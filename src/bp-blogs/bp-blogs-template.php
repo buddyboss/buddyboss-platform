@@ -247,6 +247,7 @@ function bp_get_blogs_pagination_count() {
 	$to_num    = bp_core_number_format( ( $start_num + ( $blogs_template->pag_num - 1 ) > $blogs_template->total_blog_count ) ? $blogs_template->total_blog_count : $start_num + ( $blogs_template->pag_num - 1 ) );
 	$total     = bp_core_number_format( $blogs_template->total_blog_count );
 
+	/* translators: 1: low value in the range, 2: high value in the range, 3: total number of sites. */
 	$message = sprintf( _n( 'Viewing 1 site', 'Viewing %1$s - %2$s of %3$s sites', $blogs_template->total_blog_count, 'buddyboss' ), $from_num, $to_num, $total );
 
 	/**
@@ -360,6 +361,7 @@ function bp_get_blog_avatar( $args = '' ) {
 			'height'  => false,
 			'class'   => 'avatar',
 			'id'      => false,
+			/* translators: %s: site author display name. */
 			'alt'     => sprintf( __( 'Profile photo of site author %s', 'buddyboss' ), esc_attr( $author_displayname ) ),
 			'no_grav' => true,
 		)
@@ -417,6 +419,7 @@ function bp_get_blog_avatar( $args = '' ) {
 				esc_url( $site_icon ),
 				esc_attr( "{$r['class']} avatar-{$size}" ),
 				esc_attr( $size ),
+				/* translators: %s: site name. */
 				sprintf( esc_attr__( 'Site icon for %s', 'buddyboss' ), bp_get_blog_name() )
 			);
 		}
@@ -720,6 +723,7 @@ function bp_get_blog_latest_post( $args = array() ) {
 			 *
 			 * @param string $retval Title of the latest post.
 			 */
+			/* translators: %s: latest post link. */
 			$retval = sprintf( __( 'Latest Post: %s', 'buddyboss' ), '<a href="' . $blogs_template->blog->latest_post->guid . '">' . apply_filters( 'the_title', $retval, $blogs_template->blog->latest_post->ID ) . '</a>' );
 		} else {
 
@@ -1361,17 +1365,17 @@ function bp_blogs_blog_tabs() {
 		<?php
 		if ( bp_is_current_action( 'my-blogs' ) || ! bp_current_action() ) :
 			?>
-			 class="current"<?php endif; ?>><a href="<?php echo trailingslashit( bp_displayed_user_domain() . bp_get_blogs_slug() . '/my-blogs' ); ?>"><?php printf( __( "%s's Sites", 'buddyboss' ), bp_get_displayed_user_fullname() ); ?></a></li>
+			 class="current"<?php endif; ?>><a href="<?php echo trailingslashit( bp_displayed_user_domain() . bp_get_blogs_slug() . '/my-blogs' ); ?>"><?php /* translators: %s: member display name. */ printf( __( "%s's Sites", 'buddyboss' ), bp_get_displayed_user_fullname() ); ?></a></li>
 		<li
 		<?php
 		if ( bp_is_current_action( 'recent-posts' ) ) :
 			?>
-			 class="current"<?php endif; ?>><a href="<?php echo trailingslashit( bp_displayed_user_domain() . bp_get_blogs_slug() . '/recent-posts' ); ?>"><?php printf( __( "%s's Recent Posts", 'buddyboss' ), bp_get_displayed_user_fullname() ); ?></a></li>
+			 class="current"<?php endif; ?>><a href="<?php echo trailingslashit( bp_displayed_user_domain() . bp_get_blogs_slug() . '/recent-posts' ); ?>"><?php /* translators: %s: member display name. */ printf( __( "%s's Recent Posts", 'buddyboss' ), bp_get_displayed_user_fullname() ); ?></a></li>
 		<li
 		<?php
 		if ( bp_is_current_action( 'recent-comments' ) ) :
 			?>
-			 class="current"<?php endif; ?>><a href="<?php echo trailingslashit( bp_displayed_user_domain() . bp_get_blogs_slug() . '/recent-comments' ); ?>"><?php printf( __( "%s's Recent Comments", 'buddyboss' ), bp_get_displayed_user_fullname() ); ?></a></li>
+			 class="current"<?php endif; ?>><a href="<?php echo trailingslashit( bp_displayed_user_domain() . bp_get_blogs_slug() . '/recent-comments' ); ?>"><?php /* translators: %s: member display name. */ printf( __( "%s's Recent Comments", 'buddyboss' ), bp_get_displayed_user_fullname() ); ?></a></li>
 	</ul>
 
 	<?php
@@ -1614,6 +1618,7 @@ function bp_blogs_get_profile_stats( $args = '' ) {
 			}
 
 			// If blogs exist, show some formatted output.
+			/* translators: %s: number of sites. */
 			$r['output'] = $r['before'] . sprintf( _n( '%s site', '%s sites', $r['blogs'], 'buddyboss' ), '<strong>' . $r['blogs'] . '</strong>' ) . $r['after'];
 		}
 	}

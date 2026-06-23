@@ -924,11 +924,13 @@ function bp_xprofile_validate_nickname_value( $retval, $field_id, $value, $user_
 
 	// Empty nickname.
 	if ( '' === trim( $value ) ) {
+		/* translators: %s: field name. */
 		return sprintf( __( '%s is required and not allowed to be empty.', 'buddyboss' ), $field_name );
 	}
 
 	// only alpha numeric, underscore, dash.
 	if ( ! preg_match( '/^([A-Za-z0-9-_\.]+)$/', $value ) ) {
+		/* translators: %s: field name. */
 		return sprintf( __( 'Invalid %s. Only "a-z", "0-9", "-", "_" and "." are allowed.', 'buddyboss' ), $field_name );
 	}
 
@@ -965,11 +967,13 @@ function bp_xprofile_validate_nickname_value( $retval, $field_id, $value, $user_
 
 	$value_length = function_exists( 'mb_strlen' ) ? mb_strlen( $value ) : strlen( $value );
 	if ( $value_length > $nickname_length ) {
+		/* translators: 1: field name, 2: maximum character length. */
 		return sprintf( __( '%1$s must be shorter than %2$d characters.', 'buddyboss' ), $field_name, $nickname_length );
 	}
 
 	// Minimum of 3 characters.
 	if ( $value_length < 3 ) {
+		/* translators: %s: field name. */
 		return sprintf( __( '%s must be at least 3 characters', 'buddyboss' ), $field_name );
 	}
 
@@ -979,6 +983,7 @@ function bp_xprofile_validate_nickname_value( $retval, $field_id, $value, $user_
 		$user = get_user_by( 'login', $value );
 
 		if ( false !== $user ) {
+			/* translators: %s: field name. */
 			return sprintf( __( '%s has already been taken.', 'buddyboss' ), $field_name );
 		}
 	}
@@ -999,6 +1004,7 @@ function bp_xprofile_validate_nickname_value( $retval, $field_id, $value, $user_
 	);
 
 	if ( $wpdb->get_var( $sql ) > 0 ) {
+		/* translators: %s: field name. */
 		return sprintf( __( '%s has already been taken.', 'buddyboss' ), $field_name );
 	}
 
@@ -1049,6 +1055,7 @@ function bp_xprofile_validate_phone_value( $retval, $field_id, $value, $user_id 
 
 	if ( empty( $str ) ) {
 		/* SET ERROR: The field must be a valid U.S. phone number (e.g. 888-888-8888) */
+		/* translators: %s: field name. */
 		return sprintf( __( '%s is required and not allowed to be empty.', 'buddyboss' ), $field_name );
 	}
 
@@ -1058,6 +1065,7 @@ function bp_xprofile_validate_phone_value( $retval, $field_id, $value, $user_id 
 
 	if ( ! $international ) {
 		/* SET ERROR: The field must be a valid U.S. phone number (e.g. 888-888-8888) */
+		/* translators: %s: field name. */
 		return sprintf( __( 'Enter valid %s', 'buddyboss' ), $field_name );
 	}
 
@@ -1068,6 +1076,7 @@ function bp_xprofile_validate_phone_value( $retval, $field_id, $value, $user_id 
 	}
 
 	/* SET ERROR: The field must be a valid phone number (e.g. 888-888-8888) */
+	/* translators: %s: field name. */
 	return sprintf( __( 'Enter valid %s', 'buddyboss' ), $field_name );
 }
 
@@ -1166,6 +1175,7 @@ function bp_xprofile_validate_social_networks_value( $retval, $field_id, $value,
 			$val = trim( $val );
 			if ( empty( $val ) ) {
 				$key = bp_social_network_search_key( $key, $providers );
+				/* translators: %s: social network provider name. */
 				$validation[ $key ] = sprintf( __( '%s is required and not allowed to be empty.', 'buddyboss' ), $providers[ $key ]->name );
 			}
 		}
@@ -1176,6 +1186,7 @@ function bp_xprofile_validate_social_networks_value( $retval, $field_id, $value,
 		// Skip validation for empty fields unless required.
 		if ( ! empty( $v ) && ! wp_http_validate_url( $v ) ) {
 			$key = bp_social_network_search_key( $k, $providers );
+			/* translators: %s: social network provider name. */
 			$validation[ $k ] = sprintf( __( 'Please enter valid %s profile url.', 'buddyboss' ), $providers[ $key ]->name );
 		}
 	}
@@ -1367,6 +1378,7 @@ function bb_xprofile_repeater_field_repair_callback() {
 		bp_update_option( 'bp_repair_duplicate_fields', $duplicate_fields );
 		bp_update_option( 'bp_repair_updated_fields', $updated_fields );
 
+		/* translators: %s: number of fields updated. */
 		$records_updated = sprintf( __( '%s field updated successfully.', 'buddyboss' ), bp_core_number_format( $offset ) );
 
 		return array(

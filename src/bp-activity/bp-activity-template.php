@@ -491,6 +491,7 @@ function bp_get_activity_pagination_count() {
 	$to_num    = bp_core_number_format( ( $start_num + ( $activities_template->pag_num - 1 ) > $activities_template->total_activity_count ) ? $activities_template->total_activity_count : $start_num + ( $activities_template->pag_num - 1 ) );
 	$total     = bp_core_number_format( $activities_template->total_activity_count );
 
+	/* translators: 1: starting item number, 2: ending item number, 3: total number of items. */
 	$message = sprintf( _n( 'Viewing 1 item', 'Viewing %1$s - %2$s of %3$s items', $activities_template->total_activity_count, 'buddyboss' ), $from_num, $to_num, $total );
 
 	return $message;
@@ -1100,6 +1101,7 @@ function bp_get_activity_avatar( $args = '' ) {
 	$dn_default = isset( $current_activity_item->display_name ) ? $current_activity_item->display_name : '';
 
 	// Prepend some descriptive text to alt.
+	/* translators: %s: activity author's display name. */
 	$alt_default = ! empty( $dn_default ) ? sprintf( __( 'Profile photo of %s', 'buddyboss' ), $dn_default ) : __( 'Profile photo', 'buddyboss' );
 
 	$defaults = array(
@@ -1262,6 +1264,7 @@ function bp_get_activity_secondary_avatar( $args = '' ) {
 				$alt = __( 'Group logo', 'buddyboss' );
 
 				if ( ! empty( $name ) ) {
+					/* translators: %s: group name. */
 					$alt = sprintf( __( 'Group logo of %s', 'buddyboss' ), $name );
 				}
 			}
@@ -1273,6 +1276,7 @@ function bp_get_activity_secondary_avatar( $args = '' ) {
 			$link    = home_url();
 
 			if ( empty( $alt ) ) {
+				/* translators: %s: blog name. */
 				$alt = sprintf( __( 'Profile photo of the author of the site %s', 'buddyboss' ), get_blog_option( $item_id, 'blogname' ) );
 			}
 
@@ -1283,6 +1287,7 @@ function bp_get_activity_secondary_avatar( $args = '' ) {
 			$link    = bp_core_get_userlink( $item_id, false, true );
 
 			if ( empty( $alt ) ) {
+				/* translators: %s: display name of the activity's secondary user. */
 				$alt = sprintf( __( 'Profile photo of %s', 'buddyboss' ), bp_core_get_user_displayname( $activities_template->activity->secondary_item_id ) );
 			}
 
@@ -1302,6 +1307,7 @@ function bp_get_activity_secondary_avatar( $args = '' ) {
 			}
 
 			if ( empty( $alt ) ) {
+				/* translators: %s: activity author's display name. */
 				$alt = sprintf( __( 'Profile photo of %s', 'buddyboss' ), $activities_template->activity->display_name );
 			}
 
@@ -2480,6 +2486,7 @@ function bp_activity_get_comment_count( $deprecated = null ) {
 
 	// Deprecated notice about $args.
 	if ( ! empty( $deprecated ) ) {
+		/* translators: 1: function name, 2: file path. */
 		_deprecated_argument( __FUNCTION__, '1.2', sprintf( __( '%1$s no longer accepts arguments. See the inline documentation at %2$s for more details.', 'buddyboss' ), __FUNCTION__, __FILE__ ) );
 	}
 

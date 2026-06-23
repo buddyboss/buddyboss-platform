@@ -68,6 +68,7 @@ class BP_XProfile_Field_Type_Member_Types extends BP_XProfile_Field_Type {
 					<?php
 					printf(
 						'%s',
+						/* translators: %s: URL to the profile types admin screen. */
 						sprintf(
 							__(
 								'Please make sure to add some <a href="%s">profile types</a> first.',

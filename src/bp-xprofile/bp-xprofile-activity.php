@@ -58,6 +58,7 @@ add_action( 'bp_register_activity_actions', 'xprofile_register_activity_actions'
  */
 function bp_xprofile_format_activity_action_new_avatar( $action, $activity ) {
 	$userlink = bp_core_get_userlink( $activity->user_id );
+	/* translators: 1: user link, 2: gender pronoun (e.g. his/her/their). */
 	$action   = sprintf( __( '%1$s changed %2$s profile photo', 'buddyboss' ), $userlink, bp_get_user_gender_pronoun_type( $activity->user_id ) );
 
 	// Legacy filter - pass $user_id instead of $activity.
@@ -92,6 +93,7 @@ function bp_xprofile_format_activity_action_updated_profile( $action, $activity 
 	// your language doesn't have this restriction, feel free to use a more
 	// natural translation.
 	$profile_link = trailingslashit( bp_core_get_user_domain( $activity->user_id ) . bp_get_profile_slug() );
+	/* translators: 1: user profile link, 2: gender pronoun (e.g. his/her/their). */
 	$action       = sprintf( __( '%1$s updated %2$s profile', 'buddyboss' ), '<a href="' . $profile_link . '" data-bb-hp-profile="' . esc_attr( $activity->user_id ) . '">' . bp_core_get_user_displayname( $activity->user_id ) . '</a>', bp_get_user_gender_pronoun_type( $activity->user_id ) );
 
 	/**

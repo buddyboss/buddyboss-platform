@@ -309,6 +309,7 @@ class BP_Activity_oEmbed_Extension extends BP_Core_oEmbed_Extension {
 			<a href="<?php bp_activity_thread_permalink(); ?>">
 				<span class="dashicons dashicons-admin-comments"></span>
 				<?php
+				/* translators: %s: number of comments. */
 				printf(
 					_n(
 						/* translators: accessibility text */

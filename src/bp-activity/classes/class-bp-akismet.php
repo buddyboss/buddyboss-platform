@@ -392,6 +392,7 @@ class BP_Akismet {
 			return;
 		}
 
+		/* translators: %s: username of the user who reported the activity. */
 		$this->update_activity_history( $activity->id, sprintf( __( '%s reported this activity as spam', 'buddyboss' ), bp_get_loggedin_user_username() ), 'report-spam' );
 		bp_activity_update_meta( $activity->id, '_bp_akismet_user_result', 'true' );
 		bp_activity_update_meta( $activity->id, '_bp_akismet_user', bp_get_loggedin_user_username() );
@@ -410,6 +411,7 @@ class BP_Akismet {
 			return;
 		}
 
+		/* translators: %s: username of the user who reported the activity. */
 		$this->update_activity_history( $activity->id, sprintf( __( '%s reported this activity as not spam', 'buddyboss' ), bp_get_loggedin_user_username() ), 'report-ham' );
 		bp_activity_update_meta( $activity->id, '_bp_akismet_user_result', 'false' );
 		bp_activity_update_meta( $activity->id, '_bp_akismet_user', bp_get_loggedin_user_username() );
@@ -446,6 +448,7 @@ class BP_Akismet {
 			// Uh oh, something's gone horribly wrong. Unexpected result.
 		} else {
 			bp_activity_update_meta( $activity->id, '_bp_akismet_error', bp_core_current_time() );
+			/* translators: %s: Akismet response code. */
 			$this->update_activity_history( $activity->id, sprintf( __( 'Akismet was unable to check this item (response: %s), will automatically retry again later.', 'buddyboss' ), $this->last_activity->akismet_submission['bp_as_result'] ), 'check-error' );
 		}
 

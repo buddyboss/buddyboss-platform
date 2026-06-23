@@ -1274,6 +1274,7 @@ function bp_get_profile_last_updated() {
 		 *
 		 * @param string $value Formatted last updated indicator string.
 		 */
+		/* translators: %s: human-readable time since the profile was last updated. */
 		return apply_filters( 'bp_get_profile_last_updated', sprintf( __( 'Profile updated %s', 'buddyboss' ), bp_core_time_since( strtotime( $last_updated ) ) ) );
 	}
 

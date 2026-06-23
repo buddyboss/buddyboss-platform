@@ -1704,6 +1704,7 @@ function bp_activity_generate_action_string( $activity ) {
 		}
 		$actions->{$activity->component}->{$activity->type} = array(
 			'key'             => $activity->type,
+			/* translators: %s: post type name. */
 			'value'           => sprintf( __( 'New %s published', 'buddyboss' ), str_replace( 'new_blog_', '', $activity->type ) ),
 			'format_callback' => 'bb_blogs_format_activity_action_disabled_post_type_feed',
 			'label'           => ucwords( str_replace( 'new_blog_', '', $activity->type ) ),
@@ -1755,6 +1756,7 @@ function bp_activity_format_activity_action_activity_update( $action, $activity 
 		$last_user_link = array_pop( $mentioned_users_link );
 
 		$action = sprintf(
+			/* translators: 1: author user link, 2: mentioned users links, 3: " and " separator, 4: last mentioned user link. */
 			__( '%1$s <span class="activity-to">to</span> %2$s%3$s%4$s', 'buddyboss' ),
 			bp_core_get_userlink( $activity->user_id ),
 			$mentioned_users_link ? implode( ', ', $mentioned_users_link ) : '',
@@ -1762,6 +1764,7 @@ function bp_activity_format_activity_action_activity_update( $action, $activity 
 			$last_user_link
 		);
 	} else {
+		/* translators: %s: author user link. */
 		$action = sprintf( __( '%s posted an update', 'buddyboss' ), bp_core_get_userlink( $activity->user_id ) );
 	}
 
@@ -1786,6 +1789,7 @@ function bp_activity_format_activity_action_activity_update( $action, $activity 
  * @return string $action
  */
 function bp_activity_format_activity_action_activity_comment( $action, $activity ) {
+	/* translators: %s: author user link. */
 	$action = sprintf( __( '%s posted a new activity comment', 'buddyboss' ), bp_core_get_userlink( $activity->user_id ) );
 
 	/**
@@ -1835,12 +1839,14 @@ function bp_activity_format_activity_action_custom_post_type_post( $action, $act
 		if ( ! empty( $bp->activity->track[ $activity->type ]->new_post_type_action_ms ) ) {
 			$action = sprintf( $bp->activity->track[ $activity->type ]->new_post_type_action_ms, $user_link, $post_url, $blog_link );
 		} else {
+			/* translators: 1: author user link, 2: post URL, 3: site link. */
 			$action = sprintf( __( '%1$s wrote a new <a href="%2$s">item</a>, on the site %3$s', 'buddyboss' ), $user_link, esc_url( $post_url ), $blog_link );
 		}
 	} else {
 		if ( ! empty( $bp->activity->track[ $activity->type ]->new_post_type_action ) ) {
 			$action = sprintf( $bp->activity->track[ $activity->type ]->new_post_type_action, $user_link, $post_url );
 		} else {
+			/* translators: 1: author user link, 2: post URL. */
 			$action = sprintf( __( '%1$s wrote a new <a href="%2$s">item</a>', 'buddyboss' ), $user_link, esc_url( $post_url ) );
 		}
 	}
@@ -1886,12 +1892,14 @@ function bp_activity_format_activity_action_custom_post_type_comment( $action, $
 		if ( ! empty( $bp->activity->track[ $activity->type ]->new_post_type_comment_action_ms ) ) {
 			$action = sprintf( $bp->activity->track[ $activity->type ]->new_post_type_comment_action_ms, $user_link, $activity->primary_link, $blog_link );
 		} else {
+			/* translators: 1: author user link, 2: item URL, 3: site link. */
 			$action = sprintf( __( '%1$s commented on the <a href="%2$s">item</a>, on the site %3$s', 'buddyboss' ), $user_link, $activity->primary_link, $blog_link );
 		}
 	} else {
 		if ( ! empty( $bp->activity->track[ $activity->type ]->new_post_type_comment_action ) ) {
 			$action = sprintf( $bp->activity->track[ $activity->type ]->new_post_type_comment_action, $user_link, $activity->primary_link );
 		} else {
+			/* translators: 1: author user link, 2: item URL. */
 			$action = sprintf( __( '%1$s commented on the <a href="%2$s">item</a>', 'buddyboss' ), $user_link, $activity->primary_link );
 		}
 	}
@@ -6989,6 +6997,7 @@ function bb_get_close_activity_comments_notice( $activity_id = 0 ) {
 	$activity      = new BP_Activity_Activity( $activity_id );
 	if ( ! empty( $activity->id ) && bb_is_close_activity_comments_enabled() && bb_is_activity_comments_closed( $activity->id ) ) {
 		$closer_id     = bb_get_activity_comments_closer_id( $activity->id );
+		/* translators: %s: display name of the user who closed commenting. */
 		$closed_notice = sprintf( esc_html__( '%s turned off commenting for this post', 'buddyboss' ), bp_core_get_user_displayname( $closer_id ) );
 		if ( $closer_id === bp_loggedin_user_id() ) {
 			$closed_notice = esc_html__( 'You turned off commenting for this post', 'buddyboss' );
@@ -7001,6 +7010,7 @@ function bb_get_close_activity_comments_notice( $activity_id = 0 ) {
 			} elseif ( bp_user_can( $closer_id, 'administrator' ) && 'public' === $group->status ) {
 				$closed_notice = esc_html__( 'An admin turned off commenting for this post', 'buddyboss' );
 			} else {
+				/* translators: %s: display name of the user who closed commenting. */
 				$closed_notice = sprintf( esc_html__( '%s turned off commenting for this post', 'buddyboss' ), bp_core_get_user_displayname( $closer_id ) );
 			}
 		} elseif ( bp_user_can( $closer_id, 'administrator' ) ) {
@@ -7822,8 +7832,10 @@ function bb_blogs_format_activity_action_disabled_post_type_feed( $action, $acti
 	$user_link = bp_core_get_userlink( $activity->user_id );
 
 	if ( is_multisite() ) {
+		/* translators: 1: author user link, 2: site link. */
 		$action = sprintf( __( '%1$s posted a new post, on the site %2$s', 'buddyboss' ), $user_link, '<a href="' . esc_url( $blog_url ) . '">' . esc_html( $blog_name ) . '</a>' );
 	} else {
+		/* translators: %s: author user link. */
 		$action = sprintf( __( '%1$s posted a new post.', 'buddyboss' ), $user_link );
 	}
 

@@ -292,6 +292,7 @@ EOD;
 				$anchor_text = sprintf( __( 'By %1$s on %2$s', 'buddyboss' ), $oembed->author_name, $oembed->provider_name );
 
 			} elseif ( isset( $oembed->provider_name ) ) {
+				/* translators: %s: oEmbed provider name. */
 				$anchor_text = sprintf( __( 'View on %s', 'buddyboss' ), $oembed->provider_name );
 			}
 
