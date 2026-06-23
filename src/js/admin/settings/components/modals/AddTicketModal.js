@@ -39,13 +39,18 @@ export function AddTicketModal( { isOpen, value, onClose, onSave } ) {
 		return null;
 	}
 
+	// A ticket ID must be a positive integer — mirror the server-side check
+	// (ctype_digit + > 0 in BB_Support_Access::ajax_set_ticket()) so the admin
+	// gets immediate feedback instead of only a post-submit error toast.
+	var trimmedTicket = ticket.trim();
+	var isValidTicket = /^[0-9]+$/.test( trimmedTicket ) && parseInt( trimmedTicket, 10 ) > 0;
+
 	var handleSave = function () {
-		var trimmed = ticket.trim();
-		if ( '' === trimmed ) {
+		if ( ! isValidTicket ) {
 			return;
 		}
 		if ( 'function' === typeof onSave ) {
-			onSave( trimmed );
+			onSave( trimmedTicket );
 		}
 	};
 
@@ -58,8 +63,13 @@ export function AddTicketModal( { isOpen, value, onClose, onSave } ) {
 		>
 			<div className="bb-admin-settings-modal__body">
 				<TextControl
-					label=""
+					label={ __( 'Ticket number', 'buddyboss' ) }
 					hideLabelFromVision
+					type="number"
+					inputMode="numeric"
+					min="1"
+					placeholder={ __( 'e.g. 12345', 'buddyboss' ) }
+					help={ __( 'Enter the numeric support ticket ID.', 'buddyboss' ) }
 					value={ ticket }
 					onChange={ function ( val ) { setTicket( val ); } }
 					__nextHasNoMarginBottom
@@ -70,7 +80,7 @@ export function AddTicketModal( { isOpen, value, onClose, onSave } ) {
 				<Button variant="secondary" onClick={ onClose }>
 					{ __( 'Cancel', 'buddyboss' ) }
 				</Button>
-				<Button variant="primary" onClick={ handleSave } disabled={ '' === ticket.trim() }>
+				<Button variant="primary" onClick={ handleSave } disabled={ ! isValidTicket }>
 					{ __( 'Save', 'buddyboss' ) }
 				</Button>
 			</div>

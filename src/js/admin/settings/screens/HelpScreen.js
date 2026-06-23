@@ -165,6 +165,9 @@ export function HelpScreen( { onNavigate } ) {
 	var chatOpen = chatOpenState[ 0 ];
 	var setChatOpen = chatOpenState[ 1 ];
 
+	// Ref to the footer so "Ask Buddy" can scroll it into view.
+	var footerRef = useRef( null );
+
 	function scrollToFooter(){
 		var footer = footerRef.current;
 		if ( footer ) {
@@ -194,12 +197,16 @@ export function HelpScreen( { onNavigate } ) {
 	var toggleChatbot = useCallback( function () {
 		if ( window.DocsBotAI && 'function' === typeof window.DocsBotAI.toggle ) {
 			window.DocsBotAI.toggle();
+			scrollToFooter();
+			return;
 		}
-		scrollToFooter();
+		// Widget unavailable. If chat.js failed to load (CSP / air-gapped /
+		// network), don't leave the button doing nothing — fall back to the
+		// support page. If it's merely still loading, this is a harmless no-op.
+		if ( window.bbDocsbotFailed ) {
+			window.open( 'https://buddyboss.com/my-account/?tab=support', '_blank', 'noopener,noreferrer' );
+		}
 	}, [] );
-
-	// Ref to the footer so "Ask Buddy" can scroll it into view.
-	var footerRef = useRef( null );
 
 	/**
 	 * Handle the "Ask Buddy" CTA: scroll down to the help footer, then open the
@@ -217,6 +224,12 @@ export function HelpScreen( { onNavigate } ) {
 		if ( window.DocsBotAI && 'function' === typeof window.DocsBotAI.open ) {
 			window.DocsBotAI.open();
 			scrollToFooter();
+			return;
+		}
+		// Same fallback as toggleChatbot: open the support page if the chat
+		// widget failed to load, rather than silently doing nothing.
+		if ( window.bbDocsbotFailed ) {
+			window.open( 'https://buddyboss.com/my-account/?tab=support', '_blank', 'noopener,noreferrer' );
 		}
 	}, [] );
 
@@ -874,14 +887,14 @@ export function HelpScreen( { onNavigate } ) {
 									{ __( 'Unlock Advanced Plus Features Without Paying More Than the Pro Plan', 'buddyboss' ) }
 								</h2>
 								<ul className="bb-admin-help-promo__list">
-									<li><i className="bb-icons-rl-check"></i> { __( 'Gamification (Save $199/y)', 'buddyboss') }</li>
-									<li><i className="bb-icons-rl-check"></i> { __( 'Point Types & Triggers', 'buddyboss') }</li>
-									<li><i className="bb-icons-rl-check"></i> { __( 'Ranks & Leaderboards', 'buddyboss') }</li>
-									<li><i className="bb-icons-rl-check"></i> { __( 'Achievements', 'buddyboss') }</li>
-									<li><i className="bb-icons-rl-check"></i> { __( 'Competitions', 'buddyboss') }</li>
-									<li><i className="bb-icons-rl-check"></i> { __( 'Offload Media (Save $199/y)', 'buddyboss') }</li>
-									<li><i className="bb-icons-rl-check"></i> { __( 'Domain Restriction', 'buddyboss') }</li>
-									<li><i className="bb-icons-rl-check"></i> { __( 'Premium Top-Rated Support', 'buddyboss') }</li>
+									<li><i className="bb-icons-rl-check"></i> { __( 'Gamification (Save $199/y)', 'buddyboss' ) }</li>
+									<li><i className="bb-icons-rl-check"></i> { __( 'Point Types & Triggers', 'buddyboss' ) }</li>
+									<li><i className="bb-icons-rl-check"></i> { __( 'Ranks & Leaderboards', 'buddyboss' ) }</li>
+									<li><i className="bb-icons-rl-check"></i> { __( 'Achievements', 'buddyboss' ) }</li>
+									<li><i className="bb-icons-rl-check"></i> { __( 'Competitions', 'buddyboss' ) }</li>
+									<li><i className="bb-icons-rl-check"></i> { __( 'Offload Media (Save $199/y)', 'buddyboss' ) }</li>
+									<li><i className="bb-icons-rl-check"></i> { __( 'Domain Restriction', 'buddyboss' ) }</li>
+									<li><i className="bb-icons-rl-check"></i> { __( 'Premium Top-Rated Support', 'buddyboss' ) }</li>
 								</ul>
 							</div>
 							<a target="_blank" rel="noopener noreferrer" href="https://buddyboss.com/pricing/?utm_source=product&utm_medium=platform-plugin&utm_campaign=Help-upgrade-pro-to-plus&utm_content=help" className="bb-admin-help-promo__action bb-admin-help-promo__action-plus is-primary">
@@ -920,14 +933,14 @@ export function HelpScreen( { onNavigate } ) {
 									{ __( 'Take Your Community Beyond Basics with BuddyBoss Pro Features', 'buddyboss' ) }
 								</h2>
 								<ul className="bb-admin-help-promo__list">
-									<li><i className="bb-icons-rl-check"></i> { __( 'Premium BuddyBoss Theme', 'buddyboss') }</li>
-									<li><i className="bb-icons-rl-check"></i> { __( 'Unlimited Members, Admins & Moderators', 'buddyboss') }</li>
-									<li><i className="bb-icons-rl-check"></i> { __( 'LearnDash, MemberPress Courses, TutorLMS, LifterLMS Integration', 'buddyboss') }</li>
-									<li><i className="bb-icons-rl-check"></i> { __( 'Zoom Integration for Meetings', 'buddyboss') }</li>
-									<li><i className="bb-icons-rl-check"></i> { __( 'Image, Video & Document Uploads', 'buddyboss') }</li>
-									<li><i className="bb-icons-rl-check"></i> { __( 'Social Login & Access Controls', 'buddyboss') }</li>
-									<li><i className="bb-icons-rl-check"></i> { __( 'Polls, Custom Reactions & Topics', 'buddyboss') }</li>
-									<li><i className="bb-icons-rl-check"></i> { __( 'Activity Sharing', 'buddyboss') }</li>
+									<li><i className="bb-icons-rl-check"></i> { __( 'Premium BuddyBoss Theme', 'buddyboss' ) }</li>
+									<li><i className="bb-icons-rl-check"></i> { __( 'Unlimited Members, Admins & Moderators', 'buddyboss' ) }</li>
+									<li><i className="bb-icons-rl-check"></i> { __( 'LearnDash, MemberPress Courses, TutorLMS, LifterLMS Integration', 'buddyboss' ) }</li>
+									<li><i className="bb-icons-rl-check"></i> { __( 'Zoom Integration for Meetings', 'buddyboss' ) }</li>
+									<li><i className="bb-icons-rl-check"></i> { __( 'Image, Video & Document Uploads', 'buddyboss' ) }</li>
+									<li><i className="bb-icons-rl-check"></i> { __( 'Social Login & Access Controls', 'buddyboss' ) }</li>
+									<li><i className="bb-icons-rl-check"></i> { __( 'Polls, Custom Reactions & Topics', 'buddyboss' ) }</li>
+									<li><i className="bb-icons-rl-check"></i> { __( 'Activity Sharing', 'buddyboss' ) }</li>
 								</ul>
 							</div>
 							<a target="_blank" rel="noopener noreferrer" href="https://buddyboss.com/pricing/?utm_source=product&utm_medium=platform-plugin&utm_campaign=Help-upgrade-free-to-pro&utm_content=help" className="bb-admin-help-promo__action bb-admin-help-promo__action-pro is-primary">

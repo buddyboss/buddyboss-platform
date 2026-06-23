@@ -454,9 +454,16 @@ function bb_admin_settings_page() {
 				if ( onHelpTab() ) {
 					if ( ! mounted ) {
 						mounted = true;
+						window.bbDocsbotFailed = false;
 						DocsBotAI.init( { id: DOCSBOT_ID } )
 							.then( hideLauncher )
-							.catch( function () { mounted = false; } );
+							.catch( function () {
+								// chat.js failed to load (CSP, air-gapped, network)
+								// — flag it so the Help footer button can fall back
+								// instead of silently doing nothing.
+								mounted = false;
+								window.bbDocsbotFailed = true;
+							} );
 					}
 				} else {
 					unmount();
