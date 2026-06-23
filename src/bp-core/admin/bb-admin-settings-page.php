@@ -418,6 +418,15 @@ function bb_admin_settings_page() {
 			}
 
 			function unmount() {
+				// Disconnect the launcher observer first: it watches the current
+				// shadow root, which DocsBotAI.unmount() is about to detach. Leaving
+				// it connected would (a) keep the old root alive (leak) and (b) make
+				// hideLauncher() skip re-observing the NEW root on the next Help
+				// visit, letting the floating launcher reappear.
+				if ( launcherObserver ) {
+					launcherObserver.disconnect();
+					launcherObserver = null;
+				}
 				if ( mounted && window.DocsBotAI && "function" === typeof window.DocsBotAI.unmount ) {
 					try { window.DocsBotAI.unmount(); } catch ( e ) {}
 				}

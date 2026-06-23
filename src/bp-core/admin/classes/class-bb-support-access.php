@@ -347,7 +347,12 @@ class BB_Support_Access {
 			return $sql;
 		}
 
+		// uid_name is a BP_User_Query internal (not user input), but it is
+		// interpolated into raw SQL — whitelist it to the only two legitimate
+		// column names so a stray third-party filter can never inject anything
+		// unexpected. The id is already integer-cast.
 		$uid_name = isset( $query->uid_name ) ? $query->uid_name : 'ID';
+		$uid_name = in_array( $uid_name, array( 'ID', 'user_id' ), true ) ? $uid_name : 'ID';
 
 		$sql['where'][] = "u.{$uid_name} NOT IN (" . (int) $support_user_id . ')';
 
@@ -362,6 +367,12 @@ class BB_Support_Access {
 	 * ModifyDurationModal UI offers (1–7 days); sites needing longer windows can
 	 * add them via the `bb_support_access_allowed_days` filter.
 	 *
+	 * NOTE: this governs the increments offered when EXTENDING a grant (and the
+	 * set of explicit durations accepted). The duration of a fresh "Open Access"
+	 * grant is a separate concept controlled by {@see default_days()} /
+	 * `bb_support_access_default_days` — so shortening this list does NOT shorten
+	 * the initial window.
+	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @return int[] Allowed day counts.
@@ -370,13 +381,46 @@ class BB_Support_Access {
 		$days = array( 1, 3, 5, 7 );
 
 		/**
-		 * Filter the allowed support-access durations (in days).
+		 * Filter the allowed support-access EXTENSION durations (in days).
+		 *
+		 * Governs the durations accepted when extending a grant; the initial
+		 * grant length is filtered separately via `bb_support_access_default_days`.
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
 		 * @param int[] $days Allowed day counts.
 		 */
 		return array_values( array_unique( array_map( 'absint', apply_filters( 'bb_support_access_allowed_days', $days ) ) ) );
+	}
+
+	/**
+	 * Initial "Open Access" grant duration (in days).
+	 *
+	 * This is the length of a freshly enabled grant and the fallback used when
+	 * an out-of-range duration is submitted. It is deliberately independent of
+	 * allowed_days() (the shorter extend increments), so compliance-conscious
+	 * sites that need a shorter initial window can cap it here without touching
+	 * the extension options.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @return int Default initial duration in days (always >= 1).
+	 */
+	public function default_days() {
+		/**
+		 * Filter the initial Support Access grant duration (in days).
+		 *
+		 * Governs ONLY the length of a fresh "Open Access" grant. The increments
+		 * offered when EXTENDING an existing grant are filtered separately via
+		 * `bb_support_access_allowed_days`.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param int $days Default initial duration in days.
+		 */
+		$days = (int) apply_filters( 'bb_support_access_default_days', self::DEFAULT_DAYS );
+
+		return $days > 0 ? $days : self::DEFAULT_DAYS;
 	}
 
 	/**
@@ -1025,7 +1069,7 @@ class BB_Support_Access {
 	public function enable( $days = self::DEFAULT_DAYS ) {
 		$days = absint( $days );
 		if ( ! in_array( $days, $this->allowed_days(), true ) ) {
-			$days = self::DEFAULT_DAYS;
+			$days = $this->default_days();
 		}
 
 		$support_user_id = $this->get_support_user();
