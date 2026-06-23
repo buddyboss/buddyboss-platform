@@ -3,12 +3,16 @@
  * BB_Debug_Asset_Fetcher: download unminified pair files at runtime when
  * WP_DEBUG && SCRIPT_DEBUG are both true.
  *
- * The shipped zip ships only `.min.{js,css}` for paired assets — the
- * unminified counterparts are stripped to keep the download small. Developers
- * who toggle `SCRIPT_DEBUG` on still need readable source for debugging, so
- * this class downloads the unminified files from the production branch on
- * GitHub and stages them under `wp-content/uploads/buddyboss-debug/{version}/`
- * where {@see bb_asset_url()} can serve them in place of the minified copy.
+ * The shipped zip ships only `.min.{js,css}` for paired assets, and offloads
+ * images + woff2 fonts to S3 — all stripped to keep the download small.
+ * Developers who toggle `SCRIPT_DEBUG` on want the install to behave exactly
+ * like a dev checkout, so this class downloads every stripped file (unminified
+ * JS/CSS + images + woff2) from the production branch on GitHub and restores
+ * them to their natural paths INSIDE the plugin directory. WordPress then
+ * serves them directly (no URL rewriting, no uploads staging), and relative
+ * CSS `url()` refs resolve against their restored siblings just like in dev.
+ * The S3 image offloader stands down while SCRIPT_DEBUG is active so nothing
+ * is redirected away from the restored local copies.
  *
  * Security posture:
  *  - Fetches are pinned to a commit SHA captured at build time (manifest),
@@ -16,10 +20,14 @@
  *    source tree, never a later HEAD.
  *  - Every fetched blob is SHA-256-verified against the manifest before it
  *    is written to disk. Mismatch → write refused, error logged.
- *  - Files land under wp-content/uploads/, never inside the plugin
- *    directory (WP would overwrite plugin files on update anyway).
+ *  - Files are restored INTO the plugin directory at their manifest-relative
+ *    paths. WordPress wipes and re-extracts the plugin dir on update, so the
+ *    restored files are transient by design — a version bump re-fetches them.
+ *    This requires the plugin directory to be writable by the web server
+ *    (the same requirement as WordPress's own plugin auto-update); when it
+ *    isn't, the write fails and the page degrades to minified assets.
  *  - Relative paths from the manifest are whitelist-validated to block
- *    path traversal even though the manifest is repo-controlled.
+ *    path traversal — the resolved target must stay inside the plugin dir.
  *  - Fetch loop is gated on `manage_options` capability — anonymous or
  *    low-privilege admin requests never trigger outbound network I/O.
  *  - A site-transient lock prevents concurrent runs from stampeding the
@@ -58,10 +66,11 @@ class BB_Debug_Asset_Fetcher {
 	const SENTINEL_SHA = 'LOCAL_TEST_BUILD';
 
 	/**
-	 * Uploads subdirectory the fetcher writes into. Final layout:
-	 *   wp-content/uploads/buddyboss-debug/<plugin-version>/<rel_path>
+	 * Restore target: the fetched files are written back into the plugin
+	 * directory at their manifest-relative paths, i.e.
+	 *   {BP_PLUGIN_DIR}/<rel_path>
+	 * so WordPress serves them straight from the plugin like a dev checkout.
 	 */
-	const UPLOADS_SUBDIR = 'buddyboss-debug';
 
 	/**
 	 * Site-transient key used as a concurrency lock around the fetch loop.
@@ -184,9 +193,11 @@ class BB_Debug_Asset_Fetcher {
 	/**
 	 * Public override-url lookup used by {@see bb_asset_url()}.
 	 *
-	 * Returns an URL to the unminified file under wp-content/uploads when
-	 * the fetcher has staged a verified copy for the running plugin version,
-	 * or `false` to signal the caller to fall back to the minified URL.
+	 * Returns the plugin URL of the unminified file when the fetcher has
+	 * restored a verified copy into the plugin directory for the running
+	 * version, or `false` to signal the caller to fall back to the minified
+	 * URL. Because the file is restored to its natural path, the override URL
+	 * is simply the plugin URL for that relative path.
 	 *
 	 * @since BuddyBoss 3.0.3
 	 *
@@ -195,13 +206,10 @@ class BB_Debug_Asset_Fetcher {
 	 * @return string|false
 	 */
 	public static function get_override_url( $rel_path ) {
-		$abs = self::resolve_override( $rel_path );
-		if ( ! $abs ) {
+		if ( ! self::resolve_override( $rel_path ) ) {
 			return false;
 		}
-		$uploads = wp_get_upload_dir();
-		// Replace the basedir prefix with baseurl to get a public URL.
-		return $uploads['baseurl'] . substr( $abs, strlen( $uploads['basedir'] ) );
+		return trailingslashit( BP_PLUGIN_URL ) . $rel_path;
 	}
 
 	/**
@@ -246,17 +254,25 @@ class BB_Debug_Asset_Fetcher {
 	 * Behaviour matrix (only applies when the URL points inside the plugin
 	 * directory and the file is in the manifest's pair set):
 	 *
-	 *   SCRIPT_DEBUG | URL form              | Override staged | Result
-	 *   ------------ | --------------------- | --------------- | -------------------------------------
-	 *   off          | `foo.min.{ext}`       | n/a             | unchanged
-	 *   off          | `foo.{ext}`           | n/a             | rewritten to `foo.min.{ext}` (zip doesn't ship the unminified)
-	 *   on           | `foo.min.{ext}`       | yes             | rewritten to uploads override URL
-	 *   on           | `foo.min.{ext}`       | no              | unchanged (cleanest fallback)
-	 *   on           | `foo.{ext}`           | yes             | rewritten to uploads override URL
-	 *   on           | `foo.{ext}`           | no              | rewritten to `foo.min.{ext}` so the page still loads
+	 *   SCRIPT_DEBUG | URL form              | Restored on disk | Result
+	 *   ------------ | --------------------- | ---------------- | -------------------------------------
+	 *   off          | `foo.min.{ext}`       | n/a              | unchanged
+	 *   off          | `foo.{ext}`           | n/a              | rewritten to `foo.min.{ext}` (zip doesn't ship the unminified)
+	 *   on           | `foo.min.{ext}`       | yes              | rewritten to the restored unminified plugin URL (readable source)
+	 *   on           | `foo.min.{ext}`       | no               | unchanged (cleanest fallback)
+	 *   on           | `foo.{ext}`           | yes              | the restored unminified URL (== src) — effectively unchanged
+	 *   on           | `foo.{ext}`           | no               | rewritten to `foo.min.{ext}` so the page still loads
 	 *
 	 * Non-paired assets, third-party assets, and admin-AJAX/REST contexts
 	 * fall straight through without touching the manifest.
+	 *
+	 * Manifest-unavailable fallback: when the manifest can't be loaded at all
+	 * (missing, or a `grunt build_test` sentinel build whose commit_sha is
+	 * LOCAL_TEST_BUILD), we can't look up the pair set — but a stripped
+	 * unminified asset would still 404. So as a last resort we check disk: an
+	 * unminified plugin URL whose file is absent while its `.min` twin exists
+	 * is rewritten to `.min`. This keeps a debug-toggled build_test install
+	 * loading (minified) instead of breaking.
 	 *
 	 * @since BuddyBoss 3.0.3
 	 *
@@ -303,31 +319,44 @@ class BB_Debug_Asset_Fetcher {
 
 		$unmin_rel = $base . '.' . $ext;
 		$manifest  = self::load_manifest();
-		if ( ! $manifest || empty( $manifest['files'][ $unmin_rel ] ) ) {
-			// Not in the pair set — third-party or genuinely lone asset.
-			return $src;
+
+		if ( $manifest && ! empty( $manifest['files'][ $unmin_rel ] ) ) {
+			// Known paired asset. Prefer the staged unminified override while
+			// the debug gate is on; otherwise fall back to the minified twin
+			// (the unminified file is stripped from the shipped zip).
+			if ( self::is_active() ) {
+				$override = self::get_override_url( $unmin_rel );
+				if ( $override ) {
+					return $override . $query;
+				}
+			}
+
+			if ( $is_minified ) {
+				// URL already points at the .min — nothing better to do.
+				return $src;
+			}
+
+			return $prefix . $base . '.min.' . $ext . $query;
 		}
 
-		if ( self::is_active() ) {
-			$override = self::get_override_url( $unmin_rel );
-			if ( $override ) {
-				return $override . $query;
+		// Manifest missing/invalid (e.g. a `grunt build_test` sentinel build),
+		// or the asset isn't a known pair. We can't consult the manifest, but
+		// we can still avoid a hard 404: if this URL points at an unminified
+		// file that ISN'T on disk while its `.min` twin IS, the unminified twin
+		// was stripped from the zip — rewrite to `.min` so the page still
+		// loads. Manifest-free and precise: a genuine lone unminified asset
+		// (no `.min` sibling) is left untouched.
+		if ( ! $is_minified ) {
+			$plugin_dir = trailingslashit( BP_PLUGIN_DIR );
+			if (
+				! file_exists( $plugin_dir . $unmin_rel )
+				&& file_exists( $plugin_dir . $base . '.min.' . $ext )
+			) {
+				return $prefix . $base . '.min.' . $ext . $query;
 			}
 		}
 
-		// At this point we know the URL points at a paired asset:
-		// - In production: the unminified twin was stripped, so any
-		// enqueue that references `foo.css` would 404. Rewrite to
-		// `foo.min.css` to keep the page loading.
-		// - In debug with no override yet: same rewrite, because the
-		// fetcher hasn't staged the override and the unminified file
-		// also isn't on disk.
-		if ( $is_minified ) {
-			// URL already points at the .min — nothing better to do.
-			return $src;
-		}
-
-		return $prefix . $base . '.min.' . $ext . $query;
+		return $src;
 	}
 
 	/**
@@ -363,8 +392,14 @@ class BB_Debug_Asset_Fetcher {
 
 		$current_version = isset( $manifest['plugin_version'] ) ? $manifest['plugin_version'] : '';
 		$cached_version  = get_option( self::VERSION_OPTION, '' );
-		if ( $current_version && $current_version === $cached_version ) {
-			return; // Already staged for this version.
+		// Skip only when the DB says this version is staged AND the restored
+		// files are actually still on disk. The restore lives inside the plugin
+		// dir, which WordPress wipes and re-extracts on every update/reinstall,
+		// so the version option alone can claim "staged" while the files are
+		// gone. The disk check makes a plugin-dir replacement (hook fired or
+		// not, version changed or not) always re-trigger a fresh download.
+		if ( $current_version && $current_version === $cached_version && self::restore_present( $manifest ) ) {
+			return;
 		}
 
 		// Lock so concurrent admin_init runs don't all hammer GitHub.
@@ -415,8 +450,35 @@ class BB_Debug_Asset_Fetcher {
 	}
 
 	/**
+	 * Cheap check that a previously-recorded restore is still physically present
+	 * in the plugin directory.
+	 *
+	 * Restored files live inside the plugin dir, which WordPress wipes and
+	 * re-extracts on every update/reinstall, so the DB version option can claim
+	 * "staged" while the files are actually gone. We confirm by stat-ing a
+	 * single representative manifest entry: every manifest file is stripped from
+	 * the shipped zip, so if even one is present the restore ran; if it's
+	 * missing the plugin dir was replaced and a fresh fetch is needed.
+	 *
+	 * @since BuddyBoss 3.0.3
+	 *
+	 * @param array $manifest Validated manifest.
+	 * @return bool True when the restore is present on disk.
+	 */
+	private static function restore_present( $manifest ) {
+		if ( empty( $manifest['files'] ) || ! is_array( $manifest['files'] ) ) {
+			return false;
+		}
+
+		$rel    = (string) array_key_first( $manifest['files'] );
+		$target = self::build_target_path( $rel );
+
+		return $target && is_readable( $target );
+	}
+
+	/**
 	 * Hook handler: when our plugin is updated, schedule a re-fetch so the
-	 * staged uploads track the new version.
+	 * restored plugin files track the new version (WP wipes them on update).
 	 *
 	 * Fires from `upgrader_process_complete` once WordPress has already
 	 * swapped in the new plugin files (and therefore the new manifest).
@@ -603,13 +665,13 @@ class BB_Debug_Asset_Fetcher {
 
 	/**
 	 * Validate that a manifest-supplied relative path is safe to use under
-	 * the uploads directory. Rejects empty strings, absolute paths, parent
+	 * the plugin directory. Rejects empty strings, absolute paths, parent
 	 * traversal, NUL bytes, and any byte outside a conservative allowlist.
 	 *
 	 * @since BuddyBoss 3.0.3
 	 *
 	 * @param string $rel Manifest-relative path candidate.
-	 * @return bool True when the path is safe for use under the uploads tree.
+	 * @return bool True when the path is safe for use under the plugin tree.
 	 */
 	private static function validate_rel_path( $rel ) {
 		if ( ! is_string( $rel ) || '' === $rel ) {
@@ -662,7 +724,7 @@ class BB_Debug_Asset_Fetcher {
 			return false;
 		}
 
-		$abs = self::build_target_path( $manifest['plugin_version'], $rel_path );
+		$abs = self::build_target_path( $rel_path );
 		if ( false === $abs || ! is_readable( $abs ) ) {
 			self::$override_cache[ $rel_path ] = false;
 			return false;
@@ -673,34 +735,27 @@ class BB_Debug_Asset_Fetcher {
 	}
 
 	/**
-	 * Build the absolute uploads-side path for a manifest entry, enforcing
-	 * that the resolved location stays inside the dedicated debug subtree.
+	 * Build the absolute restore path for a manifest entry inside the plugin
+	 * directory, enforcing that the resolved location stays under it.
 	 *
 	 * @since BuddyBoss 3.0.3
 	 *
-	 * @param string $version  Plugin version from the manifest.
-	 * @param string $rel_path Manifest-relative unminified path.
+	 * @param string $rel_path Manifest-relative path.
 	 * @return string|false Absolute path, or false on validation failure.
 	 */
-	private static function build_target_path( $version, $rel_path ) {
+	private static function build_target_path( $rel_path ) {
 		if ( ! self::validate_rel_path( $rel_path ) ) {
 			return false;
 		}
-		// Version namespace must match the same allowlist; we read it from
-		// the manifest, but defense-in-depth costs nothing here.
-		if ( ! preg_match( '#^[A-Za-z0-9_.\-]+$#', (string) $version ) ) {
-			return false;
-		}
 
-		$uploads = wp_get_upload_dir();
-		$base    = trailingslashit( $uploads['basedir'] ) . self::UPLOADS_SUBDIR . '/' . $version;
-		$target  = $base . '/' . $rel_path;
+		$base   = trailingslashit( BP_PLUGIN_DIR );
+		$target = $base . $rel_path;
 
 		// Belt and suspenders: even after the regex screen, sanity-check
-		// that the resolved path is still under $base. wp_normalize_path
+		// that the resolved path is still under the plugin dir. wp_normalize_path
 		// makes the prefix comparison cross-platform.
 		$norm_target = wp_normalize_path( $target );
-		$norm_base   = wp_normalize_path( $base ) . '/';
+		$norm_base   = wp_normalize_path( $base );
 		if ( 0 !== strpos( $norm_target, $norm_base ) ) {
 			return false;
 		}
@@ -741,7 +796,7 @@ class BB_Debug_Asset_Fetcher {
 				continue;
 			}
 
-			$target = self::build_target_path( $manifest['plugin_version'], $rel );
+			$target = self::build_target_path( $rel );
 			if ( false === $target ) {
 				$failures[] = array(
 					'rel'    => $rel,
@@ -857,8 +912,8 @@ class BB_Debug_Asset_Fetcher {
 		}
 		if ( empty( $wp_filesystem ) ) {
 			// Direct method only — we never prompt for FTP credentials
-			// because there's no UI here. Sites that can't write directly
-			// to uploads will surface the failure in the admin notice.
+			// because there's no UI here. Sites whose plugin directory isn't
+			// directly writable will surface the failure in the admin notice.
 			WP_Filesystem();
 		}
 		if ( empty( $wp_filesystem ) ) {

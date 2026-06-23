@@ -90,12 +90,23 @@ function main() {
 	}
 
 	var pairs     = pairFinder.findPairFiles( buildDir );
+	var assets    = pairFinder.findOffloadedAssets( buildDir );
 	var commitSha = captureCommitSha( buildDir );
 
+	// The manifest lists every file stripped from the zip that the runtime
+	// fetcher restores into the plugin under SCRIPT_DEBUG:
+	//   - unminified JS/CSS pairs (key = unminified rel path)
+	//   - offloaded images + woff2 fonts (key = asset rel path)
+	// All are fetched from the pinned production-branch commit and restored to
+	// their natural plugin paths so a debug install matches a dev checkout.
 	var files = Object.create( null );
 	for ( var i = 0; i < pairs.length; i++ ) {
 		var p = pairs[ i ];
 		files[ p.relUnmin ] = pairFinder.computeSha256( p.absUnmin );
+	}
+	for ( var j = 0; j < assets.length; j++ ) {
+		var a = assets[ j ];
+		files[ a.rel ] = pairFinder.computeSha256( a.abs );
 	}
 
 	var manifest = {
@@ -114,7 +125,9 @@ function main() {
 		'[generate-debug-manifest] wrote ' + manifestPath + '\n' +
 		'  plugin_version: ' + pluginVersion + '\n' +
 		'  commit_sha:     ' + commitSha + '\n' +
-		'  pair count:     ' + pairs.length + '\n'
+		'  pair count:     ' + pairs.length + '\n' +
+		'  asset count:    ' + assets.length + '\n' +
+		'  total files:    ' + Object.keys( files ).length + '\n'
 	);
 }
 

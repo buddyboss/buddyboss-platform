@@ -42,6 +42,22 @@ var crypto = require( 'crypto' );
 var EXCLUDED_TOP_LEVEL = [ 'vendor', 'node_modules', 'endpoints' ];
 
 /**
+ * Asset extensions that are offloaded to S3 and stripped from the zip
+ * (images + woff2 fonts). Kept in lockstep with BB_S3_Image_Offload::EXTENSIONS
+ * and the Gruntfile S3_OFFLOAD_STRIP_GLOBS. Listed in the debug manifest so the
+ * runtime fetcher can restore them into the plugin under SCRIPT_DEBUG.
+ */
+var OFFLOAD_EXTENSIONS = [ 'png', 'jpg', 'jpeg', 'gif', 'svg', 'webp', 'ico', 'bmp', 'woff2' ];
+
+/**
+ * Top-level dirs excluded from the offloaded-asset set. Unlike the JS/CSS pair
+ * set we DON'T exclude `endpoints/` here — its glyphicons font/images are
+ * offloaded to S3 and stripped, so they must be restorable too. `vendor/` and
+ * `node_modules/` carry no first-party offloaded assets and never ship.
+ */
+var OFFLOAD_EXCLUDED_TOP_LEVEL = [ 'vendor', 'node_modules' ];
+
+/**
  * Recursively walk a directory and return every regular file's path,
  * relative to the starting directory. Symlinks are not followed (to
  * avoid loops in misconfigured build trees).
@@ -179,6 +195,55 @@ function findPairFiles( rootDir ) {
 }
 
 /**
+ * Find every offloaded asset (image or woff2 font) under rootDir.
+ *
+ * These are stripped from the zip and served from S3 in production, but the
+ * runtime fetcher restores them into the plugin directory under SCRIPT_DEBUG so
+ * the install matches a dev checkout. Returned shape, per asset:
+ *   { rel: 'bp-core/images/foo.png', abs: '/abs/path/to/foo.png' }
+ *
+ * @param {string} rootDir Absolute path to walk.
+ * @returns {Array}
+ */
+function findOffloadedAssets( rootDir ) {
+	var absRoot = path.resolve( rootDir );
+
+	if ( ! fs.existsSync( absRoot ) ) {
+		throw new Error( 'findOffloadedAssets: directory does not exist: ' + absRoot );
+	}
+
+	var assets = [];
+	var allFiles = walkFiles( absRoot );
+
+	for ( var i = 0; i < allFiles.length; i++ ) {
+		var rel = path.relative( absRoot, allFiles[ i ] ).split( path.sep ).join( '/' );
+
+		var firstSlash = rel.indexOf( '/' );
+		var topSegment = firstSlash === -1 ? rel : rel.substring( 0, firstSlash );
+		if ( OFFLOAD_EXCLUDED_TOP_LEVEL.indexOf( topSegment ) !== -1 ) {
+			continue;
+		}
+
+		var dot = rel.lastIndexOf( '.' );
+		if ( dot === -1 ) {
+			continue;
+		}
+		var ext = rel.substring( dot + 1 ).toLowerCase();
+		if ( OFFLOAD_EXTENSIONS.indexOf( ext ) === -1 ) {
+			continue;
+		}
+
+		assets.push( { rel: rel, abs: allFiles[ i ] } );
+	}
+
+	assets.sort( function ( a, b ) {
+		return a.rel < b.rel ? -1 : ( a.rel > b.rel ? 1 : 0 );
+	} );
+
+	return assets;
+}
+
+/**
  * Compute the SHA-256 of a file, returned as 'sha256:<hex>'.
  *
  * The prefix is intentional — the runtime manifest stores it verbatim so
@@ -195,9 +260,11 @@ function computeSha256( filePath ) {
 }
 
 module.exports = {
-	findPairFiles:      findPairFiles,
-	computeSha256:      computeSha256,
-	EXCLUDED_TOP_LEVEL: EXCLUDED_TOP_LEVEL
+	findPairFiles:       findPairFiles,
+	findOffloadedAssets: findOffloadedAssets,
+	computeSha256:       computeSha256,
+	EXCLUDED_TOP_LEVEL:  EXCLUDED_TOP_LEVEL,
+	OFFLOAD_EXTENSIONS:  OFFLOAD_EXTENSIONS
 };
 
 /**

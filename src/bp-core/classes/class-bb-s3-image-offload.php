@@ -217,14 +217,22 @@ class BB_S3_Image_Offload {
 	 * @return bool
 	 */
 	public function is_enabled() {
+		// Stand down while the debug-asset fetcher is active (WP_DEBUG &&
+		// SCRIPT_DEBUG). In that mode BB_Debug_Asset_Fetcher restores the
+		// original images and woff2 fonts into the plugin directory, so every
+		// asset must be served locally — exactly like a dev checkout — and
+		// nothing should be redirected to S3.
+		$enabled = ! ( defined( 'WP_DEBUG' ) && WP_DEBUG && defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG );
+
 		/**
 		 * Filters whether Platform images are served from the external S3 bucket.
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
-		 * @param bool $enabled Default true.
+		 * @param bool $enabled Default true, except false while WP_DEBUG && SCRIPT_DEBUG
+		 *                       are active (assets are restored and served locally).
 		 */
-		return (bool) apply_filters( 'bb_s3_image_offload_enabled', true );
+		return (bool) apply_filters( 'bb_s3_image_offload_enabled', $enabled );
 	}
 
 	/**
