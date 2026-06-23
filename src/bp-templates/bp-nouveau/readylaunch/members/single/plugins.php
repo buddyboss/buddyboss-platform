@@ -27,12 +27,12 @@ if ( has_action( 'bp_template_title' ) ) {
 	<?php
 }
 
-// Check if we're on a WC4BP shop page and load our template directly
-if ( bb_is_readylaunch_enabled() && class_exists( 'WC4BP_Manager' ) && bp_is_current_component( wc4bp_Manager::get_shop_slug() ) ) {
+// Check if we're on a WC4BP shop page and load our template directly.
+if ( bb_is_readylaunch_enabled() && class_exists( 'WC4BP_Manager' ) && bp_is_current_component( WC4BP_Manager::get_shop_slug() ) ) {
 	global $bp;
 	$current_action = sanitize_file_name( bp_current_action() );
-	
-	// Special handling for orders -> view-order
+
+	// Special handling for orders -> view-order.
 	if ( 'orders' === $current_action && ! empty( $bp->action_variables ) ) {
 		foreach ( $bp->action_variables as $var ) {
 			if ( 'view-order' === $var ) {
@@ -41,11 +41,11 @@ if ( bb_is_readylaunch_enabled() && class_exists( 'WC4BP_Manager' ) && bp_is_cur
 			}
 		}
 	}
-	
+
 	if ( ! empty( $current_action ) && preg_match( '/^[a-z][a-z0-9_-]*$/', $current_action ) ) {
 		$shop_template_name = 'shop/member/' . $current_action . '.php';
-		$plugin_dir = buddypress()->plugin_dir;
-		$plugin_dir = rtrim( $plugin_dir, '/' ) . '/';
+		$plugin_dir         = buddypress()->plugin_dir;
+		$plugin_dir         = rtrim( $plugin_dir, '/' ) . '/';
 
 		if ( false !== strpos( $plugin_dir, '/src/' ) ) {
 			$readylaunch_template_path = $plugin_dir . 'bp-templates/bp-nouveau/readylaunch/wc4bp/' . $shop_template_name;
@@ -56,15 +56,15 @@ if ( bb_is_readylaunch_enabled() && class_exists( 'WC4BP_Manager' ) && bp_is_cur
 		if ( file_exists( $readylaunch_template_path ) ) {
 			include $readylaunch_template_path;
 		} else {
-			// Fall back to normal hook system
+			// Fall back to normal hook system.
 			bp_nouveau_plugin_hook( 'content' );
 		}
 	} else {
-		// Fall back to normal hook system if action is invalid or empty
+		// Fall back to normal hook system if action is invalid or empty.
 		bp_nouveau_plugin_hook( 'content' );
 	}
 } else {
-	// Not a WC4BP shop page, use normal hook system
+	// Not a WC4BP shop page, use normal hook system.
 	bp_nouveau_plugin_hook( 'content' );
 }
 

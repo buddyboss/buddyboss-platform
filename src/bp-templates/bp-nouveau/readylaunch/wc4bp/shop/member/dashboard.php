@@ -6,7 +6,7 @@
  *
  * @package BuddyBoss\Template
  * @subpackage BP_Nouveau\ReadyLaunch\WC4BP
- * @since BuddyBoss 2.9.00
+ * @since BuddyBoss [BBVERSION]
  * @version 1.0.0
  */
 
@@ -18,9 +18,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 <div class="woocommerce woocommerce--bb-rl">
 	<p>
 		<?php
-		/* translators: 1: Orders URL 2: Address URL 3: Account URL. */
-		$dashboard_desc = __( 'On this page you can find all the content added by third-party plugins within Woocommerce. In case the tab you want is not shown, we recommend going to <strong>Woocommerce - Settings - Advanced</strong> and checking the configuration of the endpoitns', 'buddyboss' );
-		echo esc_html( $dashboard_desc );
+		$dashboard_desc = __( 'On this page you can find all the content added by third-party plugins within WooCommerce. In case the tab you want is not shown, we recommend going to <strong>WooCommerce - Settings - Advanced</strong> and checking the configuration of the endpoints', 'buddyboss' );
+		echo wp_kses( $dashboard_desc, array( 'strong' => array() ) );
 		?>
 	</p>
 

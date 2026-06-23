@@ -2,7 +2,7 @@
 /**
  * ReadyLaunch WC4BP (WooCommerce BuddyPress Integration) Helper Functions
  *
- * @since   BuddyBoss 2.9.00
+ * @since   BuddyBoss [BBVERSION]
  * @package BuddyBoss\Core
  */
 
@@ -15,14 +15,14 @@ defined( 'ABSPATH' ) || exit;
  * This class provides helper functions for WC4BP integration
  * when using ReadyLaunch templates without BuddyBoss theme.
  *
- * @since BuddyBoss 2.9.00
+ * @since BuddyBoss [BBVERSION]
  */
 class BB_Readylaunch_WC4BP_Helper {
 
 	/**
 	 * The single instance of the class.
 	 *
-	 * @since BuddyBoss 2.9.00
+	 * @since BuddyBoss [BBVERSION]
 	 * @var BB_Readylaunch_WC4BP_Helper
 	 */
 	protected static $instance = null;
@@ -32,11 +32,11 @@ class BB_Readylaunch_WC4BP_Helper {
 	 *
 	 * Ensures only one instance of BB_Readylaunch_WC4BP_Helper is loaded or can be loaded.
 	 *
-	 * @since BuddyBoss 2.9.00
+	 * @since BuddyBoss [BBVERSION]
 	 * @static
 	 * @return BB_Readylaunch_WC4BP_Helper - Main instance.
 	 */
-	public static function instance(): BB_Readylaunch_WC4BP_Helper {
+	public static function instance() {
 		if ( is_null( self::$instance ) ) {
 			self::$instance = new self();
 		}
@@ -47,15 +47,15 @@ class BB_Readylaunch_WC4BP_Helper {
 	/**
 	 * Constructor.
 	 *
-	 * @since BuddyBoss 2.9.00
+	 * @since BuddyBoss [BBVERSION]
 	 */
 	public function __construct() {
-		// Register Readylaunch template stack for WC4BP templates
-		// This must happen before templates are searched
+		// Register Readylaunch template stack for WC4BP templates.
+		// This must happen before templates are searched.
 		add_action( 'bp_loaded', array( $this, 'bb_rl_wc4bp_register_template_stack' ), 5 );
-		
-		// Also register immediately in case bp_loaded already fired
-		// Only execute if BuddyPress is loaded and required functions are available
+
+		// Also register immediately in case bp_loaded already fired.
+		// Only execute if BuddyPress is loaded and required functions are available.
 		if ( did_action( 'bp_loaded' ) && function_exists( 'bp_register_template_stack' ) ) {
 			$this->bb_rl_wc4bp_register_template_stack();
 		}
@@ -64,39 +64,37 @@ class BB_Readylaunch_WC4BP_Helper {
 	/**
 	 * Register Readylaunch template stack for WC4BP templates.
 	 *
-	 * @since BuddyBoss 2.9.00
+	 * @since BuddyBoss [BBVERSION]
 	 */
 	public function bb_rl_wc4bp_register_template_stack() {
-		// Only process if Readylaunch is enabled
+		// Only process if Readylaunch is enabled.
 		if ( ! bb_is_readylaunch_enabled() ) {
 			return;
 		}
 
-		// Register Readylaunch WC4BP template directory at priority 15 (higher than WC4BP's 14)
-		// This ensures Readylaunch templates are checked before WC4BP's default templates
+		// Register Readylaunch WC4BP template directory at priority 15 (higher than WC4BP's 14).
+		// This ensures Readylaunch templates are checked before WC4BP's default templates.
 		bp_register_template_stack( array( $this, 'bb_rl_wc4bp_get_template_directory' ), 15 );
 	}
 
 	/**
 	 * Get Readylaunch WC4BP template directory.
 	 *
-	 * @since BuddyBoss 2.9.00
+	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @return string Template directory path.
 	 */
 	public function bb_rl_wc4bp_get_template_directory() {
 		$plugin_dir = buddypress()->plugin_dir;
 		$plugin_dir = rtrim( $plugin_dir, '/' ) . '/';
-		
-		// Check if plugin_dir already includes 'src/' (it does based on logs)
+
+		// Check if plugin_dir already includes 'src/'.
 		if ( false !== strpos( $plugin_dir, '/src/' ) ) {
-			// plugin_dir already includes src/, so use bp-templates directly
+			// plugin_dir already includes src/, so use bp-templates directly.
 			return $plugin_dir . 'bp-templates/bp-nouveau/readylaunch/wc4bp';
 		} else {
-			// plugin_dir doesn't include src/, so add it
+			// plugin_dir doesn't include src/, so add it.
 			return $plugin_dir . 'src/bp-templates/bp-nouveau/readylaunch/wc4bp';
 		}
 	}
-
 }
-

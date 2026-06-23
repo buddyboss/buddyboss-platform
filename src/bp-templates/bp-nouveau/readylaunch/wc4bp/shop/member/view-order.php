@@ -6,7 +6,7 @@
  *
  * @package BuddyBoss\Template
  * @subpackage BP_Nouveau\ReadyLaunch\WC4BP
- * @since BuddyBoss 2.9.00
+ * @since BuddyBoss [BBVERSION]
  * @version 1.0.0
  */
 
@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-/** @var WP_Post $post */
+// Global WP_Post object used by the WooCommerce order template.
 global $bp, $wp_query, $post;
 $post->post_name     = 'view-order';
 $post->post_title    = __( 'Order Details', 'buddyboss' );
@@ -29,7 +29,7 @@ $bp_action_variables = $bp->action_variables;
 			woocommerce_account_view_order( $order_id );
 		}
 	} else {
-		echo esc_attr( sprintf( '<div class="woocommerce-error">%s</div>', __( 'Please enter a valid order ID', 'buddyboss' ) ) );
+		printf( '<div class="woocommerce-error">%s</div>', esc_html__( 'Please enter a valid order ID', 'buddyboss' ) );
 	}
 	?>
 </div>

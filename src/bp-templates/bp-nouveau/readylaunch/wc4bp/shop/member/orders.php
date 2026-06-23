@@ -6,7 +6,7 @@
  *
  * @package BuddyBoss\Template
  * @subpackage BP_Nouveau\ReadyLaunch\WC4BP
- * @since BuddyBoss 2.9.00
+ * @since BuddyBoss [BBVERSION]
  * @version 1.0.0
  */
 
