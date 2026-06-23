@@ -41,6 +41,7 @@ if ( bp_has_groups( 'type=invites&user_id=' . $bp_displayed_user_id ) ) {
 							if ( ! empty( $inviter ) ) : ?>
 								<span class="small">
 								<?php
+								/* translators: 1: inviter profile link, 2: time since the invitation. */
 								printf(
 									__( 'Invited by %1$s &middot; %2$s.', 'buddyboss' ),
 									sprintf(
