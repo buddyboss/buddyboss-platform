@@ -16,6 +16,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 // Global WP_Post object used by the WooCommerce order template.
 global $bp, $wp_query, $post;
+
+// Preserve the original post fields before overriding them for the order view,
+// so the global $post state isn't corrupted for hooks, sidebars, or anything
+// else that runs after this template.
+$bb_rl_original_post_name  = isset( $post->post_name ) ? $post->post_name : '';
+$bb_rl_original_post_title = isset( $post->post_title ) ? $post->post_title : '';
+
 $post->post_name     = 'view-order';
 $post->post_title    = __( 'Order Details', 'buddyboss' );
 $bp_action_variables = $bp->action_variables;
@@ -33,4 +40,9 @@ $bp_action_variables = $bp->action_variables;
 	}
 	?>
 </div>
+
+<?php
+// Restore the original post fields.
+$post->post_name  = $bb_rl_original_post_name;
+$post->post_title = $bb_rl_original_post_title;
 

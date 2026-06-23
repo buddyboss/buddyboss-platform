@@ -36,7 +36,7 @@ class BB_Readylaunch_WC4BP_Helper {
 	 * @static
 	 * @return BB_Readylaunch_WC4BP_Helper - Main instance.
 	 */
-	public static function instance() {
+	public static function instance(): BB_Readylaunch_WC4BP_Helper {
 		if ( is_null( self::$instance ) ) {
 			self::$instance = new self();
 		}
@@ -80,11 +80,16 @@ class BB_Readylaunch_WC4BP_Helper {
 	/**
 	 * Get Readylaunch WC4BP template directory.
 	 *
+	 * Static so it can be reused as the single source of truth for the
+	 * template path (e.g. by the members/single/plugins.php template) while
+	 * still serving as the template-stack callback registered above.
+	 *
 	 * @since BuddyBoss [BBVERSION]
+	 * @static
 	 *
 	 * @return string Template directory path.
 	 */
-	public function bb_rl_wc4bp_get_template_directory() {
+	public static function bb_rl_wc4bp_get_template_directory() {
 		$plugin_dir = buddypress()->plugin_dir;
 		$plugin_dir = rtrim( $plugin_dir, '/' ) . '/';
 

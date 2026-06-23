@@ -17,7 +17,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 <div class="woocommerce woocommerce--bb-rl">
 	<?php do_action( 'wc4bp_before_checkout_body' ); ?>
 
-	<?php echo do_shortcode( '[woocommerce_checkout]' ); ?>
+	<?php echo wp_kses_post( do_shortcode( '[woocommerce_checkout]' ) ); ?>
 
 	<?php do_action( 'wc4bp_after_checkout_body' ); ?>
 </div>

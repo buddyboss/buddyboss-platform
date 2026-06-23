@@ -16,7 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 ?>
 <div class="woocommerce woocommerce--bb-rl">
 	<?php do_action( 'wc4bp_before_downloads_body' ); ?>
-	<?php echo do_shortcode( '[downloads]' ); ?>
+	<?php echo wp_kses_post( do_shortcode( '[downloads]' ) ); ?>
 	<?php do_action( 'wc4bp_after_downloads_body' ); ?>
 </div>
 

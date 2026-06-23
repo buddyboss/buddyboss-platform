@@ -44,14 +44,13 @@ if ( bb_is_readylaunch_enabled() && class_exists( 'WC4BP_Manager' ) && bp_is_cur
 
 	if ( ! empty( $current_action ) && preg_match( '/^[a-z][a-z0-9_-]*$/', $current_action ) ) {
 		$shop_template_name = 'shop/member/' . $current_action . '.php';
-		$plugin_dir         = buddypress()->plugin_dir;
-		$plugin_dir         = rtrim( $plugin_dir, '/' ) . '/';
 
-		if ( false !== strpos( $plugin_dir, '/src/' ) ) {
-			$readylaunch_template_path = $plugin_dir . 'bp-templates/bp-nouveau/readylaunch/wc4bp/' . $shop_template_name;
-		} else {
-			$readylaunch_template_path = $plugin_dir . 'src/bp-templates/bp-nouveau/readylaunch/wc4bp/' . $shop_template_name;
+		// Resolve the template directory through the WC4BP helper so the path
+		// logic lives in a single place. Load the helper if it isn't already.
+		if ( ! class_exists( 'BB_Readylaunch_WC4BP_Helper' ) ) {
+			require_once buddypress()->compatibility_dir . '/class-bb-readylaunch-wc4bp-helper.php';
 		}
+		$readylaunch_template_path = trailingslashit( BB_Readylaunch_WC4BP_Helper::bb_rl_wc4bp_get_template_directory() ) . $shop_template_name;
 
 		if ( file_exists( $readylaunch_template_path ) ) {
 			include $readylaunch_template_path;
