@@ -441,22 +441,22 @@ class BP_Video {
 		}
 
 		if ( ! empty( $r['activity_id'] ) ) {
-			$where_conditions['activity'] = "m.activity_id = {$r['activity_id']}";
+			$where_conditions['activity'] = $wpdb->prepare( 'm.activity_id = %d', $r['activity_id'] );
 		}
 
 		// existing-video check to query video which has no albums assigned.
 		if ( ! empty( $r['album_id'] ) && 'existing-video' !== $r['album_id'] ) {
-			$where_conditions['album'] = "m.album_id = {$r['album_id']}";
+			$where_conditions['album'] = $wpdb->prepare( 'm.album_id = %d', $r['album_id'] );
 		} elseif ( ! empty( $r['album_id'] ) && 'existing-video' === $r['album_id'] ) {
 			$where_conditions['album'] = 'm.album_id = 0';
 		}
 
 		if ( ! empty( $r['user_id'] ) ) {
-			$where_conditions['user'] = "m.user_id = {$r['user_id']}";
+			$where_conditions['user'] = $wpdb->prepare( 'm.user_id = %d', $r['user_id'] );
 		}
 
 		if ( ! empty( $r['group_id'] ) ) {
-			$where_conditions['group'] = "m.group_id = {$r['group_id']}";
+			$where_conditions['group'] = $wpdb->prepare( 'm.group_id = %d', $r['group_id'] );
 		}
 
 		if ( ! empty( $r['privacy'] ) ) {

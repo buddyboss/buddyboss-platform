@@ -298,7 +298,11 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 							// Build the main search query with character and word search.
 							$data_clause_xprofile_table = "( SELECT field_id, user_id FROM {$bp->profile->table_name_data} WHERE ( ExtractValue(value, '//text()') LIKE %s AND field_id IN ( ";
 							$data_clause_xprofile_table .= implode( ',', $selected_xprofile_fields['char_search'] );
-							$data_clause_xprofile_table .= ") ) OR ( value REGEXP '[[:<:]]{$search_term}[[:>:]]' AND field_id IN ( ";
+							// Bind the REGEXP operand as a placeholder (filled by the
+							// $wpdb->prepare() below) instead of interpolating the raw
+							// search term into the SQL string literal, which sanitize_text_field
+							// does not make SQL-safe (single quotes survive).
+							$data_clause_xprofile_table .= ') ) OR ( value REGEXP %s AND field_id IN ( ';
 							$data_clause_xprofile_table .= implode( ',', $selected_xprofile_fields['word_search'] );
 							$data_clause_xprofile_table .= ') ) ';
 
@@ -310,14 +314,19 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 								if ( ! empty( $date_field_ids ) && ! empty( $date_values ) ) {
 									$date_sql = $this->bb_generate_date_search_sql( $date_values, $date_field_ids );
 									if ( ! empty( $date_sql ) ) {
-										$data_clause_xprofile_table .= ' OR ( ' . $date_sql . ' ) ';
+										// $date_sql is ALREADY prepared by bb_generate_date_search_sql()
+										// and can contain literal '%' (e.g. DATE_FORMAT '%m-%d'). Escape
+										// them to '%%' so the outer $wpdb->prepare() below treats them as
+										// literals and does not mistake them for placeholders (which would
+										// shift our %s args and make prepare() return '').
+										$data_clause_xprofile_table .= ' OR ( ' . str_replace( '%', '%%', $date_sql ) . ' ) ';
 									}
 								}
 							}
 
 							$data_clause_xprofile_table .= ' )';
 
-							$sql_xprofile        = $wpdb->prepare( $data_clause_xprofile_table, '%' . $search_term . '%' );
+							$sql_xprofile        = $wpdb->prepare( $data_clause_xprofile_table, '%' . $search_term . '%', '[[:<:]]' . $search_term . '[[:>:]]' );
 							$sql_xprofile_result = $wpdb->get_results( $sql_xprofile );
 
 							// check visiblity for field id with current user.

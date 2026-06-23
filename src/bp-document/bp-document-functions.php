@@ -3597,8 +3597,8 @@ function bp_get_attachment_document_id( $attachment_id = 0 ) {
 		return false;
 	}
 
-	// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery
-	$attachment_document_id = (int) $wpdb->get_var( "SELECT DISTINCT d.id FROM {$bp->document->table_name} d WHERE d.attachment_id = {$attachment_id}" );
+	// phpcs:ignore WordPress.DB.DirectDatabaseQuery
+	$attachment_document_id = (int) $wpdb->get_var( $wpdb->prepare( "SELECT DISTINCT d.id FROM {$bp->document->table_name} d WHERE d.attachment_id = %d", (int) $attachment_id ) );
 
 	return $attachment_document_id;
 }

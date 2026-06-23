@@ -317,11 +317,11 @@ class BP_Video_Album {
 		}
 
 		if ( ! empty( $r['user_id'] ) ) {
-			$where_conditions['user'] = "m.user_id = {$r['user_id']}";
+			$where_conditions['user'] = $wpdb->prepare( 'm.user_id = %d', $r['user_id'] );
 		}
 
 		if ( ! empty( $r['group_id'] ) ) {
-			$where_conditions['group'] = "m.group_id = {$r['group_id']}";
+			$where_conditions['group'] = $wpdb->prepare( 'm.group_id = %d', $r['group_id'] );
 		}
 
 		if ( ! empty( $r['privacy'] ) ) {

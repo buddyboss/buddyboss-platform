@@ -262,7 +262,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 				'search_term'   => $_REQUEST['search_term'],
 				// How many results should be displyed in autosuggest?
 				// @todo: give a settings field for this value.
-				'ajax_per_page' => $_REQUEST['per_page'],
+				'ajax_per_page' => isset( $_REQUEST['per_page'] ) ? absint( wp_unslash( $_REQUEST['per_page'] ) ) : 0, // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 				'count_total'   => true,
 				'template_type' => 'ajax',
 			);
@@ -541,8 +541,11 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 					$pre_search_query = "SELECT * FROM ( {$pre_search_query} ) as t1 ORDER BY t1.entry_date DESC, t1.id DESC";
 				}
 
-				if ( isset( $args['ajax_per_page'] ) && $args['ajax_per_page'] > 0 ) {
-					$pre_search_query .= " LIMIT {$args['ajax_per_page']} ";
+				if ( isset( $args['ajax_per_page'] ) && absint( $args['ajax_per_page'] ) > 0 ) {
+					// Cast to int at the sink: ajax_per_page is request-derived and
+					// interpolated into the LIMIT clause, so it must never carry
+					// anything but a positive integer.
+					$pre_search_query .= ' LIMIT ' . absint( $args['ajax_per_page'] ) . ' ';
 				}
 
 				$results = $wpdb->get_results( $pre_search_query );
@@ -622,6 +625,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 							$start_html          = "<div class='results-group results-group-{$type} " . apply_filters( 'bp_search_class_search_wrap', 'bp-search-results-wrap', $label ) . "'>"
 										  . "<header class='results-group-header clearfix'>"
 										  . "<h3 class='results-group-title'><span>" . apply_filters( 'bp_search_label_search_type', $label ) . '</span></h3>'
+										  /* translators: %d: total number of results. */
 										  . "<span class='total-results'>" . sprintf( _n( '%d result', '%d results', $total_results, 'buddyboss' ), $total_results ) . '</a>'
 										  . '</header>'
 										  . "<ul id='{$type}-stream' class='item-list {$type}-list bp-list " . apply_filters( 'bp_search_class_search_list', 'bp-search-results-list', $label ) . "'>";
@@ -637,6 +641,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 
 							if ( $total_results > $args['number'] ) {
 								$end_html .= "<footer class='results-group-footer'>";
+								/* translators: %d: number of additional results not shown. */
 								$end_html .= "<a href='" . $category_search_url . "' class='view-all-link'>" .
 											   sprintf( esc_html__( 'View (%d) more', 'buddyboss' ), $total_results - $args['number'] ) .
 											 '</a>';
@@ -697,8 +702,11 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 					$pre_search_query = $obj->union_sql( $args['search_term'] ) . ' ORDER BY relevance DESC, entry_date DESC ';
 				}
 
-				if ( isset( $args['ajax_per_page'] ) && $args['ajax_per_page'] > 0 ) {
-					$pre_search_query .= " LIMIT {$args['ajax_per_page']} ";
+				if ( isset( $args['ajax_per_page'] ) && absint( $args['ajax_per_page'] ) > 0 ) {
+					// Cast to int at the sink: ajax_per_page is request-derived and
+					// interpolated into the LIMIT clause, so it must never carry
+					// anything but a positive integer.
+					$pre_search_query .= ' LIMIT ' . absint( $args['ajax_per_page'] ) . ' ';
 				} elseif ( $args['per_page'] > 0 ) {
 					$offset           = ( $args['current_page'] * $args['per_page'] ) - $args['per_page'];
 					$pre_search_query .= " LIMIT {$offset}, {$args['per_page']} ";

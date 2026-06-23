@@ -614,6 +614,20 @@ class BP_REST_Invites_Endpoint extends WP_REST_Controller {
 						'status' => 404,
 					)
 				);
+			} elseif (
+				bp_loggedin_user_id() !== (int) $invite->post_author
+				&& ! bp_current_user_can( 'bp_moderate' )
+			) {
+				// Object-level authorization: a member may only revoke their own
+				// invites. Site moderators may revoke any. Without this, any
+				// logged-in user could delete another user's invite (IDOR).
+				$retval = new WP_Error(
+					'bp_rest_authorization_required',
+					__( 'Sorry, you are not allowed to revoke this invite.', 'buddyboss' ),
+					array(
+						'status' => rest_authorization_required_code(),
+					)
+				);
 			}
 		}
 

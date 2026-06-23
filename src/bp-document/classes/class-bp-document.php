@@ -407,10 +407,11 @@ class BP_Document {
 		// Check the status of document item.
 		if ( ! empty( $r['status'] ) ) {
 			if ( is_array( $r['status'] ) ) {
-				$status                     = "'" . implode( "', '", $r['status'] ) . "'";
-				$where_conditions['status'] = "d.status IN ({$status})";
+				$status_values              = array_values( (array) $r['status'] );
+				$placeholders               = implode( ', ', array_fill( 0, count( $status_values ), '%s' ) );
+				$where_conditions['status'] = $wpdb->prepare( "d.status IN ({$placeholders})", $status_values ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQLPlaceholders.ReplacementsButNoPlaceholders
 			} else {
-				$where_conditions['status'] = "d.status = '{$r['status']}'";
+				$where_conditions['status'] = $wpdb->prepare( 'd.status = %s', $r['status'] );
 			}
 		}
 

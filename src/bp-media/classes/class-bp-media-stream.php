@@ -107,20 +107,20 @@ class BP_Media_Stream {
 			$c_start = $this->start;
 			$c_end   = $this->end;
 
-			// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash
-			list( , $range ) = explode( '=', $_SERVER['HTTP_RANGE'], 2 );
+			$http_range = sanitize_text_field( wp_unslash( $_SERVER['HTTP_RANGE'] ) );
+			list( , $range ) = explode( '=', $http_range, 2 );
 			if ( strpos( $range, ',' ) !== false ) {
 				header( 'HTTP/1.1 416 Requested Range Not Satisfiable' );
 				header( "Content-Range: bytes $this->start-$this->end/$this->size" );
 				exit;
 			}
 			if ( '-' === $range ) {
-				$c_start = $this->size - substr( $range, 1 );
+				$c_start = $this->size - (int) substr( $range, 1 );
 			} else {
 				$range   = explode( '-', $range );
-				$c_start = $range[0];
+				$c_start = (int) $range[0];
 
-				$c_end = ( isset( $range[1] ) && is_numeric( $range[1] ) ) ? $range[1] : $c_end;
+				$c_end = ( isset( $range[1] ) && is_numeric( $range[1] ) ) ? (int) $range[1] : $c_end;
 			}
 			$c_end = ( $c_end > $this->end ) ? $this->end : $c_end;
 			if ( $c_start > $c_end || $c_start > $this->size - 1 || $c_end >= $this->size ) {
