@@ -183,6 +183,7 @@ function bp_nouveau_messages_localize_scripts( $params = array() ) {
 		'howtoBulk'                  => __( 'Use the select box to define your bulk action and click on the &#10003; button to apply.', 'buddyboss' ),
 		'toOthers'                   => array(
 			'one'   => __( '1 other', 'buddyboss' ),
+			/* translators: %d: number of other recipients. */
 			'more'  => __( '%d others', 'buddyboss' ),
 			'other' => __( 'others', 'buddyboss' ),
 		),

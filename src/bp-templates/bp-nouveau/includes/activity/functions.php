@@ -244,6 +244,7 @@ function bp_nouveau_activity_localize_scripts( $params = array() ) {
 	}
 
 	$activity_strings = array(
+		/* translators: %s: logged-in user display name. */
 		'whatsnewPlaceholder' => sprintf( __( 'Share what\'s on your mind, %s...', 'buddyboss' ), bp_core_get_user_displayname( bp_loggedin_user_id() ) ),
 		'whatsnewLabel'       => esc_html__( 'Post what\'s new', 'buddyboss' ),
 		'whatsnewpostinLabel' => esc_html__( 'Post in', 'buddyboss' ),

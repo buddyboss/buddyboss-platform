@@ -172,6 +172,7 @@ function bp_nouveau_groups_localize_scripts( $params = array() ) {
 		'add_invite_tooltip'      => __( 'Send Invite', 'buddyboss' ),
 		'invites_form_reset'      => __( 'Group invitations cleared. Please use one of the available tabs to select members to invite.', 'buddyboss' ),
 		'invites_sending'         => __( 'Sending group invitations. Please wait.', 'buddyboss' ),
+		/* translators: %s: member name. */
 		'removeUserInvite'        => __( 'Cancel invitation %s', 'buddyboss' ),
 		'all_member_invited'      => __( 'All members of this group are invited.', 'buddyboss' ),
 		'member_invite_info_text' => __( 'Select members to invite by clicking the + button next to each member.', 'buddyboss' ),
@@ -1244,6 +1245,7 @@ function bp_nouveau_groups_messages_localize_scripts( $params = array() ) {
 		'invites_form_separate' => __( 'Select group members to message by clicking the + button next to each member. Once you\'ve made a selection, click "Send Message" to create a new group message.', 'buddyboss' ),
 		'invites_form_reset'    => __( 'Group invitations cleared. Please use one of the available tabs to select members to invite.', 'buddyboss' ),
 		'invites_sending'       => __( 'Sending group invitations. Please wait.', 'buddyboss' ),
+		/* translators: %s: member name. */
 		'removeUserInvite'      => __( 'Cancel invitation %s', 'buddyboss' ),
 		'feedback_select_all'   => __( 'This message will be delivered to all members of this group you can message.', 'buddyboss' ),
 		'feedback_individual'   => __( 'Select individual recipients by clicking the + button next to each member.', 'buddyboss' ),

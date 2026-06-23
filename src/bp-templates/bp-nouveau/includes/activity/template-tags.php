@@ -324,8 +324,10 @@ function bp_nouveau_activity_state() {
 				<span class="comments-count" data-comments-count="<?php echo esc_attr( $comment_count ); ?>">
 					<?php
 					if ( $comment_count > 1 || 0 === $comment_count ) {
+						/* translators: %d: number of comments. */
 						printf( _x( '%d Comments', 'placeholder: activity comments count', 'buddyboss' ), $comment_count );
 					} else {
+						/* translators: %d: number of comments. */
 						printf( _x( '%d Comment', 'placeholder: activity comment count', 'buddyboss' ), $comment_count );
 					}
 					?>

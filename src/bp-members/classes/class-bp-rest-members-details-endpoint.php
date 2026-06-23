@@ -1519,6 +1519,7 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 			'registered_date'    => bp_rest_prepare_date_response( $user->user_registered ),
 			'profile_name'       => bp_core_get_user_displayname( $user_id ),
 			'last_activity'      => function_exists( 'bp_get_last_activity' ) ? bp_get_last_activity( $user_id ) : '',
+			/* translators: %d: number of followers. */
 			'followers'          => sprintf( _n( '%d follower', '%d followers', $followers_count, 'buddyboss' ), $followers_count ),
 			'avatar_urls'        => $avatar_urls,
 			'message_url'        => wp_specialchars_decode( $message_url ),

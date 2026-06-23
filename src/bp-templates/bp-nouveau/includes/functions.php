@@ -1003,6 +1003,7 @@ function bp_nouveau_get_user_feedback( $feedback_id = '' ) {
 			),
 			'member-wp-profile-none'            => array(
 				'type'    => 'info',
+				/* translators: %s: member display name. */
 				'message' => __( '%s did not save any profile information yet.', 'buddyboss' ),
 			),
 			'member-delete-account'             => array(
@@ -1158,7 +1159,7 @@ function bp_nouveau_get_user_feedback( $feedback_id = '' ) {
 			$feedback_messages['member-notifications-none']['message'] = __( 'You have no notifications.', 'buddyboss' );
 		}
 	} elseif ( 'member-wp-profile-none' === $feedback_id && bp_is_user_profile() ) {
-		$feedback_messages['member-wp-profile-none']['message'] = sprintf( $feedback_messages['member-wp-profile-none']['message'], bp_get_displayed_user_fullname() );
+		$feedback_messages['member-wp-profile-none']['message'] = sprintf( /* translators: %s: member display name. */ $feedback_messages['member-wp-profile-none']['message'], bp_get_displayed_user_fullname() );
 	} elseif ( 'member-delete-account' === $feedback_id && bp_is_my_profile() ) {
 		$feedback_messages['member-delete-account']['message'] = __( 'Deleting your account will delete all of the content you have created. It will be completely irrecoverable.', 'buddyboss' );
 	} elseif ( 'member-activity-loading' === $feedback_id && bp_is_my_profile() ) {

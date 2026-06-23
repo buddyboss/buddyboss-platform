@@ -685,6 +685,7 @@ function bb_moderation_admin_repair_old_moderation_data() {
 
 	if ( ! empty( $moderated_activities ) ) {
 		$offset          = bb_moderation_update_suspend_data( $moderated_activities, $offset );
+		/* translators: %s: number of moderation items updated. */
 		$records_updated = sprintf( __( '%s moderation item updated successfully.', 'buddyboss' ), bp_core_number_format( $offset ) );
 
 		return array(

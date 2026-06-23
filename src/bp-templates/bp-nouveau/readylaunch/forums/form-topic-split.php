@@ -52,7 +52,7 @@ defined( 'ABSPATH' ) || exit;
 								<div class="bb-rl-forum-fieldset">
 									<div class="bp-radio-wrap">
 										<input name="bbp_topic_split_option" id="bbp_topic_split_option_reply" class="bs-styled-radio" type="radio" checked="checked" value="reply" tabindex="<?php bbp_tab_index(); ?>" />
-										<label for="bbp_topic_split_option_reply"><?php printf( wp_kses_post( __( 'New discussion in <strong>%s</strong> titled:', 'buddyboss' ) ), bbp_get_forum_title( bbp_get_topic_forum_id( bbp_get_topic_id() ) ) ); ?></label>
+										<label for="bbp_topic_split_option_reply"><?php /* translators: %s: forum title. */ printf( wp_kses_post( __( 'New discussion in <strong>%s</strong> titled:', 'buddyboss' ) ), bbp_get_forum_title( bbp_get_topic_forum_id( bbp_get_topic_id() ) ) ); ?></label>
 									</div>
 									<input type="text" id="bbp_topic_split_destination_title" value="<?php /* translators: %s: Topic title */ printf( esc_attr__( 'Split: %s', 'buddyboss' ), wp_kses_post( bbp_get_topic_title() ) ); ?>" tabindex="<?php bbp_tab_index(); ?>" size="35" name="bbp_topic_split_destination_title" />
 								</div>

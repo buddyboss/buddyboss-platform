@@ -936,6 +936,7 @@ function bp_nouveau_get_groups_buttons( $args = array() ) {
 					'rel'   => '',
 					'title' => '',
 				),
+				/* translators: %s: moderator singular role label. */
 				'link_text'         => sprintf( __( 'Promote to %s', 'buddyboss' ), get_group_role_label( $group->id, 'moderator_singular_label_name' ) ),
 			),
 			'promote_admin' => array(
@@ -945,6 +946,7 @@ function bp_nouveau_get_groups_buttons( $args = array() ) {
 				'must_be_logged_in' => true,
 				'parent_element'    => $parent_element,
 				'button_element'    => $button_element,
+				/* translators: %s: organizer singular role label. */
 				'link_text'         => sprintf( __( 'Promote to co-%s', 'buddyboss' ), strtolower( get_group_role_label( $group->id, 'organizer_singular_label_name' ) ) ),
 				'parent_attr'       => array(
 					'id'    => '',
