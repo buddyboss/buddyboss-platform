@@ -428,7 +428,8 @@ span.atwho-inserted {
 }
 
 // Emoji Picker
-.emojionearea-standalone.emojionearea {
+.emojionearea-standalone.emojionearea,
+.bb-rl-emojionearea-theatre.emojionearea {
 
 	.emojionearea-picker {
 		border-radius: var(--bb-rl-radius-lg);

@@ -635,6 +635,10 @@ body.bb-rl-register {
 			}
 		}
 	}
+
+	.bb_recaptcha_v2_element_content {
+		margin: 0 0 var(--bb-rl-space-200);
+	}
 }
 
 .register-section {
@@ -1028,7 +1032,7 @@ html:has(.memberpressproduct-template-default.single.registration) {
 					cursor: pointer;
 					border-radius: var(--bb-rl-radius-md);
 					padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
-					transition: background-color 0.2s ease, bordfont/size/smer-color 0.2s ease, color 0.2s ease;
+					transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
 					text-decoration: none;
 					background-color: var(--bb-rl-background-brand-primary-color);
 					color: var(--bb-rl-text-white-color);

@@ -17,7 +17,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /** @var WP_Post $post */
 global $bp, $wp_query, $post;
 $post->post_name     = 'view-order';
-$post->post_title    = __( 'Order Details', 'wc4bp' );
+$post->post_title    = __( 'Order Details', 'buddyboss' );
 $bp_action_variables = $bp->action_variables;
 ?>
 
@@ -29,7 +29,7 @@ $bp_action_variables = $bp->action_variables;
 			woocommerce_account_view_order( $order_id );
 		}
 	} else {
-		echo esc_attr( sprintf( '<div class="woocommerce-error">%s</div>', __( 'Please enter a valid order ID', 'wc4bp' ) ) );
+		echo esc_attr( sprintf( '<div class="woocommerce-error">%s</div>', __( 'Please enter a valid order ID', 'buddyboss' ) ) );
 	}
 	?>
 </div>

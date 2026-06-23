@@ -88,7 +88,7 @@ if ( bp_has_video_albums( array( 'include' => $album_id ) ) ) {
 									$selected = '';
 									$privacy  = bp_get_album_privacy();
 									if ( $k === $privacy ) {
-										$selected = 'selected="selectred"';}
+										$selected = 'selected="selected"';}
 									?>
 									<option <?php echo esc_attr( $selected ); ?> value="<?php echo esc_attr( $k ); ?>"><?php echo esc_html( $option ); ?></option>
 								<?php } ?>

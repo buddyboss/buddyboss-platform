@@ -826,7 +826,11 @@ function bp_core_no_access_wp_login_error( $errors ) {
 	 * @param string $value Error message to display.
 	 * @param string $value URL to redirect user to after successful login.
 	 */
-	$message = apply_filters( 'bp_wp_login_error', $bp_error_message, $_REQUEST['redirect_to'] );
+	// `redirect_to` may be absent on direct hits to wp-login.php — read
+	// defensively to avoid an "Undefined index" notice that masks the
+	// real login-error message on PHP 8+.
+	$redirect_to = isset( $_REQUEST['redirect_to'] ) ? esc_url_raw( wp_unslash( $_REQUEST['redirect_to'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+	$message     = apply_filters( 'bp_wp_login_error', $bp_error_message, $redirect_to );
 
 	$errors->add( 'bp_no_access', $message );
 
@@ -1174,13 +1178,21 @@ function bp_private_network_template_redirect() {
 	if ( ! $enable_private_network ) {
 		// Check for a valid JWT token in the request headers.
 		$headers = bb_get_all_headers();
-		if (
-			! empty( $headers['bb-preview-token'] ) &&
-			bb_validate_jwt( $headers['bb-preview-token'] )
-		) {
-			return; // Bypass restriction for internal sharing with a valid JWT token.
+
+		// Handle case-insensitive header lookup and immediate validation.
+		// Different web servers and proxy configurations can modify HTTP header casing.
+		foreach ( $headers as $key => $value ) {
+			if ( 'bb-preview-token' === strtolower( $key ) ) {
+				if ( ! empty( $value ) && bb_validate_jwt( $value ) ) {
+					unset( $headers );
+					return; // Bypass restriction for internal sharing with a valid JWT token.
+				}
+				break;
+			}
 		}
 	}
+
+	unset( $headers );
 
 	global $wp_query, $wp;
 

@@ -32,8 +32,22 @@ function buddyboss_init_mothership() {
 		require_once __DIR__ . '/class-bb-mothership-loader.php';
 	}
 
-	// Initialize the mothership functionality.
-	new BuddyBoss\Core\Admin\Mothership\BB_Mothership_Loader();
+	// Initialize the mothership functionality (singleton pattern prevents duplicate hooks).
+	BuddyBoss\Core\Admin\Mothership\BB_Mothership_Loader::instance();
+
+	// Initialize DRM (Digital Rights Management) functionality.
+	buddyboss_init_drm();
+}
+
+/**
+ * Initialize BuddyBoss DRM functionality.
+ */
+function buddyboss_init_drm() {
+	// Include DRM autoloader.
+	require_once dirname( __DIR__ ) . '/drm/autoload.php';
+
+	// Initialize DRM controller.
+	BuddyBoss\Core\Admin\DRM\BB_DRM_Controller::init();
 }
 
 // Hook into WordPress admin_init to initialize mothership.

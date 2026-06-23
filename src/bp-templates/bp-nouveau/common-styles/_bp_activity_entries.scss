@@ -1995,7 +1995,7 @@
 
 .bb-is-mobile.bb-reactions-mode {
 
-	&.activity * {
+	&.activity .activity-meta * {
 		-webkit-touch-callout: none; // To prevent IOS to show context menu on long press
 	}
 

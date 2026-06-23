@@ -170,7 +170,16 @@ window.bp = window.bp || {};
 			this.dropzone = null;
 
 			// set up dropzones auto discover to false so it does not automatically set dropzones.
-			window.Dropzone.autoDiscover = false;
+			// Guarded — `bp-media-dropzone` (which loads the Dropzone library) is only
+			// enqueued when at least one media feature is active (see
+			// bp-templates/bp-nouveau/includes/media/functions.php). When all of
+			// profile/group/messages media + group docs/albums + GIF + emoji are off,
+			// Dropzone is undefined and the unguarded assignment throws TypeError,
+			// halting `start()` so the post form composer never renders. Mirrors
+			// the same guard pattern used at buddypress-activity.js:76.
+			if ( 'undefined' !== typeof window.Dropzone ) {
+				window.Dropzone.autoDiscover = false;
+			}
 
 			if ( ! _.isUndefined( bbRlMedia ) ) {
 				this.dropzone_options = {
@@ -306,7 +315,7 @@ window.bp = window.bp || {};
 				function () {
 					$( '#bb-rl-whats-new img.emoji' ).each(
 						function ( index, Obj) {
-							$( Obj ).addClass( 'bb-rl-emojioneemoji' );
+							$( Obj ).addClass( 'emojioneemoji' );
 							var emojis = $( Obj ).attr( 'alt' );
 							$( Obj ).attr( 'data-emoji-char', emojis );
 							$( Obj ).removeClass( 'emoji' );
@@ -737,7 +746,7 @@ window.bp = window.bp || {};
 					}
 				);
 
-				var emojiElement = $( '#bb-rl-whats-new-textarea' ).find( 'img.bb-rl-emojioneemoji' ),
+				var emojiElement = $( '#bb-rl-whats-new-textarea' ).find( 'img.emojioneemoji' ),
 					contextKey   = context === 'groups' ? 'groups' : 'profile';
 				if ( 'groups' === context ) {
 					bp.Nouveau.Activity.postForm.postGifGroup = new bp.Views.PostGifGroup( { model : this.model } );
@@ -815,6 +824,13 @@ window.bp = window.bp || {};
 				self.postForm.$el.removeClass( 'bb-rl-focus-in--empty loading' );
 			}
 
+			// Validate Post title after draft/activity is loaded.
+			if ( self.postForm && typeof self.postForm.postValidate === 'function' ) {
+				setTimeout( function() {
+					self.postForm.postValidate();
+				}, 100 );
+			}
+
 			if (
 				! _.isUndefined( BP_Nouveau.activity.params.topics ) &&
 				BP_Nouveau.activity.params.topics.topic_lists.length > 0 &&
@@ -834,7 +850,7 @@ window.bp = window.bp || {};
 			}
 
 			if ( activity_data && activity_data.topics ) {
-				if ( '' === bp.draft_activity.display_post ) {
+				if ( '' === bp.draft_activity.display_post || 'edit' === bp.draft_activity.display_post ) {
 					if ( 'scheduled' !== activity_data.status ) {
 						self.postForm.model.set( 'topics', activity_data.topics );
 						bp.draft_activity.data.topics = activity_data.topics;
@@ -2270,7 +2286,7 @@ window.bp = window.bp || {};
 					content     = content.replace( /&nbsp;/g, ' ' );
 
 					var content_text = tool_box_comment.find( '.ac-textarea' ).children( '.ac-input' ).text().trim();
-					if ( content_text !== '' || content.indexOf( 'bb-rl-emojioneemoji' ) >= 0 ) {
+					if ( content_text !== '' || content.indexOf( 'emojioneemoji' ) >= 0 ) {
 						$( tool_box_comment ).closest( 'form' ).addClass( 'has-content' );
 					} else {
 						$( tool_box_comment ).closest( 'form' ).removeClass( 'has-content' );
@@ -4930,14 +4946,43 @@ window.bp = window.bp || {};
 					this.$el.addClass( 'bb-rl-focus-in--empty' );
 				}
 
-				// Validate topic content.
+				// Validate Post title first (priority over Topic).
+				var isTitleRequired   = BP_Nouveau.activity.params.is_activity_post_title_required;
+				var postTitle         = isTitleRequired ? $.trim( $( '#bb-rl-whats-new-title' ).val() || '' ) : '';
+				var $submitWrapper    = $( '#whats-new-submit' );
+				var titleTooltipError = ! _.isUndefined( BP_Nouveau.activity.params.post_title_tooltip_error ) ? BP_Nouveau.activity.params.post_title_tooltip_error : 'Please enter a title for your activity.';
+
+				if ( isTitleRequired ) {
+					if ( '' === postTitle ) {
+						// Post title is required and empty - show title tooltip, hide topic tooltip.
+						$( 'body' ).addClass( 'bb-rl-ac-title-required' );
+						if ( $submitWrapper.find( '.bb-title-tooltip-wrapper' ).length === 0 ) {
+							var $titleTooltipWrapper = $( '<div class="bb-title-tooltip-wrapper"><div class="bb-title-tooltip"></div></div>' );
+							$titleTooltipWrapper.find( '.bb-title-tooltip' ).text( titleTooltipError );
+							$submitWrapper.prepend( $titleTooltipWrapper );
+						}
+						// Hide topic tooltip if title is missing (priority).
+						$submitWrapper.find( '.bb-topic-tooltip-wrapper' ).remove();
+					} else {
+						// Post title is filled - remove title tooltip and class.
+						$( 'body' ).removeClass( 'bb-rl-ac-title-required' );
+						$submitWrapper.find( '.bb-title-tooltip-wrapper' ).remove();
+					}
+				} else {
+					// Post title is not required - remove title tooltip and class.
+					$( 'body' ).removeClass( 'bb-rl-ac-title-required' );
+					$submitWrapper.find( '.bb-title-tooltip-wrapper' ).remove();
+				}
+
+				// Validate topic content (only if title is not required or title is filled).
 				if (
 					! _.isUndefined( BP_Nouveau.activity.params.topics ) &&
 					! _.isUndefined( BP_Nouveau.activity.params.topics.bb_is_enabled_activity_topics ) &&
 					BP_Nouveau.activity.params.topics.bb_is_enabled_activity_topics &&
 					! _.isUndefined( BP_Nouveau.activity.params.topics.bb_is_activity_topic_required ) &&
 					BP_Nouveau.activity.params.topics.bb_is_activity_topic_required &&
-					! _.isUndefined( BBTopicsManager )
+					! _.isUndefined( BBTopicsManager ) &&
+					( ! isTitleRequired || '' !== postTitle )
 				) {
 					BBTopicsManager.bbTopicValidateContent( {
 						self         : this,
@@ -5026,6 +5071,20 @@ window.bp = window.bp || {};
 				this.views.add( bp.Nouveau.Activity.postForm.activityAttachments );
 				bp.Nouveau.Activity.postForm.activityToolbar = new bp.Views.ActivityToolbar( { model: this.model } );
 				this.views.add( bp.Nouveau.Activity.postForm.activityToolbar );
+
+				// Initialize Post title tooltip if title is required.
+				var isTitleRequired = BP_Nouveau.activity.params.is_activity_post_title_required;
+				if ( isTitleRequired ) {
+					$( document ).on( 'bb_display_full_form', function () {
+						var $submitWrapper = $( '.bb-rl-activity-update-form.modal-popup #whats-new-submit' );
+						var titleTooltipError = ! _.isUndefined( BP_Nouveau.activity.params.post_title_tooltip_error ) ? BP_Nouveau.activity.params.post_title_tooltip_error : 'Please enter a title for your activity.';
+						if ( $submitWrapper.length > 0 && $submitWrapper.find( '.bb-title-tooltip-wrapper' ).length === 0 ) {
+							var $titleTooltipWrapper = $( '<div class="bb-title-tooltip-wrapper"><div class="bb-title-tooltip"></div></div>' );
+							$titleTooltipWrapper.find( '.bb-title-tooltip' ).text( titleTooltipError );
+							$submitWrapper.prepend( $titleTooltipWrapper );
+						}
+					} );
+				}
 
 				this.views.add( new bp.Views.FormSubmitWrapper( { model: this.model } ) );
 
@@ -5231,6 +5290,9 @@ window.bp = window.bp || {};
 			},
 
 			resetForm: function () {
+				// Remove Post title tooltip on reset.
+				$( 'body' ).removeClass( 'bb-rl-ac-title-required' );
+				$( '#whats-new-submit' ).find( '.bb-title-tooltip-wrapper' ).remove();
 				_.each(
 					this.views._views[ '' ],
 					function ( view, index ) {
@@ -5385,7 +5447,7 @@ window.bp = window.bp || {};
 				// transform other emoji into emojionearea emoji.
 				$whatsNew.find( 'img.emoji' ).each(
 					function ( index, Obj) {
-						$( Obj ).addClass( 'bb-rl-emojioneemoji' );
+						$( Obj ).addClass( 'emojioneemoji' );
 						var emojis = $( Obj ).attr( 'alt' );
 						$( Obj ).attr( 'data-emoji-char', emojis );
 						$( Obj ).removeClass( 'emoji' );
@@ -5393,7 +5455,7 @@ window.bp = window.bp || {};
 				);
 
 				// Transform emoji image into emoji unicode.
-				$whatsNew.find( 'img.bb-rl-emojioneemoji' ).replaceWith(
+				$whatsNew.find( 'img.emojioneemoji, img.bb-rl-emojioneemoji' ).replaceWith(
 					function () {
 						return this.dataset.emojiChar;
 					}
@@ -5766,6 +5828,14 @@ window.bp = window.bp || {};
 								).addClass( 'selected' );
 							}
 
+							// Trigger GIF autoplay check for edited activity
+							// Use setTimeout to ensure DOM is updated and video elements are rendered
+							setTimeout( function() {
+								if ( 'undefined' !== typeof bp.Nouveau.Media && 'function' === typeof bp.Nouveau.Media.autoPlayGifVideos ) {
+									bp.Nouveau.Media.autoPlayGifVideos();
+								}
+							}, 100 );
+
 							// Inject the activity into the stream only if it hasn't been done already (HeartBeat).
 						} else if ( ! activityElemSel.length ) {
 
@@ -5789,6 +5859,14 @@ window.bp = window.bp || {};
 
 							// replace dummy image with original image by faking scroll event.
 							jQuery( window ).scroll();
+
+							// Trigger GIF autoplay check for newly posted activity
+							// Use setTimeout to ensure DOM is updated and video elements are rendered
+							setTimeout( function() {
+								if ( 'undefined' !== typeof bp.Nouveau.Media && 'function' === typeof bp.Nouveau.Media.autoPlayGifVideos ) {
+									bp.Nouveau.Media.autoPlayGifVideos();
+								}
+							}, 100 );
 
 							if ( link_embed ) {
 								if ( ! _.isUndefined( window.instgrm ) ) {
@@ -6174,7 +6252,7 @@ window.bp = window.bp || {};
 			}
 		);
 
-		var emojiElement = $( '#bb-rl-whats-new-textarea' ).find( 'img.bb-rl-emojioneemoji' ),
+		var emojiElement = $( '#bb-rl-whats-new-textarea' ).find( 'img.emojioneemoji' ),
 			contextKey   = context === 'groups' ? 'groups' : 'profile';
 		if ( 'groups' === context ) {
 			bp.Nouveau.Activity.postForm.postGifGroup = new bp.Views.PostGifGroup( { model : this.model } );

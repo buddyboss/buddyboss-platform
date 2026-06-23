@@ -1654,20 +1654,27 @@ function bp_folder_title() {
 function bp_get_folder_title() {
 	global $document_template, $document_folder_template;
 
+	$folder_id = 0;
+	$title     = '';
+
 	if ( isset( $document_template ) && isset( $document_template->document ) && isset( $document_template->document->title ) ) {
-		$title = $document_template->document->title;
-	} else {
-		$title = $document_folder_template->folder->title;
+		$folder_id = isset( $document_template->document->id ) ? (int) $document_template->document->id : 0;
+		$title     = $document_template->document->title;
+	} elseif ( isset( $document_folder_template ) && isset( $document_folder_template->folder ) && isset( $document_folder_template->folder->title ) ) {
+		$folder_id = isset( $document_folder_template->folder->id ) ? (int) $document_folder_template->folder->id : 0;
+		$title     = $document_folder_template->folder->title;
 	}
 
 	/**
 	 * Filters the folder title being displayed.
 	 *
 	 * @since BuddyBoss 1.4.0
+	 * @since BuddyBoss 2.18.0 Added $folder_id parameter.
 	 *
-	 * @param int $id The document folder title.
+	 * @param string $title     The document folder title.
+	 * @param int    $folder_id The document folder ID.
 	 */
-	return apply_filters( 'bp_get_folder_title', $title );
+	return apply_filters( 'bp_get_folder_title', $title, $folder_id );
 }
 
 /**
@@ -1682,19 +1689,24 @@ function bp_get_folder_title() {
 function bp_get_folder_folder_title() {
 	global $document_folder_template;
 
-	$title = '';
+	$folder_id = 0;
+	$title     = '';
+
 	if ( isset( $document_folder_template ) && isset( $document_folder_template->folder ) && isset( $document_folder_template->folder->title ) ) {
-		$title = $document_folder_template->folder->title;
+		$folder_id = isset( $document_folder_template->folder->id ) ? (int) $document_folder_template->folder->id : 0;
+		$title     = $document_folder_template->folder->title;
 	}
 
 	/**
 	 * Filters the folder title being displayed.
 	 *
 	 * @since BuddyBoss 1.4.0
+	 * @since BuddyBoss 2.18.0 Added $folder_id parameter.
 	 *
-	 * @param int $id The document folder title.
+	 * @param string $title     The document folder title.
+	 * @param int    $folder_id The document folder ID.
 	 */
-	return apply_filters( 'bp_get_folder_folder_title', $title );
+	return apply_filters( 'bp_get_folder_folder_title', $title, $folder_id );
 }
 
 /**

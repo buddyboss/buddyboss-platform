@@ -34,3 +34,17 @@
 		margin-top: var(--bb-rl-space-400);
 	}
 }
+
+.mpcs-lesson-locked .mpcs-lesson-locked-buttons {
+
+	a {
+
+		@include bb-rl-button;
+		@include bb-rl-button--brand-fill;
+		@include bb-rl-button--small;
+
+		&:hover {
+			background-color: var(--bb-rl-background-brand-primary-hover-color);
+		}
+	}
+}

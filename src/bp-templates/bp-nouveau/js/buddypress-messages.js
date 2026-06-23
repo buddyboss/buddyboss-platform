@@ -5458,6 +5458,14 @@ window.bp = window.bp || {};
 
 				// replace dummy image with original image by faking scroll event to call bp.Nouveau.lazyLoad.
 				jQuery( window ).scroll();
+
+				// Trigger GIF autoplay check when messages are loaded
+				// Use setTimeout to ensure DOM is updated and video elements are rendered
+				setTimeout( function() {
+					if ( 'undefined' !== typeof bp.Nouveau.Media && 'function' === typeof bp.Nouveau.Media.autoPlayGifVideos ) {
+						bp.Nouveau.Media.autoPlayGifVideos();
+					}
+				}, 100 );
 			},
 
 			messages_scrolled: function( event ) {
@@ -5647,6 +5655,14 @@ window.bp = window.bp || {};
 				} else {
 					this.$el.removeClass( 'focus-in--scroll' );
 				}
+
+				// Trigger GIF autoplay check for newly added message
+				// Use setTimeout to ensure DOM is updated and video elements are rendered
+				setTimeout( function() {
+					if ( 'undefined' !== typeof bp.Nouveau.Media && 'function' === typeof bp.Nouveau.Media.autoPlayGifVideos ) {
+						bp.Nouveau.Media.autoPlayGifVideos();
+					}
+				}, 100 );
 			},
 
 			replyError: function( response ) {

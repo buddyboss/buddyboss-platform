@@ -75,7 +75,7 @@ $video_extensions = bp_is_active( 'media' ) ? bp_video_get_allowed_extension() :
 
 	if ( bp_is_active( 'media' ) && ! empty( $extensions ) && bb_user_has_access_upload_document( $group_id, bp_loggedin_user_id(), $forum_id, 0, 'forum' ) ) :
 		?>
-		<div class="dropzone closed document-dropzone" id="bb-rl-forums-post-document-uploader" data-key="<?php echo esc_attr( wp_unique_id( 'forums_document_uploader_' ) ); ?>"></div>
+		<div class="dropzone closed document-dropzone" id="bb-rl-forums-post-document-uploader" data-key="<?php echo esc_attr( bp_unique_id( 'forums_document_uploader_' ) ); ?>"></div>
 		<input name="bbp_document" id="bbp_document" type="hidden" value=""/>
 		<div class="forum-post-document-template" style="display:none;">
 			<div class="dz-preview dz-file-preview">
@@ -180,12 +180,12 @@ $video_extensions = bp_is_active( 'media' ) ? bp_video_get_allowed_extension() :
 								<ul class="gif-search-results-list" >
 								</ul>
 								<div class="gif-alert gif-no-results">
-									<i class="bb-icon-l bb-icon-image-slash"></i>
+									<i class="bb-icons-rl-image-broken"></i>
 									<p><?php esc_html_e( 'No results found', 'buddyboss' ); ?></p>
 								</div>
 
 								<div class="gif-alert gif-no-connection">
-									<i class="bb-icons-rl bb-icon-cloud-slash"></i>
+									<i class="bb-icons-rl-cloud-slash"></i>
 									<p><?php esc_html_e( 'Could not connect to GIPHY', 'buddyboss' ); ?></p>
 								</div>
 							</div>
@@ -199,7 +199,7 @@ $video_extensions = bp_is_active( 'media' ) ? bp_video_get_allowed_extension() :
 
 	if ( bp_is_active( 'media' ) && bb_user_has_access_upload_emoji( $group_id, bp_loggedin_user_id(), $forum_id, 0, 'forum' ) ) :
 		?>
-		<div class="bb-rl-post-elements-buttons-item bb-rl-post-emoji bp-tooltip" data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php esc_attr_e( 'Emoji', 'buddyboss' ); ?>"></div>
+		<div class="bb-rl-post-elements-buttons-item bb-rl-post-emoji bp-tooltip" data-bp-tooltip-pos="up-left" data-bp-tooltip="<?php esc_attr_e( 'Emoji', 'buddyboss' ); ?>"></div>
 		<?php
 	endif;
 

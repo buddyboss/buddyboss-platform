@@ -9,8 +9,6 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-global $bp;
-
 if ( empty( get_query_var( 'video-attachment-id' ) ) ) {
 	echo '// Silence is golden.';
 	exit();
@@ -22,6 +20,7 @@ $encode_thread_id = base64_decode( get_query_var( 'video-thread-id' ) );
 $thread_arr       = explode( 'thread_', $encode_thread_id );
 
 if ( isset( $explode_arr ) && ! empty( $explode_arr ) && isset( $explode_arr[1] ) && (int) $explode_arr[1] > 0 ) {
+	global $bp, $wpdb;
 
 	$attachment_id = (int) $explode_arr[1];
 
@@ -38,6 +37,14 @@ if ( isset( $explode_arr ) && ! empty( $explode_arr ) && isset( $explode_arr[1] 
 	) {
 		echo '// Silence is golden.';
 		exit();
+	}
+
+	if ( ! $media ) {
+		$is_bb_video_upload = (bool) get_post_meta( $attachment_id, 'bp_video_upload', true );
+		if ( ! $is_bb_video_upload ) {
+			echo '// Silence is golden.';
+			exit();
+		}
 	}
 
 	$output_file_src = bb_core_scaled_attachment_path( $attachment_id );

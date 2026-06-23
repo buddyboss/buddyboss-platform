@@ -10,6 +10,24 @@
 
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
+
+/**
+ * Add ReadyLaunch-specific data attributes to topic type dropdown select element.
+ *
+ * @param string $output The HTML output of the dropdown.
+ * @param array  $r      The parsed arguments.
+ * @return string Modified HTML output.
+ */
+function bb_rl_add_topic_type_dropdown_attributes( $output, $r ) {
+	$output = preg_replace(
+		'/(<select[^>]*id="' . preg_quote( esc_attr( $r['select_id'] ), '/' ) . '_select"[^>]*)(>)/',
+		'$1 data-bb-caret="caret-arrow" data-bb-border="rounded"$2',
+		$output
+	);
+
+	return $output;
+}
+add_filter( 'bbp_get_form_topic_type_dropdown', 'bb_rl_add_topic_type_dropdown_attributes', 10, 2 );
 ?>
 
 <?php if ( ! bbp_is_single_forum() ) : ?>
@@ -49,7 +67,7 @@ defined( 'ABSPATH' ) || exit;
 
 						<?php do_action( 'bbp_theme_before_topic_form_type' ); ?>
 
-						<div class="bb-rl-forum-modal-type">
+						<div class="bb-rl-forum-modal-type bb-rl-filter bb-rl-filter-rounded">
 
 							<label for="bbp_stick_topic" class="screen-reader-text"><?php esc_html_e( 'Type:', 'buddyboss' ); ?></label>
 

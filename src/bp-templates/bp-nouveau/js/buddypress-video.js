@@ -42,9 +42,10 @@ window.bp = window.bp || {};
 
 			var bodySelector = $( 'body' );
 
-			this.thumbnail_xhr          = null;
-			this.thumbnail_interval     = null;
-			this.thumbnail_max_interval = 6;
+			this.thumbnail_xhr              = null;
+			this.thumbnail_interval         = null;
+			this.thumbnail_max_interval     = 6;
+			this.thumbnail_cleanup_complete = false;
 
 			this.current_page             = 1;
 			this.video_dropzone_obj       = null;
@@ -110,7 +111,67 @@ window.bp = window.bp || {};
 			if ( typeof BP_Nouveau.video.dropzone_options !== 'undefined' ) {
 				Object.assign( this.options, BP_Nouveau.video.dropzone_options );
 			}
+		},
 
+		/**
+		 * Update album photo and video counts in single album view.
+		 * Works for both Standard and ReadyLaunch modes.
+		 *
+		 * @param {Object} albumCounts - Album count data from server response
+		 * @param {number} albumCounts.album_media_count - Number of photos
+		 * @param {number} albumCounts.album_video_count - Number of videos
+		 */
+		updateAlbumCounts: function ( albumCounts ) {
+			// Check if we're in a single album view.
+			if ( ! $( '#buddypress #bp-media-single-album' ).length ) {
+				return;
+			}
+
+			var photoCount = parseInt( albumCounts.album_media_count ) || 0;
+			var videoCount = parseInt( albumCounts.album_video_count ) || 0;
+
+			// Format number with thousands separator.
+			var formatNumber = function( num ) {
+				return num.toString().replace( /\B(?=(\d{3})+(?!\d))/g, ',' );
+			};
+
+			// Update the photo count display.
+			var $photoCountSpan = $( '#buddypress .bb-album-photo-count' );
+			if ( $photoCountSpan.length > 0 ) {
+				var photoLabel = 1 === photoCount ? BP_Nouveau.media.i18n_strings.photo : BP_Nouveau.media.i18n_strings.photos;
+				$photoCountSpan.text( formatNumber( photoCount ) + ' ' + photoLabel );
+			}
+
+			// Update the video count display.
+			var $videoCountSpan = $( '#buddypress .bb-album-video-count' );
+			if ( $videoCountSpan.length > 0 ) {
+				var videoLabel = 1 === videoCount ? BP_Nouveau.media.i18n_strings.video : BP_Nouveau.media.i18n_strings.videos;
+				$videoCountSpan.text( formatNumber( videoCount ) + ' ' + videoLabel );
+			}
+		},
+
+		/**
+		 * Check if ffmpeg thumbnail generation is still in progress.
+		 * Returns true only if ffmpeg_generated has a value that is not 'no', 'yes', or empty.
+		 *
+		 * @param {Object} videoAttachments The video attachments object.
+		 * @return {boolean} True if generation is pending, false otherwise.
+		 */
+		isFFmpegGenerationPending: function ( videoAttachments ) {
+			return videoAttachments.ffmpeg_generated &&
+				'no' !== videoAttachments.ffmpeg_generated &&
+				'yes' !== videoAttachments.ffmpeg_generated;
+		},
+
+		/**
+		 * Check if the video has fewer than 2 auto-generated thumbnails.
+		 *
+		 * @param {Object} videoAttachments The video attachments object.
+		 * @return {boolean} True if thumbnails are insufficient, false otherwise.
+		 */
+		hasInsufficientThumbnails: function ( videoAttachments ) {
+			return typeof videoAttachments.default_images === 'undefined' ||
+				videoAttachments.default_images.length < 2;
 		},
 
 		/**
@@ -434,70 +495,78 @@ window.bp = window.bp || {};
 
 								}
 
-								var dir_label;
-								if ( response.data.video_personal_count ) {
-									if ( $( '#buddypress .bb-item-count' ).length > 0 && 'yes' !== BP_Nouveau.video.is_video_directory ) {
-										dir_label = BP_Nouveau.dir_labels.hasOwnProperty( 'video' ) ?
-										(
-											1 === parseInt( response.data.video_personal_count ) ?
-											BP_Nouveau.dir_labels.video.singular : BP_Nouveau.dir_labels.video.plural
-										)
-										: '';
-										$( '#buddypress .bb-item-count' ).html( '<span class="bb-count">' + response.data.video_personal_count + '</span> ' + dir_label );
-									} else if ( $( '#buddypress' ).find( '.bp-wrap .users-nav ul li#video-personal-li a span.count' ).length ) {
-										$( '#buddypress' ).find( '.bp-wrap .users-nav ul li#video-personal-li a span.count' ).text( response.data.video_personal_count );
-									} else if ( '1' === BP_Nouveau.bb_enable_content_counts ) {
-										var videoPersonalSpanTag = document.createElement( 'span' );
-										videoPersonalSpanTag.setAttribute( 'class', 'count' );
-										var videoPersonalSpanTagTextNode = document.createTextNode( response.data.video_personal_count );
-										videoPersonalSpanTag.appendChild( videoPersonalSpanTagTextNode );
-										$( '#buddypress' ).find( '.bp-wrap .users-nav ul li#video-personal-li a' ).append( videoPersonalSpanTag );
-									}
-								}
-
-								if ( response.data.video_group_count ) {
-									if ( $( '#buddypress .bb-item-count' ).length > 0 && 'yes' !== BP_Nouveau.video.is_video_directory ) {
-										dir_label = BP_Nouveau.dir_labels.hasOwnProperty( 'video' ) ?
-										(
-											1 === parseInt( response.data.video_group_count ) ?
-											BP_Nouveau.dir_labels.video.singular : BP_Nouveau.dir_labels.video.plural
-										)
-										: '';
-										$( '#buddypress .bb-item-count' ).html( '<span class="bb-count">' + response.data.video_group_count + '</span> ' + dir_label );
-									} else if ( $( '#buddypress' ).find( '.bp-wrap .groups-nav ul li#videos-groups-li a span.count' ).length ) {
-										$( '#buddypress' ).find( '.bp-wrap .groups-nav ul li#videos-groups-li a span.count' ).text( response.data.video_group_count );
-									} else if ( '1' === BP_Nouveau.bb_enable_content_counts ) {
-										var videoGroupSpanTag = document.createElement( 'span' );
-										videoGroupSpanTag.setAttribute( 'class', 'count' );
-										var videoGroupSpanTagTextNode = document.createTextNode( response.data.video_group_count );
-										videoGroupSpanTag.appendChild( videoGroupSpanTagTextNode );
-										$( '#buddypress' ).find( '.bp-wrap .groups-nav ul li#videos-groups-li a' ).append( videoGroupSpanTag );
-									}
-								}
-
-								if ( 'yes' === BP_Nouveau.video.is_video_directory ) {
-									if ( $( '#buddypress .bb-item-count' ).length > 0 ) {
-										var dir_scope = $( '#buddypress .bp-navs.dir-navs > ul > li.selected' ).data( 'bp-scope' );
-										var dir_count = 0;
-										if ( 'all' === dir_scope ) {
-											dir_count = response.data.video_all_count;
-										} else if ( 'personal' === dir_scope ) {
-											dir_count = response.data.video_personal_count;
-										} else if ( 'groups' === dir_scope ) {
-											dir_count = response.data.video_group_count;
+								// Do not show count on single album page.
+								if ( ! $( '#buddypress #bp-media-single-album' ).length ) {
+									var dir_label;
+									if ( response.data.video_personal_count ) {
+										if ( $( '#buddypress .bb-item-count' ).length > 0 && 'yes' !== BP_Nouveau.video.is_video_directory ) {
+											dir_label = BP_Nouveau.dir_labels.hasOwnProperty( 'video' ) ?
+											(
+												1 === parseInt( response.data.video_personal_count ) ?
+												BP_Nouveau.dir_labels.video.singular : BP_Nouveau.dir_labels.video.plural
+											)
+											: '';
+											$( '#buddypress .bb-item-count' ).html( '<span class="bb-count">' + response.data.video_personal_count + '</span> ' + dir_label );
+										} else if ( $( '#buddypress' ).find( '.bp-wrap .users-nav ul li#video-personal-li a span.count' ).length ) {
+											$( '#buddypress' ).find( '.bp-wrap .users-nav ul li#video-personal-li a span.count' ).text( response.data.video_personal_count );
+										} else if ( '1' === BP_Nouveau.bb_enable_content_counts ) {
+											var videoPersonalSpanTag = document.createElement( 'span' );
+											videoPersonalSpanTag.setAttribute( 'class', 'count' );
+											var videoPersonalSpanTagTextNode = document.createTextNode( response.data.video_personal_count );
+											videoPersonalSpanTag.appendChild( videoPersonalSpanTagTextNode );
+											$( '#buddypress' ).find( '.bp-wrap .users-nav ul li#video-personal-li a' ).append( videoPersonalSpanTag );
 										}
-
-										dir_label = BP_Nouveau.dir_labels.hasOwnProperty( 'video' ) ?
-										(
-											1 === dir_count ? BP_Nouveau.dir_labels.video.singular : BP_Nouveau.dir_labels.video.plural
-										)
-										: '';
-										$( '#buddypress .bb-item-count' ).html( '<span class="bb-count">' + dir_count + '</span> ' + dir_label );
-									} else {
-										$( '#buddypress' ).find( '.video-type-navs ul.video-nav li#video-all a span.count' ).text( response.data.video_all_count );
-										$( '#buddypress' ).find( '.video-type-navs ul.video-nav li#video-personal a span.count' ).text( response.data.video_personal_count );
-										$( '#buddypress' ).find( '.video-type-navs ul.video-nav li#video-groups a span.count' ).text( response.data.video_group_count );
 									}
+
+									if ( response.data.video_group_count ) {
+										if ( $( '#buddypress .bb-item-count' ).length > 0 && 'yes' !== BP_Nouveau.video.is_video_directory ) {
+											dir_label = BP_Nouveau.dir_labels.hasOwnProperty( 'video' ) ?
+											(
+												1 === parseInt( response.data.video_group_count ) ?
+												BP_Nouveau.dir_labels.video.singular : BP_Nouveau.dir_labels.video.plural
+											)
+											: '';
+											$( '#buddypress .bb-item-count' ).html( '<span class="bb-count">' + response.data.video_group_count + '</span> ' + dir_label );
+										} else if ( $( '#buddypress' ).find( '.bp-wrap .groups-nav ul li#videos-groups-li a span.count' ).length ) {
+											$( '#buddypress' ).find( '.bp-wrap .groups-nav ul li#videos-groups-li a span.count' ).text( response.data.video_group_count );
+										} else if ( '1' === BP_Nouveau.bb_enable_content_counts ) {
+											var videoGroupSpanTag = document.createElement( 'span' );
+											videoGroupSpanTag.setAttribute( 'class', 'count' );
+											var videoGroupSpanTagTextNode = document.createTextNode( response.data.video_group_count );
+											videoGroupSpanTag.appendChild( videoGroupSpanTagTextNode );
+											$( '#buddypress' ).find( '.bp-wrap .groups-nav ul li#videos-groups-li a' ).append( videoGroupSpanTag );
+										}
+									}
+
+									if ( 'yes' === BP_Nouveau.video.is_video_directory ) {
+										if ( $( '#buddypress .bb-item-count' ).length > 0 ) {
+											var dir_scope = $( '#buddypress .bp-navs.dir-navs > ul > li.selected' ).data( 'bp-scope' );
+											var dir_count = 0;
+											if ( 'all' === dir_scope ) {
+												dir_count = response.data.video_all_count;
+											} else if ( 'personal' === dir_scope ) {
+												dir_count = response.data.video_personal_count;
+											} else if ( 'groups' === dir_scope ) {
+												dir_count = response.data.video_group_count;
+											}
+
+											dir_label = BP_Nouveau.dir_labels.hasOwnProperty( 'video' ) ?
+											(
+												1 === dir_count ? BP_Nouveau.dir_labels.video.singular : BP_Nouveau.dir_labels.video.plural
+											)
+											: '';
+											$( '#buddypress .bb-item-count' ).html( '<span class="bb-count">' + dir_count + '</span> ' + dir_label );
+										} else {
+											$( '#buddypress' ).find( '.video-type-navs ul.video-nav li#video-all a span.count' ).text( response.data.video_all_count );
+											$( '#buddypress' ).find( '.video-type-navs ul.video-nav li#video-personal a span.count' ).text( response.data.video_personal_count );
+											$( '#buddypress' ).find( '.video-type-navs ul.video-nav li#video-groups a span.count' ).text( response.data.video_group_count );
+										}
+									}
+								}
+
+								// Update album counts if uploading to an album.
+								if ( response.data.album_total_count !== undefined ) {
+									self.updateAlbumCounts( response.data );
 								}
 
 								for ( var i = 0; i < self.dropzone_video.length; i++ ) {
@@ -511,6 +580,14 @@ window.bp = window.bp || {};
 
 							} else {
 								$( '#bp-video-dropzone-content' ).prepend( response.data.feedback );
+								targetPopup.find( '.bb-album-selected-id' ).val( 0 );
+								var $media_single_album = targetPopup.parents( '#bp-media-single-album' );
+								if ( $media_single_album.length ) {
+									var $video_back_button = $media_single_album.find( '#bp-video-prev.bb-uploader-steps-prev' );
+									if ( $video_back_button.length && $video_back_button.is(':visible') ) {
+										$video_back_button.trigger( 'click' );
+									}
+								}
 							}
 
 							target.removeClass( 'saving' );
@@ -563,6 +640,28 @@ window.bp = window.bp || {};
 										}
 									}
 								);
+
+								// Update album counts for both source and destination albums if present.
+								if ( response.data.source_album_id !== undefined || response.data.dest_album_id !== undefined ) {
+									var $albumContainer = $( '#buddypress #bp-media-single-album' );
+									if ( $albumContainer.length ) {
+										// Determine which album we're currently viewing from the DOM.
+										var currentAlbumId = parseInt( $albumContainer.attr( 'data-album-id' ) ) || 0;
+										var albumCounts = {};
+
+										// If we're viewing the source album, use source counts (item was removed).
+										// If we're viewing the destination album, use dest counts (item was added).
+										if ( currentAlbumId === response.data.source_album_id ) {
+											albumCounts.album_media_count = response.data.source_album_media_count;
+											albumCounts.album_video_count = response.data.source_album_video_count;
+										} else if ( currentAlbumId === response.data.dest_album_id ) {
+											albumCounts.album_media_count = response.data.dest_album_media_count;
+											albumCounts.album_video_count = response.data.dest_album_video_count;
+										}
+
+										self.updateAlbumCounts( albumCounts );
+									}
+								}
 
 								jQuery( window ).scroll();
 
@@ -948,6 +1047,9 @@ window.bp = window.bp || {};
 
 			$( popupSelector ).find( '.bp-video-thumbnail-uploader' ).removeClass( 'no_generated_thumb' );
 
+			// Reset cleanup flag for new modal session.
+			this.thumbnail_cleanup_complete = false;
+
 			$( document ).on(
 				'click',
 				'.bp-video-thumbnail-uploader.opened-edit-thumbnail .bp-video-thumbnail-auto-generated .bb-action-check-wrap',
@@ -1175,11 +1277,15 @@ window.bp = window.bp || {};
 						if ( default_images_html != '' ) {
 							$( '.bp-video-thumbnail-uploader.opened-edit-thumbnail .bp-video-thumbnail-auto-generated ul.video-thumb-list' ).removeClass( 'loading' );
 							$( '.bp-video-thumbnail-uploader.opened-edit-thumbnail .bp-video-thumbnail-auto-generated ul.video-thumb-list' ).html( default_images_html );
-							$( '.bp-video-thumbnail-uploader' ).removeClass( 'generating_thumb' );
-							if ( videoAttachments.default_images.length < 2 && BP_Nouveau.video.is_ffpmeg_installed ) {
+							$( '.bp-video-thumbnail-uploader' ).removeClass( 'generating_thumb ffmpeg_failed' );
+
+							// Only show spinners if ffmpeg is actively generating.
+							if ( bp.Nouveau.Video.hasInsufficientThumbnails( videoAttachments ) && BP_Nouveau.video.is_ffmpeg_installed && bp.Nouveau.Video.isFFmpegGenerationPending( videoAttachments ) ) {
 								$( '.bp-video-thumbnail-uploader' ).addClass( 'generating_thumb' );
 								$( '.bp-video-thumbnail-uploader.opened-edit-thumbnail .bp-video-thumbnail-auto-generated ul.video-thumb-list' ).append( '<li class="lg-grid-1-5 md-grid-1-3 sm-grid-1-3 thumb_loader"><div class="video-thumb-block"><i class="bb-icon-spinner bb-icon-l animate-spin"></i><span>' + BP_Nouveau.video.generating_thumb + '</span></div></li>' );
 								$( '.bp-video-thumbnail-uploader.opened-edit-thumbnail .bp-video-thumbnail-auto-generated ul.video-thumb-list' ).append( '<li class="lg-grid-1-5 md-grid-1-3 sm-grid-1-3 thumb_loader"><div class="video-thumb-block"><i class="bb-icon-spinner bb-icon-l animate-spin"></i><span>' + BP_Nouveau.video.generating_thumb + '</span></div></li>' );
+							} else if ( 'no' === videoAttachments.ffmpeg_generated || '' === videoAttachments.ffmpeg_generated ) {
+								$( '.bp-video-thumbnail-uploader' ).addClass( 'ffmpeg_failed' );
 							}
 						}
 					} else {
@@ -1214,7 +1320,13 @@ window.bp = window.bp || {};
 					'video_id': videoId,
 				};
 
-				if ( BP_Nouveau.video.is_ffpmeg_installed && ( ( typeof videoAttachments.default_images === 'undefined' ) || videoAttachments.default_images.length < 2 ) ) {
+				// Only trigger AJAX polling if ffmpeg is installed, we have fewer than 2 thumbnails,
+				// AND ffmpeg is actively generating (not empty, not 'no', not 'yes').
+				var shouldPollForThumbnails = BP_Nouveau.video.is_ffmpeg_installed &&
+					bp.Nouveau.Video.hasInsufficientThumbnails( videoAttachments ) &&
+					bp.Nouveau.Video.isFFmpegGenerationPending( videoAttachments );
+
+				if ( shouldPollForThumbnails ) {
 					if ( this.thumbnail_xhr ) {
 						this.thumbnail_xhr.abort();
 					}
@@ -1259,17 +1371,29 @@ window.bp = window.bp || {};
 								ulSelector.html( response.data.default_images );
 							}
 
-							if ( response.data.ffmpeg_generated && 'no' === response.data.ffmpeg_generated ) {
-								ulSelector.html( '' );
-							}
+							// When ffmpeg_generated is 'no', 'yes', or empty, stop polling and clean up UI.
+							// Do NOT clear the list - we want to keep any existing thumbnails from default_images.
+							// Use flag to prevent multiple cleanup executions from overlapping AJAX requests.
+							var ffmpegDone = 'no' === response.data.ffmpeg_generated || 'yes' === response.data.ffmpeg_generated || '' === response.data.ffmpeg_generated;
 
-							if ( $( '.bp-video-thumbnail-uploader.opened-edit-thumbnail .bp-video-thumbnail-auto-generated ul.video-thumb-list li' ).length < 2 ) {
+							if ( ffmpegDone && ! bp.Nouveau.Video.thumbnail_cleanup_complete ) {
+								bp.Nouveau.Video.thumbnail_cleanup_complete = true;
+								// Stop the polling interval - no more thumbnails will be generated.
+								clearTimeout( bp.Nouveau.Video.thumbnail_interval );
+								// Remove any loading spinners since generation is complete/failed.
+								ulSelector.find( 'li.thumb_loader' ).remove();
+								// Update UI state - remove generating class.
+								$( '.bp-video-thumbnail-uploader' ).removeClass( 'generating_thumb' );
+								// If we have no thumbnails at all, mark as no_generated_thumb.
+								if ( ulSelector.find( 'li' ).length === 0 ) {
+									$( '.bp-video-thumbnail-uploader' ).addClass( 'no_generated_thumb' );
+								}
+							} else if ( ! ffmpegDone && $( '.bp-video-thumbnail-uploader.opened-edit-thumbnail .bp-video-thumbnail-auto-generated ul.video-thumb-list li' ).length < 2 ) {
 								$( '.bp-video-thumbnail-uploader' ).addClass( 'generating_thumb' ).removeClass( 'no_generated_thumb' );
 								if ( $( '.bp-video-thumbnail-uploader.opened-edit-thumbnail .bp-video-thumbnail-auto-generated ul.video-thumb-list li.thumb_loader' ).length === 0 ) {
 									$( '.bp-video-thumbnail-uploader.opened-edit-thumbnail .bp-video-thumbnail-auto-generated ul.video-thumb-list' ).append( '<li class="lg-grid-1-5 md-grid-1-3 sm-grid-1-3 thumb_loader"><div class="video-thumb-block"><i class="bb-icon-l bb-icon-spinner animate-spin"></i><span>' + BP_Nouveau.video.generating_thumb + '</span></div></li>' );
 									$( '.bp-video-thumbnail-uploader.opened-edit-thumbnail .bp-video-thumbnail-auto-generated ul.video-thumb-list' ).append( '<li class="lg-grid-1-5 md-grid-1-3 sm-grid-1-3 thumb_loader"><div class="video-thumb-block"><i class="bb-icon-l bb-icon-spinner animate-spin"></i><span>' + BP_Nouveau.video.generating_thumb + '</span></div></li>' );
 								}
-
 							} else if ( $( '.bp-video-thumbnail-uploader.opened-edit-thumbnail .bp-video-thumbnail-auto-generated ul.video-thumb-list li.thumb_loader' ).length === 0 ) {
 								$( '.bp-video-thumbnail-uploader' ).removeClass( 'generating_thumb no_generated_thumb' );
 							}
@@ -1471,6 +1595,7 @@ window.bp = window.bp || {};
 			$( '#bp-video-uploader' ).hide();
 			$( '#bp-video-uploader-modal-title' ).text( BP_Nouveau.video.i18n_strings.upload );
 			$( '#bp-video-uploader-modal-status-text' ).text( '' );
+			$( '#bp-video-dropzone-content .bp-feedback' ).remove();
 			if ( this.video_dropzone_obj ) {
 				this.video_dropzone_obj.destroy();
 			}
@@ -1588,11 +1713,6 @@ window.bp = window.bp || {};
 									}
 								);
 
-								var length = $( '#activity-stream ul.activity-list li[data-bp-activity-id="' + activityId + '"] .activity-content .activity-inner .bb-activity-video-elem' ).length;
-								if ( length == 0 ) {
-									$( '#activity-stream ul.activity-list li[data-bp-activity-id="' + activityId + '"]' ).remove();
-								}
-
 								if ( true === response.data.delete_activity ) {
 									$( 'body #buddypress .activity-list li#activity-' + activityId ).remove();
 									$( 'body .bb-activity-video-elem.video-activity.' + id ).remove();
@@ -1645,7 +1765,7 @@ window.bp = window.bp || {};
 										$( '#buddypress .bp-wrap .users-nav' ).length > 0
 									) {
 
-										if ( $( '#buddypress .bb-item-count' ).length > 0 && 'yes' !== BP_Nouveau.video.is_video_directory ) {
+										if ( $( '#buddypress .bb-item-count' ).length > 0 && 'yes' !== BP_Nouveau.video.is_video_directory && ! BP_Nouveau.video.current_album ) {
 											dir_label = BP_Nouveau.dir_labels.hasOwnProperty( 'video' ) ?
 											(
 												1 === parseInt( response.data.video_personal_count ) ?
@@ -1676,14 +1796,14 @@ window.bp = window.bp || {};
 										}
 									}
 
-									if ( 0 !== response.data.video_html_content.length ) {
+									if ( 0 !== response.data.video_html_content.length && ! BP_Nouveau.video.current_album ) {
 										if ( 0 === parseInt( response.data.video_personal_count ) ) {
 											$( '.bb-videos-actions' ).hide();
 											$( '#video-stream' ).html( response.data.video_html_content );
 										} else {
 											buddyPressSelector.find( '.video-list:not(.existing-video-list)' ).html( response.data.video_html_content );
 										}
-									} else if ( 0 !== response.data.group_video_html_content.length ) {
+									} else if ( 0 !== response.data.group_video_html_content.length && ! BP_Nouveau.video.current_album ) {
 										if ( 0 === parseInt( response.data.video_group_count ) ) {
 											$( '.bb-videos-actions' ).hide();
 											$( '#video-stream' ).html( response.data.group_video_html_content );
@@ -1706,6 +1826,11 @@ window.bp = window.bp || {};
 											}
 										);
 									}
+								}
+
+								// Update album counts if deleting from an album.
+								if ( response.data.album_total_count !== undefined ) {
+									self.updateAlbumCounts( response.data );
 								}
 							}
 						} else {
@@ -1774,6 +1899,11 @@ window.bp = window.bp || {};
 											$( this ).closest( 'li' ).remove();
 										}
 									);
+								}
+
+								// Update album counts if deleting from an album.
+								if ( response.data.album_total_count !== undefined ) {
+									self.updateAlbumCounts( response.data );
 								}
 							} else {
 								$( '#buddypress #video-stream.video' ).prepend( response.data.feedback );
@@ -2261,7 +2391,13 @@ window.bp = window.bp || {};
 									$( document ).find( 'li#video-all' ).trigger( 'click' );
 								}
 							} else {
-								if ( parseInt( BP_Nouveau.video.current_album ) > 0 ) {
+								if (
+									parseInt( BP_Nouveau.video.current_album ) > 0 ||
+									(
+										'group' === BP_Nouveau.video.current_type &&
+										parseInt( BP_Nouveau.video.album_id ) > 0
+									)
+								) {
 									$( '#video-stream ul.video-list li[data-id="' + video_id + '"]' ).remove();
 									$( '#media-stream ul.media-list li[data-id="' + video_id + '"]' ).remove();
 								} else if ( $( '#activity-stream ul.activity-list li .activity-content .activity-inner .bb-activity-video-wrap div[data-id="' + video_id + '"]' ).length && ! $( '#activity-stream ul.activity-list li .activity-content .activity-inner .bb-activity-video-wrap div[data-id="' + video_id + '"]' ).parents().hasClass( 'bb-video-length-1' ) ) {
@@ -2280,6 +2416,28 @@ window.bp = window.bp || {};
 							}
 							target.closest( '.bp-video-move-file' ).find( '.ac-video-close-button' ).trigger( 'click' );
 							$( document ).find( 'a.bb-open-video-theatre[data-id="' + video_id + '"]' ).data( 'album-id', album_id );
+
+							// Update album counts for both source and destination albums if present.
+							if ( response.data.source_album_id !== undefined || response.data.dest_album_id !== undefined ) {
+								var $albumContainer = $( '#buddypress #bp-media-single-album' );
+								if ( $albumContainer.length ) {
+									// Determine which album we're currently viewing from the DOM.
+									var currentAlbumId = parseInt( $albumContainer.attr( 'data-album-id' ) ) || 0;
+									var albumCounts = {};
+
+									// If we're viewing the source album, use source counts (item was removed).
+									// If we're viewing the destination album, use dest counts (item was added).
+									if ( currentAlbumId === response.data.source_album_id ) {
+										albumCounts.album_media_count = response.data.source_album_media_count;
+										albumCounts.album_video_count = response.data.source_album_video_count;
+									} else if ( currentAlbumId === response.data.dest_album_id ) {
+										albumCounts.album_media_count = response.data.dest_album_media_count;
+										albumCounts.album_video_count = response.data.dest_album_video_count;
+									}
+
+									self.updateAlbumCounts( albumCounts );
+								}
+							}
 
 						} else {
 							/* jshint ignore:start */
@@ -2523,7 +2681,10 @@ window.bp = window.bp || {};
 			}
 
 			if ( $( '.bb-media-model-wrapper.video .bb-media-section' ).find( 'video' ).length ) {
-				videojs( $('.bb-media-model-wrapper.video .bb-media-section').find('video').attr('id') ).reset();
+				// Check if videojs is available before using it
+				if ( typeof videojs !== 'undefined' ) {
+					videojs( $('.bb-media-model-wrapper.video .bb-media-section').find('video').attr('id') ).reset();
+				}
 			}
 			$('.bb-media-model-wrapper').hide();
 			self.is_open_video = false;
@@ -3074,11 +3235,239 @@ window.bp = window.bp || {};
 		},
 
 		/**
+		 * Pause all YouTube/Vimeo iframe embeds in activity posts
+		 * This prevents YouTube videos from playing when Video.js videos are active
+		 * 
+		 * @param {boolean} quiet - If true, suppresses debug logs
+		 * @param {string} additionalSelector - Optional additional CSS selector for iframes (e.g., '.bb-rl-activity-video-elem iframe')
+		 */
+		pauseEmbeddedVideos: function( quiet, additionalSelector ) {
+			quiet = quiet || false;
+			additionalSelector = additionalSelector || '';
+			
+			// Base selector for activity iframes
+			var baseSelector = '.activity-list iframe, .activity-item iframe, .bb-activity-video-elem iframe';
+			// Append additional selector if provided
+			var selector = additionalSelector ? baseSelector + ', ' + additionalSelector : baseSelector;
+			
+			// Find all YouTube and Vimeo iframes in activity posts
+			var iframes = $( selector );
+			
+			iframes.each(
+				function() {
+					var $iframe = $( this );
+					var src = $iframe.attr( 'src' ) || '';
+					
+					// Check if it's a YouTube or Vimeo iframe
+					if ( src.indexOf( 'youtube.com' ) !== -1 || src.indexOf( 'youtu.be' ) !== -1 || src.indexOf( 'vimeo.com' ) !== -1 ) {
+						try {
+							var iframe = this;
+							var isYouTube = src.indexOf( 'youtube.com' ) !== -1 || src.indexOf( 'youtu.be' ) !== -1;
+							var hasEnableJsApi = src.indexOf( 'enablejsapi=1' ) !== -1;
+							var hasAutoplay = src.indexOf( 'autoplay=1' ) !== -1;
+							
+							// For YouTube: Try postMessage first
+							if ( isYouTube && iframe.contentWindow ) {
+								// Always try postMessage first
+								iframe.contentWindow.postMessage( '{"event":"command","func":"pauseVideo","args":""}', '*' );
+								
+								setTimeout( function() {
+									if ( iframe.contentWindow ) {
+										iframe.contentWindow.postMessage( '{"event":"command","func":"stopVideo","args":""}', '*' );
+									}
+								}, 100 );
+							}
+							
+							// Only reload iframe if we need to add enablejsapi=1 (required for postMessage to work reliably)
+							// If enablejsapi is already present, we can use postMessage without reloading
+							if ( isYouTube && ! hasEnableJsApi ) {
+								var newSrc = src;
+								var separator = src.indexOf( '?' ) !== -1 ? '&' : '?';
+								newSrc = src + separator + 'enablejsapi=1';
+								
+								// While we're reloading, also remove autoplay if present
+								if ( hasAutoplay ) {
+									newSrc = newSrc.replace( /[?&]autoplay=1(&|$)/g, '$1' );
+									newSrc = newSrc.replace( /^([^?]*)\?&/, '$1?' );
+								}
+								
+								// Reload iframe with enablejsapi=1
+								$iframe.attr( 'src', newSrc );
+								
+								// Wait for iframe to reload, then send pause commands
+								setTimeout( function() {
+									if ( iframe.contentWindow ) {
+										iframe.contentWindow.postMessage( '{"event":"command","func":"pauseVideo","args":""}', '*' );
+										
+										setTimeout( function() {
+											if ( iframe.contentWindow ) {
+												iframe.contentWindow.postMessage( '{"event":"command","func":"stopVideo","args":""}', '*' );
+											}
+										}, 100 );
+									}
+								}, 300 );
+							} else if ( isYouTube && hasAutoplay && hasEnableJsApi ) {
+								// If enablejsapi is present but autoplay needs removal, try postMessage first
+								// Only reload if postMessage doesn't work.
+								// The postMessage above should handle pausing the video.
+							}
+						} catch ( e ) {
+							// Cross-origin restrictions may prevent postMessage, which is expected
+						}
+					}
+				}
+			);
+		},
+
+		/**
+		 * Check if Picture-in-Picture API is supported
+		 */
+		isPictureInPictureSupported: function() {
+			return 'pictureInPictureEnabled' in document && document.pictureInPictureEnabled !== undefined;
+		},
+
+		/**
+		 * Setup picture-in-picture event handlers for a video element
+		 * Shared helper function to reduce code duplication
+		 * 
+		 * @param {HTMLElement} videoElement - The video element to setup PiP handlers for
+		 */
+		setupPictureInPictureHandlers: function( videoElement ) {
+			if ( ! videoElement || ! bp.Nouveau.Video.Player.isPictureInPictureSupported() ) {
+				return;
+			}
+
+			var pipInterval = null;
+			var pipWindow = null;
+
+			videoElement.addEventListener( 'enterpictureinpicture', function( event ) {
+				pipWindow = event.pictureInPictureWindow;
+
+				// When entering picture-in-picture, pause all YouTube/Vimeo iframes
+				bp.Nouveau.Video.Player.pauseEmbeddedVideos();
+
+				// Set up a conditional interval as a safety net (event-driven approach is primary)
+				// This only runs if events don't catch YouTube trying to play
+				// Optimized: only polls when video is playing, with longer interval
+				if ( pipInterval ) {
+					clearInterval( pipInterval );
+				}
+
+				pipInterval = setInterval( function() {
+					// Check if still in picture-in-picture
+					if ( document.pictureInPictureElement === videoElement ) {
+						// Only poll when video is actually playing (not paused)
+						// This reduces unnecessary polling when video is paused
+						if ( ! videoElement.paused ) {
+							// Safety net: pause YouTube iframes periodically while in picture-in-picture
+							// This catches edge cases where events might not fire
+							bp.Nouveau.Video.Player.pauseEmbeddedVideos( true ); // Pass true to suppress logs
+						}
+					} else {
+						clearInterval( pipInterval );
+						pipInterval = null;
+					}
+				}, 2000 ); // Check every 2000ms (2 seconds) - safety net, events handle most cases
+
+				// Try to add event listeners to the picture-in-picture window
+				if ( pipWindow ) {
+					try {
+						// Try multiple event types
+						var pipClickHandler = function() {
+							bp.Nouveau.Video.Player.pauseEmbeddedVideos( true );
+						};
+
+						pipWindow.addEventListener( 'click', pipClickHandler );
+						pipWindow.addEventListener( 'mousedown', pipClickHandler );
+						pipWindow.addEventListener( 'mouseup', pipClickHandler );
+
+						pipWindow.addEventListener( 'focus', function() {
+							bp.Nouveau.Video.Player.pauseEmbeddedVideos( true );
+						} );
+
+						// Also try to listen on the document inside the PiP window
+						if ( pipWindow.document ) {
+							pipWindow.document.addEventListener( 'click', pipClickHandler );
+						}
+					} catch ( e ) {
+						// Cannot add event listeners to picture-in-picture window (expected in some browsers)
+					}
+				}
+			} );
+
+			videoElement.addEventListener( 'leavepictureinpicture', function() {
+				// Clear the interval when leaving picture-in-picture
+				if ( pipInterval ) {
+					clearInterval( pipInterval );
+					pipInterval = null;
+				}
+
+				// When leaving picture-in-picture, ensure YouTube/Vimeo iframes remain paused
+				bp.Nouveau.Video.Player.pauseEmbeddedVideos();
+			} );
+
+			// Listen for play events on the video element directly
+			// These are the primary event-driven handlers
+			videoElement.addEventListener( 'play', function() {
+				// When Video.js video plays (especially in PiP), pause YouTube
+				if ( bp.Nouveau.Video.Player.isPictureInPictureSupported() && document.pictureInPictureElement === videoElement ) {
+					bp.Nouveau.Video.Player.pauseEmbeddedVideos( true );
+				} else {
+					bp.Nouveau.Video.Player.pauseEmbeddedVideos();
+				}
+			} );
+
+			// Listen for playing event (fired when video actually starts playing)
+			videoElement.addEventListener( 'playing', function() {
+				// When Video.js video is actually playing (especially in PiP), pause YouTube
+				if ( bp.Nouveau.Video.Player.isPictureInPictureSupported() && document.pictureInPictureElement === videoElement ) {
+					bp.Nouveau.Video.Player.pauseEmbeddedVideos( true );
+				} else {
+					bp.Nouveau.Video.Player.pauseEmbeddedVideos();
+				}
+			} );
+
+			// Listen for timeupdate events while in PiP (catches when video continues playing)
+			videoElement.addEventListener( 'timeupdate', function() {
+				// Only act if we're in picture-in-picture mode (with feature detection)
+				if ( bp.Nouveau.Video.Player.isPictureInPictureSupported() && document.pictureInPictureElement === videoElement ) {
+					// Throttle: only pause YouTube every 2 seconds while playing in PiP
+					// This prevents excessive calls while still catching YouTube attempts
+					if ( ! videoElement._lastPiPPause || Date.now() - videoElement._lastPiPPause > 2000 ) {
+						bp.Nouveau.Video.Player.pauseEmbeddedVideos( true );
+						videoElement._lastPiPPause = Date.now();
+					}
+				}
+			} );
+		},
+
+		/**
 		 * [addListeners description]
 		 */
 		addListeners: function () {
 
 			$( document ).on( 'click', '.video-js', this.openPlayer.bind( this ) );
+			
+			// Global listener for any clicks that might trigger YouTube videos
+			// This catches clicks even in picture-in-picture windows
+			// Namespaced for potential cleanup: .video-player
+			$( document ).on( 'click.video-player', function() {
+				// Check if we're in picture-in-picture mode (with feature detection)
+				if ( bp.Nouveau.Video.Player.isPictureInPictureSupported() && document.pictureInPictureElement ) {
+					// Small delay to let any play events fire first
+					setTimeout( function() {
+						bp.Nouveau.Video.Player.pauseEmbeddedVideos( true );
+					}, 50 );
+				}
+			} );
+			
+			// Listen for any iframe load events (YouTube might reload when we change src)
+			// Namespaced for potential cleanup: .video-player
+			$( document ).on( 'load.video-player', 'iframe[src*="youtube"], iframe[src*="youtu.be"]', function() {
+				if ( bp.Nouveau.Video.Player.isPictureInPictureSupported() && document.pictureInPictureElement ) {
+					bp.Nouveau.Video.Player.pauseEmbeddedVideos( true );
+				}
+			} );
 
 		},
 
@@ -3094,6 +3483,16 @@ window.bp = window.bp || {};
 					var player_id 	= $( this ).attr( 'id' );
 
 					var videoIndex                   = $( this ).attr( 'id' );
+					
+					// Check if videojs is available before using it
+					if ( typeof videojs === 'undefined' ) {
+						console.warn( 'VideoJS is not loaded yet. Retrying in 100ms...' );
+						setTimeout( function() {
+							bp.Nouveau.Video.openPlayer();
+						}, 100 );
+						return;
+					}
+					
 					player[ $( this ).attr( 'id' ) ] = videojs(
 						self,
 						options,
@@ -3106,6 +3505,7 @@ window.bp = window.bp || {};
                             this.on(
                                     'play',
                                 function() {
+									// Pause other Video.js players
                                     $( '.video-js' ).each(
                                         function () {
                                             if ( videoIndex !== $( this ).attr( 'id' ) ) {
@@ -3113,8 +3513,17 @@ window.bp = window.bp || {};
                                             }
                                         }
                                     );
+									
+									// Pause YouTube/Vimeo iframes
+									bp.Nouveau.Video.Player.pauseEmbeddedVideos();
                                 }
                                 );
+							
+							// Handle picture-in-picture events (only if PiP is supported)
+							var videoElement = this.el().querySelector( 'video' );
+							if ( videoElement ) {
+								bp.Nouveau.Video.Player.setupPictureInPictureHandlers( videoElement );
+							}
                         }
 					);
 

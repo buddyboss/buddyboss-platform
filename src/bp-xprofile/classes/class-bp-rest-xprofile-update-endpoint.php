@@ -131,9 +131,8 @@ class BP_REST_XProfile_Update_Endpoint extends WP_REST_Controller {
 
 				if ( isset( $field_post['value'] ) ) {
 					if ( 'checkbox' === $field->type || 'multiselectbox' === $field->type ) {
-						if ( is_serialized( $value ) ) {
-							$value = maybe_unserialize( $value );
-						}
+						// Disallow object instantiation to prevent PHP object injection from untrusted REST input.
+						$value = bb_xprofile_safe_unserialize( $value );
 
 						$value = json_decode( wp_json_encode( $value ), true );
 
@@ -145,9 +144,8 @@ class BP_REST_XProfile_Update_Endpoint extends WP_REST_Controller {
 
 					// Format social network value.
 					if ( 'socialnetworks' === $field->type ) {
-						if ( is_serialized( $value ) ) {
-							$value = maybe_unserialize( $value );
-						}
+						// Disallow object instantiation to prevent PHP object injection from untrusted REST input.
+						$value = bb_xprofile_safe_unserialize( $value );
 
 						$value = $this->xprofile_data_endpoint->bb_rest_format_social_network_value( $value );
 					}

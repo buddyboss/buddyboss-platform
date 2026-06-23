@@ -1,0 +1,284 @@
+.bb-admin-settings {
+	padding: 0;
+	max-width: 1600px;
+	margin: 0 auto;
+
+	&__container {
+		padding: 0 24px 24px;
+	}
+
+	&__filters {
+		display: flex;
+		gap: 24px;
+		margin: 24px 0;
+		align-items: center;
+		justify-content: space-between;
+		flex-wrap: wrap;
+		padding: 0 0 24px 0;
+		border-bottom: 1px solid $bb-border-primary-color;
+	}
+
+	&__filter-tabs {
+		display: flex;
+		gap: 8px;
+		align-items: center;
+	}
+
+	&__filter-tab {
+		background: transparent;
+		border: 0.5px solid $bb-border-tertiary-color;
+		border-radius: 999px;
+		padding: 7px 16px;
+		font-size: 13px;
+		line-height: 18px;
+		font-weight: 500;
+		color: $bb-text-tertiary-color;
+		cursor: pointer;
+		transition: all 0.2s ease;
+		white-space: nowrap;
+
+		&:hover {
+			border-color: $bb-border-tertiary-color;
+			box-shadow: inset 0 0 0 0.5px $bb-border-tertiary-color;
+		}
+
+		&:focus-visible {
+			border-color: transparent;
+			box-shadow: none;
+			outline: 2px solid $bb-border-quaternary-color;
+		}
+
+		&--active {
+			background: $bb-background-secondary-color;
+			border-color: $bb-border-quaternary-color;
+			box-shadow: inset 0 0 0 0.5px $bb-border-quaternary-color;
+			color: $bb-text-color;
+		}
+	}
+
+	&__filter-right {
+		display: flex;
+		align-items: center;
+		gap: 24px;
+	}
+
+	&__filter-select {
+        min-width: 185px;
+
+		&:focus {
+			outline: none;
+			border-color: #2271b1;
+			box-shadow: 0 0 0 1px #2271b1;
+		}
+	}
+
+	&__grid {
+		display: flex;
+		flex-direction: column;
+		gap: 40px;
+	}
+
+	&__category {
+		&-divider {
+			display: flex;
+			align-items: center;
+			gap: 8px;
+			margin-bottom: 18px;
+
+			&--with-line {
+				&::after {
+					content: '';
+					flex: 1;
+					height: 1px;
+					background-color: $bb-border-tertiary-color;
+				}
+			}
+		}
+
+		&-title {
+			font-size: 14px;
+			font-weight: 500;
+			text-transform: uppercase;
+			letter-spacing: 0.5px;
+			color: $bb-text-secondary-color;
+			margin: 0;
+			white-space: nowrap;
+		}
+	}
+
+	&__features-grid {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 16px;
+		justify-content: start;
+	}
+
+	&__feature-card {
+		background: $bb-background-base-color;
+		border: 0.5px solid $bb-border-tertiary-color;
+		border-radius: $bb-border-radius-xl;
+		padding: 16px;
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
+		min-height: 208px;
+		transition: box-shadow 0.2s ease, opacity 0.2s ease;
+		width: calc(25% - 48px);
+
+		// Greyed-out state when a required dependency is not active.
+		&--unavailable {
+			opacity: 0.5;
+		}
+
+		@media (max-width: 1340px) {
+			width: calc(33.3333% - 46px);
+		}
+
+		@media (max-width: 1040px) {
+			width: calc(50% - 46px);
+		}
+
+		@media (max-width: 580px) {
+			min-height: initial;
+			width: 100%;
+		}
+	}
+
+	&__feature-body {
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
+		flex: 1;
+
+		@media (max-width: 580px) {
+			margin-bottom: 12px;
+		}
+	}
+
+	&__feature-top {
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
+	}
+
+	&__feature-name {
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
+		flex: 1;
+	}
+
+	&__feature-icon-frame {
+		width: 28px;
+		height: 28px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		flex-shrink: 0;
+
+		.dashicons {
+			font-size: 28px;
+			width: 28px;
+			height: 28px;
+			line-height: 28px;
+			color: $bb-icon-primary-color;
+		}
+
+		// BuddyBoss ReadyLaunch font icons
+		.bb-icons-rl {
+			font-size: 28px;
+			width: 28px;
+			height: 28px;
+			line-height: 28px;
+			color: $bb-icon-primary-color;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+		}
+	}
+
+	&__feature-icon-img {
+		width: 28px;
+		height: 28px;
+		object-fit: contain;
+	}
+
+	&__feature-title {
+		margin: 0;
+		font-size: 16px;
+		font-weight: 500;
+		line-height: 22px;
+		color: $bb-text-color;
+	}
+
+	&__feature-description {
+		margin: 0;
+		color: $bb-text-tertiary-color;
+		font-size: 13px;
+		line-height: 18px;
+	}
+
+	&__feature-bottom {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		margin-top: auto;
+		padding-top: 8px;
+	}
+
+	&__feature-left {
+		flex: 1;
+		min-width: 0;
+	}
+
+	&__feature-settings-btn.components-button.is-secondary {
+		@include bb-button-secondary;
+		display: inline-flex;
+		align-items: center;
+		gap: 4px;
+
+		i[class*="bb-icon-"] {
+			font-size: 16px;
+			width: 16px;
+			height: 16px;
+			line-height: 16px;
+			color: $bb-icon-color;
+			margin: 0;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+		}
+
+		&--disabled,
+		&:disabled {
+			opacity: 0.5;
+			cursor: not-allowed;
+			pointer-events: none;
+			background: $bb-background-secondary-color;
+			box-shadow: none;
+		}
+
+		// Activating state — spinner + "Activating…" replaces icon + "Settings"
+		// while the toggle AJAX is in flight. Tames the WP Spinner default
+		// margin so it doesn't push the label off-center inside the button.
+		&--activating {
+
+			.components-spinner {
+				margin: 0 4px 0 0;
+				width: 14px;
+				height: 14px;
+			}
+		}
+	}
+
+	&__feature-right {
+		flex-shrink: 0;
+		margin-left: 16px;
+	}
+
+	&__empty {
+		text-align: center;
+		padding: 40px;
+		color: $bb-text-tertiary-color;
+	}
+}
