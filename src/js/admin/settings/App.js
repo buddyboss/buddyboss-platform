@@ -63,6 +63,11 @@ function fixAdminMenuHighlight( route ) {
 		emails: [ 'all_emails' ],
 	};
 
+	// Settings tabs that have their own dedicated submenu item (e.g. "Help" at
+	// page=bb-settings&tab=help). These must highlight their own item, not the
+	// generic "Settings" item — matched below via the `tab={feature}` rule.
+	var standaloneSettingsTabs = [ 'help' ];
+
 	var isListing = false;
 	if ( listingPanels[ feature ] ) {
 		isListing = -1 !== listingPanels[ feature ].indexOf( panel );
@@ -72,8 +77,16 @@ function fixAdminMenuHighlight( route ) {
 		isListing = true;
 	}
 
-	// Determine which slug to target: component menu or Settings.
-	var targetSlug = isListing ? feature : 'settings';
+	// Determine which slug to target: component menu, a standalone settings
+	// tab (Help), or the generic Settings item.
+	var targetSlug;
+	if ( isListing ) {
+		targetSlug = feature;
+	} else if ( 'settings' === mainRoute && -1 !== standaloneSettingsTabs.indexOf( feature ) ) {
+		targetSlug = feature;
+	} else {
+		targetSlug = 'settings';
+	}
 
 	var submenuItems = bbMenu.querySelectorAll( 'ul.wp-submenu li' );
 	var targetItem = null;
@@ -198,6 +211,20 @@ function AppInner() {
 	useEffect(() => {
 		fixAdminMenuHighlight( currentRoute );
 	}, [currentRoute]);
+
+	// Close the DocsBot chat whenever the Knowledge Base modal opens.
+	//
+	// The chat's only in-page toggle lives in the Help footer; once the
+	// full-screen KB modal opens it covers that footer, so a chat left open
+	// stays stuck on top of the modal with no way to dismiss it. Closing it as
+	// the modal opens keeps a single overlay in view. `window.DocsBotAI` is
+	// injected by the PHP loader and only carries `close()` once chat.js has
+	// initialized (Help tab only), so the guard makes this a no-op elsewhere.
+	useEffect(() => {
+		if ( kbState.isOpen && window.DocsBotAI && 'function' === typeof window.DocsBotAI.close ) {
+			window.DocsBotAI.close();
+		}
+	}, [kbState.isOpen]);
 
 	// Scroll to top on every route change. The Settings 2.0 router is
 	// homegrown (string-based currentRoute + history.replaceState) and has
