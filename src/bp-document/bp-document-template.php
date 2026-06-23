@@ -339,6 +339,7 @@ function bp_get_document_pagination_count() {
 	$to_num    = bp_core_number_format( ( $start_num + ( $document_template->pag_num - 1 ) > $document_template->total_document_count ) ? $document_template->total_document_count : $start_num + ( $document_template->pag_num - 1 ) );
 	$total     = bp_core_number_format( $document_template->total_document_count );
 
+	/* translators: 1: first document number on this page, 2: last document number on this page, 3: total number of documents. */
 	$message = sprintf( _n( 'Viewing 1 item', 'Viewing %1$s - %2$s of %3$s items', $document_template->total_document_count, 'buddyboss' ), $from_num, $to_num, $total );
 
 	return $message;
@@ -1435,6 +1436,7 @@ function bp_get_folder_pagination_count() {
 	$to_num    = bp_core_number_format( ( $start_num + ( $document_folder_template->pag_num - 1 ) > $document_folder_template->total_folder_count ) ? $document_folder_template->total_folder_count : $start_num + ( $document_folder_template->pag_num - 1 ) );
 	$total     = bp_core_number_format( $document_folder_template->total_folder_count );
 
+	/* translators: 1: first folder number on this page, 2: last folder number on this page, 3: total number of folders. */
 	$message = sprintf( _n( 'Viewing 1 item', 'Viewing %1$s - %2$s of %3$s items', $document_folder_template->total_document_count, 'buddyboss' ), $from_num, $to_num, $total );
 
 	return $message;

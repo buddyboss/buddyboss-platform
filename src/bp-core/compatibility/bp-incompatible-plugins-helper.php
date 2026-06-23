@@ -596,6 +596,7 @@ function bp_core_learndash_bbpress_notices() {
 		?>
 		<div id="message" class="error notice">
 			<p><strong><?php esc_html_e( 'LearnDash & bbPress Integration is deactivated.', 'buddyboss' ); ?></strong></p>
+			<?php /* translators: 1: Forum Discussions component link, 2: activate component link. */ ?>
 			<p><?php printf( esc_html__( 'The LearnDash & bbPress Integration plugin can\'t work if LearnDash LMS plugin & %1$s component is deactivated. Please activate LearnDash LMS plugin & %2$s component.', 'buddyboss' ), $text, $text, $activate ); ?></p>
 		</div>
 		<?php

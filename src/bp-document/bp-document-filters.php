@@ -1659,6 +1659,7 @@ function bp_document_admin_repair_document() {
 			}
 			$offset ++;
 		}
+		/* translators: %s: number of documents updated. */
 		$records_updated = sprintf( __( '%s documents updated successfully.', 'buddyboss' ), bp_core_number_format( $offset ) );
 
 		return array(

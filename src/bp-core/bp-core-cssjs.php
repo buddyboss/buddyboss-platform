@@ -764,6 +764,7 @@ function bp_core_enqueue_livestamp() {
 						/* translators: %s: the human time diff. */
 						'past'   => __( '%s ago', 'buddyboss' ),
 						's'      => __( 'second', 'buddyboss' ),
+						/* Translators: %d is the amount of seconds. */
 						'ss'     => __( '%d seconds', 'buddyboss' ),
 						'm'      => __( 'a minute', 'buddyboss' ),
 						/* Translators: %d is the amount of minutes. */
@@ -810,6 +811,7 @@ function bp_core_enqueue_livestamp() {
 			),
 			'unknown_text'      => apply_filters( 'bp_core_time_since_unknown_text', esc_html__( 'sometime', 'buddyboss' ) ),
 			'right_now_text'    => apply_filters( 'bp_core_time_since_right_now_text', esc_html__( 'Just now', 'buddyboss' ) ),
+			/* translators: %s: the human time diff. */
 			'ago_text'          => apply_filters( 'bp_core_time_since_ago_text', esc_html__( '%s ago', 'buddyboss' ) ),
 			'second_text'       => __( 'a second', 'buddyboss' ),
 			'seconds_text'      => __( 'seconds', 'buddyboss' ),

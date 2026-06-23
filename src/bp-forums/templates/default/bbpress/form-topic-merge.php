@@ -20,7 +20,7 @@
 
 				<fieldset class="bbp-form">
 
-					<legend><?php printf( __( 'Merge discussion "%s"', 'buddyboss' ), bbp_get_topic_title() ); ?></legend>
+					<legend><?php /* translators: %s: discussion title. */ printf( __( 'Merge discussion "%s"', 'buddyboss' ), bbp_get_topic_title() ); ?></legend>
 
 					<div>
 

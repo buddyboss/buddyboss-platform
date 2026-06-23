@@ -657,6 +657,7 @@ if ( ! class_exists( 'WP_Background_Process' ) ) {
 			if ( 1 === $interval ) {
 				$display = __( 'Every Minute', 'buddyboss' );
 			} else {
+				/* translators: %d: number of minutes. */
 				$display = sprintf( __( 'Every %d Minutes', 'buddyboss' ), $interval );
 			}
 

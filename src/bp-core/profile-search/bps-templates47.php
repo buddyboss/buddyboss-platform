@@ -250,15 +250,25 @@ function bp_ps_escaped_filters_data47() {
  */
 function bp_ps_full_label( $f ) {
 	$labels = array(
+		/* translators: %1$s: field label. */
 		'contains'   => __( '<strong>%1$s</strong><span></span>', 'buddyboss' ),
+		/* translators: %1$s: field label. */
 		''           => __( '<strong>%1$s</strong><span> is:<span>', 'buddyboss' ),
+		/* translators: %1$s: field label. */
 		'like'       => __( '<strong>%1$s</strong><span> is like:<span>', 'buddyboss' ),
+		/* translators: %1$s: field label. */
 		'range'      => __( '<strong>%1$s</strong><span> range:<span>', 'buddyboss' ),
+		/* translators: %1$s: field label. */
 		'date_range' => __( '<strong>%1$s</strong><span> range:<span>', 'buddyboss' ),
+		/* translators: %1$s: field label. */
 		'distance'   => __( '<strong>%1$s</strong><span> is within:<span>', 'buddyboss' ),
+		/* translators: %1$s: field label. */
 		'one_of'     => __( '<strong>%1$s</strong><span> is one of:<span>', 'buddyboss' ),
+		/* translators: %1$s: field label. */
 		'match_any'  => __( '<strong>%1$s</strong><span> match any:<span>', 'buddyboss' ),
+		/* translators: %1$s: field label. */
 		'match_all'  => __( '<strong>%1$s</strong><span> match all:<span>', 'buddyboss' ),
+		/* translators: %1$s: field label. */
 		'unknown'    => __( '<strong>%1$s</strong>:', 'buddyboss' ),
 	);
 
@@ -288,51 +298,65 @@ function bp_ps_print_filter( $f ) {
 			case 'range':
 			case 'date_range':
 				if ( ! isset( $f->value['max'] ) ) {
+					/* translators: %1$s: minimum value. */
 					return sprintf( esc_html__( 'min: %1$s', 'buddyboss' ), $f->value['min'] );
 				}
 				if ( ! isset( $f->value['min'] ) ) {
+					/* translators: %1$s: maximum value. */
 					return sprintf( esc_html__( 'max: %1$s', 'buddyboss' ), $f->value['max'] );
 				}
 
+				/* translators: 1: minimum value, 2: maximum value. */
 				return sprintf( esc_html__( 'min: %1$s, max: %2$s', 'buddyboss' ), $f->value['min'], $f->value['max'] );
 
 			case '':
 				if ( isset( $values ) ) {
+					/* translators: %1$s: field value. */
 					return sprintf( esc_html__( 'is: %1$s', 'buddyboss' ), $values[0] );
 				}
 
+				/* translators: %1$s: field value. */
 				return sprintf( esc_html__( 'is: %1$s', 'buddyboss' ), $f->value );
 
 			case 'contains':
+				/* translators: %1$s: field value. */
 				return sprintf( esc_html__( 'contains: %1$s', 'buddyboss' ), $f->value );
 
 			case 'like':
+				/* translators: %1$s: field value. */
 				return sprintf( esc_html__( 'is like: %1$s', 'buddyboss' ), $f->value );
 
 			case 'one_of':
 				if ( count( $values ) == 1 ) {
+					/* translators: %1$s: field value. */
 					return sprintf( esc_html__( 'is: %1$s', 'buddyboss' ), $values[0] );
 				}
 
+				/* translators: %1$s: comma-separated field values. */
 				return sprintf( esc_html__( 'is one of: %1$s', 'buddyboss' ), implode( ', ', $values ) );
 
 			case 'match_any':
 				if ( count( $values ) == 1 ) {
+					/* translators: %1$s: field value. */
 					return sprintf( esc_html__( 'match: %1$s', 'buddyboss' ), $values[0] );
 				}
 
+				/* translators: %1$s: comma-separated field values. */
 				return sprintf( esc_html__( 'match any: %1$s', 'buddyboss' ), implode( ', ', $values ) );
 
 			case 'match_all':
 				if ( count( $values ) == 1 ) {
+					/* translators: %1$s: field value. */
 					return sprintf( esc_html__( 'match: %1$s', 'buddyboss' ), $values[0] );
 				}
 
+				/* translators: %1$s: comma-separated field values. */
 				return sprintf( esc_html__( 'match all: %1$s', 'buddyboss' ), implode( ', ', $values ) );
 
 			case 'distance':
 				if ( $f->value['units'] == 'km' ) {
 					return sprintf(
+						/* translators: 1: distance in km, 2: location. */
 						esc_html__( 'is within: %1$s km of %2$s', 'buddyboss' ),
 						$f->value['distance'],
 						$f->value['location']
@@ -340,6 +364,7 @@ function bp_ps_print_filter( $f ) {
 				}
 
 				return sprintf(
+					/* translators: 1: distance in miles, 2: location. */
 					esc_html__( 'is within: %1$s miles of %2$s', 'buddyboss' ),
 					$f->value['distance'],
 					$f->value['location']

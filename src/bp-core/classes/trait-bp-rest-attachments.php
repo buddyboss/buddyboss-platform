@@ -120,6 +120,7 @@ trait BP_REST_Attachments {
 			$error_reason  = 'unknown';
 
 			if ( ! bb_is_gd_or_imagick_library_enabled() ) {
+				/* translators: %s: the image editor error message. */
 				$error_message = sprintf( esc_html__( 'Upload Error: %s', 'buddyboss' ), esc_html__( 'Missing image editor! Enable GD or Imagick library.', 'buddyboss' ) );
 				$error_reason  = 'image_no_editor';
 			}

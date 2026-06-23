@@ -145,6 +145,7 @@ class BP_Core_Network_Posts_Widget extends WP_Widget {
 							</span>
 									<?php if ( $show_image && has_post_thumbnail() ) { ?>
 										<div class="data-photo"><a href="<?php the_permalink(); ?>"
+																   <?php /* translators: %s: post title. */ ?>
 																   title="<?php echo esc_attr( sprintf( __( 'Permalink to %s', 'buddyboss' ), the_title_attribute( 'echo=0' ) ) ); ?>"
 																   class="entry-media entry-img">
 												<?php the_post_thumbnail(); ?>

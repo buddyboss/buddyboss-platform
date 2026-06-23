@@ -171,6 +171,7 @@ class BP_Core_User {
 				'item_id' => $this->id,
 				'type'    => 'full',
 				'alt'     => sprintf(
+					/* translators: %s: member full name. */
 					__(
 						'Profile photo of %s',
 						'buddyboss'
@@ -184,6 +185,7 @@ class BP_Core_User {
 				'item_id' => $this->id,
 				'type'    => 'thumb',
 				'alt'     => sprintf(
+					/* translators: %s: member full name. */
 					__(
 						'Profile photo of %s',
 						'buddyboss'
@@ -196,11 +198,13 @@ class BP_Core_User {
 			array(
 				'item_id' => $this->id,
 				'type'    => 'thumb',
+				/* translators: %s: member full name. */
 				'alt'     => sprintf( __( 'Profile photo of %s', 'buddyboss' ), $this->fullname ),
 				'width'   => 30,
 				'height'  => 30,
 			)
 		);
+		/* translators: %s: human-readable time difference, e.g. "2 hours ago". */
 		$this->last_active  = bp_core_get_last_activity( bp_get_user_last_activity( $this->id ), __( 'active %s', 'buddyboss' ) );
 	}
 
@@ -215,6 +219,7 @@ class BP_Core_User {
 
 		if ( bp_is_active( 'groups' ) ) {
 			$this->total_groups = BP_Groups_Member::total_group_count( $this->id );
+			/* translators: %d: number of groups. */
 			$this->total_groups = sprintf( _n( '%d group', '%d groups', $this->total_groups, 'buddyboss' ), $this->total_groups );
 		}
 	}
