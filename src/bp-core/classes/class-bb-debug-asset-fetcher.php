@@ -66,6 +66,22 @@ class BB_Debug_Asset_Fetcher {
 	const SENTINEL_SHA = 'LOCAL_TEST_BUILD';
 
 	/**
+	 * Required prefix for the manifest's `fetch_base_url`. Constrains outbound
+	 * fetches to the BuddyBoss source repo on GitHub raw — a tampered manifest
+	 * cannot point the fetcher at an arbitrary host (SSRF defense). Matches the
+	 * REPO_URL_BASE the manifest generator writes.
+	 */
+	const FETCH_BASE_PREFIX = 'https://raw.githubusercontent.com/buddyboss/buddyboss-platform/';
+
+	/**
+	 * Extensions the fetcher is allowed to write into the plugin directory.
+	 * Defense-in-depth: even a tampered manifest cannot drop executable or
+	 * config files (.php, .phtml, .htaccess, …) — only the static asset types
+	 * the manifest is ever expected to carry.
+	 */
+	const ALLOWED_EXTENSIONS = array( 'js', 'css', 'png', 'jpg', 'jpeg', 'gif', 'svg', 'webp', 'ico', 'bmp', 'woff2' );
+
+	/**
 	 * Restore target: the fetched files are written back into the plugin
 	 * directory at their manifest-relative paths, i.e.
 	 *   {BP_PLUGIN_DIR}/<rel_path>
@@ -649,7 +665,10 @@ class BB_Debug_Asset_Fetcher {
 			return false;
 		}
 
-		if ( empty( $manifest['fetch_base_url'] ) || 0 !== strpos( $manifest['fetch_base_url'], 'https://' ) ) {
+		// fetch_base_url must point at the BuddyBoss source repo on GitHub raw —
+		// not merely be https. Constrains outbound I/O to a single known host so
+		// a tampered manifest can't turn the fetcher into an SSRF primitive.
+		if ( empty( $manifest['fetch_base_url'] ) || 0 !== strpos( $manifest['fetch_base_url'], self::FETCH_BASE_PREFIX ) ) {
 			self::$manifest_cache = false;
 			return false;
 		}
@@ -688,6 +707,15 @@ class BB_Debug_Asset_Fetcher {
 		}
 		// Conservative allowlist: ASCII letters, digits, dot, dash, underscore, forward slash.
 		if ( ! preg_match( '#^[A-Za-z0-9_./\-]+$#', $rel ) ) {
+			return false;
+		}
+		// Defense-in-depth extension allowlist: only static asset types the
+		// manifest is ever expected to carry may be written into the plugin
+		// directory. Blocks executable/config drops (.php, .phtml, .htaccess)
+		// even if the manifest were tampered with.
+		$dot = strrpos( $rel, '.' );
+		$ext = ( false === $dot ) ? '' : strtolower( substr( $rel, $dot + 1 ) );
+		if ( ! in_array( $ext, self::ALLOWED_EXTENSIONS, true ) ) {
 			return false;
 		}
 		return true;

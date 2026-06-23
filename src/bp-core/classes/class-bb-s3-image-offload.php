@@ -270,7 +270,13 @@ class BB_S3_Image_Offload {
 		 *
 		 * @param string $base_url Bucket base URL.
 		 */
-		$base_url = apply_filters( 'bb_s3_image_offload_base_url', self::DEFAULT_BASE_URL );
+		// esc_url_raw() on the filtered base: the value is concatenated into the
+		// rewritten URLs that land in HTML/CSS, so a malformed or filter-injected
+		// base must be sanitized to a safe URL before use.
+		$base_url = esc_url_raw( (string) apply_filters( 'bb_s3_image_offload_base_url', self::DEFAULT_BASE_URL ) );
+		if ( '' === $base_url ) {
+			$base_url = self::DEFAULT_BASE_URL;
+		}
 
 		/**
 		 * Filters the object-key prefix prepended to source-relative paths.
@@ -280,6 +286,9 @@ class BB_S3_Image_Offload {
 		 * @param string $prefix Key prefix. Default '' (bucket root).
 		 */
 		$prefix = apply_filters( 'bb_s3_image_offload_key_prefix', self::DEFAULT_KEY_PREFIX );
+		// Strip anything outside a conservative path allowlist so the prefix
+		// can't inject characters into the constructed URL.
+		$prefix = preg_replace( '#[^A-Za-z0-9_./\-]#', '', (string) $prefix );
 
 		return trailingslashit( $base_url ) . ltrim( (string) $prefix, '/' );
 	}
