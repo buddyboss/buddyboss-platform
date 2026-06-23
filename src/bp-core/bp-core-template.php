@@ -142,6 +142,7 @@ function bp_get_directory_title( $component = '' ) {
 
 		// If none is found, concatenate.
 	} elseif ( isset( buddypress()->{$component}->name ) ) {
+		/* translators: %s: component name. */
 		$title = sprintf( __( '%s Directory', 'buddyboss' ), buddypress()->{$component}->name );
 	}
 
@@ -198,6 +199,7 @@ function bp_comment_author_avatar() {
 				array(
 					'item_id' => $comment->user_id,
 					'type'    => 'thumb',
+					/* translators: %s: comment author display name. */
 					'alt'     => sprintf( __( 'Profile photo of %s', 'buddyboss' ), bp_core_get_user_displayname( $comment->user_id ) ),
 				)
 			)
@@ -222,6 +224,7 @@ function bp_post_author_avatar() {
 				array(
 					'item_id' => $post->post_author,
 					'type'    => 'thumb',
+					/* translators: %s: post author display name. */
 					'alt'     => sprintf( __( 'Profile photo of %s', 'buddyboss' ), bp_core_get_user_displayname( $post->post_author ) ),
 				)
 			)
@@ -437,6 +440,7 @@ function bp_format_time( $time = '', $exclude_time = false, $gmt = true ) {
 		$formatted_time = date_i18n( bp_get_option( 'time_format' ), $calculated_time, $gmt );
 
 		// Return string formatted with date and time.
+		/* translators: 1: formatted date, 2: formatted time. */
 		$formatted_date = sprintf( esc_html__( '%1$s at %2$s', 'buddyboss' ), $formatted_date, $formatted_time );
 	}
 

@@ -61,6 +61,7 @@ function bb_activity_register_comments_panel_fields( $edit_time_options ) {
 			'name'                 => '_bb_enable_activity_comment_edit',
 			'label'                => __( 'Edit Activity Comments', 'buddyboss' ),
 			'type'                 => 'toggle',
+			/* translators: %s: edit time duration select control. */
 			'description'          => __( 'Allow members to edit their comment for a duration of %s', 'buddyboss' ),
 			'default'              => bb_is_activity_comment_edit_enabled(),
 			'sanitize_callback'    => 'absint',
@@ -86,6 +87,7 @@ function bb_activity_register_comments_panel_fields( $edit_time_options ) {
 			'name'                 => '_bb_activity_comment_visibility',
 			'label'                => __( 'Comment Visibility', 'buddyboss' ),
 			'type'                 => 'hidden',
+			/* translators: %s: comment count select control. */
 			'description'          => __( 'Display a maximum %s comments per post in activity feeds', 'buddyboss' ),
 			'help_text'            => __( 'Load more via "View more comments." High comment counts may slow scrolling. Applies to platform only, not app.', 'buddyboss' ),
 			'default'              => bb_get_activity_comment_visibility(),
@@ -134,6 +136,7 @@ function bb_activity_register_comments_panel_fields( $edit_time_options ) {
 			'name'                 => '_bb_enable_activity_comment_threading',
 			'label'                => __( 'Comment Threading', 'buddyboss' ),
 			'type'                 => 'toggle',
+			/* translators: %s: thread depth select control. */
 			'description'          => __( 'Organize replies into threads %s levels deep', 'buddyboss' ),
 			'help_text'            => __( 'Replies to activity comments appear in threads, except for replies at the deepest level. Applies to platform only, not app.', 'buddyboss' ),
 			'default'              => bb_is_activity_comment_threading_enabled(),
@@ -177,6 +180,7 @@ function bb_activity_register_comments_panel_fields( $edit_time_options ) {
 			'name'                 => '_bb_activity_comment_loading',
 			'label'                => __( 'Comments Loading', 'buddyboss' ),
 			'type'                 => 'hidden',
+			/* translators: %s: additional comments count select control. */
 			'description'          => __( 'Load %s Additional comments on each request', 'buddyboss' ),
 			'help_text'            => __( 'Increasing the number of comments retrieved in each request may negatively impact site performance.', 'buddyboss' ),
 			'default'              => bb_get_activity_comment_loading(),

@@ -38,7 +38,9 @@ class BP_Attachment_Avatar extends BP_Attachment {
 
 				// Specific errors for avatars.
 				'upload_error_strings'  => array(
+					/* translators: %s: maximum allowed file size. */
 					9  => sprintf( __( 'That photo is too big. Please upload one smaller than %s', 'buddyboss' ), size_format( bp_core_avatar_original_max_filesize() ) ),
+					/* translators: %s: comma-separated list of allowed file types. */
 					10 => sprintf( _n( 'Please upload only this file type: %s.', 'Please upload only these file types: %s.', count( $allowed_types ), 'buddyboss' ), self::get_avatar_types( $allowed_types ) ),
 				),
 			)

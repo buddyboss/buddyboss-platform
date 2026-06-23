@@ -75,6 +75,7 @@ class BP_Core_Follow_Following_Widget extends WP_Widget {
 		$instance['title'] = (
 			bp_loggedin_user_id() === bp_displayed_user_id()
 			? __( "I'm Following", 'buddyboss' )
+			/* translators: %s: member display name. */
 			: sprintf( __( "%s is Following", 'buddyboss' ), $this->get_user_display_name( $id ) )
 		);
 

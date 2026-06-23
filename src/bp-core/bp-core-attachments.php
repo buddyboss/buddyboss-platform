@@ -788,6 +788,7 @@ function bp_attachments_get_plupload_l10n() {
 		'bp_attachments_get_plupload_l10n',
 		array(
 			'queue_limit_exceeded'      => __( 'You have attempted to queue too many files.', 'buddyboss' ),
+			/* translators: 1: file name, 2: maximum upload size. */
 			'file_exceeds_size_limit'   => __( '%1$s exceeds the maximum upload size of %2$s for this site.', 'buddyboss' ),
 			'zero_byte_file'            => __( 'This file is empty. Please try another.', 'buddyboss' ),
 			'invalid_filetype'          => __( 'This file type is not allowed. Please try another.', 'buddyboss' ),
@@ -799,7 +800,9 @@ function bp_attachments_get_plupload_l10n() {
 			'upload_limit_exceeded'     => __( 'You may only upload 1 file.', 'buddyboss' ),
 			'http_error'                => __( 'HTTP error.', 'buddyboss' ),
 			'upload_failed'             => __( 'Upload failed.', 'buddyboss' ),
+			/* translators: 1: opening anchor tag, 2: closing anchor tag. */
 			'big_upload_failed'         => __( 'Please try uploading this file with the %1$sbrowser uploader%2$s.', 'buddyboss' ),
+			/* translators: %s: file name. */
 			'big_upload_queued'         => __( '%s exceeds the maximum upload size for the multi-file uploader when used in your browser.', 'buddyboss' ),
 			'io_error'                  => __( 'IO error.', 'buddyboss' ),
 			'security_error'            => __( 'Security error.', 'buddyboss' ),
@@ -808,9 +811,11 @@ function bp_attachments_get_plupload_l10n() {
 			'dismiss'                   => __( 'Dismiss', 'buddyboss' ),
 			'crunching'                 => __( 'Crunching&hellip;', 'buddyboss' ),
 			'unique_file_warning'       => __( 'Make sure to upload a unique file', 'buddyboss' ),
+			/* translators: %s: file name. */
 			'error_uploading'           => __( '"%s" has failed to upload.', 'buddyboss' ),
 			'has_avatar_warning'        => __( 'If you\'d like to delete the existing profile photo but not upload a new one, please use the delete tab.', 'buddyboss' ),
 			'avatar_size_warning'       => sprintf(
+				/* translators: 1: recommended width in pixels, 2: recommended height in pixels. */
 				__( 'For best results, upload an image that is %1$spx by %2$spx or larger.', 'buddyboss' ),
 				bp_core_avatar_full_height(),
 				bp_core_avatar_full_width()
@@ -1005,6 +1010,7 @@ function bp_attachments_enqueue_scripts( $class = '' ) {
 			'bp_attachments_cover_image_ui_warnings',
 			array(
 				'dimensions' => sprintf(
+					/* translators: 1: recommended width in pixels, 2: recommended height in pixels. */
 					__( 'For best results, upload an image that is %1$spx by %2$spx or larger.', 'buddyboss' ),
 					(int) $cover_dimensions['width'],
 					(int) $cover_dimensions['height']
@@ -1579,6 +1585,7 @@ function bp_attachments_cover_image_ajax_upload() {
 			$is_html4,
 			array(
 				'type'    => 'upload_error',
+				/* translators: %s: the upload error message. */
 				'message' => sprintf( __( 'Upload Error: %s', 'buddyboss' ), $uploaded['error'] ),
 			)
 		);
@@ -1664,6 +1671,7 @@ function bp_attachments_cover_image_ajax_upload() {
 
 		$error_code = 'upload_error';
 		if ( ! bb_is_gd_or_imagick_library_enabled() ) {
+			/* translators: %s: the image editor error message. */
 			$error_message = sprintf( esc_html__( 'Upload Error: %s', 'buddyboss' ), esc_html__( 'Missing image editor! Enable GD or Imagick library.', 'buddyboss' ) );
 			$error_code    = 'image_no_editor';
 		}

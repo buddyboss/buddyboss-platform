@@ -14,7 +14,7 @@
 
 		<fieldset class="bbp-form" id="bbp-edit-topic-tag">
 
-			<legend><?php printf( __( 'Manage Tag: "%s"', 'buddyboss' ), bbp_get_topic_tag_name() ); ?></legend>
+			<legend><?php /* translators: %s: topic tag name. */ printf( __( 'Manage Tag: "%s"', 'buddyboss' ), bbp_get_topic_tag_name() ); ?></legend>
 
 			<fieldset class="bbp-form" id="tag-rename">
 
@@ -72,7 +72,7 @@
 					</div>
 
 					<div class="bbp-submit-wrapper">
-						<button type="submit" tabindex="<?php bbp_tab_index(); ?>" class="button submit" onclick="return confirm('<?php echo esc_js( sprintf( __( 'Are you sure you want to merge the "%s" tag into the tag you specified?', 'buddyboss' ), bbp_get_topic_tag_name() ) ); ?>');"><?php esc_attr_e( 'Merge', 'buddyboss' ); ?></button>
+						<button type="submit" tabindex="<?php bbp_tab_index(); ?>" class="button submit" onclick="return confirm('<?php echo esc_js( /* translators: %s: topic tag name. */ sprintf( __( 'Are you sure you want to merge the "%s" tag into the tag you specified?', 'buddyboss' ), bbp_get_topic_tag_name() ) ); ?>');"><?php esc_attr_e( 'Merge', 'buddyboss' ); ?></button>
 
 						<input type="hidden" name="tag-id" value="<?php bbp_topic_tag_id(); ?>" />
 						<input type="hidden" name="action" value="bbp-merge-topic-tag" />
@@ -102,7 +102,7 @@
 					<form id="delete_tag" name="delete_tag" method="post" action="<?php the_permalink(); ?>">
 
 						<div class="bbp-submit-wrapper">
-							<button type="submit" tabindex="<?php bbp_tab_index(); ?>" class="button submit" onclick="return confirm('<?php echo esc_js( sprintf( __( 'Are you sure you want to delete the "%s" tag? This is permanent and cannot be undone.', 'buddyboss' ), bbp_get_topic_tag_name() ) ); ?>');"><?php esc_attr_e( 'Delete', 'buddyboss' ); ?></button>
+							<button type="submit" tabindex="<?php bbp_tab_index(); ?>" class="button submit" onclick="return confirm('<?php echo esc_js( /* translators: %s: topic tag name. */ sprintf( __( 'Are you sure you want to delete the "%s" tag? This is permanent and cannot be undone.', 'buddyboss' ), bbp_get_topic_tag_name() ) ); ?>');"><?php esc_attr_e( 'Delete', 'buddyboss' ); ?></button>
 
 							<input type="hidden" name="tag-id" value="<?php bbp_topic_tag_id(); ?>" />
 							<input type="hidden" name="action" value="bbp-delete-topic-tag" />

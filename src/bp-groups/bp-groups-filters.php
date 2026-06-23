@@ -1294,6 +1294,7 @@ function bb_group_subscriptions_handler() {
 
 	if ( empty( $message ) && 'subscribe' === $action ) {
 		if ( $is_subscription ) {
+			/* translators: %s: group name. */
 			$message = __( '%s You are already subscribe this group.', 'buddyboss' );
 		} else {
 			$subscription_id = bb_create_subscription(

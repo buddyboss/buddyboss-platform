@@ -78,7 +78,7 @@ function bp_friends_random_friends() {
 	} ?>
 
 	<div class="info-group">
-		<h4><?php bp_word_or_name( __( 'My Connections', 'buddyboss' ), __( "%s's Connections", 'buddyboss' ) ); ?>  (<?php echo BP_Friends_Friendship::total_friend_count( bp_displayed_user_id() ); ?>) <span><a href="<?php echo trailingslashit( bp_displayed_user_domain() . bp_get_friends_slug() ); ?>"><?php _e( 'See All', 'buddyboss' ); ?></a></span></h4>
+		<h4><?php /* translators: %s: member display name. */ bp_word_or_name( __( 'My Connections', 'buddyboss' ), __( "%s's Connections", 'buddyboss' ) ); ?>  (<?php echo BP_Friends_Friendship::total_friend_count( bp_displayed_user_id() ); ?>) <span><a href="<?php echo trailingslashit( bp_displayed_user_domain() . bp_get_friends_slug() ); ?>"><?php _e( 'See All', 'buddyboss' ); ?></a></span></h4>
 
 		<?php if ( $friend_ids ) { ?>
 
@@ -107,7 +107,7 @@ function bp_friends_random_friends() {
 		<?php } else { ?>
 
 			<div id="message" class="info">
-				<p><?php bp_word_or_name( __( "You haven't made any connections yet.", 'buddyboss' ), __( "%s hasn't created any connections yet.", 'buddyboss' ) ); ?></p>
+				<p><?php /* translators: %s: member display name. */ bp_word_or_name( __( "You haven't made any connections yet.", 'buddyboss' ), __( "%s hasn't created any connections yet.", 'buddyboss' ) ); ?></p>
 			</div>
 
 		<?php } ?>
@@ -261,10 +261,12 @@ function bp_get_member_total_friend_count() {
 		 * @param string $value String of the form "x friends".
 		 * @param int    $value Total friend count for current member in the loop.
 		 */
+		/* translators: %d: total friend count. */
 		return apply_filters( 'bp_get_member_total_friend_count', sprintf( __( '%d connection', 'buddyboss' ), (int) $members_template->member->total_friend_count ) );
 	} else {
 
 		/** This filter is documented in bp-friends/bp-friends-template.php */
+		/* translators: %d: total friend count. */
 		return apply_filters( 'bp_get_member_total_friend_count', sprintf( __( '%d connections', 'buddyboss' ), (int) $members_template->member->total_friend_count ) );
 	}
 }
@@ -868,6 +870,7 @@ function bp_friends_get_profile_stats( $args = '' ) {
 			}
 
 			// If friends exist, show some formatted output.
+			/* translators: %s: total friend count. */
 			$r['output'] = $r['before'] . sprintf( _n( '%s connection', '%s connections', $r['friends'], 'buddyboss' ), '<strong>' . $r['friends'] . '</strong>' ) . $r['after'];
 		}
 	}

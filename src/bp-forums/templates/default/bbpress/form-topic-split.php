@@ -20,7 +20,7 @@
 
 				<fieldset class="bbp-form">
 
-					<legend><?php printf( __( 'Split discussion "%s"', 'buddyboss' ), bbp_get_topic_title() ); ?></legend>
+					<legend><?php /* translators: %s: discussion title. */ printf( __( 'Split discussion "%s"', 'buddyboss' ), bbp_get_topic_title() ); ?></legend>
 
 					<div>
 
@@ -40,9 +40,9 @@
 							<div>
 								<div class="bp-radio-wrap">
 									<input name="bbp_topic_split_option" id="bbp_topic_split_option_reply" class="bs-styled-radio" type="radio" checked="checked" value="reply" tabindex="<?php bbp_tab_index(); ?>" />
-									<label for="bbp_topic_split_option_reply"><?php printf( __( 'New discussion in <strong>%s</strong> titled:', 'buddyboss' ), bbp_get_forum_title( bbp_get_topic_forum_id( bbp_get_topic_id() ) ) ); ?></label>
+									<label for="bbp_topic_split_option_reply"><?php /* translators: %s: forum title. */ printf( __( 'New discussion in <strong>%s</strong> titled:', 'buddyboss' ), bbp_get_forum_title( bbp_get_topic_forum_id( bbp_get_topic_id() ) ) ); ?></label>
 								</div>
-								<input type="text" id="bbp_topic_split_destination_title" value="<?php printf( __( 'Split: %s', 'buddyboss' ), bbp_get_topic_title() ); ?>" tabindex="<?php bbp_tab_index(); ?>" size="35" name="bbp_topic_split_destination_title" />
+								<input type="text" id="bbp_topic_split_destination_title" value="<?php /* translators: %s: discussion title. */ printf( __( 'Split: %s', 'buddyboss' ), bbp_get_topic_title() ); ?>" tabindex="<?php bbp_tab_index(); ?>" size="35" name="bbp_topic_split_destination_title" />
 							</div>
 
 							<?php

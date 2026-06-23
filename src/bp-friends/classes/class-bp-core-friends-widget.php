@@ -102,6 +102,7 @@ class BP_Core_Friends_Widget extends WP_Widget {
 		}
 
 		$link              = trailingslashit( bp_displayed_user_domain() . bp_get_friends_slug() );
+		/* translators: %s: member display name. */
 		$instance['title'] = (
 			bp_loggedin_user_id() === $user_id
 			? __( 'My Connections', 'buddyboss' )

@@ -35,6 +35,7 @@
 
 					<?php
 					if ( bbp_is_topic_edit() ) {
+						/* translators: %s: discussion title. */
 						printf( __( 'Now Editing &ldquo;%s&rdquo;', 'buddyboss' ), bbp_get_topic_title() );
 					} else {
 						bbp_is_single_forum() ? printf( __( 'Ask a question or share an idea.', 'buddyboss' ), bbp_get_forum_title() ) : _e( 'Start New Discussion', 'buddyboss' );
@@ -265,7 +266,7 @@
 	<div id="no-topic-<?php bbp_topic_id(); ?>" class="bbp-no-topic">
 		<div class="bp-feedback info">
 			<span class="bp-icon" aria-hidden="true"></span>
-			<p><?php printf( __( 'The forum "%s" is closed to new discussions and replies.', 'buddyboss' ), bbp_get_forum_title() ); ?></p>
+			<p><?php /* translators: %s: forum title. */ printf( __( 'The forum "%s" is closed to new discussions and replies.', 'buddyboss' ), bbp_get_forum_title() ); ?></p>
 		</div>
 	</div>
 

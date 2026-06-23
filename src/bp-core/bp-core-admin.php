@@ -51,5 +51,6 @@ function bp_admin() {
 		'buddyboss'
 	);
 
+	/* translators: %s: release notes URL. */
 	__( 'For more information, see <a href="%s">the release notes</a>.', 'buddyboss' );
 }

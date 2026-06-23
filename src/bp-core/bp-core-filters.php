@@ -651,6 +651,7 @@ function bp_modify_page_title( $title = '', $sep = '&raquo;', $seplocation = 'ri
 		$bp_title_parts['site'] = $blogname;
 
 		if ( ( $paged >= 2 || $page >= 2 ) && ! is_404() && ! bp_is_single_activity() && ! bp_is_user_messages() ) {
+			/* translators: %s: page number. */
 			$bp_title_parts['page'] = sprintf( __( 'Page %s', 'buddyboss' ), max( $paged, $page ) );
 		}
 	}

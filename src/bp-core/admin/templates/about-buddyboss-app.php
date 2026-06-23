@@ -41,6 +41,7 @@ defined( 'ABSPATH' ) || exit;
 		<div class="bp-hello-social-cta">
 			<p>
 				<?php
+					/* translators: %s: BuddyBoss app URL. */
 				printf(
 					__( '<span>Native mobile apps by </span><a href="%s">BuddyBoss</a><span>.</span>', 'buddyboss' ),
 					esc_url( 'https://buddyboss.com/app' )

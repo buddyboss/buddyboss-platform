@@ -12,7 +12,7 @@
 
 	<div class="bbp-meta">
 
-		<span class="bbp-forum-post-date"><?php printf( __( 'Last updated %s', 'buddyboss' ), bbp_get_forum_last_active_time() ); ?></span>
+		<span class="bbp-forum-post-date"><?php /* translators: %s: time since the forum was last active. */ printf( __( 'Last updated %s', 'buddyboss' ), bbp_get_forum_last_active_time() ); ?></span>
 
 		<a href="<?php bbp_forum_permalink(); ?>" class="bbp-forum-permalink">#<?php bbp_forum_id(); ?></a>
 

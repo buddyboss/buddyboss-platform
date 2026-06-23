@@ -326,6 +326,7 @@ function bb_feed_settings_callback_post_type_comments( $args ) {
 		<?php disabled( $is_cpt_comment_enabled, false ); ?>
 	/>
 	<label for="<?php echo esc_attr( $option_name ); ?>">
+		<?php /* translators: %s: custom post type label. */ ?>
 		<?php echo 'post' === $post_type ? esc_html__( 'Enable WordPress Post comments in the activity feed', 'buddyboss' ) : sprintf( esc_html__( 'Enable %s comments in the activity feed.', 'buddyboss' ), esc_html( $post_type_obj->labels->name ) ); ?>
 	</label>
 	<?php

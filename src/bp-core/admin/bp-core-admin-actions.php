@@ -620,6 +620,12 @@ function bb_admin_check_valid_giphy_key() {
 		'message' => esc_html__( 'There was a problem performing this action. Please try again.', 'buddyboss' ),
 	);
 
+	// Capability gate: this is an admin-settings AJAX action; restrict to
+	// administrators (consistent with the other Settings 2.0 AJAX handlers).
+	if ( ! current_user_can( 'manage_options' ) ) {
+		wp_send_json_error( $response );
+	}
+
 	$key = filter_input( INPUT_POST, 'key', FILTER_DEFAULT );
 
 	if ( empty( $key ) ) {
