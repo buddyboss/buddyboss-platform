@@ -4747,7 +4747,7 @@ window.bp = window.bp || {};
 			}
 
 			// Convert to selector string for compatibility with existing code
-			currentTarget = $currentTarget.length > 0 ? ( $currentTarget.attr( 'id' ) ? '#' + $currentTarget.attr( 'id' ) : '.bp-media-move-file' ) : '.bp-media-move-file';
+			currentTarget = $currentTarget.attr( 'id' ) ? '#' + $currentTarget.attr( 'id' ) : '.bp-media-move-file';
 
 			$( currentTarget ).find( '.location-folder-list-wrap .location-folder-list' ).remove();
 			$( currentTarget ).find( '.location-folder-list-wrap' ).append( '<ul class="location-folder-list is-loading"><li><i class="bb-icon-l bb-icon-spinner animate-spin"></i></li></ul>' );
