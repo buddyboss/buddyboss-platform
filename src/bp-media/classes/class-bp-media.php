@@ -444,22 +444,22 @@ class BP_Media {
 		}
 
 		if ( ! empty( $r['activity_id'] ) ) {
-			$where_conditions['activity'] = "m.activity_id = {$r['activity_id']}";
+			$where_conditions['activity'] = $wpdb->prepare( 'm.activity_id = %d', $r['activity_id'] );
 		}
 
 		// existing-media check to query media which has no albums assigned.
 		if ( ! empty( $r['album_id'] ) && 'existing-media' !== $r['album_id'] ) {
-			$where_conditions['album'] = "m.album_id = {$r['album_id']}";
+			$where_conditions['album'] = $wpdb->prepare( 'm.album_id = %d', $r['album_id'] );
 		} elseif ( ! empty( $r['album_id'] ) && 'existing-media' === $r['album_id'] ) {
 			$where_conditions['album'] = 'm.album_id = 0';
 		}
 
 		if ( ! empty( $r['user_id'] ) ) {
-			$where_conditions['user'] = "m.user_id = {$r['user_id']}";
+			$where_conditions['user'] = $wpdb->prepare( 'm.user_id = %d', $r['user_id'] );
 		}
 
 		if ( ! empty( $r['group_id'] ) ) {
-			$where_conditions['group'] = "m.group_id = {$r['group_id']}";
+			$where_conditions['group'] = $wpdb->prepare( 'm.group_id = %d', $r['group_id'] );
 		}
 
 		if ( ! empty( $r['privacy'] ) ) {
@@ -1301,7 +1301,7 @@ class BP_Media {
 		$total_count = wp_cache_get( $cache_key, 'bp_media' );
 
 		if ( false === $total_count ) {
-			$total_count = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$bp->media->table_name} WHERE user_id = {$user_id} AND privacy IN ({$privacy})" );
+			$total_count = (int) $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM {$bp->media->table_name} WHERE user_id = %d AND privacy IN ({$privacy})", $user_id ) );
 			wp_cache_set( $cache_key, $total_count, 'bp_media' );
 		}
 
@@ -1385,7 +1385,7 @@ class BP_Media {
 			$privacy = bp_media_query_privacy( $user_id, 0, 'groups' );
 			$privacy = "'" . implode( "', '", $privacy ) . "'";
 
-			$total_count = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$bp->media->table_name} WHERE user_id = {$user_id} AND privacy IN ({$privacy})" );
+			$total_count = (int) $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM {$bp->media->table_name} WHERE user_id = %d AND privacy IN ({$privacy})", $user_id ) );
 			wp_cache_set( $cache_key, $total_count, 'bp_media' );
 		}
 
@@ -1453,7 +1453,7 @@ class BP_Media {
 			$activity_media_id = wp_cache_get( $cache_key, 'bp_media' );
 
 			if ( false === $activity_media_id ) {
-				$activity_media_id = (int) $wpdb->get_var( "SELECT DISTINCT m.id FROM {$bp->media->table_name} m WHERE m.activity_id = {$activity_id} AND m.type = 'photo' " );
+				$activity_media_id = (int) $wpdb->get_var( $wpdb->prepare( "SELECT DISTINCT m.id FROM {$bp->media->table_name} m WHERE m.activity_id = %d AND m.type = 'photo' ", $activity_id ) );
 				wp_cache_set( $cache_key, $activity_media_id, 'bp_media' );
 			}
 
@@ -1491,7 +1491,7 @@ class BP_Media {
 		$result    = wp_cache_get( $cache_key, 'bp_media' );
 
 		if ( false === $result ) {
-			$result = (int) $wpdb->get_var( "SELECT DISTINCT m.attachment_id FROM {$bp->media->table_name} m WHERE m.activity_id = {$activity_id}" );
+			$result = (int) $wpdb->get_var( $wpdb->prepare( "SELECT DISTINCT m.attachment_id FROM {$bp->media->table_name} m WHERE m.activity_id = %d", $activity_id ) );
 			wp_cache_set( $cache_key, $result, 'bp_media' );
 		}
 

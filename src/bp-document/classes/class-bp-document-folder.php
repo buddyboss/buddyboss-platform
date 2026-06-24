@@ -315,7 +315,7 @@ class BP_Document_Folder {
 		}
 
 		if ( ! empty( $r['group_id'] ) ) {
-			$where_conditions['group'] = "f.group_id = {$r['group_id']}";
+			$where_conditions['group'] = $wpdb->prepare( 'f.group_id = %d', $r['group_id'] );
 		}
 
 		if ( ! empty( $r['privacy'] ) ) {
@@ -574,7 +574,7 @@ class BP_Document_Folder {
 	public static function total_group_folder_count( $group_id = 0 ) {
 		global $bp, $wpdb;
 
-		$total_count = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$bp->document->table_name_folder} WHERE group_id = {$group_id}" ); // db call ok; no-cache ok;
+		$total_count = (int) $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM {$bp->document->table_name_folder} WHERE group_id = %d", $group_id ) ); // db call ok; no-cache ok;
 
 		return $total_count;
 	}

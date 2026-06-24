@@ -5328,10 +5328,10 @@ function bb_set_bulk_user_profile_slug( $user_ids ) {
 	foreach ( $user_ids as $key => $user_id ) {
 
 		// removed old user meta which have value length 40.
-		$wpdb->query( "DELETE FROM {$wpdb->usermeta} WHERE meta_key LIKE 'bb_profile_slug' AND user_id = {$user_id} AND LENGTH(meta_value) = 40" );
+		$wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->usermeta} WHERE meta_key LIKE 'bb_profile_slug' AND user_id = %d AND LENGTH(meta_value) = 40", $user_id ) );
 
 		// Remove duplicate log slug with same value.
-		$wpdb->query( "DELETE um1 FROM {$wpdb->usermeta} um1, {$wpdb->usermeta} um2 WHERE um1.umeta_id > um2.umeta_id AND um1.meta_key = um2.meta_key AND um1.meta_key LIKE 'bb_profile_long_slug_%' AND LENGTH(um1.meta_key) >= 61 AND um1.user_id = {$user_id}" );
+		$wpdb->query( $wpdb->prepare( "DELETE um1 FROM {$wpdb->usermeta} um1, {$wpdb->usermeta} um2 WHERE um1.umeta_id > um2.umeta_id AND um1.meta_key = um2.meta_key AND um1.meta_key LIKE 'bb_profile_long_slug_%%' AND LENGTH(um1.meta_key) >= 61 AND um1.user_id = %d", $user_id ) );
 
 		// fetch user slug if already exists.
 		$p_slug = bb_core_get_user_slug( $user_id );

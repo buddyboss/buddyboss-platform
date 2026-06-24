@@ -141,9 +141,9 @@ id="div-listing-<?php echo esc_attr( $document_id ); ?>">
 			<?php
 			if ( $attachment_id ) {
 				?>
-				<small class="error-box"><?php _e( 'Following special characters are not supported:<br/> ? [ ] / \\\\ = < > : ; , \' " & $ # * ( ) | ~ ` ! { } % + {space}', 'buddyboss-platform' ); ?></small>
+				<small class="error-box"><?php esc_html_e( 'Following special characters are not supported:<br/> ? [ ] / \\\\ = < > : ; , \' " & $ # * ( ) | ~ ` ! { } % + {space}', 'buddyboss-platform' ); ?></small>
 			<?php } else { ?>
-				<small class="error-box"><?php _e( 'Following special characters are not supported:<br/> \ / ? % * : | " < >', 'buddyboss-platform' ); ?></small>
+				<small class="error-box"><?php esc_html_e( 'Following special characters are not supported:<br/> \ / ? % * : | " < >', 'buddyboss-platform' ); ?></small>
 				<?php
 			}
 			if ( wp_is_mobile() ) {

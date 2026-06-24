@@ -1339,7 +1339,7 @@ function bb_xprofile_repeater_field_repair_callback() {
 			$clone_id   = (int) $field->id;
 			$main_field = bb_xprofile_top_most_template_field_id( (int) $clone_id );
 
-			$metas = $wpdb->get_results( "SELECT * FROM {$bp->profile->table_name_meta} WHERE object_id = {$main_field} AND object_type = 'field'", ARRAY_A );
+			$metas = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$bp->profile->table_name_meta} WHERE object_id = %d AND object_type = 'field'", $main_field ), ARRAY_A );
 			if ( ! empty( $metas ) && ! is_wp_error( $metas ) ) {
 				$field_member_types = array();
 				foreach ( $metas as $meta ) {

@@ -373,7 +373,7 @@ class BP_XProfile_Group {
 		}
 
 		// Setup IN query from group IDs.
-		$group_ids_in = implode( ',', (array) $group_ids );
+		$group_ids_in = implode( ',', array_map( 'intval', (array) $group_ids ) );
 
 		// Support arrays and comma-separated strings.
 		$exclude_fields_cs = wp_parse_id_list( $r['exclude_fields'] );

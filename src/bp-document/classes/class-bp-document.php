@@ -370,7 +370,7 @@ class BP_Document {
 		}
 
 		if ( ! empty( $r['activity_id'] ) ) {
-			$where_conditions['activity'] = "d.activity_id = {$r['activity_id']}";
+			$where_conditions['activity'] = $wpdb->prepare( 'd.activity_id = %d', $r['activity_id'] );
 		}
 
 		// existing-document check to query document which has no folders assigned.
@@ -381,11 +381,11 @@ class BP_Document {
 		}
 
 		if ( ! empty( $r['user_id'] ) ) {
-			$where_conditions['user'] = "d.user_id = {$r['user_id']}";
+			$where_conditions['user'] = $wpdb->prepare( 'd.user_id = %d', $r['user_id'] );
 		}
 
 		if ( ! empty( $r['group_id'] ) ) {
-			$where_conditions['group'] = "d.group_id = {$r['group_id']}";
+			$where_conditions['group'] = $wpdb->prepare( 'd.group_id = %d', $r['group_id'] );
 		}
 
 		if ( ! empty( $r['privacy'] ) ) {
@@ -963,16 +963,16 @@ class BP_Document {
 		}
 
 		if ( ! empty( $r['activity_id'] ) ) {
-			$where_conditions_document['activity'] = "d.activity_id = {$r['activity_id']}";
+			$where_conditions_document['activity'] = $wpdb->prepare( 'd.activity_id = %d', $r['activity_id'] );
 		}
 
 		if ( ! empty( $r['user_id'] ) ) {
-			$where_conditions_document['user'] = "d.user_id = {$r['user_id']}";
+			$where_conditions_document['user'] = $wpdb->prepare( 'd.user_id = %d', $r['user_id'] );
 			$where_conditions_folder['user']   = "f.user_id = {$r['user_id']}";
 		}
 
 		if ( ! empty( $r['group_id'] ) ) {
-			$where_conditions_document['group'] = "d.group_id = {$r['group_id']}";
+			$where_conditions_document['group'] = $wpdb->prepare( 'd.group_id = %d', $r['group_id'] );
 			$where_conditions_folder['group']   = "f.group_id = {$r['group_id']}";
 		}
 
@@ -1896,7 +1896,7 @@ class BP_Document {
 		}
 
 		if ( empty( $activity_document_id ) ) {
-			$activity_document_id = (int) $wpdb->get_var( "SELECT DISTINCT d.id FROM {$bp->document->table_name} d WHERE d.activity_id = {$activity_id}" ); // db call ok; no-cache ok;
+			$activity_document_id = (int) $wpdb->get_var( $wpdb->prepare( "SELECT DISTINCT d.id FROM {$bp->document->table_name} d WHERE d.activity_id = %d", $activity_id ) ); // db call ok; no-cache ok;
 
 			if ( bp_is_active( 'activity' ) ) {
 				$document_activity = bp_activity_get_meta( $activity_id, 'bp_document_activity', true );

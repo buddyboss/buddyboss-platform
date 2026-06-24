@@ -5482,7 +5482,7 @@ function bb_xprofile_search_bp_user_query_search_first_last_nickname( $sql, BP_U
 	$where_condition = array();
 	if ( ! empty( $enabled_fields ) ) {
 		foreach ( $enabled_fields as $field_name => $field_id ) {
-			$where_condition[] = ' ( ( field_id = ' . $field_id . " ) AND ( value LIKE '" . $search_terms_nospace . "' OR value LIKE '" . $search_terms_space . "' ) )";
+			$where_condition[] = $wpdb->prepare( ' ( ( field_id = %d ) AND ( value LIKE %s OR value LIKE %s ) )', $field_id, $search_terms_nospace, $search_terms_space );
 		}
 	}
 	// Combine the core search (against wp_users) into a single OR clause with the xprofile_data search.

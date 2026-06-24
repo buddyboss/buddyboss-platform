@@ -316,7 +316,7 @@ class BP_Media_Album {
 		}
 
 		if ( ! empty( $r['group_id'] ) ) {
-			$where_conditions['group'] = "m.group_id = {$r['group_id']}";
+			$where_conditions['group'] = $wpdb->prepare( 'm.group_id = %d', $r['group_id'] );
 		}
 
 		if ( ! empty( $r['privacy'] ) ) {
@@ -630,7 +630,7 @@ class BP_Media_Album {
 		$total_count    = wp_cache_get( $cache_key, 'bp_media_album' );
 
 		if ( false === $total_count ) {
-			$total_count = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$bp->media->table_name_albums} WHERE group_id = {$group_id}" );
+			$total_count = (int) $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM {$bp->media->table_name_albums} WHERE group_id = %d", $group_id ) );
 			wp_cache_set( $cache_key, $total_count, 'bp_media_album' );
 		}
 

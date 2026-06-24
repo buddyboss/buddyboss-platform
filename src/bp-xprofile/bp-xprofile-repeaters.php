@@ -37,7 +37,7 @@ function bp_get_repeater_template_field_ids( $field_group_id ) {
 		return $bp_group_template_field_ids[ $cache_key ];
 	}
 
-	$group_field_ids = $wpdb->get_col( "SELECT id FROM {$bp->profile->table_name_fields} WHERE group_id = {$field_group_id} AND parent_id = 0" );
+	$group_field_ids = $wpdb->get_col( $wpdb->prepare( "SELECT id FROM {$bp->profile->table_name_fields} WHERE group_id = %d AND parent_id = 0", $field_group_id ) );
 	if ( empty( $group_field_ids ) || is_wp_error( $group_field_ids ) ) {
 		return array();
 	}
@@ -222,7 +222,7 @@ function bp_profile_repeaters_update_field_data( $user_id, $posted_field_ids, $e
 
 		if ( ! empty( $fields_of_current_set ) && ! is_wp_error( $fields_of_current_set ) ) {
 			foreach ( $fields_of_current_set as $field_of_current_set ) {
-				$cloned_from = $wpdb->get_var( "SELECT meta_value FROM {$bp->profile->table_name_meta} WHERE object_id = {$field_of_current_set} AND meta_key = '_cloned_from' " );
+				$cloned_from = $wpdb->get_var( $wpdb->prepare( "SELECT meta_value FROM {$bp->profile->table_name_meta} WHERE object_id = %d AND meta_key = '_cloned_from' ", $field_of_current_set ) );
 
 				$sql                    = "SELECT m1.object_id FROM {$bp->profile->table_name_meta} AS m1 JOIN {$bp->profile->table_name_meta} AS m2 ON m1.object_id = m2.object_id "
 					. " WHERE m1.object_type = 'field' AND m1.meta_key = '_cloned_from' AND m1.meta_value = {$cloned_from} "
@@ -410,7 +410,7 @@ function bp_clone_field_for_repeater_sets( $field_id, $field_group_id, $current_
 			$new_field_id    = $wpdb->insert_id;
 			$metas_cache_key = 'field_meta_' . $template_field_id;
 			if ( ! isset( $metas_cache[ $metas_cache_key ] ) ) {
-				$metas = $wpdb->get_results( "SELECT * FROM {$bp->profile->table_name_meta} WHERE object_id = {$template_field_id} AND object_type = 'field'", ARRAY_A );
+				$metas = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$bp->profile->table_name_meta} WHERE object_id = %d AND object_type = 'field'", $template_field_id ), ARRAY_A );
 
 				$metas_cache[ $metas_cache_key ] = $metas;
 			} else {
@@ -437,7 +437,7 @@ function bp_clone_field_for_repeater_sets( $field_id, $field_group_id, $current_
 			} else {
 				$current_clone_number = 1;
 				// get all clones of the template field.
-				$all_clones = $wpdb->get_col( "SELECT object_id FROM {$bp->profile->table_name_meta} WHERE meta_key = '_cloned_from' AND meta_value = {$template_field_id}" );
+				$all_clones = $wpdb->get_col( $wpdb->prepare( "SELECT object_id FROM {$bp->profile->table_name_meta} WHERE meta_key = '_cloned_from' AND meta_value = %d", $template_field_id ) );
 				if ( ! empty( $all_clones ) && ! is_wp_error( $all_clones ) ) {
 					$last_max_clone_number = $wpdb->get_var(
 						"SELECT MAX( meta_value ) FROM {$bp->profile->table_name_meta} WHERE meta_key = '_clone_number' AND object_id IN (" . implode( ',', $all_clones ) . ')'
@@ -520,7 +520,7 @@ function xprofile_update_clones_on_template_update( $field ) {
 
 		$wpdb->query( $sql );
 
-		$metas = $wpdb->get_results( "SELECT * FROM {$bp->profile->table_name_meta} WHERE object_id = {$field->id} AND object_type = 'field'", ARRAY_A );
+		$metas = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$bp->profile->table_name_meta} WHERE object_id = %d AND object_type = 'field'", $field->id ), ARRAY_A );
 		if ( ! empty( $metas ) && ! is_wp_error( $metas ) ) {
 			$field_member_types = array();
 			foreach ( $clone_ids as $clone_id ) {
@@ -1262,7 +1262,7 @@ function bb_admin_profile_repeaters_update_field_data( $user_id, $posted_field_i
 
 				if ( ! empty( $fields_of_current_set ) && ! is_wp_error( $fields_of_current_set ) ) {
 					foreach ( $fields_of_current_set as $field_of_current_set ) {
-						$cloned_from = $wpdb->get_var( "SELECT meta_value FROM {$bp->profile->table_name_meta} WHERE object_id = {$field_of_current_set} AND meta_key = '_cloned_from' " );
+						$cloned_from = $wpdb->get_var( $wpdb->prepare( "SELECT meta_value FROM {$bp->profile->table_name_meta} WHERE object_id = %d AND meta_key = '_cloned_from' ", $field_of_current_set ) );
 
 						$sql                    = "SELECT m1.object_id FROM {$bp->profile->table_name_meta} AS m1 JOIN {$bp->profile->table_name_meta} AS m2 ON m1.object_id = m2.object_id "
 													. " WHERE m1.object_type = 'field' AND m1.meta_key = '_cloned_from' AND m1.meta_value = {$cloned_from} "
