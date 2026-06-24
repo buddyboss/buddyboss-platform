@@ -105,13 +105,13 @@ export function DiscussionCreateModal( { isOpen, onClose, onCreated, createField
 	var handleCreate = function () {
 		var titleVal = registeredValues.title || '';
 		if ( ! titleVal.trim() ) {
-			setError( __( 'Discussion title is required.', 'buddyboss' ) );
+			setError( __( 'Discussion title is required.', 'buddyboss-platform' ) );
 			return;
 		}
 
 		var forumIdVal = registeredValues.forum_id || 0;
 		if ( ! forumIdVal ) {
-			setError( __( 'Forum is required.', 'buddyboss' ) );
+			setError( __( 'Forum is required.', 'buddyboss-platform' ) );
 			return;
 		}
 
@@ -139,14 +139,14 @@ export function DiscussionCreateModal( { isOpen, onClose, onCreated, createField
 					onCreated( response.data.topic_id );
 				}
 			} else {
-				setError( ( response.data && response.data.message ) || __( 'Failed to create discussion.', 'buddyboss' ) );
+				setError( ( response.data && response.data.message ) || __( 'Failed to create discussion.', 'buddyboss-platform' ) );
 			}
 		} ).catch( function () {
 			if ( ! isMountedRef.current ) {
 				return;
 			}
 			setIsSaving( false );
-			setError( __( 'An error occurred. Please try again.', 'buddyboss' ) );
+			setError( __( 'An error occurred. Please try again.', 'buddyboss-platform' ) );
 		} );
 	};
 
@@ -200,7 +200,7 @@ export function DiscussionCreateModal( { isOpen, onClose, onCreated, createField
 
 	return (
 		<Modal
-			title={ __( 'Start New Discussion', 'buddyboss' ) }
+			title={ __( 'Start New Discussion', 'buddyboss-platform' ) }
 			onRequestClose={ handleClose }
 			className="bb-discussion-modal bb-discussion-create-modal bb-admin-settings-modal"
 			shouldCloseOnClickOutside={ false }
@@ -248,10 +248,10 @@ export function DiscussionCreateModal( { isOpen, onClose, onCreated, createField
 
 				<div className="bb-admin-settings-modal__custom-section">
 				<TagsAutocomplete
-					label={ __( 'Tags (Optional)', 'buddyboss' ) }
+					label={ __( 'Tags (Optional)', 'buddyboss-platform' ) }
 					value={ tags }
 					onChange={ setTags }
-					placeholder={ __( 'Enter tags, separated by commas', 'buddyboss' ) }
+					placeholder={ __( 'Enter tags, separated by commas', 'buddyboss-platform' ) }
 				/>
 				</div>
 			</div>
@@ -262,7 +262,7 @@ export function DiscussionCreateModal( { isOpen, onClose, onCreated, createField
 					onClick={ handleClose }
 					disabled={ isSaving }
 				>
-					{ __( 'Cancel', 'buddyboss' ) }
+					{ __( 'Cancel', 'buddyboss-platform' ) }
 				</Button>
 				<Button
 					variant="primary"
@@ -270,7 +270,7 @@ export function DiscussionCreateModal( { isOpen, onClose, onCreated, createField
 					isBusy={ isSaving }
 					disabled={ isSaving || ! ( registeredValues.title || '' ).trim() || ! registeredValues.forum_id }
 				>
-					{ __( 'Save', 'buddyboss' ) }
+					{ __( 'Save', 'buddyboss-platform' ) }
 				</Button>
 			</div>
 		</Modal>

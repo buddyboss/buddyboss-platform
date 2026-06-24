@@ -25,9 +25,9 @@ $document_id = bp_get_document_id();
 						<?php bp_get_template_part( 'document/document-create-folder' ); ?>
 					</div>
 					<footer class="bb-rl-model-footer">
-						<a href="#" class="bb-rl-create-album bb-rl-document-open-create-popup-folder"><i class="bb-icons-rl-plus"></i><?php esc_html_e( 'Create Folder', 'buddyboss' ); ?></a>
-						<a class="bb-rl-button bb-rl-button--secondaryFill bb-rl-button--small bb-rl-ac-document-close-button" href="#"><?php esc_html_e( 'Cancel', 'buddyboss' ); ?></a>
-						<a class="bb-rl-button bb-rl-button--brandFill bb-rl-button--small bb-rl-document-move bb-rl-document-move-activity" id="<?php echo esc_attr( $document_id ); ?>" href="#"><?php esc_html_e( 'Move', 'buddyboss' ); ?></a>
+						<a href="#" class="bb-rl-create-album bb-rl-document-open-create-popup-folder"><i class="bb-icons-rl-plus"></i><?php esc_html_e( 'Create Folder', 'buddyboss-platform' ); ?></a>
+						<a class="bb-rl-button bb-rl-button--secondaryFill bb-rl-button--small bb-rl-ac-document-close-button" href="#"><?php esc_html_e( 'Cancel', 'buddyboss-platform' ); ?></a>
+						<a class="bb-rl-button bb-rl-button--brandFill bb-rl-button--small bb-rl-document-move bb-rl-document-move-activity" id="<?php echo esc_attr( $document_id ); ?>" href="#"><?php esc_html_e( 'Move', 'buddyboss-platform' ); ?></a>
 					</footer>
 				</div>
 			</div>

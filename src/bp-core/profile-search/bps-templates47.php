@@ -251,25 +251,25 @@ function bp_ps_escaped_filters_data47() {
 function bp_ps_full_label( $f ) {
 	$labels = array(
 		/* translators: %1$s: field label. */
-		'contains'   => __( '<strong>%1$s</strong><span></span>', 'buddyboss' ),
+		'contains'   => __( '<strong>%1$s</strong><span></span>', 'buddyboss-platform' ),
 		/* translators: %1$s: field label. */
-		''           => __( '<strong>%1$s</strong><span> is:<span>', 'buddyboss' ),
+		''           => __( '<strong>%1$s</strong><span> is:<span>', 'buddyboss-platform' ),
 		/* translators: %1$s: field label. */
-		'like'       => __( '<strong>%1$s</strong><span> is like:<span>', 'buddyboss' ),
+		'like'       => __( '<strong>%1$s</strong><span> is like:<span>', 'buddyboss-platform' ),
 		/* translators: %1$s: field label. */
-		'range'      => __( '<strong>%1$s</strong><span> range:<span>', 'buddyboss' ),
+		'range'      => __( '<strong>%1$s</strong><span> range:<span>', 'buddyboss-platform' ),
 		/* translators: %1$s: field label. */
-		'date_range' => __( '<strong>%1$s</strong><span> range:<span>', 'buddyboss' ),
+		'date_range' => __( '<strong>%1$s</strong><span> range:<span>', 'buddyboss-platform' ),
 		/* translators: %1$s: field label. */
-		'distance'   => __( '<strong>%1$s</strong><span> is within:<span>', 'buddyboss' ),
+		'distance'   => __( '<strong>%1$s</strong><span> is within:<span>', 'buddyboss-platform' ),
 		/* translators: %1$s: field label. */
-		'one_of'     => __( '<strong>%1$s</strong><span> is one of:<span>', 'buddyboss' ),
+		'one_of'     => __( '<strong>%1$s</strong><span> is one of:<span>', 'buddyboss-platform' ),
 		/* translators: %1$s: field label. */
-		'match_any'  => __( '<strong>%1$s</strong><span> match any:<span>', 'buddyboss' ),
+		'match_any'  => __( '<strong>%1$s</strong><span> match any:<span>', 'buddyboss-platform' ),
 		/* translators: %1$s: field label. */
-		'match_all'  => __( '<strong>%1$s</strong><span> match all:<span>', 'buddyboss' ),
+		'match_all'  => __( '<strong>%1$s</strong><span> match all:<span>', 'buddyboss-platform' ),
 		/* translators: %1$s: field label. */
-		'unknown'    => __( '<strong>%1$s</strong>:', 'buddyboss' ),
+		'unknown'    => __( '<strong>%1$s</strong>:', 'buddyboss-platform' ),
 	);
 
 	$mode  = isset( $labels[ $f->mode ] ) ? $f->mode : 'unknown';
@@ -299,65 +299,65 @@ function bp_ps_print_filter( $f ) {
 			case 'date_range':
 				if ( ! isset( $f->value['max'] ) ) {
 					/* translators: %1$s: minimum value. */
-					return sprintf( esc_html__( 'min: %1$s', 'buddyboss' ), $f->value['min'] );
+					return sprintf( esc_html__( 'min: %1$s', 'buddyboss-platform' ), $f->value['min'] );
 				}
 				if ( ! isset( $f->value['min'] ) ) {
 					/* translators: %1$s: maximum value. */
-					return sprintf( esc_html__( 'max: %1$s', 'buddyboss' ), $f->value['max'] );
+					return sprintf( esc_html__( 'max: %1$s', 'buddyboss-platform' ), $f->value['max'] );
 				}
 
 				/* translators: 1: minimum value, 2: maximum value. */
-				return sprintf( esc_html__( 'min: %1$s, max: %2$s', 'buddyboss' ), $f->value['min'], $f->value['max'] );
+				return sprintf( esc_html__( 'min: %1$s, max: %2$s', 'buddyboss-platform' ), $f->value['min'], $f->value['max'] );
 
 			case '':
 				if ( isset( $values ) ) {
 					/* translators: %1$s: field value. */
-					return sprintf( esc_html__( 'is: %1$s', 'buddyboss' ), $values[0] );
+					return sprintf( esc_html__( 'is: %1$s', 'buddyboss-platform' ), $values[0] );
 				}
 
 				/* translators: %1$s: field value. */
-				return sprintf( esc_html__( 'is: %1$s', 'buddyboss' ), $f->value );
+				return sprintf( esc_html__( 'is: %1$s', 'buddyboss-platform' ), $f->value );
 
 			case 'contains':
 				/* translators: %1$s: field value. */
-				return sprintf( esc_html__( 'contains: %1$s', 'buddyboss' ), $f->value );
+				return sprintf( esc_html__( 'contains: %1$s', 'buddyboss-platform' ), $f->value );
 
 			case 'like':
 				/* translators: %1$s: field value. */
-				return sprintf( esc_html__( 'is like: %1$s', 'buddyboss' ), $f->value );
+				return sprintf( esc_html__( 'is like: %1$s', 'buddyboss-platform' ), $f->value );
 
 			case 'one_of':
 				if ( count( $values ) == 1 ) {
 					/* translators: %1$s: field value. */
-					return sprintf( esc_html__( 'is: %1$s', 'buddyboss' ), $values[0] );
+					return sprintf( esc_html__( 'is: %1$s', 'buddyboss-platform' ), $values[0] );
 				}
 
 				/* translators: %1$s: comma-separated field values. */
-				return sprintf( esc_html__( 'is one of: %1$s', 'buddyboss' ), implode( ', ', $values ) );
+				return sprintf( esc_html__( 'is one of: %1$s', 'buddyboss-platform' ), implode( ', ', $values ) );
 
 			case 'match_any':
 				if ( count( $values ) == 1 ) {
 					/* translators: %1$s: field value. */
-					return sprintf( esc_html__( 'match: %1$s', 'buddyboss' ), $values[0] );
+					return sprintf( esc_html__( 'match: %1$s', 'buddyboss-platform' ), $values[0] );
 				}
 
 				/* translators: %1$s: comma-separated field values. */
-				return sprintf( esc_html__( 'match any: %1$s', 'buddyboss' ), implode( ', ', $values ) );
+				return sprintf( esc_html__( 'match any: %1$s', 'buddyboss-platform' ), implode( ', ', $values ) );
 
 			case 'match_all':
 				if ( count( $values ) == 1 ) {
 					/* translators: %1$s: field value. */
-					return sprintf( esc_html__( 'match: %1$s', 'buddyboss' ), $values[0] );
+					return sprintf( esc_html__( 'match: %1$s', 'buddyboss-platform' ), $values[0] );
 				}
 
 				/* translators: %1$s: comma-separated field values. */
-				return sprintf( esc_html__( 'match all: %1$s', 'buddyboss' ), implode( ', ', $values ) );
+				return sprintf( esc_html__( 'match all: %1$s', 'buddyboss-platform' ), implode( ', ', $values ) );
 
 			case 'distance':
 				if ( $f->value['units'] == 'km' ) {
 					return sprintf(
 						/* translators: 1: distance in km, 2: location. */
-						esc_html__( 'is within: %1$s km of %2$s', 'buddyboss' ),
+						esc_html__( 'is within: %1$s km of %2$s', 'buddyboss-platform' ),
 						$f->value['distance'],
 						$f->value['location']
 					);
@@ -365,7 +365,7 @@ function bp_ps_print_filter( $f ) {
 
 				return sprintf(
 					/* translators: 1: distance in miles, 2: location. */
-					esc_html__( 'is within: %1$s miles of %2$s', 'buddyboss' ),
+					esc_html__( 'is within: %1$s miles of %2$s', 'buddyboss-platform' ),
 					$f->value['distance'],
 					$f->value['location']
 				);

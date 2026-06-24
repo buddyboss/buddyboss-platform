@@ -21,8 +21,8 @@ defined( 'ABSPATH' ) || exit;
 bb_register_integration(
 	'recaptcha',
 	array(
-		'label'              => __( 'reCAPTCHA', 'buddyboss' ),
-		'description'        => __( 'Protect your community from spam and bot registrations with Google\'s invisible and checkbox verification.', 'buddyboss' ),
+		'label'              => __( 'reCAPTCHA', 'buddyboss-platform' ),
+		'description'        => __( 'Protect your community from spam and bot registrations with Google\'s invisible and checkbox verification.', 'buddyboss-platform' ),
 		'icon'               => array(
 			'type'  => 'svg',
 			'url'  => 'https://bb-features-marketing.s3.amazonaws.com/images/svg/ReCaptcha.svg',

@@ -46,7 +46,7 @@ $total_reply = bbp_get_forum_reply_count( $forum_id );
 					<?php
 					printf(
 					/* translators: total topics */
-						_n( '%d topic', '%d topics', $total, 'buddyboss' ),
+						_n( '%d topic', '%d topics', $total, 'buddyboss-platform' ),
 						$total
 					);
 					?>
@@ -56,7 +56,7 @@ $total_reply = bbp_get_forum_reply_count( $forum_id );
 					<?php
 					printf(
 					/* translators: total replies */
-						_n( '%d reply', '%d replies', $total_reply, 'buddyboss' ),
+						_n( '%d reply', '%d replies', $total_reply, 'buddyboss-platform' ),
 						$total_reply
 					);
 					?>
@@ -68,7 +68,7 @@ $total_reply = bbp_get_forum_reply_count( $forum_id );
 					<span class="middot">&middot;</span>
 					<span class="freshness">
 						<?php
-						esc_html_e( 'Last active ', 'buddyboss' );
+						esc_html_e( 'Last active ', 'buddyboss-platform' );
 						echo wp_kses_post( $last_active );
 						?>
 					</span>

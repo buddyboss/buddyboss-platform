@@ -118,7 +118,7 @@ if ( ! class_exists( 'bbPress' ) ) :
 		 * @since bbPress (r2464)
 		 */
 		public function __clone() {
-			_doing_it_wrong( __FUNCTION__, __( 'Cheatin\' huh?', 'buddyboss' ), '2.1' ); }
+			_doing_it_wrong( __FUNCTION__, __( 'Cheatin\' huh?', 'buddyboss-platform' ), '2.1' ); }
 
 		/**
 		 * A dummy magic method to prevent Forums from being unserialized
@@ -126,7 +126,7 @@ if ( ! class_exists( 'bbPress' ) ) :
 		 * @since bbPress (r2464)
 		 */
 		public function __wakeup() {
-			_doing_it_wrong( __FUNCTION__, __( 'Cheatin\' huh?', 'buddyboss' ), '2.1' ); }
+			_doing_it_wrong( __FUNCTION__, __( 'Cheatin\' huh?', 'buddyboss-platform' ), '2.1' ); }
 
 		/**
 		 * Magic method for checking the existence of a certain custom field
@@ -454,7 +454,7 @@ if ( ! class_exists( 'bbPress' ) ) :
 						'labels'              => bbp_get_forum_post_type_labels(),
 						'rewrite'             => bbp_get_forum_post_type_rewrite(),
 						'supports'            => bbp_get_forum_post_type_supports(),
-						'description'         => __( 'Forums', 'buddyboss' ),
+						'description'         => __( 'Forums', 'buddyboss-platform' ),
 						'capabilities'        => bbp_get_forum_caps(),
 						'capability_type'     => array( 'forum', 'forums' ),
 						'menu_position'       => 555555,
@@ -486,7 +486,7 @@ if ( ! class_exists( 'bbPress' ) ) :
 						'labels'              => bbp_get_topic_post_type_labels(),
 						'rewrite'             => bbp_get_topic_post_type_rewrite(),
 						'supports'            => bbp_get_topic_post_type_supports(),
-						'description'         => __( 'Forum Discussions', 'buddyboss' ),
+						'description'         => __( 'Forum Discussions', 'buddyboss-platform' ),
 						'capabilities'        => bbp_get_topic_caps(),
 						'capability_type'     => array( 'topic', 'topics' ),
 						'menu_position'       => 555555,
@@ -516,7 +516,7 @@ if ( ! class_exists( 'bbPress' ) ) :
 						'labels'              => bbp_get_reply_post_type_labels(),
 						'rewrite'             => bbp_get_reply_post_type_rewrite(),
 						'supports'            => bbp_get_reply_post_type_supports(),
-						'description'         => __( 'Forum Replies', 'buddyboss' ),
+						'description'         => __( 'Forum Replies', 'buddyboss-platform' ),
 						'capabilities'        => bbp_get_reply_caps(),
 						'capability_type'     => array( 'reply', 'replies' ),
 						'menu_position'       => 555555,
@@ -556,8 +556,8 @@ if ( ! class_exists( 'bbPress' ) ) :
 				apply_filters(
 					'bbp_register_closed_post_status',
 					array(
-						'label'             => __( 'Closed', 'buddyboss' ),
-						'label_count'       => _n_noop( 'Closed <span class="count">(%s)</span>', 'Closed <span class="count">(%s)</span>', 'buddyboss' ),
+						'label'             => __( 'Closed', 'buddyboss-platform' ),
+						'label_count'       => _n_noop( 'Closed <span class="count">(%s)</span>', 'Closed <span class="count">(%s)</span>', 'buddyboss-platform' ),
 						'public'            => true,
 						'show_in_admin_all' => true,
 						'source'            => 'bbpress',
@@ -571,8 +571,8 @@ if ( ! class_exists( 'bbPress' ) ) :
 				apply_filters(
 					'bbp_register_spam_post_status',
 					array(
-						'label'                     => __( 'Spam', 'buddyboss' ),
-						'label_count'               => _n_noop( 'Spam <span class="count">(%s)</span>', 'Spam <span class="count">(%s)</span>', 'buddyboss' ),
+						'label'                     => __( 'Spam', 'buddyboss-platform' ),
+						'label_count'               => _n_noop( 'Spam <span class="count">(%s)</span>', 'Spam <span class="count">(%s)</span>', 'buddyboss-platform' ),
 						'protected'                 => true,
 						'exclude_from_search'       => true,
 						'show_in_admin_status_list' => true,
@@ -588,8 +588,8 @@ if ( ! class_exists( 'bbPress' ) ) :
 				apply_filters(
 					'bbp_register_orphan_post_status',
 					array(
-						'label'                     => __( 'Orphan', 'buddyboss' ),
-						'label_count'               => _n_noop( 'Orphan <span class="count">(%s)</span>', 'Orphans <span class="count">(%s)</span>', 'buddyboss' ),
+						'label'                     => __( 'Orphan', 'buddyboss-platform' ),
+						'label_count'               => _n_noop( 'Orphan <span class="count">(%s)</span>', 'Orphans <span class="count">(%s)</span>', 'buddyboss-platform' ),
 						'protected'                 => true,
 						'exclude_from_search'       => true,
 						'show_in_admin_status_list' => true,
@@ -605,8 +605,8 @@ if ( ! class_exists( 'bbPress' ) ) :
 				apply_filters(
 					'bbp_register_hidden_post_status',
 					array(
-						'label'                     => __( 'Hidden', 'buddyboss' ),
-						'label_count'               => _n_noop( 'Hidden <span class="count">(%s)</span>', 'Hidden <span class="count">(%s)</span>', 'buddyboss' ),
+						'label'                     => __( 'Hidden', 'buddyboss-platform' ),
+						'label_count'               => _n_noop( 'Hidden <span class="count">(%s)</span>', 'Hidden <span class="count">(%s)</span>', 'buddyboss-platform' ),
 						'private'                   => true,
 						'exclude_from_search'       => true,
 						'show_in_admin_status_list' => true,
@@ -684,7 +684,7 @@ if ( ! class_exists( 'bbPress' ) ) :
 			// Popular discussions
 			bbp_register_view(
 				'popular',
-				__( 'Most popular discussions', 'buddyboss' ),
+				__( 'Most popular discussions', 'buddyboss-platform' ),
 				apply_filters(
 					'bbp_register_view_popular',
 					array(
@@ -700,7 +700,7 @@ if ( ! class_exists( 'bbPress' ) ) :
 			// Discussions with no replies
 			bbp_register_view(
 				'no-replies',
-				__( 'Unanswered discussions', 'buddyboss' ),
+				__( 'Unanswered discussions', 'buddyboss-platform' ),
 				apply_filters(
 					'bbp_register_view_no_replies',
 					array(

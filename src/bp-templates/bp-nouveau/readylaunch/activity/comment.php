@@ -78,10 +78,10 @@ $activity_comment_id = bp_get_activity_comment_id();
 											<?php
 											if ( $reply_count > 1 ) {
 												/* translators: %d: number of activity replies */
-												echo esc_html( sprintf( _x( '%d replies', 'placeholder: activity replies count', 'buddyboss' ), $reply_count ) );
+												echo esc_html( sprintf( _x( '%d replies', 'placeholder: activity replies count', 'buddyboss-platform' ), $reply_count ) );
 											} else {
 												/* translators: %d: number of activity reply */
-												echo esc_html( sprintf( _x( '%d reply', 'placeholder: activity reply count', 'buddyboss' ), $reply_count ) );
+												echo esc_html( sprintf( _x( '%d reply', 'placeholder: activity reply count', 'buddyboss-platform' ), $reply_count ) );
 											}
 											?>
 										</span>

@@ -31,7 +31,7 @@ if ( ( ( bp_is_my_profile() && bb_user_can_create_video() ) || ( bp_is_group() &
 							'<span class="bb-count">%d</span> Video',
 							'<span class="bb-count">%d</span> Videos',
 							bp_core_number_format( $count ),
-							'buddyboss'
+							'buddyboss-platform'
 						),
 						array( 'span' => array( 'class' => true ) )
 					),
@@ -41,7 +41,7 @@ if ( ( ( bp_is_my_profile() && bb_user_can_create_video() ) || ( bp_is_group() &
 			</div>
 		</h2>
 		<div class="bb-video-actions">
-			<a href="#" id="bp-add-video" class="bb-add-video button bb-rl-button bb-rl-button--brandFill bb-rl-button--small"><i class="bb-icons-rl-plus"></i><?php esc_html_e( 'Add Videos', 'buddyboss' ); ?></a>
+			<a href="#" id="bp-add-video" class="bb-add-video button bb-rl-button bb-rl-button--brandFill bb-rl-button--small"><i class="bb-icons-rl-plus"></i><?php esc_html_e( 'Add Videos', 'buddyboss-platform' ); ?></a>
 		</div>
 	</div>
 	<?php
@@ -59,7 +59,7 @@ if ( ( ( bp_is_my_profile() && bb_user_can_create_video() ) || ( bp_is_group() &
 						'<span class="bb-count">%d</span> Video',
 						'<span class="bb-count">%d</span> Videos',
 						$count,
-						'buddyboss'
+						'buddyboss-platform'
 					),
 					array( 'span' => array( 'class' => true ) )
 				),

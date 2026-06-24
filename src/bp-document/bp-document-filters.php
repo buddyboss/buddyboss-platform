@@ -121,9 +121,9 @@ function bp_document_clear_document_symlinks_on_delete( $documents ) {
 function bp_document_search_label_search( $type ) {
 
 	if ( 'folders' === $type ) {
-		$type = __( 'Document Folders', 'buddyboss' );
+		$type = __( 'Document Folders', 'buddyboss-platform' );
 	} elseif ( 'documents' === $type ) {
-		$type = __( 'Documents', 'buddyboss' );
+		$type = __( 'Documents', 'buddyboss-platform' );
 	}
 
 	return $type;
@@ -285,7 +285,7 @@ function bp_document_image_preview_remove_in_comment( $display ) {
  * @since BuddyBoss 1.4.0
  */
 function bp_document_change_popup_view_text_in_comment( $text ) {
-	return __( 'View', 'buddyboss' );
+	return __( 'View', 'buddyboss-platform' );
 }
 
 /**
@@ -297,7 +297,7 @@ function bp_document_change_popup_view_text_in_comment( $text ) {
  * @since BuddyBoss 1.4.0
  */
 function bp_document_change_popup_download_text_in_comment( $text ) {
-	return __( 'Download', 'buddyboss' );
+	return __( 'Download', 'buddyboss-platform' );
 }
 
 /**
@@ -928,8 +928,8 @@ function bp_document_download_url_file() {
 		// Reject invalid IDs.
 		if ( $attachment_id <= 0 || $document_file_id <= 0 ) {
 			wp_die(
-				esc_html__( 'Invalid document parameters', 'buddyboss' ),
-				esc_html__( 'Security Error', 'buddyboss' ),
+				esc_html__( 'Invalid document parameters', 'buddyboss-platform' ),
+				esc_html__( 'Security Error', 'buddyboss-platform' ),
 				array( 'response' => 400 )
 			);
 			return;
@@ -938,8 +938,8 @@ function bp_document_download_url_file() {
 		// Validate document type.
 		if ( ! in_array( $document_type, array( 'document', 'folder' ), true ) ) {
 			wp_die(
-				esc_html__( 'Invalid document type', 'buddyboss' ),
-				esc_html__( 'Security Error', 'buddyboss' ),
+				esc_html__( 'Invalid document type', 'buddyboss-platform' ),
+				esc_html__( 'Security Error', 'buddyboss-platform' ),
 				array( 'response' => 400 )
 			);
 			return;
@@ -1286,7 +1286,7 @@ function bp_document_download_file_force( $file_path, $filename ) {
 		if ( $parsed_file_path['remote_file'] ) {
 			bp_document_download_file_redirect( $file_path );
 		} else {
-			bp_document_download_error( __( 'File not found', 'buddyboss' ) );
+			bp_document_download_error( __( 'File not found', 'buddyboss-platform' ) );
 		}
 	}
 
@@ -1303,7 +1303,7 @@ function bp_document_download_file_force( $file_path, $filename ) {
  */
 function bp_document_download_error( $message, $title = '', $status = 404 ) {
 	if ( ! strstr( $message, '<a ' ) ) {
-		$message .= ' <a href="' . esc_url( site_url() ) . '" class="bp-document-forward">' . esc_html__( 'Go to document', 'buddyboss' ) . '</a>';
+		$message .= ' <a href="' . esc_url( site_url() ) . '" class="bp-document-forward">' . esc_html__( 'Go to document', 'buddyboss-platform' ) . '</a>';
 	}
 	wp_die( $message, $title, array( 'response' => $status ) ); // WPCS: XSS ok.
 }
@@ -1597,7 +1597,7 @@ function bp_document_add_admin_repair_items( $repair_list ) {
 	if ( bp_is_active( 'activity' ) ) {
 		$repair_list[] = array(
 			'bp-repair-document',
-			esc_html__( 'Repair documents', 'buddyboss' ),
+			esc_html__( 'Repair documents', 'buddyboss-platform' ),
 			'bp_document_admin_repair_document',
 		);
 	}
@@ -1660,7 +1660,7 @@ function bp_document_admin_repair_document() {
 			$offset ++;
 		}
 		/* translators: %s: number of documents updated. */
-		$records_updated = sprintf( __( '%s documents updated successfully.', 'buddyboss' ), bp_core_number_format( $offset ) );
+		$records_updated = sprintf( __( '%s documents updated successfully.', 'buddyboss-platform' ), bp_core_number_format( $offset ) );
 
 		return array(
 			'status'  => 'running',
@@ -1670,7 +1670,7 @@ function bp_document_admin_repair_document() {
 	} else {
 		return array(
 			'status'  => 1,
-			'message' => __( 'Repairing documents &hellip; Complete!', 'buddyboss' ),
+			'message' => __( 'Repairing documents &hellip; Complete!', 'buddyboss-platform' ),
 		);
 	}
 }

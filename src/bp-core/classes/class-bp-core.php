@@ -437,7 +437,7 @@ class BP_Core extends BP_Component {
 				apply_filters(
 					'bp_register_email_post_type',
 					array(
-						'description'        => __( 'BuddyBoss emails', 'buddyboss' ),
+						'description'        => __( 'BuddyBoss emails', 'buddyboss-platform' ),
 						'labels'             => bp_get_email_post_type_labels(),
 						'menu_icon'          => 'dashicons-email-alt',
 						'public'             => false,
@@ -460,7 +460,7 @@ class BP_Core extends BP_Component {
 				apply_filters(
 					'bp_register_group_type_post_type',
 					array(
-						'description'        => __( 'BuddyBoss group type', 'buddyboss' ),
+						'description'        => __( 'BuddyBoss group type', 'buddyboss-platform' ),
 						'labels'             => bp_groups_get_group_type_post_type_labels(),
 						'public'             => false,
 						'publicly_queryable' => false,

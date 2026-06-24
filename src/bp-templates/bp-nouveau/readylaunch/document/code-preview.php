@@ -39,8 +39,8 @@ if ( $sizes && filesize( $sizes ) / 1e+6 < 2 && $bp_document_text_preview ) {
 			</div>
 			<div class="bb-rl-document-expand">
 				<a href="#" class="bb-rl-document-expand-anchor"><i class="bb-icons-rl-arrows-vertical document-icon-plus"></i>
-					<span class="bb-rl-document-expand-text"><?php esc_html_e( 'Expand', 'buddyboss' ); ?></span>
-					<span class="bb-rl-document-collapse-text"><?php esc_html_e( 'Collapse', 'buddyboss' ); ?></span>
+					<span class="bb-rl-document-expand-text"><?php esc_html_e( 'Expand', 'buddyboss-platform' ); ?></span>
+					<span class="bb-rl-document-collapse-text"><?php esc_html_e( 'Collapse', 'buddyboss-platform' ); ?></span>
 				</a>
 			</div>
 		</div> <!-- .bb-rl-document-text-wrap -->
@@ -52,7 +52,7 @@ if ( $sizes && filesize( $sizes ) / 1e+6 < 2 && $bp_document_text_preview ) {
 				'<div class="bb_rl_more_text_view">%s</div>',
 				sprintf(
 				/* translators: %s: download url */
-					wp_kses_post( 'This file was truncated for preview. Please <a href="%s">download</a> to view the full file.', 'buddyboss' ),
+					wp_kses_post( __( 'This file was truncated for preview. Please <a href="%s">download</a> to view the full file.', 'buddyboss-platform' ) ),
 					esc_url( $download_url )
 				)
 			);

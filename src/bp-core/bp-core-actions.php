@@ -973,7 +973,7 @@ function bb_mention_post_type_comment( $comment_id = 0, $is_approved = true ) {
 				'notification_type' => $email_type,
 			);
 
-			$notification_type_html = esc_html__( 'comment', 'buddyboss' );
+			$notification_type_html = esc_html__( 'comment', 'buddyboss-platform' );
 
 			$args = array(
 				'tokens' => array(
@@ -985,7 +985,7 @@ function bb_mention_post_type_comment( $comment_id = 0, $is_approved = true ) {
 					'mentioned.type'    => $notification_type_html,
 					'mentioned.content' => $reply_content,
 					'author_id'         => $author_id,
-					'reply_text'        => esc_html__( 'View Comment', 'buddyboss' ),
+					'reply_text'        => esc_html__( 'View Comment', 'buddyboss-platform' ),
 					'title_text'        => $title_text,
 				),
 			);
@@ -1116,21 +1116,21 @@ function buddyboss_directory_save_layout() {
 	$object = bb_filter_input_string( INPUT_POST, 'object' );
 	if ( empty( $object ) ) {
 		wp_send_json_error( array(
-			'message' => __( 'Invalid object.', 'buddyboss' ),
+			'message' => __( 'Invalid object.', 'buddyboss-platform' ),
 		) );
 	}
 
 	$nonce = bb_filter_input_string( INPUT_POST, 'nonce' );
 	if ( ! wp_verify_nonce( $nonce, 'bp_nouveau_' . $object ) ) {
 		wp_send_json_error( array(
-			'message' => __( 'Invalid request.', 'buddyboss' ),
+			'message' => __( 'Invalid request.', 'buddyboss-platform' ),
 		) );
 	}
 
 	$option_name = bb_filter_input_string( INPUT_POST, 'option' );
 	if ( empty( $option_name ) || 'bb_layout_view' !== $option_name ) {
 		wp_send_json_error( array(
-			'message' => __( 'Not a valid option', 'buddyboss' ),
+			'message' => __( 'Not a valid option', 'buddyboss-platform' ),
 		) );
 		wp_die();
 	}
@@ -1138,7 +1138,7 @@ function buddyboss_directory_save_layout() {
 	$option_value = bb_filter_input_string( INPUT_POST, 'type' );
 	if ( ! in_array( $option_value, array( 'grid', 'list' ), true ) ) {
 		wp_send_json_error( array(
-			'message' => __( 'Not a valid value', 'buddyboss' ),
+			'message' => __( 'Not a valid value', 'buddyboss-platform' ),
 		) );
 		wp_die();
 	}

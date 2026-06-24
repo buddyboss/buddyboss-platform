@@ -19,7 +19,7 @@ if ( ( ( bp_is_my_profile() && bb_user_can_create_media() ) || ( $bp_is_group &&
 		if ( ( $bp_is_group && $bp_is_group_albums_support_enabled ) || $bp_is_profile_albums_support_enabled ) {
 			?>
 			<div class="bb-media-actions">
-				<a href="#" id="bb-create-album" class="bb-create-album button small outline"><i class="bb-icon-l bb-icon-plus"></i> <?php esc_html_e( 'Create Album', 'buddyboss' ); ?></a>
+				<a href="#" id="bb-create-album" class="bb-create-album button small outline"><i class="bb-icon-l bb-icon-plus"></i> <?php esc_html_e( 'Create Album', 'buddyboss-platform' ); ?></a>
 			</div>
 			<?php
 		}
@@ -55,7 +55,7 @@ if ( bp_has_albums( bp_ajax_querystring( 'albums' ) ) ) :
 		if ( bp_album_has_more_items() ) :
 			?>
 			<li class="load-more">
-				<a class="button outline" href="<?php bp_album_has_more_items(); ?>"><?php esc_html_e( 'Load More', 'buddyboss' ); ?></a>
+				<a class="button outline" href="<?php bp_album_has_more_items(); ?>"><?php esc_html_e( 'Load More', 'buddyboss-platform' ); ?></a>
 			</li>
 			<?php
 		endif;

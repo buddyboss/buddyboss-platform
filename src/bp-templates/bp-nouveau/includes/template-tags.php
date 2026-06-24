@@ -2258,10 +2258,10 @@ function bp_nouveau_filter_label() {
 	 */
 function bp_nouveau_get_filter_label() {
 	$component = bp_nouveau_current_object();
-	$label     = __( 'Order By:', 'buddyboss' );
+	$label     = __( 'Order By:', 'buddyboss-platform' );
 
 	if ( 'activity' === $component['object'] || 'friends' === $component['object'] ) {
-		$label = __( 'Show:', 'buddyboss' );
+		$label = __( 'Show:', 'buddyboss-platform' );
 	}
 
 	/**
@@ -2498,7 +2498,7 @@ function bp_nouveau_signup_form( $section = 'account_details' ) {
 
 		if ( $required ) {
 			/* translators: Do not translate placeholders. 2 = form field name, 3 = "(required)". */
-			$label_output = __( '<label for="%1$s">%2$s %3$s</label>', 'buddyboss' );
+			$label_output = __( '<label for="%1$s">%2$s %3$s</label>', 'buddyboss-platform' );
 		}
 
 		// Output the label for regular fields
@@ -2517,7 +2517,7 @@ function bp_nouveau_signup_form( $section = 'account_details' ) {
 		} elseif ( 'signup_blog_privacy_private' !== $name ) {
 			?>
 				<label for="signup_blog_privacy">
-					<?php esc_html_e( 'I would like my site to appear in search engines, and in public listings around this network.', 'buddyboss' ); ?>
+					<?php esc_html_e( 'I would like my site to appear in search engines, and in public listings around this network.', 'buddyboss-platform' ); ?>
 				</label>
 			<?php
 		}
@@ -2601,7 +2601,7 @@ function bp_nouveau_signup_form( $section = 'account_details' ) {
 
 				if ( ( 'signup_password' === $name ) || ( 'signup_password_confirm' === $name ) ) {
 					echo '<div class="bb-password-wrap">';
-					echo '<a href="#" class="bb-toggle-password" tabindex="-1" aria-label="' . esc_attr__( 'Toggle password visibility', 'buddyboss' ) . '"><i class="bb-icon-l bb-icon-eye"></i></a>';
+					echo '<a href="#" class="bb-toggle-password" tabindex="-1" aria-label="' . esc_attr__( 'Toggle password visibility', 'buddyboss-platform' ) . '"><i class="bb-icon-l bb-icon-eye"></i></a>';
 				}
 
 				print( $field_output );  // Constructed safely above.
@@ -2699,12 +2699,12 @@ function bp_nouveau_signup_terms_privacy() {
 			<div class="input-options checkbox-options">
 				<div class="bp-checkbox-wrap">
 					<input type="checkbox" name="legal_agreement" id="legal_agreement" value="1" class="bs-styled-checkbox">
-					<label for="legal_agreement" class="option-label"><?php /* translators: 1: terms of service link, 2: privacy policy link. */ printf( __( 'I agree to the %1$s and %2$s.', 'buddyboss' ), $terms_link, $privacy_link ); ?></label>
+					<label for="legal_agreement" class="option-label"><?php /* translators: 1: terms of service link, 2: privacy policy link. */ printf( __( 'I agree to the %1$s and %2$s.', 'buddyboss-platform' ), $terms_link, $privacy_link ); ?></label>
 				</div>
 			</div>
 		<?php } else { ?>
 			<p class="register-privacy-info">
-				<?php /* translators: 1: terms of service link, 2: privacy policy link. */ printf( __( 'By creating an account you are agreeing to the %1$s and %2$s.', 'buddyboss' ), $terms_link, $privacy_link ); ?>
+				<?php /* translators: 1: terms of service link, 2: privacy policy link. */ printf( __( 'By creating an account you are agreeing to the %1$s and %2$s.', 'buddyboss-platform' ), $terms_link, $privacy_link ); ?>
 			</p>
 		<?php } ?>
 		<div id="terms-modal" class="mfp-hide registration-popup bb-modal">
@@ -2713,7 +2713,7 @@ function bp_nouveau_signup_terms_privacy() {
 			$get_terms = get_post( $terms );
 			echo apply_filters( 'bp_term_of_service_content', apply_filters( 'the_content', $get_terms->post_content ), $get_terms->post_content );
 			?>
-			<button title="<?php esc_attr_e( 'Close (Esc)', 'buddyboss' ); ?>" type="button" class="mfp-close"><?php esc_html_e( '×', 'buddyboss' ); ?></button>
+			<button title="<?php esc_attr_e( 'Close (Esc)', 'buddyboss-platform' ); ?>" type="button" class="mfp-close"><?php esc_html_e( '×', 'buddyboss-platform' ); ?></button>
 		</div>
 		<div id="privacy-modal" class="mfp-hide registration-popup bb-modal">
 			<h1><?php echo esc_html( get_the_title( $privacy ) ); ?></h1>
@@ -2721,7 +2721,7 @@ function bp_nouveau_signup_terms_privacy() {
 			$get_privacy = get_post( $privacy );
 			echo apply_filters( 'bp_privacy_policy_content', apply_filters( 'the_content', $get_privacy->post_content ), $get_privacy->post_content );
 			?>
-			<button title="<?php esc_attr_e( 'Close (Esc)', 'buddyboss' ); ?>" type="button" class="mfp-close"><?php esc_html_e( '×', 'buddyboss' ); ?></button>
+			<button title="<?php esc_attr_e( 'Close (Esc)', 'buddyboss-platform' ); ?>" type="button" class="mfp-close"><?php esc_html_e( '×', 'buddyboss-platform' ); ?></button>
 		</div>
 		<?php
 	} elseif ( empty( $terms ) && ! empty( $privacy ) ) {
@@ -2731,12 +2731,12 @@ function bp_nouveau_signup_terms_privacy() {
 			<div class="input-options checkbox-options">
 				<div class="bp-checkbox-wrap">
 					<input type="checkbox" name="legal_agreement" id="legal_agreement" value="1" class="bs-styled-checkbox">
-					<label for="legal_agreement" class="option-label"><?php /* translators: %s: privacy policy link. */ printf( __( 'I agree to the %s.', 'buddyboss' ), $privacy_link ); ?></label>
+					<label for="legal_agreement" class="option-label"><?php /* translators: %s: privacy policy link. */ printf( __( 'I agree to the %s.', 'buddyboss-platform' ), $privacy_link ); ?></label>
 				</div>
 			</div>
 		<?php } else { ?>
 			<p class="register-privacy-info">
-				<?php /* translators: %s: privacy policy link. */ printf( __( 'By creating an account you are agreeing to the %s.', 'buddyboss' ), $privacy_link ); ?>
+				<?php /* translators: %s: privacy policy link. */ printf( __( 'By creating an account you are agreeing to the %s.', 'buddyboss-platform' ), $privacy_link ); ?>
 			</p>
 		<?php } ?>
 		<div id="privacy-modal" class="mfp-hide registration-popup bb-modal">
@@ -2745,7 +2745,7 @@ function bp_nouveau_signup_terms_privacy() {
 			$get_privacy = get_post( $privacy );
 			echo apply_filters( 'bp_privacy_policy_content', apply_filters( 'the_content', $get_privacy->post_content ), $get_privacy->post_content );
 			?>
-			<button title="<?php esc_attr_e( 'Close (Esc)', 'buddyboss' ); ?>" type="button" class="mfp-close"><?php esc_html_e( '×', 'buddyboss' ); ?></button>
+			<button title="<?php esc_attr_e( 'Close (Esc)', 'buddyboss-platform' ); ?>" type="button" class="mfp-close"><?php esc_html_e( '×', 'buddyboss-platform' ); ?></button>
 		</div>
 		<?php
 	} elseif ( ! empty( $terms ) && empty( $privacy ) ) {
@@ -2755,12 +2755,12 @@ function bp_nouveau_signup_terms_privacy() {
 			<div class="input-options checkbox-options">
 				<div class="bp-checkbox-wrap">
 					<input type="checkbox" name="legal_agreement" id="legal_agreement" value="1" class="bs-styled-checkbox">
-					<label for="legal_agreement" class="option-label"><?php /* translators: %s: terms of service link. */ printf( __( 'I agree to the %s.', 'buddyboss' ), $terms_link ); ?></label>
+					<label for="legal_agreement" class="option-label"><?php /* translators: %s: terms of service link. */ printf( __( 'I agree to the %s.', 'buddyboss-platform' ), $terms_link ); ?></label>
 				</div>
 			</div>
 		<?php } else { ?>
 			<p class="register-privacy-info">
-				<?php /* translators: %s: terms of service link. */ printf( __( 'By creating an account you are agreeing to the %s.', 'buddyboss' ), $terms_link ); ?>
+				<?php /* translators: %s: terms of service link. */ printf( __( 'By creating an account you are agreeing to the %s.', 'buddyboss-platform' ), $terms_link ); ?>
 			</p>
 		<?php } ?>
 
@@ -2770,7 +2770,7 @@ function bp_nouveau_signup_terms_privacy() {
 			$get_terms = get_post( $terms );
 			echo apply_filters( 'bp_term_of_service_content', apply_filters( 'the_content', $get_terms->post_content ), $get_terms->post_content );
 			?>
-			<button title="<?php esc_attr_e( 'Close (Esc)', 'buddyboss' ); ?>" type="button" class="mfp-close"><?php esc_html_e( '×', 'buddyboss' ); ?></button>
+			<button title="<?php esc_attr_e( 'Close (Esc)', 'buddyboss-platform' ); ?>" type="button" class="mfp-close"><?php esc_html_e( '×', 'buddyboss-platform' ); ?></button>
 		</div>
 		<?php
 	}

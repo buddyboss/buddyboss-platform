@@ -118,7 +118,7 @@ class BP_Notifications_Component extends BP_Component {
 		$args = array(
 			'slug'          => BP_NOTIFICATIONS_SLUG,
 			'has_directory' => false,
-			'search_string' => __( 'Search Notifications...', 'buddyboss' ),
+			'search_string' => __( 'Search Notifications...', 'buddyboss-platform' ),
 			'global_tables' => $global_tables,
 			'meta_tables'   => $meta_tables,
 		);
@@ -157,14 +157,14 @@ class BP_Notifications_Component extends BP_Component {
 		if ( bp_is_user() && bp_user_has_access() ) {
 			$count    = bp_notifications_get_unread_notification_count( bp_displayed_user_id() );
 			$class    = ( 0 === $count ) ? 'no-count' : 'count';
-			$nav_name = __( 'Notifications', 'buddyboss' );
+			$nav_name = __( 'Notifications', 'buddyboss-platform' );
 			$nav_name .= sprintf(
 				' <span class="%s">%s</span>',
 				esc_attr( $class ),
 				bp_core_number_format( $count )
 			);
 		} else {
-			$nav_name = __( 'Notifications', 'buddyboss' );
+			$nav_name = __( 'Notifications', 'buddyboss-platform' );
 		}
 
 		// Add 'Notifications' to the main navigation.
@@ -180,7 +180,7 @@ class BP_Notifications_Component extends BP_Component {
 
 		// Add the subnav items to the notifications nav item.
 		$sub_nav[] = array(
-			'name'            => __( 'Unread', 'buddyboss' ),
+			'name'            => __( 'Unread', 'buddyboss-platform' ),
 			'slug'            => 'unread',
 			'parent_url'      => $notifications_link,
 			'parent_slug'     => $slug,
@@ -191,7 +191,7 @@ class BP_Notifications_Component extends BP_Component {
 		);
 
 		$sub_nav[] = array(
-			'name'            => __( 'Read', 'buddyboss' ),
+			'name'            => __( 'Read', 'buddyboss-platform' ),
 			'slug'            => 'read',
 			'parent_url'      => $notifications_link,
 			'parent_slug'     => $slug,
@@ -222,8 +222,8 @@ class BP_Notifications_Component extends BP_Component {
 			// Setup the logged in user variables.
 			$notifications_link = trailingslashit( bp_loggedin_user_domain() . bp_get_notifications_slug() );
 
-			$title  = __( 'Notifications', 'buddyboss' );
-			$unread = __( 'Unread', 'buddyboss' );
+			$title  = __( 'Notifications', 'buddyboss-platform' );
+			$unread = __( 'Unread', 'buddyboss-platform' );
 
 			// Add the "My Account" sub menus.
 			$wp_admin_nav[] = array(
@@ -246,7 +246,7 @@ class BP_Notifications_Component extends BP_Component {
 			$wp_admin_nav[] = array(
 				'parent'   => 'my-account-' . $this->id,
 				'id'       => 'my-account-' . $this->id . '-read',
-				'title'    => __( 'Read', 'buddyboss' ),
+				'title'    => __( 'Read', 'buddyboss-platform' ),
 				'href'     => trailingslashit( $notifications_link . 'read' ),
 				'position' => 20,
 			);
@@ -267,14 +267,14 @@ class BP_Notifications_Component extends BP_Component {
 			$bp = buddypress();
 
 			if ( bp_is_my_profile() ) {
-				$bp->bp_options_title = __( 'Notifications', 'buddyboss' );
+				$bp->bp_options_title = __( 'Notifications', 'buddyboss-platform' );
 			} else {
 				$bp->bp_options_avatar = bp_core_fetch_avatar(
 					array(
 						'item_id' => bp_displayed_user_id(),
 						'type'    => 'thumb',
 						/* translators: %s: member display name. */
-						'alt'     => sprintf( __( 'Profile photo of %s', 'buddyboss' ), bp_get_displayed_user_fullname() ),
+						'alt'     => sprintf( __( 'Profile photo of %s', 'buddyboss-platform' ), bp_get_displayed_user_fullname() ),
 					)
 				);
 				$bp->bp_options_title  = bp_get_displayed_user_fullname();

@@ -22,7 +22,7 @@ if ( isset( $email ) && '' !== $email ) {
 		<span class="bp-icon" aria-hidden="true"></span>
 		<p>
 			<?php
-			$text = __( 'Invitations were sent successfully to the following email addresses:', 'buddyboss' );
+			$text = __( 'Invitations were sent successfully to the following email addresses:', 'buddyboss-platform' );
 			echo esc_html( trim( $text . ' ' . $email ) );
 			?>
 		</p>
@@ -37,7 +37,7 @@ if ( isset( $failed ) && '' !== $failed ) {
 		<span class="bp-icon" aria-hidden="true"></span>
 		<p>
 			<?php
-			$text = __( 'Invitations did not send because these email addresses are invalid:', 'buddyboss' );
+			$text = __( 'Invitations did not send because these email addresses are invalid:', 'buddyboss-platform' );
 			echo esc_html( trim( $text . ' ' . $failed ) );
 			?>
 		</p>
@@ -53,7 +53,7 @@ if ( isset( $exists ) && '' !== $exists ) {
 		<span class="bp-icon" aria-hidden="true"></span>
 		<p>
 			<?php
-			$text = __( 'Invitations did not send to the following email addresses, because they are already members:', 'buddyboss' );
+			$text = __( 'Invitations did not send to the following email addresses, because they are already members:', 'buddyboss-platform' );
 			echo esc_html( trim( $text . ' ' . $exists ) );
 			?>
 		</p>
@@ -69,7 +69,7 @@ if ( isset( $duplicates ) && '' !== $duplicates ) {
 		<span class="bp-icon" aria-hidden="true"></span>
 		<p>
 			<?php
-			$text = __( 'Invitations did not send to the following email addresses, because they are already invited:', 'buddyboss' );
+			$text = __( 'Invitations did not send to the following email addresses, because they are already invited:', 'buddyboss-platform' );
 			echo esc_html( trim( $text . ' ' . $duplicates ) );
 			?>
 		</p>
@@ -85,7 +85,7 @@ if ( isset( $restricted ) && '' !== $restricted ) {
 		<span class="bp-icon" aria-hidden="true"></span>
 		<p>
 			<?php
-			$text = __( 'Invitations did not send to the following email addresses, because the address or domain has been blacklisted:', 'buddyboss' );
+			$text = __( 'Invitations did not send to the following email addresses, because the address or domain has been blacklisted:', 'buddyboss-platform' );
 			echo esc_html( trim( $text . ' ' . $restricted ) );
 			?>
 		</p>
@@ -96,20 +96,20 @@ if ( isset( $restricted ) && '' !== $restricted ) {
 ?>
 <script>window.history.replaceState(null, null, window.location.pathname);</script>
 <h2 class="screen-heading general-settings-screen">
-	<?php _e( 'Sent Invites', 'buddyboss' ); ?>
+	<?php _e( 'Sent Invites', 'buddyboss-platform' ); ?>
 </h2>
 
 <p class="info invite-info">
-	<?php _e( 'You have sent invitation emails to the following people:', 'buddyboss' ); ?>
+	<?php _e( 'You have sent invitation emails to the following people:', 'buddyboss-platform' ); ?>
 </p>
 
 <table class="invite-settings bp-tables-user" id="<?php echo esc_attr( 'member-invites-table' ); ?>">
 	<thead>
 	<tr>
-		<th class="title"><?php esc_html_e( 'Name', 'buddyboss' ); ?></th>
-		<th class="title"><?php esc_html_e( 'Email', 'buddyboss' ); ?></th>
-		<th class="title"><?php esc_html_e( 'Invited', 'buddyboss' ); ?></th>
-		<th class="title"><?php esc_html_e( 'Status', 'buddyboss' ); ?></th>
+		<th class="title"><?php esc_html_e( 'Name', 'buddyboss-platform' ); ?></th>
+		<th class="title"><?php esc_html_e( 'Email', 'buddyboss-platform' ); ?></th>
+		<th class="title"><?php esc_html_e( 'Invited', 'buddyboss-platform' ); ?></th>
+		<th class="title"><?php esc_html_e( 'Status', 'buddyboss-platform' ); ?></th>
 	</tr>
 	</thead>
 
@@ -157,13 +157,13 @@ if ( isset( $restricted ) && '' !== $restricted ) {
 					if ( $allow_custom_registration && '' !== bp_custom_register_page_url() ) {
 						$class       = ( '1' === $bp_invitee_status ) ? 'registered' : 'invited';
 						$revoke_link = '';
-						$title       = ( '1' === $bp_invitee_status ) ? __( 'Registered', 'buddyboss' ) : __( 'Invited', 'buddyboss' );
+						$title       = ( '1' === $bp_invitee_status ) ? __( 'Registered', 'buddyboss-platform' ) : __( 'Invited', 'buddyboss-platform' );
 					} else {
 						$class       = ( '1' === $bp_invitee_status ) ? 'registered' : 'revoked-access';
 						$revoke_link = bp_core_get_user_domain( bp_loggedin_user_id() ) . bp_get_invites_slug() . '/revoke-invite';
-						$title       = ( '1' === $bp_invitee_status ) ? __( 'Registered', 'buddyboss' ) : __( 'Revoke Invite', 'buddyboss' );
+						$title       = ( '1' === $bp_invitee_status ) ? __( 'Registered', 'buddyboss-platform' ) : __( 'Revoke Invite', 'buddyboss-platform' );
 					}
-					$alert_message = ( '1' === $bp_invitee_status ) ? __( 'Registered', 'buddyboss' ) : __( 'Are you sure you want to revoke this invitation?', 'buddyboss' );
+					$alert_message = ( '1' === $bp_invitee_status ) ? __( 'Registered', 'buddyboss-platform' ) : __( 'Are you sure you want to revoke this invitation?', 'buddyboss-platform' );
 					$icon          = ( '1' === $bp_invitee_status ) ? 'check' : 'x-circle';
 
 					if ( $allow_custom_registration && '' !== bp_custom_register_page_url() ) {
@@ -200,7 +200,7 @@ if ( isset( $restricted ) && '' !== $restricted ) {
 		?>
 		<tr>
 			<td colspan="4" class="field-name">
-				<span><?php esc_html_e( 'You haven\'t sent any invitations yet.', 'buddyboss' ); ?></span>
+				<span><?php esc_html_e( 'You haven\'t sent any invitations yet.', 'buddyboss-platform' ); ?></span>
 			</td>
 		</tr>
 		<?php
@@ -221,8 +221,8 @@ if ( isset( $restricted ) && '' !== $restricted ) {
 									'format'    => '?paged=%#%',
 									'current'   => $current_page,
 									'total'     => $total_pages,
-									'prev_text' => __( '« Prev', 'buddyboss' ),
-									'next_text' => __( 'Next »', 'buddyboss' ),
+									'prev_text' => __( '« Prev', 'buddyboss-platform' ),
+									'next_text' => __( 'Next »', 'buddyboss-platform' ),
 								)
 							);
 						?>

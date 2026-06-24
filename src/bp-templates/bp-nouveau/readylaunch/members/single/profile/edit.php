@@ -27,11 +27,11 @@ if ( bp_has_profile( 'profile_group_id=' . $profile_group_id ) ) {
 			<h2 class="screen-heading edit-profile-screen">
 				<?php
 				if ( 1 === $profile_group_id ) {
-					echo esc_html__( 'Edit profile', 'buddyboss' );
+					echo esc_html__( 'Edit profile', 'buddyboss-platform' );
 				} else {
 					printf(
 						/* translators: %s = profile field group name */
-						__( 'Edit "%s" Information', 'buddyboss' ),
+						__( 'Edit "%s" Information', 'buddyboss-platform' ),
 						bp_get_the_profile_group_name()
 					);
 				}

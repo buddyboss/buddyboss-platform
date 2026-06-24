@@ -24,8 +24,8 @@ class BP_XProfile_Field_Type_Multiselectbox extends BP_XProfile_Field_Type {
 	public function __construct() {
 		parent::__construct();
 
-		$this->category = __( 'Multi Fields', 'buddyboss' );
-		$this->name     = __( 'Multi Select', 'buddyboss' );
+		$this->category = __( 'Multi Fields', 'buddyboss-platform' );
+		$this->name     = __( 'Multi Select', 'buddyboss-platform' );
 
 		$this->supports_multiple_defaults = true;
 		$this->accepts_null_value         = true;
@@ -107,7 +107,7 @@ class BP_XProfile_Field_Type_Multiselectbox extends BP_XProfile_Field_Type {
 		<?php if ( ! bp_get_the_profile_field_is_required() ) : ?>
 
 			<a class="clear-value" href="javascript:clear( '<?php echo esc_js( bp_get_the_profile_field_input_name() ); ?>[]' );">
-				<?php esc_html_e( 'Clear', 'buddyboss' ); ?>
+				<?php esc_html_e( 'Clear', 'buddyboss-platform' ); ?>
 			</a>
 
 		<?php endif; ?>
@@ -205,7 +205,7 @@ class BP_XProfile_Field_Type_Multiselectbox extends BP_XProfile_Field_Type {
 		<label for="<?php bp_the_profile_field_input_name(); ?>" class="screen-reader-text">
 															 <?php
 																/* translators: accessibility text */
-																esc_html_e( 'Select', 'buddyboss' );
+																esc_html_e( 'Select', 'buddyboss-platform' );
 																?>
 		</label>
 		<select <?php echo $this->get_edit_field_html_elements( $r ); ?>>

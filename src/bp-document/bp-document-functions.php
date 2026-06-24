@@ -1445,7 +1445,7 @@ function bp_document_upload() {
 	 * Make sure user is logged in.
 	 */
 	if ( ! is_user_logged_in() ) {
-		return new WP_Error( 'not_logged_in', __( 'Please login in order to upload file document.', 'buddyboss' ), array( 'status' => 500 ) );
+		return new WP_Error( 'not_logged_in', __( 'Please login in order to upload file document.', 'buddyboss-platform' ), array( 'status' => 500 ) );
 	}
 
 	do_action( 'bb_before_document_upload_handler' );
@@ -1571,13 +1571,13 @@ function bp_document_upload_handler( $file_id = 'file' ) {
 			'test_form'            => false,
 			'upload_error_strings' => array(
 				false,
-				__( 'The uploaded file exceeds ', 'buddyboss' ) . bp_document_file_upload_max_size(),
-				__( 'The uploaded file was only partially uploaded.', 'buddyboss' ),
-				__( 'No file was uploaded.', 'buddyboss' ),
+				__( 'The uploaded file exceeds ', 'buddyboss-platform' ) . bp_document_file_upload_max_size(),
+				__( 'The uploaded file was only partially uploaded.', 'buddyboss-platform' ),
+				__( 'No file was uploaded.', 'buddyboss-platform' ),
 				'',
-				__( 'Missing a temporary folder.', 'buddyboss' ),
-				__( 'Failed to write file to disk.', 'buddyboss' ),
-				__( 'File upload stopped by extension.', 'buddyboss' ),
+				__( 'Missing a temporary folder.', 'buddyboss-platform' ),
+				__( 'Failed to write file to disk.', 'buddyboss-platform' ),
+				__( 'File upload stopped by extension.', 'buddyboss-platform' ),
 			),
 		)
 	);
@@ -1602,7 +1602,7 @@ function bp_document_upload_handler( $file_id = 'file' ) {
 		return $attachment;
 	}
 
-	return new WP_Error( 'error_uploading', __( 'Error while uploading document.', 'buddyboss' ), array( 'status' => 500 ) );
+	return new WP_Error( 'error_uploading', __( 'Error while uploading document.', 'buddyboss-platform' ), array( 'status' => 500 ) );
 
 }
 
@@ -2088,52 +2088,52 @@ function bp_document_svg_icon_list() {
 	$icons = array(
 		'default_1'  => array(
 			'icon'  => 'bb-icon-file',
-			'title' => __( 'Default', 'buddyboss' ),
+			'title' => __( 'Default', 'buddyboss-platform' ),
 			'svg'   => '<svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="24" height="32" viewBox="0 0 24 32"><title>file-default</title><path d="M13.728 0h-9.728c-2.208 0-4 1.792-4 4v24c0 2.208 1.792 4 4 4h16c2.208 0 4-1.792 4-4v-17.504c0-1.056-0.416-2.048-1.12-2.784l-6.272-6.496c-0.768-0.768-1.792-1.216-2.88-1.216zM4 1.984h9.728c0.544 0 1.056 0.224 1.44 0.64l6.272 6.464c0.352 0.384 0.576 0.896 0.576 1.408v17.504c0 1.12-0.896 2.016-2.016 2.016h-16c-1.088 0-1.984-0.896-1.984-2.016v-24c0-1.12 0.896-2.016 1.984-2.016z"></path></svg>',
 		),
 		'default_2'  => array(
 			'icon'  => 'bb-icon-file-zip',
-			'title' => __( 'Archive', 'buddyboss' ),
+			'title' => __( 'Archive', 'buddyboss-platform' ),
 			'svg'   => '<svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="24" height="32" viewBox="0 0 24 32"><title>file-zip</title><path d="M13.728 0c1.088 0 2.112 0.448 2.88 1.216v0l6.272 6.496c0.704 0.736 1.12 1.728 1.12 2.784v0 17.504c0 2.208-1.792 4-4 4v0h-16c-2.208 0-4-1.792-4-4v0-24c0-2.208 1.792-4 4-4v0h9.728zM13.728 1.984h-9.728c-1.088 0-1.984 0.896-1.984 2.016v0 24c0 1.12 0.896 2.016 1.984 2.016v0h2.976v-1.984h2.016v-1.92h-2.016v-2.080h2.016v2.016h1.984v2.048h-1.984v1.92h11.008c1.056 0 1.92-0.832 1.984-1.856l0.032-0.16v-17.504c0-0.512-0.224-1.024-0.576-1.408v0l-6.272-6.464c-0.384-0.416-0.896-0.64-1.44-0.64v0zM10.976 21.952v2.048h-1.984v-2.048h1.984zM11.008 16c0.544 0 0.992 0.448 0.992 0.992v3.008c0 0.544-0.448 0.992-0.992 0.992h-4c-0.544 0-0.992-0.448-0.992-0.992v-3.008c0-0.544 0.448-0.992 0.992-0.992h4zM10.592 16.992h-3.2c-0.192 0-0.352 0.128-0.384 0.32v1.28c0 0.192 0.128 0.352 0.32 0.384l0.064 0.032h3.2c0.192 0 0.352-0.16 0.416-0.32v-1.28c0-0.224-0.192-0.416-0.416-0.416z"></path></svg>',
 		),
 		'default_3'  => array(
 			'icon'  => 'bb-icon-file-mp3',
-			'title' => __( 'Audio', 'buddyboss' ),
+			'title' => __( 'Audio', 'buddyboss-platform' ),
 			'svg'   => '<svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="24" height="32" viewBox="0 0 24 32"><title>file-mp3</title><path d="M13.728 0c1.088 0 2.112 0.448 2.88 1.216v0l6.272 6.496c0.704 0.736 1.12 1.728 1.12 2.784v0 17.504c0 2.208-1.792 4-4 4v0h-16c-2.208 0-4-1.792-4-4v0-24c0-2.208 1.792-4 4-4v0zM13.728 1.984h-9.728c-1.088 0-1.984 0.896-1.984 2.016v0 24c0 1.12 0.896 2.016 1.984 2.016v0h16c1.12 0 2.016-0.896 2.016-2.016v0-17.504c0-0.512-0.224-1.024-0.576-1.408v0l-6.272-6.464c-0.384-0.416-0.896-0.64-1.44-0.64v0zM16.96 16c0.128 0 0.288 0.032 0.384 0.128s0.16 0.224 0.16 0.352v0 7.744c0 0.96-0.672 1.824-1.664 2.048-0.96 0.224-1.984-0.192-2.464-1.056-0.448-0.832-0.288-1.888 0.448-2.528s1.856-0.736 2.688-0.224v0-3.040l-6.624 0.704v4.768c0 0.96-0.704 1.792-1.664 2.048-0.96 0.224-1.984-0.192-2.464-1.056-0.48-0.832-0.288-1.888 0.448-2.528s1.824-0.736 2.688-0.224v0-5.856c0-0.256 0.192-0.448 0.448-0.48v0z"></path></svg>',
 		),
 		'default_4'  => array(
 			'icon'  => 'bb-icon-file-html',
-			'title' => __( 'Code', 'buddyboss' ),
+			'title' => __( 'Code', 'buddyboss-platform' ),
 			'svg'   => '<svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="24" height="32" viewBox="0 0 24 32"><title>file-html</title><path d="M13.728 0c1.088 0 2.112 0.448 2.88 1.216v0l6.272 6.496c0.736 0.736 1.12 1.728 1.12 2.784v0 17.504c0 2.208-1.792 4-4 4v0h-16c-2.208 0-4-1.792-4-4v0-24c0-2.208 1.792-4 4-4v0h9.728zM13.728 1.984h-9.728c-1.088 0-1.984 0.896-1.984 2.016v0 24c0 1.12 0.896 2.016 1.984 2.016v0h16c1.12 0 2.016-0.896 2.016-2.016v0-17.504c0-0.512-0.224-1.024-0.576-1.408v0l-6.272-6.464c-0.384-0.416-0.896-0.64-1.44-0.64v0zM9.536 20.416c0.192 0.224 0.224 0.544 0.032 0.8l-0.032 0.064-2.112 2.048 2.112 2.112c0.192 0.224 0.224 0.544 0.032 0.768l-0.032 0.064c-0.224 0.224-0.544 0.256-0.768 0.064l-0.096-0.064-2.496-2.528c-0.224-0.192-0.224-0.544-0.064-0.768l0.064-0.064 2.528-2.496c0.224-0.224 0.608-0.224 0.832 0zM14.080 20.416c0.224-0.224 0.608-0.224 0.832 0v0l2.528 2.496 0.032 0.064c0.192 0.224 0.16 0.576-0.032 0.768v0l-2.592 2.592c-0.224 0.192-0.544 0.16-0.768-0.064v0l-0.064-0.064c-0.16-0.224-0.16-0.544 0.064-0.768v0l2.080-2.112-2.144-2.112c-0.16-0.256-0.16-0.576 0.064-0.8zM12.768 20.032c0.288 0.096 0.48 0.384 0.416 0.672l-0.032 0.064-1.664 5.28c-0.096 0.32-0.448 0.48-0.736 0.384s-0.448-0.384-0.416-0.672l0.032-0.064 1.664-5.28c0.096-0.32 0.448-0.48 0.736-0.384zM10.496 15.008c0.288 0 0.512 0.224 0.512 0.48v1.024c0 0.256-0.224 0.48-0.512 0.48h-4c-0.256 0-0.48-0.224-0.48-0.48v-1.024c0-0.256 0.224-0.48 0.48-0.48h4z"></path></svg>',
 		),
 		'default_5'  => array(
 			'icon'  => 'bb-icon-file-psd',
-			'title' => __( 'Design', 'buddyboss' ),
+			'title' => __( 'Design', 'buddyboss-platform' ),
 			'svg'   => '<svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="24" height="32" viewBox="0 0 24 32"><title>file-psd</title><path d="M13.728 0c1.088 0 2.112 0.448 2.88 1.216v0l6.272 6.496c0.704 0.736 1.12 1.728 1.12 2.784v0 17.504c0 2.208-1.792 4-4 4v0h-16c-2.208 0-4-1.792-4-4v0-24c0-2.208 1.792-4 4-4v0zM13.728 1.984h-9.728c-1.088 0-1.984 0.896-1.984 2.016v0 24c0 1.12 0.896 2.016 1.984 2.016v0h16c1.12 0 2.016-0.896 2.016-2.016v0-17.504c0-0.512-0.224-1.024-0.576-1.408v0l-6.272-6.464c-0.384-0.416-0.896-0.64-1.44-0.64v0zM7.072 22.336l4.416 2.528c0.32 0.192 0.704 0.192 0.992 0.032l4.448-2.528 0.896 0.704c0.16 0.16 0.192 0.416 0.064 0.576-0.032 0.032-0.064 0.064-0.128 0.096l-5.536 3.2c-0.128 0.064-0.288 0.064-0.416 0.032l-0.096-0.032-5.44-3.2c-0.192-0.128-0.256-0.352-0.128-0.544 0-0.064 0.032-0.096 0.064-0.096l0.864-0.768zM7.104 20l4.416 2.56c0.32 0.16 0.704 0.16 0.992 0l4.448-2.528 0.896 0.736c0.16 0.128 0.192 0.384 0.064 0.544-0.032 0.064-0.064 0.096-0.128 0.128l-5.536 3.168c-0.128 0.064-0.288 0.096-0.448 0.032l-0.064-0.032-5.44-3.2c-0.192-0.096-0.256-0.352-0.128-0.544 0-0.032 0.032-0.064 0.064-0.096l0.864-0.768zM12.16 15.040l0.064 0.032 5.472 3.104c0.192 0.128 0.288 0.32 0.288 0.544 0 0.16-0.064 0.32-0.192 0.416l-0.096 0.064-5.44 3.104c-0.128 0.096-0.288 0.096-0.448 0.032l-0.064-0.032-5.44-3.104c-0.224-0.096-0.32-0.32-0.288-0.544 0-0.16 0.064-0.32 0.192-0.416l0.096-0.064 5.408-3.104c0.128-0.096 0.288-0.096 0.448-0.032zM11.968 16.256l-4.256 2.432 0.8 0.448 1.856-0.704c0.032 0 0.032 0 0.064 0 0.128-0.032 0.256 0.064 0.32 0.192v0.064l0.064 0.352 1.408-0.352c0.096-0.032 0.16 0 0.224 0 0.128 0.064 0.192 0.224 0.16 0.352l-0.032 0.064-0.896 1.824 0.32 0.192 4.288-2.432-4.32-2.432zM13.408 17.696c0 0.288-0.384 0.512-0.896 0.576-0.512 0.032-0.928-0.16-0.928-0.416-0.032-0.288 0.352-0.544 0.864-0.576s0.928 0.16 0.96 0.416z"></path></svg>',
 		),
 		'default_6'  => array(
 			'icon'  => 'bb-icon-file-png',
-			'title' => __( 'Image', 'buddyboss' ),
+			'title' => __( 'Image', 'buddyboss-platform' ),
 			'svg'   => '<svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="24" height="32" viewBox="0 0 24 32"><title>file-png</title><path d="M13.728 0c1.088 0 2.112 0.448 2.88 1.216v0l6.272 6.496c0.704 0.736 1.12 1.728 1.12 2.784v0 17.504c0 2.208-1.792 4-4 4v0h-16c-2.208 0-4-1.792-4-4v0-24c0-2.208 1.792-4 4-4v0h9.728zM13.728 1.984h-9.728c-1.12 0-2.016 0.896-2.016 2.016v0 24c0 1.12 0.896 2.016 2.016 2.016v0h16c1.12 0 1.984-0.896 1.984-2.016v0-17.504c0-0.512-0.192-1.024-0.544-1.408v0l-6.272-6.496c-0.384-0.384-0.896-0.608-1.44-0.608v0zM15.68 15.008c1.28 0 2.304 1.024 2.304 2.304v0 7.392c0 1.248-1.024 2.304-2.304 2.304v0h-7.36c-1.28 0-2.336-1.056-2.336-2.304v0-7.392c0-1.28 1.056-2.304 2.336-2.304v0h7.36zM9.152 21.376l-0.096 0.064-2.144 1.6v1.664c0 0.704 0.544 1.312 1.248 1.376h7.52c0.768 0 1.408-0.64 1.408-1.376v0-3.136c-0.896 0.416-2.080 0.992-3.52 1.728-0.448 0.224-0.992 0.192-1.408-0.064l-0.128-0.096-2.368-1.728c-0.16-0.096-0.352-0.096-0.512-0.032zM15.68 15.936h-7.36c-0.768 0-1.408 0.608-1.408 1.376v0 4.48c0.416-0.32 0.96-0.704 1.536-1.152 0.512-0.384 1.152-0.416 1.664-0.096l0.128 0.064 2.368 1.728c0.128 0.096 0.288 0.128 0.448 0.096l0.096-0.064 3.936-1.92v-3.136c0-0.736-0.576-1.312-1.248-1.376h-0.16zM13.376 17.792c0.672 0 1.248 0.544 1.248 1.248s-0.576 1.248-1.248 1.248c-0.704 0-1.248-0.544-1.248-1.248s0.544-1.248 1.248-1.248z"></path></svg>',
 		),
 		'default_7'  => array(
 			'icon'  => 'bb-icon-file-pptx',
-			'title' => __( 'Presentation', 'buddyboss' ),
+			'title' => __( 'Presentation', 'buddyboss-platform' ),
 			'svg'   => '<svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="24" height="32" viewBox="0 0 24 32"><title>file-pptx</title><path d="M13.728 0c1.088 0 2.112 0.448 2.88 1.216v0l6.272 6.496c0.704 0.736 1.12 1.728 1.12 2.784v0 17.504c0 2.208-1.792 4-4 4v0h-16c-2.208 0-4-1.792-4-4v0-24c0-2.208 1.792-4 4-4v0zM13.728 1.984h-9.728c-1.088 0-1.984 0.896-1.984 2.016v0 24c0 1.12 0.896 2.016 1.984 2.016v0h16c1.12 0 2.016-0.896 2.016-2.016v0-17.504c0-0.512-0.224-1.024-0.576-1.408v0l-6.272-6.464c-0.384-0.416-0.896-0.64-1.44-0.64v0zM17.504 24.992c0.288 0 0.512 0.224 0.512 0.512v0.992c0 0.288-0.224 0.512-0.512 0.512h-11.008c-0.256 0-0.48-0.224-0.48-0.512v-0.992c0-0.288 0.224-0.512 0.48-0.512h11.008zM11.84 18.4l4.608 2.848c-0.992 1.376-2.624 2.24-4.448 2.24-2.048 0-3.872-1.12-4.8-2.816l-0.128-0.192 4.768-2.080zM12.224 12.512c2.944 0.096 5.28 2.528 5.28 5.472 0 0.864-0.192 1.632-0.512 2.368l-0.16 0.256-4.608-2.784v-5.312zM11.52 12.512v5.312l-4.704 2.016c-0.192-0.576-0.32-1.216-0.32-1.856 0-2.848 2.208-5.216 5.024-5.472z"></path></svg>',
 		),
 		'default_8'  => array(
 			'icon'  => 'bb-icon-file-xlsx',
-			'title' => __( 'Spreadsheet', 'buddyboss' ),
+			'title' => __( 'Spreadsheet', 'buddyboss-platform' ),
 			'svg'   => '<svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="24" height="32" viewBox="0 0 24 32"><title>file-xlsx</title><path d="M13.728 0c1.088 0 2.112 0.448 2.88 1.216v0l6.272 6.496c0.704 0.736 1.12 1.728 1.12 2.784v0 17.504c0 2.208-1.792 4-4 4v0h-16c-2.208 0-4-1.792-4-4v0-24c0-2.208 1.792-4 4-4v0h9.728zM13.728 1.984h-9.728c-1.088 0-1.984 0.896-1.984 2.016v0 24c0 1.12 0.896 2.016 1.984 2.016v0h16c1.12 0 2.016-0.896 2.016-2.016v0-17.504c0-0.512-0.224-1.024-0.576-1.408v0l-6.272-6.464c-0.384-0.416-0.896-0.64-1.44-0.64v0zM15.488 13.984c1.408 0 2.528 1.12 2.528 2.528v0 8c0 1.376-1.12 2.496-2.528 2.496v0h-8c-1.376 0-2.496-1.12-2.496-2.496v0-8c0-1.408 1.12-2.528 2.496-2.528v0h8zM9.024 23.072h-3.008v1.44c0 0.768 0.576 1.408 1.344 1.472h1.664v-2.912zM16.992 23.072h-6.976v2.912h5.472c0.8 0 1.44-0.576 1.504-1.344v-1.568zM9.024 19.072h-3.008v3.008h3.008v-3.008zM16.992 19.072h-6.976v3.008h6.976v-3.008zM9.024 15.008h-1.536c-0.8 0-1.472 0.672-1.472 1.504v0 1.568h3.008v-3.072zM15.488 15.008h-5.472v3.072h6.976v-1.568c0-0.8-0.576-1.44-1.344-1.504h-0.16z"></path></svg>',
 		),
 		'default_9'  => array(
 			'icon'  => 'bb-icon-file-txt',
-			'title' => __( 'Text', 'buddyboss' ),
+			'title' => __( 'Text', 'buddyboss-platform' ),
 			'svg'   => '<svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="24" height="32" viewBox="0 0 24 32"><title>file-txt</title><path d="M13.728 0c1.088 0 2.112 0.448 2.88 1.216v0l6.272 6.496c0.704 0.736 1.12 1.728 1.12 2.784v0 17.504c0 2.208-1.792 4-4 4v0h-16c-2.208 0-4-1.792-4-4v0-24c0-2.208 1.792-4 4-4v0zM13.728 1.984h-9.728c-1.088 0-1.984 0.896-1.984 2.016v0 24c0 1.12 0.896 2.016 1.984 2.016v0h16c1.12 0 2.016-0.896 2.016-2.016v0-17.504c0-0.512-0.224-1.024-0.576-1.408v0l-6.272-6.464c-0.384-0.416-0.896-0.64-1.44-0.64v0zM15.488 24c0.288 0 0.512 0.224 0.512 0.512v0.992c0 0.256-0.224 0.48-0.512 0.48h-8.992c-0.256 0-0.48-0.224-0.48-0.48v-0.992c0-0.288 0.224-0.512 0.48-0.512h8.992zM13.504 20.512c0.288 0 0.512 0.224 0.512 0.48v0.992c0 0.288-0.224 0.512-0.512 0.512h-7.008c-0.256 0-0.48-0.224-0.48-0.512v-0.992c0-0.256 0.224-0.48 0.48-0.48h7.008zM17.504 16.992c0.288 0 0.512 0.224 0.512 0.512v0.992c0 0.288-0.224 0.512-0.512 0.512h-11.008c-0.256 0-0.48-0.224-0.48-0.512v-0.992c0-0.288 0.224-0.512 0.48-0.512h11.008z"></path></svg>',
 		),
 		'default_10' => array(
 			'icon'  => 'bb-icon-file-video',
-			'title' => __( 'Video', 'buddyboss' ),
+			'title' => __( 'Video', 'buddyboss-platform' ),
 			'svg'   => '<svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="24" height="32" viewBox="0 0 24 32"><title>file-video</title><path d="M13.728 0.096c1.088 0 2.112 0.448 2.88 1.216v0l6.272 6.496c0.704 0.736 1.12 1.728 1.12 2.784v0 17.504c0 2.208-1.792 4-4 4v0h-16c-2.208 0-4-1.792-4-4v0-24c0-2.208 1.792-4 4-4v0h9.728zM13.728 2.080h-9.728c-1.088 0-1.984 0.896-1.984 2.016v0 24c0 1.088 0.896 1.984 1.984 1.984v0h16c1.12 0 2.016-0.896 2.016-1.984v0-17.504c0-0.544-0.224-1.024-0.576-1.408v0l-6.272-6.496c-0.384-0.384-0.896-0.608-1.44-0.608v0zM12.704 18.080c1.28 0 2.304 1.056 2.304 2.304v0l1.472-1.088c0.448-0.352 1.056-0.256 1.408 0.192 0.128 0.16 0.192 0.384 0.192 0.608v4.992c0 0.544-0.448 0.992-0.992 0.992-0.224 0-0.448-0.064-0.608-0.192l-1.472-1.088c0 1.248-1.056 2.304-2.304 2.304v0h-5.408c-1.248 0-2.304-1.056-2.304-2.336v0-4.384c0-1.248 1.056-2.304 2.304-2.304v0h5.408zM12.704 19.008h-5.408c-0.736 0-1.376 0.64-1.376 1.376v0 4.384c0 0.768 0.64 1.408 1.376 1.408v0h5.408c0.768 0 1.376-0.64 1.376-1.408v0-4.384c0-0.736-0.608-1.376-1.376-1.376v0zM17.088 20.096l-2.016 1.472v2.016l2.016 1.504v-4.992z"></path></svg>',
 		),
 	);
@@ -2291,14 +2291,14 @@ function bp_document_folder_bradcrumb( $folder_id ) {
 		if ( bp_is_group() && bp_is_group_single() ) {
 			$group = groups_get_group( array( 'group_id' => bp_get_current_group_id() ) );
 			$link  = bp_get_group_permalink( $group ) . bp_get_document_slug();
-			$html .= '<li><a href=" ' . $link . ' "> ' . __( 'Documents', 'buddyboss' ) . '</a></li>';
+			$html .= '<li><a href=" ' . $link . ' "> ' . __( 'Documents', 'buddyboss-platform' ) . '</a></li>';
 		} else {
 			$link  = bp_displayed_user_domain() . bp_get_document_slug();
-			$html .= '<li><a href=" ' . $link . ' "> ' . __( 'Documents', 'buddyboss' ) . '</a></li>';
+			$html .= '<li><a href=" ' . $link . ' "> ' . __( 'Documents', 'buddyboss-platform' ) . '</a></li>';
 		}
 
 		if ( count( $data ) > 3 ) {
-			$html .= '<li>' . __( '...', 'buddyboss' ) . '</li>';
+			$html .= '<li>' . __( '...', 'buddyboss-platform' ) . '</li>';
 			$data  = array_slice( $data, - 3 );
 		}
 		foreach ( $data as $element ) {
@@ -2698,22 +2698,22 @@ function bp_document_rename_file( $document_id = 0, $attachment_document_id = 0,
 
 	// Validations.
 	if ( ! $post ) {
-		return __( 'Post with ID ' . $attachment_document_id . ' does not exist!', 'buddyboss' );
+		return __( 'Post with ID ' . $attachment_document_id . ' does not exist!', 'buddyboss-platform' );
 	}
 	if ( $post && $post->post_type != 'attachment' ) {
-		return __( 'Post with ID ' . $attachment_document_id . ' is not an attachment!', 'buddyboss' );
+		return __( 'Post with ID ' . $attachment_document_id . ' is not an attachment!', 'buddyboss-platform' );
 	}
 	if ( ! $new_filename ) {
-		return __( 'The document name is empty!', 'buddyboss' );
+		return __( 'The document name is empty!', 'buddyboss-platform' );
 	}
 	if ( $new_filename != sanitize_file_name( $new_filename ) ) {
-		return __( 'Bad characters or invalid document name!', 'buddyboss' );
+		return __( 'Bad characters or invalid document name!', 'buddyboss-platform' );
 	}
 	if ( file_exists( $new_file_abs_path ) ) {
-		return __( 'A file with that name already exists in the containing folder!', 'buddyboss' );
+		return __( 'A file with that name already exists in the containing folder!', 'buddyboss-platform' );
 	}
 	if ( ! is_writable( $file_abs_dir ) ) {
-		return __( 'The document containing directory is not writable!', 'buddyboss' );
+		return __( 'The document containing directory is not writable!', 'buddyboss-platform' );
 	}
 
 	$my_post = array(
@@ -2749,7 +2749,7 @@ function bp_document_rename_file( $document_id = 0, $attachment_document_id = 0,
 	 */
 	$force_bypass = apply_filters( 'bb_document_force_bypass_rename', false, $document_id, $attachment_document_id, $file_abs_path, $new_file_abs_path );
 	if ( ! $force_bypass && ! @rename( $file_abs_path, $new_file_abs_path ) ) {
-		return __( 'File renaming error!', 'buddyboss' );
+		return __( 'File renaming error!', 'buddyboss-platform' );
 	}
 
 	if ( ! function_exists( 'wp_generate_attachment_metadata' ) ) {
@@ -3556,20 +3556,20 @@ function bp_document_default_scope( $scope = 'all' ) {
 function bp_document_size_format( $bytes, $decimals = 0 ) {
 	$quant = array(
 		/* translators: Memory unit for terabyte. */
-		_x( 'TB', 'memory unit', 'buddyboss' ) => TB_IN_BYTES,
+		_x( 'TB', 'memory unit', 'buddyboss-platform' ) => TB_IN_BYTES,
 		/* translators: Memory unit for gigabyte. */
-		_x( 'GB', 'memory unit', 'buddyboss' ) => GB_IN_BYTES,
+		_x( 'GB', 'memory unit', 'buddyboss-platform' ) => GB_IN_BYTES,
 		/* translators: Memory unit for megabyte. */
-		_x( 'MB', 'memory unit', 'buddyboss' ) => MB_IN_BYTES,
+		_x( 'MB', 'memory unit', 'buddyboss-platform' ) => MB_IN_BYTES,
 		/* translators: Memory unit for kilobyte. */
-		_x( 'KB', 'memory unit', 'buddyboss' ) => KB_IN_BYTES,
+		_x( 'KB', 'memory unit', 'buddyboss-platform' ) => KB_IN_BYTES,
 		/* translators: Memory unit for byte. */
-		_x( 'B', 'memory unit', 'buddyboss' )  => 1,
+		_x( 'B', 'memory unit', 'buddyboss-platform' )  => 1,
 	);
 
 	if ( 0 === $bytes ) {
 		/* translators: Memory unit for byte. */
-		return bp_core_number_format( 0, $decimals ) . ' ' . _x( 'B', 'memory unit', 'buddyboss' );
+		return bp_core_number_format( 0, $decimals ) . ' ' . _x( 'B', 'memory unit', 'buddyboss-platform' );
 	}
 
 	foreach ( $quant as $unit => $mag ) {

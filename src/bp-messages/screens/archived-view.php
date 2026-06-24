@@ -34,7 +34,7 @@ function messages_screen_archived() {
 
 			// Redirect away.
 		} else {
-			bp_core_add_message( __( 'You do not have access to that conversation.', 'buddyboss' ), 'error' );
+			bp_core_add_message( __( 'You do not have access to that conversation.', 'buddyboss-platform' ), 'error' );
 			$is_redirect = true;
 		}
 	}

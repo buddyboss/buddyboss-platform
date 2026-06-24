@@ -31,7 +31,7 @@ function bb_groups_register_navigation_panel_fields() {
 		'group_navigation',
 		'group_navigation_settings',
 		array(
-			'title'    => __( 'Group Navigation', 'buddyboss' ),
+			'title'    => __( 'Group Navigation', 'buddyboss-platform' ),
 			'order'    => 10,
 			'help_url' => '638208',
 		)
@@ -44,9 +44,9 @@ function bb_groups_register_navigation_panel_fields() {
 		'group_navigation_settings',
 		array(
 			'name'              => 'bb_group_nav_display',
-			'label'             => __( 'Layout', 'buddyboss' ),
+			'label'             => __( 'Layout', 'buddyboss-platform' ),
 			'type'              => 'toggle',
-			'description'       => __( 'Display the group navigation vertically', 'buddyboss' ),
+			'description'       => __( 'Display the group navigation vertically', 'buddyboss-platform' ),
 			'default'           => 0,
 			'order'             => 10,
 			'sanitize_callback' => 'absint',
@@ -60,8 +60,8 @@ function bb_groups_register_navigation_panel_fields() {
 		'group_navigation_settings',
 		array(
 			'name'              => 'bb_group_default_tab',
-			'label'             => __( 'Default Tab', 'buddyboss' ),
-			'description'       => __( 'The dropdown only shows tabs that are available to all groups.', 'buddyboss' ),
+			'label'             => __( 'Default Tab', 'buddyboss-platform' ),
+			'description'       => __( 'The dropdown only shows tabs that are available to all groups.', 'buddyboss-platform' ),
 			'type'              => 'select',
 			'default'           => 'members',
 			'options'           => array(), // Populated at AJAX time via bb_group_navigation_enrich_field_data() so options reflect current component state.
@@ -78,7 +78,7 @@ function bb_groups_register_navigation_panel_fields() {
 		'group_navigation',
 		'group_navigation_order',
 		array(
-			'title' => __( 'Navigation Order', 'buddyboss' ),
+			'title' => __( 'Navigation Order', 'buddyboss-platform' ),
 			'order' => 20,
 		)
 	);
@@ -127,33 +127,33 @@ function bb_get_group_default_tab_options() {
 		$options = apply_filters(
 			'group_default_tab_options_list',
 			array(
-				'members'  => __( 'Members', 'buddyboss' ),
-				'activity' => __( 'Feed', 'buddyboss' ),
+				'members'  => __( 'Members', 'buddyboss-platform' ),
+				'activity' => __( 'Feed', 'buddyboss-platform' ),
 			)
 		);
 	} else {
 		$options = apply_filters(
 			'group_default_tab_options_list',
 			array(
-				'members' => __( 'Members', 'buddyboss' ),
+				'members' => __( 'Members', 'buddyboss-platform' ),
 			)
 		);
 	}
 
 	if ( bp_is_active( 'media' ) && bp_is_group_media_support_enabled() ) {
-		$options['photos'] = __( 'Photos', 'buddyboss' );
+		$options['photos'] = __( 'Photos', 'buddyboss-platform' );
 	}
 
 	if ( bp_is_active( 'media' ) && bp_is_group_albums_support_enabled() ) {
-		$options['albums'] = __( 'Albums', 'buddyboss' );
+		$options['albums'] = __( 'Albums', 'buddyboss-platform' );
 	}
 
 	if ( bp_is_active( 'media' ) && bp_is_group_document_support_enabled() ) {
-		$options['documents'] = __( 'Documents', 'buddyboss' );
+		$options['documents'] = __( 'Documents', 'buddyboss-platform' );
 	}
 
 	if ( bp_is_active( 'video' ) && function_exists( 'bp_is_group_video_support_enabled' ) && bp_is_group_video_support_enabled() ) {
-		$options['videos'] = __( 'Videos', 'buddyboss' );
+		$options['videos'] = __( 'Videos', 'buddyboss-platform' );
 	}
 
 	// Convert to Settings 2.0 select format.

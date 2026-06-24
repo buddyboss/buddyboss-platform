@@ -31,30 +31,30 @@ const EditReadyLaunchHeader = ({ attributes, setAttributes }) => {
     return (
         <div {...blockProps}>
             <InspectorControls>
-                <PanelBody title={__('Header Settings', 'buddyboss')} initialOpen={true}>
+                <PanelBody title={__('Header Settings', 'buddyboss-platform')} initialOpen={true}>
                     {searchEnabled && (
                         <ToggleControl
-                            label={__('Show Search', 'buddyboss')}
+                            label={__('Show Search', 'buddyboss-platform')}
                             checked={showSearch}
                             onChange={() => setAttributes({ showSearch: !showSearch })}
                         />
                     )}
                     {messagesEnabled && (
                         <ToggleControl
-                            label={__('Show Messages', 'buddyboss')}
+                            label={__('Show Messages', 'buddyboss-platform')}
                             checked={showMessages}
                             onChange={() => setAttributes({ showMessages: !showMessages })}
                         />
                     )}
                     {notificationsEnabled && (
                         <ToggleControl
-                            label={__('Show Notifications', 'buddyboss')}
+                            label={__('Show Notifications', 'buddyboss-platform')}
                             checked={showNotifications}
                             onChange={() => setAttributes({ showNotifications: !showNotifications })}
                         />
                     )}
                     <ToggleControl
-                        label={__('Show Profile Menu', 'buddyboss')}
+                        label={__('Show Profile Menu', 'buddyboss-platform')}
                         checked={showProfileMenu}
                         onChange={() => setAttributes({ showProfileMenu: !showProfileMenu })}
                     />

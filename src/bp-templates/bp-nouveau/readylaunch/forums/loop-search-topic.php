@@ -100,7 +100,7 @@ defined( 'ABSPATH' ) || exit;
 
 				<?php do_action( 'bbp_theme_before_topic_started_by' ); ?>
 
-				<span class="bb-rl-topic-started-by"><?php /* translators: %s: topic author link. */ printf( esc_html__( 'By:%1$s', 'buddyboss' ), bbp_get_topic_author_link( array( 'size' => '14' ) ) ); ?></span>
+				<span class="bb-rl-topic-started-by"><?php /* translators: %s: topic author link. */ printf( esc_html__( 'By:%1$s', 'buddyboss-platform' ), bbp_get_topic_author_link( array( 'size' => '14' ) ) ); ?></span>
 
 				<?php do_action( 'bbp_theme_after_topic_started_by' ); ?>
 

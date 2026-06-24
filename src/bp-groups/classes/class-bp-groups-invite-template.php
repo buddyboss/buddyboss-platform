@@ -85,7 +85,7 @@ class BP_Groups_Invite_Template {
 		// Backward compatibility with old method of passing arguments.
 		if ( ! is_array( $args ) || count( $function_args ) > 1 ) {
 			/* translators: 1: method name, 2: file path. */
-			_deprecated_argument( __METHOD__, '2.0.0', sprintf( __( 'Arguments passed to %1$s should be in an associative array. See the inline documentation at %2$s for more details.', 'buddyboss' ), __METHOD__, __FILE__ ) );
+			_deprecated_argument( __METHOD__, '2.0.0', sprintf( __( 'Arguments passed to %1$s should be in an associative array. See the inline documentation at %2$s for more details.', 'buddyboss-platform' ), __METHOD__, __FILE__ ) );
 
 			$old_args_keys = array(
 				0 => 'user_id',
@@ -250,7 +250,7 @@ class BP_Groups_Invite_Template {
 				'alt'     => sprintf(
 					__(
 						'Profile photo of %s',
-						'buddyboss'
+						'buddyboss-platform'
 					),
 					$this->invite->user->fullname
 				),
@@ -263,7 +263,7 @@ class BP_Groups_Invite_Template {
 				'alt'     => sprintf(
 					__(
 						'Profile photo of %s',
-						'buddyboss'
+						'buddyboss-platform'
 					),
 					$this->invite->user->fullname
 				),
@@ -274,7 +274,7 @@ class BP_Groups_Invite_Template {
 				'item_id' => $user_id,
 				'type'    => 'thumb',
 				/* translators: %s: member full name. */
-				'alt'     => sprintf( __( 'Profile photo of %s', 'buddyboss' ), $this->invite->user->fullname ),
+				'alt'     => sprintf( __( 'Profile photo of %s', 'buddyboss-platform' ), $this->invite->user->fullname ),
 				'width'   => 30,
 				'height'  => 30,
 			)
@@ -283,12 +283,12 @@ class BP_Groups_Invite_Template {
 		$this->invite->user->user_url     = bp_core_get_user_domain( $user_id, $this->invite->user->user_nicename, $this->invite->user->user_login );
 		$this->invite->user->user_link    = "<a href='{$this->invite->user->user_url}'>{$this->invite->user->fullname}</a>";
 		/* translators: %s: human-readable time since last activity. */
-		$this->invite->user->last_active  = bp_core_get_last_activity( $this->invite->user->last_activity, __( 'active %s', 'buddyboss' ) );
+		$this->invite->user->last_active  = bp_core_get_last_activity( $this->invite->user->last_activity, __( 'active %s', 'buddyboss-platform' ) );
 
 		if ( bp_is_active( 'groups' ) ) {
 			$total_groups                     = BP_Groups_Member::total_group_count( $user_id );
 			/* translators: %d: number of groups. */
-			$this->invite->user->total_groups = sprintf( _n( '%d group', '%d groups', $total_groups, 'buddyboss' ), $total_groups );
+			$this->invite->user->total_groups = sprintf( _n( '%d group', '%d groups', $total_groups, 'buddyboss-platform' ), $total_groups );
 		}
 
 		if ( bp_is_active( 'friends' ) ) {

@@ -53,7 +53,7 @@ export function DeleteConfirmModal( {
 	onConfirmChange,
 	onConfirm,
 	onClose,
-	confirmText = __( 'Delete', 'buddyboss' ),
+	confirmText = __( 'Delete', 'buddyboss-platform' ),
 	isProcessing,
 	className,
 } ) {
@@ -62,7 +62,7 @@ export function DeleteConfirmModal( {
 	}
 
 	var isBulk = items.length > 1;
-	var title = isBulk ? ( bulkTitle || __( 'Bulk Delete', 'buddyboss' ) ) : ( singleTitle || __( 'Delete?', 'buddyboss' ) );
+	var title = isBulk ? ( bulkTitle || __( 'Bulk Delete', 'buddyboss-platform' ) ) : ( singleTitle || __( 'Delete?', 'buddyboss-platform' ) );
 	var modalClass = ( className || 'bb-delete-confirm-modal' ) + ' bb-admin-settings-modal';
 
 	return (
@@ -98,7 +98,7 @@ export function DeleteConfirmModal( {
 					<i className="bb-icons-rl bb-icons-rl-warning-circle"></i>
 					<div className="bb-admin-delete__warning-text">
 						<span className="bb-admin-delete__warning-title">
-							{ __( 'Warning', 'buddyboss' ) }
+							{ __( 'Warning', 'buddyboss-platform' ) }
 						</span>
 						<span className="bb-admin-delete__warning-desc">
 							{ warningText }
@@ -123,7 +123,7 @@ export function DeleteConfirmModal( {
 					onClick={ onClose }
 					disabled={ isProcessing }
 				>
-					{ __( 'Cancel', 'buddyboss' ) }
+					{ __( 'Cancel', 'buddyboss-platform' ) }
 				</Button>
 				<Button
 					variant="primary"

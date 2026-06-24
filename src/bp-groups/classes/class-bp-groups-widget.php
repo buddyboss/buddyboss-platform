@@ -23,11 +23,11 @@ class BP_Groups_Widget extends WP_Widget {
 	 */
 	public function __construct() {
 		$widget_ops = array(
-			'description'                 => __( 'A dynamic list of recently active, popular, newest, or alphabetical groups', 'buddyboss' ),
+			'description'                 => __( 'A dynamic list of recently active, popular, newest, or alphabetical groups', 'buddyboss-platform' ),
 			'classname'                   => 'widget_bp_groups_widget buddypress widget',
 			'customize_selective_refresh' => true,
 		);
-		parent::__construct( false, __( '(BB) Social Groups', 'buddyboss' ), $widget_ops );
+		parent::__construct( false, __( '(BB) Social Groups', 'buddyboss-platform' ), $widget_ops );
 
 		if ( is_customize_preview() || is_active_widget( false, false, $this->id_base ) ) {
 			add_action( 'bp_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
@@ -75,7 +75,7 @@ class BP_Groups_Widget extends WP_Widget {
 		}
 
 		if ( empty( $instance['title'] ) ) {
-			$instance['title'] = __( 'Groups', 'buddyboss' );
+			$instance['title'] = __( 'Groups', 'buddyboss-platform' );
 		}
 
 		/**
@@ -129,19 +129,19 @@ class BP_Groups_Widget extends WP_Widget {
 																<?php
 																if ( $instance['group_default'] == 'newest' ) :
 																	?>
-					 class="selected"<?php endif; ?>><?php _e( 'Newest', 'buddyboss' ); ?></a>
+					 class="selected"<?php endif; ?>><?php _e( 'Newest', 'buddyboss-platform' ); ?></a>
 				<span class="bp-separator" role="separator"><?php echo esc_html( $separator ); ?></span>
 				<a href="<?php bp_groups_directory_permalink(); ?>" id="recently-active-groups"
 																<?php
 																if ( $instance['group_default'] == 'active' ) :
 																	?>
-					 class="selected"<?php endif; ?>><?php _e( 'Active', 'buddyboss' ); ?></a>
+					 class="selected"<?php endif; ?>><?php _e( 'Active', 'buddyboss-platform' ); ?></a>
 				<span class="bp-separator" role="separator"><?php echo esc_html( $separator ); ?></span>
 				<a href="<?php bp_groups_directory_permalink(); ?>" id="popular-groups" 
 																<?php
 																if ( $instance['group_default'] == 'popular' ) :
 																	?>
-					 class="selected"<?php endif; ?>><?php _e( 'Popular', 'buddyboss' ); ?></a>
+					 class="selected"<?php endif; ?>><?php _e( 'Popular', 'buddyboss-platform' ); ?></a>
 			</div>
 
 			<ul id="groups-list" class="item-list" aria-live="polite" aria-relevant="all" aria-atomic="true">
@@ -163,12 +163,12 @@ class BP_Groups_Widget extends WP_Widget {
 								<?php
 								if ( 'newest' == $instance['group_default'] ) {
 									/* translators: %s: human-readable time since the group was created. */
-									printf( __( 'created %s', 'buddyboss' ), bp_get_group_date_created() );
+									printf( __( 'created %s', 'buddyboss-platform' ), bp_get_group_date_created() );
 								} elseif ( 'popular' == $instance['group_default'] ) {
 									bp_group_member_count();
 								} else {
 									/* translators: %s: human-readable time since the group was last active. */
-									printf( __( 'active %s', 'buddyboss' ), bp_get_group_last_active() );
+									printf( __( 'active %s', 'buddyboss-platform' ), bp_get_group_last_active() );
 								}
 								?>
 								</span>
@@ -181,12 +181,12 @@ class BP_Groups_Widget extends WP_Widget {
 			<?php wp_nonce_field( 'groups_widget_groups_list', '_wpnonce-groups' ); ?>
 			<input type="hidden" name="groups_widget_max" id="groups_widget_max" value="<?php echo esc_attr( $max_groups ); ?>" />
 
-			<div class="more-block <?php echo ( $groups_template->total_group_count > $max_groups ) ? '' : 'bp-hide'; ?>"><a href="<?php bp_groups_directory_permalink(); ?>" class="count-more"><?php esc_html_e( 'See all', 'buddyboss' ); ?><i class="bb-icon-l bb-icon-angle-right"></i></a></div>
+			<div class="more-block <?php echo ( $groups_template->total_group_count > $max_groups ) ? '' : 'bp-hide'; ?>"><a href="<?php bp_groups_directory_permalink(); ?>" class="count-more"><?php esc_html_e( 'See all', 'buddyboss-platform' ); ?><i class="bb-icon-l bb-icon-angle-right"></i></a></div>
 
 		<?php else : ?>
 
 			<div class="widget-error">
-				<?php _e( 'There are no groups to display.', 'buddyboss' ); ?>
+				<?php _e( 'There are no groups to display.', 'buddyboss-platform' ); ?>
 			</div>
 
 		<?php endif; ?>
@@ -228,7 +228,7 @@ class BP_Groups_Widget extends WP_Widget {
 	 */
 	public function form( $instance ) {
 		$defaults = array(
-			'title'         => __( 'Groups', 'buddyboss' ),
+			'title'         => __( 'Groups', 'buddyboss-platform' ),
 			'max_groups'    => 5,
 			'group_default' => 'active',
 			'link_title'    => false,
@@ -241,18 +241,18 @@ class BP_Groups_Widget extends WP_Widget {
 		$link_title    = (bool) $instance['link_title'];
 		?>
 
-		<p><label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _e( 'Title:', 'buddyboss' ); ?> <input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo esc_attr( $title ); ?>" style="width: 100%" /></label></p>
+		<p><label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _e( 'Title:', 'buddyboss-platform' ); ?> <input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo esc_attr( $title ); ?>" style="width: 100%" /></label></p>
 
-		<p><label for="<?php echo $this->get_field_id( 'link_title' ); ?>"><input type="checkbox" name="<?php echo $this->get_field_name( 'link_title' ); ?>" id="<?php echo $this->get_field_id( 'link_title' ); ?>" value="1" <?php checked( $link_title ); ?> /> <?php _e( 'Link widget title to Groups directory', 'buddyboss' ); ?></label></p>
+		<p><label for="<?php echo $this->get_field_id( 'link_title' ); ?>"><input type="checkbox" name="<?php echo $this->get_field_name( 'link_title' ); ?>" id="<?php echo $this->get_field_id( 'link_title' ); ?>" value="1" <?php checked( $link_title ); ?> /> <?php _e( 'Link widget title to Groups directory', 'buddyboss-platform' ); ?></label></p>
 
-		<p><label for="<?php echo $this->get_field_id( 'max_groups' ); ?>"><?php esc_html_e( 'Max groups to show:', 'buddyboss' ); ?> <input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'max_groups' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'max_groups' ) ); ?>" type="number" value="<?php echo esc_attr( $max_groups ); ?>" style="width: 30%" /></label></p>
+		<p><label for="<?php echo $this->get_field_id( 'max_groups' ); ?>"><?php esc_html_e( 'Max groups to show:', 'buddyboss-platform' ); ?> <input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'max_groups' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'max_groups' ) ); ?>" type="number" value="<?php echo esc_attr( $max_groups ); ?>" style="width: 30%" /></label></p>
 
 		<p>
-			<label for="<?php echo $this->get_field_id( 'group_default' ); ?>"><?php _e( 'Default groups to show:', 'buddyboss' ); ?></label>
+			<label for="<?php echo $this->get_field_id( 'group_default' ); ?>"><?php _e( 'Default groups to show:', 'buddyboss-platform' ); ?></label>
 			<select name="<?php echo $this->get_field_name( 'group_default' ); ?>" id="<?php echo $this->get_field_id( 'group_default' ); ?>">
-				<option value="newest" <?php selected( $group_default, 'newest' ); ?>><?php _e( 'Newest', 'buddyboss' ); ?></option>
-				<option value="active" <?php selected( $group_default, 'active' ); ?>><?php _e( 'Active', 'buddyboss' ); ?></option>
-				<option value="popular"  <?php selected( $group_default, 'popular' ); ?>><?php _e( 'Popular', 'buddyboss' ); ?></option>
+				<option value="newest" <?php selected( $group_default, 'newest' ); ?>><?php _e( 'Newest', 'buddyboss-platform' ); ?></option>
+				<option value="active" <?php selected( $group_default, 'active' ); ?>><?php _e( 'Active', 'buddyboss-platform' ); ?></option>
+				<option value="popular"  <?php selected( $group_default, 'popular' ); ?>><?php _e( 'Popular', 'buddyboss-platform' ); ?></option>
 			</select>
 		</p>
 		<?php

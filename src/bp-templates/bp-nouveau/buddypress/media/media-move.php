@@ -16,16 +16,16 @@
 			<div class="modal-wrapper">
 				<div id="boss-media-create-album-popup" class="modal-container has-folderlocationUI">
 					<header class="bb-model-header">
-						<h4><span class="target_name"><?php esc_html_e( 'Move Photo to...', 'buddyboss' ); ?></span></h4>
+						<h4><span class="target_name"><?php esc_html_e( 'Move Photo to...', 'buddyboss-platform' ); ?></span></h4>
 					</header>
 					<div class="bb-field-wrap">
 						<?php bp_get_template_part( 'media/location-move' ); ?>
 						<?php bp_get_template_part( 'media/media-create-album' ); ?>
 					</div>
 					<footer class="bb-model-footer">
-						<a href="#" class="bp-media-open-create-popup-folder"><?php esc_html_e( 'Create new album', 'buddyboss' ); ?></a>
-						<a class="ac-media-close-button" href="#"><?php esc_html_e( 'Cancel', 'buddyboss' ); ?></a>
-						<a class="button bp-media-move bp-media-move-activity" id="" href="#"><?php esc_html_e( 'Move', 'buddyboss' ); ?></a>
+						<a href="#" class="bp-media-open-create-popup-folder"><?php esc_html_e( 'Create new album', 'buddyboss-platform' ); ?></a>
+						<a class="ac-media-close-button" href="#"><?php esc_html_e( 'Cancel', 'buddyboss-platform' ); ?></a>
+						<a class="button bp-media-move bp-media-move-activity" id="" href="#"><?php esc_html_e( 'Move', 'buddyboss-platform' ); ?></a>
 					</footer>
 				</div>
 			</div>

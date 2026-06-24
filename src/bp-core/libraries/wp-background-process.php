@@ -655,10 +655,10 @@ if ( ! class_exists( 'WP_Background_Process' ) ) {
 			}
 
 			if ( 1 === $interval ) {
-				$display = __( 'Every Minute', 'buddyboss' );
+				$display = __( 'Every Minute', 'buddyboss-platform' );
 			} else {
 				/* translators: %d: number of minutes. */
-				$display = sprintf( __( 'Every %d Minutes', 'buddyboss' ), $interval );
+				$display = sprintf( __( 'Every %d Minutes', 'buddyboss-platform' ), $interval );
 			}
 
 			// Adds an "Every NNN Minute(s)" schedule to the existing cron schedules.

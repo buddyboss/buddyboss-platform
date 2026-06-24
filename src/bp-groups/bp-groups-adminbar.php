@@ -42,7 +42,7 @@ function bp_groups_group_admin_menu() {
 	$wp_admin_bar->add_menu(
 		array(
 			'id'    => $bp->group_admin_menu_id,
-			'title' => __( 'Edit Group', 'buddyboss' ),
+			'title' => __( 'Edit Group', 'buddyboss-platform' ),
 			'href'  => bp_get_group_permalink( $bp->groups->current_group ) . 'admin/edit-details/',
 		)
 	);
@@ -66,12 +66,12 @@ function bp_groups_group_admin_menu() {
 		 */
 		if ( $menu->show_in_admin_bar ) {
 			/* translators: %s: group manage tab name. */
-			$title = sprintf( __( 'Edit Group %s', 'buddyboss' ), $menu->name );
+			$title = sprintf( __( 'Edit Group %s', 'buddyboss-platform' ), $menu->name );
 
 			// Title is specific for delete.
 			if ( 'delete-group' == $menu->slug ) {
 				/* translators: %s: group manage tab name. */
-				$title = sprintf( __( '%s Group', 'buddyboss' ), $menu->name );
+				$title = sprintf( __( '%s Group', 'buddyboss-platform' ), $menu->name );
 
 				if ( bp_is_active( 'forums' ) && function_exists( 'bbp_is_group_forums_active' ) ) {
 					if ( bbp_is_group_forums_active() ) {
@@ -79,7 +79,7 @@ function bp_groups_group_admin_menu() {
 							array(
 								'parent' => $bp->group_admin_menu_id,
 								'id'     => get_option( '_bbp_forum_slug', 'forum' ),
-								'title'  => __( 'Edit Forum Settings', 'buddyboss' ),
+								'title'  => __( 'Edit Forum Settings', 'buddyboss-platform' ),
 								'href'   => bp_get_groups_action_link( 'admin/' . get_option( '_bbp_forum_slug', 'forum' ) ),
 							)
 						);

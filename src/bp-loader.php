@@ -6,7 +6,7 @@
  * Author:      BuddyBoss
  * Author URI:  https://buddyboss.com/
  * Version:     3.0.5
- * Text Domain: buddyboss
+ * Text Domain: buddyboss-platform
  * Domain Path: /languages/
  * License:     GPLv2 or later (license.txt)
  */
@@ -320,11 +320,11 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 		?>
 
 		<div id="message" class="error notice">
-			<p><strong><?php esc_html_e( 'Your site does not support BuddyBoss Platform.', 'buddyboss' ); ?></strong>
+			<p><strong><?php esc_html_e( 'Your site does not support BuddyBoss Platform.', 'buddyboss-platform' ); ?></strong>
 			</p>
 			<?php /* translators: 1: current PHP version, 2: required PHP version */ ?>
-			<p><?php printf( esc_html__( 'Your site is currently running PHP version %1$s, while BuddyBoss Platform requires version %2$s or greater.', 'buddyboss' ), esc_html( phpversion() ), esc_html( BP_REQUIRED_PHP_VERSION ) ); ?></p>
-			<p><?php esc_html_e( 'Please update your server or deactivate BuddyBoss Platform.', 'buddyboss' ); ?></p>
+			<p><?php printf( esc_html__( 'Your site is currently running PHP version %1$s, while BuddyBoss Platform requires version %2$s or greater.', 'buddyboss-platform' ), esc_html( phpversion() ), esc_html( BP_REQUIRED_PHP_VERSION ) ); ?></p>
+			<p><?php esc_html_e( 'Please update your server or deactivate BuddyBoss Platform.', 'buddyboss-platform' ); ?></p>
 		</div>
 
 		<?php
@@ -406,13 +406,13 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 		// Disable BuddyPress message.
 		if ( $is_bp_active ) {
 			$bp_plugins_url = is_network_admin() ? network_admin_url( 'plugins.php' ) : admin_url( 'plugins.php' );
-			$link_plugins   = sprintf( "<a href='%s'>%s</a>", $bp_plugins_url, __( 'deactivate', 'buddyboss' ) );
+			$link_plugins   = sprintf( "<a href='%s'>%s</a>", $bp_plugins_url, __( 'deactivate', 'buddyboss-platform' ) );
 			?>
 
 			<div id="message" class="error notice">
-				<p><strong><?php esc_html_e( 'BuddyBoss Platform is disabled.', 'buddyboss' ); ?></strong></p>
+				<p><strong><?php esc_html_e( 'BuddyBoss Platform is disabled.', 'buddyboss-platform' ); ?></strong></p>
 				<?php /* translators: %s: deactivate link for the BuddyPress plugin. */ ?>
-				<p><?php printf( esc_html__( 'The BuddyBoss Platform can\'t work while BuddyPress plugin is active. Please %s BuddyPress to re-enable BuddyBoss Platform.', 'buddyboss' ), $link_plugins ); ?></p>
+				<p><?php printf( esc_html__( 'The BuddyBoss Platform can\'t work while BuddyPress plugin is active. Please %s BuddyPress to re-enable BuddyBoss Platform.', 'buddyboss-platform' ), $link_plugins ); ?></p>
 			</div>
 
 			<?php
@@ -421,13 +421,13 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 		// Disable bbPress message.
 		if ( $is_bb_active ) {
 			$bp_plugins_url = is_network_admin() ? network_admin_url( 'plugins.php' ) : admin_url( 'plugins.php' );
-			$link_plugins   = sprintf( "<a href='%s'>%s</a>", $bp_plugins_url, __( 'deactivate', 'buddyboss' ) );
+			$link_plugins   = sprintf( "<a href='%s'>%s</a>", $bp_plugins_url, __( 'deactivate', 'buddyboss-platform' ) );
 			?>
 
 			<div id="message" class="error notice">
-				<p><strong><?php esc_html_e( 'BuddyBoss Platform is disabled.', 'buddyboss' ); ?></strong></p>
+				<p><strong><?php esc_html_e( 'BuddyBoss Platform is disabled.', 'buddyboss-platform' ); ?></strong></p>
 				<?php /* translators: %s: deactivate link for the bbPress plugin. */ ?>
-				<p><?php printf( esc_html__( 'The BuddyBoss Platform can\'t work while bbPress plugin is active. Please %s bbPress to re-enable BuddyBoss Platform.', 'buddyboss' ), $link_plugins ); ?></p>
+				<p><?php printf( esc_html__( 'The BuddyBoss Platform can\'t work while bbPress plugin is active. Please %s bbPress to re-enable BuddyBoss Platform.', 'buddyboss-platform' ), $link_plugins ); ?></p>
 			</div>
 
 			<?php
@@ -435,13 +435,13 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 
 		if ( ! empty( $bp_incompatible_plugins ) ) {
 			$incompatible_plugins_list_messages = array(
-				'buddypress-global-search/buddypress-global-search.php' => __( 'The BuddyBoss Platform can\'t work while BuddyPress Global Search plugin is active. Global Search functionality is built into the platform. Please deactivate BuddyPress Global Search first, if you wish to activate BuddyBoss Platform.', 'buddyboss' ),
-				'buddypress-followers/loader.php'                       => __( 'The BuddyBoss Platform can\'t work while BuddyPress Follow plugin is active. Follow functionality is built into the platform. Please deactivate BuddyPress Follow first, if you wish to activate BuddyBoss Platform.', 'buddyboss' ),
+				'buddypress-global-search/buddypress-global-search.php' => __( 'The BuddyBoss Platform can\'t work while BuddyPress Global Search plugin is active. Global Search functionality is built into the platform. Please deactivate BuddyPress Global Search first, if you wish to activate BuddyBoss Platform.', 'buddyboss-platform' ),
+				'buddypress-followers/loader.php'                       => __( 'The BuddyBoss Platform can\'t work while BuddyPress Follow plugin is active. Follow functionality is built into the platform. Please deactivate BuddyPress Follow first, if you wish to activate BuddyBoss Platform.', 'buddyboss-platform' ),
 			);
 			foreach ( $bp_incompatible_plugins as $incompatible_plugin_key ) {
 				?>
 				<div id="message" class="error notice">
-					<p><strong><?php esc_html_e( 'BuddyBoss Platform is disabled.', 'buddyboss' ); ?></strong></p>
+					<p><strong><?php esc_html_e( 'BuddyBoss Platform is disabled.', 'buddyboss-platform' ); ?></strong></p>
 					<?php
 					printf( '<p>%s</p>', $incompatible_plugins_list_messages[ $incompatible_plugin_key ] );
 					?>
@@ -464,55 +464,80 @@ if ( ! function_exists( 'bp_core_load_buddypress_textdomain' ) ) {
 	 *
 	 * @since BuddyPress 1.0.2
 	 * @since BuddyBoss 2.7.90 Moved function from bp-core-functions.php and made logic updates.
+	 * @since BuddyBoss [BBVERSION] Text domain renamed from "buddyboss" to "buddyboss-platform"
+	 *                             (matches the plugin slug for wp.org Plugin Check). Legacy
+	 *                             "buddyboss-{locale}.mo" files are merged into the new domain so
+	 *                             existing customer translations keep working with no per-string overhead.
 	 *
 	 * @return bool True on success, false on failure.
 	 * @see   load_textdomain() for a description of return values.
 	 */
 	function bp_core_load_buddypress_textdomain() {
-		$domain = 'buddyboss';
-		if ( ! is_textdomain_loaded( $domain ) ) {
-			$mofile_custom   = sprintf( '%s-%s.mo', $domain, get_locale() );
-			$plugin_dir_path = defined( 'BP_PLUGIN_DIR' ) ? BP_PLUGIN_DIR : plugin_dir_path( __FILE__ );
-			$plugin_dir      = $plugin_dir_path;
-			if ( defined( 'BP_SOURCE_SUBDIRECTORY' ) && ! empty( constant( 'BP_SOURCE_SUBDIRECTORY' ) ) ) {
-				$plugin_dir = $plugin_dir . 'src';
-			}
+		$domain     = 'buddyboss-platform'; // New text domain — matches the plugin slug.
+		$old_domain = 'buddyboss';           // Legacy domain — existing customer .mo/.po files are keyed to this.
 
-			/**
-			 * Filters the locations to load language files from.
-			 *
-			 * @since BuddyBoss 2.7.90
-			 *
-			 * @param array $value Array of directories to check for language files in.
-			 */
-			$locations = apply_filters(
-				'buddyboss_locale_locations',
-				array(
-					trailingslashit( WP_LANG_DIR . '/' . $domain ),
-					trailingslashit( WP_LANG_DIR ),
-					trailingslashit( WP_LANG_DIR . '/plugins' ),
-					trailingslashit( $plugin_dir . '/languages' ),
-				)
-			);
-
-			unload_textdomain( $domain );
-
-			// Try to load the translations from locations.
-			foreach ( $locations as $location ) {
-				if ( load_textdomain( $domain, $location . $mofile_custom ) ) {
-					return true;
-				}
-			}
-
-			$plugin_folder       = plugin_basename( $plugin_dir_path );
-			$buddyboss_lang_path = $plugin_folder . '/languages';
-			if ( defined( 'BP_SOURCE_SUBDIRECTORY' ) && ! empty( constant( 'BP_SOURCE_SUBDIRECTORY' ) ) ) {
-				$buddyboss_lang_path = $plugin_folder . '/src/languages';
-			}
-
-			return load_plugin_textdomain( $domain, false, $buddyboss_lang_path );
+		if ( is_textdomain_loaded( $domain ) ) {
+			return false;
 		}
 
-		return false;
+		$locale          = get_locale();
+		$plugin_dir_path = defined( 'BP_PLUGIN_DIR' ) ? BP_PLUGIN_DIR : plugin_dir_path( __FILE__ );
+		$plugin_dir      = $plugin_dir_path;
+		if ( defined( 'BP_SOURCE_SUBDIRECTORY' ) && ! empty( constant( 'BP_SOURCE_SUBDIRECTORY' ) ) ) {
+			$plugin_dir = $plugin_dir . 'src';
+		}
+
+		/**
+		 * Filters the locations to load language files from.
+		 *
+		 * @since BuddyBoss 2.7.90
+		 * @since BuddyBoss [BBVERSION] Added the legacy "buddyboss" directory so existing
+		 *                             customer translation files continue to resolve.
+		 *
+		 * @param array $value Array of directories to check for language files in.
+		 */
+		$locations = apply_filters(
+			'buddyboss_locale_locations',
+			array(
+				trailingslashit( WP_LANG_DIR . '/' . $domain ),
+				trailingslashit( WP_LANG_DIR . '/' . $old_domain ),
+				trailingslashit( WP_LANG_DIR ),
+				trailingslashit( WP_LANG_DIR . '/plugins' ),
+				trailingslashit( $plugin_dir . '/languages' ),
+			)
+		);
+
+		unload_textdomain( $domain );
+
+		$new_mofile = sprintf( '%s-%s.mo', $domain, $locale );
+		$old_mofile = sprintf( '%s-%s.mo', $old_domain, $locale );
+
+		/*
+		 * 1) Load any new-domain translation files first. When a string is translated
+		 *    under both domains, the new-domain entry wins (loaded into the domain first).
+		 */
+		foreach ( $locations as $location ) {
+			load_textdomain( $domain, $location . $new_mofile );
+		}
+
+		/*
+		 * 2) Merge the legacy "buddyboss" translation files INTO the new domain. WordPress
+		 *    merges entries for an already-loaded domain, so every existing customer
+		 *    translation stays available under "buddyboss-platform" with zero per-string
+		 *    runtime cost (no gettext filter). Legacy .mo files are intentionally NOT renamed.
+		 */
+		foreach ( $locations as $location ) {
+			load_textdomain( $domain, $location . $old_mofile );
+		}
+
+		// Standard bundled-path fallback (also covers the wp.org plugin-translations directory).
+		$plugin_folder       = plugin_basename( $plugin_dir_path );
+		$buddyboss_lang_path = $plugin_folder . '/languages';
+		if ( defined( 'BP_SOURCE_SUBDIRECTORY' ) && ! empty( constant( 'BP_SOURCE_SUBDIRECTORY' ) ) ) {
+			$buddyboss_lang_path = $plugin_folder . '/src/languages';
+		}
+		load_plugin_textdomain( $domain, false, $buddyboss_lang_path );
+
+		return is_textdomain_loaded( $domain );
 	}
 }

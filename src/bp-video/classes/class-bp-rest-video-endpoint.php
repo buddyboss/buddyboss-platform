@@ -107,7 +107,7 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 			array(
 				'args'        => array(
 					'id' => array(
-						'description' => __( 'A unique numeric ID for the video.', 'buddyboss' ),
+						'description' => __( 'A unique numeric ID for the video.', 'buddyboss-platform' ),
 						'type'        => 'integer',
 						'required'    => true,
 					),
@@ -161,7 +161,7 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 		if ( empty( $file ) ) {
 			return new WP_Error(
 				'bp_rest_video_file_required',
-				__( 'Sorry, you have not uploaded any video.', 'buddyboss' ),
+				__( 'Sorry, you have not uploaded any video.', 'buddyboss-platform' ),
 				array(
 					'status' => 400,
 				)
@@ -177,7 +177,7 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 				'bp_rest_max_upload_size',
 				sprintf(
 				/* translators: 1: File size, 2: Allowed size. */
-					__( 'File is too large (%1$s MB). Max file size: %2$s MB.', 'buddyboss' ),
+					__( 'File is too large (%1$s MB). Max file size: %2$s MB.', 'buddyboss-platform' ),
 					round( $file['file']['size'] / 1048576, 1 ),
 					bp_video_allowed_upload_video_size()
 				),
@@ -252,7 +252,7 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 
 		$retval = new WP_Error(
 			'bp_rest_authorization_required',
-			__( 'Sorry, you are not allowed to upload video.', 'buddyboss' ),
+			__( 'Sorry, you are not allowed to upload video.', 'buddyboss-platform' ),
 			array(
 				'status' => rest_authorization_required_code(),
 			)
@@ -419,7 +419,7 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 		if ( function_exists( 'bp_rest_enable_private_network' ) && true === bp_rest_enable_private_network() && ! is_user_logged_in() ) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
-				__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss' ),
+				__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss-platform' ),
 				array(
 					'status' => rest_authorization_required_code(),
 				)
@@ -434,7 +434,7 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 			if ( empty( $group->id ) ) {
 				$retval = new WP_Error(
 					'bp_rest_group_invalid_id',
-					__( 'Invalid group ID.', 'buddyboss' ),
+					__( 'Invalid group ID.', 'buddyboss-platform' ),
 					array(
 						'status' => 404,
 					)
@@ -442,7 +442,7 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 			} elseif ( ! bp_current_user_can( 'bp_moderate' ) && ! empty( $group->id ) && 'public' !== bp_get_group_status( $group ) && isset( $user_groups['groups'] ) && ! in_array( $group->id, wp_parse_id_list( $user_groups['groups'] ), true ) ) {
 				$retval = new WP_Error(
 					'bp_rest_authorization_required',
-					__( 'Sorry, Restrict access to only group members.', 'buddyboss' ),
+					__( 'Sorry, Restrict access to only group members.', 'buddyboss-platform' ),
 					array(
 						'status' => rest_authorization_required_code(),
 					)
@@ -483,7 +483,7 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 		if ( empty( $videos['videos'] ) ) {
 			return new WP_Error(
 				'bp_rest_video_id',
-				__( 'Invalid video ID.', 'buddyboss' ),
+				__( 'Invalid video ID.', 'buddyboss-platform' ),
 				array(
 					'status' => 404,
 				)
@@ -526,7 +526,7 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 		if ( function_exists( 'bp_rest_enable_private_network' ) && true === bp_rest_enable_private_network() && ! is_user_logged_in() ) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
-				__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss' ),
+				__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss-platform' ),
 				array(
 					'status' => rest_authorization_required_code(),
 				)
@@ -540,7 +540,7 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 			if ( empty( $video->id ) ) {
 				$retval = new WP_Error(
 					'bp_rest_video_invalid_id',
-					__( 'Invalid video ID.', 'buddyboss' ),
+					__( 'Invalid video ID.', 'buddyboss-platform' ),
 					array(
 						'status' => 404,
 					)
@@ -552,7 +552,7 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 			) {
 				$retval = new WP_Error(
 					'bp_rest_authorization_required',
-					__( 'Sorry, Restrict access to view this video.', 'buddyboss' ),
+					__( 'Sorry, Restrict access to view this video.', 'buddyboss-platform' ),
 					array(
 						'status' => rest_authorization_required_code(),
 					)
@@ -604,7 +604,7 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 		if ( empty( $request['upload_ids'] ) ) {
 			return new WP_Error(
 				'bp_rest_no_video_found',
-				__( 'Sorry, you are not allowed to create a Video item.', 'buddyboss' ),
+				__( 'Sorry, you are not allowed to create a Video item.', 'buddyboss-platform' ),
 				array(
 					'status' => 400,
 				)
@@ -691,7 +691,7 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 	public function create_item_permissions_check( $request ) {
 		$retval = new WP_Error(
 			'bp_rest_authorization_required',
-			__( 'Sorry, you are not allowed to create a video.', 'buddyboss' ),
+			__( 'Sorry, you are not allowed to create a video.', 'buddyboss-platform' ),
 			array(
 				'status' => rest_authorization_required_code(),
 			)
@@ -721,7 +721,7 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 			) {
 				$retval = new WP_Error(
 					'bp_rest_invalid_permission',
-					__( 'You don\'t have a permission to create a video inside this group.', 'buddyboss' ),
+					__( 'You don\'t have a permission to create a video inside this group.', 'buddyboss-platform' ),
 					array(
 						'status' => rest_authorization_required_code(),
 					)
@@ -731,7 +731,7 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 				if ( empty( $parent_album->id ) ) {
 					$retval = new WP_Error(
 						'bp_rest_invalid_album_id',
-						__( 'Invalid Album ID.', 'buddyboss' ),
+						__( 'Invalid Album ID.', 'buddyboss-platform' ),
 						array(
 							'status' => 400,
 						)
@@ -749,7 +749,7 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 					if ( true === $retval && true !== (bool) $album_privacy['can_add'] ) {
 						$retval = new WP_Error(
 							'bp_rest_invalid_permission',
-							__( 'You don\'t have a permission to create a video inside this album.', 'buddyboss' ),
+							__( 'You don\'t have a permission to create a video inside this album.', 'buddyboss-platform' ),
 							array(
 								'status' => rest_authorization_required_code(),
 							)
@@ -764,7 +764,7 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 				) {
 					$retval = new WP_Error(
 						'bp_rest_invalid_permission',
-						__( 'Invalid request. Group not associated with the respective album.', 'buddyboss' ),
+						__( 'Invalid request. Group not associated with the respective album.', 'buddyboss-platform' ),
 						array(
 							'status' => 404,
 						)
@@ -787,7 +787,7 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 						'bp_rest_invalid_upload_id',
 						sprintf(
 						/* translators: Attachment ID. */
-							__( 'Invalid attachment id: %d', 'buddyboss' ),
+							__( 'Invalid attachment id: %d', 'buddyboss-platform' ),
 							$attachment_id
 						),
 						array(
@@ -799,7 +799,7 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 						'bp_rest_invalid_video_author',
 						sprintf(
 						/* translators: Attachment ID. */
-							__( 'You are not a valid author for attachment id: %d', 'buddyboss' ),
+							__( 'You are not a valid author for attachment id: %d', 'buddyboss-platform' ),
 							$attachment_id
 						),
 						array(
@@ -813,7 +813,7 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 						'bp_rest_duplicate_video_upload_id',
 						sprintf(
 						/* translators: Attachment ID. */
-							__( 'Video already exists for attachment id: %d', 'buddyboss' ),
+							__( 'Video already exists for attachment id: %d', 'buddyboss-platform' ),
 							$attachment_id
 						),
 						array(
@@ -862,7 +862,7 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 		if ( empty( $videos['videos'] ) ) {
 			return new WP_Error(
 				'bp_rest_video_id',
-				__( 'Invalid video ID.', 'buddyboss' ),
+				__( 'Invalid video ID.', 'buddyboss-platform' ),
 				array(
 					'status' => 404,
 				)
@@ -901,7 +901,7 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 			if ( empty( (int) $moved_video_id ) || is_wp_error( $moved_video_id ) ) {
 				return new WP_Error(
 					'bp_rest_invalid_move_with_album',
-					__( 'Sorry, you are not allowed to move this video with album.', 'buddyboss' ),
+					__( 'Sorry, you are not allowed to move this video with album.', 'buddyboss-platform' ),
 					array(
 						'status' => 404,
 					)
@@ -939,7 +939,7 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 		if ( empty( $id ) ) {
 			return new WP_Error(
 				'bp_rest_user_cannot_update_video',
-				__( 'Cannot update existing video.', 'buddyboss' ),
+				__( 'Cannot update existing video.', 'buddyboss-platform' ),
 				array(
 					'status' => 500,
 				)
@@ -989,7 +989,7 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 	public function update_item_permissions_check( $request ) {
 		$retval = new WP_Error(
 			'bp_rest_authorization_required',
-			__( 'Sorry, you need to be logged in to update this video.', 'buddyboss' ),
+			__( 'Sorry, you need to be logged in to update this video.', 'buddyboss-platform' ),
 			array(
 				'status' => rest_authorization_required_code(),
 			)
@@ -1002,7 +1002,7 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 			if ( empty( $video->id ) ) {
 				$retval = new WP_Error(
 					'bp_rest_video_invalid_id',
-					__( 'Invalid video ID.', 'buddyboss' ),
+					__( 'Invalid video ID.', 'buddyboss-platform' ),
 					array(
 						'status' => 404,
 					)
@@ -1010,7 +1010,7 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 			} elseif ( ! bp_video_user_can_edit( $video ) ) {
 				$retval = new WP_Error(
 					'bp_rest_authorization_required',
-					__( 'Sorry, you are not allowed to update this video.', 'buddyboss' ),
+					__( 'Sorry, you are not allowed to update this video.', 'buddyboss-platform' ),
 					array(
 						'status' => 500,
 					)
@@ -1025,7 +1025,7 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 			) {
 				$retval = new WP_Error(
 					'bp_rest_invalid_permission',
-					__( 'You don\'t have a permission to edit a video inside this group.', 'buddyboss' ),
+					__( 'You don\'t have a permission to edit a video inside this group.', 'buddyboss-platform' ),
 					array(
 						'status' => rest_authorization_required_code(),
 					)
@@ -1037,7 +1037,7 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 			) {
 				$retval = new WP_Error(
 					'bp_rest_invalid_permission',
-					__( 'You don\'t have a permission to move/update a video inside this Album.', 'buddyboss' ),
+					__( 'You don\'t have a permission to move/update a video inside this Album.', 'buddyboss-platform' ),
 					array(
 						'status' => rest_authorization_required_code(),
 					)
@@ -1081,7 +1081,7 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 		if ( empty( $videos['videos'] ) ) {
 			return new WP_Error(
 				'bp_rest_video_id',
-				__( 'Invalid video ID.', 'buddyboss' ),
+				__( 'Invalid video ID.', 'buddyboss-platform' ),
 				array(
 					'status' => 404,
 				)
@@ -1098,7 +1098,7 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 		if ( ! bp_video_user_can_delete( $id ) ) {
 			return new wp_error(
 				'bp_rest_authorization_required',
-				__( 'Sorry, you are not allowed to delete this video.', 'buddyboss' ),
+				__( 'Sorry, you are not allowed to delete this video.', 'buddyboss-platform' ),
 				array(
 					'status' => rest_authorization_required_code(),
 				)
@@ -1140,7 +1140,7 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 	public function delete_item_permissions_check( $request ) {
 		$retval = new WP_Error(
 			'bp_rest_authorization_required',
-			__( 'Sorry, you need to be logged in to delete this video.', 'buddyboss' ),
+			__( 'Sorry, you need to be logged in to delete this video.', 'buddyboss-platform' ),
 			array(
 				'status' => rest_authorization_required_code(),
 			)
@@ -1153,7 +1153,7 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 			if ( empty( $video->id ) ) {
 				$retval = new WP_Error(
 					'bp_rest_video_invalid_id',
-					__( 'Invalid video ID.', 'buddyboss' ),
+					__( 'Invalid video ID.', 'buddyboss-platform' ),
 					array(
 						'status' => 404,
 					)
@@ -1161,7 +1161,7 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 			} elseif ( ! bp_video_user_can_delete( $video ) ) {
 				$retval = new WP_Error(
 					'bp_rest_authorization_required',
-					__( 'Sorry, you are not allowed to delete this video.', 'buddyboss' ),
+					__( 'Sorry, you are not allowed to delete this video.', 'buddyboss-platform' ),
 					array(
 						'status' => rest_authorization_required_code(),
 					)
@@ -1214,7 +1214,7 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 
 		if ( WP_REST_Server::CREATABLE === $method ) {
 			$args['upload_ids'] = array(
-				'description'       => __( 'Video specific IDs.', 'buddyboss' ),
+				'description'       => __( 'Video specific IDs.', 'buddyboss-platform' ),
 				'default'           => array(),
 				'type'              => 'array',
 				'required'          => true,
@@ -1224,7 +1224,7 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 			);
 
 			$args['activity_id'] = array(
-				'description'       => __( 'A unique numeric ID for the activity.', 'buddyboss' ),
+				'description'       => __( 'A unique numeric ID for the activity.', 'buddyboss-platform' ),
 				'type'              => 'integer',
 				'sanitize_callback' => 'absint',
 				'validate_callback' => 'rest_validate_request_arg',
@@ -1232,21 +1232,21 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 		}
 
 		$args['group_id'] = array(
-			'description'       => __( 'A unique numeric ID for the Group.', 'buddyboss' ),
+			'description'       => __( 'A unique numeric ID for the Group.', 'buddyboss-platform' ),
 			'type'              => 'integer',
 			'sanitize_callback' => 'absint',
 			'validate_callback' => 'rest_validate_request_arg',
 		);
 
 		$args['album_id'] = array(
-			'description'       => __( 'A unique numeric ID for the Video Album.', 'buddyboss' ),
+			'description'       => __( 'A unique numeric ID for the Video Album.', 'buddyboss-platform' ),
 			'type'              => 'integer',
 			'sanitize_callback' => 'absint',
 			'validate_callback' => 'rest_validate_request_arg',
 		);
 
 		$args['privacy'] = array(
-			'description'       => __( 'Privacy of the video.', 'buddyboss' ),
+			'description'       => __( 'Privacy of the video.', 'buddyboss-platform' ),
 			'type'              => 'string',
 			'enum'              => array( 'public', 'loggedin', 'onlyme', 'friends', 'grouponly' ),
 			'default'           => 'public',
@@ -1256,7 +1256,7 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 
 		if ( WP_REST_Server::EDITABLE === $method ) {
 			$args['id'] = array(
-				'description'       => __( 'A unique numeric ID for the video.', 'buddyboss' ),
+				'description'       => __( 'A unique numeric ID for the video.', 'buddyboss-platform' ),
 				'type'              => 'integer',
 				'required'          => true,
 				'sanitize_callback' => 'absint',
@@ -1293,117 +1293,117 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 			'properties' => array(
 				'id'                    => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'A unique numeric ID for the Video.', 'buddyboss' ),
+					'description' => __( 'A unique numeric ID for the Video.', 'buddyboss-platform' ),
 					'readonly'    => true,
 					'type'        => 'integer',
 				),
 				'blog_id'               => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Current Site ID.', 'buddyboss' ),
+					'description' => __( 'Current Site ID.', 'buddyboss-platform' ),
 					'readonly'    => true,
 					'type'        => 'integer',
 				),
 				'attachment_id'         => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Unique identifier for the video object.', 'buddyboss' ),
+					'description' => __( 'Unique identifier for the video object.', 'buddyboss-platform' ),
 					'readonly'    => true,
 					'type'        => 'integer',
 				),
 				'user_id'               => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'The ID for the author of the video.', 'buddyboss' ),
+					'description' => __( 'The ID for the author of the video.', 'buddyboss-platform' ),
 					'readonly'    => true,
 					'type'        => 'integer',
 				),
 				'title'                 => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'The Video title.', 'buddyboss' ),
+					'description' => __( 'The Video title.', 'buddyboss-platform' ),
 					'readonly'    => true,
 					'type'        => 'string',
 				),
 				'description'           => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'The Video description.', 'buddyboss' ),
+					'description' => __( 'The Video description.', 'buddyboss-platform' ),
 					'readonly'    => true,
 					'type'        => 'string',
 				),
 				'album_id'              => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'A unique numeric ID for the Album.', 'buddyboss' ),
+					'description' => __( 'A unique numeric ID for the Album.', 'buddyboss-platform' ),
 					'readonly'    => true,
 					'type'        => 'integer',
 				),
 				'group_id'              => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'A unique numeric ID for the Group.', 'buddyboss' ),
+					'description' => __( 'A unique numeric ID for the Group.', 'buddyboss-platform' ),
 					'readonly'    => true,
 					'type'        => 'integer',
 				),
 				'activity_id'           => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'A unique numeric ID for the activity.', 'buddyboss' ),
+					'description' => __( 'A unique numeric ID for the activity.', 'buddyboss-platform' ),
 					'readonly'    => true,
 					'type'        => 'integer',
 				),
 				'message_id'            => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'A unique numeric ID for the Message thread.', 'buddyboss' ),
+					'description' => __( 'A unique numeric ID for the Message thread.', 'buddyboss-platform' ),
 					'readonly'    => true,
 					'type'        => 'integer',
 				),
 				'hide_activity_actions' => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Based on this hide like/comment button for media activity comments.', 'buddyboss' ),
+					'description' => __( 'Based on this hide like/comment button for media activity comments.', 'buddyboss-platform' ),
 					'readonly'    => true,
 					'type'        => 'boolean',
 				),
 				'privacy'               => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Privacy of the video.', 'buddyboss' ),
+					'description' => __( 'Privacy of the video.', 'buddyboss-platform' ),
 					'enum'        => array( 'public', 'loggedin', 'onlyme', 'friends', 'grouponly' ),
 					'readonly'    => true,
 					'type'        => 'string',
 				),
 				'menu_order'            => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Order of the item.', 'buddyboss' ),
+					'description' => __( 'Order of the item.', 'buddyboss-platform' ),
 					'readonly'    => true,
 					'type'        => 'integer',
 				),
 				'date_created'          => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'The date the video was created, in the site\'s timezone.', 'buddyboss' ),
+					'description' => __( 'The date the video was created, in the site\'s timezone.', 'buddyboss-platform' ),
 					'readonly'    => true,
 					'type'        => 'string',
 					'format'      => 'date-time',
 				),
 				'attachment_data'       => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Wordpress Video Data.', 'buddyboss' ),
+					'description' => __( 'Wordpress Video Data.', 'buddyboss-platform' ),
 					'readonly'    => true,
 					'type'        => 'object',
 					'properties'  => array(
 						'full'           => array(
 							'context'     => array( 'embed', 'view', 'edit' ),
-							'description' => __( 'Video URL with full image size.', 'buddyboss' ),
+							'description' => __( 'Video URL with full image size.', 'buddyboss-platform' ),
 							'readonly'    => true,
 							'type'        => 'string',
 						),
 						'thumb'          => array(
 							'context'     => array( 'embed', 'view', 'edit' ),
-							'description' => __( 'Video URL with thumbnail image size.', 'buddyboss' ),
+							'description' => __( 'Video URL with thumbnail image size.', 'buddyboss-platform' ),
 							'readonly'    => true,
 							'type'        => 'string',
 						),
 						'activity_thumb' => array(
 							'context'     => array( 'embed', 'view', 'edit' ),
-							'description' => __( 'Video URL for the activity image size.', 'buddyboss' ),
+							'description' => __( 'Video URL for the activity image size.', 'buddyboss-platform' ),
 							'readonly'    => true,
 							'type'        => 'string',
 						),
 						'meta'           => array(
 							'context'     => array( 'embed', 'view', 'edit' ),
-							'description' => __( 'Meta items for the video.', 'buddyboss' ),
+							'description' => __( 'Meta items for the video.', 'buddyboss-platform' ),
 							'readonly'    => true,
 							'type'        => 'object',
 						),
@@ -1411,55 +1411,55 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 				),
 				'group_name'            => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Group name associate with the video.', 'buddyboss' ),
+					'description' => __( 'Group name associate with the video.', 'buddyboss-platform' ),
 					'readonly'    => true,
 					'type'        => 'string',
 				),
 				'visibility'            => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Visibility of the video.', 'buddyboss' ),
+					'description' => __( 'Visibility of the video.', 'buddyboss-platform' ),
 					'readonly'    => true,
 					'type'        => 'string',
 				),
 				'user_nicename'         => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'The User\'s nice name to create a video.', 'buddyboss' ),
+					'description' => __( 'The User\'s nice name to create a video.', 'buddyboss-platform' ),
 					'readonly'    => true,
 					'type'        => 'string',
 				),
 				'user_login'            => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'The User\'s login name to create a video.', 'buddyboss' ),
+					'description' => __( 'The User\'s login name to create a video.', 'buddyboss-platform' ),
 					'readonly'    => true,
 					'type'        => 'string',
 				),
 				'display_name'          => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'The User\'s display name to create a video.', 'buddyboss' ),
+					'description' => __( 'The User\'s display name to create a video.', 'buddyboss-platform' ),
 					'readonly'    => true,
 					'type'        => 'string',
 				),
 				'url'                   => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Video file URL.', 'buddyboss' ),
+					'description' => __( 'Video file URL.', 'buddyboss-platform' ),
 					'readonly'    => true,
 					'type'        => 'string',
 				),
 				'download_url'          => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Download Video file URL.', 'buddyboss' ),
+					'description' => __( 'Download Video file URL.', 'buddyboss-platform' ),
 					'readonly'    => true,
 					'type'        => 'string',
 				),
 				'user_permissions'      => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Current user\'s permission with the Video.', 'buddyboss' ),
+					'description' => __( 'Current user\'s permission with the Video.', 'buddyboss-platform' ),
 					'readonly'    => true,
 					'type'        => 'object',
 				),
 				'type'                  => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Current media type video.', 'buddyboss' ),
+					'description' => __( 'Current media type video.', 'buddyboss-platform' ),
 					'readonly'    => true,
 					'type'        => 'string',
 				),
@@ -1484,7 +1484,7 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 		$params = parent::get_collection_params();
 
 		$params['order'] = array(
-			'description'       => __( 'Order sort attribute ascending or descending.', 'buddyboss' ),
+			'description'       => __( 'Order sort attribute ascending or descending.', 'buddyboss-platform' ),
 			'default'           => 'desc',
 			'type'              => 'string',
 			'enum'              => array( 'asc', 'desc' ),
@@ -1493,7 +1493,7 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['orderby'] = array(
-			'description'       => __( 'Order by a specific parameter.', 'buddyboss' ),
+			'description'       => __( 'Order by a specific parameter.', 'buddyboss-platform' ),
 			'default'           => 'date_created',
 			'type'              => 'string',
 			'enum'              => array( 'date_created', 'menu_order', 'id', 'include' ),
@@ -1502,7 +1502,7 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['user_id'] = array(
-			'description'       => __( 'Limit result set to items created by a specific user.', 'buddyboss' ),
+			'description'       => __( 'Limit result set to items created by a specific user.', 'buddyboss-platform' ),
 			'default'           => 0,
 			'type'              => 'integer',
 			'sanitize_callback' => 'absint',
@@ -1510,35 +1510,35 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['max'] = array(
-			'description'       => __( 'Maximum number of results to return.', 'buddyboss' ),
+			'description'       => __( 'Maximum number of results to return.', 'buddyboss-platform' ),
 			'type'              => 'integer',
 			'sanitize_callback' => 'absint',
 			'validate_callback' => 'rest_validate_request_arg',
 		);
 
 		$params['album_id'] = array(
-			'description'       => __( 'A unique numeric ID for the Album.', 'buddyboss' ),
+			'description'       => __( 'A unique numeric ID for the Album.', 'buddyboss-platform' ),
 			'type'              => 'integer',
 			'sanitize_callback' => 'absint',
 			'validate_callback' => 'rest_validate_request_arg',
 		);
 
 		$params['group_id'] = array(
-			'description'       => __( 'A unique numeric ID for the Group.', 'buddyboss' ),
+			'description'       => __( 'A unique numeric ID for the Group.', 'buddyboss-platform' ),
 			'type'              => 'integer',
 			'sanitize_callback' => 'absint',
 			'validate_callback' => 'rest_validate_request_arg',
 		);
 
 		$params['activity_id'] = array(
-			'description'       => __( 'A unique numeric ID for the Video\'s Activity.', 'buddyboss' ),
+			'description'       => __( 'A unique numeric ID for the Video\'s Activity.', 'buddyboss-platform' ),
 			'type'              => 'integer',
 			'sanitize_callback' => 'absint',
 			'validate_callback' => 'rest_validate_request_arg',
 		);
 
 		$params['privacy'] = array(
-			'description'       => __( 'Privacy of the video.', 'buddyboss' ),
+			'description'       => __( 'Privacy of the video.', 'buddyboss-platform' ),
 			'type'              => 'array',
 			'items'             => array(
 				'enum' => array( 'public', 'loggedin', 'onlyme', 'friends', 'grouponly' ),
@@ -1549,7 +1549,7 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['scope'] = array(
-			'description'       => __( 'Scope of the video.', 'buddyboss' ),
+			'description'       => __( 'Scope of the video.', 'buddyboss-platform' ),
 			'type'              => 'array',
 			'items'             => array(
 				'enum' => array( 'friends', 'groups', 'personal' ),
@@ -1560,7 +1560,7 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['include'] = array(
-			'description'       => __( 'Ensure result set includes specific IDs.', 'buddyboss' ),
+			'description'       => __( 'Ensure result set includes specific IDs.', 'buddyboss-platform' ),
 			'default'           => array(),
 			'type'              => 'array',
 			'items'             => array( 'type' => 'integer' ),
@@ -1569,7 +1569,7 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['exclude'] = array(
-			'description'       => __( 'Ensure result set excludes specific video IDs.', 'buddyboss' ),
+			'description'       => __( 'Ensure result set excludes specific video IDs.', 'buddyboss-platform' ),
 			'default'           => array(),
 			'type'              => 'array',
 			'items'             => array( 'type' => 'integer' ),
@@ -1578,7 +1578,7 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['count_total'] = array(
-			'description' => __( 'Show total count or not.', 'buddyboss' ),
+			'description' => __( 'Show total count or not.', 'buddyboss-platform' ),
 			'default'     => true,
 			'type'        => 'boolean',
 		);
@@ -1756,7 +1756,7 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 		if ( empty( $created_video_ids ) ) {
 			return new WP_Error(
 				'bp_rest_video_creation_error',
-				__( 'Error creating video, please try again.', 'buddyboss' ),
+				__( 'Error creating video, please try again.', 'buddyboss-platform' ),
 				array(
 					'status' => 400,
 				)
@@ -2128,7 +2128,7 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 	public function bp_rest_activity_query_arguments( $args, $method ) {
 
 		$args['bp_videos'] = array(
-			'description'       => __( 'Video specific IDs.', 'buddyboss' ),
+			'description'       => __( 'Video specific IDs.', 'buddyboss-platform' ),
 			'type'              => 'array',
 			'items'             => array( 'type' => 'integer' ),
 			'sanitize_callback' => 'wp_parse_id_list',
@@ -2149,7 +2149,7 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 
 		if ( function_exists( 'bp_is_forums_video_support_enabled' ) && true === bp_is_forums_video_support_enabled() ) {
 			$params['bbp_videos'] = array(
-				'description'       => __( 'Video specific IDs.', 'buddyboss' ),
+				'description'       => __( 'Video specific IDs.', 'buddyboss-platform' ),
 				'type'              => 'array',
 				'items'             => array( 'type' => 'integer' ),
 				'sanitize_callback' => 'wp_parse_id_list',
@@ -2171,7 +2171,7 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 
 		if ( function_exists( 'bp_is_messages_video_support_enabled' ) && true === bp_is_messages_video_support_enabled() ) {
 			$params['bp_videos'] = array(
-				'description'       => __( 'Video specific IDs.', 'buddyboss' ),
+				'description'       => __( 'Video specific IDs.', 'buddyboss-platform' ),
 				'type'              => 'array',
 				'items'             => array( 'type' => 'integer' ),
 				'sanitize_callback' => 'wp_parse_id_list',
@@ -2705,7 +2705,7 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 		if ( empty( $attachment_id ) ) {
 			return new WP_Error(
 				'bp_rest_video_attachment_invalid_id',
-				__( 'Invalid attachment ID.', 'buddyboss' ),
+				__( 'Invalid attachment ID.', 'buddyboss-platform' ),
 				array(
 					'status' => 404,
 				)
@@ -2717,7 +2717,7 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 		if ( empty( $attachment ) ) {
 			return new WP_Error(
 				'bp_rest_video_attachment_invalid_id',
-				__( 'Invalid attachment ID.', 'buddyboss' ),
+				__( 'Invalid attachment ID.', 'buddyboss-platform' ),
 				array(
 					'status' => 404,
 				)
@@ -2734,7 +2734,7 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 		if ( ! $status ) {
 			return new WP_Error(
 				'bp_rest_video_attachment_delete_failed',
-				__( 'Could not delete the attachment.', 'buddyboss' ),
+				__( 'Could not delete the attachment.', 'buddyboss-platform' ),
 				array(
 					'status' => 500,
 				)
@@ -2793,7 +2793,7 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 	public function delete_uploaded_attachment_item_permissions_check( $request ) {
 		$retval = new WP_Error(
 			'bp_rest_authorization_required',
-			__( 'Sorry, you need to be logged in to delete this video.', 'buddyboss' ),
+			__( 'Sorry, you need to be logged in to delete this video.', 'buddyboss-platform' ),
 			array(
 				'status' => rest_authorization_required_code(),
 			)
@@ -2805,7 +2805,7 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 			if ( empty( $attachment_id ) ) {
 				$retval = new WP_Error(
 					'bp_rest_video_attachment_invalid_id',
-					__( 'Invalid attachment ID.', 'buddyboss' ),
+					__( 'Invalid attachment ID.', 'buddyboss-platform' ),
 					array(
 						'status' => 404,
 					)
@@ -2816,7 +2816,7 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 				if ( empty( $attachment ) ) {
 					$retval = new WP_Error(
 						'bp_rest_video_attachment_invalid_id',
-						__( 'Invalid attachment ID.', 'buddyboss' ),
+						__( 'Invalid attachment ID.', 'buddyboss-platform' ),
 						array(
 							'status' => 404,
 						)
@@ -2828,7 +2828,7 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 					} else {
 						$retval = new WP_Error(
 							'bp_rest_authorization_required',
-							__( 'Sorry, you are not allowed to delete this video attachment.', 'buddyboss' ),
+							__( 'Sorry, you are not allowed to delete this video attachment.', 'buddyboss-platform' ),
 							array(
 								'status' => rest_authorization_required_code(),
 							)

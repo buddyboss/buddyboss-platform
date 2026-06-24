@@ -33,7 +33,7 @@ $product_thumb = get_the_post_thumbnail_url();
 
 		<div class="item">
 			<h3 class="entry-title item-title">
-				<a href="<?php echo esc_url( get_permalink() ); ?>" title="<?php echo esc_attr( sprintf( /* translators: %s: product title. */ __( 'Permalink to %s', 'buddyboss' ), the_title_attribute( 'echo=0' ) ) ); ?>" rel="bookmark"><?php the_title(); ?></a>
+				<a href="<?php echo esc_url( get_permalink() ); ?>" title="<?php echo esc_attr( sprintf( /* translators: %s: product title. */ __( 'Permalink to %s', 'buddyboss-platform' ), the_title_attribute( 'echo=0' ) ) ); ?>" rel="bookmark"><?php the_title(); ?></a>
 			</h3>
 			<?php wc_get_template( 'single-product/short-description.php' ); ?>
 			<span class="entry-meta">

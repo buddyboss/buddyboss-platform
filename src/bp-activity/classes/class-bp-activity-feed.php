@@ -159,7 +159,7 @@ class BP_Activity_Feed {
 
 		// Check if id is valid.
 		if ( empty( $this->id ) ) {
-			_doing_it_wrong( 'BP_Activity_Feed', __( "RSS feed 'id' must be defined", 'buddyboss' ), 'BP 1.8' );
+			_doing_it_wrong( 'BP_Activity_Feed', __( "RSS feed 'id' must be defined", 'buddyboss-platform' ), 'BP 1.8' );
 			return false;
 		}
 
@@ -309,7 +309,7 @@ class BP_Activity_Feed {
 			case 'personal':
 				if ( 'activity_comment' == bp_get_activity_action_name() ) :
 					?>
-				<strong><?php _e( 'In reply to', 'buddyboss' ); ?></strong> -
+				<strong><?php _e( 'In reply to', 'buddyboss-platform' ); ?></strong> -
 					<?php bp_activity_parent_content(); ?>
 					<?php
 				endif;

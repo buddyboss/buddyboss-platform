@@ -32,7 +32,7 @@
 			<# } #>
 		</div>
 	</a>
-	<button type="button" data-subscription-id="{{ item.id }}" class="subscription-item_remove bb-rl-button bb-rl-button--secondaryOutline bb-rl-button--small" aria-label="<?php esc_html_e( 'Unsubscribe', 'buddyboss' ); ?>">
-		<?php esc_html_e( 'Unsubscribe', 'buddyboss' ); ?>
+	<button type="button" data-subscription-id="{{ item.id }}" class="subscription-item_remove bb-rl-button bb-rl-button--secondaryOutline bb-rl-button--small" aria-label="<?php esc_html_e( 'Unsubscribe', 'buddyboss-platform' ); ?>">
+		<?php esc_html_e( 'Unsubscribe', 'buddyboss-platform' ); ?>
 	</button>
 </script>

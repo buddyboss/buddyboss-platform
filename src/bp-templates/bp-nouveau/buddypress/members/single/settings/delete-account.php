@@ -11,7 +11,7 @@
 bp_nouveau_member_hook( 'before', 'settings_template' ); ?>
 
 <h2 class="screen-heading delete-account-screen warn">
-	<?php esc_html_e( 'Delete Account', 'buddyboss' ); ?>
+	<?php esc_html_e( 'Delete Account', 'buddyboss-platform' ); ?>
 </h2>
 
 <?php bp_nouveau_user_feedback( 'member-delete-account' ); ?>
@@ -20,7 +20,7 @@ bp_nouveau_member_hook( 'before', 'settings_template' ); ?>
 
 	<div class="bp-checkbox-wrap">
 		<input id="delete-account-understand" class="disabled bs-styled-checkbox" type="checkbox" name="delete-account-understand" value="1" data-bp-disable-input="#delete-account-button" />
-		<label class="warn" for="delete-account-understand"><?php esc_html_e( 'I understand the consequences.', 'buddyboss' ); ?></label>
+		<label class="warn" for="delete-account-understand"><?php esc_html_e( 'I understand the consequences.', 'buddyboss-platform' ); ?></label>
 	</div>
 
 	<?php bp_nouveau_submit_button( 'member-delete-account' ); ?>

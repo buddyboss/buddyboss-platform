@@ -10,5 +10,5 @@
 
 <div class="bp-feedback info">
 	<span class="bp-icon" aria-hidden="true"></span>
-	<p><?php _e( 'No forums have been created here yet.', 'buddyboss' ); ?></p>
+	<p><?php _e( 'No forums have been created here yet.', 'buddyboss-platform' ); ?></p>
 </div>

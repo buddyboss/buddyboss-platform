@@ -80,7 +80,7 @@ class BP_REST_Group_Invites_Endpoint extends WP_REST_Controller {
 			array(
 				'args'        => array(
 					'invite_id' => array(
-						'description' => __( 'A unique numeric ID for the group invitation.', 'buddyboss' ),
+						'description' => __( 'A unique numeric ID for the group invitation.', 'buddyboss-platform' ),
 						'type'        => 'integer',
 					),
 				),
@@ -235,7 +235,7 @@ class BP_REST_Group_Invites_Endpoint extends WP_REST_Controller {
 	public function get_items_permissions_check( $request ) {
 		$retval = new WP_Error(
 			'bp_rest_authorization_required',
-			__( 'Sorry, you need to be logged in to see the group invitations.', 'buddyboss' ),
+			__( 'Sorry, you need to be logged in to see the group invitations.', 'buddyboss-platform' ),
 			array(
 				'status' => rest_authorization_required_code(),
 			)
@@ -260,7 +260,7 @@ class BP_REST_Group_Invites_Endpoint extends WP_REST_Controller {
 			if ( $request['group_id'] && ! $group instanceof BP_Groups_Group ) {
 				$retval = new WP_Error(
 					'bp_rest_group_invalid_id',
-					__( 'Invalid group ID.', 'buddyboss' ),
+					__( 'Invalid group ID.', 'buddyboss-platform' ),
 					array(
 						'status' => 404,
 					)
@@ -270,7 +270,7 @@ class BP_REST_Group_Invites_Endpoint extends WP_REST_Controller {
 			} elseif ( $user_id_arg && ! $user instanceof WP_User ) {
 				$retval = new WP_Error(
 					'bp_rest_member_invalid_id',
-					__( 'Invalid member ID.', 'buddyboss' ),
+					__( 'Invalid member ID.', 'buddyboss-platform' ),
 					array(
 						'status' => 404,
 					)
@@ -280,7 +280,7 @@ class BP_REST_Group_Invites_Endpoint extends WP_REST_Controller {
 			} elseif ( $request['inviter_id'] && ! $inviter instanceof WP_User ) {
 				$retval = new WP_Error(
 					'bp_rest_member_invalid_id',
-					__( 'Invalid member ID.', 'buddyboss' ),
+					__( 'Invalid member ID.', 'buddyboss-platform' ),
 					array(
 						'status' => 404,
 					)
@@ -350,7 +350,7 @@ class BP_REST_Group_Invites_Endpoint extends WP_REST_Controller {
 		$invite  = $this->fetch_single_invite( $request['invite_id'] );
 		$retval  = new WP_Error(
 			'bp_rest_authorization_required',
-			__( 'Sorry, you need to be logged in to see the group invitations.', 'buddyboss' ),
+			__( 'Sorry, you need to be logged in to see the group invitations.', 'buddyboss-platform' ),
 			array(
 				'status' => rest_authorization_required_code(),
 			)
@@ -362,7 +362,7 @@ class BP_REST_Group_Invites_Endpoint extends WP_REST_Controller {
 			if ( ! $invite ) {
 				$retval = new WP_Error(
 					'bp_rest_group_invite_invalid_id',
-					__( 'Invalid group invitation ID.', 'buddyboss' ),
+					__( 'Invalid group invitation ID.', 'buddyboss-platform' ),
 					array(
 						'status' => 404,
 					)
@@ -420,7 +420,7 @@ class BP_REST_Group_Invites_Endpoint extends WP_REST_Controller {
 		if ( ! $invite_id ) {
 			return new WP_Error(
 				'bp_rest_group_invite_cannot_create_item',
-				__( 'Could not invite member to the group.', 'buddyboss' ),
+				__( 'Could not invite member to the group.', 'buddyboss-platform' ),
 				array(
 					'status' => 500,
 				)
@@ -470,7 +470,7 @@ class BP_REST_Group_Invites_Endpoint extends WP_REST_Controller {
 		$inviter        = bp_rest_get_user( $inviter_id_arg );
 		$retval         = new WP_Error(
 			'bp_rest_authorization_required',
-			__( 'Sorry, you need to be logged in to create an invitation.', 'buddyboss' ),
+			__( 'Sorry, you need to be logged in to create an invitation.', 'buddyboss-platform' ),
 			array(
 				'status' => rest_authorization_required_code(),
 			)
@@ -482,7 +482,7 @@ class BP_REST_Group_Invites_Endpoint extends WP_REST_Controller {
 			if ( empty( $group->id ) ) {
 				$retval = new WP_Error(
 					'bp_rest_group_invalid_id',
-					__( 'Invalid group ID.', 'buddyboss' ),
+					__( 'Invalid group ID.', 'buddyboss-platform' ),
 					array(
 						'status' => 404,
 					)
@@ -490,7 +490,7 @@ class BP_REST_Group_Invites_Endpoint extends WP_REST_Controller {
 			} elseif ( empty( $user->ID ) || empty( $inviter->ID ) || $user->ID === $inviter->ID ) {
 				$retval = new WP_Error(
 					'bp_rest_member_invalid_id',
-					__( 'Invalid member ID.', 'buddyboss' ),
+					__( 'Invalid member ID.', 'buddyboss-platform' ),
 					array(
 						'status' => 404,
 					)
@@ -499,7 +499,7 @@ class BP_REST_Group_Invites_Endpoint extends WP_REST_Controller {
 			} elseif ( ! bp_current_user_can( 'bp_moderate' ) && bp_loggedin_user_id() !== $inviter_id_arg ) {
 				$retval = new WP_Error(
 					'bp_rest_group_invite_cannot_create_item',
-					__( 'Sorry, you are not allowed to create the invitation as requested.', 'buddyboss' ),
+					__( 'Sorry, you are not allowed to create the invitation as requested.', 'buddyboss-platform' ),
 					array(
 						'status' => rest_authorization_required_code(),
 					)
@@ -570,7 +570,7 @@ class BP_REST_Group_Invites_Endpoint extends WP_REST_Controller {
 		if ( ! $invited ) {
 			return new WP_Error(
 				'bp_rest_group_invite_cannot_create_item',
-				__( 'Could not invite member to the group.', 'buddyboss' ),
+				__( 'Could not invite member to the group.', 'buddyboss-platform' ),
 				array(
 					'status' => 500,
 				)
@@ -624,7 +624,7 @@ class BP_REST_Group_Invites_Endpoint extends WP_REST_Controller {
 		$user_ids       = (array) $request['user_id'];
 		$retval         = new WP_Error(
 			'bp_rest_authorization_required',
-			__( 'Sorry, you need to be logged in to create an invitation.', 'buddyboss' ),
+			__( 'Sorry, you need to be logged in to create an invitation.', 'buddyboss-platform' ),
 			array(
 				'status' => rest_authorization_required_code(),
 			)
@@ -636,7 +636,7 @@ class BP_REST_Group_Invites_Endpoint extends WP_REST_Controller {
 			if ( empty( $group->id ) ) {
 				$retval = new WP_Error(
 					'bp_rest_group_invalid_id',
-					__( 'Invalid group ID.', 'buddyboss' ),
+					__( 'Invalid group ID.', 'buddyboss-platform' ),
 					array(
 						'status' => 404,
 					)
@@ -644,7 +644,7 @@ class BP_REST_Group_Invites_Endpoint extends WP_REST_Controller {
 			} elseif ( empty( $user_ids ) || in_array( $inviter->ID, $user_ids, true ) ) {
 				$retval = new WP_Error(
 					'bp_rest_member_invalid_id',
-					__( 'Invalid members ID.', 'buddyboss' ),
+					__( 'Invalid members ID.', 'buddyboss-platform' ),
 					array(
 						'status' => 404,
 					)
@@ -654,7 +654,7 @@ class BP_REST_Group_Invites_Endpoint extends WP_REST_Controller {
 			} elseif ( ! bp_current_user_can( 'bp_moderate' ) && bp_loggedin_user_id() !== $inviter_id_arg ) {
 				$retval = new WP_Error(
 					'bp_rest_group_invite_cannot_create_item',
-					__( 'Sorry, you are not allowed to create the invitation as requested.', 'buddyboss' ),
+					__( 'Sorry, you are not allowed to create the invitation as requested.', 'buddyboss-platform' ),
 					array(
 						'status' => rest_authorization_required_code(),
 					)
@@ -698,7 +698,7 @@ class BP_REST_Group_Invites_Endpoint extends WP_REST_Controller {
 		if ( ! $accept ) {
 			return new WP_Error(
 				'bp_rest_group_invite_cannot_update_item',
-				__( 'Could not accept group invitation.', 'buddyboss' ),
+				__( 'Could not accept group invitation.', 'buddyboss-platform' ),
 				array(
 					'status' => 500,
 				)
@@ -740,7 +740,7 @@ class BP_REST_Group_Invites_Endpoint extends WP_REST_Controller {
 	public function update_item_permissions_check( $request ) {
 		$retval  = new WP_Error(
 			'bp_rest_authorization_required',
-			__( 'Sorry, you need to be logged in to see the group invitations.', 'buddyboss' ),
+			__( 'Sorry, you need to be logged in to see the group invitations.', 'buddyboss-platform' ),
 			array(
 				'status' => rest_authorization_required_code(),
 			)
@@ -754,7 +754,7 @@ class BP_REST_Group_Invites_Endpoint extends WP_REST_Controller {
 			if ( ! $invite ) {
 				$retval = new WP_Error(
 					'bp_rest_group_invite_invalid_id',
-					__( 'Invalid group invitation ID.', 'buddyboss' ),
+					__( 'Invalid group invitation ID.', 'buddyboss-platform' ),
 					array(
 						'status' => 404,
 					)
@@ -767,7 +767,7 @@ class BP_REST_Group_Invites_Endpoint extends WP_REST_Controller {
 			) {
 				$retval = new WP_Error(
 					'bp_rest_group_invite_cannot_update_item',
-					__( 'Sorry, you are not allowed to accept the invitation as requested.', 'buddyboss' ),
+					__( 'Sorry, you are not allowed to accept the invitation as requested.', 'buddyboss-platform' ),
 					array(
 						'status' => rest_authorization_required_code(),
 					)
@@ -828,7 +828,7 @@ class BP_REST_Group_Invites_Endpoint extends WP_REST_Controller {
 		if ( ! $deleted ) {
 			return new WP_Error(
 				'bp_rest_group_invite_cannot_delete_item',
-				__( 'Could not delete group invitation.', 'buddyboss' ),
+				__( 'Could not delete group invitation.', 'buddyboss-platform' ),
 				array(
 					'status' => rest_authorization_required_code(),
 				)
@@ -873,7 +873,7 @@ class BP_REST_Group_Invites_Endpoint extends WP_REST_Controller {
 	public function delete_item_permissions_check( $request ) {
 		$retval  = new WP_Error(
 			'bp_rest_authorization_required',
-			__( 'Sorry, you need to be logged in to see the group invitations.', 'buddyboss' ),
+			__( 'Sorry, you need to be logged in to see the group invitations.', 'buddyboss-platform' ),
 			array(
 				'status' => rest_authorization_required_code(),
 			)
@@ -887,7 +887,7 @@ class BP_REST_Group_Invites_Endpoint extends WP_REST_Controller {
 			if ( ! $invite ) {
 				$retval = new WP_Error(
 					'bp_rest_group_invite_invalid_id',
-					__( 'Invalid group invitation ID.', 'buddyboss' ),
+					__( 'Invalid group invitation ID.', 'buddyboss-platform' ),
 					array(
 						'status' => 404,
 					)
@@ -901,7 +901,7 @@ class BP_REST_Group_Invites_Endpoint extends WP_REST_Controller {
 			) {
 				$retval = new WP_Error(
 					'bp_rest_group_invite_cannot_delete_item',
-					__( 'Sorry, you are not allowed to delete the invitation as requested.', 'buddyboss' ),
+					__( 'Sorry, you are not allowed to delete the invitation as requested.', 'buddyboss-platform' ),
 					array(
 						'status' => rest_authorization_required_code(),
 					)
@@ -1042,7 +1042,7 @@ class BP_REST_Group_Invites_Endpoint extends WP_REST_Controller {
 		if ( WP_REST_Server::CREATABLE === $method || WP_REST_Server::EDITABLE === $method ) {
 			$key                            = 'create_item';
 			$args['message']['type']        = 'string';
-			$args['message']['description'] = __( 'The optional message to send to the invited user.', 'buddyboss' );
+			$args['message']['description'] = __( 'The optional message to send to the invited user.', 'buddyboss-platform' );
 			$args['send_invite']            = $args['invite_sent'];
 			$args['inviter_id']['default']  = bp_loggedin_user_id();
 			$args['group_id']['required']   = true;
@@ -1051,7 +1051,7 @@ class BP_REST_Group_Invites_Endpoint extends WP_REST_Controller {
 			// Remove arguments not needed for the CREATABLE transport method.
 			unset( $args['message']['properties'], $args['invite_sent'], $args['date_modified'], $args['type'] );
 
-			$args['send_invite']['description'] = __( 'Whether the invite should be sent to the invitee.', 'buddyboss' );
+			$args['send_invite']['description'] = __( 'Whether the invite should be sent to the invitee.', 'buddyboss-platform' );
 			$args['send_invite']['default']     = true;
 
 			if ( WP_REST_Server::EDITABLE === $method ) {
@@ -1063,7 +1063,7 @@ class BP_REST_Group_Invites_Endpoint extends WP_REST_Controller {
 
 		if ( WP_REST_Server::CREATABLE === $method && true === $multiple ) {
 			$args['user_id'] = array(
-				'description'       => __( 'Return only invitations extended to those users.', 'buddyboss' ),
+				'description'       => __( 'Return only invitations extended to those users.', 'buddyboss-platform' ),
 				'type'              => 'array',
 				'items'             => array( 'type' => 'integer' ),
 				'sanitize_callback' => 'wp_parse_id_list',
@@ -1096,46 +1096,46 @@ class BP_REST_Group_Invites_Endpoint extends WP_REST_Controller {
 			'properties' => array(
 				'id'            => array(
 					'context'     => array( 'view', 'edit' ),
-					'description' => __( 'A unique numeric ID for the BP Invitation object.', 'buddyboss' ),
+					'description' => __( 'A unique numeric ID for the BP Invitation object.', 'buddyboss-platform' ),
 					'type'        => 'integer',
 					'readonly'    => true,
 				),
 				'user_id'       => array(
 					'context'     => array( 'view', 'edit' ),
-					'description' => __( 'The ID of the user who is invited to join the Group.', 'buddyboss' ),
+					'description' => __( 'The ID of the user who is invited to join the Group.', 'buddyboss-platform' ),
 					'type'        => 'integer',
 				),
 				'invite_sent'   => array(
 					'context'     => array( 'view', 'edit' ),
-					'description' => __( 'Whether the invite has been sent to the invitee.', 'buddyboss' ),
+					'description' => __( 'Whether the invite has been sent to the invitee.', 'buddyboss-platform' ),
 					'type'        => 'boolean',
 				),
 				'inviter_id'    => array(
 					'context'     => array( 'view', 'edit' ),
-					'description' => __( 'The ID of the user who made the invite.', 'buddyboss' ),
+					'description' => __( 'The ID of the user who made the invite.', 'buddyboss-platform' ),
 					'type'        => 'integer',
 				),
 				'group_id'      => array(
 					'context'     => array( 'view', 'edit' ),
-					'description' => __( 'The ID of the group to which the user has been invited.', 'buddyboss' ),
+					'description' => __( 'The ID of the group to which the user has been invited.', 'buddyboss-platform' ),
 					'type'        => 'integer',
 				),
 				'date_modified' => array(
 					'context'     => array( 'view', 'edit' ),
-					'description' => __( "The date the object was created or last updated, in the site's timezone.", 'buddyboss' ),
+					'description' => __( "The date the object was created or last updated, in the site's timezone.", 'buddyboss-platform' ),
 					'type'        => 'string',
 					'format'      => 'date-time',
 				),
 				'type'          => array(
 					'context'     => array( 'view', 'edit' ),
-					'description' => __( 'Invitation or request.', 'buddyboss' ),
+					'description' => __( 'Invitation or request.', 'buddyboss-platform' ),
 					'type'        => 'string',
 					'enum'        => array( 'invite', 'request' ),
 					'default'     => 'invite',
 				),
 				'message'       => array(
 					'context'     => array( 'view', 'edit' ),
-					'description' => __( 'The raw and rendered versions for the content of the message.', 'buddyboss' ),
+					'description' => __( 'The raw and rendered versions for the content of the message.', 'buddyboss-platform' ),
 					'type'        => 'object',
 					'arg_options' => array(
 						'sanitize_callback' => null,
@@ -1143,12 +1143,12 @@ class BP_REST_Group_Invites_Endpoint extends WP_REST_Controller {
 					),
 					'properties'  => array(
 						'raw'      => array(
-							'description' => __( 'Content for the object, as it exists in the database.', 'buddyboss' ),
+							'description' => __( 'Content for the object, as it exists in the database.', 'buddyboss-platform' ),
 							'type'        => 'string',
 							'context'     => array( 'view', 'edit' ),
 						),
 						'rendered' => array(
-							'description' => __( 'HTML content for the object, transformed for display.', 'buddyboss' ),
+							'description' => __( 'HTML content for the object, transformed for display.', 'buddyboss-platform' ),
 							'type'        => 'string',
 							'context'     => array( 'view', 'edit' ),
 							'readonly'    => true,
@@ -1181,7 +1181,7 @@ class BP_REST_Group_Invites_Endpoint extends WP_REST_Controller {
 		unset( $params['search'] );
 
 		$params['group_id'] = array(
-			'description'       => __( 'ID of the group to limit results to.', 'buddyboss' ),
+			'description'       => __( 'ID of the group to limit results to.', 'buddyboss-platform' ),
 			'required'          => false,
 			'default'           => 0,
 			'type'              => 'integer',
@@ -1190,7 +1190,7 @@ class BP_REST_Group_Invites_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['user_id'] = array(
-			'description'       => __( 'Return only invitations extended to this user.', 'buddyboss' ),
+			'description'       => __( 'Return only invitations extended to this user.', 'buddyboss-platform' ),
 			'required'          => false,
 			'default'           => 0,
 			'type'              => 'integer',
@@ -1199,7 +1199,7 @@ class BP_REST_Group_Invites_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['inviter_id'] = array(
-			'description'       => __( 'Return only invitations extended by this user.', 'buddyboss' ),
+			'description'       => __( 'Return only invitations extended by this user.', 'buddyboss-platform' ),
 			'required'          => false,
 			'default'           => 0,
 			'type'              => 'integer',
@@ -1208,7 +1208,7 @@ class BP_REST_Group_Invites_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['invite_sent'] = array(
-			'description'       => __( 'Limit result set to invites that have been sent, not sent, or include all.', 'buddyboss' ),
+			'description'       => __( 'Limit result set to invites that have been sent, not sent, or include all.', 'buddyboss-platform' ),
 			'default'           => 'sent',
 			'type'              => 'string',
 			'sanitize_callback' => 'sanitize_text_field',
@@ -1217,7 +1217,7 @@ class BP_REST_Group_Invites_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['order_by'] = array(
-			'description'       => __( 'Name of the field to order according to.', 'buddyboss' ),
+			'description'       => __( 'Name of the field to order according to.', 'buddyboss-platform' ),
 			'default'           => '',
 			'type'              => 'string',
 			'enum'              => array(
@@ -1228,7 +1228,7 @@ class BP_REST_Group_Invites_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['sort_order'] = array(
-			'description'       => __( 'Order sort attribute ascending or descending.', 'buddyboss' ),
+			'description'       => __( 'Order sort attribute ascending or descending.', 'buddyboss-platform' ),
 			'default'           => 'asc',
 			'type'              => 'string',
 			'enum'              => array( 'asc', 'desc' ),

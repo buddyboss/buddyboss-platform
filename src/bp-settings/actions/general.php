@@ -193,19 +193,19 @@ function bp_settings_action_general() {
 	// Email feedback.
 	switch ( $email_error ) {
 		case 'invalid':
-			$feedback['email_invalid'] = __( 'That email address is invalid. Check the formatting and try again.', 'buddyboss' );
+			$feedback['email_invalid'] = __( 'That email address is invalid. Check the formatting and try again.', 'buddyboss-platform' );
 			break;
 		case 'blocked':
-			$feedback['email_blocked'] = __( 'That email address is currently unavailable for use.', 'buddyboss' );
+			$feedback['email_blocked'] = __( 'That email address is currently unavailable for use.', 'buddyboss-platform' );
 			break;
 		case 'taken':
-			$feedback['email_taken'] = __( 'That email address is already taken.', 'buddyboss' );
+			$feedback['email_taken'] = __( 'That email address is already taken.', 'buddyboss-platform' );
 			break;
 		case 'empty':
-			$feedback['email_empty'] = __( 'Email address cannot be empty.', 'buddyboss' );
+			$feedback['email_empty'] = __( 'Email address cannot be empty.', 'buddyboss-platform' );
 			break;
 		case 'bb_restricted_email':
-			$feedback['bb_restricted_email'] = __( 'This email address or domain has been blacklisted. If you think you are seeing this in error, please contact the site administrator.', 'buddyboss' );
+			$feedback['bb_restricted_email'] = __( 'This email address or domain has been blacklisted. If you think you are seeing this in error, please contact the site administrator.', 'buddyboss-platform' );
 			break;
 		case false:
 			// No change.
@@ -215,16 +215,16 @@ function bp_settings_action_general() {
 	// Password feedback.
 	switch ( $pass_error ) {
 		case 'invalid':
-			$feedback['pass_error'] = __( 'Your current password is invalid.', 'buddyboss' );
+			$feedback['pass_error'] = __( 'Your current password is invalid.', 'buddyboss-platform' );
 			break;
 		case 'mismatch':
-			$feedback['pass_mismatch'] = __( 'The new password fields did not match.', 'buddyboss' );
+			$feedback['pass_mismatch'] = __( 'The new password fields did not match.', 'buddyboss-platform' );
 			break;
 		case 'empty':
-			$feedback['pass_empty'] = __( 'One of the password fields was empty.', 'buddyboss' );
+			$feedback['pass_empty'] = __( 'One of the password fields was empty.', 'buddyboss-platform' );
 			break;
 		case 'same':
-			$feedback['pass_same'] = __( 'The new password must be different from the current password.', 'buddyboss' );
+			$feedback['pass_same'] = __( 'The new password must be different from the current password.', 'buddyboss-platform' );
 			break;
 		case false:
 			// No change.
@@ -289,7 +289,7 @@ function bp_settings_action_general() {
 			true === $email_changed
 		)
 	) {
-		$feedback[]    = __( 'Your settings have been saved.', 'buddyboss' );
+		$feedback[]    = __( 'Your settings have been saved.', 'buddyboss-platform' );
 		$feedback_type = 'success';
 
 		// Some kind of errors occurred.
@@ -300,9 +300,9 @@ function bp_settings_action_general() {
 		false === $email_changed
 	) {
 		if ( bp_is_my_profile() ) {
-			$feedback['nochange'] = __( 'No changes were made to your account.', 'buddyboss' );
+			$feedback['nochange'] = __( 'No changes were made to your account.', 'buddyboss-platform' );
 		} else {
-			$feedback['nochange'] = __( 'No changes were made to this account.', 'buddyboss' );
+			$feedback['nochange'] = __( 'No changes were made to this account.', 'buddyboss-platform' );
 		}
 	}
 
@@ -359,10 +359,10 @@ function bp_settings_verify_email_change() {
 			bp_delete_user_meta( bp_displayed_user_id(), 'pending_email_change' );
 
 			// Post a success message and redirect.
-			bp_core_add_message( __( 'You have successfully verified your new email address.', 'buddyboss' ) );
+			bp_core_add_message( __( 'You have successfully verified your new email address.', 'buddyboss-platform' ) );
 		} else {
 			// Unknown error.
-			bp_core_add_message( __( 'There was a problem verifying your new email address. Please try again.', 'buddyboss' ), 'error' );
+			bp_core_add_message( __( 'There was a problem verifying your new email address. Please try again.', 'buddyboss-platform' ), 'error' );
 		}
 
 		bp_core_redirect( $redirect_to );
@@ -374,7 +374,7 @@ function bp_settings_verify_email_change() {
 
 		if ( $nonce_check ) {
 			bp_delete_user_meta( bp_displayed_user_id(), 'pending_email_change' );
-			bp_core_add_message( __( 'You have successfully dismissed your pending email change.', 'buddyboss' ) );
+			bp_core_add_message( __( 'You have successfully dismissed your pending email change.', 'buddyboss-platform' ) );
 		}
 
 		bp_core_redirect( $redirect_to );

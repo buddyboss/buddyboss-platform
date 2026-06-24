@@ -67,7 +67,7 @@ $media_active = bp_is_active( 'media' );
 						$activity_comment_content = bp_get_activity_comment_content();
 						$hide_media               = false;
 						if ( $check_hidden_content ) {
-							$activity_comment_content = esc_html__( 'This content has been hidden from site admin.', 'buddyboss' );
+							$activity_comment_content = esc_html__( 'This content has been hidden from site admin.', 'buddyboss-platform' );
 							$hide_media               = true;
 						} elseif ( $is_user_suspended ) {
 							$activity_suspend_comment_content = bb_moderation_is_suspended_message( $activity_comment_content, BP_Moderation_Activity_Comment::$moderation_type, $activity_comment_user_id );

@@ -37,9 +37,9 @@ function bp_messages_action_mark_read() {
 	// Check access to the message and mark as read.
 	if ( messages_check_thread_access( $id ) || bp_current_user_can( 'bp_moderate' ) ) {
 		messages_mark_thread_read( $id );
-		bp_core_add_message( __( 'Message marked as read.', 'buddyboss' ) );
+		bp_core_add_message( __( 'Message marked as read.', 'buddyboss-platform' ) );
 	} else {
-		bp_core_add_message( __( 'There was a problem marking that message.', 'buddyboss' ), 'error' );
+		bp_core_add_message( __( 'There was a problem marking that message.', 'buddyboss-platform' ), 'error' );
 	}
 
 	// Redirect back to the message box.

@@ -167,18 +167,18 @@ class BP_GOPP_Image_Editor_GS extends WP_Image_Editor {
 		list( $filename, $extension, $mime_type ) = $this->get_output_format( $destfilename, $mime_type );
 
 		if ( 'image/jpeg' !== $mime_type ) {
-			return new WP_Error( 'image_save_error', __( 'Unsupported MIME type.', 'buddyboss' ), $mime_type );
+			return new WP_Error( 'image_save_error', __( 'Unsupported MIME type.', 'buddyboss-platform' ), $mime_type );
 		}
 
 		if ( ! $filename || ! ( $dirname = dirname( $filename ) ) ) {
-			return new WP_Error( 'image_save_error', __( 'Unsupported destination.', 'buddyboss' ), $filename );
+			return new WP_Error( 'image_save_error', __( 'Unsupported destination.', 'buddyboss-platform' ), $filename );
 		}
 
 		// Make sure not to overwrite existing JPEG with same name. Redundant now for WP 4.7.3+ after #39875, but keep for BC.
 		$filename = $dirname . '/' . wp_unique_filename( $dirname, wp_basename( $filename ) );
 
 		if ( ! ( $cmd = self::gs_cmd( $this->get_gs_args( $filename ) ) ) ) {
-			return new WP_Error( 'image_save_error', __( 'No Ghostscript.', 'buddyboss' ) );
+			return new WP_Error( 'image_save_error', __( 'No Ghostscript.', 'buddyboss-platform' ) );
 		}
 		$return_var = -1;
 		$output     = array();
@@ -186,12 +186,12 @@ class BP_GOPP_Image_Editor_GS extends WP_Image_Editor {
 
 		if ( 0 !== $return_var ) {
 			do_action( 'gopp_error', __CLASS__, __FUNCTION__, __LINE__, compact( 'cmd', 'return_var', 'output' ) );
-			return new WP_Error( 'image_save_error', __( 'Image Editor Save Failed', 'buddyboss' ) );
+			return new WP_Error( 'image_save_error', __( 'Image Editor Save Failed', 'buddyboss-platform' ) );
 		}
 
 		$size = @getimagesize( $filename );
 		if ( ! $size ) {
-			return new WP_Error( 'image_save_error', __( 'Could not read image size.', 'buddyboss' ) );
+			return new WP_Error( 'image_save_error', __( 'Could not read image size.', 'buddyboss-platform' ) );
 		}
 
 		// Transmogrify into the JPEG file.
@@ -229,18 +229,18 @@ class BP_GOPP_Image_Editor_GS extends WP_Image_Editor {
 	protected static function gs_valid( $file, $no_read_check = false ) {
 		// Loading from URL not currently supported.
 		if ( preg_match( '|^https?://|', $file ) ) {
-			return __( 'Loading from URL not supported.', 'buddyboss' );
+			return __( 'Loading from URL not supported.', 'buddyboss-platform' );
 		}
 
 		// Check filename can't be interpreted by Ghostscript as special - see https://ghostscript.com/doc/9.20/Use.htm#Options
 		if ( preg_match( '/^[@|%-]/', $file ) ) {
-			return __( 'Unsupported file name.', 'buddyboss' );
+			return __( 'Unsupported file name.', 'buddyboss-platform' );
 		}
 
 		// Check for suspect chars in base filename - same as $special_chars in sanitize_file_name() with ctrls, space and del added
 		// but (for BC with common older uploads) with "+" removed - see #16226 for its addition (along with "%") Oct 2015.
 		if ( preg_match( '/[?\[\]\/\\\\=<>:;,\'"&$#*()|~`!{}%\x00-\x20\x7f]/', wp_basename( $file ) ) ) {
-			return __( 'Unsupported file name.', 'buddyboss' );
+			return __( 'Unsupported file name.', 'buddyboss-platform' );
 		}
 
 		if ( $no_read_check ) {
@@ -250,14 +250,14 @@ class BP_GOPP_Image_Editor_GS extends WP_Image_Editor {
 		// Check existence & magic bytes.
 		$fp = @ fopen( $file, 'rb' );
 		if ( false === $fp ) {
-			return __( 'File doesn&#8217;t exist?', 'buddyboss' );
+			return __( 'File doesn&#8217;t exist?', 'buddyboss-platform' );
 		}
 		$magic_bytes = fread( $fp, 10 ); // Max 10 chars: "%PDF-N.NN" plus optional initial linefeed.
 		fclose( $fp );
 		// This is a similar test to that done by libmagic, but more strict on version format by insisting it's "0." or "1." followed by 1 or 2 numbers.
 		if ( ! preg_match( '/^\n?%PDF-[01]\.[0-9]{1,2}/', $magic_bytes ) ) {
 			do_action( 'gopp_error', __CLASS__, __FUNCTION__, __LINE__, compact( 'file', 'magic_bytes' ) );
-			return __( 'File is not a PDF.', 'buddyboss' );
+			return __( 'File is not a PDF.', 'buddyboss-platform' );
 		}
 
 		return true;
@@ -644,7 +644,7 @@ class BP_GOPP_Image_Editor_GS extends WP_Image_Editor {
 			$this->resolution = $resolution;
 			return true;
 		}
-		return new WP_Error( 'invalid_image_resolution', __( 'Attempted to set PDF preview resolution to an invalid value.', 'buddyboss' ) );
+		return new WP_Error( 'invalid_image_resolution', __( 'Attempted to set PDF preview resolution to an invalid value.', 'buddyboss-platform' ) );
 	}
 
 	/**
@@ -699,7 +699,7 @@ class BP_GOPP_Image_Editor_GS extends WP_Image_Editor {
 			$this->page = $page;
 			return true;
 		}
-		return new WP_Error( 'invalid_image_page', __( 'Attempted to set PDF preview page to an invalid value.', 'buddyboss' ) );
+		return new WP_Error( 'invalid_image_page', __( 'Attempted to set PDF preview page to an invalid value.', 'buddyboss-platform' ) );
 	}
 
 	/**
@@ -718,7 +718,7 @@ class BP_GOPP_Image_Editor_GS extends WP_Image_Editor {
 	 * @return WP_Error
 	 */
 	public function resize( $max_w, $max_h, $crop = false ) {
-		return new WP_Error( 'image_resize_error', __( 'Unsupported operation.', 'buddyboss' ) );
+		return new WP_Error( 'image_resize_error', __( 'Unsupported operation.', 'buddyboss-platform' ) );
 	}
 
 	/**
@@ -739,7 +739,7 @@ class BP_GOPP_Image_Editor_GS extends WP_Image_Editor {
 	 * @return WP_Error
 	 */
 	public function multi_resize( $sizes ) {
-		return new WP_Error( 'image_multi_resize_error', __( 'Unsupported operation.', 'buddyboss' ) );
+		return new WP_Error( 'image_multi_resize_error', __( 'Unsupported operation.', 'buddyboss-platform' ) );
 	}
 
 	/**
@@ -758,7 +758,7 @@ class BP_GOPP_Image_Editor_GS extends WP_Image_Editor {
 	 * @return WP_Error
 	 */
 	public function crop( $src_x, $src_y, $src_w, $src_h, $dst_w = null, $dst_h = null, $src_abs = false ) {
-		return new WP_Error( 'image_crop_error', __( 'Unsupported operation.', 'buddyboss' ) );
+		return new WP_Error( 'image_crop_error', __( 'Unsupported operation.', 'buddyboss-platform' ) );
 	}
 
 	/**
@@ -771,7 +771,7 @@ class BP_GOPP_Image_Editor_GS extends WP_Image_Editor {
 	 * @return WP_Error
 	 */
 	public function rotate( $angle ) {
-		return new WP_Error( 'image_rotate_error', __( 'Unsupported operation.', 'buddyboss' ) );
+		return new WP_Error( 'image_rotate_error', __( 'Unsupported operation.', 'buddyboss-platform' ) );
 	}
 
 	/**
@@ -785,7 +785,7 @@ class BP_GOPP_Image_Editor_GS extends WP_Image_Editor {
 	 * @return WP_Error
 	 */
 	public function flip( $horz, $vert ) {
-		return new WP_Error( 'image_flip_error', __( 'Unsupported operation.', 'buddyboss' ) );
+		return new WP_Error( 'image_flip_error', __( 'Unsupported operation.', 'buddyboss-platform' ) );
 	}
 
 	/**
@@ -798,7 +798,7 @@ class BP_GOPP_Image_Editor_GS extends WP_Image_Editor {
 	 * @return WP_Error
 	 */
 	public function stream( $mime_type = null ) {
-		return new WP_Error( 'image_stream_error', __( 'Unsupported operation.', 'buddyboss' ) );
+		return new WP_Error( 'image_stream_error', __( 'Unsupported operation.', 'buddyboss-platform' ) );
 	}
 
 	/**

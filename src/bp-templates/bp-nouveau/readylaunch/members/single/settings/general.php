@@ -19,37 +19,37 @@ bp_nouveau_member_hook( 'before', 'settings_template' ); ?>
 
 	<?php if ( ! is_super_admin() ) : ?>
 		<div class="bb-field-wrap bb-super-admin-pass">
-			<label for="pwd"><?php _e( 'Current Password <span>(required to update email or change current password)</span>', 'buddyboss' ); ?></label>
+			<label for="pwd"><?php _e( 'Current Password <span>(required to update email or change current password)</span>', 'buddyboss-platform' ); ?></label>
 			<div class="bb-password-wrap">
-				<a href="#" class="bb-toggle-password" tabindex="-1" aria-label="<?php esc_attr_e( 'Toggle', 'buddyboss' ); ?>"><i class="bb-icon-l bb-icon-eye"></i></a>
+				<a href="#" class="bb-toggle-password" tabindex="-1" aria-label="<?php esc_attr_e( 'Toggle', 'buddyboss-platform' ); ?>"><i class="bb-icon-l bb-icon-eye"></i></a>
 				<input type="password" name="pwd" id="pwd" size="16" value="" class="settings-input small" <?php bp_form_field_attributes( 'password' ); ?> />
 			</div>
-			<a href="<?php echo esc_url( wp_lostpassword_url() ); ?>"><?php esc_html_e( 'Lost your password?', 'buddyboss' ); ?></a>
+			<a href="<?php echo esc_url( wp_lostpassword_url() ); ?>"><?php esc_html_e( 'Lost your password?', 'buddyboss-platform' ); ?></a>
 		</div>
 	<?php endif; ?>
 
 	<div class="bb-field-wrap">
-		<label for="email"><?php _e( 'Account Email', 'buddyboss' ); ?></label>
+		<label for="email"><?php _e( 'Account Email', 'buddyboss-platform' ); ?></label>
 		<input type="email" name="email" id="email" value="<?php echo esc_attr( bp_get_displayed_user_email() ); ?>" class="settings-input" <?php bp_form_field_attributes( 'email' ); ?> />
 	</div>
 
 	<div class="info bp-feedback">
 		<span class="bp-icon" aria-hidden="true"></span>
-		<p class="text"><?php esc_html_e( 'Leave password fields blank for no change', 'buddyboss' ); ?></p>
+		<p class="text"><?php esc_html_e( 'Leave password fields blank for no change', 'buddyboss-platform' ); ?></p>
 	</div>
 
 	<div class="bb-field-wrap">
-		<label for="pass1"><?php esc_html_e( 'Add Your New Password', 'buddyboss' ); ?></label>
+		<label for="pass1"><?php esc_html_e( 'Add Your New Password', 'buddyboss-platform' ); ?></label>
 		<div class="bb-password-wrap">
-			<a href="#" class="bb-toggle-password" tabindex="-1" aria-label="<?php esc_attr_e( 'Toggle', 'buddyboss' ); ?>"><i class="bb-icon-l bb-icon-eye"></i></a>
+			<a href="#" class="bb-toggle-password" tabindex="-1" aria-label="<?php esc_attr_e( 'Toggle', 'buddyboss-platform' ); ?>"><i class="bb-icon-l bb-icon-eye"></i></a>
 			<input type="password" name="pass1" id="pass1" size="16" value="" class="settings-input small password-entry" <?php bp_form_field_attributes( 'password' ); ?> />
 		</div>
 	</div>
 
 	<div class="bb-field-wrap">
-		<label for="pass2" class="repeated-pwd"><?php esc_html_e( 'Repeat Your New Password', 'buddyboss' ); ?></label>
+		<label for="pass2" class="repeated-pwd"><?php esc_html_e( 'Repeat Your New Password', 'buddyboss-platform' ); ?></label>
 		<div class="bb-password-wrap">
-			<a href="#" class="bb-toggle-password" tabindex="-1" aria-label="<?php esc_attr_e( 'Toggle', 'buddyboss' ); ?>"><i class="bb-icon-l bb-icon-eye"></i></a>
+			<a href="#" class="bb-toggle-password" tabindex="-1" aria-label="<?php esc_attr_e( 'Toggle', 'buddyboss-platform' ); ?>"><i class="bb-icon-l bb-icon-eye"></i></a>
 			<input type="password" name="pass2" id="pass2" size="16" value="" class="settings-input small password-entry-confirm" <?php bp_form_field_attributes( 'password' ); ?> />
 		</div>
 	</div>

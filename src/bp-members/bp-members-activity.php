@@ -19,9 +19,9 @@ function bp_members_register_activity_actions() {
 	bp_activity_set_action(
 		buddypress()->members->id,
 		'new_member',
-		__( 'New member registered', 'buddyboss' ),
+		__( 'New member registered', 'buddyboss-platform' ),
 		'bp_members_format_activity_action_new_member',
-		__( 'New Members', 'buddyboss' ),
+		__( 'New Members', 'buddyboss-platform' ),
 		array( 'activity' )
 	);
 
@@ -46,7 +46,7 @@ add_action( 'bp_register_activity_actions', 'bp_members_register_activity_action
 function bp_members_format_activity_action_new_member( $action, $activity ) {
 	$userlink = bp_core_get_userlink( $activity->user_id );
 	/* translators: %s: member display name link. */
-	$action   = sprintf( __( '%s became a registered member', 'buddyboss' ), $userlink );
+	$action   = sprintf( __( '%s became a registered member', 'buddyboss-platform' ), $userlink );
 
 	// Legacy filter - pass $user_id instead of $activity.
 	if ( has_filter( 'bp_core_activity_registered_member_action' ) ) {

@@ -66,7 +66,7 @@ if ( bp_has_albums( array( 'include' => $album_id ) ) ) : ?>
 						if ( ( $bp_is_my_profile || $bp_is_user_media ) || ( $bp_is_group ) ) {
 							?>
 								<div class="video-action-wrap item-action-wrap bb_more_options action">
-									<a href="#" class="album-action_more bb_more_options_action" data-balloon-pos="up" data-balloon="<?php esc_attr_e( 'More actions', 'buddyboss' ); ?>" aria-label="<?php esc_attr_e( 'More actions', 'buddyboss' ); ?>">
+									<a href="#" class="album-action_more bb_more_options_action" data-balloon-pos="up" data-balloon="<?php esc_attr_e( 'More actions', 'buddyboss-platform' ); ?>" aria-label="<?php esc_attr_e( 'More actions', 'buddyboss-platform' ); ?>">
 										<i class="bb-icons-rl-dots-three"></i>
 									</a>
 									<div class="media-action_list bb_more_dropdown bb_more_options_list">
@@ -88,7 +88,7 @@ if ( bp_has_albums( array( 'include' => $album_id ) ) ) : ?>
 												?>
 													<li class="album-add-photos">
 														<a class="bb-album-add-photos" id="bp-add-media" href="#" >
-														<?php esc_html_e( 'Add Photos', 'buddyboss' ); ?>
+														<?php esc_html_e( 'Add Photos', 'buddyboss-platform' ); ?>
 														</a>
 													</li>
 													<?php
@@ -110,7 +110,7 @@ if ( bp_has_albums( array( 'include' => $album_id ) ) ) : ?>
 												) {
 												?>
 													<li class="album-add-videos">
-														<a href="#" id="bp-add-video" class="bb-album-add-videos"><?php esc_html_e( 'Add Videos', 'buddyboss' ); ?></a>
+														<a href="#" id="bp-add-video" class="bb-album-add-videos"><?php esc_html_e( 'Add Videos', 'buddyboss-platform' ); ?></a>
 													</li>
 													<?php
 											}
@@ -126,7 +126,7 @@ if ( bp_has_albums( array( 'include' => $album_id ) ) ) : ?>
 													<li class="album-edit">
 														<a href="#" class="bb-edit-album bb-rl-edit-album" id="bp-edit-album-title" <?php echo $privacy; ?>>
 														<?php
-															esc_html_e( 'Edit Album', 'buddyboss' );
+															esc_html_e( 'Edit Album', 'buddyboss-platform' );
 														?>
 														</a>
 													</li>
@@ -137,7 +137,7 @@ if ( bp_has_albums( array( 'include' => $album_id ) ) ) : ?>
 												?>
 													<li class="album-delete">
 															<a class="bb-album-delete error" id="bb-delete-album" href="#">
-															<?php esc_html_e( 'Delete Album', 'buddyboss' ); ?>
+															<?php esc_html_e( 'Delete Album', 'buddyboss-platform' ); ?>
 															</a>
 													</li>
 													<?php
@@ -181,7 +181,7 @@ if ( bp_has_albums( array( 'include' => $album_id ) ) ) : ?>
 				</div>
 				<div class="bb-rl-album-meta">
 					<p>
-						<span><?php esc_html_e( 'Created: ', 'buddyboss' ); ?><?php bp_core_format_date( $media_album_template->album->date_created ); ?></span><span class="bb-sep"></span>
+						<span><?php esc_html_e( 'Created: ', 'buddyboss-platform' ); ?><?php bp_core_format_date( $media_album_template->album->date_created ); ?></span><span class="bb-sep"></span>
 
 						<?php
 						if ( $bp_is_my_profile ) {
@@ -194,8 +194,8 @@ if ( bp_has_albums( array( 'include' => $album_id ) ) ) : ?>
 						}
 						?>
 
-						<span class="bb-album-photo-count"><i class="bb-icons-rl-images"></i><?php printf( _n( '%s', '%s', $media_album_template->album->media['total'], 'buddyboss' ), bp_core_number_format( $media_album_template->album->media['total'] ) ); ?></span><span class="bb-sep"></span>
-						<span class="bb-album-video-count"><i class="bb-icons-rl-video"></i><?php printf( _n( '%s', '%s', $media_album_template->album->media['total_video'], 'buddyboss' ), bp_core_number_format( $media_album_template->album->media['total_video'] ) ); ?></span>
+						<span class="bb-album-photo-count"><i class="bb-icons-rl-images"></i><?php printf( _n( '%s', '%s', $media_album_template->album->media['total'], 'buddyboss-platform' ), bp_core_number_format( $media_album_template->album->media['total'] ) ); ?></span><span class="bb-sep"></span>
+						<span class="bb-album-video-count"><i class="bb-icons-rl-video"></i><?php printf( _n( '%s', '%s', $media_album_template->album->media['total_video'], 'buddyboss-platform' ), bp_core_number_format( $media_album_template->album->media['total_video'] ) ); ?></span>
 					</p>
 				</div>
 

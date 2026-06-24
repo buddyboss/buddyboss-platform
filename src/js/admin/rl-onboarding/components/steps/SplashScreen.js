@@ -53,8 +53,8 @@ export const SplashScreen = ({ stepData, onNext, onSkip }) => {
             <div className="bb-rl-splash-content">
                 <div className="bb-rl-splash-content-product-container">
                     <div className="bb-rl-splash-content-product">
-                        <p className="bb-rl-splash-content-product-name">{__('BuddyBoss Theme', 'buddyboss')}</p>
-                        <p className="bb-rl-splash-content-product-baseline">{__('Customizable WordPress theme', 'buddyboss')}</p>
+                        <p className="bb-rl-splash-content-product-name">{__('BuddyBoss Theme', 'buddyboss-platform')}</p>
+                        <p className="bb-rl-splash-content-product-baseline">{__('Customizable WordPress theme', 'buddyboss-platform')}</p>
                         <img
                             src={`${window.bbRlOnboarding.assets.assetsUrl}buddyboss-theme-preview.jpg`}
                             alt="BuddyBoss Theme Preview"
@@ -64,13 +64,13 @@ export const SplashScreen = ({ stepData, onNext, onSkip }) => {
                         <ul className="bb-rl-splash-content-product-features">
                             <li className="bb-rl-splash-content-product-feature">
                                 <i className="bb-icons-rl-check"></i>
-                                {__('Advanced customization', 'buddyboss')}
+                                {__('Advanced customization', 'buddyboss-platform')}
                             </li>
                             <li className="bb-rl-splash-content-product-feature">
                                 <i className="bb-icons-rl-check"></i>
 
 						{ createInterpolateElement(
-							__('Deep <link>integration</link> support', 'buddyboss'),
+							__('Deep <link>integration</link> support', 'buddyboss-platform'),
 							{ link: <a href='https://www.buddyboss.com/integrations/' target={'_blank'} /> }
 						) }
                             </li>
@@ -79,16 +79,16 @@ export const SplashScreen = ({ stepData, onNext, onSkip }) => {
                             {
 								activated ? (
 		                            <a href={window?.bbRlOnboarding?.readylaunch?.theme_settings} onClick={(e)=>markStepCompletedAndFollow(e, window?.bbRlOnboarding?.readylaunch?.theme_settings, 1)} className="bb-rl-button bb-rl-button--outline">
-		                                {__('Configure BuddyBoss Theme', 'buddyboss')}
+		                                {__('Configure BuddyBoss Theme', 'buddyboss-platform')}
 		                            </a>
 	                            ) : (
 		                            has_theme ? (
 			                            <a href={window?.bbRlOnboarding?.readylaunch?.themes} onClick={(e)=>markStepCompletedAndFollow(e, window?.bbRlOnboarding?.readylaunch?.themes, 0)} className="bb-rl-button bb-rl-button--outline">
-			                                {__('Activate BuddyBoss Theme', 'buddyboss')}
+			                                {__('Activate BuddyBoss Theme', 'buddyboss-platform')}
 			                            </a>
 	                                ) : (
 			                            <a href='https://www.buddyboss.com/website-platform/#platform_pricing_box' target="_blank" className="bb-rl-button">
-				                            {__('Buy Theme', 'buddyboss')}
+				                            {__('Buy Theme', 'buddyboss-platform')}
 			                            </a>
                                     )
 								)
@@ -97,8 +97,8 @@ export const SplashScreen = ({ stepData, onNext, onSkip }) => {
                     </div>
 
                     <div className="bb-rl-splash-content-product">
-                        <p className="bb-rl-splash-content-product-name">{__('ReadyLaunch', 'buddyboss')}</p>
-                        <p className="bb-rl-splash-content-product-baseline">{__('Community features for any WordPress theme', 'buddyboss')}</p>
+                        <p className="bb-rl-splash-content-product-name">{__('ReadyLaunch', 'buddyboss-platform')}</p>
+                        <p className="bb-rl-splash-content-product-baseline">{__('Community features for any WordPress theme', 'buddyboss-platform')}</p>
                         <img
                             src={`${window.bbRlOnboarding.assets.assetsUrl}readylaunch-preview.jpg`}
                             alt="BuddyBoss Theme Preview"
@@ -108,15 +108,15 @@ export const SplashScreen = ({ stepData, onNext, onSkip }) => {
                         <ul className="bb-rl-splash-content-product-features">
                             <li className="bb-rl-splash-content-product-feature">
                                 <i className="bb-icons-rl-check"></i>
-                                {__('Minimal configuration', 'buddyboss')}
+                                {__('Minimal configuration', 'buddyboss-platform')}
                             </li>
                             <li className="bb-rl-splash-content-product-feature">
                                 <i className="bb-icons-rl-check"></i>
-                                {__('Supports any WordPress Theme', 'buddyboss')}
+                                {__('Supports any WordPress Theme', 'buddyboss-platform')}
                             </li>
                         </ul>
                         <a className="bb-rl-button" onClick={handleGetStarted}>
-                            {__('Configure ReadyLaunch', 'buddyboss')}
+                            {__('Configure ReadyLaunch', 'buddyboss-platform')}
                         </a>
                     </div>
                 </div>

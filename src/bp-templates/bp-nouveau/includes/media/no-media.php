@@ -25,8 +25,8 @@ defined( 'ABSPATH' ) || exit;
 						bp_is_group_albums()
 					)
 				)
-			) ? esc_html__( 'Sorry, no photos or videos were found.', 'buddyboss' )
-			: esc_html__( 'Sorry, no photos were found.', 'buddyboss' )
+			) ? esc_html__( 'Sorry, no photos or videos were found.', 'buddyboss-platform' )
+			: esc_html__( 'Sorry, no photos were found.', 'buddyboss-platform' )
 		);
 		?>
 	</p>

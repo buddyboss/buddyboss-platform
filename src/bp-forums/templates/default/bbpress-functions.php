@@ -47,7 +47,7 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 					$properties,
 					array(
 						'id'      => 'default',
-						'name'    => __( 'Forums Default', 'buddyboss' ),
+						'name'    => __( 'Forums Default', 'buddyboss-platform' ),
 						'version' => bbp_get_version(),
 						'dir'     => trailingslashit( bbpress()->themes_dir . 'default' ),
 						'url'     => trailingslashit( bbpress()->themes_url . 'default' ),
@@ -237,11 +237,11 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 			}
 
 			$common_array = array(
-				'loading_text' => __( 'Loading', 'buddyboss' ),
+				'loading_text' => __( 'Loading', 'buddyboss-platform' ),
 				'ajax_url'     => bp_core_ajax_url(),
 				'nonce'        => wp_create_nonce( 'search_tag' ),
 				'load'         => $no_load_topic,
-				'tag_text'     => __( 'Add Tags:', 'buddyboss' ),
+				'tag_text'     => __( 'Add Tags:', 'buddyboss-platform' ),
 			);
 
 			wp_localize_script( 'bbpress-common', 'bbpCommonJsData', $common_array );
@@ -274,9 +274,9 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 					'bbpress-editor',
 					'bbpEditorJsStrs',
 					array(
-						'description' => __( 'Explain what the forum is about', 'buddyboss' ),
-						'type_reply'  => __( 'Type your reply here', 'buddyboss' ),
-						'type_topic'  => __( 'Type your discussion content here', 'buddyboss' ),
+						'description' => __( 'Explain what the forum is about', 'buddyboss-platform' ),
+						'type_reply'  => __( 'Type your reply here', 'buddyboss-platform' ),
+						'type_topic'  => __( 'Type your discussion content here', 'buddyboss-platform' ),
 					)
 				);
 			}
@@ -732,7 +732,7 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 					'bbpForumJS',
 					array(
 						'bbp_ajaxurl'        => bbp_get_ajax_url(),
-						'generic_ajax_error' => __( 'Something went wrong. Refresh your browser and try again.', 'buddyboss' ),
+						'generic_ajax_error' => __( 'Something went wrong. Refresh your browser and try again.', 'buddyboss-platform' ),
 						'is_user_logged_in'  => is_user_logged_in(),
 						'subs_nonce'         => wp_create_nonce( 'toggle-subscription_' . get_the_ID() ),
 					)
@@ -745,7 +745,7 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 					'bbpTopicJS',
 					array(
 						'bbp_ajaxurl'        => bbp_get_ajax_url(),
-						'generic_ajax_error' => __( 'Something went wrong. Refresh your browser and try again.', 'buddyboss' ),
+						'generic_ajax_error' => __( 'Something went wrong. Refresh your browser and try again.', 'buddyboss-platform' ),
 						'is_user_logged_in'  => is_user_logged_in(),
 						'fav_nonce'          => wp_create_nonce( 'toggle-favorite_' . bbp_get_topic_id() ),
 						'subs_nonce'         => wp_create_nonce( 'toggle-subscription_' . bbp_get_topic_id() ),
@@ -774,12 +774,12 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 
 			// Bail if subscriptions are not active.
 			if ( ! bb_is_enabled_subscription( 'forum' ) ) {
-				bbp_ajax_response( false, __( 'Subscriptions are no longer active.', 'buddyboss' ), 300 );
+				bbp_ajax_response( false, __( 'Subscriptions are no longer active.', 'buddyboss-platform' ), 300 );
 			}
 
 			// Bail if user is not logged in.
 			if ( ! is_user_logged_in() ) {
-				bbp_ajax_response( false, __( 'Please login to subscribe to this forum.', 'buddyboss' ), 301 );
+				bbp_ajax_response( false, __( 'Please login to subscribe to this forum.', 'buddyboss-platform' ), 301 );
 			}
 
 			// Get user and forum data.
@@ -788,7 +788,7 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 
 			// Bail if user cannot add favorites for this user.
 			if ( ! current_user_can( 'edit_user', $user_id ) ) {
-				bbp_ajax_response( false, __( 'You do not have permission to do this.', 'buddyboss' ), 302 );
+				bbp_ajax_response( false, __( 'You do not have permission to do this.', 'buddyboss-platform' ), 302 );
 			}
 
 			// Get the forum.
@@ -796,12 +796,12 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 
 			// Bail if forum cannot be found.
 			if ( empty( $forum ) ) {
-				bbp_ajax_response( false, __( 'The forum could not be found.', 'buddyboss' ), 303 );
+				bbp_ajax_response( false, __( 'The forum could not be found.', 'buddyboss-platform' ), 303 );
 			}
 
 			// Bail if user did not take this action.
 			if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'toggle-subscription_' . $forum->ID ) ) {
-				bbp_ajax_response( false, __( 'Are you sure you meant to do that?', 'buddyboss' ), 304 );
+				bbp_ajax_response( false, __( 'Are you sure you meant to do that?', 'buddyboss-platform' ), 304 );
 			}
 
 			// Take action.
@@ -809,7 +809,7 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 
 			// Bail if action failed.
 			if ( empty( $status ) ) {
-				bbp_ajax_response( false, __( 'The request was unsuccessful. Please try again.', 'buddyboss' ), 305 );
+				bbp_ajax_response( false, __( 'The request was unsuccessful. Please try again.', 'buddyboss-platform' ), 305 );
 			}
 
 			// Put subscription attributes in convenient array.
@@ -842,12 +842,12 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 
 			// Bail if favorites are not active.
 			if ( ! bbp_is_favorites_active() ) {
-				bbp_ajax_response( false, __( 'Saving discussions is no longer active.', 'buddyboss' ), 300 );
+				bbp_ajax_response( false, __( 'Saving discussions is no longer active.', 'buddyboss-platform' ), 300 );
 			}
 
 			// Bail if user is not logged in.
 			if ( ! is_user_logged_in() ) {
-				bbp_ajax_response( false, __( 'Please login to make this discussion a favorite.', 'buddyboss' ), 301 );
+				bbp_ajax_response( false, __( 'Please login to make this discussion a favorite.', 'buddyboss-platform' ), 301 );
 			}
 
 			// Get user and topic data.
@@ -856,7 +856,7 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 
 			// Bail if user cannot add favorites for this user.
 			if ( ! current_user_can( 'edit_user', $user_id ) ) {
-				bbp_ajax_response( false, __( 'You do not have permission to do this.', 'buddyboss' ), 302 );
+				bbp_ajax_response( false, __( 'You do not have permission to do this.', 'buddyboss-platform' ), 302 );
 			}
 
 			// Get the topic.
@@ -864,12 +864,12 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 
 			// Bail if topic cannot be found.
 			if ( empty( $topic ) ) {
-				bbp_ajax_response( false, __( 'The discussion could not be found.', 'buddyboss' ), 303 );
+				bbp_ajax_response( false, __( 'The discussion could not be found.', 'buddyboss-platform' ), 303 );
 			}
 
 			// Bail if user did not take this action.
 			if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'toggle-favorite_' . $topic->ID ) ) {
-				bbp_ajax_response( false, __( 'Are you sure you meant to do that?', 'buddyboss' ), 304 );
+				bbp_ajax_response( false, __( 'Are you sure you meant to do that?', 'buddyboss-platform' ), 304 );
 			}
 
 			// Take action.
@@ -877,7 +877,7 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 
 			// Bail if action failed.
 			if ( empty( $status ) ) {
-				bbp_ajax_response( false, __( 'The request was unsuccessful. Please try again.', 'buddyboss' ), 305 );
+				bbp_ajax_response( false, __( 'The request was unsuccessful. Please try again.', 'buddyboss-platform' ), 305 );
 			}
 
 			// Put subscription attributes in convenient array.
@@ -910,12 +910,12 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 
 			// Bail if subscriptions are not active.
 			if ( ! bb_is_enabled_subscription( 'topic' ) ) {
-				bbp_ajax_response( false, __( 'Subscriptions are no longer active.', 'buddyboss' ), 300 );
+				bbp_ajax_response( false, __( 'Subscriptions are no longer active.', 'buddyboss-platform' ), 300 );
 			}
 
 			// Bail if user is not logged in.
 			if ( ! is_user_logged_in() ) {
-				bbp_ajax_response( false, __( 'Please login to subscribe to this discussion.', 'buddyboss' ), 301 );
+				bbp_ajax_response( false, __( 'Please login to subscribe to this discussion.', 'buddyboss-platform' ), 301 );
 			}
 
 			// Get user and topic data.
@@ -924,7 +924,7 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 
 			// Bail if user cannot add favorites for this user.
 			if ( ! current_user_can( 'edit_user', $user_id ) ) {
-				bbp_ajax_response( false, __( 'You do not have permission to do this.', 'buddyboss' ), 302 );
+				bbp_ajax_response( false, __( 'You do not have permission to do this.', 'buddyboss-platform' ), 302 );
 			}
 
 			// Get the topic.
@@ -932,12 +932,12 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 
 			// Bail if topic cannot be found.
 			if ( empty( $topic ) ) {
-				bbp_ajax_response( false, __( 'The discussion could not be found.', 'buddyboss' ), 303 );
+				bbp_ajax_response( false, __( 'The discussion could not be found.', 'buddyboss-platform' ), 303 );
 			}
 
 			// Bail if user did not take this action.
 			if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'toggle-subscription_' . $topic->ID ) ) {
-				bbp_ajax_response( false, __( 'Are you sure you meant to do that?', 'buddyboss' ), 304 );
+				bbp_ajax_response( false, __( 'Are you sure you meant to do that?', 'buddyboss-platform' ), 304 );
 			}
 
 			// Take action.
@@ -945,7 +945,7 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 
 			// Bail if action failed.
 			if ( empty( $status ) ) {
-				bbp_ajax_response( false, __( 'The request was unsuccessful. Please try again.', 'buddyboss' ), 305 );
+				bbp_ajax_response( false, __( 'The request was unsuccessful. Please try again.', 'buddyboss-platform' ), 305 );
 			}
 
 			// Put subscription attributes in convenient array.

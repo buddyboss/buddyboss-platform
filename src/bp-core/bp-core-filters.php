@@ -472,7 +472,7 @@ function bp_core_filter_user_welcome_email( $welcome_email ) {
 	}
 
 	// [User Set] Replaces 'PASSWORD' in welcome email; Represents value set by user
-	return str_replace( 'PASSWORD', __( '[User Set]', 'buddyboss' ), $welcome_email );
+	return str_replace( 'PASSWORD', __( '[User Set]', 'buddyboss-platform' ), $welcome_email );
 }
 add_filter( 'update_welcome_user_email', 'bp_core_filter_user_welcome_email' );
 
@@ -506,7 +506,7 @@ function bp_core_filter_blog_welcome_email( $welcome_email, $blog_id, $user_id, 
 	}
 
 	// [User Set] Replaces $password in welcome email; Represents value set by user
-	return str_replace( $password, __( '[User Set]', 'buddyboss' ), $welcome_email );
+	return str_replace( $password, __( '[User Set]', 'buddyboss-platform' ), $welcome_email );
 }
 add_filter( 'update_welcome_email', 'bp_core_filter_blog_welcome_email', 10, 4 );
 
@@ -652,7 +652,7 @@ function bp_modify_page_title( $title = '', $sep = '&raquo;', $seplocation = 'ri
 
 		if ( ( $paged >= 2 || $page >= 2 ) && ! is_404() && ! bp_is_single_activity() && ! bp_is_user_messages() ) {
 			/* translators: %s: page number. */
-			$bp_title_parts['page'] = sprintf( __( 'Page %s', 'buddyboss' ), max( $paged, $page ) );
+			$bp_title_parts['page'] = sprintf( __( 'Page %s', 'buddyboss-platform' ), max( $paged, $page ) );
 		}
 	}
 
@@ -1007,12 +1007,12 @@ function bp_customizer_nav_menus_set_item_types( $item_types = array() ) {
 		$item_types,
 		array(
 			'bp_loggedin_nav'  => array(
-				'title'  => __( 'BuddyBoss (logged-in)', 'buddyboss' ),
+				'title'  => __( 'BuddyBoss (logged-in)', 'buddyboss-platform' ),
 				'type'   => 'bp_nav',
 				'object' => 'bp_loggedin_nav',
 			),
 			'bp_loggedout_nav' => array(
-				'title'  => __( 'BuddyBoss (logged-out)', 'buddyboss' ),
+				'title'  => __( 'BuddyBoss (logged-out)', 'buddyboss-platform' ),
 				'type'   => 'bp_nav',
 				'object' => 'bp_loggedout_nav',
 			),
@@ -1357,7 +1357,7 @@ function bp_core_render_email_template( $template ) {
 	ob_end_clean();
 
 	// Make sure we add a <title> tag so WP Customizer picks it up.
-	$template = str_replace( '<head>', '<head><title>' . esc_html__( 'BuddyBoss Emails', 'buddyboss' ) . '</title>', $template );
+	$template = str_replace( '<head>', '<head><title>' . esc_html__( 'BuddyBoss Emails', 'buddyboss-platform' ) . '</title>', $template );
 	echo str_replace( '{{{content}}}', wpautop( get_post()->post_content ), $template );
 
 	/*
@@ -1622,7 +1622,7 @@ if ( ! function_exists( 'buddyboss_platform_plugin_update_notice' ) ) {
 		$buddyboss_theme = wp_get_theme( 'buddyboss-theme' );
 		if ( $buddyboss_theme->exists() && $buddyboss_theme->get( 'Version' ) && function_exists( 'buddyboss_theme' ) && version_compare( $buddyboss_theme->get( 'Version' ), '1.5.0', '<' ) ) {
 			$class   = 'notice notice-error';
-			$message = __( 'Please update BuddyBoss Theme to v1.5.0 to maintain compatibility with BuddyBoss Platform. Some icons in your theme will look wrong until you update.', 'buddyboss' );
+			$message = __( 'Please update BuddyBoss Theme to v1.5.0 to maintain compatibility with BuddyBoss Platform. Some icons in your theme will look wrong until you update.', 'buddyboss-platform' );
 			printf( '<div class="%1$s"><p>%2$s</p></div>', esc_attr( $class ), esc_html( $message ) );
 		}
 	}
@@ -1735,47 +1735,47 @@ function bp_core_cron_schedules( $schedules = array() ) {
 	$bb_schedules = array(
 		'bb_schedule_1min'    => array(
 			'interval' => MINUTE_IN_SECONDS,
-			'display'  => __( 'Every minute', 'buddyboss' ),
+			'display'  => __( 'Every minute', 'buddyboss-platform' ),
 		),
 		'bb_schedule_5min'    => array(
 			'interval' => 5 * MINUTE_IN_SECONDS,
-			'display'  => __( 'Once in 5 minutes', 'buddyboss' ),
+			'display'  => __( 'Once in 5 minutes', 'buddyboss-platform' ),
 		),
 		'bb_schedule_10min'   => array(
 			'interval' => 10 * MINUTE_IN_SECONDS,
-			'display'  => __( 'Once in 10 minutes', 'buddyboss' ),
+			'display'  => __( 'Once in 10 minutes', 'buddyboss-platform' ),
 		),
 		'bb_schedule_15min'   => array(
 			'interval' => 15 * MINUTE_IN_SECONDS,
-			'display'  => __( 'Once in 15 minutes', 'buddyboss' ),
+			'display'  => __( 'Once in 15 minutes', 'buddyboss-platform' ),
 		),
 		'bb_schedule_30min'   => array(
 			'interval' => 30 * MINUTE_IN_SECONDS,
-			'display'  => __( 'Once in 30 minutes', 'buddyboss' ),
+			'display'  => __( 'Once in 30 minutes', 'buddyboss-platform' ),
 		),
 		'bb_schedule_1hour'   => array(
 			'interval' => 60 * MINUTE_IN_SECONDS,
-			'display'  => __( 'Once Hourly', 'buddyboss' ),
+			'display'  => __( 'Once Hourly', 'buddyboss-platform' ),
 		),
 		'bb_schedule_3hours'  => array(
 			'interval' => 180 * MINUTE_IN_SECONDS,
-			'display'  => __( 'Once in 3 hours', 'buddyboss' ),
+			'display'  => __( 'Once in 3 hours', 'buddyboss-platform' ),
 		),
 		'bb_schedule_12hours' => array(
 			'interval' => 720 * MINUTE_IN_SECONDS,
-			'display'  => __( 'Once in 12 hours', 'buddyboss' ),
+			'display'  => __( 'Once in 12 hours', 'buddyboss-platform' ),
 		),
 		'bb_schedule_24hours' => array(
 			'interval' => 1440 * MINUTE_IN_SECONDS,
-			'display'  => __( 'Once in 24 hours', 'buddyboss' ),
+			'display'  => __( 'Once in 24 hours', 'buddyboss-platform' ),
 		),
 		'bb_schedule_15days'  => array(
 			'interval' => 15 * DAY_IN_SECONDS,
-			'display'  => __( 'Every 15 days', 'buddyboss' ),
+			'display'  => __( 'Every 15 days', 'buddyboss-platform' ),
 		),
 		'bb_schedule_30days'  => array(
 			'interval' => 30 * DAY_IN_SECONDS,
-			'display'  => __( 'Every 30 days', 'buddyboss' ),
+			'display'  => __( 'Every 30 days', 'buddyboss-platform' ),
 		),
 	);
 
@@ -1853,10 +1853,10 @@ function bb_admin_setting_profile_group_add_script_data( $script_data, $object =
 
 		// Set feedback messages.
 		$script_data['feedback_messages'] = array(
-			1 => esc_html__( 'There was a problem cropping custom profile avatar.', 'buddyboss' ),
-			2 => esc_html__( 'The custom profile avatar was uploaded successfully.', 'buddyboss' ),
-			3 => esc_html__( 'There was a problem deleting custom profile avatar. Please try again.', 'buddyboss' ),
-			4 => esc_html__( 'The custom profile avatar was deleted successfully!', 'buddyboss' ),
+			1 => esc_html__( 'There was a problem cropping custom profile avatar.', 'buddyboss-platform' ),
+			2 => esc_html__( 'The custom profile avatar was uploaded successfully.', 'buddyboss-platform' ),
+			3 => esc_html__( 'There was a problem deleting custom profile avatar. Please try again.', 'buddyboss-platform' ),
+			4 => esc_html__( 'The custom profile avatar was deleted successfully!', 'buddyboss-platform' ),
 		);
 	}
 
@@ -1874,10 +1874,10 @@ function bb_admin_setting_profile_group_add_script_data( $script_data, $object =
 
 		// Set feedback messages.
 		$script_data['feedback_messages'] = array(
-			1 => esc_html__( 'There was a problem cropping custom group avatar.', 'buddyboss' ),
-			2 => esc_html__( 'The custom group avatar was uploaded successfully.', 'buddyboss' ),
-			3 => esc_html__( 'There was a problem deleting custom group avatar. Please try again.', 'buddyboss' ),
-			4 => esc_html__( 'The custom group avatar was deleted successfully!', 'buddyboss' ),
+			1 => esc_html__( 'There was a problem cropping custom group avatar.', 'buddyboss-platform' ),
+			2 => esc_html__( 'The custom group avatar was uploaded successfully.', 'buddyboss-platform' ),
+			3 => esc_html__( 'There was a problem deleting custom group avatar. Please try again.', 'buddyboss-platform' ),
+			4 => esc_html__( 'The custom group avatar was deleted successfully!', 'buddyboss-platform' ),
 		);
 	}
 

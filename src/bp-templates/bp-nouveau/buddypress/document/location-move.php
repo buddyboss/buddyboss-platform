@@ -21,15 +21,15 @@ $document_folder_id = bp_get_document_folder_id();
 ?>
 <div class="bb-dropdown-wrap">
 	<div class="location-folder-list-wrap-main <?php echo wp_is_mobile() ? 'is-mobile' : ''; ?>">
-		<span class="no-folder-exists" style="display: none;"><?php esc_html_e( 'No folders found. Please create and select folder.', 'buddyboss' ); ?></span>
+		<span class="no-folder-exists" style="display: none;"><?php esc_html_e( 'No folders found. Please create and select folder.', 'buddyboss-platform' ); ?></span>
 
-		<input type="hidden" class="bb-folder-destination" value="<?php esc_html_e( 'Select Folder', 'buddyboss' ); ?>" readonly/>
+		<input type="hidden" class="bb-folder-destination" value="<?php esc_html_e( 'Select Folder', 'buddyboss-platform' ); ?>" readonly/>
 		<div class="location-folder-list-wrap">
 			<h4><span class="where-to-move-profile-or-group-document"></span></h4>
 			<div class="breadcrumbs-append-ul-li">
 				<div class="breadcrumb">
 					<div class="item">
-						<span data-id="0"><?php esc_html_e( 'Documents', 'buddyboss' ); ?></span>
+						<span data-id="0"><?php esc_html_e( 'Documents', 'buddyboss-platform' ); ?></span>
 					</div>
 				</div>
 			</div>

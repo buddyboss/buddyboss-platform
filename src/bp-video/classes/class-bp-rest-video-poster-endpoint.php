@@ -66,7 +66,7 @@ class BP_REST_Video_Poster_Endpoint extends WP_REST_Controller {
 			array(
 				'args'   => array(
 					'id' => array(
-						'description' => __( 'A unique numeric ID for the video.', 'buddyboss' ),
+						'description' => __( 'A unique numeric ID for the video.', 'buddyboss-platform' ),
 						'type'        => 'integer',
 						'required'    => true,
 					),
@@ -116,7 +116,7 @@ class BP_REST_Video_Poster_Endpoint extends WP_REST_Controller {
 		if ( empty( $file ) ) {
 			return new WP_Error(
 				'bp_rest_thumb_file_required',
-				__( 'Sorry, you have not uploaded any thumb.', 'buddyboss' ),
+				__( 'Sorry, you have not uploaded any thumb.', 'buddyboss-platform' ),
 				array(
 					'status' => 400,
 				)
@@ -132,7 +132,7 @@ class BP_REST_Video_Poster_Endpoint extends WP_REST_Controller {
 				'bp_rest_max_upload_size',
 				sprintf(
 				/* translators: 1: File size, 2: Allowed size. */
-					__( 'File is too large (%1$s MB). Max file size: %2$s MB.', 'buddyboss' ),
+					__( 'File is too large (%1$s MB). Max file size: %2$s MB.', 'buddyboss-platform' ),
 					round( $file['file']['size'] / 1048576, 1 ),
 					bp_media_allowed_upload_media_size()
 				),
@@ -187,7 +187,7 @@ class BP_REST_Video_Poster_Endpoint extends WP_REST_Controller {
 
 		$retval = new WP_Error(
 			'bp_rest_authorization_required',
-			__( 'Sorry, you are not allowed to upload poster image.', 'buddyboss' ),
+			__( 'Sorry, you are not allowed to upload poster image.', 'buddyboss-platform' ),
 			array(
 				'status' => rest_authorization_required_code(),
 			)
@@ -200,7 +200,7 @@ class BP_REST_Video_Poster_Endpoint extends WP_REST_Controller {
 			if ( empty( $video->id ) ) {
 				$retval = new WP_Error(
 					'bp_rest_video_invalid_id',
-					__( 'Invalid video ID.', 'buddyboss' ),
+					__( 'Invalid video ID.', 'buddyboss-platform' ),
 					array(
 						'status' => 404,
 					)
@@ -211,7 +211,7 @@ class BP_REST_Video_Poster_Endpoint extends WP_REST_Controller {
 				if ( empty( $permission['upload_poster'] ) ) {
 					$retval = new WP_Error(
 						'bp_rest_video_poster_invalid_access',
-						__( 'You don\'t have permission to upload the poster on this video.', 'buddyboss' ),
+						__( 'You don\'t have permission to upload the poster on this video.', 'buddyboss-platform' ),
 						array(
 							'status' => rest_authorization_required_code(),
 						)
@@ -257,7 +257,7 @@ class BP_REST_Video_Poster_Endpoint extends WP_REST_Controller {
 		if ( empty( $videos['videos'] ) ) {
 			return new WP_Error(
 				'bp_rest_video_invalid_id',
-				__( 'Invalid video ID.', 'buddyboss' ),
+				__( 'Invalid video ID.', 'buddyboss-platform' ),
 				array(
 					'status' => 404,
 				)
@@ -298,7 +298,7 @@ class BP_REST_Video_Poster_Endpoint extends WP_REST_Controller {
 
 		$retval = new WP_Error(
 			'bp_rest_authorization_required',
-			__( 'Sorry, you are not allowed to fetch poster images.', 'buddyboss' ),
+			__( 'Sorry, you are not allowed to fetch poster images.', 'buddyboss-platform' ),
 			array(
 				'status' => rest_authorization_required_code(),
 			)
@@ -311,7 +311,7 @@ class BP_REST_Video_Poster_Endpoint extends WP_REST_Controller {
 			if ( empty( $video->id ) ) {
 				$retval = new WP_Error(
 					'bp_rest_video_invalid_id',
-					__( 'Invalid video ID.', 'buddyboss' ),
+					__( 'Invalid video ID.', 'buddyboss-platform' ),
 					array(
 						'status' => 404,
 					)
@@ -322,7 +322,7 @@ class BP_REST_Video_Poster_Endpoint extends WP_REST_Controller {
 				if ( empty( $permission['upload_poster'] ) ) {
 					$retval = new WP_Error(
 						'bp_rest_video_poster_invalid_access',
-						__( 'You don\'t have permission to view the poster on this video.', 'buddyboss' ),
+						__( 'You don\'t have permission to view the poster on this video.', 'buddyboss-platform' ),
 						array(
 							'status' => rest_authorization_required_code(),
 						)
@@ -379,7 +379,7 @@ class BP_REST_Video_Poster_Endpoint extends WP_REST_Controller {
 		if ( empty( $attachment_id ) ) {
 			return new WP_Error(
 				'bp_rest_attachment_invalid_id',
-				__( 'Invalid attachment ID.', 'buddyboss' ),
+				__( 'Invalid attachment ID.', 'buddyboss-platform' ),
 				array(
 					'status' => 404,
 				)
@@ -429,7 +429,7 @@ class BP_REST_Video_Poster_Endpoint extends WP_REST_Controller {
 	public function create_item_permissions_check( $request ) {
 		$retval = new WP_Error(
 			'bp_rest_authorization_required',
-			__( 'Sorry, you are not allowed to add poster image.', 'buddyboss' ),
+			__( 'Sorry, you are not allowed to add poster image.', 'buddyboss-platform' ),
 			array(
 				'status' => rest_authorization_required_code(),
 			)
@@ -444,7 +444,7 @@ class BP_REST_Video_Poster_Endpoint extends WP_REST_Controller {
 			if ( empty( $video->id ) ) {
 				$retval = new WP_Error(
 					'bp_rest_video_invalid_id',
-					__( 'Invalid video ID.', 'buddyboss' ),
+					__( 'Invalid video ID.', 'buddyboss-platform' ),
 					array(
 						'status' => 404,
 					)
@@ -454,7 +454,7 @@ class BP_REST_Video_Poster_Endpoint extends WP_REST_Controller {
 					'bp_rest_duplicate_media_upload_id',
 					sprintf(
 					/* translators: Attachment ID. */
-						__( 'Media already exists for attachment id: %d', 'buddyboss' ),
+						__( 'Media already exists for attachment id: %d', 'buddyboss-platform' ),
 						$attachment_id
 					),
 					array(
@@ -467,7 +467,7 @@ class BP_REST_Video_Poster_Endpoint extends WP_REST_Controller {
 				if ( empty( $permission['upload_poster'] ) ) {
 					$retval = new WP_Error(
 						'bp_rest_video_poster_invalid_access',
-						__( 'You don\'t have permission to add the poster on this video.', 'buddyboss' ),
+						__( 'You don\'t have permission to add the poster on this video.', 'buddyboss-platform' ),
 						array(
 							'status' => rest_authorization_required_code(),
 						)
@@ -521,7 +521,7 @@ class BP_REST_Video_Poster_Endpoint extends WP_REST_Controller {
 		) {
 			return new WP_Error(
 				'bp_rest_invalid_request',
-				__( 'Sorry, You can not able to delete auto generated video poster.', 'buddyboss' ),
+				__( 'Sorry, You can not able to delete auto generated video poster.', 'buddyboss-platform' ),
 				array(
 					'status' => 400,
 				)
@@ -535,7 +535,7 @@ class BP_REST_Video_Poster_Endpoint extends WP_REST_Controller {
 		) {
 			return new WP_Error(
 				'bp_rest_invalid_default_id',
-				__( 'Sorry, You have passed invalid poster ID.', 'buddyboss' ),
+				__( 'Sorry, You have passed invalid poster ID.', 'buddyboss-platform' ),
 				array(
 					'status' => 400,
 				)
@@ -581,7 +581,7 @@ class BP_REST_Video_Poster_Endpoint extends WP_REST_Controller {
 	public function delete_item_permissions_check( $request ) {
 		$retval = new WP_Error(
 			'bp_rest_authorization_required',
-			__( 'Sorry, you are not allowed to delete poster images.', 'buddyboss' ),
+			__( 'Sorry, you are not allowed to delete poster images.', 'buddyboss-platform' ),
 			array(
 				'status' => rest_authorization_required_code(),
 			)
@@ -594,7 +594,7 @@ class BP_REST_Video_Poster_Endpoint extends WP_REST_Controller {
 			if ( empty( $video->id ) ) {
 				$retval = new WP_Error(
 					'bp_rest_video_invalid_id',
-					__( 'Invalid video ID.', 'buddyboss' ),
+					__( 'Invalid video ID.', 'buddyboss-platform' ),
 					array(
 						'status' => 404,
 					)
@@ -605,7 +605,7 @@ class BP_REST_Video_Poster_Endpoint extends WP_REST_Controller {
 				if ( empty( $permission['upload_poster'] ) ) {
 					$retval = new WP_Error(
 						'bp_rest_video_poster_invalid_access',
-						__( 'You don\'t have permission to delete the poster on this video.', 'buddyboss' ),
+						__( 'You don\'t have permission to delete the poster on this video.', 'buddyboss-platform' ),
 						array(
 							'status' => rest_authorization_required_code(),
 						)
@@ -644,7 +644,7 @@ class BP_REST_Video_Poster_Endpoint extends WP_REST_Controller {
 		if ( empty( $videos['videos'] ) ) {
 			return new WP_Error(
 				'bp_rest_video_invalid_id',
-				__( 'Invalid video ID.', 'buddyboss' ),
+				__( 'Invalid video ID.', 'buddyboss-platform' ),
 				array(
 					'status' => 404,
 				)
@@ -777,7 +777,7 @@ class BP_REST_Video_Poster_Endpoint extends WP_REST_Controller {
 
 		if ( WP_REST_Server::CREATABLE === $method || WP_REST_Server::DELETABLE === $method ) {
 			$args['id'] = array(
-				'description'       => __( 'A unique numeric ID for the video.', 'buddyboss' ),
+				'description'       => __( 'A unique numeric ID for the video.', 'buddyboss-platform' ),
 				'type'              => 'integer',
 				'required'          => true,
 				'sanitize_callback' => 'absint',
@@ -785,7 +785,7 @@ class BP_REST_Video_Poster_Endpoint extends WP_REST_Controller {
 			);
 
 			$args['attachment_id'] = array(
-				'description'       => __( 'A Unique numeric ID for the video poster.', 'buddyboss' ),
+				'description'       => __( 'A Unique numeric ID for the video poster.', 'buddyboss-platform' ),
 				'type'              => 'integer',
 				'required'          => true,
 				'sanitize_callback' => 'absint',
@@ -800,7 +800,7 @@ class BP_REST_Video_Poster_Endpoint extends WP_REST_Controller {
 		if ( WP_REST_Server::CREATABLE === $method ) {
 			$args['attachment_id']['required'] = false;
 			$args['file']                      = array(
-				'description' => __( 'File path for video poster.', 'buddyboss' ),
+				'description' => __( 'File path for video poster.', 'buddyboss-platform' ),
 				'type'        => 'string',
 				'required'    => false,
 			);
@@ -832,25 +832,25 @@ class BP_REST_Video_Poster_Endpoint extends WP_REST_Controller {
 			'properties' => array(
 				'attachment_id' => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'A Unique numeric ID for the video poster.', 'buddyboss' ),
+					'description' => __( 'A Unique numeric ID for the video poster.', 'buddyboss-platform' ),
 					'type'        => 'object',
 					'readonly'    => true,
 				),
 				'url'           => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'URL of the Video poster.', 'buddyboss' ),
+					'description' => __( 'URL of the Video poster.', 'buddyboss-platform' ),
 					'readonly'    => true,
 					'type'        => 'object',
 					'properties'  => array(
 						'full'  => array(
 							'context'     => array( 'embed', 'view', 'edit' ),
-							'description' => __( 'Video poster URL with full image size.', 'buddyboss' ),
+							'description' => __( 'Video poster URL with full image size.', 'buddyboss-platform' ),
 							'readonly'    => true,
 							'type'        => 'string',
 						),
 						'thumb' => array(
 							'context'     => array( 'embed', 'view', 'edit' ),
-							'description' => __( 'Video poster URL with thumbnail image size.', 'buddyboss' ),
+							'description' => __( 'Video poster URL with thumbnail image size.', 'buddyboss-platform' ),
 							'readonly'    => true,
 							'type'        => 'string',
 						),
@@ -858,19 +858,19 @@ class BP_REST_Video_Poster_Endpoint extends WP_REST_Controller {
 				),
 				'preview'       => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Whether to check it\'s setup for the preview or not.', 'buddyboss' ),
+					'description' => __( 'Whether to check it\'s setup for the preview or not.', 'buddyboss-platform' ),
 					'type'        => 'boolean',
 					'readonly'    => true,
 				),
 				'can_delete'    => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Whether to check user can delete the video poster image or not.', 'buddyboss' ),
+					'description' => __( 'Whether to check user can delete the video poster image or not.', 'buddyboss-platform' ),
 					'type'        => 'boolean',
 					'readonly'    => true,
 				),
 				'can_set'       => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Whether to check user can set as preview or not.', 'buddyboss' ),
+					'description' => __( 'Whether to check user can set as preview or not.', 'buddyboss-platform' ),
 					'type'        => 'boolean',
 					'readonly'    => true,
 				),

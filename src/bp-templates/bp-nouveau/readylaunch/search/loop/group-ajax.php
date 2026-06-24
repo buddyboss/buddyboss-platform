@@ -43,7 +43,7 @@ defined( 'ABSPATH' ) || exit;
 			<span class="middot">&middot;</span>
 			<p class="item-meta last-active">
 				<?php
-				esc_html_e( 'Last active ', 'buddyboss' );
+				esc_html_e( 'Last active ', 'buddyboss-platform' );
 				bp_group_last_active();
 				?>
 			</p>

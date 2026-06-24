@@ -41,12 +41,12 @@ import { forceRemoveEditor } from '../components/common/RichTextEditor';
  * @type {Array}
  */
 var sortOptions = [
-	{ label: __( 'Newest', 'buddyboss' ), value: 'newest' },
-	{ label: __( 'Oldest', 'buddyboss' ), value: 'oldest' },
-	{ label: __( 'Highest Discussions', 'buddyboss' ), value: 'highest_discussions' },
-	{ label: __( 'Lowest Discussions', 'buddyboss' ), value: 'lowest_discussions' },
-	{ label: __( 'Highest Replies', 'buddyboss' ), value: 'highest_replies' },
-	{ label: __( 'Lowest Replies', 'buddyboss' ), value: 'lowest_replies' },
+	{ label: __( 'Newest', 'buddyboss-platform' ), value: 'newest' },
+	{ label: __( 'Oldest', 'buddyboss-platform' ), value: 'oldest' },
+	{ label: __( 'Highest Discussions', 'buddyboss-platform' ), value: 'highest_discussions' },
+	{ label: __( 'Lowest Discussions', 'buddyboss-platform' ), value: 'lowest_discussions' },
+	{ label: __( 'Highest Replies', 'buddyboss-platform' ), value: 'highest_replies' },
+	{ label: __( 'Lowest Replies', 'buddyboss-platform' ), value: 'lowest_replies' },
 ];
 
 /**
@@ -79,9 +79,9 @@ var VISIBILITY_ICONS = {
  * @type {Object}
  */
 var VISIBILITY_LABELS = {
-	'publish': __( 'Public', 'buddyboss' ),
-	'private': __( 'Private', 'buddyboss' ),
-	'hidden': __( 'Hidden', 'buddyboss' ),
+	'publish': __( 'Public', 'buddyboss-platform' ),
+	'private': __( 'Private', 'buddyboss-platform' ),
+	'hidden': __( 'Hidden', 'buddyboss-platform' ),
 };
 
 /**
@@ -262,7 +262,7 @@ export function ForumsListScreen( { onNavigate } ) {
 			setIsLoading( false );
 			setNotice( {
 				type: 'error',
-				message: __( 'Failed to load forums. Please try again.', 'buddyboss' ),
+				message: __( 'Failed to load forums. Please try again.', 'buddyboss-platform' ),
 			} );
 		} );
 	}, [ currentPage, searchQuery, filter, sortBy, refetchCounter ] );
@@ -349,11 +349,11 @@ export function ForumsListScreen( { onNavigate } ) {
 				setBulkAction( '' );
 				resetAndRefetch();
 			} else {
-				setNotice( { type: 'error', message: ( response.data && response.data.message ) || __( 'Action failed.', 'buddyboss' ) } );
+				setNotice( { type: 'error', message: ( response.data && response.data.message ) || __( 'Action failed.', 'buddyboss-platform' ) } );
 			}
 		} ).catch( function () {
 			setIsBulkProcessing( false );
-			setNotice( { type: 'error', message: __( 'An error occurred.', 'buddyboss' ) } );
+			setNotice( { type: 'error', message: __( 'An error occurred.', 'buddyboss-platform' ) } );
 		} );
 	};
 
@@ -441,14 +441,14 @@ export function ForumsListScreen( { onNavigate } ) {
 			if ( response.success && response.data ) {
 				setEditForum( response.data );
 			} else {
-				setNotice( { type: 'error', message: ( response.data && response.data.message ) || __( 'Failed to load forum data.', 'buddyboss' ) } );
+				setNotice( { type: 'error', message: ( response.data && response.data.message ) || __( 'Failed to load forum data.', 'buddyboss-platform' ) } );
 			}
 		} ).catch( function ( err ) {
 			if ( err && 'AbortError' === err.name ) {
 				return;
 			}
 			setIsEditLoading( false );
-			setNotice( { type: 'error', message: __( 'An error occurred loading forum data.', 'buddyboss' ) } );
+			setNotice( { type: 'error', message: __( 'An error occurred loading forum data.', 'buddyboss-platform' ) } );
 		} );
 	};
 
@@ -468,11 +468,11 @@ export function ForumsListScreen( { onNavigate } ) {
 				setNotice( { type: 'success', message: response.data.message } );
 				resetAndRefetch();
 			} else {
-				setNotice( { type: 'error', message: ( response.data && response.data.message ) || __( 'Failed to save forum.', 'buddyboss' ) } );
+				setNotice( { type: 'error', message: ( response.data && response.data.message ) || __( 'Failed to save forum.', 'buddyboss-platform' ) } );
 			}
 		} ).catch( function ( err ) {
 			setIsEditSaving( false );
-			setNotice( { type: 'error', message: err.message || __( 'An error occurred saving the forum.', 'buddyboss' ) } );
+			setNotice( { type: 'error', message: err.message || __( 'An error occurred saving the forum.', 'buddyboss-platform' ) } );
 		} );
 	};
 
@@ -483,7 +483,7 @@ export function ForumsListScreen( { onNavigate } ) {
 	 */
 	var handleForumCreated = function () {
 		setCreateModalOpen( false );
-		setNotice( { type: 'success', message: __( 'Forum created successfully.', 'buddyboss' ) } );
+		setNotice( { type: 'success', message: __( 'Forum created successfully.', 'buddyboss-platform' ) } );
 		resetAndRefetch();
 	};
 
@@ -534,7 +534,7 @@ export function ForumsListScreen( { onNavigate } ) {
 				options.push( { label: label, value: key } );
 			} );
 		} else {
-			options.push( { label: __( 'All', 'buddyboss' ), value: 'all' } );
+			options.push( { label: __( 'All', 'buddyboss-platform' ), value: 'all' } );
 		}
 		return options;
 	}, [ views ] );
@@ -570,7 +570,7 @@ export function ForumsListScreen( { onNavigate } ) {
 
 			{ /* Header */ }
 			<div className="bb-forums-list__header">
-				<h2 className="bb-forums-list__title">{ __( 'Forums', 'buddyboss' ) }</h2>
+				<h2 className="bb-forums-list__title">{ __( 'Forums', 'buddyboss-platform' ) }</h2>
 				<Button
 					variant="primary"
 					className="bb-forums-list__create-btn"
@@ -579,7 +579,7 @@ export function ForumsListScreen( { onNavigate } ) {
 					} }
 				>
 					<i className="bb-icons-rl bb-icons-rl-plus"></i>
-					{ __( 'Create New Forum', 'buddyboss' ) }
+					{ __( 'Create New Forum', 'buddyboss-platform' ) }
 				</Button>
 			</div>
 
@@ -594,7 +594,7 @@ export function ForumsListScreen( { onNavigate } ) {
 				isBulkProcessing={ isBulkProcessing }
 				searchInput={ searchInput }
 				onSearchChange={ handleSearchChange }
-				searchPlaceholder={ __( 'Search forums', 'buddyboss' ) }
+				searchPlaceholder={ __( 'Search forums', 'buddyboss-platform' ) }
 			>
 				<SelectControl
 					value={ filter }
@@ -620,7 +620,7 @@ export function ForumsListScreen( { onNavigate } ) {
 					</div>
 				) : 0 === forums.length ? (
 					<div className="bb-forums-list__empty bb-admin-list-table__empty">
-						<p>{ __( 'No forums found.', 'buddyboss' ) }</p>
+						<p>{ __( 'No forums found.', 'buddyboss-platform' ) }</p>
 					</div>
 				) : (
 					<table className="bb-forums-list__table bb-admin-list-table">
@@ -634,22 +634,22 @@ export function ForumsListScreen( { onNavigate } ) {
 									/>
 								</th>
 								<th className="bb-forums-list__th--name">
-									{ __( 'Forum', 'buddyboss' ) }
+									{ __( 'Forum', 'buddyboss-platform' ) }
 								</th>
 								<th className="bb-forums-list__th--privacy">
-									{ __( 'Privacy', 'buddyboss' ) }
+									{ __( 'Privacy', 'buddyboss-platform' ) }
 								</th>
 								<th className="bb-forums-list__th--discussions">
-									{ __( 'Discussions', 'buddyboss' ) }
+									{ __( 'Discussions', 'buddyboss-platform' ) }
 								</th>
 								<th className="bb-forums-list__th--replies">
-									{ __( 'Replies', 'buddyboss' ) }
+									{ __( 'Replies', 'buddyboss-platform' ) }
 								</th>
 								<th className="bb-forums-list__th--author">
-									{ __( 'Author', 'buddyboss' ) }
+									{ __( 'Author', 'buddyboss-platform' ) }
 								</th>
 								<th className="bb-forums-list__th--last-post">
-									{ __( 'Last Post', 'buddyboss' ) }
+									{ __( 'Last Post', 'buddyboss-platform' ) }
 								</th>
 								{ /* Custom columns from bbp_admin_forums_column_headers filter */ }
 								{ customColumnKeys.map( function ( key ) {
@@ -726,7 +726,7 @@ export function ForumsListScreen( { onNavigate } ) {
 												</span>
 											) : (
 												<span className="bb-forums-list__no-activity">
-													{ __( 'No Discussions', 'buddyboss' ) }
+													{ __( 'No Discussions', 'buddyboss-platform' ) }
 												</span>
 											) }
 										</td>
@@ -741,7 +741,7 @@ export function ForumsListScreen( { onNavigate } ) {
 										<td className="bb-forums-list__td--actions bb-admin-actions-toggle">
 											<DropdownMenu
 												icon={ <i className="bb-icons-rl-dots-three"></i> }
-												label={ __( 'More options', 'buddyboss' ) }
+												label={ __( 'More options', 'buddyboss-platform' ) }
 											>
 												{ function ( dropdownProps ) {
 													var onClose = dropdownProps.onClose;
@@ -758,7 +758,7 @@ export function ForumsListScreen( { onNavigate } ) {
 																	} }
 																>
 																	<i className="bb-icons-rl bb-icons-rl-eye"></i>
-																	{ __( 'View', 'buddyboss' ) }
+																	{ __( 'View', 'buddyboss-platform' ) }
 																	<i className="bb-icons-rl bb-icons-rl-arrow-up-right bb-icons-external"></i>
 																</MenuItem>
 															) }
@@ -769,7 +769,7 @@ export function ForumsListScreen( { onNavigate } ) {
 																} }
 															>
 																<i className="bb-icons-rl bb-icons-rl-note-pencil"></i>
-																{ __( 'Edit', 'buddyboss' ) }
+																{ __( 'Edit', 'buddyboss-platform' ) }
 															</MenuItem>
 															<MenuItem
 																isDestructive
@@ -779,7 +779,7 @@ export function ForumsListScreen( { onNavigate } ) {
 																} }
 															>
 																<i className="bb-icons-rl bb-icons-rl-trash"></i>
-																{ __( 'Delete', 'buddyboss' ) }
+																{ __( 'Delete', 'buddyboss-platform' ) }
 															</MenuItem>
 														</MenuGroup>
 													);
@@ -824,24 +824,24 @@ export function ForumsListScreen( { onNavigate } ) {
 				className="bb-forum-bulk-edit-modal"
 			>
 				<SelectControl
-					label={ __( 'Status', 'buddyboss' ) }
+					label={ __( 'Status', 'buddyboss-platform' ) }
 					value={ bulkEditStatus }
 					options={ [
-						{ value: 'no_change', label: __( '\u2014 No Change \u2014', 'buddyboss' ) },
-						{ value: 'open', label: __( 'Open', 'buddyboss' ) },
-						{ value: 'closed', label: __( 'Closed', 'buddyboss' ) },
+						{ value: 'no_change', label: __( '\u2014 No Change \u2014', 'buddyboss-platform' ) },
+						{ value: 'open', label: __( 'Open', 'buddyboss-platform' ) },
+						{ value: 'closed', label: __( 'Closed', 'buddyboss-platform' ) },
 					] }
 					onChange={ setBulkEditStatus }
 					__nextHasNoMarginBottom
 				/>
 				<SelectControl
-					label={ __( 'Visibility', 'buddyboss' ) }
+					label={ __( 'Visibility', 'buddyboss-platform' ) }
 					value={ bulkEditVisibility }
 					options={ [
-						{ value: 'no_change', label: __( '\u2014 No Change \u2014', 'buddyboss' ) },
-						{ value: 'publish', label: __( 'Public', 'buddyboss' ) },
-						{ value: 'private', label: __( 'Private', 'buddyboss' ) },
-						{ value: 'hidden', label: __( 'Hidden', 'buddyboss' ) },
+						{ value: 'no_change', label: __( '\u2014 No Change \u2014', 'buddyboss-platform' ) },
+						{ value: 'publish', label: __( 'Public', 'buddyboss-platform' ) },
+						{ value: 'private', label: __( 'Private', 'buddyboss-platform' ) },
+						{ value: 'hidden', label: __( 'Hidden', 'buddyboss-platform' ) },
 					] }
 					onChange={ setBulkEditVisibility }
 					__nextHasNoMarginBottom
@@ -851,7 +851,7 @@ export function ForumsListScreen( { onNavigate } ) {
 			{ /* Delete Forum Modal */ }
 			<DeleteConfirmModal
 				isOpen={ deleteModalOpen }
-				singleTitle={ __( 'Delete forum?', 'buddyboss' ) }
+				singleTitle={ __( 'Delete forum?', 'buddyboss-platform' ) }
 				items={ deleteTargetForumNames }
 				onRemoveItem={ function ( id ) {
 					setDeleteTargetIds( function ( prev ) {
@@ -865,9 +865,9 @@ export function ForumsListScreen( { onNavigate } ) {
 						return prev.filter( function ( i ) { return i !== id; } );
 					} );
 				} }
-				warningText={ __( 'This permanently deletes forum from the community and cannot be undone.', 'buddyboss' ) }
-				description={ __( 'Deletes the forum and all associated discussions, replies, media, and related content from the community. This action cannot be undone.', 'buddyboss' ) }
-				confirmLabel={ __( 'I understand that this deletes the forum and its discussions.', 'buddyboss' ) }
+				warningText={ __( 'This permanently deletes forum from the community and cannot be undone.', 'buddyboss-platform' ) }
+				description={ __( 'Deletes the forum and all associated discussions, replies, media, and related content from the community. This action cannot be undone.', 'buddyboss-platform' ) }
+				confirmLabel={ __( 'I understand that this deletes the forum and its discussions.', 'buddyboss-platform' ) }
 				confirmChecked={ deleteConfirmChecked }
 				onConfirmChange={ setDeleteConfirmChecked }
 				onConfirm={ handleConfirmDelete }
@@ -925,7 +925,7 @@ export function ForumsListScreen( { onNavigate } ) {
  * @type {Object}
  */
 var forumTabLabels = {
-	details: __( 'Details', 'buddyboss' ),
+	details: __( 'Details', 'buddyboss-platform' ),
 };
 
 /**
@@ -1112,12 +1112,12 @@ function ForumEditModal( props ) {
 
 		var allowedTypes = [ 'image/jpeg', 'image/png', 'image/gif', 'image/webp' ];
 		if ( -1 === allowedTypes.indexOf( file.type ) ) {
-			setError( __( 'Invalid file type. Only JPEG, PNG, GIF, and WebP images are allowed.', 'buddyboss' ) );
+			setError( __( 'Invalid file type. Only JPEG, PNG, GIF, and WebP images are allowed.', 'buddyboss-platform' ) );
 			return;
 		}
 
 		if ( file.size > 10 * 1024 * 1024 ) {
-			setError( __( 'File size exceeds the maximum allowed size of 10MB.', 'buddyboss' ) );
+			setError( __( 'File size exceeds the maximum allowed size of 10MB.', 'buddyboss-platform' ) );
 			return;
 		}
 
@@ -1139,7 +1139,7 @@ function ForumEditModal( props ) {
 				setImageUrl( response.data.url );
 				setRemoveImage( false );
 			} else {
-				setError( ( response.data && response.data.message ) || __( 'Failed to upload image.', 'buddyboss' ) );
+				setError( ( response.data && response.data.message ) || __( 'Failed to upload image.', 'buddyboss-platform' ) );
 			}
 		} ).catch( function ( err ) {
 			if ( ! isMountedRef.current ) {
@@ -1147,7 +1147,7 @@ function ForumEditModal( props ) {
 			}
 			setIsUploading( false );
 			if ( 'AbortError' !== err.name ) {
-				setError( __( 'An error occurred while uploading. Please try again.', 'buddyboss' ) );
+				setError( __( 'An error occurred while uploading. Please try again.', 'buddyboss-platform' ) );
 			}
 		} );
 	};
@@ -1171,7 +1171,7 @@ function ForumEditModal( props ) {
 	var handleSave = function () {
 		var nameVal = registeredValues.name || '';
 		if ( ! nameVal.trim() ) {
-			setError( __( 'Forum name is required.', 'buddyboss' ) );
+			setError( __( 'Forum name is required.', 'buddyboss-platform' ) );
 			return;
 		}
 
@@ -1322,7 +1322,7 @@ function ForumEditModal( props ) {
 		return (
 			<div className="bb-forum-modal__image-field bb-forum-create-modal__image-field">
 				<label className="components-base-control__label" htmlFor="bb-forum-edit-image">
-					{ __( 'Feature Image (Optional)', 'buddyboss' ) }
+					{ __( 'Feature Image (Optional)', 'buddyboss-platform' ) }
 				</label>
 				<input
 					type="file"
@@ -1341,7 +1341,7 @@ function ForumEditModal( props ) {
 								className="bb-forum-modal__replace-image"
 								disabled={ isUploading }
 							>
-								{ __( 'Replace', 'buddyboss' ) }
+								{ __( 'Replace', 'buddyboss-platform' ) }
 							</Button>
 							<Button
 								variant="secondary"
@@ -1350,7 +1350,7 @@ function ForumEditModal( props ) {
 								className="bb-forum-modal__remove-image"
 								disabled={ isUploading }
 							>
-								{ __( 'Reset', 'buddyboss' ) }
+								{ __( 'Reset', 'buddyboss-platform' ) }
 							</Button>
 						</div>
 					</div>
@@ -1369,7 +1369,7 @@ function ForumEditModal( props ) {
 					</button>
 				) }
 				<p className="bb-forum-create-modal__image-help">
-					{ __( 'For best results, use an image at least 1500px by 300px or higher.', 'buddyboss' ) }
+					{ __( 'For best results, use an image at least 1500px by 300px or higher.', 'buddyboss-platform' ) }
 				</p>
 			</div>
 		);
@@ -1410,7 +1410,7 @@ function ForumEditModal( props ) {
 
 	return (
 		<Modal
-			title={ __( 'Edit Forum', 'buddyboss' ) }
+			title={ __( 'Edit Forum', 'buddyboss-platform' ) }
 			onRequestClose={ function () {
 				if ( ! isSaving ) {
 					onClose();
@@ -1446,7 +1446,7 @@ function ForumEditModal( props ) {
 					onClick={ onClose }
 					disabled={ isSaving }
 				>
-					{ __( 'Cancel', 'buddyboss' ) }
+					{ __( 'Cancel', 'buddyboss-platform' ) }
 				</Button>
 				<Button
 					variant="primary"
@@ -1454,7 +1454,7 @@ function ForumEditModal( props ) {
 					isBusy={ isSaving }
 					disabled={ isSaving || isUploading }
 				>
-					{ __( 'Save', 'buddyboss' ) }
+					{ __( 'Save', 'buddyboss-platform' ) }
 				</Button>
 			</div>
 		</Modal>

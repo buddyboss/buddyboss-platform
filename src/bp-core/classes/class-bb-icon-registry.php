@@ -100,7 +100,7 @@ class BB_Icon_Registry {
 				'invalid_icon_id',
 				sprintf(
 					/* translators: %s: icon ID */
-					__( 'Invalid icon ID "%s". Icon IDs must contain only alphanumeric characters, underscores, and hyphens.', 'buddyboss' ),
+					__( 'Invalid icon ID "%s". Icon IDs must contain only alphanumeric characters, underscores, and hyphens.', 'buddyboss-platform' ),
 					$icon_id
 				)
 			);
@@ -112,7 +112,7 @@ class BB_Icon_Registry {
 				'icon_already_registered',
 				sprintf(
 					/* translators: %s: icon ID */
-					__( 'Icon "%s" is already registered.', 'buddyboss' ),
+					__( 'Icon "%s" is already registered.', 'buddyboss-platform' ),
 					$icon_id
 				)
 			);
@@ -124,7 +124,7 @@ class BB_Icon_Registry {
 				'missing_icon_type',
 				sprintf(
 					/* translators: %s: icon ID */
-					__( 'Icon "%s" must have a type.', 'buddyboss' ),
+					__( 'Icon "%s" must have a type.', 'buddyboss-platform' ),
 					$icon_id
 				)
 			);
@@ -138,7 +138,7 @@ class BB_Icon_Registry {
 				'invalid_icon_type',
 				sprintf(
 					/* translators: 1: icon ID, 2: valid types */
-					__( 'Invalid icon type for "%1$s". Must be one of: %2$s', 'buddyboss' ),
+					__( 'Invalid icon type for "%1$s". Must be one of: %2$s', 'buddyboss-platform' ),
 					$icon_id,
 					implode( ', ', $valid_types )
 				)
@@ -222,7 +222,7 @@ class BB_Icon_Registry {
 						'missing_dashicon_slug',
 						sprintf(
 							/* translators: %s: icon ID */
-							__( 'Dashicon "%s" must have a slug.', 'buddyboss' ),
+							__( 'Dashicon "%s" must have a slug.', 'buddyboss-platform' ),
 							$icon_id
 						)
 					);
@@ -235,7 +235,7 @@ class BB_Icon_Registry {
 						'missing_svg_source',
 						sprintf(
 							/* translators: %s: icon ID */
-							__( 'SVG icon "%s" must have a url, path, or data_uri.', 'buddyboss' ),
+							__( 'SVG icon "%s" must have a url, path, or data_uri.', 'buddyboss-platform' ),
 							$icon_id
 						)
 					);
@@ -248,7 +248,7 @@ class BB_Icon_Registry {
 						'missing_image_source',
 						sprintf(
 							/* translators: %s: icon ID */
-							__( 'Image icon "%s" must have a url or path.', 'buddyboss' ),
+							__( 'Image icon "%s" must have a url or path.', 'buddyboss-platform' ),
 							$icon_id
 						)
 					);
@@ -261,7 +261,7 @@ class BB_Icon_Registry {
 						'missing_font_class',
 						sprintf(
 							/* translators: %s: icon ID */
-							__( 'Font icon "%s" must have a CSS class.', 'buddyboss' ),
+							__( 'Font icon "%s" must have a CSS class.', 'buddyboss-platform' ),
 							$icon_id
 						)
 					);
@@ -274,7 +274,7 @@ class BB_Icon_Registry {
 						'missing_react_component',
 						sprintf(
 							/* translators: %s: icon ID */
-							__( 'React icon "%s" must have a component name.', 'buddyboss' ),
+							__( 'React icon "%s" must have a component name.', 'buddyboss-platform' ),
 							$icon_id
 						)
 					);

@@ -474,7 +474,7 @@ function bp_get_the_notification_time_since() {
 
 		// Notified date is empty, so return a fun string.
 	} else {
-		$retval = __( 'Date not found', 'buddyboss' );
+		$retval = __( 'Date not found', 'buddyboss-platform' );
 	}
 
 	/**
@@ -576,7 +576,7 @@ function bp_get_the_notification_mark_read_link( $user_id = 0 ) {
 	// Set default user ID to use.
 	$user_id = 0 === $user_id ? bp_displayed_user_id() : $user_id;
 
-	$retval = sprintf( '<a href="%1$s" class="mark-read primary">%2$s</a>', esc_url( bp_get_the_notification_mark_read_url( $user_id ) ), __( 'Read', 'buddyboss' ) );
+	$retval = sprintf( '<a href="%1$s" class="mark-read primary">%2$s</a>', esc_url( bp_get_the_notification_mark_read_url( $user_id ) ), __( 'Read', 'buddyboss-platform' ) );
 
 	/**
 	 * Filters the mark read link for the current notification.
@@ -668,7 +668,7 @@ function bp_get_the_notification_mark_unread_link( $user_id = 0 ) {
 	// Set default user ID to use.
 	$user_id = 0 === $user_id ? bp_displayed_user_id() : $user_id;
 
-	$retval = sprintf( '<a href="%1$s" class="mark-unread primary">%2$s</a>', esc_url( bp_get_the_notification_mark_unread_url( $user_id ) ), __( 'Unread', 'buddyboss' ) );
+	$retval = sprintf( '<a href="%1$s" class="mark-unread primary">%2$s</a>', esc_url( bp_get_the_notification_mark_unread_url( $user_id ) ), __( 'Unread', 'buddyboss-platform' ) );
 
 	/**
 	 * Filters the link used for marking a single notification as unread.
@@ -802,7 +802,7 @@ function bp_get_the_notification_delete_link( $user_id = 0 ) {
 	// Set default user ID to use.
 	$user_id = 0 === $user_id ? bp_displayed_user_id() : $user_id;
 
-	$retval = sprintf( '<a href="%1$s" class="delete secondary confirm">%2$s</a>', esc_url( bp_get_the_notification_delete_url( $user_id ) ), __( 'Delete', 'buddyboss' ) );
+	$retval = sprintf( '<a href="%1$s" class="delete secondary confirm">%2$s</a>', esc_url( bp_get_the_notification_delete_url( $user_id ) ), __( 'Delete', 'buddyboss-platform' ) );
 
 	/**
 	 * Filters the delete link for the current notification.
@@ -958,7 +958,7 @@ function bp_get_notifications_pagination_count() {
 	$total      = bp_core_number_format( $query_loop->total_notification_count );
 
 	/* translators: 1: starting notification number, 2: ending notification number, 3: total number of notifications. */
-	$pag = sprintf( _n( 'Viewing 1 notification', 'Viewing %1$s - %2$s of %3$s notifications', $query_loop->total_notification_count, 'buddyboss' ), $from_num, $to_num, $total );
+	$pag = sprintf( _n( 'Viewing 1 notification', 'Viewing %1$s - %2$s of %3$s notifications', $query_loop->total_notification_count, 'buddyboss-platform' ), $from_num, $to_num, $total );
 
 	/**
 	 * Filters the pagination count for the current notification loop.
@@ -1018,15 +1018,15 @@ function bp_notifications_sort_order_form() {
 	} ?>
 
 	<form action="" method="get" id="notifications-sort-order">
-		<label for="notifications-sort-order-list"><?php esc_html_e( 'Order By:', 'buddyboss' ); ?></label>
+		<label for="notifications-sort-order-list"><?php esc_html_e( 'Order By:', 'buddyboss-platform' ); ?></label>
 
 		<select id="notifications-sort-order-list" name="sort_order" onchange="this.form.submit();">
-			<option value="DESC" <?php selected( $selected, 'DESC' ); ?>><?php _e( 'Newest First', 'buddyboss' ); ?></option>
-			<option value="ASC"  <?php selected( $selected, 'ASC' ); ?>><?php _e( 'Oldest First', 'buddyboss' ); ?></option>
+			<option value="DESC" <?php selected( $selected, 'DESC' ); ?>><?php _e( 'Newest First', 'buddyboss-platform' ); ?></option>
+			<option value="ASC"  <?php selected( $selected, 'ASC' ); ?>><?php _e( 'Oldest First', 'buddyboss-platform' ); ?></option>
 		</select>
 
 		<noscript>
-			<input id="submit" type="submit" name="form-submit" class="submit" value="<?php esc_attr_e( 'Go', 'buddyboss' ); ?>" />
+			<input id="submit" type="submit" name="form-submit" class="submit" value="<?php esc_attr_e( 'Go', 'buddyboss-platform' ); ?>" />
 		</noscript>
 	</form>
 
@@ -1043,20 +1043,20 @@ function bp_notifications_bulk_management_dropdown() {
 	<label class="bp-screen-reader-text" for="notification-select">
 	<?php
 		/* translators: accessibility text */
-		_e( 'Select Bulk Action', 'buddyboss' );
+		_e( 'Select Bulk Action', 'buddyboss-platform' );
 	?>
 	</label>
 	<select name="notification_bulk_action" id="notification-select">
-		<option value="" selected="selected"><?php _e( 'Bulk Actions', 'buddyboss' ); ?></option>
+		<option value="" selected="selected"><?php _e( 'Bulk Actions', 'buddyboss-platform' ); ?></option>
 
 		<?php if ( bp_is_current_action( 'unread' ) ) : ?>
-			<option value="read"><?php _e( 'Mark read', 'buddyboss' ); ?></option>
+			<option value="read"><?php _e( 'Mark read', 'buddyboss-platform' ); ?></option>
 		<?php elseif ( bp_is_current_action( 'read' ) ) : ?>
-			<option value="unread"><?php _e( 'Mark unread', 'buddyboss' ); ?></option>
+			<option value="unread"><?php _e( 'Mark unread', 'buddyboss-platform' ); ?></option>
 		<?php endif; ?>
-		<option value="delete"><?php _e( 'Delete', 'buddyboss' ); ?></option>
+		<option value="delete"><?php _e( 'Delete', 'buddyboss-platform' ); ?></option>
 	</select>
-	<input type="submit" id="notification-bulk-manage" class="button action" value="<?php esc_attr_e( 'Apply', 'buddyboss' ); ?>">
+	<input type="submit" id="notification-bulk-manage" class="button action" value="<?php esc_attr_e( 'Apply', 'buddyboss-platform' ); ?>">
 	<?php
 }
 
@@ -1113,8 +1113,8 @@ function bb_on_screen_notification_template() {
 			</ul>
 			<div class="bb-remove-all-notification">
 				<a class="action-close primary">
-					<span class="bb-for-desktop"><?php _e( 'Clear', 'buddyboss' ); ?></span>
-					<span class="bb-for-mobile"><?php _e( 'Clear All', 'buddyboss' ); ?></span>
+					<span class="bb-for-desktop"><?php _e( 'Clear', 'buddyboss-platform' ); ?></span>
+					<span class="bb-for-mobile"><?php _e( 'Clear All', 'buddyboss-platform' ); ?></span>
 					<span class="dashicons dashicons-no" aria-hidden="true"></span>
 				</a>
 			</div>

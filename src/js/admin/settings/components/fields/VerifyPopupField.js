@@ -83,8 +83,8 @@ export function VerifyPopupField( props ) {
 	const verifyConfig    = field.verify_config || {};
 
 	// Config with defaults.
-	const modalTitle     = verifyConfig.modal_title || __( 'Verify Settings', 'buddyboss' );
-	const loadingMessage = verifyConfig.loading_message || __( 'Verifying credentials...', 'buddyboss' );
+	const modalTitle     = verifyConfig.modal_title || __( 'Verify Settings', 'buddyboss-platform' );
+	const loadingMessage = verifyConfig.loading_message || __( 'Verifying credentials...', 'buddyboss-platform' );
 	const loadingIcon    = verifyConfig.loading_icon || 'bb-icons-rl-cloud';
 	const successIcon    = verifyConfig.success_icon || 'bb-icons-rl-check-circle';
 	const errorIcon      = verifyConfig.error_icon || 'bb-icons-rl-warning-circle';
@@ -202,7 +202,7 @@ export function VerifyPopupField( props ) {
 				if ( result.success ) {
 					const data = result.data || {};
 					setModalPhase( 'success' );
-					setModalMessage( data.message || __( 'Verified successfully.', 'buddyboss' ) );
+					setModalMessage( data.message || __( 'Verified successfully.', 'buddyboss-platform' ) );
 
 					// Update connected state based on response (for disconnect, is_connected = false).
 					const responseConnected = data.is_connected || false;
@@ -255,7 +255,7 @@ export function VerifyPopupField( props ) {
 					wp.hooks.doAction( 'bb_admin_verify_field_success', field, data, values );
 				} else {
 					const errorData = result.data || {};
-					const errorMsg  = errorData.message || __( 'Verification failed.', 'buddyboss' );
+					const errorMsg  = errorData.message || __( 'Verification failed.', 'buddyboss-platform' );
 					setModalPhase( 'error' );
 					setModalMessage( errorMsg );
 
@@ -289,7 +289,7 @@ export function VerifyPopupField( props ) {
 				if ( err && 'AbortError' === err.name ) {
 					return;
 				}
-				const catchMsg = __( 'Connection failed. Please try again.', 'buddyboss' );
+				const catchMsg = __( 'Connection failed. Please try again.', 'buddyboss-platform' );
 				setModalPhase( 'error' );
 				setModalMessage( catchMsg );
 				wp.hooks.doAction( 'bb_admin_verify_field_phase_change', field, 'error', { message: catchMsg } );
@@ -464,12 +464,12 @@ export function VerifyPopupField( props ) {
 	 */
 	const connectLabel = wp.hooks.applyFilters(
 		'bb_admin_verify_field_button_label',
-		field.button_label || __( 'Verify', 'buddyboss' ),
+		field.button_label || __( 'Verify', 'buddyboss-platform' ),
 		field,
 		connected
 	);
 
-	const disconnectLabel = field.disconnect_label || __( 'Disconnect', 'buddyboss' );
+	const disconnectLabel = field.disconnect_label || __( 'Disconnect', 'buddyboss-platform' );
 	const buttonLabel     = 'disconnect' === buttonState ? disconnectLabel : connectLabel;
 
 	/**
@@ -551,7 +551,7 @@ export function VerifyPopupField( props ) {
 								type="button"
 								className="bb-admin-verify-modal__close"
 								onClick={ closeModal }
-								aria-label={ __( 'Close', 'buddyboss' ) }
+								aria-label={ __( 'Close', 'buddyboss-platform' ) }
 							>
 								<i className="bb-icons-rl-x" />
 							</button>
@@ -593,14 +593,14 @@ export function VerifyPopupField( props ) {
 										onClick={ submitVerification }
 										disabled={ 'loading' === modalPhase }
 									>
-										{ __( 'Submit', 'buddyboss' ) }
+										{ __( 'Submit', 'buddyboss-platform' ) }
 									</button>
 									<button
 										type="button"
 										className="bb-admin-verify-modal__btn"
 										onClick={ closeModal }
 									>
-										{ __( 'Cancel', 'buddyboss' ) }
+										{ __( 'Cancel', 'buddyboss-platform' ) }
 									</button>
 								</>
 							) }
@@ -611,7 +611,7 @@ export function VerifyPopupField( props ) {
 									className="bb-admin-verify-modal__btn bb-admin-verify-modal__btn--primary"
 									disabled
 								>
-									{ __( 'Verifying...', 'buddyboss' ) }
+									{ __( 'Verifying...', 'buddyboss-platform' ) }
 								</button>
 							) }
 
@@ -621,7 +621,7 @@ export function VerifyPopupField( props ) {
 									className="bb-admin-verify-modal__btn bb-admin-verify-modal__btn--primary"
 									onClick={ closeModal }
 								>
-									{ __( 'OK', 'buddyboss' ) }
+									{ __( 'OK', 'buddyboss-platform' ) }
 								</button>
 							) }
 						</div>

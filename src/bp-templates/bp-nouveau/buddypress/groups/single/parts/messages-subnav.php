@@ -9,7 +9,7 @@
  */
 ?>
 
-<nav class="<?php bp_nouveau_single_item_subnav_classes(); ?>" id="subnav" role="navigation" aria-label="<?php esc_attr_e( 'Group Messages menu', 'buddyboss' ); ?>">
+<nav class="<?php bp_nouveau_single_item_subnav_classes(); ?>" id="subnav" role="navigation" aria-label="<?php esc_attr_e( 'Group Messages menu', 'buddyboss-platform' ); ?>">
 	<?php if ( bp_nouveau_has_nav( array( 'object' => 'group_messages' ) ) ) : ?>
 		<ul class="subnav">
 			<?php

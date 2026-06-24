@@ -36,7 +36,7 @@ $video_extensions = bp_is_active( 'video' ) ? bp_video_get_allowed_extension() :
 				<div class="dz-image">
 					<img data-dz-thumbnail />
 				</div>
-				<div class="dz-error-title"><?php esc_html_e( 'Upload Failed', 'buddyboss' ); ?></div>
+				<div class="dz-error-title"><?php esc_html_e( 'Upload Failed', 'buddyboss-platform' ); ?></div>
 				<div class="dz-details">
 					<div class="dz-filename"><span data-dz-name></span></div>
 					<div class="dz-size" data-dz-size></div>
@@ -82,7 +82,7 @@ $video_extensions = bp_is_active( 'video' ) ? bp_video_get_allowed_extension() :
 		<input name="bbp_document" id="bbp_document" type="hidden" value=""/>
 		<div class="forum-post-document-template" style="display:none;">
 			<div class="dz-preview dz-file-preview">
-				<div class="dz-error-title"><?php esc_html_e( 'Upload Failed', 'buddyboss' ); ?></div>
+				<div class="dz-error-title"><?php esc_html_e( 'Upload Failed', 'buddyboss-platform' ); ?></div>
 				<div class="dz-details">
 					<div class="dz-icon"><span class="bb-icon-l bb-icon-file"></span></div>
 					<div class="dz-filename"><span data-dz-name></span></div>
@@ -116,7 +116,7 @@ $video_extensions = bp_is_active( 'video' ) ? bp_video_get_allowed_extension() :
 			<div class="dz-details">
 				<div class="dz-filename"><span data-dz-name></span></div>
 			</div>
-			<div class="dz-error-title"><?php esc_html_e( 'Upload Failed', 'buddyboss' ); ?></div>
+			<div class="dz-error-title"><?php esc_html_e( 'Upload Failed', 'buddyboss-platform' ); ?></div>
 			<div class="dz-progress-ring-wrap">
 				<i class="bb-icon-f bb-icon-video"></i>
 				<svg class="dz-progress-ring" width="54" height="54">
@@ -141,7 +141,7 @@ $video_extensions = bp_is_active( 'video' ) ? bp_video_get_allowed_extension() :
 					</g>
 				</svg>
 			</div>
-			<div class="dz-progress-count"><?php esc_html_e( '0% Uploaded', 'buddyboss' ); ?></div>
+			<div class="dz-progress-count"><?php esc_html_e( '0% Uploaded', 'buddyboss-platform' ); ?></div>
 			<div class="dz-video-thumbnail"></div>
 		</div>
 	</div>
@@ -152,8 +152,8 @@ $video_extensions = bp_is_active( 'video' ) ? bp_video_get_allowed_extension() :
 <div id="whats-new-toolbar" class="<?php echo ( ! bp_is_active( 'media' ) ) ? esc_attr( 'media-off' ) : ''; ?> ">
 
 	<?php if ( bp_is_active( 'media' ) && bbp_use_wp_editor() ) : ?>
-		<div class="post-elements-buttons-item show-toolbar" data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php esc_attr_e( 'Show formatting', 'buddyboss' ); ?>" data-bp-tooltip-hide="<?php esc_html_e( 'Hide formatting', 'buddyboss' ); ?>" data-bp-tooltip-show="<?php esc_html_e( 'Show formatting', 'buddyboss' ); ?>">
-			<a href="#" id="show-toolbar-button" class="toolbar-button bp-tooltip" aria-label="<?php esc_attr_e( 'Show formatting', 'buddyboss' ); ?>">
+		<div class="post-elements-buttons-item show-toolbar" data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php esc_attr_e( 'Show formatting', 'buddyboss-platform' ); ?>" data-bp-tooltip-hide="<?php esc_html_e( 'Hide formatting', 'buddyboss-platform' ); ?>" data-bp-tooltip-show="<?php esc_html_e( 'Show formatting', 'buddyboss-platform' ); ?>">
+			<a href="#" id="show-toolbar-button" class="toolbar-button bp-tooltip" aria-label="<?php esc_attr_e( 'Show formatting', 'buddyboss-platform' ); ?>">
 				<span class="bb-icon-l bb-icon-font"></span>
 			</a>
 		</div>
@@ -163,7 +163,7 @@ $video_extensions = bp_is_active( 'video' ) ? bp_video_get_allowed_extension() :
 	if ( bp_is_active( 'media' ) && bb_user_has_access_upload_media( $group_id, bp_loggedin_user_id(), $forum_id, 0, 'forum' ) ) :
 		?>
 		<div class="post-elements-buttons-item post-media media-support">
-			<a href="#" id="forums-media-button" class="toolbar-button bp-tooltip" data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php esc_attr_e( 'Attach photo', 'buddyboss' ); ?>">
+			<a href="#" id="forums-media-button" class="toolbar-button bp-tooltip" data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php esc_attr_e( 'Attach photo', 'buddyboss-platform' ); ?>">
 				<i class="bb-icon-l bb-icon-camera"></i>
 			</a>
 		</div>
@@ -174,7 +174,7 @@ $video_extensions = bp_is_active( 'video' ) ? bp_video_get_allowed_extension() :
 	if ( bp_is_active( 'media' ) && ! empty( $video_extensions ) && bb_user_has_access_upload_video( $group_id, bp_loggedin_user_id(), $forum_id, 0, 'forum' ) ) :
 		?>
 		<div class="post-elements-buttons-item post-video video-support">
-			<a href="#" id="forums-video-button" class="toolbar-button bp-tooltip" data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php esc_attr_e( 'Attach video', 'buddyboss' ); ?>">
+			<a href="#" id="forums-video-button" class="toolbar-button bp-tooltip" data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php esc_attr_e( 'Attach video', 'buddyboss-platform' ); ?>">
 				<i class="bb-icon-l bb-icon-video"></i>
 			</a>
 		</div>
@@ -185,7 +185,7 @@ $video_extensions = bp_is_active( 'video' ) ? bp_video_get_allowed_extension() :
 		?>
 
 		<div class="post-elements-buttons-item post-media document-support">
-			<a href="#" id="forums-document-button" class="toolbar-button bp-tooltip" data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php esc_attr_e( 'Attach document', 'buddyboss' ); ?>">
+			<a href="#" id="forums-document-button" class="toolbar-button bp-tooltip" data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php esc_attr_e( 'Attach document', 'buddyboss-platform' ); ?>">
 				<i class="bb-icon-l bb-icon-attach"></i>
 			</a>
 		</div>
@@ -197,13 +197,13 @@ $video_extensions = bp_is_active( 'video' ) ? bp_video_get_allowed_extension() :
 		?>
 		<div class="post-elements-buttons-item post-gif">
 			<div class="gif-media-search">
-				<a href="#" id="forums-gif-button" class="toolbar-button bp-tooltip" data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php esc_attr_e( 'Choose a GIF', 'buddyboss' ); ?>">
+				<a href="#" id="forums-gif-button" class="toolbar-button bp-tooltip" data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php esc_attr_e( 'Choose a GIF', 'buddyboss-platform' ); ?>">
 					<i class="bb-icon-l bb-icon-gif"></i>
 				</a>
 				<div class="gif-media-search-dropdown">
 					<div class="gif-search-content">
 						<div class="gif-search-query">
-							<input type="search" placeholder="<?php esc_html_e( 'Search GIPHY...', 'buddyboss' ); ?>" class="search-query-input" />
+							<input type="search" placeholder="<?php esc_html_e( 'Search GIPHY...', 'buddyboss-platform' ); ?>" class="search-query-input" />
 							<span class="search-icon"></span>
 						</div>
 						<div class="gif-search-results" id="gif-search-results">
@@ -211,12 +211,12 @@ $video_extensions = bp_is_active( 'video' ) ? bp_video_get_allowed_extension() :
 							</ul>
 							<div class="gif-alert gif-no-results">
 								<i class="bb-icon-l bb-icon-image-slash"></i>
-								<p><?php esc_html_e( 'No results found', 'buddyboss' ); ?></p>
+								<p><?php esc_html_e( 'No results found', 'buddyboss-platform' ); ?></p>
 							</div>
 
 							<div class="gif-alert gif-no-connection">
 								<i class="bb-icon-l bb-icon-cloud-slash"></i>
-								<p><?php esc_html_e( 'Could not connect to GIPHY', 'buddyboss' ); ?></p>
+								<p><?php esc_html_e( 'Could not connect to GIPHY', 'buddyboss-platform' ); ?></p>
 							</div>
 						</div>
 					</div>
@@ -228,7 +228,7 @@ $video_extensions = bp_is_active( 'video' ) ? bp_video_get_allowed_extension() :
 
 	if ( bp_is_active( 'media' ) && bb_user_has_access_upload_emoji( $group_id, bp_loggedin_user_id(), $forum_id, 0, 'forum' ) ) :
 		?>
-		<div class="post-elements-buttons-item post-emoji bp-tooltip" data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php esc_attr_e( 'Emoji', 'buddyboss' ); ?>"></div>
+		<div class="post-elements-buttons-item post-emoji bp-tooltip" data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php esc_attr_e( 'Emoji', 'buddyboss-platform' ); ?>"></div>
 	<?php endif; ?>
 
 </div>

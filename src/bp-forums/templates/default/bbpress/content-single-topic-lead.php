@@ -14,11 +14,11 @@
 
 	<li class="bbp-header">
 
-		<div class="bbp-topic-author"><?php _e( 'Creator', 'buddyboss' ); ?></div><!-- .bbp-topic-author -->
+		<div class="bbp-topic-author"><?php _e( 'Creator', 'buddyboss-platform' ); ?></div><!-- .bbp-topic-author -->
 
 		<div class="bbp-topic-content">
 
-			<?php _e( 'Discussion', 'buddyboss' ); ?>
+			<?php _e( 'Discussion', 'buddyboss-platform' ); ?>
 
 			<?php bbp_topic_subscription_link(); ?>
 
@@ -83,11 +83,11 @@
 
 	<li class="bbp-footer">
 
-		<div class="bbp-topic-author"><?php _e( 'Creator', 'buddyboss' ); ?></div>
+		<div class="bbp-topic-author"><?php _e( 'Creator', 'buddyboss-platform' ); ?></div>
 
 		<div class="bbp-topic-content">
 
-			<?php _e( 'Discussion', 'buddyboss' ); ?>
+			<?php _e( 'Discussion', 'buddyboss-platform' ); ?>
 
 		</div><!-- .bbp-topic-content -->
 

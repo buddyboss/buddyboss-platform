@@ -135,7 +135,7 @@ class BP_Friends_Component extends BP_Component {
 		$args = array(
 			'slug'                  => BP_FRIENDS_SLUG,
 			'has_directory'         => false,
-			'search_string'         => __( 'Search Connections&hellip;', 'buddyboss' ),
+			'search_string'         => __( 'Search Connections&hellip;', 'buddyboss-platform' ),
 			'notification_callback' => 'friends_format_notifications',
 			'global_tables'         => $global_tables,
 		);
@@ -169,7 +169,7 @@ class BP_Friends_Component extends BP_Component {
 		$access        = bp_core_can_edit_settings();
 		$slug          = bp_get_friends_slug();
 		$friends_link  = trailingslashit( $user_domain . $slug );
-		$main_nav_name = __( 'Connections', 'buddyboss' );
+		$main_nav_name = __( 'Connections', 'buddyboss-platform' );
 
 		$main_nav = array(
 			'name'                => $main_nav_name,
@@ -182,7 +182,7 @@ class BP_Friends_Component extends BP_Component {
 
 		// Add the subnav items to the friends nav item.
 		$sub_nav[] = array(
-			'name'            => ! bp_is_my_profile() ? __( 'All Connections', 'buddyboss' ) : __( 'My Connections', 'buddyboss' ),
+			'name'            => ! bp_is_my_profile() ? __( 'All Connections', 'buddyboss-platform' ) : __( 'My Connections', 'buddyboss-platform' ),
 			'slug'            => 'my-friends',
 			'parent_url'      => $friends_link,
 			'parent_slug'     => $slug,
@@ -193,7 +193,7 @@ class BP_Friends_Component extends BP_Component {
 
 		if ( bp_get_mutual_friendships() ) {
 			$sub_nav[] = array(
-				'name'            => __( 'Mutual Connections', 'buddyboss' ),
+				'name'            => __( 'Mutual Connections', 'buddyboss-platform' ),
 				'slug'            => 'mutual',
 				'parent_url'      => $friends_link,
 				'parent_slug'     => $slug,
@@ -204,7 +204,7 @@ class BP_Friends_Component extends BP_Component {
 		}
 
 		$sub_nav[] = array(
-			'name'            => __( 'Requests', 'buddyboss' ),
+			'name'            => __( 'Requests', 'buddyboss-platform' ),
 			'slug'            => 'requests',
 			'parent_url'      => $friends_link,
 			'parent_slug'     => $slug,
@@ -239,17 +239,17 @@ class BP_Friends_Component extends BP_Component {
 			if ( ! empty( $count ) ) {
 				$title = sprintf(
 					/* translators: %s: Pending friend request count for the current user */
-					__( 'Connections %s', 'buddyboss' ),
+					__( 'Connections %s', 'buddyboss-platform' ),
 					'<span class="count">' . bp_core_number_format( $count ) . '</span>'
 				);
 				$pending = sprintf(
 					/* translators: %s: Pending friend request count for the current user */
-					__( 'Pending Requests %s', 'buddyboss' ),
+					__( 'Pending Requests %s', 'buddyboss-platform' ),
 					'<span class="count">' . bp_core_number_format( $count ) . '</span>'
 				);
 			} else {
-				$title   = __( 'Connections', 'buddyboss' );
-				$pending = __( 'No Pending Requests', 'buddyboss' );
+				$title   = __( 'Connections', 'buddyboss-platform' );
+				$pending = __( 'No Pending Requests', 'buddyboss-platform' );
 			}
 
 			// Add the "My Account" sub menus.
@@ -264,7 +264,7 @@ class BP_Friends_Component extends BP_Component {
 			$wp_admin_nav[] = array(
 				'parent'   => 'my-account-' . $this->id,
 				'id'       => 'my-account-' . $this->id . '-friendships',
-				'title'    => __( 'My Connections', 'buddyboss' ),
+				'title'    => __( 'My Connections', 'buddyboss-platform' ),
 				'href'     => $friends_link,
 				'position' => 10,
 			);
@@ -294,14 +294,14 @@ class BP_Friends_Component extends BP_Component {
 			$bp = buddypress();
 
 			if ( bp_is_my_profile() ) {
-				$bp->bp_options_title = __( 'Connections', 'buddyboss' );
+				$bp->bp_options_title = __( 'Connections', 'buddyboss-platform' );
 			} else {
 				$bp->bp_options_avatar = bp_core_fetch_avatar(
 					array(
 						'item_id' => bp_displayed_user_id(),
 						'type'    => 'thumb',
 						/* translators: %s: member display name. */
-						'alt'     => sprintf( __( 'Profile photo of %s', 'buddyboss' ), bp_get_displayed_user_fullname() ),
+						'alt'     => sprintf( __( 'Profile photo of %s', 'buddyboss-platform' ), bp_get_displayed_user_fullname() ),
 					)
 				);
 				$bp->bp_options_title  = bp_get_displayed_user_fullname();

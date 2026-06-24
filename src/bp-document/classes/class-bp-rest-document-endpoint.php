@@ -85,7 +85,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 			array(
 				'args'        => array(
 					'id' => array(
-						'description' => __( 'A unique numeric ID for the document.', 'buddyboss' ),
+						'description' => __( 'A unique numeric ID for the document.', 'buddyboss-platform' ),
 						'type'        => 'integer',
 						'required'    => true,
 					),
@@ -139,7 +139,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 		if ( empty( $file ) ) {
 			return new WP_Error(
 				'bp_rest_document_file_required',
-				__( 'Sorry, you have not uploaded any document.', 'buddyboss' ),
+				__( 'Sorry, you have not uploaded any document.', 'buddyboss-platform' ),
 				array(
 					'status' => 400,
 				)
@@ -155,7 +155,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 				'bp_rest_max_upload_size',
 				sprintf(
 					/* translators: 1: File size, 2: Allowed size. */
-					__( 'File is too large (%1$s MB). Max file size: %2$s MB.', 'buddyboss' ),
+					__( 'File is too large (%1$s MB). Max file size: %2$s MB.', 'buddyboss-platform' ),
 					round( $file['file']['size'] / 1048576, 1 ),
 					bp_media_allowed_upload_document_size()
 				),
@@ -224,7 +224,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 
 		$retval = new WP_Error(
 			'bp_rest_authorization_required',
-			__( 'Sorry, you are not allowed to upload document.', 'buddyboss' ),
+			__( 'Sorry, you are not allowed to upload document.', 'buddyboss-platform' ),
 			array(
 				'status' => rest_authorization_required_code(),
 			)
@@ -393,7 +393,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 		if ( function_exists( 'bp_rest_enable_private_network' ) && true === bp_rest_enable_private_network() && ! is_user_logged_in() ) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
-				__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss' ),
+				__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss-platform' ),
 				array(
 					'status' => rest_authorization_required_code(),
 				)
@@ -411,7 +411,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 			if ( empty( $group->id ) ) {
 				$retval = new WP_Error(
 					'bp_rest_group_invalid_id',
-					__( 'Invalid group ID.', 'buddyboss' ),
+					__( 'Invalid group ID.', 'buddyboss-platform' ),
 					array(
 						'status' => 404,
 					)
@@ -419,7 +419,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 			} elseif ( ! bp_current_user_can( 'bp_moderate' ) && ! empty( $group->id ) && 'public' !== bp_get_group_status( $group ) && isset( $user_groups['groups'] ) && ! in_array( $group->id, wp_parse_id_list( $user_groups['groups'] ), true ) ) {
 				$retval = new WP_Error(
 					'bp_rest_authorization_required',
-					__( 'Sorry, Restrict access to only group members.', 'buddyboss' ),
+					__( 'Sorry, Restrict access to only group members.', 'buddyboss-platform' ),
 					array(
 						'status' => rest_authorization_required_code(),
 					)
@@ -462,7 +462,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 		if ( empty( $documents['documents'] ) ) {
 			return new WP_Error(
 				'bp_rest_document_invalid_id',
-				__( 'Invalid document ID.', 'buddyboss' ),
+				__( 'Invalid document ID.', 'buddyboss-platform' ),
 				array(
 					'status' => 404,
 				)
@@ -505,7 +505,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 		if ( function_exists( 'bp_rest_enable_private_network' ) && true === bp_rest_enable_private_network() && ! is_user_logged_in() ) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
-				__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss' ),
+				__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss-platform' ),
 				array(
 					'status' => rest_authorization_required_code(),
 				)
@@ -517,7 +517,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 		if ( true === $retval && empty( $document->id ) ) {
 			$retval = new WP_Error(
 				'bp_rest_document_invalid_id',
-				__( 'Invalid document ID.', 'buddyboss' ),
+				__( 'Invalid document ID.', 'buddyboss-platform' ),
 				array(
 					'status' => 404,
 				)
@@ -532,7 +532,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 		) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
-				__( 'Sorry, Restrict access to view this document.', 'buddyboss' ),
+				__( 'Sorry, Restrict access to view this document.', 'buddyboss-platform' ),
 				array(
 					'status' => rest_authorization_required_code(),
 				)
@@ -581,7 +581,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 		if ( empty( $request['document_ids'] ) ) {
 			return new WP_Error(
 				'bp_rest_no_document_found',
-				__( 'Sorry, you are not allowed to create a Document item.', 'buddyboss' ),
+				__( 'Sorry, you are not allowed to create a Document item.', 'buddyboss-platform' ),
 				array(
 					'status' => 400,
 				)
@@ -666,7 +666,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 	public function create_item_permissions_check( $request ) {
 		$error = new WP_Error(
 			'bp_rest_authorization_required',
-			__( 'Sorry, you are not allowed to create a document.', 'buddyboss' ),
+			__( 'Sorry, you are not allowed to create a document.', 'buddyboss-platform' ),
 			array(
 				'status' => rest_authorization_required_code(),
 			)
@@ -694,7 +694,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 			) {
 				$retval = new WP_Error(
 					'bp_rest_invalid_permission',
-					__( 'You don\'t have a permission to create a document inside this group.', 'buddyboss' ),
+					__( 'You don\'t have a permission to create a document inside this group.', 'buddyboss-platform' ),
 					array(
 						'status' => rest_authorization_required_code(),
 					)
@@ -707,7 +707,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 			if ( empty( $parent_folder->id ) ) {
 				$retval = new WP_Error(
 					'bp_rest_invalid_parent_folder_id',
-					__( 'Invalid Parent Folder ID.', 'buddyboss' ),
+					__( 'Invalid Parent Folder ID.', 'buddyboss-platform' ),
 					array(
 						'status' => 400,
 					)
@@ -715,7 +715,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 			} elseif ( ! bp_folder_user_can_edit( $parent_folder->id ) ) {
 				$retval = new WP_Error(
 					'bp_rest_invalid_permission',
-					__( 'You don\'t have a permission to create a document inside this folder.', 'buddyboss' ),
+					__( 'You don\'t have a permission to create a document inside this folder.', 'buddyboss-platform' ),
 					array(
 						'status' => rest_authorization_required_code(),
 					)
@@ -737,7 +737,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 						'bp_rest_invalid_document_id',
 						sprintf(
 							/* translators: Attachment ID. */
-							__( 'Invalid attachment id: %d', 'buddyboss' ),
+							__( 'Invalid attachment id: %d', 'buddyboss-platform' ),
 							$attachment_id
 						),
 						array(
@@ -749,7 +749,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 						'bp_rest_invalid_document_author',
 						sprintf(
 							/* translators: Attachment ID. */
-							__( 'You are not a valid author for attachment id: %d', 'buddyboss' ),
+							__( 'You are not a valid author for attachment id: %d', 'buddyboss-platform' ),
 							$attachment_id
 						),
 						array(
@@ -764,7 +764,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 						'bp_rest_duplicate_document_upload_id',
 						sprintf(
 							/* translators: Attachment ID. */
-							__( 'Document already exists for attachment id: %d', 'buddyboss' ),
+							__( 'Document already exists for attachment id: %d', 'buddyboss-platform' ),
 							$attachment_id
 						),
 						array(
@@ -815,7 +815,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 		if ( empty( $documents['documents'] ) ) {
 			return new WP_Error(
 				'bp_rest_document_invalid_id',
-				__( 'Invalid document ID.', 'buddyboss' ),
+				__( 'Invalid document ID.', 'buddyboss-platform' ),
 				array(
 					'status' => 404,
 				)
@@ -854,7 +854,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 			if ( empty( (int) $moved_document_id ) || is_wp_error( $moved_document_id ) ) {
 				return new WP_Error(
 					'bp_rest_invalid_move_with_folder',
-					__( 'Sorry, you are not allowed to move this document with folder.', 'buddyboss' ),
+					__( 'Sorry, you are not allowed to move this document with folder.', 'buddyboss-platform' ),
 					array(
 						'status' => 404,
 					)
@@ -916,7 +916,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 		if ( ! is_numeric( $id ) ) {
 			return new WP_Error(
 				'bp_rest_user_cannot_update_document',
-				__( 'Cannot update existing document.', 'buddyboss' ),
+				__( 'Cannot update existing document.', 'buddyboss-platform' ),
 				array(
 					'status' => 500,
 				)
@@ -962,7 +962,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 	public function update_item_permissions_check( $request ) {
 		$error = new WP_Error(
 			'bp_rest_authorization_required',
-			__( 'Sorry, you need to be logged in to update this document.', 'buddyboss' ),
+			__( 'Sorry, you need to be logged in to update this document.', 'buddyboss-platform' ),
 			array(
 				'status' => rest_authorization_required_code(),
 			)
@@ -978,7 +978,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 			if ( empty( $document->id ) ) {
 				$retval = new WP_Error(
 					'bp_rest_document_invalid_id',
-					__( 'Invalid document ID.', 'buddyboss' ),
+					__( 'Invalid document ID.', 'buddyboss-platform' ),
 					array(
 						'status' => 404,
 					)
@@ -998,7 +998,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 				) {
 					$retval = new WP_Error(
 						'bp_rest_invalid_permission',
-						__( 'You don\'t have a permission to edit a document inside this group.', 'buddyboss' ),
+						__( 'You don\'t have a permission to edit a document inside this group.', 'buddyboss-platform' ),
 						array(
 							'status' => rest_authorization_required_code(),
 						)
@@ -1010,7 +1010,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 				if ( ! bp_folder_user_can_edit( (int) $request['folder_id'] ) ) {
 					$retval = new WP_Error(
 						'bp_rest_invalid_permission',
-						__( 'You don\'t have permission to move/update a document inside the folder.', 'buddyboss' ),
+						__( 'You don\'t have permission to move/update a document inside the folder.', 'buddyboss-platform' ),
 						array(
 							'status' => rest_authorization_required_code(),
 						)
@@ -1055,7 +1055,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 		if ( empty( $documents['documents'] ) ) {
 			return new WP_Error(
 				'bp_rest_document_invalid_id',
-				__( 'Invalid document ID.', 'buddyboss' ),
+				__( 'Invalid document ID.', 'buddyboss-platform' ),
 				array(
 					'status' => 404,
 				)
@@ -1072,7 +1072,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 		if ( ! bp_document_user_can_delete( $id ) ) {
 			return WP_Error(
 				'bp_rest_authorization_required',
-				__( 'Sorry, you are not allowed to delete this document.', 'buddyboss' ),
+				__( 'Sorry, you are not allowed to delete this document.', 'buddyboss-platform' ),
 				array(
 					'status' => rest_authorization_required_code(),
 				)
@@ -1114,7 +1114,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 	public function delete_item_permissions_check( $request ) {
 		$retval = new WP_Error(
 			'bp_rest_authorization_required',
-			__( 'Sorry, you need to be logged in to delete this document.', 'buddyboss' ),
+			__( 'Sorry, you need to be logged in to delete this document.', 'buddyboss-platform' ),
 			array(
 				'status' => rest_authorization_required_code(),
 			)
@@ -1153,7 +1153,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 
 		if ( WP_REST_Server::CREATABLE === $method ) {
 			$args['document_ids'] = array(
-				'description'       => __( 'Document specific IDs.', 'buddyboss' ),
+				'description'       => __( 'Document specific IDs.', 'buddyboss-platform' ),
 				'default'           => array(),
 				'type'              => 'array',
 				'required'          => true,
@@ -1163,7 +1163,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 			);
 
 			$args['activity_id'] = array(
-				'description'       => __( 'A unique numeric ID for the activity.', 'buddyboss' ),
+				'description'       => __( 'A unique numeric ID for the activity.', 'buddyboss-platform' ),
 				'type'              => 'integer',
 				'sanitize_callback' => 'absint',
 				'validate_callback' => 'rest_validate_request_arg',
@@ -1172,28 +1172,28 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 		}
 
 		$args['content'] = array(
-			'description'       => __( 'Document Content.', 'buddyboss' ),
+			'description'       => __( 'Document Content.', 'buddyboss-platform' ),
 			'type'              => 'string',
 			'sanitize_callback' => 'sanitize_textarea_field',
 			'validate_callback' => 'rest_validate_request_arg',
 		);
 
 		$args['group_id'] = array(
-			'description'       => __( 'A unique numeric ID for the Group.', 'buddyboss' ),
+			'description'       => __( 'A unique numeric ID for the Group.', 'buddyboss-platform' ),
 			'type'              => 'integer',
 			'sanitize_callback' => 'absint',
 			'validate_callback' => 'rest_validate_request_arg',
 		);
 
 		$args['folder_id'] = array(
-			'description'       => __( 'A unique numeric ID for the Document Folder.', 'buddyboss' ),
+			'description'       => __( 'A unique numeric ID for the Document Folder.', 'buddyboss-platform' ),
 			'type'              => 'integer',
 			'sanitize_callback' => 'absint',
 			'validate_callback' => 'rest_validate_request_arg',
 		);
 
 		$args['privacy'] = array(
-			'description'       => __( 'Privacy of the document.', 'buddyboss' ),
+			'description'       => __( 'Privacy of the document.', 'buddyboss-platform' ),
 			'type'              => 'string',
 			'enum'              => array( 'public', 'loggedin', 'friends', 'onlyme', 'grouponly' ),
 			'default'           => 'public',
@@ -1204,7 +1204,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 		if ( WP_REST_Server::EDITABLE === $method ) {
 			$key        = 'edit';
 			$args['id'] = array(
-				'description'       => __( 'A unique numeric ID for the document.', 'buddyboss' ),
+				'description'       => __( 'A unique numeric ID for the document.', 'buddyboss-platform' ),
 				'type'              => 'integer',
 				'required'          => true,
 				'sanitize_callback' => 'absint',
@@ -1426,7 +1426,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 				echo '<div class="document-audio-wrap">' .
 					'<audio controls controlsList="nodownload">' .
 						'<source src="' . esc_url_raw( $audio_url ) . '" type="audio/mpeg">' .
-						esc_html__( 'Your browser does not support the audio element.', 'buddyboss' ) .
+						esc_html__( 'Your browser does not support the audio element.', 'buddyboss-platform' ) .
 					'</audio>' .
 				'</div>';
 
@@ -1455,7 +1455,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 							'<textarea class="document-text-file-data-hidden" style="display: none;">' . wp_kses_post( $file_data ) . '</textarea>' .
 						'</div>' .
 						'<div class="document-expand">' .
-							'<a href="#" class="document-expand-anchor"><i class="bb-icon-l bb-icon-plus document-icon-plus"></i> ' . esc_html__( 'Click to expand', 'buddyboss' ) . '</a>' .
+							'<a href="#" class="document-expand-anchor"><i class="bb-icon-l bb-icon-plus document-icon-plus"></i> ' . esc_html__( 'Click to expand', 'buddyboss-platform' ) . '</a>' .
 						'</div>' .
 					'</div>';
 
@@ -1465,7 +1465,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 							'<div class="more_text_view">%s</div>',
 							sprintf(
 							/* translators: %s: download url */
-								wp_kses_post( 'This file was truncated for preview. Please <a href="%s">download</a> to view the full file.', 'buddyboss' ),
+								wp_kses_post( __( 'This file was truncated for preview. Please <a href="%s">download</a> to view the full file.', 'buddyboss-platform' ) ),
 								esc_url( $data['download_url'] )
 							)
 						);
@@ -1501,196 +1501,196 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 			'properties' => array(
 				'id'                    => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'A unique numeric ID for the Document.', 'buddyboss' ),
+					'description' => __( 'A unique numeric ID for the Document.', 'buddyboss-platform' ),
 					'readonly'    => true,
 					'type'        => 'integer',
 				),
 				'blog_id'               => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Current Site ID.', 'buddyboss' ),
+					'description' => __( 'Current Site ID.', 'buddyboss-platform' ),
 					'readonly'    => true,
 					'type'        => 'integer',
 				),
 				'attachment_id'         => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Unique identifier for the document object.', 'buddyboss' ),
+					'description' => __( 'Unique identifier for the document object.', 'buddyboss-platform' ),
 					'readonly'    => true,
 					'type'        => 'integer',
 				),
 				'user_id'               => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'The ID for the author of the document.', 'buddyboss' ),
+					'description' => __( 'The ID for the author of the document.', 'buddyboss-platform' ),
 					'readonly'    => true,
 					'type'        => 'integer',
 				),
 				'title'                 => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'The Document title.', 'buddyboss' ),
+					'description' => __( 'The Document title.', 'buddyboss-platform' ),
 					'readonly'    => true,
 					'type'        => 'string',
 				),
 				'description'           => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'The Document description.', 'buddyboss' ),
+					'description' => __( 'The Document description.', 'buddyboss-platform' ),
 					'readonly'    => true,
 					'type'        => 'string',
 				),
 				'type'                  => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Whether it is a document or folder.', 'buddyboss' ),
+					'description' => __( 'Whether it is a document or folder.', 'buddyboss-platform' ),
 					'readonly'    => true,
 					'type'        => 'string',
 				),
 				'folder_id'             => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'A unique numeric ID for the parent Folder.', 'buddyboss' ),
+					'description' => __( 'A unique numeric ID for the parent Folder.', 'buddyboss-platform' ),
 					'readonly'    => true,
 					'type'        => 'integer',
 				),
 				'group_id'              => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'A unique numeric ID for the Group.', 'buddyboss' ),
+					'description' => __( 'A unique numeric ID for the Group.', 'buddyboss-platform' ),
 					'readonly'    => true,
 					'type'        => 'integer',
 				),
 				'activity_id'           => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'A unique numeric ID for the activity.', 'buddyboss' ),
+					'description' => __( 'A unique numeric ID for the activity.', 'buddyboss-platform' ),
 					'readonly'    => true,
 					'type'        => 'integer',
 				),
 				'message_id'            => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'A unique numeric ID for the Message thread.', 'buddyboss' ),
+					'description' => __( 'A unique numeric ID for the Message thread.', 'buddyboss-platform' ),
 					'readonly'    => true,
 					'type'        => 'integer',
 				),
 				'hide_activity_actions' => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Based on this hide like/comment button for document activity comments.', 'buddyboss' ),
+					'description' => __( 'Based on this hide like/comment button for document activity comments.', 'buddyboss-platform' ),
 					'readonly'    => true,
 					'type'        => 'boolean',
 				),
 				'privacy'               => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Privacy of the document.', 'buddyboss' ),
+					'description' => __( 'Privacy of the document.', 'buddyboss-platform' ),
 					'enum'        => array( 'public', 'loggedin', 'onlyme', 'friends', 'grouponly' ),
 					'readonly'    => true,
 					'type'        => 'string',
 				),
 				'menu_order'            => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Order of the item.', 'buddyboss' ),
+					'description' => __( 'Order of the item.', 'buddyboss-platform' ),
 					'readonly'    => true,
 					'type'        => 'integer',
 				),
 				'date_created'          => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'The date the document was created, in the site\'s timezone.', 'buddyboss' ),
+					'description' => __( 'The date the document was created, in the site\'s timezone.', 'buddyboss-platform' ),
 					'readonly'    => true,
 					'type'        => 'string',
 					'format'      => 'date-time',
 				),
 				'date_modified'         => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'The date the document was modified, in the site\'s timezone.', 'buddyboss' ),
+					'description' => __( 'The date the document was modified, in the site\'s timezone.', 'buddyboss-platform' ),
 					'readonly'    => true,
 					'type'        => 'string',
 					'format'      => 'date-time',
 				),
 				'group_name'            => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Group name associate with the document.', 'buddyboss' ),
+					'description' => __( 'Group name associate with the document.', 'buddyboss-platform' ),
 					'readonly'    => true,
 					'type'        => 'string',
 				),
 				'group_status'          => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Group status associate with the document.', 'buddyboss' ),
+					'description' => __( 'Group status associate with the document.', 'buddyboss-platform' ),
 					'readonly'    => true,
 					'type'        => 'string',
 				),
 				'visibility'            => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Visibility of the document.', 'buddyboss' ),
+					'description' => __( 'Visibility of the document.', 'buddyboss-platform' ),
 					'readonly'    => true,
 					'type'        => 'string',
 				),
 				'count'                 => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Count of the child documents and folders of the folder.', 'buddyboss' ),
+					'description' => __( 'Count of the child documents and folders of the folder.', 'buddyboss-platform' ),
 					'readonly'    => true,
 					'type'        => 'string',
 				),
 				'download_url'          => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Download URL for the document.', 'buddyboss' ),
+					'description' => __( 'Download URL for the document.', 'buddyboss-platform' ),
 					'readonly'    => true,
 					'type'        => 'string',
 				),
 				'extension'             => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Document file extension.', 'buddyboss' ),
+					'description' => __( 'Document file extension.', 'buddyboss-platform' ),
 					'readonly'    => true,
 					'type'        => 'string',
 				),
 				'extension_description' => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Document file description.', 'buddyboss' ),
+					'description' => __( 'Document file description.', 'buddyboss-platform' ),
 					'readonly'    => true,
 					'type'        => 'string',
 				),
 				'svg_icon'              => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Document Icon based on the extension.', 'buddyboss' ),
+					'description' => __( 'Document Icon based on the extension.', 'buddyboss-platform' ),
 					'readonly'    => true,
 					'type'        => 'string',
 				),
 				'filename'              => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Full name of the document file with extension.', 'buddyboss' ),
+					'description' => __( 'Full name of the document file with extension.', 'buddyboss-platform' ),
 					'readonly'    => true,
 					'type'        => 'string',
 				),
 				'size'                  => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Size of the uploaded document.', 'buddyboss' ),
+					'description' => __( 'Size of the uploaded document.', 'buddyboss-platform' ),
 					'readonly'    => true,
 					'type'        => 'string',
 				),
 				'msg_preview'           => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Message preview for the document.', 'buddyboss' ),
+					'description' => __( 'Message preview for the document.', 'buddyboss-platform' ),
 					'readonly'    => true,
 					'type'        => 'string',
 				),
 				'attachment_data'       => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Wordpress Document Data.', 'buddyboss' ),
+					'description' => __( 'Wordpress Document Data.', 'buddyboss-platform' ),
 					'readonly'    => true,
 					'type'        => 'object',
 					'properties'  => array(
 						'full'           => array(
 							'context'     => array( 'embed', 'view', 'edit' ),
-							'description' => __( 'Document URL with full image size.', 'buddyboss' ),
+							'description' => __( 'Document URL with full image size.', 'buddyboss-platform' ),
 							'readonly'    => true,
 							'type'        => 'string',
 						),
 						'thumb'          => array(
 							'context'     => array( 'embed', 'view', 'edit' ),
-							'description' => __( 'Document URL with thumbnail image size.', 'buddyboss' ),
+							'description' => __( 'Document URL with thumbnail image size.', 'buddyboss-platform' ),
 							'readonly'    => true,
 							'type'        => 'string',
 						),
 						'activity_thumb' => array(
 							'context'     => array( 'embed', 'view', 'edit' ),
-							'description' => __( 'Document URL for the activity image size.', 'buddyboss' ),
+							'description' => __( 'Document URL for the activity image size.', 'buddyboss-platform' ),
 							'readonly'    => true,
 							'type'        => 'string',
 						),
 						'meta'           => array(
 							'context'     => array( 'embed', 'view', 'edit' ),
-							'description' => __( 'Meta items for the document.', 'buddyboss' ),
+							'description' => __( 'Meta items for the document.', 'buddyboss-platform' ),
 							'readonly'    => true,
 							'type'        => 'object',
 						),
@@ -1698,19 +1698,19 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 				),
 				'user_nicename'         => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'The User\'s nice name to create a document.', 'buddyboss' ),
+					'description' => __( 'The User\'s nice name to create a document.', 'buddyboss-platform' ),
 					'readonly'    => true,
 					'type'        => 'string',
 				),
 				'user_login'            => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'The User\'s login name to create a document.', 'buddyboss' ),
+					'description' => __( 'The User\'s login name to create a document.', 'buddyboss-platform' ),
 					'readonly'    => true,
 					'type'        => 'string',
 				),
 				'display_name'          => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'The User\'s display name to create a document.', 'buddyboss' ),
+					'description' => __( 'The User\'s display name to create a document.', 'buddyboss-platform' ),
 					'readonly'    => true,
 					'type'        => 'string',
 				),
@@ -1735,7 +1735,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 		$params = parent::get_collection_params();
 
 		$params['order'] = array(
-			'description'       => __( 'Order sort attribute ascending or descending.', 'buddyboss' ),
+			'description'       => __( 'Order sort attribute ascending or descending.', 'buddyboss-platform' ),
 			'default'           => 'asc',
 			'type'              => 'string',
 			'enum'              => array( 'asc', 'desc' ),
@@ -1744,7 +1744,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['orderby'] = array(
-			'description'       => __( 'Order documents by which attribute.', 'buddyboss' ),
+			'description'       => __( 'Order documents by which attribute.', 'buddyboss-platform' ),
 			'default'           => 'title',
 			'type'              => 'string',
 			'enum'              => array( 'title', 'date_created', 'date_modified', 'group_id', 'privacy', 'id', 'include' ),
@@ -1753,14 +1753,14 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['max'] = array(
-			'description'       => __( 'Maximum number of results to return', 'buddyboss' ),
+			'description'       => __( 'Maximum number of results to return', 'buddyboss-platform' ),
 			'type'              => 'integer',
 			'sanitize_callback' => 'absint',
 			'validate_callback' => 'rest_validate_request_arg',
 		);
 
 		$params['scope'] = array(
-			'description'       => __( 'Scope of the Document.', 'buddyboss' ),
+			'description'       => __( 'Scope of the Document.', 'buddyboss-platform' ),
 			'type'              => 'array',
 			'items'             => array(
 				'enum' => array( 'public', 'friends', 'groups', 'personal' ),
@@ -1771,7 +1771,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['user_id'] = array(
-			'description'       => __( 'Limit results to a specific user.', 'buddyboss' ),
+			'description'       => __( 'Limit results to a specific user.', 'buddyboss-platform' ),
 			'default'           => 0,
 			'type'              => 'integer',
 			'sanitize_callback' => 'absint',
@@ -1779,28 +1779,28 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['folder_id'] = array(
-			'description'       => __( 'A unique numeric ID for the Folder.', 'buddyboss' ),
+			'description'       => __( 'A unique numeric ID for the Folder.', 'buddyboss-platform' ),
 			'type'              => 'integer',
 			'sanitize_callback' => 'absint',
 			'validate_callback' => 'rest_validate_request_arg',
 		);
 
 		$params['group_id'] = array(
-			'description'       => __( 'A unique numeric ID for the Group.', 'buddyboss' ),
+			'description'       => __( 'A unique numeric ID for the Group.', 'buddyboss-platform' ),
 			'type'              => 'integer',
 			'sanitize_callback' => 'absint',
 			'validate_callback' => 'rest_validate_request_arg',
 		);
 
 		$params['activity_id'] = array(
-			'description'       => __( 'A unique numeric ID for the Document\'s Activity.', 'buddyboss' ),
+			'description'       => __( 'A unique numeric ID for the Document\'s Activity.', 'buddyboss-platform' ),
 			'type'              => 'integer',
 			'sanitize_callback' => 'absint',
 			'validate_callback' => 'rest_validate_request_arg',
 		);
 
 		$params['privacy'] = array(
-			'description'       => __( 'Privacy of the Document.', 'buddyboss' ),
+			'description'       => __( 'Privacy of the Document.', 'buddyboss-platform' ),
 			'type'              => 'array',
 			'items'             => array(
 				'enum' => array( 'public', 'loggedin', 'friends', 'onlyme', 'grouponly' ),
@@ -1811,7 +1811,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['include'] = array(
-			'description'       => __( 'Ensure result set includes specific document IDs.', 'buddyboss' ),
+			'description'       => __( 'Ensure result set includes specific document IDs.', 'buddyboss-platform' ),
 			'default'           => array(),
 			'type'              => 'array',
 			'items'             => array( 'type' => 'integer' ),
@@ -1820,7 +1820,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['exclude'] = array(
-			'description'       => __( 'Ensure result set excludes specific document IDs.', 'buddyboss' ),
+			'description'       => __( 'Ensure result set excludes specific document IDs.', 'buddyboss-platform' ),
 			'default'           => array(),
 			'type'              => 'array',
 			'items'             => array( 'type' => 'integer' ),
@@ -1829,13 +1829,13 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['count_total'] = array(
-			'description' => __( 'Show total count or not.', 'buddyboss' ),
+			'description' => __( 'Show total count or not.', 'buddyboss-platform' ),
 			'default'     => true,
 			'type'        => 'boolean',
 		);
 
 		$params['type'] = array(
-			'description' => __( 'Type of document.', 'buddyboss' ),
+			'description' => __( 'Type of document.', 'buddyboss-platform' ),
 			'default'     => 'both',
 			'type'        => 'string',
 			'enum'        => array( 'both', 'document', 'folder' ),
@@ -2110,7 +2110,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 		if ( empty( $created_document_ids ) ) {
 			return new WP_Error(
 				'bp_rest_document_creation_error',
-				__( 'Error creating document, please try again.', 'buddyboss' ),
+				__( 'Error creating document, please try again.', 'buddyboss-platform' ),
 				array(
 					'status' => 400,
 				)
@@ -3095,7 +3095,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 	public function bp_rest_activity_query_arguments( $args, $method ) {
 
 		$args['bp_documents'] = array(
-			'description'       => __( 'Document specific IDs.', 'buddyboss' ),
+			'description'       => __( 'Document specific IDs.', 'buddyboss-platform' ),
 			'type'              => 'array',
 			'items'             => array( 'type' => 'integer' ),
 			'sanitize_callback' => 'wp_parse_id_list',
@@ -3115,7 +3115,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 	public function bp_rest_forums_collection_params( $params ) {
 
 		$params['bbp_documents'] = array(
-			'description'       => __( 'Document specific IDs.', 'buddyboss' ),
+			'description'       => __( 'Document specific IDs.', 'buddyboss-platform' ),
 			'type'              => 'array',
 			'items'             => array( 'type' => 'integer' ),
 			'sanitize_callback' => 'wp_parse_id_list',
@@ -3135,7 +3135,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 	public function bp_rest_message_query_arguments( $params ) {
 
 		$params['bp_documents'] = array(
-			'description'       => __( 'Document specific IDs.', 'buddyboss' ),
+			'description'       => __( 'Document specific IDs.', 'buddyboss-platform' ),
 			'type'              => 'array',
 			'items'             => array( 'type' => 'integer' ),
 			'sanitize_callback' => 'wp_parse_id_list',
@@ -3181,7 +3181,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 		if ( empty( $attachment_id ) ) {
 			return new WP_Error(
 				'bp_rest_document_attachment_invalid_id',
-				__( 'Invalid attachment ID.', 'buddyboss' ),
+				__( 'Invalid attachment ID.', 'buddyboss-platform' ),
 				array(
 					'status' => 404,
 				)
@@ -3193,7 +3193,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 		if ( empty( $attachment ) ) {
 			return new WP_Error(
 				'bp_rest_document_attachment_invalid_id',
-				__( 'Invalid attachment ID.', 'buddyboss' ),
+				__( 'Invalid attachment ID.', 'buddyboss-platform' ),
 				array(
 					'status' => 404,
 				)
@@ -3206,7 +3206,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 		if ( ! $status ) {
 			return new WP_Error(
 				'bp_rest_document_attachment_delete_failed',
-				__( 'Could not delete the attachment.', 'buddyboss' ),
+				__( 'Could not delete the attachment.', 'buddyboss-platform' ),
 				array(
 					'status' => 500,
 				)
@@ -3247,7 +3247,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 	public function delete_uploaded_attachment_item_permissions_check( $request ) {
 		$retval = new WP_Error(
 			'bp_rest_authorization_required',
-			__( 'Sorry, you need to be logged in to delete this document.', 'buddyboss' ),
+			__( 'Sorry, you need to be logged in to delete this document.', 'buddyboss-platform' ),
 			array(
 				'status' => rest_authorization_required_code(),
 			)
@@ -3259,7 +3259,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 			if ( empty( $attachment_id ) ) {
 				$retval = new WP_Error(
 					'bp_rest_document_attachment_invalid_id',
-					__( 'Invalid attachment ID.', 'buddyboss' ),
+					__( 'Invalid attachment ID.', 'buddyboss-platform' ),
 					array(
 						'status' => 404,
 					)
@@ -3270,7 +3270,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 				if ( empty( $attachment ) ) {
 					$retval = new WP_Error(
 						'bp_rest_document_attachment_invalid_id',
-						__( 'Invalid attachment ID.', 'buddyboss' ),
+						__( 'Invalid attachment ID.', 'buddyboss-platform' ),
 						array(
 							'status' => 404,
 						)
@@ -3282,7 +3282,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 					} else {
 						$retval = new WP_Error(
 							'bp_rest_authorization_required',
-							 __( 'Sorry, you are not allowed to delete this document attachment.', 'buddyboss' ),
+							 __( 'Sorry, you are not allowed to delete this document attachment.', 'buddyboss-platform' ),
 							array(
 								'status' => rest_authorization_required_code(),
 							)

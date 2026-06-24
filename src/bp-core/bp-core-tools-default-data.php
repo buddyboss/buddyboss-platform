@@ -9,7 +9,7 @@ function bp_admin_tools_default_data_save() {
 
 	if ( ! empty( $_POST['bp-admin-clear'] ) ) {
 		bp_dd_clear_db();
-		echo '<div id="message" class="updated fade"><p>' . __( 'Everything was deleted.', 'buddyboss' ) . '</p></div>';
+		echo '<div id="message" class="updated fade"><p>' . __( 'Everything was deleted.', 'buddyboss-platform' ) . '</p></div>';
 	}
 
 	if ( isset( $_POST['bp-admin-submit'] ) ) {
@@ -25,35 +25,35 @@ function bp_admin_tools_default_data_save() {
 			bp_delete_option( 'bp_dd_import_users' );
 			$users             = bp_dd_import_users();
 			/* translators: %s: number of members imported. */
-			$imported['users'] = sprintf( __( '%s new members', 'buddyboss' ), bp_core_number_format( count( $users ) ) );
+			$imported['users'] = sprintf( __( '%s new members', 'buddyboss-platform' ), bp_core_number_format( count( $users ) ) );
 			bp_dd_update_import( 'users', 'users' );
 		}
 
 		if ( isset( $_POST['bp']['import-profile'] ) && ! bp_dd_is_imported( 'users', 'xprofile' ) ) {
 			$profile             = bp_dd_import_users_profile();
 			/* translators: %s: number of profile field entries imported. */
-			$imported['profile'] = sprintf( __( '%s profile field entries', 'buddyboss' ), bp_core_number_format( $profile ) );
+			$imported['profile'] = sprintf( __( '%s profile field entries', 'buddyboss-platform' ), bp_core_number_format( $profile ) );
 			bp_dd_update_import( 'users', 'xprofile' );
 		}
 
 		if ( isset( $_POST['bp']['import-friends'] ) && ! bp_dd_is_imported( 'users', 'friends' ) ) {
 			$friends             = bp_dd_import_users_friends();
 			/* translators: %s: number of member connections imported. */
-			$imported['friends'] = sprintf( __( '%s member connections', 'buddyboss' ), bp_core_number_format( $friends ) );
+			$imported['friends'] = sprintf( __( '%s member connections', 'buddyboss-platform' ), bp_core_number_format( $friends ) );
 			bp_dd_update_import( 'users', 'friends' );
 		}
 
 		if ( isset( $_POST['bp']['import-messages'] ) && ! bp_dd_is_imported( 'users', 'messages' ) ) {
 			$messages             = bp_dd_import_users_messages();
 			/* translators: %s: number of private messages imported. */
-			$imported['messages'] = sprintf( __( '%s private messages', 'buddyboss' ), bp_core_number_format( count( $messages ) ) );
+			$imported['messages'] = sprintf( __( '%s private messages', 'buddyboss-platform' ), bp_core_number_format( count( $messages ) ) );
 			bp_dd_update_import( 'users', 'messages' );
 		}
 
 		if ( isset( $_POST['bp']['import-activity'] ) && ! bp_dd_is_imported( 'users', 'activity' ) ) {
 			$activity             = bp_dd_import_users_activity();
 			/* translators: %s: number of activity items imported. */
-			$imported['activity'] = sprintf( __( '%s personal activity items', 'buddyboss' ), bp_core_number_format( $activity ) );
+			$imported['activity'] = sprintf( __( '%s personal activity items', 'buddyboss-platform' ), bp_core_number_format( $activity ) );
 			bp_dd_update_import( 'users', 'activity' );
 		}
 
@@ -61,48 +61,48 @@ function bp_admin_tools_default_data_save() {
 		if ( isset( $_POST['bp']['import-groups'] ) && ! bp_dd_is_imported( 'groups', 'groups' ) ) {
 			$groups             = bp_dd_import_groups();
 			/* translators: %s: number of groups imported. */
-			$imported['groups'] = sprintf( __( '%s new social groups', 'buddyboss' ), bp_core_number_format( count( $groups ) ) );
+			$imported['groups'] = sprintf( __( '%s new social groups', 'buddyboss-platform' ), bp_core_number_format( count( $groups ) ) );
 			bp_dd_update_import( 'groups', 'groups' );
 		}
 		if ( isset( $_POST['bp']['import-g-members'] ) && ! bp_dd_is_imported( 'groups', 'members' ) ) {
 			$g_members             = bp_dd_import_groups_members();
 			/* translators: %s: number of group members imported. */
-			$imported['g_members'] = sprintf( __( '%s group members (1 user can be in several groups)', 'buddyboss' ), bp_core_number_format( count( $g_members ) ) );
+			$imported['g_members'] = sprintf( __( '%s group members (1 user can be in several groups)', 'buddyboss-platform' ), bp_core_number_format( count( $g_members ) ) );
 			bp_dd_update_import( 'groups', 'members' );
 		}
 
 		if ( isset( $_POST['bp']['import-g-activity'] ) && ! bp_dd_is_imported( 'groups', 'activity' ) ) {
 			$g_activity             = bp_dd_import_groups_activity();
 			/* translators: %s: number of group activity items imported. */
-			$imported['g_activity'] = sprintf( __( '%s group activity items', 'buddyboss' ), bp_core_number_format( $g_activity ) );
+			$imported['g_activity'] = sprintf( __( '%s group activity items', 'buddyboss-platform' ), bp_core_number_format( $g_activity ) );
 			bp_dd_update_import( 'groups', 'activity' );
 		}
 
 		if ( isset( $_POST['bp']['import-forums'] ) && ! bp_dd_is_imported( 'forums', 'forums' ) ) {
 			$forums             = bp_dd_import_forums();
 			/* translators: %s: number of forum activity items imported. */
-			$imported['forums'] = sprintf( __( '%s forums activity items', 'buddyboss' ), count( $forums ) );
+			$imported['forums'] = sprintf( __( '%s forums activity items', 'buddyboss-platform' ), count( $forums ) );
 			bp_dd_update_import( 'forums', 'forums' );
 		}
 
 		if ( isset( $_POST['bp']['import-f-topics'] ) && ! bp_dd_is_imported( 'forums', 'topics' ) ) {
 			$topics               = bp_dd_import_forums_topics();
 			/* translators: %s: number of discussion activity items imported. */
-			$imported['g_topics'] = sprintf( __( '%s discussion activity items', 'buddyboss' ), count( $topics ) );
+			$imported['g_topics'] = sprintf( __( '%s discussion activity items', 'buddyboss-platform' ), count( $topics ) );
 			bp_dd_update_import( 'forums', 'topics' );
 		}
 
 		if ( isset( $_POST['bp']['import-f-replies'] ) && ! bp_dd_is_imported( 'forums', 'replies' ) ) {
 			$topics                = bp_dd_import_forums_topics_replies();
 			/* translators: %s: number of reply activity items imported. */
-			$imported['g_replies'] = sprintf( __( '%s reply activity items', 'buddyboss' ), count( $topics ) );
+			$imported['g_replies'] = sprintf( __( '%s reply activity items', 'buddyboss-platform' ), count( $topics ) );
 			bp_dd_update_import( 'forums', 'replies' );
 		}
 
 		if ( isset( $_POST['bp']['import-g-forums'] ) && ! bp_dd_is_imported( 'groups', 'forums' ) ) {
 			$groupsforums         = bp_dd_import_forums_in_groups();
 			/* translators: %s: number of group forums imported. */
-			$imported['g_forums'] = sprintf( __( 'In %s group forums, discussions and replies were added', 'buddyboss' ), count( $groupsforums ) );
+			$imported['g_forums'] = sprintf( __( 'In %s group forums, discussions and replies were added', 'buddyboss-platform' ), count( $groupsforums ) );
 			bp_dd_update_import( 'groups', 'forums' );
 
 		}
@@ -111,7 +111,7 @@ function bp_admin_tools_default_data_save() {
 		<div id="message" class="updated fade">
 			<p>
 				<?php
-				_e( 'Data was successfully imported', 'buddyboss' );
+				_e( 'Data was successfully imported', 'buddyboss-platform' );
 				if ( count( $imported ) > 0 ) {
 					echo ':<ul class="results"><li>';
 					echo implode( '</li><li>', $imported );
@@ -1443,7 +1443,7 @@ function bp_dd_import_forums_in_groups() {
 		if ( ! empty( $group ) ) {
 			$forum['name']        = $group->name;
 			/* translators: %s: group name. */
-			$forum['description'] = sprintf( __( 'Default Forum for %s Group', 'buddyboss' ), $group->name );
+			$forum['description'] = sprintf( __( 'Default Forum for %s Group', 'buddyboss-platform' ), $group->name );
 			$forum['visibility']  = $group->status;
 			$forum['status']      = 'open';
 

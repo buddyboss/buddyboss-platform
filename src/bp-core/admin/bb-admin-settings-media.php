@@ -35,8 +35,8 @@ function bb_admin_settings_register_media_feature() {
 	bb_register_feature(
 		'media',
 		array(
-			'label'              => __( 'Media Uploading', 'buddyboss' ),
-			'description'        => __( 'Allow members to upload photos, videos, documents, emojis, and GIFs, and organize them into albums or folders.', 'buddyboss' ),
+			'label'              => __( 'Media Uploading', 'buddyboss-platform' ),
+			'description'        => __( 'Allow members to upload photos, videos, documents, emojis, and GIFs, and organize them into albums or folders.', 'buddyboss-platform' ),
 			'icon'               => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-image',
@@ -85,7 +85,7 @@ function bb_admin_settings_register_media_feature() {
 		'media',
 		'photos',
 		array(
-			'title'      => __( 'Photos', 'buddyboss' ),
+			'title'      => __( 'Photos', 'buddyboss-platform' ),
 			'icon'       => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-image',
@@ -110,7 +110,7 @@ function bb_admin_settings_register_media_feature() {
 			'media',
 			'videos',
 			array(
-				'title'    => __( 'Videos', 'buddyboss' ),
+				'title'    => __( 'Videos', 'buddyboss-platform' ),
 				'icon'     => array(
 					'type'  => 'font',
 					'class' => 'bb-icons-rl bb-icons-rl-video-camera',
@@ -135,7 +135,7 @@ function bb_admin_settings_register_media_feature() {
 			'media',
 			'documents',
 			array(
-				'title'    => __( 'Documents', 'buddyboss' ),
+				'title'    => __( 'Documents', 'buddyboss-platform' ),
 				'icon'     => array(
 					'type'  => 'font',
 					'class' => 'bb-icons-rl bb-icons-rl-file-text',
@@ -159,7 +159,7 @@ function bb_admin_settings_register_media_feature() {
 		'media',
 		'emoji',
 		array(
-			'title'    => __( 'Emoji', 'buddyboss' ),
+			'title'    => __( 'Emoji', 'buddyboss-platform' ),
 			'icon'     => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-smiley',
@@ -182,7 +182,7 @@ function bb_admin_settings_register_media_feature() {
 		'media',
 		'animated_gifs',
 		array(
-			'title'    => __( 'Animated GIFs', 'buddyboss' ),
+			'title'    => __( 'Animated GIFs', 'buddyboss-platform' ),
 			'icon'     => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-gif',
@@ -205,7 +205,7 @@ function bb_admin_settings_register_media_feature() {
 		'media',
 		'security_performance',
 		array(
-			'title' => __( 'Security & Performance', 'buddyboss' ),
+			'title' => __( 'Security & Performance', 'buddyboss-platform' ),
 			'icon'  => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-shield-check',
@@ -219,7 +219,7 @@ function bb_admin_settings_register_media_feature() {
 		'media',
 		'access_controls',
 		array(
-			'title' => __( 'Access Controls', 'buddyboss' ),
+			'title' => __( 'Access Controls', 'buddyboss-platform' ),
 			'icon'  => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-lock',
@@ -248,7 +248,7 @@ function bb_admin_settings_register_media_feature() {
 			'media',
 			'offload_media_link',
 			array(
-				'title'        => __( 'Offload Media', 'buddyboss' ),
+				'title'        => __( 'Offload Media', 'buddyboss-platform' ),
 				'icon'         => array(
 					'type'  => 'font',
 					'class' => 'bb-icons-rl bb-icons-rl-cloud',

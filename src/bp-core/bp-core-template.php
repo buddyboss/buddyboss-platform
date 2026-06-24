@@ -116,7 +116,7 @@ function bp_get_options_title() {
 	$bp = buddypress();
 
 	if ( empty( $bp->bp_options_title ) ) {
-		$bp->bp_options_title = __( 'Options', 'buddyboss' );
+		$bp->bp_options_title = __( 'Options', 'buddyboss-platform' );
 	}
 
 	echo apply_filters( 'bp_get_options_title', esc_attr( $bp->bp_options_title ) );
@@ -143,7 +143,7 @@ function bp_get_directory_title( $component = '' ) {
 		// If none is found, concatenate.
 	} elseif ( isset( buddypress()->{$component}->name ) ) {
 		/* translators: %s: component name. */
-		$title = sprintf( __( '%s Directory', 'buddyboss' ), buddypress()->{$component}->name );
+		$title = sprintf( __( '%s Directory', 'buddyboss-platform' ), buddypress()->{$component}->name );
 	}
 
 	/**
@@ -200,7 +200,7 @@ function bp_comment_author_avatar() {
 					'item_id' => $comment->user_id,
 					'type'    => 'thumb',
 					/* translators: %s: comment author display name. */
-					'alt'     => sprintf( __( 'Profile photo of %s', 'buddyboss' ), bp_core_get_user_displayname( $comment->user_id ) ),
+					'alt'     => sprintf( __( 'Profile photo of %s', 'buddyboss-platform' ), bp_core_get_user_displayname( $comment->user_id ) ),
 				)
 			)
 		);
@@ -225,7 +225,7 @@ function bp_post_author_avatar() {
 					'item_id' => $post->post_author,
 					'type'    => 'thumb',
 					/* translators: %s: post author display name. */
-					'alt'     => sprintf( __( 'Profile photo of %s', 'buddyboss' ), bp_core_get_user_displayname( $post->post_author ) ),
+					'alt'     => sprintf( __( 'Profile photo of %s', 'buddyboss-platform' ), bp_core_get_user_displayname( $post->post_author ) ),
 				)
 			)
 		);
@@ -441,7 +441,7 @@ function bp_format_time( $time = '', $exclude_time = false, $gmt = true ) {
 
 		// Return string formatted with date and time.
 		/* translators: 1: formatted date, 2: formatted time. */
-		$formatted_date = sprintf( esc_html__( '%1$s at %2$s', 'buddyboss' ), $formatted_date, $formatted_time );
+		$formatted_date = sprintf( esc_html__( '%1$s at %2$s', 'buddyboss-platform' ), $formatted_date, $formatted_time );
 	}
 
 	/**
@@ -562,21 +562,21 @@ function bp_search_form_type_select() {
 	$options = array();
 
 	if ( bp_is_active( 'xprofile' ) ) {
-		$options['members'] = __( 'Members', 'buddyboss' );
+		$options['members'] = __( 'Members', 'buddyboss-platform' );
 	}
 
 	if ( bp_is_active( 'groups' ) ) {
-		$options['groups'] = __( 'Groups', 'buddyboss' );
+		$options['groups'] = __( 'Groups', 'buddyboss-platform' );
 	}
 
 	if ( bp_is_active( 'blogs' ) && is_multisite() ) {
-		$options['blogs'] = __( 'Blogs', 'buddyboss' );
+		$options['blogs'] = __( 'Blogs', 'buddyboss-platform' );
 	}
 
-	$options['posts'] = __( 'Posts', 'buddyboss' );
+	$options['posts'] = __( 'Posts', 'buddyboss-platform' );
 
 	// Eventually this won't be needed and a page will be built to integrate all search results.
-	$selection_box  = '<label for="search-which" class="accessibly-hidden">' . __( 'Search these:', 'buddyboss' ) . '</label>';
+	$selection_box  = '<label for="search-which" class="accessibly-hidden">' . __( 'Search these:', 'buddyboss-platform' ) . '</label>';
 	$selection_box .= '<select name="search-which" id="search-which" style="width: auto">';
 
 	/**
@@ -696,7 +696,7 @@ function bp_get_search_default_text( $component = '' ) {
 		$component = bp_current_component();
 	}
 
-	$default_text = __( 'Search anything&hellip;', 'buddyboss' );
+	$default_text = __( 'Search anything&hellip;', 'buddyboss-platform' );
 
 	// Most of the time, $component will be the actual component ID.
 	if ( ! empty( $component ) ) {
@@ -905,7 +905,7 @@ function bp_create_excerpt( $text, $length = 225, $options = array() ) {
 	$r = bp_parse_args(
 		$options,
 		array(
-			'ending'            => __( ' [&hellip;]', 'buddyboss' ),
+			'ending'            => __( ' [&hellip;]', 'buddyboss-platform' ),
 			'exact'             => false,
 			'html'              => true,
 			'filter_shortcodes' => $filter_shortcodes_default,
@@ -1278,7 +1278,7 @@ function bp_get_email_subject( $args = array() ) {
 		array(
 			'before'  => '[',
 			'after'   => ']',
-			'default' => __( 'Community', 'buddyboss' ),
+			'default' => __( 'Community', 'buddyboss-platform' ),
 			'text'    => '',
 		),
 		'get_email_subject'
@@ -3601,7 +3601,7 @@ function bp_get_title_parts( $seplocation = 'right' ) {
 		$current_component = bp_current_component();
 
 		// No current component (when does this happen?).
-		$bp_title_parts = array( __( 'Directory', 'buddyboss' ) );
+		$bp_title_parts = array( __( 'Directory', 'buddyboss-platform' ) );
 
 		if ( ! empty( $current_component ) ) {
 			$bp_title_parts = array( bp_get_directory_title( $current_component ) );
@@ -3609,19 +3609,19 @@ function bp_get_title_parts( $seplocation = 'right' ) {
 
 		// Sign up page.
 	} elseif ( bp_is_register_page() ) {
-		$bp_title_parts = array( __( 'Create an Account', 'buddyboss' ) );
+		$bp_title_parts = array( __( 'Create an Account', 'buddyboss-platform' ) );
 
 		// Activation page.
 	} elseif ( bp_is_activation_page() ) {
-		$bp_title_parts = array( __( 'Activate Your Account', 'buddyboss' ) );
+		$bp_title_parts = array( __( 'Activate Your Account', 'buddyboss-platform' ) );
 
 		// Group creation page.
 	} elseif ( bp_is_group_create() ) {
-		$bp_title_parts = array( __( 'Create a Group', 'buddyboss' ) );
+		$bp_title_parts = array( __( 'Create a Group', 'buddyboss-platform' ) );
 
 		// Blog creation page.
 	} elseif ( bp_is_create_blog() ) {
-		$bp_title_parts = array( __( 'Create a Site', 'buddyboss' ) );
+		$bp_title_parts = array( __( 'Create a Site', 'buddyboss-platform' ) );
 	}
 
 	// Strip spans.

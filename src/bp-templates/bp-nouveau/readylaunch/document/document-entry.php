@@ -110,7 +110,7 @@ data-group-id="<?php bp_document_group_id(); ?>" data-activity-id="<?php echo es
 data-id="<?php echo esc_attr( $document_id ); ?>" data-parent-id="<?php bp_document_parent_id(); ?>"
 id="div-listing-<?php echo esc_attr( $document_id ); ?>">
 	<div class="media-folder_icon">
-		<a href="<?php echo esc_url( $document_folder_link ); ?>" aria-label="<?php esc_attr_e( 'View document', 'buddyboss' ); ?>"> <i class="<?php echo esc_attr( $svg_icon ); ?>"></i> </a>
+		<a href="<?php echo esc_url( $document_folder_link ); ?>" aria-label="<?php esc_attr_e( 'View document', 'buddyboss-platform' ); ?>"> <i class="<?php echo esc_attr( $svg_icon ); ?>"></i> </a>
 	</div>
 	<div class="media-folder_details">
 		<a class="media-folder_name <?php echo esc_attr( $class ); ?>" href="<?php echo esc_url( $document_folder_link ); ?>"
@@ -143,16 +143,16 @@ id="div-listing-<?php echo esc_attr( $document_id ); ?>">
 			<?php
 			if ( $attachment_id ) {
 				?>
-				<small class="error-box"><?php esc_html_e( 'Following special characters are not supported:<br/> ? [ ] / \\\\ = < > : ; , \' " & $ # * ( ) | ~ ` ! { } % + {space}', 'buddyboss' ); ?></small>
+				<small class="error-box"><?php esc_html_e( 'Following special characters are not supported:<br/> ? [ ] / \\\\ = < > : ; , \' " & $ # * ( ) | ~ ` ! { } % + {space}', 'buddyboss-platform' ); ?></small>
 			<?php } else { ?>
-				<small class="error-box"><?php esc_html_e( 'Following special characters are not supported:<br/> \ / ? % * : | " < >', 'buddyboss' ); ?></small>
+				<small class="error-box"><?php esc_html_e( 'Following special characters are not supported:<br/> \ / ? % * : | " < >', 'buddyboss-platform' ); ?></small>
 				<?php
 			}
 			if ( wp_is_mobile() ) {
 				?>
-				<a href="#" class="name_edit_cancel button small"><?php esc_html_e( 'Cancel', 'buddyboss' ); ?></a>
+				<a href="#" class="name_edit_cancel button small"><?php esc_html_e( 'Cancel', 'buddyboss-platform' ); ?></a>
 				<a href="#"
-				class="name_edit_save button small pull-right"><?php esc_html_e( 'Save', 'buddyboss' ); ?></a>
+				class="name_edit_save button small pull-right"><?php esc_html_e( 'Save', 'buddyboss-platform' ); ?></a>
 				<?php
 			}
 			?>
@@ -168,7 +168,7 @@ id="div-listing-<?php echo esc_attr( $document_id ); ?>">
 					$user_domain .= bp_get_document_slug();
 				}
 				?>
-				<span class="media-folder_author"><?php esc_html_e( 'by ', 'buddyboss' ); ?>
+				<span class="media-folder_author"><?php esc_html_e( 'by ', 'buddyboss-platform' ); ?>
 					<?php
 					if ( ! empty( $user_domain ) ) {
 						?>
@@ -203,11 +203,11 @@ id="div-listing-<?php echo esc_attr( $document_id ); ?>">
 					$group_status = bp_get_group_status( $group );
 					?>
 					<span class="media-folder_group"><?php echo wp_kses_post( $group_link ); ?></span>
-					<span class="media-folder_status"><?php echo esc_html__( ucfirst( $group_status ), 'buddyboss' ); // phpcs:ignore WordPress.WP.I18n.NonSingularStringLiteralText ?></span>
+					<span class="media-folder_status"><?php echo esc_html__( ucfirst( $group_status ), 'buddyboss-platform' ); // phpcs:ignore WordPress.WP.I18n.NonSingularStringLiteralText ?></span>
 					<?php
 				} else {
 					?>
-					<span class="media-folder_group"><?php esc_html_e( '-', 'buddyboss' ); ?></span>
+					<span class="media-folder_group"><?php esc_html_e( '-', 'buddyboss-platform' ); ?></span>
 					<?php
 				}
 				?>
@@ -223,7 +223,7 @@ id="div-listing-<?php echo esc_attr( $document_id ); ?>">
 				$group_id = bp_get_document_group_id();
 				if ( $group_id > 0 ) {
 					?>
-					<span class="bp-tooltip" data-bp-tooltip-pos="down" data-bp-tooltip="<?php esc_attr_e( 'Based on group privacy', 'buddyboss' ); ?>"><?php bp_document_privacy(); ?></span>
+					<span class="bp-tooltip" data-bp-tooltip-pos="down" data-bp-tooltip="<?php esc_attr_e( 'Based on group privacy', 'buddyboss-platform' ); ?>"><?php bp_document_privacy(); ?></span>
 					<?php
 				} else {
 					?>
@@ -252,7 +252,7 @@ id="div-listing-<?php echo esc_attr( $document_id ); ?>">
 		<?php
 		if ( $show ) {
 			?>
-			<a href="#" class="media-folder_action__anchor bb_more_options_action" aria-label="<?php esc_attr_e( 'More actions', 'buddyboss' ); ?>">
+			<a href="#" class="media-folder_action__anchor bb_more_options_action" aria-label="<?php esc_attr_e( 'More actions', 'buddyboss-platform' ); ?>">
 				<i class="bb-icons-rl-dots-three"></i>
 			</a>
 			<div class="media-folder_action__list bb_more_dropdown bb_more_options_list">
@@ -262,10 +262,10 @@ id="div-listing-<?php echo esc_attr( $document_id ); ?>">
 					if ( $can_download ) {
 						?>
 						<li class="download_file">
-							<a href="<?php echo esc_url( $download_link ); ?>"><?php esc_html_e( 'Download', 'buddyboss' ); ?></a>
+							<a href="<?php echo esc_url( $download_link ); ?>"><?php esc_html_e( 'Download', 'buddyboss-platform' ); ?></a>
 						</li>
 						<li class="bb_rl_copy_download_file_url">
-							<a href="<?php echo esc_url( $download_link ); ?>"><?php esc_html_e( 'Copy Download Link', 'buddyboss' ); ?></a>
+							<a href="<?php echo esc_url( $download_link ); ?>"><?php esc_html_e( 'Copy Download Link', 'buddyboss-platform' ); ?></a>
 						</li>
 						<?php
 					}
@@ -273,15 +273,15 @@ id="div-listing-<?php echo esc_attr( $document_id ); ?>">
 						$privacy = ( 0 === $group_id && 0 === bp_get_document_parent_id() ) ? 'data-privacy="' . esc_attr( bp_get_db_document_privacy() ) . '"' : '';
 						?>
 						<li class="bb-rl-edit-file">
-							<a href="#" data-type="<?php echo esc_attr( $document_type ); ?>" class="ac-document-edit" <?php echo wp_kses_post( $privacy ); ?>><?php esc_html_e( 'Edit', 'buddyboss' ); ?></a>
+							<a href="#" data-type="<?php echo esc_attr( $document_type ); ?>" class="ac-document-edit" <?php echo wp_kses_post( $privacy ); ?>><?php esc_html_e( 'Edit', 'buddyboss-platform' ); ?></a>
 						</li>
 						<?php
 						if ( $can_move ) {
 							if ( $is_comment_doc ) {
 								?>
 								<li class="move_file disabled-move" data-balloon-pos="down"
-									data-balloon="<?php esc_html_e( 'Document inherits activity privacy in comment. You are not allowed to move.', 'buddyboss' ); ?>">
-									<a href="#"><?php esc_html_e( 'Move', 'buddyboss' ); ?></a>
+									data-balloon="<?php esc_html_e( 'Document inherits activity privacy in comment. You are not allowed to move.', 'buddyboss-platform' ); ?>">
+									<a href="#"><?php esc_html_e( 'Move', 'buddyboss-platform' ); ?></a>
 								</li>
 								<?php
 							} else {
@@ -292,7 +292,7 @@ id="div-listing-<?php echo esc_attr( $document_id ); ?>">
 									data-id="<?php echo esc_attr( $document_id ); ?>"
 									data-type="<?php echo esc_attr( $move_type ); ?>"
 									id="<?php echo esc_attr( $move_id ); ?>"
-									class="<?php echo esc_attr( $move_class ); ?>"><?php esc_html_e( 'Move', 'buddyboss' ); ?></a>
+									class="<?php echo esc_attr( $move_class ); ?>"><?php esc_html_e( 'Move', 'buddyboss-platform' ); ?></a>
 								</li>
 								<?php
 							}
@@ -316,7 +316,7 @@ id="div-listing-<?php echo esc_attr( $document_id ); ?>">
 							data-item-attachment-id="<?php echo esc_attr( $attachment_id ); ?>"
 							data-item-id="<?php echo esc_attr( $document_id ); ?>"
 							data-type="<?php echo esc_attr( $document_type ); ?>"
-							href="#"><?php esc_html_e( 'Delete', 'buddyboss' ); ?></a>
+							href="#"><?php esc_html_e( 'Delete', 'buddyboss-platform' ); ?></a>
 						</li>
 						<?php
 					}

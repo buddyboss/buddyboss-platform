@@ -39,7 +39,7 @@ function bp_members_admin_bar_my_account_menu() {
 			array(
 				'id'    => $bp->my_account_menu_id,
 				'group' => true,
-				'title' => __( 'Edit My Profile', 'buddyboss' ),
+				'title' => __( 'Edit My Profile', 'buddyboss-platform' ),
 				'href'  => bp_loggedin_user_domain(),
 				'meta'  => array(
 					'class' => 'ab-sub-secondary',
@@ -56,7 +56,7 @@ function bp_members_admin_bar_my_account_menu() {
 		$wp_admin_bar->add_menu(
 			array(
 				'id'    => 'bp-login',
-				'title' => __( 'Log In', 'buddyboss' ),
+				'title' => __( 'Log In', 'buddyboss-platform' ),
 				'href'  => wp_login_url( bp_get_requested_url() ),
 			)
 		);
@@ -66,7 +66,7 @@ function bp_members_admin_bar_my_account_menu() {
 			$wp_admin_bar->add_menu(
 				array(
 					'id'    => 'bp-register',
-					'title' => __( 'Register', 'buddyboss' ),
+					'title' => __( 'Register', 'buddyboss-platform' ),
 					'href'  => bp_get_signup_page(),
 				)
 			);
@@ -105,7 +105,7 @@ function bp_members_admin_bar_user_admin_menu() {
 	$wp_admin_bar->add_menu(
 		array(
 			'id'    => $bp->user_admin_menu_id,
-			'title' => __( 'Edit Member', 'buddyboss' ),
+			'title' => __( 'Edit Member', 'buddyboss-platform' ),
 			'href'  => add_query_arg(
 				array(
 					'redirect_to' => urlencode( bp_get_members_component_link( 'profile', 'edit' ) ),
@@ -121,7 +121,7 @@ function bp_members_admin_bar_user_admin_menu() {
 			array(
 				'parent' => $bp->user_admin_menu_id,
 				'id'     => $bp->user_admin_menu_id . '-edit-profile',
-				'title'  => __( 'Edit Profile', 'buddyboss' ),
+				'title'  => __( 'Edit Profile', 'buddyboss-platform' ),
 				'href'   => add_query_arg(
 					array(
 						'redirect_to' => urlencode( bp_get_members_component_link( 'profile', 'edit' ) ),
@@ -137,7 +137,7 @@ function bp_members_admin_bar_user_admin_menu() {
 				array(
 					'parent' => $bp->user_admin_menu_id,
 					'id'     => $bp->user_admin_menu_id . '-change-avatar',
-					'title'  => __( 'Edit Profile Photo', 'buddyboss' ),
+					'title'  => __( 'Edit Profile Photo', 'buddyboss-platform' ),
 					'href'   => add_query_arg(
 						array(
 							'redirect_to' => urlencode( bp_get_members_component_link( 'profile', 'change-avatar' ) ),
@@ -154,7 +154,7 @@ function bp_members_admin_bar_user_admin_menu() {
 				array(
 					'parent' => $bp->user_admin_menu_id,
 					'id'     => $bp->user_admin_menu_id . '-change-cover-image',
-					'title'  => __( 'Edit Cover Photo', 'buddyboss' ),
+					'title'  => __( 'Edit Cover Photo', 'buddyboss-platform' ),
 					'href'   => add_query_arg(
 						array(
 							'redirect_to' => urlencode( bp_get_members_component_link( 'profile', 'change-cover-image' ) ),
@@ -182,7 +182,7 @@ function bp_members_admin_bar_user_admin_menu() {
 			array(
 				'parent' => $bp->user_admin_menu_id,
 				'id'     => $bp->user_admin_menu_id . '-delete-user',
-				'title'  => __( 'Delete Account', 'buddyboss' ),
+				'title'  => __( 'Delete Account', 'buddyboss-platform' ),
 				'href'   => add_query_arg(
 					array(
 						'redirect_to' => urlencode( bp_displayed_user_domain() . 'settings/delete-account/' ),

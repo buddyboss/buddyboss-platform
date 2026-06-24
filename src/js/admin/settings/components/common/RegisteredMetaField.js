@@ -204,7 +204,7 @@ function AjaxMultiSelectField( { field, value, onChange, disabled } ) {
 										handleRemove( id );
 									} }
 									disabled={ disabled }
-									aria-label={ __( 'Remove', 'buddyboss' ) }
+									aria-label={ __( 'Remove', 'buddyboss-platform' ) }
 								>
 									<i className="bb-icons-rl-x"></i>
 								</button>

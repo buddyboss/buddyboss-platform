@@ -43,7 +43,7 @@ function messages_screen_conversation() {
 
 	if ( empty( $thread_id ) || ! messages_is_valid_thread( $thread_id ) ) {
 		if ( is_user_logged_in() ) {
-			bp_core_add_message( __( 'The conversation you tried to access is no longer available', 'buddyboss' ), 'error' );
+			bp_core_add_message( __( 'The conversation you tried to access is no longer available', 'buddyboss-platform' ), 'error' );
 		}
 
 		bp_core_redirect( trailingslashit( bp_displayed_user_domain() . bp_get_messages_slug() ) );
@@ -58,7 +58,7 @@ function messages_screen_conversation() {
 
 			// Redirect away.
 		} else {
-			bp_core_add_message( __( 'You do not have access to that conversation.', 'buddyboss' ), 'error' );
+			bp_core_add_message( __( 'You do not have access to that conversation.', 'buddyboss-platform' ), 'error' );
 			bp_core_redirect( trailingslashit( bp_loggedin_user_domain() . bp_get_messages_slug() ) );
 		}
 	}
@@ -70,7 +70,7 @@ function messages_screen_conversation() {
 	$count    = bp_get_total_unread_messages_count();
 	$class    = ( 0 === $count ) ? 'no-count' : 'count';
 	/* translators: 1: CSS class for the count badge, 2: unread message count. */
-	$nav_name = sprintf( __( 'Messages <span class="%1$s">%2$s</span>', 'buddyboss' ), esc_attr( $class ), bp_core_number_format( $count ) );
+	$nav_name = sprintf( __( 'Messages <span class="%1$s">%2$s</span>', 'buddyboss-platform' ), esc_attr( $class ), bp_core_number_format( $count ) );
 
 	// Edit the Navigation name.
 	$bp->members->nav->edit_nav(

@@ -22,8 +22,8 @@ class BP_Core_Whos_Online_Widget extends WP_Widget {
 	 * @since BuddyPress 1.5.0
 	 */
 	public function __construct() {
-		$name        = __( '(BB) Who\'s Online', 'buddyboss' );
-		$description = __( 'Profile photos of online users', 'buddyboss' );
+		$name        = __( '(BB) Who\'s Online', 'buddyboss-platform' );
+		$description = __( 'Profile photos of online users', 'buddyboss-platform' );
 		parent::__construct(
 			false,
 			$name,
@@ -117,14 +117,14 @@ class BP_Core_Whos_Online_Widget extends WP_Widget {
 				$online_count = $members_template->total_member_count;
 				if ( $online_count > (int) $settings['max_members'] ) {
 					?>
-					<div class="more-block"><a href="<?php bp_members_directory_permalink(); ?>" class="count-more"><?php esc_html_e( 'See all', 'buddyboss' ); ?><i class="bb-icon-l bb-icon-angle-right"></i></a></div>
+					<div class="more-block"><a href="<?php bp_members_directory_permalink(); ?>" class="count-more"><?php esc_html_e( 'See all', 'buddyboss-platform' ); ?><i class="bb-icon-l bb-icon-angle-right"></i></a></div>
 					<?php
 				}
 			} else {
 				?>
 
 				<div class="widget-error widget-error-users">
-					<?php esc_html_e( 'There are no users currently online', 'buddyboss' ); ?>
+					<?php esc_html_e( 'There are no users currently online', 'buddyboss-platform' ); ?>
 				</div>
 
 				<?php
@@ -174,13 +174,13 @@ class BP_Core_Whos_Online_Widget extends WP_Widget {
 				$connection_count = $members_template->total_member_count;
 				if ( $connection_count > (int) $settings['max_members'] ) {
 					?>
-					<div class="more-block"><a href="<?php bp_members_directory_permalink(); ?>" class="count-more"><?php esc_html_e( 'See all', 'buddyboss' ); ?><i class="bb-icon-l bb-icon-angle-right"></i></a></div>
+					<div class="more-block"><a href="<?php bp_members_directory_permalink(); ?>" class="count-more"><?php esc_html_e( 'See all', 'buddyboss-platform' ); ?><i class="bb-icon-l bb-icon-angle-right"></i></a></div>
 				<?php } ?>
 
 			<?php } else { ?>
 
 				<div class="widget-error widget-error-connections">
-					<?php esc_html_e( 'There are no users currently online', 'buddyboss' ); ?>
+					<?php esc_html_e( 'There are no users currently online', 'buddyboss-platform' ); ?>
 				</div>
 
 				<?php
@@ -189,7 +189,7 @@ class BP_Core_Whos_Online_Widget extends WP_Widget {
 			$connection_html = ob_get_clean();
 		}
 
-		$refresh_online_users = '<a href="" class="bs-widget-reload bs-heartbeat-reload hide" aria-label="' . esc_attr__( 'Reload', 'buddyboss' ) . '"><i class="bb-icon-spin6"></i></a>';
+		$refresh_online_users = '<a href="" class="bs-widget-reload bs-heartbeat-reload hide" aria-label="' . esc_attr__( 'Reload', 'buddyboss-platform' ) . '"><i class="bb-icon-spin6"></i></a>';
 
 		echo $args['before_widget'] . $args['before_title'] . $title . $refresh_online_users . $args['after_title'];
 
@@ -198,7 +198,7 @@ class BP_Core_Whos_Online_Widget extends WP_Widget {
 		?>
 		<div class="item-options bb-online-members-tabs" id="who-online-members-list-options">
 			<a href="javascript:void(0);" id="online-members" data-content="boss_whos_online_widget_heartbeat" class="online-members-count">
-				<?php esc_html_e( 'Online', 'buddyboss' ); ?>
+				<?php esc_html_e( 'Online', 'buddyboss-platform' ); ?>
 				<span class="widget-num-count"><?php echo esc_html( $online_count ); ?></span>
 			</a>
 			<?php
@@ -206,7 +206,7 @@ class BP_Core_Whos_Online_Widget extends WP_Widget {
 				?>
 				<span class="bp-separator" role="separator"><?php echo esc_html( $separator ); ?></span>
 				<a href="javascript:void(0);" id="connection-members" data-content="boss_whos_online_widget_connections" class="online-friends-count">
-					<?php esc_html_e( 'Connections', 'buddyboss' ); ?>
+					<?php esc_html_e( 'Connections', 'buddyboss-platform' ); ?>
 					<span class="widget-num-count"><?php echo esc_html( $connection_count ); ?></span>
 				</a>
 				<?php
@@ -267,14 +267,14 @@ class BP_Core_Whos_Online_Widget extends WP_Widget {
 
 		<p>
 			<label for="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>">
-				<?php esc_html_e( 'Title:', 'buddyboss' ); ?>
+				<?php esc_html_e( 'Title:', 'buddyboss-platform' ); ?>
 				<input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'title' ) ); ?>" type="text" value="<?php echo esc_attr( $title ); ?>" style="width: 100%" />
 			</label>
 		</p>
 
 		<p>
 			<label for="<?php echo esc_attr( $this->get_field_id( 'max_members' ) ); ?>">
-				<?php esc_html_e( 'Max members to show:', 'buddyboss' ); ?>
+				<?php esc_html_e( 'Max members to show:', 'buddyboss-platform' ); ?>
 				<input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'max_members' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'max_members' ) ); ?>" type="number" value="<?php echo esc_attr( $max_members ); ?>" style="width: 30%" />
 			</label>
 		</p>
@@ -294,7 +294,7 @@ class BP_Core_Whos_Online_Widget extends WP_Widget {
 		return bp_parse_args(
 			$instance,
 			array(
-				'title'       => __( "Who's Online", 'buddyboss' ),
+				'title'       => __( "Who's Online", 'buddyboss-platform' ),
 				'max_members' => 15,
 			),
 			'members_widget_settings'
@@ -403,13 +403,13 @@ function buddyboss_theme_whos_online_widget_heartbeat( $response = array(), $dat
 		$online_count = $members_template->total_member_count;
 		if ( $online_count > $number ) {
 			?>
-			<div class="more-block"><a href="<?php bp_members_directory_permalink(); ?>" class="count-more"><?php esc_html_e( 'See all', 'buddyboss' ); ?><i class="bb-icon-l bb-icon-angle-right"></i></a></div>
+			<div class="more-block"><a href="<?php bp_members_directory_permalink(); ?>" class="count-more"><?php esc_html_e( 'See all', 'buddyboss-platform' ); ?><i class="bb-icon-l bb-icon-angle-right"></i></a></div>
 			<?php
 		}
 	} else {
 		?>
 			<div class="widget-error widget-error-users">
-				<?php esc_html_e( 'There are no users currently online', 'buddyboss' ); ?>
+				<?php esc_html_e( 'There are no users currently online', 'buddyboss-platform' ); ?>
 			</div>
 		<?php
 	}
@@ -455,13 +455,13 @@ function buddyboss_theme_whos_online_widget_heartbeat( $response = array(), $dat
 		$connection_count = $members_template->total_member_count;
 		if ( $connection_count > $number ) {
 			?>
-			<div class="more-block"><a href="<?php bp_members_directory_permalink(); ?>" class="count-more"><?php esc_html_e( 'See all', 'buddyboss' ); ?><i class="bb-icon-l bb-icon-angle-right"></i></a></div>
+			<div class="more-block"><a href="<?php bp_members_directory_permalink(); ?>" class="count-more"><?php esc_html_e( 'See all', 'buddyboss-platform' ); ?><i class="bb-icon-l bb-icon-angle-right"></i></a></div>
 			<?php
 		}
 	} else {
 		?>
 		<div class="widget-error widget-error-connections">
-			<?php esc_html_e( 'There are no users currently online', 'buddyboss' ); ?>
+			<?php esc_html_e( 'There are no users currently online', 'buddyboss-platform' ); ?>
 		</div>
 		<?php
 	}

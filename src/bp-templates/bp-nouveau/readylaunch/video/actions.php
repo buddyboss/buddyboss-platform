@@ -47,8 +47,8 @@ if (
 
 	<header class="bb-member-media-header bb-videos-actions" style="display:none;">
 		<div class="bb-media-meta bb-videos-meta">
-			<a data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Select All', 'buddyboss' ); ?>" class="bb-select bp-tooltip" id="bb-select-deselect-all-video" href="#"><i class="bb-icons-rl-check-circle"></i></a>
-			<a data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Delete', 'buddyboss' ); ?>" class="bb-delete bp-tooltip" id="bb-delete-video" href="#" disabled="disabled"><i class="bb-icons-rl-trash"></i></a>
+			<a data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Select All', 'buddyboss-platform' ); ?>" class="bb-select bp-tooltip" id="bb-select-deselect-all-video" href="#"><i class="bb-icons-rl-check-circle"></i></a>
+			<a data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Delete', 'buddyboss-platform' ); ?>" class="bb-delete bp-tooltip" id="bb-delete-video" href="#" disabled="disabled"><i class="bb-icons-rl-trash"></i></a>
 		</div>
 	</header>
 

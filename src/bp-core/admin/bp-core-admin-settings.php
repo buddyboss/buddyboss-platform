@@ -23,7 +23,7 @@ function bp_admin_setting_callback_activity_akismet() {
 	?>
 
 	<input id="_bp_enable_akismet" name="_bp_enable_akismet" type="checkbox" value="1" <?php checked( bp_is_akismet_active( true ) ); ?> />
-	<label for="_bp_enable_akismet"><?php esc_html_e( 'Enable Akismet spam protection for activity feed', 'buddyboss' ); ?></label>
+	<label for="_bp_enable_akismet"><?php esc_html_e( 'Enable Akismet spam protection for activity feed', 'buddyboss-platform' ); ?></label>
 
 	<?php
 }
@@ -37,7 +37,7 @@ function bp_admin_setting_callback_blogforum_comments() {
 	?>
 
 	<input id="bp-disable-blogforum-comments" name="bp-disable-blogforum-comments" type="checkbox" value="1" <?php checked( ! bp_disable_blogforum_comments( false ) ); ?> />
-	<label for="bp-disable-blogforum-comments"><?php esc_html_e( 'Allow activity feed commenting on blog posts, custom post types, and forum discussions', 'buddyboss' ); ?></label>
+	<label for="bp-disable-blogforum-comments"><?php esc_html_e( 'Allow activity feed commenting on blog posts, custom post types, and forum discussions', 'buddyboss-platform' ); ?></label>
 
 	<?php
 }
@@ -64,7 +64,7 @@ function bp_posts_in_activity_tutorial() {
 			)
 		);
 		?>
-		"><?php esc_html_e( 'View Tutorial', 'buddyboss' ); ?></a>
+		"><?php esc_html_e( 'View Tutorial', 'buddyboss-platform' ); ?></a>
 	</p>
 	<?php
 }
@@ -78,7 +78,7 @@ function bp_admin_setting_callback_enable_activity_link_preview() {
 	?>
 
 	<input id="_bp_enable_activity_link_preview" name="_bp_enable_activity_link_preview" type="checkbox" value="1" <?php checked( bp_is_activity_link_preview_active( false ) ); ?> />
-	<label for="_bp_enable_activity_link_preview"><?php esc_html_e( 'When links are used in activity posts, display an image and excerpt from the site', 'buddyboss' ); ?></label>
+	<label for="_bp_enable_activity_link_preview"><?php esc_html_e( 'When links are used in activity posts, display an image and excerpt from the site', 'buddyboss-platform' ); ?></label>
 
 	<?php
 }
@@ -105,7 +105,7 @@ function bp_activity_settings_tutorial() {
 				)
 			);
 		?>
-		"><?php esc_html_e( 'View Tutorial', 'buddyboss' ); ?></a>
+		"><?php esc_html_e( 'View Tutorial', 'buddyboss-platform' ); ?></a>
 	</p>
 	<?php
 }
@@ -140,7 +140,7 @@ function bp_core_admin_settings() {
 	?>
 
 	<div class="wrap">
-		<h2 class="nav-tab-wrapper"><?php bp_core_admin_tabs( __( 'Settings', 'buddyboss' ) ); ?></h2>
+		<h2 class="nav-tab-wrapper"><?php bp_core_admin_tabs( __( 'Settings', 'buddyboss-platform' ) ); ?></h2>
 		<div class="nav-settings-subsubsub">
 			<ul class="subsubsub">
 				<?php bp_core_settings_admin_tabs(); ?>
@@ -176,7 +176,7 @@ function bp_core_admin_settings() {
 function bp_core_admin_buddyboss_app() {
 	?>
 	<div class="wrap">
-		<h2 class="nav-tab-wrapper"><?php bp_core_admin_tabs( __( 'BuddyBoss App', 'buddyboss' ) ); ?></h2>
+		<h2 class="nav-tab-wrapper"><?php bp_core_admin_tabs( __( 'BuddyBoss App', 'buddyboss-platform' ) ); ?></h2>
 		<?php require buddypress()->plugin_dir . 'bp-core/admin/templates/about-buddyboss-app.php'; ?>
 	</div>
 	<?php
@@ -259,7 +259,7 @@ function bp_feed_settings_callback_post_type( $args ) {
 	// Description for the last option of CPT.
 	if ( true === $args['description'] && 'post' !== $post_type ) {
 		?>
-		<p class="description" style="margin-bottom: 10px;"><?php esc_html_e( 'Select which custom post types show in the activity feed when members publish them. For each custom post type, you can select whether or not to show comments in these activity posts (if comments are supported).', 'buddyboss' ); ?></p>
+		<p class="description" style="margin-bottom: 10px;"><?php esc_html_e( 'Select which custom post types show in the activity feed when members publish them. For each custom post type, you can select whether or not to show comments in these activity posts (if comments are supported).', 'buddyboss-platform' ); ?></p>
 		<?php
 	}
 	?>
@@ -273,14 +273,14 @@ function bp_feed_settings_callback_post_type( $args ) {
 		<?php checked( bp_is_post_type_feed_enable( $post_type, false ) ); ?>
 	/>
 	<label for="<?php echo esc_attr( $option_name ); ?>">
-		<?php echo 'post' === $post_type ? esc_html__( 'WordPress Posts', 'buddyboss' ) : $post_type_obj->labels->name; ?>
+		<?php echo 'post' === $post_type ? esc_html__( 'WordPress Posts', 'buddyboss-platform' ) : $post_type_obj->labels->name; ?>
 	</label>
 	<?php
 
 	// Description for the WordPress Blog Posts
 	if ( 'post' === $post_type ) {
 		?>
-		<p class="description"><?php esc_html_e( 'When members publish new blog posts, show them in the activity feed.', 'buddyboss' ); ?></p>
+		<p class="description"><?php esc_html_e( 'When members publish new blog posts, show them in the activity feed.', 'buddyboss-platform' ); ?></p>
 		<?php
 	}
 }
@@ -306,7 +306,7 @@ function bb_feed_settings_callback_post_type_comments( $args ) {
 				<?php
 				printf(
 				/* translators: %s: comment post type */
-					esc_html__( 'Comments are not supported for %s.', 'buddyboss' ),
+					esc_html__( 'Comments are not supported for %s.', 'buddyboss-platform' ),
 					esc_html( $post_type_obj->labels->name )
 				);
 				?>
@@ -327,14 +327,14 @@ function bb_feed_settings_callback_post_type_comments( $args ) {
 	/>
 	<label for="<?php echo esc_attr( $option_name ); ?>">
 		<?php /* translators: %s: custom post type label. */ ?>
-		<?php echo 'post' === $post_type ? esc_html__( 'Enable WordPress Post comments in the activity feed', 'buddyboss' ) : sprintf( esc_html__( 'Enable %s comments in the activity feed.', 'buddyboss' ), esc_html( $post_type_obj->labels->name ) ); ?>
+		<?php echo 'post' === $post_type ? esc_html__( 'Enable WordPress Post comments in the activity feed', 'buddyboss-platform' ) : sprintf( esc_html__( 'Enable %s comments in the activity feed.', 'buddyboss-platform' ), esc_html( $post_type_obj->labels->name ) ); ?>
 	</label>
 	<?php
 
 	// Description for the WordPress Blog Posts.
 	if ( 'post' === $post_type ) {
 		?>
-		<p class="description"><?php esc_html_e( 'Allow members to view and create comments to blog posts in the activity feed.', 'buddyboss' ); ?></p>
+		<p class="description"><?php esc_html_e( 'Allow members to view and create comments to blog posts in the activity feed.', 'buddyboss-platform' ); ?></p>
 		<?php
 	}
 }
@@ -390,7 +390,7 @@ function bp_admin_moderation_block_setting_tutorial() {
 				)
 			);
 		?>
-		"><?php esc_html_e( 'View Tutorial', 'buddyboss' ); ?></a>
+		"><?php esc_html_e( 'View Tutorial', 'buddyboss-platform' ); ?></a>
 	</p>
 	<?php
 }
@@ -417,7 +417,7 @@ function bp_admin_moderation_report_setting_tutorial() {
 				)
 			);
 		?>
-		"><?php esc_html_e( 'View Tutorial', 'buddyboss' ); ?></a>
+		"><?php esc_html_e( 'View Tutorial', 'buddyboss-platform' ); ?></a>
 	</p>
 	<?php
 }
@@ -529,7 +529,7 @@ function bb_admin_performance_general_setting_tutorial() {
 			)
 		);
 		?>
-		"><?php esc_html_e( 'View Tutorial', 'buddyboss' ); ?></a>
+		"><?php esc_html_e( 'View Tutorial', 'buddyboss-platform' ); ?></a>
 	</p>
 	<?php
 }
@@ -556,7 +556,7 @@ function bb_admin_performance_activity_setting_tutorial() {
 			)
 		);
 		?>
-		"><?php esc_html_e( 'View Tutorial', 'buddyboss' ); ?></a>
+		"><?php esc_html_e( 'View Tutorial', 'buddyboss-platform' ); ?></a>
 	</p>
 	<?php
 }

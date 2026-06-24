@@ -344,7 +344,7 @@ class BB_Mothership_Loader {
 				}
 
 				// Translators: %s is the response error message.
-				$error_html = esc_html__( 'Migrate License activation failed: %s', 'buddyboss' );
+				$error_html = esc_html__( 'Migrate License activation failed: %s', 'buddyboss-platform' );
 
 				try {
 					$response = LicenseActivations::activate( $plugin_id, $license_data['license_key'], $domain );

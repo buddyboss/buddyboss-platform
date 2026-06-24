@@ -202,8 +202,8 @@ if ( ! class_exists( 'BBP_Admin' ) ) :
 					if ( current_user_can( 'bbp_tools_repair_page' ) ) {
 						$hooks[] = add_submenu_page(
 							'buddyboss-platform',
-							__( 'Repair Forums', 'buddyboss' ),
-							__( 'Forum Repair', 'buddyboss' ),
+							__( 'Repair Forums', 'buddyboss-platform' ),
+							__( 'Forum Repair', 'buddyboss-platform' ),
 							$this->minimum_capability,
 							'bbp-repair',
 							'bbp_admin_repair'
@@ -213,8 +213,8 @@ if ( ! class_exists( 'BBP_Admin' ) ) :
 					if ( current_user_can( 'bbp_tools_import_page' ) ) {
 						$hooks[] = add_submenu_page(
 							'buddyboss-platform',
-							__( 'Import Forums', 'buddyboss' ),
-							__( 'Forum Import', 'buddyboss' ),
+							__( 'Import Forums', 'buddyboss-platform' ),
+							__( 'Forum Import', 'buddyboss-platform' ),
 							$this->minimum_capability,
 							'bbp-converter',
 							'bbp_converter_settings'
@@ -234,8 +234,8 @@ if ( ! class_exists( 'BBP_Admin' ) ) :
 
 			add_submenu_page(
 				'index.php',
-				__( 'Update Forums', 'buddyboss' ),
-				__( 'Update Forums', 'buddyboss' ),
+				__( 'Update Forums', 'buddyboss-platform' ),
+				__( 'Update Forums', 'buddyboss-platform' ),
 				'manage_network',
 				'bbp-update',
 				array( $this, 'update_screen' )
@@ -257,8 +257,8 @@ if ( ! class_exists( 'BBP_Admin' ) ) :
 
 			add_submenu_page(
 				'upgrade.php',
-				__( 'Update Forums', 'buddyboss' ),
-				__( 'Update Forums', 'buddyboss' ),
+				__( 'Update Forums', 'buddyboss-platform' ),
+				__( 'Update Forums', 'buddyboss-platform' ),
 				'manage_network',
 				'bbpress-update',
 				array( $this, 'network_update_screen' )
@@ -411,12 +411,12 @@ if ( ! class_exists( 'BBP_Admin' ) ) :
 
 			// Settings page link
 			if ( current_user_can( 'bbp_settings_page' ) ) {
-				$new_links['settings'] = '<a href="' . esc_url( add_query_arg( array( 'page' => 'bbpress' ), admin_url( 'options-general.php' ) ) ) . '">' . esc_html__( 'Settings', 'buddyboss' ) . '</a>';
+				$new_links['settings'] = '<a href="' . esc_url( add_query_arg( array( 'page' => 'bbpress' ), admin_url( 'options-general.php' ) ) ) . '">' . esc_html__( 'Settings', 'buddyboss-platform' ) . '</a>';
 			}
 
 			// About page link
 			if ( current_user_can( 'bbp_about_page' ) ) {
-				$new_links['about'] = '<a href="' . esc_url( add_query_arg( array( 'page' => 'bbp-about' ), admin_url( 'index.php' ) ) ) . '">' . esc_html__( 'About', 'buddyboss' ) . '</a>';
+				$new_links['about'] = '<a href="' . esc_url( add_query_arg( array( 'page' => 'bbp-about' ), admin_url( 'index.php' ) ) ) . '">' . esc_html__( 'About', 'buddyboss-platform' ) . '</a>';
 			}
 
 			// Add a few links to the existing links array
@@ -431,7 +431,7 @@ if ( ! class_exists( 'BBP_Admin' ) ) :
 		 * @uses wp_add_dashboard_widget() To add the dashboard widget
 		 */
 		public static function dashboard_widget_right_now() {
-			wp_add_dashboard_widget( 'bbp-dashboard-right-now', __( 'Right Now in Forums', 'buddyboss' ), 'bbp_dashboard_widget_right_now' );
+			wp_add_dashboard_widget( 'bbp-dashboard-right-now', __( 'Right Now in Forums', 'buddyboss-platform' ), 'bbp_dashboard_widget_right_now' );
 		}
 
 		/**
@@ -447,7 +447,7 @@ if ( ! class_exists( 'BBP_Admin' ) ) :
 					array(
 						'parent' => 'wp-logo',
 						'id'     => 'bbp-about',
-						'title'  => esc_html__( 'About BuddyBoss', 'buddyboss' ),
+						'title'  => esc_html__( 'About BuddyBoss', 'buddyboss-platform' ),
 						'href'   => esc_url( bp_get_admin_url( '?hello=buddyboss' ) ),
 					)
 				);
@@ -524,7 +524,7 @@ if ( ! class_exists( 'BBP_Admin' ) ) :
 			// Mint
 			wp_admin_css_color(
 				'bbp-mint',
-				esc_html__( 'Mint', 'buddyboss' ),
+				esc_html__( 'Mint', 'buddyboss-platform' ),
 				$this->styles_url . 'mint' . $suffix . '.css',
 				array( '#4f6d59', '#33834e', '#5FB37C', '#81c498' ),
 				array(
@@ -537,7 +537,7 @@ if ( ! class_exists( 'BBP_Admin' ) ) :
 			// Evergreen
 			wp_admin_css_color(
 				'bbp-evergreen',
-				esc_html__( 'Evergreen', 'buddyboss' ),
+				esc_html__( 'Evergreen', 'buddyboss-platform' ),
 				$this->styles_url . 'evergreen' . $suffix . '.css',
 				array( '#324d3a', '#446950', '#56b274', '#324d3a' ),
 				array(
@@ -592,7 +592,7 @@ if ( ! class_exists( 'BBP_Admin' ) ) :
 
 			<div class="wrap">
 				<div id="icon-edit" class="icon32 icon32-posts-topic"><br /></div>
-				<h2><?php esc_html_e( 'Update Forum', 'buddyboss' ); ?></h2>
+				<h2><?php esc_html_e( 'Update Forum', 'buddyboss-platform' ); ?></h2>
 
 				<?php
 
@@ -603,8 +603,8 @@ if ( ! class_exists( 'BBP_Admin' ) ) :
 						bbp_version_updater();
 						?>
 
-						<p><?php esc_html_e( 'All done!', 'buddyboss' ); ?></p>
-						<a class="button" href="index.php?page=bbp-update"><?php esc_html_e( 'Go Back', 'buddyboss' ); ?></a>
+						<p><?php esc_html_e( 'All done!', 'buddyboss-platform' ); ?></p>
+						<a class="button" href="index.php?page=bbp-update"><?php esc_html_e( 'Go Back', 'buddyboss-platform' ); ?></a>
 
 						<?php
 
@@ -614,8 +614,8 @@ if ( ! class_exists( 'BBP_Admin' ) ) :
 					default:
 						?>
 
-						<p><?php esc_html_e( 'You can update your forum through this page. Hit the link below to update.', 'buddyboss' ); ?></p>
-						<p><a class="button" href="index.php?page=bbp-update&amp;action=bbp-update"><?php esc_html_e( 'Update Forum', 'buddyboss' ); ?></a></p>
+						<p><?php esc_html_e( 'You can update your forum through this page. Hit the link below to update.', 'buddyboss-platform' ); ?></p>
+						<p><a class="button" href="index.php?page=bbp-update&amp;action=bbp-update"><?php esc_html_e( 'Update Forum', 'buddyboss-platform' ); ?></a></p>
 
 						<?php
 						break;
@@ -644,7 +644,7 @@ if ( ! class_exists( 'BBP_Admin' ) ) :
 
 			<div class="wrap">
 				<div id="icon-edit" class="icon32 icon32-posts-topic"><br /></div>
-				<h2><?php esc_html_e( 'Update Forums', 'buddyboss' ); ?></h2>
+				<h2><?php esc_html_e( 'Update Forums', 'buddyboss-platform' ); ?></h2>
 
 				<?php
 
@@ -661,8 +661,8 @@ if ( ! class_exists( 'BBP_Admin' ) ) :
 				if ( empty( $blogs ) ) :
 					?>
 
-					<p><?php esc_html_e( 'All done!', 'buddyboss' ); ?></p>
-					<a class="button" href="update-core.php?page=bbpress-update"><?php esc_html_e( 'Go Back', 'buddyboss' ); ?></a>
+					<p><?php esc_html_e( 'All done!', 'buddyboss-platform' ); ?></p>
+					<a class="button" href="update-core.php?page=bbpress-update"><?php esc_html_e( 'Go Back', 'buddyboss-platform' ); ?></a>
 
 				<?php
 
@@ -694,7 +694,7 @@ if ( ! class_exists( 'BBP_Admin' ) ) :
 							// Site errored out, no response?
 							if ( is_wp_error( $response ) ) {
 								/* translators: 1: site URL, 2: error message. */
-								wp_die( sprintf( __( 'Warning! Problem updating %1$s. Your server may not be able to connect to sites running on it. Error message: <em>%2$s</em>', 'buddyboss' ), $siteurl, $response->get_error_message() ) );
+								wp_die( sprintf( __( 'Warning! Problem updating %1$s. Your server may not be able to connect to sites running on it. Error message: <em>%2$s</em>', 'buddyboss-platform' ), $siteurl, $response->get_error_message() ) );
 							}
 
 							// Switch to the new blog
@@ -720,8 +720,8 @@ if ( ! class_exists( 'BBP_Admin' ) ) :
 					</ul>
 
 					<p>
-						<?php esc_html_e( 'If your browser doesn\'t start loading the next page automatically, click this link:', 'buddyboss' ); ?>
-						<a class="button" href="update-core.php?page=bbpress-update&amp;action=bbpress-update&amp;n=<?php echo ( $n + 5 ); ?>"><?php esc_html_e( 'Next Forums', 'buddyboss' ); ?></a>
+						<?php esc_html_e( 'If your browser doesn\'t start loading the next page automatically, click this link:', 'buddyboss-platform' ); ?>
+						<a class="button" href="update-core.php?page=bbpress-update&amp;action=bbpress-update&amp;n=<?php echo ( $n + 5 ); ?>"><?php esc_html_e( 'Next Forums', 'buddyboss-platform' ); ?></a>
 					</p>
 					<script type='text/javascript'>
                         <!--
@@ -741,8 +741,8 @@ if ( ! class_exists( 'BBP_Admin' ) ) :
 				default:
 				?>
 
-					<p><?php esc_html_e( 'You can update all the forums on your network through this page. It works by calling the update script of each site automatically. Hit the link below to update.', 'buddyboss' ); ?></p>
-					<p><a class="button" href="update-core.php?page=bbpress-update&amp;action=bbpress-update"><?php esc_html_e( 'Update Forums', 'buddyboss' ); ?></a></p>
+					<p><?php esc_html_e( 'You can update all the forums on your network through this page. It works by calling the update script of each site automatically. Hit the link below to update.', 'buddyboss-platform' ); ?></p>
+					<p><a class="button" href="update-core.php?page=bbpress-update&amp;action=bbpress-update"><?php esc_html_e( 'Update Forums', 'buddyboss-platform' ); ?></a></p>
 
 					<?php
 					break;

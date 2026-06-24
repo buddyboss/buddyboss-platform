@@ -357,7 +357,7 @@ $settings = bp_email_get_appearance_settings();
 							<tr>
 								<td>
 									<div class="body_text_color body_text_size" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; line-height: <?php echo esc_attr( floor( $settings['body_text_size'] * 1.618 ) . 'px' ); ?>; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; color: <?php echo esc_attr( $settings['body_text_color'] ); ?>;">
-										{{sender.name}} <?php _e( 'sent you a new message', 'buddyboss' ); ?>
+										{{sender.name}} <?php _e( 'sent you a new message', 'buddyboss-platform' ); ?>
 									</div>
 								</td>
 							</tr>
@@ -367,7 +367,7 @@ $settings = bp_email_get_appearance_settings();
 							<tr>
 								<td valign="middle" width="10%" style="vertical-align: middle;">
 									<a href="#" target="_blank">
-										<img alt="<?php esc_html_e( 'Avatar', 'buddyboss' ); ?>" src="<?php echo apply_filters( 'bp_email_default_avatar', bb_attachments_get_default_profile_group_avatar_image( array( 'object' => 'user' ) ) ); ?>" width="45" height="45" style="border: 1px solid #b9babc; border-radius: 50%; vertical-align: middle;" />
+										<img alt="<?php esc_html_e( 'Avatar', 'buddyboss-platform' ); ?>" src="<?php echo apply_filters( 'bp_email_default_avatar', bb_attachments_get_default_profile_group_avatar_image( array( 'object' => 'user' ) ) ); ?>" width="45" height="45" style="border: 1px solid #b9babc; border-radius: 50%; vertical-align: middle;" />
 									</a>
 									<span class="body_secondary_text_color body_text_size" style="margin-left: 10px; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; line-height: <?php echo esc_attr( floor( $settings['body_text_size'] * 1.618 ) . 'px' ); ?>; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; color: <?php echo esc_attr( $settings['body_secondary_text_color'] ); ?>; letter-spacing: -0.24px;">{{sender.name}}</span>
 								</td>
@@ -405,7 +405,7 @@ $settings = bp_email_get_appearance_settings();
 							</tr>
 							<tr>
 								<td>
-									<a class="body_text_size highlight_color button_outline" href="#" target="_blank" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; text-decoration: none; display: inline-block; border: 1px solid <?php echo esc_attr( $settings['highlight_color'] ); ?>; border-radius: 100px; min-width: <?php echo esc_attr( floor( $settings['body_text_size'] * 5.25 ) . 'px' ); ?>; text-align: center; height: <?php echo esc_attr( floor( $settings['body_text_size'] * 2.125 ) . 'px' ); ?>; line-height: <?php echo esc_attr( floor( $settings['body_text_size'] * 2.125 ) . 'px' ); ?>; font-size: <?php echo esc_attr( floor( $settings['body_text_size'] * 0.875 ) . 'px' ); ?>; color: <?php echo esc_attr( $settings['highlight_color'] ); ?>;padding: 0 10px;"><?php _e( 'Reply', 'buddyboss' ); ?></a>
+									<a class="body_text_size highlight_color button_outline" href="#" target="_blank" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; text-decoration: none; display: inline-block; border: 1px solid <?php echo esc_attr( $settings['highlight_color'] ); ?>; border-radius: 100px; min-width: <?php echo esc_attr( floor( $settings['body_text_size'] * 5.25 ) . 'px' ); ?>; text-align: center; height: <?php echo esc_attr( floor( $settings['body_text_size'] * 2.125 ) . 'px' ); ?>; line-height: <?php echo esc_attr( floor( $settings['body_text_size'] * 2.125 ) . 'px' ); ?>; font-size: <?php echo esc_attr( floor( $settings['body_text_size'] * 0.875 ) . 'px' ); ?>; color: <?php echo esc_attr( $settings['highlight_color'] ); ?>;padding: 0 10px;"><?php _e( 'Reply', 'buddyboss-platform' ); ?></a>
 								</td>
 							</tr>
 						</table>
@@ -453,7 +453,7 @@ $settings = bp_email_get_appearance_settings();
 						?>
 
 						<span class="footer_text"><?php echo nl2br( stripslashes( $settings['footer_text'] ) ); ?></span>
-						<p style="margin: 5px 0;"><?php _e( "If you don't want to receive these emails in the future, please ", 'buddyboss' ); ?><a href="{{{unsubscribe}}}" style="text-decoration: none;"><?php esc_html_e( 'unsubscribe', 'buddyboss' ); ?></a>.</p>
+						<p style="margin: 5px 0;"><?php _e( "If you don't want to receive these emails in the future, please ", 'buddyboss-platform' ); ?><a href="{{{unsubscribe}}}" style="text-decoration: none;"><?php esc_html_e( 'unsubscribe', 'buddyboss-platform' ); ?></a>.</p>
 
 						<?php
 						/**

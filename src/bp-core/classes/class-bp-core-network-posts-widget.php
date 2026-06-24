@@ -25,8 +25,8 @@ class BP_Core_Network_Posts_Widget extends WP_Widget {
 	public function __construct() {
 
 		// Setup widget name & description.
-		$name        = _x( 'BuddyBoss - Network Posts', 'widget name', 'buddyboss' );
-		$description = __( 'A dynamic list of network posts', 'buddyboss' );
+		$name        = _x( 'BuddyBoss - Network Posts', 'widget name', 'buddyboss-platform' );
+		$description = __( 'A dynamic list of network posts', 'buddyboss-platform' );
 
 		// Call WP_Widget constructor.
 		parent::__construct(
@@ -146,7 +146,7 @@ class BP_Core_Network_Posts_Widget extends WP_Widget {
 									<?php if ( $show_image && has_post_thumbnail() ) { ?>
 										<div class="data-photo"><a href="<?php the_permalink(); ?>"
 																   <?php /* translators: %s: post title. */ ?>
-																   title="<?php echo esc_attr( sprintf( __( 'Permalink to %s', 'buddyboss' ), the_title_attribute( 'echo=0' ) ) ); ?>"
+																   title="<?php echo esc_attr( sprintf( __( 'Permalink to %s', 'buddyboss-platform' ), the_title_attribute( 'echo=0' ) ) ); ?>"
 																   class="entry-media entry-img">
 												<?php the_post_thumbnail(); ?>
 											</a>
@@ -206,22 +206,22 @@ class BP_Core_Network_Posts_Widget extends WP_Widget {
 	public function form( $instance ) {
 
 		// Get widget settings.
-		$title      = isset( $instance['title'] ) ? esc_attr( $instance['title'] ) : __( 'Recent Networkside Posts', 'buddyboss' );
+		$title      = isset( $instance['title'] ) ? esc_attr( $instance['title'] ) : __( 'Recent Networkside Posts', 'buddyboss-platform' );
 		$number     = isset( $instance['number'] ) ? absint( $instance['number'] ) : 1;
 		$show_date  = isset( $instance['show_date'] ) ? (bool) $instance['show_date'] : true;
 		$show_image = isset( $instance['show_image'] ) ? (bool) $instance['show_image'] : true;
 		?>
-		<p><label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _e( 'Title:', 'buddyboss' ); ?></label>
+		<p><label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _e( 'Title:', 'buddyboss-platform' ); ?></label>
 			<input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo $title; ?>" /></p>
 
-		<p><label for="<?php echo $this->get_field_id( 'number' ); ?>"><?php _e( 'Number of posts to show for each blog:', 'buddyboss' ); ?></label>
+		<p><label for="<?php echo $this->get_field_id( 'number' ); ?>"><?php _e( 'Number of posts to show for each blog:', 'buddyboss-platform' ); ?></label>
 			<input class="tiny-text" id="<?php echo $this->get_field_id( 'number' ); ?>" name="<?php echo $this->get_field_name( 'number' ); ?>" type="number" step="1" min="1" value="<?php echo $number; ?>" size="3" /></p>
 
 		<p><input class="checkbox" type="checkbox"<?php checked( $show_date ); ?> id="<?php echo $this->get_field_id( 'show_date' ); ?>" name="<?php echo $this->get_field_name( 'show_date' ); ?>" />
-			<label for="<?php echo $this->get_field_id( 'show_date' ); ?>"><?php _e( 'Display post date?', 'buddyboss' ); ?></label></p>
+			<label for="<?php echo $this->get_field_id( 'show_date' ); ?>"><?php _e( 'Display post date?', 'buddyboss-platform' ); ?></label></p>
 
 		<p><input class="checkbox" type="checkbox"<?php checked( $show_image ); ?> id="<?php echo $this->get_field_id( 'show_image' ); ?>" name="<?php echo $this->get_field_name( 'show_image' ); ?>" />
-			<label for="<?php echo $this->get_field_id( 'show_image' ); ?>"><?php _e( 'Display post featured image?', 'buddyboss' ); ?></label></p>
+			<label for="<?php echo $this->get_field_id( 'show_image' ); ?>"><?php _e( 'Display post featured image?', 'buddyboss-platform' ); ?></label></p>
 
 		<?php
 	}
@@ -238,7 +238,7 @@ class BP_Core_Network_Posts_Widget extends WP_Widget {
 		return bp_parse_args(
 			$instance,
 			array(
-				'title'      => __( 'Recent Networkside Posts', 'buddyboss' ),
+				'title'      => __( 'Recent Networkside Posts', 'buddyboss-platform' ),
 				'number'     => 1,
 				'show_date'  => true,
 				'show_image' => true,

@@ -42,9 +42,9 @@ $video_extensions = bp_is_active( 'video' ) ? bp_video_get_allowed_extension() :
 			<div class="dz-image">
 				<img data-dz-thumbnail />
 			</div>
-			<div class="dz-error-title"><?php esc_html_e( 'Upload Failed', 'buddyboss' ); ?></div>
+			<div class="dz-error-title"><?php esc_html_e( 'Upload Failed', 'buddyboss-platform' ); ?></div>
 			<div class="dz-details">
-				<div class="dz-progress"><span data-dz-progress></span> <?php esc_html_e( 'Complete', 'buddyboss' ); ?></div>
+				<div class="dz-progress"><span data-dz-progress></span> <?php esc_html_e( 'Complete', 'buddyboss-platform' ); ?></div>
 				<div class="dz-filename" data-dz-name></div>
 			</div>
 			<div class="dz-progress-ring-wrap">
@@ -79,9 +79,9 @@ $video_extensions = bp_is_active( 'video' ) ? bp_video_get_allowed_extension() :
 		<input name="bbp_document" id="bbp_document" type="hidden" value=""/>
 		<div class="forum-post-document-template" style="display:none;">
 			<div class="dz-preview dz-file-preview">
-				<div class="dz-error-title"><?php esc_html_e( 'Upload Failed', 'buddyboss' ); ?></div>
+				<div class="dz-error-title"><?php esc_html_e( 'Upload Failed', 'buddyboss-platform' ); ?></div>
 				<div class="dz-details">
-					<div class="dz-progress"><span data-dz-progress></span> <?php esc_html_e( 'Complete', 'buddyboss' ); ?></div>
+					<div class="dz-progress"><span data-dz-progress></span> <?php esc_html_e( 'Complete', 'buddyboss-platform' ); ?></div>
 					<div class="dz-icon"><span class="bb-icons-rl bb-icons-rl-file"></span></div>
 					<div class="dz-filename"><span data-dz-name></span></div>
 				</div>
@@ -105,10 +105,10 @@ $video_extensions = bp_is_active( 'video' ) ? bp_video_get_allowed_extension() :
 					<img data-dz-thumbnail />
 				</div>
 				<div class="dz-details">
-					<div class="dz-progress"><span data-dz-progress></span> <?php esc_html_e( 'Complete', 'buddyboss' ); ?></div>
+					<div class="dz-progress"><span data-dz-progress></span> <?php esc_html_e( 'Complete', 'buddyboss-platform' ); ?></div>
 					<div class="dz-filename" data-dz-name></div>
 				</div>
-				<div class="dz-error-title"><?php esc_html_e( 'Upload Failed', 'buddyboss' ); ?></div>
+				<div class="dz-error-title"><?php esc_html_e( 'Upload Failed', 'buddyboss-platform' ); ?></div>
 				<div class="dz-progress-ring-wrap">
 					<i class="bb-icons-rl-fill bb-icons-rl-video-camera"></i>
 					<svg class="dz-progress-ring" width="48" height="48">
@@ -132,7 +132,7 @@ $video_extensions = bp_is_active( 'video' ) ? bp_video_get_allowed_extension() :
 	if ( bp_is_active( 'media' ) && bb_user_has_access_upload_media( $group_id, bp_loggedin_user_id(), $forum_id, 0, 'forum' ) ) :
 		?>
 		<div class="bb-rl-post-elements-buttons-item bb-rl-post-media bb-rl-media-support">
-			<a href="#" id="bb-rl-forums-media-button" class="bb-rl-toolbar-button bp-tooltip" data-bp-tooltip-pos="up-left" data-bp-tooltip="<?php esc_attr_e( 'Attach photo', 'buddyboss' ); ?>">
+			<a href="#" id="bb-rl-forums-media-button" class="bb-rl-toolbar-button bp-tooltip" data-bp-tooltip-pos="up-left" data-bp-tooltip="<?php esc_attr_e( 'Attach photo', 'buddyboss-platform' ); ?>">
 				<i class="bb-icons-rl-camera"></i>
 			</a>
 		</div>
@@ -143,7 +143,7 @@ $video_extensions = bp_is_active( 'video' ) ? bp_video_get_allowed_extension() :
 	if ( bp_is_active( 'media' ) && ! empty( $video_extensions ) && bb_user_has_access_upload_video( $group_id, bp_loggedin_user_id(), $forum_id, 0, 'forum' ) ) :
 		?>
 		<div class="bb-rl-post-elements-buttons-item bb-rl-post-video bb-rl-video-support">
-			<a href="#" id="bb-rl-forums-video-button" class="bb-rl-toolbar-button bp-tooltip" data-bp-tooltip-pos="up-left" data-bp-tooltip="<?php esc_attr_e( 'Attach video', 'buddyboss' ); ?>">
+			<a href="#" id="bb-rl-forums-video-button" class="bb-rl-toolbar-button bp-tooltip" data-bp-tooltip-pos="up-left" data-bp-tooltip="<?php esc_attr_e( 'Attach video', 'buddyboss-platform' ); ?>">
 				<i class="bb-icons-rl-video-camera"></i>
 			</a>
 		</div>
@@ -154,7 +154,7 @@ $video_extensions = bp_is_active( 'video' ) ? bp_video_get_allowed_extension() :
 		?>
 
 		<div class="bb-rl-post-elements-buttons-item bb-rl-post-media bb-rl-document-support">
-			<a href="#" id="bb-rl-forums-document-button" class="bb-rl-toolbar-button bp-tooltip" data-bp-tooltip-pos="up-left" data-bp-tooltip="<?php esc_attr_e( 'Attach document', 'buddyboss' ); ?>">
+			<a href="#" id="bb-rl-forums-document-button" class="bb-rl-toolbar-button bp-tooltip" data-bp-tooltip-pos="up-left" data-bp-tooltip="<?php esc_attr_e( 'Attach document', 'buddyboss-platform' ); ?>">
 				<i class="bb-icons-rl-paperclip-horizontal"></i>
 			</a>
 		</div>
@@ -166,14 +166,14 @@ $video_extensions = bp_is_active( 'video' ) ? bp_video_get_allowed_extension() :
 		?>
 		<div class="bb-rl-post-elements-buttons-item bb-rl-post-gif">
 			<div class="bb-rl-gif-media-search">
-				<a href="#" id="bb-rl-forums-gif-button" class="bb-rl-toolbar-button bp-tooltip" data-bp-tooltip-pos="up-left" data-bp-tooltip="<?php esc_attr_e( 'Choose a GIF', 'buddyboss' ); ?>">
+				<a href="#" id="bb-rl-forums-gif-button" class="bb-rl-toolbar-button bp-tooltip" data-bp-tooltip-pos="up-left" data-bp-tooltip="<?php esc_attr_e( 'Choose a GIF', 'buddyboss-platform' ); ?>">
 					<i class="bb-icons-rl-gif"></i>
 				</a>
 				<div class="bb-rl-gif-media-search-dropdown">
 					<div class="bb-rl-forums-attached-gif-container">
 						<div class="gif-search-content">
 							<div class="gif-search-query">
-								<input type="search" placeholder="<?php esc_attr_e( 'Search GIPHY...', 'buddyboss' ); ?>" class="search-query-input" />
+								<input type="search" placeholder="<?php esc_attr_e( 'Search GIPHY...', 'buddyboss-platform' ); ?>" class="search-query-input" />
 								<span class="search-icon"></span>
 							</div>
 							<div class="gif-search-results" id="gif-search-results">
@@ -181,12 +181,12 @@ $video_extensions = bp_is_active( 'video' ) ? bp_video_get_allowed_extension() :
 								</ul>
 								<div class="gif-alert gif-no-results">
 									<i class="bb-icons-rl-image-broken"></i>
-									<p><?php esc_html_e( 'No results found', 'buddyboss' ); ?></p>
+									<p><?php esc_html_e( 'No results found', 'buddyboss-platform' ); ?></p>
 								</div>
 
 								<div class="gif-alert gif-no-connection">
 									<i class="bb-icons-rl-cloud-slash"></i>
-									<p><?php esc_html_e( 'Could not connect to GIPHY', 'buddyboss' ); ?></p>
+									<p><?php esc_html_e( 'Could not connect to GIPHY', 'buddyboss-platform' ); ?></p>
 								</div>
 							</div>
 						</div>
@@ -199,14 +199,14 @@ $video_extensions = bp_is_active( 'video' ) ? bp_video_get_allowed_extension() :
 
 	if ( bp_is_active( 'media' ) && bb_user_has_access_upload_emoji( $group_id, bp_loggedin_user_id(), $forum_id, 0, 'forum' ) ) :
 		?>
-		<div class="bb-rl-post-elements-buttons-item bb-rl-post-emoji bp-tooltip" data-bp-tooltip-pos="up-left" data-bp-tooltip="<?php esc_attr_e( 'Emoji', 'buddyboss' ); ?>"></div>
+		<div class="bb-rl-post-elements-buttons-item bb-rl-post-emoji bp-tooltip" data-bp-tooltip-pos="up-left" data-bp-tooltip="<?php esc_attr_e( 'Emoji', 'buddyboss-platform' ); ?>"></div>
 		<?php
 	endif;
 
 	if ( bp_is_active( 'media' ) && bbp_use_wp_editor() ) :
 		?>
-		<div class="bb-rl-post-elements-buttons-item bb-rl-show-toolbar" data-bp-tooltip-pos="up-left" data-bp-tooltip="<?php esc_attr_e( 'Show formatting', 'buddyboss' ); ?>" data-bp-tooltip-hide="<?php esc_html_e( 'Hide formatting', 'buddyboss' ); ?>" data-bp-tooltip-show="<?php esc_html_e( 'Show formatting', 'buddyboss' ); ?>">
-			<a href="#" id="bb-rl-show-toolbar-button" class="bb-rl-toolbar-button bp-tooltip" aria-label="<?php esc_attr_e( 'Show formatting', 'buddyboss' ); ?>">
+		<div class="bb-rl-post-elements-buttons-item bb-rl-show-toolbar" data-bp-tooltip-pos="up-left" data-bp-tooltip="<?php esc_attr_e( 'Show formatting', 'buddyboss-platform' ); ?>" data-bp-tooltip-hide="<?php esc_html_e( 'Hide formatting', 'buddyboss-platform' ); ?>" data-bp-tooltip-show="<?php esc_html_e( 'Show formatting', 'buddyboss-platform' ); ?>">
+			<a href="#" id="bb-rl-show-toolbar-button" class="bb-rl-toolbar-button bp-tooltip" aria-label="<?php esc_attr_e( 'Show formatting', 'buddyboss-platform' ); ?>">
 				<i class="bb-icons-rl-text-aa"></i>
 			</a>
 		</div>

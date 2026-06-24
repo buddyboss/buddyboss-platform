@@ -34,7 +34,7 @@ function bp_admin_bar_my_account_root() {
 			array(
 				'parent' => 'my-account',
 				'id'     => 'my-account-buddypress',
-				'title'  => __( 'My Account', 'buddyboss' ),
+				'title'  => __( 'My Account', 'buddyboss-platform' ),
 				'group'  => true,
 				'meta'   => array(
 					'class' => 'ab-sub-secondary',
@@ -59,7 +59,7 @@ function bp_core_load_admin_bar() {
 
 	// Hide the WordPress Toolbar and show the BuddyBar.
 	if ( ! bp_use_wp_admin_bar() ) {
-		_doing_it_wrong( __FUNCTION__, __( 'The BuddyBar is no longer supported. Please migrate to the WordPress toolbar as soon as possible.', 'buddyboss' ), '2.1.0' );
+		_doing_it_wrong( __FUNCTION__, __( 'The BuddyBar is no longer supported. Please migrate to the WordPress toolbar as soon as possible.', 'buddyboss-platform' ), '2.1.0' );
 
 		// Load deprecated code if not available.
 		if ( ! function_exists( 'bp_core_admin_bar' ) ) {
@@ -181,7 +181,7 @@ function bp_wp_admin_bar_my_account_menu( $wp_admin_bar ) {
 		if ( 'nickname' !== $current_value ) {
 
 			$username = bp_activity_get_user_mentionname( $current_user->ID );
-			$at = __( '@', 'buddyboss' );
+			$at = __( '@', 'buddyboss-platform' );
 			if ( '' !== $username ) {
 				$user_info .= "<span class='username'>{$at}{$username}</span>";
 			} else {
@@ -207,7 +207,7 @@ function bp_wp_admin_bar_my_account_menu( $wp_admin_bar ) {
 			array(
 				'parent' => 'user-actions',
 				'id'     => 'edit-profile',
-				'title'  => __( 'Edit My Profile', 'buddyboss' ),
+				'title'  => __( 'Edit My Profile', 'buddyboss-platform' ),
 				'href'   => $profile_url,
 			)
 		);
@@ -217,7 +217,7 @@ function bp_wp_admin_bar_my_account_menu( $wp_admin_bar ) {
 		array(
 			'parent' => 'user-actions',
 			'id'     => 'logout',
-			'title'  => __( 'Log Out', 'buddyboss' ),
+			'title'  => __( 'Log Out', 'buddyboss-platform' ),
 			'href'   => wp_logout_url(),
 		)
 	);

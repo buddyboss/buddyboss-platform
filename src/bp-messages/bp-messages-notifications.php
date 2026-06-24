@@ -30,7 +30,7 @@ function messages_format_notifications( $action, $item_id, $secondary_item_id, $
 	$total_items = (int) $total_items;
 	$text        = '';
 	$link        = trailingslashit( bp_loggedin_user_domain() . bp_get_messages_slug() . '/inbox' );
-	$title       = __( 'Messages', 'buddyboss' );
+	$title       = __( 'Messages', 'buddyboss-platform' );
 	$amount      = 'single';
 
 	if ( 'new_message' === $action ) {
@@ -38,7 +38,7 @@ function messages_format_notifications( $action, $item_id, $secondary_item_id, $
 			$amount = 'multiple';
 			$text   = sprintf(
 				/* translators: %d total messages */
-				__( 'You have %d new messages', 'buddyboss' ),
+				__( 'You have %d new messages', 'buddyboss-platform' ),
 				$total_items
 			);
 
@@ -63,55 +63,55 @@ function messages_format_notifications( $action, $item_id, $secondary_item_id, $
 					if ( empty( $message_from ) ) {
 						$text = sprintf(
 							/* translators: %s user name */
-							__( '%s sent you a new private message', 'buddyboss' ),
+							__( '%s sent you a new private message', 'buddyboss-platform' ),
 							bp_core_get_user_displayname( $secondary_item_id )
 						);
 					} elseif ( 'group' === $message_from && 'open' === $message_type && 'individual' === $message_users ) {
 						$text = sprintf(
 							/* translators: %1$s and %2$s is replaced with the username and group name */
-							__( '%1$s sent you a new private message from the group: %2$s', 'buddyboss' ),
+							__( '%1$s sent you a new private message from the group: %2$s', 'buddyboss-platform' ),
 							bp_core_get_user_displayname( $secondary_item_id ),
 							$group_name
 						);
 					} elseif ( 'group' === $message_from && 'open' === $message_type && 'all' === $message_users ) {
 						$text = sprintf(
 							/* translators: %1$s and %2$s is replaced with the username and group name */
-							__( '%1$s sent you a new group message from the group: %2$s', 'buddyboss' ),
+							__( '%1$s sent you a new group message from the group: %2$s', 'buddyboss-platform' ),
 							bp_core_get_user_displayname( $secondary_item_id ),
 							$group_name
 						);
 					} elseif ( 'group' === $message_from && 'private' === $message_type && 'all' === $message_users ) {
 						$text = sprintf(
 							/* translators: %1$s and %2$s is replaced with the username and group name */
-							__( '%1$s sent you a new private message from the group: %2$s', 'buddyboss' ),
+							__( '%1$s sent you a new private message from the group: %2$s', 'buddyboss-platform' ),
 							bp_core_get_user_displayname( $secondary_item_id ),
 							$group_name
 						);
 					} elseif ( 'group' === $message_from && 'private' === $message_type && 'individual' === $message_users && isset( $secondary_item_id ) && ! bp_core_get_user_displayname( $secondary_item_id ) ) {
 						$text = sprintf(
 							/* translators: %1$s and %2$s is replaced with the username and group name */
-							__( '%1$s sent you a new private message from the group: %2$s', 'buddyboss' ),
+							__( '%1$s sent you a new private message from the group: %2$s', 'buddyboss-platform' ),
 							bp_core_get_user_displayname( $secondary_item_id ),
 							$group_name
 						);
 					} else {
 						$text = sprintf(
 							/* translators: %s user name */
-							__( '%s sent you a new private message', 'buddyboss' ),
+							__( '%s sent you a new private message', 'buddyboss-platform' ),
 							bp_core_get_user_displayname( $secondary_item_id )
 						);
 					}
 				} else {
 					$text = sprintf(
 						/* translators: %s user name */
-						__( '%s sent you a new private message', 'buddyboss' ),
+						__( '%s sent you a new private message', 'buddyboss-platform' ),
 						bp_core_get_user_displayname( $secondary_item_id )
 					);
 				}
 			} else {
 				$text = sprintf(
 					/* translators: Number of total private messages */
-					_n( 'You have %s new private message', 'You have %s new private messages', $total_items, 'buddyboss' ),
+					_n( 'You have %s new private message', 'You have %s new private messages', $total_items, 'buddyboss-platform' ),
 					bp_core_number_format( $total_items )
 				);
 			}

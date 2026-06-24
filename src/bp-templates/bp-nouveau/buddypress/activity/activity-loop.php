@@ -26,7 +26,7 @@ if ( bp_has_activities( bp_ajax_querystring( 'activity' ) ) ) :
 	if ( bp_activity_has_more_items() ) :
 		?>
 		<li class="load-more">
-			<a class="button outline" href="<?php bp_activity_load_more_link(); ?>"><?php esc_html_e( 'Load More', 'buddyboss' ); ?></a>
+			<a class="button outline" href="<?php bp_activity_load_more_link(); ?>"><?php esc_html_e( 'Load More', 'buddyboss-platform' ); ?></a>
 		</li>
 		<?php
 	endif;

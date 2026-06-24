@@ -32,7 +32,7 @@ function bb_members_register_profile_headers_panel_fields() {
 		'profile_headers',
 		'profile_headers',
 		array(
-			'title'       => __( 'Profile Headers', 'buddyboss' ),
+			'title'       => __( 'Profile Headers', 'buddyboss-platform' ),
 			'description' => '',
 			'order'       => 10,
 			'pro_notice'  => bb_admin_settings_get_pro_notice(
@@ -51,19 +51,19 @@ function bb_members_register_profile_headers_panel_fields() {
 		'profile_headers',
 		array(
 			'name'              => 'bb-profile-headers-layout-style',
-			'label'             => __( 'Header Style', 'buddyboss' ),
+			'label'             => __( 'Header Style', 'buddyboss-platform' ),
 			'type'              => 'image_radio',
-			'description'       => __( 'Select the style of your profile headers. Profile cover images will only be displayed if they are enabled.', 'buddyboss' ),
+			'description'       => __( 'Select the style of your profile headers. Profile cover images will only be displayed if they are enabled.', 'buddyboss-platform' ),
 			'default'           => function_exists( 'bb_get_profile_header_style' ) ? bb_get_profile_header_style() : 'left',
 			'sanitize_callback' => 'bb_members_sanitize_header_style',
 			'options'           => array(
 				array(
-					'label' => is_rtl() ? __( 'Right', 'buddyboss' ) : __( 'Left', 'buddyboss' ),
+					'label' => is_rtl() ? __( 'Right', 'buddyboss-platform' ) : __( 'Left', 'buddyboss-platform' ),
 					'value' => 'left',
 					'image' => 'header-left-profile',
 				),
 				array(
-					'label' => __( 'Centered', 'buddyboss' ),
+					'label' => __( 'Centered', 'buddyboss-platform' ),
 					'value' => 'centered',
 					'image' => 'header-centered-profile',
 				),
@@ -82,42 +82,42 @@ function bb_members_register_profile_headers_panel_fields() {
 		'profile_headers',
 		array(
 			'name'              => 'bb-profile-headers-layout-elements',
-			'label'             => __( 'Elements', 'buddyboss' ),
+			'label'             => __( 'Elements', 'buddyboss-platform' ),
 			'type'              => 'toggle_list',
-			'description'       => __( 'Select which elements to show in your profile headers.', 'buddyboss' ),
+			'description'       => __( 'Select which elements to show in your profile headers.', 'buddyboss-platform' ),
 			'default'           => array(),
 			'sanitize_callback' => 'bb_members_sanitize_toggle_list',
 			'options'           => array(
 				array(
-					'label' => __( 'Online Status', 'buddyboss' ),
+					'label' => __( 'Online Status', 'buddyboss-platform' ),
 					'value' => 'online-status',
 				),
 				array(
-					'label' => __( 'Profile Type', 'buddyboss' ),
+					'label' => __( 'Profile Type', 'buddyboss-platform' ),
 					'value' => 'profile-type',
 				),
 				array(
-					'label' => __( 'Member Handle', 'buddyboss' ),
+					'label' => __( 'Member Handle', 'buddyboss-platform' ),
 					'value' => 'member-handle',
 				),
 				array(
-					'label' => __( 'Joined Date', 'buddyboss' ),
+					'label' => __( 'Joined Date', 'buddyboss-platform' ),
 					'value' => 'joined-date',
 				),
 				array(
-					'label' => __( 'Last Active', 'buddyboss' ),
+					'label' => __( 'Last Active', 'buddyboss-platform' ),
 					'value' => 'last-active',
 				),
 				array(
-					'label' => __( 'Followers', 'buddyboss' ),
+					'label' => __( 'Followers', 'buddyboss-platform' ),
 					'value' => 'followers',
 				),
 				array(
-					'label' => __( 'Following', 'buddyboss' ),
+					'label' => __( 'Following', 'buddyboss-platform' ),
 					'value' => 'following',
 				),
 				array(
-					'label' => __( 'Social Networks', 'buddyboss' ),
+					'label' => __( 'Social Networks', 'buddyboss-platform' ),
 					'value' => 'social-networks',
 				),
 			),

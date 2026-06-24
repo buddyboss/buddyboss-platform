@@ -151,17 +151,17 @@ function bp_friends_header_tabs() {
 	<?php
 	if ( ! bp_action_variable( 0 ) || bp_is_action_variable( 'recently-active', 0 ) ) :
 		?>
-		 class="current"<?php endif; ?>><a href="<?php echo trailingslashit( bp_displayed_user_domain() . bp_get_friends_slug() . '/my-friends/recently-active' ); ?>"><?php _e( 'Recently Active', 'buddyboss' ); ?></a></li>
+		 class="current"<?php endif; ?>><a href="<?php echo trailingslashit( bp_displayed_user_domain() . bp_get_friends_slug() . '/my-friends/recently-active' ); ?>"><?php _e( 'Recently Active', 'buddyboss-platform' ); ?></a></li>
 	<li
 	<?php
 	if ( bp_is_action_variable( 'newest', 0 ) ) :
 		?>
-		 class="current"<?php endif; ?>><a href="<?php echo trailingslashit( bp_displayed_user_domain() . bp_get_friends_slug() . '/my-friends/newest' ); ?>"><?php _e( 'Newest', 'buddyboss' ); ?></a></li>
+		 class="current"<?php endif; ?>><a href="<?php echo trailingslashit( bp_displayed_user_domain() . bp_get_friends_slug() . '/my-friends/newest' ); ?>"><?php _e( 'Newest', 'buddyboss-platform' ); ?></a></li>
 	<li
 	<?php
 	if ( bp_is_action_variable( 'alphabetically', 0 ) ) :
 		?>
-		 class="current"<?php endif; ?>><a href="<?php echo trailingslashit( bp_displayed_user_domain() . bp_get_friends_slug() . '/my-friends/alphabetically' ); ?>"><?php _e( 'Alphabetically', 'buddyboss' ); ?></a></li>
+		 class="current"<?php endif; ?>><a href="<?php echo trailingslashit( bp_displayed_user_domain() . bp_get_friends_slug() . '/my-friends/alphabetically' ); ?>"><?php _e( 'Alphabetically', 'buddyboss-platform' ); ?></a></li>
 
 	<?php
 	do_action( 'friends_header_tabs' );
@@ -181,13 +181,13 @@ function bp_friends_filter_title() {
 	switch ( $current_filter ) {
 		case 'recently-active':
 		default:
-			_e( 'Recently Active', 'buddyboss' );
+			_e( 'Recently Active', 'buddyboss-platform' );
 			break;
 		case 'newest':
-			_e( 'Newest', 'buddyboss' );
+			_e( 'Newest', 'buddyboss-platform' );
 			break;
 		case 'alphabetically':
-			_e( 'Alphabetically', 'buddyboss' );
+			_e( 'Alphabetically', 'buddyboss-platform' );
 			break;
 	}
 }

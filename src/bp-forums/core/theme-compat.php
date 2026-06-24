@@ -665,7 +665,7 @@ function bbp_template_include_theme_compat( $template = '' ) {
 		bbp_theme_compat_reset_post(
 			array(
 				'ID'             => 0,
-				'post_title'     => __( 'Replies', 'buddyboss' ),
+				'post_title'     => __( 'Replies', 'buddyboss-platform' ),
 				'post_author'    => 0,
 				'post_date'      => 0,
 				'post_content'   => $bbp_shortcodes->display_reply_index(),
@@ -769,7 +769,7 @@ function bbp_template_include_theme_compat( $template = '' ) {
 				'post_content'   => $new_content,
 				'post_type'      => '',
 				/* translators: %s: topic tag name. */
-				'post_title'     => sprintf( __( 'Discussion Tag: %s', 'buddyboss' ), '<span>' . bbp_get_topic_tag_name() . '</span>' ),
+				'post_title'     => sprintf( __( 'Discussion Tag: %s', 'buddyboss-platform' ), '<span>' . bbp_get_topic_tag_name() . '</span>' ),
 				'post_status'    => bbp_get_public_status_id(),
 				'comment_status' => 'closed',
 			)

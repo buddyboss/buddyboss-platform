@@ -17,7 +17,7 @@ if ( bp_is_user_document() || bp_is_user_folders() ) {
 }
 ?>
 	<div class="bb-rl-field-wrap bb-rl-privacy-field-wrap-hide-show">
-		<label for="bb-rl-folder-privacy" class="bb-label"><?php esc_html_e( 'Privacy', 'buddyboss' ); ?></label>
+		<label for="bb-rl-folder-privacy" class="bb-label"><?php esc_html_e( 'Privacy', 'buddyboss-platform' ); ?></label>
 		<div class="bb-rl-dropdown-wrap bb-rl-filter">
 			<select id="bb-rl-folder-privacy">
 				<?php

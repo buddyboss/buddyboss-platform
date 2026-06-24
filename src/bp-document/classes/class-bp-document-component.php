@@ -153,19 +153,19 @@ class BP_Document_Component extends BP_Component {
 
 		// Register the visibility levels. See bp_document_get_visibility_levels() to filter.
 		$this->visibility_levels = array(
-			'public'   => __( 'Public', 'buddyboss' ),
-			'loggedin' => __( 'All Members', 'buddyboss' ),
+			'public'   => __( 'Public', 'buddyboss-platform' ),
+			'loggedin' => __( 'All Members', 'buddyboss-platform' ),
 		);
 
 		if ( bp_is_active( 'friends' ) ) {
-			$this->visibility_levels['friends'] = __( 'My Connections', 'buddyboss' );
+			$this->visibility_levels['friends'] = __( 'My Connections', 'buddyboss-platform' );
 		}
 
 		if ( bp_is_active( 'groups' ) ) {
-			$this->visibility_levels['grouponly'] = __( 'Group members', 'buddyboss' );
+			$this->visibility_levels['grouponly'] = __( 'Group members', 'buddyboss-platform' );
 		}
 
-		$this->visibility_levels['onlyme'] = __( 'Only Me', 'buddyboss' );
+		$this->visibility_levels['onlyme'] = __( 'Only Me', 'buddyboss-platform' );
 
 		$this->published_status = 'published';
 		$this->scheduled_status = 'scheduled';
@@ -197,7 +197,7 @@ class BP_Document_Component extends BP_Component {
 				'has_directory'   => true,
 				'global_tables'   => $global_tables,
 				'directory_title' => isset( $bp->pages->document->title ) ? $bp->pages->document->title : $default_directory_title,
-				'search_string'   => __( 'Search Documents&hellip;', 'buddyboss' ),
+				'search_string'   => __( 'Search Documents&hellip;', 'buddyboss-platform' ),
 				'meta_tables'     => $meta_tables,
 			)
 		);
@@ -260,9 +260,9 @@ class BP_Document_Component extends BP_Component {
 
 			// Only grab count if we're on a user page and current user has access.
 			if ( bp_is_user() ) {
-				$nav_name = __( 'Documents', 'buddyboss' );
+				$nav_name = __( 'Documents', 'buddyboss-platform' );
 			} else {
-				$nav_name = __( 'Documents', 'buddyboss' );
+				$nav_name = __( 'Documents', 'buddyboss-platform' );
 			}
 
 			// Add 'Documents' to the main navigation.
@@ -313,7 +313,7 @@ class BP_Document_Component extends BP_Component {
 			$wp_admin_nav[] = array(
 				'parent' => buddypress()->my_account_menu_id,
 				'id'     => 'my-account' . $this->id,
-				'title'  => __( 'Documents', 'buddyboss' ),
+				'title'  => __( 'Documents', 'buddyboss-platform' ),
 				'href'   => $document_link,
 			);
 
@@ -321,7 +321,7 @@ class BP_Document_Component extends BP_Component {
 			$wp_admin_nav[] = array(
 				'parent'   => 'my-account' . $this->id,
 				'id'       => 'my-account-' . $this->id . '-my-document',
-				'title'    => __( 'My Documents', 'buddyboss' ),
+				'title'    => __( 'My Documents', 'buddyboss-platform' ),
 				'href'     => $document_link,
 				'position' => 10,
 			);
@@ -342,7 +342,7 @@ class BP_Document_Component extends BP_Component {
 			$bp = buddypress();
 
 			if ( bp_is_my_profile() && ! bp_is_single_folder() ) {
-				$bp->bp_options_title = __( 'My Documents', 'buddyboss' );
+				$bp->bp_options_title = __( 'My Documents', 'buddyboss-platform' );
 
 			} elseif ( ! bp_is_my_profile() && ! bp_is_single_folder() ) {
 				$bp->bp_options_avatar = bp_core_fetch_avatar(
@@ -350,7 +350,7 @@ class BP_Document_Component extends BP_Component {
 						'item_id' => bp_displayed_user_id(),
 						'type'    => 'thumb',
 						/* translators: %s: member display name. */
-						'alt'     => sprintf( __( 'Profile photo of %s', 'buddyboss' ), bp_get_displayed_user_fullname() ),
+						'alt'     => sprintf( __( 'Profile photo of %s', 'buddyboss-platform' ), bp_get_displayed_user_fullname() ),
 					)
 				);
 				$bp->bp_options_title  = bp_get_displayed_user_fullname();

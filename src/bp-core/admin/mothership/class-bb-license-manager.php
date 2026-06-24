@@ -318,7 +318,7 @@ class BB_License_Manager extends LicenseManager {
 					self::activateLicense( $license_key, $activation_domain );
 					printf(
 						'<div class="notice notice-success"><p>%s</p></div>',
-						esc_html__( 'License activated successfully', 'buddyboss' )
+						esc_html__( 'License activated successfully', 'buddyboss-platform' )
 					);
 				} catch ( \Exception $e ) {
 					printf(
@@ -333,7 +333,7 @@ class BB_License_Manager extends LicenseManager {
 					self::deactivateLicense( $license_key, $activation_domain );
 					printf(
 						'<div class="notice notice-success"><p>%s</p></div>',
-						esc_html__( 'License deactivated successfully', 'buddyboss' )
+						esc_html__( 'License deactivated successfully', 'buddyboss-platform' )
 					);
 				} catch ( \Exception $e ) {
 					printf(
@@ -390,11 +390,11 @@ class BB_License_Manager extends LicenseManager {
 	 */
 	private static function validate_activation_permissions(): void {
 		if ( ! current_user_can( 'manage_options' ) ) {
-			throw new \Exception( esc_html__( 'You do not have permission to activate a license', 'buddyboss' ) );
+			throw new \Exception( esc_html__( 'You do not have permission to activate a license', 'buddyboss-platform' ) );
 		}
 
 		if ( ! isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['_wpnonce'] ) ), 'mothership_activate_license' ) ) {
-			throw new \Exception( esc_html__( 'Invalid nonce', 'buddyboss' ) );
+			throw new \Exception( esc_html__( 'Invalid nonce', 'buddyboss-platform' ) );
 		}
 	}
 
@@ -409,11 +409,11 @@ class BB_License_Manager extends LicenseManager {
 	 */
 	private static function validate_activation_inputs( string $license_key, string $domain ): void {
 		if ( empty( $license_key ) ) {
-			throw new \Exception( esc_html__( 'License key is required', 'buddyboss' ) );
+			throw new \Exception( esc_html__( 'License key is required', 'buddyboss-platform' ) );
 		}
 
 		if ( empty( $domain ) ) {
-			throw new \Exception( esc_html__( 'Activation domain is required', 'buddyboss' ) );
+			throw new \Exception( esc_html__( 'Activation domain is required', 'buddyboss-platform' ) );
 		}
 
 		$rate_limit_check = self::check_rate_limit();
@@ -451,7 +451,7 @@ class BB_License_Manager extends LicenseManager {
 			self::disable_header_capture();
 			bb_error_log( sprintf( 'License activation API exception: %s', $e->getMessage() ), true );
 			throw new \Exception(
-				esc_html__( 'License activation failed. Please check your license key and try again. If the problem persists, contact support.', 'buddyboss' )
+				esc_html__( 'License activation failed. Please check your license key and try again. If the problem persists, contact support.', 'buddyboss-platform' )
 			);
 		}
 	}
@@ -495,7 +495,7 @@ class BB_License_Manager extends LicenseManager {
 		throw new \Exception(
 			sprintf(
 				/* translators: %s is the error message from API */
-				esc_html__( 'License activation failed: %s', 'buddyboss' ),
+				esc_html__( 'License activation failed: %s', 'buddyboss-platform' ),
 				esc_html( $error_message )
 			)
 		);
@@ -516,7 +516,7 @@ class BB_License_Manager extends LicenseManager {
 			bb_error_log( 'Cleared orphaned plugin ID (422)', true );
 
 			throw new \Exception(
-				esc_html__( 'License activation failed: The stored product ID did not match your license. Please try activating again with your license key.', 'buddyboss' )
+				esc_html__( 'License activation failed: The stored product ID did not match your license. Please try activating again with your license key.', 'buddyboss-platform' )
 			);
 		}
 	}
@@ -563,7 +563,7 @@ class BB_License_Manager extends LicenseManager {
 		throw new \Exception(
 			sprintf(
 				/* translators: %d is the number of minutes to wait */
-				esc_html__( 'License activation failed: Too many activation requests. Please wait approximately %d minute(s) before trying again.', 'buddyboss' ),
+				esc_html__( 'License activation failed: Too many activation requests. Please wait approximately %d minute(s) before trying again.', 'buddyboss-platform' ),
 				max( 1, $wait_minutes ) // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- max() returns integer
 			)
 		);
@@ -614,7 +614,7 @@ class BB_License_Manager extends LicenseManager {
 		} catch ( \Exception $e ) {
 			self::disable_header_capture();
 			bb_error_log( sprintf( 'Error storing license credentials: %s', $e->getMessage() ), true );
-			throw new \Exception( esc_html__( 'License activation succeeded but failed to save. Please try again.', 'buddyboss' ) );
+			throw new \Exception( esc_html__( 'License activation succeeded but failed to save. Please try again.', 'buddyboss-platform' ) );
 		}
 	}
 
@@ -749,7 +749,7 @@ class BB_License_Manager extends LicenseManager {
 						'rate_limit',
 						sprintf(
 							/* translators: %d is the number of minutes to wait */
-							esc_html__( 'Too many activation requests. Please wait approximately %d minute(s) before trying again.', 'buddyboss' ),
+							esc_html__( 'Too many activation requests. Please wait approximately %d minute(s) before trying again.', 'buddyboss-platform' ),
 							max( 1, $wait_minutes )
 						)
 					);
@@ -797,7 +797,7 @@ class BB_License_Manager extends LicenseManager {
 							'product_mismatch',
 							sprintf(
 								/* translators: 1: Expected product, 2: Actual product from license */
-								esc_html__( 'Product validation failed: Your license is for "%2$s" but the system was configured for "%1$s". The configuration has been reset. Please try activating again.', 'buddyboss' ),
+								esc_html__( 'Product validation failed: Your license is for "%2$s" but the system was configured for "%1$s". The configuration has been reset. Please try activating again.', 'buddyboss-platform' ),
 								$product_id,
 								$actual_product
 							)
@@ -846,12 +846,12 @@ class BB_License_Manager extends LicenseManager {
 			// Requirements: 3-50 chars, lowercase letters/numbers/hyphens, must start with letter,
 			// no consecutive hyphens, must be buddyboss-related product.
 			if ( strlen( $plugin_id ) < 3 || strlen( $plugin_id ) > 50 ) {
-				throw new \Exception( esc_html__( 'Invalid plugin ID length in license key', 'buddyboss' ) );
+				throw new \Exception( esc_html__( 'Invalid plugin ID length in license key', 'buddyboss-platform' ) );
 			}
 
 			// Must start with letter, contain only lowercase letters, numbers, single hyphens.
 			if ( ! preg_match( '/^[a-z][a-z0-9]*(-[a-z0-9]+)*$/', $plugin_id ) ) {
-				throw new \Exception( esc_html__( 'Invalid plugin ID format in license key', 'buddyboss' ) );
+				throw new \Exception( esc_html__( 'Invalid plugin ID format in license key', 'buddyboss-platform' ) );
 			}
 
 			// Whitelist: Must be a known BuddyBoss product ID pattern.
@@ -865,7 +865,7 @@ class BB_License_Manager extends LicenseManager {
 			}
 
 			if ( ! $is_valid_prefix ) {
-				throw new \Exception( esc_html__( 'Invalid product identifier in license key', 'buddyboss' ) );
+				throw new \Exception( esc_html__( 'Invalid product identifier in license key', 'buddyboss-platform' ) );
 			}
 
 			// Store the web plugin ID.
@@ -891,23 +891,23 @@ class BB_License_Manager extends LicenseManager {
 		ob_start();
 		$plugin_id = self::getContainer()->get( AbstractPluginConnection::class )->pluginId; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase,WordPress.NamingConventions.ValidFunctionName.MethodNameInvalid
 		?>
-		<h2><?php esc_html_e( 'License Activation', 'buddyboss' ); ?></h2>
+		<h2><?php esc_html_e( 'License Activation', 'buddyboss-platform' ); ?></h2>
 		<form method="post" action="" name="<?php echo esc_attr( $plugin_id ); ?>_activate_license_form">
 			<div class="<?php echo esc_attr( $plugin_id ); ?>-license-form license-form-wrap">
 				<table class="form-table">
 					<tr>
 						<th scope="row">
-							<label for="license_key"><?php esc_html_e( 'License Key', 'buddyboss' ); ?></label>
+							<label for="license_key"><?php esc_html_e( 'License Key', 'buddyboss-platform' ); ?></label>
 						</th>
 						<td>
-							<input type="text" name="license_key" id="license_key" placeholder="<?php esc_attr_e( 'Enter your license key', 'buddyboss' ); ?>" value="<?php echo esc_attr( Credentials::getLicenseKey() ); ?>" >
+							<input type="text" name="license_key" id="license_key" placeholder="<?php esc_attr_e( 'Enter your license key', 'buddyboss-platform' ); ?>" value="<?php echo esc_attr( Credentials::getLicenseKey() ); ?>" >
 							<input type="hidden" name="activation_domain" id="activation_domain" value="<?php echo esc_attr( Credentials::getActivationDomain() ); ?>" >
 							<p class="description">
 								<?php
 									printf(
 										/* translators: %s is the link to get a free license key */
-										esc_html__( 'Don\'t have a license yet? Click  %s to get your free license key and receive plugin updates.', 'buddyboss' ),
-										'<a href="#" id="get-free-license-link" rel="noopener noreferrer">' . esc_html__( 'here', 'buddyboss' ) . '</a>'
+										esc_html__( 'Don\'t have a license yet? Click  %s to get your free license key and receive plugin updates.', 'buddyboss-platform' ),
+										'<a href="#" id="get-free-license-link" rel="noopener noreferrer">' . esc_html__( 'here', 'buddyboss-platform' ) . '</a>'
 									);
 								?>
 							</p>
@@ -917,7 +917,7 @@ class BB_License_Manager extends LicenseManager {
 						<td colspan="2" scope="row">
 							<?php wp_nonce_field( 'mothership_activate_license', '_wpnonce' ); ?>
 							<input type="hidden" name="buddyboss_platform_license_button" value="activate">
-							<input type="submit" value="<?php esc_html_e( 'Activate License', 'buddyboss' ); ?>" class="button button-primary <?php echo esc_attr( $plugin_id ); ?>-button-activate">
+							<input type="submit" value="<?php esc_html_e( 'Activate License', 'buddyboss-platform' ); ?>" class="button button-primary <?php echo esc_attr( $plugin_id ); ?>-button-activate">
 						</td>
 					</tr>
 				</table>
@@ -942,7 +942,7 @@ class BB_License_Manager extends LicenseManager {
 		<div id="free-license-modal" class="bb-license-modal" style="display: none;">
 			<div class="bb-modal-content">
 				<div class="bb-modal-header">
-					<h3><?php esc_html_e( 'Get Your BuddyBoss Platform License Key', 'buddyboss' ); ?></h3>
+					<h3><?php esc_html_e( 'Get Your BuddyBoss Platform License Key', 'buddyboss-platform' ); ?></h3>
 					<span class="bb-modal-close">&times;</span>
 				</div>
 				<div class="bb-modal-body">
@@ -950,7 +950,7 @@ class BB_License_Manager extends LicenseManager {
 						<table class="form-table">
 							<tr>
 								<th scope="row">
-									<label for="first_name"><?php esc_html_e( 'First Name', 'buddyboss' ); ?> <span class="required">*</span></label>
+									<label for="first_name"><?php esc_html_e( 'First Name', 'buddyboss-platform' ); ?> <span class="required">*</span></label>
 								</th>
 								<td>
 									<input type="text" name="first_name" id="first_name" required class="regular-text" />
@@ -958,7 +958,7 @@ class BB_License_Manager extends LicenseManager {
 							</tr>
 							<tr>
 								<th scope="row">
-									<label for="last_name"><?php esc_html_e( 'Last Name', 'buddyboss' ); ?> <span class="required">*</span></label>
+									<label for="last_name"><?php esc_html_e( 'Last Name', 'buddyboss-platform' ); ?> <span class="required">*</span></label>
 								</th>
 								<td>
 									<input type="text" name="last_name" id="last_name" required class="regular-text" />
@@ -966,7 +966,7 @@ class BB_License_Manager extends LicenseManager {
 							</tr>
 							<tr>
 								<th scope="row">
-									<label for="email"><?php esc_html_e( 'Email Address', 'buddyboss' ); ?> <span class="required">*</span></label>
+									<label for="email"><?php esc_html_e( 'Email Address', 'buddyboss-platform' ); ?> <span class="required">*</span></label>
 								</th>
 								<td>
 									<input type="email" name="email" id="email" required class="regular-text" />
@@ -975,7 +975,7 @@ class BB_License_Manager extends LicenseManager {
 						</table>
 						<div class="bb-modal-footer">
 							<button type="submit" class="button button-primary" id="submit-license-request">
-								<?php esc_html_e( 'Get License Key', 'buddyboss' ); ?>
+								<?php esc_html_e( 'Get License Key', 'buddyboss-platform' ); ?>
 							</button>
 						</div>
 					</form>
@@ -1031,7 +1031,7 @@ class BB_License_Manager extends LicenseManager {
 				var originalText = $submitBtn.text();
 
 				// Show loading state.
-				$submitBtn.text('<?php esc_html_e( 'Processing...', 'buddyboss' ); ?>').prop('disabled', true);
+				$submitBtn.text('<?php esc_html_e( 'Processing...', 'buddyboss-platform' ); ?>').prop('disabled', true);
 				$('#license-response').hide();
 
 				// Get form data.
@@ -1060,12 +1060,12 @@ class BB_License_Manager extends LicenseManager {
 								$('#license_key').val(response.data.license_key);
 							}
 						} else {
-							$('#license-success-message').html('<strong><?php esc_html_e( 'Error:', 'buddyboss' ); ?></strong> ' + response.data);
+							$('#license-success-message').html('<strong><?php esc_html_e( 'Error:', 'buddyboss-platform' ); ?></strong> ' + response.data);
 							$('#license-response').show();
 						}
 					},
 					error: function() {
-						$('#license-success-message').html('<strong><?php esc_html_e( 'Error:', 'buddyboss' ); ?></strong> <?php esc_html_e( 'An error occurred while processing your request.', 'buddyboss' ); ?>');
+						$('#license-success-message').html('<strong><?php esc_html_e( 'Error:', 'buddyboss-platform' ); ?></strong> <?php esc_html_e( 'An error occurred while processing your request.', 'buddyboss-platform' ); ?>');
 						$('#license-response').show();
 					},
 					complete: function() {
@@ -1125,22 +1125,22 @@ class BB_License_Manager extends LicenseManager {
 		$license_key  = Credentials::getLicenseKey();
 		$license_info = $this->bb_get_license_details( $license_key );
 		?>
-		<h2><?php esc_html_e( 'Active License Information', 'buddyboss' ); ?></h2>
+		<h2><?php esc_html_e( 'Active License Information', 'buddyboss-platform' ); ?></h2>
 
 		<?php
 		if ( ! is_wp_error( $license_info ) ) {
 			$activation_text = sprintf(
 				/* translators: 1: Number of sites activated, 2: Total sites allowed */
-				__( '%1$s of %2$s sites have been activated with this license key', 'buddyboss' ),
+				__( '%1$s of %2$s sites have been activated with this license key', 'buddyboss-platform' ),
 				$license_info['total_prod_used'],
 				999 <= (int) $license_info['total_prod_allowed'] ? 'unlimited' : $license_info['total_prod_allowed']
 			);
 			?>
 			<div class="activated-licence">
-				<p class=""><?php esc_html_e( 'License Key: ', 'buddyboss' ); ?><?php echo esc_html( $license_info['license_key'] ); ?></p>
-				<p class=""><?php esc_html_e( 'Status: ', 'buddyboss' ); ?><?php echo esc_html( $license_info['status'] ); ?></p>
-				<p class=""><?php esc_html_e( 'Product: ', 'buddyboss' ); ?><?php echo esc_html( $license_info['product'] ); ?></p>
-				<p class=""><?php esc_html_e( 'Activations: ', 'buddyboss' ); ?><?php echo esc_html( $activation_text ); ?></p>
+				<p class=""><?php esc_html_e( 'License Key: ', 'buddyboss-platform' ); ?><?php echo esc_html( $license_info['license_key'] ); ?></p>
+				<p class=""><?php esc_html_e( 'Status: ', 'buddyboss-platform' ); ?><?php echo esc_html( $license_info['status'] ); ?></p>
+				<p class=""><?php esc_html_e( 'Product: ', 'buddyboss-platform' ); ?><?php echo esc_html( $license_info['product'] ); ?></p>
+				<p class=""><?php esc_html_e( 'Activations: ', 'buddyboss-platform' ); ?><?php echo esc_html( $activation_text ); ?></p>
 			</div>
 		<?php } ?>
 
@@ -1149,11 +1149,11 @@ class BB_License_Manager extends LicenseManager {
 				<table class="form-table">
 					<tr>
 						<td colspan="2" scope="row">
-							<input type="hidden" name="license_key" id="license_key" placeholder="<?php esc_attr_e( 'Enter your license key', 'buddyboss' ); ?>" value="<?php echo esc_attr( $license_key ); ?>" readonly />
+							<input type="hidden" name="license_key" id="license_key" placeholder="<?php esc_attr_e( 'Enter your license key', 'buddyboss-platform' ); ?>" value="<?php echo esc_attr( $license_key ); ?>" readonly />
 							<input type="hidden" name="activation_domain" id="activation_domain" value="<?php echo esc_attr( Credentials::getActivationDomain() ); ?>" />
 							<?php wp_nonce_field( 'mothership_deactivate_license', '_wpnonce' ); ?>
 							<input type="hidden" name="buddyboss_platform_license_button" value="deactivate">
-							<input type="submit" value="<?php esc_html_e( 'Deactivate License', 'buddyboss' ); ?>" class="button button-secondary <?php echo esc_attr( $plugin_id ); ?>-button-deactivate" >
+							<input type="submit" value="<?php esc_html_e( 'Deactivate License', 'buddyboss-platform' ); ?>" class="button button-secondary <?php echo esc_attr( $plugin_id ); ?>-button-deactivate" >
 						</td>
 					</tr>
 				</table>
@@ -1271,12 +1271,12 @@ class BB_License_Manager extends LicenseManager {
 	public static function ajax_get_free_license(): void {
 		// Verify nonce - check existence first to prevent PHP warnings.
 		if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'bb_get_free_license' ) ) {
-			wp_send_json_error( __( 'Invalid nonce', 'buddyboss' ) );
+			wp_send_json_error( __( 'Invalid nonce', 'buddyboss-platform' ) );
 		}
 
 		// Check user capabilities.
 		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_send_json_error( __( 'You do not have permission to perform this action', 'buddyboss' ) );
+			wp_send_json_error( __( 'You do not have permission to perform this action', 'buddyboss-platform' ) );
 		}
 
 		// Get form data.
@@ -1286,11 +1286,11 @@ class BB_License_Manager extends LicenseManager {
 
 		// Validate required fields.
 		if ( empty( $first_name ) || empty( $last_name ) || empty( $email ) ) {
-			wp_send_json_error( __( 'All fields are required', 'buddyboss' ) );
+			wp_send_json_error( __( 'All fields are required', 'buddyboss-platform' ) );
 		}
 
 		if ( ! is_email( $email ) ) {
-			wp_send_json_error( __( 'Please enter a valid email address', 'buddyboss' ) );
+			wp_send_json_error( __( 'Please enter a valid email address', 'buddyboss-platform' ) );
 		}
 
 		// Prepare API request data.
@@ -1317,7 +1317,7 @@ class BB_License_Manager extends LicenseManager {
 			wp_send_json_error(
 				sprintf(
 					/* translators: %s is the error message */
-					__( 'API request failed: %s', 'buddyboss' ),
+					__( 'API request failed: %s', 'buddyboss-platform' ),
 					$response->get_error_message()
 				)
 			);
@@ -1330,7 +1330,7 @@ class BB_License_Manager extends LicenseManager {
 			wp_send_json_error(
 				sprintf(
 					/* translators: %d is the HTTP status code */
-					__( 'API returned error code: %d', 'buddyboss' ),
+					__( 'API returned error code: %d', 'buddyboss-platform' ),
 					$response_code
 				)
 			);
@@ -1339,12 +1339,12 @@ class BB_License_Manager extends LicenseManager {
 		$data = json_decode( $response_body, true );
 
 		if ( ! $data ) {
-			wp_send_json_error( __( 'Invalid response from API', 'buddyboss' ) );
+			wp_send_json_error( __( 'Invalid response from API', 'buddyboss-platform' ) );
 		}
 
 		// Check if API returned success.
 		if ( isset( $data['success'] ) && $data['success'] ) {
-			$message     = isset( $data['message'] ) ? $data['message'] : __( 'License key generated successfully!', 'buddyboss' );
+			$message     = isset( $data['message'] ) ? $data['message'] : __( 'License key generated successfully!', 'buddyboss-platform' );
 			$license_key = isset( $data['license_key'] ) ? $data['license_key'] : '';
 
 			wp_send_json_success(
@@ -1354,7 +1354,7 @@ class BB_License_Manager extends LicenseManager {
 				)
 			);
 		} else {
-			$error_message = isset( $data['message'] ) ? $data['message'] : __( 'Failed to generate license key', 'buddyboss' );
+			$error_message = isset( $data['message'] ) ? $data['message'] : __( 'Failed to generate license key', 'buddyboss-platform' );
 			wp_send_json_error( $error_message );
 		}
 	}
@@ -1368,12 +1368,12 @@ class BB_License_Manager extends LicenseManager {
 	public static function ajax_reset_license_settings(): void {
 		// Verify nonce - check existence first to prevent PHP warnings.
 		if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'bb_reset_license_settings' ) ) {
-			wp_send_json_error( __( 'Invalid nonce', 'buddyboss' ) );
+			wp_send_json_error( __( 'Invalid nonce', 'buddyboss-platform' ) );
 		}
 
 		// Check user capabilities.
 		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_send_json_error( __( 'You do not have permission to perform this action', 'buddyboss' ) );
+			wp_send_json_error( __( 'You do not have permission to perform this action', 'buddyboss-platform' ) );
 		}
 
 		try {
@@ -1438,14 +1438,14 @@ class BB_License_Manager extends LicenseManager {
 
 			wp_send_json_success(
 				array(
-					'message' => __( 'License settings have been reset successfully. You can now activate your license with the correct license key.', 'buddyboss' ),
+					'message' => __( 'License settings have been reset successfully. You can now activate your license with the correct license key.', 'buddyboss-platform' ),
 				)
 			);
 		} catch ( \Exception $e ) {
 			bb_error_log( sprintf( 'Error resetting license: %s', $e->getMessage() ), true );
 			// Don't expose internal errors to users via AJAX response.
 			wp_send_json_error(
-				__( 'Failed to reset license settings. Please try again or contact support if the problem persists.', 'buddyboss' )
+				__( 'Failed to reset license settings. Please try again or contact support if the problem persists.', 'buddyboss-platform' )
 			);
 		}
 	}
@@ -1527,7 +1527,7 @@ class BB_License_Manager extends LicenseManager {
 				'rate_limit_exceeded',
 				sprintf(
 					/* translators: %d is the number of minutes to wait */
-					esc_html__( 'Rate limit exceeded. Please wait approximately %d minute(s) before trying again.', 'buddyboss' ),
+					esc_html__( 'Rate limit exceeded. Please wait approximately %d minute(s) before trying again.', 'buddyboss-platform' ),
 					$wait_minutes
 				)
 			);

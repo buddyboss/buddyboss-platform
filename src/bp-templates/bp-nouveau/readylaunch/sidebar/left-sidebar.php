@@ -133,7 +133,7 @@ if ( $is_memberpress_inner ) {
 			?>
 			<div class="bb-rl-left-panel-widget">
 				<div class="bb-rl-list">
-					<h2><?php esc_html_e( 'Links', 'buddyboss' ); ?></h2>
+					<h2><?php esc_html_e( 'Links', 'buddyboss-platform' ); ?></h2>
 					<ul class="bb-readylaunchpanel-menu bb-bottom-readylaunchpanel-menu">
 					<?php
 					foreach ( $custom_links as $link_item ) {

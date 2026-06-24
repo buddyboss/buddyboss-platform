@@ -322,7 +322,7 @@ function bp_get_video_pagination_count() {
 	$to_num    = bp_core_number_format( ( $start_num + ( $video_template->pag_num - 1 ) > $video_template->total_video_count ) ? $video_template->total_video_count : $start_num + ( $video_template->pag_num - 1 ) );
 	$total     = bp_core_number_format( $video_template->total_video_count );
 
-	$message = sprintf( _n( 'Viewing 1 item', 'Viewing %1$s - %2$s of %3$s items', $video_template->total_video_count, 'buddyboss' ), $from_num, $to_num, $total ); // phpcs:ignore
+	$message = sprintf( _n( 'Viewing 1 item', 'Viewing %1$s - %2$s of %3$s items', $video_template->total_video_count, 'buddyboss-platform' ), $from_num, $to_num, $total ); // phpcs:ignore
 
 	return $message;
 }
@@ -1267,7 +1267,7 @@ function bp_get_video_album_pagination_count() {
 	$to_num    = bp_core_number_format( ( $start_num + ( $video_album_template->pag_num - 1 ) > $video_album_template->total_album_count ) ? $video_album_template->total_album_count : $start_num + ( $video_album_template->pag_num - 1 ) );
 	$total     = bp_core_number_format( $video_album_template->total_album_count );
 
-	$message = sprintf( _n( 'Viewing 1 item', 'Viewing %1$s - %2$s of %3$s items', $video_album_template->total_video_count, 'buddyboss' ), $from_num, $to_num, $total ); // phpcs:ignore
+	$message = sprintf( _n( 'Viewing 1 item', 'Viewing %1$s - %2$s of %3$s items', $video_album_template->total_video_count, 'buddyboss-platform' ), $from_num, $to_num, $total ); // phpcs:ignore
 
 	return $message;
 }

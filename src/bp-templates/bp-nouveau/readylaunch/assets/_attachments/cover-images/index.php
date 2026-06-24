@@ -25,7 +25,7 @@ $cover_label     = '';
 
 if ( bp_is_group() ) {
 	$group_id    = bp_get_current_group_id();
-	$cover_label = __( 'Group', 'buddyboss' );
+	$cover_label = __( 'Group', 'buddyboss-platform' );
 	if ( bp_attachments_get_group_has_cover_image( $group_id ) ) {
 		$has_cover_image = true;
 		$cover_image_url = bp_attachments_get_attachment(
@@ -39,7 +39,7 @@ if ( bp_is_group() ) {
 	$container_class .= ' bb-rl-cover-container--group';
 } elseif ( bp_is_user() ) {
 	$user_id     = bp_displayed_user_id();
-	$cover_label = __( 'Profile', 'buddyboss' );
+	$cover_label = __( 'Profile', 'buddyboss-platform' );
 	if ( bp_attachments_get_attachment(
 		'url',
 		array(
@@ -64,20 +64,20 @@ $container_class .= $has_cover_image ? ' bb-rl-cover-container--has-cover' : ' b
 ?>
 
 <div class="bb-rl-image-headline">
-	<h3><?php esc_html_e( 'Cover', 'buddyboss' ); ?></h3>
+	<h3><?php esc_html_e( 'Cover', 'buddyboss-platform' ); ?></h3>
 </div>
 <div class="bb-rl-image-caption">
-	<?php esc_html_e( 'For best results, upload an image that is 1200px by 300px or larger.', 'buddyboss' ); ?>
+	<?php esc_html_e( 'For best results, upload an image that is 1200px by 300px or larger.', 'buddyboss-platform' ); ?>
 </div>
 <div class="<?php echo esc_attr( $container_class ); ?>">
 	<div class="bb-rl-cover-preview">
-		<a class="bb-rl-remove-cover-button" href="#" data-balloon-pos="up" data-balloon="<?php esc_html_e( 'Delete Group Cover Photo', 'buddyboss' ); ?>">
+		<a class="bb-rl-remove-cover-button" href="#" data-balloon-pos="up" data-balloon="<?php esc_html_e( 'Delete Group Cover Photo', 'buddyboss-platform' ); ?>">
 			<i class="bb-icons-rl-x"></i>
 		</a>
 		<img src="<?php echo esc_url( $cover_image_url ); ?>" class="group-cover-image" alt="
 			<?php
 				/* translators: %s: Cover image type (Group or Profile) */
-				echo esc_attr( sprintf( __( '%s cover image', 'buddyboss' ), $cover_label ) );
+				echo esc_attr( sprintf( __( '%s cover image', 'buddyboss-platform' ), $cover_label ) );
 			?>
 		" />
 	</div>

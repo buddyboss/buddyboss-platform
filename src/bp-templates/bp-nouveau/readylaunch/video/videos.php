@@ -40,7 +40,7 @@ $is_send_ajax_request = bb_is_send_ajax_request();
 				bp_get_template_part( 'video/add-video' );
 			} else {
 				?>
-				<h2 class="bb-title"><?php esc_html_e( 'Videos', 'buddyboss' ); ?></h2>
+				<h2 class="bb-title"><?php esc_html_e( 'Videos', 'buddyboss-platform' ); ?></h2>
 				<?php
 			}
 

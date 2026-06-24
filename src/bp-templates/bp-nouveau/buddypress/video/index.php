@@ -44,7 +44,7 @@ bp_nouveau_template_notices();
 							'<span class="bb-count">%d</span> Video',
 							'<span class="bb-count">%d</span> Videos',
 							$count,
-							'buddyboss'
+							'buddyboss-platform'
 						), array( 'span' => array( 'class' => true ) )
 					),
 					(int) $count
@@ -66,13 +66,13 @@ bp_nouveau_template_notices();
 
 			if ( ( bp_is_profile_video_support_enabled() && bb_user_can_create_video() ) ) {
 				?>
-				<a class="bb-add-videos button small" id="bp-add-video" href="#" ><i class="bb-icon-l bb-icon-upload"></i><?php esc_html_e( 'Add Videos', 'buddyboss' ); ?></a>
+				<a class="bb-add-videos button small" id="bp-add-video" href="#" ><i class="bb-icon-l bb-icon-upload"></i><?php esc_html_e( 'Add Videos', 'buddyboss-platform' ); ?></a>
 				<?php
 			}
 
 			if ( ( bp_is_profile_albums_support_enabled() ) ) {
 				?>
-				<a href="#" id="bb-create-video-album" class="bb-create-video-album button small"><i class="bb-icon-l bb-icon-image-video"></i><?php esc_html_e( 'Create Album', 'buddyboss' ); ?></a>
+				<a href="#" id="bb-create-video-album" class="bb-create-video-album button small"><i class="bb-icon-l bb-icon-image-video"></i><?php esc_html_e( 'Create Album', 'buddyboss-platform' ); ?></a>
 				<?php
 			}
 

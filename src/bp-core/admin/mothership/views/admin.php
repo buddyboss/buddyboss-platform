@@ -16,34 +16,34 @@ namespace BuddyBoss\Core\Admin\Mothership;
 	<div class="buddyboss-mothership-block-container">
 		<div class="buddyboss-mothership-block">
 			<div class="inside">
-				<h2><?php esc_html_e( 'Manual Connect', 'buddyboss' ); ?></h2>
+				<h2><?php esc_html_e( 'Manual Connect', 'buddyboss-platform' ); ?></h2>
 				<p>
 					<li>
 						<?php
 						/* translators: %s: Link to BuddyBoss.com */
-						printf( esc_html__( 'Log into %s', 'buddyboss' ), '<a href="https://my.buddyboss.com/wp-admin">BuddyBoss.com</a>' );
+						printf( esc_html__( 'Log into %s', 'buddyboss-platform' ), '<a href="https://my.buddyboss.com/wp-admin">BuddyBoss.com</a>' );
 						?>
 					</li>
 					<li>
 						<?php
 						/* translators: %s: Link to account page */
-						printf( esc_html__( 'Go to your %s', 'buddyboss' ), '<a href="https://my.buddyboss.com/my-account/">Account</a>' );
+						printf( esc_html__( 'Go to your %s', 'buddyboss-platform' ), '<a href="https://my.buddyboss.com/my-account/">Account</a>' );
 						?>
 					</li>
 					<li>
-						<?php esc_html_e( 'Go to the "Subscriptions" tab', 'buddyboss' ); ?>
+						<?php esc_html_e( 'Go to the "Subscriptions" tab', 'buddyboss-platform' ); ?>
 					</li>
 					<li>
-						<?php esc_html_e( 'Find your product\'s license key', 'buddyboss' ); ?>
+						<?php esc_html_e( 'Find your product\'s license key', 'buddyboss-platform' ); ?>
 					</li>
 					<li>
-						<?php esc_html_e( 'Enter your license key below', 'buddyboss' ); ?>
+						<?php esc_html_e( 'Enter your license key below', 'buddyboss-platform' ); ?>
 					</li>
 					<li>
-						<?php esc_html_e( 'Enter your BuddyBoss account email', 'buddyboss' ); ?>
+						<?php esc_html_e( 'Enter your BuddyBoss account email', 'buddyboss-platform' ); ?>
 					</li>
 					<li>
-						<?php esc_html_e( 'Click "Update License"', 'buddyboss' ); ?>
+						<?php esc_html_e( 'Click "Update License"', 'buddyboss-platform' ); ?>
 					</li>
 				</p>
 			</div>
@@ -51,19 +51,19 @@ namespace BuddyBoss\Core\Admin\Mothership;
 
 		<div class="buddyboss-mothership-block">
 			<div class="inside">
-				<h2><?php esc_html_e( 'Benefits of a License', 'buddyboss' ); ?></h2>
+				<h2><?php esc_html_e( 'Benefits of a License', 'buddyboss-platform' ); ?></h2>
 				<ul>
 					<li>
-						<strong><?php esc_html_e( 'Stay Up to Date', 'buddyboss' ); ?></strong><br/>
-						<?php esc_html_e( 'Get the latest features right away', 'buddyboss' ); ?>
+						<strong><?php esc_html_e( 'Stay Up to Date', 'buddyboss-platform' ); ?></strong><br/>
+						<?php esc_html_e( 'Get the latest features right away', 'buddyboss-platform' ); ?>
 					</li>
 					<li>
-						<strong><?php esc_html_e( 'Admin Notifications', 'buddyboss' ); ?></strong><br/>
-						<?php esc_html_e( 'Get updates in WordPress', 'buddyboss' ); ?>
+						<strong><?php esc_html_e( 'Admin Notifications', 'buddyboss-platform' ); ?></strong><br/>
+						<?php esc_html_e( 'Get updates in WordPress', 'buddyboss-platform' ); ?>
 					</li>
 					<li>
-						<strong><?php esc_html_e( 'Professional Support', 'buddyboss' ); ?></strong><br/>
-						<?php esc_html_e( 'Get help with any questions', 'buddyboss' ); ?>
+						<strong><?php esc_html_e( 'Professional Support', 'buddyboss-platform' ); ?></strong><br/>
+						<?php esc_html_e( 'Get help with any questions', 'buddyboss-platform' ); ?>
 					</li>
 				</ul>
 			</div>
@@ -83,11 +83,11 @@ namespace BuddyBoss\Core\Admin\Mothership;
 
 	<!-- Reset License Settings Section -->
 	<div class="buddyboss-mothership-reset-section" style="margin-top: 20px; padding: 20px; background: #fff; border: 1px solid #ccd0d4;">
-		<h3><?php esc_html_e( 'Troubleshooting', 'buddyboss' ); ?></h3>
-		<p><?php esc_html_e( 'If you\'re experiencing activation issues, you can reset all license settings and try again.', 'buddyboss' ); ?></p>
-		<p><strong><?php esc_html_e( 'Warning:', 'buddyboss' ); ?></strong> <?php esc_html_e( 'This will clear all license data including activation status. You will need to re-activate your license after resetting.', 'buddyboss' ); ?></p>
+		<h3><?php esc_html_e( 'Troubleshooting', 'buddyboss-platform' ); ?></h3>
+		<p><?php esc_html_e( 'If you\'re experiencing activation issues, you can reset all license settings and try again.', 'buddyboss-platform' ); ?></p>
+		<p><strong><?php esc_html_e( 'Warning:', 'buddyboss-platform' ); ?></strong> <?php esc_html_e( 'This will clear all license data including activation status. You will need to re-activate your license after resetting.', 'buddyboss-platform' ); ?></p>
 		<button type="button" id="bb-reset-license-btn" class="button button-secondary">
-			<?php esc_html_e( 'Reset License Settings', 'buddyboss' ); ?>
+			<?php esc_html_e( 'Reset License Settings', 'buddyboss-platform' ); ?>
 		</button>
 		<span id="bb-reset-license-spinner" class="spinner" style="float: none; margin: 0 10px;"></span>
 		<div id="bb-reset-license-message" style="margin-top: 10px;"></div>
@@ -99,7 +99,7 @@ namespace BuddyBoss\Core\Admin\Mothership;
 			e.preventDefault();
 
 			// Confirm action
-			if (!confirm('<?php echo esc_js( __( 'Are you sure you want to reset all license settings? This will deactivate your license and clear all stored data.', 'buddyboss' ) ); ?>')) {
+			if (!confirm('<?php echo esc_js( __( 'Are you sure you want to reset all license settings? This will deactivate your license and clear all stored data.', 'buddyboss-platform' ) ); ?>')) {
 				return;
 			}
 
@@ -133,13 +133,13 @@ namespace BuddyBoss\Core\Admin\Mothership;
 						}, 2000);
 					} else {
 						// Create error message safely to prevent XSS
-						var $errorMsg = $('<div class="notice notice-error inline"><p><strong><?php esc_html_e( 'Error:', 'buddyboss' ); ?></strong> <span></span></p></div>');
+						var $errorMsg = $('<div class="notice notice-error inline"><p><strong><?php esc_html_e( 'Error:', 'buddyboss-platform' ); ?></strong> <span></span></p></div>');
 						$errorMsg.find('span').text(response.data);
 						$message.html($errorMsg);
 					}
 				},
 				error: function() {
-					$message.html('<div class="notice notice-error inline"><p><strong><?php esc_html_e( 'Error:', 'buddyboss' ); ?></strong> <?php esc_html_e( 'An error occurred while resetting license settings.', 'buddyboss' ); ?></p></div>');
+					$message.html('<div class="notice notice-error inline"><p><strong><?php esc_html_e( 'Error:', 'buddyboss-platform' ); ?></strong> <?php esc_html_e( 'An error occurred while resetting license settings.', 'buddyboss-platform' ); ?></p></div>');
 				},
 				complete: function() {
 					$btn.prop('disabled', false);

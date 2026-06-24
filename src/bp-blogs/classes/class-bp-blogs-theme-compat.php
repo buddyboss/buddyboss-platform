@@ -116,7 +116,7 @@ class BP_Blogs_Theme_Compat {
 		bp_theme_compat_reset_post(
 			array(
 				'ID'             => ! empty( $blog_page_id ) ? $blog_page_id : 0,
-				'post_title'     => __( 'Sites', 'buddyboss' ),
+				'post_title'     => __( 'Sites', 'buddyboss-platform' ),
 				'post_author'    => 0,
 				'post_date'      => 0,
 				'post_content'   => '',
@@ -182,9 +182,9 @@ class BP_Blogs_Theme_Compat {
 
 		// Title based on ability to create blogs.
 		if ( is_user_logged_in() && bp_blog_signup_enabled() ) {
-			$title = __( 'Create a Site', 'buddyboss' );
+			$title = __( 'Create a Site', 'buddyboss-platform' );
 		} else {
-			$title = __( 'Sites', 'buddyboss' );
+			$title = __( 'Sites', 'buddyboss-platform' );
 		}
 
 		$blog_page_id = bp_core_get_directory_page_id( 'blog' );

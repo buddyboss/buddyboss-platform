@@ -21,17 +21,17 @@ if ( ! isset( $options['collapsible'] ) ) {
 
 if ( is_admin() ) {
 	?>
-	<p><strong><?php _e( 'jQuery UI Theme', 'buddyboss' ); ?></strong></p>
+	<p><strong><?php _e( 'jQuery UI Theme', 'buddyboss-platform' ); ?></strong></p>
 	<select name="options[theme]">
 	<?php foreach ( bp_ps_jquery_ui_themes() as $theme => $name ) { ?>
 		<option value="<?php echo $theme; ?>" <?php selected( $options['theme'], $theme ); ?>><?php echo $name; ?></option>
 	<?php } ?>
 	</select>
 
-	<p><strong><?php _e( 'Collapsible Form', 'buddyboss' ); ?></strong></p>
+	<p><strong><?php _e( 'Collapsible Form', 'buddyboss-platform' ); ?></strong></p>
 	<select name="options[collapsible]">
-		<option value='Yes' <?php selected( $options['collapsible'], 'Yes' ); ?>><?php _e( 'Yes', 'buddyboss' ); ?></option>
-		<option value='No' <?php selected( $options['collapsible'], 'No' ); ?>><?php _e( 'No', 'buddyboss' ); ?></option>
+		<option value='Yes' <?php selected( $options['collapsible'], 'Yes' ); ?>><?php _e( 'Yes', 'buddyboss-platform' ); ?></option>
+		<option value='No' <?php selected( $options['collapsible'], 'No' ); ?>><?php _e( 'No', 'buddyboss-platform' ); ?></option>
 	</select>
 	<?php
 	return 'end_of_options';
@@ -126,12 +126,12 @@ foreach ( $F->fields as $f ) {
 			break;
 
 		case 'distance':
-			$of          = __( 'of', 'buddyboss' );
-			$km          = __( 'km', 'buddyboss' );
-			$miles       = __( 'miles', 'buddyboss' );
-			$placeholder = __( 'Start typing, then select a location', 'buddyboss' );
+			$of          = __( 'of', 'buddyboss-platform' );
+			$km          = __( 'km', 'buddyboss-platform' );
+			$miles       = __( 'miles', 'buddyboss-platform' );
+			$placeholder = __( 'Start typing, then select a location', 'buddyboss-platform' );
 			$icon_url    = buddypress()->plugin_url . 'bp-core/profile-search/templates/members/locator.png';
-			$icon_title  = __( 'get current location', 'buddyboss' );
+			$icon_title  = __( 'get current location', 'buddyboss-platform' );
 			?>
 			<input type="number" min="1" style="width: 5em;" name="<?php echo $name . '[distance]'; ?>" value="<?php echo $value['distance']; ?>">
 			<select name="<?php echo $name . '[units]'; ?>">
@@ -196,7 +196,7 @@ foreach ( $F->fields as $f ) {
 				?>
 					name="<?php echo $name; ?>" value="<?php echo $key; ?>"> <?php echo $label; ?></label><br>
 			<?php } ?>
-			<a href="javascript:bp_ps_clear_radio('<?php echo $id; ?>_wrap')"><?php _e( 'Clear', 'buddyboss' ); ?></a><br>
+			<a href="javascript:bp_ps_clear_radio('<?php echo $id; ?>_wrap')"><?php _e( 'Clear', 'buddyboss-platform' ); ?></a><br>
 			<?php
 			break;
 
@@ -226,7 +226,7 @@ foreach ( $F->fields as $f ) {
 }
 ?>
 		<div>
-			<input type="submit" value="<?php _e( 'Search', 'buddyboss' ); ?>">
+			<input type="submit" value="<?php _e( 'Search', 'buddyboss-platform' ); ?>">
 		</div>
 	</form>
 

@@ -30,7 +30,7 @@ function bb_recaptcha_verification_admin_settings() {
 		wp_send_json_error(
 			array(
 				'code'    => 403,
-				'message' => esc_html__( 'There was a problem performing this action. Please try again.', 'buddyboss' ),
+				'message' => esc_html__( 'There was a problem performing this action. Please try again.', 'buddyboss-platform' ),
 			)
 		);
 	}
@@ -42,7 +42,7 @@ function bb_recaptcha_verification_admin_settings() {
 		wp_send_json_error(
 			array(
 				'code'    => 403,
-				'message' => esc_html__( 'Sorry, you are not allowed to do that.', 'buddyboss' ),
+				'message' => esc_html__( 'Sorry, you are not allowed to do that.', 'buddyboss-platform' ),
 			)
 		);
 	}
@@ -62,16 +62,16 @@ function bb_recaptcha_verification_admin_settings() {
 	if ( ! empty( $selected_version ) ) {
 		if ( empty( $captcha_response ) ) {
 			$data = '<img src="' . bb_recaptcha_integration_url( 'assets/images/error.png' ) . '" alt="" class="recaptcha-status-icon" />
-					<p>' . __( 'reCAPTCHA verification failed, please try again', 'buddyboss' ) . '</p>';
+					<p>' . __( 'reCAPTCHA verification failed, please try again', 'buddyboss-platform' ) . '</p>';
 		} else {
 			$response = bb_get_google_recaptcha_api_response( $secret_key, $captcha_response );
 			if ( $response && ! empty( $response['success'] ) ) {
 				$connection_status = 'connected';
 				$data              = '<img src="' . bb_recaptcha_integration_url( 'assets/images/success.png' ) . '" alt="" class="recaptcha-status-icon" />
-					<p>' . __( 'reCAPTCHA verification was successful', 'buddyboss' ) . '</p>';
+					<p>' . __( 'reCAPTCHA verification was successful', 'buddyboss-platform' ) . '</p>';
 			} else {
 				$data = '<img src="' . bb_recaptcha_integration_url( 'assets/images/error.png' ) . '" alt="" class="recaptcha-status-icon" />
-					<p>' . __( 'reCAPTCHA verification failed, please try again', 'buddyboss' ) . '</p>';
+					<p>' . __( 'reCAPTCHA verification failed, please try again', 'buddyboss-platform' ) . '</p>';
 			}
 		}
 	}

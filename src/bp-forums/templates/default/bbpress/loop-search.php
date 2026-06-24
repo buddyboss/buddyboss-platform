@@ -14,11 +14,11 @@
 
 	<li class="bbp-header">
 
-		<div class="bbp-search-author"><?php _e( 'Author', 'buddyboss' ); ?></div><!-- .bbp-reply-author -->
+		<div class="bbp-search-author"><?php _e( 'Author', 'buddyboss-platform' ); ?></div><!-- .bbp-reply-author -->
 
 		<div class="bbp-search-content">
 
-			<?php _e( 'Search Results', 'buddyboss' ); ?>
+			<?php _e( 'Search Results', 'buddyboss-platform' ); ?>
 
 		</div><!-- .bbp-search-content -->
 
@@ -39,11 +39,11 @@
 
 	<li class="bbp-footer">
 
-		<div class="bbp-search-author"><?php _e( 'Author', 'buddyboss' ); ?></div>
+		<div class="bbp-search-author"><?php _e( 'Author', 'buddyboss-platform' ); ?></div>
 
 		<div class="bbp-search-content">
 
-			<?php _e( 'Search Results', 'buddyboss' ); ?>
+			<?php _e( 'Search Results', 'buddyboss-platform' ); ?>
 
 		</div><!-- .bbp-search-content -->
 

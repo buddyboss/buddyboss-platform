@@ -221,7 +221,7 @@ function bp_nouveau_member_header_bubble_buttons( $args = array() ) {
 	bp_get_template_part( 'common/more-options-view' );
 	$template_part_content = ob_get_clean();
 
-	$output = sprintf( '<a href="#" class="bb_more_options_action" aria-label="%1$s"><i class="bb-icon-f bb-icon-ellipsis-h"></i></a><div class="bb_more_options_list bb_more_dropdown"> %2$s %3$s</div><div class="bb_more_dropdown_overlay"></div>', esc_attr__( 'More Options', 'buddyboss' ), $template_part_content, $output );
+	$output = sprintf( '<a href="#" class="bb_more_options_action" aria-label="%1$s"><i class="bb-icon-f bb-icon-ellipsis-h"></i></a><div class="bb_more_options_list bb_more_dropdown"> %2$s %3$s</div><div class="bb_more_dropdown_overlay"></div>', esc_attr__( 'More Options', 'buddyboss-platform' ), $template_part_content, $output );
 
 	bp_nouveau_wrapper( array_merge( $args, array( 'output' => $output ) ) );
 }
@@ -369,7 +369,7 @@ function bp_nouveau_get_members_buttons( $args ) {
 					'component'         => 'friends',
 					'must_be_logged_in' => true,
 					'parent_element'    => $parent_element,
-					'link_text'         => esc_html__( 'Accept', 'buddyboss' ),
+					'link_text'         => esc_html__( 'Accept', 'buddyboss-platform' ),
 					'parent_attr'       => array(
 						'id'    => '',
 						'class' => $parent_class,
@@ -395,7 +395,7 @@ function bp_nouveau_get_members_buttons( $args ) {
 					'component'         => 'friends',
 					'must_be_logged_in' => true,
 					'parent_element'    => $parent_element,
-					'link_text'         => esc_html__( 'Ignore', 'buddyboss' ),
+					'link_text'         => esc_html__( 'Ignore', 'buddyboss-platform' ),
 					'parent_attr'       => array(
 						'id'    => '',
 						'class' => $parent_class,
@@ -861,7 +861,7 @@ function bp_nouveau_get_member_meta() {
 
 			$meta['last_activity'] = sprintf(
 				/* translators: %s: Member joined date. */
-				'<span class="activity">' . esc_html__( 'Joined %s', 'buddyboss' ) . '</span>',
+				'<span class="activity">' . esc_html__( 'Joined %s', 'buddyboss-platform' ) . '</span>',
 				esc_html( $register_date )
 			);
 
@@ -1223,7 +1223,7 @@ function bb_get_member_joined_date( $user_id = 0 ) {
 	$register_date        = date_i18n( 'M Y', strtotime( get_userdata( $user_id )->user_registered ) );
 	$user_registered_date = sprintf(
 		/* translators: 1: User registered date. */
-		esc_html__( 'Joined %s', 'buddyboss' ),
+		esc_html__( 'Joined %s', 'buddyboss-platform' ),
 		esc_html( $register_date )
 	);
 

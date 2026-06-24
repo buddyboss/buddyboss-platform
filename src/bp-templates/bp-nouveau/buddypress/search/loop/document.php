@@ -64,7 +64,7 @@ if ( $attachment_id && $bp_doc_activity_id ) {
 						<?php
 						if ( ! bp_is_user() ) {
 							?>
-							<span class="media-folder_author"><?php esc_html_e( 'By ', 'buddyboss' ); ?>
+							<span class="media-folder_author"><?php esc_html_e( 'By ', 'buddyboss-platform' ); ?>
 								<a href="<?php echo esc_url( trailingslashit( bp_core_get_user_domain( bp_get_document_user_id() ) . bp_get_document_slug() ) ); ?>" data-bb-hp-profile="<?php echo esc_attr( bp_get_document_user_id() ); ?>">
 									<?php bp_document_author(); ?>
 								</a>
@@ -85,7 +85,7 @@ if ( $attachment_id && $bp_doc_activity_id ) {
 							if ( $group_id > 0 ) {
 								?>
 								<span class="middot">&middot;</span>
-								<span class="bp-tooltip" data-bp-tooltip-pos="down" data-bp-tooltip="<?php esc_attr_e( 'Based on group privacy', 'buddyboss' ); ?>">
+								<span class="bp-tooltip" data-bp-tooltip-pos="down" data-bp-tooltip="<?php esc_attr_e( 'Based on group privacy', 'buddyboss-platform' ); ?>">
 									<?php echo esc_html( $bp_document_privacy ); ?>
 								</span>
 								<?php

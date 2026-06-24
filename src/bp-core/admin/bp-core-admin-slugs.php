@@ -35,7 +35,7 @@ function bp_core_admin_get_directory_pages() {
 
 	if ( function_exists( 'bp_nouveau_get_appearance_settings' ) ) {
 		if ( bp_nouveau_get_appearance_settings( 'user_front_page' ) ) {
-			$directory_pages['profile_dashboard'] = __( 'Profile Dashboard', 'buddyboss' );
+			$directory_pages['profile_dashboard'] = __( 'Profile Dashboard', 'buddyboss-platform' );
 		}
 	}
 
@@ -43,18 +43,18 @@ function bp_core_admin_get_directory_pages() {
 	if ( bp_is_active( 'forums' ) ) {
 
 		if ( bp_is_active( 'groups' ) ) {
-			$directory_pages = array_insert_after( $directory_pages, 'groups', array( 'new_forums_page' => __( 'Forums', 'buddyboss' ) ) );
+			$directory_pages = array_insert_after( $directory_pages, 'groups', array( 'new_forums_page' => __( 'Forums', 'buddyboss-platform' ) ) );
 		} else {
-			$directory_pages = array_insert_after( $directory_pages, 'members', array( 'new_forums_page' => __( 'Forums', 'buddyboss' ) ) );
+			$directory_pages = array_insert_after( $directory_pages, 'members', array( 'new_forums_page' => __( 'Forums', 'buddyboss-platform' ) ) );
 		}
 	}
 
 	if ( bp_is_active( 'media' ) && ( bp_is_profile_document_support_enabled() || bp_is_forums_document_support_enabled() || bp_is_group_document_support_enabled() || bp_is_messages_document_support_enabled() ) ) {
-		$directory_pages['document'] = __( 'Documents', 'buddyboss' );
+		$directory_pages['document'] = __( 'Documents', 'buddyboss-platform' );
 	}
 
 	if ( bp_is_active( 'media' ) && function_exists( 'bp_is_profile_video_support_enabled' ) &&  ( bp_is_profile_video_support_enabled() || bp_is_forums_video_support_enabled() || bp_is_group_video_support_enabled() || bp_is_messages_video_support_enabled() ) ) {
-		$directory_pages['video'] = __( 'Videos', 'buddyboss' );
+		$directory_pages['video'] = __( 'Videos', 'buddyboss-platform' );
 	}
 
 	/** Directory Display */
@@ -97,10 +97,10 @@ function array_insert_after( array $array, $key, array $new ) {
  */
 function bp_core_admin_get_static_pages() {
 	$static_pages = array(
-		'register' => __( 'Register Form', 'buddyboss' ),
-		'terms'    => __( 'Terms of Service', 'buddyboss' ),
-		'privacy'  => __( 'Privacy Policy', 'buddyboss' ),
-		'activate' => __( 'Activate Account', 'buddyboss' ),
+		'register' => __( 'Register Form', 'buddyboss-platform' ),
+		'terms'    => __( 'Terms of Service', 'buddyboss-platform' ),
+		'privacy'  => __( 'Privacy Policy', 'buddyboss-platform' ),
+		'activate' => __( 'Activate Account', 'buddyboss-platform' ),
 	);
 
 	/**

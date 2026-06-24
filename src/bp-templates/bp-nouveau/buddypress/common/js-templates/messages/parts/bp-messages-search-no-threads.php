@@ -13,8 +13,8 @@
 	<div class="no-message-wrap">
 		<span class="bb-icon bb-icon-f bb-icon-comments-slash"></span>
 		<div class="no-message-content">
-			<h3><?php esc_html_e( 'No Messages Found', 'buddyboss' ); ?></h3>
-			<p><?php esc_html_e( 'We couldn\'t find any messages matching your search term.', 'buddyboss' ); ?></p>
+			<h3><?php esc_html_e( 'No Messages Found', 'buddyboss-platform' ); ?></h3>
+			<p><?php esc_html_e( 'We couldn\'t find any messages matching your search term.', 'buddyboss-platform' ); ?></p>
 		</div>
 	</div>
 </script>

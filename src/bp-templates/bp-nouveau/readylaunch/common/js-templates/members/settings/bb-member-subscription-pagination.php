@@ -35,7 +35,7 @@
 		<div class="bbp-pagination-links">
 			<#
 			if ( 1 < paged ) { #>
-				<a class="prev page-numbers" data-page="{{ options.current_active-1 }}" href="#"><# print( wp.i18n.__( 'Prev', 'buddyboss' ) ); #></a>
+				<a class="prev page-numbers" data-page="{{ options.current_active-1 }}" href="#"><# print( wp.i18n.__( 'Prev', 'buddyboss-platform' ) ); #></a>
 			<# }
 
 			if ( -1 == jQuery.inArray( 1, links ) ) {
@@ -75,7 +75,7 @@
 			}
 
 			if ( paged < max ) { #>
-				<a class="next page-numbers" data-page="{{ paged+1 }}" href="#"><# print( wp.i18n.__( 'Next', 'buddyboss' ) ); #></a>
+				<a class="next page-numbers" data-page="{{ paged+1 }}" href="#"><# print( wp.i18n.__( 'Next', 'buddyboss-platform' ) ); #></a>
 			<# } #>
 		</div>
 	<# } #>

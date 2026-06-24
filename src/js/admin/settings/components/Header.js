@@ -134,7 +134,7 @@ export function Header({ onNavigate, kbTriggerRef, openKb }) {
 					<div className="bb-admin-header__logo">
 						<img
 							src={bbAdminData?.logoUrl || ''}
-							alt={__('BuddyBoss', 'buddyboss')}
+							alt={__('BuddyBoss', 'buddyboss-platform')}
 							className="bb-admin-header__logo-img"
 						/>
 					</div>
@@ -148,8 +148,8 @@ export function Header({ onNavigate, kbTriggerRef, openKb }) {
 								type="text"
 								value={searchQuery}
 								onChange={(e) => setSearchQuery(e.target.value)}
-								placeholder={__('Search for settings...', 'buddyboss')}
-								aria-label={__('Search for settings', 'buddyboss')}
+								placeholder={__('Search for settings...', 'buddyboss-platform')}
+								aria-label={__('Search for settings', 'buddyboss-platform')}
 								className="bb-admin-header__search-input"
 							/>
 							<i className="bb-icon-search bb-admin-header__search-icon"></i>
@@ -184,7 +184,7 @@ export function Header({ onNavigate, kbTriggerRef, openKb }) {
 						{showSearchResults && searchResults.length === 0 && !isSearching && searchQuery.length >= 2 && (
 							<div className="bb-admin-header__search-results">
 								<div className="bb-admin-header__search-result bb-admin-header__search-result--no-results">
-									{__('No settings found', 'buddyboss')}
+									{__('No settings found', 'buddyboss-platform')}
 								</div>
 							</div>
 						)}
@@ -205,14 +205,14 @@ export function Header({ onNavigate, kbTriggerRef, openKb }) {
 					<span
 						ref={ipnSlotRef}
 						className="bb-admin-header__ipn-slot"
-						aria-label={__('Notifications', 'buddyboss')}
+						aria-label={__('Notifications', 'buddyboss-platform')}
 					/>
 					{/* Documentation/Help Icon — opens the Knowledge Base modal. */}
 					<button
 						ref={kbTriggerRef}
 						type="button"
 						className="bb-admin-header__icon-button"
-						aria-label={__('Documentation', 'buddyboss')}
+						aria-label={__('Documentation', 'buddyboss-platform')}
 						onClick={openKb}
 					>
 						<i className="bb-icons-rl-graduation-cap" aria-hidden="true"></i>

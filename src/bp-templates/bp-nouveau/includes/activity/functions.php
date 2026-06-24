@@ -110,13 +110,13 @@ function bp_nouveau_activity_localize_scripts( $params = array() ) {
 		'is_activity_edit'                => bp_is_activity_edit() ? (int) bp_current_action() : false,
 		'displayed_user_id'               => bp_displayed_user_id(),
 		'errors'                          => array(
-			'empty_post_update' => esc_html__( 'Sorry, Your update cannot be empty.', 'buddyboss' ),
-			'post_fail'         => esc_html__( 'An error occurred while saving your post.', 'buddyboss' ),
-			'media_fail'        => esc_html__( 'To change the media type, remove existing media from your post.', 'buddyboss' ),
+			'empty_post_update' => esc_html__( 'Sorry, Your update cannot be empty.', 'buddyboss-platform' ),
+			'post_fail'         => esc_html__( 'An error occurred while saving your post.', 'buddyboss-platform' ),
+			'media_fail'        => esc_html__( 'To change the media type, remove existing media from your post.', 'buddyboss-platform' ),
 		),
 		'is_activity_post_title_required' => $is_activity_post_title_required,
 		'activity_post_title_maxlength'   => bb_activity_post_title_max_length(),
-		'post_title_tooltip_error'        => esc_html__( 'Please enter a title', 'buddyboss' ),
+		'post_title_tooltip_error'        => esc_html__( 'Please enter a title', 'buddyboss-platform' ),
 	);
 
 	$user_displayname = bp_get_loggedin_user_fullname();
@@ -136,7 +136,7 @@ function bp_nouveau_activity_localize_scripts( $params = array() ) {
 			'user_domain'       => bp_loggedin_user_domain(),
 			'avatar_alt'        => sprintf(
 			/* translators: %s = member name */
-				__( 'Profile photo of %s', 'buddyboss' ),
+				__( 'Profile photo of %s', 'buddyboss-platform' ),
 				$user_displayname
 			),
 		) );
@@ -191,7 +191,7 @@ function bp_nouveau_activity_localize_scripts( $params = array() ) {
 	if ( ! bp_is_single_item() && ! bp_is_user() ) {
 		$activity_objects = array(
 			'profile' => array(
-				'text'                     => __( 'Post in: Profile', 'buddyboss' ),
+				'text'                     => __( 'Post in: Profile', 'buddyboss-platform' ),
 				'autocomplete_placeholder' => '',
 				'priority'                 => 5,
 			),
@@ -200,12 +200,12 @@ function bp_nouveau_activity_localize_scripts( $params = array() ) {
 		// the groups component is active & the current user is at least a member of 1 group
 		if ( bp_is_active( 'groups' ) && bp_has_groups( array( 'user_id' => bp_loggedin_user_id(), 'max' => 1, 'search_terms' => false ) ) ) {
 			$activity_objects['group'] = array(
-				'text'                      => esc_html__( 'Post in: Group', 'buddyboss' ),
-				'autocomplete_placeholder'  => esc_html__( 'Search groups', 'buddyboss' ),
+				'text'                      => esc_html__( 'Post in: Group', 'buddyboss-platform' ),
+				'autocomplete_placeholder'  => esc_html__( 'Search groups', 'buddyboss-platform' ),
 				'priority'                  => 10,
-				'loading_group_placeholder' => esc_html__( 'Loading groups...', 'buddyboss' ),
-				'finding_group_placeholder' => esc_html__( 'Finding groups...', 'buddyboss' ),
-				'no_groups_found'           => esc_html__( 'No groups found.', 'buddyboss' ),
+				'loading_group_placeholder' => esc_html__( 'Loading groups...', 'buddyboss-platform' ),
+				'finding_group_placeholder' => esc_html__( 'Finding groups...', 'buddyboss-platform' ),
+				'no_groups_found'           => esc_html__( 'No groups found.', 'buddyboss-platform' ),
 			);
 			$group_args = array(
 				'user_id'     => bp_loggedin_user_id(),
@@ -245,38 +245,38 @@ function bp_nouveau_activity_localize_scripts( $params = array() ) {
 
 	$activity_strings = array(
 		/* translators: %s: logged-in user display name. */
-		'whatsnewPlaceholder' => sprintf( __( 'Share what\'s on your mind, %s...', 'buddyboss' ), bp_core_get_user_displayname( bp_loggedin_user_id() ) ),
-		'whatsnewLabel'       => esc_html__( 'Post what\'s new', 'buddyboss' ),
-		'whatsnewpostinLabel' => esc_html__( 'Post in', 'buddyboss' ),
-		'postUpdateButton'    => esc_html__( 'Post', 'buddyboss' ),
-		'updatePostButton'    => esc_html__( 'Update Post', 'buddyboss' ),
-		'cancelButton'        => esc_html__( 'Cancel', 'buddyboss' ),
-		'commentLabel'        => esc_html__( '%d Comment', 'buddyboss' ),
-		'commentsLabel'       => esc_html__( '%d Comments', 'buddyboss' ),
-		'loadingMore'         => esc_html__( 'Loading...', 'buddyboss' ),
-		'discardButton'       => esc_html__( 'Discard Draft', 'buddyboss' ),
-		'pinPost'             => esc_html__( 'Pin to Feed', 'buddyboss' ),
-		'unpinPost'           => esc_html__( 'Unpin from Feed', 'buddyboss' ),
-		'pinGroupPost'        => esc_html__( 'Pin to Group', 'buddyboss' ),
-		'unpinGroupPost'      => esc_html__( 'Unpin from Group', 'buddyboss' ),
-		'pinPostError'        => esc_html__( 'There was a problem marking this operation. Please try again.', 'buddyboss' ),
-		'reactionAjaxError'   => esc_html__( 'There was a problem marking this operation. Please try again.', 'buddyboss' ),
-		'closeComments'       => esc_html__( 'Turn off commenting', 'buddyboss' ),
-		'uncloseComments'     => esc_html__( 'Turn on commenting', 'buddyboss' ),
-		'closeCommentsError'  => esc_html__( 'There was a problem marking this operation. Please try again.', 'buddyboss' ),
-		'commentPostError'    => esc_html__( 'There was a problem posting your comment.', 'buddyboss' ),
-		'muteNotification'    => esc_html__( 'Turn off notifications', 'buddyboss' ),
-		'unmuteNotification'  => esc_html__( 'Turn on notifications', 'buddyboss' ),
-		'whatsNewTitle'       => $is_activity_post_title_required ? esc_attr__( 'Title', 'buddyboss' ) : esc_attr__( 'Title (optional)', 'buddyboss' ),
+		'whatsnewPlaceholder' => sprintf( __( 'Share what\'s on your mind, %s...', 'buddyboss-platform' ), bp_core_get_user_displayname( bp_loggedin_user_id() ) ),
+		'whatsnewLabel'       => esc_html__( 'Post what\'s new', 'buddyboss-platform' ),
+		'whatsnewpostinLabel' => esc_html__( 'Post in', 'buddyboss-platform' ),
+		'postUpdateButton'    => esc_html__( 'Post', 'buddyboss-platform' ),
+		'updatePostButton'    => esc_html__( 'Update Post', 'buddyboss-platform' ),
+		'cancelButton'        => esc_html__( 'Cancel', 'buddyboss-platform' ),
+		'commentLabel'        => esc_html__( '%d Comment', 'buddyboss-platform' ),
+		'commentsLabel'       => esc_html__( '%d Comments', 'buddyboss-platform' ),
+		'loadingMore'         => esc_html__( 'Loading...', 'buddyboss-platform' ),
+		'discardButton'       => esc_html__( 'Discard Draft', 'buddyboss-platform' ),
+		'pinPost'             => esc_html__( 'Pin to Feed', 'buddyboss-platform' ),
+		'unpinPost'           => esc_html__( 'Unpin from Feed', 'buddyboss-platform' ),
+		'pinGroupPost'        => esc_html__( 'Pin to Group', 'buddyboss-platform' ),
+		'unpinGroupPost'      => esc_html__( 'Unpin from Group', 'buddyboss-platform' ),
+		'pinPostError'        => esc_html__( 'There was a problem marking this operation. Please try again.', 'buddyboss-platform' ),
+		'reactionAjaxError'   => esc_html__( 'There was a problem marking this operation. Please try again.', 'buddyboss-platform' ),
+		'closeComments'       => esc_html__( 'Turn off commenting', 'buddyboss-platform' ),
+		'uncloseComments'     => esc_html__( 'Turn on commenting', 'buddyboss-platform' ),
+		'closeCommentsError'  => esc_html__( 'There was a problem marking this operation. Please try again.', 'buddyboss-platform' ),
+		'commentPostError'    => esc_html__( 'There was a problem posting your comment.', 'buddyboss-platform' ),
+		'muteNotification'    => esc_html__( 'Turn off notifications', 'buddyboss-platform' ),
+		'unmuteNotification'  => esc_html__( 'Turn on notifications', 'buddyboss-platform' ),
+		'whatsNewTitle'       => $is_activity_post_title_required ? esc_attr__( 'Title', 'buddyboss-platform' ) : esc_attr__( 'Title (optional)', 'buddyboss-platform' ),
 	);
 
 	if ( bp_get_displayed_user() && ! bp_is_my_profile() ) {
 		/* translators: %s = user name */
-		$activity_strings['whatsnewPlaceholder'] = sprintf( esc_html__( 'Write something to %s...', 'buddyboss' ), bp_get_user_firstname( bp_get_displayed_user_fullname() ) );
+		$activity_strings['whatsnewPlaceholder'] = sprintf( esc_html__( 'Write something to %s...', 'buddyboss-platform' ), bp_get_user_firstname( bp_get_displayed_user_fullname() ) );
 	}
 
 	if ( bp_is_group() ) {
-		$activity_strings['whatsnewPlaceholder'] = esc_html__( 'Share something with the group...', 'buddyboss' );
+		$activity_strings['whatsnewPlaceholder'] = esc_html__( 'Share something with the group...', 'buddyboss-platform' );
 
 		$activity_params = array_merge(
 			$activity_params,
@@ -330,7 +330,7 @@ function bp_nouveau_get_activity_directory_nav_items() {
 		'slug'      => 'all', // slug is used because BP_Core_Nav requires it, but it's the scope
 		'li_class'  => array( 'dynamic', 'selected' ),
 		'link'      => bp_get_activity_directory_permalink(),
-		'text'      => __( 'All Updates', 'buddyboss' ),
+		'text'      => __( 'All Updates', 'buddyboss-platform' ),
 		'count'     => false,
 		'position'  => 5,
 	);
@@ -571,17 +571,17 @@ function bp_nouveau_activity_notification_filters() {
 	$notifications = array(
 		array(
 			'id'       => 'new_at_mention',
-			'label'    => __( 'New mentions', 'buddyboss' ),
+			'label'    => __( 'New mentions', 'buddyboss-platform' ),
 			'position' => 5,
 		),
 		array(
 			'id'       => 'update_reply',
-			'label'    => __( 'New update replies', 'buddyboss' ),
+			'label'    => __( 'New update replies', 'buddyboss-platform' ),
 			'position' => 15,
 		),
 		array(
 			'id'       => 'comment_reply',
-			'label'    => __( 'New update comment replies', 'buddyboss' ),
+			'label'    => __( 'New update comment replies', 'buddyboss-platform' ),
 			'position' => 25,
 		),
 	);

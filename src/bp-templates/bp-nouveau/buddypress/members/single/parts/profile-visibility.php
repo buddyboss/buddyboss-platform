@@ -22,17 +22,17 @@ if ( bp_current_user_can( 'bp_xprofile_change_field_visibility' ) ) : ?>
 			'<span class="current-visibility-level">' . bp_get_the_profile_field_visibility_level_label() . '</span>'
 		);
 		?>
-		<button class="visibility-toggle-link button" type="button"><?php esc_html_e( 'Change', 'buddyboss' ); ?></button>
+		<button class="visibility-toggle-link button" type="button"><?php esc_html_e( 'Change', 'buddyboss-platform' ); ?></button>
 	</p>
 
 	<div class="field-visibility-settings" id="field-visibility-settings-<?php echo esc_attr( $get_profile_field_id ); ?>">
 		<fieldset>
-			<legend><?php esc_html_e( 'Select who is allowed to see this field?', 'buddyboss' ); ?></legend>
+			<legend><?php esc_html_e( 'Select who is allowed to see this field?', 'buddyboss-platform' ); ?></legend>
 
 			<?php bp_profile_visibility_radio_buttons(); ?>
 
 		</fieldset>
-		<button class="field-visibility-settings-close button" type="button"><?php esc_html_e( 'Close', 'buddyboss' ); ?></button>
+		<button class="field-visibility-settings-close button" type="button"><?php esc_html_e( 'Close', 'buddyboss-platform' ); ?></button>
 	</div>
 
 <?php else : ?>

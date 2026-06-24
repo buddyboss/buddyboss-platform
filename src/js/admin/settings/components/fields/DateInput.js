@@ -32,7 +32,7 @@ export function DateInput( props ) {
 	var label = props.label || '';
 	var value = props.value || null;
 	var onChange = props.onChange;
-	var placeholder = props.placeholder || __( 'dd/mm/yyyy', 'buddyboss' );
+	var placeholder = props.placeholder || __( 'dd/mm/yyyy', 'buddyboss-platform' );
 	var disabled = props.disabled || false;
 
 	var isOpenState = useState( false );

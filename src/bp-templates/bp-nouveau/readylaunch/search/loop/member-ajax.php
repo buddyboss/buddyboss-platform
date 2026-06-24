@@ -28,7 +28,7 @@ defined( 'ABSPATH' ) || exit;
 		if ( bp_nouveau_member_has_meta() ) :
 			?>
 			<p class="entry-meta item-meta last-activity">
-				<?php echo esc_html__( 'Last active', 'buddyboss' ) . ' ' . wp_kses_post( bb_get_member_last_activity_time() ); ?>
+				<?php echo esc_html__( 'Last active', 'buddyboss-platform' ) . ' ' . wp_kses_post( bb_get_member_last_activity_time() ); ?>
 			</p><!-- #item-meta -->
 		<?php endif; ?>
 	</div>

@@ -54,7 +54,7 @@ function bb_media_build_context_description( $prefix, $contexts ) {
 
 	if ( count( $contexts ) > 0 ) {
 		/* translators: Conjunction used between the last two items in a list (e.g., "groups, activity posts and forums"). */
-		return $prefix . ' ' . implode( ', ', $contexts ) . ' ' . __( 'and', 'buddyboss' ) . ' ' . $last;
+		return $prefix . ' ' . implode( ', ', $contexts ) . ' ' . __( 'and', 'buddyboss-platform' ) . ' ' . $last;
 	}
 
 	return $prefix . ' ' . $last;
@@ -77,18 +77,18 @@ function bb_media_build_context_description( $prefix, $contexts ) {
  * @return string The formatted group context description.
  */
 function bb_media_get_group_context_description( $prefix ) {
-	$group_contexts = array( __( 'groups', 'buddyboss' ) );
+	$group_contexts = array( __( 'groups', 'buddyboss-platform' ) );
 
 	if ( bp_is_active( 'activity' ) ) {
-		$group_contexts[] = __( 'activity posts', 'buddyboss' );
+		$group_contexts[] = __( 'activity posts', 'buddyboss-platform' );
 	}
 
 	if ( bp_is_active( 'messages' ) && bp_disable_group_messages() ) {
-		$group_contexts[] = __( 'messages', 'buddyboss' );
+		$group_contexts[] = __( 'messages', 'buddyboss-platform' );
 	}
 
 	if ( bp_is_active( 'forums' ) ) {
-		$group_contexts[] = __( 'forums', 'buddyboss' );
+		$group_contexts[] = __( 'forums', 'buddyboss-platform' );
 	}
 
 	return bb_media_build_context_description( $prefix, $group_contexts );
@@ -288,7 +288,7 @@ function bb_media_ajax_giphy_connect() {
 	// Capability check first (cheaper than nonce verification).
 	if ( ! bp_current_user_can( 'bp_moderate' ) ) {
 		wp_send_json_error(
-			array( 'message' => __( 'Permission denied.', 'buddyboss' ) ),
+			array( 'message' => __( 'Permission denied.', 'buddyboss-platform' ) ),
 			403
 		);
 	}
@@ -296,7 +296,7 @@ function bb_media_ajax_giphy_connect() {
 	// Verify nonce.
 	if ( ! check_ajax_referer( 'bb_admin_settings', 'nonce', false ) ) {
 		wp_send_json_error(
-			array( 'message' => __( 'Security check failed.', 'buddyboss' ) ),
+			array( 'message' => __( 'Security check failed.', 'buddyboss-platform' ) ),
 			403
 		);
 	}
@@ -314,12 +314,12 @@ function bb_media_ajax_giphy_connect() {
 		wp_send_json_success(
 			array(
 				'is_connected' => false,
-				'button_label' => __( 'Connect', 'buddyboss' ),
+				'button_label' => __( 'Connect', 'buddyboss-platform' ),
 				'status'       => array(
 					'type' => 'warning',
-					'text' => __( 'Not Connected', 'buddyboss' ),
+					'text' => __( 'Not Connected', 'buddyboss-platform' ),
 				),
-				'message'      => __( 'GIPHY API key disconnected.', 'buddyboss' ),
+				'message'      => __( 'GIPHY API key disconnected.', 'buddyboss-platform' ),
 			)
 		);
 		return;
@@ -327,7 +327,7 @@ function bb_media_ajax_giphy_connect() {
 
 	// Connect: save and validate the API key.
 	if ( empty( $api_key ) ) {
-		wp_send_json_error( array( 'message' => __( 'Please enter an API key.', 'buddyboss' ) ) );
+		wp_send_json_error( array( 'message' => __( 'Please enter an API key.', 'buddyboss-platform' ) ) );
 	}
 
 	// Save the key first (matches legacy behavior where Settings API saves regardless of validation).
@@ -346,12 +346,12 @@ function bb_media_ajax_giphy_connect() {
 		wp_send_json_success(
 			array(
 				'is_connected' => true,
-				'button_label' => __( 'Disconnect', 'buddyboss' ),
+				'button_label' => __( 'Disconnect', 'buddyboss-platform' ),
 				'status'       => array(
 					'type' => 'success',
-					'text' => __( 'Connected', 'buddyboss' ),
+					'text' => __( 'Connected', 'buddyboss-platform' ),
 				),
-				'message'      => __( 'GIPHY API key connected successfully.', 'buddyboss' ),
+				'message'      => __( 'GIPHY API key connected successfully.', 'buddyboss-platform' ),
 			)
 		);
 	}
@@ -360,12 +360,12 @@ function bb_media_ajax_giphy_connect() {
 	wp_send_json_success(
 		array(
 			'is_connected' => false,
-			'button_label' => __( 'Connect', 'buddyboss' ),
+			'button_label' => __( 'Connect', 'buddyboss-platform' ),
 			'status'       => array(
 				'type' => 'warning',
-				'text' => __( 'Not Connected', 'buddyboss' ),
+				'text' => __( 'Not Connected', 'buddyboss-platform' ),
 			),
-			'message'      => __( 'API key saved, but GIPHY could not verify the key. Please check that your key is correct.', 'buddyboss' ),
+			'message'      => __( 'API key saved, but GIPHY could not verify the key. Please check that your key is correct.', 'buddyboss-platform' ),
 			'has_warning'  => true,
 		)
 	);
@@ -412,7 +412,7 @@ function bb_media_ajax_check_symlink_status() {
 	// Capability check first (cheaper than nonce verification).
 	if ( ! bp_current_user_can( 'bp_moderate' ) ) {
 		wp_send_json_error(
-			array( 'message' => __( 'Permission denied.', 'buddyboss' ) ),
+			array( 'message' => __( 'Permission denied.', 'buddyboss-platform' ) ),
 			403
 		);
 	}
@@ -420,7 +420,7 @@ function bb_media_ajax_check_symlink_status() {
 	// Verify nonce.
 	if ( ! check_ajax_referer( 'bb_admin_settings', 'nonce', false ) ) {
 		wp_send_json_error(
-			array( 'message' => __( 'Security check failed.', 'buddyboss' ) ),
+			array( 'message' => __( 'Security check failed.', 'buddyboss-platform' ) ),
 			403
 		);
 	}
@@ -442,13 +442,13 @@ function bb_media_ajax_check_symlink_status() {
 	$display_support_err = (bool) bp_get_option( 'bb_display_support_error' );
 
 	if ( $is_offloaded ) {
-		$delivery_provider = apply_filters( 'bb_media_offload_delivery_provider', __( 'Other', 'buddyboss' ) );
+		$delivery_provider = apply_filters( 'bb_media_offload_delivery_provider', __( 'Other', 'buddyboss-platform' ) );
 		wp_send_json_success(
 			array(
 				'status'  => 'warning',
 				'message' => sprintf(
 					/* translators: %s: Offload delivery provider name. */
-					__( 'Symbolic links are disabled due to media being offloaded to %s', 'buddyboss' ),
+					__( 'Symbolic links are disabled due to media being offloaded to %s', 'buddyboss-platform' ),
 					$delivery_provider
 				),
 			)
@@ -457,35 +457,35 @@ function bb_media_ajax_check_symlink_status() {
 		wp_send_json_success(
 			array(
 				'status'  => 'warning',
-				'message' => __( 'Symbolic function disabled on your server. Please contact your hosting provider.', 'buddyboss' ),
+				'message' => __( 'Symbolic function disabled on your server. Please contact your hosting provider.', 'buddyboss-platform' ),
 			)
 		);
 	} elseif ( $is_symlinks_enabled && empty( $symlink_type ) ) {
 		wp_send_json_success(
 			array(
 				'status'  => 'warning',
-				'message' => __( 'Symbolic links don\'t seem to work on your server. Please contact BuddyBoss for support.', 'buddyboss' ),
+				'message' => __( 'Symbolic links don\'t seem to work on your server. Please contact BuddyBoss for support.', 'buddyboss-platform' ),
 			)
 		);
 	} elseif ( $display_support_err ) {
 		wp_send_json_success(
 			array(
 				'status'  => 'warning',
-				'message' => __( 'Symbolic links don\'t seem to work on your server. Please contact BuddyBoss for support.', 'buddyboss' ),
+				'message' => __( 'Symbolic links don\'t seem to work on your server. Please contact BuddyBoss for support.', 'buddyboss-platform' ),
 			)
 		);
 	} elseif ( ! $is_symlinks_enabled ) {
 		wp_send_json_success(
 			array(
 				'status'  => 'warning',
-				'message' => __( 'Symbolic links are disabled', 'buddyboss' ),
+				'message' => __( 'Symbolic links are disabled', 'buddyboss-platform' ),
 			)
 		);
 	} else {
 		wp_send_json_success(
 			array(
 				'status'  => 'success',
-				'message' => __( 'Symbolic links are activated', 'buddyboss' ),
+				'message' => __( 'Symbolic links are activated', 'buddyboss-platform' ),
 			)
 		);
 	}
@@ -505,7 +505,7 @@ function bb_media_ajax_check_ffmpeg_status() {
 	// Capability check first (cheaper than nonce verification).
 	if ( ! bp_current_user_can( 'bp_moderate' ) ) {
 		wp_send_json_error(
-			array( 'message' => __( 'Permission denied.', 'buddyboss' ) ),
+			array( 'message' => __( 'Permission denied.', 'buddyboss-platform' ) ),
 			403
 		);
 	}
@@ -513,7 +513,7 @@ function bb_media_ajax_check_ffmpeg_status() {
 	// Verify nonce.
 	if ( ! check_ajax_referer( 'bb_admin_settings', 'nonce', false ) ) {
 		wp_send_json_error(
-			array( 'message' => __( 'Security check failed.', 'buddyboss' ) ),
+			array( 'message' => __( 'Security check failed.', 'buddyboss-platform' ) ),
 			403
 		);
 	}
@@ -530,7 +530,7 @@ function bb_media_ajax_check_ffmpeg_status() {
 					_x(
 						'Your server needs %s installed to automatically generate multiple thumbnails from video files (optional). Ask your web host.',
 						'extension notification',
-						'buddyboss'
+						'buddyboss-platform'
 					),
 					'<code><a href="https://ffmpeg.org/" target="_blank" rel="noopener noreferrer">FFmpeg</a></code>'
 				),
@@ -551,7 +551,7 @@ function bb_media_ajax_check_ffmpeg_status() {
 						_x(
 							'Your server needs %1$s installed to automatically create thumbnails after uploading videos (optional). Ask your web host.<br /><br />If FFmpeg is already installed on your server and you still see the above warning, this means BuddyBoss Platform is unable to auto-detect the binary file path for FFmpeg. You will need to add the below FFmpeg absolute path constants into your %2$s file, replacing PATH_OF_BINARY_FILE with the actual file path to the FFmpeg binary file. Ask your web host to provide the absolute path for the FFmpeg binary file.<br /><br />%3$s<br />%4$s',
 							'extension notification',
-							'buddyboss'
+							'buddyboss-platform'
 						),
 						'<code><a href="https://ffmpeg.org/" target="_blank" rel="noopener noreferrer">FFmpeg</a></code>',
 						'<code>wp-config.php</code>',
@@ -590,7 +590,7 @@ function bb_media_ajax_check_direct_access() {
 	// Capability check first (cheaper than nonce verification).
 	if ( ! bp_current_user_can( 'bp_moderate' ) ) {
 		wp_send_json_error(
-			array( 'message' => __( 'Permission denied.', 'buddyboss' ) ),
+			array( 'message' => __( 'Permission denied.', 'buddyboss-platform' ) ),
 			403
 		);
 	}
@@ -598,7 +598,7 @@ function bb_media_ajax_check_direct_access() {
 	// Verify nonce.
 	if ( ! check_ajax_referer( 'bb_admin_settings', 'nonce', false ) ) {
 		wp_send_json_error(
-			array( 'message' => __( 'Security check failed.', 'buddyboss' ) ),
+			array( 'message' => __( 'Security check failed.', 'buddyboss-platform' ) ),
 			403
 		);
 	}
@@ -606,14 +606,14 @@ function bb_media_ajax_check_direct_access() {
 	$bypass_check = (bool) apply_filters( 'bb_media_check_default_access', false );
 
 	if ( $bypass_check ) {
-		$delivery_provider = apply_filters( 'bb_media_offload_delivery_provider', __( 'Other', 'buddyboss' ) );
+		$delivery_provider = apply_filters( 'bb_media_offload_delivery_provider', __( 'Other', 'buddyboss-platform' ) );
 
 		wp_send_json_success(
 			array(
 				'status'  => 'warning',
 				'message' => sprintf(
 					/* translators: %s: Offload delivery provider name. */
-					__( 'Direct access to your media files and folders is disabled due to media being offloaded to %s', 'buddyboss' ),
+					__( 'Direct access to your media files and folders is disabled due to media being offloaded to %s', 'buddyboss-platform' ),
 					$delivery_provider
 				),
 			)
@@ -683,7 +683,7 @@ function bb_media_ajax_check_direct_access() {
 		wp_send_json_success(
 			array(
 				'status'  => 'warning',
-				'message' => __( 'Direct access to your media files and folders is not blocked', 'buddyboss' ),
+				'message' => __( 'Direct access to your media files and folders is not blocked', 'buddyboss-platform' ),
 			)
 		);
 		return;
@@ -692,7 +692,7 @@ function bb_media_ajax_check_direct_access() {
 	wp_send_json_success(
 		array(
 			'status'  => 'success',
-			'message' => __( 'Direct access to your media files and folders is blocked', 'buddyboss' ),
+			'message' => __( 'Direct access to your media files and folders is blocked', 'buddyboss-platform' ),
 		)
 	);
 }

@@ -140,15 +140,15 @@ class BP_Video_Component extends BP_Component {
 
 		// Register the visibility levels. See bp_video_get_visibility_levels() to filter.
 		$this->visibility_levels = array(
-			'public'   => __( 'Public', 'buddyboss' ),
-			'loggedin' => __( 'All Members', 'buddyboss' ),
+			'public'   => __( 'Public', 'buddyboss-platform' ),
+			'loggedin' => __( 'All Members', 'buddyboss-platform' ),
 		);
 
 		if ( bp_is_active( 'friends' ) ) {
-			$this->visibility_levels['friends'] = __( 'My Connections', 'buddyboss' );
+			$this->visibility_levels['friends'] = __( 'My Connections', 'buddyboss-platform' );
 		}
 
-		$this->visibility_levels['onlyme'] = __( 'Only Me', 'buddyboss' );
+		$this->visibility_levels['onlyme'] = __( 'Only Me', 'buddyboss-platform' );
 
 		$this->published_status = 'published';
 		$this->scheduled_status = 'scheduled';
@@ -172,7 +172,7 @@ class BP_Video_Component extends BP_Component {
 				'has_directory'   => true,
 				'global_tables'   => $global_tables,
 				'directory_title' => isset( $bp->pages->video->title ) ? $bp->pages->video->title : $default_directory_title,
-				'search_string'   => __( 'Search Videos&hellip;', 'buddyboss' ),
+				'search_string'   => __( 'Search Videos&hellip;', 'buddyboss-platform' ),
 			)
 		);
 	}
@@ -219,7 +219,7 @@ class BP_Video_Component extends BP_Component {
 
 			$slug       = bp_get_video_slug();
 			$video_link = trailingslashit( $user_domain . $slug );
-			$nav_name   = __( 'Videos', 'buddyboss' );
+			$nav_name   = __( 'Videos', 'buddyboss-platform' );
 
 			// Add 'Videos' to the main navigation.
 			$main_nav = array(
@@ -267,7 +267,7 @@ class BP_Video_Component extends BP_Component {
 			$wp_admin_nav[] = array(
 				'parent' => buddypress()->my_account_menu_id,
 				'id'     => 'my-account-' . $this->id,
-				'title'  => __( 'Videos', 'buddyboss' ),
+				'title'  => __( 'Videos', 'buddyboss-platform' ),
 				'href'   => $video_link,
 			);
 
@@ -275,7 +275,7 @@ class BP_Video_Component extends BP_Component {
 			$wp_admin_nav[] = array(
 				'parent'   => 'my-account-' . $this->id,
 				'id'       => 'my-account-' . $this->id . '-my-video',
-				'title'    => __( 'My Videos', 'buddyboss' ),
+				'title'    => __( 'My Videos', 'buddyboss-platform' ),
 				'href'     => $video_link,
 				'position' => 10,
 			);
@@ -295,7 +295,7 @@ class BP_Video_Component extends BP_Component {
 			$bp = buddypress();
 
 			if ( bp_is_my_profile() && ! bp_is_single_album() ) {
-				$bp->bp_options_title = __( 'My Videos', 'buddyboss' );
+				$bp->bp_options_title = __( 'My Videos', 'buddyboss-platform' );
 
 			} elseif ( ! bp_is_my_profile() && ! bp_is_single_album() ) {
 				$bp->bp_options_avatar = bp_core_fetch_avatar(
@@ -304,7 +304,7 @@ class BP_Video_Component extends BP_Component {
 						'type'    => 'thumb',
 						'alt'     => sprintf(
 							/* translators: User Display Name. */
-							__( 'Profile video of %s', 'buddyboss' ),
+							__( 'Profile video of %s', 'buddyboss-platform' ),
 							bp_get_displayed_user_fullname()
 						),
 					)

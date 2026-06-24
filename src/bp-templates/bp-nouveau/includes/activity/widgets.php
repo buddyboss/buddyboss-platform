@@ -32,12 +32,12 @@ class BP_Latest_Activities extends WP_Widget {
 		$widget_ops = apply_filters(
 			'bp_latest_activities', array(
 				'classname'                   => 'bp-latest-activities buddypress',
-				'description'                 => __( 'Select to display the latest activity updates, by type, posted within your community.', 'buddyboss' ),
+				'description'                 => __( 'Select to display the latest activity updates, by type, posted within your community.', 'buddyboss-platform' ),
 				'customize_selective_refresh' => true,
 			)
 		);
 
-		parent::__construct( false, __( '(BB) Latest Activities', 'buddyboss' ), $widget_ops );
+		parent::__construct( false, __( '(BB) Latest Activities', 'buddyboss-platform' ), $widget_ops );
 	}
 
 	/**
@@ -59,7 +59,7 @@ class BP_Latest_Activities extends WP_Widget {
 	 */
 	public function widget( $args, $instance ) {
 		// Default values
-		$title      = __( 'Latest updates', 'buddyboss' );
+		$title      = __( 'Latest updates', 'buddyboss-platform' );
 		$type       = array( 'activity_update' );
 		$max        = 5;
 		$bp_nouveau = bp_nouveau();
@@ -226,7 +226,7 @@ class BP_Latest_Activities extends WP_Widget {
 		$instance = bp_parse_args(
 			(array) $instance,
 			array(
-				'title'    => __( 'Latest updates', 'buddyboss' ),
+				'title'    => __( 'Latest updates', 'buddyboss-platform' ),
 				'max'      => 5,
 				'type'     => '',
 				'relevant' => false,
@@ -246,16 +246,16 @@ class BP_Latest_Activities extends WP_Widget {
 		}
 		?>
 		<p>
-			<label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php esc_html_e( 'Title:', 'buddyboss' ); ?></label>
+			<label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php esc_html_e( 'Title:', 'buddyboss-platform' ); ?></label>
 			<input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo esc_attr( $title ); ?>" />
 		</p>
 
 		<p>
-			<label for="<?php echo $this->get_field_id( 'max' ); ?>"><?php _e( 'Maximum amount to display:', 'buddyboss' ); ?></label>
+			<label for="<?php echo $this->get_field_id( 'max' ); ?>"><?php _e( 'Maximum amount to display:', 'buddyboss-platform' ); ?></label>
 			<input type="number" class="widefat" id="<?php echo $this->get_field_id( 'max' ); ?>" name="<?php echo $this->get_field_name( 'max' ); ?>" value="<?php echo intval( $max ); ?>" step="1" min="1" max="20" />
 		</p>
 		<p>
-			<label for="<?php echo $this->get_field_id( 'type' ); ?>"><?php esc_html_e( 'Activity Type:', 'buddyboss' ); ?></label>
+			<label for="<?php echo $this->get_field_id( 'type' ); ?>"><?php esc_html_e( 'Activity Type:', 'buddyboss-platform' ); ?></label>
 			<select class="widefat" multiple="multiple" id="<?php echo $this->get_field_id( 'type' ); ?>" name="<?php echo $this->get_field_name( 'type' ); ?>[]">
 				<?php foreach ( bp_nouveau_get_activity_filters() as $key => $name ) : ?>
 					<option value="<?php echo esc_attr( $key ); ?>" <?php selected( in_array( $key, $type, true ) ); ?>><?php echo esc_html( $name ); ?></option>
@@ -264,8 +264,8 @@ class BP_Latest_Activities extends WP_Widget {
 		</p>
 		<p>
 			<input type="checkbox" class="widefat" id="<?php echo $this->get_field_id( 'relevant' ); ?>" name="<?php echo $this->get_field_name( 'relevant' ); ?>" <?php checked( true, $relevant ); ?> value="1" />
-			<label for="<?php echo $this->get_field_id( 'relevant' ); ?>"><?php esc_html_e( 'Only show activities that are relevant to the logged-in member', 'buddyboss' ); ?></label>
-			<p><small><info style="color: #808080;font-size: 13px;"><?php esc_html_e( 'While logged in, members will only see activities from their own timeline, their connections, members they followed, groups they joined, forum discussions they subscribed to, and posts they are mentioned in.', 'buddyboss' ); ?></info></small></p>
+			<label for="<?php echo $this->get_field_id( 'relevant' ); ?>"><?php esc_html_e( 'Only show activities that are relevant to the logged-in member', 'buddyboss-platform' ); ?></label>
+			<p><small><info style="color: #808080;font-size: 13px;"><?php esc_html_e( 'While logged in, members will only see activities from their own timeline, their connections, members they followed, groups they joined, forum discussions they subscribed to, and posts they are mentioned in.', 'buddyboss-platform' ); ?></info></small></p>
 		</p>
 		<?php
 	}

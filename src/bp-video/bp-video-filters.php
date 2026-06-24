@@ -920,12 +920,12 @@ function bp_video_add_admin_repair_items( $repair_list ) {
 	if ( bp_is_active( 'activity' ) ) {
 		$repair_list[] = array(
 			'bp-repair-video',
-			esc_html__( 'Repair videos', 'buddyboss' ),
+			esc_html__( 'Repair videos', 'buddyboss-platform' ),
 			'bp_video_admin_repair_video',
 		);
 		$repair_list[] = array(
 			'bp-video-forum-privacy-repair',
-			esc_html__( 'Repair forum video privacy', 'buddyboss' ),
+			esc_html__( 'Repair forum video privacy', 'buddyboss-platform' ),
 			'bp_video_forum_privacy_repair',
 		);
 	}
@@ -980,7 +980,7 @@ function bp_video_admin_repair_video() {
 			}
 			$offset ++;
 		}
-		$records_updated = sprintf( __( '%s videos updated successfully.', 'buddyboss' ), bp_core_number_format( $offset ) );  // phpcs:ignore
+		$records_updated = sprintf( __( '%s videos updated successfully.', 'buddyboss-platform' ), bp_core_number_format( $offset ) );  // phpcs:ignore
 
 		return array(
 			'status'  => 'running',
@@ -990,7 +990,7 @@ function bp_video_admin_repair_video() {
 	} else {
 		return array(
 			'status'  => 1,
-			'message' => __( 'Repairing videos &hellip; Complete!', 'buddyboss' ),
+			'message' => __( 'Repairing videos &hellip; Complete!', 'buddyboss-platform' ),
 		);
 	}
 }
@@ -1019,7 +1019,7 @@ function bp_video_forum_privacy_repair() {
 			}
 			$offset ++;
 		}
-		$records_updated = sprintf( __( '%s forums video privacy updated successfully.', 'buddyboss' ), bp_core_number_format( $offset ) ); // phpcs:ignore
+		$records_updated = sprintf( __( '%s forums video privacy updated successfully.', 'buddyboss-platform' ), bp_core_number_format( $offset ) ); // phpcs:ignore
 
 		return array(
 			'status'  => 'running',
@@ -1027,11 +1027,11 @@ function bp_video_forum_privacy_repair() {
 			'records' => $records_updated,
 		);
 	} else {
-		$statement = __( 'Repairing forum video privacy &hellip; %s', 'buddyboss' ); // phpcs:ignore
+		$statement = __( 'Repairing forum video privacy &hellip; %s', 'buddyboss-platform' ); // phpcs:ignore
 
 		return array(
 			'status'  => 1,
-			'message' => sprintf( $statement, __( 'Complete!', 'buddyboss' ) ),
+			'message' => sprintf( $statement, __( 'Complete!', 'buddyboss-platform' ) ),
 		);
 	}
 }
@@ -1132,7 +1132,7 @@ function bp_video_download_file_force( $file_path, $filename ) {
 		if ( $parsed_file_path['remote_file'] ) {
 			bp_video_download_file_redirect( $file_path );
 		} else {
-			bp_video_download_error( __( 'File not found', 'buddyboss' ) );
+			bp_video_download_error( __( 'File not found', 'buddyboss-platform' ) );
 		}
 	}
 
@@ -1150,7 +1150,7 @@ function bp_video_download_file_force( $file_path, $filename ) {
  */
 function bp_video_download_error( $message, $title = '', $status = 404 ) {
 	if ( ! strstr( $message, '<a ' ) ) {
-		$message .= ' <a href="' . esc_url( site_url() ) . '" class="bp-video-forward">' . esc_html__( 'Go to video', 'buddyboss' ) . '</a>';
+		$message .= ' <a href="' . esc_url( site_url() ) . '" class="bp-video-forward">' . esc_html__( 'Go to video', 'buddyboss-platform' ) . '</a>';
 	}
 	wp_die( $message, $title, array( 'response' => $status ) ); // phpcs:ignore
 }
@@ -1970,7 +1970,7 @@ add_filter( 'redirect_canonical', 'bb_video_remove_specific_trailing_slash', 999
 function bb_video_search_label_search( $type ) {
 
 	if ( 'videos' === $type ) {
-		$type = esc_html__( 'Videos', 'buddyboss' );
+		$type = esc_html__( 'Videos', 'buddyboss-platform' );
 	}
 
 	return $type;

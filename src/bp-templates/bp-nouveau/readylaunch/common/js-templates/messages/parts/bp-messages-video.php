@@ -15,10 +15,10 @@
 				<img data-dz-thumbnail />
 			</div>
 			<div class="dz-details">
-				<div class="dz-progress"><span data-dz-progress></span> <?php esc_html_e( 'Complete', 'buddyboss' ); ?></div>
+				<div class="dz-progress"><span data-dz-progress></span> <?php esc_html_e( 'Complete', 'buddyboss-platform' ); ?></div>
 				<div class="dz-filename" data-dz-name></div>
 			</div>
-			<div class="dz-error-title"><?php esc_html_e( 'Upload Failed', 'buddyboss' ); ?></div>
+			<div class="dz-error-title"><?php esc_html_e( 'Upload Failed', 'buddyboss-platform' ); ?></div>
 			<div class="dz-progress-ring-wrap">
 				<i class="bb-icons-rl-fill bb-icons-rl-video-camera"></i>
 				<svg class="dz-progress-ring" width="48" height="48">

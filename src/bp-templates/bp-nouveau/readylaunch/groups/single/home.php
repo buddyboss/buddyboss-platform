@@ -32,7 +32,7 @@ if ( bp_has_groups() ) {
 					<div class="bb-rl-group-info flex items-center">
 						<?php
 						if ( BB_Readylaunch::bb_is_group_admin() ) {
-							echo '<a href="' . esc_url( bp_get_group_permalink() ) . '" class="bb-rl-group-link"><i class="bb-icons-rl-arrow-left"></i><span class="bb-rl-screen-reader-text">' . esc_html__( 'Back', 'buddyboss' ) . '</span></a>';
+							echo '<a href="' . esc_url( bp_get_group_permalink() ) . '" class="bb-rl-group-link"><i class="bb-icons-rl-arrow-left"></i><span class="bb-rl-screen-reader-text">' . esc_html__( 'Back', 'buddyboss-platform' ) . '</span></a>';
 						}
 
 						if ( ! bp_disable_group_avatar_uploads() ) :
@@ -69,17 +69,17 @@ if ( bp_has_groups() ) {
 											<div class="bb-rl-modal-wrapper">
 												<div class="modal-container">
 													<header class="bb-model-header">
-														<h4><span class="target_name"><?php esc_html_e( 'Leave Group', 'buddyboss' ); ?></span></h4>
+														<h4><span class="target_name"><?php esc_html_e( 'Leave Group', 'buddyboss-platform' ); ?></span></h4>
 														<a class="bb-close-leave-group bb-model-close-button" href="#">
 															<span class="bb-icon-l bb-icon-times"></span>
 														</a>
 													</header>
 													<div class="bb-leave-group-content bb-action-popup-content">
-														<p><?php esc_html_e( 'Are you sure you want to leave ', 'buddyboss' ); ?><span class="bb-group-name"></span>?</p>
+														<p><?php esc_html_e( 'Are you sure you want to leave ', 'buddyboss-platform' ); ?><span class="bb-group-name"></span>?</p>
 													</div>
 													<footer class="bb-model-footer flex align-items-center">
-														<a class="bb-close-leave-group bb-close-action-popup bb-rl-button bb-rl-button--secondaryFill bb-rl-button--small" href="#"><?php esc_html_e( 'Cancel', 'buddyboss' ); ?></a>
-														<a class="button push-right bb-confirm-leave-group bb-rl-button bb-rl-button--brandFill bb-rl-button--small" href="#"><?php esc_html_e( 'Confirm', 'buddyboss' ); ?></a>
+														<a class="bb-close-leave-group bb-close-action-popup bb-rl-button bb-rl-button--secondaryFill bb-rl-button--small" href="#"><?php esc_html_e( 'Cancel', 'buddyboss-platform' ); ?></a>
+														<a class="button push-right bb-confirm-leave-group bb-rl-button bb-rl-button--brandFill bb-rl-button--small" href="#"><?php esc_html_e( 'Confirm', 'buddyboss-platform' ); ?></a>
 													</footer>
 
 												</div>

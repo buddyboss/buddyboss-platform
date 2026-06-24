@@ -259,26 +259,26 @@ class BP_Nouveau_Customizer_Group_Nav extends BP_Core_Nav {
 	protected function setup_nav() {
 		$nav_items = array(
 			'root'    => array(
-				'name'                => __( 'My Groups', 'buddyboss' ),
+				'name'                => __( 'My Groups', 'buddyboss-platform' ),
 				'slug'                => $this->group->slug,
 				'position'            => -1,
 				/** This filter is documented in bp-groups/classes/class-bp-groups-component.php. */
 				'default_subnav_slug' => apply_filters( 'bp_groups_default_extension', defined( 'BP_GROUPS_DEFAULT_EXTENSION' ) ? BP_GROUPS_DEFAULT_EXTENSION : 'home' ),
 			),
 			'members'    => array(
-				'name'        => __( 'Members', 'buddyboss' ),
+				'name'        => __( 'Members', 'buddyboss-platform' ),
 				'slug'        => 'members',
 				'parent_slug' => $this->group->slug,
 				'position'    => 10,
 			),
 			'invites' => array(
-				'name'        => __( 'Send Invites', 'buddyboss' ),
+				'name'        => __( 'Send Invites', 'buddyboss-platform' ),
 				'slug'        => 'invite',
 				'parent_slug' => $this->group->slug,
 				'position'    => 30,
 			),
 			'manage'  => array(
-				'name'        => __( 'Manage', 'buddyboss' ),
+				'name'        => __( 'Manage', 'buddyboss-platform' ),
 				'slug'        => 'admin',
 				'parent_slug' => $this->group->slug,
 				'position'    => 1000,
@@ -287,7 +287,7 @@ class BP_Nouveau_Customizer_Group_Nav extends BP_Core_Nav {
 
 		if ( bp_is_active( 'media' ) && bp_is_group_media_support_enabled() ) {
 			$nav_items['photos'] = array(
-				'name'        => __( 'Photos', 'buddyboss' ),
+				'name'        => __( 'Photos', 'buddyboss-platform' ),
 				'slug'        => 'photos',
 				'parent_slug' => $this->group->slug,
 				'position'    => 21,
@@ -301,7 +301,7 @@ class BP_Nouveau_Customizer_Group_Nav extends BP_Core_Nav {
 					$video_menu_position = 1001;
 				}
 				$nav_items['videos'] = array(
-					'name'        => __( 'Videos', 'buddyboss' ),
+					'name'        => __( 'Videos', 'buddyboss-platform' ),
 					'slug'        => 'videos',
 					'parent_slug' => $this->group->slug,
 					'position'    => $video_menu_position,
@@ -310,7 +310,7 @@ class BP_Nouveau_Customizer_Group_Nav extends BP_Core_Nav {
 
 			if ( bp_is_group_albums_support_enabled() ) {
 				$nav_items['albums'] = array(
-					'name'        => __( 'Albums', 'buddyboss' ),
+					'name'        => __( 'Albums', 'buddyboss-platform' ),
 					'slug'        => 'albums',
 					'parent_slug' => $this->group->slug,
 					'position'    => 23,
@@ -322,7 +322,7 @@ class BP_Nouveau_Customizer_Group_Nav extends BP_Core_Nav {
 		if ( bp_is_active( 'forums' ) && function_exists( 'bbp_is_group_forums_active' ) ) {
 			if ( bbp_is_group_forums_active() ) {
 				$nav_items['forum'] = array(
-					'name'        => __( 'Discussions', 'buddyboss' ),
+					'name'        => __( 'Discussions', 'buddyboss-platform' ),
 					'slug'        => get_option( '_bbp_forum_slug', 'forum' ),
 					'parent_slug' => $this->group->slug,
 					'position'    => 30,
@@ -332,7 +332,7 @@ class BP_Nouveau_Customizer_Group_Nav extends BP_Core_Nav {
 
 		if ( bp_enable_group_hierarchies() ) {
 			$nav_items['subgroups'] = array(
-				'name'        => __( 'Subgroups', 'buddyboss' ),
+				'name'        => __( 'Subgroups', 'buddyboss-platform' ),
 				'slug'        => 'subgroups',
 				'parent_slug' => $this->group->slug,
 				'position'    => 28,
@@ -346,7 +346,7 @@ class BP_Nouveau_Customizer_Group_Nav extends BP_Core_Nav {
 
 		if ( bp_is_active( 'activity' ) ) {
 			$nav_items['activity'] = array(
-				'name'        => __( 'Feed', 'buddyboss' ),
+				'name'        => __( 'Feed', 'buddyboss-platform' ),
 				'slug'        => 'activity',
 				'parent_slug' => $this->group->slug,
 				'position'    => 20,
@@ -355,7 +355,7 @@ class BP_Nouveau_Customizer_Group_Nav extends BP_Core_Nav {
 
 		if ( bp_is_active( 'messages' ) && true === bp_disable_group_messages() && groups_can_user_manage_messages( bp_loggedin_user_id(), $this->group->id ) ) {
 			$nav_items['messages'] = array(
-				'name'        => __( 'Send Messages', 'buddyboss' ),
+				'name'        => __( 'Send Messages', 'buddyboss-platform' ),
 				'slug'        => 'messages',
 				'parent_slug' => $this->group->slug,
 				'position'    => 25,
@@ -364,7 +364,7 @@ class BP_Nouveau_Customizer_Group_Nav extends BP_Core_Nav {
 
 		if ( bp_is_active( 'media' ) && bp_is_group_document_support_enabled() ) {
 			$nav_items['documents'] = array(
-				'name'        => __( 'Documents', 'buddyboss' ),
+				'name'        => __( 'Documents', 'buddyboss-platform' ),
 				'slug'        => 'documents',
 				'parent_slug' => $this->group->slug,
 				'position'    => 24,

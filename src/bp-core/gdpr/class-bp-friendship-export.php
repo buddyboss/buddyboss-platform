@@ -25,7 +25,7 @@ final class BP_Friendship_Export extends BP_Export {
 		if ( null === $instance ) {
 
 			$instance = new BP_Friendship_Export();
-			$instance->setup( 'bp_friendship', __( 'Friendship', 'buddyboss' ) );
+			$instance->setup( 'bp_friendship', __( 'Friendship', 'buddyboss-platform' ) );
 		}
 
 		return $instance;
@@ -55,7 +55,7 @@ final class BP_Friendship_Export extends BP_Export {
 		foreach ( $data_items['items'] as $item ) {
 
 			$group_id    = 'bp_friends';
-			$group_label = __( 'Connections', 'buddyboss' );
+			$group_label = __( 'Connections', 'buddyboss-platform' );
 			$item_id     = "{$this->exporter_name}-{$group_id}-{$item->id}";
 
 			if ( $item->initiator_user_id == $user->ID ) {
@@ -68,31 +68,31 @@ final class BP_Friendship_Export extends BP_Export {
 
 			if ( $item->is_confirmed == '0' && $is_initiator ) {
 				$group_id   .= '_pending_sent';
-				$group_label = __( 'Pending Sent Connection Requests', 'buddyboss' );
+				$group_label = __( 'Pending Sent Connection Requests', 'buddyboss-platform' );
 			}
 
 			if ( $item->is_confirmed == '0' && ! $is_initiator ) {
 				$group_id   .= '_pending_received';
-				$group_label = __( 'Pending Received Connection Requests', 'buddyboss' );
+				$group_label = __( 'Pending Received Connection Requests', 'buddyboss-platform' );
 			}
 
 			$friend_user = get_userdata( $friend_user_id );
 
 			$data = array(
 				array(
-					'name'  => __( 'Connection Name', 'buddyboss' ),
+					'name'  => __( 'Connection Name', 'buddyboss-platform' ),
 					'value' => $friend_user->display_name,
 				),
 				array(
-					'name'  => __( 'Sent Created (GMT)', 'buddyboss' ),
+					'name'  => __( 'Sent Created (GMT)', 'buddyboss-platform' ),
 					'value' => $item->date_created,
 				),
 			);
 
 			if ( $item->is_confirmed == '1' ) {
-				$is_initiator_value = ( ( $is_initiator ) ? __( 'Yes', 'buddyboss' ) : __( 'No', 'buddyboss' ) );
+				$is_initiator_value = ( ( $is_initiator ) ? __( 'Yes', 'buddyboss-platform' ) : __( 'No', 'buddyboss-platform' ) );
 				$data[]             = array(
-					'name'  => __( 'Request Initiator', 'buddyboss' ),
+					'name'  => __( 'Request Initiator', 'buddyboss-platform' ),
 					'value' => $is_initiator_value,
 				);
 			}

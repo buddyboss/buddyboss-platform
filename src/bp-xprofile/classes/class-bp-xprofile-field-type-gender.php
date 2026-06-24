@@ -24,8 +24,8 @@ class BP_XProfile_Field_Type_Gender extends BP_XProfile_Field_Type {
 	public function __construct() {
 		parent::__construct();
 
-		$this->category = __( 'Multi Fields', 'buddyboss' );
-		$this->name     = __( 'Gender', 'buddyboss' );
+		$this->category = __( 'Multi Fields', 'buddyboss-platform' );
+		$this->name     = __( 'Gender', 'buddyboss-platform' );
 
 		$this->supports_options = true;
 
@@ -109,7 +109,7 @@ class BP_XProfile_Field_Type_Gender extends BP_XProfile_Field_Type {
 		$original_option_values = bb_xprofile_safe_unserialize( BP_XProfile_ProfileData::get_value_byid( $this->field_obj->id, $args['user_id'] ) ); // Object injection guard.
 
 		$options = $this->field_obj->get_children();
-		$html    = '<option value="">' . /* translators: no option picked in select box */ esc_html__( '----', 'buddyboss' ) . '</option>';
+		$html    = '<option value="">' . /* translators: no option picked in select box */ esc_html__( '----', 'buddyboss-platform' ) . '</option>';
 
 		if ( empty( $original_option_values ) && ! empty( $_POST[ 'field_' . $this->field_obj->id ] ) ) {
 			$original_option_values = sanitize_text_field( $_POST[ 'field_' . $this->field_obj->id ] );
@@ -201,7 +201,7 @@ class BP_XProfile_Field_Type_Gender extends BP_XProfile_Field_Type {
 		<label for="<?php bp_the_profile_field_input_name(); ?>" class="screen-reader-text">
 															 <?php
 																/* translators: accessibility text */
-																esc_html_e( 'Select', 'buddyboss' );
+																esc_html_e( 'Select', 'buddyboss-platform' );
 																?>
 			</label>
 		<select <?php echo $this->get_edit_field_html_elements( $raw_properties ); ?>>
@@ -233,14 +233,14 @@ class BP_XProfile_Field_Type_Gender extends BP_XProfile_Field_Type {
 		?>
 
 		<div id="<?php echo esc_attr( $type ); ?>" class="postbox bp-options-box" style="<?php echo esc_attr( $class ); ?> margin-top: 15px;">
-			<h3><?php esc_html_e( 'Male and Female use "his" and "her" pronouns in the activity feed. Other options use "their".', 'buddyboss' ); ?></h3>
+			<h3><?php esc_html_e( 'Male and Female use "his" and "her" pronouns in the activity feed. Other options use "their".', 'buddyboss-platform' ); ?></h3>
 			<div class="inside" aria-live="polite" aria-atomic="true" aria-relevant="all">
 				<p style="display: none;">
-					<label for="sort_order_<?php echo esc_attr( $type ); ?>"><?php esc_html_e( 'Sort Order:', 'buddyboss' ); ?></label>
+					<label for="sort_order_<?php echo esc_attr( $type ); ?>"><?php esc_html_e( 'Sort Order:', 'buddyboss-platform' ); ?></label>
 					<select name="sort_order_<?php echo esc_attr( $type ); ?>" id="sort_order_<?php echo esc_attr( $type ); ?>" >
-						<option value="custom" <?php selected( 'custom', $current_field->order_by ); ?>><?php esc_html_e( 'Custom', 'buddyboss' ); ?></option>
-						<option value="asc"    <?php selected( 'asc', $current_field->order_by ); ?>><?php esc_html_e( 'Ascending', 'buddyboss' ); ?></option>
-						<option value="desc"   <?php selected( 'desc', $current_field->order_by ); ?>><?php esc_html_e( 'Descending', 'buddyboss' ); ?></option>
+						<option value="custom" <?php selected( 'custom', $current_field->order_by ); ?>><?php esc_html_e( 'Custom', 'buddyboss-platform' ); ?></option>
+						<option value="asc"    <?php selected( 'asc', $current_field->order_by ); ?>><?php esc_html_e( 'Ascending', 'buddyboss-platform' ); ?></option>
+						<option value="desc"   <?php selected( 'desc', $current_field->order_by ); ?>><?php esc_html_e( 'Descending', 'buddyboss-platform' ); ?></option>
 					</select>
 				</p>
 
@@ -265,19 +265,19 @@ class BP_XProfile_Field_Type_Gender extends BP_XProfile_Field_Type {
 					$options[] = (object) array(
 						'id'                => 1,
 						'is_default_option' => false,
-						'name'              => __( 'Male', 'buddyboss' ),
+						'name'              => __( 'Male', 'buddyboss-platform' ),
 						'key'               => 'male',
 					);
 					$options[] = (object) array(
 						'id'                => 2,
 						'is_default_option' => false,
-						'name'              => __( 'Female', 'buddyboss' ),
+						'name'              => __( 'Female', 'buddyboss-platform' ),
 						'key'               => 'female',
 					);
 					$options[] = (object) array(
 						'id'                => 3,
 						'is_default_option' => false,
-						'name'              => __( 'Prefer Not to Answer', 'buddyboss' ),
+						'name'              => __( 'Prefer Not to Answer', 'buddyboss-platform' ),
 						'key'               => 'other',
 					);
 				}
@@ -340,7 +340,7 @@ class BP_XProfile_Field_Type_Gender extends BP_XProfile_Field_Type {
 							<label for="<?php echo esc_attr( "{$type}_option{$j}" ); ?>" class="screen-reader-text">
 												   <?php
 													/* translators: accessibility text */
-													esc_html_e( 'Add an option', 'buddyboss' );
+													esc_html_e( 'Add an option', 'buddyboss-platform' );
 													?>
 								</label>
 							<?php
@@ -370,18 +370,18 @@ class BP_XProfile_Field_Type_Gender extends BP_XProfile_Field_Type {
 							<label for="<?php echo esc_attr( "{$type}_option{$default_name}" ); ?>">
 								<?php
 								if ( 'male' === $key ) {
-									_e( 'Male', 'buddyboss' );
+									_e( 'Male', 'buddyboss-platform' );
 								} elseif ( 'female' === $key ) {
-									_e( 'Female', 'buddyboss' );
+									_e( 'Female', 'buddyboss-platform' );
 								} else {
-									_e( 'Other', 'buddyboss' );
+									_e( 'Other', 'buddyboss-platform' );
 								}
 								?>
 							</label>
 
 							<?php if ( ! in_array( $key, array( 'male', 'female' ) ) ) : ?>
 								<div class ="delete-button">
-									<a href='javascript:remove_div("<?php echo esc_attr( "{$type}_div{$j}" ); ?>")' class="delete"><?php esc_html_e( 'Delete', 'buddyboss' ); ?></a>
+									<a href='javascript:remove_div("<?php echo esc_attr( "{$type}_div{$j}" ); ?>")' class="delete"><?php esc_html_e( 'Delete', 'buddyboss-platform' ); ?></a>
 								</div>
 							<?php endif; ?>
 
@@ -393,7 +393,7 @@ class BP_XProfile_Field_Type_Gender extends BP_XProfile_Field_Type {
 				<?php } ?>
 
 				<div id="<?php echo esc_attr( "{$type}_more" ); ?>"></div>
-				<p><a href="javascript:add_option('<?php echo esc_js( $type ); ?>')"><?php esc_html_e( 'Add Another Option', 'buddyboss' ); ?></a></p>
+				<p><a href="javascript:add_option('<?php echo esc_js( $type ); ?>')"><?php esc_html_e( 'Add Another Option', 'buddyboss-platform' ); ?></a></p>
 
 				<?php
 

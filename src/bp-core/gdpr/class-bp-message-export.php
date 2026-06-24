@@ -24,7 +24,7 @@ final class BP_Message_Export extends BP_Export {
 
 		if ( null === $instance ) {
 			$instance = new BP_Message_Export();
-			$instance->setup( 'bp_message', __( 'Private Messages', 'buddyboss' ) );
+			$instance->setup( 'bp_message', __( 'Private Messages', 'buddyboss-platform' ) );
 		}
 
 		return $instance;
@@ -54,7 +54,7 @@ final class BP_Message_Export extends BP_Export {
 		foreach ( $data_items['items'] as $item ) {
 
 			$group_id    = 'bp_messages';
-			$group_label = __( 'Message Threads & Replies', 'buddyboss' );
+			$group_label = __( 'Message Threads & Replies', 'buddyboss-platform' );
 			$item_id     = "{$this->exporter_name}-{$group_id}-{$item->id}";
 
 			$permalink = bp_get_message_thread_view_link( $item->thread_id, $user->ID );
@@ -79,23 +79,23 @@ final class BP_Message_Export extends BP_Export {
 
 			$data = array(
 				array(
-					'name'  => __( 'Message Subject', 'buddyboss' ),
+					'name'  => __( 'Message Subject', 'buddyboss-platform' ),
 					'value' => $item->subject,
 				),
 				array(
-					'name'  => __( 'Message Content', 'buddyboss' ),
+					'name'  => __( 'Message Content', 'buddyboss-platform' ),
 					'value' => $item->message,
 				),
 				array(
-					'name'  => __( 'Created Date (GMT)', 'buddyboss' ),
+					'name'  => __( 'Created Date (GMT)', 'buddyboss-platform' ),
 					'value' => $item->date_sent,
 				),
 				array(
-					'name'  => __( 'Message Recipients', 'buddyboss' ),
+					'name'  => __( 'Message Recipients', 'buddyboss-platform' ),
 					'value' => $recipients,
 				),
 				array(
-					'name'  => __( 'Thread URL', 'buddyboss' ),
+					'name'  => __( 'Thread URL', 'buddyboss-platform' ),
 					'value' => $permalink,
 				),
 			);

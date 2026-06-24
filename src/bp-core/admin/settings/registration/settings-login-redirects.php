@@ -32,7 +32,7 @@ function bb_registration_register_login_redirects_panel_fields() {
 		$panel_id,
 		'global_redirects',
 		array(
-			'title'       => __( 'Global Redirects', 'buddyboss' ),
+			'title'       => __( 'Global Redirects', 'buddyboss-platform' ),
 			'description' => '',
 			'order'       => 10,
 			'help_url'    => '636046',
@@ -46,13 +46,13 @@ function bb_registration_register_login_redirects_panel_fields() {
 		'global_redirects',
 		array(
 			'name'              => 'bb-login-redirection',
-			'label'             => __( 'After Login', 'buddyboss' ),
-			'description'       => __( 'Select a page or external link to redirect your members to after they login.', 'buddyboss' ),
+			'label'             => __( 'After Login', 'buddyboss-platform' ),
+			'description'       => __( 'Select a page or external link to redirect your members to after they login.', 'buddyboss-platform' ),
 			'type'              => 'async_select',
 			'async_action'      => 'bb_admin_search_published_pages',
 			'default'           => '',
 			'sanitize_callback' => 'bb_registration_sanitize_redirection',
-			'placeholder'       => __( 'Default', 'buddyboss' ),
+			'placeholder'       => __( 'Default', 'buddyboss-platform' ),
 			'group'             => 'login_redirect',
 			'order'             => 10,
 		)
@@ -69,7 +69,7 @@ function bb_registration_register_login_redirects_panel_fields() {
 			'type'              => 'text',
 			'default'           => '',
 			'sanitize_callback' => 'bb_registration_sanitize_redirect_url',
-			'placeholder'       => __( 'Enter custom URL', 'buddyboss' ),
+			'placeholder'       => __( 'Enter custom URL', 'buddyboss-platform' ),
 			'conditional'       => array(
 				'field'  => 'bb-login-redirection',
 				'value'  => '0',
@@ -87,13 +87,13 @@ function bb_registration_register_login_redirects_panel_fields() {
 		'global_redirects',
 		array(
 			'name'              => 'bb-logout-redirection',
-			'label'             => __( 'After Logout', 'buddyboss' ),
-			'description'       => __( 'Select a page or external link to redirect your members to after they logout.', 'buddyboss' ),
+			'label'             => __( 'After Logout', 'buddyboss-platform' ),
+			'description'       => __( 'Select a page or external link to redirect your members to after they logout.', 'buddyboss-platform' ),
 			'type'              => 'async_select',
 			'async_action'      => 'bb_admin_search_published_pages',
 			'default'           => '',
 			'sanitize_callback' => 'bb_registration_sanitize_redirection',
-			'placeholder'       => __( 'Default', 'buddyboss' ),
+			'placeholder'       => __( 'Default', 'buddyboss-platform' ),
 			'group'             => 'logout_redirect',
 			'order'             => 20,
 		)
@@ -110,7 +110,7 @@ function bb_registration_register_login_redirects_panel_fields() {
 			'type'              => 'text',
 			'default'           => '',
 			'sanitize_callback' => 'bb_registration_sanitize_redirect_url',
-			'placeholder'       => __( 'Enter custom URL', 'buddyboss' ),
+			'placeholder'       => __( 'Enter custom URL', 'buddyboss-platform' ),
 			'conditional'       => array(
 				'field'  => 'bb-logout-redirection',
 				'value'  => '0',
@@ -134,8 +134,8 @@ function bb_registration_register_login_redirects_panel_fields() {
 			$panel_id,
 			'profile_type_redirects',
 			array(
-				'title'       => __( 'Profile Type Redirects', 'buddyboss' ),
-				'description' => __( 'Choose a page or external link where each profile type will be redirected after login or logout.', 'buddyboss' ),
+				'title'       => __( 'Profile Type Redirects', 'buddyboss-platform' ),
+				'description' => __( 'Choose a page or external link where each profile type will be redirected after login or logout.', 'buddyboss-platform' ),
 				'order'       => 20,
 				'help_url'    => '636059',
 				// The controlling toggle (bp-member-type-enable-disable) lives in the

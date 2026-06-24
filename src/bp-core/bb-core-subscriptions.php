@@ -89,8 +89,8 @@ function bb_subscriptions_migrate_users_forum_topic( $is_background = false, $is
 
 			if ( ! $is_background ) {
 				/* translators: Status of current action. */
-				$statement = __( 'Migrating BBPress (up to v2.5.14) forum and discussion subscriptions to BuddyBoss&hellip; %s', 'buddyboss' );
-				$result    = __( 'Complete!', 'buddyboss' );
+				$statement = __( 'Migrating BBPress (up to v2.5.14) forum and discussion subscriptions to BuddyBoss&hellip; %s', 'buddyboss-platform' );
+				$result    = __( 'Complete!', 'buddyboss-platform' );
 
 				// All done!
 				return array(
@@ -253,7 +253,7 @@ function bb_migrate_users_forum_topic_subscriptions( $subscription_users, $offse
 	if ( ! $is_background ) {
 		$records_updated = sprintf(
 		/* translators: total members */
-			__( 'The BBPress (up to v2.5.14) forum and discussion subscriptions successfully migrated to BuddyBoss for %s members.', 'buddyboss' ),
+			__( 'The BBPress (up to v2.5.14) forum and discussion subscriptions successfully migrated to BuddyBoss for %s members.', 'buddyboss-platform' ),
 			bp_core_number_format( $latest_offset - 1 )
 		);
 
@@ -386,8 +386,8 @@ function bb_subscriptions_migrating_bbpress_users_subscriptions( $is_background 
 
 			if ( ! $is_background ) {
 				/* translators: Status of current action. */
-				$statement = __( 'Migrating BBPress (v2.6+) forum and discussion subscriptions to BuddyBoss&hellip; %s', 'buddyboss' );
-				$result    = __( 'Complete!', 'buddyboss' );
+				$statement = __( 'Migrating BBPress (v2.6+) forum and discussion subscriptions to BuddyBoss&hellip; %s', 'buddyboss-platform' );
+				$result    = __( 'Complete!', 'buddyboss-platform' );
 
 				// All done!
 				return array(
@@ -552,7 +552,7 @@ function bb_migrate_bbpress_users_post_subscriptions( $subscription_posts, $blog
 	$latest_offset   = ( true === $is_background ? get_site_option( 'bb_subscriptions_migrate_bbpress_offset', 0 ) : $offset + 1 );
 	$records_updated = sprintf(
 	/* translators: total members */
-		__( 'The total %s BBPress (v2.6+) forum and discussion subscriptions successfully migrated to BuddyBoss.', 'buddyboss' ),
+		__( 'The total %s BBPress (v2.6+) forum and discussion subscriptions successfully migrated to BuddyBoss.', 'buddyboss-platform' ),
 		bp_core_number_format( $latest_offset - 1 )
 	);
 
@@ -614,8 +614,8 @@ function bb_get_subscriptions_types( $singular = false ) {
 		}
 	} else {
 		if ( function_exists( 'bbp_is_subscriptions_active' ) && bbp_is_subscriptions_active() ) {
-			$types['forum'] = ( $singular ? __( 'Forum', 'buddyboss' ) : __( 'Forums', 'buddyboss' ) );
-			$types['topic'] = ( $singular ? __( 'Discussion', 'buddyboss' ) : __( 'Discussions', 'buddyboss' ) );
+			$types['forum'] = ( $singular ? __( 'Forum', 'buddyboss-platform' ) : __( 'Forums', 'buddyboss-platform' ) );
+			$types['topic'] = ( $singular ? __( 'Discussion', 'buddyboss-platform' ) : __( 'Discussions', 'buddyboss-platform' ) );
 		}
 	}
 
@@ -673,7 +673,7 @@ function bb_create_subscription( $args = array() ) {
 			if ( 'wp_error' === $r['error_type'] ) {
 				return new WP_Error(
 					'bb_subscriptions_create_exists',
-					__( 'The subscription is already exists.', 'buddyboss' ),
+					__( 'The subscription is already exists.', 'buddyboss-platform' ),
 					array(
 						'status' => 400,
 					)
@@ -687,7 +687,7 @@ function bb_create_subscription( $args = array() ) {
 				if ( 'wp_error' === $r['error_type'] ) {
 					return new WP_Error(
 						'bb_subscriptions_id_not_match',
-						__( 'The subscription ID is not match.', 'buddyboss' ),
+						__( 'The subscription ID is not match.', 'buddyboss-platform' ),
 						array(
 							'status' => 400,
 						)
@@ -701,7 +701,7 @@ function bb_create_subscription( $args = array() ) {
 		if ( 'wp_error' === $r['error_type'] ) {
 			return new WP_Error(
 				'bb_subscriptions_not_found',
-				__( 'The subscription does\'t exists.', 'buddyboss' ),
+				__( 'The subscription does\'t exists.', 'buddyboss-platform' ),
 				array(
 					'status' => 400,
 				)
@@ -725,7 +725,7 @@ function bb_create_subscription( $args = array() ) {
 
 	// Return if not create a subscription.
 	if ( is_wp_error( $new_subscription_created ) || ! $new_subscription_created ) {
-		$error_message = is_wp_error( $new_subscription_created ) ? $new_subscription_created->get_error_message() : __( 'There is an error while adding the subscription.', 'buddyboss' );
+		$error_message = is_wp_error( $new_subscription_created ) ? $new_subscription_created->get_error_message() : __( 'There is an error while adding the subscription.', 'buddyboss-platform' );
 		if ( 'wp_error' === $r['error_type'] ) {
 			return new WP_Error(
 				'bb_subscription_invalid_item_request',
@@ -1301,7 +1301,7 @@ function bb_migrate_group_subscription( $is_background = false ) {
 
 			$records_updated = sprintf(
 			/* translators: total topics */
-				_n( '%d group forum and discussion subscriptions migrated successfully', '%d groups forum and discussion subscriptions migrated successfully', bp_core_number_format( $total ), 'buddyboss' ),
+				_n( '%d group forum and discussion subscriptions migrated successfully', '%d groups forum and discussion subscriptions migrated successfully', bp_core_number_format( $total ), 'buddyboss-platform' ),
 				bp_core_number_format( $total )
 			);
 
@@ -1317,12 +1317,12 @@ function bb_migrate_group_subscription( $is_background = false ) {
 		delete_site_option( 'bb_group_subscriptions_migrated_count' );
 
 		/* translators: Status of current action. */
-		$statement = __( 'Migrating Group forum and discussion subscriptions data structure to the new subscription flow&hellip; %s', 'buddyboss' );
+		$statement = __( 'Migrating Group forum and discussion subscriptions data structure to the new subscription flow&hellip; %s', 'buddyboss-platform' );
 
 		// All done!
 		return array(
 			'status'  => 1,
-			'message' => sprintf( $statement, __( 'Complete!', 'buddyboss' ) ),
+			'message' => sprintf( $statement, __( 'Complete!', 'buddyboss-platform' ) ),
 		);
 	}
 }

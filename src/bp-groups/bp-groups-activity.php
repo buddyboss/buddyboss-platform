@@ -30,36 +30,36 @@ function groups_register_activity_actions() {
 	bp_activity_set_action(
 		$bp->groups->id,
 		'activity_update',
-		__( 'Posted a status update', 'buddyboss' ),
+		__( 'Posted a status update', 'buddyboss-platform' ),
 		'bp_groups_format_activity_action_activity_update',
-		__( 'Updates', 'buddyboss' ),
+		__( 'Updates', 'buddyboss-platform' ),
 		array( 'activity', 'group', 'member', 'member_groups' )
 	);
 
 	bp_activity_set_action(
 		$bp->groups->id,
 		'created_group',
-		__( 'Created a group', 'buddyboss' ),
+		__( 'Created a group', 'buddyboss-platform' ),
 		'bp_groups_format_activity_action_created_group',
-		__( 'New Groups', 'buddyboss' ),
+		__( 'New Groups', 'buddyboss-platform' ),
 		array( 'activity', 'member', 'member_groups' )
 	);
 
 	bp_activity_set_action(
 		$bp->groups->id,
 		'joined_group',
-		__( 'Joined a group', 'buddyboss' ),
+		__( 'Joined a group', 'buddyboss-platform' ),
 		'bp_groups_format_activity_action_joined_group',
-		__( 'Group Memberships', 'buddyboss' ),
+		__( 'Group Memberships', 'buddyboss-platform' ),
 		array( 'activity', 'group', 'member', 'member_groups' )
 	);
 
 	bp_activity_set_action(
 		$bp->groups->id,
 		'group_details_updated',
-		__( 'Group details edited', 'buddyboss' ),
+		__( 'Group details edited', 'buddyboss-platform' ),
 		'bp_groups_format_activity_action_group_details_updated',
-		__( 'Group Updates', 'buddyboss' ),
+		__( 'Group Updates', 'buddyboss-platform' ),
 		array( 'activity', 'group', 'member', 'member_groups' )
 	);
 
@@ -110,7 +110,7 @@ function bp_groups_format_activity_action_created_group( $action, $activity ) {
 	$group_link = '<a href="' . esc_url( bp_get_group_permalink( $group ) ) . '" data-bb-hp-group="' . esc_attr( $group->id ) . '">' . esc_html( $group->name ) . '</a>';
 
 	/* translators: 1: user link, 2: group link. */
-	$action = sprintf( __( '%1$s created the group %2$s', 'buddyboss' ), $user_link, $group_link );
+	$action = sprintf( __( '%1$s created the group %2$s', 'buddyboss-platform' ), $user_link, $group_link );
 
 	/**
 	 * Filters the 'created_group' activity actions.
@@ -139,7 +139,7 @@ function bp_groups_format_activity_action_joined_group( $action, $activity ) {
 	$group_link = '<a href="' . esc_url( bp_get_group_permalink( $group ) ) . '" data-bb-hp-group="' . esc_attr( $group->id ) . '">' . esc_html( $group->name ) . '</a>';
 
 	/* translators: 1: user link, 2: group link. */
-	$action = sprintf( __( '%1$s joined the group %2$s', 'buddyboss' ), $user_link, $group_link );
+	$action = sprintf( __( '%1$s joined the group %2$s', 'buddyboss-platform' ), $user_link, $group_link );
 
 	// Legacy filters (do not follow parameter patterns of other activity
 	// action filters, and requires apply_filters_ref_array()).
@@ -179,7 +179,7 @@ function bp_groups_format_activity_action_activity_update( $action, $activity ) 
 	$group_link = '<a href="' . esc_url( bp_get_group_permalink( $group ) ) . '" data-bb-hp-group="' . esc_attr( $group->id ) . '">' . bp_get_group_name( $group ) . '</a>';
 
 	/* translators: 1: user link, 2: group link. */
-	$action = sprintf( __( '%1$s posted an update in the group %2$s', 'buddyboss' ), $user_link, $group_link );
+	$action = sprintf( __( '%1$s posted an update in the group %2$s', 'buddyboss-platform' ), $user_link, $group_link );
 
 	/**
 	 * Filters the groups 'activity_update' activity actions.
@@ -216,26 +216,26 @@ function bp_groups_format_activity_action_group_details_updated( $action, $activ
 	// No changed details were found, so use a generic message.
 	if ( empty( $changed ) ) {
 		/* translators: 1: user link, 2: group link. */
-		$action = sprintf( __( '%1$s updated details for the group %2$s', 'buddyboss' ), $user_link, $group_link );
+		$action = sprintf( __( '%1$s updated details for the group %2$s', 'buddyboss-platform' ), $user_link, $group_link );
 
 		// Name and description changed - to keep things short, don't describe changes in detail.
 	} elseif ( isset( $changed['name'] ) && isset( $changed['description'] ) ) {
 		/* translators: 1: user link, 2: group link. */
-		$action = sprintf( __( '%1$s changed the name and description of the group %2$s', 'buddyboss' ), $user_link, $group_link );
+		$action = sprintf( __( '%1$s changed the name and description of the group %2$s', 'buddyboss-platform' ), $user_link, $group_link );
 
 		// Name only.
 	} elseif ( isset( $changed['name']['old'] ) && isset( $changed['name']['new'] ) ) {
 		/* translators: 1: user link, 2: group link, 3: old group name, 4: new group name. */
-		$action = sprintf( __( '%1$s changed the name of the group %2$s from "%3$s" to "%4$s"', 'buddyboss' ), $user_link, $group_link, wp_strip_all_tags( $changed['name']['old'] ), wp_strip_all_tags( $changed['name']['new'] ) );
+		$action = sprintf( __( '%1$s changed the name of the group %2$s from "%3$s" to "%4$s"', 'buddyboss-platform' ), $user_link, $group_link, wp_strip_all_tags( $changed['name']['old'] ), wp_strip_all_tags( $changed['name']['new'] ) );
 
 		// Description only.
 	} elseif ( isset( $changed['description']['old'] ) && isset( $changed['description']['new'] ) ) {
 		/* translators: 1: user link, 2: group link, 3: old group description, 4: new group description. */
-		$action = sprintf( __( '%1$s changed the description of the group %2$s from "%3$s" to "%4$s"', 'buddyboss' ), $user_link, $group_link, wp_strip_all_tags( $changed['description']['old'] ), wp_strip_all_tags( $changed['description']['new'] ) );
+		$action = sprintf( __( '%1$s changed the description of the group %2$s from "%3$s" to "%4$s"', 'buddyboss-platform' ), $user_link, $group_link, wp_strip_all_tags( $changed['description']['old'] ), wp_strip_all_tags( $changed['description']['new'] ) );
 
 	} elseif ( isset( $changed['slug']['old'] ) && isset( $changed['slug']['new'] ) ) {
 		/* translators: 1: user link, 2: group link. */
-		$action = sprintf( __( '%1$s changed the permalink of the group %2$s.', 'buddyboss' ), $user_link, $group_link );
+		$action = sprintf( __( '%1$s changed the permalink of the group %2$s.', 'buddyboss-platform' ), $user_link, $group_link );
 
 	}
 
@@ -484,7 +484,7 @@ function groups_record_activity( $args = '' ) {
 
 			if ( ! bp_activity_user_can_edit( $activity ) ) {
 				if ( 'wp_error' === $args['error_type'] ) {
-					return new WP_Error( 'error', __( 'Allowed time for editing this activity is passed already, you can not edit now.', 'buddyboss' ) );
+					return new WP_Error( 'error', __( 'Allowed time for editing this activity is passed already, you can not edit now.', 'buddyboss-platform' ) );
 				} else {
 					return false;
 				}
@@ -646,7 +646,7 @@ function bp_groups_membership_accepted_add_activity( $user_id, $group_id ) {
 	 * @param int    $group_id ID of the group. Passed by reference.
 	 */
 	/* translators: 1: user link, 2: group link. */
-	$action = apply_filters_ref_array( 'groups_activity_membership_accepted_action', array( sprintf( __( '%1$s joined the group %2$s', 'buddyboss' ), bp_core_get_userlink( $user_id ), '<a href="' . bp_get_group_permalink( $group ) . '">' . esc_attr( $group->name ) . '</a>' ), $user_id, &$group ) );
+	$action = apply_filters_ref_array( 'groups_activity_membership_accepted_action', array( sprintf( __( '%1$s joined the group %2$s', 'buddyboss-platform' ), bp_core_get_userlink( $user_id ), '<a href="' . bp_get_group_permalink( $group ) . '">' . esc_attr( $group->name ) . '</a>' ), $user_id, &$group ) );
 
 	// Record in activity feeds.
 	groups_record_activity(

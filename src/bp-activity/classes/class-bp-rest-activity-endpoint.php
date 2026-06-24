@@ -76,7 +76,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			array(
 				'args'        => array(
 					'id' => array(
-						'description' => __( 'A unique numeric ID for the activity.', 'buddyboss' ),
+						'description' => __( 'A unique numeric ID for the activity.', 'buddyboss-platform' ),
 						'type'        => 'integer',
 					),
 				),
@@ -115,7 +115,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			array(
 				'args'        => array(
 					'id' => array(
-						'description' => __( 'A unique numeric ID for the activity.', 'buddyboss' ),
+						'description' => __( 'A unique numeric ID for the activity.', 'buddyboss-platform' ),
 						'type'        => 'integer',
 						'required'    => true,
 					),
@@ -138,12 +138,12 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			array(
 				'args'   => array(
 					'id'         => array(
-						'description' => __( 'A unique numeric ID for the activity.', 'buddyboss' ),
+						'description' => __( 'A unique numeric ID for the activity.', 'buddyboss-platform' ),
 						'type'        => 'integer',
 						'required'    => true,
 					),
 					'remove_pin' => array(
-						'description' => __( 'If true then remove pin.', 'buddyboss' ),
+						'description' => __( 'If true then remove pin.', 'buddyboss-platform' ),
 						'type'        => 'boolean',
 						'default'     => false,
 					),
@@ -164,12 +164,12 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			array(
 				'args'   => array(
 					'id'               => array(
-						'description' => __( 'A unique numeric ID for the activity.', 'buddyboss' ),
+						'description' => __( 'A unique numeric ID for the activity.', 'buddyboss-platform' ),
 						'type'        => 'integer',
 						'required'    => true,
 					),
 					'turn_on_comments' => array(
-						'description' => __( 'If true then turn on comments.', 'buddyboss' ),
+						'description' => __( 'If true then turn on comments.', 'buddyboss-platform' ),
 						'type'        => 'boolean',
 						'default'     => false,
 					),
@@ -190,7 +190,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			array(
 				'args'   => array(
 					'action' => array(
-						'description' => __( 'Turn On/Off attribute mute or unmute.', 'buddyboss' ),
+						'description' => __( 'Turn On/Off attribute mute or unmute.', 'buddyboss-platform' ),
 						'type'        => 'string',
 						'enum'        => array( 'mute', 'unmute' ),
 						'required'    => true,
@@ -427,7 +427,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 		if ( function_exists( 'bp_rest_enable_private_network' ) && true === bp_rest_enable_private_network() && ! is_user_logged_in() ) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
-				__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss' ),
+				__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss-platform' ),
 				array(
 					'status' => rest_authorization_required_code(),
 				)
@@ -468,7 +468,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 		if ( empty( $activity->id ) ) {
 			return new WP_Error(
 				'bp_rest_invalid_id',
-				__( 'Invalid activity ID.', 'buddyboss' ),
+				__( 'Invalid activity ID.', 'buddyboss-platform' ),
 				array(
 					'status' => 404,
 				)
@@ -509,7 +509,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 		if ( function_exists( 'bp_rest_enable_private_network' ) && true === bp_rest_enable_private_network() && ! is_user_logged_in() ) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
-				__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss' ),
+				__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss-platform' ),
 				array(
 					'status' => rest_authorization_required_code(),
 				)
@@ -519,7 +519,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 		if ( true === $retval && ! $this->can_see( $request ) ) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
-				__( 'Sorry, you cannot view the activities.', 'buddyboss' ),
+				__( 'Sorry, you cannot view the activities.', 'buddyboss-platform' ),
 				array(
 					'status' => rest_authorization_required_code(),
 				)
@@ -607,7 +607,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 		if ( true === $this->bp_rest_activity_content_validate( $request ) ) {
 			return new WP_Error(
 				'bp_rest_create_activity_empty_content',
-				__( 'Please, enter some content.', 'buddyboss' ),
+				__( 'Please, enter some content.', 'buddyboss-platform' ),
 				array(
 					'status' => 400,
 				)
@@ -622,7 +622,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 				if ( ! $can_send_media ) {
 					return new WP_Error(
 						'bp_rest_bp_activity_media',
-						__( 'You don\'t have access to send the media.', 'buddyboss' ),
+						__( 'You don\'t have access to send the media.', 'buddyboss-platform' ),
 						array(
 							'status' => 400,
 						)
@@ -635,7 +635,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 				if ( ! $can_send_document ) {
 					return new WP_Error(
 						'bp_rest_bp_activity_document',
-						__( 'You don\'t have access to send the document.', 'buddyboss' ),
+						__( 'You don\'t have access to send the document.', 'buddyboss-platform' ),
 						array(
 							'status' => 400,
 						)
@@ -648,7 +648,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 				if ( ! $can_send_video ) {
 					return new WP_Error(
 						'bp_rest_bp_activity_video',
-						__( 'You don\'t have access to send the video.', 'buddyboss' ),
+						__( 'You don\'t have access to send the video.', 'buddyboss-platform' ),
 						array(
 							'status' => 400,
 						)
@@ -661,7 +661,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 				if ( ! $can_send_gif ) {
 					return new WP_Error(
 						'bp_rest_bp_activity_gif',
-						__( 'You don\'t have access to send the gif.', 'buddyboss' ),
+						__( 'You don\'t have access to send the gif.', 'buddyboss-platform' ),
 						array(
 							'status' => 400,
 						)
@@ -687,7 +687,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 				if ( ! $can_upload_feature_image ) {
 					return new WP_Error(
 						'bb_rest_activity_feature_image_access',
-						__( 'You do not have permission to upload feature image.', 'buddyboss' ),
+						__( 'You do not have permission to upload feature image.', 'buddyboss-platform' ),
 						array(
 							'status' => 400,
 						)
@@ -762,7 +762,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 		if ( ! is_numeric( $activity_id ) ) {
 			return new WP_Error(
 				'bp_rest_user_cannot_create_activity',
-				__( 'Cannot create new activity.', 'buddyboss' ),
+				__( 'Cannot create new activity.', 'buddyboss-platform' ),
 				array(
 					'status' => 500,
 				)
@@ -860,7 +860,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 	public function create_item_permissions_check( $request ) {
 		$error = new WP_Error(
 			'bp_rest_authorization_required',
-			__( 'Sorry, you are not allowed to create activities.', 'buddyboss' ),
+			__( 'Sorry, you are not allowed to create activities.', 'buddyboss-platform' ),
 			array(
 				'status' => rest_authorization_required_code(),
 			)
@@ -889,7 +889,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 				) {
 					return new WP_Error(
 						'bp_rest_user_cannot_create_activity',
-						__( 'Platform pro plugin is either older version or not active.', 'buddyboss' ),
+						__( 'Platform pro plugin is either older version or not active.', 'buddyboss-platform' ),
 						array(
 							'status' => 403,
 						)
@@ -901,7 +901,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 				) {
 					return new WP_Error(
 						'bp_rest_user_cannot_create_activity',
-						__( 'Schedule activity settings disabled.', 'buddyboss' ),
+						__( 'Schedule activity settings disabled.', 'buddyboss-platform' ),
 						array(
 							'status' => 403,
 						)
@@ -909,7 +909,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 				} elseif ( bb_get_activity_scheduled_status() === $activity_status && empty( $activity_date ) ) {
 					return new WP_Error(
 						'bp_rest_user_cannot_create_activity',
-						__( 'Unable to schedule activity, date parameter required.', 'buddyboss' ),
+						__( 'Unable to schedule activity, date parameter required.', 'buddyboss-platform' ),
 						array(
 							'status' => 400,
 						)
@@ -922,7 +922,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 					// Scheduled activity should be greater than the current time.
 					return new WP_Error(
 						'bp_rest_user_cannot_create_activity',
-						__( 'Please set a minimum schedule time for at least 1 hour later.', 'buddyboss' ),
+						__( 'Please set a minimum schedule time for at least 1 hour later.', 'buddyboss-platform' ),
 						array(
 							'status' => 400,
 						)
@@ -943,7 +943,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 					) {
 						return new WP_Error(
 							'bp_rest_user_cannot_create_activity',
-							__( 'You are not permitted to schedule activity in this group.', 'buddyboss' ),
+							__( 'You are not permitted to schedule activity in this group.', 'buddyboss-platform' ),
 							array(
 								'status' => 403,
 							)
@@ -1031,7 +1031,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 		) {
 			return new WP_Error(
 				'bp_rest_update_activity_empty_content',
-				__( 'Please, enter some content.', 'buddyboss' ),
+				__( 'Please, enter some content.', 'buddyboss-platform' ),
 				array(
 					'status' => 400,
 				)
@@ -1055,7 +1055,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 				if ( ! $can_upload_feature_image ) {
 					return new WP_Error(
 						'bb_rest_activity_feature_image_access',
-						__( 'You do not have permission to upload feature image.', 'buddyboss' ),
+						__( 'You do not have permission to upload feature image.', 'buddyboss-platform' ),
 						array(
 							'status' => 400,
 						)
@@ -1115,7 +1115,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 		) {
 			return new WP_Error(
 				'bp_rest_update_invalid_activity_privacy',
-				__( 'Sorry, you are not allow to update the privacy', 'buddyboss' ),
+				__( 'Sorry, you are not allow to update the privacy', 'buddyboss-platform' ),
 				array(
 					'status' => 400,
 				)
@@ -1136,7 +1136,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 		if ( ! is_numeric( $activity_id ) ) {
 			return new WP_Error(
 				'bp_rest_user_cannot_update_activity',
-				__( 'Cannot update existing activity.', 'buddyboss' ),
+				__( 'Cannot update existing activity.', 'buddyboss-platform' ),
 				array(
 					'status' => 500,
 				)
@@ -1224,7 +1224,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 	public function update_item_permissions_check( $request ) {
 		$retval = new WP_Error(
 			'bp_rest_authorization_required',
-			__( 'Sorry, you are not allowed to update this activity.', 'buddyboss' ),
+			__( 'Sorry, you are not allowed to update this activity.', 'buddyboss-platform' ),
 			array(
 				'status' => rest_authorization_required_code(),
 			)
@@ -1242,7 +1242,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			if ( empty( $activity->id ) ) {
 				$retval = new WP_Error(
 					'bp_rest_invalid_id',
-					__( 'Invalid activity ID.', 'buddyboss' ),
+					__( 'Invalid activity ID.', 'buddyboss-platform' ),
 					array(
 						'status' => 404,
 					)
@@ -1254,7 +1254,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			) {
 				$retval = new WP_Error(
 					'bp_rest_authorization_required',
-					__( 'Sorry, you are not allowed to update this activity. The comments are closed for the activity.', 'buddyboss' ),
+					__( 'Sorry, you are not allowed to update this activity. The comments are closed for the activity.', 'buddyboss-platform' ),
 					array(
 						'status' => rest_authorization_required_code(),
 					)
@@ -1267,7 +1267,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			) {
 				$retval = new WP_Error(
 					'bp_rest_authorization_required',
-					__( 'Sorry, you are not allowed to update this activity.', 'buddyboss' ),
+					__( 'Sorry, you are not allowed to update this activity.', 'buddyboss-platform' ),
 					array(
 						'status' => rest_authorization_required_code(),
 					)
@@ -1281,7 +1281,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			) {
 				return new WP_Error(
 					'bp_rest_user_cannot_create_activity',
-					__( 'Platform pro plugin is either older version or not active.', 'buddyboss' ),
+					__( 'Platform pro plugin is either older version or not active.', 'buddyboss-platform' ),
 					array(
 						'status' => 403,
 					)
@@ -1293,7 +1293,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			) {
 				return new WP_Error(
 					'bp_rest_user_cannot_create_activity',
-					__( 'Schedule activity settings disabled.', 'buddyboss' ),
+					__( 'Schedule activity settings disabled.', 'buddyboss-platform' ),
 					array(
 						'status' => 403,
 					)
@@ -1301,7 +1301,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			} elseif ( function_exists( 'bb_get_activity_scheduled_status' ) && bb_get_activity_scheduled_status() === $activity_status && empty( $activity_date ) ) {
 				$retval = new WP_Error(
 					'bp_rest_authorization_required',
-					__( 'Unable to update schedule activity, date parameter required.', 'buddyboss' ),
+					__( 'Unable to update schedule activity, date parameter required.', 'buddyboss-platform' ),
 					array(
 						'status' => 400,
 					)
@@ -1315,7 +1315,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 				// Scheduled activity should be greater than the current time.
 				return new WP_Error(
 					'bp_rest_user_cannot_create_activity',
-					__( 'Please set a minimum schedule time for at least 1 hour later.', 'buddyboss' ),
+					__( 'Please set a minimum schedule time for at least 1 hour later.', 'buddyboss-platform' ),
 					array(
 						'status' => 400,
 					)
@@ -1323,7 +1323,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			} elseif ( function_exists( 'bb_get_activity_scheduled_status' ) && bb_get_activity_scheduled_status() === $activity_status && function_exists( 'bb_is_enabled_activity_schedule_posts' ) && ! bb_is_enabled_activity_schedule_posts() ) {
 				$retval = new WP_Error(
 					'bp_rest_authorization_required',
-					__( 'Schedule activity settings disabled.', 'buddyboss' ),
+					__( 'Schedule activity settings disabled.', 'buddyboss-platform' ),
 					array(
 						'status' => 403,
 					)
@@ -1335,7 +1335,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 				// Updating status from published to scheduled not allowed.
 				$retval = new WP_Error(
 					'bp_rest_authorization_required',
-					__( 'Sorry, you are not allowed to change this activity status.', 'buddyboss' ),
+					__( 'Sorry, you are not allowed to change this activity status.', 'buddyboss-platform' ),
 					array(
 						'status' => rest_authorization_required_code(),
 					)
@@ -1356,7 +1356,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			) {
 				$retval = new WP_Error(
 					'bp_rest_authorization_required',
-					__( 'You are not permitted to schedule activity in this group.', 'buddyboss' ),
+					__( 'You are not permitted to schedule activity in this group.', 'buddyboss-platform' ),
 					array(
 						'status' => 403,
 					)
@@ -1414,7 +1414,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 		if ( ! $retval ) {
 			return new WP_Error(
 				'bp_rest_activity_cannot_delete',
-				__( 'Could not delete the activity.', 'buddyboss' ),
+				__( 'Could not delete the activity.', 'buddyboss-platform' ),
 				array(
 					'status' => 500,
 				)
@@ -1455,7 +1455,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 	public function delete_item_permissions_check( $request ) {
 		$retval = new WP_Error(
 			'bp_rest_authorization_required',
-			__( 'Sorry, you are not allowed to delete this activity.', 'buddyboss' ),
+			__( 'Sorry, you are not allowed to delete this activity.', 'buddyboss-platform' ),
 			array(
 				'status' => rest_authorization_required_code(),
 			)
@@ -1467,7 +1467,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			if ( empty( $activity->id ) ) {
 				$retval = new WP_Error(
 					'bp_rest_invalid_id',
-					__( 'Invalid activity ID.', 'buddyboss' ),
+					__( 'Invalid activity ID.', 'buddyboss-platform' ),
 					array(
 						'status' => 404,
 					)
@@ -1534,7 +1534,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 		if ( empty( $activity->id ) ) {
 			return new WP_Error(
 				'bp_rest_invalid_id',
-				__( 'Invalid activity ID.', 'buddyboss' ),
+				__( 'Invalid activity ID.', 'buddyboss-platform' ),
 				array(
 					'status' => 404,
 				)
@@ -1560,7 +1560,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 		$result = false;
 		if ( empty( $args['reaction_id'] ) && in_array( $activity->id, $this->get_user_favorites( $activity ), true ) ) {
 			$result  = bp_activity_remove_user_favorite( $activity->id, $user_id, $args );
-			$message = __( 'Sorry, you cannot remove the activity from your favorites.', 'buddyboss' );
+			$message = __( 'Sorry, you cannot remove the activity from your favorites.', 'buddyboss-platform' );
 
 			if ( is_wp_error( $result ) ) {
 				$message = $result->get_error_message();
@@ -1570,7 +1570,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			$this->user_favorites = array_diff( $this->get_user_favorites( $activity ), array( $activity->id ) );
 		} else {
 			$result  = bp_activity_add_user_favorite( $activity->id, $user_id, $args );
-			$message = __( 'Sorry, you cannot add the activity to your favorites.', 'buddyboss' );
+			$message = __( 'Sorry, you cannot add the activity to your favorites.', 'buddyboss-platform' );
 
 			if ( is_wp_error( $result ) ) {
 				$message = $result->get_error_message();
@@ -1640,7 +1640,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 	public function update_favorite_permissions_check( $request ) {
 		$retval = new WP_Error(
 			'bp_rest_authorization_required',
-			__( 'Sorry, you are not allowed to update favorites.', 'buddyboss' ),
+			__( 'Sorry, you are not allowed to update favorites.', 'buddyboss-platform' ),
 			array(
 				'status' => rest_authorization_required_code(),
 			)
@@ -1713,16 +1713,16 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 
 		if ( ! empty( $result ) ) {
 			if ( 'unpinned' === $result ) {
-				$feedback = esc_html__( 'Your post has been unpinned', 'buddyboss' );
+				$feedback = esc_html__( 'Your post has been unpinned', 'buddyboss-platform' );
 			} elseif ( 'pinned' === $result ) {
-				$feedback = esc_html__( 'Your post has been pinned', 'buddyboss' );
+				$feedback = esc_html__( 'Your post has been pinned', 'buddyboss-platform' );
 			} elseif ( 'pin_updated' === $result ) {
-				$feedback = esc_html__( 'Your pinned post has been updated', 'buddyboss' );
+				$feedback = esc_html__( 'Your pinned post has been updated', 'buddyboss-platform' );
 			}
 		} else {
 			return new WP_Error(
 				'bp_rest_activity_cannot_update_pin',
-				__( 'There was a problem marking this operation. Please try again.', 'buddyboss' ),
+				__( 'There was a problem marking this operation. Please try again.', 'buddyboss-platform' ),
 				array(
 					'status' => 500,
 				)
@@ -1769,7 +1769,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 	public function update_pin_permissions_check( $request ) {
 		$retval = new WP_Error(
 			'bp_rest_authorization_required',
-			__( 'Sorry, you are not allowed to perform this action.', 'buddyboss' ),
+			__( 'Sorry, you are not allowed to perform this action.', 'buddyboss-platform' ),
 			array(
 				'status' => rest_authorization_required_code(),
 			)
@@ -1779,7 +1779,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 		if ( empty( $activity->id ) ) {
 			$retval = new WP_Error(
 				'bp_rest_invalid_id',
-				__( 'Invalid activity ID.', 'buddyboss' ),
+				__( 'Invalid activity ID.', 'buddyboss-platform' ),
 				array(
 					'status' => 404,
 				)
@@ -1880,16 +1880,16 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 
 		if ( ! empty( $result ) ) {
 			if ( 'unclosed_comments' === $result ) {
-				$feedback = esc_html__( 'You turned on commenting for this post', 'buddyboss' );
+				$feedback = esc_html__( 'You turned on commenting for this post', 'buddyboss-platform' );
 			} elseif ( 'closed_comments' === $result ) {
-				$feedback = esc_html__( 'You turned off commenting for this post', 'buddyboss' );
+				$feedback = esc_html__( 'You turned off commenting for this post', 'buddyboss-platform' );
 			} elseif ( 'not_allowed' === $result || 'not_member' === $result ) {
-				$feedback = esc_html__( 'You are not permitted with the requested operation', 'buddyboss' );
+				$feedback = esc_html__( 'You are not permitted with the requested operation', 'buddyboss-platform' );
 			}
 		} else {
 			return new WP_Error(
 				'bp_rest_activity_cannot_update_close_comments',
-				__( 'There was a problem marking this operation. Please try again.', 'buddyboss' ),
+				__( 'There was a problem marking this operation. Please try again.', 'buddyboss-platform' ),
 				array(
 					'status' => 500,
 				)
@@ -1936,7 +1936,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 	public function update_close_comments_permissions_check( $request ) {
 		$retval = new WP_Error(
 			'bp_rest_authorization_required',
-			__( 'Sorry, you are not allowed to perform this action.', 'buddyboss' ),
+			__( 'Sorry, you are not allowed to perform this action.', 'buddyboss-platform' ),
 			array(
 				'status' => rest_authorization_required_code(),
 			)
@@ -1948,7 +1948,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			if ( empty( $activity->id ) ) {
 				$retval = new WP_Error(
 					'bp_rest_invalid_id',
-					__( 'Invalid activity ID.', 'buddyboss' ),
+					__( 'Invalid activity ID.', 'buddyboss-platform' ),
 					array(
 						'status' => 404,
 					)
@@ -1972,7 +1972,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 		if ( false === $retval ) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
-				__( 'Sorry, you are not allowed to perform this action.', 'buddyboss' ),
+				__( 'Sorry, you are not allowed to perform this action.', 'buddyboss-platform' ),
 				array(
 					'status' => rest_authorization_required_code(),
 				)
@@ -2784,7 +2784,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			}
 
 			$args['activity_status'] = array(
-				'description'       => __( 'Status of the activity.', 'buddyboss' ),
+				'description'       => __( 'Status of the activity.', 'buddyboss-platform' ),
 				'default'           => 'published',
 				'type'              => 'string',
 				'enum'              => array( 'published', 'scheduled' ),
@@ -2793,7 +2793,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			);
 
 			$args['post_title'] = array(
-				'description'       => __( 'The title of the activity\'s post.', 'buddyboss' ),
+				'description'       => __( 'The title of the activity\'s post.', 'buddyboss-platform' ),
 				'type'              => 'string',
 				'required'          => function_exists( 'bb_is_activity_post_title_enabled' ) ? bb_is_activity_post_title_enabled() : false,
 				'sanitize_callback' => 'sanitize_text_field',
@@ -2827,7 +2827,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 		$reaction = function_exists( 'bb_load_reaction' ) ? bb_load_reaction() : null;
 
 		$args['reaction_id'] = array(
-			'description'       => __( 'Reaction ID.', 'buddyboss' ),
+			'description'       => __( 'Reaction ID.', 'buddyboss-platform' ),
 			'type'              => 'integer',
 			'required'          => false,
 			'sanitize_callback' => 'absint',
@@ -2836,7 +2836,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 		);
 
 		$args['item_type'] = array(
-			'description'       => __( 'Item type', 'buddyboss' ),
+			'description'       => __( 'Item type', 'buddyboss-platform' ),
 			'type'              => 'string',
 			'required'          => false,
 			'sanitize_callback' => 'sanitize_text_field',
@@ -2868,39 +2868,39 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			'properties' => array(
 				'id'                             => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'A unique numeric ID for the activity.', 'buddyboss' ),
+					'description' => __( 'A unique numeric ID for the activity.', 'buddyboss-platform' ),
 					'readonly'    => true,
 					'type'        => 'integer',
 				),
 				'primary_item_id'                => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'The ID of some other object primarily associated with this one.', 'buddyboss' ),
+					'description' => __( 'The ID of some other object primarily associated with this one.', 'buddyboss-platform' ),
 					'type'        => 'integer',
 				),
 				'secondary_item_id'              => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'The ID of some other object also associated with this one.', 'buddyboss' ),
+					'description' => __( 'The ID of some other object also associated with this one.', 'buddyboss-platform' ),
 					'type'        => 'integer',
 				),
 				'user_id'                        => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'The ID for the author of the activity.', 'buddyboss' ),
+					'description' => __( 'The ID for the author of the activity.', 'buddyboss-platform' ),
 					'type'        => 'integer',
 				),
 				'name'                           => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'User\'s display name for the activity.', 'buddyboss' ),
+					'description' => __( 'User\'s display name for the activity.', 'buddyboss-platform' ),
 					'type'        => 'string',
 				),
 				'link'                           => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'The permalink to this activity on the site.', 'buddyboss' ),
+					'description' => __( 'The permalink to this activity on the site.', 'buddyboss-platform' ),
 					'format'      => 'uri',
 					'type'        => 'string',
 				),
 				'component'                      => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'The active BuddyPress component the activity relates to.', 'buddyboss' ),
+					'description' => __( 'The active BuddyPress component the activity relates to.', 'buddyboss-platform' ),
 					'type'        => 'string',
 					'enum'        => array_keys( buddypress()->active_components ),
 					'arg_options' => array(
@@ -2909,7 +2909,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 				),
 				'type'                           => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'The activity type of the activity.', 'buddyboss' ),
+					'description' => __( 'The activity type of the activity.', 'buddyboss-platform' ),
 					'type'        => 'string',
 					'enum'        => array_keys( bp_activity_get_types() ),
 					'arg_options' => array(
@@ -2918,7 +2918,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 				),
 				'title'                          => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'The description of the activity\'s type (eg: Username posted an update)', 'buddyboss' ),
+					'description' => __( 'The description of the activity\'s type (eg: Username posted an update)', 'buddyboss-platform' ),
 					'type'        => 'string',
 					'readonly'    => true,
 					'arg_options' => array(
@@ -2927,7 +2927,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 				),
 				'post_title'        => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'The title of the activity\'s post.', 'buddyboss' ),
+					'description' => __( 'The title of the activity\'s post.', 'buddyboss-platform' ),
 					'type'        => 'string',
 					'required'    => function_exists( 'bb_is_activity_post_title_enabled' ) ? bb_is_activity_post_title_enabled() : false,
 					'arg_options' => array(
@@ -2936,7 +2936,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 				),
 				'content'                        => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Allowed HTML content for the activity.', 'buddyboss' ),
+					'description' => __( 'Allowed HTML content for the activity.', 'buddyboss-platform' ),
 					'type'        => 'object',
 					'arg_options' => array(
 						'sanitize_callback' => null,
@@ -2946,12 +2946,12 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 					),
 					'properties'  => array(
 						'raw'      => array(
-							'description' => __( 'Content for the activity, as it exists in the database.', 'buddyboss' ),
+							'description' => __( 'Content for the activity, as it exists in the database.', 'buddyboss-platform' ),
 							'type'        => 'string',
 							'context'     => array( 'embed', 'edit' ),
 						),
 						'rendered' => array(
-							'description' => __( 'HTML content for the activity, transformed for display.', 'buddyboss' ),
+							'description' => __( 'HTML content for the activity, transformed for display.', 'buddyboss-platform' ),
 							'type'        => 'string',
 							'context'     => array( 'embed', 'view', 'edit' ),
 							'readonly'    => true,
@@ -2960,13 +2960,13 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 				),
 				'date'                           => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( "The date the activity was published, in the site's timezone.", 'buddyboss' ),
+					'description' => __( "The date the activity was published, in the site's timezone.", 'buddyboss-platform' ),
 					'type'        => 'string',
 					'format'      => 'date-time',
 				),
 				'status'                         => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Whether the activity has been marked as spam or not.', 'buddyboss' ),
+					'description' => __( 'Whether the activity has been marked as spam or not.', 'buddyboss-platform' ),
 					'type'        => 'string',
 					'enum'        => array( 'published', 'spam' ),
 					'readonly'    => true,
@@ -2976,149 +2976,149 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 				),
 				'comments'                       => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'A list of objects children of the activity object.', 'buddyboss' ),
+					'description' => __( 'A list of objects children of the activity object.', 'buddyboss-platform' ),
 					'type'        => 'array',
 					'readonly'    => true,
 				),
 				'comment_count'                  => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Total number of comments of the activity object.', 'buddyboss' ),
+					'description' => __( 'Total number of comments of the activity object.', 'buddyboss-platform' ),
 					'type'        => 'integer',
 					'readonly'    => true,
 				),
 				'hidden'                         => array(
 					'context'     => array( 'edit' ),
-					'description' => __( 'Whether the activity object should be sitewide hidden or not.', 'buddyboss' ),
+					'description' => __( 'Whether the activity object should be sitewide hidden or not.', 'buddyboss-platform' ),
 					'type'        => 'boolean',
 				),
 				'favorited'                      => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Whether the activity object has been favorited by the current user.', 'buddyboss' ),
+					'description' => __( 'Whether the activity object has been favorited by the current user.', 'buddyboss-platform' ),
 					'type'        => 'boolean',
 					'readonly'    => true,
 				),
 				'can_favorite'                   => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Whether or not user have the favorite access for the activity object.', 'buddyboss' ),
+					'description' => __( 'Whether or not user have the favorite access for the activity object.', 'buddyboss-platform' ),
 					'type'        => 'boolean',
 					'readonly'    => true,
 				),
 				'favorite_count'                 => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Favorite count for the activity object.', 'buddyboss' ),
+					'description' => __( 'Favorite count for the activity object.', 'buddyboss-platform' ),
 					'type'        => 'integer',
 					'readonly'    => true,
 				),
 				'can_comment'                    => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Whether or not user have the comment access for the activity object.', 'buddyboss' ),
+					'description' => __( 'Whether or not user have the comment access for the activity object.', 'buddyboss-platform' ),
 					'type'        => 'boolean',
 					'readonly'    => true,
 				),
 				'comment_count'                  => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Comment count for the activity object.', 'buddyboss' ),
+					'description' => __( 'Comment count for the activity object.', 'buddyboss-platform' ),
 					'type'        => 'boolean',
 					'readonly'    => true,
 				),
 				'can_edit'                       => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Whether or not user have the edit access for the activity object.', 'buddyboss' ),
+					'description' => __( 'Whether or not user have the edit access for the activity object.', 'buddyboss-platform' ),
 					'type'        => 'boolean',
 					'readonly'    => true,
 				),
 				'is_edited'                      => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Determine whether an activity has been edited or not.', 'buddyboss' ),
+					'description' => __( 'Determine whether an activity has been edited or not.', 'buddyboss-platform' ),
 					'type'        => 'boolean',
 					'readonly'    => true,
 				),
 				'can_delete'                     => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Whether or not user have the delete access for the activity object.', 'buddyboss' ),
+					'description' => __( 'Whether or not user have the delete access for the activity object.', 'buddyboss-platform' ),
 					'type'        => 'boolean',
 					'readonly'    => true,
 				),
 				'content_stripped'               => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Content for the activity without HTML tags.', 'buddyboss' ),
+					'description' => __( 'Content for the activity without HTML tags.', 'buddyboss-platform' ),
 					'type'        => 'string',
 					'readonly'    => true,
 				),
 				'privacy'                        => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Privacy of the activity.', 'buddyboss' ),
+					'description' => __( 'Privacy of the activity.', 'buddyboss-platform' ),
 					'type'        => 'string',
 					'enum'        => array( 'public', 'loggedin', 'onlyme', 'friends', 'media' ),
 				),
 				'activity_data'                  => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Activity data for allow edit or not.', 'buddyboss' ),
+					'description' => __( 'Activity data for allow edit or not.', 'buddyboss-platform' ),
 					'type'        => 'object',
 				),
 				'feature_media'                  => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Feature media image which added last in the content for blog post as well as custom post type.', 'buddyboss' ),
+					'description' => __( 'Feature media image which added last in the content for blog post as well as custom post type.', 'buddyboss-platform' ),
 					'type'        => 'string',
 					'format'      => 'uri',
 				),
 				'preview_data'                   => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'WordPress Embed data with activity.', 'buddyboss' ),
+					'description' => __( 'WordPress Embed data with activity.', 'buddyboss-platform' ),
 					'type'        => 'string',
 					'readonly'    => true,
 				),
 				'link_embed_url'                 => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'WordPress Embed URL with activity.', 'buddyboss' ),
+					'description' => __( 'WordPress Embed URL with activity.', 'buddyboss-platform' ),
 					'type'        => 'string',
 					'readonly'    => true,
 				),
 				'is_pinned'                      => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Is perticular activity is pinned.', 'buddyboss' ),
+					'description' => __( 'Is perticular activity is pinned.', 'buddyboss-platform' ),
 					'type'        => 'boolean',
 					'readonly'    => true,
 				),
 				'can_pin'                        => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Is user allowed to pin and unpin the respective activity.', 'buddyboss' ),
+					'description' => __( 'Is user allowed to pin and unpin the respective activity.', 'buddyboss-platform' ),
 					'type'        => 'boolean',
 					'readonly'    => true,
 				),
 				'reacted_names'                  => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => esc_html__( 'Reacted user names and count for the activity reactions.', 'buddyboss' ),
+					'description' => esc_html__( 'Reacted user names and count for the activity reactions.', 'buddyboss-platform' ),
 					'type'        => 'string',
 					'readonly'    => true,
 				),
 				'reacted_counts'                 => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => esc_html__( 'Reaction count for the activity.', 'buddyboss' ),
+					'description' => esc_html__( 'Reaction count for the activity.', 'buddyboss-platform' ),
 					'type'        => 'array',
 					'readonly'    => true,
 				),
 				'reacted_id'                     => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => esc_html__( 'Reaction ID from user reacted on the activity.', 'buddyboss' ),
+					'description' => esc_html__( 'Reaction ID from user reacted on the activity.', 'buddyboss-platform' ),
 					'type'        => 'integer',
 					'readonly'    => true,
 				),
 				'is_comment_closed'              => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Is perticular activity comments are closed.', 'buddyboss' ),
+					'description' => __( 'Is perticular activity comments are closed.', 'buddyboss-platform' ),
 					'type'        => 'boolean',
 					'readonly'    => true,
 				),
 				'can_close_comment'              => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Is user allowed to turn on and turn off the respective activity comments.', 'buddyboss' ),
+					'description' => __( 'Is user allowed to turn on and turn off the respective activity comments.', 'buddyboss-platform' ),
 					'type'        => 'boolean',
 					'readonly'    => true,
 				),
 				'activity_status'                => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Status of the activity.', 'buddyboss' ),
+					'description' => __( 'Status of the activity.', 'buddyboss-platform' ),
 					'type'        => 'string',
 					'enum'        => array( 'published', 'scheduled' ),
 				),
@@ -3132,7 +3132,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			$avatar_properties['full'] = array(
 				'context'     => array( 'embed', 'view', 'edit' ),
 				/* translators: 1: Full avatar width in pixels. 2: Full avatar height in pixels */
-				'description' => sprintf( __( 'Avatar URL with full image size (%1$d x %2$d pixels).', 'buddyboss' ), bp_core_number_format( bp_core_avatar_full_width() ), bp_core_number_format( bp_core_avatar_full_height() ) ),
+				'description' => sprintf( __( 'Avatar URL with full image size (%1$d x %2$d pixels).', 'buddyboss-platform' ), bp_core_number_format( bp_core_avatar_full_width() ), bp_core_number_format( bp_core_avatar_full_height() ) ),
 				'type'        => 'string',
 				'format'      => 'uri',
 			);
@@ -3140,14 +3140,14 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			$avatar_properties['thumb'] = array(
 				'context'     => array( 'embed', 'view', 'edit' ),
 				/* translators: 1: Thumb avatar width in pixels. 2: Thumb avatar height in pixels */
-				'description' => sprintf( __( 'Avatar URL with thumb image size (%1$d x %2$d pixels).', 'buddyboss' ), bp_core_number_format( bp_core_avatar_thumb_width() ), bp_core_number_format( bp_core_avatar_thumb_height() ) ),
+				'description' => sprintf( __( 'Avatar URL with thumb image size (%1$d x %2$d pixels).', 'buddyboss-platform' ), bp_core_number_format( bp_core_avatar_thumb_width() ), bp_core_number_format( bp_core_avatar_thumb_height() ) ),
 				'type'        => 'string',
 				'format'      => 'uri',
 			);
 
 			$schema['properties']['user_avatar'] = array(
 				'context'     => array( 'embed', 'view', 'edit' ),
-				'description' => __( 'Avatar URLs for the author of the activity.', 'buddyboss' ),
+				'description' => __( 'Avatar URLs for the author of the activity.', 'buddyboss-platform' ),
 				'type'        => 'object',
 				'readonly'    => true,
 				'properties'  => $avatar_properties,
@@ -3158,13 +3158,13 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 		if ( bp_is_active( 'notifications' ) && bb_is_notification_type_enabled( 'bb_activity_comment' ) ) {
 			$schema['properties']['can_toggle_notification'] = array(
 				'context'     => array( 'embed', 'view', 'edit' ),
-				'description' => __( 'Is user allowed to on/off notification the respective activity.', 'buddyboss' ),
+				'description' => __( 'Is user allowed to on/off notification the respective activity.', 'buddyboss-platform' ),
 				'type'        => 'boolean',
 				'readonly'    => true,
 			);
 			$schema['properties']['is_receive_notification'] = array(
 				'context'     => array( 'embed', 'view', 'edit' ),
-				'description' => __( 'Is particular activity is muted.', 'buddyboss' ),
+				'description' => __( 'Is particular activity is muted.', 'buddyboss-platform' ),
 				'type'        => 'boolean',
 				'readonly'    => true,
 			);
@@ -3189,7 +3189,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 		$params['context']['default'] = 'view';
 
 		$params['exclude'] = array(
-			'description'       => __( 'Ensure result set excludes specific IDs.', 'buddyboss' ),
+			'description'       => __( 'Ensure result set excludes specific IDs.', 'buddyboss-platform' ),
 			'default'           => array(),
 			'type'              => 'array',
 			'items'             => array( 'type' => 'integer' ),
@@ -3198,7 +3198,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['include'] = array(
-			'description'       => __( 'Ensure result set includes specific IDs.', 'buddyboss' ),
+			'description'       => __( 'Ensure result set includes specific IDs.', 'buddyboss-platform' ),
 			'default'           => array(),
 			'type'              => 'array',
 			'items'             => array( 'type' => 'integer' ),
@@ -3207,7 +3207,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['order'] = array(
-			'description'       => __( 'Order sort attribute ascending or descending.', 'buddyboss' ),
+			'description'       => __( 'Order sort attribute ascending or descending.', 'buddyboss-platform' ),
 			'default'           => 'desc',
 			'type'              => 'string',
 			'enum'              => array( 'asc', 'desc' ),
@@ -3216,7 +3216,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['orderby'] = array(
-			'description'       => __( 'Order by a specific parameter.', 'buddyboss' ),
+			'description'       => __( 'Order by a specific parameter.', 'buddyboss-platform' ),
 			'default'           => '',
 			'type'              => 'string',
 			'enum'              => array( 'id', 'include', 'date_recorded', 'date_updated' ),
@@ -3224,14 +3224,14 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['after'] = array(
-			'description'       => __( 'Limit result set to items published after a given ISO8601 compliant date.', 'buddyboss' ),
+			'description'       => __( 'Limit result set to items published after a given ISO8601 compliant date.', 'buddyboss-platform' ),
 			'type'              => 'string',
 			'format'            => 'date-time',
 			'validate_callback' => 'rest_validate_request_arg',
 		);
 
 		$params['user_id'] = array(
-			'description'       => __( 'Limit result set to items created by a specific user (ID).', 'buddyboss' ),
+			'description'       => __( 'Limit result set to items created by a specific user (ID).', 'buddyboss-platform' ),
 			'default'           => 0,
 			'type'              => 'integer',
 			'sanitize_callback' => 'absint',
@@ -3239,7 +3239,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['status'] = array(
-			'description'       => __( 'Limit result set to items with a specific status.', 'buddyboss' ),
+			'description'       => __( 'Limit result set to items with a specific status.', 'buddyboss-platform' ),
 			'default'           => 'ham_only',
 			'type'              => 'string',
 			'enum'              => array( 'ham_only', 'spam_only', 'all' ),
@@ -3248,7 +3248,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['scope'] = array(
-			'description'       => __( 'Limit result set to items with a specific scope.', 'buddyboss' ),
+			'description'       => __( 'Limit result set to items with a specific scope.', 'buddyboss-platform' ),
 			'type'              => 'string',
 			'enum'              => array( 'just-me', 'friends', 'groups', 'favorites', 'mentions', 'following', 'unanswered' ),
 			'sanitize_callback' => 'sanitize_text_field',
@@ -3256,7 +3256,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['group_id'] = array(
-			'description'       => __( 'Limit result set to items created by a specific group.', 'buddyboss' ),
+			'description'       => __( 'Limit result set to items created by a specific group.', 'buddyboss-platform' ),
 			'default'           => 0,
 			'type'              => 'integer',
 			'sanitize_callback' => 'absint',
@@ -3264,7 +3264,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['site_id'] = array(
-			'description'       => __( 'Limit result set to items created by a specific site.', 'buddyboss' ),
+			'description'       => __( 'Limit result set to items created by a specific site.', 'buddyboss-platform' ),
 			'default'           => 0,
 			'type'              => 'integer',
 			'sanitize_callback' => 'absint',
@@ -3272,7 +3272,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['primary_id'] = array(
-			'description'       => __( 'Limit result set to items with a specific prime association ID.', 'buddyboss' ),
+			'description'       => __( 'Limit result set to items with a specific prime association ID.', 'buddyboss-platform' ),
 			'default'           => 0,
 			'type'              => 'integer',
 			'sanitize_callback' => 'absint',
@@ -3280,7 +3280,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['secondary_id'] = array(
-			'description'       => __( 'Limit result set to items with a specific secondary association ID.', 'buddyboss' ),
+			'description'       => __( 'Limit result set to items with a specific secondary association ID.', 'buddyboss-platform' ),
 			'default'           => 0,
 			'type'              => 'integer',
 			'sanitize_callback' => 'absint',
@@ -3288,7 +3288,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['component'] = array(
-			'description'       => __( 'Limit result set to items with a specific active BuddyPress component.', 'buddyboss' ),
+			'description'       => __( 'Limit result set to items with a specific active BuddyPress component.', 'buddyboss-platform' ),
 			'type'              => 'string',
 			'enum'              => array_keys( buddypress()->active_components ),
 			'sanitize_callback' => 'sanitize_key',
@@ -3296,7 +3296,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['type'] = array(
-			'description'       => __( 'Limit result set to items with a specific activity type.', 'buddyboss' ),
+			'description'       => __( 'Limit result set to items with a specific activity type.', 'buddyboss-platform' ),
 			'type'              => 'string',
 			'enum'              => array_keys( bp_activity_get_types() ),
 			'sanitize_callback' => 'sanitize_key',
@@ -3304,7 +3304,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['display_comments'] = array(
-			'description'       => __( 'No comments by default, stream for within stream display, threaded for below each activity item.', 'buddyboss' ),
+			'description'       => __( 'No comments by default, stream for within stream display, threaded for below each activity item.', 'buddyboss-platform' ),
 			'default'           => '',
 			'type'              => 'string',
 			'sanitize_callback' => 'sanitize_key',
@@ -3312,7 +3312,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['privacy'] = array(
-			'description'       => __( 'Privacy of the activity.', 'buddyboss' ),
+			'description'       => __( 'Privacy of the activity.', 'buddyboss-platform' ),
 			'type'              => 'array',
 			'items'             => array(
 				'type' => 'string',
@@ -3323,7 +3323,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['activity_status'] = array(
-			'description'       => __( 'Status of the activity.', 'buddyboss' ),
+			'description'       => __( 'Status of the activity.', 'buddyboss-platform' ),
 			'default'           => 'published',
 			'type'              => 'string',
 			'enum'              => array( 'published', 'scheduled' ),
@@ -3652,7 +3652,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 		if ( empty( $notification_type ) ) {
 			return new WP_Error(
 				'bp_rest_authorization_required',
-				__( 'Sorry, you are not allowed to turn on/off notification.', 'buddyboss' ),
+				__( 'Sorry, you are not allowed to turn on/off notification.', 'buddyboss-platform' ),
 				array(
 					'status' => rest_authorization_required_code(),
 				)
@@ -3662,7 +3662,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 		if ( empty( $activity->id ) ) {
 			return new WP_Error(
 				'bp_rest_invalid_id',
-				__( 'Invalid activity ID.', 'buddyboss' ),
+				__( 'Invalid activity ID.', 'buddyboss-platform' ),
 				array(
 					'status' => 400,
 				)
@@ -3673,7 +3673,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 		if ( empty( $toggle_notification_action ) ) {
 			return new WP_Error(
 				'bp_rest_activity_notification_required_action',
-				__( 'The action is required.', 'buddyboss' ),
+				__( 'The action is required.', 'buddyboss-platform' ),
 				array(
 					'status' => 400,
 				)
@@ -3691,16 +3691,16 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 		$feedback = '';
 		if ( ! empty( $result ) ) {
 			if ( 'unmute' === $result ) {
-				$feedback = esc_html__( 'Notifications for this activity have been unmuted.', 'buddyboss' );
+				$feedback = esc_html__( 'Notifications for this activity have been unmuted.', 'buddyboss-platform' );
 			} elseif ( 'mute' === $result ) {
-				$feedback = esc_html__( 'Notifications for this activity have been muted.', 'buddyboss' );
+				$feedback = esc_html__( 'Notifications for this activity have been muted.', 'buddyboss-platform' );
 			} elseif ( 'already_muted' === $result ) {
-				$feedback = esc_html__( 'Notifications for this activity already been muted.', 'buddyboss' );
+				$feedback = esc_html__( 'Notifications for this activity already been muted.', 'buddyboss-platform' );
 			}
 		} else {
 			return new WP_Error(
 				'bp_rest_activity_cannot_mute_notification',
-				__( 'There was a problem marking this operation. Please try again.', 'buddyboss' ),
+				__( 'There was a problem marking this operation. Please try again.', 'buddyboss-platform' ),
 				array(
 					'status' => 500,
 				)
@@ -3747,7 +3747,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 	public function update_mute_unmute_notification_permissions_check( $request ) {
 		$retval = new WP_Error(
 			'bp_rest_authorization_required',
-			__( 'Sorry, you are not allowed to perform this action.', 'buddyboss' ),
+			__( 'Sorry, you are not allowed to perform this action.', 'buddyboss-platform' ),
 			array(
 				'status' => rest_authorization_required_code(),
 			)
@@ -3757,7 +3757,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 		if ( empty( $activity->id ) ) {
 			$retval = new WP_Error(
 				'bp_rest_invalid_id',
-				__( 'Invalid activity ID.', 'buddyboss' ),
+				__( 'Invalid activity ID.', 'buddyboss-platform' ),
 				array(
 					'status' => 400,
 				)

@@ -118,7 +118,7 @@ export function ActivityCommentModal( { isOpen, activity, onClose, onSave, isSav
 		}
 
 		if ( ! latestContent || ! latestContent.trim() ) {
-			setError( __( 'Please enter a comment.', 'buddyboss' ) );
+			setError( __( 'Please enter a comment.', 'buddyboss-platform' ) );
 			return;
 		}
 
@@ -131,7 +131,7 @@ export function ActivityCommentModal( { isOpen, activity, onClose, onSave, isSav
 
 	return (
 		<Modal
-			title={ __( 'Comment on Activity', 'buddyboss' ) + ' (ID #' + activity.id + ')' }
+			title={ __( 'Comment on Activity', 'buddyboss-platform' ) + ' (ID #' + activity.id + ')' }
 			onRequestClose={ onClose }
 			className="bb-activity-comment-modal bb-admin-settings-modal"
 			shouldCloseOnClickOutside={ false }
@@ -143,7 +143,7 @@ export function ActivityCommentModal( { isOpen, activity, onClose, onSave, isSav
 
 				<div className="bb-admin-meta-field__editor-field">
 					<label className="bb-admin-meta-field__label" htmlFor={ editorId }>
-						{ __( 'Comment', 'buddyboss' ) }
+						{ __( 'Comment', 'buddyboss-platform' ) }
 					</label>
 					<div className="bb-admin-meta-field__editor-wrapper">
 						<textarea
@@ -165,7 +165,7 @@ export function ActivityCommentModal( { isOpen, activity, onClose, onSave, isSav
 							rel="noopener noreferrer"
 							className="bb-activity-comment-modal__view-link"
 						>
-							{ __( 'View Activity', 'buddyboss' ) }
+							{ __( 'View Activity', 'buddyboss-platform' ) }
 							<i className="bb-icons-rl bb-icons-rl-arrow-up-right"></i>
 						</a>
 					) }
@@ -176,7 +176,7 @@ export function ActivityCommentModal( { isOpen, activity, onClose, onSave, isSav
 						onClick={ onClose }
 						disabled={ isSaving }
 					>
-						{ __( 'Cancel', 'buddyboss' ) }
+						{ __( 'Cancel', 'buddyboss-platform' ) }
 					</Button>
 					<Button
 						variant="primary"
@@ -184,7 +184,7 @@ export function ActivityCommentModal( { isOpen, activity, onClose, onSave, isSav
 						isBusy={ isSaving }
 						disabled={ isSaving }
 					>
-						{ __( 'Save', 'buddyboss' ) }
+						{ __( 'Save', 'buddyboss-platform' ) }
 					</Button>
 				</div>
 			</div>

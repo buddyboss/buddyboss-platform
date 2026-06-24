@@ -54,11 +54,11 @@ export function SideNavigation({ featureId, sidePanels, navItems, currentPanel, 
 	};
 
 	return (
-		<nav className="bb-admin-side-nav" aria-label={__('Settings Navigation', 'buddyboss')}>
+		<nav className="bb-admin-side-nav" aria-label={__('Settings Navigation', 'buddyboss-platform')}>
 			{/* Back button */}
 			<button className="bb-admin-side-nav__back-btn" onClick={handleBackClick}>
 				<span className="bb-icons-rl-arrow-left"></span>
-				{__('Back to Settings', 'buddyboss')}
+				{__('Back to Settings', 'buddyboss-platform')}
 			</button>
 
 			{/* Menu list - Side Panels */}

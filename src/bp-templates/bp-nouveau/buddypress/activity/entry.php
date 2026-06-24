@@ -32,7 +32,7 @@ if ( ! empty( $link_embed ) ) {
 }
 
 // translators: %s: User display name.
-$activity_popup_title = sprintf( esc_html__( '%s\'s post', 'buddyboss' ), bp_core_get_user_displayname( bp_get_activity_user_id() ) );
+$activity_popup_title = sprintf( esc_html__( '%s\'s post', 'buddyboss-platform' ), bp_core_get_user_displayname( bp_get_activity_user_id() ) );
 
 ?>
 
@@ -41,14 +41,14 @@ $activity_popup_title = sprintf( esc_html__( '%s\'s post', 'buddyboss' ), bp_cor
 	<?php bb_nouveau_activity_entry_bubble_buttons(); ?>
 
 	<div class="bb-pin-action">
-		<span class="bb-pin-action_button" data-balloon-pos="up" data-balloon="<?php esc_attr_e( 'Pinned Post', 'buddyboss' ); ?>">
+		<span class="bb-pin-action_button" data-balloon-pos="up" data-balloon="<?php esc_attr_e( 'Pinned Post', 'buddyboss-platform' ); ?>">
 			<i class="bb-icon-f bb-icon-thumbtack"></i>
 		</span>
 		<?php
 		$notification_type = bb_activity_enabled_notification( 'bb_activity_comment', bp_loggedin_user_id() );
 		if ( ! empty( $notification_type ) && ! empty( array_filter( $notification_type ) ) ) {
 			?>
-			<span class="bb-mute-action_button" data-balloon-pos="up" data-balloon="<?php esc_attr_e( 'Turned off notifications', 'buddyboss' ); ?>">
+			<span class="bb-mute-action_button" data-balloon-pos="up" data-balloon="<?php esc_attr_e( 'Turned off notifications', 'buddyboss-platform' ); ?>">
 				<i class="bb-icon-f bb-icon-bell-slash"></i>
 			</span>
 			<?php

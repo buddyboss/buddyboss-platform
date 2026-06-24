@@ -18,7 +18,7 @@
 				<div class="modal-container has-folderlocationUI">
 
 					<header class="bb-model-header">
-						<a href="#" class="bp-video-upload-tab bp-upload-tab selected" data-content="bp-video-dropzone-content" id="bp-video-uploader-modal-title"><?php esc_html_e( 'Upload', 'buddyboss' ); ?></a>
+						<a href="#" class="bp-video-upload-tab bp-upload-tab selected" data-content="bp-video-dropzone-content" id="bp-video-uploader-modal-title"><?php esc_html_e( 'Upload', 'buddyboss-platform' ); ?></a>
 
 						<span id="bp-video-uploader-modal-status-text" style="display: none;"></span>
 
@@ -42,7 +42,7 @@
 								) :
 									?>
 									<div class="video-uploader-post-content">
-										<textarea name="bp-video-post-content" id="bp-video-post-content" placeholder="<?php bp_is_group() ? esc_html_e( 'Write something about your videos, to be shown on the group feed', 'buddyboss' ) : esc_html_e( 'Write something about your videos, to be shown on your timeline', 'buddyboss' ); ?>"></textarea>
+										<textarea name="bp-video-post-content" id="bp-video-post-content" placeholder="<?php bp_is_group() ? esc_html_e( 'Write something about your videos, to be shown on the group feed', 'buddyboss-platform' ) : esc_html_e( 'Write something about your videos, to be shown on your timeline', 'buddyboss-platform' ); ?>"></textarea>
 									</div>
 								<?php endif; ?>
 								<div class="video-uploader-wrapper">
@@ -52,7 +52,7 @@
 											<div class="dz-details">
 												<div class="dz-filename"><span data-dz-name></span></div>
 											</div>
-											<div class="dz-error-title"><?php esc_html_e( 'Upload Failed', 'buddyboss' ); ?></div>
+											<div class="dz-error-title"><?php esc_html_e( 'Upload Failed', 'buddyboss-platform' ); ?></div>
 											<div class="dz-progress-ring-wrap">
 												<i class="bb-icon-f bb-icon-video"></i>
 												<svg class="dz-progress-ring" width="54" height="54">
@@ -77,7 +77,7 @@
 													</g>
 												</svg>
 											</div>
-											<div class="dz-progress-count"><?php esc_html_e( '0% Uploaded', 'buddyboss' ); ?></div>
+											<div class="dz-progress-count"><?php esc_html_e( '0% Uploaded', 'buddyboss-platform' ); ?></div>
 											<div class="dz-video-thumbnail"></div>
 										</div>
 									</div>
@@ -87,14 +87,14 @@
 									?>
 									<a id="bp-video-next" class="bb-field-uploader-next bb-field-uploader-actions" href="#">
 										<i class="bb-icon-l bb-icon-folder"></i>
-										<?php esc_html_e( 'Select Album', 'buddyboss' ); ?>
+										<?php esc_html_e( 'Select Album', 'buddyboss-platform' ); ?>
 									</a>
 									<?php
 								} elseif ( bp_is_profile_albums_support_enabled() ) {
 									?>
 									<a id="bp-video-next" class="bb-field-uploader-next bb-field-uploader-actions" href="#">
 										<i class="bb-icon-l bb-icon-folder"></i>
-										<?php esc_html_e( 'Select Album', 'buddyboss' ); ?>
+										<?php esc_html_e( 'Select Album', 'buddyboss-platform' ); ?>
 									</a>
 									<?php
 								}
@@ -116,7 +116,7 @@
 					<footer class="bb-model-footer video-uploader-footer">
 						<a href="#" class="bp-video-open-create-popup-album" style="display: none;">
 							<i class="bb-icon-l bb-icon-plus"></i>
-							<?php esc_html_e( 'Create new album', 'buddyboss' ); ?>
+							<?php esc_html_e( 'Create new album', 'buddyboss-platform' ); ?>
 						</a>
 
 						<?php if ( ! bp_is_group() && ! bp_is_single_album() ) : ?>
@@ -133,8 +133,8 @@
 							</div>
 						<?php endif; ?>
 
-						<a class="button push-right" id="bp-video-submit" style="display: none;" href="#"><?php esc_html_e( 'Done', 'buddyboss' ); ?></a>
-						<a id="bp-video-prev" class="bb-uploader-steps-prev bb-field-uploader-actions" href="#"><?php esc_html_e( 'Back', 'buddyboss' ); ?></a>
+						<a class="button push-right" id="bp-video-submit" style="display: none;" href="#"><?php esc_html_e( 'Done', 'buddyboss-platform' ); ?></a>
+						<a id="bp-video-prev" class="bb-uploader-steps-prev bb-field-uploader-actions" href="#"><?php esc_html_e( 'Back', 'buddyboss-platform' ); ?></a>
 					</footer>
 
 				</div>

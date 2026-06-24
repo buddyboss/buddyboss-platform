@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
 		<div class="mpcs-section-header active">
 			<div class="mpcs-section-title">
 				<span class="mpcs-section-title-text">
-					<?php echo esc_html( ! empty( $resources->labels['downloads'] ) ? $resources->labels['downloads'] : __( 'Downloads', 'buddyboss' ) ); ?>
+					<?php echo esc_html( ! empty( $resources->labels['downloads'] ) ? $resources->labels['downloads'] : __( 'Downloads', 'buddyboss-platform' ) ); ?>
 				</span>
 			</div>
 		</div><!-- mpcs-section-header -->
@@ -62,7 +62,7 @@ defined( 'ABSPATH' ) || exit;
 							</div>
 							<div class="mpcs-lesson-button">
 								<span class="mpcs-button">
-									<span class="btn"><?php esc_html_e( 'View', 'buddyboss' ); ?></span>
+									<span class="btn"><?php esc_html_e( 'View', 'buddyboss-platform' ); ?></span>
 								</span>
 							</div>
 						</a>
@@ -78,7 +78,7 @@ defined( 'ABSPATH' ) || exit;
 		<div class="mpcs-section-header active">
 			<div class="mpcs-section-title">
 				<span class="mpcs-section-title-text">
-					<?php echo esc_html( ! empty( $resources->labels['links'] ) ? $resources->labels['links'] : __( 'Links', 'buddyboss' ) ); ?>
+					<?php echo esc_html( ! empty( $resources->labels['links'] ) ? $resources->labels['links'] : __( 'Links', 'buddyboss-platform' ) ); ?>
 				</span>
 			</div>
 		</div><!-- mpcs-section-header -->
@@ -92,7 +92,7 @@ defined( 'ABSPATH' ) || exit;
 						</div>
 						<div class="mpcs-lesson-button">
 							<span class="mpcs-button">
-								<span class="btn"><?php esc_html_e( 'Visit', 'buddyboss' ); ?></span>
+								<span class="btn"><?php esc_html_e( 'Visit', 'buddyboss-platform' ); ?></span>
 							</span>
 						</div>
 					</a>

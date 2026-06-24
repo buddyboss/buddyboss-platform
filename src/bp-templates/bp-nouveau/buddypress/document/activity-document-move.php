@@ -26,9 +26,9 @@
 						<?php bp_get_template_part( 'document/document-create-folder' ); ?>
 					</div>
 					<footer class="bb-model-footer">
-						<a href="#" class="bp-document-open-create-popup-folder"><?php esc_html_e( 'Create new folder', 'buddyboss' ); ?></a>
-						<a class="ac-document-close-button" href="#"><?php esc_html_e( 'Cancel', 'buddyboss' ); ?></a>
-						<a class="button bp-document-move bp-document-move-activity" id="<?php bp_document_id(); ?>" href="#"><?php esc_html_e( 'Move', 'buddyboss' ); ?></a>
+						<a href="#" class="bp-document-open-create-popup-folder"><?php esc_html_e( 'Create new folder', 'buddyboss-platform' ); ?></a>
+						<a class="ac-document-close-button" href="#"><?php esc_html_e( 'Cancel', 'buddyboss-platform' ); ?></a>
+						<a class="button bp-document-move bp-document-move-activity" id="<?php bp_document_id(); ?>" href="#"><?php esc_html_e( 'Move', 'buddyboss-platform' ); ?></a>
 					</footer>
 				</div>
 			</div>

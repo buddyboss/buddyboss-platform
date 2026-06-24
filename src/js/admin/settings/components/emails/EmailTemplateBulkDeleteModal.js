@@ -86,7 +86,7 @@ export function EmailTemplateBulkDeleteModal( { isOpen, selectedItems, onRemoveI
 				if ( setToast ) {
 					setToast( {
 						status: 'error',
-						message: ( response.data && response.data.message ) || __( 'Failed to delete.', 'buddyboss' ),
+						message: ( response.data && response.data.message ) || __( 'Failed to delete.', 'buddyboss-platform' ),
 					} );
 				}
 			}
@@ -96,14 +96,14 @@ export function EmailTemplateBulkDeleteModal( { isOpen, selectedItems, onRemoveI
 			}
 			setIsDeleting( false );
 			if ( setToast ) {
-				setToast( { status: 'error', message: __( 'An error occurred.', 'buddyboss' ) } );
+				setToast( { status: 'error', message: __( 'An error occurred.', 'buddyboss-platform' ) } );
 			}
 		} );
 	};
 
 	return (
 		<Modal
-			title={ __( 'Bulk Delete', 'buddyboss' ) }
+			title={ __( 'Bulk Delete', 'buddyboss-platform' ) }
 			onRequestClose={ handleClose }
 			className="bb-admin-settings-modal bb-email-template-modal bb-email-template-modal--bulk-delete"
 			shouldCloseOnClickOutside={ false }
@@ -135,19 +135,19 @@ export function EmailTemplateBulkDeleteModal( { isOpen, selectedItems, onRemoveI
 				<div className="bb-email-template-modal__delete-warning">
 					<i className="bb-icons-rl bb-icons-rl-warning-circle" />
 					<div>
-						<p><strong>{ __( 'Warning', 'buddyboss' ) }</strong></p>
-						<p>{ __( 'This permanently deletes email templates and cannot be undone.', 'buddyboss' ) }</p>
+						<p><strong>{ __( 'Warning', 'buddyboss-platform' ) }</strong></p>
+						<p>{ __( 'This permanently deletes email templates and cannot be undone.', 'buddyboss-platform' ) }</p>
 					</div>
 				</div>
 
 				<p className="bb-email-template-modal__delete-description">
-					{ __( 'Deleting the email template will remove it from the list and automatically unlink it from any associated situations.', 'buddyboss' ) }
+					{ __( 'Deleting the email template will remove it from the list and automatically unlink it from any associated situations.', 'buddyboss-platform' ) }
 				</p>
 
 				{/* Confirmation checkbox */}
 				<div className="bb-email-template-modal__confirm-checkbox">
 					<CheckboxControl
-						label={ __( 'I understand that this deletes the email templates.', 'buddyboss' ) }
+						label={ __( 'I understand that this deletes the email templates.', 'buddyboss-platform' ) }
 						checked={ isConfirmed }
 						onChange={ setIsConfirmed }
 						__nextHasNoMarginBottom
@@ -157,7 +157,7 @@ export function EmailTemplateBulkDeleteModal( { isOpen, selectedItems, onRemoveI
 
 			<div className="bb-admin-settings-modal__footer bb-email-template-modal__footer">
 				<Button variant="secondary" onClick={ handleClose } disabled={ isDeleting }>
-					{ __( 'Cancel', 'buddyboss' ) }
+					{ __( 'Cancel', 'buddyboss-platform' ) }
 				</Button>
 				<Button
 					className="bb-admin-button-danger"
@@ -165,7 +165,7 @@ export function EmailTemplateBulkDeleteModal( { isOpen, selectedItems, onRemoveI
 					isBusy={ isDeleting }
 					disabled={ ! isConfirmed || isDeleting }
 				>
-					{ isDeleting ? __( 'Deleting...', 'buddyboss' ) : __( 'Delete', 'buddyboss' ) }
+					{ isDeleting ? __( 'Deleting...', 'buddyboss-platform' ) : __( 'Delete', 'buddyboss-platform' ) }
 				</Button>
 			</div>
 		</Modal>

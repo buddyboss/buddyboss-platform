@@ -85,7 +85,7 @@ echo esc_attr( $has_no_thumbnail );
 			$item_id = 0;
 			if ( bp_loggedin_user_id() === $video_user_id || bp_current_user_can( 'bp_moderate' ) || $can_edit ) {
 				?>
-				<a href="#" class="video-action_more item-action_more" data-balloon-pos="up" data-balloon="<?php esc_html_e( 'More actions', 'buddyboss' ); ?>" aria-label="<?php esc_attr_e( 'More actions', 'buddyboss' ); ?>">
+				<a href="#" class="video-action_more item-action_more" data-balloon-pos="up" data-balloon="<?php esc_html_e( 'More actions', 'buddyboss-platform' ); ?>" aria-label="<?php esc_attr_e( 'More actions', 'buddyboss-platform' ); ?>">
 					<i class="bb-icon-rl bb-icon-ellipsis-v"></i>
 				</a>
 				<div class="video-action_list item-action_list bb_more_dropdown">
@@ -100,7 +100,7 @@ echo esc_attr( $has_no_thumbnail );
 								data-video-attachment-id="<?php echo esc_attr( $attachment_id ); ?>"
 								data-video-id="<?php echo esc_attr( $video_id ); ?>"
 								class="ac-video-thumbnail-edit">
-								<?php esc_html_e( 'Change Thumbnail', 'buddyboss' ); ?>
+								<?php esc_html_e( 'Change Thumbnail', 'buddyboss-platform' ); ?>
 							</a>
 						</li>
 						<?php } ?>
@@ -109,8 +109,8 @@ echo esc_attr( $has_no_thumbnail );
 							if ( $can_move ) {
 								if ( $is_comment_vid ) {
 									?>
-									<li class="move_video move-disabled video-action-class" data-balloon-pos="down" data-balloon="<?php esc_html_e( 'Video inherits activity privacy in comment. You are not allowed to move.', 'buddyboss' ); ?>">
-										<a href="#"><?php esc_html_e( 'Move', 'buddyboss' ); ?></a>
+									<li class="move_video move-disabled video-action-class" data-balloon-pos="down" data-balloon="<?php esc_html_e( 'Video inherits activity privacy in comment. You are not allowed to move.', 'buddyboss-platform' ); ?>">
+										<a href="#"><?php esc_html_e( 'Move', 'buddyboss-platform' ); ?></a>
 									</li>
 									<?php
 								} else {
@@ -125,7 +125,7 @@ echo esc_attr( $has_no_thumbnail );
 											data-type="<?php echo esc_attr( $move_type ); ?>"
 											id="<?php echo esc_attr( $move_id ); ?>"
 											class="ac-video-move">
-											<?php esc_html_e( 'Move', 'buddyboss' ); ?>
+											<?php esc_html_e( 'Move', 'buddyboss-platform' ); ?>
 										</a>
 									</li>
 									<?php
@@ -144,7 +144,7 @@ echo esc_attr( $has_no_thumbnail );
 								data-item-id="<?php echo esc_attr( $video_id ); ?>"
 								data-type="video"
 								href="#">
-								<?php esc_html_e( 'Delete', 'buddyboss' ); ?>
+								<?php esc_html_e( 'Delete', 'buddyboss-platform' ); ?>
 							</a>
 						</li>
 					</ul>
@@ -195,7 +195,7 @@ echo esc_attr( $has_no_thumbnail );
 			if ( $video_template->video_count > $max_length && ( $max_length - 1 ) === $video_template->current_video ) {
 				$count = $video_template->video_count - $max_length;
 				?>
-				<span class="bb-videos-length"><span><strong>+<?php echo esc_html( $count ); ?></strong> <span><?php esc_html_e( 'More Video', 'buddyboss' ); ?></span></span></span>
+				<span class="bb-videos-length"><span><strong>+<?php echo esc_html( $count ); ?></strong> <span><?php esc_html_e( 'More Video', 'buddyboss-platform' ); ?></span></span></span>
 				<?php
 			}
 			?>
@@ -221,11 +221,11 @@ echo esc_attr( $has_no_thumbnail );
 				$count = $video_template->video_count - $max_length;
 				if ( 1 === $count ) {
 					?>
-					<span class="bb-videos-length"><span><strong>+<?php echo esc_html( $count ); ?></strong> <span><?php esc_html_e( 'More Video', 'buddyboss' ); ?></span></span></span>
+					<span class="bb-videos-length"><span><strong>+<?php echo esc_html( $count ); ?></strong> <span><?php esc_html_e( 'More Video', 'buddyboss-platform' ); ?></span></span></span>
 					<?php
 				} else {
 					?>
-					<span class="bb-videos-length"><span><strong>+<?php echo esc_html( $count ); ?></strong> <span><?php esc_html_e( 'More Videos', 'buddyboss' ); ?></span></span></span>
+					<span class="bb-videos-length"><span><strong>+<?php echo esc_html( $count ); ?></strong> <span><?php esc_html_e( 'More Videos', 'buddyboss-platform' ); ?></span></span></span>
 					<?php
 				}
 			}

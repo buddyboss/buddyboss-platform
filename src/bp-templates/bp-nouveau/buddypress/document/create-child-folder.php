@@ -25,16 +25,16 @@ if ( function_exists( 'bp_is_group_single' ) && bp_is_group_single() && bp_is_gr
 			<div class="modal-wrapper">
 				<div id="boss-media-create-album-popup" class="modal-container has-folderlocationUI">
 					<header class="bb-model-header">
-						<h4><?php esc_html_e( 'Create new folder', 'buddyboss' ); ?></h4>
+						<h4><?php esc_html_e( 'Create new folder', 'buddyboss-platform' ); ?></h4>
 						<a class="bb-model-close-button" id="bp-media-create-folder-close" href="#"><span class="bb-icon-l bb-icon-times"></span></a>
 					</header>
 					<div class="bb-field-wrap">
-						<label for="bb-album-child-title" class="bb-label"><?php esc_html_e( 'Title', 'buddyboss' ); ?></label>
-						<input id="bb-album-child-title" value="" type="text" placeholder="<?php esc_html_e( 'Enter Folder Title', 'buddyboss' ); ?>" />
-						<small class="error-box"><?php _e( 'Following special characters are not supported: \ / ? % * : | " < >', 'buddyboss' ); ?></small>
+						<label for="bb-album-child-title" class="bb-label"><?php esc_html_e( 'Title', 'buddyboss-platform' ); ?></label>
+						<input id="bb-album-child-title" value="" type="text" placeholder="<?php esc_html_e( 'Enter Folder Title', 'buddyboss-platform' ); ?>" />
+						<small class="error-box"><?php _e( 'Following special characters are not supported: \ / ? % * : | " < >', 'buddyboss-platform' ); ?></small>
 					</div>
 					<footer class="bb-model-footer">
-						<a class="button" id="bp-media-create-child-folder-submit" href="#"><?php esc_html_e( 'Create new folder', 'buddyboss' ); ?></a>
+						<a class="button" id="bp-media-create-child-folder-submit" href="#"><?php esc_html_e( 'Create new folder', 'buddyboss-platform' ); ?></a>
 					</footer>
 				</div>
 			</div>

@@ -18,8 +18,8 @@
 			<img data-skip-lazy="" class="skip-lazy" src="{{{data.url}}}" id="avatar-crop-preview"/>
 		</div>
 		<div id="avatar-crop-actions">
-			<button type="button" class="button avatar-crop-submit"><?php esc_html_e( 'Crop Photo', 'buddyboss' ); ?></button>
-            <a class="avatar-crop-cancel" href="#"><?php esc_html_e( 'Cancel', 'buddyboss' ); ?></a>
+			<button type="button" class="button avatar-crop-submit"><?php esc_html_e( 'Crop Photo', 'buddyboss-platform' ); ?></button>
+            <a class="avatar-crop-cancel" href="#"><?php esc_html_e( 'Cancel', 'buddyboss-platform' ); ?></a>
 		</div>
 	</div>
 </script>

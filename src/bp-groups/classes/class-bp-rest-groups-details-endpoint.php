@@ -59,7 +59,7 @@ class BP_REST_Groups_Details_Endpoint extends WP_REST_Controller {
 			array(
 				'args'   => array(
 					'id' => array(
-						'description' => __( 'A unique numeric ID for the Group.', 'buddyboss' ),
+						'description' => __( 'A unique numeric ID for the Group.', 'buddyboss-platform' ),
 						'type'        => 'integer',
 					),
 				),
@@ -78,7 +78,7 @@ class BP_REST_Groups_Details_Endpoint extends WP_REST_Controller {
 			array(
 				'args'   => array(
 					'id' => array(
-						'description' => __( 'A unique numeric ID for the Group.', 'buddyboss' ),
+						'description' => __( 'A unique numeric ID for the Group.', 'buddyboss-platform' ),
 						'type'        => 'integer',
 					),
 				),
@@ -140,7 +140,7 @@ class BP_REST_Groups_Details_Endpoint extends WP_REST_Controller {
 	public function get_items_permissions_check( $request ) {
 		$retval = new WP_Error(
 			'bp_rest_component_required',
-			__( 'Sorry, Groups component was not enabled.', 'buddyboss' ),
+			__( 'Sorry, Groups component was not enabled.', 'buddyboss-platform' ),
 			array(
 				'status' => '404',
 			)
@@ -187,7 +187,7 @@ class BP_REST_Groups_Details_Endpoint extends WP_REST_Controller {
 		if ( empty( $group->id ) ) {
 			$retval = new WP_Error(
 				'bp_rest_group_invalid_id',
-				__( 'Invalid group ID.', 'buddyboss' ),
+				__( 'Invalid group ID.', 'buddyboss-platform' ),
 				array(
 					'status' => 404,
 				)
@@ -427,7 +427,7 @@ class BP_REST_Groups_Details_Endpoint extends WP_REST_Controller {
 		if ( function_exists( 'bp_rest_enable_private_network' ) && true === bp_rest_enable_private_network() && ! is_user_logged_in() ) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
-				__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss' ),
+				__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss-platform' ),
 				array(
 					'status' => rest_authorization_required_code(),
 				)
@@ -437,7 +437,7 @@ class BP_REST_Groups_Details_Endpoint extends WP_REST_Controller {
 		if ( true === $retval && ! bp_is_active( 'groups' ) ) {
 			$retval = new WP_Error(
 				'bp_rest_component_required',
-				__( 'Sorry, Groups component was not enabled.', 'buddyboss' ),
+				__( 'Sorry, Groups component was not enabled.', 'buddyboss-platform' ),
 				array(
 					'status' => '404',
 				)
@@ -448,7 +448,7 @@ class BP_REST_Groups_Details_Endpoint extends WP_REST_Controller {
 		if ( true === $retval && empty( $group->id ) ) {
 			$retval = new WP_Error(
 				'bp_rest_group_invalid_id',
-				__( 'Invalid group ID.', 'buddyboss' ),
+				__( 'Invalid group ID.', 'buddyboss-platform' ),
 				array(
 					'status' => 404,
 				)
@@ -458,7 +458,7 @@ class BP_REST_Groups_Details_Endpoint extends WP_REST_Controller {
 		if ( true === $retval && ! is_user_logged_in() && ( 'private' === bp_get_group_status( $group ) || 'hidden' === bp_get_group_status( $group ) ) ) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
-				__( 'Sorry, you are not allowed to view group tabs.', 'buddyboss' ),
+				__( 'Sorry, you are not allowed to view group tabs.', 'buddyboss-platform' ),
 				array(
 					'status' => rest_authorization_required_code(),
 				)
@@ -490,7 +490,7 @@ class BP_REST_Groups_Details_Endpoint extends WP_REST_Controller {
 			'properties' => array(
 				'tabs'          => array(
 					'context'     => array( 'embed', 'view' ),
-					'description' => __( 'Groups directory tabs.', 'buddyboss' ),
+					'description' => __( 'Groups directory tabs.', 'buddyboss-platform' ),
 					'type'        => 'object',
 					'readonly'    => true,
 					'items'       => array(
@@ -499,7 +499,7 @@ class BP_REST_Groups_Details_Endpoint extends WP_REST_Controller {
 				),
 				'order_options' => array(
 					'context'     => array( 'embed', 'view' ),
-					'description' => __( 'Groups order by options.', 'buddyboss' ),
+					'description' => __( 'Groups order by options.', 'buddyboss-platform' ),
 					'type'        => 'array',
 					'readonly'    => true,
 				),
@@ -523,7 +523,7 @@ class BP_REST_Groups_Details_Endpoint extends WP_REST_Controller {
 	public function get_collection_params() {
 		$params = array(
 			'type' => array(
-				'description'       => __( 'Filter by.. active(Last Active), popular(Most Members), newest(Newly Created), alphabetical(Alphabetical)', 'buddyboss' ),
+				'description'       => __( 'Filter by.. active(Last Active), popular(Most Members), newest(Newly Created), alphabetical(Alphabetical)', 'buddyboss-platform' ),
 				'type'              => 'string',
 				'default'           => 'active',
 				'enum'              => array( 'active', 'popular', 'newest', 'alphabetical' ),
@@ -574,7 +574,7 @@ class BP_REST_Groups_Details_Endpoint extends WP_REST_Controller {
 		$nav_items    = array();
 
 		$nav_items['all'] = array(
-			'text'     => __( 'All Groups', 'buddyboss' ),
+			'text'     => __( 'All Groups', 'buddyboss-platform' ),
 			'slug'     => 'all',
 			'position' => 5,
 		);
@@ -589,7 +589,7 @@ class BP_REST_Groups_Details_Endpoint extends WP_REST_Controller {
 			// If the user has groups create a nav item.
 			if ( $my_groups_count ) {
 				$nav_items['personal'] = array(
-					'text'     => __( 'My Groups', 'buddyboss' ),
+					'text'     => __( 'My Groups', 'buddyboss-platform' ),
 					'slug'     => 'personal', // slug is used because BP_Core_Nav requires it, but it's the scope.
 					'position' => 15,
 				);
@@ -602,7 +602,7 @@ class BP_REST_Groups_Details_Endpoint extends WP_REST_Controller {
 			// If the user can create groups, add the create nav.
 			if ( bp_user_can_create_groups() ) {
 				$nav_items['create'] = array(
-					'text'     => __( 'Create a Group', 'buddyboss' ),
+					'text'     => __( 'Create a Group', 'buddyboss-platform' ),
 					'slug'     => 'create', // slug is used because BP_Core_Nav requires it, but it's the scope.
 					'count'    => false,
 					'position' => 999,
@@ -702,10 +702,10 @@ class BP_REST_Groups_Details_Endpoint extends WP_REST_Controller {
 	public function bp_rest_legacy_get_group_component_filters() {
 		$filters_data = array();
 
-		$filters_data['active']       = __( 'Last Active', 'buddyboss' );
-		$filters_data['popular']      = __( 'Most Members', 'buddyboss' );
-		$filters_data['newest']       = __( 'Newly Created', 'buddyboss' );
-		$filters_data['alphabetical'] = __( 'Alphabetical', 'buddyboss' );
+		$filters_data['active']       = __( 'Last Active', 'buddyboss-platform' );
+		$filters_data['popular']      = __( 'Most Members', 'buddyboss-platform' );
+		$filters_data['newest']       = __( 'Newly Created', 'buddyboss-platform' );
+		$filters_data['alphabetical'] = __( 'Alphabetical', 'buddyboss-platform' );
 
 		return apply_filters( 'bp_rest_legacy_get_group_component_filters', $filters_data );
 	}
@@ -736,7 +736,7 @@ class BP_REST_Groups_Details_Endpoint extends WP_REST_Controller {
 		if ( empty( $group_id ) ) {
 			return new WP_Error(
 				'bp_rest_group_id_required',
-				__( 'Group ID is required', 'buddyboss' ),
+				__( 'Group ID is required', 'buddyboss-platform' ),
 				array( 'status' => 404 )
 			);
 		}
@@ -746,7 +746,7 @@ class BP_REST_Groups_Details_Endpoint extends WP_REST_Controller {
 		if ( empty( $group ) || empty( $group->id ) ) {
 			return new WP_Error(
 				'bp_rest_group_invalid_id',
-				__( 'Invalid Group ID.', 'buddyboss' ),
+				__( 'Invalid Group ID.', 'buddyboss-platform' ),
 				array( 'status' => 404 )
 			);
 		}
@@ -763,7 +763,7 @@ class BP_REST_Groups_Details_Endpoint extends WP_REST_Controller {
 
 			$group_type_label = isset( $group_type->labels['singular_name'] )
 				? wp_specialchars_decode( $group_type->labels['singular_name'] )
-				: __( 'Group', 'buddyboss' );
+				: __( 'Group', 'buddyboss-platform' );
 		}
 
 		$data = array(
@@ -773,7 +773,7 @@ class BP_REST_Groups_Details_Endpoint extends WP_REST_Controller {
 			'status'            => bp_get_group_status( $group ),
 			'group_type_label'  => $group_type_label,
 			/* translators: %s: human-readable time since the group was last active. */
-			'last_activity'     => sprintf( esc_html__( 'Active %s', 'buddyboss' ), wp_kses_post( bp_get_group_last_active( $group ) ) ),
+			'last_activity'     => sprintf( esc_html__( 'Active %s', 'buddyboss-platform' ), wp_kses_post( bp_get_group_last_active( $group ) ) ),
 			'members_count'     => groups_get_total_member_count( $group->id ),
 			'avatar_urls'       => array(
 				'thumb'      => bp_core_fetch_avatar(

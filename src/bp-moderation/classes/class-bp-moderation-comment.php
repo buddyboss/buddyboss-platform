@@ -109,7 +109,7 @@ class BP_Moderation_Comment extends BP_Moderation_Abstract {
 	 * @return mixed
 	 */
 	public function add_content_types( $content_types ) {
-		$content_types[ self::$moderation_type ] = __( 'Blog Comments', 'buddyboss' );
+		$content_types[ self::$moderation_type ] = __( 'Blog Comments', 'buddyboss-platform' );
 
 		return $content_types;
 	}
@@ -139,7 +139,7 @@ class BP_Moderation_Comment extends BP_Moderation_Abstract {
 			if ( $is_user_blocked ) {
 				$comment_text = bb_moderation_has_blocked_message( $comment_text, $this->item_type, $comment->comment_ID );
 			} else {
-				$comment_text = esc_html__( 'This content has been hidden from site admin.', 'buddyboss' );
+				$comment_text = esc_html__( 'This content has been hidden from site admin.', 'buddyboss-platform' );
 			}
 		} elseif ( bb_moderation_is_user_blocked_by( $comment_author_id ) ) {
 			$comment_text = bb_moderation_is_blocked_message( $comment_text, $this->item_type, $comment->comment_ID );
@@ -341,7 +341,7 @@ class BP_Moderation_Comment extends BP_Moderation_Abstract {
 		);
 
 		if ( ! empty( $comment_report_link ) ) {
-			$comment_text .= sprintf( '<div class="bb_more_options"><span class="bb_more_options_action" data-balloon-pos="up" data-balloon="%1$s"><i class="bb-icon-f bb-icon-ellipsis-h"></i></span><div class="bb_more_options_list bb_more_dropdown"><div class="bb_more_dropdown__title"><span class="bb_more_dropdown__title__text">%2$s</span><span class="bb_more_dropdown__close_button" role="button"><i class="bb-icon-l bb-icon-times"></i></span></div>%3$s</div><div class="bb_more_dropdown_overlay"></div></div>', esc_html__( 'More Options', 'buddyboss' ), esc_html__( 'Options', 'buddyboss' ), $comment_report_link );
+			$comment_text .= sprintf( '<div class="bb_more_options"><span class="bb_more_options_action" data-balloon-pos="up" data-balloon="%1$s"><i class="bb-icon-f bb-icon-ellipsis-h"></i></span><div class="bb_more_options_list bb_more_dropdown"><div class="bb_more_dropdown__title"><span class="bb_more_dropdown__title__text">%2$s</span><span class="bb_more_dropdown__close_button" role="button"><i class="bb-icon-l bb-icon-times"></i></span></div>%3$s</div><div class="bb_more_dropdown_overlay"></div></div>', esc_html__( 'More Options', 'buddyboss-platform' ), esc_html__( 'Options', 'buddyboss-platform' ), $comment_report_link );
 		}
 
 		return $comment_text;
@@ -420,7 +420,7 @@ class BP_Moderation_Comment extends BP_Moderation_Abstract {
 	 * @return string
 	 */
 	public function report_button_text( $button_text, $item_id ) {
-		return esc_html__( 'Report Comment', 'buddyboss' );
+		return esc_html__( 'Report Comment', 'buddyboss-platform' );
 	}
 
 	/**
@@ -434,7 +434,7 @@ class BP_Moderation_Comment extends BP_Moderation_Abstract {
 	 * @return string
 	 */
 	public function report_content_type( $content_type, $item_id ) {
-		return esc_html__( 'Comment', 'buddyboss' );
+		return esc_html__( 'Comment', 'buddyboss-platform' );
 	}
 
 	/**
@@ -505,7 +505,7 @@ class BP_Moderation_Comment extends BP_Moderation_Abstract {
 			if ( $is_user_blocked ) {
 				$excerpt = bb_moderation_has_blocked_message( $excerpt, $this->item_type, $comment->comment_ID );
 			} else {
-				$excerpt = esc_html__( 'This content has been hidden from site admin.', 'buddyboss' );
+				$excerpt = esc_html__( 'This content has been hidden from site admin.', 'buddyboss-platform' );
 			}
 		} elseif ( bb_moderation_is_user_blocked_by( $comment_author_id ) ) {
 			$excerpt = bb_moderation_is_blocked_message( $excerpt, $this->item_type, $comment->comment_ID );

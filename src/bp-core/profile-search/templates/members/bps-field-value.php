@@ -15,13 +15,13 @@ list ($name, $value) = bp_ps_template_args();
 <?php
 if ( ! is_array( $value ) ) {
 	/* translators: %1$s field name, %2$s value */
-	printf( esc_html__( '%1$s: %2$s', 'buddyboss' ), $name, $value );
+	printf( esc_html__( '%1$s: %2$s', 'buddyboss-platform' ), $name, $value );
 } elseif ( $value['units'] == 'km' ) {
 				/* translators: %1$s field name, %2$s location, %3$d distance */
-				printf( esc_html__( '%1$s: %2$s (%3$d km away)', 'buddyboss' ), $name, $value['location'], $value['distance'] );
+				printf( esc_html__( '%1$s: %2$s (%3$d km away)', 'buddyboss-platform' ), $name, $value['location'], $value['distance'] );
 } elseif ( $value['units'] == 'miles' ) {
 				/* translators: %1$s field name, %2$s location, %3$d distance */
-				printf( esc_html__( '%1$s: %2$s (%3$d miles away)', 'buddyboss' ), $name, $value['location'], $value['distance'] );
+				printf( esc_html__( '%1$s: %2$s (%3$d miles away)', 'buddyboss-platform' ), $name, $value['location'], $value['distance'] );
 }
 ?>
 		</span>

@@ -120,10 +120,10 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 	 * @return mixed
 	 */
 	public function add_content_types( $content_types ) {
-		$content_types[ self::$moderation_type ] = __( 'User', 'buddyboss' );
+		$content_types[ self::$moderation_type ] = __( 'User', 'buddyboss-platform' );
 
 		if ( bb_is_moderation_member_reporting_enable() ) {
-			$content_types[ self::$moderation_type_report ] = __( 'Report Member', 'buddyboss' );
+			$content_types[ self::$moderation_type_report ] = __( 'Report Member', 'buddyboss-platform' );
 		}
 
 		return $content_types;

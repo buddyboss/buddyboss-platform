@@ -29,7 +29,7 @@ defined( 'ABSPATH' ) || exit;
  * @return string Translated role name on success, original name on failure.
  */
 function bbp_translate_user_role( $name ) {
-	return translate_with_gettext_context( before_last_bar( $name ), 'User role', 'buddyboss' );
+	return translate_with_gettext_context( before_last_bar( $name ), 'User role', 'buddyboss-platform' );
 }
 
 /**
@@ -40,17 +40,17 @@ function bbp_translate_user_role( $name ) {
 function bbp_dummy_role_names() {
 
 	/* translators: user role */
-	__( 'Organizer', 'buddyboss' );
+	__( 'Organizer', 'buddyboss-platform' );
 
 	/* translators: user role */
-	__( 'Moderator', 'buddyboss' );
+	__( 'Moderator', 'buddyboss-platform' );
 
 	/* translators: user role */
-	__( 'Participant', 'buddyboss' );
+	__( 'Participant', 'buddyboss-platform' );
 
 	/* translators: user role */
-	__( 'Spectator', 'buddyboss' );
+	__( 'Spectator', 'buddyboss-platform' );
 
 	/* translators: user role */
-	__( 'Blocked', 'buddyboss' );
+	__( 'Blocked', 'buddyboss-platform' );
 }

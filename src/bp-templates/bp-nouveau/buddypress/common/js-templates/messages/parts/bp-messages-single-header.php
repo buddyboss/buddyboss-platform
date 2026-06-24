@@ -111,7 +111,7 @@
 							<# if ( other_recipients[i].is_deleted ) { #>{{other_recipients[i].user_name}}<#
 							} else if ( other_recipients[i].user_link && ( ! data.toOthers || data.toOthers == '' ) ) { #><a href="{{other_recipients[i].user_link}}" data-bb-hp-profile="{{other_recipients[i].id}}">{{other_recipients[i].user_name}}</a><#
 							} else { #>{{ other_recipients[i].user_name }}<# }
-							if ( i != first_four.length - 1  || ( i == first_four.length -1 && data.toOthers ) ) { #><?php esc_html_e( ',', 'buddyboss' ); ?><# } #>
+							if ( i != first_four.length - 1  || ( i == first_four.length -1 && data.toOthers ) ) { #><?php esc_html_e( ',', 'buddyboss-platform' ); ?><# } #>
 						</span>
 					<# } #>
 
@@ -131,13 +131,13 @@
 				if ( 1 < data.group_joined_date.length ) {
 				#>
 				<dd>
-					<span class="thread-date"><?php esc_html_e( 'Joined', 'buddyboss' ); ?> {{data.group_joined_date}}</span>
+					<span class="thread-date"><?php esc_html_e( 'Joined', 'buddyboss-platform' ); ?> {{data.group_joined_date}}</span>
 				</dd>
 				<#
 				}
 			} else { #>
 				<dd>
-					<span class="thread-date"><?php esc_html_e( 'Started', 'buddyboss' ); ?> {{data.started_date}}</span>
+					<span class="thread-date"><?php esc_html_e( 'Started', 'buddyboss-platform' ); ?> {{data.started_date}}</span>
 				</dd>
 			<# } #>
 		</dl>
@@ -149,22 +149,22 @@
 				<div class="message_actions">
 					<a href="#" class="message_action__anchor">
 						<i class="bb-icon-f bb-icon-ellipsis-h"></i>
-						<span class="bp-screen-reader-text"><?php esc_html_e( 'More options', 'buddyboss' ); ?></span>
+						<span class="bp-screen-reader-text"><?php esc_html_e( 'More options', 'buddyboss-platform' ); ?></span>
 					</a>
 					<div class="message_action__list bb_more_dropdown" data-bp-thread-id="{{ data.id }}">
 						<?php bp_get_template_part( 'common/more-options-view' ); ?>
 						<ul>
 							<li class="unread">
-								<a data-bp-action="unread" href="#" data-mark-read-text="<?php esc_html_e( 'Mark as read', 'buddyboss' ); ?>"  data-mark-unread-text="<?php esc_html_e( 'Mark as unread', 'buddyboss' ); ?>"><?php esc_html_e( 'Mark as unread', 'buddyboss' ); ?></a>
+								<a data-bp-action="unread" href="#" data-mark-read-text="<?php esc_html_e( 'Mark as read', 'buddyboss-platform' ); ?>"  data-mark-unread-text="<?php esc_html_e( 'Mark as unread', 'buddyboss-platform' ); ?>"><?php esc_html_e( 'Mark as unread', 'buddyboss-platform' ); ?></a>
 							</li>
 							<# if ( data.is_thread_archived ) { #>
 								<li class="unhide_thread">
-									<a data-bp-action="unhide_thread" href="#"><?php esc_html_e( 'Unarchive', 'buddyboss' ); ?>
+									<a data-bp-action="unhide_thread" href="#"><?php esc_html_e( 'Unarchive', 'buddyboss-platform' ); ?>
 									</a>
 								</li>
 							<# } else { #>
 								<li class="hide_thread">
-									<a data-bp-action="hide_thread" href="#"><?php esc_html_e( 'Archive', 'buddyboss' ); ?>
+									<a data-bp-action="hide_thread" href="#"><?php esc_html_e( 'Archive', 'buddyboss-platform' ); ?>
 									</a>
 								</li>
 							<# }
@@ -177,21 +177,21 @@
 								   data-tc="{{data.recipients.count}}"
 								   data-pp="{{data.recipients.per_page}}"
 								   data-cp="1"
-								   data-action="bp_view_more"><?php esc_html_e( 'View members', 'buddyboss' ); ?></a>
+								   data-action="bp_view_more"><?php esc_html_e( 'View members', 'buddyboss-platform' ); ?></a>
 							</li>
 							<# } #>
 							<?php if ( bp_is_active( 'moderation' ) && bp_is_moderation_member_blocking_enable() ) { ?>
 								<# if ( data.recipients.count > 1 ) { #>
 									<li class="report_thread">
-										<a id="mass-block-member" href="#mass-user-block-list" class="mass-block-member" data-thread-id="{{data.id}}" data-cp="1" data-text="<?php esc_html_e( 'Block a Member', 'buddyboss' ); ?>"><?php esc_html_e( 'Block a member', 'buddyboss' ); ?></a>
+										<a id="mass-block-member" href="#mass-user-block-list" class="mass-block-member" data-thread-id="{{data.id}}" data-cp="1" data-text="<?php esc_html_e( 'Block a Member', 'buddyboss-platform' ); ?>"><?php esc_html_e( 'Block a member', 'buddyboss-platform' ); ?></a>
 									</li>
 								<# } else if ( other_recipients.length == 1 && other_recipients[0].is_user_blocked ) { #>
 									<li class="reported_thread">
-										<a href="#"><?php esc_html_e( 'Blocked', 'buddyboss' ); ?></a>
+										<a href="#"><?php esc_html_e( 'Blocked', 'buddyboss-platform' ); ?></a>
 									</li>
 								<# } else if ( other_recipients.length == 1 && true == other_recipients[0].can_be_blocked && 1 !== other_recipients[0].is_deleted ) { #>
 									<li class="report_thread">
-										<a id="report-content-<?php echo esc_attr( BP_Moderation_Members::$moderation_type ); ?>-{{other_recipients[0].id}}" href="#block-member" class="block-member" data-bp-content-id="{{other_recipients[0].id}}" data-bp-content-type="<?php echo esc_attr( BP_Moderation_Members::$moderation_type ); ?>" data-bp-nonce="<?php echo esc_attr( wp_create_nonce( 'bp-moderation-content' ) ); ?>"><?php esc_html_e( 'Block member', 'buddyboss' ); ?></a>
+										<a id="report-content-<?php echo esc_attr( BP_Moderation_Members::$moderation_type ); ?>-{{other_recipients[0].id}}" href="#block-member" class="block-member" data-bp-content-id="{{other_recipients[0].id}}" data-bp-content-type="<?php echo esc_attr( BP_Moderation_Members::$moderation_type ); ?>" data-bp-nonce="<?php echo esc_attr( wp_create_nonce( 'bp-moderation-content' ) ); ?>"><?php esc_html_e( 'Block member', 'buddyboss-platform' ); ?></a>
 									</li>
 								<# } #>
 							<?php } ?>
@@ -199,24 +199,24 @@
 							<?php if ( bp_is_active( 'moderation' ) && bb_is_moderation_member_reporting_enable() ) { ?>
 								<# if ( data.recipients.count > 1 ) { #>
 									<li class="report_member_thread">
-										<a id="mass-report-member" href="#mass-user-block-list" class="mass-report-member" data-thread-id="{{data.id}}" data-cp="1"><?php esc_html_e( 'Report a member', 'buddyboss' ); ?></a>
+										<a id="mass-report-member" href="#mass-user-block-list" class="mass-report-member" data-thread-id="{{data.id}}" data-cp="1"><?php esc_html_e( 'Report a member', 'buddyboss-platform' ); ?></a>
 									</li>
 								<# } else if ( other_recipients.length == 1 && other_recipients[0].is_user_reported && true !== other_recipients[0].is_user_suspended ) { #>
 									<li class="report_member_thread">
-										<a id="report-content-<?php echo esc_attr( BP_Moderation_Members::$moderation_type_report ); ?>-{{other_recipients[0].id}}" href="#reported-content" class="reported-content" reported_type="{{other_recipients[0].reported_type}}" item_id="{{other_recipients[0].id}}" item_type="<?php echo esc_attr( BP_Moderation_Members::$moderation_type_report ); ?>"><?php esc_html_e( 'Report member', 'buddyboss' ); ?></a>
+										<a id="report-content-<?php echo esc_attr( BP_Moderation_Members::$moderation_type_report ); ?>-{{other_recipients[0].id}}" href="#reported-content" class="reported-content" reported_type="{{other_recipients[0].reported_type}}" item_id="{{other_recipients[0].id}}" item_type="<?php echo esc_attr( BP_Moderation_Members::$moderation_type_report ); ?>"><?php esc_html_e( 'Report member', 'buddyboss-platform' ); ?></a>
 									</li>
 								<# } else if ( other_recipients.length == 1 && true == other_recipients[0].can_be_report && 1 !== other_recipients[0].is_deleted && true !== other_recipients[0].is_user_suspended ) { #>
 									<li class="report_member_thread">
-										<a id="report-content-<?php echo esc_attr( BP_Moderation_Members::$moderation_type_report ); ?>-{{other_recipients[0].id}}" href="#content-report" class="report-content" data-bp-content-id="{{other_recipients[0].id}}" data-bp-content-type="<?php echo esc_attr( BP_Moderation_Members::$moderation_type_report ); ?>" data-bp-nonce="<?php echo esc_attr( wp_create_nonce( 'bp-moderation-content' ) ); ?>" reported_type="{{other_recipients[0].reported_type}}"><?php esc_html_e( 'Report member', 'buddyboss' ); ?></a>
+										<a id="report-content-<?php echo esc_attr( BP_Moderation_Members::$moderation_type_report ); ?>-{{other_recipients[0].id}}" href="#content-report" class="report-content" data-bp-content-id="{{other_recipients[0].id}}" data-bp-content-type="<?php echo esc_attr( BP_Moderation_Members::$moderation_type_report ); ?>" data-bp-nonce="<?php echo esc_attr( wp_create_nonce( 'bp-moderation-content' ) ); ?>" reported_type="{{other_recipients[0].reported_type}}"><?php esc_html_e( 'Report member', 'buddyboss-platform' ); ?></a>
 									</li>
 								<# } #>
 							<?php } ?>
 
 							<li class="delete_messages">
-								<a data-bp-action="delete" href="#"><?php esc_html_e( 'Delete your messages', 'buddyboss' ); ?></a>
+								<a data-bp-action="delete" href="#"><?php esc_html_e( 'Delete your messages', 'buddyboss-platform' ); ?></a>
 							</li>
 							<li class="delete_thread">
-								<a data-bp-action="delete_thread" href="#"><?php esc_html_e( 'Delete conversation', 'buddyboss' ); ?></a>
+								<a data-bp-action="delete_thread" href="#"><?php esc_html_e( 'Delete conversation', 'buddyboss-platform' ); ?></a>
 							</li>
 						</ul>
 					</div>
@@ -231,19 +231,19 @@
 				}
 				?>
 				<div class="message_actions">
-					<a href="#" class="message_action__anchor" aria-label="<?php esc_attr_e( 'More actions', 'buddyboss' ); ?>"> <i class="bb-icon-f bb-icon-ellipsis-h"></i> </a>
+					<a href="#" class="message_action__anchor" aria-label="<?php esc_attr_e( 'More actions', 'buddyboss-platform' ); ?>"> <i class="bb-icon-f bb-icon-ellipsis-h"></i> </a>
 					<div class="message_action__list bb_more_dropdown" data-bp-thread-id="{{ data.id }}">
 						<?php bp_get_template_part( 'common/more-options-view' ); ?>
 						<ul>
 							<li class="unread">
-								<a data-bp-action="unread" href="#" data-mark-read-text="<?php esc_html_e( 'Mark as read', 'buddyboss' ); ?>"  data-mark-unread-text="<?php esc_html_e( 'Mark as unread', 'buddyboss' ); ?>">
-									<?php esc_html_e( 'Mark as unread', 'buddyboss' ); ?>
+								<a data-bp-action="unread" href="#" data-mark-read-text="<?php esc_html_e( 'Mark as read', 'buddyboss-platform' ); ?>"  data-mark-unread-text="<?php esc_html_e( 'Mark as unread', 'buddyboss-platform' ); ?>">
+									<?php esc_html_e( 'Mark as unread', 'buddyboss-platform' ); ?>
 								</a>
 							</li>
 							<# if ( data.is_thread_archived ) { #>
 								<li class="unhide_thread">
 									<a data-bp-action="unhide_thread" href="#">
-										<?php esc_html_e( 'Unarchive', 'buddyboss' ); ?>
+										<?php esc_html_e( 'Unarchive', 'buddyboss-platform' ); ?>
 									</a>
 								</li>
 							<# } else { #>
@@ -252,7 +252,7 @@
 										<?php
 										esc_html_e(
 											'Archive',
-											'buddyboss'
+											'buddyboss-platform'
 										);
 										?>
 									</a>
@@ -267,21 +267,21 @@
 								   data-tc="{{data.recipients.count}}"
 								   data-pp="{{data.recipients.per_page}}"
 								   data-cp="1"
-								   data-action="bp_view_more"><?php esc_html_e( 'View members', 'buddyboss' ); ?></a>
+								   data-action="bp_view_more"><?php esc_html_e( 'View members', 'buddyboss-platform' ); ?></a>
 							</li>
 							<# } #>
 							<?php if ( bp_is_active( 'moderation' ) && bp_is_moderation_member_blocking_enable() ) { ?>
 								<# if ( data.recipients.count > 1 ) { #>
 									<li class="report_thread">
-										<a id="mass-block-member" href="#mass-user-block-list" class="mass-block-member" data-thread-id="{{data.id}}" data-cp="1" data-text="<?php esc_html_e( 'Block a Member', 'buddyboss' ); ?>"><?php esc_html_e( 'Block a member', 'buddyboss' ); ?></a>
+										<a id="mass-block-member" href="#mass-user-block-list" class="mass-block-member" data-thread-id="{{data.id}}" data-cp="1" data-text="<?php esc_html_e( 'Block a Member', 'buddyboss-platform' ); ?>"><?php esc_html_e( 'Block a member', 'buddyboss-platform' ); ?></a>
 									</li>
 								<# } else if ( other_recipients.length == 1 && other_recipients[0].is_user_blocked ) { #>
 									<li class="reported_thread">
-										<a href="#"><?php esc_html_e( 'Blocked', 'buddyboss' ); ?></a>
+										<a href="#"><?php esc_html_e( 'Blocked', 'buddyboss-platform' ); ?></a>
 									</li>
 								<# } else if ( other_recipients.length == 1 && true == other_recipients[0].can_be_blocked && 1 !== other_recipients[0].is_deleted ) { #>
 								<li class="report_thread">
-									<a id="report-content-<?php echo esc_attr( BP_Moderation_Members::$moderation_type ); ?>-{{other_recipients[0].id}}" href="#block-member" class="block-member" data-bp-content-id="{{other_recipients[0].id}}" data-bp-content-type="<?php echo esc_attr( BP_Moderation_Members::$moderation_type ); ?>" data-bp-nonce="<?php echo esc_attr( wp_create_nonce( 'bp-moderation-content' ) ); ?>"><?php esc_html_e( 'Block member', 'buddyboss' ); ?></a>
+									<a id="report-content-<?php echo esc_attr( BP_Moderation_Members::$moderation_type ); ?>-{{other_recipients[0].id}}" href="#block-member" class="block-member" data-bp-content-id="{{other_recipients[0].id}}" data-bp-content-type="<?php echo esc_attr( BP_Moderation_Members::$moderation_type ); ?>" data-bp-nonce="<?php echo esc_attr( wp_create_nonce( 'bp-moderation-content' ) ); ?>"><?php esc_html_e( 'Block member', 'buddyboss-platform' ); ?></a>
 								</li>
 								<# } #>
 							<?php } ?>
@@ -289,27 +289,27 @@
 							<?php if ( bp_is_active( 'moderation' ) && bb_is_moderation_member_reporting_enable() ) { ?>
 								<# if ( data.recipients.count > 1 ) { #>
 								<li class="report_member_thread">
-									<a id="mass-report-member" href="#mass-user-block-list" class="mass-report-member" data-thread-id="{{data.id}}" data-cp="1"><?php esc_html_e( 'Report a member', 'buddyboss' ); ?></a>
+									<a id="mass-report-member" href="#mass-user-block-list" class="mass-report-member" data-thread-id="{{data.id}}" data-cp="1"><?php esc_html_e( 'Report a member', 'buddyboss-platform' ); ?></a>
 								</li>
 								<# } else if ( other_recipients.length == 1 && other_recipients[0].is_user_reported && true !== other_recipients[0].is_user_suspended ) { #>
 								<li class="report_member_thread">
-									<a id="report-content-<?php echo esc_attr( BP_Moderation_Members::$moderation_type_report ); ?>-{{other_recipients[0].id}}" href="#reported-content" class="reported-content" reported_type="{{other_recipients[0].reported_type}}" item_id="{{other_recipients[0].id}}" item_type="<?php echo esc_attr( BP_Moderation_Members::$moderation_type_report ); ?>"><?php esc_html_e( 'Report member', 'buddyboss' ); ?></a>
+									<a id="report-content-<?php echo esc_attr( BP_Moderation_Members::$moderation_type_report ); ?>-{{other_recipients[0].id}}" href="#reported-content" class="reported-content" reported_type="{{other_recipients[0].reported_type}}" item_id="{{other_recipients[0].id}}" item_type="<?php echo esc_attr( BP_Moderation_Members::$moderation_type_report ); ?>"><?php esc_html_e( 'Report member', 'buddyboss-platform' ); ?></a>
 								</li>
 								<# } else if ( other_recipients.length == 1 && true == other_recipients[0].can_be_report && 1 !== other_recipients[0].is_deleted && true !== other_recipients[0].is_user_suspended ) { #>
 								<li class="report_member_thread">
-									<a id="report-content-<?php echo esc_attr( BP_Moderation_Members::$moderation_type_report ); ?>-{{other_recipients[0].id}}" href="#content-report" class="report-content" data-bp-content-id="{{other_recipients[0].id}}" data-bp-content-type="<?php echo esc_attr( BP_Moderation_Members::$moderation_type_report ); ?>" data-bp-nonce="<?php echo esc_attr( wp_create_nonce( 'bp-moderation-content' ) ); ?>" reported_type="{{other_recipients[0].reported_type}}"><?php esc_html_e( 'Report member', 'buddyboss' ); ?></a>
+									<a id="report-content-<?php echo esc_attr( BP_Moderation_Members::$moderation_type_report ); ?>-{{other_recipients[0].id}}" href="#content-report" class="report-content" data-bp-content-id="{{other_recipients[0].id}}" data-bp-content-type="<?php echo esc_attr( BP_Moderation_Members::$moderation_type_report ); ?>" data-bp-nonce="<?php echo esc_attr( wp_create_nonce( 'bp-moderation-content' ) ); ?>" reported_type="{{other_recipients[0].reported_type}}"><?php esc_html_e( 'Report member', 'buddyboss-platform' ); ?></a>
 								</li>
 								<# } #>
 							<?php } ?>
 
 							<li class="delete_messages" data-bp-action="delete">
-								<a data-bp-action="delete" href="#"><?php esc_html_e( 'Delete your messages', 'buddyboss' ); ?></a>
+								<a data-bp-action="delete" href="#"><?php esc_html_e( 'Delete your messages', 'buddyboss-platform' ); ?></a>
 							</li>
 							<?php
 							if ( ! empty( $old_user ) ) {
 								?>
 								<li class="delete_thread">
-									<a data-bp-action="delete_thread" href="#"><?php esc_html_e( 'Delete conversation', 'buddyboss' ); ?></a>
+									<a data-bp-action="delete_thread" href="#"><?php esc_html_e( 'Delete conversation', 'buddyboss-platform' ); ?></a>
 								</li>
 								<?php
 							}
@@ -328,8 +328,8 @@
 					<div class="modal-wrapper">
 						<div class="modal-container">
 							<header class="bb-model-header">
-								<h4><?php esc_html_e( 'Block a Member', 'buddyboss' ); ?></h4>
-								<button title="<?php esc_attr_e( 'Close (Esc)', 'buddyboss' ); ?>" type="button" class="mfp-close"></button>
+								<h4><?php esc_html_e( 'Block a Member', 'buddyboss-platform' ); ?></h4>
+								<button title="<?php esc_attr_e( 'Close (Esc)', 'buddyboss-platform' ); ?>" type="button" class="mfp-close"></button>
 							</header>
 							<div id="moderated_user_list"></div>
 						</div>
@@ -344,8 +344,8 @@
 				<div class="modal-wrapper">
 					<div class="modal-container">
 						<header class="bb-model-header">
-							<h4><?php esc_html_e( 'Members', 'buddyboss' ); ?></h4>
-							<button title="<?php esc_attr_e( 'Close (Esc)', 'buddyboss' ); ?>" type="button" class="mfp-close"></button>
+							<h4><?php esc_html_e( 'Members', 'buddyboss-platform' ); ?></h4>
+							<button title="<?php esc_attr_e( 'Close (Esc)', 'buddyboss-platform' ); ?>" type="button" class="mfp-close"></button>
 						</header>
 						<div id="members_list"></div>
 					</div>

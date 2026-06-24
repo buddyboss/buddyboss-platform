@@ -34,7 +34,7 @@ if ( $sizes && filesize( $sizes ) / 1e+6 < 2 && $bp_document_text_preview ) {
 				<textarea class="document-text-file-data-hidden" style="display: none;"><?php echo wp_kses_post( $file_data ); ?></textarea>
 			</div>
 			<div class="document-expand">
-				<a href="#" class="document-expand-anchor"><i class="bb-icon-l bb-icon-expand document-icon-plus"></i> <span><?php esc_html_e( 'Expand', 'buddyboss' ); ?></span></a>
+				<a href="#" class="document-expand-anchor"><i class="bb-icon-l bb-icon-expand document-icon-plus"></i> <span><?php esc_html_e( 'Expand', 'buddyboss-platform' ); ?></span></a>
 			</div>
 		</div> <!-- .document-text-wrap -->
 		<?php
@@ -45,7 +45,7 @@ if ( $sizes && filesize( $sizes ) / 1e+6 < 2 && $bp_document_text_preview ) {
 				'<div class="more_text_view">%s</div>',
 				sprintf(
 				/* translators: %s: download url */
-					wp_kses_post( 'This file was truncated for preview. Please <a href="%s">download</a> to view the full file.', 'buddyboss' ),
+					wp_kses_post( __( 'This file was truncated for preview. Please <a href="%s">download</a> to view the full file.', 'buddyboss-platform' ) ),
 					esc_url( $download_url )
 				)
 			);

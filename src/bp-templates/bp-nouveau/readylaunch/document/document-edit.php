@@ -22,14 +22,14 @@ $document_id = bp_get_document_id();
 			<div class="bb-rl-modal-wrapper">
 				<div id="bb-rl-media-create-album-popup" class="bb-rl-modal-container bb-rl-has-folderlocationUI">
 					<header class="bb-model-header">
-						<h4><?php esc_html_e( 'Edit Document', 'buddyboss' ); ?></h4>
+						<h4><?php esc_html_e( 'Edit Document', 'buddyboss-platform' ); ?></h4>
 						<a class="bb-model-close-button bb-rl-media-edit-document-close" id="bp-media-edit-document-close" href="#"><span class="bb-icon-l bb-icon-times"></span></a>
 					</header>
 					<div class="bb-rl-modal-body">
 						<div class="bb-field-wrap">
-							<label for="bb-document-title" class="bb-label"><?php esc_html_e( 'Title', 'buddyboss' ); ?></label>
-							<input id="bb-document-title" value="" type="text" placeholder="<?php esc_html_e( 'Enter Document Title', 'buddyboss' ); ?>" />
-							<small class="error-box"><?php esc_html_e( 'Following special characters are not supported: \ / ? % * : | " < >', 'buddyboss' ); ?></small>
+							<label for="bb-document-title" class="bb-label"><?php esc_html_e( 'Title', 'buddyboss-platform' ); ?></label>
+							<input id="bb-document-title" value="" type="text" placeholder="<?php esc_html_e( 'Enter Document Title', 'buddyboss-platform' ); ?>" />
+							<small class="error-box"><?php esc_html_e( 'Following special characters are not supported: \ / ? % * : | " < >', 'buddyboss-platform' ); ?></small>
 						</div>
 					</div>
 					<footer class="bb-model-footer">
@@ -37,7 +37,7 @@ $document_id = bp_get_document_id();
 						if ( ! bp_is_group() ) :
 							?>
 							<div class="bb-rl-field-wrap bb-rl-privacy-field-wrap-hide-show">
-								<label for="bb-rl-folder-privacy" class="bb-label"><?php esc_html_e( 'Privacy', 'buddyboss' ); ?></label>
+								<label for="bb-rl-folder-privacy" class="bb-label"><?php esc_html_e( 'Privacy', 'buddyboss-platform' ); ?></label>
 								<div class="bb-rl-dropdown-wrap bb-rl-filter">
 									<select id="bb-rl-folder-privacy-select" class="bb-rl-dropdown bb-rl-folder-privacy-select">
 										<?php
@@ -58,8 +58,8 @@ $document_id = bp_get_document_id();
 							<?php
 						endif;
 						?>
-						<a class="button bb-rl-button bb-rl-button--secondaryFill bb-rl-button--small bb-rl-media-edit-document-close" id="bp-media-edit-document-cancel" href="#"><?php esc_html_e( 'Cancel', 'buddyboss' ); ?></a>
-						<a class="button bb-rl-button bb-rl-button--brandFill bb-rl-button--small" id="bp-media-edit-document-submit" href="#"><?php esc_html_e( 'Save', 'buddyboss' ); ?></a>
+						<a class="button bb-rl-button bb-rl-button--secondaryFill bb-rl-button--small bb-rl-media-edit-document-close" id="bp-media-edit-document-cancel" href="#"><?php esc_html_e( 'Cancel', 'buddyboss-platform' ); ?></a>
+						<a class="button bb-rl-button bb-rl-button--brandFill bb-rl-button--small" id="bp-media-edit-document-submit" href="#"><?php esc_html_e( 'Save', 'buddyboss-platform' ); ?></a>
 					</footer>
 				</div>
 			</div>

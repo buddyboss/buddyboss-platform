@@ -14,11 +14,11 @@ bp_nouveau_wp_profile_hooks( 'before' ); ?>
 	<h2 class="screen-heading wp-profile-screen">
 		<?php
 		if ( bp_is_my_profile() ) {
-			esc_html_e( 'My Profile', 'buddyboss' );
+			esc_html_e( 'My Profile', 'buddyboss-platform' );
 		} else {
 			printf(
 				/* Translators: a member's profile, e.g. "Paul's profile". */
-				__( "%s's Profile", 'buddyboss' ),
+				__( "%s's Profile", 'buddyboss-platform' ),
 				bp_get_displayed_user_fullname()
 			);
 		}

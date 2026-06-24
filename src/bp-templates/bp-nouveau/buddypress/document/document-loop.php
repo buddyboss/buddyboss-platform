@@ -46,13 +46,13 @@ if ( bp_has_document( bp_ajax_querystring( 'document' ) ) ) :
 		<div class="document-data-table-head">
 			<div class="data-head data-head-name <?php echo esc_attr( $active_title_class ); ?>" data-target="name">
 				<span>
-					<?php esc_html_e( 'Name', 'buddyboss' ); ?>
+					<?php esc_html_e( 'Name', 'buddyboss-platform' ); ?>
 					<i class="bb-icon-f bb-icon-caret-down"></i>
 				</span>
 			</div>
 			<div class="data-head data-head-modified <?php echo esc_attr( $active_date_class ); ?>" data-target="modified">
 				<span>
-					<?php esc_html_e( 'Modified', 'buddyboss' ); ?>
+					<?php esc_html_e( 'Modified', 'buddyboss-platform' ); ?>
 					<i class="bb-icon-f bb-icon-caret-down"></i>
 				</span>
 			</div>
@@ -61,7 +61,7 @@ if ( bp_has_document( bp_ajax_querystring( 'document' ) ) ) :
 				if ( bp_is_document_directory() && bp_is_active( 'groups' ) && ( ( isset( $scope ) && 'personal' !== $scope ) || bp_is_document_directory() ) ) {
 					?>
 					<span>
-					<?php esc_html_e( 'Group', 'buddyboss' ); ?>
+					<?php esc_html_e( 'Group', 'buddyboss-platform' ); ?>
 						<i class="bb-icon-f bb-icon-caret-down"></i>
 					</span>
 					<?php
@@ -71,7 +71,7 @@ if ( bp_has_document( bp_ajax_querystring( 'document' ) ) ) :
 
 			<div class="data-head data-head-visibility <?php echo esc_attr( $active_privacy_class ); ?>" data-target="visibility">
 				<span>
-					<?php esc_html_e( 'Visibility', 'buddyboss' ); ?>
+					<?php esc_html_e( 'Visibility', 'buddyboss-platform' ); ?>
 					<i class="bb-icon-f bb-icon-caret-down"></i>
 				</span>
 			</div>
@@ -93,7 +93,7 @@ if ( bp_has_document( bp_ajax_querystring( 'document' ) ) ) :
 		?>
 		<div class="pager">
 			<div class="dt-more-container load-more">
-				<a class="button outline full" href="<?php bp_document_load_more_link(); ?>"><?php esc_html_e( 'Load More', 'buddyboss' ); ?></a>
+				<a class="button outline full" href="<?php bp_document_load_more_link(); ?>"><?php esc_html_e( 'Load More', 'buddyboss-platform' ); ?></a>
 			</div>
 		</div>
 		<?php

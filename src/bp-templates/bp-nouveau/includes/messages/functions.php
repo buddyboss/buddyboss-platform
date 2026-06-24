@@ -154,55 +154,55 @@ function bp_nouveau_messages_localize_scripts( $params = array() ) {
 
 	$params['messages'] = array(
 		'i18n'                       => array(
-			'search_recipients' => __( 'Search members', 'buddyboss' ),
+			'search_recipients' => __( 'Search members', 'buddyboss-platform' ),
 		),
 		'errors'                     => array(
-			'send_to'         => __( 'Please add at least one recipient.', 'buddyboss' ),
-			'message_content' => __( 'Please add some content to your message.', 'buddyboss' ),
-			'no_messages'     => __( 'Sorry, no messages were found.', 'buddyboss' ),
-			'media_fail'      => __( 'To change the media type, remove existing media from your post.', 'buddyboss' ),
+			'send_to'         => __( 'Please add at least one recipient.', 'buddyboss-platform' ),
+			'message_content' => __( 'Please add some content to your message.', 'buddyboss-platform' ),
+			'no_messages'     => __( 'Sorry, no messages were found.', 'buddyboss-platform' ),
+			'media_fail'      => __( 'To change the media type, remove existing media from your post.', 'buddyboss-platform' ),
 		),
 		'nonces'                     => array(
 			'send'           => wp_create_nonce( 'messages_send_message' ),
 			'load_recipient' => wp_create_nonce( 'messages_load_recipient' ),
 		),
-		'loading'                    => __( 'Loading messages.', 'buddyboss' ),
+		'loading'                    => __( 'Loading messages.', 'buddyboss-platform' ),
 		'doingAction'                => array(
-			'read'          => __( 'Marking read.', 'buddyboss' ),
-			'unread'        => __( 'Marking unread.', 'buddyboss' ),
-			'delete'        => __( 'Deleting messages.', 'buddyboss' ),
-			'star'          => __( 'Starring messages.', 'buddyboss' ),
-			'unstar'        => __( 'Unstarring messages.', 'buddyboss' ),
-			'hide_thread'   => __( 'Archiving conversation.', 'buddyboss' ),
-			'unhide_thread' => __( 'Unarchiving conversation.', 'buddyboss' ),
+			'read'          => __( 'Marking read.', 'buddyboss-platform' ),
+			'unread'        => __( 'Marking unread.', 'buddyboss-platform' ),
+			'delete'        => __( 'Deleting messages.', 'buddyboss-platform' ),
+			'star'          => __( 'Starring messages.', 'buddyboss-platform' ),
+			'unstar'        => __( 'Unstarring messages.', 'buddyboss-platform' ),
+			'hide_thread'   => __( 'Archiving conversation.', 'buddyboss-platform' ),
+			'unhide_thread' => __( 'Unarchiving conversation.', 'buddyboss-platform' ),
 		),
-		'type_message'               => __( 'Write a message...', 'buddyboss' ),
-		'delete_confirmation'        => __( 'Are you sure you want to permanently delete all of your messages from this conversation? This cannot be undone.', 'buddyboss' ),
-		'delete_thread_confirmation' => __( 'As a site admin you are able to delete conversations. Are you sure you want to permanently delete this conversation and all of its messages? This cannot be undone.', 'buddyboss' ),
+		'type_message'               => __( 'Write a message...', 'buddyboss-platform' ),
+		'delete_confirmation'        => __( 'Are you sure you want to permanently delete all of your messages from this conversation? This cannot be undone.', 'buddyboss-platform' ),
+		'delete_thread_confirmation' => __( 'As a site admin you are able to delete conversations. Are you sure you want to permanently delete this conversation and all of its messages? This cannot be undone.', 'buddyboss-platform' ),
 		'bulk_actions'               => bp_nouveau_messages_get_bulk_actions(),
-		'howtoBulk'                  => __( 'Use the select box to define your bulk action and click on the &#10003; button to apply.', 'buddyboss' ),
+		'howtoBulk'                  => __( 'Use the select box to define your bulk action and click on the &#10003; button to apply.', 'buddyboss-platform' ),
 		'toOthers'                   => array(
-			'one'   => __( '1 other', 'buddyboss' ),
+			'one'   => __( '1 other', 'buddyboss-platform' ),
 			/* translators: %d: number of other recipients. */
-			'more'  => __( '%d others', 'buddyboss' ),
-			'other' => __( 'others', 'buddyboss' ),
+			'more'  => __( '%d others', 'buddyboss-platform' ),
+			'other' => __( 'others', 'buddyboss-platform' ),
 		),
 		'rootUrl'                    => urldecode( wp_parse_url( trailingslashit( bp_displayed_user_domain() . bp_get_messages_slug() ), PHP_URL_PATH ) ),
 		'hasThreads'                 => bp_has_message_threads( bp_ajax_querystring( 'messages' ) ),
-		'today'                      => __( 'Today', 'buddyboss' ),
+		'today'                      => __( 'Today', 'buddyboss-platform' ),
 		'video_default_url'          => ( function_exists( 'bb_get_video_default_placeholder_image' ) && ! empty( bb_get_video_default_placeholder_image() ) ? bb_get_video_default_placeholder_image() : '' ),
 		'message_url'                => trailingslashit( bp_loggedin_user_domain() . bp_get_messages_slug() ),
 		'message_archived_url'       => trailingslashit( bb_get_messages_archived_url() ),
 		'current_thread_id'          => (int) bp_action_variable( 0 ),
 		'is_blocked_by_members'      => function_exists( 'bb_moderation_get_blocked_by_user_ids' ) ? bb_moderation_get_blocked_by_user_ids( get_current_user_id() ) : array(),
 		'current_thread_type'        => $current_thread_type,
-		'gif_media'                  => __( 'Sent a gif', 'buddyboss' ),
-		'single_media'               => __( 'Sent a photo', 'buddyboss' ),
-		'multiple_media'             => __( 'Sent some photos', 'buddyboss' ),
-		'single_video'               => __( 'Sent a video', 'buddyboss' ),
-		'multiple_video'             => __( 'Sent some videos', 'buddyboss' ),
-		'single_document'            => __( 'Sent a document', 'buddyboss' ),
-		'multiple_document'          => __( 'Sent some documents', 'buddyboss' ),
+		'gif_media'                  => __( 'Sent a gif', 'buddyboss-platform' ),
+		'single_media'               => __( 'Sent a photo', 'buddyboss-platform' ),
+		'multiple_media'             => __( 'Sent some photos', 'buddyboss-platform' ),
+		'single_video'               => __( 'Sent a video', 'buddyboss-platform' ),
+		'multiple_video'             => __( 'Sent some videos', 'buddyboss-platform' ),
+		'single_document'            => __( 'Sent a document', 'buddyboss-platform' ),
+		'multiple_document'          => __( 'Sent some documents', 'buddyboss-platform' ),
 	);
 
 	// Star private messages.
@@ -211,12 +211,12 @@ function bp_nouveau_messages_localize_scripts( $params = array() ) {
 			$params['messages'],
 			array(
 				'strings'          => array(
-					'text_unstar'         => __( 'Unstar', 'buddyboss' ),
-					'text_star'           => __( 'Star', 'buddyboss' ),
-					'title_unstar'        => __( 'Starred', 'buddyboss' ),
-					'title_star'          => __( 'Not starred', 'buddyboss' ),
-					'title_unstar_thread' => __( 'Remove all starred messages in this thread', 'buddyboss' ),
-					'title_star_thread'   => __( 'Star the first message in this thread', 'buddyboss' ),
+					'text_unstar'         => __( 'Unstar', 'buddyboss-platform' ),
+					'text_star'           => __( 'Star', 'buddyboss-platform' ),
+					'title_unstar'        => __( 'Starred', 'buddyboss-platform' ),
+					'title_star'          => __( 'Not starred', 'buddyboss-platform' ),
+					'title_unstar_thread' => __( 'Remove all starred messages in this thread', 'buddyboss-platform' ),
+					'title_star_thread'   => __( 'Star the first message in this thread', 'buddyboss-platform' ),
 				),
 				'is_single_thread' => (int) bp_is_messages_conversation(),
 				'star_counter'     => 0,
@@ -339,7 +339,7 @@ function bp_nouveau_format_notice_notification_for_user( $array ) {
 	}
 
 	return array(
-		'text' => __( 'New sitewide notice', 'buddyboss' ),
+		'text' => __( 'New sitewide notice', 'buddyboss-platform' ),
 		'link' => bp_loggedin_user_domain(),
 	);
 }
@@ -575,7 +575,7 @@ function bp_nouveau_messages_notification_filters() {
 	bp_nouveau_notifications_register_filter(
 		array(
 			'id'       => 'new_message',
-			'label'    => __( 'New private messages', 'buddyboss' ),
+			'label'    => __( 'New private messages', 'buddyboss-platform' ),
 			'position' => 115,
 		)
 	);

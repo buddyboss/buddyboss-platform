@@ -365,7 +365,7 @@ function AppInner() {
 	return (
 		<div className="bb-admin-app">
 			<a href="#bb-admin-settings-main" className="screen-reader-shortcut">
-				{ __( 'Skip to settings content', 'buddyboss' ) }
+				{ __( 'Skip to settings content', 'buddyboss-platform' ) }
 			</a>
 			<Header
 				onNavigate={setCurrentRoute}

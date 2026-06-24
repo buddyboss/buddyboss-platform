@@ -148,7 +148,7 @@ export default function KBLanding() {
 		return (
 			<div className="bb-kb-landing">
 				<div className="bb-kb-landing__error" role="alert">
-					{ __( 'Couldn’t load documentation.', 'buddyboss' ) }
+					{ __( 'Couldn’t load documentation.', 'buddyboss-platform' ) }
 					<button
 						type="button"
 						className="components-button is-primary"
@@ -161,7 +161,7 @@ export default function KBLanding() {
 							setRetry( ( c ) => c + 1 );
 						} }
 					>
-						{ __( 'Retry', 'buddyboss' ) }
+						{ __( 'Retry', 'buddyboss-platform' ) }
 					</button>
 				</div>
 			</div>
@@ -171,7 +171,7 @@ export default function KBLanding() {
 	return (
 		<div className="bb-kb-landing">
 			<h2 className="bb-kb-landing__title">
-				{ __( 'BuddyBoss Knowledge Base', 'buddyboss' ) }
+				{ __( 'BuddyBoss Knowledge Base', 'buddyboss-platform' ) }
 			</h2>
 			<ul className="bb-kb-landing__grid" role="list">
 				{ cards.map( ( cat ) => (
@@ -186,7 +186,7 @@ export default function KBLanding() {
 							<p className="bb-kb-card__description">{ cat.description }</p>
 							<span className="bb-kb-card__count">
 								{ sprintf(
-									_n( '%d article', '%d articles', cat.count, 'buddyboss' ),
+									_n( '%d article', '%d articles', cat.count, 'buddyboss-platform' ),
 									cat.count
 								) }
 							</span>

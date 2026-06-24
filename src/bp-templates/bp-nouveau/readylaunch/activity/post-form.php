@@ -44,7 +44,7 @@ if ( ! bp_is_active( 'media' ) ) {
 	$media_enabled_class = ' media-off';
 }
 ?>
-	<h2 class="bb-rl-screen-reader-text"><?php esc_html_e( 'Post Update', 'buddyboss' ); ?></h2>
+	<h2 class="bb-rl-screen-reader-text"><?php esc_html_e( 'Post Update', 'buddyboss-platform' ); ?></h2>
 	<div id="bb-rl-activity-form-placeholder" class="bb-rl-activity-form-placeholder-<?php echo esc_attr( $media_enabled_class . $bp_hide_class ); ?>"></div>
 	<div id="bb-rl-activity-form" class="bb-rl-activity-update-form<?php echo esc_attr( $media_enabled_class . $bp_hide_class ); ?>"></div>
 <?php

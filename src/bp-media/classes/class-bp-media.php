@@ -788,18 +788,18 @@ class BP_Media {
 				$group_name = bp_get_group_name( $group );
 				$status     = bp_get_group_status( $group );
 				if ( 'hidden' === $status || 'private' === $status ) {
-					$visibility = esc_html__( 'Group Members', 'buddyboss' );
+					$visibility = esc_html__( 'Group Members', 'buddyboss-platform' );
 				} else {
 					$visibility = ucfirst( $status );
 				}
 			} else {
 				$media_privacy = bp_media_get_visibility_levels();
 				if ( 'friends' === $media->privacy && bp_loggedin_user_id() !== (int) $media->user_id ) {
-					$visibility = esc_html__( 'Connections', 'buddyboss' );
+					$visibility = esc_html__( 'Connections', 'buddyboss-platform' );
 				} elseif ( 'message' === $media->privacy ) {
-					$visibility = esc_html__( 'Message', 'buddyboss' );
+					$visibility = esc_html__( 'Message', 'buddyboss-platform' );
 				} elseif ( 'forums' === $media->privacy ) {
-					$visibility = esc_html__( 'Forums', 'buddyboss' );
+					$visibility = esc_html__( 'Forums', 'buddyboss-platform' );
 				} else {
 					$visibility = ( isset( $media_privacy[ $media->privacy ] ) ) ? ucfirst( $media_privacy[ $media->privacy ] ) : '';
 				}

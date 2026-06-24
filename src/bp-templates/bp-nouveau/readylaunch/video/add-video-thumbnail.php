@@ -21,7 +21,7 @@ defined( 'ABSPATH' ) || exit;
 				<div class="bb-rl-modal-container">
 					<header class="bb-rl-modal-header">
 						<h4 class="bb-rl-video-thumbnail-upload-tab bb-rl-thumbnail-upload-tab selected bb-rl-video-thumbnail-uploader-modal-title" data-content="bp-video-thumbnail-dropzone-content">
-							<?php esc_html_e( 'Change Thumbnail', 'buddyboss' ); ?>
+							<?php esc_html_e( 'Change Thumbnail', 'buddyboss-platform' ); ?>
 						</h4>
 						<span id="bb-rl-video-thumbnail-uploader-modal-status-text" style="display: none;"></span>
 						<a class="bb-rl-modal-close-button bb-rl-video-thumbnail-uploader-close" id="" href="#">
@@ -34,13 +34,13 @@ defined( 'ABSPATH' ) || exit;
 								<li class="lg-grid-1-5 md-grid-1-3 sm-grid-1-3 bb_rl_thumb_loader">
 									<div class="bb-rl-video-thumb-block">
 										<i class="bb-rl-loader"></i>
-										<span><?php esc_html_e( 'Generating thumbnail…', 'buddyboss' ); ?></span>
+										<span><?php esc_html_e( 'Generating thumbnail…', 'buddyboss-platform' ); ?></span>
 									</div>
 								</li>
 								<li class="lg-grid-1-5 md-grid-1-3 sm-grid-1-3 bb_rl_thumb_loader">
 									<div class="bb-rl-video-thumb-block">
 										<i class="bb-rl-loader"></i>
-										<span><?php esc_html_e( 'Generating thumbnail…', 'buddyboss' ); ?></span>
+										<span><?php esc_html_e( 'Generating thumbnail…', 'buddyboss-platform' ); ?></span>
 									</div>
 								</li>
 							</ul>
@@ -91,7 +91,7 @@ defined( 'ABSPATH' ) || exit;
 					<input type="hidden" value="" class="bb-rl-video-edit-thumbnail-hidden-video-id">
 					<input type="hidden" value="" class="bb-rl-video-edit-thumbnail-hidden-attachment-id">
 					<footer class="bb-rl-model-footer flex align-items-center">
-						<a class="bb-rl-button bb-rl-button--brandFill bb-rl-button--small bb-rl-video-thumbnail-submit is-disabled" id="" href="#"><?php esc_html_e( 'Change', 'buddyboss' ); ?></a>
+						<a class="bb-rl-button bb-rl-button--brandFill bb-rl-button--small bb-rl-video-thumbnail-submit is-disabled" id="" href="#"><?php esc_html_e( 'Change', 'buddyboss-platform' ); ?></a>
 					</footer>
 				</div>
 			</div>

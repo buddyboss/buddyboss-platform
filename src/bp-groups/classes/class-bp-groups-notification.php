@@ -60,8 +60,8 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 	public function load() {
 		$this->register_notification_group(
 			'groups',
-			esc_html__( 'Social Groups', 'buddyboss' ),
-			esc_html__( 'Social Groups', 'buddyboss' ),
+			esc_html__( 'Social Groups', 'buddyboss-platform' ),
+			esc_html__( 'Social Groups', 'buddyboss-platform' ),
 			9
 		);
 
@@ -91,19 +91,19 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 		$this->register_notification_for_group_subscriptions();
 
 		$this->register_notification_filter(
-			esc_html__( 'Group invitations and requests', 'buddyboss' ),
+			esc_html__( 'Group invitations and requests', 'buddyboss-platform' ),
 			array( 'bb_groups_new_invite', 'bb_groups_new_request', 'bb_groups_request_accepted', 'bb_groups_request_rejected' ),
 			60
 		);
 
 		$this->register_notification_filter(
-			esc_html__( 'Group promotions', 'buddyboss' ),
+			esc_html__( 'Group promotions', 'buddyboss-platform' ),
 			array( 'bb_groups_promoted' ),
 			75
 		);
 
 		$this->register_notification_filter(
-			esc_html__( 'Group details changed', 'buddyboss' ),
+			esc_html__( 'Group details changed', 'buddyboss-platform' ),
 			array( 'bb_groups_details_updated' ),
 			80
 		);
@@ -117,8 +117,8 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 	public function register_notification_for_group_updated() {
 		$this->register_notification_type(
 			'bb_groups_details_updated',
-			esc_html__( 'The details of a group you manage are updated', 'buddyboss' ),
-			esc_html__( 'A group\'s details are updated', 'buddyboss' ),
+			esc_html__( 'The details of a group you manage are updated', 'buddyboss-platform' ),
+			esc_html__( 'A group\'s details are updated', 'buddyboss-platform' ),
 			'groups'
 		);
 
@@ -126,13 +126,13 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 			'groups-details-updated',
 			array(
 				/* translators: do not remove {} brackets or translate its contents. */
-				'email_title'         => __( '[{{{site.name}}}] Group details updated', 'buddyboss' ),
+				'email_title'         => __( '[{{{site.name}}}] Group details updated', 'buddyboss-platform' ),
 				/* translators: do not remove {} brackets or translate its contents. */
-				'email_content'       => __( "Group details for the group &quot;<a href=\"{{{group.url}}}\">{{group.name}}</a>&quot; were updated.\n\n{{{group.description}}}\n\n{{{group.small_card}}}", 'buddyboss' ),
+				'email_content'       => __( "Group details for the group &quot;<a href=\"{{{group.url}}}\">{{group.name}}</a>&quot; were updated.\n\n{{{group.description}}}\n\n{{{group.small_card}}}", 'buddyboss-platform' ),
 				/* translators: do not remove {} brackets or translate its contents. */
-				'email_plain_content' => __( "Group details for the group \"{{group.name}}\" were updated:\n\n{{changed_text}}\n\nTo view the group, visit: {{{group.url}}}", 'buddyboss' ),
-				'situation_label'     => __( "A group's details are updated", 'buddyboss' ),
-				'unsubscribe_text'    => __( 'You will no longer receive emails when one of your groups is updated.', 'buddyboss' ),
+				'email_plain_content' => __( "Group details for the group \"{{group.name}}\" were updated:\n\n{{changed_text}}\n\nTo view the group, visit: {{{group.url}}}", 'buddyboss-platform' ),
+				'situation_label'     => __( "A group's details are updated", 'buddyboss-platform' ),
+				'unsubscribe_text'    => __( 'You will no longer receive emails when one of your groups is updated.', 'buddyboss-platform' ),
 				'group'               => 'groups_discussions',
 			),
 			'bb_groups_details_updated'
@@ -155,8 +155,8 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 	public function register_notification_for_group_user_promotion() {
 		$this->register_notification_type(
 			'bb_groups_promoted',
-			__( 'You\'re promoted in a group', 'buddyboss' ),
-			__( 'A member is promoted in a group', 'buddyboss' ),
+			__( 'You\'re promoted in a group', 'buddyboss-platform' ),
+			__( 'A member is promoted in a group', 'buddyboss-platform' ),
 			'groups'
 		);
 
@@ -164,13 +164,13 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 			'groups-member-promoted',
 			array(
 				/* translators: do not remove {} brackets or translate its contents. */
-				'email_title'         => __( '[{{{site.name}}}] You have been promoted in the group: "{{group.name}}"', 'buddyboss' ),
+				'email_title'         => __( '[{{{site.name}}}] You have been promoted in the group: "{{group.name}}"', 'buddyboss-platform' ),
 				/* translators: do not remove {} brackets or translate its contents. */
-				'email_content'       => __( "You have been promoted to <b>{{promoted_to}}</b> in the group &quot;<a href=\"{{{group.url}}}\">{{group.name}}</a>&quot;.\n\n{{{group.small_card}}}", 'buddyboss' ),
+				'email_content'       => __( "You have been promoted to <b>{{promoted_to}}</b> in the group &quot;<a href=\"{{{group.url}}}\">{{group.name}}</a>&quot;.\n\n{{{group.small_card}}}", 'buddyboss-platform' ),
 				/* translators: do not remove {} brackets or translate its contents. */
-				'email_plain_content' => __( "You have been promoted to {{promoted_to}} in the group: \"{{group.name}}\".\n\nTo visit the group, go to: {{{group.url}}}", 'buddyboss' ),
-				'situation_label'     => __( 'A member is promoted in a group', 'buddyboss' ),
-				'unsubscribe_text'    => __( 'You will no longer receive emails when you have been promoted in a group.', 'buddyboss' ),
+				'email_plain_content' => __( "You have been promoted to {{promoted_to}} in the group: \"{{group.name}}\".\n\nTo visit the group, go to: {{{group.url}}}", 'buddyboss-platform' ),
+				'situation_label'     => __( 'A member is promoted in a group', 'buddyboss-platform' ),
+				'unsubscribe_text'    => __( 'You will no longer receive emails when you have been promoted in a group.', 'buddyboss-platform' ),
 				'group'               => 'groups_discussions',
 			),
 			'bb_groups_promoted'
@@ -193,8 +193,8 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 	public function register_notification_for_group_invite() {
 		$this->register_notification_type(
 			'bb_groups_new_invite',
-			esc_html__( 'You receive a new invite to join a group', 'buddyboss' ),
-			esc_html__( 'A member receives an invite to join a group', 'buddyboss' ),
+			esc_html__( 'You receive a new invite to join a group', 'buddyboss-platform' ),
+			esc_html__( 'A member receives an invite to join a group', 'buddyboss-platform' ),
 			'groups'
 		);
 
@@ -202,13 +202,13 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 			'groups-invitation',
 			array(
 				/* translators: do not remove {} brackets or translate its contents. */
-				'email_title'         => __( '[{{{site.name}}}] You have an invitation to the group: "{{group.name}}"', 'buddyboss' ),
+				'email_title'         => __( '[{{{site.name}}}] You have an invitation to the group: "{{group.name}}"', 'buddyboss-platform' ),
 				/* translators: do not remove {} brackets or translate its contents. */
-				'email_content'       => __( "<a href=\"{{{inviter.url}}}\">{{inviter.name}}</a> has invited you to join the group: <a href=\"{{{group.url}}}\">{{group.name}}</a>.\n\n{{{group.invite_message}}}\n\n{{{group.small_card}}}\n\n<a href=\"{{{invites.url}}}\">Click here</a> to manage this and all other pending group invites.", 'buddyboss' ),
+				'email_content'       => __( "<a href=\"{{{inviter.url}}}\">{{inviter.name}}</a> has invited you to join the group: <a href=\"{{{group.url}}}\">{{group.name}}</a>.\n\n{{{group.invite_message}}}\n\n{{{group.small_card}}}\n\n<a href=\"{{{invites.url}}}\">Click here</a> to manage this and all other pending group invites.", 'buddyboss-platform' ),
 				/* translators: do not remove {} brackets or translate its contents. */
-				'email_plain_content' => __( "{{inviter.name}} has invited you to join the group: \"{{group.name}}\".\n\n{{{group.invite_message}}}\n\nTo accept your invitation, visit: {{{invites.url}}}\n\nTo learn more about the group, visit: {{{group.url}}}.\nTo view {{inviter.name}}'s profile, visit: {{{inviter.url}}}", 'buddyboss' ),
-				'situation_label'     => __( 'A member receives an invite to join a group', 'buddyboss' ),
-				'unsubscribe_text'    => __( 'You will no longer receive emails when you are invited to join a group.', 'buddyboss' ),
+				'email_plain_content' => __( "{{inviter.name}} has invited you to join the group: \"{{group.name}}\".\n\n{{{group.invite_message}}}\n\nTo accept your invitation, visit: {{{invites.url}}}\n\nTo learn more about the group, visit: {{{group.url}}}.\nTo view {{inviter.name}}'s profile, visit: {{{inviter.url}}}", 'buddyboss-platform' ),
+				'situation_label'     => __( 'A member receives an invite to join a group', 'buddyboss-platform' ),
+				'unsubscribe_text'    => __( 'You will no longer receive emails when you are invited to join a group.', 'buddyboss-platform' ),
 				'group'               => 'groups_discussions',
 			),
 			'bb_groups_new_invite'
@@ -231,8 +231,8 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 	public function register_notification_for_group_membership_request() {
 		$this->register_notification_type(
 			'bb_groups_new_request',
-			esc_html__( 'A member requests to join a group you manage', 'buddyboss' ),
-			esc_html__( 'A group organizer receives a request to join their group', 'buddyboss' ),
+			esc_html__( 'A member requests to join a group you manage', 'buddyboss-platform' ),
+			esc_html__( 'A group organizer receives a request to join their group', 'buddyboss-platform' ),
 			'groups'
 		);
 
@@ -240,13 +240,13 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 			'groups-membership-request',
 			array(
 				/* translators: do not remove {} brackets or translate its contents. */
-				'email_title'         => __( '[{{{site.name}}}] Membership request for group: {{group.name}}', 'buddyboss' ),
+				'email_title'         => __( '[{{{site.name}}}] Membership request for group: {{group.name}}', 'buddyboss-platform' ),
 				/* translators: do not remove {} brackets or translate its contents. */
-				'email_content'       => __( "<a href=\"{{{profile.url}}}\">{{requesting-user.name}}</a> wants to join the group &quot;<a href=\"{{{group.url}}}\">{{group.name}}</a>&quot;. As you are organizer of this group, you must either accept or reject the membership request.\n\n{{{member.card}}}\n\n<a href=\"{{{group-requests.url}}}\">Click here</a> to manage this and all other pending requests.", 'buddyboss' ),
+				'email_content'       => __( "<a href=\"{{{profile.url}}}\">{{requesting-user.name}}</a> wants to join the group &quot;<a href=\"{{{group.url}}}\">{{group.name}}</a>&quot;. As you are organizer of this group, you must either accept or reject the membership request.\n\n{{{member.card}}}\n\n<a href=\"{{{group-requests.url}}}\">Click here</a> to manage this and all other pending requests.", 'buddyboss-platform' ),
 				/* translators: do not remove {} brackets or translate its contents. */
-				'email_plain_content' => __( "{{requesting-user.name}} wants to join the group \"{{group.name}}\". As you are the organizer of this group, you must either accept or reject the membership request.\n\nTo manage this and all other pending requests, visit: {{{group-requests.url}}}\n\nTo view {{requesting-user.name}}'s profile, visit: {{{profile.url}}}", 'buddyboss' ),
-				'situation_label'     => __( 'A group organizer receives a request to join their group', 'buddyboss' ),
-				'unsubscribe_text'    => __( 'You will no longer receive emails when someone requests to be a member of your group.', 'buddyboss' ),
+				'email_plain_content' => __( "{{requesting-user.name}} wants to join the group \"{{group.name}}\". As you are the organizer of this group, you must either accept or reject the membership request.\n\nTo manage this and all other pending requests, visit: {{{group-requests.url}}}\n\nTo view {{requesting-user.name}}'s profile, visit: {{{profile.url}}}", 'buddyboss-platform' ),
+				'situation_label'     => __( 'A group organizer receives a request to join their group', 'buddyboss-platform' ),
+				'unsubscribe_text'    => __( 'You will no longer receive emails when someone requests to be a member of your group.', 'buddyboss-platform' ),
 				'group'               => 'groups_discussions',
 			),
 			'bb_groups_new_request'
@@ -270,8 +270,8 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 	public function register_notification_for_group_membership_request_accepted() {
 		$this->register_notification_type(
 			'bb_groups_request_accepted',
-			esc_html__( 'Your request to join a group is accepted', 'buddyboss' ),
-			esc_html__( 'A member is accepted into a group', 'buddyboss' ),
+			esc_html__( 'Your request to join a group is accepted', 'buddyboss-platform' ),
+			esc_html__( 'A member is accepted into a group', 'buddyboss-platform' ),
 			'groups'
 		);
 
@@ -279,13 +279,13 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 			'groups-membership-request-accepted',
 			array(
 				/* translators: do not remove {} brackets or translate its contents. */
-				'email_title'         => __( '[{{{site.name}}}] Membership request for group "{{group.name}}" accepted', 'buddyboss' ),
+				'email_title'         => __( '[{{{site.name}}}] Membership request for group "{{group.name}}" accepted', 'buddyboss-platform' ),
 				/* translators: do not remove {} brackets or translate its contents. */
-				'email_content'       => __( "Your membership request for the group &quot;<a href=\"{{{group.url}}}\">{{group.name}}</a>&quot; has been accepted.\n\n{{{group.small_card}}}", 'buddyboss' ),
+				'email_content'       => __( "Your membership request for the group &quot;<a href=\"{{{group.url}}}\">{{group.name}}</a>&quot; has been accepted.\n\n{{{group.small_card}}}", 'buddyboss-platform' ),
 				/* translators: do not remove {} brackets or translate its contents. */
-				'email_plain_content' => __( "Your membership request for the group \"{{group.name}}\" has been accepted.\n\nTo view the group, visit: {{{group.url}}}", 'buddyboss' ),
-				'situation_label'     => __( 'A member is accepted into a group', 'buddyboss' ),
-				'unsubscribe_text'    => __( 'You will no longer receive emails when your request to join a group has been accepted or denied.', 'buddyboss' ),
+				'email_plain_content' => __( "Your membership request for the group \"{{group.name}}\" has been accepted.\n\nTo view the group, visit: {{{group.url}}}", 'buddyboss-platform' ),
+				'situation_label'     => __( 'A member is accepted into a group', 'buddyboss-platform' ),
+				'unsubscribe_text'    => __( 'You will no longer receive emails when your request to join a group has been accepted or denied.', 'buddyboss-platform' ),
 				'group'               => 'groups_discussions',
 			),
 			'bb_groups_request_accepted'
@@ -309,8 +309,8 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 	public function register_notification_for_group_membership_request_rejected() {
 		$this->register_notification_type(
 			'bb_groups_request_rejected',
-			esc_html__( 'Your request to join a group is rejected', 'buddyboss' ),
-			esc_html__( 'A member is rejected from joining a group', 'buddyboss' ),
+			esc_html__( 'Your request to join a group is rejected', 'buddyboss-platform' ),
+			esc_html__( 'A member is rejected from joining a group', 'buddyboss-platform' ),
 			'groups'
 		);
 
@@ -318,13 +318,13 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 			'groups-membership-request-rejected',
 			array(
 				/* translators: do not remove {} brackets or translate its contents. */
-				'email_title'         => __( '[{{{site.name}}}] Membership request for group "{{group.name}}" rejected', 'buddyboss' ),
+				'email_title'         => __( '[{{{site.name}}}] Membership request for group "{{group.name}}" rejected', 'buddyboss-platform' ),
 				/* translators: do not remove {} brackets or translate its contents. */
-				'email_content'       => __( "Your membership request for the group &quot;<a href=\"{{{group.url}}}\">{{group.name}}</a>&quot; has been rejected.\n\n{{{group.small_card}}}", 'buddyboss' ),
+				'email_content'       => __( "Your membership request for the group &quot;<a href=\"{{{group.url}}}\">{{group.name}}</a>&quot; has been rejected.\n\n{{{group.small_card}}}", 'buddyboss-platform' ),
 				/* translators: do not remove {} brackets or translate its contents. */
-				'email_plain_content' => __( "Your membership request for the group \"{{group.name}}\" has been rejected.\n\nTo request membership again, visit: {{{group.url}}}", 'buddyboss' ),
-				'situation_label'     => __( 'A member is rejected from joining a group', 'buddyboss' ),
-				'unsubscribe_text'    => __( 'You will no longer receive emails when your request to join a group has been accepted or denied.', 'buddyboss' ),
+				'email_plain_content' => __( "Your membership request for the group \"{{group.name}}\" has been rejected.\n\nTo request membership again, visit: {{{group.url}}}", 'buddyboss-platform' ),
+				'situation_label'     => __( 'A member is rejected from joining a group', 'buddyboss-platform' ),
+				'unsubscribe_text'    => __( 'You will no longer receive emails when your request to join a group has been accepted or denied.', 'buddyboss-platform' ),
 				'group'               => 'groups_discussions',
 			),
 			'bb_groups_request_rejected'
@@ -347,8 +347,8 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 	public function register_notification_for_group_user_messages() {
 		$this->register_notification_type(
 			'bb_groups_new_message',
-			esc_html__( 'You receive a new group message', 'buddyboss' ),
-			esc_html__( 'A member receives a new group message', 'buddyboss' ),
+			esc_html__( 'You receive a new group message', 'buddyboss-platform' ),
+			esc_html__( 'A member receives a new group message', 'buddyboss-platform' ),
 			'groups'
 		);
 
@@ -356,13 +356,13 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 			'group-message-email',
 			array(
 				/* translators: do not remove {} brackets or translate its contents. */
-				'email_title'         => __( '[{{{site.name}}}] New message from group: "{{{group.name}}}"', 'buddyboss' ),
+				'email_title'         => __( '[{{{site.name}}}] New message from group: "{{{group.name}}}"', 'buddyboss-platform' ),
 				/* translators: do not remove {} brackets or translate its contents. */
-				'email_content'       => __( "{{{sender.name}}} from {{{group.name}}} sent you a message.\n\n{{{message}}}", 'buddyboss' ),
+				'email_content'       => __( "{{{sender.name}}} from {{{group.name}}} sent you a message.\n\n{{{message}}}", 'buddyboss-platform' ),
 				/* translators: do not remove {} brackets or translate its contents. */
-				'email_plain_content' => __( "{{{sender.name}}} from {{{group.name}}} sent you a message.\n\n{{{message}}}\"\n\nGo to the discussion to reply or catch up on the conversation: {{{message.url}}}", 'buddyboss' ),
-				'situation_label'     => __( 'A member receives a new group message', 'buddyboss' ),
-				'unsubscribe_text'    => __( 'You will no longer receive emails when someone sends you a group message.', 'buddyboss' ),
+				'email_plain_content' => __( "{{{sender.name}}} from {{{group.name}}} sent you a message.\n\n{{{message}}}\"\n\nGo to the discussion to reply or catch up on the conversation: {{{message.url}}}", 'buddyboss-platform' ),
+				'situation_label'     => __( 'A member receives a new group message', 'buddyboss-platform' ),
+				'unsubscribe_text'    => __( 'You will no longer receive emails when someone sends you a group message.', 'buddyboss-platform' ),
 				'group'               => 'messages',
 			),
 			'bb_groups_new_message'
@@ -373,13 +373,13 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 				'group-message-digest',
 				array(
 					/* translators: do not remove {} brackets or translate its contents. */
-					'email_title'         => __( '[{{{site.name}}}] New messages from group: "{{{group.name}}}"', 'buddyboss' ),
+					'email_title'         => __( '[{{{site.name}}}] New messages from group: "{{{group.name}}}"', 'buddyboss-platform' ),
 					/* translators: do not remove {} brackets or translate its contents. */
-					'email_content'       => __( "You have {{{unread.count}}} unread messages from {{{group.name}}}.\n\n{{{message}}}", 'buddyboss' ),
+					'email_content'       => __( "You have {{{unread.count}}} unread messages from {{{group.name}}}.\n\n{{{message}}}", 'buddyboss-platform' ),
 					/* translators: do not remove {} brackets or translate its contents. */
-					'email_plain_content' => __( "You have {{{unread.count}}} unread messages from {{{group.name}}}.\n\n{{{message}}}\n\nGo to the discussion to reply or catch up on the conversation: {{{message.url}}}", 'buddyboss' ),
-					'situation_label'     => __( 'A member receives a new group message', 'buddyboss' ),
-					'unsubscribe_text'    => __( 'You will no longer receive emails when someone sends you a group message.', 'buddyboss' ),
+					'email_plain_content' => __( "You have {{{unread.count}}} unread messages from {{{group.name}}}.\n\n{{{message}}}\n\nGo to the discussion to reply or catch up on the conversation: {{{message.url}}}", 'buddyboss-platform' ),
+					'situation_label'     => __( 'A member receives a new group message', 'buddyboss-platform' ),
+					'unsubscribe_text'    => __( 'You will no longer receive emails when someone sends you a group message.', 'buddyboss-platform' ),
 					'group'               => 'messages',
 				),
 				'bb_groups_new_message'
@@ -445,12 +445,12 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 			$title             = bp_get_group_name( $group );
 
 			if ( 'web_push' === $screen ) {
-				$text = __( 'The group details were updated', 'buddyboss' );
+				$text = __( 'The group details were updated', 'buddyboss-platform' );
 			} else {
 				if ( (int) $total_items > 1 ) {
 					$text = sprintf(
 						/* translators: 1. group name. 2. total times. */
-						esc_html__( 'The group details for "%1$s" were updated %2$d times.', 'buddyboss' ),
+						esc_html__( 'The group details for "%1$s" were updated %2$d times.', 'buddyboss-platform' ),
 						$group->name,
 						(int) $total_items
 					);
@@ -458,7 +458,7 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 				} else {
 					$text = sprintf(
 					/* translators: group name */
-						esc_html__( 'The group details for "%s" were updated', 'buddyboss' ),
+						esc_html__( 'The group details for "%s" were updated', 'buddyboss-platform' ),
 						$group->name
 					);
 				}
@@ -495,17 +495,17 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 				if ( $promote_text ) {
 					$text = sprintf(
 						/* translators: Promoted text. */
-						__( 'Your role was changed to "%s"', 'buddyboss' ),
+						__( 'Your role was changed to "%s"', 'buddyboss-platform' ),
 						$promote_text
 					);
 				} else {
-					$text = __( 'Your role was changed', 'buddyboss' );
+					$text = __( 'Your role was changed', 'buddyboss-platform' );
 				}
 			} else {
 				if ( (int) $total_items > 1 ) {
 					$text = sprintf(
 						/* translators: 1. User Role name. 2. total times. */
-						__( 'You were promoted to a %1$s in %2$d groups', 'buddyboss' ),
+						__( 'You were promoted to a %1$s in %2$d groups', 'buddyboss-platform' ),
 						$promote_text,
 						(int) $total_items
 					);
@@ -514,14 +514,14 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 					if ( $promote_text ) {
 						$text = sprintf(
 							/* translators: group name */
-							esc_html__( 'Your role in "%1$s" was changed to "%2$s"', 'buddyboss' ),
+							esc_html__( 'Your role in "%1$s" was changed to "%2$s"', 'buddyboss-platform' ),
 							$group->name,
 							$promote_text
 						);
 					} else {
 						$text = sprintf(
 							/* translators: group name */
-							esc_html__( 'Your role in "%1$s" was changed', 'buddyboss' ),
+							esc_html__( 'Your role in "%1$s" was changed', 'buddyboss-platform' ),
 							$group->name
 						);
 					}
@@ -555,21 +555,21 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 
 			if ( 'web_push' === $screen ) {
 				$notification_link = bp_core_get_user_domain( $notification->user_id ) . bp_get_groups_slug() . '/invites/?n=1';
-				$text              = __( 'You\'ve been invited to join this group.', 'buddyboss' );
+				$text              = __( 'You\'ve been invited to join this group.', 'buddyboss-platform' );
 			} else {
 				$notification_link = bp_loggedin_user_domain() . bp_get_groups_slug() . '/invites/?n=1';
 
 				if ( (int) $total_items > 1 ) {
 					$text = sprintf(
 						/* translators: total times. */
-						esc_html__( 'You have %d new group invitations', 'buddyboss' ),
+						esc_html__( 'You have %d new group invitations', 'buddyboss-platform' ),
 						(int) $total_items
 					);
 					$amount = 'multiple';
 				} else {
 					$text = sprintf(
 						/* translators: group name */
-						esc_html__( 'You\'ve been invited to join "%s"', 'buddyboss' ),
+						esc_html__( 'You\'ve been invited to join "%s"', 'buddyboss-platform' ),
 						$group->name
 					);
 				}
@@ -605,14 +605,14 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 				$user_fullname = bp_core_get_user_displayname( $notification->secondary_item_id );
 				$text          = sprintf(
 					/* translators: user name */
-					__( '%s has requested to join this group', 'buddyboss' ),
+					__( '%s has requested to join this group', 'buddyboss-platform' ),
 					$user_fullname
 				);
 			} else {
 				if ( (int) $total_items > 1 ) {
 					$text = sprintf(
 						/* translators: 1. total times. 2. group name */
-						esc_html__( '%1$d new membership requests for the group "%2$s"', 'buddyboss' ),
+						esc_html__( '%1$d new membership requests for the group "%2$s"', 'buddyboss-platform' ),
 						(int) $total_items,
 						$group->name
 					);
@@ -621,7 +621,7 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 					$user_fullname = bp_core_get_user_displayname( $secondary_item_id );
 					$text          = sprintf(
 						/* translators: 1. user name. 2.group name. */
-						esc_html__( '%1$s has requested to join "%2$s"', 'buddyboss' ),
+						esc_html__( '%1$s has requested to join "%2$s"', 'buddyboss-platform' ),
 						$user_fullname,
 						$group->name
 					);
@@ -655,12 +655,12 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 			$title             = bp_get_group_name( $group );
 
 			if ( 'web_push' === $screen ) {
-				$text = __( 'Your request to join has been approved', 'buddyboss' );
+				$text = __( 'Your request to join has been approved', 'buddyboss-platform' );
 			} else {
 				if ( (int) $total_items > 1 ) {
 					$text = sprintf(
 					/* translators: total groups count. */
-						esc_html__( '%d accepted group membership requests', 'buddyboss' ),
+						esc_html__( '%d accepted group membership requests', 'buddyboss-platform' ),
 						(int) $total_items,
 						$group->name
 					);
@@ -670,7 +670,7 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 				} else {
 					$text = sprintf(
 					/* translators: group name. */
-						esc_html__( '%s has approved your request to join', 'buddyboss' ),
+						esc_html__( '%s has approved your request to join', 'buddyboss-platform' ),
 						$group->name
 					);
 				}
@@ -703,12 +703,12 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 			$title             = bp_get_group_name( $group );
 
 			if ( 'web_push' === $screen ) {
-				$text = __( 'Your request to join has been denied', 'buddyboss' );
+				$text = __( 'Your request to join has been denied', 'buddyboss-platform' );
 			} else {
 				if ( (int) $total_items > 1 ) {
 					$text = sprintf(
 					/* translators: total times */
-						esc_html__( '%d rejected group membership requests', 'buddyboss' ),
+						esc_html__( '%d rejected group membership requests', 'buddyboss-platform' ),
 						(int) $total_items,
 						$group->name
 					);
@@ -718,7 +718,7 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 				} else {
 					$text = sprintf(
 					/* translators: group name. */
-						esc_html__( '%s has denied your request to join', 'buddyboss' ),
+						esc_html__( '%s has denied your request to join', 'buddyboss-platform' ),
 						$group->name
 					);
 				}
@@ -777,17 +777,17 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 
 		if ( function_exists( 'bp_is_active' ) && bp_is_active( 'activity' ) ) {
 			// Register the group activity subscription notifications.
-			$activity_notification_tooltip_text = __( 'Requires group subscriptions to enable', 'buddyboss' );
+			$activity_notification_tooltip_text = __( 'Requires group subscriptions to enable', 'buddyboss-platform' );
 			if ( function_exists( 'bb_enable_group_subscriptions' ) && true === bb_enable_group_subscriptions() ) {
-				$activity_notification_tooltip_text = __( 'Required by group subscriptions', 'buddyboss' );
+				$activity_notification_tooltip_text = __( 'Required by group subscriptions', 'buddyboss-platform' );
 			}
 
 			$subscription_types[] = 'bb_groups_subscribed_activity';
 
 			$this->register_notification_type(
 				'bb_groups_subscribed_activity',
-				esc_html__( 'New post in a group you\'re subscribed to', 'buddyboss' ),
-				esc_html__( 'A new activity post in a group a member is subscribed to', 'buddyboss' ),
+				esc_html__( 'New post in a group you\'re subscribed to', 'buddyboss-platform' ),
+				esc_html__( 'A new activity post in a group a member is subscribed to', 'buddyboss-platform' ),
 				'groups',
 				function_exists( 'bb_enable_group_subscriptions' ) && true === bb_enable_group_subscriptions(),
 				true,
@@ -798,13 +798,13 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 				'groups-new-activity',
 				array(
 					/* translators: do not remove {} brackets or translate its contents. */
-					'email_title'         => __( '[{{{site.name}}}] {{poster.name}} posted {{activity.type}} in {{group.name}}', 'buddyboss' ),
+					'email_title'         => __( '[{{{site.name}}}] {{poster.name}} posted {{activity.type}} in {{group.name}}', 'buddyboss-platform' ),
 					/* translators: do not remove {} brackets or translate its contents. */
-					'email_content'       => __( "<a href=\"{{{poster.url}}}\">{{poster.name}}</a> posted {{activity.type}} in <a href=\"{{{group.url}}}\">{{group.name}}</a>:\n\n{{{activity.content}}}", 'buddyboss' ),
+					'email_content'       => __( "<a href=\"{{{poster.url}}}\">{{poster.name}}</a> posted {{activity.type}} in <a href=\"{{{group.url}}}\">{{group.name}}</a>:\n\n{{{activity.content}}}", 'buddyboss-platform' ),
 					/* translators: do not remove {} brackets or translate its contents. */
-					'email_plain_content' => __( "{{poster.name}} posted {{activity.type}} in {{group.name}}:\n\n{{{activity.content}}}\"\n\nView the post: {{{activity.url}}}", 'buddyboss' ),
-					'situation_label'     => __( 'New activity post in a group a member is subscribed to', 'buddyboss' ),
-					'unsubscribe_text'    => __( 'You will no longer receive emails of new posts in groups you are subscribed to.', 'buddyboss' ),
+					'email_plain_content' => __( "{{poster.name}} posted {{activity.type}} in {{group.name}}:\n\n{{{activity.content}}}\"\n\nView the post: {{{activity.url}}}", 'buddyboss-platform' ),
+					'situation_label'     => __( 'New activity post in a group a member is subscribed to', 'buddyboss-platform' ),
+					'unsubscribe_text'    => __( 'You will no longer receive emails of new posts in groups you are subscribed to.', 'buddyboss-platform' ),
 					'group'               => 'groups_discussions',
 				),
 				'bb_groups_subscribed_activity'
@@ -823,15 +823,15 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 		if ( function_exists( 'bp_is_active' ) && bp_is_active( 'forums' ) ) {
 
 			// Register the group discussion subscription notifications.
-			$discussion_notification_tooltip_text = __( 'Requires group subscriptions to enable', 'buddyboss' );
+			$discussion_notification_tooltip_text = __( 'Requires group subscriptions to enable', 'buddyboss-platform' );
 			if ( function_exists( 'bb_enable_group_subscriptions' ) && true === bb_enable_group_subscriptions() ) {
-				$discussion_notification_tooltip_text = __( 'Required by group subscriptions', 'buddyboss' );
+				$discussion_notification_tooltip_text = __( 'Required by group subscriptions', 'buddyboss-platform' );
 			}
 
 			$this->register_notification_type(
 				'bb_groups_subscribed_discussion',
-				esc_html__( 'New discussion in a group you\'re subscribed to', 'buddyboss' ),
-				esc_html__( 'A new discussion in a group a member is subscribed to', 'buddyboss' ),
+				esc_html__( 'New discussion in a group you\'re subscribed to', 'buddyboss-platform' ),
+				esc_html__( 'A new discussion in a group a member is subscribed to', 'buddyboss-platform' ),
 				'groups',
 				function_exists( 'bb_enable_group_subscriptions' ) && true === bb_enable_group_subscriptions(),
 				true,
@@ -842,13 +842,13 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 				'groups-new-discussion',
 				array(
 					/* translators: do not remove {} brackets or translate its contents. */
-					'email_title'         => __( '[{{{site.name}}}] New discussion in {{group.name}}', 'buddyboss' ),
+					'email_title'         => __( '[{{{site.name}}}] New discussion in {{group.name}}', 'buddyboss-platform' ),
 					/* translators: do not remove {} brackets or translate its contents. */
-					'email_content'       => __( "<a href=\"{{{poster.url}}}\">{{poster.name}}</a> created a discussion in <a href=\"{{{group.url}}}\">{{group.name}}</a>:\n\n{{{discussion.content}}}", 'buddyboss' ),
+					'email_content'       => __( "<a href=\"{{{poster.url}}}\">{{poster.name}}</a> created a discussion in <a href=\"{{{group.url}}}\">{{group.name}}</a>:\n\n{{{discussion.content}}}", 'buddyboss-platform' ),
 					/* translators: do not remove {} brackets or translate its contents. */
-					'email_plain_content' => __( "{{poster.name}} created a discussion {{discussion.title}} in {{group.name}}:\n\n{{{discussion.content}}}\n\nDiscussion Link: {{discussion.url}}", 'buddyboss' ),
-					'situation_label'     => __( 'New forum discussion in a group a member is subscribed to', 'buddyboss' ),
-					'unsubscribe_text'    => __( 'You will no longer receive emails of new discussions in groups you are subscribed to.', 'buddyboss' ),
+					'email_plain_content' => __( "{{poster.name}} created a discussion {{discussion.title}} in {{group.name}}:\n\n{{{discussion.content}}}\n\nDiscussion Link: {{discussion.url}}", 'buddyboss-platform' ),
+					'situation_label'     => __( 'New forum discussion in a group a member is subscribed to', 'buddyboss-platform' ),
+					'unsubscribe_text'    => __( 'You will no longer receive emails of new discussions in groups you are subscribed to.', 'buddyboss-platform' ),
 					'group'               => 'groups_discussions',
 				),
 				'bb_groups_subscribed_discussion'
@@ -871,8 +871,8 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 			$this->bb_register_subscription_type(
 				array(
 					'label'              => array(
-						'singular' => __( 'Group', 'buddyboss' ),
-						'plural'   => __( 'Groups', 'buddyboss' ),
+						'singular' => __( 'Group', 'buddyboss-platform' ),
+						'plural'   => __( 'Groups', 'buddyboss-platform' ),
 					),
 					'subscription_type'  => 'group',
 					'items_callback'     => array( $this, 'bb_render_subscribed_groups' ),
@@ -923,7 +923,7 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 		if ( empty( $r['item_id'] ) ) {
 			$retval = new WP_Error(
 				'bb_subscription_required_item_id',
-				__( 'The item ID is required.', 'buddyboss' ),
+				__( 'The item ID is required.', 'buddyboss-platform' ),
 				array(
 					'status' => 400,
 				)
@@ -931,7 +931,7 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 		} elseif ( empty( $r['type'] ) ) {
 			$retval = new WP_Error(
 				'bb_subscription_required_item_type',
-				__( 'The item type is required.', 'buddyboss' ),
+				__( 'The item type is required.', 'buddyboss-platform' ),
 				array(
 					'status' => 400,
 				)
@@ -939,7 +939,7 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 		} elseif ( 'group' !== $r['type'] ) {
 			$retval = new WP_Error(
 				'bb_subscription_invalid_item_id_or_type',
-				__( 'The item id is not matching with the type.', 'buddyboss' ),
+				__( 'The item id is not matching with the type.', 'buddyboss-platform' ),
 				array(
 					'status' => 400,
 				)
@@ -952,7 +952,7 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 			if ( ! empty( $r['secondary_item_id'] ) && $r['secondary_item_id'] !== $group->parent_id ) {
 				$retval = new WP_Error(
 					'bb_subscription_invalid_secondary_item_id',
-					__( 'The secondary item ID is not valid.', 'buddyboss' ),
+					__( 'The secondary item ID is not valid.', 'buddyboss-platform' ),
 					array(
 						'status' => 400,
 					)
@@ -1045,7 +1045,7 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 					$data['icon']['thumb'] = $group_thumb_image;
 					$data['title']         = sprintf(
 					/* translators: Subscription label. */
-						__( 'Deleted %s', 'buddyboss' ),
+						__( 'Deleted %s', 'buddyboss-platform' ),
 						$type_data['label']['singular']
 					);
 				} else {
@@ -1274,7 +1274,7 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 				wp_strip_all_tags( $activity->content ),
 				50,
 				array(
-					'ending' => __( '&hellip;', 'buddyboss' ),
+					'ending' => __( '&hellip;', 'buddyboss-platform' ),
 				)
 			) . '"';
 
@@ -1300,7 +1300,7 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 				if ( ! empty( $activity_excerpt ) ) {
 					$text = sprintf(
 					/* translators: 1: User full name, 2: Activity content. */
-						__( '%1$s posted an update: %2$s', 'buddyboss' ),
+						__( '%1$s posted an update: %2$s', 'buddyboss-platform' ),
 						$user_fullname,
 						$activity_excerpt
 					);
@@ -1309,13 +1309,13 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 					if ( count( $media_ids ) > 1 ) {
 						$text = sprintf(
 						/* translators: User full name. */
-							__( '%1$s posted some photos', 'buddyboss' ),
+							__( '%1$s posted some photos', 'buddyboss-platform' ),
 							$user_fullname
 						);
 					} else {
 						$text = sprintf(
 						/* translators: User full name. */
-							__( '%1$s posted a photo', 'buddyboss' ),
+							__( '%1$s posted a photo', 'buddyboss-platform' ),
 							$user_fullname
 						);
 					}
@@ -1324,13 +1324,13 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 					if ( count( $document_ids ) > 1 ) {
 						$text = sprintf(
 						/* translators: User full name. */
-							__( '%1$s posted some documents', 'buddyboss' ),
+							__( '%1$s posted some documents', 'buddyboss-platform' ),
 							$user_fullname
 						);
 					} else {
 						$text = sprintf(
 						/* translators: User full name. */
-							__( '%1$s posted a document', 'buddyboss' ),
+							__( '%1$s posted a document', 'buddyboss-platform' ),
 							$user_fullname
 						);
 					}
@@ -1339,26 +1339,26 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 					if ( count( $video_ids ) > 1 ) {
 						$text = sprintf(
 						/* translators: User full name. */
-							__( '%1$s posted some videos', 'buddyboss' ),
+							__( '%1$s posted some videos', 'buddyboss-platform' ),
 							$user_fullname
 						);
 					} else {
 						$text = sprintf(
 						/* translators: User full name. */
-							__( '%1$s posted a video', 'buddyboss' ),
+							__( '%1$s posted a video', 'buddyboss-platform' ),
 							$user_fullname
 						);
 					}
 				} elseif ( ! empty( $gif_data ) ) {
 					$text = sprintf(
 					/* translators: User full name. */
-						__( '%1$s posted a gif', 'buddyboss' ),
+						__( '%1$s posted a gif', 'buddyboss-platform' ),
 						$user_fullname
 					);
 				} else {
 					$text = sprintf(
 					/* translators: %s: User full name. */
-						__( '%1$s posted an update', 'buddyboss' ),
+						__( '%1$s posted an update', 'buddyboss-platform' ),
 						$user_fullname
 					);
 				}
@@ -1367,7 +1367,7 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 					$notification_link = add_query_arg( 'type', $notification->component_action, $notification_link );
 					$text              = sprintf(
 					/* translators: %s: Total reply count. */
-						__( 'You have %1$d new posts', 'buddyboss' ),
+						__( 'You have %1$d new posts', 'buddyboss-platform' ),
 						(int) $total_items
 					);
 					$amount = 'multiple';
@@ -1377,7 +1377,7 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 					if ( ! empty( $activity_excerpt ) ) {
 						$text = sprintf(
 						/* translators: 1: User full name, 2: Group name, 3: Activity content. */
-							__( '%1$s posted an update in %2$s: %3$s', 'buddyboss' ),
+							__( '%1$s posted an update in %2$s: %3$s', 'buddyboss-platform' ),
 							$user_fullname,
 							$group_name,
 							$activity_excerpt
@@ -1387,14 +1387,14 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 						if ( count( $media_ids ) > 1 ) {
 							$text = sprintf(
 							/* translators: User full name, 2: Group name. */
-								__( '%1$s posted some photos in %2$s', 'buddyboss' ),
+								__( '%1$s posted some photos in %2$s', 'buddyboss-platform' ),
 								$user_fullname,
 								$group_name
 							);
 						} else {
 							$text = sprintf(
 							/* translators: User full name, 2: Group name. */
-								__( '%1$s posted a photo in %2$s', 'buddyboss' ),
+								__( '%1$s posted a photo in %2$s', 'buddyboss-platform' ),
 								$user_fullname,
 								$group_name
 							);
@@ -1404,14 +1404,14 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 						if ( count( $document_ids ) > 1 ) {
 							$text = sprintf(
 							/* translators: User full name, 2: Group name. */
-								__( '%1$s posted some documents in %2$s', 'buddyboss' ),
+								__( '%1$s posted some documents in %2$s', 'buddyboss-platform' ),
 								$user_fullname,
 								$group_name
 							);
 						} else {
 							$text = sprintf(
 							/* translators: User full name, 2: Group name. */
-								__( '%1$s posted a document in %2$s', 'buddyboss' ),
+								__( '%1$s posted a document in %2$s', 'buddyboss-platform' ),
 								$user_fullname,
 								$group_name
 							);
@@ -1421,14 +1421,14 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 						if ( count( $video_ids ) > 1 ) {
 							$text = sprintf(
 							/* translators: User full name, 2: Group name. */
-								__( '%1$s posted some videos in %2$s', 'buddyboss' ),
+								__( '%1$s posted some videos in %2$s', 'buddyboss-platform' ),
 								$user_fullname,
 								$group_name
 							);
 						} else {
 							$text = sprintf(
 							/* translators: User full name, 2: Group name. */
-								__( '%1$s posted a video in %2$s', 'buddyboss' ),
+								__( '%1$s posted a video in %2$s', 'buddyboss-platform' ),
 								$user_fullname,
 								$group_name
 							);
@@ -1436,14 +1436,14 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 					} elseif ( ! empty( $gif_data ) ) {
 						$text = sprintf(
 						/* translators: User full name, 2: Group name. */
-							__( '%1$s posted a gif in %2$s', 'buddyboss' ),
+							__( '%1$s posted a gif in %2$s', 'buddyboss-platform' ),
 							$user_fullname,
 							$group_name
 						);
 					} else {
 						$text = sprintf(
 						/* translators: %s: User full name, 2: Group name. */
-							__( '%1$s posted an update in %2$s', 'buddyboss' ),
+							__( '%1$s posted an update in %2$s', 'buddyboss-platform' ),
 							$user_fullname,
 							$group_name
 						);
@@ -1475,7 +1475,7 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 				wp_strip_all_tags( bbp_get_topic_title( $item_id ) ),
 				50,
 				array(
-					'ending' => __( '&hellip;', 'buddyboss' ),
+					'ending' => __( '&hellip;', 'buddyboss-platform' ),
 				)
 			) . '"';
 			$notification_link = wp_nonce_url(
@@ -1500,7 +1500,7 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 			if ( 'web_push' === $screen ) {
 				$text = sprintf(
 				/* translators: 1: User full name, 2: Group name, 3: Discussion Title. */
-					__( '%1$s started a discussion%2$s', 'buddyboss' ),
+					__( '%1$s started a discussion%2$s', 'buddyboss-platform' ),
 					$user_fullname,
 					! empty( $discussion_title ) ? ': ' . $discussion_title : ''
 				);
@@ -1509,14 +1509,14 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 					$notification_link = add_query_arg( 'type', $notification->component_action, $notification_link );
 					$text              = sprintf(
 					/* translators: %s: Total reply count. */
-						__( 'You have %1$d new discussions', 'buddyboss' ),
+						__( 'You have %1$d new discussions', 'buddyboss-platform' ),
 						(int) $total_items
 					);
 					$amount = 'multiple';
 				} else {
 					$text = sprintf(
 					/* translators: 1: User full name, 2: Group name, 3: Discussion Title. */
-						__( '%1$s started a discussion%2$s%3$s', 'buddyboss' ),
+						__( '%1$s started a discussion%2$s%3$s', 'buddyboss-platform' ),
 						$user_fullname,
 						! empty( $group_name ) ? ' in ' . $group_name : '',
 						! empty( $discussion_title ) ? ': ' . $discussion_title : ''

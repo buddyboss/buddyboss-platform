@@ -34,7 +34,7 @@ if ( bp_is_user() && bb_enable_content_counts() ) {
 								'<span class="bb-count">%d</span> Album',
 								'<span class="bb-count">%d</span> Albums',
 								$count,
-								'buddyboss'
+								'buddyboss-platform'
 							),
 							array( 'span' => array( 'class' => true ) )
 						),
@@ -48,7 +48,7 @@ if ( bp_is_user() && bb_enable_content_counts() ) {
 								'<span class="bb-count">%d</span> Photo',
 								'<span class="bb-count">%d</span> Photos',
 								$count,
-								'buddyboss'
+								'buddyboss-platform'
 							),
 							array( 'span' => array( 'class' => true ) )
 						),

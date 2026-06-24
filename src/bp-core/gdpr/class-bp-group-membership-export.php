@@ -24,7 +24,7 @@ final class BP_Group_Membership_Export extends BP_Export {
 
 		if ( null === $instance ) {
 			$instance = new BP_Group_Membership_Export();
-			$instance->setup( 'bp_group_memberships', __( 'Group Memberships', 'buddyboss' ) );
+			$instance->setup( 'bp_group_memberships', __( 'Group Memberships', 'buddyboss-platform' ) );
 		}
 
 		return $instance;
@@ -56,7 +56,7 @@ final class BP_Group_Membership_Export extends BP_Export {
 			$group = groups_get_group( $item->group_id );
 
 			$group_id    = 'bp_group_membership';
-			$group_label = __( 'Group Membership', 'buddyboss' );
+			$group_label = __( 'Group Membership', 'buddyboss-platform' );
 			$item_id     = "{$this->exporter_name}-{$group_id}-{$item->id}";
 
 			$group_permalink = bp_get_group_permalink( $group );
@@ -64,16 +64,16 @@ final class BP_Group_Membership_Export extends BP_Export {
 			$membership_type = false;
 
 			if ( $item->user_id === $user->ID && '0' === $item->is_confirmed && '0' === $item->inviter_id ) {
-				$group_label     = __( 'Group Pending Requests', 'buddyboss' );
+				$group_label     = __( 'Group Pending Requests', 'buddyboss-platform' );
 				$membership_type = 'pending_request';
 			} elseif ( $item->user_id === $user->ID && '0' === $item->is_confirmed && '0' === $item->inviter_id ) {
-				$group_label     = __( 'Group Pending Received Invitation Requests', 'buddyboss' );
+				$group_label     = __( 'Group Pending Received Invitation Requests', 'buddyboss-platform' );
 				$membership_type = 'pending_received_invitation';
 			} elseif ( $item->inviter_id === $user->ID && '0' === $item->is_confirmed ) {
-				$group_label     = __( 'Group Pending Sent Invitation Requests', 'buddyboss' );
+				$group_label     = __( 'Group Pending Sent Invitation Requests', 'buddyboss-platform' );
 				$membership_type = 'pending_sent_invitation';
 			} elseif ( $item->user_id === $user->ID && '1' === $item->is_confirmed ) {
-				$group_label     = __( 'Group Membership', 'buddyboss' );
+				$group_label     = __( 'Group Membership', 'buddyboss-platform' );
 				$membership_type = 'membership';
 			}
 
@@ -81,15 +81,15 @@ final class BP_Group_Membership_Export extends BP_Export {
 
 			$data = array(
 				array(
-					'name'  => __( 'Group Name', 'buddyboss' ),
+					'name'  => __( 'Group Name', 'buddyboss-platform' ),
 					'value' => bp_get_group_name( $group ),
 				),
 				array(
-					'name'  => __( 'Sent Date (GMT)', 'buddyboss' ),
+					'name'  => __( 'Sent Date (GMT)', 'buddyboss-platform' ),
 					'value' => $item->date_modified,
 				),
 				array(
-					'name'  => __( 'Group URL', 'buddyboss' ),
+					'name'  => __( 'Group URL', 'buddyboss-platform' ),
 					'value' => $group_permalink,
 				),
 			);
@@ -97,7 +97,7 @@ final class BP_Group_Membership_Export extends BP_Export {
 			if ( 'pending_received_invitation' === $membership_type ) {
 				$get_user = get_userdata( $item->inviter_id );
 				$data[]   = array(
-					'name'  => __( 'Sent by', 'buddyboss' ),
+					'name'  => __( 'Sent by', 'buddyboss-platform' ),
 					'value' => $get_user->display_name,
 				);
 			}
@@ -105,14 +105,14 @@ final class BP_Group_Membership_Export extends BP_Export {
 			if ( 'pending_sent_invitation' === $membership_type ) {
 				$get_user = get_userdata( $item->user_id );
 				$data[]   = array(
-					'name'  => __( 'Sent to', 'buddyboss' ),
+					'name'  => __( 'Sent to', 'buddyboss-platform' ),
 					'value' => $get_user->display_name,
 				);
 			}
 
 			if ( ! empty( $item->comments ) ) {
 				$data[] = array(
-					'name'  => __( 'Group Comments', 'buddyboss' ),
+					'name'  => __( 'Group Comments', 'buddyboss-platform' ),
 					'value' => $item->comments,
 				);
 			}

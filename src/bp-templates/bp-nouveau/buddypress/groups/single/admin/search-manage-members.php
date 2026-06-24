@@ -46,7 +46,7 @@ bp_nouveau_group_hook( 'before', 'manage_members_list' );
 						<?php
 						if ( bp_get_group_member_is_banned() ) :
 							/* translators: indicates a user is banned from a group, e.g. "Mike (banned)". */
-							esc_html_e( '(banned)', 'buddyboss' );
+							esc_html_e( '(banned)', 'buddyboss-platform' );
 						endif;
 						?>
 					</span>

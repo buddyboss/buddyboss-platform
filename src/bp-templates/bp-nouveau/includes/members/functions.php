@@ -24,7 +24,7 @@ function bp_nouveau_get_members_directory_nav_items() {
 		'slug'      => 'all', // slug is used because BP_Core_Nav requires it, but it's the scope
 		'li_class'  => array( 'selected' ),
 		'link'      => bp_get_members_directory_permalink(),
-		'text'      => __( 'All Members', 'buddyboss' ),
+		'text'      => __( 'All Members', 'buddyboss-platform' ),
 		'position'  => 5,
 		'count'     => false,
 	);
@@ -37,7 +37,7 @@ function bp_nouveau_get_members_directory_nav_items() {
 				'slug'      => 'personal', // slug is used because BP_Core_Nav requires it, but it's the scope
 				'li_class'  => array(),
 				'link'      => bp_loggedin_user_domain() . bp_get_friends_slug() . '/my-friends/',
-				'text'      => __( 'My Connections', 'buddyboss' ),
+				'text'      => __( 'My Connections', 'buddyboss-platform' ),
 				'position'  => 15,
 				'count'     => false,
 			);
@@ -53,7 +53,7 @@ function bp_nouveau_get_members_directory_nav_items() {
 					'slug'      => 'following', // slug is used because BP_Core_Nav requires it, but it's the scope
 					'li_class'  => array(),
 					'link'      => bp_loggedin_user_domain() . bp_get_follow_slug() . '/my-following/',
-					'text'      => __( 'Following', 'buddyboss' ),
+					'text'      => __( 'Following', 'buddyboss-platform' ),
 					'position'  => 16,
 					'count'     => false,
 				);
@@ -66,7 +66,7 @@ function bp_nouveau_get_members_directory_nav_items() {
 					'slug'      => 'followers', // slug is used because BP_Core_Nav requires it, but it's the scope
 					'li_class'  => array(),
 					'link'      => bp_loggedin_user_domain() . bp_get_follow_slug() . '/my-followers/',
-					'text'      => __( 'Followers', 'buddyboss' ),
+					'text'      => __( 'Followers', 'buddyboss-platform' ),
 					'count'     => false,
 					'position'  => 16,
 				);
@@ -102,12 +102,12 @@ function bp_nouveau_get_members_directory_nav_items() {
 function bp_nouveau_get_members_filters( $context = '' ) {
 	if ( 'group' !== $context ) {
 		$filters = array(
-			'active' => __( 'Recently Active', 'buddyboss' ),
-			'newest' => __( 'Newest Members', 'buddyboss' ),
+			'active' => __( 'Recently Active', 'buddyboss-platform' ),
+			'newest' => __( 'Newest Members', 'buddyboss-platform' ),
 		);
 
 		if ( bp_is_active( 'xprofile' ) ) {
-			$filters['alphabetical'] = __( 'Alphabetical', 'buddyboss' );
+			$filters['alphabetical'] = __( 'Alphabetical', 'buddyboss-platform' );
 		}
 
 		$action = 'bp_members_directory_order_options';
@@ -117,15 +117,15 @@ function bp_nouveau_get_members_filters( $context = '' ) {
 		}
 	} else {
 		$filters = array(
-			'last_joined'  => __( 'Newest', 'buddyboss' ),
-			'first_joined' => __( 'Oldest', 'buddyboss' ),
+			'last_joined'  => __( 'Newest', 'buddyboss-platform' ),
+			'first_joined' => __( 'Oldest', 'buddyboss-platform' ),
 		);
 
 		if ( bp_is_active( 'activity' ) ) {
-			$filters['group_activity'] = __( 'Group Activity', 'buddyboss' );
+			$filters['group_activity'] = __( 'Group Activity', 'buddyboss-platform' );
 		}
 
-		$filters['alphabetical'] = __( 'Alphabetical', 'buddyboss' );
+		$filters['alphabetical'] = __( 'Alphabetical', 'buddyboss-platform' );
 		$action                  = 'bp_groups_members_order_options';
 	}
 
@@ -231,7 +231,7 @@ function bp_nouveau_admin_bar_member_dashboard ( $wp_admin_nav = array() ) {
 			$wp_admin_nav[] = array(
 				'parent' => buddypress()->my_account_menu_id,
 				'id'     => 'my-account-front',
-				'title'  => __( 'Dashboard', 'buddyboss' ),
+				'title'  => __( 'Dashboard', 'buddyboss-platform' ),
 				'href'   => $dashboard_link,
 			);
 
@@ -239,7 +239,7 @@ function bp_nouveau_admin_bar_member_dashboard ( $wp_admin_nav = array() ) {
 			$wp_admin_nav[] = array(
 				'parent'   => 'my-account-front',
 				'id'       => 'my-account-front-view',
-				'title'    => __( 'View', 'buddyboss' ),
+				'title'    => __( 'View', 'buddyboss-platform' ),
 				'href'     => $dashboard_link,
 				'position' => 10
 			);
@@ -467,9 +467,9 @@ function bp_nouveau_get_wp_profile_fields( $user = null ) {
 	$contact_methods = (array) apply_filters( 'bp_nouveau_get_wp_profile_field', wp_get_user_contact_methods( $user ), $user );
 
 	$wp_fields = array(
-		'display_name'     => __( 'Name', 'buddyboss' ),
-		'user_description' => __( 'About Me', 'buddyboss' ),
-		'user_url'         => __( 'Website', 'buddyboss' ),
+		'display_name'     => __( 'Name', 'buddyboss-platform' ),
+		'user_description' => __( 'About Me', 'buddyboss-platform' ),
+		'user_url'         => __( 'Website', 'buddyboss-platform' ),
 	);
 
 	return array_merge( $wp_fields, $contact_methods );
@@ -579,12 +579,12 @@ function bp_nouveau_member_localize_scripts( $params = array() ) {
 		)
 	) {
 		$params['subscriptions'] = array(
-			'unsubscribe'     => __( 'You\'ve been unsubscribed from ', 'buddyboss' ),
-			'error'           => __( 'There was a problem unsubscribing from ', 'buddyboss' ),
+			'unsubscribe'     => __( 'You\'ve been unsubscribed from ', 'buddyboss-platform' ),
+			'error'           => __( 'There was a problem unsubscribing from ', 'buddyboss-platform' ),
 			'per_page'        => apply_filters( 'bb_subscriptions_per_page', 5 ),
 			/* translators: %s: plural label of the item type being subscribed to. */
-			'no_result'       => __( 'You are not currently subscribed to any %s.', 'buddyboss' ),
-			'subscribe_error' => __( 'There was a problem subscribing to ', 'buddyboss' ),
+			'no_result'       => __( 'You are not currently subscribed to any %s.', 'buddyboss-platform' ),
+			'subscribe_error' => __( 'There was a problem subscribing to ', 'buddyboss-platform' ),
 		);
 	}
 

@@ -18,14 +18,14 @@ $bp_get_album_id = ! empty( $bp_get_album_id ) ? $bp_get_album_id : 0;
 ?>
 <div class="bb-rl-dropdown-wrap">
 	<div class="bb-rl-location-album-list-wrap-main <?php echo wp_is_mobile() ? 'is-mobile' : ''; ?>">
-		<span class="bb-rl-no-album-exists" style="display: none;"><?php esc_html_e( 'You have not created any album yet to move this photo into.', 'buddyboss' ); ?></span>
-		<input type="hidden" class="bb-rl-album-destination" value="<?php esc_html_e( 'Select Album', 'buddyboss' ); ?>" readonly />
+		<span class="bb-rl-no-album-exists" style="display: none;"><?php esc_html_e( 'You have not created any album yet to move this photo into.', 'buddyboss-platform' ); ?></span>
+		<input type="hidden" class="bb-rl-album-destination" value="<?php esc_html_e( 'Select Album', 'buddyboss-platform' ); ?>" readonly />
 		<div class="bb-rl-location-album-list-wrap">
 			<h4><span class="bb-rl-where-to-move-profile-or-group-video"></span></h4>
 			<div class="bb-rl-breadcrumbs-append-ul-li">
 				<div class="breadcrumb">
 					<div class="item">
-						<span data-id="0"><?php esc_html_e( 'Albums', 'buddyboss' ); ?></span>
+						<span data-id="0"><?php esc_html_e( 'Albums', 'buddyboss-platform' ); ?></span>
 					</div>
 				</div>
 			</div>

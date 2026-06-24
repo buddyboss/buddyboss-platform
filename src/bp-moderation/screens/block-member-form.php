@@ -13,50 +13,50 @@
 			<div class="modal-wrapper">
 				<div class="modal-container">
 					<header class="bb-model-header">
-						<h4><?php esc_html_e( 'Block Member?', 'buddyboss' ); ?></h4>
-						<button title="<?php esc_html_e( 'Close (Esc)', 'buddyboss' ); ?>" type="button" class="mfp-close">
+						<h4><?php esc_html_e( 'Block Member?', 'buddyboss-platform' ); ?></h4>
+						<button title="<?php esc_html_e( 'Close (Esc)', 'buddyboss-platform' ); ?>" type="button" class="mfp-close">
 							<span class="bb-icon-l bb-icon-times"></span>
 						</button>
 					</header>
 
 					<div class="bb-report-type-wrp">
 						<p>
-							<?php esc_html_e( 'Please confirm you want to block this member.', 'buddyboss' ); ?>
+							<?php esc_html_e( 'Please confirm you want to block this member.', 'buddyboss-platform' ); ?>
 						</p>
 						<p>
-							<?php esc_html_e( 'You will no longer be able to:', 'buddyboss' ); ?>
+							<?php esc_html_e( 'You will no longer be able to:', 'buddyboss-platform' ); ?>
 						</p>
 						<ul>
 							<?php if ( bp_is_active( 'activity' ) ) : ?>
 							<li>
 								<?php
-								esc_html_e( 'See blocked member\'s posts', 'buddyboss' );
+								esc_html_e( 'See blocked member\'s posts', 'buddyboss-platform' );
 								?>
 							</li>
 							<?php endif; ?>
 							<li>
 								<?php
-								esc_html_e( 'Mention this member in posts', 'buddyboss' );
+								esc_html_e( 'Mention this member in posts', 'buddyboss-platform' );
 								?>
 							</li>
 							<?php if ( bp_is_active( 'groups' ) ) : ?>
 							<li>
 								<?php
-								esc_html_e( 'Invite this member to groups', 'buddyboss' );
+								esc_html_e( 'Invite this member to groups', 'buddyboss-platform' );
 								?>
 							</li>
 							<?php endif; ?>
 							<?php if ( bp_is_active( 'messages' ) ) : ?>
 							<li>
 								<?php
-								esc_html_e( 'Message this member', 'buddyboss' );
+								esc_html_e( 'Message this member', 'buddyboss-platform' );
 								?>
 							</li>
 							<?php endif; ?>
 							<?php if ( bp_is_active( 'friends' ) ) : ?>
 							<li>
 								<?php
-								esc_html_e( 'Add this member as a connection', 'buddyboss' );
+								esc_html_e( 'Add this member as a connection', 'buddyboss-platform' );
 								?>
 							</li>
 							<?php endif; ?>
@@ -64,16 +64,16 @@
 
 						<p>
 							<?php if ( bp_is_active( 'friends' ) ) : ?>
-								<strong><?php esc_html_e( 'Please note: ', 'buddyboss' ); ?></strong>
-								<?php esc_html_e( 'This action will also remove this member from your connections and send a report to the site admin.', 'buddyboss' ); ?>
+								<strong><?php esc_html_e( 'Please note: ', 'buddyboss-platform' ); ?></strong>
+								<?php esc_html_e( 'This action will also remove this member from your connections and send a report to the site admin.', 'buddyboss-platform' ); ?>
 							<?php endif; ?>
 
-							<?php esc_html_e( 'Please allow a few minutes for this process to complete.', 'buddyboss' ); ?>
+							<?php esc_html_e( 'Please allow a few minutes for this process to complete.', 'buddyboss-platform' ); ?>
 						</p>
 						<form id="bb-block-member" action="javascript:void(0);">
 							<footer class="bb-model-footer">
-								<input type="button" class="bb-cancel-report-content button" value="<?php esc_attr_e( 'Cancel', 'buddyboss' ); ?>"/>
-								<button type="submit" class="report-submit button"><?php esc_attr_e( 'Confirm', 'buddyboss' ); ?></button>
+								<input type="button" class="bb-cancel-report-content button" value="<?php esc_attr_e( 'Cancel', 'buddyboss-platform' ); ?>"/>
+								<button type="submit" class="report-submit button"><?php esc_attr_e( 'Confirm', 'buddyboss-platform' ); ?></button>
 								<input type="hidden" name="content_id" class="bp-content-id"/>
 								<input type="hidden" name="content_type" class="bp-content-type"/>
 								<input type="hidden" name="_wpnonce" class="bp-nonce"/>

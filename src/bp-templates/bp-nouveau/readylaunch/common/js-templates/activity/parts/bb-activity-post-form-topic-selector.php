@@ -13,13 +13,13 @@
 
 	<#
 	if ( data.topics && data.topics.topic_lists && data.topics.topic_lists.length > 0 ) { #>
-		<span class="bb-rl-topic-selector-button" data-select-topic-text="<?php esc_html_e( 'Select Topic', 'buddyboss' ); ?>">
+		<span class="bb-rl-topic-selector-button" data-select-topic-text="<?php esc_html_e( 'Select Topic', 'buddyboss-platform' ); ?>">
 			<#
 			var topicId = parseInt( data.topics.topic_id );
 			if ( 0 !== topicId && data.topics.topic_name ) { #>
 				{{ data.topics.topic_name }}
 			<# } else { #>
-				<?php esc_html_e( 'Select Topic', 'buddyboss' ); ?>
+				<?php esc_html_e( 'Select Topic', 'buddyboss-platform' ); ?>
 			<# } #>
 		</span>
 		<div class="bb-rl-topic-selector-list">
@@ -29,7 +29,7 @@
 				?>
 					<li>
 						<a href="#" data-topic-id="">
-							<?php esc_html_e( 'None', 'buddyboss' ); ?>
+							<?php esc_html_e( 'None', 'buddyboss-platform' ); ?>
 						</a>
 					</li>
 				<?php

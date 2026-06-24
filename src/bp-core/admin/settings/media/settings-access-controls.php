@@ -39,7 +39,7 @@ function bb_media_register_access_controls_panel_fields() {
 		'access_controls',
 		'media_access_controls',
 		array(
-			'title'      => __( 'Media Access', 'buddyboss' ),
+			'title'      => __( 'Media Access', 'buddyboss-platform' ),
 			'order'      => 10,
 			'help_url'   => '121813',
 			'pro_notice' => bb_admin_settings_get_pro_notice(
@@ -58,9 +58,9 @@ function bb_media_register_access_controls_panel_fields() {
 		'media_access_controls',
 		array(
 			'name'              => 'bb-access-control-upload-media',
-			'label'             => __( 'Upload Photos', 'buddyboss' ),
+			'label'             => __( 'Upload Photos', 'buddyboss-platform' ),
 			'type'              => 'access_control',
-			'description'       => __( 'Select which members can upload photos based on:', 'buddyboss' ),
+			'description'       => __( 'Select which members can upload photos based on:', 'buddyboss-platform' ),
 			'default'           => '',
 			'pro_only'          => true,
 			'order'             => 10,
@@ -75,9 +75,9 @@ function bb_media_register_access_controls_panel_fields() {
 		'media_access_controls',
 		array(
 			'name'              => 'bb-access-control-upload-video',
-			'label'             => __( 'Upload Videos', 'buddyboss' ),
+			'label'             => __( 'Upload Videos', 'buddyboss-platform' ),
 			'type'              => 'access_control',
-			'description'       => __( 'Select which members can upload videos based on:', 'buddyboss' ),
+			'description'       => __( 'Select which members can upload videos based on:', 'buddyboss-platform' ),
 			'default'           => '',
 			'pro_only'          => true,
 			'order'             => 20,
@@ -92,9 +92,9 @@ function bb_media_register_access_controls_panel_fields() {
 		'media_access_controls',
 		array(
 			'name'              => 'bb-access-control-upload-document',
-			'label'             => __( 'Upload Documents', 'buddyboss' ),
+			'label'             => __( 'Upload Documents', 'buddyboss-platform' ),
 			'type'              => 'access_control',
-			'description'       => __( 'Select which members can upload documents based on:', 'buddyboss' ),
+			'description'       => __( 'Select which members can upload documents based on:', 'buddyboss-platform' ),
 			'default'           => '',
 			'pro_only'          => true,
 			'order'             => 30,
@@ -111,7 +111,7 @@ function bb_media_register_access_controls_panel_fields() {
 			'name'              => 'bb-media-access-control-notice',
 			'label'             => '',
 			'type'              => 'notice',
-			'description'       => __( 'These settings do not apply to administrators.', 'buddyboss' ),
+			'description'       => __( 'These settings do not apply to administrators.', 'buddyboss-platform' ),
 			'notice_type'       => 'info',
 			'sanitize_callback' => '__return_empty_string',
 			'order'             => 100,

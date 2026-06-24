@@ -127,7 +127,7 @@ class BP_REST_Video_Details_Endpoint extends WP_REST_Controller {
 			'properties' => array(
 				'tabs'    => array(
 					'context'     => array( 'embed', 'view' ),
-					'description' => __( 'Video directory tabs.', 'buddyboss' ),
+					'description' => __( 'Video directory tabs.', 'buddyboss-platform' ),
 					'type'        => 'object',
 					'readonly'    => true,
 					'items'       => array(
@@ -136,7 +136,7 @@ class BP_REST_Video_Details_Endpoint extends WP_REST_Controller {
 				),
 				'privacy' => array(
 					'context'     => array( 'embed', 'view' ),
-					'description' => __( 'Video privacy.', 'buddyboss' ),
+					'description' => __( 'Video privacy.', 'buddyboss-platform' ),
 					'type'        => 'object',
 					'readonly'    => true,
 				),

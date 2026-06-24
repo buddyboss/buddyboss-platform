@@ -48,7 +48,7 @@ function bp_member_revoke_invite_admin() {
 	$redirect = wp_validate_redirect( $redirect, bp_displayed_user_domain() . 'invites/' );
 
 	if ( empty( $_GET ) ) {
-		bp_core_add_message( __( 'You didn\'t include any email addresses!', 'buddyboss' ), 'error' );
+		bp_core_add_message( __( 'You didn\'t include any email addresses!', 'buddyboss-platform' ), 'error' );
 		bp_core_redirect( $redirect );
 		die();
 	}

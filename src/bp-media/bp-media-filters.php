@@ -96,9 +96,9 @@ add_filter( 'bb_activity_comment_get_edit_data', 'bp_media_get_edit_activity_dat
 function bp_media_search_label_search( $type ) {
 
 	if ( 'albums' === $type ) {
-		$type = __( 'Albums', 'buddyboss' );
+		$type = __( 'Albums', 'buddyboss-platform' );
 	} elseif ( 'photos' === $type ) {
-		$type = __( 'Photos', 'buddyboss' );
+		$type = __( 'Photos', 'buddyboss-platform' );
 	}
 
 	return $type;
@@ -779,7 +779,7 @@ function bp_media_forums_embed_gif( $content, $id ) {
 				<video preload="auto" playsinline poster="<?php echo $preview_url; ?>" loop muted>
 					<source src="<?php echo $video_url; ?>" type="video/mp4">
 				</video>
-				<a href="#" class="gif-play-button" aria-label="<?php esc_attr_e( 'Play GIF', 'buddyboss' ); ?>">
+				<a href="#" class="gif-play-button" aria-label="<?php esc_attr_e( 'Play GIF', 'buddyboss-platform' ); ?>">
 					<span class="bb-icon-bl bb-icon-play"></span>
 				</a>
 				<span class="gif-icon"></span>
@@ -1145,7 +1145,7 @@ function bp_media_activity_embed_gif_content( $activity_id ) {
 				<video preload="auto" playsinline poster="<?php echo $preview_url; ?>" loop muted>
 					<source src="<?php echo $video_url; ?>" type="video/mp4">
 				</video>
-				<a href="#" class="gif-play-button" aria-label="<?php esc_attr_e( 'Play GIF', 'buddyboss' ); ?>">
+				<a href="#" class="gif-play-button" aria-label="<?php esc_attr_e( 'Play GIF', 'buddyboss-platform' ); ?>">
 					<span class="bb-icon-bl bb-icon-play"></span>
 				</a>
 				<span class="gif-icon"></span>
@@ -1280,7 +1280,7 @@ function bp_media_get_tools_media_settings_admin_tabs( $tabs ) {
 				'admin.php'
 			)
 		),
-		'name' => __( 'Import Media', 'buddyboss' ),
+		'name' => __( 'Import Media', 'buddyboss-platform' ),
 		'slug' => 'bp-media-import',
 	);
 
@@ -1296,8 +1296,8 @@ function bp_media_import_admin_menu() {
 
 	add_submenu_page(
 		'buddyboss-platform',
-		__( 'Import Media', 'buddyboss' ),
-		__( 'Import Media', 'buddyboss' ),
+		__( 'Import Media', 'buddyboss-platform' ),
+		__( 'Import Media', 'buddyboss-platform' ),
 		'manage_options',
 		'bp-media-import',
 		'bp_media_import_submenu_page'
@@ -1351,7 +1351,7 @@ function bp_media_import_submenu_page() {
 
 	?>
 	<div class="wrap">
-		<h2 class="nav-tab-wrapper"><?php bp_core_admin_tabs( __( 'Tools', 'buddyboss' ) ); ?></h2>
+		<h2 class="nav-tab-wrapper"><?php bp_core_admin_tabs( __( 'Tools', 'buddyboss-platform' ) ); ?></h2>
 		<div class="nav-settings-subsubsub">
 			<ul class="subsubsub">
 				<?php bp_core_tools_settings_admin_tabs(); ?>
@@ -1369,14 +1369,14 @@ function bp_media_import_submenu_page() {
 							if ( ! empty( $meta_icon ) ) {
 								echo '<i class="' . esc_attr( $meta_icon ) . '"></i>';
 							}
-							esc_html_e( 'Import Media', 'buddyboss' );
+							esc_html_e( 'Import Media', 'buddyboss-platform' );
 							?>
 						</h2>
 
 						<?php
 						if ( $check ) {
 							?>
-							<p><?php _e( 'BuddyBoss Media plugin database tables do not exist, meaning you have nothing to import.', 'buddyboss' ); ?></p>
+							<p><?php _e( 'BuddyBoss Media plugin database tables do not exist, meaning you have nothing to import.', 'buddyboss-platform' ); ?></p>
 							<?php
 						} elseif ( $is_updating ) {
 							$total_media   = get_option( 'bp_media_import_total_media', 0 );
@@ -1393,39 +1393,39 @@ function bp_media_import_submenu_page() {
 							$media_ids     = get_option( 'bp_media_import_media_ids', array() );
 							?>
 							<p>
-								<?php esc_html_e( 'Your database is being updated in the background.', 'buddyboss' ); ?>
+								<?php esc_html_e( 'Your database is being updated in the background.', 'buddyboss-platform' ); ?>
 							</p>
 							<label style="display: none;"
-								   id="bp-media-resetting"><strong><?php echo __( 'Migration in progress', 'buddyboss' ) . '...'; ?></strong></label>
+								   id="bp-media-resetting"><strong><?php echo __( 'Migration in progress', 'buddyboss-platform' ) . '...'; ?></strong></label>
 							<table class="form-table">
 								<tr>
-									<th scope="row"><?php _e( 'Albums', 'buddyboss' ); ?></th>
+									<th scope="row"><?php _e( 'Albums', 'buddyboss-platform' ); ?></th>
 									<td>
-										<span id="bp-media-import-albums-done"><?php echo $albums_done; ?></span> <?php _e( 'out of', 'buddyboss' ); ?>
+										<span id="bp-media-import-albums-done"><?php echo $albums_done; ?></span> <?php _e( 'out of', 'buddyboss-platform' ); ?>
 										<span id="bp-media-import-albums-total"><?php echo $total_albums; ?></span></td>
 								</tr>
 								<tr>
-									<th scope="row"><?php _e( 'Media', 'buddyboss' ); ?></th>
+									<th scope="row"><?php _e( 'Media', 'buddyboss-platform' ); ?></th>
 									<td>
-										<span id="bp-media-import-media-done"><?php echo $media_done; ?></span> <?php _e( 'out of', 'buddyboss' ); ?>
+										<span id="bp-media-import-media-done"><?php echo $media_done; ?></span> <?php _e( 'out of', 'buddyboss-platform' ); ?>
 										<span id="bp-media-import-media-total"><?php echo $total_media; ?></span></td>
 								</tr>
 								<tr>
-									<th scope="row"><?php _e( 'Forums', 'buddyboss' ); ?></th>
+									<th scope="row"><?php _e( 'Forums', 'buddyboss-platform' ); ?></th>
 									<td>
-										<span id="bp-media-import-forums-done"><?php echo $forums_done; ?></span> <?php _e( 'out of', 'buddyboss' ); ?>
+										<span id="bp-media-import-forums-done"><?php echo $forums_done; ?></span> <?php _e( 'out of', 'buddyboss-platform' ); ?>
 										<span id="bp-media-import-media-total"><?php echo $forums_total; ?></span></td>
 								</tr>
 								<tr>
-									<th scope="row"><?php _e( 'Discussions', 'buddyboss' ); ?></th>
+									<th scope="row"><?php _e( 'Discussions', 'buddyboss-platform' ); ?></th>
 									<td>
-										<span id="bp-media-import-forums-done"><?php echo $topics_done; ?></span> <?php _e( 'out of', 'buddyboss' ); ?>
+										<span id="bp-media-import-forums-done"><?php echo $topics_done; ?></span> <?php _e( 'out of', 'buddyboss-platform' ); ?>
 										<span id="bp-media-import-media-total"><?php echo $topics_total; ?></span></td>
 								</tr>
 								<tr>
-									<th scope="row"><?php _e( 'Replies', 'buddyboss' ); ?></th>
+									<th scope="row"><?php _e( 'Replies', 'buddyboss-platform' ); ?></th>
 									<td>
-										<span id="bp-media-import-forums-done"><?php echo $replies_done; ?></span> <?php _e( 'out of', 'buddyboss' ); ?>
+										<span id="bp-media-import-forums-done"><?php echo $replies_done; ?></span> <?php _e( 'out of', 'buddyboss-platform' ); ?>
 										<span id="bp-media-import-media-total"><?php echo $replies_total; ?></span></td>
 								</tr>
 							</table>
@@ -1437,7 +1437,7 @@ function bp_media_import_submenu_page() {
 								<input type="hidden" value="1" name="bp-media-re-run-import"
 									   id="bp-media-re-run-import"/>
 								<input type="submit" style="display: none;"
-									   value="<?php _e( 'Re-Run Migration', 'buddyboss' ); ?>"
+									   value="<?php _e( 'Re-Run Migration', 'buddyboss-platform' ); ?>"
 									   id="bp-media-import-submit" name="bp-media-import-submit"
 									   class="button-primary"/>
 								<?php
@@ -1446,20 +1446,20 @@ function bp_media_import_submenu_page() {
 							$albums_ids = get_option( 'bp_media_import_albums_ids', array() );
 							$media_ids  = get_option( 'bp_media_import_media_ids', array() );
 							?>
-							<p><?php _e( 'BuddyBoss Media data update is complete! Any previously uploaded member photos should display in their profiles now.', 'buddyboss' ); ?></p>
+							<p><?php _e( 'BuddyBoss Media data update is complete! Any previously uploaded member photos should display in their profiles now.', 'buddyboss-platform' ); ?></p>
 
 							<?php if ( ! empty( $albums_ids ) || ! empty( $media_ids ) ) { ?>
 								<input type="hidden" value="1" name="bp-media-re-run-import"
 									   id="bp-media-re-run-import"/>
-								<input type="submit" value="<?php _e( 'Re-Run Migration', 'buddyboss' ); ?>"
+								<input type="submit" value="<?php _e( 'Re-Run Migration', 'buddyboss-platform' ); ?>"
 									   id="bp-media-import-submit" name="bp-media-import-submit"
 									   class="button-primary"/>
 								<?php
 							}
 						} else {
 							?>
-							<p><?php _e( 'Import your existing members photo uploads, if you were previously using <a href="https://www.buddyboss.com/product/buddyboss-media/">BuddyBoss Media</a> with BuddyPress. Click "Run Migration" below to migrate your old photos into the new Media component.', 'buddyboss' ); ?></p>
-							<input type="submit" value="<?php _e( 'Run Migration', 'buddyboss' ); ?>"
+							<p><?php _e( 'Import your existing members photo uploads, if you were previously using <a href="https://www.buddyboss.com/product/buddyboss-media/">BuddyBoss Media</a> with BuddyPress. Click "Run Migration" below to migrate your old photos into the new Media component.', 'buddyboss-platform' ); ?></p>
+							<input type="submit" value="<?php _e( 'Run Migration', 'buddyboss-platform' ); ?>"
 								   id="bp-media-import-submit" name="bp-media-import-submit" class="button-primary"/>
 						<?php } ?>
 					</div>
@@ -1505,9 +1505,9 @@ function bp_media_activation_notice() {
 			);
 			$notice    = sprintf(
 				'%1$s <a href="%2$s">%3$s</a>',
-				__( 'We have found some media uploaded from the <strong>BuddyBoss Media</strong></strong> plugin, which is not compatible with BuddyBoss Platform as it has its own media component. You should  import the media into BuddyBoss Platform, and then remove the BuddyBoss Media plugin if you are still using it.', 'buddyboss' ),
+				__( 'We have found some media uploaded from the <strong>BuddyBoss Media</strong></strong> plugin, which is not compatible with BuddyBoss Platform as it has its own media component. You should  import the media into BuddyBoss Platform, and then remove the BuddyBoss Media plugin if you are still using it.', 'buddyboss-platform' ),
 				esc_url( $admin_url ),
-				__( 'Import Media', 'buddyboss' )
+				__( 'Import Media', 'buddyboss-platform' )
 			);
 
 			bp_core_add_admin_notice( $notice );
@@ -1652,17 +1652,17 @@ function bp_media_add_admin_repair_items( $repair_list ) {
 	if ( bp_is_active( 'activity' ) ) {
 		$repair_list[] = array(
 			'bp-repair-media',
-			esc_html__( 'Repair media', 'buddyboss' ),
+			esc_html__( 'Repair media', 'buddyboss-platform' ),
 			'bp_media_admin_repair_media',
 		);
 		$repair_list[] = array(
 			'bp-media-forum-privacy-repair',
-			esc_html__( 'Repair forum media privacy', 'buddyboss' ),
+			esc_html__( 'Repair forum media privacy', 'buddyboss-platform' ),
 			'bp_media_forum_privacy_repair',
 		);
 		$repair_list[] = array(
 			'bp-media-message-repair',
-			esc_html__( 'Repair messages media', 'buddyboss' ),
+			esc_html__( 'Repair messages media', 'buddyboss-platform' ),
 			'bp_media_message_privacy_repair',
 		);
 	}
@@ -1696,7 +1696,7 @@ function bp_media_message_privacy_repair() {
 			$offset ++;
 		}
 		/* translators: %s: number of messages updated. */
-		$records_updated = sprintf( __( '%s messages updated successfully.', 'buddyboss' ), bp_core_number_format( $offset ) );
+		$records_updated = sprintf( __( '%s messages updated successfully.', 'buddyboss-platform' ), bp_core_number_format( $offset ) );
 
 		return array(
 			'status'  => 'running',
@@ -1706,7 +1706,7 @@ function bp_media_message_privacy_repair() {
 	} else {
 		return array(
 			'status'  => 1,
-			'message' => __( 'Repairing messages media &hellip; Complete!', 'buddyboss' ),
+			'message' => __( 'Repairing messages media &hellip; Complete!', 'buddyboss-platform' ),
 		);
 	}
 }
@@ -1760,7 +1760,7 @@ function bp_media_admin_repair_media() {
 			$offset ++;
 		}
 		/* translators: %s: number of media items updated. */
-		$records_updated = sprintf( __( '%s media updated successfully.', 'buddyboss' ), bp_core_number_format( $offset ) );
+		$records_updated = sprintf( __( '%s media updated successfully.', 'buddyboss-platform' ), bp_core_number_format( $offset ) );
 
 		return array(
 			'status'  => 'running',
@@ -1770,7 +1770,7 @@ function bp_media_admin_repair_media() {
 	} else {
 		return array(
 			'status'  => 1,
-			'message' => __( 'Repairing media &hellip; Complete!', 'buddyboss' ),
+			'message' => __( 'Repairing media &hellip; Complete!', 'buddyboss-platform' ),
 		);
 	}
 }
@@ -1799,7 +1799,7 @@ function bp_media_forum_privacy_repair() {
 			$offset ++;
 		}
 		/* translators: %s: number of forums media items whose privacy was updated. */
-		$records_updated = sprintf( __( '%s forums media privacy updated successfully.', 'buddyboss' ), bp_core_number_format( $offset ) );
+		$records_updated = sprintf( __( '%s forums media privacy updated successfully.', 'buddyboss-platform' ), bp_core_number_format( $offset ) );
 
 		return array(
 			'status'  => 'running',
@@ -1808,11 +1808,11 @@ function bp_media_forum_privacy_repair() {
 		);
 	} else {
 		/* translators: %s: completion status text. */
-		$statement = __( 'Repair forum media privacy &hellip; %s', 'buddyboss' );
+		$statement = __( 'Repair forum media privacy &hellip; %s', 'buddyboss-platform' );
 
 		return array(
 			'status'  => 1,
-			'message' => sprintf( $statement, __( 'Complete!', 'buddyboss' ) ),
+			'message' => sprintf( $statement, __( 'Complete!', 'buddyboss-platform' ) ),
 		);
 	}
 }
@@ -1915,7 +1915,7 @@ function bp_media_download_file_force( $file_path, $filename ) {
 		if ( $parsed_file_path['remote_file'] ) {
 			bp_media_download_file_redirect( $file_path );
 		} else {
-			bp_media_download_error( __( 'File not found', 'buddyboss' ) );
+			bp_media_download_error( __( 'File not found', 'buddyboss-platform' ) );
 		}
 	}
 
@@ -1933,7 +1933,7 @@ function bp_media_download_file_force( $file_path, $filename ) {
  */
 function bp_media_download_error( $message, $title = '', $status = 404 ) {
 	if ( ! strstr( $message, '<a ' ) ) {
-		$message .= ' <a href="' . esc_url( site_url() ) . '" class="bp-media-forward">' . esc_html__( 'Go to media', 'buddyboss' ) . '</a>';
+		$message .= ' <a href="' . esc_url( site_url() ) . '" class="bp-media-forward">' . esc_html__( 'Go to media', 'buddyboss-platform' ) . '</a>';
 	}
 	wp_die( $message, $title, array( 'response' => $status ) ); // WPCS: XSS ok.
 }

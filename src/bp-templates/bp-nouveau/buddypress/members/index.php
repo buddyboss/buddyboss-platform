@@ -56,7 +56,7 @@ do_action( 'bp_before_directory_members_page' );
 								'<span class="bb-count">%d</span> Member',
 								'<span class="bb-count">%d</span> Members',
 								$count,
-								'buddyboss'
+								'buddyboss-platform'
 							),
 							array( 'span' => array( 'class' => true ) )
 						),

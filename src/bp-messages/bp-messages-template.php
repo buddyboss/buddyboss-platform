@@ -646,7 +646,7 @@ function bp_get_message_thread_total_and_unread_count( $thread_id = false ) {
 		'<span class="thread-count">(%1$s)</span> <span class="bp-screen-reader-text">%2$s</span>',
 		bp_core_number_format( $total ),
 		/* translators: %d: number of unread messages. */
-		sprintf( _n( '%d unread', '%d unread', $unread, 'buddyboss' ), bp_core_number_format( $unread ) )
+		sprintf( _n( '%d unread', '%d unread', $unread, 'buddyboss-platform' ), bp_core_number_format( $unread ) )
 	);
 }
 
@@ -731,7 +731,7 @@ function bp_get_message_thread_avatar( $args = '' ) {
 
 	$fullname = bp_core_get_user_displayname( $messages_template->thread->last_sender_id );
 	/* translators: %s: member display name. */
-	$alt      = sprintf( __( 'Profile photo of %s', 'buddyboss' ), $fullname );
+	$alt      = sprintf( __( 'Profile photo of %s', 'buddyboss-platform' ), $fullname );
 
 	$r = bp_parse_args(
 		$args,
@@ -840,7 +840,7 @@ function bp_messages_pagination_count() {
 	$total     = bp_core_number_format( $messages_template->total_thread_count );
 
 	/* translators: 1: starting message number, 2: ending message number, 3: total number of messages. */
-	$message = sprintf( _n( 'Viewing 1 message', 'Viewing %1$s - %2$s of %3$s messages', $messages_template->total_thread_count, 'buddyboss' ), $from_num, $to_num, $total );
+	$message = sprintf( _n( 'Viewing 1 message', 'Viewing %1$s - %2$s of %3$s messages', $messages_template->total_thread_count, 'buddyboss-platform' ), $from_num, $to_num, $total );
 
 	echo esc_html( $message );
 }
@@ -868,11 +868,11 @@ function bp_message_search_form() {
 		<label for="messages_search" class="bp-screen-reader-text">
 		<?php
 			/* translators: accessibility text */
-			esc_html_e( 'Search Messages', 'buddyboss' );
+			esc_html_e( 'Search Messages', 'buddyboss-platform' );
 		?>
 		</label>
 		<input type="text" name="s" id="messages_search"<?php echo $search_placeholder . $search_value; ?> />
-		<input type="submit" class="button" id="messages_search_submit" name="messages_search_submit" value="<?php esc_html_e( 'Search', 'buddyboss' ); ?>" />
+		<input type="submit" class="button" id="messages_search_submit" name="messages_search_submit" value="<?php esc_html_e( 'Search', 'buddyboss-platform' ); ?>" />
 	</form>
 
 	<?php
@@ -1015,27 +1015,27 @@ function bp_messages_options() {
 	<label for="message-type-select" class="bp-screen-reader-text">
 	<?php
 		/* translators: accessibility text */
-		_e( 'Select:', 'buddyboss' );
+		_e( 'Select:', 'buddyboss-platform' );
 	?>
 	</label>
 	<select name="message-type-select" id="message-type-select">
-		<option value=""><?php _e( 'Select', 'buddyboss' ); ?></option>
-		<option value="read"><?php _ex( 'Read', 'Past Participle: Messages have been read', 'buddyboss' ); ?></option>
-		<option value="unread"><?php _e( 'Unread', 'buddyboss' ); ?></option>
-		<option value="all"><?php _e( 'All', 'buddyboss' ); ?></option>
+		<option value=""><?php _e( 'Select', 'buddyboss-platform' ); ?></option>
+		<option value="read"><?php _ex( 'Read', 'Past Participle: Messages have been read', 'buddyboss-platform' ); ?></option>
+		<option value="unread"><?php _e( 'Unread', 'buddyboss-platform' ); ?></option>
+		<option value="all"><?php _e( 'All', 'buddyboss-platform' ); ?></option>
 	</select> &nbsp;
 
 	<?php if ( ! bp_is_current_action( 'notices' ) ) : ?>
 
-		<a href="#" id="mark_as_read"><?php _e( 'Mark as Read', 'buddyboss' ); ?></a> &nbsp;
-		<a href="#" id="mark_as_unread"><?php _e( 'Mark as Unread', 'buddyboss' ); ?></a> &nbsp;
+		<a href="#" id="mark_as_read"><?php _e( 'Mark as Read', 'buddyboss-platform' ); ?></a> &nbsp;
+		<a href="#" id="mark_as_unread"><?php _e( 'Mark as Unread', 'buddyboss-platform' ); ?></a> &nbsp;
 
 		<?php wp_nonce_field( 'bp_messages_mark_messages_read', 'mark-messages-read-nonce', false ); ?>
 		<?php wp_nonce_field( 'bp_messages_mark_messages_unread', 'mark-messages-unread-nonce', false ); ?>
 
 	<?php endif; ?>
 
-	<a href="#" id="delete_<?php echo bp_current_action(); ?>_messages"><?php _e( 'Delete Selected', 'buddyboss' ); ?></a> &nbsp;
+	<a href="#" id="delete_<?php echo bp_current_action(); ?>_messages"><?php _e( 'Delete Selected', 'buddyboss-platform' ); ?></a> &nbsp;
 	<?php wp_nonce_field( 'bp_messages_delete_selected', 'delete-selected-nonce', false ); ?>
 	<?php
 }
@@ -1049,14 +1049,14 @@ function bp_messages_bulk_management_dropdown() {
 	?>
 	<label class="bp-screen-reader-text" for="messages-select">
 	<?php
-		_e( 'Select Bulk Action', 'buddyboss' );
+		_e( 'Select Bulk Action', 'buddyboss-platform' );
 	?>
 	</label>
 	<select name="messages_bulk_action" id="messages-select">
-		<option value="" selected="selected"><?php _e( 'Bulk Actions', 'buddyboss' ); ?></option>
-		<option value="read"><?php _e( 'Mark read', 'buddyboss' ); ?></option>
-		<option value="unread"><?php _e( 'Mark unread', 'buddyboss' ); ?></option>
-		<option value="delete"><?php _e( 'Delete', 'buddyboss' ); ?></option>
+		<option value="" selected="selected"><?php _e( 'Bulk Actions', 'buddyboss-platform' ); ?></option>
+		<option value="read"><?php _e( 'Mark read', 'buddyboss-platform' ); ?></option>
+		<option value="unread"><?php _e( 'Mark unread', 'buddyboss-platform' ); ?></option>
+		<option value="delete"><?php _e( 'Delete', 'buddyboss-platform' ); ?></option>
 		<?php
 			/**
 			 * Action to add additional options to the messages bulk management dropdown.
@@ -1066,7 +1066,7 @@ function bp_messages_bulk_management_dropdown() {
 			do_action( 'bp_messages_bulk_management_dropdown' );
 		?>
 	</select>
-	<input type="submit" id="messages-bulk-manage" class="button action" value="<?php esc_attr_e( 'Apply', 'buddyboss' ); ?>">
+	<input type="submit" id="messages-bulk-manage" class="button action" value="<?php esc_attr_e( 'Apply', 'buddyboss-platform' ); ?>">
 	<?php
 }
 
@@ -1119,7 +1119,7 @@ function bp_message_is_active_notice() {
 function bp_get_message_is_active_notice() {
 
 	$string = bp_messages_is_active_notice()
-		? __( 'Currently Active', 'buddyboss' )
+		? __( 'Currently Active', 'buddyboss-platform' )
 		: '';
 
 	return apply_filters( 'bp_get_message_is_active_notice', $string );
@@ -1291,9 +1291,9 @@ function bp_get_message_activate_deactivate_text() {
 	global $messages_template;
 
 	if ( 1 === (int) $messages_template->thread->is_active ) {
-		$text = __( 'Deactivate', 'buddyboss' );
+		$text = __( 'Deactivate', 'buddyboss-platform' );
 	} else {
-		$text = __( 'Activate', 'buddyboss' );
+		$text = __( 'Activate', 'buddyboss-platform' );
 	}
 
 	/**
@@ -1356,7 +1356,7 @@ function bp_message_get_notices() {
 				<p>
 					<strong><?php echo stripslashes( wp_filter_kses( $notice->subject ) ); ?></strong><br />
 					<?php echo stripslashes( wp_filter_kses( $notice->message ) ); ?>
-					<button type="button" id="close-notice" class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Dismiss this notice', 'buddyboss' ); ?>"><span class="bp-screen-reader-text"><?php _e( 'Dismiss this notice', 'buddyboss' ); ?></span> <span aria-hidden="true">&Chi;</span></button>
+					<button type="button" id="close-notice" class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Dismiss this notice', 'buddyboss-platform' ); ?>"><span class="bp-screen-reader-text"><?php _e( 'Dismiss this notice', 'buddyboss-platform' ); ?></span> <span aria-hidden="true">&Chi;</span></button>
 					<?php wp_nonce_field( 'bp_messages_close_notice', 'close-notice-nonce' ); ?>
 				</p>
 			</div>
@@ -1478,11 +1478,11 @@ function bp_get_send_message_button( $args = '' ) {
 			'message_receiver_user_id' => $receiver_user_id,
 			'wrapper_id'               => 'send-private-message',
 			'link_href'                => bp_get_send_private_message_link(),
-			'link_text'                => esc_html__( 'Send Message', 'buddyboss' ),
+			'link_text'                => esc_html__( 'Send Message', 'buddyboss-platform' ),
 			'link_class'               => 'send-message',
 			'is_tooltips'              => false,
 			'data-balloon-pos'         => '',
-			'data-balloon'             => esc_html__( 'Send Message', 'buddyboss' ),
+			'data-balloon'             => esc_html__( 'Send Message', 'buddyboss-platform' ),
 			'prefix_link_text'         => '',
 			'postfix_link_text'        => '',
 			'button_attr'              => array(
@@ -1755,7 +1755,7 @@ function bp_get_the_thread_subject() {
 function bp_get_the_thread_recipients() {
 	if ( 5 <= bp_get_thread_recipients_count() ) {
 		/* translators: %s: number of recipients. */
-		$recipients = sprintf( __( '%s recipients', 'buddyboss' ), bp_core_number_format( bp_get_thread_recipients_count() ) );
+		$recipients = sprintf( __( '%s recipients', 'buddyboss-platform' ), bp_core_number_format( bp_get_thread_recipients_count() ) );
 	} else {
 		$recipients = bp_get_thread_recipients_list();
 	}
@@ -1825,12 +1825,12 @@ function bp_get_thread_recipients_list() {
 			$recipient_link = bp_core_get_userlink( $recipient->user_id );
 
 			if ( empty( $recipient_link ) ) {
-				$recipient_link = __( 'Deleted User', 'buddyboss' );
+				$recipient_link = __( 'Deleted User', 'buddyboss-platform' );
 			}
 
 			$recipient_links[] = $recipient_link;
 		} else {
-			$recipient_links[] = __( 'you', 'buddyboss' );
+			$recipient_links[] = __( 'you', 'buddyboss-platform' );
 		}
 	}
 
@@ -2090,7 +2090,7 @@ function bp_get_the_thread_message_sender_name() {
 	$display_name = bp_core_get_user_displayname( $thread_template->message->sender_id );
 
 	if ( empty( $display_name ) ) {
-		$display_name = __( 'Deleted User', 'buddyboss' );
+		$display_name = __( 'Deleted User', 'buddyboss-platform' );
 	}
 
 	/**
@@ -2155,7 +2155,7 @@ function bp_get_the_thread_message_time_since() {
 	 *
 	 * @param string $value Default text of 'Sent x hours ago'.
 	 */
-	return apply_filters( 'bp_get_the_thread_message_time_since', sprintf( __( '%s', 'buddyboss' ), bp_core_time_since( bp_get_the_thread_message_date_sent() ) ) );
+	return apply_filters( 'bp_get_the_thread_message_time_since', sprintf( __( '%s', 'buddyboss-platform' ), bp_core_time_since( bp_get_the_thread_message_date_sent() ) ) );
 }
 
 /**
@@ -2208,7 +2208,7 @@ function bp_get_the_thread_message_content() {
 
 	// If user was deleted, mark content as deleted.
 	if ( false === bp_core_get_core_userdata( bp_get_the_thread_message_sender_id() ) ) {
-		$content = esc_html__( 'This message was deleted', 'buddyboss' );
+		$content = esc_html__( 'This message was deleted', 'buddyboss-platform' );
 	}
 
 	/**
@@ -2243,7 +2243,7 @@ function bb_get_the_thread_message_excerpt() {
 
 	// If user was deleted, mark content as deleted.
 	if ( false === bp_core_get_core_userdata( bp_get_the_thread_message_sender_id() ) ) {
-		$content = esc_html__( 'This message was deleted', 'buddyboss' );
+		$content = esc_html__( 'This message was deleted', 'buddyboss-platform' );
 	}
 
 	/**
@@ -2359,7 +2359,7 @@ function bb_get_thread_sent_date( $last_message_date = false ) {
 	 *
 	 * @param string $value String representing the time since the older date.
 	 */
-	$unknown_text = apply_filters( 'bb_get_thread_sent_date_unknown_text', __( 'Sometime', 'buddyboss' ) );
+	$unknown_text = apply_filters( 'bb_get_thread_sent_date_unknown_text', __( 'Sometime', 'buddyboss-platform' ) );
 
 	if ( empty( $last_message_date ) ) {
 		return $unknown_text;
@@ -2372,7 +2372,7 @@ function bb_get_thread_sent_date( $last_message_date = false ) {
 	 *
 	 * @param string $value String representing the time since the older date.
 	 */
-	$right_now_text = apply_filters( 'bb_get_thread_sent_date_right_now_text', __( 'Now', 'buddyboss' ) );
+	$right_now_text = apply_filters( 'bb_get_thread_sent_date_right_now_text', __( 'Now', 'buddyboss-platform' ) );
 
 	// Array of time period chunks.
 	$chunks = array(
@@ -2474,7 +2474,7 @@ function bb_get_thread_sent_date( $last_message_date = false ) {
 						$start_week = bb_get_week_timestamp( '-7 days' );
 						$end_week   = bb_get_week_timestamp( 'now', 'end' );
 						if ( 1 == $count ) {
-							$output = __( 'Yesterday', 'buddyboss' );
+							$output = __( 'Yesterday', 'buddyboss-platform' );
 						} elseif ( $start_week <= $last_message_date && $end_week >= $last_message_date ) {
 							$output = bp_core_get_format_date( $old_last_date, 'l' );
 						} else {
@@ -2535,7 +2535,7 @@ function bb_get_thread_start_date( $thread_start_date = false, $show_week_days =
 	 *
 	 * @param string $value String representing the time since the older date.
 	 */
-	$unknown_text = apply_filters( 'bb_get_thread_start_date_unknown_text', __( 'Sometime', 'buddyboss' ) );
+	$unknown_text = apply_filters( 'bb_get_thread_start_date_unknown_text', __( 'Sometime', 'buddyboss-platform' ) );
 
 	if ( empty( $thread_start_date ) ) {
 		return $unknown_text;
@@ -2548,7 +2548,7 @@ function bb_get_thread_start_date( $thread_start_date = false, $show_week_days =
 	 *
 	 * @param string $value String representing the time since the older date.
 	 */
-	$today_text = apply_filters( 'bb_get_thread_start_date_today_text', __( 'today', 'buddyboss' ) );
+	$today_text = apply_filters( 'bb_get_thread_start_date_today_text', __( 'today', 'buddyboss-platform' ) );
 
 	// Array of time period chunks.
 	$chunks = array(
@@ -2646,7 +2646,7 @@ function bb_get_thread_start_date( $thread_start_date = false, $show_week_days =
 					break;
 				case DAY_IN_SECONDS:
 					if ( 1 == $count ) {
-						$output = __( 'yesterday', 'buddyboss' );
+						$output = __( 'yesterday', 'buddyboss-platform' );
 					} elseif ( $end_week <= $thread_start_date ) {
 						$output = bp_core_get_format_date( $old_start_date, 'l' );
 					} else {

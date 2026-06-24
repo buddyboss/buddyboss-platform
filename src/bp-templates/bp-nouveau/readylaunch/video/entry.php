@@ -55,7 +55,7 @@ if ( false !== strpos( $attachment_full, 'video-placeholder.jpg' ) || false !== 
 			$report_btn = bp_video_get_report_link( array( 'id' => $video_id ) );
 			if ( $can_edit || $can_move || $can_delete || $report_btn ) {
 				?>
-				<a href="#" class="video-action_more item-action_more bb_more_options_action" data-balloon-pos="up" data-balloon="<?php esc_attr_e( 'More actions', 'buddyboss' ); ?>" aria-label="<?php esc_attr_e( 'More actions', 'buddyboss' ); ?>">
+				<a href="#" class="video-action_more item-action_more bb_more_options_action" data-balloon-pos="up" data-balloon="<?php esc_attr_e( 'More actions', 'buddyboss-platform' ); ?>" aria-label="<?php esc_attr_e( 'More actions', 'buddyboss-platform' ); ?>">
 					<i class="bb-icons-rl-dots-three"></i>
 				</a>
 				<div class="video-action_list item-action_list bb_more_dropdown bb_more_options_list">
@@ -72,15 +72,15 @@ if ( false !== strpos( $attachment_full, 'video-placeholder.jpg' ) || false !== 
 									data-video-attachment-id="<?php echo esc_attr( $attachment_id ); ?>"
 									data-video-id="<?php echo esc_attr( $video_id ); ?>"
 									class="bb-rl-ac-video-thumbnail-edit">
-									<?php esc_html_e( 'Change Thumbnail', 'buddyboss' ); ?>
+									<?php esc_html_e( 'Change Thumbnail', 'buddyboss-platform' ); ?>
 								</a>
 							</li>
 							<?php
 						}
 						if ( $is_comment_vid ) {
 							?>
-							<li class="move_video move-disabled" data-balloon-pos="down" data-balloon="<?php esc_html_e( 'Video inherits activity privacy in comment. You are not allowed to move.', 'buddyboss' ); ?>">
-								<a href="#"><?php esc_html_e( 'Move', 'buddyboss' ); ?></a>
+							<li class="move_video move-disabled" data-balloon-pos="down" data-balloon="<?php esc_html_e( 'Video inherits activity privacy in comment. You are not allowed to move.', 'buddyboss-platform' ); ?>">
+								<a href="#"><?php esc_html_e( 'Move', 'buddyboss-platform' ); ?></a>
 							</li>
 							<?php
 						} elseif ( $can_move ) {
@@ -95,7 +95,7 @@ if ( false !== strpos( $attachment_full, 'video-placeholder.jpg' ) || false !== 
 									data-type="<?php echo esc_attr( $move_type ); ?>"
 									id="<?php echo esc_attr( $move_id ); ?>"
 									class="bb-rl-ac-video-move">
-									<?php esc_html_e( 'Move', 'buddyboss' ); ?>
+									<?php esc_html_e( 'Move', 'buddyboss-platform' ); ?>
 								</a>
 							</li>
 							<?php
@@ -121,7 +121,7 @@ if ( false !== strpos( $attachment_full, 'video-placeholder.jpg' ) || false !== 
 									data-item-id="<?php echo esc_attr( $video_id ); ?>"
 									data-type="video"
 									href="#">
-									<?php esc_html_e( 'Delete', 'buddyboss' ); ?>
+									<?php esc_html_e( 'Delete', 'buddyboss-platform' ); ?>
 								</a>
 							</li>
 							<?php
@@ -147,7 +147,7 @@ if ( false !== strpos( $attachment_full, 'video-placeholder.jpg' ) || false !== 
 			data-album-id="<?php bp_video_album_id(); ?>"
 			data-group-id="<?php bp_video_group_id(); ?>"
 			data-attachment-id="<?php echo esc_attr( $attachment_id ); ?>"
-			aria-label="<?php esc_attr_e( 'Open video in media theatre', 'buddyboss' ); ?>"
+			aria-label="<?php esc_attr_e( 'Open video in media theatre', 'buddyboss-platform' ); ?>"
 			href="#">
 				<img src="<?php echo esc_url( buddypress()->plugin_url ); ?>bp-templates/bp-nouveau/images/video-placeholder.jpg" data-src="<?php echo esc_url( $poster_full ); ?>" alt="<?php bp_video_title(); ?>" class="lazy"/>
 		</a>
@@ -159,7 +159,7 @@ if ( false !== strpos( $attachment_full, 'video-placeholder.jpg' ) || false !== 
 			?>
 			<div class="bb-video-check-wrap bb-action-check-wrap">
 				<input id="bb-video-<?php echo esc_attr( $video_id ); ?>" class="bb-custom-check" type="checkbox" value="<?php echo esc_attr( $video_id ); ?>" name="bb-video-select" />
-				<label class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Select', 'buddyboss' ); ?>" for="bb-video-<?php echo esc_attr( $video_id ); ?>"><span class="bb-icons-rl-check-circle"></span></label>
+				<label class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Select', 'buddyboss-platform' ); ?>" for="bb-video-<?php echo esc_attr( $video_id ); ?>"><span class="bb-icons-rl-check-circle"></span></label>
 			</div>
 		<?php endif; ?>
 	</div>

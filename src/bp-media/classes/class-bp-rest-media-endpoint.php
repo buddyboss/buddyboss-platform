@@ -75,7 +75,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 					'permission_callback' => array( $this, 'delete_items_permissions_check' ),
 					'args'                => array(
 						'media_ids' => array(
-							'description' => __( 'A unique numeric IDs for the media.', 'buddyboss' ),
+							'description' => __( 'A unique numeric IDs for the media.', 'buddyboss-platform' ),
 							'type'        => 'array',
 							'items'       => array(
 								'type' => 'integer',
@@ -95,7 +95,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 			array(
 				'args'        => array(
 					'id' => array(
-						'description' => __( 'A unique numeric ID for the media.', 'buddyboss' ),
+						'description' => __( 'A unique numeric ID for the media.', 'buddyboss-platform' ),
 						'type'        => 'integer',
 						'required'    => true,
 					),
@@ -287,7 +287,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 		if ( function_exists( 'bp_rest_enable_private_network' ) && true === bp_rest_enable_private_network() && ! is_user_logged_in() ) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
-				__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss' ),
+				__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss-platform' ),
 				array(
 					'status' => rest_authorization_required_code(),
 				)
@@ -302,7 +302,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 			if ( empty( $group->id ) ) {
 				$retval = new WP_Error(
 					'bp_rest_group_invalid_id',
-					__( 'Invalid group ID.', 'buddyboss' ),
+					__( 'Invalid group ID.', 'buddyboss-platform' ),
 					array(
 						'status' => 404,
 					)
@@ -310,7 +310,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 			} elseif ( ! bp_current_user_can( 'bp_moderate' ) && ! empty( $group->id ) && 'public' !== bp_get_group_status( $group ) && isset( $user_groups['groups'] ) && ! in_array( $group->id, wp_parse_id_list( $user_groups['groups'] ), true ) ) {
 				$retval = new WP_Error(
 					'bp_rest_authorization_required',
-					__( 'Sorry, Restrict access to only group members.', 'buddyboss' ),
+					__( 'Sorry, Restrict access to only group members.', 'buddyboss-platform' ),
 					array(
 						'status' => rest_authorization_required_code(),
 					)
@@ -353,7 +353,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 		if ( empty( $medias['medias'] ) ) {
 			return new WP_Error(
 				'bp_rest_media_id',
-				__( 'Invalid media ID.', 'buddyboss' ),
+				__( 'Invalid media ID.', 'buddyboss-platform' ),
 				array(
 					'status' => 404,
 				)
@@ -396,7 +396,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 		if ( function_exists( 'bp_rest_enable_private_network' ) && true === bp_rest_enable_private_network() && ! is_user_logged_in() ) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
-				__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss' ),
+				__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss-platform' ),
 				array(
 					'status' => rest_authorization_required_code(),
 				)
@@ -408,7 +408,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 		if ( true === $retval && empty( $media->id ) ) {
 			$retval = new WP_Error(
 				'bp_rest_media_invalid_id',
-				__( 'Invalid media ID.', 'buddyboss' ),
+				__( 'Invalid media ID.', 'buddyboss-platform' ),
 				array(
 					'status' => 404,
 				)
@@ -423,7 +423,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 		) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
-				__( 'Sorry, Restrict access to view this media.', 'buddyboss' ),
+				__( 'Sorry, Restrict access to view this media.', 'buddyboss-platform' ),
 				array(
 					'status' => rest_authorization_required_code(),
 				)
@@ -474,7 +474,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 		if ( empty( $request['upload_ids'] ) ) {
 			return new WP_Error(
 				'bp_rest_no_media_found',
-				__( 'Sorry, you are not allowed to create a Media item.', 'buddyboss' ),
+				__( 'Sorry, you are not allowed to create a Media item.', 'buddyboss-platform' ),
 				array(
 					'status' => 400,
 				)
@@ -510,7 +510,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 		) {
 			return new WP_Error(
 				'bp_rest_authorization_required',
-				__( 'Sorry, you are not allowed to create a folder.', 'buddyboss' ),
+				__( 'Sorry, you are not allowed to create a folder.', 'buddyboss-platform' ),
 				array(
 					'status' => rest_authorization_required_code(),
 				)
@@ -574,7 +574,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 	public function create_item_permissions_check( $request ) {
 		$retval = new WP_Error(
 			'bp_rest_authorization_required',
-			__( 'Sorry, you are not allowed to create a media.', 'buddyboss' ),
+			__( 'Sorry, you are not allowed to create a media.', 'buddyboss-platform' ),
 			array(
 				'status' => rest_authorization_required_code(),
 			)
@@ -604,7 +604,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 			) {
 				$retval = new WP_Error(
 					'bp_rest_invalid_permission',
-					__( 'You don\'t have a permission to create a media inside this group.', 'buddyboss' ),
+					__( 'You don\'t have a permission to create a media inside this group.', 'buddyboss-platform' ),
 					array(
 						'status' => rest_authorization_required_code(),
 					)
@@ -614,7 +614,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 				if ( empty( $parent_album->id ) ) {
 					$retval = new WP_Error(
 						'bp_rest_invalid_album_id',
-						__( 'Invalid Album ID.', 'buddyboss' ),
+						__( 'Invalid Album ID.', 'buddyboss-platform' ),
 						array(
 							'status' => 400,
 						)
@@ -627,7 +627,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 					if ( true === $retval && true !== (bool) $album_privacy['can_add'] ) {
 						$retval = new WP_Error(
 							'bp_rest_invalid_permission',
-							__( 'You don\'t have a permission to create a media inside this album.', 'buddyboss' ),
+							__( 'You don\'t have a permission to create a media inside this album.', 'buddyboss-platform' ),
 							array(
 								'status' => rest_authorization_required_code(),
 							)
@@ -642,7 +642,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 				) {
 					$retval = new WP_Error(
 						'bp_rest_invalid_permission',
-						__( 'Invalid request. Group not associated with the respective album.', 'buddyboss' ),
+						__( 'Invalid request. Group not associated with the respective album.', 'buddyboss-platform' ),
 						array(
 							'status' => 404,
 						)
@@ -665,7 +665,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 						'bp_rest_invalid_upload_id',
 						sprintf(
 						/* translators: Attachment ID. */
-							__( 'Invalid attachment id: %d', 'buddyboss' ),
+							__( 'Invalid attachment id: %d', 'buddyboss-platform' ),
 							$attachment_id
 						),
 						array(
@@ -677,7 +677,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 						'bp_rest_invalid_media_author',
 						sprintf(
 						/* translators: Attachment ID. */
-							__( 'You are not a valid author for attachment id: %d', 'buddyboss' ),
+							__( 'You are not a valid author for attachment id: %d', 'buddyboss-platform' ),
 							$attachment_id
 						),
 						array(
@@ -691,7 +691,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 						'bp_rest_duplicate_media_upload_id',
 						sprintf(
 						/* translators: Attachment ID. */
-							__( 'Media already exists for attachment id: %d', 'buddyboss' ),
+							__( 'Media already exists for attachment id: %d', 'buddyboss-platform' ),
 							$attachment_id
 						),
 						array(
@@ -741,7 +741,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 		if ( empty( $medias['medias'] ) ) {
 			return new WP_Error(
 				'bp_rest_media_id',
-				__( 'Invalid media ID.', 'buddyboss' ),
+				__( 'Invalid media ID.', 'buddyboss-platform' ),
 				array(
 					'status' => 404,
 				)
@@ -780,7 +780,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 			if ( empty( (int) $moved_media_id ) || is_wp_error( $moved_media_id ) ) {
 				return new WP_Error(
 					'bp_rest_invalid_move_with_album',
-					__( 'Sorry, you are not allowed to move this media with album.', 'buddyboss' ),
+					__( 'Sorry, you are not allowed to move this media with album.', 'buddyboss-platform' ),
 					array(
 						'status' => 404,
 					)
@@ -818,7 +818,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 		if ( empty( $id ) ) {
 			return new WP_Error(
 				'bp_rest_user_cannot_update_media',
-				__( 'Cannot update existing media.', 'buddyboss' ),
+				__( 'Cannot update existing media.', 'buddyboss-platform' ),
 				array(
 					'status' => 500,
 				)
@@ -868,7 +868,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 	public function update_item_permissions_check( $request ) {
 		$retval = new WP_Error(
 			'bp_rest_authorization_required',
-			__( 'Sorry, you need to be logged in to update this media.', 'buddyboss' ),
+			__( 'Sorry, you need to be logged in to update this media.', 'buddyboss-platform' ),
 			array(
 				'status' => rest_authorization_required_code(),
 			)
@@ -881,7 +881,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 			if ( empty( $media->id ) ) {
 				$retval = new WP_Error(
 					'bp_rest_media_invalid_id',
-					__( 'Invalid media ID.', 'buddyboss' ),
+					__( 'Invalid media ID.', 'buddyboss-platform' ),
 					array(
 						'status' => 404,
 					)
@@ -895,7 +895,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 			) {
 				$retval = new WP_Error(
 					'bp_rest_authorization_required',
-					__( 'Sorry, you are not allowed to update this media.', 'buddyboss' ),
+					__( 'Sorry, you are not allowed to update this media.', 'buddyboss-platform' ),
 					array(
 						'status' => 500,
 					)
@@ -910,7 +910,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 			) {
 				$retval = new WP_Error(
 					'bp_rest_invalid_permission',
-					__( 'You don\'t have a permission to edit a media inside this group.', 'buddyboss' ),
+					__( 'You don\'t have a permission to edit a media inside this group.', 'buddyboss-platform' ),
 					array(
 						'status' => rest_authorization_required_code(),
 					)
@@ -922,7 +922,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 			if ( ! bp_album_user_can_edit( (int) $request['album_id'] ) ) {
 				$retval = new WP_Error(
 					'bp_rest_invalid_permission',
-					__( 'You don\'t have a permission to move/update a media inside this Album.', 'buddyboss' ),
+					__( 'You don\'t have a permission to move/update a media inside this Album.', 'buddyboss-platform' ),
 					array(
 						'status' => rest_authorization_required_code(),
 					)
@@ -969,7 +969,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 		if ( empty( $media_ids ) ) {
 			return new WP_Error(
 				'bp_rest_media_invalid_ids',
-				__( 'Invalid media IDs.', 'buddyboss' ),
+				__( 'Invalid media IDs.', 'buddyboss-platform' ),
 				array(
 					'status' => 404,
 				)
@@ -987,7 +987,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 		if ( empty( $medias['medias'] ) ) {
 			return new WP_Error(
 				'bp_rest_media_ids',
-				__( 'Invalid media IDs.', 'buddyboss' ),
+				__( 'Invalid media IDs.', 'buddyboss-platform' ),
 				array(
 					'status' => 404,
 				)
@@ -1008,7 +1008,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 				if ( ! bp_media_user_can_delete( $media->id ) ) {
 					$status[ $media->id ] = new WP_Error(
 						'bp_rest_authorization_required',
-						__( 'Sorry, you are not allowed to delete this media.', 'buddyboss' ),
+						__( 'Sorry, you are not allowed to delete this media.', 'buddyboss-platform' ),
 						array(
 							'status' => rest_authorization_required_code(),
 						)
@@ -1020,7 +1020,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 				if ( ! bp_video_user_can_delete( $media->id ) ) {
 					$status[ $media->id ] = new WP_Error(
 						'bp_rest_authorization_required',
-						__( 'Sorry, you are not allowed to delete this media.', 'buddyboss' ),
+						__( 'Sorry, you are not allowed to delete this media.', 'buddyboss-platform' ),
 						array(
 							'status' => rest_authorization_required_code(),
 						)
@@ -1064,7 +1064,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 	public function delete_items_permissions_check( $request ) {
 		$retval = new WP_Error(
 			'bp_rest_authorization_required',
-			__( 'Sorry, you need to be logged in to delete this media.', 'buddyboss' ),
+			__( 'Sorry, you need to be logged in to delete this media.', 'buddyboss-platform' ),
 			array(
 				'status' => rest_authorization_required_code(),
 			)
@@ -1110,7 +1110,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 		if ( empty( $medias['medias'] ) ) {
 			return new WP_Error(
 				'bp_rest_media_id',
-				__( 'Invalid media ID.', 'buddyboss' ),
+				__( 'Invalid media ID.', 'buddyboss-platform' ),
 				array(
 					'status' => 404,
 				)
@@ -1127,7 +1127,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 		if ( ! bp_media_user_can_delete( $id ) ) {
 			return new WP_Error(
 				'bp_rest_authorization_required',
-				__( 'Sorry, you are not allowed to delete this media.', 'buddyboss' ),
+				__( 'Sorry, you are not allowed to delete this media.', 'buddyboss-platform' ),
 				array(
 					'status' => rest_authorization_required_code(),
 				)
@@ -1169,7 +1169,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 	public function delete_item_permissions_check( $request ) {
 		$retval = new WP_Error(
 			'bp_rest_authorization_required',
-			__( 'Sorry, you need to be logged in to delete this media.', 'buddyboss' ),
+			__( 'Sorry, you need to be logged in to delete this media.', 'buddyboss-platform' ),
 			array(
 				'status' => rest_authorization_required_code(),
 			)
@@ -1182,7 +1182,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 			if ( empty( $media->id ) ) {
 				$retval = new WP_Error(
 					'bp_rest_media_invalid_id',
-					__( 'Invalid media ID.', 'buddyboss' ),
+					__( 'Invalid media ID.', 'buddyboss-platform' ),
 					array(
 						'status' => 404,
 					)
@@ -1190,7 +1190,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 			} elseif ( ! bp_media_user_can_delete( $media ) ) {
 				$retval = new WP_Error(
 					'bp_rest_authorization_required',
-					__( 'Sorry, you are not allowed to delete this media.', 'buddyboss' ),
+					__( 'Sorry, you are not allowed to delete this media.', 'buddyboss-platform' ),
 					array(
 						'status' => rest_authorization_required_code(),
 					)
@@ -1236,7 +1236,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 		if ( empty( $file ) ) {
 			return new WP_Error(
 				'bp_rest_media_file_required',
-				__( 'Sorry, you have not uploaded any media.', 'buddyboss' ),
+				__( 'Sorry, you have not uploaded any media.', 'buddyboss-platform' ),
 				array(
 					'status' => 400,
 				)
@@ -1252,7 +1252,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 				'bp_rest_max_upload_size',
 				sprintf(
 					/* translators: 1: File size, 2: Allowed size. */
-					__( 'File is too large (%1$s MB). Max file size: %2$s MB.', 'buddyboss' ),
+					__( 'File is too large (%1$s MB). Max file size: %2$s MB.', 'buddyboss-platform' ),
 					round( $file['file']['size'] / 1048576, 1 ),
 					bp_media_allowed_upload_media_size()
 				),
@@ -1320,7 +1320,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 
 		$retval = new WP_Error(
 			'bp_rest_authorization_required',
-			__( 'Sorry, you are not allowed to upload media.', 'buddyboss' ),
+			__( 'Sorry, you are not allowed to upload media.', 'buddyboss-platform' ),
 			array(
 				'status' => rest_authorization_required_code(),
 			)
@@ -1375,7 +1375,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 
 		if ( WP_REST_Server::CREATABLE === $method ) {
 			$args['upload_ids'] = array(
-				'description'       => __( 'Media specific IDs.', 'buddyboss' ),
+				'description'       => __( 'Media specific IDs.', 'buddyboss-platform' ),
 				'default'           => array(),
 				'type'              => 'array',
 				'required'          => true,
@@ -1385,7 +1385,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 			);
 
 			$args['activity_id'] = array(
-				'description'       => __( 'A unique numeric ID for the activity.', 'buddyboss' ),
+				'description'       => __( 'A unique numeric ID for the activity.', 'buddyboss-platform' ),
 				'type'              => 'integer',
 				'sanitize_callback' => 'absint',
 				'validate_callback' => 'rest_validate_request_arg',
@@ -1393,21 +1393,21 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 		}
 
 		$args['group_id'] = array(
-			'description'       => __( 'A unique numeric ID for the Group.', 'buddyboss' ),
+			'description'       => __( 'A unique numeric ID for the Group.', 'buddyboss-platform' ),
 			'type'              => 'integer',
 			'sanitize_callback' => 'absint',
 			'validate_callback' => 'rest_validate_request_arg',
 		);
 
 		$args['album_id'] = array(
-			'description'       => __( 'A unique numeric ID for the Media Album.', 'buddyboss' ),
+			'description'       => __( 'A unique numeric ID for the Media Album.', 'buddyboss-platform' ),
 			'type'              => 'integer',
 			'sanitize_callback' => 'absint',
 			'validate_callback' => 'rest_validate_request_arg',
 		);
 
 		$args['privacy'] = array(
-			'description'       => __( 'Privacy of the media.', 'buddyboss' ),
+			'description'       => __( 'Privacy of the media.', 'buddyboss-platform' ),
 			'type'              => 'string',
 			'enum'              => array( 'public', 'loggedin', 'onlyme', 'friends', 'grouponly' ),
 			'default'           => 'public',
@@ -1417,7 +1417,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 
 		if ( WP_REST_Server::EDITABLE === $method ) {
 			$args['id'] = array(
-				'description'       => __( 'A unique numeric ID for the media.', 'buddyboss' ),
+				'description'       => __( 'A unique numeric ID for the media.', 'buddyboss-platform' ),
 				'type'              => 'integer',
 				'required'          => true,
 				'sanitize_callback' => 'absint',
@@ -1592,117 +1592,117 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 			'properties' => array(
 				'id'                    => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'A unique numeric ID for the Media.', 'buddyboss' ),
+					'description' => __( 'A unique numeric ID for the Media.', 'buddyboss-platform' ),
 					'readonly'    => true,
 					'type'        => 'integer',
 				),
 				'blog_id'               => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Current Site ID.', 'buddyboss' ),
+					'description' => __( 'Current Site ID.', 'buddyboss-platform' ),
 					'readonly'    => true,
 					'type'        => 'integer',
 				),
 				'attachment_id'         => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Unique identifier for the media object.', 'buddyboss' ),
+					'description' => __( 'Unique identifier for the media object.', 'buddyboss-platform' ),
 					'readonly'    => true,
 					'type'        => 'integer',
 				),
 				'user_id'               => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'The ID for the author of the media.', 'buddyboss' ),
+					'description' => __( 'The ID for the author of the media.', 'buddyboss-platform' ),
 					'readonly'    => true,
 					'type'        => 'integer',
 				),
 				'title'                 => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'The Media title.', 'buddyboss' ),
+					'description' => __( 'The Media title.', 'buddyboss-platform' ),
 					'readonly'    => true,
 					'type'        => 'string',
 				),
 				'description'           => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'The Media description.', 'buddyboss' ),
+					'description' => __( 'The Media description.', 'buddyboss-platform' ),
 					'readonly'    => true,
 					'type'        => 'string',
 				),
 				'album_id'              => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'A unique numeric ID for the Album.', 'buddyboss' ),
+					'description' => __( 'A unique numeric ID for the Album.', 'buddyboss-platform' ),
 					'readonly'    => true,
 					'type'        => 'integer',
 				),
 				'group_id'              => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'A unique numeric ID for the Group.', 'buddyboss' ),
+					'description' => __( 'A unique numeric ID for the Group.', 'buddyboss-platform' ),
 					'readonly'    => true,
 					'type'        => 'integer',
 				),
 				'activity_id'           => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'A unique numeric ID for the activity.', 'buddyboss' ),
+					'description' => __( 'A unique numeric ID for the activity.', 'buddyboss-platform' ),
 					'readonly'    => true,
 					'type'        => 'integer',
 				),
 				'message_id'            => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'A unique numeric ID for the Message thread.', 'buddyboss' ),
+					'description' => __( 'A unique numeric ID for the Message thread.', 'buddyboss-platform' ),
 					'readonly'    => true,
 					'type'        => 'integer',
 				),
 				'hide_activity_actions' => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Based on this hide like/comment button for media activity comments.', 'buddyboss' ),
+					'description' => __( 'Based on this hide like/comment button for media activity comments.', 'buddyboss-platform' ),
 					'readonly'    => true,
 					'type'        => 'boolean',
 				),
 				'privacy'               => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Privacy of the media.', 'buddyboss' ),
+					'description' => __( 'Privacy of the media.', 'buddyboss-platform' ),
 					'enum'        => array( 'public', 'loggedin', 'onlyme', 'friends', 'grouponly' ),
 					'readonly'    => true,
 					'type'        => 'string',
 				),
 				'menu_order'            => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Order of the item.', 'buddyboss' ),
+					'description' => __( 'Order of the item.', 'buddyboss-platform' ),
 					'readonly'    => true,
 					'type'        => 'integer',
 				),
 				'date_created'          => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'The date the media was created, in the site\'s timezone.', 'buddyboss' ),
+					'description' => __( 'The date the media was created, in the site\'s timezone.', 'buddyboss-platform' ),
 					'readonly'    => true,
 					'type'        => 'string',
 					'format'      => 'date-time',
 				),
 				'attachment_data'       => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Wordpress Media Data.', 'buddyboss' ),
+					'description' => __( 'Wordpress Media Data.', 'buddyboss-platform' ),
 					'readonly'    => true,
 					'type'        => 'object',
 					'properties'  => array(
 						'full'           => array(
 							'context'     => array( 'embed', 'view', 'edit' ),
-							'description' => __( 'Media URL with full image size.', 'buddyboss' ),
+							'description' => __( 'Media URL with full image size.', 'buddyboss-platform' ),
 							'readonly'    => true,
 							'type'        => 'string',
 						),
 						'thumb'          => array(
 							'context'     => array( 'embed', 'view', 'edit' ),
-							'description' => __( 'Media URL with thumbnail image size.', 'buddyboss' ),
+							'description' => __( 'Media URL with thumbnail image size.', 'buddyboss-platform' ),
 							'readonly'    => true,
 							'type'        => 'string',
 						),
 						'activity_thumb' => array(
 							'context'     => array( 'embed', 'view', 'edit' ),
-							'description' => __( 'Media URL for the activity image size.', 'buddyboss' ),
+							'description' => __( 'Media URL for the activity image size.', 'buddyboss-platform' ),
 							'readonly'    => true,
 							'type'        => 'string',
 						),
 						'meta'           => array(
 							'context'     => array( 'embed', 'view', 'edit' ),
-							'description' => __( 'Meta items for the media.', 'buddyboss' ),
+							'description' => __( 'Meta items for the media.', 'buddyboss-platform' ),
 							'readonly'    => true,
 							'type'        => 'object',
 						),
@@ -1710,55 +1710,55 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 				),
 				'group_name'            => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Group name associate with the media.', 'buddyboss' ),
+					'description' => __( 'Group name associate with the media.', 'buddyboss-platform' ),
 					'readonly'    => true,
 					'type'        => 'string',
 				),
 				'visibility'            => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Visibility of the media.', 'buddyboss' ),
+					'description' => __( 'Visibility of the media.', 'buddyboss-platform' ),
 					'readonly'    => true,
 					'type'        => 'string',
 				),
 				'user_nicename'         => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'The User\'s nice name to create a media.', 'buddyboss' ),
+					'description' => __( 'The User\'s nice name to create a media.', 'buddyboss-platform' ),
 					'readonly'    => true,
 					'type'        => 'string',
 				),
 				'user_login'            => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'The User\'s login name to create a media.', 'buddyboss' ),
+					'description' => __( 'The User\'s login name to create a media.', 'buddyboss-platform' ),
 					'readonly'    => true,
 					'type'        => 'string',
 				),
 				'display_name'          => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'The User\'s display name to create a media.', 'buddyboss' ),
+					'description' => __( 'The User\'s display name to create a media.', 'buddyboss-platform' ),
 					'readonly'    => true,
 					'type'        => 'string',
 				),
 				'url'                   => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Media file URL.', 'buddyboss' ),
+					'description' => __( 'Media file URL.', 'buddyboss-platform' ),
 					'readonly'    => true,
 					'type'        => 'string',
 				),
 				'download_url'          => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Download Media file URL.', 'buddyboss' ),
+					'description' => __( 'Download Media file URL.', 'buddyboss-platform' ),
 					'readonly'    => true,
 					'type'        => 'string',
 				),
 				'user_permissions'      => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Current user\'s permission with the media.', 'buddyboss' ),
+					'description' => __( 'Current user\'s permission with the media.', 'buddyboss-platform' ),
 					'readonly'    => true,
 					'type'        => 'object',
 				),
 				'type'                  => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Current media type, photo or video.', 'buddyboss' ),
+					'description' => __( 'Current media type, photo or video.', 'buddyboss-platform' ),
 					'readonly'    => true,
 					'type'        => 'string',
 				),
@@ -1783,7 +1783,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 		$params = parent::get_collection_params();
 
 		$params['order'] = array(
-			'description'       => __( 'Order sort attribute ascending or descending.', 'buddyboss' ),
+			'description'       => __( 'Order sort attribute ascending or descending.', 'buddyboss-platform' ),
 			'default'           => 'desc',
 			'type'              => 'string',
 			'enum'              => array( 'asc', 'desc' ),
@@ -1792,7 +1792,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['orderby'] = array(
-			'description'       => __( 'Order media by which attribute.', 'buddyboss' ),
+			'description'       => __( 'Order media by which attribute.', 'buddyboss-platform' ),
 			'default'           => 'date_created',
 			'type'              => 'string',
 			'enum'              => array( 'date_created', 'menu_order', 'id', 'include' ),
@@ -1801,7 +1801,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['user_id'] = array(
-			'description'       => __( 'Limit results to friends of a user.', 'buddyboss' ),
+			'description'       => __( 'Limit results to friends of a user.', 'buddyboss-platform' ),
 			'default'           => 0,
 			'type'              => 'integer',
 			'sanitize_callback' => 'absint',
@@ -1809,35 +1809,35 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['max'] = array(
-			'description'       => __( 'Maximum number of results to return', 'buddyboss' ),
+			'description'       => __( 'Maximum number of results to return', 'buddyboss-platform' ),
 			'type'              => 'integer',
 			'sanitize_callback' => 'absint',
 			'validate_callback' => 'rest_validate_request_arg',
 		);
 
 		$params['album_id'] = array(
-			'description'       => __( 'A unique numeric ID for the Album.', 'buddyboss' ),
+			'description'       => __( 'A unique numeric ID for the Album.', 'buddyboss-platform' ),
 			'type'              => 'integer',
 			'sanitize_callback' => 'absint',
 			'validate_callback' => 'rest_validate_request_arg',
 		);
 
 		$params['group_id'] = array(
-			'description'       => __( 'A unique numeric ID for the Group.', 'buddyboss' ),
+			'description'       => __( 'A unique numeric ID for the Group.', 'buddyboss-platform' ),
 			'type'              => 'integer',
 			'sanitize_callback' => 'absint',
 			'validate_callback' => 'rest_validate_request_arg',
 		);
 
 		$params['activity_id'] = array(
-			'description'       => __( 'A unique numeric ID for the Media\'s Activity.', 'buddyboss' ),
+			'description'       => __( 'A unique numeric ID for the Media\'s Activity.', 'buddyboss-platform' ),
 			'type'              => 'integer',
 			'sanitize_callback' => 'absint',
 			'validate_callback' => 'rest_validate_request_arg',
 		);
 
 		$params['privacy'] = array(
-			'description'       => __( 'Privacy of the media.', 'buddyboss' ),
+			'description'       => __( 'Privacy of the media.', 'buddyboss-platform' ),
 			'type'              => 'array',
 			'items'             => array(
 				'enum' => array( 'public', 'loggedin', 'onlyme', 'friends', 'grouponly' ),
@@ -1848,7 +1848,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['scope'] = array(
-			'description'       => __( 'Scope of the media.', 'buddyboss' ),
+			'description'       => __( 'Scope of the media.', 'buddyboss-platform' ),
 			'type'              => 'array',
 			'items'             => array(
 				'enum' => array( 'friends', 'groups', 'personal' ),
@@ -1859,7 +1859,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['include'] = array(
-			'description'       => __( 'Ensure result set includes specific IDs.', 'buddyboss' ),
+			'description'       => __( 'Ensure result set includes specific IDs.', 'buddyboss-platform' ),
 			'default'           => array(),
 			'type'              => 'array',
 			'items'             => array( 'type' => 'integer' ),
@@ -1868,7 +1868,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['exclude'] = array(
-			'description'       => __( 'Ensure result set excludes specific media IDs.', 'buddyboss' ),
+			'description'       => __( 'Ensure result set excludes specific media IDs.', 'buddyboss-platform' ),
 			'default'           => array(),
 			'type'              => 'array',
 			'items'             => array( 'type' => 'integer' ),
@@ -1877,7 +1877,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['count_total'] = array(
-			'description' => __( 'Show total count or not.', 'buddyboss' ),
+			'description' => __( 'Show total count or not.', 'buddyboss-platform' ),
 			'default'     => true,
 			'type'        => 'boolean',
 		);
@@ -2053,7 +2053,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 		if ( empty( $created_media_ids ) ) {
 			return new WP_Error(
 				'bp_rest_media_creation_error',
-				__( 'Error creating media, please try again.', 'buddyboss' ),
+				__( 'Error creating media, please try again.', 'buddyboss-platform' ),
 				array(
 					'status' => 400,
 				)
@@ -2814,7 +2814,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 	public function bp_rest_activity_query_arguments( $args, $method ) {
 
 		$args['bp_media_ids'] = array(
-			'description'       => __( 'Media specific IDs.', 'buddyboss' ),
+			'description'       => __( 'Media specific IDs.', 'buddyboss-platform' ),
 			'type'              => 'array',
 			'items'             => array( 'type' => 'integer' ),
 			'sanitize_callback' => 'wp_parse_id_list',
@@ -2822,19 +2822,19 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 		);
 
 		$args['media_gif'] = array(
-			'description' => __( 'Save gif data into activity', 'buddyboss' ),
+			'description' => __( 'Save gif data into activity', 'buddyboss-platform' ),
 			'type'        => 'object',
 			'items'       => array( 'type' => 'string' ),
 			'properties'  => array(
 				'url' => array(
-					'description'       => __( 'URL for the gif media from object `480w_still->url`', 'buddyboss' ),
+					'description'       => __( 'URL for the gif media from object `480w_still->url`', 'buddyboss-platform' ),
 					'type'              => 'string',
 					'required'          => true,
 					'sanitize_callback' => 'sanitize_key',
 					'validate_callback' => 'rest_validate_request_arg',
 				),
 				'mp4' => array(
-					'description'       => __( 'Gif file URL from object `original_mp4->mp4`', 'buddyboss' ),
+					'description'       => __( 'Gif file URL from object `original_mp4->mp4`', 'buddyboss-platform' ),
 					'required'          => true,
 					'type'              => 'string',
 					'sanitize_callback' => 'sanitize_key',
@@ -2856,7 +2856,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 	public function bp_rest_forums_collection_params( $params ) {
 
 		$params['bbp_media'] = array(
-			'description'       => __( 'Media specific IDs.', 'buddyboss' ),
+			'description'       => __( 'Media specific IDs.', 'buddyboss-platform' ),
 			'type'              => 'array',
 			'items'             => array( 'type' => 'integer' ),
 			'sanitize_callback' => 'wp_parse_id_list',
@@ -2864,19 +2864,19 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['bbp_media_gif'] = array(
-			'description' => __( 'Save gif data into topic.', 'buddyboss' ),
+			'description' => __( 'Save gif data into topic.', 'buddyboss-platform' ),
 			'type'        => 'object',
 			'items'       => array( 'type' => 'string' ),
 			'properties'  => array(
 				'url' => array(
-					'description'       => __( 'URL for the gif media from object `480w_still->url`', 'buddyboss' ),
+					'description'       => __( 'URL for the gif media from object `480w_still->url`', 'buddyboss-platform' ),
 					'type'              => 'string',
 					'required'          => true,
 					'sanitize_callback' => 'sanitize_key',
 					'validate_callback' => 'rest_validate_request_arg',
 				),
 				'mp4' => array(
-					'description'       => __( 'Gif file URL from object `original_mp4->mp4`', 'buddyboss' ),
+					'description'       => __( 'Gif file URL from object `original_mp4->mp4`', 'buddyboss-platform' ),
 					'required'          => true,
 					'type'              => 'string',
 					'sanitize_callback' => 'sanitize_key',
@@ -2898,7 +2898,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 	public function bp_rest_message_query_arguments( $params ) {
 
 		$params['bp_media_ids'] = array(
-			'description'       => __( 'Media specific IDs.', 'buddyboss' ),
+			'description'       => __( 'Media specific IDs.', 'buddyboss-platform' ),
 			'type'              => 'array',
 			'items'             => array( 'type' => 'integer' ),
 			'sanitize_callback' => 'wp_parse_id_list',
@@ -2906,19 +2906,19 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['media_gif'] = array(
-			'description' => __( 'Save gif data into topic.', 'buddyboss' ),
+			'description' => __( 'Save gif data into topic.', 'buddyboss-platform' ),
 			'type'        => 'object',
 			'items'       => array( 'type' => 'string' ),
 			'properties'  => array(
 				'url' => array(
-					'description'       => __( 'URL for the gif media from object `480w_still->url`', 'buddyboss' ),
+					'description'       => __( 'URL for the gif media from object `480w_still->url`', 'buddyboss-platform' ),
 					'type'              => 'string',
 					'required'          => true,
 					'sanitize_callback' => 'sanitize_key',
 					'validate_callback' => 'rest_validate_request_arg',
 				),
 				'mp4' => array(
-					'description'       => __( 'Gif file URL from object `original_mp4->mp4`', 'buddyboss' ),
+					'description'       => __( 'Gif file URL from object `original_mp4->mp4`', 'buddyboss-platform' ),
 					'required'          => true,
 					'type'              => 'string',
 					'sanitize_callback' => 'sanitize_key',
@@ -3894,7 +3894,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 		if ( empty( $attachment_id ) ) {
 			return new WP_Error(
 				'bp_rest_media_attachment_invalid_id',
-				__( 'Invalid attachment ID.', 'buddyboss' ),
+				__( 'Invalid attachment ID.', 'buddyboss-platform' ),
 				array(
 					'status' => 404,
 				)
@@ -3906,7 +3906,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 		if ( empty( $attachment ) ) {
 			return new WP_Error(
 				'bp_rest_media_attachment_invalid_id',
-				__( 'Invalid attachment ID.', 'buddyboss' ),
+				__( 'Invalid attachment ID.', 'buddyboss-platform' ),
 				array(
 					'status' => 404,
 				)
@@ -3919,7 +3919,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 		if ( ! $status ) {
 			return new WP_Error(
 				'bp_rest_media_attachment_delete_failed',
-				__( 'Could not delete the attachment.', 'buddyboss' ),
+				__( 'Could not delete the attachment.', 'buddyboss-platform' ),
 				array(
 					'status' => 500,
 				)
@@ -3960,7 +3960,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 	public function delete_uploaded_attachment_item_permissions_check( $request ) {
 		$retval = new WP_Error(
 			'bp_rest_authorization_required',
-			__( 'Sorry, you need to be logged in to delete this media.', 'buddyboss' ),
+			__( 'Sorry, you need to be logged in to delete this media.', 'buddyboss-platform' ),
 			array(
 				'status' => rest_authorization_required_code(),
 			)
@@ -3972,7 +3972,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 			if ( empty( $attachment_id ) ) {
 				$retval = new WP_Error(
 					'bp_rest_media_attachment_invalid_id',
-					__( 'Invalid attachment ID.', 'buddyboss' ),
+					__( 'Invalid attachment ID.', 'buddyboss-platform' ),
 					array(
 						'status' => 404,
 					)
@@ -3983,7 +3983,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 				if ( empty( $attachment ) ) {
 					$retval = new WP_Error(
 						'bp_rest_media_attachment_invalid_id',
-						__( 'Invalid attachment ID.', 'buddyboss' ),
+						__( 'Invalid attachment ID.', 'buddyboss-platform' ),
 						array(
 							'status' => 404,
 						)
@@ -3995,7 +3995,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 					} else {
 						$retval = new WP_Error(
 							'bp_rest_authorization_required',
-							__( 'Sorry, you are not allowed to delete this media attachment.', 'buddyboss' ),
+							__( 'Sorry, you are not allowed to delete this media attachment.', 'buddyboss-platform' ),
 							array(
 								'status' => rest_authorization_required_code(),
 							)

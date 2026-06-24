@@ -30,11 +30,11 @@ import { GroupTopicsTab } from './GroupTopicsTab';
  * @type {Object}
  */
 var tabLabels = {
-	details: __( 'Details', 'buddyboss' ),
-	members: __( 'Members', 'buddyboss' ),
-	permissions: __( 'Permissions', 'buddyboss' ),
-	integrations: __( 'Integrations', 'buddyboss' ),
-	topics: __( 'Topics', 'buddyboss' ),
+	details: __( 'Details', 'buddyboss-platform' ),
+	members: __( 'Members', 'buddyboss-platform' ),
+	permissions: __( 'Permissions', 'buddyboss-platform' ),
+	integrations: __( 'Integrations', 'buddyboss-platform' ),
+	topics: __( 'Topics', 'buddyboss-platform' ),
 };
 
 /**
@@ -228,7 +228,7 @@ export function GroupEditModal( { isOpen, group, onClose, onSave, isSaving } ) {
 		if ( 0 === tabFields.length ) {
 			return (
 				<p className="bb-group-edit-modal__empty-tab">
-					{ __( 'No settings available for this tab.', 'buddyboss' ) }
+					{ __( 'No settings available for this tab.', 'buddyboss-platform' ) }
 				</p>
 			);
 		}
@@ -343,7 +343,7 @@ export function GroupEditModal( { isOpen, group, onClose, onSave, isSaving } ) {
 
 	return (
 		<Modal
-			title={ __( 'Edit Group', 'buddyboss' ) }
+			title={ __( 'Edit Group', 'buddyboss-platform' ) }
 			onRequestClose={ function () {
 				if ( ! isSaving ) {
 					onClose();
@@ -387,7 +387,7 @@ export function GroupEditModal( { isOpen, group, onClose, onSave, isSaving } ) {
 					onClick={ onClose }
 					disabled={ isSaving }
 				>
-					{ __( 'Cancel', 'buddyboss' ) }
+					{ __( 'Cancel', 'buddyboss-platform' ) }
 				</Button>
 				<Button
 					variant="primary"
@@ -395,7 +395,7 @@ export function GroupEditModal( { isOpen, group, onClose, onSave, isSaving } ) {
 					isBusy={ isSaving }
 					disabled={ isSaving }
 				>
-					{ __( 'Save', 'buddyboss' ) }
+					{ __( 'Save', 'buddyboss-platform' ) }
 				</Button>
 			</div>
 		</Modal>

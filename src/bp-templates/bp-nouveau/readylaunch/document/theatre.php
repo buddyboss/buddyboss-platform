@@ -12,19 +12,19 @@
 	<div id="bb-rl-media-model-container" class="bb-rl-media-model-container bb-document-theater">
 		<div class="bb-rl-media-model-header">
 			<h2></h2>
-			<a data-balloon-pos="left" data-balloon="<?php esc_attr_e( 'Toggle Sidebar', 'buddyboss' ); ?>" class="bb-rl-toggle-theatre-sidebar" href="#">
+			<a data-balloon-pos="left" data-balloon="<?php esc_attr_e( 'Toggle Sidebar', 'buddyboss-platform' ); ?>" class="bb-rl-toggle-theatre-sidebar" href="#">
 				<i class="bb-icons-rl-sidebar-simple"></i>
 			</a>
-			<a data-balloon-pos="left" data-balloon="<?php esc_attr_e( 'Close', 'buddyboss' ); ?>" class="bb-rl-close-media-theatre bb-rl-close-model bb-close-document-theatre" href="#">
+			<a data-balloon-pos="left" data-balloon="<?php esc_attr_e( 'Close', 'buddyboss-platform' ); ?>" class="bb-rl-close-media-theatre bb-rl-close-model bb-close-document-theatre" href="#">
 				<i class="bb-icons-rl-x"></i>
 			</a>
 		</div>
 		<div class="bb-rl-media-model-inner">
 			<div class="bb-rl-media-section bb-rl-document-section">
-				<a class="bb-rl-theater-command bb-rl-prev-document" href="#previous" aria-label="<?php esc_attr_e( 'Previous', 'buddyboss' ); ?>">
+				<a class="bb-rl-theater-command bb-rl-prev-document" href="#previous" aria-label="<?php esc_attr_e( 'Previous', 'buddyboss-platform' ); ?>">
 					<i class="bb-icons-rl-caret-left"></i>
 				</a>
-				<a class="bb-rl-theater-command bb-rl-next-document" href="#next" aria-label="<?php esc_attr_e( 'Next', 'buddyboss' ); ?>">
+				<a class="bb-rl-theater-command bb-rl-next-document" href="#next" aria-label="<?php esc_attr_e( 'Next', 'buddyboss-platform' ); ?>">
 					<i class="bb-icons-rl-caret-right"></i>
 				</a>
 				<div class="document-preview"></div>

@@ -18,9 +18,9 @@ defined( 'ABSPATH' ) || exit;
 	<div class="bb-rl-media-none-figure"><i class="bb-icons-rl-file-video"></i></div>
 	<aside class="bp-feedback bp-messages info">
 		<span class="bp-icon" aria-hidden="true"></span>
-		<p><?php esc_html_e( 'No videos found', 'buddyboss' ); ?></p>
+		<p><?php esc_html_e( 'No videos found', 'buddyboss-platform' ); ?></p>
 	</aside>
-	<p class="bb-rl-media-none-description"><?php esc_html_e( 'It looks like there aren\'t any videos in this directory.', 'buddyboss' ); ?></p>
+	<p class="bb-rl-media-none-description"><?php esc_html_e( 'It looks like there aren\'t any videos in this directory.', 'buddyboss-platform' ); ?></p>
 	<?php
 	if (
 		! bp_is_video_directory() &&

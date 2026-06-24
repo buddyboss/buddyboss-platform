@@ -25,7 +25,7 @@ function bp_video_upload() {
 	 * Make sure user is logged in
 	 */
 	if ( ! is_user_logged_in() ) {
-		return new WP_Error( 'not_logged_in', __( 'Please login in order to upload file video.', 'buddyboss' ), array( 'status' => 500 ) );
+		return new WP_Error( 'not_logged_in', __( 'Please login in order to upload file video.', 'buddyboss-platform' ), array( 'status' => 500 ) );
 	}
 
 	/**
@@ -176,13 +176,13 @@ function bp_video_thumbnail_upload_handler( $file_id = 'file' ) {
 			'test_form'            => false,
 			'upload_error_strings' => array(
 				false,
-				__( 'The uploaded file exceeds ', 'buddyboss' ) . bp_media_file_upload_max_size(),
-				__( 'The uploaded file was only partially uploaded.', 'buddyboss' ),
-				__( 'No file was uploaded.', 'buddyboss' ),
+				__( 'The uploaded file exceeds ', 'buddyboss-platform' ) . bp_media_file_upload_max_size(),
+				__( 'The uploaded file was only partially uploaded.', 'buddyboss-platform' ),
+				__( 'No file was uploaded.', 'buddyboss-platform' ),
 				'',
-				__( 'Missing a temporary folder.', 'buddyboss' ),
-				__( 'Failed to write file to disk.', 'buddyboss' ),
-				__( 'File upload stopped by extension.', 'buddyboss' ),
+				__( 'Missing a temporary folder.', 'buddyboss-platform' ),
+				__( 'Failed to write file to disk.', 'buddyboss-platform' ),
+				__( 'File upload stopped by extension.', 'buddyboss-platform' ),
 			),
 		)
 	);
@@ -223,7 +223,7 @@ function bp_video_thumbnail_upload_handler( $file_id = 'file' ) {
 		return $attachment;
 	}
 
-	return new WP_Error( 'error_uploading', __( 'Error while uploading thumbnail.', 'buddyboss' ), array( 'status' => 500 ) );
+	return new WP_Error( 'error_uploading', __( 'Error while uploading thumbnail.', 'buddyboss-platform' ), array( 'status' => 500 ) );
 
 }
 
@@ -238,7 +238,7 @@ function bp_video_thumbnail_upload() {
 	 * Make sure user is logged in
 	 */
 	if ( ! is_user_logged_in() ) {
-		return new WP_Error( 'not_logged_in', __( 'Please login in order to upload file media.', 'buddyboss' ), array( 'status' => 500 ) );
+		return new WP_Error( 'not_logged_in', __( 'Please login in order to upload file media.', 'buddyboss-platform' ), array( 'status' => 500 ) );
 	}
 
 	$attachment = bp_video_thumbnail_upload_handler();
@@ -363,7 +363,7 @@ function bp_video_upload_handler( $file_id = 'file' ) {
 				if ( ! file_exists( $tmp_file_path ) || 0 === filesize( $tmp_file_path ) ) {
 					return new WP_Error(
 						'invalid_assembled_file',
-						__( 'The assembled video file is invalid or empty.', 'buddyboss' ),
+						__( 'The assembled video file is invalid or empty.', 'buddyboss-platform' ),
 						array( 'status' => 500 )
 					);
 				}
@@ -374,7 +374,7 @@ function bp_video_upload_handler( $file_id = 'file' ) {
 	$_FILES['async-upload']['tmp_name'] = $tmp_file_path;
 	$_FILES['async-upload']['name']     = $filename;
 	if ( ! isset( $_FILES['async-upload']['tmp_name'] ) || ! isset( $_FILES['async-upload']['name'] ) ) {
-		return new WP_Error( 'error_uploading', __( 'Invalid file upload.', 'buddyboss' ), array( 'status' => 400 ) );
+		return new WP_Error( 'error_uploading', __( 'Invalid file upload.', 'buddyboss-platform' ), array( 'status' => 400 ) );
 	}
 	$tmp_name                       = sanitize_text_field( wp_unslash( $_FILES['async-upload']['tmp_name'] ) );
 	$_FILES['async-upload']['size'] = filesize( $tmp_name );
@@ -392,13 +392,13 @@ function bp_video_upload_handler( $file_id = 'file' ) {
 			'test_form'            => false,
 			'upload_error_strings' => array(
 				false,
-				__( 'The uploaded file exceeds ', 'buddyboss' ) . bp_video_file_upload_max_size(),
-				__( 'The uploaded file was only partially uploaded.', 'buddyboss' ),
-				__( 'No file was uploaded.', 'buddyboss' ),
+				__( 'The uploaded file exceeds ', 'buddyboss-platform' ) . bp_video_file_upload_max_size(),
+				__( 'The uploaded file was only partially uploaded.', 'buddyboss-platform' ),
+				__( 'No file was uploaded.', 'buddyboss-platform' ),
 				'',
-				__( 'Missing a temporary folder.', 'buddyboss' ),
-				__( 'Failed to write file to disk.', 'buddyboss' ),
-				__( 'File upload stopped by extension.', 'buddyboss' ),
+				__( 'Missing a temporary folder.', 'buddyboss-platform' ),
+				__( 'Failed to write file to disk.', 'buddyboss-platform' ),
+				__( 'File upload stopped by extension.', 'buddyboss-platform' ),
 			),
 		)
 	);
@@ -436,7 +436,7 @@ function bp_video_upload_handler( $file_id = 'file' ) {
 		return $attachment;
 	}
 
-	return new WP_Error( 'error_uploading', __( 'Error while uploading video.', 'buddyboss' ), array( 'status' => 500 ) );
+	return new WP_Error( 'error_uploading', __( 'Error while uploading video.', 'buddyboss-platform' ), array( 'status' => 500 ) );
 
 }
 
@@ -2721,52 +2721,52 @@ function bp_video_svg_icon_list() {
 	$icons = array(
 		'default_1'  => array(
 			'icon'  => 'bb-icon-file',
-			'title' => __( 'Default', 'buddyboss' ),
+			'title' => __( 'Default', 'buddyboss-platform' ),
 			'svg'   => '<svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="24" height="32" viewBox="0 0 24 32"><title>file-default</title><path d="M13.728 0h-9.728c-2.208 0-4 1.792-4 4v24c0 2.208 1.792 4 4 4h16c2.208 0 4-1.792 4-4v-17.504c0-1.056-0.416-2.048-1.12-2.784l-6.272-6.496c-0.768-0.768-1.792-1.216-2.88-1.216zM4 1.984h9.728c0.544 0 1.056 0.224 1.44 0.64l6.272 6.464c0.352 0.384 0.576 0.896 0.576 1.408v17.504c0 1.12-0.896 2.016-2.016 2.016h-16c-1.088 0-1.984-0.896-1.984-2.016v-24c0-1.12 0.896-2.016 1.984-2.016z"></path></svg>',
 		),
 		'default_2'  => array(
 			'icon'  => 'bb-icon-file-archive',
-			'title' => __( 'Archive', 'buddyboss' ),
+			'title' => __( 'Archive', 'buddyboss-platform' ),
 			'svg'   => '<svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="24" height="32" viewBox="0 0 24 32"><title>file-zip</title><path d="M13.728 0c1.088 0 2.112 0.448 2.88 1.216v0l6.272 6.496c0.704 0.736 1.12 1.728 1.12 2.784v0 17.504c0 2.208-1.792 4-4 4v0h-16c-2.208 0-4-1.792-4-4v0-24c0-2.208 1.792-4 4-4v0h9.728zM13.728 1.984h-9.728c-1.088 0-1.984 0.896-1.984 2.016v0 24c0 1.12 0.896 2.016 1.984 2.016v0h2.976v-1.984h2.016v-1.92h-2.016v-2.080h2.016v2.016h1.984v2.048h-1.984v1.92h11.008c1.056 0 1.92-0.832 1.984-1.856l0.032-0.16v-17.504c0-0.512-0.224-1.024-0.576-1.408v0l-6.272-6.464c-0.384-0.416-0.896-0.64-1.44-0.64v0zM10.976 21.952v2.048h-1.984v-2.048h1.984zM11.008 16c0.544 0 0.992 0.448 0.992 0.992v3.008c0 0.544-0.448 0.992-0.992 0.992h-4c-0.544 0-0.992-0.448-0.992-0.992v-3.008c0-0.544 0.448-0.992 0.992-0.992h4zM10.592 16.992h-3.2c-0.192 0-0.352 0.128-0.384 0.32v1.28c0 0.192 0.128 0.352 0.32 0.384l0.064 0.032h3.2c0.192 0 0.352-0.16 0.416-0.32v-1.28c0-0.224-0.192-0.416-0.416-0.416z"></path></svg>',
 		),
 		'default_3'  => array(
 			'icon'  => 'bb-icon-file-mp3',
-			'title' => __( 'Audio', 'buddyboss' ),
+			'title' => __( 'Audio', 'buddyboss-platform' ),
 			'svg'   => '<svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="24" height="32" viewBox="0 0 24 32"><title>file-mp3</title><path d="M13.728 0c1.088 0 2.112 0.448 2.88 1.216v0l6.272 6.496c0.704 0.736 1.12 1.728 1.12 2.784v0 17.504c0 2.208-1.792 4-4 4v0h-16c-2.208 0-4-1.792-4-4v0-24c0-2.208 1.792-4 4-4v0zM13.728 1.984h-9.728c-1.088 0-1.984 0.896-1.984 2.016v0 24c0 1.12 0.896 2.016 1.984 2.016v0h16c1.12 0 2.016-0.896 2.016-2.016v0-17.504c0-0.512-0.224-1.024-0.576-1.408v0l-6.272-6.464c-0.384-0.416-0.896-0.64-1.44-0.64v0zM16.96 16c0.128 0 0.288 0.032 0.384 0.128s0.16 0.224 0.16 0.352v0 7.744c0 0.96-0.672 1.824-1.664 2.048-0.96 0.224-1.984-0.192-2.464-1.056-0.448-0.832-0.288-1.888 0.448-2.528s1.856-0.736 2.688-0.224v0-3.040l-6.624 0.704v4.768c0 0.96-0.704 1.792-1.664 2.048-0.96 0.224-1.984-0.192-2.464-1.056-0.48-0.832-0.288-1.888 0.448-2.528s1.824-0.736 2.688-0.224v0-5.856c0-0.256 0.192-0.448 0.448-0.48v0z"></path></svg>',
 		),
 		'default_4'  => array(
 			'icon'  => 'bb-icon-file-html',
-			'title' => __( 'Code', 'buddyboss' ),
+			'title' => __( 'Code', 'buddyboss-platform' ),
 			'svg'   => '<svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="24" height="32" viewBox="0 0 24 32"><title>file-html</title><path d="M13.728 0c1.088 0 2.112 0.448 2.88 1.216v0l6.272 6.496c0.736 0.736 1.12 1.728 1.12 2.784v0 17.504c0 2.208-1.792 4-4 4v0h-16c-2.208 0-4-1.792-4-4v0-24c0-2.208 1.792-4 4-4v0h9.728zM13.728 1.984h-9.728c-1.088 0-1.984 0.896-1.984 2.016v0 24c0 1.12 0.896 2.016 1.984 2.016v0h16c1.12 0 2.016-0.896 2.016-2.016v0-17.504c0-0.512-0.224-1.024-0.576-1.408v0l-6.272-6.464c-0.384-0.416-0.896-0.64-1.44-0.64v0zM9.536 20.416c0.192 0.224 0.224 0.544 0.032 0.8l-0.032 0.064-2.112 2.048 2.112 2.112c0.192 0.224 0.224 0.544 0.032 0.768l-0.032 0.064c-0.224 0.224-0.544 0.256-0.768 0.064l-0.096-0.064-2.496-2.528c-0.224-0.192-0.224-0.544-0.064-0.768l0.064-0.064 2.528-2.496c0.224-0.224 0.608-0.224 0.832 0zM14.080 20.416c0.224-0.224 0.608-0.224 0.832 0v0l2.528 2.496 0.032 0.064c0.192 0.224 0.16 0.576-0.032 0.768v0l-2.592 2.592c-0.224 0.192-0.544 0.16-0.768-0.064v0l-0.064-0.064c-0.16-0.224-0.16-0.544 0.064-0.768v0l2.080-2.112-2.144-2.112c-0.16-0.256-0.16-0.576 0.064-0.8zM12.768 20.032c0.288 0.096 0.48 0.384 0.416 0.672l-0.032 0.064-1.664 5.28c-0.096 0.32-0.448 0.48-0.736 0.384s-0.448-0.384-0.416-0.672l0.032-0.064 1.664-5.28c0.096-0.32 0.448-0.48 0.736-0.384zM10.496 15.008c0.288 0 0.512 0.224 0.512 0.48v1.024c0 0.256-0.224 0.48-0.512 0.48h-4c-0.256 0-0.48-0.224-0.48-0.48v-1.024c0-0.256 0.224-0.48 0.48-0.48h4z"></path></svg>',
 		),
 		'default_5'  => array(
 			'icon'  => 'bb-icon-file-psd',
-			'title' => __( 'Design', 'buddyboss' ),
+			'title' => __( 'Design', 'buddyboss-platform' ),
 			'svg'   => '<svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="24" height="32" viewBox="0 0 24 32"><title>file-psd</title><path d="M13.728 0c1.088 0 2.112 0.448 2.88 1.216v0l6.272 6.496c0.704 0.736 1.12 1.728 1.12 2.784v0 17.504c0 2.208-1.792 4-4 4v0h-16c-2.208 0-4-1.792-4-4v0-24c0-2.208 1.792-4 4-4v0zM13.728 1.984h-9.728c-1.088 0-1.984 0.896-1.984 2.016v0 24c0 1.12 0.896 2.016 1.984 2.016v0h16c1.12 0 2.016-0.896 2.016-2.016v0-17.504c0-0.512-0.224-1.024-0.576-1.408v0l-6.272-6.464c-0.384-0.416-0.896-0.64-1.44-0.64v0zM7.072 22.336l4.416 2.528c0.32 0.192 0.704 0.192 0.992 0.032l4.448-2.528 0.896 0.704c0.16 0.16 0.192 0.416 0.064 0.576-0.032 0.032-0.064 0.064-0.128 0.096l-5.536 3.2c-0.128 0.064-0.288 0.064-0.416 0.032l-0.096-0.032-5.44-3.2c-0.192-0.128-0.256-0.352-0.128-0.544 0-0.064 0.032-0.096 0.064-0.096l0.864-0.768zM7.104 20l4.416 2.56c0.32 0.16 0.704 0.16 0.992 0l4.448-2.528 0.896 0.736c0.16 0.128 0.192 0.384 0.064 0.544-0.032 0.064-0.064 0.096-0.128 0.128l-5.536 3.168c-0.128 0.064-0.288 0.096-0.448 0.032l-0.064-0.032-5.44-3.2c-0.192-0.096-0.256-0.352-0.128-0.544 0-0.032 0.032-0.064 0.064-0.096l0.864-0.768zM12.16 15.040l0.064 0.032 5.472 3.104c0.192 0.128 0.288 0.32 0.288 0.544 0 0.16-0.064 0.32-0.192 0.416l-0.096 0.064-5.44 3.104c-0.128 0.096-0.288 0.096-0.448 0.032l-0.064-0.032-5.44-3.104c-0.224-0.096-0.32-0.32-0.288-0.544 0-0.16 0.064-0.32 0.192-0.416l0.096-0.064 5.408-3.104c0.128-0.096 0.288-0.096 0.448-0.032zM11.968 16.256l-4.256 2.432 0.8 0.448 1.856-0.704c0.032 0 0.032 0 0.064 0 0.128-0.032 0.256 0.064 0.32 0.192v0.064l0.064 0.352 1.408-0.352c0.096-0.032 0.16 0 0.224 0 0.128 0.064 0.192 0.224 0.16 0.352l-0.032 0.064-0.896 1.824 0.32 0.192 4.288-2.432-4.32-2.432zM13.408 17.696c0 0.288-0.384 0.512-0.896 0.576-0.512 0.032-0.928-0.16-0.928-0.416-0.032-0.288 0.352-0.544 0.864-0.576s0.928 0.16 0.96 0.416z"></path></svg>',
 		),
 		'default_6'  => array(
 			'icon'  => 'bb-icon-file-png',
-			'title' => __( 'Image', 'buddyboss' ),
+			'title' => __( 'Image', 'buddyboss-platform' ),
 			'svg'   => '<svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="24" height="32" viewBox="0 0 24 32"><title>file-png</title><path d="M13.728 0c1.088 0 2.112 0.448 2.88 1.216v0l6.272 6.496c0.704 0.736 1.12 1.728 1.12 2.784v0 17.504c0 2.208-1.792 4-4 4v0h-16c-2.208 0-4-1.792-4-4v0-24c0-2.208 1.792-4 4-4v0h9.728zM13.728 1.984h-9.728c-1.12 0-2.016 0.896-2.016 2.016v0 24c0 1.12 0.896 2.016 2.016 2.016v0h16c1.12 0 1.984-0.896 1.984-2.016v0-17.504c0-0.512-0.192-1.024-0.544-1.408v0l-6.272-6.496c-0.384-0.384-0.896-0.608-1.44-0.608v0zM15.68 15.008c1.28 0 2.304 1.024 2.304 2.304v0 7.392c0 1.248-1.024 2.304-2.304 2.304v0h-7.36c-1.28 0-2.336-1.056-2.336-2.304v0-7.392c0-1.28 1.056-2.304 2.336-2.304v0h7.36zM9.152 21.376l-0.096 0.064-2.144 1.6v1.664c0 0.704 0.544 1.312 1.248 1.376h7.52c0.768 0 1.408-0.64 1.408-1.376v0-3.136c-0.896 0.416-2.080 0.992-3.52 1.728-0.448 0.224-0.992 0.192-1.408-0.064l-0.128-0.096-2.368-1.728c-0.16-0.096-0.352-0.096-0.512-0.032zM15.68 15.936h-7.36c-0.768 0-1.408 0.608-1.408 1.376v0 4.48c0.416-0.32 0.96-0.704 1.536-1.152 0.512-0.384 1.152-0.416 1.664-0.096l0.128 0.064 2.368 1.728c0.128 0.096 0.288 0.128 0.448 0.096l0.096-0.064 3.936-1.92v-3.136c0-0.736-0.576-1.312-1.248-1.376h-0.16zM13.376 17.792c0.672 0 1.248 0.544 1.248 1.248s-0.576 1.248-1.248 1.248c-0.704 0-1.248-0.544-1.248-1.248s0.544-1.248 1.248-1.248z"></path></svg>',
 		),
 		'default_7'  => array(
 			'icon'  => 'bb-icon-file-pptx',
-			'title' => __( 'Presentation', 'buddyboss' ),
+			'title' => __( 'Presentation', 'buddyboss-platform' ),
 			'svg'   => '<svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="24" height="32" viewBox="0 0 24 32"><title>file-pptx</title><path d="M13.728 0c1.088 0 2.112 0.448 2.88 1.216v0l6.272 6.496c0.704 0.736 1.12 1.728 1.12 2.784v0 17.504c0 2.208-1.792 4-4 4v0h-16c-2.208 0-4-1.792-4-4v0-24c0-2.208 1.792-4 4-4v0zM13.728 1.984h-9.728c-1.088 0-1.984 0.896-1.984 2.016v0 24c0 1.12 0.896 2.016 1.984 2.016v0h16c1.12 0 2.016-0.896 2.016-2.016v0-17.504c0-0.512-0.224-1.024-0.576-1.408v0l-6.272-6.464c-0.384-0.416-0.896-0.64-1.44-0.64v0zM17.504 24.992c0.288 0 0.512 0.224 0.512 0.512v0.992c0 0.288-0.224 0.512-0.512 0.512h-11.008c-0.256 0-0.48-0.224-0.48-0.512v-0.992c0-0.288 0.224-0.512 0.48-0.512h11.008zM11.84 18.4l4.608 2.848c-0.992 1.376-2.624 2.24-4.448 2.24-2.048 0-3.872-1.12-4.8-2.816l-0.128-0.192 4.768-2.080zM12.224 12.512c2.944 0.096 5.28 2.528 5.28 5.472 0 0.864-0.192 1.632-0.512 2.368l-0.16 0.256-4.608-2.784v-5.312zM11.52 12.512v5.312l-4.704 2.016c-0.192-0.576-0.32-1.216-0.32-1.856 0-2.848 2.208-5.216 5.024-5.472z"></path></svg>',
 		),
 		'default_8'  => array(
 			'icon'  => 'bb-icon-file-xlsx',
-			'title' => __( 'Spreadsheet', 'buddyboss' ),
+			'title' => __( 'Spreadsheet', 'buddyboss-platform' ),
 			'svg'   => '<svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="24" height="32" viewBox="0 0 24 32"><title>file-xlsx</title><path d="M13.728 0c1.088 0 2.112 0.448 2.88 1.216v0l6.272 6.496c0.704 0.736 1.12 1.728 1.12 2.784v0 17.504c0 2.208-1.792 4-4 4v0h-16c-2.208 0-4-1.792-4-4v0-24c0-2.208 1.792-4 4-4v0h9.728zM13.728 1.984h-9.728c-1.088 0-1.984 0.896-1.984 2.016v0 24c0 1.12 0.896 2.016 1.984 2.016v0h16c1.12 0 2.016-0.896 2.016-2.016v0-17.504c0-0.512-0.224-1.024-0.576-1.408v0l-6.272-6.464c-0.384-0.416-0.896-0.64-1.44-0.64v0zM15.488 13.984c1.408 0 2.528 1.12 2.528 2.528v0 8c0 1.376-1.12 2.496-2.528 2.496v0h-8c-1.376 0-2.496-1.12-2.496-2.496v0-8c0-1.408 1.12-2.528 2.496-2.528v0h8zM9.024 23.072h-3.008v1.44c0 0.768 0.576 1.408 1.344 1.472h1.664v-2.912zM16.992 23.072h-6.976v2.912h5.472c0.8 0 1.44-0.576 1.504-1.344v-1.568zM9.024 19.072h-3.008v3.008h3.008v-3.008zM16.992 19.072h-6.976v3.008h6.976v-3.008zM9.024 15.008h-1.536c-0.8 0-1.472 0.672-1.472 1.504v0 1.568h3.008v-3.072zM15.488 15.008h-5.472v3.072h6.976v-1.568c0-0.8-0.576-1.44-1.344-1.504h-0.16z"></path></svg>',
 		),
 		'default_9'  => array(
 			'icon'  => 'bb-icon-file-txt',
-			'title' => __( 'Text', 'buddyboss' ),
+			'title' => __( 'Text', 'buddyboss-platform' ),
 			'svg'   => '<svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="24" height="32" viewBox="0 0 24 32"><title>file-txt</title><path d="M13.728 0c1.088 0 2.112 0.448 2.88 1.216v0l6.272 6.496c0.704 0.736 1.12 1.728 1.12 2.784v0 17.504c0 2.208-1.792 4-4 4v0h-16c-2.208 0-4-1.792-4-4v0-24c0-2.208 1.792-4 4-4v0zM13.728 1.984h-9.728c-1.088 0-1.984 0.896-1.984 2.016v0 24c0 1.12 0.896 2.016 1.984 2.016v0h16c1.12 0 2.016-0.896 2.016-2.016v0-17.504c0-0.512-0.224-1.024-0.576-1.408v0l-6.272-6.464c-0.384-0.416-0.896-0.64-1.44-0.64v0zM15.488 24c0.288 0 0.512 0.224 0.512 0.512v0.992c0 0.256-0.224 0.48-0.512 0.48h-8.992c-0.256 0-0.48-0.224-0.48-0.48v-0.992c0-0.288 0.224-0.512 0.48-0.512h8.992zM13.504 20.512c0.288 0 0.512 0.224 0.512 0.48v0.992c0 0.288-0.224 0.512-0.512 0.512h-7.008c-0.256 0-0.48-0.224-0.48-0.512v-0.992c0-0.256 0.224-0.48 0.48-0.48h7.008zM17.504 16.992c0.288 0 0.512 0.224 0.512 0.512v0.992c0 0.288-0.224 0.512-0.512 0.512h-11.008c-0.256 0-0.48-0.224-0.48-0.512v-0.992c0-0.288 0.224-0.512 0.48-0.512h11.008z"></path></svg>',
 		),
 		'default_10' => array(
 			'icon'  => 'bb-icon-file-video',
-			'title' => __( 'Video', 'buddyboss' ),
+			'title' => __( 'Video', 'buddyboss-platform' ),
 			'svg'   => '<svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="24" height="32" viewBox="0 0 24 32"><title>file-video</title><path d="M13.728 0.096c1.088 0 2.112 0.448 2.88 1.216v0l6.272 6.496c0.704 0.736 1.12 1.728 1.12 2.784v0 17.504c0 2.208-1.792 4-4 4v0h-16c-2.208 0-4-1.792-4-4v0-24c0-2.208 1.792-4 4-4v0h9.728zM13.728 2.080h-9.728c-1.088 0-1.984 0.896-1.984 2.016v0 24c0 1.088 0.896 1.984 1.984 1.984v0h16c1.12 0 2.016-0.896 2.016-1.984v0-17.504c0-0.544-0.224-1.024-0.576-1.408v0l-6.272-6.496c-0.384-0.384-0.896-0.608-1.44-0.608v0zM12.704 18.080c1.28 0 2.304 1.056 2.304 2.304v0l1.472-1.088c0.448-0.352 1.056-0.256 1.408 0.192 0.128 0.16 0.192 0.384 0.192 0.608v4.992c0 0.544-0.448 0.992-0.992 0.992-0.224 0-0.448-0.064-0.608-0.192l-1.472-1.088c0 1.248-1.056 2.304-2.304 2.304v0h-5.408c-1.248 0-2.304-1.056-2.304-2.336v0-4.384c0-1.248 1.056-2.304 2.304-2.304v0h5.408zM12.704 19.008h-5.408c-0.736 0-1.376 0.64-1.376 1.376v0 4.384c0 0.768 0.64 1.408 1.376 1.408v0h5.408c0.768 0 1.376-0.64 1.376-1.408v0-4.384c0-0.736-0.608-1.376-1.376-1.376v0zM17.088 20.096l-2.016 1.472v2.016l2.016 1.504v-4.992z"></path></svg>',
 		),
 	);
@@ -4322,7 +4322,7 @@ function bb_video_check_is_ffmpeg_binary() {
 			$retval['error'] = $e->getMessage();
 		}
 	} else {
-		$retval['error'] = __( 'FFMpeg\FFMpeg class not found', 'buddyboss' );
+		$retval['error'] = __( 'FFMpeg\FFMpeg class not found', 'buddyboss-platform' );
 	}
 
 	return (object) $retval;
@@ -4370,7 +4370,7 @@ function bb_video_check_is_ffprobe_binary() {
 			$retval['error'] = $e->getMessage();
 		}
 	} else {
-		$retval['error'] = __( 'FFMpeg\FFProbe class not found', 'buddyboss' );
+		$retval['error'] = __( 'FFMpeg\FFProbe class not found', 'buddyboss-platform' );
 	}
 
 	return (object) $retval;
@@ -4906,7 +4906,7 @@ function bb_resumable_upload( $tmp_file_path, $filename ) {
 
 	// Security: Validate identifier format to prevent path traversal.
 	if ( empty( $identifier ) || ! preg_match( '/^[a-zA-Z0-9\-]+$/', $identifier ) ) {
-		$errors[] = __( 'Invalid upload identifier', 'buddyboss' );
+		$errors[] = __( 'Invalid upload identifier', 'buddyboss-platform' );
 
 		return array(
 			'final'     => false,
@@ -4921,7 +4921,7 @@ function bb_resumable_upload( $tmp_file_path, $filename ) {
 	// Create directory with secure permissions.
 	if ( ! is_dir( $file_chunks_folder ) ) {
 		if ( ! wp_mkdir_p( $file_chunks_folder ) ) {
-			$errors[] = __( 'Failed to create upload directory', 'buddyboss' );
+			$errors[] = __( 'Failed to create upload directory', 'buddyboss-platform' );
 
 			return array(
 				'final'     => false,
@@ -4953,7 +4953,7 @@ function bb_resumable_upload( $tmp_file_path, $filename ) {
 	if ( ! empty( $extension ) && ! in_array( $ext_without_dot, $allowed_extensions, true ) ) {
 		$errors[] = sprintf(
 		/* translators: %s: file extension */
-			__( 'File type %s is not allowed', 'buddyboss' ),
+			__( 'File type %s is not allowed', 'buddyboss-platform' ),
 			$extension
 		);
 
@@ -4975,7 +4975,7 @@ function bb_resumable_upload( $tmp_file_path, $filename ) {
 
 	// Validate chunk parameters.
 	if ( $total_chunks <= 0 || $chunk_index < 0 || $chunk_index >= $total_chunks ) {
-		$errors[] = __( 'Invalid chunk parameters', 'buddyboss' );
+		$errors[] = __( 'Invalid chunk parameters', 'buddyboss-platform' );
 
 		return array(
 			'final'     => false,
@@ -4990,7 +4990,7 @@ function bb_resumable_upload( $tmp_file_path, $filename ) {
 	if ( (float) $total_size > $max_upload_size ) {
 		$errors[] = sprintf(
 		/* translators: %s: file size */
-			__( 'File size exceeds maximum allowed size of %s', 'buddyboss' ),
+			__( 'File size exceeds maximum allowed size of %s', 'buddyboss-platform' ),
 			size_format( $max_upload_size )
 		);
 
@@ -5005,7 +5005,7 @@ function bb_resumable_upload( $tmp_file_path, $filename ) {
 	// Validate chunk file size.
 	$uploaded_chunk_size = file_exists( $tmp_file_path ) ? filesize( $tmp_file_path ) : 0;
 	if ( $uploaded_chunk_size <= 0 ) {
-		$errors[] = __( 'Uploaded chunk is empty', 'buddyboss' );
+		$errors[] = __( 'Uploaded chunk is empty', 'buddyboss-platform' );
 
 		return array(
 			'final'     => false,
@@ -5026,7 +5026,7 @@ function bb_resumable_upload( $tmp_file_path, $filename ) {
 
 	$tolerance_margin = (float) $chunk_size * 0.1; // 10% tolerance.
 	if ( $current_total + $uploaded_chunk_size > (float) $total_size + $tolerance_margin ) {
-		$errors[] = __( 'Total uploaded size exceeds declared file size', 'buddyboss' );
+		$errors[] = __( 'Total uploaded size exceeds declared file size', 'buddyboss-platform' );
 
 		return array(
 			'final'     => false,
@@ -5042,7 +5042,7 @@ function bb_resumable_upload( $tmp_file_path, $filename ) {
 	if ( ! move_uploaded_file( $tmp_file_path, $chunk_file ) ) {
 		$errors[] = sprintf(
 		/* translators: %d: chunk index */
-			__( 'Failed to save chunk %d', 'buddyboss' ),
+			__( 'Failed to save chunk %d', 'buddyboss-platform' ),
 			$chunk_index,
 		);
 
@@ -5127,7 +5127,7 @@ function bb_check_all_parts( $args ) {
 	$lock_fp   = fopen( $lock_file, 'c+' );
 
 	if ( false === $lock_fp ) {
-		$errors[] = __( 'Failed to create lock file', 'buddyboss' );
+		$errors[] = __( 'Failed to create lock file', 'buddyboss-platform' );
 
 		return false;
 	}
@@ -5135,7 +5135,7 @@ function bb_check_all_parts( $args ) {
 	// Acquire exclusive lock.
 	if ( ! flock( $lock_fp, LOCK_EX ) ) {
 		fclose( $lock_fp );
-		$errors[] = __( 'Failed to acquire lock', 'buddyboss' );
+		$errors[] = __( 'Failed to acquire lock', 'buddyboss-platform' );
 
 		return false;
 	}
@@ -5158,7 +5158,7 @@ function bb_check_all_parts( $args ) {
 	$parts_count = count( $parts );
 	$successes[] = sprintf(
 	/* translators: %1$d: parts count, %2$d: total chunks */
-		__( '%1$d of %2$d parts received', 'buddyboss' ),
+		__( '%1$d of %2$d parts received', 'buddyboss-platform' ),
 		$parts_count,
 		$total_chunks
 	);
@@ -5179,7 +5179,7 @@ function bb_check_all_parts( $args ) {
 			fclose( $lock_fp );
 			$errors[] = sprintf(
 			/* translators: %d: chunk index */
-				__( 'Missing chunk %d', 'buddyboss' ),
+				__( 'Missing chunk %d', 'buddyboss-platform' ),
 				$i
 			);
 
@@ -5200,7 +5200,7 @@ function bb_check_all_parts( $args ) {
 		fclose( $lock_fp );
 		$errors[] = sprintf(
 		/* translators: %1$s: expected size, %2$s: got size */
-			__( 'File size mismatch. Expected: %1$s, Got: %2$s', 'buddyboss' ),
+			__( 'File size mismatch. Expected: %1$s, Got: %2$s', 'buddyboss-platform' ),
 			size_format( $total_size ),
 			size_format( $loaded_size )
 		);
@@ -5286,7 +5286,7 @@ function bb_create_file_from_chunks( $args ) {
 	// Ensure destination directory exists.
 	if ( ! is_dir( $rel_path ) ) {
 		if ( ! wp_mkdir_p( $rel_path ) ) {
-			$errors[] = __( 'Cannot create destination directory', 'buddyboss' );
+			$errors[] = __( 'Cannot create destination directory', 'buddyboss-platform' );
 
 			return false;
 		}
@@ -5309,7 +5309,7 @@ function bb_create_file_from_chunks( $args ) {
 	$fp              = fopen( $final_file_path, 'wb' );
 
 	if ( false === $fp ) {
-		$errors[] = __( 'Cannot create the destination file', 'buddyboss' );
+		$errors[] = __( 'Cannot create the destination file', 'buddyboss-platform' );
 
 		return false;
 	}
@@ -5325,7 +5325,7 @@ function bb_create_file_from_chunks( $args ) {
 			if ( ! file_exists( $chunk_path ) ) {
 				$errors[] = sprintf(
 				/* translators: %d: chunk index */
-					__( 'Chunk %d not found', 'buddyboss' ),
+					__( 'Chunk %d not found', 'buddyboss-platform' ),
 					$i
 				);
 				throw new Exception( 'Missing chunk' );
@@ -5336,7 +5336,7 @@ function bb_create_file_from_chunks( $args ) {
 			if ( false === $chunk_fp ) {
 				$errors[] = sprintf(
 				/* translators: %d: chunk index */
-					__( 'Failed to open chunk %d', 'buddyboss' ),
+					__( 'Failed to open chunk %d', 'buddyboss-platform' ),
 					$i
 				);
 				throw new Exception( 'Cannot open chunk' );
@@ -5350,7 +5350,7 @@ function bb_create_file_from_chunks( $args ) {
 					fclose( $chunk_fp );
 					$errors[] = sprintf(
 					/* translators: %d: chunk index */
-						__( 'Failed to read chunk %d', 'buddyboss' ),
+						__( 'Failed to read chunk %d', 'buddyboss-platform' ),
 						$i
 					);
 					throw new Exception( 'Read error' );
@@ -5362,7 +5362,7 @@ function bb_create_file_from_chunks( $args ) {
 					fclose( $chunk_fp );
 					$errors[] = sprintf(
 					/* translators: %d: chunk index */
-						__( 'Failed to write data from chunk %d', 'buddyboss' ),
+						__( 'Failed to write data from chunk %d', 'buddyboss-platform' ),
 						$i
 					);
 					throw new Exception( 'Write error' );
@@ -5401,7 +5401,7 @@ function bb_create_file_from_chunks( $args ) {
 		unlink( $final_file_path );
 		$errors[] = sprintf(
 		/* translators: %1$s: expected size, %2$s: got size */
-			__( 'Final file size mismatch. Expected: %1$s, Got: %2$s', 'buddyboss' ),
+			__( 'Final file size mismatch. Expected: %1$s, Got: %2$s', 'buddyboss-platform' ),
 			size_format( $total_size ),
 			size_format( $final_size )
 		);
@@ -5414,7 +5414,7 @@ function bb_create_file_from_chunks( $args ) {
 
 	$successes[] = sprintf(
 	/* translators: %s: file name */
-		__( 'File successfully created: %s', 'buddyboss' ),
+		__( 'File successfully created: %s', 'buddyboss-platform' ),
 		basename( $final_file_path )
 	);
 
@@ -5450,7 +5450,7 @@ function bb_get_next_available_filename( $args ) {
 	$orig_file_name = sanitize_file_name( $orig_file_name );
 
 	if ( empty( $orig_file_name ) ) {
-		$errors[] = __( 'Invalid filename', 'buddyboss' );
+		$errors[] = __( 'Invalid filename', 'buddyboss-platform' );
 
 		return false;
 	}
@@ -5486,7 +5486,7 @@ function bb_get_next_available_filename( $args ) {
 
 	$errors[] = sprintf(
 	/* translators: %1$s: file name, %2$s: file extension */
-		__( 'Cannot create unique name for saving file %1$s%2$s', 'buddyboss' ),
+		__( 'Cannot create unique name for saving file %1$s%2$s', 'buddyboss-platform' ),
 		$orig_file_name,
 		$extension
 	);

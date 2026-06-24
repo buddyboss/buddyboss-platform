@@ -24,8 +24,8 @@ class BP_XProfile_Field_Type_Selectbox extends BP_XProfile_Field_Type {
 	public function __construct() {
 		parent::__construct();
 
-		$this->category = __( 'Multi Fields', 'buddyboss' );
-		$this->name     = __( 'Drop Down', 'buddyboss' );
+		$this->category = __( 'Multi Fields', 'buddyboss-platform' );
+		$this->name     = __( 'Drop Down', 'buddyboss-platform' );
 
 		$this->supports_options = true;
 
@@ -109,7 +109,7 @@ class BP_XProfile_Field_Type_Selectbox extends BP_XProfile_Field_Type {
 		$original_option_values = bb_xprofile_safe_unserialize( BP_XProfile_ProfileData::get_value_byid( $this->field_obj->id, $args['user_id'] ) ); // Object injection guard.
 
 		$options = $this->field_obj->get_children();
-		$html    = '<option value="">' . /* translators: no option picked in select box */ esc_html__( '----', 'buddyboss' ) . '</option>';
+		$html    = '<option value="">' . /* translators: no option picked in select box */ esc_html__( '----', 'buddyboss-platform' ) . '</option>';
 
 		if ( empty( $original_option_values ) && ! empty( $_POST[ 'field_' . $this->field_obj->id ] ) ) {
 			$original_option_values = sanitize_text_field( $_POST[ 'field_' . $this->field_obj->id ] );
@@ -185,7 +185,7 @@ class BP_XProfile_Field_Type_Selectbox extends BP_XProfile_Field_Type {
 		<label for="<?php bp_the_profile_field_input_name(); ?>" class="screen-reader-text">
 															 <?php
 																/* translators: accessibility text */
-																esc_html_e( 'Select', 'buddyboss' );
+																esc_html_e( 'Select', 'buddyboss-platform' );
 																?>
 		</label>
 		<select <?php echo $this->get_edit_field_html_elements( $raw_properties ); ?>>

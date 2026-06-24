@@ -78,7 +78,7 @@ function bp_friends_random_friends() {
 	} ?>
 
 	<div class="info-group">
-		<h4><?php /* translators: %s: member display name. */ bp_word_or_name( __( 'My Connections', 'buddyboss' ), __( "%s's Connections", 'buddyboss' ) ); ?>  (<?php echo BP_Friends_Friendship::total_friend_count( bp_displayed_user_id() ); ?>) <span><a href="<?php echo trailingslashit( bp_displayed_user_domain() . bp_get_friends_slug() ); ?>"><?php _e( 'See All', 'buddyboss' ); ?></a></span></h4>
+		<h4><?php /* translators: %s: member display name. */ bp_word_or_name( __( 'My Connections', 'buddyboss-platform' ), __( "%s's Connections", 'buddyboss-platform' ) ); ?>  (<?php echo BP_Friends_Friendship::total_friend_count( bp_displayed_user_id() ); ?>) <span><a href="<?php echo trailingslashit( bp_displayed_user_domain() . bp_get_friends_slug() ); ?>"><?php _e( 'See All', 'buddyboss-platform' ); ?></a></span></h4>
 
 		<?php if ( $friend_ids ) { ?>
 
@@ -107,7 +107,7 @@ function bp_friends_random_friends() {
 		<?php } else { ?>
 
 			<div id="message" class="info">
-				<p><?php /* translators: %s: member display name. */ bp_word_or_name( __( "You haven't made any connections yet.", 'buddyboss' ), __( "%s hasn't created any connections yet.", 'buddyboss' ) ); ?></p>
+				<p><?php /* translators: %s: member display name. */ bp_word_or_name( __( "You haven't made any connections yet.", 'buddyboss-platform' ), __( "%s hasn't created any connections yet.", 'buddyboss-platform' ) ); ?></p>
 			</div>
 
 		<?php } ?>
@@ -186,7 +186,7 @@ function bp_friends_random_members( $total_members = 5 ) {
 	<?php } else { ?>
 
 		<div id="message" class="info">
-			<p><?php _e( "There aren't enough site members to show a random sample just yet.", 'buddyboss' ); ?></p>
+			<p><?php _e( "There aren't enough site members to show a random sample just yet.", 'buddyboss-platform' ); ?></p>
 		</div>
 
 	<?php } ?>
@@ -203,7 +203,7 @@ function bp_friends_random_members( $total_members = 5 ) {
 function bp_friend_search_form() {
 
 	$action = bp_displayed_user_domain() . bp_get_friends_slug() . '/my-friends/search/';
-	$label  = __( 'Filter Connections', 'buddyboss' );
+	$label  = __( 'Filter Connections', 'buddyboss-platform' );
 	?>
 
 		<form action="<?php echo $action; ?>" id="friend-search-form" method="post">
@@ -262,12 +262,12 @@ function bp_get_member_total_friend_count() {
 		 * @param int    $value Total friend count for current member in the loop.
 		 */
 		/* translators: %d: total friend count. */
-		return apply_filters( 'bp_get_member_total_friend_count', sprintf( __( '%d connection', 'buddyboss' ), (int) $members_template->member->total_friend_count ) );
+		return apply_filters( 'bp_get_member_total_friend_count', sprintf( __( '%d connection', 'buddyboss-platform' ), (int) $members_template->member->total_friend_count ) );
 	} else {
 
 		/** This filter is documented in bp-friends/bp-friends-template.php */
 		/* translators: %d: total friend count. */
-		return apply_filters( 'bp_get_member_total_friend_count', sprintf( __( '%d connections', 'buddyboss' ), (int) $members_template->member->total_friend_count ) );
+		return apply_filters( 'bp_get_member_total_friend_count', sprintf( __( '%d connections', 'buddyboss-platform' ), (int) $members_template->member->total_friend_count ) );
 	}
 }
 
@@ -399,14 +399,14 @@ function bp_get_add_friend_button( $potential_friend_id = 0, $friend_status = fa
 					'wrapper_class'       => 'friendship-button pending_friend',
 					'wrapper_id'          => 'friendship-button-' . $potential_friend_id,
 					'link_href'           => wp_nonce_url( bp_loggedin_user_domain() . bp_get_friends_slug() . '/requests/cancel/' . $potential_friend_id . '/', 'friends_withdraw_friendship' ),
-					'link_text'           => esc_html__( 'Request Sent', 'buddyboss' ),
+					'link_text'           => esc_html__( 'Request Sent', 'buddyboss-platform' ),
 					'link_id'             => 'friend-' . $potential_friend_id,
 					'link_rel'            => 'remove',
 					'link_class'          => 'friendship-button pending_friend requested',
 					'button_attr'         => array(
 						'hover_type'           => $button_args['button_attr']['hover_type'] ?? false,
-						'data-title'           => esc_html__( 'Cancel Request', 'buddyboss' ),
-						'data-title-displayed' => esc_html__( 'Request Sent', 'buddyboss' ),
+						'data-title'           => esc_html__( 'Cancel Request', 'buddyboss-platform' ),
+						'data-title-displayed' => esc_html__( 'Request Sent', 'buddyboss-platform' ),
 					),
 				),
 				$button_args
@@ -424,14 +424,14 @@ function bp_get_add_friend_button( $potential_friend_id = 0, $friend_status = fa
 					'wrapper_class'       => 'friendship-button awaiting_response_friend',
 					'wrapper_id'          => 'friendship-button-' . $potential_friend_id,
 					'link_href'           => bp_loggedin_user_domain() . bp_get_friends_slug() . '/requests/',
-					'link_text'           => esc_html__( 'Pending Request', 'buddyboss' ),
+					'link_text'           => esc_html__( 'Pending Request', 'buddyboss-platform' ),
 					'link_id'             => 'friend-' . $potential_friend_id,
 					'link_rel'            => 'remove',
 					'link_class'          => 'friendship-button awaiting_response_friend requested',
 					'button_attr'         => array(
 						'hover_type'           => $button_args['button_attr']['hover_type'] ?? false,
-						'data-title'           => esc_html__( 'Review Request', 'buddyboss' ),
-						'data-title-displayed' => esc_html__( 'Pending Request', 'buddyboss' ),
+						'data-title'           => esc_html__( 'Review Request', 'buddyboss-platform' ),
+						'data-title-displayed' => esc_html__( 'Pending Request', 'buddyboss-platform' ),
 					),
 				),
 				$button_args
@@ -449,7 +449,7 @@ function bp_get_add_friend_button( $potential_friend_id = 0, $friend_status = fa
 					'wrapper_class'       => 'friendship-button is_friend',
 					'wrapper_id'          => 'friendship-button-' . $potential_friend_id,
 					'link_href'           => wp_nonce_url( bp_loggedin_user_domain() . bp_get_friends_slug() . '/remove-friend/' . $potential_friend_id . '/', 'friends_remove_friend' ),
-					'link_text'           => esc_html__( 'Connected', 'buddyboss' ),
+					'link_text'           => esc_html__( 'Connected', 'buddyboss-platform' ),
 					'link_id'             => 'friend-' . $potential_friend_id,
 					'link_rel'            => 'remove',
 					'link_class'          => 'friendship-button is_friend remove',
@@ -457,8 +457,8 @@ function bp_get_add_friend_button( $potential_friend_id = 0, $friend_status = fa
 						'data-bb-user-name'    => bp_core_get_user_displayname( $potential_friend_id ),
 						'data-bb-user-link'    => bp_core_get_user_domain( $potential_friend_id ),
 						'hover_type'           => $button_args['button_attr']['hover_type'] ?? false,
-						'data-title'           => esc_html__( 'Remove Connection', 'buddyboss' ),
-						'data-title-displayed' => esc_html__( 'Connected', 'buddyboss' ),
+						'data-title'           => esc_html__( 'Remove Connection', 'buddyboss-platform' ),
+						'data-title-displayed' => esc_html__( 'Connected', 'buddyboss-platform' ),
 					),
 				),
 				$button_args
@@ -476,7 +476,7 @@ function bp_get_add_friend_button( $potential_friend_id = 0, $friend_status = fa
 					'wrapper_class'       => 'friendship-button not_friends',
 					'wrapper_id'          => 'friendship-button-' . $potential_friend_id,
 					'link_href'           => wp_nonce_url( bp_loggedin_user_domain() . bp_get_friends_slug() . '/add-friend/' . $potential_friend_id . '/', 'friends_add_friend' ),
-					'link_text'           => esc_html__( 'Connect', 'buddyboss' ),
+					'link_text'           => esc_html__( 'Connect', 'buddyboss-platform' ),
 					'link_id'             => 'friend-' . $potential_friend_id,
 					'link_rel'            => 'add',
 					'link_class'          => 'friendship-button not_friends add',
@@ -871,7 +871,7 @@ function bp_friends_get_profile_stats( $args = '' ) {
 
 			// If friends exist, show some formatted output.
 			/* translators: %s: total friend count. */
-			$r['output'] = $r['before'] . sprintf( _n( '%s connection', '%s connections', $r['friends'], 'buddyboss' ), '<strong>' . $r['friends'] . '</strong>' ) . $r['after'];
+			$r['output'] = $r['before'] . sprintf( _n( '%s connection', '%s connections', $r['friends'], 'buddyboss-platform' ), '<strong>' . $r['friends'] . '</strong>' ) . $r['after'];
 		}
 	}
 

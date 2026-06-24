@@ -15,10 +15,10 @@
 	<li class="bbp-header">
 
 		<ul class="forum-titles">
-			<li class="bbp-forum-info"><?php _e( 'Forum', 'buddyboss' ); ?></li>
-			<li class="bbp-forum-topic-count"><?php _e( 'Discussions', 'buddyboss' ); ?></li>
-			<li class="bbp-forum-reply-count"><?php bbp_show_lead_topic() ? _e( 'Replies', 'buddyboss' ) : _e( 'Posts', 'buddyboss' ); ?></li>
-			<li class="bbp-forum-freshness"><?php _e( 'Last Post', 'buddyboss' ); ?></li>
+			<li class="bbp-forum-info"><?php _e( 'Forum', 'buddyboss-platform' ); ?></li>
+			<li class="bbp-forum-topic-count"><?php _e( 'Discussions', 'buddyboss-platform' ); ?></li>
+			<li class="bbp-forum-reply-count"><?php bbp_show_lead_topic() ? _e( 'Replies', 'buddyboss-platform' ) : _e( 'Posts', 'buddyboss-platform' ); ?></li>
+			<li class="bbp-forum-freshness"><?php _e( 'Last Post', 'buddyboss-platform' ); ?></li>
 		</ul>
 
 	</li><!-- .bbp-header -->

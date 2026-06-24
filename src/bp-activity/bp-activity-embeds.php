@@ -289,11 +289,11 @@ EOD;
 			// Show author info.
 			if ( isset( $oembed->provider_name ) && isset( $oembed->author_name ) ) {
 				/* translators: By [oEmbed author] on [oEmbed provider]. eg. By BuddyPress on YouTube. */
-				$anchor_text = sprintf( __( 'By %1$s on %2$s', 'buddyboss' ), $oembed->author_name, $oembed->provider_name );
+				$anchor_text = sprintf( __( 'By %1$s on %2$s', 'buddyboss-platform' ), $oembed->author_name, $oembed->provider_name );
 
 			} elseif ( isset( $oembed->provider_name ) ) {
 				/* translators: %s: oEmbed provider name. */
-				$anchor_text = sprintf( __( 'View on %s', 'buddyboss' ), $oembed->provider_name );
+				$anchor_text = sprintf( __( 'View on %s', 'buddyboss-platform' ), $oembed->provider_name );
 			}
 
 			if ( true === isset( $anchor_text ) ) {
@@ -341,7 +341,7 @@ EOD;
 			printf(
 				'<video controls preload="metadata"><source src="%1$s"><p>%2$s</p></video>',
 				esc_url( $media['videos'][0]['url'] ),
-				esc_html__( 'Your browser does not support HTML5 video', 'buddyboss' )
+				esc_html__( 'Your browser does not support HTML5 video', 'buddyboss-platform' )
 			);
 
 			// No video? Try audio. HTML5-only.
@@ -349,7 +349,7 @@ EOD;
 			printf(
 				'<audio controls preload="metadata"><source src="%1$s"><p>%2$s</p></audio>',
 				esc_url( $media['audio'][0]['url'] ),
-				esc_html__( 'Your browser does not support HTML5 audio', 'buddyboss' )
+				esc_html__( 'Your browser does not support HTML5 audio', 'buddyboss-platform' )
 			);
 		}
 	}

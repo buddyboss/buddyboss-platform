@@ -44,26 +44,26 @@ defined( 'ABSPATH' ) || exit;
 								if ( bp_is_active( 'media' ) ) {
 									?>
 									<div class="bb-rl-post-elements-buttons-item bb-rl-post-media bb-rl-media-support">
-										<a href="#" class="toolbar-button bp-tooltip bb-rl-ac-reply-media-button" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Attach photo', 'buddyboss' ); ?>" data-ac-id="536">
+										<a href="#" class="toolbar-button bp-tooltip bb-rl-ac-reply-media-button" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Attach photo', 'buddyboss-platform' ); ?>" data-ac-id="536">
 											<i class="bb-icons-rl-camera"></i>
 										</a>
 									</div>
 
 									<div class="bb-rl-post-elements-buttons-item bb-rl-post-video bb-rl-video-support">
-										<a href="#" class="toolbar-button bp-tooltip bb-rl-ac-reply-video-button" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Attach video', 'buddyboss' ); ?>" data-ac-id="536">
+										<a href="#" class="toolbar-button bp-tooltip bb-rl-ac-reply-video-button" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Attach video', 'buddyboss-platform' ); ?>" data-ac-id="536">
 											<i class="bb-icons-rl-video-camera"></i>
 										</a>
 									</div>
 
 									<div class="bb-rl-post-elements-buttons-item bb-rl-post-media bb-rl-document-support">
-										<a href="#" class="toolbar-button bp-tooltip bb-rl-ac-reply-document-button" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Attach document', 'buddyboss' ); ?>" data-ac-id="536">
+										<a href="#" class="toolbar-button bp-tooltip bb-rl-ac-reply-document-button" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Attach document', 'buddyboss-platform' ); ?>" data-ac-id="536">
 											<i class="bb-icons-rl-paperclip-horizontal"></i>
 										</a>
 									</div>
 
 									<div class="bb-rl-post-elements-buttons-item bb-rl-post-gif">
 										<div class="bb-rl-gif-media-search">
-											<a href="#" class="toolbar-button bp-tooltip bb-rl-ac-reply-gif-button" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Choose a GIF', 'buddyboss' ); ?>">
+											<a href="#" class="toolbar-button bp-tooltip bb-rl-ac-reply-gif-button" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Choose a GIF', 'buddyboss-platform' ); ?>">
 												<i class="bb-icons-rl-gif"></i>
 											</a>
 											<div class="bb-rl-gif-media-search-dropdown"></div>
@@ -72,10 +72,10 @@ defined( 'ABSPATH' ) || exit;
 
 									<span class="bb-rl-separator"></span>
 
-									<div class="bb-rl-post-elements-buttons-item bb-rl-post-emoji bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Emoji', 'buddyboss' ); ?>" id="bb-rl-ac-reply-emoji-button-536" data-nth-child="5">
+									<div class="bb-rl-post-elements-buttons-item bb-rl-post-emoji bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Emoji', 'buddyboss-platform' ); ?>" id="bb-rl-ac-reply-emoji-button-536" data-nth-child="5">
 										<div class="emojionearea emojionearea-standalone ac-input bp-suggestions medium-editor-element" role="application">
-											<div class="emojionearea-editor has-placeholder" contenteditable="false" placeholder="<?php esc_attr_e( 'Write a comment...', 'buddyboss' ); ?>" tabindex="0" dir="ltr" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off"></div>
-											<div class="emojionearea-button" title="<?php esc_attr_e( 'Use the TAB key to insert emoji faster', 'buddyboss' ); ?>">
+											<div class="emojionearea-editor has-placeholder" contenteditable="false" placeholder="<?php esc_attr_e( 'Write a comment...', 'buddyboss-platform' ); ?>" tabindex="0" dir="ltr" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off"></div>
+											<div class="emojionearea-button" title="<?php esc_attr_e( 'Use the TAB key to insert emoji faster', 'buddyboss-platform' ); ?>">
 												<div class="emojionearea-button-open"></div>
 											</div>
 										</div>
@@ -86,7 +86,7 @@ defined( 'ABSPATH' ) || exit;
 							</div>
 							<button type="button" class="bb-rl-button bb-rl-button--secondaryFill ac-reply-cancel">Cancel</button>
 							<div class="bb-rl-ac-submit-wrap">
-								<input type="submit" name="ac_form_submit" value="<?php esc_attr_e( 'Comment', 'buddyboss' ); ?>">
+								<input type="submit" name="ac_form_submit" value="<?php esc_attr_e( 'Comment', 'buddyboss-platform' ); ?>">
 							</div>
 						</div>
 					</div>

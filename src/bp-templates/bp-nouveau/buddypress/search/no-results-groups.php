@@ -9,4 +9,4 @@
  * @version 1.0.0
  */
 
-esc_html_e( 'No groups found!', 'buddyboss' );
+esc_html_e( 'No groups found!', 'buddyboss-platform' );

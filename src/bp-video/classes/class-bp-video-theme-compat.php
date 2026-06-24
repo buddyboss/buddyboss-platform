@@ -166,7 +166,7 @@ class BP_Video_Theme_Compat {
 		bp_theme_compat_reset_post(
 			array(
 				'ID'             => ! empty( $video_page_id ) ? $video_page_id : 0,
-				'post_title'     => __( 'Videos', 'buddyboss' ),
+				'post_title'     => __( 'Videos', 'buddyboss-platform' ),
 				'post_author'    => 0,
 				'post_date'      => 0,
 				'post_content'   => '',

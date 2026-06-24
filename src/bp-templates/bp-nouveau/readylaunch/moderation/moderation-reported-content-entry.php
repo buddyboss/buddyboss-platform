@@ -26,7 +26,7 @@ $bp_moderation_item_type = bp_get_moderation_item_type();
 		if ( true === $hide_sitewide ) {
 			?>
 			<span class="description">
-				<?php esc_html_e( 'moderated', 'buddyboss' ); ?>
+				<?php esc_html_e( 'moderated', 'buddyboss-platform' ); ?>
 			</span>
 			<?php
 		}

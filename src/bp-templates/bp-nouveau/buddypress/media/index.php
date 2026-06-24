@@ -42,7 +42,7 @@ bp_nouveau_template_notices();
 							'<span class="bb-count">%d</span> Photo',
 							'<span class="bb-count">%d</span> Photos',
 							$count,
-							'buddyboss'
+							'buddyboss-platform'
 						), array( 'span' => array( 'class' => true ) )
 					),
 					(int) $count
@@ -63,7 +63,7 @@ bp_nouveau_template_notices();
 			?>
 			<a class="bb-add-photos button small" id="bp-add-media" href="#">
 				<i class="bb-icon-l bb-icon-upload"></i>
-				<?php esc_html_e( 'Add Photos', 'buddyboss' ); ?>
+				<?php esc_html_e( 'Add Photos', 'buddyboss-platform' ); ?>
 			</a>
 
 			<?php
@@ -72,7 +72,7 @@ bp_nouveau_template_notices();
 				?>
 				<a href="#" id="bb-create-album" class="bb-create-album button small">
 					<i class="bb-icon-l bb-icon-image-video"></i>
-					<?php esc_html_e( 'Create Album', 'buddyboss' ); ?>
+					<?php esc_html_e( 'Create Album', 'buddyboss-platform' ); ?>
 				</a>
 				<?php
 			}

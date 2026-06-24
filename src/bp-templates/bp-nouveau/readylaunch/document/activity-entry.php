@@ -41,7 +41,7 @@ if ( $attachment_id ) {
 }
 $class_theatre = apply_filters( 'bp_document_activity_theater_class', 'bb-rl-open-document-theatre' );
 $class_popup   = apply_filters( 'bp_document_activity_theater_description_class', 'bb-rl-document-detail-wrap-description-popup' );
-$click_text    = apply_filters( 'bp_document_activity_click_to_view_text', __( ' view', 'buddyboss' ) );
+$click_text    = apply_filters( 'bp_document_activity_click_to_view_text', __( ' view', 'buddyboss-platform' ) );
 $video_url     = bb_document_video_get_symlink( $document_id );
 $user_can_edit = bp_document_user_can_edit( $document_id );
 ?>
@@ -97,7 +97,7 @@ $user_can_edit = bp_document_user_can_edit( $document_id );
 			<span class="bb-rl-document-title"><?php echo esc_html( $filename ); ?></span>
 			<span class="bb-rl-document-description"><?php echo esc_html( $size ); ?></span>
 			<span class="bb-rl-document-extension-description"><?php echo esc_html( bp_document_get_extension_description( $extension ) ); ?></span>
-			<span class="bb-rl-document-helper-text"> <span> - </span><span class="bb-rl-document-helper-text-click"><?php esc_html_e( 'Click to', 'buddyboss' ); ?></span><span class="bb-rl-document-helper-text-inner"><?php echo esc_html( $click_text ); ?></span></span>
+			<span class="bb-rl-document-helper-text"> <span> - </span><span class="bb-rl-document-helper-text-click"><?php esc_html_e( 'Click to', 'buddyboss-platform' ); ?></span><span class="bb-rl-document-helper-text-inner"><?php echo esc_html( $click_text ); ?></span></span>
 		</a>
 	</div>
 

@@ -26,7 +26,7 @@ defined( 'ABSPATH' ) || exit;
 					<h3>
 						<?php
 						/* translators: %s: Topic title */
-						printf( esc_html__( 'Merge discussion "%s"', 'buddyboss' ), bbp_get_topic_title() );
+						printf( esc_html__( 'Merge discussion "%s"', 'buddyboss-platform' ), bbp_get_topic_title() );
 						?>
 					</h3>
 				</div>
@@ -37,18 +37,18 @@ defined( 'ABSPATH' ) || exit;
 							<div class="bb-rl-forum-fieldset">
 								<div class="bp-feedback info">
 									<span class="bp-icon" aria-hidden="true"></span>
-									<p><?php esc_html_e( 'Select the discussion to merge this one into. The destination topic will remain the lead discussion, and this one will change into a reply.', 'buddyboss' ); ?><br/>
-									<?php esc_html_e( 'To keep this discussion as the lead, go to the other discussion and use the merge tool from there instead.', 'buddyboss' ); ?></p>
+									<p><?php esc_html_e( 'Select the discussion to merge this one into. The destination topic will remain the lead discussion, and this one will change into a reply.', 'buddyboss-platform' ); ?><br/>
+									<?php esc_html_e( 'To keep this discussion as the lead, go to the other discussion and use the merge tool from there instead.', 'buddyboss-platform' ); ?></p>
 								</div>
 
 								<div class="bp-feedback info">
 									<span class="bp-icon" aria-hidden="true"></span>
-									<p><?php esc_html_e( 'All replies within both discussions will be merged chronologically. The order of the merged replies is based on the time and date they were posted. If the destination discussion was created after this one, it\'s post date will be updated to second earlier than this one.', 'buddyboss' ); ?></p>
+									<p><?php esc_html_e( 'All replies within both discussions will be merged chronologically. The order of the merged replies is based on the time and date they were posted. If the destination discussion was created after this one, it\'s post date will be updated to second earlier than this one.', 'buddyboss-platform' ); ?></p>
 								</div>
 							</div>
 
 							<fieldset class="bbp-form bb-rl-forum-fieldset">
-								<legend><?php esc_html_e( 'Destination', 'buddyboss' ); ?></legend>
+								<legend><?php esc_html_e( 'Destination', 'buddyboss-platform' ); ?></legend>
 								<div>
 									<?php
 									if ( bbp_has_topics(
@@ -60,7 +60,7 @@ defined( 'ABSPATH' ) || exit;
 									) ) :
 										?>
 
-										<label for="bbp_destination_topic"><?php esc_html_e( 'Merge with this topic:', 'buddyboss' ); ?></label>
+										<label for="bbp_destination_topic"><?php esc_html_e( 'Merge with this topic:', 'buddyboss-platform' ); ?></label>
 
 											<?php
 											bbp_dropdown(
@@ -76,7 +76,7 @@ defined( 'ABSPATH' ) || exit;
 
 									<?php else : ?>
 
-										<label><?php esc_html_e( 'There are no other discussions in this forum to merge with.', 'buddyboss' ); ?></label>
+										<label><?php esc_html_e( 'There are no other discussions in this forum to merge with.', 'buddyboss-platform' ); ?></label>
 
 									<?php endif; ?>
 
@@ -84,25 +84,25 @@ defined( 'ABSPATH' ) || exit;
 							</fieldset>
 
 							<fieldset class="bbp-form bb-rl-forum-fieldset">
-								<legend><?php esc_html_e( 'Discussion Extras', 'buddyboss' ); ?></legend>
+								<legend><?php esc_html_e( 'Discussion Extras', 'buddyboss-platform' ); ?></legend>
 
 								<div>
 									<?php if ( bb_is_enabled_subscription( 'topic' ) ) : ?>
 										<div class="bp-checkbox-wrap">
 											<input name="bbp_topic_subscribers" id="bbp_topic_subscribers" class="bs-styled-checkbox" type="checkbox" value="1" checked="checked" tabindex="<?php bbp_tab_index(); ?>" />
-											<label for="bbp_topic_subscribers"><?php esc_html_e( 'Merge discussion subscribers', 'buddyboss' ); ?></label>
+											<label for="bbp_topic_subscribers"><?php esc_html_e( 'Merge discussion subscribers', 'buddyboss-platform' ); ?></label>
 										</div>
 									<?php endif; ?>
 
 									<div class="bp-checkbox-wrap">
 										<input name="bbp_topic_favoriters" id="bbp_topic_favoriters" class="bs-styled-checkbox" type="checkbox" value="1" checked="checked" tabindex="<?php bbp_tab_index(); ?>" />
-										<label for="bbp_topic_favoriters"><?php esc_html_e( 'Merge discussion favoriters', 'buddyboss' ); ?></label>
+										<label for="bbp_topic_favoriters"><?php esc_html_e( 'Merge discussion favoriters', 'buddyboss-platform' ); ?></label>
 									</div>
 
 									<?php if ( bbp_allow_topic_tags() ) : ?>
 										<div class="bp-checkbox-wrap">
 											<input name="bbp_topic_tags" id="bbp_topic_tags" class="bs-styled-checkbox" type="checkbox" value="1" checked="checked" tabindex="<?php bbp_tab_index(); ?>" />
-											<label for="bbp_topic_tags"><?php esc_html_e( 'Merge discussion tags', 'buddyboss' ); ?></label>
+											<label for="bbp_topic_tags"><?php esc_html_e( 'Merge discussion tags', 'buddyboss-platform' ); ?></label>
 										</div>
 									<?php endif; ?>
 								</div>
@@ -110,13 +110,13 @@ defined( 'ABSPATH' ) || exit;
 
 							<div class="bp-feedback error">
 								<span class="bp-icon" aria-hidden="true"></span>
-								<p><?php wp_kses_post( __( '<strong>WARNING:</strong> This process cannot be undone.', 'buddyboss' ) ); ?></p>
+								<p><?php wp_kses_post( __( '<strong>WARNING:</strong> This process cannot be undone.', 'buddyboss-platform' ) ); ?></p>
 							</div>
 						</div>
 
 						<div class="bb-rl-forum-modal-footer bb-rl-forum-modal-footer--static">
 							<div class="bbp-submit-wrapper">
-								<button type="submit" tabindex="<?php bbp_tab_index(); ?>" id="bbp_merge_topic_submit" name="bbp_merge_topic_submit" class="bb-rl-button bb-rl-button--brandFill bb-rl-button--small submit"><?php esc_html_e( 'Submit', 'buddyboss' ); ?></button>
+								<button type="submit" tabindex="<?php bbp_tab_index(); ?>" id="bbp_merge_topic_submit" name="bbp_merge_topic_submit" class="bb-rl-button bb-rl-button--brandFill bb-rl-button--small submit"><?php esc_html_e( 'Submit', 'buddyboss-platform' ); ?></button>
 							</div>
 						</div>
 					</div>
@@ -130,7 +130,7 @@ defined( 'ABSPATH' ) || exit;
 	<?php else : ?>
 
 		<div id="no-topic-<?php bbp_topic_id(); ?>" class="bbp-no-topic">
-			<div class="entry-content"><?php is_user_logged_in() ? esc_html_e( 'You do not have the permissions to edit this discussion!', 'buddyboss' ) : esc_html_e( 'You cannot edit this discussion.', 'buddyboss' ); ?></div>
+			<div class="entry-content"><?php is_user_logged_in() ? esc_html_e( 'You do not have the permissions to edit this discussion!', 'buddyboss-platform' ) : esc_html_e( 'You cannot edit this discussion.', 'buddyboss-platform' ); ?></div>
 		</div>
 
 	<?php endif; ?>

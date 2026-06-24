@@ -20,11 +20,11 @@ $is_disabled_invite_member_content = bp_disable_invite_member_email_content();
 ?>
 
 <h2 class="screen-heading general-settings-screen">
-	<?php _e( 'Send Invites', 'buddyboss' ); ?>
+	<?php _e( 'Send Invites', 'buddyboss-platform' ); ?>
 </h2>
 
 <p class="info invite-info">
-	<?php _e( 'Invite non-members to create an account. They will receive an email with a link to register.', 'buddyboss' ); ?>
+	<?php _e( 'Invite non-members to create an account. They will receive an email with a link to register.', 'buddyboss-platform' ); ?>
 </p>
 
 <form action="<?php echo esc_url( bp_displayed_user_domain() . bp_get_invites_slug() ); ?>" method="post" class="standard-form" id="send-invite-form">
@@ -32,12 +32,12 @@ $is_disabled_invite_member_content = bp_disable_invite_member_email_content();
 	<table class="invite-settings bp-tables-user" id="<?php echo esc_attr( 'member-invites-table' ); ?>">
 		<thead>
 		<tr>
-			<th class="title"><?php esc_html_e( 'Recipient Name', 'buddyboss' ); ?></th>
-			<th class="title"><?php esc_html_e( 'Recipient Email', 'buddyboss' ); ?></th>
+			<th class="title"><?php esc_html_e( 'Recipient Name', 'buddyboss-platform' ); ?></th>
+			<th class="title"><?php esc_html_e( 'Recipient Email', 'buddyboss-platform' ); ?></th>
 			<?php
 			if ( true === $send_invite_member_type_allow ) {
 				?>
-				<th class="title"><?php esc_html_e( 'Profile Type', 'buddyboss' ); ?></th>
+				<th class="title"><?php esc_html_e( 'Profile Type', 'buddyboss-platform' ); ?></th>
 				<?php
 			}
 			?>
@@ -52,10 +52,10 @@ $is_disabled_invite_member_content = bp_disable_invite_member_email_content();
 			?>
 			<tr>
 				<td class="field-name">
-					<input type="text" name="invitee[<?php echo $i; ?>][]" id="invitee_<?php echo $i; ?>_title" value="<?php echo esc_attr( '' ); ?>" class="invites-input" <?php bp_form_field_attributes( 'invitee' ); ?> aria-label="<?php esc_attr_e( 'Recipient Name', 'buddyboss' ); ?>"/>
+					<input type="text" name="invitee[<?php echo $i; ?>][]" id="invitee_<?php echo $i; ?>_title" value="<?php echo esc_attr( '' ); ?>" class="invites-input" <?php bp_form_field_attributes( 'invitee' ); ?> aria-label="<?php esc_attr_e( 'Recipient Name', 'buddyboss-platform' ); ?>"/>
 				</td>
 				<td class="field-email">
-					<input type="email" name="email[<?php echo $i; ?>][]" id="email_<?php echo $i; ?>_email" value="<?php echo esc_attr( '' ); ?>" class="invites-input" <?php bp_form_field_attributes( 'email' ); ?> aria-label="<?php esc_attr_e( 'Recipient Email', 'buddyboss' ); ?>"/>
+					<input type="email" name="email[<?php echo $i; ?>][]" id="email_<?php echo $i; ?>_email" value="<?php echo esc_attr( '' ); ?>" class="invites-input" <?php bp_form_field_attributes( 'email' ); ?> aria-label="<?php esc_attr_e( 'Recipient Email', 'buddyboss-platform' ); ?>"/>
 				</td>
 				<?php
 				if ( true === $send_invite_member_type_allow ) {
@@ -71,7 +71,7 @@ $is_disabled_invite_member_content = bp_disable_invite_member_email_content();
 					?>
 					<td class="field-member-type">
 						<select name="member-type[<?php echo $i; ?>][]" id="member_type<?php echo $i; ?>_member_type" class="invites-input">
-							<option value=""><?php _e( '-- Select Type --', 'buddyboss' ); ?></option>
+							<option value=""><?php _e( '-- Select Type --', 'buddyboss-platform' ); ?></option>
 							<?php
 							foreach ( $member_types as $type ) {
 								$name = bp_get_member_type_key( $type );
@@ -109,16 +109,16 @@ $is_disabled_invite_member_content = bp_disable_invite_member_email_content();
 
 	if ( true === $is_disabled_invite_member_subject ) {
 		?>
-		<label for="bp-member-invites-custom-subject"><?php _e( 'Customize the text of the invitation subject.', 'buddyboss' ); ?></label>
+		<label for="bp-member-invites-custom-subject"><?php _e( 'Customize the text of the invitation subject.', 'buddyboss-platform' ); ?></label>
 		<textarea name="bp_member_invites_custom_subject" id="bp-member-invites-custom-subject" rows="5" cols="10" ><?php echo esc_textarea( bp_get_member_invitation_subject() ); ?></textarea>
-		<input type="hidden" value="<?php _e( 'Are you sure you want to send the invite without a subject?', 'buddyboss' ); ?>" name="error-message-empty-subject-field" id="error-message-empty-subject-field">
+		<input type="hidden" value="<?php _e( 'Are you sure you want to send the invite without a subject?', 'buddyboss-platform' ); ?>" name="error-message-empty-subject-field" id="error-message-empty-subject-field">
 		<?php
 	}
 
 	if ( true === $is_disabled_invite_member_content ) {
 
 		?>
-		<label for="bp-member-invites-custom-content"><?php _e( 'Customize the text of the invitation email. A link to register will be sent with the email.', 'buddyboss' ); ?></label>
+		<label for="bp-member-invites-custom-content"><?php _e( 'Customize the text of the invitation email. A link to register will be sent with the email.', 'buddyboss-platform' ); ?></label>
 		<?php
 		add_filter( 'mce_buttons', 'bp_nouveau_btn_invites_mce_buttons', 10, 1 );
 		add_filter( 'tiny_mce_before_init', 'bp_nouveau_send_invite_content_css' );
@@ -140,7 +140,7 @@ $is_disabled_invite_member_content = bp_disable_invite_member_email_content();
 		remove_filter( 'mce_buttons', 'bp_nouveau_btn_invites_mce_buttons', 10, 1 );
 		remove_filter( 'tiny_mce_before_init', 'bp_nouveau_send_invite_content_css' );
 		?>
-		<input type="hidden" value="<?php _e( 'Are you sure you want to send the invite without adding a message?', 'buddyboss' ); ?>" name="error-message-empty-body-field" id="error-message-empty-body-field">
+		<input type="hidden" value="<?php _e( 'Are you sure you want to send the invite without adding a message?', 'buddyboss-platform' ); ?>" name="error-message-empty-body-field" id="error-message-empty-body-field">
 		<?php
 	}
 
@@ -149,13 +149,13 @@ $is_disabled_invite_member_content = bp_disable_invite_member_email_content();
 		true === $is_disabled_invite_member_content
 	) {
 		?>
-		<input type="hidden" value="<?php _e( 'Are you sure you want to send the invite without adding a subject and message?', 'buddyboss' ); ?>" name="error-message-empty-subject-body-field" id="error-message-empty-subject-body-field">
+		<input type="hidden" value="<?php _e( 'Are you sure you want to send the invite without adding a subject and message?', 'buddyboss-platform' ); ?>" name="error-message-empty-subject-body-field" id="error-message-empty-subject-body-field">
 		<?php
 	}
 	?>
-	<input type="hidden" value="<?php _e( 'Enter a valid email address', 'buddyboss' ); ?>" name="error-message-invalid-email-address-field" id="error-message-invalid-email-address-field">
-	<input type="hidden" value="<?php _e( 'Enter name', 'buddyboss' ); ?>" name="error-message-empty-name-field" id="error-message-empty-name-field">
-	<input type="hidden" value="<?php _e( 'Please fill out all required fields to invite a new member.', 'buddyboss' ); ?>" name="error-message-required-field" id="error-message-required-field">
+	<input type="hidden" value="<?php _e( 'Enter a valid email address', 'buddyboss-platform' ); ?>" name="error-message-invalid-email-address-field" id="error-message-invalid-email-address-field">
+	<input type="hidden" value="<?php _e( 'Enter name', 'buddyboss-platform' ); ?>" name="error-message-empty-name-field" id="error-message-empty-name-field">
+	<input type="hidden" value="<?php _e( 'Please fill out all required fields to invite a new member.', 'buddyboss-platform' ); ?>" name="error-message-required-field" id="error-message-required-field">
 	<?php bp_nouveau_submit_button( 'member-invites-submit' ); ?>
 
 </form>

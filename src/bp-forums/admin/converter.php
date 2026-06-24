@@ -151,54 +151,54 @@ class BBP_Converter {
 			}
 		}
 		// System Select.
-		add_settings_field( '_bbp_converter_platform', __( 'Select Platform', 'buddyboss' ), 'bbp_converter_setting_callback_platform', 'bbpress_converter', 'bbpress_converter_main' );
+		add_settings_field( '_bbp_converter_platform', __( 'Select Platform', 'buddyboss-platform' ), 'bbp_converter_setting_callback_platform', 'bbpress_converter', 'bbpress_converter_main' );
 		register_setting( 'bbpress_converter_main', '_bbp_converter_platform', 'sanitize_text_field' );
 
 		// Database Server.
-		add_settings_field( '_bbp_converter_db_server', __( 'Database Server', 'buddyboss' ), 'bbp_converter_setting_callback_dbserver', 'bbpress_converter', 'bbpress_converter_main' );
+		add_settings_field( '_bbp_converter_db_server', __( 'Database Server', 'buddyboss-platform' ), 'bbp_converter_setting_callback_dbserver', 'bbpress_converter', 'bbpress_converter_main' );
 		register_setting( 'bbpress_converter_main', '_bbp_converter_db_server', 'sanitize_text_field' );
 
 		// Database Server Port.
-		add_settings_field( '_bbp_converter_db_port', __( 'Database Port', 'buddyboss' ), 'bbp_converter_setting_callback_dbport', 'bbpress_converter', 'bbpress_converter_main' );
+		add_settings_field( '_bbp_converter_db_port', __( 'Database Port', 'buddyboss-platform' ), 'bbp_converter_setting_callback_dbport', 'bbpress_converter', 'bbpress_converter_main' );
 		register_setting( 'bbpress_converter_main', '_bbp_converter_db_port', 'intval' );
 
 		// Database Name.
-		add_settings_field( '_bbp_converter_db_name', __( 'Database Name', 'buddyboss' ), 'bbp_converter_setting_callback_dbname', 'bbpress_converter', 'bbpress_converter_main' );
+		add_settings_field( '_bbp_converter_db_name', __( 'Database Name', 'buddyboss-platform' ), 'bbp_converter_setting_callback_dbname', 'bbpress_converter', 'bbpress_converter_main' );
 		register_setting( 'bbpress_converter_main', '_bbp_converter_db_name', 'sanitize_text_field' );
 
 		// Database User.
-		add_settings_field( '_bbp_converter_db_user', __( 'Database User', 'buddyboss' ), 'bbp_converter_setting_callback_dbuser', 'bbpress_converter', 'bbpress_converter_main' );
+		add_settings_field( '_bbp_converter_db_user', __( 'Database User', 'buddyboss-platform' ), 'bbp_converter_setting_callback_dbuser', 'bbpress_converter', 'bbpress_converter_main' );
 		register_setting( 'bbpress_converter_main', '_bbp_converter_db_user', 'sanitize_text_field' );
 
 		// Database Pass.
-		add_settings_field( '_bbp_converter_db_pass', __( 'Database Password', 'buddyboss' ), 'bbp_converter_setting_callback_dbpass', 'bbpress_converter', 'bbpress_converter_main' );
+		add_settings_field( '_bbp_converter_db_pass', __( 'Database Password', 'buddyboss-platform' ), 'bbp_converter_setting_callback_dbpass', 'bbpress_converter', 'bbpress_converter_main' );
 		register_setting( 'bbpress_converter_main', '_bbp_converter_db_pass', 'sanitize_text_field' );
 
 		// Database Prefix.
-		add_settings_field( '_bbp_converter_db_prefix', __( 'Table Prefix', 'buddyboss' ), 'bbp_converter_setting_callback_dbprefix', 'bbpress_converter', 'bbpress_converter_main' );
+		add_settings_field( '_bbp_converter_db_prefix', __( 'Table Prefix', 'buddyboss-platform' ), 'bbp_converter_setting_callback_dbprefix', 'bbpress_converter', 'bbpress_converter_main' );
 		register_setting( 'bbpress_converter_main', '_bbp_converter_db_prefix', 'sanitize_text_field' );
 
 		// Add the options section.
-		add_settings_section( 'bbpress_converter_opt', __( '', 'buddyboss' ), 'bbp_converter_setting_callback_options_section', 'bbpress_converter' );
+		add_settings_section( 'bbpress_converter_opt', __( '', 'buddyboss-platform' ), 'bbp_converter_setting_callback_options_section', 'bbpress_converter' );
 
 		// Rows Limit.
-		add_settings_field( '_bbp_converter_rows', __( 'Rows Limit', 'buddyboss' ), 'bbp_converter_setting_callback_rows', 'bbpress_converter', 'bbpress_converter_opt' );
+		add_settings_field( '_bbp_converter_rows', __( 'Rows Limit', 'buddyboss-platform' ), 'bbp_converter_setting_callback_rows', 'bbpress_converter', 'bbpress_converter_opt' );
 		register_setting( 'bbpress_converter_opt', '_bbp_converter_rows', 'intval' );
 
 		// Delay Time.
-		add_settings_field( '_bbp_converter_delay_time', __( 'Delay Time', 'buddyboss' ), 'bbp_converter_setting_callback_delay_time', 'bbpress_converter', 'bbpress_converter_opt' );
+		add_settings_field( '_bbp_converter_delay_time', __( 'Delay Time', 'buddyboss-platform' ), 'bbp_converter_setting_callback_delay_time', 'bbpress_converter', 'bbpress_converter_opt' );
 		register_setting( 'bbpress_converter_opt', '_bbp_converter_delay_time', 'intval' );
 
 		// Convert Users ?
-		add_settings_field( '_bbp_converter_convert_users', __( 'Convert Users', 'buddyboss' ), 'bbp_converter_setting_callback_convert_users', 'bbpress_converter', 'bbpress_converter_opt' );
+		add_settings_field( '_bbp_converter_convert_users', __( 'Convert Users', 'buddyboss-platform' ), 'bbp_converter_setting_callback_convert_users', 'bbpress_converter', 'bbpress_converter_opt' );
 		register_setting( 'bbpress_converter_opt', '_bbp_converter_convert_users', 'intval' );
 
 		// Restart.
-		add_settings_field( '_bbp_converter_restart', __( 'Start Over', 'buddyboss' ), 'bbp_converter_setting_callback_restart', 'bbpress_converter', 'bbpress_converter_opt' );
+		add_settings_field( '_bbp_converter_restart', __( 'Start Over', 'buddyboss-platform' ), 'bbp_converter_setting_callback_restart', 'bbpress_converter', 'bbpress_converter_opt' );
 		register_setting( 'bbpress_converter_opt', '_bbp_converter_restart', 'intval' );
 
 		// Clean.
-		add_settings_field( '_bbp_converter_clean', __( 'Purge Previous Import', 'buddyboss' ), 'bbp_converter_setting_callback_clean', 'bbpress_converter', 'bbpress_converter_opt' );
+		add_settings_field( '_bbp_converter_clean', __( 'Purge Previous Import', 'buddyboss-platform' ), 'bbp_converter_setting_callback_clean', 'bbpress_converter', 'bbpress_converter_opt' );
 		register_setting( 'bbpress_converter_opt', '_bbp_converter_clean', 'intval' );
 	}
 
@@ -234,27 +234,27 @@ class BBP_Converter {
 				'strings'    => array(
 
 					// Button text.
-					'button_start'        => esc_html__( 'Start', 'buddyboss' ),
-					'button_continue'     => esc_html__( 'Continue', 'buddyboss' ),
+					'button_start'        => esc_html__( 'Start', 'buddyboss-platform' ),
+					'button_continue'     => esc_html__( 'Continue', 'buddyboss-platform' ),
 
 					// Start button clicked.
-					'start_start'         => esc_html__( 'Starting Import...', 'buddyboss' ),
-					'start_continue'      => esc_html__( 'Continuing Import...', 'buddyboss' ),
+					'start_start'         => esc_html__( 'Starting Import...', 'buddyboss-platform' ),
+					'start_continue'      => esc_html__( 'Continuing Import...', 'buddyboss-platform' ),
 
 					// Import.
-					'import_complete'     => esc_html__( 'Import Finished.', 'buddyboss' ),
-					'import_stopped_user' => esc_html__( 'Import Stopped (by User.)', 'buddyboss' ),
-					'import_error_halt'   => esc_html__( 'Import Halted (Error.)', 'buddyboss' ),
-					'import_error_db'     => esc_html__( 'Database Connection Failed.', 'buddyboss' ),
+					'import_complete'     => esc_html__( 'Import Finished.', 'buddyboss-platform' ),
+					'import_stopped_user' => esc_html__( 'Import Stopped (by User.)', 'buddyboss-platform' ),
+					'import_error_halt'   => esc_html__( 'Import Halted (Error.)', 'buddyboss-platform' ),
+					'import_error_db'     => esc_html__( 'Database Connection Failed.', 'buddyboss-platform' ),
 
 					// Status.
-					'status_complete'     => esc_html__( 'Finished', 'buddyboss' ),
-					'status_stopped'      => esc_html__( 'Stopped', 'buddyboss' ),
-					'status_starting'     => esc_html__( 'Starting', 'buddyboss' ),
+					'status_complete'     => esc_html__( 'Finished', 'buddyboss-platform' ),
+					'status_stopped'      => esc_html__( 'Stopped', 'buddyboss-platform' ),
+					'status_starting'     => esc_html__( 'Starting', 'buddyboss-platform' ),
 					/* translators: %s: step number. */
-					'status_up_next'      => esc_html__( 'Doing step %s...', 'buddyboss' ),
+					'status_up_next'      => esc_html__( 'Doing step %s...', 'buddyboss-platform' ),
 					/* translators: %s: number of seconds. */
-					'status_counting'     => esc_html__( 'Next in %s seconds...', 'buddyboss' ),
+					'status_counting'     => esc_html__( 'Next in %s seconds...', 'buddyboss-platform' ),
 				),
 			)
 		);
@@ -592,19 +592,19 @@ class BBP_Converter {
 				$this->sync_table( true );
 
 				empty( $this->start )
-					? $this->converter_response( esc_html__( 'Readying sync-table', 'buddyboss' ) )
-					: $this->converter_response( esc_html__( 'Sync-table ready', 'buddyboss' ) );
+					? $this->converter_response( esc_html__( 'Readying sync-table', 'buddyboss-platform' ) )
+					: $this->converter_response( esc_html__( 'Sync-table ready', 'buddyboss-platform' ) );
 			} else {
 				$this->bump_start();
 				/* translators: 1: start row number, 2: end row number. */
-			$this->converter_response( sprintf( esc_html__( 'Deleting previously converted data (%1$s through %2$s)', 'buddyboss' ), $this->start, $this->max ) );
+			$this->converter_response( sprintf( esc_html__( 'Deleting previously converted data (%1$s through %2$s)', 'buddyboss-platform' ), $this->start, $this->max ) );
 			}
 
 			$this->converter->clean = false;
 		} else {
 			$this->bump_step();
 			$this->sync_table( false );
-			$this->converter_response( esc_html__( 'Skipping sync-table clean-up', 'buddyboss' ) );
+			$this->converter_response( esc_html__( 'Skipping sync-table clean-up', 'buddyboss-platform' ) );
 		}
 	}
 
@@ -619,16 +619,16 @@ class BBP_Converter {
 				$this->bump_step();
 
 				empty( $this->start )
-					? $this->converter_response( esc_html__( 'No users to import', 'buddyboss' ) )
-					: $this->converter_response( esc_html__( 'All users imported', 'buddyboss' ) );
+					? $this->converter_response( esc_html__( 'No users to import', 'buddyboss-platform' ) )
+					: $this->converter_response( esc_html__( 'All users imported', 'buddyboss-platform' ) );
 			} else {
 				$this->bump_start();
 				/* translators: 1: start row number, 2: end row number, 3: total rows in step. */
-			$this->converter_response( sprintf( esc_html__( 'Converting users (%1$s through %2$s of %3$s)', 'buddyboss' ), $this->start, $this->max, $this->rows_in_step ) );
+			$this->converter_response( sprintf( esc_html__( 'Converting users (%1$s through %2$s of %3$s)', 'buddyboss-platform' ), $this->start, $this->max, $this->rows_in_step ) );
 			}
 		} else {
 			$this->bump_step();
-			$this->converter_response( esc_html__( 'Skipping user clean-up', 'buddyboss' ) );
+			$this->converter_response( esc_html__( 'Skipping user clean-up', 'buddyboss-platform' ) );
 		}
 	}
 
@@ -643,16 +643,16 @@ class BBP_Converter {
 				$this->bump_step();
 
 				empty( $this->start )
-					? $this->converter_response( esc_html__( 'No passwords to clear', 'buddyboss' ) )
-					: $this->converter_response( esc_html__( 'All passwords cleared', 'buddyboss' ) );
+					? $this->converter_response( esc_html__( 'No passwords to clear', 'buddyboss-platform' ) )
+					: $this->converter_response( esc_html__( 'All passwords cleared', 'buddyboss-platform' ) );
 			} else {
 				$this->bump_start();
 				/* translators: 1: start row number, 2: end row number. */
-			$this->converter_response( sprintf( esc_html__( 'Delete default WordPress user passwords (%1$s through %2$s)', 'buddyboss' ), $this->start, $this->max ) );
+			$this->converter_response( sprintf( esc_html__( 'Delete default WordPress user passwords (%1$s through %2$s)', 'buddyboss-platform' ), $this->start, $this->max ) );
 			}
 		} else {
 			$this->bump_step();
-			$this->converter_response( esc_html__( 'Skipping password clean-up', 'buddyboss' ) );
+			$this->converter_response( esc_html__( 'Skipping password clean-up', 'buddyboss-platform' ) );
 		}
 	}
 
@@ -666,12 +666,12 @@ class BBP_Converter {
 			$this->bump_step();
 
 			empty( $this->start )
-				? $this->converter_response( esc_html__( 'No forums to import', 'buddyboss' ) )
-				: $this->converter_response( esc_html__( 'All forums imported', 'buddyboss' ) );
+				? $this->converter_response( esc_html__( 'No forums to import', 'buddyboss-platform' ) )
+				: $this->converter_response( esc_html__( 'All forums imported', 'buddyboss-platform' ) );
 		} else {
 			$this->bump_start();
 			/* translators: 1: start row number, 2: end row number, 3: total rows in step. */
-		$this->converter_response( sprintf( esc_html__( 'Converting forums (%1$s through %2$s of %3$s)', 'buddyboss' ), $this->start, $this->max, $this->rows_in_step ) );
+		$this->converter_response( sprintf( esc_html__( 'Converting forums (%1$s through %2$s of %3$s)', 'buddyboss-platform' ), $this->start, $this->max, $this->rows_in_step ) );
 		}
 	}
 
@@ -685,12 +685,12 @@ class BBP_Converter {
 			$this->bump_step();
 
 			empty( $this->start )
-				? $this->converter_response( esc_html__( 'No forum parents to import', 'buddyboss' ) )
-				: $this->converter_response( esc_html__( 'All forum parents imported', 'buddyboss' ) );
+				? $this->converter_response( esc_html__( 'No forum parents to import', 'buddyboss-platform' ) )
+				: $this->converter_response( esc_html__( 'All forum parents imported', 'buddyboss-platform' ) );
 		} else {
 			$this->bump_start();
 			/* translators: 1: start row number, 2: end row number, 3: total rows in step. */
-		$this->converter_response( sprintf( esc_html__( 'Calculating forum hierarchy (%1$s through %2$s of %3$s)', 'buddyboss' ), $this->start, $this->max, $this->rows_in_step ) );
+		$this->converter_response( sprintf( esc_html__( 'Calculating forum hierarchy (%1$s through %2$s of %3$s)', 'buddyboss-platform' ), $this->start, $this->max, $this->rows_in_step ) );
 		}
 	}
 
@@ -704,12 +704,12 @@ class BBP_Converter {
 			$this->bump_step();
 
 			empty( $this->start )
-				? $this->converter_response( esc_html__( 'No forum subscriptions to import', 'buddyboss' ) )
-				: $this->converter_response( esc_html__( 'All forum subscriptions imported', 'buddyboss' ) );
+				? $this->converter_response( esc_html__( 'No forum subscriptions to import', 'buddyboss-platform' ) )
+				: $this->converter_response( esc_html__( 'All forum subscriptions imported', 'buddyboss-platform' ) );
 		} else {
 			$this->bump_start();
 			/* translators: 1: start row number, 2: end row number, 3: total rows in step. */
-		$this->converter_response( sprintf( esc_html__( 'Converting forum subscriptions (%1$s through %2$s of %3$s)', 'buddyboss' ), $this->start, $this->max, $this->rows_in_step ) );
+		$this->converter_response( sprintf( esc_html__( 'Converting forum subscriptions (%1$s through %2$s of %3$s)', 'buddyboss-platform' ), $this->start, $this->max, $this->rows_in_step ) );
 		}
 	}
 
@@ -724,12 +724,12 @@ class BBP_Converter {
 			$this->bump_step();
 
 			empty( $this->start )
-				? $this->converter_response( esc_html__( 'No topics to import', 'buddyboss' ) )
-				: $this->converter_response( esc_html__( 'All topics imported', 'buddyboss' ) );
+				? $this->converter_response( esc_html__( 'No topics to import', 'buddyboss-platform' ) )
+				: $this->converter_response( esc_html__( 'All topics imported', 'buddyboss-platform' ) );
 		} else {
 			$this->bump_start();
 			/* translators: 1: start row number, 2: end row number, 3: total rows in step. */
-		$this->converter_response( sprintf( esc_html__( 'Converting topics (%1$s through %2$s of %3$s)', 'buddyboss' ), $this->start, $this->max, $this->rows_in_step ) );
+		$this->converter_response( sprintf( esc_html__( 'Converting topics (%1$s through %2$s of %3$s)', 'buddyboss-platform' ), $this->start, $this->max, $this->rows_in_step ) );
 		}
 	}
 
@@ -743,12 +743,12 @@ class BBP_Converter {
 			$this->bump_step();
 
 			empty( $this->start )
-				? $this->converter_response( esc_html__( 'No anonymous topic authors to import', 'buddyboss' ) )
-				: $this->converter_response( esc_html__( 'All anonymous topic authors imported', 'buddyboss' ) );
+				? $this->converter_response( esc_html__( 'No anonymous topic authors to import', 'buddyboss-platform' ) )
+				: $this->converter_response( esc_html__( 'All anonymous topic authors imported', 'buddyboss-platform' ) );
 		} else {
 			$this->bump_start();
 			/* translators: 1: start row number, 2: end row number, 3: total rows in step. */
-		$this->converter_response( sprintf( esc_html__( 'Converting anonymous topic authors (%1$s through %2$s of %3$s)', 'buddyboss' ), $this->start, $this->max, $this->rows_in_step ) );
+		$this->converter_response( sprintf( esc_html__( 'Converting anonymous topic authors (%1$s through %2$s of %3$s)', 'buddyboss-platform' ), $this->start, $this->max, $this->rows_in_step ) );
 		}
 	}
 
@@ -762,12 +762,12 @@ class BBP_Converter {
 			$this->bump_step();
 
 			empty( $this->start )
-				? $this->converter_response( esc_html__( 'No stickies to import', 'buddyboss' ) )
-				: $this->converter_response( esc_html__( 'All stickies imported', 'buddyboss' ) );
+				? $this->converter_response( esc_html__( 'No stickies to import', 'buddyboss-platform' ) )
+				: $this->converter_response( esc_html__( 'All stickies imported', 'buddyboss-platform' ) );
 		} else {
 			$this->bump_start();
 			/* translators: 1: start row number, 2: end row number, 3: total rows in step. */
-		$this->converter_response( sprintf( esc_html__( 'Calculating topic stickies (%1$s through %2$s of %3$s)', 'buddyboss' ), $this->start, $this->max, $this->rows_in_step ) );
+		$this->converter_response( sprintf( esc_html__( 'Calculating topic stickies (%1$s through %2$s of %3$s)', 'buddyboss-platform' ), $this->start, $this->max, $this->rows_in_step ) );
 		}
 	}
 
@@ -781,12 +781,12 @@ class BBP_Converter {
 			$this->bump_step();
 
 			empty( $this->start )
-				? $this->converter_response( esc_html__( 'No super stickies to import', 'buddyboss' ) )
-				: $this->converter_response( esc_html__( 'All super stickies imported', 'buddyboss' ) );
+				? $this->converter_response( esc_html__( 'No super stickies to import', 'buddyboss-platform' ) )
+				: $this->converter_response( esc_html__( 'All super stickies imported', 'buddyboss-platform' ) );
 		} else {
 			$this->bump_start();
 			/* translators: 1: start row number, 2: end row number, 3: total rows in step. */
-		$this->converter_response( sprintf( esc_html__( 'Calculating topic super stickies (%1$s through %2$s of %3$s)', 'buddyboss' ), $this->start, $this->max, $this->rows_in_step ) );
+		$this->converter_response( sprintf( esc_html__( 'Calculating topic super stickies (%1$s through %2$s of %3$s)', 'buddyboss-platform' ), $this->start, $this->max, $this->rows_in_step ) );
 		}
 	}
 
@@ -800,12 +800,12 @@ class BBP_Converter {
 			$this->bump_step();
 
 			empty( $this->start )
-				? $this->converter_response( esc_html__( 'No closed topics to import', 'buddyboss' ) )
-				: $this->converter_response( esc_html__( 'All closed topics imported', 'buddyboss' ) );
+				? $this->converter_response( esc_html__( 'No closed topics to import', 'buddyboss-platform' ) )
+				: $this->converter_response( esc_html__( 'All closed topics imported', 'buddyboss-platform' ) );
 		} else {
 			$this->bump_start();
 			/* translators: 1: start row number, 2: end row number, 3: total rows in step. */
-		$this->converter_response( sprintf( esc_html__( 'Calculating closed topics (%1$s through %2$s of %3$s)', 'buddyboss' ), $this->start, $this->max, $this->rows_in_step ) );
+		$this->converter_response( sprintf( esc_html__( 'Calculating closed topics (%1$s through %2$s of %3$s)', 'buddyboss-platform' ), $this->start, $this->max, $this->rows_in_step ) );
 		}
 	}
 
@@ -819,12 +819,12 @@ class BBP_Converter {
 			$this->bump_step();
 
 			empty( $this->start )
-				? $this->converter_response( esc_html__( 'No topic tags to import', 'buddyboss' ) )
-				: $this->converter_response( esc_html__( 'All topic tags imported', 'buddyboss' ) );
+				? $this->converter_response( esc_html__( 'No topic tags to import', 'buddyboss-platform' ) )
+				: $this->converter_response( esc_html__( 'All topic tags imported', 'buddyboss-platform' ) );
 		} else {
 			$this->bump_start();
 			/* translators: 1: start row number, 2: end row number, 3: total rows in step. */
-		$this->converter_response( sprintf( esc_html__( 'Converting topic tags (%1$s through %2$s of %3$s)', 'buddyboss' ), $this->start, $this->max, $this->rows_in_step ) );
+		$this->converter_response( sprintf( esc_html__( 'Converting topic tags (%1$s through %2$s of %3$s)', 'buddyboss-platform' ), $this->start, $this->max, $this->rows_in_step ) );
 		}
 	}
 
@@ -838,12 +838,12 @@ class BBP_Converter {
 			$this->bump_step();
 
 			empty( $this->start )
-				? $this->converter_response( esc_html__( 'No topic subscriptions to import', 'buddyboss' ) )
-				: $this->converter_response( esc_html__( 'All topic subscriptions imported', 'buddyboss' ) );
+				? $this->converter_response( esc_html__( 'No topic subscriptions to import', 'buddyboss-platform' ) )
+				: $this->converter_response( esc_html__( 'All topic subscriptions imported', 'buddyboss-platform' ) );
 		} else {
 			$this->bump_start();
 			/* translators: 1: start row number, 2: end row number, 3: total rows in step. */
-		$this->converter_response( sprintf( esc_html__( 'Converting topic subscriptions (%1$s through %2$s of %3$s)', 'buddyboss' ), $this->start, $this->max, $this->rows_in_step ) );
+		$this->converter_response( sprintf( esc_html__( 'Converting topic subscriptions (%1$s through %2$s of %3$s)', 'buddyboss-platform' ), $this->start, $this->max, $this->rows_in_step ) );
 		}
 	}
 
@@ -857,12 +857,12 @@ class BBP_Converter {
 			$this->bump_step();
 
 			empty( $this->start )
-				? $this->converter_response( esc_html__( 'No favorites to import', 'buddyboss' ) )
-				: $this->converter_response( esc_html__( 'All favorites imported', 'buddyboss' ) );
+				? $this->converter_response( esc_html__( 'No favorites to import', 'buddyboss-platform' ) )
+				: $this->converter_response( esc_html__( 'All favorites imported', 'buddyboss-platform' ) );
 		} else {
 			$this->bump_start();
 			/* translators: 1: start row number, 2: end row number, 3: total rows in step. */
-		$this->converter_response( sprintf( esc_html__( 'Converting favorites (%1$s through %2$s of %3$s)', 'buddyboss' ), $this->start, $this->max, $this->rows_in_step ) );
+		$this->converter_response( sprintf( esc_html__( 'Converting favorites (%1$s through %2$s of %3$s)', 'buddyboss-platform' ), $this->start, $this->max, $this->rows_in_step ) );
 		}
 	}
 
@@ -876,12 +876,12 @@ class BBP_Converter {
 			$this->bump_step();
 
 			empty( $this->start )
-				? $this->converter_response( esc_html__( 'No replies to import', 'buddyboss' ) )
-				: $this->converter_response( esc_html__( 'All replies imported', 'buddyboss' ) );
+				? $this->converter_response( esc_html__( 'No replies to import', 'buddyboss-platform' ) )
+				: $this->converter_response( esc_html__( 'All replies imported', 'buddyboss-platform' ) );
 		} else {
 			$this->bump_start();
 			/* translators: 1: start row number, 2: end row number, 3: total rows in step. */
-		$this->converter_response( sprintf( esc_html__( 'Converting replies (%1$s through %2$s of %3$s)', 'buddyboss' ), $this->start, $this->max, $this->rows_in_step ) );
+		$this->converter_response( sprintf( esc_html__( 'Converting replies (%1$s through %2$s of %3$s)', 'buddyboss-platform' ), $this->start, $this->max, $this->rows_in_step ) );
 		}
 	}
 
@@ -895,12 +895,12 @@ class BBP_Converter {
 			$this->bump_step();
 
 			empty( $this->start )
-				? $this->converter_response( esc_html__( 'No anonymous reply authors to import', 'buddyboss' ) )
-				: $this->converter_response( esc_html__( 'All anonymous reply authors imported', 'buddyboss' ) );
+				? $this->converter_response( esc_html__( 'No anonymous reply authors to import', 'buddyboss-platform' ) )
+				: $this->converter_response( esc_html__( 'All anonymous reply authors imported', 'buddyboss-platform' ) );
 		} else {
 			$this->bump_start();
 			/* translators: 1: start row number, 2: end row number, 3: total rows in step. */
-		$this->converter_response( sprintf( esc_html__( 'Converting anonymous reply authors (%1$s through %2$s of %3$s)', 'buddyboss' ), $this->start, $this->max, $this->rows_in_step ) );
+		$this->converter_response( sprintf( esc_html__( 'Converting anonymous reply authors (%1$s through %2$s of %3$s)', 'buddyboss-platform' ), $this->start, $this->max, $this->rows_in_step ) );
 		}
 	}
 
@@ -914,12 +914,12 @@ class BBP_Converter {
 			$this->bump_step();
 
 			empty( $this->start )
-				? $this->converter_response( esc_html__( 'No threaded replies to import', 'buddyboss' ) )
-				: $this->converter_response( esc_html__( 'All threaded replies imported', 'buddyboss' ) );
+				? $this->converter_response( esc_html__( 'No threaded replies to import', 'buddyboss-platform' ) )
+				: $this->converter_response( esc_html__( 'All threaded replies imported', 'buddyboss-platform' ) );
 		} else {
 			$this->bump_start();
 			/* translators: 1: start row number, 2: end row number, 3: total rows in step. */
-		$this->converter_response( sprintf( esc_html__( 'Calculating threaded replies parents (%1$s through %2$s of %3$s)', 'buddyboss' ), $this->start, $this->max, $this->rows_in_step ) );
+		$this->converter_response( sprintf( esc_html__( 'Calculating threaded replies parents (%1$s through %2$s of %3$s)', 'buddyboss-platform' ), $this->start, $this->max, $this->rows_in_step ) );
 		}
 	}
 
@@ -930,7 +930,7 @@ class BBP_Converter {
 	 */
 	private function step_done() {
 		$this->reset();
-		$this->converter_response( esc_html__( 'Import Finished', 'buddyboss' ) );
+		$this->converter_response( esc_html__( 'Import Finished', 'buddyboss-platform' ) );
 	}
 
 	/** Helper Table **********************************************************/
@@ -1129,7 +1129,7 @@ abstract class BBP_Converter_Base {
 
 		// Connection failed.
 		if ( ! $this->opdb->db_connect( false ) ) {
-			$error = new WP_Error( 'bbp_converter_db_connection_failed', esc_html__( 'Database connection failed.', 'buddyboss' ) );
+			$error = new WP_Error( 'bbp_converter_db_connection_failed', esc_html__( 'Database connection failed.', 'buddyboss-platform' ) );
 			wp_send_json_error( $error );
 		}
 

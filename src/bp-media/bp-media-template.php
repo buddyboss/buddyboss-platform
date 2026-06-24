@@ -329,7 +329,7 @@ function bp_get_media_pagination_count() {
 	$to_num    = bp_core_number_format( ( $start_num + ( $media_template->pag_num - 1 ) > $media_template->total_media_count ) ? $media_template->total_media_count : $start_num + ( $media_template->pag_num - 1 ) );
 	$total     = bp_core_number_format( $media_template->total_media_count );
 
-	$message = sprintf( _n( 'Viewing 1 item', 'Viewing %1$s - %2$s of %3$s items', $media_template->total_media_count, 'buddyboss' ), $from_num, $to_num, $total );
+	$message = sprintf( _n( 'Viewing 1 item', 'Viewing %1$s - %2$s of %3$s items', $media_template->total_media_count, 'buddyboss-platform' ), $from_num, $to_num, $total );
 
 	return $message;
 }
@@ -1331,7 +1331,7 @@ function bp_get_album_pagination_count() {
 	$to_num    = bp_core_number_format( ( $start_num + ( $media_album_template->pag_num - 1 ) > $media_album_template->total_album_count ) ? $media_album_template->total_album_count : $start_num + ( $media_album_template->pag_num - 1 ) );
 	$total     = bp_core_number_format( $media_album_template->total_album_count );
 
-	$message = sprintf( _n( 'Viewing 1 item', 'Viewing %1$s - %2$s of %3$s items', $media_album_template->total_media_count, 'buddyboss' ), $from_num, $to_num, $total );
+	$message = sprintf( _n( 'Viewing 1 item', 'Viewing %1$s - %2$s of %3$s items', $media_album_template->total_media_count, 'buddyboss-platform' ), $from_num, $to_num, $total );
 
 	return $message;
 }

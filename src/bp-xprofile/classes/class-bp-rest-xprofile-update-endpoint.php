@@ -272,7 +272,7 @@ class BP_REST_XProfile_Update_Endpoint extends WP_REST_Controller {
 	public function update_items_permissions_check( $request ) {
 		$retval = new WP_Error(
 			'bp_rest_authorization_required',
-			__( 'Sorry, you are not allowed to update your profile fields.', 'buddyboss' ),
+			__( 'Sorry, you are not allowed to update your profile fields.', 'buddyboss-platform' ),
 			array(
 				'status' => rest_authorization_required_code(),
 			)
@@ -285,7 +285,7 @@ class BP_REST_XProfile_Update_Endpoint extends WP_REST_Controller {
 			if ( empty( $user_id ) ) {
 				$retval = new WP_Error(
 					'bp_rest_login_required',
-					__( 'Sorry, you are not logged in to update fields.', 'buddyboss' ),
+					__( 'Sorry, you are not logged in to update fields.', 'buddyboss-platform' ),
 					array(
 						'status' => rest_authorization_required_code(),
 					)
@@ -319,13 +319,13 @@ class BP_REST_XProfile_Update_Endpoint extends WP_REST_Controller {
 			'properties' => array(
 				'updated' => array(
 					'context'     => array( 'edit' ),
-					'description' => __( 'Whether fields updated or giving an error.', 'buddyboss' ),
+					'description' => __( 'Whether fields updated or giving an error.', 'buddyboss-platform' ),
 					'readonly'    => true,
 					'type'        => 'string',
 				),
 				'data'    => array(
 					'context'     => array( 'edit' ),
-					'description' => __( 'Object of groups.', 'buddyboss' ),
+					'description' => __( 'Object of groups.', 'buddyboss-platform' ),
 					'readonly'    => true,
 					'type'        => 'object',
 					'properties'  => $this->group_fields_endpoint->get_item_schema()['properties'],
@@ -352,7 +352,7 @@ class BP_REST_XProfile_Update_Endpoint extends WP_REST_Controller {
 		$params['context']['default'] = 'edit';
 
 		$params['fields'] = array(
-			'description' => __( 'Fields array with field_id, group_id, type, value and visibility_level to update the data.', 'buddyboss' ),
+			'description' => __( 'Fields array with field_id, group_id, type, value and visibility_level to update the data.', 'buddyboss-platform' ),
 			'type'        => 'array',
 			'items'       => array( 'type' => 'object' ),
 			'default'     => array(
@@ -366,24 +366,24 @@ class BP_REST_XProfile_Update_Endpoint extends WP_REST_Controller {
 			'required'    => true,
 			'properties'  => array(
 				'field_id'         => array(
-					'description'       => __( 'The ID of the field the data is from.', 'buddyboss' ),
+					'description'       => __( 'The ID of the field the data is from.', 'buddyboss-platform' ),
 					'type'              => 'integer',
 					'required'          => true,
 					'sanitize_callback' => 'absint',
 					'validate_callback' => 'rest_validate_request_arg',
 				),
 				'group_id'         => array(
-					'description'       => __( 'ID of the profile group of fields that have profile fields', 'buddyboss' ),
+					'description'       => __( 'ID of the profile group of fields that have profile fields', 'buddyboss-platform' ),
 					'default'           => 0,
 					'type'              => 'integer',
 					'sanitize_callback' => 'absint',
 					'validate_callback' => 'rest_validate_request_arg',
 				),
 				'value'            => array(
-					'description' => __( 'The value of the field data.', 'buddyboss' ),
+					'description' => __( 'The value of the field data.', 'buddyboss-platform' ),
 				),
 				'visibility_level' => array(
-					'description' => __( 'Who may see the saved value for this profile field.', 'buddyboss' ),
+					'description' => __( 'Who may see the saved value for this profile field.', 'buddyboss-platform' ),
 					'default'     => 'public',
 					'type'        => 'string',
 					'enum'        => array_keys( bp_xprofile_get_visibility_levels() ),
@@ -392,7 +392,7 @@ class BP_REST_XProfile_Update_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['profile_group_id'] = array(
-			'description'       => __( 'ID of the field group that have fields.', 'buddyboss' ),
+			'description'       => __( 'ID of the field group that have fields.', 'buddyboss-platform' ),
 			'default'           => 0,
 			'type'              => 'integer',
 			'sanitize_callback' => 'absint',
@@ -400,7 +400,7 @@ class BP_REST_XProfile_Update_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['hide_empty_groups'] = array(
-			'description'       => __( 'Whether to hide profile groups of fields that do not have any profile fields or not.', 'buddyboss' ),
+			'description'       => __( 'Whether to hide profile groups of fields that do not have any profile fields or not.', 'buddyboss-platform' ),
 			'default'           => false,
 			'type'              => 'boolean',
 			'sanitize_callback' => 'rest_sanitize_boolean',
@@ -408,7 +408,7 @@ class BP_REST_XProfile_Update_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['member_type'] = array(
-			'description'       => __( 'Limit fields by those restricted to a given member type, or array of member types. If `$user_id` is provided, the value of `$member_type` will be overridden by the member types of the provided user. The special value of \'any\' will return only those fields that are unrestricted by member type - i.e., those applicable to any type.', 'buddyboss' ),
+			'description'       => __( 'Limit fields by those restricted to a given member type, or array of member types. If `$user_id` is provided, the value of `$member_type` will be overridden by the member types of the provided user. The special value of \'any\' will return only those fields that are unrestricted by member type - i.e., those applicable to any type.', 'buddyboss-platform' ),
 			'default'           => array(),
 			'type'              => 'array',
 			'items'             => array( 'type' => 'string' ),
@@ -417,7 +417,7 @@ class BP_REST_XProfile_Update_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['hide_empty_fields'] = array(
-			'description'       => __( 'Whether to hide profile groups of fields that do not have any profile fields or not.', 'buddyboss' ),
+			'description'       => __( 'Whether to hide profile groups of fields that do not have any profile fields or not.', 'buddyboss-platform' ),
 			'default'           => false,
 			'type'              => 'boolean',
 			'sanitize_callback' => 'rest_sanitize_boolean',
@@ -425,7 +425,7 @@ class BP_REST_XProfile_Update_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['fetch_fields'] = array(
-			'description'       => __( 'Whether to fetch the fields for each group.', 'buddyboss' ),
+			'description'       => __( 'Whether to fetch the fields for each group.', 'buddyboss-platform' ),
 			'default'           => true,
 			'type'              => 'boolean',
 			'sanitize_callback' => 'rest_sanitize_boolean',
@@ -433,7 +433,7 @@ class BP_REST_XProfile_Update_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['fetch_field_data'] = array(
-			'description'       => __( 'Whether to fetch data for each field. Requires a $user_id.', 'buddyboss' ),
+			'description'       => __( 'Whether to fetch data for each field. Requires a $user_id.', 'buddyboss-platform' ),
 			'default'           => true,
 			'type'              => 'boolean',
 			'sanitize_callback' => 'rest_sanitize_boolean',
@@ -441,7 +441,7 @@ class BP_REST_XProfile_Update_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['fetch_visibility_level'] = array(
-			'description'       => __( 'Whether to fetch the visibility level for each field.', 'buddyboss' ),
+			'description'       => __( 'Whether to fetch the visibility level for each field.', 'buddyboss-platform' ),
 			'default'           => true,
 			'type'              => 'boolean',
 			'sanitize_callback' => 'rest_sanitize_boolean',
@@ -449,7 +449,7 @@ class BP_REST_XProfile_Update_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['exclude_groups'] = array(
-			'description'       => __( 'Ensure result set excludes specific profile field groups.', 'buddyboss' ),
+			'description'       => __( 'Ensure result set excludes specific profile field groups.', 'buddyboss-platform' ),
 			'default'           => array(),
 			'type'              => 'array',
 			'items'             => array( 'type' => 'integer' ),
@@ -458,7 +458,7 @@ class BP_REST_XProfile_Update_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['exclude_fields'] = array(
-			'description'       => __( 'Ensure result set excludes specific profile fields.', 'buddyboss' ),
+			'description'       => __( 'Ensure result set excludes specific profile fields.', 'buddyboss-platform' ),
 			'default'           => array(),
 			'type'              => 'array',
 			'items'             => array( 'type' => 'string' ),
@@ -467,7 +467,7 @@ class BP_REST_XProfile_Update_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['update_meta_cache'] = array(
-			'description'       => __( 'Whether to pre-fetch xprofilemeta for all retrieved groups, fields, and data.', 'buddyboss' ),
+			'description'       => __( 'Whether to pre-fetch xprofilemeta for all retrieved groups, fields, and data.', 'buddyboss-platform' ),
 			'default'           => true,
 			'type'              => 'boolean',
 			'sanitize_callback' => 'rest_sanitize_boolean',
@@ -511,7 +511,7 @@ class BP_REST_XProfile_Update_Endpoint extends WP_REST_Controller {
 					$is_required = false;
 				} elseif ( 'administrator' !== $selected_member_type_wp_roles[0] ) {
 					$errors                  = true;
-					$bp_error_message_string = __( 'Changing this profile type would remove your Administrator role and lock you out of the WordPress admin.', 'buddyboss' );
+					$bp_error_message_string = __( 'Changing this profile type would remove your Administrator role and lock you out of the WordPress admin.', 'buddyboss-platform' );
 					$validations['field_id'] = $field_id;
 					$validations['message']  = $bp_error_message_string;
 				}
@@ -525,7 +525,7 @@ class BP_REST_XProfile_Update_Endpoint extends WP_REST_Controller {
 					$is_required = false;
 				} elseif ( ! in_array( $selected_member_type_wp_roles[0], array( 'editor', 'administrator' ), true ) ) {
 					$errors                  = true;
-					$bp_error_message_string = __( 'Changing this profile type would remove your Editor role and lock you out of the WordPress admin.', 'buddyboss' );
+					$bp_error_message_string = __( 'Changing this profile type would remove your Editor role and lock you out of the WordPress admin.', 'buddyboss-platform' );
 					$validations['field_id'] = $field_id;
 					$validations['message']  = $bp_error_message_string;
 				}
@@ -549,7 +549,7 @@ class BP_REST_XProfile_Update_Endpoint extends WP_REST_Controller {
 			$errors                  = true;
 			$validations['field_id'] = $field_id;
 			/* translators: Field name */
-			$validations['message'] = sprintf( __( '%s is required and not allowed to be empty.', 'buddyboss' ), $field->name );
+			$validations['message'] = sprintf( __( '%s is required and not allowed to be empty.', 'buddyboss-platform' ), $field->name );
 		}
 
 		if (

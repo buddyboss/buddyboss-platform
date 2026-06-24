@@ -16,14 +16,14 @@ defined( 'ABSPATH' ) || exit;
 $is_send_ajax_request = bb_is_send_ajax_request();
 ?>
 <header class="entry-header notifications-header flex">
-	<h1 class="entry-title flex-1"><?php esc_html_e( 'Notifications', 'buddyboss' ); ?></h1>
+	<h1 class="entry-title flex-1"><?php esc_html_e( 'Notifications', 'buddyboss-platform' ); ?></h1>
 	<div class="notifications-header-actions">
 		<?php
 			bp_get_template_part( 'members/single/parts/item-subnav' );
 			bp_get_template_part( 'common/search-and-filters-bar' );
 		?>
 		<div class="bb-sort-by-date">
-			<?php esc_html_e( 'Sort by date', 'buddyboss' ); ?>
+			<?php esc_html_e( 'Sort by date', 'buddyboss-platform' ); ?>
 			<?php bp_nouveau_notifications_sort_order_links(); ?>
 		</div>
 	</div>

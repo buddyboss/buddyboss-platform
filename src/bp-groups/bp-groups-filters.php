@@ -1161,32 +1161,32 @@ function bb_subscription_send_subscribe_group_notifications( $content, $user_id,
 	$gif_data         = ! empty( $activity_metas['_gif_data'][0] ) ? maybe_unserialize( $activity_metas['_gif_data'][0] ) : array();
 
 	if ( ! empty( wp_strip_all_tags( $activity->content ) ) ) {
-		$activity_type = __( 'an update', 'buddyboss' );
+		$activity_type = __( 'an update', 'buddyboss-platform' );
 	} elseif ( $media_ids ) {
 		$media_ids = array_filter( ! is_array( $media_ids ) ? explode( ',', $media_ids ) : $media_ids );
 		if ( count( $media_ids ) > 1 ) {
-			$activity_type = __( 'some photos', 'buddyboss' );
+			$activity_type = __( 'some photos', 'buddyboss-platform' );
 		} else {
-			$activity_type = __( 'a photo', 'buddyboss' );
+			$activity_type = __( 'a photo', 'buddyboss-platform' );
 		}
 	} elseif ( $document_ids ) {
 		$document_ids = array_filter( ! is_array( $document_ids ) ? explode( ',', $document_ids ) : $document_ids );
 		if ( count( $document_ids ) > 1 ) {
-			$activity_type = __( 'some documents', 'buddyboss' );
+			$activity_type = __( 'some documents', 'buddyboss-platform' );
 		} else {
-			$activity_type = __( 'a document', 'buddyboss' );
+			$activity_type = __( 'a document', 'buddyboss-platform' );
 		}
 	} elseif ( $video_ids ) {
 		$video_ids = array_filter( ! is_array( $video_ids ) ? explode( ',', $video_ids ) : $video_ids );
 		if ( count( $video_ids ) > 1 ) {
-			$activity_type = __( 'some videos', 'buddyboss' );
+			$activity_type = __( 'some videos', 'buddyboss-platform' );
 		} else {
-			$activity_type = __( 'a video', 'buddyboss' );
+			$activity_type = __( 'a video', 'buddyboss-platform' );
 		}
 	} elseif ( $gif_data ) {
-		$activity_type = __( 'a gif', 'buddyboss' );
+		$activity_type = __( 'a gif', 'buddyboss-platform' );
 	} else {
-		$activity_type = __( 'an update', 'buddyboss' );
+		$activity_type = __( 'an update', 'buddyboss-platform' );
 	}
 
 	$args = array(
@@ -1228,7 +1228,7 @@ function bb_groups_repair_group_subscriptions( $repair_list ) {
 	if ( bp_is_active( 'groups' ) ) {
 		$repair_list[] = array(
 			'bb-repair-group-subscription',
-			esc_html__( 'Migrate Group forum and discussion subscriptions data structure to the new subscription flow', 'buddyboss' ),
+			esc_html__( 'Migrate Group forum and discussion subscriptions data structure to the new subscription flow', 'buddyboss-platform' ),
 			'bb_migrate_group_subscription',
 		);
 	}
@@ -1278,11 +1278,11 @@ function bb_group_subscriptions_handler() {
 
 	// Check for empty group.
 	if ( empty( $group_id ) || empty( $group->id ) ) {
-		$message = __( 'No group was found! Which group are you subscribing/unsubscribing to?', 'buddyboss' );
+		$message = __( 'No group was found! Which group are you subscribing/unsubscribing to?', 'buddyboss-platform' );
 	} elseif ( ! wp_verify_nonce( $nonce, 'bb-group-subscription-' . $group_id ) ) {
-		$message = __( 'There was a problem subscribing/unsubscribing from that group!', 'buddyboss' );
+		$message = __( 'There was a problem subscribing/unsubscribing from that group!', 'buddyboss-platform' );
 	} elseif ( ! groups_is_user_member( $user_id, $group_id ) ) {
-		$message = __( 'You are not part of that group!', 'buddyboss' );
+		$message = __( 'You are not part of that group!', 'buddyboss-platform' );
 	}
 
 	$group_name = sprintf(
@@ -1295,7 +1295,7 @@ function bb_group_subscriptions_handler() {
 	if ( empty( $message ) && 'subscribe' === $action ) {
 		if ( $is_subscription ) {
 			/* translators: %s: group name. */
-			$message = __( '%s You are already subscribe this group.', 'buddyboss' );
+			$message = __( '%s You are already subscribe this group.', 'buddyboss-platform' );
 		} else {
 			$subscription_id = bb_create_subscription(
 				array(
@@ -1309,13 +1309,13 @@ function bb_group_subscriptions_handler() {
 			if ( is_wp_error( $subscription_id ) ) {
 				$message = sprintf(
 				/* translators: Group name */
-					__( 'There was a problem subscribing to %s.', 'buddyboss' ),
+					__( 'There was a problem subscribing to %s.', 'buddyboss-platform' ),
 					$group_name
 				);
 			} else {
 				$message = sprintf(
 				/* translators: Group name */
-					__( 'You\'ve been subscribed to %s.', 'buddyboss' ),
+					__( 'You\'ve been subscribed to %s.', 'buddyboss-platform' ),
 					$group_name
 				);
 				$type    = 'success';
@@ -1325,13 +1325,13 @@ function bb_group_subscriptions_handler() {
 		if (  ! $is_subscription || ! bb_delete_subscription( $is_subscription ) ) {
 			$message = sprintf(
 			/* translators: Group name */
-				__( 'There was a problem unsubscribing from %s.', 'buddyboss' ),
+				__( 'There was a problem unsubscribing from %s.', 'buddyboss-platform' ),
 				$group_name
 			);
 		} else {
 			$message = sprintf(
 			/* translators: Group name */
-				__( 'You\'ve been unsubscribed from %s.', 'buddyboss' ),
+				__( 'You\'ve been unsubscribed from %s.', 'buddyboss-platform' ),
 				$group_name
 			);
 			$type    = 'success';
@@ -1757,8 +1757,8 @@ function bb_readylaunch_middle_content_my_groups( $args = array() ) {
 	);
 
 	if ( $args['has_sidebar_data'] && $args['is_sidebar_enabled_for_groups'] ) {
-		$group_data['heading']    = __( 'My Groups', 'buddyboss' );
-		$group_data['error_text'] = __( 'There are no groups to display.', 'buddyboss' );
+		$group_data['heading']    = __( 'My Groups', 'buddyboss-platform' );
+		$group_data['error_text'] = __( 'There are no groups to display.', 'buddyboss-platform' );
 
 		$user_id    = bp_loggedin_user_id();
 		$group_args = array(

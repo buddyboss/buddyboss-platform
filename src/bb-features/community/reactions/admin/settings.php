@@ -41,7 +41,7 @@ function bb_admin_settings_register_reactions_settings() {
 		'reactions',
 		'display_settings',
 		array(
-			'title'      => __( 'Display Settings', 'buddyboss' ),
+			'title'      => __( 'Display Settings', 'buddyboss-platform' ),
 			'icon'       => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-gear-six',
@@ -67,7 +67,7 @@ function bb_admin_settings_register_reactions_settings() {
 		'reactions',
 		'reactions',
 		array(
-			'title'      => __( 'Reactions', 'buddyboss' ),
+			'title'      => __( 'Reactions', 'buddyboss-platform' ),
 			'icon'       => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-smiley',
@@ -88,7 +88,7 @@ function bb_admin_settings_register_reactions_settings() {
 		'display_settings',
 		'enable_reactions',
 		array(
-			'title'       => __( 'Display Settings', 'buddyboss' ),
+			'title'       => __( 'Display Settings', 'buddyboss-platform' ),
 			'description' => '',
 			'order'       => 10,
 			'help_url'    => '636189',
@@ -109,16 +109,16 @@ function bb_admin_settings_register_reactions_settings() {
 		'enable_reactions',
 		array(
 			'name'              => 'bb_all_reactions',
-			'label'             => isset( $field_all_reactions['title'] ) ? $field_all_reactions['title'] : __( 'Enable Reactions', 'buddyboss' ),
+			'label'             => isset( $field_all_reactions['title'] ) ? $field_all_reactions['title'] : __( 'Enable Reactions', 'buddyboss-platform' ),
 			'type'              => 'toggle_list',
-			'description'       => __( 'Select the types of content that members are allowed to react to.', 'buddyboss' ),
+			'description'       => __( 'Select the types of content that members are allowed to react to.', 'buddyboss-platform' ),
 			'options'           => array(
 				array(
-					'label' => __( 'Activity Posts', 'buddyboss' ),
+					'label' => __( 'Activity Posts', 'buddyboss-platform' ),
 					'value' => 'activity',
 				),
 				array(
-					'label' => __( 'Activity Comments', 'buddyboss' ),
+					'label' => __( 'Activity Comments', 'buddyboss-platform' ),
 					'value' => 'activity_comment',
 				),
 			),
@@ -140,7 +140,7 @@ function bb_admin_settings_register_reactions_settings() {
 		'reactions',
 		'reactions_settings',
 		array(
-			'title'       => __( 'Reactions', 'buddyboss' ),
+			'title'       => __( 'Reactions', 'buddyboss-platform' ),
 			'description' => '',
 			'order'       => 10,
 		)
@@ -166,19 +166,19 @@ function bb_admin_settings_register_reactions_settings() {
 	// Build reaction mode options with id, notice, and disabled state.
 	$reactions_modes = array(
 		'likes'    => array(
-			'label'    => esc_html__( 'Likes', 'buddyboss' ),
+			'label'    => esc_html__( 'Likes', 'buddyboss-platform' ),
 			'name'     => 'bb_reaction_mode',
 			'value'    => 'likes',
 			'id'       => 'bb_reaction_mode_likes',
-			'notice'   => __( 'A simple "Like" button will show for members to express their appreciation or acknowledgement.', 'buddyboss' ),
+			'notice'   => __( 'A simple "Like" button will show for members to express their appreciation or acknowledgement.', 'buddyboss-platform' ),
 			'disabled' => false,
 		),
 		'emotions' => array(
-			'label'    => esc_html__( 'Emotions', 'buddyboss' ),
+			'label'    => esc_html__( 'Emotions', 'buddyboss-platform' ),
 			'name'     => 'bb_reaction_mode',
 			'value'    => 'emotions',
 			'id'       => 'bb_reaction_mode_emotions',
-			'notice'   => esc_html__( 'Members express their thoughts or feelings by selecting an emotion from a list of options. Maximum of only 6 emotions can be used.', 'buddyboss' ),
+			'notice'   => esc_html__( 'Members express their thoughts or feelings by selecting an emotion from a list of options. Maximum of only 6 emotions can be used.', 'buddyboss-platform' ),
 			'disabled' => (
 				! class_exists( 'BB_Reactions' ) ||
 				! function_exists( 'bbp_pro_is_license_valid' ) ||
@@ -220,7 +220,7 @@ function bb_admin_settings_register_reactions_settings() {
 		'reactions_settings',
 		array(
 			'name'              => 'bb_reaction_mode',
-			'label'             => isset( $field_reaction_mode['title'] ) ? $field_reaction_mode['title'] : __( 'Reactions Mode', 'buddyboss' ),
+			'label'             => isset( $field_reaction_mode['title'] ) ? $field_reaction_mode['title'] : __( 'Reactions Mode', 'buddyboss-platform' ),
 			'type'              => 'reaction_mode',
 			'description'       => '',
 			'options'           => $reaction_mode_options,
@@ -236,14 +236,14 @@ function bb_admin_settings_register_reactions_settings() {
 	// -------------------------------------------------------------------------
 	$button_settings        = $cached_button_settings;
 	$button_icon            = isset( $button_settings['icon'] ) ? $button_settings['icon'] : 'thumbs-up';
-	$button_text            = isset( $button_settings['text'] ) ? trim( $button_settings['text'] ) : __( 'Like', 'buddyboss' );
+	$button_text            = isset( $button_settings['text'] ) ? trim( $button_settings['text'] ) : __( 'Like', 'buddyboss-platform' );
 	$field_reactions_button = isset( $reaction_titles['bb_reactions_button'] ) ? $reaction_titles['bb_reactions_button'] : array();
 
 	$reactions_button_field_args = array(
 		'name'              => 'bb_reactions_button',
-		'label'             => isset( $field_reactions_button['title'] ) ? $field_reactions_button['title'] : __( 'Reaction Button', 'buddyboss' ),
+		'label'             => isset( $field_reactions_button['title'] ) ? $field_reactions_button['title'] : __( 'Reaction Button', 'buddyboss-platform' ),
 		'type'              => 'reaction_button',
-		'description'       => __( 'This label and icon indicate the default reaction before any reaction is selected. In \'Emotions\' mode, clicking the button applies the first reaction in the configured list.', 'buddyboss' ),
+		'description'       => __( 'This label and icon indicate the default reaction before any reaction is selected. In \'Emotions\' mode, clicking the button applies the first reaction in the configured list.', 'buddyboss-platform' ),
 		'icon'              => $button_icon,
 		'text'              => $button_text,
 		'maxlength'         => 12,

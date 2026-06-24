@@ -134,7 +134,7 @@ class BP_Activity_oEmbed_Extension extends BP_Core_oEmbed_Extension {
 
 		return array(
 			'content'      => $activity->content,
-			'title'        => __( 'Activity', 'buddyboss' ),
+			'title'        => __( 'Activity', 'buddyboss-platform' ),
 			'author_name'  => bp_core_get_user_displayname( $activity->user_id ),
 			'author_url'   => bp_core_get_user_domain( $activity->user_id ),
 
@@ -191,7 +191,7 @@ class BP_Activity_oEmbed_Extension extends BP_Core_oEmbed_Extension {
 	 * @return string
 	 */
 	protected function set_iframe_title( $item_id ) {
-		return __( 'Embedded Activity Item', 'buddyboss' );
+		return __( 'Embedded Activity Item', 'buddyboss-platform' );
 	}
 
 	/**
@@ -317,7 +317,7 @@ class BP_Activity_oEmbed_Extension extends BP_Core_oEmbed_Extension {
 						/* translators: accessibility text */
 						'%s <span class="screen-reader-text">Comments</span>',
 						$count,
-						'buddyboss'
+						'buddyboss-platform'
 					),
 					bp_core_number_format( $count )
 				);

@@ -1259,7 +1259,7 @@ function bb_get_default_notification_avatar( $size = 'full', $notification = '' 
 		esc_url( $image_url ),
 		esc_attr( ( 'thumb' === $size ? 'avatar-150' : 'avatar-300 ' ) ),
 		esc_attr( ( 'thumb' === $size ? '150' : '300 ' ) ),
-		esc_attr__( 'Notification Icon', 'buddyboss' )
+		esc_attr__( 'Notification Icon', 'buddyboss-platform' )
 	);
 }
 
@@ -1387,7 +1387,7 @@ function bb_get_notification_conditional_icon( $notification ) {
 					$excerpt,
 					50,
 					array(
-						'ending' => __( '&hellip;', 'buddyboss' ),
+						'ending' => __( '&hellip;', 'buddyboss-platform' ),
 					)
 				) . '"';
 
@@ -1436,7 +1436,7 @@ function bb_get_notification_conditional_icon( $notification ) {
 					$excerpt,
 					50,
 					array(
-						'ending' => __( '&hellip;', 'buddyboss' ),
+						'ending' => __( '&hellip;', 'buddyboss-platform' ),
 					)
 				) . '"';
 

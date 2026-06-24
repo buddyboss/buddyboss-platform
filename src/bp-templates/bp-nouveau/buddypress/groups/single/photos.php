@@ -23,7 +23,7 @@ if ( bb_enable_content_counts() && 'photos' === bp_current_action() ) {
 						'<span class="bb-count">%d</span> Photo',
 						'<span class="bb-count">%d</span> Photos',
 						$count,
-						'buddyboss'
+						'buddyboss-platform'
 					),
 					array( 'span' => array( 'class' => true ) )
 				),
@@ -67,7 +67,7 @@ if ( bb_enable_content_counts() && 'photos' === bp_current_action() ) {
 						bp_get_template_part( 'media/add-media' );
 					} else {
 						?>
-						<h2 class="bb-title"><?php esc_html_e( 'Photos', 'buddyboss' ); ?></h2>
+						<h2 class="bb-title"><?php esc_html_e( 'Photos', 'buddyboss-platform' ); ?></h2>
 						<?php
 					}
 					?>

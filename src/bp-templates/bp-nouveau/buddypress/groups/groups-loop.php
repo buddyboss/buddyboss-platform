@@ -64,9 +64,9 @@ if ( bp_has_groups( bp_ajax_querystring( 'groups' ) ) ) {
 						$has_default_cover     = function_exists( 'bb_attachment_get_cover_image_class' ) ? bb_attachment_get_cover_image_class( $bp_group_id, 'group' ) : '';
 						?>
 						<div class="bs-group-cover only-grid-view <?php echo esc_attr( $has_default_cover . ' cover-' . $group_cover_height ); ?>">
-							<a href="<?php bp_group_permalink(); ?>" aria-label="<?php esc_attr_e( 'View group', 'buddyboss' ); ?>">
+							<a href="<?php bp_group_permalink(); ?>" aria-label="<?php esc_attr_e( 'View group', 'buddyboss-platform' ); ?>">
 								<?php if ( ! empty( $group_cover_image_url ) ) { ?>
-									<img src="<?php echo esc_url( $group_cover_image_url ); ?>" alt="<?php esc_attr_e( 'Group cover image', 'buddyboss' ); ?>">
+									<img src="<?php echo esc_url( $group_cover_image_url ); ?>" alt="<?php esc_attr_e( 'Group cover image', 'buddyboss-platform' ); ?>">
 								<?php } ?>
 							</a>
 						</div>
@@ -101,7 +101,7 @@ if ( bp_has_groups( bp_ajax_querystring( 'groups' ) ) ) {
 										echo '<p class="last-activity item-meta">' .
 										sprintf(
 												/* translators: %s = last activity timestamp (e.g. "active 1 hour ago") */
-											esc_attr__( 'Active %s', 'buddyboss' ),
+											esc_attr__( 'Active %s', 'buddyboss-platform' ),
 											wp_kses_post( bp_get_group_last_active() )
 										) .
 										'</p>';
@@ -141,17 +141,17 @@ if ( bp_has_groups( bp_ajax_querystring( 'groups' ) ) ) {
 				<div class="modal-wrapper">
 					<div class="modal-container">
 						<header class="bb-model-header">
-							<h4><span class="target_name"><?php esc_html_e( 'Leave Group', 'buddyboss' ); ?></span></h4>
+							<h4><span class="target_name"><?php esc_html_e( 'Leave Group', 'buddyboss-platform' ); ?></span></h4>
 							<a class="bb-close-leave-group bb-model-close-button" href="#">
 								<span class="bb-icon-l bb-icon-times"></span>
 							</a>
 						</header>
 						<div class="bb-leave-group-content bb-action-popup-content">
-							<p><?php esc_html_e( 'Are you sure you want to leave ', 'buddyboss' ); ?><span class="bb-group-name"></span>?</p>
+							<p><?php esc_html_e( 'Are you sure you want to leave ', 'buddyboss-platform' ); ?><span class="bb-group-name"></span>?</p>
 						</div>
 						<footer class="bb-model-footer flex align-items-center">
-							<a class="bb-close-leave-group bb-close-action-popup" href="#"><?php esc_html_e( 'Cancel', 'buddyboss' ); ?></a>
-							<a class="button push-right bb-confirm-leave-group" href="#"><?php esc_html_e( 'Confirm', 'buddyboss' ); ?></a>
+							<a class="bb-close-leave-group bb-close-action-popup" href="#"><?php esc_html_e( 'Cancel', 'buddyboss-platform' ); ?></a>
+							<a class="button push-right bb-confirm-leave-group" href="#"><?php esc_html_e( 'Confirm', 'buddyboss-platform' ); ?></a>
 						</footer>
 
 					</div>

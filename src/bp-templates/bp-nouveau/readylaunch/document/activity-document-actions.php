@@ -32,10 +32,10 @@ $move_id                = ( 0 < $group_id ) ? $group_id : $document_user_id;
 $move_type              = ( 0 < $group_id ) ? 'group' : 'profile';
 ?>
 <div class="bb-rl-document-action-wrap">
-	<a href="<?php echo esc_url( $download_url ); ?>" class="bb-rl-document-action_download" data-id="<?php echo esc_attr( $document_id ); ?>" data-activity-id="<?php bp_document_activity_id(); ?>" data-balloon-pos="up" data-balloon="<?php esc_attr_e( 'Download', 'buddyboss' ); ?>">
+	<a href="<?php echo esc_url( $download_url ); ?>" class="bb-rl-document-action_download" data-id="<?php echo esc_attr( $document_id ); ?>" data-activity-id="<?php bp_document_activity_id(); ?>" data-balloon-pos="up" data-balloon="<?php esc_attr_e( 'Download', 'buddyboss-platform' ); ?>">
 		<i class="bb-icons-rl-arrow-circle-down"></i>
 	</a>
-	<a href="#" target="_blank" class="bb-rl-document-action_more" data-balloon-pos="up" data-balloon="<?php esc_attr_e( 'More actions', 'buddyboss' ); ?>">
+	<a href="#" target="_blank" class="bb-rl-document-action_more" data-balloon-pos="up" data-balloon="<?php esc_attr_e( 'More actions', 'buddyboss-platform' ); ?>">
 		<i class="bb-icons-rl-dots-three"></i>
 	</a>
 	<div class="bb_rl_more_dropdown">
@@ -44,7 +44,7 @@ $move_type              = ( 0 < $group_id ) ? 'group' : 'profile';
 			if ( $can_download_btn ) {
 				?>
 				<li class="bb_rl_copy_download_file_url bb-rl-document-action-class">
-					<a href="<?php echo esc_url( $download_url ); ?>"><?php esc_attr_e( 'Copy Download Link', 'buddyboss' ); ?></a>
+					<a href="<?php echo esc_url( $download_url ); ?>"><?php esc_attr_e( 'Copy Download Link', 'buddyboss-platform' ); ?></a>
 				</li>
 				<?php
 			}
@@ -52,14 +52,14 @@ $move_type              = ( 0 < $group_id ) ? 'group' : 'profile';
 				if ( ! in_array( $db_privacy, array( 'forums', 'message' ), true ) ) {
 					if ( $is_comment_doc ) {
 						?>
-						<li class="bb_rl_move_file bb-rl-document-action-class bb-rl-move-disabled" data-balloon-pos="down" data-balloon="<?php esc_attr_e( 'Document inherits activity privacy in comment. You are not allowed to move.', 'buddyboss' ); ?>">
-							<a href="#"><?php esc_attr_e( 'Move', 'buddyboss' ); ?></a>
+						<li class="bb_rl_move_file bb-rl-document-action-class bb-rl-move-disabled" data-balloon-pos="down" data-balloon="<?php esc_attr_e( 'Document inherits activity privacy in comment. You are not allowed to move.', 'buddyboss-platform' ); ?>">
+							<a href="#"><?php esc_attr_e( 'Move', 'buddyboss-platform' ); ?></a>
 						</li>
 						<?php
 					} elseif ( $can_move ) {
 						?>
 						<li class="bb_rl_move_file bb-rl-document-action-class">
-							<a href="#" data-action="document" data-type="<?php echo esc_attr( $move_type ); ?>" id="<?php echo esc_attr( $move_id ); ?>" class="ac-document-move"><?php esc_attr_e( 'Move', 'buddyboss' ); ?></a>
+							<a href="#" data-action="document" data-type="<?php echo esc_attr( $move_type ); ?>" id="<?php echo esc_attr( $move_id ); ?>" class="ac-document-move"><?php esc_attr_e( 'Move', 'buddyboss-platform' ); ?></a>
 						</li>
 						<?php
 					}
@@ -68,7 +68,7 @@ $move_type              = ( 0 < $group_id ) ? 'group' : 'profile';
 					$item_id = bp_is_active( 'activity' ) ? ( bp_get_activity_comment_id() ?: bp_get_activity_id() ) : 0;
 					?>
 					<li class="bb_rl_delete_file bb-rl-document-action-class">
-						<a class="bb-rl-document-file-delete" data-item-activity-id="<?php echo esc_attr( $item_id ); ?>" data-item-from="activity" data-item-preview-attachment-id="<?php echo esc_attr( $document_attachment_id ); ?>" data-item-attachment-id="<?php echo esc_attr( $document_attachment_id ); ?>" data-item-id="<?php echo esc_attr( $document_id ); ?>" data-type="<?php echo esc_attr( 'document' ); ?>" href="#"><?php esc_attr_e( 'Delete', 'buddyboss' ); ?></a>
+						<a class="bb-rl-document-file-delete" data-item-activity-id="<?php echo esc_attr( $item_id ); ?>" data-item-from="activity" data-item-preview-attachment-id="<?php echo esc_attr( $document_attachment_id ); ?>" data-item-attachment-id="<?php echo esc_attr( $document_attachment_id ); ?>" data-item-id="<?php echo esc_attr( $document_id ); ?>" data-type="<?php echo esc_attr( 'document' ); ?>" href="#"><?php esc_attr_e( 'Delete', 'buddyboss-platform' ); ?></a>
 					</li>
 					<?php
 				}

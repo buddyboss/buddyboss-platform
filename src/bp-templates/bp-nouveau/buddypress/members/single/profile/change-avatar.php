@@ -12,9 +12,9 @@
 <h2 class="screen-heading change-avatar-screen">
 	<?php
 	if ( ! (int) bp_get_option( 'bp-disable-avatar-uploads' ) ) {
-		esc_html_e( 'Change Profile Photo', 'buddyboss' );
+		esc_html_e( 'Change Profile Photo', 'buddyboss-platform' );
 	} else {
-		esc_html_e( 'Profile Photo', 'buddyboss' );
+		esc_html_e( 'Profile Photo', 'buddyboss-platform' );
 	}
 	?>
 </h2>
@@ -28,7 +28,7 @@ if ( ! (int) bp_get_option( 'bp-disable-avatar-uploads' ) ) {
 	<p class="bp-feedback info">
 		<span class="bp-icon" aria-hidden="true"></span>
 		<span class="bp-help-text">
-			<?php esc_html_e( 'Your profile photo will be used on your profile and throughout the site.', 'buddyboss' ); ?>
+			<?php esc_html_e( 'Your profile photo will be used on your profile and throughout the site.', 'buddyboss-platform' ); ?>
 		</span>
 	</p>
 
@@ -38,32 +38,32 @@ if ( ! (int) bp_get_option( 'bp-disable-avatar-uploads' ) ) {
 		if ( 'upload-image' === $avatar_admin_step ) {
 			wp_nonce_field( 'bp_avatar_upload' );
 			?>
-			<p class="bp-help-text"><?php esc_html_e( "Click below to select a JPG, GIF or PNG format photo from your computer and then click 'Upload Image' to proceed.", 'buddyboss' ); ?></p>
+			<p class="bp-help-text"><?php esc_html_e( "Click below to select a JPG, GIF or PNG format photo from your computer and then click 'Upload Image' to proceed.", 'buddyboss-platform' ); ?></p>
 
 			<p id="avatar-upload">
-				<label for="file" class="bp-screen-reader-text"><?php esc_html_e( 'Select an image', 'buddyboss' ); ?></label>
+				<label for="file" class="bp-screen-reader-text"><?php esc_html_e( 'Select an image', 'buddyboss-platform' ); ?></label>
 				<input type="file" name="file" id="file" />
-				<input type="submit" name="upload" id="upload" value="<?php esc_attr_e( 'Upload Image', 'buddyboss' ); ?>" />
+				<input type="submit" name="upload" id="upload" value="<?php esc_attr_e( 'Upload Image', 'buddyboss-platform' ); ?>" />
 				<input type="hidden" name="action" id="action" value="bp_avatar_upload" />
 			</p>
 
 			<?php
 			if ( bp_get_user_has_avatar() ) {
 				?>
-				<p class="bp-help-text"><?php esc_html_e( "If you'd like to delete your current profile photo, use the delete profile photo button.", 'buddyboss' ); ?></p>
-				<p><a class="button edit" href="<?php bp_avatar_delete_link(); ?>"><?php esc_html_e( 'Delete My Profile Photo', 'buddyboss' ); ?></a></p>
+				<p class="bp-help-text"><?php esc_html_e( "If you'd like to delete your current profile photo, use the delete profile photo button.", 'buddyboss-platform' ); ?></p>
+				<p><a class="button edit" href="<?php bp_avatar_delete_link(); ?>"><?php esc_html_e( 'Delete My Profile Photo', 'buddyboss-platform' ); ?></a></p>
 				<?php
 			}
 		}
 
 		if ( 'crop-image' === $avatar_admin_step ) {
 			?>
-			<p class="bp-help-text screen-header"><?php esc_html_e( 'Crop Your New Profile Photo', 'buddyboss' ); ?></p>
-			<img src="<?php bp_avatar_to_crop(); ?>" id="avatar-to-crop" class="avatar" alt="<?php esc_attr_e( 'Profile photo to crop', 'buddyboss' ); ?>" />
+			<p class="bp-help-text screen-header"><?php esc_html_e( 'Crop Your New Profile Photo', 'buddyboss-platform' ); ?></p>
+			<img src="<?php bp_avatar_to_crop(); ?>" id="avatar-to-crop" class="avatar" alt="<?php esc_attr_e( 'Profile photo to crop', 'buddyboss-platform' ); ?>" />
 			<div id="avatar-crop-pane">
-				<img src="<?php bp_avatar_to_crop(); ?>" id="avatar-crop-preview" class="avatar" alt="<?php esc_attr_e( 'Profile photo preview', 'buddyboss' ); ?>" />
+				<img src="<?php bp_avatar_to_crop(); ?>" id="avatar-crop-preview" class="avatar" alt="<?php esc_attr_e( 'Profile photo preview', 'buddyboss-platform' ); ?>" />
 			</div>
-			<input type="submit" name="avatar-crop-submit" id="avatar-crop-submit" value="<?php esc_attr_e( 'Crop Image', 'buddyboss' ); ?>" />
+			<input type="submit" name="avatar-crop-submit" id="avatar-crop-submit" value="<?php esc_attr_e( 'Crop Image', 'buddyboss-platform' ); ?>" />
 			<input type="hidden" name="image_src" id="image_src" value="<?php bp_avatar_to_crop_src(); ?>" />
 			<input type="hidden" id="x" name="x" />
 			<input type="hidden" id="y" name="y" />
@@ -88,7 +88,7 @@ if ( ! (int) bp_get_option( 'bp-disable-avatar-uploads' ) ) {
 	?>
 	<div class="bp-feedback info">
 		<span class="bp-icon" aria-hidden="true"></span>
-		<p><?php esc_html_e( 'Your profile photo cannot be changed.', 'buddyboss' ); ?></p>
+		<p><?php esc_html_e( 'Your profile photo cannot be changed.', 'buddyboss-platform' ); ?></p>
 	</div>
 	<?php
 }

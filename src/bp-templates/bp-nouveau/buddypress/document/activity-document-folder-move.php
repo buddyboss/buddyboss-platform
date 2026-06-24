@@ -25,9 +25,9 @@
 					</div>
 					<div class="error" style="display: none;"></div>
 					<footer class="bb-model-footer">
-						<a href="#" class="bp-document-open-create-popup-folder"><?php esc_html_e( 'Create new folder', 'buddyboss' ); ?></a>
-						<a class="ac-folder-close-button" href="#"><?php esc_html_e( 'Cancel', 'buddyboss' ); ?></a>
-						<a class="button bp-folder-move" id="" href="#"><?php esc_html_e( 'Move', 'buddyboss' ); ?></a>
+						<a href="#" class="bp-document-open-create-popup-folder"><?php esc_html_e( 'Create new folder', 'buddyboss-platform' ); ?></a>
+						<a class="ac-folder-close-button" href="#"><?php esc_html_e( 'Cancel', 'buddyboss-platform' ); ?></a>
+						<a class="button bp-folder-move" id="" href="#"><?php esc_html_e( 'Move', 'buddyboss-platform' ); ?></a>
 					</footer>
 				</div>
 			</div>

@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
 
 <div id="bbpress-forums">
 	<fieldset class="bbp-form" id="bbp-protected">
-		<Legend><?php esc_html_e( 'Protected', 'buddyboss' ); ?></legend>
+		<Legend><?php esc_html_e( 'Protected', 'buddyboss-platform' ); ?></legend>
 
 		<?php echo wp_kses_post( get_the_password_form() ); ?>
 

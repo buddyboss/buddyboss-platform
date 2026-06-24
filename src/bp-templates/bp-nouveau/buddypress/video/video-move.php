@@ -16,7 +16,7 @@
 			<div class="modal-wrapper">
 				<div id="boss-video-create-album-popup" class="modal-container has-folderlocationUI">
 					<header class="bb-model-header">
-						<h4><span class="target_name"><?php esc_html_e( 'Move Video to...', 'buddyboss' ); ?></span></h4>
+						<h4><span class="target_name"><?php esc_html_e( 'Move Video to...', 'buddyboss-platform' ); ?></span></h4>
 					</header>
 					<div class="bb-field-wrap">
 						<?php
@@ -25,9 +25,9 @@
 						?>
 					</div>
 					<footer class="bb-model-footer">
-						<a href="#" class="bp-video-open-create-popup-album"><?php esc_html_e( 'Create new album', 'buddyboss' ); ?></a>
-						<a class="ac-video-close-button" href="#"><?php esc_html_e( 'Cancel', 'buddyboss' ); ?></a>
-						<a class="button bp-video-move bp-video-move-activity" id="" href="#"><?php esc_html_e( 'Move', 'buddyboss' ); ?></a>
+						<a href="#" class="bp-video-open-create-popup-album"><?php esc_html_e( 'Create new album', 'buddyboss-platform' ); ?></a>
+						<a class="ac-video-close-button" href="#"><?php esc_html_e( 'Cancel', 'buddyboss-platform' ); ?></a>
+						<a class="button bp-video-move bp-video-move-activity" id="" href="#"><?php esc_html_e( 'Move', 'buddyboss-platform' ); ?></a>
 					</footer>
 				</div>
 			</div>

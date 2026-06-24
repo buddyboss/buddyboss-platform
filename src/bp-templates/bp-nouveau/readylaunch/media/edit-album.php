@@ -30,14 +30,14 @@ if ( bp_is_active( 'video' ) && bp_has_video_albums( array( 'include' => $album_
 			<div class="bb-rl-modal-wrapper">
 				<div id="bb-rl-media-create-album-popup" class="bb-rl-modal-container bb-rl-has-folderlocationUI">
 					<header class="bb-model-header">
-						<h4><?php esc_html_e( 'Edit Album', 'buddyboss' ); ?></h4>
+						<h4><?php esc_html_e( 'Edit Album', 'buddyboss-platform' ); ?></h4>
 						<a class="bb-model-close-button bb-rl-media-edit-album-close" id="bp-media-edit-album-close" href="#"><span class="bb-icon-l bb-icon-times"></span></a>
 					</header>
 					<div class="bb-rl-modal-body">
 						<div class="bb-field-wrap">
-							<label for="bb-album-title" class="bb-label"><?php esc_html_e( 'Title', 'buddyboss' ); ?></label>
-							<input id="bb-album-title" value="" type="text" placeholder="<?php esc_html_e( 'Enter album title', 'buddyboss' ); ?>" />
-							<small class="error-box"><?php _e( 'Following special characters are not supported: \ / ? % * : | " < >', 'buddyboss' ); ?></small>
+							<label for="bb-album-title" class="bb-label"><?php esc_html_e( 'Title', 'buddyboss-platform' ); ?></label>
+							<input id="bb-album-title" value="" type="text" placeholder="<?php esc_html_e( 'Enter album title', 'buddyboss-platform' ); ?>" />
+							<small class="error-box"><?php _e( 'Following special characters are not supported: \ / ? % * : | " < >', 'buddyboss-platform' ); ?></small>
 						</div>
 					</div>
 					<footer class="bb-model-footer">
@@ -58,8 +58,8 @@ if ( bp_is_active( 'video' ) && bp_has_video_albums( array( 'include' => $album_
 								</select>
 							</div>
 						<?php endif; ?>
-						<a class="button bb-rl-button bb-rl-button--secondaryFill bb-rl-button--small bb-rl-media-edit-album-close" id="bp-media-edit-album-cancel" href="#"><?php esc_html_e( 'Cancel', 'buddyboss' ); ?></a>
-						<a class="button bb-rl-button bb-rl-button--brandFill bb-rl-button--small" id="bp-media-edit-album-submit" href="#"><?php esc_html_e( 'Save', 'buddyboss' ); ?></a>
+						<a class="button bb-rl-button bb-rl-button--secondaryFill bb-rl-button--small bb-rl-media-edit-album-close" id="bp-media-edit-album-cancel" href="#"><?php esc_html_e( 'Cancel', 'buddyboss-platform' ); ?></a>
+						<a class="button bb-rl-button bb-rl-button--brandFill bb-rl-button--small" id="bp-media-edit-album-submit" href="#"><?php esc_html_e( 'Save', 'buddyboss-platform' ); ?></a>
 					</footer>
 				</div>
 			</div>

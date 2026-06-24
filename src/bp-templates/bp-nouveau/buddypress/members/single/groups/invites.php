@@ -9,7 +9,7 @@
  */
 ?>
 
-<h2 class="screen-heading group-invites-screen"><?php esc_html_e( 'Group Invites', 'buddyboss' ); ?></h2>
+<h2 class="screen-heading group-invites-screen"><?php esc_html_e( 'Group Invites', 'buddyboss-platform' ); ?></h2>
 <?php
 bp_nouveau_group_hook( 'before', 'invites_content' );
 
@@ -43,7 +43,7 @@ if ( bp_has_groups( 'type=invites&user_id=' . $bp_displayed_user_id ) ) {
 								<?php
 								/* translators: 1: inviter profile link, 2: time since the invitation. */
 								printf(
-									__( 'Invited by %1$s &middot; %2$s.', 'buddyboss' ),
+									__( 'Invited by %1$s &middot; %2$s.', 'buddyboss-platform' ),
 									sprintf(
 										'<a href="%s">%s</a>',
 										$inviter['url'],

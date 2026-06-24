@@ -476,13 +476,13 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 		 */
 		function print_search_options( $items_to_search ) {
 			echo "<div class='wp-user-fields' style='margin: 10px 0 0 30px'>";
-			echo "<p class='xprofile-group-name' style='margin: 5px 0'><strong>" . __( 'Account', 'buddyboss' ) . '</strong></p>';
+			echo "<p class='xprofile-group-name' style='margin: 5px 0'><strong>" . __( 'Account', 'buddyboss-platform' ) . '</strong></p>';
 
 			$fields = array(
-				'user_login'   => __( 'Username/Login', 'buddyboss' ),
-				'display_name' => __( 'Display Name', 'buddyboss' ),
-				'user_email'   => __( 'Email', 'buddyboss' ),
-				'user_meta'    => __( 'User Meta', 'buddyboss' ),
+				'user_login'   => __( 'Username/Login', 'buddyboss-platform' ),
+				'display_name' => __( 'Display Name', 'buddyboss-platform' ),
+				'user_email'   => __( 'Email', 'buddyboss-platform' ),
+				'user_meta'    => __( 'User Meta', 'buddyboss-platform' ),
 			);
 			foreach ( $fields as $field => $label ) {
 				$item    = 'member_field_' . $field;
@@ -1577,9 +1577,9 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 					if ( ! isset( $translation_cache[ $cache_key ] ) ) {
 						$translation_cache[ $cache_key ] = array(
 							// Get singular form translation (e.g., "one year" for "year").
-							'singular' => _n( '%s ' . $unit['singular'], '%s ' . $unit['plural'], 1, 'buddyboss' ),
+							'singular' => _n( '%s ' . $unit['singular'], '%s ' . $unit['plural'], 1, 'buddyboss-platform' ),
 							// Get plural form translation (e.g., "two years" for "years").
-							'plural'   => _n( '%s ' . $unit['singular'], '%s ' . $unit['plural'], 2, 'buddyboss' ),
+							'plural'   => _n( '%s ' . $unit['singular'], '%s ' . $unit['plural'], 2, 'buddyboss-platform' ),
 						);
 
 						// Clean up cache if it exceeds the size limit.
@@ -1601,8 +1601,8 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 
 						if ( ! isset( $translation_cache[ $cache_key ] ) ) {
 							$translation_cache[ $cache_key ] = array(
-								'singular' => __( $unit, 'buddyboss' ),
-								'plural'   => __( $unit, 'buddyboss' ),
+								'singular' => __( $unit, 'buddyboss-platform' ),
+								'plural'   => __( $unit, 'buddyboss-platform' ),
 							);
 
 							// Clean up cache if it exceeds the size limit.
@@ -1646,7 +1646,7 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 				// Cache WordPress translations for direction words.
 				if ( ! isset( $translation_cache[ $cache_key ] ) ) {
 					// Get the translation for this direction word (e.g., "ago" for "ago").
-					$translation_cache[ $cache_key ] = __( '%s ' . $direction, 'buddyboss' );
+					$translation_cache[ $cache_key ] = __( '%s ' . $direction, 'buddyboss-platform' );
 
 					// Clean up cache if it exceeds the size limit.
 					if ( count( $translation_cache ) > self::$max_cache_size ) {
@@ -1817,7 +1817,7 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 			foreach ( $directions as $direction ) {
 				// Get the WordPress translation for this direction word.
 				// Example: __('%s ago', 'buddyboss') → "since".
-				$direction_translation = __( '%s ' . $direction, 'buddyboss' );
+				$direction_translation = __( '%s ' . $direction, 'buddyboss-platform' );
 
 				// Remove the %s placeholder to get just the direction word.
 				// Example: "since %s" → "since".

@@ -39,9 +39,9 @@ class BP_Attachment_Avatar extends BP_Attachment {
 				// Specific errors for avatars.
 				'upload_error_strings'  => array(
 					/* translators: %s: maximum allowed file size. */
-					9  => sprintf( __( 'That photo is too big. Please upload one smaller than %s', 'buddyboss' ), size_format( bp_core_avatar_original_max_filesize() ) ),
+					9  => sprintf( __( 'That photo is too big. Please upload one smaller than %s', 'buddyboss-platform' ), size_format( bp_core_avatar_original_max_filesize() ) ),
 					/* translators: %s: comma-separated list of allowed file types. */
-					10 => sprintf( _n( 'Please upload only this file type: %s.', 'Please upload only these file types: %s.', count( $allowed_types ), 'buddyboss' ), self::get_avatar_types( $allowed_types ) ),
+					10 => sprintf( _n( 'Please upload only this file type: %s.', 'Please upload only these file types: %s.', count( $allowed_types ), 'buddyboss-platform' ), self::get_avatar_types( $allowed_types ) ),
 				),
 			)
 		);
@@ -57,7 +57,7 @@ class BP_Attachment_Avatar extends BP_Attachment {
 	 */
 	public static function get_avatar_types( $allowed_types = array() ) {
 		$types = array_map( 'strtoupper', $allowed_types );
-		$comma = _x( ',', 'avatar types separator', 'buddyboss' );
+		$comma = _x( ',', 'avatar types separator', 'buddyboss-platform' );
 		return join( $comma . ' ', $types );
 	}
 
@@ -402,11 +402,11 @@ class BP_Attachment_Avatar extends BP_Attachment {
 
 			// Set feedback messages.
 			$script_data['feedback_messages'] = array(
-				1 => __( 'There was a problem cropping your profile photo.', 'buddyboss' ),
-				2 => __( 'Your new profile photo was uploaded successfully.', 'buddyboss' ),
-				3 => __( 'There was a problem deleting your profile photo. Please try again.', 'buddyboss' ),
-				4 => __( 'Your profile photo was deleted successfully!', 'buddyboss' ),
-				5 => __( 'Missing image editor! Enable GD or Imagick library.', 'buddyboss' ),
+				1 => __( 'There was a problem cropping your profile photo.', 'buddyboss-platform' ),
+				2 => __( 'Your new profile photo was uploaded successfully.', 'buddyboss-platform' ),
+				3 => __( 'There was a problem deleting your profile photo. Please try again.', 'buddyboss-platform' ),
+				4 => __( 'Your profile photo was deleted successfully!', 'buddyboss-platform' ),
+				5 => __( 'Missing image editor! Enable GD or Imagick library.', 'buddyboss-platform' ),
 			);
 		} elseif ( ! empty( $group_id ) ) {
 			$script_data['bp_params'] = array(
@@ -421,10 +421,10 @@ class BP_Attachment_Avatar extends BP_Attachment {
 
 			// Set feedback messages.
 			$script_data['feedback_messages'] = array(
-				1 => __( 'There was a problem cropping the group profile photo.', 'buddyboss' ),
-				2 => __( 'The group profile photo was uploaded successfully.', 'buddyboss' ),
-				3 => __( 'There was a problem deleting the group profile photo. Please try again.', 'buddyboss' ),
-				4 => __( 'The group profile photo was deleted successfully!', 'buddyboss' ),
+				1 => __( 'There was a problem cropping the group profile photo.', 'buddyboss-platform' ),
+				2 => __( 'The group profile photo was uploaded successfully.', 'buddyboss-platform' ),
+				3 => __( 'There was a problem deleting the group profile photo. Please try again.', 'buddyboss-platform' ),
+				4 => __( 'The group profile photo was deleted successfully!', 'buddyboss-platform' ),
 			);
 		} else {
 

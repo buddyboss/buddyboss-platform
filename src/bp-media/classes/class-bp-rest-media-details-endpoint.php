@@ -149,7 +149,7 @@ class BP_REST_Media_Details_Endpoint extends WP_REST_Controller {
 		if ( empty( $request['media_ids'] ) ) {
 			return new WP_Error(
 				'bp_rest_no_media_found',
-				__( 'Sorry, you are not allowed to move a Media item.', 'buddyboss' ),
+				__( 'Sorry, you are not allowed to move a Media item.', 'buddyboss-platform' ),
 				array(
 					'status' => 400,
 				)
@@ -170,7 +170,7 @@ class BP_REST_Media_Details_Endpoint extends WP_REST_Controller {
 		) {
 			return new WP_Error(
 				'bp_rest_authorization_required',
-				__( 'Sorry, you are not allowed to move a media.', 'buddyboss' ),
+				__( 'Sorry, you are not allowed to move a media.', 'buddyboss-platform' ),
 				array(
 					'status' => rest_authorization_required_code(),
 				)
@@ -189,7 +189,7 @@ class BP_REST_Media_Details_Endpoint extends WP_REST_Controller {
 			if ( (int) $media->group_id !== (int) $group_id ) {
 				$retval['failed'][ $media_id ] = new WP_Error(
 					'bp_rest_invalid_move_with_album',
-					__( 'Sorry, you are not allowed to move this media with album.', 'buddyboss' ),
+					__( 'Sorry, you are not allowed to move this media with album.', 'buddyboss-platform' ),
 					array(
 						'status' => 404,
 					)
@@ -199,7 +199,7 @@ class BP_REST_Media_Details_Endpoint extends WP_REST_Controller {
 				if ( empty( (int) $moved_media_id ) || is_wp_error( $moved_media_id ) ) {
 					$retval['failed'][ $media_id ] = new WP_Error(
 						'bp_rest_invalid_move_with_album',
-						__( 'Sorry, you are not allowed to move this media with album.', 'buddyboss' ),
+						__( 'Sorry, you are not allowed to move this media with album.', 'buddyboss-platform' ),
 						array(
 							'status' => 404,
 						)
@@ -239,7 +239,7 @@ class BP_REST_Media_Details_Endpoint extends WP_REST_Controller {
 	public function move_items_permissions_check( $request ) {
 		$retval = new WP_Error(
 			'bp_rest_authorization_required',
-			__( 'Sorry, you are not allowed to create a media.', 'buddyboss' ),
+			__( 'Sorry, you are not allowed to create a media.', 'buddyboss-platform' ),
 			array(
 				'status' => rest_authorization_required_code(),
 			)
@@ -269,7 +269,7 @@ class BP_REST_Media_Details_Endpoint extends WP_REST_Controller {
 			) {
 				$retval = new WP_Error(
 					'bp_rest_invalid_permission',
-					__( 'You don\'t have a permission to move a media inside this group.', 'buddyboss' ),
+					__( 'You don\'t have a permission to move a media inside this group.', 'buddyboss-platform' ),
 					array(
 						'status' => rest_authorization_required_code(),
 					)
@@ -279,7 +279,7 @@ class BP_REST_Media_Details_Endpoint extends WP_REST_Controller {
 				if ( empty( $parent_album->id ) ) {
 					$retval = new WP_Error(
 						'bp_rest_invalid_album_id',
-						__( 'Invalid Album ID.', 'buddyboss' ),
+						__( 'Invalid Album ID.', 'buddyboss-platform' ),
 						array(
 							'status' => 400,
 						)
@@ -290,7 +290,7 @@ class BP_REST_Media_Details_Endpoint extends WP_REST_Controller {
 				if ( true === $retval && true !== (bool) $album_privacy['can_move'] ) {
 					$retval = new WP_Error(
 						'bp_rest_invalid_permission',
-						__( 'You don\'t have a permission to move a media inside this album.', 'buddyboss' ),
+						__( 'You don\'t have a permission to move a media inside this album.', 'buddyboss-platform' ),
 						array(
 							'status' => rest_authorization_required_code(),
 						)
@@ -324,7 +324,7 @@ class BP_REST_Media_Details_Endpoint extends WP_REST_Controller {
 
 		if ( WP_REST_Server::CREATABLE === $method ) {
 			$args['media_ids'] = array(
-				'description'       => __( 'Media specific IDs.', 'buddyboss' ),
+				'description'       => __( 'Media specific IDs.', 'buddyboss-platform' ),
 				'default'           => array(),
 				'type'              => 'array',
 				'required'          => true,
@@ -334,14 +334,14 @@ class BP_REST_Media_Details_Endpoint extends WP_REST_Controller {
 			);
 
 			$args['group_id'] = array(
-				'description'       => __( 'A unique numeric ID for the Group.', 'buddyboss' ),
+				'description'       => __( 'A unique numeric ID for the Group.', 'buddyboss-platform' ),
 				'type'              => 'integer',
 				'sanitize_callback' => 'absint',
 				'validate_callback' => 'rest_validate_request_arg',
 			);
 
 			$args['album_id'] = array(
-				'description'       => __( 'A unique numeric ID for the Media Album.', 'buddyboss' ),
+				'description'       => __( 'A unique numeric ID for the Media Album.', 'buddyboss-platform' ),
 				'type'              => 'integer',
 				'required'          => true,
 				'sanitize_callback' => 'absint',
@@ -374,7 +374,7 @@ class BP_REST_Media_Details_Endpoint extends WP_REST_Controller {
 			'properties' => array(
 				'tabs'    => array(
 					'context'     => array( 'embed', 'view' ),
-					'description' => __( 'Media directory tabs.', 'buddyboss' ),
+					'description' => __( 'Media directory tabs.', 'buddyboss-platform' ),
 					'type'        => 'object',
 					'readonly'    => true,
 					'items'       => array(
@@ -383,7 +383,7 @@ class BP_REST_Media_Details_Endpoint extends WP_REST_Controller {
 				),
 				'privacy' => array(
 					'context'     => array( 'embed', 'view' ),
-					'description' => __( 'Media privacy.', 'buddyboss' ),
+					'description' => __( 'Media privacy.', 'buddyboss-platform' ),
 					'type'        => 'object',
 					'readonly'    => true,
 				),

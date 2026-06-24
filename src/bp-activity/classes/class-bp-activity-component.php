@@ -175,15 +175,15 @@ class BP_Activity_Component extends BP_Component {
 
 		// Register the visibility levels. See bp_activity_get_visibility_levels() to filter.
 		$this->visibility_levels = array(
-			'public'   => __( 'Public', 'buddyboss' ),
-			'loggedin' => __( 'All Members', 'buddyboss' ),
+			'public'   => __( 'Public', 'buddyboss-platform' ),
+			'loggedin' => __( 'All Members', 'buddyboss-platform' ),
 		);
 
 		if ( bp_is_active( 'friends' ) ) {
-			$this->visibility_levels['friends'] = __( 'My Connections', 'buddyboss' );
+			$this->visibility_levels['friends'] = __( 'My Connections', 'buddyboss-platform' );
 		}
 
-		$this->visibility_levels['onlyme'] = __( 'Only Me', 'buddyboss' );
+		$this->visibility_levels['onlyme'] = __( 'Only Me', 'buddyboss-platform' );
 
 		$this->published_status = 'published';
 		$this->scheduled_status = 'scheduled';
@@ -212,7 +212,7 @@ class BP_Activity_Component extends BP_Component {
 			'has_directory'         => true,
 			'directory_title'       => isset( $bp->pages->activity->title ) ? $bp->pages->activity->title : $default_directory_title,
 			'notification_callback' => 'bp_activity_format_notifications',
-			'search_string'         => __( 'Search Feed&hellip;', 'buddyboss' ),
+			'search_string'         => __( 'Search Feed&hellip;', 'buddyboss-platform' ),
 			'global_tables'         => $global_tables,
 			'meta_tables'           => $meta_tables,
 		);
@@ -271,7 +271,7 @@ class BP_Activity_Component extends BP_Component {
 
 		// Add 'Activity' to the main navigation.
 		$main_nav = array(
-			'name'                => __( 'Timeline', 'buddyboss' ),
+			'name'                => __( 'Timeline', 'buddyboss-platform' ),
 			'slug'                => $slug,
 			'position'            => 25,
 			'screen_function'     => 'bp_activity_screen_my_activity',
@@ -307,11 +307,11 @@ class BP_Activity_Component extends BP_Component {
 				if ( ! empty( $count ) ) {
 					$title = sprintf(
 						/* translators: %s: Unread mention count for the current user */
-						__( 'Mentions %s', 'buddyboss' ),
+						__( 'Mentions %s', 'buddyboss-platform' ),
 						'<span class="count">' . bp_core_number_format( $count ) . '</span>'
 					);
 				} else {
-					$title = __( 'Mentions', 'buddyboss' );
+					$title = __( 'Mentions', 'buddyboss-platform' );
 				}
 			}
 
@@ -319,7 +319,7 @@ class BP_Activity_Component extends BP_Component {
 			$wp_admin_nav[] = array(
 				'parent' => buddypress()->my_account_menu_id,
 				'id'     => 'my-account-' . $this->id,
-				'title'  => __( 'Timeline', 'buddyboss' ),
+				'title'  => __( 'Timeline', 'buddyboss-platform' ),
 				'href'   => $activity_link,
 			);
 		}
@@ -339,14 +339,14 @@ class BP_Activity_Component extends BP_Component {
 			$bp = buddypress();
 
 			if ( bp_is_my_profile() ) {
-				$bp->bp_options_title = __( 'My Activity', 'buddyboss' );
+				$bp->bp_options_title = __( 'My Activity', 'buddyboss-platform' );
 			} else {
 				$bp->bp_options_avatar = bp_core_fetch_avatar(
 					array(
 						'item_id' => bp_displayed_user_id(),
 						'type'    => 'thumb',
 						/* translators: %s: displayed user's full name. */
-						'alt'     => sprintf( __( 'Profile photo of %s', 'buddyboss' ), bp_get_displayed_user_fullname() ),
+						'alt'     => sprintf( __( 'Profile photo of %s', 'buddyboss-platform' ), bp_get_displayed_user_fullname() ),
 					)
 				);
 				$bp->bp_options_title  = bp_get_displayed_user_fullname();

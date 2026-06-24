@@ -67,12 +67,12 @@ function bp_get_member_latest_update( $args = '' ) {
 	 */
 	$update_content = apply_filters( 'bp_get_activity_latest_update_excerpt', trim( strip_tags( bp_create_excerpt( $update['content'], $length ) ) ), $r );
 
-	$update_content = sprintf( _x( '- &quot;%s&quot;', 'member latest update in member directory', 'buddyboss' ), $update_content );
+	$update_content = sprintf( _x( '- &quot;%s&quot;', 'member latest update in member directory', 'buddyboss-platform' ), $update_content );
 
 	// If $view_link is true and the text returned by bp_create_excerpt() is different from the original text (ie it's
 	// been truncated), add the "View" link.
 	if ( $view_link && ( $update_content != $update['content'] ) ) {
-		$view = __( 'View', 'buddyboss' );
+		$view = __( 'View', 'buddyboss-platform' );
 
 		$update_content .= '<span class="activity-read-more"><a href="' . bp_activity_get_permalink( $update['id'] ) . '" rel="nofollow">' . $view . '</a></span>';
 	}
@@ -253,7 +253,7 @@ function bp_nouveau_member_get_description_edit_link() {
 	add_filter( 'edit_profile_url', 'bp_members_edit_profile_url', 10, 3 );
 	$link .= '#description';
 
-	return sprintf( '<a href="%1$s">%2$s</a>', esc_url( $link ), esc_html__( 'Edit your bio', 'buddyboss' ) );
+	return sprintf( '<a href="%1$s">%2$s</a>', esc_url( $link ), esc_html__( 'Edit your bio', 'buddyboss-platform' ) );
 }
 
 /**
@@ -305,7 +305,7 @@ function bp_get_send_public_message_button( $args = '' ) {
 			'block_self'        => true,
 			'wrapper_id'        => 'post-mention',
 			'link_href'         => bp_get_send_public_message_link(),
-			'link_text'         => __( 'Public Mention', 'buddyboss' ),
+			'link_text'         => __( 'Public Mention', 'buddyboss-platform' ),
 			'link_class'        => 'activity-button mention'
 		)
 	);
@@ -502,10 +502,10 @@ function bp_admin_setting_callback_theme_package_id() {
 
 	if ( $options ) : ?>
 		<select name="_bp_theme_package_id" id="_bp_theme_package_id" aria-describedby="_bp_theme_package_description"><?php echo $options; ?></select>
-		<p id="_bp_theme_package_description" class="description"><?php esc_html_e( 'The selected Template Pack will serve all BuddyPress templates.', 'buddyboss' ); ?></p>
+		<p id="_bp_theme_package_description" class="description"><?php esc_html_e( 'The selected Template Pack will serve all BuddyPress templates.', 'buddyboss-platform' ); ?></p>
 
 	<?php else : ?>
-		<p><?php esc_html_e( 'No template packages available.', 'buddyboss' ); ?></p>
+		<p><?php esc_html_e( 'No template packages available.', 'buddyboss-platform' ); ?></p>
 
 	<?php endif;
 }
@@ -625,7 +625,7 @@ function bbp_get_single_topic_description( $args = '' ) {
 	$time_since  = bbp_get_topic_freshness_link( $topic_id );
 
 	// Singular/Plural
-	$voice_count = sprintf( _n( '%s member', '%s members', $vc_int, 'buddyboss' ), $voice_count );
+	$voice_count = sprintf( _n( '%s member', '%s members', $vc_int, 'buddyboss-platform' ), $voice_count );
 
 	// Topic has replies
 	$last_reply = bbp_get_topic_last_reply_id( $topic_id );
@@ -636,15 +636,15 @@ function bbp_get_single_topic_description( $args = '' ) {
 				'size'    => $r['size'],
 			)
 		);
-		$retstr          = sprintf( esc_html__( 'This discussion contains %1$s, has %2$s, and was last updated by %3$s %4$s.', 'buddyboss' ), $reply_count, $voice_count, $last_updated_by, $time_since );
+		$retstr          = sprintf( esc_html__( 'This discussion contains %1$s, has %2$s, and was last updated by %3$s %4$s.', 'buddyboss-platform' ), $reply_count, $voice_count, $last_updated_by, $time_since );
 
 		// Topic has no replies
 	} elseif ( ! empty( $voice_count ) && ! empty( $reply_count ) ) {
-		$retstr = sprintf( esc_html__( 'This discussion contains %1$s and has %2$s.', 'buddyboss' ), $voice_count, $reply_count );
+		$retstr = sprintf( esc_html__( 'This discussion contains %1$s and has %2$s.', 'buddyboss-platform' ), $voice_count, $reply_count );
 
 		// Topic has no replies and no members
 	} elseif ( empty( $voice_count ) && empty( $reply_count ) ) {
-		$retstr = sprintf( esc_html__( 'This discussion has no replies.', 'buddyboss' ), $voice_count, $reply_count );
+		$retstr = sprintf( esc_html__( 'This discussion has no replies.', 'buddyboss-platform' ), $voice_count, $reply_count );
 	}
 
 	// Add the 'view all' filter back
@@ -724,7 +724,7 @@ function bbp_get_single_forum_description( $args = '' ) {
 
 	// Has replies
 	if ( ! empty( $reply_count ) ) {
-		$reply_text = sprintf( _n( '%s reply', '%s replies', $rc_int, 'buddyboss' ), $reply_count );
+		$reply_text = sprintf( _n( '%s reply', '%s replies', $rc_int, 'buddyboss-platform' ), $reply_count );
 	}
 
 	// Forum has active data
@@ -740,7 +740,7 @@ function bbp_get_single_forum_description( $args = '' ) {
 
 		// Forum has no last active data
 	} else {
-		$topic_text = sprintf( _n( '%s discussion', '%s discussions', $tc_int, 'buddyboss' ), $topic_count );
+		$topic_text = sprintf( _n( '%s discussion', '%s discussions', $tc_int, 'buddyboss-platform' ), $topic_count );
 	}
 
 	// Forum has active data
@@ -749,16 +749,16 @@ function bbp_get_single_forum_description( $args = '' ) {
 		if ( ! empty( $reply_count ) ) {
 
 			if ( bbp_is_forum_category( $forum_id ) ) {
-				$retstr = sprintf( esc_html__( 'This category contains %1$s and %2$s, and was last updated by %3$s %4$s.', 'buddyboss' ), $topic_text, $reply_text, $last_updated_by, $time_since );
+				$retstr = sprintf( esc_html__( 'This category contains %1$s and %2$s, and was last updated by %3$s %4$s.', 'buddyboss-platform' ), $topic_text, $reply_text, $last_updated_by, $time_since );
 			} else {
-				$retstr = sprintf( esc_html__( 'This forum contains %1$s and %2$s, and was last updated by %3$s %4$s.', 'buddyboss' ), $topic_text, $reply_text, $last_updated_by, $time_since );
+				$retstr = sprintf( esc_html__( 'This forum contains %1$s and %2$s, and was last updated by %3$s %4$s.', 'buddyboss-platform' ), $topic_text, $reply_text, $last_updated_by, $time_since );
 			}
 		} else {
 
 			if ( bbp_is_forum_category( $forum_id ) ) {
-				$retstr = sprintf( esc_html__( 'This category contains %1$s, and was last updated by %2$s %3$s.', 'buddyboss' ), $topic_text, $last_updated_by, $time_since );
+				$retstr = sprintf( esc_html__( 'This category contains %1$s, and was last updated by %2$s %3$s.', 'buddyboss-platform' ), $topic_text, $last_updated_by, $time_since );
 			} else {
-				$retstr = sprintf( esc_html__( 'This forum contains %1$s, and was last updated by %2$s %3$s.', 'buddyboss' ), $topic_text, $last_updated_by, $time_since );
+				$retstr = sprintf( esc_html__( 'This forum contains %1$s, and was last updated by %2$s %3$s.', 'buddyboss-platform' ), $topic_text, $last_updated_by, $time_since );
 			}
 		}
 
@@ -768,21 +768,21 @@ function bbp_get_single_forum_description( $args = '' ) {
 		if ( ! empty( $reply_count ) ) {
 
 			if ( bbp_is_forum_category( $forum_id ) ) {
-				$retstr = sprintf( esc_html__( 'This category contains %1$s and %2$s.', 'buddyboss' ), $topic_text, $reply_text );
+				$retstr = sprintf( esc_html__( 'This category contains %1$s and %2$s.', 'buddyboss-platform' ), $topic_text, $reply_text );
 			} else {
-				$retstr = sprintf( esc_html__( 'This forum contains %1$s and %2$s.', 'buddyboss' ), $topic_text, $reply_text );
+				$retstr = sprintf( esc_html__( 'This forum contains %1$s and %2$s.', 'buddyboss-platform' ), $topic_text, $reply_text );
 			}
 		} else {
 
 			if ( ! empty( $topic_count ) ) {
 
 				if ( bbp_is_forum_category( $forum_id ) ) {
-					$retstr = sprintf( esc_html__( 'This category contains %1$s.', 'buddyboss' ), $topic_text );
+					$retstr = sprintf( esc_html__( 'This category contains %1$s.', 'buddyboss-platform' ), $topic_text );
 				} else {
-					$retstr = sprintf( esc_html__( 'This forum contains %1$s.', 'buddyboss' ), $topic_text );
+					$retstr = sprintf( esc_html__( 'This forum contains %1$s.', 'buddyboss-platform' ), $topic_text );
 				}
 			} else {
-				$retstr = esc_html__( 'This forum is empty.', 'buddyboss' );
+				$retstr = esc_html__( 'This forum is empty.', 'buddyboss-platform' );
 			}
 		}
 	}

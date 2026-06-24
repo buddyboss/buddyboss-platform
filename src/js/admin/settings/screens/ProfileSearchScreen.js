@@ -139,7 +139,7 @@ export default function ProfileSearchScreen( { onNavigate, helpUrl, onHelpClick,
 			.catch( function ( error ) {
 				if ( 'AbortError' !== error.name ) {
 					setIsLoading( false );
-					setToast( { status: 'error', message: error.message || __( 'Failed to load search fields.', 'buddyboss' ) } );
+					setToast( { status: 'error', message: error.message || __( 'Failed to load search fields.', 'buddyboss-platform' ) } );
 				}
 			} );
 	}, [] );
@@ -200,15 +200,15 @@ export default function ProfileSearchScreen( { onNavigate, helpUrl, onHelpClick,
 		savePlatformSetting( 'bp-enable-profile-search', newValue ? 1 : 0 )
 			.then( function ( response ) {
 				if ( response.success ) {
-					setToast( { status: 'success', message: __( 'Setting saved.', 'buddyboss' ) } );
+					setToast( { status: 'success', message: __( 'Setting saved.', 'buddyboss-platform' ) } );
 				} else {
 					setEnableProfileSearch( prevValue );
-					setToast( { status: 'error', message: __( 'Failed to save setting.', 'buddyboss' ) } );
+					setToast( { status: 'error', message: __( 'Failed to save setting.', 'buddyboss-platform' ) } );
 				}
 			} )
 			.catch( function () {
 				setEnableProfileSearch( prevValue );
-				setToast( { status: 'error', message: __( 'Failed to save setting.', 'buddyboss' ) } );
+				setToast( { status: 'error', message: __( 'Failed to save setting.', 'buddyboss-platform' ) } );
 			} );
 	}, [ enableProfileSearch ] );
 
@@ -231,17 +231,17 @@ export default function ProfileSearchScreen( { onNavigate, helpUrl, onHelpClick,
 		deleteProfileSearchField( { field_index: fieldIndex }, { signal: deleteAbortRef.current.signal } )
 			.then( function ( response ) {
 				if ( response.success ) {
-					setToast( { status: 'success', message: response.data.message || __( 'Field removed.', 'buddyboss' ) } );
+					setToast( { status: 'success', message: response.data.message || __( 'Field removed.', 'buddyboss-platform' ) } );
 					loadSearchFields();
 				} else {
-					setToast( { status: 'error', message: ( response.data && response.data.message ) || __( 'Failed to remove field.', 'buddyboss' ) } );
+					setToast( { status: 'error', message: ( response.data && response.data.message ) || __( 'Failed to remove field.', 'buddyboss-platform' ) } );
 				}
 			} )
 			.catch( function ( error ) {
 				if ( 'AbortError' === error.name ) {
 					return;
 				}
-				setToast( { status: 'error', message: error.message || __( 'Failed to remove field.', 'buddyboss' ) } );
+				setToast( { status: 'error', message: error.message || __( 'Failed to remove field.', 'buddyboss-platform' ) } );
 			} );
 	}
 
@@ -305,12 +305,12 @@ export default function ProfileSearchScreen( { onNavigate, helpUrl, onHelpClick,
 		// below when the request resolves. Matches the auto-save UX in
 		// `FeatureSettingsScreen` (`setToast({ status: 'saving', ... })`
 		// before each save).
-		setToast( { status: 'saving', message: __( 'Saving order…', 'buddyboss' ) } );
+		setToast( { status: 'saving', message: __( 'Saving order…', 'buddyboss-platform' ) } );
 
 		reorderProfileSearchFields( { field_order: fieldOrder }, { signal: reorderAbortRef.current.signal } )
 			.then( function ( response ) {
 				if ( response.success ) {
-					setToast( { status: 'success', message: __( 'Order updated.', 'buddyboss' ) } );
+					setToast( { status: 'success', message: __( 'Order updated.', 'buddyboss-platform' ) } );
 					// Reload from server so field indices (id) stay in sync with the new order.
 					loadSearchFields();
 				} else {
@@ -319,7 +319,7 @@ export default function ProfileSearchScreen( { onNavigate, helpUrl, onHelpClick,
 					// admin can act on it instead of seeing a generic "Failed".
 					var serverMessage = response && response.data && response.data.message
 						? response.data.message
-						: __( 'Failed to save order.', 'buddyboss' );
+						: __( 'Failed to save order.', 'buddyboss-platform' );
 					setToast( { status: 'error', message: serverMessage } );
 					loadSearchFields();
 				}
@@ -331,7 +331,7 @@ export default function ProfileSearchScreen( { onNavigate, helpUrl, onHelpClick,
 				// Transport-level failure (network/timeout/JSON parse). Prefer the
 				// thrown error's `message` when present so the toast shows the
 				// real cause instead of a generic copy.
-				var message = error && error.message ? error.message : __( 'Failed to save order.', 'buddyboss' );
+				var message = error && error.message ? error.message : __( 'Failed to save order.', 'buddyboss-platform' );
 				setToast( { status: 'error', message: message } );
 				loadSearchFields();
 			} );
@@ -360,7 +360,7 @@ export default function ProfileSearchScreen( { onNavigate, helpUrl, onHelpClick,
 				<div className="bb-admin-feature-settings__section-header">
 					<div className="bb-admin-feature-settings__section-header-left">
 						<h3 className="bb-admin-feature-settings__section-title">
-							{ getSectionTitle( feature, activePanelId, 'profile_search' ) || __( 'Profile Search', 'buddyboss' ) }
+							{ getSectionTitle( feature, activePanelId, 'profile_search' ) || __( 'Profile Search', 'buddyboss-platform' ) }
 						</h3>
 					</div>
 					<div className="bb-admin-feature-settings__section-header-right">
@@ -383,13 +383,13 @@ export default function ProfileSearchScreen( { onNavigate, helpUrl, onHelpClick,
 							<div className="bb-admin-settings-form">
 								<div className="bb-admin-settings-form__field">
 									<div className="bb-admin-settings-form__field-label">
-										{ getFieldLabel( feature, activePanelId, 'bp-enable-profile-search' ) || __( 'Profile Search', 'buddyboss' ) }
+										{ getFieldLabel( feature, activePanelId, 'bp-enable-profile-search' ) || __( 'Profile Search', 'buddyboss-platform' ) }
 									</div>
 									<div className="bb-admin-settings-form__field-content bb-admin-settings-form__field-content--inline">
 										<div className="bb-admin-settings-form__field-input-wrapper">
 											<div className="bb-admin-settings-form__toggle-wrapper">
 												<ToggleControl
-													label={ getFieldDescription( feature, activePanelId, 'bp-enable-profile-search' ) || __( 'Enable advanced profile search on the Members page', 'buddyboss' ) }
+													label={ getFieldDescription( feature, activePanelId, 'bp-enable-profile-search' ) || __( 'Enable advanced profile search on the Members page', 'buddyboss-platform' ) }
 													checked={ enableProfileSearch }
 													onChange={ handleToggleChange }
 												/>
@@ -415,13 +415,13 @@ export default function ProfileSearchScreen( { onNavigate, helpUrl, onHelpClick,
 					<div className="bb-admin-feature-settings__section-header">
 						<div className="bb-admin-feature-settings__section-header-left">
 							<h3 className="bb-admin-feature-settings__section-title">
-								{ __( 'Form Fields', 'buddyboss' ) }
+								{ __( 'Form Fields', 'buddyboss-platform' ) }
 							</h3>
 						</div>
 					</div>
 					<div className="bb-admin-feature-settings__section-body">
 						<p className="bb-admin-feature-settings__section-description">
-							{ __( 'Profile search fields match your profile fields. Ensure options are named and assigned correctly, then select them here for search.', 'buddyboss' ) }
+							{ __( 'Profile search fields match your profile fields. Ensure options are named and assigned correctly, then select them here for search.', 'buddyboss-platform' ) }
 						</p>
 						{ isLoading
 							? (
@@ -451,7 +451,7 @@ export default function ProfileSearchScreen( { onNavigate, helpUrl, onHelpClick,
 													<div className="bb-pf-field-left">
 														<span
 															className="bb-pf-drag-handle"
-															aria-label={ __( 'Drag to reorder field', 'buddyboss' ) }
+															aria-label={ __( 'Drag to reorder field', 'buddyboss-platform' ) }
 														>
 															<i className="bb-icons-rl-list" />
 														</span>
@@ -469,7 +469,7 @@ export default function ProfileSearchScreen( { onNavigate, helpUrl, onHelpClick,
 																e.stopPropagation();
 																setOpenMenuId( openMenuId === index ? null : index );
 															} }
-															aria-label={ __( 'Actions', 'buddyboss' ) }
+															aria-label={ __( 'Actions', 'buddyboss-platform' ) }
 															aria-haspopup="true"
 															aria-expanded={ index === openMenuId ? 'true' : 'false' }
 														>
@@ -487,7 +487,7 @@ export default function ProfileSearchScreen( { onNavigate, helpUrl, onHelpClick,
 																>
 																	<span className="components-menu-item__item">
 																		<i className="bb-icons-rl bb-icons-rl-note-pencil" />
-																		{ ' ' + __( 'Edit', 'buddyboss' ) }
+																		{ ' ' + __( 'Edit', 'buddyboss-platform' ) }
 																	</span>
 																</button>
 																<button
@@ -500,7 +500,7 @@ export default function ProfileSearchScreen( { onNavigate, helpUrl, onHelpClick,
 																>
 																	<span className="components-menu-item__item">
 																		<i className="bb-icons-rl bb-icons-rl-trash" />
-																		{ ' ' + __( 'Delete', 'buddyboss' ) }
+																		{ ' ' + __( 'Delete', 'buddyboss-platform' ) }
 																	</span>
 																</button>
 															</div>
@@ -513,7 +513,7 @@ export default function ProfileSearchScreen( { onNavigate, helpUrl, onHelpClick,
 								)
 								: (
 									<div className="bb-admin-profile-types__empty">
-										<p>{ __( 'No form fields configured. Click "Add Field" to add a search field.', 'buddyboss' ) }</p>
+										<p>{ __( 'No form fields configured. Click "Add Field" to add a search field.', 'buddyboss-platform' ) }</p>
 									</div>
 								)
 						}
@@ -524,7 +524,7 @@ export default function ProfileSearchScreen( { onNavigate, helpUrl, onHelpClick,
 							} }
 						>
 							<i className="bb-icons-rl bb-icons-rl-plus" />
-							{ __( 'Add Field', 'buddyboss' ) }
+							{ __( 'Add Field', 'buddyboss-platform' ) }
 						</button>
 					</div>
 				</div>
@@ -548,13 +548,13 @@ export default function ProfileSearchScreen( { onNavigate, helpUrl, onHelpClick,
 			{/* Delete field confirmation. */}
 			<ConfirmToggleModal
 				isOpen={ null !== deleteFieldData }
-				title={ __( 'Remove Field', 'buddyboss' ) }
+				title={ __( 'Remove Field', 'buddyboss-platform' ) }
 				message={ deleteFieldData
-					? sprintf( __( 'Are you sure you want to remove the field "%s"? This action cannot be undone.', 'buddyboss' ), decodeEntities( deleteFieldData.label || deleteFieldData.name ) )
+					? sprintf( __( 'Are you sure you want to remove the field "%s"? This action cannot be undone.', 'buddyboss-platform' ), decodeEntities( deleteFieldData.label || deleteFieldData.name ) )
 					: ''
 				}
-				confirmLabel={ __( 'Remove', 'buddyboss' ) }
-				cancelLabel={ __( 'Cancel', 'buddyboss' ) }
+				confirmLabel={ __( 'Remove', 'buddyboss-platform' ) }
+				cancelLabel={ __( 'Cancel', 'buddyboss-platform' ) }
 				isDestructive={ true }
 				onConfirm={ function () { handleDeleteField( deleteFieldData.id ); } }
 				onCancel={ function () { setDeleteFieldData( null ); } }

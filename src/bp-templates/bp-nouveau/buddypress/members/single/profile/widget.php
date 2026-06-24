@@ -16,7 +16,7 @@ if ( ! isset( $bp_nouveau->xprofile->profile_completion_widget_para ) ) {
 }
 
 $user_progress        = $bp_nouveau->xprofile->profile_completion_widget_para;
-$progress_label       = ( $user_progress['completion_percentage'] == 100 ) ? esc_html__( 'Completed', 'buddyboss' ) : esc_html__( 'Complete', 'buddyboss' );
+$progress_label       = ( $user_progress['completion_percentage'] == 100 ) ? esc_html__( 'Completed', 'buddyboss-platform' ) : esc_html__( 'Complete', 'buddyboss-platform' );
 $user_progress_offset = 100 - $user_progress['completion_percentage'];
 
 ?>
@@ -27,7 +27,7 @@ $user_progress_offset = 100 - $user_progress['completion_percentage'];
 			<path stroke-dasharray="<?php echo esc_attr( $user_progress['completion_percentage'] ); ?>, 100" stroke-dashoffset="-<?php echo esc_attr( $user_progress_offset ); ?>" class="pc_progress_rate" d="M143 73C143 34.3401 111.66 3 73 3C34.3401 3 3 34.3401 3 73" stroke="#F1F3F5" stroke-width="6" pathLength="100"/>
 		</svg>
 		<div class="progress_text_wrap">
-			<h3><span class="progress_text_value"><?php echo esc_html( $user_progress['completion_percentage'] ); ?></span><span class="progress_text_unit"><?php echo __( '%', 'buddyboss' ); ?></span></h3>
+			<h3><span class="progress_text_value"><?php echo esc_html( $user_progress['completion_percentage'] ); ?></span><span class="progress_text_unit"><?php echo __( '%', 'buddyboss-platform' ); ?></span></h3>
 			<span class="progress_text_label"><?php echo esc_html( $progress_label ); ?></span>
 		</div>
 	</div>

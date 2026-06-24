@@ -41,9 +41,9 @@ if ( is_user_logged_in() && ! empty( $active_extensions ) ) {
 	<div class="bb-rl-media-none-figure"><i class="bb-icons-rl-file-doc"></i></div>
 	<aside class="bp-feedback bp-messages info">
 		<span class="bp-icon" aria-hidden="true"></span>
-		<p><?php esc_html_e( 'No documents found', 'buddyboss' ); ?></p>
+		<p><?php esc_html_e( 'No documents found', 'buddyboss-platform' ); ?></p>
 	</aside>
-	<p class="bb-rl-media-none-description"><?php esc_html_e( 'It looks like there aren\'t any documents in this directory.', 'buddyboss' ); ?></p>
+	<p class="bb-rl-media-none-description"><?php esc_html_e( 'It looks like there aren\'t any documents in this directory.', 'buddyboss-platform' ); ?></p>
 	<div class="bb-rl-media-none-actions">
 		<?php
 		if ( $is_inside_folder && $can_create_folder ) {
@@ -51,7 +51,7 @@ if ( is_user_logged_in() && ! empty( $active_extensions ) ) {
 			<div class="bb-media-actions-wrap album-actions-wrap">
 				<div class="bb-media-actions">
 					<a href="#" id="bb-create-folder-child" class="bb-create-folder-stacked button bb-rl-button bb-rl-button--secondaryFill bb-rl-button--small">
-						<i class="bb-icons-rl-folder-plus"></i><?php esc_html_e( 'Create Folder', 'buddyboss' ); ?>
+						<i class="bb-icons-rl-folder-plus"></i><?php esc_html_e( 'Create Folder', 'buddyboss-platform' ); ?>
 					</a>
 				</div>
 			</div>

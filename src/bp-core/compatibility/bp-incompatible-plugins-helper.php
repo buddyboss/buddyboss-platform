@@ -397,7 +397,7 @@ function bp_core_add_admin_menu_for_memberpress_buddypress( $menus ) {
 	}
 
 	$main_slug = apply_filters( 'mepr-bp-info-main-nav-slug', 'mp-membership' );
-	$name      = apply_filters( 'mepr-bp-info-main-nav-name', _x( 'Membership', 'ui', 'buddyboss' ) );
+	$name      = apply_filters( 'mepr-bp-info-main-nav-name', _x( 'Membership', 'ui', 'buddyboss-platform' ) );
 	$position  = apply_filters( 'mepr-bp-info-main-nav-position', 25 );
 
 	$wp_admin_bar->add_menu(
@@ -415,7 +415,7 @@ function bp_core_add_admin_menu_for_memberpress_buddypress( $menus ) {
 		array(
 			'parent' => $main_slug,
 			'id'     => 'mp-info',
-			'title'  => _x( 'Info', 'ui', 'buddyboss' ),
+			'title'  => _x( 'Info', 'ui', 'buddyboss-platform' ),
 			'href'   => $bp->loggedin_user->domain . $main_slug . '/',
 		)
 	);
@@ -425,7 +425,7 @@ function bp_core_add_admin_menu_for_memberpress_buddypress( $menus ) {
 		array(
 			'parent' => $main_slug,
 			'id'     => 'mp-subscriptions',
-			'title'  => _x( 'Subscriptions', 'ui', 'buddyboss' ),
+			'title'  => _x( 'Subscriptions', 'ui', 'buddyboss-platform' ),
 			'href'   => $bp->loggedin_user->domain . $main_slug . '/mp-subscriptions/',
 		)
 	);
@@ -435,7 +435,7 @@ function bp_core_add_admin_menu_for_memberpress_buddypress( $menus ) {
 		array(
 			'parent' => $main_slug,
 			'id'     => 'mp-payments',
-			'title'  => _x( 'Payments', 'ui', 'buddyboss' ),
+			'title'  => _x( 'Payments', 'ui', 'buddyboss-platform' ),
 			'href'   => $bp->loggedin_user->domain . $main_slug . '/mp-payments/',
 		)
 	);
@@ -553,7 +553,7 @@ function bp_core_add_support_for_google_captcha_pro( $section_notice, $section_s
 			$section_notice = sprintf(
 				'<a href="%s">%s</a>',
 				bp_get_admin_url( add_query_arg( array( 'page' => 'bp-components' ), 'admin.php' ) ),
-				__( 'Activate Forum Discussions Component', 'buddyboss' )
+				__( 'Activate Forum Discussions Component', 'buddyboss-platform' )
 			);
 		}
 	}
@@ -591,13 +591,13 @@ function bp_core_learndash_bbpress_notices() {
 	if ( empty( bp_is_active( 'forums' ) ) || ! class_exists( 'SFWD_LMS' ) ) {
 		$links = bp_get_admin_url( add_query_arg( array( 'page' => 'bp-components' ), 'admin.php' ) );
 
-		$text     = sprintf( '<a href="%s">%s</a>', $links, __( 'Forum Discussions', 'buddyboss' ) );
-		$activate = sprintf( '<a href="%s">%s</a>', $links, __( 'activate', 'buddyboss' ) );
+		$text     = sprintf( '<a href="%s">%s</a>', $links, __( 'Forum Discussions', 'buddyboss-platform' ) );
+		$activate = sprintf( '<a href="%s">%s</a>', $links, __( 'activate', 'buddyboss-platform' ) );
 		?>
 		<div id="message" class="error notice">
-			<p><strong><?php esc_html_e( 'LearnDash & bbPress Integration is deactivated.', 'buddyboss' ); ?></strong></p>
+			<p><strong><?php esc_html_e( 'LearnDash & bbPress Integration is deactivated.', 'buddyboss-platform' ); ?></strong></p>
 			<?php /* translators: 1: Forum Discussions component link, 2: activate component link. */ ?>
-			<p><?php printf( esc_html__( 'The LearnDash & bbPress Integration plugin can\'t work if LearnDash LMS plugin & %1$s component is deactivated. Please activate LearnDash LMS plugin & %2$s component.', 'buddyboss' ), $text, $text, $activate ); ?></p>
+			<p><?php printf( esc_html__( 'The LearnDash & bbPress Integration plugin can\'t work if LearnDash LMS plugin & %1$s component is deactivated. Please activate LearnDash LMS plugin & %2$s component.', 'buddyboss-platform' ), $text, $text, $activate ); ?></p>
 		</div>
 		<?php
 	}

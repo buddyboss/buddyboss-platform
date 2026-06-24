@@ -56,9 +56,9 @@ add_filter( 'bbp_get_form_topic_type_dropdown', 'bb_rl_add_topic_type_dropdown_a
 					<h3>
 						<?php
 						if ( bbp_is_topic_edit() ) {
-							esc_html_e( 'Edit Discussion', 'buddyboss' );
+							esc_html_e( 'Edit Discussion', 'buddyboss-platform' );
 						} else {
-							esc_html_e( 'Start a new discussion', 'buddyboss' );
+							esc_html_e( 'Start a new discussion', 'buddyboss-platform' );
 						}
 						?>
 					</h3>
@@ -69,7 +69,7 @@ add_filter( 'bbp_get_form_topic_type_dropdown', 'bb_rl_add_topic_type_dropdown_a
 
 						<div class="bb-rl-forum-modal-type bb-rl-filter bb-rl-filter-rounded">
 
-							<label for="bbp_stick_topic" class="screen-reader-text"><?php esc_html_e( 'Type:', 'buddyboss' ); ?></label>
+							<label for="bbp_stick_topic" class="screen-reader-text"><?php esc_html_e( 'Type:', 'buddyboss-platform' ); ?></label>
 
 							<?php bbp_form_topic_type_dropdown(); ?>
 
@@ -80,7 +80,7 @@ add_filter( 'bbp_get_form_topic_type_dropdown', 'bb_rl_add_topic_type_dropdown_a
 					<?php endif; ?>
 
 					<button type="button" class="bb-rl-forum-modal-close">
-						<span class="screen-reader-text"><?php esc_html_e( 'Close Modal', 'buddyboss' ); ?></span>
+						<span class="screen-reader-text"><?php esc_html_e( 'Close Modal', 'buddyboss-platform' ); ?></span>
 						<span class="bb-icons-rl-x"></span>
 					</button>
 
@@ -92,7 +92,7 @@ add_filter( 'bbp_get_form_topic_type_dropdown', 'bb_rl_add_topic_type_dropdown_a
 
 					<div class="bp-feedback info">
 						<span class="bp-icon" aria-hidden="true"></span>
-						<p><?php esc_html_e( 'This forum is marked as closed to new discussions, however your posting capabilities still allow you to do so.', 'buddyboss' ); ?></p>
+						<p><?php esc_html_e( 'This forum is marked as closed to new discussions, however your posting capabilities still allow you to do so.', 'buddyboss-platform' ); ?></p>
 					</div>
 
 				<?php endif; ?>
@@ -108,8 +108,8 @@ add_filter( 'bbp_get_form_topic_type_dropdown', 'bb_rl_add_topic_type_dropdown_a
 					<?php do_action( 'bbp_theme_before_topic_form_title' ); ?>
 
 					<div class="bb-rl-forum-modal-title">
-						<label for="bbp_topic_title" class="screen-reader-text"><?php esc_html_e( 'Discussion Title', 'buddyboss' ); ?></label>
-						<input type="text" id="bbp_topic_title" placeholder="<?php esc_attr_e( 'Title', 'buddyboss' ); ?>" value="<?php bbp_form_topic_title(); ?>" tabindex="<?php bbp_tab_index(); ?>" size="40" name="bbp_topic_title" maxlength="<?php bbp_title_max_length(); ?>" />
+						<label for="bbp_topic_title" class="screen-reader-text"><?php esc_html_e( 'Discussion Title', 'buddyboss-platform' ); ?></label>
+						<input type="text" id="bbp_topic_title" placeholder="<?php esc_attr_e( 'Title', 'buddyboss-platform' ); ?>" value="<?php bbp_form_topic_title(); ?>" tabindex="<?php bbp_tab_index(); ?>" size="40" name="bbp_topic_title" maxlength="<?php bbp_title_max_length(); ?>" />
 					</div>
 
 					<?php do_action( 'bbp_theme_after_topic_form_title' ); ?>
@@ -123,7 +123,7 @@ add_filter( 'bbp_get_form_topic_type_dropdown', 'bb_rl_add_topic_type_dropdown_a
 					<?php if ( ! ( bbp_use_wp_editor() || current_user_can( 'unfiltered_html' ) ) ) : ?>
 
 						<p class="form-allowed-tags">
-							<label><?php esc_html_e( 'You may use these <abbr title="HyperText Markup Language">HTML</abbr> tags and attributes:', 'buddyboss' ); ?></label><br />
+							<label><?php esc_html_e( 'You may use these <abbr title="HyperText Markup Language">HTML</abbr> tags and attributes:', 'buddyboss-platform' ); ?></label><br />
 							<code><?php bbp_allowed_tags(); ?></code>
 						</p>
 
@@ -140,7 +140,7 @@ add_filter( 'bbp_get_form_topic_type_dropdown', 'bb_rl_add_topic_type_dropdown_a
 
 						<p class="bb-rl-forum-tags">
 							<input type="hidden" value="<?php echo ( ! empty( $get_the_tags ) ) ? esc_attr( $get_the_tags ) : ''; ?>" name="bbp_topic_tags" class="bbp_topic_tags" id="bbp_topic_tags" >
-							<select name="bbp_topic_tags_dropdown[]" class="bbp_topic_tags_dropdown" id="bbp_topic_tags_dropdown" placeholder="<?php esc_attr_e( 'Enter tags, separated by commas (optional)', 'buddyboss' ); ?>" autocomplete="off" multiple="multiple" style="width: 100%" tabindex="<?php bbp_tab_index(); ?>">
+							<select name="bbp_topic_tags_dropdown[]" class="bbp_topic_tags_dropdown" id="bbp_topic_tags_dropdown" placeholder="<?php esc_attr_e( 'Enter tags, separated by commas (optional)', 'buddyboss-platform' ); ?>" autocomplete="off" multiple="multiple" style="width: 100%" tabindex="<?php bbp_tab_index(); ?>">
 								<?php
 								if ( ! empty( $get_the_tags ) ) {
 									$get_the_tags = explode( ',', $get_the_tags );
@@ -164,11 +164,11 @@ add_filter( 'bbp_get_form_topic_type_dropdown', 'bb_rl_add_topic_type_dropdown_a
 						<?php do_action( 'bbp_theme_before_topic_form_forum' ); ?>
 
 						<p class="bb-rl-forum-id-selection">
-							<label for="bbp_forum_id"><?php esc_html_e( 'Forum:', 'buddyboss' ); ?></label><br />
+							<label for="bbp_forum_id"><?php esc_html_e( 'Forum:', 'buddyboss-platform' ); ?></label><br />
 							<?php
 								bbp_dropdown(
 									array(
-										'show_none' => __( '(No Forum)', 'buddyboss' ),
+										'show_none' => __( '(No Forum)', 'buddyboss-platform' ),
 										'selected'  => bbp_get_form_topic_forum(),
 									)
 								);
@@ -186,11 +186,11 @@ add_filter( 'bbp_get_form_topic_type_dropdown', 'bb_rl_add_topic_type_dropdown_a
 						<fieldset class="bbp-form">
 							<div class="bp-checkbox-wrap">
 								<input name="bbp_log_topic_edit" id="bbp_log_topic_edit" class="bs-styled-checkbox" type="checkbox" value="1" <?php bbp_form_topic_log_edit(); ?> tabindex="<?php bbp_tab_index(); ?>" />
-								<label for="bbp_log_topic_edit"><?php esc_html_e( 'Keep a log of this edit:', 'buddyboss' ); ?></label><br />
+								<label for="bbp_log_topic_edit"><?php esc_html_e( 'Keep a log of this edit:', 'buddyboss-platform' ); ?></label><br />
 							</div>
 
 							<div class="bb-rl-forum-edit-reason">
-								<label for="bbp_topic_edit_reason"><?php printf( esc_html__( 'Optional reason for editing:', 'buddyboss' ), bbp_get_current_user_name() ); ?></label><br />
+								<label for="bbp_topic_edit_reason"><?php printf( esc_html__( 'Optional reason for editing:', 'buddyboss-platform' ), bbp_get_current_user_name() ); ?></label><br />
 								<input type="text" value="<?php bbp_form_topic_edit_reason(); ?>" tabindex="<?php bbp_tab_index(); ?>" size="40" name="bbp_topic_edit_reason" id="bbp_topic_edit_reason" />
 							</div>
 						</fieldset>
@@ -231,11 +231,11 @@ add_filter( 'bbp_get_form_topic_type_dropdown', 'bb_rl_add_topic_type_dropdown_a
 									)
 								) {
 									?>
-									<label for="bbp_topic_subscription"><?php esc_html_e( 'Notify the author of follow-up replies via email', 'buddyboss' ); ?></label>
+									<label for="bbp_topic_subscription"><?php esc_html_e( 'Notify the author of follow-up replies via email', 'buddyboss-platform' ); ?></label>
 									<?php
 								} else {
 									?>
-									<label for="bbp_topic_subscription"><?php esc_html_e( 'Notify the author of follow-up replies', 'buddyboss' ); ?></label>
+									<label for="bbp_topic_subscription"><?php esc_html_e( 'Notify the author of follow-up replies', 'buddyboss-platform' ); ?></label>
 									<?php
 								}
 								elseif (
@@ -249,11 +249,11 @@ add_filter( 'bbp_get_form_topic_type_dropdown', 'bb_rl_add_topic_type_dropdown_a
 									) :
 
 									?>
-									<label for="bbp_topic_subscription"><?php esc_html_e( 'Notify me of new replies by email', 'buddyboss' ); ?></label>
+									<label for="bbp_topic_subscription"><?php esc_html_e( 'Notify me of new replies by email', 'buddyboss-platform' ); ?></label>
 										<?php
 									else :
 										?>
-									<label for="bbp_topic_subscription"><?php esc_html_e( 'Notify me of new replies', 'buddyboss' ); ?></label>
+									<label for="bbp_topic_subscription"><?php esc_html_e( 'Notify me of new replies', 'buddyboss-platform' ); ?></label>
 										<?php
 
 									endif;
@@ -270,14 +270,14 @@ add_filter( 'bbp_get_form_topic_type_dropdown', 'bb_rl_add_topic_type_dropdown_a
 
 						<?php do_action( 'bbp_theme_before_topic_form_submit_button' ); ?>
 
-						<button type="button" tabindex="<?php bbp_tab_index(); ?>" id="bb_topic_discard_draft" name="bb_topic_discard_draft" class="button discard small bb_discard_topic_reply_draft"><?php esc_html_e( 'Discard Draft', 'buddyboss' ); ?></button>
+						<button type="button" tabindex="<?php bbp_tab_index(); ?>" id="bb_topic_discard_draft" name="bb_topic_discard_draft" class="button discard small bb_discard_topic_reply_draft"><?php esc_html_e( 'Discard Draft', 'buddyboss-platform' ); ?></button>
 
 						<button type="submit" tabindex="<?php bbp_tab_index(); ?>" id="bbp_topic_submit" name="bbp_topic_submit" class="bb-rl-button bb-rl-button--brandFill bb-rl-button--small submit">
 							<?php
 							if ( bbp_is_topic_edit() ) {
-								esc_html_e( 'Update', 'buddyboss' );
+								esc_html_e( 'Update', 'buddyboss-platform' );
 							} else {
-								esc_html_e( 'Post', 'buddyboss' );
+								esc_html_e( 'Post', 'buddyboss-platform' );
 							}
 							?>
 						</button>
@@ -308,7 +308,7 @@ add_filter( 'bbp_get_form_topic_type_dropdown', 'bb_rl_add_topic_type_dropdown_a
 			<p>
 				<?php
 				/* translators: %s: Forum title */
-				printf( esc_html__( 'The forum "%s" is closed to new discussions and replies.', 'buddyboss' ), bbp_get_forum_title() );
+				printf( esc_html__( 'The forum "%s" is closed to new discussions and replies.', 'buddyboss-platform' ), bbp_get_forum_title() );
 				?>
 			</p>
 		</div>
@@ -319,7 +319,7 @@ add_filter( 'bbp_get_form_topic_type_dropdown', 'bb_rl_add_topic_type_dropdown_a
 	<div id="no-topic-<?php bbp_topic_id(); ?>" class="bbp-no-topic">
 		<div class="bp-feedback info">
 			<span class="bp-icon" aria-hidden="true"></span>
-			<p><?php is_user_logged_in() ? esc_html_e( 'You cannot create new discussions.', 'buddyboss' ) : esc_html_e( 'You must be logged in to create new discussions.', 'buddyboss' ); ?></p>
+			<p><?php is_user_logged_in() ? esc_html_e( 'You cannot create new discussions.', 'buddyboss-platform' ) : esc_html_e( 'You must be logged in to create new discussions.', 'buddyboss-platform' ); ?></p>
 		</div>
 	</div>
 

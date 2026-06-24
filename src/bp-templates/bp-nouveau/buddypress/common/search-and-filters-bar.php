@@ -15,7 +15,7 @@
 		?>
 		<button class="subnav-filters-opener" aria-expanded="false" aria-controls="subnav-filters">
 			<i class="bb-icon-f bb-icon-search"></i>
-			<span class="screen-reader-text"><?php esc_html_e( 'Open search filters', 'buddyboss' ); ?></span>
+			<span class="screen-reader-text"><?php esc_html_e( 'Open search filters', 'buddyboss-platform' ); ?></span>
 		</button>
 		<?php
 	}
@@ -137,7 +137,7 @@ if ( bp_is_activity_directory() || bp_is_user_activity() ) {
 	?>
 	<i class="bb-icon-f bb-icon-loader animate-spin"></i>
 	<div class="bb-subnav-filters-container-main">
-		<span class="bb-subnav-filters-label"><?php echo esc_html_e( 'Show', 'buddyboss' ); ?></span>
+		<span class="bb-subnav-filters-label"><?php echo esc_html_e( 'Show', 'buddyboss-platform' ); ?></span>
 		<div class="bb-subnav-filters-container bb-subnav-filters-filtering <?php echo esc_attr( $labels_only_class ); ?>">
 
 			<button class="subnav-filters-opener" aria-expanded="false" aria-controls="bb-subnav-filter-show">
@@ -175,7 +175,7 @@ if ( bp_is_activity_directory() || bp_is_user_activity() ) {
 	$default_by_context_label = isset( $sorting_labels_by_context[ $default_selected ] ) ? $sorting_labels_by_context[ $default_selected ] : ( isset( $sorting_labels[ $default_selected ] ) ? $sorting_labels[ $default_selected ] : '' );
 	?>
 	<div class='<?php echo esc_attr( $hide_class ); ?> bb-subnav-filters-container-main'>
-		<span class="bb-subnav-filters-label"><?php echo esc_html_e( 'by', 'buddyboss' ); ?></span>
+		<span class="bb-subnav-filters-label"><?php echo esc_html_e( 'by', 'buddyboss-platform' ); ?></span>
 		<div class="bb-subnav-filters-container bb-subnav-filters-filtering">
 			<button class="subnav-filters-opener" aria-expanded="false" aria-controls="bb-subnav-filter-by">
 				<span class="selected"><?php echo esc_html( $default_by_context_label ); ?></span>

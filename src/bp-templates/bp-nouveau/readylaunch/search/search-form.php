@@ -27,12 +27,12 @@ $search_term = ! empty( $_REQUEST['s'] ) ? sanitize_text_field( wp_unslash( $_RE
 			name="s"
 			type="search"
 			value="<?php echo BP_Search::instance()->has_search_results() ? esc_attr( $search_term ) : ''; ?>"
-			placeholder="<?php echo BP_Search::instance()->has_search_results() ? esc_attr__( 'Search Network&hellip;', 'buddyboss' ) : esc_attr__( 'Try different keywords&hellip;', 'buddyboss' ); ?>"
+			placeholder="<?php echo BP_Search::instance()->has_search_results() ? esc_attr__( 'Search Network&hellip;', 'buddyboss-platform' ) : esc_attr__( 'Try different keywords&hellip;', 'buddyboss-platform' ); ?>"
 		/>
 
 		<button type="submit" id="<?php bp_nouveau_search_selector_id( 'search-submit' ); ?>" class="nouveau-search-submit">
 			<span class="bb-icons-rl-magnifying-glass" aria-hidden="true"></span>
-			<span id="button-text" class="bp-screen-reader-text"><?php esc_html_e( 'Search', 'buddyboss' ); ?></span>
+			<span id="button-text" class="bp-screen-reader-text"><?php esc_html_e( 'Search', 'buddyboss-platform' ); ?></span>
 		</button>
 
 	</form>

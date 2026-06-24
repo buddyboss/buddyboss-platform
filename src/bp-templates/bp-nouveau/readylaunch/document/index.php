@@ -19,7 +19,7 @@ $is_send_ajax_request = bb_is_send_ajax_request();
 <div class="bb-rl-document-directory-wrapper">
 	<div class="bb-rl-secondary-header flex items-center">
 		<div class="bb-rl-entry-heading">
-			<h2><?php esc_html_e( 'Documents', 'buddyboss' ); ?></h2>
+			<h2><?php esc_html_e( 'Documents', 'buddyboss-platform' ); ?></h2>
 		</div>
 		<div class="bb-rl-sub-ctrls flex items-center">
 			<?php
@@ -33,8 +33,8 @@ $is_send_ajax_request = bb_is_send_ajax_request();
 
 				if ( bp_is_profile_albums_support_enabled() ) {
 					?>
-						<a href="#" id="bb-create-folder" class="action-secondary bb-create-folder button small"><i class="bb-icons-rl-folder-plus"></i><?php esc_html_e( 'Create Folder', 'buddyboss' ); ?></a>
-						<a href="#" id="bp-add-document" class="action-primary bb-add-document button small"><i class="bb-icons-rl-plus"></i><?php esc_html_e( 'Add Documents', 'buddyboss' ); ?></a>
+						<a href="#" id="bb-create-folder" class="action-secondary bb-create-folder button small"><i class="bb-icons-rl-folder-plus"></i><?php esc_html_e( 'Create Folder', 'buddyboss-platform' ); ?></a>
+						<a href="#" id="bp-add-document" class="action-primary bb-add-document button small"><i class="bb-icons-rl-plus"></i><?php esc_html_e( 'Add Documents', 'buddyboss-platform' ); ?></a>
 						<?php
 						bp_get_template_part( 'document/document-uploader' );
 						bp_get_template_part( 'document/create-folder' );

@@ -64,7 +64,7 @@ if ( is_user_logged_in() && ! empty( $memberships ) ) {
 						if ( ! empty( $course_author_fullname ) ) {
 							?>
 							<div class="bb-rl-author-name">
-								<span class="bb-rl-author-name-label"><?php echo esc_html__( 'By ', 'buddyboss' ); ?></span><?php echo esc_html( trim( $course_author_fullname ) ); ?>
+								<span class="bb-rl-author-name-label"><?php echo esc_html__( 'By ', 'buddyboss-platform' ); ?></span><?php echo esc_html( trim( $course_author_fullname ) ); ?>
 							</div>
 							<?php
 						}
@@ -74,7 +74,7 @@ if ( is_user_logged_in() && ! empty( $memberships ) ) {
 
 				<div class="bb-rl-course-meta bb-rl-course-meta--updated">
 					<div class="bb-rl-course-meta-label">
-						<?php echo esc_html__( 'This course was last updated on', 'buddyboss' ); ?>
+						<?php echo esc_html__( 'This course was last updated on', 'buddyboss-platform' ); ?>
 					</div>
 					<div class="bb-rl-course-meta-value">
 						<?php
@@ -89,7 +89,7 @@ if ( is_user_logged_in() && ! empty( $memberships ) ) {
 				if ( ! empty( $memberships ) ) {
 					$membership = $memberships[0];
 					if ( isset( $membership->price ) && floatval( $membership->price ) <= 0 ) {
-						$course_price = __( 'Free', 'buddyboss' );
+						$course_price = __( 'Free', 'buddyboss-platform' );
 					} else {
 						$course_price = \MeprAppHelper::format_currency( $membership->price );
 						// Add period type if it's recurring.
@@ -114,7 +114,7 @@ if ( is_user_logged_in() && ! empty( $memberships ) ) {
 					<div class="bb-rl-course-purchase-button">
 						<a href="<?php echo esc_url( get_permalink( $primary_membership->ID ) ); ?>" 
 							class="button">
-							<?php esc_html_e( 'Get Access', 'buddyboss' ); ?>
+							<?php esc_html_e( 'Get Access', 'buddyboss-platform' ); ?>
 						</a>
 					</div>
 					<?php
@@ -126,7 +126,7 @@ if ( is_user_logged_in() && ! empty( $memberships ) ) {
 					$next_lesson = models\UserProgress::next_lesson( $current_user_id, $post->ID );
 					if ( $next_lesson && is_object( $next_lesson ) ) {
 						$bookmark_url = get_permalink( $next_lesson->ID );
-						$button_text  = $user_has_progress ? __( 'Continue', 'buddyboss' ) : __( 'Start', 'buddyboss' );
+						$button_text  = $user_has_progress ? __( 'Continue', 'buddyboss-platform' ) : __( 'Start', 'buddyboss-platform' );
 						?>
 						<div class="bb-rl-course-continue-button">
 							<a href="<?php echo esc_url( $bookmark_url ); ?>" class="bb-rl-button bb-rl-button--brandFill bb-rl-button--small">
@@ -155,7 +155,7 @@ if ( is_user_logged_in() && ! empty( $memberships ) ) {
 							<img src="<?php echo esc_url( models\Lesson::get_thumbnail( $post ) ); ?>" alt="">
 						</a>
 					<?php } else { ?>
-						<img src="<?php echo esc_url( buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/images/group_cover_image.jpeg' ); ?>" alt="<?php esc_attr_e( 'Course placeholder image', 'buddyboss' ); ?>">
+						<img src="<?php echo esc_url( buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/images/group_cover_image.jpeg' ); ?>" alt="<?php esc_attr_e( 'Course placeholder image', 'buddyboss-platform' ); ?>">
 					<?php } ?>
 				</div>
 			</div>

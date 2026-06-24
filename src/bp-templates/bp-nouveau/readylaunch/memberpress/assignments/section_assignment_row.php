@@ -50,7 +50,7 @@
 					if ( $has_completed_lesson ) {
 						printf( '<span class="mpcs-lesson-list-quiz-score">(%s)</span>', esc_html( $submission->get_score_percent() ) );
 					} else {
-						printf( '<span class="mpcs-lesson-list-quiz-score">(%s)</span>', esc_html__( 'Grade Pending', 'buddyboss' ) );
+						printf( '<span class="mpcs-lesson-list-quiz-score">(%s)</span>', esc_html__( 'Grade Pending', 'buddyboss-platform' ) );
 					}
 				}
 				?>
@@ -62,13 +62,13 @@
 					<span class="mpcs-button">
 						<?php if ( $has_completed_lesson ) : ?>
 							<span class="btn is-outline" href="<?php echo esc_url( get_permalink( $lesson->ID ) ); ?>">
-								<?php esc_html_e( 'View', 'buddyboss' ); ?>
+								<?php esc_html_e( 'View', 'buddyboss-platform' ); ?>
 							</span>
 
 						<?php elseif ( $lesson_available ) : ?>
 							<span class="btn btn-green is-purple"
 								href="<?php echo esc_url( get_permalink( $lesson->ID ) ); ?>">
-								<?php esc_html_e( 'Start', 'buddyboss' ); ?>
+								<?php esc_html_e( 'Start', 'buddyboss-platform' ); ?>
 							</span>
 						<?php endif; ?>
 					</span>
@@ -79,6 +79,6 @@
 	</a>
 <?php else : ?>
 	</span>
-	<span class="mpcs-lesson-locked-tooltip"><?php esc_html_e( 'Lesson unavailable. You must complete all previous lessons and quizzes before you start this lesson.', 'buddyboss' ); ?></span>
+	<span class="mpcs-lesson-locked-tooltip"><?php esc_html_e( 'Lesson unavailable. You must complete all previous lessons and quizzes before you start this lesson.', 'buddyboss-platform' ); ?></span>
 <?php endif; ?>
 </div>

@@ -714,9 +714,9 @@ class BP_Document {
 					$group_name = bp_get_group_name( $group );
 					$status     = bp_get_group_status( $group );
 					if ( 'hidden' === $status || 'private' === $status ) {
-						$visibility = esc_html__( 'Group Members', 'buddyboss' );
+						$visibility = esc_html__( 'Group Members', 'buddyboss-platform' );
 					} else {
-						$visibility = esc_html__( ucfirst( $status ), 'buddyboss' ); // phpcs:ignore WordPress.WP.I18n.NonSingularStringLiteralText
+						$visibility = esc_html__( ucfirst( $status ), 'buddyboss-platform' ); // phpcs:ignore WordPress.WP.I18n.NonSingularStringLiteralText
 					}
 				} else {
 					$visibility = '';
@@ -724,11 +724,11 @@ class BP_Document {
 			} else {
 				$document_privacy = bp_document_get_visibility_levels();
 				if ( 'friends' === $document->privacy && bp_loggedin_user_id() !== (int) $document->user_id ) {
-					$visibility = esc_html__( 'Connections', 'buddyboss' );
+					$visibility = esc_html__( 'Connections', 'buddyboss-platform' );
 				} elseif ( 'message' === $document->privacy ) {
-					$visibility = esc_html__( 'Message', 'buddyboss' );
+					$visibility = esc_html__( 'Message', 'buddyboss-platform' );
 				} elseif ( 'forums' === $document->privacy ) {
-					$visibility = esc_html__( 'Forums', 'buddyboss' );
+					$visibility = esc_html__( 'Forums', 'buddyboss-platform' );
 				} else {
 					$visibility = ( isset( $document_privacy[ $document->privacy ] ) ) ? ucfirst( $document_privacy[ $document->privacy ] ) : '';
 				}
@@ -1418,7 +1418,7 @@ class BP_Document {
 					$group_name = bp_get_group_name( $group );
 					$status     = bp_get_group_status( $group );
 					if ( 'hidden' === $status || 'private' === $status ) {
-						$visibility = esc_html__( 'Group Members', 'buddyboss' );
+						$visibility = esc_html__( 'Group Members', 'buddyboss-platform' );
 					} else {
 						$visibility = ucfirst( $status );
 					}
@@ -1428,7 +1428,7 @@ class BP_Document {
 			} else {
 				$document_privacy = bp_document_get_visibility_levels();
 				if ( 'friends' === $document->privacy && bp_loggedin_user_id() !== (int) $document->user_id ) {
-					$visibility = esc_html__( 'Connections', 'buddyboss' );
+					$visibility = esc_html__( 'Connections', 'buddyboss-platform' );
 				} else {
 					$visibility = ( isset( $document_privacy[ $document->privacy ] ) ) ? $document_privacy[ $document->privacy ] : $document->privacy;
 				}

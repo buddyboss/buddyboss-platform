@@ -209,7 +209,7 @@ export default function KBCategory() {
 	if ( 'error' === status || ! detail ) {
 		return (
 			<div className="bb-kb-category bb-kb-category--error" role="alert">
-				{ __( 'Couldn’t load this category.', 'buddyboss' ) }
+				{ __( 'Couldn’t load this category.', 'buddyboss-platform' ) }
 			</div>
 		);
 	}

@@ -25,7 +25,7 @@ function bp_media_upload() {
 	 * Make sure user is logged in
 	 */
 	if ( ! is_user_logged_in() ) {
-		return new WP_Error( 'not_logged_in', __( 'Please login in order to upload file media.', 'buddyboss' ), array( 'status' => 500 ) );
+		return new WP_Error( 'not_logged_in', __( 'Please login in order to upload file media.', 'buddyboss-platform' ), array( 'status' => 500 ) );
 	}
 
 	/**
@@ -206,13 +206,13 @@ function bp_media_upload_handler( $file_id = 'file' ) {
 			'upload_error_strings' => array(
 				false,
 				/* translators: %d: maximum allowed upload size in MB. */
-				sprintf( __( 'The uploaded file exceeds %d MB', 'buddyboss' ), bp_media_file_upload_max_size() ),
-				__( 'The uploaded file was only partially uploaded.', 'buddyboss' ),
-				__( 'No file was uploaded.', 'buddyboss' ),
+				sprintf( __( 'The uploaded file exceeds %d MB', 'buddyboss-platform' ), bp_media_file_upload_max_size() ),
+				__( 'The uploaded file was only partially uploaded.', 'buddyboss-platform' ),
+				__( 'No file was uploaded.', 'buddyboss-platform' ),
 				'',
-				__( 'Missing a temporary folder.', 'buddyboss' ),
-				__( 'Failed to write file to disk.', 'buddyboss' ),
-				__( 'File upload stopped by extension.', 'buddyboss' ),
+				__( 'Missing a temporary folder.', 'buddyboss-platform' ),
+				__( 'Failed to write file to disk.', 'buddyboss-platform' ),
+				__( 'File upload stopped by extension.', 'buddyboss-platform' ),
 			),
 		)
 	);
@@ -240,7 +240,7 @@ function bp_media_upload_handler( $file_id = 'file' ) {
 		return $attachment;
 	}
 
-	return new WP_Error( 'error_uploading', __( 'Error while uploading media.', 'buddyboss' ), array( 'status' => 500 ) );
+	return new WP_Error( 'error_uploading', __( 'Error while uploading media.', 'buddyboss-platform' ), array( 'status' => 500 ) );
 
 }
 
@@ -2323,7 +2323,7 @@ function bp_media_import_status_request() {
 	// trigger imports/resets (privilege escalation). Nonce verification is
 	// handled separately.
 	if ( ! current_user_can( 'manage_options' ) ) {
-		wp_send_json_error( array( 'message' => __( 'Sorry, you are not allowed to do that.', 'buddyboss' ) ) );
+		wp_send_json_error( array( 'message' => __( 'Sorry, you are not allowed to do that.', 'buddyboss-platform' ) ) );
 	}
 
 	$import_status = get_option( 'bp_media_import_status' );
@@ -2416,8 +2416,8 @@ function bp_media_import_status_request() {
 			'topics_total'  => $topics_total,
 			'replies_total' => $replies_total,
 			'import_status' => $import_status,
-			'success_msg'   => __( 'BuddyBoss Media data update is complete! Any previously uploaded member photos should display in their profiles now.', 'buddyboss' ),
-			'error_msg'     => __( 'BuddyBoss Media data update is failing!', 'buddyboss' ),
+			'success_msg'   => __( 'BuddyBoss Media data update is complete! Any previously uploaded member photos should display in their profiles now.', 'buddyboss-platform' ),
+			'error_msg'     => __( 'BuddyBoss Media data update is failing!', 'buddyboss-platform' ),
 		)
 	);
 }

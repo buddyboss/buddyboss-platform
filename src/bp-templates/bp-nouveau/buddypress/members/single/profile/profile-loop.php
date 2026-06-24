@@ -10,7 +10,7 @@
 
 ?>
 
-<h2 class="screen-heading view-profile-screen"><?php esc_html_e( 'View Profile', 'buddyboss' ); ?></h2>
+<h2 class="screen-heading view-profile-screen"><?php esc_html_e( 'View Profile', 'buddyboss-platform' ); ?></h2>
 <?php
 bp_nouveau_xprofile_hook( 'before', 'loop_content' );
 
@@ -80,9 +80,9 @@ if ( bp_has_profile() ) {
 		<p>
 			<?php
 			if ( bp_is_my_profile() ) {
-				esc_html_e( 'You have not yet added details to your profile.', 'buddyboss' );
+				esc_html_e( 'You have not yet added details to your profile.', 'buddyboss-platform' );
 			} else {
-				esc_html_e( 'This member has not yet added details to their profile.', 'buddyboss' );
+				esc_html_e( 'This member has not yet added details to their profile.', 'buddyboss-platform' );
 			}
 			?>
 		</p>

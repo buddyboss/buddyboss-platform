@@ -120,7 +120,7 @@ function bp_get_members_member_type_base() {
 	 * @param string $base
 	 * @todo if this is changed what will it break? Should we allow this?
 	 */
-	return apply_filters( 'bp_members_member_type_base', _x( 'type', 'profile type URL base', 'buddyboss' ) );
+	return apply_filters( 'bp_members_member_type_base', _x( 'type', 'profile type URL base', 'buddyboss-platform' ) );
 }
 
 /**
@@ -512,16 +512,16 @@ function bp_get_members_pagination_count() {
 
 	if ( 'active' == $members_template->type ) {
 		/* translators: 1: from number, 2: to number, 3: total member count. */
-		$pag = sprintf( _n( 'Viewing 1 member', 'Viewing %1$s - %2$s of %3$s members', $members_template->total_member_count, 'buddyboss' ), $from_num, $to_num, $total );
+		$pag = sprintf( _n( 'Viewing 1 member', 'Viewing %1$s - %2$s of %3$s members', $members_template->total_member_count, 'buddyboss-platform' ), $from_num, $to_num, $total );
 	} elseif ( 'popular' == $members_template->type ) {
 		/* translators: 1: from number, 2: to number, 3: total member count. */
-		$pag = sprintf( _n( 'Viewing 1 member with connections', 'Viewing %1$s - %2$s of %3$s members with connections', $members_template->total_member_count, 'buddyboss' ), $from_num, $to_num, $total );
+		$pag = sprintf( _n( 'Viewing 1 member with connections', 'Viewing %1$s - %2$s of %3$s members with connections', $members_template->total_member_count, 'buddyboss-platform' ), $from_num, $to_num, $total );
 	} elseif ( 'online' == $members_template->type ) {
 		/* translators: 1: from number, 2: to number, 3: total online member count. */
-		$pag = sprintf( _n( 'Viewing 1 online member', 'Viewing %1$s - %2$s of %3$s online members', $members_template->total_member_count, 'buddyboss' ), $from_num, $to_num, $total );
+		$pag = sprintf( _n( 'Viewing 1 online member', 'Viewing %1$s - %2$s of %3$s online members', $members_template->total_member_count, 'buddyboss-platform' ), $from_num, $to_num, $total );
 	} else {
 		/* translators: 1: from number, 2: to number, 3: total member count. */
-		$pag = sprintf( _n( 'Viewing 1 member', 'Viewing %1$s - %2$s of %3$s members', $members_template->total_member_count, 'buddyboss' ), $from_num, $to_num, $total );
+		$pag = sprintf( _n( 'Viewing 1 member', 'Viewing %1$s - %2$s of %3$s members', $members_template->total_member_count, 'buddyboss-platform' ), $from_num, $to_num, $total );
 
 	}
 
@@ -823,7 +823,7 @@ function bp_get_member_avatar( $args = '' ) {
 		'class'  => 'avatar',
 		'id'     => false,
 		/* translators: %s: member full name. */
-		'alt'    => sprintf( __( 'Profile photo of %s', 'buddyboss' ), $fullname ),
+		'alt'    => sprintf( __( 'Profile photo of %s', 'buddyboss-platform' ), $fullname ),
 	);
 
 	$r = bp_parse_args( $args, $defaults );
@@ -1016,7 +1016,7 @@ function bp_get_member_last_active( $args = array() ) {
 	// Backwards compatibility for anyone forcing a 'true' active_format.
 	if ( true === $r['active_format'] ) {
 		/* translators: %s: human-readable time-since string (e.g. "5 minutes"). */
-		$r['active_format'] = __( 'active %s', 'buddyboss' );
+		$r['active_format'] = __( 'active %s', 'buddyboss-platform' );
 	}
 
 	// Member has logged in at least one time.
@@ -1034,7 +1034,7 @@ function bp_get_member_last_active( $args = array() ) {
 
 		// Member has never logged in or been active.
 	} else {
-		$last_activity = __( 'Never active', 'buddyboss' );
+		$last_activity = __( 'Never active', 'buddyboss-platform' );
 	}
 
 	/**
@@ -1195,7 +1195,7 @@ function bp_get_member_registered( $args = array() ) {
 	}
 
 	/* translators: %s: human-readable time-since string (e.g. "5 minutes"). */
-	$registered = esc_attr( bp_core_get_last_activity( $members_template->member->user_registered, _x( 'registered %s', 'Records the timestamp that the user registered into the activity feed', 'buddyboss' ) ) );
+	$registered = esc_attr( bp_core_get_last_activity( $members_template->member->user_registered, _x( 'registered %s', 'Records the timestamp that the user registered into the activity feed', 'buddyboss-platform' ) ) );
 
 	/**
 	 * Filters the 'registered [x days ago]' string for the current member.
@@ -1261,7 +1261,7 @@ function bp_directory_members_search_form() {
 
 	$search_form_html = '<form action="" method="get" id="search-members-form">
 		<label for="members_search"><input type="text" name="' . esc_attr( $query_arg ) . '" id="members_search" placeholder="' . esc_attr( $search_value ) . '" /></label>
-		<input type="submit" id="members_search_submit" name="members_search_submit" value="' . __( 'Search', 'buddyboss' ) . '" />
+		<input type="submit" id="members_search_submit" name="members_search_submit" value="' . __( 'Search', 'buddyboss-platform' ) . '" />
 	</form>';
 
 	/**
@@ -1354,7 +1354,7 @@ function bp_get_loggedin_user_nav() {
 	}
 
 	// Always add a log out list item to the end of the navigation.
-	$logout_link = '<li><a id="wp-logout" href="' . wp_logout_url( bp_get_root_domain() ) . '">' . __( 'Log Out', 'buddyboss' ) . '</a></li>';
+	$logout_link = '<li><a id="wp-logout" href="' . wp_logout_url( bp_get_root_domain() ) . '">' . __( 'Log Out', 'buddyboss-platform' ) . '</a></li>';
 
 	echo apply_filters( 'bp_logout_nav_link', $logout_link );
 }
@@ -1549,7 +1549,7 @@ function bp_get_loggedin_user_avatar( $args = '' ) {
 			'height'  => false,
 			'html'    => true,
 			/* translators: %s: logged-in user full name. */
-			'alt'     => sprintf( __( 'Profile photo of %s', 'buddyboss' ), bp_get_loggedin_user_fullname() ),
+			'alt'     => sprintf( __( 'Profile photo of %s', 'buddyboss-platform' ), bp_get_loggedin_user_fullname() ),
 		)
 	);
 
@@ -1608,7 +1608,7 @@ function bp_get_displayed_user_avatar( $args = '' ) {
 			'height'  => false,
 			'html'    => true,
 			/* translators: %s: displayed user full name. */
-			'alt'     => sprintf( __( 'Profile photo of %s', 'buddyboss' ), bp_get_displayed_user_fullname() ),
+			'alt'     => sprintf( __( 'Profile photo of %s', 'buddyboss-platform' ), bp_get_displayed_user_fullname() ),
 		)
 	);
 
@@ -1696,7 +1696,7 @@ function bp_get_last_activity( $user_id = 0 ) {
 	$last_activity = bp_core_get_last_activity(
 		bp_get_user_last_activity( $user_id ),
 		/* translators: %s: The last activity human-readable date. */
-		esc_html__( 'Active %s', 'buddyboss' )
+		esc_html__( 'Active %s', 'buddyboss-platform' )
 	);
 
 	/**
@@ -2018,7 +2018,7 @@ function bp_get_current_member_type_message() {
 	$type_object = bp_get_member_type_object( bp_get_current_member_type() );
 
 	/* translators: %s: member type label. */
-	$message = sprintf( __( 'Viewing all members who are %s', 'buddyboss' ), '<strong>' . $type_object->labels['name'] . '</strong>' );
+	$message = sprintf( __( 'Viewing all members who are %s', 'buddyboss-platform' ), '<strong>' . $type_object->labels['name'] . '</strong>' );
 
 	/**
 	 * Filters the current profile type message.
@@ -2495,7 +2495,7 @@ function bp_get_signup_avatar( $args = '' ) {
 	$defaults = array(
 		'size'  => bp_core_avatar_full_width(),
 		'class' => 'avatar',
-		'alt'   => __( 'Your Profile Photo', 'buddyboss' ),
+		'alt'   => __( 'Your Profile Photo', 'buddyboss-platform' ),
 	);
 
 	$r = bp_parse_args( $args, $defaults );
@@ -2595,7 +2595,7 @@ function bp_members_activity_feed() {
 	}
 	?>
 
-	<link rel="alternate" type="application/rss+xml" title="<?php bloginfo( 'name' ); ?> | <?php bp_displayed_user_fullname(); ?> | <?php _e( 'Activity RSS Feed', 'buddyboss' ); ?>" href="<?php bp_member_activity_feed_link(); ?>" />
+	<link rel="alternate" type="application/rss+xml" title="<?php bloginfo( 'name' ); ?> | <?php bp_displayed_user_fullname(); ?> | <?php _e( 'Activity RSS Feed', 'buddyboss-platform' ); ?>" href="<?php bp_member_activity_feed_link(); ?>" />
 
 	<?php
 }
@@ -2732,7 +2732,7 @@ function bp_get_add_switch_button( $user_id, $button_args = array() ) {
 				'wrapper_class'     => 'switch-button back-to-admin',
 				'wrapper_id'        => 'switch-button-' . $old_user->ID,
 				'link_href'         => esc_url( $link ),
-				'link_text'         => __( 'Back to Admin', 'buddyboss' ),
+				'link_text'         => __( 'Back to Admin', 'buddyboss-platform' ),
 				'link_id'           => 'switch-' . $old_user->ID,
 				'link_rel'          => 'stop',
 				'link_class'        => 'switch-button back-to-admin stop bp-toggle-action-button outline',
@@ -2749,7 +2749,7 @@ function bp_get_add_switch_button( $user_id, $button_args = array() ) {
 				'wrapper_class'     => 'switch-button view-as',
 				'wrapper_id'        => 'switch-button-' . $user_id,
 				'link_href'         => esc_url( $link ),
-				'link_text'         => __( 'View As', 'buddyboss' ),
+				'link_text'         => __( 'View As', 'buddyboss-platform' ),
 				'link_id'           => 'switch-' . $user_id,
 				'link_rel'          => 'start',
 				'link_class'        => 'switch-button view-as start outline',
@@ -2833,20 +2833,20 @@ function bb_get_followers_count( $user_id = false ) {
 			$followers = sprintf(
 				/* translators: Follower string. */
 				'<strong>0</strong> %1$s',
-				esc_html__( 'followers', 'buddyboss' ),
+				esc_html__( 'followers', 'buddyboss-platform' ),
 			);
 		} elseif ( 1 === $total_followers ) {
 			$followers = sprintf(
 				/* translators: Follower string. */
 				'<strong>1</strong> %1$s',
-				esc_html__( 'follower', 'buddyboss' ),
+				esc_html__( 'follower', 'buddyboss-platform' ),
 			);
 		} else {
 			$followers = sprintf(
 				/* translators: 1: Total followers count. 2: Follower string. */
 				'<strong>%1$s</strong> %2$s',
 				$total_followers,
-				esc_html__( 'followers', 'buddyboss' ),
+				esc_html__( 'followers', 'buddyboss-platform' ),
 			);
 		}
 		?>
@@ -2890,20 +2890,20 @@ function bb_get_following_count( $user_id = false ) {
 			$following = sprintf(
 				/* translators: Following string. */
 				'<strong>0</strong> %1$s',
-				esc_html__( 'following', 'buddyboss' ),
+				esc_html__( 'following', 'buddyboss-platform' ),
 			);
 		} elseif ( 1 === $total_following ) {
 			$following = sprintf(
 				/* translators: Following string. */
 				'<strong>1</strong> %1$s',
-				esc_html__( 'following', 'buddyboss' ),
+				esc_html__( 'following', 'buddyboss-platform' ),
 			);
 		} else {
 			$following = sprintf(
 				/* translators: 1: Total following count. 2: Following string. */
 				'<strong>%1$s</strong> %2$s',
 				$total_following,
-				esc_html__( 'following', 'buddyboss' ),
+				esc_html__( 'following', 'buddyboss-platform' ),
 			);
 		}
 		?>
@@ -3050,7 +3050,7 @@ function bb_get_member_last_activity_time( $args = array() ) {
 
 	// Backwards compatibility for anyone forcing a 'true' active_format.
 	if ( true === $r['active_format'] ) {
-		$r['active_format'] = __( '%s', 'buddyboss' );
+		$r['active_format'] = __( '%s', 'buddyboss-platform' );
 	}
 
 	// Member has logged in at least one time.
@@ -3068,7 +3068,7 @@ function bb_get_member_last_activity_time( $args = array() ) {
 
 		// Member has never logged in or been active.
 	} else {
-		$last_activity = esc_html__( 'Never active', 'buddyboss' );
+		$last_activity = esc_html__( 'Never active', 'buddyboss-platform' );
 	}
 
 	/**

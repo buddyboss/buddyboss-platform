@@ -168,7 +168,7 @@ class BuddyPress {
 	 * @since BuddyPress 1.7.0
 	 */
 	public function __clone() {
-		_doing_it_wrong( __FUNCTION__, __( 'Cheatin\' huh?', 'buddyboss' ), '1.7' ); }
+		_doing_it_wrong( __FUNCTION__, __( 'Cheatin\' huh?', 'buddyboss-platform' ), '1.7' ); }
 
 	/**
 	 * A dummy magic method to prevent BuddyPress from being unserialized.
@@ -176,7 +176,7 @@ class BuddyPress {
 	 * @since BuddyPress 1.7.0
 	 */
 	public function __wakeup() {
-		_doing_it_wrong( __FUNCTION__, __( 'Cheatin\' huh?', 'buddyboss' ), '1.7' ); }
+		_doing_it_wrong( __FUNCTION__, __( 'Cheatin\' huh?', 'buddyboss-platform' ), '1.7' ); }
 
 	/**
 	 * Magic method for checking the existence of a certain custom field.

@@ -48,14 +48,14 @@ class BP_Document_Privacy {
 	function get_visibility_options( $is_group = false ) {
 
 		$options = array(
-			'public'   => __( 'Everyone', 'buddyboss' ),
-			'loggedin' => __( 'Logged In Users', 'buddyboss' ),
-			'onlyme'   => __( 'Only Me', 'buddyboss' ),
-			'friends'  => __( 'My Connections', 'buddyboss' ),
+			'public'   => __( 'Everyone', 'buddyboss-platform' ),
+			'loggedin' => __( 'Logged In Users', 'buddyboss-platform' ),
+			'onlyme'   => __( 'Only Me', 'buddyboss-platform' ),
+			'friends'  => __( 'My Connections', 'buddyboss-platform' ),
 		);
 
 		if ( $is_group && bp_is_active( 'groups' ) ) {
-			$options['grouponly'] = __( 'Group Members', 'buddyboss' );
+			$options['grouponly'] = __( 'Group Members', 'buddyboss-platform' );
 		}
 
 		return $options;
@@ -73,7 +73,7 @@ class BP_Document_Privacy {
 		$result = bp_document_get_specific( array( 'document_ids' => $document_id ) );
 
 		if ( empty( $result['documents'] ) || empty( $result['documents'][0] ) ) {
-			return new WP_Error( 'no_document', __( 'There is no document.', 'buddyboss' ), array( 'status' => 500 ) );
+			return new WP_Error( 'no_document', __( 'There is no document.', 'buddyboss-platform' ), array( 'status' => 500 ) );
 		}
 
 		return $result['documents'][0]->privacy;
@@ -91,7 +91,7 @@ class BP_Document_Privacy {
 		$result = bp_document_get_specific( array( 'document_ids' => $document_id ) );
 
 		if ( empty( $result['documents'] ) || empty( $result['documents'][0] ) ) {
-			return new WP_Error( 'no_document', __( 'There is no document.', 'buddyboss' ), array( 'status' => 500 ) );
+			return new WP_Error( 'no_document', __( 'There is no document.', 'buddyboss-platform' ), array( 'status' => 500 ) );
 		}
 
 		$document   = $result['documents'][0];

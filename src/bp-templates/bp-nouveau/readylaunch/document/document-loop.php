@@ -66,7 +66,7 @@ if ( bp_has_document( bp_ajax_querystring( 'document' ) ) ) :
 		?>
 		<div class="pager">
 			<div class="dt-more-container load-more">
-				<a class="button outline full" href="<?php bp_document_load_more_link(); ?>"><?php esc_html_e( 'Show More', 'buddyboss' ); ?><i class="bb-icons-rl-caret-down"></i></a>
+				<a class="button outline full" href="<?php bp_document_load_more_link(); ?>"><?php esc_html_e( 'Show More', 'buddyboss-platform' ); ?><i class="bb-icons-rl-caret-down"></i></a>
 			</div>
 		</div>
 		<?php

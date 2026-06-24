@@ -51,7 +51,7 @@ function bp_member_invite_submit() {
 	check_admin_referer( 'bp_member_invite_submit' );
 
 	if ( empty( $_POST ) ) {
-		bp_core_add_message( __( 'You didn\'t include any email addresses!', 'buddyboss' ), 'error' );
+		bp_core_add_message( __( 'You didn\'t include any email addresses!', 'buddyboss-platform' ), 'error' );
 		bp_core_redirect( $bp->loggedin_user->domain . '/invites' );
 		die();
 	}
@@ -246,7 +246,7 @@ function bp_invites_member_invite_filter_content( $content, $email ) {
 		            bp_get_member_invites_wildcard_replace(
 			            wp_kses(
 				            /* translators: %s: invitation acceptance URL. */
-				            sprintf( __( 'To accept this invitation, please <a href="%s">click here</a>.', 'buddyboss' ), '{{invitee.url}}' ),
+				            sprintf( __( 'To accept this invitation, please <a href="%s">click here</a>.', 'buddyboss-platform' ), '{{invitee.url}}' ),
 				            bp_invites_kses_allowed_tags()
 			            )
 		            );

@@ -37,7 +37,7 @@ function bb_admin_settings_page() {
 					<?php
 					esc_html_e(
 						'BuddyBoss Admin Settings assets not found. Please run: npm run build:admin:settings',
-						'buddyboss'
+						'buddyboss-platform'
 					);
 					?>
 				</p>
@@ -382,7 +382,7 @@ function bb_admin_settings_page() {
 		?>
 		<noscript>
 			<p style="padding: 20px; font-size: 14px;">
-				<?php esc_html_e( 'JavaScript is required for BuddyBoss Settings. Please enable JavaScript in your browser.', 'buddyboss' ); ?>
+				<?php esc_html_e( 'JavaScript is required for BuddyBoss Settings. Please enable JavaScript in your browser.', 'buddyboss-platform' ); ?>
 			</p>
 		</noscript>
 	</div>

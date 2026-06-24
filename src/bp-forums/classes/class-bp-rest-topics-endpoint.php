@@ -74,7 +74,7 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 			array(
 				'args'        => array(
 					'id' => array(
-						'description' => __( 'A unique numeric ID for the topic.', 'buddyboss' ),
+						'description' => __( 'A unique numeric ID for the topic.', 'buddyboss-platform' ),
 						'type'        => 'integer',
 						'required'    => true,
 					),
@@ -343,7 +343,7 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 		if ( function_exists( 'bp_rest_enable_private_network' ) && true === bp_rest_enable_private_network() && ! is_user_logged_in() ) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
-				__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss' ),
+				__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss-platform' ),
 				array(
 					'status' => rest_authorization_required_code(),
 				)
@@ -415,7 +415,7 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 		if ( function_exists( 'bp_rest_enable_private_network' ) && true === bp_rest_enable_private_network() && ! is_user_logged_in() ) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
-				__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss' ),
+				__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss-platform' ),
 				array(
 					'status' => rest_authorization_required_code(),
 				)
@@ -427,7 +427,7 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 		if ( true === $retval && empty( $topic->ID ) ) {
 			$retval = new WP_Error(
 				'bp_rest_topic_invalid_id',
-				__( 'Invalid topic ID.', 'buddyboss' ),
+				__( 'Invalid topic ID.', 'buddyboss-platform' ),
 				array(
 					'status' => 404,
 				)
@@ -437,7 +437,7 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 		if ( true === $retval && ( ! isset( $topic->post_type ) || 'topic' !== $topic->post_type ) ) {
 			$retval = new WP_Error(
 				'bp_rest_topic_invalid_id',
-				__( 'Invalid topic ID.', 'buddyboss' ),
+				__( 'Invalid topic ID.', 'buddyboss-platform' ),
 				array(
 					'status' => 404,
 				)
@@ -450,7 +450,7 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 			if ( true === $retval && is_user_logged_in() && ! current_user_can( $post_type->cap->read_post, $topic->ID ) ) {
 				$retval = new WP_Error(
 					'bp_rest_authorization_required',
-					__( 'Sorry, you are not allowed to access this topic.', 'buddyboss' ),
+					__( 'Sorry, you are not allowed to access this topic.', 'buddyboss-platform' ),
 					array(
 						'status' => rest_authorization_required_code(),
 					)
@@ -551,7 +551,7 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 			if ( ! current_user_can( 'publish_topics' ) ) {
 				return new WP_Error(
 					'bp_rest_bbp_topic_permissions',
-					__( 'Sorry, You do not have permission to create new discussions.', 'buddyboss' ),
+					__( 'Sorry, You do not have permission to create new discussions.', 'buddyboss-platform' ),
 					array(
 						'status' => rest_authorization_required_code(),
 					)
@@ -578,7 +578,7 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 		if ( empty( $topic_title ) ) {
 			return new WP_Error(
 				'bp_rest_bbp_topic_title',
-				__( 'Sorry, Your discussion needs a subject.', 'buddyboss' ),
+				__( 'Sorry, Your discussion needs a subject.', 'buddyboss-platform' ),
 				array(
 					'status' => 400,
 				)
@@ -617,7 +617,7 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 		) {
 			return new WP_Error(
 				'bp_rest_bbp_topic_content',
-				__( 'Sorry, Your discussion cannot be empty.', 'buddyboss' ),
+				__( 'Sorry, Your discussion cannot be empty.', 'buddyboss-platform' ),
 				array(
 					'status' => 400,
 				)
@@ -632,7 +632,7 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 			if ( empty( $topic->bbp_forum_id ) ) {
 				return new WP_Error(
 					'bp_rest_bbp_topic_forum_id',
-					__( 'Sorry, Forum ID is missing.', 'buddyboss' ),
+					__( 'Sorry, Forum ID is missing.', 'buddyboss-platform' ),
 					array(
 						'status' => 400,
 					)
@@ -641,7 +641,7 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 			} elseif ( ! is_numeric( $topic->bbp_forum_id ) ) {
 				return new WP_Error(
 					'bp_rest_bbp_topic_forum_id',
-					__( 'Sorry, Forum ID must be a number.', 'buddyboss' ),
+					__( 'Sorry, Forum ID must be a number.', 'buddyboss-platform' ),
 					array(
 						'status' => 400,
 					)
@@ -657,7 +657,7 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 				if ( 0 === $posted_forum_id ) {
 					return new WP_Error(
 						'bp_rest_bbp_topic_forum_id',
-						__( 'Sorry, Forum ID is missing.', 'buddyboss' ),
+						__( 'Sorry, Forum ID is missing.', 'buddyboss-platform' ),
 						array(
 							'status' => 400,
 						)
@@ -667,7 +667,7 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 				} elseif ( 0 > $posted_forum_id ) {
 					return new WP_Error(
 						'bp_rest_bbp_topic_forum_id',
-						__( 'Sorry, Forum ID cannot be a negative number.', 'buddyboss' ),
+						__( 'Sorry, Forum ID cannot be a negative number.', 'buddyboss-platform' ),
 						array(
 							'status' => 400,
 						)
@@ -677,7 +677,7 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 				} elseif ( ! bbp_get_forum( $posted_forum_id ) ) {
 					return new WP_Error(
 						'bp_rest_bbp_topic_forum_id',
-						__( 'Sorry, Forum does not exist.', 'buddyboss' ),
+						__( 'Sorry, Forum does not exist.', 'buddyboss-platform' ),
 						array(
 							'status' => 400,
 						)
@@ -697,7 +697,7 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 			if ( bbp_is_forum_category( $forum_id ) ) {
 				return new WP_Error(
 					'bp_rest_bbp_topic_forum_category',
-					__( 'Sorry, This forum is a category. No discussions can be created in this forum.', 'buddyboss' ),
+					__( 'Sorry, This forum is a category. No discussions can be created in this forum.', 'buddyboss-platform' ),
 					array(
 						'status' => 400,
 					)
@@ -710,7 +710,7 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 				if ( bbp_is_forum_closed( $forum_id ) && ! current_user_can( 'edit_forum', $forum_id ) ) {
 					return new WP_Error(
 						'bp_rest_bbp_topic_forum_closed',
-						__( 'Sorry, This forum has been closed to new discussions.', 'buddyboss' ),
+						__( 'Sorry, This forum has been closed to new discussions.', 'buddyboss-platform' ),
 						array(
 							'status' => 400,
 						)
@@ -747,7 +747,7 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 					) {
 						return new WP_Error(
 							'bp_rest_bbp_topic_forum_closed',
-							__( 'Sorry, This forum is private and you do not have the capability to read or create new discussions in it.', 'buddyboss' ),
+							__( 'Sorry, This forum is private and you do not have the capability to read or create new discussions in it.', 'buddyboss-platform' ),
 							array(
 								'status' => 400,
 							)
@@ -762,7 +762,7 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 					) {
 						return new WP_Error(
 							'bp_rest_bbp_topic_forum_closed',
-							__( 'Sorry, This forum is hidden and you do not have the capability to read or create new discussions in it.', 'buddyboss' ),
+							__( 'Sorry, This forum is hidden and you do not have the capability to read or create new discussions in it.', 'buddyboss-platform' ),
 							array(
 								'status' => 400,
 							)
@@ -778,7 +778,7 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 			if ( ! $can_send_media ) {
 				return new WP_Error(
 					'bp_rest_bbp_topic_media',
-					__( 'You don\'t have access to send the media.', 'buddyboss' ),
+					__( 'You don\'t have access to send the media.', 'buddyboss-platform' ),
 					array(
 						'status' => 400,
 					)
@@ -791,7 +791,7 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 			if ( ! $can_send_document ) {
 				return new WP_Error(
 					'bp_rest_bbp_topic_media',
-					__( 'You don\'t have access to send the document.', 'buddyboss' ),
+					__( 'You don\'t have access to send the document.', 'buddyboss-platform' ),
 					array(
 						'status' => 400,
 					)
@@ -804,7 +804,7 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 			if ( ! $can_send_video ) {
 				return new WP_Error(
 					'bp_rest_bbp_topic_media',
-					__( 'You don\'t have access to send the video.', 'buddyboss' ),
+					__( 'You don\'t have access to send the video.', 'buddyboss-platform' ),
 					array(
 						'status' => 400,
 					)
@@ -817,7 +817,7 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 			if ( ! $can_send_gif ) {
 				return new WP_Error(
 					'bp_rest_bbp_topic_media',
-					__( 'You don\'t have access to send the gif.', 'buddyboss' ),
+					__( 'You don\'t have access to send the gif.', 'buddyboss-platform' ),
 					array(
 						'status' => 400,
 					)
@@ -829,7 +829,7 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 		if ( ! bbp_check_for_flood( $anonymous_data, $topic_author ) ) {
 			return new WP_Error(
 				'bp_rest_bbp_topic_flood',
-				__( 'Slow down; you move too fast.', 'buddyboss' ),
+				__( 'Slow down; you move too fast.', 'buddyboss-platform' ),
 				array(
 					'status' => 400,
 				)
@@ -848,7 +848,7 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 		) ) {
 			return new WP_Error(
 				'bp_rest_bbp_topic_duplicate',
-				__( 'Duplicate discussion detected; it looks as though you\'ve already said that!', 'buddyboss' ),
+				__( 'Duplicate discussion detected; it looks as though you\'ve already said that!', 'buddyboss-platform' ),
 				array(
 					'status' => 400,
 				)
@@ -859,7 +859,7 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 		if ( ! bbp_check_for_blacklist( $anonymous_data, $topic_author, $topic_title, $topic_content ) ) {
 			return new WP_Error(
 				'bp_rest_bbp_topic_blacklist',
-				__( 'Sorry, Your discussion cannot be created at this time.', 'buddyboss' ),
+				__( 'Sorry, Your discussion cannot be created at this time.', 'buddyboss-platform' ),
 				array(
 					'status' => 400,
 				)
@@ -902,7 +902,7 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 		if ( bbp_has_errors() ) {
 			return new WP_Error(
 				'bp_rest_bbp_topic_unknown',
-				__( 'Unknown error.', 'buddyboss' ),
+				__( 'Unknown error.', 'buddyboss-platform' ),
 				array(
 					'status' => 400,
 				)
@@ -931,8 +931,8 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 		if ( empty( $topic_id ) || is_wp_error( $topic_id ) ) {
 			$append_error = (
 			( is_wp_error( $topic_id ) && $topic_id->get_error_message() )
-				? __( 'The following problem(s) have been found with your topic: ', 'buddyboss' ) . $topic_id->get_error_message()
-				: __( 'We are facing a problem to creating a topic.', 'buddyboss' )
+				? __( 'The following problem(s) have been found with your topic: ', 'buddyboss-platform' ) . $topic_id->get_error_message()
+				: __( 'We are facing a problem to creating a topic.', 'buddyboss-platform' )
 			);
 
 			return new WP_Error(
@@ -1081,7 +1081,7 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 	public function create_item_permissions_check( $request ) {
 		$retval = new WP_Error(
 			'bp_rest_authorization_required',
-			__( 'Sorry, you need to be logged in to create a topic.', 'buddyboss' ),
+			__( 'Sorry, you need to be logged in to create a topic.', 'buddyboss-platform' ),
 			array(
 				'status' => rest_authorization_required_code(),
 			)
@@ -1149,7 +1149,7 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 		if ( empty( $topic_new->bbp_topic_id ) ) {
 			new WP_Error(
 				'bp_rest_topic_invalid_id',
-				__( 'Invalid topic ID.', 'buddyboss' ),
+				__( 'Invalid topic ID.', 'buddyboss-platform' ),
 				array(
 					'status' => 404,
 				)
@@ -1165,7 +1165,7 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 		if ( empty( $topic ) ) {
 			new WP_Error(
 				'bp_rest_bbp_edit_topic_not_found',
-				__( 'Sorry, The discussion you want to edit was not found.', 'buddyboss' ),
+				__( 'Sorry, The discussion you want to edit was not found.', 'buddyboss-platform' ),
 				array(
 					'status' => 404,
 				)
@@ -1201,7 +1201,7 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 			if ( ! current_user_can( 'edit_topic', $topic_id ) ) {
 				return new WP_Error(
 					'bp_rest_bbp_edit_topic_permissions',
-					__( 'Sorry, You do not have permission to edit that discussion.', 'buddyboss' ),
+					__( 'Sorry, You do not have permission to edit that discussion.', 'buddyboss-platform' ),
 					array(
 						'status' => 403,
 					)
@@ -1233,7 +1233,7 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 		if ( empty( $topic_new->bbp_forum_id ) ) {
 			return new WP_Error(
 				'bp_rest_bbp_topic_forum_id',
-				__( 'Sorry, Forum ID is missing.', 'buddyboss' ),
+				__( 'Sorry, Forum ID is missing.', 'buddyboss-platform' ),
 				array(
 					'status' => 400,
 				)
@@ -1254,7 +1254,7 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 			if ( bbp_is_forum_category( $forum_id ) ) {
 				return new WP_Error(
 					'bp_rest_bbp_edit_topic_forum_category',
-					__( 'Sorry, This forum is a category. No discussions can be created in this forum.', 'buddyboss' ),
+					__( 'Sorry, This forum is a category. No discussions can be created in this forum.', 'buddyboss-platform' ),
 					array(
 						'status' => 400,
 					)
@@ -1267,7 +1267,7 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 				if ( bbp_is_forum_closed( $forum_id ) && ! current_user_can( 'edit_forum', $forum_id ) ) {
 					return new WP_Error(
 						'bp_rest_bbp_edit_topic_forum_closed',
-						__( 'Sorry, This forum has been closed to new discussions.', 'buddyboss' ),
+						__( 'Sorry, This forum has been closed to new discussions.', 'buddyboss-platform' ),
 						array(
 							'status' => 400,
 						)
@@ -1304,7 +1304,7 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 					) {
 						return new WP_Error(
 							'bp_rest_bbp_edit_topic_forum_private',
-							__( 'Sorry, This forum is private and you do not have the capability to read or create new discussions in it.', 'buddyboss' ),
+							__( 'Sorry, This forum is private and you do not have the capability to read or create new discussions in it.', 'buddyboss-platform' ),
 							array(
 								'status' => 400,
 							)
@@ -1319,7 +1319,7 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 					) {
 						return new WP_Error(
 							'bp_rest_bbp_edit_topic_forum_hidden',
-							__( 'Sorry, This forum is hidden and you do not have the capability to read or create new discussions in it.', 'buddyboss' ),
+							__( 'Sorry, This forum is hidden and you do not have the capability to read or create new discussions in it.', 'buddyboss-platform' ),
 							array(
 								'status' => 400,
 							)
@@ -1341,7 +1341,7 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 		if ( empty( $topic_title ) ) {
 			return new WP_Error(
 				'bp_rest_bbp_edit_topic_title',
-				__( 'Sorry, Your discussion needs a title.', 'buddyboss' ),
+				__( 'Sorry, Your discussion needs a title.', 'buddyboss-platform' ),
 				array(
 					'status' => 400,
 				)
@@ -1380,7 +1380,7 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 		) {
 			return new WP_Error(
 				'bp_rest_bbp_edit_topic_content',
-				__( 'Sorry, Your discussion cannot be empty.', 'buddyboss' ),
+				__( 'Sorry, Your discussion cannot be empty.', 'buddyboss-platform' ),
 				array(
 					'status' => 400,
 				)
@@ -1393,7 +1393,7 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 			if ( ! $can_send_media ) {
 				return new WP_Error(
 					'bp_rest_bbp_topic_media',
-					__( 'You don\'t have access to send the media.', 'buddyboss' ),
+					__( 'You don\'t have access to send the media.', 'buddyboss-platform' ),
 					array(
 						'status' => 400,
 					)
@@ -1406,7 +1406,7 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 			if ( ! $can_send_document ) {
 				return new WP_Error(
 					'bp_rest_bbp_topic_media',
-					__( 'You don\'t have access to send the document.', 'buddyboss' ),
+					__( 'You don\'t have access to send the document.', 'buddyboss-platform' ),
 					array(
 						'status' => 400,
 					)
@@ -1419,7 +1419,7 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 			if ( ! $can_send_gif ) {
 				return new WP_Error(
 					'bp_rest_bbp_topic_media',
-					__( 'You don\'t have access to send the gif.', 'buddyboss' ),
+					__( 'You don\'t have access to send the gif.', 'buddyboss-platform' ),
 					array(
 						'status' => 400,
 					)
@@ -1431,7 +1431,7 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 		if ( ! bbp_check_for_blacklist( $anonymous_data, $topic_author, $topic_title, $topic_content ) ) {
 			return new WP_Error(
 				'bp_rest_bbp_topic_blacklist',
-				__( 'Sorry, Your discussion cannot be edited at this time.', 'buddyboss' ),
+				__( 'Sorry, Your discussion cannot be edited at this time.', 'buddyboss-platform' ),
 				array(
 					'status' => 400,
 				)
@@ -1539,8 +1539,8 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 		if ( empty( $topic_id ) || is_wp_error( $topic_id ) ) {
 			$append_error = (
 			( is_wp_error( $topic_id ) && $topic_id->get_error_message() )
-				? __( 'The following problem(s) have been found with your topic: ', 'buddyboss' ) . $topic_id->get_error_message() . __( 'Please try again.', 'buddyboss' )
-				: __( 'We are facing a problem to update a topic.', 'buddyboss' )
+				? __( 'The following problem(s) have been found with your topic: ', 'buddyboss-platform' ) . $topic_id->get_error_message() . __( 'Please try again.', 'buddyboss-platform' )
+				: __( 'We are facing a problem to update a topic.', 'buddyboss-platform' )
 			);
 
 			return new WP_Error(
@@ -1674,7 +1674,7 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 	public function update_item_permissions_check( $request ) {
 		$retval = new WP_Error(
 			'bp_rest_authorization_required',
-			__( 'Sorry, you need to be logged in to create a topic.', 'buddyboss' ),
+			__( 'Sorry, you need to be logged in to create a topic.', 'buddyboss-platform' ),
 			array(
 				'status' => rest_authorization_required_code(),
 			)
@@ -1689,7 +1689,7 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 			if ( bbp_get_user_id( 0, true, true ) !== $topic->post_author && ! current_user_can( 'edit_topic', $request->get_param( 'id' ) ) ) {
 				$retval = new WP_Error(
 					'bp_rest_authorization_required',
-					__( 'Sorry, you are not allowed to update this topic.', 'buddyboss' ),
+					__( 'Sorry, you are not allowed to update this topic.', 'buddyboss-platform' ),
 					array(
 						'status' => rest_authorization_required_code(),
 					)
@@ -1768,7 +1768,7 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 	public function delete_item_permissions_check( $request ) {
 		$retval = new WP_Error(
 			'bp_rest_authorization_required',
-			__( 'Sorry, you need to be logged in to perform this action.', 'buddyboss' ),
+			__( 'Sorry, you need to be logged in to perform this action.', 'buddyboss-platform' ),
 			array(
 				'status' => rest_authorization_required_code(),
 			)
@@ -1780,7 +1780,7 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 			if ( ! current_user_can( 'delete_topic', $request->get_param( 'id' ) ) ) {
 				$retval = new WP_Error(
 					'bp_rest_authorization_required',
-					__( 'Sorry, you are not allowed to delete this topic.', 'buddyboss' ),
+					__( 'Sorry, you are not allowed to delete this topic.', 'buddyboss-platform' ),
 					array(
 						'status' => rest_authorization_required_code(),
 					)
@@ -1816,7 +1816,7 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 
 			$args = array(
 				'id' => array(
-					'description' => __( 'A unique numeric ID for the topic.', 'buddyboss' ),
+					'description' => __( 'A unique numeric ID for the topic.', 'buddyboss-platform' ),
 					'type'        => 'integer',
 					'required'    => true,
 				),
@@ -1860,13 +1860,13 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 			$args['status']['enum']        = array_keys( bbp_get_topic_statuses() );
 			$args['sticky']['type']        = 'string';
 			$args['sticky']['enum']        = array( 'stick', 'super', 'unstick' );
-			$args['parent']['description'] = __( 'ID of the parent Forum.', 'buddyboss' );
+			$args['parent']['description'] = __( 'ID of the parent Forum.', 'buddyboss-platform' );
 			$args['parent']['required']    = true;
 			$args['group']['type']         = 'integer';
-			$args['group']['description']  = __( 'ID of the forum\'s group', 'buddyboss' );
+			$args['group']['description']  = __( 'ID of the forum\'s group', 'buddyboss-platform' );
 
 			$params['subscribe'] = array(
-				'description'       => __( 'whether user subscribe topic or no', 'buddyboss' ),
+				'description'       => __( 'whether user subscribe topic or no', 'buddyboss-platform' ),
 				'type'              => 'boolean',
 				'sanitize_callback' => 'rest_sanitize_boolean',
 				'validate_callback' => 'rest_validate_request_arg',
@@ -1877,13 +1877,13 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 			$key = 'update_item';
 
 			$args['reason_editing'] = array(
-				'description'       => __( 'Reason for editing a topic.', 'buddyboss' ),
+				'description'       => __( 'Reason for editing a topic.', 'buddyboss-platform' ),
 				'type'              => 'string',
 				'validate_callback' => 'rest_validate_request_arg',
 			);
 
 			$args['log'] = array(
-				'description'       => __( 'Keep a log of topic edit.', 'buddyboss' ),
+				'description'       => __( 'Keep a log of topic edit.', 'buddyboss-platform' ),
 				'type'              => 'boolean',
 				'default'           => true,
 				'sanitize_callback' => 'rest_sanitize_boolean',
@@ -1891,7 +1891,7 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 			);
 
 			$params['subscribe'] = array(
-				'description'       => __( 'whether user subscribe topic or no', 'buddyboss' ),
+				'description'       => __( 'whether user subscribe topic or no', 'buddyboss-platform' ),
 				'type'              => 'boolean',
 				'sanitize_callback' => 'rest_sanitize_boolean',
 				'validate_callback' => 'rest_validate_request_arg',
@@ -2111,62 +2111,62 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 			'type'       => 'object',
 			'properties' => array(
 				'id'                       => array(
-					'description' => __( 'Unique identifier for the topic.', 'buddyboss' ),
+					'description' => __( 'Unique identifier for the topic.', 'buddyboss-platform' ),
 					'type'        => 'integer',
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'readonly'    => true,
 				),
 				'date'                     => array(
-					'description' => __( 'The date the object was published, in the site\'s timezone.', 'buddyboss' ),
+					'description' => __( 'The date the object was published, in the site\'s timezone.', 'buddyboss-platform' ),
 					'type'        => 'string',
 					'format'      => 'date-time',
 					'context'     => array( 'embed', 'view', 'edit' ),
 				),
 				'date_gmt'                 => array(
-					'description' => __( 'The date the object was published, as GMT.', 'buddyboss' ),
+					'description' => __( 'The date the object was published, as GMT.', 'buddyboss-platform' ),
 					'type'        => 'string',
 					'format'      => 'date-time',
 					'context'     => array( 'embed', 'view', 'edit' ),
 				),
 				'guid'                     => array(
-					'description' => __( 'The url identifier for the topic.', 'buddyboss' ),
+					'description' => __( 'The url identifier for the topic.', 'buddyboss-platform' ),
 					'type'        => 'object',
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'readonly'    => true,
 					'properties'  => array(
 						'raw'      => array(
-							'description' => __( 'GUID for the topic, as it exists in the database.', 'buddyboss' ),
+							'description' => __( 'GUID for the topic, as it exists in the database.', 'buddyboss-platform' ),
 							'type'        => 'string',
 							'context'     => array( 'embed', 'view', 'edit' ),
 						),
 						'rendered' => array(
-							'description' => __( 'GUID for the topic, transformed for display.', 'buddyboss' ),
+							'description' => __( 'GUID for the topic, transformed for display.', 'buddyboss-platform' ),
 							'type'        => 'string',
 							'context'     => array( 'embed', 'view', 'edit' ),
 						),
 					),
 				),
 				'modified'                 => array(
-					'description' => __( 'The date for topic was last modified, in the site\'s timezone.', 'buddyboss' ),
+					'description' => __( 'The date for topic was last modified, in the site\'s timezone.', 'buddyboss-platform' ),
 					'type'        => 'string',
 					'format'      => 'date-time',
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'readonly'    => true,
 				),
 				'modified_gmt'             => array(
-					'description' => __( 'The date for topic was last modified, as GMT.', 'buddyboss' ),
+					'description' => __( 'The date for topic was last modified, as GMT.', 'buddyboss-platform' ),
 					'type'        => 'string',
 					'format'      => 'date-time',
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'readonly'    => true,
 				),
 				'password'                 => array(
-					'description' => __( 'A password to protect access to the post.', 'buddyboss' ),
+					'description' => __( 'A password to protect access to the post.', 'buddyboss-platform' ),
 					'type'        => 'string',
 					'context'     => array( 'edit' ),
 				),
 				'slug'                     => array(
-					'description' => __( 'An alphanumeric unique identifier for the topic.', 'buddyboss' ),
+					'description' => __( 'An alphanumeric unique identifier for the topic.', 'buddyboss-platform' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'arg_options' => array(
@@ -2174,115 +2174,115 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 					),
 				),
 				'status'                   => array(
-					'description' => __( 'The current status of the topic.', 'buddyboss' ),
+					'description' => __( 'The current status of the topic.', 'buddyboss-platform' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view', 'edit' ),
 				),
 				'link'                     => array(
-					'description' => __( 'The permalink to this topic on the site.', 'buddyboss' ),
+					'description' => __( 'The permalink to this topic on the site.', 'buddyboss-platform' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'format'      => 'uri',
 				),
 				'author'                   => array(
-					'description' => __( 'The ID for the author of the topic.', 'buddyboss' ),
+					'description' => __( 'The ID for the author of the topic.', 'buddyboss-platform' ),
 					'type'        => 'integer',
 					'context'     => array( 'embed', 'view', 'edit' ),
 				),
 				'parent'                   => array(
-					'description' => __( 'ID of the parent topic.', 'buddyboss' ),
+					'description' => __( 'ID of the parent topic.', 'buddyboss-platform' ),
 					'type'        => 'integer',
 					'context'     => array( 'embed', 'view', 'edit' ),
 				),
 				'sticky'                   => array(
-					'description' => __( 'Whether the topic is sticky or not.', 'buddyboss' ),
+					'description' => __( 'Whether the topic is sticky or not.', 'buddyboss-platform' ),
 					'type'        => 'boolean',
 					'context'     => array( 'embed', 'view', 'edit' ),
 				),
 				'total_reply_count'        => array(
-					'description' => __( 'Total replies count in the topic.', 'buddyboss' ),
+					'description' => __( 'Total replies count in the topic.', 'buddyboss-platform' ),
 					'type'        => 'integer',
 					'context'     => array( 'embed', 'view', 'edit' ),
 				),
 				'last_reply_id'            => array(
-					'description' => __( 'Recently posted reply id into the topic.', 'buddyboss' ),
+					'description' => __( 'Recently posted reply id into the topic.', 'buddyboss-platform' ),
 					'type'        => 'integer',
 					'context'     => array( 'embed', 'view', 'edit' ),
 				),
 				'last_active_author'       => array(
-					'description' => __( 'Last updated the user\'s ID in topic.', 'buddyboss' ),
+					'description' => __( 'Last updated the user\'s ID in topic.', 'buddyboss-platform' ),
 					'type'        => 'integer',
 					'context'     => array( 'embed', 'view', 'edit' ),
 				),
 				'last_active_time'         => array(
-					'description' => __( 'Last updated time for the topic.', 'buddyboss' ),
+					'description' => __( 'Last updated time for the topic.', 'buddyboss-platform' ),
 					'type'        => 'date-time',
 					'context'     => array( 'embed', 'view', 'edit' ),
 				),
 				'is_closed'                => array(
-					'description' => __( 'Whether the topic is closed or not.', 'buddyboss' ),
+					'description' => __( 'Whether the topic is closed or not.', 'buddyboss-platform' ),
 					'type'        => 'boolean',
 					'context'     => array( 'embed', 'view', 'edit' ),
 				),
 				'voice_count'              => array(
-					'description' => __( 'Voice count of the topic', 'buddyboss' ),
+					'description' => __( 'Voice count of the topic', 'buddyboss-platform' ),
 					'type'        => 'integer',
 					'context'     => array( 'embed', 'view', 'edit' ),
 				),
 				'forum_id'                 => array(
-					'description' => __( 'Forum ID for the topic.', 'buddyboss' ),
+					'description' => __( 'Forum ID for the topic.', 'buddyboss-platform' ),
 					'type'        => 'integer',
 					'context'     => array( 'embed', 'view', 'edit' ),
 				),
 				'is_topic_anonymous'       => array(
-					'description' => __( 'Whether the post is by an anonymous user or not.', 'buddyboss' ),
+					'description' => __( 'Whether the post is by an anonymous user or not.', 'buddyboss-platform' ),
 					'type'        => 'boolean',
 					'context'     => array( 'embed', 'view', 'edit' ),
 				),
 				'anonymous_author_data'    => array(
-					'description' => __( 'An anonymous users data.', 'buddyboss' ),
+					'description' => __( 'An anonymous users data.', 'buddyboss-platform' ),
 					'type'        => 'object',
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'properties'  => array(
 						'name'    => array(
-							'description' => __( 'Name of the anonymous user.', 'buddyboss' ),
+							'description' => __( 'Name of the anonymous user.', 'buddyboss-platform' ),
 							'type'        => 'string',
 							'context'     => array( 'embed', 'view', 'edit' ),
 						),
 						'email'   => array(
-							'description' => __( 'Email address of the anonymous user.', 'buddyboss' ),
+							'description' => __( 'Email address of the anonymous user.', 'buddyboss-platform' ),
 							'type'        => 'string',
 							'context'     => array( 'embed', 'view', 'edit' ),
 						),
 						'website' => array(
-							'description' => __( 'Website of the anonymous user.', 'buddyboss' ),
+							'description' => __( 'Website of the anonymous user.', 'buddyboss-platform' ),
 							'type'        => 'string',
 							'context'     => array( 'embed', 'view', 'edit' ),
 						),
 						'avatar'  => array(
-							'description' => __( 'Avatar url of the anonymous user.', 'buddyboss' ),
+							'description' => __( 'Avatar url of the anonymous user.', 'buddyboss-platform' ),
 							'type'        => 'string',
 							'context'     => array( 'embed', 'view', 'edit' ),
 						),
 					),
 				),
 				'classes'                  => array(
-					'description' => __( 'Classes lists for the topic.', 'buddyboss' ),
+					'description' => __( 'Classes lists for the topic.', 'buddyboss-platform' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view', 'edit' ),
 				),
 				'title'                    => array(
-					'description' => __( 'The title of the topic.', 'buddyboss' ),
+					'description' => __( 'The title of the topic.', 'buddyboss-platform' ),
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'type'        => 'object',
 					'properties'  => array(
 						'raw'      => array(
-							'description' => __( 'Content for the title of the topic, as it exists in the database.', 'buddyboss' ),
+							'description' => __( 'Content for the title of the topic, as it exists in the database.', 'buddyboss-platform' ),
 							'type'        => 'string',
 							'context'     => array( 'embed', 'view', 'edit' ),
 						),
 						'rendered' => array(
-							'description' => __( 'The title of the topic, transformed for display.', 'buddyboss' ),
+							'description' => __( 'The title of the topic, transformed for display.', 'buddyboss-platform' ),
 							'type'        => 'string',
 							'context'     => array( 'embed', 'view', 'edit' ),
 						),
@@ -2290,124 +2290,124 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 				),
 				'content'                  => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'The content of the topic.', 'buddyboss' ),
+					'description' => __( 'The content of the topic.', 'buddyboss-platform' ),
 					'type'        => 'object',
 					'properties'  => array(
 						'raw'      => array(
-							'description' => __( 'Content for the topic, as it exists in the database.', 'buddyboss' ),
+							'description' => __( 'Content for the topic, as it exists in the database.', 'buddyboss-platform' ),
 							'type'        => 'string',
 							'context'     => array( 'embed', 'view', 'edit' ),
 						),
 						'rendered' => array(
-							'description' => __( 'HTML content for the topic, transformed for display.', 'buddyboss' ),
+							'description' => __( 'HTML content for the topic, transformed for display.', 'buddyboss-platform' ),
 							'type'        => 'string',
 							'context'     => array( 'embed', 'view', 'edit' ),
 						),
 					),
 				),
 				'short_content'            => array(
-					'description' => __( 'Short Content of the topic.', 'buddyboss' ),
+					'description' => __( 'Short Content of the topic.', 'buddyboss-platform' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view', 'edit' ),
 				),
 				'preview_data'             => array(
-					'description' => __( 'WordPress Embed and link preview data.', 'buddyboss' ),
+					'description' => __( 'WordPress Embed and link preview data.', 'buddyboss-platform' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'readonly'    => true,
 				),
 				'link_embed_url'    => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'WordPress Embed URL.', 'buddyboss' ),
+					'description' => __( 'WordPress Embed URL.', 'buddyboss-platform' ),
 					'type'        => 'string',
 					'readonly'    => true,
 				),
 				'group'                    => array(
-					'description' => __( 'Topic forum\'s group.', 'buddyboss' ),
+					'description' => __( 'Topic forum\'s group.', 'buddyboss-platform' ),
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'type'        => 'object',
 				),
 				'action_states'            => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Available actions with current user for topic.', 'buddyboss' ),
+					'description' => __( 'Available actions with current user for topic.', 'buddyboss-platform' ),
 					'type'        => 'object',
 					'properties'  => array(
 						'subscribed'   => array(
-							'description' => __( 'Check whether the current user is subscribed or not in the topic.', 'buddyboss' ),
+							'description' => __( 'Check whether the current user is subscribed or not in the topic.', 'buddyboss-platform' ),
 							'type'        => 'boolean',
 							'context'     => array( 'embed', 'view', 'edit' ),
 						),
 						'favorited'    => array(
-							'description' => __( 'Check whether the topic is favorited or not for the user.', 'buddyboss' ),
+							'description' => __( 'Check whether the topic is favorited or not for the user.', 'buddyboss-platform' ),
 							'type'        => 'boolean',
 							'context'     => array( 'embed', 'view', 'edit' ),
 						),
 						'open'         => array(
-							'description' => __( 'Check whether the topic is open or not for the user.', 'buddyboss' ),
+							'description' => __( 'Check whether the topic is open or not for the user.', 'buddyboss-platform' ),
 							'type'        => 'boolean',
 							'context'     => array( 'embed', 'view', 'edit' ),
 						),
 						'sticky'       => array(
-							'description' => __( 'Check whether the topic is sticky or not for the user.', 'buddyboss' ),
+							'description' => __( 'Check whether the topic is sticky or not for the user.', 'buddyboss-platform' ),
 							'type'        => 'boolean',
 							'context'     => array( 'embed', 'view', 'edit' ),
 						),
 						'super_sticky' => array(
-							'description' => __( 'Check whether the topic is super sticky or not for the user.', 'buddyboss' ),
+							'description' => __( 'Check whether the topic is super sticky or not for the user.', 'buddyboss-platform' ),
 							'type'        => 'boolean',
 							'context'     => array( 'embed', 'view', 'edit' ),
 						),
 						'spam'         => array(
-							'description' => __( 'Check whether the topic status is spam or not.', 'buddyboss' ),
+							'description' => __( 'Check whether the topic status is spam or not.', 'buddyboss-platform' ),
 							'type'        => 'boolean',
 							'context'     => array( 'embed', 'view', 'edit' ),
 						),
 						'trash'        => array(
-							'description' => __( 'Check whether the topic status is trash or not.', 'buddyboss' ),
+							'description' => __( 'Check whether the topic status is trash or not.', 'buddyboss-platform' ),
 							'type'        => 'boolean',
 							'context'     => array( 'embed', 'view', 'edit' ),
 						),
 					),
 				),
 				'topic_tags'               => array(
-					'description' => __( 'Topic\'s tags', 'buddyboss' ),
+					'description' => __( 'Topic\'s tags', 'buddyboss-platform' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view', 'edit' ),
 				),
 				'current_user_permissions' => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Current user\'s permission with the topic.', 'buddyboss' ),
+					'description' => __( 'Current user\'s permission with the topic.', 'buddyboss-platform' ),
 					'type'        => 'object',
 					'properties'  => array(
 						'show_replies' => array(
-							'description' => __( 'Whether shows the replies for the current user or not.', 'buddyboss' ),
+							'description' => __( 'Whether shows the replies for the current user or not.', 'buddyboss-platform' ),
 							'type'        => 'boolean',
 							'context'     => array( 'embed', 'view', 'edit' ),
 						),
 						'edit'         => array(
-							'description' => __( 'Whether the current user can edit the topic or not.', 'buddyboss' ),
+							'description' => __( 'Whether the current user can edit the topic or not.', 'buddyboss-platform' ),
 							'type'        => 'boolean',
 							'context'     => array( 'embed', 'view', 'edit' ),
 						),
 						'moderate'     => array(
-							'description' => __( 'Whether the current user is moderator or not.', 'buddyboss' ),
+							'description' => __( 'Whether the current user is moderator or not.', 'buddyboss-platform' ),
 							'type'        => 'boolean',
 							'context'     => array( 'embed', 'view', 'edit' ),
 						),
 						'reply'        => array(
-							'description' => __( 'Whether the current user can reply on topic or not.', 'buddyboss' ),
+							'description' => __( 'Whether the current user can reply on topic or not.', 'buddyboss-platform' ),
 							'type'        => 'boolean',
 							'context'     => array( 'embed', 'view', 'edit' ),
 						),
 						'trash'        => array(
-							'description' => __( 'Whether the current user can trash a topic or not.', 'buddyboss' ),
+							'description' => __( 'Whether the current user can trash a topic or not.', 'buddyboss-platform' ),
 							'type'        => 'boolean',
 							'context'     => array( 'embed', 'view', 'edit' ),
 						),
 					),
 				),
 				'revisions'                => array(
-					'description' => __( 'Revisions for topic.', 'buddyboss' ),
+					'description' => __( 'Revisions for topic.', 'buddyboss-platform' ),
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'type'        => 'object',
 				),
@@ -2434,7 +2434,7 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 		$params['per_page']['default'] = bbp_get_topics_per_page();
 
 		$params['author'] = array(
-			'description'       => __( 'Author ID, or comma-separated list of IDs.', 'buddyboss' ),
+			'description'       => __( 'Author ID, or comma-separated list of IDs.', 'buddyboss-platform' ),
 			'default'           => '',
 			'type'              => 'string',
 			'sanitize_callback' => 'sanitize_key',
@@ -2442,7 +2442,7 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['author_exclude'] = array(
-			'description'       => __( 'An array of author IDs not to query from.', 'buddyboss' ),
+			'description'       => __( 'An array of author IDs not to query from.', 'buddyboss-platform' ),
 			'type'              => 'array',
 			'items'             => array( 'type' => 'integer' ),
 			'sanitize_callback' => 'wp_parse_id_list',
@@ -2450,7 +2450,7 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['exclude'] = array(
-			'description'       => __( 'An array of topic IDs not to retrieve.', 'buddyboss' ),
+			'description'       => __( 'An array of topic IDs not to retrieve.', 'buddyboss-platform' ),
 			'type'              => 'array',
 			'items'             => array( 'type' => 'integer' ),
 			'sanitize_callback' => 'wp_parse_id_list',
@@ -2458,7 +2458,7 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['include'] = array(
-			'description'       => __( 'An array of topic IDs to retrieve.', 'buddyboss' ),
+			'description'       => __( 'An array of topic IDs to retrieve.', 'buddyboss-platform' ),
 			'type'              => 'array',
 			'items'             => array( 'type' => 'integer' ),
 			'sanitize_callback' => 'wp_parse_id_list',
@@ -2466,14 +2466,14 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['offset'] = array(
-			'description'       => __( 'The number of topics to offset before retrieval.', 'buddyboss' ),
+			'description'       => __( 'The number of topics to offset before retrieval.', 'buddyboss-platform' ),
 			'type'              => 'integer',
 			'sanitize_callback' => 'absint',
 			'validate_callback' => 'rest_validate_request_arg',
 		);
 
 		$params['order'] = array(
-			'description'       => __( 'Designates ascending or descending order of topics.', 'buddyboss' ),
+			'description'       => __( 'Designates ascending or descending order of topics.', 'buddyboss-platform' ),
 			'default'           => 'asc',
 			'type'              => 'string',
 			'enum'              => array( 'asc', 'desc' ),
@@ -2482,7 +2482,7 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['orderby'] = array(
-			'description'       => __( 'Sort retrieved topics by parameter.', 'buddyboss' ),
+			'description'       => __( 'Sort retrieved topics by parameter.', 'buddyboss-platform' ),
 			'type'              => 'array',
 			'items'             => array(
 				'type' => 'string',
@@ -2505,7 +2505,7 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['status'] = array(
-			'description'       => __( 'Limit result set to topic assigned a specific status.', 'buddyboss' ),
+			'description'       => __( 'Limit result set to topic assigned a specific status.', 'buddyboss-platform' ),
 			'type'              => 'array',
 			'items'             => array(
 				'type' => 'string',
@@ -2516,7 +2516,7 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['parent'] = array(
-			'description'       => __( 'Forum ID to retrieve all the topics.', 'buddyboss' ),
+			'description'       => __( 'Forum ID to retrieve all the topics.', 'buddyboss-platform' ),
 			'default'           => '0',
 			'type'              => 'integer',
 			'sanitize_callback' => 'absint',
@@ -2524,21 +2524,21 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['subscriptions'] = array(
-			'description'       => __( 'Retrieve subscribed topics by user.', 'buddyboss' ),
+			'description'       => __( 'Retrieve subscribed topics by user.', 'buddyboss-platform' ),
 			'default'           => false,
 			'type'              => 'boolean',
 			'validate_callback' => 'rest_validate_request_arg',
 		);
 
 		$params['favorites'] = array(
-			'description'       => __( 'Retrieve favorite topics by the current user.', 'buddyboss' ),
+			'description'       => __( 'Retrieve favorite topics by the current user.', 'buddyboss-platform' ),
 			'default'           => false,
 			'type'              => 'boolean',
 			'validate_callback' => 'rest_validate_request_arg',
 		);
 
 		$params['tag'] = array(
-			'description'       => __( 'Search topic with specific tag.', 'buddyboss' ),
+			'description'       => __( 'Search topic with specific tag.', 'buddyboss-platform' ),
 			'type'              => 'string',
 			'validate_callback' => 'rest_validate_request_arg',
 		);

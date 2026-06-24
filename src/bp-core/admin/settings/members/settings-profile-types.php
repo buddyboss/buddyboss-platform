@@ -27,7 +27,7 @@ function bb_members_register_profile_types_panel_fields() {
 		'profile_types',
 		'profile_types_settings',
 		array(
-			'title'       => __( 'Profile Type Settings', 'buddyboss' ),
+			'title'       => __( 'Profile Type Settings', 'buddyboss-platform' ),
 			'description' => '',
 			'order'       => 10,
 			'help_url'    => '636004',
@@ -42,10 +42,10 @@ function bb_members_register_profile_types_panel_fields() {
 		'profile_types_settings',
 		array(
 			'name'              => 'bp-member-type-enable-disable',
-			'label'             => __( 'Profile Types', 'buddyboss' ),
+			'label'             => __( 'Profile Types', 'buddyboss-platform' ),
 			'type'              => 'toggle',
-			'description'       => __( 'Enable profile types', 'buddyboss' ),
-			'help_text'         => __( 'When enabled, profile types allow you to assign unique profile fields and permissions to different member types.', 'buddyboss' ),
+			'description'       => __( 'Enable profile types', 'buddyboss-platform' ),
+			'help_text'         => __( 'When enabled, profile types allow you to assign unique profile fields and permissions to different member types.', 'buddyboss-platform' ),
 			'default'           => bp_member_type_enable_disable(),
 			'sanitize_callback' => 'absint',
 			'order'             => 10,
@@ -60,9 +60,9 @@ function bb_members_register_profile_types_panel_fields() {
 		'profile_types_settings',
 		array(
 			'name'              => 'bp-member-type-display-on-profile',
-			'label'             => __( 'Display Profile Types', 'buddyboss' ),
+			'label'             => __( 'Display Profile Types', 'buddyboss-platform' ),
 			'type'              => 'toggle',
-			'description'       => __( 'Display profile type on member profiles', 'buddyboss' ),
+			'description'       => __( 'Display profile type on member profiles', 'buddyboss-platform' ),
 			'default'           => bp_member_type_display_on_profile(),
 			'sanitize_callback' => 'absint',
 			'conditional'       => array(
@@ -84,11 +84,11 @@ function bb_members_register_profile_types_panel_fields() {
 		'profile_types_settings',
 		array(
 			'name'              => 'bp-member-type-default-on-registration',
-			'label'             => __( 'Default Profile Type', 'buddyboss' ),
+			'label'             => __( 'Default Profile Type', 'buddyboss-platform' ),
 			'type'              => 'select',
 			'help_text'         => sprintf(
 				/* translators: %s: Repair Community link. */
-				__( 'Set a default profile type for new users. Use <a href="%s">Repair Community</a> tools to assign it to existing users.', 'buddyboss' ),
+				__( 'Set a default profile type for new users. Use <a href="%s">Repair Community</a> tools to assign it to existing users.', 'buddyboss-platform' ),
 				esc_url(
 					add_query_arg(
 						array(

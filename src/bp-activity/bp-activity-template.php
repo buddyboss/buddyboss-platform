@@ -492,7 +492,7 @@ function bp_get_activity_pagination_count() {
 	$total     = bp_core_number_format( $activities_template->total_activity_count );
 
 	/* translators: 1: starting item number, 2: ending item number, 3: total number of items. */
-	$message = sprintf( _n( 'Viewing 1 item', 'Viewing %1$s - %2$s of %3$s items', $activities_template->total_activity_count, 'buddyboss' ), $from_num, $to_num, $total );
+	$message = sprintf( _n( 'Viewing 1 item', 'Viewing %1$s - %2$s of %3$s items', $activities_template->total_activity_count, 'buddyboss-platform' ), $from_num, $to_num, $total );
 
 	return $message;
 }
@@ -1102,7 +1102,7 @@ function bp_get_activity_avatar( $args = '' ) {
 
 	// Prepend some descriptive text to alt.
 	/* translators: %s: activity author's display name. */
-	$alt_default = ! empty( $dn_default ) ? sprintf( __( 'Profile photo of %s', 'buddyboss' ), $dn_default ) : __( 'Profile photo', 'buddyboss' );
+	$alt_default = ! empty( $dn_default ) ? sprintf( __( 'Profile photo of %s', 'buddyboss-platform' ), $dn_default ) : __( 'Profile photo', 'buddyboss-platform' );
 
 	$defaults = array(
 		'alt'     => $alt_default,
@@ -1261,11 +1261,11 @@ function bp_get_activity_secondary_avatar( $args = '' ) {
 			}
 
 			if ( empty( $alt ) ) {
-				$alt = __( 'Group logo', 'buddyboss' );
+				$alt = __( 'Group logo', 'buddyboss-platform' );
 
 				if ( ! empty( $name ) ) {
 					/* translators: %s: group name. */
-					$alt = sprintf( __( 'Group logo of %s', 'buddyboss' ), $name );
+					$alt = sprintf( __( 'Group logo of %s', 'buddyboss-platform' ), $name );
 				}
 			}
 
@@ -1277,7 +1277,7 @@ function bp_get_activity_secondary_avatar( $args = '' ) {
 
 			if ( empty( $alt ) ) {
 				/* translators: %s: blog name. */
-				$alt = sprintf( __( 'Profile photo of the author of the site %s', 'buddyboss' ), get_blog_option( $item_id, 'blogname' ) );
+				$alt = sprintf( __( 'Profile photo of the author of the site %s', 'buddyboss-platform' ), get_blog_option( $item_id, 'blogname' ) );
 			}
 
 			break;
@@ -1288,7 +1288,7 @@ function bp_get_activity_secondary_avatar( $args = '' ) {
 
 			if ( empty( $alt ) ) {
 				/* translators: %s: display name of the activity's secondary user. */
-				$alt = sprintf( __( 'Profile photo of %s', 'buddyboss' ), bp_core_get_user_displayname( $activities_template->activity->secondary_item_id ) );
+				$alt = sprintf( __( 'Profile photo of %s', 'buddyboss-platform' ), bp_core_get_user_displayname( $activities_template->activity->secondary_item_id ) );
 			}
 
 			if ( ! empty( $item_id ) ) {
@@ -1308,7 +1308,7 @@ function bp_get_activity_secondary_avatar( $args = '' ) {
 
 			if ( empty( $alt ) ) {
 				/* translators: %s: activity author's display name. */
-				$alt = sprintf( __( 'Profile photo of %s', 'buddyboss' ), $activities_template->activity->display_name );
+				$alt = sprintf( __( 'Profile photo of %s', 'buddyboss-platform' ), $activities_template->activity->display_name );
 			}
 
 			break;
@@ -2065,7 +2065,7 @@ function bp_activity_recurse_comments( $comment, $args = array() ) {
 				$comment->top_level_count > $r['comment_load_limit']
 			)
 		) {
-			echo '<a href="javascript:void(0);" class="view-more-comments">' . esc_html__( 'View more comments', 'buddyboss' ) . '</a>';
+			echo '<a href="javascript:void(0);" class="view-more-comments">' . esc_html__( 'View more comments', 'buddyboss-platform' ) . '</a>';
 		}
 
 		/**
@@ -2088,10 +2088,10 @@ function bp_activity_recurse_comments( $comment, $args = array() ) {
 			)
 		) {
 			if ( ! empty( $r['parent_comment_id'] ) && $r['main_activity_id'] !== $r['parent_comment_id'] ) {
-				$view_more_text = __( 'View more replies', 'buddyboss' );
+				$view_more_text = __( 'View more replies', 'buddyboss-platform' );
 				$view_more_icon = "<i class='bb-icon-l bb-icon-corner-right'></i>";
 			} else {
-				$view_more_text = __( 'View more comments', 'buddyboss' );
+				$view_more_text = __( 'View more comments', 'buddyboss-platform' );
 				$view_more_icon = '';
 			}
 
@@ -2487,7 +2487,7 @@ function bp_activity_get_comment_count( $deprecated = null ) {
 	// Deprecated notice about $args.
 	if ( ! empty( $deprecated ) ) {
 		/* translators: 1: function name, 2: file path. */
-		_deprecated_argument( __FUNCTION__, '1.2', sprintf( __( '%1$s no longer accepts arguments. See the inline documentation at %2$s for more details.', 'buddyboss' ), __FUNCTION__, __FILE__ ) );
+		_deprecated_argument( __FUNCTION__, '1.2', sprintf( __( '%1$s no longer accepts arguments. See the inline documentation at %2$s for more details.', 'buddyboss-platform' ), __FUNCTION__, __FILE__ ) );
 	}
 
 	$count = $activities_template->activity->all_child_count ?? 0;
@@ -3040,7 +3040,7 @@ function bp_get_activity_delete_link() {
 		$class = 'delete-activity-single';
 	}
 
-	$link = '<a href="' . esc_url( $url ) . '" class="button item-button bp-secondary-action ' . $class . ' confirm" rel="nofollow">' . __( 'Delete', 'buddyboss' ) . '</a>';
+	$link = '<a href="' . esc_url( $url ) . '" class="button item-button bp-secondary-action ' . $class . ' confirm" rel="nofollow">' . __( 'Delete', 'buddyboss-platform' ) . '</a>';
 
 	/**
 	 * Filters the activity delete link.
@@ -3144,7 +3144,7 @@ function bp_get_activity_latest_update( $user_id = 0 ) {
 		'%s <a href="%s">%s</a>',
 		$latest_update,
 		esc_url_raw( bp_activity_get_permalink( $update['id'] ) ),
-		esc_attr__( 'View', 'buddyboss' )
+		esc_attr__( 'View', 'buddyboss-platform' )
 	);
 
 	/**
@@ -3255,7 +3255,7 @@ function bp_get_activity_filter_links( $args = false ) {
 	$link = remove_query_arg( 'afilter', $link );
 
 	if ( isset( $_GET['afilter'] ) ) {
-		$component_links[] = '<' . $tag . ' id="afilter-clear"><a href="' . esc_url( $link ) . '">' . __( 'Clear Filter', 'buddyboss' ) . '</a></' . $tag . '>';
+		$component_links[] = '<' . $tag . ' id="afilter-clear"><a href="' . esc_url( $link ) . '">' . __( 'Clear Filter', 'buddyboss-platform' ) . '</a></' . $tag . '>';
 	}
 
 	/**
@@ -3551,7 +3551,7 @@ function bp_get_mentioned_user_display_name( $user_id_or_username = false ) {
 
 	// If user somehow has no name, return this really lame string.
 	if ( empty( $name ) ) {
-		$name = __( 'a user', 'buddyboss' );
+		$name = __( 'a user', 'buddyboss-platform' );
 	}
 
 	/**
@@ -4146,7 +4146,7 @@ function bp_get_activity_feed_item_description() {
 function bp_activity_sitewide_feed() {
 	?>
 
-	<link rel="alternate" type="application/rss+xml" title="<?php bloginfo( 'name' ); ?> | <?php _e( 'Site Wide Activity RSS Feed', 'buddyboss' ); ?>" href="<?php bp_sitewide_activity_feed_link(); ?>" />
+	<link rel="alternate" type="application/rss+xml" title="<?php bloginfo( 'name' ); ?> | <?php _e( 'Site Wide Activity RSS Feed', 'buddyboss-platform' ); ?>" href="<?php bp_sitewide_activity_feed_link(); ?>" />
 
 	<?php
 }
@@ -4383,16 +4383,16 @@ function bp_get_add_follow_button( $leader_id = false, $follower_id = false, $bu
 				'wrapper_class'     => 'follow-button following',
 				'wrapper_id'        => 'follow-button-' . $leader_id,
 				'link_href'         => wp_nonce_url( bp_loggedin_user_domain() . bp_get_follow_slug() . '/stop-following/' . $leader_id . '/', 'follow_unfollow' ),
-				'link_text'         => esc_html__( 'Following', 'buddyboss' ),
+				'link_text'         => esc_html__( 'Following', 'buddyboss-platform' ),
 				'link_id'           => 'follow-' . $leader_id,
 				'link_rel'          => 'stop',
 				'link_class'        => 'follow-button following stop bp-toggle-action-button',
-				'data-balloon'      => esc_html__( 'Stop Following', 'buddyboss' ),
+				'data-balloon'      => esc_html__( 'Stop Following', 'buddyboss-platform' ),
 				'button_attr'       => array(
 					'data-bp-nonce'        => wp_nonce_url( bp_loggedin_user_domain() . bp_get_follow_slug() . '/stop-following/' . $leader_id . '/', 'follow_unfollow' ),
 					'hover_type'           => $button_args['button_attr']['hover_type'] ?? false,
-					'data-title'           => esc_html__( 'Unfollow', 'buddyboss' ),
-					'data-title-displayed' => esc_html__( 'Following', 'buddyboss' ),
+					'data-title'           => esc_html__( 'Unfollow', 'buddyboss-platform' ),
+					'data-title-displayed' => esc_html__( 'Following', 'buddyboss-platform' ),
 				),
 			),
 			$button_args
@@ -4407,7 +4407,7 @@ function bp_get_add_follow_button( $leader_id = false, $follower_id = false, $bu
 				'wrapper_class'     => 'follow-button not_following',
 				'wrapper_id'        => 'follow-button-' . $leader_id,
 				'link_href'         => wp_nonce_url( bp_loggedin_user_domain() . bp_get_follow_slug() . '/start-following/' . $leader_id . '/', 'follow_follow' ),
-				'link_text'         => esc_html__( 'Follow', 'buddyboss' ),
+				'link_text'         => esc_html__( 'Follow', 'buddyboss-platform' ),
 				'link_id'           => 'follow-' . $leader_id,
 				'link_rel'          => 'start',
 				'link_class'        => 'follow-button not_following start',

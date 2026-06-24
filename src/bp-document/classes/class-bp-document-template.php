@@ -246,8 +246,8 @@ class BP_Document_Template {
 					'format'    => '',
 					'total'     => ceil( (int) $this->total_document_count / (int) $this->pag_num ),
 					'current'   => (int) $this->pag_page,
-					'prev_text' => __( '&larr;', 'buddyboss' ),
-					'next_text' => __( '&rarr;', 'buddyboss' ),
+					'prev_text' => __( '&larr;', 'buddyboss-platform' ),
+					'next_text' => __( '&rarr;', 'buddyboss-platform' ),
 					'mid_size'  => 1,
 					'add_args'  => array(),
 				)

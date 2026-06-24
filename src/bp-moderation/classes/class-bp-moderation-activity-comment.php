@@ -112,7 +112,7 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 	 * @return mixed
 	 */
 	public function add_content_types( $content_types ) {
-		$content_types[ self::$moderation_type ] = __( 'Activity Comments', 'buddyboss' );
+		$content_types[ self::$moderation_type ] = __( 'Activity Comments', 'buddyboss-platform' );
 
 		return $content_types;
 	}
@@ -293,7 +293,7 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 			return $button_text;
 		}
 
-		$button_text = esc_html__( 'Report Comment', 'buddyboss' );
+		$button_text = esc_html__( 'Report Comment', 'buddyboss-platform' );
 
 		return $button_text;
 	}
@@ -315,7 +315,7 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 			return $content_type;
 		}
 
-		$content_type = esc_html__( 'Comment', 'buddyboss' );
+		$content_type = esc_html__( 'Comment', 'buddyboss-platform' );
 
 		return $content_type;
 	}

@@ -229,16 +229,16 @@ function bp_get_group_type_post_type_labels() {
 	 * @param array $value Associative array (name => label).
 	 */
 	return apply_filters( 'bp_get_group_type_post_type_labels', array(
-		'add_new_item'          => __( 'New Group Type', 'buddyboss' ),
-		'all_items'             => __( 'Group Types', 'buddyboss' ),
-		'edit_item'             => __( 'Edit Group Type', 'buddyboss' ),
-		'menu_name'             => __( 'Social Groups', 'buddyboss' ),
-		'name'                  => __( 'Group Types', 'buddyboss' ),
-		'new_item'              => __( 'New Group Type', 'buddyboss' ),
-		'not_found'             => __( 'No Group Types found', 'buddyboss' ),
-		'not_found_in_trash'    => __( 'No Group Types found in trash', 'buddyboss' ),
-		'search_items'          => __( 'Search Group Types', 'buddyboss' ),
-		'singular_name'         => __( 'Group Type', 'buddyboss' ),
+		'add_new_item'          => __( 'New Group Type', 'buddyboss-platform' ),
+		'all_items'             => __( 'Group Types', 'buddyboss-platform' ),
+		'edit_item'             => __( 'Edit Group Type', 'buddyboss-platform' ),
+		'menu_name'             => __( 'Social Groups', 'buddyboss-platform' ),
+		'name'                  => __( 'Group Types', 'buddyboss-platform' ),
+		'new_item'              => __( 'New Group Type', 'buddyboss-platform' ),
+		'not_found'             => __( 'No Group Types found', 'buddyboss-platform' ),
+		'not_found_in_trash'    => __( 'No Group Types found in trash', 'buddyboss-platform' ),
+		'search_items'          => __( 'Search Group Types', 'buddyboss-platform' ),
+		'singular_name'         => __( 'Group Type', 'buddyboss-platform' ),
 	) );
 }
 

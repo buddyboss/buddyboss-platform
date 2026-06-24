@@ -110,20 +110,20 @@ function bbp_time_since( $older_date, $newer_date = false, $gmt = false ) {
 function bbp_get_time_since( $older_date, $newer_date = false, $gmt = false ) {
 
 	// Setup the strings
-	$unknown_text   = apply_filters( 'bbp_core_time_since_unknown_text', __( 'sometime', 'buddyboss' ) );
-	$right_now_text = apply_filters( 'bbp_core_time_since_right_now_text', __( 'right now', 'buddyboss' ) );
+	$unknown_text   = apply_filters( 'bbp_core_time_since_unknown_text', __( 'sometime', 'buddyboss-platform' ) );
+	$right_now_text = apply_filters( 'bbp_core_time_since_right_now_text', __( 'right now', 'buddyboss-platform' ) );
 	/* translators: %s: human-readable time difference. */
-	$ago_text       = apply_filters( 'bbp_core_time_since_ago_text', __( '%s ago', 'buddyboss' ) );
+	$ago_text       = apply_filters( 'bbp_core_time_since_ago_text', __( '%s ago', 'buddyboss-platform' ) );
 
 	// array of time period chunks
 	$chunks = array(
-		array( 60 * 60 * 24 * 365, __( 'year', 'buddyboss' ), __( 'years', 'buddyboss' ) ),
-		array( 60 * 60 * 24 * 30, __( 'month', 'buddyboss' ), __( 'months', 'buddyboss' ) ),
-		array( 60 * 60 * 24 * 7, __( 'week', 'buddyboss' ), __( 'weeks', 'buddyboss' ) ),
-		array( 60 * 60 * 24, __( 'day', 'buddyboss' ), __( 'days', 'buddyboss' ) ),
-		array( 60 * 60, __( 'hour', 'buddyboss' ), __( 'hours', 'buddyboss' ) ),
-		array( 60, __( 'minute', 'buddyboss' ), __( 'minutes', 'buddyboss' ) ),
-		array( 1, __( 'second', 'buddyboss' ), __( 'seconds', 'buddyboss' ) ),
+		array( 60 * 60 * 24 * 365, __( 'year', 'buddyboss-platform' ), __( 'years', 'buddyboss-platform' ) ),
+		array( 60 * 60 * 24 * 30, __( 'month', 'buddyboss-platform' ), __( 'months', 'buddyboss-platform' ) ),
+		array( 60 * 60 * 24 * 7, __( 'week', 'buddyboss-platform' ), __( 'weeks', 'buddyboss-platform' ) ),
+		array( 60 * 60 * 24, __( 'day', 'buddyboss-platform' ), __( 'days', 'buddyboss-platform' ) ),
+		array( 60 * 60, __( 'hour', 'buddyboss-platform' ), __( 'hours', 'buddyboss-platform' ) ),
+		array( 60, __( 'minute', 'buddyboss-platform' ), __( 'minutes', 'buddyboss-platform' ) ),
+		array( 1, __( 'second', 'buddyboss-platform' ), __( 'seconds', 'buddyboss-platform' ) ),
 	);
 
 	if ( ! empty( $older_date ) && ! is_numeric( $older_date ) ) {
@@ -178,7 +178,7 @@ function bbp_get_time_since( $older_date, $newer_date = false, $gmt = false ) {
 
 				// Add to output var
 				if ( 0 != $count2 ) {
-					$output .= ( 1 == $count2 ) ? _x( ',', 'Separator in time since', 'buddyboss' ) . ' 1 ' . $name2 : _x( ',', 'Separator in time since', 'buddyboss' ) . ' ' . $count2 . ' ' . $chunks[ $i + 1 ][2];
+					$output .= ( 1 == $count2 ) ? _x( ',', 'Separator in time since', 'buddyboss-platform' ) . ' 1 ' . $name2 : _x( ',', 'Separator in time since', 'buddyboss-platform' ) . ' ' . $count2 . ' ' . $chunks[ $i + 1 ][2];
 				}
 			}
 
@@ -576,11 +576,11 @@ function bbp_get_statistics( $args = '' ) {
 
 			// Generate the hidden topic count's title attribute.
 			/* translators: %s: private topics count */
-			$topic_titles[] = ! empty( $topics['private'] ) ? sprintf( __( 'Private: %s', 'buddyboss' ), bbp_number_format_i18n( $topics['private'] ) ) : '';
+			$topic_titles[] = ! empty( $topics['private'] ) ? sprintf( __( 'Private: %s', 'buddyboss-platform' ), bbp_number_format_i18n( $topics['private'] ) ) : '';
 			/* translators: %s: spammed topics count */
-			$topic_titles[] = ! empty( $topics['spammed'] ) ? sprintf( __( 'Spammed: %s', 'buddyboss' ), bbp_number_format_i18n( $topics['spammed'] ) ) : '';
+			$topic_titles[] = ! empty( $topics['spammed'] ) ? sprintf( __( 'Spammed: %s', 'buddyboss-platform' ), bbp_number_format_i18n( $topics['spammed'] ) ) : '';
 			/* translators: %s: trashed topics count */
-			$topic_titles[] = ! empty( $topics['trashed'] ) ? sprintf( __( 'Trashed: %s', 'buddyboss' ), bbp_number_format_i18n( $topics['trashed'] ) ) : '';
+			$topic_titles[] = ! empty( $topics['trashed'] ) ? sprintf( __( 'Trashed: %s', 'buddyboss-platform' ), bbp_number_format_i18n( $topics['trashed'] ) ) : '';
 
 			// Compile the hidden topic title.
 			$hidden_topic_title = implode( ' | ', array_filter( $topic_titles ) );
@@ -615,11 +615,11 @@ function bbp_get_statistics( $args = '' ) {
 
 			// Generate the hidden topic count's title attribute.
 			/* translators: %s: private replies count */
-			$reply_titles[] = ! empty( $replies['private'] ) ? sprintf( __( 'Private: %s', 'buddyboss' ), bbp_number_format_i18n( $replies['private'] ) ) : '';
+			$reply_titles[] = ! empty( $replies['private'] ) ? sprintf( __( 'Private: %s', 'buddyboss-platform' ), bbp_number_format_i18n( $replies['private'] ) ) : '';
 			/* translators: %s: spammed replies count */
-			$reply_titles[] = ! empty( $replies['spammed'] ) ? sprintf( __( 'Spammed: %s', 'buddyboss' ), bbp_number_format_i18n( $replies['spammed'] ) ) : '';
+			$reply_titles[] = ! empty( $replies['spammed'] ) ? sprintf( __( 'Spammed: %s', 'buddyboss-platform' ), bbp_number_format_i18n( $replies['spammed'] ) ) : '';
 			/* translators: %s: trashed replies count */
-			$reply_titles[] = ! empty( $replies['trashed'] ) ? sprintf( __( 'Trashed: %s', 'buddyboss' ), bbp_number_format_i18n( $replies['trashed'] ) ) : '';
+			$reply_titles[] = ! empty( $replies['trashed'] ) ? sprintf( __( 'Trashed: %s', 'buddyboss-platform' ), bbp_number_format_i18n( $replies['trashed'] ) ) : '';
 
 			// Compile the hidden replies title.
 			$hidden_reply_title = implode( ' | ', array_filter( $reply_titles ) );
@@ -715,12 +715,12 @@ function bbp_filter_anonymous_post_data( $args = '' ) {
 	// Filter variables and add errors if necessary
 	$r['bbp_anonymous_name'] = apply_filters( 'bbp_pre_anonymous_post_author_name', $r['bbp_anonymous_name'] );
 	if ( empty( $r['bbp_anonymous_name'] ) ) {
-		bbp_add_error( 'bbp_anonymous_name', __( '<strong>ERROR</strong>: Invalid author name submitted!', 'buddyboss' ) );
+		bbp_add_error( 'bbp_anonymous_name', __( '<strong>ERROR</strong>: Invalid author name submitted!', 'buddyboss-platform' ) );
 	}
 
 	$r['bbp_anonymous_email'] = apply_filters( 'bbp_pre_anonymous_post_author_email', $r['bbp_anonymous_email'] );
 	if ( empty( $r['bbp_anonymous_email'] ) ) {
-		bbp_add_error( 'bbp_anonymous_email', __( '<strong>ERROR</strong>: Invalid email address submitted!', 'buddyboss' ) );
+		bbp_add_error( 'bbp_anonymous_email', __( '<strong>ERROR</strong>: Invalid email address submitted!', 'buddyboss-platform' ) );
 	}
 
 	// Website is optional
@@ -2264,7 +2264,7 @@ function bbp_set_404() {
 	global $wp_query;
 
 	if ( ! isset( $wp_query ) ) {
-		_doing_it_wrong( __FUNCTION__, esc_html__( 'Conditional query tags do not work before the query is run. Before then, they always return false.', 'buddyboss' ), '3.1' );
+		_doing_it_wrong( __FUNCTION__, esc_html__( 'Conditional query tags do not work before the query is run. Before then, they always return false.', 'buddyboss-platform' ), '3.1' );
 		return false;
 	}
 

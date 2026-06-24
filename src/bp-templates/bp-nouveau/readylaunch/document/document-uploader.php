@@ -15,7 +15,7 @@
 			<div class="bb-rl-modal-wrapper">
 				<div class="modal-container has-folderlocationUI">
 					<header class="bb-model-header">
-						<a href="#" class="bp-media-upload-tab bp-upload-tab selected" data-content="bp-dropzone-content" id="bp-media-uploader-modal-title"><?php esc_html_e( 'Upload', 'buddyboss' ); ?></a>
+						<a href="#" class="bp-media-upload-tab bp-upload-tab selected" data-content="bp-dropzone-content" id="bp-media-uploader-modal-title"><?php esc_html_e( 'Upload', 'buddyboss-platform' ); ?></a>
 						<span id="bp-media-uploader-modal-status-text" style="display: none;"></span>
 						<a class="bb-model-close-button" id="bp-media-uploader-close" href="#">
 							<span class="bb-icon-l bb-icon-times"></span>
@@ -35,14 +35,14 @@
 								) :
 									?>
 								<div class="media-uploader-post-content">
-									<textarea name="bp-media-post-content" id="bp-media-post-content" placeholder="<?php esc_html_e( 'Write a description', 'buddyboss' ); ?>"></textarea>
+									<textarea name="bp-media-post-content" id="bp-media-post-content" placeholder="<?php esc_html_e( 'Write a description', 'buddyboss-platform' ); ?>"></textarea>
 								</div>
 								<?php endif; ?>
 								<div class="media-uploader-wrapper">
 									<div class="dropzone document-dropzone" id="media-uploader"></div>
 									<div class="uploader-post-document-template" style="display:none;">
 										<div class="dz-preview dz-file-preview">
-											<div class="dz-error-title"><?php esc_html_e( 'Upload Failed', 'buddyboss' ); ?></div>
+											<div class="dz-error-title"><?php esc_html_e( 'Upload Failed', 'buddyboss-platform' ); ?></div>
 											<div class="dz-details">
 												<div class="dz-icon"><span class="bb-icon-l bb-icon-file"></span></div>
 												<div class="dz-filename"><span data-dz-name></span></div>
@@ -60,7 +60,7 @@
 								</div>
 								<a id="bp-media-document-next" class="bb-field-uploader-next bb-field-uploader-actions" href="#">
 									<i class="bb-icon-l bb-icon-folder"></i>
-									<?php esc_html_e( 'Select Folder', 'buddyboss' ); ?>
+									<?php esc_html_e( 'Select Folder', 'buddyboss-platform' ); ?>
 								</a>
 							</div>
 						</div>
@@ -74,7 +74,7 @@
 					<footer class="bb-model-footer document-uploader-footer">
 						<a href="#" class="bb-rl-document-open-create-popup-folder" style="display: none;" >
 							<i class="bb-icons-rl-plus"></i>
-							<?php esc_html_e( 'Create Folder', 'buddyboss' ); ?>
+							<?php esc_html_e( 'Create Folder', 'buddyboss-platform' ); ?>
 						</a>
 						<?php if ( ! bp_is_group() ) : ?>
 							<div class="bb-dropdown-wrap bb-rl-filter">
@@ -92,8 +92,8 @@
 								</select>
 							</div>
 						<?php endif; ?>
-						<a class="button pull-right bb-rl-button bb-rl-button--brandFill bb-rl-button--small" id="bp-media-document-submit" style="display: none;" href="#"><?php esc_html_e( 'Done', 'buddyboss' ); ?></a>
-						<a id="bp-media-document-prev" class="bb-uploader-steps-prev bb-field-uploader-actions" href="#"><?php esc_html_e( 'Back', 'buddyboss' ); ?></a>
+						<a class="button pull-right bb-rl-button bb-rl-button--brandFill bb-rl-button--small" id="bp-media-document-submit" style="display: none;" href="#"><?php esc_html_e( 'Done', 'buddyboss-platform' ); ?></a>
+						<a id="bp-media-document-prev" class="bb-uploader-steps-prev bb-field-uploader-actions" href="#"><?php esc_html_e( 'Back', 'buddyboss-platform' ); ?></a>
 					</footer>
 				</div>
 			</div>

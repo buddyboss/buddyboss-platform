@@ -19,7 +19,7 @@ function document_screen_group_single_folder() {
 
 	if ( empty( $folder_id ) || ! BP_Document_Folder::folder_exists( $folder_id ) ) {
 		if ( is_user_logged_in() ) {
-			bp_core_add_message( __( 'The folder you tried to access is no longer available', 'buddyboss' ), 'error' );
+			bp_core_add_message( __( 'The folder you tried to access is no longer available', 'buddyboss-platform' ), 'error' );
 		}
 
 		bp_core_redirect( trailingslashit( bp_displayed_user_domain() . bp_get_document_slug() ) );
@@ -27,7 +27,7 @@ function document_screen_group_single_folder() {
 
 	// No access.
 	if ( ( ! folders_check_folder_access( $folder_id ) && ! bp_is_my_profile() ) && ! bp_current_user_can( 'bp_moderate' ) ) {
-		bp_core_add_message( __( 'You do not have access to that folder.', 'buddyboss' ), 'error' );
+		bp_core_add_message( __( 'You do not have access to that folder.', 'buddyboss-platform' ), 'error' );
 		bp_core_redirect( trailingslashit( bp_displayed_user_domain() . bp_get_document_slug() ) );
 	}
 

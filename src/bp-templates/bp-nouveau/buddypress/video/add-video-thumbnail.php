@@ -19,7 +19,7 @@
 
 					<header class="bb-model-header">
 						<a href="#" class="bp-video-thumbnail-upload-tab bp-thumbnail-upload-tab selected bp-video-thumbnail-uploader-modal-title" data-content="bp-video-thumbnail-dropzone-content" id="">
-							<?php esc_html_e( 'Change Thumbnail', 'buddyboss' ); ?>
+							<?php esc_html_e( 'Change Thumbnail', 'buddyboss-platform' ); ?>
 						</a>
 
 						<span id="bp-video-thumbnail-uploader-modal-status-text" style="display: none;"></span>
@@ -93,7 +93,7 @@
 					<input type="hidden" value="" class="video-edit-thumbnail-hidden-attachment-id">
 
 					<footer class="bb-model-footer flex align-items-center">
-						<a class="button push-right bp-video-thumbnail-submit is-disabled" id="" href="#"><?php esc_html_e( 'Change', 'buddyboss' ); ?></a>
+						<a class="button push-right bp-video-thumbnail-submit is-disabled" id="" href="#"><?php esc_html_e( 'Change', 'buddyboss-platform' ); ?></a>
 					</footer>
 
 				</div>

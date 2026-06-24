@@ -27,7 +27,7 @@ function bb_moderation_register_member_moderation_fields() {
 		'member_moderation',
 		'member_moderation_settings',
 		array(
-			'title'    => __( 'Member Moderation', 'buddyboss' ),
+			'title'    => __( 'Member Moderation', 'buddyboss-platform' ),
 			'order'    => 10,
 			'help_url' => '636191',
 		)
@@ -40,10 +40,10 @@ function bb_moderation_register_member_moderation_fields() {
 		'member_moderation_settings',
 		array(
 			'name'              => 'bpm_blocking_member_blocking',
-			'label'             => __( 'Member Blocking', 'buddyboss' ),
+			'label'             => __( 'Member Blocking', 'buddyboss-platform' ),
 			'type'              => 'toggle',
-			'description'       => __( 'Allow members to block other members', 'buddyboss' ),
-			'help_text'         => __( 'When a member is blocked, their profile and all of their content are hidden from the member who blocked them.', 'buddyboss' ),
+			'description'       => __( 'Allow members to block other members', 'buddyboss-platform' ),
+			'help_text'         => __( 'When a member is blocked, their profile and all of their content are hidden from the member who blocked them.', 'buddyboss-platform' ),
 			'default'           => bp_is_moderation_member_blocking_enable( false ),
 			'sanitize_callback' => 'absint',
 			'order'             => 10,
@@ -57,16 +57,16 @@ function bb_moderation_register_member_moderation_fields() {
 		'member_moderation_settings',
 		array(
 			'name'              => 'bb_blocking_member_reporting',
-			'label'             => __( 'Member Reporting', 'buddyboss' ),
+			'label'             => __( 'Member Reporting', 'buddyboss-platform' ),
 			'type'              => 'toggle',
-			'description'       => __( 'Allow members to report other members', 'buddyboss' ),
+			'description'       => __( 'Allow members to report other members', 'buddyboss-platform' ),
 			'help_text'         => sprintf(
 				/* translators: %s: reporting categories link. */
-				__( 'If a member believes another member has violated one of your %s, they can report it to the site administrators.', 'buddyboss' ),
+				__( 'If a member believes another member has violated one of your %s, they can report it to the site administrators.', 'buddyboss-platform' ),
 				sprintf(
 					'<a href="%s">%s</a>',
 					esc_url( bb_get_feature_settings_url( 'moderation', 'reporting_categories' ) ),
-					__( 'reporting categories', 'buddyboss' )
+					__( 'reporting categories', 'buddyboss-platform' )
 				)
 			),
 			'default'           => bb_is_moderation_member_reporting_enable( false ),
@@ -90,10 +90,10 @@ function bb_moderation_register_member_moderation_fields() {
 		'member_moderation_settings',
 		array(
 			'name'                 => 'bpm_blocking_auto_suspend',
-			'label'                => __( 'Auto Suspend', 'buddyboss' ),
+			'label'                => __( 'Auto Suspend', 'buddyboss-platform' ),
 			'type'                 => 'toggle',
 			/* translators: %s: threshold number input placeholder. */
-			'description'          => __( 'Auto suspend members after %s blocks', 'buddyboss' ),
+			'description'          => __( 'Auto suspend members after %s blocks', 'buddyboss-platform' ),
 			'default'              => bp_is_moderation_auto_suspend_enable( false ),
 			'sanitize_callback'    => 'absint',
 			'description_controls' => array(
@@ -129,7 +129,7 @@ function bb_moderation_register_member_moderation_fields() {
 			'label'                => '',
 			'type'                 => 'toggle',
 			/* translators: %s: threshold number input placeholder. */
-			'description'          => __( 'Auto suspend members after %s reports', 'buddyboss' ),
+			'description'          => __( 'Auto suspend members after %s reports', 'buddyboss-platform' ),
 			'default'              => bb_is_moderation_auto_suspend_report_enable( false ),
 			'sanitize_callback'    => 'absint',
 			'description_controls' => array(
@@ -162,9 +162,9 @@ function bb_moderation_register_member_moderation_fields() {
 		'member_moderation_settings',
 		array(
 			'name'              => 'bpm_blocking_email_notification',
-			'label'             => __( 'Email Notification', 'buddyboss' ),
+			'label'             => __( 'Email Notification', 'buddyboss-platform' ),
 			'type'              => 'toggle',
-			'description'       => __( 'Notify administrators when members have been automatically suspended', 'buddyboss' ),
+			'description'       => __( 'Notify administrators when members have been automatically suspended', 'buddyboss-platform' ),
 			'default'           => bp_is_moderation_blocking_email_notification_enable( false ),
 			'sanitize_callback' => 'absint',
 			'conditional'       => array(

@@ -43,7 +43,7 @@ function bp_member_revoke_invite() {
 	}
 
 	if ( empty( $_POST ) ) {
-		bp_core_add_message( __( 'You didn\'t include any email addresses!', 'buddyboss' ), 'error' );
+		bp_core_add_message( __( 'You didn\'t include any email addresses!', 'buddyboss-platform' ), 'error' );
 		bp_core_redirect( $bp->loggedin_user->domain . '/invites/sent-invites' );
 		die();
 	}
@@ -64,7 +64,7 @@ function bp_member_revoke_invite() {
 		}
 	}
 
-	bp_core_add_message( __( 'You didn\'t include any email addresses!', 'buddyboss' ), 'error' );
+	bp_core_add_message( __( 'You didn\'t include any email addresses!', 'buddyboss-platform' ), 'error' );
 	bp_core_redirect( bp_displayed_user_domain() . 'invites/' );
 
 }

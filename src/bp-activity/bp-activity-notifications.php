@@ -38,7 +38,7 @@ function bp_activity_format_notifications( $action, $item_id, $secondary_item_id
 			$action_filter = 'at_mentions';
 			$link          = bp_activity_get_permalink( $item_id );
 			/* translators: %s: logged-in user's username. */
-			$title         = sprintf( __( '@%s Mentions', 'buddyboss' ), bp_get_loggedin_user_username() );
+			$title         = sprintf( __( '@%s Mentions', 'buddyboss-platform' ), bp_get_loggedin_user_username() );
 			$amount        = 'single';
 
 			/**
@@ -58,45 +58,45 @@ function bp_activity_format_notifications( $action, $item_id, $secondary_item_id
 
 			if ( (int) $total_items > 1 ) {
 				/* translators: %d: total number of new mentions. */
-				$text   = sprintf( __( 'You have %1$d new mentions', 'buddyboss' ), (int) $total_items );
+				$text   = sprintf( __( 'You have %1$d new mentions', 'buddyboss-platform' ), (int) $total_items );
 				$amount = 'multiple';
 			} else {
 				/* translators: %s: full name of the user who mentioned you. */
-				$text = sprintf( __( '%1$s mentioned you', 'buddyboss' ), $user_fullname );
+				$text = sprintf( __( '%1$s mentioned you', 'buddyboss-platform' ), $user_fullname );
 			}
 			break;
 
 		case 'update_reply':
 			$link   = bp_get_notifications_permalink();
-			$title  = __( 'New Activity reply', 'buddyboss' );
+			$title  = __( 'New Activity reply', 'buddyboss-platform' );
 			$amount = 'single';
 
 			if ( (int) $total_items > 1 ) {
 				$link   = add_query_arg( 'type', $action, $link );
 				/* translators: %d: total number of new replies. */
-				$text   = sprintf( __( 'You have %1$d new replies', 'buddyboss' ), (int) $total_items );
+				$text   = sprintf( __( 'You have %1$d new replies', 'buddyboss-platform' ), (int) $total_items );
 				$amount = 'multiple';
 			} else {
 				$link = add_query_arg( 'rid', (int) $id, bp_activity_get_permalink( $activity_id ) );
 				/* translators: %s: full name of the user who commented. */
-				$text = sprintf( __( '%1$s commented on one of your updates', 'buddyboss' ), $user_fullname );
+				$text = sprintf( __( '%1$s commented on one of your updates', 'buddyboss-platform' ), $user_fullname );
 			}
 			break;
 
 		case 'comment_reply':
 			$link   = bp_get_notifications_permalink();
-			$title  = __( 'New Activity comment reply', 'buddyboss' );
+			$title  = __( 'New Activity comment reply', 'buddyboss-platform' );
 			$amount = 'single';
 
 			if ( (int) $total_items > 1 ) {
 				$link   = add_query_arg( 'type', $action, $link );
 				/* translators: %d: total number of new comment replies. */
-				$text   = sprintf( __( 'You have %1$d new comment replies', 'buddyboss' ), (int) $total_items );
+				$text   = sprintf( __( 'You have %1$d new comment replies', 'buddyboss-platform' ), (int) $total_items );
 				$amount = 'multiple';
 			} else {
 				$link = add_query_arg( 'crid', (int) $id, bp_activity_get_permalink( $activity_id ) );
 				/* translators: %s: full name of the user who replied. */
-				$text = sprintf( __( '%1$s replied to one of your activity comments', 'buddyboss' ), $user_fullname );
+				$text = sprintf( __( '%1$s replied to one of your activity comments', 'buddyboss-platform' ), $user_fullname );
 			}
 			break;
 

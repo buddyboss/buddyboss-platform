@@ -14,7 +14,7 @@ if ( is_user_logged_in() && ! empty( $active_extensions ) && ( ( bp_is_my_profil
 
 	<div class="bb-media-actions-wrap album-actions-wrap">
 		<div class="bb-media-actions">
-			<a href="#" id="bb-create-folder" class="bb-create-folder button bb-rl-button bb-rl-button--secondaryFill bb-rl-button--small"><i class="bb-icons-rl-folder-plus"></i><?php esc_html_e( 'Create Folder', 'buddyboss' ); ?></a>
+			<a href="#" id="bb-create-folder" class="bb-create-folder button bb-rl-button bb-rl-button--secondaryFill bb-rl-button--small"><i class="bb-icons-rl-folder-plus"></i><?php esc_html_e( 'Create Folder', 'buddyboss-platform' ); ?></a>
 		</div>
 	</div>
 

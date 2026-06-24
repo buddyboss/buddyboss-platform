@@ -349,13 +349,13 @@ class BP_Groups_Member {
 		if ( 'mod' == $status ) {
 			$this->is_admin   = 0;
 			$this->is_mod     = 1;
-			$this->user_title = __( 'Group Moderator', 'buddyboss' );
+			$this->user_title = __( 'Group Moderator', 'buddyboss-platform' );
 		}
 
 		if ( 'admin' == $status ) {
 			$this->is_admin   = 1;
 			$this->is_mod     = 0;
-			$this->user_title = __( 'Group Organizer', 'buddyboss' );
+			$this->user_title = __( 'Group Organizer', 'buddyboss-platform' );
 		}
 
 		return $this->save();

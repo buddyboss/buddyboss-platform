@@ -22,11 +22,11 @@ defined( 'ABSPATH' ) || exit;
 			<div class="modal-wrapper bb-large">
 				<div class="modal-container">
 					<header class="bb-model-header">
-						<a href="#" class="bp-media-upload-tab bp-upload-tab selected" data-content="bp-dropzone-content" id="bp-media-uploader-modal-title"><?php esc_html_e( 'Upload', 'buddyboss' ); ?></a>
+						<a href="#" class="bp-media-upload-tab bp-upload-tab selected" data-content="bp-dropzone-content" id="bp-media-uploader-modal-title"><?php esc_html_e( 'Upload', 'buddyboss-platform' ); ?></a>
 						<?php
 						if ( bp_is_single_album() ) :
 							?>
-							<a href="#" class="bp-media-upload-tab bp-upload-tab" data-content="bp-existing-media-content" id="bp-media-select-from-existing"><?php esc_html_e( 'Select Photos', 'buddyboss' ); ?></a>
+							<a href="#" class="bp-media-upload-tab bp-upload-tab" data-content="bp-existing-media-content" id="bp-media-select-from-existing"><?php esc_html_e( 'Select Photos', 'buddyboss-platform' ); ?></a>
 							<?php
 						endif;
 						?>
@@ -47,7 +47,7 @@ defined( 'ABSPATH' ) || exit;
 						) :
 							?>
 							<div class="media-uploader-post-content">
-								<textarea name="bp-media-post-content" id="bp-media-post-content" placeholder="<?php esc_html_e( 'Write a description', 'buddyboss' ); ?>"></textarea>
+								<textarea name="bp-media-post-content" id="bp-media-post-content" placeholder="<?php esc_html_e( 'Write a description', 'buddyboss-platform' ); ?>"></textarea>
 							</div>
 							<?php
 						endif;
@@ -72,7 +72,7 @@ defined( 'ABSPATH' ) || exit;
 									if ( bp_document_has_more_items() ) :
 										?>
 										<li class="load-more">
-											<a class="button outline" href="<?php bp_document_load_more_link(); ?>"><?php esc_html_e( 'Load More', 'buddyboss' ); ?></a>
+											<a class="button outline" href="<?php bp_document_load_more_link(); ?>"><?php esc_html_e( 'Load More', 'buddyboss-platform' ); ?></a>
 										</li>
 										<?php
 									endif;
@@ -88,8 +88,8 @@ defined( 'ABSPATH' ) || exit;
 					endif;
 					?>
 					<footer class="flex align-items-center bb-model-footer">
-						<a class="button outline" id="bp-media-add-more" style="display: none;" href="#">+ <?php esc_html_e( 'Add more photos', 'buddyboss' ); ?></a>
-						<a class="button push-right" id="bp-media-submit" style="display: none;" href="#"><?php esc_html_e( 'Done', 'buddyboss' ); ?></a>
+						<a class="button outline" id="bp-media-add-more" style="display: none;" href="#">+ <?php esc_html_e( 'Add more photos', 'buddyboss-platform' ); ?></a>
+						<a class="button push-right" id="bp-media-submit" style="display: none;" href="#"><?php esc_html_e( 'Done', 'buddyboss-platform' ); ?></a>
 					</footer>
 				</div>
 			</div>

@@ -40,10 +40,10 @@ if ( bp_has_video_albums( array( 'include' => $album_id ) ) ) {
 					<?php
 					if ( ( $bp_is_my_profile || bp_current_user_can( 'bp_moderate' ) ) || ( $bp_is_group && $can_add ) ) {
 						?>
-						<input type="text" value="<?php bp_video_album_title(); ?>" placeholder="<?php esc_html_e( 'Title', 'buddyboss' ); ?>" id="bb-album-title" style="display: none;" />
-						<a href="#" class="button small" id="bp-edit-album-title"><?php esc_html_e( 'Edit', 'buddyboss' ); ?></a>
-						<a href="#" class="button small" id="bp-save-album-title" style="display: none;" ><?php esc_html_e( 'Save', 'buddyboss' ); ?></a>
-						<a href="#" class="button small" id="bp-cancel-edit-album-title" style="display: none;" ><?php esc_html_e( 'Cancel', 'buddyboss' ); ?></a>
+						<input type="text" value="<?php bp_video_album_title(); ?>" placeholder="<?php esc_html_e( 'Title', 'buddyboss-platform' ); ?>" id="bb-album-title" style="display: none;" />
+						<a href="#" class="button small" id="bp-edit-album-title"><?php esc_html_e( 'Edit', 'buddyboss-platform' ); ?></a>
+						<a href="#" class="button small" id="bp-save-album-title" style="display: none;" ><?php esc_html_e( 'Save', 'buddyboss-platform' ); ?></a>
+						<a href="#" class="button small" id="bp-cancel-edit-album-title" style="display: none;" ><?php esc_html_e( 'Cancel', 'buddyboss-platform' ); ?></a>
 						<?php
 					}
 					?>
@@ -54,7 +54,7 @@ if ( bp_has_video_albums( array( 'include' => $album_id ) ) ) {
 						<?php
 						printf(
 						/* translators: videos */
-							_n( '%s video', '%s videos', $video_album_template->album->video['total'], 'buddyboss' ), // phpcs:ignore
+							_n( '%s video', '%s videos', $video_album_template->album->video['total'], 'buddyboss-platform' ), // phpcs:ignore
 							bp_core_number_format( $video_album_template->album->video['total'] ) // phpcs:ignore
 						);
 						?>
@@ -68,14 +68,14 @@ if ( bp_has_video_albums( array( 'include' => $album_id ) ) ) {
 
 					<div class="bb-album-actions">
 						<a class="bb-delete button small outline error" id="bb-delete-album" href="#">
-							<?php esc_html_e( 'Delete Album', 'buddyboss' ); ?>
+							<?php esc_html_e( 'Delete Album', 'buddyboss-platform' ); ?>
 						</a>
 
 						<?php
 						if ( $can_add ) {
 							?>
 							<a class="bb-add-videos button small outline" id="bp-add-video" href="#" >
-								<?php esc_html_e( 'Add Videos', 'buddyboss' ); ?>
+								<?php esc_html_e( 'Add Videos', 'buddyboss-platform' ); ?>
 							</a>
 							<?php
 						}

@@ -1248,7 +1248,7 @@ function bp_profile_last_updated() {
 	$last_updated = bp_get_profile_last_updated();
 
 	if ( empty( $last_updated ) ) {
-		_e( 'Profile not recently updated.', 'buddyboss' );
+		_e( 'Profile not recently updated.', 'buddyboss-platform' );
 	} else {
 		echo $last_updated;
 	}
@@ -1275,7 +1275,7 @@ function bp_get_profile_last_updated() {
 		 * @param string $value Formatted last updated indicator string.
 		 */
 		/* translators: %s: human-readable time since the profile was last updated. */
-		return apply_filters( 'bp_get_profile_last_updated', sprintf( __( 'Profile updated %s', 'buddyboss' ), bp_core_time_since( strtotime( $last_updated ) ) ) );
+		return apply_filters( 'bp_get_profile_last_updated', sprintf( __( 'Profile updated %s', 'buddyboss-platform' ), bp_core_time_since( strtotime( $last_updated ) ) ) );
 	}
 
 	return false;
@@ -1357,7 +1357,7 @@ function bp_edit_profile_button() {
 			'block_self'        => true,
 			'link_href'         => trailingslashit( bp_displayed_user_domain() . bp_get_profile_slug() . '/edit' ),
 			'link_class'        => 'edit',
-			'link_text'         => __( 'Edit Profile', 'buddyboss' ),
+			'link_text'         => __( 'Edit Profile', 'buddyboss-platform' ),
 		)
 	);
 }
@@ -1523,7 +1523,7 @@ function bp_profile_get_settings_visibility_select( $args = '' ) {
 				<?php echo $r['before_controls']; ?>
 
 				<label for="<?php echo esc_attr( 'field_' . $r['field_id'] ); ?>_visibility" class="<?php echo esc_attr( $r['label_class'] ); ?>">
-					<?php _e( 'Select visibility', 'buddyboss' ); /* translators: accessibility text */ ?>
+					<?php _e( 'Select visibility', 'buddyboss-platform' ); /* translators: accessibility text */ ?>
 				</label>
 				<select class="<?php echo esc_attr( $r['class'] ); ?>" name="<?php echo esc_attr( 'field_' . $r['field_id'] ); ?>_visibility" id="<?php echo esc_attr( 'field_' . $r['field_id'] ); ?>_visibility">
 
@@ -1583,7 +1583,7 @@ function bp_get_the_profile_field_required_label() {
 	$retval = '';
 
 	if ( bp_get_the_profile_field_is_required() ) {
-		$translated_string = __( '(required)', 'buddyboss' );
+		$translated_string = __( '(required)', 'buddyboss-platform' );
 
 		$retval  = ' <span class="bp-required-field-label">';
 		$retval .= apply_filters( 'bp_get_the_profile_field_required_label', $translated_string, bp_get_the_profile_field_id() );
@@ -1616,7 +1616,7 @@ function bp_get_the_profile_field_optional_label() {
 	if ( ! bp_get_the_profile_field_is_required() ) {
 
 		// @note Removed (optional) text from here for the future reference.
-		$translated_string = __( '(optional)', 'buddyboss' );
+		$translated_string = __( '(optional)', 'buddyboss-platform' );
 
 		$retval  = ' <span class="bp-optional-field-label">';
 		$retval .= apply_filters( 'bp_get_the_profile_field_optional_label', $translated_string, bp_get_the_profile_field_id() );

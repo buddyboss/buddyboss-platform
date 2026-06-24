@@ -1177,10 +1177,10 @@ function bp_migrate_directory_page_titles() {
 	$default_titles = bp_core_get_directory_page_default_titles();
 
 	$legacy_titles = array(
-		'activity' => __( 'Site-Wide Activity', 'buddyboss' ),
-		'blogs'    => __( 'Sites', 'buddyboss' ),
-		'groups'   => __( 'Groups', 'buddyboss' ),
-		'members'  => __( 'Members', 'buddyboss' ),
+		'activity' => __( 'Site-Wide Activity', 'buddyboss-platform' ),
+		'blogs'    => __( 'Sites', 'buddyboss-platform' ),
+		'groups'   => __( 'Groups', 'buddyboss-platform' ),
+		'members'  => __( 'Members', 'buddyboss-platform' ),
 	);
 
 	foreach ( $bp_pages as $component => $page_id ) {
@@ -1544,7 +1544,7 @@ add_filter(
 			'bb_doc_77' => array(
 				'extension'   => '.mp4',
 				'mime_type'   => 'video/mp4',
-				'description' => __( 'MP4', 'buddyboss' ),
+				'description' => __( 'MP4', 'buddyboss-platform' ),
 				'is_default'  => 1,
 				'is_active'   => 1,
 				'icon'        => '',
@@ -1552,7 +1552,7 @@ add_filter(
 			'bb_doc_78' => array(
 				'extension'   => '.webm',
 				'mime_type'   => 'video/webm',
-				'description' => __( 'WebM', 'buddyboss' ),
+				'description' => __( 'WebM', 'buddyboss-platform' ),
 				'is_default'  => 1,
 				'is_active'   => 1,
 				'icon'        => '',
@@ -1560,7 +1560,7 @@ add_filter(
 			'bb_doc_79' => array(
 				'extension'   => '.ogg',
 				'mime_type'   => 'video/ogg',
-				'description' => __( 'Ogg', 'buddyboss' ),
+				'description' => __( 'Ogg', 'buddyboss-platform' ),
 				'is_default'  => 1,
 				'is_active'   => 1,
 				'icon'        => '',
@@ -1568,7 +1568,7 @@ add_filter(
 			'bb_doc_80' => array(
 				'extension'   => '.mov',
 				'mime_type'   => 'video/quicktime',
-				'description' => __( 'Quicktime', 'buddyboss' ),
+				'description' => __( 'Quicktime', 'buddyboss-platform' ),
 				'is_default'  => 1,
 				'is_active'   => 1,
 				'icon'        => '',
@@ -2070,10 +2070,10 @@ function bb_update_to_1_9_3() {
 function bb_core_update_email_situation_labels() {
 
 	$email_situation_labels = array(
-		'activity-at-message'          => esc_html__( 'A member is mentioned in an activity post', 'buddyboss' ),
-		'groups-at-message'            => esc_html__( 'A member is mentioned in a group activity post', 'buddyboss' ),
-		'zoom-scheduled-meeting-email' => esc_html__( 'A Zoom meeting is scheduled in a group', 'buddyboss' ),
-		'zoom-scheduled-webinar-email' => esc_html__( 'A Zoom webinar is scheduled in a group', 'buddyboss' ),
+		'activity-at-message'          => esc_html__( 'A member is mentioned in an activity post', 'buddyboss-platform' ),
+		'groups-at-message'            => esc_html__( 'A member is mentioned in a group activity post', 'buddyboss-platform' ),
+		'zoom-scheduled-meeting-email' => esc_html__( 'A Zoom meeting is scheduled in a group', 'buddyboss-platform' ),
+		'zoom-scheduled-webinar-email' => esc_html__( 'A Zoom webinar is scheduled in a group', 'buddyboss-platform' ),
 	);
 
 	foreach ( $email_situation_labels as $situation_slug => $situation_label ) {
@@ -2367,11 +2367,11 @@ function bb_update_to_2_2_3() {
 
 	$email = array(
 		/* translators: do not remove {} brackets or translate its contents. */
-		'post_title'   => __( '[{{{site.name}}}] {{poster.name}} posted {{activity.type}}.', 'buddyboss' ),
+		'post_title'   => __( '[{{{site.name}}}] {{poster.name}} posted {{activity.type}}.', 'buddyboss-platform' ),
 		/* translators: do not remove {} brackets or translate its contents. */
-		'post_content' => __( "<a href=\"{{{poster.url}}}\">{{poster.name}}</a> posted {{activity.type}}:\n\n{{{activity.content}}}", 'buddyboss' ),
+		'post_content' => __( "<a href=\"{{{poster.url}}}\">{{poster.name}}</a> posted {{activity.type}}:\n\n{{{activity.content}}}", 'buddyboss-platform' ),
 		/* translators: do not remove {} brackets or translate its contents. */
-		'post_excerpt' => __( "{{poster.name}} posted {{activity.type}}:\n\n{{{activity.content}}}\\n\nView the post: {{{activity.url}}}", 'buddyboss' ),
+		'post_excerpt' => __( "{{poster.name}} posted {{activity.type}}:\n\n{{{activity.content}}}\\n\nView the post: {{{activity.url}}}", 'buddyboss-platform' ),
 	);
 
 	$id = 'new-activity-following';
@@ -2402,7 +2402,7 @@ function bb_update_to_2_2_3() {
 			(int) $term->term_id,
 			bp_get_email_tax_type(),
 			array(
-				'description' => esc_html__( 'New activity post by someone a member is following', 'buddyboss' ),
+				'description' => esc_html__( 'New activity post by someone a member is following', 'buddyboss-platform' ),
 			)
 		);
 	}
@@ -2445,11 +2445,11 @@ function bb_update_to_2_2_5() {
 
 	$email = array(
 		/* translators: do not remove {} brackets or translate its contents. */
-		'post_title'   => __( '[{{{site.name}}}] {{follower.name}} started following you', 'buddyboss' ),
+		'post_title'   => __( '[{{{site.name}}}] {{follower.name}} started following you', 'buddyboss-platform' ),
 		/* translators: do not remove {} brackets or translate its contents. */
-		'post_content' => __( "<a href=\"{{{follower.url}}}\">{{follower.name}}</a> started following you.\n\n{{{member.card}}}", 'buddyboss' ),
+		'post_content' => __( "<a href=\"{{{follower.url}}}\">{{follower.name}}</a> started following you.\n\n{{{member.card}}}", 'buddyboss-platform' ),
 		/* translators: do not remove {} brackets or translate its contents. */
-		'post_excerpt' => __( "{{follower.name}} started following you.\n\nTo learn more about them, visit their profile: {{{follower.url}}}", 'buddyboss' ),
+		'post_excerpt' => __( "{{follower.name}} started following you.\n\nTo learn more about them, visit their profile: {{{follower.url}}}", 'buddyboss-platform' ),
 	);
 
 	$id = 'new-follower';
@@ -2480,7 +2480,7 @@ function bb_update_to_2_2_5() {
 			(int) $term->term_id,
 			bp_get_email_tax_type(),
 			array(
-				'description' => esc_html__( 'A member receives a new follower', 'buddyboss' ),
+				'description' => esc_html__( 'A member receives a new follower', 'buddyboss-platform' ),
 			)
 		);
 	}
@@ -2609,27 +2609,27 @@ function bb_migrate_group_subscription_email_templates() {
 	$email_templates = array(
 		array(
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_title'       => __( '[{{{site.name}}}] {{poster.name}} posted {{activity.type}} in {{group.name}}', 'buddyboss' ),
+			'post_title'       => __( '[{{{site.name}}}] {{poster.name}} posted {{activity.type}} in {{group.name}}', 'buddyboss-platform' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_content'     => __( "<a href=\"{{{poster.url}}}\">{{poster.name}}</a> posted {{activity.type}} in <a href=\"{{{group.url}}}\">{{group.name}}</a>:\n\n{{{activity.content}}}", 'buddyboss' ),
+			'post_content'     => __( "<a href=\"{{{poster.url}}}\">{{poster.name}}</a> posted {{activity.type}} in <a href=\"{{{group.url}}}\">{{group.name}}</a>:\n\n{{{activity.content}}}", 'buddyboss-platform' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_excerpt'     => __( "{{poster.name}} posted {{activity.type}} in {{group.name}}:\n\n{{{activity.content}}}\"\n\nView the post: {{{activity.url}}}", 'buddyboss' ),
+			'post_excerpt'     => __( "{{poster.name}} posted {{activity.type}} in {{group.name}}:\n\n{{{activity.content}}}\"\n\nView the post: {{{activity.url}}}", 'buddyboss-platform' ),
 			'post_status'      => 'publish',
 			'post_type'        => bp_get_email_post_type(),
 			'id'               => 'groups-new-activity',
-			'term_description' => __( 'New activity post in a group a member is subscribed to', 'buddyboss' ),
+			'term_description' => __( 'New activity post in a group a member is subscribed to', 'buddyboss-platform' ),
 		),
 		array(
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_title'       => __( '[{{{site.name}}}] New discussion in {{group.name}}', 'buddyboss' ),
+			'post_title'       => __( '[{{{site.name}}}] New discussion in {{group.name}}', 'buddyboss-platform' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_content'     => __( "<a href=\"{{{poster.url}}}\">{{poster.name}}</a> created a discussion in <a href=\"{{{group.url}}}\">{{group.name}}</a>:\n\n{{{discussion.content}}}", 'buddyboss' ),
+			'post_content'     => __( "<a href=\"{{{poster.url}}}\">{{poster.name}}</a> created a discussion in <a href=\"{{{group.url}}}\">{{group.name}}</a>:\n\n{{{discussion.content}}}", 'buddyboss-platform' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_excerpt'     => __( "{{poster.name}} created a discussion {{discussion.title}} in {{group.name}}:\n\n{{{discussion.content}}}\n\nDiscussion Link: {{discussion.url}}", 'buddyboss' ),
+			'post_excerpt'     => __( "{{poster.name}} created a discussion {{discussion.title}} in {{group.name}}:\n\n{{{discussion.content}}}\n\nDiscussion Link: {{discussion.url}}", 'buddyboss-platform' ),
 			'post_status'      => 'publish',
 			'post_type'        => bp_get_email_post_type(),
 			'id'               => 'groups-new-discussion',
-			'term_description' => __( 'New forum discussion in a group a member is subscribed to', 'buddyboss' ),
+			'term_description' => __( 'New forum discussion in a group a member is subscribed to', 'buddyboss-platform' ),
 		),
 	);
 
@@ -2955,11 +2955,11 @@ function bb_update_to_2_3_50() {
 
 	$email = array(
 		/* translators: do not remove {} brackets or translate its contents. */
-		'post_title'   => __( '[{{{site.name}}}] {{commenter.name}} replied to your comment', 'buddyboss' ),
+		'post_title'   => __( '[{{{site.name}}}] {{commenter.name}} replied to your comment', 'buddyboss-platform' ),
 		/* translators: do not remove {} brackets or translate its contents. */
-		'post_content' => __( "<a href=\"{{{commenter.url}}}\">{{commenter.name}}</a> replied to your comment:\n\n{{{comment_reply}}}", 'buddyboss' ),
+		'post_content' => __( "<a href=\"{{{commenter.url}}}\">{{commenter.name}}</a> replied to your comment:\n\n{{{comment_reply}}}", 'buddyboss-platform' ),
 		/* translators: do not remove {} brackets or translate its contents. */
-		'post_excerpt' => __( "{{commenter.name}} replied to your comment:\n\n{{{comment_reply}}}\n\nView the comment: {{{comment.url}}}", 'buddyboss' ),
+		'post_excerpt' => __( "{{commenter.name}} replied to your comment:\n\n{{{comment_reply}}}\n\nView the comment: {{{comment.url}}}", 'buddyboss-platform' ),
 	);
 
 	$id = 'new-comment-reply';
@@ -2990,7 +2990,7 @@ function bb_update_to_2_3_50() {
 			(int) $term->term_id,
 			bp_get_email_tax_type(),
 			array(
-				'description' => esc_html__( 'A member receives a reply to their WordPress post comment', 'buddyboss' ),
+				'description' => esc_html__( 'A member receives a reply to their WordPress post comment', 'buddyboss-platform' ),
 			)
 		);
 	}

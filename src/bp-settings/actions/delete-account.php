@@ -48,7 +48,7 @@ function bp_settings_action_delete_account() {
 
 		// Add feedback after deleting a user.
 		/* translators: %s: the deleted user's full name. */
-		bp_core_add_message( sprintf( __( '%s was successfully deleted.', 'buddyboss' ), $username ), 'success' );
+		bp_core_add_message( sprintf( __( '%s was successfully deleted.', 'buddyboss-platform' ), $username ), 'success' );
 
 		// Redirect to the root domain.
 		bp_core_redirect( bp_get_root_domain() );

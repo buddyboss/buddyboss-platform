@@ -33,7 +33,7 @@ if ( function_exists( 'bbp_is_forum_group_forum' ) && bbp_is_forum_group_forum( 
 						'html'    => true,
 						'alt'     => sprintf(
 							/* translators: %s is the group name */
-							__( '%s logo', 'buddyboss' ),
+							__( '%s logo', 'buddyboss-platform' ),
 							$group->name
 						),
 						'class'   => 'bb-rl-group-avatar',
@@ -51,7 +51,7 @@ if ( function_exists( 'bbp_is_forum_group_forum' ) && bbp_is_forum_group_forum( 
 	<div class="bb-rl-topic-header-meta">
 		<?php if ( ! bbp_is_topic_open() ) { ?>
 				<div class="bb-rl-topic-status-closed">
-					<?php esc_html_e( 'Closed', 'buddyboss' ); ?>
+					<?php esc_html_e( 'Closed', 'buddyboss-platform' ); ?>
 				</div>
 		<?php } ?>
 		<?php
@@ -87,7 +87,7 @@ if ( function_exists( 'bbp_is_forum_group_forum' ) && bbp_is_forum_group_forum( 
 			if ( ! $empty ) {
 				?>
 				<div class="bb_more_options forum-dropdown bb-rl-context-wrap">
-					<a href="#" class="bb-rl-context-btn bb_more_options_action bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'More Options', 'buddyboss' ); ?>" aria-label="<?php esc_attr_e( 'More Options', 'buddyboss' ); ?>">
+					<a href="#" class="bb-rl-context-btn bb_more_options_action bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'More Options', 'buddyboss-platform' ); ?>" aria-label="<?php esc_attr_e( 'More Options', 'buddyboss-platform' ); ?>">
 						<i class="bb-icons-rl-dots-three"></i>
 					</a>
 					<div class="bb_more_options_list bb_more_dropdown bb-rl-context-dropdown">
@@ -106,7 +106,7 @@ if ( function_exists( 'bbp_is_forum_group_forum' ) && bbp_is_forum_group_forum( 
 	<div class="bb-rl-topic-started-in">
 		<?php
 		/* translators: %1$s is the group avatar, %2$s is the forum title, %3$s is the forum permalink */
-		printf( wp_kses_post( '<a href="%1$s">%2$s%3$s</a>', 'buddyboss' ), bbp_get_forum_permalink( bbp_get_topic_forum_id() ), $group_avatar, bbp_get_forum_title( bbp_get_topic_forum_id() ) );
+		printf( wp_kses_post( '<a href="%1$s">%2$s%3$s</a>' ), bbp_get_forum_permalink( bbp_get_topic_forum_id() ), $group_avatar, bbp_get_forum_title( bbp_get_topic_forum_id() ) );
 		?>
 	</div>
 
@@ -170,7 +170,7 @@ if ( function_exists( 'bbp_is_forum_group_forum' ) && bbp_is_forum_group_forum( 
 				bbp_topic_reply_link();
 				if ( ! bbp_current_user_can_access_create_reply_form() && ! bbp_is_topic_closed() && ! bbp_is_forum_closed( bbp_get_topic_forum_id() ) && ! is_user_logged_in() ) {
 					?>
-						<a href="<?php echo esc_url( wp_login_url() ); ?>" class="bbp-topic-login-link bb-style-primary-bgr-color bb-style-border-radius"><?php esc_html_e( 'Log In to Reply', 'buddyboss' ); ?></a>
+						<a href="<?php echo esc_url( wp_login_url() ); ?>" class="bbp-topic-login-link bb-style-primary-bgr-color bb-style-border-radius"><?php esc_html_e( 'Log In to Reply', 'buddyboss-platform' ); ?></a>
 				<?php } ?>
 			</div>
 		</div><!-- .bb-rl-forum-actions -->

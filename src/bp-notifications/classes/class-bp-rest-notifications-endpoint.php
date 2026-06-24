@@ -57,7 +57,7 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 			array(
 				'args'   => array(
 					'id' => array(
-						'description' => __( 'A unique numeric ID for the notification.', 'buddyboss' ),
+						'description' => __( 'A unique numeric ID for the notification.', 'buddyboss-platform' ),
 						'type'        => 'integer',
 					),
 				),
@@ -170,7 +170,7 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 	public function get_items_permissions_check( $request ) {
 		$retval = new WP_Error(
 			'bp_rest_authorization_required',
-			__( 'Sorry, you are not allowed to see the notifications.', 'buddyboss' ),
+			__( 'Sorry, you are not allowed to see the notifications.', 'buddyboss-platform' ),
 			array(
 				'status' => rest_authorization_required_code(),
 			)
@@ -181,7 +181,7 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 			if ( bp_loggedin_user_id() !== $request['user_id'] && ! $this->can_see() ) {
 				$retval = new WP_Error(
 					'bp_rest_authorization_required',
-					__( 'Sorry, you are not allowed to see the notifications.', 'buddyboss' ),
+					__( 'Sorry, you are not allowed to see the notifications.', 'buddyboss-platform' ),
 					array(
 						'status' => rest_authorization_required_code(),
 					)
@@ -250,7 +250,7 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 	public function get_item_permissions_check( $request ) {
 		$retval = new WP_Error(
 			'bp_rest_authorization_required',
-			__( 'Sorry, you are not allowed to see the notification.', 'buddyboss' ),
+			__( 'Sorry, you are not allowed to see the notification.', 'buddyboss-platform' ),
 			array(
 				'status' => rest_authorization_required_code(),
 			)
@@ -263,7 +263,7 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 			if ( is_null( $notification->item_id ) ) {
 				$retval = new WP_Error(
 					'bp_rest_notification_invalid_id',
-					__( 'Invalid notification ID.', 'buddyboss' ),
+					__( 'Invalid notification ID.', 'buddyboss-platform' ),
 					array(
 						'status' => 404,
 					)
@@ -271,7 +271,7 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 			} elseif ( ! $this->can_see( $notification->id ) ) {
 				$retval = new WP_Error(
 					'bp_rest_authorization_required',
-					__( 'Sorry, you cannot view this notification.', 'buddyboss' ),
+					__( 'Sorry, you cannot view this notification.', 'buddyboss-platform' ),
 					array(
 						'status' => rest_authorization_required_code(),
 					)
@@ -341,7 +341,7 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 		if ( ! is_numeric( $notification_id ) ) {
 			return new WP_Error(
 				'bp_rest_user_cannot_create_notification',
-				__( 'Cannot create new notification.', 'buddyboss' ),
+				__( 'Cannot create new notification.', 'buddyboss-platform' ),
 				array(
 					'status' => 500,
 				)
@@ -423,7 +423,7 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 		if ( $request['is_new'] === $notification->is_new ) {
 			return new WP_Error(
 				'bp_rest_user_cannot_update_notification_status',
-				__( 'Notification is already with the status you are trying to update into.', 'buddyboss' ),
+				__( 'Notification is already with the status you are trying to update into.', 'buddyboss-platform' ),
 				array(
 					'status' => 500,
 				)
@@ -436,7 +436,7 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 		if ( ! (bool) $updated ) {
 			return new WP_Error(
 				'bp_rest_user_cannot_update_notification',
-				__( 'Cannot update the status of this notification.', 'buddyboss' ),
+				__( 'Cannot update the status of this notification.', 'buddyboss-platform' ),
 				array(
 					'status' => 500,
 				)
@@ -522,7 +522,7 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 		if ( ! BP_Notifications_Notification::delete( array( 'id' => $notification->id ) ) ) {
 			return new WP_Error(
 				'bp_rest_notification_invalid_id',
-				__( 'Invalid notification ID.', 'buddyboss' ),
+				__( 'Invalid notification ID.', 'buddyboss-platform' ),
 				array(
 					'status' => 404,
 				)
@@ -1005,66 +1005,66 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 			'properties' => array(
 				'id'                => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'A unique numeric ID for the notification.', 'buddyboss' ),
+					'description' => __( 'A unique numeric ID for the notification.', 'buddyboss-platform' ),
 					'readonly'    => true,
 					'type'        => 'integer',
 				),
 				'user_id'           => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'The ID of the user the notification is addressed to.', 'buddyboss' ),
+					'description' => __( 'The ID of the user the notification is addressed to.', 'buddyboss-platform' ),
 					'type'        => 'integer',
 					'default'     => bp_loggedin_user_id(),
 				),
 				'item_id'           => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'The ID of the item associated with the notification.', 'buddyboss' ),
+					'description' => __( 'The ID of the item associated with the notification.', 'buddyboss-platform' ),
 					'type'        => 'integer',
 				),
 				'secondary_item_id' => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'The ID of the secondary item associated with the notification.', 'buddyboss' ),
+					'description' => __( 'The ID of the secondary item associated with the notification.', 'buddyboss-platform' ),
 					'type'        => 'integer',
 				),
 				'component'         => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'The name of the BuddyPress component the notification relates to.', 'buddyboss' ),
+					'description' => __( 'The name of the BuddyPress component the notification relates to.', 'buddyboss-platform' ),
 					'type'        => 'string',
 				),
 				'action'            => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'The name of the component\'s action the notification is about.', 'buddyboss' ),
+					'description' => __( 'The name of the component\'s action the notification is about.', 'buddyboss-platform' ),
 					'type'        => 'string',
 				),
 				'date'              => array(
-					'description' => __( 'The date the notification was created, in the site\'s timezone.', 'buddyboss' ),
+					'description' => __( 'The date the notification was created, in the site\'s timezone.', 'buddyboss-platform' ),
 					'type'        => 'string',
 					'format'      => 'date-time',
 					'context'     => array( 'embed', 'view', 'edit' ),
 				),
 				'is_new'            => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Whether it\'s a new notification or not.', 'buddyboss' ),
+					'description' => __( 'Whether it\'s a new notification or not.', 'buddyboss-platform' ),
 					'type'        => 'integer',
 					'default'     => 1,
 				),
 				'object'            => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'The name of the notification object.', 'buddyboss' ),
+					'description' => __( 'The name of the notification object.', 'buddyboss-platform' ),
 					'type'        => 'string',
 				),
 				'object_id'         => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'The ID of the notification object.', 'buddyboss' ),
+					'description' => __( 'The ID of the notification object.', 'buddyboss-platform' ),
 					'type'        => 'integer',
 				),
 				'description'       => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Description of notification.', 'buddyboss' ),
+					'description' => __( 'Description of notification.', 'buddyboss-platform' ),
 					'type'        => 'object',
 					'readonly'    => true,
 					'properties'  => array(
 						'rendered' => array(
-							'description' => __( 'HTML description for the object, transformed for display.', 'buddyboss' ),
+							'description' => __( 'HTML description for the object, transformed for display.', 'buddyboss-platform' ),
 							'type'        => 'string',
 							'context'     => array( 'embed', 'view', 'edit' ),
 							'readonly'    => true,
@@ -1073,17 +1073,17 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 				),
 				'link_url'          => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Link URL for the notification.', 'buddyboss' ),
+					'description' => __( 'Link URL for the notification.', 'buddyboss-platform' ),
 					'type'        => 'string',
 				),
 				'rest_actions'      => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Rest Actions which perform accept/reject based on the status.', 'buddyboss' ),
+					'description' => __( 'Rest Actions which perform accept/reject based on the status.', 'buddyboss-platform' ),
 					'type'        => 'object',
 				),
 				'readonly'          => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Readonly for the moderated members notification.', 'buddyboss' ),
+					'description' => __( 'Readonly for the moderated members notification.', 'buddyboss-platform' ),
 					'type'        => 'object',
 				),
 			),
@@ -1093,7 +1093,7 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 
 		$avatar_properties['full'] = array(
 			/* translators: Full image size for the member Avatar */
-			'description' => sprintf( __( 'Avatar URL with full image size (%1$d x %2$d pixels).', 'buddyboss' ), bp_core_number_format( bp_core_avatar_full_width() ), bp_core_number_format( bp_core_avatar_full_height() ) ),
+			'description' => sprintf( __( 'Avatar URL with full image size (%1$d x %2$d pixels).', 'buddyboss-platform' ), bp_core_number_format( bp_core_avatar_full_width() ), bp_core_number_format( bp_core_avatar_full_height() ) ),
 			'type'        => 'string',
 			'format'      => 'uri',
 			'context'     => array( 'embed', 'view', 'edit' ),
@@ -1101,14 +1101,14 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 
 		$avatar_properties['thumb'] = array(
 			/* translators: Thumb image size for the member Avatar */
-			'description' => sprintf( __( 'Avatar URL with thumb image size (%1$d x %2$d pixels).', 'buddyboss' ), bp_core_number_format( bp_core_avatar_thumb_width() ), bp_core_number_format( bp_core_avatar_thumb_height() ) ),
+			'description' => sprintf( __( 'Avatar URL with thumb image size (%1$d x %2$d pixels).', 'buddyboss-platform' ), bp_core_number_format( bp_core_avatar_thumb_width() ), bp_core_number_format( bp_core_avatar_thumb_height() ) ),
 			'type'        => 'string',
 			'format'      => 'uri',
 			'context'     => array( 'embed', 'view', 'edit' ),
 		);
 
 		$schema['properties']['avatar_urls'] = array(
-			'description' => __( 'Avatar URLs for the notification.', 'buddyboss' ),
+			'description' => __( 'Avatar URLs for the notification.', 'buddyboss-platform' ),
 			'type'        => 'object',
 			'context'     => array( 'embed', 'view', 'edit' ),
 			'readonly'    => true,
@@ -1137,7 +1137,7 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 		unset( $params['search'] );
 
 		$params['order_by'] = array(
-			'description'       => __( 'Name of the field to order according to.', 'buddyboss' ),
+			'description'       => __( 'Name of the field to order according to.', 'buddyboss-platform' ),
 			'default'           => 'id',
 			'type'              => 'string',
 			'enum'              => array(
@@ -1154,7 +1154,7 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['sort_order'] = array(
-			'description'       => __( 'Order sort attribute ascending or descending.', 'buddyboss' ),
+			'description'       => __( 'Order sort attribute ascending or descending.', 'buddyboss-platform' ),
 			'default'           => 'ASC',
 			'type'              => 'string',
 			'enum'              => array( 'ASC', 'DESC' ),
@@ -1163,7 +1163,7 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['component_name'] = array(
-			'description'       => __( 'Limit result set to notifications associated with a specific component', 'buddyboss' ),
+			'description'       => __( 'Limit result set to notifications associated with a specific component', 'buddyboss-platform' ),
 			'default'           => '',
 			'type'              => 'string',
 			'sanitize_callback' => 'sanitize_text_field',
@@ -1171,7 +1171,7 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['component_action'] = array(
-			'description'       => __( 'Limit result set to notifications associated with a specific component\'s action name.', 'buddyboss' ),
+			'description'       => __( 'Limit result set to notifications associated with a specific component\'s action name.', 'buddyboss-platform' ),
 			'default'           => '',
 			'type'              => 'string',
 			'sanitize_callback' => 'sanitize_text_field',
@@ -1179,7 +1179,7 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['user_id'] = array(
-			'description'       => __( 'Limit result set to notifications addressed to a specific user.', 'buddyboss' ),
+			'description'       => __( 'Limit result set to notifications addressed to a specific user.', 'buddyboss-platform' ),
 			'default'           => bp_loggedin_user_id(),
 			'type'              => 'integer',
 			'sanitize_callback' => 'absint',
@@ -1187,7 +1187,7 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['item_id'] = array(
-			'description'       => __( 'Limit result set to notifications associated with a specific item ID.', 'buddyboss' ),
+			'description'       => __( 'Limit result set to notifications associated with a specific item ID.', 'buddyboss-platform' ),
 			'default'           => 0,
 			'type'              => 'integer',
 			'sanitize_callback' => 'absint',
@@ -1195,7 +1195,7 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['secondary_item_id'] = array(
-			'description'       => __( 'Limit result set to notifications associated with a specific secondary item ID.', 'buddyboss' ),
+			'description'       => __( 'Limit result set to notifications associated with a specific secondary item ID.', 'buddyboss-platform' ),
 			'default'           => 0,
 			'type'              => 'integer',
 			'sanitize_callback' => 'absint',
@@ -1203,7 +1203,7 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['is_new'] = array(
-			'description'       => __( 'Limit result set to items from specific states.', 'buddyboss' ),
+			'description'       => __( 'Limit result set to items from specific states.', 'buddyboss-platform' ),
 			'default'           => true,
 			'type'              => 'boolean',
 			'sanitize_callback' => 'rest_sanitize_boolean',
@@ -1257,9 +1257,9 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 					if ( $friendship->id === $notification->secondary_item_id ) {
 
 						if ( ! empty( $friendship->is_confirmed ) ) {
-							$data['status'] = __( 'Accepted', 'buddyboss' );
+							$data['status'] = __( 'Accepted', 'buddyboss-platform' );
 						} else {
-							$data['status']             = __( 'Pending', 'buddyboss' );
+							$data['status']             = __( 'Pending', 'buddyboss-platform' );
 							$data['accept']['endpoint'] = rest_url( $this->namespace . '/' . buddypress()->friends->id . '/' . $friendship->id );
 							$data['accept']['method']   = 'PATCH';
 							$data['accept']['link_url'] = bp_loggedin_user_domain() . bp_get_friends_slug();
@@ -1269,7 +1269,7 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 							$data['reject']['link_url'] = bp_loggedin_user_domain() . bp_get_friends_slug();
 						}
 					} else {
-						$data['status'] = __( 'Rejected', 'buddyboss' );
+						$data['status'] = __( 'Rejected', 'buddyboss-platform' );
 					}
 				}
 				break;
@@ -1284,7 +1284,7 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 					$group     = groups_get_group( $notification->item_id );
 					$is_member = groups_is_user_member( $notification->secondary_item_id, $notification->item_id );
 					if ( ! empty( $is_member ) ) {
-						$data['status'] = __( 'Accepted', 'buddyboss' );
+						$data['status'] = __( 'Accepted', 'buddyboss-platform' );
 					} else {
 						$requests = groups_get_requests(
 							array(
@@ -1296,9 +1296,9 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 						if ( ! empty( $requests ) ) {
 							$current_request = current( $requests );
 							if ( ! empty( $current_request->accepted ) ) {
-								$data['status'] = __( 'Accepted', 'buddyboss' );
+								$data['status'] = __( 'Accepted', 'buddyboss-platform' );
 							} else {
-								$data['status']             = __( 'Pending', 'buddyboss' );
+								$data['status']             = __( 'Pending', 'buddyboss-platform' );
 								$data['accept']['endpoint'] = rest_url( $this->namespace . '/' . buddypress()->groups->id . '/membership-requests/' . $current_request->id );
 								$data['accept']['method']   = 'PATCH';
 								$data['accept']['link_url'] = trailingslashit( bp_get_group_permalink( $group ) . 'members' );
@@ -1308,7 +1308,7 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 								$data['reject']['link_url'] = trailingslashit( bp_get_group_permalink( $group ) . 'members' );
 							}
 						} else {
-							$data['status'] = __( 'Rejected', 'buddyboss' );
+							$data['status'] = __( 'Rejected', 'buddyboss-platform' );
 						}
 					}
 				}
@@ -1320,7 +1320,7 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 					$group     = groups_get_group( $notification->item_id );
 					$is_member = groups_is_user_member( $notification->user_id, $notification->item_id );
 					if ( ! empty( $is_member ) ) {
-						$data['status'] = __( 'Accepted', 'buddyboss' );
+						$data['status'] = __( 'Accepted', 'buddyboss-platform' );
 					} else {
 						$invites = groups_get_invites(
 							array(
@@ -1332,9 +1332,9 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 						if ( ! empty( $invites ) ) {
 							$current_invites = current( $invites );
 							if ( ! empty( $current_invites->accepted ) ) {
-								$data['status'] = __( 'Accepted', 'buddyboss' );
+								$data['status'] = __( 'Accepted', 'buddyboss-platform' );
 							} else {
-								$data['status']             = __( 'Pending', 'buddyboss' );
+								$data['status']             = __( 'Pending', 'buddyboss-platform' );
 								$data['accept']['endpoint'] = rest_url( $this->namespace . '/' . buddypress()->groups->id . '/invites/' . $current_invites->id );
 								$data['accept']['method']   = 'PATCH';
 								$data['accept']['link_url'] = bp_get_group_permalink( $group );
@@ -1344,7 +1344,7 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 								$data['reject']['link_url'] = bp_get_group_permalink( $group );
 							}
 						} else {
-							$data['status'] = __( 'Rejected', 'buddyboss' );
+							$data['status'] = __( 'Rejected', 'buddyboss-platform' );
 						}
 					}
 				}
@@ -1537,7 +1537,7 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 	public function update_read_permissions_check( $request ) {
 		$retval = new WP_Error(
 			'bp_rest_authorization_required',
-			__( 'Sorry, you are not allowed to see the notification.', 'buddyboss' ),
+			__( 'Sorry, you are not allowed to see the notification.', 'buddyboss-platform' ),
 			array(
 				'status' => rest_authorization_required_code(),
 			)

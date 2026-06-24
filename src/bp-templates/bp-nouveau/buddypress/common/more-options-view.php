@@ -10,6 +10,6 @@
 
 ?>
 <div class="bb_more_dropdown__title">
-	<span class="bb_more_dropdown__title__text"><?php esc_html_e( 'Options', 'buddyboss' ); ?></span>
+	<span class="bb_more_dropdown__title__text"><?php esc_html_e( 'Options', 'buddyboss-platform' ); ?></span>
 	<span class="bb_more_dropdown__close_button" role="button"><i class="bb-icon-l bb-icon-times"></i></span>
 </div>

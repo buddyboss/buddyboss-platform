@@ -40,7 +40,7 @@ function xprofile_add_admin_menu() {
 		: admin_url( 'admin.php?page=bb-settings&tab=members&panel=profile_fields' );
 
 	$submenu['buddyboss-platform'][] = array(
-		__( 'Profiles', 'buddyboss' ),
+		__( 'Profiles', 'buddyboss-platform' ),
 		'bp_moderate',
 		$settings_url,
 	);

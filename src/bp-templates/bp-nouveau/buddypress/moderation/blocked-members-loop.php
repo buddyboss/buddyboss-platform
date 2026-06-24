@@ -14,12 +14,12 @@
 // phpcs:ignore WordPress.Security.NonceVerification.Missing
 if ( empty( $_POST['page'] ) || 1 === (int) bb_filter_input_string( INPUT_POST, 'page' ) ) {
 	?>
-	<div class="bp-feedback bp-messages error moderation_notice is_hidden"><span class="bp-icon" aria-hidden="true"></span><p><?php _e( 'Sorry, you were not able to report this member.', 'buddyboss' ); ?></p></div>
+	<div class="bp-feedback bp-messages error moderation_notice is_hidden"><span class="bp-icon" aria-hidden="true"></span><p><?php _e( 'Sorry, you were not able to report this member.', 'buddyboss-platform' ); ?></p></div>
 	<table id="moderation-list" class="bp-tables-user">
 		<thead>
 			<th class="title">
 				<?php
-				esc_html_e( 'Blocked Members', 'buddyboss' );
+				esc_html_e( 'Blocked Members', 'buddyboss-platform' );
 				?>
 			</th>
 			<th class="title"></th>
@@ -47,7 +47,7 @@ if ( bp_moderation_has_more_items() ) {
 		<div class="md-more-container load-more text-center">
 			<a class="button outline" href="<?php bp_moderation_load_more_link(); ?>">
 				<?php
-				esc_html_e( 'Load More', 'buddyboss' );
+				esc_html_e( 'Load More', 'buddyboss-platform' );
 				?>
 			</a>
 		</div>

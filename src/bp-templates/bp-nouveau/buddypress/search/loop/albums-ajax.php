@@ -37,7 +37,7 @@ $albums_link = bp_get_album_link();
 			<div class="media-album_modified">
 				<div class="media-album_details__bottom">
 					<span class="media-album_author">
-						<?php esc_html_e( 'By ', 'buddyboss' ); ?>
+						<?php esc_html_e( 'By ', 'buddyboss-platform' ); ?>
 						<a href="<?php echo esc_url( $albums_link ); ?>"><?php bp_album_author(); ?></a>
 					</span>
 					<span class="middot">&middot;</span>
@@ -53,7 +53,7 @@ $albums_link = bp_get_album_link();
 						if ( $group_id > 0 ) {
 							?>
 							<span class="middot">&middot;</span>
-							<span class="bp-tooltip" data-bp-tooltip-pos="left" data-bp-tooltip="<?php esc_attr_e( 'Based on group privacy', 'buddyboss' ); ?>">
+							<span class="bp-tooltip" data-bp-tooltip-pos="left" data-bp-tooltip="<?php esc_attr_e( 'Based on group privacy', 'buddyboss-platform' ); ?>">
 								<?php bp_album_visibility(); ?>
 							</span>
 							<?php

@@ -18,7 +18,7 @@ $is_send_ajax_request = bb_is_send_ajax_request();
 <div class="bb-rl-video-directory-wrapper">
 	<div class="bb-rl-secondary-header flex items-center">
 		<div class="bb-rl-entry-heading">
-			<h2><?php esc_html_e( 'Videos', 'buddyboss' ); ?> <span class="bb-rl-heading-count"><?php echo ! $is_send_ajax_request ? esc_html( bp_core_number_format( bp_get_total_video_count() ) ) : ''; ?></span></h2>
+			<h2><?php esc_html_e( 'Videos', 'buddyboss-platform' ); ?> <span class="bb-rl-heading-count"><?php echo ! $is_send_ajax_request ? esc_html( bp_core_number_format( bp_get_total_video_count() ) ) : ''; ?></span></h2>
 		</div>
 		<div class="bb-rl-sub-ctrls flex items-center">
 			<?php
@@ -31,7 +31,7 @@ $is_send_ajax_request = bb_is_send_ajax_request();
 				if ( bp_is_profile_albums_support_enabled() ) {
 					?>
 						<a href="#" id="bb-create-video-album" class="action-secondary bb-create-video-album button small">
-							<i class="bb-icons-rl-images"></i><?php esc_html_e( 'Create Album', 'buddyboss' ); ?>
+							<i class="bb-icons-rl-images"></i><?php esc_html_e( 'Create Album', 'buddyboss-platform' ); ?>
 						</a>
 						<?php
 				}
@@ -42,7 +42,7 @@ $is_send_ajax_request = bb_is_send_ajax_request();
 				) {
 					?>
 						<a class="action-primary bb-add-videos button small" id="bp-add-video" href="#" >
-							<i class="bb-icons-rl-plus"></i><?php esc_html_e( 'Add Videos', 'buddyboss' ); ?>
+							<i class="bb-icons-rl-plus"></i><?php esc_html_e( 'Add Videos', 'buddyboss-platform' ); ?>
 						</a>
 						<?php
 				}

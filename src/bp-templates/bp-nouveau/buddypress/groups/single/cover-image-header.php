@@ -52,20 +52,20 @@ add_filter( 'bp_get_group_description_excerpt', 'bb_get_group_description_excerp
 			?>
 
 			<?php if ( bp_is_item_admin() ) { ?>
-				<a href="<?php echo esc_url( $group_cover_link ); ?>" class="link-change-cover-image bp-tooltip" data-bp-tooltip-pos="right" data-bp-tooltip="<?php esc_attr_e( 'Change Cover Photo', 'buddyboss' ); ?>" aria-label="<?php esc_attr_e( 'Change Cover Photo', 'buddyboss' ); ?>">
+				<a href="<?php echo esc_url( $group_cover_link ); ?>" class="link-change-cover-image bp-tooltip" data-bp-tooltip-pos="right" data-bp-tooltip="<?php esc_attr_e( 'Change Cover Photo', 'buddyboss-platform' ); ?>" aria-label="<?php esc_attr_e( 'Change Cover Photo', 'buddyboss-platform' ); ?>">
 					<i class="bb-icon-bf bb-icon-camera"></i>
 				</a>
 			<?php } ?>
 
 			<?php if ( ! empty( $group_cover_image ) && bp_is_item_admin() && bp_attachments_get_group_has_cover_image( bp_get_group_id() ) ) { ?>
-				<a href="#" class="position-change-cover-image bp-tooltip" data-bp-tooltip-pos="right" data-bp-tooltip="<?php esc_attr_e( 'Reposition Cover Photo', 'buddyboss' ); ?>" aria-label="<?php esc_attr_e( 'Reposition Cover Photo', 'buddyboss' ); ?>">
+				<a href="#" class="position-change-cover-image bp-tooltip" data-bp-tooltip-pos="right" data-bp-tooltip="<?php esc_attr_e( 'Reposition Cover Photo', 'buddyboss-platform' ); ?>" aria-label="<?php esc_attr_e( 'Reposition Cover Photo', 'buddyboss-platform' ); ?>">
 					<i class="bb-icon-bf bb-icon-arrows"></i>
 				</a>
 				<div class="header-cover-reposition-wrap">
-					<a href="#" class="button small cover-image-cancel"><?php esc_html_e( 'Cancel', 'buddyboss' ); ?></a>
-					<a href="#" class="button small cover-image-save"><?php esc_html_e( 'Save Changes', 'buddyboss' ); ?></a>
-					<span class="drag-element-helper"><i class="bb-icon-l bb-icon-bars"></i><?php esc_html_e( 'Drag to move cover photo', 'buddyboss' ); ?></span>
-					<img src="<?php echo esc_url( $group_cover_image ); ?>" alt="<?php esc_attr_e( 'Cover photo', 'buddyboss' ); ?>" />
+					<a href="#" class="button small cover-image-cancel"><?php esc_html_e( 'Cancel', 'buddyboss-platform' ); ?></a>
+					<a href="#" class="button small cover-image-save"><?php esc_html_e( 'Save Changes', 'buddyboss-platform' ); ?></a>
+					<span class="drag-element-helper"><i class="bb-icon-l bb-icon-bars"></i><?php esc_html_e( 'Drag to move cover photo', 'buddyboss-platform' ); ?></span>
+					<img src="<?php echo esc_url( $group_cover_image ); ?>" alt="<?php esc_attr_e( 'Cover photo', 'buddyboss-platform' ); ?>" />
 				</div>
 			<?php } ?>
 		<?php } ?>
@@ -75,7 +75,7 @@ add_filter( 'bp_get_group_description_excerpt', 'bb_get_group_description_excerp
 		<?php if ( ! bp_disable_group_avatar_uploads() ) : ?>
 			<div id="item-header-avatar">
 				<?php if ( bp_is_item_admin() ) { ?>
-					<a href="<?php echo esc_url( $group_avatar ); ?>" class="link-change-profile-image bp-tooltip" data-bp-tooltip-pos="down" data-bp-tooltip="<?php esc_attr_e( 'Change Group Photo', 'buddyboss' ); ?>" aria-label="<?php esc_attr_e( 'Change Group Photo', 'buddyboss' ); ?>">
+					<a href="<?php echo esc_url( $group_avatar ); ?>" class="link-change-profile-image bp-tooltip" data-bp-tooltip-pos="down" data-bp-tooltip="<?php esc_attr_e( 'Change Group Photo', 'buddyboss-platform' ); ?>" aria-label="<?php esc_attr_e( 'Change Group Photo', 'buddyboss-platform' ); ?>">
 						<i class="bb-icon-rf bb-icon-camera"></i>
 					</a>
 					<span class="link-change-overlay"></span>
@@ -146,7 +146,7 @@ add_filter( 'bp_get_group_description_excerpt', 'bb_get_group_description_excerp
 							<?php
 							printf(
 								/* translators: %s = last activity timestamp (e.g. "active 1 hour ago") */
-								esc_html__( 'Active %s', 'buddyboss' ),
+								esc_html__( 'Active %s', 'buddyboss-platform' ),
 								wp_kses_post( bp_get_group_last_active() )
 							);
 							?>
@@ -195,8 +195,8 @@ add_filter( 'bp_get_group_description_excerpt', 'bb_get_group_description_excerp
 			<div class="modal-wrapper">
 				<div class="modal-container">
 					<header class="bb-model-header">
-						<h4><span class="target_name"><?php echo esc_html__( 'Group Description', 'buddyboss' ); ?></span></h4>
-						<a class="bb-close-action-popup bb-model-close-button" href="#" aria-label="<?php esc_attr_e( 'Close', 'buddyboss' ); ?>">
+						<h4><span class="target_name"><?php echo esc_html__( 'Group Description', 'buddyboss-platform' ); ?></span></h4>
+						<a class="bb-close-action-popup bb-model-close-button" href="#" aria-label="<?php esc_attr_e( 'Close', 'buddyboss-platform' ); ?>">
 							<span class="bb-icon-l bb-icon-times"></span>
 						</a>
 					</header>
@@ -216,17 +216,17 @@ add_filter( 'bp_get_group_description_excerpt', 'bb_get_group_description_excerp
 			<div class="modal-wrapper">
 				<div class="modal-container">
 					<header class="bb-model-header">
-						<h4><span class="target_name"><?php esc_html_e( 'Leave Group', 'buddyboss' ); ?></span></h4>
+						<h4><span class="target_name"><?php esc_html_e( 'Leave Group', 'buddyboss-platform' ); ?></span></h4>
 						<a class="bb-close-leave-group bb-model-close-button" href="#">
 							<span class="bb-icon-l bb-icon-times"></span>
 						</a>
 					</header>
 					<div class="bb-leave-group-content bb-action-popup-content">
-						<p><?php esc_html_e( 'Are you sure you want to leave ', 'buddyboss' ); ?><span class="bb-group-name"></span>?</p>
+						<p><?php esc_html_e( 'Are you sure you want to leave ', 'buddyboss-platform' ); ?><span class="bb-group-name"></span>?</p>
 					</div>
 					<footer class="bb-model-footer flex align-items-center">
-						<a class="bb-close-leave-group bb-close-action-popup" href="#"><?php esc_html_e( 'Cancel', 'buddyboss' ); ?></a>
-						<a class="button push-right bb-confirm-leave-group" href="#"><?php esc_html_e( 'Confirm', 'buddyboss' ); ?></a>
+						<a class="bb-close-leave-group bb-close-action-popup" href="#"><?php esc_html_e( 'Cancel', 'buddyboss-platform' ); ?></a>
+						<a class="button push-right bb-confirm-leave-group" href="#"><?php esc_html_e( 'Confirm', 'buddyboss-platform' ); ?></a>
 					</footer>
 
 				</div>

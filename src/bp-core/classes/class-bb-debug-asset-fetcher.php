@@ -560,8 +560,8 @@ class BB_Debug_Asset_Fetcher {
 		if ( ! is_readable( $manifest_path ) ) {
 			printf(
 				'<div class="notice notice-info"><p><strong>%s</strong> %s</p></div>',
-				esc_html__( 'BuddyBoss debug assets:', 'buddyboss' ),
-				esc_html__( 'Unminified-asset manifest not found. The shipped plugin zip ships this file; running from a source checkout will skip the runtime override and load minified assets only.', 'buddyboss' )
+				esc_html__( 'BuddyBoss debug assets:', 'buddyboss-platform' ),
+				esc_html__( 'Unminified-asset manifest not found. The shipped plugin zip ships this file; running from a source checkout will skip the runtime override and load minified assets only.', 'buddyboss-platform' )
 			);
 			return;
 		}
@@ -570,8 +570,8 @@ class BB_Debug_Asset_Fetcher {
 		if ( get_site_transient( self::LOCK_TRANSIENT ) ) {
 			printf(
 				'<div class="notice notice-info"><p><strong>%s</strong> %s</p></div>',
-				esc_html__( 'BuddyBoss debug assets:', 'buddyboss' ),
-				esc_html__( 'Downloading unminified asset bundle for this version… reload in a few seconds.', 'buddyboss' )
+				esc_html__( 'BuddyBoss debug assets:', 'buddyboss-platform' ),
+				esc_html__( 'Downloading unminified asset bundle for this version… reload in a few seconds.', 'buddyboss-platform' )
 			);
 			return;
 		}
@@ -586,11 +586,11 @@ class BB_Debug_Asset_Fetcher {
 		echo '<div class="notice notice-error"><p><strong>';
 		printf(
 			/* translators: %d: number of files. */
-			esc_html( _n( 'BuddyBoss debug assets: %d file failed to download.', 'BuddyBoss debug assets: %d files failed to download.', $count, 'buddyboss' ) ),
+			esc_html( _n( 'BuddyBoss debug assets: %d file failed to download.', 'BuddyBoss debug assets: %d files failed to download.', $count, 'buddyboss-platform' ) ),
 			(int) $count
 		);
 		echo '</strong> ';
-		esc_html_e( 'Pages will fall back to minified bundles. Verify outbound HTTPS to raw.githubusercontent.com, then reload to retry.', 'buddyboss' );
+		esc_html_e( 'Pages will fall back to minified bundles. Verify outbound HTTPS to raw.githubusercontent.com, then reload to retry.', 'buddyboss-platform' );
 		echo '</p><ul style="margin-left:1.5em;">';
 		// Cap to the first 10 to avoid a wall of red on widespread failure.
 		$shown = array_slice( $failures['failures'], 0, 10 );
@@ -607,7 +607,7 @@ class BB_Debug_Asset_Fetcher {
 				esc_html(
 					sprintf(
 						/* translators: %d: remaining failure count. */
-						_n( '…and %d more failure.', '…and %d more failures.', $count - count( $shown ), 'buddyboss' ),
+						_n( '…and %d more failure.', '…and %d more failures.', $count - count( $shown ), 'buddyboss-platform' ),
 						$count - count( $shown )
 					)
 				)

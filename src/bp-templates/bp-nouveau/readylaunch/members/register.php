@@ -92,10 +92,10 @@ $bp_get_current_signup_step = bp_get_current_signup_step();
 					/***** Blog Creation Details */
 					?>
 					<div class="register-section blog-details" id="blog-details-section">
-						<h2><?php esc_html_e( 'Site Details', 'buddyboss' ); ?></h2>
+						<h2><?php esc_html_e( 'Site Details', 'buddyboss-platform' ); ?></h2>
 						<p>
 							<input type="checkbox" name="signup_with_blog" id="signup_with_blog" class="bs-styled-checkbox" value="1" <?php checked( (int) bp_get_signup_with_blog_value(), 1 ); ?> />
-							<label for="signup_with_blog"><?php esc_html_e( "Yes, I'd like to create a new site", 'buddyboss' ); ?></label>
+							<label for="signup_with_blog"><?php esc_html_e( "Yes, I'd like to create a new site", 'buddyboss-platform' ); ?></label>
 						</p>
 						<div id="blog-details"
 						<?php

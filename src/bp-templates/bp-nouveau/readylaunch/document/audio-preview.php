@@ -20,7 +20,7 @@ if ( $allow_extension ) {
 	<div class="bb-rl-document-audio-wrap">
 		<audio controls controlsList="nodownload">
 			<source src="<?php echo esc_url( $audio_url ); ?>" type="audio/mpeg">
-			<?php esc_html_e( 'Your browser does not support the audio element.', 'buddyboss' ); ?>
+			<?php esc_html_e( 'Your browser does not support the audio element.', 'buddyboss-platform' ); ?>
 		</audio>
 	</div>
 	<?php

@@ -73,7 +73,7 @@ class BP_REST_Document_Folder_Endpoint extends WP_REST_Controller {
 			array(
 				'args'        => array(
 					'id' => array(
-						'description' => __( 'A unique numeric ID for the folder.', 'buddyboss' ),
+						'description' => __( 'A unique numeric ID for the folder.', 'buddyboss-platform' ),
 						'type'        => 'integer',
 						'required'    => true,
 					),
@@ -105,11 +105,11 @@ class BP_REST_Document_Folder_Endpoint extends WP_REST_Controller {
 			array(
 				'args' => array(
 					'group_id'     => array(
-						'description' => __( 'A unique numeric ID for the Group.', 'buddyboss' ),
+						'description' => __( 'A unique numeric ID for the Group.', 'buddyboss-platform' ),
 						'type'        => 'integer',
 					),
 					'hierarchical' => array(
-						'description' => __( 'Whether to retrieve as a hierarchical or not.', 'buddyboss' ),
+						'description' => __( 'Whether to retrieve as a hierarchical or not.', 'buddyboss-platform' ),
 						'type'        => 'boolean',
 						'default'     => true,
 					),
@@ -243,7 +243,7 @@ class BP_REST_Document_Folder_Endpoint extends WP_REST_Controller {
 		if ( function_exists( 'bp_rest_enable_private_network' ) && true === bp_rest_enable_private_network() && ! is_user_logged_in() ) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
-				__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss' ),
+				__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss-platform' ),
 				array(
 					'status' => rest_authorization_required_code(),
 				)
@@ -285,7 +285,7 @@ class BP_REST_Document_Folder_Endpoint extends WP_REST_Controller {
 		if ( empty( $folders['folders'] ) ) {
 			return new WP_Error(
 				'bp_rest_folder_invalid_id',
-				__( 'Invalid Folder ID.', 'buddyboss' ),
+				__( 'Invalid Folder ID.', 'buddyboss-platform' ),
 				array(
 					'status' => 404,
 				)
@@ -328,7 +328,7 @@ class BP_REST_Document_Folder_Endpoint extends WP_REST_Controller {
 		if ( function_exists( 'bp_rest_enable_private_network' ) && true === bp_rest_enable_private_network() && ! is_user_logged_in() ) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
-				__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss' ),
+				__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss-platform' ),
 				array(
 					'status' => rest_authorization_required_code(),
 				)
@@ -340,7 +340,7 @@ class BP_REST_Document_Folder_Endpoint extends WP_REST_Controller {
 		if ( true === $retval && empty( $folder->id ) ) {
 			$retval = new WP_Error(
 				'bp_rest_folder_invalid_id',
-				__( 'Invalid Folder ID.', 'buddyboss' ),
+				__( 'Invalid Folder ID.', 'buddyboss-platform' ),
 				array(
 					'status' => 404,
 				)
@@ -354,7 +354,7 @@ class BP_REST_Document_Folder_Endpoint extends WP_REST_Controller {
 		) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
-				__( 'Sorry, Restrict access to view this folder.', 'buddyboss' ),
+				__( 'Sorry, Restrict access to view this folder.', 'buddyboss-platform' ),
 				array(
 					'status' => rest_authorization_required_code(),
 				)
@@ -416,7 +416,7 @@ class BP_REST_Document_Folder_Endpoint extends WP_REST_Controller {
 		) {
 			return new WP_Error(
 				'bp_rest_authorization_required',
-				__( 'Sorry, you are not allowed to create a folder.', 'buddyboss' ),
+				__( 'Sorry, you are not allowed to create a folder.', 'buddyboss-platform' ),
 				array(
 					'status' => rest_authorization_required_code(),
 				)
@@ -478,7 +478,7 @@ class BP_REST_Document_Folder_Endpoint extends WP_REST_Controller {
 	public function create_item_permissions_check( $request ) {
 		$error = new WP_Error(
 			'bp_rest_authorization_required',
-			__( 'Sorry, you are not allowed to create a folder.', 'buddyboss' ),
+			__( 'Sorry, you are not allowed to create a folder.', 'buddyboss-platform' ),
 			array(
 				'status' => rest_authorization_required_code(),
 			)
@@ -501,7 +501,7 @@ class BP_REST_Document_Folder_Endpoint extends WP_REST_Controller {
 				) {
 					$retval = new WP_Error(
 						'bp_rest_invalid_permission',
-						__( 'You don\'t have a permission to create a folder inside this group.', 'buddyboss' ),
+						__( 'You don\'t have a permission to create a folder inside this group.', 'buddyboss-platform' ),
 						array(
 							'status' => rest_authorization_required_code(),
 						)
@@ -514,7 +514,7 @@ class BP_REST_Document_Folder_Endpoint extends WP_REST_Controller {
 				if ( empty( $parent_folder->id ) ) {
 					$retval = new WP_Error(
 						'bp_rest_invalid_parent_folder',
-						__( 'Invalid Parent Folder ID.', 'buddyboss' ),
+						__( 'Invalid Parent Folder ID.', 'buddyboss-platform' ),
 						array(
 							'status' => 400,
 						)
@@ -522,7 +522,7 @@ class BP_REST_Document_Folder_Endpoint extends WP_REST_Controller {
 				} elseif ( ! bp_folder_user_can_edit( $parent_folder->id ) ) {
 					$retval = new WP_Error(
 						'bp_rest_invalid_permission',
-						__( 'You don\'t have a permission to create a folder inside this folder.', 'buddyboss' ),
+						__( 'You don\'t have a permission to create a folder inside this folder.', 'buddyboss-platform' ),
 						array(
 							'status' => rest_authorization_required_code(),
 						)
@@ -570,7 +570,7 @@ class BP_REST_Document_Folder_Endpoint extends WP_REST_Controller {
 		if ( empty( $folders['folders'] ) ) {
 			return new WP_Error(
 				'bp_rest_folder_invalid_id',
-				__( 'Invalid Folder ID.', 'buddyboss' ),
+				__( 'Invalid Folder ID.', 'buddyboss-platform' ),
 				array(
 					'status' => 404,
 				)
@@ -633,7 +633,7 @@ class BP_REST_Document_Folder_Endpoint extends WP_REST_Controller {
 				if ( ! bp_folder_user_can_edit( $folder_id ) ) {
 					return new WP_Error(
 						'bp_rest_authorization_required',
-						__( 'Sorry, You don\'t have permission to move this folder.', 'buddyboss' ),
+						__( 'Sorry, You don\'t have permission to move this folder.', 'buddyboss-platform' ),
 						array(
 							'status' => rest_authorization_required_code(),
 						)
@@ -645,7 +645,7 @@ class BP_REST_Document_Folder_Endpoint extends WP_REST_Controller {
 				if ( ! bp_folder_user_can_edit( $destination_folder_id ) ) {
 					return new WP_Error(
 						'bp_rest_authorization_required',
-						__( 'Sorry, You don\'t have permission to move this folder.', 'buddyboss' ),
+						__( 'Sorry, You don\'t have permission to move this folder.', 'buddyboss-platform' ),
 						array(
 							'status' => rest_authorization_required_code(),
 						)
@@ -658,7 +658,7 @@ class BP_REST_Document_Folder_Endpoint extends WP_REST_Controller {
 				if ( in_array( $destination_folder_id, $fetch_children, true ) ) {
 					return new WP_Error(
 						'bp_rest_invalid_move_folder',
-						__( 'Couldn’t move item because it\'s parent folder.', 'buddyboss' ),
+						__( 'Couldn’t move item because it\'s parent folder.', 'buddyboss-platform' ),
 						array(
 							'status' => 400,
 						)
@@ -678,7 +678,7 @@ class BP_REST_Document_Folder_Endpoint extends WP_REST_Controller {
 		if ( ! is_numeric( $updated_folder_id ) ) {
 			return new WP_Error(
 				'bp_rest_user_cannot_update_folder',
-				__( 'Cannot update existing folder.', 'buddyboss' ),
+				__( 'Cannot update existing folder.', 'buddyboss-platform' ),
 				array(
 					'status' => 500,
 				)
@@ -724,7 +724,7 @@ class BP_REST_Document_Folder_Endpoint extends WP_REST_Controller {
 	public function update_item_permissions_check( $request ) {
 		$error = new WP_Error(
 			'bp_rest_authorization_required',
-			__( 'Sorry, you need to be logged in to update this folder.', 'buddyboss' ),
+			__( 'Sorry, you need to be logged in to update this folder.', 'buddyboss-platform' ),
 			array(
 				'status' => rest_authorization_required_code(),
 			)
@@ -739,7 +739,7 @@ class BP_REST_Document_Folder_Endpoint extends WP_REST_Controller {
 			if ( empty( $folder->id ) ) {
 				$retval = new WP_Error(
 					'bp_rest_folder_invalid_id',
-					__( 'Invalid Folder ID.', 'buddyboss' ),
+					__( 'Invalid Folder ID.', 'buddyboss-platform' ),
 					array(
 						'status' => 404,
 					)
@@ -759,7 +759,7 @@ class BP_REST_Document_Folder_Endpoint extends WP_REST_Controller {
 				) {
 					$retval = new WP_Error(
 						'bp_rest_invalid_permission',
-						__( 'You don\'t have a permission to edit a folder inside this group.', 'buddyboss' ),
+						__( 'You don\'t have a permission to edit a folder inside this group.', 'buddyboss-platform' ),
 						array(
 							'status' => rest_authorization_required_code(),
 						)
@@ -804,7 +804,7 @@ class BP_REST_Document_Folder_Endpoint extends WP_REST_Controller {
 		if ( empty( $folders['folders'] ) ) {
 			return new WP_Error(
 				'bp_rest_folder_invalid_id',
-				__( 'Invalid Folder ID.', 'buddyboss' ),
+				__( 'Invalid Folder ID.', 'buddyboss-platform' ),
 				array(
 					'status' => 404,
 				)
@@ -821,7 +821,7 @@ class BP_REST_Document_Folder_Endpoint extends WP_REST_Controller {
 		if ( ! bp_folder_user_can_delete( $id ) ) {
 			return WP_Error(
 				'bp_rest_authorization_required',
-				__( 'Sorry, you are not allowed to delete this folder.', 'buddyboss' ),
+				__( 'Sorry, you are not allowed to delete this folder.', 'buddyboss-platform' ),
 				array(
 					'status' => rest_authorization_required_code(),
 				)
@@ -863,7 +863,7 @@ class BP_REST_Document_Folder_Endpoint extends WP_REST_Controller {
 	public function delete_item_permissions_check( $request ) {
 		$retval = new WP_Error(
 			'bp_rest_authorization_required',
-			__( 'Sorry, you need to be logged in to delete this folder.', 'buddyboss' ),
+			__( 'Sorry, you need to be logged in to delete this folder.', 'buddyboss-platform' ),
 			array(
 				'status' => rest_authorization_required_code(),
 			)
@@ -876,7 +876,7 @@ class BP_REST_Document_Folder_Endpoint extends WP_REST_Controller {
 			if ( empty( $folder->id ) ) {
 				$retval = new WP_Error(
 					'bp_rest_folder_invalid_id',
-					__( 'Invalid Folder ID.', 'buddyboss' ),
+					__( 'Invalid Folder ID.', 'buddyboss-platform' ),
 					array(
 						'status' => 404,
 					)
@@ -884,7 +884,7 @@ class BP_REST_Document_Folder_Endpoint extends WP_REST_Controller {
 			} elseif ( ! bp_folder_user_can_delete( $folder ) ) {
 				$retval = new WP_Error(
 					'bp_rest_authorization_required',
-					__( 'Sorry, you are not allowed to delete this folder.', 'buddyboss' ),
+					__( 'Sorry, you are not allowed to delete this folder.', 'buddyboss-platform' ),
 					array(
 						'status' => rest_authorization_required_code(),
 					)
@@ -1001,7 +1001,7 @@ class BP_REST_Document_Folder_Endpoint extends WP_REST_Controller {
 	public function folder_tree_items_permissions_check( $request ) {
 		$retval = new WP_Error(
 			'bp_rest_authorization_required',
-			__( 'Sorry, you are not allowed to view folder tree.', 'buddyboss' ),
+			__( 'Sorry, you are not allowed to view folder tree.', 'buddyboss-platform' ),
 			array(
 				'status' => rest_authorization_required_code(),
 			)
@@ -1055,7 +1055,7 @@ class BP_REST_Document_Folder_Endpoint extends WP_REST_Controller {
 		$key  = 'create';
 
 		$args['title'] = array(
-			'description'       => __( 'Folder Title.', 'buddyboss' ),
+			'description'       => __( 'Folder Title.', 'buddyboss-platform' ),
 			'type'              => 'string',
 			'required'          => true,
 			'sanitize_callback' => 'sanitize_text_field',
@@ -1063,21 +1063,21 @@ class BP_REST_Document_Folder_Endpoint extends WP_REST_Controller {
 		);
 
 		$args['parent'] = array(
-			'description'       => __( 'A unique numeric ID for the parent folder.', 'buddyboss' ),
+			'description'       => __( 'A unique numeric ID for the parent folder.', 'buddyboss-platform' ),
 			'type'              => 'integer',
 			'sanitize_callback' => 'absint',
 			'validate_callback' => 'rest_validate_request_arg',
 		);
 
 		$args['group_id'] = array(
-			'description'       => __( 'A unique numeric ID for the Group.', 'buddyboss' ),
+			'description'       => __( 'A unique numeric ID for the Group.', 'buddyboss-platform' ),
 			'type'              => 'integer',
 			'sanitize_callback' => 'absint',
 			'validate_callback' => 'rest_validate_request_arg',
 		);
 
 		$args['privacy'] = array(
-			'description'       => __( 'Privacy of the folder.', 'buddyboss' ),
+			'description'       => __( 'Privacy of the folder.', 'buddyboss-platform' ),
 			'type'              => 'string',
 			'enum'              => array( 'public', 'loggedin', 'friends', 'onlyme', 'grouponly' ),
 			'default'           => 'public',
@@ -1088,7 +1088,7 @@ class BP_REST_Document_Folder_Endpoint extends WP_REST_Controller {
 		if ( WP_REST_Server::EDITABLE === $method ) {
 			$key        = 'edit';
 			$args['id'] = array(
-				'description'       => __( 'A unique numeric ID for the folder', 'buddyboss' ),
+				'description'       => __( 'A unique numeric ID for the folder', 'buddyboss-platform' ),
 				'type'              => 'integer',
 				'required'          => true,
 				'sanitize_callback' => 'absint',
@@ -1145,7 +1145,7 @@ class BP_REST_Document_Folder_Endpoint extends WP_REST_Controller {
 		$params = parent::get_collection_params();
 
 		$params['order'] = array(
-			'description'       => __( 'Order sort attribute ascending or descending.', 'buddyboss' ),
+			'description'       => __( 'Order sort attribute ascending or descending.', 'buddyboss-platform' ),
 			'default'           => 'desc',
 			'type'              => 'string',
 			'enum'              => array( 'asc', 'desc' ),
@@ -1154,7 +1154,7 @@ class BP_REST_Document_Folder_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['orderby'] = array(
-			'description'       => __( 'Order folders by which attribute.', 'buddyboss' ),
+			'description'       => __( 'Order folders by which attribute.', 'buddyboss-platform' ),
 			'default'           => 'date_created',
 			'type'              => 'string',
 			'enum'              => array( 'id', 'title', 'date_created', 'user_id', 'group_id', 'privacy' ),
@@ -1163,14 +1163,14 @@ class BP_REST_Document_Folder_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['max'] = array(
-			'description'       => __( 'Maximum number of results to return', 'buddyboss' ),
+			'description'       => __( 'Maximum number of results to return', 'buddyboss-platform' ),
 			'type'              => 'integer',
 			'sanitize_callback' => 'absint',
 			'validate_callback' => 'rest_validate_request_arg',
 		);
 
 		$params['user_id'] = array(
-			'description'       => __( 'Limit results to a specific user.', 'buddyboss' ),
+			'description'       => __( 'Limit results to a specific user.', 'buddyboss-platform' ),
 			'default'           => 0,
 			'type'              => 'integer',
 			'sanitize_callback' => 'absint',
@@ -1178,21 +1178,21 @@ class BP_REST_Document_Folder_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['parent'] = array(
-			'description'       => __( 'A unique numeric ID for the parent Folder.', 'buddyboss' ),
+			'description'       => __( 'A unique numeric ID for the parent Folder.', 'buddyboss-platform' ),
 			'type'              => 'integer',
 			'sanitize_callback' => 'absint',
 			'validate_callback' => 'rest_validate_request_arg',
 		);
 
 		$params['group_id'] = array(
-			'description'       => __( 'A unique numeric ID for the Group.', 'buddyboss' ),
+			'description'       => __( 'A unique numeric ID for the Group.', 'buddyboss-platform' ),
 			'type'              => 'integer',
 			'sanitize_callback' => 'absint',
 			'validate_callback' => 'rest_validate_request_arg',
 		);
 
 		$params['privacy'] = array(
-			'description'       => __( 'Privacy of the folder.', 'buddyboss' ),
+			'description'       => __( 'Privacy of the folder.', 'buddyboss-platform' ),
 			'type'              => 'array',
 			'items'             => array(
 				'enum' => array( 'public', 'loggedin', 'friends', 'onlyme', 'grouponly' ),
@@ -1203,7 +1203,7 @@ class BP_REST_Document_Folder_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['include'] = array(
-			'description'       => __( 'Ensure result set includes specific folder IDs.', 'buddyboss' ),
+			'description'       => __( 'Ensure result set includes specific folder IDs.', 'buddyboss-platform' ),
 			'default'           => array(),
 			'type'              => 'array',
 			'items'             => array( 'type' => 'integer' ),
@@ -1212,7 +1212,7 @@ class BP_REST_Document_Folder_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['exclude'] = array(
-			'description'       => __( 'Ensure result set excludes specific folder IDs.', 'buddyboss' ),
+			'description'       => __( 'Ensure result set excludes specific folder IDs.', 'buddyboss-platform' ),
 			'default'           => array(),
 			'type'              => 'array',
 			'items'             => array( 'type' => 'integer' ),
@@ -1221,7 +1221,7 @@ class BP_REST_Document_Folder_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['count_total'] = array(
-			'description' => __( 'Show total count or not.', 'buddyboss' ),
+			'description' => __( 'Show total count or not.', 'buddyboss-platform' ),
 			'default'     => true,
 			'type'        => 'boolean',
 		);

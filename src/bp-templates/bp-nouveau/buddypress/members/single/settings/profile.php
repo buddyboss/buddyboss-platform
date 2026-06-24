@@ -11,11 +11,11 @@
 bp_nouveau_member_hook( 'before', 'settings_template' ); ?>
 
 <h2 class="screen-heading profile-settings-screen">
-	<?php esc_html_e( 'Profile Visibility Settings', 'buddyboss' ); ?>
+	<?php esc_html_e( 'Profile Visibility Settings', 'buddyboss-platform' ); ?>
 </h2>
 
 <p class="bp-help-text profile-visibility-info">
-	<?php esc_html_e( 'Select who may see your profile details.', 'buddyboss' ); ?>
+	<?php esc_html_e( 'Select who may see your profile details.', 'buddyboss-platform' ); ?>
 </p>
 
 <form action="<?php echo esc_url( bp_displayed_user_domain() . bp_get_settings_slug() . '/profile/' ); ?>" method="post" class="standard-form" id="settings-form">
@@ -37,7 +37,7 @@ bp_nouveau_member_hook( 'before', 'settings_template' ); ?>
 					<thead>
 					<tr>
 						<th class="title field-group-name"><?php bp_the_profile_group_name(); ?></th>
-						<th class="title"><?php esc_html_e( 'Visibility', 'buddyboss' ); ?></th>
+						<th class="title"><?php esc_html_e( 'Visibility', 'buddyboss-platform' ); ?></th>
 					</tr>
 					</thead>
 
@@ -51,7 +51,7 @@ bp_nouveau_member_hook( 'before', 'settings_template' ); ?>
 							<td class="field-name"><?php bp_the_profile_field_name(); ?></td>
 							<?php if ( $is_group_repeater ) : ?>
 								<td class="field-visibility">
-									<a title="<?php esc_html_e( 'Manage Privacy', 'buddyboss' ); ?>" href="<?php echo esc_url( $group_url ); ?>" ><?php esc_html_e( 'Manage Privacy', 'buddyboss' ); ?></a>
+									<a title="<?php esc_html_e( 'Manage Privacy', 'buddyboss-platform' ); ?>" href="<?php echo esc_url( $group_url ); ?>" ><?php esc_html_e( 'Manage Privacy', 'buddyboss-platform' ); ?></a>
 								</td>
 							<?php else : ?>
 								<td class="field-visibility"><?php bp_profile_settings_visibility_select(); ?></td>

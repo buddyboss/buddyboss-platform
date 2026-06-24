@@ -136,13 +136,13 @@ export default function KnowledgeBaseModal( { triggerRef } ) {
 								<span className="bb-kb-modal__brand-separator"></span>
 							</>
 						) : null }
-						{ __( 'Documentation', 'buddyboss' ) }
+						{ __( 'Documentation', 'buddyboss-platform' ) }
 					</span>
 					<button
 						type="button"
 						className="bb-kb-modal__close"
 						onClick={ close }
-						aria-label={ __( 'Close documentation', 'buddyboss' ) }
+						aria-label={ __( 'Close documentation', 'buddyboss-platform' ) }
 					>
 						<i className="bb-icons-rl-x" aria-hidden="true" />
 					</button>

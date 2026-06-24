@@ -585,7 +585,7 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 				<div class="bb-telemetry-notice_logo"><i class="bb-icon-brand-buddyboss bb-icon-rf"></i></div>
 				<div class="bb-telemetry-notice_content">
 					<p class="bb-telemetry-notice_heading">
-						<strong><?php esc_html_e( 'Help us improve BuddyBoss', 'buddyboss' ); ?></strong>
+						<strong><?php esc_html_e( 'Help us improve BuddyBoss', 'buddyboss-platform' ); ?></strong>
 					</p>
 					<p>
 						<?php
@@ -593,7 +593,7 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 						printf(
 							wp_kses(
 							/* translators: %1$s and %2$s are links. */
-								__( 'We gather statistics about how our users use the product. We aggregate this information to help us improve the product and provide you with a better service. If you\'re happy with that you can dismiss this message, otherwise you can <a href="%1$s">adjust your telemetry settings</a>. To read more about what statistics we collect and why, click below.', 'buddyboss' ),
+								__( 'We gather statistics about how our users use the product. We aggregate this information to help us improve the product and provide you with a better service. If you\'re happy with that you can dismiss this message, otherwise you can <a href="%1$s">adjust your telemetry settings</a>. To read more about what statistics we collect and why, click below.', 'buddyboss-platform' ),
 								array(
 									'a' => array(
 										'href' => array(),
@@ -606,7 +606,7 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 					</p>
 					<p>
 						<a href="<?php echo esc_url( $telemetry_url ); ?>" class="button button-primary" target="_blank" >
-							<?php esc_html_e( 'About Telemetry', 'buddyboss' ); ?>
+							<?php esc_html_e( 'About Telemetry', 'buddyboss-platform' ); ?>
 						</a>
 					</p>
 				</div>
@@ -626,14 +626,14 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 			// (admin_notices fires for any admin viewer; manage_options matches
 			// the network-admin-friendly subset that can dismiss it).
 			if ( ! current_user_can( 'manage_options' ) ) {
-				wp_send_json_error( array( 'error' => __( 'You do not have permission to perform this action.', 'buddyboss' ) ) );
+				wp_send_json_error( array( 'error' => __( 'You do not have permission to perform this action.', 'buddyboss-platform' ) ) );
 			}
 
 			$bb_telemetry_nonce = bb_filter_input_string( INPUT_POST, 'nonce' );
 
 			// Nonce check.
 			if ( empty( $bb_telemetry_nonce ) || ! wp_verify_nonce( $bb_telemetry_nonce, 'bb-telemetry-notice-nonce' ) ) {
-				wp_send_json_error( array( 'error' => __( 'Sorry, something goes wrong please try again.', 'buddyboss' ) ) );
+				wp_send_json_error( array( 'error' => __( 'Sorry, something goes wrong please try again.', 'buddyboss-platform' ) ) );
 			}
 
 			bp_update_option( 'bb_telemetry_notice_dismissed', 1 );

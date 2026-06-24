@@ -129,27 +129,27 @@ function bp_nouveau_media_localize_scripts( $params = array() ) {
 		'group_album'                        => bp_is_group_albums_support_enabled(),
 		'messages_media'                     => bp_is_messages_media_support_enabled() && bb_user_can_create_media(),
 		'messages_media_active'              => bp_is_messages_media_support_enabled(),
-		'dropzone_media_message'             => sprintf( '<strong>%s</strong> %s', esc_html__( 'Add Photos', 'buddyboss' ), esc_html__( 'Or drag and drop', 'buddyboss' ) ),
-		'media_select_error'                 => __( 'This file type is not supported for photo uploads.', 'buddyboss' ),
-		'empty_media_type'                   => __( 'Empty media file will not be uploaded.', 'buddyboss' ),
-		'invalid_media_type'                 => __( 'Unable to upload the file', 'buddyboss' ),
-		'media_size_error_header'            => __( 'File too large ', 'buddyboss' ),
-		'media_size_error_description'       => __( 'This file type is too large.', 'buddyboss' ),
-		'dictFileTooBig'                     => __( 'Sorry, file size is too big ({{filesize}} MB). Max file size limit: {{maxFilesize}} MB.', 'buddyboss' ),
-		'cover_photo_size_error_header'      => __( 'Unable to reposition the image ', 'buddyboss' ),
-		'cover_photo_size_error_description' => __( 'To reposition your cover photo, please upload a larger image and then try again.', 'buddyboss' ),
+		'dropzone_media_message'             => sprintf( '<strong>%s</strong> %s', esc_html__( 'Add Photos', 'buddyboss-platform' ), esc_html__( 'Or drag and drop', 'buddyboss-platform' ) ),
+		'media_select_error'                 => __( 'This file type is not supported for photo uploads.', 'buddyboss-platform' ),
+		'empty_media_type'                   => __( 'Empty media file will not be uploaded.', 'buddyboss-platform' ),
+		'invalid_media_type'                 => __( 'Unable to upload the file', 'buddyboss-platform' ),
+		'media_size_error_header'            => __( 'File too large ', 'buddyboss-platform' ),
+		'media_size_error_description'       => __( 'This file type is too large.', 'buddyboss-platform' ),
+		'dictFileTooBig'                     => __( 'Sorry, file size is too big ({{filesize}} MB). Max file size limit: {{maxFilesize}} MB.', 'buddyboss-platform' ),
+		'cover_photo_size_error_header'      => __( 'Unable to reposition the image ', 'buddyboss-platform' ),
+		'cover_photo_size_error_description' => __( 'To reposition your cover photo, please upload a larger image and then try again.', 'buddyboss-platform' ),
 		'maxFiles'                           => bp_media_allowed_upload_media_per_batch(),
 		'is_media_directory'                 => ( bp_is_media_directory() ) ? 'yes' : 'no',
-		'create_album_error_title'           => __( 'Please enter title of album', 'buddyboss' ),
+		'create_album_error_title'           => __( 'Please enter title of album', 'buddyboss-platform' ),
 		'current_album'                      => $album_id,
 		'current_type'                       => $type,
 		'move_to_id_popup'                   => $move_to_id_popup,
 		/* translators: %s: maximum number of photos allowed per upload batch. */
-		'media_dict_file_exceeded'           => sprintf( __( 'You are allowed to upload only %s photos at a time.', 'buddyboss' ), bp_core_number_format( bp_media_allowed_upload_media_per_batch() ) ),
+		'media_dict_file_exceeded'           => sprintf( __( 'You are allowed to upload only %s photos at a time.', 'buddyboss-platform' ), bp_core_number_format( bp_media_allowed_upload_media_per_batch() ) ),
 		'can_manage_media'                   => ( is_user_logged_in() && bb_user_can_create_media() ),
-		'create_album_title'                 => __( 'Create Album', 'buddyboss' ),
-		'dictCancelUploadConfirmation'       => __( 'Are you sure you want to cancel this upload?', 'buddyboss' ),
-		'connection_lost_error'              => __( 'Connection lost with the server.', 'buddyboss' ),
+		'create_album_title'                 => __( 'Create Album', 'buddyboss-platform' ),
+		'dictCancelUploadConfirmation'       => __( 'Are you sure you want to cancel this upload?', 'buddyboss-platform' ),
+		'connection_lost_error'              => __( 'Connection lost with the server.', 'buddyboss-platform' ),
 	);
 
 	if ( bp_is_single_album() ) {
@@ -182,43 +182,43 @@ function bp_nouveau_media_localize_scripts( $params = array() ) {
 	);
 	$params['media']['gif_api_key'] = bp_media_get_gif_api_key();
 
-	$params['media']['gif_search_placeholder'] = __( 'Search GIPHY...', 'buddyboss' );
-	$params['media']['gif_no_results']         = __( 'No results found', 'buddyboss' );
-	$params['media']['gif_no_connection']      = __( 'Could not connect to GIPHY', 'buddyboss' );
+	$params['media']['gif_search_placeholder'] = __( 'Search GIPHY...', 'buddyboss-platform' );
+	$params['media']['gif_no_results']         = __( 'No results found', 'buddyboss-platform' );
+	$params['media']['gif_no_connection']      = __( 'Could not connect to GIPHY', 'buddyboss-platform' );
 
 	$params['media']['i18n_strings'] = array(
-		'select'               => __( 'Select', 'buddyboss' ),
-		'unselect'             => __( 'Unselect', 'buddyboss' ),
-		'selectall'            => __( 'Select All', 'buddyboss' ),
-		'unselectall'          => __( 'Unselect All', 'buddyboss' ),
-		'no_photos_found'      => ( bp_is_active( 'video' ) && ( ( bp_is_profile_video_support_enabled() && bp_is_user_albums() ) || ( bp_is_group_video_support_enabled() && bp_is_group_albums() ) ) ) ? __( 'Sorry, no photos & videos were found', 'buddyboss' ) : __( 'Sorry, no photos were found', 'buddyboss' ),
-		'upload'               => __( 'Upload', 'buddyboss' ),
-		'uploading'            => __( 'Uploading', 'buddyboss' ),
+		'select'               => __( 'Select', 'buddyboss-platform' ),
+		'unselect'             => __( 'Unselect', 'buddyboss-platform' ),
+		'selectall'            => __( 'Select All', 'buddyboss-platform' ),
+		'unselectall'          => __( 'Unselect All', 'buddyboss-platform' ),
+		'no_photos_found'      => ( bp_is_active( 'video' ) && ( ( bp_is_profile_video_support_enabled() && bp_is_user_albums() ) || ( bp_is_group_video_support_enabled() && bp_is_group_albums() ) ) ) ? __( 'Sorry, no photos & videos were found', 'buddyboss-platform' ) : __( 'Sorry, no photos were found', 'buddyboss-platform' ),
+		'upload'               => __( 'Upload', 'buddyboss-platform' ),
+		'uploading'            => __( 'Uploading', 'buddyboss-platform' ),
 		/* translators: 1: number of uploaded files, 2: total number of files. */
-		'upload_status'        => __( '%1$d out of %2$d uploaded', 'buddyboss' ),
-		'album_delete_confirm' => __( 'Are you sure you want to delete this album? Photos in this album will also be deleted.', 'buddyboss' ),
-		'album_delete_error'   => __( 'There was a problem deleting the album.', 'buddyboss' ),
-		'media_delete_confirm' => __( 'Are you sure you want to delete this media?', 'buddyboss' ),
-		'photo'                => __( 'photo', 'buddyboss' ),
-		'photos'               => __( 'photos', 'buddyboss' ),
-		'video'                => __( 'video', 'buddyboss' ),
-		'videos'               => __( 'videos', 'buddyboss' ),
+		'upload_status'        => __( '%1$d out of %2$d uploaded', 'buddyboss-platform' ),
+		'album_delete_confirm' => __( 'Are you sure you want to delete this album? Photos in this album will also be deleted.', 'buddyboss-platform' ),
+		'album_delete_error'   => __( 'There was a problem deleting the album.', 'buddyboss-platform' ),
+		'media_delete_confirm' => __( 'Are you sure you want to delete this media?', 'buddyboss-platform' ),
+		'photo'                => __( 'photo', 'buddyboss-platform' ),
+		'photos'               => __( 'photos', 'buddyboss-platform' ),
+		'video'                => __( 'video', 'buddyboss-platform' ),
+		'videos'               => __( 'videos', 'buddyboss-platform' ),
 	);
 
 	$params['dir_labels'] = array_merge(
 		$params['dir_labels'],
 		array(
 			'video' => array(
-				'singular' => esc_html__( 'Video', 'buddyboss' ),
-				'plural'   => esc_html__( 'Videos', 'buddyboss' ),
+				'singular' => esc_html__( 'Video', 'buddyboss-platform' ),
+				'plural'   => esc_html__( 'Videos', 'buddyboss-platform' ),
 			),
 			'album' => array(
-				'singular' => esc_html__( 'Album', 'buddyboss' ),
-				'plural'   => esc_html__( 'Albums', 'buddyboss' ),
+				'singular' => esc_html__( 'Album', 'buddyboss-platform' ),
+				'plural'   => esc_html__( 'Albums', 'buddyboss-platform' ),
 			),
 			'media' => array(
-				'singular' => esc_html__( 'Photo', 'buddyboss' ),
-				'plural'   => esc_html__( 'Photos', 'buddyboss' ),
+				'singular' => esc_html__( 'Photo', 'buddyboss-platform' ),
+				'plural'   => esc_html__( 'Photos', 'buddyboss-platform' ),
 			),
 		)
 	);
@@ -241,7 +241,7 @@ function bp_nouveau_get_media_directory_nav_items() {
 		'slug'      => 'all', // slug is used because BP_Core_Nav requires it, but it's the scope.
 		'li_class'  => array( 'selected' ),
 		'link'      => bp_get_media_directory_permalink(),
-		'text'      => __( 'All Photos', 'buddyboss' ),
+		'text'      => __( 'All Photos', 'buddyboss-platform' ),
 		'count'     => false,
 		'position'  => 5,
 	);
@@ -252,7 +252,7 @@ function bp_nouveau_get_media_directory_nav_items() {
 			'slug'      => 'personal', // slug is used because BP_Core_Nav requires it, but it's the scope.
 			'li_class'  => array(),
 			'link'      => bp_loggedin_user_domain() . bp_get_media_slug() . '/my-media/',
-			'text'      => __( 'My Photos', 'buddyboss' ),
+			'text'      => __( 'My Photos', 'buddyboss-platform' ),
 			'count'     => false,
 			'position'  => 15,
 		);
@@ -264,7 +264,7 @@ function bp_nouveau_get_media_directory_nav_items() {
 			'slug'      => 'groups', // slug is used because BP_Core_Nav requires it, but it's the scope.
 			'li_class'  => array(),
 			'link'      => bp_loggedin_user_domain() . bp_get_media_slug() . '/groups-media/',
-			'text'      => __( 'My Groups', 'buddyboss' ),
+			'text'      => __( 'My Groups', 'buddyboss-platform' ),
 			'count'     => false,
 			'position'  => 15,
 		);

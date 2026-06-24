@@ -22,7 +22,7 @@ if ( bp_current_user_can( 'bp_xprofile_change_field_visibility' ) ) : ?>
 
 	<div class="bb-rl-field-visibility-block">
 		<p class="field-visibility-settings-toggle field-visibility-settings-header" id="field-visibility-settings-toggle-<?php echo esc_attr( $get_profile_field_id ); ?>">
-			<span class="field-visibility-label"><?php esc_html_e( 'Visibility:', 'buddyboss' ); ?></span>
+			<span class="field-visibility-label"><?php esc_html_e( 'Visibility:', 'buddyboss-platform' ); ?></span>
 			<span class="field-visibility-toggle-action">
 				<?php
 				printf(

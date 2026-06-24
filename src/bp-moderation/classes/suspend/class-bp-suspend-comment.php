@@ -255,7 +255,7 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 			if ( $is_user_suspended ) {
 				$comment_text = bb_moderation_is_suspended_message( $comment_text, $this->item_type, $comment->comment_ID );
 			} else {
-				$comment_text = esc_html__( 'This content has been hidden from site admin.', 'buddyboss' );
+				$comment_text = esc_html__( 'This content has been hidden from site admin.', 'buddyboss-platform' );
 			}
 		}
 
@@ -641,7 +641,7 @@ class BP_Suspend_Comment extends BP_Suspend_Abstract {
 			if ( $is_user_suspended ) {
 				$excerpt = bb_moderation_is_suspended_message( $excerpt, $this->item_type, $comment->comment_ID );
 			} else {
-				$excerpt = esc_html__( 'This content has been hidden from site admin.', 'buddyboss' );
+				$excerpt = esc_html__( 'This content has been hidden from site admin.', 'buddyboss-platform' );
 			}
 		}
 

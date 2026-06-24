@@ -32,9 +32,9 @@ function bp_notifications_action_delete() {
 
 	// Check the nonce and delete the notification.
 	if ( bp_verify_nonce_request( 'bp_notification_delete_' . $id ) && bp_notifications_delete_notification( $id ) ) {
-		bp_core_add_message( __( 'Notification successfully deleted.', 'buddyboss' ) );
+		bp_core_add_message( __( 'Notification successfully deleted.', 'buddyboss-platform' ) );
 	} else {
-		bp_core_add_message( __( 'There was a problem deleting that notification.', 'buddyboss' ), 'error' );
+		bp_core_add_message( __( 'There was a problem deleting that notification.', 'buddyboss-platform' ), 'error' );
 	}
 
 	// Redirect.

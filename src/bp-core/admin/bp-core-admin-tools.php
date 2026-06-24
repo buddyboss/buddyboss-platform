@@ -31,7 +31,7 @@ function bp_core_admin_tools() {
 	$users_data = require_once BP_DEFAULT_DATA_DIR . 'data/users.php';
 	?>
 	<div class="wrap">
-		<h2 class="nav-tab-wrapper"><?php bp_core_admin_tabs( __( 'Tools', 'buddyboss' ) ); ?></h2>
+		<h2 class="nav-tab-wrapper"><?php bp_core_admin_tabs( __( 'Tools', 'buddyboss-platform' ) ); ?></h2>
 		<div class="nav-settings-subsubsub">
 			<ul class="subsubsub">
 				<?php bp_core_tools_settings_admin_tabs(); ?>
@@ -49,18 +49,18 @@ function bp_core_admin_tools() {
 					<i class="<?php echo esc_attr( $meta_icon ); ?>"></i>
 					<?php
 				}
-				esc_html_e( 'Default Data', 'buddyboss' ); ?>
+				esc_html_e( 'Default Data', 'buddyboss-platform' ); ?>
 			</h2>
 
 			<form action="" method="post" id="bp-admin-form" class="bp-admin-form">
 				<fieldset>
-					<legend><?php esc_html_e( 'What data do you want to import?', 'buddyboss' ); ?></legend>
+					<legend><?php esc_html_e( 'What data do you want to import?', 'buddyboss-platform' ); ?></legend>
 					<ul class="items">
 						<li class="users main">
 							<label for="import-users">
 								<input type="checkbox" class="main-header" name="bp[import-users]" id="import-users"
 									   value="1" <?php bp_dd_imported_disabled( 'users', 'users' ); ?>/>
-								<strong><?php _e( 'Members', 'buddyboss' ); ?></strong>
+								<strong><?php _e( 'Members', 'buddyboss-platform' ); ?></strong>
 							</label>
 							<ul>
 
@@ -70,7 +70,7 @@ function bp_core_admin_tools() {
 											<input type="checkbox" class="checkbox" name="bp[import-profile]"
 												   id="import-profile"
 												   value="1" <?php bp_dd_imported_disabled( 'users', 'xprofile' ); ?>/>
-											<?php _e( 'Profile fields (with data)', 'buddyboss' ); ?>
+											<?php _e( 'Profile fields (with data)', 'buddyboss-platform' ); ?>
 										</label>
 									</li>
 								<?php endif; ?>
@@ -81,7 +81,7 @@ function bp_core_admin_tools() {
 											<input type="checkbox" class="checkbox" name="bp[import-friends]"
 												   id="import-friends"
 												   value="1" <?php bp_dd_imported_disabled( 'users', 'friends' ); ?>/>
-											<?php _e( 'Connections', 'buddyboss' ); ?>
+											<?php _e( 'Connections', 'buddyboss-platform' ); ?>
 										</label>
 									</li>
 								<?php endif; ?>
@@ -92,7 +92,7 @@ function bp_core_admin_tools() {
 											<input type="checkbox" class="checkbox" name="bp[import-activity]"
 												   id="import-activity"
 												   value="1" <?php bp_dd_imported_disabled( 'users', 'activity' ); ?>/>
-											<?php _e( 'Activity posts', 'buddyboss' ); ?>
+											<?php _e( 'Activity posts', 'buddyboss-platform' ); ?>
 										</label>
 									</li>
 								<?php endif; ?>
@@ -103,7 +103,7 @@ function bp_core_admin_tools() {
 											<input type="checkbox" class="checkbox" name="bp[import-messages]"
 												   id="import-messages"
 												   value="1" <?php bp_dd_imported_disabled( 'users', 'messages' ); ?>/>
-											<?php _e( 'Private messages', 'buddyboss' ); ?>
+											<?php _e( 'Private messages', 'buddyboss-platform' ); ?>
 										</label>
 									</li>
 								<?php endif; ?>
@@ -117,7 +117,7 @@ function bp_core_admin_tools() {
 									<input type="checkbox" class="main-header" name="bp[import-groups]"
 										   id="import-groups"
 										   value="1" <?php bp_dd_imported_disabled( 'groups', 'groups' ); ?>/>
-									<strong><?php _e( 'Groups', 'buddyboss' ); ?></strong>
+									<strong><?php _e( 'Groups', 'buddyboss-platform' ); ?></strong>
 								</label>
 								<ul>
 
@@ -126,7 +126,7 @@ function bp_core_admin_tools() {
 											<input type="checkbox" class="checkbox" name="bp[import-g-members]"
 												   id="import-g-members"
 												   value="1" <?php bp_dd_imported_disabled( 'groups', 'members' ); ?>/>
-											<?php _e( 'Members', 'buddyboss' ); ?>
+											<?php _e( 'Members', 'buddyboss-platform' ); ?>
 										</label>
 									</li>
 
@@ -139,7 +139,7 @@ function bp_core_admin_tools() {
 												<input type="checkbox" class="checkbox" name="bp[import-g-activity]"
 													   id="import-g-activity"
 													   value="1" <?php bp_dd_imported_disabled( 'groups', 'activity' ); ?>/>
-												<?php _e( 'Activity posts', 'buddyboss' ); ?>
+												<?php _e( 'Activity posts', 'buddyboss-platform' ); ?>
 											</label>
 										</li>
 									<?php endif; ?>
@@ -153,7 +153,7 @@ function bp_core_admin_tools() {
 												<input type="checkbox" class="checkbox" name="bp[import-g-forums]"
 													   id="import-g-forums"
 													   value="1" <?php bp_dd_imported_disabled( 'groups', 'forums' ); ?>/>
-												<?php _e( 'Forums in Groups (with data)', 'buddyboss' ); ?>
+												<?php _e( 'Forums in Groups (with data)', 'buddyboss-platform' ); ?>
 											</label>
 										</li>
 										<?php
@@ -172,7 +172,7 @@ function bp_core_admin_tools() {
 									<input type="checkbox" class="main-header" name="bp[import-forums]"
 										   id="import-forums"
 										   value="1" <?php bp_dd_imported_disabled( 'forums', 'forums' ); ?>/>
-									<strong><?php _e( 'Forums', 'buddyboss' ); ?></strong>
+									<strong><?php _e( 'Forums', 'buddyboss-platform' ); ?></strong>
 								</label>
 								<ul>
 									<li>
@@ -181,7 +181,7 @@ function bp_core_admin_tools() {
 											<input type="checkbox" class="checkbox" name="bp[import-f-topics]"
 												   id="import-f-topics"
 												   value="1" <?php bp_dd_imported_disabled( 'forums', 'topics' ); ?>/>
-											<?php _e( 'Discussions', 'buddyboss' ); ?>
+											<?php _e( 'Discussions', 'buddyboss-platform' ); ?>
 										</label>
 									</li>
 									<li>
@@ -190,7 +190,7 @@ function bp_core_admin_tools() {
 											<input type="checkbox" class="checkbox" name="bp[import-f-replies]"
 												   id="import-f-replies"
 												   value="1" <?php bp_dd_imported_disabled( 'forums', 'replies' ); ?>/>
-											<?php _e( 'Replies', 'buddyboss' ); ?>
+											<?php _e( 'Replies', 'buddyboss-platform' ); ?>
 										</label>
 									</li>
 								</ul>
@@ -204,16 +204,16 @@ function bp_core_admin_tools() {
 
 					<p class="submit">
 						<input class="button-primary" type="submit" name="bp-admin-submit" id="bp-admin-submit"
-							   value="<?php esc_attr_e( 'Import Selected Data', 'buddyboss' ); ?>"/>
+							   value="<?php esc_attr_e( 'Import Selected Data', 'buddyboss-platform' ); ?>"/>
 						<input class="button" type="submit" name="bp-admin-clear" id="bp-admin-clear"
-							   value="<?php esc_attr_e( 'Clear Default Data', 'buddyboss' ); ?>"/>
+							   value="<?php esc_attr_e( 'Clear Default Data', 'buddyboss-platform' ); ?>"/>
 					</p>
 				</fieldset>
 
 				<?php wp_nonce_field( 'bp-admin-tools-default-data' ); ?>
 			</form>
 
-			<p class="description"><?php esc_html_e( 'Some of these tools utilize substantial database resources. Avoid running more than 1 import job at a time.', 'buddyboss' ); ?></p>
+			<p class="description"><?php esc_html_e( 'Some of these tools utilize substantial database resources. Avoid running more than 1 import job at a time.', 'buddyboss-platform' ); ?></p>
 
 		</div>
 	</div>
@@ -228,7 +228,7 @@ function bp_core_admin_tools() {
 function bp_repair_community_submenu_page() {
 	?>
 	<div class="wrap">
-		<h2 class="nav-tab-wrapper"><?php bp_core_admin_tabs( __( 'Tools', 'buddyboss' ) ); ?></h2>
+		<h2 class="nav-tab-wrapper"><?php bp_core_admin_tabs( __( 'Tools', 'buddyboss-platform' ) ); ?></h2>
 		<div class="nav-settings-subsubsub">
 			<ul class="subsubsub">
 				<?php bp_core_tools_settings_admin_tabs(); ?>
@@ -246,15 +246,15 @@ function bp_repair_community_submenu_page() {
 					<i class="<?php echo esc_attr( $meta_icon ); ?>"></i>
 					<?php
 				}
-				esc_html_e( 'Repair Community', 'buddyboss' );
+				esc_html_e( 'Repair Community', 'buddyboss-platform' );
 				?>
 			</h2>
 
-			<p><?php esc_html_e( 'BuddyBoss keeps track of various relationships between members, groups, and activity items. Occasionally these relationships become out of sync, most often after an import, update, or migration. Use the tools below to manually recalculate these relationships.', 'buddyboss' ); ?></p>
+			<p><?php esc_html_e( 'BuddyBoss keeps track of various relationships between members, groups, and activity items. Occasionally these relationships become out of sync, most often after an import, update, or migration. Use the tools below to manually recalculate these relationships.', 'buddyboss-platform' ); ?></p>
 
 			<form class="settings" method="post" action="">
 				<fieldset>
-					<legend><?php esc_html_e( 'Data to Repair:', 'buddyboss' ); ?></legend>
+					<legend><?php esc_html_e( 'Data to Repair:', 'buddyboss-platform' ); ?></legend>
 
 					<div class="checkbox">
 						<?php
@@ -278,7 +278,7 @@ function bp_repair_community_submenu_page() {
 
 					<p class="submit">
 						<?php wp_nonce_field( 'bp-do-counts' ); ?>
-						<a class="button-primary" id="bp-tools-submit"><?php esc_attr_e( 'Repair Items', 'buddyboss' ); ?></a>
+						<a class="button-primary" id="bp-tools-submit"><?php esc_attr_e( 'Repair Items', 'buddyboss-platform' ); ?></a>
 					</p>
 
 				</fieldset>
@@ -338,13 +338,13 @@ function bp_admin_repair_list() {
 	// - last_activity migration (2.0).
 	$repair_list[20] = array(
 		'bp-total-member-count',
-		esc_html__( 'Repair total members count', 'buddyboss' ),
+		esc_html__( 'Repair total members count', 'buddyboss-platform' ),
 		'bp_admin_repair_count_members',
 	);
 
 	$repair_list[25] = array(
 		'bp-last-activity',
-		esc_html__( 'Repair member "last activity" data', 'buddyboss' ),
+		esc_html__( 'Repair member "last activity" data', 'buddyboss-platform' ),
 		'bp_admin_repair_last_activity',
 	);
 
@@ -352,25 +352,25 @@ function bp_admin_repair_list() {
 	// - default xprofile groups/fields
 	$repair_list[35] = array(
 		'bp-xprofile-fields',
-		esc_html__( 'Repair default profile set and fields', 'buddyboss' ),
+		esc_html__( 'Repair default profile set and fields', 'buddyboss-platform' ),
 		'repair_default_profiles_fields',
 	);
 
 	$repair_list[36] = array(
 		'bp-xprofile-wordpress-resync',
-		esc_html__( 'Re-sync BuddyBoss profile fields to WordPress profile fields', 'buddyboss' ),
+		esc_html__( 'Re-sync BuddyBoss profile fields to WordPress profile fields', 'buddyboss-platform' ),
 		'resync_xprofile_wordpress_fields',
 	);
 
 	$repair_list[37] = array(
 		'bp-wordpress-xprofile-resync',
-		esc_html__( 'Re-sync WordPress profile fields to BuddyBoss profile fields', 'buddyboss' ),
+		esc_html__( 'Re-sync WordPress profile fields to BuddyBoss profile fields', 'buddyboss-platform' ),
 		'resync_wordpress_xprofile_fields',
 	);
 
 	$repair_list[38] = array(
 		'bp-wordpress-update-display-name',
-		esc_html__( 'Update display name to selected format in profile settings', 'buddyboss' ),
+		esc_html__( 'Update display name to selected format in profile settings', 'buddyboss-platform' ),
 		'xprofile_update_display_names',
 	);
 
@@ -379,7 +379,7 @@ function bp_admin_repair_list() {
 	if ( bp_is_active( 'friends' ) ) {
 		$repair_list[0] = array(
 			'bp-user-friends',
-			esc_html__( 'Repair total connections count for each member', 'buddyboss' ),
+			esc_html__( 'Repair total connections count for each member', 'buddyboss-platform' ),
 			'bp_admin_repair_friend_count',
 		);
 	}
@@ -390,14 +390,14 @@ function bp_admin_repair_list() {
 		// User group count.
 		$repair_list[10] = array(
 			'bp-group-count',
-			esc_html__( 'Repair total groups count for each member', 'buddyboss' ),
+			esc_html__( 'Repair total groups count for each member', 'buddyboss-platform' ),
 			'bp_admin_repair_group_count',
 		);
 
 		// Recalculate group members count for each group.
 		$repair_list[124] = array(
 			'bp-group-members-count',
-			esc_html__( 'Recalculate the total members count for each group', 'buddyboss' ),
+			esc_html__( 'Recalculate the total members count for each group', 'buddyboss-platform' ),
 			'bp_admin_repair_group_member_count',
 		);
 	}
@@ -407,7 +407,7 @@ function bp_admin_repair_list() {
 	if ( bp_is_active( 'blogs' ) ) {
 		$repair_list[90] = array(
 			'bp-blog-records',
-			esc_html__( 'Repopulate site tracking records', 'buddyboss' ),
+			esc_html__( 'Repopulate site tracking records', 'buddyboss-platform' ),
 			'bp_admin_repair_blog_records',
 		);
 	}
@@ -416,7 +416,7 @@ function bp_admin_repair_list() {
 	// - install missing emails.
 	$repair_list[99] = array(
 		'bp-missing-emails',
-		esc_html__( 'Install missing emails (restore missing emails from defaults)', 'buddyboss' ),
+		esc_html__( 'Install missing emails (restore missing emails from defaults)', 'buddyboss-platform' ),
 		'bp_admin_install_emails',
 		( isset( $_GET['tool'] ) && 'bp-reinstall-emails' === $_GET['tool'] ),
 	);
@@ -424,7 +424,7 @@ function bp_admin_repair_list() {
 	// - reinstall emails.
 	$repair_list[100] = array(
 		'bp-reinstall-emails',
-		esc_html__( 'Reset emails (delete and restore from defaults)', 'buddyboss' ),
+		esc_html__( 'Reset emails (delete and restore from defaults)', 'buddyboss-platform' ),
 		'bp_admin_reinstall_emails',
 		( isset( $_GET['tool'] ) && 'bp-missing-emails' === $_GET['tool'] ),
 	);
@@ -437,7 +437,7 @@ function bp_admin_repair_list() {
 			// - Assign default member type.
 			$repair_list[101] = array(
 				'bp-assign-member-type',
-				esc_html__( 'Assign members without a profile type to the default profile type (excludes admins)', 'buddyboss' ),
+				esc_html__( 'Assign members without a profile type to the default profile type (excludes admins)', 'buddyboss-platform' ),
 				'bp_admin_assign_member_type',
 			);
 		}
@@ -447,7 +447,7 @@ function bp_admin_repair_list() {
 	if ( bp_is_active( 'activity' ) && function_exists( 'bb_is_reactions_feature_enabled' ) && bb_is_reactions_feature_enabled() ) {
 		$repair_list[85] = array(
 			'bp-sync-activity-favourite',
-			esc_html__( 'Migrate BuddyPress activity favourites to BuddyBoss reactions table', 'buddyboss' ),
+			esc_html__( 'Migrate BuddyPress activity favourites to BuddyBoss reactions table', 'buddyboss-platform' ),
 			'bp_admin_update_activity_favourite',
 		);
 	}
@@ -456,14 +456,14 @@ function bp_admin_repair_list() {
 	// - maybe create the database table and migrate any existing group invitations.
 	$repair_list[110] = array(
 		'bp-invitations-table',
-		esc_html__( 'Create the database table for Invitations and migrate existing group invitations if needed', 'buddyboss' ),
+		esc_html__( 'Create the database table for Invitations and migrate existing group invitations if needed', 'buddyboss-platform' ),
 		'bp_admin_invitations_table',
 	);
 
 	// Sync profile completion widget.
 	$repair_list[111] = array(
 		'bp-sync-profile-completion-widget',
-		esc_html__( 'Re-Sync Profile Completion widget profile photo status', 'buddyboss' ),
+		esc_html__( 'Re-Sync Profile Completion widget profile photo status', 'buddyboss-platform' ),
 		'bb_sync_profile_completion_widget',
 	);
 
@@ -494,8 +494,8 @@ function bp_admin_repair_friend_count() {
 	}
 
 	/* translators: %s: the result of the action performed by the repair tool. */
-	$statement = __( 'Repairing total connections count for each member &hellip; %s', 'buddyboss' );
-	$result    = __( 'Failed!', 'buddyboss' );
+	$statement = __( 'Repairing total connections count for each member &hellip; %s', 'buddyboss-platform' );
+	$result    = __( 'Failed!', 'buddyboss-platform' );
 
 	$sql_delete = "DELETE FROM {$wpdb->usermeta} WHERE meta_key IN ( 'total_friend_count' );";
 	if ( is_wp_error( $wpdb->query( $sql_delete ) ) ) {
@@ -537,7 +537,7 @@ function bp_admin_repair_friend_count() {
 
 	return array(
 		'status'  => 1,
-		'message' => sprintf( $statement, __( 'Complete!', 'buddyboss' ) ),
+		'message' => sprintf( $statement, __( 'Complete!', 'buddyboss-platform' ) ),
 	);
 }
 
@@ -556,8 +556,8 @@ function bp_admin_repair_group_count() {
 	}
 
 	/* translators: %s: the result of the action performed by the repair tool. */
-	$statement = __( 'Repairing total groups count for each member &hellip; %s', 'buddyboss' );
-	$result    = __( 'Failed!', 'buddyboss' );
+	$statement = __( 'Repairing total groups count for each member &hellip; %s', 'buddyboss-platform' );
+	$result    = __( 'Failed!', 'buddyboss-platform' );
 
 	$sql_delete = "DELETE FROM {$wpdb->usermeta} WHERE meta_key IN ( 'total_group_count' );";
 	if ( is_wp_error( $wpdb->query( $sql_delete ) ) ) {
@@ -588,7 +588,7 @@ function bp_admin_repair_group_count() {
 
 	return array(
 		'status'  => 1,
-		'message' => sprintf( $statement, __( 'Complete!', 'buddyboss' ) ),
+		'message' => sprintf( $statement, __( 'Complete!', 'buddyboss-platform' ) ),
 	);
 }
 
@@ -603,10 +603,10 @@ function bp_admin_repair_blog_records() {
 
 	// Description of this tool, displayed to the user.
 	/* translators: %s: the result of the action performed by the repair tool. */
-	$statement = __( 'Repopulating Blogs records&hellip; %s', 'buddyboss' );
+	$statement = __( 'Repopulating Blogs records&hellip; %s', 'buddyboss-platform' );
 
 	// Default to failure text.
-	$result = __( 'Failed!', 'buddyboss' );
+	$result = __( 'Failed!', 'buddyboss-platform' );
 
 	// Default to unrepaired.
 	$repair = false;
@@ -618,7 +618,7 @@ function bp_admin_repair_blog_records() {
 
 	// Setup success/fail messaging.
 	if ( true === $repair ) {
-		$result = __( 'Complete!', 'buddyboss' );
+		$result = __( 'Complete!', 'buddyboss-platform' );
 	}
 
 	// All done!
@@ -635,13 +635,13 @@ function bp_admin_repair_blog_records() {
  */
 function bp_admin_repair_count_members() {
 	/* translators: %s: the result of the action performed by the repair tool. */
-	$statement = __( 'Repairing total members count &hellip; %s', 'buddyboss' );
+	$statement = __( 'Repairing total members count &hellip; %s', 'buddyboss-platform' );
 	delete_transient( 'bp_active_member_count' );
 	bp_core_get_active_member_count();
 
 	return array(
 		'status'  => 1,
-		'message' => sprintf( $statement, __( 'Complete!', 'buddyboss' ) ),
+		'message' => sprintf( $statement, __( 'Complete!', 'buddyboss-platform' ) ),
 	);
 }
 
@@ -654,12 +654,12 @@ function bp_admin_repair_count_members() {
  */
 function bp_admin_repair_last_activity() {
 	/* translators: %s: the result of the action performed by the repair tool. */
-	$statement = __( 'Repairing member "last activity" data &hellip; %s', 'buddyboss' );
+	$statement = __( 'Repairing member "last activity" data &hellip; %s', 'buddyboss-platform' );
 	bp_last_activity_migrate();
 
 	return array(
 		'status'  => 1,
-		'message' => sprintf( $statement, __( 'Complete!', 'buddyboss' ) ),
+		'message' => sprintf( $statement, __( 'Complete!', 'buddyboss-platform' ) ),
 	);
 }
 
@@ -717,11 +717,11 @@ function repair_default_profiles_fields() {
 	bp_core_xprofile_clear_all_user_progress_cache();
 
 	/* translators: %s: the result of the action performed by the repair tool. */
-	$statement = __( 'Repairing default profile set and fields &hellip; %s', 'buddyboss' );
+	$statement = __( 'Repairing default profile set and fields &hellip; %s', 'buddyboss-platform' );
 
 	return array(
 		'status'  => 1,
-		'message' => sprintf( $statement, __( 'Complete!', 'buddyboss' ) ),
+		'message' => sprintf( $statement, __( 'Complete!', 'buddyboss-platform' ) ),
 	);
 }
 
@@ -749,7 +749,7 @@ function resync_xprofile_wordpress_fields() {
 		}
 
 		/* translators: %s: number of members updated. */
-		$records_updated = sprintf( __( '%s members updated successfully.', 'buddyboss' ), bp_core_number_format( $offset ) );
+		$records_updated = sprintf( __( '%s members updated successfully.', 'buddyboss-platform' ), bp_core_number_format( $offset ) );
 		return array(
 			'status'  => 'running',
 			'offset'  => $offset,
@@ -757,10 +757,10 @@ function resync_xprofile_wordpress_fields() {
 		);
 	} else {
 		/* translators: %s: the result of the action performed by the repair tool. */
-		$statement = __( 'Re-syncing BuddyBoss profile fields to WordPress profile fields &hellip; %s', 'buddyboss' );
+		$statement = __( 'Re-syncing BuddyBoss profile fields to WordPress profile fields &hellip; %s', 'buddyboss-platform' );
 		return array(
 			'status'  => 1,
-			'message' => sprintf( $statement, __( 'Complete!', 'buddyboss' ) ),
+			'message' => sprintf( $statement, __( 'Complete!', 'buddyboss-platform' ) ),
 		);
 	}
 }
@@ -802,7 +802,7 @@ function resync_wordpress_xprofile_fields() {
 			$offset++;
 		}
 		/* translators: %s: number of members updated. */
-		$records_updated = sprintf( __( '%s members updated successfully.', 'buddyboss' ), bp_core_number_format( $offset ) );
+		$records_updated = sprintf( __( '%s members updated successfully.', 'buddyboss-platform' ), bp_core_number_format( $offset ) );
 		return array(
 			'status'  => 'running',
 			'offset'  => $offset,
@@ -810,10 +810,10 @@ function resync_wordpress_xprofile_fields() {
 		);
 	} else {
 		/* translators: %s: the result of the action performed by the repair tool. */
-		$statement = __( 'Re-syncing WordPress profile fields to BuddyBoss profile fields &hellip; %s', 'buddyboss' );
+		$statement = __( 'Re-syncing WordPress profile fields to BuddyBoss profile fields &hellip; %s', 'buddyboss-platform' );
 		return array(
 			'status'  => 1,
-			'message' => sprintf( $statement, __( 'Complete!', 'buddyboss' ) ),
+			'message' => sprintf( $statement, __( 'Complete!', 'buddyboss-platform' ) ),
 		);
 	}
 }
@@ -849,7 +849,7 @@ function xprofile_update_display_names() {
 			$offset++;
 		}
 		/* translators: %s: number of members updated. */
-		$records_updated = sprintf( __( '%s members updated successfully.', 'buddyboss' ), bp_core_number_format( $offset ) );
+		$records_updated = sprintf( __( '%s members updated successfully.', 'buddyboss-platform' ), bp_core_number_format( $offset ) );
 		return array(
 			'status'  => 'running',
 			'offset'  => $offset,
@@ -857,10 +857,10 @@ function xprofile_update_display_names() {
 		);
 	} else {
 		/* translators: %s: the result of the action performed by the repair tool. */
-		$statement = __( 'Updating display name to selected format in profile settings &hellip; %s', 'buddyboss' );
+		$statement = __( 'Updating display name to selected format in profile settings &hellip; %s', 'buddyboss-platform' );
 		return array(
 			'status'  => 1,
-			'message' => sprintf( $statement, __( 'Complete!', 'buddyboss' ) ),
+			'message' => sprintf( $statement, __( 'Complete!', 'buddyboss-platform' ) ),
 		);
 	}
 }
@@ -922,7 +922,7 @@ function bp_admin_tools_feedback( $message, $class = false ) {
 function bp_core_admin_available_tools_page() {
 	?>
 	<div class="wrap">
-		<h1><?php esc_attr_e( 'Tools', 'buddyboss' ); ?></h1>
+		<h1><?php esc_attr_e( 'Tools', 'buddyboss-platform' ); ?></h1>
 
 		<?php
 
@@ -952,11 +952,11 @@ function bp_core_admin_available_tools_intro() {
 	$url  = add_query_arg( $query_arg, bp_get_admin_url( $page ) );
 	?>
 	<div class="card tool-box">
-		<h2><?php esc_html_e( 'BuddyBoss Tools', 'buddyboss' ); ?></h2>
+		<h2><?php esc_html_e( 'BuddyBoss Tools', 'buddyboss-platform' ); ?></h2>
 		<p>
-			<?php esc_html_e( 'BuddyBoss keeps track of various relationships between users, groups, and activity items. Occasionally these relationships become out of sync, most often after an import, update, or migration.', 'buddyboss' ); ?>
+			<?php esc_html_e( 'BuddyBoss keeps track of various relationships between users, groups, and activity items. Occasionally these relationships become out of sync, most often after an import, update, or migration.', 'buddyboss-platform' ); ?>
 			/* translators: %s: BuddyBoss Tools link. */
-			<?php printf( esc_html__( 'Use the %s to repair these relationships.', 'buddyboss' ), '<a href="' . esc_url( $url ) . '">' . esc_html__( 'BuddyBoss Tools', 'buddyboss' ) . '</a>' ); ?>
+			<?php printf( esc_html__( 'Use the %s to repair these relationships.', 'buddyboss-platform' ), '<a href="' . esc_url( $url ) . '">' . esc_html__( 'BuddyBoss Tools', 'buddyboss-platform' ) . '</a>' ); ?>
 		</p>
 	</div>
 	<?php
@@ -1044,13 +1044,13 @@ function bp_admin_install_emails() {
 		'status'  => 1,
 		'records' => sprintf(
 		/* translators: %1$s for counts missing emails. */
-			__( '%1$s missing emails have been installed.', 'buddyboss' ),
+			__( '%1$s missing emails have been installed.', 'buddyboss-platform' ),
 			$installed_email,
 		),
 		'message' => sprintf(
 		/* translators: %1$s for view emails url. */
-			__( 'Installing missing emails &hellip; Complete! %1$s', 'buddyboss' ),
-			'<a href="' . get_admin_url( bp_get_root_blog_id(), 'edit.php?post_type=' . bp_get_email_post_type() ) . '">' . esc_html__( 'View Emails.', 'buddyboss' ) . '</a>'
+			__( 'Installing missing emails &hellip; Complete! %1$s', 'buddyboss-platform' ),
+			'<a href="' . get_admin_url( bp_get_root_blog_id(), 'edit.php?post_type=' . bp_get_email_post_type() ) . '">' . esc_html__( 'View Emails.', 'buddyboss-platform' ) . '</a>'
 		),
 	);
 }
@@ -1118,8 +1118,8 @@ function bp_admin_reinstall_emails() {
 		'status'  => 1,
 		'message' => sprintf(
 		/* translators: %1$s for view emails url. */
-			__( 'Reseting emails &hellip; Complete! %1$s', 'buddyboss' ),
-			'<a href="' . get_admin_url( bp_get_root_blog_id(), 'edit.php?post_type=' . bp_get_email_post_type() ) . '">' . esc_html__( 'View Emails.', 'buddyboss' ) . '</a>'
+			__( 'Reseting emails &hellip; Complete! %1$s', 'buddyboss-platform' ),
+			'<a href="' . get_admin_url( bp_get_root_blog_id(), 'edit.php?post_type=' . bp_get_email_post_type() ) . '">' . esc_html__( 'View Emails.', 'buddyboss-platform' ) . '</a>'
 		),
 	);
 }
@@ -1141,7 +1141,7 @@ function bp_core_admin_notice_repopulate_blogs_resume() {
 		return;
 	}
 
-	echo '<div class="error"><p>' . __( 'It looks like you have more sites to record. Resume recording by checking the "Repopulate site tracking records" option.', 'buddyboss' ) . '</p></div>';
+	echo '<div class="error"><p>' . __( 'It looks like you have more sites to record. Resume recording by checking the "Repopulate site tracking records" option.', 'buddyboss-platform' ) . '</p></div>';
 }
 
 add_action( 'network_admin_notices', 'bp_core_admin_notice_repopulate_blogs_resume' );
@@ -1187,7 +1187,7 @@ function bp_admin_assign_member_type() {
 			$offset++;
 		}
 		/* translators: %s: number of members updated. */
-		$records_updated = sprintf( __( '%s members updated successfully.', 'buddyboss' ), bp_core_number_format( $offset ) );
+		$records_updated = sprintf( __( '%s members updated successfully.', 'buddyboss-platform' ), bp_core_number_format( $offset ) );
 		return array(
 			'status'  => 'running',
 			'offset'  => $offset,
@@ -1196,8 +1196,8 @@ function bp_admin_assign_member_type() {
 	} else {
 		// Description of this tool, displayed to the user.
 		/* translators: %s: the result of the action performed by the repair tool. */
-		$statement = __( 'Assign users without a profile type to the default profile type records&hellip; %s', 'buddyboss' );
-		$result    = __( 'Complete!', 'buddyboss' );
+		$statement = __( 'Assign users without a profile type to the default profile type records&hellip; %s', 'buddyboss-platform' );
+		$result    = __( 'Complete!', 'buddyboss-platform' );
 		// All done!
 		return array(
 			'status'  => 1,
@@ -1232,7 +1232,7 @@ function bp_admin_repair_nickname_value() {
 			$offset++;
 		}
 		/* translators: %s: number of members updated. */
-		$records_updated = sprintf( __( '%s members updated successfully.', 'buddyboss' ), bp_core_number_format( $offset ) );
+		$records_updated = sprintf( __( '%s members updated successfully.', 'buddyboss-platform' ), bp_core_number_format( $offset ) );
 		return array(
 			'status'  => 'running',
 			'offset'  => $offset,
@@ -1241,8 +1241,8 @@ function bp_admin_repair_nickname_value() {
 	} else {
 		// Description of this tool, displayed to the user.
 		/* translators: %s: the result of the action performed by the repair tool. */
-		$statement = __( 'Repair Nickname&hellip; %s', 'buddyboss' );
-		$result    = __( 'Complete!', 'buddyboss' );
+		$statement = __( 'Repair Nickname&hellip; %s', 'buddyboss-platform' );
+		$result    = __( 'Complete!', 'buddyboss-platform' );
 
 		// All done!
 		return array(
@@ -1262,7 +1262,7 @@ function bp_admin_repair_tools_wrapper_function() {
 	$response = array(
 		'feedback' => sprintf(
 			'<div class="bp-feedback error bp-ajax-message"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
-			esc_html__( 'There was a problem performing this action. Please try again.', 'buddyboss' )
+			esc_html__( 'There was a problem performing this action. Please try again.', 'buddyboss-platform' )
 		),
 	);
 
@@ -1404,7 +1404,7 @@ function bp_admin_update_activity_favourite() {
 			}
 
 			/* translators: %s: number of activity favorites updated. */
-			$records_updated = sprintf( __( '%s activity favorites updated successfully.', 'buddyboss' ), bp_core_number_format( $offset ) );
+			$records_updated = sprintf( __( '%s activity favorites updated successfully.', 'buddyboss-platform' ), bp_core_number_format( $offset ) );
 
 			return array(
 				'status'  => 'running',
@@ -1414,20 +1414,20 @@ function bp_admin_update_activity_favourite() {
 		} else {
 			bp_update_option( 'bp_activity_reactions', true );
 			/* translators: %s: the result of the action performed by the repair tool. */
-			$statement = __( 'Updating activity favorites data &hellip; %s', 'buddyboss' );
+			$statement = __( 'Updating activity favorites data &hellip; %s', 'buddyboss-platform' );
 
 			return array(
 				'status'  => 1,
-				'message' => sprintf( $statement, __( 'Complete!', 'buddyboss' ) ),
+				'message' => sprintf( $statement, __( 'Complete!', 'buddyboss-platform' ) ),
 			);
 		}
 	} else {
 		/* translators: %s: the result of the action performed by the repair tool. */
-		$statement = __( 'Updating activity favorites data &hellip; %s', 'buddyboss' );
+		$statement = __( 'Updating activity favorites data &hellip; %s', 'buddyboss-platform' );
 
 		return array(
 			'status'  => 1,
-			'message' => sprintf( $statement, __( 'Complete!', 'buddyboss' ) ),
+			'message' => sprintf( $statement, __( 'Complete!', 'buddyboss-platform' ) ),
 		);
 	}
 }
@@ -1507,8 +1507,8 @@ function bp_admin_invitations_table() {
 	require_once( buddypress()->plugin_dir . '/bp-core/admin/bp-core-admin-schema.php' );
 
 	/* translators: %s: the result of the action performed by the repair tool */
-	$statement = __( 'Creating the database table for Invitations if it does not exist &hellip; %s', 'buddyboss' );
-	$result    = __( 'Failed to create table!', 'buddyboss' );
+	$statement = __( 'Creating the database table for Invitations if it does not exist &hellip; %s', 'buddyboss-platform' );
+	$result    = __( 'Failed to create table!', 'buddyboss-platform' );
 
 	bp_core_install_invitations();
 
@@ -1521,7 +1521,7 @@ function bp_admin_invitations_table() {
 			'message' => sprintf( $statement, $result ),
 		);
 	} else {
-		$result = __( 'Complete!', 'buddyboss' );
+		$result = __( 'Complete!', 'buddyboss-platform' );
 	}
 
 	// Migrate group invitations if needed.
@@ -1529,15 +1529,15 @@ function bp_admin_invitations_table() {
 		$bp = buddypress();
 
 		/* translators: %s: the result of the action performed by the repair tool */
-		$migrate_statement = __( 'Migrating existing group invitations &hellip; %s', 'buddyboss' );
-		$migrate_result    = __( 'Failed to migrate invitations!', 'buddyboss' );
+		$migrate_statement = __( 'Migrating existing group invitations &hellip; %s', 'buddyboss-platform' );
+		$migrate_result    = __( 'Failed to migrate invitations!', 'buddyboss-platform' );
 
 		bp_groups_migrate_invitations();
 
 		// Check that there are no outstanding group invites in the group_members table.
 		$records = $wpdb->get_results( "SELECT id FROM {$bp->groups->table_name_members} WHERE is_confirmed = 0 AND is_banned = 0" );
 		if ( empty( $records ) ) {
-			$migrate_result = __( 'Complete!', 'buddyboss' );
+			$migrate_result = __( 'Complete!', 'buddyboss-platform' );
 
 			return array(
 				'status'  => 0,
@@ -1627,7 +1627,7 @@ function bb_sync_profile_completion_widget() {
 		}
 
 		/* translators: %s: number of members updated. */
-		$records_updated = sprintf( __( 'Profile completion widget, profile photo status updated successfully for %s members.', 'buddyboss' ), bp_core_number_format( $offset ) );
+		$records_updated = sprintf( __( 'Profile completion widget, profile photo status updated successfully for %s members.', 'buddyboss-platform' ), bp_core_number_format( $offset ) );
 		return array(
 			'status'  => 'running',
 			'offset'  => $offset,
@@ -1635,10 +1635,10 @@ function bb_sync_profile_completion_widget() {
 		);
 	} else {
 		/* translators: %s: the result of the action performed by the repair tool. */
-		$statement = __( 'Profile Completion widget, profile photo status re-sync %s', 'buddyboss' );
+		$statement = __( 'Profile Completion widget, profile photo status re-sync %s', 'buddyboss-platform' );
 		return array(
 			'status'  => 1,
-			'message' => sprintf( $statement, __( 'Complete!', 'buddyboss' ) ),
+			'message' => sprintf( $statement, __( 'Complete!', 'buddyboss-platform' ) ),
 		);
 	}
 }
@@ -1727,17 +1727,17 @@ function bp_admin_repair_group_member_count() {
 			'offset'  => $offset,
 			'records' => sprintf(
 				/* translators: %s: number of groups */
-				esc_html__( '%s groups member count updated successfully.', 'buddyboss' ),
+				esc_html__( '%s groups member count updated successfully.', 'buddyboss-platform' ),
 				bp_core_number_format( $offset )
 			),
 		);
 	}
 
 	/* translators: %s: the result of the action performed by the repair tool. */
-	$statement = esc_html__( 'Recalculating the total group members count for each group &hellip; %s', 'buddyboss' );
+	$statement = esc_html__( 'Recalculating the total group members count for each group &hellip; %s', 'buddyboss-platform' );
 
 	return array(
 		'status'  => 1,
-		'message' => sprintf( $statement, esc_html__( 'Complete!', 'buddyboss' ) ),
+		'message' => sprintf( $statement, esc_html__( 'Complete!', 'buddyboss-platform' ) ),
 	);
 }

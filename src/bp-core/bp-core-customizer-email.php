@@ -24,8 +24,8 @@ function bp_email_init_customizer( WP_Customize_Manager $wp_customize ) {
 	$wp_customize->add_panel(
 		'bp_mailtpl',
 		array(
-			'description' => __( 'Customize the appearance of emails sent by BuddyBoss.', 'buddyboss' ),
-			'title'       => __( 'BuddyBoss Emails', 'buddyboss' ),
+			'description' => __( 'Customize the appearance of emails sent by BuddyBoss.', 'buddyboss-platform' ),
+			'title'       => __( 'BuddyBoss Emails', 'buddyboss-platform' ),
 		)
 	);
 
@@ -138,17 +138,17 @@ function bp_email_get_customizer_sections() {
 			'section_bp_mailtpl_header' => array(
 				'capability' => 'bp_moderate',
 				'panel'      => 'bp_mailtpl',
-				'title'      => __( 'Header', 'buddyboss' ),
+				'title'      => __( 'Header', 'buddyboss-platform' ),
 			),
 			'section_bp_mailtpl_body'   => array(
 				'capability' => 'bp_moderate',
 				'panel'      => 'bp_mailtpl',
-				'title'      => __( 'Body', 'buddyboss' ),
+				'title'      => __( 'Body', 'buddyboss-platform' ),
 			),
 			'section_bp_mailtpl_footer' => array(
 				'capability' => 'bp_moderate',
 				'panel'      => 'bp_mailtpl',
-				'title'      => __( 'Footer', 'buddyboss' ),
+				'title'      => __( 'Footer', 'buddyboss-platform' ),
 			),
 		)
 	);
@@ -318,7 +318,7 @@ function bp_email_get_customizer_controls() {
 		array(
 			'bp_mailtpl_logo'                      => array(
 				'class'       => 'WP_Customize_Cropped_Image_Control',
-				'label'       => __( 'Upload Logo', 'buddyboss' ),
+				'label'       => __( 'Upload Logo', 'buddyboss-platform' ),
 				'section'     => 'section_bp_mailtpl_header',
 				'settings'    => 'bp_email_options[logo]',
 				'width'       => 180,
@@ -329,8 +329,8 @@ function bp_email_get_customizer_controls() {
 
 			'bp_mailtpl_site_title_logo_size'      => array(
 				'class'       => 'BP_Customizer_Control_Range',
-				'label'       => __( 'Site Title logo size', 'buddyboss' ),
-				'description' => __( 'Used when logo is set.', 'buddyboss' ),
+				'label'       => __( 'Site Title logo size', 'buddyboss-platform' ),
+				'description' => __( 'Used when logo is set.', 'buddyboss-platform' ),
 				'section'     => 'section_bp_mailtpl_header',
 				'settings'    => 'bp_email_options[site_title_logo_size]',
 
@@ -343,16 +343,16 @@ function bp_email_get_customizer_controls() {
 
 			'bp_mailtpl_site_title_text_color'     => array(
 				'class'       => 'WP_Customize_Color_Control',
-				'label'       => __( 'Site Title color', 'buddyboss' ),
-				'description' => __( 'Used when logo is not set.', 'buddyboss' ),
+				'label'       => __( 'Site Title color', 'buddyboss-platform' ),
+				'description' => __( 'Used when logo is not set.', 'buddyboss-platform' ),
 				'section'     => 'section_bp_mailtpl_header',
 				'settings'    => 'bp_email_options[site_title_text_color]',
 			),
 
 			'bp_mailtpl_site_title_text_size'      => array(
 				'class'       => 'BP_Customizer_Control_Range',
-				'label'       => __( 'Site Title text size', 'buddyboss' ),
-				'description' => __( 'Used when logo is not set.', 'buddyboss' ),
+				'label'       => __( 'Site Title text size', 'buddyboss-platform' ),
+				'description' => __( 'Used when logo is not set.', 'buddyboss-platform' ),
 				'section'     => 'section_bp_mailtpl_header',
 				'settings'    => 'bp_email_options[site_title_text_size]',
 
@@ -365,14 +365,14 @@ function bp_email_get_customizer_controls() {
 
 			'bp_mailtpl_recipient_text_color'      => array(
 				'class'    => 'WP_Customize_Color_Control',
-				'label'    => __( 'Recipient Color', 'buddyboss' ),
+				'label'    => __( 'Recipient Color', 'buddyboss-platform' ),
 				'section'  => 'section_bp_mailtpl_header',
 				'settings' => 'bp_email_options[recipient_text_color]',
 			),
 
 			'bp_mailtpl_recipient_text_size'       => array(
 				'class'       => 'BP_Customizer_Control_Range',
-				'label'       => __( 'Recipient Text Size', 'buddyboss' ),
+				'label'       => __( 'Recipient Text Size', 'buddyboss-platform' ),
 				'section'     => 'section_bp_mailtpl_header',
 				'settings'    => 'bp_email_options[recipient_text_size]',
 
@@ -385,42 +385,42 @@ function bp_email_get_customizer_controls() {
 
 			'bp_mailtpl_email_bg'                  => array(
 				'class'    => 'WP_Customize_Color_Control',
-				'label'    => __( 'Email Background Color', 'buddyboss' ),
+				'label'    => __( 'Email Background Color', 'buddyboss-platform' ),
 				'section'  => 'section_bp_mailtpl_body',
 				'settings' => 'bp_email_options[email_bg]',
 			),
 
 			'bp_mailtpl_body_bg'                   => array(
 				'class'    => 'WP_Customize_Color_Control',
-				'label'    => __( 'Body Background Color', 'buddyboss' ),
+				'label'    => __( 'Body Background Color', 'buddyboss-platform' ),
 				'section'  => 'section_bp_mailtpl_body',
 				'settings' => 'bp_email_options[body_bg]',
 			),
 
 			'bp_mailtpl_body_border_color'         => array(
 				'class'    => 'WP_Customize_Color_Control',
-				'label'    => __( 'Body Border Color', 'buddyboss' ),
+				'label'    => __( 'Body Border Color', 'buddyboss-platform' ),
 				'section'  => 'section_bp_mailtpl_body',
 				'settings' => 'bp_email_options[body_border_color]',
 			),
 
 			'bp_mailtpl_body_text_color'           => array(
 				'class'    => 'WP_Customize_Color_Control',
-				'label'    => __( 'Body Primary Text Color', 'buddyboss' ),
+				'label'    => __( 'Body Primary Text Color', 'buddyboss-platform' ),
 				'section'  => 'section_bp_mailtpl_body',
 				'settings' => 'bp_email_options[body_text_color]',
 			),
 
 			'bp_mailtpl_body_secondary_text_color' => array(
 				'class'    => 'WP_Customize_Color_Control',
-				'label'    => __( 'Body Secondary Text Color', 'buddyboss' ),
+				'label'    => __( 'Body Secondary Text Color', 'buddyboss-platform' ),
 				'section'  => 'section_bp_mailtpl_body',
 				'settings' => 'bp_email_options[body_secondary_text_color]',
 			),
 
 			'bp_mailtpl_body_text_size'            => array(
 				'class'       => 'BP_Customizer_Control_Range',
-				'label'       => __( 'Body Text Size', 'buddyboss' ),
+				'label'       => __( 'Body Text Size', 'buddyboss-platform' ),
 				'section'     => 'section_bp_mailtpl_body',
 				'settings'    => 'bp_email_options[body_text_size]',
 
@@ -433,22 +433,22 @@ function bp_email_get_customizer_controls() {
 
 			'bp_mailtpl_quote_bg'                  => array(
 				'class'    => 'WP_Customize_Color_Control',
-				'label'    => __( 'Quote Background Color', 'buddyboss' ),
+				'label'    => __( 'Quote Background Color', 'buddyboss-platform' ),
 				'section'  => 'section_bp_mailtpl_body',
 				'settings' => 'bp_email_options[quote_bg]',
 			),
 
 			'bp_mailtpl_highlight_color'           => array(
 				'class'    => 'WP_Customize_Color_Control',
-				'label'    => __( 'Links and Buttons Color', 'buddyboss' ),
+				'label'    => __( 'Links and Buttons Color', 'buddyboss-platform' ),
 				'section'  => 'section_bp_mailtpl_body',
 				'settings' => 'bp_email_options[highlight_color]',
 			),
 
 			'bp_mailtpl_footer_text'               => array(
 				'class'       => 'WP_Customize_Control',
-				'description' => __( 'Change the email footer content.', 'buddyboss' ),
-				'label'       => __( 'Footer Text', 'buddyboss' ),
+				'description' => __( 'Change the email footer content.', 'buddyboss-platform' ),
+				'label'       => __( 'Footer Text', 'buddyboss-platform' ),
 				'section'     => 'section_bp_mailtpl_footer',
 				'settings'    => 'bp_email_options[footer_text]',
 				'type'        => 'textarea',
@@ -456,14 +456,14 @@ function bp_email_get_customizer_controls() {
 
 			'bp_mailtpl_footer_text_color'         => array(
 				'class'    => 'WP_Customize_Color_Control',
-				'label'    => __( 'Footer Text Color', 'buddyboss' ),
+				'label'    => __( 'Footer Text Color', 'buddyboss-platform' ),
 				'section'  => 'section_bp_mailtpl_footer',
 				'settings' => 'bp_email_options[footer_text_color]',
 			),
 
 			'bp_mailtpl_footer_text_size'          => array(
 				'class'       => 'BP_Customizer_Control_Range',
-				'label'       => __( 'Footer Text Size', 'buddyboss' ),
+				'label'       => __( 'Footer Text Size', 'buddyboss-platform' ),
 				'section'     => 'section_bp_mailtpl_footer',
 				'settings'    => 'bp_email_options[footer_text_size]',
 

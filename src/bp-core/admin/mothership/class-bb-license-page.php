@@ -30,7 +30,7 @@ class BB_License_Page implements StaticContainerAwareness {
 	 * @return string
 	 */
 	public static function pageTitle(): string {
-		return esc_html__( 'BuddyBoss License Activation', 'buddyboss' );
+		return esc_html__( 'BuddyBoss License Activation', 'buddyboss-platform' );
 	}
 
 	/**
@@ -42,7 +42,7 @@ class BB_License_Page implements StaticContainerAwareness {
 		return add_submenu_page(
 			'buddyboss-platform',
 			self::pageTitle(),
-			esc_html__( 'License Activation', 'buddyboss' ),
+			esc_html__( 'License Activation', 'buddyboss-platform' ),
 			self::CAPABILITY,
 			self::SLUG,
 			array(

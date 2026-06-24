@@ -25,7 +25,7 @@ if ( bp_is_group_create() ) {
 }
 ?>
 ">
-	<?php esc_html_e( 'Manage Group Members', 'buddyboss' ); ?>
+	<?php esc_html_e( 'Manage Group Members', 'buddyboss-platform' ); ?>
 </h2>
 
 <dl class="groups-manage-members-list bb-rl-groups-manage-members-list">
@@ -42,7 +42,7 @@ if ( bp_is_group_create() ) {
 				<?php
 				printf(
 					/* translators: %1$s: Organizer role label, %2$s: Moderator role label */
-					esc_html__( '%1$s have full control over group settings, content, and members, including %2$s privileges, privacy adjustments, photo updates, and deletion.', 'buddyboss' ),
+					esc_html__( '%1$s have full control over group settings, content, and members, including %2$s privileges, privacy adjustments, photo updates, and deletion.', 'buddyboss-platform' ),
 					wp_kses_post( get_group_role_label( $bp_current_group_id, 'organizer_plural_label_name' ) ),
 					wp_kses_post( strtolower( get_group_role_label( $bp_current_group_id, 'moderator_plural_label_name' ) ) )
 				);
@@ -87,7 +87,7 @@ if ( bp_is_group_create() ) {
 											if ( groups_is_user_admin( $bp_org_user_id, $bp_current_group_id ) ) {
 												echo esc_html( get_group_role_label( $bp_current_group_id, 'organizer_singular_label_name' ) );
 											} else {
-												esc_html_e( 'Select Action', 'buddyboss' );
+												esc_html_e( 'Select Action', 'buddyboss-platform' );
 											}
 											?>
 										</option>
@@ -97,7 +97,7 @@ if ( bp_is_group_create() ) {
 									</select>
 								</div>
 								<div class="bb-rl-group-member-action-wrapper">
-									<button href="" class="bb-rl-group-member-action-button disabled"><?php esc_html_e( 'Apply', 'buddyboss' ); ?></button>
+									<button href="" class="bb-rl-group-member-action-button disabled"><?php esc_html_e( 'Apply', 'buddyboss-platform' ); ?></button>
 								</div>
 							</div>
 
@@ -118,7 +118,7 @@ if ( bp_is_group_create() ) {
 				<?php
 				printf(
 					/* translators: %1$s: Organizer role label */
-					esc_html__( 'Moderators can edit or delete group activity feed content, excluding posts created by %1$s.', 'buddyboss' ),
+					esc_html__( 'Moderators can edit or delete group activity feed content, excluding posts created by %1$s.', 'buddyboss-platform' ),
 					wp_kses_post( strtolower( get_group_role_label( $bp_current_group_id, 'organizer_singular_label_name' ) ) )
 				);
 				?>
@@ -165,7 +165,7 @@ if ( bp_is_group_create() ) {
 											} elseif ( groups_is_user_member( $bp_mod_user_id, $bp_current_group_id ) ) {
 												echo esc_html( get_group_role_label( $bp_current_group_id, 'member_singular_label_name' ) );
 											} else {
-												esc_html_e( 'Select Action', 'buddyboss' );
+												esc_html_e( 'Select Action', 'buddyboss-platform' );
 											}
 											?>
 										</option>
@@ -178,7 +178,7 @@ if ( bp_is_group_create() ) {
 									</select>
 								</div>
 								<div class="bb-rl-group-member-action-wrapper">
-									<button href="" class="bb-rl-group-member-action-button disabled"><?php esc_html_e( 'Apply', 'buddyboss' ); ?></button>
+									<button href="" class="bb-rl-group-member-action-button disabled"><?php esc_html_e( 'Apply', 'buddyboss-platform' ); ?></button>
 								</div>
 							</div>
 						</li>
@@ -200,7 +200,7 @@ if ( bp_is_group_create() ) {
 			</div>
 			<button type="reset" class="search-form_reset">
 				<span class="bb-icon-rf bb-icon-times" aria-hidden="true"></span>
-				<span class="bp-screen-reader-text"><?php esc_html_e( 'Reset', 'buddyboss' ); ?></span>
+				<span class="bp-screen-reader-text"><?php esc_html_e( 'Reset', 'buddyboss-platform' ); ?></span>
 			</button>
 		</div>
 	</dt>
@@ -211,7 +211,7 @@ if ( bp_is_group_create() ) {
 			<?php
 			printf(
 				/* translators: %1$s: Member role label, %2$s: Member role label */
-				esc_html__( 'Members are automatically assigned the \'%1$s\' role, enabling them to contribute to discussions, post in activity feeds, and view other group %2$s activity.', 'buddyboss' ),
+				esc_html__( 'Members are automatically assigned the \'%1$s\' role, enabling them to contribute to discussions, post in activity feeds, and view other group %2$s activity.', 'buddyboss-platform' ),
 				wp_kses_post( strtolower( get_group_role_label( $bp_current_group_id, 'member_singular_label_name' ) ) ),
 				wp_kses_post( strtolower( get_group_role_label( $bp_current_group_id, 'member_plural_label_name' ) ) )
 			);
@@ -245,7 +245,7 @@ if ( bp_is_group_create() ) {
 									<?php
 									if ( bp_get_group_member_is_banned() ) :
 										/* translators: indicates a user is banned from a group, e.g. "Mike (banned)". */
-										esc_html_e( '(banned)', 'buddyboss' );
+										esc_html_e( '(banned)', 'buddyboss-platform' );
 										endif;
 									?>
 								</span>
@@ -264,7 +264,7 @@ if ( bp_is_group_create() ) {
 									} elseif ( groups_is_user_member( $bp_member_user_id, $bp_current_group_id ) ) {
 										echo esc_html( get_group_role_label( $bp_current_group_id, 'member_singular_label_name' ) );
 									} else {
-										esc_html_e( 'Select Action', 'buddyboss' );
+										esc_html_e( 'Select Action', 'buddyboss-platform' );
 									}
 									?>
 									</option>
@@ -277,7 +277,7 @@ if ( bp_is_group_create() ) {
 								</select>
 							</div>
 							<div class="bb-rl-group-member-action-wrapper">
-								<button class="bb-rl-group-member-action-button disabled"><?php esc_html_e( 'Apply', 'buddyboss' ); ?></button>
+								<button class="bb-rl-group-member-action-button disabled"><?php esc_html_e( 'Apply', 'buddyboss-platform' ); ?></button>
 							</div>
 						</div>
 
@@ -307,7 +307,7 @@ if ( bp_is_group_create() ) {
 					?>
 					<li class="bb-rl-view-more bb-rl-view-more--pagination" data-bp-pagination="<?php echo esc_attr( $members_template->pag_arg ); ?>">
 						<a class="bb-rl-button bb-rl-button--secondaryFill bb-rl-button--small" href="<?php echo esc_url( bb_get_groups_members_load_more_link() ); ?>" data-method="append">
-							<?php esc_html_e( 'Show More', 'buddyboss' ); ?>
+							<?php esc_html_e( 'Show More', 'buddyboss-platform' ); ?>
 							<i class="bb-icons-rl-caret-down"></i>
 						</a>
 					</li>

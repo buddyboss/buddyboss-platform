@@ -57,7 +57,7 @@ function bp_activity_action_post_update() {
 
 	// No activity content so provide feedback and redirect.
 	if ( empty( $content ) ) {
-		bp_core_add_message( __( 'Please enter some content to post.', 'buddyboss' ), 'error' );
+		bp_core_add_message( __( 'Please enter some content to post.', 'buddyboss-platform' ), 'error' );
 		bp_core_redirect( wp_get_referer() );
 	}
 
@@ -91,9 +91,9 @@ function bp_activity_action_post_update() {
 
 	// Provide user feedback.
 	if ( ! empty( $activity_id ) ) {
-		bp_core_add_message( __( 'Update Posted!', 'buddyboss' ) );
+		bp_core_add_message( __( 'Update Posted!', 'buddyboss-platform' ) );
 	} else {
-		bp_core_add_message( __( 'There was an error when posting your update. Please try again.', 'buddyboss' ), 'error' );
+		bp_core_add_message( __( 'There was an error when posting your update. Please try again.', 'buddyboss-platform' ), 'error' );
 	}
 
 	// Redirect.

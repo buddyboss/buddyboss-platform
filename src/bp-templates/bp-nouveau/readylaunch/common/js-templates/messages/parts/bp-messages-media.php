@@ -14,7 +14,7 @@
 			<div class="dz-image">
 				<img data-dz-thumbnail/>
 			</div>
-			<div class="dz-error-title"><?php esc_html_e( 'Upload Failed', 'buddyboss' ); ?></div>
+			<div class="dz-error-title"><?php esc_html_e( 'Upload Failed', 'buddyboss-platform' ); ?></div>
 			<div class="dz-details">
 				<div class="dz-filename"><span data-dz-name></span></div>
 				<div class="dz-size" data-dz-size></div>

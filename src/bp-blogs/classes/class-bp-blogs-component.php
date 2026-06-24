@@ -77,7 +77,7 @@ class BP_Blogs_Component extends BP_Component {
 			'has_directory'         => false, // Non-multisite installs don't need a top-level Sites directory, since there's only one site.
 			'directory_title'       => isset( $bp->pages->blogs->title ) ? $bp->pages->blogs->title : $default_directory_title,
 			'notification_callback' => 'bp_blogs_format_notifications',
-			'search_string'         => __( 'Search sites&hellip;', 'buddyboss' ),
+			'search_string'         => __( 'Search sites&hellip;', 'buddyboss-platform' ),
 			'autocomplete_all'      => defined( 'BP_MESSAGES_AUTOCOMPLETE_ALL' ),
 			'global_tables'         => $global_tables,
 			'meta_tables'           => $meta_tables,
@@ -218,7 +218,7 @@ class BP_Blogs_Component extends BP_Component {
 		// Add 'Sites' to the main navigation.
 		$count    = (int) bp_get_total_blog_count_for_user();
 		$class    = ( 0 === $count ) ? 'no-count' : 'count';
-		$nav_text = __( 'Sites', 'buddyboss' );
+		$nav_text = __( 'Sites', 'buddyboss-platform' );
 		$nav_text .= sprintf(
 			' <span class="%s">%s</span>',
 			esc_attr( $class ),
@@ -235,7 +235,7 @@ class BP_Blogs_Component extends BP_Component {
 		);
 
 		$sub_nav[] = array(
-			'name'            => __( 'My Sites', 'buddyboss' ),
+			'name'            => __( 'My Sites', 'buddyboss-platform' ),
 			'slug'            => 'my-sites',
 			'parent_url'      => $parent_url,
 			'parent_slug'     => $slug,
@@ -279,7 +279,7 @@ class BP_Blogs_Component extends BP_Component {
 			$wp_admin_nav[] = array(
 				'parent' => buddypress()->my_account_menu_id,
 				'id'     => 'my-account-' . $this->id,
-				'title'  => __( 'Sites', 'buddyboss' ),
+				'title'  => __( 'Sites', 'buddyboss-platform' ),
 				'href'   => $blogs_link,
 			);
 
@@ -287,7 +287,7 @@ class BP_Blogs_Component extends BP_Component {
 			$wp_admin_nav[] = array(
 				'parent'   => 'my-account-' . $this->id,
 				'id'       => 'my-account-' . $this->id . '-my-sites',
-				'title'    => __( 'My Sites', 'buddyboss' ),
+				'title'    => __( 'My Sites', 'buddyboss-platform' ),
 				'href'     => $blogs_link,
 				'position' => 10,
 			);
@@ -297,7 +297,7 @@ class BP_Blogs_Component extends BP_Component {
 				$wp_admin_nav[] = array(
 					'parent'   => 'my-account-' . $this->id,
 					'id'       => 'my-account-' . $this->id . '-create',
-					'title'    => __( 'Create a Site', 'buddyboss' ),
+					'title'    => __( 'Create a Site', 'buddyboss-platform' ),
 					'href'     => trailingslashit( bp_get_blogs_directory_permalink() . 'create' ),
 					'position' => 99,
 				);
@@ -318,7 +318,7 @@ class BP_Blogs_Component extends BP_Component {
 
 			if ( bp_is_my_profile() ) {
 				if ( bp_is_active( 'xprofile' ) ) {
-					$bp->bp_options_title = __( 'My Sites', 'buddyboss' );
+					$bp->bp_options_title = __( 'My Sites', 'buddyboss-platform' );
 				}
 
 				// If we are not viewing the logged in user, set up the current
@@ -329,7 +329,7 @@ class BP_Blogs_Component extends BP_Component {
 						'item_id' => bp_displayed_user_id(),
 						'type'    => 'thumb',
 						/* translators: %s: member display name. */
-						'alt'     => sprintf( __( 'Profile photo of %s', 'buddyboss' ), bp_get_displayed_user_fullname() ),
+						'alt'     => sprintf( __( 'Profile photo of %s', 'buddyboss-platform' ), bp_get_displayed_user_fullname() ),
 					)
 				);
 				$bp->bp_options_title  = bp_get_displayed_user_fullname();

@@ -25,7 +25,7 @@ if ( bp_is_my_profile() || ( bp_is_active( 'groups' ) && bp_is_group() && is_use
 			?>
 			<div class="bb-media-actions-wrap">
 				<div class="bb-media-actions">
-					<a href="#" id="bp-add-document" class="bb-add-document button bb-rl-button bb-rl-button--brandFill bb-rl-button--small"><i class="bb-icons-rl-plus"></i><?php esc_html_e( 'Add Documents', 'buddyboss' ); ?></a>
+					<a href="#" id="bp-add-document" class="bb-add-document button bb-rl-button bb-rl-button--brandFill bb-rl-button--small"><i class="bb-icons-rl-plus"></i><?php esc_html_e( 'Add Documents', 'buddyboss-platform' ); ?></a>
 				</div>
 			</div>
 			<?php

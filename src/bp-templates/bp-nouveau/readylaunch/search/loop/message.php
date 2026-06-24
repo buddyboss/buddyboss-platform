@@ -17,7 +17,7 @@ global $current_message; ?>
 <li class="bp-search-item bp-search-item_message">
 	<p class="message_participants">
 		<?php
-		esc_html_e( 'Conversation between', 'buddyboss' );
+		esc_html_e( 'Conversation between', 'buddyboss-platform' );
 		$participants = array();
 		foreach ( $current_message->recepients as $recepient_id ) {
 			if ( (int) $recepient_id === get_current_user_id() ) {
@@ -27,12 +27,12 @@ global $current_message; ?>
 			$participants[] = bp_core_get_userlink( $recepient_id );
 		}
 
-		echo ' ' . implode( ', ', $participants ) . ' ' . __( 'and you.', 'buddyboss' );
+		echo ' ' . implode( ', ', $participants ) . ' ' . __( 'and you.', 'buddyboss-platform' );
 		?>
 
 		<span class='view_thread_link'>
 			<a href='<?php echo esc_url( trailingslashit( bp_loggedin_user_domain() ) . 'messages/view/' . $current_message->thread_id . '/' ); ?>'>
-				<?php esc_html_e( 'View Conversation', 'buddyboss' ); ?>
+				<?php esc_html_e( 'View Conversation', 'buddyboss-platform' ); ?>
 			</a>
 		</span>
 	</p>

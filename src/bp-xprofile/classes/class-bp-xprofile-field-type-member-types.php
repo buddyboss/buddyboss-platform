@@ -24,8 +24,8 @@ class BP_XProfile_Field_Type_Member_Types extends BP_XProfile_Field_Type {
 	public function __construct() {
 		parent::__construct();
 
-		$this->category = __( 'Multi Fields', 'buddyboss' );
-		$this->name     = __( 'Profile Type', 'buddyboss' );
+		$this->category = __( 'Multi Fields', 'buddyboss-platform' );
+		$this->name     = __( 'Profile Type', 'buddyboss-platform' );
 
 		$this->supports_options = false;
 
@@ -72,7 +72,7 @@ class BP_XProfile_Field_Type_Member_Types extends BP_XProfile_Field_Type {
 						sprintf(
 							__(
 								'Please make sure to add some <a href="%s">profile types</a> first.',
-								'buddyboss'
+								'buddyboss-platform'
 							),
 							add_query_arg(
 								array(
@@ -181,7 +181,7 @@ class BP_XProfile_Field_Type_Member_Types extends BP_XProfile_Field_Type {
 
 		if ( ! empty( $bp_active_member_types ) ) {
 
-			$html .= '<option value="">' . /* translators: no option picked in select box */ esc_html__( '----', 'buddyboss' ) . '</option>';
+			$html .= '<option value="">' . /* translators: no option picked in select box */ esc_html__( '----', 'buddyboss-platform' ) . '</option>';
 
 			foreach ( $bp_active_member_types as $bp_active_member_type ) {
 				$enabled = get_post_meta( $bp_active_member_type, '_bp_member_type_enable_profile_field', true );
@@ -262,7 +262,7 @@ class BP_XProfile_Field_Type_Member_Types extends BP_XProfile_Field_Type {
 		$member_type_name = get_post_meta( $field_value, '_bp_member_type_label_singular_name', true );
 
 		if ( '' === $member_type_name || false === $member_type_name ) {
-			return esc_html__( '---', 'buddyboss' );
+			return esc_html__( '---', 'buddyboss-platform' );
 		}
 
 		return $member_type_name;
