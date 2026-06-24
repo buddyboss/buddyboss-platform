@@ -134,16 +134,14 @@ body.buddyboss_page_bb-integrations {
 		}
 	}
 
-	// Card — Figma: 0.5px #D9D9D9 border, 12px radius, 16px padding, 16px gap.
 	&__card {
 		display: flex;
 		flex-direction: column;
 		gap: 16px;
 		padding: 16px;
-		background: #fff;
-		border: 0.5px solid #d9d9d9;
+		background: $bb-background-base-color;
+		border: 0.5px solid $bb-border-secondary-color;
 		border-radius: 12px;
-		min-height: 270px;
 
 		&--skeleton {
 			background: linear-gradient(90deg, #f3f4f5 25%, #ececec 37%, #f3f4f5 63%);
@@ -152,7 +150,6 @@ body.buddyboss_page_bb-integrations {
 		}
 	}
 
-	// Clickable body (logo + text); grows so the action button sits at the bottom.
 	&__card-body {
 		display: flex;
 		flex-direction: column;
@@ -174,7 +171,6 @@ body.buddyboss_page_bb-integrations {
 		gap: 24px;
 	}
 
-	// Logo — Figma: 56px circle, 0.5px #E5E5E5 ring, 40px icon inside.
 	&__card-logo {
 		display: inline-flex;
 		align-items: center;
@@ -183,7 +179,7 @@ body.buddyboss_page_bb-integrations {
 		width: 56px;
 		height: 56px;
 		padding: 8px;
-		border: 0.5px solid #e5e5e5;
+		border: 0.5px solid $bb-border-primary-color;
 		border-radius: 99px;
 		box-sizing: border-box;
 
@@ -202,31 +198,28 @@ body.buddyboss_page_bb-integrations {
 	&__card-text {
 		display: flex;
 		flex-direction: column;
-		gap: 8px;
+		gap: 16px;
 	}
 
-	// Title — Figma heading/lg-medium: 16px / 500 / 22px / #000.
 	&__card-title {
 		font-size: 16px;
 		font-weight: 500;
 		line-height: 22px;
-		color: #000;
+		color: $bb-text-color;
 	}
 
-	// Vendor + description — Figma body/regular: 13px / 400 / 18px / #666.
 	&__card-vendor {
 		font-size: 13px;
 		font-weight: 400;
 		line-height: 18px;
-		color: #666;
+		color: $bb-text-tertiary-color;
 	}
 
 	&__card-desc {
 		font-size: 13px;
 		font-weight: 400;
 		line-height: 18px;
-		color: #666;
-		// Max 3 lines per Figma.
+		color: $bb-text-tertiary-color;
 		display: -webkit-box;
 		-webkit-line-clamp: 3;
 		-webkit-box-orient: vertical;
@@ -239,31 +232,9 @@ body.buddyboss_page_bb-integrations {
 		gap: 16px;
 	}
 
-	// Primary action button — Figma: orange outline #EF5D33, 8px radius.
 	&__btn {
-		display: inline-flex;
-		align-items: center;
-		gap: 4px;
-		box-sizing: border-box;
-		padding: 6px 16px;
-		font-size: 14px;
-		font-weight: 400;
-		line-height: 20px;
+		@include bb-button-primary-outline;
 		text-decoration: none;
-		border-radius: 8px;
-		cursor: pointer;
-
-		&--primary {
-			color: #ef5d33;
-			background: transparent;
-			border: 1px solid #ef5d33;
-
-			&:hover,
-			&:focus {
-				color: #ef5d33;
-				background: rgba(239, 93, 51, 0.06);
-			}
-		}
 	}
 
 	&__pagination {
