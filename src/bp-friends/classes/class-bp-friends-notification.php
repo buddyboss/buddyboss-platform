@@ -99,6 +99,7 @@ class BP_Friends_Notification extends BP_Core_Notification_Abstract {
 				'email_plain_content' => __( "{{initiator.name}} wants to add you as a connection.\n\nTo accept this request and manage all of your pending requests, visit: {{{friend-requests.url}}}\n\nTo view {{initiator.name}}'s profile, visit: {{{initiator.url}}}", 'buddyboss' ),
 				'situation_label'     => __( 'A member receives a new connection request', 'buddyboss' ),
 				'unsubscribe_text'    => __( 'You will no longer receive emails when someone sends you an invitation to connect.', 'buddyboss' ),
+				'group'               => 'connections',
 			),
 			'bb_connections_new_request'
 		);
@@ -136,6 +137,7 @@ class BP_Friends_Notification extends BP_Core_Notification_Abstract {
 				'email_plain_content' => __( "{{friend.name}} accepted your friend request.\n\nTo learn more about them, visit their profile: {{{friendship.url}}}", 'buddyboss' ),
 				'situation_label'     => __( 'A member\'s connection request is accepted', 'buddyboss' ),
 				'unsubscribe_text'    => __( 'You will no longer receive emails when someone accepts your invitation to connect.', 'buddyboss' ),
+				'group'               => 'connections',
 			),
 			'bb_connections_request_accepted'
 		);
