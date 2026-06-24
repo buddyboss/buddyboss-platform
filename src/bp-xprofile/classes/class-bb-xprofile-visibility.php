@@ -170,9 +170,15 @@ class BB_XProfile_Visibility {
 			return $cache[ $user_id ];
 		}
 
+		// Resolve visibility table name with a safe fallback when xprofile globals
+		// have not been set up yet (e.g., fresh install before bp_setup_globals).
+		$table_name_visibility = ! empty( $bp->profile->table_name_visibility )
+			? $bp->profile->table_name_visibility
+			: bp_core_get_table_prefix() . 'bb_xprofile_visibility';
+
 		if ( '' == $table_exists ) {
 			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-			$table_exists = $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $bp->profile->table_name_visibility ) );
+			$table_exists = $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $table_name_visibility ) );
 		}
 
 		if ( $table_exists ) {
@@ -180,7 +186,7 @@ class BB_XProfile_Visibility {
 			$retval            = $wpdb->get_row(
 				$wpdb->prepare(
 				// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-					"SELECT id FROM {$bp->profile->table_name_visibility} WHERE user_id = %d LIMIT 1",
+					"SELECT id FROM {$table_name_visibility} WHERE user_id = %d LIMIT 1",
 					$user_id
 				)
 			);
