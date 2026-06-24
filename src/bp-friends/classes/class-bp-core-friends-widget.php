@@ -138,7 +138,7 @@ class BP_Core_Friends_Widget extends WP_Widget {
 
 		$title = $instance['link_title'] ? '<a href="' . esc_url( $link ) . '">' . esc_html( $title ) . '</a>' : esc_html( $title );
 
-		echo $before_title . $title . $after_title;
+		echo $before_title . esc_html( $title ) . $after_title;
 
 		// Back up the global.
 		$old_members_template = $members_template;

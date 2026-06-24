@@ -202,7 +202,7 @@ class BP_Members_List_Table extends WP_Users_List_Table {
 			}
 
 			/* translators: %s: link to edit registration settings. */
-			printf( __( 'Registration is disabled. %s', 'buddyboss-platform' ), $link );
+			printf( esc_html__( 'Registration is disabled. %s', 'buddyboss-platform' ), $link );
 		}
 
 	}

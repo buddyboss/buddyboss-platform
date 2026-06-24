@@ -1193,7 +1193,7 @@ function _bp_get_user_meta_last_activity_warning( $retval, $object_id, $meta_key
 	if ( 'last_activity' === $meta_key ) {
 		// Don't send the warning more than once per pageload.
 		if ( false === $warned ) {
-			_doing_it_wrong( 'get_user_meta( $user_id, \'last_activity\' )', __( 'User last_activity data is no longer stored in usermeta. Use bp_get_user_last_activity() instead.', 'buddyboss-platform' ), '2.0.0' );
+			_doing_it_wrong( 'get_user_meta( $user_id, \'last_activity\' )', esc_html__( 'User last_activity data is no longer stored in usermeta. Use bp_get_user_last_activity() instead.', 'buddyboss-platform' ), '2.0.0' );
 			$warned = true;
 		}
 
@@ -1228,7 +1228,7 @@ add_filter( 'get_user_metadata', '_bp_get_user_meta_last_activity_warning', 10, 
  */
 function _bp_update_user_meta_last_activity_warning( $meta_id, $object_id, $meta_key, $meta_value ) {
 	if ( 'last_activity' === $meta_key ) {
-		_doing_it_wrong( 'update_user_meta( $user_id, \'last_activity\' )', __( 'User last_activity data is no longer stored in usermeta. Use bp_update_user_last_activity() instead.', 'buddyboss-platform' ), '2.0.0' );
+		_doing_it_wrong( 'update_user_meta( $user_id, \'last_activity\' )', esc_html__( 'User last_activity data is no longer stored in usermeta. Use bp_update_user_last_activity() instead.', 'buddyboss-platform' ), '2.0.0' );
 		bp_update_user_last_activity( $object_id, $meta_value );
 	}
 }

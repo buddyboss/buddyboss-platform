@@ -343,7 +343,7 @@ function bp_search_pagination_page_counts( $total_items, $items_per_page, $curr_
 		<div class="pag-data">
 			<?php
 			/* translators: 1: starting result number, 2: ending result number, 3: total number of results. */
-			printf( __( 'Viewing %1$d - %2$d of %3$d results', 'buddyboss-platform' ), $from_num, min( $total_items, $to_num ), $total_items );
+			printf( esc_html__( 'Viewing %1$d - %2$d of %3$d results', 'buddyboss-platform' ), $from_num, min( $total_items, $to_num ), $total_items );
 			?>
 		</div>
 	</div>

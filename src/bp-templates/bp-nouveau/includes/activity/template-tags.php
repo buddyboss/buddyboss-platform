@@ -325,10 +325,10 @@ function bp_nouveau_activity_state() {
 					<?php
 					if ( $comment_count > 1 || 0 === $comment_count ) {
 						/* translators: %d: number of comments. */
-						printf( _x( '%d Comments', 'placeholder: activity comments count', 'buddyboss-platform' ), $comment_count );
+						printf( esc_html_x( '%d Comments', 'placeholder: activity comments count', 'buddyboss-platform' ), $comment_count );
 					} else {
 						/* translators: %d: number of comments. */
-						printf( _x( '%d Comment', 'placeholder: activity comment count', 'buddyboss-platform' ), $comment_count );
+						printf( esc_html_x( '%d Comment', 'placeholder: activity comment count', 'buddyboss-platform' ), $comment_count );
 					}
 					?>
 				</span>

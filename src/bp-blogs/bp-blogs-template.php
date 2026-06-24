@@ -1075,7 +1075,7 @@ function bp_show_blog_signup_form( $blogname = '', $blog_title = '', $errors = '
 		$errors           = $filtered_results['errors'];
 
 		if ( $errors->get_error_code() ) {
-			echo '<p>' . __( 'There was a problem; please correct the form below and try again.', 'buddyboss-platform' ) . '</p>';
+			echo '<p>' . esc_html__( 'There was a problem; please correct the form below and try again.', 'buddyboss-platform' ) . '</p>';
 		}
 		?>
 		<p><?php printf( __( "By filling out the form below, you can <strong>add a site to your account</strong>. There is no limit to the number of sites that you can have, so create to your heart's content, but blog responsibly!", 'buddyboss-platform' ), $current_user->data->display_name ); ?></p>
@@ -1119,9 +1119,9 @@ function bp_blogs_signup_blog( $blogname = '', $blog_title = '', $errors = '' ) 
 
 	// Blog name.
 	if ( ! is_subdomain_install() ) {
-		echo '<label for="blogname">' . __( 'Site Name:', 'buddyboss-platform' ) . '</label>';
+		echo '<label for="blogname">' . esc_html__( 'Site Name:', 'buddyboss-platform' ) . '</label>';
 	} else {
-		echo '<label for="blogname">' . __( 'Site Domain:', 'buddyboss-platform' ) . '</label>';
+		echo '<label for="blogname">' . esc_html__( 'Site Domain:', 'buddyboss-platform' ) . '</label>';
 	}
 
 	if ( $errmsg = $errors->get_error_message( 'blogname' ) ) {
@@ -1139,15 +1139,15 @@ function bp_blogs_signup_blog( $blogname = '', $blog_title = '', $errors = '' ) 
 	}
 
 	if ( ! is_user_logged_in() ) {
-		print '(<strong>' . __( 'Your address will be ', 'buddyboss-platform' );
+		print '(<strong>' . esc_html__( 'Your address will be ', 'buddyboss-platform' );
 
 		if ( ! is_subdomain_install() ) {
-			print $current_site->domain . $current_site->path . __( 'blogname', 'buddyboss-platform' );
+			print $current_site->domain . $current_site->path . esc_html__( 'blogname', 'buddyboss-platform' );
 		} else {
-			print __( 'domain.', 'buddyboss-platform' ) . $current_site->domain . $current_site->path;
+			print esc_html__( 'domain.', 'buddyboss-platform' ) . $current_site->domain . $current_site->path;
 		}
 
-		echo '.</strong> ' . __( 'Must be at least 4 characters, letters and numbers only. It cannot be changed so choose carefully!)', 'buddyboss-platform' ) . '</p>';
+		echo '.</strong> ' . esc_html__( 'Must be at least 4 characters, letters and numbers only. It cannot be changed so choose carefully!)', 'buddyboss-platform' ) . '</p>';
 	}
 
 	// Blog Title.
@@ -1301,7 +1301,7 @@ function bp_blogs_confirm_blog_signup( $domain, $path, $blog_title, $user_name, 
 		printf(
 			'%s %s',
 			sprintf(
-				__( '%s is your new site.', 'buddyboss-platform' ),
+				esc_html__( '%s is your new site.', 'buddyboss-platform' ),
 				sprintf( '<a href="%s">%s</a>', esc_url( $blog_url ), esc_url( $blog_url ) )
 			),
 			sprintf(
@@ -1365,17 +1365,17 @@ function bp_blogs_blog_tabs() {
 		<?php
 		if ( bp_is_current_action( 'my-blogs' ) || ! bp_current_action() ) :
 			?>
-			 class="current"<?php endif; ?>><a href="<?php echo trailingslashit( bp_displayed_user_domain() . bp_get_blogs_slug() . '/my-blogs' ); ?>"><?php /* translators: %s: member display name. */ printf( __( "%s's Sites", 'buddyboss-platform' ), bp_get_displayed_user_fullname() ); ?></a></li>
+			 class="current"<?php endif; ?>><a href="<?php echo trailingslashit( bp_displayed_user_domain() . bp_get_blogs_slug() . '/my-blogs' ); ?>"><?php /* translators: %s: member display name. */ printf( esc_html__( "%s's Sites", 'buddyboss-platform' ), bp_get_displayed_user_fullname() ); ?></a></li>
 		<li
 		<?php
 		if ( bp_is_current_action( 'recent-posts' ) ) :
 			?>
-			 class="current"<?php endif; ?>><a href="<?php echo trailingslashit( bp_displayed_user_domain() . bp_get_blogs_slug() . '/recent-posts' ); ?>"><?php /* translators: %s: member display name. */ printf( __( "%s's Recent Posts", 'buddyboss-platform' ), bp_get_displayed_user_fullname() ); ?></a></li>
+			 class="current"<?php endif; ?>><a href="<?php echo trailingslashit( bp_displayed_user_domain() . bp_get_blogs_slug() . '/recent-posts' ); ?>"><?php /* translators: %s: member display name. */ printf( esc_html__( "%s's Recent Posts", 'buddyboss-platform' ), bp_get_displayed_user_fullname() ); ?></a></li>
 		<li
 		<?php
 		if ( bp_is_current_action( 'recent-comments' ) ) :
 			?>
-			 class="current"<?php endif; ?>><a href="<?php echo trailingslashit( bp_displayed_user_domain() . bp_get_blogs_slug() . '/recent-comments' ); ?>"><?php /* translators: %s: member display name. */ printf( __( "%s's Recent Comments", 'buddyboss-platform' ), bp_get_displayed_user_fullname() ); ?></a></li>
+			 class="current"<?php endif; ?>><a href="<?php echo trailingslashit( bp_displayed_user_domain() . bp_get_blogs_slug() . '/recent-comments' ); ?>"><?php /* translators: %s: member display name. */ printf( esc_html__( "%s's Recent Comments", 'buddyboss-platform' ), bp_get_displayed_user_fullname() ); ?></a></li>
 	</ul>
 
 	<?php

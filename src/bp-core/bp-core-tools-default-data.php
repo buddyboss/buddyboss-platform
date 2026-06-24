@@ -13,7 +13,7 @@ function bp_admin_tools_default_data_save() {
 
 	if ( ! empty( $_POST['bp-admin-clear'] ) ) {
 		bp_dd_clear_db();
-		echo '<div id="message" class="updated fade"><p>' . __( 'Everything was deleted.', 'buddyboss-platform' ) . '</p></div>';
+		echo '<div id="message" class="updated fade"><p>' . esc_html__( 'Everything was deleted.', 'buddyboss-platform' ) . '</p></div>';
 	}
 
 	if ( isset( $_POST['bp-admin-submit'] ) ) {

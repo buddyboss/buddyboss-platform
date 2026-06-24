@@ -23,7 +23,7 @@ defined( 'ABSPATH' ) || exit;
 
 				<fieldset class="bbp-form">
 
-					<legend><?php /* translators: %s: reply title. */ printf( __( 'Move reply "%s"', 'buddyboss-platform' ), bbp_get_reply_title() ); ?></legend>
+					<legend><?php /* translators: %s: reply title. */ printf( esc_html__( 'Move reply "%s"', 'buddyboss-platform' ), bbp_get_reply_title() ); ?></legend>
 
 					<div>
 
@@ -45,7 +45,7 @@ defined( 'ABSPATH' ) || exit;
 									<input name="bbp_reply_move_option" id="bbp_reply_move_option_reply" class="bs-styled-radio" type="radio" checked="checked" value="topic" tabindex="<?php bbp_tab_index(); ?>" />
 									<label for="bbp_reply_move_option_reply"><?php /* translators: %s: forum title. */ printf( __( 'New discussion in <strong>%s</strong> titled:', 'buddyboss-platform' ), bbp_get_forum_title( bbp_get_reply_forum_id( bbp_get_reply_id() ) ) ); ?></label>
 								</div>
-								<input type="text" id="bbp_reply_move_destination_title" value="<?php /* translators: %s: reply title. */ printf( __( 'Moved: %s', 'buddyboss-platform' ), bbp_get_reply_title() ); ?>" tabindex="<?php bbp_tab_index(); ?>" size="35" name="bbp_reply_move_destination_title" />
+								<input type="text" id="bbp_reply_move_destination_title" value="<?php /* translators: %s: reply title. */ printf( esc_html__( 'Moved: %s', 'buddyboss-platform' ), bbp_get_reply_title() ); ?>" tabindex="<?php bbp_tab_index(); ?>" size="35" name="bbp_reply_move_destination_title" />
 							</div>
 
 							<?php

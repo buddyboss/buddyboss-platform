@@ -87,7 +87,7 @@ function bp_settings_pending_email_notice() {
 		<?php
 		/* translators: %s: the new pending email address. */
 		printf(
-			__( 'There is a pending change of your email address to %s.', 'buddyboss-platform' ),
+			esc_html__( 'There is a pending change of your email address to %s.', 'buddyboss-platform' ),
 			'<strong>' . esc_html( $pending_email['newemail'] ) . '</strong>'
 		);
 		?>

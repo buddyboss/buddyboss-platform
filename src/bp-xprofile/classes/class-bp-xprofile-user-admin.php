@@ -455,7 +455,7 @@ if ( ! class_exists( 'BP_XProfile_User_Admin' ) ) :
 						<?php
 						/* translators: %s: field visibility level label. */
 						printf(
-							__( 'This field can be seen by: %s', 'buddyboss-platform' ),
+							esc_html__( 'This field can be seen by: %s', 'buddyboss-platform' ),
 							'<span class="current-visibility-level">' . bp_get_the_profile_field_visibility_level_label() . '</span>'
 						);
 						?>
@@ -517,7 +517,7 @@ if ( ! class_exists( 'BP_XProfile_User_Admin' ) ) :
 			?>
 			<p><?php
 			/* translators: %s: user display name. */
-			printf( __( '%s has been marked as a spammer. All BuddyBoss data associated with the user has been removed.', 'buddyboss-platform' ), esc_html( bp_core_get_user_displayname( $user->ID ) ) ); ?></p>
+			printf( esc_html__( '%s has been marked as a spammer. All BuddyBoss data associated with the user has been removed.', 'buddyboss-platform' ), esc_html( bp_core_get_user_displayname( $user->ID ) ) ); ?></p>
 			<?php
 		}
 
@@ -532,7 +532,7 @@ if ( ! class_exists( 'BP_XProfile_User_Admin' ) ) :
 			?>
 			<p><?php
 			/* translators: %s: member display name. */
-			printf( __( 'Member "%s" marked suspended. All BuddyBoss data associated with the member has been disabled.', 'buddyboss-platform' ), esc_html( bp_core_get_user_displayname( $user->ID ) ) ); ?></p>
+			printf( esc_html__( 'Member "%s" marked suspended. All BuddyBoss data associated with the member has been disabled.', 'buddyboss-platform' ), esc_html( bp_core_get_user_displayname( $user->ID ) ) ); ?></p>
 			<?php
 		}
 

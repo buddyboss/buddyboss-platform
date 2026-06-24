@@ -797,7 +797,7 @@ function bp_print_add_repeater_set_button( $args = array() ) {
 		echo '<i class="bb-icon-f bb-icon-plus"></i>';
 		printf(
 			/* translators: %s = profile field group name */
-			__( 'Add Another', 'buddyboss-platform' ),
+			esc_html__( 'Add Another', 'buddyboss-platform' ),
 			bp_get_the_profile_group_name()
 		);
 		echo '</button>';
@@ -1155,7 +1155,7 @@ function bb_admin_xprofile_add_repeater_set() {
 									<?php
 									/* translators: %s: field visibility level label. */
 									printf(
-										__( 'This field can be seen by: %s', 'buddyboss-platform' ),
+										esc_html__( 'This field can be seen by: %s', 'buddyboss-platform' ),
 										'<span class="current-visibility-level">' . bp_get_the_profile_field_visibility_level_label() . '</span>'
 									);
 									?>

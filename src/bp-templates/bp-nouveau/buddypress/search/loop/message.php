@@ -26,7 +26,7 @@ global $current_message; ?>
 			$participants[] = bp_core_get_userlink( $recepient_id );
 		}
 
-		echo ' ' . implode( ', ', $participants ) . ' ' . __( 'and you.', 'buddyboss-platform' );
+		echo ' ' . implode( ', ', $participants ) . ' ' . esc_html__( 'and you.', 'buddyboss-platform' );
 		?>
 
 		<span class='view_thread_link'>

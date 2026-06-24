@@ -17,7 +17,7 @@ defined( 'ABSPATH' ) || exit;
 
 		<fieldset class="bbp-form" id="bbp-edit-topic-tag">
 
-			<legend><?php /* translators: %s: topic tag name. */ printf( __( 'Manage Tag: "%s"', 'buddyboss-platform' ), bbp_get_topic_tag_name() ); ?></legend>
+			<legend><?php /* translators: %s: topic tag name. */ printf( esc_html__( 'Manage Tag: "%s"', 'buddyboss-platform' ), bbp_get_topic_tag_name() ); ?></legend>
 
 			<fieldset class="bbp-form" id="tag-rename">
 

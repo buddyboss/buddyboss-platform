@@ -91,7 +91,7 @@ class BP_Core_Members_Widget extends WP_Widget {
 		$separator = apply_filters( 'bp_members_widget_separator', '|' );
 
 		// Output before widget HTMl, title (and maybe content before & after it).
-		echo $args['before_widget'] . $args['before_title'] . $title . $args['after_title'];
+		echo $args['before_widget'] . $args['before_title'] . esc_html( $title ) . $args['after_title'];
 
 		// Setup args for querying members.
 		$members_args = array(
@@ -244,29 +244,29 @@ class BP_Core_Members_Widget extends WP_Widget {
 		?>
 
 		<p>
-			<label for="<?php echo $this->get_field_id( 'title' ); ?>">
+			<label for="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>">
 				<?php esc_html_e( 'Title:', 'buddyboss-platform' ); ?>
-				<input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo esc_attr( $title ); ?>" style="width: 100%" />
+				<input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'title' ) ); ?>" type="text" value="<?php echo esc_attr( $title ); ?>" style="width: 100%" />
 			</label>
 		</p>
 
 		<p>
-			<label for="<?php echo $this->get_field_id( 'link_title' ); ?>">
-				<input type="checkbox" name="<?php echo $this->get_field_name( 'link_title' ); ?>" id="<?php echo $this->get_field_id( 'link_title' ); ?>" value="1" <?php checked( $link_title ); ?> />
+			<label for="<?php echo esc_attr( $this->get_field_id( 'link_title' ) ); ?>">
+				<input type="checkbox" name="<?php echo esc_attr( $this->get_field_name( 'link_title' ) ); ?>" id="<?php echo esc_attr( $this->get_field_id( 'link_title' ) ); ?>" value="1" <?php checked( $link_title ); ?> />
 				<?php esc_html_e( 'Link widget title to Members directory', 'buddyboss-platform' ); ?>
 			</label>
 		</p>
 
 		<p>
-			<label for="<?php echo $this->get_field_id( 'max_members' ); ?>">
+			<label for="<?php echo esc_attr( $this->get_field_id( 'max_members' ) ); ?>">
 				<?php esc_html_e( 'Max members to show:', 'buddyboss-platform' ); ?>
 				<input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'max_members' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'max_members' ) ); ?>" type="number" value="<?php echo esc_attr( $max_members ); ?>" style="width: 30%" />
 			</label>
 		</p>
 
 		<p>
-			<label for="<?php echo $this->get_field_id( 'member_default' ); ?>"><?php esc_html_e( 'Default members to show:', 'buddyboss-platform' ); ?></label>
-			<select name="<?php echo $this->get_field_name( 'member_default' ); ?>" id="<?php echo $this->get_field_id( 'member_default' ); ?>">
+			<label for="<?php echo esc_attr( $this->get_field_id( 'member_default' ) ); ?>"><?php esc_html_e( 'Default members to show:', 'buddyboss-platform' ); ?></label>
+			<select name="<?php echo esc_attr( $this->get_field_name( 'member_default' ) ); ?>" id="<?php echo esc_attr( $this->get_field_id( 'member_default' ) ); ?>">
 				<option value="newest"
 				<?php
 				if ( 'newest' === $member_default ) :

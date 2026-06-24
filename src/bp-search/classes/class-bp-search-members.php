@@ -476,7 +476,7 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 		 */
 		function print_search_options( $items_to_search ) {
 			echo "<div class='wp-user-fields' style='margin: 10px 0 0 30px'>";
-			echo "<p class='xprofile-group-name' style='margin: 5px 0'><strong>" . __( 'Account', 'buddyboss-platform' ) . '</strong></p>';
+			echo "<p class='xprofile-group-name' style='margin: 5px 0'><strong>" . esc_html__( 'Account', 'buddyboss-platform' ) . '</strong></p>';
 
 			$fields = array(
 				'user_login'   => __( 'Username/Login', 'buddyboss-platform' ),

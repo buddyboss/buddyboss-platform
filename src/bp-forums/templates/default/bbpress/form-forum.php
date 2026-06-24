@@ -152,7 +152,7 @@ defined( 'ABSPATH' ) || exit;
 	<div id="no-forum-<?php bbp_forum_id(); ?>" class="bbp-no-forum">
 		<div class="bp-feedback info">
 			<span class="bp-icon" aria-hidden="true"></span>
-			<p><?php /* translators: %s: forum title. */ printf( __( 'The forum "%s" is closed to new content.', 'buddyboss-platform' ), bbp_get_forum_title() ); ?></p>
+			<p><?php /* translators: %s: forum title. */ printf( esc_html__( 'The forum "%s" is closed to new content.', 'buddyboss-platform' ), bbp_get_forum_title() ); ?></p>
 		</div>
 	</div>
 

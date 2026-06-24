@@ -77,12 +77,12 @@ function groups_ajax_widget_groups_list() {
 						<?php
 						if ( 'newest' == $type ) {
 							/* translators: %s: human-readable time since the group was created. */
-							printf( __( 'created %s', 'buddyboss-platform' ), bp_get_group_date_created() );
+							printf( esc_html__( 'created %s', 'buddyboss-platform' ), bp_get_group_date_created() );
 						} elseif ( 'popular' == $type ) {
 							bp_group_member_count();
 						} else {
 							/* translators: %s: human-readable time since the group was last active. */
-							printf( __( 'active %s', 'buddyboss-platform' ), bp_get_group_last_active() );
+							printf( esc_html__( 'active %s', 'buddyboss-platform' ), bp_get_group_last_active() );
 						}
 						?>
 						</span>
@@ -96,7 +96,7 @@ function groups_ajax_widget_groups_list() {
 
 	<?php else : ?>
 
-		<?php echo '-1[[SPLIT]]<li>' . __( 'No groups matched the current filter.', 'buddyboss-platform' ); ?>
+		<?php echo '-1[[SPLIT]]<li>' . esc_html__( 'No groups matched the current filter.', 'buddyboss-platform' ); ?>
 
 		<?php
 	endif;

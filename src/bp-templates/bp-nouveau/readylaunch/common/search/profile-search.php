@@ -87,7 +87,7 @@ $search_form_data = bp_profile_search_escaped_form_data( $form_id );
 										printf(
 											'<option value="" %1$s>%2$s</option>',
 											selected( $field_value['min']['day'], 0, false ),
-											/* translators: no option picked in select box */ __( 'Select Day', 'buddyboss-platform' )
+											/* translators: no option picked in select box */ esc_html__( 'Select Day', 'buddyboss-platform' )
 										);
 
 										for ( $i = 1; $i < 32; ++$i ) {
@@ -123,7 +123,7 @@ $search_form_data = bp_profile_search_escaped_form_data( $form_id );
 										'<option value="" %1$s>%2$s</option>',
 										selected( $field_value['min']['month'], 0, false ),
 										/* translators: no option picked in select box */
-										__( 'Select Month', 'buddyboss-platform' )
+										esc_html__( 'Select Month', 'buddyboss-platform' )
 									);
 
 									for ( $i = 0; $i < 12; ++$i ) {
@@ -145,7 +145,7 @@ $search_form_data = bp_profile_search_escaped_form_data( $form_id );
 										'<option value="" %1$s>%2$s</option>',
 										selected( $field_value['min']['year'], 0, false ),
 										/* translators: no option picked in select box */
-										__( 'Select Year', 'buddyboss-platform' )
+										esc_html__( 'Select Year', 'buddyboss-platform' )
 									);
 
 										$date_range_type = bp_xprofile_get_meta( $field->id, 'field', 'range_type', true );
@@ -182,7 +182,7 @@ $search_form_data = bp_profile_search_escaped_form_data( $form_id );
 										printf(
 											'<option value="" %1$s>%2$s</option>',
 											selected( $field_value['max']['day'], 0, false ),
-											/* translators: no option picked in select box */ __( 'Select Day', 'buddyboss-platform' )
+											/* translators: no option picked in select box */ esc_html__( 'Select Day', 'buddyboss-platform' )
 										);
 
 										for ( $i = 1; $i < 32; ++$i ) {
@@ -203,7 +203,7 @@ $search_form_data = bp_profile_search_escaped_form_data( $form_id );
 										'<option value="" %1$s>%2$s</option>',
 										selected( $field_value['max']['month'], 0, false ),
 										/* translators: no option picked in select box */
-										__( 'Select Month', 'buddyboss-platform' )
+										esc_html__( 'Select Month', 'buddyboss-platform' )
 									);
 
 									for ( $i = 0; $i < 12; ++$i ) {
@@ -225,7 +225,7 @@ $search_form_data = bp_profile_search_escaped_form_data( $form_id );
 										'<option value="" %1$s>%2$s</option>',
 										selected( $field_value['max']['year'], 0, false ),
 										/* translators: no option picked in select box */
-										__( 'Select Year', 'buddyboss-platform' )
+										esc_html__( 'Select Year', 'buddyboss-platform' )
 									);
 									for ( $i = $end; $i >= $start; $i-- ) {
 										printf(

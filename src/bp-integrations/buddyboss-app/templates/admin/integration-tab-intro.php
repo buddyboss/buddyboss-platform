@@ -28,14 +28,14 @@
 			printf(
 				'<a href="%s" class="button-primary">%s</a>',
 				esc_url( bp_get_admin_url( '?hello=buddyboss-app' ) ),
-				__( 'Video Demo', 'buddyboss-platform' )
+				esc_html__( 'Video Demo', 'buddyboss-platform' )
 			);
 		?>
 		<?php
 			printf(
 				'<a href="%s" target="_blank" class="button-secondary">%s</a>',
 				'https://buddyboss.com/app',
-				__( 'More Info', 'buddyboss-platform' )
+				esc_html__( 'More Info', 'buddyboss-platform' )
 			);
 		?>
 	</div>

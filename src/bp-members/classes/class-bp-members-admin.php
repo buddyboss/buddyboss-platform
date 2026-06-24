@@ -886,7 +886,7 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 
 			// Can current user edit this profile?
 			if ( ! $this->member_can_edit( $user_id ) ) {
-				wp_die( __( 'You cannot edit the requested user.', 'buddyboss-platform' ) );
+				wp_die( esc_html__( 'You cannot edit the requested user.', 'buddyboss-platform' ) );
 			}
 
 			// Build redirection URL.
@@ -1190,9 +1190,9 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 					<?php
 					printf(
 						'%1$s <a href="%2$s">%3$s</a>',
-						__( 'No user found with this ID.', 'buddyboss-platform' ),
+						esc_html__( 'No user found with this ID.', 'buddyboss-platform' ),
 						esc_url( bp_get_admin_url( 'users.php' ) ),
-						__( 'Go back and try again.', 'buddyboss-platform' )
+						esc_html__( 'Go back and try again.', 'buddyboss-platform' )
 					);
 					?>
 				</p>
@@ -1271,7 +1271,7 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 							<?php
 							$date = bp_format_time( strtotime( $user->user_registered ), false, true );
 							?>
-						<span id="timestamp"><?php /* translators: %s: registration date. */ printf( __( 'Registered on: %s', 'buddyboss-platform' ), '<strong>' . $date . '</strong>' ); ?></span>
+						<span id="timestamp"><?php /* translators: %s: registration date. */ printf( esc_html__( 'Registered on: %s', 'buddyboss-platform' ), '<strong>' . $date . '</strong>' ); ?></span>
 					</div>
 				</div> <!-- #misc-publishing-actions -->
 
@@ -1301,7 +1301,7 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 		 */
 		public function user_admin_spammer_metabox( $user = null ) {
 			?>
-			<p><?php /* translators: %s: member display name. */ printf( __( '%s has been marked as a spammer. All BuddyBoss data associated with the user has been removed.', 'buddyboss-platform' ), esc_html( bp_core_get_user_displayname( $user->ID ) ) ); ?></p>
+			<p><?php /* translators: %s: member display name. */ printf( esc_html__( '%s has been marked as a spammer. All BuddyBoss data associated with the user has been removed.', 'buddyboss-platform' ), esc_html( bp_core_get_user_displayname( $user->ID ) ) ); ?></p>
 			<?php
 		}
 
@@ -1314,7 +1314,7 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 		 */
 		public function user_admin_suspended_metabox( $user = null ) {
 			?>
-			<p><?php /* translators: %s: member display name. */ printf( __( '%s has been marked as a suspended. All BuddyBoss data associated with the user has been removed.', 'buddyboss-platform' ), esc_html( bp_core_get_user_displayname( $user->ID ) ) ); ?></p>
+			<p><?php /* translators: %s: member display name. */ printf( esc_html__( '%s has been marked as a suspended. All BuddyBoss data associated with the user has been removed.', 'buddyboss-platform' ), esc_html( bp_core_get_user_displayname( $user->ID ) ) ); ?></p>
 			<?php
 		}
 
@@ -1345,7 +1345,7 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 			?>
 
 		<ul>
-			<li class="bp-members-profile-stats"><?php /* translators: %s: last active date. */ printf( __( 'Last active: %1$s', 'buddyboss-platform' ), '<strong>' . $date . '</strong>' ); ?></li>
+			<li class="bp-members-profile-stats"><?php /* translators: %s: last active date. */ printf( esc_html__( 'Last active: %1$s', 'buddyboss-platform' ), '<strong>' . $date . '</strong>' ); ?></li>
 
 				<?php
 				// Loading other stats only if user has activated their account.
@@ -2289,7 +2289,7 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 
 				if ( $usersearch ) {
 					/* translators: %s: user search query. */
-					printf( '<span class="subtitle">' . __( 'Search results for "%s"', 'buddyboss-platform' ) . '</span>', esc_html( $usersearch ) );
+					printf( '<span class="subtitle">' . esc_html__( 'Search results for "%s"', 'buddyboss-platform' ) . '</span>', esc_html( $usersearch ) );
 				}
 				?>
 
@@ -2312,7 +2312,7 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 
 					if ( $usersearch ) {
 						/* translators: %s: user search query. */
-						printf( '<span class="subtitle">' . __( 'Search results for "%s"', 'buddyboss-platform' ) . '</span>', esc_html( $usersearch ) );
+						printf( '<span class="subtitle">' . esc_html__( 'Search results for "%s"', 'buddyboss-platform' ) . '</span>', esc_html( $usersearch ) );
 					}
 
 					?>

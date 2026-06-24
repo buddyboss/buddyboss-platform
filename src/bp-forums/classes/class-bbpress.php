@@ -121,7 +121,7 @@ if ( ! class_exists( 'bbPress' ) ) :
 		 * @since bbPress (r2464)
 		 */
 		public function __clone() {
-			_doing_it_wrong( __FUNCTION__, __( 'Cheatin\' huh?', 'buddyboss-platform' ), '2.1' ); }
+			_doing_it_wrong( __FUNCTION__, esc_html__( 'Cheatin\' huh?', 'buddyboss-platform' ), '2.1' ); }
 
 		/**
 		 * A dummy magic method to prevent Forums from being unserialized
@@ -129,7 +129,7 @@ if ( ! class_exists( 'bbPress' ) ) :
 		 * @since bbPress (r2464)
 		 */
 		public function __wakeup() {
-			_doing_it_wrong( __FUNCTION__, __( 'Cheatin\' huh?', 'buddyboss-platform' ), '2.1' ); }
+			_doing_it_wrong( __FUNCTION__, esc_html__( 'Cheatin\' huh?', 'buddyboss-platform' ), '2.1' ); }
 
 		/**
 		 * Magic method for checking the existence of a certain custom field

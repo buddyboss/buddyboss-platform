@@ -1396,7 +1396,7 @@ function bp_media_import_submenu_page() {
 								<?php esc_html_e( 'Your database is being updated in the background.', 'buddyboss-platform' ); ?>
 							</p>
 							<label style="display: none;"
-								   id="bp-media-resetting"><strong><?php echo __( 'Migration in progress', 'buddyboss-platform' ) . '...'; ?></strong></label>
+								   id="bp-media-resetting"><strong><?php echo esc_html__( 'Migration in progress', 'buddyboss-platform' ) . '...'; ?></strong></label>
 							<table class="form-table">
 								<tr>
 									<th scope="row"><?php esc_html_e( 'Albums', 'buddyboss-platform' ); ?></th>

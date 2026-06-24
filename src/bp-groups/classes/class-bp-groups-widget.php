@@ -103,7 +103,7 @@ class BP_Groups_Widget extends WP_Widget {
 
 		$title = ! empty( $instance['link_title'] ) ? '<a href="' . bp_get_groups_directory_permalink() . '">' . $title . '</a>' : $title;
 
-		echo $before_title . $title . $after_title;
+		echo $before_title . esc_html( $title ) . $after_title;
 
 		$max_groups = ! empty( $instance['max_groups'] ) ? (int) $instance['max_groups'] : 5;
 
@@ -163,12 +163,12 @@ class BP_Groups_Widget extends WP_Widget {
 								<?php
 								if ( 'newest' == $instance['group_default'] ) {
 									/* translators: %s: human-readable time since the group was created. */
-									printf( __( 'created %s', 'buddyboss-platform' ), bp_get_group_date_created() );
+									printf( esc_html__( 'created %s', 'buddyboss-platform' ), bp_get_group_date_created() );
 								} elseif ( 'popular' == $instance['group_default'] ) {
 									bp_group_member_count();
 								} else {
 									/* translators: %s: human-readable time since the group was last active. */
-									printf( __( 'active %s', 'buddyboss-platform' ), bp_get_group_last_active() );
+									printf( esc_html__( 'active %s', 'buddyboss-platform' ), bp_get_group_last_active() );
 								}
 								?>
 								</span>
@@ -241,15 +241,15 @@ class BP_Groups_Widget extends WP_Widget {
 		$link_title    = (bool) $instance['link_title'];
 		?>
 
-		<p><label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php esc_html_e( 'Title:', 'buddyboss-platform' ); ?> <input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo esc_attr( $title ); ?>" style="width: 100%" /></label></p>
+		<p><label for="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>"><?php esc_html_e( 'Title:', 'buddyboss-platform' ); ?> <input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'title' ) ); ?>" type="text" value="<?php echo esc_attr( $title ); ?>" style="width: 100%" /></label></p>
 
-		<p><label for="<?php echo $this->get_field_id( 'link_title' ); ?>"><input type="checkbox" name="<?php echo $this->get_field_name( 'link_title' ); ?>" id="<?php echo $this->get_field_id( 'link_title' ); ?>" value="1" <?php checked( $link_title ); ?> /> <?php esc_html_e( 'Link widget title to Groups directory', 'buddyboss-platform' ); ?></label></p>
+		<p><label for="<?php echo esc_attr( $this->get_field_id( 'link_title' ) ); ?>"><input type="checkbox" name="<?php echo esc_attr( $this->get_field_name( 'link_title' ) ); ?>" id="<?php echo esc_attr( $this->get_field_id( 'link_title' ) ); ?>" value="1" <?php checked( $link_title ); ?> /> <?php esc_html_e( 'Link widget title to Groups directory', 'buddyboss-platform' ); ?></label></p>
 
-		<p><label for="<?php echo $this->get_field_id( 'max_groups' ); ?>"><?php esc_html_e( 'Max groups to show:', 'buddyboss-platform' ); ?> <input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'max_groups' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'max_groups' ) ); ?>" type="number" value="<?php echo esc_attr( $max_groups ); ?>" style="width: 30%" /></label></p>
+		<p><label for="<?php echo esc_attr( $this->get_field_id( 'max_groups' ) ); ?>"><?php esc_html_e( 'Max groups to show:', 'buddyboss-platform' ); ?> <input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'max_groups' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'max_groups' ) ); ?>" type="number" value="<?php echo esc_attr( $max_groups ); ?>" style="width: 30%" /></label></p>
 
 		<p>
-			<label for="<?php echo $this->get_field_id( 'group_default' ); ?>"><?php esc_html_e( 'Default groups to show:', 'buddyboss-platform' ); ?></label>
-			<select name="<?php echo $this->get_field_name( 'group_default' ); ?>" id="<?php echo $this->get_field_id( 'group_default' ); ?>">
+			<label for="<?php echo esc_attr( $this->get_field_id( 'group_default' ) ); ?>"><?php esc_html_e( 'Default groups to show:', 'buddyboss-platform' ); ?></label>
+			<select name="<?php echo esc_attr( $this->get_field_name( 'group_default' ) ); ?>" id="<?php echo esc_attr( $this->get_field_id( 'group_default' ) ); ?>">
 				<option value="newest" <?php selected( $group_default, 'newest' ); ?>><?php esc_html_e( 'Newest', 'buddyboss-platform' ); ?></option>
 				<option value="active" <?php selected( $group_default, 'active' ); ?>><?php esc_html_e( 'Active', 'buddyboss-platform' ); ?></option>
 				<option value="popular"  <?php selected( $group_default, 'popular' ); ?>><?php esc_html_e( 'Popular', 'buddyboss-platform' ); ?></option>

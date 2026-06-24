@@ -48,7 +48,7 @@
 
 				submit_button( __( 'Save Settings', 'buddyboss-platform' ) );
 			} else {
-				printf( '<p>%s</p>', __( 'In BuddyPress, developers frequently added their plugin options into Settings > BuddyPress > Options. If you enable any third party BuddyPress plugins that used this method, those options will appear on this page.', 'buddyboss-platform' ) );
+				printf( '<p>%s</p>', esc_html__( 'In BuddyPress, developers frequently added their plugin options into Settings > BuddyPress > Options. If you enable any third party BuddyPress plugins that used this method, those options will appear on this page.', 'buddyboss-platform' ) );
 			}
 			?>
 		</form>

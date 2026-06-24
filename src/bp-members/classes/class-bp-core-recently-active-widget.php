@@ -66,7 +66,7 @@ class BP_Core_Recently_Active_Widget extends WP_Widget {
 		$refresh_recent_users = '<a href="" class="bs-widget-reload bs-heartbeat-reload hide" aria-label="' . esc_attr__( 'Reload', 'buddyboss-platform' ) . '"><i class="bb-icon-spin6"></i></a>';
 
 		echo $args['before_widget'];
-		echo $args['before_title'] . $title . $refresh_recent_users . $args['after_title'];
+		echo $args['before_title'] . esc_html( $title ) . $refresh_recent_users . $args['after_title'];
 
 		// Setup args for querying members.
 		$members_args = array(
@@ -156,14 +156,14 @@ class BP_Core_Recently_Active_Widget extends WP_Widget {
 		?>
 
 		<p>
-			<label for="<?php echo $this->get_field_id( 'title' ); ?>">
+			<label for="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>">
 				<?php esc_html_e( 'Title:', 'buddyboss-platform' ); ?>
-				<input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo esc_attr( $title ); ?>" style="width: 100%" />
+				<input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'title' ) ); ?>" type="text" value="<?php echo esc_attr( $title ); ?>" style="width: 100%" />
 			</label>
 		</p>
 
 		<p>
-			<label for="<?php echo $this->get_field_id( 'max_members' ); ?>">
+			<label for="<?php echo esc_attr( $this->get_field_id( 'max_members' ) ); ?>">
 				<?php esc_html_e( 'Max members to show:', 'buddyboss-platform' ); ?>
 				<input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'max_members' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'max_members' ) ); ?>" type="number" value="<?php echo esc_attr( $max_members ); ?>" style="width: 30%" />
 			</label>

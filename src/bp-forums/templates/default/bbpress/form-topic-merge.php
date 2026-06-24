@@ -23,7 +23,7 @@ defined( 'ABSPATH' ) || exit;
 
 				<fieldset class="bbp-form">
 
-					<legend><?php /* translators: %s: discussion title. */ printf( __( 'Merge discussion "%s"', 'buddyboss-platform' ), bbp_get_topic_title() ); ?></legend>
+					<legend><?php /* translators: %s: discussion title. */ printf( esc_html__( 'Merge discussion "%s"', 'buddyboss-platform' ), bbp_get_topic_title() ); ?></legend>
 
 					<div>
 

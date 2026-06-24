@@ -237,7 +237,7 @@ class BB_Feature_Registry {
 				__FUNCTION__,
 				sprintf(
 					/* translators: 1: original feature ID, 2: new feature ID */
-					__( 'Feature ID "%1$s" already registered. Using "%2$s" instead.', 'buddyboss-platform' ),
+					esc_html__( 'Feature ID "%1$s" already registered. Using "%2$s" instead.', 'buddyboss-platform' ),
 					$original_id,
 					$feature_id
 				),
@@ -419,7 +419,7 @@ class BB_Feature_Registry {
 				__FUNCTION__,
 				sprintf(
 					/* translators: 1: original ID, 2: new ID */
-					__( 'Side panel ID "%1$s" already registered for feature. Using "%2$s" instead.', 'buddyboss-platform' ),
+					esc_html__( 'Side panel ID "%1$s" already registered for feature. Using "%2$s" instead.', 'buddyboss-platform' ),
 					$original_id,
 					$side_panel_id
 				),
@@ -571,7 +571,7 @@ class BB_Feature_Registry {
 				__FUNCTION__,
 				sprintf(
 					/* translators: 1: original section ID, 2: new section ID */
-					__( 'Section ID "%1$s" already registered for side panel. Using "%2$s" instead.', 'buddyboss-platform' ),
+					esc_html__( 'Section ID "%1$s" already registered for side panel. Using "%2$s" instead.', 'buddyboss-platform' ),
 					$original_id,
 					$section_id
 				),
@@ -843,7 +843,7 @@ class BB_Feature_Registry {
 				__FUNCTION__,
 				sprintf(
 					/* translators: 1: navigation item ID */
-					__( 'Navigation item ID "%s" already registered for feature.', 'buddyboss-platform' ),
+					esc_html__( 'Navigation item ID "%s" already registered for feature.', 'buddyboss-platform' ),
 					$nav_id
 				),
 				'3.0.0'

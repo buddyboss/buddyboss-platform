@@ -46,7 +46,7 @@ if ( ! class_exists( 'Bp_Search_Type' ) ) :
 		 * @since BuddyBoss 1.0.0
 		 */
 		public function __clone() {
-			_doing_it_wrong( __FUNCTION__, __( 'Cheatin\' huh?', 'buddyboss-platform' ), '1.7' );
+			_doing_it_wrong( __FUNCTION__, esc_html__( 'Cheatin\' huh?', 'buddyboss-platform' ), '1.7' );
 		}
 
 		/**
@@ -55,7 +55,7 @@ if ( ! class_exists( 'Bp_Search_Type' ) ) :
 		 * @since BuddyBoss 1.0.0
 		 */
 		public function __wakeup() {
-			_doing_it_wrong( __FUNCTION__, __( 'Cheatin\' huh?', 'buddyboss-platform' ), '1.7' );
+			_doing_it_wrong( __FUNCTION__, esc_html__( 'Cheatin\' huh?', 'buddyboss-platform' ), '1.7' );
 		}
 
 		/**

@@ -23,7 +23,7 @@ function bp_settings_action_export() {
 	if ( isset( $_POST['member-data-export-submit'] ) ) {
 
 		if ( ! wp_verify_nonce( $_POST['_wpnonce'], 'buddyboss_data_export_request' ) ) {
-			wp_die( __( 'Sorry something went wrong, please try again.', 'buddyboss-platform' ) );
+			wp_die( esc_html__( 'Sorry something went wrong, please try again.', 'buddyboss-platform' ) );
 		}
 
 		if ( bp_core_can_edit_settings() ) {

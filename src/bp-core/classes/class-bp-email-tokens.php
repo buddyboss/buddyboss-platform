@@ -259,7 +259,7 @@ class BP_Email_Tokens {
 													<td class="mobile-text-center">
 														<div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( floor( $settings['body_text_size'] * 1.625 ) . 'px' ); ?>; color: <?php echo esc_attr( $settings['body_secondary_text_color'] ); ?>; line-height: <?php echo esc_attr( floor( $settings['body_text_size'] * 1.625 ) . 'px' ); ?>;"><?php echo $group->name; ?></div>
 														<div class="spacer" style="font-size: 3px; line-height: 3px; height: 3px;">&nbsp;</div>
-														<p style="opacity: 0.7; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( floor( $settings['body_text_size'] * 0.8125 ) . 'px' ); ?>; color: <?php echo esc_attr( $settings['body_text_color'] ); ?>; margin: 0;"><?php echo $group_visibility . ' ' . __( 'Group', 'buddyboss-platform' ); ?></p>
+														<p style="opacity: 0.7; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( floor( $settings['body_text_size'] * 0.8125 ) . 'px' ); ?>; color: <?php echo esc_attr( $settings['body_text_color'] ); ?>; margin: 0;"><?php echo $group_visibility . ' ' . esc_html__( 'Group', 'buddyboss-platform' ); ?></p>
 													</td>
 												</tr>
 												<tr>
@@ -419,7 +419,7 @@ class BP_Email_Tokens {
 					<td>
 						<h3><?php echo $group->name; ?></h3>
 						<div class="spacer" style="font-size: 7px; line-height: 7px; height: 7px;">&nbsp;</div>
-						<?php echo ucfirst( $group->status ) . ' ' . __( 'Group', 'buddyboss-platform' ); ?><br>
+						<?php echo ucfirst( $group->status ) . ' ' . esc_html__( 'Group', 'buddyboss-platform' ); ?><br>
 						<table cellspacing="0" cellpadding="0" border="0" width="100%">
 							<tr>
 								<td align="left">
@@ -3026,7 +3026,7 @@ class BP_Email_Tokens {
 						}
 						?>
 						<?php if ( $total_document_ids > 5 ) : ?>
-							<a href="<?php echo esc_url( $image_url ); ?>"><?php echo sprintf( __( 'and %d more', 'buddyboss-platform' ), $total_document_ids - 5 ); ?></a>
+							<a href="<?php echo esc_url( $image_url ); ?>"><?php echo sprintf( esc_html__( 'and %d more', 'buddyboss-platform' ), $total_document_ids - 5 ); ?></a>
 						<?php endif; ?>
 					</div>
 					<?php

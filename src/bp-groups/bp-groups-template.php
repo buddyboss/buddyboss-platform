@@ -3781,7 +3781,7 @@ function bp_group_admin_tabs_backcompat( $subnav_output = '', $subnav_item = '',
 	ob_end_clean();
 
 	if ( ! empty( $admin_tabs_backcompat ) ) {
-		_doing_it_wrong( "do_action( 'groups_admin_tabs' )", __( 'This action should not be used directly. Please use the BuddyPress Group Extension API to generate Manage tabs.', 'buddyboss-platform' ), '2.2.0' );
+		_doing_it_wrong( "do_action( 'groups_admin_tabs' )", esc_html__( 'This action should not be used directly. Please use the BuddyPress Group Extension API to generate Manage tabs.', 'buddyboss-platform' ), '2.2.0' );
 		$subnav_output .= $admin_tabs_backcompat;
 	}
 

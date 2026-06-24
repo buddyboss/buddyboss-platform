@@ -2487,7 +2487,7 @@ function bp_activity_get_comment_count( $deprecated = null ) {
 	// Deprecated notice about $args.
 	if ( ! empty( $deprecated ) ) {
 		/* translators: 1: function name, 2: file path. */
-		_deprecated_argument( __FUNCTION__, '1.2', sprintf( __( '%1$s no longer accepts arguments. See the inline documentation at %2$s for more details.', 'buddyboss-platform' ), __FUNCTION__, __FILE__ ) );
+		_deprecated_argument( __FUNCTION__, '1.2', sprintf( esc_html__( '%1$s no longer accepts arguments. See the inline documentation at %2$s for more details.', 'buddyboss-platform' ), __FUNCTION__, __FILE__ ) );
 	}
 
 	$count = $activities_template->activity->all_child_count ?? 0;

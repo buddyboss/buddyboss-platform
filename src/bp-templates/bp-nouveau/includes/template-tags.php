@@ -2699,12 +2699,12 @@ function bp_nouveau_signup_terms_privacy() {
 			<div class="input-options checkbox-options">
 				<div class="bp-checkbox-wrap">
 					<input type="checkbox" name="legal_agreement" id="legal_agreement" value="1" class="bs-styled-checkbox">
-					<label for="legal_agreement" class="option-label"><?php /* translators: 1: terms of service link, 2: privacy policy link. */ printf( __( 'I agree to the %1$s and %2$s.', 'buddyboss-platform' ), $terms_link, $privacy_link ); ?></label>
+					<label for="legal_agreement" class="option-label"><?php /* translators: 1: terms of service link, 2: privacy policy link. */ printf( esc_html__( 'I agree to the %1$s and %2$s.', 'buddyboss-platform' ), $terms_link, $privacy_link ); ?></label>
 				</div>
 			</div>
 		<?php } else { ?>
 			<p class="register-privacy-info">
-				<?php /* translators: 1: terms of service link, 2: privacy policy link. */ printf( __( 'By creating an account you are agreeing to the %1$s and %2$s.', 'buddyboss-platform' ), $terms_link, $privacy_link ); ?>
+				<?php /* translators: 1: terms of service link, 2: privacy policy link. */ printf( esc_html__( 'By creating an account you are agreeing to the %1$s and %2$s.', 'buddyboss-platform' ), $terms_link, $privacy_link ); ?>
 			</p>
 		<?php } ?>
 		<div id="terms-modal" class="mfp-hide registration-popup bb-modal">
@@ -2731,12 +2731,12 @@ function bp_nouveau_signup_terms_privacy() {
 			<div class="input-options checkbox-options">
 				<div class="bp-checkbox-wrap">
 					<input type="checkbox" name="legal_agreement" id="legal_agreement" value="1" class="bs-styled-checkbox">
-					<label for="legal_agreement" class="option-label"><?php /* translators: %s: privacy policy link. */ printf( __( 'I agree to the %s.', 'buddyboss-platform' ), $privacy_link ); ?></label>
+					<label for="legal_agreement" class="option-label"><?php /* translators: %s: privacy policy link. */ printf( esc_html__( 'I agree to the %s.', 'buddyboss-platform' ), $privacy_link ); ?></label>
 				</div>
 			</div>
 		<?php } else { ?>
 			<p class="register-privacy-info">
-				<?php /* translators: %s: privacy policy link. */ printf( __( 'By creating an account you are agreeing to the %s.', 'buddyboss-platform' ), $privacy_link ); ?>
+				<?php /* translators: %s: privacy policy link. */ printf( esc_html__( 'By creating an account you are agreeing to the %s.', 'buddyboss-platform' ), $privacy_link ); ?>
 			</p>
 		<?php } ?>
 		<div id="privacy-modal" class="mfp-hide registration-popup bb-modal">
@@ -2755,12 +2755,12 @@ function bp_nouveau_signup_terms_privacy() {
 			<div class="input-options checkbox-options">
 				<div class="bp-checkbox-wrap">
 					<input type="checkbox" name="legal_agreement" id="legal_agreement" value="1" class="bs-styled-checkbox">
-					<label for="legal_agreement" class="option-label"><?php /* translators: %s: terms of service link. */ printf( __( 'I agree to the %s.', 'buddyboss-platform' ), $terms_link ); ?></label>
+					<label for="legal_agreement" class="option-label"><?php /* translators: %s: terms of service link. */ printf( esc_html__( 'I agree to the %s.', 'buddyboss-platform' ), $terms_link ); ?></label>
 				</div>
 			</div>
 		<?php } else { ?>
 			<p class="register-privacy-info">
-				<?php /* translators: %s: terms of service link. */ printf( __( 'By creating an account you are agreeing to the %s.', 'buddyboss-platform' ), $terms_link ); ?>
+				<?php /* translators: %s: terms of service link. */ printf( esc_html__( 'By creating an account you are agreeing to the %s.', 'buddyboss-platform' ), $terms_link ); ?>
 			</p>
 		<?php } ?>
 

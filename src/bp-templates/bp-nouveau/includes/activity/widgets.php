@@ -100,7 +100,7 @@ class BP_Latest_Activities extends WP_Widget {
 		echo $args['before_widget'];
 
 		if ( $title ) {
-			echo $args['before_title'] . $title . $args['after_title'];
+			echo $args['before_title'] . esc_html( $title ) . $args['after_title'];
 		}
 
 		$reset_activities_template = null;
@@ -246,25 +246,25 @@ class BP_Latest_Activities extends WP_Widget {
 		}
 		?>
 		<p>
-			<label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php esc_html_e( 'Title:', 'buddyboss-platform' ); ?></label>
-			<input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo esc_attr( $title ); ?>" />
+			<label for="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>"><?php esc_html_e( 'Title:', 'buddyboss-platform' ); ?></label>
+			<input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'title' ) ); ?>" type="text" value="<?php echo esc_attr( $title ); ?>" />
 		</p>
 
 		<p>
-			<label for="<?php echo $this->get_field_id( 'max' ); ?>"><?php esc_html_e( 'Maximum amount to display:', 'buddyboss-platform' ); ?></label>
-			<input type="number" class="widefat" id="<?php echo $this->get_field_id( 'max' ); ?>" name="<?php echo $this->get_field_name( 'max' ); ?>" value="<?php echo intval( $max ); ?>" step="1" min="1" max="20" />
+			<label for="<?php echo esc_attr( $this->get_field_id( 'max' ) ); ?>"><?php esc_html_e( 'Maximum amount to display:', 'buddyboss-platform' ); ?></label>
+			<input type="number" class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'max' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'max' ) ); ?>" value="<?php echo intval( $max ); ?>" step="1" min="1" max="20" />
 		</p>
 		<p>
-			<label for="<?php echo $this->get_field_id( 'type' ); ?>"><?php esc_html_e( 'Activity Type:', 'buddyboss-platform' ); ?></label>
-			<select class="widefat" multiple="multiple" id="<?php echo $this->get_field_id( 'type' ); ?>" name="<?php echo $this->get_field_name( 'type' ); ?>[]">
+			<label for="<?php echo esc_attr( $this->get_field_id( 'type' ) ); ?>"><?php esc_html_e( 'Activity Type:', 'buddyboss-platform' ); ?></label>
+			<select class="widefat" multiple="multiple" id="<?php echo esc_attr( $this->get_field_id( 'type' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'type' ) ); ?>[]">
 				<?php foreach ( bp_nouveau_get_activity_filters() as $key => $name ) : ?>
 					<option value="<?php echo esc_attr( $key ); ?>" <?php selected( in_array( $key, $type, true ) ); ?>><?php echo esc_html( $name ); ?></option>
 				<?php endforeach; ?>
 			</select>
 		</p>
 		<p>
-			<input type="checkbox" class="widefat" id="<?php echo $this->get_field_id( 'relevant' ); ?>" name="<?php echo $this->get_field_name( 'relevant' ); ?>" <?php checked( true, $relevant ); ?> value="1" />
-			<label for="<?php echo $this->get_field_id( 'relevant' ); ?>"><?php esc_html_e( 'Only show activities that are relevant to the logged-in member', 'buddyboss-platform' ); ?></label>
+			<input type="checkbox" class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'relevant' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'relevant' ) ); ?>" <?php checked( true, $relevant ); ?> value="1" />
+			<label for="<?php echo esc_attr( $this->get_field_id( 'relevant' ) ); ?>"><?php esc_html_e( 'Only show activities that are relevant to the logged-in member', 'buddyboss-platform' ); ?></label>
 			<p><small><info style="color: #808080;font-size: 13px;"><?php esc_html_e( 'While logged in, members will only see activities from their own timeline, their connections, members they followed, groups they joined, forum discussions they subscribed to, and posts they are mentioned in.', 'buddyboss-platform' ); ?></info></small></p>
 		</p>
 		<?php

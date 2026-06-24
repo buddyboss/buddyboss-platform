@@ -191,18 +191,18 @@ class BBP_Login_Widget extends WP_Widget {
 		?>
 
 		<p>
-			<label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php esc_html_e( 'Title:', 'buddyboss-platform' ); ?>
-			<input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo esc_attr( $settings['title'] ); ?>" /></label>
+			<label for="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>"><?php esc_html_e( 'Title:', 'buddyboss-platform' ); ?>
+			<input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'title' ) ); ?>" type="text" value="<?php echo esc_attr( $settings['title'] ); ?>" /></label>
 		</p>
 
 		<p>
-			<label for="<?php echo $this->get_field_id( 'register' ); ?>"><?php esc_html_e( 'Register URL:', 'buddyboss-platform' ); ?>
-			<input class="widefat" id="<?php echo $this->get_field_id( 'register' ); ?>" name="<?php echo $this->get_field_name( 'register' ); ?>" type="text" value="<?php echo esc_url( $settings['register'] ); ?>" /></label>
+			<label for="<?php echo esc_attr( $this->get_field_id( 'register' ) ); ?>"><?php esc_html_e( 'Register URL:', 'buddyboss-platform' ); ?>
+			<input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'register' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'register' ) ); ?>" type="text" value="<?php echo esc_url( $settings['register'] ); ?>" /></label>
 		</p>
 
 		<p>
-			<label for="<?php echo $this->get_field_id( 'lostpass' ); ?>"><?php esc_html_e( 'Lost Password URL:', 'buddyboss-platform' ); ?>
-			<input class="widefat" id="<?php echo $this->get_field_id( 'lostpass' ); ?>" name="<?php echo $this->get_field_name( 'lostpass' ); ?>" type="text" value="<?php echo esc_url( $settings['lostpass'] ); ?>" /></label>
+			<label for="<?php echo esc_attr( $this->get_field_id( 'lostpass' ) ); ?>"><?php esc_html_e( 'Lost Password URL:', 'buddyboss-platform' ); ?>
+			<input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'lostpass' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'lostpass' ) ); ?>" type="text" value="<?php echo esc_url( $settings['lostpass'] ); ?>" /></label>
 		</p>
 
 		<?php
@@ -367,8 +367,8 @@ class BBP_Views_Widget extends WP_Widget {
 		?>
 
 		<p>
-			<label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php esc_html_e( 'Title:', 'buddyboss-platform' ); ?>
-				<input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo esc_attr( $settings['title'] ); ?>" />
+			<label for="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>"><?php esc_html_e( 'Title:', 'buddyboss-platform' ); ?>
+				<input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'title' ) ); ?>" type="text" value="<?php echo esc_attr( $settings['title'] ); ?>" />
 			</label>
 		</p>
 
@@ -514,8 +514,8 @@ class BBP_Search_Widget extends WP_Widget {
 		?>
 
 		<p>
-			<label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php esc_html_e( 'Title:', 'buddyboss-platform' ); ?>
-				<input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo esc_attr( $settings['title'] ); ?>" />
+			<label for="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>"><?php esc_html_e( 'Title:', 'buddyboss-platform' ); ?>
+				<input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'title' ) ); ?>" type="text" value="<?php echo esc_attr( $settings['title'] ); ?>" />
 			</label>
 		</p>
 
@@ -741,14 +741,14 @@ class BBP_Forums_Widget extends WP_Widget {
 		?>
 
 		<p>
-			<label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php esc_html_e( 'Title:', 'buddyboss-platform' ); ?>
-				<input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo esc_attr( $settings['title'] ); ?>" />
+			<label for="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>"><?php esc_html_e( 'Title:', 'buddyboss-platform' ); ?>
+				<input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'title' ) ); ?>" type="text" value="<?php echo esc_attr( $settings['title'] ); ?>" />
 			</label>
 		</p>
 
 		<p>
-			<label for="<?php echo $this->get_field_id( 'parent_forum' ); ?>"><?php esc_html_e( 'Parent Forum ID:', 'buddyboss-platform' ); ?>
-				<input class="widefat" id="<?php echo $this->get_field_id( 'parent_forum' ); ?>" name="<?php echo $this->get_field_name( 'parent_forum' ); ?>" type="text" value="<?php echo esc_attr( $settings['parent_forum'] ); ?>" />
+			<label for="<?php echo esc_attr( $this->get_field_id( 'parent_forum' ) ); ?>"><?php esc_html_e( 'Parent Forum ID:', 'buddyboss-platform' ); ?>
+				<input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'parent_forum' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'parent_forum' ) ); ?>" type="text" value="<?php echo esc_attr( $settings['parent_forum'] ); ?>" />
 			</label>
 
 			<br />
@@ -987,7 +987,7 @@ class BBP_Topics_Widget extends WP_Widget {
 						<?php
 						if ( ! empty( $author_link ) ) :
 							/* translators: %1$s: topic author link. */
-							printf( __( 'by %1$s', 'buddyboss-platform' ), '<span class="topic-author"><a href="' . esc_url( $author_url ) . '">' . bbp_get_topic_author_display_name( $topic_id ) . '</a></span>' );
+							printf( esc_html__( 'by %1$s', 'buddyboss-platform' ), '<span class="topic-author"><a href="' . esc_url( $author_url ) . '">' . bbp_get_topic_author_display_name( $topic_id ) . '</a></span>' );
 						endif;
 						?>
 
@@ -1064,12 +1064,12 @@ class BBP_Topics_Widget extends WP_Widget {
 		$settings = $this->parse_settings( $instance );
 		?>
 
-		<p><label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php esc_html_e( 'Title:', 'buddyboss-platform' ); ?> <input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo esc_attr( $settings['title'] ); ?>" /></label></p>
-		<p><label for="<?php echo $this->get_field_id( 'max_shown' ); ?>"><?php esc_html_e( 'Maximum topics to show:', 'buddyboss-platform' ); ?> <input class="widefat" id="<?php echo $this->get_field_id( 'max_shown' ); ?>" name="<?php echo $this->get_field_name( 'max_shown' ); ?>" type="text" value="<?php echo esc_attr( $settings['max_shown'] ); ?>" /></label></p>
+		<p><label for="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>"><?php esc_html_e( 'Title:', 'buddyboss-platform' ); ?> <input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'title' ) ); ?>" type="text" value="<?php echo esc_attr( $settings['title'] ); ?>" /></label></p>
+		<p><label for="<?php echo esc_attr( $this->get_field_id( 'max_shown' ) ); ?>"><?php esc_html_e( 'Maximum topics to show:', 'buddyboss-platform' ); ?> <input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'max_shown' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'max_shown' ) ); ?>" type="text" value="<?php echo esc_attr( $settings['max_shown'] ); ?>" /></label></p>
 
 		<p>
-			<label for="<?php echo $this->get_field_id( 'parent_forum' ); ?>"><?php esc_html_e( 'Parent Forum ID:', 'buddyboss-platform' ); ?>
-				<input class="widefat" id="<?php echo $this->get_field_id( 'parent_forum' ); ?>" name="<?php echo $this->get_field_name( 'parent_forum' ); ?>" type="text" value="<?php echo esc_attr( $settings['parent_forum'] ); ?>" />
+			<label for="<?php echo esc_attr( $this->get_field_id( 'parent_forum' ) ); ?>"><?php esc_html_e( 'Parent Forum ID:', 'buddyboss-platform' ); ?>
+				<input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'parent_forum' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'parent_forum' ) ); ?>" type="text" value="<?php echo esc_attr( $settings['parent_forum'] ); ?>" />
 			</label>
 
 			<br />
@@ -1077,12 +1077,12 @@ class BBP_Topics_Widget extends WP_Widget {
 			<small><?php esc_html_e( '"0" to show only root - "any" to show all', 'buddyboss-platform' ); ?></small>
 		</p>
 
-		<p><label for="<?php echo $this->get_field_id( 'show_date' ); ?>"><?php esc_html_e( 'Show post date:', 'buddyboss-platform' ); ?> <input type="checkbox" id="<?php echo $this->get_field_id( 'show_date' ); ?>" name="<?php echo $this->get_field_name( 'show_date' ); ?>" <?php checked( true, $settings['show_date'] ); ?> value="1" /></label></p>
-		<p><label for="<?php echo $this->get_field_id( 'show_user' ); ?>"><?php esc_html_e( 'Show discussion author:', 'buddyboss-platform' ); ?> <input type="checkbox" id="<?php echo $this->get_field_id( 'show_user' ); ?>" name="<?php echo $this->get_field_name( 'show_user' ); ?>" <?php checked( true, $settings['show_user'] ); ?> value="1" /></label></p>
+		<p><label for="<?php echo esc_attr( $this->get_field_id( 'show_date' ) ); ?>"><?php esc_html_e( 'Show post date:', 'buddyboss-platform' ); ?> <input type="checkbox" id="<?php echo esc_attr( $this->get_field_id( 'show_date' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'show_date' ) ); ?>" <?php checked( true, $settings['show_date'] ); ?> value="1" /></label></p>
+		<p><label for="<?php echo esc_attr( $this->get_field_id( 'show_user' ) ); ?>"><?php esc_html_e( 'Show discussion author:', 'buddyboss-platform' ); ?> <input type="checkbox" id="<?php echo esc_attr( $this->get_field_id( 'show_user' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'show_user' ) ); ?>" <?php checked( true, $settings['show_user'] ); ?> value="1" /></label></p>
 
 		<p>
-			<label for="<?php echo $this->get_field_id( 'order_by' ); ?>"><?php esc_html_e( 'Order By:', 'buddyboss-platform' ); ?></label>
-			<select name="<?php echo $this->get_field_name( 'order_by' ); ?>" id="<?php echo $this->get_field_name( 'order_by' ); ?>">
+			<label for="<?php echo esc_attr( $this->get_field_id( 'order_by' ) ); ?>"><?php esc_html_e( 'Order By:', 'buddyboss-platform' ); ?></label>
+			<select name="<?php echo esc_attr( $this->get_field_name( 'order_by' ) ); ?>" id="<?php echo esc_attr( $this->get_field_name( 'order_by' ) ); ?>">
 				<option <?php selected( $settings['order_by'], 'newness' ); ?> value="newness"><?php esc_html_e( 'Newest Discussions', 'buddyboss-platform' ); ?></option>
 				<option <?php selected( $settings['order_by'], 'popular' ); ?> value="popular"><?php esc_html_e( 'Popular Discussions', 'buddyboss-platform' ); ?></option>
 				<option <?php selected( $settings['order_by'], 'freshness' ); ?> value="freshness"><?php esc_html_e( 'Discussions With Recent Replies', 'buddyboss-platform' ); ?></option>
@@ -1230,8 +1230,8 @@ class BBP_Stats_Widget extends WP_Widget {
 		?>
 
 		<p>
-			<label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php esc_html_e( 'Title:', 'buddyboss-platform' ); ?>
-				<input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo esc_attr( $settings['title'] ); ?>"/>
+			<label for="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>"><?php esc_html_e( 'Title:', 'buddyboss-platform' ); ?>
+				<input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'title' ) ); ?>" type="text" value="<?php echo esc_attr( $settings['title'] ); ?>"/>
 			</label>
 		</p>
 
@@ -1411,7 +1411,7 @@ class BBP_Replies_Widget extends WP_Widget {
 						<?php
 						if ( ! empty( $author_link ) ) :
 							/* translators: %1$s: reply author link. */
-							printf( __( '%1$s on ', 'buddyboss-platform' ), '<span class="reply-author"><a href="' . esc_url( $reply_author_url ) . '">' . bbp_get_reply_author_display_name( $reply_id ) . '</a></span>' );
+							printf( esc_html__( '%1$s on ', 'buddyboss-platform' ), '<span class="reply-author"><a href="' . esc_url( $reply_author_url ) . '">' . bbp_get_reply_author_display_name( $reply_id ) . '</a></span>' );
 						endif;
 
 						echo $reply_link;
@@ -1482,10 +1482,10 @@ class BBP_Replies_Widget extends WP_Widget {
 		$settings = $this->parse_settings( $instance );
 		?>
 
-		<p><label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php esc_html_e( 'Title:', 'buddyboss-platform' ); ?> <input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo esc_attr( $settings['title'] ); ?>" /></label></p>
-		<p><label for="<?php echo $this->get_field_id( 'max_shown' ); ?>"><?php esc_html_e( 'Maximum replies to show:', 'buddyboss-platform' ); ?> <input class="widefat" id="<?php echo $this->get_field_id( 'max_shown' ); ?>" name="<?php echo $this->get_field_name( 'max_shown' ); ?>" type="text" value="<?php echo esc_attr( $settings['max_shown'] ); ?>" /></label></p>
-		<p><label for="<?php echo $this->get_field_id( 'show_date' ); ?>"><?php esc_html_e( 'Show post date:', 'buddyboss-platform' ); ?> <input type="checkbox" id="<?php echo $this->get_field_id( 'show_date' ); ?>" name="<?php echo $this->get_field_name( 'show_date' ); ?>" <?php checked( true, $settings['show_date'] ); ?> value="1" /></label></p>
-		<p><label for="<?php echo $this->get_field_id( 'show_user' ); ?>"><?php esc_html_e( 'Show reply author:', 'buddyboss-platform' ); ?> <input type="checkbox" id="<?php echo $this->get_field_id( 'show_user' ); ?>" name="<?php echo $this->get_field_name( 'show_user' ); ?>" <?php checked( true, $settings['show_user'] ); ?> value="1" /></label></p>
+		<p><label for="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>"><?php esc_html_e( 'Title:', 'buddyboss-platform' ); ?> <input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'title' ) ); ?>" type="text" value="<?php echo esc_attr( $settings['title'] ); ?>" /></label></p>
+		<p><label for="<?php echo esc_attr( $this->get_field_id( 'max_shown' ) ); ?>"><?php esc_html_e( 'Maximum replies to show:', 'buddyboss-platform' ); ?> <input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'max_shown' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'max_shown' ) ); ?>" type="text" value="<?php echo esc_attr( $settings['max_shown'] ); ?>" /></label></p>
+		<p><label for="<?php echo esc_attr( $this->get_field_id( 'show_date' ) ); ?>"><?php esc_html_e( 'Show post date:', 'buddyboss-platform' ); ?> <input type="checkbox" id="<?php echo esc_attr( $this->get_field_id( 'show_date' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'show_date' ) ); ?>" <?php checked( true, $settings['show_date'] ); ?> value="1" /></label></p>
+		<p><label for="<?php echo esc_attr( $this->get_field_id( 'show_user' ) ); ?>"><?php esc_html_e( 'Show reply author:', 'buddyboss-platform' ); ?> <input type="checkbox" id="<?php echo esc_attr( $this->get_field_id( 'show_user' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'show_user' ) ); ?>" <?php checked( true, $settings['show_user'] ); ?> value="1" /></label></p>
 
 		<?php
 	}

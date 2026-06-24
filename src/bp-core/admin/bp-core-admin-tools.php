@@ -1141,7 +1141,7 @@ function bp_core_admin_notice_repopulate_blogs_resume() {
 		return;
 	}
 
-	echo '<div class="error"><p>' . __( 'It looks like you have more sites to record. Resume recording by checking the "Repopulate site tracking records" option.', 'buddyboss-platform' ) . '</p></div>';
+	echo '<div class="error"><p>' . esc_html__( 'It looks like you have more sites to record. Resume recording by checking the "Repopulate site tracking records" option.', 'buddyboss-platform' ) . '</p></div>';
 }
 
 add_action( 'network_admin_notices', 'bp_core_admin_notice_repopulate_blogs_resume' );

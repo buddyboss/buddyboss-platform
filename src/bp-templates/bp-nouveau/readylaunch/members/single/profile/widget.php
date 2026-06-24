@@ -30,7 +30,7 @@ $user_progress_offset = 100 - $user_progress['completion_percentage'];
 		<div class="progress_text_wrap">
 			<h3>
 				<span class="progress_text_value"><?php echo esc_html( $user_progress['completion_percentage'] ); ?></span>
-				<span class="progress_text_unit"><?php echo __( '%', 'buddyboss-platform' ); ?></span>
+				<span class="progress_text_unit"><?php echo esc_html__( '%', 'buddyboss-platform' ); ?></span>
 				<span class="progress_text_label"><?php echo esc_html( $progress_label ); ?></span>
 			</h3>
 		</div>
