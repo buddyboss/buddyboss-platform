@@ -2595,7 +2595,7 @@ function bp_members_activity_feed() {
 	}
 	?>
 
-	<link rel="alternate" type="application/rss+xml" title="<?php bloginfo( 'name' ); ?> | <?php bp_displayed_user_fullname(); ?> | <?php _e( 'Activity RSS Feed', 'buddyboss-platform' ); ?>" href="<?php bp_member_activity_feed_link(); ?>" />
+	<link rel="alternate" type="application/rss+xml" title="<?php bloginfo( 'name' ); ?> | <?php bp_displayed_user_fullname(); ?> | <?php esc_html_e( 'Activity RSS Feed', 'buddyboss-platform' ); ?>" href="<?php bp_member_activity_feed_link(); ?>" />
 
 	<?php
 }

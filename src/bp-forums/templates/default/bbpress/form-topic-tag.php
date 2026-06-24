@@ -21,27 +21,27 @@ defined( 'ABSPATH' ) || exit;
 
 			<fieldset class="bbp-form" id="tag-rename">
 
-				<legend><?php _e( 'Rename', 'buddyboss-platform' ); ?></legend>
+				<legend><?php esc_html_e( 'Rename', 'buddyboss-platform' ); ?></legend>
 
 				<div class="bp-feedback info">
 					<span class="bp-icon" aria-hidden="true"></span>
-					<p><?php _e( 'Leave the slug empty to have one automatically generated.', 'buddyboss-platform' ); ?></p>
+					<p><?php esc_html_e( 'Leave the slug empty to have one automatically generated.', 'buddyboss-platform' ); ?></p>
 				</div>
 
 				<div class="bp-feedback info">
 					<span class="bp-icon" aria-hidden="true"></span>
-					<p><?php _e( 'Changing the slug affects its permalink. Any links to the old slug will stop working.', 'buddyboss-platform' ); ?></p>
+					<p><?php esc_html_e( 'Changing the slug affects its permalink. Any links to the old slug will stop working.', 'buddyboss-platform' ); ?></p>
 				</div>
 
 				<form id="rename_tag" name="rename_tag" method="post" action="<?php the_permalink(); ?>">
 
 					<div>
-						<label for="tag-name"><?php _e( 'Name:', 'buddyboss-platform' ); ?></label>
+						<label for="tag-name"><?php esc_html_e( 'Name:', 'buddyboss-platform' ); ?></label>
 						<input type="text" id="tag-name" name="tag-name" size="20" maxlength="40" tabindex="<?php bbp_tab_index(); ?>" value="<?php echo esc_attr( bbp_get_topic_tag_name() ); ?>" />
 					</div>
 
 					<div>
-						<label for="tag-slug"><?php _e( 'Slug:', 'buddyboss-platform' ); ?></label>
+						<label for="tag-slug"><?php esc_html_e( 'Slug:', 'buddyboss-platform' ); ?></label>
 						<input type="text" id="tag-slug" name="tag-slug" size="20" maxlength="40" tabindex="<?php bbp_tab_index(); ?>" value="<?php echo esc_attr( apply_filters( 'editable_slug', bbp_get_topic_tag_slug() ) ); ?>" />
 					</div>
 
@@ -60,17 +60,17 @@ defined( 'ABSPATH' ) || exit;
 
 			<fieldset class="bbp-form" id="tag-merge">
 
-				<legend><?php _e( 'Merge', 'buddyboss-platform' ); ?></legend>
+				<legend><?php esc_html_e( 'Merge', 'buddyboss-platform' ); ?></legend>
 
 				<div class="bp-feedback info">
 					<span class="bp-icon" aria-hidden="true"></span>
-					<p><?php _e( 'Merging tags together cannot be undone.', 'buddyboss-platform' ); ?></p>
+					<p><?php esc_html_e( 'Merging tags together cannot be undone.', 'buddyboss-platform' ); ?></p>
 				</div>
 
 				<form id="merge_tag" name="merge_tag" method="post" action="<?php the_permalink(); ?>">
 
 					<div>
-						<label for="tag-existing-name"><?php _e( 'Existing tag:', 'buddyboss-platform' ); ?></label>
+						<label for="tag-existing-name"><?php esc_html_e( 'Existing tag:', 'buddyboss-platform' ); ?></label>
 						<input type="text" id="tag-existing-name" name="tag-existing-name" size="22" tabindex="<?php bbp_tab_index(); ?>" maxlength="40" />
 					</div>
 
@@ -90,16 +90,16 @@ defined( 'ABSPATH' ) || exit;
 
 				<fieldset class="bbp-form" id="delete-tag">
 
-					<legend><?php _e( 'Delete', 'buddyboss-platform' ); ?></legend>
+					<legend><?php esc_html_e( 'Delete', 'buddyboss-platform' ); ?></legend>
 
 					<div class="bp-feedback info">
 						<span class="bp-icon" aria-hidden="true"></span>
-						<p><?php _e( 'This does not delete your discussions. Only the tag itself is deleted.', 'buddyboss-platform' ); ?></p>
+						<p><?php esc_html_e( 'This does not delete your discussions. Only the tag itself is deleted.', 'buddyboss-platform' ); ?></p>
 					</div>
 					<div class="bp-feedback info">
 						<span class="bp-icon" aria-hidden="true"></span>
-						<p><?php _e( 'Deleting a tag cannot be undone.', 'buddyboss-platform' ); ?><br />
-						<?php _e( 'Any links to this tag will no longer function.', 'buddyboss-platform' ); ?></p>
+						<p><?php esc_html_e( 'Deleting a tag cannot be undone.', 'buddyboss-platform' ); ?><br />
+						<?php esc_html_e( 'Any links to this tag will no longer function.', 'buddyboss-platform' ); ?></p>
 					</div>
 
 					<form id="delete_tag" name="delete_tag" method="post" action="<?php the_permalink(); ?>">

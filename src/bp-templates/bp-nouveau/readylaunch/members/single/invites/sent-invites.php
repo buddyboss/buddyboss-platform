@@ -96,11 +96,11 @@ if ( isset( $restricted ) && '' !== $restricted ) {
 ?>
 <script>window.history.replaceState(null, null, window.location.pathname);</script>
 <h2 class="screen-heading general-settings-screen">
-	<?php _e( 'Sent Invites', 'buddyboss-platform' ); ?>
+	<?php esc_html_e( 'Sent Invites', 'buddyboss-platform' ); ?>
 </h2>
 
 <p class="info invite-info">
-	<?php _e( 'You have sent invitation emails to the following people:', 'buddyboss-platform' ); ?>
+	<?php esc_html_e( 'You have sent invitation emails to the following people:', 'buddyboss-platform' ); ?>
 </p>
 
 <table class="invite-settings bp-tables-user" id="<?php echo esc_attr( 'member-invites-table' ); ?>">

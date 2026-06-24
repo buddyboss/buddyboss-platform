@@ -17,11 +17,11 @@ defined( 'ABSPATH' ) || exit;
 
 	<li class="bbp-header">
 
-		<div class="bbp-search-author"><?php _e( 'Author', 'buddyboss-platform' ); ?></div><!-- .bbp-reply-author -->
+		<div class="bbp-search-author"><?php esc_html_e( 'Author', 'buddyboss-platform' ); ?></div><!-- .bbp-reply-author -->
 
 		<div class="bbp-search-content">
 
-			<?php _e( 'Search Results', 'buddyboss-platform' ); ?>
+			<?php esc_html_e( 'Search Results', 'buddyboss-platform' ); ?>
 
 		</div><!-- .bbp-search-content -->
 
@@ -42,11 +42,11 @@ defined( 'ABSPATH' ) || exit;
 
 	<li class="bbp-footer">
 
-		<div class="bbp-search-author"><?php _e( 'Author', 'buddyboss-platform' ); ?></div>
+		<div class="bbp-search-author"><?php esc_html_e( 'Author', 'buddyboss-platform' ); ?></div>
 
 		<div class="bbp-search-content">
 
-			<?php _e( 'Search Results', 'buddyboss-platform' ); ?>
+			<?php esc_html_e( 'Search Results', 'buddyboss-platform' ); ?>
 
 		</div><!-- .bbp-search-content -->
 

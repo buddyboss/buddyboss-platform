@@ -72,7 +72,7 @@ $F = bp_profile_search_escaped_form_data( $form_id );
 
 						case 'date_range':
 							?>
-							<span class="date-from date-label"><?php _e( 'From', 'buddyboss-platform' ); ?></span>
+							<span class="date-from date-label"><?php esc_html_e( 'From', 'buddyboss-platform' ); ?></span>
 							<div class="date-wrapper">
 								<select name="<?php echo $name . '[min][day]'; ?>">
 										<?php
@@ -167,7 +167,7 @@ $F = bp_profile_search_escaped_form_data( $form_id );
 								</select>
 							</div>
 
-							<span class="date-to date-label"><?php _e( 'To', 'buddyboss-platform' ); ?></span>
+							<span class="date-to date-label"><?php esc_html_e( 'To', 'buddyboss-platform' ); ?></span>
 							<div class="date-wrapper">
 								<select name="<?php echo $name . '[max][day]'; ?>">
 										<?php
@@ -382,17 +382,17 @@ $F = bp_profile_search_escaped_form_data( $form_id );
 			<div class="submit-wrapper">
 				<p class="clear-from-wrap">
 					<a href='javascript:void(0);' onclick="return bp_ps_clear_form_elements(this);">
-					    <?php _e( 'Reset', 'buddyboss-platform' ); ?>
+					    <?php esc_html_e( 'Reset', 'buddyboss-platform' ); ?>
 					</a>
 				</p>
-				<input type="submit" class="submit" value="<?php _e( 'Search', 'buddyboss-platform' ); ?>"/>
+				<input type="submit" class="submit" value="<?php esc_html_e( 'Search', 'buddyboss-platform' ); ?>"/>
 			</div>
 
 			<?php
 		} else {
 			?>
 			<div class="submit-wrapper">
-				<span class="no-field"><?php _e( 'Please add fields to search members.', 'buddyboss-platform' ); ?></span>
+				<span class="no-field"><?php esc_html_e( 'Please add fields to search members.', 'buddyboss-platform' ); ?></span>
 			</div>
 			<?php
 		}

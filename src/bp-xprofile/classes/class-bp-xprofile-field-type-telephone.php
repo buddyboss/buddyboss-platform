@@ -164,7 +164,7 @@ class BP_XProfile_Field_Type_Telephone extends BP_XProfile_Field_Type {
 			<table class="form-table bp-date-options">
 				<tr>
 					<th scope="row">
-						<label for="phone-format-elapsed"><?php _e( 'Phone Format', 'buddyboss-platform' ); ?></label>
+						<label for="phone-format-elapsed"><?php esc_html_e( 'Phone Format', 'buddyboss-platform' ); ?></label>
 					</th>
 
 					<td>

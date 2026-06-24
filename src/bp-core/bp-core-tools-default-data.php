@@ -115,7 +115,7 @@ function bp_admin_tools_default_data_save() {
 		<div id="message" class="updated fade">
 			<p>
 				<?php
-				_e( 'Data was successfully imported', 'buddyboss-platform' );
+				esc_html_e( 'Data was successfully imported', 'buddyboss-platform' );
 				if ( count( $imported ) > 0 ) {
 					echo ':<ul class="results"><li>';
 					echo implode( '</li><li>', $imported );

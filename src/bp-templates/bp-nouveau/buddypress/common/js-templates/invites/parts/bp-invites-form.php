@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
 <script type="text/html" id="tmpl-bp-invites-form">
 
 	<label for="send-invites-control"><?php esc_html_e( 'Optional: Customize the message of your invite.', 'buddyboss-platform' ); ?></label>
-	<textarea id="send-invites-control" class="bp-faux-placeholder-label" placeholder="<?php _e( 'Type message','buddyboss-platform' ); ?>"></textarea>
+	<textarea id="send-invites-control" class="bp-faux-placeholder-label" placeholder="<?php esc_html_e( 'Type message','buddyboss-platform' ); ?>"></textarea>
 
 	<div class="action">
 		<button type="button" id="bp-invites-reset" class="button bp-secondary-action"><?php esc_html_e( 'Cancel', 'buddyboss-platform' ); ?></button>

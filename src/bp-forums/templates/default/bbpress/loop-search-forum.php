@@ -25,7 +25,7 @@ defined( 'ABSPATH' ) || exit;
 
 		<?php do_action( 'bbp_theme_before_forum_title' ); ?>
 
-		<h3><?php _e( 'Forum: ', 'buddyboss-platform' ); ?><a href="<?php bbp_forum_permalink(); ?>"><?php bbp_forum_title(); ?></a></h3>
+		<h3><?php esc_html_e( 'Forum: ', 'buddyboss-platform' ); ?><a href="<?php bbp_forum_permalink(); ?>"><?php bbp_forum_title(); ?></a></h3>
 
 		<?php do_action( 'bbp_theme_after_forum_title' ); ?>
 

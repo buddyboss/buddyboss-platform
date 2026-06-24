@@ -848,11 +848,11 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 			if ( current_user_can( 'edit_user', $user->ID ) ) :
 				?>
 
-				<a class="nav-tab<?php echo esc_attr( $wp_active ); ?>" href="<?php echo esc_url( $wordpress_url ); ?>"><?php _e( 'Profile', 'buddyboss-platform' ); ?></a>
+				<a class="nav-tab<?php echo esc_attr( $wp_active ); ?>" href="<?php echo esc_url( $wordpress_url ); ?>"><?php esc_html_e( 'Profile', 'buddyboss-platform' ); ?></a>
 
 			<?php endif; ?>
 
-			<a class="nav-tab<?php echo esc_attr( $bp_active ); ?>" href="<?php echo esc_url( $community_url ); ?>"><?php _e( 'Extended Profile', 'buddyboss-platform' ); ?></a>
+			<a class="nav-tab<?php echo esc_attr( $bp_active ); ?>" href="<?php echo esc_url( $community_url ); ?>"><?php esc_html_e( 'Extended Profile', 'buddyboss-platform' ); ?></a>
 
 			<?php
 			/**
@@ -2274,7 +2274,7 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 		<div class="wrap">
 			<?php if ( version_compare( $GLOBALS['wp_version'], '4.8', '>=' ) ) : ?>
 
-				<h1 class="wp-heading-inline"><?php _e( 'Users', 'buddyboss-platform' ); ?></h1>
+				<h1 class="wp-heading-inline"><?php esc_html_e( 'Users', 'buddyboss-platform' ); ?></h1>
 
 				<?php if ( current_user_can( 'create_users' ) ) : ?>
 
@@ -2297,7 +2297,7 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 
 			<?php else : ?>
 
-				<h1><?php _e( 'Users', 'buddyboss-platform' ); ?>
+				<h1><?php esc_html_e( 'Users', 'buddyboss-platform' ); ?>
 
 					<?php if ( current_user_can( 'create_users' ) ) : ?>
 
@@ -2575,9 +2575,9 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 			$types = bp_get_member_types( array(), 'objects' );
 			?>
 
-		<label class="screen-reader-text" for="<?php echo $id_name; ?>"><?php _e( 'Change profile type to&hellip;', 'buddyboss-platform' ); ?></label>
+		<label class="screen-reader-text" for="<?php echo $id_name; ?>"><?php echo wp_kses_post( __( 'Change profile type to&hellip;', 'buddyboss-platform' ) ); ?></label>
 		<select name="<?php echo $id_name; ?>" id="<?php echo $id_name; ?>" style="display:inline-block;float:none;">
-			<option value=""><?php _e( 'Change profile type to&hellip;', 'buddyboss-platform' ); ?></option>
+			<option value=""><?php echo wp_kses_post( __( 'Change profile type to&hellip;', 'buddyboss-platform' ) ); ?></option>
 
 				<?php foreach ( $types as $type ) : ?>
 
@@ -2585,7 +2585,7 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 
 			<?php endforeach; ?>
 
-			<option value="remove_member_type"><?php _e( 'No Profile Type', 'buddyboss-platform' ); ?></option>
+			<option value="remove_member_type"><?php esc_html_e( 'No Profile Type', 'buddyboss-platform' ); ?></option>
 
 		</select>
 			<?php

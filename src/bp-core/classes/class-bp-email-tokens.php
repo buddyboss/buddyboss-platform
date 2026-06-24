@@ -294,7 +294,7 @@ class BP_Email_Tokens {
 																			<tbody>
 																			<tr>
 																				<td height="34px" align="right" style="vertical-align: middle;" class="mobile-padding-bottom">
-																					<a class="mobile-button-center" href="<?php echo esc_url( $invite_url ); ?>" target="_blank" rel="nofollow" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( floor( $settings['body_text_size'] * 0.875 ) . 'px' ); ?>; text-decoration: none; display: inline-block; border-radius: 100px; text-align: center; min-height: 16px; line-height: 16px; background: <?php echo $settings['highlight_color']; ?>; color: #fff !important; min-width: 110px; padding: 8px;"><font style="color:#fff;"><?php _e( 'Visit Group', 'buddyboss-platform' ); ?></font></a>
+																					<a class="mobile-button-center" href="<?php echo esc_url( $invite_url ); ?>" target="_blank" rel="nofollow" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( floor( $settings['body_text_size'] * 0.875 ) . 'px' ); ?>; text-decoration: none; display: inline-block; border-radius: 100px; text-align: center; min-height: 16px; line-height: 16px; background: <?php echo $settings['highlight_color']; ?>; color: #fff !important; min-width: 110px; padding: 8px;"><font style="color:#fff;"><?php esc_html_e( 'Visit Group', 'buddyboss-platform' ); ?></font></a>
 																				</td>
 																			</tr>
 																			</tbody>
@@ -306,7 +306,7 @@ class BP_Email_Tokens {
 																			<tbody>
 																			<tr>
 																				<td height="34px" align="right" style="vertical-align: middle;" class="mobile-padding-bottom">
-																					<a class="mobile-button-center" href="<?php echo bp_get_group_permalink( $group ); ?>" target="_blank" rel="nofollow" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( floor( $settings['body_text_size'] * 0.875 ) . 'px' ); ?>; text-decoration: none; display: inline-block; border-radius: 100px; text-align: center; min-height: 16px; line-height: 16px; background: <?php echo $settings['highlight_color']; ?>; color: #fff !important; min-width: 110px; padding: 8px;"><font style="color:#fff;"><?php _e( 'Visit Group', 'buddyboss-platform' ); ?></font></a>
+																					<a class="mobile-button-center" href="<?php echo bp_get_group_permalink( $group ); ?>" target="_blank" rel="nofollow" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( floor( $settings['body_text_size'] * 0.875 ) . 'px' ); ?>; text-decoration: none; display: inline-block; border-radius: 100px; text-align: center; min-height: 16px; line-height: 16px; background: <?php echo $settings['highlight_color']; ?>; color: #fff !important; min-width: 110px; padding: 8px;"><font style="color:#fff;"><?php esc_html_e( 'Visit Group', 'buddyboss-platform' ); ?></font></a>
 																				</td>
 																			</tr>
 																			</tbody>
@@ -495,13 +495,13 @@ class BP_Email_Tokens {
 
 										switch ( $joined_status ) {
 											case 'joined':
-												_e( 'Leave Group', 'buddyboss-platform' );
+												esc_html_e( 'Leave Group', 'buddyboss-platform' );
 												break;
 											case 'not-joined':
-												_e( 'Join Group', 'buddyboss-platform' );
+												esc_html_e( 'Join Group', 'buddyboss-platform' );
 												break;
 											default:
-												_e( 'Visit Group', 'buddyboss-platform' );
+												esc_html_e( 'Visit Group', 'buddyboss-platform' );
 												break;
 										}
 										?>
@@ -1330,7 +1330,7 @@ class BP_Email_Tokens {
 																	<table cellpadding="0" cellspacing="0" border="0" width="47%" style="width: 47%;" align="right" class="no-responsive-table mobile-padding-bottom">
 																		<tr>
 																			<td height="34px" align="right" style="vertical-align: middle;" class="">
-																				<a href="<?php echo bp_core_get_user_domain( $member_id ); ?>" target="_blank" rel="nofollow" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size: <?php echo esc_attr( floor( $settings['body_text_size'] * 0.875 ) . 'px' ); ?>;text-decoration: none;display: block;height: <?php echo esc_attr( floor( $settings['body_text_size'] * 2.125 ) . 'px' ); ?>;line-height: <?php echo esc_attr( floor( $settings['body_text_size'] * 2 ) . 'px' ); ?>;"><?php _e( 'View Profile', 'buddyboss-platform' ); ?></a>
+																				<a href="<?php echo bp_core_get_user_domain( $member_id ); ?>" target="_blank" rel="nofollow" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size: <?php echo esc_attr( floor( $settings['body_text_size'] * 0.875 ) . 'px' ); ?>;text-decoration: none;display: block;height: <?php echo esc_attr( floor( $settings['body_text_size'] * 2.125 ) . 'px' ); ?>;line-height: <?php echo esc_attr( floor( $settings['body_text_size'] * 2 ) . 'px' ); ?>;"><?php esc_html_e( 'View Profile', 'buddyboss-platform' ); ?></a>
 																			</td>
 																		</tr>
 																	</table>

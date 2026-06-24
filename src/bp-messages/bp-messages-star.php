@@ -342,8 +342,8 @@ add_action( 'bp_enqueue_scripts', 'bp_messages_star_enqueue_scripts' );
 function bp_messages_star_bulk_management_dropdown() {
 	?>
 
-	<option value="star"><?php _e( 'Add star', 'buddyboss-platform' ); ?></option>
-	<option value="unstar"><?php _e( 'Remove star', 'buddyboss-platform' ); ?></option>
+	<option value="star"><?php esc_html_e( 'Add star', 'buddyboss-platform' ); ?></option>
+	<option value="unstar"><?php esc_html_e( 'Remove star', 'buddyboss-platform' ); ?></option>
 
 	<?php
 }

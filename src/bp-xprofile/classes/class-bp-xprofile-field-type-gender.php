@@ -370,11 +370,11 @@ class BP_XProfile_Field_Type_Gender extends BP_XProfile_Field_Type {
 							<label for="<?php echo esc_attr( "{$type}_option{$default_name}" ); ?>">
 								<?php
 								if ( 'male' === $key ) {
-									_e( 'Male', 'buddyboss-platform' );
+									esc_html_e( 'Male', 'buddyboss-platform' );
 								} elseif ( 'female' === $key ) {
-									_e( 'Female', 'buddyboss-platform' );
+									esc_html_e( 'Female', 'buddyboss-platform' );
 								} else {
-									_e( 'Other', 'buddyboss-platform' );
+									esc_html_e( 'Other', 'buddyboss-platform' );
 								}
 								?>
 							</label>

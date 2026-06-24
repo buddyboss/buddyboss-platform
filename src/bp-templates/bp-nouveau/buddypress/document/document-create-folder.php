@@ -19,7 +19,7 @@ defined( 'ABSPATH' ) || exit;
 	<div class="bb-field-wrap">
 		<label for="new_folder_name_input" class="bb-label"><?php esc_html_e( 'Folder Title', 'buddyboss-platform' ); ?></label>
 		<input class="popup-on-fly-create-folder-title" value="" type="text" placeholder="<?php esc_attr_e( 'Enter Folder Title', 'buddyboss-platform' ); ?>">
-		<small class="error-box"><?php _e( 'Following special characters are not supported: \ / ? % * : | " < >', 'buddyboss-platform' ); ?></small>
+		<small class="error-box"><?php esc_html_e( 'Following special characters are not supported: \ / ? % * : | " < >', 'buddyboss-platform' ); ?></small>
 	</div>
 	<?php
 	if ( ! bp_is_group() ) :

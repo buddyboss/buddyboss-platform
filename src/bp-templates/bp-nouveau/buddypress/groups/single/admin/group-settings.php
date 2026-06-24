@@ -264,7 +264,7 @@ if ( bp_is_group_create() ) : ?>
 
 			<p class="group-setting-label" tabindex="0"><?php esc_html_e( 'What type of group is this? (optional)', 'buddyboss-platform' ); ?></p>
 			<select id="bp-groups-type" name="group-types[]" autocomplete="off">
-				<option value="" <?php selected( '', '' ); ?>><?php _e( 'Select Group Type', 'buddyboss-platform' ); ?></option>
+				<option value="" <?php selected( '', '' ); ?>><?php esc_html_e( 'Select Group Type', 'buddyboss-platform' ); ?></option>
 				<?php
 				foreach ( $group_types as $type ) :
 
@@ -323,7 +323,7 @@ if ( bp_is_group_create() ) : ?>
 			<legend><?php esc_html_e( 'Group Parent', 'buddyboss-platform' ); ?></legend>
 			<p class="group-setting-label" tabindex="0"><?php esc_html_e( 'Which group should be the parent of this group? (optional)', 'buddyboss-platform' ); ?></p>
 			<select id="bp-groups-parent" name="bp-groups-parent" autocomplete="off">
-				<option value="0" <?php selected( 0, $current_parent_group_id ); ?>><?php _e( 'Select Parent', 'buddyboss-platform' ); ?></option>
+				<option value="0" <?php selected( 0, $current_parent_group_id ); ?>><?php esc_html_e( 'Select Parent', 'buddyboss-platform' ); ?></option>
 				<?php
 				if ( $possible_parent_groups ) {
 					foreach ( $possible_parent_groups as $possible_parent_group ) {

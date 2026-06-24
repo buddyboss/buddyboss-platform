@@ -189,7 +189,7 @@ function bbp_converter_setting_callback_main_section( $args ) {
 		?>
 	</h2>
 	<h3><?php esc_html_e( 'Database Settings', 'buddyboss-platform' ); ?></h3>
-	<p><?php _e( 'Information about your previous forums database so that they can be converted. <strong>Backup your database before proceeding.</strong>', 'buddyboss-platform' ); ?></p>
+	<p><?php echo wp_kses_post( __( 'Information about your previous forums database so that they can be converted. <strong>Backup your database before proceeding.</strong>', 'buddyboss-platform' ) ); ?></p>
 
 	<?php
 }
@@ -312,7 +312,7 @@ function bbp_converter_setting_callback_dbname() {
  */
 function bbp_converter_setting_callback_options_section() {
 	?>
-	<h3><?php _e( 'Options', 'buddyboss-platform' ); ?></h3>
+	<h3><?php esc_html_e( 'Options', 'buddyboss-platform' ); ?></h3>
 	<p><?php esc_html_e( 'Some optional parameters to help tune the conversion process.', 'buddyboss-platform' ); ?></p>
 
 	<?php

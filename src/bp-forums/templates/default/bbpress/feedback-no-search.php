@@ -13,5 +13,5 @@ defined( 'ABSPATH' ) || exit;
 
 <div class="bp-feedback info">
 	<span class="bp-icon" aria-hidden="true"></span>
-	<p><?php _e( 'No search results were found here.', 'buddyboss-platform' ); ?></p>
+	<p><?php esc_html_e( 'No search results were found here.', 'buddyboss-platform' ); ?></p>
 </div>

@@ -211,17 +211,17 @@ class BP_Core_Network_Posts_Widget extends WP_Widget {
 		$show_date  = isset( $instance['show_date'] ) ? (bool) $instance['show_date'] : true;
 		$show_image = isset( $instance['show_image'] ) ? (bool) $instance['show_image'] : true;
 		?>
-		<p><label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _e( 'Title:', 'buddyboss-platform' ); ?></label>
+		<p><label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php esc_html_e( 'Title:', 'buddyboss-platform' ); ?></label>
 			<input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo $title; ?>" /></p>
 
-		<p><label for="<?php echo $this->get_field_id( 'number' ); ?>"><?php _e( 'Number of posts to show for each blog:', 'buddyboss-platform' ); ?></label>
+		<p><label for="<?php echo $this->get_field_id( 'number' ); ?>"><?php esc_html_e( 'Number of posts to show for each blog:', 'buddyboss-platform' ); ?></label>
 			<input class="tiny-text" id="<?php echo $this->get_field_id( 'number' ); ?>" name="<?php echo $this->get_field_name( 'number' ); ?>" type="number" step="1" min="1" value="<?php echo $number; ?>" size="3" /></p>
 
 		<p><input class="checkbox" type="checkbox"<?php checked( $show_date ); ?> id="<?php echo $this->get_field_id( 'show_date' ); ?>" name="<?php echo $this->get_field_name( 'show_date' ); ?>" />
-			<label for="<?php echo $this->get_field_id( 'show_date' ); ?>"><?php _e( 'Display post date?', 'buddyboss-platform' ); ?></label></p>
+			<label for="<?php echo $this->get_field_id( 'show_date' ); ?>"><?php esc_html_e( 'Display post date?', 'buddyboss-platform' ); ?></label></p>
 
 		<p><input class="checkbox" type="checkbox"<?php checked( $show_image ); ?> id="<?php echo $this->get_field_id( 'show_image' ); ?>" name="<?php echo $this->get_field_name( 'show_image' ); ?>" />
-			<label for="<?php echo $this->get_field_id( 'show_image' ); ?>"><?php _e( 'Display post featured image?', 'buddyboss-platform' ); ?></label></p>
+			<label for="<?php echo $this->get_field_id( 'show_image' ); ?>"><?php esc_html_e( 'Display post featured image?', 'buddyboss-platform' ); ?></label></p>
 
 		<?php
 	}

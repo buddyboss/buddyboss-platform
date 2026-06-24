@@ -17,11 +17,11 @@ defined( 'ABSPATH' ) || exit;
 
 	<li class="bbp-header">
 
-		<div class="bbp-topic-author"><?php _e( 'Creator', 'buddyboss-platform' ); ?></div><!-- .bbp-topic-author -->
+		<div class="bbp-topic-author"><?php esc_html_e( 'Creator', 'buddyboss-platform' ); ?></div><!-- .bbp-topic-author -->
 
 		<div class="bbp-topic-content">
 
-			<?php _e( 'Discussion', 'buddyboss-platform' ); ?>
+			<?php esc_html_e( 'Discussion', 'buddyboss-platform' ); ?>
 
 			<?php bbp_topic_subscription_link(); ?>
 
@@ -86,11 +86,11 @@ defined( 'ABSPATH' ) || exit;
 
 	<li class="bbp-footer">
 
-		<div class="bbp-topic-author"><?php _e( 'Creator', 'buddyboss-platform' ); ?></div>
+		<div class="bbp-topic-author"><?php esc_html_e( 'Creator', 'buddyboss-platform' ); ?></div>
 
 		<div class="bbp-topic-content">
 
-			<?php _e( 'Discussion', 'buddyboss-platform' ); ?>
+			<?php esc_html_e( 'Discussion', 'buddyboss-platform' ); ?>
 
 		</div><!-- .bbp-topic-content -->
 

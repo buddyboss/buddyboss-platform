@@ -31,7 +31,7 @@ foreach ( $F->fields as $f ) {
 
 if ( ! empty( $F->action ) ) {
 	?>
-		<a href='<?php echo $F->action; ?>'><?php _e( 'Clear', 'buddyboss-platform' ); ?></a>
+		<a href='<?php echo $F->action; ?>'><?php esc_html_e( 'Clear', 'buddyboss-platform' ); ?></a>
 	<?php
 }
 ?>

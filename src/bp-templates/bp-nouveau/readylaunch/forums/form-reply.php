@@ -87,7 +87,7 @@ defined( 'ABSPATH' ) || exit;
 					<?php if ( ! ( bbp_use_wp_editor() || current_user_can( 'unfiltered_html' ) ) ) : ?>
 
 						<p class="form-allowed-tags">
-							<label><?php _e( 'You may use these <abbr title="HyperText Markup Language">HTML</abbr> tags and attributes:', 'buddyboss-platform' ); ?></label><br />
+							<label><?php echo wp_kses_post( __( 'You may use these <abbr title="HyperText Markup Language">HTML</abbr> tags and attributes:', 'buddyboss-platform' ) ); ?></label><br />
 							<code><?php bbp_allowed_tags(); ?></code>
 						</p>
 

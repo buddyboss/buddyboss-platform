@@ -78,7 +78,7 @@ function bp_friends_random_friends() {
 	} ?>
 
 	<div class="info-group">
-		<h4><?php /* translators: %s: member display name. */ bp_word_or_name( __( 'My Connections', 'buddyboss-platform' ), __( "%s's Connections", 'buddyboss-platform' ) ); ?>  (<?php echo BP_Friends_Friendship::total_friend_count( bp_displayed_user_id() ); ?>) <span><a href="<?php echo trailingslashit( bp_displayed_user_domain() . bp_get_friends_slug() ); ?>"><?php _e( 'See All', 'buddyboss-platform' ); ?></a></span></h4>
+		<h4><?php /* translators: %s: member display name. */ bp_word_or_name( __( 'My Connections', 'buddyboss-platform' ), __( "%s's Connections", 'buddyboss-platform' ) ); ?>  (<?php echo BP_Friends_Friendship::total_friend_count( bp_displayed_user_id() ); ?>) <span><a href="<?php echo trailingslashit( bp_displayed_user_domain() . bp_get_friends_slug() ); ?>"><?php esc_html_e( 'See All', 'buddyboss-platform' ); ?></a></span></h4>
 
 		<?php if ( $friend_ids ) { ?>
 
@@ -186,7 +186,7 @@ function bp_friends_random_members( $total_members = 5 ) {
 	<?php } else { ?>
 
 		<div id="message" class="info">
-			<p><?php _e( "There aren't enough site members to show a random sample just yet.", 'buddyboss-platform' ); ?></p>
+			<p><?php esc_html_e( "There aren't enough site members to show a random sample just yet.", 'buddyboss-platform' ); ?></p>
 		</div>
 
 	<?php } ?>

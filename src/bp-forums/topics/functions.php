@@ -3871,7 +3871,7 @@ function bbp_display_topics_feed_rss2( $topics_query = array() ) {
 
 	<channel>
 
-		<title><?php bloginfo_rss( 'name' ); ?> &#187; <?php _e( 'All Discussions', 'buddyboss-platform' ); ?></title>
+		<title><?php bloginfo_rss( 'name' ); ?> &#187; <?php esc_html_e( 'All Discussions', 'buddyboss-platform' ); ?></title>
 		<atom:link href="<?php self_link(); ?>" rel="self" type="application/rss+xml" />
 		<link><?php self_link(); ?></link>
 		<description></description>

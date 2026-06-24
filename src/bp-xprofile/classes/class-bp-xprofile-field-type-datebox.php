@@ -528,7 +528,7 @@ class BP_XProfile_Field_Type_Datebox extends BP_XProfile_Field_Type {
 					<div class="bp-date-format-option">
 						<label for="date-format-elapsed">
 							<input type="radio" name="field-settings[date_format]" id="date-format-elapsed" <?php checked( 'elapsed', $settings['date_format'] ); ?> value="elapsed" aria-describedby="date-format-elapsed-setting" />
-							<span class="date-format-label" id="date-format-elapsed-setting"><?php esc_html_e( 'Time elapsed', 'buddyboss-platform' ); ?></span> <?php _e( '<code>4 years ago</code>, <code>4 years from now</code>', 'buddyboss-platform' ); ?>
+							<span class="date-format-label" id="date-format-elapsed-setting"><?php esc_html_e( 'Time elapsed', 'buddyboss-platform' ); ?></span> <?php echo wp_kses_post( __( '<code>4 years ago</code>, <code>4 years from now</code>', 'buddyboss-platform' ) ); ?>
 						</label>
 					</div>
 

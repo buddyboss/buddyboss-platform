@@ -36,7 +36,7 @@ defined( 'ABSPATH' ) || exit;
 
 					<div class="bp-feedback info">
 						<span class="bp-icon" aria-hidden="true"></span>
-						<p><?php _e( 'This discussion is marked as closed to new replies, however your posting capabilities still allow you to do so.', 'buddyboss-platform' ); ?></p>
+						<p><?php esc_html_e( 'This discussion is marked as closed to new replies, however your posting capabilities still allow you to do so.', 'buddyboss-platform' ); ?></p>
 					</div>
 
 				<?php endif; ?>
@@ -58,7 +58,7 @@ defined( 'ABSPATH' ) || exit;
 					<?php if ( ! ( bbp_use_wp_editor() || current_user_can( 'unfiltered_html' ) ) ) : ?>
 
 						<p class="form-allowed-tags">
-							<label><?php _e( 'You may use these <abbr title="HyperText Markup Language">HTML</abbr> tags and attributes:', 'buddyboss-platform' ); ?></label><br />
+							<label><?php echo wp_kses_post( __( 'You may use these <abbr title="HyperText Markup Language">HTML</abbr> tags and attributes:', 'buddyboss-platform' ) ); ?></label><br />
 							<code><?php bbp_allowed_tags(); ?></code>
 						</p>
 
@@ -165,7 +165,7 @@ defined( 'ABSPATH' ) || exit;
 						<fieldset class="bbp-form">
 							<div class="bp-checkbox-wrap">
 								<input name="bbp_log_reply_edit" id="bbp_log_reply_edit" class="bs-styled-checkbox" type="checkbox" value="1" <?php bbp_form_reply_log_edit(); ?> tabindex="<?php bbp_tab_index(); ?>" />
-								<label for="bbp_log_reply_edit"><?php _e( 'Keep a log of this edit:', 'buddyboss-platform' ); ?></label>
+								<label for="bbp_log_reply_edit"><?php esc_html_e( 'Keep a log of this edit:', 'buddyboss-platform' ); ?></label>
 							</div>
 
 							<div>
@@ -188,7 +188,7 @@ defined( 'ABSPATH' ) || exit;
 
 						<button type="button" tabindex="<?php bbp_tab_index(); ?>" id="bb_reply_discard_draft" name="bb_reply_discard_draft" class="button discard small bb_discard_topic_reply_draft"><?php esc_html_e( 'Discard Draft', 'buddyboss-platform' ); ?></button>
 
-						<button type="submit" tabindex="<?php bbp_tab_index(); ?>" id="bbp_reply_submit" name="bbp_reply_submit" class="button submit"><?php _e( 'Post', 'buddyboss-platform' ); ?></button>
+						<button type="submit" tabindex="<?php bbp_tab_index(); ?>" id="bbp_reply_submit" name="bbp_reply_submit" class="button submit"><?php esc_html_e( 'Post', 'buddyboss-platform' ); ?></button>
 
 						<?php do_action( 'bbp_theme_after_reply_form_submit_button' ); ?>
 
@@ -230,7 +230,7 @@ defined( 'ABSPATH' ) || exit;
 	<div id="no-reply-<?php bbp_topic_id(); ?>" class="bbp-no-reply">
 		<div class="bp-feedback info">
 			<span class="bp-icon" aria-hidden="true"></span>
-			<p><?php is_user_logged_in() ? _e( 'You cannot reply to this discussion.', 'buddyboss-platform' ) : _e( 'Log in  to reply.', 'buddyboss-platform' ); ?></p>
+			<p><?php is_user_logged_in() ? esc_html_e( 'You cannot reply to this discussion.', 'buddyboss-platform' ) : esc_html_e( 'Log in  to reply.', 'buddyboss-platform' ); ?></p>
 		</div>
 	</div>
 

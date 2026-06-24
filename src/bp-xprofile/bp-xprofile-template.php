@@ -1248,7 +1248,7 @@ function bp_profile_last_updated() {
 	$last_updated = bp_get_profile_last_updated();
 
 	if ( empty( $last_updated ) ) {
-		_e( 'Profile not recently updated.', 'buddyboss-platform' );
+		esc_html_e( 'Profile not recently updated.', 'buddyboss-platform' );
 	} else {
 		echo $last_updated;
 	}
@@ -1523,7 +1523,7 @@ function bp_profile_get_settings_visibility_select( $args = '' ) {
 				<?php echo $r['before_controls']; ?>
 
 				<label for="<?php echo esc_attr( 'field_' . $r['field_id'] ); ?>_visibility" class="<?php echo esc_attr( $r['label_class'] ); ?>">
-					<?php _e( 'Select visibility', 'buddyboss-platform' ); /* translators: accessibility text */ ?>
+					<?php esc_html_e( 'Select visibility', 'buddyboss-platform' ); /* translators: accessibility text */ ?>
 				</label>
 				<select class="<?php echo esc_attr( $r['class'] ); ?>" name="<?php echo esc_attr( 'field_' . $r['field_id'] ); ?>_visibility" id="<?php echo esc_attr( 'field_' . $r['field_id'] ); ?>_visibility">
 

@@ -21,17 +21,17 @@ if ( ! isset( $options['collapsible'] ) ) {
 
 if ( is_admin() ) {
 	?>
-	<p><strong><?php _e( 'jQuery UI Theme', 'buddyboss-platform' ); ?></strong></p>
+	<p><strong><?php esc_html_e( 'jQuery UI Theme', 'buddyboss-platform' ); ?></strong></p>
 	<select name="options[theme]">
 	<?php foreach ( bp_ps_jquery_ui_themes() as $theme => $name ) { ?>
 		<option value="<?php echo $theme; ?>" <?php selected( $options['theme'], $theme ); ?>><?php echo $name; ?></option>
 	<?php } ?>
 	</select>
 
-	<p><strong><?php _e( 'Collapsible Form', 'buddyboss-platform' ); ?></strong></p>
+	<p><strong><?php esc_html_e( 'Collapsible Form', 'buddyboss-platform' ); ?></strong></p>
 	<select name="options[collapsible]">
-		<option value='Yes' <?php selected( $options['collapsible'], 'Yes' ); ?>><?php _e( 'Yes', 'buddyboss-platform' ); ?></option>
-		<option value='No' <?php selected( $options['collapsible'], 'No' ); ?>><?php _e( 'No', 'buddyboss-platform' ); ?></option>
+		<option value='Yes' <?php selected( $options['collapsible'], 'Yes' ); ?>><?php esc_html_e( 'Yes', 'buddyboss-platform' ); ?></option>
+		<option value='No' <?php selected( $options['collapsible'], 'No' ); ?>><?php esc_html_e( 'No', 'buddyboss-platform' ); ?></option>
 	</select>
 	<?php
 	return 'end_of_options';
@@ -196,7 +196,7 @@ foreach ( $F->fields as $f ) {
 				?>
 					name="<?php echo $name; ?>" value="<?php echo $key; ?>"> <?php echo $label; ?></label><br>
 			<?php } ?>
-			<a href="javascript:bp_ps_clear_radio('<?php echo $id; ?>_wrap')"><?php _e( 'Clear', 'buddyboss-platform' ); ?></a><br>
+			<a href="javascript:bp_ps_clear_radio('<?php echo $id; ?>_wrap')"><?php esc_html_e( 'Clear', 'buddyboss-platform' ); ?></a><br>
 			<?php
 			break;
 
@@ -226,7 +226,7 @@ foreach ( $F->fields as $f ) {
 }
 ?>
 		<div>
-			<input type="submit" value="<?php _e( 'Search', 'buddyboss-platform' ); ?>">
+			<input type="submit" value="<?php esc_html_e( 'Search', 'buddyboss-platform' ); ?>">
 		</div>
 	</form>
 

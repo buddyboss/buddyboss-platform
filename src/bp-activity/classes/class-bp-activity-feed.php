@@ -309,7 +309,7 @@ class BP_Activity_Feed {
 			case 'personal':
 				if ( 'activity_comment' == bp_get_activity_action_name() ) :
 					?>
-				<strong><?php _e( 'In reply to', 'buddyboss-platform' ); ?></strong> -
+				<strong><?php esc_html_e( 'In reply to', 'buddyboss-platform' ); ?></strong> -
 					<?php bp_activity_parent_content(); ?>
 					<?php
 				endif;

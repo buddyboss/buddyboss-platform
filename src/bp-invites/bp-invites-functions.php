@@ -198,7 +198,7 @@ function bp_invites_member_invite_register_screen_message() {
 
 	?>
 	<?php if ( empty( $email ) ) : ?>
-		<div id="message" class="error"><p><?php _e( "It looks like you're trying to accept an invitation to join the site, but some information is missing. Please try again by clicking on the link in the invitation email.", 'buddyboss-platform' ); ?></p></div>
+		<div id="message" class="error"><p><?php esc_html_e( "It looks like you're trying to accept an invitation to join the site, but some information is missing. Please try again by clicking on the link in the invitation email.", 'buddyboss-platform' ); ?></p></div>
 	<?php endif; ?>
 
 	<?php if ( $bp->signup->step == 'request-details' && ! empty( $email ) ) : ?>

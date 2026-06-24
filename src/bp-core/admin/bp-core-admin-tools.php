@@ -60,7 +60,7 @@ function bp_core_admin_tools() {
 							<label for="import-users">
 								<input type="checkbox" class="main-header" name="bp[import-users]" id="import-users"
 									   value="1" <?php bp_dd_imported_disabled( 'users', 'users' ); ?>/>
-								<strong><?php _e( 'Members', 'buddyboss-platform' ); ?></strong>
+								<strong><?php esc_html_e( 'Members', 'buddyboss-platform' ); ?></strong>
 							</label>
 							<ul>
 
@@ -70,7 +70,7 @@ function bp_core_admin_tools() {
 											<input type="checkbox" class="checkbox" name="bp[import-profile]"
 												   id="import-profile"
 												   value="1" <?php bp_dd_imported_disabled( 'users', 'xprofile' ); ?>/>
-											<?php _e( 'Profile fields (with data)', 'buddyboss-platform' ); ?>
+											<?php esc_html_e( 'Profile fields (with data)', 'buddyboss-platform' ); ?>
 										</label>
 									</li>
 								<?php endif; ?>
@@ -81,7 +81,7 @@ function bp_core_admin_tools() {
 											<input type="checkbox" class="checkbox" name="bp[import-friends]"
 												   id="import-friends"
 												   value="1" <?php bp_dd_imported_disabled( 'users', 'friends' ); ?>/>
-											<?php _e( 'Connections', 'buddyboss-platform' ); ?>
+											<?php esc_html_e( 'Connections', 'buddyboss-platform' ); ?>
 										</label>
 									</li>
 								<?php endif; ?>
@@ -92,7 +92,7 @@ function bp_core_admin_tools() {
 											<input type="checkbox" class="checkbox" name="bp[import-activity]"
 												   id="import-activity"
 												   value="1" <?php bp_dd_imported_disabled( 'users', 'activity' ); ?>/>
-											<?php _e( 'Activity posts', 'buddyboss-platform' ); ?>
+											<?php esc_html_e( 'Activity posts', 'buddyboss-platform' ); ?>
 										</label>
 									</li>
 								<?php endif; ?>
@@ -103,7 +103,7 @@ function bp_core_admin_tools() {
 											<input type="checkbox" class="checkbox" name="bp[import-messages]"
 												   id="import-messages"
 												   value="1" <?php bp_dd_imported_disabled( 'users', 'messages' ); ?>/>
-											<?php _e( 'Private messages', 'buddyboss-platform' ); ?>
+											<?php esc_html_e( 'Private messages', 'buddyboss-platform' ); ?>
 										</label>
 									</li>
 								<?php endif; ?>
@@ -117,7 +117,7 @@ function bp_core_admin_tools() {
 									<input type="checkbox" class="main-header" name="bp[import-groups]"
 										   id="import-groups"
 										   value="1" <?php bp_dd_imported_disabled( 'groups', 'groups' ); ?>/>
-									<strong><?php _e( 'Groups', 'buddyboss-platform' ); ?></strong>
+									<strong><?php esc_html_e( 'Groups', 'buddyboss-platform' ); ?></strong>
 								</label>
 								<ul>
 
@@ -126,7 +126,7 @@ function bp_core_admin_tools() {
 											<input type="checkbox" class="checkbox" name="bp[import-g-members]"
 												   id="import-g-members"
 												   value="1" <?php bp_dd_imported_disabled( 'groups', 'members' ); ?>/>
-											<?php _e( 'Members', 'buddyboss-platform' ); ?>
+											<?php esc_html_e( 'Members', 'buddyboss-platform' ); ?>
 										</label>
 									</li>
 
@@ -139,7 +139,7 @@ function bp_core_admin_tools() {
 												<input type="checkbox" class="checkbox" name="bp[import-g-activity]"
 													   id="import-g-activity"
 													   value="1" <?php bp_dd_imported_disabled( 'groups', 'activity' ); ?>/>
-												<?php _e( 'Activity posts', 'buddyboss-platform' ); ?>
+												<?php esc_html_e( 'Activity posts', 'buddyboss-platform' ); ?>
 											</label>
 										</li>
 									<?php endif; ?>
@@ -153,7 +153,7 @@ function bp_core_admin_tools() {
 												<input type="checkbox" class="checkbox" name="bp[import-g-forums]"
 													   id="import-g-forums"
 													   value="1" <?php bp_dd_imported_disabled( 'groups', 'forums' ); ?>/>
-												<?php _e( 'Forums in Groups (with data)', 'buddyboss-platform' ); ?>
+												<?php esc_html_e( 'Forums in Groups (with data)', 'buddyboss-platform' ); ?>
 											</label>
 										</li>
 										<?php
@@ -172,7 +172,7 @@ function bp_core_admin_tools() {
 									<input type="checkbox" class="main-header" name="bp[import-forums]"
 										   id="import-forums"
 										   value="1" <?php bp_dd_imported_disabled( 'forums', 'forums' ); ?>/>
-									<strong><?php _e( 'Forums', 'buddyboss-platform' ); ?></strong>
+									<strong><?php esc_html_e( 'Forums', 'buddyboss-platform' ); ?></strong>
 								</label>
 								<ul>
 									<li>
@@ -181,7 +181,7 @@ function bp_core_admin_tools() {
 											<input type="checkbox" class="checkbox" name="bp[import-f-topics]"
 												   id="import-f-topics"
 												   value="1" <?php bp_dd_imported_disabled( 'forums', 'topics' ); ?>/>
-											<?php _e( 'Discussions', 'buddyboss-platform' ); ?>
+											<?php esc_html_e( 'Discussions', 'buddyboss-platform' ); ?>
 										</label>
 									</li>
 									<li>
@@ -190,7 +190,7 @@ function bp_core_admin_tools() {
 											<input type="checkbox" class="checkbox" name="bp[import-f-replies]"
 												   id="import-f-replies"
 												   value="1" <?php bp_dd_imported_disabled( 'forums', 'replies' ); ?>/>
-											<?php _e( 'Replies', 'buddyboss-platform' ); ?>
+											<?php esc_html_e( 'Replies', 'buddyboss-platform' ); ?>
 										</label>
 									</li>
 								</ul>

@@ -4146,7 +4146,7 @@ function bp_get_activity_feed_item_description() {
 function bp_activity_sitewide_feed() {
 	?>
 
-	<link rel="alternate" type="application/rss+xml" title="<?php bloginfo( 'name' ); ?> | <?php _e( 'Site Wide Activity RSS Feed', 'buddyboss-platform' ); ?>" href="<?php bp_sitewide_activity_feed_link(); ?>" />
+	<link rel="alternate" type="application/rss+xml" title="<?php bloginfo( 'name' ); ?> | <?php esc_html_e( 'Site Wide Activity RSS Feed', 'buddyboss-platform' ); ?>" href="<?php bp_sitewide_activity_feed_link(); ?>" />
 
 	<?php
 }

@@ -80,7 +80,7 @@ $search_form_data = bp_profile_search_escaped_form_data( $form_id );
 
 						case 'date_range':
 							?>
-							<span class="date-from date-label"><?php _e( 'From', 'buddyboss-platform' ); ?></span>
+							<span class="date-from date-label"><?php esc_html_e( 'From', 'buddyboss-platform' ); ?></span>
 							<div class="date-wrapper">
 								<select name="<?php echo esc_attr( $field_name . '[min][day]' ); ?>">
 										<?php
@@ -175,7 +175,7 @@ $search_form_data = bp_profile_search_escaped_form_data( $form_id );
 								</select>
 							</div>
 
-							<span class="date-to date-label"><?php _e( 'To', 'buddyboss-platform' ); ?></span>
+							<span class="date-to date-label"><?php esc_html_e( 'To', 'buddyboss-platform' ); ?></span>
 							<div class="date-wrapper">
 								<select name="<?php echo esc_attr( $field_name . '[max][day]' ); ?>">
 										<?php

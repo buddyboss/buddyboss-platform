@@ -251,7 +251,7 @@ class BP_Latest_Activities extends WP_Widget {
 		</p>
 
 		<p>
-			<label for="<?php echo $this->get_field_id( 'max' ); ?>"><?php _e( 'Maximum amount to display:', 'buddyboss-platform' ); ?></label>
+			<label for="<?php echo $this->get_field_id( 'max' ); ?>"><?php esc_html_e( 'Maximum amount to display:', 'buddyboss-platform' ); ?></label>
 			<input type="number" class="widefat" id="<?php echo $this->get_field_id( 'max' ); ?>" name="<?php echo $this->get_field_name( 'max' ); ?>" value="<?php echo intval( $max ); ?>" step="1" min="1" max="20" />
 		</p>
 		<p>

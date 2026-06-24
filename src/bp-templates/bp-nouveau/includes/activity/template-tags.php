@@ -1589,8 +1589,8 @@ function bp_nouveau_activity_description( $activity_id = 0 ) {
 
 		<a class="bp-add-media-activity-description <?php echo( ! empty( $media->description ) ? 'show-edit' : 'show-add' ); ?>" href="#">
 			<span class="bb-icon-l bb-icon-edit"></span>
-			<span class="add"><?php _e( 'Add a description', 'buddyboss-platform' ); ?></span>
-			<span class="edit"><?php _e( 'Edit', 'buddyboss-platform' ); ?></span>
+			<span class="add"><?php esc_html_e( 'Add a description', 'buddyboss-platform' ); ?></span>
+			<span class="edit"><?php esc_html_e( 'Edit', 'buddyboss-platform' ); ?></span>
 		</a>
 		<div class="bp-edit-media-activity-description" style="display: none;">
 			<div class="innerWrap">
@@ -1642,8 +1642,8 @@ function bp_nouveau_document_activity_description( $activity_id = 0 ) {
 
 		<a class="bp-add-media-activity-description <?php echo( ! empty( $document->description ) ? 'show-edit' : 'show-add' ); ?>" href="#">
 			<span class="bb-icon-l bb-icon-edit"></span>
-			<span class="add"><?php _e( 'Add a description', 'buddyboss-platform' ); ?></span>
-			<span class="edit"><?php _e( 'Edit', 'buddyboss-platform' ); ?></span>
+			<span class="add"><?php esc_html_e( 'Add a description', 'buddyboss-platform' ); ?></span>
+			<span class="edit"><?php esc_html_e( 'Edit', 'buddyboss-platform' ); ?></span>
 		</a>
 		<div class="bp-edit-media-activity-description" style="display: none;">
 			<div class="innerWrap">

@@ -1306,7 +1306,7 @@ function bp_admin_do_wp_nav_menu_meta_box() {
 					)
 				);
 				?>
-				#buddypress-menu" class="select-all"><?php _e( 'Select All', 'buddyboss-platform' ); ?></a>
+				#buddypress-menu" class="select-all"><?php esc_html_e( 'Select All', 'buddyboss-platform' ); ?></a>
 			</span>
 			<span class="add-to-menu">
 				<input type="submit"
@@ -1470,13 +1470,13 @@ function bp_email_plaintext_metabox( $post ) {
 	<label class="screen-reader-text" for="excerpt">
 		<?php
 		/* translators: accessibility text */
-		_e( 'Plain text email content', 'buddyboss-platform' );
+		esc_html_e( 'Plain text email content', 'buddyboss-platform' );
 		?>
 	</label>
 	<textarea rows="5" cols="40" name="excerpt"
 					  id="excerpt"><?php echo $post->post_excerpt; // textarea_escaped ?></textarea>
 
-	<p><?php _e( 'Most email clients support HTML email. However, some people prefer to receive plain text email. Enter a plain text alternative version of your email here.', 'buddyboss-platform' ); ?></p>
+	<p><?php esc_html_e( 'Most email clients support HTML email. However, some people prefer to receive plain text email. Enter a plain text alternative version of your email here.', 'buddyboss-platform' ); ?></p>
 	<!-- accesslint:endignore -->
 	<?php
 }

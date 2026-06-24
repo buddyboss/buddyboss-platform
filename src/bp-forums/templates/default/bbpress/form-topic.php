@@ -41,7 +41,7 @@ defined( 'ABSPATH' ) || exit;
 						/* translators: %s: discussion title. */
 						printf( __( 'Now Editing &ldquo;%s&rdquo;', 'buddyboss-platform' ), bbp_get_topic_title() );
 					} else {
-						bbp_is_single_forum() ? printf( __( 'Ask a question or share an idea.', 'buddyboss-platform' ), bbp_get_forum_title() ) : _e( 'Start New Discussion', 'buddyboss-platform' );
+						bbp_is_single_forum() ? printf( __( 'Ask a question or share an idea.', 'buddyboss-platform' ), bbp_get_forum_title() ) : esc_html_e( 'Start New Discussion', 'buddyboss-platform' );
 					}
 					?>
 
@@ -53,7 +53,7 @@ defined( 'ABSPATH' ) || exit;
 
 					<div class="bp-feedback info">
 						<span class="bp-icon" aria-hidden="true"></span>
-						<p><?php _e( 'This forum is marked as closed to new discussions, however your posting capabilities still allow you to do so.', 'buddyboss-platform' ); ?></p>
+						<p><?php esc_html_e( 'This forum is marked as closed to new discussions, however your posting capabilities still allow you to do so.', 'buddyboss-platform' ); ?></p>
 					</div>
 
 				<?php endif; ?>
@@ -67,7 +67,7 @@ defined( 'ABSPATH' ) || exit;
 					<?php do_action( 'bbp_theme_before_topic_form_title' ); ?>
 
 					<p>
-						<label for="bbp_topic_title"><?php _e( 'Discussion Title', 'buddyboss-platform' ); ?></label><br />
+						<label for="bbp_topic_title"><?php esc_html_e( 'Discussion Title', 'buddyboss-platform' ); ?></label><br />
 						<input type="text" id="bbp_topic_title" value="<?php bbp_form_topic_title(); ?>" tabindex="<?php bbp_tab_index(); ?>" size="40" name="bbp_topic_title" maxlength="<?php bbp_title_max_length(); ?>" />
 					</p>
 
@@ -84,7 +84,7 @@ defined( 'ABSPATH' ) || exit;
 					<?php if ( ! ( bbp_use_wp_editor() || current_user_can( 'unfiltered_html' ) ) ) : ?>
 
 						<p class="form-allowed-tags">
-							<label><?php _e( 'You may use these <abbr title="HyperText Markup Language">HTML</abbr> tags and attributes:', 'buddyboss-platform' ); ?></label><br />
+							<label><?php echo wp_kses_post( __( 'You may use these <abbr title="HyperText Markup Language">HTML</abbr> tags and attributes:', 'buddyboss-platform' ) ); ?></label><br />
 							<code><?php bbp_allowed_tags(); ?></code>
 						</p>
 
@@ -125,7 +125,7 @@ defined( 'ABSPATH' ) || exit;
 						<?php do_action( 'bbp_theme_before_topic_form_forum' ); ?>
 
 						<p>
-							<label for="bbp_forum_id"><?php _e( 'Forum:', 'buddyboss-platform' ); ?></label><br />
+							<label for="bbp_forum_id"><?php esc_html_e( 'Forum:', 'buddyboss-platform' ); ?></label><br />
 							<?php
 								bbp_dropdown(
 									array(
@@ -146,7 +146,7 @@ defined( 'ABSPATH' ) || exit;
 
 						<p>
 
-							<label for="bbp_stick_topic"><?php _e( 'Type:', 'buddyboss-platform' ); ?></label><br />
+							<label for="bbp_stick_topic"><?php esc_html_e( 'Type:', 'buddyboss-platform' ); ?></label><br />
 
 							<?php bbp_form_topic_type_dropdown(); ?>
 
@@ -224,7 +224,7 @@ defined( 'ABSPATH' ) || exit;
 						<fieldset class="bbp-form">
 							<div class="bp-checkbox-wrap">
 								<input name="bbp_log_topic_edit" id="bbp_log_topic_edit" class="bs-styled-checkbox" type="checkbox" value="1" <?php bbp_form_topic_log_edit(); ?> tabindex="<?php bbp_tab_index(); ?>" />
-								<label for="bbp_log_topic_edit"><?php _e( 'Keep a log of this edit:', 'buddyboss-platform' ); ?></label><br />
+								<label for="bbp_log_topic_edit"><?php esc_html_e( 'Keep a log of this edit:', 'buddyboss-platform' ); ?></label><br />
 							</div>
 
 							<div>
@@ -245,7 +245,7 @@ defined( 'ABSPATH' ) || exit;
 
 						<button type="button" tabindex="<?php bbp_tab_index(); ?>" id="bb_topic_discard_draft" name="bb_topic_discard_draft" class="button discard small bb_discard_topic_reply_draft"><?php esc_html_e( 'Discard Draft', 'buddyboss-platform' ); ?></button>
 
-						<button type="submit" tabindex="<?php bbp_tab_index(); ?>" id="bbp_topic_submit" name="bbp_topic_submit" class="button submit"><?php _e( 'Post', 'buddyboss-platform' ); ?></button>
+						<button type="submit" tabindex="<?php bbp_tab_index(); ?>" id="bbp_topic_submit" name="bbp_topic_submit" class="button submit"><?php esc_html_e( 'Post', 'buddyboss-platform' ); ?></button>
 
 						<?php do_action( 'bbp_theme_after_topic_form_submit_button' ); ?>
 
@@ -278,7 +278,7 @@ defined( 'ABSPATH' ) || exit;
 	<div id="no-topic-<?php bbp_topic_id(); ?>" class="bbp-no-topic">
 		<div class="bp-feedback info">
 			<span class="bp-icon" aria-hidden="true"></span>
-			<p><?php is_user_logged_in() ? _e( 'You cannot create new discussions.', 'buddyboss-platform' ) : _e( 'You must be logged in to create new discussions.', 'buddyboss-platform' ); ?></p>
+			<p><?php is_user_logged_in() ? esc_html_e( 'You cannot create new discussions.', 'buddyboss-platform' ) : esc_html_e( 'You must be logged in to create new discussions.', 'buddyboss-platform' ); ?></p>
 		</div>
 	</div>
 

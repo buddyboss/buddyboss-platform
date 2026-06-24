@@ -33,7 +33,7 @@ if ( function_exists( 'bp_is_group_single' ) && bp_is_group_single() && bp_is_gr
 						<div class="bb-field-wrap">
 							<label for="bb-album-child-title" class="bb-label"><?php esc_html_e( 'Rename Folder', 'buddyboss-platform' ); ?></label>
 							<input id="bb-album-child-title" type="text" value="<?php bp_folder_title(); ?>" placeholder="<?php esc_html_e( 'Enter Folder Title', 'buddyboss-platform' ); ?>"/>
-							<small class="error-box"><?php _e( 'Following special characters are not supported: \ / ? % * : | " < >', 'buddyboss-platform' ); ?></small>
+							<small class="error-box"><?php esc_html_e( 'Following special characters are not supported: \ / ? % * : | " < >', 'buddyboss-platform' ); ?></small>
 						</div>
 						<?php
 						$current_folder = bp_get_folder_id();

@@ -1015,27 +1015,27 @@ function bp_messages_options() {
 	<label for="message-type-select" class="bp-screen-reader-text">
 	<?php
 		/* translators: accessibility text */
-		_e( 'Select:', 'buddyboss-platform' );
+		esc_html_e( 'Select:', 'buddyboss-platform' );
 	?>
 	</label>
 	<select name="message-type-select" id="message-type-select">
-		<option value=""><?php _e( 'Select', 'buddyboss-platform' ); ?></option>
-		<option value="read"><?php _ex( 'Read', 'Past Participle: Messages have been read', 'buddyboss-platform' ); ?></option>
-		<option value="unread"><?php _e( 'Unread', 'buddyboss-platform' ); ?></option>
-		<option value="all"><?php _e( 'All', 'buddyboss-platform' ); ?></option>
+		<option value=""><?php esc_html_e( 'Select', 'buddyboss-platform' ); ?></option>
+		<option value="read"><?php echo esc_html_x( 'Read', 'Past Participle: Messages have been read', 'buddyboss-platform' ); ?></option>
+		<option value="unread"><?php esc_html_e( 'Unread', 'buddyboss-platform' ); ?></option>
+		<option value="all"><?php esc_html_e( 'All', 'buddyboss-platform' ); ?></option>
 	</select> &nbsp;
 
 	<?php if ( ! bp_is_current_action( 'notices' ) ) : ?>
 
-		<a href="#" id="mark_as_read"><?php _e( 'Mark as Read', 'buddyboss-platform' ); ?></a> &nbsp;
-		<a href="#" id="mark_as_unread"><?php _e( 'Mark as Unread', 'buddyboss-platform' ); ?></a> &nbsp;
+		<a href="#" id="mark_as_read"><?php esc_html_e( 'Mark as Read', 'buddyboss-platform' ); ?></a> &nbsp;
+		<a href="#" id="mark_as_unread"><?php esc_html_e( 'Mark as Unread', 'buddyboss-platform' ); ?></a> &nbsp;
 
 		<?php wp_nonce_field( 'bp_messages_mark_messages_read', 'mark-messages-read-nonce', false ); ?>
 		<?php wp_nonce_field( 'bp_messages_mark_messages_unread', 'mark-messages-unread-nonce', false ); ?>
 
 	<?php endif; ?>
 
-	<a href="#" id="delete_<?php echo bp_current_action(); ?>_messages"><?php _e( 'Delete Selected', 'buddyboss-platform' ); ?></a> &nbsp;
+	<a href="#" id="delete_<?php echo bp_current_action(); ?>_messages"><?php esc_html_e( 'Delete Selected', 'buddyboss-platform' ); ?></a> &nbsp;
 	<?php wp_nonce_field( 'bp_messages_delete_selected', 'delete-selected-nonce', false ); ?>
 	<?php
 }
@@ -1049,14 +1049,14 @@ function bp_messages_bulk_management_dropdown() {
 	?>
 	<label class="bp-screen-reader-text" for="messages-select">
 	<?php
-		_e( 'Select Bulk Action', 'buddyboss-platform' );
+		esc_html_e( 'Select Bulk Action', 'buddyboss-platform' );
 	?>
 	</label>
 	<select name="messages_bulk_action" id="messages-select">
-		<option value="" selected="selected"><?php _e( 'Bulk Actions', 'buddyboss-platform' ); ?></option>
-		<option value="read"><?php _e( 'Mark read', 'buddyboss-platform' ); ?></option>
-		<option value="unread"><?php _e( 'Mark unread', 'buddyboss-platform' ); ?></option>
-		<option value="delete"><?php _e( 'Delete', 'buddyboss-platform' ); ?></option>
+		<option value="" selected="selected"><?php esc_html_e( 'Bulk Actions', 'buddyboss-platform' ); ?></option>
+		<option value="read"><?php esc_html_e( 'Mark read', 'buddyboss-platform' ); ?></option>
+		<option value="unread"><?php esc_html_e( 'Mark unread', 'buddyboss-platform' ); ?></option>
+		<option value="delete"><?php esc_html_e( 'Delete', 'buddyboss-platform' ); ?></option>
 		<?php
 			/**
 			 * Action to add additional options to the messages bulk management dropdown.
@@ -1356,7 +1356,7 @@ function bp_message_get_notices() {
 				<p>
 					<strong><?php echo stripslashes( wp_filter_kses( $notice->subject ) ); ?></strong><br />
 					<?php echo stripslashes( wp_filter_kses( $notice->message ) ); ?>
-					<button type="button" id="close-notice" class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Dismiss this notice', 'buddyboss-platform' ); ?>"><span class="bp-screen-reader-text"><?php _e( 'Dismiss this notice', 'buddyboss-platform' ); ?></span> <span aria-hidden="true">&Chi;</span></button>
+					<button type="button" id="close-notice" class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Dismiss this notice', 'buddyboss-platform' ); ?>"><span class="bp-screen-reader-text"><?php esc_html_e( 'Dismiss this notice', 'buddyboss-platform' ); ?></span> <span aria-hidden="true">&Chi;</span></button>
 					<?php wp_nonce_field( 'bp_messages_close_notice', 'close-notice-nonce' ); ?>
 				</p>
 			</div>

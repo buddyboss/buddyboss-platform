@@ -33,7 +33,7 @@ function bp_core_admin_help_main_page() {
 
 			<!-- print submenu -->
 			<div class="article-child well">
-				<h3 id="article-child-title" style="display: none;"><?php _e( 'Articles', 'buddyboss-platform' ); ?></h3>
+				<h3 id="article-child-title" style="display: none;"><?php esc_html_e( 'Articles', 'buddyboss-platform' ); ?></h3>
 			</div>
 		</div>
 	</div>
@@ -54,9 +54,9 @@ function bp_core_admin_help() {
 	</div>
 	<div class="wrap">
 	<h1>
-		<?php _e( 'Documentation', 'buddyboss-platform' ); ?>
+		<?php esc_html_e( 'Documentation', 'buddyboss-platform' ); ?>
 		<a href="https://www.buddyboss.com/resources/docs/" class="page-title-action"
-		   target="_blank"><?php _e( 'Resources Website', 'buddyboss-platform' ); ?></a>
+		   target="_blank"><?php esc_html_e( 'Resources Website', 'buddyboss-platform' ); ?></a>
 	</h1>
 
 	<div class="wp-list-table widefat bp-help-card-grid">

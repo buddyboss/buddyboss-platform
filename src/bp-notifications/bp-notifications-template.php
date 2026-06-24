@@ -1021,8 +1021,8 @@ function bp_notifications_sort_order_form() {
 		<label for="notifications-sort-order-list"><?php esc_html_e( 'Order By:', 'buddyboss-platform' ); ?></label>
 
 		<select id="notifications-sort-order-list" name="sort_order" onchange="this.form.submit();">
-			<option value="DESC" <?php selected( $selected, 'DESC' ); ?>><?php _e( 'Newest First', 'buddyboss-platform' ); ?></option>
-			<option value="ASC"  <?php selected( $selected, 'ASC' ); ?>><?php _e( 'Oldest First', 'buddyboss-platform' ); ?></option>
+			<option value="DESC" <?php selected( $selected, 'DESC' ); ?>><?php esc_html_e( 'Newest First', 'buddyboss-platform' ); ?></option>
+			<option value="ASC"  <?php selected( $selected, 'ASC' ); ?>><?php esc_html_e( 'Oldest First', 'buddyboss-platform' ); ?></option>
 		</select>
 
 		<noscript>
@@ -1043,18 +1043,18 @@ function bp_notifications_bulk_management_dropdown() {
 	<label class="bp-screen-reader-text" for="notification-select">
 	<?php
 		/* translators: accessibility text */
-		_e( 'Select Bulk Action', 'buddyboss-platform' );
+		esc_html_e( 'Select Bulk Action', 'buddyboss-platform' );
 	?>
 	</label>
 	<select name="notification_bulk_action" id="notification-select">
-		<option value="" selected="selected"><?php _e( 'Bulk Actions', 'buddyboss-platform' ); ?></option>
+		<option value="" selected="selected"><?php esc_html_e( 'Bulk Actions', 'buddyboss-platform' ); ?></option>
 
 		<?php if ( bp_is_current_action( 'unread' ) ) : ?>
-			<option value="read"><?php _e( 'Mark read', 'buddyboss-platform' ); ?></option>
+			<option value="read"><?php esc_html_e( 'Mark read', 'buddyboss-platform' ); ?></option>
 		<?php elseif ( bp_is_current_action( 'read' ) ) : ?>
-			<option value="unread"><?php _e( 'Mark unread', 'buddyboss-platform' ); ?></option>
+			<option value="unread"><?php esc_html_e( 'Mark unread', 'buddyboss-platform' ); ?></option>
 		<?php endif; ?>
-		<option value="delete"><?php _e( 'Delete', 'buddyboss-platform' ); ?></option>
+		<option value="delete"><?php esc_html_e( 'Delete', 'buddyboss-platform' ); ?></option>
 	</select>
 	<input type="submit" id="notification-bulk-manage" class="button action" value="<?php esc_attr_e( 'Apply', 'buddyboss-platform' ); ?>">
 	<?php
@@ -1113,8 +1113,8 @@ function bb_on_screen_notification_template() {
 			</ul>
 			<div class="bb-remove-all-notification">
 				<a class="action-close primary">
-					<span class="bb-for-desktop"><?php _e( 'Clear', 'buddyboss-platform' ); ?></span>
-					<span class="bb-for-mobile"><?php _e( 'Clear All', 'buddyboss-platform' ); ?></span>
+					<span class="bb-for-desktop"><?php esc_html_e( 'Clear', 'buddyboss-platform' ); ?></span>
+					<span class="bb-for-mobile"><?php esc_html_e( 'Clear All', 'buddyboss-platform' ); ?></span>
 					<span class="dashicons dashicons-no" aria-hidden="true"></span>
 				</a>
 			</div>

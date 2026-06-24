@@ -974,7 +974,7 @@ class BP_XProfile_Group {
 							?>
 
 							<div id="submitdiv" class="postbox">
-								<h2><?php _e( 'Submit', 'buddyboss-platform' ); ?></h2>
+								<h2><?php esc_html_e( 'Submit', 'buddyboss-platform' ); ?></h2>
 								<div class="inside">
 									<div id="submitcomment" class="submitbox">
 										<div id="major-publishing-actions">
@@ -999,7 +999,7 @@ class BP_XProfile_Group {
 												<input type="submit" name="save_group" value="<?php echo esc_attr( $button ); ?>" class="button-primary"/>
 											</div>
 											<div id="delete-action">
-												<a href="<?php echo esc_url( $cancel_url ); ?>" class="deletion"><?php _e( 'Cancel', 'buddyboss-platform' ); ?></a>
+												<a href="<?php echo esc_url( $cancel_url ); ?>" class="deletion"><?php esc_html_e( 'Cancel', 'buddyboss-platform' ); ?></a>
 											</div>
 											<div class="clear"></div>
 										</div>
@@ -1030,12 +1030,12 @@ class BP_XProfile_Group {
 								<?php $enabled = 'on' == self::get_group_meta( $this->id, 'is_repeater_enabled' ) ? 'on' : 'off'; ?>
 
 								<div id="repeatersetdiv" class="postbox">
-									<h2><?php _e( 'Repeater Set', 'buddyboss-platform' ); ?></h2>
+									<h2><?php esc_html_e( 'Repeater Set', 'buddyboss-platform' ); ?></h2>
 									<div class="inside">
-										<p style="margin-top: 0;"><?php _e( 'Allow the profile fields within this set to be repeated again and again, so the user can add multiple instances of their data.', 'buddyboss-platform' ); ?></p>
+										<p style="margin-top: 0;"><?php esc_html_e( 'Allow the profile fields within this set to be repeated again and again, so the user can add multiple instances of their data.', 'buddyboss-platform' ); ?></p>
 										<select name="group_is_repeater" id="group_is_repeater" >
-											<option value="off" <?php selected( $enabled, 'off' ); ?>><?php _e( 'Disabled', 'buddyboss-platform' ); ?></option>
-											<option value="on" <?php selected( $enabled, 'on' ); ?>><?php _e( 'Enabled', 'buddyboss-platform' ); ?></option>
+											<option value="off" <?php selected( $enabled, 'off' ); ?>><?php esc_html_e( 'Disabled', 'buddyboss-platform' ); ?></option>
+											<option value="on" <?php selected( $enabled, 'on' ); ?>><?php esc_html_e( 'Enabled', 'buddyboss-platform' ); ?></option>
 										</select>
 									</div>
 								</div>

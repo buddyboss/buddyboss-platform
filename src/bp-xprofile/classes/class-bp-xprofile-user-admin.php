@@ -472,7 +472,7 @@ if ( ! class_exists( 'BP_XProfile_User_Admin' ) ) :
 
 						<div class="field-visibility-settings" id="field-visibility-settings-<?php bp_the_profile_field_id(); ?>">
 							<fieldset>
-								<legend><?php _e( 'Who can see this field?', 'buddyboss-platform' ); ?></legend>
+								<legend><?php esc_html_e( 'Who can see this field?', 'buddyboss-platform' ); ?></legend>
 
 								<?php bp_profile_visibility_radio_buttons(); ?>
 

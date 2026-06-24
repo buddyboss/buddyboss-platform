@@ -1080,7 +1080,7 @@ function bp_show_blog_signup_form( $blogname = '', $blog_title = '', $errors = '
 		?>
 		<p><?php printf( __( "By filling out the form below, you can <strong>add a site to your account</strong>. There is no limit to the number of sites that you can have, so create to your heart's content, but blog responsibly!", 'buddyboss-platform' ), $current_user->data->display_name ); ?></p>
 
-		<p><?php _e( "If you\'re not going to use a great domain, leave it for a new user. Now have at it!", 'buddyboss-platform' ); ?></p>
+		<p><?php esc_html_e( "If you\'re not going to use a great domain, leave it for a new user. Now have at it!", 'buddyboss-platform' ); ?></p>
 
 		<form class="standard-form" id="setupform" method="post" action="">
 
@@ -1153,7 +1153,7 @@ function bp_blogs_signup_blog( $blogname = '', $blog_title = '', $errors = '' ) 
 	// Blog Title.
 	?>
 
-	<label for="blog_title"><?php _e( 'Site Title:', 'buddyboss-platform' ); ?></label>
+	<label for="blog_title"><?php esc_html_e( 'Site Title:', 'buddyboss-platform' ); ?></label>
 
 	<?php if ( $errmsg = $errors->get_error_message( 'blog_title' ) ) { ?>
 
@@ -1165,7 +1165,7 @@ function bp_blogs_signup_blog( $blogname = '', $blog_title = '', $errors = '' ) 
 	?>
 
 	<fieldset class="create-site">
-		<legend class="label"><?php _e( 'Privacy: I would like my site to appear in search engines, and in public listings around this network', 'buddyboss-platform' ); ?></legend>
+		<legend class="label"><?php esc_html_e( 'Privacy: I would like my site to appear in search engines, and in public listings around this network', 'buddyboss-platform' ); ?></legend>
 
 		<label class="checkbox" for="blog_public_on">
 			<input type="radio" id="blog_public_on" name="blog_public" value="1"
@@ -1173,7 +1173,7 @@ function bp_blogs_signup_blog( $blogname = '', $blog_title = '', $errors = '' ) 
 			if ( ! isset( $_POST['blog_public'] ) || '1' == $_POST['blog_public'] ) {
 				?>
 				checked="checked"<?php } ?> />
-			<strong><?php _e( 'Yes', 'buddyboss-platform' ); ?></strong>
+			<strong><?php esc_html_e( 'Yes', 'buddyboss-platform' ); ?></strong>
 		</label>
 		<label class="checkbox" for="blog_public_off">
 			<input type="radio" id="blog_public_off" name="blog_public" value="0"
@@ -1181,7 +1181,7 @@ function bp_blogs_signup_blog( $blogname = '', $blog_title = '', $errors = '' ) 
 			if ( isset( $_POST['blog_public'] ) && '0' == $_POST['blog_public'] ) {
 				?>
 				checked="checked"<?php } ?> />
-			<strong><?php _e( 'No', 'buddyboss-platform' ); ?></strong>
+			<strong><?php esc_html_e( 'No', 'buddyboss-platform' ); ?></strong>
 		</label>
 	</fieldset>
 
@@ -1295,7 +1295,7 @@ function bp_blogs_confirm_blog_signup( $domain, $path, $blog_title, $user_name, 
 	restore_current_blog();
 
 	?>
-	<p><?php _e( 'Congratulations! You have successfully registered a new site.', 'buddyboss-platform' ); ?></p>
+	<p><?php esc_html_e( 'Congratulations! You have successfully registered a new site.', 'buddyboss-platform' ); ?></p>
 	<p>
 		<?php
 		printf(
