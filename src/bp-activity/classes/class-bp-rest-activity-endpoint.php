@@ -2162,24 +2162,26 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			'link_embed_url'    => '',
 			'is_pinned'         => false,
 			'can_pin'           => false,
-			'reacted_names'     => bb_activity_reaction_names_and_count( $activity->id, 'activity_comment' === $activity->type ? $activity->type : 'activity', 1 ),
-			'reacted_counts'    => bb_get_activity_most_reactions( $activity->id, 'activity_comment' === $activity->type ? $activity->type : 'activity', 7 ),
-			'reacted_id'        => bb_load_reaction()->bb_user_reacted_reaction_id(
+			'reacted_names'     => function_exists( 'bb_activity_reaction_names_and_count' ) ? bb_activity_reaction_names_and_count( $activity->id, 'activity_comment' === $activity->type ? $activity->type : 'activity', 1 ) : '',
+			'reacted_counts'    => function_exists( 'bb_get_activity_most_reactions' ) ? bb_get_activity_most_reactions( $activity->id, 'activity_comment' === $activity->type ? $activity->type : 'activity', 7 ) : array(),
+			'reacted_id'        => ( function_exists( 'bb_load_reaction' ) && bb_load_reaction() ) ? bb_load_reaction()->bb_user_reacted_reaction_id(
 				array(
 					'item_id'   => $activity->id,
 					'item_type' => 'activity_comment' === $activity->type ? $activity->type : 'activity',
 					'user_id'   => bp_loggedin_user_id(),
 				)
-			),
+			) : 0,
 			'is_comment_closed' => function_exists( 'bb_is_close_activity_comments_enabled' ) && bb_is_close_activity_comments_enabled() ? bb_is_activity_comments_closed( $activity->id ) : false,
 			'activity_status'   => $activity->status,
 		);
 
 		$data['bb_activity_post_feature_image'] = array();
 		if ( ! empty( $activity->id ) ) {
-			$feature_image_data = bb_pro_activity_post_feature_image_instance()->bb_get_feature_image_data( $activity->id );
-			if ( ! empty( $feature_image_data ) ) {
-				$data['bb_activity_post_feature_image'] = $feature_image_data;
+			if ( function_exists( 'bb_pro_activity_post_feature_image_instance' ) ) {
+				$feature_image_data = bb_pro_activity_post_feature_image_instance()->bb_get_feature_image_data( $activity->id );
+				if ( ! empty( $feature_image_data ) ) {
+					$data['bb_activity_post_feature_image'] = $feature_image_data;
+				}
 			}
 		}
 
@@ -2822,13 +2824,15 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 	public function get_favorite_endpoint_schema() {
 		$args = array();
 
+		$reaction = function_exists( 'bb_load_reaction' ) ? bb_load_reaction() : null;
+
 		$args['reaction_id'] = array(
 			'description'       => __( 'Reaction ID.', 'buddyboss' ),
 			'type'              => 'integer',
 			'required'          => false,
 			'sanitize_callback' => 'absint',
 			'validate_callback' => 'rest_validate_request_arg',
-			'enum'              => array_column( bb_load_reaction()->bb_get_reactions( bb_get_reaction_mode() ), 'id' ),
+			'enum'              => $reaction ? array_column( $reaction->bb_get_reactions( bb_get_reaction_mode() ), 'id' ) : array(),
 		);
 
 		$args['item_type'] = array(
@@ -2837,7 +2841,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			'required'          => false,
 			'sanitize_callback' => 'sanitize_text_field',
 			'validate_callback' => 'rest_validate_request_arg',
-			'enum'              => array_keys( bb_load_reaction()->bb_get_registered_reaction_item_types() ),
+			'enum'              => $reaction ? array_keys( $reaction->bb_get_registered_reaction_item_types() ) : array(),
 		);
 
 		/**
@@ -3348,7 +3352,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			return 0;
 		}
 
-		if ( function_exists( 'bb_load_reaction' ) ) {
+		if ( function_exists( 'bb_load_reaction' ) && bb_load_reaction() ) {
 			$fav_count = bb_load_reaction()->bb_total_item_reactions_count(
 				array(
 					'item_id'   => $activity->id,

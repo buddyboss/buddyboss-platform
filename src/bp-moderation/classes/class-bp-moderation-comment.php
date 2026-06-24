@@ -35,7 +35,8 @@ class BP_Moderation_Comment extends BP_Moderation_Abstract {
 		// Register moderation data.
 		add_filter( 'bp_moderation_content_types', array( $this, 'add_content_types' ), 11 );
 
-		add_filter( 'comment_reply_link', array( $this, 'add_report_button' ), 999, 3 );
+		// Add report button for all comments via comment_text filter.
+		add_filter( 'comment_text', array( $this, 'add_report_button' ), 100, 2 );
 
 		// Update report button.
 		add_filter( "bp_moderation_{$this->item_type}_button", array( $this, 'update_button' ), 10, 2 );
@@ -301,41 +302,49 @@ class BP_Moderation_Comment extends BP_Moderation_Abstract {
 	}
 
 	/**
-	 * Add report buttong
+	 * Add report button
 	 *
 	 * @since BuddyBoss 1.5.6
 	 *
-	 * @param string     $link    The HTML markup for the comment reply link.
-	 * @param array      $args    An array of arguments overriding the defaults.
-	 * @param WP_Comment $comment The object of the comment being replied.
+	 * @param string     $comment_text The comment text.
+	 * @param WP_Comment $comment      The comment object.
 	 *
 	 * @return string
 	 */
-	public function add_report_button( $link, $args, $comment ) {
-
+	public function add_report_button( $comment_text, $comment ) {
 		if ( ! $comment instanceof WP_Comment ) {
-			return $link;
+			return $comment_text;
 		}
 
-		if ( ! empty( $link ) && bp_is_moderation_content_reporting_enable( 0, self::$moderation_type ) ) {
-			$comment_report_link = bp_moderation_get_report_button(
-				array(
-					'id'                => 'comment_report',
-					'component'         => 'moderation',
-					'must_be_logged_in' => true,
-					'button_attr'       => array(
-						'data-bp-content-id'   => $comment->comment_ID,
-						'data-bp-content-type' => self::$moderation_type,
-						'class'                => 'report-content',
-					),
-				)
-			);
-			if ( ! empty( $comment_report_link ) ) {
-				$link .= sprintf( '<div class="bb_more_options"><span class="bb_more_options_action" data-balloon-pos="up" data-balloon="%1$s"><i class="bb-icon-f bb-icon-ellipsis-h"></i></span><div class="bb_more_options_list bb_more_dropdown"><div class="bb_more_dropdown__title"><span class="bb_more_dropdown__title__text">%2$s</span><span class="bb_more_dropdown__close_button" role="button"><i class="bb-icon-l bb-icon-times"></i></span></div>%3$s</div><div class="bb_more_dropdown_overlay"></div></div>', esc_html__( 'More Options', 'buddyboss' ), esc_html__( 'Options', 'buddyboss' ), $comment_report_link );
-			}
+		// Check if comment ID exists.
+		if ( empty( $comment->comment_ID ) ) {
+			return $comment_text;
 		}
 
-		return $link;
+		// Check if moderation is enabled.
+		if ( ! bp_is_moderation_content_reporting_enable( 0, self::$moderation_type ) ) {
+			return $comment_text;
+		}
+
+		// Add report button to all comments.
+		$comment_report_link = bp_moderation_get_report_button(
+			array(
+				'id'                => 'comment_report',
+				'component'         => 'moderation',
+				'must_be_logged_in' => true,
+				'button_attr'       => array(
+					'data-bp-content-id'   => $comment->comment_ID,
+					'data-bp-content-type' => self::$moderation_type,
+					'class'                => 'report-content',
+				),
+			)
+		);
+
+		if ( ! empty( $comment_report_link ) ) {
+			$comment_text .= sprintf( '<div class="bb_more_options"><span class="bb_more_options_action" data-balloon-pos="up" data-balloon="%1$s"><i class="bb-icon-f bb-icon-ellipsis-h"></i></span><div class="bb_more_options_list bb_more_dropdown"><div class="bb_more_dropdown__title"><span class="bb_more_dropdown__title__text">%2$s</span><span class="bb_more_dropdown__close_button" role="button"><i class="bb-icon-l bb-icon-times"></i></span></div>%3$s</div><div class="bb_more_dropdown_overlay"></div></div>', esc_html__( 'More Options', 'buddyboss' ), esc_html__( 'Options', 'buddyboss' ), $comment_report_link );
+		}
+
+		return $comment_text;
 	}
 
 	/**

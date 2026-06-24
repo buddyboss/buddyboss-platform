@@ -24,7 +24,7 @@ if ( bp_is_user_media() || bp_is_user_albums() ) {
 ?>
 	<div class="bb-rl-field-wrap bb-rl-privacy-field-wrap-hide-show">
 		<label for="bb-album-privacy" class="bb-label"><?php esc_html_e( 'Privacy', 'buddyboss' ); ?></label>
-		<div class="bb-rl-dropdown-wrap">
+		<div class="bb-rl-dropdown-wrap bb-rl-filter">
 			<select id="bb-album-privacy">
 				<?php
 				foreach ( bp_media_get_visibility_levels() as $key => $privacy ) :

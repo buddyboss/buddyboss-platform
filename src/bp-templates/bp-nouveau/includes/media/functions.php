@@ -181,18 +181,26 @@ function bp_nouveau_media_localize_scripts( $params = array() ) {
 	);
 	$params['media']['gif_api_key'] = bp_media_get_gif_api_key();
 
+	$params['media']['gif_search_placeholder'] = __( 'Search GIPHY...', 'buddyboss' );
+	$params['media']['gif_no_results']         = __( 'No results found', 'buddyboss' );
+	$params['media']['gif_no_connection']      = __( 'Could not connect to GIPHY', 'buddyboss' );
+
 	$params['media']['i18n_strings'] = array(
 		'select'               => __( 'Select', 'buddyboss' ),
 		'unselect'             => __( 'Unselect', 'buddyboss' ),
 		'selectall'            => __( 'Select All', 'buddyboss' ),
 		'unselectall'          => __( 'Unselect All', 'buddyboss' ),
-		'no_photos_found'      => ( bp_is_active( 'video' ) && ( bp_is_profile_video_support_enabled() && bp_is_user_albums() ) || ( bp_is_group_video_support_enabled() && bp_is_group_albums() ) ) ? __( 'Sorry, no photos & videos were found', 'buddyboss' ) : __( 'Sorry, no photos were found', 'buddyboss' ),
+		'no_photos_found'      => ( bp_is_active( 'video' ) && ( ( bp_is_profile_video_support_enabled() && bp_is_user_albums() ) || ( bp_is_group_video_support_enabled() && bp_is_group_albums() ) ) ) ? __( 'Sorry, no photos & videos were found', 'buddyboss' ) : __( 'Sorry, no photos were found', 'buddyboss' ),
 		'upload'               => __( 'Upload', 'buddyboss' ),
 		'uploading'            => __( 'Uploading', 'buddyboss' ),
 		'upload_status'        => __( '%1$d out of %2$d uploaded', 'buddyboss' ),
 		'album_delete_confirm' => __( 'Are you sure you want to delete this album? Photos in this album will also be deleted.', 'buddyboss' ),
 		'album_delete_error'   => __( 'There was a problem deleting the album.', 'buddyboss' ),
 		'media_delete_confirm' => __( 'Are you sure you want to delete this media?', 'buddyboss' ),
+		'photo'                => __( 'photo', 'buddyboss' ),
+		'photos'               => __( 'photos', 'buddyboss' ),
+		'video'                => __( 'video', 'buddyboss' ),
+		'videos'               => __( 'videos', 'buddyboss' ),
 	);
 
 	$params['dir_labels'] = array_merge(
