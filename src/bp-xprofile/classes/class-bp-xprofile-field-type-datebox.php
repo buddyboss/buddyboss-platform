@@ -519,7 +519,7 @@ class BP_XProfile_Field_Type_Datebox extends BP_XProfile_Field_Type {
 						<div class="bp-date-format-option">
 							<label for="date-format-<?php echo esc_attr( $format ); ?>">
 								<input type="radio" name="field-settings[date_format]" id="date-format-<?php echo esc_attr( $format ); ?>" value="<?php echo esc_attr( $format ); ?>" <?php checked( $format, $settings['date_format'] ); ?> />
-								<span class="date-format-label"><?php echo date_i18n( $format ); ?></span>
+								<span class="date-format-label"><?php echo esc_html( date_i18n( $format ) ); ?></span>
 								<code><?php echo esc_html( $format ); ?></code>
 							</label>
 						</div>

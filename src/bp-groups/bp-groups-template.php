@@ -3279,7 +3279,7 @@ function bp_group_admin_memberlist( $admin_list = false, $group = false ) {
 				<span class="activity">
 					<?php
 					/* translators: %s: human-readable time since joining. */
-					echo bp_core_get_last_activity( strtotime( $admin->date_modified ), __( 'joined %s', 'buddyboss-platform' ) );
+					echo esc_html( bp_core_get_last_activity( strtotime( $admin->date_modified ), __( 'joined %s', 'buddyboss-platform' ) ) );
 					?>
 				</span>
 
@@ -3395,7 +3395,7 @@ function bp_group_mod_memberlist( $admin_list = false, $group = false ) {
 				<h5><?php echo bp_core_get_userlink( $mod->user_id ); ?></h5>
 
 				<?php /* translators: %s: human-readable time since joining. */ ?>
-				<span class="activity"><?php echo bp_core_get_last_activity( strtotime( $mod->date_modified ), __( 'joined %s', 'buddyboss-platform' ) ); ?></span>
+				<span class="activity"><?php echo esc_html( bp_core_get_last_activity( strtotime( $mod->date_modified ), __( 'joined %s', 'buddyboss-platform' ) ) ); ?></span>
 
 				<?php if ( bp_is_active( 'friends' ) ) : ?>
 

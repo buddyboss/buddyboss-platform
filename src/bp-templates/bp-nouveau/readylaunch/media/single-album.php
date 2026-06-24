@@ -194,8 +194,8 @@ if ( bp_has_albums( array( 'include' => $album_id ) ) ) : ?>
 						}
 						?>
 
-						<span class="bb-album-photo-count"><i class="bb-icons-rl-images"></i><?php printf( _n( '%s', '%s', $media_album_template->album->media['total'], 'buddyboss-platform' ), bp_core_number_format( $media_album_template->album->media['total'] ) ); ?></span><span class="bb-sep"></span>
-						<span class="bb-album-video-count"><i class="bb-icons-rl-video"></i><?php printf( _n( '%s', '%s', $media_album_template->album->media['total_video'], 'buddyboss-platform' ), bp_core_number_format( $media_album_template->album->media['total_video'] ) ); ?></span>
+						<span class="bb-album-photo-count"><i class="bb-icons-rl-images"></i><?php printf( _n( '%s', '%s', $media_album_template->album->media['total'], 'buddyboss-platform' ), esc_html( bp_core_number_format( $media_album_template->album->media['total'] ) ) ); ?></span><span class="bb-sep"></span>
+						<span class="bb-album-video-count"><i class="bb-icons-rl-video"></i><?php printf( _n( '%s', '%s', $media_album_template->album->media['total_video'], 'buddyboss-platform' ), esc_html( bp_core_number_format( $media_album_template->album->media['total_video'] ) ) ); ?></span>
 					</p>
 				</div>
 

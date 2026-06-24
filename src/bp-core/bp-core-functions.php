@@ -1422,7 +1422,7 @@ function bp_core_time_since( $older_date, $newer_date = false ) {
  * @return string|null
  */
 function bp_core_iso8601_date( $timestamp = '' ) {
-	echo bp_core_get_iso8601_date( $timestamp );
+	echo esc_html( bp_core_get_iso8601_date( $timestamp ) );
 }
 	/**
 	 * Return an ISO-8601 date from a date string.

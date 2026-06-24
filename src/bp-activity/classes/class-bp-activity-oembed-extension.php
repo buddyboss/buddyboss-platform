@@ -319,7 +319,7 @@ class BP_Activity_oEmbed_Extension extends BP_Core_oEmbed_Extension {
 						$count,
 						'buddyboss-platform'
 					),
-					bp_core_number_format( $count )
+					esc_html( bp_core_number_format( $count ) )
 				);
 				?>
 			</a>

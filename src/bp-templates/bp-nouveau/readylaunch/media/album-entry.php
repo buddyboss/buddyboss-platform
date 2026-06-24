@@ -50,10 +50,10 @@ $icons = array(
 						<?php
 					}
 					?>
-					<span class="bb-album_stats_photos"> <i class="bb-icons-rl-images"></i> <?php echo bp_core_number_format( $media_album_template->album->media['total'] ); ?></span>
+					<span class="bb-album_stats_photos"> <i class="bb-icons-rl-images"></i> <?php echo esc_html( bp_core_number_format( $media_album_template->album->media['total'] ) ); ?></span>
 					<?php if ( ( bp_is_profile_albums_support_enabled() || bp_is_group_albums_support_enabled() ) && ( bp_is_active( 'video' ) && ( bp_is_profile_video_support_enabled() || bp_is_group_video_support_enabled() ) ) ) { ?>
 						<span class="bb-album_stats_spacer"></span>
-						<span class="bb-album_stats_videos"><i class="bb-icons-rl-video"></i> <?php echo bp_core_number_format( $media_album_template->album->media['total_video'] ); ?></span>
+						<span class="bb-album_stats_videos"><i class="bb-icons-rl-video"></i> <?php echo esc_html( bp_core_number_format( $media_album_template->album->media['total_video'] ) ); ?></span>
 					<?php } ?>
 				</div>
 			</div>

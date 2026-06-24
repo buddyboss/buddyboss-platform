@@ -38,7 +38,7 @@ if ( groups_check_user_has_invite( $loggedin_user_id, $current_group_id ) ) {
 					),
 					sprintf(
 						'<span class="last-activity">%s</span>',
-						bp_core_time_since( $inviter['date_modified'] )
+						esc_html( bp_core_time_since( $inviter['date_modified'] ) )
 					),
 					sprintf(
 						'<a href="%s" >%s</a>',

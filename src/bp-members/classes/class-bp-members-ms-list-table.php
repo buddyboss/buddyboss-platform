@@ -368,7 +368,7 @@ class BP_Members_MS_List_Table extends WP_MS_Users_List_Table {
 			$date = 'Y/m/d \<\b\r \/\> g:i:s a';
 		}
 
-		echo mysql2date( $date, $signup_object->registered ) . '</td>';
+		echo esc_html( mysql2date( $date, $signup_object->registered ) ) . '</td>';
 	}
 
 	/**
@@ -387,7 +387,7 @@ class BP_Members_MS_List_Table extends WP_MS_Users_List_Table {
 			$date = 'Y/m/d \<\b\r \/\> g:i:s a';
 		}
 
-		echo mysql2date( $date, $signup_object->date_sent );
+		echo esc_html( mysql2date( $date, $signup_object->date_sent ) );
 	}
 
 	/**

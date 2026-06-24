@@ -427,7 +427,7 @@ class BP_Activity_Feed {
 	<link><?php echo $this->link; ?></link>
 	<atom:link href="<?php self_link(); ?>" rel="self" type="application/rss+xml" />
 	<description><?php echo $this->description; ?></description>
-	<lastBuildDate><?php echo mysql2date( 'D, d M Y H:i:s O', bp_activity_get_last_updated(), false ); ?></lastBuildDate>
+	<lastBuildDate><?php echo esc_html( mysql2date( 'D, d M Y H:i:s O', bp_activity_get_last_updated(), false ) ); ?></lastBuildDate>
 	<generator>https://buddypress.org/?v=<?php bp_version(); ?></generator>
 	<language><?php bloginfo_rss( 'language' ); ?></language>
 	<ttl><?php echo $this->ttl; ?></ttl>
@@ -452,7 +452,7 @@ class BP_Activity_Feed {
 				<guid isPermaLink="false"><?php bp_activity_feed_item_guid(); ?></guid>
 				<title><?php echo stripslashes( bp_get_activity_feed_item_title() ); ?></title>
 				<link><?php bp_activity_thread_permalink(); ?></link>
-				<pubDate><?php echo mysql2date( 'D, d M Y H:i:s O', bp_get_activity_feed_item_date(), false ); ?></pubDate>
+				<pubDate><?php echo esc_html( mysql2date( 'D, d M Y H:i:s O', bp_get_activity_feed_item_date(), false ) ); ?></pubDate>
 
 				<?php if ( bp_get_activity_feed_item_description() ) : ?>
 					<content:encoded><![CDATA[<?php $this->feed_content(); ?>]]></content:encoded>

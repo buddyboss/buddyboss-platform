@@ -371,7 +371,7 @@ class BP_Members_List_Table extends WP_Users_List_Table {
 	 * @param object|null $signup_object The signup data object.
 	 */
 	public function column_registered( $signup_object = null ) {
-		echo mysql2date( 'Y/m/d', $signup_object->registered );
+		echo esc_html( mysql2date( 'Y/m/d', $signup_object->registered ) );
 	}
 
 	/**
@@ -382,7 +382,7 @@ class BP_Members_List_Table extends WP_Users_List_Table {
 	 * @param object|null $signup_object The signup data object.
 	 */
 	public function column_date_sent( $signup_object = null ) {
-		echo mysql2date( 'Y/m/d', $signup_object->date_sent );
+		echo esc_html( mysql2date( 'Y/m/d', $signup_object->date_sent ) );
 	}
 
 	/**

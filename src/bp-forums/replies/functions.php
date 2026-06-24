@@ -2355,7 +2355,7 @@ function bbp_display_replies_feed_rss2( $replies_query = array() ) {
 		<atom:link href="<?php self_link(); ?>" rel="self" type="application/rss+xml" />
 		<link><?php self_link(); ?></link>
 		<description></description>
-		<pubDate><?php echo mysql2date( 'D, d M Y H:i:s O', current_time( 'mysql' ), false ); ?></pubDate>
+		<pubDate><?php echo esc_html( mysql2date( 'D, d M Y H:i:s O', current_time( 'mysql' ), false ) ); ?></pubDate>
 		<generator>http://bbpress.org/?v=<?php bbp_version(); ?></generator>
 		<language><?php bloginfo_rss( 'language' ); ?></language>
 
@@ -2369,7 +2369,7 @@ function bbp_display_replies_feed_rss2( $replies_query = array() ) {
 						<guid><?php bbp_topic_permalink(); ?></guid>
 						<title><![CDATA[<?php bbp_topic_title(); ?>]]></title>
 						<link><?php bbp_topic_permalink(); ?></link>
-						<pubDate><?php echo mysql2date( 'D, d M Y H:i:s +0000', get_post_time( 'Y-m-d H:i:s', true ), false ); ?></pubDate>
+						<pubDate><?php echo esc_html( mysql2date( 'D, d M Y H:i:s +0000', get_post_time( 'Y-m-d H:i:s', true ), false ) ); ?></pubDate>
 						<dc:creator><?php the_author(); ?></dc:creator>
 
 						<description>
@@ -2399,7 +2399,7 @@ function bbp_display_replies_feed_rss2( $replies_query = array() ) {
 					<guid><?php bbp_reply_url(); ?></guid>
 					<title><![CDATA[<?php bbp_reply_title(); ?>]]></title>
 					<link><?php bbp_reply_url(); ?></link>
-					<pubDate><?php echo mysql2date( 'D, d M Y H:i:s +0000', get_post_time( 'Y-m-d H:i:s', true ), false ); ?></pubDate>
+					<pubDate><?php echo esc_html( mysql2date( 'D, d M Y H:i:s +0000', get_post_time( 'Y-m-d H:i:s', true ), false ) ); ?></pubDate>
 					<dc:creator><?php the_author(); ?></dc:creator>
 
 					<description>

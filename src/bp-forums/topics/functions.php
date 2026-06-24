@@ -3875,7 +3875,7 @@ function bbp_display_topics_feed_rss2( $topics_query = array() ) {
 		<atom:link href="<?php self_link(); ?>" rel="self" type="application/rss+xml" />
 		<link><?php self_link(); ?></link>
 		<description></description>
-		<pubDate><?php echo mysql2date( 'D, d M Y H:i:s O', current_time( 'mysql' ), false ); ?></pubDate>
+		<pubDate><?php echo esc_html( mysql2date( 'D, d M Y H:i:s O', current_time( 'mysql' ), false ) ); ?></pubDate>
 		<generator>http://bbpress.org/?v=<?php bbp_version(); ?></generator>
 		<language><?php bloginfo_rss( 'language' ); ?></language>
 
@@ -3892,7 +3892,7 @@ function bbp_display_topics_feed_rss2( $topics_query = array() ) {
 					<guid><?php bbp_topic_permalink(); ?></guid>
 					<title><![CDATA[<?php bbp_topic_title(); ?>]]></title>
 					<link><?php bbp_topic_permalink(); ?></link>
-					<pubDate><?php echo mysql2date( 'D, d M Y H:i:s +0000', get_post_meta( bbp_get_topic_id(), '_bbp_last_active_time', true ) ); ?></pubDate>
+					<pubDate><?php echo esc_html( mysql2date( 'D, d M Y H:i:s +0000', get_post_meta( bbp_get_topic_id(), '_bbp_last_active_time', true ) ) ); ?></pubDate>
 					<dc:creator><?php the_author(); ?></dc:creator>
 
 					<?php if ( ! post_password_required() ) : ?>

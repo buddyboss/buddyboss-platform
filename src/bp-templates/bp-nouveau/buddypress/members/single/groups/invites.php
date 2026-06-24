@@ -55,7 +55,7 @@ if ( bp_has_groups( 'type=invites&user_id=' . $bp_displayed_user_id ) ) {
 									),
 									sprintf(
 										'<span class="last-activity">%s</span>',
-										bp_core_time_since( $inviter['date_modified'] )
+										esc_html( bp_core_time_since( $inviter['date_modified'] ) )
 									)
 								);
 								?>
