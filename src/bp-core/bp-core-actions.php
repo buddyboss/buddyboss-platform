@@ -140,11 +140,6 @@ if ( is_admin() ) {
 // Activation redirect.
 add_action( 'bp_activation', 'bp_add_activation_redirect' );
 
-// Add Platform plugin updater code.
-if ( is_admin() ) {
-	add_action( 'bp_admin_init', 'bp_platform_plugin_updater' );
-}
-
 // Email unsubscribe.
 add_action( 'bp_get_request_unsubscribe', 'bp_email_unsubscribe_handler' );
 
@@ -185,10 +180,8 @@ add_action(
 	2
 );
 
-// remove admin notices for the upgrade page.
+// remove admin notices for the ReadyLaunch screen.
 add_action( 'admin_head', 'bb_remove_admin_notices', 99 );
-// load the web performance loader class.
-add_action( 'bp_admin_init', 'bb_load_web_performance_tester', 999 );
 
 /**
  * Restrict user when visit attachment url from media/document.
@@ -798,6 +791,16 @@ function bb_core_read_blog_comment_notification() {
 		return;
 	}
 
+	// The body of this function calls BP_Notifications_Notification::update()
+	// and bp_notifications_get_notification(), both owned by the notifications
+	// component. When notifications is deactivated via Settings 2.0, the class
+	// autoloader (src/class-buddypress.php) returns early for inactive
+	// components, and the function file (bp-notifications-functions.php) is
+	// not loaded — so calling either would fatal.
+	if ( ! bp_is_active( 'notifications' ) ) {
+		return;
+	}
+
 	$comment_id = 0;
 	// For replies to a parent update.
 	if ( ! empty( $_GET['cid'] ) ) {
@@ -1178,55 +1181,22 @@ function bb_bg_process_log_load() {
 add_action( 'bp_init', 'bb_bg_process_log_load' );
 
 /**
- * Remove notices from the buddyboss upgrade and ReadyLaunch screens.
+ * Remove notices from the ReadyLaunch screen.
  *
  * @since BuddyBoss 2.6.30
  */
 function bb_remove_admin_notices() {
 	$screen = get_current_screen();
-	if ( 'buddyboss_page_bb-upgrade' === $screen->id || 'buddyboss_page_bb-readylaunch' === $screen->id ) {
+	// `bb-readylaunch` screen retired in BuddyBoss 3.0.0; Settings 2.0
+	// (`buddyboss_page_bb-settings`) is now the home for appearance settings
+	// and doesn't need the notice suppression that the legacy page did.
+	if ( 'buddyboss_page_bb-upgrade' === $screen->id ) {
 		remove_all_actions( 'admin_notices' );
 
 		// Additional check for the common WordPress error/warning hooks.
 		remove_all_actions( 'all_admin_notices' );
 	}
 }
-
-/**
- * Load the web performance tester.
- *
- * @since BuddyBoss 2.6.30
- *
- * @return void
- */
-function bb_load_web_performance_tester() {
-	$active_tab  = isset( $_GET['tab'] ) ? sanitize_text_field( $_GET['tab'] ) : ''; // phpcs:ignore
-	$active_page = isset( $_GET['page'] ) ? sanitize_text_field( $_GET['page'] ) : ''; // phpcs:ignore
-
-	if ( 'bb-upgrade' === $active_page && 'bb-performance-tester' === $active_tab ) {
-		bb_web_performance_tester();
-	}
-}
-
-/**
- * Delete the upgrade notice transient when administrators logout.
- *
- * @since BuddyBoss 2.7.10
- *
- * @param int $user_id The ID of the user who is logging out.
- *
- * @return void
- */
-function bb_reset_upgrade_notice_on_admin_logut( $user_id ) {
-	$user = get_userdata( $user_id );
-	if ( user_can( $user, 'manage_options' ) ) {
-		delete_transient( 'bb_pro_upgrade_notice_dismissed' );
-	}
-
-	unset( $user );
-}
-
-add_action( 'wp_logout', 'bb_reset_upgrade_notice_on_admin_logut' );
 
 /**
  * Function to load telemetry class.
@@ -1273,4 +1243,4 @@ function bb_load_readylaunch() {
 	}
 }
 
-add_action( 'bp_loaded', 'bb_load_readylaunch', 99 );
+add_action( 'bp_init', 'bb_load_readylaunch', 1 );

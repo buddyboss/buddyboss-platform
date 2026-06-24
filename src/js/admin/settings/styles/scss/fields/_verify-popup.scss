@@ -1,0 +1,207 @@
+/* Verify Popup Field Component */
+
+/* Modal overlay - positioned at document root level */
+.bb-admin-verify-modal {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	z-index: 9999;
+
+	&__backdrop {
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		background-color: rgba(0, 0, 0, 0.6);
+		cursor: pointer;
+	}
+
+	&__container {
+		position: relative;
+		z-index: 10000;
+		background-color: $bb-background-base-color;
+		border: 1px solid $bb-border-secondary-color;
+		border-radius: $bb-border-radius-xl;
+		box-shadow: 0px 8px 24px rgba(0, 0, 0, 0.15);
+		max-width: 680px;
+		width: 90%;
+		max-height: 80vh;
+		overflow: auto;
+	}
+
+	&__header {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		padding: 20px;
+		border-bottom: 1px solid $bb-border-secondary-color;
+	}
+
+	&__title {
+		font-size: 18px;
+		font-weight: 500;
+		line-height: 1.4;
+		color: $bb-text-color;
+		margin: 0;
+	}
+
+	&__close {
+		background-color: transparent;
+		border: none;
+		padding: 0;
+		margin: 0;
+		cursor: pointer;
+		font-size: 24px;
+		color: $bb-icon-secondary-color;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		transition: color 0.2s ease;
+	}
+
+	&__content {
+		padding: 24px;
+		min-height: 120px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+
+	&__status {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		text-align: center;
+
+		p {
+			margin: 16px 0 0 0;
+			font-size: 14px;
+			line-height: 20px;
+			color: $bb-text-secondary-color;
+			word-break: break-word;
+
+			svg {
+				vertical-align: middle;
+				margin: 0 0 0 8px;
+			}
+		}
+
+		i {
+			color: $bb-icon-secondary-color;
+			font-size: 48px;
+			line-height: 1;
+			display: inline-block;
+		}
+
+		&--success {
+
+			i {
+				color: $bb-icon-positive-primary-color;
+				font-weight: 500;
+			}
+		}
+
+		&--error {
+
+			i {
+				color: $bb-icon-danger-color;
+				font-weight: 500;
+			}
+		}
+	}
+
+	&__footer {
+		display: flex;
+		align-items: center;
+		justify-content: flex-end;
+		gap: 12px;
+		padding: 16px 24px;
+		border-top: 1px solid #e5e5e5;
+	}
+
+	&__btn {
+		@include bb-button-secondary;
+		cursor: pointer;
+
+		&--primary {
+			@include bb-button-primary;
+		}
+	}
+}
+
+.bb-admin-verify-field {
+
+	&__btn {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		gap: 6px;
+		padding: 8px 16px;
+		font-size: 14px;
+		font-weight: 500;
+		line-height: 20px;
+		border-radius: $bb-border-radius-lg;
+		border: 1px solid transparent;
+		cursor: pointer;
+		transition: all 0.2s ease;
+
+		&:disabled {
+			opacity: 0.6;
+			cursor: not-allowed;
+		}
+
+		/* Primary button (Connect) */
+		&--primary {
+			color: #fff;
+			background-color: $bb-background-brand-primary-color;
+			border-color: $bb-background-brand-primary-color;
+
+			&:hover:not(:disabled),
+			&:focus:not(:disabled) {
+				background-color: darken( $bb-background-brand-primary-color, 8% );
+				border-color: darken( $bb-background-brand-primary-color, 8% );
+				box-shadow: none;
+			}
+
+			&:active:not(:disabled) {
+				background-color: darken( $bb-background-brand-primary-color, 12% );
+				border-color: darken( $bb-background-brand-primary-color, 12% );
+			}
+		}
+
+		/* Secondary button (Disconnect) */
+		&--secondary {
+			color: $bb-text-color;
+			background-color: transparent;
+			border-color: $bb-border-secondary-color;
+
+			&:hover:not(:disabled),
+			&:focus:not(:disabled) {
+				background-color: $bb-background-primary-color;
+				border-color: $bb-border-tertiary-color;
+				box-shadow: none;
+			}
+
+			&:active:not(:disabled) {
+				background-color: $bb-background-tertiary-color;
+				border-color: $bb-border-quaternary-color;
+			}
+		}
+	}
+}
+
+@keyframes spin {
+	0% {
+		transform: rotate(0deg);
+	}
+	100% {
+		transform: rotate(360deg);
+	}
+}

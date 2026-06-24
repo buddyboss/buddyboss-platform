@@ -33,6 +33,12 @@ $is_send_ajax_request = bb_is_send_ajax_request();
 
 		// Home/Media.
 		case 'my-media':
+			/**
+			 * Fires before the display of the media list.
+			 *
+			 * @since BuddyBoss 2.15.2
+			 */
+			bp_nouveau_member_hook( 'before', 'rl_stream_media_content' );
 			?>
 			<div class="bb-rl-media-stream">
 				<?php
@@ -52,6 +58,13 @@ $is_send_ajax_request = bb_is_send_ajax_request();
 			</div>
 			<?php
 			bp_nouveau_member_hook( 'after', 'media_content' );
+
+			/**
+			 * Fires after the display of the media list.
+			 *
+			 * @since BuddyBoss 2.15.2
+			 */
+			bp_nouveau_member_hook( 'after', 'rl_stream_media_content' );
 			break;
 
 		// Home/Media/Albums.

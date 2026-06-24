@@ -57,6 +57,7 @@ function bp_activity_action_spam_activity( $activity_id = 0 ) {
 
 	// Mark as spam.
 	bp_activity_mark_as_spam( $activity );
+	$activity->title_required = false;
 	$activity->save();
 
 	// Tell the user the spamming has been successful.

@@ -542,7 +542,11 @@ function bp_document_add( $args = '' ) {
 		$document->privacy = $r['privacy'];
 	} elseif ( ! empty( $document->group_id ) ) {
 		$document->privacy = 'grouponly';
-		if ( ! empty( $document->activity_id ) ) {
+		// `BP_Activity_Activity` is loaded by the activity component and is
+		// NOT in the always-on autoload list. Guard against fatals when
+		// activity is deactivated but a group document upload still
+		// references an activity_id. Mirrors the gating in bp_media_add().
+		if ( ! empty( $document->activity_id ) && bp_is_active( 'activity' ) ) {
 			$activity = new BP_Activity_Activity( $document->activity_id );
 			if ( ! empty( $activity ) && 'activity_comment' === $activity->type ) {
 				$document->privacy = $r['privacy'];
@@ -1242,7 +1246,17 @@ function folders_check_folder_access( $folder_id ) {
 			return true;
 		}
 
-		if ( is_user_logged_in() && 'friends' === $folder->privacy && friends_check_friendship( get_current_user_id(), $folder->user_id ) ) {
+		// `friends_check_friendship()` is loaded by the friends component.
+		// A folder previously set to "friends only" privacy can outlive a
+		// friends deactivation — gate the call so access falls through to
+		// the default (deny) instead of fatalling on the missing function.
+		if (
+			is_user_logged_in() &&
+			'friends' === $folder->privacy &&
+			bp_is_active( 'friends' ) &&
+			function_exists( 'friends_check_friendship' ) &&
+			friends_check_friendship( get_current_user_id(), $folder->user_id )
+		) {
 			return true;
 		}
 
@@ -1493,9 +1507,19 @@ function bp_document_upload() {
 	$extension = bp_document_extension( $attachment->ID );
 	$svg_icon  = bp_document_svg_icon( $extension, $attachment->ID );
 
+	/**
+	 * Filter the attachment URL for document.
+	 *
+	 * @since BuddyBoss 2.15.0
+	 *
+	 * @param string $attachment_url Attachment URL for document.
+	 * @param int    $attachment_id Attachment ID.
+	 */
+	$attachment_url = apply_filters( 'bb_document_get_attachment_url', untrailingslashit( $attachment_url ), $attachment->ID );
+
 	$result = array(
 		'id'                => (int) $attachment->ID,
-		'url'               => esc_url( untrailingslashit( $attachment_url ) ),
+		'url'               => esc_url( $attachment_url ),
 		'name'              => esc_attr( pathinfo( basename( $attachment_file ), PATHINFO_FILENAME ) ),
 		'full_name'         => esc_attr( basename( $attachment_file ) ),
 		'type'              => esc_attr( 'document' ),
@@ -2140,9 +2164,11 @@ function bp_document_user_document_folder_tree_view_li_html( $user_id = 0, $grou
 	}
 
 	if ( 'group' === $type && ! $group_id ) {
-		$group_id               = $id;
-		$documents_folder_query = $wpdb->prepare( "SELECT * FROM {$document_folder_table} WHERE group_id = %d ORDER BY id DESC", $group_id );
-	} elseif ( 'group' === $type && $group_id ) {
+		$group_id = $id;
+	}
+
+	if ( $group_id > 0 ) {
+		// Query by group_id only to get all group folders.
 		$documents_folder_query = $wpdb->prepare( "SELECT * FROM {$document_folder_table} WHERE group_id = %d ORDER BY id DESC", $group_id );
 	} else {
 		$documents_folder_query = $wpdb->prepare( "SELECT * FROM {$document_folder_table} WHERE user_id = %d AND group_id = %d ORDER BY id DESC", $user_id, $group_id );
@@ -2207,7 +2233,21 @@ function bp_document_folder_recursive_li_list( $array, $first = false ) {
 	}
 
 	foreach ( $array as $item ) {
-		$output .= '<li data-id="' . esc_attr( $item['id'] ) . '" data-privacy="' . esc_attr( $item['privacy'] ) . '"><span id="' . esc_attr( $item['id'] ) . '" data-id="' . esc_attr( $item['id'] ) . '">' . stripslashes( $item['title'] ) . '</span>' . bp_document_folder_recursive_li_list( $item['children'], true ) . '</li>';
+		$folder_id = isset( $item['id'] ) ? (int) $item['id'] : 0;
+
+		/**
+		 * Filters the folder title in the folder tree list (move popup).
+		 *
+		 * @since BuddyBoss 2.18.0
+		 *
+		 * @param string $title     The folder title.
+		 * @param int    $folder_id The folder ID.
+		 */
+		$folder_title = apply_filters( 'bb_document_folder_tree_item_title', $item['title'], $folder_id );
+
+		if ( ! empty( $folder_title ) ) {
+			$output .= '<li data-id="' . esc_attr( $item['id'] ) . '" data-privacy="' . esc_attr( $item['privacy'] ) . '"><span id="' . esc_attr( $item['id'] ) . '" data-id="' . esc_attr( $item['id'] ) . '">' . esc_html( stripslashes( $folder_title ) ) . '</span>' . bp_document_folder_recursive_li_list( $item['children'], true ) . '</li>';
+		}
 	}
 	$output .= '</ul>';
 
@@ -2262,7 +2302,21 @@ function bp_document_folder_bradcrumb( $folder_id ) {
 			$data  = array_slice( $data, - 3 );
 		}
 		foreach ( $data as $element ) {
-			$link     = '';
+
+			/**
+			 * Filters the breadcrumb element data before rendering.
+			 *
+			 * @since BuddyBoss 2.18.0
+			 *
+			 * @param array $element The breadcrumb element containing folder data.
+			 */
+			$element = apply_filters( 'bb_document_folder_breadcrumb_element', $element );
+
+			// Skip if an element is empty or missing required data.
+			if ( empty( $element ) || ! isset( $element['id'], $element['group_id'], $element['title'] ) ) {
+				continue;
+			}
+
 			$group_id = (int) $element['group_id'];
 			if ( 0 === $group_id ) {
 				$link = bp_displayed_user_domain() . bp_get_document_slug() . '/folders/' . $element['id'];
@@ -2270,7 +2324,7 @@ function bp_document_folder_bradcrumb( $folder_id ) {
 				$group = groups_get_group( array( 'group_id' => $group_id ) );
 				$link  = bp_get_group_permalink( $group ) . bp_get_document_slug() . '/folders/' . $element['id'];
 			}
-			$html .= '<li> <a href=" ' . $link . ' ">' . stripslashes( $element['title'] ) . '</a></li>';
+			$html .= '<li> <a href=" ' . $link . ' ">' . esc_html( stripslashes( $element['title'] ) ) . '</a></li>';
 		}
 		$html .= '</ul>';
 	}
@@ -2370,6 +2424,7 @@ function bp_document_move_document_to_folder( $document_id = 0, $folder_id = 0, 
 					$activity->hide_sitewide     = ( 'groups' === $activity->component && ( 'hidden' === $status || 'private' === $status ) ) ? 1 : 0;
 					$activity->secondary_item_id = 0;
 					$activity->privacy           = $destination_privacy;
+					$activity->title_required    = false;
 					$activity->save();
 				}
 
@@ -2426,7 +2481,8 @@ function bp_document_move_document_to_folder( $document_id = 0, $folder_id = 0, 
 						bp_activity_delete( array( 'id' => $need_delete ) );
 
 						// Update parent activity privacy to destination privacy.
-						$parent_activity->privacy = $destination_privacy;
+						$parent_activity->privacy        = $destination_privacy;
+						$parent_activity->title_required = false;
 						$parent_activity->save();
 
 					} elseif ( count( $parent_activity_document_ids ) > 1 ) {
@@ -2442,6 +2498,7 @@ function bp_document_move_document_to_folder( $document_id = 0, $folder_id = 0, 
 							$activity->hide_sitewide     = ( 'groups' === $activity->component && ( 'hidden' === $status || 'private' === $status ) ) ? 1 : 0;
 							$activity->secondary_item_id = 0;
 							$activity->privacy           = $destination_privacy;
+							$activity->title_required    = false;
 							$activity->save();
 
 							bp_activity_update_meta( (int) $child_activity_id, 'bp_document_ids', $document_id );
@@ -2679,7 +2736,19 @@ function bp_document_rename_file( $document_id = 0, $attachment_document_id = 0,
 	// Delete symlink before renaming the main file.
 	bp_document_delete_symlinks( $document_id );
 
-	if ( ! @rename( $file_abs_path, $new_file_abs_path ) ) {
+	/**
+	 * Filters the force bypass rename.
+	 *
+	 * @since BuddyBoss 2.15.0
+	 *
+	 * @param bool   $force_bypass           Force bypass rename.
+	 * @param int    $document_id            Document ID.
+	 * @param int    $attachment_document_id Attachment document ID.
+	 * @param string $file_abs_path          File absolute path.
+	 * @param string $new_file_abs_path      New file absolute path.
+	 */
+	$force_bypass = apply_filters( 'bb_document_force_bypass_rename', false, $document_id, $attachment_document_id, $file_abs_path, $new_file_abs_path );
+	if ( ! $force_bypass && ! @rename( $file_abs_path, $new_file_abs_path ) ) {
 		return __( 'File renaming error!', 'buddyboss' );
 	}
 
@@ -2927,7 +2996,8 @@ function bp_document_move_folder_to_folder( $folder_id, $destination_folder_id, 
 				if ( ! empty( $activity_id ) && bp_is_active( 'activity' ) ) {
 					$activity = new BP_Activity_Activity( (int) $activity_id );
 					if ( bp_activity_user_can_delete( $activity ) ) {
-						$activity->privacy = $destination_privacy;
+						$activity->privacy        = $destination_privacy;
+						$activity->title_required = false;
 						$activity->save();
 					}
 				}
@@ -2962,7 +3032,8 @@ function bp_document_move_folder_to_folder( $folder_id, $destination_folder_id, 
 					if ( ! empty( $activity_id ) && bp_is_active( 'activity' ) ) {
 						$activity = new BP_Activity_Activity( (int) $activity_id );
 						if ( bp_activity_user_can_delete( $activity ) ) {
-							$activity->privacy = $destination_privacy;
+							$activity->privacy        = $destination_privacy;
+							$activity->title_required = false;
 							$activity->save();
 						}
 					}
@@ -3035,7 +3106,8 @@ function bp_document_update_privacy( $document_id = 0, $privacy = '', $type = 'f
 							if ( ! empty( $activity_id ) && bp_is_active( 'activity' ) ) {
 								$activity = new BP_Activity_Activity( (int) $activity_id );
 								if ( bp_activity_user_can_delete( $activity ) ) {
-									$activity->privacy = $privacy;
+									$activity->privacy        = $privacy;
+									$activity->title_required = false;
 									$activity->save();
 								}
 							}
@@ -3060,7 +3132,8 @@ function bp_document_update_privacy( $document_id = 0, $privacy = '', $type = 'f
 					if ( ! empty( $activity_id ) && bp_is_active( 'activity' ) ) {
 						$activity = new BP_Activity_Activity( (int) $activity_id );
 						if ( bp_activity_user_can_delete( $activity ) ) {
-							$activity->privacy = $privacy;
+							$activity->privacy        = $privacy;
+							$activity->title_required = false;
 							$activity->save();
 						}
 					}
@@ -3088,7 +3161,8 @@ function bp_document_update_privacy( $document_id = 0, $privacy = '', $type = 'f
 			if ( bp_is_active( 'activity' ) && ! empty( $activity_id ) ) {
 				$activity = new BP_Activity_Activity( (int) $activity_id );
 				if ( bp_activity_user_can_delete( $activity ) ) {
-					$activity->privacy = $privacy;
+					$activity->privacy        = $privacy;
+					$activity->title_required = false;
 					$activity->save();
 				}
 			}
@@ -4325,11 +4399,16 @@ function bp_document_generate_code_previews( $attachment_id ) {
 			$file_name     = basename( $absolute_path );
 			$extension_pos = strrpos( $file_name, '.' ); // find position of the last dot, so where the extension starts.
 			$thumb         = substr( $file_name, 0, $extension_pos ) . '_thumb' . substr( $file_name, $extension_pos );
-			copy( $absolute_path, $preview_folder . '/' . $thumb );
+			if ( file_exists( $absolute_path ) ) {
+				copy( $absolute_path, $preview_folder . '/' . $thumb );
+			}
 
 		}
 
-		$files      = scandir( $preview_folder );
+		$files = scandir( $preview_folder );
+		if ( empty( $files ) ) {
+			return false;
+		}
 		$first_file = $preview_folder . '/' . $files[2];
 		bp_document_chmod_r( $preview_folder );
 
@@ -5268,11 +5347,40 @@ function bb_document_get_activity_document( $activity = '', $args = array() ) {
 		'per_page' => 0,
 	);
 
-	// Update privacy for the group and comments.
-	if ( bp_is_active( 'groups' ) && bp_is_group() && bp_is_group_document_support_enabled() ) {
-		$document_args['privacy'] = array( 'grouponly' );
+	// Determine if this is a group context.
+	// For activity comments, check the parent activity's component to ensure
+	// documents attached to group activity comments inherit group privacy.
+	$is_group_context = false;
+
+	if ( 'activity_comment' === $activity->type && ! empty( $activity->item_id ) ) {
+		$parent_activity = new BP_Activity_Activity( $activity->item_id );
+		if ( bp_is_active( 'groups' ) && ! empty( $parent_activity->component ) ) {
+			$is_group_context = 'groups' === $parent_activity->component;
+		}
+	} else {
+		$is_group_context = bp_is_active( 'groups' ) && 'groups' === $activity->component;
+	}
+
+	// Update privacy based on context.
+	if ( $is_group_context ) {
+		if ( bp_is_group_document_support_enabled() ) {
+			$document_args['privacy'] = array( 'grouponly' );
+			if ( 'activity_comment' === $activity->type ) {
+				$document_args['privacy'][] = 'comment';
+			}
+		} else {
+			$document_args['privacy'] = array( '0' );
+		}
+	} else {
+		// For activity feed activities, use bp_document_query_privacy.
+		$document_args['privacy'] = bp_document_query_privacy( $activity->user_id, 0, $activity->component );
+
 		if ( 'activity_comment' === $activity->type ) {
 			$document_args['privacy'][] = 'comment';
+		}
+
+		if ( ! bp_is_profile_document_support_enabled() ) {
+			$document_args['user_id'] = 'null';
 		}
 	}
 

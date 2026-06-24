@@ -142,6 +142,7 @@ class Activity extends BuddypressCommand {
 			array(
 				'action'            => $r['action'],
 				'content'           => $r['content'],
+				'title_required'    => false,
 				'component'         => $r['component'],
 				'type'              => $r['type'],
 				'primary_link'      => $r['primary-link'],
@@ -490,6 +491,7 @@ class Activity extends BuddypressCommand {
 		// Mark as spam.
 		bp_activity_mark_as_spam( $activity );
 
+		$activity->title_required = false;
 		if ( $activity->save() ) {
 			WP_CLI::success( 'Activity marked as spam.' );
 		} else {
@@ -525,6 +527,7 @@ class Activity extends BuddypressCommand {
 		// Mark as ham.
 		bp_activity_mark_as_ham( $activity );
 
+		$activity->title_required = false;
 		if ( $activity->save() ) {
 			WP_CLI::success( 'Activity marked as ham.' );
 		} else {
@@ -562,8 +565,9 @@ class Activity extends BuddypressCommand {
 		// Post the activity update.
 		$id = bp_activity_post_update(
 			array(
-				'content' => $assoc_args['content'],
-				'user_id' => $user->ID,
+				'content'        => $assoc_args['content'],
+				'user_id'        => $user->ID,
+				'title_required' => false,
 			)
 		);
 

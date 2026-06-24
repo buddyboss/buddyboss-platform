@@ -1470,11 +1470,28 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 				continue;
 			}
 
-			if ( ! isset( $f->filter ) ) {
+			if ( ! isset( $f->filter ) || ! is_callable( $f->search ) ) {
 				continue;
 			}
-			if ( ! is_callable( $f->search ) ) {
-				continue;
+
+			// Skip if value is an array and all values (recursively) are empty or 0.
+			if ( is_array( $f->value ) ) {
+				$has_non_empty_value = false;
+				array_walk_recursive(
+					$f->value,
+					function( $v ) use ( &$has_non_empty_value ) {
+						if ( $has_non_empty_value ) {
+							return;
+						}
+						if ( ! empty( $v ) ) { // treats '', null, 0, '0', false as empty
+							$has_non_empty_value = true;
+						}
+					}
+				);
+
+				if ( ! $has_non_empty_value ) {
+					continue;
+				}
 			}
 
 			$f = apply_filters( 'bp_ps_field_before_query', $f );

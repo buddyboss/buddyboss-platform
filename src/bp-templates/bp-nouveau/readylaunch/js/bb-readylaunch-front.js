@@ -7,7 +7,8 @@ window.bp = window.bp || {};
 	function ( exports, $ ) {
 
 		var bpNouveauLocal    = BP_Nouveau,
-			bbRlIsAs3cfActive = bpNouveauLocal.bbRlIsAs3cfActive,
+			bbRlIsAs3cfActive = bpNouveauLocal.is_as3cf_active,
+			bbRlIsOmActive    = bpNouveauLocal.is_om_active,
 			bbRlMedia         = bpNouveauLocal.media,
 			bbRlAjaxUrl       = bpNouveauLocal.ajaxurl,
 			bbRlNonce         = bpNouveauLocal.nonces;
@@ -59,6 +60,7 @@ window.bp = window.bp || {};
 				$document.on( 'click', '.action-delete', this.markNotificationDelete.bind( this ) );
 				$document.on( 'click', '.bb-rl-header-container .header-aside .user-link', this.profileNav.bind( this ) );
 				$document.on( 'click', '.bb-rl-header-search', this.searchModelToggle.bind( this ) );
+				$document.on( 'click', '.bb-rl-profile-list-item--after', this.toggleProfileListItem.bind( this ) );
 			},
 
 			profileNav: function ( e ) {
@@ -71,6 +73,21 @@ window.bp = window.bp || {};
 				e.preventDefault();
 
 				$( '#bb-rl-network-search-modal' ).removeClass( 'bp-hide' );
+			},
+
+			/**
+			 * Toggle profile list item active state
+			 */
+			toggleProfileListItem: function ( e ) {
+				e.preventDefault();
+				e.stopPropagation();
+
+				var $clickedAfter = $( e.currentTarget );
+				var $currentItem = $clickedAfter.closest( '.bb-rl-profile-list-item' );
+
+				$( '.bb-rl-profile-list-item' ).not( $currentItem ).removeClass( 'active' );
+
+				$currentItem.toggleClass( 'active' );
 			},
 
 			/**
@@ -114,24 +131,16 @@ window.bp = window.bp || {};
 
 			initSelect2Filters: function () {
 				var self = this;
-				var maxRetries = 3;
+				var maxRetries = 10;
 				var retryCount = 0;
+				var retryDelay = 200;
 
 				function tryInitSelect2() {
-					// Check if document is ready
-					if ( document.readyState !== 'complete' ) {
-						if ( retryCount < maxRetries ) {
-							retryCount++;
-							setTimeout( tryInitSelect2, 500 );
-						}
-						return;
-					}
-
 					// Check if select2 library is available
 					if ( typeof $.fn.select2 === 'undefined' ) {
 						if ( retryCount < maxRetries ) {
 							retryCount++;
-							setTimeout( tryInitSelect2, 500 );
+							setTimeout( tryInitSelect2, retryDelay );
 						}
 						return;
 					}
@@ -141,7 +150,7 @@ window.bp = window.bp || {};
 					if ( $selects.length === 0 ) {
 						if ( retryCount < maxRetries ) {
 							retryCount++;
-							setTimeout( tryInitSelect2, 500 );
+							setTimeout( tryInitSelect2, retryDelay );
 						}
 						return;
 					}
@@ -150,9 +159,17 @@ window.bp = window.bp || {};
 					self.gridListFilter();
 				}
 
-				// Start the initialization process
+				// Start the initialization process when document is ready.
 				$( document ).ready( function () {
 					tryInitSelect2();
+				} );
+
+				// Reinitialize select2 after AJAX requests complete (for dynamically loaded content).
+				$( document ).ajaxComplete( function () {
+					// Use a small delay to ensure DOM is updated.
+					setTimeout( function () {
+						self.initSelect2Scoped( $( document ) );
+					}, 100 );
 				} );
 			},
 
@@ -208,6 +225,76 @@ window.bp = window.bp || {};
 						);
 					}
 				);
+			},
+
+			/**
+			 * Initialize select2 for .bb-rl-filter select elements within a container.
+			 * This is a utility function that can be called when modals or popups are opened
+			 * to ensure select2 is properly initialized on dynamically visible elements.
+			 *
+			 * @param {jQuery|string} $container - jQuery object or selector for the container element
+			 */
+			initSelect2Scoped: function ( $container ) {
+				if ( 'undefined' === typeof $ ) {
+					$ = jQuery;
+				}
+
+				if ( 'string' === typeof $container ) {
+					$container = $( $container );
+				}
+
+				if ( 'undefined' === typeof $.fn.select2 || ! $container.length ) {
+					return;
+				}
+
+				$container.find( '.bb-rl-filter select' ).each( function () {
+					var $selectEl = $( this );
+
+					// Skip if already initialized.
+					if ( $selectEl.hasClass( 'select2-hidden-accessible' ) ) {
+						return;
+					}
+
+					// Skip elements inside hidden containers (they should be initialized when shown).
+					if ( ! $selectEl.is( ':visible' ) ) {
+						return;
+					}
+
+					var customClass = '';
+
+					if ( $selectEl.data( 'bb-caret' ) ) {
+						customClass += ' bb-rl-caret-icon ';
+					}
+					if ( $selectEl.data( 'bb-icon' ) ) {
+						customClass += ' bb-rl-has-icon ';
+						customClass += ' ' + $selectEl.data( 'bb-icon' ) + ' ';
+					}
+					if ( $selectEl.data( 'bb-border' ) === 'rounded' ) {
+						customClass += ' bb-rl-rounded-border ';
+					}
+					if ( $selectEl.data( 'dropdown-align' ) ) {
+						customClass += ' bb-rl-align-adaptive ';
+					}
+
+					$selectEl.select2( {
+						theme: 'rl',
+						dropdownParent: $selectEl.parent()
+					} );
+
+					$selectEl.next( '.select2-container' ).find( '.select2-selection' ).addClass( 'bb-rl-select2-container' + customClass );
+
+					$selectEl.on( 'select2:open', function () {
+						var $this = $( this ),
+							customDropDownClass = '';
+
+						if ( $this.data( 'dropdown-align' ) ) {
+							customDropDownClass += ' bb-rl-dropdown-align-adaptive ';
+						}
+
+						$( '.select2-dropdown' ).addClass( 'bb-rl-select2-dropdown' );
+						$this.closest( '.bb-rl-filter' ).find( '.bb-rl-select2-dropdown' ).addClass( customDropDownClass );
+					} );
+				} );
 			},
 
 			styledSelect: function () {
@@ -704,6 +791,17 @@ window.bp = window.bp || {};
 						function ( file, xhr, formData ) {
 							formData.append( 'action', actionName );
 							formData.append( '_wpnonce', bbRlNonce[ nonceName ] );
+							
+							var forumId = 0;
+							if ( $('#bbp_forum_id' ).length ) {
+								forumId = $('#bbp_forum_id').val();
+							}
+							formData.append( 'bbp_forum_id', forumId );
+							var topicId = 0;
+							if ( $('#bbp_topic_id' ).length ) {
+								topicId = $('#bbp_topic_id').val();
+							}
+							formData.append('bbp_topic_id', topicId);
 
 							var toolBox = view.$el.parents( parentSelector );
 							otherButtonSelectors.forEach(
@@ -720,7 +818,11 @@ window.bp = window.bp || {};
 					dropzone.on(
 						'success',
 						function ( file, response ) {
-							if ( response.data.id ) {
+							if ( 'video' === mediaType && true === file.upload.chunked ) {
+								// convert file.xhr.response string to object.
+								response = JSON.parse( file.xhr.response );
+							}
+							if ( response.data && response.data.id ) {
 								if ( 'activity' === ActiveComponent ) {
 									// Privacy and metadata handling.
 									if ( ! bp.privacyEditable ) {
@@ -819,6 +921,24 @@ window.bp = window.bp || {};
 							if ( 'activity' === ActiveComponent ) {
 								if ( bp.draft_activity.allow_delete_media ) {
 									// Remove logic for media items.
+									if ( view[ modelKey ] && view[ modelKey ].length ) {
+										for ( var i in view[ modelKey ] ) {
+											if ( file.id === view[ modelKey ][i].id ) {
+												if ( ! _.isUndefined( view[ modelKey ][i].saved ) && ! view[ modelKey ][i].saved ) {
+													bp.Nouveau.Media.removeAttachment( file.id );
+												}
+											} else if ( file[ mediaType + '_edit_data' ] ) {
+												// Removed medias after draft is restored.
+												var attachment_id = file[ mediaType + '_edit_data' ].id;
+												if ( attachment_id === view[ modelKey ][i].id ) {
+													if ( ! _.isUndefined( view[ modelKey ][i].saved ) && ! view[ modelKey ][i].saved ) {
+														bp.Nouveau.Media.removeAttachment( attachment_id );
+													}
+												}
+											}
+										}
+									}
+
 									view[ modelKey ] = view[ modelKey ].filter(
 										function ( mediaItem ) {
 											return file.id !== mediaItem.id &&
@@ -954,7 +1074,9 @@ window.bp = window.bp || {};
 
 								// Handle thumbnails for media files.
 								if ( 'media' === fileType ) {
-									if ( 'undefined' !== typeof bbRlIsAs3cfActive && '1' === bbRlIsAs3cfActive ) {
+									var isAs3cfActive = 'undefined' !== typeof bbRlIsAs3cfActive && '1' === bbRlIsAs3cfActive;
+									var isOmActive    = 'undefined' !== typeof bbRlIsOmActive && '1' === bbRlIsOmActive;
+									if ( isAs3cfActive || isOmActive ) {
 										$( dropzoneObj.files[index].previewElement ).find( 'img' ).attr( 'src', file.thumb );
 										dropzoneObj.emit( 'thumbnail', file.thumb );
 									} else {

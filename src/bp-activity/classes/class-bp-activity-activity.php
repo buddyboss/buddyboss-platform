@@ -86,6 +86,14 @@ class BP_Activity_Activity {
 	var $action;
 
 	/**
+	 * The post title of the activity item.
+	 *
+	 * @since BuddyBoss 2.13.0
+	 * @var string
+	 */
+	var $post_title;
+
+	/**
 	 * The content of the activity item.
 	 *
 	 * @since BuddyPress 1.2.0
@@ -238,6 +246,7 @@ class BP_Activity_Activity {
 		$this->component         = $row->component;
 		$this->type              = $row->type;
 		$this->action            = $row->action;
+		$this->post_title        = ! empty( $row->post_title ) ? $row->post_title : '';
 		$this->content           = $row->content;
 		$this->date_recorded     = $row->date_recorded;
 		$this->date_updated      = $row->date_updated;
@@ -278,6 +287,7 @@ class BP_Activity_Activity {
 		$this->component         = apply_filters_ref_array( 'bp_activity_component_before_save', array( $this->component, &$this ) );
 		$this->type              = apply_filters_ref_array( 'bp_activity_type_before_save', array( $this->type, &$this ) );
 		$this->action            = ! empty( $this->action ) ? apply_filters_ref_array( 'bp_activity_action_before_save', array( $this->action, &$this ) ) : '';
+		$this->post_title        = ! empty( $this->post_title ) ? apply_filters_ref_array( 'bb_activity_post_title_before_save', array( $this->post_title, &$this ) ) : '';
 		$this->content           = ! empty( $this->content ) ? apply_filters_ref_array( 'bp_activity_content_before_save', array( $this->content, &$this ) ) : '';
 		$this->date_recorded     = apply_filters_ref_array( 'bp_activity_date_recorded_before_save', array( $this->date_recorded, &$this ) );
 		$this->date_updated      = apply_filters_ref_array( 'bp_activity_date_updated_before_save', array( $this->date_updated, &$this ) );
@@ -287,6 +297,7 @@ class BP_Activity_Activity {
 		$this->is_spam           = apply_filters_ref_array( 'bp_activity_is_spam_before_save', array( $this->is_spam, &$this ) );
 		$this->privacy           = apply_filters_ref_array( 'bp_activity_privacy_before_save', array( $this->privacy, &$this ) );
 		$this->status            = apply_filters_ref_array( 'bb_activity_status_before_save', array( $this->status, &$this ) );
+		$this->title_required    = isset( $this->title_required ) ? apply_filters_ref_array( 'bb_activity_title_required_before_save', array( $this->title_required, &$this ) ) : bb_is_activity_post_title_enabled();
 
 		/**
 		 * Fires before the current activity item gets saved.
@@ -317,16 +328,23 @@ class BP_Activity_Activity {
 			}
 		}
 
-		$prev_activity_status = '';
+		if ( $this->title_required ) {
+			$validate_post_title = bb_validate_activity_post_title( $this->post_title, $this );
+			if ( ! $validate_post_title['valid'] ) {
+				$this->errors->add( 'bb_activity_invalid_post_title', $validate_post_title['message'] );
+				return $this->errors;
+			}
+			$this->post_title = bb_activity_strip_post_title( $this->post_title );
+		}
 
+		$prev_activity_status = '';
 		// If we have an existing ID, update the activity item, otherwise insert it.
 		if ( ! empty( $this->id ) ) {
-
 			$prev_activity_status = self::bb_get_activity_status( $this->id );
 
-			$q = $wpdb->prepare( "UPDATE {$bp->activity->table_name} SET user_id = %d, component = %s, type = %s, action = %s, content = %s, primary_link = %s, date_recorded = %s, date_updated = %s, item_id = %d, secondary_item_id = %d, hide_sitewide = %d, is_spam = %d, privacy = %s, status = %s WHERE id = %d", $this->user_id, $this->component, $this->type, $this->action, $this->content, $this->primary_link, $this->date_recorded, $this->date_updated, $this->item_id, $this->secondary_item_id, $this->hide_sitewide, $this->is_spam, $this->privacy, $this->status, $this->id );
+			$q = $wpdb->prepare( "UPDATE {$bp->activity->table_name} SET user_id = %d, component = %s, type = %s, action = %s, post_title = %s, content = %s, primary_link = %s, date_recorded = %s, date_updated = %s, item_id = %d, secondary_item_id = %d, hide_sitewide = %d, is_spam = %d, privacy = %s, status = %s WHERE id = %d", $this->user_id, $this->component, $this->type, $this->action, $this->post_title, $this->content, $this->primary_link, $this->date_recorded, $this->date_updated, $this->item_id, $this->secondary_item_id, $this->hide_sitewide, $this->is_spam, $this->privacy, $this->status, $this->id );
 		} else {
-			$q = $wpdb->prepare( "INSERT INTO {$bp->activity->table_name} ( user_id, component, type, action, content, primary_link, date_recorded, date_updated, item_id, secondary_item_id, hide_sitewide, is_spam, privacy, status ) VALUES ( %d, %s, %s, %s, %s, %s, %s, %s, %d, %d, %d, %d, %s, %s )", $this->user_id, $this->component, $this->type, $this->action, $this->content, $this->primary_link, $this->date_recorded, $this->date_updated, $this->item_id, $this->secondary_item_id, $this->hide_sitewide, $this->is_spam, $this->privacy, $this->status );
+			$q = $wpdb->prepare( "INSERT INTO {$bp->activity->table_name} ( user_id, component, type, action, post_title, content, primary_link, date_recorded, date_updated, item_id, secondary_item_id, hide_sitewide, is_spam, privacy, status ) VALUES ( %d, %s, %s, %s, %s, %s, %s, %s, %s, %d, %d, %d, %d, %s, %s )", $this->user_id, $this->component, $this->type, $this->action, $this->post_title, $this->content, $this->primary_link, $this->date_recorded, $this->date_updated, $this->item_id, $this->secondary_item_id, $this->hide_sitewide, $this->is_spam, $this->privacy, $this->status );
 		}
 
 		if ( false === $wpdb->query( $q ) ) {
@@ -474,6 +492,32 @@ class BP_Activity_Activity {
 		// Excluded types.
 		$excluded_types = array();
 
+		if (
+			! empty( $r['scope'] ) &&
+			'unanswered' === $r['scope']
+		) {
+			if ( bb_is_rest() ) {
+				global $bb_rest_request;
+				$r['scope'] = BP_REST_Activity_Endpoint::bp_rest_activity_default_scope(
+					'all',
+					( $bb_rest_request['user_id'] ? $bb_rest_request['user_id'] : 0 ),
+					( $bb_rest_request['group_id'] ? $bb_rest_request['group_id'] : 0 ),
+					isset( $bb_rest_request['component'] ) ? $bb_rest_request['component'] : '',
+					( $bb_rest_request['primary_id'] ? $bb_rest_request['primary_id'] : 0 )
+				);
+			} else {
+				$r['scope'] = bp_activity_default_scope();
+			}
+
+			// Ensure filter array is initialized.
+			if ( ! isset( $r['filter'] ) || ! is_array( $r['filter'] ) ) {
+				$r['filter'] = array();
+			}
+
+			// Set the flag for unanswered activities.
+			$r['filter']['unanswered_only'] = true;
+		}
+
 		// Scope takes precedence.
 		if ( ! empty( $r['scope'] ) ) {
 			$scope_query = self::get_scope_query_sql( $r['scope'], $r );
@@ -516,7 +560,7 @@ class BP_Activity_Activity {
 		// Searching.
 		if ( $r['search_terms'] ) {
 			$search_terms_like              = '%' . bp_esc_like( $r['search_terms'] ) . '%';
-			$where_conditions['search_sql'] = $wpdb->prepare( 'ExtractValue( a.content, "//text()" ) LIKE %s', $search_terms_like );
+			$where_conditions['search_sql'] = $wpdb->prepare( 'ExtractValue( a.content, "//text()" ) LIKE %s OR a.post_title LIKE %s', $search_terms_like, $search_terms_like );
 
 			// Allow search CPT's post title in the activity feed.
 			$join_sql                       .= "LEFT JOIN {$bp->activity->table_name_meta} m ON ( m.activity_id = a.id )";
@@ -1757,7 +1801,22 @@ class BP_Activity_Activity {
 				$sql['select'] = 'SELECT a.id';
 				$sql['from']   = "FROM {$bp->activity->table_name} a";
 				if ( true === $exclude_childrens ) {
-					$sql['where'] = "WHERE a.type = 'activity_comment' {$spam_sql} AND a.secondary_item_id = $activity_id";
+					// When filtering spam (ham_only), also includes orphaned comments.
+					// Orphaned comments are replies to spam comments - they should appear at root level.
+					if ( 'ham_only' === $spam ) {
+						// Get spam comment IDs for this activity to find orphaned comments.
+						$spam_comment_ids = self::get_spam_comment_ids( $activity_id );
+
+						if ( ! empty( $spam_comment_ids ) ) {
+							$spam_ids_list = implode( ',', array_map( 'intval', $spam_comment_ids ) );
+							// Include direct replies OR orphaned comments (replies to spam).
+							$sql['where'] = "WHERE a.type = 'activity_comment' {$spam_sql} AND a.item_id = {$activity_id} AND (a.secondary_item_id = {$activity_id} OR a.secondary_item_id IN ({$spam_ids_list}))";
+						} else {
+							$sql['where'] = "WHERE a.type = 'activity_comment' {$spam_sql} AND a.secondary_item_id = {$activity_id}";
+						}
+					} else {
+						$sql['where'] = "WHERE a.type = 'activity_comment' {$spam_sql} AND a.secondary_item_id = $activity_id";
+					}
 				} else {
 					$sql['where'] = "WHERE a.type = 'activity_comment' {$spam_sql} AND a.item_id = $top_level_parent_id and a.mptt_left > $left AND a.mptt_left < $right";
 				}
@@ -1810,6 +1869,24 @@ class BP_Activity_Activity {
 						// Condition to handle other random order of ID if any.
 						$comparison_eq_op = ( 'DESC' === strtoupper( $args['comment_order_by'] ) ) ? '>=' : '<=';
 
+						// Handle timestamp conversion with proper validation.
+						$last_timestamp = $args['last_comment_timestamp'];
+						if ( is_numeric( $last_timestamp ) ) {
+							// Validate Unix timestamp is positive and not impossibly far in future.
+							$timestamp = (int) $last_timestamp;
+							if ( $timestamp <= 0 ) {
+								$timestamp = time(); // Fallback to current time for invalid timestamps.
+							}
+							$last_timestamp_formatted = date_i18n( 'Y-m-d H:i:s', $timestamp );
+						} else {
+							// Sanitize and validate date string.
+							$timestamp = strtotime( sanitize_text_field( $last_timestamp ) );
+							if ( false === $timestamp || $timestamp <= 0 ) {
+								$timestamp = time(); // Fallback for invalid date strings.
+							}
+							$last_timestamp_formatted = date_i18n( 'Y-m-d H:i:s', $timestamp );
+						}
+
 						$sql['where'] .= $wpdb->prepare(
 							" AND (
 								a.id {$comparison_op} %d
@@ -1820,7 +1897,7 @@ class BP_Activity_Activity {
 							) ",
 							$args['last_comment_id'],
 							$args['last_comment_id'],
-							date_i18n( 'Y-m-d H:i:s', strtotime( $args['last_comment_timestamp'] ) )
+							$last_timestamp_formatted
 						);
 					}
 
@@ -2185,6 +2262,11 @@ class BP_Activity_Activity {
 			}
 		}
 
+		// Show unanswered activities only where clause.
+		if ( ! empty( $filter_array['unanswered_only'] ) && ! apply_filters( 'bb_activity_unanswered_only_remove_sql', false ) ) {
+			$filter_sql[] = "uac.item_id IS NULL";
+		}
+
 		if ( empty( $filter_sql ) ) {
 			return false;
 		}
@@ -2229,7 +2311,9 @@ class BP_Activity_Activity {
 	public static function total_favorite_count( $user_id, $activity_type = 'activity' ) {
 
 		// Get activities from user meta.
-		$favorite_activity_entries = bb_activity_get_user_reacted_item_ids( $user_id, $activity_type );
+		$favorite_activity_entries = function_exists( 'bb_activity_get_user_reacted_item_ids' )
+			? bb_activity_get_user_reacted_item_ids( $user_id, $activity_type )
+			: array();
 		if ( ! empty( $favorite_activity_entries ) ) {
 			return count( $favorite_activity_entries );
 		}
@@ -2356,9 +2440,23 @@ class BP_Activity_Activity {
 		}
 
 		// Select conditions.
+		// When filtering spam (ham_only), also count orphaned comments in top_level_count.
+		// Orphaned comments are replies to spam comments - they should be counted as root level.
+		$top_level_case = 'a.secondary_item_id = ' . $comment_id;
+
+		if ( ! empty( $args['spam'] ) && 'ham_only' === $args['spam'] ) {
+			// Get spam comment IDs for this activity to include orphaned comments in count.
+			$spam_comment_ids = self::get_spam_comment_ids( $comment_id );
+
+			if ( ! empty( $spam_comment_ids ) ) {
+				$spam_ids_list  = implode( ',', array_map( 'intval', $spam_comment_ids ) );
+				$top_level_case = "(a.secondary_item_id = {$comment_id} OR a.secondary_item_id IN ({$spam_ids_list}))";
+			}
+		}
+
 		$select_sql = 'SELECT
 			COUNT(*) AS all_child_count,
-			SUM( CASE WHEN a.secondary_item_id = ' . $comment_id . ' THEN 1 ELSE 0 END ) AS top_level_count';
+			SUM( CASE WHEN ' . $top_level_case . ' THEN 1 ELSE 0 END ) AS top_level_count';
 
 		$from_sql = ' FROM ' . $bp->activity->table_name . ' a';
 
@@ -2438,5 +2536,37 @@ class BP_Activity_Activity {
 		}
 
 		return $status;
+	}
+
+	/**
+	 * Get spam comment IDs for an activity.
+	 *
+	 * Used to identify orphaned comments (non-spam replies to spam comments)
+	 * that should appear at root level when their parent is marked as spam.
+	 *
+	 * @since BuddyBoss 2.21.0
+	 *
+	 * @param int $activity_id The activity ID to get spam comment IDs for.
+	 *
+	 * @return array Array of spam comment IDs.
+	 */
+	private static function get_spam_comment_ids( $activity_id ) {
+		static $cache = array();
+
+		$activity_id = (int) $activity_id;
+
+		if ( ! isset( $cache[ $activity_id ] ) ) {
+			global $wpdb;
+			$bp = buddypress();
+
+			$cache[ $activity_id ] = $wpdb->get_col(
+				$wpdb->prepare(
+					"SELECT id FROM {$bp->activity->table_name} WHERE type = 'activity_comment' AND item_id = %d AND is_spam = 1",
+					$activity_id
+				)
+			);
+		}
+
+		return $cache[ $activity_id ];
 	}
 }

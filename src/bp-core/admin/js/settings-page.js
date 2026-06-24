@@ -1,4 +1,4 @@
-/* global BP_ADMIN, BP_Uploader, BP_Confirm, bp, BBTopicsManager */
+/* global BP_ADMIN, BP_Uploader, BP_Confirm, bp */
 
 window.bp = window.bp || {};
 
@@ -259,23 +259,8 @@ window.bp = window.bp || {};
 				$( '#wpwrap #adminmenumain #adminmenuwrap #adminmenu .toplevel_page_buddyboss-platform ul.wp-submenu-wrap li' ).find( 'a[href*="post_type=forum"]' ).parent().addClass( 'current' );
 			}
 
-			// Set Profile selected on Profile Type post types.
-			if ( $( 'body.buddypress.post-type-bp-member-type' ).length ) {
-				var selectorProfileTypes = $( '#wpwrap #adminmenumain #adminmenuwrap #adminmenu .toplevel_page_buddyboss-platform ul.wp-submenu-wrap li a[href*="bp-profile-setup"]' );
-				$( menuOpen ).removeClass( 'current' );
-				$( selectorProfileTypes ).addClass( 'current' );
-				$( selectorProfileTypes ).attr( 'aria-current','page' );
-				$( '#wpwrap #adminmenumain #adminmenuwrap #adminmenu .toplevel_page_buddyboss-platform ul.wp-submenu-wrap li' ).find( 'a[href*="bp-profile-setup"]' ).parent().addClass( 'current' );
-			}
-
-			// Set Profile selected on Profile Search post types.
-			if ( $( 'body.buddypress.post-type-bp_ps_form' ).length ) {
-				var selectorProfileSearch = $( '#wpwrap #adminmenumain #adminmenuwrap #adminmenu .toplevel_page_buddyboss-platform ul.wp-submenu-wrap li a[href*="bp-profile-setup"]' );
-				$( menuOpen ).removeClass( 'current' );
-				$( selectorProfileSearch ).addClass( 'current' );
-				$( selectorProfileSearch ).attr( 'aria-current','page' );
-				$( '#wpwrap #adminmenumain #adminmenuwrap #adminmenu .toplevel_page_buddyboss-platform ul.wp-submenu-wrap li' ).find( 'a[href*="bp-profile-setup"]' ).parent().addClass( 'current' );
-			}
+			// Legacy menu highlighting for bp-member-type and bp_ps_form CPTs
+			// removed — both CPTs now have show_ui: false and redirect to Settings 2.0.
 
 			// Set Tools selected on Repair Forums Page.
 			if ( $( 'body.buddypress.buddyboss_page_bbp-repair' ).length ) {
@@ -385,52 +370,6 @@ window.bp = window.bp || {};
 				);
 			}
 
-			if ( $( 'body .section-bp_document_settings_extensions' ).length ) {
-
-				$( document ).find( '.nav-settings-subsubsub .subsubsub li.bp-media a' ).addClass( 'current' );
-
-				if ($( 'body .section-bp_document_settings_extensions table tbody tr td table tbody tr td input:checkbox:checked' ).length === $( 'body .section-bp_document_settings_extensions table tbody tr td table tbody tr td input:checkbox' ).length) {
-					$( '#bp_select_extensions' ).prop( 'checked', true );
-				}
-
-				$( '#bp_select_extensions' ).click(
-					function () {
-						var table = $( 'body .section-bp_document_settings_extensions table tbody tr td table tbody tr' );
-						$( 'td input:checkbox', table ).prop( 'checked', this.checked );
-					}
-				);
-
-				$( 'body .section-bp_document_settings_extensions table tbody tr td table tbody tr td input:checkbox' ).click(
-					function () {
-						if ($( 'body .section-bp_document_settings_extensions table tbody tr td table tbody tr td input:checkbox:checked' ).length === $( 'body .section-bp_document_settings_extensions table tbody tr td table tbody tr td input:checkbox' ).length) {
-							$( '#bp_select_extensions' ).prop( 'checked', true );
-						} else {
-							$( '#bp_select_extensions' ).prop( 'checked', false );
-						}
-					}
-				);
-
-				$( 'form' ).submit(
-					function () {
-						var error = false;
-						$( 'body .section-bp_document_settings_extensions table tbody tr td table tbody tr.document-extensions td [type="text"]' ).each(
-							function() {
-								var value = $.trim( $( this ).val() );
-								if ( '' === value ) {
-									$( this ).addClass( 'error' );
-									error = true;
-								} else if ( $( this ). hasClass( 'error' ) ) {
-									$( this ).removeClass( 'error' );
-								}
-							}
-						);
-						if ( error ) {
-							return false;
-						}
-					}
-				);
-			}
-
 			if ( $( '.buddyboss_page_bp-activity' ).length ) {
 					$( document ).on(
 						'click',
@@ -483,49 +422,6 @@ window.bp = window.bp || {};
 								$( this ).text( '(' + $( this ).closest( 'li' ).find( 'ul:first li' ).size() + ')' );
 						}
 					);
-			}
-
-			// As soon as an admin selects the option "Hierarchies - Allow groups to have subgroups" they
-			// should instantly see the option to "Restrict Invitations".
-			// We should also make it so deselect "hierarchies" will automatically deselect "restrict invitations" to
-			// prevent any unwanted errors.
-			if ( $( '.buddyboss_page_bp-settings .section-bp_groups_hierarchies' ).length ) {
-
-					var checkbox = document.getElementById( 'bp-enable-group-hierarchies' );
-
-				if (checkbox.checked) {
-					$( '.bp-enable-group-restrict-invites, .bp-enable-group-hide-subgroups' ).show();
-				} else {
-					$( '.bp-enable-group-restrict-invites, .bp-enable-group-hide-subgroups' ).hide();
-				}
-
-					$( document ).on(
-						'click',
-						'#bp-enable-group-hierarchies',
-						function () {
-							if ( true === this.checked ) {
-								$( '.bp-enable-group-restrict-invites, .bp-enable-group-hide-subgroups' ).show();
-							} else {
-								$( '.bp-enable-group-restrict-invites, .bp-enable-group-hide-subgroups' ).hide();
-								$( '#bp-enable-group-restrict-invites, #bp-enable-group-hide-subgroups' ).prop( 'checked', false );
-							}
-						}
-					);
-
-				// Show confirmation dialog when user enable restrict invite option.
-				$( document ).on(
-					'click',
-					'#bp-enable-group-restrict-invites',
-					function () {
-						if ( true === this.checked ) {
-							if ( confirm( BP_ADMIN.group.restrict_invites_confirm_message ) ) {
-								return true;
-							} else {
-								return false;
-							}
-						}
-					}
-				);
 			}
 
 			// Hide/show group header element group type.
@@ -632,75 +528,6 @@ window.bp = window.bp || {};
 				);
 			}
 
-			// Activity settings.
-			if ( $( '.buddyboss_page_bp-settings .section-bp_custom_post_type' ).length ) {
-				$( '.bp-feed-post-type-checkbox' ).each(
-					function() {
-						var post_type = $( this ).data( 'post_type' );
-
-						if ( true === this.checked ) {
-							$( '.bp-feed-post-type-comment-' + post_type )
-							.closest( 'tr' )
-							.show();
-						}
-					}
-				);
-
-				$( '.buddyboss_page_bp-settings .section-bp_custom_post_type' ).on(
-					'click',
-					'.bp-feed-post-type-checkbox',
-					function () {
-						var post_type    = $( this ).data( 'post_type' ),
-							commentField = $( '.bp-feed-post-type-comment-' + post_type );
-
-						if ( true === this.checked ) {
-							commentField
-								.closest( 'tr' )
-								.show();
-						} else {
-							commentField
-								.prop( 'checked', false )
-								.closest( 'tr' )
-								.hide();
-						}
-					}
-				);
-			}
-
-			$( '#bp_media_profile_media_support' ).change(
-				function () {
-					if ( ! this.checked) {
-						$( '#bp_media_profile_albums_support' ).prop( 'disabled', true );
-						$( '#bp_media_profile_albums_support' ).attr( 'checked', false );
-					} else {
-						$( '#bp_media_profile_albums_support' ).prop( 'disabled', false );
-					}
-				}
-			);
-
-			$( '#bp_media_group_media_support' ).change(
-				function () {
-					if ( ! this.checked) {
-						$( '#bp_media_group_albums_support' ).prop( 'disabled', true );
-						$( '#bp_media_group_albums_support' ).attr( 'checked', false );
-					} else {
-						$( '#bp_media_group_albums_support' ).prop( 'disabled', false );
-					}
-				}
-			);
-
-			if ( $( 'body .section-bp_video_settings_extensions' ).length ) {
-
-				$( document ).find( '.nav-settings-subsubsub .subsubsub li.bp-media a' ).addClass( 'current' );
-
-				$( '.video-extensions-listing #bp_select_extensions' ).click(
-					function () {
-						var table = $( 'body .section-bp_video_settings_extensions table tbody tr td table tbody tr' );
-						$( 'td input:checkbox', table ).prop( 'checked', this.checked );
-					}
-				);
-
-			}
 
 			/**
 			 * Admin Tools Default data setting Page
@@ -1848,45 +1675,14 @@ window.bp = window.bp || {};
 				);
 			}
 
-			if ( $( '#bp_groups_avatar_settings .image-width-height' ).length ) {
-				var bpCoverGroupWidth  = $( 'select#bb-cover-group-width' ).find( 'option:selected' ).val();
-				var bpCoverGroupHeight = $( 'select#bb-cover-group-height' ).find( 'option:selected' ).val();
-				$( '#bp_groups_avatar_settings' ).on(
-					'change',
-					'select#bb-cover-group-width, select#bb-cover-group-height',
-					function(e) {
-						e.preventDefault();
-
-						is_confirmed_show = true;
-						if ( 'bb-cover-group-width' === $( this ).attr( 'id' ) && bpCoverGroupWidth === $( this ).val() ) {
-							is_confirmed_show = false;
-						} else if ( 'bb-cover-group-height' === $( this ).attr( 'id' ) && bpCoverGroupHeight === $( this ).val() ) {
-							is_confirmed_show = false;
-						}
-
-						// Add class to preview section for browser only.
-						if ( 'bb-cover-group-height' === $( this ).attr( 'id' ) ) {
-							if ( 'small' === $( this ).val() ) {
-								$( '.preview_avatar_cover .web-preview-wrap .preview-item-cover' ).removeClass( 'large-image' );
-							} else {
-								$( '.preview_avatar_cover .web-preview-wrap .preview-item-cover' ).addClass( 'large-image' );
-							}
-						}
-					}
-				);
-			}
-
 			$( 'body.buddyboss_page_bp-settings' ).on(
 				'click',
 				'input[name="submit"]',
 				function(e) {
 
-					if ( is_confirmed_show && ( $( '#bp_member_avatar_settings' ).length || $( '#bp_groups_avatar_settings' ).length ) ) {
+					if ( is_confirmed_show && ( $( '#bp_member_avatar_settings' ).length ) ) {
 
 						var coverWarningMessage = BP_ADMIN.cover_size_alert.profile;
-						if ( $( '#bp_groups_avatar_settings' ).length ) {
-							coverWarningMessage = BP_ADMIN.cover_size_alert.group;
-						}
 
 						if (  confirm( coverWarningMessage ) ) {
 							return true;
@@ -1974,275 +1770,6 @@ window.bp = window.bp || {};
 						$( '.member-directory-profile-primary-action' ).removeClass( 'bp-hide' );
 					}
 				}
-			);
-
-			$( document ).on(
-				'click',
-				'table.extension-listing #btn-add-extensions',
-				function() {
-					var parent     = $( this ).closest( 'table.extension-listing' );
-					var newOption  = $( this ).closest( 'table.extension-listing' ).find( 'tbody tr.custom-extension-data' ).html();
-					var totalCount = 1;
-					parent.find( 'tbody' ).append( ' <tr class="custom-extension extra-extension document-extensions"> ' + newOption + ' </tr> ' );
-
-					makeIconSelect();
-
-					parent.find( 'tbody tr.extra-extension' ).each(
-						function() {
-								$( this ).find( 'input.extension-check' ).attr( 'name', 'bp_document_extensions_support[' + totalCount + '][is_active]' );
-								$( this ).find( 'input.extension-check' ).attr( 'data-name', 'bp_document_extensions_support[' + totalCount + '][is_active]' );
-								$( this ).find( 'input.extension-name' ).attr( 'name', 'bp_document_extensions_support[' + totalCount + '][name]' );
-								$( this ).find( 'input.extension-name' ).attr( 'data-name', 'bp_document_extensions_support[' + totalCount + '][name]' );
-								$( this ).find( 'input.extension-hidden' ).attr( 'name', 'bp_document_extensions_support[' + totalCount + '][hidden]' );
-								$( this ).find( 'input.extension-hidden' ).attr( 'data-name', 'bp_document_extensions_support[' + totalCount + '][hidden]' );
-								$( this ).find( 'input.extension-extension' ).attr( 'name', 'bp_document_extensions_support[' + totalCount + '][extension]' );
-								$( this ).find( 'input.extension-extension' ).attr( 'data-name', 'bp_document_extensions_support[' + totalCount + '][extension]' );
-								$( this ).find( 'select.extension-icon' ).attr( 'name', 'bp_document_extensions_support[' + totalCount + '][icon]' );
-								$( this ).find( 'select.extension-icon' ).attr( 'data-name', 'bp_document_extensions_support[' + totalCount + '][icon]' );
-								$( this ).find( 'input.extension-mime' ).attr( 'name', 'bp_document_extensions_support[' + totalCount + '][mime_type]' );
-								$( this ).find( 'input.extension-mime' ).attr( 'data-name', 'bp_document_extensions_support[' + totalCount + '][mime_type]' );
-								$( this ).find( 'input.extension-desc' ).attr( 'name', 'bp_document_extensions_support[' + totalCount + '][description]' );
-								$( this ).find( 'input.extension-desc' ).attr( 'data-name', 'bp_document_extensions_support[' + totalCount + '][description]' );
-								$( this ).find( 'a.btn-check-mime-type' ).attr( 'id', 'bp_document_extensions_support[' + totalCount + '][mime_type]' );
-								totalCount = totalCount + 1;
-						}
-					);
-
-					totalCount = parseInt( $( '.extension-listing tr.default-extension' ).length );
-
-				}
-			);
-
-			$( document ).on(
-				'click',
-				'table.extension-listing #btn-add-video-extensions',
-				function() {
-					var parent     = $( this ).closest( 'table.extension-listing' );
-					var newOption  = $( this ).closest( 'table.extension-listing' ).find( 'tbody tr.custom-extension-data' ).html();
-					var totalCount = 1;
-					parent.find( 'tbody' ).append( ' <tr class="custom-extension extra-extension video-extensions"> ' + newOption + ' </tr> ' );
-
-					makeIconSelect();
-
-					parent.find( 'tbody tr.extra-extension' ).each(
-						function() {
-							$( this ).find( 'input.extension-check' ).attr( 'name', 'bp_video_extensions_support[' + totalCount + '][is_active]' );
-							$( this ).find( 'input.extension-check' ).attr( 'data-name', 'bp_video_extensions_support[' + totalCount + '][is_active]' );
-							$( this ).find( 'input.extension-name' ).attr( 'name', 'bp_video_extensions_support[' + totalCount + '][name]' );
-							$( this ).find( 'input.extension-name' ).attr( 'data-name', 'bp_video_extensions_support[' + totalCount + '][name]' );
-							$( this ).find( 'input.extension-hidden' ).attr( 'name', 'bp_video_extensions_support[' + totalCount + '][hidden]' );
-							$( this ).find( 'input.extension-hidden' ).attr( 'data-name', 'bp_video_extensions_support[' + totalCount + '][hidden]' );
-							$( this ).find( 'input.extension-extension' ).attr( 'name', 'bp_video_extensions_support[' + totalCount + '][extension]' );
-							$( this ).find( 'input.extension-extension' ).attr( 'data-name', 'bp_video_extensions_support[' + totalCount + '][extension]' );
-							$( this ).find( 'input.extension-mime' ).attr( 'name', 'bp_video_extensions_support[' + totalCount + '][mime_type]' );
-							$( this ).find( 'input.extension-mime' ).attr( 'data-name', 'bp_video_extensions_support[' + totalCount + '][mime_type]' );
-							$( this ).find( 'input.extension-desc' ).attr( 'name', 'bp_video_extensions_support[' + totalCount + '][description]' );
-							$( this ).find( 'input.extension-desc' ).attr( 'data-name', 'bp_video_extensions_support[' + totalCount + '][description]' );
-							$( this ).find( 'a.btn-check-mime-type' ).attr( 'id', 'bp_video_extensions_support[' + totalCount + '][mime_type]' );
-							totalCount = totalCount + 1;
-						}
-					);
-
-					totalCount = parseInt( $( '.extension-listing tr.default-extension' ).length );
-
-				}
-			);
-
-			function makeIconSelect() {
-
-				$( '.document-extensions-listing .extension-icon' ).each(
-					function() {
-
-						if ( $( this ).closest( 'td' ).find( '.icon-select-main' ).length === 0 ) {
-							var iconsArray = [];
-							$( this ).closest( 'td' ).find( 'select.extension-icon option' ).each(
-								function(){
-									var iconClass = $( this ).attr('data-value');
-									var text      = this.innerText;
-									var item      = '<li><i class="' + iconClass + '"></i><span>' + text + '</span></li>';
-									iconsArray.push( item );
-								}
-							);
-
-							$( this ).closest( 'td' ).find( 'select.extension-icon' ).parent().append( '<div class="icon-select-main"><span class="icon-select-button"></span><div class="custom-extension-list"> <ul class="custom-extension-list-select">' + iconsArray.join('') + '</ul></div></div>' );
-
-							// Set the button value to the first el of the array by default.
-							var currentSelectedIcon     = $( this ).closest( 'td' ).find( '.extension-icon option:selected' ).attr('data-value');
-							var currentSelectedIconText = $( this ).closest( 'td' ).find( '.extension-icon option:selected' ).text();
-							$( this ).closest( 'td' ).find( '.icon-select-main .icon-select-button' ).html( '<li><i class="' + currentSelectedIcon + '"></i><span>' + currentSelectedIconText + '</span></li>' );
-						}
-
-					}
-				);
-
-			}
-
-			makeIconSelect();
-
-			$( document ).on(
-				'click',
-				'.custom-extension-list-select li',
-				function() {
-					var iconClass = $( this ).find( 'i' ).attr( 'class' );
-					var text      = this.innerText;
-					var item      = '<li><i class="' + iconClass + '"></i><span>' + text + '</span></li>';
-					$( this ).closest( 'td' ).find( '.icon-select-main .icon-select-button' ).html( item );
-					$( this ).closest( 'td' ).find( '.icon-select-main .custom-extension-list' ).toggle();
-					$( this ).closest( 'td' ).find( 'select.extension-icon option[value="' + iconClass + '"]' ).attr( 'selected','selected' );
-					if ( $( this ).closest( '.icon-select-main' ).siblings( '.bb-icon' ).length ) {
-						$( this ).closest( '.icon-select-main' ).siblings( '.bb-icon' ).attr( 'class', 'bb-icon ' + iconClass );
-					}
-				}
-			);
-
-			$( document ).on(
-				'click',
-				'.icon-select-main .icon-select-button',
-				function() {
-					$( this ).siblings( '.custom-extension-list' ).toggle();
-				}
-			);
-
-			$( document ).on(
-				'click',
-				'table.extension-listing #btn-remove-extensions',
-				function() {
-
-					var parent = $( this ).closest( 'table.extension-listing' );
-					$( this ).closest( 'tr' ).remove();
-					var totalCount = parseInt( $( '.extension-listing tr.extra-extension' ).length );
-					totalCount     = 1;
-					var media_type = 'bp_document';
-					if (
-						$( this ).closest('tr.custom-extension').length > 0 &&
-						$( this ).closest('tr.custom-extension').hasClass('video-extensions')
-					) {
-						media_type = 'bp_video';
-					}
-					parent.find( 'tbody tr.extra-extension' ).each(
-						function() {
-								$( this ).find( 'input.extension-check' ).attr( 'name', media_type + '_extensions_support[' + totalCount + '][is_active]' );
-								$( this ).find( 'input.extension-check' ).attr( 'data-name', media_type + '_extensions_support[' + totalCount + '][is_active]' );
-								$( this ).find( 'input.extension-name' ).attr( 'name', media_type + '_extensions_support[' + totalCount + '][name]' );
-								$( this ).find( 'input.extension-name' ).attr( 'data-name', media_type + '_extensions_support[' + totalCount + '][name]' );
-								$( this ).find( 'input.extension-hidden' ).attr( 'name', media_type + '_extensions_support[' + totalCount + '][hidden]' );
-								$( this ).find( 'input.extension-hidden' ).attr( 'data-name', media_type + '_extensions_support[' + totalCount + '][hidden]' );
-								$( this ).find( 'input.extension-extension' ).attr( 'name', media_type + '_extensions_support[' + totalCount + '][extension]' );
-								$( this ).find( 'input.extension-extension' ).attr( 'data-name', media_type + '_extensions_support[' + totalCount + '][extension]' );
-								$( this ).find( 'input.extension-mime' ).attr( 'name', media_type + '_extensions_support[' + totalCount + '][mime_type]' );
-								$( this ).find( 'input.extension-mime' ).attr( 'data-name', media_type + '_extensions_support[' + totalCount + '][mime_type]' );
-								$( this ).find( 'input.extension-desc' ).attr( 'name', media_type + '_extensions_support[' + totalCount + '][description]' );
-								$( this ).find( 'input.extension-desc' ).attr( 'data-name', media_type + '_extensions_support[' + totalCount + '][description]' );
-								$( this ).find( 'select.extension-icon' ).attr( 'name', media_type + '_extensions_support[' + totalCount + '][icon]' );
-								$( this ).find( 'select.extension-icon' ).attr( 'data-name', media_type + '_extensions_support[' + totalCount + '][icon]' );
-								totalCount = totalCount + 1;
-						}
-					);
-
-				}
-			);
-
-			$( document ).on(
-				'click',
-				'#input-mime-type-submit-check',
-				function(e) {
-					e.preventDefault();
-					var file_data = $( '#bp-document-file-input' ).prop( 'files' )[0];
-					if ( 'undefined' === typeof file_data ) {
-						alert( BP_ADMIN.select_document );
-						return false;
-					}
-					var form_data = new FormData();
-					form_data.append( 'file', file_data );
-					form_data.append( 'action', 'bp_document_check_file_mime_type' );
-					$.ajax(
-						{
-							url: BP_ADMIN.ajax_url, // point to server-side PHP script.
-							cache: false,
-							contentType: false,
-							processData: false,
-							data: form_data,
-							type: 'post',
-							success: function( response ){
-								$( '.show-document-mime-type' ).show();
-								$( '.show-document-mime-type input.type' ).val( response.data.type );
-							}
-						}
-					);
-				}
-			);
-
-			$( document ).on(
-				'click',
-				'.show-document-mime-type .mime-copy',
-				function(e) {
-					e.preventDefault();
-
-					var mimeToId = $( this ).attr( 'id' );
-
-					$( document ).find( 'input[name="' + mimeToId + '"]' ).val( '' );
-					var valueCopied = $( document ).find( '#mime-type' ).val();
-					$( document ).find( 'input[name="' + mimeToId + '"]' ).val( valueCopied );
-					$( document ).find( '.close-modal' ).trigger( 'click' );
-				}
-			);
-
-			$( document ).on(
-				'click',
-				'.btn-check-mime-type',
-				function(e) {
-					e.preventDefault();
-
-					var copiedValue = $( this ).attr( 'id' );
-					$( document ).find( '.mime-copy' ).attr( 'id', copiedValue );
-					$( document ).find( '.bp-hello-mime' ).attr( 'id', 'bp-hello-container' );
-					if ( $( document ).find( '#bp-hello-backdrop' ).length ) {
-					} else {
-						var finder = $( document ).find( '.bp-hello-mime' );
-						$( '<div id="bp-hello-backdrop" style="display: none;"></div>' ).insertBefore( finder );
-					}
-					var backdrop = document.getElementById( 'bp-hello-backdrop' ),
-						modal    = document.querySelector( '#bp-hello-container:not(.bb-onload-modal)' );
-
-					if ( null === backdrop ) {
-						return;
-					}
-					document.body.classList.add( 'bp-disable-scroll' );
-
-					// Show modal and overlay.
-					backdrop.style.display = '';
-					modal.style.display    = '';
-
-					// Focus the "X" so bp_hello_handle_keyboard_events() works.
-					var focus_target = modal.querySelectorAll( 'a[href], button' );
-					focus_target     = Array.prototype.slice.call( focus_target );
-					focus_target[0].focus();
-
-				}
-			);
-
-			document.addEventListener(
-				'click',
-				function( event ) {
-					var backdrop = document.getElementById( 'bp-hello-backdrop' );
-					if ( ! backdrop || ! document.getElementById( 'bp-hello-container' ) ) {
-						return;
-					}
-
-					var backdrop_click    = backdrop.contains( event.target ),
-						modal_close_click = event.target.classList.contains( 'close-modal' );
-
-					if ( ! modal_close_click && ! backdrop_click ) {
-						return;
-					}
-
-					$( event.target ).closest( '#bp-hello-container' ).hide();
-
-					$( document ).find( '#bp-document-file-input' ).val( '' );
-					$( document ).find( '.show-document-mime-type' ).hide();
-					$( document ).find( '.show-document-mime-type input#mime-type' ).val( '' );
-				},
-				false
 			);
 
 			// Show the moderation activate popup when admin click spam user link.
@@ -2371,31 +1898,6 @@ window.bp = window.bp || {};
 						return confirm( BP_ADMIN.moderation.suspend_confirm_message );
 					} else if ( 'unsuspend' === DataAction ) {
 						return confirm( BP_ADMIN.moderation.unsuspend_confirm_message );
-					}
-				}
-			);
-
-			$( document ).on(
-				'click',
-				'.notification-defaults',
-				function () {
-					var isHidden = $( this ).next( '.manage-defaults' );
-					if ( isHidden.hasClass( 'manage-defaults-hide' ) ) {
-						$( this ).next( '.manage-defaults' ).removeClass( 'manage-defaults-hide' );
-					} else {
-						$( this ).next( '.manage-defaults' ).addClass( 'manage-defaults-hide' );
-					}
-				}
-			);
-
-			$( document ).on(
-				'click',
-				'.bb-notification-checkbox',
-				function () {
-					if ( false === $( this ).prop( 'checked' ) ) {
-						$( this ).parents( '.field-block' ).find( '.manage-defaults .field-wrap' ).addClass( 'disabled' );
-					} else {
-						$( this ).parents( '.field-block' ).find( '.manage-defaults .field-wrap' ).removeClass( 'disabled' );
 					}
 				}
 			);
@@ -2558,10 +2060,19 @@ window.bp = window.bp || {};
 
 				var decodedContent = $( '<textarea>' ).html( content ).text();
 
+				// Remove content inside <pre> and <code> tags before checking for escaped HTML
+				var contentWithoutCodeBlocks = content;
+				
+				// Remove <pre>...</pre> blocks
+				contentWithoutCodeBlocks = contentWithoutCodeBlocks.replace(/<pre[^>]*>[\s\S]*?<\/pre>/gi, '');
+				
+				// Remove <code>...</code> blocks
+				contentWithoutCodeBlocks = contentWithoutCodeBlocks.replace(/<code[^>]*>[\s\S]*?<\/code>/gi, '');
+
 				var escapedHtmlRegex = /&lt;.*?&gt;/;
 
-				// Check for escaped HTML tags
-				if ( escapedHtmlRegex.test( content ) ) {
+				// Check for escaped HTML tags (excluding content in pre and code tags)
+				if ( escapedHtmlRegex.test( contentWithoutCodeBlocks ) ) {
 					alert( BP_ADMIN.forum_validation.escaped_html_tags );
 					event.preventDefault();
 					return;
@@ -2889,37 +2400,6 @@ window.bp = window.bp || {};
 		validateDuplicateEmailRuleEntry( e );
 	} );
 
-	/**
-	 * Handles the dismissal of the "Upgrade to Pro" notice via AJAX.
-	 *
-	 * @param {Event} e The click event triggered when the dismiss button is clicked.
-	 */
-	$( document ).on( 'click', '.bb-dismiss-upgrade-notice', function ( e ) {
-		e.preventDefault();
-
-		// Retrieve the nonce from the notice element.
-		var nonce = jQuery( this ).closest( '.bb-upgrade-notice' ).data( 'nonce' );
-		if ( 'undefined' === typeof nonce ) {
-			return;
-		}
-
-		$.ajax(
-			{
-				type   : 'POST',
-				url    : BP_ADMIN.ajax_url,
-				data   : {
-					'action': 'bb_upgrade_dismiss_notice',
-					'nonce' : nonce
-				},
-				success: function ( response ) {
-					if ( response.success ) {
-						jQuery( '.bb-upgrade-notice' ).fadeOut();
-					}
-				},
-			}
-		);
-	} );
-
 	function bb_unique( array ) {
 		return $.grep( array, function ( el, index ) {
 			return index === $.inArray( el, array );
@@ -3014,47 +2494,5 @@ window.bp = window.bp || {};
 			}
 		});
 	}
-
-	function activityTopicHandle() {
-		// Initialize the BBTopicsManager with admin-specific configuration for activity topics.
-		if ( 'undefined' !== typeof BBTopicsManager ) {
-			BBTopicsManager.config.modalSelector          = '#bb-hello-container';
-			BBTopicsManager.config.modalContentSelector   = '.bb-hello-content';
-			BBTopicsManager.config.backdropSelector       = '#bb-hello-backdrop';
-			BBTopicsManager.config.modalOpenClass         = 'bp-disable-scroll';
-			BBTopicsManager.config.closeModalSelector     = '.close-modal, #bb_topic_cancel';
-			BBTopicsManager.config.errorContainer         = '<div class="bb-hello-error"><i class="bb-icon-rf bb-icon-exclamation"></i></div>';
-			BBTopicsManager.config.errorContainerSelector = '.bb-hello-error';
-			BBTopicsManager.config.ajaxUrl                = BP_ADMIN.ajax_url;
-			BBTopicsManager.config.nonce                  = BP_ADMIN.nonce;
-			BBTopicsManager.config.topicsLimit            = BP_ADMIN.topics_limit;
-
-			// Migrate topic elements.
-			BBTopicsManager.config.migrateTopicBackdropModal  = '#bb-hello-topic-migrate-backdrop';
-			BBTopicsManager.config.migrateTopicContainerModal = '#bb-hello-topic-migrate-container';
-			BBTopicsManager.config.migrateAjaxAction          = 'bb_migrate_topic';
-		}
-
-		$( document ).on(
-			'change',
-			'#bb_enable_group_activity_topics',
-			function ( e ) {
-				// Prevent default action and stop event propagation.
-				e.preventDefault();
-				e.stopPropagation();
-
-				var enableGroupTopicsChecked = $( '#bb_enable_group_activity_topics' ).is( ':checked' );
-
-				// Show/hide only group topics dependent fields.
-				if ( enableGroupTopicsChecked ) {
-					$( '.bb_enable_group_activity_topics_required' ).removeClass( 'bp-hide' );
-				} else {
-					$( '.bb_enable_group_activity_topics_required' ).addClass( 'bp-hide' );
-				}
-			}
-		);
-	}
-
-	activityTopicHandle();
 
 }());

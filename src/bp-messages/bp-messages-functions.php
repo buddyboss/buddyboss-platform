@@ -1092,7 +1092,14 @@ function group_messages_notification_new_message( $raw_args = array() ) {
 	}
 
 	$group      = bp_messages_get_meta( $id, 'group_id', true );
-	$group_name = bp_get_group_name( groups_get_group( $group ) );
+	// `groups_get_group()` and `bp_get_group_name()` are loaded by the
+	// groups component. Group-flagged message threads can outlive a
+	// groups deactivation — fall back to an empty group name in that
+	// case rather than fatalling on the missing function.
+	$group_name = '';
+	if ( ! empty( $group ) && bp_is_active( 'groups' ) && function_exists( 'groups_get_group' ) ) {
+		$group_name = bp_get_group_name( groups_get_group( $group ) );
+	}
 
 	// check if it has enough recipients to use batch emails.
 	$min_count_recipients = function_exists( 'bb_email_queue_has_min_count' ) && bb_email_queue_has_min_count( $recipients );
@@ -1282,6 +1289,12 @@ function bp_messages_get_avatars( $thread_id, $user_id ) {
 	$avatars_user_ids = array();
 	$thread_messages  = BP_Messages_Thread::get_messages( $thread_id, null, 99999999 );
 	$recepients       = BP_Messages_Thread::get_recipients_for_thread( $thread_id );
+
+	// Ensure $thread_messages is an array to prevent PHP 8+ fatal errors
+	// when object cache returns unexpected data.
+	if ( ! is_array( $thread_messages ) ) {
+		$thread_messages = array();
+	}
 
 	if ( count( $recepients ) > 2 ) {
 		foreach ( $thread_messages as $message ) {
@@ -2184,7 +2197,7 @@ function bb_get_message_response_object( $message ) {
 	if ( false === bp_core_get_core_userdata( $sender_id ) ) {
 		$content = esc_html__( 'This message was deleted', 'buddyboss' );
 	}
-	$content    = preg_replace( '#(<p></p>)#', '<p><br></p>', apply_filters( 'bp_get_the_thread_message_content', $content ) );
+	$content    = preg_replace( '#(<p></p>)#', '<p><br></p>', apply_filters( 'bp_get_the_thread_message_content', $content, $message->id ) );
 	$excerpt    = apply_filters( 'bb_get_the_thread_message_excerpt', preg_replace( '#(<br\s*?\/?>|</(\w+)><(\w+)>)#', ' ', $content ) );
 	$message_id = $message->id;
 	$excerpt    = wp_trim_words( wp_strip_all_tags( $excerpt ) );

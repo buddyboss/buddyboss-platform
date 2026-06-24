@@ -26,6 +26,12 @@ $is_send_ajax_request = bb_is_send_ajax_request();
 
 		// Home/Video.
 		case 'my-video':
+			/**
+			 * Fires before the display of the video list.
+			 *
+			 * @since BuddyBoss 2.15.2
+			 */
+			bp_nouveau_member_hook( 'before', 'rl_stream_video_content' );
 			?>
 			<div class="bb-rl-media-stream">
 				<?php
@@ -46,6 +52,12 @@ $is_send_ajax_request = bb_is_send_ajax_request();
 			<?php
 			bp_nouveau_member_hook( 'after', 'video_content' );
 
+			/**
+			 * Fires after the display of the video list.
+			 *
+			 * @since BuddyBoss 2.15.2
+			 */
+			bp_nouveau_member_hook( 'after', 'rl_stream_video_content' );
 			break;
 
 		// Home/Video/Albums.

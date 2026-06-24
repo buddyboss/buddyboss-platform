@@ -2656,6 +2656,11 @@ function bb_all_enabled_reactions( $key = '' ) {
  * @return bool True if reaction for activity posts is enabled, otherwise false.
  */
 function bb_is_reaction_activity_posts_enabled( $default = true ) {
+	// First check if reactions feature is enabled via Settings 2.0 toggle.
+	if ( ! bb_is_reactions_feature_enabled() ) {
+		return false;
+	}
+
 	return (bool) apply_filters( 'bb_is_reaction_activity_posts_enabled', (bool) bb_all_enabled_reactions( 'activity' ) );
 }
 
@@ -2669,6 +2674,11 @@ function bb_is_reaction_activity_posts_enabled( $default = true ) {
  * @return bool True if reaction for activity comments is enabled, otherwise false.
  */
 function bb_is_reaction_activity_comments_enabled( $default = true ) {
+	// First check if reactions feature is enabled via Settings 2.0 toggle.
+	if ( ! bb_is_reactions_feature_enabled() ) {
+		return false;
+	}
+
 	return (bool) apply_filters( 'bb_is_reaction_activity_comments_enabled', (bool) bb_all_enabled_reactions( 'activity_comment' ) );
 }
 
@@ -2685,12 +2695,9 @@ function bb_is_reaction_activity_comments_enabled( $default = true ) {
 function bb_get_reaction_mode( $default = 'likes' ) {
 
 	$mode = bp_get_option( 'bb_reaction_mode', $default );
-	if (
-		! class_exists( 'BB_Reactions' ) ||
-		! function_exists( 'bbp_pro_is_license_valid' ) ||
-		! bbp_pro_is_license_valid()
-	) {
+	if ( ! class_exists( 'BB_Reactions' ) && 'emotions' === $mode ) {
 		$mode = 'likes';
+		bp_update_option( 'bb_reaction_mode', $mode );
 	}
 
 	return apply_filters( 'bb_get_reaction_mode', $mode );
@@ -2704,6 +2711,11 @@ function bb_get_reaction_mode( $default = 'likes' ) {
  * @return bool
  */
 function bb_is_reaction_emotions_enabled() {
+	// First check if reactions feature is enabled via Settings 2.0 toggle.
+	if ( ! bb_is_reactions_feature_enabled() ) {
+		return false;
+	}
+
 	return (bool) apply_filters( 'bb_is_reaction_emotions_enabled', (bool) ( bb_get_reaction_mode() === 'emotions' ) );
 }
 
@@ -2733,10 +2745,15 @@ function bb_reaction_button_options( $key = '' ) {
  * @return array
  */
 function bb_active_reactions() {
+	$reaction = bb_load_reaction();
+	if ( ! $reaction ) {
+		return array();
+	}
+
 	if ( bb_is_reaction_emotions_enabled() ) {
-		$all_emotions = bb_load_reaction()->bb_get_reactions( 'emotions' );
+		$all_emotions = $reaction->bb_get_reactions( 'emotions' );
 	} else {
-		$all_emotions = bb_load_reaction()->bb_get_reactions();
+		$all_emotions = $reaction->bb_get_reactions();
 	}
 
 	return ( ! empty( $all_emotions ) ? array_column( $all_emotions, null, 'id' ) : array() );
@@ -2805,24 +2822,92 @@ function bb_enable_content_counts( $default = false ) {
  * Get all activity filters option labels.
  *
  * @since BuddyBoss 2.8.20
+ * @since BuddyBoss 2.18.0 Added $context parameter for language-specific capitalization.
+ *
+ * @param string $context The context for labels. Accepts 'default' for dropdown labels,
+ *                        'show_context' for "Show: {label}" context (lowercase for proper grammar in some languages).
+ *                        Default 'default'.
  *
  * @return array Array of all activity filters option labels.
  */
-function bb_get_activity_filter_options_labels() {
+function bb_get_activity_filter_options_labels( $context = 'default' ) {
 	$filters = array(
-		'all'       => __( 'All updates', 'buddyboss' ),
-		'just-me'   => __( 'Created by me', 'buddyboss' ),
-		'favorites' => __( "I've reacted to", 'buddyboss' ),
-		'groups'    => __( 'From my groups', 'buddyboss' ),
-		'friends'   => __( 'From my connections', 'buddyboss' ),
-		'mentions'  => __( "I'm mentioned in", 'buddyboss' ),
-		'following' => __( "I'm following", 'buddyboss' ),
+		'all'        => array(
+			/* translators: Activity filter label shown in dropdown menus */
+			'default'      => __( 'All Updates', 'buddyboss' ),
+			/* translators: Activity filter label shown after "Show:" text - use lowercase */
+			'show_context' => __( 'all updates', 'buddyboss' ),
+		),
+		'just-me'    => array(
+			/* translators: Activity filter label shown in dropdown menus */
+			'default'      => __( 'Created by Me', 'buddyboss' ),
+			/* translators: Activity filter label shown after "Show:" text - use lowercase */
+			'show_context' => __( 'created by me', 'buddyboss' ),
+		),
+		'favorites'  => array(
+			/* translators: Activity filter label shown in dropdown menus */
+			'default'      => __( "I've Reacted To", 'buddyboss' ),
+			/* translators: Activity filter label shown after "Show:" text - use lowercase */
+			'show_context' => __( "I've reacted to", 'buddyboss' ),
+		),
+		'groups'     => array(
+			/* translators: Activity filter label shown in dropdown menus */
+			'default'      => __( 'From My Groups', 'buddyboss' ),
+			/* translators: Activity filter label shown after "Show:" text - use lowercase */
+			'show_context' => __( 'from my groups', 'buddyboss' ),
+		),
+		'friends'    => array(
+			/* translators: Activity filter label shown in dropdown menus */
+			'default'      => __( 'From My Connections', 'buddyboss' ),
+			/* translators: Activity filter label shown after "Show:" text - use lowercase */
+			'show_context' => __( 'from my connections', 'buddyboss' ),
+		),
+		'mentions'   => array(
+			/* translators: Activity filter label shown in dropdown menus */
+			'default'      => __( "I'm Mentioned In", 'buddyboss' ),
+			/* translators: Activity filter label shown after "Show:" text - use lowercase */
+			'show_context' => __( "I'm mentioned in", 'buddyboss' ),
+		),
+		'following'  => array(
+			/* translators: Activity filter label shown in dropdown menus */
+			'default'      => __( "I'm Following", 'buddyboss' ),
+			/* translators: Activity filter label shown after "Show:" text - use lowercase */
+			'show_context' => __( "I'm following", 'buddyboss' ),
+		),
+		'unanswered' => array(
+			/* translators: Activity filter label shown in dropdown menus */
+			'default'      => __( 'Unanswered', 'buddyboss' ),
+			/* translators: Activity filter label shown after "Show:" text - use lowercase */
+			'show_context' => __( 'unanswered', 'buddyboss' ),
+		),
+	);
+
+	// Extract labels for the requested context.
+	$labels = array_map(
+		function ( $filter ) use ( $context ) {
+			if ( is_array( $filter ) ) {
+				return $filter[ $context ] ?? $filter['default'];
+			}
+			return $filter;
+		},
+		$filters
 	);
 
 	// Common function to get only allowed ones.
-	$filters = bb_filter_activity_filter_scope_keys( $filters );
+	$labels = bb_filter_activity_filter_scope_keys( $labels );
 
-	return (array) apply_filters( 'bb_get_activity_filter_options_labels', $filters );
+	/**
+	 * Filters the activity filter options labels.
+	 *
+	 * @since BuddyBoss 2.8.20
+	 * @since BuddyBoss 2.18.0 Added $context parameter.
+	 *
+	 * @param array  $labels  Array of activity filter labels. Keys are scope names (e.g., 'all', 'just-me', 'favorites').
+	 *                        Values are the translated label strings for the requested context.
+	 * @param string $context The context for labels. 'default' for dropdown labels,
+	 *                        'show_context' for labels shown after "Show:" text.
+	 */
+	return (array) apply_filters( 'bb_get_activity_filter_options_labels', $labels, $context );
 }
 
 /**
@@ -2838,13 +2923,14 @@ function bb_get_enabled_activity_filter_options( $args = array() ) {
 
 	// Set default options if not provided.
 	$default = array(
-		'all'       => 1,
-		'just-me'   => 1,
-		'favorites' => 1,
-		'groups'    => 1,
-		'friends'   => 1,
-		'mentions'  => 1,
-		'following' => 1,
+		'all'        => 1,
+		'just-me'    => 1,
+		'favorites'  => 1,
+		'groups'     => 1,
+		'friends'    => 1,
+		'mentions'   => 1,
+		'following'  => 1,
+		'unanswered' => 1,
 	);
 
 	$args    = array_intersect_key( $args, $default );
@@ -2863,23 +2949,80 @@ function bb_get_enabled_activity_filter_options( $args = array() ) {
  * Get all activity timeline filters option labels.
  *
  * @since BuddyBoss 2.8.20
+ * @since BuddyBoss 2.18.0 Added $context parameter for language-specific capitalization.
+ *
+ * @param string $context The context for labels. Accepts 'default' for dropdown labels,
+ *                        'show_context' for "Show: {label}" context (lowercase for proper grammar in some languages).
+ *                        Default 'default'.
  *
  * @return array Array of all activity timeline filters option labels.
  */
-function bb_get_activity_timeline_filter_options_labels() {
+function bb_get_activity_timeline_filter_options_labels( $context = 'default' ) {
 	$filters = array(
-		'just-me'   => __( 'Personal posts', 'buddyboss' ),
-		'favorites' => __( 'Reacted to', 'buddyboss' ),
-		'groups'    => __( 'From groups', 'buddyboss' ),
-		'friends'   => __( 'From connections', 'buddyboss' ),
-		'mentions'  => __( 'Mentioned in', 'buddyboss' ),
-		'following' => __( 'Following', 'buddyboss' ),
+		'just-me'   => array(
+			/* translators: Timeline filter label shown in dropdown menus */
+			'default'      => __( 'Personal Posts', 'buddyboss' ),
+			/* translators: Timeline filter label shown after "Show:" text - use lowercase if grammatically appropriate in your language */
+			'show_context' => __( 'personal posts', 'buddyboss' ),
+		),
+		'favorites' => array(
+			/* translators: Timeline filter label shown in dropdown menus */
+			'default'      => __( 'Reacted To', 'buddyboss' ),
+			/* translators: Timeline filter label shown after "Show:" text - use lowercase if grammatically appropriate in your language */
+			'show_context' => __( 'reacted to', 'buddyboss' ),
+		),
+		'groups'    => array(
+			/* translators: Timeline filter label shown in dropdown menus */
+			'default'      => __( 'From Groups', 'buddyboss' ),
+			/* translators: Timeline filter label shown after "Show:" text - use lowercase if grammatically appropriate in your language */
+			'show_context' => __( 'from groups', 'buddyboss' ),
+		),
+		'friends'   => array(
+			/* translators: Timeline filter label shown in dropdown menus */
+			'default'      => __( 'From Connections', 'buddyboss' ),
+			/* translators: Timeline filter label shown after "Show:" text - use lowercase if grammatically appropriate in your language */
+			'show_context' => __( 'from connections', 'buddyboss' ),
+		),
+		'mentions'  => array(
+			/* translators: Timeline filter label shown in dropdown menus */
+			'default'      => __( 'Mentioned In', 'buddyboss' ),
+			/* translators: Timeline filter label shown after "Show:" text - use lowercase if grammatically appropriate in your language */
+			'show_context' => __( 'mentioned in', 'buddyboss' ),
+		),
+		'following' => array(
+			/* translators: Timeline filter label shown in dropdown menus */
+			'default'      => __( 'Following', 'buddyboss' ),
+			/* translators: Timeline filter label shown after "Show:" text - use lowercase if grammatically appropriate in your language */
+			'show_context' => __( 'following', 'buddyboss' ),
+		),
+	);
+
+	// Extract labels for the requested context.
+	$labels = array_map(
+		function ( $filter ) use ( $context ) {
+			if ( is_array( $filter ) ) {
+				return $filter[ $context ] ?? $filter['default'];
+			}
+			return $filter;
+		},
+		$filters
 	);
 
 	// Common function to get only allowed ones.
-	$filters = bb_filter_activity_filter_scope_keys( $filters );
+	$labels = bb_filter_activity_filter_scope_keys( $labels );
 
-	return (array) apply_filters( 'bb_get_activity_timeline_filter_options_labels', $filters );
+	/**
+	 * Filters the activity timeline filter options labels.
+	 *
+	 * @since BuddyBoss 2.8.20
+	 * @since BuddyBoss 2.18.0 Added $context parameter.
+	 *
+	 * @param array  $labels  Array of activity timeline filter labels. Keys are scope names (e.g., 'just-me', 'favorites', 'groups').
+	 *                        Values are the translated label strings for the requested context.
+	 * @param string $context The context for labels. 'default' for dropdown labels,
+	 *                        'show_context' for labels shown after "Show:" text.
+	 */
+	return (array) apply_filters( 'bb_get_activity_timeline_filter_options_labels', $labels, $context );
 }
 
 /**
@@ -2919,15 +3062,53 @@ function bb_get_enabled_activity_timeline_filter_options( $args = array() ) {
  * Get all activity sorting options labels.
  *
  * @since BuddyBoss 2.8.20
+ * @since BuddyBoss 2.18.0 Added $context parameter for language-specific capitalization.
+ *
+ * @param string $context The context for labels. Accepts 'default' for dropdown labels,
+ *                        'by_context' for "by {label}" context (lowercase for proper grammar in some languages).
+ *                        Default 'default'.
  *
  * @return array Array of all activity sorting options labels.
  */
-function bb_get_activity_sorting_options_labels() {
+function bb_get_activity_sorting_options_labels( $context = 'default' ) {
 	$sorting_options = array(
-		'date_recorded' => __( 'New posts', 'buddyboss' ),
-		'date_updated'  => __( 'Recent activity', 'buddyboss' ),
+		'date_recorded' => array(
+			/* translators: Sorting option label shown in dropdown menus */
+			'default'    => __( 'New Posts', 'buddyboss' ),
+			/* translators: Sorting option label shown after "by" text - use lowercase if grammatically appropriate in your language */
+			'by_context' => __( 'new posts', 'buddyboss' ),
+		),
+		'date_updated'  => array(
+			/* translators: Sorting option label shown in dropdown menus */
+			'default'    => __( 'Recent Activity', 'buddyboss' ),
+			/* translators: Sorting option label shown after "by" text - use lowercase if grammatically appropriate in your language */
+			'by_context' => __( 'recent activity', 'buddyboss' ),
+		),
 	);
-	return (array) apply_filters( 'bb_get_activity_sorting_options_labels', $sorting_options );
+
+	// Extract labels for the requested context.
+	$labels = array_map(
+		function ( $option ) use ( $context ) {
+			if ( is_array( $option ) ) {
+				return $option[ $context ] ?? $option['default'];
+			}
+			return $option;
+		},
+		$sorting_options
+	);
+
+	/**
+	 * Filters the activity sorting options labels.
+	 *
+	 * @since BuddyBoss 2.8.20
+	 * @since BuddyBoss 2.18.0 Added $context parameter.
+	 *
+	 * @param array  $labels  Array of activity sorting labels. Keys are sorting keys (e.g., 'date_recorded', 'date_updated').
+	 *                        Values are the translated label strings for the requested context.
+	 * @param string $context The context for labels. 'default' for dropdown labels,
+	 *                        'by_context' for labels shown after "by" text.
+	 */
+	return (array) apply_filters( 'bb_get_activity_sorting_options_labels', $labels, $context );
 }
 
 /**
@@ -2980,3 +3161,60 @@ function bb_is_activity_search_enabled( $default = true ) {
 	 */
 	return (bool) apply_filters( 'bb_is_activity_search_enabled', (bool) bp_get_option( 'bb_enable_activity_search', $default ) );
 }
+
+/**
+ * Check whether the Reactions feature is enabled via Settings 2.0 feature toggle.
+ *
+ * @since BuddyBoss 3.0.0
+ *
+ * @param bool $reset Optional. Pass true to clear the static cache. Default false.
+ *
+ * @return bool True if reactions feature is enabled, false otherwise.
+ */
+function bb_is_reactions_feature_enabled( $reset = false ) {
+	static $is_enabled = null;
+
+	if ( $reset ) {
+		$is_enabled = null;
+	}
+
+	if ( null !== $is_enabled ) {
+		return $is_enabled;
+	}
+
+	// Check if the feature registry exists (Settings 2.0).
+	if ( ! function_exists( 'bb_feature_registry' ) ) {
+		// Fallback: if no feature registry, assume enabled for backward compatibility.
+		$is_enabled = true;
+		return $is_enabled;
+	}
+
+	// Check the bb-active-features option directly for reactions.
+	$active_features = bp_get_option( 'bb-active-features', array() );
+
+	// Backward compatibility: if 'reactions' key not set (e.g. site not yet saved from Settings 2.0),
+	// treat as enabled so existing sites keep reactions. Must match is_active_callback in
+	// bb-features/community/reactions/bb-feature-config.php so feature card and functionality stay in sync.
+	if ( ! array_key_exists( 'reactions', $active_features ) ) {
+		$is_enabled = true;
+		return $is_enabled;
+	}
+
+	$is_enabled = ! empty( $active_features['reactions'] );
+	return $is_enabled;
+}
+
+/**
+ * Reset static cache when a feature is toggled on/off.
+ *
+ * @since BuddyBoss 3.0.0
+ *
+ * @param string $feature_id The feature ID that was toggled.
+ */
+function bb_reset_reactions_feature_cache( $feature_id ) {
+	if ( 'reactions' === $feature_id ) {
+		bb_is_reactions_feature_enabled( true );
+	}
+}
+add_action( 'bb_feature_activated', 'bb_reset_reactions_feature_cache' );
+add_action( 'bb_feature_deactivated', 'bb_reset_reactions_feature_cache' );
