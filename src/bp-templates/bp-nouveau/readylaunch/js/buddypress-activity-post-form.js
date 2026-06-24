@@ -3495,7 +3495,7 @@ window.bp = window.bp || {};
 				this.$el.html( this.template( this.model.toJSON() ) );
 				var whats_new_form = $( '#bb-rl-whats-new-form' );
 
-				if ( ! _.isUndefined( bbRlActivity.params.object ) && 'group' === bbRlActivity.params.object && 'group' === bbRlActivity.params.object ) {
+				if ( ! _.isUndefined( bbRlActivity.params.object ) && 'group' === bbRlActivity.params.object ) {
 					this.model.set(
 						{
 							item_name : bbRlActivity.params.item_name,
