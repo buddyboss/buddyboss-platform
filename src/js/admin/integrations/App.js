@@ -166,13 +166,16 @@ export function App() {
 				</div>
 
 				<div className="bb-integrations__controls">
-					<input
-						type="search"
-						className="bb-integrations__search"
-						placeholder={ __( 'Search integrations…', 'buddyboss' ) }
-						onChange={ handleSearchChange }
-						aria-label={ __( 'Search integrations', 'buddyboss' ) }
-					/>
+					<div className="bb-integrations__search-wrap">
+						<input
+							type="search"
+							className="bb-integrations__search"
+							placeholder={ __( 'Search integrations…', 'buddyboss' ) }
+							onChange={ handleSearchChange }
+							aria-label={ __( 'Search integrations', 'buddyboss' ) }
+						/>
+						<i class="bb-icon-search bb-admin-header__search-icon"></i>
+					</div>
 					<select
 						className="bb-integrations__category"
 						value={ category }

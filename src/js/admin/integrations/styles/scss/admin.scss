@@ -7,62 +7,69 @@
  * @since BuddyBoss [BBVERSION]
  */
 
-// Whiten the admin content background for this page only (this bundle's CSS is
-// enqueued solely on bb-integrations). The Figma sits the bordered cards on a
-// white surface — on the default grey admin background the 0.5px #D9D9D9 card
-// borders blend in and read as borderless.
-body.buddyboss_page_bb-integrations {
-	background: #fff;
+// Variables & mixing
+@import '../../../settings/styles/scss/utils/variables';
+@import '../../../settings/styles/scss/utils/mixings';
 
-	#wpcontent,
-	#wpbody-content {
-		background: #fff;
-	}
+
+body.buddyboss_page_bb-integrations {
+	background-color: $bb-background-color;
+}
+
+.bb-admin-integrations {
+	padding: 0;
+	max-width: 1600px;
+	margin: 0 auto;
 }
 
 .bb-integrations {
-	max-width: 1360px;
-	margin: 20px auto;
-	padding: 0 16px;
+	padding: 0 24px 24px;
 
-	// Filter bar — Figma: tabs left, search + category right, 24px pad, divider.
 	&__toolbar {
 		display: flex;
-		flex-wrap: wrap;
-		justify-content: space-between;
+		gap: 24px;
+		margin: 24px 0;
 		align-items: center;
-		gap: 12px;
-		padding-bottom: 24px;
-		margin-bottom: 24px;
-		border-bottom: 1px solid #e5e5e5;
+		justify-content: space-between;
+		flex-wrap: wrap;
+		padding: 0 0 24px 0;
+		border-bottom: 1px solid $bb-border-primary-color;
 	}
 
-	// Tier tabs (All / Free / Pro) — segmented pill control.
 	&__tabs {
-		display: inline-flex;
+		display: flex;
+		gap: 8px;
 		align-items: center;
-		gap: 4px;
-		padding: 4px;
-		background: #f0f0f1;
-		border-radius: 999px;
 	}
 
 	&__tab {
-		appearance: none;
-		border: 0;
 		background: transparent;
-		padding: 4px 16px;
-		font-size: 13px;
-		font-weight: 500;
-		line-height: 20px;
-		color: #50575e;
+		border: 0.5px solid $bb-border-tertiary-color;
 		border-radius: 999px;
+		padding: 7px 16px;
+		font-size: 13px;
+		line-height: 18px;
+		font-weight: 500;
+		color: $bb-text-tertiary-color;
 		cursor: pointer;
+		transition: all 0.2s ease;
+		white-space: nowrap;
+
+		&:hover {
+			border-color: $bb-border-tertiary-color;
+			box-shadow: inset 0 0 0 0.5px $bb-border-tertiary-color;
+		}
+
+		&:focus-visible {
+			border-color: transparent;
+			box-shadow: none;
+			outline: 2px solid $bb-border-quaternary-color;
+		}
 
 		&.is-active {
-			background: #fff;
-			color: #1e1e1e;
-			box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+			background: $bb-background-secondary-color;
+			border-color: $bb-border-quaternary-color;
+			color: $bb-text-color;
 		}
 
 		&:disabled {
@@ -78,10 +85,34 @@ body.buddyboss_page_bb-integrations {
 		gap: 12px;
 	}
 
-	&__search {
-		flex: 1 1 240px;
-		max-width: 420px;
-		min-height: 36px;
+	.bb-integrations__search {
+		@include bb-input-text;
+
+		&-wrap {
+			width: 100%;
+			max-width: 225px;
+			position: relative;
+
+			i {
+				position: absolute;
+				right: 8px;
+				top: 50%;
+				transform: translateY(-50%);
+				font-size: 20px;
+				color: $bb-icon-tertiary-color;
+				width: 20px;
+				height: 20px;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				pointer-events: none;
+			}
+		}
+	}
+
+	.bb-integrations__category {
+		@include bb-admin-settings-select;
+		min-height: 32px;
 	}
 
 	&__category {
