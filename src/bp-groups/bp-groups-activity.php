@@ -482,10 +482,19 @@ function groups_record_activity( $args = '' ) {
 				}
 			}
 
+			// Resolve the post title: keep the submitted value, honor an explicit clear, otherwise retain the stored title.
+			if ( ! empty( $args['post_title'] ) ) {
+				$edited_post_title = $args['post_title'];
+			} elseif ( ! empty( $args['post_title_cleared'] ) ) {
+				$edited_post_title = '';
+			} else {
+				$edited_post_title = $activity->post_title;
+			}
+
 			$args = array(
 				'id'                => $activity->id,
 				'action'            => ! empty( $args['action'] ) ? $args['action'] : $activity->action,
-				'post_title'        => ! empty( $args['post_title'] ) ? $args['post_title'] : ( ! empty( $args['post_title_cleared'] ) ? '' : $activity->post_title ),
+				'post_title'        => $edited_post_title,
 				'title_required'    => ! empty( $args['title_required'] ) ? $args['title_required'] : $activity->title_required,
 				'content'           => ! empty( $args['content'] ) ? $args['content'] : '',
 				'component'         => $activity->component,

@@ -5399,7 +5399,8 @@ window.bp = window.bp || {};
 
 			postUpdate: function ( event ) {
 				var self = this,
-					meta = {}, edit = false;
+					meta = {}, edit = false,
+					$form = ( event && event.target && $( event.target ).is( 'form' ) ) ? $( event.target ) : self.$el;
 
 				if ( event ) {
 					if ( 'keydown' === event.type && ( 13 !== event.keyCode || ! event.ctrlKey ) ) {
@@ -5412,9 +5413,9 @@ window.bp = window.bp || {};
 				// unset all errors before submit.
 				self.model.unset( 'errors' );
 
-				// Set the content and meta.
+				// Set the content and meta from the submitted form.
 				_.each(
-					self.$el.serializeArray(),
+					$form.serializeArray(),
 					function ( pair ) {
 						pair.name = pair.name.replace( '[]', '' );
 						if ( pair.name.startsWith( 'bb-poll-question-option[' ) ) {
@@ -5435,7 +5436,7 @@ window.bp = window.bp || {};
 				);
 
 				// Post content.
-				var $whatsNew        = self.$el.find( '#bb-rl-whats-new' ),
+				var $whatsNew        = $form.find( '#bb-rl-whats-new' ),
 					atwho_query      = $whatsNew.find( 'span.atwho-query' ),
 					atwhoQueryLength = atwho_query.length;
 				for ( var i = 0; i < atwhoQueryLength; i++ ) {
@@ -5465,7 +5466,7 @@ window.bp = window.bp || {};
 
 				self.model.set( 'content', content, { silent: true } );
 
-				var postTitle = self.$el.find( '#bb-rl-whats-new-title' ).val() || '';
+				var postTitle = $form.find( '#bb-rl-whats-new-title' ).val() || '';
 				if ( postTitle.length > 0 ) {
 					var maxPostTitleLength = BP_Nouveau.activity.params.activity_post_title_maxlength;
 					// Maximum 80 characters allowed.
@@ -5636,7 +5637,6 @@ window.bp = window.bp || {};
 				);
 
 				// Force post_title from visible input right before send - ensures cleared title is always sent.
-				var $form    = ( event && event.target && $( event.target ).is( 'form' ) ) ? $( event.target ) : self.$el;
 				var $titleEl = $form.find( 'input#bb-rl-whats-new-title, input.bb-rl-whats-new-title' ).first();
 				if ( ! $titleEl.length ) {
 					$titleEl = $( 'input#bb-rl-whats-new-title, input.bb-rl-whats-new-title' ).filter( ':visible' ).first();

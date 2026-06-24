@@ -785,7 +785,16 @@ function bp_nouveau_ajax_post_update() {
 		}
 	}
 
-	$post_title = isset( $_POST['post_title'] ) ? sanitize_text_field( wp_unslash( $_POST['post_title'] ) ) : ( isset( $_POST['whats-new-title'] ) ? sanitize_text_field( wp_unslash( $_POST['whats-new-title'] ) ) : '' );
+	if ( isset( $_POST['post_title'] ) ) {
+		$post_title = sanitize_text_field( wp_unslash( $_POST['post_title'] ) );
+	} elseif ( isset( $_POST['whats-new-title'] ) ) {
+		// Backward compatibility: older/cached scripts (and some third-party forms) submit the raw "whats-new-title" field instead of "post_title".
+		$post_title = sanitize_text_field( wp_unslash( $_POST['whats-new-title'] ) );
+	} else {
+		$post_title = '';
+	}
+
+	// On edit, an explicit "cleared" flag forces an empty title so it is not reinserted from the stored value.
 	if ( ! empty( $_POST['id'] ) && ! empty( $_POST['post_title_cleared'] ) ) {
 		$post_title = '';
 	}
@@ -1065,7 +1074,7 @@ function bp_nouveau_ajax_post_update() {
 			);
 
 			if ( ! empty( $_POST['post_title_cleared'] ) ) {
-				$post_array['post_title_cleared'] = 1;
+				$post_array['post_title_cleared'] = true;
 			}
 
 			if ( $is_scheduled ) {

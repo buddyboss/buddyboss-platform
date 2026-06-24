@@ -1852,7 +1852,7 @@ function groups_post_update( $args = '' ) {
 		'recorded_time'  => $recorded_time,
 	);
 	if ( ! empty( $r['post_title_cleared'] ) ) {
-		$record_args['post_title_cleared'] = 1;
+		$record_args['post_title_cleared'] = true;
 	}
 	$activity_id = groups_record_activity( $record_args );
 

@@ -6227,17 +6227,8 @@ window.bp = window.bp || {};
 
 				self.model.set( 'content', content, { silent: true } );
 
-				var activityPostTitle = $form.find( '#bb-rl-whats-new-title' ).length ? $form.find( '#bb-rl-whats-new-title' ).val() || '' : $form.find( '#whats-new-title' ).val() || '';
-				if ( activityPostTitle.length > 0 ) {
-					var maxPostTitleLength = BP_Nouveau.activity.params.activity_post_title_maxlength;
-					// Maximum 80 characters allowed.
-					if ( activityPostTitle.length > maxPostTitleLength ) {
-						activityPostTitle = activityPostTitle.slice( 0, maxPostTitleLength );
-					}
-				}
-				self.model.set( 'post_title', activityPostTitle, { silent: true } );
-
-				// Silently add meta.
+				// Silently add meta. The post title is captured into meta during serializeArray above,
+				// and re-read authoritatively from the submitted form just before the request is sent.
 				self.model.set( meta, { silent: true } );
 
 				var medias = self.model.get( 'media' );
