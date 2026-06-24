@@ -1,0 +1,414 @@
+/**
+ * BuddyBoss Integrations marketplace — styles.
+ *
+ * Scoped under top-level plugin classes (.bb-integrations / .bb-integrations-drawer)
+ * to avoid colliding with WP admin or other plugins. Mobile-first.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+
+// Whiten the admin content background for this page only (this bundle's CSS is
+// enqueued solely on bb-integrations). The Figma sits the bordered cards on a
+// white surface — on the default grey admin background the 0.5px #D9D9D9 card
+// borders blend in and read as borderless.
+body.buddyboss_page_bb-integrations {
+	background: #fff;
+
+	#wpcontent,
+	#wpbody-content {
+		background: #fff;
+	}
+}
+
+.bb-integrations {
+	max-width: 1360px;
+	margin: 20px auto;
+	padding: 0 16px;
+
+	// Filter bar — Figma: tabs left, search + category right, 24px pad, divider.
+	&__toolbar {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: space-between;
+		align-items: center;
+		gap: 12px;
+		padding-bottom: 24px;
+		margin-bottom: 24px;
+		border-bottom: 1px solid #e5e5e5;
+	}
+
+	// Tier tabs (All / Free / Pro) — segmented pill control.
+	&__tabs {
+		display: inline-flex;
+		align-items: center;
+		gap: 4px;
+		padding: 4px;
+		background: #f0f0f1;
+		border-radius: 999px;
+	}
+
+	&__tab {
+		appearance: none;
+		border: 0;
+		background: transparent;
+		padding: 4px 16px;
+		font-size: 13px;
+		font-weight: 500;
+		line-height: 20px;
+		color: #50575e;
+		border-radius: 999px;
+		cursor: pointer;
+
+		&.is-active {
+			background: #fff;
+			color: #1e1e1e;
+			box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+		}
+
+		&:disabled {
+			opacity: 0.45;
+			cursor: not-allowed;
+		}
+	}
+
+	&__controls {
+		display: flex;
+		flex: 1 1 320px;
+		justify-content: flex-end;
+		gap: 12px;
+	}
+
+	&__search {
+		flex: 1 1 240px;
+		max-width: 420px;
+		min-height: 36px;
+	}
+
+	&__category {
+		flex: 0 0 auto;
+		min-height: 36px;
+	}
+
+	&__grid {
+		display: grid;
+		grid-template-columns: 1fr;
+		gap: 16px;
+
+		@media (min-width: 768px) {
+			grid-template-columns: repeat(2, 1fr);
+		}
+
+		@media (min-width: 1024px) {
+			grid-template-columns: repeat(4, 1fr);
+		}
+	}
+
+	// Card — Figma: 0.5px #D9D9D9 border, 12px radius, 16px padding, 16px gap.
+	&__card {
+		display: flex;
+		flex-direction: column;
+		gap: 16px;
+		padding: 16px;
+		background: #fff;
+		border: 0.5px solid #d9d9d9;
+		border-radius: 12px;
+		min-height: 270px;
+
+		&--skeleton {
+			background: linear-gradient(90deg, #f3f4f5 25%, #ececec 37%, #f3f4f5 63%);
+			background-size: 400% 100%;
+			animation: bb-integrations-shimmer 1.4s ease infinite;
+		}
+	}
+
+	// Clickable body (logo + text); grows so the action button sits at the bottom.
+	&__card-body {
+		display: flex;
+		flex-direction: column;
+		gap: 16px;
+		flex: 1 1 auto;
+		padding: 0;
+		border: 0;
+		background: none;
+		text-align: left;
+		cursor: pointer;
+		width: 100%;
+	}
+
+	&__card-top {
+		display: flex;
+		flex-direction: row;
+		justify-content: space-between;
+		align-items: flex-start;
+		gap: 24px;
+	}
+
+	// Logo — Figma: 56px circle, 0.5px #E5E5E5 ring, 40px icon inside.
+	&__card-logo {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		flex: 0 0 auto;
+		width: 56px;
+		height: 56px;
+		padding: 8px;
+		border: 0.5px solid #e5e5e5;
+		border-radius: 99px;
+		box-sizing: border-box;
+
+		img {
+			width: 40px;
+			height: 40px;
+			object-fit: contain;
+		}
+
+		i {
+			font-size: 28px;
+			color: #8c8f94;
+		}
+	}
+
+	&__card-text {
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
+	}
+
+	// Title — Figma heading/lg-medium: 16px / 500 / 22px / #000.
+	&__card-title {
+		font-size: 16px;
+		font-weight: 500;
+		line-height: 22px;
+		color: #000;
+	}
+
+	// Vendor + description — Figma body/regular: 13px / 400 / 18px / #666.
+	&__card-vendor {
+		font-size: 13px;
+		font-weight: 400;
+		line-height: 18px;
+		color: #666;
+	}
+
+	&__card-desc {
+		font-size: 13px;
+		font-weight: 400;
+		line-height: 18px;
+		color: #666;
+		// Max 3 lines per Figma.
+		display: -webkit-box;
+		-webkit-line-clamp: 3;
+		-webkit-box-orient: vertical;
+		overflow: hidden;
+	}
+
+	&__card-actions {
+		display: flex;
+		flex-direction: row;
+		gap: 16px;
+	}
+
+	// Primary action button — Figma: orange outline #EF5D33, 8px radius.
+	&__btn {
+		display: inline-flex;
+		align-items: center;
+		gap: 4px;
+		box-sizing: border-box;
+		padding: 6px 16px;
+		font-size: 14px;
+		font-weight: 400;
+		line-height: 20px;
+		text-decoration: none;
+		border-radius: 8px;
+		cursor: pointer;
+
+		&--primary {
+			color: #ef5d33;
+			background: transparent;
+			border: 1px solid #ef5d33;
+
+			&:hover,
+			&:focus {
+				color: #ef5d33;
+				background: rgba(239, 93, 51, 0.06);
+			}
+		}
+	}
+
+	&__pagination {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: 12px;
+		margin: 24px 0;
+	}
+
+	&__pagination-info {
+		font-size: 13px;
+		color: #50575e;
+	}
+
+	&__state {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 12px;
+		padding: 48px 16px;
+		text-align: center;
+		color: #50575e;
+	}
+}
+
+@keyframes bb-integrations-shimmer {
+	0% { background-position: 100% 0; }
+	100% { background-position: -100% 0; }
+}
+
+/* Right slide-in detail drawer. */
+.bb-integrations-drawer {
+	position: fixed;
+	inset: 0;
+	z-index: 100000;
+
+	&__overlay {
+		position: absolute;
+		inset: 0;
+		background: rgba(0, 0, 0, 0.5);
+	}
+
+	&__panel {
+		position: absolute;
+		top: 0;
+		right: 0;
+		bottom: 0;
+		width: 100%;
+		max-width: 520px;
+		background: #fff;
+		box-shadow: -2px 0 16px rgba(0, 0, 0, 0.15);
+		overflow-y: auto;
+		padding: 24px;
+
+		.rtl & {
+			right: auto;
+			left: 0;
+			box-shadow: 2px 0 16px rgba(0, 0, 0, 0.15);
+		}
+	}
+
+	&__close {
+		position: absolute;
+		top: 16px;
+		right: 16px;
+		border: 0;
+		background: none;
+		cursor: pointer;
+		font-size: 18px;
+		color: #50575e;
+
+		.rtl & {
+			right: auto;
+			left: 16px;
+		}
+	}
+
+	&__state {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		min-height: 200px;
+	}
+
+	&__header {
+		padding: 8px 0 16px;
+		border-bottom: 1px solid #e2e4e7;
+		margin-bottom: 16px;
+	}
+
+	&__icon {
+		display: inline-flex;
+		width: 48px;
+		height: 48px;
+		align-items: center;
+		justify-content: center;
+		margin-bottom: 8px;
+
+		img {
+			max-width: 48px;
+			max-height: 48px;
+			object-fit: contain;
+		}
+
+		i {
+			font-size: 32px;
+			color: #8c8f94;
+		}
+	}
+
+	&__title {
+		font-size: 18px;
+		margin: 0 0 8px;
+	}
+
+	&__collection {
+		font-size: 13px;
+		font-weight: 400;
+		color: #8c8f94;
+	}
+
+	&__desc {
+		font-size: 13px;
+		color: #50575e;
+		margin: 0 0 12px;
+	}
+
+	&__actions {
+		display: flex;
+		gap: 8px;
+	}
+
+	&__body {
+		font-size: 14px;
+		line-height: 1.6;
+		color: #1e1e1e;
+
+		p {
+			margin: 0 0 12px;
+		}
+
+		// Restore list bullets — the WP admin stylesheet resets list-style, so
+		// the upstream `<ul class="wp-block-list">` renders flat without these.
+		ul {
+			list-style: disc;
+			padding-left: 1.5em;
+			margin: 0 0 12px;
+		}
+
+		ol {
+			list-style: decimal;
+			padding-left: 1.5em;
+			margin: 0 0 12px;
+		}
+
+		li {
+			margin: 0 0 6px;
+			list-style: inherit;
+		}
+
+		img {
+			max-width: 100%;
+			height: auto;
+			border-radius: 6px;
+			margin: 12px 0;
+		}
+
+		h2,
+		h3,
+		h4 {
+			margin-top: 20px;
+		}
+
+		a {
+			color: #ef5d33;
+		}
+	}
+}

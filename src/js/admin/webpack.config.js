@@ -73,6 +73,31 @@ const settingsConfig = {
     },
 };
 
+// Integrations marketplace configuration.
+// Standalone admin page (BuddyBoss → Integrations); its own bundle so it never
+// loads on the Settings page and vice-versa.
+const integrationsConfig = {
+    ...defaultConfig,
+    name: 'integrations',
+    entry: {
+        'index': path.resolve(__dirname, 'integrations/index.js'),
+    },
+    output: {
+        path: path.resolve(__dirname, '../../bp-core/admin/bb-settings/integrations/build'),
+        filename: '[name].js',
+        clean: {
+            keep: /styles/, // Keep the styles directory (SCSS output)
+        },
+    },
+    module: {
+        ...defaultConfig.module,
+        rules: [
+            ...rules,
+            scssRule,
+        ],
+    },
+};
+
 // Export configuration based on build target.
 // `readylaunch` target retired in BuddyBoss [BBVERSION] — legacy admin page
 // folded into Settings Appearance feature.
@@ -80,7 +105,9 @@ if (buildTarget === 'rl-onboarding') {
     module.exports = rlOnboardingConfig;
 } else if (buildTarget === 'settings') {
     module.exports = settingsConfig;
+} else if (buildTarget === 'integrations') {
+    module.exports = integrationsConfig;
 } else {
     // Default: export all configurations for combined builds.
-    module.exports = [rlOnboardingConfig, settingsConfig];
+    module.exports = [rlOnboardingConfig, settingsConfig, integrationsConfig];
 }
