@@ -503,6 +503,7 @@ if ( ! function_exists( 'bp_core_load_buddypress_textdomain' ) ) {
 				trailingslashit( WP_LANG_DIR . '/' . $old_domain ),
 				trailingslashit( WP_LANG_DIR ),
 				trailingslashit( WP_LANG_DIR . '/plugins' ),
+				trailingslashit( WP_LANG_DIR . '/loco/plugins' ), // Loco Translate "Custom" location.
 				trailingslashit( $plugin_dir . '/languages' ),
 			)
 		);

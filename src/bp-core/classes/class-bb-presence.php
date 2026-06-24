@@ -1071,6 +1071,7 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 						trailingslashit( WP_LANG_DIR . '/' . $old_domain ),
 						trailingslashit( WP_LANG_DIR ),
 						trailingslashit( WP_LANG_DIR . '/plugins' ),
+						trailingslashit( WP_LANG_DIR . '/loco/plugins' ), // Loco Translate "Custom" location.
 						trailingslashit( $buddyboss_lang ),
 					);
 
