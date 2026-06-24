@@ -48,9 +48,6 @@ add_action( 'menu_order', 'bbp_admin_menu_order' );
 add_action( 'wpmu_new_blog', 'bbp_new_site', 10, 6 );
 
 // Hook on to admin_init
-add_action( 'bbp_admin_init', 'bbp_admin_forums' );
-add_action( 'bbp_admin_init', 'bbp_admin_topics' );
-add_action( 'bbp_admin_init', 'bbp_admin_replies' );
 add_action( 'bbp_admin_init', 'bbp_setup_updater', 999 );
 add_action( 'bbp_admin_init', 'bbp_register_importers' );
 add_action( 'bbp_admin_init', 'bbp_register_admin_scripts' );
@@ -74,9 +71,6 @@ add_action( 'bbp_deactivation', 'bbp_delete_rewrite_rules' );
 
 // New Site
 add_action( 'bbp_new_site', 'bbp_create_initial_content', 8 );
-
-// Contextual Helpers
-add_action( 'load-settings_page_bbpress', 'bbp_admin_settings_help' );
 
 // Handle submission of Tools pages
 add_action( 'load-tools_page_bbp-repair', 'bbp_admin_repair_handler' );
