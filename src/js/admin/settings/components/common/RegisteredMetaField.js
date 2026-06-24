@@ -203,6 +203,11 @@ function AjaxMultiSelectField( { field, value, onChange, disabled } ) {
 				} )
 				.catch( function ( err ) {
 					if ( 'AbortError' !== err.name ) {
+						// Surface genuine search failures (network/server) for
+						// debugging; an aborted (superseded) request is expected.
+						if ( window.console && 'function' === typeof window.console.warn ) {
+							window.console.warn( 'RegisteredMetaField search failed:', err );
+						}
 						setIsLoading( false );
 						setSuggestions( [] );
 					}

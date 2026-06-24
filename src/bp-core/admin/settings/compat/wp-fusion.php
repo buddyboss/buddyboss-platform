@@ -95,10 +95,15 @@ function bb_legacy_wpf_register_ajax_resolvers( $resolvers ) {
 		$resolvers['wpf_tags']['create_label'] = __( 'Create "%s"', 'buddyboss' );
 	}
 
+	// Shared between this resolver's `search` and `has_more` closures so the page
+	// count from the single WP_Query is reused without a second query — and
+	// without leaning on request-global ($GLOBALS) state to pass it between them.
+	$redirect_max_pages = 1;
+
 	$resolvers['wpf_redirect'] = array(
 		'match'         => 'select4-select-page',
 		'placeholder'   => __( 'Select a page', 'buddyboss' ),
-		'search'        => function ( $query, $page ) {
+		'search'        => function ( $query, $page ) use ( &$redirect_max_pages ) {
 			$wp_query = new WP_Query(
 				array(
 					'post_type'              => 'any',
@@ -121,13 +126,12 @@ function bb_legacy_wpf_register_ajax_resolvers( $resolvers ) {
 				);
 			}
 			// Stash the page count for has_more without a second query.
-			$GLOBALS['bb_legacy_ajax_select_max_pages'] = (int) $wp_query->max_num_pages;
+			$redirect_max_pages = (int) $wp_query->max_num_pages;
 			return $out;
 		},
-		'has_more'      => function ( $query, $page, $matches ) {
+		'has_more'      => function ( $query, $page, $matches ) use ( &$redirect_max_pages ) {
 			unset( $query, $matches ); // Paging decided by WP_Query max pages.
-			$max = isset( $GLOBALS['bb_legacy_ajax_select_max_pages'] ) ? (int) $GLOBALS['bb_legacy_ajax_select_max_pages'] : 1;
-			return (int) $page < $max;
+			return (int) $page < ( $redirect_max_pages > 0 ? $redirect_max_pages : 1 );
 		},
 		'resolve_label' => function ( $value ) {
 			// WP Fusion stores a post ID or a raw URL.

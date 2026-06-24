@@ -2728,6 +2728,7 @@ function bb_legacy_ajax_select_search() {
 
 	if ( ! bp_current_user_can( 'bp_moderate' ) ) {
 		$fail();
+		return;
 	}
 
 	// `nonce` and `resolver` arrive on the same transport as the rest of the
@@ -2744,11 +2745,13 @@ function bb_legacy_ajax_select_search() {
 
 	if ( ! wp_verify_nonce( $nonce, 'bb_admin_settings' ) ) {
 		$fail();
+		return;
 	}
 
 	$resolvers = bb_legacy_get_ajax_select_resolvers();
 	if ( '' === $resolver_key || empty( $resolvers[ $resolver_key ] ) || ! is_callable( $resolvers[ $resolver_key ]['search'] ) ) {
 		$fail();
+		return;
 	}
 	$resolver = $resolvers[ $resolver_key ];
 

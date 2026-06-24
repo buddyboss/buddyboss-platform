@@ -201,8 +201,10 @@ function bb_legacy_bpagj_toggle_list_to_meta( $raw ) {
 	$allowed = array_keys( bb_legacy_bpagj_member_types() );
 	$out     = array();
 
-	// Object shape: { slug => 0|1 }.
-	$is_assoc = array_keys( $raw ) !== range( 0, count( $raw ) - 1 );
+	// Object shape: { slug => 0|1 }. Guard against the empty array first: PHP's
+	// range( 0, -1 ) returns array( 0, -1 ) (descending), so the bare comparison
+	// would mis-flag an empty array as associative.
+	$is_assoc = ! empty( $raw ) && array_keys( $raw ) !== range( 0, count( $raw ) - 1 );
 	if ( $is_assoc ) {
 		foreach ( $raw as $slug => $on ) {
 			$slug = sanitize_key( (string) $slug );
@@ -320,7 +322,20 @@ function bb_legacy_bpagj_register_fields( $registry, $component ) {
 	// `apply_filters( 'bb_legacy_meta_field_tab', 'details', … )`); the React
 	// GroupEditModal filters its content per-tab and orphans fields whose
 	// `tab` value doesn't match a known tab key, so this is mandatory.
-	$tab = (string) apply_filters( 'bb_legacy_bpagj_field_tab', 'details' );
+
+	/**
+	 * Filters the GroupEditModal tab the Auto-Group-Join fields are anchored to.
+	 *
+	 * The React GroupEditModal orphans fields whose `tab` does not match a tab it
+	 * actually renders, so a consumer overriding this must return a known tab key
+	 * (the default `details` is always safe).
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $tab       Target tab key. Default `details`.
+	 * @param string $component Component the fields are registered for (e.g. `groups`).
+	 */
+	$tab = (string) apply_filters( 'bb_legacy_bpagj_field_tab', 'details', $component );
 
 	$registry->register(
 		$component,
