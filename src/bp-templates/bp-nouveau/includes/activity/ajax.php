@@ -1028,6 +1028,10 @@ function bp_nouveau_ajax_post_update() {
 			$draft_activity_meta_key .= '_' . bp_get_displayed_user()->id;
 		}
 
+		// A cleared title is already an empty string here (see the post_title_cleared handling above), and
+		// bp_activity_post_update()/bp_activity_add() persist it verbatim with no stored-title fallback, so the
+		// non-group path needs no explicit post_title_cleared flag. If a stored-title fallback is ever added there
+		// (as groups_record_activity() has), propagate 'post_title_cleared' into $post_array like the group path below.
 		$post_array = array(
 			'id'         => $activity_id,
 			'post_title' => $post_title,
