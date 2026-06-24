@@ -4,6 +4,9 @@
 
 namespace WP_CLI\Utils;
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 use \Composer\Semver\Comparator;
 use \Composer\Semver\Semver;
 use \WP_CLI;

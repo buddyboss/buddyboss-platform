@@ -7,6 +7,9 @@
  * @version 1.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 ?>
 
 <div id="bp-media-uploader" class="bp-media-document-uploader" style="display: none;">

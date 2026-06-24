@@ -9,6 +9,9 @@
  * @version 1.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 global $current_comment;
 ?>
 <li class="bp-search-item bp-search-item_posts_comments">

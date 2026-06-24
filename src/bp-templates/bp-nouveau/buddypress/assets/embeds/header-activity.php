@@ -2,6 +2,10 @@
 /**
  * @version 3.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 ?>
 <div id="bp-embed-header">
 	<div class="bp-embed-avatar">

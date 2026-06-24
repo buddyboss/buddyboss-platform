@@ -11,6 +11,9 @@
  * @version 3.1.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 ?>
 
 <div class="bp-cover-image"></div>

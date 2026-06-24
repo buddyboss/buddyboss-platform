@@ -8,6 +8,9 @@
  * @version  1.2.3
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 switch ( bp_get_group_current_invite_tab() ) :
 
 	case 'invite':

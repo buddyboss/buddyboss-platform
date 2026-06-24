@@ -1,6 +1,9 @@
 <?php
 namespace Buddypress\CLI\Command;
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 if ( ! class_exists( 'User_Command' ) ) {
 	require_once WP_CLI_ROOT . '/php/commands/user.php';
 }

@@ -9,6 +9,9 @@
  * @version 1.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 global $current_comment; ?>
 <div class="bp-search-ajax-item bp-search-ajax-item_posts_comments">
 	<div class="item-avatar">

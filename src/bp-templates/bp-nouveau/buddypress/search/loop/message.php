@@ -9,6 +9,9 @@
  * @version 1.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 global $current_message; ?>
 <li class="bp-search-item bp-search-item_message">
 	<p class="message_participants">

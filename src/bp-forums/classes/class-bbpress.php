@@ -10,6 +10,9 @@
  * @package BuddyBoss\Main
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 if ( ! class_exists( 'bbPress' ) ) :
 	/**
 	 * Main bbPress Class

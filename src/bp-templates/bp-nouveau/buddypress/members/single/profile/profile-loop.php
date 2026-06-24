@@ -8,6 +8,9 @@
  * @version 1.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 ?>
 
 <h2 class="screen-heading view-profile-screen"><?php esc_html_e( 'View Profile', 'buddyboss-platform' ); ?></h2>

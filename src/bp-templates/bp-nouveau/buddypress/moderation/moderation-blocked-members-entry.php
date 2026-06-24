@@ -11,6 +11,9 @@
  * @version 1.5.6
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 $hide_sitewide           = 1 === (int) bp_get_moderation_hide_site_wide();
 $bp_moderation_item_id   = bp_get_moderation_item_id();
 $bp_moderation_item_type = bp_get_moderation_item_type();

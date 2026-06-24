@@ -9,6 +9,9 @@
  * @version 1.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 $folder_link             = bp_get_folder_folder_link();
 $document_folder_privacy = bp_get_document_folder_privacy();
 ?>

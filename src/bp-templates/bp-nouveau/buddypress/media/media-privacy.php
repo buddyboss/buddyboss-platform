@@ -9,6 +9,9 @@
  * @version 1.5.6
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 $album_privacy = '';
 if ( bp_is_user_media() || bp_is_user_albums() ) {
 	$album_id = (int) bp_action_variable( 0 );

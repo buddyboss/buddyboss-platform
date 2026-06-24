@@ -8,6 +8,10 @@
  * @since   BuddyBoss 1.0.0
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 ?>
 <div class="bp-search-ajax-item bboss_ajax_search_group">
 	<a href="<?php echo esc_url( add_query_arg( array( 'no_frame' => '1' ), bp_get_group_permalink() ) ); ?>">

@@ -8,6 +8,9 @@
  * @version 1.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 $group_link               = bp_get_group_permalink();
 $admin_link               = trailingslashit( $group_link . 'admin' );
 $group_avatar             = trailingslashit( $admin_link . 'group-avatar' );

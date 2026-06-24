@@ -9,6 +9,9 @@
  * @version 1.7.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 $audio_url                    = '';
 $doc_extension                = bp_get_document_extension();
 $doc_preview_music_extensions = bp_get_document_preview_music_extensions();

@@ -10,6 +10,9 @@
  * @version 1.7.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 ?>
 <div id="bp-video-uploader" style="display: none;" class="bp-video-uploader open-popup">
 	<transition name="modal">

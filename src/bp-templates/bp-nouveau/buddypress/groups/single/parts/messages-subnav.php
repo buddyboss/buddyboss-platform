@@ -7,6 +7,10 @@
  * @since   BuddyBoss 1.5.7
  * @version 1.5.7
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 ?>
 
 <nav class="<?php bp_nouveau_single_item_subnav_classes(); ?>" id="subnav" role="navigation" aria-label="<?php esc_attr_e( 'Group Messages menu', 'buddyboss-platform' ); ?>">

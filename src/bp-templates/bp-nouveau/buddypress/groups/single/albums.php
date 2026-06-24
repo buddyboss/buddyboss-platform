@@ -10,6 +10,9 @@
  * @version 1.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 if ( bb_enable_content_counts() && 'albums' === bp_current_action() && ! bp_is_single_album() ) {
 	$count = bp_media_get_total_group_album_count();
 	?>

@@ -7,6 +7,9 @@
  * @version 1.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 $document_id = bp_get_document_id();
 ?>
 <div class="bb-rl-media-move-file bb-rl-modal-move-file" style="display: none;" id="bb-rl-media-move-file-<?php echo esc_attr( $document_id ); ?>" data-activity-id="">

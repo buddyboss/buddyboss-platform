@@ -12,6 +12,9 @@
  * @version 1.7.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 $bp_is_group = bp_is_group();
 ?>
 

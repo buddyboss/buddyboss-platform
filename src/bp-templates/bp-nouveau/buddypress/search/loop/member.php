@@ -9,6 +9,9 @@
  * @version 1.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 $member_user_id   = bp_get_member_user_id();
 $member_user_link = bp_get_member_permalink();
 ?>

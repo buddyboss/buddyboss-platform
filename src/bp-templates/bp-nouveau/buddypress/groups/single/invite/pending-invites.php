@@ -8,6 +8,9 @@
  * @version 1.2.3
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 bp_get_template_part( 'groups/single/parts/invite-subnav' );
 ?>
 <div id="group-invites-container">

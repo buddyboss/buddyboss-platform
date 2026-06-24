@@ -8,6 +8,9 @@
  * @version 3.1.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 ?>
 <script id="tmpl-bp-avatar-webcam" type="text/html">
 	<# if ( ! data.user_media ) { #>

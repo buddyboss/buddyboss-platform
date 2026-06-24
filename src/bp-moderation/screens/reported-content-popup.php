@@ -6,6 +6,9 @@
  * @package BuddyBoss
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 ?>
 
 <div id="reported-content" class="content-report-popup moderation-popup mfp-hide">

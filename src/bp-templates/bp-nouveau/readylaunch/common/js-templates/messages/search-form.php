@@ -5,6 +5,10 @@
  * @since   BuddyBoss 2.9.00
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 ?>
 <form action="" method="get" id="user_messages_search_form" class="bp-messages-search-form" data-bp-search="messages">
 	<button type="submit" id="user_messages_search_submit">

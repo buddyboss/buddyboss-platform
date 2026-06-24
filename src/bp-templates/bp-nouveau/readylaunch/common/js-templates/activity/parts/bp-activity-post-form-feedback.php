@@ -6,6 +6,9 @@
  * @version 1.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 ?>
 <script type="text/html" id="tmpl-activity-post-form-feedback">
 	<span class="bb-icons-rl-fill" aria-hidden="true"></span>

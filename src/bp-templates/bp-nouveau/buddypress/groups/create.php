@@ -8,6 +8,9 @@
  * @version 1.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 bp_nouveau_groups_create_hook( 'before', 'page' ); ?>
 
 <h2 class="bp-subhead"><?php esc_html_e( 'Create A New Group', 'buddyboss-platform' ); ?></h2>

@@ -6,6 +6,9 @@
  * @package BuddyBoss\Theme
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 $forum_id = bbp_get_forum_id();
 if ( bbp_is_forum_category( $forum_id ) ) {
 

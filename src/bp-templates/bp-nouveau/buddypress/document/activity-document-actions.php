@@ -9,6 +9,9 @@
  * @version 1.7.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 global $document_template;
 $document_id            = bp_get_document_id();
 $document_attachment_id = bp_get_document_attachment_id();

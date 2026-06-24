@@ -2,6 +2,9 @@
 
 // Utility functions used by Behat steps
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 function assertEquals( $expected, $actual ) {
 	if ( $expected != $actual ) {
 		throw new Exception( 'Actual value: ' . var_export( $actual, true ) );

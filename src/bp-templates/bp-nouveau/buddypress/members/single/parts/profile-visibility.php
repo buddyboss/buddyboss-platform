@@ -8,6 +8,9 @@
  * @version 1.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 if ( empty( $GLOBALS['profile_template'] ) ) {
 	return;
 }

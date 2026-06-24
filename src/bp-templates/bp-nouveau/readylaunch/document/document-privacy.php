@@ -7,6 +7,9 @@
  * @version 1.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 $folder_privacy = '';
 if ( bp_is_user_document() || bp_is_user_folders() ) {
 	$folder_id = (int) bp_action_variable( 0 );

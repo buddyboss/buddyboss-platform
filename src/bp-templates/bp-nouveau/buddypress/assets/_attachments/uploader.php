@@ -8,6 +8,9 @@
  * @version 3.1.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 ?>
 <script type="text/html" id="tmpl-upload-window">
 	<?php if ( ! _device_can_upload() ) : ?>

@@ -6,6 +6,9 @@
  * @subpackage Image_Editor
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 if ( ! defined( 'BP_GOPP_IMAGE_EDITOR_GS_TRANSIENT_EXPIRATION' ) ) {
 	define( 'BP_GOPP_IMAGE_EDITOR_GS_TRANSIENT_EXPIRATION', DAY_IN_SECONDS );
 }

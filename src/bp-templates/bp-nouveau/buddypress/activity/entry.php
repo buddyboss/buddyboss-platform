@@ -12,6 +12,9 @@
  * @package BuddyBoss
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 bp_nouveau_activity_hook( 'before', 'entry' );
 
 $activity_id    = bp_get_activity_id();

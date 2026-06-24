@@ -12,6 +12,9 @@
  * @version 1.7.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 global $video_template;
 
 $width  = $video_template->video->attachment_data->thumb_meta['width'] ?? 0;

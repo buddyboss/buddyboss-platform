@@ -9,6 +9,9 @@
  * @version 1.4.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 ?>
 
 <div id="bp-media-create-folder" style="display: none;">

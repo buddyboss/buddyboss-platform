@@ -10,6 +10,10 @@
  * @param array $component_names
  * @return array
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 function bbp_filter_notifications_get_registered_components( $component_names = array() ) {
 
 	// Force $component_names to be an array

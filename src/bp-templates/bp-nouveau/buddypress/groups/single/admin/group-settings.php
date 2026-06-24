@@ -8,6 +8,9 @@
  * @version 1.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 $bp_get_new_group_status = bp_get_new_group_status();
 $bp_is_media_active      = bp_is_active( 'media' );
 

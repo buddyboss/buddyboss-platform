@@ -8,6 +8,9 @@
  * @version 3.1.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 ?>
 <script id="tmpl-bp-avatar-item" type="text/html">
 	<div id="avatar-to-crop">

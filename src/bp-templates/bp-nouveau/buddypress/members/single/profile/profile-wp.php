@@ -8,6 +8,9 @@
  * @version 1.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 bp_nouveau_wp_profile_hooks( 'before' ); ?>
 
 <div class="bp-widget wp-profile">

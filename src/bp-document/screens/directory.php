@@ -6,6 +6,9 @@
  * @since BuddyBoss 1.4.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 /**
  * Load the Document directory.
  *

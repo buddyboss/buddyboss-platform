@@ -9,6 +9,9 @@
  * @version 1.4.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 ?>
 
 <div class="bp-media-move-folder" id="bp-media-move-folder" style="display: none;">

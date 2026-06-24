@@ -10,6 +10,9 @@
  * @version 1.5.7
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 $attachment_id            = bp_get_document_attachment_id();
 $download_url             = bp_document_download_link( $attachment_id, bp_get_document_id() );
 $extension                = bp_get_document_extension();

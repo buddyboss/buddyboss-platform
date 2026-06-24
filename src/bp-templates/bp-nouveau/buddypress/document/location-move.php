@@ -9,6 +9,9 @@
  * @version 1.4.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 $ul = '';
 if ( bp_is_group_document() || bp_is_group_folders() ) {
 	$group_id = bp_get_current_group_id();

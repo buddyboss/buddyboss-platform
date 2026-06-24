@@ -8,6 +8,9 @@
  * @version 1.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 if ( bp_is_group_subgroups() ) {
 	ob_start();
 	bp_nouveau_group_template_part();

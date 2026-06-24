@@ -5,6 +5,9 @@
  * @package BuddyBoss\Theme
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 do_action( 'bbp_template_before_user_subscriptions' );
 
 if ( bbp_is_user_home() || current_user_can( 'edit_users' ) ) : ?>

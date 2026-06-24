@@ -8,6 +8,9 @@
  * @version 1.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 // Added this condition for theme backward compatibility.
 if ( bp_action_variables() && 'subscriptions' === bp_action_variable( 0 ) ) {
 	bp_get_template_part( 'members/single/settings/subscriptions' );

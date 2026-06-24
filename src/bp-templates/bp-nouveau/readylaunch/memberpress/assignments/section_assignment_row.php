@@ -9,6 +9,9 @@
  * @package BuddyBoss\MemberpressLMS
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 ?>
 
 <div id="mpcs-lesson-<?php echo esc_attr( $lesson->ID ); ?>" class="mpcs-lesson

@@ -8,6 +8,10 @@
  * @package BuddyBoss\Core
  * @version 1.4.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 ?>
 
 <div id="bp-media-uploader" style="display: none;">

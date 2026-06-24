@@ -6,6 +6,9 @@
  * @version  1.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 ?>
 <div class="bb-rl-media-video-model-wrapper bb-rl-internal-model media-video bb-rl-media-video-theatre" style="display: none;" id="buddypress">
 	<div id="bb-rl-media-video-model-container" class="bb-rl-media-model-container">

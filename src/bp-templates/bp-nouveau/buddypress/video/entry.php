@@ -10,6 +10,9 @@
  * @version 1.7.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 global $video_template;
 
 $video_id           = bp_get_video_id();

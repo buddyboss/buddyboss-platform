@@ -9,6 +9,9 @@
  * @package BuddyBoss\MemberpressLMS
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 use memberpress\courses\lib\Utils;
 use memberpress\courses as base;
 do_action( base\SLUG_KEY . '_classroom_start_instructor' );

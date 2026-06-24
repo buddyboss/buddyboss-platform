@@ -11,6 +11,9 @@
  * @version 1.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 bp_nouveau_activity_hook( 'before', 'comment_entry' );
 
 $activity_comment_id = bp_get_activity_comment_id();

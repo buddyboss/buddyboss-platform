@@ -8,6 +8,9 @@
  * @version 1.7.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 $is_send_ajax_request = bb_is_send_ajax_request();
 if ( bb_enable_content_counts() && 'videos' === bp_current_action() ) {
 	?>

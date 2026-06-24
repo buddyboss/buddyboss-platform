@@ -8,6 +8,9 @@
 
 namespace BuddyBoss\Core\Admin\Mothership;
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 ?>
 <div class="wrap buddyboss-mothership-wrap">
 

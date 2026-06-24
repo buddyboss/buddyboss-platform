@@ -8,6 +8,10 @@
  * @since   BuddyBoss 1.0.0
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 ?>
 <div class="bp-search-results bp-feedback info">
 	<span class="bp-icon" aria-hidden="true"></span>

@@ -7,6 +7,9 @@
  * @version 1.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 ?>
 
 <div class="bb-rl-media-move-folder bb-rl-modal-move-file" id="bb-rl-media-move-folder" style="display: none;">

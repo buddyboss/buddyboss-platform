@@ -7,6 +7,9 @@
  * @subpackage Administration
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 /*
 This is a compressed copy of NBBC. Do not edit!
 

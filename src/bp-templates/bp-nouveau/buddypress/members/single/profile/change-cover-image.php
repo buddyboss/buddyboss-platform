@@ -8,6 +8,9 @@
  * @version 1.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 ?>
 
 <h2 class="screen-heading change-cover-image-screen"><?php esc_html_e( 'Change Cover Photo', 'buddyboss-platform' ); ?></h2>

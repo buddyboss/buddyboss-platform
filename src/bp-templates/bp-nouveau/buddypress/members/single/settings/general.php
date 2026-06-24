@@ -9,6 +9,9 @@
  * @todo    password field lables need thinking, name for password fields do not conform to standards
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 bp_nouveau_member_hook( 'before', 'settings_template' ); ?>
 
 <h2 class="screen-heading general-settings-screen">

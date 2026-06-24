@@ -9,6 +9,9 @@
  * @version 1.5.6
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 ?>
 <div class="bp-media-move-file bp-media-move-photo" style="display: none;">
 	<transition name="modal">

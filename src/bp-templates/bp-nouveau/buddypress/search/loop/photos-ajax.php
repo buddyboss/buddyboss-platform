@@ -9,6 +9,9 @@
  * @version 1.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 $listing_class = '';
 $attachment_id = bp_get_media_attachment_id();
 $media_id      = bp_get_media_id();

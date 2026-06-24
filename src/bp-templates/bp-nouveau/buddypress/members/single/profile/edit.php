@@ -8,6 +8,9 @@
  * @version 1.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 bp_nouveau_xprofile_hook( 'before', 'edit_content' );
 
 if ( bp_has_profile( 'profile_group_id=' . bp_get_current_profile_group_id() ) ) {

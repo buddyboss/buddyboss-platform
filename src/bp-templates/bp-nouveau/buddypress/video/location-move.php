@@ -9,6 +9,9 @@
  * @version 1.7.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 $bp_get_album_id = bp_get_album_id();
 $bp_get_album_id = ! empty( $bp_get_album_id ) ? $bp_get_album_id : 0;
 ?>

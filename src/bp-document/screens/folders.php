@@ -7,6 +7,9 @@
  * @since BuddyBoss 1.4.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 /**
  * Load an individual folder screen.
  *

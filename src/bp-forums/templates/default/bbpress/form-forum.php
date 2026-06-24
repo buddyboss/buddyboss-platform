@@ -6,6 +6,9 @@
  * @package BuddyBoss\Theme
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 ?>
 <div id="bbpress-forums">
 <?php if ( bbp_is_forum_edit() ) : ?>

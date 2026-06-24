@@ -8,6 +8,9 @@
  * @version 1.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 $search_term = ( is_search() && isset( $_GET['s'] ) ) ? $_GET['s'] : '';
 ?>
 

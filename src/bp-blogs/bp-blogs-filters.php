@@ -6,6 +6,9 @@
  * @since BuddyPress 1.6.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 /** Display Filters **********************************************************/
 
 add_filter( 'bp_get_blog_latest_post_title', 'wptexturize' );

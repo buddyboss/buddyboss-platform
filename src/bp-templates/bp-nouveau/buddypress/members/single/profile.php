@@ -8,6 +8,9 @@
  * @version 1.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 bp_get_template_part( 'members/single/parts/item-subnav' );
 bp_nouveau_member_hook( 'before', 'profile_content' );
 ?>

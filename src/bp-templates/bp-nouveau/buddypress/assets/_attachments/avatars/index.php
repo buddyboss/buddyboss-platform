@@ -11,6 +11,9 @@
  * @version 3.1.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 /**
  * This action is for internal use, please do not use it
  */

@@ -1,3 +1,4 @@
+<?php defined( 'ABSPATH' ) || exit; // Exit if accessed directly. ?>
 <div class="wrap">
 
 	<div class="bp-admin-card section-bp_compatibility-integration">

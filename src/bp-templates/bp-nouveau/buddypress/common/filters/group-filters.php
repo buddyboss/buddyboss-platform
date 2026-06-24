@@ -8,6 +8,9 @@
  * @version 1.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 // Check group type enable?
 if ( false === bp_disable_group_type_creation() ) {
 	return '';

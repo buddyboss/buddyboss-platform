@@ -6,6 +6,9 @@
  * @version 1.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 ?>
 <script type="text/html" id="tmpl-activity-video">
 	<div class="dropzone closed video-dropzone" id="bb-rl-activity-post-video-uploader"></div>

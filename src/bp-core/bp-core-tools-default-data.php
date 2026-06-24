@@ -5,6 +5,10 @@
  *
  * @BuddyBoss 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 function bp_admin_tools_default_data_save() {
 
 	if ( ! empty( $_POST['bp-admin-clear'] ) ) {

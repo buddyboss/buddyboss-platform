@@ -9,6 +9,9 @@
  * @version 1.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 $forum_id    = get_the_ID();
 $total       = bbp_get_forum_topic_count( $forum_id );
 $result      = bp_search_is_post_restricted( $forum_id, get_current_user_id(), 'forum' );

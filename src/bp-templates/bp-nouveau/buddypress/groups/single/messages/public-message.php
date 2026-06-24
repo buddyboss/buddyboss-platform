@@ -8,6 +8,9 @@
  * @version 1.5.7
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 $bp_loggedin_user_id = bp_loggedin_user_id();
 $args                = array(
 	'page'                => 1,

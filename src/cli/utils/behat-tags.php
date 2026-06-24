@@ -13,6 +13,9 @@
  *   vendor/bin/behat --format progress $BEHAT_TAGS
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 function version_tags( $prefix, $current, $operator = '<' ) {
 	if ( ! $current ) {
 		return array();

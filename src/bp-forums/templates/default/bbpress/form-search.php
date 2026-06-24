@@ -6,6 +6,9 @@
  * @package BuddyBoss\Theme
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 ?>
 
 <form role="search" method="get" id="bbp-search-form" action="<?php bbp_search_url(); ?>">

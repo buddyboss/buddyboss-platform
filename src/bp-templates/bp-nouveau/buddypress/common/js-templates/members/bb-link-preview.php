@@ -6,6 +6,10 @@
  *
  * @since 2.3.60
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 // phpcs:disable PHPCompatibility
 ?>
 <script type="text/html" id="tmpl-bb-link-preview">

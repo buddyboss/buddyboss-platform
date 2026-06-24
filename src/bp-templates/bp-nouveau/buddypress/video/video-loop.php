@@ -10,6 +10,9 @@
  * @version 1.7.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 bp_nouveau_before_loop();
 
 // phpcs:ignore WordPress.Security.NonceVerification.Missing

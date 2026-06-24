@@ -4,6 +4,10 @@
  *
  * @since BuddyBoss 2.1.4
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 function bb_invite_setup_globals() {
 	global $wpdb;
 

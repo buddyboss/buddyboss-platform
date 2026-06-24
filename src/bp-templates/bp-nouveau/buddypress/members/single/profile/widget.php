@@ -8,6 +8,9 @@
  * @version 1.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 $bp_nouveau = bp_nouveau();
 
 // If no Profile Completion Progress found then stop.

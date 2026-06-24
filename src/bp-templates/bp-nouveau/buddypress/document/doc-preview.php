@@ -9,6 +9,9 @@
  * @version 1.7.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 $bp_document_image_preview = apply_filters( 'bp_document_image_preview', true );
 $attachment_url            = bp_get_document_attachment_image_activity_thumbnail();
 $bp_get_document_extension = bp_get_document_extension();

@@ -7,6 +7,9 @@
  * @version 1.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 // Doc/PDF/image extension files preview.
 bp_get_template_part( 'document/doc-preview' );
 

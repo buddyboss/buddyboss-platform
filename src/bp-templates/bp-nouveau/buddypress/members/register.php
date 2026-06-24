@@ -8,6 +8,9 @@
  * @version 1.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 bp_nouveau_signup_hook( 'before', 'page' );
 $bp_get_current_signup_step = bp_get_current_signup_step();
 ?>

@@ -10,6 +10,9 @@
  * @version 1.7.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 global $video_album_template;
 
 $is_send_ajax_request = bb_is_send_ajax_request();

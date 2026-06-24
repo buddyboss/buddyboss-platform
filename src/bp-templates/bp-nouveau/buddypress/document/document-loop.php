@@ -9,6 +9,9 @@
  * @version 1.4.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 bp_nouveau_before_loop();
 
 if ( bp_has_document( bp_ajax_querystring( 'document' ) ) ) :

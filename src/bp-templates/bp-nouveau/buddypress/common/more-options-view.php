@@ -8,6 +8,9 @@
  * @version 1.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 ?>
 <div class="bb_more_dropdown__title">
 	<span class="bb_more_dropdown__title__text"><?php esc_html_e( 'Options', 'buddyboss-platform' ); ?></span>
