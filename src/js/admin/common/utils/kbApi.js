@@ -18,6 +18,8 @@
  * @since BuddyBoss [BBVERSION]
  */
 
+import { decodeEntities } from '@wordpress/html-entities';
+
 import { applyFilters } from '@wordpress/hooks';
 
 const DEFAULT_PATH_BASE = '/wp-json/wp/v2';
@@ -235,69 +237,12 @@ export const kbApi = {
 	},
 };
 
-/**
- * Decode the small set of HTML entities WordPress emits in `title.rendered`
- * (mirrors PHP's `wp_specialchars_decode` default ENT_NOQUOTES + named-entity
- * coverage). Title strings are short, ASCII-only entities, and never injected
- * as HTML — the result is rendered as a React text child only — so a small
- * regex table is both safer (no DOM-API innerHTML write at all) and adequate.
- * For numeric entities (`&#039;`, `&#x27;`) we also handle the common forms.
- *
- * Numeric code points are bounds-checked against the Unicode range
- * (0..0x10FFFF) before being passed to `String.fromCodePoint`, which throws
- * on out-of-range inputs. Out-of-range entities pass through verbatim.
- *
- * @param {string} str Raw `title.rendered` from the WP REST envelope.
- * @return {string} Decoded text.
- */
-export function decodeEntities( str ) {
-	if ( typeof str !== 'string' || str === '' ) {
-		return '';
-	}
-	const named = {
-		'&amp;':   '&',
-		'&lt;':    '<',
-		'&gt;':    '>',
-		'&quot;':  '"',
-		'&#039;':  '\'',
-		'&#39;':   '\'',
-		'&apos;':  '\'',
-		'&nbsp;':  ' ',
-		'&hellip;': '…',
-		'&ndash;': '–',
-		'&mdash;': '—',
-		'&lsquo;': '‘',
-		'&rsquo;': '’',
-		'&ldquo;': '“',
-		'&rdquo;': '”',
-	};
-	let out = str.replace( /&(?:amp|lt|gt|quot|#0?39|apos|nbsp|hellip|ndash|mdash|lsquo|rsquo|ldquo|rdquo);/g, ( m ) => named[ m ] || m );
-	// Numeric decimal entities: &#NN;
-	out = out.replace( /&#(\d+);/g, ( _m, code ) => {
-		const n = parseInt( code, 10 );
-		if ( ! Number.isFinite( n ) || n < 0 || n > 0x10FFFF ) {
-			return _m;
-		}
-		try {
-			return String.fromCodePoint( n );
-		} catch ( e ) {
-			return _m;
-		}
-	} );
-	// Numeric hex entities: &#xNN;
-	out = out.replace( /&#x([0-9a-fA-F]+);/g, ( _m, code ) => {
-		const n = parseInt( code, 16 );
-		if ( ! Number.isFinite( n ) || n < 0 || n > 0x10FFFF ) {
-			return _m;
-		}
-		try {
-			return String.fromCodePoint( n );
-		} catch ( e ) {
-			return _m;
-		}
-	} );
-	return out;
-}
+// `decodeEntities` for KB title strings is re-exported from
+// @wordpress/html-entities (imported above) — the WP-canonical decoder with
+// full named-entity coverage, already used by the integration components — so
+// the whole admin surface decodes entities one consistent way. Re-exported here
+// so the existing KB consumers that import it from this module keep working.
+export { decodeEntities };
 
 /**
  * Coerce http: → https: on a buddyboss.com URL to avoid mixed-content

@@ -22,6 +22,46 @@ import { decodeEntities } from '@wordpress/html-entities';
 import { fetchIntegrationBySlug } from '../../utils/integrationsApi';
 import { sanitizeHtml, safeUrl } from '@bb/admin-common';
 
+/**
+ * Requires / Recommended dependency rows.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {Object} props
+ * @param {string} props.label Section label ("Requires" / "Recommended").
+ * @param {Array}  props.items Array of { name, url, tier } (tier optional: 'free' | 'pro').
+ * @returns {JSX.Element}
+ */
+function DependencyList( { label, items } ) {
+	return (
+		<div className="bb-integrations-drawer__deps">
+			<span className="bb-integrations-drawer__deps-label">{ label }</span>
+			<ul className="bb-integrations-drawer__deps-list">
+				{ items.map( ( dep, i ) => {
+					const name = dep && dep.name ? decodeEntities( dep.name ) : '';
+					if ( ! name ) {
+						return null;
+					}
+					const tierTag = 'pro' === dep.tier ? __( 'PREMIUM', 'buddyboss' )
+						: ( 'free' === dep.tier ? __( 'FREE', 'buddyboss' ) : '' );
+					return (
+						<li key={ ( dep && dep.url ) || name || i } className="bb-integrations-drawer__deps-item">
+							{ dep && dep.url ? (
+								<a href={ safeUrl( dep.url ) } target="_blank" rel="noopener noreferrer">{ name }</a>
+							) : (
+								name
+							) }
+							{ tierTag && (
+								<span className={ 'bb-integrations-drawer__deps-tag bb-integrations-drawer__deps-tag--' + dep.tier }>{ tierTag }</span>
+							) }
+						</li>
+					);
+				} ) }
+			</ul>
+		</div>
+	);
+}
+
 export function IntegrationDrawer( { slug, onClose } ) {
 	const [ status, setStatus ] = useState( 'loading' ); // loading | ready | error | notfound
 	const [ item, setItem ] = useState( null );
@@ -120,8 +160,17 @@ export function IntegrationDrawer( { slug, onClose } ) {
 	const description = item?.short_description ? decodeEntities( item.short_description ) : '';
 	const collection = item?.collection_name ? decodeEntities( item.collection_name ) : '';
 	const logo = item?.logo_image_url && 'string' === typeof item.logo_image_url ? item.logo_image_url : '';
-	const learnMoreUrl = item?.link || item?.link_url || '';
 	const contentHtml = item?.content?.rendered ? item.content.rendered : '';
+
+	// API field contract — all optional; each block renders only when present.
+	const installUrl = item?.install_url && 'string' === typeof item.install_url ? item.install_url : '';
+	const learnMoreUrl = item?.plugin_url || item?.link || item?.link_url || '';
+	const supportUrl = item?.support_url && 'string' === typeof item.support_url ? item.support_url : '';
+	const vendorName = item?.vendor_name ? decodeEntities( item.vendor_name ) : '';
+	const vendorUrl = item?.vendor_url && 'string' === typeof item.vendor_url ? item.vendor_url : '';
+	const requires = Array.isArray( item?.requires ) ? item.requires : [];
+	const recommended = Array.isArray( item?.recommended ) ? item.recommended : [];
+	const screenshots = Array.isArray( item?.screenshots ) ? item.screenshots.filter( ( s ) => 'string' === typeof s ) : [];
 
 	return (
 		<div className="bb-integrations-drawer" role="dialog" aria-modal="true" aria-label={ title || __( 'Integration details', 'buddyboss' ) }>
@@ -171,25 +220,53 @@ export function IntegrationDrawer( { slug, onClose } ) {
 									<span className="bb-integrations-drawer__collection"> · { collection }</span>
 								) }
 							</h2>
+							{ vendorName && (
+								<p className="bb-integrations-drawer__vendor">
+									{ vendorUrl ? (
+										<a href={ safeUrl( vendorUrl ) } target="_blank" rel="noopener noreferrer">{ vendorName }</a>
+									) : (
+										vendorName
+									) }
+								</p>
+							) }
 							{ description && (
 								<p className="bb-integrations-drawer__desc">{ description }</p>
 							) }
 
-							{ /* PENDING Q6: "Works with" badges (integrations_require → names) go here. */ }
-
 							<div className="bb-integrations-drawer__actions">
-								{ /* PENDING Q4: Install/Activate goes here when the install path is defined. */ }
+								{ /* install_url → Install (primary); plugin_url → Learn More; support_url → Support. */ }
+								{ installUrl && (
+									<a href={ safeUrl( installUrl ) } className="button button-primary">
+										{ __( 'Install', 'buddyboss' ) }
+									</a>
+								) }
 								{ learnMoreUrl && (
 									<a
 										href={ safeUrl( learnMoreUrl ) }
-										className="button button-primary"
+										className={ installUrl ? 'button' : 'button button-primary' }
 										target="_blank"
 										rel="noopener noreferrer"
 									>
 										{ __( 'Learn More', 'buddyboss' ) }
 									</a>
 								) }
+								{ supportUrl && (
+									<a href={ safeUrl( supportUrl ) } className="button" target="_blank" rel="noopener noreferrer">
+										{ __( 'Support', 'buddyboss' ) }
+									</a>
+								) }
 							</div>
+
+							{ ( requires.length > 0 || recommended.length > 0 ) && (
+								<div className="bb-integrations-drawer__requirements">
+									{ requires.length > 0 && (
+										<DependencyList label={ __( 'Requires', 'buddyboss' ) } items={ requires } />
+									) }
+									{ recommended.length > 0 && (
+										<DependencyList label={ __( 'Recommended', 'buddyboss' ) } items={ recommended } />
+									) }
+								</div>
+							) }
 						</div>
 
 						{ contentHtml && (
@@ -198,6 +275,14 @@ export function IntegrationDrawer( { slug, onClose } ) {
 								// eslint-disable-next-line react/no-danger
 								dangerouslySetInnerHTML={ { __html: sanitizeHtml( contentHtml ) } }
 							/>
+						) }
+
+						{ screenshots.length > 0 && (
+							<div className="bb-integrations-drawer__screenshots">
+								{ screenshots.map( ( src, i ) => (
+									<img key={ src || i } src={ safeUrl( src ) } alt="" loading="lazy" />
+								) ) }
+							</div>
 						) }
 					</div>
 				) }

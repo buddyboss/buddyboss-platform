@@ -210,7 +210,11 @@ const buildListPath = ({ page = 1, perPage = 20, search = '', category = 0 } = {
 		`page=${encodeURIComponent(page)}`,
 		`per_page=${encodeURIComponent(perPage)}`,
 		// Light field set for the grid; the detail drawer fetches content.rendered separately.
-		'_fields=id,slug,title,short_description,logo_image_url,collection_name,template,integrations_category,integrations_collection,integrations_require,link,link_url',
+		// TEAM CONTRACT: install_url, vendor_name and tier are requested here so the
+		// card lights them up automatically once buddyboss.com adds them to the
+		// wp/v2/integrations response (requesting unknown fields is harmless — WP just
+		// omits them). See docs spec "API field contract".
+		'_fields=id,slug,title,short_description,logo_image_url,collection_name,template,integrations_category,integrations_collection,integrations_require,link,link_url,install_url,plugin_url,vendor_name,tier',
 	];
 	if (search) {
 		query.push(`search=${encodeURIComponent(search)}`);
@@ -308,9 +312,12 @@ export const fetchIntegrationBySlug = async (slug, signal) => {
 	if (!slug || typeof slug !== 'string') {
 		throw new Error('Integration slug is required');
 	}
+	// TEAM CONTRACT (detail): install_url, vendor_name, vendor_url, tier, requires,
+	// recommended, screenshots, support_url are requested so the drawer renders them
+	// automatically once buddyboss.com adds them. Unknown fields are omitted by WP.
 	const path =
 		`/wp-json/wp/v2/integrations?slug=${encodeURIComponent(slug)}` +
-		'&_fields=id,slug,title,short_description,content,logo_image_url,collection_name,template,integrations_category,integrations_collection,integrations_require,link,link_url';
+		'&_fields=id,slug,title,short_description,content,logo_image_url,collection_name,template,integrations_category,integrations_collection,integrations_require,link,link_url,install_url,plugin_url,vendor_name,vendor_url,tier,requires,recommended,screenshots,support_url';
 	const cacheKey = `${CACHE_PREFIX}detail_${slug}`;
 
 	const cached = getFromCache(cacheKey, DETAIL_TTL_MS);

@@ -3,7 +3,7 @@
  *
  * Built once (BUILD_TARGET=common) and exposed on window.bbAdminCommon via the
  * webpack `library` output. App bundles import `@bb/admin-common`, which is
- * externalized to this global (see webpack.config.js), so the the layer ships once.
+ * externalized to this global (see webpack.config.js), so the layer ships once.
  *
  * @package BuddyBoss\Core\Administration
  * @since BuddyBoss [BBVERSION]

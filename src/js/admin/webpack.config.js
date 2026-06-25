@@ -137,6 +137,10 @@ const integrationsConfig = withCommonExternal({
 // Shared admin-common layer — built ONCE, consumed by every admin app as an external.
 // Exposes its exports on window.bbAdminCommon so app bundles can import
 // `@bb/admin-common` as an external (no code duplication across bundles).
+//
+// NOTE: commonConfig intentionally does NOT use withCommonExternal() — it IS
+// window.bbAdminCommon, so it must not externalize itself. Only consumer configs
+// (settings, integrations) are wrapped with withCommonExternal().
 const commonConfig = {
     ...defaultConfig,
     name: 'common',

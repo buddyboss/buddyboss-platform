@@ -5,7 +5,7 @@
  * @since BuddyBoss [BBVERSION]
  */
 
-import { useState, useEffect, lazy, Suspense } from '@wordpress/element';
+import { useState, useEffect, useCallback, lazy, Suspense } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { Router } from './Router';
 import { KbProvider, useKb, BBAdminHeader } from '@bb/admin-common';
@@ -174,6 +174,15 @@ function AppInner() {
 	const { open: openKb, state: kbState } = useKb();
 	const [currentRoute, setCurrentRoute] = useState('/settings');
 	const [isLoading, setIsLoading] = useState(true);
+
+	// Stable identities so BBAdminHeader's search effect doesn't re-subscribe on
+	// every render (ajaxFetch is module-scoped; setCurrentRoute is stable).
+	const handleHeaderSearch = useCallback( ( query, signal ) =>
+		ajaxFetch( 'bb_admin_search_settings', { query }, { signal } ).then(
+			( response ) => ( response.success ? ( response.data?.results || [] ) : [] )
+		),
+	[] );
+	const handleHeaderSelectResult = useCallback( ( result ) => setCurrentRoute( result.route ), [] );
 
 	// One-shot localStorage flush for the help-content cache.
 	//
@@ -371,12 +380,8 @@ function AppInner() {
 			<BBAdminHeader
 				logoUrl={ ( typeof bbAdminData !== 'undefined' && bbAdminData.logoUrl ) || '' }
 				ipnRootId={ ( typeof bbAdminData !== 'undefined' && bbAdminData.ipnRootId ) || '' }
-				onSearch={ ( query, signal ) =>
-					ajaxFetch( 'bb_admin_search_settings', { query }, { signal } ).then(
-						( response ) => ( response.success ? ( response.data?.results || [] ) : [] )
-					)
-				}
-				onSelectResult={ ( result ) => setCurrentRoute( result.route ) }
+				onSearch={ handleHeaderSearch }
+				onSelectResult={ handleHeaderSelectResult }
 				onHelp={ openKb }
 			/>
 			<div id="bb-admin-settings-main" tabIndex="-1">

@@ -233,6 +233,19 @@ body.buddyboss_page_bb-integrations {
 		min-height: 54px;
 	}
 
+	&__card-badge {
+		align-self: flex-start;
+		font-size: 10px;
+		font-weight: 600;
+		letter-spacing: 0.5px;
+		text-transform: uppercase;
+		color: #fff;
+		background: #ef5d33;
+		border-radius: 4px;
+		padding: 2px 8px;
+		line-height: 16px;
+	}
+
 	&__card-actions {
 		display: flex;
 		flex-direction: row;
@@ -418,6 +431,82 @@ body.buddyboss_page_bb-integrations {
 
 		a {
 			color: #ef5d33;
+		}
+	}
+
+	&__vendor {
+		font-size: 13px;
+		color: #8c8f94;
+		margin: 0 0 8px;
+
+		a {
+			color: #ef5d33;
+		}
+	}
+
+	&__requirements {
+		margin: 16px 0;
+	}
+
+	&__deps {
+		margin-bottom: 12px;
+
+		&-label {
+			display: block;
+			font-size: 12px;
+			font-weight: 600;
+			text-transform: uppercase;
+			color: #50575e;
+			margin-bottom: 6px;
+		}
+
+		&-list {
+			list-style: none;
+			margin: 0;
+			padding: 0;
+		}
+
+		&-item {
+			display: flex;
+			align-items: center;
+			gap: 8px;
+			font-size: 13px;
+			padding: 4px 0;
+
+			a {
+				color: #ef5d33;
+			}
+		}
+
+		&-tag {
+			font-size: 10px;
+			font-weight: 600;
+			text-transform: uppercase;
+			padding: 1px 6px;
+			border-radius: 3px;
+
+			&--free {
+				background: #edf7ed;
+				color: #1e7e34;
+			}
+
+			&--pro {
+				background: #fdecea;
+				color: #b3261e;
+			}
+		}
+	}
+
+	&__screenshots {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 12px;
+		margin-top: 16px;
+
+		img {
+			width: 100%;
+			border: 1px solid #e2e4e7;
+			border-radius: 6px;
 		}
 	}
 }

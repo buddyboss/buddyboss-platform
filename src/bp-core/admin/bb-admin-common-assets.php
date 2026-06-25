@@ -4,7 +4,7 @@
  *
  * Registers the `bb-admin-common` script handle (exposes window.bbAdminCommon)
  * and the `bb-admin-common-style` style handle. App pages enqueue these as
- * dependencies so the the layer ships once across all admin React apps.
+ * dependencies so the layer ships once across all admin React apps.
  *
  * @package BuddyBoss\Core\Administration
  * @since BuddyBoss [BBVERSION]
