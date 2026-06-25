@@ -389,7 +389,7 @@ function xprofile_get_field_data( $field, $user_id = 0, $multi_format = 'array' 
 		return false;
 	}
 
-	$values = maybe_unserialize( BP_XProfile_ProfileData::get_value_byid( $field_id, $user_id ) );
+	$values = bb_xprofile_safe_unserialize( BP_XProfile_ProfileData::get_value_byid( $field_id, $user_id ) ); // Object injection guard.
 
 	if ( is_array( $values ) ) {
 		$data = array();
@@ -1771,7 +1771,7 @@ function bp_get_user_social_networks_urls( $user_id = null ) {
 	if ( $social_networks_id > 0 ) {
 		$providers = bp_xprofile_social_network_provider();
 
-		$original_option_values = maybe_unserialize( BP_XProfile_ProfileData::get_value_byid( $social_networks_id, $user ) );
+		$original_option_values = bb_xprofile_safe_unserialize( BP_XProfile_ProfileData::get_value_byid( $social_networks_id, $user ) ); // Object injection guard.
 
 		$social_settings_field   = xprofile_get_field( $social_networks_id, $user_id );
 		$social_settings_options = $social_settings_field->get_children();
@@ -2323,7 +2323,7 @@ function bp_xprofile_get_user_progress( $group_ids, $photo_types ) {
 
 			// For Social networks field check child field is completed or not
 			if  ( 'socialnetworks' == $group_single_field->type ){
-				$field_data_value = maybe_unserialize( $group_single_field->data->value );
+				$field_data_value = bb_xprofile_safe_unserialize( $group_single_field->data->value ); // Object injection guard.
 				$children = $group_single_field->type_obj->field_obj->get_children();
 				foreach ( $children as $child ){
 					if ( isset( $field_data_value[$child->name] ) &&  ! empty( $field_data_value[$child->name] ) ) {
@@ -2332,7 +2332,7 @@ function bp_xprofile_get_user_progress( $group_ids, $photo_types ) {
 					++ $group_total_fields;
 				}
 			} else{
-				$field_data_value = maybe_unserialize( $group_single_field->data->value );
+				$field_data_value = bb_xprofile_safe_unserialize( $group_single_field->data->value ); // Object injection guard.
 
 				if ( ! empty( $field_data_value ) ) {
 					++ $group_completed_fields;
@@ -2383,7 +2383,12 @@ function bp_xprofile_get_user_progress_formatted( $user_progress_arr ) {
 	$profile_slug         = bp_get_profile_slug();
 
 	// Calculate Total Progress percentage.
-	$profile_completion_percentage = round( ( $user_progress_arr['completed_fields'] * 100 ) / $user_progress_arr['total_fields'] );
+	// Default to 0% when there are no total fields to prevent division by zero errors.
+	// This can occur when no profile groups or photo types are selected in widget settings.
+	$profile_completion_percentage = 0;
+	if ( isset( $user_progress_arr['total_fields'] ) && $user_progress_arr['total_fields'] > 0 ) {
+		$profile_completion_percentage = round( ( $user_progress_arr['completed_fields'] * 100 ) / $user_progress_arr['total_fields'] );
+	}
 	$user_prgress_formatted        = array(
 		'completion_percentage' => $profile_completion_percentage,
 	);
@@ -2539,7 +2544,7 @@ function bb_get_user_social_networks_field_value( $user_id = null ) {
 	$user = ( null !== $user_id && 0 < $user_id ) ? $user_id : bp_displayed_user_id();
 
 	if ( $social_networks_id > 0 ) {
-		$original_option_values = maybe_unserialize( BP_XProfile_ProfileData::get_value_byid( $social_networks_id, $user ) );
+		$original_option_values = bb_xprofile_safe_unserialize( BP_XProfile_ProfileData::get_value_byid( $social_networks_id, $user ) ); // Object injection guard.
 	}
 
 	return $original_option_values;
@@ -2638,7 +2643,7 @@ function bb_remove_google_plus_fields( $field_id, $field_name ) {
 	) {
 		foreach ( $user_ids as $user_id ) {
 			$field_data = new BP_XProfile_ProfileData( $field_id, $user_id );
-			$data_value = maybe_unserialize( $field_data->value );
+			$data_value = bb_xprofile_safe_unserialize( $field_data->value ); // Object injection guard.
 			if ( ! empty( $data_value ) && isset( $data_value[ $field_name ] ) ) {
 				$field_value = $data_value[ $field_name ];
 				unset( $data_value[ $field_name ] );
@@ -2917,5 +2922,42 @@ function bb_migrate_xprofile_visibility( $background = false, $page = 1 ) {
 			'offset'  => $page + 1,
 			'records' => $records_updated,
 		);
+	}
+}
+
+if ( ! function_exists( 'bb_xprofile_safe_unserialize' ) ) {
+
+	/**
+	 * Safely unserialize an xProfile field value that originates from, or may
+	 * contain, untrusted input — without ever instantiating PHP objects.
+	 *
+	 * Profile values for checkbox, multiselectbox and socialnetworks fields may be
+	 * stored or submitted as a serialized array. Passing untrusted input straight
+	 * to maybe_unserialize() (a bare unserialize()) enables PHP object injection: a
+	 * crafted serialized object would be instantiated and its magic methods
+	 * (__wakeup/__destruct) executed, potentially triggering a POP gadget chain.
+	 *
+	 * This helper mirrors maybe_unserialize() for all legitimate data — it returns
+	 * the value unchanged when it is not a serialized string, and returns the
+	 * unserialized array/scalar otherwise — but uses the native allowed_classes
+	 * option so any object in the payload is decoded as an inert
+	 * __PHP_Incomplete_Class instead of a real instance. No magic methods run.
+	 *
+	 * The platform requires PHP 7.4+, where the allowed_classes option is always
+	 * available, so no older-PHP fallback is needed.
+	 *
+	 * @since BuddyBoss 3.0.5
+	 *
+	 * @param mixed $value Possibly-serialized value.
+	 *
+	 * @return mixed Unserialized value with objects disallowed, or the original value when not serialized.
+	 */
+	function bb_xprofile_safe_unserialize( $value ) {
+		if ( ! is_string( $value ) || ! is_serialized( $value ) ) {
+			return $value;
+		}
+
+		// phpcs:ignore PHPCompatibility.FunctionUse.NewFunctionParameters.unserialize_optionsFound,WordPress.PHP.DiscouragedPHPFunctions.serialize_unserialize -- The options arg is available on PHP 7+ (platform requires 7.4+); object injection is mitigated by allowed_classes => false, so no objects are ever instantiated from the input.
+		return unserialize( $value, array( 'allowed_classes' => false ) );
 	}
 }

@@ -931,7 +931,9 @@ function bp_activity_get_user_favorites( $user_id = 0, $activity_type = 'activit
 	}
 
 	// Get favorites for user.
-	$favs = bb_activity_get_user_reacted_item_ids( $user_id, $activity_type );
+	$favs = function_exists( 'bb_activity_get_user_reacted_item_ids' )
+		? bb_activity_get_user_reacted_item_ids( $user_id, $activity_type )
+		: array();
 
 	/**
 	 * Filters the favorited activity items for a specified user.
@@ -956,14 +958,24 @@ function bp_activity_get_user_favorites( $user_id = 0, $activity_type = 'activit
  * @return WP_Error|object|bool Object on success, WP_Error on failure.
  */
 function bp_activity_add_user_favorite( $activity_id, $user_id = 0, $args = array() ) {
+	$reaction = bb_load_reaction();
+
 	$r = bp_parse_args(
 		$args,
 		array(
 			'type'        => 'activity',
-			'reaction_id' => bb_load_reaction()->bb_reactions_reaction_id(),
+			'reaction_id' => $reaction ? $reaction->bb_reactions_reaction_id() : 0,
 			'error_type'  => 'bool',
 		)
 	);
+
+	// If reaction system is not loaded, bail.
+	if ( ! $reaction ) {
+		return ( 'bool' === $r['error_type'] ) ? false : new WP_Error(
+			'bp_activity_add_user_favorite_disabled',
+			esc_html__( 'Reactions are not available.', 'buddyboss' )
+		);
+	}
 
 	// Fallback to logged in user if no user_id is passed.
 	if ( empty( $user_id ) ) {
@@ -996,7 +1008,7 @@ function bp_activity_add_user_favorite( $activity_id, $user_id = 0, $args = arra
 		}
 	}
 
-	$reacted = bb_load_reaction()->bb_add_user_item_reaction(
+	$reacted = $reaction->bb_add_user_item_reaction(
 		array(
 			'item_type'   => $r['type'],
 			'reaction_id' => $r['reaction_id'],
@@ -1073,6 +1085,15 @@ function bp_activity_remove_user_favorite( $activity_id, $user_id = 0, $args = a
 		$user_id = bp_loggedin_user_id();
 	}
 
+	// If reaction system is not loaded, bail.
+	$reaction = bb_load_reaction();
+	if ( ! $reaction ) {
+		return ( 'bool' === $r['error_type'] ) ? false : new WP_Error(
+			'bp_activity_remove_user_favorite_disabled',
+			esc_html__( 'Reactions are not available.', 'buddyboss' )
+		);
+	}
+
 	// Check if migration is in progress.
 	if (
 		function_exists( 'bb_pro_reaction_get_migration_status' ) &&
@@ -1089,7 +1110,7 @@ function bp_activity_remove_user_favorite( $activity_id, $user_id = 0, $args = a
 	}
 
 	// Check if user try to un-react but there is no reaction id as per current reaction mode.
-	$reacted_reaction_id = bb_load_reaction()->bb_user_reacted_reaction_id(
+	$reacted_reaction_id = $reaction->bb_user_reacted_reaction_id(
 		array(
 			'item_id'   => $activity_id,
 			'item_type' => $r['type'],
@@ -1108,7 +1129,7 @@ function bp_activity_remove_user_favorite( $activity_id, $user_id = 0, $args = a
 		}
 	}
 
-	$un_reacted = bb_load_reaction()->bb_remove_user_item_reactions(
+	$un_reacted = $reaction->bb_remove_user_item_reactions(
 		array(
 			'item_type'  => $r['type'],
 			'item_id'    => $activity_id,
@@ -1432,11 +1453,14 @@ function bp_activity_remove_all_user_data( $user_id = 0 ) {
 	bp_delete_user_meta( $user_id, 'bp_favorite_activities' );
 
 	// Remove user reactions from reactions table.
-	bb_load_reaction()->bb_remove_user_item_reactions(
-		array(
-			'user_id' => $user_id,
-		)
-	);
+	$reaction = bb_load_reaction();
+	if ( $reaction ) {
+		$reaction->bb_remove_user_item_reactions(
+			array(
+				'user_id' => $user_id,
+			)
+		);
+	}
 
 	// Execute additional code
 	do_action( 'bp_activity_remove_data', $user_id ); // Deprecated! Do not use!
@@ -2103,6 +2127,8 @@ function bp_activity_add( $args = '' ) {
 		array(
 			'id'                => false,                              // Pass an existing activity ID to update an existing entry.
 			'action'            => '',                                 // The activity action - e.g. "Jon Doe posted an update"
+			'post_title'        => '',                                 // The activity title.
+			'title_required'    => bb_is_activity_post_title_enabled(),
 			'content'           => '',                                 // Optional: The content of the activity item e.g. "BuddyPress is awesome guys!"
 			'component'         => false,                              // The name/ID of the component e.g. groups, profile, mycomponent.
 			'type'              => false,                              // The activity type e.g. activity_update, profile_updated.
@@ -2135,6 +2161,8 @@ function bp_activity_add( $args = '' ) {
 	$activity->user_id           = $r['user_id'];
 	$activity->component         = $r['component'];
 	$activity->type              = $r['type'];
+	$activity->post_title        = $r['post_title'];
+	$activity->title_required    = $r['title_required'];
 	$activity->content           = $r['content'];
 	$activity->primary_link      = $r['primary_link'];
 	$activity->item_id           = $r['item_id'];
@@ -2225,17 +2253,19 @@ function bp_activity_post_update( $args = '' ) {
 	$r = bp_parse_args(
 		$args,
 		array(
-			'id'            => false,
-			'content'       => false,
-			'user_id'       => bp_loggedin_user_id(),
-			'component'     => buddypress()->activity->id,
-			'hide_sitewide' => false,
-			'type'          => 'activity_update',
-			'privacy'       => 'public',
-			'status'        => bb_get_activity_published_status(),
-			'recorded_time' => bp_core_current_time(),
-			'updated_time'  => bp_core_current_time(),
-			'error_type'    => 'bool',
+			'id'             => false,
+			'post_title'     => false,
+			'title_required' => bb_is_activity_post_title_enabled(),
+			'content'        => false,
+			'user_id'        => bp_loggedin_user_id(),
+			'component'      => buddypress()->activity->id,
+			'hide_sitewide'  => false,
+			'type'           => 'activity_update',
+			'privacy'        => 'public',
+			'status'         => bb_get_activity_published_status(),
+			'recorded_time'  => bp_core_current_time(),
+			'updated_time'   => bp_core_current_time(),
+			'error_type'     => 'bool',
 		)
 	);
 
@@ -2279,6 +2309,15 @@ function bp_activity_post_update( $args = '' ) {
 	 */
 	$add_primary_link = apply_filters( 'bp_activity_new_update_primary_link', '' );
 
+	/**
+	 * Filters the new activity post title for current activity item.
+	 *
+	 * @since BuddyBoss 2.13.0
+	 *
+	 * @param string $activity_post_title Activity post title posted by user.
+	 */
+	$add_post_title = apply_filters( 'bb_activity_new_update_post_title', $r['post_title'] );
+
 	if ( ! empty( $r['id'] ) ) {
 		$activity = new BP_Activity_Activity( $r['id'] );
 
@@ -2300,6 +2339,8 @@ function bp_activity_post_update( $args = '' ) {
 				array(
 					'id'                => $activity->id,
 					'action'            => $activity->action,
+					'post_title'        => $add_post_title,
+					'title_required'    => $r['title_required'],
 					'content'           => $add_content,
 					'component'         => $activity->component,
 					'type'              => $activity->type,
@@ -2331,17 +2372,19 @@ function bp_activity_post_update( $args = '' ) {
 		// Now write the values.
 		$activity_id = bp_activity_add(
 			array(
-				'user_id'       => $r['user_id'],
-				'content'       => $add_content,
-				'primary_link'  => $add_primary_link,
-				'component'     => $r['component'],
-				'type'          => $r['type'],
-				'hide_sitewide' => $r['hide_sitewide'],
-				'privacy'       => $r['privacy'],
-				'recorded_time' => $r['recorded_time'],
-				'updated_time'  => $r['updated_time'],
-				'status'        => $r['status'],
-				'error_type'    => $r['error_type'],
+				'user_id'        => $r['user_id'],
+				'post_title'     => $add_post_title,
+				'title_required' => $r['title_required'],
+				'content'        => $add_content,
+				'primary_link'   => $add_primary_link,
+				'component'      => $r['component'],
+				'type'           => $r['type'],
+				'hide_sitewide'  => $r['hide_sitewide'],
+				'privacy'        => $r['privacy'],
+				'recorded_time'  => $r['recorded_time'],
+				'updated_time'   => $r['updated_time'],
+				'status'         => $r['status'],
+				'error_type'     => $r['error_type'],
 			)
 		);
 	}
@@ -2961,6 +3004,19 @@ function bp_activity_new_comment( $args = '' ) {
 		)
 	);
 
+	/**
+	 * Filters the parsed arguments for a new activity comment before processing.
+	 *
+	 * This filter allows modification of comment arguments before any validation
+	 * or database operations occur. It can be used to redirect replies to different
+	 * parent comments (e.g., for threading depth limits).
+	 *
+	 * @since BuddyBoss 2.20.0
+	 *
+	 * @param array $r Parsed arguments for the new comment.
+	 */
+	$r = apply_filters( 'bb_activity_new_comment_pre_validate', $r );
+
 	// Error type is boolean; need to initialize some variables for backpat.
 	if ( 'bool' === $r['error_type'] ) {
 		if ( empty( $bp->activity->errors ) ) {
@@ -3148,9 +3204,14 @@ function bp_activity_new_comment( $args = '' ) {
 	wp_cache_delete( $activity_id, 'bp_activity_comments' );
 	wp_cache_delete( 'bp_get_child_comments_' . $activity_id, 'bp_activity_comments' );
 
+	// Clear comment chain cache for the parent comment.
+	if ( ! empty( $r['parent_id'] ) && (int) $r['parent_id'] !== (int) $activity_id ) {
+		wp_cache_delete( 'bb_comment_chain_' . (int) $r['parent_id'] . '_' . (int) $activity_id, 'bp_activity_comments' );
+	}
+
 	// Walk the tree to clear caches for all parent items.
 	$clear_id = $r['parent_id'];
-	while ( $clear_id != $activity_id ) {
+	while ( (int) $clear_id !== (int) $activity_id ) {
 		$clear_object = new BP_Activity_Activity( $clear_id );
 		wp_cache_delete( $clear_id, 'bp_activity' );
 		$clear_id = intval( $clear_object->secondary_item_id );
@@ -3550,6 +3611,9 @@ function bp_activity_delete_comment( $activity_id, $comment_id ) {
 	// Purge comment cache for the root activity update.
 	wp_cache_delete( $activity_id, 'bp_activity_comments' );
 	wp_cache_delete( 'bp_get_child_comments_' . $activity_id, 'bp_activity_comments' );
+
+	// Clear comment chain cache for the deleted comment.
+	wp_cache_delete( 'bb_comment_chain_' . (int) $comment_id . '_' . (int) $activity_id, 'bp_activity_comments' );
 
 	// Recalculate the comment tree.
 	BP_Activity_Activity::rebuild_activity_comment_tree( $activity_id );
@@ -5561,6 +5625,7 @@ function bp_activity_get_edit_data( $activity_id = 0 ) {
 			'group_id'              => $group_id,
 			'group_name'            => $group_name,
 			'folder_id'             => $folder_id,
+			'post_title'            => $activity->post_title,
 			'content'               => stripslashes( $activity->content ),
 			'item_id'               => $activity->item_id,
 			'object'                => $activity->component,
@@ -6193,7 +6258,12 @@ function bb_activity_migration( $raw_db_version, $current_db ) {
 function bb_migrate_activity_like_reaction( $paged = 1 ) {
 	global $wpdb, $bp, $bb_background_updater;
 
-	$reaction_id = bb_load_reaction()->bb_reactions_get_like_reaction_id();
+	$reaction = bb_load_reaction();
+	if ( ! $reaction ) {
+		return;
+	}
+
+	$reaction_id = $reaction->bb_reactions_get_like_reaction_id();
 
 	if ( empty( $paged ) ) {
 		$paged = 1;
@@ -6251,7 +6321,12 @@ function bb_migrate_activity_like_reaction( $paged = 1 ) {
 function bb_activity_like_reaction_background_process_migration( $results, $paged, $reaction_id ) {
 	global $wpdb, $bb_background_updater;
 
-	$user_reaction_table = bb_load_reaction()::$user_reaction_table;
+	$reaction = bb_load_reaction();
+	if ( ! $reaction ) {
+		return;
+	}
+
+	$user_reaction_table = $reaction::$user_reaction_table;
 
 	if ( empty( $results ) ) {
 		return;
@@ -6316,8 +6391,13 @@ function bb_activity_like_reaction_background_process_migration( $results, $page
  * @return void
  */
 function bb_update_users_like_reaction( $user_ids, $activity_id, $reaction_id ) {
+	$reaction = bb_load_reaction();
+	if ( ! $reaction ) {
+		return;
+	}
+
 	foreach ( $user_ids as $user_id ) {
-		bb_load_reaction()->bb_add_user_item_reaction(
+		$reaction->bb_add_user_item_reaction(
 			array(
 				'user_id'     => $user_id,
 				'reaction_id' => $reaction_id,
@@ -7050,6 +7130,159 @@ function bb_get_activity_comment_loading( $default = 10 ) {
 }
 
 /**
+ * Get the ancestor chain info for an activity comment.
+ *
+ * Traverses up the comment tree in a single pass to build the full ancestor
+ * chain, compute depth, and allow lookup of ancestors at any depth level.
+ *
+ * Uses optimized single-column queries instead of loading full activity objects.
+ *
+ * @since BuddyBoss 2.20.0
+ *
+ * @param int $comment_id  The ID of the comment to check.
+ * @param int $activity_id The ID of the root activity.
+ *
+ * @return array {
+ *     @type int   $depth     The depth of the comment (1 = first level).
+ *     @type int[] $ancestors Array of ancestor IDs from depth 1 to the comment's depth.
+ * }
+ */
+function bb_get_activity_comment_chain_info( $comment_id, $activity_id ) {
+	global $wpdb;
+
+	$comment_id  = (int) $comment_id;
+	$activity_id = (int) $activity_id;
+
+	$cache_key = 'bb_comment_chain_' . $comment_id . '_' . $activity_id;
+	$info      = wp_cache_get( $cache_key, 'bp_activity_comments' );
+
+	if ( false !== $info ) {
+		return $info;
+	}
+
+	$bp             = buddypress();
+	$current_id     = $comment_id;
+	$max_iterations = 50;
+	$iterations     = 0;
+	$ancestors      = array();
+
+	while ( $current_id !== $activity_id && $iterations < $max_iterations ) {
+		$iterations++;
+
+		$parent_id = $wpdb->get_var(
+			$wpdb->prepare(
+				"SELECT secondary_item_id FROM {$bp->activity->table_name} WHERE id = %d AND type = 'activity_comment'",
+				$current_id
+			)
+		);
+
+		if ( ! $parent_id || (int) $parent_id === $current_id ) {
+			break;
+		}
+
+		$ancestors[] = $current_id;
+		$current_id  = (int) $parent_id;
+	}
+
+	// Reverse so index 0 = depth 1 (shallowest ancestor).
+	$ancestors = array_reverse( $ancestors );
+
+	$info = array(
+		'depth'     => max( 1, count( $ancestors ) ),
+		'ancestors' => $ancestors,
+	);
+
+	wp_cache_set( $cache_key, $info, 'bp_activity_comments' );
+
+	return $info;
+}
+
+/**
+ * Calculate the depth of an activity comment.
+ *
+ * Wrapper around bb_get_activity_comment_chain_info() for backward compatibility.
+ *
+ * @since BuddyBoss 2.20.0
+ *
+ * @param int $comment_id  The ID of the comment to check.
+ * @param int $activity_id The ID of the root activity.
+ *
+ * @return int The depth of the comment (1 = first level, 2 = second level, etc.).
+ */
+function bb_get_activity_comment_depth_by_id( $comment_id, $activity_id ) {
+	$info = bb_get_activity_comment_chain_info( $comment_id, $activity_id );
+
+	return $info['depth'];
+}
+
+/**
+ * Find the ancestor comment at a specific depth level.
+ *
+ * Wrapper around bb_get_activity_comment_chain_info() for backward compatibility.
+ *
+ * @since BuddyBoss 2.20.0
+ *
+ * @param int $comment_id   The ID of the starting comment.
+ * @param int $activity_id  The ID of the root activity.
+ * @param int $target_depth The depth level to find (1 = first level comment).
+ *
+ * @return int The ID of the ancestor at the target depth, or the activity_id if not found.
+ */
+function bb_get_activity_comment_ancestor_at_depth( $comment_id, $activity_id, $target_depth ) {
+	$info         = bb_get_activity_comment_chain_info( $comment_id, $activity_id );
+	$target_index = $target_depth - 1;
+	$activity_id  = (int) $activity_id;
+
+	if ( isset( $info['ancestors'][ $target_index ] ) ) {
+		return $info['ancestors'][ $target_index ];
+	} elseif ( $target_depth > 0 && ! empty( $info['ancestors'] ) ) {
+		return end( $info['ancestors'] );
+	}
+
+	return $activity_id;
+}
+
+/**
+ * Adjust the parent ID for activity comments at max threading depth.
+ *
+ * When a user replies to a comment that is already at the maximum threading depth,
+ * this function redirects the reply to an ancestor comment so that the new comment
+ * is stored at the maximum depth level instead of exceeding it.
+ *
+ * @since BuddyBoss 2.20.0
+ *
+ * @param array $args Arguments for the new activity comment.
+ *
+ * @return array Modified arguments with adjusted parent_id if necessary.
+ */
+function bb_adjust_activity_comment_threading_parent( $args ) {
+
+	if ( ! bb_is_activity_comment_threading_enabled() ) {
+		return $args;
+	}
+
+	$parent_id   = (int) $args['parent_id'];
+	$activity_id = (int) $args['activity_id'];
+
+	if ( empty( $parent_id ) || $parent_id === $activity_id ) {
+		return $args;
+	}
+
+	$max_depth = bb_get_activity_comment_threading_depth();
+	$info      = bb_get_activity_comment_chain_info( $parent_id, $activity_id );
+
+	if ( $info['depth'] >= $max_depth ) {
+		$target_index = $max_depth - 2; // (max_depth - 1) depth, zero-indexed.
+
+		if ( isset( $info['ancestors'][ $target_index ] ) ) {
+			$args['parent_id'] = $info['ancestors'][ $target_index ];
+		}
+	}
+
+	return $args;
+}
+
+/**
  * Set activity notification status.
  *
  * @since BuddyBoss 2.5.80
@@ -7329,7 +7562,8 @@ function bb_activity_edit_update_media_status( $media_ids ) {
 
 					$media_activity = new BP_Activity_Activity( $media->activity_id );
 					if ( ! empty( $media_activity->id ) ) {
-						$media_activity->status = bb_get_activity_published_status();
+						$media_activity->status         = bb_get_activity_published_status();
+						$media_activity->title_required = false;
 						$media_activity->save();
 					}
 				}
@@ -7380,7 +7614,8 @@ function bb_activity_edit_update_video_status( $video_ids ) {
 
 					$video_activity = new BP_Activity_Activity( $video->activity_id );
 					if ( ! empty( $video_activity->id ) ) {
-						$video_activity->status = bb_get_activity_published_status();
+						$video_activity->status         = bb_get_activity_published_status();
+						$video_activity->title_required = false;
 						$video_activity->save();
 					}
 				}
@@ -7431,7 +7666,8 @@ function bb_activity_edit_update_document_status( $document_ids ) {
 
 					$document_activity = new BP_Activity_Activity( $document->activity_id );
 					if ( ! empty( $document_activity->id ) ) {
-						$document_activity->status = bb_get_activity_published_status();
+						$document_activity->status         = bb_get_activity_published_status();
+						$document_activity->title_required = false;
 						$document_activity->save();
 					}
 				}
@@ -7743,4 +7979,140 @@ function bb_activity_topics_manager_instance() {
 	}
 
 	return null;
+}
+
+/**
+ * Check if activity post title is enabled.
+ *
+ * @since BuddyBoss 2.13.0
+ *
+ * @param bool $default_value Default value if option is not set.
+ *
+ * @return bool True if activity post title is enabled, false otherwise.
+ */
+function bb_is_activity_post_title_enabled( $default_value = false ) {
+
+	/**
+	 * Filters whether to enable activity post title.
+	 *
+	 * @since BuddyBoss 2.13.0
+	 *
+	 * @param bool $is_enabled Whether the activity post title is enabled.
+	 */
+	return (bool) apply_filters( 'bb_is_activity_post_title_enabled', bp_get_option( 'bb_activity_post_title_enabled', $default_value ) );
+}
+
+/**
+ * Get the maximum length for activity post titles.
+ *
+ * @since BuddyBoss 2.13.0
+ *
+ * @return int The maximum length for activity post titles.
+ */
+function bb_activity_post_title_max_length() {
+
+	/**
+	 * Filters the maximum length for activity post titles.
+	 *
+	 * @since BuddyBoss 2.13.0
+	 *
+	 * @param int $max_length Maximum allowed length for activity post titles.
+	 */
+	return (int) apply_filters( 'bb_activity_post_title_max_length', 80 );
+}
+
+/**
+ * Strip the activity post title if it exceeds the maximum length.
+ *
+ * @since BuddyBoss 2.13.0
+ *
+ * @param string $post_title The post title to strip.
+ *
+ * @return string The stripped activity post title.
+ */
+function bb_activity_strip_post_title( $post_title = '' ) {
+	if ( ! empty( $post_title ) ) {
+		$post_title_validation = bb_validate_activity_post_title( $post_title );
+		if ( ! $post_title_validation['valid'] ) {
+			$max_length = bb_activity_post_title_max_length();
+			$post_title = function_exists( 'mb_substr' ) ? mb_substr( $post_title, 0, $max_length ) : substr( $post_title, 0, $max_length );
+		}
+	}
+
+	return $post_title;
+}
+
+/**
+ * Validation for activity post title.
+ *
+ * @since BuddyBoss 2.13.0
+ *
+ * @param string                    $post_title      The post title to validate.
+ * @param BP_Activity_Activity|null $activity_object The activity object.
+ *
+ * @return array Validation result with 'valid' and 'message' keys.
+ */
+function bb_validate_activity_post_title( $post_title, ?BP_Activity_Activity $activity_object = null ) {
+	$result = array(
+		'valid'   => true,
+		'message' => '',
+	);
+
+	$non_valid_component = isset( $activity_object->component ) && ! in_array( $activity_object->component, array( 'groups', 'activity' ), true );
+
+	/**
+	 * Filter to prevent validation of activity post title based on activity component.
+	 *
+	 * @since BuddyBoss 2.13.0
+	 *
+	 * @param bool   $non_valid_component Whether to skip validation of activity post title for the component.
+	 * @param object $activity_object     The activity object.
+	 */
+	$non_valid_component = apply_filters( 'bb_activity_post_title_component_skip', $non_valid_component, $activity_object );
+	if ( $non_valid_component ) {
+		return $result;
+	}
+
+	$non_valid_type = isset( $activity_object->type ) && 'activity_update' !== $activity_object->type;
+
+	/**
+	 * Filter to prevent validation of activity post title based on a activity type.
+	 *
+	 * @since BuddyBoss 2.13.0
+	 *
+	 * @param bool   $non_valid_type  Whether to skip validation of activity post title for the type.
+	 * @param object $activity_object The activity object.
+	 */
+	$non_valid_type = apply_filters( 'bb_activity_post_title_type_skip', $non_valid_type, $activity_object );
+	if ( $non_valid_type ) {
+		return $result;
+	}
+
+	$post_title = sanitize_text_field( wp_unslash( $post_title ) );
+
+	// Check if title is required and empty.
+	if ( bb_is_activity_post_title_enabled() && empty( $post_title ) ) {
+		$result['valid']   = false;
+		$result['message'] = __( 'Please enter a title for your activity.', 'buddyboss' );
+
+		return $result;
+	}
+
+	// Check length if title is not empty.
+	if ( ! empty( $post_title ) ) {
+		$max_length     = bb_activity_post_title_max_length();
+		$current_length = function_exists( 'mb_strlen' ) ? mb_strlen( $post_title ) : strlen( $post_title );
+
+		if ( $current_length > $max_length ) {
+			$result['valid']   = false;
+			$result['message'] = sprintf(
+			/* translators: 1: maximum length of the post title, 2: current length of the post title. */
+				__( 'Title must be less than %1$d characters. You used %2$d characters.', 'buddyboss' ),
+				$max_length,
+				$current_length
+			);
+		}
+	}
+
+	return $result;
 }

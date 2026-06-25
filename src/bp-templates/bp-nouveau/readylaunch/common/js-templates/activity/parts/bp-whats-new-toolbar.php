@@ -40,7 +40,7 @@
 	$extensions = ( function_exists( 'bp_document_get_allowed_extension' ) ) ? bp_document_get_allowed_extension() : '';
 	if ( bp_is_active( 'media' ) && ! empty( $extensions ) && ( ( bp_is_activity_directory() && ( bp_is_profile_document_support_enabled() || bp_is_group_document_support_enabled() ) ) || ( bp_is_user_activity() && bp_is_profile_document_support_enabled() ) || ( bp_is_group_activity() && bp_is_group_document_support_enabled() ) ) ) :
 		?>
-		<div class="bb-rl-post-elements-buttons-item bb-rl-post-media bb-rl-document-support">
+		<div class="bb-rl-post-elements-buttons-item bb-rl-post-document bb-rl-document-support">
 			<a href="#" id="bb-rl-activity-document-button" class="bb-rl-toolbar-button bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Attach document', 'buddyboss' ); ?>" aria-label="<?php esc_attr_e( 'Attach document', 'buddyboss' ); ?>">
 				<i class="bb-icons-rl-paperclip-horizontal"></i>
 			</a>

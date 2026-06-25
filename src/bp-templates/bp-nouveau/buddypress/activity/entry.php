@@ -57,6 +57,27 @@ $activity_popup_title = sprintf( esc_html__( '%s\'s post', 'buddyboss' ), bp_cor
 	</div>
 
 	<?php
+	if (
+		function_exists( 'bb_pro_activity_post_feature_image_instance' ) &&
+		bb_pro_activity_post_feature_image_instance() &&
+		method_exists( bb_pro_activity_post_feature_image_instance(), 'bb_get_feature_image_data' )
+	) {
+		?>
+		<div class="activity-feature-image">
+			<?php
+			$feature_image_data = bb_pro_activity_post_feature_image_instance()->bb_get_feature_image_data( $activity_id );
+			if ( ! empty( $feature_image_data ) ) {
+				?>
+				<img class="activity-feature-image-media" src="<?php echo esc_url( $feature_image_data['url'] ); ?>" alt="<?php echo esc_attr( $feature_image_data['title'] ); ?>" />
+				<?php
+			}
+			?>
+		</div>
+		<?php
+	}
+	?>
+
+	<?php
 	global $activities_template;
 
 	$user_link       = bp_get_activity_user_link();
@@ -213,7 +234,7 @@ $activity_popup_title = sprintf( esc_html__( '%s\'s post', 'buddyboss' ), bp_cor
 				)
 			) {
 				?>
-				<p class="activity-topic 4">
+				<p class="activity-topic">
 					<?php
 					if (
 						function_exists( 'bb_activity_topics_manager_instance' ) &&
@@ -236,6 +257,16 @@ $activity_popup_title = sprintf( esc_html__( '%s\'s post', 'buddyboss' ), bp_cor
 		</div>
 
 	<?php endif; ?>
+
+	<?php
+	if ( bb_activity_has_post_title() ) {
+		?>
+		<div class="activity-title">
+			<h2><?php bb_activity_post_title(); ?></h2>
+		</div>
+		<?php
+	}
+	?>
 
 	<div class="activity-content <?php bp_activity_entry_css_class(); ?>">
 
@@ -278,6 +309,10 @@ $activity_popup_title = sprintf( esc_html__( '%s\'s post', 'buddyboss' ), bp_cor
 			<?php
 			if ( bp_activity_get_comment_count() ) {
 				bp_activity_comments();
+			} else {
+				// Always output an empty <ul> when there are no comments to ensure proper DOM structure for comment submission
+				$activity_id = bp_get_activity_id();
+				echo '<ul data-activity_id="' . esc_attr( $activity_id ) . '" data-parent_comment_id="' . esc_attr( $activity_id ) . '"></ul>';
 			}
 
 			if ( is_user_logged_in() ) {

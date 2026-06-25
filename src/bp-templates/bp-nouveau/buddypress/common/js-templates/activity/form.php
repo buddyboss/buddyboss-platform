@@ -38,6 +38,7 @@ $template_parts = apply_filters(
 		'parts/bp-activity-edit-postin',
 		'parts/bb-activity-post-form-topic-selector',
 		'parts/bp-activity-post-privacy-stage-footer',
+		'parts/bb-activity-post-form-title',
 	)
 );
 

@@ -2767,7 +2767,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 		if ( ! empty( $content ) ) {
 			$data['message'] = array(
 				'raw'      => wp_strip_all_tags( $content ),
-				'rendered' => apply_filters( 'bp_get_the_thread_message_content', wpautop( $content ) ),
+				'rendered' => apply_filters( 'bp_get_the_thread_message_content', wpautop( $content ), $message->id ),
 			);
 		}
 
@@ -2826,7 +2826,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 					$data['message']['raw'] = $content;
 				}
 				if ( isset( $data['message']['rendered'] ) ) {
-					$data['message']['rendered'] = apply_filters( 'bp_get_the_thread_message_content', wpautop( $content ) );
+					$data['message']['rendered'] = apply_filters( 'bp_get_the_thread_message_content', wpautop( $content ), $data['message_id'] );
 				}
 			}
 

@@ -42,6 +42,7 @@ $template_parts = apply_filters(
 		'parts/bp-activity-edit-postin-header',
 		'parts/bp-activity-post-privacy-stage-footer',
 		'parts/bb-activity-post-form-topic-selector',
+		'parts/bb-activity-post-form-title',
 	)
 );
 

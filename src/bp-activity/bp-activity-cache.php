@@ -56,6 +56,8 @@ function bp_activity_clear_cache_for_activity( $activity ) {
 	wp_cache_delete( $activity->id, 'activity_edit_data' );
 	if ( 'activity_comment' === $activity->type ) {
 		wp_cache_delete( 'comment_' . $activity->id, 'activity_edit_data' );
+		// Clear comment chain cache. Used in bb_get_activity_comment_chain_info().
+		wp_cache_delete( 'bb_comment_chain_' . $activity->id . '_' . $activity->item_id, 'bp_activity_comments' );
 	}
 	wp_cache_delete( 'bb_get_activity_status_' . $activity->id, 'bp_activity' );
 
@@ -110,6 +112,8 @@ function bb_activity_clear_cache_after_deleted_activity( $activities ) {
 			wp_cache_delete( $activity->id, 'activity_edit_data' );
 			if ( 'activity_comment' === $activity->type ) {
 				wp_cache_delete( 'comment_' . $activity->id, 'activity_edit_data' );
+				// Clear comment chain cache. Used in bb_get_activity_comment_chain_info().
+				wp_cache_delete( 'bb_comment_chain_' . $activity->id . '_' . $activity->item_id, 'bp_activity_comments' );
 			}
 			wp_cache_delete( 'bb_get_activity_status_' . $activity->id, 'bp_activity' );
 			if ( ! empty( $activity->secondary_item_id ) ) {
@@ -141,6 +145,8 @@ add_action( 'bp_activity_add', 'bp_activity_reset_cache_incrementor' );
 add_action( 'added_activity_meta', 'bp_activity_reset_cache_incrementor' );
 add_action( 'updated_activity_meta', 'bp_activity_reset_cache_incrementor' );
 add_action( 'deleted_activity_meta', 'bp_activity_reset_cache_incrementor' );
+add_action( 'bp_activity_mark_as_spam', 'bp_activity_reset_cache_incrementor' );
+add_action( 'bp_activity_mark_as_ham', 'bp_activity_reset_cache_incrementor' );
 
 /**
  * Clear cached data for deleted users.
@@ -238,6 +244,11 @@ add_action( 'added_activity_meta', 'bb_activity_clear_metadata', 10, 2 );
  */
 function bb_activity_comment_reset_count( $activities ) {
 	if ( ! empty( $activities ) ) {
+
+		if ( ! is_array( $activities ) && $activities instanceof BP_Activity_Activity ) {
+			$activities = array( $activities );
+		}
+
 		foreach ( $activities as $activity ) {
 			// Clear the comment count cache based on its own id and parent activity ID.
 			wp_cache_delete( 'bp_activity_comment_count_' . $activity->id, 'bp_activity_comments' );
@@ -266,6 +277,8 @@ function bb_activity_comment_reset_count( $activities ) {
 }
 
 add_action( 'bp_activity_after_delete', 'bb_activity_comment_reset_count' );
+add_action( 'bp_activity_mark_as_spam', 'bb_activity_comment_reset_count' );
+add_action( 'bp_activity_mark_as_ham', 'bb_activity_comment_reset_count' );
 
 /**
  * Reset cache incrementor for the activity when privacy is changed.

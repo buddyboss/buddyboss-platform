@@ -2214,7 +2214,7 @@ function bp_get_the_thread_message_content() {
 	 *
 	 * @param string $message The content of the current message in the loop.
 	 */
-	return apply_filters( 'bp_get_the_thread_message_content', $content );
+	return apply_filters( 'bp_get_the_thread_message_content', $content, $thread_template->message->id );
 }
 
 /**

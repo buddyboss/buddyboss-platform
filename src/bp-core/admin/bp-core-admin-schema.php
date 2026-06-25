@@ -26,7 +26,7 @@ function bp_core_install( $active_components = false ) {
 	// If no components passed, get all the active components from the main site.
 	if ( empty( $active_components ) ) {
 
-		/** This filter is documented in bp-core/admin/bp-core-admin-components.php */
+		/** This filter is documented in bp-core/classes/class-bp-core.php */
 		$active_components = apply_filters( 'bp_active_components', bp_get_option( 'bp-active-components' ) );
 
 		// check for xprofile is active component in db or not if not then update it.
@@ -43,9 +43,12 @@ function bp_core_install( $active_components = false ) {
 	}
 
 	if ( function_exists( 'bb_load_reaction' ) ) {
-		// Create table for the bb reactions.
-		bb_load_reaction()->create_table();
-		bb_load_reaction()->bb_register_activity_like();
+		$reaction = bb_load_reaction();
+		if ( $reaction ) {
+			// Create table for the bb reactions.
+			$reaction->create_table();
+			$reaction->bb_register_activity_like();
+		}
 	}
 
 	// Install Activity Feeds even when inactive (to store last_activity data).
@@ -204,6 +207,7 @@ function bp_core_install_activity_streams() {
 				component varchar(75) NOT NULL,
 				type varchar(75) NOT NULL,
 				action text NOT NULL,
+				post_title text DEFAULT NULL,
 				content longtext NOT NULL,
 				primary_link text NOT NULL,
 				item_id bigint(20) NOT NULL,
@@ -224,10 +228,15 @@ function bp_core_install_activity_streams() {
 				KEY secondary_item_id (secondary_item_id),
 				KEY component (component),
 				KEY type (type),
+				KEY post_title (post_title(191)),
 				KEY mptt_left (mptt_left),
 				KEY mptt_right (mptt_right),
 				KEY hide_sitewide (hide_sitewide),
-				KEY is_spam (is_spam)
+				KEY is_spam (is_spam),
+				KEY activity_type_is_spam (type,is_spam),
+				FULLTEXT KEY bb_post_title (post_title),
+				FULLTEXT KEY bb_content (content),
+				FULLTEXT KEY bb_title_content (post_title, content)
 			) {$charset_collate};";
 
 	$sql[] = "CREATE TABLE {$bp_prefix}bp_activity_meta (

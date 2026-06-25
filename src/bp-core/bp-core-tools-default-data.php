@@ -955,13 +955,15 @@ function bp_dd_import_users_activity() {
 
 		if ( $bp_activity_id = bp_activity_post_update(
 			array(
-				'user_id' => $user,
-				'content' => $content,
+				'user_id'        => $user,
+				'content'        => $content,
+				'title_required' => false,
 			)
 		)
 		) {
-			$bp_activity                = new BP_Activity_Activity( $bp_activity_id );
-			$bp_activity->date_recorded = bp_dd_get_random_date( 44 );
+			$bp_activity                 = new BP_Activity_Activity( $bp_activity_id );
+			$bp_activity->date_recorded  = bp_dd_get_random_date( 44 );
+			$bp_activity->title_required = false;
 			if ( $bp_activity->save() ) {
 				$count ++;
 			}
@@ -1105,14 +1107,16 @@ function bp_dd_import_groups_activity() {
 
 		if ( $bp_activity_id = groups_post_update(
 			array(
-				'user_id'  => $user_id,
-				'group_id' => $group_id,
-				'content'  => $content,
+				'user_id'        => $user_id,
+				'group_id'       => $group_id,
+				'content'        => $content,
+				'title_required' => false,
 			)
 		)
 		) {
-			$bp_activity                = new BP_Activity_Activity( $bp_activity_id );
-			$bp_activity->date_recorded = bp_dd_get_random_date( 29 );
+			$bp_activity                 = new BP_Activity_Activity( $bp_activity_id );
+			$bp_activity->date_recorded  = bp_dd_get_random_date( 29 );
+			$bp_activity->title_required = false;
 			if ( $bp_activity->save() ) {
 				$count ++;
 			}

@@ -403,6 +403,12 @@ class BP_REST_Settings_Endpoint extends WP_REST_Controller {
 				return $this->validate_associative_array( $key, $value, $current_value );
 
 			case 'boolean_map':
+				// Clients may submit a boolean map as a sequential JSON array (a list of
+				// enabled slugs, or a positional boolean list), which PHP decodes with
+				// integer keys. Normalise back to the canonical `slug => bool` map before
+				// validating, otherwise validate_boolean_map_array() rejects the integer
+				// keys with a 400 (PROD-9716).
+				$value = $this->normalize_boolean_map_value( $value, $current_value );
 				return $this->validate_boolean_map_array( $key, $value, $current_value );
 
 			case 'numeric_map':
@@ -520,7 +526,9 @@ class BP_REST_Settings_Endpoint extends WP_REST_Controller {
 							array( 'status' => 400 )
 						);
 					}
-					$validated[] = (bool) $item;
+					// wp_validate_boolean() — not a bare (bool) cast — so the allow-listed
+					// string 'false' resolves to false. (bool) 'false' is true in PHP.
+					$validated[] = wp_validate_boolean( $item );
 					break;
 
 				case 'sequential_numeric':
@@ -648,6 +656,95 @@ class BP_REST_Settings_Endpoint extends WP_REST_Controller {
 	}
 
 	/**
+	 * Normalise a submitted boolean-map value into the canonical `slug => bool` shape.
+	 *
+	 * The persisted shape for boolean-map settings (e.g. the ReadyLaunch sidebar
+	 * widgets) is a string-keyed map. Some clients instead submit the selection as
+	 * a sequential JSON array, which PHP decodes with integer keys and which
+	 * validate_boolean_map_array() would reject with a 400. Four input shapes are
+	 * normalised here:
+	 *
+	 * - Empty array ( `array()` — "all widgets disabled" ) — expanded to a full
+	 *   false-map so downstream reads ( `$map['slug']` ) return false, not null.
+	 * - Canonical map ( `array( 'slug_a' => true, 'slug_b' => false )` ) — returned
+	 *   untouched.
+	 * - Enabled-slug list ( `array( 'slug_a', 'slug_c' )` ) — every known slug is set
+	 *   to false, then the submitted slugs are flipped to true. Order-independent and
+	 *   supports partial selections.
+	 * - Positional boolean list ( `array( true, false, true )` ) aligned to the stored
+	 *   map's key order — re-keyed by position, but only when the counts match exactly.
+	 *
+	 * Any shape that can't be confidently normalised is returned untouched so the
+	 * downstream validator can reject it with a descriptive error rather than this
+	 * method guessing.
+	 *
+	 * @since BuddyBoss 3.0.5
+	 *
+	 * @param mixed $value         Submitted value.
+	 * @param mixed $current_value Current stored map (the source of the known slugs).
+	 * @return mixed Normalised value.
+	 */
+	protected function normalize_boolean_map_value( $value, $current_value ) {
+		// Non-array input can't be normalised here — hand it to the validator.
+		if ( ! is_array( $value ) ) {
+			return $value;
+		}
+
+		// Without a reference map we can't resolve the slugs — leave it for the
+		// validator to handle.
+		if ( empty( $current_value ) || ! is_array( $current_value ) ) {
+			return $value;
+		}
+
+		$known_keys = array_keys( $current_value );
+
+		// An empty submission means "all widgets disabled". Expand to a full
+		// false-map so downstream reads ( $map['slug'] ) return false rather than
+		// null — matching the shape the onboarding sanitizer always builds.
+		if ( empty( $value ) ) {
+			return array_fill_keys( $known_keys, false );
+		}
+
+		// A string-keyed map is already canonical; only sequential / integer-keyed
+		// input needs normalising.
+		if ( ! is_int( array_key_first( $value ) ) ) {
+			return $value;
+		}
+
+		$submitted_vals = array_values( $value );
+
+		// Shape A: a list of enabled slugs. Order-independent and partial-selection
+		// safe — start everything disabled, then enable the submitted slugs. Only
+		// applies when every submitted value is a known slug, otherwise fall through.
+		$all_strings = array_reduce(
+			$submitted_vals,
+			function ( $carry, $item ) {
+				return $carry && is_string( $item );
+			},
+			true
+		);
+		if ( $all_strings && empty( array_diff( $submitted_vals, $known_keys ) ) ) {
+			$map = array_fill_keys( $known_keys, false );
+			foreach ( $submitted_vals as $slug ) {
+				$map[ $slug ] = true;
+			}
+			return $map;
+		}
+
+		// Shape B: a positional boolean list aligned to the stored key order. Only
+		// safe when the counts line up one-to-one.
+		if ( count( $submitted_vals ) === count( $known_keys ) ) {
+			$map = array();
+			foreach ( $submitted_vals as $i => $v ) {
+				$map[ $known_keys[ $i ] ] = $v;
+			}
+			return $map;
+		}
+
+		return $value;
+	}
+
+	/**
 	 * Validate boolean map arrays (key => boolean).
 	 *
 	 * @param string $key           Setting key.
@@ -693,7 +790,9 @@ class BP_REST_Settings_Endpoint extends WP_REST_Controller {
 				);
 			}
 
-			$validated[ $sanitized_key ] = (bool) $item;
+			// wp_validate_boolean() — not a bare (bool) cast — so the allow-listed
+			// string 'false' resolves to false. (bool) 'false' is true in PHP.
+			$validated[ $sanitized_key ] = wp_validate_boolean( $item );
 		}
 
 		return $validated;
@@ -1215,6 +1314,7 @@ class BP_REST_Settings_Endpoint extends WP_REST_Controller {
 		if ( bp_is_active( 'activity' ) ) {
 			// Activity Settings.
 			$results['bp_enable_activity_edit']         = bp_is_activity_edit_enabled();
+			$results['bb_enable_activity_post_title']   = bb_is_activity_post_title_enabled();
 			$results['bp_activity_edit_time']           = bp_get_activity_edit_time( - 1 );
 			$results['bb_enable_activity_comment_edit'] = bb_is_activity_comment_edit_enabled();
 			$results['bb_activity_comment_edit_time']   = bb_get_activity_comment_edit_time( - 1 );
@@ -1291,30 +1391,10 @@ class BP_REST_Settings_Endpoint extends WP_REST_Controller {
 			if ( function_exists( 'bb_get_activity_sorting_options_labels' ) ) {
 				$sorting_options_labels = bb_get_activity_sorting_options_labels();
 
-				// Retrieve the saved options.
+				// Retrieve the saved options and reuse the shared helper so disabled keys are filtered out.
 				$sorting_options = bb_get_enabled_activity_sorting_options();
-				if ( ! empty( $sorting_options ) ) {
-					// Sort filter labels based on the order of $sorting_options.
-					$sorted_labels = array();
-					foreach ( $sorting_options as $key => $value ) {
-						if ( isset( $sorting_options_labels[ $key ] ) ) {
-							$sorted_labels[ $key ] = $sorting_options_labels[ $key ];
-						}
-					}
 
-					// Add the remaining labels that were not part of $sorting_options.
-					if ( count( $sorting_options_labels ) > count( $sorted_labels ) ) {
-						foreach ( $sorting_options_labels as $key => $label ) {
-							if ( ! isset( $sorted_labels[ $key ] ) ) {
-								$sorted_labels[ $key ] = $label;
-							}
-						}
-					}
-				} else {
-					$sorted_labels = $sorting_options_labels;
-				}
-
-				$results['bb_activity_sorting_options'] = $sorted_labels;
+				$results['bb_activity_sorting_options'] = $this->bb_get_sorted_filter_labels( $sorting_options, $sorting_options_labels );
 			}
 
 			// Activity Topics.
@@ -1704,20 +1784,22 @@ class BP_REST_Settings_Endpoint extends WP_REST_Controller {
 	 */
 	protected function bb_get_sorted_filter_labels( $activity_filters, $filter_labels ) {
 		if ( ! empty( $activity_filters ) && ! empty( $filter_labels ) ) {
-			// Sort filter labels based on the order of $activity_filters.
+			// Sort filter labels based on the order of $activity_filters, keeping only enabled keys.
 			$sorted_filter_labels = array();
 			foreach ( $activity_filters as $key => $value ) {
+				if ( empty( $value ) ) {
+					continue;
+				}
 				if ( isset( $filter_labels[ $key ] ) ) {
 					$sorted_filter_labels[ $key ] = $filter_labels[ $key ];
 				}
 			}
 
-			// Add the remaining labels that were not part of $activity_filters.
-			if ( count( $filter_labels ) > count( $sorted_filter_labels ) ) {
-				foreach ( $filter_labels as $key => $label ) {
-					if ( ! isset( $sorted_filter_labels[ $key ] ) ) {
-						$sorted_filter_labels[ $key ] = $label;
-					}
+			// Add labels that were never saved in $activity_filters (e.g. newly-introduced options).
+			// Keys that exist in $activity_filters but are disabled must stay excluded.
+			foreach ( $filter_labels as $key => $label ) {
+				if ( ! array_key_exists( $key, $activity_filters ) && ! isset( $sorted_filter_labels[ $key ] ) ) {
+					$sorted_filter_labels[ $key ] = $label;
 				}
 			}
 		} else {

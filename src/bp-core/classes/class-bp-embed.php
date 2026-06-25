@@ -260,7 +260,7 @@ class BP_Embed extends WP_Embed {
 	 * @return string Potentially modified $content.
 	 */
 	public function autoembed( $content, $type = '' ) {
-		$is_activity = isset( $type->component ) && ( 'activity_update' === $type->type || 'activity_comment' === $type->type );
+		$is_activity = isset( $type->component ) && ( 'activity_update' === $type->type || 'activity_comment' === $type->type || 'activity_share' === $type->type );
 		$link_embed  = false;
 
 		// Check the type of activity and return if not a bbPress activity.
