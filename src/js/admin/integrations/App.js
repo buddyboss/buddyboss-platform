@@ -14,8 +14,9 @@
  * @since BuddyBoss [BBVERSION]
  */
 
-import { useState, useEffect, useRef, useCallback, useMemo } from '@wordpress/element';
+import { useState, useEffect, useRef, useCallback, useMemo, Fragment } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
+import { BBAdminHeader, KbProvider, useKb, KnowledgeBaseModal } from '@bb/admin-common';
 import {
 	fetchIntegrations,
 	fetchIntegrationCategories,
@@ -25,9 +26,12 @@ import { IntegrationGrid } from './components/IntegrationGrid';
 import { IntegrationDrawer } from './components/IntegrationDrawer';
 import { Pagination } from './components/Pagination';
 
+const adminData = ( typeof window !== 'undefined' && window.bbIntegrationsData ) || {};
+
 const PER_PAGE = 20;
 
-export function App() {
+function AppInner() {
+	const { open: openKb } = useKb();
 	const [ items, setItems ] = useState( [] );
 	const [ categories, setCategories ] = useState( [] );
 	const [ page, setPage ] = useState( 1 );
@@ -125,87 +129,127 @@ export function App() {
 		[ categories ]
 	);
 
-	return (
-		<div className="bb-integrations">
-			<div className="bb-integrations__toolbar">
-				{ /* Tier tabs — Figma layout. Only "All" is wired today; Free/Pro
-				     are disabled (not no-op) until the API exposes a free/pro
-				     field (Q5), so a visible filter never silently returns the
-				     same results. Re-enable by removing `disabled` + handling
-				     `tier` in the list query once the field exists. */ }
-				<div className="bb-integrations__tabs" role="tablist">
-					<button
-						type="button"
-						role="tab"
-						aria-selected={ 'all' === tier }
-						className={ 'bb-integrations__tab' + ( 'all' === tier ? ' is-active' : '' ) }
-						onClick={ () => setTier( 'all' ) }
-					>
-						{ __( 'All', 'buddyboss' ) }
-					</button>
-					<button
-						type="button"
-						role="tab"
-						aria-selected={ 'free' === tier }
-						className="bb-integrations__tab"
-						disabled
-						title={ __( 'Coming soon', 'buddyboss' ) }
-					>
-						{ __( 'Free', 'buddyboss' ) }
-					</button>
-					<button
-						type="button"
-						role="tab"
-						aria-selected={ 'pro' === tier }
-						className="bb-integrations__tab"
-						disabled
-						title={ __( 'Coming soon', 'buddyboss' ) }
-					>
-						{ __( 'Pro', 'buddyboss' ) }
-					</button>
-				</div>
-
-				<div className="bb-integrations__controls">
-					<div className="bb-integrations__search-wrap">
-						<input
-							type="search"
-							className="bb-integrations__search"
-							placeholder={ __( 'Search integrations…', 'buddyboss' ) }
-							onChange={ handleSearchChange }
-							aria-label={ __( 'Search integrations', 'buddyboss' ) }
-						/>
-						<i class="bb-icon-search bb-admin-header__search-icon"></i>
-					</div>
-					<select
-						className="bb-integrations__category"
-						value={ category }
-						onChange={ handleCategoryChange }
-						aria-label={ __( 'Filter by category', 'buddyboss' ) }
-					>
-						<option value={ 0 }>{ __( 'All Categories', 'buddyboss' ) }</option>
-						{ visibleCategories.map( ( cat ) => (
-							<option key={ cat.id } value={ cat.id }>
-								{ cat.name }
-							</option>
-						) ) }
-					</select>
-				</div>
-			</div>
-
-			<IntegrationGrid
-				items={ items }
-				status={ status }
-				onSelect={ setActiveSlug }
-				onRetry={ handleRetry }
+	const searchSlot = (
+		<div className="bb-integrations__search-wrap">
+			<input
+				type="search"
+				className="bb-integrations__search"
+				placeholder={ __( 'Search integrations…', 'buddyboss' ) }
+				onChange={ handleSearchChange }
+				aria-label={ __( 'Search integrations', 'buddyboss' ) }
 			/>
-
-			{ 'ready' === status && totalPages > 1 && (
-				<Pagination page={ page } totalPages={ totalPages } onChange={ setPage } />
-			) }
-
-			{ activeSlug && (
-				<IntegrationDrawer slug={ activeSlug } onClose={ () => setActiveSlug( null ) } />
-			) }
+			<i className="bb-icon-search bb-admin-header__search-icon" aria-hidden="true"></i>
 		</div>
+	);
+
+	return (
+		<Fragment>
+			<BBAdminHeader
+				logoUrl={ adminData.logoUrl }
+				ipnRootId={ adminData.ipnRootId }
+				onSearch={ ( query, signal ) => {
+					const fd = new FormData();
+					fd.append( 'action', 'bb_admin_search_settings' );
+					fd.append( 'nonce', adminData.searchNonce || '' );
+					fd.append( 'query', query );
+					return fetch( adminData.ajaxUrl, { method: 'POST', body: fd, credentials: 'same-origin', signal } )
+						.then( ( response ) => response.json() )
+						.then( ( response ) => ( response.success ? ( response.data?.results || [] ) : [] ) );
+				} }
+				onSelectResult={ ( result ) => {
+					window.location.href = ( adminData.settingsUrl || '' ) + '#' + result.route;
+				} }
+				onHelp={ openKb }
+			/>
+			<div className="bb-integrations">
+				<div className="bb-integrations__toolbar">
+					{ /* Tier tabs — Figma layout. Only "All" is wired today; Free/Pro
+					     are disabled (not no-op) until the API exposes a free/pro
+					     field (Q5), so a visible filter never silently returns the
+					     same results. Re-enable by removing `disabled` + handling
+					     `tier` in the list query once the field exists. */ }
+					<div className="bb-integrations__tabs" role="tablist">
+						<button
+							type="button"
+							role="tab"
+							aria-selected={ 'all' === tier }
+							className={ 'bb-integrations__tab' + ( 'all' === tier ? ' is-active' : '' ) }
+							onClick={ () => setTier( 'all' ) }
+						>
+							{ __( 'All', 'buddyboss' ) }
+						</button>
+						<button
+							type="button"
+							role="tab"
+							aria-selected={ 'free' === tier }
+							className="bb-integrations__tab"
+							disabled
+							title={ __( 'Coming soon', 'buddyboss' ) }
+						>
+							{ __( 'Free', 'buddyboss' ) }
+						</button>
+						<button
+							type="button"
+							role="tab"
+							aria-selected={ 'pro' === tier }
+							className="bb-integrations__tab"
+							disabled
+							title={ __( 'Coming soon', 'buddyboss' ) }
+						>
+							{ __( 'Pro', 'buddyboss' ) }
+						</button>
+					</div>
+
+					<div className="bb-integrations__controls">
+						{ searchSlot }
+						<select
+							className="bb-integrations__category"
+							value={ category }
+							onChange={ handleCategoryChange }
+							aria-label={ __( 'Filter by category', 'buddyboss' ) }
+						>
+							<option value={ 0 }>{ __( 'All Categories', 'buddyboss' ) }</option>
+							{ visibleCategories.map( ( cat ) => (
+								<option key={ cat.id } value={ cat.id }>
+									{ cat.name }
+								</option>
+							) ) }
+						</select>
+					</div>
+				</div>
+
+				<IntegrationGrid
+					items={ items }
+					status={ status }
+					onSelect={ setActiveSlug }
+					onRetry={ handleRetry }
+				/>
+
+				{ 'ready' === status && totalPages > 1 && (
+					<Pagination page={ page } totalPages={ totalPages } onChange={ setPage } />
+				) }
+
+				{ activeSlug && (
+					<IntegrationDrawer slug={ activeSlug } onClose={ () => setActiveSlug( null ) } />
+				) }
+			</div>
+			<KnowledgeBaseModal />
+		</Fragment>
+	);
+}
+
+/**
+ * App root — wraps the marketplace in the shared Knowledge Base provider so the
+ * header's help icon opens the same in-app KB modal as the Settings app.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @returns {JSX.Element} Integrations app.
+ */
+export function App() {
+	return (
+		<KbProvider>
+			<AppInner />
+		</KbProvider>
 	);
 }

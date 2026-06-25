@@ -134,6 +134,11 @@ function bb_admin_settings_init() {
 			require_once buddypress()->plugin_dir . 'bp-core/admin/bb-admin-integrations-page.php';
 		}
 
+		// Shared admin-common layer asset registration.
+		if ( file_exists( buddypress()->plugin_dir . 'bp-core/admin/bb-admin-common-assets.php' ) ) {
+			require_once buddypress()->plugin_dir . 'bp-core/admin/bb-admin-common-assets.php';
+		}
+
 		// Admin-only cover image upload + user crop AJAX handlers
 		// (`bb_admin_cover_image_upload_temp` + `bb_admin_cover_image_set`).
 		// Two-step pipeline that mirrors the avatar crop flow so the React

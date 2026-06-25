@@ -55,34 +55,44 @@ const ARTICLE_PAGE_CAP  = 12;  // ~1200 articles max per category — Customizat
 const SLUG_RE = /^[a-z0-9-]{1,80}$/i;
 
 /**
+ * Read the localized admin data, from whichever admin app is hosting the KB
+ * modal. The Settings app localizes `bbAdminData`; the Integrations app
+ * localizes `bbIntegrationsData`. Both expose `apiUrl` + `nonce`, so the shared
+ * KB layer reads whichever is present.
+ *
+ * @return {Object} Localized data, or an empty object.
+ */
+function kbAdminData() {
+	if ( typeof window === 'undefined' ) {
+		return {};
+	}
+	return window.bbAdminData || window.bbIntegrationsData || {};
+}
+
+/**
  * Resolve the same-origin help-content proxy URL.
  *
- * Reads `window.bbAdminData.apiUrl` (set by `bb-admin-settings-page.php` to
- * `rest_url( 'buddyboss/v1/' )`). Falls back to the WP-Admin REST root if
- * the localized data is missing — the controller registers under both
- * `buddyboss/v1` (with platform-api) and `bb/v1` (without), so the
- * fallback resolves on platform-only installs.
+ * Reads `apiUrl` from the host app's localized data (set to
+ * `rest_url( 'buddyboss/v1/' )`). Falls back to the WP-Admin REST root if the
+ * localized data is missing — the controller registers under both
+ * `buddyboss/v1` (with platform-api) and `bb/v1` (without), so the fallback
+ * resolves on platform-only installs.
  *
  * @return {string} Proxy POST endpoint URL.
  */
 function proxyEndpoint() {
-	const root = ( typeof window !== 'undefined' && window.bbAdminData && window.bbAdminData.apiUrl )
-		? window.bbAdminData.apiUrl
-		: '/wp-json/buddyboss/v1/';
+	const root = kbAdminData().apiUrl || '/wp-json/buddyboss/v1/';
 	const base = root.endsWith( '/' ) ? root : root + '/';
 	return base + 'help-content/proxy';
 }
 
 /**
- * Read the WP REST nonce from the localized admin data.
+ * Read the WP REST nonce from the host app's localized data.
  *
  * @return {string} REST nonce, or empty string if not localized.
  */
 function restNonce() {
-	if ( typeof window === 'undefined' || ! window.bbAdminData ) {
-		return '';
-	}
-	return window.bbAdminData.nonce || '';
+	return kbAdminData().nonce || '';
 }
 
 /**
@@ -118,7 +128,7 @@ async function jsonGet( path, signal ) {
 	const envelope        = await res.json();
 	const headers         = ( envelope && typeof envelope === 'object' && envelope.headers && typeof envelope.headers === 'object' ) ? envelope.headers : {};
 	const totalPagesHeader = headers[ 'x-wp-totalpages' ];
-	if ( ! totalPagesHeader && typeof window !== 'undefined' && window.bbAdminData?.debug ) {
+	if ( ! totalPagesHeader && kbAdminData().debug ) {
 		// eslint-disable-next-line no-console
 		console.warn( '[bb-kb] missing x-wp-totalpages header on', path );
 	}

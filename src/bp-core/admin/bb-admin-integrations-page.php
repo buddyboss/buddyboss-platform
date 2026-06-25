@@ -61,10 +61,22 @@ function bb_admin_integrations_page() {
 		$bb_icon_version
 	);
 
+	// Enqueue the shared admin-common layer (registered by bb-admin-common-assets.php at
+	// admin_enqueue_scripts priority 1) so the global header + CSS ship once.
+	if ( wp_script_is( 'bb-admin-common', 'registered' ) ) {
+		wp_enqueue_script( 'bb-admin-common' );
+	}
+	if ( wp_style_is( 'bb-admin-common-style', 'registered' ) ) {
+		wp_enqueue_style( 'bb-admin-common-style' );
+	}
+
+	// Merge bb-admin-common into the integrations bundle deps to guarantee load order.
+	$integrations_deps = array_unique( array_merge( $asset['dependencies'], array( 'bb-admin-common' ) ) );
+
 	wp_enqueue_script(
 		'bb-admin-integrations',
 		$build_url . '/index.js',
-		$asset['dependencies'],
+		$integrations_deps,
 		$asset['version'],
 		true
 	);
@@ -97,16 +109,52 @@ function bb_admin_integrations_page() {
 	$api_namespace = function_exists( 'bp_rest_namespace' ) && function_exists( 'bp_rest_version' )
 		? bp_rest_namespace() . '/' . bp_rest_version() . '/'
 		: 'buddyboss/v1/';
+
+	// Resolve the Mothership IPN root element ID so the shared header can locate
+	// and relocate the live IPN bell node. The prefix is edition-specific, so we
+	// ask the IPN View service for the actual ID; on failure the JS falls back to
+	// a structural [id$="_ipn_root"] selector. Mirrors the Settings page.
+	$ipn_root_id = '';
+	if (
+		class_exists( '\BuddyBoss\Core\Admin\Mothership\BB_Mothership_Loader' ) &&
+		class_exists( '\BuddyBossPlatform\GroundLevel\InProductNotifications\Services\View' )
+	) {
+		try {
+			$container   = \BuddyBoss\Core\Admin\Mothership\BB_Mothership_Loader::instance()->get_container();
+			$ipn_view    = $container->get( \BuddyBossPlatform\GroundLevel\InProductNotifications\Services\View::class );
+			$ipn_root_id = $ipn_view->getRootElementId();
+		} catch ( Throwable $e ) {
+			unset( $e );
+		}
+	}
+
 	wp_localize_script(
 		'bb-admin-integrations',
 		'bbIntegrationsData',
 		array(
-			'apiUrl'   => rest_url( $api_namespace ),
-			'nonce'    => wp_create_nonce( 'wp_rest' ),
-			'adminUrl' => esc_url( admin_url() ),
-			'version'  => defined( 'BP_PLATFORM_VERSION' ) ? BP_PLATFORM_VERSION : '0',
+			'apiUrl'    => rest_url( $api_namespace ),
+			'nonce'     => wp_create_nonce( 'wp_rest' ),
+			'adminUrl'  => esc_url( admin_url() ),
+			'version'   => defined( 'BP_PLATFORM_VERSION' ) ? BP_PLATFORM_VERSION : '0',
+			'logoUrl'     => esc_url( buddypress()->plugin_url . 'bp-core/images/admin/BBLogo.png' ),
+			'ipnRootId'   => $ipn_root_id,
+			// The shared header's global "Search for settings" box queries the
+			// Settings search AJAX (bb_admin_search_settings, nonce action
+			// bb_admin_settings); results deep-link into the Settings page.
+			'ajaxUrl'     => esc_url( admin_url( 'admin-ajax.php' ) ),
+			'searchNonce' => wp_create_nonce( 'bb_admin_settings' ),
+			'settingsUrl' => esc_url( admin_url( 'admin.php?page=bb-settings' ) ),
 		)
 	);
 
-	echo '<div class="wrap"><div id="bb-admin-integrations"></div></div>';
+	// Render the React mount, then fire bb_admin_header_actions OUTSIDE the React
+	// tree (inside .wrap) so the Mothership IPN bell renders its root <div> +
+	// script synchronously; the shared header relocates that live node into its
+	// bell slot. Mirrors the Settings page.
+	// The `bb-admin-app` class scopes the shared Knowledge Base modal styles
+	// (defined under `.bb-admin-app` in the shared common CSS) so the modal is
+	// styled here the same as on the Settings page.
+	echo '<div class="wrap"><div id="bb-admin-integrations" class="bb-admin-app"></div>';
+	do_action( 'bb_admin_header_actions' );
+	echo '</div>';
 }

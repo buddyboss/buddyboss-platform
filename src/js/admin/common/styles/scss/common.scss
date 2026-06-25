@@ -1,0 +1,283 @@
+/**
+ * Shared BuddyBoss admin header + Knowledge Base modal styles.
+ * Single source of truth for the global admin header on every admin page.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+
+@import 'variables';
+@import 'mixings';
+
+ /* Header */
+ #wpbody-content:has(.bb-admin-app > .bb-admin-header) {
+	padding-top: 57px;
+ }
+
+ .bb-admin-header {
+	background-color: #fff;
+	margin: 0 0 0 -20px;
+	padding: 12px 24px;
+	border-bottom: 1px solid $bb-border-color;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	position: fixed;
+    top: 32px;
+    left: 180px;
+    right: 0;
+	z-index: 100;
+
+	body.folded & {
+		left: 56px;
+	}
+
+	&__container {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		width: 100%;
+	}
+
+	&__left {
+		margin-right: auto;
+	}
+
+	&__logo {
+		display: flex;
+		align-items: center;
+
+		a {
+			display: flex;
+		}
+
+		&-img {
+			max-width: 130px;
+			height: auto;
+		}
+	}
+
+	&__center {
+		flex: 1 1 auto;
+		display: flex;
+		justify-content: center;
+		margin: 0 40px;
+		position: relative;
+	}
+
+	&__search {
+		position: relative;
+		width: 500px;
+		max-width: 100%;
+
+		&-wrapper {
+			position: relative;
+			width: 100%;
+		}
+
+		input.bb-admin-header__search-input {
+			@include bb-input-text;
+		}
+
+		&-icon {
+			position: absolute;
+			right: 8px;
+			top: 50%;
+			transform: translateY(-50%);
+			font-size: 20px;
+			color: #6a6a6a;
+			width: 20px;
+			height: 20px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			pointer-events: none;
+		}
+
+		&-spinner {
+			position: absolute;
+			right: 35px;
+			top: 50%;
+			transform: translateY(-50%);
+		}
+
+		&-results {
+			position: absolute;
+			top: 100%;
+			left: 0;
+			right: 0;
+			display: flex;
+			flex-direction: column;
+			background: $bb-background-base-color;
+			border: 1px solid $bb-border-secondary-color;
+			border-radius: $bb-border-radius-xl;
+			box-shadow: 0px 4px 12px 0px rgba(0, 0, 0, 0.12);
+			max-height: 400px;
+			overflow-y: auto;
+			z-index: 1000;
+			margin-top: 5px;
+		}
+
+		&-result {
+			display: flex;
+			align-items: center;
+			padding: 8px;
+			margin: 4px 8px;
+			border-radius: $bb-border-radius-lg;
+			cursor: pointer;
+			text-align: left;
+			background: none;
+			border: none;
+
+			&:hover {
+				background: $bb-background-primary-hover-color;
+			}
+
+			&:last-child {
+				border-bottom: none;
+			}
+
+			&--no-results {
+				cursor: default;
+				color: #999;
+			}
+
+			&-icon {
+				color: $bb-icon-tertiary-color;
+				font-size: 16px;
+				margin-right: 8px;
+			}
+
+			&-content {
+				flex: 1;
+			}
+
+			&-label {
+				color: $bb-text-tertiary-color;
+				font-size: 13px;
+				font-weight: 400;
+
+				&-field {
+					color: $bb-text-color;
+				}
+			}
+		}
+	}
+
+	&__right {
+		display: flex;
+		align-items: center;
+		gap: 4px;
+	}
+
+	&__icon-button {
+		background-color: transparent;
+		border: none;
+		border-radius: $bb-border-radius-md;
+		color: #2f2f2f;
+		cursor: pointer;
+		position: relative;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		padding: 4px;
+		text-decoration: none;
+
+		i[class*="bb-icons-"] {
+			color: $bb-icon-secondary-color;
+			font-size: 24px;
+
+			&:before {
+				margin: 0;
+			}
+		}
+
+		&:hover {
+			background-color: $bb-background-color;
+		}
+
+		&--notifications {
+			position: relative;
+		}
+	}
+
+	&__ipn-slot {
+		border-radius: $bb-border-radius-md;
+
+		&:hover {
+			background-color: $bb-background-color;
+		}
+	}
+
+	// Mothership IPN inbox mount point. The IPN React app renders its own
+	// <button> inside Shadow DOM here, so we reset host-level button styles
+	// (padding, hover bg) to avoid double-padding and conflicting hover states.
+	// Width/height match sibling __icon-button (24px icon + 8px padding ≈ 32×32).
+	&__ipn-root {
+		padding: 0;
+		background: transparent;
+		width: 32px;
+		height: 32px;
+
+		&:hover {
+			background: transparent;
+		}
+	}
+
+	&__notification-badge {
+		position: absolute;
+		top: 2px;
+		right: 5px;
+		background-color: #ff0000;
+		color: white;
+		font-size: 9px;
+		line-height: 8px;
+		padding: 2px 0;
+		border-radius: 16px;
+		min-width: 12px;
+		text-align: center;
+		font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell, sans-serif;
+		font-weight: 400;
+		letter-spacing: -0.045px;
+	}
+}
+
+@media screen and (max-width: 960px) {
+
+	.bb-admin-header {
+		left: 56px;
+	}
+
+	.bb-admin-header__center {
+		width: 50%;
+		margin: 0;
+	}
+
+	.bb-admin-header__search {
+		width: 80%;
+		max-width: initial;
+	}
+
+}
+
+@media screen and (max-width: 782px) {
+
+	.bb-admin-header {
+		top: 46px;
+		left: 20px;
+	}
+
+	#wpbody-content:has(.bb-admin-app>.bb-admin-header) {
+		padding-top: 68px;
+	}
+}
+
+@media screen and (max-width: 600px) {
+
+	.bb-admin-header {
+		position: absolute;
+		left: 10px;
+	}
+}
+
+// Knowledge Base modal styles (shared so consumers get the in-app help modal).
+@import 'knowledge_base';

@@ -43,6 +43,11 @@ export default function KnowledgeBaseModal( { triggerRef } ) {
 	const dialogRef              = useRef( null );
 	const previouslyFocusedRef   = useRef( null );
 
+	// Brand logo from whichever admin app hosts the modal (Settings → bbAdminData,
+	// Integrations → bbIntegrationsData).
+	const adminData = ( typeof window !== 'undefined' && ( window.bbAdminData || window.bbIntegrationsData ) ) || {};
+	const brandLogoUrl = adminData.logoUrl || '';
+
 	// Focus capture on open, restore on close.
 	useEffect( () => {
 		if ( state.isOpen ) {
@@ -130,9 +135,9 @@ export default function KnowledgeBaseModal( { triggerRef } ) {
 			>
 				<header className="bb-kb-modal__header">
 					<span id="bb-kb-modal-title" className="bb-kb-modal__brand">
-						{ window.bbAdminData && window.bbAdminData.logoUrl ? (
+						{ brandLogoUrl ? (
 							<>
-								<img className="bb-kb-modal__brand-logo" src={ window.bbAdminData.logoUrl } alt="BuddyBoss" />
+								<img className="bb-kb-modal__brand-logo" src={ brandLogoUrl } alt="BuddyBoss" />
 								<span className="bb-kb-modal__brand-separator"></span>
 							</>
 						) : null }

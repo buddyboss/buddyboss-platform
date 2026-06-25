@@ -182,6 +182,13 @@ function bb_admin_settings_page() {
 		}
 	}
 
+	// Shared admin header CSS (the global header styles moved out of admin.css
+	// into the shared common stylesheet so Settings and Integrations
+	// share one source). Registered by bb_register_admin_common_assets().
+	if ( wp_style_is( 'bb-admin-common-style', 'registered' ) ) {
+		wp_enqueue_style( 'bb-admin-common-style' );
+	}
+
 	// Localize script with admin data.
 	$groups_per_page_option = bp_core_do_network_admin() ? 'buddyboss_page_bp_groups_network_per_page' : 'buddyboss_page_bp_groups_per_page';
 	$groups_per_page        = absint( get_user_option( $groups_per_page_option, get_current_user_id() ) );
