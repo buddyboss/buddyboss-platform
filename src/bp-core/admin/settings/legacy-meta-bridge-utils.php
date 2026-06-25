@@ -1091,7 +1091,12 @@ function bb_legacy_extract_select_options( $html, $name ) {
 	}
 
 	$out = array();
-	foreach ( $xpath->query( "//select[@name='{$safe_name}']/option" ) as $opt ) {
+	// Descendant axis (`//option`, not `/option`): a classic <select> may group its
+	// options under <optgroup> (e.g. the "Public" / "Members only" sections on a
+	// forum category select). Grouped options are children of the optgroup, not of
+	// the select, so a direct-child query drops them and the React field renders
+	// empty. Matching descendants captures both flat and grouped options.
+	foreach ( $xpath->query( "//select[@name='{$safe_name}']//option" ) as $opt ) {
 		$out[] = array(
 			// phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase -- DOM API property.
 			'label' => trim( $opt->textContent ),
