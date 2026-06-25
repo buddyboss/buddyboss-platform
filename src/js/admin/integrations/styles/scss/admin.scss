@@ -87,6 +87,11 @@ body.buddyboss_page_bb-integrations {
 
 	.bb-integrations__search {
 		@include bb-input-text;
+		padding-right: 28px;
+
+		&::-webkit-search-cancel-button {
+			display: none;
+		}
 
 		&-wrap {
 			width: 100%;
@@ -147,6 +152,7 @@ body.buddyboss_page_bb-integrations {
 			background: linear-gradient(90deg, #f3f4f5 25%, #ececec 37%, #f3f4f5 63%);
 			background-size: 400% 100%;
 			animation: bb-integrations-shimmer 1.4s ease infinite;
+			min-height: 170px;
 		}
 	}
 
