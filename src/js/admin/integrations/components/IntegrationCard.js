@@ -36,7 +36,7 @@ export function IntegrationCard( { item, onSelect } ) {
 	const vendorName = item?.vendor_name ? decodeEntities( item.vendor_name ) : '';
 	const isPro = 'pro' === item?.tier;
 
-	const open = () => onSelect( item.slug );
+	const open = () => onSelect( item.slug, title );
 
 	return (
 		<div className="bb-integrations__card">

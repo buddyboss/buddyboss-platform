@@ -62,7 +62,7 @@ function DependencyList( { label, items } ) {
 	);
 }
 
-export function IntegrationDrawer( { slug, onClose } ) {
+export function IntegrationDrawer( { slug, initialTitle, onClose } ) {
 	const [ status, setStatus ] = useState( 'loading' ); // loading | ready | error | notfound
 	const [ item, setItem ] = useState( null );
 	const abortRef = useRef( null );
@@ -157,6 +157,9 @@ export function IntegrationDrawer( { slug, onClose } ) {
 	}, [] );
 
 	const title = item?.title?.rendered ? decodeEntities( item.title.rendered ) : '';
+	// Top-bar name: prefer the fetched title, fall back to the title handed over
+	// from the clicked card so the header is never blank while loading.
+	const headerName = title || ( initialTitle ? decodeEntities( initialTitle ) : '' );
 	const description = item?.short_description ? decodeEntities( item.short_description ) : '';
 	const collection = item?.collection_name ? decodeEntities( item.collection_name ) : '';
 	const logo = item?.logo_image_url && 'string' === typeof item.logo_image_url ? item.logo_image_url : '';
@@ -177,14 +180,17 @@ export function IntegrationDrawer( { slug, onClose } ) {
 			<div className="bb-integrations-drawer__overlay" onClick={ onClose } aria-hidden="true" />
 
 			<div className="bb-integrations-drawer__panel" ref={ panelRef }>
-				<button
-					type="button"
-					className="bb-integrations-drawer__close"
-					onClick={ onClose }
-					aria-label={ __( 'Close', 'buddyboss' ) }
-				>
-					<i className="bb-icons-rl bb-icons-rl-x" aria-hidden="true" />
-				</button>
+				<div className="bb-integrations-drawer__topbar">
+					<h2 className="bb-integrations-drawer__name">{ headerName }</h2>
+					<button
+						type="button"
+						className="bb-integrations-drawer__close"
+						onClick={ onClose }
+						aria-label={ __( 'Close', 'buddyboss' ) }
+					>
+						<i className="bb-icons-rl bb-icons-rl-x" aria-hidden="true" />
+					</button>
+				</div>
 
 				{ 'loading' === status && (
 					<div className="bb-integrations-drawer__state" aria-busy="true">
