@@ -16,7 +16,7 @@ body.buddyboss_page_bb-integrations {
 	background-color: $bb-background-color;
 }
 
-.bb-admin-integrations {
+#bb-admin-integrations {
 	padding: 0;
 	max-width: 1600px;
 	margin: 0 auto;
@@ -193,6 +193,7 @@ body.buddyboss_page_bb-integrations {
 			width: 40px;
 			height: 40px;
 			object-fit: contain;
+			border-radius: $bb-border-radius-full;
 		}
 
 		i {
@@ -305,7 +306,7 @@ body.buddyboss_page_bb-integrations {
 		right: 0;
 		bottom: 0;
 		width: 100%;
-		max-width: 520px;
+		max-width: 720px;
 		background: $bb-background-base-color;
 		box-shadow: -16px 0 56px 0 rgba(0, 0, 0, 0.20);
 		border: 1px solid rgba(0, 0, 0, 0.10);
@@ -375,33 +376,40 @@ body.buddyboss_page_bb-integrations {
 	}
 
 	&__header {
-		padding: 8px 0 16px;
-		border-bottom: 1px solid #e2e4e7;
+		background-color: $bb-background-primary-color;
+		padding: 24px;
 		margin-bottom: 16px;
+		border-radius: $bb-border-radius-2xl;
+		text-align: center;
 	}
 
 	&__icon {
 		display: inline-flex;
-		width: 48px;
-		height: 48px;
+		width: 56px;
+		height: 56px;
 		align-items: center;
 		justify-content: center;
+		background-color: $bb-background-base-color;
+		border: 1px solid $bb-border-primary-color;
+		border-radius: $bb-border-radius-full;
 		margin-bottom: 8px;
 
 		img {
-			max-width: 48px;
-			max-height: 48px;
+			max-width: 40px;
+			max-height: 40px;
 			object-fit: contain;
 		}
 
 		i {
-			font-size: 32px;
+			font-size: 36px;
 			color: #8c8f94;
 		}
 	}
 
 	&__title {
-		font-size: 18px;
+		color: $bb-text-color;
+		font-size: 16px;
+		font-weight: 600;
 		margin: 0 0 8px;
 	}
 
@@ -413,13 +421,24 @@ body.buddyboss_page_bb-integrations {
 
 	&__desc {
 		font-size: 13px;
-		color: #50575e;
-		margin: 0 0 12px;
+		color: $bb-text-secondary-color;
+		margin: 0 0 16px;
 	}
 
 	&__actions {
 		display: flex;
-		gap: 8px;
+		justify-content: center;
+		gap: 16px;
+
+		.button-primary {
+			@include bb-button-primary;
+			min-height: auto;
+			line-height: 1.2;
+
+			&:focus {
+				background: $bb-background-brand-primary-color;
+			}
+		}
 	}
 
 	&__body {
@@ -428,11 +447,12 @@ body.buddyboss_page_bb-integrations {
 		color: #1e1e1e;
 
 		p {
+			color: $bb-text-tertiary-color;
+			font-size: 13px;
+			font-weight: 400;
 			margin: 0 0 12px;
 		}
 
-		// Restore list bullets — the WP admin stylesheet resets list-style, so
-		// the upstream `<ul class="wp-block-list">` renders flat without these.
 		ul {
 			list-style: disc;
 			padding-left: 1.5em;
@@ -457,14 +477,34 @@ body.buddyboss_page_bb-integrations {
 			margin: 12px 0;
 		}
 
+		h1 {
+			color: $bb-text-color;
+			font-size: 16px;
+			font-weight: 500;
+			margin: 0 0 12px;
+			padding: 0;
+		}
+
 		h2,
 		h3,
 		h4 {
-			margin-top: 20px;
+			font-size: 15px;
+			font-weight: 500;
+			color: $bb-text-color;
+			margin: 0 0 12px;
 		}
 
-		a {
-			color: #ef5d33;
+		h3,
+		h4 {
+			font-size: 14px;
+		}
+
+		.wp-block-buttons {
+			margin-bottom: 16px;
+		}
+
+		.wp-block-button__link {
+			color: $bb-primary-color;
 		}
 	}
 
