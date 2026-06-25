@@ -1163,7 +1163,7 @@ export default function RepliesListScreen( { onNavigate } ) {
 														handleEditFieldChange( item.field.id, val );
 													} }
 													itemId={ editReply.id }
-												disabled={ isFieldConditionalDisabled( item.field, editRegisteredValues ) }
+													disabled={ isFieldConditionalDisabled( item.field, editRegisteredValues ) }
 												/>
 											</div>
 										);
