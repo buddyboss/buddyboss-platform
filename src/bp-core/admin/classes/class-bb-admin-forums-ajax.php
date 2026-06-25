@@ -555,8 +555,10 @@ class BB_Admin_Forums_Ajax {
 			bbp_open_forum( $forum_id );
 		}
 
-		// Handle featured image.
-		if ( ! empty( $image_id ) ) {
+		// Handle featured image. The wp.media picker lets admins select any
+		// Library item, so guard against non-image (or non-existent) attachment
+		// IDs reaching set_post_thumbnail().
+		if ( ! empty( $image_id ) && wp_attachment_is_image( $image_id ) ) {
 			set_post_thumbnail( $forum_id, $image_id );
 		}
 
@@ -744,10 +746,12 @@ class BB_Admin_Forums_Ajax {
 			}
 		}
 
-		// Handle featured image.
+		// Handle featured image. The wp.media picker lets admins select any
+		// Library item, so guard against non-image (or non-existent) attachment
+		// IDs reaching set_post_thumbnail().
 		if ( $remove_image ) {
 			delete_post_thumbnail( $forum_id );
-		} elseif ( ! empty( $image_id ) ) {
+		} elseif ( ! empty( $image_id ) && wp_attachment_is_image( $image_id ) ) {
 			set_post_thumbnail( $forum_id, $image_id );
 		}
 
