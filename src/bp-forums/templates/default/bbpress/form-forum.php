@@ -32,10 +32,10 @@ defined( 'ABSPATH' ) || exit;
 				<?php
 				if ( bbp_is_forum_edit() ) {
 					/* translators: %s: forum title. */
-					printf( __( 'Now Editing &ldquo;%s&rdquo;', 'buddyboss-platform' ), bbp_get_forum_title() );
+					printf( __( 'Now Editing &ldquo;%s&rdquo;', 'buddyboss-platform' ), esc_html( bbp_get_forum_title() ) );
 				} else {
 					/* translators: %s: parent forum title. */
-					bbp_is_single_forum() ? printf( __( 'Create New Forum in &ldquo;%s&rdquo;', 'buddyboss-platform' ), bbp_get_forum_title() ) : esc_html_e( 'Create New Forum', 'buddyboss-platform' );
+					bbp_is_single_forum() ? printf( __( 'Create New Forum in &ldquo;%s&rdquo;', 'buddyboss-platform' ), esc_html( bbp_get_forum_title() ) ) : esc_html_e( 'Create New Forum', 'buddyboss-platform' );
 				}
 				?>
 				</h2>
@@ -152,7 +152,7 @@ defined( 'ABSPATH' ) || exit;
 	<div id="no-forum-<?php bbp_forum_id(); ?>" class="bbp-no-forum">
 		<div class="bp-feedback info">
 			<span class="bp-icon" aria-hidden="true"></span>
-			<p><?php /* translators: %s: forum title. */ printf( esc_html__( 'The forum "%s" is closed to new content.', 'buddyboss-platform' ), bbp_get_forum_title() ); ?></p>
+			<p><?php /* translators: %s: forum title. */ printf( esc_html__( 'The forum "%s" is closed to new content.', 'buddyboss-platform' ), esc_html( bbp_get_forum_title() ) ); ?></p>
 		</div>
 	</div>
 

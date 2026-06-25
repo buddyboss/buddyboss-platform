@@ -486,7 +486,7 @@ function bbp_get_search_pagination_count() {
  * @uses bbp_get_search_pagination_links() To get the search pagination links
  */
 function bbp_search_pagination_links() {
-	echo bbp_get_search_pagination_links();
+	echo wp_kses_post( bbp_get_search_pagination_links() );
 }
 
 /**

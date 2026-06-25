@@ -90,7 +90,7 @@ if ( groups_check_user_has_invite( $loggedin_user_id, $current_group_id ) ) {
 		} else {
 			?>
 			<p>
-				<?php /* translators: %s: group name. */ printf( esc_html__( 'You are requesting to become a member of the group "%s".', 'buddyboss-platform' ), bp_get_group_name() ); ?>
+				<?php /* translators: %s: group name. */ printf( esc_html__( 'You are requesting to become a member of the group "%s".', 'buddyboss-platform' ), esc_html( bp_get_group_name() ) ); ?>
 			</p>
 
 			<form action="<?php bp_group_form_action( 'request-membership' ); ?>" method="post" name="request-membership-form" id="request-membership-form" class="standard-form">

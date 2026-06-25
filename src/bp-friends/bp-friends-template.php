@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
  * @since BuddyPress 1.5.0
  */
 function bp_friends_slug() {
-	echo bp_get_friends_slug();
+	echo esc_attr( bp_get_friends_slug() );
 }
 	/**
 	 * Return the friends component slug.
@@ -42,7 +42,7 @@ function bp_get_friends_slug() {
  * @since BuddyPress 1.5.0
  */
 function bp_friends_root_slug() {
-	echo bp_get_friends_root_slug();
+	echo esc_attr( bp_get_friends_root_slug() );
 }
 	/**
 	 * Return the friends component root slug.
@@ -89,15 +89,15 @@ function bp_friends_random_friends() {
 				<li>
 					<a href="<?php echo bp_core_get_user_domain( $friend_ids[ $i ] ); ?>">
 										<?php
-										echo bp_core_fetch_avatar(
+										echo wp_kses_post( bp_core_fetch_avatar(
 											array(
 												'item_id' => $friend_ids[ $i ],
 												'type'    => 'thumb',
 											)
-										);
+										) );
 										?>
 																							</a>
-					<h5><?php echo bp_core_get_userlink( $friend_ids[ $i ] ); ?></h5>
+					<h5><?php echo wp_kses_post( bp_core_get_userlink( $friend_ids[ $i ] ) ); ?></h5>
 				</li>
 
 			<?php } ?>
@@ -145,15 +145,15 @@ function bp_friends_random_members( $total_members = 5 ) {
 			<li>
 				<a href="<?php echo bp_core_get_user_domain( $user_ids['users'][ $i ]->id ); ?>">
 									<?php
-									echo bp_core_fetch_avatar(
+									echo wp_kses_post( bp_core_fetch_avatar(
 										array(
 											'item_id' => $user_ids['users'][ $i ]->id,
 											'type'    => 'thumb',
 										)
-									);
+									) );
 									?>
 																									</a>
-				<h5><?php echo bp_core_get_userlink( $user_ids['users'][ $i ]->id ); ?></h5>
+				<h5><?php echo wp_kses_post( bp_core_get_userlink( $user_ids['users'][ $i ]->id ) ); ?></h5>
 
 				<?php if ( bp_is_active( 'xprofile' ) ) { ?>
 
@@ -236,7 +236,7 @@ add_action( 'bp_directory_members_actions', 'bp_member_add_friend_button' );
  * @since BuddyPress 1.2.0
  */
 function bp_member_total_friend_count() {
-	echo bp_get_member_total_friend_count();
+	echo esc_html( bp_get_member_total_friend_count() );
 }
 	/**
 	 * Return the friend count for the current member in the loop.
@@ -281,7 +281,7 @@ function bp_get_member_total_friend_count() {
  * @param int $user_id See {@link bp_get_potential_friend_id()}.
  */
 function bp_potential_friend_id( $user_id = 0 ) {
-	echo bp_get_potential_friend_id( $user_id );
+	echo esc_attr( bp_get_potential_friend_id( $user_id ) );
 }
 	/**
 	 * Return the ID of current user in the friend request loop.
@@ -360,7 +360,7 @@ function bp_is_friend( $user_id = 0 ) {
  * @param array    $button_args         See {@link BP_Button class}.
  */
 function bp_add_friend_button( $potential_friend_id = 0, $friend_status = false, $button_args = array() ) {
-	echo bp_get_add_friend_button( $potential_friend_id, $friend_status, $button_args );
+	echo wp_kses_post( bp_get_add_friend_button( $potential_friend_id, $friend_status, $button_args ) );
 }
 
 /**
@@ -624,7 +624,7 @@ function bp_get_mutual_friendships( $user_id = 0 ) {
  * @since BuddyPress 1.2.0
  */
 function bp_friend_friendship_id() {
-	echo bp_get_friend_friendship_id();
+	echo esc_attr( bp_get_friend_friendship_id() );
 }
 	/**
 	 * Return the ID of the friendship between the logged-in user and the current user in the loop.
@@ -687,7 +687,7 @@ function bp_get_friend_friendship_id() {
  * @since BuddyPress 1.0.0
  */
 function bp_friend_accept_request_link() {
-	echo bp_get_friend_accept_request_link();
+	echo wp_kses_post( bp_get_friend_accept_request_link() );
 }
 	/**
 	 * Return the URL for accepting the current friendship request in the loop.
@@ -722,7 +722,7 @@ function bp_get_friend_accept_request_link() {
  * @since BuddyPress 1.0.0
  */
 function bp_friend_reject_request_link() {
-	echo bp_get_friend_reject_request_link();
+	echo wp_kses_post( bp_get_friend_reject_request_link() );
 }
 	/**
 	 * Return the URL for rejecting the current friendship request in the loop.
@@ -759,7 +759,7 @@ function bp_get_friend_reject_request_link() {
  * @param int $user_id See {@link friends_get_total_friend_count()}.
  */
 function bp_total_friend_count( $user_id = 0 ) {
-	echo bp_get_total_friend_count( $user_id );
+	echo esc_html( bp_get_total_friend_count( $user_id ) );
 }
 	/**
 	 * Return the total friend count for a given user.
@@ -793,7 +793,7 @@ function bp_get_total_friend_count( $user_id = 0 ) {
  * @param int $user_id See {@link bp_friend_get_total_requests_count().
  */
 function bp_friend_total_requests_count( $user_id = 0 ) {
-	echo bp_friend_get_total_requests_count( $user_id );
+	echo esc_html( bp_friend_get_total_requests_count( $user_id ) );
 }
 	/**
 	 * Return the total friendship request count for a given user.

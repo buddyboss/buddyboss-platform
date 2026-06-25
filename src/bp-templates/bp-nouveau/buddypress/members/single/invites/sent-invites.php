@@ -208,7 +208,7 @@ if ( isset( $restricted ) && '' !== $restricted ) {
 	$total_pages = $the_query->max_num_pages;
 	if ( $total_pages > 1 ) {
 		$current_page = max( 1, get_query_var( 'paged' ) );
-		echo paginate_links(
+		echo wp_kses_post( paginate_links(
 			array(
 				'base'      => get_pagenum_link( 1 ) . '%_%',
 				'format'    => '?paged=%#%',
@@ -217,7 +217,7 @@ if ( isset( $restricted ) && '' !== $restricted ) {
 				'prev_text' => __( '« Prev', 'buddyboss-platform' ),
 				'next_text' => __( 'Next »', 'buddyboss-platform' ),
 			)
-		);
+		) );
 	}
 
 	wp_reset_postdata();

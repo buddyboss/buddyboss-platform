@@ -2374,7 +2374,7 @@ function bbp_display_replies_feed_rss2( $replies_query = array() ) {
 
 						<description>
 							<![CDATA[
-							<p><?php /* translators: %s: number of replies. */ printf( esc_html__( 'Replies: %s', 'buddyboss-platform' ), bbp_get_topic_reply_count() ); ?></p>
+							<p><?php /* translators: %s: number of replies. */ printf( esc_html__( 'Replies: %s', 'buddyboss-platform' ), esc_html( bbp_get_topic_reply_count() ) ); ?></p>
 							<?php bbp_topic_content(); ?>
 							]]>
 						</description>

@@ -456,7 +456,7 @@ if ( ! class_exists( 'BP_XProfile_User_Admin' ) ) :
 						/* translators: %s: field visibility level label. */
 						printf(
 							esc_html__( 'This field can be seen by: %s', 'buddyboss-platform' ),
-							'<span class="current-visibility-level">' . bp_get_the_profile_field_visibility_level_label() . '</span>'
+							'<span class="current-visibility-level">' . esc_html( bp_get_the_profile_field_visibility_level_label() ) . '</span>'
 						);
 						?>
 						</span>
@@ -553,14 +553,14 @@ if ( ! class_exists( 'BP_XProfile_User_Admin' ) ) :
 		<div class="avatar">
 
 			<?php
-			echo bp_core_fetch_avatar(
+			echo wp_kses_post( bp_core_fetch_avatar(
 				array(
 					'item_id' => $user->ID,
 					'object'  => 'user',
 					'type'    => 'full',
 					'title'   => $user->display_name,
 				)
-			);
+			) );
 			?>
 
 				<?php

@@ -2476,7 +2476,7 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 
 								<tr>
 									<td class="column-fields"><?php esc_html_e( 'Email', 'buddyboss-platform' ); ?></td>
-									<td><?php echo sanitize_email( $signup->user_email ); ?></td>
+									<td><?php echo esc_html( sanitize_email( $signup->user_email ) ); ?></td>
 								</tr>
 
 								<?php

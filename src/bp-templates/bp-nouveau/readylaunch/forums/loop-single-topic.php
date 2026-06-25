@@ -129,7 +129,7 @@ if ( function_exists( 'bbp_is_forum_group_forum' ) && bbp_is_forum_group_forum( 
 			do_action( 'bbp_theme_before_topic_started_in' );
 			?>
 			<div class="bb-rl-topic-started-in">
-				<?php printf( wp_kses_post( '<a href="%1$s">%2$s%3$s</a>' ), bbp_get_forum_permalink( bbp_get_topic_forum_id() ), $group_avatar, bbp_get_forum_title( bbp_get_topic_forum_id() ) ); ?>
+				<?php printf( wp_kses_post( '<a href="%1$s">%2$s%3$s</a>' ), esc_url( bbp_get_forum_permalink( bbp_get_topic_forum_id() ) ), $group_avatar, bbp_get_forum_title( bbp_get_topic_forum_id() ) ); ?>
 			</div>
 			<?php
 			do_action( 'bbp_theme_after_topic_started_in' );
@@ -140,7 +140,7 @@ if ( function_exists( 'bbp_is_forum_group_forum' ) && bbp_is_forum_group_forum( 
 		</div>
 
 		<p class="bb-rl-topic-description">
-			<?php echo get_the_excerpt( bbp_get_topic_id() ); ?>
+			<?php echo wp_kses_post( get_the_excerpt( bbp_get_topic_id() ) ); ?>
 		</p>
 
 		<?php
@@ -217,7 +217,7 @@ if ( function_exists( 'bbp_is_forum_group_forum' ) && bbp_is_forum_group_forum( 
 
 				<?php do_action( 'bbp_theme_before_topic_started_by' ); ?>
 
-				<span class="bb-rl-topic-started-by"><?php /* translators: %s: topic author link. */ printf( esc_html__( 'By:%1$s', 'buddyboss-platform' ), bbp_get_topic_author_link( array( 'size' => '14' ) ) ); ?></span>
+				<span class="bb-rl-topic-started-by"><?php /* translators: %s: topic author link. */ printf( esc_html__( 'By:%1$s', 'buddyboss-platform' ), wp_kses_post( bbp_get_topic_author_link( array( 'size' => '14' ) ) ) ); ?></span>
 
 				<?php do_action( 'bbp_theme_after_topic_started_by' ); ?>
 

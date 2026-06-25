@@ -138,7 +138,7 @@ function bbp_filter_get_user_option( $value = false, $option = '', $user = 0 ) {
  * @return string
  */
 function bbp_user_topic_count( $user_id = 0, $integer = false ) {
-	echo bbp_get_user_topic_count( $user_id, $integer );
+	echo esc_html( bbp_get_user_topic_count( $user_id, $integer ) );
 }
 	/**
 	 * Return a users reply count
@@ -177,7 +177,7 @@ function bbp_get_user_topic_count( $user_id = 0, $integer = false ) {
  * @return string
  */
 function bbp_user_reply_count( $user_id = 0, $integer = false ) {
-	echo bbp_get_user_reply_count( $user_id, $integer );
+	echo esc_html( bbp_get_user_reply_count( $user_id, $integer ) );
 }
 	/**
 	 * Return a users reply count
@@ -216,7 +216,7 @@ function bbp_get_user_reply_count( $user_id = 0, $integer = false ) {
  * @return string
  */
 function bbp_user_post_count( $user_id = 0, $integer = false ) {
-	echo bbp_get_user_post_count( $user_id, $integer );
+	echo esc_html( bbp_get_user_post_count( $user_id, $integer ) );
 }
 	/**
 	 * Return a users total post count

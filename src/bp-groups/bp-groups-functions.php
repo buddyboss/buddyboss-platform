@@ -3788,7 +3788,7 @@ add_action( 'groups_remove_member', 'bp_groups_clear_invite_message_on_uninvite'
  * @return string   custom post type of group type.
  */
 function bp_groups_group_type_post_type() {
-	echo bp_groups_get_group_type_post_type();
+	echo esc_attr( bp_groups_get_group_type_post_type() );
 }
 
 /**

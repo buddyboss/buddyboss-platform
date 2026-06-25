@@ -2663,7 +2663,7 @@ function bp_get_displayed_user() {
  * @since BuddyPress 2.7.0
  */
 function bp_member_type_tax_name() {
-	echo bp_get_member_type_tax_name();
+	echo esc_html( bp_get_member_type_tax_name() );
 }
 
 	/**
@@ -3101,7 +3101,7 @@ add_action( 'bp_register_member_types', 'bp_register_active_member_types' );
  * @return string   custom post type of profile type.
  */
 function bp_member_type_post_type() {
-	echo bp_get_member_type_post_type();
+	echo esc_attr( bp_get_member_type_post_type() );
 }
 
 /**

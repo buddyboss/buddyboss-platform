@@ -1136,12 +1136,12 @@ function bb_notification_avatar() {
 			?>
 			<a href="<?php echo ! empty( $link ) ? esc_url( $link ) : ''; ?>" class="<?php echo esc_attr( $moderation_class ); ?>" <?php echo $data_hp; ?>>
 				<?php
-				echo bp_core_fetch_avatar(
+				echo wp_kses_post( bp_core_fetch_avatar(
 					array(
 						'item_id' => $item_id,
 						'object'  => $object,
 					)
-				);
+				) );
 
 				// Get the small icon for the notification which will print beside the avatar.
 				$notification_icon = bb_notification_small_icon( $component_action, true, $notification );

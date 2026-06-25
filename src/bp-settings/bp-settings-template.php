@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
  * @since BuddyPress 1.5.0
  */
 function bp_settings_slug() {
-	echo bp_get_settings_slug();
+	echo esc_attr( bp_get_settings_slug() );
 }
 	/**
 	 * Return the settings component slug.
@@ -42,7 +42,7 @@ function bp_get_settings_slug() {
  * @since BuddyPress 1.5.0
  */
 function bp_settings_root_slug() {
-	echo bp_get_settings_root_slug();
+	echo esc_attr( bp_get_settings_root_slug() );
 }
 	/**
 	 * Return the settings component root slug.

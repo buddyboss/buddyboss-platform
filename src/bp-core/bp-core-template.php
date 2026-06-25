@@ -303,7 +303,7 @@ function bp_get_avatar_to_crop() {
  * @since BuddyPress 1.1.0
  */
 function bp_avatar_to_crop_src() {
-	echo bp_get_avatar_to_crop_src();
+	echo esc_url( bp_get_avatar_to_crop_src() );
 }
 	/**
 	 * Return the relative file path to the avatar to crop.
@@ -347,7 +347,7 @@ function bp_avatar_cropper() {
  * @since BuddyPress 1.0.0
  */
 function bp_site_name() {
-	echo bp_get_site_name();
+	echo esc_html( bp_get_site_name() );
 }
 	/**
 	 * Returns the name of the BP site. Used in RSS headers.
@@ -678,7 +678,7 @@ function bp_get_search_placeholder( $component = '' ) {
  * @param string $component See {@link bp_get_search_default_text()}.
  */
 function bp_search_default_text( $component = '' ) {
-	echo bp_get_search_default_text( $component );
+	echo esc_html( bp_get_search_default_text( $component ) );
 }
 	/**
 	 * Return the default text for the search box for a given component.
@@ -838,7 +838,7 @@ function bp_get_form_field_attributes( $name = '', $attributes = array() ) {
  * @param array|string $args See {@link BP_Button}.
  */
 function bp_button( $args = '' ) {
-	echo bp_get_button( $args );
+	echo wp_kses_post( bp_get_button( $args ) );
 }
 	/**
 	 * Create and return a button.
@@ -1142,7 +1142,7 @@ add_filter( 'bp_create_excerpt', 'force_balance_tags' );
  * @since BuddyPress 1.2.0
  */
 function bp_total_member_count() {
-	echo bp_get_total_member_count();
+	echo esc_html( bp_get_total_member_count() );
 }
 
 /**
@@ -1459,7 +1459,7 @@ function bp_action_variable( $position = 0 ) {
  * @since BuddyPress 1.1.0
  */
 function bp_root_domain() {
-	echo bp_get_root_domain();
+	echo esc_url( bp_get_root_domain() );
 }
 	/**
 	 * Return the "root domain", the URL of the BP root blog.
@@ -1496,7 +1496,7 @@ function bp_get_root_domain() {
  * @param string $component The component name.
  */
 function bp_root_slug( $component = '' ) {
-	echo bp_get_root_slug( $component );
+	echo esc_attr( bp_get_root_slug( $component ) );
 }
 	/**
 	 * Get the root slug for given component.
@@ -1625,7 +1625,7 @@ function bp_user_has_access() {
  * @since BuddyPress 1.5.0
  */
 function bp_search_slug() {
-	echo bp_get_search_slug();
+	echo esc_attr( bp_get_search_slug() );
 }
 	/**
 	 * Return the search slug.

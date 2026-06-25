@@ -1477,7 +1477,7 @@ function bp_core_date_format( $time = false, $date = true, $symbol = ' @ ' ) {
  * @return string|null
  */
 function bp_core_format_date( $date = '', $format = '' ) {
-	echo bp_core_get_format_date( $date, $format );
+	echo esc_html( bp_core_get_format_date( $date, $format ) );
 }
 
 /**
@@ -3404,7 +3404,7 @@ function bp_upload_dir() {
  * @since BuddyPress 2.5.0
  */
 function bp_email_post_type() {
-	echo bp_get_email_post_type();
+	echo esc_attr( bp_get_email_post_type() );
 }
 	/**
 	 * Returns the name of the email post type.
@@ -3501,7 +3501,7 @@ function bp_get_email_post_type_supports() {
  * @since BuddyPress 2.5.0
  */
 function bp_email_tax_type() {
-	echo bp_get_email_tax_type();
+	echo esc_attr( bp_get_email_tax_type() );
 }
 	/**
 	 * Return the name of the email type taxonomy.

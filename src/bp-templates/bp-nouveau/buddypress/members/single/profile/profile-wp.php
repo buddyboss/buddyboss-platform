@@ -22,7 +22,7 @@ bp_nouveau_wp_profile_hooks( 'before' ); ?>
 			printf(
 				/* Translators: a member's profile, e.g. "Paul's profile". */
 				esc_html__( "%s's Profile", 'buddyboss-platform' ),
-				bp_get_displayed_user_fullname()
+				esc_html( bp_get_displayed_user_fullname() )
 			);
 		}
 		?>

@@ -43,7 +43,7 @@ defined( 'ABSPATH' ) || exit;
 							<div>
 								<div class="bp-radio-wrap">
 									<input name="bbp_topic_split_option" id="bbp_topic_split_option_reply" class="bs-styled-radio" type="radio" checked="checked" value="reply" tabindex="<?php bbp_tab_index(); ?>" />
-									<label for="bbp_topic_split_option_reply"><?php /* translators: %s: forum title. */ printf( __( 'New discussion in <strong>%s</strong> titled:', 'buddyboss-platform' ), bbp_get_forum_title( bbp_get_topic_forum_id( bbp_get_topic_id() ) ) ); ?></label>
+									<label for="bbp_topic_split_option_reply"><?php /* translators: %s: forum title. */ printf( __( 'New discussion in <strong>%s</strong> titled:', 'buddyboss-platform' ), esc_html( bbp_get_forum_title( bbp_get_topic_forum_id( bbp_get_topic_id() ) ) ) ); ?></label>
 								</div>
 								<input type="text" id="bbp_topic_split_destination_title" value="<?php /* translators: %s: discussion title. */ printf( esc_html__( 'Split: %s', 'buddyboss-platform' ), bbp_get_topic_title() ); ?>" tabindex="<?php bbp_tab_index(); ?>" size="35" name="bbp_topic_split_destination_title" />
 							</div>

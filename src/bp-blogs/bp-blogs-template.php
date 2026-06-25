@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
  * @since BuddyPress 1.5.0
  */
 function bp_blogs_slug() {
-	echo bp_get_blogs_slug();
+	echo esc_attr( bp_get_blogs_slug() );
 }
 	/**
 	 * Return the blogs component slug.
@@ -42,7 +42,7 @@ function bp_get_blogs_slug() {
  * @since BuddyPress 1.5.0
  */
 function bp_blogs_root_slug() {
-	echo bp_get_blogs_root_slug();
+	echo esc_attr( bp_get_blogs_root_slug() );
 }
 	/**
 	 * Return the blogs component root slug.
@@ -227,7 +227,7 @@ function bp_the_blog() {
  * @since BuddyPress 1.0.0
  */
 function bp_blogs_pagination_count() {
-	echo bp_get_blogs_pagination_count();
+	echo esc_html( bp_get_blogs_pagination_count() );
 }
 
 /**
@@ -267,7 +267,7 @@ function bp_get_blogs_pagination_count() {
  * Output the blogs pagination links.
  */
 function bp_blogs_pagination_links() {
-	echo bp_get_blogs_pagination_links();
+	echo wp_kses_post( bp_get_blogs_pagination_links() );
 }
 	/**
 	 * Return the blogs pagination links.
@@ -297,7 +297,7 @@ function bp_get_blogs_pagination_links() {
  * @param array|string $args See {@link bp_get_blog_avatar()}.
  */
 function bp_blog_avatar( $args = '' ) {
-	echo bp_get_blog_avatar( $args );
+	echo wp_kses_post( bp_get_blog_avatar( $args ) );
 }
 	/**
 	 * Get a blog's avatar.
@@ -466,7 +466,7 @@ function bp_get_blog_avatar( $args = '' ) {
 }
 
 function bp_blog_permalink() {
-	echo bp_get_blog_permalink();
+	echo esc_url( bp_get_blog_permalink() );
 }
 function bp_get_blog_permalink() {
 	global $blogs_template;
@@ -496,7 +496,7 @@ function bp_get_blog_permalink() {
  * Output the name of the current blog in the loop.
  */
 function bp_blog_name() {
-	echo bp_get_blog_name();
+	echo esc_html( bp_get_blog_name() );
 }
 	/**
 	 * Return the name of the current blog in the loop.
@@ -522,7 +522,7 @@ function bp_get_blog_name() {
  * @since BuddyPress 1.7.0
  */
 function bp_blog_id() {
-	echo bp_get_blog_id();
+	echo esc_attr( bp_get_blog_id() );
 }
 	/**
 	 * Return the ID of the current blog in the loop.
@@ -584,7 +584,7 @@ function bp_get_blog_description() {
  * @param array $classes Array of custom classes.
  */
 function bp_blog_class( $classes = array() ) {
-	echo bp_get_blog_class( $classes );
+	echo esc_attr( bp_get_blog_class( $classes ) );
 }
 	/**
 	 * Return the row class of the current blog in the loop.
@@ -752,7 +752,7 @@ function bp_get_blog_latest_post( $args = array() ) {
  * @see bp_get_blog_latest_post_title()
  */
 function bp_blog_latest_post_title() {
-	echo bp_get_blog_latest_post_title();
+	echo esc_html( bp_get_blog_latest_post_title() );
 }
 	/**
 	 * Return the title of the latest post on the current blog in the loop.
@@ -826,7 +826,7 @@ function bp_get_blog_latest_post_permalink() {
  * @since BuddyPress 1.7.0
  */
 function bp_blog_latest_post_content() {
-	echo bp_get_blog_latest_post_content();
+	echo wp_kses_post( bp_get_blog_latest_post_content() );
 }
 	/**
 	 * Return the content of the latest post on the current blog in the loop.
@@ -948,7 +948,7 @@ function bp_blog_hidden_fields() {
  * Output the total number of blogs on the site.
  */
 function bp_total_blog_count() {
-	echo bp_get_total_blog_count();
+	echo esc_html( bp_get_total_blog_count() );
 }
 	/**
 	 * Return the total number of blogs on the site.
@@ -1365,17 +1365,17 @@ function bp_blogs_blog_tabs() {
 		<?php
 		if ( bp_is_current_action( 'my-blogs' ) || ! bp_current_action() ) :
 			?>
-			 class="current"<?php endif; ?>><a href="<?php echo trailingslashit( bp_displayed_user_domain() . bp_get_blogs_slug() . '/my-blogs' ); ?>"><?php /* translators: %s: member display name. */ printf( esc_html__( "%s's Sites", 'buddyboss-platform' ), bp_get_displayed_user_fullname() ); ?></a></li>
+			 class="current"<?php endif; ?>><a href="<?php echo trailingslashit( bp_displayed_user_domain() . bp_get_blogs_slug() . '/my-blogs' ); ?>"><?php /* translators: %s: member display name. */ printf( esc_html__( "%s's Sites", 'buddyboss-platform' ), esc_html( bp_get_displayed_user_fullname() ) ); ?></a></li>
 		<li
 		<?php
 		if ( bp_is_current_action( 'recent-posts' ) ) :
 			?>
-			 class="current"<?php endif; ?>><a href="<?php echo trailingslashit( bp_displayed_user_domain() . bp_get_blogs_slug() . '/recent-posts' ); ?>"><?php /* translators: %s: member display name. */ printf( esc_html__( "%s's Recent Posts", 'buddyboss-platform' ), bp_get_displayed_user_fullname() ); ?></a></li>
+			 class="current"<?php endif; ?>><a href="<?php echo trailingslashit( bp_displayed_user_domain() . bp_get_blogs_slug() . '/recent-posts' ); ?>"><?php /* translators: %s: member display name. */ printf( esc_html__( "%s's Recent Posts", 'buddyboss-platform' ), esc_html( bp_get_displayed_user_fullname() ) ); ?></a></li>
 		<li
 		<?php
 		if ( bp_is_current_action( 'recent-comments' ) ) :
 			?>
-			 class="current"<?php endif; ?>><a href="<?php echo trailingslashit( bp_displayed_user_domain() . bp_get_blogs_slug() . '/recent-comments' ); ?>"><?php /* translators: %s: member display name. */ printf( esc_html__( "%s's Recent Comments", 'buddyboss-platform' ), bp_get_displayed_user_fullname() ); ?></a></li>
+			 class="current"<?php endif; ?>><a href="<?php echo trailingslashit( bp_displayed_user_domain() . bp_get_blogs_slug() . '/recent-comments' ); ?>"><?php /* translators: %s: member display name. */ printf( esc_html__( "%s's Recent Comments", 'buddyboss-platform' ), esc_html( bp_get_displayed_user_fullname() ) ); ?></a></li>
 	</ul>
 
 	<?php
@@ -1422,7 +1422,7 @@ function bp_directory_blogs_search_form() {
  * @since BuddyPress 2.0.0
  */
 function bp_blog_create_button() {
-	echo bp_get_blog_create_button();
+	echo wp_kses_post( bp_get_blog_create_button() );
 }
 	/**
 	 * Get the Create a Site button.
@@ -1523,7 +1523,7 @@ add_action( 'bp_blogs_directory_blog_types', 'bp_blog_backcompat_create_nav_item
  * @param array|string $args See {@link bp_get_blogs_visit_blog_button()}.
  */
 function bp_blogs_visit_blog_button( $args = '' ) {
-	echo bp_get_blogs_visit_blog_button( $args );
+	echo wp_kses_post( bp_get_blogs_visit_blog_button( $args ) );
 }
 	/**
 	 * Return button for visiting a blog in a loop.

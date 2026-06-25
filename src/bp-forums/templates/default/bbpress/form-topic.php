@@ -41,7 +41,7 @@ defined( 'ABSPATH' ) || exit;
 						/* translators: %s: discussion title. */
 						printf( __( 'Now Editing &ldquo;%s&rdquo;', 'buddyboss-platform' ), bbp_get_topic_title() );
 					} else {
-						bbp_is_single_forum() ? printf( esc_html__( 'Ask a question or share an idea.', 'buddyboss-platform' ), bbp_get_forum_title() ) : esc_html_e( 'Start New Discussion', 'buddyboss-platform' );
+						bbp_is_single_forum() ? printf( esc_html__( 'Ask a question or share an idea.', 'buddyboss-platform' ), esc_html( bbp_get_forum_title() ) ) : esc_html_e( 'Start New Discussion', 'buddyboss-platform' );
 					}
 					?>
 
@@ -228,7 +228,7 @@ defined( 'ABSPATH' ) || exit;
 							</div>
 
 							<div>
-								<label for="bbp_topic_edit_reason"><?php printf( esc_html__( 'Optional reason for editing:', 'buddyboss-platform' ), bbp_get_current_user_name() ); ?></label><br />
+								<label for="bbp_topic_edit_reason"><?php printf( esc_html__( 'Optional reason for editing:', 'buddyboss-platform' ), esc_html( bbp_get_current_user_name() ) ); ?></label><br />
 								<input type="text" value="<?php bbp_form_topic_edit_reason(); ?>" tabindex="<?php bbp_tab_index(); ?>" size="40" name="bbp_topic_edit_reason" id="bbp_topic_edit_reason" />
 							</div>
 						</fieldset>
@@ -269,7 +269,7 @@ defined( 'ABSPATH' ) || exit;
 	<div id="no-topic-<?php bbp_topic_id(); ?>" class="bbp-no-topic">
 		<div class="bp-feedback info">
 			<span class="bp-icon" aria-hidden="true"></span>
-			<p><?php /* translators: %s: forum title. */ printf( esc_html__( 'The forum "%s" is closed to new discussions and replies.', 'buddyboss-platform' ), bbp_get_forum_title() ); ?></p>
+			<p><?php /* translators: %s: forum title. */ printf( esc_html__( 'The forum "%s" is closed to new discussions and replies.', 'buddyboss-platform' ), esc_html( bbp_get_forum_title() ) ); ?></p>
 		</div>
 	</div>
 

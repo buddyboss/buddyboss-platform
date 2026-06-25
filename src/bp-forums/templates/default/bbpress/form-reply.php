@@ -169,7 +169,7 @@ defined( 'ABSPATH' ) || exit;
 							</div>
 
 							<div>
-								<label for="bbp_reply_edit_reason"><?php printf( esc_html__( 'Optional reason for editing:', 'buddyboss-platform' ), bbp_get_current_user_name() ); ?></label><br />
+								<label for="bbp_reply_edit_reason"><?php printf( esc_html__( 'Optional reason for editing:', 'buddyboss-platform' ), esc_html( bbp_get_current_user_name() ) ); ?></label><br />
 								<input type="text" value="<?php bbp_form_reply_edit_reason(); ?>" tabindex="<?php bbp_tab_index(); ?>" size="40" name="bbp_reply_edit_reason" id="bbp_reply_edit_reason" />
 							</div>
 						</fieldset>
@@ -221,7 +221,7 @@ defined( 'ABSPATH' ) || exit;
 	<div id="no-reply-<?php bbp_topic_id(); ?>" class="bbp-no-reply">
 		<div class="bp-feedback info">
 			<span class="bp-icon" aria-hidden="true"></span>
-			<p><?php /* translators: %s: forum title. */ printf( esc_html__( 'The forum "%s" is closed to new discussions and replies.', 'buddyboss-platform' ), bbp_get_forum_title( bbp_get_topic_forum_id() ) ); ?></p>
+			<p><?php /* translators: %s: forum title. */ printf( esc_html__( 'The forum "%s" is closed to new discussions and replies.', 'buddyboss-platform' ), esc_html( bbp_get_forum_title( bbp_get_topic_forum_id() ) ) ); ?></p>
 		</div>
 	</div>
 

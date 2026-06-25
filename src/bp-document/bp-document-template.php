@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
  * @since BuddyBoss 1.4.0
  */
 function bp_document_slug() {
-	echo bp_get_document_slug();
+	echo esc_attr( bp_get_document_slug() );
 }
 /**
  * Return the document component slug.
@@ -42,7 +42,7 @@ function bp_get_document_slug() {
  * @since BuddyBoss 1.4.0
  */
 function bp_document_root_slug() {
-	echo bp_get_document_root_slug();
+	echo esc_attr( bp_get_document_root_slug() );
 }
 /**
  * Return the document component root slug.
@@ -319,7 +319,7 @@ function bp_get_document_load_more_link() {
  * @global object $document_template {@link BP_Document_Template}
  */
 function bp_document_pagination_count() {
-	echo bp_get_document_pagination_count();
+	echo esc_html( bp_get_document_pagination_count() );
 }
 
 /**
@@ -351,7 +351,7 @@ function bp_get_document_pagination_count() {
  * @since BuddyBoss 1.4.0
  */
 function bp_document_pagination_links() {
-	echo bp_get_document_pagination_links();
+	echo wp_kses_post( bp_get_document_pagination_links() );
 }
 
 /**
@@ -416,7 +416,7 @@ function bp_document_has_more_items() {
  * @since BuddyBoss 1.4.0
  */
 function bp_document_count() {
-	echo bp_get_document_count();
+	echo esc_html( bp_get_document_count() );
 }
 
 /**
@@ -478,7 +478,7 @@ function bp_get_document_per_page() {
  * @since BuddyBoss 1.4.0
  */
 function bp_document_id() {
-	echo bp_get_document_id();
+	echo esc_attr( bp_get_document_id() );
 }
 
 /**
@@ -518,7 +518,7 @@ function bp_get_document_id() {
  * @since BuddyBoss 1.4.0
  */
 function bp_document_parent_id() {
-	echo bp_get_document_parent_id();
+	echo esc_attr( bp_get_document_parent_id() );
 }
 
 /**
@@ -558,7 +558,7 @@ function bp_get_document_parent_id() {
  * @since BuddyBoss 1.4.0
  */
 function bp_document_blog_id() {
-	echo bp_get_document_blog_id();
+	echo esc_attr( bp_get_document_blog_id() );
 }
 
 /**
@@ -589,7 +589,7 @@ function bp_get_document_blog_id() {
  * @since BuddyBoss 1.4.0
  */
 function bp_document_folder_user_id() {
-	echo bp_get_document_folder_user_id();
+	echo esc_attr( bp_get_document_folder_user_id() );
 }
 
 /**
@@ -626,7 +626,7 @@ function bp_get_document_folder_user_id() {
  * @since BuddyBoss 1.4.0
  */
 function bp_document_user_id() {
-	echo bp_get_document_user_id();
+	echo esc_attr( bp_get_document_user_id() );
 }
 
 /**
@@ -665,7 +665,7 @@ function bp_get_document_user_id() {
  * @since BuddyBoss 1.4.0
  */
 function bp_document_attachment_id() {
-	echo bp_get_document_attachment_id();
+	echo esc_attr( bp_get_document_attachment_id() );
 }
 
 /**
@@ -726,7 +726,7 @@ function bp_get_document_extension() {
  * @since BuddyBoss 1.4.0
  */
 function bp_document_title() {
-	echo bp_get_document_title();
+	echo esc_html( bp_get_document_title() );
 }
 
 /**
@@ -895,7 +895,7 @@ function bp_document_user_can_edit( $document = false ) {
  * @since BuddyBoss 1.4.0
  */
 function bp_document_folder_id() {
-	echo bp_get_document_folder_id();
+	echo esc_attr( bp_get_document_folder_id() );
 }
 
 /**
@@ -934,7 +934,7 @@ function bp_get_document_folder_id() {
  * @since BuddyBoss 1.4.0
  */
 function bp_document_activity_id() {
-	echo bp_get_document_activity_id();
+	echo esc_attr( bp_get_document_activity_id() );
 }
 
 /**
@@ -1124,7 +1124,7 @@ function bp_get_document_attachment_image() {
  * @since BuddyBoss 1.7.0
  */
 function bp_document_attachment_url() {
-	echo bp_get_document_attachment_url();
+	echo esc_url( bp_get_document_attachment_url() );
 }
 
 /**
@@ -1416,7 +1416,7 @@ function bp_get_folder_load_more_link() {
  * @global object $document_folder_template {@link BP_Document_Folder_Template}
  */
 function bp_folder_pagination_count() {
-	echo bp_get_folder_pagination_count();
+	echo esc_html( bp_get_folder_pagination_count() );
 }
 
 /**
@@ -1448,7 +1448,7 @@ function bp_get_folder_pagination_count() {
  * @since BuddyBoss 1.4.0
  */
 function bp_folder_pagination_links() {
-	echo bp_get_folder_pagination_links();
+	echo wp_kses_post( bp_get_folder_pagination_links() );
 }
 
 /**
@@ -1513,7 +1513,7 @@ function bp_folder_has_more_items() {
  * @since BuddyBoss 1.4.0
  */
 function bp_folder_count() {
-	echo bp_get_folder_count();
+	echo esc_html( bp_get_folder_count() );
 }
 
 /**
@@ -1575,7 +1575,7 @@ function bp_get_folder_per_page() {
  * @since BuddyBoss 1.4.0
  */
 function bp_folder_id() {
-	echo bp_get_folder_id();
+	echo esc_attr( bp_get_folder_id() );
 }
 
 /**
@@ -1641,7 +1641,7 @@ function bp_get_folder_id() {
  * @since BuddyBoss 1.4.0
  */
 function bp_folder_title() {
-	echo bp_get_folder_title();
+	echo esc_html( bp_get_folder_title() );
 }
 
 /**
@@ -1739,7 +1739,7 @@ function bp_get_folder_privacy() {
  * @since BuddyBoss 1.4.0
  */
 function bp_folder_link() {
-	echo bp_get_folder_link();
+	echo wp_kses_post( bp_get_folder_link() );
 }
 
 /**
@@ -1939,7 +1939,7 @@ function bp_folder_user_can_edit( $folder = false ) {
  * @since BuddyBoss 1.4.0
  */
 function bp_document_name() {
-	echo bp_get_document_name();
+	echo esc_html( bp_get_document_name() );
 }
 
 /**
@@ -2050,7 +2050,7 @@ function bp_get_folder_author() {
  * @since BuddyBoss 1.4.0
  */
 function bp_document_preview_attachment_id() {
-	echo bp_get_document_preview_attachment_id();
+	echo esc_attr( bp_get_document_preview_attachment_id() );
 }
 
 /**
@@ -2086,7 +2086,7 @@ function bp_get_document_preview_attachment_id() {
  * @since BuddyBoss 1.4.0
  */
 function bp_folder_group_id() {
-	echo bp_get_folder_group_id();
+	echo esc_attr( bp_get_folder_group_id() );
 }
 
 /**
@@ -2123,7 +2123,7 @@ function bp_get_folder_group_id() {
  * @since BuddyBoss 1.4.0
  */
 function bp_document_group_id() {
-	echo bp_get_document_group_id();
+	echo esc_attr( bp_get_document_group_id() );
 }
 
 /**
@@ -2162,7 +2162,7 @@ function bp_get_document_group_id() {
  * @since BuddyBoss 1.4.0
  */
 function bp_document_folder_group_id() {
-	echo bp_get_document_folder_group_id();
+	echo esc_attr( bp_get_document_folder_group_id() );
 }
 
 /**
@@ -2233,7 +2233,7 @@ function bp_get_document_date_modified() {
  * @since BuddyBoss 1.4.0
  */
 function bp_document_folder_date() {
-	echo bp_get_document_folder_date();
+	echo esc_html( bp_get_document_folder_date() );
 }
 
 /**
@@ -2273,7 +2273,7 @@ function bp_get_document_folder_date() {
  * @since BuddyBoss 1.4.0
  */
 function bp_document_date() {
-	echo bp_get_document_date();
+	echo esc_html( bp_get_document_date() );
 }
 
 /**
@@ -2427,7 +2427,7 @@ function bp_get_db_document_privacy() {
  * @since BuddyBoss 1.4.0
  */
 function bp_document_parent_activity_id() {
-	echo bp_get_document_parent_activity_id();
+	echo esc_attr( bp_get_document_parent_activity_id() );
 }
 
 /**

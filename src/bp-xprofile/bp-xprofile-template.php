@@ -259,7 +259,7 @@ function bp_field_has_public_data() {
  * @since BuddyPress 1.0.0
  */
 function bp_the_profile_group_id() {
-	echo bp_get_the_profile_group_id();
+	echo esc_attr( bp_get_the_profile_group_id() );
 }
 
 	/**
@@ -288,7 +288,7 @@ function bp_get_the_profile_group_id() {
  * @since BuddyPress 1.0.0
  */
 function bp_the_profile_group_name() {
-	echo bp_get_the_profile_group_name();
+	echo esc_html( bp_get_the_profile_group_name() );
 }
 
 	/**
@@ -317,7 +317,7 @@ function bp_get_the_profile_group_name() {
  * @since BuddyPress 1.1.0
  */
 function bp_the_profile_group_slug() {
-	echo bp_get_the_profile_group_slug();
+	echo esc_attr( bp_get_the_profile_group_slug() );
 }
 
 	/**
@@ -346,7 +346,7 @@ function bp_get_the_profile_group_slug() {
  * @since BuddyPress 1.0.0
  */
 function bp_the_profile_group_description() {
-	echo bp_get_the_profile_group_description();
+	echo esc_html( bp_get_the_profile_group_description() );
 }
 
 	/**
@@ -408,7 +408,7 @@ function bp_get_the_profile_group_edit_form_action() {
  * @since BuddyPress 1.1.0
  */
 function bp_the_profile_group_field_ids() {
-	echo bp_get_the_profile_group_field_ids();
+	echo esc_attr( bp_get_the_profile_group_field_ids() );
 }
 
 	/**
@@ -438,7 +438,7 @@ function bp_get_the_profile_group_field_ids() {
  * @since BuddyPress 2.1.0
  */
 function bp_the_profile_field_ids() {
-	echo bp_get_the_profile_field_ids();
+	echo esc_attr( bp_get_the_profile_field_ids() );
 }
 	/**
 	 * Generate a comma-separated list of field IDs that are to be submitted on profile edit.
@@ -511,7 +511,7 @@ function bp_the_profile_field() {
  * @since BuddyPress 1.1.0
  */
 function bp_the_profile_field_id() {
-	echo bp_get_the_profile_field_id();
+	echo esc_attr( bp_get_the_profile_field_id() );
 }
 
 	/**
@@ -540,7 +540,7 @@ function bp_get_the_profile_field_id() {
  * @since BuddyPress 1.0.0
  */
 function bp_the_profile_field_name() {
-	echo bp_get_the_profile_field_name();
+	echo esc_html( bp_get_the_profile_field_name() );
 }
 
 	/**
@@ -712,7 +712,7 @@ function bp_get_the_profile_field_edit_value() {
  * @since BuddyPress 1.1.0
  */
 function bp_the_profile_field_type() {
-	echo bp_get_the_profile_field_type();
+	echo esc_attr( bp_get_the_profile_field_type() );
 }
 
 	/**
@@ -741,7 +741,7 @@ function bp_get_the_profile_field_type() {
  * @since BuddyPress 1.1.0
  */
 function bp_the_profile_field_description() {
-	echo bp_get_the_profile_field_description();
+	echo esc_html( bp_get_the_profile_field_description() );
 }
 
 	/**
@@ -770,7 +770,7 @@ function bp_get_the_profile_field_description() {
  * @since BuddyPress 1.1.0
  */
 function bp_the_profile_field_input_name() {
-	echo bp_get_the_profile_field_input_name();
+	echo esc_html( bp_get_the_profile_field_input_name() );
 }
 
 	/**
@@ -916,7 +916,7 @@ function bp_get_the_profile_field_is_required() {
  * @since BuddyPress 1.6.0
  */
 function bp_the_profile_field_visibility_level() {
-	echo bp_get_the_profile_field_visibility_level();
+	echo esc_attr( bp_get_the_profile_field_visibility_level() );
 }
 
 	/**
@@ -954,7 +954,7 @@ function bp_get_the_profile_field_visibility_level() {
  * @since BuddyPress 1.6.0
  */
 function bp_the_profile_field_visibility_level_label() {
-	echo bp_get_the_profile_field_visibility_level_label();
+	echo esc_html( bp_get_the_profile_field_visibility_level_label() );
 }
 
 	/**
@@ -1204,7 +1204,7 @@ function bp_profile_group_name( $deprecated = true ) {
 	if ( ! $deprecated ) {
 		return bp_get_profile_group_name();
 	} else {
-		echo bp_get_profile_group_name();
+		echo esc_html( bp_get_profile_group_name() );
 	}
 }
 
@@ -1287,7 +1287,7 @@ function bp_get_profile_last_updated() {
  * @since BuddyPress 1.1.0
  */
 function bp_current_profile_group_id() {
-	echo bp_get_current_profile_group_id();
+	echo esc_attr( bp_get_current_profile_group_id() );
 }
 
 	/**
@@ -1321,7 +1321,7 @@ function bp_get_current_profile_group_id() {
  * @since BuddyPress 1.1.0
  */
 function bp_avatar_delete_link() {
-	echo bp_get_avatar_delete_link();
+	echo wp_kses_post( bp_get_avatar_delete_link() );
 }
 
 	/**
@@ -1372,7 +1372,7 @@ function bp_edit_profile_button() {
  * @param array|string $args Args for the radio buttons. See {@link bp_profile_get_visibility_radio_buttons}
  */
 function bp_profile_visibility_radio_buttons( $args = '' ) {
-	echo bp_profile_get_visibility_radio_buttons( $args );
+	echo wp_kses_post( bp_profile_get_visibility_radio_buttons( $args ) );
 }
 	/**
 	 * Return the field visibility radio buttons.
@@ -1569,7 +1569,7 @@ function bp_profile_get_settings_visibility_select( $args = '' ) {
  * @since BuddyPress 2.4.0
  */
 function bp_the_profile_field_required_label() {
-	echo bp_get_the_profile_field_required_label();
+	echo wp_kses_post( bp_get_the_profile_field_required_label() );
 }
 
 	/**
@@ -1600,7 +1600,7 @@ function bp_get_the_profile_field_required_label() {
  * @since BuddyBoss 1.0.0
  */
 function bp_the_profile_field_optional_label() {
-	echo bp_get_the_profile_field_optional_label();
+	echo wp_kses_post( bp_get_the_profile_field_optional_label() );
 }
 
 /**

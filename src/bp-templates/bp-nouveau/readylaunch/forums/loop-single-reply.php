@@ -29,7 +29,7 @@ defined( 'ABSPATH' ) || exit;
 		<div class="bb-rl-reply-author-avatar item-avatar">
 			<?php
 			$args = array( 'type' => 'avatar' );
-			echo bbp_get_reply_author_link( $args );
+			echo wp_kses_post( bbp_get_reply_author_link( $args ) );
 			?>
 		</div><!-- .bbp-reply-author -->
 
@@ -37,7 +37,7 @@ defined( 'ABSPATH' ) || exit;
 			<h3>
 				<?php
 				$args = array( 'type' => 'name' );
-				echo bbp_get_reply_author_link( $args );
+				echo wp_kses_post( bbp_get_reply_author_link( $args ) );
 				?>
 			</h3>
 			<span class="bb-rl-timestamp"><?php bbp_reply_post_date(); ?></span>
@@ -117,10 +117,10 @@ defined( 'ABSPATH' ) || exit;
 						<?php
 						// If post is a topic, print the topic admin links instead.
 						if ( bbp_is_topic( bbp_get_reply_id() ) ) {
-							echo bbp_get_topic_reply_link();
+							echo wp_kses_post( bbp_get_topic_reply_link() );
 							// If post is a reply, print the reply admin links instead.
 						} else {
-							echo bbp_get_reply_to_link();
+							echo wp_kses_post( bbp_get_reply_to_link() );
 						}
 						if ( ! $empty ) {
 							?>

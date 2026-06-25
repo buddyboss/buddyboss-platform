@@ -190,7 +190,7 @@ add_filter( 'bbp_get_form_topic_type_dropdown', 'bb_rl_add_topic_type_dropdown_a
 							</div>
 
 							<div class="bb-rl-forum-edit-reason">
-								<label for="bbp_topic_edit_reason"><?php printf( esc_html__( 'Optional reason for editing:', 'buddyboss-platform' ), bbp_get_current_user_name() ); ?></label><br />
+								<label for="bbp_topic_edit_reason"><?php printf( esc_html__( 'Optional reason for editing:', 'buddyboss-platform' ), esc_html( bbp_get_current_user_name() ) ); ?></label><br />
 								<input type="text" value="<?php bbp_form_topic_edit_reason(); ?>" tabindex="<?php bbp_tab_index(); ?>" size="40" name="bbp_topic_edit_reason" id="bbp_topic_edit_reason" />
 							</div>
 						</fieldset>
@@ -308,7 +308,7 @@ add_filter( 'bbp_get_form_topic_type_dropdown', 'bb_rl_add_topic_type_dropdown_a
 			<p>
 				<?php
 				/* translators: %s: Forum title */
-				printf( esc_html__( 'The forum "%s" is closed to new discussions and replies.', 'buddyboss-platform' ), bbp_get_forum_title() );
+				printf( esc_html__( 'The forum "%s" is closed to new discussions and replies.', 'buddyboss-platform' ), esc_html( bbp_get_forum_title() ) );
 				?>
 			</p>
 		</div>

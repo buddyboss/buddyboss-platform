@@ -19,7 +19,7 @@ defined( 'ABSPATH' ) || exit;
  * @uses  bbp_get_reply_post_type() To get the reply post type
  */
 function bbp_reply_post_type() {
-	echo bbp_get_reply_post_type();
+	echo esc_attr( bbp_get_reply_post_type() );
 }
 
 /**
@@ -355,7 +355,7 @@ function bbp_the_reply() {
  * @uses  bbp_get_reply_id() To get the reply id
  */
 function bbp_reply_id( $reply_id = 0 ) {
-	echo bbp_get_reply_id( $reply_id );
+	echo esc_attr( bbp_get_reply_id( $reply_id ) );
 }
 
 /**
@@ -569,7 +569,7 @@ function bbp_get_reply_url( $reply_id = 0, $redirect_to = '' ) {
  * @uses  bbp_get_reply_title() To get the reply title
  */
 function bbp_reply_title( $reply_id = 0 ) {
-	echo bbp_get_reply_title( $reply_id );
+	echo esc_html( bbp_get_reply_title( $reply_id ) );
 }
 
 /**
@@ -630,7 +630,7 @@ function bbp_get_reply_title_fallback( $post_title = '', $post_id = 0 ) {
  * @uses  bbp_get_reply_content() To get the reply content
  */
 function bbp_reply_content( $reply_id = 0 ) {
-	echo bbp_get_reply_content( $reply_id );
+	echo wp_kses_post( bbp_get_reply_content( $reply_id ) );
 }
 
 /**
@@ -672,7 +672,7 @@ function bbp_get_reply_content( $reply_id = 0 ) {
  * @uses  bbp_get_reply_excerpt() To get the reply excerpt
  */
 function bbp_reply_excerpt( $reply_id = 0, $length = 100 ) {
-	echo bbp_get_reply_excerpt( $reply_id, $length );
+	echo wp_kses_post( bbp_get_reply_excerpt( $reply_id, $length ) );
 }
 
 /**
@@ -729,7 +729,7 @@ function bbp_get_reply_excerpt( $reply_id = 0, $length = 100 ) {
  * @uses  bbp_get_reply_post_date() to get the output
  */
 function bbp_reply_post_date( $reply_id = 0, $humanize = false, $gmt = false ) {
-	echo bbp_get_reply_post_date( $reply_id, $humanize, $gmt );
+	echo esc_html( bbp_get_reply_post_date( $reply_id, $humanize, $gmt ) );
 }
 
 /**
@@ -958,7 +958,7 @@ function bbp_get_reply_revision_count( $reply_id = 0, $integer = false ) {
  * @uses  bbp_get_reply_status() To get the reply status
  */
 function bbp_reply_status( $reply_id = 0 ) {
-	echo bbp_get_reply_status( $reply_id );
+	echo esc_attr( bbp_get_reply_status( $reply_id ) );
 }
 
 /**
@@ -1117,7 +1117,7 @@ function bbp_get_reply_author( $reply_id = 0 ) {
  * @uses  bbp_get_reply_author_id() To get the reply author id
  */
 function bbp_reply_author_id( $reply_id = 0 ) {
-	echo bbp_get_reply_author_id( $reply_id );
+	echo esc_attr( bbp_get_reply_author_id( $reply_id ) );
 }
 
 /**
@@ -1222,7 +1222,7 @@ function bbp_get_reply_author_display_name( $reply_id = 0, $viewer_user_id = 0 )
  * @uses  bbp_get_reply_author_avatar() To get the reply author id
  */
 function bbp_reply_author_avatar( $reply_id = 0, $size = 40 ) {
-	echo bbp_get_reply_author_avatar( $reply_id, $size );
+	echo wp_kses_post( bbp_get_reply_author_avatar( $reply_id, $size ) );
 }
 
 /**
@@ -1269,7 +1269,7 @@ function bbp_get_reply_author_avatar( $reply_id = 0, $size = 40 ) {
  * @uses  bbp_get_reply_author_link() To get the reply author link
  */
 function bbp_reply_author_link( $args = '' ) {
-	echo bbp_get_reply_author_link( $args );
+	echo wp_kses_post( bbp_get_reply_author_link( $args ) );
 }
 
 /**
@@ -1451,7 +1451,7 @@ function bbp_get_reply_author_url( $reply_id = 0 ) {
  * @uses  bbp_get_reply_author_email() To get the reply author email
  */
 function bbp_reply_author_email( $reply_id = 0 ) {
-	echo bbp_get_reply_author_email( $reply_id );
+	echo esc_html( bbp_get_reply_author_email( $reply_id ) );
 }
 
 /**
@@ -1555,7 +1555,7 @@ function bbp_get_reply_author_role( $args = array() ) {
  * @uses  bbp_get_reply_topic_title() To get the reply topic title
  */
 function bbp_reply_topic_title( $reply_id = 0 ) {
-	echo bbp_get_reply_topic_title( $reply_id );
+	echo esc_html( bbp_get_reply_topic_title( $reply_id ) );
 }
 
 /**
@@ -1589,7 +1589,7 @@ function bbp_get_reply_topic_title( $reply_id = 0 ) {
  * @uses  bbp_get_reply_topic_id() To get the reply topic id
  */
 function bbp_reply_topic_id( $reply_id = 0 ) {
-	echo bbp_get_reply_topic_id( $reply_id );
+	echo esc_attr( bbp_get_reply_topic_id( $reply_id ) );
 }
 
 /**
@@ -1635,7 +1635,7 @@ function bbp_get_reply_topic_id( $reply_id = 0 ) {
  * @uses  bbp_get_reply_forum_id() To get the reply forum id
  */
 function bbp_reply_forum_id( $reply_id = 0 ) {
-	echo bbp_get_reply_forum_id( $reply_id );
+	echo esc_attr( bbp_get_reply_forum_id( $reply_id ) );
 }
 
 /**
@@ -1680,7 +1680,7 @@ function bbp_get_reply_forum_id( $reply_id = 0 ) {
  * @uses  bbp_get_reply_ancestor_id() To get the reply's ancestor id
  */
 function bbp_reply_ancestor_id( $reply_id = 0 ) {
-	echo bbp_get_reply_ancestor_id( $reply_id );
+	echo esc_attr( bbp_get_reply_ancestor_id( $reply_id ) );
 }
 
 /**
@@ -1764,7 +1764,7 @@ function bbp_get_reply_to( $reply_id = 0 ) {
  * @uses  bbp_get_reply_to_link() To get the reply to link
  */
 function bbp_reply_to_link( $args = array() ) {
-	echo bbp_get_reply_to_link( $args );
+	echo wp_kses_post( bbp_get_reply_to_link( $args ) );
 }
 
 /**
@@ -1846,7 +1846,7 @@ function bbp_get_reply_to_link( $args = array() ) {
  * @uses  bbp_get_cancel_reply_to_link() To get the reply cancellation link
  */
 function bbp_cancel_reply_to_link( $text = '' ) {
-	echo bbp_get_cancel_reply_to_link( $text );
+	echo wp_kses_post( bbp_get_cancel_reply_to_link( $text ) );
 }
 
 /**
@@ -1893,7 +1893,7 @@ function bbp_get_cancel_reply_to_link( $text = '' ) {
  * @uses  bbp_get_reply_position() To get the reply position
  */
 function bbp_reply_position( $reply_id = 0, $topic_id = 0 ) {
-	echo bbp_get_reply_position( $reply_id, $topic_id );
+	echo esc_attr( bbp_get_reply_position( $reply_id, $topic_id ) );
 }
 
 /**
@@ -1961,7 +1961,7 @@ function bbp_get_reply_position( $reply_id = 0, $topic_id = 0 ) {
  * @uses  bbp_get_reply_admin_links() To get the reply admin links
  */
 function bbp_reply_admin_links( $args = array() ) {
-	echo bbp_get_reply_admin_links( $args );
+	echo wp_kses_post( bbp_get_reply_admin_links( $args ) );
 }
 
 /**
@@ -2075,7 +2075,7 @@ function bbp_get_reply_admin_links( $args = array() ) {
  * @uses  bbp_get_reply_edit_link() To get the reply edit link
  */
 function bbp_reply_edit_link( $args = '' ) {
-	echo bbp_get_reply_edit_link( $args );
+	echo wp_kses_post( bbp_get_reply_edit_link( $args ) );
 }
 
 /**
@@ -2205,7 +2205,7 @@ function bbp_get_reply_edit_url( $reply_id = 0 ) {
  * @uses  bbp_get_reply_trash_link() To get the reply trash link
  */
 function bbp_reply_trash_link( $args = '' ) {
-	echo bbp_get_reply_trash_link( $args );
+	echo wp_kses_post( bbp_get_reply_trash_link( $args ) );
 }
 
 /**
@@ -2333,7 +2333,7 @@ function bbp_get_reply_trash_link( $args = '' ) {
  * @uses  bbp_get_reply_spam_link() To get the reply spam link
  */
 function bbp_reply_spam_link( $args = '' ) {
-	echo bbp_get_reply_spam_link( $args );
+	echo wp_kses_post( bbp_get_reply_spam_link( $args ) );
 }
 
 /**
@@ -2407,7 +2407,7 @@ function bbp_get_reply_spam_link( $args = '' ) {
  * @uses  bbp_get_reply_move_link() To get the reply move link
  */
 function bbp_reply_move_link( $args = '' ) {
-	echo bbp_get_reply_move_link( $args );
+	echo wp_kses_post( bbp_get_reply_move_link( $args ) );
 }
 
 /**
@@ -2484,7 +2484,7 @@ function bbp_get_reply_move_link( $args = '' ) {
  * @uses  bbp_get_topic_split_link() To get the topic split link
  */
 function bbp_topic_split_link( $args = '' ) {
-	echo bbp_get_topic_split_link( $args );
+	echo wp_kses_post( bbp_get_topic_split_link( $args ) );
 }
 
 /**
@@ -2560,7 +2560,7 @@ function bbp_get_topic_split_link( $args = '' ) {
  * @uses  bbp_get_reply_class() To get the reply class
  */
 function bbp_reply_class( $reply_id = 0, $classes = array() ) {
-	echo bbp_get_reply_class( $reply_id, $classes );
+	echo esc_attr( bbp_get_reply_class( $reply_id, $classes ) );
 }
 
 /**
@@ -2644,7 +2644,7 @@ function bbp_get_topic_pagination_count() {
  * @uses  bbp_get_topic_pagination_links() To get the topic pagination links
  */
 function bbp_topic_pagination_links() {
-	echo bbp_get_topic_pagination_links();
+	echo wp_kses_post( bbp_get_topic_pagination_links() );
 }
 
 /**
@@ -2676,7 +2676,7 @@ function bbp_get_topic_pagination_links() {
  * @uses  bbp_get_form_reply_content() To get value of reply content field
  */
 function bbp_form_reply_content() {
-	echo bbp_get_form_reply_content();
+	echo wp_kses_post( bbp_get_form_reply_content() );
 }
 
 /**

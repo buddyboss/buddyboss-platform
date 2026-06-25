@@ -215,7 +215,7 @@ if ( isset( $restricted ) && '' !== $restricted ) {
 					<p class="pag-data">
 						<?php
 							$current_page = max( 1, get_query_var( 'paged' ) );
-							echo paginate_links(
+							echo wp_kses_post( paginate_links(
 								array(
 									'base'      => get_pagenum_link( 1 ) . '%_%',
 									'format'    => '?paged=%#%',
@@ -224,7 +224,7 @@ if ( isset( $restricted ) && '' !== $restricted ) {
 									'prev_text' => __( '« Prev', 'buddyboss-platform' ),
 									'next_text' => __( 'Next »', 'buddyboss-platform' ),
 								)
-							);
+							) );
 						?>
 					</p>
 				</div>

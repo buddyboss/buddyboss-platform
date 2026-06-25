@@ -18,7 +18,7 @@ defined( 'ABSPATH' ) || exit;
  * @uses  bbp_get_forum_post_type() To get the forum post type
  */
 function bbp_forum_post_type() {
-	echo bbp_get_forum_post_type();
+	echo esc_attr( bbp_get_forum_post_type() );
 }
 
 /**
@@ -280,7 +280,7 @@ function bbp_the_forum() {
  * @uses  bbp_get_forum_id() To get the forum id
  */
 function bbp_forum_id( $forum_id = 0 ) {
-	echo bbp_get_forum_id( $forum_id );
+	echo esc_attr( bbp_get_forum_id( $forum_id ) );
 }
 
 /**
@@ -435,7 +435,7 @@ function bbp_get_forum_permalink( $forum_id = 0, $redirect_to = '' ) {
  * @uses  bbp_get_forum_title() To get the forum title
  */
 function bbp_forum_title( $forum_id = 0 ) {
-	echo bbp_get_forum_title( $forum_id );
+	echo esc_html( bbp_get_forum_title( $forum_id ) );
 }
 
 /**
@@ -465,7 +465,7 @@ function bbp_get_forum_title( $forum_id = 0 ) {
  * @param string $title Default text to use as title
  */
 function bbp_forum_archive_title( $title = '' ) {
-	echo bbp_get_forum_archive_title( $title );
+	echo esc_html( bbp_get_forum_archive_title( $title ) );
 }
 
 /**
@@ -514,7 +514,7 @@ function bbp_get_forum_archive_title( $title = '' ) {
  * @uses  bbp_get_forum_content() To get the forum content
  */
 function bbp_forum_content( $forum_id = 0 ) {
-	echo bbp_get_forum_content( $forum_id );
+	echo wp_kses_post( bbp_get_forum_content( $forum_id ) );
 }
 
 /**
@@ -566,7 +566,7 @@ function bbp_forum_row_actions() {
  * @uses  bbp_get_forum_last_active_id() To get the forum's last active id
  */
 function bbp_forum_last_active_id( $forum_id = 0 ) {
-	echo bbp_get_forum_last_active_id( $forum_id );
+	echo esc_attr( bbp_get_forum_last_active_id( $forum_id ) );
 }
 
 /**
@@ -599,7 +599,7 @@ function bbp_get_forum_last_active_id( $forum_id = 0 ) {
  * @uses  bbp_get_forum_last_active_time() To get the forum freshness
  */
 function bbp_forum_last_active_time( $forum_id = 0 ) {
-	echo bbp_get_forum_last_active_time( $forum_id );
+	echo esc_html( bbp_get_forum_last_active_time( $forum_id ) );
 }
 
 /**
@@ -657,7 +657,7 @@ function bbp_get_forum_last_active_time( $forum_id = 0 ) {
  * @uses  bbp_get_forum_freshness_link() To get the forum freshness link
  */
 function bbp_forum_freshness_link( $forum_id = 0 ) {
-	echo bbp_get_forum_freshness_link( $forum_id );
+	echo wp_kses_post( bbp_get_forum_freshness_link( $forum_id ) );
 }
 
 /**
@@ -727,7 +727,7 @@ function bbp_get_forum_freshness_link( $forum_id = 0 ) {
  * @uses  bbp_get_forum_parent_id() To get the forum's parent ID
  */
 function bbp_forum_parent_id( $forum_id = 0 ) {
-	echo bbp_get_forum_parent_id( $forum_id );
+	echo esc_attr( bbp_get_forum_parent_id( $forum_id ) );
 }
 
 /**
@@ -1084,7 +1084,7 @@ function bbp_get_forum_index_pagination_count() {
  * @uses  bbp_get_forum_index_pagination_links() To get the forum index pagination links
  */
 function bbp_forum_index_pagination_links() {
-	echo bbp_get_forum_index_pagination_links();
+	echo wp_kses_post( bbp_get_forum_index_pagination_links() );
 }
 
 /**
@@ -1116,7 +1116,7 @@ function bbp_get_forum_index_pagination_links() {
  * @uses  bbp_get_forum_subscription_link()
  */
 function bbp_forum_subscription_link( $args = array() ) {
-	echo bbp_get_forum_subscription_link( $args );
+	echo wp_kses_post( bbp_get_forum_subscription_link( $args ) );
 }
 
 /**
@@ -1168,7 +1168,7 @@ function bbp_get_forum_subscription_link( $args = array() ) {
  * @uses  bbp_get_forum_report_link()
  */
 function bbp_forum_report_link( $args = array() ) {
-	echo bbp_get_forum_report_link( $args );
+	echo wp_kses_post( bbp_get_forum_report_link( $args ) );
 }
 
 /**
@@ -1216,7 +1216,7 @@ function bbp_get_forum_report_link( $args = array() ) {
  * @uses  bbp_get_forum_last_topic_id() To get the forum's last topic id
  */
 function bbp_forum_last_topic_id( $forum_id = 0 ) {
-	echo bbp_get_forum_last_topic_id( $forum_id );
+	echo esc_attr( bbp_get_forum_last_topic_id( $forum_id ) );
 }
 
 /**
@@ -1249,7 +1249,7 @@ function bbp_get_forum_last_topic_id( $forum_id = 0 ) {
  * @uses  bbp_get_forum_last_topic_title() To get the forum's last topic's title
  */
 function bbp_forum_last_topic_title( $forum_id = 0 ) {
-	echo bbp_get_forum_last_topic_title( $forum_id );
+	echo esc_html( bbp_get_forum_last_topic_title( $forum_id ) );
 }
 
 /**
@@ -1340,7 +1340,7 @@ function bbp_get_forum_last_topic_author_id( $forum_id = 0 ) {
  *                                               author link
  */
 function bbp_forum_last_topic_author_link( $forum_id = 0 ) {
-	echo bbp_get_forum_last_topic_author_link( $forum_id );
+	echo wp_kses_post( bbp_get_forum_last_topic_author_link( $forum_id ) );
 }
 
 /**
@@ -1378,7 +1378,7 @@ function bbp_get_forum_last_topic_author_link( $forum_id = 0 ) {
  * @uses  bbp_get_forum_last_reply_id() To get the forum's last reply id
  */
 function bbp_forum_last_reply_id( $forum_id = 0 ) {
-	echo bbp_get_forum_last_reply_id( $forum_id );
+	echo esc_attr( bbp_get_forum_last_reply_id( $forum_id ) );
 }
 
 /**
@@ -1414,7 +1414,7 @@ function bbp_get_forum_last_reply_id( $forum_id = 0 ) {
  * @uses bbp_get_forum_last_reply_title() To get the forum's last reply's title
  */
 function bbp_forum_last_reply_title( $forum_id = 0 ) {
-	echo bbp_get_forum_last_reply_title( $forum_id );
+	echo esc_html( bbp_get_forum_last_reply_title( $forum_id ) );
 }
 
 /**
@@ -1530,7 +1530,7 @@ function bbp_get_forum_last_reply_url( $forum_id = 0 ) {
  *                                             author id
  */
 function bbp_forum_last_reply_author_id( $forum_id = 0 ) {
-	echo bbp_get_forum_last_reply_author_id( $forum_id );
+	echo esc_attr( bbp_get_forum_last_reply_author_id( $forum_id ) );
 }
 
 /**
@@ -1566,7 +1566,7 @@ function bbp_get_forum_last_reply_author_id( $forum_id = 0 ) {
  *                                               author link
  */
 function bbp_forum_last_reply_author_link( $forum_id = 0 ) {
-	echo bbp_get_forum_last_reply_author_link( $forum_id );
+	echo wp_kses_post( bbp_get_forum_last_reply_author_link( $forum_id ) );
 }
 
 /**
@@ -1605,7 +1605,7 @@ function bbp_get_forum_last_reply_author_link( $forum_id = 0 ) {
  * @uses  bbp_get_forum_topics_link() To get the forum topics link
  */
 function bbp_forum_topics_link( $forum_id = 0 ) {
-	echo bbp_get_forum_topics_link( $forum_id );
+	echo wp_kses_post( bbp_get_forum_topics_link( $forum_id ) );
 }
 
 /**
@@ -1673,7 +1673,7 @@ function bbp_get_forum_topics_link( $forum_id = 0 ) {
  * @uses  bbp_get_forum_subforum_count() To get the forum's subforum count
  */
 function bbp_forum_subforum_count( $forum_id = 0, $integer = false ) {
-	echo bbp_get_forum_subforum_count( $forum_id, $integer );
+	echo esc_html( bbp_get_forum_subforum_count( $forum_id, $integer ) );
 }
 
 /**
@@ -1710,7 +1710,7 @@ function bbp_get_forum_subforum_count( $forum_id = 0, $integer = false ) {
  * @uses  bbp_get_forum_topic_count() To get the forum topic count
  */
 function bbp_forum_topic_count( $forum_id = 0, $total_count = true, $integer = false ) {
-	echo bbp_get_forum_topic_count( $forum_id, $total_count, $integer );
+	echo esc_html( bbp_get_forum_topic_count( $forum_id, $total_count, $integer ) );
 }
 
 /**
@@ -1750,7 +1750,7 @@ function bbp_get_forum_topic_count( $forum_id = 0, $total_count = true, $integer
  * @uses  bbp_get_forum_reply_count() To get the forum reply count
  */
 function bbp_forum_reply_count( $forum_id = 0, $total_count = true, $integer = false ) {
-	echo bbp_get_forum_reply_count( $forum_id, $total_count, $integer );
+	echo esc_html( bbp_get_forum_reply_count( $forum_id, $total_count, $integer ) );
 }
 
 /**
@@ -1790,7 +1790,7 @@ function bbp_get_forum_reply_count( $forum_id = 0, $total_count = true, $integer
  * @uses  bbp_get_forum_post_count() To get the forum post count
  */
 function bbp_forum_post_count( $forum_id = 0, $total_count = true, $integer = false ) {
-	echo bbp_get_forum_post_count( $forum_id, $total_count, $integer );
+	echo esc_html( bbp_get_forum_post_count( $forum_id, $total_count, $integer ) );
 }
 
 /**
@@ -1868,7 +1868,7 @@ function bbp_get_forum_topic_count_hidden( $forum_id = 0, $integer = false ) {
  * @uses  bbp_get_forum_status() To get the forum status
  */
 function bbp_forum_status( $forum_id = 0 ) {
-	echo bbp_get_forum_status( $forum_id );
+	echo esc_attr( bbp_get_forum_status( $forum_id ) );
 }
 
 /**
@@ -1936,7 +1936,7 @@ function bbp_get_forum_visibility( $forum_id = 0 ) {
  * @uses  bbp_get_forum_type() To get the forum type
  */
 function bbp_forum_type( $forum_id = 0 ) {
-	echo bbp_get_forum_type( $forum_id );
+	echo esc_attr( bbp_get_forum_type( $forum_id ) );
 }
 
 /**
@@ -2147,7 +2147,7 @@ function bbp_is_forum_hidden( $forum_id = 0, $check_ancestors = true ) {
  * @uses  bbp_get_forum_author() To get the forum author
  */
 function bbp_forum_author_display_name( $forum_id = 0 ) {
-	echo bbp_get_forum_author_display_name( $forum_id );
+	echo esc_html( bbp_get_forum_author_display_name( $forum_id ) );
 }
 
 /**
@@ -2181,7 +2181,7 @@ function bbp_get_forum_author_display_name( $forum_id = 0 ) {
  * @uses  bbp_get_forum_author_id() To get the forum author id
  */
 function bbp_forum_author_id( $forum_id = 0 ) {
-	echo bbp_get_forum_author_id( $forum_id );
+	echo esc_attr( bbp_get_forum_author_id( $forum_id ) );
 }
 
 /**
@@ -2296,7 +2296,7 @@ function bbp_suppress_private_author_link( $author_link, $args ) {
  * @uses  bbp_get_forum_class() To get the row class of the forum
  */
 function bbp_forum_class( $forum_id = 0, $classes = array() ) {
-	echo bbp_get_forum_class( $forum_id, $classes );
+	echo esc_attr( bbp_get_forum_class( $forum_id, $classes ) );
 }
 
 /**
@@ -2390,7 +2390,7 @@ function bbp_get_form_forum_title() {
  * @uses  bbp_get_form_forum_content() To get value of forum content field
  */
 function bbp_form_forum_content() {
-	echo bbp_get_form_forum_content();
+	echo wp_kses_post( bbp_get_form_forum_content() );
 }
 
 /**
@@ -2601,7 +2601,7 @@ function bbp_get_form_forum_subscribed() {
  * @uses  bbp_get_form_forum_type() To get the topic's forum id
  */
 function bbp_form_forum_type_dropdown( $args = '' ) {
-	echo bbp_get_form_forum_type_dropdown( $args );
+	echo wp_kses_post( bbp_get_form_forum_type_dropdown( $args ) );
 }
 
 /**
@@ -2692,7 +2692,7 @@ function bbp_get_form_forum_type_dropdown( $args = '' ) {
  * @uses  bbp_get_form_forum_status() To get the topic's forum id
  */
 function bbp_form_forum_status_dropdown( $args = '' ) {
-	echo bbp_get_form_forum_status_dropdown( $args );
+	echo wp_kses_post( bbp_get_form_forum_status_dropdown( $args ) );
 }
 
 /**
@@ -2782,7 +2782,7 @@ function bbp_get_form_forum_status_dropdown( $args = '' ) {
  * @uses  bbp_get_form_forum_visibility() To get the topic's forum id
  */
 function bbp_form_forum_visibility_dropdown( $args = '' ) {
-	echo bbp_get_form_forum_visibility_dropdown( $args );
+	echo wp_kses_post( bbp_get_form_forum_visibility_dropdown( $args ) );
 }
 
 /**
@@ -2877,7 +2877,7 @@ function bbp_get_form_forum_visibility_dropdown( $args = '' ) {
  * @uses  bbp_get_forum_topics_feed_link()
  */
 function bbp_forum_topics_feed_link( $forum_id = 0 ) {
-	echo bbp_get_forum_topics_feed_link( $forum_id );
+	echo wp_kses_post( bbp_get_forum_topics_feed_link( $forum_id ) );
 }
 
 /**
@@ -2944,7 +2944,7 @@ function bbp_get_forum_topics_feed_link( $forum_id = 0 ) {
  * @uses  bbp_get_forum_replies_feed_link()
  */
 function bbp_forum_replies_feed_link( $forum_id = 0 ) {
-	echo bbp_get_forum_replies_feed_link( $forum_id );
+	echo wp_kses_post( bbp_get_forum_replies_feed_link( $forum_id ) );
 }
 
 /**

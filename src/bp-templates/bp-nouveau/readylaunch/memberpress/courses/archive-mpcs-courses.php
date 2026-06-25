@@ -78,12 +78,12 @@ if ( MeprRule::is_locked( $post ) && helpers\Courses::is_course_archive() ) {
 						?>
 						<a href="<?php echo esc_url( $author_url ); ?>" class="item-avatar bb-rl-author-avatar">
 							<?php
-							echo bp_core_fetch_avatar(
+							echo wp_kses_post( bp_core_fetch_avatar(
 								array(
 									'item_id' => $user_id,
 									'html' => true,
 								)
-							);
+							) );
 							?>
 						</a>
 						<span class="bb-rl-author-name">
@@ -160,12 +160,12 @@ if ( MeprRule::is_locked( $post ) && helpers\Courses::is_course_archive() ) {
 			?>
 			<span class="bb-rl-author-avatar">
 				<?php
-				echo bp_core_fetch_avatar(
+				echo wp_kses_post( bp_core_fetch_avatar(
 					array(
 						'item_id' => $user_id,
 						'html' => true,
 					)
-				);
+				) );
 				?>
 			</span>
 			<span class="bb-rl-author-name"><?php echo esc_html( $author_name ); ?></span>

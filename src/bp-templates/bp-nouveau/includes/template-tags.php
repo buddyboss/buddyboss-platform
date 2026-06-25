@@ -2624,7 +2624,7 @@ function bp_nouveau_signup_form( $section = 'account_details' ) {
 			} else {
 				printf(
 					'<small>%1$s</small> %2$s',
-					home_url( '/' ),
+					esc_url( home_url( '/' ) ),
 					$field_output  // Constructed safely above.
 				);
 			}

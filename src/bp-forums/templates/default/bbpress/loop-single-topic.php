@@ -75,7 +75,7 @@ defined( 'ABSPATH' ) || exit;
 
 			<?php do_action( 'bbp_theme_before_topic_started_by' ); ?>
 
-			<span class="bbp-topic-started-by"><?php /* translators: %1$s: topic author link. */ printf( esc_html__( 'Started by: %1$s', 'buddyboss-platform' ), bbp_get_topic_author_link( array( 'size' => '14' ) ) ); ?></span>
+			<span class="bbp-topic-started-by"><?php /* translators: %1$s: topic author link. */ printf( esc_html__( 'Started by: %1$s', 'buddyboss-platform' ), wp_kses_post( bbp_get_topic_author_link( array( 'size' => '14' ) ) ) ); ?></span>
 
 			<?php do_action( 'bbp_theme_after_topic_started_by' ); ?>
 
@@ -83,7 +83,7 @@ defined( 'ABSPATH' ) || exit;
 
 				<?php do_action( 'bbp_theme_before_topic_started_in' ); ?>
 
-				<span class="bbp-topic-started-in"><?php /* translators: 1: forum permalink, 2: forum title. */ printf( __( 'in: <a href="%1$s">%2$s</a>', 'buddyboss-platform' ), bbp_get_forum_permalink( bbp_get_topic_forum_id() ), bbp_get_forum_title( bbp_get_topic_forum_id() ) ); ?></span>
+				<span class="bbp-topic-started-in"><?php /* translators: 1: forum permalink, 2: forum title. */ printf( __( 'in: <a href="%1$s">%2$s</a>', 'buddyboss-platform' ), esc_url( bbp_get_forum_permalink( bbp_get_topic_forum_id() ) ), bbp_get_forum_title( bbp_get_topic_forum_id() ) ); ?></span>
 
 				<?php do_action( 'bbp_theme_after_topic_started_in' ); ?>
 

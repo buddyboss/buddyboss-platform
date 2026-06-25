@@ -107,6 +107,6 @@ defined( 'ABSPATH' ) || exit;
 		<?php if ( ! empty( $resources->labels['custom'] ) ) : ?>
 			<h3><?php echo esc_html( $resources->labels['custom'] ); ?></h3>
 		<?php endif; ?>
-		<?php echo wpautop( wp_kses_post( $resources->custom[0]->content ) ); ?>
+		<?php echo wp_kses_post( wpautop( wp_kses_post( $resources->custom[0]->content ) ) ); ?>
 	</div>
 <?php endif; ?>

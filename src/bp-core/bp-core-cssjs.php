@@ -554,7 +554,7 @@ function bp_core_add_cropper_inline_css() {
 function bp_core_add_ajax_url_js() {
 	?>
 
-	<script>var ajaxurl = '<?php echo bp_core_ajax_url(); ?>';</script>
+	<script>var ajaxurl = '<?php echo esc_url( bp_core_ajax_url() ); ?>';</script>
 
 	<?php
 }

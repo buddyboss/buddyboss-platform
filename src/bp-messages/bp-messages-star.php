@@ -64,7 +64,7 @@ function bp_messages_is_message_starred( $mid = 0, $user_id = 0 ) {
  * @param array $args See bp_get_the_message_star_action_link() for full documentation.
  */
 function bp_the_message_star_action_link( $args = array() ) {
-	echo bp_get_the_message_star_action_link( $args );
+	echo wp_kses_post( bp_get_the_message_star_action_link( $args ) );
 }
 	/**
 	 * Return the link or raw URL for starring or unstarring a message.

@@ -19,7 +19,7 @@ defined( 'ABSPATH' ) || exit;
  * @uses  bbp_get_topic_post_type() To get the topic post type
  */
 function bbp_topic_post_type() {
-	echo bbp_get_topic_post_type();
+	echo esc_attr( bbp_get_topic_post_type() );
 }
 
 /**
@@ -535,7 +535,7 @@ function bbp_add_sticky_topics( &$query, $args = array() ) {
  * @uses  bbp_get_topic_id() To get the topic id
  */
 function bbp_topic_id( $topic_id = 0 ) {
-	echo bbp_get_topic_id( $topic_id );
+	echo esc_attr( bbp_get_topic_id( $topic_id ) );
 }
 
 /**
@@ -725,7 +725,7 @@ function bbp_get_topic_title( $topic_id = 0 ) {
  * @param string $title Default text to use as title
  */
 function bbp_topic_archive_title( $title = '' ) {
-	echo bbp_get_topic_archive_title( $title );
+	echo esc_html( bbp_get_topic_archive_title( $title ) );
 }
 
 /**
@@ -774,7 +774,7 @@ function bbp_get_topic_archive_title( $title = '' ) {
  * @uses  bbp_get_topic_content() To get the topic content
  */
 function bbp_topic_content( $topic_id = 0 ) {
-	echo bbp_get_topic_content( $topic_id );
+	echo wp_kses_post( bbp_get_topic_content( $topic_id ) );
 }
 
 /**
@@ -816,7 +816,7 @@ function bbp_get_topic_content( $topic_id = 0 ) {
  * @uses  bbp_get_topic_excerpt() To get the topic excerpt
  */
 function bbp_topic_excerpt( $topic_id = 0, $length = 100 ) {
-	echo bbp_get_topic_excerpt( $topic_id, $length );
+	echo wp_kses_post( bbp_get_topic_excerpt( $topic_id, $length ) );
 }
 
 /**
@@ -873,7 +873,7 @@ function bbp_get_topic_excerpt( $topic_id = 0, $length = 100 ) {
  * @uses  bbp_get_topic_post_date() to get the output
  */
 function bbp_topic_post_date( $topic_id = 0, $humanize = false, $gmt = false ) {
-	echo bbp_get_topic_post_date( $topic_id, $humanize, $gmt );
+	echo esc_html( bbp_get_topic_post_date( $topic_id, $humanize, $gmt ) );
 }
 
 /**
@@ -921,7 +921,7 @@ function bbp_get_topic_post_date( $topic_id = 0, $humanize = false, $gmt = false
  * @uses  bbp_get_topic_pagination() To get the topic pagination links
  */
 function bbp_topic_pagination( $args = '' ) {
-	echo bbp_get_topic_pagination( $args );
+	echo wp_kses_post( bbp_get_topic_pagination( $args ) );
 }
 
 /**
@@ -1191,7 +1191,7 @@ function bbp_get_topic_revision_count( $topic_id = 0, $integer = false ) {
  * @uses  bbp_get_topic_status() To get the topic status
  */
 function bbp_topic_status( $topic_id = 0 ) {
-	echo bbp_get_topic_status( $topic_id );
+	echo esc_attr( bbp_get_topic_status( $topic_id ) );
 }
 
 /**
@@ -1438,7 +1438,7 @@ function bbp_get_topic_author( $topic_id = 0 ) {
  * @uses  bbp_get_topic_author_id() To get the topic author id
  */
 function bbp_topic_author_id( $topic_id = 0 ) {
-	echo bbp_get_topic_author_id( $topic_id );
+	echo esc_attr( bbp_get_topic_author_id( $topic_id ) );
 }
 
 /**
@@ -1542,7 +1542,7 @@ function bbp_get_topic_author_display_name( $topic_id = 0 ) {
  * @uses  bbp_get_topic_author_avatar() To get the topic author avatar
  */
 function bbp_topic_author_avatar( $topic_id = 0, $size = 40 ) {
-	echo bbp_get_topic_author_avatar( $topic_id, $size );
+	echo wp_kses_post( bbp_get_topic_author_avatar( $topic_id, $size ) );
 }
 
 /**
@@ -1588,7 +1588,7 @@ function bbp_get_topic_author_avatar( $topic_id = 0, $size = 40 ) {
  * @uses  bbp_get_topic_author_link() To get the topic author link
  */
 function bbp_topic_author_link( $args = '' ) {
-	echo bbp_get_topic_author_link( $args );
+	echo wp_kses_post( bbp_get_topic_author_link( $args ) );
 }
 
 /**
@@ -1774,7 +1774,7 @@ function bbp_get_topic_author_url( $topic_id = 0 ) {
  * @uses  bbp_get_topic_author_email() To get the topic author email
  */
 function bbp_topic_author_email( $topic_id = 0 ) {
-	echo bbp_get_topic_author_email( $topic_id );
+	echo esc_html( bbp_get_topic_author_email( $topic_id ) );
 }
 
 /**
@@ -1879,7 +1879,7 @@ function bbp_get_topic_author_role( $args = array() ) {
  * @uses  bbp_get_topic_forum_title() To get the topic's forum title
  */
 function bbp_topic_forum_title( $topic_id = 0 ) {
-	echo bbp_get_topic_forum_title( $topic_id );
+	echo esc_html( bbp_get_topic_forum_title( $topic_id ) );
 }
 
 /**
@@ -1912,7 +1912,7 @@ function bbp_get_topic_forum_title( $topic_id = 0 ) {
  * @uses  bbp_get_topic_forum_id()
  */
 function bbp_topic_forum_id( $topic_id = 0 ) {
-	echo bbp_get_topic_forum_id( $topic_id );
+	echo esc_attr( bbp_get_topic_forum_id( $topic_id ) );
 }
 
 /**
@@ -1945,7 +1945,7 @@ function bbp_get_topic_forum_id( $topic_id = 0 ) {
  * @uses  bbp_get_topic_last_active_id() To get the topic's last active id
  */
 function bbp_topic_last_active_id( $topic_id = 0 ) {
-	echo bbp_get_topic_last_active_id( $topic_id );
+	echo esc_attr( bbp_get_topic_last_active_id( $topic_id ) );
 }
 
 /**
@@ -1978,7 +1978,7 @@ function bbp_get_topic_last_active_id( $topic_id = 0 ) {
  * @uses  bbp_get_topic_last_active_time() To get topic freshness
  */
 function bbp_topic_last_active_time( $topic_id = 0 ) {
-	echo bbp_get_topic_last_active_time( $topic_id );
+	echo esc_html( bbp_get_topic_last_active_time( $topic_id ) );
 }
 
 /**
@@ -2028,7 +2028,7 @@ function bbp_get_topic_last_active_time( $topic_id = 0 ) {
  * @uses  bbp_get_topic_subscription_link()
  */
 function bbp_topic_subscription_link( $args = array() ) {
-	echo bbp_get_topic_subscription_link( $args );
+	echo wp_kses_post( bbp_get_topic_subscription_link( $args ) );
 }
 
 /**
@@ -2077,7 +2077,7 @@ function bbp_get_topic_subscription_link( $args = array() ) {
  * @uses  bbp_get_topic_favorite_link()
  */
 function bbp_topic_favorite_link( $args = array() ) {
-	echo bbp_get_topic_favorite_link( $args );
+	echo wp_kses_post( bbp_get_topic_favorite_link( $args ) );
 }
 
 /**
@@ -2128,7 +2128,7 @@ function bbp_get_topic_favorite_link( $args = array() ) {
  * @uses  bbp_get_topic_last_reply_id() To get the topic last reply id
  */
 function bbp_topic_last_reply_id( $topic_id = 0 ) {
-	echo bbp_get_topic_last_reply_id( $topic_id );
+	echo esc_attr( bbp_get_topic_last_reply_id( $topic_id ) );
 }
 
 /**
@@ -2163,7 +2163,7 @@ function bbp_get_topic_last_reply_id( $topic_id = 0 ) {
  * @uses bbp_get_topic_last_reply_title() To get the topic last reply title
  */
 function bbp_topic_last_reply_title( $topic_id = 0 ) {
-	echo bbp_get_topic_last_reply_title( $topic_id );
+	echo esc_html( bbp_get_topic_last_reply_title( $topic_id ) );
 }
 
 /**
@@ -2269,7 +2269,7 @@ function bbp_get_topic_last_reply_url( $topic_id = 0 ) {
  * @uses  bbp_get_topic_freshness_link() To get the topic freshness link
  */
 function bbp_topic_freshness_link( $topic_id = 0 ) {
-	echo bbp_get_topic_freshness_link( $topic_id );
+	echo wp_kses_post( bbp_get_topic_freshness_link( $topic_id ) );
 }
 
 /**
@@ -2313,7 +2313,7 @@ function bbp_get_topic_freshness_link( $topic_id = 0 ) {
  * @uses  bbp_get_topic_replies_link() To get the topic replies link
  */
 function bbp_topic_replies_link( $topic_id = 0 ) {
-	echo bbp_get_topic_replies_link( $topic_id );
+	echo wp_kses_post( bbp_get_topic_replies_link( $topic_id ) );
 }
 
 /**
@@ -2381,7 +2381,7 @@ function bbp_get_topic_replies_link( $topic_id = 0 ) {
  * @uses  bbp_get_topic_reply_count() To get the topic reply count
  */
 function bbp_topic_reply_count( $topic_id = 0, $integer = false ) {
-	echo bbp_get_topic_reply_count( $topic_id, $integer );
+	echo esc_html( bbp_get_topic_reply_count( $topic_id, $integer ) );
 }
 
 /**
@@ -2417,7 +2417,7 @@ function bbp_get_topic_reply_count( $topic_id = 0, $integer = false ) {
  * @uses  bbp_get_topic_post_count() To get the topic post count
  */
 function bbp_topic_post_count( $topic_id = 0, $integer = false ) {
-	echo bbp_get_topic_post_count( $topic_id, $integer );
+	echo esc_html( bbp_get_topic_post_count( $topic_id, $integer ) );
 }
 
 /**
@@ -2490,7 +2490,7 @@ function bbp_get_topic_reply_count_hidden( $topic_id = 0, $integer = false ) {
  * @uses  bbp_get_topic_voice_count() To get the topic voice count
  */
 function bbp_topic_voice_count( $topic_id = 0, $integer = false ) {
-	echo bbp_get_topic_voice_count( $topic_id, $integer );
+	echo esc_html( bbp_get_topic_voice_count( $topic_id, $integer ) );
 }
 
 /**
@@ -2523,7 +2523,7 @@ function bbp_get_topic_voice_count( $topic_id = 0, $integer = false ) {
  * @uses bbp_get_topic_tag_list() To get the topic tag list
  */
 function bbp_topic_tag_list( $topic_id = 0, $args = '' ) {
-	echo bbp_get_topic_tag_list( $topic_id, $args );
+	echo wp_kses_post( bbp_get_topic_tag_list( $topic_id, $args ) );
 }
 
 /**
@@ -2594,7 +2594,7 @@ function bbp_get_topic_tag_list( $topic_id = 0, $args = '' ) {
  * @uses  bbp_get_topic_class() To get the topic class
  */
 function bbp_topic_class( $topic_id = 0, $classes = array() ) {
-	echo bbp_get_topic_class( $topic_id, $classes );
+	echo esc_attr( bbp_get_topic_class( $topic_id, $classes ) );
 }
 
 /**
@@ -2641,7 +2641,7 @@ function bbp_get_topic_class( $topic_id = 0, $classes = array() ) {
  * @uses bbp_get_topic_admin_links() To get the topic admin links
  */
 function bbp_topic_admin_links( $args = array() ) {
-	echo bbp_get_topic_admin_links( $args );
+	echo wp_kses_post( bbp_get_topic_admin_links( $args ) );
 }
 
 /**
@@ -2738,7 +2738,7 @@ function bbp_get_topic_admin_links( $args = array() ) {
  * @uses  bbp_get_topic_edit_link() To get the topic edit link
  */
 function bbp_topic_edit_link( $args = '' ) {
-	echo bbp_get_topic_edit_link( $args );
+	echo wp_kses_post( bbp_get_topic_edit_link( $args ) );
 }
 
 /**
@@ -2871,7 +2871,7 @@ function bbp_get_topic_edit_url( $topic_id = 0 ) {
  * @uses  bbp_get_topic_trash_link() To get the topic trash link
  */
 function bbp_topic_trash_link( $args = '' ) {
-	echo bbp_get_topic_trash_link( $args );
+	echo wp_kses_post( bbp_get_topic_trash_link( $args ) );
 }
 
 /**
@@ -2998,7 +2998,7 @@ function bbp_get_topic_trash_link( $args = '' ) {
  * @uses  bbp_get_topic_close_link() To get the topic close link
  */
 function bbp_topic_close_link( $args = '' ) {
-	echo bbp_get_topic_close_link( $args );
+	echo wp_kses_post( bbp_get_topic_close_link( $args ) );
 }
 
 /**
@@ -3069,7 +3069,7 @@ function bbp_get_topic_close_link( $args = '' ) {
  * @uses  bbp_get_topic_stick_link() To get the topic stick link
  */
 function bbp_topic_stick_link( $args = '' ) {
-	echo bbp_get_topic_stick_link( $args );
+	echo wp_kses_post( bbp_get_topic_stick_link( $args ) );
 }
 
 /**
@@ -3163,7 +3163,7 @@ function bbp_get_topic_stick_link( $args = '' ) {
  * @uses  bbp_get_topic_merge_link() To get the topic merge link
  */
 function bbp_topic_merge_link( $args = '' ) {
-	echo bbp_get_topic_merge_link( $args );
+	echo wp_kses_post( bbp_get_topic_merge_link( $args ) );
 }
 
 /**
@@ -3222,7 +3222,7 @@ function bbp_get_topic_merge_link( $args = '' ) {
  * @uses  bbp_get_topic_spam_link() Topic spam link
  */
 function bbp_topic_spam_link( $args = '' ) {
-	echo bbp_get_topic_spam_link( $args );
+	echo wp_kses_post( bbp_get_topic_spam_link( $args ) );
 }
 
 /**
@@ -3341,7 +3341,7 @@ function bbp_get_topic_report_link( $args = '' ) {
  * @uses  bbp_get_reply_to_link() To get the reply to link
  */
 function bbp_topic_reply_link( $args = array() ) {
-	echo bbp_get_topic_reply_link( $args );
+	echo wp_kses_post( bbp_get_topic_reply_link( $args ) );
 }
 
 /**
@@ -3485,7 +3485,7 @@ function bbp_get_forum_pagination_count() {
  * @uses  bbp_get_forum_pagination_links() To get the pagination links
  */
 function bbp_forum_pagination_links() {
-	echo bbp_get_forum_pagination_links();
+	echo wp_kses_post( bbp_get_forum_pagination_links() );
 }
 
 /**
@@ -3571,7 +3571,7 @@ function bbp_topic_notices() {
  *
  */
 function bbp_topic_type_select( $args = '' ) {
-	echo bbp_get_form_topic_type_dropdown( $args );
+	echo wp_kses_post( bbp_get_form_topic_type_dropdown( $args ) );
 }
 
 /**
@@ -3586,7 +3586,7 @@ function bbp_topic_type_select( $args = '' ) {
  *              - selected: Override the selected option
  */
 function bbp_form_topic_type_dropdown( $args = '' ) {
-	echo bbp_get_form_topic_type_dropdown( $args );
+	echo wp_kses_post( bbp_get_form_topic_type_dropdown( $args ) );
 }
 
 /**
@@ -3685,7 +3685,7 @@ function bbp_get_form_topic_type_dropdown( $args = '' ) {
  * @param int $topic_id The topic id to use
  */
 function bbp_form_topic_status_dropdown( $args = '' ) {
-	echo bbp_get_form_topic_status_dropdown( $args );
+	echo wp_kses_post( bbp_get_form_topic_status_dropdown( $args ) );
 }
 
 /**
@@ -3773,7 +3773,7 @@ function bbp_get_form_topic_status_dropdown( $args = '' ) {
  * @uses  bbp_get_topic_post_type() To get the topic post type
  */
 function bbp_topic_tag_tax_id() {
-	echo bbp_get_topic_tag_tax_id();
+	echo esc_attr( bbp_get_topic_tag_tax_id() );
 }
 
 /**
@@ -3838,7 +3838,7 @@ function bbp_get_topic_tag_tax_rewrite() {
  * @uses  bbp_get_topic_tag_id()
  */
 function bbp_topic_tag_id( $tag = '' ) {
-	echo bbp_get_topic_tag_id( $tag );
+	echo esc_attr( bbp_get_topic_tag_id( $tag ) );
 }
 
 /**
@@ -3883,7 +3883,7 @@ function bbp_get_topic_tag_id( $tag = '' ) {
  * @uses  bbp_get_topic_tag_name()
  */
 function bbp_topic_tag_name( $tag = '' ) {
-	echo bbp_get_topic_tag_name( $tag );
+	echo esc_html( bbp_get_topic_tag_name( $tag ) );
 }
 
 /**
@@ -3928,7 +3928,7 @@ function bbp_get_topic_tag_name( $tag = '' ) {
  * @uses  bbp_get_topic_tag_slug()
  */
 function bbp_topic_tag_slug( $tag = '' ) {
-	echo bbp_get_topic_tag_slug( $tag );
+	echo esc_attr( bbp_get_topic_tag_slug( $tag ) );
 }
 
 /**
@@ -4068,7 +4068,7 @@ function bbp_get_topic_tag_edit_link( $tag = '' ) {
  * @uses  bbp_get_topic_tag_description()
  */
 function bbp_topic_tag_description( $args = array() ) {
-	echo bbp_get_topic_tag_description( $args );
+	echo wp_kses_post( bbp_get_topic_tag_description( $args ) );
 }
 
 /**
@@ -4164,7 +4164,7 @@ function bbp_get_form_topic_title() {
  * @uses  bbp_get_form_topic_content() To get value of topic content field
  */
 function bbp_form_topic_content() {
-	echo bbp_get_form_topic_content();
+	echo wp_kses_post( bbp_get_form_topic_content() );
 }
 
 /**

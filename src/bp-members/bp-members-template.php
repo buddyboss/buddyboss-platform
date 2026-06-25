@@ -17,7 +17,7 @@ defined( 'ABSPATH' ) || exit;
  * @since BuddyPress 2.4.0
  */
 function bp_profile_slug() {
-	echo bp_get_profile_slug();
+	echo esc_attr( bp_get_profile_slug() );
 }
 	/**
 	 * Return the profile component slug.
@@ -44,7 +44,7 @@ function bp_get_profile_slug() {
  * @since BuddyPress 1.5.0
  */
 function bp_members_slug() {
-	echo bp_get_members_slug();
+	echo esc_attr( bp_get_members_slug() );
 }
 	/**
 	 * Return the members component slug.
@@ -71,7 +71,7 @@ function bp_get_members_slug() {
  * @since BuddyPress 1.5.0
  */
 function bp_members_root_slug() {
-	echo bp_get_members_root_slug();
+	echo esc_attr( bp_get_members_root_slug() );
 }
 	/**
 	 * Return the members component root slug.
@@ -202,7 +202,7 @@ function bp_get_member_type_directory_permalink( $member_type = '' ) {
  * @since BuddyPress 1.5.0
  */
 function bp_signup_slug() {
-	echo bp_get_signup_slug();
+	echo esc_attr( bp_get_signup_slug() );
 }
 	/**
 	 * Return the sign-up slug.
@@ -238,7 +238,7 @@ function bp_get_signup_slug() {
  * @since BuddyPress 1.5.0
  */
 function bp_activate_slug() {
-	echo bp_get_activate_slug();
+	echo esc_attr( bp_get_activate_slug() );
 }
 	/**
 	 * Return the activation slug.
@@ -489,7 +489,7 @@ function bp_members() {
  * @since BuddyPress 1.2.0
  */
 function bp_members_pagination_count() {
-	echo bp_get_members_pagination_count();
+	echo esc_html( bp_get_members_pagination_count() );
 }
 	/**
 	 * Generate the members pagination count.
@@ -541,7 +541,7 @@ function bp_get_members_pagination_count() {
  * @since BuddyPress 1.2.0
  */
 function bp_members_pagination_links() {
-	echo bp_get_members_pagination_links();
+	echo wp_kses_post( bp_get_members_pagination_links() );
 }
 	/**
 	 * Fetch the members pagination links.
@@ -569,7 +569,7 @@ function bp_get_members_pagination_links() {
  * @since BuddyPress 1.2.0
  */
 function bp_member_user_id() {
-	echo bp_get_member_user_id();
+	echo esc_attr( bp_get_member_user_id() );
 }
 	/**
 	 * Get the ID of the current member in the loop.
@@ -669,7 +669,7 @@ function bp_get_member_class( $classes = array() ) {
  * @since BuddyPress 1.2.5
  */
 function bp_member_user_nicename() {
-	echo bp_get_member_user_nicename();
+	echo esc_html( bp_get_member_user_nicename() );
 }
 	/**
 	 * Get the nicename of the current member in the loop.
@@ -697,7 +697,7 @@ function bp_get_member_user_nicename() {
  * @since BuddyPress 1.2.5
  */
 function bp_member_user_login() {
-	echo bp_get_member_user_login();
+	echo esc_html( bp_get_member_user_login() );
 }
 	/**
 	 * Get the login of the current member in the loop.
@@ -725,7 +725,7 @@ function bp_get_member_user_login() {
  * @since BuddyPress 1.2.5
  */
 function bp_member_user_email() {
-	echo bp_get_member_user_email();
+	echo esc_html( bp_get_member_user_email() );
 }
 	/**
 	 * Get the email address of the current member in the loop.
@@ -1280,7 +1280,7 @@ function bp_directory_members_search_form() {
  * @since BuddyPress 1.2.0
  */
 function bp_total_site_member_count() {
-	echo bp_get_total_site_member_count();
+	echo esc_html( bp_get_total_site_member_count() );
 }
 	/**
 	 * Get the total site member count.
@@ -1516,7 +1516,7 @@ function bp_displayed_user_use_cover_image_header() {
  * @param array|string $args {@see bp_get_loggedin_user_avatar()}.
  */
 function bp_loggedin_user_avatar( $args = '' ) {
-	echo bp_get_loggedin_user_avatar( $args );
+	echo wp_kses_post( bp_get_loggedin_user_avatar( $args ) );
 }
 	/**
 	 * Get the logged-in user's avatar.
@@ -1575,7 +1575,7 @@ function bp_get_loggedin_user_avatar( $args = '' ) {
  * @param array|string $args {@see bp_get_displayed_user_avatar()}.
  */
 function bp_displayed_user_avatar( $args = '' ) {
-	echo bp_get_displayed_user_avatar( $args );
+	echo wp_kses_post( bp_get_displayed_user_avatar( $args ) );
 }
 	/**
 	 * Get the displayed user's avatar.
@@ -1872,7 +1872,7 @@ function bp_loggedin_user_domain() {
  * @since BuddyPress 1.0.0
  */
 function bp_displayed_user_fullname() {
-	echo bp_get_displayed_user_fullname();
+	echo esc_html( bp_get_displayed_user_fullname() );
 }
 	/**
 	 * Get the displayed user's display name.
@@ -1900,7 +1900,7 @@ function bp_get_displayed_user_fullname() {
 	 * @since BuddyPress 1.0.0
 	 */
 function bp_user_fullname() {
-	echo bp_get_displayed_user_fullname(); }
+	echo esc_html( bp_get_displayed_user_fullname() ); }
 
 
 /**
@@ -1937,7 +1937,7 @@ function bp_get_loggedin_user_fullname() {
  * @since BuddyPress 1.2.0
  */
 function bp_displayed_user_username() {
-	echo bp_get_displayed_user_username();
+	echo esc_html( bp_get_displayed_user_username() );
 }
 	/**
 	 * Get the username of the displayed user.
@@ -1971,7 +1971,7 @@ function bp_get_displayed_user_username() {
  * @since BuddyPress 1.2.0
  */
 function bp_loggedin_user_username() {
-	echo bp_get_loggedin_user_username();
+	echo esc_html( bp_get_loggedin_user_username() );
 }
 	/**
 	 * Get the username of the logged-in user.
@@ -2471,7 +2471,7 @@ function bp_get_current_signup_step() {
  * @param array|string $args See {@link bp_get_signup_avatar(}.
  */
 function bp_signup_avatar( $args = '' ) {
-	echo bp_get_signup_avatar( $args );
+	echo wp_kses_post( bp_get_signup_avatar( $args ) );
 }
 	/**
 	 * Get the user avatar during signup.
@@ -2677,7 +2677,7 @@ function bp_get_members_component_link( $component, $action = '', $query_args = 
  * @param array $button_args See BP_Button class for more information.
  */
 function bp_add_switch_button( $user_id, $button_args = array() ) {
-	echo bp_get_add_switch_button( $user_id, $button_args );
+	echo wp_kses_post( bp_get_add_switch_button( $user_id, $button_args ) );
 }
 
 /**

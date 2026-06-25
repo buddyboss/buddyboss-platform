@@ -27,7 +27,7 @@ $document_folder_privacy = bp_get_document_folder_privacy();
 
 			<div class="media-folder_details">
 				<a class="media-folder_name " href="<?php echo esc_url( $folder_link ); ?>">
-					<span><?php echo bp_get_folder_folder_title(); ?></span>
+					<span><?php echo esc_html( bp_get_folder_folder_title() ); ?></span>
 				</a>
 			</div>
 

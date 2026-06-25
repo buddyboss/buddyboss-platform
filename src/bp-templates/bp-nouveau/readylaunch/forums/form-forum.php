@@ -31,10 +31,10 @@ defined( 'ABSPATH' ) || exit;
 				<?php
 				if ( bbp_is_forum_edit() ) {
 					/* translators: %s: Forum title */
-					printf( esc_html__( 'Now Editing &ldquo;%s&rdquo;', 'buddyboss-platform' ), bbp_get_forum_title() );
+					printf( esc_html__( 'Now Editing &ldquo;%s&rdquo;', 'buddyboss-platform' ), esc_html( bbp_get_forum_title() ) );
 				} else {
 					/* translators: %s: Forum title */
-					bbp_is_single_forum() ? printf( esc_html__( 'Create New Forum in &ldquo;%s&rdquo;', 'buddyboss-platform' ), bbp_get_forum_title() ) : esc_html_e( 'Create New Forum', 'buddyboss-platform' );
+					bbp_is_single_forum() ? printf( esc_html__( 'Create New Forum in &ldquo;%s&rdquo;', 'buddyboss-platform' ), esc_html( bbp_get_forum_title() ) ) : esc_html_e( 'Create New Forum', 'buddyboss-platform' );
 				}
 				?>
 				</h2>
@@ -159,7 +159,7 @@ defined( 'ABSPATH' ) || exit;
 			<p>
 				<?php
 				/* translators: %s: Forum title */
-				printf( esc_html__( 'The forum "%s" is closed to new content.', 'buddyboss-platform' ), bbp_get_forum_title() );
+				printf( esc_html__( 'The forum "%s" is closed to new content.', 'buddyboss-platform' ), esc_html( bbp_get_forum_title() ) );
 				?>
 			</p>
 		</div>

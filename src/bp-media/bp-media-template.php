@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
  * @since BuddyBoss 1.0.0
  */
 function bp_media_slug() {
-	echo bp_get_media_slug();
+	echo esc_attr( bp_get_media_slug() );
 }
 /**
  * Return the media component slug.
@@ -42,7 +42,7 @@ function bp_get_media_slug() {
  * @since BuddyBoss 1.0.0
  */
 function bp_media_root_slug() {
-	echo bp_get_media_root_slug();
+	echo esc_attr( bp_get_media_root_slug() );
 }
 /**
  * Return the media component root slug.
@@ -309,7 +309,7 @@ function bp_get_media_load_more_link() {
  * @global object $media_template {@link BP_Media_Template}
  */
 function bp_media_pagination_count() {
-	echo bp_get_media_pagination_count();
+	echo esc_html( bp_get_media_pagination_count() );
 }
 
 /**
@@ -340,7 +340,7 @@ function bp_get_media_pagination_count() {
  * @since BuddyBoss 1.0.0
  */
 function bp_media_pagination_links() {
-	echo bp_get_media_pagination_links();
+	echo wp_kses_post( bp_get_media_pagination_links() );
 }
 
 /**
@@ -405,7 +405,7 @@ function bp_media_has_more_items() {
  * @since BuddyBoss 1.0.0
  */
 function bp_media_count() {
-	echo bp_get_media_count();
+	echo esc_html( bp_get_media_count() );
 }
 
 /**
@@ -467,7 +467,7 @@ function bp_get_media_per_page() {
  * @since BuddyBoss 1.0.0
  */
 function bp_media_id() {
-	echo bp_get_media_id();
+	echo esc_attr( bp_get_media_id() );
 }
 
 /**
@@ -498,7 +498,7 @@ function bp_get_media_id() {
  * @since BuddyBoss 1.0.0
  */
 function bp_media_blog_id() {
-	echo bp_get_media_blog_id();
+	echo esc_attr( bp_get_media_blog_id() );
 }
 
 /**
@@ -529,7 +529,7 @@ function bp_get_media_blog_id() {
  * @since BuddyBoss 1.0.0
  */
 function bp_media_user_id() {
-	echo bp_get_media_user_id();
+	echo esc_attr( bp_get_media_user_id() );
 }
 
 /**
@@ -595,7 +595,7 @@ function bp_get_media_author() {
  * @since BuddyBoss 1.0.0
  */
 function bp_media_attachment_id() {
-	echo bp_get_media_attachment_id();
+	echo esc_attr( bp_get_media_attachment_id() );
 }
 
 /**
@@ -626,7 +626,7 @@ function bp_get_media_attachment_id() {
  * @since BuddyBoss 1.0.0
  */
 function bp_media_title() {
-	echo bp_get_media_title();
+	echo esc_html( bp_get_media_title() );
 }
 
 /**
@@ -718,7 +718,7 @@ function bp_media_user_can_delete( $media = false ) {
  * @since BuddyBoss 1.0.0
  */
 function bp_media_album_id() {
-	echo bp_get_media_album_id();
+	echo esc_attr( bp_get_media_album_id() );
 }
 
 /**
@@ -749,7 +749,7 @@ function bp_get_media_album_id() {
  * @since BuddyBoss 1.2.5
  */
 function bp_media_group_id() {
-	echo bp_get_media_group_id();
+	echo esc_attr( bp_get_media_group_id() );
 }
 
 /**
@@ -780,7 +780,7 @@ function bp_get_media_group_id() {
  * @since BuddyBoss 1.0.0
  */
 function bp_media_activity_id() {
-	echo bp_get_media_activity_id();
+	echo esc_attr( bp_get_media_activity_id() );
 }
 
 /**
@@ -1024,7 +1024,7 @@ function bp_get_media_visibility() {
  * @since BuddyBoss 1.2.0
  */
 function bp_media_parent_activity_id() {
-	echo bp_get_media_parent_activity_id();
+	echo esc_attr( bp_get_media_parent_activity_id() );
 }
 
 /**
@@ -1311,7 +1311,7 @@ function bp_get_album_load_more_link() {
  * @global object $media_album_template {@link BP_Media_Album_Template}
  */
 function bp_album_pagination_count() {
-	echo bp_get_album_pagination_count();
+	echo esc_html( bp_get_album_pagination_count() );
 }
 
 /**
@@ -1342,7 +1342,7 @@ function bp_get_album_pagination_count() {
  * @since BuddyBoss 1.0.0
  */
 function bp_album_pagination_links() {
-	echo bp_get_album_pagination_links();
+	echo wp_kses_post( bp_get_album_pagination_links() );
 }
 
 /**
@@ -1407,7 +1407,7 @@ function bp_album_has_more_items() {
  * @since BuddyBoss 1.0.0
  */
 function bp_album_count() {
-	echo bp_get_album_count();
+	echo esc_html( bp_get_album_count() );
 }
 
 /**
@@ -1469,7 +1469,7 @@ function bp_get_album_per_page() {
  * @since BuddyBoss 1.0.0
  */
 function bp_album_id() {
-	echo bp_get_album_id();
+	echo esc_attr( bp_get_album_id() );
 }
 
 /**
@@ -1561,7 +1561,7 @@ function bp_get_album_privacy() {
  * @since BuddyBoss 1.0.0
  */
 function bp_album_link() {
-	echo bp_get_album_link();
+	echo wp_kses_post( bp_get_album_link() );
 }
 
 /**
@@ -1658,7 +1658,7 @@ function bp_album_user_can_delete( $album = false ) {
  * @since BuddyBoss 1.0.0
  */
 function bp_album_user_id() {
-	echo bp_get_album_user_id();
+	echo esc_attr( bp_get_album_user_id() );
 }
 
 /**
@@ -1724,7 +1724,7 @@ function bp_get_album_author() {
  * @since BuddyBoss 1.2.5
  */
 function bp_album_group_id() {
-	echo bp_get_album_group_id();
+	echo esc_attr( bp_get_album_group_id() );
 }
 
 /**

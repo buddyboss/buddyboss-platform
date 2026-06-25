@@ -128,14 +128,14 @@ class BP_Core_Network_Posts_Widget extends WP_Widget {
 									?>
 						<li class="vcard">
 							<div class="item-avatar">
-								<a href="<?php echo get_author_posts_url( get_the_author_meta( 'ID' ), get_the_author_meta( 'user_nicename' ) ); ?>">
+								<a href="<?php echo esc_url( get_author_posts_url( get_the_author_meta( 'ID' ), get_the_author_meta( 'user_nicename' ) ) ); ?>">
 									<?php echo get_avatar( get_the_author_meta( 'ID' ), 80 ); ?>
 								</a>
 							</div>
 
 							<div class="item">
 								<div class="item-title">
-									<a class="post-author" href="<?php echo get_author_posts_url( get_the_author_meta( 'ID' ), get_the_author_meta( 'user_nicename' ) ); ?>"><?php the_author(); ?></a>
+									<a class="post-author" href="<?php echo esc_url( get_author_posts_url( get_the_author_meta( 'ID' ), get_the_author_meta( 'user_nicename' ) ) ); ?>"><?php the_author(); ?></a>
 									<span class="netowrk-post-type">created a post:</span>
 
 								</div>

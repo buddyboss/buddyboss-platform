@@ -572,7 +572,7 @@ class BP_Core_Members_Switching {
 
 		$components = array_keys( buddypress()->active_components );
 
-		echo bp_get_button(
+		echo wp_kses_post( bp_get_button(
 			array(
 				'id'         => 'bp_member_switching',
 				'component'  => reset( $components ),
@@ -580,7 +580,7 @@ class BP_Core_Members_Switching {
 				'link_text'  => esc_html__( 'View As', 'buddyboss-platform' ),
 				'wrapper_id' => 'bp_member_switching_switch_to',
 			)
-		);
+		) );
 	}
 
 	/**

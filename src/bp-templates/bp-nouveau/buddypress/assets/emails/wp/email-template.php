@@ -323,10 +323,10 @@ $width = wp_is_mobile() ? '100%' : '600px';
 											do_action( 'bp_before_email_recipient' );
 
 											if ( ! empty( $email_user->ID ) ) {
-												echo $email_user->display_name . ' <img src="' . bp_core_fetch_avatar( array(
+												echo $email_user->display_name . ' <img src="' . wp_kses_post( bp_core_fetch_avatar( array(
 														'item_id' => $email_user->ID,
 														'html'    => false
-													) ) . '" " width="34" height="34" style="border: 1px solid #b9babc; border-radius: 50%; margin-left: 12px; vertical-align: middle;" />';
+													) ) ) . '" " width="34" height="34" style="border: 1px solid #b9babc; border-radius: 50%; margin-left: 12px; vertical-align: middle;" />';
 											}
 
 											/**

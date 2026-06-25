@@ -26,7 +26,7 @@ defined( 'ABSPATH' ) || exit;
 						<h3>
 							<?php
 							/* translators: %s: Reply title */
-							printf( esc_html__( 'Move reply "%s"', 'buddyboss-platform' ), bbp_get_reply_title() );
+							printf( esc_html__( 'Move reply "%s"', 'buddyboss-platform' ), esc_html( bbp_get_reply_title() ) );
 							?>
 						</h3>
 					</div>
@@ -55,7 +55,7 @@ defined( 'ABSPATH' ) || exit;
 										<label for="bbp_reply_move_option_reply">
 											<?php
 											/* translators: %s: Forum title */
-											printf( wp_kses_post( __( 'New discussion in <strong>%s</strong> titled:', 'buddyboss-platform' ) ), bbp_get_forum_title( bbp_get_reply_forum_id( bbp_get_reply_id() ) ) );
+											printf( wp_kses_post( __( 'New discussion in <strong>%s</strong> titled:', 'buddyboss-platform' ) ), esc_html( bbp_get_forum_title( bbp_get_reply_forum_id( bbp_get_reply_id() ) ) ) );
 											?>
 										</label>
 									</div>

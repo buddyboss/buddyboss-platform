@@ -666,7 +666,7 @@ class BBP_Forums_Widget extends WP_Widget {
 					<a class="bbp-forum-title" href="<?php bbp_forum_permalink( $widget_query->post->ID ); ?>"><?php bbp_forum_title( $widget_query->post->ID ); ?></a>
 					<span class="topics-count">
 						<?php
-						echo bbp_get_forum_topic_count( $widget_query->post->ID );
+						echo esc_html( bbp_get_forum_topic_count( $widget_query->post->ID ) );
 						?>
 					</span>
 					<?php
@@ -975,7 +975,7 @@ class BBP_Topics_Widget extends WP_Widget {
 
 						<a href="<?php echo esc_url( $author_url ); ?>" class="bbp-author-link" rel="nofollow">
 							<span class="bbp-author-avatar">
-								<?php echo bbp_get_topic_author_avatar( $topic_id ); ?>
+								<?php echo wp_kses_post( bbp_get_topic_author_avatar( $topic_id ) ); ?>
 							</span>
 						</a>
 
@@ -1400,7 +1400,7 @@ class BBP_Replies_Widget extends WP_Widget {
 
 					<a href="<?php echo esc_url( $reply_author_url ); ?>" class="bbp-author-link" rel="nofollow">
 						<span class="bbp-author-avatar">
-							<?php echo bbp_get_reply_author_avatar( $reply_id ); ?>
+							<?php echo wp_kses_post( bbp_get_reply_author_avatar( $reply_id ) ); ?>
 						</span>
 					</a>
 

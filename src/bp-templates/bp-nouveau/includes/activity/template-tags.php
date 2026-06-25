@@ -298,7 +298,7 @@ function bp_nouveau_activity_state() {
 	<div class="activity-state <?php echo ! empty( $reaction_count ) ? 'has-likes' : ''; ?> <?php echo $comment_count ? 'has-comments' : ''; ?>">
 		<?php
 		if ( bb_is_reaction_activity_posts_enabled() && function_exists( 'bb_get_activity_post_user_reactions_html' ) ) {
-			echo bb_get_activity_post_user_reactions_html( $activity_id );
+			echo wp_kses_post( bb_get_activity_post_user_reactions_html( $activity_id ) );
 		}
 
 		/**

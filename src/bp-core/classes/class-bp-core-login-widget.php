@@ -80,8 +80,8 @@ class BP_Core_Login_Widget extends WP_Widget {
 			</div>
 
 			<div class="bp-login-widget-user-links">
-				<h4 class="bp-login-widget-user-link"><?php echo bp_core_get_userlink( bp_loggedin_user_id() ); ?></h4>
-				<div class="bp-login-widget-user-logout"><a class="logout" href="<?php echo wp_logout_url( bp_get_requested_url() ); ?>"><?php esc_html_e( 'Log Out', 'buddyboss-platform' ); ?></a></div>
+				<h4 class="bp-login-widget-user-link"><?php echo wp_kses_post( bp_core_get_userlink( bp_loggedin_user_id() ) ); ?></h4>
+				<div class="bp-login-widget-user-logout"><a class="logout" href="<?php echo esc_url( wp_logout_url( bp_get_requested_url() ) ); ?>"><?php esc_html_e( 'Log Out', 'buddyboss-platform' ); ?></a></div>
 			</div>
 
 			<?php

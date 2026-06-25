@@ -19,7 +19,7 @@ defined( 'ABSPATH' ) || exit;
 		<fieldset class="bbp-form bb-rl-forum-form" id="bbp-edit-topic-tag">
 
 			<div class="bb-rl-forum-modal-header">
-				<h3><?php /* translators: %s: topic tag name. */ printf( esc_html__( 'Manage Tag: "%s"', 'buddyboss-platform' ), bbp_get_topic_tag_name() ); ?></h3>
+				<h3><?php /* translators: %s: topic tag name. */ printf( esc_html__( 'Manage Tag: "%s"', 'buddyboss-platform' ), esc_html( bbp_get_topic_tag_name() ) ); ?></h3>
 			</div>
 
 			<div class="bb-rl-forum-modal-content">

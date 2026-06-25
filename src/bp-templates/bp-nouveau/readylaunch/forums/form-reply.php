@@ -134,7 +134,7 @@ defined( 'ABSPATH' ) || exit;
 						</div>
 
 						<div class="bb-rl-forum-edit-reason">
-							<label for="bbp_reply_edit_reason"><?php printf( esc_html__( 'Optional reason for editing:', 'buddyboss-platform' ), bbp_get_current_user_name() ); ?></label><br />
+							<label for="bbp_reply_edit_reason"><?php printf( esc_html__( 'Optional reason for editing:', 'buddyboss-platform' ), esc_html( bbp_get_current_user_name() ) ); ?></label><br />
 							<input type="text" value="<?php bbp_form_reply_edit_reason(); ?>" tabindex="<?php bbp_tab_index(); ?>" size="40" name="bbp_reply_edit_reason" id="bbp_reply_edit_reason" />
 						</div>
 					</fieldset>
@@ -264,7 +264,7 @@ defined( 'ABSPATH' ) || exit;
 			<p>
 				<?php
 				/* translators: %s: Forum title */
-				printf( esc_html__( 'The forum "%s" is closed to new discussions and replies.', 'buddyboss-platform' ), bbp_get_forum_title( bbp_get_topic_forum_id() ) );
+				printf( esc_html__( 'The forum "%s" is closed to new discussions and replies.', 'buddyboss-platform' ), esc_html( bbp_get_forum_title( bbp_get_topic_forum_id() ) ) );
 				?>
 			</p>
 		</div>

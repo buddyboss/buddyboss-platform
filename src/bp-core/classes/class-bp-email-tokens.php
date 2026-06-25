@@ -234,7 +234,7 @@ class BP_Email_Tokens {
 									<tbody>
 									<tr>
 										<td width="20%" class="mobile-block-full">
-											<a class="group-avatar-wrap mobile-center" href="<?php echo bp_get_group_permalink( $group ); ?>" style="display: block; width: 104px;">
+											<a class="group-avatar-wrap mobile-center" href="<?php echo esc_url( bp_get_group_permalink( $group ) ); ?>" style="display: block; width: 104px;">
 												<?php
 												$group_avatar = bp_core_fetch_avatar(
 													array(
@@ -306,7 +306,7 @@ class BP_Email_Tokens {
 																			<tbody>
 																			<tr>
 																				<td height="34px" align="right" style="vertical-align: middle;" class="mobile-padding-bottom">
-																					<a class="mobile-button-center" href="<?php echo bp_get_group_permalink( $group ); ?>" target="_blank" rel="nofollow" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( floor( $settings['body_text_size'] * 0.875 ) . 'px' ); ?>; text-decoration: none; display: inline-block; border-radius: 100px; text-align: center; min-height: 16px; line-height: 16px; background: <?php echo $settings['highlight_color']; ?>; color: #fff !important; min-width: 110px; padding: 8px;"><font style="color:#fff;"><?php esc_html_e( 'Visit Group', 'buddyboss-platform' ); ?></font></a>
+																					<a class="mobile-button-center" href="<?php echo esc_url( bp_get_group_permalink( $group ) ); ?>" target="_blank" rel="nofollow" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( floor( $settings['body_text_size'] * 0.875 ) . 'px' ); ?>; text-decoration: none; display: inline-block; border-radius: 100px; text-align: center; min-height: 16px; line-height: 16px; background: <?php echo $settings['highlight_color']; ?>; color: #fff !important; min-width: 110px; padding: 8px;"><font style="color:#fff;"><?php esc_html_e( 'Visit Group', 'buddyboss-platform' ); ?></font></a>
 																				</td>
 																			</tr>
 																			</tbody>
@@ -476,7 +476,7 @@ class BP_Email_Tokens {
 								</td>
 
 								<td align="right">
-									<a class="button-primary" href="<?php echo bp_get_group_permalink( $group ); ?>">
+									<a class="button-primary" href="<?php echo esc_url( bp_get_group_permalink( $group ) ); ?>">
 										<?php
 										$joined_status = 'unknown';
 										$recepients    = $bp_email->get_to();
@@ -1293,7 +1293,7 @@ class BP_Email_Tokens {
 												</tr>
 												<tr>
 													<td class="mobile-text-center">
-														<div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( floor( $settings['body_text_size'] * 1.25 ) . 'px' ); ?>; color: <?php echo esc_attr( $settings['body_secondary_text_color'] ); ?>; line-height: <?php echo esc_attr( floor( $settings['body_text_size'] * 1.75 ) . 'px' ); ?>;"><?php echo bp_core_get_user_displayname( $member_id, $receiver_id ); ?></div>
+														<div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( floor( $settings['body_text_size'] * 1.25 ) . 'px' ); ?>; color: <?php echo esc_attr( $settings['body_secondary_text_color'] ); ?>; line-height: <?php echo esc_attr( floor( $settings['body_text_size'] * 1.75 ) . 'px' ); ?>;"><?php echo esc_html( bp_core_get_user_displayname( $member_id, $receiver_id ) ); ?></div>
 														<div class="spacer" style="font-size: 2px; line-height: 2px; height: 2px;">&nbsp;</div>
 														<p style="opacity: 0.7; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( floor( $settings['body_text_size'] * 0.8125 ) . 'px' ); ?>; color : <?php echo esc_attr( $settings['body_text_color'] ); ?>; margin: 0;">
 															@<?php echo bp_activity_get_user_mentionname( $member_id ); ?>
@@ -1459,7 +1459,7 @@ class BP_Email_Tokens {
 								<tr>
 									<td>
 										<div style="color: <?php echo esc_attr( $settings['body_text_color'] ); ?>; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; letter-spacing: -0.24px; line-height: <?php echo esc_attr( floor( $settings['body_text_size'] * 1.625 ) . 'px' ); ?>;">
-											<?php echo wpautop( $group_excerpt ); ?>
+											<?php echo wp_kses_post( wpautop( $group_excerpt ) ); ?>
 										</div>
 									</td>
 								</tr>
@@ -1518,7 +1518,7 @@ class BP_Email_Tokens {
 						<tr>
 							<td>
 								<div style="color: <?php echo esc_attr( $settings['body_text_color'] ); ?>; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; letter-spacing: -0.24px; line-height: <?php echo esc_attr( floor( $settings['body_text_size'] * 1.625 ) . 'px' ); ?>;">
-									<?php echo wpautop( $tokens['invite.message'] ); ?>
+									<?php echo wp_kses_post( wpautop( $tokens['invite.message'] ) ); ?>
 								</div>
 							</td>
 						</tr>
@@ -1619,7 +1619,7 @@ class BP_Email_Tokens {
 											<tr>
 												<td>
 													<div style="color: <?php echo esc_attr( $settings['body_text_color'] ); ?>; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; letter-spacing: -0.24px; line-height: <?php echo esc_attr( floor( $settings['body_text_size'] * 1.625 ) . 'px' ); ?>;">
-														<?php echo wpautop( $formatted_tokens['reply.content'] ); ?>
+														<?php echo wp_kses_post( wpautop( $formatted_tokens['reply.content'] ) ); ?>
 													</div>
 												</td>
 											</tr>
@@ -1725,7 +1725,7 @@ class BP_Email_Tokens {
 											<tr>
 												<td>
 													<div style="color: <?php echo esc_attr( $settings['body_text_color'] ); ?>; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; letter-spacing: -0.24px; line-height: <?php echo esc_attr( floor( $settings['body_text_size'] * 1.625 ) . 'px' ); ?>;">
-														<?php echo wpautop( $formatted_tokens['discussion.content'] ); ?>
+														<?php echo wp_kses_post( wpautop( $formatted_tokens['discussion.content'] ) ); ?>
 													</div>
 												</td>
 											</tr>
@@ -2157,7 +2157,7 @@ class BP_Email_Tokens {
 								</a>
 							</td>
 							<td width="88%" style="vertical-align: middle;">
-								<div style="color: <?php echo esc_attr( $settings['body_secondary_text_color'] ); ?>; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; line-height: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; letter-spacing: -0.24px;"><?php echo bp_core_get_user_displayname( $activity->user_id ); ?></div>
+								<div style="color: <?php echo esc_attr( $settings['body_secondary_text_color'] ); ?>; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; line-height: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; letter-spacing: -0.24px;"><?php echo esc_html( bp_core_get_user_displayname( $activity->user_id ) ); ?></div>
 							</td>
 						</tr>
 						</tbody>
@@ -2398,7 +2398,7 @@ class BP_Email_Tokens {
 									<tr>
 										<td>
 											<div style="color: <?php echo esc_attr( $settings['body_text_color'] ); ?>; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; letter-spacing: -0.24px; line-height: <?php echo esc_attr( floor( $settings['body_text_size'] * 1.625 ) . 'px' ); ?>;">
-												<?php echo wpautop( $formatted_tokens['discussion.content'] ); ?>
+												<?php echo wp_kses_post( wpautop( $formatted_tokens['discussion.content'] ) ); ?>
 											</div>
 										</td>
 									</tr>
@@ -2478,7 +2478,7 @@ class BP_Email_Tokens {
 									</a>
 								</td>
 								<td width="88%" style="vertical-align: middle;">
-									<div style="color: <?php echo esc_attr( $settings['body_secondary_text_color'] ); ?>; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; line-height: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; letter-spacing: -0.24px;"><?php echo bp_core_get_user_displayname( $activity->user_id ); ?></div>
+									<div style="color: <?php echo esc_attr( $settings['body_secondary_text_color'] ); ?>; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; line-height: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; letter-spacing: -0.24px;"><?php echo esc_html( bp_core_get_user_displayname( $activity->user_id ) ); ?></div>
 								</td>
 							</tr>
 						</tbody>
@@ -2730,7 +2730,7 @@ class BP_Email_Tokens {
 												<td>
 													<div class="bb-content-body" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; letter-spacing: -0.24px; line-height: <?php echo esc_attr( floor( $settings['body_text_size'] * 1.625 ) . 'px' ); ?>; color: <?php echo esc_attr( $settings['body_secondary_text_color'] ); ?>;">
 														<?php
-														echo wpautop( $comment_reply );
+														echo wp_kses_post( wpautop( $comment_reply ) );
 														?>
 													</div>
 												</td>

@@ -116,7 +116,7 @@ function bp_message_thread() {
  * Output the ID of the current thread in the loop.
  */
 function bp_message_thread_id() {
-	echo bp_get_message_thread_id();
+	echo esc_attr( bp_get_message_thread_id() );
 }
 	/**
 	 * Get the ID of the current thread in the loop.
@@ -164,7 +164,7 @@ function bp_get_message_thread_subject() {
  * Output an excerpt from the current message in the loop.
  */
 function bp_message_thread_excerpt() {
-	echo bp_get_message_thread_excerpt();
+	echo wp_kses_post( bp_get_message_thread_excerpt() );
 }
 	/**
 	 * Generate an excerpt from the current message in the loop.
@@ -196,7 +196,7 @@ function bp_get_message_thread_excerpt() {
  * @since BuddyPress 2.0.0
  */
 function bp_message_thread_content() {
-	echo bp_get_message_thread_content();
+	echo wp_kses_post( bp_get_message_thread_content() );
 }
 	/**
 	 * Return the thread's last message content.
@@ -283,7 +283,7 @@ function bp_get_message_thread_to() {
  *                       should be generated. Default: ID of logged-in user.
  */
 function bp_message_thread_view_link( $thread_id = 0, $user_id = null ) {
-	echo bp_get_message_thread_view_link( $thread_id, $user_id );
+	echo wp_kses_post( bp_get_message_thread_view_link( $thread_id, $user_id ) );
 }
 	/**
 	 * Get the permalink of a particular thread.
@@ -576,7 +576,7 @@ function bp_get_message_thread_unread_count() {
  * @param int|bool $thread_id Optional. ID of the thread. Defaults to current thread ID.
  */
 function bp_message_thread_total_count( $thread_id = false ) {
-	echo bp_get_message_thread_total_count( $thread_id );
+	echo esc_html( bp_get_message_thread_total_count( $thread_id ) );
 }
 	/**
 	 * Get the current thread's total message count.
@@ -625,7 +625,7 @@ function bp_get_message_thread_total_count( $thread_id = false ) {
  * @param int|bool $thread_id Optional. ID of the thread. Default: current thread ID.
  */
 function bp_message_thread_total_and_unread_count( $thread_id = false ) {
-	echo bp_get_message_thread_total_and_unread_count( $thread_id );
+	echo wp_kses_post( bp_get_message_thread_total_and_unread_count( $thread_id ) );
 }
 	/**
 	 * Get markup for the current thread's total and unread count.
@@ -678,7 +678,7 @@ function bp_get_message_thread_last_post_date_raw() {
  * Output the nicely formatted date of the last post in the current thread.
  */
 function bp_message_thread_last_post_date() {
-	echo bp_get_message_thread_last_post_date();
+	echo esc_html( bp_get_message_thread_last_post_date() );
 }
 	/**
 	 * Get the nicely formatted date of the last post in the current thread.
@@ -705,7 +705,7 @@ function bp_get_message_thread_last_post_date() {
  * @param array|string $args See {@link bp_get_message_thread_avatar()}.
  */
 function bp_message_thread_avatar( $args = '' ) {
-	echo bp_get_message_thread_avatar( $args );
+	echo wp_kses_post( bp_get_message_thread_avatar( $args ) );
 }
 	/**
 	 * Return the avatar for the last sender in the current message thread.
@@ -781,7 +781,7 @@ function bp_get_message_thread_avatar( $args = '' ) {
  * @return int $unread_count Total inbox unread count for user.
  */
 function bp_total_unread_messages_count( $user_id = 0 ) {
-	echo bp_get_total_unread_messages_count( $user_id );
+	echo esc_html( bp_get_total_unread_messages_count( $user_id ) );
 }
 	/**
 	 * Get the unread messages count for the current inbox.
@@ -808,7 +808,7 @@ function bp_get_total_unread_messages_count( $user_id = 0 ) {
  * Output the pagination HTML for the current thread loop.
  */
 function bp_messages_pagination() {
-	echo bp_get_messages_pagination();
+	echo wp_kses_post( bp_get_messages_pagination() );
 }
 	/**
 	 * Get the pagination HTML for the current thread loop.
@@ -1153,7 +1153,7 @@ function bp_get_message_notice_id() {
  * Output the post date of the current notice in the loop.
  */
 function bp_message_notice_post_date() {
-	echo bp_get_message_notice_post_date();
+	echo esc_html( bp_get_message_notice_post_date() );
 }
 	/**
 	 * Get the post date of the current notice in the loop.
@@ -1201,7 +1201,7 @@ function bp_get_message_notice_subject() {
  * Output the text of the current notice in the loop.
  */
 function bp_message_notice_text() {
-	echo bp_get_message_notice_text();
+	echo esc_html( bp_get_message_notice_text() );
 }
 	/**
 	 * Get the text of the current notice in the loop.
@@ -1312,7 +1312,7 @@ function bp_get_message_activate_deactivate_text() {
  * @since BuddyPress 1.5.0
  */
 function bp_messages_slug() {
-	echo bp_get_messages_slug();
+	echo esc_attr( bp_get_messages_slug() );
 }
 	/**
 	 * Return the messages component slug.
@@ -1408,7 +1408,7 @@ function bp_get_send_private_message_link() {
  * @since BuddyPress 1.2.6
  */
 function bp_send_private_message_button() {
-	echo bp_get_send_message_button();
+	echo wp_kses_post( bp_get_send_message_button() );
 }
 
 /**
@@ -1420,7 +1420,7 @@ function bp_send_private_message_button() {
  * @param array|string $args See {@link bp_get_send_message_button()}.
  */
 function bp_send_message_button( $args = '' ) {
-	echo bp_get_send_message_button( $args );
+	echo wp_kses_post( bp_get_send_message_button( $args ) );
 }
 
 /**
@@ -1549,15 +1549,15 @@ function bp_message_get_recipient_tabs() {
 			<li id="un-<?php echo esc_attr( $recipient ); ?>" class="friend-tab">
 				<span>
 				<?php
-					echo bp_core_fetch_avatar(
+					echo wp_kses_post( bp_core_fetch_avatar(
 						array(
 							'item_id' => $user_id,
 							'type'    => 'thumb',
 							'width'   => 15,
 							'height'  => 15,
 						)
-					);
-					echo bp_core_get_userlink( $user_id );
+					) );
+					echo wp_kses_post( bp_core_get_userlink( $user_id ) );
 				?>
 				</span>
 			</li>
@@ -2192,7 +2192,7 @@ function bp_get_the_thread_message_date_sent() {
  * @since BuddyPress 1.1.0
  */
 function bp_the_thread_message_content() {
-	echo bp_get_the_thread_message_content();
+	echo wp_kses_post( bp_get_the_thread_message_content() );
 }
 	/**
 	 * Get the content of the current message in the loop.
@@ -2227,7 +2227,7 @@ function bp_get_the_thread_message_content() {
  * @since BuddyBoss 2.1.4
  */
 function bb_the_thread_message_excerpt() {
-	echo bb_get_the_thread_message_excerpt();
+	echo wp_kses_post( bb_get_the_thread_message_excerpt() );
 }
 /**
  * Get the excerpt of the current message in the loop.
@@ -2708,7 +2708,7 @@ function bb_get_the_thread_message_sent_time() {
  * @since BuddyBoss 2.1.4
  */
 function bb_messages_archived_slug() {
-	echo bb_get_messages_archived_slug();
+	echo esc_attr( bb_get_messages_archived_slug() );
 }
 
 /**
@@ -2769,7 +2769,7 @@ function bb_get_messages_archived_url() {
  *                       should be generated. Default: ID of logged-in user.
  */
 function bb_message_archived_thread_view_link( $thread_id = 0, $user_id = null ) {
-	echo bb_get_message_archived_thread_view_link( $thread_id, $user_id );
+	echo wp_kses_post( bb_get_message_archived_thread_view_link( $thread_id, $user_id ) );
 }
 /**
  * Get the permalink of a particular archived thread.

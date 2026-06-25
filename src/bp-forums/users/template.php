@@ -22,7 +22,7 @@ defined( 'ABSPATH' ) || exit;
  * @uses bbp_get_user_id() To get the user id
  */
 function bbp_user_id( $user_id = 0, $displayed_user_fallback = true, $current_user_fallback = false ) {
-	echo bbp_get_user_id( $user_id, $displayed_user_fallback, $current_user_fallback );
+	echo esc_attr( bbp_get_user_id( $user_id, $displayed_user_fallback, $current_user_fallback ) );
 }
 	/**
 	 * Return a validated user id
@@ -67,7 +67,7 @@ function bbp_get_user_id( $user_id = 0, $displayed_user_fallback = true, $curren
  * @uses bbp_get_current_user_id() To get the current user id
  */
 function bbp_current_user_id() {
-	echo bbp_get_current_user_id();
+	echo esc_attr( bbp_get_current_user_id() );
 }
 	/**
 	 * Return ID of current user
@@ -90,7 +90,7 @@ function bbp_get_current_user_id() {
  * @uses bbp_get_displayed_user_id() To get the displayed user id
  */
 function bbp_displayed_user_id() {
-	echo bbp_get_displayed_user_id();
+	echo esc_attr( bbp_get_displayed_user_id() );
 }
 	/**
 	 * Return ID of displayed user
@@ -166,7 +166,7 @@ function bbp_get_displayed_user_field( $field = '', $filter = 'display' ) {
  * @uses bbp_get_current_user_name() To get the current user name
  */
 function bbp_current_user_name() {
-	echo bbp_get_current_user_name();
+	echo esc_html( bbp_get_current_user_name() );
 }
 	/**
 	 * Return name of current user
@@ -194,7 +194,7 @@ function bbp_get_current_user_name() {
  * @uses bbp_get_current_user_avatar() To get the current user avatar
  */
 function bbp_current_user_avatar( $size = 40 ) {
-	echo bbp_get_current_user_avatar( $size );
+	echo wp_kses_post( bbp_get_current_user_avatar( $size ) );
 }
 
 	/**
@@ -232,7 +232,7 @@ function bbp_get_current_user_avatar( $size = 40 ) {
  * @uses bbp_get_user_profile_link() To get user profile link
  */
 function bbp_user_profile_link( $user_id = 0 ) {
-	echo bbp_get_user_profile_link( $user_id );
+	echo wp_kses_post( bbp_get_user_profile_link( $user_id ) );
 }
 	/**
 	 * Return link to the profile page of a user
@@ -254,7 +254,7 @@ function bbp_get_user_profile_link( $user_id = 0 ) {
  * @param array $args before|after|user_id|force
  */
 function bbp_user_nicename( $user_id = 0, $args = array() ) {
-	echo bbp_get_user_nicename( $user_id, $args );
+	echo esc_html( bbp_get_user_nicename( $user_id, $args ) );
 }
 	/**
 	 * Return a users nicename to the screen
@@ -372,7 +372,7 @@ function bbp_get_user_profile_url( $user_id = 0, $user_nicename = '' ) {
  * @uses bbp_get_user_profile_edit_link() To get user profile edit link
  */
 function bbp_user_profile_edit_link( $user_id = 0 ) {
-	echo bbp_get_user_profile_edit_link( $user_id );
+	echo wp_kses_post( bbp_get_user_profile_edit_link( $user_id ) );
 }
 	/**
 	 * Return link to the profile edit page of a user
@@ -526,7 +526,7 @@ function bbp_get_user_display_role( $user_id = 0 ) {
  * @uses bbp_get_admin_link() To get the admin link
  */
 function bbp_admin_link( $args = '' ) {
-	echo bbp_get_admin_link( $args );
+	echo wp_kses_post( bbp_get_admin_link( $args ) );
 }
 	/**
 	 * Return the link to the admin section
@@ -633,7 +633,7 @@ function bbp_get_author_ip( $args = '' ) {
  * @uses bbp_get_author_display_name() to get the author name
  */
 function bbp_author_display_name( $post_id = 0 ) {
-	echo bbp_get_author_display_name( $post_id );
+	echo esc_html( bbp_get_author_display_name( $post_id ) );
 }
 
 	/**
@@ -689,7 +689,7 @@ function bbp_get_author_display_name( $post_id = 0 ) {
  * @uses bbp_get_author_email() to get the author email
  */
 function bbp_author_email( $post_id = 0 ) {
-	echo bbp_get_author_email( $post_id );
+	echo esc_html( bbp_get_author_email( $post_id ) );
 }
 
 	/**
@@ -745,7 +745,7 @@ function bbp_get_author_email( $post_id = 0 ) {
  * @uses bbp_get_author_url() to get the author url
  */
 function bbp_author_url( $post_id = 0 ) {
-	echo bbp_get_author_url( $post_id );
+	echo esc_url( bbp_get_author_url( $post_id ) );
 }
 
 	/**
@@ -864,7 +864,7 @@ function bbp_get_favorites_permalink( $user_id = 0 ) {
  * @uses bbp_get_user_favorites_link() To get the user favorites link
  */
 function bbp_user_favorites_link( $args = array(), $user_id = 0, $wrap = true ) {
-	echo bbp_get_user_favorites_link( $args, $user_id, $wrap );
+	echo wp_kses_post( bbp_get_user_favorites_link( $args, $user_id, $wrap ) );
 }
 	/**
 	 * User favorites link
@@ -1019,7 +1019,7 @@ function bbp_get_subscriptions_permalink( $user_id = 0 ) {
  * @uses bbp_get_user_subscribe_link() To get the subscribe link
  */
 function bbp_user_subscribe_link( $args = '', $user_id = 0, $wrap = true ) {
-	echo bbp_get_user_subscribe_link( $args, $user_id, $wrap );
+	echo wp_kses_post( bbp_get_user_subscribe_link( $args, $user_id, $wrap ) );
 }
 
 /**
@@ -1640,7 +1640,7 @@ function bbp_user_lost_pass_fields() {
  * @todo deprecate?
  */
 function bbp_author_link( $args = '' ) {
-	echo bbp_get_author_link( $args );
+	echo wp_kses_post( bbp_get_author_link( $args ) );
 }
 	/**
 	 * Return the author link of the post

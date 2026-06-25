@@ -45,7 +45,7 @@ $product_thumb = get_the_post_thumbnail_url();
 					<?php
 					$category = wc_get_product_category_list( $product_id );
 					if ( $category ) {
-						echo wc_get_product_category_list( $product_id, '<span class="middot">&middot;</span>' );
+						echo wp_kses_post( wc_get_product_category_list( $product_id, '<span class="middot">&middot;</span>' ) );
 					}
 					?>
 				</span>

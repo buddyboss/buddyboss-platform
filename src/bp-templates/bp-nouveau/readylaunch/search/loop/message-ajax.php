@@ -21,7 +21,7 @@ global $current_message; ?>
 				<?php echo stripslashes( wp_strip_all_tags( $current_message->subject ) ); ?>
 			</div>
 			<div class="item-desc">
-				<?php esc_html_e( 'From:', 'buddyboss-platform' ); ?> <?php echo bp_core_get_user_displayname( $current_message->sender_id ); ?>
+				<?php esc_html_e( 'From:', 'buddyboss-platform' ); ?> <?php echo esc_html( bp_core_get_user_displayname( $current_message->sender_id ) ); ?>
 			</div>
 		</div>
 	</a>

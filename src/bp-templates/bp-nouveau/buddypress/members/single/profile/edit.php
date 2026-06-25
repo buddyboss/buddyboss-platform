@@ -24,7 +24,7 @@ if ( bp_has_profile( 'profile_group_id=' . bp_get_current_profile_group_id() ) )
 			printf(
 			/* translators: %s = profile field group name */
 				esc_html__( 'Edit "%s" Information', 'buddyboss-platform' ),
-				bp_get_the_profile_group_name()
+				esc_html( bp_get_the_profile_group_name() )
 			)
 			?>
 		</h2>

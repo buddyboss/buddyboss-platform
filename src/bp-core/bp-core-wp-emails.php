@@ -161,7 +161,7 @@ if ( ! function_exists( 'wp_notify_postauthor' ) ) :
 			}
 			?>
 			<?php echo $title; ?>
-			<a href="<?php echo get_permalink( $comment->comment_post_ID ); ?>"><?php echo $post->post_title; ?></a>
+			<a href="<?php echo esc_url( get_permalink( $comment->comment_post_ID ) ); ?>"><?php echo $post->post_title; ?></a>
 		</p>
 		<table cellspacing="0" cellpadding="0" border="0" width="100%">
 			<?php if ( ! empty( $comment->user_id ) ) { ?>
@@ -191,7 +191,7 @@ if ( ! function_exists( 'wp_notify_postauthor' ) ) :
 								</td>
 								<td width="88%" style="vertical-align: middle;">
 									<div style="color: <?php echo esc_attr( $settings['body_secondary_text_color'] ); ?>; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; line-height: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; letter-spacing: -0.24px;">
-										<?php echo bp_core_get_user_displayname( $comment->user_id, $post->post_author ); ?>
+										<?php echo esc_html( bp_core_get_user_displayname( $comment->user_id, $post->post_author ) ); ?>
 									</div>
 								</td>
 							</tr>
@@ -220,7 +220,7 @@ if ( ! function_exists( 'wp_notify_postauthor' ) ) :
 									<tr>
 										<td>
 											<div style="color: <?php echo esc_attr( $settings['body_text_color'] ); ?>; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; letter-spacing: -0.24px; line-height: <?php echo esc_attr( floor( $settings['body_text_size'] * 1.625 ) . 'px' ); ?>;">
-												<?php echo wpautop( $comment_content ); ?>
+												<?php echo wp_kses_post( wpautop( $comment_content ) ); ?>
 											</div>
 										</td>
 									</tr>
@@ -505,7 +505,7 @@ if ( ! function_exists( 'wp_notify_moderator' ) ) :
 								</td>
 								<td width="88%" style="vertical-align: middle;">
 									<div style="color: <?php echo esc_attr( $settings['body_secondary_text_color'] ); ?>; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; line-height: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; letter-spacing: -0.24px;">
-										<?php echo bp_core_get_user_displayname( $comment->user_id, $post->post_author ); ?>
+										<?php echo esc_html( bp_core_get_user_displayname( $comment->user_id, $post->post_author ) ); ?>
 									</div>
 								</td>
 							</tr>
@@ -534,7 +534,7 @@ if ( ! function_exists( 'wp_notify_moderator' ) ) :
 									<tr>
 										<td>
 											<div style="color: <?php echo esc_attr( $settings['body_text_color'] ); ?>; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; letter-spacing: -0.24px; line-height: <?php echo esc_attr( floor( $settings['body_text_size'] * 1.625 ) . 'px' ); ?>;">
-												<?php echo wpautop( $comment_content ); ?>
+												<?php echo wp_kses_post( wpautop( $comment_content ) ); ?>
 											</div>
 										</td>
 									</tr>
@@ -556,7 +556,7 @@ if ( ! function_exists( 'wp_notify_moderator' ) ) :
 
 			<tr>
 				<td>
-					<a href="<?php echo get_comment_link( $comment ); ?>" target="_blank" rel="nofollow"
+					<a href="<?php echo esc_url( get_comment_link( $comment ) ); ?>" target="_blank" rel="nofollow"
 					   style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; color: <?php echo $settings['highlight_color']; ?>; text-decoration: none; display: inline-block; border: 1px solid <?php echo $settings['highlight_color']; ?>; border-radius: 100px; min-width: 64px; text-align: center; height: 16px; line-height: 16px; padding: 8px;"><?php esc_html_e( 'Reply', 'buddyboss-platform' ); ?></a>
 				</td>
 			</tr>

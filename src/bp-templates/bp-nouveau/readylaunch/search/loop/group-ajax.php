@@ -26,7 +26,7 @@ defined( 'ABSPATH' ) || exit;
 		<div class="entry-meta">
 			<div class="item-meta group-details">
 				<?php
-				echo bp_create_excerpt(
+				echo wp_kses_post( bp_create_excerpt(
 					bp_get_group_description(),
 					255,
 					array(
@@ -34,7 +34,7 @@ defined( 'ABSPATH' ) || exit;
 						'strip_tags' => true,
 						'ending'     => '&hellip;',
 					)
-				);
+				) );
 				?>
 			</div><!-- //.group_description -->
 			<span class="item-meta">

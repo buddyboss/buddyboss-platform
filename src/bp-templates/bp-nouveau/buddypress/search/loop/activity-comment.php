@@ -31,13 +31,13 @@ $bp_activity_url       = bp_activity_get_permalink( bp_get_activity_id() );
 			<?php if ( bp_nouveau_activity_has_content() ) : ?>
 				<div class="activity-inner">
 					<?php
-					echo bp_create_excerpt(
+					echo wp_kses_post( bp_create_excerpt(
 						bp_get_activity_content_body(),
 						100,
 						array(
 							'ending' => '&hellip;'
 						)
-					);
+					) );
 					?>
 				</div>
 			<?php endif; ?>
