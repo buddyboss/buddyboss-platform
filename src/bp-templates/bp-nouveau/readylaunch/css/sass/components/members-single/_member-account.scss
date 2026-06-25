@@ -420,11 +420,6 @@
 
 	.is_loading {
 
-		.bb-loading-bg {
-			background-color: var(--bb-rl-background-secondary-color);
-			animation: fade-in-out infinite 2s ease;
-		}
-
 		.subscription-items_loading {
 			display: flex;
 			align-items: center;
