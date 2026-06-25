@@ -2287,3 +2287,84 @@ function bb_moderation_moderated_user_ids_sql( $user_id = 0 ) {
 
 	return $retval;
 }
+
+/**
+ * Default reporting categories that ship with BuddyBoss Platform.
+ *
+ * Keeping the source strings here lets us re-translate them at render
+ * time without depending on the locale that was active during install.
+ *
+ * @since [BBVERSION]
+ *
+ * @return array
+ */
+function bp_moderation_get_default_report_categories() {
+	return array(
+		'offensive'      => array(
+			'name'        => __( 'Offensive', 'buddyboss' ),
+			'description' => __( 'Contains abusive or derogatory content', 'buddyboss' ),
+		),
+		'inappropriate'  => array(
+			'name'        => __( 'Inappropriate', 'buddyboss' ),
+			'description' => __( 'Contains mature or sensitive content', 'buddyboss' ),
+		),
+		'misinformation' => array(
+			'name'        => __( 'Misinformation', 'buddyboss' ),
+			'description' => __( 'Contains misleading or false information', 'buddyboss' ),
+		),
+		'harassment'     => array(
+			'name'        => __( 'Harassment', 'buddyboss' ),
+			'description' => __( 'Harassment or bullying behavior', 'buddyboss' ),
+		),
+		'suspicious'     => array(
+			'name'        => __( 'Suspicious', 'buddyboss' ),
+			'description' => __( 'Contains spam, fake content or potential malware', 'buddyboss' ),
+		),
+		'other'          => array(
+			'name'        => __( 'Other', 'buddyboss' ),
+			'description' => '',
+		),
+	);
+}
+
+/**
+ * Translate a default reporting-category term's name/description on the fly.
+ *
+ * Site-created terms (and default terms whose name/description has been
+ * customised by the site admin) are returned untouched.
+ *
+ * @param WP_Term|object $term Term object.
+ *
+ * @since [BBVERSION]
+ * 
+ * @return WP_Term|object
+ */
+function bp_moderation_maybe_translate_report_term( $term ) {
+	if ( empty( $term ) || empty( $term->term_id ) || 'bpm_category' !== $term->taxonomy ) {
+		return $term;
+	}
+
+	$key = get_term_meta( (int) $term->term_id, '_bp_moderation_default_key', true );
+
+	// Fallback for installs that pre-date the meta marker: match by slug.
+	if ( empty( $key ) && ! empty( $term->slug ) ) {
+		$defaults = bp_moderation_get_default_report_categories();
+		if ( isset( $defaults[ $term->slug ] ) ) {
+			$key = $term->slug;
+		}
+	}
+
+	if ( empty( $key ) ) {
+		return $term;
+	}
+
+	$defaults = bp_moderation_get_default_report_categories();
+	if ( ! isset( $defaults[ $key ] ) ) {
+		return $term;
+	}
+
+	$term->name        = $defaults[ $key ]['name'];
+	$term->description = $defaults[ $key ]['description'];
+
+	return $term;
+}
