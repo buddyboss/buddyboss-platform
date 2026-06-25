@@ -355,7 +355,7 @@ function bbp_new_topic_handler( $action = '' ) {
 	if ( bbp_allow_topic_tags() && ! empty( $_POST['bbp_topic_tags'] ) ) {
 
 		// Escape tag input.
-		$terms = esc_attr( strip_tags( $_POST['bbp_topic_tags'] ) );
+		$terms = esc_attr( wp_strip_all_tags( $_POST['bbp_topic_tags'] ) );
 
 		// Explode by comma.
 		if ( strstr( $terms, ',' ) ) {
@@ -745,7 +745,7 @@ function bbp_edit_topic_handler( $action = '' ) {
 	if ( bbp_allow_topic_tags() && current_user_can( 'assign_topic_tags' ) && ! empty( $_POST['bbp_topic_tags'] ) ) {
 
 		// Escape tag input.
-		$terms = esc_attr( strip_tags( $_POST['bbp_topic_tags'] ) );
+		$terms = esc_attr( wp_strip_all_tags( $_POST['bbp_topic_tags'] ) );
 
 		// Explode by comma.
 		if ( strstr( $terms, ',' ) ) {
@@ -819,7 +819,7 @@ function bbp_edit_topic_handler( $action = '' ) {
 
 		// Revision Reason.
 		if ( ! empty( $_POST['bbp_topic_edit_reason'] ) ) {
-			$topic_edit_reason = esc_attr( strip_tags( $_POST['bbp_topic_edit_reason'] ) );
+			$topic_edit_reason = esc_attr( wp_strip_all_tags( $_POST['bbp_topic_edit_reason'] ) );
 		}
 
 		// Update revision log.
@@ -1355,7 +1355,7 @@ function bbp_merge_topic_handler( $action = '' ) {
 	if ( strtotime( $source_topic->post_date ) < strtotime( $destination_topic->post_date ) ) {
 
 		// Set destination topic post_date to 1 second before source topic.
-		$destination_post_date = date( 'Y-m-d H:i:s', strtotime( $source_topic->post_date ) - 1 );
+		$destination_post_date = gmdate( 'Y-m-d H:i:s', strtotime( $source_topic->post_date ) - 1 );
 
 		// Update destination topic.
 		wp_update_post(
@@ -1703,7 +1703,7 @@ function bbp_split_topic_handler( $action = '' ) {
 
 					// Use the new title that was passed.
 					if ( ! empty( $_POST['bbp_topic_split_destination_title'] ) ) {
-						$destination_topic_title = esc_attr( strip_tags( $_POST['bbp_topic_split_destination_title'] ) );
+						$destination_topic_title = esc_attr( wp_strip_all_tags( $_POST['bbp_topic_split_destination_title'] ) );
 
 						// Use the source topic title.
 					} else {
@@ -1757,7 +1757,7 @@ function bbp_split_topic_handler( $action = '' ) {
 	if ( strtotime( $from_reply->post_date ) < strtotime( $destination_topic->post_date ) ) {
 
 		// Set destination topic post_date to 1 second before from reply.
-		$destination_post_date = date( 'Y-m-d H:i:s', strtotime( $from_reply->post_date ) - 1 );
+		$destination_post_date = gmdate( 'Y-m-d H:i:s', strtotime( $from_reply->post_date ) - 1 );
 
 		// Update destination topic.
 		wp_update_post(
@@ -3788,7 +3788,7 @@ function bbp_topic_content_autoembed_paragraph( $content, $topic_id = 0 ) {
 		$embed_urls = $embeds_array = array();
 		$flag       = true;
 
-		if ( preg_match( '/(https?:\/\/[^\s<>"]+)/i', strip_tags( $content ) ) ) {
+		if ( preg_match( '/(https?:\/\/[^\s<>"]+)/i', wp_strip_all_tags( $content ) ) ) {
 			preg_match_all( '/(https?:\/\/[^\s<>"]+)/i', $content, $embed_urls );
 		}
 

@@ -151,7 +151,7 @@ class PHPWind extends BBP_Converter_Base {
 		$this->field_map[] = array(
 			'to_type'      => 'bbs_forum',
 			'to_fieldname' => 'post_modified_gmt',
-			'default'      => date( 'Y-m-d H:i:s' ),
+			'default'      => gmdate( 'Y-m-d H:i:s' ),
 		);
 
 		/** Topic Section */

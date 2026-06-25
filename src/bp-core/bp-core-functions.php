@@ -1681,7 +1681,7 @@ function bp_core_record_activity() {
 	}
 
 	// updated users last activity on each page refresh.
-	bp_update_user_last_activity( $user_id, date( 'Y-m-d H:i:s', $current_time ) );
+	bp_update_user_last_activity( $user_id, gmdate( 'Y-m-d H:i:s', $current_time ) );
 }
 add_action( 'wp_head', 'bp_core_record_activity' );
 
@@ -2306,7 +2306,7 @@ function bp_verify_nonce_request( $action = '', $query_arg = '_wpnonce' ) {
 
 	// Parse home_url() into pieces to remove query-strings, strange characters,
 	// and other funny things that plugins might to do to it.
-	$parsed_home = parse_url( home_url( '/', ( is_ssl() ? 'https' : 'http' ) ) );
+	$parsed_home = wp_parse_url( home_url( '/', ( is_ssl() ? 'https' : 'http' ) ) );
 
 	// Maybe include the port, if it's included in home_url().
 	if ( isset( $parsed_home['port'] ) ) {
@@ -8696,7 +8696,7 @@ if ( ! function_exists( 'bb_filter_input_string' ) ) {
 		 * the `<script>` and `<style>` tags. E.g. `strip_tags( '<script>something</script>' )`
 		 * will return 'something'. wp_strip_all_tags will return ''
 		 */
-		$string = $require_array ? array_map( 'strip_tags', $string ) : strip_tags( $string );
+		$string = $require_array ? array_map( 'strip_tags', $string ) : wp_strip_all_tags( $string );
 
 		if ( ! in_array( FILTER_FLAG_NO_ENCODE_QUOTES, $flags, true ) ) {
 			$string = str_replace( array( "'", '"' ), array( '&#39;', '&#34;' ), $string );
@@ -8738,7 +8738,7 @@ if ( ! function_exists( 'bb_filter_var_string' ) ) {
 		 * the `<script>` and `<style>` tags. E.g. `strip_tags( '<script>something</script>' )`
 		 * will return 'something'. wp_strip_all_tags will return ''
 		 */
-		$string = $require_array ? array_map( 'strip_tags', $string ) : strip_tags( $string );
+		$string = $require_array ? array_map( 'strip_tags', $string ) : wp_strip_all_tags( $string );
 
 		if ( ! in_array( FILTER_FLAG_NO_ENCODE_QUOTES, $flags, true ) ) {
 			$string = str_replace( array( "'", '"' ), array( '&#39;', '&#34;' ), $string );

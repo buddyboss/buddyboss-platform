@@ -200,9 +200,9 @@ class BP_XProfile_Field_Type_Datebox extends BP_XProfile_Field_Type {
 
 			// If Unix timestamp.
 			if ( is_numeric( $date ) ) {
-				$day   = date( 'j', $date );
-				$month = date( 'F', $date );
-				$year  = date( 'Y', $date );
+				$day   = gmdate( 'j', $date );
+				$month = gmdate( 'F', $date );
+				$year  = gmdate( 'Y', $date );
 
 				// If MySQL timestamp.
 			} else {
@@ -273,8 +273,8 @@ class BP_XProfile_Field_Type_Datebox extends BP_XProfile_Field_Type {
 				$settings = $this->get_field_settings( $this->field_obj->id );
 
 				if ( 'relative' === $settings['range_type'] ) {
-					$start = date( 'Y' ) + $settings['range_relative_start'];
-					$end   = date( 'Y' ) + $settings['range_relative_end'];
+					$start = gmdate( 'Y' ) + $settings['range_relative_start'];
+					$end   = gmdate( 'Y' ) + $settings['range_relative_end'];
 				} else {
 					$start = $settings['range_absolute_start'];
 					$end   = $settings['range_absolute_end'];
@@ -381,8 +381,8 @@ class BP_XProfile_Field_Type_Datebox extends BP_XProfile_Field_Type {
 			'date_format'          => 'Y-m-d',
 			'date_format_custom'   => '',
 			'range_type'           => 'absolute',
-			'range_absolute_start' => date( 'Y' ) - 60,
-			'range_absolute_end'   => date( 'Y' ) + 10,
+			'range_absolute_start' => gmdate( 'Y' ) - 60,
+			'range_absolute_end'   => gmdate( 'Y' ) + 10,
 			'range_relative_start' => '-10',
 			'range_relative_end'   => '20',
 		);

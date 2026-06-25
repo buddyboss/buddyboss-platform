@@ -145,14 +145,14 @@ $F = bp_profile_search_escaped_form_data( $form_id );
 									if ( 'relative' === $date_range_type ) {
 										$range_relative_start = bp_xprofile_get_meta( $f->id, 'field', 'range_relative_start', true );
 										$range_relative_end   = bp_xprofile_get_meta( $f->id, 'field', 'range_relative_end', true );
-										$start                = date( 'Y' ) - abs( $range_relative_start );
-										$end                  = date( 'Y' ) + $range_relative_end;
+										$start                = gmdate( 'Y' ) - abs( $range_relative_start );
+										$end                  = gmdate( 'Y' ) + $range_relative_end;
 									} elseif ( 'absolute' === $date_range_type ) {
 										$start = bp_xprofile_get_meta( $f->id, 'field', 'range_absolute_start', true );
 										$end   = bp_xprofile_get_meta( $f->id, 'field', 'range_absolute_end', true );
 									} else {
-										$start = date( 'Y' ) - 50;// 50 years ago
-										$end   = date( 'Y' ) + 50;// 50 years in future
+										$start = gmdate( 'Y' ) - 50;// 50 years ago
+										$end   = gmdate( 'Y' ) + 50;// 50 years in future
 									}
 
 									for ( $i = $end; $i >= $start; $i -- ) {

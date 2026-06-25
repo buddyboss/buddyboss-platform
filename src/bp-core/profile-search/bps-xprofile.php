@@ -169,9 +169,9 @@ function bp_ps_xprofile_search( $f ) {
 			break;
 
 		case 'date_age_range':
-			$day   = date( 'j' );
-			$month = date( 'n' );
-			$year  = date( 'Y' );
+			$day   = gmdate( 'j' );
+			$month = gmdate( 'n' );
+			$year  = gmdate( 'Y' );
 
 			if ( isset( $value['max'] ) ) {
 				$ymin                    = $year - $value['max'] - 1;

@@ -926,7 +926,7 @@ function bp_nouveau_ajax_post_update() {
 			$activity_schedule_time     = sanitize_text_field( $activity_schedule_time );
 
 			// Convert 12-hour time format to 24-hour time format.
-			$activity_schedule_time_24hr = date( 'H:i', strtotime( $activity_schedule_time . ' ' . $activity_schedule_meridiem ) );
+			$activity_schedule_time_24hr = gmdate( 'H:i', strtotime( $activity_schedule_time . ' ' . $activity_schedule_meridiem ) );
 
 			// Combine date and time.
 			$activity_datetime = $activity_schedule_date_raw . ' ' . $activity_schedule_time_24hr;

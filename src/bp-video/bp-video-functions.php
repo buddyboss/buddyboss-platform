@@ -75,7 +75,7 @@ function bp_video_upload() {
 	$filetype = wp_check_filetype( $file_url );
 	$ext      = $filetype['ext'];
 	if ( empty( $ext ) ) {
-		$path = parse_url( $file_url, PHP_URL_PATH );
+		$path = wp_parse_url( $file_url, PHP_URL_PATH );
 		$ext  = pathinfo( basename( $path ), PATHINFO_EXTENSION );
 	}
 	// https://stackoverflow.com/questions/40995987/how-to-play-mov-files-in-video-tag/40999234#40999234.
@@ -2010,7 +2010,7 @@ function bp_video_delete_orphaned_attachments() {
 	$post_table              = $wpdb->posts;
 	$postmeta_table          = $wpdb->postmeta;
 	$six_hours_ago_timestamp = strtotime( '-6 hours', current_time( 'timestamp', 1 ) );
-	$six_hours_ago           = date( 'Y-m-d H:i:s', $six_hours_ago_timestamp );
+	$six_hours_ago           = gmdate( 'Y-m-d H:i:s', $six_hours_ago_timestamp );
 
 	$query = "SELECT {$post_table}.ID
 				FROM {$post_table}

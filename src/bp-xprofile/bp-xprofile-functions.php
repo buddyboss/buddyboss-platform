@@ -1548,7 +1548,7 @@ function bp_xprofile_maybe_format_datebox_post_data( $field_id ) {
 			if ( false !== $timestamp ) {
 
 				// Add the timestamp to the global $_POST that should contain the datebox data.
-				$_POST[ 'field_' . $field_id ] = date( 'Y-m-d H:i:s', $timestamp );
+				$_POST[ 'field_' . $field_id ] = gmdate( 'Y-m-d H:i:s', $timestamp );
 			}
 		}
 	}

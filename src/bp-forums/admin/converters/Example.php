@@ -113,22 +113,22 @@ class Example extends BBP_Converter_Base {
 		$this->field_map[] = array(
 			'to_type'      => 'forum',
 			'to_fieldname' => 'post_date',
-			'default'      => date( 'Y-m-d H:i:s' ),
+			'default'      => gmdate( 'Y-m-d H:i:s' ),
 		);
 		$this->field_map[] = array(
 			'to_type'      => 'forum',
 			'to_fieldname' => 'post_date_gmt',
-			'default'      => date( 'Y-m-d H:i:s' ),
+			'default'      => gmdate( 'Y-m-d H:i:s' ),
 		);
 		$this->field_map[] = array(
 			'to_type'      => 'forum',
 			'to_fieldname' => 'post_modified',
-			'default'      => date( 'Y-m-d H:i:s' ),
+			'default'      => gmdate( 'Y-m-d H:i:s' ),
 		);
 		$this->field_map[] = array(
 			'to_type'      => 'forum',
 			'to_fieldname' => 'post_modified_gmt',
-			'default'      => date( 'Y-m-d H:i:s' ),
+			'default'      => gmdate( 'Y-m-d H:i:s' ),
 		);
 
 		// Setup the table joins for the forum section

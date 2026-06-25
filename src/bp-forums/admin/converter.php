@@ -2269,8 +2269,8 @@ abstract class BBP_Converter_Base {
 		}
 
 		return is_numeric( $field )
-			? date( 'Y-m-d H:i:s', $field )
-			: date( 'Y-m-d H:i:s', strtotime( $field ) );
+			? gmdate( 'Y-m-d H:i:s', $field )
+			: gmdate( 'Y-m-d H:i:s', strtotime( $field ) );
 	}
 }
 

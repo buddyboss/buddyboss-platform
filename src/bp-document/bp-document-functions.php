@@ -1286,7 +1286,7 @@ function bp_document_delete_orphaned_attachments() {
 	$post_table              = $wpdb->posts;
 	$postmeta_table          = $wpdb->postmeta;
 	$six_hours_ago_timestamp = strtotime( '-6 hours', current_time( 'timestamp', 1 ) );
-	$six_hours_ago           = date( 'Y-m-d H:i:s', $six_hours_ago_timestamp );
+	$six_hours_ago           = gmdate( 'Y-m-d H:i:s', $six_hours_ago_timestamp );
 
 	$query = "SELECT {$post_table}.ID
 				FROM {$post_table}

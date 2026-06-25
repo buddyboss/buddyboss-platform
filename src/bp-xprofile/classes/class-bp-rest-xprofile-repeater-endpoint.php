@@ -949,7 +949,7 @@ class BP_REST_XProfile_Repeater_Endpoint extends WP_REST_Controller {
 							$type = $wpdb->get_var( $wpdb->prepare( "SELECT `type` FROM {$bp->table_prefix}bp_xprofile_fields WHERE id = %d", $corresponding_field_id ) );
 
 							if ( 'datebox' === $type && ! empty( $new_data ) ) {
-								$new_data = date( 'Y-m-d 00:00:00', strtotime( $new_data ) );
+								$new_data = gmdate( 'Y-m-d 00:00:00', strtotime( $new_data ) );
 							}
 
 							xprofile_set_field_data( $corresponding_field_id, $user_id, $new_data );

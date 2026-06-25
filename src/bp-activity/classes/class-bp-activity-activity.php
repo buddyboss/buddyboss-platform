@@ -2134,7 +2134,7 @@ class BP_Activity_Activity {
 
 		for ( $i = 0, $count = count( $activities ); $i < $count; ++$i ) {
 			$title                              = explode( '<span', $activities[ $i ]['content'] );
-			$activity_feed[ $i ]['title']       = trim( strip_tags( $title[0] ) );
+			$activity_feed[ $i ]['title']       = trim( wp_strip_all_tags( $title[0] ) );
 			$activity_feed[ $i ]['link']        = $activities[ $i ]['primary_link'];
 			$activity_feed[ $i ]['description'] = @sprintf( $activities[ $i ]['content'], '' );
 			$activity_feed[ $i ]['pubdate']     = $activities[ $i ]['date_recorded'];
@@ -2253,7 +2253,7 @@ class BP_Activity_Activity {
 		if ( ! empty( $filter_array['since'] ) ) {
 			// Validate that this is a proper Y-m-d H:i:s date.
 			// Trick: parse to UNIX date then translate back.
-			$translated_date = date( 'Y-m-d H:i:s', strtotime( $filter_array['since'] ) );
+			$translated_date = gmdate( 'Y-m-d H:i:s', strtotime( $filter_array['since'] ) );
 			if ( $translated_date === $filter_array['since'] ) {
 				if ( ! empty( $filter_array['since_date_column'] ) && 'date_updated' === $filter_array['since_date_column'] ) {
 					$filter_sql[] = "a.date_updated > '{$translated_date}'";

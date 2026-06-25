@@ -800,7 +800,7 @@ if ( ! class_exists( 'BBP_Akismet' ) ) :
 
 							<tr>
 								<td style="color: #999; text-align: right; white-space: nowrap;">
-									<span title="<?php echo esc_attr( date( 'D d M Y @ h:i:m a', $row['time'] ) . ' GMT' ); ?>">
+									<span title="<?php echo esc_attr( gmdate( 'D d M Y @ h:i:m a', $row['time'] ) . ' GMT' ); ?>">
 										<?php bbp_time_since( $row['time'], false, true ); ?>
 									</span>
 								</td>
