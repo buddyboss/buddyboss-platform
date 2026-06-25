@@ -578,7 +578,7 @@ function bp_dd_get_random_date( $days_from = 30, $days_to = 0 ) {
 	$date_from = new DateTime( 'now - ' . $days_from . ' days' );
 	$date_to   = new DateTime( 'now - ' . $days_to . ' days' );
 
-	return date_i18n( 'Y-m-d H:i:s', mt_rand( $date_from->getTimestamp(), $date_to->getTimestamp() ) );
+	return date_i18n( 'Y-m-d H:i:s', wp_rand( $date_from->getTimestamp(), $date_to->getTimestamp() ) );
 }
 
 /**
@@ -1165,7 +1165,7 @@ function bp_dd_import_groups_members( $groups = false ) {
 	add_filter( 'bp_after_activity_add_parse_args', 'bp_dd_groups_join_group_date_fix' );
 
 	foreach ( $groups as $group_id ) {
-		$user_ids = bp_dd_get_random_users_ids( mt_rand( 2, 15 ) );
+		$user_ids = bp_dd_get_random_users_ids( wp_rand( 2, 15 ) );
 
 		foreach ( $user_ids as $user_id ) {
 			if ( groups_join_group( $group_id, $user_id ) ) {
@@ -1312,7 +1312,7 @@ function bp_dd_import_forums_topics( $forums = false ) {
 
 	require BP_DEFAULT_DATA_DIR . 'data/forums_topics.php';
 	foreach ( $forums as $forum_id ) {
-		$topic = (array) array_rand( $topics, absint( rand( 2, count( $topics ) ) ) );
+		$topic = (array) array_rand( $topics, absint( wp_rand( 2, count( $topics ) ) ) );
 		foreach ( $topic as $topic_key ) {
 			$topic_data = $topics[ $topic_key ];
 
@@ -1399,7 +1399,7 @@ function bp_dd_import_forums_topics_replies( $topics = false ) {
 
 	foreach ( $topics as $topic_id ) {
 
-		$reply = (array) array_rand( $replies, absint( rand( 1, 7 ) ) );
+		$reply = (array) array_rand( $replies, absint( wp_rand( 1, 7 ) ) );
 
 		foreach ( $reply as $reply_key ) {
 			$reply_data = $replies[ $reply_key ];
@@ -1472,7 +1472,7 @@ function bp_dd_import_forums_in_groups() {
 	require BP_DEFAULT_DATA_DIR . 'data/forums_topics.php';
 
 	foreach ( $forum_ids as $forum_id ) {
-		$topic = (array) array_rand( $topics, absint( rand( 2, count( $topics ) ) ) );
+		$topic = (array) array_rand( $topics, absint( wp_rand( 2, count( $topics ) ) ) );
 		foreach ( $topic as $topic_key ) {
 			$topic_data = $topics[ $topic_key ];
 
@@ -1490,7 +1490,7 @@ function bp_dd_import_forums_in_groups() {
 	require BP_DEFAULT_DATA_DIR . 'data/forums_replies.php';
 
 	foreach ( $topics_ids as $topic_id ) {
-		$reply = (array) array_rand( $replies, absint( rand( 1, 7 ) ) );
+		$reply = (array) array_rand( $replies, absint( wp_rand( 1, 7 ) ) );
 
 		foreach ( $reply as $reply_key ) {
 			$reply_data = $replies[ $reply_key ];

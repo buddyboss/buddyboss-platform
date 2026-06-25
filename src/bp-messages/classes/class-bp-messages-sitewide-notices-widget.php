@@ -91,7 +91,7 @@ class BP_Messages_Sitewide_Notices_Widget extends WP_Widget {
 	 */
 	public function update( $new_instance, $old_instance ) {
 		$instance          = $old_instance;
-		$instance['title'] = strip_tags( $new_instance['title'] );
+		$instance['title'] = wp_strip_all_tags( $new_instance['title'] );
 		return $instance;
 	}
 
@@ -112,7 +112,7 @@ class BP_Messages_Sitewide_Notices_Widget extends WP_Widget {
 			)
 		);
 
-		$title = strip_tags( $instance['title'] );
+		$title = wp_strip_all_tags( $instance['title'] );
 		?>
 
 		<p>

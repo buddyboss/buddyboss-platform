@@ -133,8 +133,8 @@ class BP_Core_Recently_Active_Widget extends WP_Widget {
 	 */
 	public function update( $new_instance, $old_instance ) {
 		$instance                = $old_instance;
-		$instance['title']       = strip_tags( $new_instance['title'] );
-		$instance['max_members'] = strip_tags( $new_instance['max_members'] );
+		$instance['title']       = wp_strip_all_tags( $new_instance['title'] );
+		$instance['max_members'] = wp_strip_all_tags( $new_instance['max_members'] );
 
 		return $instance;
 	}
@@ -151,8 +151,8 @@ class BP_Core_Recently_Active_Widget extends WP_Widget {
 
 		// Get widget settings.
 		$settings    = $this->parse_settings( $instance );
-		$title       = strip_tags( $settings['title'] );
-		$max_members = strip_tags( $settings['max_members'] );
+		$title       = wp_strip_all_tags( $settings['title'] );
+		$max_members = wp_strip_all_tags( $settings['max_members'] );
 		?>
 
 		<p>

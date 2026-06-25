@@ -6998,7 +6998,7 @@ function bp_group_request_comment() {
 	 *
 	 * @param string $value Membership request comment left by user.
 	 */
-	echo apply_filters( 'bp_group_request_comment', strip_tags( stripslashes( $requests_template->request->comments ) ) );
+	echo apply_filters( 'bp_group_request_comment', wp_strip_all_tags( stripslashes( $requests_template->request->comments ) ) );
 }
 
 /**

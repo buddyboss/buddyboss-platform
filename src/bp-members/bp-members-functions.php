@@ -3206,7 +3206,7 @@ function bp_get_member_type_key( $post_id ) {
 		$term = term_exists( sanitize_key( $key ), bp_get_member_type_tax_name() );
 		if ( 0 !== $term && null !== $term ) {
 			$digits = 3;
-			$unique = rand( pow( 10, $digits - 1 ), pow( 10, $digits ) - 1 );
+			$unique = wp_rand( pow( 10, $digits - 1 ), pow( 10, $digits ) - 1 );
 			$key    = $key . $unique;
 		}
 		update_post_meta( $post_id, '_bp_member_type_key', sanitize_key( $key ) );

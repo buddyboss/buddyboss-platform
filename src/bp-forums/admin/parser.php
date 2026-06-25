@@ -858,7 +858,7 @@ class BBCodeLibrary {
 		if ( $action == BBCODE_CHECK ) {
 			return true;
 		}
-		$url = is_string( $default ) ? $default : $bbcode->UnHTMLEncode( strip_tags( $content ) );
+		$url = is_string( $default ) ? $default : $bbcode->UnHTMLEncode( wp_strip_all_tags( $content ) );
 		if ( $bbcode->IsValidURL( $url ) ) {
 			if ( $bbcode->debug ) {
 				print 'ISVALIDURL<br />';
@@ -882,7 +882,7 @@ class BBCodeLibrary {
 		if ( $action == BBCODE_CHECK ) {
 			return true;
 		}
-		$email = is_string( $default ) ? $default : $bbcode->UnHTMLEncode( strip_tags( $content ) );
+		$email = is_string( $default ) ? $default : $bbcode->UnHTMLEncode( wp_strip_all_tags( $content ) );
 		if ( $bbcode->IsValidEmail( $email ) ) {
 			return '<a href="mailto:' . htmlspecialchars( $email, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ) . '" class="bbcode_email">' . $content . '</a>';
 		} else {
@@ -965,7 +965,7 @@ class BBCodeLibrary {
 		if ( $action == BBCODE_CHECK ) {
 			return true;
 		}
-		$content = trim( $bbcode->UnHTMLEncode( strip_tags( $content ) ) );
+		$content = trim( $bbcode->UnHTMLEncode( wp_strip_all_tags( $content ) ) );
 		if ( preg_match( '/\\.(?:gif|jpeg|jpg|jpe|png)$/', $content ) ) {
 			if ( preg_match( '/^[a-zA-Z0-9_][^:]+$/', $content ) ) {
 				if ( ! preg_match( '/(?:\\/\\.\\.\\/)|(?:^\\.\\.\\/)|(?:^\\/)/', $content ) ) {
@@ -1653,7 +1653,7 @@ $/Dx",
 						preg_match( '/^([^\\/&?#]+)\\/*(.*)$/', $token, $matches );
 						$url = 'http:/' . '/' . $matches[1] . '/' . $matches[2];
 					}
-					$params = @parse_url( $url );
+					$params = @wp_parse_url( $url );
 					if ( ! is_array( $params ) ) {
 						$params = array();
 					}
@@ -2118,7 +2118,7 @@ $/Dx",
 						foreach ( $tag_rule['plain_link'] as $possible_content ) {
 							if ( $possible_content == '_content'
 							&& strlen( $contents ) > 0 ) {
-									$link = $this->UnHTMLEncode( strip_tags( $contents ) );
+									$link = $this->UnHTMLEncode( wp_strip_all_tags( $contents ) );
 									break;
 							}
 							if ( isset( $params[ $possible_content ] )
@@ -2127,7 +2127,7 @@ $/Dx",
 								break;
 							}
 						}
-						$params = @parse_url( $link );
+						$params = @wp_parse_url( $link );
 						if ( ! is_array( $params ) ) {
 							$params = array();
 						}

@@ -88,7 +88,7 @@ function bp_moderation_wp_redirect( $location ) {
 	$modbypass = filter_input( INPUT_GET, 'modbypass', FILTER_SANITIZE_NUMBER_INT );
 	if ( ! empty( $modbypass ) ) {
 
-		$query_str = parse_url( $location, PHP_URL_QUERY );
+		$query_str = wp_parse_url( $location, PHP_URL_QUERY );
 		parse_str( $query_str, $params );
 
 		$params['modbypass'] = $modbypass;

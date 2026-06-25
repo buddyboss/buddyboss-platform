@@ -316,7 +316,7 @@ class BP_XProfile_Field_Type_Telephone extends BP_XProfile_Field_Type {
 	 */
 	public static function display_filter( $field_value, $field_id = '' ) {
 		$url   = wp_strip_all_tags( html_entity_decode( $field_value, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ) );
-		$parts = parse_url( $url );
+		$parts = wp_parse_url( $url );
 
 		// Add the tel: protocol to the field value.
 		if ( isset( $parts['scheme'] ) ) {

@@ -377,7 +377,7 @@ class BB_Icon_Registry {
 
 		// Check if it's a URL (SVG or image).
 		if ( $this->bb_is_url( $icon_id ) ) {
-			$extension = strtolower( pathinfo( parse_url( $icon_id, PHP_URL_PATH ), PATHINFO_EXTENSION ) );
+			$extension = strtolower( pathinfo( wp_parse_url( $icon_id, PHP_URL_PATH ), PATHINFO_EXTENSION ) );
 			if ( 'svg' === $extension ) {
 				return array(
 					'type' => 'svg',

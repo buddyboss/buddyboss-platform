@@ -764,7 +764,7 @@ class BP_Core_Members_Switching {
 	 * @return bool Should the old user cookie be secure?
 	 */
 	public static function secure_olduser_cookie() {
-		return ( is_ssl() && ( 'https' === parse_url( home_url(), PHP_URL_SCHEME ) ) );
+		return ( is_ssl() && ( 'https' === wp_parse_url( home_url(), PHP_URL_SCHEME ) ) );
 	}
 
 	/**
@@ -777,7 +777,7 @@ class BP_Core_Members_Switching {
 	 * @return bool Should the auth cookie be secure?
 	 */
 	public static function secure_auth_cookie() {
-		return ( is_ssl() && ( 'https' === parse_url( wp_login_url(), PHP_URL_SCHEME ) ) );
+		return ( is_ssl() && ( 'https' === wp_parse_url( wp_login_url(), PHP_URL_SCHEME ) ) );
 	}
 
 	/**

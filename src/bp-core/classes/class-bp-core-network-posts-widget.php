@@ -187,7 +187,7 @@ class BP_Core_Network_Posts_Widget extends WP_Widget {
 	public function update( $new_instance, $old_instance ) {
 		$instance = $old_instance;
 
-		$instance['title']      = strip_tags( $new_instance['title'] );
+		$instance['title']      = wp_strip_all_tags( $new_instance['title'] );
 		$instance['number']     = (int) $new_instance['number'];
 		$instance['show_date']  = isset( $new_instance['show_date'] ) ? (bool) $new_instance['show_date'] : false;
 		$instance['show_image'] = isset( $new_instance['show_image'] ) ? (bool) $new_instance['show_image'] : false;

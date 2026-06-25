@@ -844,7 +844,7 @@ function bbp_get_topic_excerpt( $topic_id = 0, $length = 100 ) {
 		$excerpt = bbp_get_topic_content( $topic_id );
 	}
 
-	$excerpt = trim( strip_tags( $excerpt ) );
+	$excerpt = trim( wp_strip_all_tags( $excerpt ) );
 
 	// Multibyte support
 	if ( function_exists( 'mb_strlen' ) ) {

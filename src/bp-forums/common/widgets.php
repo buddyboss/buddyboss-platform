@@ -167,7 +167,7 @@ class BBP_Login_Widget extends WP_Widget {
 	 */
 	public function update( $new_instance, $old_instance ) {
 		$instance             = $old_instance;
-		$instance['title']    = strip_tags( $new_instance['title'] );
+		$instance['title']    = wp_strip_all_tags( $new_instance['title'] );
 		$instance['register'] = esc_url_raw( $new_instance['register'] );
 		$instance['lostpass'] = esc_url_raw( $new_instance['lostpass'] );
 
@@ -345,7 +345,7 @@ class BBP_Views_Widget extends WP_Widget {
 	 */
 	public function update( $new_instance = array(), $old_instance = array() ) {
 		$instance          = $old_instance;
-		$instance['title'] = strip_tags( $new_instance['title'] );
+		$instance['title'] = wp_strip_all_tags( $new_instance['title'] );
 
 		return $instance;
 	}
@@ -492,7 +492,7 @@ class BBP_Search_Widget extends WP_Widget {
 	 */
 	public function update( $new_instance, $old_instance ) {
 		$instance          = $old_instance;
-		$instance['title'] = strip_tags( $new_instance['title'] );
+		$instance['title'] = wp_strip_all_tags( $new_instance['title'] );
 
 		return $instance;
 	}
@@ -713,7 +713,7 @@ class BBP_Forums_Widget extends WP_Widget {
 	 */
 	public function update( $new_instance, $old_instance ) {
 		$instance                 = $old_instance;
-		$instance['title']        = strip_tags( $new_instance['title'] );
+		$instance['title']        = wp_strip_all_tags( $new_instance['title'] );
 		$instance['parent_forum'] = sanitize_text_field( $new_instance['parent_forum'] );
 
 		// Force to any.
@@ -1025,8 +1025,8 @@ class BBP_Topics_Widget extends WP_Widget {
 	 */
 	public function update( $new_instance = array(), $old_instance = array() ) {
 		$instance                 = $old_instance;
-		$instance['title']        = strip_tags( $new_instance['title'] );
-		$instance['order_by']     = strip_tags( $new_instance['order_by'] );
+		$instance['title']        = wp_strip_all_tags( $new_instance['title'] );
+		$instance['order_by']     = wp_strip_all_tags( $new_instance['order_by'] );
 		$instance['parent_forum'] = sanitize_text_field( $new_instance['parent_forum'] );
 		$instance['max_shown']    = (int) $new_instance['max_shown'];
 
@@ -1209,7 +1209,7 @@ class BBP_Stats_Widget extends WP_Widget {
 	 */
 	public function update( $new_instance, $old_instance ) {
 		$instance          = $old_instance;
-		$instance['title'] = strip_tags( $new_instance['title'] );
+		$instance['title'] = wp_strip_all_tags( $new_instance['title'] );
 
 		return $instance;
 	}
@@ -1450,7 +1450,7 @@ class BBP_Replies_Widget extends WP_Widget {
 	 */
 	public function update( $new_instance = array(), $old_instance = array() ) {
 		$instance              = $old_instance;
-		$instance['title']     = strip_tags( $new_instance['title'] );
+		$instance['title']     = wp_strip_all_tags( $new_instance['title'] );
 		$instance['max_shown'] = (int) $new_instance['max_shown'];
 
 		// Date.

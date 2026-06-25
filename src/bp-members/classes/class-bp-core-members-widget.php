@@ -217,9 +217,9 @@ class BP_Core_Members_Widget extends WP_Widget {
 	public function update( $new_instance, $old_instance ) {
 		$instance = $old_instance;
 
-		$instance['title']          = strip_tags( $new_instance['title'] );
-		$instance['max_members']    = strip_tags( $new_instance['max_members'] );
-		$instance['member_default'] = strip_tags( $new_instance['member_default'] );
+		$instance['title']          = wp_strip_all_tags( $new_instance['title'] );
+		$instance['max_members']    = wp_strip_all_tags( $new_instance['max_members'] );
+		$instance['member_default'] = wp_strip_all_tags( $new_instance['member_default'] );
 		$instance['link_title']     = isset( $new_instance['link_title'] ) ? (bool) $new_instance['link_title'] : false;
 
 		return $instance;
@@ -237,9 +237,9 @@ class BP_Core_Members_Widget extends WP_Widget {
 
 		// Get widget settings.
 		$settings       = $this->parse_settings( $instance );
-		$title          = strip_tags( $settings['title'] );
-		$max_members    = strip_tags( $settings['max_members'] );
-		$member_default = strip_tags( $settings['member_default'] );
+		$title          = wp_strip_all_tags( $settings['title'] );
+		$max_members    = wp_strip_all_tags( $settings['max_members'] );
+		$member_default = wp_strip_all_tags( $settings['member_default'] );
 		$link_title     = (bool) $settings['link_title'];
 		?>
 

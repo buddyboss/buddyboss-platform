@@ -700,7 +700,7 @@ function bbp_get_reply_excerpt( $reply_id = 0, $length = 100 ) {
 		$excerpt = bbp_get_reply_content( $reply_id );
 	}
 
-	$excerpt = trim( strip_tags( $excerpt ) );
+	$excerpt = trim( wp_strip_all_tags( $excerpt ) );
 
 	// Multibyte support
 	if ( function_exists( 'mb_strlen' ) ) {

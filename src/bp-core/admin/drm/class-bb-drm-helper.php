@@ -324,7 +324,7 @@ class BB_DRM_Helper {
 
 		// Additional WordPress multisite check.
 		if ( is_multisite() ) {
-			$network_domain = parse_url( network_site_url(), PHP_URL_HOST );
+			$network_domain = wp_parse_url( network_site_url(), PHP_URL_HOST );
 			if ( $network_domain !== $domain ) {
 				// Check if this is a staging subdomain in multisite.
 				if ( preg_match( $subdomain_pattern, $network_domain ) ) {

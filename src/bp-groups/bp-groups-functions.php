@@ -560,12 +560,12 @@ function groups_check_slug( $slug ) {
 	}
 
 	if ( in_array( $slug, (array) $bp->groups->forbidden_names ) ) {
-		$slug = $slug . '-' . rand();
+		$slug = $slug . '-' . wp_rand();
 	}
 
 	if ( BP_Groups_Group::check_slug( $slug ) ) {
 		do {
-			$slug = $slug . '-' . rand();
+			$slug = $slug . '-' . wp_rand();
 		} while ( BP_Groups_Group::check_slug( $slug ) );
 	}
 
@@ -3893,7 +3893,7 @@ function bp_group_get_group_type_key( $post_id ) {
 		$term = term_exists( sanitize_key( $key ), 'bp_group_type' );
 		if ( 0 !== $term && null !== $term ) {
 			$digits = 3;
-			$unique = rand( pow( 10, $digits - 1 ), pow( 10, $digits ) - 1 );
+			$unique = wp_rand( pow( 10, $digits - 1 ), pow( 10, $digits ) - 1 );
 			$key    = $key . $unique;
 		}
 		update_post_meta( $post_id, '_bp_group_type_key', sanitize_key( $key ) );

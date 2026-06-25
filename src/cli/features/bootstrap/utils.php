@@ -363,7 +363,7 @@ function launch_editor_for_input( $input, $filename = 'WP-CLI' ) {
 	do {
 		$tmpfile  = basename( $filename );
 		$tmpfile  = preg_replace( '|\.[^.]*$|', '', $tmpfile );
-		$tmpfile .= '-' . substr( md5( rand() ), 0, 6 );
+		$tmpfile .= '-' . substr( md5( wp_rand() ), 0, 6 );
 		$tmpfile  = $tmpdir . $tmpfile . '.tmp';
 		$fp       = @fopen( $tmpfile, 'x' );
 		if ( ! $fp && is_writable( $tmpdir ) && file_exists( $tmpfile ) ) {
@@ -528,7 +528,7 @@ function parse_url( $url ) {
 	$url_parts = \parse_url( $url );
 
 	if ( ! isset( $url_parts['scheme'] ) ) {
-		$url_parts = parse_url( 'http://' . $url );
+		$url_parts = wp_parse_url( 'http://' . $url );
 	}
 
 	return $url_parts;

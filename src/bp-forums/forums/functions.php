@@ -152,7 +152,7 @@ function bbp_new_forum_handler( $action = '' ) {
 	/** Forum Title */
 
 	if ( ! empty( $_POST['bbp_forum_title'] ) ) {
-		$forum_title = esc_attr( strip_tags( $_POST['bbp_forum_title'] ) );
+		$forum_title = esc_attr( wp_strip_all_tags( $_POST['bbp_forum_title'] ) );
 	}
 
 	// Filter and sanitize.
@@ -466,7 +466,7 @@ function bbp_edit_forum_handler( $action = '' ) {
 	/** Forum Title */
 
 	if ( ! empty( $_POST['bbp_forum_title'] ) ) {
-		$forum_title = esc_attr( strip_tags( $_POST['bbp_forum_title'] ) );
+		$forum_title = esc_attr( wp_strip_all_tags( $_POST['bbp_forum_title'] ) );
 	}
 
 	// Filter and sanitize

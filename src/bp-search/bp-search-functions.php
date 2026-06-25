@@ -615,10 +615,10 @@ if ( in_array( 'geo-my-wp/geo-my-wp.php', apply_filters( 'active_plugins', (arra
 	}
 
 	function bps_current_page() {
-		$current = defined( 'DOING_AJAX' ) ? parse_url(
+		$current = defined( 'DOING_AJAX' ) ? wp_parse_url(
 			$_SERVER['HTTP_REFERER'],
 			PHP_URL_PATH
-		) : parse_url( $_SERVER['REQUEST_URI'], PHP_URL_PATH );
+		) : wp_parse_url( $_SERVER['REQUEST_URI'], PHP_URL_PATH );
 
 		return apply_filters( 'bps_current_page', $current );        // published interface, 20190324
 	}

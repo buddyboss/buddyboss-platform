@@ -210,9 +210,9 @@ class BP_Groups_Widget extends WP_Widget {
 	public function update( $new_instance, $old_instance ) {
 		$instance = $old_instance;
 
-		$instance['title']         = strip_tags( $new_instance['title'] );
-		$instance['max_groups']    = strip_tags( $new_instance['max_groups'] );
-		$instance['group_default'] = strip_tags( $new_instance['group_default'] );
+		$instance['title']         = wp_strip_all_tags( $new_instance['title'] );
+		$instance['max_groups']    = wp_strip_all_tags( $new_instance['max_groups'] );
+		$instance['group_default'] = wp_strip_all_tags( $new_instance['group_default'] );
 		$instance['link_title']    = isset( $new_instance['link_title'] ) ? (bool) $new_instance['link_title'] : false;
 
 		return $instance;
@@ -235,9 +235,9 @@ class BP_Groups_Widget extends WP_Widget {
 		);
 		$instance = bp_parse_args( (array) $instance, $defaults, 'groups_widget_form' );
 
-		$title         = strip_tags( $instance['title'] );
-		$max_groups    = strip_tags( $instance['max_groups'] );
-		$group_default = strip_tags( $instance['group_default'] );
+		$title         = wp_strip_all_tags( $instance['title'] );
+		$max_groups    = wp_strip_all_tags( $instance['max_groups'] );
+		$group_default = wp_strip_all_tags( $instance['group_default'] );
 		$link_title    = (bool) $instance['link_title'];
 		?>
 
