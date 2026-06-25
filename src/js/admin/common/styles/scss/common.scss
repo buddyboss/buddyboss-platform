@@ -98,6 +98,10 @@
 			right: 35px;
 			top: 50%;
 			transform: translateY(-50%);
+
+			.spinner {
+				margin: 0;
+			}
 		}
 
 		&-results {
