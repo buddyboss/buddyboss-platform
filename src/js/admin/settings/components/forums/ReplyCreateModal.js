@@ -16,7 +16,7 @@ import {
 import { __ } from '@wordpress/i18n';
 
 import { createReply } from '../../utils/ajax';
-import { groupFieldsWithLayout, buildRegisteredFieldPayload, getVisibleFields, needsSeparator, splitFieldsByMetaboxGroup } from '../../utils/format';
+import { groupFieldsWithLayout, buildRegisteredFieldPayload, getVisibleFields, isFieldConditionalDisabled, needsSeparator, splitFieldsByMetaboxGroup } from '../../utils/format';
 import { RegisteredMetaField } from '../common/RegisteredMetaField';
 import { forceRemoveEditor } from '../common/RichTextEditor';
 
@@ -248,6 +248,7 @@ export function ReplyCreateModal( { isOpen, onClose, onCreated, createFields } )
 									handleFieldChange( field.id, val );
 								} }
 								itemId={ 0 }
+								disabled={ isFieldConditionalDisabled( field, registeredValues ) }
 							/>
 						);
 					} ) }
@@ -264,6 +265,7 @@ export function ReplyCreateModal( { isOpen, onClose, onCreated, createFields } )
 						handleFieldChange( item.field.id, val );
 					} }
 					itemId={ 0 }
+					disabled={ isFieldConditionalDisabled( item.field, registeredValues ) }
 				/>
 			</div>
 		);

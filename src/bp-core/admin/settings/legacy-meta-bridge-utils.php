@@ -2570,11 +2570,39 @@ function bb_legacy_run_cpt_bridge_box( $registry, $component, $box, &$order, $ex
 		// registry's React shell looks up against sibling registered fields. A
 		// compat-module override wins over the auto-detected conditional (it can
 		// also set `action` => 'disable' to grey-out rather than hide).
-		$conditional = ! empty( $override['conditional']['field'] )
-			? $override['conditional']
-			: ( ! empty( $input['conditional']['field'] ) ? $input['conditional'] : null );
+		// A compat-module override wins over the auto-detected conditional, and may
+		// be either single-field ({ field, value }) or multi-field
+		// ({ fields, compare }) — the latter for predicates a single trigger can't
+		// express (e.g. WP Fusion's check_tags: disabled until any required-tag
+		// field is non-empty).
+		$conditional = null;
+		if ( is_array( $override['conditional'] ?? null )
+			&& ( ! empty( $override['conditional']['field'] ) || ! empty( $override['conditional']['fields'] ) )
+		) {
+			$conditional = $override['conditional'];
+		} elseif ( ! empty( $input['conditional']['field'] ) ) {
+			$conditional = $input['conditional'];
+		}
 
-		if ( ! empty( $conditional['field'] ) ) {
+		if ( is_array( $conditional ) && ! empty( $conditional['fields'] ) && is_array( $conditional['fields'] ) ) {
+			// Multi-field conditional: normalize every trigger's raw $_POST name to
+			// its bridge field id (legacy_<box>_<name>), the same flattening used
+			// for the field id above, so each resolves to its sibling registered field.
+			$trigger_ids = array();
+			foreach ( $conditional['fields'] as $raw_trigger ) {
+				$trigger_id = sanitize_key( 'legacy_' . $box['id'] . '_' . bb_legacy_flatten_input_name( (string) $raw_trigger ) );
+				if ( '' !== $trigger_id && $trigger_id !== $field_id ) {
+					$trigger_ids[] = $trigger_id;
+				}
+			}
+			if ( ! empty( $trigger_ids ) ) {
+				$args_field['conditional'] = array(
+					'fields'  => array_values( array_unique( $trigger_ids ) ),
+					'compare' => isset( $conditional['compare'] ) ? (string) $conditional['compare'] : 'any_non_empty',
+					'action'  => ( ! empty( $conditional['action'] ) && is_string( $conditional['action'] ) ) ? $conditional['action'] : 'disable',
+				);
+			}
+		} elseif ( is_array( $conditional ) && ! empty( $conditional['field'] ) ) {
 			// Flatten brackets the same way as the field id above so a grouped
 			// trigger name resolves to the matching sibling field id.
 			$trigger_field_id = sanitize_key( 'legacy_' . $box['id'] . '_' . bb_legacy_flatten_input_name( $conditional['field'] ) );

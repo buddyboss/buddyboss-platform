@@ -16,7 +16,7 @@ import {
 import { __ } from '@wordpress/i18n';
 
 import { createDiscussion } from '../../utils/ajax';
-import { groupFieldsWithLayout, buildRegisteredFieldPayload, getVisibleFields, needsSeparator, splitFieldsByMetaboxGroup } from '../../utils/format';
+import { groupFieldsWithLayout, buildRegisteredFieldPayload, getVisibleFields, isFieldConditionalDisabled, needsSeparator, splitFieldsByMetaboxGroup } from '../../utils/format';
 import { RegisteredMetaField } from '../common/RegisteredMetaField';
 import { forceRemoveEditor } from '../common/RichTextEditor';
 import { TagsAutocomplete } from './TagsAutocomplete';
@@ -215,6 +215,7 @@ export function DiscussionCreateModal( { isOpen, onClose, onCreated, createField
 									handleFieldChange( field.id, val );
 								} }
 								itemId={ 0 }
+								disabled={ isFieldConditionalDisabled( field, registeredValues ) }
 							/>
 						);
 					} ) }
@@ -230,6 +231,7 @@ export function DiscussionCreateModal( { isOpen, onClose, onCreated, createField
 						handleFieldChange( item.field.id, val );
 					} }
 					itemId={ 0 }
+					disabled={ isFieldConditionalDisabled( item.field, registeredValues ) }
 				/>
 			</div>
 		);

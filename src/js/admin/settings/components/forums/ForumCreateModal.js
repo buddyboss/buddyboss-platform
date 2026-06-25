@@ -16,7 +16,7 @@ import {
 import { __ } from '@wordpress/i18n';
 
 import { createForum, uploadForumImage } from '../../utils/ajax';
-import { toSlug, groupFieldsWithLayout, buildRegisteredFieldPayload, getVisibleFields, needsSeparator, splitFieldsByMetaboxGroup } from '../../utils/format';
+import { toSlug, groupFieldsWithLayout, buildRegisteredFieldPayload, getVisibleFields, isFieldConditionalDisabled, needsSeparator, splitFieldsByMetaboxGroup } from '../../utils/format';
 import { safeUrl } from '../../utils/sanitize';
 import { RegisteredMetaField } from '../common/RegisteredMetaField';
 import { forceRemoveEditor } from '../common/RichTextEditor';
@@ -322,6 +322,7 @@ export function ForumCreateModal( { isOpen, onClose, onCreated, forumBaseSlug, c
 									handleFieldChange( field.id, val );
 								} }
 								itemId={ 0 }
+								disabled={ isFieldConditionalDisabled( field, registeredValues ) }
 							/>
 						);
 					} ) }
@@ -337,6 +338,7 @@ export function ForumCreateModal( { isOpen, onClose, onCreated, forumBaseSlug, c
 						handleFieldChange( item.field.id, val );
 					} }
 					itemId={ 0 }
+					disabled={ isFieldConditionalDisabled( item.field, registeredValues ) }
 				/>
 			</div>
 		);

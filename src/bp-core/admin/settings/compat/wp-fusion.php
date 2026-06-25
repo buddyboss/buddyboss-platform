@@ -182,16 +182,17 @@ function bb_legacy_wpf_field_overrides( $overrides, $box_id, $post_type ) {
 		'action' => 'disable',
 	);
 
-	// Fields WP Fusion's `data-unlock` / `$disabled` logic gates on lock_content.
+	// Fields the POST metabox disables while lock_content is unchecked — exactly
+	// the two named in its data-unlock attribute
+	// (WP_Fusion_Admin_Interfaces::restrict_content_checkbox):
+	//   data-unlock="wpf-settings-allow_tags wpf-settings-allow_tags_all".
+	// "Required tags (not)" and "Redirect if access is denied" render always-enabled
+	// in the post metabox, so they are deliberately NOT gated here. (lock_posts /
+	// hide_term / redirect_url belong to the taxonomy-term metabox, never the post
+	// metabox.)
 	$gated = array(
-		'wpf-settings[lock_posts]',
-		'wpf-settings[hide_term]',
 		'wpf-settings[allow_tags][]',
 		'wpf-settings[allow_tags_all][]',
-		'wpf-settings[allow_tags_not][]',
-		'wpf-settings[redirect]',
-		'wpf-settings[redirect_url]',
-		'wpf-settings[check_tags]',
 	);
 
 	foreach ( $gated as $name ) {
@@ -200,6 +201,24 @@ function bb_legacy_wpf_field_overrides( $overrides, $box_id, $post_type ) {
 		}
 		$overrides[ $name ]['conditional'] = $gate;
 	}
+
+	// "Refresh access if denied" (check_tags) is gated differently in WP Fusion: it
+	// is disabled until at least one required tag is selected — i.e. while BOTH
+	// allow_tags AND allow_tags_all are empty — independent of lock_content
+	// (wpf-admin.js:685-701; mirrored server-side in force_check_tags_checkbox()).
+	// Expressed as a multi-field "any non-empty" disable conditional so the modal
+	// greys it out under exactly the same condition the classic metabox does.
+	if ( ! isset( $overrides['wpf-settings[check_tags]'] ) || ! is_array( $overrides['wpf-settings[check_tags]'] ) ) {
+		$overrides['wpf-settings[check_tags]'] = array();
+	}
+	$overrides['wpf-settings[check_tags]']['conditional'] = array(
+		'fields'  => array(
+			'wpf-settings[allow_tags][]',
+			'wpf-settings[allow_tags_all][]',
+		),
+		'compare' => 'any_non_empty',
+		'action'  => 'disable',
+	);
 
 	// The "Or enter a URL" field is a plain text input in the metabox markup;
 	// render it as a URL field in the modal.

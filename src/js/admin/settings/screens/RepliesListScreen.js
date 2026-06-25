@@ -27,7 +27,7 @@ import { DeleteConfirmModal } from '../components/common/DeleteConfirmModal';
 import { BulkEditModal } from '../components/common/BulkEditModal';
 import { useListScreenHandlers } from '../hooks/useListScreenHandlers';
 import { useListScreenState } from '../hooks/useListScreenState';
-import { groupFieldsWithLayout, buildRegisteredFieldPayload, getVisibleFields, needsSeparator, splitFieldsByMetaboxGroup } from '../utils/format';
+import { groupFieldsWithLayout, buildRegisteredFieldPayload, getVisibleFields, isFieldConditionalDisabled, needsSeparator, splitFieldsByMetaboxGroup } from '../utils/format';
 import { ReplyCreateModal } from '../components/forums/ReplyCreateModal';
 import { RegisteredMetaField } from '../components/common/RegisteredMetaField';
 import { forceRemoveEditor } from '../components/common/RichTextEditor';
@@ -1146,6 +1146,7 @@ export default function RepliesListScreen( { onNavigate } ) {
 																	handleEditFieldChange( field.id, val );
 																} }
 																itemId={ editReply.id }
+																disabled={ isFieldConditionalDisabled( field, editRegisteredValues ) }
 															/>
 														);
 													} ) }
@@ -1162,6 +1163,7 @@ export default function RepliesListScreen( { onNavigate } ) {
 														handleEditFieldChange( item.field.id, val );
 													} }
 													itemId={ editReply.id }
+												disabled={ isFieldConditionalDisabled( item.field, editRegisteredValues ) }
 												/>
 											</div>
 										);
