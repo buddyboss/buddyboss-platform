@@ -1749,11 +1749,6 @@ table.profile-settings tbody td select {
   padding: var(--bb-rl-space-200);
 }
 
-.bb-rl-account-settings-section .is_loading .bb-loading-bg {
-  background-color: var(--bb-rl-background-secondary-color);
-  animation: fade-in-out infinite 2s ease;
-}
-
 .bb-rl-account-settings-section .is_loading .subscription-items_loading {
   display: flex;
   align-items: center;

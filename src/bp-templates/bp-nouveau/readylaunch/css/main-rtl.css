@@ -10757,7 +10757,7 @@ input.bb-rl-zoom-slider::-moz-range-progress {
   font-size: 24px;
 }
 
-.bb-rl-member-social-links .bb-rl-social i.bb-icons-rl-flickr-logo:before, .bb-rl-member-social-links .bb-rl-social i.bb-icons-rl-meetup-logo:before, .bb-rl-member-social-links .bb-rl-social i.bb-icons-rl-meetup-logo:before, .bb-rl-member-social-links .bb-rl-social i.bb-icons-rl-quora-logo:before, .bb-rl-member-social-links .bb-rl-social i.bb-icons-rl-vk-logo:before {
+.bb-rl-member-social-links .bb-rl-social i.bb-icons-rl-flickr-logo:before, .bb-rl-member-social-links .bb-rl-social i.bb-icons-rl-meetup-logo:before, .bb-rl-member-social-links .bb-rl-social i.bb-icons-rl-quora-logo:before, .bb-rl-member-social-links .bb-rl-social i.bb-icons-rl-vk-logo:before {
   content: "\e2e2";
 }
 
@@ -20444,11 +20444,6 @@ table.profile-settings tbody td select {
   border: 1px solid var(--bb-rl-border-secondary-color);
   border-radius: var(--bb-rl-radius-base);
   padding: var(--bb-rl-space-200);
-}
-
-.bb-rl-account-settings-section .is_loading .bb-loading-bg {
-  background-color: var(--bb-rl-background-secondary-color);
-  animation: fade-in-out infinite 2s ease;
 }
 
 .bb-rl-account-settings-section .is_loading .subscription-items_loading {
