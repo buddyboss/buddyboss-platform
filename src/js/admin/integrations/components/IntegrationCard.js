@@ -29,7 +29,7 @@ export function IntegrationCard( { item, onSelect } ) {
 	const logo = item?.logo_image_url && 'string' === typeof item.logo_image_url ? item.logo_image_url : '';
 	const learnMoreUrl = item?.link || item?.link_url || '';
 
-	const open = () => onSelect( item.slug );
+	const open = () => onSelect( item.slug, title );
 
 	return (
 		<div className="bb-integrations__card">

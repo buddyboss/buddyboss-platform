@@ -43,6 +43,9 @@ function AppInner() {
 	const [ tier, setTier ] = useState( 'all' );
 	const [ status, setStatus ] = useState( 'loading' ); // loading | ready | error | empty
 	const [ activeSlug, setActiveSlug ] = useState( null );
+	// Title from the clicked card, so the drawer top bar can show the integration
+	// name immediately while the full record is still loading.
+	const [ activeTitle, setActiveTitle ] = useState( '' );
 	// Bumped to force the list effect to re-run on an explicit retry.
 	const [ reloadToken, setReloadToken ] = useState( 0 );
 
@@ -227,7 +230,10 @@ function AppInner() {
 				<IntegrationGrid
 					items={ items }
 					status={ status }
-					onSelect={ setActiveSlug }
+					onSelect={ ( slug, title ) => {
+						setActiveTitle( title || '' );
+						setActiveSlug( slug );
+					} }
 					onRetry={ handleRetry }
 				/>
 
@@ -236,7 +242,11 @@ function AppInner() {
 				) }
 
 				{ activeSlug && (
-					<IntegrationDrawer slug={ activeSlug } onClose={ () => setActiveSlug( null ) } />
+					<IntegrationDrawer
+						slug={ activeSlug }
+						initialTitle={ activeTitle }
+						onClose={ () => setActiveSlug( null ) }
+					/>
 				) }
 			</div>
 			<KnowledgeBaseModal />

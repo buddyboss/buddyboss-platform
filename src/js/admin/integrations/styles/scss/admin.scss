@@ -282,7 +282,8 @@ body.buddyboss_page_bb-integrations {
 	&__overlay {
 		position: absolute;
 		inset: 0;
-		background: rgba(0, 0, 0, 0.5);
+		background: rgba(0, 0, 0, 0.6);
+		backdrop-filter: blur(1px);
 	}
 
 	&__panel {
@@ -292,10 +293,11 @@ body.buddyboss_page_bb-integrations {
 		bottom: 0;
 		width: 100%;
 		max-width: 520px;
-		background: #fff;
-		box-shadow: -2px 0 16px rgba(0, 0, 0, 0.15);
+		background: $bb-background-base-color;
+		box-shadow: -16px 0 56px 0 rgba(0, 0, 0, 0.20);
+		border: 1px solid rgba(0, 0, 0, 0.10);
+		border-radius: 16px 0 0 0;
 		overflow-y: auto;
-		padding: 24px;
 
 		.rtl & {
 			right: auto;
@@ -304,20 +306,52 @@ body.buddyboss_page_bb-integrations {
 		}
 	}
 
+	&__topbar {
+		position: sticky;
+		top: 0;
+		z-index: 1;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 16px;
+		padding: 16px 24px;
+		min-height: 64px;
+		box-sizing: border-box;
+		background: $bb-background-base-color;
+		border-bottom: 1px solid $bb-border-secondary-color;
+
+		.rtl & {
+			border-radius: 0 16px 0 0;
+		}
+	}
+
+	&__name {
+		margin: 0;
+		font-size: 18px;
+		line-height: 24px;
+		font-weight: 500;
+		color: $bb-text-color;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
+
+	&__content {
+		padding: 16px 24px;
+	}
+
 	&__close {
-		position: absolute;
-		top: 16px;
-		right: 16px;
+		flex: 0 0 auto;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
 		border: 0;
 		background: none;
 		cursor: pointer;
-		font-size: 18px;
-		color: #50575e;
-
-		.rtl & {
-			right: auto;
-			left: 16px;
-		}
+		font-size: 24px;
+		line-height: 1;
+		color: $bb-icon-secondary-color;
+		padding: 0;
 	}
 
 	&__state {
