@@ -101,11 +101,12 @@ function bb_admin_integrations_page() {
 		}
 	}
 
-	// The React app reads window.bbIntegrationsData.{apiUrl,nonce,version}. A
-	// distinct global name (not the Settings app's bbAdminData) keeps the two
-	// standalone bundles isolated. apiUrl points at the buddyboss/v1 REST root so
-	// the client can build the integrations/proxy URL; version is used to bust
-	// the client localStorage cache on plugin upgrade.
+	// The React app reads window.bbIntegrationsData — a distinct global name (not
+	// the Settings app's bbAdminData) so the two standalone bundles stay isolated.
+	// Keys: apiUrl (buddyboss/v1 REST root, for the integrations/proxy URL), nonce
+	// (wp_rest), adminUrl, version (busts the client localStorage cache on upgrade),
+	// logoUrl + ipnRootId (shared header), and ajaxUrl + searchNonce + settingsUrl
+	// (shared header's global "Search for settings" → Settings search AJAX).
 	$api_namespace = function_exists( 'bp_rest_namespace' ) && function_exists( 'bp_rest_version' )
 		? bp_rest_namespace() . '/' . bp_rest_version() . '/'
 		: 'buddyboss/v1/';

@@ -21,7 +21,7 @@
 
 import { __ } from '@wordpress/i18n';
 import { decodeEntities } from '@wordpress/html-entities';
-import { safeUrl } from '../../settings/utils/sanitize';
+import { safeUrl } from '@bb/admin-common';
 
 export function IntegrationCard( { item, onSelect } ) {
 	const title = item?.title?.rendered ? decodeEntities( item.title.rendered ) : '';
@@ -31,20 +31,12 @@ export function IntegrationCard( { item, onSelect } ) {
 
 	const open = () => onSelect( item.slug );
 
-	const handleKeyDown = ( e ) => {
-		if ( 'Enter' === e.key || ' ' === e.key ) {
-			e.preventDefault();
-			open();
-		}
-	};
-
 	return (
 		<div className="bb-integrations__card">
 			<button
 				type="button"
 				className="bb-integrations__card-body"
 				onClick={ open }
-				onKeyDown={ handleKeyDown }
 				aria-label={ title }
 			>
 				<div className="bb-integrations__card-top">

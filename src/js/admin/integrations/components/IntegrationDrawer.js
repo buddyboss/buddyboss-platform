@@ -20,12 +20,14 @@ import { useState, useEffect, useRef } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { decodeEntities } from '@wordpress/html-entities';
 import { fetchIntegrationBySlug } from '../../utils/integrationsApi';
-import { sanitizeHtml, safeUrl } from '../../settings/utils/sanitize';
+import { sanitizeHtml, safeUrl } from '@bb/admin-common';
 
 export function IntegrationDrawer( { slug, onClose } ) {
 	const [ status, setStatus ] = useState( 'loading' ); // loading | ready | error | notfound
 	const [ item, setItem ] = useState( null );
 	const abortRef = useRef( null );
+	const panelRef = useRef( null );
+	const previouslyFocusedRef = useRef( null );
 
 	// Fetch detail whenever the slug changes.
 	useEffect( () => {
@@ -73,6 +75,47 @@ export function IntegrationDrawer( { slug, onClose } ) {
 		return () => document.removeEventListener( 'keydown', onKey );
 	}, [ onClose ] );
 
+	// Focus management for the modal dialog (role="dialog" aria-modal="true"):
+	// move focus into the panel on open and restore it to the opener on close.
+	useEffect( () => {
+		previouslyFocusedRef.current = document.activeElement;
+		const closeBtn = panelRef.current && panelRef.current.querySelector( '.bb-integrations-drawer__close' );
+		if ( closeBtn ) {
+			closeBtn.focus();
+		}
+		return () => {
+			if ( previouslyFocusedRef.current && previouslyFocusedRef.current.focus ) {
+				previouslyFocusedRef.current.focus();
+			}
+		};
+	}, [] );
+
+	// Trap Tab focus inside the panel while the dialog is open.
+	useEffect( () => {
+		const onTrap = ( e ) => {
+			if ( 'Tab' !== e.key || ! panelRef.current ) {
+				return;
+			}
+			const focusables = panelRef.current.querySelectorAll(
+				'a[href], button:not([disabled]), input:not([disabled]), [tabindex]:not([tabindex="-1"])'
+			);
+			if ( ! focusables.length ) {
+				return;
+			}
+			const first = focusables[ 0 ];
+			const last = focusables[ focusables.length - 1 ];
+			if ( e.shiftKey && document.activeElement === first ) {
+				e.preventDefault();
+				last.focus();
+			} else if ( ! e.shiftKey && document.activeElement === last ) {
+				e.preventDefault();
+				first.focus();
+			}
+		};
+		document.addEventListener( 'keydown', onTrap );
+		return () => document.removeEventListener( 'keydown', onTrap );
+	}, [] );
+
 	const title = item?.title?.rendered ? decodeEntities( item.title.rendered ) : '';
 	const description = item?.short_description ? decodeEntities( item.short_description ) : '';
 	const collection = item?.collection_name ? decodeEntities( item.collection_name ) : '';
@@ -84,7 +127,7 @@ export function IntegrationDrawer( { slug, onClose } ) {
 		<div className="bb-integrations-drawer" role="dialog" aria-modal="true" aria-label={ title || __( 'Integration details', 'buddyboss' ) }>
 			<div className="bb-integrations-drawer__overlay" onClick={ onClose } aria-hidden="true" />
 
-			<div className="bb-integrations-drawer__panel">
+			<div className="bb-integrations-drawer__panel" ref={ panelRef }>
 				<button
 					type="button"
 					className="bb-integrations-drawer__close"

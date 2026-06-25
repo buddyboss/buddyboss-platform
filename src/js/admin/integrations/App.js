@@ -129,6 +129,22 @@ function AppInner() {
 		[ categories ]
 	);
 
+	// Global header search → Settings search AJAX (stable identity so BBAdminHeader's
+	// search effect doesn't re-subscribe on every render). adminData is module-scoped.
+	const handleHeaderSearch = useCallback( ( query, signal ) => {
+		const fd = new FormData();
+		fd.append( 'action', 'bb_admin_search_settings' );
+		fd.append( 'nonce', adminData.searchNonce || '' );
+		fd.append( 'query', query );
+		return fetch( adminData.ajaxUrl, { method: 'POST', body: fd, credentials: 'same-origin', signal } )
+			.then( ( response ) => response.json() )
+			.then( ( response ) => ( response.success ? ( response.data?.results || [] ) : [] ) );
+	}, [] );
+
+	const handleHeaderSelectResult = useCallback( ( result ) => {
+		window.location.href = ( adminData.settingsUrl || '' ) + '#' + result.route;
+	}, [] );
+
 	const searchSlot = (
 		<div className="bb-integrations__search-wrap">
 			<input
@@ -147,18 +163,8 @@ function AppInner() {
 			<BBAdminHeader
 				logoUrl={ adminData.logoUrl }
 				ipnRootId={ adminData.ipnRootId }
-				onSearch={ ( query, signal ) => {
-					const fd = new FormData();
-					fd.append( 'action', 'bb_admin_search_settings' );
-					fd.append( 'nonce', adminData.searchNonce || '' );
-					fd.append( 'query', query );
-					return fetch( adminData.ajaxUrl, { method: 'POST', body: fd, credentials: 'same-origin', signal } )
-						.then( ( response ) => response.json() )
-						.then( ( response ) => ( response.success ? ( response.data?.results || [] ) : [] ) );
-				} }
-				onSelectResult={ ( result ) => {
-					window.location.href = ( adminData.settingsUrl || '' ) + '#' + result.route;
-				} }
+				onSearch={ handleHeaderSearch }
+				onSelectResult={ handleHeaderSelectResult }
 				onHelp={ openKb }
 			/>
 			<div className="bb-integrations">

@@ -17,8 +17,11 @@ export function IntegrationGrid( { items, status, onSelect, onRetry } ) {
 	if ( 'loading' === status ) {
 		return (
 			<div className="bb-integrations__grid" aria-busy="true">
+				<span className="screen-reader-text" aria-live="polite">
+					{ __( 'Loading integrations…', 'buddyboss' ) }
+				</span>
 				{ Array.from( { length: SKELETON_COUNT } ).map( ( _, i ) => (
-					<div key={ i } className="bb-integrations__card bb-integrations__card--skeleton" />
+					<div key={ i } className="bb-integrations__card bb-integrations__card--skeleton" aria-hidden="true" />
 				) ) }
 			</div>
 		);

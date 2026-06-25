@@ -171,7 +171,7 @@ export function BBAdminHeader( {
 								<div className="bb-admin-header__search-results">
 									{ searchResults.map( ( result, index ) => (
 										<button
-											key={ index }
+											key={ result.route || index }
 											className="bb-admin-header__search-result"
 											onClick={ () => handleResultClick( result ) }
 										>

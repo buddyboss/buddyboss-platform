@@ -17,3 +17,7 @@ export { BBAdminHeader } from './components/BBAdminHeader';
 export { KbProvider, useKb } from './context/KbContext';
 export { default as KnowledgeBaseModal } from './components/knowledge-base/KnowledgeBaseModal';
 export { sanitizeKbArticle, safeImageUrl } from './utils/sanitizeKbArticle';
+
+// Shared HTML/URL sanitizer (DOMParser allowlist) — used by Settings and the
+// Integrations marketplace; lives here so it ships once.
+export { sanitizeHtml, safeUrl, sanitizeCustomColumns } from './utils/sanitize';
