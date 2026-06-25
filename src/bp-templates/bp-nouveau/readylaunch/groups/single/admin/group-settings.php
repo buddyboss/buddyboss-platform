@@ -223,32 +223,35 @@ if ( bp_is_group_create() ) : ?>
 					<?php
 					foreach ( $group_types as $group_type ) :
 
-					$group_option = sprintf(
-						'<option for="%1$s" value="%2$s" %3$s>%4$s</option>',
-						sprintf(
-							'group-type-%s',
-							$group_type->name
-						),
-						esc_attr( $group_type->name ),
-						selected( ( true === bp_groups_has_group_type( bp_get_current_group_id(), $group_type->name ) ) ? $group_type->name : '', $group_type->name, false ),
-						esc_html( $group_type->labels['singular_name'] )
-					);
+						$group_option = sprintf(
+							'<option for="%1$s" value="%2$s" %3$s>%4$s</option>',
+							sprintf(
+								'group-type-%s',
+								$group_type->name
+							),
+							esc_attr( $group_type->name ),
+							selected( ( true === bp_groups_has_group_type( bp_get_current_group_id(), $group_type->name ) ) ? $group_type->name : '', $group_type->name, false ),
+							esc_html( $group_type->labels['singular_name'] )
+						);
 
-					if ( false === bp_restrict_group_creation() && true === bp_member_type_enable_disable() ) {
+						if ( false === bp_restrict_group_creation() && true === bp_member_type_enable_disable() ) {
 
-						$get_all_registered_member_types = bp_get_active_member_types();
+							$get_all_registered_member_types = bp_get_active_member_types();
 
-						if ( ! empty( $get_all_registered_member_types ) ) {
+							if ( ! empty( $get_all_registered_member_types ) ) {
 
-							$current_user_member_type = bp_get_member_type( bp_loggedin_user_id() );
+								$current_user_member_type = bp_get_member_type( bp_loggedin_user_id() );
 
-							if ( '' !== $current_user_member_type ) {
+								if ( '' !== $current_user_member_type ) {
 
-								$member_type_post_id = bp_member_type_post_by_type( $current_user_member_type );
-								$include_group_type  = get_post_meta( $member_type_post_id, '_bp_member_type_enabled_group_type_create', true );
+									$member_type_post_id = bp_member_type_post_by_type( $current_user_member_type );
+									$include_group_type  = get_post_meta( $member_type_post_id, '_bp_member_type_enabled_group_type_create', true );
 
-								if ( ! empty( $include_group_type ) ) {
-									if ( in_array( $group_type->name, $include_group_type, true ) ) {
+									if ( ! empty( $include_group_type ) ) {
+										if ( in_array( $group_type->name, $include_group_type, true ) ) {
+											echo wp_kses_post( $group_option );
+										}
+									} else {
 										echo wp_kses_post( $group_option );
 									}
 								} else {
@@ -260,9 +263,6 @@ if ( bp_is_group_create() ) : ?>
 						} else {
 							echo wp_kses_post( $group_option );
 						}
-					} else {
-						echo wp_kses_post( $group_option );
-					}
 					endforeach;
 					?>
 				</select>
