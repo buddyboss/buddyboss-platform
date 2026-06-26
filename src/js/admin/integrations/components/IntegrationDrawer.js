@@ -20,7 +20,7 @@ import { useState, useEffect, useRef } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { decodeEntities } from '@wordpress/html-entities';
 import { fetchIntegrationBySlug } from '../../utils/integrationsApi';
-import { sanitizeHtml, safeUrl } from '@bb/admin-common';
+import { sanitizeKbArticle, safeUrl } from '@bb/admin-common';
 
 /**
  * Requires / Recommended dependency rows.
@@ -278,8 +278,10 @@ export function IntegrationDrawer( { slug, initialTitle, onClose } ) {
 						{ contentHtml && (
 							<div
 								className="bb-integrations-drawer__body"
+								// Same rich-content sanitizer the Knowledge Base modal uses — allows
+								// WP block markup, images and trusted video embeds (YouTube/Vimeo).
 								// eslint-disable-next-line react/no-danger
-								dangerouslySetInnerHTML={ { __html: sanitizeHtml( contentHtml ) } }
+								dangerouslySetInnerHTML={ { __html: sanitizeKbArticle( contentHtml ) } }
 							/>
 						) }
 
