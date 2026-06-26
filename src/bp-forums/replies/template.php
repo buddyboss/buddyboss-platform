@@ -2839,14 +2839,14 @@ function bbp_update_total_parent_reply( $reply_id, $topic_id, $new_topic_reply_c
 				$bbp_gtcpq_sql = $wpdb->prepare(
 					"SELECT COUNT({$wpdb->posts}.ID) FROM {$wpdb->posts} LEFT JOIN {$wpdb->postmeta}
 				ON {$wpdb->postmeta}.post_id = {$wpdb->posts}.ID WHERE {$wpdb->posts}.post_parent = %d AND {$wpdb->posts}.post_status
-				IN ( {$post_status} ) AND {$wpdb->posts}.post_type = '%s' AND {$wpdb->posts}.post_type = '%s'
-				AND {$wpdb->postmeta}.meta_key = '%s';",
+				IN ( {$post_status} ) AND {$wpdb->posts}.post_type = %s AND {$wpdb->posts}.post_type = %s
+				AND {$wpdb->postmeta}.meta_key = %s;",
 					$topic_id,
 					bbp_get_reply_post_type(),
 					'reply',
 					'_bbp_reply_to'
 				);
-				$reply_count   = $wpdb->get_var( $bbp_gtcpq_sql );
+				$reply_count   = $wpdb->get_var( $bbp_gtcpq_sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $bbp_gtcpq_sql is $wpdb->prepare()'d above; $post_status is an esc-quoted list of bbp_get_public_status_id() (internal status slug).
 				$replies       = (int) get_post_meta( $topic_id, '_bbp_reply_count', true );
 
 				// Find parent reply - Subtract child reply from total reply count.

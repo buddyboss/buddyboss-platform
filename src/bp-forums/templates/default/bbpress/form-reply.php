@@ -31,8 +31,7 @@ defined( 'ABSPATH' ) || exit;
 				<legend>
 					<?php
 					/* translators: %s: topic title or reply reference. */
-					// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- bbp_get_form_reply_to() returns an int; bbp_get_topic_title() self-escapes via its filter.
-					printf( esc_html__( 'Reply To: %s', 'buddyboss-platform' ), ( bbp_get_form_reply_to() ) ? /* translators: 1: reply ID, 2: topic title. */ sprintf( esc_html__( 'Reply #%1$s in %2$s', 'buddyboss-platform' ), bbp_get_form_reply_to(), bbp_get_topic_title() ) : bbp_get_topic_title() );
+					printf( esc_html__( 'Reply To: %s', 'buddyboss-platform' ), ( bbp_get_form_reply_to() ) ? /* translators: 1: reply ID, 2: topic title. */ sprintf( esc_html__( 'Reply #%1$s in %2$s', 'buddyboss-platform' ), bbp_get_form_reply_to(), bbp_get_topic_title() ) : bbp_get_topic_title() ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- bbp_get_form_reply_to() returns an int; bbp_get_topic_title() self-escapes via its filter.
 					?>
 				</legend>
 
@@ -221,8 +220,7 @@ defined( 'ABSPATH' ) || exit;
 			<p>
 				<?php
 				/* translators: %s: discussion title. */
-				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- bbp_get_topic_title() self-escapes via its filter.
-				printf( esc_html__( 'The discussion "%s" is closed to new replies.', 'buddyboss-platform' ), bbp_get_topic_title() );
+				printf( esc_html__( 'The discussion "%s" is closed to new replies.', 'buddyboss-platform' ), bbp_get_topic_title() ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- bbp_get_topic_title() self-escapes via its filter.
 				?>
 			</p>
 		</div>

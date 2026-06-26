@@ -124,12 +124,13 @@ if ( ! class_exists( 'BP_Search_CPT' ) ) :
 				$sql                 .= " AND p.post_type != %s";
 				$query_placeholder[] = $this->cpt_name;
 			} elseif ( false === $exclude_post_type && ! empty( $enrolled_courses ) ) {
-				$courses_id_in = '"' . implode( '","', $enrolled_courses ) . '"';
+				$courses_id_in = implode( ',', array_map( 'absint', $enrolled_courses ) );
 				$sql .= " AND p.ID IN ( SELECT DISTINCT post_id FROM {$wpdb->postmeta} WHERE meta_key = 'course_id' AND meta_value IN ({$courses_id_in}) )";
 			}
 
 			$query_placeholder[] = $this->cpt_name;
 
+			// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- $sql uses %s placeholders bound via $query_placeholder; interpolated parts are core table names, registered-taxonomy slugs ($tax_in), and absint'd course IDs ($courses_id_in).
 			$sql = $wpdb->prepare( $sql, $query_placeholder );
 
 			return apply_filters(

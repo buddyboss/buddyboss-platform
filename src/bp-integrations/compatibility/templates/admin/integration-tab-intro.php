@@ -44,6 +44,7 @@
 			ob_clean();
 
 			if ( ! empty( $output ) ) {
+				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $output is buffered settings-section HTML (form controls) from bp_core_compatibility_do_settings_sections(); wp_kses_post would strip inputs.
 				echo $output;
 
 				submit_button( __( 'Save Settings', 'buddyboss-platform' ) );

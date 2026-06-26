@@ -690,9 +690,11 @@ if ( ! class_exists( 'BBP_Akismet' ) ) :
 				$http_request .= $request;
 
 				// Open a socket connection
+				// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fsockopen -- direct socket I/O for Akismet HTTP fallback; WP_Filesystem offers no streaming socket equivalent.
 				if ( false !== ( $fs = @fsockopen( $http_host, $port, $errno, $errstr, 10 ) ) ) {
 
 					// Write our request to the pointer
+					// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fwrite -- direct socket I/O for Akismet HTTP fallback; WP_Filesystem offers no streaming socket equivalent.
 					fwrite( $fs, $http_request );
 
 					// Loop through pointer and compile a response
@@ -702,6 +704,7 @@ if ( ! class_exists( 'BBP_Akismet' ) ) :
 					}
 
 					// Close our socket
+					// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose -- direct socket I/O for Akismet HTTP fallback; WP_Filesystem offers no streaming socket equivalent.
 					fclose( $fs );
 
 					// Explode the response into usable data

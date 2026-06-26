@@ -23,7 +23,7 @@ global $media_album_template;
 
 			<div class="bb-album-content-wrap">
 				<h4><?php bp_album_title(); ?></h4>
-				<span class="bb-album_date"><?php echo bp_core_format_date( $media_album_template->album->date_created ); ?></span>
+				<span class="bb-album_date"><?php echo esc_html( bp_core_format_date( $media_album_template->album->date_created ) ); ?></span>
 				<div class="bb-album_stats">
 					<span class="bb-album_stats_photos"> <i class="bb-icon-l bb-icon-image"></i> <?php echo esc_html( bp_core_number_format( $media_album_template->album->media['total'] ) ); ?></span>
 					<?php if ( ( bp_is_profile_albums_support_enabled() || bp_is_group_albums_support_enabled() ) && ( bp_is_active( 'video' ) && ( bp_is_profile_video_support_enabled() || bp_is_group_video_support_enabled() ) ) ) { ?>
