@@ -159,7 +159,7 @@ class BP_XProfile_Group {
 		}
 
 		// Attempt to insert or update.
-		$query = $wpdb->query( $sql );
+		$query = $wpdb->query( $sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- $sql is $wpdb->prepare()'d above.
 
 		// Bail if query fails. If `$query` is 0, it means the save was successful, but no fields were updated.
 		if ( false === $query || is_wp_error( $query ) ) {
@@ -215,7 +215,7 @@ class BP_XProfile_Group {
 
 		$bp      = buddypress();
 		$sql     = $wpdb->prepare( "DELETE FROM {$bp->profile->table_name_groups} WHERE id = %d", $this->id );
-		$deleted = $wpdb->query( $sql );
+		$deleted = $wpdb->query( $sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- $sql is $wpdb->prepare()'d above.
 
 		// Delete field group.
 		if ( empty( $deleted ) || is_wp_error( $deleted ) ) {
@@ -454,7 +454,7 @@ class BP_XProfile_Group {
 		// Fetch the fields.
 		$cache_field_key = 'bp_xprofile_field_ids_' . md5( maybe_serialize( $r ) );
 		if ( ! isset( $bp_xprofile_field_ids[ $cache_field_key ] ) || is_admin() ) {
-			$field_ids                           = $wpdb->get_col( "SELECT id FROM {$bp->profile->table_name_fields} WHERE group_id IN ( {$group_ids_in} ) AND parent_id = 0 {$exclude_fields_sql} {$in_sql} ORDER BY field_order" );
+			$field_ids                           = $wpdb->get_col( "SELECT id FROM {$bp->profile->table_name_fields} WHERE group_id IN ( {$group_ids_in} ) AND parent_id = 0 {$exclude_fields_sql} {$in_sql} ORDER BY field_order" ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- Table name internal; $group_ids_in/$exclude_fields_sql/$in_sql are all intval/wp_parse_id_list-built ID lists; ORDER BY is hardcoded.
 			$bp_xprofile_field_ids[ $cache_field_key ] = $field_ids;
 		} else {
 			$field_ids = $bp_xprofile_field_ids[ $cache_field_key ];
@@ -820,6 +820,7 @@ class BP_XProfile_Group {
 			}
 
 			$levels = $wpdb->get_results(
+				// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- Only internal table names ($profile_table/$profile_meta_table from $bp->profile / table prefix) interpolated; no user input, hardcoded WHERE/ORDER BY.
 				"SELECT xf.id,
 				GROUP_CONCAT(xm.meta_key ORDER BY xf.id) meta_keys,
 				GROUP_CONCAT(xm.meta_value ORDER BY xf.id) meta_values

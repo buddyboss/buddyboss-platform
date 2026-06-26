@@ -75,6 +75,6 @@ function extension_tags() {
 $skip_tags = array_merge( $skip_tags, extension_tags() );
 
 if ( ! empty( $skip_tags ) ) {
-	echo '--tags=~' . implode( '&&~', $skip_tags );
+	echo '--tags=~' . implode( '&&~', $skip_tags ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- WP-CLI/Behat command context (stdout output, developer-supplied CLI args); not a web request runtime path.
 }
 

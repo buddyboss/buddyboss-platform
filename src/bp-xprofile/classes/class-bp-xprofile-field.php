@@ -391,7 +391,7 @@ class BP_XProfile_Field {
 		$bp  = buddypress();
 		$sql = $wpdb->prepare( "DELETE FROM {$bp->profile->table_name_fields} WHERE id = %d OR parent_id = %d", $this->id, $this->id );
 
-		if ( ! $wpdb->query( $sql ) ) {
+		if ( ! $wpdb->query( $sql ) ) { // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- $sql is $wpdb->prepare()'d above.
 			return false;
 		}
 
@@ -477,7 +477,7 @@ class BP_XProfile_Field {
 		 * Check for null so field options can be changed without changing any
 		 * other part of the field. The described situation will return 0 here.
 		 */
-		if ( $wpdb->query( $sql ) !== null ) {
+		if ( $wpdb->query( $sql ) !== null ) { // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- $sql is $wpdb->prepare()'d above.
 
 			if ( $is_new_field ) {
 				$this->id = $wpdb->insert_id;
@@ -544,7 +544,7 @@ class BP_XProfile_Field {
 
 						if ( '' != $option_value ) {
 							$sql = $wpdb->prepare( "INSERT INTO {$bp->profile->table_name_fields} (group_id, parent_id, type, name, description, is_required, option_order, is_default_option) VALUES (%d, %d, 'option', %s, '', 0, %d, %d)", $this->group_id, $parent_id, $option_value, $counter, $is_default );
-							if ( ! $wpdb->query( $sql ) ) {
+							if ( ! $wpdb->query( $sql ) ) { // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- $sql is $wpdb->prepare()'d above.
 								return false;
 							}
 						}
@@ -625,7 +625,7 @@ class BP_XProfile_Field {
 		$bp        = buddypress();
 		$cache_key = 'bp_xprofile_get_children_' . $parent_id . '_' . $this->group_id . '_' . $for_editing . '_' . $this->order_by;
 		if ( ! isset( $bp_get_children_cache[ $cache_key ] ) ) {
-			$children = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$bp->profile->table_name_fields} WHERE parent_id = %d AND group_id = %d {$sort_sql}", $parent_id, $this->group_id ) );
+			$children = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$bp->profile->table_name_fields} WHERE parent_id = %d AND group_id = %d {$sort_sql}", $parent_id, $this->group_id ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- Table name from $bp->profile->table_name_fields; $sort_sql is a hardcoded ORDER BY whitelist; ids bound via %d.
 
 			$bp_get_children_cache[ $cache_key ] = $children;
 		} else {
@@ -658,7 +658,7 @@ class BP_XProfile_Field {
 		$bp  = buddypress();
 		$sql = $wpdb->prepare( "DELETE FROM {$bp->profile->table_name_fields} WHERE parent_id = %d", $this->id );
 
-		$wpdb->query( $sql );
+		$wpdb->query( $sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- $sql is $wpdb->prepare()'d above.
 	}
 
 	/**
@@ -959,7 +959,7 @@ class BP_XProfile_Field {
 		if ( false === $type ) {
 			$table_name = bp_core_get_table_prefix() . 'bp_xprofile_fields';
 			$sql        = $wpdb->prepare( "SELECT type FROM {$table_name} WHERE id = %d", $field_id );
-			$type       = $wpdb->get_var( $sql );
+			$type       = $wpdb->get_var( $sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $sql is $wpdb->prepare()'d above; table name from bp_core_get_table_prefix().
 			wp_cache_set( $cache_key, $type, 'bp_xprofile' );
 		}
 
@@ -1000,7 +1000,7 @@ class BP_XProfile_Field {
 			wp_cache_set( $cache_key, $ids, 'bp_xprofile' );
 		}
 		$sql     = $wpdb->prepare( "DELETE FROM {$bp->profile->table_name_fields} WHERE group_id = %d", $group_id );
-		$deleted = $wpdb->get_var( $sql );
+		$deleted = $wpdb->get_var( $sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- $sql is $wpdb->prepare()'d above.
 
 		// Return true if fields were deleted.
 		if ( false !== $deleted ) {
@@ -1039,7 +1039,7 @@ class BP_XProfile_Field {
 		$id = bp_core_get_incremented_cache( $field_name, 'bp_xprofile_fields_by_name' );
 		if ( false === $id ) {
 			$sql = $wpdb->prepare( "SELECT id FROM {$bp->profile->table_name_fields} WHERE name = %s AND parent_id = 0", $field_name );
-			$id  = $wpdb->get_var( $sql );
+			$id  = $wpdb->get_var( $sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- $sql is $wpdb->prepare()'d above.
 			bp_core_set_incremented_cache( $field_name, 'bp_xprofile_fields_by_name', $id );
 		}
 
@@ -1070,14 +1070,14 @@ class BP_XProfile_Field {
 		// Get table name and field parent.
 		$table_name = buddypress()->profile->table_name_fields;
 		$sql        = $wpdb->prepare( "UPDATE {$table_name} SET field_order = %d, group_id = %d WHERE id = %d", $position, $field_group_id, $field_id );
-		$parent     = $wpdb->query( $sql );
+		$parent     = $wpdb->query( $sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $sql is $wpdb->prepare()'d above; table name from buddypress()->profile->table_name_fields.
 
 		// Update $field_id with new $position and $field_group_id.
 		if ( ! empty( $parent ) && ! is_wp_error( $parent ) ) {
 
 			// Update any children of this $field_id.
 			$sql = $wpdb->prepare( "UPDATE {$table_name} SET group_id = %d WHERE parent_id = %d", $field_group_id, $field_id );
-			$wpdb->query( $sql );
+			$wpdb->query( $sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $sql is $wpdb->prepare()'d above; table name from buddypress()->profile->table_name_fields.
 
 			// Invalidate profile field cache.
 			wp_cache_delete( $field_id, 'bp_xprofile_fields' );
