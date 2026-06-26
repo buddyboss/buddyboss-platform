@@ -65,17 +65,20 @@ export function IntegrationCard( { item, categoryMap, onSelect } ) {
 				</div>
 
 				<div className="bb-integrations__card-text">
-					{ /* Only the title opens the detail drawer. */ }
-					<button
-						type="button"
-						className="bb-integrations__card-title"
-						onClick={ open }
-					>
-						{ title }
-					</button>
-					{ categoryName && (
-						<span className="bb-integrations__card-category">{ categoryName }</span>
-					) }
+					{ /* Title + category sit tight together; the 16px gap is before the description. */ }
+					<div className="bb-integrations__card-heading">
+						{ /* Only the title opens the detail drawer. */ }
+						<button
+							type="button"
+							className="bb-integrations__card-title"
+							onClick={ open }
+						>
+							{ title }
+						</button>
+						{ categoryName && (
+							<span className="bb-integrations__card-category">{ categoryName }</span>
+						) }
+					</div>
 					<span className="bb-integrations__card-desc">{ description }</span>
 				</div>
 			</div>

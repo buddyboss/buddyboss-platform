@@ -144,6 +144,7 @@ body.buddyboss_page_bb-integrations {
 		flex-direction: column;
 		gap: 16px;
 		padding: 16px;
+		min-height: 270px; // Figma cardAddon min-height
 		background: $bb-background-base-color;
 		border: 0.5px solid $bb-border-secondary-color;
 		border-radius: 12px;
@@ -202,12 +203,20 @@ body.buddyboss_page_bb-integrations {
 		gap: 16px;
 	}
 
+	// Title + category grouped (Figma Frame 115). No gap here — each row carries
+	// its own vertical padding (title 1px, category 3px) so the title↔category
+	// spacing is 4px and the category↔description spacing is 3px + the 16px text gap.
+	&__card-heading {
+		display: flex;
+		flex-direction: column;
+	}
+
 	&__card-title {
 		// Rendered as a <button> — only the title text opens the drawer, so reset
 		// the native button chrome and shrink the hit area to the text itself.
 		align-self: flex-start;
 		margin: 0;
-		padding: 0;
+		padding: 1px 0; // Figma Frame 116
 		border: 0;
 		background: none;
 		font-size: 16px;
@@ -224,6 +233,7 @@ body.buddyboss_page_bb-integrations {
 	}
 
 	&__card-category {
+		padding: 3px 0; // Figma Frame 117
 		font-size: 13px;
 		font-weight: 400;
 		line-height: 18px;
