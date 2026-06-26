@@ -1168,10 +1168,17 @@ window.bp = window.bp || {};
 			    $body         = $( 'body' );
 
 			// Check if target is inside #bb-rl-activity-modal or media theater.
-			var isInsideModal        = this.isInsideModalOrContainer( target );
-			var isInsideMediaTheatre = target.closest( '.bb-rl-internal-model' ).length > 0;
+			var isInsideModal         = this.isInsideModalOrContainer( target );
+			var isInsideActivityModal = target.closest( '#bb-rl-activity-modal' ).length > 0;
+			var isInsideMediaTheatre  = target.closest( '.bb-rl-internal-model' ).length > 0;
 
-			if ( isInsideModal ) {
+			// The modal-scoped .activity-state / .comments-count / .acomments-count nodes
+			// only exist inside #bb-rl-activity-modal. isInsideModal is broad (it also
+			// matches the media/video theatre, where closest('#bb-rl-activity-modal') is
+			// empty), so gate this lookup on the narrow isInsideActivityModal — otherwise it
+			// overwrites the sensible activityItem.find() defaults above with empty sets and
+			// the subsequent updates become no-ops.
+			if ( isInsideActivityModal ) {
 				activityState = activityItem.closest( '#bb-rl-activity-modal' ).find( '.activity-state' );
 				commentsText  = activityItem.closest( '#bb-rl-activity-modal' ).find( '.comments-count' );
 				repliesText   = activityItem.closest( '#bb-rl-activity-modal' ).find( '.acomments-count' );
@@ -4539,7 +4546,7 @@ window.bp = window.bp || {};
 		 * Call when modal content has finished loading so the modal shows the correct pin icon and class.
 		 */
 		syncPinIconToModal: function() {
-			var parentActivityId = $( '#hidden_parent_id' ).length > 0 ? parseInt( $( '#hidden_parent_id' ).val() ) : 0;
+			var parentActivityId = $( '#hidden_parent_id' ).length > 0 ? parseInt( $( '#hidden_parent_id' ).val(), 10 ) : 0;
 			if ( parentActivityId <= 0 ) {
 				return;
 			}
@@ -4567,7 +4574,7 @@ window.bp = window.bp || {};
 		 * @param {jQuery} target - The close button element that triggered the modal close.
 		 */
 		syncPinPostActivityOnCloseTheatre: function( target ) {
-			var parentActivityId         = $( '#hidden_parent_id' ).length > 0 ? parseInt( $( '#hidden_parent_id' ).val() ) : 0;
+			var parentActivityId         = $( '#hidden_parent_id' ).length > 0 ? parseInt( $( '#hidden_parent_id' ).val(), 10 ) : 0;
 			var $wrapper                 = target.closest( '.bb-rl-media-model-wrapper' );
 			if ( ! $wrapper.length ) {
 				return;
@@ -4589,6 +4596,11 @@ window.bp = window.bp || {};
 				$pageActivityListItem.addClass( 'activity-sync' );
 				bp.Nouveau.Activity.heartbeat_data.last_recorded = 0;
 				bp.Nouveau.refreshActivities();
+				// Clear the flag immediately: both buddypress-media.js and
+				// buddypress-video.js bind closeTheatre to .bb-rl-close-media-theatre, so
+				// this can run twice for one close. Resetting here makes the second call a
+				// no-op instead of firing refreshActivities() a second time in the same tick.
+				bp.Nouveau.Activity.activityPinHasUpdates = false;
 			}
 		},
 	};
