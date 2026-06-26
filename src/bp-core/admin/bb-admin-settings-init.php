@@ -140,6 +140,16 @@ function bb_admin_settings_init() {
 			require_once buddypress()->plugin_dir . 'bp-core/admin/bb-admin-settings-page.php';
 		}
 
+		// Integrations marketplace page (render function for the bb-integrations submenu).
+		if ( file_exists( buddypress()->plugin_dir . 'bp-core/admin/bb-admin-integrations-page.php' ) ) {
+			require_once buddypress()->plugin_dir . 'bp-core/admin/bb-admin-integrations-page.php';
+		}
+
+		// Shared admin-common layer asset registration.
+		if ( file_exists( buddypress()->plugin_dir . 'bp-core/admin/bb-admin-common-assets.php' ) ) {
+			require_once buddypress()->plugin_dir . 'bp-core/admin/bb-admin-common-assets.php';
+		}
+
 		// Admin-only cover image upload + user crop AJAX handlers
 		// (`bb_admin_cover_image_upload_temp` + `bb_admin_cover_image_set`).
 		// Two-step pipeline that mirrors the avatar crop flow so the React
@@ -284,6 +294,31 @@ function bb_register_help_content_rest_route() {
 	( new BB_REST_Help_Content_Endpoint() )->register_routes();
 }
 add_action( 'rest_api_init', 'bb_register_help_content_rest_route' );
+
+/**
+ * Register the Integrations marketplace REST proxy route.
+ *
+ * Same-origin server-side proxy for the buddyboss.com Integrations directory
+ * (`wp/v2/integrations` + taxonomies). Mirrors the help-content proxy with its
+ * own cache namespace and filters. The React Integrations screen POSTs path-only
+ * fragments to `buddyboss/v1/integrations/proxy`.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_register_integrations_rest_route() {
+	$controller_file = buddypress()->plugin_dir . 'bp-core/admin/classes/class-bb-rest-integrations-endpoint.php';
+	if ( ! file_exists( $controller_file ) ) {
+		return;
+	}
+	require_once $controller_file;
+	if ( ! class_exists( 'BB_REST_Integrations_Endpoint' ) ) {
+		return;
+	}
+	( new BB_REST_Integrations_Endpoint() )->register_routes();
+}
+add_action( 'rest_api_init', 'bb_register_integrations_rest_route' );
 
 /**
  * Initialize the Integration Bridge early.

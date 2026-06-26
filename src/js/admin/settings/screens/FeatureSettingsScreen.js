@@ -33,7 +33,7 @@ import { sanitizeHtml, safeUrl } from '../utils/sanitize';
 // unknown tags instead of removing them, so future KB blocks degrade
 // gracefully. `safeImageUrl` mirrors the same scheme/HTTPS-coercion
 // rules used inside the body for the standalone hero image.
-import { sanitizeKbArticle, safeImageUrl } from '../utils/sanitizeKbArticle';
+import { sanitizeKbArticle, safeImageUrl } from '@bb/admin-common';
 import { useGroupNavSync } from '../components/groups/GroupNavSync';
 import { useProfileNavSync } from '../components/members/ProfileNavSync';
 import { WelcomeBanner } from '../components/appearance/WelcomeBanner';

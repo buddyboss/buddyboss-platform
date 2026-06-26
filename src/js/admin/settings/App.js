@@ -5,11 +5,11 @@
  * @since BuddyBoss [BBVERSION]
  */
 
-import { useState, useEffect, useRef, lazy, Suspense } from '@wordpress/element';
+import { useState, useEffect, useCallback, lazy, Suspense } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
-import { Header } from './components/Header';
 import { Router } from './Router';
-import { KbProvider, useKb } from './context/KbContext';
+import { KbProvider, useKb, BBAdminHeader } from '@bb/admin-common';
+import { ajaxFetch } from './utils/ajax';
 import { clearHelpContentCache } from '../utils/api';
 
 // Register integration-specific hooks that extend the shared bb_verify_popup
@@ -18,11 +18,13 @@ import { clearHelpContentCache } from '../utils/api';
 import './components/recaptcha/recaptcha-verify-hooks';
 import './components/pusher/pusher-verify-hooks';
 
-// Lazy-load the Knowledge Base modal so admins who never open it don't pay
-// the bundle cost. The dynamic import resolves only after the user clicks the
-// graduation-cap trigger and `kbState.isOpen` flips to true.
+// Knowledge Base modal now lives in the shared layer (@bb/admin-common) so the
+// Settings and Integrations apps present the same help experience. It is an
+// external (the shared bundle is already enqueued as a dependency), so the lazy
+// import resolves from the in-memory global rather than a separate network
+// chunk; the Suspense wrapper is retained for parity.
 const KnowledgeBaseModal = lazy( () =>
-	import( './components/knowledge-base/KnowledgeBaseModal' )
+	import( '@bb/admin-common' ).then( ( module ) => ( { default: module.KnowledgeBaseModal } ) )
 );
 
 /**
@@ -182,10 +184,18 @@ export function App() {
 }
 
 function AppInner() {
-	const kbTriggerRef = useRef( null );
 	const { open: openKb, state: kbState } = useKb();
 	const [currentRoute, setCurrentRoute] = useState('/settings');
 	const [isLoading, setIsLoading] = useState(true);
+
+	// Stable identities so BBAdminHeader's search effect doesn't re-subscribe on
+	// every render (ajaxFetch is module-scoped; setCurrentRoute is stable).
+	const handleHeaderSearch = useCallback( ( query, signal ) =>
+		ajaxFetch( 'bb_admin_search_settings', { query }, { signal } ).then(
+			( response ) => ( response.success ? ( response.data?.results || [] ) : [] )
+		),
+	[] );
+	const handleHeaderSelectResult = useCallback( ( result ) => setCurrentRoute( result.route ), [] );
 
 	// One-shot localStorage flush for the help-content cache.
 	//
@@ -394,17 +404,19 @@ function AppInner() {
 			<a href="#bb-admin-settings-main" className="screen-reader-shortcut">
 				{ __( 'Skip to settings content', 'buddyboss' ) }
 			</a>
-			<Header
-				onNavigate={setCurrentRoute}
-				kbTriggerRef={kbTriggerRef}
-				openKb={openKb}
+			<BBAdminHeader
+				logoUrl={ ( typeof bbAdminData !== 'undefined' && bbAdminData.logoUrl ) || '' }
+				ipnRootId={ ( typeof bbAdminData !== 'undefined' && bbAdminData.ipnRootId ) || '' }
+				onSearch={ handleHeaderSearch }
+				onSelectResult={ handleHeaderSelectResult }
+				onHelp={ openKb }
 			/>
 			<div id="bb-admin-settings-main" tabIndex="-1">
 				<Router currentRoute={currentRoute} onNavigate={setCurrentRoute} />
 			</div>
 			{ kbState.isOpen && (
 				<Suspense fallback={null}>
-					<KnowledgeBaseModal triggerRef={kbTriggerRef} />
+					<KnowledgeBaseModal />
 				</Suspense>
 			) }
 		</div>

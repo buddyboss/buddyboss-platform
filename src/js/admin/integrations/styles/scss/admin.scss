@@ -1,0 +1,647 @@
+/**
+ * BuddyBoss Integrations marketplace — styles.
+ *
+ * Scoped under top-level plugin classes (.bb-integrations / .bb-integrations-drawer)
+ * to avoid colliding with WP admin or other plugins. Mobile-first.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+
+// Variables & mixing
+@import '../../../settings/styles/scss/utils/variables';
+@import '../../../settings/styles/scss/utils/mixings';
+
+
+body.buddyboss_page_bb-integrations {
+	background-color: $bb-background-color;
+}
+
+#bb-admin-integrations {
+	padding: 0;
+	max-width: 1600px;
+	margin: 0 auto;
+}
+
+.bb-integrations {
+	padding: 0 24px 24px;
+
+	&__toolbar {
+		display: flex;
+		gap: 24px;
+		margin: 24px 0;
+		align-items: center;
+		justify-content: space-between;
+		flex-wrap: wrap;
+		padding: 0 0 24px 0;
+		border-bottom: 1px solid $bb-border-primary-color;
+	}
+
+	&__tabs {
+		display: flex;
+		gap: 8px;
+		align-items: center;
+	}
+
+	&__tab {
+		background: transparent;
+		border: 0.5px solid $bb-border-tertiary-color;
+		border-radius: 999px;
+		padding: 7px 16px;
+		font-size: 13px;
+		line-height: 18px;
+		font-weight: 500;
+		color: $bb-text-tertiary-color;
+		cursor: pointer;
+		transition: all 0.2s ease;
+		white-space: nowrap;
+
+		&:hover {
+			border-color: $bb-border-tertiary-color;
+			box-shadow: inset 0 0 0 0.5px $bb-border-tertiary-color;
+		}
+
+		&:focus-visible {
+			border-color: transparent;
+			box-shadow: none;
+			outline: 2px solid $bb-border-quaternary-color;
+		}
+
+		&.is-active {
+			background: $bb-background-secondary-color;
+			border-color: $bb-border-quaternary-color;
+			color: $bb-text-color;
+		}
+
+		&:disabled {
+			opacity: 0.45;
+			cursor: not-allowed;
+		}
+	}
+
+	&__controls {
+		display: flex;
+		flex: 1 1 320px;
+		justify-content: flex-end;
+		gap: 12px;
+	}
+
+	.bb-integrations__search {
+		@include bb-input-text;
+		padding-right: 28px;
+
+		&::-webkit-search-cancel-button {
+			display: none;
+		}
+
+		&-wrap {
+			width: 100%;
+			max-width: 225px;
+			position: relative;
+
+			i {
+				position: absolute;
+				right: 8px;
+				top: 50%;
+				transform: translateY(-50%);
+				font-size: 20px;
+				color: $bb-icon-tertiary-color;
+				width: 20px;
+				height: 20px;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				pointer-events: none;
+			}
+		}
+	}
+
+	.bb-integrations__category {
+		@include bb-admin-settings-select;
+		min-height: 32px;
+	}
+
+	&__category {
+		flex: 0 0 auto;
+		min-height: 36px;
+	}
+
+	&__grid {
+		display: grid;
+		grid-template-columns: 1fr;
+		gap: 16px;
+
+		@media (min-width: 768px) {
+			grid-template-columns: repeat(2, 1fr);
+		}
+
+		@media (min-width: 1024px) {
+			grid-template-columns: repeat(4, 1fr);
+		}
+	}
+
+	&__card {
+		display: flex;
+		flex-direction: column;
+		gap: 16px;
+		padding: 16px;
+		min-height: 270px; // Figma cardAddon min-height
+		background: $bb-background-base-color;
+		border: 0.5px solid $bb-border-secondary-color;
+		border-radius: 12px;
+
+		&--skeleton {
+			background: linear-gradient(90deg, #f3f4f5 25%, #ececec 37%, #f3f4f5 63%);
+			background-size: 400% 100%;
+			animation: bb-integrations-shimmer 1.4s ease infinite;
+			min-height: 170px;
+		}
+	}
+
+	&__card-body {
+		display: flex;
+		flex-direction: column;
+		gap: 16px;
+		flex: 1 1 auto;
+	}
+
+	&__card-top {
+		display: flex;
+		flex-direction: row;
+		justify-content: space-between;
+		align-items: flex-start;
+		gap: 24px;
+	}
+
+	&__card-logo {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		flex: 0 0 auto;
+		width: 56px;
+		height: 56px;
+		padding: 8px;
+		border: 0.5px solid $bb-border-primary-color;
+		border-radius: 99px;
+		box-sizing: border-box;
+
+		img {
+			width: 40px;
+			height: 40px;
+			object-fit: contain;
+			border-radius: $bb-border-radius-full;
+		}
+
+		i {
+			font-size: 28px;
+			color: #8c8f94;
+		}
+	}
+
+	&__card-text {
+		display: flex;
+		flex-direction: column;
+		gap: 16px;
+	}
+
+	// Title + category grouped (Figma Frame 115). No gap here — each row carries
+	// its own vertical padding (title 1px, category 3px) so the title↔category
+	// spacing is 4px and the category↔description spacing is 3px + the 16px text gap.
+	&__card-heading {
+		display: flex;
+		flex-direction: column;
+	}
+
+	&__card-title {
+		// Rendered as a <button> — only the title text opens the drawer, so reset
+		// the native button chrome and shrink the hit area to the text itself.
+		align-self: flex-start;
+		margin: 0;
+		padding: 1px 0; // Figma Frame 116
+		border: 0;
+		background: none;
+		font-size: 16px;
+		font-weight: 500;
+		line-height: 22px;
+		color: $bb-text-color;
+		text-align: left;
+		cursor: pointer;
+
+		&:hover,
+		&:focus {
+			color: #ef5d33;
+		}
+	}
+
+	&__card-category {
+		padding: 3px 0; // Figma Frame 117
+		font-size: 13px;
+		font-weight: 400;
+		line-height: 18px;
+		color: $bb-text-tertiary-color;
+	}
+
+	&__card-desc {
+		font-size: 13px;
+		font-weight: 400;
+		line-height: 18px;
+		color: $bb-text-tertiary-color;
+		display: -webkit-box;
+		-webkit-line-clamp: 3;
+		-webkit-box-orient: vertical;
+		overflow: hidden;
+		min-height: 54px;
+	}
+
+	&__card-badge {
+		align-self: flex-start;
+		font-size: 10px;
+		font-weight: 600;
+		letter-spacing: 0.5px;
+		text-transform: uppercase;
+		color: #fff;
+		background: #ef5d33;
+		border-radius: 4px;
+		padding: 2px 8px;
+		line-height: 16px;
+	}
+
+	&__card-actions {
+		display: flex;
+		flex-direction: row;
+		// Install sits left, "Learn More ↗" right (Figma: buttons row, space-between).
+		justify-content: space-between;
+		align-items: center;
+		gap: 16px;
+	}
+
+	&__btn {
+		@include bb-button-primary-outline;
+		text-decoration: none;
+
+		// Disabled "Install" (no install_url yet) — greyed outline + label per Figma.
+		&:disabled {
+			border-color: #f7ae99;
+			color: #f9bead;
+			cursor: default;
+			pointer-events: none;
+		}
+	}
+
+	// Secondary "Learn More" — borderless, dark label + ArrowUpRight icon, right-aligned.
+	&__btn--link {
+		display: inline-flex;
+		flex-direction: row;
+		align-items: center;
+		gap: 4px;
+		padding: 6px 8px;
+		border: 0;
+		background: none;
+		color: #1e1e1e;
+		font-size: 14px;
+		font-weight: 400;
+		line-height: 20px;
+
+		i {
+			font-size: 16px;
+			line-height: 1;
+		}
+
+		&:hover,
+		&:focus {
+			color: #ef5d33;
+		}
+	}
+
+	// Pagination footer — item count + numbered pages (Settings 2.0 list style).
+	&__footer {
+		display: flex;
+		align-items: center;
+		justify-content: flex-end;
+		gap: 16px;
+		padding: 16px 0;
+		margin-top: 8px;
+	}
+
+	&__item-count {
+		font-size: 13px;
+		color: $bb-text-tertiary-color;
+	}
+
+	&__state {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 12px;
+		padding: 48px 16px;
+		text-align: center;
+		color: #50575e;
+	}
+}
+
+// Numbered page buttons + ellipsis, shared with the Settings 2.0 list screens.
+.bb-admin-pagination {
+	@include bb-admin-pagination;
+}
+
+@keyframes bb-integrations-shimmer {
+	0% { background-position: 100% 0; }
+	100% { background-position: -100% 0; }
+}
+
+/* Right slide-in detail drawer. */
+.bb-integrations-drawer {
+	position: fixed;
+	inset: 0;
+	z-index: 100000;
+
+	&__overlay {
+		position: absolute;
+		inset: 0;
+		background: rgba(0, 0, 0, 0.6);
+		backdrop-filter: blur(1px);
+	}
+
+	&__panel {
+		position: absolute;
+		top: 0;
+		right: 0;
+		bottom: 0;
+		width: 100%;
+		max-width: 720px;
+		background: $bb-background-base-color;
+		box-shadow: -16px 0 56px 0 rgba(0, 0, 0, 0.20);
+		border: 1px solid rgba(0, 0, 0, 0.10);
+		border-radius: 16px 0 0 0;
+		overflow-y: auto;
+
+		.rtl & {
+			right: auto;
+			left: 0;
+			box-shadow: 2px 0 16px rgba(0, 0, 0, 0.15);
+		}
+	}
+
+	&__topbar {
+		position: sticky;
+		top: 0;
+		z-index: 1;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 16px;
+		padding: 16px 24px;
+		min-height: 64px;
+		box-sizing: border-box;
+		background: $bb-background-base-color;
+		border-bottom: 1px solid $bb-border-secondary-color;
+
+		.rtl & {
+			border-radius: 0 16px 0 0;
+		}
+	}
+
+	&__name {
+		margin: 0;
+		font-size: 18px;
+		line-height: 24px;
+		font-weight: 500;
+		color: $bb-text-color;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
+
+	&__content {
+		padding: 16px 24px;
+	}
+
+	&__close {
+		flex: 0 0 auto;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		border: 0;
+		background: none;
+		cursor: pointer;
+		font-size: 24px;
+		line-height: 1;
+		color: $bb-icon-secondary-color;
+		padding: 0;
+	}
+
+	&__state {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		min-height: 200px;
+	}
+
+	&__header {
+		background-color: $bb-background-primary-color;
+		padding: 24px;
+		margin-bottom: 16px;
+		border-radius: $bb-border-radius-2xl;
+		text-align: center;
+	}
+
+	&__icon {
+		display: inline-flex;
+		width: 56px;
+		height: 56px;
+		align-items: center;
+		justify-content: center;
+		background-color: $bb-background-base-color;
+		border: 1px solid $bb-border-primary-color;
+		border-radius: $bb-border-radius-full;
+		margin-bottom: 8px;
+
+		img {
+			max-width: 40px;
+			max-height: 40px;
+			object-fit: contain;
+		}
+
+		i {
+			font-size: 36px;
+			color: #8c8f94;
+		}
+	}
+
+	&__title {
+		color: $bb-text-color;
+		font-size: 16px;
+		font-weight: 600;
+		margin: 0 0 8px;
+	}
+
+	&__collection {
+		font-size: 13px;
+		font-weight: 400;
+		color: #8c8f94;
+	}
+
+	&__desc {
+		font-size: 13px;
+		color: $bb-text-secondary-color;
+		margin: 0 0 16px;
+	}
+
+	&__actions {
+		display: flex;
+		justify-content: center;
+		gap: 16px;
+
+		.button-primary {
+			@include bb-button-primary;
+			min-height: auto;
+			line-height: 1.2;
+
+			&:focus {
+				background: $bb-background-brand-primary-color;
+			}
+		}
+	}
+
+	&__body {
+		font-size: 14px;
+		line-height: 1.6;
+		color: #1e1e1e;
+
+		p {
+			color: $bb-text-tertiary-color;
+			font-size: 13px;
+			font-weight: 400;
+			margin: 0 0 12px;
+		}
+
+		ul {
+			list-style: disc;
+			padding-left: 1.5em;
+			margin: 0 0 12px;
+		}
+
+		ol {
+			list-style: decimal;
+			padding-left: 1.5em;
+			margin: 0 0 12px;
+		}
+
+		li {
+			margin: 0 0 6px;
+			list-style: inherit;
+		}
+
+		img {
+			max-width: 100%;
+			height: auto;
+			border-radius: 6px;
+			margin: 12px 0;
+		}
+
+		h1 {
+			color: $bb-text-color;
+			font-size: 16px;
+			font-weight: 500;
+			margin: 0 0 12px;
+			padding: 0;
+		}
+
+		h2,
+		h3,
+		h4 {
+			font-size: 15px;
+			font-weight: 500;
+			color: $bb-text-color;
+			margin: 0 0 12px;
+		}
+
+		h3,
+		h4 {
+			font-size: 14px;
+		}
+
+		.wp-block-buttons {
+			margin-bottom: 16px;
+		}
+
+		.wp-block-button__link {
+			color: $bb-primary-color;
+		}
+	}
+
+	&__vendor {
+		font-size: 13px;
+		color: #8c8f94;
+		margin: 0 0 8px;
+
+		a {
+			color: #ef5d33;
+		}
+	}
+
+	&__requirements {
+		margin: 16px 0;
+	}
+
+	&__deps {
+		margin-bottom: 12px;
+
+		&-label {
+			display: block;
+			font-size: 12px;
+			font-weight: 600;
+			text-transform: uppercase;
+			color: #50575e;
+			margin-bottom: 6px;
+		}
+
+		&-list {
+			list-style: none;
+			margin: 0;
+			padding: 0;
+		}
+
+		&-item {
+			display: flex;
+			align-items: center;
+			gap: 8px;
+			font-size: 13px;
+			padding: 4px 0;
+
+			a {
+				color: #ef5d33;
+			}
+		}
+
+		&-tag {
+			font-size: 10px;
+			font-weight: 600;
+			text-transform: uppercase;
+			padding: 1px 6px;
+			border-radius: 3px;
+
+			&--free {
+				background: #edf7ed;
+				color: #1e7e34;
+			}
+
+			&--pro {
+				background: #fdecea;
+				color: #b3261e;
+			}
+		}
+	}
+
+	&__screenshots {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 12px;
+		margin-top: 16px;
+
+		img {
+			width: 100%;
+			border: 1px solid #e2e4e7;
+			border-radius: 6px;
+		}
+	}
+}

@@ -453,10 +453,25 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 				function_exists( 'bb_admin_settings_page' ) ? 'bb_admin_settings_page' : 'bp_core_admin_settings'
 			);
 
-			// Legacy "Plugin Integrations" submenu removed in Settings 2.0. Integrations
-			// now live inside the Settings grid under the "Integrations" category.
-			// The bp-integrations URL is redirected by bb_redirect_bp_integrations_*
-			// in bp-core-admin-actions.php.
+			// Legacy "Plugin Integrations" submenu removed in Settings 2.0. The
+			// per-integration settings now live inside the Settings grid under the
+			// "Integrations" category (the bp-integrations URL is redirected by
+			// bb_redirect_bp_integrations_* in bp-core-admin-actions.php).
+			//
+			// Separately, the Integrations *marketplace* — a curated directory of
+			// third-party integrations fetched from buddyboss.com — is its own
+			// standalone React page under the new bb-integrations slug. Registered
+			// unconditionally (like bb-settings above): add_submenu_page() only
+			// stores the callback string; WP invokes bb_admin_integrations_page()
+			// at render time, by which point bb-admin-integrations-page.php is loaded.
+			$hooks[] = add_submenu_page(
+				$this->settings_page,
+				__( 'BuddyBoss Integrations', 'buddyboss' ),
+				__( 'Integrations', 'buddyboss' ),
+				$this->capability,
+				'bb-integrations',
+				'bb_admin_integrations_page'
+			);
 
 			// ReadyLaunch legacy admin page retired in BuddyBoss 3.0.0 —
 			// the `bb-readylaunch` URL now redirects to Appearance in Settings 2.0
