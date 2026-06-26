@@ -498,6 +498,7 @@ function bp_admin_repair_friend_count() {
 	$result    = __( 'Failed!', 'buddyboss-platform' );
 
 	$sql_delete = "DELETE FROM {$wpdb->usermeta} WHERE meta_key IN ( 'total_friend_count' );";
+	// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Only $wpdb->usermeta table name is interpolated; meta_key is a hardcoded literal.
 	if ( is_wp_error( $wpdb->query( $sql_delete ) ) ) {
 		return array( 1, sprintf( $statement, $result ) );
 	}
@@ -560,6 +561,7 @@ function bp_admin_repair_group_count() {
 	$result    = __( 'Failed!', 'buddyboss-platform' );
 
 	$sql_delete = "DELETE FROM {$wpdb->usermeta} WHERE meta_key IN ( 'total_group_count' );";
+	// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Only $wpdb->usermeta table name is interpolated; meta_key is a hardcoded literal.
 	if ( is_wp_error( $wpdb->query( $sql_delete ) ) ) {
 		return array( 1, sprintf( $statement, $result ) );
 	}
@@ -705,12 +707,15 @@ function repair_default_profiles_fields() {
 	$nick_name = $wpdb->prepare( "DELETE FROM {$bp_prefix}bp_xprofile_fields WHERE can_delete = %d AND parent_id = %d AND is_required = %d AND name = %s AND type = %s AND id != %d", 0, 0, 1, 'Nickname', 'textbox', $nickname_id );
 
 	// Remove all duplicate first name fields.
+	// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $first_name is a $wpdb->prepare()'d query built above.
 	$wpdb->query( $first_name );
 
 	// Remove all duplicate last name fields.
+	// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $last_name is a $wpdb->prepare()'d query built above.
 	$wpdb->query( $last_name );
 
 	// Remove all duplicate nick name fields.
+	// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $nick_name is a $wpdb->prepare()'d query built above.
 	$wpdb->query( $nick_name );
 
 	// Clear profile completion data
@@ -1379,9 +1384,10 @@ function bp_admin_update_activity_favourite() {
 					continue;
 				}
 
+				$fav_user_ids_in       = implode( ',', array_map( 'absint', $fav_user_ids ) );
 				$migrated_fav_user_ids = $wpdb->get_col(
 					$wpdb->prepare(
-						'SELECT user_id FROM ' . $reaction::$user_reaction_table . ' WHERE item_id = %d AND user_id IN (' . implode( ',', $fav_user_ids ) . ')',
+						'SELECT user_id FROM ' . $reaction::$user_reaction_table . ' WHERE item_id = %d AND user_id IN (' . $fav_user_ids_in . ')', // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- Table name from $reaction::$user_reaction_table; $fav_user_ids_in is an absint'd ID list; $item_id is %d-bound.
 						$item_id
 					)
 				);
@@ -1516,6 +1522,7 @@ function bp_admin_invitations_table() {
 	// Check for existence of invitations table.
 	$table_name = BP_Invitation_Manager::get_table_name();
 	$query      = $wpdb->prepare( 'SHOW TABLES LIKE %s', $wpdb->esc_like( $table_name ) );
+	// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- $query is a $wpdb->prepare()'d statement built above.
 	if ( ! $wpdb->get_var( $query ) == $table_name ) {
 		return array(
 			'status'  => 2,

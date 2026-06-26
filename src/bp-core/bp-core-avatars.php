@@ -938,7 +938,7 @@ function bp_core_delete_existing_avatar( $args = '' ) {
 		closedir( $av_dir );
 	}
 
-	@rmdir( $avatar_folder_dir );
+	@rmdir( $avatar_folder_dir ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_rmdir -- Removing emptied avatar directory; WP_Filesystem offers no streaming equivalent.
 
 	/**
 	 * Fires after deleting an existing avatar.

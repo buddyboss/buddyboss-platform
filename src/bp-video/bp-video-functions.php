@@ -931,7 +931,7 @@ function bp_video_preview_image_by_js( $video ) {
 
 		// Create temp folder.
 		wp_mkdir_p( $upload_dir );
-		chmod( $upload_dir, 0777 );
+		chmod( $upload_dir, 0777 ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_chmod -- Explicit permission set on a freshly-created temp thumbnail dir.
 
 	}
 
@@ -1191,7 +1191,7 @@ function bp_video_background_create_thumbnail( $video ) {
 
 					// Create temp folder.
 					wp_mkdir_p( $upload_dir );
-					chmod( $upload_dir, 0777 );
+					chmod( $upload_dir, 0777 ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_chmod -- Explicit permission set on a freshly-created temp thumbnail dir.
 
 				}
 
@@ -2031,7 +2031,7 @@ function bp_video_delete_orphaned_attachments() {
 				GROUP BY {$post_table}.ID
 				ORDER BY {$post_table}.post_date DESC";
 
-	$video_wp_query_posts = $wpdb->get_col( $query );
+	$video_wp_query_posts = $wpdb->get_col( $query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Only table names ($wpdb->posts/$wpdb->postmeta) and a server-generated gmdate() value are interpolated; no user input.
 	if ( ! empty( $video_wp_query_posts ) ) {
 		foreach ( $video_wp_query_posts as $post_id ) {
 			wp_delete_attachment( $post_id, true );
@@ -3517,13 +3517,13 @@ function bb_video_symlink_path() {
 	$platform_previews_path = $upload_dir . '/bb-platform-previews';
 	if ( ! is_dir( $platform_previews_path ) ) {
 		wp_mkdir_p( $platform_previews_path );
-		chmod( $platform_previews_path, 0755 );
+		chmod( $platform_previews_path, 0755 ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_chmod -- Explicit permission set on a freshly-created previews dir.
 	}
 
 	$video_symlinks_path = $platform_previews_path . '/' . md5( 'bb-videos' );
 	if ( ! is_dir( $video_symlinks_path ) ) {
 		wp_mkdir_p( $video_symlinks_path );
-		chmod( $video_symlinks_path, 0755 );
+		chmod( $video_symlinks_path, 0755 ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_chmod -- Explicit permission set on a freshly-created symlinks dir.
 	}
 
 	return $video_symlinks_path;
@@ -4930,7 +4930,7 @@ function bb_resumable_upload( $tmp_file_path, $filename ) {
 				'warnings'  => $warnings,
 			);
 		}
-		chmod( $file_chunks_folder, 0755 );
+		chmod( $file_chunks_folder, 0755 ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_chmod -- Explicit permission set on a freshly-created chunks dir.
 	}
 
 	// Remove problematic symbols from filename.
@@ -5055,7 +5055,7 @@ function bb_resumable_upload( $tmp_file_path, $filename ) {
 	}
 
 	// Set secure file permissions.
-	chmod( $chunk_file, 0644 );
+	chmod( $chunk_file, 0644 ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_chmod -- Explicit permission set on a freshly-written chunk file.
 
 	$check_args = array(
 		'file_chunks_folder' => $file_chunks_folder,
@@ -5124,7 +5124,7 @@ function bb_check_all_parts( $args ) {
 	$warnings           = &$args['warnings'];
 	// Use file locking to prevent race conditions during chunk verification.
 	$lock_file = $file_chunks_folder . '/.lock';
-	$lock_fp   = fopen( $lock_file, 'c+' );
+	$lock_fp   = fopen( $lock_file, 'c+' ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fopen -- Direct stream I/O for flock()-based upload lock; WP_Filesystem offers no streaming/locking equivalent.
 
 	if ( false === $lock_fp ) {
 		$errors[] = __( 'Failed to create lock file', 'buddyboss-platform' );
@@ -5134,7 +5134,7 @@ function bb_check_all_parts( $args ) {
 
 	// Acquire exclusive lock.
 	if ( ! flock( $lock_fp, LOCK_EX ) ) {
-		fclose( $lock_fp );
+		fclose( $lock_fp ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose -- Closing flock() lock handle; WP_Filesystem offers no streaming equivalent.
 		$errors[] = __( 'Failed to acquire lock', 'buddyboss-platform' );
 
 		return false;
@@ -5166,7 +5166,7 @@ function bb_check_all_parts( $args ) {
 	// Check if all the parts are present.
 	if ( $parts_count !== $total_chunks ) {
 		flock( $lock_fp, LOCK_UN );
-		fclose( $lock_fp );
+		fclose( $lock_fp ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose -- Closing flock() lock handle; WP_Filesystem offers no streaming equivalent.
 
 		return false;
 	}
@@ -5176,7 +5176,7 @@ function bb_check_all_parts( $args ) {
 		$expected_part = $file_chunks_folder . '/' . $filename . '.part' . $i;
 		if ( ! file_exists( $expected_part ) ) {
 			flock( $lock_fp, LOCK_UN );
-			fclose( $lock_fp );
+			fclose( $lock_fp ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose -- Closing flock() lock handle; WP_Filesystem offers no streaming equivalent.
 			$errors[] = sprintf(
 			/* translators: %d: chunk index */
 				__( 'Missing chunk %d', 'buddyboss-platform' ),
@@ -5197,7 +5197,7 @@ function bb_check_all_parts( $args ) {
 	$tolerance = (float) $total_size * 0.01;
 	if ( abs( $loaded_size - (float) $total_size ) > $tolerance ) {
 		flock( $lock_fp, LOCK_UN );
-		fclose( $lock_fp );
+		fclose( $lock_fp ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose -- Closing flock() lock handle; WP_Filesystem offers no streaming equivalent.
 		$errors[] = sprintf(
 		/* translators: %1$s: expected size, %2$s: got size */
 			__( 'File size mismatch. Expected: %1$s, Got: %2$s', 'buddyboss-platform' ),
@@ -5223,7 +5223,7 @@ function bb_check_all_parts( $args ) {
 
 	// Release lock and close lock file.
 	flock( $lock_fp, LOCK_UN );
-	fclose( $lock_fp );
+	fclose( $lock_fp ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose -- Closing flock() lock handle; WP_Filesystem offers no streaming equivalent.
 
 	if ( ! empty( $new_path ) && 0 === count( $errors ) ) {
 		bb_clean_up( $file_chunks_folder );
@@ -5290,7 +5290,7 @@ function bb_create_file_from_chunks( $args ) {
 
 			return false;
 		}
-		chmod( $rel_path, 0755 );
+		chmod( $rel_path, 0755 ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_chmod -- Explicit permission set on a freshly-created destination dir.
 	}
 
 	$filename_args = array(
@@ -5306,7 +5306,7 @@ function bb_create_file_from_chunks( $args ) {
 	}
 
 	$final_file_path = $rel_path . $save_name . $extension;
-	$fp              = fopen( $final_file_path, 'wb' );
+	$fp              = fopen( $final_file_path, 'wb' ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fopen -- Direct binary stream I/O combining upload chunks; WP_Filesystem offers no streaming equivalent.
 
 	if ( false === $fp ) {
 		$errors[] = __( 'Cannot create the destination file', 'buddyboss-platform' );
@@ -5331,7 +5331,7 @@ function bb_create_file_from_chunks( $args ) {
 				throw new Exception( 'Missing chunk' );
 			}
 
-			$chunk_fp = fopen( $chunk_path, 'rb' );
+			$chunk_fp = fopen( $chunk_path, 'rb' ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fopen -- Direct binary stream I/O reading an upload chunk; WP_Filesystem offers no streaming equivalent.
 
 			if ( false === $chunk_fp ) {
 				$errors[] = sprintf(
@@ -5344,10 +5344,10 @@ function bb_create_file_from_chunks( $args ) {
 
 			// Stream chunk data in 8KB buffers to minimize memory usage.
 			while ( ! feof( $chunk_fp ) ) {
-				$buffer = fread( $chunk_fp, 8192 );
+				$buffer = fread( $chunk_fp, 8192 ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fread -- Direct binary stream I/O reading an upload chunk; WP_Filesystem offers no streaming equivalent.
 
 				if ( false === $buffer ) {
-					fclose( $chunk_fp );
+					fclose( $chunk_fp ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose -- Closing chunk stream handle; WP_Filesystem offers no streaming equivalent.
 					$errors[] = sprintf(
 					/* translators: %d: chunk index */
 						__( 'Failed to read chunk %d', 'buddyboss-platform' ),
@@ -5356,10 +5356,10 @@ function bb_create_file_from_chunks( $args ) {
 					throw new Exception( 'Read error' );
 				}
 
-				$written = fwrite( $fp, $buffer );
+				$written = fwrite( $fp, $buffer ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fwrite -- Direct binary stream I/O writing combined file; WP_Filesystem offers no streaming equivalent.
 
 				if ( false === $written ) {
-					fclose( $chunk_fp );
+					fclose( $chunk_fp ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose -- Closing chunk stream handle; WP_Filesystem offers no streaming equivalent.
 					$errors[] = sprintf(
 					/* translators: %d: chunk index */
 						__( 'Failed to write data from chunk %d', 'buddyboss-platform' ),
@@ -5369,7 +5369,7 @@ function bb_create_file_from_chunks( $args ) {
 				}
 			}
 
-			fclose( $chunk_fp );
+			fclose( $chunk_fp ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose -- Closing chunk stream handle; WP_Filesystem offers no streaming equivalent.
 		}
 
 		$success = true;
@@ -5379,7 +5379,7 @@ function bb_create_file_from_chunks( $args ) {
 	} finally {
 		// Always close the main file handle.
 		if ( is_resource( $fp ) ) {
-			fclose( $fp );
+			fclose( $fp ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose -- Closing combined-file stream handle; WP_Filesystem offers no streaming equivalent.
 		}
 	}
 
@@ -5410,7 +5410,7 @@ function bb_create_file_from_chunks( $args ) {
 	}
 
 	// Set secure file permissions.
-	chmod( $final_file_path, 0644 );
+	chmod( $final_file_path, 0644 ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_chmod -- Explicit permission set on a freshly-created combined file.
 
 	$successes[] = sprintf(
 	/* translators: %s: file name */
@@ -5543,7 +5543,7 @@ function bb_rrmdir( $dir ) {
 		}
 	}
 
-	return rmdir( $dir );
+	return rmdir( $dir ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_rmdir -- Return value needed to detect removal failure; WP_Filesystem has no void-safe streaming equivalent for recursive cleanup.
 }
 
 /**
@@ -5567,7 +5567,7 @@ function bb_clean_up( $file_chunks_folder ) {
 	$temp_name = $file_chunks_folder . '_UNUSED_' . time() . '_' . wp_rand( 1000, 9999 );
 
 	// Rename the temporary directory to avoid access from other concurrent chunks uploads.
-	if ( rename( $file_chunks_folder, $temp_name ) ) {
+	if ( rename( $file_chunks_folder, $temp_name ) ) { // phpcs:ignore WordPress.WP.AlternativeFunctions.rename_rename -- Return value needed to confirm atomic directory rename for concurrency-safe cleanup; no WP wrapper.
 		return bb_rrmdir( $temp_name );
 	}
 

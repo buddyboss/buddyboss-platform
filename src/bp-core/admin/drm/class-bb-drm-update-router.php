@@ -14,9 +14,9 @@
  *   the bundled video/document components become available.
  *
  * The actual Mothership update injection is performed by the vendor AddonsManager
- * (GroundLevel\Mothership\Manager\AddonsManager) on the `site_transient_update_plugins`
- * filter. This class complements it by suppressing the wordpress.org entry and by forcing
- * an immediate install when the paid component folders are missing from the current build.
+ * (GroundLevel\Mothership\Manager\AddonsManager) on the WordPress plugin-updates
+ * transient filter. This class complements it by suppressing the wordpress.org entry and by
+ * forcing an immediate install when the paid component folders are missing from the current build.
  *
  * @package BuddyBoss\Core\Admin\DRM
  * @since BuddyBoss [BBVERSION]

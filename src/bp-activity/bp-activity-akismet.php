@@ -61,6 +61,7 @@ function bp_activity_akismet_delete_old_metadata() {
 
 	// _bp_akismet_submission meta values are large, so expire them after $interval days regardless of the activity status
 	$sql          = $wpdb->prepare( "SELECT a.id FROM {$bp->activity->table_name} a LEFT JOIN {$bp->activity->table_name_meta} m ON a.id = m.activity_id WHERE m.meta_key = %s AND DATE_SUB(%s, INTERVAL {$interval} DAY) > a.date_recorded LIMIT 10000", '_bp_akismet_submission', current_time( 'mysql', 1 ) );
+	// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- $sql is the $wpdb->prepare() result above; $interval is absint()-bounded (min 1); table names internal.
 	$activity_ids = $wpdb->get_col( $sql );
 
 	if ( ! empty( $activity_ids ) ) {

@@ -92,9 +92,9 @@ function bb_xprofile_migrate_simple_to_repeater_fields_data( $xprofile ) {
 		}
 
 		if ( ! empty( $repeater_template_fields ) ) {
-			$repeater_template_fields_in = "'" . implode( "','", $repeater_template_fields ) . "'";
+			$repeater_template_fields_in = implode( ',', array_map( 'absint', (array) $repeater_template_fields ) );
 
-			$user_ids = $wpdb->get_col( "SELECT DISTINCT user_id FROM {$bp->profile->table_name_data} WHERE field_id IN ({$repeater_template_fields_in})" );
+			$user_ids = $wpdb->get_col( "SELECT DISTINCT user_id FROM {$bp->profile->table_name_data} WHERE field_id IN ({$repeater_template_fields_in})" ); // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter -- Table name from $bp->profile->table_name_data; IN() list is absint-mapped above.
 
 			if ( ! empty( $user_ids ) ) {
 

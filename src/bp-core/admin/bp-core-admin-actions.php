@@ -589,22 +589,20 @@ function bb_check_user_nickname( &$errors, $update, &$user ) {
 
 	$un_name = ( ! empty( $user->nickname ) ) ? $user->nickname : $user->user_login;
 
-	$where = array(
-		'meta_key = "nickname"',
-		'meta_value = "' . $un_name . '"',
-	);
-
 	if ( ! empty( $user->ID ) ) {
-		$where[] = 'user_id != ' . $user->ID;
+		$sql = $wpdb->prepare(
+			"SELECT count(*) FROM {$wpdb->usermeta} WHERE meta_key = 'nickname' AND meta_value = %s AND user_id != %d",
+			$un_name,
+			$user->ID
+		);
+	} else {
+		$sql = $wpdb->prepare(
+			"SELECT count(*) FROM {$wpdb->usermeta} WHERE meta_key = 'nickname' AND meta_value = %s",
+			$un_name
+		);
 	}
 
-	$sql = sprintf(
-		'SELECT count(*) FROM %s WHERE %s',
-		$wpdb->usermeta,
-		implode( ' AND ', $where )
-	);
-
-	if ( $wpdb->get_var( $sql ) > 0 ) {
+	if ( $wpdb->get_var( $sql ) > 0 ) { // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $sql is $wpdb->prepare()'d above.
 		$errors->add( 'nickname_exists', __( '<strong>Error</strong>: Nickname already has been taken. Please try again.', 'buddyboss-platform' ), array( 'form-field' => 'nickname' ) );
 	}
 }

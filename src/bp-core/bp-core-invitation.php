@@ -38,8 +38,8 @@ function invitation_delete_invitemeta( $invite_id, $meta_key = false, $meta_valu
 	if ( empty( $meta_key ) ) {
 		$table_name = buddypress()->table_prefix . 'bp_invitations_invitemeta';
 		$sql        = "SELECT meta_key FROM {$table_name} WHERE invite_id = %d";
-		$query      = $wpdb->prepare( $sql, $invite_id );
-		$keys       = $wpdb->get_col( $query );
+		$query      = $wpdb->prepare( $sql, $invite_id ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- $table_name is internally built from buddypress()->table_prefix; invite_id is %d-bound.
+		$keys       = $wpdb->get_col( $query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $query is prepared above.
 
 		// With no meta_key, ignore $delete_all.
 		$delete_all = false;
