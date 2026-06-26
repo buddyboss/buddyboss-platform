@@ -196,8 +196,10 @@ function AppInner() {
 					{ /* Tier tabs — Figma layout. Only "All" is wired today; Free/Pro
 					     are disabled (not no-op) until the API exposes a free/pro
 					     field (Q5), so a visible filter never silently returns the
-					     same results. Re-enable by removing `disabled` + handling
-					     `tier` in the list query once the field exists. */ }
+					     same results. Re-enable by: (1) removing `disabled`, (2) handling
+					     `tier` in the list query, and (3) adding WAI-ARIA arrow-key
+					     navigation (onKeyDown on the tablist — Left/Right cycles tabs);
+					     a11y nav is unnecessary while only one tab is focusable. */ }
 					<div className="bb-integrations__tabs" role="tablist">
 						<button
 							type="button"

@@ -18,7 +18,7 @@ defined( 'ABSPATH' ) || exit;
  * Reads the generated index.asset.php to pick up the version hash and
  * dependency list from @wordpress/dependency-extraction-webpack-plugin.
  * Consumer pages (e.g. the Integrations page) enqueue these handles so the
- * the layer ships once and is never duplicated across bundles.
+ * layer ships once and is never duplicated across bundles.
  *
  * @since BuddyBoss [BBVERSION]
  *
