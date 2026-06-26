@@ -161,12 +161,6 @@ body.buddyboss_page_bb-integrations {
 		flex-direction: column;
 		gap: 16px;
 		flex: 1 1 auto;
-		padding: 0;
-		border: 0;
-		background: none;
-		text-align: left;
-		cursor: pointer;
-		width: 100%;
 	}
 
 	&__card-top {
@@ -209,10 +203,24 @@ body.buddyboss_page_bb-integrations {
 	}
 
 	&__card-title {
+		// Rendered as a <button> — only the title text opens the drawer, so reset
+		// the native button chrome and shrink the hit area to the text itself.
+		align-self: flex-start;
+		margin: 0;
+		padding: 0;
+		border: 0;
+		background: none;
 		font-size: 16px;
 		font-weight: 500;
 		line-height: 22px;
 		color: $bb-text-color;
+		text-align: left;
+		cursor: pointer;
+
+		&:hover,
+		&:focus {
+			color: #ef5d33;
+		}
 	}
 
 	&__card-vendor {
@@ -250,12 +258,48 @@ body.buddyboss_page_bb-integrations {
 	&__card-actions {
 		display: flex;
 		flex-direction: row;
+		// Install sits left, "Learn More ↗" right (Figma: buttons row, space-between).
+		justify-content: space-between;
+		align-items: center;
 		gap: 16px;
 	}
 
 	&__btn {
 		@include bb-button-primary-outline;
 		text-decoration: none;
+
+		// Disabled "Install" (no install_url yet) — greyed outline + label per Figma.
+		&:disabled {
+			border-color: #f7ae99;
+			color: #f9bead;
+			cursor: default;
+			pointer-events: none;
+		}
+	}
+
+	// Secondary "Learn More" — borderless, dark label + ArrowUpRight icon, right-aligned.
+	&__btn--link {
+		display: inline-flex;
+		flex-direction: row;
+		align-items: center;
+		gap: 4px;
+		padding: 6px 8px;
+		border: 0;
+		background: none;
+		color: #1e1e1e;
+		font-size: 14px;
+		font-weight: 400;
+		line-height: 20px;
+
+		i {
+			font-size: 16px;
+			line-height: 1;
+		}
+
+		&:hover,
+		&:focus {
+			color: #ef5d33;
+		}
 	}
 
 	&__pagination {
