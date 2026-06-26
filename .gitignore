@@ -28,3 +28,8 @@ src/scoped_vendor
 node_modules
 npm-debug.log
 *.zip
+CLAUDE.md
+PHP_TESTS_NEXT_STEPS.md
+TEST_COMMANDS.md
+TEST_IMPLEMENTATION_SUMMARY.md
+docs/FEATURE_SYSTEM_TECHNICAL_SCOPE.md

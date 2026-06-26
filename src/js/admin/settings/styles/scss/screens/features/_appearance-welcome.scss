@@ -1,0 +1,183 @@
+/**
+ * Appearance → General — Welcome Banner.
+ *
+ * Spacing/typography tokens transcribed verbatim from the Figma CSS export.
+ * Layout shape: white card (radius 16, border 0.5 #F7AE99), two-column row
+ * with the text column on the left and a 464×256 preview image on the
+ * right. Stacks vertically below 900px.
+ */
+
+.bb-admin-welcome-banner {
+	box-sizing: border-box;
+	max-width: 100%;
+	margin: 0 0 24px 0;
+	// Frame 7 — outer card padding 24/32.
+	padding: 24px 32px;
+	background: $bb-background-base-color;
+	border: 0.5px solid $bb-border-brand-tertiary-color;
+	border-radius: $bb-border-radius-2xl;
+
+	&__content {
+		display: flex;
+		align-items: flex-start;
+		justify-content: space-between;
+		// "texts" row — gap 24 between text column and preview image.
+		gap: 24px;
+		flex-wrap: nowrap;
+	}
+
+	&__text {
+		flex: 1 1 auto;
+		min-width: 0;
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 24px;
+		align-self: center;
+	}
+
+	&__title {
+		font-size: 22px;
+		font-weight: 500;
+		line-height: 30px;
+		margin: 0;
+		color: $bb-text-color;
+	}
+
+	&__intro {
+		// Frame 37110 — wraps subtitle and the description+checks group.
+		// Gap 16 between subtitle and the body wrapper.
+		display: flex;
+		flex-direction: column;
+		gap: 16px;
+		margin: 0;
+		width: 100%;
+	}
+
+	&__intro-body {
+		display: flex;
+		flex-direction: column;
+		gap: 10px;
+		width: 100%;
+	}
+
+	&__subtitle {
+		font-size: 16px;
+		font-weight: 500;
+		line-height: 22px;
+		margin: 0;
+		color: $bb-text-color;
+	}
+
+	&__description {
+		font-size: 13px;
+		line-height: 18px;
+		color: $bb-text-tertiary-color;
+		margin: 0;
+	}
+
+	&__checks {
+		// Frame 5 — row of checks, gap 24.
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		display: flex;
+		flex-wrap: wrap;
+		gap: 8px 24px;
+	}
+
+	&__check {
+		display: inline-flex;
+		align-items: center;
+		gap: 8px;
+		padding: 3px 0;
+		font-size: 13px;
+		line-height: 18px;
+		font-weight: 500;
+		color: $bb-text-secondary-color;
+
+		&::before {
+			content: '';
+			flex: 0 0 auto;
+			width: 16px;
+			height: 16px;
+			// Checkmark — stroke #2F2F2F per Figma (was orange in V1).
+			background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' fill='none'><path d='M3.33334 8.66667L6.66668 12L13 5' stroke='%232F2F2F' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/></svg>");
+			background-repeat: no-repeat;
+			background-position: center;
+		}
+	}
+
+	&__actions {
+		// Frame 37111 — row of buttons, gap 12.
+		display: flex;
+		gap: 12px;
+		flex-wrap: wrap;
+	}
+
+	&__btn {
+
+		// Chain `.is-primary` / `.is-secondary` (added by WP `<Button variant>`)
+		// so the selector specificity (0,3,0) beats the global
+		// `.components-button.is-primary` override in `_elements.scss`
+		// which forces `padding: 8px 16px`. Without this chain the buttons
+		// render ~36px tall instead of the Figma 32px hug.
+		&--primary.components-button.is-primary {
+			@include bb-button-primary;
+			height: 32px;
+			min-height: 32px;
+			padding: 6px 16px;
+			gap: 4px;
+			border-radius: $bb-border-radius-lg;
+			font-size: 14px;
+			font-weight: 400;
+			line-height: 20px;
+		}
+
+		&--secondary.components-button.is-secondary {
+			@include bb-button-primary-outline;
+			height: 32px;
+			min-height: 32px;
+			padding: 6px 16px;
+			gap: 4px;
+			border-radius: $bb-border-radius-lg;
+			font-size: 14px;
+			font-weight: 400;
+			line-height: 20px;
+		}
+	}
+
+	&__preview {
+		flex: 0 0 auto;
+		width: 464px;
+		max-width: 50%;
+		aspect-ratio: 464 / 256;
+		border: 0.5px solid $bb-border-secondary-color;
+		border-radius: $bb-border-radius-lg;
+		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+		overflow: hidden;
+
+		img {
+			display: block;
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
+			object-position: center top;
+		}
+	}
+
+	@media (max-width: 900px) {
+		&__content {
+			flex-direction: column;
+			align-items: stretch;
+			gap: 16px;
+		}
+
+		&__preview {
+			width: 100%;
+			max-width: 100%;
+			order: -1;
+			margin-bottom: 12px;
+		}
+	}
+}
