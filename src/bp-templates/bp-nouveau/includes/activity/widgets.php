@@ -97,10 +97,10 @@ class BP_Latest_Activities extends WP_Widget {
 			$args['before_widget'] = str_replace( 'bp-latest-activities', join( ' ', $classes ), $args['before_widget'] );
 		}
 
-		echo $args['before_widget'];
+		echo wp_kses_post( $args['before_widget'] );
 
 		if ( $title ) {
-			echo $args['before_title'] . esc_html( $title ) . $args['after_title'];
+			echo wp_kses_post( $args['before_title'] ) . esc_html( $title ) . wp_kses_post( $args['after_title'] );
 		}
 
 		$reset_activities_template = null;
@@ -182,7 +182,7 @@ class BP_Latest_Activities extends WP_Widget {
 		$GLOBALS['activities_template']    = $reset_activities_template;
 		$bp_nouveau->activity->widget_args = array();
 
-		echo $args['after_widget'];
+		echo wp_kses_post( $args['after_widget'] );
 	}
 
 	/**

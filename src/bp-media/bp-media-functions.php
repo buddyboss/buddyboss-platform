@@ -2433,7 +2433,7 @@ function bp_media_directory_page_content() {
 
 	if ( ! empty( $page_ids['media'] ) ) {
 		$media_page_content = get_post_field( 'post_content', $page_ids['media'] );
-		echo apply_filters( 'the_content', $media_page_content );
+		echo wp_kses_post( apply_filters( 'the_content', $media_page_content ) );
 	}
 }
 
@@ -3538,13 +3538,13 @@ function bp_media_delete_symlinks( $media ) {
 		foreach ( $all_attachments as $attachment_path ) {
 			// Delete symlink without an extension.
 			if ( file_exists( $attachment_path ) ) {
-				unlink( $attachment_path );
+				wp_delete_file( $attachment_path );
 			}
 
 			// Delete symlink with an extension.
 			$attachment_path = ! empty( $symlink_extension ) ? $attachment_path . '.' . $symlink_extension : $attachment_path;
 			if ( file_exists( $attachment_path ) ) {
-				unlink( $attachment_path );
+				wp_delete_file( $attachment_path );
 			}
 		}
 	}
@@ -4207,7 +4207,7 @@ function bb_media_delete_older_symlinks() {
 
 		if ( file_exists( $file ) && $file_time < $limit ) {
 			$list[] = $file;
-			unlink( $file );
+			wp_delete_file( $file );
 		}
 	}
 	closedir( $dh );

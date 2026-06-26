@@ -309,17 +309,19 @@ class BP_Activity_oEmbed_Extension extends BP_Core_oEmbed_Extension {
 			<a href="<?php bp_activity_thread_permalink(); ?>">
 				<span class="dashicons dashicons-admin-comments"></span>
 				<?php
-				/* translators: %s: number of comments. */
-				printf(
-					_n(
-						/* translators: accessibility text */
-						'%s <span class="screen-reader-text">Comment</span>',
-						/* translators: accessibility text */
-						'%s <span class="screen-reader-text">Comments</span>',
-						$count,
-						'buddyboss-platform'
-					),
-					esc_html( bp_core_number_format( $count ) )
+				echo wp_kses_post(
+					sprintf(
+						/* translators: %s: number of comments. */
+						_n(
+							/* translators: accessibility text */
+							'%s <span class="screen-reader-text">Comment</span>',
+							/* translators: accessibility text */
+							'%s <span class="screen-reader-text">Comments</span>',
+							$count,
+							'buddyboss-platform'
+						),
+						esc_html( bp_core_number_format( $count ) )
+					)
 				);
 				?>
 			</a>

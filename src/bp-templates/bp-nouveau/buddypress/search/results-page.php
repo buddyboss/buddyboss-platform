@@ -30,7 +30,7 @@ if ( empty( $_GET['s'] ) || '' === $_GET['s'] ) {
 ?>
 <header class="entry-header">
 	<h1 class="entry-title">
-		<?php echo stripslashes( $post_title ); ?>
+		<?php echo stripslashes( $post_title ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $post_title is composed of plain-text translations with the search term already escaped via esc_html() at assignment. ?>
 	</h1>
 </header>
 

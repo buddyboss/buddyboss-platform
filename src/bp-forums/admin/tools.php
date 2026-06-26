@@ -126,7 +126,7 @@ function bbp_admin_repair() {
  * @param bool   $slug
  */
 function bbp_form_option( $option, $default = '', $slug = false ) {
-	echo bbp_get_form_option( $option, $default, $slug );
+	echo bbp_get_form_option( $option, $default, $slug ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- bbp_get_form_option() escapes its return value with esc_attr().
 }
 
 /**
@@ -226,7 +226,7 @@ function bbp_converter_setting_callback_platform() {
 	closedir( $curdir );
 	?>
 
-	<select name="_bbp_converter_platform" id="_bbp_converter_platform"><?php echo $platform_options; ?></select>
+	<select name="_bbp_converter_platform" id="_bbp_converter_platform"><?php echo wp_kses_post( $platform_options ); ?></select>
 	<label for="_bbp_converter_platform"><?php esc_html_e( 'is the previous forum software', 'buddyboss-platform' ); ?></label>
 
 	<?php
@@ -561,7 +561,7 @@ function bbp_admin_tools_feedback( $message, $class = false ) {
 	$message = '<div id="message" class="' . esc_attr( $class ) . '">' . $message . '</div>';
 	$message = str_replace( "'", "\'", $message );
 	$lambda  = function () use ( $message ) {
-		echo $message;
+		echo wp_kses_post( $message );
 	};
 
 	add_action( 'admin_notices', $lambda );

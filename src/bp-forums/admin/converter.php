@@ -179,7 +179,7 @@ class BBP_Converter {
 		register_setting( 'bbpress_converter_main', '_bbp_converter_db_prefix', 'sanitize_text_field' );
 
 		// Add the options section.
-		add_settings_section( 'bbpress_converter_opt', __( '', 'buddyboss-platform' ), 'bbp_converter_setting_callback_options_section', 'bbpress_converter' );
+		add_settings_section( 'bbpress_converter_opt', '', 'bbp_converter_setting_callback_options_section', 'bbpress_converter' );
 
 		// Rows Limit.
 		add_settings_field( '_bbp_converter_rows', __( 'Rows Limit', 'buddyboss-platform' ), 'bbp_converter_setting_callback_rows', 'bbpress_converter', 'bbpress_converter_opt' );

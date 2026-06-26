@@ -453,8 +453,8 @@ if ( ! class_exists( 'BP_XProfile_User_Admin' ) ) :
 					<p class="field-visibility-settings-<?php echo $can_change_visibility ? 'toggle' : 'notoggle'; ?>" id="field-visibility-settings-toggle-<?php bp_the_profile_field_id(); ?>"><span id="<?php bp_the_profile_field_input_name(); ?>-2">
 
 						<?php
-						/* translators: %s: field visibility level label. */
 						printf(
+							/* translators: %s: field visibility level label. */
 							esc_html__( 'This field can be seen by: %s', 'buddyboss-platform' ),
 							'<span class="current-visibility-level">' . esc_html( bp_get_the_profile_field_visibility_level_label() ) . '</span>'
 						);

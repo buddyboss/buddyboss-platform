@@ -206,7 +206,7 @@ function bb_admin_cover_image_upload_temp_ajax() {
 	// Drop @ on move_uploaded_file — the false return is checked and a
 	// genuine error (open_basedir, perms, disk-full) should bubble through
 	// WP's error log. `@` would mask that diagnostic.
-	if ( ! move_uploaded_file( $tmp_name, $tmp_path ) ) {
+	if ( ! move_uploaded_file( $tmp_name, $tmp_path ) ) { // phpcs:ignore Generic.PHP.ForbiddenFunctions.Found -- move_uploaded_file() is the secure way to handle an HTTP upload (verifies POST origin); wp_handle_upload is not applicable to this cropped-tmp flow.
 		wp_send_json_error( array( 'message' => __( 'Could not save the uploaded file.', 'buddyboss-platform' ) ), 500 );
 	}
 

@@ -307,7 +307,7 @@ if ( ! function_exists( 'bp_search_pagination' ) ) :
 							}
 
 							// $link_html = "<li class='" . esc_attr($class) . "'>" . $link_html . "</li>";
-							echo $link_html;
+							echo wp_kses_post( $link_html );
 						}
 						?>
 						<?php if ( $use_bootstrap ) : ?>
@@ -343,7 +343,7 @@ function bp_search_pagination_page_counts( $total_items, $items_per_page, $curr_
 		<div class="pag-data">
 			<?php
 			/* translators: 1: starting result number, 2: ending result number, 3: total number of results. */
-			printf( esc_html__( 'Viewing %1$d - %2$d of %3$d results', 'buddyboss-platform' ), $from_num, min( $total_items, $to_num ), $total_items );
+			printf( esc_html__( 'Viewing %1$d - %2$d of %3$d results', 'buddyboss-platform' ), (int) $from_num, (int) min( $total_items, $to_num ), (int) $total_items );
 			?>
 		</div>
 	</div>

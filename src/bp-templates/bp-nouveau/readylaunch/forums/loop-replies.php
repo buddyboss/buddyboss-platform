@@ -70,7 +70,7 @@ $topic_id = bbp_get_topic_id();
 									<i class="bb-icons-rl-user"></i> <span class="bs-voices"><?php bbp_topic_voice_count(); ?>
 								</div>
 								<div class="bb-rl-topic-reply-count">
-									<i class="bb-icons-rl-chat"></i> <span class="bs-replies"><?php echo $topic_reply_count; ?></span>
+									<i class="bb-icons-rl-chat"></i> <span class="bs-replies"><?php echo esc_html( $topic_reply_count ); ?></span>
 								</div>
 							</div>
 							<div class="bb-rl-topic-actions">

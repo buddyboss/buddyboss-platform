@@ -32,10 +32,10 @@ defined( 'ABSPATH' ) || exit;
 				<?php
 				if ( bbp_is_forum_edit() ) {
 					/* translators: %s: forum title. */
-					printf( __( 'Now Editing &ldquo;%s&rdquo;', 'buddyboss-platform' ), esc_html( bbp_get_forum_title() ) );
+					echo wp_kses_post( sprintf( __( 'Now Editing &ldquo;%s&rdquo;', 'buddyboss-platform' ), esc_html( bbp_get_forum_title() ) ) );
 				} else {
 					/* translators: %s: parent forum title. */
-					bbp_is_single_forum() ? printf( __( 'Create New Forum in &ldquo;%s&rdquo;', 'buddyboss-platform' ), esc_html( bbp_get_forum_title() ) ) : esc_html_e( 'Create New Forum', 'buddyboss-platform' );
+					bbp_is_single_forum() ? printf( wp_kses_post( __( 'Create New Forum in &ldquo;%s&rdquo;', 'buddyboss-platform' ) ), esc_html( bbp_get_forum_title() ) ) : esc_html_e( 'Create New Forum', 'buddyboss-platform' );
 				}
 				?>
 				</h2>
@@ -58,7 +58,7 @@ defined( 'ABSPATH' ) || exit;
 					<?php do_action( 'bbp_theme_before_forum_form_title' ); ?>
 
 					<p>
-						<label class="bbp-forum-title-label" for="bbp_forum_title"><?php /* translators: %d: maximum forum name length. */ printf( __( 'Forum Name <span>(Maximum Length: %d)</span>', 'buddyboss-platform' ), bbp_get_title_max_length() ); ?></label><br />
+						<label class="bbp-forum-title-label" for="bbp_forum_title"><?php /* translators: %d: maximum forum name length. */ echo wp_kses_post( sprintf( __( 'Forum Name <span>(Maximum Length: %d)</span>', 'buddyboss-platform' ), absint( bbp_get_title_max_length() ) ) ); ?></label><br />
 						<input type="text" id="bbp_forum_title" value="<?php bbp_form_forum_title(); ?>" tabindex="<?php bbp_tab_index(); ?>" size="40" name="bbp_forum_title" maxlength="<?php bbp_title_max_length(); ?>" />
 					</p>
 

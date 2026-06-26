@@ -83,7 +83,7 @@ class BP_XProfile_Field_Type_Selectbox extends BP_XProfile_Field_Type {
 		do_action( bp_get_the_profile_field_errors_action() );
 		?>
 
-		<select <?php echo $this->get_edit_field_html_elements( $raw_properties ); ?> aria-labelledby="<?php bp_the_profile_field_input_name(); ?>-1" aria-describedby="<?php bp_the_profile_field_input_name(); ?>-3">
+		<select <?php echo $this->get_edit_field_html_elements( $raw_properties ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- get_edit_field_html_elements() returns attribute markup escaped via bp_get_form_field_attributes(). ?> aria-labelledby="<?php bp_the_profile_field_input_name(); ?>-1" aria-describedby="<?php bp_the_profile_field_input_name(); ?>-3">
 			<?php bp_the_profile_field_options( array( 'user_id' => $user_id ) ); ?>
 		</select>
 
@@ -167,7 +167,7 @@ class BP_XProfile_Field_Type_Selectbox extends BP_XProfile_Field_Type {
 		 */
 		$html = apply_filters( 'bb_get_the_profile_field_options_select_html', $html, $this->field_obj );
 
-		echo $html;
+		echo $html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $html is field-escaped <option> markup; wp_kses_post would strip <select>/<option>.
 	}
 
 	/**
@@ -188,7 +188,7 @@ class BP_XProfile_Field_Type_Selectbox extends BP_XProfile_Field_Type {
 																esc_html_e( 'Select', 'buddyboss-platform' );
 																?>
 		</label>
-		<select <?php echo $this->get_edit_field_html_elements( $raw_properties ); ?>>
+		<select <?php echo $this->get_edit_field_html_elements( $raw_properties ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- get_edit_field_html_elements() returns attribute markup escaped via bp_get_form_field_attributes(). ?>>
 			<?php bp_the_profile_field_options(); ?>
 		</select>
 

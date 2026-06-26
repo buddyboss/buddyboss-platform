@@ -87,7 +87,7 @@ class BP_XProfile_Field_Type_URL extends BP_XProfile_Field_Type {
 		do_action( bp_get_the_profile_field_errors_action() );
 		?>
 
-		<input <?php echo $this->get_edit_field_html_elements( $r ); ?> aria-labelledby="<?php bp_the_profile_field_input_name(); ?>-1" aria-describedby="<?php bp_the_profile_field_input_name(); ?>-3">
+		<input <?php echo $this->get_edit_field_html_elements( $r ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- get_edit_field_html_elements() returns attribute markup already escaped via esc_attr() in bp_get_form_field_attributes(). ?> aria-labelledby="<?php bp_the_profile_field_input_name(); ?>-1" aria-describedby="<?php bp_the_profile_field_input_name(); ?>-3">
 
 		<?php
 	}
@@ -118,7 +118,7 @@ class BP_XProfile_Field_Type_URL extends BP_XProfile_Field_Type {
 																esc_html_e( 'Website', 'buddyboss-platform' );
 																?>
 		</label>
-		<input <?php echo $this->get_edit_field_html_elements( $r ); ?>>
+		<input <?php echo $this->get_edit_field_html_elements( $r ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- get_edit_field_html_elements() returns attribute markup already escaped via esc_attr() in bp_get_form_field_attributes(). ?>>
 
 		<?php
 	}

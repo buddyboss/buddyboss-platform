@@ -364,6 +364,7 @@ function bp_nouveau_wrapper( $args = array() ) {
 	}
 
 	// Print the wrapper and its content.
+	// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $container is from a validated whitelist; $container_id/$container_classes are pre-escaped attribute markup; $output is generated nav HTML.
 	printf( '<%1$s%2$s%3$s>%4$s</%1$s>', $container, $container_id, $container_classes, $output );
 }
 

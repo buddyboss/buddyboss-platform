@@ -275,7 +275,7 @@ if ( 'video' === $media_template->media->type ) {
 						if ( $report_btn ) {
 							?>
 							<li class="report_file">
-								<?php echo $report_btn; ?>
+								<?php echo wp_kses_post( $report_btn ); ?>
 							</li>
 							<?php
 						}

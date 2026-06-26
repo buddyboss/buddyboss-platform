@@ -23,7 +23,7 @@ defined( 'ABSPATH' ) || exit;
 
 				<fieldset class="bbp-form">
 
-					<legend><?php /* translators: %s: discussion title. */ printf( esc_html__( 'Merge discussion "%s"', 'buddyboss-platform' ), bbp_get_topic_title() ); ?></legend>
+					<legend><?php /* translators: %s: discussion title. */ printf( esc_html__( 'Merge discussion "%s"', 'buddyboss-platform' ), bbp_get_topic_title() ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- bbp_get_topic_title() is escaped via its bbp_get_topic_title filter. ?></legend>
 
 					<div>
 

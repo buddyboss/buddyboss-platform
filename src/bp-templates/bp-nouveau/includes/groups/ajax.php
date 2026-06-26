@@ -561,16 +561,16 @@ function bp_nouveau_ajax_get_users_to_invite() {
 
 	foreach ( $potential_invites->users as $user ) {
 		?>
-		<li class="<?php echo $user['id']; ?>">
+		<li class="<?php echo esc_attr( $user['id'] ); ?>">
 			<div class="item-avatar">
 				<a href="<?php echo esc_url( bp_core_get_user_domain( $user['id'] ) ); ?>">
-					<img src="<?php echo $user['avatar']; ?>" class="avatar" alt=""/> </a>
+					<img src="<?php echo esc_url( $user['avatar'] ); ?>" class="avatar" alt=""/> </a>
 			</div>
 
 			<div class="item">
 				<div class="list-title member-name">
 					<a href="<?php echo esc_url( bp_core_get_user_domain( $user['id'] ) ); ?>">
-						<?php echo $user['name']; ?>
+						<?php echo esc_html( $user['name'] ); ?>
 					</a>
 				</div>
 
@@ -581,10 +581,10 @@ function bp_nouveau_ajax_get_users_to_invite() {
 								<li><?php esc_html_e( 'Invited by:', 'buddyboss-platform' ); ?></li>
 								<?php foreach ( $user['invited_by'] as $inviter ) { ?>
 									<li>
-										<a href="<?php echo $inviter['user_link']; ?>" class="bp-tooltip"
-										   data-bp-tooltip-pos="up" data-bp-tooltip="<?php echo $inviter['name']; ?>">
-											<img src="<?php echo $inviter['avatar']; ?>" width="30px"
-												 class="avatar mini" alt="<?php echo $inviter['name']; ?>">
+										<a href="<?php echo esc_url( $inviter['user_link'] ); ?>" class="bp-tooltip"
+										   data-bp-tooltip-pos="up" data-bp-tooltip="<?php echo esc_attr( $inviter['name'] ); ?>">
+											<img src="<?php echo esc_url( $inviter['avatar'] ); ?>" width="30px"
+												 class="avatar mini" alt="<?php echo esc_attr( $inviter['name'] ); ?>">
 										</a>
 									</li>
 								<?php } ?>
@@ -604,8 +604,8 @@ function bp_nouveau_ajax_get_users_to_invite() {
 			</div>
 			<div class="action">
 				<?php if ( empty( $user['is_sent'] ) || ( false === $user['is_sent'] && true === $user['is_sent'] ) ) { ?>
-					<button data-bp-user-id="<?php echo $user['id']; ?>"
-							data-bp-user-name="<?php echo $user['name']; ?>" type="button" class="button invite-button group-add-remove-invite-button bp-tooltip bp-icons
+					<button data-bp-user-id="<?php echo esc_attr( $user['id'] ); ?>"
+							data-bp-user-name="<?php echo esc_attr( $user['name'] ); ?>" type="button" class="button invite-button group-add-remove-invite-button bp-tooltip bp-icons
 														<?php
 														if ( isset( $user['selected'] ) && $user['selected'] ) {
 															?>
@@ -627,8 +627,8 @@ function bp_nouveau_ajax_get_users_to_invite() {
 				if ( isset( $user['can_edit'] ) && true === $user['can_edit'] ) {
 					if ( 'invited' === $request['scope'] ) {
 						?>
-						<button data-bp-user-id="<?php echo $user['id']; ?>"
-								data-bp-user-name="<?php echo $user['name']; ?>" type="button"
+						<button data-bp-user-id="<?php echo esc_attr( $user['id'] ); ?>"
+								data-bp-user-name="<?php echo esc_attr( $user['name'] ); ?>" type="button"
 								class="button remove-button group-remove-invite-button bp-tooltip bp-icons"
 								data-bp-tooltip-pos="left"
 								data-bp-tooltip="<?php esc_attr_e( 'Cancel invitation', 'buddyboss-platform' ); ?>">
@@ -638,8 +638,8 @@ function bp_nouveau_ajax_get_users_to_invite() {
 						<?php
 					} else {
 						?>
-						<button data-bp-user-id="<?php echo $user['id']; ?>"
-								data-bp-user-name="<?php echo $user['name']; ?>" type="button"
+						<button data-bp-user-id="<?php echo esc_attr( $user['id'] ); ?>"
+								data-bp-user-name="<?php echo esc_attr( $user['name'] ); ?>" type="button"
 								class="button invite-button group-remove-invite-button bp-tooltip bp-icons"
 								data-bp-tooltip-pos="left"
 								data-bp-tooltip="<?php esc_attr_e( 'Cancel invitation', 'buddyboss-platform' ); ?>">
@@ -970,19 +970,19 @@ function bp_nouveau_ajax_groups_get_group_members_listing() {
 			?>
 			<li class="group-message-member-li
 			<?php
-			echo $member->ID;
+			echo esc_attr( $member->ID );
 			echo ( $is_friends_connection ) ? ' can-grp-msg ' : ' is_disabled can-not-grp-msg';
 			?>
 			">
 				<div class="item-avatar">
 					<a href="<?php echo esc_url( bp_core_get_user_domain( $member->ID ) ); ?>">
-						<?php echo $image; ?>
+						<?php echo wp_kses_post( $image ); ?>
 					</a>
 				</div>
 				<div class="item">
 					<div class="list-title member-name">
 						<a href="<?php echo esc_url( bp_core_get_user_domain( $member->ID ) ); ?>">
-							<?php echo $name; ?>
+							<?php echo esc_html( $name ); ?>
 						</a>
 					</div>
 				</div>

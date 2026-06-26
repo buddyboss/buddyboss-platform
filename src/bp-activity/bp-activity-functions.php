@@ -5466,7 +5466,7 @@ function bp_activity_directory_page_content() {
 
 	if ( ! empty( $page_ids['activity'] ) ) {
 		$activity_page_content = get_post_field( 'post_content', $page_ids['activity'] );
-		echo apply_filters( 'the_content', $activity_page_content );
+		echo wp_kses_post( apply_filters( 'the_content', $activity_page_content ) );
 	}
 }
 

@@ -492,7 +492,7 @@ function bp_get_activity_pagination_count() {
 	$total     = bp_core_number_format( $activities_template->total_activity_count );
 
 	/* translators: 1: starting item number, 2: ending item number, 3: total number of items. */
-	$message = sprintf( _n( 'Viewing 1 item', 'Viewing %1$s - %2$s of %3$s items', $activities_template->total_activity_count, 'buddyboss-platform' ), $from_num, $to_num, $total );
+	$message = sprintf( _n( 'Viewing 1 item', 'Viewing %1$s - %2$s of %3$s items', $activities_template->total_activity_count, 'buddyboss-platform' ), $from_num, $to_num, $total ); // phpcs:ignore WordPress.WP.I18n.MissingSingularPlaceholder -- Singular keeps its literal form to preserve existing translations (msgid unchanged); upstream BuddyPress pagination string.
 
 	return $message;
 }
@@ -2075,7 +2075,7 @@ function bp_activity_recurse_comments( $comment, $args = array() ) {
 		 *
 		 * @param string $output The HTML output of the start of the UL element.
 		 */
-		echo apply_filters( 'bb_activity_recurse_comments_start_ul', "<ul data-activity_id={$activities_template->activity->id} data-parent_comment_id={$comment->id}>" );
+		echo wp_kses_post( apply_filters( 'bb_activity_recurse_comments_start_ul', "<ul data-activity_id={$activities_template->activity->id} data-parent_comment_id={$comment->id}>" ) );
 	}
 
 	$comment_loaded_count = 0;
@@ -2100,7 +2100,7 @@ function bp_activity_recurse_comments( $comment, $args = array() ) {
 				$hidden_class = 'acomments-view-more--hide';
 			}
 
-			echo '<li class="acomments-view-more acomments-view-more--root ' . esc_attr( $hidden_class ) . '">' . $view_more_icon . esc_html( $view_more_text ) . '</li>';
+			echo '<li class="acomments-view-more acomments-view-more--root ' . esc_attr( $hidden_class ) . '">' . wp_kses_post( $view_more_icon ) . esc_html( $view_more_text ) . '</li>';
 			break;
 		}
 		// Put the comment into the global so it's available to filters.
@@ -2137,7 +2137,7 @@ function bp_activity_recurse_comments( $comment, $args = array() ) {
 		 *
 		 * @param string $value Closing tag for the HTML markup to use.
 		 */
-		echo apply_filters( 'bp_activity_recurse_comments_end_ul', '</ul>' );
+		echo wp_kses_post( apply_filters( 'bp_activity_recurse_comments_end_ul', '</ul>' ) );
 	}
 }
 
@@ -3667,7 +3667,7 @@ function bp_activity_comments_user_avatars( $args = array() ) {
 	 * @param array  $r      Array of arguments used for each avatar.
 	 * @param array  $output Array of each avatar found, before imploded into single string.
 	 */
-	echo apply_filters( 'bp_activity_comments_user_avatars', $retval, $r, $output );
+	echo wp_kses_post( apply_filters( 'bp_activity_comments_user_avatars', $retval, $r, $output ) );
 }
 
 /**
@@ -3803,10 +3803,10 @@ function bp_activity_types_list( $output = 'select', $args = '' ) {
 		// Switch output based on the element.
 		switch ( $output ) {
 			case 'select':
-				printf( '<option value="%1$s" %2$s>%3$s</option>', esc_attr( $type ), $selected, esc_html( $description ) );
+				printf( '<option value="%1$s" %2$s>%3$s</option>', esc_attr( $type ), $selected, esc_html( $description ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $selected is safe attribute markup from WP core selected().
 				break;
 			case 'checkbox':
-				printf( '<label style="" for="%1$s[]">%2$s<input type="checkbox" id="%1$s[]" name="%1$s[]" value="%3$s" %4$s/></label>', esc_attr( $args['checkbox_name'] ), esc_html( $description ), esc_attr( $args['checkbox_name'] ), esc_attr( $args['checkbox_name'] ), esc_attr( $type ), $checked );
+				printf( '<label style="" for="%1$s[]">%2$s<input type="checkbox" id="%1$s[]" name="%1$s[]" value="%3$s" %4$s/></label>', esc_attr( $args['checkbox_name'] ), esc_html( $description ), esc_attr( $args['checkbox_name'] ), esc_attr( $args['checkbox_name'] ), esc_attr( $type ), $checked ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $checked is safe attribute markup from WP core checked().
 				break;
 		}
 

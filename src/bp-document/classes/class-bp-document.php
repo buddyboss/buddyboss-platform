@@ -1464,12 +1464,14 @@ class BP_Document {
 				$colarr[ $col ][ '_' . $k ] = strtolower( $row[ $col ] );
 			}
 		}
-		$eval = 'array_multisort(';
+		$multisort_args = array();
 		foreach ( $cols as $col => $order ) {
-			$eval .= '$colarr[\'' . $col . '\'],' . $order . ',';
+			$multisort_args[] = &$colarr[ $col ];
+			// $order may be a sort-flag constant name (e.g. 'SORT_ASC'); resolve it to the constant value.
+			$multisort_args[] = ( is_string( $order ) && defined( $order ) ) ? constant( $order ) : $order;
 		}
-		$eval = substr( $eval, 0, - 1 ) . ');';
-		eval( $eval );
+		call_user_func_array( 'array_multisort', $multisort_args );
+		unset( $multisort_args );
 		$ret = array();
 		foreach ( $colarr as $col => $arr ) {
 			foreach ( $arr as $k => $v ) {

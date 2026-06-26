@@ -280,7 +280,7 @@ function bbp_update_user_last_posted( $user_id = 0, $time = 0 ) {
  * @uses bbp_get_user_last_posted() To output the last posted time
  */
 function bbp_user_last_posted( $user_id = 0 ) {
-	echo bbp_get_user_last_posted( $user_id );
+	echo esc_html( bbp_get_user_last_posted( $user_id ) );
 }
 
 	/**

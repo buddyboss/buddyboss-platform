@@ -694,7 +694,7 @@ function bbp_get_topic_permalink( $topic_id = 0, $redirect_to = '' ) {
  * @uses  bbp_get_topic_title() To get the topic title
  */
 function bbp_topic_title( $topic_id = 0 ) {
-	echo bbp_get_topic_title( $topic_id );
+	echo bbp_get_topic_title( $topic_id ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- bbp_get_topic_title() self-escapes its return value.
 }
 
 /**
@@ -1046,7 +1046,7 @@ function bbp_topic_content_append_revisions( $content = '', $topic_id = 0 ) {
  * @uses  bbp_get_topic_revision_log() To get the topic revision log
  */
 function bbp_topic_revision_log( $topic_id = 0 ) {
-	echo bbp_get_topic_revision_log( $topic_id );
+	echo wp_kses_post( bbp_get_topic_revision_log( $topic_id ) );
 }
 
 /**
@@ -1392,7 +1392,7 @@ function bbp_is_topic_anonymous( $topic_id = 0 ) {
  * @uses       bbp_get_topic_author() To get the topic author
  */
 function bbp_topic_author( $topic_id = 0 ) {
-	echo bbp_get_topic_author( $topic_id );
+	echo esc_html( bbp_get_topic_author( $topic_id ) );
 }
 
 /**
@@ -1472,7 +1472,7 @@ function bbp_get_topic_author_id( $topic_id = 0 ) {
  *                                            name
  */
 function bbp_topic_author_display_name( $topic_id = 0 ) {
-	echo bbp_get_topic_author_display_name( $topic_id );
+	echo bbp_get_topic_author_display_name( $topic_id ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- bbp_get_topic_author_display_name() self-escapes its return value.
 }
 
 /**
@@ -1830,7 +1830,7 @@ function bbp_get_topic_author_email( $topic_id = 0 ) {
  * @uses  bbp_get_topic_author_role() To get the topic author role
  */
 function bbp_topic_author_role( $args = array() ) {
-	echo bbp_get_topic_author_role( $args );
+	echo wp_kses_post( bbp_get_topic_author_role( $args ) );
 }
 
 /**
@@ -2454,7 +2454,7 @@ function bbp_get_topic_post_count( $topic_id = 0, $integer = false ) {
  * @uses  bbp_get_topic_reply_count_hidden() To get the topic hidden reply count
  */
 function bbp_topic_reply_count_hidden( $topic_id = 0, $integer = false ) {
-	echo bbp_get_topic_reply_count_hidden( $topic_id, $integer );
+	echo esc_html( bbp_get_topic_reply_count_hidden( $topic_id, $integer ) );
 }
 
 /**
@@ -3435,7 +3435,7 @@ function bbp_get_reply_report_link( $args = array() ) {
  * @uses  bbp_get_forum_pagination_count() To get the forum pagination count
  */
 function bbp_forum_pagination_count() {
-	echo bbp_get_forum_pagination_count();
+	echo bbp_get_forum_pagination_count(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- bbp_get_forum_pagination_count() self-escapes its return value.
 }
 
 /**
@@ -3470,7 +3470,7 @@ function bbp_get_forum_pagination_count() {
 		// Several topics in a forum with several pages
 	} else {
 		/* translators: 2: number shown on this page, 3: last item number on this page, 4: total number of discussions. */
-		$retstr = sprintf( _n( 'Viewing %2$s of %4$s discussions', 'Viewing %2$s - %3$s of %4$s discussions', $total_int, 'buddyboss-platform' ), $bbp->topic_query->post_count, $from_num, $to_num, $total );
+		$retstr = sprintf( _n( 'Viewing %2$s of %4$s discussions', 'Viewing %2$s - %3$s of %4$s discussions', $total_int, 'buddyboss-platform' ), $bbp->topic_query->post_count, $from_num, $to_num, $total ); // phpcs:ignore WordPress.WP.I18n.MissingSingularPlaceholder -- Singular keeps its literal form to preserve existing translations (msgid unchanged); upstream BuddyPress pagination string.
 	}
 
 	// Filter and return
@@ -3663,7 +3663,7 @@ function bbp_get_form_topic_type_dropdown( $args = '' ) {
 		unset( $topic_sticky_types['super'] );
 	}
 	?>
-		<select name="<?php echo esc_attr( $r['select_id'] ); ?>" id="<?php echo esc_attr( $r['select_id'] ); ?>_select"<?php echo $tab; ?>>
+		<select name="<?php echo esc_attr( $r['select_id'] ); ?>" id="<?php echo esc_attr( $r['select_id'] ); ?>_select"<?php echo $tab; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $tab is esc_attr()'d at assignment and is safe attribute markup. ?>>
 			<?php foreach ( $topic_sticky_types as $key => $label ) : ?>
 				<option value="<?php echo esc_attr( $key ); ?>"<?php selected( $key, $r['selected'] ); ?>>
 					<span><?php esc_html_e( 'Type: ', 'buddyboss-platform' ); ?></span>
@@ -3747,7 +3747,7 @@ function bbp_get_form_topic_status_dropdown( $args = '' ) {
 	?>
 
     <select name="<?php echo esc_attr( $r['select_id'] ); ?>"
-            id="<?php echo esc_attr( $r['select_id'] ); ?>_select"<?php echo $tab; ?>>
+            id="<?php echo esc_attr( $r['select_id'] ); ?>_select"<?php echo $tab; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $tab is built from an (int) cast and is safe attribute markup. ?>>
 
 		<?php foreach ( bbp_get_topic_statuses( $r['topic_id'] ) as $key => $label ) : ?>
 
@@ -4128,7 +4128,7 @@ function bbp_get_topic_tag_description( $args = array() ) {
  * @uses  bbp_get_form_topic_title() To get the value of topic title field
  */
 function bbp_form_topic_title() {
-	echo bbp_get_form_topic_title();
+	echo bbp_get_form_topic_title(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- bbp_get_form_topic_title() returns esc_html()'d value.
 }
 
 /**
@@ -4217,7 +4217,7 @@ function bbp_topic_row_actions() {
  * @uses  bbp_get_form_topic_tags() To get the value of topic tags field
  */
 function bbp_form_topic_tags() {
-	echo bbp_get_form_topic_tags();
+	echo bbp_get_form_topic_tags(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- bbp_get_form_topic_tags() returns esc_attr()'d value.
 }
 
 /**
@@ -4291,7 +4291,7 @@ function bbp_get_form_topic_tags() {
  * @uses  bbp_get_form_topic_forum() To get the topic's forum id
  */
 function bbp_form_topic_forum() {
-	echo bbp_get_form_topic_forum();
+	echo esc_html( bbp_get_form_topic_forum() );
 }
 
 /**
@@ -4330,7 +4330,7 @@ function bbp_get_form_topic_forum() {
  * @uses  bbp_get_form_topic_subscribed() To get the subscribed checkbox value
  */
 function bbp_form_topic_subscribed() {
-	echo bbp_get_form_topic_subscribed();
+	echo bbp_get_form_topic_subscribed(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- bbp_get_form_topic_subscribed() returns checked() attribute markup.
 }
 
 /**
@@ -4380,7 +4380,7 @@ function bbp_get_form_topic_subscribed() {
  * @uses  bbp_get_form_topic_log_edit() To get the topic log edit value
  */
 function bbp_form_topic_log_edit() {
-	echo bbp_get_form_topic_log_edit();
+	echo bbp_get_form_topic_log_edit(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- bbp_get_form_topic_log_edit() returns checked() attribute markup.
 }
 
 /**
@@ -4417,7 +4417,7 @@ function bbp_get_form_topic_log_edit() {
  * @uses  bbp_get_form_topic_edit_reason() To get the topic edit reason value
  */
 function bbp_form_topic_edit_reason() {
-	echo bbp_get_form_topic_edit_reason();
+	echo bbp_get_form_topic_edit_reason(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- bbp_get_form_topic_edit_reason() returns esc_attr()'d value.
 }
 
 /**

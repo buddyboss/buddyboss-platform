@@ -278,7 +278,7 @@ trait BP_REST_Attachments {
 		$avatar_object = $this->get_avatar_object( $args );
 
 		if ( file_exists( $avatar_original['file'] ) ) {
-			unlink( $avatar_original['file'] );
+			wp_delete_file( $avatar_original['file'] );
 		}
 
 		return $avatar_object;
@@ -332,7 +332,7 @@ trait BP_REST_Attachments {
 		} else {
 			$image_file = $resized['path'];
 			$img_dir    = str_replace( $upload_path, '', $resized['path'] );
-			unlink( $file );
+			wp_delete_file( $file );
 		}
 
 		// Check for WP_Error on what should be an image.

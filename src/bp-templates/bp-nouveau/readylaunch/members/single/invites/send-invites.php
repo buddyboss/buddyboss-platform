@@ -52,10 +52,10 @@ $is_disabled_invite_member_content = bp_disable_invite_member_email_content();
 			?>
 			<tr>
 				<td class="field-name">
-					<input type="text" name="invitee[<?php echo $i; ?>][]" id="invitee_<?php echo $i; ?>_title" value="<?php echo esc_attr( '' ); ?>" class="invites-input" <?php bp_form_field_attributes( 'invitee' ); ?> aria-label="<?php esc_attr_e( 'Recipient Name', 'buddyboss-platform' ); ?>"/>
+					<input type="text" name="invitee[<?php echo esc_attr( $i ); ?>][]" id="invitee_<?php echo esc_attr( $i ); ?>_title" value="<?php echo esc_attr( '' ); ?>" class="invites-input" <?php bp_form_field_attributes( 'invitee' ); ?> aria-label="<?php esc_attr_e( 'Recipient Name', 'buddyboss-platform' ); ?>"/>
 				</td>
 				<td class="field-email">
-					<input type="email" name="email[<?php echo $i; ?>][]" id="email_<?php echo $i; ?>_email" value="<?php echo esc_attr( '' ); ?>" class="invites-input" <?php bp_form_field_attributes( 'email' ); ?> aria-label="<?php esc_attr_e( 'Recipient Email', 'buddyboss-platform' ); ?>"/>
+					<input type="email" name="email[<?php echo esc_attr( $i ); ?>][]" id="email_<?php echo esc_attr( $i ); ?>_email" value="<?php echo esc_attr( '' ); ?>" class="invites-input" <?php bp_form_field_attributes( 'email' ); ?> aria-label="<?php esc_attr_e( 'Recipient Email', 'buddyboss-platform' ); ?>"/>
 				</td>
 				<?php
 				if ( true === $send_invite_member_type_allow ) {
@@ -70,7 +70,7 @@ $is_disabled_invite_member_content = bp_disable_invite_member_email_content();
 					}
 					?>
 					<td class="field-member-type">
-						<select name="member-type[<?php echo $i; ?>][]" id="member_type<?php echo $i; ?>_member_type" class="invites-input">
+						<select name="member-type[<?php echo esc_attr( $i ); ?>][]" id="member_type<?php echo esc_attr( $i ); ?>_member_type" class="invites-input">
 							<option value=""><?php esc_html_e( '-- Select Type --', 'buddyboss-platform' ); ?></option>
 							<?php
 							foreach ( $member_types as $type ) {

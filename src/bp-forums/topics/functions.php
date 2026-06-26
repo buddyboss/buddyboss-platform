@@ -911,7 +911,7 @@ function bbp_edit_topic_handler( $action = '' ) {
 
 	} else {
 		$append_error = ( is_wp_error( $topic_id ) && $topic_id->get_error_message() ) ? $topic_id->get_error_message() . ' ' : '';
-		bbp_add_error( 'bbp_topic_error', __( '<strong>ERROR</strong>: The following problem(s) have been found with your topic:' . $append_error . 'Please try again.', 'buddyboss-platform' ) );
+		bbp_add_error( 'bbp_topic_error', sprintf( /* translators: %s: additional error details (may be empty). */ __( '<strong>ERROR</strong>: The following problem(s) have been found with your topic:%sPlease try again.', 'buddyboss-platform' ), $append_error ) );
 	}
 }
 
@@ -3858,7 +3858,7 @@ function bbp_display_topics_feed_rss2( $topics_query = array() ) {
 	// Display the feed.
 	header( 'Content-Type: ' . feed_content_type( 'rss2' ) . '; charset=' . get_option( 'blog_charset' ), true );
 	header( 'Status: 200 OK' );
-	echo '<?xml version="1.0" encoding="' . get_option( 'blog_charset' ) . '"?' . '>'; ?>
+	echo '<?xml version="1.0" encoding="' . esc_attr( get_option( 'blog_charset' ) ) . '"?' . '>'; ?>
 
 	<rss version="2.0"
 		xmlns:content="http://purl.org/rss/1.0/modules/content/"

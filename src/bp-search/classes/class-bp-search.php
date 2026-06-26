@@ -253,7 +253,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 				self::instance()->prepare_search_page();
 				$content = bp_search_buffer_template_part( 'results-page-content', '', false );
 
-				echo $content;
+				echo $content; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- buffered search template (form/input/button), escaped internally; wp_kses_post would strip form controls.
 
 				die();
 			}
@@ -641,8 +641,8 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 
 							if ( $total_results > $args['number'] ) {
 								$end_html .= "<footer class='results-group-footer'>";
-								/* translators: %d: number of additional results not shown. */
 								$end_html .= "<a href='" . $category_search_url . "' class='view-all-link'>" .
+											   /* translators: %d: number of additional results not shown. */
 											   sprintf( esc_html__( 'View (%d) more', 'buddyboss-platform' ), $total_results - $args['number'] ) .
 											 '</a>';
 								$end_html .= '</footer>';
@@ -915,7 +915,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 			}
 
 			$tab_url = $search_url;
-			echo "<li class='{$class}'><a href='" . esc_url( $tab_url ) . "'>{$label}</a></li>";
+			echo "<li class='" . esc_attr( $class ) . "'><a href='" . esc_url( $tab_url ) . "'>" . wp_kses_post( $label ) . '</a></li>';
 
 			// then other tabs.
 			$search_items = bp_search_items();
@@ -941,7 +941,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 				}
 
 				$tab_url = esc_url( add_query_arg( 'subset', $item, $search_url ) );
-				echo "<li class='{$class} {$item}' data-item='{$item}'><a href='" . esc_url( $tab_url ) . "'>{$label}</a></li>";
+				echo "<li class='" . esc_attr( $class ) . ' ' . esc_attr( $item ) . "' data-item='" . esc_attr( $item ) . "'><a href='" . esc_url( $tab_url ) . "'>" . wp_kses_post( $label ) . '</a></li>';
 			}
 		}
 
@@ -951,7 +951,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 				$current_tab = $this->search_args['search_subset'];
 
 				foreach ( $this->search_results[ $current_tab ]['items'] as $item_id => $item ) {
-					echo $item['html'];
+					echo wp_kses_post( $item['html'] );
 				}
 
 				if ( $current_tab != 'all' ) {

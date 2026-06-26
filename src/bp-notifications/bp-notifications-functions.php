@@ -1134,7 +1134,7 @@ function bb_notification_avatar() {
 				}
 			}
 			?>
-			<a href="<?php echo ! empty( $link ) ? esc_url( $link ) : ''; ?>" class="<?php echo esc_attr( $moderation_class ); ?>" <?php echo $data_hp; ?>>
+			<a href="<?php echo ! empty( $link ) ? esc_url( $link ) : ''; ?>" class="<?php echo esc_attr( $moderation_class ); ?>" <?php echo $data_hp; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $data_hp is a pre-built attribute string with esc_attr'd value or empty. ?>>
 				<?php
 				echo wp_kses_post( bp_core_fetch_avatar(
 					array(

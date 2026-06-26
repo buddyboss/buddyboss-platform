@@ -192,7 +192,7 @@ function bp_core_admin_buddyboss_app() {
  * @param bool   $slug    Form option slug.
  */
 function bp_form_option( $option, $default = '', $slug = false ) {
-	echo bp_get_form_option( $option, $default, $slug );
+	echo bp_get_form_option( $option, $default, $slug ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- bp_get_form_option() escapes the value with esc_attr().
 }
 
 /**
@@ -273,7 +273,7 @@ function bp_feed_settings_callback_post_type( $args ) {
 		<?php checked( bp_is_post_type_feed_enable( $post_type, false ) ); ?>
 	/>
 	<label for="<?php echo esc_attr( $option_name ); ?>">
-		<?php echo 'post' === $post_type ? esc_html__( 'WordPress Posts', 'buddyboss-platform' ) : $post_type_obj->labels->name; ?>
+		<?php echo 'post' === $post_type ? esc_html__( 'WordPress Posts', 'buddyboss-platform' ) : esc_html( $post_type_obj->labels->name ); ?>
 	</label>
 	<?php
 

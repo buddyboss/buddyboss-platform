@@ -459,7 +459,7 @@ function bp_attachments_create_item_type( $type = 'avatar', $args = array() ) {
 
 	// Remove copied file if it fails.
 	if ( ! $created ) {
-		@unlink( $image_file_path );
+		@wp_delete_file( $image_file_path );
 	}
 
 	// Return the response.
@@ -713,7 +713,7 @@ function bp_attachments_delete_file( $args = array() ) {
 		return false;
 	}
 
-	@unlink( $attachment_path );
+	@wp_delete_file( $attachment_path );
 	return true;
 }
 
@@ -1447,7 +1447,7 @@ function bp_attachments_cover_image_generate_file( $args = array(), $cover_image
 		while ( false !== ( $attachment_file = readdir( $att_dir ) ) ) {
 			// Skip directories and the new cover photo.
 			if ( 2 < strlen( $attachment_file ) && 0 !== strpos( $attachment_file, '.' ) && $cover_basename !== $attachment_file ) {
-				@unlink( $args['cover_image_dir'] . '/' . $attachment_file );
+				@wp_delete_file( $args['cover_image_dir'] . '/' . $attachment_file );
 			}
 		}
 	}

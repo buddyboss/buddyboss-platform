@@ -124,7 +124,7 @@ if ( bp_has_albums( array( 'include' => $album_id ) ) ) : ?>
 												$privacy = ! $bp_is_group && $can_edit ? 'data-privacy="' . esc_attr( bp_get_album_privacy() ) . '"' : '';
 												?>
 													<li class="album-edit">
-														<a href="#" class="bb-edit-album bb-rl-edit-album" id="bp-edit-album-title" <?php echo $privacy; ?>>
+														<a href="#" class="bb-edit-album bb-rl-edit-album" id="bp-edit-album-title" <?php echo $privacy; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $privacy is attribute markup with esc_attr'd value built at assignment. ?>>
 														<?php
 															esc_html_e( 'Edit Album', 'buddyboss-platform' );
 														?>
@@ -194,8 +194,8 @@ if ( bp_has_albums( array( 'include' => $album_id ) ) ) : ?>
 						}
 						?>
 
-						<span class="bb-album-photo-count"><i class="bb-icons-rl-images"></i><?php printf( _n( '%s', '%s', $media_album_template->album->media['total'], 'buddyboss-platform' ), esc_html( bp_core_number_format( $media_album_template->album->media['total'] ) ) ); ?></span><span class="bb-sep"></span>
-						<span class="bb-album-video-count"><i class="bb-icons-rl-video"></i><?php printf( _n( '%s', '%s', $media_album_template->album->media['total_video'], 'buddyboss-platform' ), esc_html( bp_core_number_format( $media_album_template->album->media['total_video'] ) ) ); ?></span>
+						<span class="bb-album-photo-count"><i class="bb-icons-rl-images"></i><?php echo esc_html( bp_core_number_format( $media_album_template->album->media['total'] ) ); ?></span><span class="bb-sep"></span>
+						<span class="bb-album-video-count"><i class="bb-icons-rl-video"></i><?php echo esc_html( bp_core_number_format( $media_album_template->album->media['total_video'] ) ); ?></span>
 					</p>
 				</div>
 

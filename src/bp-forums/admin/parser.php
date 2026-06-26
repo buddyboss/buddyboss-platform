@@ -1755,7 +1755,7 @@ $/Dx",
 	function Internal_CollectText( $array, $start = 0 ) {
 		ob_start();
 		for ( $start = intval( $start ), $end = count( $array ); $start < $end; $start++ ) {
-			print $array[ $start ][ BBCODE_STACK_TEXT ];
+			print $array[ $start ][ BBCODE_STACK_TEXT ]; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- collected into an output buffer for further BBCode parsing, not final HTML output.
 		}
 		$output = ob_get_contents();
 		ob_end_clean();
@@ -1764,7 +1764,7 @@ $/Dx",
 	function Internal_CollectTextReverse( $array, $start = 0, $end = 0 ) {
 		ob_start();
 		for ( $start = intval( $start ); $start >= $end; $start-- ) {
-			print $array[ $start ][ BBCODE_STACK_TEXT ];
+			print $array[ $start ][ BBCODE_STACK_TEXT ]; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- collected into an output buffer for further BBCode parsing, not final HTML output.
 		}
 		$output = ob_get_contents();
 		ob_end_clean();

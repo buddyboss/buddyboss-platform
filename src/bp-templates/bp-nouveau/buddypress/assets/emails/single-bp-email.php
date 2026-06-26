@@ -300,10 +300,10 @@ $settings = bp_email_get_appearance_settings();
 								<img src="<?php echo esc_attr( $image_src[0] ); ?>" alt="<?php echo esc_attr( $blogname ); ?>" style="margin:0; padding:0; border:none; display:block; max-height:auto; height:auto; width:<?php echo esc_attr( $settings['site_title_logo_size'] ); ?>px;" border="0" />
 													 <?php
 							} else {
-								echo $blogname;
+								echo esc_html( $blogname );
 							}
 						} else {
-							echo $blogname;
+							echo esc_html( $blogname );
 						}
 
 						/**
@@ -325,7 +325,7 @@ $settings = bp_email_get_appearance_settings();
 
 						// echo bp_get_option( 'blogname' );
 						if ( bp_is_email_customizer() ) {
-							echo '{{recipient.name}} <img src="' . apply_filters( 'bp_email_customizer_default_avatar', bb_attachments_get_default_profile_group_avatar_image( array( 'object' => 'user' ) ) ) . '" width="34" height="34" style="border: 1px solid #b9babc; border-radius: 50%; margin-left: 12px; vertical-align: middle;" />';
+							echo '{{recipient.name}} <img src="' . esc_url( apply_filters( 'bp_email_customizer_default_avatar', bb_attachments_get_default_profile_group_avatar_image( array( 'object' => 'user' ) ) ) ) . '" width="34" height="34" style="border: 1px solid #b9babc; border-radius: 50%; margin-left: 12px; vertical-align: middle;" />';
 						} else {
 							bp_email_the_salutation( $settings );
 						}
@@ -367,7 +367,7 @@ $settings = bp_email_get_appearance_settings();
 							<tr>
 								<td valign="middle" width="10%" style="vertical-align: middle;">
 									<a href="#" target="_blank">
-										<img alt="<?php esc_html_e( 'Avatar', 'buddyboss-platform' ); ?>" src="<?php echo apply_filters( 'bp_email_default_avatar', bb_attachments_get_default_profile_group_avatar_image( array( 'object' => 'user' ) ) ); ?>" width="45" height="45" style="border: 1px solid #b9babc; border-radius: 50%; vertical-align: middle;" />
+										<img alt="<?php esc_html_e( 'Avatar', 'buddyboss-platform' ); ?>" src="<?php echo esc_url( apply_filters( 'bp_email_default_avatar', bb_attachments_get_default_profile_group_avatar_image( array( 'object' => 'user' ) ) ) ); ?>" width="45" height="45" style="border: 1px solid #b9babc; border-radius: 50%; vertical-align: middle;" />
 									</a>
 									<span class="body_secondary_text_color body_text_size" style="margin-left: 10px; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; line-height: <?php echo esc_attr( floor( $settings['body_text_size'] * 1.618 ) . 'px' ); ?>; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; color: <?php echo esc_attr( $settings['body_secondary_text_color'] ); ?>; letter-spacing: -0.24px;">{{sender.name}}</span>
 								</td>
@@ -452,7 +452,7 @@ $settings = bp_email_get_appearance_settings();
 						do_action( 'bp_before_email_footer' );
 						?>
 
-						<span class="footer_text"><?php echo nl2br( stripslashes( $settings['footer_text'] ) ); ?></span>
+						<span class="footer_text"><?php echo wp_kses_post( nl2br( stripslashes( $settings['footer_text'] ) ) ); ?></span>
 						<p style="margin: 5px 0;"><?php esc_html_e( "If you don't want to receive these emails in the future, please ", 'buddyboss-platform' ); ?><a href="{{{unsubscribe}}}" style="text-decoration: none;"><?php esc_html_e( 'unsubscribe', 'buddyboss-platform' ); ?></a>.</p>
 
 						<?php

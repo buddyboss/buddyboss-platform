@@ -2369,10 +2369,10 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 				$content = '<p class="joined deleted-message">' . __( 'This message was deleted', 'buddyboss-platform' ) . '</p>';
 			} elseif ( $message_unbanned && 'yes' === $message_unbanned ) {
 				/* translators: %s: Group Name */
-				$content = sprintf( __( '<p class="joined">Removed Ban <strong>%s</strong></p>', 'buddyboss-platform' ), ucwords( $group_name ) );
+				$content = sprintf( __( '<p class="joined">Removed Ban <strong>%s</strong></p>', 'buddyboss-platform' ), ucwords( $group_name ) ); // phpcs:ignore WordPress.WP.I18n.NoHtmlWrappedStrings -- HTML wrapper kept inside the string to preserve existing translations (msgid unchanged).
 			} elseif ( $message_banned && 'yes' === $message_banned ) {
 				/* translators: %s: Group Name */
-				$content = sprintf( __( '<p class="joined">Ban <strong>%s</strong></p>', 'buddyboss-platform' ), ucwords( $group_name ) );
+				$content = sprintf( __( '<p class="joined">Ban <strong>%s</strong></p>', 'buddyboss-platform' ), ucwords( $group_name ) ); // phpcs:ignore WordPress.WP.I18n.NoHtmlWrappedStrings -- HTML wrapper kept inside the string to preserve existing translations (msgid unchanged).
 			} elseif ( 'This message was deleted' === wp_strip_all_tags( bp_get_the_thread_message_content() ) ) {
 				$content = '<p class="joined">' . wp_strip_all_tags( bp_get_the_thread_message_content() ) . '</p>';
 			} else {
@@ -2448,10 +2448,10 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 				$content = '<p class="joined deleted-message">' . __( 'This message was deleted', 'buddyboss-platform' ) . '</p>';
 			} elseif ( $message_unbanned && 'yes' === $message_unbanned ) {
 				/* translators: %s: Group Name */
-				$content = sprintf( __( '<p class="joined">Removed Ban <strong>%s</strong></p>', 'buddyboss-platform' ), ucwords( $group_name ) );
+				$content = sprintf( __( '<p class="joined">Removed Ban <strong>%s</strong></p>', 'buddyboss-platform' ), ucwords( $group_name ) ); // phpcs:ignore WordPress.WP.I18n.NoHtmlWrappedStrings -- HTML wrapper kept inside the string to preserve existing translations (msgid unchanged).
 			} elseif ( $message_banned && 'yes' === $message_banned ) {
 				/* translators: %s: Group Name */
-				$content = sprintf( __( '<p class="joined">Ban <strong>%s</strong></p>', 'buddyboss-platform' ), ucwords( $group_name ) );
+				$content = sprintf( __( '<p class="joined">Ban <strong>%s</strong></p>', 'buddyboss-platform' ), ucwords( $group_name ) ); // phpcs:ignore WordPress.WP.I18n.NoHtmlWrappedStrings -- HTML wrapper kept inside the string to preserve existing translations (msgid unchanged).
 			} elseif ( 'This message was deleted' === wp_strip_all_tags( bp_get_the_thread_message_content() ) ) {
 				$content = '<p class="joined deleted-message">' . wp_strip_all_tags( bp_get_the_thread_message_content() ) . '</p>';
 			} else {

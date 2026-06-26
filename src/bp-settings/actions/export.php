@@ -35,7 +35,7 @@ function bp_settings_action_export() {
 
 			if ( is_wp_error( $request_id ) ) {
 
-				bp_core_add_message( sprintf( __( '%s', 'buddyboss-platform' ), $request_id->get_error_message() ), 'error' );
+				bp_core_add_message( $request_id->get_error_message(), 'error' );
 
 				// Redirect to the root domain.
 				// bp_core_redirect( bp_get_root_domain() );

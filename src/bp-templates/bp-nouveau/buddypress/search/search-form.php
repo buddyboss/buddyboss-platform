@@ -23,8 +23,8 @@ $search_term =  ! empty( $_REQUEST['s'] ) ? esc_html( $_REQUEST['s'] ) : '';
 			id="<?php bp_nouveau_search_selector_id( 'search' ); ?>"
 			name="s"
 			type="search"
-			value="<?php echo BP_Search::instance()->has_search_results() ? $search_term : '' ?>"
-			placeholder="<?php echo BP_Search::instance()->has_search_results() ?  __( 'Search Network&hellip;', "buddyboss-platform" ) : __( 'Try different keywords&hellip;', "buddyboss-platform" ) ?>"
+			value="<?php echo BP_Search::instance()->has_search_results() ? $search_term : ''; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $search_term is esc_html'd at assignment. ?>"
+			placeholder="<?php echo BP_Search::instance()->has_search_results() ? wp_kses_post( __( 'Search Network&hellip;', 'buddyboss-platform' ) ) : wp_kses_post( __( 'Try different keywords&hellip;', 'buddyboss-platform' ) ); ?>"
 		/>
 
 		<button type="submit" id="<?php bp_nouveau_search_selector_id( 'search-submit' ); ?>" class="nouveau-search-submit">

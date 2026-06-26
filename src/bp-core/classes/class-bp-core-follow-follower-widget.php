@@ -110,11 +110,13 @@ class BP_Core_Follow_Follower_Widget extends WP_Widget {
 		) ) {
 			do_action( 'bp_before_follower_widget' );
 
-			echo $args['before_widget'];
-			echo $args['before_title']
-			   . $title
-			   . $follower_count
-			   . $args['after_title'];
+			echo wp_kses_post( $args['before_widget'] );
+			echo wp_kses_post(
+				$args['before_title']
+				. $title
+				. $follower_count
+				. $args['after_title']
+			);
 			?>
 
 			<div class="avatar-block">
@@ -131,7 +133,7 @@ class BP_Core_Follow_Follower_Widget extends WP_Widget {
 				<div class="more-block more-followers"><a href="<?php bp_members_directory_permalink(); ?>#followers" class="count-more"><?php esc_html_e( 'See all', 'buddyboss-platform' ); ?><i class="bb-icon-l bb-icon-angle-right"></i></a></div>
 			<?php } ?>
 
-			<?php echo $args['after_widget']; ?>
+			<?php echo wp_kses_post( $args['after_widget'] ); ?>
 
 			<?php do_action( 'bp_after_follower_widget' ); ?>
 

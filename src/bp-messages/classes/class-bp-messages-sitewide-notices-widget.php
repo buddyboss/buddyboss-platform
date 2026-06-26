@@ -67,8 +67,8 @@ class BP_Messages_Sitewide_Notices_Widget extends WP_Widget {
 		 */
 		$title = apply_filters( 'widget_title', $title, $instance, $this->id_base );
 
-		echo $before_widget;
-		echo $before_title . esc_html( $title ) . $after_title; ?>
+		echo wp_kses_post( $before_widget );
+		echo wp_kses_post( $before_title ) . esc_html( $title ) . wp_kses_post( $after_title ); ?>
 
 		<div class="bp-site-wide-message">
 			<?php bp_message_get_notices(); ?>
@@ -76,7 +76,7 @@ class BP_Messages_Sitewide_Notices_Widget extends WP_Widget {
 
 		<?php
 
-		echo $after_widget;
+		echo wp_kses_post( $after_widget );
 	}
 
 	/**

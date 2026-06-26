@@ -46,7 +46,7 @@ $total    = bbp_get_topic_reply_count( $topic_id );
 			<span class="middot">&middot;</span>
 			<?php
 			/* translators: %d: number of replies. */
-			printf( _n( '%d reply', '%d replies', $total, 'buddyboss-platform' ), $total );
+			echo esc_html( sprintf( _n( '%d reply', '%d replies', $total, 'buddyboss-platform' ), $total ) );
 			?>
 			<span class="middot">&middot;</span>
 			<span>

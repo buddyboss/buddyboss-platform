@@ -99,11 +99,11 @@ class BP_Groups_Widget extends WP_Widget {
 		 */
 		$separator = apply_filters( 'bp_groups_widget_separator', '|' );
 
-		echo $before_widget;
+		echo wp_kses_post( $before_widget );
 
 		$title = ! empty( $instance['link_title'] ) ? '<a href="' . bp_get_groups_directory_permalink() . '">' . $title . '</a>' : $title;
 
-		echo $before_title . esc_html( $title ) . $after_title;
+		echo wp_kses_post( $before_title ) . esc_html( $title ) . wp_kses_post( $after_title );
 
 		$max_groups = ! empty( $instance['max_groups'] ) ? (int) $instance['max_groups'] : 5;
 
@@ -163,12 +163,12 @@ class BP_Groups_Widget extends WP_Widget {
 								<?php
 								if ( 'newest' == $instance['group_default'] ) {
 									/* translators: %s: human-readable time since the group was created. */
-									printf( esc_html__( 'created %s', 'buddyboss-platform' ), bp_get_group_date_created() );
+									printf( esc_html__( 'created %s', 'buddyboss-platform' ), esc_html( bp_get_group_date_created() ) );
 								} elseif ( 'popular' == $instance['group_default'] ) {
 									bp_group_member_count();
 								} else {
 									/* translators: %s: human-readable time since the group was last active. */
-									printf( esc_html__( 'active %s', 'buddyboss-platform' ), bp_get_group_last_active() );
+									printf( esc_html__( 'active %s', 'buddyboss-platform' ), esc_html( bp_get_group_last_active() ) );
 								}
 								?>
 								</span>
@@ -192,7 +192,7 @@ class BP_Groups_Widget extends WP_Widget {
 		<?php endif; ?>
 
 		<?php
-		echo $after_widget;
+		echo wp_kses_post( $after_widget );
 
 		// Restore the global.
 		$groups_template = $old_groups_template;

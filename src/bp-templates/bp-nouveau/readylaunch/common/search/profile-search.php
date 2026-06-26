@@ -94,9 +94,9 @@ $search_form_data = bp_profile_search_escaped_form_data( $form_id );
 											$day = str_pad( $i, 2, '0', STR_PAD_LEFT );
 											printf(
 												'<option value="%1$s" %2$s>%3$s</option>',
-												$day,
+												esc_attr( $day ),
 												selected( $field_value['min']['day'], $day, false ),
-												$i
+												esc_html( $i )
 											);
 										}
 										?>
@@ -131,9 +131,9 @@ $search_form_data = bp_profile_search_escaped_form_data( $form_id );
 										$month = str_pad( $month, 2, '0', STR_PAD_LEFT );
 										printf(
 											'<option value="%1$s" %2$s>%3$s</option>',
-											$month,
+											esc_attr( $month ),
 											selected( $field_value['min']['month'], $month, false ),
-											$months[ $i ]
+											esc_html( $months[ $i ] )
 										);
 									}
 									?>
@@ -189,9 +189,9 @@ $search_form_data = bp_profile_search_escaped_form_data( $form_id );
 											$day = str_pad( $i, 2, '0', STR_PAD_LEFT );
 											printf(
 												'<option value="%1$s" %2$s>%3$s</option>',
-												$day,
+												esc_attr( $day ),
 												selected( $field_value['max']['day'], $day, false ),
-												$i
+												esc_html( $i )
 											);
 										}
 										?>
@@ -211,9 +211,9 @@ $search_form_data = bp_profile_search_escaped_form_data( $form_id );
 										$month = str_pad( $month, 2, '0', STR_PAD_LEFT );
 										printf(
 											'<option value="%1$s" %2$s>%3$s</option>',
-											$month,
+											esc_attr( $month ),
 											selected( $field_value['max']['month'], $month, false ),
-											$months[ $i ]
+											esc_html( $months[ $i ] )
 										);
 									}
 									?>

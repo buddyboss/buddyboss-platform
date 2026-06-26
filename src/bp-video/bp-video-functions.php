@@ -3556,8 +3556,8 @@ function bp_video_delete_video_previews() {
 
 	$five_minutes = strtotime( '-5 minutes' );
 	while ( false != ( $file = readdir( $dir ) ) ) { // phpcs:ignore WordPress.CodeAnalysis.AssignmentInCondition.FoundInWhileCondition, WordPress.PHP.StrictComparisons.LooseComparison
-		if ( file_exists( $inner_directory_name . '/' . $file ) && is_writable( $inner_directory_name . '/' . $file ) && filemtime( $inner_directory_name . '/' . $file ) < $five_minutes ) {
-			@unlink( $inner_directory_name . '/' . $file ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
+		if ( file_exists( $inner_directory_name . '/' . $file ) && wp_is_writable( $inner_directory_name . '/' . $file ) && filemtime( $inner_directory_name . '/' . $file ) < $five_minutes ) {
+			@wp_delete_file( $inner_directory_name . '/' . $file ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
 		}
 	}
 	closedir( $dir );
@@ -3776,7 +3776,7 @@ function bb_video_delete_thumb_symlink( $video, $delete_thumb_id ) {
 	}
 
 	if ( file_exists( $attachment_path ) || is_link( $attachment_path ) ) {
-		unlink( $attachment_path );
+		wp_delete_file( $attachment_path );
 	}
 
 	$image_sizes = bb_video_get_image_sizes();
@@ -3804,12 +3804,12 @@ function bb_video_delete_thumb_symlink( $video, $delete_thumb_id ) {
 
 			// Delete the symlink if video preview file exists.
 			if ( file_exists( $preview_attachment ) || is_link( $preview_attachment ) ) {
-				unlink( $preview_attachment );
+				wp_delete_file( $preview_attachment );
 			}
 
 			// Delete the symlink if video/preview file exists.
 			if ( file_exists( $attachment ) || is_link( $attachment ) ) {
-				unlink( $attachment );
+				wp_delete_file( $attachment );
 			}
 		}
 	}
@@ -3981,17 +3981,17 @@ function bb_video_delete_symlinks( $video ) {
 
 			// Delete the symlink if video file exists.
 			if ( file_exists( $video_attachment ) ) {
-				unlink( $video_attachment );
+				wp_delete_file( $video_attachment );
 			}
 
 			// Delete the symlink if video preview file exists.
 			if ( file_exists( $preview_attachment ) ) {
-				unlink( $preview_attachment );
+				wp_delete_file( $preview_attachment );
 			}
 
 			// Delete the symlink if video/preview file exists.
 			if ( file_exists( $attachment ) ) {
-				unlink( $attachment );
+				wp_delete_file( $attachment );
 			}
 		}
 	}
@@ -4191,7 +4191,7 @@ function bb_video_delete_older_symlinks() {
 
 		if ( file_exists( $file ) && $file_time < $limit ) {
 			$list[] = $file;
-			unlink( $file );
+			wp_delete_file( $file );
 		}
 	}
 	closedir( $dh );
@@ -5039,7 +5039,7 @@ function bb_resumable_upload( $tmp_file_path, $filename ) {
 	$chunk_file = $file_chunks_folder . '/' . $filename . '.part' . $chunk_index;
 
 	// Move uploaded chunk to destination.
-	if ( ! move_uploaded_file( $tmp_file_path, $chunk_file ) ) {
+	if ( ! move_uploaded_file( $tmp_file_path, $chunk_file ) ) { // phpcs:ignore Generic.PHP.ForbiddenFunctions.Found -- move_uploaded_file() is the secure way to move an uploaded chunk (verifies POST origin) in this resumable-upload handler.
 		$errors[] = sprintf(
 		/* translators: %d: chunk index */
 			__( 'Failed to save chunk %d', 'buddyboss-platform' ),
@@ -5386,7 +5386,7 @@ function bb_create_file_from_chunks( $args ) {
 	// Clean up partial file on failure.
 	if ( ! $success ) {
 		if ( file_exists( $final_file_path ) ) {
-			unlink( $final_file_path );
+			wp_delete_file( $final_file_path );
 		}
 
 		return false;
@@ -5398,7 +5398,7 @@ function bb_create_file_from_chunks( $args ) {
 	$tolerance  = (float) $total_size * 0.01;
 
 	if ( abs( $final_size - (float) $total_size ) > $tolerance ) {
-		unlink( $final_file_path );
+		wp_delete_file( $final_file_path );
 		$errors[] = sprintf(
 		/* translators: %1$s: expected size, %2$s: got size */
 			__( 'Final file size mismatch. Expected: %1$s, Got: %2$s', 'buddyboss-platform' ),
@@ -5538,7 +5538,7 @@ function bb_rrmdir( $dir ) {
 			if ( ! bb_rrmdir( $path ) ) {
 				return false;
 			}
-		} elseif ( ! unlink( $path ) ) {
+		} elseif ( ! unlink( $path ) ) { // phpcs:ignore WordPress.WP.AlternativeFunctions.unlink_unlink -- Return value is needed to detect deletion failure; wp_delete_file() returns void.
 			return false;
 		}
 	}

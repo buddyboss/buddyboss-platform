@@ -2698,10 +2698,12 @@ function bp_document_rename_file( $document_id = 0, $attachment_document_id = 0,
 
 	// Validations.
 	if ( ! $post ) {
-		return __( 'Post with ID ' . $attachment_document_id . ' does not exist!', 'buddyboss-platform' );
+		// translators: %d: the attachment post ID.
+		return sprintf( __( 'Post with ID %d does not exist!', 'buddyboss-platform' ), $attachment_document_id );
 	}
 	if ( $post && $post->post_type != 'attachment' ) {
-		return __( 'Post with ID ' . $attachment_document_id . ' is not an attachment!', 'buddyboss-platform' );
+		// translators: %d: the attachment post ID.
+		return sprintf( __( 'Post with ID %d is not an attachment!', 'buddyboss-platform' ), $attachment_document_id );
 	}
 	if ( ! $new_filename ) {
 		return __( 'The document name is empty!', 'buddyboss-platform' );
@@ -2712,7 +2714,7 @@ function bp_document_rename_file( $document_id = 0, $attachment_document_id = 0,
 	if ( file_exists( $new_file_abs_path ) ) {
 		return __( 'A file with that name already exists in the containing folder!', 'buddyboss-platform' );
 	}
-	if ( ! is_writable( $file_abs_dir ) ) {
+	if ( ! wp_is_writable( $file_abs_dir ) ) {
 		return __( 'The document containing directory is not writable!', 'buddyboss-platform' );
 	}
 
@@ -2729,7 +2731,7 @@ function bp_document_rename_file( $document_id = 0, $attachment_document_id = 0,
 		$size_data = image_get_intermediate_size( $attachment_document_id, $size );
 		$attachment_path = ! empty( $size_data['path'] ) ? $uploads_path . DIRECTORY_SEPARATOR . $size_data['path'] : '';
 		if ( ! empty( $attachment_path ) && file_exists( $attachment_path ) ) {
-			@unlink( $attachment_path );
+			@wp_delete_file( $attachment_path );
 		}
 	}
 
@@ -2844,7 +2846,7 @@ function bp_document_rename_file( $document_id = 0, $attachment_document_id = 0,
 	);
 
 	if ( file_exists( $file_abs_path ) ) {
-		@unlink( $file_abs_path );
+		@wp_delete_file( $file_abs_path );
 	}
 
 	return $response;
@@ -3913,8 +3915,8 @@ function bp_document_delete_document_previews() {
 	}
 	$five_minutes = strtotime( '-5 minutes' );
 	while ( false != ( $file = readdir( $dir ) ) ) { // phpcs:ignore WordPress.CodeAnalysis.AssignmentInCondition.FoundInWhileCondition, WordPress.PHP.StrictComparisons.LooseComparison
-		if ( file_exists( $inner_directory_name . '/' . $file ) && is_writable( $inner_directory_name . '/' . $file ) && filemtime( $inner_directory_name . '/' . $file ) < $five_minutes ) {
-			@unlink( $inner_directory_name . '/' . $file ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
+		if ( file_exists( $inner_directory_name . '/' . $file ) && wp_is_writable( $inner_directory_name . '/' . $file ) && filemtime( $inner_directory_name . '/' . $file ) < $five_minutes ) {
+			@wp_delete_file( $inner_directory_name . '/' . $file ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
 		}
 	}
 	closedir( $dir );
@@ -4165,13 +4167,13 @@ function bp_document_delete_symlinks( $document ) {
 		foreach ( $all_attachments as $attachment_path ) {
 			// Delete symlink without an extension.
 			if ( file_exists( $attachment_path ) ) {
-				unlink( $attachment_path );
+				wp_delete_file( $attachment_path );
 			}
 
 			// Delete symlink with an extension.
 			$attachment_path = $attachment_path . '.' . $symlink_extension;
 			if ( file_exists( $attachment_path ) ) {
-				unlink( $attachment_path );
+				wp_delete_file( $attachment_path );
 			}
 		}
 	}
@@ -4213,7 +4215,7 @@ function bp_document_remove_temp_directory( $dir ) {
 				if ( filetype( $dir . '/' . $object ) === 'dir' ) {
 					bp_document_remove_temp_directory( $dir . '/' . $object );
 				} else {
-					unlink( $dir . '/' . $object );
+					wp_delete_file( $dir . '/' . $object );
 				}
 			}
 		}
@@ -4331,7 +4333,7 @@ function bp_document_pdf_previews( $ids, $check_mime_type = false ) {
 					foreach ( $old_value[0]['sizes'] as $sizeinfo ) {
 						// Check whether pre WP 4.7.3 lacking PDF marker and if so don't delete so as not to break links to thumbnails in content.
 						if ( false !== strpos( $sizeinfo['file'], '-pdf' ) ) {
-							@unlink( $dirname . $sizeinfo['file'] ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
+							@wp_delete_file( $dirname . $sizeinfo['file'] ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
 						}
 					}
 				}
@@ -5155,7 +5157,7 @@ function bb_document_delete_older_symlinks() {
 
 		if ( file_exists( $file ) && $file_time < $limit ) {
 			$list[] = $file;
-			unlink( $file );
+			wp_delete_file( $file );
 		}
 	}
 	closedir( $dh );

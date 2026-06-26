@@ -60,7 +60,7 @@ defined( 'ABSPATH' ) || exit;
 						<label class="bbp-forum-title-label" for="bbp_forum_title">
 							<?php
 							/* translators: %d: Maximum length of forum title */
-							printf( esc_html__( 'Forum Name <span>(Maximum Length: %d)</span>', 'buddyboss-platform' ), bbp_get_title_max_length() );
+							echo wp_kses_post( sprintf( __( 'Forum Name <span>(Maximum Length: %d)</span>', 'buddyboss-platform' ), bbp_get_title_max_length() ) );
 							?>
 						</label><br />
 						<input type="text" id="bbp_forum_title" value="<?php bbp_form_forum_title(); ?>" tabindex="<?php bbp_tab_index(); ?>" size="40" name="bbp_forum_title" maxlength="<?php bbp_title_max_length(); ?>" />

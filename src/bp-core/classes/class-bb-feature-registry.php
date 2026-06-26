@@ -238,8 +238,8 @@ class BB_Feature_Registry {
 				sprintf(
 					/* translators: 1: original feature ID, 2: new feature ID */
 					esc_html__( 'Feature ID "%1$s" already registered. Using "%2$s" instead.', 'buddyboss-platform' ),
-					$original_id,
-					$feature_id
+					esc_html( $original_id ),
+					esc_html( $feature_id )
 				),
 				'3.0.0'
 			);
@@ -420,8 +420,8 @@ class BB_Feature_Registry {
 				sprintf(
 					/* translators: 1: original ID, 2: new ID */
 					esc_html__( 'Side panel ID "%1$s" already registered for feature. Using "%2$s" instead.', 'buddyboss-platform' ),
-					$original_id,
-					$side_panel_id
+					esc_html( $original_id ),
+					esc_html( $side_panel_id )
 				),
 				'3.0.0'
 			);
@@ -572,8 +572,8 @@ class BB_Feature_Registry {
 				sprintf(
 					/* translators: 1: original section ID, 2: new section ID */
 					esc_html__( 'Section ID "%1$s" already registered for side panel. Using "%2$s" instead.', 'buddyboss-platform' ),
-					$original_id,
-					$section_id
+					esc_html( $original_id ),
+					esc_html( $section_id )
 				),
 				'3.0.0'
 			);
@@ -844,7 +844,7 @@ class BB_Feature_Registry {
 				sprintf(
 					/* translators: 1: navigation item ID */
 					esc_html__( 'Navigation item ID "%s" already registered for feature.', 'buddyboss-platform' ),
-					$nav_id
+					esc_html( $nav_id )
 				),
 				'3.0.0'
 			);

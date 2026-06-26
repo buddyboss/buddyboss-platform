@@ -1378,7 +1378,7 @@ class BP_XProfile_Field {
 					$message_type = 'updated';
 				}
 				?>
-				<div id="message" class="<?php echo $message_type; ?> fade">
+				<div id="message" class="<?php echo esc_attr( $message_type ); ?> fade">
 					<p><?php echo esc_html( $message ); ?></p>
 				</div>
 
@@ -1636,12 +1636,12 @@ class BP_XProfile_Field {
 				<ul>
 					<?php foreach ( $member_types as $member_type ) : ?>
 						<li>
-							<label for="member-type-<?php echo $member_type->labels['name']; ?>">
+							<label for="member-type-<?php echo esc_attr( $member_type->labels['name'] ); ?>">
 								<input name="member-types[]"
-									   id="member-type-<?php echo $member_type->labels['name']; ?>"
+									   id="member-type-<?php echo esc_attr( $member_type->labels['name'] ); ?>"
 									   class="member-type-selector" type="checkbox"
-									   value="<?php echo $member_type->name; ?>" <?php checked( in_array( $member_type->name, $field_member_types ) ); ?>/>
-								<?php echo $member_type->labels['singular_name']; ?>
+									   value="<?php echo esc_attr( $member_type->name ); ?>" <?php checked( in_array( $member_type->name, $field_member_types ) ); ?>/>
+								<?php echo esc_html( $member_type->labels['singular_name'] ); ?>
 							</label>
 						</li>
 					<?php endforeach; ?>

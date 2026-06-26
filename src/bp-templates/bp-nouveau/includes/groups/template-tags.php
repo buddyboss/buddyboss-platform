@@ -435,7 +435,7 @@ function bp_nouveau_group_manage_screen() {
 	if ( 'group-invites' === bp_get_groups_current_create_step() ) {
 		printf(
 			'<form action="%s" method="post" enctype="multipart/form-data">',
-			bp_get_group_creation_form_action()
+			esc_url( bp_get_group_creation_form_action() )
 		);
 	}
 
@@ -454,7 +454,7 @@ function bp_nouveau_group_manage_screen() {
 	);
 
 	// The submit actions
-	echo $output;
+	echo $output; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- pre-escaped button markup (esc_attr/esc_js per value); contains <input> which wp_kses_post would strip.
 
 	if ( ! $is_group_create ) {
 		/**

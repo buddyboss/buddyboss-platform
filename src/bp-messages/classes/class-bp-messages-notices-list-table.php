@@ -101,7 +101,7 @@ class BP_Messages_Notices_List_Table extends WP_List_Table {
 			$class = ' class="notice-active"';
 		}
 
-		echo "<tr{$class}>";
+		echo wp_kses_post( "<tr{$class}>" );
 		$this->single_row_columns( $item );
 		echo '</tr>';
 	}
@@ -176,7 +176,7 @@ class BP_Messages_Notices_List_Table extends WP_List_Table {
 			);
 		}
 
-		echo '<strong>' . apply_filters( 'bp_get_message_notice_subject', $item->subject ) . '</strong> ' . $this->row_actions( $actions );
+		echo '<strong>' . esc_html( apply_filters( 'bp_get_message_notice_subject', $item->subject ) ) . '</strong> ' . wp_kses_post( $this->row_actions( $actions ) );
 	}
 
 	/**
@@ -187,7 +187,7 @@ class BP_Messages_Notices_List_Table extends WP_List_Table {
 	 * @param object $item The current item
 	 */
 	public function column_message( $item ) {
-		echo apply_filters( 'bp_get_message_notice_text', $item->message );
+		echo wp_kses_post( apply_filters( 'bp_get_message_notice_text', $item->message ) );
 	}
 
 	/**
@@ -198,6 +198,6 @@ class BP_Messages_Notices_List_Table extends WP_List_Table {
 	 * @param object $item The current item
 	 */
 	public function column_date_sent( $item ) {
-		echo apply_filters( 'bp_get_message_notice_post_date', bp_format_time( strtotime( $item->date_sent ) ) );
+		echo esc_html( apply_filters( 'bp_get_message_notice_post_date', bp_format_time( strtotime( $item->date_sent ) ) ) );
 	}
 }

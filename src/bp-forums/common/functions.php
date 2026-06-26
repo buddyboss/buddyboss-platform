@@ -90,7 +90,7 @@ function bbp_convert_date( $time, $d = 'U', $translate = false ) {
  * @uses bbp_get_time_since() To get the formatted time
  */
 function bbp_time_since( $older_date, $newer_date = false, $gmt = false ) {
-	echo bbp_get_time_since( $older_date, $newer_date, $gmt );
+	echo esc_html( bbp_get_time_since( $older_date, $newer_date, $gmt ) );
 }
 	/**
 	 * Return formatted time to display human readable time difference.
@@ -631,7 +631,7 @@ function bbp_get_statistics( $args = '' ) {
 	if ( ! empty( $r['count_tags'] ) && bbp_allow_topic_tags() ) {
 
 		// Get the count.
-		$topic_tag_count = wp_count_terms( bbp_get_topic_tag_tax_id(), array( 'hide_empty' => true ) );
+		$topic_tag_count = wp_count_terms( array( 'taxonomy' => bbp_get_topic_tag_tax_id(), 'hide_empty' => true ) );
 
 		// Empty tags.
 		if ( ! empty( $r['count_empty_tags'] ) && current_user_can( 'edit_topic_tags' ) ) {

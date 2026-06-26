@@ -403,7 +403,7 @@ class BP_Activity_Feed {
 	 */
 	protected function output() {
 		$this->http_headers();
-		echo '<?xml version="1.0" encoding="' . get_option( 'blog_charset' ) . '"?' . '>';
+		echo '<?xml version="1.0" encoding="' . esc_attr( get_option( 'blog_charset' ) ) . '"?' . '>';
 		?>
 
 <rss version="2.0"
@@ -423,16 +423,16 @@ class BP_Activity_Feed {
 >
 
 <channel>
-	<title><?php echo $this->title; ?></title>
-	<link><?php echo $this->link; ?></link>
+	<title><?php echo esc_html( $this->title ); ?></title>
+	<link><?php echo esc_url( $this->link ); ?></link>
 	<atom:link href="<?php self_link(); ?>" rel="self" type="application/rss+xml" />
-	<description><?php echo $this->description; ?></description>
+	<description><?php echo esc_html( $this->description ); ?></description>
 	<lastBuildDate><?php echo esc_html( mysql2date( 'D, d M Y H:i:s O', bp_activity_get_last_updated(), false ) ); ?></lastBuildDate>
 	<generator>https://buddypress.org/?v=<?php bp_version(); ?></generator>
 	<language><?php bloginfo_rss( 'language' ); ?></language>
-	<ttl><?php echo $this->ttl; ?></ttl>
-	<sy:updatePeriod><?php echo $this->update_period; ?></sy:updatePeriod>
-	<sy:updateFrequency><?php echo $this->update_frequency; ?></sy:updateFrequency>
+	<ttl><?php echo esc_html( $this->ttl ); ?></ttl>
+	<sy:updatePeriod><?php echo esc_html( $this->update_period ); ?></sy:updatePeriod>
+	<sy:updateFrequency><?php echo esc_html( $this->update_frequency ); ?></sy:updateFrequency>
 		<?php
 
 		/**
@@ -450,7 +450,7 @@ class BP_Activity_Feed {
 				?>
 			<item>
 				<guid isPermaLink="false"><?php bp_activity_feed_item_guid(); ?></guid>
-				<title><?php echo stripslashes( bp_get_activity_feed_item_title() ); ?></title>
+				<title><?php echo esc_html( stripslashes( bp_get_activity_feed_item_title() ) ); ?></title>
 				<link><?php bp_activity_thread_permalink(); ?></link>
 				<pubDate><?php echo esc_html( mysql2date( 'D, d M Y H:i:s O', bp_get_activity_feed_item_date(), false ) ); ?></pubDate>
 

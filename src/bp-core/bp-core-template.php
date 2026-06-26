@@ -101,7 +101,7 @@ function bp_get_options_nav( $parent_slug = '' ) {
 		 * @param array  $subnav_item   Submenu array item being displayed.
 		 * @param string $selected_item Current action.
 		 */
-		echo apply_filters( 'bp_get_options_nav_' . $subnav_item->css_id, '<li id="' . esc_attr( $subnav_item->css_id . '-' . $list_type . '-li' ) . '" ' . $selected . '><a id="' . esc_attr( $subnav_item->css_id ) . '" href="' . esc_url( $subnav_item->link ) . '">' . $subnav_item->name . '</a></li>', $subnav_item, $selected_item );
+		echo wp_kses_post( apply_filters( 'bp_get_options_nav_' . $subnav_item->css_id, '<li id="' . esc_attr( $subnav_item->css_id . '-' . $list_type . '-li' ) . '" ' . $selected . '><a id="' . esc_attr( $subnav_item->css_id ) . '" href="' . esc_url( $subnav_item->link ) . '">' . $subnav_item->name . '</a></li>', $subnav_item, $selected_item ) );
 	}
 }
 
@@ -119,7 +119,7 @@ function bp_get_options_title() {
 		$bp->bp_options_title = __( 'Options', 'buddyboss-platform' );
 	}
 
-	echo apply_filters( 'bp_get_options_title', esc_attr( $bp->bp_options_title ) );
+	echo apply_filters( 'bp_get_options_title', esc_attr( $bp->bp_options_title ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- bp_get_options_title default value is already escaped via esc_attr().
 }
 
 /**
@@ -181,7 +181,7 @@ function bp_has_options_avatar() {
  * @todo Deprecate.
  */
 function bp_get_options_avatar() {
-	echo apply_filters( 'bp_get_options_avatar', buddypress()->bp_options_avatar );
+	echo wp_kses_post( apply_filters( 'bp_get_options_avatar', buddypress()->bp_options_avatar ) );
 }
 
 /**
@@ -193,7 +193,7 @@ function bp_comment_author_avatar() {
 	global $comment;
 
 	if ( function_exists( 'bp_core_fetch_avatar' ) ) {
-		echo apply_filters(
+		echo wp_kses_post( apply_filters(
 			'bp_comment_author_avatar',
 			bp_core_fetch_avatar(
 				array(
@@ -203,7 +203,7 @@ function bp_comment_author_avatar() {
 					'alt'     => sprintf( __( 'Profile photo of %s', 'buddyboss-platform' ), bp_core_get_user_displayname( $comment->user_id ) ),
 				)
 			)
-		);
+		) );
 	} elseif ( function_exists( 'get_avatar' ) ) {
 		get_avatar();
 	}
@@ -218,7 +218,7 @@ function bp_post_author_avatar() {
 	global $post;
 
 	if ( function_exists( 'bp_core_fetch_avatar' ) ) {
-		echo apply_filters(
+		echo wp_kses_post( apply_filters(
 			'bp_post_author_avatar',
 			bp_core_fetch_avatar(
 				array(
@@ -228,7 +228,7 @@ function bp_post_author_avatar() {
 					'alt'     => sprintf( __( 'Profile photo of %s', 'buddyboss-platform' ), bp_core_get_user_displayname( $post->post_author ) ),
 				)
 			)
-		);
+		) );
 	} elseif ( function_exists( 'get_avatar' ) ) {
 		get_avatar();
 	}
@@ -240,7 +240,7 @@ function bp_post_author_avatar() {
  * @since BuddyPress 1.1.0
  */
 function bp_avatar_admin_step() {
-	echo bp_get_avatar_admin_step();
+	echo esc_html( bp_get_avatar_admin_step() );
 }
 	/**
 	 * Return the current avatar upload step.
@@ -272,7 +272,7 @@ function bp_get_avatar_admin_step() {
  * @since BuddyPress 1.1.0
  */
 function bp_avatar_to_crop() {
-	echo bp_get_avatar_to_crop();
+	echo esc_url( bp_get_avatar_to_crop() );
 }
 	/**
 	 * Return the URL of the avatar to crop.
@@ -490,7 +490,7 @@ function bp_word_or_name( $youtext, $nametext, $capitalize = true, $echo = true 
 			 *
 			 * @param string $youtext Context-determined string to display.
 			 */
-			echo apply_filters( 'bp_word_or_name', $youtext );
+			echo esc_html( apply_filters( 'bp_word_or_name', $youtext ) );
 		} else {
 
 			/** This filter is documented in bp-core/bp-core-template.php */
@@ -503,7 +503,7 @@ function bp_word_or_name( $youtext, $nametext, $capitalize = true, $echo = true 
 		if ( true == $echo ) {
 
 			/** This filter is documented in bp-core/bp-core-template.php */
-			echo apply_filters( 'bp_word_or_name', $nametext );
+			echo esc_html( apply_filters( 'bp_word_or_name', $nametext ) );
 		} else {
 
 			/** This filter is documented in bp-core/bp-core-template.php */
@@ -756,7 +756,7 @@ function bp_custom_profile_sidebar_boxes() {
  * @param array  $attributes Array of existing attributes to add.
  */
 function bp_form_field_attributes( $name = '', $attributes = array() ) {
-	echo bp_get_form_field_attributes( $name, $attributes );
+	echo bp_get_form_field_attributes( $name, $attributes ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- bp_get_form_field_attributes returns attribute markup with each key sanitized via sanitize_key() and each value via esc_attr().
 }
 	/**
 	 * Get the attributes for a form field.
@@ -1184,7 +1184,7 @@ add_filter( 'bp_get_total_member_count', 'bp_core_number_format' );
  * @todo Deprecate. It doesn't make any sense to echo a boolean.
  */
 function bp_blog_signup_allowed() {
-	echo bp_get_blog_signup_allowed();
+	echo esc_html( bp_get_blog_signup_allowed() );
 }
 	/**
 	 * Is blog signup allowed?
@@ -3649,7 +3649,7 @@ function bp_get_title_parts( $seplocation = 'right' ) {
  * @since BuddyPress 1.1.0
  */
 function bp_the_body_class() {
-	echo bp_get_the_body_class();
+	echo bp_get_the_body_class(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- bp_get_the_body_class returns a sanitized class attribute string via its filter callback.
 }
 	/**
 	 * Customize the body class, according to the currently displayed BP content.
@@ -4229,7 +4229,7 @@ function bp_nav_menu( $args = array() ) {
 	$nav_menu = apply_filters( 'bp_nav_menu', $nav_menu, $args );
 
 	if ( ! empty( $args->echo ) ) {
-		echo $nav_menu;
+		echo wp_kses_post( $nav_menu );
 	} else {
 		return $nav_menu;
 	}
@@ -4243,7 +4243,7 @@ function bp_nav_menu( $args = array() ) {
  * @param array $settings Email Settings.
  */
 function bp_email_the_salutation( $settings = array() ) {
-	echo bp_email_get_salutation( $settings );
+	echo wp_kses_post( bp_email_get_salutation( $settings ) );
 }
 
 	/**

@@ -46,20 +46,24 @@ $result      = bp_search_is_post_restricted( $forum_id, get_current_user_id(), '
 			<div class="entry-meta">
 				<span class="topic-count">
 					<?php
-					printf(
-						/* translators: total topics */
-						_n( '%d topic', '%d topics', $total_topic, 'buddyboss-platform' ),
-						absint( $total_topic )
+					echo esc_html(
+						sprintf(
+							/* translators: total topics */
+							_n( '%d topic', '%d topics', $total_topic, 'buddyboss-platform' ),
+							absint( $total_topic )
+						)
 					);
 					?>
 				</span>
 				<span class="middot">&middot;</span>
 				<span class="reply-count">
 					<?php
-					printf(
-						/* translators: total replies */
-						_n( '%d reply', '%d replies', $total_reply, 'buddyboss-platform' ),
-						absint( $total_reply )
+					echo esc_html(
+						sprintf(
+							/* translators: total replies */
+							_n( '%d reply', '%d replies', $total_reply, 'buddyboss-platform' ),
+							absint( $total_reply )
+						)
 					);
 					?>
 				</span>

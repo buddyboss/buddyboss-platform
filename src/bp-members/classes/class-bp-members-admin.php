@@ -1271,7 +1271,7 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 							<?php
 							$date = bp_format_time( strtotime( $user->user_registered ), false, true );
 							?>
-						<span id="timestamp"><?php /* translators: %s: registration date. */ printf( esc_html__( 'Registered on: %s', 'buddyboss-platform' ), '<strong>' . $date . '</strong>' ); ?></span>
+						<span id="timestamp"><?php /* translators: %s: registration date. */ echo wp_kses_post( sprintf( esc_html__( 'Registered on: %s', 'buddyboss-platform' ), '<strong>' . esc_html( $date ) . '</strong>' ) ); ?></span>
 					</div>
 				</div> <!-- #misc-publishing-actions -->
 
@@ -1345,7 +1345,7 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 			?>
 
 		<ul>
-			<li class="bp-members-profile-stats"><?php /* translators: %s: last active date. */ printf( esc_html__( 'Last active: %1$s', 'buddyboss-platform' ), '<strong>' . $date . '</strong>' ); ?></li>
+			<li class="bp-members-profile-stats"><?php /* translators: %s: last active date. */ echo wp_kses_post( sprintf( esc_html__( 'Last active: %1$s', 'buddyboss-platform' ), '<strong>' . esc_html( $date ) . '</strong>' ) ); ?></li>
 
 				<?php
 				// Loading other stats only if user has activated their account.
@@ -2025,6 +2025,7 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 
 						if ( ! empty( $_REQUEST['resent'] ) ) {
 							$notice['message'] .= sprintf(
+								// translators: %s: number of activation emails successfully sent.
 								_n(
 									'%s activation email successfully sent! ',
 									'%s activation emails successfully sent! ',
@@ -2037,6 +2038,7 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 
 						if ( ! empty( $_REQUEST['notsent'] ) ) {
 							$notice['message'] .= sprintf(
+								// translators: %s: number of activation emails that were not sent.
 								_n(
 									'%s activation email was not sent.',
 									'%s activation emails were not sent.',
@@ -2061,6 +2063,7 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 
 						if ( ! empty( $_REQUEST['activated'] ) ) {
 							$notice['message'] .= sprintf(
+								// translators: %s: number of accounts successfully activated.
 								_n(
 									'%s account successfully activated! ',
 									'%s accounts successfully activated! ',
@@ -2073,6 +2076,7 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 
 						if ( ! empty( $_REQUEST['notactivated'] ) ) {
 							$notice['message'] .= sprintf(
+								// translators: %s: number of accounts that were not activated.
 								_n(
 									'%s account was not activated.',
 									'%s accounts were not activated.',
@@ -2097,6 +2101,7 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 
 						if ( ! empty( $_REQUEST['deleted'] ) ) {
 							$notice['message'] .= sprintf(
+								// translators: %s: number of sign-ups successfully deleted.
 								_n(
 									'%s sign-up successfully deleted!',
 									'%s sign-ups successfully deleted!',
@@ -2109,6 +2114,7 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 
 						if ( ! empty( $_REQUEST['notdeleted'] ) ) {
 							$notice['message'] .= sprintf(
+								// translators: %s: number of sign-ups that were not deleted.
 								_n(
 									'%s sign-up was not deleted.',
 									'%s sign-ups were not deleted.',
@@ -2188,7 +2194,7 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 
 			<?php endif; ?>
 
-				<p><?php echo $notice['message']; ?></p>
+				<p><?php echo wp_kses_post( $notice['message'] ); ?></p>
 
 					<?php if ( ! empty( $_REQUEST['notactivated'] ) || ! empty( $_REQUEST['notdeleted'] ) || ! empty( $_REQUEST['notsent'] ) ) : ?>
 
@@ -2504,7 +2510,7 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 											?>
 											<tr>
 												<td class="column-fields"><?php echo esc_html( $fdata[ $pid ] ); ?></td>
-												<td><?php echo $this->format_xprofile_field_for_display( $field_value ); ?></td>
+												<td><?php echo $this->format_xprofile_field_for_display( $field_value ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- format_xprofile_field_for_display() returns esc_html()-escaped value. ?></td>
 											</tr>
 											<?php
 										}
@@ -2575,8 +2581,8 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 			$types = bp_get_member_types( array(), 'objects' );
 			?>
 
-		<label class="screen-reader-text" for="<?php echo $id_name; ?>"><?php echo wp_kses_post( __( 'Change profile type to&hellip;', 'buddyboss-platform' ) ); ?></label>
-		<select name="<?php echo $id_name; ?>" id="<?php echo $id_name; ?>" style="display:inline-block;float:none;">
+		<label class="screen-reader-text" for="<?php echo esc_attr( $id_name ); ?>"><?php echo wp_kses_post( __( 'Change profile type to&hellip;', 'buddyboss-platform' ) ); ?></label>
+		<select name="<?php echo esc_attr( $id_name ); ?>" id="<?php echo esc_attr( $id_name ); ?>" style="display:inline-block;float:none;">
 			<option value=""><?php echo wp_kses_post( __( 'Change profile type to&hellip;', 'buddyboss-platform' ) ); ?></option>
 
 				<?php foreach ( $types as $type ) : ?>

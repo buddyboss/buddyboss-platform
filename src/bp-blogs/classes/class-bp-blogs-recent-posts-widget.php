@@ -57,8 +57,8 @@ class BP_Blogs_Recent_Posts_Widget extends WP_Widget {
 		 */
 		$title = apply_filters( 'widget_title', $title, $instance, $this->id_base );
 
-		echo $args['before_widget'];
-		echo $args['before_title'] . esc_html( $title ) . $args['after_title'];
+		echo wp_kses_post( $args['before_widget'] );
+		echo wp_kses_post( $args['before_title'] ) . wp_kses_post( $title ) . wp_kses_post( $args['after_title'] );
 
 		if ( empty( $instance['max_posts'] ) || empty( $instance['max_posts'] ) ) {
 			$instance['max_posts'] = 10;
@@ -117,7 +117,7 @@ class BP_Blogs_Recent_Posts_Widget extends WP_Widget {
 		<?php endif; ?>
 
 		<?php
-		echo $after_widget;
+		echo wp_kses_post( $after_widget );
 
 		// Restore the global.
 		$activities_template = $old_activities_template;

@@ -140,7 +140,7 @@ function bp_get_message_thread_id() {
  * Output the subject of the current thread in the loop.
  */
 function bp_message_thread_subject() {
-	echo bp_get_message_thread_subject();
+	echo esc_html( bp_get_message_thread_subject() );
 }
 	/**
 	 * Get the subject of the current thread in the loop.
@@ -228,7 +228,7 @@ function bp_get_message_thread_content() {
  * Output a link to the page of the current thread's last author.
  */
 function bp_message_thread_from() {
-	echo bp_get_message_thread_from();
+	echo wp_kses_post( bp_get_message_thread_from() );
 }
 	/**
 	 * Get a link to the page of the current thread's last author.
@@ -252,7 +252,7 @@ function bp_get_message_thread_from() {
  * Output links to the pages of the current thread's recipients.
  */
 function bp_message_thread_to() {
-	echo bp_get_message_thread_to();
+	echo wp_kses_post( bp_get_message_thread_to() );
 }
 	/**
 	 * Generate HTML links to the pages of the current thread's recipients.
@@ -654,7 +654,7 @@ function bp_get_message_thread_total_and_unread_count( $thread_id = false ) {
  * Output the unformatted date of the last post in the current thread.
  */
 function bp_message_thread_last_post_date_raw() {
-	echo bp_get_message_thread_last_post_date_raw();
+	echo esc_html( bp_get_message_thread_last_post_date_raw() );
 }
 	/**
 	 * Get the unformatted date of the last post in the current thread.
@@ -840,7 +840,7 @@ function bp_messages_pagination_count() {
 	$total     = bp_core_number_format( $messages_template->total_thread_count );
 
 	/* translators: 1: starting message number, 2: ending message number, 3: total number of messages. */
-	$message = sprintf( _n( 'Viewing 1 message', 'Viewing %1$s - %2$s of %3$s messages', $messages_template->total_thread_count, 'buddyboss-platform' ), $from_num, $to_num, $total );
+	$message = sprintf( _n( 'Viewing 1 message', 'Viewing %1$s - %2$s of %3$s messages', $messages_template->total_thread_count, 'buddyboss-platform' ), $from_num, $to_num, $total ); // phpcs:ignore WordPress.WP.I18n.MissingSingularPlaceholder -- Singular keeps its literal form to preserve existing translations (msgid unchanged); upstream BuddyPress pagination string.
 
 	echo esc_html( $message );
 }
@@ -871,7 +871,7 @@ function bp_message_search_form() {
 			esc_html_e( 'Search Messages', 'buddyboss-platform' );
 		?>
 		</label>
-		<input type="text" name="s" id="messages_search"<?php echo $search_placeholder . $search_value; ?> />
+		<input type="text" name="s" id="messages_search"<?php echo $search_placeholder . $search_value; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $search_placeholder and $search_value are attribute fragments already built with esc_attr(). ?> />
 		<input type="submit" class="button" id="messages_search_submit" name="messages_search_submit" value="<?php esc_html_e( 'Search', 'buddyboss-platform' ); ?>" />
 	</form>
 
@@ -887,7 +887,7 @@ function bp_message_search_form() {
 	 *
 	 * @param string $search_form_html HTML markup for the message search form.
 	 */
-	echo apply_filters( 'bp_message_search_form', $search_form_html );
+	echo wp_kses_post( apply_filters( 'bp_message_search_form', $search_form_html ) );
 }
 
 /**
@@ -1035,7 +1035,7 @@ function bp_messages_options() {
 
 	<?php endif; ?>
 
-	<a href="#" id="delete_<?php echo bp_current_action(); ?>_messages"><?php esc_html_e( 'Delete Selected', 'buddyboss-platform' ); ?></a> &nbsp;
+	<a href="#" id="delete_<?php echo esc_attr( bp_current_action() ); ?>_messages"><?php esc_html_e( 'Delete Selected', 'buddyboss-platform' ); ?></a> &nbsp;
 	<?php wp_nonce_field( 'bp_messages_delete_selected', 'delete-selected-nonce', false ); ?>
 	<?php
 }
@@ -1104,7 +1104,7 @@ function bp_messages_is_active_notice() {
  * @return bool
  */
 function bp_message_is_active_notice() {
-	echo bp_get_message_is_active_notice();
+	echo esc_html( bp_get_message_is_active_notice() );
 }
 	/**
 	 * Returns a string for the active notice.
@@ -1177,7 +1177,7 @@ function bp_get_message_notice_post_date() {
  * Output the subject of the current notice in the loop.
  */
 function bp_message_notice_subject() {
-	echo bp_get_message_notice_subject();
+	echo esc_html( bp_get_message_notice_subject() );
 }
 	/**
 	 * Get the subject of the current notice in the loop.
@@ -1354,8 +1354,8 @@ function bp_message_get_notices() {
 			?>
 			<div id="message" class="info notice" rel="n-<?php echo esc_attr( $notice->id ); ?>">
 				<p>
-					<strong><?php echo stripslashes( wp_filter_kses( $notice->subject ) ); ?></strong><br />
-					<?php echo stripslashes( wp_filter_kses( $notice->message ) ); ?>
+					<strong><?php echo wp_kses_post( stripslashes( wp_filter_kses( $notice->subject ) ) ); ?></strong><br />
+					<?php echo wp_kses_post( stripslashes( wp_filter_kses( $notice->message ) ) ); ?>
 					<button type="button" id="close-notice" class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Dismiss this notice', 'buddyboss-platform' ); ?>"><span class="bp-screen-reader-text"><?php esc_html_e( 'Dismiss this notice', 'buddyboss-platform' ); ?></span> <span aria-hidden="true">&Chi;</span></button>
 					<?php wp_nonce_field( 'bp_messages_close_notice', 'close-notice-nonce' ); ?>
 				</p>
@@ -1723,7 +1723,7 @@ function bp_get_the_thread_id() {
  * Output the subject of the thread currently being iterated over.
  */
 function bp_the_thread_subject() {
-	echo bp_get_the_thread_subject();
+	echo esc_html( bp_get_the_thread_subject() );
 }
 	/**
 	 * Get the subject of the thread currently being iterated over.
@@ -1806,7 +1806,7 @@ function bp_get_max_thread_recipients_to_list() {
  * @since BuddyPress 2.2.0
  */
 function bp_the_thread_recipients_list() {
-	echo bp_get_thread_recipients_list();
+	echo wp_kses_post( bp_get_thread_recipients_list() );
 }
 	/**
 	 * Generate HTML links to the profiles of recipients in the current thread.
@@ -1991,7 +1991,7 @@ function bp_get_the_thread_message_sender_id() {
  *                           for a description.
  */
 function bp_the_thread_message_sender_avatar( $args = '' ) {
-	echo bp_get_the_thread_message_sender_avatar_thumb( $args );
+	echo wp_kses_post( bp_get_the_thread_message_sender_avatar_thumb( $args ) );
 }
 	/**
 	 * Get the avatar for the current message sender.
@@ -2137,7 +2137,7 @@ function bp_get_the_thread_delete_link() {
  * @since BuddyPress 1.1.0
  */
 function bp_the_thread_message_time_since() {
-	echo bp_get_the_thread_message_time_since();
+	echo esc_html( bp_get_the_thread_message_time_since() );
 }
 	/**
 	 * Generate the 'Sent x hours ago' string for the current message.
@@ -2155,7 +2155,7 @@ function bp_get_the_thread_message_time_since() {
 	 *
 	 * @param string $value Default text of 'Sent x hours ago'.
 	 */
-	return apply_filters( 'bp_get_the_thread_message_time_since', sprintf( __( '%s', 'buddyboss-platform' ), bp_core_time_since( bp_get_the_thread_message_date_sent() ) ) );
+	return apply_filters( 'bp_get_the_thread_message_time_since', bp_core_time_since( bp_get_the_thread_message_date_sent() ) );
 }
 
 /**
@@ -2164,7 +2164,7 @@ function bp_get_the_thread_message_time_since() {
  * @since BuddyPress 2.1.0
  */
 function bp_the_thread_message_date_sent() {
-	echo bp_get_the_thread_message_date_sent();
+	echo esc_html( bp_get_the_thread_message_date_sent() );
 }
 	/**
 	 * Generate the 'Sent x hours ago' string for the current message.

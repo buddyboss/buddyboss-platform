@@ -309,7 +309,7 @@ function bb_media_symlink_validate( $updated_value ) {
 					}
 
 					if ( false === $status && ! empty( $symlink_url ) && file_exists( $attachment_path ) ) {
-						unlink( $attachment_path );
+						wp_delete_file( $attachment_path );
 						bp_update_option( 'bp_media_symlink_support', 0 );
 
 						foreach ( $keys as $k ) {
@@ -362,7 +362,7 @@ function bb_media_symlink_validate( $updated_value ) {
 						}
 
 						if ( false === $status && ! empty( $symlink_url ) && file_exists( $attachment_path ) ) {
-							unlink( $attachment_path );
+							wp_delete_file( $attachment_path );
 							bp_update_option( 'bp_media_symlink_support', 0 );
 							bp_update_option( 'bb_display_support_error', 1 );
 							foreach ( $keys as $k ) {

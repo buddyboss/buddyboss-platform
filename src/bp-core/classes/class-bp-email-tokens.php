@@ -257,9 +257,9 @@ class BP_Email_Tokens {
 												<tbody>
 												<tr>
 													<td class="mobile-text-center">
-														<div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( floor( $settings['body_text_size'] * 1.625 ) . 'px' ); ?>; color: <?php echo esc_attr( $settings['body_secondary_text_color'] ); ?>; line-height: <?php echo esc_attr( floor( $settings['body_text_size'] * 1.625 ) . 'px' ); ?>;"><?php echo $group->name; ?></div>
+														<div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( floor( $settings['body_text_size'] * 1.625 ) . 'px' ); ?>; color: <?php echo esc_attr( $settings['body_secondary_text_color'] ); ?>; line-height: <?php echo esc_attr( floor( $settings['body_text_size'] * 1.625 ) . 'px' ); ?>;"><?php echo esc_html( $group->name ); ?></div>
 														<div class="spacer" style="font-size: 3px; line-height: 3px; height: 3px;">&nbsp;</div>
-														<p style="opacity: 0.7; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( floor( $settings['body_text_size'] * 0.8125 ) . 'px' ); ?>; color: <?php echo esc_attr( $settings['body_text_color'] ); ?>; margin: 0;"><?php echo $group_visibility . ' ' . esc_html__( 'Group', 'buddyboss-platform' ); ?></p>
+														<p style="opacity: 0.7; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( floor( $settings['body_text_size'] * 0.8125 ) . 'px' ); ?>; color: <?php echo esc_attr( $settings['body_text_color'] ); ?>; margin: 0;"><?php echo esc_html( $group_visibility ) . ' ' . esc_html__( 'Group', 'buddyboss-platform' ); ?></p>
 													</td>
 												</tr>
 												<tr>
@@ -280,7 +280,7 @@ class BP_Email_Tokens {
 																					$member_text         = ( $group_members_count > 1 ) ? __( 'members', 'buddyboss-platform' ) : __( 'member', 'buddyboss-platform' );
 																					?>
 																					<div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size: <?php echo esc_attr( floor( $settings['body_text_size'] * 0.8125 ) . 'px' ); ?>; color: <?php echo esc_attr( $settings['body_text_color'] ); ?>;">
-																						<span style="color: <?php echo esc_attr( $settings['body_secondary_text_color'] ); ?>; opacity: 0.85;"><?php echo $group_members_count; ?></span> <?php echo $member_text; ?>
+																						<span style="color: <?php echo esc_attr( $settings['body_secondary_text_color'] ); ?>; opacity: 0.85;"><?php echo esc_html( $group_members_count ); ?></span> <?php echo esc_html( $member_text ); ?>
 																					</div>
 																				</td>
 																			</tr>
@@ -294,7 +294,7 @@ class BP_Email_Tokens {
 																			<tbody>
 																			<tr>
 																				<td height="34px" align="right" style="vertical-align: middle;" class="mobile-padding-bottom">
-																					<a class="mobile-button-center" href="<?php echo esc_url( $invite_url ); ?>" target="_blank" rel="nofollow" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( floor( $settings['body_text_size'] * 0.875 ) . 'px' ); ?>; text-decoration: none; display: inline-block; border-radius: 100px; text-align: center; min-height: 16px; line-height: 16px; background: <?php echo $settings['highlight_color']; ?>; color: #fff !important; min-width: 110px; padding: 8px;"><font style="color:#fff;"><?php esc_html_e( 'Visit Group', 'buddyboss-platform' ); ?></font></a>
+																					<a class="mobile-button-center" href="<?php echo esc_url( $invite_url ); ?>" target="_blank" rel="nofollow" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( floor( $settings['body_text_size'] * 0.875 ) . 'px' ); ?>; text-decoration: none; display: inline-block; border-radius: 100px; text-align: center; min-height: 16px; line-height: 16px; background: <?php echo esc_attr( $settings['highlight_color'] ); ?>; color: #fff !important; min-width: 110px; padding: 8px;"><font style="color:#fff;"><?php esc_html_e( 'Visit Group', 'buddyboss-platform' ); ?></font></a>
 																				</td>
 																			</tr>
 																			</tbody>
@@ -306,7 +306,7 @@ class BP_Email_Tokens {
 																			<tbody>
 																			<tr>
 																				<td height="34px" align="right" style="vertical-align: middle;" class="mobile-padding-bottom">
-																					<a class="mobile-button-center" href="<?php echo esc_url( bp_get_group_permalink( $group ) ); ?>" target="_blank" rel="nofollow" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( floor( $settings['body_text_size'] * 0.875 ) . 'px' ); ?>; text-decoration: none; display: inline-block; border-radius: 100px; text-align: center; min-height: 16px; line-height: 16px; background: <?php echo $settings['highlight_color']; ?>; color: #fff !important; min-width: 110px; padding: 8px;"><font style="color:#fff;"><?php esc_html_e( 'Visit Group', 'buddyboss-platform' ); ?></font></a>
+																					<a class="mobile-button-center" href="<?php echo esc_url( bp_get_group_permalink( $group ) ); ?>" target="_blank" rel="nofollow" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( floor( $settings['body_text_size'] * 0.875 ) . 'px' ); ?>; text-decoration: none; display: inline-block; border-radius: 100px; text-align: center; min-height: 16px; line-height: 16px; background: <?php echo esc_attr( $settings['highlight_color'] ); ?>; color: #fff !important; min-width: 110px; padding: 8px;"><font style="color:#fff;"><?php esc_html_e( 'Visit Group', 'buddyboss-platform' ); ?></font></a>
 																				</td>
 																			</tr>
 																			</tbody>
@@ -393,7 +393,7 @@ class BP_Email_Tokens {
 							'item_id'    => $group_id,
 						)
 					);
-					echo "<tr><td colspan='100%'><img src='{$cover_image}' alt='' /></td></tr>";
+					echo "<tr><td colspan='100%'><img src='" . esc_url( $cover_image ) . "' alt='' /></td></tr>";
 				}
 				?>
 
@@ -417,9 +417,9 @@ class BP_Email_Tokens {
 						</a>
 					</td>
 					<td>
-						<h3><?php echo $group->name; ?></h3>
+						<h3><?php echo esc_html( $group->name ); ?></h3>
 						<div class="spacer" style="font-size: 7px; line-height: 7px; height: 7px;">&nbsp;</div>
-						<?php echo ucfirst( $group->status ) . ' ' . esc_html__( 'Group', 'buddyboss-platform' ); ?><br>
+						<?php echo esc_html( ucfirst( $group->status ) ) . ' ' . esc_html__( 'Group', 'buddyboss-platform' ); ?><br>
 						<table cellspacing="0" cellpadding="0" border="0" width="100%">
 							<tr>
 								<td align="left">
@@ -470,7 +470,7 @@ class BP_Email_Tokens {
 										$output .= '</span>';
 
 										$output .= "<span class='members'>" . groups_get_total_member_count( $group->id ) . ' ' . __( 'Members', 'buddyboss-platform' ) . '</span>';
-										echo $output;
+										echo wp_kses_post( $output );
 									}
 									?>
 								</td>
@@ -597,7 +597,7 @@ class BP_Email_Tokens {
 											<td>
 												<div style="color: <?php echo esc_attr( $settings['body_text_color'] ); ?>; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; letter-spacing: -0.24px; line-height: <?php echo esc_attr( floor( $settings['body_text_size'] * 1.625 ) . 'px' ); ?>;">
 													<?php
-													echo apply_filters_ref_array(
+													echo apply_filters_ref_array( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Output of the 'bp_get_activity_content_body' filter (activity content pipeline); escaping would corrupt valid markup.
 														'bp_get_activity_content_body',
 														array(
 															$activity->content,
@@ -626,7 +626,7 @@ class BP_Email_Tokens {
 
 			<tr>
 				<td>
-					<a href="<?php echo esc_url( $tokens['mentioned.url'] ); ?>" target="_blank" rel="nofollow" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; color: <?php echo $settings['highlight_color']; ?>; text-decoration: none; display: inline-block; border: 1px solid <?php echo $settings['highlight_color']; ?>; border-radius: 100px;  min-width: 64px; text-align: center; height: 16px; line-height: 16px; padding:8px;"><?php esc_html_e( 'Reply', 'buddyboss-platform' ); ?></a>
+					<a href="<?php echo esc_url( $tokens['mentioned.url'] ); ?>" target="_blank" rel="nofollow" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; color: <?php echo esc_attr( $settings['highlight_color'] ); ?>; text-decoration: none; display: inline-block; border: 1px solid <?php echo esc_attr( $settings['highlight_color'] ); ?>; border-radius: 100px;  min-width: 64px; text-align: center; height: 16px; line-height: 16px; padding:8px;"><?php esc_html_e( 'Reply', 'buddyboss-platform' ); ?></a>
 				</td>
 			</tr>
 		</table>
@@ -800,7 +800,7 @@ class BP_Email_Tokens {
 									</tr>
 									<tr>
 										<td>
-											<?php echo $this->get_email_media( $object_id, $tokens, 'mentioned' ); ?>
+											<?php echo wp_kses_post( $this->get_email_media( $object_id, $tokens, 'mentioned' ) ); ?>
 										</td>
 									</tr>
 									</tbody>
@@ -821,7 +821,7 @@ class BP_Email_Tokens {
 
 			<tr>
 				<td>
-					<a href="<?php echo esc_url( $tokens['mentioned.url'] ); ?>" target="_blank" rel="nofollow" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; color: <?php echo $settings['highlight_color']; ?>; text-decoration: none; display: inline-block; border: 1px solid <?php echo $settings['highlight_color']; ?>; border-radius: 100px;  min-width: 64px; text-align: center; height: 16px; line-height: 16px; padding: 8px 28px;"><?php echo esc_html( $reply_text ); ?></a>
+					<a href="<?php echo esc_url( $tokens['mentioned.url'] ); ?>" target="_blank" rel="nofollow" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; color: <?php echo esc_attr( $settings['highlight_color'] ); ?>; text-decoration: none; display: inline-block; border: 1px solid <?php echo esc_attr( $settings['highlight_color'] ); ?>; border-radius: 100px;  min-width: 64px; text-align: center; height: 16px; line-height: 16px; padding: 8px 28px;"><?php echo esc_html( $reply_text ); ?></a>
 				</td>
 			</tr>
 		</table>
@@ -958,7 +958,7 @@ class BP_Email_Tokens {
 														// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 														echo $processed_content;
 
-														echo $this->get_email_media( $activity_comment->id, $tokens, 'activity_reply' );
+														echo wp_kses_post( $this->get_email_media( $activity_comment->id, $tokens, 'activity_reply' ) );
 
 														/**
 														 * Display text after activity comment.
@@ -1178,9 +1178,9 @@ class BP_Email_Tokens {
 														<a href="<?php echo esc_url( $sender_link ); ?>" target="_blank" rel="nofollow" style="color: <?php echo esc_attr( $settings['body_secondary_text_color'] ); ?>!important; font-weight: 500; text-decoration:none;"><?php echo esc_html( $sender_name ); ?></a>
 													<?php } ?>
 													<div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; letter-spacing: -0.24px; line-height: <?php echo esc_attr( floor( $settings['body_text_size'] * 1.625 ) . 'px' ); ?>;">
-														<?php echo nl2br( $tokens['usermessage'] ); ?>
+														<?php echo wp_kses_post( nl2br( $tokens['usermessage'] ) ); ?>
 													</div>
-													<?php echo $this->get_email_media( $tokens['message_id'], $tokens, 'message' ); ?>
+													<?php echo wp_kses_post( $this->get_email_media( $tokens['message_id'], $tokens, 'message' ) ); ?>
 												</td>
 											</tr>
 										</tbody>
@@ -1296,7 +1296,7 @@ class BP_Email_Tokens {
 														<div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( floor( $settings['body_text_size'] * 1.25 ) . 'px' ); ?>; color: <?php echo esc_attr( $settings['body_secondary_text_color'] ); ?>; line-height: <?php echo esc_attr( floor( $settings['body_text_size'] * 1.75 ) . 'px' ); ?>;"><?php echo esc_html( bp_core_get_user_displayname( $member_id, $receiver_id ) ); ?></div>
 														<div class="spacer" style="font-size: 2px; line-height: 2px; height: 2px;">&nbsp;</div>
 														<p style="opacity: 0.7; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( floor( $settings['body_text_size'] * 0.8125 ) . 'px' ); ?>; color : <?php echo esc_attr( $settings['body_text_color'] ); ?>; margin: 0;">
-															@<?php echo bp_activity_get_user_mentionname( $member_id ); ?>
+															@<?php echo esc_html( bp_activity_get_user_mentionname( $member_id ) ); ?>
 														</p>
 													</td>
 												</tr>
@@ -1319,7 +1319,7 @@ class BP_Email_Tokens {
 																				$connection_text = ( $friend_count > 1 ) ? __( 'connections', 'buddyboss-platform' ) : __( 'connection', 'buddyboss-platform' );
 																				?>
 																				<div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size: <?php echo esc_attr( floor( $settings['body_text_size'] * 0.8125 ) . 'px' ); ?>; color: <?php echo esc_attr( $settings['body_text_color'] ); ?>;">
-																					<span style="color: <?php echo esc_attr( $settings['body_secondary_text_color'] ); ?>; opacity: 0.85;"><?php echo $friend_count; ?></span> <?php echo $connection_text; ?>
+																					<span style="color: <?php echo esc_attr( $settings['body_secondary_text_color'] ); ?>; opacity: 0.85;"><?php echo esc_html( $friend_count ); ?></span> <?php echo esc_html( $connection_text ); ?>
 																				</div>
 																				<?php
 																			}
@@ -1330,7 +1330,7 @@ class BP_Email_Tokens {
 																	<table cellpadding="0" cellspacing="0" border="0" width="47%" style="width: 47%;" align="right" class="no-responsive-table mobile-padding-bottom">
 																		<tr>
 																			<td height="34px" align="right" style="vertical-align: middle;" class="">
-																				<a href="<?php echo bp_core_get_user_domain( $member_id ); ?>" target="_blank" rel="nofollow" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size: <?php echo esc_attr( floor( $settings['body_text_size'] * 0.875 ) . 'px' ); ?>;text-decoration: none;display: block;height: <?php echo esc_attr( floor( $settings['body_text_size'] * 2.125 ) . 'px' ); ?>;line-height: <?php echo esc_attr( floor( $settings['body_text_size'] * 2 ) . 'px' ); ?>;"><?php esc_html_e( 'View Profile', 'buddyboss-platform' ); ?></a>
+																				<a href="<?php echo esc_url( bp_core_get_user_domain( $member_id ) ); ?>" target="_blank" rel="nofollow" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size: <?php echo esc_attr( floor( $settings['body_text_size'] * 0.875 ) . 'px' ); ?>;text-decoration: none;display: block;height: <?php echo esc_attr( floor( $settings['body_text_size'] * 2.125 ) . 'px' ); ?>;line-height: <?php echo esc_attr( floor( $settings['body_text_size'] * 2 ) . 'px' ); ?>;"><?php esc_html_e( 'View Profile', 'buddyboss-platform' ); ?></a>
 																			</td>
 																		</tr>
 																	</table>
@@ -1593,7 +1593,7 @@ class BP_Email_Tokens {
 								</a>
 							</td>
 							<td width="88%" style="vertical-align: middle;">
-								<div style="color: <?php echo esc_attr( $settings['body_secondary_text_color'] ); ?>; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; line-height: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; letter-spacing: -0.24px;"><?php echo bbp_get_reply_author_display_name( $formatted_tokens['reply.id'], $receiver_user_id ); ?></div>
+								<div style="color: <?php echo esc_attr( $settings['body_secondary_text_color'] ); ?>; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; line-height: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; letter-spacing: -0.24px;"><?php echo bbp_get_reply_author_display_name( $formatted_tokens['reply.id'], $receiver_user_id ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- bbp_get_reply_author_display_name() is self-escaping. ?></div>
 							</td>
 						</tr>
 						</tbody>
@@ -1623,7 +1623,7 @@ class BP_Email_Tokens {
 													</div>
 												</td>
 											</tr>
-											<?php echo $this->get_email_media( $tokens['reply.id'], $tokens, 'reply' ); ?>
+											<?php echo wp_kses_post( $this->get_email_media( $tokens['reply.id'], $tokens, 'reply' ) ); ?>
 										</tbody>
 									</table>
 								</td>
@@ -1699,7 +1699,7 @@ class BP_Email_Tokens {
 								</a>
 							</td>
 							<td width="88%" style="vertical-align: middle;">
-								<div style="color: <?php echo esc_attr( $settings['body_secondary_text_color'] ); ?>; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; line-height: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; letter-spacing: -0.24px;"><?php echo bbp_get_topic_author_display_name( $formatted_tokens['discussion.id'] ); ?></div>
+								<div style="color: <?php echo esc_attr( $settings['body_secondary_text_color'] ); ?>; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; line-height: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; letter-spacing: -0.24px;"><?php echo bbp_get_topic_author_display_name( $formatted_tokens['discussion.id'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- bbp_get_topic_author_display_name() is self-escaping. ?></div>
 							</td>
 						</tr>
 						</tbody>
@@ -1731,7 +1731,7 @@ class BP_Email_Tokens {
 											</tr>
 											<tr>
 												<td>
-													<?php echo $this->get_email_media( $tokens['discussion.id'], $tokens, 'discussion' ); ?>
+													<?php echo wp_kses_post( $this->get_email_media( $tokens['discussion.id'], $tokens, 'discussion' ) ); ?>
 												</td>
 											</tr>
 										</tbody>
@@ -1874,11 +1874,11 @@ class BP_Email_Tokens {
 								?>
 								<tr>
 									<td valign="middle" width="65px" style="vertical-align: middle;">
-										<?php echo implode( ' ', $sender_avatars ); ?>
+										<?php echo wp_kses_post( implode( ' ', $sender_avatars ) ); ?>
 									</td>
 									<td width="88%" style="vertical-align: middle;">
 										<div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; line-height: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; letter-spacing: -0.24px;">
-											<?php echo implode( ', ', $sender_names ); ?>
+											<?php echo esc_html( implode( ', ', $sender_names ) ); ?>
 										</div>
 									</td>
 								</tr>
@@ -1934,9 +1934,9 @@ class BP_Email_Tokens {
 													<a href="<?php echo esc_url( bp_core_get_user_domain( $message['sender_id'] ) ); ?>" target="_blank" rel="nofollow" style="color: <?php echo esc_attr( $settings['body_secondary_text_color'] ); ?>!important; font-weight: 500; text-decoration:none;"><?php echo esc_html( bp_core_get_user_displayname( $message['sender_id'], $message['recipients_id'] ) ); ?></a>
 												</p>
 												<div class="bb-email-message-content" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; letter-spacing: -0.24px; line-height: <?php echo esc_attr( floor( $settings['body_text_size'] * 1.625 ) . 'px' ); ?>;">
-													<?php echo stripslashes( wpautop( $message['message'] ) ); ?>
+													<?php echo wp_kses_post( stripslashes( wpautop( $message['message'] ) ) ); ?>
 												</div>
-												<?php echo $this->get_email_media( $message['message_id'], $tokens, 'message' ); ?>
+												<?php echo wp_kses_post( $this->get_email_media( $message['message_id'], $tokens, 'message' ) ); ?>
 											</td>
 										</tr>
 										<tr>
@@ -2272,9 +2272,9 @@ class BP_Email_Tokens {
 														<?php
 														$poll_id = bp_activity_get_meta( $activity->id, 'bb_poll_id' );
 														if ( ! empty( $poll_id ) && function_exists( 'get_email_poll' ) ) {
-															echo get_email_poll( $activity->id, $poll_id, $tokens );
+															echo get_email_poll( $activity->id, $poll_id, $tokens ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- get_email_poll() returns internally-built escaped poll markup.
 														}
-														echo $this->get_email_media( $activity->id, $tokens );
+														echo wp_kses_post( $this->get_email_media( $activity->id, $tokens ) );
 														?>
 													</td>
 												</tr>
@@ -2404,7 +2404,7 @@ class BP_Email_Tokens {
 									</tr>
 									<tr>
 										<td>
-											<?php echo $this->get_email_media( $tokens['discussion.id'], $tokens, 'discussion' ); ?>
+											<?php echo wp_kses_post( $this->get_email_media( $tokens['discussion.id'], $tokens, 'discussion' ) ); ?>
 										</td>
 									</tr>
 									</tbody>
@@ -2590,7 +2590,7 @@ class BP_Email_Tokens {
 															}
 															?>
 														</div>
-														<?php echo $this->get_email_media( $activity->id, $tokens ); ?>
+														<?php echo wp_kses_post( $this->get_email_media( $activity->id, $tokens ) ); ?>
 													</td>
 												</tr>
 												<tr>
@@ -2698,12 +2698,12 @@ class BP_Email_Tokens {
 						<tbody>
 						<tr>
 							<td valign="middle" width="65px" style="vertical-align: middle;">
-								<a style="display: block; width: 47px;" href="<?php echo $commenter_url; ?>" target="_blank" rel="nofollow">
+								<a style="display: block; width: 47px;" href="<?php echo esc_url( $commenter_url ); ?>" target="_blank" rel="nofollow">
 									<img alt="" src="<?php echo esc_url( $commenter_avatar_url ); ?>" width="47" height="47" border="0" style="margin:0; padding:0; border:none; display:block; max-width: 47px; border-radius: 50%;" />
 								</a>
 							</td>
 							<td width="88%" style="vertical-align: middle;">
-								<div style="color: <?php echo esc_attr( $settings['body_secondary_text_color'] ); ?>; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; line-height: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; letter-spacing: -0.24px;"><?php echo $commenter_name; ?></div>
+								<div style="color: <?php echo esc_attr( $settings['body_secondary_text_color'] ); ?>; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; line-height: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; letter-spacing: -0.24px;"><?php echo esc_html( $commenter_name ); ?></div>
 							</td>
 						</tr>
 						</tbody>
@@ -3026,7 +3026,8 @@ class BP_Email_Tokens {
 						}
 						?>
 						<?php if ( $total_document_ids > 5 ) : ?>
-							<a href="<?php echo esc_url( $image_url ); ?>"><?php echo sprintf( esc_html__( 'and %d more', 'buddyboss-platform' ), $total_document_ids - 5 ); ?></a>
+							<?php /* translators: %d: number of additional documents beyond the first five shown. */ ?>
+						<a href="<?php echo esc_url( $image_url ); ?>"><?php echo esc_html( sprintf( __( 'and %d more', 'buddyboss-platform' ), $total_document_ids - 5 ) ); ?></a>
 						<?php endif; ?>
 					</div>
 					<?php

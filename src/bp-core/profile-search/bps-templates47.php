@@ -386,30 +386,30 @@ function bp_ps_autocomplete_script( $f ) {
 	$autocomplete_options = apply_filters( 'bp_ps_autocomplete_options', "{types: ['geocode']}", $f );
 	$geolocation_options  = apply_filters( 'bp_ps_geolocation_options', '{timeout: 5000}', $f );
 	?>
-	<input type="hidden" id="Lat_<?php echo $f->unique_id; ?>" name="<?php echo $f->code . '[lat]'; ?>" value="<?php echo $f->value['lat']; ?>">
-	<input type="hidden" id="Lng_<?php echo $f->unique_id; ?>" name="<?php echo $f->code . '[lng]'; ?>" value="<?php echo $f->value['lng']; ?>">
+	<input type="hidden" id="Lat_<?php echo esc_attr( $f->unique_id ); ?>" name="<?php echo esc_attr( $f->code . '[lat]' ); ?>" value="<?php echo esc_attr( $f->value['lat'] ); ?>">
+	<input type="hidden" id="Lng_<?php echo esc_attr( $f->unique_id ); ?>" name="<?php echo esc_attr( $f->code . '[lng]' ); ?>" value="<?php echo esc_attr( $f->value['lng'] ); ?>">
 
 	<script>
-		function bp_ps_<?php echo $f->unique_id; ?>() {
-			var input = document.getElementById('<?php echo $f->unique_id; ?>');
+		function bp_ps_<?php echo esc_js( $f->unique_id ); ?>() {
+			var input = document.getElementById('<?php echo esc_js( $f->unique_id ); ?>');
 			var options = <?php echo $autocomplete_options; ?>;
 			var autocomplete = new google.maps.places.Autocomplete(input, options);
 			google.maps.event.addListener(autocomplete, 'place_changed', function () {
 				var place = autocomplete.getPlace();
-				document.getElementById('Lat_<?php echo $f->unique_id; ?>').value = place.geometry.location.lat();
-				document.getElementById('Lng_<?php echo $f->unique_id; ?>').value = place.geometry.location.lng();
+				document.getElementById('Lat_<?php echo esc_js( $f->unique_id ); ?>').value = place.geometry.location.lat();
+				document.getElementById('Lng_<?php echo esc_js( $f->unique_id ); ?>').value = place.geometry.location.lng();
 			});
 		}
 
-		jQuery(document).ready(bp_ps_<?php echo $f->unique_id; ?>);
+		jQuery(document).ready(bp_ps_<?php echo esc_js( $f->unique_id ); ?>);
 
-		function bp_ps_locate_<?php echo $f->unique_id; ?>() {
+		function bp_ps_locate_<?php echo esc_js( $f->unique_id ); ?>() {
 			if (navigator.geolocation) {
 				var options = <?php echo $geolocation_options; ?>;
 				navigator.geolocation.getCurrentPosition(function (position) {
-					document.getElementById('Lat_<?php echo $f->unique_id; ?>').value = position.coords.latitude;
-					document.getElementById('Lng_<?php echo $f->unique_id; ?>').value = position.coords.longitude;
-					bp_ps_address_<?php echo $f->unique_id; ?>(position);
+					document.getElementById('Lat_<?php echo esc_js( $f->unique_id ); ?>').value = position.coords.latitude;
+					document.getElementById('Lng_<?php echo esc_js( $f->unique_id ); ?>').value = position.coords.longitude;
+					bp_ps_address_<?php echo esc_js( $f->unique_id ); ?>(position);
 				}, function (error) {
 					alert('ERROR ' + error.code + ': ' + error.message);
 				}, options);
@@ -418,15 +418,15 @@ function bp_ps_autocomplete_script( $f ) {
 			}
 		}
 
-		jQuery('#Btn_<?php echo $f->unique_id; ?>').click(bp_ps_locate_<?php echo $f->unique_id; ?>);
+		jQuery('#Btn_<?php echo esc_js( $f->unique_id ); ?>').click(bp_ps_locate_<?php echo esc_js( $f->unique_id ); ?>);
 
-		function bp_ps_address_<?php echo $f->unique_id; ?>(position) {
+		function bp_ps_address_<?php echo esc_js( $f->unique_id ); ?>(position) {
 			var geocoder = new google.maps.Geocoder;
 			var latlng = {lat: position.coords.latitude, lng: position.coords.longitude};
 			geocoder.geocode({'location': latlng}, function (results, status) {
 				if (status === 'OK') {
 					if (results[0]) {
-						document.getElementById('<?php echo $f->unique_id; ?>').value = results[0].formatted_address;
+						document.getElementById('<?php echo esc_js( $f->unique_id ); ?>').value = results[0].formatted_address;
 					} else {
 						alert('ERROR: Geocoder found no results');
 					}

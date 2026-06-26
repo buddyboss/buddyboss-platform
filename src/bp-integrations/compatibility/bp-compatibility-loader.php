@@ -33,7 +33,7 @@ function bp_core_compatibility_do_settings_sections( $page ) {
 		if ( isset( $wp_settings_fields[ $page ][ $section['id'] ] ) ) {
 
 			if ( $section['title'] ) {
-				echo "<h3>{$section['title']}</h3>\n";
+				echo '<h3>' . esc_html( $section['title'] ) . "</h3>\n";
 			}
 
 			if ( $section['callback'] ) {

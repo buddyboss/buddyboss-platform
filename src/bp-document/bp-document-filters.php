@@ -102,7 +102,7 @@ function bp_document_clear_document_symlinks_on_delete( $documents ) {
 				if ( $get_existing ) {
 					foreach ( $get_existing as $symlink ) {
 						if ( file_exists( $symlink ) ) {
-							unlink( $symlink );
+							wp_delete_file( $symlink );
 						}
 					}
 				}
@@ -1305,7 +1305,7 @@ function bp_document_download_error( $message, $title = '', $status = 404 ) {
 	if ( ! strstr( $message, '<a ' ) ) {
 		$message .= ' <a href="' . esc_url( site_url() ) . '" class="bp-document-forward">' . esc_html__( 'Go to document', 'buddyboss-platform' ) . '</a>';
 	}
-	wp_die( $message, $title, array( 'response' => $status ) ); // WPCS: XSS ok.
+	wp_die( wp_kses_post( $message ), esc_html( $title ), array( 'response' => absint( $status ) ) );
 }
 
 /**
@@ -1495,7 +1495,7 @@ function bp_document_readfile_chunked( $file, $start = 0, $length = 0 ) {
 				$read_length = $end - $p + 1;
 			}
 
-			echo @fread( $handle, $read_length ); // phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged, WordPress.XSS.EscapeOutput.OutputNotEscaped, WordPress.WP.AlternativeFunctions.file_system_read_fread
+			echo @fread( $handle, $read_length ); // phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged, WordPress.Security.EscapeOutput.OutputNotEscaped, WordPress.WP.AlternativeFunctions.file_system_read_fread -- Raw binary file content streamed for download; cannot be escaped.
 			$p = @ftell( $handle ); // phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged
 
 			if ( ob_get_length() ) {

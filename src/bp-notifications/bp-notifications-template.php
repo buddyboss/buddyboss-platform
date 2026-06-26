@@ -400,7 +400,7 @@ function bp_get_the_notification_component_name() {
  * @since BuddyPress 1.9.0
  */
 function bp_the_notification_component_action() {
-	echo bp_get_the_notification_component_action();
+	echo esc_html( bp_get_the_notification_component_action() );
 }
 	/**
 	 * Return the name of the action associated with the notification currently being iterated on.
@@ -427,7 +427,7 @@ function bp_get_the_notification_component_action() {
  * @since BuddyPress 1.9.0
  */
 function bp_the_notification_date_notified() {
-	echo bp_get_the_notification_date_notified();
+	echo esc_html( bp_get_the_notification_date_notified() );
 }
 	/**
 	 * Return the timestamp of the current notification.
@@ -454,7 +454,7 @@ function bp_get_the_notification_date_notified() {
  * @since BuddyPress 1.9.0
  */
 function bp_the_notification_time_since() {
-	echo bp_get_the_notification_time_since();
+	echo esc_html( bp_get_the_notification_time_since() );
 }
 	/**
 	 * Return the timestamp of the current notification.
@@ -958,7 +958,7 @@ function bp_get_notifications_pagination_count() {
 	$total      = bp_core_number_format( $query_loop->total_notification_count );
 
 	/* translators: 1: starting notification number, 2: ending notification number, 3: total number of notifications. */
-	$pag = sprintf( _n( 'Viewing 1 notification', 'Viewing %1$s - %2$s of %3$s notifications', $query_loop->total_notification_count, 'buddyboss-platform' ), $from_num, $to_num, $total );
+	$pag = sprintf( _n( 'Viewing 1 notification', 'Viewing %1$s - %2$s of %3$s notifications', $query_loop->total_notification_count, 'buddyboss-platform' ), $from_num, $to_num, $total ); // phpcs:ignore WordPress.WP.I18n.MissingSingularPlaceholder -- Singular keeps its literal form to preserve existing translations (msgid unchanged); upstream BuddyPress pagination string.
 
 	/**
 	 * Filters the pagination count for the current notification loop.

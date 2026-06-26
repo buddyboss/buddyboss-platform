@@ -82,7 +82,7 @@ class BP_REST_Moderation_Report_Endpoint extends WP_REST_Controller {
 
 		$count = 1;
 
-		$reports_terms = get_terms( 'bpm_category', array( 'hide_empty' => false ) );
+		$reports_terms = get_terms( array( 'taxonomy' => 'bpm_category', 'hide_empty' => false ) );
 		if ( ! empty( $reports_terms ) ) {
 			foreach ( $reports_terms as $reports_term ) {
 				$show_when           = get_term_meta( $reports_term->term_id, 'bb_category_show_when_reporting', true );
@@ -572,8 +572,8 @@ class BP_REST_Moderation_Report_Endpoint extends WP_REST_Controller {
 			$params['context']['default'] = 'edit';
 
 			$reports_terms   = get_terms(
-				'bpm_category',
 				array(
+					'taxonomy'   => 'bpm_category',
 					'hide_empty' => false,
 					'fields'     => 'ids',
 				)

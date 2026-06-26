@@ -118,7 +118,7 @@ function bp_admin_tools_default_data_save() {
 				esc_html_e( 'Data was successfully imported', 'buddyboss-platform' );
 				if ( count( $imported ) > 0 ) {
 					echo ':<ul class="results"><li>';
-					echo implode( '</li><li>', $imported );
+					echo wp_kses_post( implode( '</li><li>', $imported ) );
 					echo '</li></ul>';
 				}
 				?>

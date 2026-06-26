@@ -35,7 +35,7 @@ if ( bbp_is_forum_category( $forum_id ) ) {
 	<br />
 	<div class="bp-feedback info">
 		<span class="bp-icon" aria-hidden="true"></span>
-		<p><?php echo $feedback_message; ?></p>
+		<p><?php echo esc_html( $feedback_message ); ?></p>
 	</div>
 
 	<?php

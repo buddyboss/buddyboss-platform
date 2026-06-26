@@ -102,10 +102,10 @@ class BP_Core_Friends_Widget extends WP_Widget {
 		}
 
 		$link              = trailingslashit( bp_displayed_user_domain() . bp_get_friends_slug() );
-		/* translators: %s: member display name. */
 		$instance['title'] = (
 			bp_loggedin_user_id() === $user_id
 			? __( 'My Connections', 'buddyboss-platform' )
+			/* translators: %s: member display name. */
 			: sprintf( __( "%s's Connections", 'buddyboss-platform' ), $this->get_user_display_name( bp_displayed_user_id() ) )
 		);
 
@@ -134,11 +134,11 @@ class BP_Core_Friends_Widget extends WP_Widget {
 		 */
 		$title = apply_filters( 'widget_title', $instance['title'], $instance, $this->id_base );
 
-		echo $before_widget;
+		echo wp_kses_post( $before_widget );
 
 		$title = $instance['link_title'] ? '<a href="' . esc_url( $link ) . '">' . esc_html( $title ) . '</a>' : esc_html( $title );
 
-		echo $before_title . esc_html( $title ) . $after_title;
+		echo wp_kses_post( $before_title ) . wp_kses_post( $title ) . wp_kses_post( $after_title );
 
 		// Back up the global.
 		$old_members_template = $members_template;
@@ -202,7 +202,7 @@ class BP_Core_Friends_Widget extends WP_Widget {
 		<?php endif; ?>
 
 		<?php
-		echo $after_widget;
+		echo wp_kses_post( $after_widget );
 
 		// Restore the global.
 		$members_template = $old_members_template;

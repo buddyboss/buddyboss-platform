@@ -104,7 +104,7 @@ function bp_blogs_register_post_tracking_args( $params = null, $post_type = 0 ) 
 				/* translators: %s: singular post type label. */
 				$params->admin_filter    = sprintf( __( 'New %s published', 'buddyboss-platform' ), strtolower( $singular_label_name ) );
 				$params->format_callback = 'bp_blogs_format_activity_action_new_custom_post_type_feed';
-				$params->front_filter    = sprintf( __( '%s', 'buddyboss-platform' ), $plural_label_name );
+				$params->front_filter    = $plural_label_name;
 				$params->contexts        = array( 'activity', 'member' );
 				$params->position        = 5;
 

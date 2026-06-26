@@ -487,7 +487,12 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 			foreach ( $fields as $field => $label ) {
 				$item    = 'member_field_' . $field;
 				$checked = ! empty( $items_to_search ) && in_array( $item, $items_to_search ) ? ' checked' : '';
-				echo "<label><input type='checkbox' value='{$item}' name='bp_search_plugin_options[items-to-search][]' {$checked}>{$label}</label><br>";
+				printf(
+					'<label><input type="checkbox" value="%1$s" name="bp_search_plugin_options[items-to-search][]"%2$s>%3$s</label><br>',
+					esc_attr( $item ),
+					$checked ? ' checked' : '',
+					esc_html( $label )
+				);
 			}
 
 			echo '</div><!-- .wp-user-fields -->';
@@ -505,14 +510,19 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 			if ( ! empty( $groups ) ) {
 				echo "<div class='xprofile-fields' style='margin: 0 0 10px 30px'>";
 				foreach ( $groups as $group ) {
-					echo "<p class='xprofile-group-name' style='margin: 5px 0'><strong>" . $group->name . '</strong></p>';
+					echo "<p class='xprofile-group-name' style='margin: 5px 0'><strong>" . esc_html( $group->name ) . '</strong></p>';
 
 					if ( ! empty( $group->fields ) ) {
 						foreach ( $group->fields as $field ) {
 							// lets save these as xprofile_field_{field_id}
 							$item    = 'xprofile_field_' . $field->id;
 							$checked = ! empty( $items_to_search ) && in_array( $item, $items_to_search ) ? ' checked' : '';
-							echo "<label><input type='checkbox' value='{$item}' name='bp_search_plugin_options[items-to-search][]' {$checked}>{$field->name}</label><br>";
+							printf(
+								'<label><input type="checkbox" value="%1$s" name="bp_search_plugin_options[items-to-search][]"%2$s>%3$s</label><br>',
+								esc_attr( $item ),
+								$checked ? ' checked' : '',
+								esc_html( $field->name )
+							);
 						}
 					}
 				}
@@ -1577,9 +1587,9 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 					if ( ! isset( $translation_cache[ $cache_key ] ) ) {
 						$translation_cache[ $cache_key ] = array(
 							// Get singular form translation (e.g., "one year" for "year").
-							'singular' => _n( '%s ' . $unit['singular'], '%s ' . $unit['plural'], 1, 'buddyboss-platform' ),
+							'singular' => _n( '%s ' . $unit['singular'], '%s ' . $unit['plural'], 1, 'buddyboss-platform' ), // phpcs:ignore WordPress.WP.I18n.NonSingularStringLiteralSingle,WordPress.WP.I18n.NonSingularStringLiteralPlural -- Intentional runtime lookup of WordPress core's existing time-unit translations; cannot be a static literal.
 							// Get plural form translation (e.g., "two years" for "years").
-							'plural'   => _n( '%s ' . $unit['singular'], '%s ' . $unit['plural'], 2, 'buddyboss-platform' ),
+							'plural'   => _n( '%s ' . $unit['singular'], '%s ' . $unit['plural'], 2, 'buddyboss-platform' ), // phpcs:ignore WordPress.WP.I18n.NonSingularStringLiteralSingle,WordPress.WP.I18n.NonSingularStringLiteralPlural -- Intentional runtime lookup of WordPress core's existing time-unit translations; cannot be a static literal.
 						);
 
 						// Clean up cache if it exceeds the size limit.
@@ -1601,8 +1611,8 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 
 						if ( ! isset( $translation_cache[ $cache_key ] ) ) {
 							$translation_cache[ $cache_key ] = array(
-								'singular' => __( $unit, 'buddyboss-platform' ),
-								'plural'   => __( $unit, 'buddyboss-platform' ),
+								'singular' => __( $unit, 'buddyboss-platform' ), // phpcs:ignore WordPress.WP.I18n.NonSingularStringLiteralText -- Intentional runtime lookup of WordPress core's existing time-unit translations; cannot be a static literal.
+								'plural'   => __( $unit, 'buddyboss-platform' ), // phpcs:ignore WordPress.WP.I18n.NonSingularStringLiteralText -- Intentional runtime lookup of WordPress core's existing time-unit translations; cannot be a static literal.
 							);
 
 							// Clean up cache if it exceeds the size limit.
@@ -1646,7 +1656,7 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 				// Cache WordPress translations for direction words.
 				if ( ! isset( $translation_cache[ $cache_key ] ) ) {
 					// Get the translation for this direction word (e.g., "ago" for "ago").
-					$translation_cache[ $cache_key ] = __( '%s ' . $direction, 'buddyboss-platform' );
+					$translation_cache[ $cache_key ] = __( '%s ' . $direction, 'buddyboss-platform' ); // phpcs:ignore WordPress.WP.I18n.NonSingularStringLiteralText -- Intentional runtime lookup of WordPress core's existing time-direction translations; cannot be a static literal.
 
 					// Clean up cache if it exceeds the size limit.
 					if ( count( $translation_cache ) > self::$max_cache_size ) {
@@ -1817,7 +1827,7 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 			foreach ( $directions as $direction ) {
 				// Get the WordPress translation for this direction word.
 				// Example: __('%s ago', 'buddyboss') → "since".
-				$direction_translation = __( '%s ' . $direction, 'buddyboss-platform' );
+				$direction_translation = __( '%s ' . $direction, 'buddyboss-platform' ); // phpcs:ignore WordPress.WP.I18n.NonSingularStringLiteralText -- Intentional runtime lookup of WordPress core's existing time-direction translations; cannot be a static literal.
 
 				// Remove the %s placeholder to get just the direction word.
 				// Example: "since %s" → "since".

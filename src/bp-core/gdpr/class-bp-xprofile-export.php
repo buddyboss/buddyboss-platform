@@ -108,7 +108,8 @@ final class BP_Xprofile_Export extends BP_Export {
 		foreach ( $data_items['items'] as $xgroup => $items ) {
 
 			$group_id    = $xgroup;
-			$group_label = __( "User Profile - {$xgroup}", 'buddyboss-platform' );
+			// translators: %s: the XProfile field group name.
+			$group_label = sprintf( __( 'User Profile - %s', 'buddyboss-platform' ), $xgroup );
 			$item_id     = "{$this->exporter_name}-{$group_id}";
 
 			$data = array();

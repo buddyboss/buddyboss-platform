@@ -191,7 +191,7 @@ class BP_Core_Whos_Online_Widget extends WP_Widget {
 
 		$refresh_online_users = '<a href="" class="bs-widget-reload bs-heartbeat-reload hide" aria-label="' . esc_attr__( 'Reload', 'buddyboss-platform' ) . '"><i class="bb-icon-spin6"></i></a>';
 
-		echo $args['before_widget'] . $args['before_title'] . esc_html( $title ) . $refresh_online_users . $args['after_title'];
+		echo wp_kses_post( $args['before_widget'] ) . wp_kses_post( $args['before_title'] ) . esc_html( $title ) . wp_kses_post( $refresh_online_users ) . wp_kses_post( $args['after_title'] );
 
 		$separator = apply_filters( 'bp_members_online_widget_separator', '|' );
 
@@ -226,7 +226,7 @@ class BP_Core_Whos_Online_Widget extends WP_Widget {
 			<?php
 		}
 
-		echo $args['after_widget'];
+		echo wp_kses_post( $args['after_widget'] );
 
 		// Restore the global.
 		$members_template = $old_members_template;

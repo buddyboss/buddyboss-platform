@@ -26,6 +26,7 @@ defined( 'ABSPATH' ) || exit;
 					<h3>
 						<?php
 						/* translators: %s: Topic title */
+						// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- bbp_get_topic_title() is escaped via its own bbp_get_topic_title filter; format string uses esc_html__().
 						printf( esc_html__( 'Split discussion "%s"', 'buddyboss-platform' ), bbp_get_topic_title() );
 						?>
 					</h3>

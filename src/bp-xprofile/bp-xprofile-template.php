@@ -137,7 +137,7 @@ function bp_profile_group_has_fields() {
  *                     space-delimited string.
  */
 function bp_field_css_class( $class = false ) {
-	echo bp_get_field_css_class( $class );
+	echo bp_get_field_css_class( $class ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- returns class="..." attribute markup; esc_attr would corrupt it.
 }
 
 	/**
@@ -375,7 +375,7 @@ function bp_get_the_profile_group_description() {
  * @since BuddyPress 1.1.0
  */
 function bp_the_profile_group_edit_form_action() {
-	echo bp_get_the_profile_group_edit_form_action();
+	echo esc_url( bp_get_the_profile_group_edit_form_action() );
 }
 
 	/**
@@ -594,7 +594,7 @@ function bp_get_the_profile_field_alternate_name( $the_field = false ) {
  * @since BuddyPress 1.0.0
  */
 function bp_the_profile_field_value() {
-	echo bp_get_the_profile_field_value();
+	echo bp_get_the_profile_field_value(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- filter-escaped via bp_xprofile_escape_field_data (esc_html / xprofile_filter_kses).
 }
 
 	/**
@@ -664,7 +664,7 @@ function bp_get_the_profile_field_value() {
  * @since BuddyPress 1.1.0
  */
 function bp_the_profile_field_edit_value() {
-	echo bp_get_the_profile_field_edit_value();
+	echo bp_get_the_profile_field_edit_value(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- filter-escaped via bp_xprofile_escape_field_data (esc_html / xprofile_filter_kses).
 }
 
 	/**
@@ -820,7 +820,7 @@ function bp_get_the_profile_field_errors_action() {
  * @param array $args Specify type for datebox. Allowed 'day', 'month', 'year'.
  */
 function bp_the_profile_field_options( $args = array() ) {
-	echo bp_get_the_profile_field_options( $args );
+	echo bp_get_the_profile_field_options( $args ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- returns field option markup pre-escaped per option (esc_attr/esc_html); contains form controls wp_kses_post would strip.
 }
 	/**
 	 * Retrieves field options HTML for field types of 'selectbox', 'multiselectbox', 'radio', 'checkbox', and 'datebox'.
@@ -879,7 +879,7 @@ function bp_get_the_profile_field_options( $args = array() ) {
  * @since BuddyPress 1.1.0
  */
 function bp_the_profile_field_is_required() {
-	echo bp_get_the_profile_field_is_required();
+	echo esc_html( bp_get_the_profile_field_is_required() );
 }
 
 	/**
@@ -1020,7 +1020,7 @@ function bp_unserialize_profile_field( $value ) {
  * @param string|array $args Array of arguments for field data. See {@link bp_get_profile_field_data}
  */
 function bp_profile_field_data( $args = '' ) {
-	echo bp_get_profile_field_data( $args );
+	echo wp_kses_post( bp_get_profile_field_data( $args ) );
 }
 
 	/**
@@ -1126,7 +1126,7 @@ function bp_profile_has_multiple_groups() {
  * @since BuddyPress 1.0.0
  */
 function bp_profile_group_tabs() {
-	echo bp_get_profile_group_tabs();
+	echo wp_kses_post( bp_get_profile_group_tabs() );
 
 	/**
 	 * Fires at the end of the tab output for switching between profile field
@@ -1250,7 +1250,7 @@ function bp_profile_last_updated() {
 	if ( empty( $last_updated ) ) {
 		esc_html_e( 'Profile not recently updated.', 'buddyboss-platform' );
 	} else {
-		echo $last_updated;
+		echo esc_html( $last_updated );
 	}
 }
 
@@ -1417,20 +1417,20 @@ function bp_profile_get_visibility_radio_buttons( $args = '' ) {
 		ob_start();
 
 		// Output anything before.
-		echo $r['before']; ?>
+		echo wp_kses_post( $r['before'] ); ?>
 
 			<?php if ( bp_current_user_can( 'bp_xprofile_change_field_visibility' ) ) : ?>
 
 				<?php foreach ( bp_xprofile_get_visibility_levels() as $level ) : ?>
 
-					<?php printf( $r['before_radio'], esc_attr( $level['id'] ) ); ?>
+					<?php echo wp_kses_post( sprintf( $r['before_radio'], esc_attr( $level['id'] ) ) ); ?>
 
 					<div class="bp-radio-wrap">
 						<input class="bs-styled-radio" type="radio" id="<?php echo esc_attr( 'see-field_' . $r['field_id'] . '_' . $level['id'] ); ?>" name="<?php echo esc_attr( 'field_' . $r['field_id'] . '_visibility' ); ?>" value="<?php echo esc_attr( $level['id'] ); ?>" <?php checked( $level['id'], bp_get_the_profile_field_visibility_level() ); ?> />
 						<label for="<?php echo esc_attr( 'see-field_' . $r['field_id'] . '_' . $level['id'] ); ?>"><span class="field-visibility-text"><?php echo esc_html( $level['label'] ); ?></span></label>
 					</div>
 
-					<?php echo $r['after_radio']; ?>
+					<?php echo wp_kses_post( $r['after_radio'] ); ?>
 
 				<?php endforeach; ?>
 
@@ -1438,7 +1438,7 @@ function bp_profile_get_visibility_radio_buttons( $args = '' ) {
 			endif;
 
 			// Output anything after.
-			echo $r['after'];
+			echo wp_kses_post( $r['after'] );
 
 			// Get the output buffer and empty it.
 			$retval = ob_get_clean();
@@ -1464,7 +1464,7 @@ function bp_profile_get_visibility_radio_buttons( $args = '' ) {
  * @param array|string $args Args for the select list. See {@link bp_profile_get_settings_visibility_select}
  */
 function bp_profile_settings_visibility_select( $args = '' ) {
-	echo bp_profile_get_settings_visibility_select( $args );
+	echo bp_profile_get_settings_visibility_select( $args ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- returns pre-escaped select/radio markup (esc_attr/esc_html, wp_kses_post on wrappers); contains form controls wp_kses_post would strip.
 }
 	/**
 	 * Return the XProfile field visibility select list for settings.
@@ -1515,12 +1515,12 @@ function bp_profile_get_settings_visibility_select( $args = '' ) {
 		ob_start();
 
 		// Output anything before.
-		echo $r['before'];
+		echo wp_kses_post( $r['before'] );
 		?>
 
 			<?php if ( bp_current_user_can( 'bp_xprofile_change_field_visibility' ) ) : ?>
 
-				<?php echo $r['before_controls']; ?>
+				<?php echo wp_kses_post( $r['before_controls'] ); ?>
 
 				<label for="<?php echo esc_attr( 'field_' . $r['field_id'] ); ?>_visibility" class="<?php echo esc_attr( $r['label_class'] ); ?>">
 					<?php esc_html_e( 'Select visibility', 'buddyboss-platform' ); /* translators: accessibility text */ ?>
@@ -1535,7 +1535,7 @@ function bp_profile_get_settings_visibility_select( $args = '' ) {
 
 				</select>
 
-				<?php echo $r['after_controls']; ?>
+				<?php echo wp_kses_post( $r['after_controls'] ); ?>
 
 			<?php else : ?>
 
@@ -1545,7 +1545,7 @@ function bp_profile_get_settings_visibility_select( $args = '' ) {
 			endif;
 
 			// Output anything after.
-			echo $r['after'];
+			echo wp_kses_post( $r['after'] );
 
 			// Get the output buffer and empty it.
 			$retval = ob_get_clean();
@@ -1637,7 +1637,7 @@ function bp_get_the_profile_field_optional_label() {
  *                     space-delimited string.
  */
 function bp_field_data_attribute( $attribute = false ) {
-	echo bp_get_field_data_attribute( $attribute );
+	echo bp_get_field_data_attribute( $attribute ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- returns built data-attribute markup; escaping would corrupt the attribute string.
 }
 
 	/**

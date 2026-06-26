@@ -4439,7 +4439,7 @@ function bp_group_directory_page_content() {
 
 	if ( ! empty( $page_ids['groups'] ) && ! bp_is_group_subgroups() ) {
 		$group_page_content = get_post_field( 'post_content', $page_ids['groups'] );
-		echo apply_filters( 'the_content', $group_page_content );
+		echo wp_kses_post( apply_filters( 'the_content', $group_page_content ) );
 	}
 }
 
@@ -5718,7 +5718,7 @@ function bb_groups_members( $group_id = 0, $role = array( 'member', 'mod', 'admi
 					<?php
 					printf(
 						'%s<span class="bb-rl-group-member-count-label"> %s</span>',
-						$member_count,
+						esc_html( $member_count ),
 						esc_html( $member_label )
 					);
 					?>

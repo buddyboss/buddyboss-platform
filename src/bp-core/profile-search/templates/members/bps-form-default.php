@@ -24,7 +24,7 @@ if ( is_admin() ) {
 	<p><strong><?php esc_html_e( 'jQuery UI Theme', 'buddyboss-platform' ); ?></strong></p>
 	<select name="options[theme]">
 	<?php foreach ( bp_ps_jquery_ui_themes() as $theme => $name ) { ?>
-		<option value="<?php echo $theme; ?>" <?php selected( $options['theme'], $theme ); ?>><?php echo $name; ?></option>
+		<option value="<?php echo esc_attr( $theme ); ?>" <?php selected( $options['theme'], $theme ); ?>><?php echo esc_html( $name ); ?></option>
 	<?php } ?>
 	</select>
 
@@ -48,7 +48,7 @@ if ( ! empty( $options['theme'] ) ) {
 	?>
 <script>
 	jQuery(function($) {
-		$('#<?php echo $accordion; ?>').accordion({
+		$('#<?php echo esc_js( $accordion ); ?>').accordion({
 			icons: {"header": "ui-icon-plus", "activeHeader": "<?php echo ( $options['collapsible'] == 'Yes' ) ? 'ui-icon-minus' : 'ui-icon-blank'; ?>"},
 			active: false,
 			collapsible: <?php echo ( $options['collapsible'] == 'Yes' ) ? 'true' : 'false'; ?>,
@@ -61,12 +61,12 @@ if ( ! empty( $options['theme'] ) ) {
 	.bp-ps-form input {display: inline;}
 </style>
 
-<div id="<?php echo $accordion; ?>">
-	<span class="bp-ps-form-title"> <?php echo $F->title; ?></span>
+<div id="<?php echo esc_attr( $accordion ); ?>">
+	<span class="bp-ps-form-title"> <?php echo esc_html( $F->title ); ?></span>
 	<?php
 }
 ?>
-	<form action="<?php echo $F->action; ?>" method="<?php echo $F->method; ?>" id="<?php echo $F->unique_id; ?>" class="bp-ps-form">
+	<form action="<?php echo esc_url( $F->action ); ?>" method="<?php echo esc_attr( $F->method ); ?>" id="<?php echo esc_attr( $F->unique_id ); ?>" class="bp-ps-form">
 
 <?php
 foreach ( $F->fields as $f ) {
@@ -80,34 +80,34 @@ foreach ( $F->fields as $f ) {
 	}
 	if ( $display == 'hidden' ) {
 		?>
-			<input type="hidden" name="<?php echo $name; ?>" value="<?php echo $value; ?>">
+			<input type="hidden" name="<?php echo esc_attr( $name ); ?>" value="<?php echo $value; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $value pre-escaped via esc_attr() in bp_ps_escaped_form_data47(). ?>">
 		<?php
 		continue;
 	}
 	?>
-		<div id="<?php echo $id; ?>_wrap" class="bp-ps-<?php echo $display; ?>">
-			<label for="<?php echo $id; ?>" class="bp-ps-label"><?php echo $f->full_label; ?></label><br>
+		<div id="<?php echo esc_attr( $id ); ?>_wrap" class="bp-ps-<?php echo esc_attr( $display ); ?>">
+			<label for="<?php echo esc_attr( $id ); ?>" class="bp-ps-label"><?php echo wp_kses_post( $f->full_label ); ?></label><br>
 	<?php
 	switch ( $display ) {
 		case 'range':
 			?>
-			<input type="text" style="width: 5em;" id="<?php echo $id; ?>" name="<?php echo $name . '[min]'; ?>" value="<?php echo $value['min']; ?>">
+			<input type="text" style="width: 5em;" id="<?php echo esc_attr( $id ); ?>" name="<?php echo esc_attr( $name . '[min]' ); ?>" value="<?php echo esc_attr( $value['min'] ); ?>">
 			<span> - </span>
-			<input type="text" style="width: 5em;" name="<?php echo $name . '[max]'; ?>" value="<?php echo $value['max']; ?>"><br>
+			<input type="text" style="width: 5em;" name="<?php echo esc_attr( $name . '[max]' ); ?>" value="<?php echo esc_attr( $value['max'] ); ?>"><br>
 			<?php
 			break;
 
 		case 'range-select':
 			?>
-			<select style="width: 5em;" id="<?php echo $id; ?>" name="<?php echo $name . '[min]'; ?>">
+			<select style="width: 5em;" id="<?php echo esc_attr( $id ); ?>" name="<?php echo esc_attr( $name . '[min]' ); ?>">
 			<?php foreach ( $f->options as $option ) { ?>
-				<option <?php selected( $value['min'], $option ); ?> value="<?php echo $option; ?>"><?php echo $option; ?> </option>
+				<option <?php selected( $value['min'], $option ); ?> value="<?php echo $option; ?>"><?php echo $option; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $option pre-escaped via esc_attr() in bp_ps_escaped_form_data47(). ?> </option>
 			<?php } ?>
 			</select>
 			<span> - </span>
-			<select style="width: 5em;" name="<?php echo $name . '[max]'; ?>">
+			<select style="width: 5em;" name="<?php echo esc_attr( $name . '[max]' ); ?>">
 			<?php foreach ( $f->options as $option ) { ?>
-				<option <?php selected( $value['max'], $option ); ?> value="<?php echo $option; ?>"><?php echo $option; ?> </option>
+				<option <?php selected( $value['max'], $option ); ?> value="<?php echo $option; ?>"><?php echo $option; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $option pre-escaped via esc_attr() in bp_ps_escaped_form_data47(). ?> </option>
 			<?php } ?>
 			</select><br>
 			<?php
@@ -115,13 +115,13 @@ foreach ( $F->fields as $f ) {
 
 		case 'textbox':
 			?>
-			<input type="search" id="<?php echo $id; ?>" name="<?php echo $name; ?>" value="<?php echo $value; ?>"><br>
+			<input type="search" id="<?php echo esc_attr( $id ); ?>" name="<?php echo esc_attr( $name ); ?>" value="<?php echo $value; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $value pre-escaped via esc_attr() in bp_ps_escaped_form_data47(). ?>"><br>
 			<?php
 			break;
 
 		case 'number':
 			?>
-			<input type="number" id="<?php echo $id; ?>" name="<?php echo $name; ?>" value="<?php echo $value; ?>"><br>
+			<input type="number" id="<?php echo esc_attr( $id ); ?>" name="<?php echo esc_attr( $name ); ?>" value="<?php echo $value; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $value pre-escaped via esc_attr() in bp_ps_escaped_form_data47(). ?>"><br>
 			<?php
 			break;
 
@@ -133,23 +133,23 @@ foreach ( $F->fields as $f ) {
 			$icon_url    = buddypress()->plugin_url . 'bp-core/profile-search/templates/members/locator.png';
 			$icon_title  = __( 'get current location', 'buddyboss-platform' );
 			?>
-			<input type="number" min="1" style="width: 5em;" name="<?php echo $name . '[distance]'; ?>" value="<?php echo $value['distance']; ?>">
-			<select name="<?php echo $name . '[units]'; ?>">
-				<option value="km" <?php selected( $value['units'], 'km' ); ?>><?php echo $km; ?></option>
-				<option value="miles" <?php selected( $value['units'], 'miles' ); ?>><?php echo $miles; ?></option>
+			<input type="number" min="1" style="width: 5em;" name="<?php echo esc_attr( $name . '[distance]' ); ?>" value="<?php echo esc_attr( $value['distance'] ); ?>">
+			<select name="<?php echo esc_attr( $name . '[units]' ); ?>">
+				<option value="km" <?php selected( $value['units'], 'km' ); ?>><?php echo esc_html( $km ); ?></option>
+				<option value="miles" <?php selected( $value['units'], 'miles' ); ?>><?php echo esc_html( $miles ); ?></option>
 			</select>
-			<span><?php echo $of; ?></span>
-			<input type="search" style="width: 90%;" id="<?php echo $id; ?>" name="<?php echo $name . '[location]'; ?>" value="<?php echo $value['location']; ?>"
-				placeholder="<?php echo $placeholder; ?>">
-			<img id="<?php echo $id; ?>_icon" style="cursor: pointer;" src="<?php echo $icon_url; ?>" title="<?php echo $icon_title; ?>"><br>
-			<input type="hidden" id="<?php echo $id; ?>_lat" name="<?php echo $name . '[lat]'; ?>" value="<?php echo $value['lat']; ?>">
-			<input type="hidden" id="<?php echo $id; ?>_lng" name="<?php echo $name . '[lng]'; ?>" value="<?php echo $value['lng']; ?>">
+			<span><?php echo esc_html( $of ); ?></span>
+			<input type="search" style="width: 90%;" id="<?php echo esc_attr( $id ); ?>" name="<?php echo esc_attr( $name . '[location]' ); ?>" value="<?php echo esc_attr( $value['location'] ); ?>"
+				placeholder="<?php echo esc_attr( $placeholder ); ?>">
+			<img id="<?php echo esc_attr( $id ); ?>_icon" style="cursor: pointer;" src="<?php echo esc_url( $icon_url ); ?>" title="<?php echo esc_attr( $icon_title ); ?>"><br>
+			<input type="hidden" id="<?php echo esc_attr( $id ); ?>_lat" name="<?php echo esc_attr( $name . '[lat]' ); ?>" value="<?php echo esc_attr( $value['lat'] ); ?>">
+			<input type="hidden" id="<?php echo esc_attr( $id ); ?>_lng" name="<?php echo esc_attr( $name . '[lng]' ); ?>" value="<?php echo esc_attr( $value['lng'] ); ?>">
 
 			<script>
 				jQuery(function($) {
-					bp_ps_autocomplete('<?php echo $id; ?>', '<?php echo $id; ?>_lat', '<?php echo $id; ?>_lng');
-					$('#<?php echo $id; ?>_icon').click(function () {
-						bp_ps_locate('<?php echo $id; ?>', '<?php echo $id; ?>_lat', '<?php echo $id; ?>_lng')
+					bp_ps_autocomplete('<?php echo esc_js( $id ); ?>', '<?php echo esc_js( $id ); ?>_lat', '<?php echo esc_js( $id ); ?>_lng');
+					$('#<?php echo esc_js( $id ); ?>_icon').click(function () {
+						bp_ps_locate('<?php echo esc_js( $id ); ?>', '<?php echo esc_js( $id ); ?>_lat', '<?php echo esc_js( $id ); ?>_lng')
 					});
 				});
 			</script>
@@ -158,14 +158,14 @@ foreach ( $F->fields as $f ) {
 
 		case 'selectbox':
 			?>
-			<select id="<?php echo $id; ?>" name="<?php echo $name; ?>">
+			<select id="<?php echo esc_attr( $id ); ?>" name="<?php echo esc_attr( $name ); ?>">
 			<?php foreach ( $f->options as $key => $label ) { ?>
 				<option
 				<?php
 				if ( $key == $value ) {
 					echo 'selected="selected"';}
 				?>
-				 value="<?php echo $key; ?>"><?php echo $label; ?> </option>
+				 value="<?php echo $key; ?>"><?php echo $label; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $key/$label pre-escaped via esc_attr() in bp_ps_escaped_form_data47(). ?> </option>
 			<?php } ?>
 			</select><br>
 			<?php
@@ -173,14 +173,14 @@ foreach ( $F->fields as $f ) {
 
 		case 'multiselectbox':
 			?>
-			<select id="<?php echo $id; ?>" name="<?php echo $name . '[]'; ?>" multiple="multiple">
+			<select id="<?php echo esc_attr( $id ); ?>" name="<?php echo esc_attr( $name . '[]' ); ?>" multiple="multiple">
 			<?php foreach ( $f->options as $key => $label ) { ?>
 				<option
 				<?php
 				if ( in_array( $key, $f->values ) ) {
 					echo 'selected="selected"';}
 				?>
-				 value="<?php echo $key; ?>"><?php echo $label; ?></option>
+				 value="<?php echo $key; ?>"><?php echo $label; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $key/$label pre-escaped via esc_attr() in bp_ps_escaped_form_data47(). ?></option>
 			<?php } ?>
 			</select><br>
 			<?php
@@ -194,9 +194,9 @@ foreach ( $F->fields as $f ) {
 				if ( $key == $value ) {
 					echo 'checked="checked"';}
 				?>
-					name="<?php echo $name; ?>" value="<?php echo $key; ?>"> <?php echo $label; ?></label><br>
+					name="<?php echo esc_attr( $name ); ?>" value="<?php echo $key; ?>"> <?php echo $label; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $key/$label pre-escaped via esc_attr() in bp_ps_escaped_form_data47(). ?></label><br>
 			<?php } ?>
-			<a href="javascript:bp_ps_clear_radio('<?php echo $id; ?>_wrap')"><?php esc_html_e( 'Clear', 'buddyboss-platform' ); ?></a><br>
+			<a href="javascript:bp_ps_clear_radio('<?php echo esc_attr( $id ); ?>_wrap')"><?php esc_html_e( 'Clear', 'buddyboss-platform' ); ?></a><br>
 			<?php
 			break;
 
@@ -208,19 +208,19 @@ foreach ( $F->fields as $f ) {
 				if ( in_array( $key, $f->values ) ) {
 					echo 'checked="checked"';}
 				?>
-					name="<?php echo $name . '[]'; ?>" value="<?php echo $key; ?>"> <?php echo $label; ?></label><br>
+					name="<?php echo esc_attr( $name . '[]' ); ?>" value="<?php echo $key; ?>"> <?php echo $label; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $key/$label pre-escaped via esc_attr() in bp_ps_escaped_form_data47(). ?></label><br>
 			<?php } ?>
 			<?php
 			break;
 
 		default:
 			?>
-			<p class="bp-ps-error"><?php echo "BP Profile Search: unknown display <em>$display</em> for field <em>$f->name</em>."; ?></p>
+			<p class="bp-ps-error"><?php echo 'BP Profile Search: unknown display <em>' . esc_html( $display ) . '</em> for field <em>' . esc_html( $f->name ) . '</em>.'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static HTML wrapper with esc_html()-escaped interpolated values. ?></p>
 			<?php
 			break;
 	}
 	?>
-			<em class="bp-ps-description"><?php echo $f->description; ?></em>
+			<em class="bp-ps-description"><?php echo $f->description; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- pre-escaped via esc_attr() in bp_ps_escaped_form_data47(). ?></em>
 		</div><br>
 	<?php
 }

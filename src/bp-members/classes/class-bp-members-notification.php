@@ -152,6 +152,7 @@ class BP_Members_Notification extends BP_Core_Notification_Abstract {
 
 				// Set up the string and the filter.
 				if ( (int) $total_items > 1 ) {
+					// translators: %d: number of password-change notifications.
 					$text   = sprintf( __( '%d Your password was changed', 'buddyboss-platform' ), (int) $total_items );
 					$amount = 'multiple';
 				} else {

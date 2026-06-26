@@ -108,7 +108,7 @@ function bp_core_admin_backpat_page() {
 
 		<p><?php esc_html_e( 'Don\'t worry! We\'ve moved the BuddyPress options into more convenient and easier to find locations. You\'re seeing this page because you are running a legacy BuddyPress plugin which has not been updated.', 'buddyboss-platform' ); ?></p>
 		<?php /* translators: 1: Settings > BuddyPress URL, 2: Settings 2.0 profile fields URL. */ ?>
-		<p><?php printf( __( 'Components, Pages, Settings, and Forums, have been moved to <a href="%1$s">Settings &gt; BuddyPress</a>. Profile Fields has been moved to <a href="%2$s">Settings 2.0</a>.', 'buddyboss-platform' ), esc_url( $settings_url ), esc_url( bb_get_feature_settings_url( 'members', 'profile_fields' ) ) ); ?></p>
+		<p><?php echo wp_kses_post( sprintf( __( 'Components, Pages, Settings, and Forums, have been moved to <a href="%1$s">Settings &gt; BuddyPress</a>. Profile Fields has been moved to <a href="%2$s">Settings 2.0</a>.', 'buddyboss-platform' ), esc_url( $settings_url ), esc_url( bb_get_feature_settings_url( 'members', 'profile_fields' ) ) ) ); ?></p>
 	</div>
 
 	<?php
@@ -148,7 +148,7 @@ function bp_core_print_admin_notices() {
 		printf( '<div id="message" class="fade %s">', sanitize_html_class( $type ) );
 
 		foreach ( $notices as $notice ) {
-			printf( '<p>%s</p>', $notice['message'] );
+			printf( '<p>%s</p>', wp_kses_post( $notice['message'] ) );
 		}
 
 		printf( '</div>' );
@@ -530,7 +530,7 @@ function bp_print_legacy_theme_deprecated_notice() {
 		'<div class="notice notice-error">
 	        <p>%s</p>
 	    </div>',
-		$message
+		wp_kses_post( $message )
 	);
 }
 
@@ -576,7 +576,7 @@ function bp_core_settings_admin_tabs( $active_tab = '' ) {
 		$i = $i + 1;
 	}
 
-	echo $tabs_html;
+	echo wp_kses_post( $tabs_html );
 
 	/**
 	 * Fires after the output of tabs for the admin area.
@@ -675,7 +675,7 @@ function bp_core_admin_tabs( $active_tab = '' ) {
 		$tabs_html .= '<a href="' . esc_url( $tab_data['href'] ) . '" class="' . esc_attr( $tab_class ) . '">' . esc_html( $tab_data['name'] ) . '</a>';
 	}
 
-	echo $tabs_html;
+	echo wp_kses_post( $tabs_html );
 
 	/**
 	 * Fires after the output of tabs for the admin area.
@@ -828,7 +828,7 @@ function bp_core_admin_integration_tabs( $active_tab = '' ) {
 		$i = $i + 1;
 	}
 
-	echo $tabs_html;
+	echo wp_kses_post( $tabs_html );
 
 	/**
 	 * Fires after the output of tabs for the admin area.
@@ -1417,13 +1417,13 @@ function bp_email_tax_type_metabox( $post, $box ) {
 	$tax_name = esc_attr( $r['taxonomy'] );
 	$taxonomy = get_taxonomy( $r['taxonomy'] );
 	?>
-	<div id="taxonomy-<?php echo $tax_name; ?>" class="categorydiv">
-		<div id="<?php echo $tax_name; ?>-all" class="tabs-panel">
+	<div id="taxonomy-<?php echo $tax_name; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $tax_name esc_attr'd at assignment. ?>" class="categorydiv">
+		<div id="<?php echo $tax_name; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $tax_name esc_attr'd at assignment. ?>-all" class="tabs-panel">
 			<?php
 			$name = ( $tax_name == 'category' ) ? 'post_category' : 'tax_input[' . $tax_name . ']';
-			echo "<input type='hidden' name='{$name}[]' value='0' />"; // Allows for an empty term set to be sent. 0 is an invalid Term ID and will be ignored by empty() checks.
+			echo "<input type='hidden' name='{$name}[]' value='0' />"; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Allows an empty term set to be sent; $name is built from the esc_attr'd $tax_name.
 			?>
-			<ul id="<?php echo $tax_name; ?>checklist" data-wp-lists="list:<?php echo $tax_name; ?>"
+			<ul id="<?php echo $tax_name; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $tax_name esc_attr'd at assignment. ?>checklist" data-wp-lists="list:<?php echo $tax_name; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $tax_name esc_attr'd at assignment. ?>"
 				class="categorychecklist form-no-clear">
 				<?php
 				wp_terms_checklist(
@@ -1474,7 +1474,7 @@ function bp_email_plaintext_metabox( $post ) {
 		?>
 	</label>
 	<textarea rows="5" cols="40" name="excerpt"
-					  id="excerpt"><?php echo $post->post_excerpt; // textarea_escaped ?></textarea>
+					  id="excerpt"><?php echo esc_textarea( $post->post_excerpt ); ?></textarea>
 
 	<p><?php esc_html_e( 'Most email clients support HTML email. However, some people prefer to receive plain text email. Enter a plain text alternative version of your email here.', 'buddyboss-platform' ); ?></p>
 	<!-- accesslint:endignore -->
@@ -1886,14 +1886,18 @@ function bp_member_type_import_submenu_page() {
 						</h2>
 						<p>
 							<?php
-							printf(
-								/* translators: %s: profile types admin list URL. */
-					__( 'Import your existing <a href="%s">profile types</a> (or "member types" in BuddyPress). You may have created these types <strong>manually via code</strong> or by using a <strong>third party plugin</strong>. Click "Run Migration" below and all registered member types will be imported. Then you can remove the old code or plugin.', 'buddyboss-platform' ),
-								add_query_arg(
-									array(
-										'post_type' => bp_get_member_type_post_type(),
-									),
-									admin_url( 'edit.php' )
+							echo wp_kses_post(
+								sprintf(
+									/* translators: %s: profile types admin list URL. */
+									__( 'Import your existing <a href="%s">profile types</a> (or "member types" in BuddyPress). You may have created these types <strong>manually via code</strong> or by using a <strong>third party plugin</strong>. Click "Run Migration" below and all registered member types will be imported. Then you can remove the old code or plugin.', 'buddyboss-platform' ),
+									esc_url(
+										add_query_arg(
+											array(
+												'post_type' => bp_get_member_type_post_type(),
+											),
+											admin_url( 'edit.php' )
+										)
+									)
 								)
 							);
 							?>
@@ -2167,7 +2171,7 @@ function bp_core_tools_settings_admin_tabs( $active_tab = '' ) {
 		$i = $i + 1;
 	}
 
-	echo $tabs_html;
+	echo wp_kses_post( $tabs_html );
 
 	/**
 	 * Fires after the output of tabs for the admin area.
@@ -2449,7 +2453,7 @@ function bp_core_admin_moderation_tabs( $active_tab = '' ) {
 		$tabs_html .= '<a href="' . esc_url( $tab_data['href'] ) . '" class="' . esc_attr( $tab_class ) . '">' . esc_html( $tab_data['name'] ) . '</a>';
 	}
 
-	echo $tabs_html;
+	echo wp_kses_post( $tabs_html );
 
 	/**
 	 * Fires after the output of tabs for the admin area.

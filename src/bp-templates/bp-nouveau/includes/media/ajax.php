@@ -1553,12 +1553,12 @@ function bp_nouveau_ajax_media_get_media_description() {
 				?>
 				<div class="bp-activity-head">
 					<div class="activity-avatar item-avatar">
-						<a href="<?php echo esc_url( $user_domain ); ?>"><?php echo $avatar; ?></a>
+						<a href="<?php echo esc_url( $user_domain ); ?>"><?php echo wp_kses_post( $avatar ); ?></a>
 					</div>
 
 					<div class="activity-header">
 						<p><a href="<?php echo esc_url( $user_domain ); ?>"><?php echo esc_html( $display_name ); ?></a> <?php esc_html_e( 'uploaded an image', 'buddyboss-platform' ); ?><a href="<?php echo esc_url( $user_domain ); ?>" class="view activity-time-since"></p>
-						<p class="activity-date"><a href="<?php echo esc_url( $user_domain ); ?>"><?php echo $time_since; ?></a></p>
+						<p class="activity-date"><a href="<?php echo esc_url( $user_domain ); ?>"><?php echo esc_html( $time_since ); ?></a></p>
 					</div>
 				</div>
 				<div class="activity-media-description">
@@ -1574,7 +1574,7 @@ function bp_nouveau_ajax_media_get_media_description() {
 
 						<div class="bp-edit-media-activity-description" style="display: none;">
 							<div class="innerWrap">
-								<textarea id="add-activity-description" title="<?php esc_html_e( 'Add a description', 'buddyboss-platform' ); ?>" class="textInput" name="caption_text" placeholder="<?php esc_html_e( 'Add a description', 'buddyboss-platform' ); ?>" role="textbox"><?php echo sanitize_textarea_field( $media->description ); ?></textarea>
+								<textarea id="add-activity-description" title="<?php esc_html_e( 'Add a description', 'buddyboss-platform' ); ?>" class="textInput" name="caption_text" placeholder="<?php esc_html_e( 'Add a description', 'buddyboss-platform' ); ?>" role="textbox"><?php echo esc_textarea( $media->description ); ?></textarea>
 							</div>
 							<div class="in-profile description-new-submit">
 								<input type="hidden" id="bp-attachment-id" value="<?php echo esc_attr( $attachment_id ); ?>">

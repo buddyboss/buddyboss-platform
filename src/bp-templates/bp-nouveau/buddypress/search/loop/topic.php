@@ -48,7 +48,7 @@ $total    = bbp_get_topic_reply_count( $topic_id );
 				<span><?php echo esc_html__( 'By ', 'buddyboss-platform' ) . esc_html( bp_core_get_user_displayname( bbp_get_topic_author_id( $topic_id ) ) ); ?></span>
 				<span class="middot">&middot;</span>
 				<span class="reply-count">
-					<?php /* translators: %d: number of replies. */ printf( _n( '%d reply', '%d replies', $total, 'buddyboss-platform' ), $total ); ?>
+					<?php /* translators: %d: number of replies. */ echo esc_html( sprintf( _n( '%d reply', '%d replies', $total, 'buddyboss-platform' ), $total ) ); ?>
 				</span>
 				<span class="middot">&middot;</span>
 				<span>

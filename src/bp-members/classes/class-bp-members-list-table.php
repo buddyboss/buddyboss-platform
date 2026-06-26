@@ -202,7 +202,7 @@ class BP_Members_List_Table extends WP_Users_List_Table {
 			}
 
 			/* translators: %s: link to edit registration settings. */
-			printf( esc_html__( 'Registration is disabled. %s', 'buddyboss-platform' ), $link );
+			printf( esc_html__( 'Registration is disabled. %s', 'buddyboss-platform' ), wp_kses_post( $link ) );
 		}
 
 	}
@@ -235,7 +235,8 @@ class BP_Members_List_Table extends WP_Users_List_Table {
 			}
 
 			$style = ( ' class="alternate"' == $style ) ? '' : ' class="alternate"';
-			echo "\n\t" . $this->single_row( $signup_object, $style );
+			echo "\n\t";
+			$this->single_row( $signup_object, $style );
 		}
 	}
 
@@ -253,8 +254,8 @@ class BP_Members_List_Table extends WP_Users_List_Table {
 	 * @return void
 	 */
 	public function single_row( $signup_object = null, $style = '', $role = '', $numposts = 0 ) {
-		echo '<tr' . $style . ' id="signup-' . esc_attr( $signup_object->id ) . '">';
-		echo $this->single_row_columns( $signup_object );
+		echo '<tr' . $style . ' id="signup-' . esc_attr( $signup_object->id ) . '">'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $style is internally generated class attribute markup.
+		echo wp_kses_post( $this->single_row_columns( $signup_object ) );
 		echo '</tr>';
 	}
 
@@ -270,7 +271,7 @@ class BP_Members_List_Table extends WP_Users_List_Table {
 		<label class="screen-reader-text" for="signup_<?php echo intval( $signup_object->id ); ?>">
 																 <?php
 																	/* translators: accessibility text */
-																	printf( esc_html__( 'Select user: %s', 'buddyboss-platform' ), $signup_object->user_login );
+																	printf( esc_html__( 'Select user: %s', 'buddyboss-platform' ), esc_html( $signup_object->user_login ) );
 																	?>
 		</label>
 		<input type="checkbox" id="signup_<?php echo intval( $signup_object->id ); ?>" name="allsignups[]" value="<?php echo esc_attr( $signup_object->id ); ?>" />
@@ -317,7 +318,7 @@ class BP_Members_List_Table extends WP_Users_List_Table {
 			bp_get_admin_url( 'users.php' )
 		);
 
-		echo $avatar . sprintf( '<strong><a href="%1$s" class="edit">%2$s</a></strong><br/>', esc_url( $activate_link ), $signup_object->user_login );
+		echo wp_kses_post( $avatar . sprintf( '<strong><a href="%1$s" class="edit">%2$s</a></strong><br/>', esc_url( $activate_link ), esc_html( $signup_object->user_login ) ) );
 
 		$actions = array();
 
@@ -338,7 +339,7 @@ class BP_Members_List_Table extends WP_Users_List_Table {
 		 */
 		$actions = apply_filters( 'bp_members_ms_signup_row_actions', $actions, $signup_object );
 
-		echo $this->row_actions( $actions );
+		echo wp_kses_post( $this->row_actions( $actions ) );
 	}
 
 	/**

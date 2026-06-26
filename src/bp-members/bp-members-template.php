@@ -512,16 +512,16 @@ function bp_get_members_pagination_count() {
 
 	if ( 'active' == $members_template->type ) {
 		/* translators: 1: from number, 2: to number, 3: total member count. */
-		$pag = sprintf( _n( 'Viewing 1 member', 'Viewing %1$s - %2$s of %3$s members', $members_template->total_member_count, 'buddyboss-platform' ), $from_num, $to_num, $total );
+		$pag = sprintf( _n( 'Viewing 1 member', 'Viewing %1$s - %2$s of %3$s members', $members_template->total_member_count, 'buddyboss-platform' ), $from_num, $to_num, $total ); // phpcs:ignore WordPress.WP.I18n.MissingSingularPlaceholder -- Singular keeps its literal form to preserve existing translations (msgid unchanged); upstream BuddyPress pagination string.
 	} elseif ( 'popular' == $members_template->type ) {
 		/* translators: 1: from number, 2: to number, 3: total member count. */
-		$pag = sprintf( _n( 'Viewing 1 member with connections', 'Viewing %1$s - %2$s of %3$s members with connections', $members_template->total_member_count, 'buddyboss-platform' ), $from_num, $to_num, $total );
+		$pag = sprintf( _n( 'Viewing 1 member with connections', 'Viewing %1$s - %2$s of %3$s members with connections', $members_template->total_member_count, 'buddyboss-platform' ), $from_num, $to_num, $total ); // phpcs:ignore WordPress.WP.I18n.MissingSingularPlaceholder -- Singular keeps its literal form to preserve existing translations (msgid unchanged); upstream BuddyPress pagination string.
 	} elseif ( 'online' == $members_template->type ) {
 		/* translators: 1: from number, 2: to number, 3: total online member count. */
-		$pag = sprintf( _n( 'Viewing 1 online member', 'Viewing %1$s - %2$s of %3$s online members', $members_template->total_member_count, 'buddyboss-platform' ), $from_num, $to_num, $total );
+		$pag = sprintf( _n( 'Viewing 1 online member', 'Viewing %1$s - %2$s of %3$s online members', $members_template->total_member_count, 'buddyboss-platform' ), $from_num, $to_num, $total ); // phpcs:ignore WordPress.WP.I18n.MissingSingularPlaceholder -- Singular keeps its literal form to preserve existing translations (msgid unchanged); upstream BuddyPress pagination string.
 	} else {
 		/* translators: 1: from number, 2: to number, 3: total member count. */
-		$pag = sprintf( _n( 'Viewing 1 member', 'Viewing %1$s - %2$s of %3$s members', $members_template->total_member_count, 'buddyboss-platform' ), $from_num, $to_num, $total );
+		$pag = sprintf( _n( 'Viewing 1 member', 'Viewing %1$s - %2$s of %3$s members', $members_template->total_member_count, 'buddyboss-platform' ), $from_num, $to_num, $total ); // phpcs:ignore WordPress.WP.I18n.MissingSingularPlaceholder -- Singular keeps its literal form to preserve existing translations (msgid unchanged); upstream BuddyPress pagination string.
 
 	}
 
@@ -600,7 +600,7 @@ function bp_get_member_user_id() {
  * @param array $classes Array of custom classes.
  */
 function bp_member_class( $classes = array() ) {
-	echo bp_get_member_class( $classes );
+	echo bp_get_member_class( $classes ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- bp_get_member_class() returns escaped class="..." markup.
 }
 	/**
 	 * Return the row class of the current member in the loop.
@@ -787,7 +787,7 @@ function bp_member_avatar( $args = '' ) {
 	 * @param string       $value Formatted HTML <img> element, or raw avatar URL based on $html arg.
 	 * @param array|string $args  See {@link bp_get_member_avatar()}.
 	 */
-	echo apply_filters( 'bp_member_avatar', bp_get_member_avatar( $args ), $args );
+	echo wp_kses_post( apply_filters( 'bp_member_avatar', bp_get_member_avatar( $args ), $args ) );
 }
 	/**
 	 * Get a member's avatar.
@@ -914,7 +914,7 @@ function bp_member_name() {
 	 *
 	 * @param string $value Display name for current member.
 	 */
-	echo apply_filters( 'bp_member_name', bp_get_member_name() );
+	echo esc_html( apply_filters( 'bp_member_name', bp_get_member_name() ) );
 }
 	/**
 	 * Get the display name of the current member in the loop.
@@ -984,7 +984,7 @@ function bp_get_member_name() {
  * @param array $args {@see bp_get_member_last_active()}.
  */
 function bp_member_last_active( $args = array() ) {
-	echo bp_get_member_last_active( $args );
+	echo esc_html( bp_get_member_last_active( $args ) );
 }
 	/**
 	 * Return the current member's last active time.
@@ -1058,7 +1058,7 @@ function bp_get_member_last_active( $args = array() ) {
  * @param array|string $args See {@link bp_get_member_profile_data()}.
  */
 function bp_member_profile_data( $args = '' ) {
-	echo bp_get_member_profile_data( $args );
+	echo wp_kses_post( bp_get_member_profile_data( $args ) );
 }
 	/**
 	 * Get a piece of user profile data.
@@ -1161,7 +1161,7 @@ function bp_get_member_profile_data( $args = '' ) {
  * @param array $args Optional. {@see bp_get_member_registered()}
  */
 function bp_member_registered( $args = array() ) {
-	echo bp_get_member_registered( $args );
+	echo bp_get_member_registered( $args ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- bp_get_member_registered() escapes its return value with esc_attr().
 }
 	/**
 	 * Get the 'registered [x days ago]' string for the current member.
@@ -1217,8 +1217,8 @@ function bp_member_random_profile_data() {
 
 	if ( bp_is_active( 'xprofile' ) ) { ?>
 		<?php $random_data = xprofile_get_random_profile_data( $members_template->member->id, true ); ?>
-			<strong><?php echo wp_filter_kses( $random_data[0]->name ); ?></strong>
-			<?php echo wp_filter_kses( $random_data[0]->value ); ?>
+			<strong><?php echo wp_filter_kses( $random_data[0]->name ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- wp_filter_kses() sanitizes the value. ?></strong>
+			<?php echo wp_filter_kses( $random_data[0]->value ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- wp_filter_kses() sanitizes the value. ?>
 		<?php
 	}
 }
@@ -1271,7 +1271,7 @@ function bp_directory_members_search_form() {
 	 *
 	 * @param string $search_form_html HTML markup for the member search form.
 	 */
-	echo apply_filters( 'bp_directory_members_search_form', $search_form_html );
+	echo wp_kses_post( apply_filters( 'bp_directory_members_search_form', $search_form_html ) );
 }
 
 /**
@@ -1350,13 +1350,13 @@ function bp_get_loggedin_user_nav() {
 		}
 
 		// Echo out the final list item.
-		echo apply_filters_ref_array( 'bp_get_loggedin_user_nav_' . $nav_item->css_id, array( '<li id="li-nav-' . $nav_item->css_id . '" ' . $selected . '><a id="my-' . $nav_item->css_id . '" href="' . $nav_item->link . '">' . $nav_item->name . '</a></li>', &$nav_item ) );
+		echo wp_kses_post( apply_filters_ref_array( 'bp_get_loggedin_user_nav_' . $nav_item->css_id, array( '<li id="li-nav-' . $nav_item->css_id . '" ' . $selected . '><a id="my-' . $nav_item->css_id . '" href="' . $nav_item->link . '">' . $nav_item->name . '</a></li>', &$nav_item ) ) );
 	}
 
 	// Always add a log out list item to the end of the navigation.
 	$logout_link = '<li><a id="wp-logout" href="' . wp_logout_url( bp_get_root_domain() ) . '">' . __( 'Log Out', 'buddyboss-platform' ) . '</a></li>';
 
-	echo apply_filters( 'bp_logout_nav_link', $logout_link );
+	echo wp_kses_post( apply_filters( 'bp_logout_nav_link', $logout_link ) );
 }
 
 /**
@@ -1486,7 +1486,7 @@ function bp_get_displayed_user_nav() {
 		 * @param array  $user_nav_item Array holding parts used to construct tab list item.
 		 *                              Passed by reference.
 		 */
-		echo apply_filters_ref_array( 'bp_get_displayed_user_nav_' . $user_nav_item->css_id, array( '<li id="' . $user_nav_item->css_id . '-personal-li" ' . $selected . '><a id="user-' . $user_nav_item->css_id . '" href="' . $link . '">' . $user_nav_item->name . '</a></li>', &$user_nav_item ) );
+		echo wp_kses_post( apply_filters_ref_array( 'bp_get_displayed_user_nav_' . $user_nav_item->css_id, array( '<li id="' . $user_nav_item->css_id . '-personal-li" ' . $selected . '><a id="user-' . $user_nav_item->css_id . '" href="' . $link . '">' . $user_nav_item->name . '</a></li>', &$user_nav_item ) ) );
 	}
 }
 
@@ -1630,7 +1630,7 @@ function bp_get_displayed_user_avatar( $args = '' ) {
  * @since BuddyPress 1.5.0
  */
 function bp_displayed_user_email() {
-	echo bp_get_displayed_user_email();
+	echo bp_get_displayed_user_email(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- bp_get_displayed_user_email() self-escapes its return value.
 }
 	/**
 	 * Get the email address of the displayed user.
@@ -1677,7 +1677,7 @@ function bp_last_activity( $user_id = 0 ) {
 	 *
 	 * @param string $value Formatted 'active [x days ago]' string.
 	 */
-	echo apply_filters( 'bp_last_activity', bp_get_last_activity( $user_id ) );
+	echo esc_html( apply_filters( 'bp_last_activity', bp_get_last_activity( $user_id ) ) );
 }
 	/**
 	 * Get the "active [x days ago]" string for a user.
@@ -1717,7 +1717,7 @@ function bp_get_last_activity( $user_id = 0 ) {
  * @since BuddyPress 1.2.0
  */
 function bp_user_firstname() {
-	echo bp_get_user_firstname();
+	echo esc_html( bp_get_user_firstname() );
 }
 	/**
 	 * Output the first name of a user.
@@ -1909,7 +1909,7 @@ function bp_user_fullname() {
  * @since BuddyPress 1.0.0
  */
 function bp_loggedin_user_fullname() {
-	echo bp_get_loggedin_user_fullname();
+	echo bp_get_loggedin_user_fullname(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- bp_get_loggedin_user_fullname() self-escapes its return value.
 }
 	/**
 	 * Get the logged-in user's display name.
@@ -2005,7 +2005,7 @@ function bp_get_loggedin_user_username() {
  * @since BuddyPress 2.3.0
  */
 function bp_current_member_type_message() {
-	echo bp_get_current_member_type_message();
+	echo wp_kses_post( bp_get_current_member_type_message() );
 }
 	/**
 	 * Generate the current profile type message.
@@ -2168,7 +2168,7 @@ function bp_get_current_activation_key() {
  * @since BuddyPress 1.1.0
  */
 function bp_signup_username_value() {
-	echo bp_get_signup_username_value();
+	echo esc_attr( bp_get_signup_username_value() );
 }
 	/**
 	 * Get the username submitted during signup.
@@ -2208,7 +2208,7 @@ function bp_get_signup_username_value() {
  * @since BuddyPress 1.1.0
  */
 function bp_signup_email_value() {
-	echo bp_get_signup_email_value();
+	echo esc_attr( bp_get_signup_email_value() );
 }
 	/**
 	 * Get the email address submitted during signup.
@@ -2241,7 +2241,7 @@ function bp_get_signup_email_value() {
  * @since BuddyPress 1.1.0
  */
 function bp_signup_with_blog_value() {
-	echo bp_get_signup_with_blog_value();
+	echo esc_attr( bp_get_signup_with_blog_value() );
 }
 	/**
 	 * Get the 'signup_with_blog' value submitted during signup.
@@ -2272,7 +2272,7 @@ function bp_get_signup_with_blog_value() {
  * @since BuddyPress 1.1.0
  */
 function bp_signup_blog_url_value() {
-	echo bp_get_signup_blog_url_value();
+	echo esc_attr( bp_get_signup_blog_url_value() );
 }
 	/**
 	 * Get the 'signup_blog_url' value submitted at signup.
@@ -2305,7 +2305,7 @@ function bp_get_signup_blog_url_value() {
  * @since BuddyPress 2.1.0
  */
 function bp_signup_subdomain_base() {
-	echo bp_signup_get_subdomain_base();
+	echo esc_attr( bp_signup_get_subdomain_base() );
 }
 	/**
 	 * Return the base URL for subdomain installations of WordPress Multisite.
@@ -2339,7 +2339,7 @@ function bp_signup_get_subdomain_base() {
  * @since BuddyPress 1.1.0
  */
 function bp_signup_blog_title_value() {
-	echo bp_get_signup_blog_title_value();
+	echo esc_attr( bp_get_signup_blog_title_value() );
 }
 	/**
 	 * Get the 'signup_blog_title' value submitted at signup.
@@ -2372,7 +2372,7 @@ function bp_get_signup_blog_title_value() {
  * @since BuddyPress 1.1.0
  */
 function bp_signup_blog_privacy_value() {
-	echo bp_get_signup_blog_privacy_value();
+	echo esc_attr( bp_get_signup_blog_privacy_value() );
 }
 	/**
 	 * Get the 'signup_blog_privacy' value submitted at signup.
@@ -2405,7 +2405,7 @@ function bp_get_signup_blog_privacy_value() {
  * @since BuddyPress 1.1.0
  */
 function bp_signup_avatar_dir_value() {
-	echo bp_get_signup_avatar_dir_value();
+	echo esc_attr( bp_get_signup_avatar_dir_value() );
 }
 	/**
 	 * Get the avatar dir used during signup.
@@ -2448,7 +2448,7 @@ function bp_get_signup_avatar_dir_value() {
  * @since BuddyPress 1.1.0
  */
 function bp_current_signup_step() {
-	echo bp_get_current_signup_step();
+	echo esc_html( bp_get_current_signup_step() );
 }
 	/**
 	 * Get the current signup step.
@@ -2564,7 +2564,7 @@ function bp_get_signup_avatar( $args = '' ) {
  * @todo Remove this function. Echoing a bool is pointless.
  */
 function bp_signup_allowed() {
-	echo bp_get_signup_allowed();
+	echo esc_html( bp_get_signup_allowed() );
 }
 	/**
 	 * Is user signup allowed?
@@ -2774,7 +2774,7 @@ function bp_get_add_switch_button( $user_id, $button_args = array() ) {
  * @since BuddyBoss 1.1.6
  */
 function bp_signup_confirm_email_value() {
-	echo bp_get_signup_confirm_email_value();
+	echo esc_attr( bp_get_signup_confirm_email_value() );
 }
 	/**
 	 * Get the confirm email address submitted during signup.
@@ -3050,7 +3050,7 @@ function bb_get_member_last_activity_time( $args = array() ) {
 
 	// Backwards compatibility for anyone forcing a 'true' active_format.
 	if ( true === $r['active_format'] ) {
-		$r['active_format'] = __( '%s', 'buddyboss-platform' );
+		$r['active_format'] = '%s';
 	}
 
 	// Member has logged in at least one time.

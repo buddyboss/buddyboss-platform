@@ -123,7 +123,7 @@ class BP_XProfile_Field_Type_Datebox extends BP_XProfile_Field_Type {
 																		esc_html_e( 'Day', 'buddyboss-platform' );
 																		?>
 				</label>
-				<select <?php echo $this->get_edit_field_html_elements( $day_r ); ?>>
+				<select <?php echo $this->get_edit_field_html_elements( $day_r ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- bp_get_form_field_attributes() esc_attr's values and sanitize_key's attribute names. ?>>
 					<?php
 					bp_the_profile_field_options(
 						array(
@@ -139,7 +139,7 @@ class BP_XProfile_Field_Type_Datebox extends BP_XProfile_Field_Type {
 																		esc_html_e( 'Month', 'buddyboss-platform' );
 																		?>
 				</label>
-				<select <?php echo $this->get_edit_field_html_elements( $month_r ); ?>>
+				<select <?php echo $this->get_edit_field_html_elements( $month_r ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- bp_get_form_field_attributes() esc_attr's values and sanitize_key's attribute names. ?>>
 					<?php
 					bp_the_profile_field_options(
 						array(
@@ -155,7 +155,7 @@ class BP_XProfile_Field_Type_Datebox extends BP_XProfile_Field_Type {
 																		esc_html_e( 'Year', 'buddyboss-platform' );
 																		?>
 				</label>
-				<select <?php echo $this->get_edit_field_html_elements( $year_r ); ?>>
+				<select <?php echo $this->get_edit_field_html_elements( $year_r ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- bp_get_form_field_attributes() esc_attr's values and sanitize_key's attribute names. ?>>
 					<?php
 					bp_the_profile_field_options(
 						array(
@@ -299,7 +299,7 @@ class BP_XProfile_Field_Type_Datebox extends BP_XProfile_Field_Type {
 		 * @param int    $id    ID of the field object being rendered.
 		 * @param string $date  Current date.
 		 */
-		echo apply_filters( 'bp_get_the_profile_field_datebox', $html, $args['type'], $day, $month, $year, $this->field_obj->id, $date );
+		echo apply_filters( 'bp_get_the_profile_field_datebox', $html, $args['type'], $day, $month, $year, $this->field_obj->id, $date ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- field-escaped <select>/<option> date markup; wp_kses_post would strip form controls.
 	}
 
 	/**
@@ -343,7 +343,7 @@ class BP_XProfile_Field_Type_Datebox extends BP_XProfile_Field_Type {
 																esc_html_e( 'Day', 'buddyboss-platform' );
 																?>
 		</label>
-		<select <?php echo $this->get_edit_field_html_elements( $day_r ); ?>>
+		<select <?php echo $this->get_edit_field_html_elements( $day_r ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- bp_get_form_field_attributes() esc_attr's values and sanitize_key's attribute names. ?>>
 			<?php bp_the_profile_field_options( array( 'type' => 'day' ) ); ?>
 		</select>
 
@@ -352,7 +352,7 @@ class BP_XProfile_Field_Type_Datebox extends BP_XProfile_Field_Type {
 																esc_html_e( 'Month', 'buddyboss-platform' );
 																?>
 		</label>
-		<select <?php echo $this->get_edit_field_html_elements( $month_r ); ?>>
+		<select <?php echo $this->get_edit_field_html_elements( $month_r ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- bp_get_form_field_attributes() esc_attr's values and sanitize_key's attribute names. ?>>
 			<?php bp_the_profile_field_options( array( 'type' => 'month' ) ); ?>
 		</select>
 
@@ -361,7 +361,7 @@ class BP_XProfile_Field_Type_Datebox extends BP_XProfile_Field_Type {
 																esc_html_e( 'Year', 'buddyboss-platform' );
 																?>
 		</label>
-		<select <?php echo $this->get_edit_field_html_elements( $year_r ); ?>>
+		<select <?php echo $this->get_edit_field_html_elements( $year_r ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- bp_get_form_field_attributes() esc_attr's values and sanitize_key's attribute names. ?>>
 			<?php bp_the_profile_field_options( array( 'type' => 'year' ) ); ?>
 		</select>
 

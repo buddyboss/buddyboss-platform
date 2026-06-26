@@ -17,7 +17,7 @@ defined( 'ABSPATH' ) || exit;
  * @since BuddyPress 1.6.0
  */
 function bp_version() {
-	echo bp_get_version();
+	echo esc_html( bp_get_version() );
 }
 	/**
 	 * Return the BuddyPress version.
@@ -36,7 +36,7 @@ function bp_get_version() {
  * @since BuddyPress 1.6.0
  */
 function bp_db_version() {
-	echo bp_get_db_version();
+	echo esc_html( bp_get_db_version() );
 }
 	/**
 	 * Return the BuddyPress database version.
@@ -55,7 +55,7 @@ function bp_get_db_version() {
  * @since BuddyPress 1.6.0
  */
 function bp_db_version_raw() {
-	echo bp_get_db_version_raw();
+	echo esc_html( bp_get_db_version_raw() );
 }
 	/**
 	 * Return the BuddyPress database version.
@@ -1607,7 +1607,7 @@ function bp_core_render_message() {
 
 		<div id="message" class="bp-template-notice <?php echo esc_attr( $type ); ?>">
 
-			<?php echo $content; ?>
+			<?php echo wp_kses_post( $content ); ?>
 
 		</div>
 
@@ -5602,7 +5602,7 @@ function bp_core_remove_temp_directory( $directory = '' ) {
 				if ( 'dir' === filetype( $directory . '/' . $object ) ) {
 					bp_core_remove_temp_directory( $directory . '/' . $object );
 				} else {
-					unlink( $directory . '/' . $object );
+					wp_delete_file( $directory . '/' . $object );
 				}
 			}
 		}

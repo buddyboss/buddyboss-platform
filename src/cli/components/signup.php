@@ -329,7 +329,7 @@ class Signup extends BuddypressCommand {
 		}
 
 		if ( 'ids' === $formatter->format ) {
-			echo implode( ' ', $signups['signups'] ); // WPCS: XSS ok.
+			echo esc_html( implode( ' ', $signups['signups'] ) );
 		} elseif ( 'count' === $formatter->format ) {
 			WP_CLI::line( $signups['total'] );
 		} else {

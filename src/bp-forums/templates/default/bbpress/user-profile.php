@@ -23,9 +23,9 @@ defined( 'ABSPATH' ) || exit;
 
 			<?php endif; ?>
 
-			<p class="bbp-user-forum-role"><?php /* translators: %s: forum role name. */ printf( esc_html__( 'Forum Role: %s', 'buddyboss-platform' ), bbp_get_user_display_role() ); ?></p>
-			<p class="bbp-user-topic-count"><?php /* translators: %s: number of discussions started. */ printf( esc_html__( 'Discussions Started: %s', 'buddyboss-platform' ), bbp_get_user_topic_count_raw() ); ?></p>
-			<p class="bbp-user-reply-count"><?php /* translators: %s: number of replies created. */ printf( esc_html__( 'Replies Created: %s', 'buddyboss-platform' ), bbp_get_user_reply_count_raw() ); ?></p>
+			<p class="bbp-user-forum-role"><?php /* translators: %s: forum role name. */ printf( esc_html__( 'Forum Role: %s', 'buddyboss-platform' ), bbp_get_user_display_role() ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- bbp_get_user_display_role() is self-escaping. ?></p>
+			<p class="bbp-user-topic-count"><?php /* translators: %s: number of discussions started. */ printf( esc_html__( 'Discussions Started: %s', 'buddyboss-platform' ), esc_html( bbp_get_user_topic_count_raw() ) ); ?></p>
+			<p class="bbp-user-reply-count"><?php /* translators: %s: number of replies created. */ printf( esc_html__( 'Replies Created: %s', 'buddyboss-platform' ), esc_html( bbp_get_user_reply_count_raw() ) ); ?></p>
 		</div>
 	</div><!-- #bbp-author-topics-started -->
 

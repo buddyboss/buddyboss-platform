@@ -832,7 +832,7 @@ function bp_core_process_spammer_status( $user_id, $status, $do_wp_cleanup = tru
 
 		// Finally, mark this user as a spammer.
 		if ( is_multisite() ) {
-			update_user_status( $user_id, 'spam', $is_spam );
+			update_user_status( $user_id, 'spam', $is_spam ); // phpcs:ignore WordPress.WP.DeprecatedFunctions.update_user_statusFound -- No non-deprecated API updates the multisite users.spam column; wp_update_user() does not handle the spam flag.
 		}
 	}
 
@@ -3642,8 +3642,8 @@ function bp_member_type_directory() {
 			$type_id = 0;
 		}
 		?>
-		<li id="members-<?php echo $type_id; ?>">
-			<a href="<?php echo bp_member_type_directory_permalink( $type_name ); ?>"><?php printf( '%s <span>%s</span>', $member_type_name, $members_count ); // @todo no variables in the text domain please ?></a>
+		<li id="members-<?php echo esc_attr( $type_id ); ?>">
+			<a href="<?php echo esc_url( bp_member_type_directory_permalink( $type_name ) ); ?>"><?php printf( '%s <span>%s</span>', esc_html( $member_type_name ), esc_html( $members_count ) ); // @todo no variables in the text domain please ?></a>
 		</li>
 		<?php
 	}
@@ -4540,7 +4540,7 @@ function bp_members_directory_page_content() {
 
 	if ( ! empty( $page_ids['members'] ) ) {
 		$members_page_content = get_post_field( 'post_content', $page_ids['members'] );
-		echo apply_filters( 'the_content', $members_page_content );
+		echo apply_filters( 'the_content', $members_page_content ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Output of the 'the_content' filter (WP post content pipeline); escaping would corrupt valid markup/embeds.
 	}
 }
 add_action( 'bp_before_directory_members_page', 'bp_members_directory_page_content' );
@@ -4556,7 +4556,7 @@ function bp_activate_page_content() {
 
 	if ( ! empty( $page_ids['activate'] ) ) {
 		$activate_page_content = get_post_field( 'post_content', $page_ids['activate'] );
-		echo apply_filters( 'the_content', $activate_page_content );
+		echo apply_filters( 'the_content', $activate_page_content ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Output of the 'the_content' filter (WP post content pipeline); escaping would corrupt valid markup/embeds.
 	}
 }
 add_action( 'bp_before_activation_page', 'bp_activate_page_content' );
@@ -4572,7 +4572,7 @@ function bp_register_page_content() {
 
 	if ( ! empty( $page_ids['register'] ) ) {
 		$register_page_content = get_post_field( 'post_content', $page_ids['register'] );
-		echo apply_filters( 'the_content', $register_page_content );
+		echo apply_filters( 'the_content', $register_page_content ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Output of the 'the_content' filter (WP post content pipeline); escaping would corrupt valid markup/embeds.
 	}
 }
 add_action( 'bp_before_register_page', 'bp_register_page_content' );

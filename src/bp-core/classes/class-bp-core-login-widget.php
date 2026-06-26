@@ -58,9 +58,9 @@ class BP_Core_Login_Widget extends WP_Widget {
 		 */
 		$title = apply_filters( 'widget_title', $title, $instance, $this->id_base );
 
-		echo $args['before_widget'];
+		echo wp_kses_post( $args['before_widget'] );
 
-		echo $args['before_title'] . esc_html( $title ) . $args['after_title']; ?>
+		echo wp_kses_post( $args['before_title'] ) . esc_html( $title ) . wp_kses_post( $args['after_title'] ); ?>
 
 		<?php if ( is_user_logged_in() ) : ?>
 
@@ -74,7 +74,7 @@ class BP_Core_Login_Widget extends WP_Widget {
 			?>
 
 			<div class="bp-login-widget-user-avatar">
-				<a href="<?php echo bp_loggedin_user_domain(); ?>">
+				<a href="<?php echo esc_url( bp_loggedin_user_domain() ); ?>">
 					<?php bp_loggedin_user_avatar( 'type=thumb&width=50&height=50' ); ?>
 				</a>
 			</div>
@@ -153,7 +153,7 @@ class BP_Core_Login_Widget extends WP_Widget {
 			<?php
 		endif;
 
-		echo $args['after_widget'];
+		echo wp_kses_post( $args['after_widget'] );
 	}
 
 	/**

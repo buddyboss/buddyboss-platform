@@ -889,7 +889,7 @@ function bbp_edit_reply_handler( $action = '' ) {
 
 	} else {
 		$append_error = ( is_wp_error( $reply_id ) && $reply_id->get_error_message() ) ? $reply_id->get_error_message() . ' ' : '';
-		bbp_add_error( 'bbp_reply_error', __( '<strong>ERROR</strong>: The following problem(s) have been found with your reply:' . $append_error . 'Please try again.', 'buddyboss-platform' ) );
+		bbp_add_error( 'bbp_reply_error', sprintf( /* translators: %s: additional error details (may be empty). */ __( '<strong>ERROR</strong>: The following problem(s) have been found with your reply:%sPlease try again.', 'buddyboss-platform' ), $append_error ) );
 	}
 }
 
@@ -2324,7 +2324,7 @@ function bbp_display_replies_feed_rss2( $replies_query = array() ) {
 
 	// Adjust the title based on context
 	if ( bbp_is_single_topic() && bbp_user_can_view_forum( array( 'forum_id' => bbp_get_topic_forum_id() ) ) ) {
-		$title = apply_filters( 'wp_title_rss', get_wp_title_rss( ' &#187; ' ) );
+		$title = apply_filters( 'wp_title_rss', get_wp_title_rss() );
 	} elseif ( ! bbp_show_lead_topic() ) {
 		$title = ' &#187; ' . __( 'All Posts', 'buddyboss-platform' );
 	} else {
@@ -2334,7 +2334,7 @@ function bbp_display_replies_feed_rss2( $replies_query = array() ) {
 	// Display the feed
 	header( 'Content-Type: ' . feed_content_type( 'rss2' ) . '; charset=' . get_option( 'blog_charset' ), true );
 	header( 'Status: 200 OK' );
-	echo '<?xml version="1.0" encoding="' . get_option( 'blog_charset' ) . '"?' . '>'; ?>
+	echo '<?xml version="1.0" encoding="' . esc_attr( get_option( 'blog_charset' ) ) . '"?' . '>'; ?>
 
 	<rss version="2.0"
 		xmlns:content="http://purl.org/rss/1.0/modules/content/"
@@ -2349,7 +2349,7 @@ function bbp_display_replies_feed_rss2( $replies_query = array() ) {
 		<title>
 		<?php
 		bloginfo_rss( 'name' );
-		echo $title;
+		echo wp_kses_post( $title );
 		?>
 		</title>
 		<atom:link href="<?php self_link(); ?>" rel="self" type="application/rss+xml" />

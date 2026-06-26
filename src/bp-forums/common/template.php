@@ -1452,7 +1452,7 @@ function bbp_redirect_to_field( $redirect_to = '' ) {
 	$redirect_to    = remove_query_arg( 'loggedout', $redirect_to );
 	$redirect_field = '<input type="hidden" id="bbp_redirect_to" name="redirect_to" value="' . esc_url( $redirect_to ) . '" />';
 
-	echo apply_filters( 'bbp_redirect_to_field', $redirect_field, $redirect_to );
+	echo apply_filters( 'bbp_redirect_to_field', $redirect_field, $redirect_to ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- hidden input markup with esc_url()-escaped value; contains <input> which wp_kses_post would strip.
 }
 
 /**
@@ -1469,7 +1469,7 @@ function bbp_redirect_to_field( $redirect_to = '' ) {
  * @uses bbp_get_sanitize_val() To sanitize the value.
  */
 function bbp_sanitize_val( $request = '', $input_type = 'text' ) {
-	echo bbp_get_sanitize_val( $request, $input_type );
+	echo bbp_get_sanitize_val( $request, $input_type ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- bbp_get_sanitize_val() returns esc_attr()-escaped value.
 }
 	/**
 	 * Return sanitized $_REQUEST value.
@@ -1529,7 +1529,7 @@ function bbp_get_sanitize_val( $request = '', $input_type = 'text' ) {
  *                             increment
  */
 function bbp_tab_index( $auto_increment = true ) {
-	echo bbp_get_tab_index( $auto_increment );
+	echo esc_attr( bbp_get_tab_index( $auto_increment ) );
 }
 
 	/**
@@ -1790,7 +1790,7 @@ function bbp_get_dropdown( $args = '' ) {
 function bbp_reply_attributes_meta_box_discussion_reply_title( $title, $post ) {
 
 	if ( bbp_get_topic_post_type() === get_post_type( $post->ID ) || bbp_get_reply_post_type() === get_post_type( $post->ID ) ) {
-		$title = get_the_date( 'm/d/y', $post->ID ) . ' - ' . esc_html__( wp_trim_words( wp_strip_all_tags( $post->post_content ), 8, '...' ), 'buddyboss-platform' );
+		$title = get_the_date( 'm/d/y', $post->ID ) . ' - ' . esc_html( wp_trim_words( wp_strip_all_tags( $post->post_content ), 8, '...' ) );
 	}
 
 	return apply_filters( 'bbp_reply_attributes_meta_box_discussion_reply_title', $title, $post );
@@ -2111,7 +2111,7 @@ function bbp_get_the_content( $args = array() ) {
 
 	// Output something before the editor
 	if ( ! empty( $r['before'] ) ) {
-		echo $r['before'];
+		echo wp_kses_post( $r['before'] );
 	}
 
 	// Use TinyMCE if available
@@ -2166,7 +2166,7 @@ function bbp_get_the_content( $args = array() ) {
 
 		// Output something after the editor
 		if ( ! empty( $r['after'] ) ) {
-			echo $r['after'];
+			echo wp_kses_post( $r['after'] );
 		}
 
 		// Put the output into a usable variable
@@ -2449,7 +2449,7 @@ function bbp_reset_query_name() {
  * @uses bbp_get_breadcrumb() To get the breadcrumb
  */
 function bbp_title_breadcrumb( $args = array() ) {
-	echo bbp_get_breadcrumb( $args );
+	echo wp_kses_post( bbp_get_breadcrumb( $args ) );
 }
 
 /**
@@ -2464,7 +2464,7 @@ function bbp_title_breadcrumb( $args = array() ) {
  * @param string $sep          Separator. Defaults to '&larr;'.
  */
 function bbp_breadcrumb( $args = array() ) {
-	echo bbp_get_breadcrumb( $args );
+	echo wp_kses_post( bbp_get_breadcrumb( $args ) );
 }
 	/**
 	 * Return a breadcrumb ( forum -> topic -> reply )
@@ -2766,7 +2766,7 @@ function bbp_get_breadcrumb( $args = array() ) {
  * @uses bbp_get_allowed_tags()
  */
 function bbp_allowed_tags() {
-	echo bbp_get_allowed_tags();
+	echo bbp_get_allowed_tags(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- bbp_get_allowed_tags() returns htmlentities()-encoded text; esc_html would double-encode.
 }
 
 /**
@@ -2847,7 +2847,7 @@ function bbp_template_notices() {
 		<div class="bp-feedback error">
 			<span class="bp-icon" aria-hidden="true"></span>
 			<p>
-				<?php echo implode( "</p>\n<p>", $errors ); ?>
+				<?php echo wp_kses_post( implode( "</p>\n<p>", $errors ) ); ?>
 			</p>
 		</div>
 
@@ -2861,7 +2861,7 @@ function bbp_template_notices() {
 		<div class="bp-feedback info">
 			<span class="bp-icon" aria-hidden="true"></span>
 			<p>
-				<?php echo implode( "</p>\n<p>", $messages ); ?>
+				<?php echo wp_kses_post( implode( "</p>\n<p>", $messages ) ); ?>
 			</p>
 		</div>
 
@@ -3135,7 +3135,7 @@ function bb_forums_edit_link_preview_field( $post_id ) {
 	if ( isset( $link_data['url'] ) && ! empty( $link_data['url'] ) ) {
 		$link_data_string = htmlentities( wp_json_encode( $link_data ), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 );
 		?>
-		<input type="hidden" name="bb_link_url" id="bb_link_url" value="<?php echo $link_data_string; ?>"/>
+		<input type="hidden" name="bb_link_url" id="bb_link_url" value="<?php echo $link_data_string; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- already entity-encoded via htmlentities() with ENT_QUOTES for attribute output. ?>"/>
 		<?php
 	}
 }

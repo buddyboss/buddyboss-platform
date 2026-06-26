@@ -1153,15 +1153,15 @@ function bb_admin_xprofile_add_repeater_set() {
 							<p class="field-visibility-settings-<?php echo $can_change_visibility ? 'toggle' : 'notoggle'; ?>" id="field-visibility-settings-toggle-<?php bp_the_profile_field_input_name(); ?>">
 									<span id="<?php echo esc_attr( $field->id ); ?>-2">
 									<?php
-									/* translators: %s: field visibility level label. */
 									printf(
+										/* translators: %s: field visibility level label. */
 										esc_html__( 'This field can be seen by: %s', 'buddyboss-platform' ),
 										'<span class="current-visibility-level">' . esc_html( bp_get_the_profile_field_visibility_level_label() ) . '</span>'
 									);
 									?>
 									</span>
 								<?php if ( $can_change_visibility ) : ?>
-									<button type="button" class="button visibility-toggle-link" aria-describedby="<?php echo bp_the_profile_field_input_name(); ?>-2" aria-expanded="false"><?php esc_html_e( 'Change', 'buddyboss-platform' ); ?></button>
+									<button type="button" class="button visibility-toggle-link" aria-describedby="<?php echo esc_attr( bp_get_the_profile_field_input_name() ); ?>-2" aria-expanded="false"><?php esc_html_e( 'Change', 'buddyboss-platform' ); ?></button>
 								<?php endif; ?>
 							</p>
 							<?php if ( $can_change_visibility ) : ?>

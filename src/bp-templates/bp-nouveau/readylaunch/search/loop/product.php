@@ -51,7 +51,7 @@ $product_thumb = get_the_post_thumbnail_url();
 				</span>
 				<span class="middot">&middot;</span>
 				<div class="item-meta-amount">
-					<?php echo wc_price( wc_get_price_to_display( $product ) ) . $product->get_price_suffix(); ?>
+					<?php echo wp_kses_post( wc_price( wc_get_price_to_display( $product ) ) . $product->get_price_suffix() ); ?>
 				</div>
 			</span>
 		</div>

@@ -280,8 +280,8 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 
 			$hooks[] = add_submenu_page(
 				$this->settings_page,
-				__( '', 'buddyboss-platform' ),
-				__( '', 'buddyboss-platform' ),
+				'',
+				'',
 				$this->capability,
 				'bp-plugin-separator-notice',
 				''
@@ -499,8 +499,8 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 
 			$hooks[] = add_submenu_page(
 				$this->settings_page,
-				__( '', 'buddyboss-platform' ),
-				__( '', 'buddyboss-platform' ),
+				'',
+				'',
 				$this->capability,
 				'bp-plugin-separator-notice',
 				''

@@ -20,7 +20,7 @@ $no_results_class = ! BP_Search::instance()->has_search_results() ?  'bp-search-
 
 <div class="bp-search-page buddypress-wrap bp-dir-hori-nav">
 
-	<div class="bp-search-results-wrapper dir-form <?php echo $no_results_class; ?>">
+	<div class="bp-search-results-wrapper dir-form <?php echo esc_attr( $no_results_class ); ?>">
 
 		<nav class="search_filters item-list-tabs main-navs dir-navs bp-navs no-ajax" role="navigation">
 			<ul class="component-navigation search-nav">

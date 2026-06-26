@@ -603,7 +603,7 @@ function bbp_edit_forum_handler( $action = '' ) {
 
 	} else {
 		$append_error = ( is_wp_error( $forum_id ) && $forum_id->get_error_message() ) ? $forum_id->get_error_message() . ' ' : '';
-		bbp_add_error( 'bbp_forum_error', __( '<strong>ERROR</strong>: The following problem(s) have been found with your forum:' . $append_error . 'Please try again.', 'buddyboss-platform' ) );
+		bbp_add_error( 'bbp_forum_error', sprintf( /* translators: %s: additional error details (may be empty). */ __( '<strong>ERROR</strong>: The following problem(s) have been found with your forum:%sPlease try again.', 'buddyboss-platform' ), $append_error ) );
 	}
 }
 

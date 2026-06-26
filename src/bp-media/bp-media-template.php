@@ -329,7 +329,8 @@ function bp_get_media_pagination_count() {
 	$to_num    = bp_core_number_format( ( $start_num + ( $media_template->pag_num - 1 ) > $media_template->total_media_count ) ? $media_template->total_media_count : $start_num + ( $media_template->pag_num - 1 ) );
 	$total     = bp_core_number_format( $media_template->total_media_count );
 
-	$message = sprintf( _n( 'Viewing 1 item', 'Viewing %1$s - %2$s of %3$s items', $media_template->total_media_count, 'buddyboss-platform' ), $from_num, $to_num, $total );
+	// translators: 1: starting item number, 2: ending item number, 3: total number of items.
+	$message = sprintf( _n( 'Viewing 1 item', 'Viewing %1$s - %2$s of %3$s items', $media_template->total_media_count, 'buddyboss-platform' ), $from_num, $to_num, $total ); // phpcs:ignore WordPress.WP.I18n.MissingSingularPlaceholder -- Singular keeps its literal form to preserve existing translations (msgid unchanged); upstream BuddyPress pagination string.
 
 	return $message;
 }
@@ -436,7 +437,7 @@ function bp_get_media_count() {
  * @since BuddyBoss 1.0.0
  */
 function bp_media_per_page() {
-	echo bp_get_media_per_page();
+	echo esc_html( bp_get_media_per_page() );
 }
 
 /**
@@ -560,7 +561,7 @@ function bp_get_media_user_id() {
  * @since BuddyBoss 1.5.3
  */
 function bp_media_author() {
-	echo bp_get_media_author();
+	echo esc_html( bp_get_media_author() );
 }
 
 /**
@@ -811,7 +812,7 @@ function bp_get_media_activity_id() {
  * @since BuddyBoss 1.0.0
  */
 function bp_media_date_created() {
-	echo bp_get_media_date_created();
+	echo esc_html( bp_get_media_date_created() );
 }
 
 /**
@@ -842,7 +843,7 @@ function bp_get_media_date_created() {
  * @since BuddyBoss 1.0.0
  */
 function bp_media_attachment_image_thumbnail() {
-	echo bp_get_media_attachment_image_thumbnail();
+	echo esc_url( bp_get_media_attachment_image_thumbnail() );
 }
 
 /**
@@ -873,7 +874,7 @@ function bp_get_media_attachment_image_thumbnail() {
  * @since BuddyBoss 1.0.0
  */
 function bp_media_attachment_image_activity_thumbnail() {
-	echo bp_get_media_attachment_image_activity_thumbnail();
+	echo esc_url( bp_get_media_attachment_image_activity_thumbnail() );
 }
 
 /**
@@ -962,7 +963,7 @@ function bp_get_media_directory_permalink() {
  * @since BuddyBoss 1.2.3
  */
 function bp_media_privacy() {
-	echo bp_get_media_privacy();
+	echo esc_html( bp_get_media_privacy() );
 }
 
 /**
@@ -993,7 +994,7 @@ function bp_get_media_privacy() {
  * @since BuddyBoss 1.2.3
  */
 function bp_media_visibility() {
-	echo bp_get_media_visibility();
+	echo esc_html( bp_get_media_visibility() );
 }
 
 /**
@@ -1331,7 +1332,8 @@ function bp_get_album_pagination_count() {
 	$to_num    = bp_core_number_format( ( $start_num + ( $media_album_template->pag_num - 1 ) > $media_album_template->total_album_count ) ? $media_album_template->total_album_count : $start_num + ( $media_album_template->pag_num - 1 ) );
 	$total     = bp_core_number_format( $media_album_template->total_album_count );
 
-	$message = sprintf( _n( 'Viewing 1 item', 'Viewing %1$s - %2$s of %3$s items', $media_album_template->total_media_count, 'buddyboss-platform' ), $from_num, $to_num, $total );
+	// translators: 1: starting item number, 2: ending item number, 3: total number of items.
+	$message = sprintf( _n( 'Viewing 1 item', 'Viewing %1$s - %2$s of %3$s items', $media_album_template->total_media_count, 'buddyboss-platform' ), $from_num, $to_num, $total ); // phpcs:ignore WordPress.WP.I18n.MissingSingularPlaceholder -- Singular keeps its literal form to preserve existing translations (msgid unchanged); upstream BuddyPress pagination string.
 
 	return $message;
 }
@@ -1438,7 +1440,7 @@ function bp_get_album_count() {
  * @since BuddyBoss 1.0.0
  */
 function bp_album_per_page() {
-	echo bp_get_album_per_page();
+	echo esc_html( bp_get_album_per_page() );
 }
 
 /**
@@ -1689,7 +1691,7 @@ function bp_get_album_user_id() {
  * @since BuddyBoss 1.5.3
  */
 function bp_album_author() {
-	echo bp_get_album_author();
+	echo esc_html( bp_get_album_author() );
 }
 
 /**
@@ -1755,7 +1757,7 @@ function bp_get_album_group_id() {
  * @since BuddyBoss 1.2.5
  */
 function bp_album_privacy() {
-	echo bp_get_album_privacy();
+	echo esc_html( bp_get_album_privacy() );
 }
 
 /**
@@ -1764,7 +1766,7 @@ function bp_album_privacy() {
  * @since BuddyBoss 1.2.5
  */
 function bp_album_visibility() {
-	echo bp_get_album_visibility();
+	echo esc_html( bp_get_album_visibility() );
 }
 
 /**
@@ -1915,7 +1917,7 @@ function bp_album_user_can_edit( $album = false ) {
  * @since BuddyBoss 1.7.0
  */
 function bb_media_photos_directory_image_thumbnail() {
-	echo bb_get_media_photos_directory_image_thumbnail();
+	echo esc_url( bb_get_media_photos_directory_image_thumbnail() );
 }
 
 /**
@@ -1946,7 +1948,7 @@ function bb_get_media_photos_directory_image_thumbnail() {
  * @since BuddyBoss 1.7.0
  */
 function bb_media_photos_theatre_popup_image() {
-	echo bb_get_media_photos_theatre_popup_image();
+	echo esc_url( bb_get_media_photos_theatre_popup_image() );
 }
 
 /**

@@ -318,7 +318,7 @@ class BP_Attachment_Avatar extends BP_Attachment {
 		}
 
 		// Remove the original.
-		@unlink( $absolute_path );
+		@wp_delete_file( $absolute_path );
 
 		// Return the full and thumb cropped avatars.
 		return $avatar_types;

@@ -340,7 +340,7 @@ function bp_get_document_pagination_count() {
 	$total     = bp_core_number_format( $document_template->total_document_count );
 
 	/* translators: 1: first document number on this page, 2: last document number on this page, 3: total number of documents. */
-	$message = sprintf( _n( 'Viewing 1 item', 'Viewing %1$s - %2$s of %3$s items', $document_template->total_document_count, 'buddyboss-platform' ), $from_num, $to_num, $total );
+	$message = sprintf( _n( 'Viewing 1 item', 'Viewing %1$s - %2$s of %3$s items', $document_template->total_document_count, 'buddyboss-platform' ), $from_num, $to_num, $total ); // phpcs:ignore WordPress.WP.I18n.MissingSingularPlaceholder -- Singular keeps its literal form to preserve existing translations (msgid unchanged); upstream BuddyPress pagination string.
 
 	return $message;
 }
@@ -447,7 +447,7 @@ function bp_get_document_count() {
  * @since BuddyBoss 1.4.0
  */
 function bp_document_per_page() {
-	echo bp_get_document_per_page();
+	echo esc_html( bp_get_document_per_page() );
 }
 
 /**
@@ -969,7 +969,7 @@ function bp_get_document_activity_id() {
  * @since BuddyBoss 1.4.0
  */
 function bp_document_date_created() {
-	echo bp_get_document_date_created();
+	echo esc_html( bp_get_document_date_created() );
 }
 
 /**
@@ -1002,7 +1002,7 @@ function bp_get_document_date_created() {
  * @since BuddyBoss 1.4.0
  */
 function bp_document_attachment_image_thumbnail() {
-	echo bp_get_document_attachment_image_thumbnail();
+	echo esc_url( bp_get_document_attachment_image_thumbnail() );
 }
 
 /**
@@ -1040,7 +1040,7 @@ function bp_get_document_attachment_image_thumbnail() {
  * @since BuddyBoss 1.4.0
  */
 function bp_document_attachment_image_activity_thumbnail() {
-	echo bp_get_document_attachment_image_activity_thumbnail();
+	echo esc_url( bp_get_document_attachment_image_activity_thumbnail() );
 }
 
 /**
@@ -1086,7 +1086,7 @@ function bp_get_document_attachment_image_activity_thumbnail() {
  * @since BuddyBoss 1.4.0
  */
 function bp_document_attachment_image() {
-	echo bp_get_document_attachment_image();
+	echo esc_url( bp_get_document_attachment_image() );
 }
 
 /**
@@ -1437,7 +1437,7 @@ function bp_get_folder_pagination_count() {
 	$total     = bp_core_number_format( $document_folder_template->total_folder_count );
 
 	/* translators: 1: first folder number on this page, 2: last folder number on this page, 3: total number of folders. */
-	$message = sprintf( _n( 'Viewing 1 item', 'Viewing %1$s - %2$s of %3$s items', $document_folder_template->total_document_count, 'buddyboss-platform' ), $from_num, $to_num, $total );
+	$message = sprintf( _n( 'Viewing 1 item', 'Viewing %1$s - %2$s of %3$s items', $document_folder_template->total_document_count, 'buddyboss-platform' ), $from_num, $to_num, $total ); // phpcs:ignore WordPress.WP.I18n.MissingSingularPlaceholder -- Singular keeps its literal form to preserve existing translations (msgid unchanged); upstream BuddyPress pagination string.
 
 	return $message;
 }
@@ -1544,7 +1544,7 @@ function bp_get_folder_count() {
  * @since BuddyBoss 1.4.0
  */
 function bp_folder_per_page() {
-	echo bp_get_folder_per_page();
+	echo esc_html( bp_get_folder_per_page() );
 }
 
 /**
@@ -1976,7 +1976,7 @@ function bp_get_document_name() {
  * @since BuddyBoss 1.4.0
  */
 function bp_document_author() {
-	echo bp_get_document_author();
+	echo esc_html( bp_get_document_author() );
 }
 
 /**
@@ -2014,7 +2014,7 @@ function bp_get_document_author() {
  * @since BuddyBoss 1.4.0
  */
 function bp_folder_author() {
-	echo bp_get_folder_author();
+	echo esc_html( bp_get_folder_author() );
 }
 
 /**
@@ -2200,7 +2200,7 @@ function bp_get_document_folder_group_id() {
  * @since BuddyBoss 1.4.0
  */
 function bp_document_date_modified() {
-	echo bp_get_document_date_modified();
+	echo esc_html( bp_get_document_date_modified() );
 }
 
 /**
@@ -2317,7 +2317,7 @@ function bp_get_document_date() {
  * @since BuddyBoss 1.4.0
  */
 function bp_document_folder_privacy() {
-	echo bp_get_document_folder_privacy();
+	echo esc_html( bp_get_document_folder_privacy() );
 }
 
 /**
@@ -2354,7 +2354,7 @@ function bp_get_document_folder_privacy() {
  * @since BuddyBoss 1.4.0
  */
 function bp_document_privacy() {
-	echo bp_get_document_privacy();
+	echo esc_html( bp_get_document_privacy() );
 }
 
 /**
@@ -2388,7 +2388,7 @@ function bp_get_document_privacy() {
 }
 
 function bp_db_document_privacy() {
-	echo bp_get_db_document_privacy();
+	echo esc_html( bp_get_db_document_privacy() );
 }
 
 /**

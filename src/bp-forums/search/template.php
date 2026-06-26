@@ -196,7 +196,7 @@ function bbp_the_search_result() {
  * @uses bbp_get_search_title()
  */
 function bbp_search_title() {
-	echo bbp_get_search_title();
+	echo bbp_get_search_title(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- bbp_get_search_title() is self-escaping.
 }
 
 /**
@@ -436,7 +436,7 @@ function bbp_get_search_pagination_base() {
  * @uses bbp_get_search_pagination_count() To get the search result pagination count
  */
 function bbp_search_pagination_count() {
-	echo bbp_get_search_pagination_count();
+	echo bbp_get_search_pagination_count(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- bbp_get_search_pagination_count() is self-escaping.
 }
 
 /**
@@ -470,7 +470,7 @@ function bbp_get_search_pagination_count() {
 		// Several pages of results
 	} else {
 		/* translators: 2: number shown on this page, 3: last item number on this page, 4: total number of results. */
-		$retstr = sprintf( _n( 'Viewing %2$s of %4$s results', 'Viewing %2$s - %3$s of %4$s results', $bbp->search_query->post_count, 'buddyboss-platform' ), $bbp->search_query->post_count, $from_num, $to_num, $total );
+		$retstr = sprintf( _n( 'Viewing %2$s of %4$s results', 'Viewing %2$s - %3$s of %4$s results', $bbp->search_query->post_count, 'buddyboss-platform' ), $bbp->search_query->post_count, $from_num, $to_num, $total ); // phpcs:ignore WordPress.WP.I18n.MissingSingularPlaceholder -- Singular keeps its literal form to preserve existing translations (msgid unchanged); upstream BuddyPress pagination string.
 
 	}
 

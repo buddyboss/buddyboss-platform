@@ -370,7 +370,7 @@ function bbp_get_theme_package_id( $default = 'default' ) {
  * @param $default bool Optional. Default value 80
  */
 function bbp_title_max_length( $default = 80 ) {
-	echo bbp_get_title_max_length( $default );
+	echo esc_html( bbp_get_title_max_length( $default ) );
 }
 	/**
 	 * Return the maximum length of a title

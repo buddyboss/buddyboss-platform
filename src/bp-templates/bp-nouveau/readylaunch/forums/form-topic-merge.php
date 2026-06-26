@@ -26,6 +26,7 @@ defined( 'ABSPATH' ) || exit;
 					<h3>
 						<?php
 						/* translators: %s: Topic title */
+						// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- bbp_get_topic_title() is self-escaping (filtered).
 						printf( esc_html__( 'Merge discussion "%s"', 'buddyboss-platform' ), bbp_get_topic_title() );
 						?>
 					</h3>

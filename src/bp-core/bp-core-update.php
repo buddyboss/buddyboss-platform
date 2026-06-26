@@ -3711,7 +3711,7 @@ function bb_remove_symlinks( $folder_path ) {
 			// Check if the entry is a symlink.
 			if ( is_link( $entry_path ) ) {
 				// Delete the symlink.
-				unlink( $entry_path );
+				wp_delete_file( $entry_path );
 			}
 		}
 		// Close the folder handle.

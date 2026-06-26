@@ -291,7 +291,7 @@ class BP_Core_Members_Switching {
 					 * @param bool $just_switched Whether the user made the switch on this page request.
 					 */
 					$message = apply_filters( 'bp_member_switching_switched_message', $message, $user, $old_user, $switch_back_url, $just_switched );
-					echo $message; // WPCS: XSS ok.
+					echo wp_kses_post( $message );
 					?>
 				</p>
 			</div>
@@ -463,8 +463,8 @@ class BP_Core_Members_Switching {
 				<style>
 					/* Member Switching */
 					#wpadminbar #wp-admin-bar-top-secondary li#wp-admin-bar-switch-back a {
-						background: <?php echo $colors['background']; ?>;
-						color: <?php echo $colors['color']; ?>;;
+						background: <?php echo esc_attr( $colors['background'] ); ?>;
+						color: <?php echo esc_attr( $colors['color'] ); ?>;;
 					}
 				</style>
 				<?php

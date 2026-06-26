@@ -41,7 +41,7 @@ function bbp_is_anonymous() {
  *                                              data
  */
 function bbp_current_anonymous_user_data( $key = '' ) {
-	echo bbp_get_current_anonymous_user_data( $key );
+	echo esc_html( bbp_get_current_anonymous_user_data( $key ) );
 }
 
 /**

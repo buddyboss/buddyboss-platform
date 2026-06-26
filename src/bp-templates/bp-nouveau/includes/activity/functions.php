@@ -251,7 +251,9 @@ function bp_nouveau_activity_localize_scripts( $params = array() ) {
 		'postUpdateButton'    => esc_html__( 'Post', 'buddyboss-platform' ),
 		'updatePostButton'    => esc_html__( 'Update Post', 'buddyboss-platform' ),
 		'cancelButton'        => esc_html__( 'Cancel', 'buddyboss-platform' ),
+		/* translators: %d: number of comments (singular). */
 		'commentLabel'        => esc_html__( '%d Comment', 'buddyboss-platform' ),
+		/* translators: %d: number of comments (plural). */
 		'commentsLabel'       => esc_html__( '%d Comments', 'buddyboss-platform' ),
 		'loadingMore'         => esc_html__( 'Loading...', 'buddyboss-platform' ),
 		'discardButton'       => esc_html__( 'Discard Draft', 'buddyboss-platform' ),

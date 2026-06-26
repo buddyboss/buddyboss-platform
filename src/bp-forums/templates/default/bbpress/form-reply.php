@@ -28,7 +28,13 @@ defined( 'ABSPATH' ) || exit;
 			<?php do_action( 'bbp_theme_before_reply_form' ); ?>
 
 			<fieldset class="bbp-form">
-				<legend><?php /* translators: %s: topic title or reply reference. */ printf( esc_html__( 'Reply To: %s', 'buddyboss-platform' ), ( bbp_get_form_reply_to() ) ? /* translators: 1: reply ID, 2: topic title. */ sprintf( esc_html__( 'Reply #%1$s in %2$s', 'buddyboss-platform' ), bbp_get_form_reply_to(), bbp_get_topic_title() ) : bbp_get_topic_title() ); ?></legend>
+				<legend>
+					<?php
+					/* translators: %s: topic title or reply reference. */
+					// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- bbp_get_form_reply_to() returns an int; bbp_get_topic_title() self-escapes via its filter.
+					printf( esc_html__( 'Reply To: %s', 'buddyboss-platform' ), ( bbp_get_form_reply_to() ) ? /* translators: 1: reply ID, 2: topic title. */ sprintf( esc_html__( 'Reply #%1$s in %2$s', 'buddyboss-platform' ), bbp_get_form_reply_to(), bbp_get_topic_title() ) : bbp_get_topic_title() );
+					?>
+				</legend>
 
 				<?php do_action( 'bbp_theme_before_reply_form_notices' ); ?>
 
@@ -212,7 +218,13 @@ defined( 'ABSPATH' ) || exit;
 	<div id="no-reply-<?php bbp_topic_id(); ?>" class="bbp-no-reply">
 		<div class="bp-feedback info">
 			<span class="bp-icon" aria-hidden="true"></span>
-			<p><?php /* translators: %s: discussion title. */ printf( esc_html__( 'The discussion "%s" is closed to new replies.', 'buddyboss-platform' ), bbp_get_topic_title() ); ?></p>
+			<p>
+				<?php
+				/* translators: %s: discussion title. */
+				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- bbp_get_topic_title() self-escapes via its filter.
+				printf( esc_html__( 'The discussion "%s" is closed to new replies.', 'buddyboss-platform' ), bbp_get_topic_title() );
+				?>
+			</p>
 		</div>
 	</div>
 

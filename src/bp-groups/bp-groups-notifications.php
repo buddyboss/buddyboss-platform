@@ -29,8 +29,8 @@ function groups_notification_group_updated( $group_id = 0, $old_group = null ) {
 		$changed = array();
 
 		if ( $group->name !== $old_group->name ) {
-			/* translators: 1: old group name, 2: new group name. */
 			$changed[] = sprintf(
+				/* translators: 1: old group name, 2: new group name. */
 				__( '* Name changed from "%1$s" to "%2$s".', 'buddyboss-platform' ),
 				esc_html( $old_group->name ),
 				esc_html( $group->name )
@@ -38,8 +38,8 @@ function groups_notification_group_updated( $group_id = 0, $old_group = null ) {
 		}
 
 		if ( $group->description !== $old_group->description ) {
-			/* translators: 1: old group description, 2: new group description. */
 			$changed[] = sprintf(
+				/* translators: 1: old group description, 2: new group description. */
 				__( '* Description changed from "%1$s" to "%2$s".', 'buddyboss-platform' ),
 				esc_html( $old_group->description ),
 				esc_html( $group->description )
@@ -47,8 +47,8 @@ function groups_notification_group_updated( $group_id = 0, $old_group = null ) {
 		}
 
 		if ( $group->slug !== $old_group->slug ) {
-			/* translators: 1: old group permalink, 2: new group permalink. */
 			$changed[] = sprintf(
+				/* translators: 1: old group permalink, 2: new group permalink. */
 				__( '* Permalink changed from "%1$s" to "%2$s".', 'buddyboss-platform' ),
 				esc_url( bp_get_group_permalink( $old_group ) ),
 				esc_url( bp_get_group_permalink( $group ) )

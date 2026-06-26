@@ -248,6 +248,7 @@ class BP_Groups_Invite_Template {
 				'item_id' => $user_id,
 				'type'    => 'full',
 				'alt'     => sprintf(
+					// translators: %s: the invited member's full name.
 					__(
 						'Profile photo of %s',
 						'buddyboss-platform'
@@ -261,6 +262,7 @@ class BP_Groups_Invite_Template {
 				'item_id' => $user_id,
 				'type'    => 'thumb',
 				'alt'     => sprintf(
+					// translators: %s: the invited member's full name.
 					__(
 						'Profile photo of %s',
 						'buddyboss-platform'

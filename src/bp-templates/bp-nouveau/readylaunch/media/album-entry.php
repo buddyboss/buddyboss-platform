@@ -35,7 +35,7 @@ $icons = array(
 
 			<div class="bb-album-content-wrap">
 				<h4><?php bp_album_title(); ?></h4>
-				<span class="bb-album_date"><?php echo bp_core_format_date( $media_album_template->album->date_created ); ?></span>
+				<span class="bb-album_date"><?php bp_core_format_date( $media_album_template->album->date_created ); ?></span>
 				<div class="bb-album_stats">
 					<?php
 					if ( 'grouponly' !== $privacy ) {

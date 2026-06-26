@@ -270,9 +270,11 @@ if ( bp_is_group_create() ) : ?>
 
 					$option = sprintf(
 						'<option for="%1$s" value="%2$s" %3$s>%4$s</option>',
-						sprintf(
-							'group-type-%s',
-							$type->name
+						esc_attr(
+							sprintf(
+								'group-type-%s',
+								$type->name
+							)
 						),
 						esc_attr( $type->name ),
 						selected( ( true === bp_groups_has_group_type( bp_get_current_group_id(), $type->name ) ) ? $type->name : '', $type->name, false ),
@@ -294,19 +296,19 @@ if ( bp_is_group_create() ) : ?>
 
 								if ( ! empty( $include_group_type ) ) {
 									if ( in_array( $type->name, $include_group_type ) ) {
-										print $option;
+										print $option; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $option is pre-escaped <option> markup built with esc_attr()/esc_html()/selected().
 									}
 								} else {
-									print $option;
+									print $option; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $option is pre-escaped <option> markup built with esc_attr()/esc_html()/selected().
 								}
 							} else {
-								print $option;
+								print $option; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $option is pre-escaped <option> markup built with esc_attr()/esc_html()/selected().
 							}
 						} else {
-							print $option;
+							print $option; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $option is pre-escaped <option> markup built with esc_attr()/esc_html()/selected().
 						}
 					} else {
-						print $option;
+						print $option; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $option is pre-escaped <option> markup built with esc_attr()/esc_html()/selected().
 					}
 				endforeach;
 				?>
@@ -328,7 +330,7 @@ if ( bp_is_group_create() ) : ?>
 				if ( $possible_parent_groups ) {
 					foreach ( $possible_parent_groups as $possible_parent_group ) {
 						?>
-						<option value="<?php echo $possible_parent_group->id; ?>" <?php selected( $current_parent_group_id, $possible_parent_group->id ); ?>><?php echo esc_html( $possible_parent_group->name ); ?></option>
+						<option value="<?php echo esc_attr( $possible_parent_group->id ); ?>" <?php selected( $current_parent_group_id, $possible_parent_group->id ); ?>><?php echo esc_html( $possible_parent_group->name ); ?></option>
 						<?php
 					}
 				}

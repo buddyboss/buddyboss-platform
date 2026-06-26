@@ -70,7 +70,7 @@ defined( 'ABSPATH' ) || exit;
 								<?php bbp_topic_author_link( array( 'size' => '48' ) ); ?>
 							</div>
 							<div class="bb-rl-reply-header-content">
-								<h4 class="bb-rl-reply-header-title"><?php echo bbp_get_topic_author_display_name(); ?></h4>
+								<h4 class="bb-rl-reply-header-title"><?php echo bbp_get_topic_author_display_name(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- bbp_get_topic_author_display_name() is self-escaping. ?></h4>
 								<p class="bb-rl-reply-header-excerpt"><?php bbp_reply_excerpt( bbp_get_topic_id(), 50 ); ?></p>
 							</div>
 						</div>
@@ -250,7 +250,7 @@ defined( 'ABSPATH' ) || exit;
 			<p>
 				<?php
 				/* translators: %s: Topic title */
-				printf( esc_html__( 'The discussion "%s" is closed to new replies.', 'buddyboss-platform' ), bbp_get_topic_title() );
+				printf( esc_html__( 'The discussion "%s" is closed to new replies.', 'buddyboss-platform' ), bbp_get_topic_title() ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- bbp_get_topic_title() is self-escaping.
 				?>
 			</p>
 		</div>

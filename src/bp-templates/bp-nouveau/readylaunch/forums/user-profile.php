@@ -27,19 +27,19 @@ defined( 'ABSPATH' ) || exit;
 			<p class="bbp-user-forum-role">
 				<?php
 				/* translators: %s is the user's forum role */
-				printf( esc_html__( 'Forum Role: %s', 'buddyboss-platform' ), bbp_get_user_display_role() );
+				printf( esc_html__( 'Forum Role: %s', 'buddyboss-platform' ), bbp_get_user_display_role() ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- bbp_get_user_display_role() returns a translated, self-escaped role label.
 				?>
 			</p>
 			<p class="bbp-user-topic-count">
 				<?php
 				/* translators: %s is the number of topics started by the user */
-				printf( esc_html__( 'Discussions Started: %s', 'buddyboss-platform' ), bbp_get_user_topic_count_raw() );
+				printf( esc_html__( 'Discussions Started: %s', 'buddyboss-platform' ), esc_html( bbp_get_user_topic_count_raw() ) );
 				?>
 			</p>
 			<p class="bbp-user-reply-count">
 				<?php
 				/* translators: %s is the number of replies created by the user */
-				printf( esc_html__( 'Replies Created: %s', 'buddyboss-platform' ), bbp_get_user_reply_count_raw() );
+				printf( esc_html__( 'Replies Created: %s', 'buddyboss-platform' ), esc_html( bbp_get_user_reply_count_raw() ) );
 				?>
 			</p>
 		</div>

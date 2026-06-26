@@ -803,7 +803,7 @@ function bbp_reply_content_append_revisions( $content = '', $reply_id = 0 ) {
  * @uses  bbp_get_reply_revision_log() To get the reply revision log
  */
 function bbp_reply_revision_log( $reply_id = 0 ) {
-	echo bbp_get_reply_revision_log( $reply_id );
+	echo wp_kses_post( bbp_get_reply_revision_log( $reply_id ) );
 }
 
 /**
@@ -1073,7 +1073,7 @@ function bbp_is_reply_anonymous( $reply_id = 0 ) {
  * @uses       bbp_get_reply_author() To get the reply author
  */
 function bbp_reply_author( $reply_id = 0 ) {
-	echo bbp_get_reply_author( $reply_id );
+	echo esc_html( bbp_get_reply_author( $reply_id ) );
 }
 
 /**
@@ -1150,7 +1150,7 @@ function bbp_get_reply_author_id( $reply_id = 0 ) {
  * @uses  bbp_get_reply_author_display_name()
  */
 function bbp_reply_author_display_name( $reply_id = 0 ) {
-	echo bbp_get_reply_author_display_name( $reply_id );
+	echo bbp_get_reply_author_display_name( $reply_id ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- bbp_get_reply_author_display_name() is self-escaping.
 }
 
 /**
@@ -1507,7 +1507,7 @@ function bbp_get_reply_author_email( $reply_id = 0 ) {
  * @uses  bbp_get_reply_author_role() To get the reply author role
  */
 function bbp_reply_author_role( $args = array() ) {
-	echo bbp_get_reply_author_role( $args );
+	echo wp_kses_post( bbp_get_reply_author_role( $args ) );
 }
 
 /**
@@ -1722,7 +1722,7 @@ function bbp_get_reply_ancestor_id( $reply_id = 0 ) {
  * @uses  bbp_get_reply_to() To get the reply to id
  */
 function bbp_reply_to( $reply_id = 0 ) {
-	echo bbp_get_reply_to( $reply_id );
+	echo esc_html( bbp_get_reply_to( $reply_id ) );
 }
 
 /**
@@ -2146,7 +2146,7 @@ function bbp_get_reply_edit_link( $args = '' ) {
  * @uses  bbp_get_reply_edit_url() To get the reply edit url
  */
 function bbp_reply_edit_url( $reply_id = 0 ) {
-	echo bbp_get_reply_edit_url( $reply_id );
+	echo bbp_get_reply_edit_url( $reply_id ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- bbp_get_reply_edit_url() is self-escaping.
 }
 
 /**
@@ -2605,7 +2605,7 @@ function bbp_get_reply_class( $reply_id = 0, $classes = array() ) {
  * @uses  bbp_get_topic_pagination_count() To get the topic pagination count
  */
 function bbp_topic_pagination_count() {
-	echo bbp_get_topic_pagination_count();
+	echo bbp_get_topic_pagination_count(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- bbp_get_topic_pagination_count() is self-escaping.
 }
 
 /**
@@ -2719,7 +2719,7 @@ function bbp_get_form_reply_content() {
  * @uses  bbp_get_form_reply_to() To get value of the reply to field
  */
 function bbp_form_reply_to() {
-	echo bbp_get_form_reply_to();
+	echo esc_html( bbp_get_form_reply_to() );
 }
 
 /**
@@ -2757,7 +2757,7 @@ function bbp_get_form_reply_to() {
  * @uses  bbp_get_form_reply_log_edit() To get the reply log edit value
  */
 function bbp_form_reply_log_edit() {
-	echo bbp_get_form_reply_log_edit();
+	echo bbp_get_form_reply_log_edit(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- bbp_get_form_reply_log_edit() returns checked() attribute markup.
 }
 
 /**
@@ -2791,7 +2791,7 @@ function bbp_get_form_reply_log_edit() {
  * @uses  bbp_get_form_reply_edit_reason() To get the reply edit reason value
  */
 function bbp_form_reply_edit_reason() {
-	echo bbp_get_form_reply_edit_reason();
+	echo bbp_get_form_reply_edit_reason(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- bbp_get_form_reply_edit_reason() returns an esc_attr'd value.
 }
 
 /**

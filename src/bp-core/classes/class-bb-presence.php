@@ -305,7 +305,7 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 
 			// If mu-plugin directory not exists then create automatically.
 			if ( ! is_dir( WPMU_PLUGIN_DIR ) ) {
-				mkdir( WPMU_PLUGIN_DIR, 0755 );
+				wp_mkdir_p( WPMU_PLUGIN_DIR );
 			}
 
 			$mu_plugins = get_mu_plugins();

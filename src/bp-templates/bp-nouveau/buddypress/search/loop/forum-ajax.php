@@ -40,20 +40,24 @@ $total_reply = bbp_get_forum_reply_count( $forum_id );
 				<div class="entry-meta">
 					<span class="topic-count">
 						<?php
-						printf(
-						/* translators: total topics */
-							_n( '%d topic', '%d topics', $total, 'buddyboss-platform' ),
-							$total
+						echo esc_html(
+							sprintf(
+							/* translators: total topics */
+								_n( '%d topic', '%d topics', $total, 'buddyboss-platform' ),
+								$total
+							)
 						);
 						?>
 					</span>
 					<span class="middot">&middot;</span>
 					<span class="reply-count">
 						<?php
-						printf(
-						/* translators: total replies */
-							_n( '%d reply', '%d replies', $total_reply, 'buddyboss-platform' ),
-							$total_reply
+						echo esc_html(
+							sprintf(
+							/* translators: total replies */
+								_n( '%d reply', '%d replies', $total_reply, 'buddyboss-platform' ),
+								$total_reply
+							)
 						);
 						?>
 					</span>

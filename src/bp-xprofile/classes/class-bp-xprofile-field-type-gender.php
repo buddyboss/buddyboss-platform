@@ -83,7 +83,7 @@ class BP_XProfile_Field_Type_Gender extends BP_XProfile_Field_Type {
 		do_action( bp_get_the_profile_field_errors_action() );
 		?>
 
-		<select <?php echo $this->get_edit_field_html_elements( $raw_properties ); ?> aria-labelledby="<?php bp_the_profile_field_input_name(); ?>-1" aria-describedby="<?php bp_the_profile_field_input_name(); ?>-3">
+		<select <?php echo $this->get_edit_field_html_elements( $raw_properties ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- get_edit_field_html_elements() returns esc_attr'd attribute markup. ?> aria-labelledby="<?php bp_the_profile_field_input_name(); ?>-1" aria-describedby="<?php bp_the_profile_field_input_name(); ?>-3">
 			<?php bp_the_profile_field_options( array( 'user_id' => $user_id ) ); ?>
 		</select>
 
@@ -183,7 +183,7 @@ class BP_XProfile_Field_Type_Gender extends BP_XProfile_Field_Type {
 			$html .= apply_filters( 'bp_get_the_profile_field_options_select_gender', '<option' . $selected . ' value="' . esc_attr( stripslashes( $option_value ) ) . '">' . esc_html( stripslashes( $options[ $k ]->name ) ) . '</option>', $options[ $k ], $this->field_obj->id, $selected, $k );
 		}
 
-		echo $html;
+		echo $html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $html is built from <option> markup with esc_attr/esc_html'd values; wp_kses_post would strip option tags.
 	}
 
 	/**
@@ -204,7 +204,7 @@ class BP_XProfile_Field_Type_Gender extends BP_XProfile_Field_Type {
 																esc_html_e( 'Select', 'buddyboss-platform' );
 																?>
 			</label>
-		<select <?php echo $this->get_edit_field_html_elements( $raw_properties ); ?>>
+		<select <?php echo $this->get_edit_field_html_elements( $raw_properties ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- get_edit_field_html_elements() returns esc_attr'd attribute markup. ?>>
 			<?php bp_the_profile_field_options(); ?>
 		</select>
 
@@ -365,7 +365,7 @@ class BP_XProfile_Field_Type_Gender extends BP_XProfile_Field_Type {
 							}
 
 							?>
-							<input type="hidden" name="<?php echo esc_attr( "{$type}-option-order[]" ); ?>" value="<?php echo $key; ?>" />
+							<input type="hidden" name="<?php echo esc_attr( "{$type}-option-order[]" ); ?>" value="<?php echo esc_attr( $key ); ?>" />
 							<input type="text" name="<?php echo esc_attr( "{$type}_option[{$j}_{$key}]" ); ?>" id="<?php echo esc_attr( "{$type}_option{$j}" ); ?>" value="<?php echo esc_attr( stripslashes( $options[ $i ]->name ) ); ?>" />
 							<label for="<?php echo esc_attr( "{$type}_option{$default_name}" ); ?>">
 								<?php

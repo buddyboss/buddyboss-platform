@@ -78,7 +78,7 @@ function bp_friends_random_friends() {
 	} ?>
 
 	<div class="info-group">
-		<h4><?php /* translators: %s: member display name. */ bp_word_or_name( __( 'My Connections', 'buddyboss-platform' ), __( "%s's Connections", 'buddyboss-platform' ) ); ?>  (<?php echo BP_Friends_Friendship::total_friend_count( bp_displayed_user_id() ); ?>) <span><a href="<?php echo trailingslashit( bp_displayed_user_domain() . bp_get_friends_slug() ); ?>"><?php esc_html_e( 'See All', 'buddyboss-platform' ); ?></a></span></h4>
+		<h4><?php /* translators: %s: member display name. */ bp_word_or_name( __( 'My Connections', 'buddyboss-platform' ), __( "%s's Connections", 'buddyboss-platform' ) ); ?>  (<?php echo esc_html( BP_Friends_Friendship::total_friend_count( bp_displayed_user_id() ) ); ?>) <span><a href="<?php echo esc_url( trailingslashit( bp_displayed_user_domain() . bp_get_friends_slug() ) ); ?>"><?php esc_html_e( 'See All', 'buddyboss-platform' ); ?></a></span></h4>
 
 		<?php if ( $friend_ids ) { ?>
 
@@ -87,7 +87,7 @@ function bp_friends_random_friends() {
 			<?php for ( $i = 0, $count = count( $friend_ids ); $i < $count; ++$i ) { ?>
 
 				<li>
-					<a href="<?php echo bp_core_get_user_domain( $friend_ids[ $i ] ); ?>">
+					<a href="<?php echo esc_url( bp_core_get_user_domain( $friend_ids[ $i ] ) ); ?>">
 										<?php
 										echo wp_kses_post( bp_core_fetch_avatar(
 											array(
@@ -143,7 +143,7 @@ function bp_friends_random_members( $total_members = 5 ) {
 		<?php for ( $i = 0, $count = count( $user_ids['users'] ); $i < $count; ++$i ) { ?>
 
 			<li>
-				<a href="<?php echo bp_core_get_user_domain( $user_ids['users'][ $i ]->id ); ?>">
+				<a href="<?php echo esc_url( bp_core_get_user_domain( $user_ids['users'][ $i ]->id ) ); ?>">
 									<?php
 									echo wp_kses_post( bp_core_fetch_avatar(
 										array(
@@ -160,9 +160,9 @@ function bp_friends_random_members( $total_members = 5 ) {
 					<?php $random_data = xprofile_get_random_profile_data( $user_ids['users'][ $i ]->id, true ); ?>
 
 					<div class="profile-data">
-						<p class="field-name"><?php echo $random_data[0]->name; ?></p>
+						<p class="field-name"><?php echo esc_html( $random_data[0]->name ); ?></p>
 
-						<?php echo $random_data[0]->value; ?>
+						<?php echo wp_kses_post( $random_data[0]->value ); ?>
 
 					</div>
 
@@ -206,10 +206,10 @@ function bp_friend_search_form() {
 	$label  = __( 'Filter Connections', 'buddyboss-platform' );
 	?>
 
-		<form action="<?php echo $action; ?>" id="friend-search-form" method="post">
+		<form action="<?php echo esc_url( $action ); ?>" id="friend-search-form" method="post">
 
-			<label for="friend-search-box" id="friend-search-label"><?php echo $label; ?></label>
-			<input type="search" name="friend-search-box" id="friend-search-box" value="<?php echo $value; ?>"<?php echo $disabled; ?> />
+			<label for="friend-search-box" id="friend-search-label"><?php echo esc_html( $label ); ?></label>
+			<input type="search" name="friend-search-box" id="friend-search-box" value="<?php echo esc_attr( $value ); ?>"<?php echo esc_attr( $disabled ); ?> />
 
 			<?php wp_nonce_field( 'friends_search', '_wpnonce_friend_search' ); ?>
 
@@ -831,7 +831,7 @@ function bp_friend_get_total_requests_count( $user_id = 0 ) {
  * @param array|string $args before|after|user_id.
  */
 function bp_friends_profile_stats( $args = '' ) {
-	echo bp_friends_get_profile_stats( $args );
+	echo wp_kses_post( bp_friends_get_profile_stats( $args ) );
 }
 add_action( 'bp_members_admin_user_stats', 'bp_friends_profile_stats', 7, 1 );
 

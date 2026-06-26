@@ -357,7 +357,7 @@ class Notification extends BuddypressCommand {
 		}
 
 		if ( 'ids' === $formatter->format ) {
-			echo implode( ' ', wp_list_pluck( $notifications, 'id' ) ); // WPCS: XSS ok.
+			echo esc_html( implode( ' ', wp_list_pluck( $notifications, 'id' ) ) );
 		} elseif ( 'count' === $formatter->format ) {
 			$formatter->display_items( $notifications );
 		} else {

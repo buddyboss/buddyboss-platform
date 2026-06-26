@@ -29,7 +29,7 @@ defined( 'ABSPATH' ) || exit;
  * @return string Translated role name on success, original name on failure.
  */
 function bbp_translate_user_role( $name ) {
-	return translate_with_gettext_context( before_last_bar( $name ), 'User role', 'buddyboss-platform' );
+	return translate_with_gettext_context( before_last_bar( $name ), 'User role', 'buddyboss-platform' ); // phpcs:ignore WordPress.WP.I18n.LowLevelTranslationFunction,WordPress.WP.I18n.NonSingularStringLiteralText -- Intentional dynamic translation of WP user-role names via core's gettext catalog (bbPress pattern).
 }
 
 /**

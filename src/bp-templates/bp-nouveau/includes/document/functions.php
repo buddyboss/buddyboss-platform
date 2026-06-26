@@ -1047,7 +1047,7 @@ function bb_document_force_download( $file_path, $file_name ) {
 
 	$handle = fopen( $file_path, 'rb' );
 	while ( ! feof( $handle ) ) {
-		echo fread( $handle, $chunk_size );
+		echo fread( $handle, $chunk_size ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- raw binary file stream for octet-stream download; escaping would corrupt the file.
 		flush();
 	}
 	fclose( $handle );

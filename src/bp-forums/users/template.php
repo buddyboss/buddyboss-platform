@@ -119,7 +119,7 @@ function bbp_get_displayed_user_id() {
  * @uses bbp_get_displayed_user_field() To get the field
  */
 function bbp_displayed_user_field( $field = '', $filter = 'display' ) {
-	echo bbp_get_displayed_user_field( $field, $filter );
+	echo bbp_get_displayed_user_field( $field, $filter ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- value sanitized for display context via WP_User::__get()/sanitize_user_field().
 }
 	/**
 	 * Return a sanitized user field value
@@ -475,7 +475,7 @@ function bbp_get_user_profile_edit_url( $user_id = 0, $user_nicename = '' ) {
  * @uses bbp_get_user_display_role To get the user display role
  */
 function bbp_user_display_role( $user_id = 0 ) {
-	echo bbp_get_user_display_role( $user_id );
+	echo bbp_get_user_display_role( $user_id ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- bbp_get_user_display_role() self-escapes.
 }
 	/**
 	 * Return a user's main role for display
@@ -578,7 +578,7 @@ function bbp_get_admin_link( $args = '' ) {
  * @uses bbp_get_author_ip() To get the post author link
  */
 function bbp_author_ip( $args = '' ) {
-	echo bbp_get_author_ip( $args );
+	echo wp_kses_post( bbp_get_author_ip( $args ) );
 }
 	/**
 	 * Return the author IP address of a post
@@ -1263,7 +1263,7 @@ function bbp_edit_user_display_name() {
 
 	<?php foreach ( $public_display as $id => $item ) : ?>
 
-		<option id="<?php echo $id; ?>" value="<?php echo esc_attr( $item ); ?>"<?php selected( $bbp->displayed_user->display_name, $item ); ?>><?php echo $item; ?></option>
+		<option id="<?php echo esc_attr( $id ); ?>" value="<?php echo esc_attr( $item ); ?>"<?php selected( $bbp->displayed_user->display_name, $item ); ?>><?php echo esc_html( $item ); ?></option>
 
 	<?php endforeach; ?>
 
@@ -1296,7 +1296,7 @@ function bbp_edit_user_blog_role() {
 
 		<?php foreach ( $blog_roles as $role => $details ) : ?>
 
-			<option <?php selected( $user_role, $role ); ?> value="<?php echo esc_attr( $role ); ?>"><?php echo bbp_translate_user_role( $details['name'] ); ?></option>
+			<option <?php selected( $user_role, $role ); ?> value="<?php echo esc_attr( $role ); ?>"><?php echo bbp_translate_user_role( $details['name'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- bbp_translate_user_role() self-escapes. ?></option>
 
 		<?php endforeach; ?>
 
@@ -1334,7 +1334,7 @@ function bbp_edit_user_forums_role() {
 
 		<?php foreach ( $dynamic_roles as $role => $details ) : ?>
 
-			<option <?php selected( $user_role, $role ); ?> value="<?php echo esc_attr( $role ); ?>"><?php echo bbp_translate_user_role( $details['name'] ); ?></option>
+			<option <?php selected( $user_role, $role ); ?> value="<?php echo esc_attr( $role ); ?>"><?php echo bbp_translate_user_role( $details['name'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- bbp_translate_user_role() self-escapes. ?></option>
 
 		<?php endforeach; ?>
 

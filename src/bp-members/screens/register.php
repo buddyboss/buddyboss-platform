@@ -229,7 +229,7 @@ function bp_core_screen_signup() {
 				add_action(
 					'bp_' . $fieldname . '_errors',
 					function() use ( $error_message ) {
-						echo apply_filters( 'bp_members_signup_error_message', '<div class="error">' . $error_message . '</div>' );
+						echo wp_kses_post( apply_filters( 'bp_members_signup_error_message', '<div class="error">' . $error_message . '</div>' ) );
 					}
 				);
 			}

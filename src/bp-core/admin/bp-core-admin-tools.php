@@ -903,7 +903,7 @@ function bp_admin_tools_feedback( $message, $class = false ) {
 	$message = '<div id="message" class="' . esc_attr( $class ) . '">' . $message . '</div>';
 	$message = str_replace( "'", "\'", $message );
 	$lambda  = function () use ( $message ) {
-		echo $message;
+		echo wp_kses_post( $message );
 	};
 
 	add_action( bp_core_do_network_admin() ? 'network_admin_notices' : 'admin_notices', $lambda );
@@ -955,8 +955,9 @@ function bp_core_admin_available_tools_intro() {
 		<h2><?php esc_html_e( 'BuddyBoss Tools', 'buddyboss-platform' ); ?></h2>
 		<p>
 			<?php esc_html_e( 'BuddyBoss keeps track of various relationships between users, groups, and activity items. Occasionally these relationships become out of sync, most often after an import, update, or migration.', 'buddyboss-platform' ); ?>
-			/* translators: %s: BuddyBoss Tools link. */
-			<?php printf( esc_html__( 'Use the %s to repair these relationships.', 'buddyboss-platform' ), '<a href="' . esc_url( $url ) . '">' . esc_html__( 'BuddyBoss Tools', 'buddyboss-platform' ) . '</a>' ); ?>
+			<?php
+			/* translators: %s: link to the BuddyBoss Tools page. */
+			printf( esc_html__( 'Use the %s to repair these relationships.', 'buddyboss-platform' ), '<a href="' . esc_url( $url ) . '">' . esc_html__( 'BuddyBoss Tools', 'buddyboss-platform' ) . '</a>' ); ?>
 		</p>
 	</div>
 	<?php
@@ -1093,8 +1094,8 @@ function bp_admin_reinstall_emails() {
 
 	// Make sure we have no orphaned email type terms.
 	$email_types = get_terms(
-		bp_get_email_tax_type(),
 		array(
+			'taxonomy'               => bp_get_email_tax_type(),
 			'fields'                 => 'ids',
 			'hide_empty'             => false,
 			'update_term_meta_cache' => false,

@@ -91,7 +91,7 @@ class BP_Core_Members_Widget extends WP_Widget {
 		$separator = apply_filters( 'bp_members_widget_separator', '|' );
 
 		// Output before widget HTMl, title (and maybe content before & after it).
-		echo $args['before_widget'] . $args['before_title'] . esc_html( $title ) . $args['after_title'];
+		echo wp_kses_post( $args['before_widget'] ) . wp_kses_post( $args['before_title'] ) . esc_html( $title ) . wp_kses_post( $args['after_title'] );
 
 		// Setup args for querying members.
 		$members_args = array(
@@ -199,7 +199,7 @@ class BP_Core_Members_Widget extends WP_Widget {
 		<?php endif; ?>
 
 		<?php
-		echo $args['after_widget'];
+		echo wp_kses_post( $args['after_widget'] );
 
 		// Restore the global.
 		$members_template = $old_members_template;

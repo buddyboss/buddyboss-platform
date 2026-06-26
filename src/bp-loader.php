@@ -406,13 +406,13 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 		// Disable BuddyPress message.
 		if ( $is_bp_active ) {
 			$bp_plugins_url = is_network_admin() ? network_admin_url( 'plugins.php' ) : admin_url( 'plugins.php' );
-			$link_plugins   = sprintf( "<a href='%s'>%s</a>", $bp_plugins_url, __( 'deactivate', 'buddyboss-platform' ) );
+			$link_plugins   = sprintf( "<a href='%s'>%s</a>", esc_url( $bp_plugins_url ), esc_html__( 'deactivate', 'buddyboss-platform' ) );
 			?>
 
 			<div id="message" class="error notice">
 				<p><strong><?php esc_html_e( 'BuddyBoss Platform is disabled.', 'buddyboss-platform' ); ?></strong></p>
 				<?php /* translators: %s: deactivate link for the BuddyPress plugin. */ ?>
-				<p><?php printf( esc_html__( 'The BuddyBoss Platform can\'t work while BuddyPress plugin is active. Please %s BuddyPress to re-enable BuddyBoss Platform.', 'buddyboss-platform' ), $link_plugins ); ?></p>
+				<p><?php echo wp_kses_post( sprintf( esc_html__( 'The BuddyBoss Platform can\'t work while BuddyPress plugin is active. Please %s BuddyPress to re-enable BuddyBoss Platform.', 'buddyboss-platform' ), $link_plugins ) ); ?></p>
 			</div>
 
 			<?php
@@ -421,13 +421,13 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 		// Disable bbPress message.
 		if ( $is_bb_active ) {
 			$bp_plugins_url = is_network_admin() ? network_admin_url( 'plugins.php' ) : admin_url( 'plugins.php' );
-			$link_plugins   = sprintf( "<a href='%s'>%s</a>", $bp_plugins_url, __( 'deactivate', 'buddyboss-platform' ) );
+			$link_plugins   = sprintf( "<a href='%s'>%s</a>", esc_url( $bp_plugins_url ), esc_html__( 'deactivate', 'buddyboss-platform' ) );
 			?>
 
 			<div id="message" class="error notice">
 				<p><strong><?php esc_html_e( 'BuddyBoss Platform is disabled.', 'buddyboss-platform' ); ?></strong></p>
 				<?php /* translators: %s: deactivate link for the bbPress plugin. */ ?>
-				<p><?php printf( esc_html__( 'The BuddyBoss Platform can\'t work while bbPress plugin is active. Please %s bbPress to re-enable BuddyBoss Platform.', 'buddyboss-platform' ), $link_plugins ); ?></p>
+				<p><?php echo wp_kses_post( sprintf( esc_html__( 'The BuddyBoss Platform can\'t work while bbPress plugin is active. Please %s bbPress to re-enable BuddyBoss Platform.', 'buddyboss-platform' ), $link_plugins ) ); ?></p>
 			</div>
 
 			<?php
@@ -443,7 +443,7 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 				<div id="message" class="error notice">
 					<p><strong><?php esc_html_e( 'BuddyBoss Platform is disabled.', 'buddyboss-platform' ); ?></strong></p>
 					<?php
-					printf( '<p>%s</p>', $incompatible_plugins_list_messages[ $incompatible_plugin_key ] );
+					printf( '<p>%s</p>', esc_html( $incompatible_plugins_list_messages[ $incompatible_plugin_key ] ) );
 					?>
 				</div>
 				<?php

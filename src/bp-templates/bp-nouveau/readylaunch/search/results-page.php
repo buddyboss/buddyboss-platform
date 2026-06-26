@@ -28,12 +28,12 @@ if ( empty( $_GET['s'] ) || '' === $_GET['s'] ) {
 	$no_results = ' bb-rl-no-search-results';
 }
 ?>
-<div class="bb-rl-container<?php echo $no_results; ?>">
+<div class="bb-rl-container<?php echo esc_attr( $no_results ); ?>">
 	<div class="bb-rl-search-results-container">
 
 		<header class="entry-header">
 			<h1 class="entry-title">
-				<?php echo stripslashes( $post_title ); ?>
+				<?php echo wp_kses_post( stripslashes( $post_title ) ); ?>
 			</h1>
 		</header>
 

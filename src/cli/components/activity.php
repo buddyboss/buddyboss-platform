@@ -295,7 +295,7 @@ class Activity extends BuddypressCommand {
 		}
 
 		if ( 'ids' === $formatter->format ) {
-			echo implode( ' ', $activities['activities'] ); // WPCS: XSS ok.
+			echo esc_html( implode( ' ', $activities['activities'] ) );
 		} elseif ( 'count' === $formatter->format ) {
 			$formatter->display_items( $activities['total'] );
 		} else {
@@ -751,9 +751,11 @@ class Activity extends BuddypressCommand {
 					}
 
 					// stolen from groups_join_group.
+					// translators: 1: user link, 2: group link.
 					$r['action'] = sprintf( __( '%1$s posted an update in the group %2$s', 'buddyboss-platform' ), bp_core_get_userlink( $r['user-id'] ), '<a href="' . bp_get_group_permalink( $group_obj ) . '">' . bp_get_group_name( $group_obj ) . '</a>' );
 				} else {
 					// old way, for some other kind of update.
+					// translators: %s: user link.
 					$r['action'] = sprintf( __( '%s posted an update', 'buddyboss-platform' ), bp_core_get_userlink( $r['user-id'] ) );
 				}
 				if ( empty( $r['content'] ) ) {
@@ -778,6 +780,7 @@ class Activity extends BuddypressCommand {
 					$r['item-id'] = $parent_item->id;
 				}
 
+				// translators: %s: user link.
 				$r['action']       = sprintf( __( '%s posted a new activity comment', 'buddyboss-platform' ), bp_core_get_userlink( $r['user-id'] ) );
 				$r['content']      = $this->generate_random_text();
 				$r['primary-link'] = bp_core_get_userlink( $r['user-id'] );
@@ -823,6 +826,7 @@ class Activity extends BuddypressCommand {
 					}
 
 					if ( ! $r['action'] ) {
+						// translators: 1: user link, 2: site link.
 						$r['action'] = sprintf( __( '%1$s created the site %2$s', 'buddyboss-platform' ), bp_core_get_userlink( $r['user-id'] ), '<a href="' . get_home_url( $r['item-id'] ) . '">' . esc_attr( get_blog_option( $r['item-id'], 'blogname' ) ) . '</a>' );
 					}
 
@@ -841,6 +845,7 @@ class Activity extends BuddypressCommand {
 					}
 
 					if ( '' === $r['action'] ) {
+						// translators: 1: user link, 2: post link.
 						$r['action'] = sprintf( __( '%1$s wrote a new post, %2$s', 'buddyboss-platform' ), bp_core_get_userlink( (int) $post->post_author ), '<a href="' . $r['primary-link'] . '">' . $post->post_title . '</a>' );
 					}
 
@@ -870,6 +875,7 @@ class Activity extends BuddypressCommand {
 					}
 
 					if ( '' === $r['action'] ) {
+						// translators: 1: user link, 2: post link.
 						$r['action'] = sprintf( __( '%1$s commented on the post, %2$s', 'buddyboss-platform' ), bp_core_get_userlink( $r['user-id'] ), '<a href="' . $post_permalink . '">' . apply_filters( 'the_title', $post->post_title, $post->ID ) . '</a>' );
 					}
 
@@ -895,6 +901,7 @@ class Activity extends BuddypressCommand {
 					$r['item-id'] = $this->get_random_user_id();
 				}
 
+				// translators: 1: first user link, 2: second user link.
 				$r['action'] = sprintf( __( '%1$s and %2$s are now connected', 'buddyboss-platform' ), bp_core_get_userlink( $r['user-id'] ), bp_core_get_userlink( $r['item-id'] ) );
 
 				break;
@@ -919,6 +926,7 @@ class Activity extends BuddypressCommand {
 				$group_permalink = bp_get_group_permalink( $group );
 
 				if ( empty( $r['action'] ) ) {
+					// translators: 1: user link, 2: group link.
 					$r['action'] = sprintf( __( '%1$s created the group %2$s', 'buddyboss-platform' ), bp_core_get_userlink( $r['user-id'] ), '<a href="' . $group_permalink . '">' . esc_attr( $group->name ) . '</a>' );
 				}
 
@@ -945,6 +953,7 @@ class Activity extends BuddypressCommand {
 				}
 
 				if ( empty( $r['action'] ) ) {
+					// translators: 1: user link, 2: group link.
 					$r['action'] = sprintf( __( '%1$s joined the group %2$s', 'buddyboss-platform' ), bp_core_get_userlink( $r['user-id'] ), '<a href="' . bp_get_group_permalink( $group ) . '">' . esc_attr( $group->name ) . '</a>' );
 				}
 
@@ -965,14 +974,17 @@ class Activity extends BuddypressCommand {
 
 				// new_avatar.
 				if ( 'new_avatar' === $r['type'] ) {
+					// translators: 1: user link, 2: gender possessive pronoun (e.g. his/her/their).
 					$r['action'] = sprintf( __( '%1$s changed %2$s profile photo', 'buddyboss-platform' ), $userlink, bp_get_user_gender_pronoun_type( $r['user-id'] ) );
 
 					// new_member.
 				} elseif ( 'new_member' === $r['type'] ) {
+					// translators: %s: user link.
 					$r['action'] = sprintf( __( '%s became a registered member', 'buddyboss-platform' ), $userlink );
 
 					// updated_profile.
 				} else {
+					// translators: 1: user link, 2: gender possessive pronoun (e.g. his/her/their).
 					$r['action'] = sprintf( __( '%1$s updated %2$s profile', 'buddyboss-platform' ), $userlink, bp_get_user_gender_pronoun_type( $r['user-id'] ) );
 				}
 

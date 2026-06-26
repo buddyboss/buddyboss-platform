@@ -546,7 +546,7 @@ function bb_recaptcha_display( $action = '' ) {
 				}
 			}
 			?>
-			<div id="bb_recaptcha_v2_element" class="bb_recaptcha_v2_element_content <?php echo esc_attr( $v2_class ); ?>" data-sitekey="<?php echo $site_key; ?>"></div>
+			<div id="bb_recaptcha_v2_element" class="bb_recaptcha_v2_element_content <?php echo esc_attr( $v2_class ); ?>" data-sitekey="<?php echo esc_attr( $site_key ); ?>"></div>
 			<?php
 		}
 

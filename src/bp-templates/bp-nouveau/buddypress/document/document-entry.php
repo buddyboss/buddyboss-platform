@@ -343,7 +343,7 @@ id="div-listing-<?php echo esc_attr( $document_id ); ?>">
 					if ( $report_btn && 'document' === $document_type ) {
 						?>
 						<li class="report_file">
-							<?php echo $report_btn; ?>
+							<?php echo wp_kses_post( $report_btn ); ?>
 						</li>
 						<?php
 					}

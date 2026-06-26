@@ -927,7 +927,7 @@ function bbp_list_forums( $args = '' ) {
 		}
 
 		// Output the list
-		echo apply_filters( 'bbp_list_forums', $r['before'] . $output . $r['after'], $r );
+		echo wp_kses_post( apply_filters( 'bbp_list_forums', $r['before'] . $output . $r['after'], $r ) );
 	}
 }
 
@@ -1034,7 +1034,7 @@ function bb_get_list_forums_recursively( $args = array() ) {
 /** Forum Pagination **********************************************************/
 
 function bbp_forum_index_pagination_count() {
-	echo bbp_get_forum_index_pagination_count();
+	echo bbp_get_forum_index_pagination_count(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- bbp_get_forum_index_pagination_count() self-escapes its return value.
 }
 
 /**
@@ -1069,7 +1069,7 @@ function bbp_get_forum_index_pagination_count() {
 		// Several forums in a forum index with several pages
 	} else {
 		/* translators: 2: number shown on this page, 3: last item number on this page, 4: total number of forums. */
-		$retstr = sprintf( _n( 'Viewing %2$s of %4$s forums', 'Viewing %2$s - %3$s of %4$s forums', $total_int, 'buddyboss-platform' ), $bbp->forum_query->post_count, $from_num, $to_num, $total );
+		$retstr = sprintf( _n( 'Viewing %2$s of %4$s forums', 'Viewing %2$s - %3$s of %4$s forums', $total_int, 'buddyboss-platform' ), $bbp->forum_query->post_count, $from_num, $to_num, $total ); // phpcs:ignore WordPress.WP.I18n.MissingSingularPlaceholder -- Singular keeps its literal form to preserve existing translations (msgid unchanged); upstream BuddyPress pagination string.
 	}
 
 	// Filter and return
@@ -1832,7 +1832,7 @@ function bbp_get_forum_post_count( $forum_id = 0, $total_count = true, $integer 
  * @uses  bbp_get_forum_topic_count_hidden() To get the forum hidden topic count
  */
 function bbp_forum_topic_count_hidden( $forum_id = 0, $integer = false ) {
-	echo bbp_get_forum_topic_count_hidden( $forum_id, $integer );
+	echo esc_html( bbp_get_forum_topic_count_hidden( $forum_id, $integer ) );
 }
 
 /**
@@ -1904,7 +1904,7 @@ function bbp_get_forum_status( $forum_id = 0 ) {
  * @uses  bbp_get_forum_visibility() To get the forum visibility
  */
 function bbp_forum_visibility( $forum_id = 0 ) {
-	echo bbp_get_forum_visibility( $forum_id );
+	echo esc_html( bbp_get_forum_visibility( $forum_id ) );
 }
 
 /**
@@ -2352,7 +2352,7 @@ function bbp_get_forum_class( $forum_id = 0, $classes = array() ) {
  * @uses  bbp_get_form_forum_title() To get the value of forum title field
  */
 function bbp_form_forum_title() {
-	echo bbp_get_form_forum_title();
+	echo bbp_get_form_forum_title(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- bbp_get_form_forum_title() self-escapes its return value.
 }
 
 /**
@@ -2428,7 +2428,7 @@ function bbp_get_form_forum_content() {
  * @uses  bbp_get_form_forum_parent() To get the topic's forum id
  */
 function bbp_form_forum_parent() {
-	echo bbp_get_form_forum_parent();
+	echo bbp_get_form_forum_parent(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- bbp_get_form_forum_parent() returns esc_attr()'d value.
 }
 
 /**
@@ -2467,7 +2467,7 @@ function bbp_get_form_forum_parent() {
  * @uses  bbp_get_form_forum_type() To get the topic's forum id
  */
 function bbp_form_forum_type() {
-	echo bbp_get_form_forum_type();
+	echo bbp_get_form_forum_type(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- bbp_get_form_forum_type() returns esc_attr()'d value.
 }
 
 /**
@@ -2506,7 +2506,7 @@ function bbp_get_form_forum_type() {
  * @uses  bbp_get_form_forum_visibility() To get the topic's forum id
  */
 function bbp_form_forum_visibility() {
-	echo bbp_get_form_forum_visibility();
+	echo bbp_get_form_forum_visibility(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- bbp_get_form_forum_visibility() returns esc_attr()'d value.
 }
 
 /**
@@ -2545,7 +2545,7 @@ function bbp_get_form_forum_visibility() {
  * @uses  bbp_get_form_forum_subscribed() To get the subscribed checkbox value
  */
 function bbp_form_forum_subscribed() {
-	echo bbp_get_form_forum_subscribed();
+	echo bbp_get_form_forum_subscribed(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- bbp_get_form_forum_subscribed() returns checked() attribute markup.
 }
 
 /**
@@ -2758,7 +2758,7 @@ function bbp_get_form_forum_status_dropdown( $args = '' ) {
 	ob_start();
 	?>
 
-	<select name="<?php echo esc_attr( $r['select_id'] ); ?>" id="<?php echo esc_attr( $r['select_id'] ); ?>_select"<?php echo $tab; ?>>
+	<select name="<?php echo esc_attr( $r['select_id'] ); ?>" id="<?php echo esc_attr( $r['select_id'] ); ?>_select"<?php echo $tab; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $tab is built from an (int) cast and is safe attribute markup. ?>>
 
 		<?php foreach ( bbp_get_forum_statuses( $r['forum_id'] ) as $key => $label ) : ?>
 			<option value="<?php echo esc_attr( $key ); ?>"<?php selected( $key, $r['selected'] ); ?>><?php echo esc_html( $label ); ?></option>

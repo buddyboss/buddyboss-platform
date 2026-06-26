@@ -142,7 +142,7 @@ if ( isset( $restricted ) && '' !== $restricted ) {
 					<span>
 						<?php
 						$date = get_the_date( '', $post_id );
-						echo $date;
+						echo esc_html( $date );
 						?>
 					</span>
 				</td>
@@ -168,7 +168,7 @@ if ( isset( $restricted ) && '' !== $restricted ) {
 						?>
 						<span class="bp-invitee-status">
 							<span class="dashicons <?php echo esc_attr( $icon ); ?>"></span>
-							<?php echo $title; ?>
+							<?php echo esc_html( $title ); ?>
 						</span>
 						<?php
 					} else {
@@ -176,14 +176,14 @@ if ( isset( $restricted ) && '' !== $restricted ) {
 						if ( 'registered' === $class ) {
 							?>
 							<span class="bp-invitee-status">
-								<span class="dashicons <?php echo esc_attr( $icon ); ?>"></span><?php echo $title; ?>
+								<span class="dashicons <?php echo esc_attr( $icon ); ?>"></span><?php echo esc_html( $title ); ?>
 							</span>
 							<?php
 						} else {
 							?>
 							<span class="bp-invitee-status">
 								<a data-revoke-access="<?php echo esc_url( $revoke_link ); ?>" data-name="<?php echo esc_attr( $alert_message ); ?>" id="<?php echo esc_attr( $post_id ); ?>" class="<?php echo esc_attr( $class ); ?>" href="javascript:void(0);">
-									<span class="dashicons <?php echo esc_attr( $icon ); ?>"></span><?php echo $title; ?>
+									<span class="dashicons <?php echo esc_attr( $icon ); ?>"></span><?php echo esc_html( $title ); ?>
 								</a>
 							</span>
 							<?php

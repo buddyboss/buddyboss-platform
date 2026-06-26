@@ -66,19 +66,20 @@ class BP_XProfile_Field_Type_Member_Types extends BP_XProfile_Field_Type {
 			<div id="<?php echo esc_attr( $type ); ?>" class="postbox bp-options-box" style="<?php echo esc_attr( $class ); ?> margin-top: 15px;">
 				<h3>
 					<?php
-					printf(
-						'%s',
-						/* translators: %s: URL to the profile types admin screen. */
+					echo wp_kses_post(
 						sprintf(
+							/* translators: %s: URL to the profile types admin screen. */
 							__(
 								'Please make sure to add some <a href="%s">profile types</a> first.',
 								'buddyboss-platform'
 							),
-							add_query_arg(
-								array(
-									'post_type' => bp_get_member_type_post_type(),
-								),
-								admin_url( 'edit.php' )
+							esc_url(
+								add_query_arg(
+									array(
+										'post_type' => bp_get_member_type_post_type(),
+									),
+									admin_url( 'edit.php' )
+								)
 							)
 						)
 					);
@@ -133,7 +134,7 @@ class BP_XProfile_Field_Type_Member_Types extends BP_XProfile_Field_Type {
 			do_action( bp_get_the_profile_field_errors_action() );
 
 			?>
-			<select <?php echo $this->get_edit_field_html_elements( $raw_properties ); ?> aria-labelledby="<?php bp_the_profile_field_input_name(); ?>-1" aria-describedby="<?php bp_the_profile_field_input_name(); ?>-3">
+			<select <?php echo $this->get_edit_field_html_elements( $raw_properties ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- get_edit_field_html_elements() returns esc_attr'd attribute markup. ?> aria-labelledby="<?php bp_the_profile_field_input_name(); ?>-1" aria-describedby="<?php bp_the_profile_field_input_name(); ?>-3">
 				<?php bp_the_profile_field_options( array( 'user_id' => $user_id ) ); ?>
 			</select>
 			<?php
@@ -189,15 +190,15 @@ class BP_XProfile_Field_Type_Member_Types extends BP_XProfile_Field_Type {
 				if ( '' === $enabled || '1' === $enabled || (int)$post_selected === $bp_active_member_type ) {
 					$html .= sprintf(
 						'<option value="%s" %s>%s</option>',
-						$bp_active_member_type,
+						esc_attr( $bp_active_member_type ),
 						( $post_selected == $bp_active_member_type ) ? ' selected="selected"' : '',
-						$name
+						esc_html( $name )
 					);
 				}
 			}
 		}
 
-		echo apply_filters( 'bp_get_the_profile_field_member_type_post_type', $html, $args['type'], $post_type_selected, $this->field_obj->id );
+		echo apply_filters( 'bp_get_the_profile_field_member_type_post_type', $html, $args['type'], $post_type_selected, $this->field_obj->id ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $html is <option> markup with esc_attr/esc_html'd values; wp_kses_post would strip option tags.
 	}
 
 	/**
@@ -212,7 +213,7 @@ class BP_XProfile_Field_Type_Member_Types extends BP_XProfile_Field_Type {
 	public function admin_field_html( array $raw_properties = array() ) {
 		$html = $this->get_edit_field_html_elements( $raw_properties );
 		?>
-		<select <?php echo $html; ?>>
+		<select <?php echo $html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $html holds get_edit_field_html_elements() esc_attr'd attribute markup. ?>>
 			<?php bp_the_profile_field_options(); ?>
 		</select>
 		<?php

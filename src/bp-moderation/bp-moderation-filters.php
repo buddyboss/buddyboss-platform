@@ -131,8 +131,8 @@ function bp_moderation_content_report() {
 	}
 
 	$reports_terms = get_terms(
-		'bpm_category',
 		array(
+			'taxonomy'   => 'bpm_category',
 			'hide_empty' => false,
 			'fields'     => 'ids',
 		)

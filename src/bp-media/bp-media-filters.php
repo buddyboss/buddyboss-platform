@@ -134,7 +134,7 @@ function bp_media_activity_entry() {
 	);
 
 	if ( ! empty( $is_media ) ) {
-		print $is_media;
+		print $is_media; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Returns trusted, internally-built activity media markup that wp_kses_post() would corrupt.
 	}
 }
 
@@ -693,7 +693,7 @@ function bp_media_forums_embed_attachments( $content, $id ) {
 		?>
 		<div class="bb-activity-media-wrap forums-media-wrap
 		<?php
-		echo 'bb-media-length-' . $media_template->media_count;
+		echo 'bb-media-length-' . esc_attr( $media_template->media_count );
 		echo $media_template->media_count > 5 ? ' bb-media-length-more' : '';
 		?>
 		">
@@ -776,8 +776,8 @@ function bp_media_forums_embed_gif( $content, $id ) {
 	<div class="activity-attached-gif-container">
 		<div class="gif-image-container">
 			<div class="gif-player">
-				<video preload="auto" playsinline poster="<?php echo $preview_url; ?>" loop muted>
-					<source src="<?php echo $video_url; ?>" type="video/mp4">
+				<video preload="auto" playsinline poster="<?php echo esc_url( $preview_url ); ?>" loop muted>
+					<source src="<?php echo esc_url( $video_url ); ?>" type="video/mp4">
 				</video>
 				<a href="#" class="gif-play-button" aria-label="<?php esc_attr_e( 'Play GIF', 'buddyboss-platform' ); ?>">
 					<span class="bb-icon-bl bb-icon-play"></span>
@@ -1142,8 +1142,8 @@ function bp_media_activity_embed_gif_content( $activity_id ) {
 	<div class="activity-attached-gif-container">
 		<div class="gif-image-container">
 			<div class="gif-player">
-				<video preload="auto" playsinline poster="<?php echo $preview_url; ?>" loop muted>
-					<source src="<?php echo $video_url; ?>" type="video/mp4">
+				<video preload="auto" playsinline poster="<?php echo esc_url( $preview_url ); ?>" loop muted>
+					<source src="<?php echo esc_url( $video_url ); ?>" type="video/mp4">
 				</video>
 				<a href="#" class="gif-play-button" aria-label="<?php esc_attr_e( 'Play GIF', 'buddyboss-platform' ); ?>">
 					<span class="bb-icon-bl bb-icon-play"></span>
@@ -1172,7 +1172,7 @@ function bp_media_activity_embed_gif() {
 		return false;
 	}
 
-	echo bp_media_activity_embed_gif_content( bp_get_activity_id() );
+	echo bp_media_activity_embed_gif_content( bp_get_activity_id() ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Returns trusted, internally-built GIF player markup with <video>/<source> tags that wp_kses_post() would strip.
 }
 
 /**
@@ -1205,7 +1205,7 @@ function bp_media_comment_embed_gif( $comment_id ) {
 	$gif_content = bp_media_activity_embed_gif_content( $comment_id );
 
 	if ( ! empty( $gif_content ) ) {
-		echo $gif_content;
+		echo $gif_content; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Returns trusted, internally-built GIF player markup with <video>/<source> tags that wp_kses_post() would strip.
 	}
 }
 
@@ -1401,32 +1401,32 @@ function bp_media_import_submenu_page() {
 								<tr>
 									<th scope="row"><?php esc_html_e( 'Albums', 'buddyboss-platform' ); ?></th>
 									<td>
-										<span id="bp-media-import-albums-done"><?php echo $albums_done; ?></span> <?php esc_html_e( 'out of', 'buddyboss-platform' ); ?>
-										<span id="bp-media-import-albums-total"><?php echo $total_albums; ?></span></td>
+										<span id="bp-media-import-albums-done"><?php echo esc_html( $albums_done ); ?></span> <?php esc_html_e( 'out of', 'buddyboss-platform' ); ?>
+										<span id="bp-media-import-albums-total"><?php echo esc_html( $total_albums ); ?></span></td>
 								</tr>
 								<tr>
 									<th scope="row"><?php esc_html_e( 'Media', 'buddyboss-platform' ); ?></th>
 									<td>
-										<span id="bp-media-import-media-done"><?php echo $media_done; ?></span> <?php esc_html_e( 'out of', 'buddyboss-platform' ); ?>
-										<span id="bp-media-import-media-total"><?php echo $total_media; ?></span></td>
+										<span id="bp-media-import-media-done"><?php echo esc_html( $media_done ); ?></span> <?php esc_html_e( 'out of', 'buddyboss-platform' ); ?>
+										<span id="bp-media-import-media-total"><?php echo esc_html( $total_media ); ?></span></td>
 								</tr>
 								<tr>
 									<th scope="row"><?php esc_html_e( 'Forums', 'buddyboss-platform' ); ?></th>
 									<td>
-										<span id="bp-media-import-forums-done"><?php echo $forums_done; ?></span> <?php esc_html_e( 'out of', 'buddyboss-platform' ); ?>
-										<span id="bp-media-import-media-total"><?php echo $forums_total; ?></span></td>
+										<span id="bp-media-import-forums-done"><?php echo esc_html( $forums_done ); ?></span> <?php esc_html_e( 'out of', 'buddyboss-platform' ); ?>
+										<span id="bp-media-import-media-total"><?php echo esc_html( $forums_total ); ?></span></td>
 								</tr>
 								<tr>
 									<th scope="row"><?php esc_html_e( 'Discussions', 'buddyboss-platform' ); ?></th>
 									<td>
-										<span id="bp-media-import-forums-done"><?php echo $topics_done; ?></span> <?php esc_html_e( 'out of', 'buddyboss-platform' ); ?>
-										<span id="bp-media-import-media-total"><?php echo $topics_total; ?></span></td>
+										<span id="bp-media-import-forums-done"><?php echo esc_html( $topics_done ); ?></span> <?php esc_html_e( 'out of', 'buddyboss-platform' ); ?>
+										<span id="bp-media-import-media-total"><?php echo esc_html( $topics_total ); ?></span></td>
 								</tr>
 								<tr>
 									<th scope="row"><?php esc_html_e( 'Replies', 'buddyboss-platform' ); ?></th>
 									<td>
-										<span id="bp-media-import-forums-done"><?php echo $replies_done; ?></span> <?php esc_html_e( 'out of', 'buddyboss-platform' ); ?>
-										<span id="bp-media-import-media-total"><?php echo $replies_total; ?></span></td>
+										<span id="bp-media-import-forums-done"><?php echo esc_html( $replies_done ); ?></span> <?php esc_html_e( 'out of', 'buddyboss-platform' ); ?>
+										<span id="bp-media-import-media-total"><?php echo esc_html( $replies_total ); ?></span></td>
 								</tr>
 							</table>
 							<p>
@@ -1790,10 +1790,11 @@ function bp_media_forum_privacy_repair() {
 	if ( ! empty( $records ) ) {
 		foreach ( $records as $record ) {
 			if ( ! empty( $record ) ) {
-				$media_ids = get_post_meta( $record, 'bp_media_ids', true );
-				if ( $media_ids ) {
-					$update_query = "UPDATE {$bp->media->table_name} SET `privacy`= 'forums' WHERE id in (" . $media_ids . ')';
-					$wpdb->query( $update_query );
+				$media_ids = wp_parse_id_list( get_post_meta( $record, 'bp_media_ids', true ) );
+				if ( ! empty( $media_ids ) ) {
+					$ids_in       = implode( ',', $media_ids );
+					$update_query = "UPDATE {$bp->media->table_name} SET `privacy`= 'forums' WHERE id IN ({$ids_in})";
+					$wpdb->query( $update_query ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- IDs are integers via wp_parse_id_list().
 				}
 			}
 			$offset ++;
@@ -1935,7 +1936,7 @@ function bp_media_download_error( $message, $title = '', $status = 404 ) {
 	if ( ! strstr( $message, '<a ' ) ) {
 		$message .= ' <a href="' . esc_url( site_url() ) . '" class="bp-media-forward">' . esc_html__( 'Go to media', 'buddyboss-platform' ) . '</a>';
 	}
-	wp_die( $message, $title, array( 'response' => $status ) ); // WPCS: XSS ok.
+	wp_die( wp_kses_post( $message ), esc_html( $title ), array( 'response' => absint( $status ) ) );
 }
 
 /**
@@ -1992,7 +1993,7 @@ function bp_media_readfile_chunked( $file, $start = 0, $length = 0 ) {
 				$read_length = $end - $p + 1;
 			}
 
-			echo @fread( $handle, $read_length ); // phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged, WordPress.XSS.EscapeOutput.OutputNotEscaped, WordPress.WP.AlternativeFunctions.file_system_read_fread
+			echo @fread( $handle, $read_length ); // phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged, WordPress.Security.EscapeOutput.OutputNotEscaped, WordPress.WP.AlternativeFunctions.file_system_read_fread -- Raw binary file stream for download; escaping would corrupt the output.
 			$p = @ftell( $handle ); // phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged
 
 			if ( ob_get_length() ) {

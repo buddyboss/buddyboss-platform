@@ -829,7 +829,7 @@ function bp_nouveau_member_has_meta() {
  * @return string HTML Output.
  */
 function bp_nouveau_member_meta() {
-	echo join( "\n", bp_nouveau_get_member_meta() );
+	echo wp_kses_post( join( "\n", bp_nouveau_get_member_meta() ) );
 }
 
 /**

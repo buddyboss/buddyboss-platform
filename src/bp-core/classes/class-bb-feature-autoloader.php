@@ -121,7 +121,7 @@ class BB_Feature_Autoloader {
 				sprintf(
 					/* translators: %s: pattern */
 					esc_html__( 'Invalid regex pattern for feature class mapping: %s', 'buddyboss-platform' ),
-					$pattern
+					esc_html( $pattern )
 				),
 				'3.0.0'
 			);

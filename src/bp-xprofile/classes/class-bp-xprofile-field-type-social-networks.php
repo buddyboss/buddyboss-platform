@@ -132,11 +132,11 @@ class BP_XProfile_Field_Type_Social_Networks extends BP_XProfile_Field_Type {
 			);
 
 			$key   = bp_social_network_search_key( $option->name, $providers );
-			$html .= '<div class="editfield"><legend id="field_' . $option->id . '-1">' . $providers[ $key ]->name . '</legend>
+			$html .= '<div class="editfield"><legend id="field_' . esc_attr( $option->id ) . '-1">' . esc_html( $providers[ $key ]->name ) . '</legend>
 						<input ' . $field . '></div>';
 		}
 
-		echo $html;
+		echo $html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $html is built from escaped pieces; $field is attribute markup escaped via bp_get_form_field_attributes() and cannot be passed through wp_kses_post() without stripping the input element.
 	}
 
 	/**
@@ -157,7 +157,7 @@ class BP_XProfile_Field_Type_Social_Networks extends BP_XProfile_Field_Type {
 																esc_html_e( 'Select', 'buddyboss-platform' );
 																?>
 			</label>
-		<select <?php echo $this->get_edit_field_html_elements( $raw_properties ); ?>>
+		<select <?php echo $this->get_edit_field_html_elements( $raw_properties ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- get_edit_field_html_elements() returns attribute markup already escaped via bp_get_form_field_attributes(). ?>>
 			<?php bp_the_profile_field_options(); ?>
 		</select>
 
@@ -286,7 +286,7 @@ class BP_XProfile_Field_Type_Social_Networks extends BP_XProfile_Field_Type {
 								foreach ( bp_xprofile_social_network_provider() as $option ) {
 									$compare = ( true === $fresh_setup ) ? $options[ $i ]->value : $options[ $i ]->name;
 									?>
-									<option class="<?php echo $options[ $i ]->name . ' ' . $option->value; ?>" value="<?php echo esc_attr( $option->value ); ?>" <?php echo ( $compare === $option->value ) ? 'selected' : ''; ?>><?php echo $option->name; ?></option>
+									<option class="<?php echo esc_attr( $options[ $i ]->name . ' ' . $option->value ); ?>" value="<?php echo esc_attr( $option->value ); ?>" <?php echo ( $compare === $option->value ) ? 'selected' : ''; ?>><?php echo esc_html( $option->name ); ?></option>
 									<?php
 
 								}

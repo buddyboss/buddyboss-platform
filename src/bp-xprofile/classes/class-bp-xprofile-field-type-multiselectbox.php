@@ -94,7 +94,7 @@ class BP_XProfile_Field_Type_Multiselectbox extends BP_XProfile_Field_Type {
 		do_action( bp_get_the_profile_field_errors_action() );
 		?>
 
-		<select <?php echo $this->get_edit_field_html_elements( $r ); ?> aria-labelledby="<?php bp_the_profile_field_input_name(); ?>-1" aria-describedby="<?php bp_the_profile_field_input_name(); ?>-3">
+		<select <?php echo $this->get_edit_field_html_elements( $r ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- returns attribute markup already escaped via bp_get_form_field_attributes(). ?> aria-labelledby="<?php bp_the_profile_field_input_name(); ?>-1" aria-describedby="<?php bp_the_profile_field_input_name(); ?>-3">
 			<?php
 			bp_the_profile_field_options(
 				array(
@@ -181,7 +181,7 @@ class BP_XProfile_Field_Type_Multiselectbox extends BP_XProfile_Field_Type {
 			$html .= apply_filters( 'bp_get_the_profile_field_options_multiselect', '<option' . $selected . ' value="' . esc_attr( stripslashes( $options[ $k ]->name ) ) . '">' . esc_html( stripslashes( $options[ $k ]->name ) ) . '</option>', $options[ $k ], $this->field_obj->id, $selected, $k );
 		}
 
-		echo $html;
+		echo $html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- <option> markup pre-escaped per option (esc_attr value, esc_html label, literal selected attr).
 	}
 
 	/**
@@ -208,7 +208,7 @@ class BP_XProfile_Field_Type_Multiselectbox extends BP_XProfile_Field_Type {
 																esc_html_e( 'Select', 'buddyboss-platform' );
 																?>
 		</label>
-		<select <?php echo $this->get_edit_field_html_elements( $r ); ?>>
+		<select <?php echo $this->get_edit_field_html_elements( $r ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- returns attribute markup already escaped via bp_get_form_field_attributes(). ?>>
 			<?php bp_the_profile_field_options(); ?>
 		</select>
 

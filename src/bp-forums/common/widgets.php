@@ -80,10 +80,10 @@ class BBP_Login_Widget extends WP_Widget {
 		$settings['register'] = apply_filters( 'bbp_login_widget_register', $settings['register'], $instance, $this->id_base );
 		$settings['lostpass'] = apply_filters( 'bbp_login_widget_lostpass', $settings['lostpass'], $instance, $this->id_base );
 
-		echo $args['before_widget'];
+		echo wp_kses_post( $args['before_widget'] );
 
 		if ( ! empty( $settings['title'] ) ) {
-			echo $args['before_title'] . $settings['title'] . $args['after_title'];
+			echo wp_kses_post( $args['before_title'] . $settings['title'] . $args['after_title'] );
 		}
 
 		if ( ! is_user_logged_in() ) : ?>
@@ -152,7 +152,7 @@ class BBP_Login_Widget extends WP_Widget {
 			<?php
 		endif;
 
-		echo $args['after_widget'];
+		echo wp_kses_post( $args['after_widget'] );
 	}
 
 	/**
@@ -309,10 +309,10 @@ class BBP_Views_Widget extends WP_Widget {
 		// Start an output buffer.
 		ob_start();
 
-		echo $args['before_widget'];
+		echo wp_kses_post( $args['before_widget'] );
 
 		if ( ! empty( $settings['title'] ) ) {
-			echo $args['before_title'] . $settings['title'] . $args['after_title'];
+			echo wp_kses_post( $args['before_title'] . $settings['title'] . $args['after_title'] );
 		}
 		?>
 
@@ -327,10 +327,10 @@ class BBP_Views_Widget extends WP_Widget {
 		</ul>
 
 		<?php
-		echo $args['after_widget'];
+		echo wp_kses_post( $args['after_widget'] );
 
 		// Output the current buffer.
-		echo ob_get_clean();
+		echo wp_kses_post( ob_get_clean() );
 	}
 
 	/**
@@ -469,15 +469,15 @@ class BBP_Search_Widget extends WP_Widget {
 		// Forums filter.
 		$settings['title'] = apply_filters( 'bbp_search_widget_title', $settings['title'], $instance, $this->id_base );
 
-		echo $args['before_widget'];
+		echo wp_kses_post( $args['before_widget'] );
 
 		if ( ! empty( $settings['title'] ) ) {
-			echo $args['before_title'] . $settings['title'] . $args['after_title'];
+			echo wp_kses_post( $args['before_title'] . $settings['title'] . $args['after_title'] );
 		}
 
 		bbp_get_template_part( 'form', 'search' );
 
-		echo $args['after_widget'];
+		echo wp_kses_post( $args['after_widget'] );
 	}
 
 	/**
@@ -648,10 +648,10 @@ class BBP_Forums_Widget extends WP_Widget {
 			return;
 		}
 
-		echo $args['before_widget'];
+		echo wp_kses_post( $args['before_widget'] );
 
 		if ( ! empty( $settings['title'] ) ) {
-			echo $args['before_title'] . $settings['title'] . $args['after_title'];
+			echo wp_kses_post( $args['before_title'] . $settings['title'] . $args['after_title'] );
 		}
 		?>
 
@@ -685,7 +685,7 @@ class BBP_Forums_Widget extends WP_Widget {
 							'show_reply_count' => false,
 						);
 
-						echo bb_get_list_forums_recursively( $r );
+						echo wp_kses_post( bb_get_list_forums_recursively( $r ) );
 					}
 					?>
 				</li>
@@ -695,7 +695,7 @@ class BBP_Forums_Widget extends WP_Widget {
 		</ul>
 
 		<?php
-		echo $args['after_widget'];
+		echo wp_kses_post( $args['after_widget'] );
 
 		// Reset the $post global.
 		wp_reset_postdata();
@@ -936,10 +936,10 @@ class BBP_Topics_Widget extends WP_Widget {
 		// Start an output buffer.
 		ob_start();
 
-		echo $args['before_widget'];
+		echo wp_kses_post( $args['before_widget'] );
 
 		if ( ! empty( $settings['title'] ) ) {
-			echo $args['before_title'] . $settings['title'] . $args['after_title'];
+			echo wp_kses_post( $args['before_title'] . $settings['title'] . $args['after_title'] );
 		}
 		?>
 
@@ -969,7 +969,7 @@ class BBP_Topics_Widget extends WP_Widget {
 				$author_url = bbp_get_topic_author_url( $topic_id );
 				?>
 
-				<li class="<?php echo $author_related_class; ?>">
+				<li class="<?php echo esc_attr( $author_related_class ); ?>">
 
 					<?php if ( ! empty( $author_link ) ) : ?>
 
@@ -987,7 +987,7 @@ class BBP_Topics_Widget extends WP_Widget {
 						<?php
 						if ( ! empty( $author_link ) ) :
 							/* translators: %1$s: topic author link. */
-							printf( esc_html__( 'by %1$s', 'buddyboss-platform' ), '<span class="topic-author"><a href="' . esc_url( $author_url ) . '">' . bbp_get_topic_author_display_name( $topic_id ) . '</a></span>' );
+							echo wp_kses_post( sprintf( __( 'by %1$s', 'buddyboss-platform' ), '<span class="topic-author"><a href="' . esc_url( $author_url ) . '">' . bbp_get_topic_author_display_name( $topic_id ) . '</a></span>' ) );
 						endif;
 						?>
 
@@ -1004,13 +1004,13 @@ class BBP_Topics_Widget extends WP_Widget {
 		</ul>
 
 		<?php
-		echo $args['after_widget'];
+		echo wp_kses_post( $args['after_widget'] );
 
 		// Reset the $post global.
 		wp_reset_postdata();
 
 		// Output the current buffer.
-		echo ob_get_clean();
+		echo wp_kses_post( ob_get_clean() );
 	}
 
 	/**
@@ -1186,15 +1186,15 @@ class BBP_Stats_Widget extends WP_Widget {
 		// Forums widget title filter.
 		$settings['title'] = apply_filters( 'bbp_stats_widget_title', $settings['title'], $instance, $this->id_base );
 
-		echo $args['before_widget'];
+		echo wp_kses_post( $args['before_widget'] );
 
 		if ( ! empty( $settings['title'] ) ) {
-			echo $args['before_title'] . $settings['title'] . $args['after_title'];
+			echo wp_kses_post( $args['before_title'] . $settings['title'] . $args['after_title'] );
 		}
 
 		bbp_get_template_part( 'content', 'statistics' );
 
-		echo $args['after_widget'];
+		echo wp_kses_post( $args['after_widget'] );
 	}
 
 	/**
@@ -1356,10 +1356,10 @@ class BBP_Replies_Widget extends WP_Widget {
 		// Start an output buffer.
 		ob_start();
 
-		echo $args['before_widget'];
+		echo wp_kses_post( $args['before_widget'] );
 
 		if ( ! empty( $settings['title'] ) ) {
-			echo $args['before_title'] . $settings['title'] . $args['after_title'];
+			echo wp_kses_post( $args['before_title'] . $settings['title'] . $args['after_title'] );
 		}
 		?>
 
@@ -1395,7 +1395,7 @@ class BBP_Replies_Widget extends WP_Widget {
 
 				?>
 
-				<li class="<?php echo $author_related_class; ?>">
+				<li class="<?php echo esc_attr( $author_related_class ); ?>">
 					<?php if ( ! empty( $author_link ) ) : ?>
 
 					<a href="<?php echo esc_url( $reply_author_url ); ?>" class="bbp-author-link" rel="nofollow">
@@ -1411,10 +1411,10 @@ class BBP_Replies_Widget extends WP_Widget {
 						<?php
 						if ( ! empty( $author_link ) ) :
 							/* translators: %1$s: reply author link. */
-							printf( esc_html__( '%1$s on ', 'buddyboss-platform' ), '<span class="reply-author"><a href="' . esc_url( $reply_author_url ) . '">' . bbp_get_reply_author_display_name( $reply_id ) . '</a></span>' );
+							echo wp_kses_post( sprintf( __( '%1$s on ', 'buddyboss-platform' ), '<span class="reply-author"><a href="' . esc_url( $reply_author_url ) . '">' . bbp_get_reply_author_display_name( $reply_id ) . '</a></span>' ) );
 						endif;
 
-						echo $reply_link;
+						echo wp_kses_post( $reply_link );
 
 						if ( ! empty( $settings['show_date'] ) ) : ?>
 
@@ -1429,13 +1429,13 @@ class BBP_Replies_Widget extends WP_Widget {
 		</ul>
 
 		<?php
-		echo $args['after_widget'];
+		echo wp_kses_post( $args['after_widget'] );
 
 		// Reset the $post global.
 		wp_reset_postdata();
 
 		// Output the current buffer.
-		echo ob_get_clean();
+		echo wp_kses_post( ob_get_clean() );
 	}
 
 	/**

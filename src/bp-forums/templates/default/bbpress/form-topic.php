@@ -39,7 +39,8 @@ defined( 'ABSPATH' ) || exit;
 					<?php
 					if ( bbp_is_topic_edit() ) {
 						/* translators: %s: discussion title. */
-						printf( __( 'Now Editing &ldquo;%s&rdquo;', 'buddyboss-platform' ), bbp_get_topic_title() );
+						// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- HTML entities in literal; bbp_get_topic_title() is self-escaping.
+						echo wp_kses_post( sprintf( __( 'Now Editing &ldquo;%s&rdquo;', 'buddyboss-platform' ), bbp_get_topic_title() ) );
 					} else {
 						bbp_is_single_forum() ? printf( esc_html__( 'Ask a question or share an idea.', 'buddyboss-platform' ), esc_html( bbp_get_forum_title() ) ) : esc_html_e( 'Start New Discussion', 'buddyboss-platform' );
 					}

@@ -641,12 +641,12 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 		public function render_input_field_html( $args ) {
 			printf(
 				'<input name="%s" type="%s" id="%s" value="%s" placeholder="%s" class="regular-text" /> %s',
-				$args['input_name'],
-				$args['input_type'],
-				$args['input_id'],
-				$args['input_value'],
-				$args['input_placeholder'],
-				$args['input_description'] ? $this->render_input_description( $args['input_description'] ) : ''
+				esc_attr( $args['input_name'] ),
+				esc_attr( $args['input_type'] ),
+				esc_attr( $args['input_id'] ),
+				esc_attr( $args['input_value'] ),
+				esc_attr( $args['input_placeholder'] ),
+				$args['input_description'] ? wp_kses_post( $this->render_input_description( $args['input_description'] ) ) : ''
 			);
 		}
 
@@ -665,12 +665,12 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 				<label for="%1$s">%5$s</label>
 				%6$s
 			',
-				$args['input_id'],
-				$args['input_name'],
+				esc_attr( $args['input_id'] ),
+				esc_attr( $args['input_name'] ),
 				checked( (bool) $input_value, true, false ),
-				$args['input_run_js'] ? "data-run-js-condition=\"{$args['input_run_js']}\"" : '',
-				$args['input_text'],
-				$args['input_description'] ? $this->render_input_description( $args['input_description'] ) : ''
+				$args['input_run_js'] ? 'data-run-js-condition="' . esc_attr( $args['input_run_js'] ) . '"' : '',
+				esc_html( $args['input_text'] ),
+				$args['input_description'] ? wp_kses_post( $this->render_input_description( $args['input_description'] ) ) : ''
 			);
 		}
 
@@ -685,20 +685,20 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 
 			printf(
 				'<select name="%s" id="%s" autocomplete="off" %s>',
-				$args['input_name'],
-				$args['input_id'],
-				isset( $args['input_run_js'] ) && $args['input_run_js'] ? "data-run-js-condition=\"{$args['input_run_js']}\"" : ''
+				esc_attr( $args['input_name'] ),
+				esc_attr( $args['input_id'] ),
+				isset( $args['input_run_js'] ) && $args['input_run_js'] ? 'data-run-js-condition="' . esc_attr( $args['input_run_js'] ) . '"' : ''
 			);
 
 			foreach ( $args['input_options'] ?: array() as $key => $value ) {
 				$selected = $input_value == $key ? 'selected' : '';
-				printf( '<option value="%s" %s>%s</option>', $key, $selected, $value );
+				printf( '<option value="%s" %s>%s</option>', esc_attr( $key ), esc_attr( $selected ), esc_html( $value ) );
 			}
 
 			echo '</select>';
 
 			if ( $args['input_description'] ) {
-				echo $this->render_input_description( $args['input_description'] );
+				echo wp_kses_post( $this->render_input_description( $args['input_description'] ) );
 			}
 		}
 
@@ -739,11 +739,11 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 			}
 
 			foreach ( (array) $wp_settings_sections[ $page ] as $section ) {
-				echo "<div id='{$section['id']}' class='bp-admin-card section-{$section['id']}'>";
+				echo "<div id='" . esc_attr( $section['id'] ) . "' class='bp-admin-card section-" . esc_attr( $section['id'] ) . "'>";
 				$has_tutorial_btn = ( isset( $section['tutorial_callback'] ) && ! empty( $section['tutorial_callback'] ) ) ? 'has_tutorial_btn' : '';
 				$has_icon         = ( isset( $section['icon'] ) && ! empty( $section['icon'] ) ) ? '<i class="' . esc_attr( $section['icon'] ) . '"></i>' : '';
 				if ( $section['title'] ) {
-					echo '<h2 class=' . esc_attr( $has_tutorial_btn ) . '>' . $has_icon .
+					echo '<h2 class=' . esc_attr( $has_tutorial_btn ) . '>' . wp_kses_post( $has_icon ) .
 						wp_kses_post( $section['title'] );
 
 						if ( isset( $section['tutorial_callback'] ) && ! empty( $section['tutorial_callback'] ) ) {
@@ -808,12 +808,12 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 					$class = ' class="' . esc_attr( $field['args']['class'] ) . '"';
 				}
 
-				echo "<tr{$class}>";
+				echo "<tr{$class}>"; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $class is esc_attr-escaped class attribute markup above.
 
 				if ( ! empty( $field['args']['label_for'] ) ) {
-					echo '<th scope="row"><label for="' . esc_attr( $field['args']['label_for'] ) . '">' . $field['title'] . '</label></th>';
+					echo '<th scope="row"><label for="' . esc_attr( $field['args']['label_for'] ) . '">' . wp_kses_post( $field['title'] ) . '</label></th>';
 				} else {
-					echo '<th scope="row">' . $field['title'] . '</th>';
+					echo '<th scope="row">' . wp_kses_post( $field['title'] ) . '</th>';
 				}
 
 				echo '<td>';

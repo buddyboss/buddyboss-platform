@@ -827,7 +827,7 @@ class BP_GOPP_Image_Editor_GS extends WP_Image_Editor {
 				if ( 0 === $return_var && $size ) {
 					$this->update_size( $size[0], $size[1] );
 				}
-				@unlink( $filename ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
+				@wp_delete_file( $filename ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
 			}
 		}
 		return $this->size;

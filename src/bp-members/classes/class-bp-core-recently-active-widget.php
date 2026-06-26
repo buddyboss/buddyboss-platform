@@ -65,8 +65,8 @@ class BP_Core_Recently_Active_Widget extends WP_Widget {
 
 		$refresh_recent_users = '<a href="" class="bs-widget-reload bs-heartbeat-reload hide" aria-label="' . esc_attr__( 'Reload', 'buddyboss-platform' ) . '"><i class="bb-icon-spin6"></i></a>';
 
-		echo $args['before_widget'];
-		echo $args['before_title'] . esc_html( $title ) . $refresh_recent_users . $args['after_title'];
+		echo wp_kses_post( $args['before_widget'] );
+		echo wp_kses_post( $args['before_title'] ) . esc_html( $title ) . wp_kses_post( $refresh_recent_users ) . wp_kses_post( $args['after_title'] );
 
 		// Setup args for querying members.
 		$members_args = array(
@@ -83,7 +83,7 @@ class BP_Core_Recently_Active_Widget extends WP_Widget {
 		$old_members_template = $members_template;
 
 		?>
-		<div id="boss_recently_active_widget_heartbeat" data-max="<?php echo $settings['max_members']; ?>">
+		<div id="boss_recently_active_widget_heartbeat" data-max="<?php echo esc_attr( $settings['max_members'] ); ?>">
 			<?php if ( bp_has_members( $members_args ) ) : ?>
 
 				<div class="avatar-block">
@@ -116,7 +116,7 @@ class BP_Core_Recently_Active_Widget extends WP_Widget {
 			<?php endif; ?>
 		</div>
 		<?php
-		echo $args['after_widget'];
+		echo wp_kses_post( $args['after_widget'] );
 
 		// Restore the global.
 		$members_template = $old_members_template;

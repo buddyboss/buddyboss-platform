@@ -105,7 +105,7 @@ function bp_ps_show_directory( $attr, $content ) {
 		printf(
 			/* translators: %s: BP Profile Search plugin name and version. */
 			'<p class="bp-ps-error">' . esc_html__( '%s: The shortcode [bp_ps_directory] is not compatible with the Nouveau template pack.', 'buddyboss-platform' ) . '</p>',
-			'<strong>BP Profile Search ' . bp_get_version() . '</strong>'
+			'<strong>BP Profile Search ' . esc_html( bp_get_version() ) . '</strong>'
 		);
 	}
 
@@ -161,7 +161,7 @@ function bp_ps_display_sort_options() {
 	 global $bp_ps_sort_options;
 
 	$version = bp_get_version();
-	echo "\n<!-- BP Profile Search $version -->\n";
+	echo "\n<!-- BP Profile Search " . esc_html( $version ) . " -->\n";
 
 	$sort_options = apply_filters( 'bp_ps_sort_options', $bp_ps_sort_options );
 	foreach ( $sort_options as $code => $name ) {

@@ -110,11 +110,11 @@ class BP_Core_Follow_Following_Widget extends WP_Widget {
 		) ) {
 			do_action( 'bp_before_following_widget' );
 
-			echo $args['before_widget'];
-			echo $args['before_title']
-			   . $title
-			   . $following_count
-			   . $args['after_title'];
+			echo $args['before_widget']; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $args['before_widget'] is theme/WP-provided widget wrapper markup.
+			echo $args['before_title'] // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $args['before_title'] is theme/WP-provided widget wrapper markup.
+			   . esc_html( $title )
+			   . wp_kses_post( $following_count )
+			   . $args['after_title']; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $args['after_title'] is theme/WP-provided widget wrapper markup.
 			?>
 
 			<div class="avatar-block">
@@ -131,7 +131,7 @@ class BP_Core_Follow_Following_Widget extends WP_Widget {
 				<div class="more-block more-following"><a href="<?php bp_members_directory_permalink(); ?>#following" class="count-more"><?php esc_html_e( 'See all', 'buddyboss-platform' ); ?><i class="bb-icon-l bb-icon-angle-right"></i></a></div>
 			<?php } ?>
 
-			<?php echo $args['after_widget']; ?>
+			<?php echo $args['after_widget']; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $args['after_widget'] is theme/WP-provided widget wrapper markup. ?>
 
 			<?php do_action( 'bp_after_following_widget' ); ?>
 
