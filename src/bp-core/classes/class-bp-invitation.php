@@ -844,7 +844,7 @@ class BP_Invitation {
 
 		$cached = bp_core_get_incremented_cache( $paged_invites_sql, 'bp_invitations' );
 		if ( false === $cached ) {
-			$paged_invite_ids = $wpdb->get_col( $paged_invites_sql );
+			$paged_invite_ids = $wpdb->get_col( $paged_invites_sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- SQL assembled from query-builder fragments; $sql['where'] from get_where_sql() is %d/%s-prepared, pagination is %d-prepared, table/column names internal.
 			bp_core_set_incremented_cache( $paged_invites_sql, 'bp_invitations', $paged_invite_ids );
 		} else {
 			$paged_invite_ids = $cached;
@@ -906,7 +906,7 @@ class BP_Invitation {
 		$sql        = "{$select_sql} {$from_sql} {$where_sql}";
 
 		// Return the queried results
-		return $wpdb->get_var( $sql );
+		return $wpdb->get_var( $sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $where_sql from get_where_sql() is %d/%s-prepared; $select_sql/$from_sql are hardcoded with internal table name.
 	}
 
 	/**

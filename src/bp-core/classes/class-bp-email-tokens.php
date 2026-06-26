@@ -447,7 +447,7 @@ class BP_Email_Tokens {
 
 										$sql['limit'] = 'LIMIT 4';
 
-										$group_user_ids = $wpdb->get_results( "{$sql[ 'select' ]} {$sql[ 'where' ]} {$sql[ 'groupby' ]} {$sql[ 'orderby' ]} {$sql[ 'order' ]} {$sql[ 'limit' ]}" );
+										$group_user_ids = $wpdb->get_results( "{$sql[ 'select' ]} {$sql[ 'where' ]} {$sql[ 'groupby' ]} {$sql[ 'orderby' ]} {$sql[ 'order' ]} {$sql[ 'limit' ]}" ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- internal table name; WHERE uses absint($group->id) and a %s-prepared component; groupby/orderby/limit are hardcoded literals.
 
 										$group_user_ids = wp_list_pluck( $group_user_ids, 'user_id' );
 
@@ -1999,7 +1999,7 @@ class BP_Email_Tokens {
 		$table_name = $bp_prefix . 'bp_messages_messages';
 		$sender_id  = $wpdb->get_var(
 			$wpdb->prepare(
-				'SELECT sender_id FROM `' . $table_name . '` WHERE id = %d',
+				'SELECT sender_id FROM `' . $table_name . '` WHERE id = %d', // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- $table_name built from bp_core_get_table_prefix(); message_id is %d-bound.
 				$tokens['message_id']
 			)
 		);

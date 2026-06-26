@@ -44,7 +44,8 @@ $F = bp_ps_escaped_form_data( $version = '4.9' );
 if ( ! empty( $options['theme'] ) ) {
 	$accordion = 'bp_ps_accordion_' . $F->unique_id;
 	wp_enqueue_script( 'jquery-ui-accordion' );
-	wp_enqueue_style( 'jquery-ui-theme', 'https://code.jquery.com/ui/1.12.1/themes/' . $options['theme'] . '/jquery-ui.min.css' );
+	// phpcs:ignore PluginCheck.CodeAnalysis.EnqueuedResourceOffloading.OffloadedContent -- Legacy profile-search accordion theme; admin-selected jQuery-UI theme name. Bundling all jQuery-UI themes locally is a pending asset decision.
+	wp_enqueue_style( 'jquery-ui-theme', 'https://code.jquery.com/ui/1.12.1/themes/' . esc_attr( $options['theme'] ) . '/jquery-ui.min.css' );
 	?>
 <script>
 	jQuery(function($) {

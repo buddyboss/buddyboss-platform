@@ -1307,7 +1307,7 @@ function bp_document_delete_orphaned_attachments() {
 				GROUP BY {$post_table}.ID
 				ORDER BY {$post_table}.post_date DESC";
 
-	$document_wp_query_posts = $wpdb->get_col( $query );
+	$document_wp_query_posts = $wpdb->get_col( $query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- $query built only from $wpdb->posts/$wpdb->postmeta table names and a server-generated gmdate() timestamp; no user input.
 
 	if ( ! empty( $document_wp_query_posts ) ) {
 		foreach ( $document_wp_query_posts as $post_id ) {
@@ -2176,7 +2176,7 @@ function bp_document_user_document_folder_tree_view_li_html( $user_id = 0, $grou
 
 	$cached = bp_core_get_incremented_cache( $documents_folder_query, 'bp_document_folder' );
 	if ( false === $cached ) {
-		$data = $wpdb->get_results( $documents_folder_query, ARRAY_A ); // db call ok; no-cache ok;
+		$data = $wpdb->get_results( $documents_folder_query, ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- $documents_folder_query is built via $wpdb->prepare() above with %d args.
 		bp_core_set_incremented_cache( $documents_folder_query, 'bp_document_folder', $data );
 	} else {
 		$data = $cached;
@@ -2282,7 +2282,7 @@ function bp_document_folder_bradcrumb( $folder_id ) {
 		$folder_id
 	);
 
-	$data = $wpdb->get_results( $documents_folder_query, ARRAY_A ); // db call ok; no-cache ok;
+	$data = $wpdb->get_results( $documents_folder_query, ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- $documents_folder_query is built via $wpdb->prepare() above with a %d folder id; table name from $document_folder_table.
 	$html = '';
 
 	if ( ! empty( $data ) ) {
@@ -2750,7 +2750,7 @@ function bp_document_rename_file( $document_id = 0, $attachment_document_id = 0,
 	 * @param string $new_file_abs_path      New file absolute path.
 	 */
 	$force_bypass = apply_filters( 'bb_document_force_bypass_rename', false, $document_id, $attachment_document_id, $file_abs_path, $new_file_abs_path );
-	if ( ! $force_bypass && ! @rename( $file_abs_path, $new_file_abs_path ) ) {
+	if ( ! $force_bypass && ! @rename( $file_abs_path, $new_file_abs_path ) ) { // phpcs:ignore WordPress.WP.AlternativeFunctions.rename_rename -- direct rename of an uploaded document file on disk; WP_Filesystem offers no equivalent move that preserves the streamed file.
 		return __( 'File renaming error!', 'buddyboss-platform' );
 	}
 
@@ -3878,13 +3878,13 @@ function bp_document_symlink_path() {
 	$platform_previews_path = $upload_dir . '/bb-platform-previews';
 	if ( ! is_dir( $platform_previews_path ) ) {
 		wp_mkdir_p( $platform_previews_path );
-		chmod( $platform_previews_path, 0755 );
+		chmod( $platform_previews_path, 0755 ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_chmod -- explicit permission set on the freshly-created previews directory.
 	}
 
 	$document_symlinks_path = $platform_previews_path . '/' . md5( 'bb-documents' );
 	if ( ! is_dir( $document_symlinks_path ) ) {
 		wp_mkdir_p( $document_symlinks_path );
-		chmod( $document_symlinks_path, 0755 );
+		chmod( $document_symlinks_path, 0755 ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_chmod -- explicit permission set on the freshly-created symlinks directory.
 	}
 
 	return $document_symlinks_path;
@@ -4220,7 +4220,7 @@ function bp_document_remove_temp_directory( $dir ) {
 			}
 		}
 		reset( $objects );
-		rmdir( $dir );
+		rmdir( $dir ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_rmdir -- removing an emptied temp document directory; WP_Filesystem offers no streaming equivalent in this context.
 	}
 }
 
@@ -4392,7 +4392,7 @@ function bp_document_generate_code_previews( $attachment_id ) {
 
 			// Create temp folder.
 			wp_mkdir_p( $upload_dir );
-			chmod( $upload_dir, 0777 );
+			chmod( $upload_dir, 0777 ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_chmod -- explicit permission set on the freshly-created temp preview-image directory.
 
 			// Create given main parent folder.
 			$preview_folder = $upload_dir;
@@ -4672,7 +4672,7 @@ function bp_document_get_preview_url( $document_id, $attachment_id, $size = 'bb-
 function bp_document_chmod_r( $path ) {
 	$dir = new DirectoryIterator( $path );
 	foreach ( $dir as $item ) {
-		chmod( $item->getPathname(), 0777 );
+		chmod( $item->getPathname(), 0777 ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_chmod -- explicit recursive permission set on freshly-created preview files/dirs.
 		if ( $item->isDir() && ! $item->isDot() ) {
 			bp_document_chmod_r( $item->getPathname() );
 		}

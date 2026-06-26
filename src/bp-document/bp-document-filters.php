@@ -151,7 +151,7 @@ function bp_document_activity_entry() {
 
 	$is_document = bb_document_get_activity_document( $activity );
 	if ( ! empty( $is_document ) ) {
-		print $is_document;
+		print $is_document; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Buffered document template HTML (with download form controls) from bb_document_get_activity_document(); already escaped within its template parts.
 	}
 }
 
@@ -1092,10 +1092,10 @@ Options -ExecCGI
 
 	foreach ( $files as $file ) {
 		if ( wp_mkdir_p( $file['base'] ) && ! file_exists( trailingslashit( $file['base'] ) . $file['file'] ) ) {
-			$file_handle = @fopen( trailingslashit( $file['base'] ) . $file['file'], 'wb' ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged, WordPress.WP.AlternativeFunctions.file_system_read_fopen
+			$file_handle = @fopen( trailingslashit( $file['base'] ) . $file['file'], 'wb' ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged, WordPress.WP.AlternativeFunctions.file_system_read_fopen, WordPress.WP.AlternativeFunctions.file_system_operations_fopen -- direct stream I/O to write document-folder code-execution protection file; WP_Filesystem offers no streaming equivalent.
 			if ( $file_handle ) {
-				fwrite( $file_handle, $file['content'] ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_read_fwrite
-				fclose( $file_handle ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_read_fclose
+				fwrite( $file_handle, $file['content'] ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_read_fwrite, WordPress.WP.AlternativeFunctions.file_system_operations_fwrite -- direct stream I/O to write document-folder protection file; WP_Filesystem offers no streaming equivalent.
+				fclose( $file_handle ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_read_fclose, WordPress.WP.AlternativeFunctions.file_system_operations_fclose -- closes the protection-file write stream; WP_Filesystem offers no streaming equivalent.
 			}
 		}
 	}
@@ -1471,7 +1471,7 @@ function bp_document_readfile_chunked( $file, $start = 0, $length = 0 ) {
 	if ( ! defined( 'BP_DOCUMENT_CHUNK_SIZE' ) ) {
 		define( 'BP_DOCUMENT_CHUNK_SIZE', 1024 * 1024 );
 	}
-	$handle = @fopen( $file, 'r' ); // phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged, WordPress.WP.AlternativeFunctions.file_system_read_fopen
+	$handle = @fopen( $file, 'r' ); // phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged, WordPress.WP.AlternativeFunctions.file_system_read_fopen, WordPress.WP.AlternativeFunctions.file_system_operations_fopen -- direct stream I/O for chunked document download; WP_Filesystem offers no streaming equivalent.
 
 	if ( false === $handle ) {
 		return false;
@@ -1495,7 +1495,7 @@ function bp_document_readfile_chunked( $file, $start = 0, $length = 0 ) {
 				$read_length = $end - $p + 1;
 			}
 
-			echo @fread( $handle, $read_length ); // phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged, WordPress.Security.EscapeOutput.OutputNotEscaped, WordPress.WP.AlternativeFunctions.file_system_read_fread -- Raw binary file content streamed for download; cannot be escaped.
+			echo @fread( $handle, $read_length ); // phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged, WordPress.Security.EscapeOutput.OutputNotEscaped, WordPress.WP.AlternativeFunctions.file_system_read_fread, WordPress.WP.AlternativeFunctions.file_system_operations_fread -- Raw binary document content streamed for download; cannot be escaped and WP_Filesystem offers no streaming equivalent.
 			$p = @ftell( $handle ); // phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged
 
 			if ( ob_get_length() ) {
@@ -1513,7 +1513,7 @@ function bp_document_readfile_chunked( $file, $start = 0, $length = 0 ) {
 		}
 	}
 
-	return @fclose( $handle ); // phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged, WordPress.WP.AlternativeFunctions.file_system_read_fclose
+	return @fclose( $handle ); // phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged, WordPress.WP.AlternativeFunctions.file_system_read_fclose, WordPress.WP.AlternativeFunctions.file_system_operations_fclose -- closes the direct document-download stream handle; WP_Filesystem offers no streaming equivalent.
 }
 
 /**
@@ -1616,7 +1616,7 @@ function bp_document_admin_repair_document() {
 	$bp     = buddypress();
 
 	$document_query = "SELECT id, activity_id FROM {$bp->document->table_name} WHERE activity_id != 0 LIMIT 50 OFFSET $offset ";
-	$documents      = $wpdb->get_results( $document_query );
+	$documents      = $wpdb->get_results( $document_query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Table name from $bp->document; $offset is an (int)-cast integer.
 
 	if ( ! empty( $documents ) ) {
 		foreach ( $documents as $document ) {

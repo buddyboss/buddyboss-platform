@@ -205,6 +205,7 @@ class BP_GOPP_Image_Editor_GS extends WP_Image_Editor {
 		// Set correct file permissions
 		$stat  = stat( dirname( $filename ) );
 		$perms = $stat['mode'] & 0000666; // Same permissions as parent folder, strip off the executable bits.
+		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_chmod -- explicit permission set on a freshly-created intermediate image file.
 		@ chmod( $filename, $perms );
 
 		/** This filter is documented in wp-includes/class-wp-image-editor-gd.php */
@@ -251,11 +252,14 @@ class BP_GOPP_Image_Editor_GS extends WP_Image_Editor {
 		}
 
 		// Check existence & magic bytes.
+		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fopen -- direct binary stream read of PDF magic bytes; WP_Filesystem offers no streaming equivalent.
 		$fp = @ fopen( $file, 'rb' );
 		if ( false === $fp ) {
 			return __( 'File doesn&#8217;t exist?', 'buddyboss-platform' );
 		}
+		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fread -- direct binary stream read of PDF magic bytes; WP_Filesystem offers no streaming equivalent.
 		$magic_bytes = fread( $fp, 10 ); // Max 10 chars: "%PDF-N.NN" plus optional initial linefeed.
+		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose -- closing the PDF magic-bytes read handle; WP_Filesystem offers no streaming equivalent.
 		fclose( $fp );
 		// This is a similar test to that done by libmagic, but more strict on version format by insisting it's "0." or "1." followed by 1 or 2 numbers.
 		if ( ! preg_match( '/^\n?%PDF-[01]\.[0-9]{1,2}/', $magic_bytes ) ) {

@@ -121,6 +121,7 @@ class BP_Nouveau_Group_Invite_Query extends BP_User_Query {
 		$sql['order']   = 'DESC';
 
 		/** LIMIT clause ******************************************************/
+		// phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter -- $sql parts are internal table name (select), $wpdb->prepare()'d %d WHERE clauses, and hardcoded orderby/order/limit constants.
 		$this->group_member_ids = $wpdb->get_col( "{$sql['select']} {$sql['where']} {$sql['orderby']} {$sql['order']} {$sql['limit']}" );
 
 		return array_merge( $this->group_member_ids, $pending_invites );

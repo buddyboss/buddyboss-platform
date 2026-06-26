@@ -1074,14 +1074,18 @@ class BP_Document {
 		$cached_document = bp_core_get_incremented_cache( $document_ids_sql_document, $cache_group );
 
 		if ( false === $cached_folder ) {
-			$document_ids_folder = $wpdb->get_col( $document_ids_sql_folder ); // db call ok; no-cache ok;
+			// phpcs:disable WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- SQL assembled from internally-built/escaped fragments ($where_sql_folder, whitelisted $order_by_folder/$sort, table names); values are prepared/esc_sql'd upstream.
+			$document_ids_folder = $wpdb->get_col( $document_ids_sql_folder ); // db call ok; no-cache ok.
+			// phpcs:enable WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter
 			bp_core_set_incremented_cache( $document_ids_sql_folder, $cache_group, $document_ids_folder );
 		} else {
 			$document_ids_folder = $cached_folder;
 		}
 
 		if ( false === $cached_document ) {
-			$document_ids_document = $wpdb->get_col( $document_ids_sql_document ); // db call ok; no-cache ok;
+			// phpcs:disable WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- SQL assembled from internally-built/escaped fragments ($where_sql_document, whitelisted $order_by_document/$sort, table names); values are prepared/esc_sql'd upstream.
+			$document_ids_document = $wpdb->get_col( $document_ids_sql_document ); // db call ok; no-cache ok.
+			// phpcs:enable WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter
 			bp_core_set_incremented_cache( $document_ids_sql_document, $cache_group, $document_ids_document );
 		} else {
 			$document_ids_document = $cached_document;
@@ -1814,10 +1818,13 @@ class BP_Document {
 				}
 			}
 		}
-		$privacy = "'" . implode( "', '", $privacy ) . "'";
+		// Build %s placeholders so every privacy value is bound through prepare() (no interpolation).
+		$privacy_placeholders = implode( ', ', array_fill( 0, count( $privacy ), '%s' ) );
 
-		$total_count_document = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$bp->document->table_name} WHERE user_id = {$user_id} AND privacy IN ({$privacy}) AND folder_id = 0" );       // db call ok; no-cache ok;
-		$total_count_folder   = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$bp->document->table_name_folder} WHERE user_id = {$user_id} AND privacy IN ({$privacy}) AND parent = 0" ); // db call ok; no-cache ok;
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- $privacy_placeholders is a count-based list of %s tokens; all privacy values are bound via prepare(); table name from $bp.
+		$total_count_document = (int) $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM {$bp->document->table_name} WHERE user_id = %d AND privacy IN ( $privacy_placeholders ) AND folder_id = 0", array_merge( array( $user_id ), $privacy ) ) ); // db call ok; no-cache ok.
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- $privacy_placeholders is a count-based list of %s tokens; all privacy values are bound via prepare(); table name from $bp.
+		$total_count_folder   = (int) $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM {$bp->document->table_name_folder} WHERE user_id = %d AND privacy IN ( $privacy_placeholders ) AND parent = 0", array_merge( array( $user_id ), $privacy ) ) ); // db call ok; no-cache ok.
 		$total_count          = $total_count_folder + $total_count_document;
 
 		return $total_count;
@@ -1834,8 +1841,8 @@ class BP_Document {
 	public static function total_group_document_count( $group_id = 0 ) {
 		global $bp, $wpdb;
 
-		$total_count_document = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$bp->document->table_name} WHERE group_id = {$group_id} AND folder_id = 0" );       // db call ok; no-cache ok;
-		$total_count_folder   = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$bp->document->table_name_folder} WHERE group_id = {$group_id} AND parent = 0" ); // db call ok; no-cache ok;
+		$total_count_document = (int) $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM {$bp->document->table_name} WHERE group_id = %d AND folder_id = 0", $group_id ) );       // db call ok; no-cache ok; phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- Table name from $bp; $group_id is %d-prepared.
+		$total_count_folder   = (int) $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM {$bp->document->table_name_folder} WHERE group_id = %d AND parent = 0", $group_id ) ); // db call ok; no-cache ok; phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- Table name from $bp; $group_id is %d-prepared.
 		$total_count          = $total_count_folder + $total_count_document;
 
 		return $total_count;
@@ -1861,7 +1868,9 @@ class BP_Document {
 		$cached = bp_core_get_incremented_cache( $folder_document_sql, 'bp_document' );
 
 		if ( false === $cached ) {
-			$document_ids = $wpdb->get_col( $folder_document_sql ); // db call ok; no-cache ok;
+			// phpcs:disable WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $folder_document_sql is built via $wpdb->prepare() above.
+			$document_ids = $wpdb->get_col( $folder_document_sql ); // db call ok; no-cache ok.
+			// phpcs:enable WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter
 			bp_core_set_incremented_cache( $folder_document_sql, 'bp_document', $document_ids );
 		} else {
 			$document_ids = $cached;
@@ -1977,7 +1986,7 @@ class BP_Document {
 			$q = $wpdb->prepare( "INSERT INTO {$bp->document->table_name} ( blog_id, attachment_id, user_id, title, description, folder_id, activity_id, message_id, group_id, privacy, menu_order, date_created, date_modified, status ) VALUES ( %d, %d, %d, %s, %s, %d, %d, %d, %d, %s, %d, %s, %s, %s )", $this->blog_id, $this->attachment_id, $this->user_id, $this->title, $this->description, $this->folder_id, $this->activity_id, $this->message_id, $this->group_id, $this->privacy, $this->menu_order, $this->date_created, $this->date_modified, $this->status );
 		}
 
-		if ( false === $wpdb->query( $q ) ) {
+		if ( false === $wpdb->query( $q ) ) { // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- $q is built via $wpdb->prepare() above.
 			return false;
 		}
 

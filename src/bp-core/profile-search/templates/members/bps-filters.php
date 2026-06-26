@@ -25,7 +25,7 @@ foreach ( $F->fields as $f ) {
 	$filter = apply_filters( 'bp_ps_print_filter', $filter, $f );
 
 	?>
-		<strong><?php echo $f->label; ?></strong> <span><?php echo $filter; ?></span><br>
+		<strong><?php echo esc_html( $f->label ); ?></strong> <span><?php echo esc_html( $filter ); ?></span><br>
 	<?php
 }
 

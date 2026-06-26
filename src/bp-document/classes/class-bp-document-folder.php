@@ -396,7 +396,8 @@ class BP_Document_Folder {
 
 		$cached = bp_core_get_incremented_cache( $folder_ids_sql, $cache_group );
 		if ( false === $cached ) {
-			$folder_ids = $wpdb->get_col( $folder_ids_sql ); // db call ok; no-cache ok;
+			// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $folder_ids_sql composed of prepared fragments and internal table names; LIMIT/order_by are whitelisted/absint'd. db call ok; no-cache ok;
+			$folder_ids = $wpdb->get_col( $folder_ids_sql );
 			bp_core_set_incremented_cache( $folder_ids_sql, $cache_group, $folder_ids );
 		} else {
 			$folder_ids = $cached;
@@ -441,7 +442,8 @@ class BP_Document_Folder {
 			$total_folders_sql = apply_filters( 'bp_document_folder_total_documents_sql', "SELECT count(DISTINCT f.id) FROM {$bp->document->table_name_folder} f {$join_sql} {$where_sql}", $where_sql, $sort );
 			$cached            = bp_core_get_incremented_cache( $total_folders_sql, $cache_group );
 			if ( false === $cached ) {
-				$total_folders = $wpdb->get_var( $total_folders_sql ); // db call ok; no-cache ok;
+				// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $where_sql/$join_sql are prepared fragments; table name from $bp->document->table_name_folder. db call ok; no-cache ok;
+				$total_folders = $wpdb->get_var( $total_folders_sql );
 				bp_core_set_incremented_cache( $total_folders_sql, $cache_group, $total_folders );
 			} else {
 				$total_folders = $cached;
@@ -641,10 +643,14 @@ class BP_Document_Folder {
 		$where_sql = 'WHERE ' . join( ' AND ', $where_args );
 
 		// Fetch all document folders being deleted so we can perform more actions.
-		$folders = $wpdb->get_results( "SELECT * FROM {$bp->document->table_name_folder} {$where_sql}" ); // db call ok; no-cache ok;
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $where_sql built from $wpdb->prepare()'d fragments; table name from $bp->document->table_name_folder. db call ok; no-cache ok;
+		$folders = $wpdb->get_results( "SELECT * FROM {$bp->document->table_name_folder} {$where_sql}" );
+
+		$folder_id_int = (int) $r['id'];
 
 		if ( ! empty( $r['id'] ) && empty( $r['date_created'] ) && empty( $r['group_id'] ) && empty( $r['user_id'] ) ) {
-			$recursive_folders = $wpdb->get_results( "SELECT * FROM {$bp->document->table_name_folder} WHERE FIND_IN_SET(ID,(SELECT GROUP_CONCAT(lv SEPARATOR ',') FROM ( SELECT @pv:=(SELECT GROUP_CONCAT(id SEPARATOR ',') FROM {$bp->document->table_name_folder} WHERE parent IN (@pv)) AS lv FROM {$bp->document->table_name_folder} JOIN (SELECT @pv:= {$r['id']})tmp WHERE parent IN (@pv)) a))" ); // db call ok; no-cache ok;
+			// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- Table name from $bp->document->table_name_folder; $folder_id_int is cast to int. db call ok; no-cache ok;
+			$recursive_folders = $wpdb->get_results( "SELECT * FROM {$bp->document->table_name_folder} WHERE FIND_IN_SET(ID,(SELECT GROUP_CONCAT(lv SEPARATOR ',') FROM ( SELECT @pv:=(SELECT GROUP_CONCAT(id SEPARATOR ',') FROM {$bp->document->table_name_folder} WHERE parent IN (@pv)) AS lv FROM {$bp->document->table_name_folder} JOIN (SELECT @pv:= {$folder_id_int})tmp WHERE parent IN (@pv)) a))" );
 			$folders           = array_merge( $folders, $recursive_folders );
 		}
 
@@ -659,7 +665,8 @@ class BP_Document_Folder {
 		do_action_ref_array( 'bp_document_folder_before_delete', array( $folders, $r ) );
 
 		if ( ! empty( $r['id'] ) && empty( $r['date_created'] ) && empty( $r['group_id'] ) && empty( $r['user_id'] ) ) {
-			$recursive_folders = $wpdb->get_results( "SELECT * FROM {$bp->document->table_name_folder} WHERE FIND_IN_SET(ID,(SELECT GROUP_CONCAT(lv SEPARATOR ',') FROM ( SELECT @pv:=(SELECT GROUP_CONCAT(id SEPARATOR ',') FROM {$bp->document->table_name_folder} WHERE parent IN (@pv)) AS lv FROM {$bp->document->table_name_folder} JOIN (SELECT @pv:= {$r['id']})tmp WHERE parent IN (@pv)) a))" ); // db call ok; no-cache ok;
+			// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- Table name from $bp->document->table_name_folder; $folder_id_int is cast to int. db call ok; no-cache ok;
+			$recursive_folders = $wpdb->get_results( "SELECT * FROM {$bp->document->table_name_folder} WHERE FIND_IN_SET(ID,(SELECT GROUP_CONCAT(lv SEPARATOR ',') FROM ( SELECT @pv:=(SELECT GROUP_CONCAT(id SEPARATOR ',') FROM {$bp->document->table_name_folder} WHERE parent IN (@pv)) AS lv FROM {$bp->document->table_name_folder} JOIN (SELECT @pv:= {$folder_id_int})tmp WHERE parent IN (@pv)) a))" );
 			$folders           = array_merge( $folders, $recursive_folders );
 
 			// Pluck the document folders IDs out of the $folders array.
@@ -818,7 +825,8 @@ class BP_Document_Folder {
 			$q = $wpdb->prepare( "INSERT INTO {$bp->document->table_name_folder} ( blog_id, user_id, group_id, title, privacy, date_created, date_modified, parent ) VALUES ( %d, %d, %d, %s, %s, %s, %s, %d )", $this->blog_id, $this->user_id, $this->group_id, $this->title, $this->privacy, $this->date_created, $this->date_modified, $this->parent );
 		}
 
-		$q = $wpdb->query( $q ); // db call ok; no-cache ok;
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $q is a $wpdb->prepare()'d statement built above. db call ok; no-cache ok;
+		$q = $wpdb->query( $q );
 		if ( false === $q ) {
 			return false;
 		}

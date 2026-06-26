@@ -145,7 +145,10 @@ if ( is_user_logged_in() && ! empty( $memberships ) ) {
 				<div class="bb-rl-course-overview-footer">
 					<div class="mpcs-sidebar-wrapper">
 						<div class="course-progress">
-							<?php echo helpers\Courses::classroom_sidebar_progress( $post ); ?>
+							<?php
+							// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- classroom_sidebar_progress() returns rendered progress-widget HTML from the MemberPress Courses helper (trusted template markup, no user data).
+							echo helpers\Courses::classroom_sidebar_progress( $post );
+							?>
 						</div>
 					</div>
 					<div class="bb-rl-course-enrolled"></div>

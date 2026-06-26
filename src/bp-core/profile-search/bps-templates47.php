@@ -392,7 +392,7 @@ function bp_ps_autocomplete_script( $f ) {
 	<script>
 		function bp_ps_<?php echo esc_js( $f->unique_id ); ?>() {
 			var input = document.getElementById('<?php echo esc_js( $f->unique_id ); ?>');
-			var options = <?php echo $autocomplete_options; ?>;
+			var options = <?php echo $autocomplete_options; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- raw JS object literal (default "{types: ['geocode']}") emitted inside <script>; esc_js would corrupt the literal. ?>;
 			var autocomplete = new google.maps.places.Autocomplete(input, options);
 			google.maps.event.addListener(autocomplete, 'place_changed', function () {
 				var place = autocomplete.getPlace();
@@ -405,7 +405,7 @@ function bp_ps_autocomplete_script( $f ) {
 
 		function bp_ps_locate_<?php echo esc_js( $f->unique_id ); ?>() {
 			if (navigator.geolocation) {
-				var options = <?php echo $geolocation_options; ?>;
+				var options = <?php echo $geolocation_options; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- raw JS object literal (default "{timeout: 5000}") emitted inside <script>; esc_js would corrupt the literal. ?>;
 				navigator.geolocation.getCurrentPosition(function (position) {
 					document.getElementById('Lat_<?php echo esc_js( $f->unique_id ); ?>').value = position.coords.latitude;
 					document.getElementById('Lng_<?php echo esc_js( $f->unique_id ); ?>').value = position.coords.longitude;
