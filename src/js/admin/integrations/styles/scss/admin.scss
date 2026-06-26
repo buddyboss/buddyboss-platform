@@ -312,17 +312,19 @@ body.buddyboss_page_bb-integrations {
 		}
 	}
 
-	&__pagination {
+	// Pagination footer — item count + numbered pages (Settings 2.0 list style).
+	&__footer {
 		display: flex;
 		align-items: center;
-		justify-content: center;
-		gap: 12px;
-		margin: 24px 0;
+		justify-content: flex-end;
+		gap: 16px;
+		padding: 16px 0;
+		margin-top: 8px;
 	}
 
-	&__pagination-info {
+	&__item-count {
 		font-size: 13px;
-		color: #50575e;
+		color: $bb-text-tertiary-color;
 	}
 
 	&__state {
@@ -334,6 +336,11 @@ body.buddyboss_page_bb-integrations {
 		text-align: center;
 		color: #50575e;
 	}
+}
+
+// Numbered page buttons + ellipsis, shared with the Settings 2.0 list screens.
+.bb-admin-pagination {
+	@include bb-admin-pagination;
 }
 
 @keyframes bb-integrations-shimmer {

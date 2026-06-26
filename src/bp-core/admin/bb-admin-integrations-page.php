@@ -125,7 +125,9 @@ function bb_admin_integrations_page() {
 			$ipn_view    = $container->get( \BuddyBossPlatform\GroundLevel\InProductNotifications\Services\View::class );
 			$ipn_root_id = $ipn_view->getRootElementId();
 		} catch ( Throwable $e ) {
-			unset( $e );
+			// Non-fatal: IPN service unavailable — $ipn_root_id stays empty and the
+			// JS falls back to a structural [id$="_ipn_root"] selector.
+			$ipn_root_id = '';
 		}
 	}
 

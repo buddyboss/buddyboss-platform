@@ -36,6 +36,7 @@ function AppInner() {
 	const [ categories, setCategories ] = useState( [] );
 	const [ page, setPage ] = useState( 1 );
 	const [ totalPages, setTotalPages ] = useState( 1 );
+	const [ total, setTotal ] = useState( 0 );
 	const [ search, setSearch ] = useState( '' );
 	const [ category, setCategory ] = useState( 0 );
 	// Tier tabs (All / Free / Pro). "all" is functional today; Free/Pro filtering
@@ -86,6 +87,7 @@ function AppInner() {
 				}
 				setItems( res.items );
 				setTotalPages( res.totalPages );
+				setTotal( res.total );
 				setStatus( res.items.length ? 'ready' : 'empty' );
 			} )
 			.catch( ( err ) => {
@@ -141,6 +143,15 @@ function AppInner() {
 		} );
 		return map;
 	}, [ categories ] );
+
+	// Stable identities for the drawer's open/close so the drawer's Escape-key
+	// effect doesn't tear down + re-register its listener on every App re-render
+	// (category change, list load, debounced search).
+	const handleIntegrationSelect = useCallback( ( slug, title ) => {
+		setActiveTitle( title || '' );
+		setActiveSlug( slug );
+	}, [] );
+	const handleDrawerClose = useCallback( () => setActiveSlug( null ), [] );
 
 	// Global header search → Settings search AJAX (stable identity so BBAdminHeader's
 	// search effect doesn't re-subscribe on every render). adminData is module-scoped.
@@ -241,22 +252,19 @@ function AppInner() {
 					items={ items }
 					status={ status }
 					categoryMap={ categoryMap }
-					onSelect={ ( slug, title ) => {
-						setActiveTitle( title || '' );
-						setActiveSlug( slug );
-					} }
+					onSelect={ handleIntegrationSelect }
 					onRetry={ handleRetry }
 				/>
 
-				{ 'ready' === status && totalPages > 1 && (
-					<Pagination page={ page } totalPages={ totalPages } onChange={ setPage } />
+				{ 'ready' === status && (
+					<Pagination page={ page } totalPages={ totalPages } total={ total } onChange={ setPage } />
 				) }
 
 				{ activeSlug && (
 					<IntegrationDrawer
 						slug={ activeSlug }
 						initialTitle={ activeTitle }
-						onClose={ () => setActiveSlug( null ) }
+						onClose={ handleDrawerClose }
 					/>
 				) }
 			</div>

@@ -166,7 +166,7 @@ class BB_REST_Integrations_Endpoint extends WP_REST_Controller {
 	 * @return true|WP_Error
 	 */
 	public function get_item_permissions_check( $request ) {
-		unset( $request );
+		// $request is unused — the capability gate is global, not per-item.
 		if ( ! current_user_can( 'manage_options' ) ) {
 			return new WP_Error(
 				'bb_rest_integrations_forbidden',

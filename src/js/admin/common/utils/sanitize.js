@@ -252,8 +252,14 @@ function isAllowedUrl(url) {
 		return false;
 	}
 
-	// Allow relative URLs
-	if (url.startsWith('/') || url.startsWith('#') || url.startsWith('?')) {
+	// Allow root-relative, fragment and query URLs. A single leading slash is
+	// relative; a protocol-relative '//host/path' must NOT short-circuit here —
+	// it navigates cross-origin, so let it fall through to the scheme allowlist.
+	if (
+		( url.startsWith('/') && ! url.startsWith('//') ) ||
+		url.startsWith('#') ||
+		url.startsWith('?')
+	) {
 		return true;
 	}
 
