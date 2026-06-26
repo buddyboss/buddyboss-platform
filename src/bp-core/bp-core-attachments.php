@@ -1705,7 +1705,14 @@ function bp_attachments_cover_image_ajax_upload() {
 	// Set the name of the file.
 	$name       = $_FILES['file']['name'];
 	$name_parts = pathinfo( $name );
-	$name       = trim( substr( $name, 0, - ( 1 + strlen( $name_parts['extension'] ) ) ) );
+	// `pathinfo()` omits the `extension` key entirely for files with no
+	// dot (e.g. an upload named `backup`). On PHP 8.1+, `strlen( null )`
+	// raises a deprecation warning; on PHP 8.4+ it will fatal. Default
+	// to an empty extension so the trim short-circuits cleanly.
+	$ext = isset( $name_parts['extension'] ) ? $name_parts['extension'] : '';
+	if ( '' !== $ext ) {
+		$name = trim( substr( $name, 0, - ( 1 + strlen( $ext ) ) ) );
+	}
 
 	/**
 	 * Fires if the new cover photo was successfully uploaded.

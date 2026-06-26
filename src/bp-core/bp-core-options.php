@@ -2656,6 +2656,11 @@ function bb_all_enabled_reactions( $key = '' ) {
  * @return bool True if reaction for activity posts is enabled, otherwise false.
  */
 function bb_is_reaction_activity_posts_enabled( $default = true ) {
+	// First check if reactions feature is enabled via Settings 2.0 toggle.
+	if ( ! bb_is_reactions_feature_enabled() ) {
+		return false;
+	}
+
 	return (bool) apply_filters( 'bb_is_reaction_activity_posts_enabled', (bool) bb_all_enabled_reactions( 'activity' ) );
 }
 
@@ -2669,6 +2674,11 @@ function bb_is_reaction_activity_posts_enabled( $default = true ) {
  * @return bool True if reaction for activity comments is enabled, otherwise false.
  */
 function bb_is_reaction_activity_comments_enabled( $default = true ) {
+	// First check if reactions feature is enabled via Settings 2.0 toggle.
+	if ( ! bb_is_reactions_feature_enabled() ) {
+		return false;
+	}
+
 	return (bool) apply_filters( 'bb_is_reaction_activity_comments_enabled', (bool) bb_all_enabled_reactions( 'activity_comment' ) );
 }
 
@@ -2685,10 +2695,9 @@ function bb_is_reaction_activity_comments_enabled( $default = true ) {
 function bb_get_reaction_mode( $default = 'likes' ) {
 
 	$mode = bp_get_option( 'bb_reaction_mode', $default );
-	if (
-		! class_exists( 'BB_Reactions' )
-	) {
+	if ( ! class_exists( 'BB_Reactions' ) && 'emotions' === $mode ) {
 		$mode = 'likes';
+		bp_update_option( 'bb_reaction_mode', $mode );
 	}
 
 	return apply_filters( 'bb_get_reaction_mode', $mode );
@@ -2702,6 +2711,11 @@ function bb_get_reaction_mode( $default = 'likes' ) {
  * @return bool
  */
 function bb_is_reaction_emotions_enabled() {
+	// First check if reactions feature is enabled via Settings 2.0 toggle.
+	if ( ! bb_is_reactions_feature_enabled() ) {
+		return false;
+	}
+
 	return (bool) apply_filters( 'bb_is_reaction_emotions_enabled', (bool) ( bb_get_reaction_mode() === 'emotions' ) );
 }
 
@@ -2731,10 +2745,15 @@ function bb_reaction_button_options( $key = '' ) {
  * @return array
  */
 function bb_active_reactions() {
+	$reaction = bb_load_reaction();
+	if ( ! $reaction ) {
+		return array();
+	}
+
 	if ( bb_is_reaction_emotions_enabled() ) {
-		$all_emotions = bb_load_reaction()->bb_get_reactions( 'emotions' );
+		$all_emotions = $reaction->bb_get_reactions( 'emotions' );
 	} else {
-		$all_emotions = bb_load_reaction()->bb_get_reactions();
+		$all_emotions = $reaction->bb_get_reactions();
 	}
 
 	return ( ! empty( $all_emotions ) ? array_column( $all_emotions, null, 'id' ) : array() );
@@ -3142,3 +3161,60 @@ function bb_is_activity_search_enabled( $default = true ) {
 	 */
 	return (bool) apply_filters( 'bb_is_activity_search_enabled', (bool) bp_get_option( 'bb_enable_activity_search', $default ) );
 }
+
+/**
+ * Check whether the Reactions feature is enabled via Settings 2.0 feature toggle.
+ *
+ * @since BuddyBoss 3.0.0
+ *
+ * @param bool $reset Optional. Pass true to clear the static cache. Default false.
+ *
+ * @return bool True if reactions feature is enabled, false otherwise.
+ */
+function bb_is_reactions_feature_enabled( $reset = false ) {
+	static $is_enabled = null;
+
+	if ( $reset ) {
+		$is_enabled = null;
+	}
+
+	if ( null !== $is_enabled ) {
+		return $is_enabled;
+	}
+
+	// Check if the feature registry exists (Settings 2.0).
+	if ( ! function_exists( 'bb_feature_registry' ) ) {
+		// Fallback: if no feature registry, assume enabled for backward compatibility.
+		$is_enabled = true;
+		return $is_enabled;
+	}
+
+	// Check the bb-active-features option directly for reactions.
+	$active_features = bp_get_option( 'bb-active-features', array() );
+
+	// Backward compatibility: if 'reactions' key not set (e.g. site not yet saved from Settings 2.0),
+	// treat as enabled so existing sites keep reactions. Must match is_active_callback in
+	// bb-features/community/reactions/bb-feature-config.php so feature card and functionality stay in sync.
+	if ( ! array_key_exists( 'reactions', $active_features ) ) {
+		$is_enabled = true;
+		return $is_enabled;
+	}
+
+	$is_enabled = ! empty( $active_features['reactions'] );
+	return $is_enabled;
+}
+
+/**
+ * Reset static cache when a feature is toggled on/off.
+ *
+ * @since BuddyBoss 3.0.0
+ *
+ * @param string $feature_id The feature ID that was toggled.
+ */
+function bb_reset_reactions_feature_cache( $feature_id ) {
+	if ( 'reactions' === $feature_id ) {
+		bb_is_reactions_feature_enabled( true );
+	}
+}
+add_action( 'bb_feature_activated', 'bb_reset_reactions_feature_cache' );
+add_action( 'bb_feature_deactivated', 'bb_reset_reactions_feature_cache' );

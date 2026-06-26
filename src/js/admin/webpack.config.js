@@ -29,27 +29,6 @@ const scssRule = {
 // Check if we're building for a specific target
 const buildTarget = process.env.BUILD_TARGET || 'all';
 
-// ReadyLaunch configuration
-const readylaunchConfig = {
-    ...defaultConfig,
-    name: 'readylaunch',
-    entry: {
-        'index': path.resolve(__dirname, 'readylaunch/index.js'),
-    },
-    output: {
-        path: path.resolve(__dirname, '../../bp-core/admin/bb-settings/readylaunch/build'),
-        filename: '[name].js',
-        clean: false, // Prevent cleaning other build directories
-    },
-    module: {
-        ...defaultConfig.module,
-        rules: [
-            ...rules,
-            scssRule,
-        ],
-    },
-};
-
 // RL Onboarding configuration
 const rlOnboardingConfig = {
     ...defaultConfig,
@@ -71,12 +50,37 @@ const rlOnboardingConfig = {
     },
 };
 
-// Export configuration based on build target
-if (buildTarget === 'readylaunch') {
-    module.exports = readylaunchConfig;
-} else if (buildTarget === 'rl-onboarding') {
+// Settings configuration
+const settingsConfig = {
+    ...defaultConfig,
+    name: 'settings',
+    entry: {
+        'index': path.resolve(__dirname, 'settings/index.js'),
+    },
+    output: {
+        path: path.resolve(__dirname, '../../bp-core/admin/bb-settings/settings/build'),
+        filename: '[name].js',
+        clean: {
+            keep: /styles/, // Keep the styles directory (SCSS output)
+        },
+    },
+    module: {
+        ...defaultConfig.module,
+        rules: [
+            ...rules,
+            scssRule,
+        ],
+    },
+};
+
+// Export configuration based on build target.
+// `readylaunch` target retired in BuddyBoss [BBVERSION] — legacy admin page
+// folded into Settings Appearance feature.
+if (buildTarget === 'rl-onboarding') {
     module.exports = rlOnboardingConfig;
+} else if (buildTarget === 'settings') {
+    module.exports = settingsConfig;
 } else {
-    // Default: export both configurations for combined builds
-    module.exports = [readylaunchConfig, rlOnboardingConfig];
-} 
+    // Default: export all configurations for combined builds.
+    module.exports = [rlOnboardingConfig, settingsConfig];
+}
