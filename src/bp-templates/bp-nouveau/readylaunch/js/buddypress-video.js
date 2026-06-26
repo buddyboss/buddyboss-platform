@@ -2311,6 +2311,10 @@ window.bp = window.bp || {};
 			modelWrapper.find( 'figure' ).removeClass( 'has-no-thumbnail' );
 
 			self.current_video = false;
+
+			if ( 'undefined' !== typeof bp.Nouveau.Activity && 'function' === typeof bp.Nouveau.Activity.syncPinPostActivityOnCloseTheatre ) {
+				bp.Nouveau.Activity.syncPinPostActivityOnCloseTheatre( target );
+			}
 		},
 
 		getVideosDescription: function () {
@@ -2351,6 +2355,9 @@ window.bp = window.bp || {};
 							$( '.bb-media-info-section:visible .bb-rl-activity-list' ).removeClass( 'loading' ).html( response.data.description );
 							$( '.bb-media-info-section:visible' ).show();
 
+							if ( 'undefined' !== typeof bp.Nouveau.Activity && bp.Nouveau.Activity.syncPinIconToModal ) {
+								bp.Nouveau.Activity.syncPinIconToModal();
+							}
 							self.updateTheaterHeaderTitle(
 								{
 									wrapper : $mediaWrapper,
@@ -2788,6 +2795,9 @@ window.bp = window.bp || {};
 								}
 								$( '.bb-media-info-section:visible' ).show();
 
+								if ( 'undefined' !== typeof bp.Nouveau.Activity && bp.Nouveau.Activity.syncPinIconToModal ) {
+									bp.Nouveau.Activity.syncPinIconToModal();
+								}
 								$( '.bb-media-info-section:visible' ).find( '.bb-activity-more-options-action' ).attr( 'data-balloon-pos', 'left' );
 
 								jQuery( window ).scroll();
