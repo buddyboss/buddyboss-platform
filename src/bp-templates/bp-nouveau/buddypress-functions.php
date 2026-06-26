@@ -384,6 +384,33 @@ class BP_Nouveau extends BP_Theme_Compat {
 		 */
 		$css_dependencies = apply_filters( 'bp_nouveau_css_dependencies', array( 'dashicons' ) );
 
+		// Build the base styles array with icon fonts.
+		$styles_array = array(
+			'bp-nouveau-icons-map' => array(
+				'file'         => 'icons/css/icons-map%s.css',
+				'dependencies' => array(),
+				'version'      => $this->version,
+			),
+			'bp-nouveau-bb-icons'  => array(
+				'file'         => 'icons/css/bb-icons%1$s%2$s.css',
+				'dependencies' => array(),
+				'version'      => $bb_icon_version,
+			),
+		);
+
+		/*
+		 * Only include bp-nouveau (buddypress.css) on frontend pages.
+		 *
+		 * @since BuddyBoss 2.20.0
+		 */
+		if ( ! is_admin() ) {
+			$styles_array['bp-nouveau'] = array(
+				'file'         => 'css/buddypress%1$s%2$s.css',
+				'dependencies' => $css_dependencies,
+				'version'      => $this->version,
+			);
+		}
+
 		/**
 		 * Filters the styles to enqueue for BuddyPress Nouveau.
 		 *
@@ -397,23 +424,7 @@ class BP_Nouveau extends BP_Theme_Compat {
 		 */
 		$styles = apply_filters(
 			'bp_nouveau_enqueue_styles',
-			array(
-				'bp-nouveau-icons-map' => array(
-					'file'         => 'icons/css/icons-map%s.css',
-					'dependencies' => array(),
-					'version'      => $this->version,
-				),
-				'bp-nouveau-bb-icons'  => array(
-					'file'         => 'icons/css/bb-icons%1$s%2$s.css',
-					'dependencies' => array(),
-					'version'      => $bb_icon_version,
-				),
-				'bp-nouveau'           => array(
-					'file'         => 'css/buddypress%1$s%2$s.css',
-					'dependencies' => $css_dependencies,
-					'version'      => $this->version,
-				),
-			)
+			$styles_array
 		);
 
 		if ( $styles ) {
@@ -894,9 +905,9 @@ class BP_Nouveau extends BP_Theme_Compat {
 
 		if ( bp_is_members_directory() ) {
 			$nav_items = bp_nouveau_get_members_directory_nav_items();
-		} elseif ( bp_is_activity_directory() ) {
+		} elseif ( bp_is_activity_directory() && function_exists( 'bp_nouveau_get_activity_directory_nav_items' ) ) {
 			$nav_items = bp_nouveau_get_activity_directory_nav_items();
-		} elseif ( bp_is_groups_directory() ) {
+		} elseif ( bp_is_groups_directory() && function_exists( 'bp_nouveau_get_groups_directory_nav_items' ) ) {
 			$nav_items = bp_nouveau_get_groups_directory_nav_items();
 		} elseif ( bp_is_blogs_directory() ) {
 			$nav_items = bp_nouveau_get_blogs_directory_nav_items();

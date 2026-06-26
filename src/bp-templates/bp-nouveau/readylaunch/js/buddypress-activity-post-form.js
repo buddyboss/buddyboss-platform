@@ -170,7 +170,16 @@ window.bp = window.bp || {};
 			this.dropzone = null;
 
 			// set up dropzones auto discover to false so it does not automatically set dropzones.
-			window.Dropzone.autoDiscover = false;
+			// Guarded — `bp-media-dropzone` (which loads the Dropzone library) is only
+			// enqueued when at least one media feature is active (see
+			// bp-templates/bp-nouveau/includes/media/functions.php). When all of
+			// profile/group/messages media + group docs/albums + GIF + emoji are off,
+			// Dropzone is undefined and the unguarded assignment throws TypeError,
+			// halting `start()` so the post form composer never renders. Mirrors
+			// the same guard pattern used at buddypress-activity.js:76.
+			if ( 'undefined' !== typeof window.Dropzone ) {
+				window.Dropzone.autoDiscover = false;
+			}
 
 			if ( ! _.isUndefined( bbRlMedia ) ) {
 				this.dropzone_options = {
@@ -306,7 +315,7 @@ window.bp = window.bp || {};
 				function () {
 					$( '#bb-rl-whats-new img.emoji' ).each(
 						function ( index, Obj) {
-							$( Obj ).addClass( 'bb-rl-emojioneemoji' );
+							$( Obj ).addClass( 'emojioneemoji' );
 							var emojis = $( Obj ).attr( 'alt' );
 							$( Obj ).attr( 'data-emoji-char', emojis );
 							$( Obj ).removeClass( 'emoji' );
@@ -737,7 +746,7 @@ window.bp = window.bp || {};
 					}
 				);
 
-				var emojiElement = $( '#bb-rl-whats-new-textarea' ).find( 'img.bb-rl-emojioneemoji' ),
+				var emojiElement = $( '#bb-rl-whats-new-textarea' ).find( 'img.emojioneemoji' ),
 					contextKey   = context === 'groups' ? 'groups' : 'profile';
 				if ( 'groups' === context ) {
 					bp.Nouveau.Activity.postForm.postGifGroup = new bp.Views.PostGifGroup( { model : this.model } );
@@ -2277,7 +2286,7 @@ window.bp = window.bp || {};
 					content     = content.replace( /&nbsp;/g, ' ' );
 
 					var content_text = tool_box_comment.find( '.ac-textarea' ).children( '.ac-input' ).text().trim();
-					if ( content_text !== '' || content.indexOf( 'bb-rl-emojioneemoji' ) >= 0 ) {
+					if ( content_text !== '' || content.indexOf( 'emojioneemoji' ) >= 0 ) {
 						$( tool_box_comment ).closest( 'form' ).addClass( 'has-content' );
 					} else {
 						$( tool_box_comment ).closest( 'form' ).removeClass( 'has-content' );
@@ -5438,7 +5447,7 @@ window.bp = window.bp || {};
 				// transform other emoji into emojionearea emoji.
 				$whatsNew.find( 'img.emoji' ).each(
 					function ( index, Obj) {
-						$( Obj ).addClass( 'bb-rl-emojioneemoji' );
+						$( Obj ).addClass( 'emojioneemoji' );
 						var emojis = $( Obj ).attr( 'alt' );
 						$( Obj ).attr( 'data-emoji-char', emojis );
 						$( Obj ).removeClass( 'emoji' );
@@ -5446,7 +5455,7 @@ window.bp = window.bp || {};
 				);
 
 				// Transform emoji image into emoji unicode.
-				$whatsNew.find( 'img.bb-rl-emojioneemoji' ).replaceWith(
+				$whatsNew.find( 'img.emojioneemoji, img.bb-rl-emojioneemoji' ).replaceWith(
 					function () {
 						return this.dataset.emojiChar;
 					}
@@ -6243,7 +6252,7 @@ window.bp = window.bp || {};
 			}
 		);
 
-		var emojiElement = $( '#bb-rl-whats-new-textarea' ).find( 'img.bb-rl-emojioneemoji' ),
+		var emojiElement = $( '#bb-rl-whats-new-textarea' ).find( 'img.emojioneemoji' ),
 			contextKey   = context === 'groups' ? 'groups' : 'profile';
 		if ( 'groups' === context ) {
 			bp.Nouveau.Activity.postForm.postGifGroup = new bp.Views.PostGifGroup( { model : this.model } );

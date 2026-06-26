@@ -1,8 +1,3 @@
-body.post-type-forum #minor-publishing,
-body.post-type-forum #save-post {
-	display: none;
-}
-
 #bbp-converter-stop,
 #bbp-converter-progress {
 	display: none;

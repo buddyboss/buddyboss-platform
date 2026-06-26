@@ -1626,8 +1626,9 @@ function bp_album_user_can_delete( $album = false ) {
 	if ( is_user_logged_in() ) {
 
 		// Groups albums have their own access.
-		if ( ! empty( $album->group_id ) && groups_can_user_manage_albums( bp_loggedin_user_id(), $album->group_id ) ) {
-			$can_delete = true;
+		if ( ! empty( $album->group_id ) ) {
+			$album_privacy = bb_media_user_can_access( $album->id, 'album' );
+			$can_delete    = isset( $album_privacy['can_delete'] ) && true === (bool) $album_privacy['can_delete'];
 
 			// Users are allowed to delete their own album.
 		} elseif ( isset( $album->user_id ) && bp_loggedin_user_id() === $album->user_id ) {

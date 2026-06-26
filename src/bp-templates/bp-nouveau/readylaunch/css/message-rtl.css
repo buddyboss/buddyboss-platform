@@ -560,6 +560,14 @@ body.messages .bb-rl-content-wrapper {
   z-index: 11;
 }
 
+#buddypress .bb-rl-messages-container .bb-rl-thread-item:nth-child(3) ~ .bb-rl-thread-item:nth-last-child(2) .message_action__list,
+#buddypress .bb-rl-messages-container .bb-rl-thread-item:nth-child(3) ~ .bb-rl-thread-item:nth-last-child(3) .message_action__list,
+#buddypress .bb-rl-messages-container .bb-rl-thread-item:nth-child(3) ~ .bb-rl-thread-item:last-child .message_action__list {
+  top: initial;
+  bottom: 30px;
+  left: -8px;
+}
+
 #bb-rl-messages-thread-list-nav {
   padding: var(--bb-rl-space-200);
 }

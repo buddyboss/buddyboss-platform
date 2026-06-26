@@ -1,0 +1,343 @@
+/* ----------------------------------------------------------------
+   Discussion Tags List Screen
+   ---------------------------------------------------------------- */
+
+.bb-discussion-tags-list {
+	max-width: calc(100% - 64px);
+	padding: 0 24px 16px;
+	background-color: $bb-background-base-color;
+	border: 0.5px solid $bb-border-primary-color;
+	border-radius: $bb-border-radius-2xl;
+	box-shadow: 0px 1.5px 1px 0px rgba(0, 0, 0, 0.16);
+	margin: 32px 32px 0;
+
+	// Notice (shared pattern)
+	.bb-admin-notice {
+		margin-top: 24px;
+	}
+
+	.bb-admin-notice--dismiss {
+		background: none;
+		border: none;
+		cursor: pointer;
+	}
+
+	// Header
+	&__header {
+		border-bottom: 1px solid $bb-border-secondary-color;
+		padding: 16px 0;
+		min-height: 64px;
+		margin-bottom: 24px;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		box-sizing: border-box;
+	}
+
+	&__title {
+		font-size: 18px;
+		font-weight: 500;
+		color: $bb-text-color;
+		margin: 0;
+	}
+
+	&__add-btn.is-primary {
+		@include bb-button-primary;
+
+		i {
+			font-size: 16px;
+			font-weight: 700;
+			margin-right: 6px;
+		}
+	}
+
+	// Toolbar — layout styled via .bb-admin-list-toolbar
+
+	// Bulk Actions
+	&__bulk-actions {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+
+		select {
+			min-width: 160px;
+			height: 32px;
+			font-size: 13px;
+		}
+	}
+
+	&__bulk-apply.is-secondary {
+		@include bb-button-primary-outline;
+	}
+
+	// Search — styled via .bb-admin-list-search
+
+	// Table — base styled via .bb-admin-list-table
+
+	&__table td {
+		overflow: hidden;
+	}
+
+	// Checkbox column
+	&__col-cb {
+		width: 30px;
+
+		.components-checkbox-control__input-container {
+			margin: 0;
+		}
+	}
+
+	// Tag column
+	&__col-tag {
+		min-width: 200px;
+	}
+
+	&__tag-cell {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+	}
+
+	&__tag-icon {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		color: $bb-icon-tertiary-color;
+		font-size: 20px;
+		flex-shrink: 0;
+		height: 32px;
+		width: 32px;
+		background-color: $bb-background-color;
+		border-radius: $bb-border-radius-full;
+	}
+
+	&__tag-name {
+		font-size: 14px;
+		font-weight: 500;
+		color: $bb-text-color;
+	}
+
+	// Slug column
+	&__col-slug {
+		min-width: 120px;
+	}
+
+	&__slug-badge {
+		display: inline-block;
+		padding: 4px 8px;
+		font-size: 11px;
+		font-weight: 500;
+		line-height: 1.4;
+		color: $bb-text-secondary-color;
+		background-color: $bb-background-secondary-color;
+		border: 1px solid $bb-border-tertiary-color;
+		border-radius: $bb-border-radius-full;
+		min-width: 14px;
+		text-align: center;
+	}
+
+	// Count column
+	&__col-count {
+		min-width: 140px;
+	}
+
+	&__count-cell {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+	}
+
+	&__count-icon {
+		font-size: 16px;
+		color: $bb-icon-tertiary-color;
+		flex-shrink: 0;
+	}
+
+	&__count-link {
+		color: $bb-link-color;
+		font-size: 13px;
+		text-decoration: none;
+
+		&:hover {
+			color: $bb-link-color;
+			text-decoration: underline;
+		}
+	}
+
+	&__count-zero {
+		color: $bb-text-secondary-color;
+		font-size: 13px;
+	}
+
+	// Actions column
+	// Actions Column — toggle styled via .bb-admin-actions-toggle
+	&__col-actions {
+		width: 40px;
+		text-align: center;
+	}
+
+	// Footer
+	&__footer {
+		display: flex;
+		align-items: center;
+		justify-content: flex-end;
+		gap: 16px;
+		padding: 16px 0;
+		margin-top: 8px;
+	}
+
+	// Item Count
+	&__item-count {
+		font-size: 13px;
+		color: $bb-text-secondary-color;
+	}
+
+	@media screen and (max-width: 960px) {
+		overflow: auto;
+
+		&__header,
+		&__toolbar,
+		&__table-wrap,
+		&__footer {
+			min-width: 820px;
+		}
+	}
+
+}
+
+// Full-width for custom panel screen.
+.bb-admin-feature-settings__main--custom-panel {
+	.bb-discussion-tags-list {
+		max-width: 100%;
+	}
+}
+
+// Tag Create/Edit Modal
+.bb-tag-create-modal {
+	.components-modal__content {
+		padding: 0;
+	}
+
+	&__loading {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		padding: 48px 24px;
+	}
+}
+
+// Tag Single Delete Modal (warning + confirm pattern)
+.bb-tag-delete-modal {
+
+	&.components-modal__frame {
+		max-width: 500px;
+	}
+
+	&__body {
+		padding: 24px;
+	}
+
+	&__description {
+		font-size: 13px;
+		line-height: 1.6;
+		color: $bb-text-color;
+		margin: 0 0 16px;
+	}
+
+	.components-checkbox-control {
+		margin-bottom: 0;
+	}
+
+	&__footer {
+		display: flex;
+		align-items: center;
+		justify-content: flex-end;
+		gap: 8px;
+		padding: 16px 24px;
+		border-top: 1px solid $bb-border-secondary-color;
+
+		.is-secondary {
+			@include bb-button-secondary;
+		}
+
+		.is-destructive.is-primary {
+			background-color: $bb-error-color;
+			border-color: $bb-error-color;
+			color: $bb-text-inverse-color;
+			border-radius: $bb-border-radius-md;
+			font-size: 13px;
+			font-weight: 500;
+			padding: 6px 16px;
+			height: 32px;
+			box-shadow: none;
+
+			&:hover {
+				background-color: darken($bb-error-color, 5%);
+				border-color: darken($bb-error-color, 5%);
+			}
+
+			&:disabled {
+				opacity: 0.5;
+				cursor: not-allowed;
+			}
+		}
+	}
+}
+
+// Tag Bulk Delete Modal
+.bb-tag-bulk-delete-modal {
+
+	&.components-modal__frame {
+		max-width: 500px;
+	}
+
+	&__body {
+		padding: 24px;
+	}
+
+	&__description {
+		font-size: 13px;
+		line-height: 1.6;
+		color: $bb-text-color;
+		margin: 0 0 16px;
+	}
+
+	.components-checkbox-control {
+		margin-bottom: 0;
+	}
+
+	&__footer {
+		display: flex;
+		align-items: center;
+		justify-content: flex-end;
+		gap: 8px;
+		padding: 16px 24px;
+		border-top: 1px solid $bb-border-secondary-color;
+
+		.is-secondary {
+			@include bb-button-secondary;
+		}
+
+		.is-destructive.is-primary {
+			background-color: $bb-error-color;
+			border-color: $bb-error-color;
+			color: $bb-text-inverse-color;
+			border-radius: $bb-border-radius-md;
+			font-size: 13px;
+			font-weight: 500;
+			padding: 6px 16px;
+			height: 32px;
+			box-shadow: none;
+
+			&:hover {
+				background-color: darken($bb-error-color, 5%);
+				border-color: darken($bb-error-color, 5%);
+			}
+
+			&:disabled {
+				opacity: 0.5;
+				cursor: not-allowed;
+			}
+		}
+	}
+}

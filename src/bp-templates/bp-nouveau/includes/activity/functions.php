@@ -56,7 +56,9 @@ function bp_nouveau_activity_enqueue_scripts() {
 	}
 
 	wp_enqueue_script( 'bp-nouveau-activity' );
-	wp_enqueue_script( 'bp-nouveau-activity-reacted' );
+	if ( bp_is_activity_like_active() ) {
+		wp_enqueue_script( 'bp-nouveau-activity-reacted' );
+	}
 	wp_enqueue_script( 'bp-medium-editor' );
 	wp_enqueue_style( 'bp-medium-editor' );
 	wp_enqueue_style( 'bp-medium-editor-beagle' );
@@ -296,6 +298,14 @@ function bp_nouveau_activity_localize_scripts( $params = array() ) {
 		'can_create_activity'          => bb_user_can_create_activity(),
 		'can_create_activity_media'    => bb_user_can_create_media(),
 		'can_create_activity_document' => bb_user_can_create_document(),
+	);
+
+	// Comment threading settings for JavaScript.
+	$threading_enabled = bb_is_activity_comment_threading_enabled();
+
+	$activity_params['comment_threading'] = array(
+		'enabled'   => $threading_enabled,
+		'max_depth' => $threading_enabled ? (int) bb_get_activity_comment_threading_depth() : 1,
 	);
 
 	$params['activity'] = array(
