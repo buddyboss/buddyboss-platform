@@ -1756,7 +1756,7 @@ function bp_get_user_social_networks_urls( $user_id = null ) {
 	global $wpdb;
 	global $bp;
 
-	$social_networks_field = $wpdb->get_row( "SELECT a.id, a.name FROM {$bp->table_prefix}bp_xprofile_fields a WHERE parent_id = 0 AND type = 'socialnetworks' " );
+	$social_networks_field = $wpdb->get_row( "SELECT a.id, a.name FROM {$bp->table_prefix}bp_xprofile_fields a WHERE parent_id = 0 AND type = 'socialnetworks' " ); // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter -- Only $bp->table_prefix interpolated; all WHERE conditions are hardcoded literals.
 	$social_networks_id    = $social_networks_field->id;
 	$social_networks_text  = $social_networks_field->name;
 
@@ -2497,7 +2497,7 @@ function bp_xprofile_get_users_by_field_value( $field_id, $field_val ) {
 		, $field_val
 	);
 
-	$get_desired = $wpdb->get_results( $query );
+	$get_desired = $wpdb->get_results( $query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- $query is %d/%s-prepared above; tables from $bp->profile->table_name_data/$wpdb->users.
 
 	if( count( $get_desired ) ) {
 		return $get_desired;

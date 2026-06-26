@@ -238,13 +238,13 @@ function bb_media_symlink_validate( $updated_value ) {
 	$platform_previews_path = $upload_dir . '/bb-platform-previews';
 	if ( ! is_dir( $platform_previews_path ) ) {
 		wp_mkdir_p( $platform_previews_path );
-		chmod( $platform_previews_path, 0755 );
+		chmod( $platform_previews_path, 0755 ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_chmod -- explicit permission set on a freshly-created directory.
 	}
 
 	$media_symlinks_path = $platform_previews_path . '/' . md5( 'bb-media' );
 	if ( ! is_dir( $media_symlinks_path ) ) {
 		wp_mkdir_p( $media_symlinks_path );
-		chmod( $media_symlinks_path, 0755 );
+		chmod( $media_symlinks_path, 0755 ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_chmod -- explicit permission set on a freshly-created directory.
 	}
 
 	foreach ( $keys as $k ) {
@@ -1099,7 +1099,7 @@ function bb_background_remove_duplicate_async_request_batch_process( $batch ) {
 		)
 	);
 
-	$wpdb->query( $del_sql );
+	$wpdb->query( $del_sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $del_sql is $wpdb->prepare()'d above; table name from class static property.
 }
 
 add_action( 'bb_async_request_batch_process', 'bb_background_remove_duplicate_async_request_batch_process', 1, 1 );

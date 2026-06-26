@@ -599,7 +599,7 @@ function bp_get_activity_count() {
  * @since BuddyPress 1.2.0
  */
 function bp_activity_per_page() {
-	echo bp_get_activity_per_page();
+	echo esc_html( bp_get_activity_per_page() );
 }
 
 /**
@@ -666,7 +666,7 @@ function bp_get_activities_title() {
  * @todo Deprecate.
  */
 function bp_activities_no_activity() {
-	echo bp_get_activities_no_activity();
+	echo esc_html( bp_get_activities_no_activity() );
 }
 
 /**
@@ -796,7 +796,7 @@ function bp_get_activity_secondary_item_id() {
  * @since BuddyPress 1.2.0
  */
 function bp_activity_date_recorded() {
-	echo bp_get_activity_date_recorded();
+	echo esc_html( bp_get_activity_date_recorded() );
 }
 
 /**
@@ -805,7 +805,7 @@ function bp_activity_date_recorded() {
  * @since BuddyBoss 2.8.20
  */
 function bb_activity_date_updated() {
-	echo bb_get_activity_date_updated();
+	echo esc_html( bb_get_activity_date_updated() );
 }
 
 /**
@@ -858,7 +858,7 @@ function bb_get_activity_date_updated() {
  * @since BuddyPress 2.1.0
  */
 function bp_activity_member_display_name() {
-	echo bp_get_activity_member_display_name();
+	echo esc_html( bp_get_activity_member_display_name() );
 }
 
 /**
@@ -965,7 +965,7 @@ function bp_get_activity_type() {
  *       remove redundant echo
  */
 function bp_activity_action_name() {
-	echo bp_activity_type(); }
+	echo bp_activity_type(); } // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- bp_activity_type() itself echoes esc_attr()'d output and returns void.
 
 /**
  * Return the activity type.
@@ -1397,7 +1397,7 @@ function bp_get_activity_secondary_avatar( $args = '' ) {
  * @param array $args See bp_get_activity_action().
  */
 function bp_activity_action( $args = array() ) {
-	echo bp_get_activity_action( $args );
+	echo bp_get_activity_action( $args ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- HTML action string already filtered through bp_activity_filter_kses on the bp_get_activity_action filter; escaping here would strip intended markup.
 }
 
 /**
@@ -1467,7 +1467,7 @@ function bp_get_activity_action( $args = array() ) {
  * @since BuddyPress 1.2.0
  */
 function bp_activity_content_body() {
-	echo bp_get_activity_content_body();
+	echo bp_get_activity_content_body(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- content body is rich HTML already sanitized via bp_activity_filter_kses/bp_activity_content_body filters (media, embeds); escaping here would corrupt it.
 }
 
 /**
@@ -1565,7 +1565,7 @@ function bp_get_activity_content() {
  * @since BuddyBoss 1.2.0
  */
 function bp_activity_privacy() {
-	echo bp_get_activity_privacy();
+	echo esc_html( bp_get_activity_privacy() );
 }
 
 /**
@@ -1929,7 +1929,7 @@ function bp_get_activity_parent_user_id() {
  * @since BuddyPress 1.2.0
  */
 function bp_activity_is_favorite() {
-	echo bp_get_activity_is_favorite();
+	echo bp_get_activity_is_favorite(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- getter returns a (bool) cast value, not user-facing markup.
 }
 
 /**
@@ -1964,7 +1964,7 @@ function bp_get_activity_is_favorite() {
  * @param array|string $args See {@link bp_activity_get_comments} for description.
  */
 function bp_activity_comments( $args = '' ) {
-	echo bp_activity_get_comments( $args );
+	echo bp_activity_get_comments( $args ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- returns assembled comment markup built from already-escaped template parts; wp_kses_post would strip required form/markup.
 }
 
 /**
@@ -2313,7 +2313,7 @@ function bp_get_activity_comment_name() {
  * @since BuddyPress 1.5.0
  */
 function bp_activity_comment_date_recorded() {
-	echo bp_get_activity_comment_date_recorded();
+	echo esc_html( bp_get_activity_comment_date_recorded() );
 }
 
 /**
@@ -2346,7 +2346,7 @@ function bp_get_activity_comment_date_recorded() {
  * @since BuddyPress 2.3.0
  */
 function bp_activity_comment_date_recorded_raw() {
-	echo bp_get_activity_comment_date_recorded_raw();
+	echo esc_html( bp_get_activity_comment_date_recorded_raw() );
 }
 
 /**
@@ -2549,7 +2549,7 @@ function bp_activity_recurse_comment_count( $comment, $count = 0 ) {
  *                            when used in activity comment loop.
  */
 function bp_activity_comment_depth( $comment = 0 ) {
-	echo bp_activity_get_comment_depth( $comment );
+	echo esc_html( bp_activity_get_comment_depth( $comment ) );
 }
 
 /**
@@ -2646,7 +2646,7 @@ function bp_get_activity_comment_link() {
  * @since BuddyPress 1.2.0
  */
 function bp_activity_comment_form_nojs_display() {
-	echo bp_get_activity_comment_form_nojs_display();
+	echo bp_get_activity_comment_form_nojs_display(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- getter returns a hardcoded style="display: block" attribute literal or false; no dynamic data.
 }
 
 /**
@@ -2675,7 +2675,7 @@ function bp_get_activity_comment_form_nojs_display() {
  * @since BuddyPress 1.2.0
  */
 function bp_activity_comment_form_action() {
-	echo bp_get_activity_comment_form_action();
+	echo esc_url( bp_get_activity_comment_form_action() );
 }
 
 /**
@@ -3103,7 +3103,7 @@ function bp_get_activity_delete_url() {
  * @param int $user_id See {@link bp_get_activity_latest_update()} for description.
  */
 function bp_activity_latest_update( $user_id = 0 ) {
-	echo bp_get_activity_latest_update( $user_id );
+	echo bp_get_activity_latest_update( $user_id ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- getter returns HTML (excerpt + "View" link) already filtered through bp_activity_filter_kses; escaping would strip the link.
 }
 
 /**
@@ -3371,7 +3371,7 @@ function bp_activity_can_favorite() {
  * @see   bp_get_total_favorite_count_for_user() for description of parameters.
  */
 function bp_total_favorite_count_for_user( $user_id = 0, $activity_type = 'activity' ) {
-	echo bp_get_total_favorite_count_for_user( $user_id, $activity_type );
+	echo esc_html( bp_get_total_favorite_count_for_user( $user_id, $activity_type ) );
 }
 
 /**
@@ -3424,7 +3424,7 @@ function bp_get_total_favorite_count_for_user( $user_id = 0, $activity_type = 'a
  * @param int $user_id See {@link bp_get_total_mention_count_for_user()}.
  */
 function bp_total_mention_count_for_user( $user_id = 0 ) {
-	echo bp_get_total_mention_count_for_user( $user_id );
+	echo esc_html( bp_get_total_mention_count_for_user( $user_id ) );
 }
 
 /**
@@ -3571,7 +3571,7 @@ function bp_get_mentioned_user_display_name( $user_id_or_username = false ) {
  * @since BuddyPress 1.2.0
  */
 function bp_activity_post_form_action() {
-	echo bp_get_activity_post_form_action();
+	echo esc_url( bp_get_activity_post_form_action() );
 }
 
 /**
@@ -3744,7 +3744,7 @@ function bp_activity_recurse_comments_user_ids( array $comments = array() ) {
  * @since BuddyPress 1.9.0
  */
 function bp_displayed_user_mentionname() {
-	echo bp_get_displayed_user_mentionname();
+	echo esc_html( bp_get_displayed_user_mentionname() );
 }
 
 /**
@@ -3954,7 +3954,7 @@ function bp_get_activities_member_rss_link() {
  * @since BuddyPress 1.0.0
  */
 function bp_activity_feed_item_guid() {
-	echo bp_get_activity_feed_item_guid();
+	echo esc_url( bp_get_activity_feed_item_guid() );
 }
 
 /**
@@ -4161,7 +4161,7 @@ add_action( 'bp_head', 'bp_activity_sitewide_feed' );
  *                        'member_groups', 'group'.
  */
 function bp_activity_show_filters( $context = '' ) {
-	echo bp_get_activity_show_filters( $context );
+	echo bp_get_activity_show_filters( $context ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- getter builds <option> markup with each value/label run through esc_attr()/esc_html() internally; wp_kses_post would strip the <option> tags.
 }
 
 /**

@@ -5486,11 +5486,11 @@ function bb_xprofile_search_bp_user_query_search_first_last_nickname( $sql, BP_U
 		}
 	}
 	// Combine the core search (against wp_users) into a single OR clause with the xprofile_data search.
-	$matched_user_ids = $wpdb->get_col( "SELECT DISTINCT user_id FROM {$bp->profile->table_name_data} WHERE " . implode( ' OR ', $where_condition ) );
+	$matched_user_ids = $wpdb->get_col( "SELECT DISTINCT user_id FROM {$bp->profile->table_name_data} WHERE " . implode( ' OR ', $where_condition ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Table name from $bp->profile->table_name_data; $where_condition is built from $wpdb->prepare()'d fragments above.
 
 	// Checked profile fields based on privacy settings of particular user while searching.
 	if ( ! empty( $matched_user_ids ) ) {
-		$matched_user_data = $wpdb->get_results( "SELECT * FROM {$bp->profile->table_name_data} WHERE " . implode( ' OR ', $where_condition ) );
+		$matched_user_data = $wpdb->get_results( "SELECT * FROM {$bp->profile->table_name_data} WHERE " . implode( ' OR ', $where_condition ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Table name from $bp->profile->table_name_data; $where_condition is built from $wpdb->prepare()'d fragments above.
 
 		if ( ! empty( $matched_user_data ) ) {
 			foreach ( $matched_user_data as $k => $user ) {
@@ -5607,7 +5607,7 @@ function bp_core_remove_temp_directory( $directory = '' ) {
 			}
 		}
 		reset( $objects );
-		rmdir( $directory );
+		rmdir( $directory ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_rmdir -- direct removal of an emptied temp directory; WP_Filesystem offers no drop-in equivalent.
 	}
 }
 
@@ -9709,10 +9709,10 @@ function bb_delete_default_user_png_avatar( $item_ids = array(), $is_delete_dir 
 
 	$delete_query = $wpdb->prepare( "DELETE FROM $wpdb->usermeta WHERE meta_key = %s", 'default-user-avatar-png' );
 	if ( ! empty( $item_ids ) ) {
-		$delete_query .= ' AND user_id IN (' . implode( ',', $item_ids ) . ')';
+		$delete_query .= ' AND user_id IN (' . implode( ',', array_map( 'absint', (array) $item_ids ) ) . ')';
 	}
 
-	$wpdb->query( $delete_query );
+	$wpdb->query( $delete_query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $delete_query base is $wpdb->prepare()'d; appended IN() list is absint-mapped above.
 
 	if ( $is_delete_dir ) {
 		$wp_filesystem   = bb_wp_filesystem();
@@ -9744,10 +9744,10 @@ function bb_delete_default_group_png_avatar( $item_ids = array(), $is_delete_dir
 
 	$delete_query = $wpdb->prepare( "DELETE FROM {$bp->groups->table_name_groupmeta} WHERE meta_key = %s", 'default-group-avatar-png' );
 	if ( ! empty( $item_ids ) ) {
-		$delete_query .= ' AND group_id IN (' . implode( ',', $item_ids ) . ')';
+		$delete_query .= ' AND group_id IN (' . implode( ',', array_map( 'absint', (array) $item_ids ) ) . ')';
 	}
 
-	$wpdb->query( $delete_query );
+	$wpdb->query( $delete_query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $delete_query base is $wpdb->prepare()'d; appended IN() list is absint-mapped above.
 
 	if ( $is_delete_dir ) {
 		$wp_filesystem    = bb_wp_filesystem();

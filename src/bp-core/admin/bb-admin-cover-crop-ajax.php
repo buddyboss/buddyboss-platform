@@ -213,7 +213,7 @@ function bb_admin_cover_image_upload_temp_ajax() {
 	// Set sensible permissions matching what `BP_Attachment::upload` produces.
 	// Drop @: a chmod failure on a writable upload dir is genuinely worth
 	// logging — if it surfaces, the site has a permission problem worth fixing.
-	chmod( $tmp_path, 0644 );
+	chmod( $tmp_path, 0644 ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_chmod -- explicit permission set on the freshly-created uploaded cover-crop tmp file.
 
 	// Keep @ on getimagesize — it intentionally emits a warning on bad input
 	// and the boolean false return is the documented "not an image" signal.

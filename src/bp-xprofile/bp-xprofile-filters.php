@@ -989,12 +989,12 @@ function bp_xprofile_validate_nickname_value( $retval, $field_id, $value, $user_
 	}
 
 	$where = array(
-		'meta_key = "nickname"',
-		'meta_value = "' . $value . '"',
+		"meta_key = 'nickname'",
+		$wpdb->prepare( 'meta_value = %s', $value ),
 	);
 
 	if ( $user_id ) {
-		$where[] = 'user_id != ' . $user_id;
+		$where[] = $wpdb->prepare( 'user_id != %d', $user_id );
 	}
 
 	$sql = sprintf(
@@ -1003,7 +1003,7 @@ function bp_xprofile_validate_nickname_value( $retval, $field_id, $value, $user_
 		implode( ' AND ', $where )
 	);
 
-	if ( $wpdb->get_var( $sql ) > 0 ) {
+	if ( $wpdb->get_var( $sql ) > 0 ) { // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- Table name from $wpdb->usermeta; $where conditions are %s/%d-prepared above.
 		/* translators: %s: field name. */
 		return sprintf( __( '%s has already been taken.', 'buddyboss-platform' ), $field_name );
 	}
@@ -1324,7 +1324,7 @@ function bb_xprofile_repeater_field_repair_callback() {
 	$clone_fields_query = "SELECT c.object_id, c.meta_value as clone_number, a.* FROM {$bp->profile->table_name_fields} a LEFT JOIN {$bp->profile->table_name_meta} b ON (a.id = b.object_id)
     LEFT JOIN {$bp->profile->table_name_meta} c ON (a.id = c.object_id)
     WHERE a.parent_id = '0' AND b.meta_key = '_is_repeater_clone' AND b.meta_value = '1' AND c.meta_key = '_clone_number' ORDER BY c.object_id, c.meta_value ASC LIMIT 50 OFFSET $offset";
-	$added_fields       = $wpdb->get_results( $clone_fields_query );
+	$added_fields       = $wpdb->get_results( $clone_fields_query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Table names from $bp->profile; $offset is an (int)-cast integer.
 
 	if ( $offset == 0 ) {
 		$duplicate_fields = array();
@@ -1439,7 +1439,7 @@ function bb_xprofile_repair_user_nicknames_callback() {
 					LEFT JOIN `{$wpdb->base_prefix}bp_xprofile_data` as xprofile ON users.ID = xprofile.user_id AND xprofile.field_id = %d
 					WHERE users.user_nicename != COALESCE(meta.meta_value, users.user_nicename) OR users.user_nicename != COALESCE(xprofile.value, users.user_nicename)";
 
-	$records = $wpdb->get_results( $wpdb->prepare( $users_query, bp_xprofile_nickname_field_id() ) );
+	$records = $wpdb->get_results( $wpdb->prepare( $users_query, bp_xprofile_nickname_field_id() ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- $users_query is a hardcoded query with table names from $wpdb and a %d placeholder, prepared here.
 
 	if ( ! empty( $records ) ) {
 		foreach ( $records as $record ) {
