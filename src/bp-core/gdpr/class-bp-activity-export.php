@@ -171,16 +171,16 @@ final class BP_Activity_Export extends BP_Export {
 
 		$query_where = "item.user_id=%d AND item.type IN ('activity_update','activity_comment') && is_spam=0";
 
-		$offset = ( $page - 1 ) * $this->items_per_batch;
-		$limit  = "LIMIT {$this->items_per_batch} OFFSET {$offset}";
+		$offset = ( absint( $page ) - 1 ) * absint( $this->items_per_batch );
+		$limit  = 'LIMIT ' . absint( $this->items_per_batch ) . ' OFFSET ' . absint( $offset );
 
 		$query       = "SELECT {$query_select} FROM {$table} WHERE {$query_where} {$limit}";
-		$query       = $wpdb->prepare( $query, $user->ID );
+		$query       = $wpdb->prepare( $query, $user->ID ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Table name from bp_core_get_table_prefix(); $query_where is hardcoded with %d; $limit is absint-built.
 		$query_count = "SELECT {$query_select_count} FROM {$table} WHERE {$query_where}";
-		$query_count = $wpdb->prepare( $query_count, $user->ID );
+		$query_count = $wpdb->prepare( $query_count, $user->ID ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Table name from bp_core_get_table_prefix(); $query_where is hardcoded with %d.
 
-		$count = (int) $wpdb->get_var( $query_count );
-		$items = $wpdb->get_results( $query );
+		$count = (int) $wpdb->get_var( $query_count ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $query_count is $wpdb->prepare()'d above.
+		$items = $wpdb->get_results( $query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $query is $wpdb->prepare()'d above.
 
 		return array(
 			'total'  => $count,

@@ -164,16 +164,17 @@ final class BP_Friendship_Export extends BP_Export {
 		$query_select_count = 'COUNT(item.id)';
 		$query_where        = 'item.initiator_user_id=%d OR item.friend_user_id=%d';
 
-		$offset = ( $page - 1 ) * $this->items_per_batch;
-		$limit  = "LIMIT {$this->items_per_batch} OFFSET {$offset}";
+		$items_per_batch = absint( $this->items_per_batch );
+		$offset          = ( absint( $page ) - 1 ) * $items_per_batch;
+		$limit           = "LIMIT {$items_per_batch} OFFSET {$offset}";
 
 		$query       = "SELECT {$query_select} FROM {$table} WHERE {$query_where} {$limit}";
-		$query       = $wpdb->prepare( $query, $user->ID, $user->ID );
+		$query       = $wpdb->prepare( $query, $user->ID, $user->ID ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Table from $bp->friends->table_name; user IDs %d-prepared; LIMIT/OFFSET are absint()'d.
 		$query_count = "SELECT {$query_select_count} FROM {$table} WHERE {$query_where}";
-		$query_count = $wpdb->prepare( $query_count, $user->ID, $user->ID );
+		$query_count = $wpdb->prepare( $query_count, $user->ID, $user->ID ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Table from $bp->friends->table_name; user IDs %d-prepared.
 
-		$count = (int) $wpdb->get_var( $query_count );
-		$items = $wpdb->get_results( $query );
+		$count = (int) $wpdb->get_var( $query_count ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- $query_count is %d-prepared above.
+		$items = $wpdb->get_results( $query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- $query is %d-prepared above; LIMIT/OFFSET absint()'d.
 
 		return array(
 			'total'  => $count,

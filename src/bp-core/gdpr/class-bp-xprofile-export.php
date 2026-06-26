@@ -210,7 +210,7 @@ final class BP_Xprofile_Export extends BP_Export {
 
 		foreach ( $xprofile_groups as $xgroup ) {
 
-			$fields = $wpdb->get_results(
+			$fields = $wpdb->get_results( // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter -- Table from $bp->profile->global_tables; group_id is %d-prepared below.
 				$wpdb->prepare(
 					"SELECT *FROM {$field_table} WHERE group_id=%d AND parent_id=0",
 					$xgroup->id

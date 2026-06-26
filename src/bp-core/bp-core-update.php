@@ -969,13 +969,17 @@ function bp_update_to_1_4_0() {
 function bp_update_to_1_4_3() {
 	global $wpdb;
 	$bp      = buddypress();
-	$squery  = "SELECT GROUP_CONCAT( pm.meta_value ) as media_id FROM {$wpdb->posts} p, {$wpdb->postmeta} pm WHERE p.ID = pm.post_id and p.post_type in ( 'forum', 'topic', 'reply' ) and pm.meta_key = 'bp_media_ids' and pm.meta_value != ''";
-	$records = $wpdb->get_col( $squery );
+	$squery  = "SELECT GROUP_CONCAT( pm.meta_value ) as media_id FROM {$wpdb->posts} p, {$wpdb->postmeta} pm WHERE p.ID = pm.post_id and p.post_type in ( 'forum', 'topic', 'reply' ) and pm.meta_key = 'bp_media_ids' and pm.meta_value != ''"; // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Only table names ($wpdb->posts, $wpdb->postmeta) and hardcoded literals are interpolated.
+	$records = $wpdb->get_col( $squery ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $squery interpolates only $wpdb->posts/$wpdb->postmeta table names and hardcoded literals.
 	if ( ! empty( $records ) && bp_is_active( 'media' ) ) {
 		$records = reset( $records );
 		if ( ! empty( $records ) ) {
-			$update_query = "UPDATE {$bp->media->table_name} SET `privacy`= 'forums' WHERE id in (" . $records . ')';
-			$wpdb->query( $update_query );
+			// $records is a GROUP_CONCAT of media IDs; cast each to an integer for safety.
+			$ids = implode( ',', array_map( 'absint', array_filter( explode( ',', $records ) ) ) );
+			if ( '' !== $ids ) {
+				$update_query = "UPDATE {$bp->media->table_name} SET `privacy`= 'forums' WHERE id in (" . $ids . ')'; // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- Table name from $bp->media; $ids is an absint()-mapped integer list.
+				$wpdb->query( $update_query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- Table name from $bp->media; $ids is an absint()-mapped integer list.
+			}
 		}
 	}
 }
@@ -1892,7 +1896,7 @@ function bb_to_1_8_6_upload_temp_cover_file( $cover_type ) {
 
 			// Create temp folder.
 			wp_mkdir_p( $upload_dir );
-			chmod( $upload_dir, 0777 );
+			chmod( $upload_dir, 0777 ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_chmod -- explicit permission set on a freshly-created directory.
 		}
 
 		if ( is_dir( $upload_dir ) ) {
@@ -3068,8 +3072,8 @@ function bb_background_update_group_member_count() {
 	}
 
 	// Fetch all groups.
-	$sql       = "SELECT DISTINCT id FROM {$wpdb->base_prefix}bp_groups ORDER BY id DESC";
-	$group_ids = $wpdb->get_col( $sql );
+	$sql       = "SELECT DISTINCT id FROM {$wpdb->base_prefix}bp_groups ORDER BY id DESC"; // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Only the table name ($wpdb->base_prefix . 'bp_groups') is interpolated; no user input.
+	$group_ids = $wpdb->get_col( $sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $sql interpolates only the $wpdb->base_prefix bp_groups table name; no user input.
 
 	if ( empty( $group_ids ) ) {
 		return;
@@ -3171,9 +3175,9 @@ function bb_migrate_message_media_document( $table_exists, $results, $paged ) {
 			isset( $result->meta_value ) &&
 			preg_match( '/^\d+(?:,\d+)*$/', $result->meta_value )
 		) {
-			$query = $wpdb->prepare( "UPDATE {$table_name} SET message_id = %d WHERE id IN ( {$result->meta_value} )", $result->message_id );
+			$query = $wpdb->prepare( "UPDATE {$table_name} SET message_id = %d WHERE id IN ( {$result->meta_value} )", $result->message_id ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $table_name is a validated internal table; $result->meta_value is guaranteed a comma-separated integer list by the preg_match above; message_id is %d-prepared.
 
-			$wpdb->query( $query );
+			$wpdb->query( $query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $query was built with $wpdb->prepare() on the line above.
 		}
 	}
 
@@ -3216,7 +3220,7 @@ function bb_core_update_repair_duplicate_following_notification() {
 	$sql .= ' )';
 
 	// Remove duplicate notification ids.
-	$wpdb->query( $wpdb->prepare( $sql, 'activity', 'bb_following_new' ) );
+	$wpdb->query( $wpdb->prepare( $sql, 'activity', 'bb_following_new' ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $sql interpolates only $bp->notifications->table_name; component_name/component_action are %s-bound via prepare().
 
 	// Purge all the cache for API.
 	if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
@@ -3263,7 +3267,7 @@ function bb_update_to_2_4_10() {
 	$sql .= ' WHERE gm.meta_key = %s AND gm.meta_value = %d';
 
 	// Get the group ids with 0 members.
-	$groups = $wpdb->get_results( $wpdb->prepare( $sql, 'total_member_count', 0 ) );
+	$groups = $wpdb->get_results( $wpdb->prepare( $sql, 'total_member_count', 0 ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $sql interpolates only internal table names ($wpdb->base_prefix); meta_key/meta_value are %s/%d-bound via prepare().
 
 	if ( ! empty( $groups ) ) {
 		$admin = get_users(
@@ -3495,7 +3499,7 @@ function bb_background_removed_orphaned_metadata() {
 function bb_core_removed_orphaned_member_slug() {
 	global $wpdb;
 
-	$limit = apply_filters( 'bb_core_removed_orphaned_member_slug_limit', 50 );
+	$limit = (int) apply_filters( 'bb_core_removed_orphaned_member_slug_limit', 50 );
 
 	$query = "SELECT user_id FROM (
 		SELECT user_id, COUNT(*) AS count FROM {$wpdb->usermeta}
@@ -3504,10 +3508,10 @@ function bb_core_removed_orphaned_member_slug() {
 		    ORDER BY count DESC
 		    LIMIT {$limit}
 		) AS t
-		WHERE count > 3;";
+		WHERE count > 3;"; // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $wpdb->usermeta is a table name; $limit is cast to (int).
 
 	// Retrieve users with more than 3 profile slug metas.
-	$users = $wpdb->get_col( $query );
+	$users = $wpdb->get_col( $query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $query interpolates only the $wpdb->usermeta table name and an (int)-cast $limit.
 
 	if (
 		empty( $users ) ||

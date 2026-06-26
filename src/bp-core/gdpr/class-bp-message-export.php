@@ -272,15 +272,20 @@ final class BP_Message_Export extends BP_Export {
 		$query_select_count = 'COUNT(item.id)';
 		$query_where        = 'item.sender_id=%d';
 
-		$offset = ( $page - 1 ) * $this->items_per_batch;
-		$limit  = "LIMIT {$this->items_per_batch} OFFSET {$offset}";
+		$items_per_batch = (int) $this->items_per_batch;
+		$offset          = ( (int) $page - 1 ) * $items_per_batch;
+		$limit           = "LIMIT {$items_per_batch} OFFSET {$offset}";
 
 		$query       = "SELECT {$query_select} FROM {$table} WHERE {$query_where} {$limit}";
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $query is a built SQL string; sender_id %d-bound here; LIMIT/OFFSET are (int)-cast; table name internal.
 		$query       = $wpdb->prepare( $query, $user->ID );
 		$query_count = "SELECT {$query_select_count} FROM {$table} WHERE {$query_where}";
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $query_count is a built SQL string; sender_id %d-bound here; table name internal.
 		$query_count = $wpdb->prepare( $query_count, $user->ID );
 
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $query_count is the $wpdb->prepare() result above (sender_id %d-bound); table name internal.
 		$count = (int) $wpdb->get_var( $query_count );
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- $query is the $wpdb->prepare() result above (sender_id %d-bound); LIMIT/OFFSET are (int)-cast; table name internal.
 		$items = $wpdb->get_results( $query );
 
 		$items = $this->messages_recipients( $items );

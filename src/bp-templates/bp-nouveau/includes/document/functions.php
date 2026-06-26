@@ -932,7 +932,7 @@ function bp_document_download_file( $attachment_id, $type = 'document' ) {
 			// Create temp folder.
 			wp_mkdir_p( $upload_dir );
 			// Security: Use safer permissions.
-			chmod( $upload_dir, 0755 );
+			chmod( $upload_dir, 0755 ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_chmod -- explicit permission set on a freshly-created directory.
 
 			// Create given main parent folder with sanitized name.
 			$safe_folder_title = sanitize_file_name( $folder->title );
@@ -966,7 +966,7 @@ function bp_document_download_file( $attachment_id, $type = 'document' ) {
 			) {
 				$options = \BuddyBoss\Library\Composer::instance()->zipstream_instance()->archive();
 				$options->setSendHttpHeaders( false ); // Disable sending HTTP headers.
-				$options->setOutputStream( fopen( $zip_name, 'w' ) ); // Specify the output file path.
+				$options->setOutputStream( fopen( $zip_name, 'w' ) ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fopen -- direct stream handle required by ZipStream output stream; WP_Filesystem offers no streaming equivalent.
 
 				// Create a new ZipFile instance.
 				$zip = \BuddyBoss\Library\Composer::instance()->zipstream_instance()->zipstream( $file_name, $options );
@@ -1045,12 +1045,12 @@ function bb_document_force_download( $file_path, $file_name ) {
 	header( 'Content-Disposition: attachment; filename="' . $file_name . '"' );
 	header( 'Content-Length: ' . filesize( $file_path ) );
 
-	$handle = fopen( $file_path, 'rb' );
+	$handle = fopen( $file_path, 'rb' ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fopen -- direct stream I/O for chunked binary document download; WP_Filesystem offers no streaming equivalent.
 	while ( ! feof( $handle ) ) {
-		echo fread( $handle, $chunk_size ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- raw binary file stream for octet-stream download; escaping would corrupt the file.
+		echo fread( $handle, $chunk_size ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped,WordPress.WP.AlternativeFunctions.file_system_operations_fread -- raw binary file stream for octet-stream download; escaping would corrupt the file; WP_Filesystem offers no streaming equivalent.
 		flush();
 	}
-	fclose( $handle );
+	fclose( $handle ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose -- closing the direct binary stream opened above.
 }
 
 function bp_document_get_child_folders( $folder_id = 0, $parent_folder = '' ) {
@@ -1068,7 +1068,7 @@ function bp_document_get_child_folders( $folder_id = 0, $parent_folder = '' ) {
 	$query_where            = "find_in_set(parent, @pv) and length(@pv := concat(@pv, ',', id))";
 	$query_from             = $wpdb->prepare( "( select * from {$document_folder_table} order by parent, id) folder_sorted, (select @pv := %d) initialisation", $folder_id );
 	$documents_folder_query = "select * from $query_from where $query_where";
-	$data                   = $wpdb->get_results( $documents_folder_query, ARRAY_A ); // db call ok; no-cache ok;
+	$data                   = $wpdb->get_results( $documents_folder_query, ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $query_from is prepared above (%d for $folder_id, internal table name); $query_where is a hardcoded literal.
 
 	// Build array of item references.
 	foreach ( $data as $key => &$item ) {
@@ -1151,14 +1151,14 @@ function bp_document_get_preview_text_from_attachment( $attachment_id ) {
 
 	$data = get_transient( 'attachment_text' . $attachment_id );
 	if ( false === $data ) {
-		$file_open = fopen( get_attached_file( $attachment_id ), 'r' );
-		$file_data = fread( $file_open, 10000 );
+		$file_open = fopen( get_attached_file( $attachment_id ), 'r' ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fopen -- direct stream I/O to read a leading text chunk of a document file; WP_Filesystem offers no streaming equivalent.
+		$file_data = fread( $file_open, 10000 ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fread -- direct stream read of the document preview chunk; WP_Filesystem offers no streaming equivalent.
 		$more_text = false;
 		if ( strlen( $file_data ) >= 9999 ) {
 			$file_data .= '...';
 			$more_text  = true;
 		}
-		fclose( $file_open );
+		fclose( $file_open ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose -- closing the direct stream opened above.
 
 		$data              = array();
 		$data['text']      = $file_data;

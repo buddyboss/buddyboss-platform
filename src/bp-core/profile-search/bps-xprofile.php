@@ -103,6 +103,7 @@ function bp_ps_xprofile_search( $f ) {
 			$field_visibility[] = 'loggedin';
 
 			if ( bp_is_active( 'friends' ) ) {
+				// phpcs:disable WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- Table name from $bp->friends->table_name (internal); user ids bound via %d placeholders.
 				$friend_ids_sql = $wpdb->prepare(
 					'SELECT CASE
 		                	WHEN initiator_user_id = %d THEN friend_user_id
@@ -113,6 +114,7 @@ function bp_ps_xprofile_search( $f ) {
 		                	AND ( initiator_user_id = %d OR friend_user_id = %d )',
 					$loggin_user_id, $loggin_user_id, $loggin_user_id
 				);
+				// phpcs:enable WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter
 			}
 		}
 
@@ -394,7 +396,7 @@ function bp_ps_gender_setup( $fields ) {
 	global $wpdb;
 	global $bp;
 
-	$exists_gender = $wpdb->get_results( "SELECT COUNT(*) as count, id FROM {$bp->table_prefix}bp_xprofile_fields a WHERE parent_id = 0 AND type = 'gender' " );
+	$exists_gender = $wpdb->get_results( "SELECT COUNT(*) as count, id FROM {$bp->table_prefix}bp_xprofile_fields a WHERE parent_id = 0 AND type = 'gender' " ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- Table prefix from $bp->table_prefix; no user input, hardcoded WHERE clause.
 
 	if ( $exists_gender[0]->count > 0 ) {
 
@@ -518,6 +520,7 @@ function bp_ps_anyfield_search( $f ) {
 			$field_visibility[] = 'loggedin';
 
 			if ( bp_is_active( 'friends' ) ) {
+				// phpcs:disable WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- Table name from $bp->friends->table_name (internal); user ids bound via %d placeholders.
 				$friend_ids_sql = $wpdb->prepare(
 					'SELECT CASE
 		                	WHEN initiator_user_id = %d THEN friend_user_id
@@ -528,6 +531,7 @@ function bp_ps_anyfield_search( $f ) {
 		                	AND ( initiator_user_id = %d OR friend_user_id = %d )',
 					$loggin_user_id, $loggin_user_id, $loggin_user_id
 				);
+				// phpcs:enable WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter
 			}
 		}
 
@@ -565,7 +569,7 @@ function bp_ps_anyfield_search( $f ) {
 						$query_placeholder[] = '%' . bp_ps_esc_like( $term ) . '%';
 					}
 				}
-				$sql['where'][ $filter ] = $wpdb->prepare( implode( ' OR ', $every_word_clauses ), ...$query_placeholder );
+				$sql['where'][ $filter ] = $wpdb->prepare( implode( ' OR ', $every_word_clauses ), ...$query_placeholder ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- $every_word_clauses are hardcoded "( xpd.value LIKE %s )" fragments; values bound via $query_placeholder.
 			} else {
 				$sql['where'][ $filter ] = '1=1';
 			}
@@ -580,7 +584,7 @@ function bp_ps_anyfield_search( $f ) {
 	$sql   = apply_filters( 'bp_ps_field_sql', $sql, $f );
 	$query = $sql['select'] . ' WHERE ' . implode( ' AND ', $sql['where'] );
 
-	$results  = $wpdb->get_results( $query, ARRAY_A );
+	$results  = $wpdb->get_results( $query, ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $query assembled from $wpdb->prepare()'d / esc_sql()'d WHERE fragments and internal table names.
 	$user_ids = array();
 	if ( ! empty( $results ) ) {
 		// Exclude repeater fields.
@@ -715,5 +719,5 @@ function bb_ps_xprofile_email_users_search( $f ) {
 			break;
 	}
 
-	return $wpdb->get_col( $sql_query );
+	return $wpdb->get_col( $sql_query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- $sql_query is {$wpdb->users} table name plus $wpdb->prepare()'d WHERE fragments.
 }

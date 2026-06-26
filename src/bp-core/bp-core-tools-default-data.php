@@ -372,7 +372,7 @@ function bp_dd_get_random_groups_ids( $count = 1, $output = 'array' ) {
 			$limit = 'LIMIT ' . (int) $count;
 		}
 
-		$groups = $wpdb->get_col( "SELECT id FROM {$bp->groups->table_name} ORDER BY rand() {$limit}" );
+		$groups = $wpdb->get_col( "SELECT id FROM {$bp->groups->table_name} ORDER BY rand() {$limit}" ); // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter -- Table from $bp->groups->table_name; $limit is built from (int) $count.
 	}
 
 	/**

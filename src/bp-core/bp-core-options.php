@@ -458,6 +458,7 @@ function bp_core_get_root_options() {
 		$blog_options_keys      = "'" . join( "', '", (array) $root_blog_option_keys ) . "'";
 		$blog_options_table     = bp_is_multiblog_mode() ? $wpdb->options : $wpdb->get_blog_prefix( bp_get_root_blog_id() ) . 'options';
 		$blog_options_query     = "SELECT option_name AS name, option_value AS value FROM {$blog_options_table} WHERE option_name IN ( {$blog_options_keys} )";
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $blog_options_keys is a quoted join of hardcoded bp_get_default_options() keys (not user input); $blog_options_table is an internally-built options table name.
 		$root_blog_options_meta = $wpdb->get_results( $blog_options_query );
 
 		// On Multisite installations, some options must always be fetched from sitemeta.
@@ -484,6 +485,7 @@ function bp_core_get_root_options() {
 			$network_option_keys    = array_keys( $network_options );
 			$sitemeta_options_keys  = "'" . join( "', '", (array) $network_option_keys ) . "'";
 			$sitemeta_options_query = $wpdb->prepare( "SELECT meta_key AS name, meta_value AS value FROM {$wpdb->sitemeta} WHERE meta_key IN ( {$sitemeta_options_keys} ) AND site_id = %d", $current_site->id );
+			// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $sitemeta_options_query is the $wpdb->prepare() result above; $sitemeta_options_keys is a quoted join of hardcoded network option keys.
 			$network_options_meta   = $wpdb->get_results( $sitemeta_options_query );
 
 			// Sitemeta comes second in the merge, so that network 'registration' value wins.

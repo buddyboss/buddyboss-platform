@@ -162,15 +162,20 @@ final class BP_Group_Membership_Export extends BP_Export {
 		$query_select_count = 'COUNT(item.id)';
 		$query_where        = 'item.user_id=%d OR item.inviter_id=%d';
 
-		$offset = ( $page - 1 ) * $this->items_per_batch;
-		$limit  = "LIMIT {$this->items_per_batch} OFFSET {$offset}";
+		$items_per_batch = (int) $this->items_per_batch;
+		$offset          = ( (int) $page - 1 ) * $items_per_batch;
+		$limit           = "LIMIT {$items_per_batch} OFFSET {$offset}";
 
-		$query       = "SELECT {$query_select} FROM {$table} WHERE {$query_where} {$limit}";
+		$query = "SELECT {$query_select} FROM {$table} WHERE {$query_where} {$limit}";
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- $table is internal table name; $query_select/$query_where are hardcoded with %d placeholders; $limit uses int-cast values; $user->ID is %d-bound.
 		$query       = $wpdb->prepare( $query, $user->ID, $user->ID );
 		$query_count = "SELECT {$query_select_count} FROM {$table} WHERE {$query_where}";
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- $table is internal table name; $query_select_count/$query_where are hardcoded with %d placeholders; $user->ID is %d-bound.
 		$query_count = $wpdb->prepare( $query_count, $user->ID, $user->ID );
 
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $query_count is a $wpdb->prepare()'d statement built above.
 		$count = (int) $wpdb->get_var( $query_count );
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $query is a $wpdb->prepare()'d statement built above.
 		$items = $wpdb->get_results( $query );
 
 		return array(

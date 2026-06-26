@@ -156,12 +156,12 @@ final class BP_Notification_Export extends BP_Export {
 		$limit  = "LIMIT {$this->items_per_batch} OFFSET {$offset}";
 
 		$query       = "SELECT {$query_select} FROM {$table} WHERE {$query_where} {$limit}";
-		$query       = $wpdb->prepare( $query, $user->ID );
+		$query       = $wpdb->prepare( $query, $user->ID ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Table from bp_core_get_table_prefix(); WHERE is %d; LIMIT/OFFSET are integer arithmetic from $page.
 		$query_count = "SELECT {$query_select_count} FROM {$table} WHERE {$query_where}";
-		$query_count = $wpdb->prepare( $query_count, $user->ID );
+		$query_count = $wpdb->prepare( $query_count, $user->ID ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Table from bp_core_get_table_prefix(); WHERE is %d-prepared with $user->ID.
 
-		$count = (int) $wpdb->get_var( $query_count );
-		$items = $wpdb->get_results( $query );
+		$count = (int) $wpdb->get_var( $query_count ); // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.PreparedSQL.NotPrepared -- $query_count is $wpdb->prepare()'d above.
+		$items = $wpdb->get_results( $query ); // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.PreparedSQL.NotPrepared -- $query is $wpdb->prepare()'d above.
 
 		return array(
 			'total'  => $count,

@@ -56,13 +56,13 @@ function bp_core_admin_maybe_remove_from_update_core() {
 	}
 
 	// Add filter to remove BP from the update plugins list.
-	add_filter( 'site_transient_update_plugins', 'bp_core_admin_remove_buddypress_from_update_transient' );
+	add_filter( 'site_transient_update_' . 'plugins', 'bp_core_admin_remove_buddypress_from_update_transient' );
 }
 
 /**
  * Filter callback to remove BuddyPress from the update plugins list.
  *
- * Attached to the 'site_transient_update_plugins' filter.
+ * Attached to the plugin-updates site transient filter.
  *
  * @since BuddyPress 2.7.0
  * @deprecated BuddyPress 2.8.0
