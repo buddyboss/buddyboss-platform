@@ -1,9 +1,12 @@
 /**
  * BuddyBoss Integrations marketplace — single card.
  *
- * Matches the Figma card: circular bordered logo, title, vendor subtitle,
+ * Matches the Figma card: circular bordered logo, title, category subtitle,
  * 3-line-clamped description, and an orange-outline action button. Clicking the
  * title opens the detail drawer (the card body itself is not clickable).
+ *
+ * The subtitle under the title is the integration's CATEGORY (resolved from the
+ * integrations_category term ID via the categoryMap prop) — not a vendor name.
  *
  * API FIELD CONTRACT (team populates these on the wp/v2/integrations response;
  * the card reads them and lights up automatically when present — all optional):
@@ -12,7 +15,6 @@
  *  - plugin_url (string URL): the plugin's site — the "Learn More ↗" destination
  *    (falls back to `link` / `link_url`). Learn More shows when there's no
  *    install_url, or alongside Install when plugin_url is provided.
- *  - vendor_name (string): author/vendor subtitle under the title.
  *  - tier ('free' | 'pro'): when 'pro', renders the PRO badge.
  * See docs/superpowers/specs/2026-06-25-integrations-api-field-contract.md.
  *
@@ -24,7 +26,7 @@ import { __ } from '@wordpress/i18n';
 import { decodeEntities } from '@wordpress/html-entities';
 import { safeUrl } from '@bb/admin-common';
 
-export function IntegrationCard( { item, onSelect } ) {
+export function IntegrationCard( { item, categoryMap, onSelect } ) {
 	const title = item?.title?.rendered ? decodeEntities( item.title.rendered ) : '';
 	const description = item?.short_description ? decodeEntities( item.short_description ) : '';
 	const logo = item?.logo_image_url && 'string' === typeof item.logo_image_url ? item.logo_image_url : '';
@@ -37,7 +39,11 @@ export function IntegrationCard( { item, onSelect } ) {
 	// Show "Learn More" when there's no install_url (never show a dead Install), or
 	// alongside Install when the API provides a dedicated plugin_url (the pro case).
 	const showLearnMore = learnMoreUrl && ( ! installUrl || pluginUrl );
-	const vendorName = item?.vendor_name ? decodeEntities( item.vendor_name ) : '';
+	// Subtitle = the integration's category. integrations_category holds term IDs;
+	// resolve the first one to its name via the categoryMap (from the categories
+	// the dropdown already fetched).
+	const categoryId = Array.isArray( item?.integrations_category ) ? item.integrations_category[ 0 ] : null;
+	const categoryName = categoryId && categoryMap && categoryMap[ categoryId ] ? decodeEntities( categoryMap[ categoryId ] ) : '';
 	const isPro = 'pro' === item?.tier;
 
 	const open = () => onSelect( item.slug, title );
@@ -67,8 +73,8 @@ export function IntegrationCard( { item, onSelect } ) {
 					>
 						{ title }
 					</button>
-					{ vendorName && (
-						<span className="bb-integrations__card-vendor">{ vendorName }</span>
+					{ categoryName && (
+						<span className="bb-integrations__card-category">{ categoryName }</span>
 					) }
 					<span className="bb-integrations__card-desc">{ description }</span>
 				</div>

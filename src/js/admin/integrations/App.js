@@ -132,6 +132,16 @@ function AppInner() {
 		[ categories ]
 	);
 
+	// term ID → category name, so each card can show its category as the subtitle
+	// (item.integrations_category holds term IDs, not names).
+	const categoryMap = useMemo( () => {
+		const map = {};
+		categories.forEach( ( c ) => {
+			map[ c.id ] = c.name;
+		} );
+		return map;
+	}, [ categories ] );
+
 	// Global header search → Settings search AJAX (stable identity so BBAdminHeader's
 	// search effect doesn't re-subscribe on every render). adminData is module-scoped.
 	const handleHeaderSearch = useCallback( ( query, signal ) => {
@@ -230,6 +240,7 @@ function AppInner() {
 				<IntegrationGrid
 					items={ items }
 					status={ status }
+					categoryMap={ categoryMap }
 					onSelect={ ( slug, title ) => {
 						setActiveTitle( title || '' );
 						setActiveSlug( slug );
