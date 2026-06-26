@@ -137,12 +137,18 @@ function bp_core_admin_php52_plugin_row( $file, $plugin_data ) {
 		$active_class .= ' not-shiny';
 	}
 
-	echo '<tr class="plugin-update-tr' . $active_class . '" id="' . esc_attr( $response->slug . '-update' ) . '" data-slug="' . esc_attr( $response->slug ) . '" data-plugin="' . esc_attr( $file ) . '"><td colspan="' . esc_attr( $wp_list_table->get_column_count() ) . '" class="plugin-update colspanchange"><div class="update-message inline notice notice-error notice-alt">';
+	echo '<tr class="plugin-update-tr' . esc_attr( $active_class ) . '" id="' . esc_attr( $response->slug . '-update' ) . '" data-slug="' . esc_attr( $response->slug ) . '" data-plugin="' . esc_attr( $file ) . '"><td colspan="' . esc_attr( $wp_list_table->get_column_count() ) . '" class="plugin-update colspanchange"><div class="update-message inline notice notice-error notice-alt">';
 
-	printf(
-		$p,
-		esc_html__( 'A BuddyPress update is available, but your system is not compatible.', 'buddyboss-platform' ) . ' ' .
-		sprintf( __( 'See <a href="%s">the Codex guide</a> for more information.', 'buddyboss-platform' ), 'https://codex.buddypress.org/getting-started/buddypress-2-8-will-require-php-5-3/' )
+	echo wp_kses_post(
+		sprintf(
+			$p,
+			esc_html__( 'A BuddyPress update is available, but your system is not compatible.', 'buddyboss-platform' ) . ' ' .
+			sprintf(
+				/* translators: %s: URL to the Codex guide */
+				__( 'See <a href="%s">the Codex guide</a> for more information.', 'buddyboss-platform' ),
+				esc_url( 'https://codex.buddypress.org/getting-started/buddypress-2-8-will-require-php-5-3/' )
+			)
+		)
 	);
 
 	echo '</div></td></tr>';
@@ -152,7 +158,7 @@ function bp_core_admin_php52_plugin_row( $file, $plugin_data ) {
 	 * See WP_Plugins_List_Table::single_row().
 	 */
 	$checkbox_id = 'checkbox_' . md5( $plugin_data['Name'] );
-	echo "<script type='text/javascript'>document.getElementById('$checkbox_id').disabled = true;</script>";
+	echo "<script type='text/javascript'>document.getElementById('" . esc_js( $checkbox_id ) . "').disabled = true;</script>";
 }
 
 /**
@@ -196,7 +202,21 @@ function bp_core_admin_php53_admin_notice() {
 
 	<div id="message" class="error notice is-dismissible bp-is-dismissible" data-noticeid="<?php echo esc_attr( $notice_id ); ?>">
 		<p><strong><?php esc_html_e( 'Your site is not ready for BuddyPress 2.8.', 'buddyboss-platform' ); ?></strong></p>
-		<p><?php printf( esc_html__( 'Your site is currently running PHP version %s, while BuddyPress 2.8 will require version 5.3+.', 'buddyboss-platform' ), esc_html( phpversion() ) ); ?> <?php printf( __( 'See <a href="%s">the Codex guide</a> for more information.', 'buddyboss-platform' ), 'https://codex.buddypress.org/getting-started/buddypress-2-8-will-require-php-5-3/' ); ?></p>
+		<p>
+			<?php
+			/* translators: %s: current PHP version */
+			printf( esc_html__( 'Your site is currently running PHP version %s, while BuddyPress 2.8 will require version 5.3+.', 'buddyboss-platform' ), esc_html( phpversion() ) );
+			?>
+			<?php
+			echo wp_kses_post(
+				sprintf(
+					/* translators: %s: URL to the Codex guide */
+					__( 'See <a href="%s">the Codex guide</a> for more information.', 'buddyboss-platform' ),
+					esc_url( 'https://codex.buddypress.org/getting-started/buddypress-2-8-will-require-php-5-3/' )
+				)
+			);
+			?>
+		</p>
 		<?php wp_nonce_field( "bp-dismissible-notice-$notice_id", "bp-dismissible-nonce-$notice_id" ); ?>
 	</div>
 	<?php

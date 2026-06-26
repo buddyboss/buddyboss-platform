@@ -149,15 +149,15 @@ function bp_core_get_wp_profile() {
 	$ud = get_userdata( bp_displayed_user_id() ); ?>
 
 <div class="bp-widget wp-profile">
-	<h4><?php _e( 'My Profile', 'buddyboss-platform' ); ?></h4>
+	<h4><?php esc_html_e( 'My Profile', 'buddyboss-platform' ); ?></h4>
 
 	<table class="wp-profile-fields">
 
 		<?php if ( $ud->display_name ) : ?>
 
 			<tr id="wp_displayname">
-				<td class="label"><?php _e( 'Name', 'buddyboss-platform' ); ?></td>
-				<td class="data"><?php echo $ud->display_name; ?></td>
+				<td class="label"><?php esc_html_e( 'Name', 'buddyboss-platform' ); ?></td>
+				<td class="data"><?php echo esc_html( $ud->display_name ); ?></td>
 			</tr>
 
 		<?php endif; ?>
@@ -165,8 +165,8 @@ function bp_core_get_wp_profile() {
 		<?php if ( $ud->user_description ) : ?>
 
 			<tr id="wp_desc">
-				<td class="label"><?php _e( 'About Me', 'buddyboss-platform' ); ?></td>
-				<td class="data"><?php echo $ud->user_description; ?></td>
+				<td class="label"><?php esc_html_e( 'About Me', 'buddyboss-platform' ); ?></td>
+				<td class="data"><?php echo esc_html( $ud->user_description ); ?></td>
 			</tr>
 
 		<?php endif; ?>
@@ -174,8 +174,8 @@ function bp_core_get_wp_profile() {
 		<?php if ( $ud->user_url ) : ?>
 
 			<tr id="wp_website">
-				<td class="label"><?php _e( 'Website', 'buddyboss-platform' ); ?></td>
-				<td class="data"><?php echo make_clickable( $ud->user_url ); ?></td>
+				<td class="label"><?php esc_html_e( 'Website', 'buddyboss-platform' ); ?></td>
+				<td class="data"><?php echo wp_kses_post( make_clickable( $ud->user_url ) ); ?></td>
 			</tr>
 
 		<?php endif; ?>
@@ -183,8 +183,8 @@ function bp_core_get_wp_profile() {
 		<?php if ( $ud->jabber ) : ?>
 
 			<tr id="wp_jabber">
-				<td class="label"><?php _e( 'Jabber', 'buddyboss-platform' ); ?></td>
-				<td class="data"><?php echo $ud->jabber; ?></td>
+				<td class="label"><?php esc_html_e( 'Jabber', 'buddyboss-platform' ); ?></td>
+				<td class="data"><?php echo esc_html( $ud->jabber ); ?></td>
 			</tr>
 
 		<?php endif; ?>
@@ -192,8 +192,8 @@ function bp_core_get_wp_profile() {
 		<?php if ( $ud->aim ) : ?>
 
 			<tr id="wp_aim">
-				<td class="label"><?php _e( 'AOL Messenger', 'buddyboss-platform' ); ?></td>
-				<td class="data"><?php echo $ud->aim; ?></td>
+				<td class="label"><?php esc_html_e( 'AOL Messenger', 'buddyboss-platform' ); ?></td>
+				<td class="data"><?php echo esc_html( $ud->aim ); ?></td>
 			</tr>
 
 		<?php endif; ?>
@@ -201,8 +201,8 @@ function bp_core_get_wp_profile() {
 		<?php if ( $ud->yim ) : ?>
 
 			<tr id="wp_yim">
-				<td class="label"><?php _e( 'Yahoo Messenger', 'buddyboss-platform' ); ?></td>
-				<td class="data"><?php echo $ud->yim; ?></td>
+				<td class="label"><?php esc_html_e( 'Yahoo Messenger', 'buddyboss-platform' ); ?></td>
+				<td class="data"><?php echo esc_html( $ud->yim ); ?></td>
 			</tr>
 
 		<?php endif; ?>
@@ -290,7 +290,7 @@ function bp_search_form_enabled() {
  * @since BuddyPress 1.0.0
  */
 function bp_page_title() {
-	echo bp_get_page_title();
+	echo bp_get_page_title(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Return value is esc_attr()-escaped inside the getter; re-escaping would double-encode entities.
 }
 	/**
 	 * Prior to BuddyPress 1.5, this was used to generate the page's <title> text.
@@ -323,7 +323,7 @@ function bp_log_out_link() {
 	_deprecated_function( __FUNCTION__, '1.5', 'wp_logout_url()' );
 
 	$logout_link = '<a href="' . wp_logout_url( bp_get_root_domain() ) . '">' . __( 'Log Out', 'buddyboss-platform' ) . '</a>';
-	echo apply_filters( 'bp_logout_link', $logout_link );
+	echo wp_kses_post( apply_filters( 'bp_logout_link', $logout_link ) );
 }
 
 /**
@@ -370,9 +370,11 @@ function groups_at_message_notification( $content, $poster_user_id, $group_id, $
 			// Set up and send the message
 			$ud      = bp_core_get_core_userdata( $receiver_user_id );
 			$to      = $ud->user_email;
+			/* translators: 1: name of the member who posted the mention, 2: name of the group. */
 			$subject = bp_get_email_subject( array( 'text' => sprintf( __( '%1$s mentioned you in the group "%2$s"', 'buddyboss-platform' ), $poster_name, $group->name ) ) );
 
 			$message = sprintf(
+				/* translators: 1: name of the member who posted the mention, 2: name of the group, 3: the message content, 4: link to view and respond to the message. */
 				__(
 					'%1$s mentioned you in the group "%2$s":
 
@@ -442,7 +444,7 @@ function bp_search_form() {
 		</form>
 	';
 
-	echo apply_filters( 'bp_search_form', $form );
+	echo apply_filters( 'bp_search_form', $form ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $form is <form>/<input> form-control markup built from escaped values above; wp_kses_post would strip form controls.
 }
 
 /**

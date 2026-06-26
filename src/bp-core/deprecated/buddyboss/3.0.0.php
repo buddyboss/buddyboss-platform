@@ -6,6 +6,10 @@
  * @deprecated BuddyBoss 3.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
+
 // ──────────────────────────────────────────────────────────────────────────────
 // Search Settings 2.0 deprecated functions and hook compatibility.
 // Legacy settings API functions were removed from bp-search-settings.php.
@@ -1596,6 +1600,7 @@ function bb_deprecated_xprofile_admin_rendering_hooks() {
 
 	foreach ( $deprecated_hooks as $hook => $description ) {
 		if ( has_action( $hook ) ) {
+			// phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped -- Arguments to _deprecated_hook(), a core API that escapes its own debug output; not direct output.
 			_deprecated_hook(
 				$hook,
 				'BuddyBoss 3.0.0',
@@ -1606,6 +1611,7 @@ function bb_deprecated_xprofile_admin_rendering_hooks() {
 					$hook
 				)
 			);
+			// phpcs:enable WordPress.Security.EscapeOutput.OutputNotEscaped
 		}
 	}
 }
@@ -1630,6 +1636,7 @@ function bb_deprecated_profile_admin_tab_hooks() {
 
 	foreach ( $deprecated_filters as $hook ) {
 		if ( has_filter( $hook ) ) {
+			// phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped -- Arguments to _deprecated_hook(), a core API that escapes its own debug output; not direct output.
 			_deprecated_hook(
 				$hook,
 				'BuddyBoss 3.0.0',
@@ -1640,6 +1647,7 @@ function bb_deprecated_profile_admin_tab_hooks() {
 					$hook
 				)
 			);
+			// phpcs:enable WordPress.Security.EscapeOutput.OutputNotEscaped
 		}
 	}
 }
