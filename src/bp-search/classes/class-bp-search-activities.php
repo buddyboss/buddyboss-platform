@@ -172,7 +172,7 @@ if ( ! class_exists( 'Bp_Search_Activities' ) ) :
 			$query_placeholder[]     = $search_term_placeholder;
 			$query_placeholder[]     = $search_term_placeholder;
 			$query_placeholder[]     = $search_term_placeholder;
-			$sql                     = $wpdb->prepare( $sql, $query_placeholder );
+			$sql                     = $wpdb->prepare( $sql, $query_placeholder ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- $sql assembled from internal select/from/where clauses; search term bound via esc_like'd $query_placeholder here.
 
 			return apply_filters(
 				'Bp_Search_Activities_sql',

@@ -2871,7 +2871,7 @@ function groups_change_all_activity_feed_status( $group_id = 0, $status = 0 ) {
 	}
 
 	$q = $wpdb->prepare( "UPDATE {$bp->activity->table_name} SET hide_sitewide = %d WHERE item_id = %d and component = 'groups' AND privacy = 'public' ", $status, $group_id );
-	if ( false === $wpdb->query( $q ) ) {
+	if ( false === $wpdb->query( $q ) ) { // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- $q is %d-prepared above; table from $bp->activity->table_name.
 		return false;
 	}
 
@@ -2946,8 +2946,8 @@ function groups_delete_groupmeta( $group_id, $meta_key = false, $meta_value = fa
 	if ( empty( $meta_key ) ) {
 		$table_name = buddypress()->groups->table_name_groupmeta;
 		$sql        = "SELECT meta_key FROM {$table_name} WHERE group_id = %d";
-		$query      = $wpdb->prepare( $sql, $group_id );
-		$keys       = $wpdb->get_col( $query );
+		$query      = $wpdb->prepare( $sql, $group_id ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- $table_name from groups->table_name_groupmeta; group_id is %d.
+		$keys       = $wpdb->get_col( $query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- $query is %d-prepared above.
 
 		// With no meta_key, ignore $delete_all.
 		$delete_all = false;
@@ -3057,8 +3057,8 @@ function groups_delete_membermeta( $member_id, $meta_key = false, $meta_value = 
 	if ( empty( $meta_key ) ) {
 		$table_name = buddypress()->groups->table_name_membermeta;
 		$sql        = "SELECT meta_key FROM {$table_name} WHERE member_id = %d";
-		$query      = $wpdb->prepare( $sql, $member_id );
-		$keys       = $wpdb->get_col( $query );
+		$query      = $wpdb->prepare( $sql, $member_id ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- $table_name from groups->table_name_membermeta; member_id is %d.
+		$keys       = $wpdb->get_col( $query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- $query is %d-prepared above.
 
 		// With no meta_key, ignore $delete_all.
 		$delete_all = false;
@@ -4027,7 +4027,7 @@ function bp_group_get_count_by_group_type( $group_type = '', $taxonomy = 'bp_gro
 		'on'     => 'ON tt.term_id = t.term_id',
 		'where'  => $wpdb->prepare( 'WHERE tt.taxonomy = %s', $taxonomy ),
 	);
-	$bp_get_group_type_count = $wpdb->get_results( join( ' ', $bp_group_type_query ) );
+	$bp_get_group_type_count = $wpdb->get_results( join( ' ', $bp_group_type_query ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Tables from $wpdb->term_taxonomy/terms; taxonomy is %s-prepared in the 'where' fragment.
 
 	restore_current_blog();
 
@@ -4302,13 +4302,13 @@ function bp_get_group_ids_by_group_types( $group_type = '', $taxonomy = 'bp_grou
 		return false;
 	}
 
-	$taxonomy_id        = $bp_group_type_query->term_taxonomy_id;
+	$taxonomy_id        = absint( $bp_group_type_query->term_taxonomy_id );
 	$groups             = $bp->table_prefix . 'bp_groups';
 	$group_meta         = $bp->table_prefix . 'bp_groups_groupmeta';
 	$term_relationships = $wpdb->term_relationships;
 
 	$query   = "SELECT g.id as id FROM $groups g JOIN $group_meta gm_last_activity on ( g.id = gm_last_activity.group_id ) WHERE  g.id IN ( SELECT object_id FROM $term_relationships WHERE $term_relationships.term_taxonomy_id IN ($taxonomy_id) ) AND gm_last_activity.meta_key = 'last_activity'";
-	$results = $wpdb->get_results( $query, ARRAY_A );
+	$results = $wpdb->get_results( $query, ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- Tables from $bp->table_prefix/$wpdb->term_relationships; $taxonomy_id is absint()'d.
 
 	return $results;
 }
@@ -4675,11 +4675,11 @@ function bp_groups_migrate_invitations() {
 	$query      = "INSERT INTO {$table_name} (user_id, inviter_id, invitee_email, class, item_id, secondary_item_id, type, content, date_modified, invite_sent, accepted) VALUES ";
 	$query     .= implode( ', ', $values );
 	$query     .= ';';
-	$wpdb->query( $query );
+	$wpdb->query( $query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- Table from BP_Invitation_Manager::get_table_name(); each VALUES row is $wpdb->prepare()'d above.
 
 	$ids_to_delete = implode( ',', $processed );
 	if ( $ids_to_delete ) {
-		$wpdb->query( "DELETE FROM {$bp->groups->table_name_members} WHERE ID IN ($ids_to_delete)" );
+		$wpdb->query( "DELETE FROM {$bp->groups->table_name_members} WHERE ID IN ($ids_to_delete)" ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- $ids_to_delete is implode of (int)-cast IDs; table from $bp->groups->table_name_members.
 	}
 }
 
@@ -4995,7 +4995,7 @@ function bb_get_all_members_for_groups( $args = array() ) {
 		}
 
 		// Get the specific user ids.
-		$results = $wpdb->get_col( "{$sql['select']} {$sql['where']} {$sql['limit']}" );
+		$results = $wpdb->get_col( "{$sql['select']} {$sql['where']} {$sql['limit']}" ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- Table from $bp->groups->table_name_members; group_ids via wp_parse_id_list(); limit %d-prepared.
 	}
 
 	return apply_filters( 'bb_get_all_members_for_groups', array_map( 'intval', $results ), $results );

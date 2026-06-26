@@ -681,7 +681,7 @@ function bb_moderation_admin_repair_old_moderation_data() {
 	$offset                   = isset( $_POST['offset'] ) ? (int) ( $_POST['offset'] ) : 0;
 	$sql_offset               = $offset - 1;
 	$moderated_activities_sql = $wpdb->prepare( "SELECT id,item_id,item_type FROM {$suspend_table} WHERE item_type IN ('media','video','document') GROUP BY id ORDER BY id DESC LIMIT 10 OFFSET %d", $sql_offset );
-	$moderated_activities     = $wpdb->get_results( $moderated_activities_sql );
+	$moderated_activities     = $wpdb->get_results( $moderated_activities_sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- $moderated_activities_sql is built via $wpdb->prepare() above ($suspend_table from $wpdb->base_prefix, %d-prepared offset).
 
 	if ( ! empty( $moderated_activities ) ) {
 		$offset          = bb_moderation_update_suspend_data( $moderated_activities, $offset );

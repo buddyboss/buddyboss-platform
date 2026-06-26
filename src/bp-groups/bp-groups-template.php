@@ -2235,7 +2235,7 @@ function bp_group_search_form() {
 		' . wp_nonce_field( 'group-filter-box', '_wpnonce_group_filter', true, false ) . '
 		</form>';
 
-	echo apply_filters( 'bp_group_search_form', $search_form_html );
+	echo apply_filters( 'bp_group_search_form', $search_form_html ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Buffered <form> markup with form controls (input/label/nonce field); wp_kses_post would strip them.
 }
 
 /**
@@ -5289,7 +5289,7 @@ function bp_get_group_member_joined_since( $args = array() ) {
 		);
 		$group = groups_get_group( $args );
 
-		$wpdb->query( $wpdb->prepare( "UPDATE {$bp->groups->table_name_members} SET date_modified = '%s' WHERE group_id = %d AND user_id = %d ", $group->date_created, $current_group_id, $members_template->member->ID ) );
+		$wpdb->query( $wpdb->prepare( "UPDATE {$bp->groups->table_name_members} SET date_modified = %s WHERE group_id = %d AND user_id = %d ", $group->date_created, $current_group_id, $members_template->member->ID ) );
 
 		$members_template->member->date_modified = $group->date_created;
 	}

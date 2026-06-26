@@ -80,7 +80,7 @@ class BP_Media_Stream {
 	 * Open stream
 	 */
 	private function open() {
-		// phpcs:ignore Squiz.PHP.DisallowMultipleAssignments.FoundInControlStructure, WordPress.CodeAnalysis.AssignmentInCondition.Found, WordPress.WP.AlternativeFunctions.file_system_read_fopen
+		// phpcs:ignore Squiz.PHP.DisallowMultipleAssignments.FoundInControlStructure, WordPress.CodeAnalysis.AssignmentInCondition.Found, WordPress.WP.AlternativeFunctions.file_system_read_fopen, WordPress.WP.AlternativeFunctions.file_system_operations_fopen -- direct stream open for byte-range media streaming; WP_Filesystem offers no streaming equivalent.
 		if ( ! ( $this->stream = fopen( $this->path, 'rb' ) ) ) {
 			die( 'Could not open stream for reading' );
 		}
@@ -144,7 +144,7 @@ class BP_Media_Stream {
 	 * Close currently opened stream.
 	 */
 	private function end() {
-		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_read_fclose
+		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_read_fclose, WordPress.WP.AlternativeFunctions.file_system_operations_fclose -- closing the media stream handle opened in open().
 		fclose( $this->stream );
 		exit;
 	}
@@ -160,7 +160,7 @@ class BP_Media_Stream {
 			if ( ( $i + $bytes_to_read ) > $this->end ) {
 				$bytes_to_read = $this->end - $i + 1;
 			}
-			// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_read_fread
+			// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_read_fread, WordPress.WP.AlternativeFunctions.file_system_operations_fread -- direct stream read of media byte range; WP_Filesystem offers no streaming equivalent.
 			$data = fread( $this->stream, $bytes_to_read );
 			echo $data; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			flush();

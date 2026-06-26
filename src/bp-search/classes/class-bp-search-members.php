@@ -326,8 +326,8 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 
 							$data_clause_xprofile_table .= ' )';
 
-							$sql_xprofile        = $wpdb->prepare( $data_clause_xprofile_table, '%' . $search_term . '%', '[[:<:]]' . $search_term . '[[:>:]]' );
-							$sql_xprofile_result = $wpdb->get_results( $sql_xprofile );
+							$sql_xprofile        = $wpdb->prepare( $data_clause_xprofile_table, '%' . $search_term . '%', '[[:<:]]' . $search_term . '[[:>:]]' ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Search term bound via %s; only DB-sourced field IDs (integers) and a pre-prepared $date_sql fragment are interpolated.
+							$sql_xprofile_result = $wpdb->get_results( $sql_xprofile ); // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.PreparedSQL.NotPrepared -- $sql_xprofile is $wpdb->prepare()'d above.
 
 							// check visiblity for field id with current user.
 							if ( ! empty( $sql_xprofile_result ) ) {
@@ -420,7 +420,7 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 			}
 
 			if ( ! empty( $query_placeholder ) ) {
-				$sql = $wpdb->prepare( $sql, $query_placeholder );
+				$sql = $wpdb->prepare( $sql, $query_placeholder ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- $sql assembled from internal $COLUMNS/$FROM/$WHERE clauses; search term bound via $query_placeholder here.
 			}
 
 			return apply_filters(

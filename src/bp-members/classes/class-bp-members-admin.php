@@ -2524,7 +2524,7 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 					<?php if ( 'resend' == $action ) : ?>
 
 						<p class="description">
-							<?php /* translators: %s: last notified date. */ printf( esc_html__( 'Last notified: %s', 'buddyboss-platform' ), $last_notified ); ?>
+							<?php /* translators: %s: last notified date. */ printf( esc_html__( 'Last notified: %s', 'buddyboss-platform' ), esc_html( $last_notified ) ); ?>
 
 							<?php if ( ! empty( $signup->recently_sent ) ) : ?>
 

@@ -657,6 +657,7 @@ function bp_core_get_total_member_count() {
 
 	if ( false === $count ) {
 		$status_sql = bp_core_get_status_sql();
+		// phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter -- $status_sql is internal bp_core_get_status_sql() output; table from $wpdb->users; no user input.
 		$count      = $wpdb->get_var( "SELECT COUNT(ID) FROM {$wpdb->users} WHERE {$status_sql}" );
 		wp_cache_set( 'bp_total_member_count', $count, 'bp' );
 	}
@@ -752,8 +753,10 @@ function bp_core_get_active_member_count() {
 			$sql = "SELECT ID FROM {$wpdb->users} WHERE user_status != 0";
 		}
 
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- $sql is a hardcoded constant string (no interpolated user input); table from $wpdb->users.
 		$exclude_users     = $wpdb->get_col( $sql );
 		$exclude_users_sql = ! empty( $exclude_users ) ? 'AND user_id NOT IN (' . implode( ',', wp_parse_id_list( $exclude_users ) ) . ')' : '';
+		// phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter -- $exclude_users_sql is implode of wp_parse_id_list() integers; table internal; component %s-prepared.
 		$count             = (int) $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(user_id) FROM {$bp->members->table_name_last_activity} WHERE component = %s AND type = 'last_activity' {$exclude_users_sql}", $bp->members->id ) );
 
 		set_transient( 'bp_active_member_count', $count );
@@ -2230,7 +2233,8 @@ function bp_members_migrate_signups() {
 
 		// Fetch activation keys separately, to avoid the all_with_meta
 		// overhead.
-		$status_2_ids_sql = implode( ',', $status_2_ids );
+		$status_2_ids_sql = implode( ',', array_map( 'absint', $status_2_ids ) );
+		// phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter -- $status_2_ids_sql is implode of absint()-mapped IDs; table from $wpdb->usermeta; no user input.
 		$ak_data          = $wpdb->get_results( "SELECT user_id, meta_value FROM {$wpdb->usermeta} WHERE meta_key = 'activation_key' AND user_id IN ({$status_2_ids_sql})" );
 
 		// Rekey.
@@ -3396,15 +3400,19 @@ function bp_member_type_post_by_type( $member_type ) {
 		return $member_type_post[ $cache_key ];
 	}
 
-	$query   = "SELECT post_id FROM {$wpdb->postmeta} WHERE meta_key = '%s' AND LOWER(meta_value) = '%s'";
+	$query   = "SELECT post_id FROM {$wpdb->postmeta} WHERE meta_key = %s AND LOWER(meta_value) = %s";
+	// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $query is a literal SQL string with %s placeholders; values bound here via prepare().
 	$query   = $wpdb->prepare( $query, '_bp_member_type_key', $member_type );
+	// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- $query is the $wpdb->prepare() result from the line above.
 	$post_id = $wpdb->get_var( $query );
 
 	// Fallback to legacy way to retrieve profile type from name by using singular label.
 	if ( ! $post_id ) {
 		$name    = str_replace( array( '-', '-' ), array( ' ', ',' ), $member_type );
-		$query   = "SELECT post_id FROM {$wpdb->postmeta} WHERE meta_key = '%s' AND LOWER(meta_value) = '%s'";
+		$query   = "SELECT post_id FROM {$wpdb->postmeta} WHERE meta_key = %s AND LOWER(meta_value) = %s";
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $query is a literal SQL string with %s placeholders; values bound here via prepare().
 		$query   = $wpdb->prepare( $query, '_bp_member_type_label_singular_name', $name );
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- $query is the $wpdb->prepare() result from the line above.
 		$post_id = $wpdb->get_var( $query );
 	}
 
@@ -3435,7 +3443,7 @@ function bp_member_type_by_type( $type_id ) {
 	$cache_key  = 'bp_member_type_by_type_' . $type_id;
 	$member_ids = wp_cache_get( $cache_key, 'bp_member_member_type' );
 	if ( false === $member_ids ) {
-		$member_ids = $wpdb->get_col( "SELECT u.ID FROM {$wpdb->users} u INNER JOIN {$wpdb->term_relationships} r ON u.ID = r.object_id WHERE u.user_status = 0 AND r.term_taxonomy_id = " . $type_id );
+		$member_ids = $wpdb->get_col( $wpdb->prepare( "SELECT u.ID FROM {$wpdb->users} u INNER JOIN {$wpdb->term_relationships} r ON u.ID = r.object_id WHERE u.user_status = 0 AND r.term_taxonomy_id = %d", $type_id ) );
 		wp_cache_set( $cache_key, $member_ids, 'bp_member_member_type' );
 	}
 
@@ -5313,12 +5321,12 @@ function bb_set_bulk_user_profile_slug( $user_ids ) {
 		return;
 	}
 
-	$implode_user_ids = implode( ',', $user_ids );
+	$implode_user_ids = implode( ',', array_map( 'absint', $user_ids ) );
 
 	// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 	$wpdb->query(
 		$wpdb->prepare(
-			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.LikeWildcardsInQuery
+			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.LikeWildcardsInQuery -- literal LIKE 'bb_profile_slug_%' prefix wildcard (not a placeholder); $implode_user_ids is absint()-mapped IDs.
 			"UPDATE {$wpdb->usermeta} SET meta_key = REPLACE(meta_key, %s, %s) WHERE meta_key LIKE 'bb_profile_slug_%' AND LENGTH(meta_key) >= 56 AND user_id IN ({$implode_user_ids})",
 			'bb_profile_slug_',
 			'bb_profile_long_slug_'
@@ -5328,10 +5336,10 @@ function bb_set_bulk_user_profile_slug( $user_ids ) {
 	foreach ( $user_ids as $key => $user_id ) {
 
 		// removed old user meta which have value length 40.
-		$wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->usermeta} WHERE meta_key LIKE 'bb_profile_slug' AND user_id = %d AND LENGTH(meta_value) = 40", $user_id ) );
+		$wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->usermeta} WHERE meta_key LIKE 'bb_profile_slug' AND user_id = %d AND LENGTH(meta_value) = 40", $user_id ) ); // phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.LikeWildcardsInQuery -- Literal LIKE term with no wildcard; not user input.
 
 		// Remove duplicate log slug with same value.
-		$wpdb->query( $wpdb->prepare( "DELETE um1 FROM {$wpdb->usermeta} um1, {$wpdb->usermeta} um2 WHERE um1.umeta_id > um2.umeta_id AND um1.meta_key = um2.meta_key AND um1.meta_key LIKE 'bb_profile_long_slug_%%' AND LENGTH(um1.meta_key) >= 61 AND um1.user_id = %d", $user_id ) );
+		$wpdb->query( $wpdb->prepare( "DELETE um1 FROM {$wpdb->usermeta} um1, {$wpdb->usermeta} um2 WHERE um1.umeta_id > um2.umeta_id AND um1.meta_key = um2.meta_key AND um1.meta_key LIKE 'bb_profile_long_slug_%%' AND LENGTH(um1.meta_key) >= 61 AND um1.user_id = %d", $user_id ) ); // phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.LikeWildcardsInQuery -- Literal LIKE prefix wildcard on an internal meta_key; not user input.
 
 		// fetch user slug if already exists.
 		$p_slug = bb_core_get_user_slug( $user_id );
@@ -5565,16 +5573,18 @@ function bb_remove_orphaned_profile_slug( $user_id ) {
 		return;
 	}
 
+	// phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.LikeWildcardsInQuery -- literal LIKE 'bb_profile_slug_%' prefix wildcard (not a placeholder); %s value is bound.
 	$condition[] = $wpdb->prepare( "( meta_key LIKE 'bb_profile_slug_%' AND meta_key != %s )", "bb_profile_slug_{$p_slug}" );
 	$condition[] = "( meta_key LIKE 'bb_profile_long_slug_%' AND LENGTH(meta_key) < 61 )";
-	$condition[] = $wpdb->prepare( "( meta_key LIKE 'bb_profile_slug' AND meta_value != %s )", $p_slug );
+	$condition[] = $wpdb->prepare( "( meta_key LIKE 'bb_profile_slug' AND meta_value != %s )", $p_slug ); // phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.LikeWildcardsInQuery -- Literal LIKE term with no wildcard; not user input.
 
 	$condition_join = '(' . implode( ' OR ', $condition ) . ') AND ' . $wpdb->prepare( 'user_id = %d', $user_id );
 
 	// Initial deletion query
 	$delete_query = "DELETE FROM {$table_name} WHERE {$condition_join} LIMIT 500";
 
-	// Execute the initial deletion
+	// Execute the initial deletion.
+	// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $condition_join is composed entirely of $wpdb->prepare()'d fragments + literal wildcards; $table_name from $wpdb->usermeta.
 	$wpdb->query( $delete_query );
 
 	// Recursive deletion until no more rows are affected

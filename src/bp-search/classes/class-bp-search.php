@@ -548,7 +548,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 					$pre_search_query .= ' LIMIT ' . absint( $args['ajax_per_page'] ) . ' ';
 				}
 
-				$results = $wpdb->get_results( $pre_search_query );
+				$results = $wpdb->get_results( $pre_search_query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $pre_search_query is a UNION of per-handler prepared subqueries; the only request value (ajax_per_page) is absint()-cast into LIMIT above.
 				/*
 				 $results will have a structure like below */
 				/*
@@ -708,11 +708,17 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 					// anything but a positive integer.
 					$pre_search_query .= ' LIMIT ' . absint( $args['ajax_per_page'] ) . ' ';
 				} elseif ( $args['per_page'] > 0 ) {
-					$offset           = ( $args['current_page'] * $args['per_page'] ) - $args['per_page'];
-					$pre_search_query .= " LIMIT {$offset}, {$args['per_page']} ";
+					// Cast to int at the sink: per_page/current_page are request-derived
+					// and interpolated into the LIMIT clause, so they must never carry
+					// anything but positive integers.
+					$per_page          = absint( $args['per_page'] );
+					$current_page      = absint( $args['current_page'] );
+					$offset            = ( $current_page * $per_page ) - $per_page;
+					$offset            = max( 0, $offset );
+					$pre_search_query .= " LIMIT {$offset}, {$per_page} ";
 				}
 
-				$results = $wpdb->get_results( $pre_search_query );
+				$results = $wpdb->get_results( $pre_search_query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $pre_search_query is a UNION of per-handler prepared subqueries; LIMIT/OFFSET values are absint()-cast above.
 
 				/*
 				 $results will have a structure like below */

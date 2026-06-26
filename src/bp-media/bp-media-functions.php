@@ -1476,7 +1476,7 @@ function bp_media_delete_orphaned_attachments() {
 				GROUP BY {$post_table}.ID
 				ORDER BY {$post_table}.post_date DESC";
 
-	$media_wp_query_posts = $wpdb->get_col( $query );
+	$media_wp_query_posts = $wpdb->get_col( $query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- query interpolates only internal table names ($wpdb->posts/postmeta) and an internally gmdate()-generated timestamp; no user input.
 
 	if ( ! empty( $media_wp_query_posts ) ) {
 		foreach ( $media_wp_query_posts as $post_id ) {
@@ -2860,7 +2860,7 @@ function bp_media_user_media_album_tree_view_li_html( $user_id = 0, $group_id = 
 	}
 
 	// db call ok; no-cache ok;
-	$data = $wpdb->get_results( $media_album_query, ARRAY_A );
+	$data = $wpdb->get_results( $media_album_query, ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- $media_album_query is prepared above (%d for user_id/group_id; internal table name).
 
 	// Build array of item references.
 	foreach ( $data as $key => &$item ) {
@@ -3345,13 +3345,13 @@ function bp_media_symlink_path() {
 	$platform_previews_path = $upload_dir . '/bb-platform-previews';
 	if ( ! is_dir( $platform_previews_path ) ) {
 		wp_mkdir_p( $platform_previews_path );
-		chmod( $platform_previews_path, 0755 );
+		chmod( $platform_previews_path, 0755 ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_chmod -- explicit permission set on a freshly-created directory.
 	}
 
 	$media_symlinks_path = $platform_previews_path . '/' . md5( 'bb-media' );
 	if ( ! is_dir( $media_symlinks_path ) ) {
 		wp_mkdir_p( $media_symlinks_path );
-		chmod( $media_symlinks_path, 0755 );
+		chmod( $media_symlinks_path, 0755 ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_chmod -- explicit permission set on a freshly-created directory.
 	}
 
 	return $media_symlinks_path;

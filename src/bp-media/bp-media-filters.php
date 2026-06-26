@@ -1681,7 +1681,7 @@ function bp_media_message_privacy_repair() {
 	$bp     = buddypress();
 
 	$media_query = "SELECT id FROM {$bp->media->table_name} WHERE privacy = 'message' AND type = 'photo' LIMIT 20 OFFSET $offset ";
-	$medias      = $wpdb->get_results( $media_query );
+	$medias      = $wpdb->get_results( $media_query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Table name from $bp->media; $offset is an (int)-cast integer.
 
 	if ( ! empty( $medias ) ) {
 		foreach ( $medias as $media ) {
@@ -1722,7 +1722,7 @@ function bp_media_admin_repair_media() {
 	$bp     = buddypress();
 
 	$media_query = "SELECT id, activity_id FROM {$bp->media->table_name} WHERE activity_id != 0 AND type = 'photo' LIMIT 50 OFFSET $offset ";
-	$medias      = $wpdb->get_results( $media_query );
+	$medias      = $wpdb->get_results( $media_query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Table name from $bp->media; $offset is an (int)-cast integer.
 
 	if ( ! empty( $medias ) ) {
 		foreach ( $medias as $media ) {
@@ -1733,8 +1733,8 @@ function bp_media_admin_repair_media() {
 						$activity = new BP_Activity_Activity( $activity->item_id );
 					}
 					if ( bp_is_active( 'groups' ) && buddypress()->groups->id === $activity->component ) {
-						$update_query = "UPDATE {$bp->media->table_name} SET group_id=" . $activity->item_id . ", privacy='grouponly' WHERE id=" . $media->id . ' ';
-						$wpdb->query( $update_query );
+						$update_query = $wpdb->prepare( "UPDATE {$bp->media->table_name} SET group_id = %d, privacy = 'grouponly' WHERE id = %d", $activity->item_id, $media->id );
+						$wpdb->query( $update_query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- $update_query is built via $wpdb->prepare() above.
 					}
 					if ( 'media' === $activity->privacy ) {
 						if ( ! empty( $activity->secondary_item_id ) ) {
@@ -1744,8 +1744,8 @@ function bp_media_admin_repair_media() {
 									$media_activity = new BP_Activity_Activity( $media_activity->item_id );
 								}
 								if ( bp_is_active( 'groups' ) && buddypress()->groups->id === $media_activity->component ) {
-									$update_query = "UPDATE {$bp->media->table_name} SET group_id=" . $media_activity->item_id . ", privacy='grouponly' WHERE id=" . $media->id . ' ';
-									$wpdb->query( $update_query );
+									$update_query = $wpdb->prepare( "UPDATE {$bp->media->table_name} SET group_id = %d, privacy = 'grouponly' WHERE id = %d", $media_activity->item_id, $media->id );
+									$wpdb->query( $update_query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- $update_query is built via $wpdb->prepare() above.
 									$activity->item_id   = $media_activity->item_id;
 									$activity->component = buddypress()->groups->id;
 								}
@@ -1786,7 +1786,7 @@ function bp_media_forum_privacy_repair() {
 	$bp     = buddypress();
 
 	$squery  = "SELECT p.ID as post_id FROM {$wpdb->posts} p, {$wpdb->postmeta} pm WHERE p.ID = pm.post_id and p.post_type in ( 'forum', 'topic', 'reply' ) and pm.meta_key = 'bp_media_ids' and pm.meta_value != '' LIMIT 20 OFFSET $offset ";
-	$records = $wpdb->get_col( $squery );
+	$records = $wpdb->get_col( $squery ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Table names from $wpdb; $offset is an (int)-cast integer.
 	if ( ! empty( $records ) ) {
 		foreach ( $records as $record ) {
 			if ( ! empty( $record ) ) {
@@ -1794,7 +1794,7 @@ function bp_media_forum_privacy_repair() {
 				if ( ! empty( $media_ids ) ) {
 					$ids_in       = implode( ',', $media_ids );
 					$update_query = "UPDATE {$bp->media->table_name} SET `privacy`= 'forums' WHERE id IN ({$ids_in})";
-					$wpdb->query( $update_query ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- IDs are integers via wp_parse_id_list().
+					$wpdb->query( $update_query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table name from $bp->media; $ids_in is an implode of wp_parse_id_list() integers.
 				}
 			}
 			$offset ++;
@@ -1969,7 +1969,7 @@ function bp_media_readfile_chunked( $file, $start = 0, $length = 0 ) {
 	if ( ! defined( 'BP_MEDIA_CHUNK_SIZE' ) ) {
 		define( 'BP_MEDIA_CHUNK_SIZE', 1024 * 1024 );
 	}
-	$handle = @fopen( $file, 'r' ); // phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged, WordPress.WP.AlternativeFunctions.file_system_read_fopen
+	$handle = @fopen( $file, 'r' ); // phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged, WordPress.WP.AlternativeFunctions.file_system_read_fopen, WordPress.WP.AlternativeFunctions.file_system_operations_fopen -- direct stream I/O for chunked media download; WP_Filesystem offers no streaming equivalent.
 
 	if ( false === $handle ) {
 		return false;
@@ -1993,7 +1993,7 @@ function bp_media_readfile_chunked( $file, $start = 0, $length = 0 ) {
 				$read_length = $end - $p + 1;
 			}
 
-			echo @fread( $handle, $read_length ); // phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged, WordPress.Security.EscapeOutput.OutputNotEscaped, WordPress.WP.AlternativeFunctions.file_system_read_fread -- Raw binary file stream for download; escaping would corrupt the output.
+			echo @fread( $handle, $read_length ); // phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged, WordPress.Security.EscapeOutput.OutputNotEscaped, WordPress.WP.AlternativeFunctions.file_system_read_fread, WordPress.WP.AlternativeFunctions.file_system_operations_fread -- Raw binary file stream for media download; escaping would corrupt the output and WP_Filesystem offers no streaming equivalent.
 			$p = @ftell( $handle ); // phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged
 
 			if ( ob_get_length() ) {
@@ -2011,7 +2011,7 @@ function bp_media_readfile_chunked( $file, $start = 0, $length = 0 ) {
 		}
 	}
 
-	return @fclose( $handle ); // phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged, WordPress.WP.AlternativeFunctions.file_system_read_fclose
+	return @fclose( $handle ); // phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged, WordPress.WP.AlternativeFunctions.file_system_read_fclose, WordPress.WP.AlternativeFunctions.file_system_operations_fclose -- closes the direct media-download stream handle; WP_Filesystem offers no streaming equivalent.
 }
 
 /**
@@ -2512,10 +2512,10 @@ Options -ExecCGI
 
 	foreach ( $files as $file ) {
 		if ( wp_mkdir_p( $file['base'] ) && ! file_exists( trailingslashit( $file['base'] ) . $file['file'] ) ) {
-			$file_handle = @fopen( trailingslashit( $file['base'] ) . $file['file'], 'wb' ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged, WordPress.WP.AlternativeFunctions.file_system_read_fopen
+			$file_handle = @fopen( trailingslashit( $file['base'] ) . $file['file'], 'wb' ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged, WordPress.WP.AlternativeFunctions.file_system_read_fopen, WordPress.WP.AlternativeFunctions.file_system_operations_fopen -- direct stream I/O to write .htaccess code-execution protection file; WP_Filesystem offers no streaming equivalent.
 			if ( $file_handle ) {
-				fwrite( $file_handle, $file['content'] ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_read_fwrite
-				fclose( $file_handle ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_read_fclose
+				fwrite( $file_handle, $file['content'] ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_read_fwrite, WordPress.WP.AlternativeFunctions.file_system_operations_fwrite -- direct stream I/O to write .htaccess code-execution protection file; WP_Filesystem offers no streaming equivalent.
+				fclose( $file_handle ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_read_fclose, WordPress.WP.AlternativeFunctions.file_system_operations_fclose -- closes the protection-file write stream; WP_Filesystem offers no streaming equivalent.
 			}
 		}
 	}

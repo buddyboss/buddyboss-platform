@@ -1048,7 +1048,7 @@ class BP_Group_Extension {
 		$screen = ob_get_contents();
 		ob_end_clean();
 
-		echo $this->maybe_add_submit_button( $screen );
+		echo $this->maybe_add_submit_button( $screen ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $screen is buffered group-extension edit-screen HTML (forms/inputs/submit button); escaping would strip required form controls.
 
 		$this->nonce_field( 'edit' );
 	}

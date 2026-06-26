@@ -280,6 +280,7 @@ class BP_Media {
 			$q = $wpdb->prepare( "INSERT INTO {$bp->media->table_name} ( blog_id, attachment_id, user_id, title, description, album_id, activity_id, message_id, group_id, privacy, menu_order, date_created, status ) VALUES ( %d, %d, %d, %s, %s, %d, %d, %d, %d, %s, %d, %s, %s )", $this->blog_id, $this->attachment_id, $this->user_id, $this->title, $this->description, $this->album_id, $this->activity_id, $this->message_id, $this->group_id, $this->privacy, $this->menu_order, $this->date_created, $this->status );
 		}
 
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- $q is a $wpdb->prepare()'d statement built above.
 		if ( false === $wpdb->query( $q ) ) {
 			return false;
 		}
@@ -558,6 +559,7 @@ class BP_Media {
 		$cached = bp_core_get_incremented_cache( $media_ids_sql, $cache_group );
 
 		if ( false === $cached ) {
+			// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $media_ids_sql composed of prepared/wp_parse_id_list fragments and internal table names; LIMIT/order_by are whitelisted/absint'd.
 			$media_ids = $wpdb->get_col( $media_ids_sql );
 			bp_core_set_incremented_cache( $media_ids_sql, $cache_group, $media_ids );
 		} else {
@@ -603,6 +605,7 @@ class BP_Media {
 			$total_medias_sql = apply_filters( 'bp_media_total_medias_sql', "SELECT count(DISTINCT m.id) FROM {$bp->media->table_name} m {$join_sql} {$where_sql}", $where_sql, $sort );
 			$cached           = bp_core_get_incremented_cache( $total_medias_sql, $cache_group );
 			if ( false === $cached ) {
+				// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $where_sql/$join_sql are prepared fragments; table name from $bp->media->table_name.
 				$total_medias = $wpdb->get_var( $total_medias_sql );
 				bp_core_set_incremented_cache( $total_medias_sql, $cache_group, $total_medias );
 			} else {
@@ -633,6 +636,7 @@ class BP_Media {
 				$total_videos_sql = apply_filters( 'bp_media_total_videos_sql', "SELECT count(DISTINCT m.id) FROM {$bp->media->table_name} m {$join_sql} {$where_sql}", $where_sql, $sort );
 				$cached           = bp_core_get_incremented_cache( $total_videos_sql, $cache_group );
 				if ( false === $cached ) {
+					// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $where_sql/$join_sql are prepared fragments; table name from $bp->media->table_name.
 					$total_videos = $wpdb->get_var( $total_videos_sql );
 					bp_core_set_incremented_cache( $total_videos_sql, $cache_group, $total_videos );
 				} else {
@@ -1301,6 +1305,7 @@ class BP_Media {
 		$total_count = wp_cache_get( $cache_key, 'bp_media' );
 
 		if ( false === $total_count ) {
+			// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $privacy is hardcoded privacy tokens from bp_media_query_privacy(); $user_id is %d-bound; table from $bp->media->table_name.
 			$total_count = (int) $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM {$bp->media->table_name} WHERE user_id = %d AND privacy IN ({$privacy})", $user_id ) );
 			wp_cache_set( $cache_key, $total_count, 'bp_media' );
 		}
@@ -1385,6 +1390,7 @@ class BP_Media {
 			$privacy = bp_media_query_privacy( $user_id, 0, 'groups' );
 			$privacy = "'" . implode( "', '", $privacy ) . "'";
 
+			// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $privacy is hardcoded privacy tokens from bp_media_query_privacy(); $user_id is %d-bound; table from $bp->media->table_name.
 			$total_count = (int) $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM {$bp->media->table_name} WHERE user_id = %d AND privacy IN ({$privacy})", $user_id ) );
 			wp_cache_set( $cache_key, $total_count, 'bp_media' );
 		}
@@ -1407,11 +1413,13 @@ class BP_Media {
 			return false;
 		}
 
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Table name from $bp->media->table_name; $album_id is %d-bound.
 		$album_media_sql = $wpdb->prepare( "SELECT DISTINCT m.id FROM {$bp->media->table_name} m WHERE m.album_id = %d", $album_id );
 
 		$cached = bp_core_get_incremented_cache( $album_media_sql, 'bp_media' );
 
 		if ( false === $cached ) {
+			// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $album_media_sql is the $wpdb->prepare() result above ($album_id %d-bound; table name internal).
 			$media_ids = $wpdb->get_col( $album_media_sql );
 			bp_core_set_incremented_cache( $album_media_sql, 'bp_media', $media_ids );
 		} else {

@@ -216,6 +216,7 @@ class BP_Signup {
 		 * @param array  $args  Array of original arguments for get() method.
 		 * @param array  $r     Array of parsed arguments for get() method.
 		 */
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $sql parts are all $wpdb->prepare()'d (WHERE/LIMIT), wp_parse_id_list() IN list, sanitize_title()'d ORDER BY token, and internal table name.
 		$paged_signups = $wpdb->get_results( apply_filters( 'bp_members_signups_paged_query', join( ' ', $sql ), $sql, $args, $r ) );
 
 		if ( empty( $paged_signups ) ) {
@@ -286,6 +287,7 @@ class BP_Signup {
 		 * @param array  $args  Array of original arguments for get() method.
 		 * @param array  $r     Array of parsed arguments for get() method.
 		 */
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $sql parts are all $wpdb->prepare()'d (WHERE), wp_parse_id_list() IN list, and internal table name; SELECT COUNT(*) is a static preg_replace of an internal string.
 		$total_signups = $wpdb->get_var( apply_filters( 'bp_members_signups_count_query', join( ' ', $sql ), $sql, $args, $r ) );
 
 		return array(

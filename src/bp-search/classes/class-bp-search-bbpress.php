@@ -45,7 +45,7 @@ if ( ! class_exists( 'Bp_Search_bbPress' ) ) :
 				";
 			$query_placeholder[] = '%' . $search_term . '%';
 			$query_placeholder[] = '%' . $search_term . '%';
-			$sql                 = $wpdb->prepare( $sql, $query_placeholder );
+			$sql                 = $wpdb->prepare( $sql, $query_placeholder ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- $wpdb->posts table name and $this->type (internal post-type slug) interpolated; search terms bound via %s placeholders.
 
 			return apply_filters(
 				'Bp_Search_Forums_sql',

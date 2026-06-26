@@ -2275,8 +2275,8 @@ function bb_moderation_moderated_user_ids_sql( $user_id = 0 ) {
 		) ) AS combined_results";
 
 	// Prepare the query with parameters.
-	$retval = $wpdb->prepare(
-		$query,
+	$retval = $wpdb->prepare( // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- $query is a hardcoded query with %s/%d placeholders and table names from $bp->moderation, prepared here.
+		$query, // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $query interpolates only $bp->moderation table names and %s/%d placeholders bound below.
 		BP_Moderation_Members::$moderation_type, // ms.item_type = 'user'.
 		$user_id,                                // m.user_id = 2.
 		BP_Moderation_Members::$moderation_type, // ms.item_type = 'user'.
