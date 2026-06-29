@@ -46,16 +46,21 @@ const CACHE_PREFIX = `bb_integrations_${ getAdminData().version || '0' }_`;
  *
  * @since BuddyBoss [BBVERSION]
  *
+ * The returned wrapper exposes a `cancel()` method so callers can clear a
+ * pending invocation in a React effect cleanup (avoids a setState after unmount).
+ *
  * @param {Function} func Function to debounce.
  * @param {number}   wait Delay in ms.
- * @returns {Function} Debounced wrapper.
+ * @returns {Function} Debounced wrapper with a `.cancel()` method.
  */
 export const debounce = (func, wait) => {
 	let timeout;
-	return function debounced(...args) {
+	const debounced = function debounced(...args) {
 		clearTimeout(timeout);
 		timeout = setTimeout(() => func.apply(this, args), wait);
 	};
+	debounced.cancel = () => clearTimeout(timeout);
+	return debounced;
 };
 
 /**
@@ -95,29 +100,6 @@ const saveToCache = (cacheKey, data) => {
 		localStorage.setItem(cacheKey, JSON.stringify({ timestamp: Date.now(), data }));
 	} catch (e) {
 		// Quota exceeded or unavailable — caching is best-effort, ignore.
-	}
-};
-
-/**
- * Clear all integrations marketplace localStorage cache entries.
- *
- * Collect-then-delete in two passes: removing during a `localStorage.key(i)`
- * walk re-indexes the store and silently skips keys.
- *
- * @since BuddyBoss [BBVERSION]
- */
-export const clearIntegrationsCache = () => {
-	try {
-		const keysToRemove = [];
-		for (let i = 0; i < localStorage.length; i++) {
-			const key = localStorage.key(i);
-			if (key && key.startsWith(CACHE_PREFIX)) {
-				keysToRemove.push(key);
-			}
-		}
-		keysToRemove.forEach((key) => localStorage.removeItem(key));
-	} catch (e) {
-		// Nothing to do if localStorage is unavailable.
 	}
 };
 

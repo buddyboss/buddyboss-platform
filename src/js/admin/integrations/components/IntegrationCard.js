@@ -24,7 +24,7 @@
 
 import { __ } from '@wordpress/i18n';
 import { decodeEntities } from '@wordpress/html-entities';
-import { safeUrl } from '@bb/admin-common';
+import { safeUrl, safeImageUrl } from '@bb/admin-common';
 
 export function IntegrationCard( { item, categoryMap, onSelect } ) {
 	const title = item?.title?.rendered ? decodeEntities( item.title.rendered ) : '';
@@ -54,7 +54,7 @@ export function IntegrationCard( { item, categoryMap, onSelect } ) {
 				<div className="bb-integrations__card-top">
 					<span className="bb-integrations__card-logo">
 						{ logo ? (
-							<img src={ safeUrl( logo ) } alt="" />
+							<img src={ safeImageUrl( logo ) } alt="" />
 						) : (
 							<i className="bb-icons-rl bb-icons-rl-puzzle-piece" aria-hidden="true" />
 						) }

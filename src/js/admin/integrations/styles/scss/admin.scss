@@ -193,7 +193,7 @@ body.buddyboss_page_bb-integrations {
 
 		i {
 			font-size: 28px;
-			color: #8c8f94;
+			color: $bb-icon-tertiary-color;
 		}
 	}
 
@@ -203,17 +203,12 @@ body.buddyboss_page_bb-integrations {
 		gap: 16px;
 	}
 
-	// Title + category grouped (Figma Frame 115). No gap here — each row carries
-	// its own vertical padding (title 1px, category 3px) so the title↔category
-	// spacing is 4px and the category↔description spacing is 3px + the 16px text gap.
 	&__card-heading {
 		display: flex;
 		flex-direction: column;
 	}
 
 	&__card-title {
-		// Rendered as a <button> — only the title text opens the drawer, so reset
-		// the native button chrome and shrink the hit area to the text itself.
 		align-self: flex-start;
 		margin: 0;
 		padding: 1px 0; // Figma Frame 116
@@ -228,12 +223,12 @@ body.buddyboss_page_bb-integrations {
 
 		&:hover,
 		&:focus {
-			color: #ef5d33;
+			color: $bb-primary-color;
 		}
 	}
 
 	&__card-category {
-		padding: 3px 0; // Figma Frame 117
+		padding: 3px 0;
 		font-size: 13px;
 		font-weight: 400;
 		line-height: 18px;
@@ -477,7 +472,7 @@ body.buddyboss_page_bb-integrations {
 	&__collection {
 		font-size: 13px;
 		font-weight: 400;
-		color: #8c8f94;
+		color: $bb-text-tertiary-color;
 	}
 
 	&__desc {
@@ -505,7 +500,7 @@ body.buddyboss_page_bb-integrations {
 	&__body {
 		font-size: 14px;
 		line-height: 1.6;
-		color: #1e1e1e;
+		color: $bb-text-color;
 
 		p {
 			color: $bb-text-tertiary-color;
@@ -571,11 +566,12 @@ body.buddyboss_page_bb-integrations {
 
 	&__vendor {
 		font-size: 13px;
-		color: #8c8f94;
+		color: $bb-text-secondary-color;
 		margin: 0 0 8px;
 
 		a {
-			color: #ef5d33;
+			color: $bb-primary-color;
+			text-decoration: none;
 		}
 	}
 

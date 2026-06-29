@@ -20,7 +20,7 @@ import { useState, useEffect, useRef } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { decodeEntities } from '@wordpress/html-entities';
 import { fetchIntegrationBySlug } from '../../utils/integrationsApi';
-import { sanitizeKbArticle, safeUrl } from '@bb/admin-common';
+import { sanitizeKbArticle, safeUrl, safeImageUrl } from '@bb/admin-common';
 
 /**
  * Requires / Recommended dependency rows.
@@ -215,7 +215,7 @@ export function IntegrationDrawer( { slug, initialTitle, onClose } ) {
 						<div className="bb-integrations-drawer__header">
 							<span className="bb-integrations-drawer__icon">
 								{ logo ? (
-									<img src={ safeUrl( logo ) } alt="" />
+									<img src={ safeImageUrl( logo ) } alt="" />
 								) : (
 									<i className="bb-icons-rl bb-icons-rl-puzzle-piece" aria-hidden="true" />
 								) }
@@ -288,7 +288,7 @@ export function IntegrationDrawer( { slug, initialTitle, onClose } ) {
 						{ screenshots.length > 0 && (
 							<div className="bb-integrations-drawer__screenshots">
 								{ screenshots.map( ( src, i ) => (
-									<img key={ src || i } src={ safeUrl( src ) } alt="" loading="lazy" />
+									<img key={ src || i } src={ safeImageUrl( src ) } alt="" loading="lazy" />
 								) ) }
 							</div>
 						) }
