@@ -312,15 +312,15 @@ class BP_Media_Album {
 		}
 
 		if ( ! empty( $r['user_id'] ) ) {
-			$where_conditions['user'] = "m.user_id = {$r['user_id']}";
+			$where_conditions['user'] = 'm.user_id = ' . (int) $r['user_id'];
 		}
 
 		if ( ! empty( $r['group_id'] ) ) {
-			$where_conditions['group'] = "m.group_id = {$r['group_id']}";
+			$where_conditions['group'] = 'm.group_id = ' . (int) $r['group_id'];
 		}
 
 		if ( ! empty( $r['privacy'] ) ) {
-			$privacy                     = "'" . implode( "', '", $r['privacy'] ) . "'";
+			$privacy                     = "'" . implode( "', '", array_map( 'esc_sql', (array) $r['privacy'] ) ) . "'";
 			$where_conditions['privacy'] = "m.privacy IN ({$privacy})";
 		}
 

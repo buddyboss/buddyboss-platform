@@ -444,26 +444,26 @@ class BP_Media {
 		}
 
 		if ( ! empty( $r['activity_id'] ) ) {
-			$where_conditions['activity'] = "m.activity_id = {$r['activity_id']}";
+			$where_conditions['activity'] = 'm.activity_id = ' . (int) $r['activity_id'];
 		}
 
 		// existing-media check to query media which has no albums assigned.
 		if ( ! empty( $r['album_id'] ) && 'existing-media' !== $r['album_id'] ) {
-			$where_conditions['album'] = "m.album_id = {$r['album_id']}";
+			$where_conditions['album'] = 'm.album_id = ' . (int) $r['album_id'];
 		} elseif ( ! empty( $r['album_id'] ) && 'existing-media' === $r['album_id'] ) {
 			$where_conditions['album'] = 'm.album_id = 0';
 		}
 
 		if ( ! empty( $r['user_id'] ) ) {
-			$where_conditions['user'] = "m.user_id = {$r['user_id']}";
+			$where_conditions['user'] = 'm.user_id = ' . (int) $r['user_id'];
 		}
 
 		if ( ! empty( $r['group_id'] ) ) {
-			$where_conditions['group'] = "m.group_id = {$r['group_id']}";
+			$where_conditions['group'] = 'm.group_id = ' . (int) $r['group_id'];
 		}
 
 		if ( ! empty( $r['privacy'] ) ) {
-			$privacy                     = "'" . implode( "', '", $r['privacy'] ) . "'";
+			$privacy                     = "'" . implode( "', '", array_map( 'esc_sql', (array) $r['privacy'] ) ) . "'";
 			$where_conditions['privacy'] = "m.privacy IN ({$privacy})";
 		}
 
@@ -474,10 +474,10 @@ class BP_Media {
 		// Check the status of media item.
 		if ( ! empty( $r['status'] ) ) {
 			if ( is_array( $r['status'] ) ) {
-				$status                     = "'" . implode( "', '", $r['status'] ) . "'";
+				$status                     = "'" . implode( "', '", array_map( 'esc_sql', $r['status'] ) ) . "'";
 				$where_conditions['status'] = "m.status IN ({$status})";
 			} else {
-				$where_conditions['status'] = "m.status = '{$r['status']}'";
+				$where_conditions['status'] = "m.status = '" . esc_sql( $r['status'] ) . "'";
 			}
 		}
 

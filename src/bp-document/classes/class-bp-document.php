@@ -370,26 +370,26 @@ class BP_Document {
 		}
 
 		if ( ! empty( $r['activity_id'] ) ) {
-			$where_conditions['activity'] = "d.activity_id = {$r['activity_id']}";
+			$where_conditions['activity'] = 'd.activity_id = ' . (int) $r['activity_id'];
 		}
 
 		// existing-document check to query document which has no folders assigned.
 		if ( ! empty( $r['folder_id'] ) && 'existing-document' !== $r['folder_id'] ) {
-			$where_conditions['folder'] = "d.folder_id = {$r['folder_id']}";
+			$where_conditions['folder'] = 'd.folder_id = ' . (int) $r['folder_id'];
 		} elseif ( ! empty( $r['folder_id'] ) && 'existing-document' === $r['folder_id'] ) {
 			$where_conditions['folder'] = 'd.folder_id = 0';
 		}
 
 		if ( ! empty( $r['user_id'] ) ) {
-			$where_conditions['user'] = "d.user_id = {$r['user_id']}";
+			$where_conditions['user'] = 'd.user_id = ' . (int) $r['user_id'];
 		}
 
 		if ( ! empty( $r['group_id'] ) ) {
-			$where_conditions['group'] = "d.group_id = {$r['group_id']}";
+			$where_conditions['group'] = 'd.group_id = ' . (int) $r['group_id'];
 		}
 
 		if ( ! empty( $r['privacy'] ) ) {
-			$privacy                     = "'" . implode( "', '", $r['privacy'] ) . "'";
+			$privacy                     = "'" . implode( "', '", array_map( 'esc_sql', (array) $r['privacy'] ) ) . "'";
 			$where_conditions['privacy'] = "d.privacy IN ({$privacy})";
 		}
 
@@ -407,10 +407,10 @@ class BP_Document {
 		// Check the status of document item.
 		if ( ! empty( $r['status'] ) ) {
 			if ( is_array( $r['status'] ) ) {
-				$status                     = "'" . implode( "', '", $r['status'] ) . "'";
+				$status                     = "'" . implode( "', '", array_map( 'esc_sql', $r['status'] ) ) . "'";
 				$where_conditions['status'] = "d.status IN ({$status})";
 			} else {
-				$where_conditions['status'] = "d.status = '{$r['status']}'";
+				$where_conditions['status'] = "d.status = '" . esc_sql( $r['status'] ) . "'";
 			}
 		}
 

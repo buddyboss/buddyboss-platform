@@ -399,12 +399,12 @@ class Cache {
 	public function purge_by_component( $component = array() ) {
 		global $wpdb;
 
-		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-		$sql  = "DELETE FROM {$this->cache_table} WHERE cache_group like ";
-		$sql .= "'%" . $component . "%'";
+		$like = '%' . $wpdb->esc_like( $component ) . '%';
 
-		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-		$wpdb->query( $sql );
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		$wpdb->query(
+			$wpdb->prepare( "DELETE FROM {$this->cache_table} WHERE cache_group LIKE %s", $like )
+		);
 	}
 
 	/**

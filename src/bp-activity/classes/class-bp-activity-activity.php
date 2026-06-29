@@ -669,17 +669,17 @@ class BP_Activity_Activity {
 
 		// The filter activities by their privacy.
 		if ( ! empty( $r['privacy'] ) ) {
-			$privacy                     = "'" . implode( "', '", $r['privacy'] ) . "'";
+			$privacy                     = "'" . implode( "', '", array_map( 'esc_sql', (array) $r['privacy'] ) ) . "'";
 			$where_conditions['privacy'] = "a.privacy IN ({$privacy})";
 		}
 
 		// Check the status of items.
 		if ( ! empty( $r['status'] ) ) {
 			if ( is_array( $r['status'] ) ) {
-				$status                     = "'" . implode( "', '", $r['status'] ) . "'";
+				$status                     = "'" . implode( "', '", array_map( 'esc_sql', $r['status'] ) ) . "'";
 				$where_conditions['status'] = "a.status IN ({$status})";
 			} else {
-				$where_conditions['status'] = "a.status = '{$r['status']}'";
+				$where_conditions['status'] = "a.status = '" . esc_sql( $r['status'] ) . "'";
 			}
 		}
 
