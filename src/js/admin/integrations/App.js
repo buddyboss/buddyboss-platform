@@ -1,14 +1,11 @@
 /**
  * BuddyBoss Integrations marketplace — root component.
  *
- * Owns listing state (items, categories, page, search, category filter) and the
- * selected integration for the detail drawer. All data flows through the
- * server-side proxy via integrationsApi (CORS-safe, cached). Filtering, search
- * and pagination are server-side so the grid never over-fetches.
- *
- * Pending team decisions are isolated behind placeholders and do not affect the
- * data flow: Free/Pro tabs, Install-vs-Learn-More action, and "Works with" /
- * PRO badges (see docs/superpowers/specs/2026-06-24-integrations-marketplace-design.md).
+ * Owns listing state (items, categories, page, search, category + Free/Pro tier
+ * filter) and the selected integration for the detail drawer. All data flows
+ * through the server-side proxy via integrationsApi (CORS-safe, cached); search,
+ * category, tier filtering and pagination are all server-side so the grid never
+ * over-fetches (the API filters by acf.type_label — see the field-contract spec).
  *
  * @package BuddyBoss\Core\Administration
  * @since BuddyBoss [BBVERSION]
