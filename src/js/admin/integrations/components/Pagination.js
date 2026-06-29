@@ -100,6 +100,7 @@ export function Pagination( { page, totalPages, total, onChange } ) {
 								key={ pageNum }
 								variant={ page === pageNum ? 'primary' : 'secondary' }
 								onClick={ () => onChange( pageNum ) }
+								aria-current={ page === pageNum ? 'page' : undefined }
 								className={ p + '__pagination-btn' + ( page === pageNum ? ' ' + p + '__pagination-btn--current' : '' ) }
 							>
 								{ pageNum }

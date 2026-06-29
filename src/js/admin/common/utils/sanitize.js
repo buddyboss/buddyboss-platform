@@ -224,7 +224,7 @@ function sanitizeStyle(style) {
 		const val = trimmed.substring(colonIdx + 1).trim();
 
 		// Only allow known-safe CSS properties.
-		if (-1 === ALLOWED_CSS_PROPERTIES.indexOf(prop)) {
+		if (!ALLOWED_CSS_PROPERTIES.includes(prop)) {
 			continue;
 		}
 
