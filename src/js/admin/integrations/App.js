@@ -271,7 +271,9 @@ function AppInner() {
 						<button
 							type="button"
 							role="tab"
+							id="tier-tab-all"
 							aria-selected={ 'all' === tier }
+							aria-controls="tier-panel"
 							tabIndex={ 'all' === tier ? 0 : -1 }
 							className={ 'bb-integrations__tab' + ( 'all' === tier ? ' is-active' : '' ) }
 							onClick={ () => handleTierChange( 'all' ) }
@@ -281,7 +283,9 @@ function AppInner() {
 						<button
 							type="button"
 							role="tab"
+							id="tier-tab-free"
 							aria-selected={ 'free' === tier }
+							aria-controls="tier-panel"
 							tabIndex={ 'free' === tier ? 0 : -1 }
 							className={ 'bb-integrations__tab' + ( 'free' === tier ? ' is-active' : '' ) }
 							onClick={ () => handleTierChange( 'free' ) }
@@ -291,7 +295,9 @@ function AppInner() {
 						<button
 							type="button"
 							role="tab"
+							id="tier-tab-pro"
 							aria-selected={ 'pro' === tier }
+							aria-controls="tier-panel"
 							tabIndex={ 'pro' === tier ? 0 : -1 }
 							className={ 'bb-integrations__tab' + ( 'pro' === tier ? ' is-active' : '' ) }
 							onClick={ () => handleTierChange( 'pro' ) }
@@ -318,18 +324,20 @@ function AppInner() {
 					</div>
 				</div>
 
-				<IntegrationGrid
-					items={ items }
-					status={ status }
-					categoryMap={ categoryMap }
-					plugins={ plugins }
-					onSelect={ handleIntegrationSelect }
-					onRetry={ handleRetry }
-				/>
+				<div id="tier-panel" role="tabpanel" aria-labelledby={ 'tier-tab-' + tier }>
+					<IntegrationGrid
+						items={ items }
+						status={ status }
+						categoryMap={ categoryMap }
+						plugins={ plugins }
+						onSelect={ handleIntegrationSelect }
+						onRetry={ handleRetry }
+					/>
 
-				{ 'ready' === status && (
-					<Pagination page={ page } totalPages={ totalPages } total={ total } onChange={ setPage } />
-				) }
+					{ 'ready' === status && (
+						<Pagination page={ page } totalPages={ totalPages } total={ total } onChange={ setPage } />
+					) }
+				</div>
 
 				{ activeSlug && (
 					<IntegrationDrawer
