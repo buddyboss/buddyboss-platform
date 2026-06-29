@@ -247,17 +247,28 @@ body.buddyboss_page_bb-integrations {
 		min-height: 54px;
 	}
 
+	// Pro badge — matches the Settings 2.0 .bb-pro-badge (crown + gradient pill).
 	&__card-badge {
 		align-self: flex-start;
-		font-size: 10px;
-		font-weight: 600;
-		letter-spacing: 0.5px;
-		text-transform: uppercase;
-		color: #fff;
-		background: #ef5d33;
-		border-radius: 4px;
-		padding: 2px 8px;
-		line-height: 16px;
+		display: inline-flex;
+		align-items: center;
+		padding: 4px 8px;
+		border: 1px solid #e0623d;
+		border-radius: $bb-border-radius-full;
+		background: linear-gradient(100deg, #f7dfdb 4.86%, #d8d6ff 91.52%);
+
+		span {
+			font-size: 11px;
+			font-weight: 500;
+			line-height: 16px;
+			color: $bb-text-secondary-color;
+		}
+
+		[class*="bb-icon"] {
+			font-size: 16px;
+			line-height: 1;
+			margin-right: 4px;
+		}
 	}
 
 	&__card-actions {

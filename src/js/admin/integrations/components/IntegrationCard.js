@@ -44,7 +44,12 @@ export function IntegrationCard( { item, categoryMap, onSelect } ) {
 	// the dropdown already fetched).
 	const categoryId = Array.isArray( item?.integrations_category ) ? item.integrations_category[ 0 ] : null;
 	const categoryName = categoryId && categoryMap && categoryMap[ categoryId ] ? decodeEntities( categoryMap[ categoryId ] ) : '';
-	const isPro = 'pro' === item?.tier;
+	// Pro badge — the API returns the plan under acf.type_label (e.g. "Free" /
+	// "Premium"). Check for "free" (case-insensitive); anything else that's a
+	// non-empty label is a paid plan, so it gets the PRO badge — never match an
+	// exact paid value, since it varies (Premium / Pro / …).
+	const planLabel = ( item?.acf?.type_label || '' ).trim().toLowerCase();
+	const isPaid = '' !== planLabel && 'free' !== planLabel;
 
 	const open = () => onSelect( item.slug, title );
 
@@ -59,8 +64,11 @@ export function IntegrationCard( { item, categoryMap, onSelect } ) {
 							<i className="bb-icons-rl bb-icons-rl-puzzle-piece" aria-hidden="true" />
 						) }
 					</span>
-					{ isPro && (
-						<span className="bb-integrations__card-badge">{ __( 'PRO', 'buddyboss' ) }</span>
+					{ isPaid && (
+						<span className="bb-integrations__card-badge">
+							<i className="bb-icons-rl bb-icons-rl-crown-simple" aria-hidden="true" />
+							<span>{ __( 'PRO', 'buddyboss' ) }</span>
+						</span>
 					) }
 				</div>
 

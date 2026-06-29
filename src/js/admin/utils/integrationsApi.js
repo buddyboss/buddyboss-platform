@@ -187,7 +187,7 @@ const proxyFetch = async (path, signal) => {
  * @param {Object} params Listing params.
  * @returns {string} Path-only fragment with encoded query string.
  */
-const buildListPath = ({ page = 1, perPage = 20, search = '', category = 0 } = {}) => {
+const buildListPath = ({ page = 1, perPage = 20, search = '', category = 0, typeLabel = '' } = {}) => {
 	const query = [
 		`page=${encodeURIComponent(page)}`,
 		`per_page=${encodeURIComponent(perPage)}`,
@@ -196,13 +196,18 @@ const buildListPath = ({ page = 1, perPage = 20, search = '', category = 0 } = {
 		// card lights them up automatically once buddyboss.com adds them to the
 		// wp/v2/integrations response (requesting unknown fields is harmless — WP just
 		// omits them). See docs spec "API field contract".
-		'_fields=id,slug,title,short_description,logo_image_url,collection_name,template,integrations_category,integrations_collection,integrations_require,link,link_url,install_url,plugin_url,vendor_name,tier',
+		'_fields=id,slug,title,short_description,logo_image_url,collection_name,template,integrations_category,integrations_collection,integrations_require,link,link_url,install_url,plugin_url,vendor_name,tier,acf',
 	];
 	if (search) {
 		query.push(`search=${encodeURIComponent(search)}`);
 	}
 	if (category) {
 		query.push(`integrations_category=${encodeURIComponent(category)}`);
+	}
+	if (typeLabel) {
+		// Plan filter for the Free/Pro tabs. The API value is the acf type_label
+		// (e.g. "Free" / "Premium"), supplied by the caller.
+		query.push(`type_label=${encodeURIComponent(typeLabel)}`);
 	}
 	return `/wp-json/wp/v2/integrations?${query.join('&')}`;
 };
@@ -299,7 +304,7 @@ export const fetchIntegrationBySlug = async (slug, signal) => {
 	// automatically once buddyboss.com adds them. Unknown fields are omitted by WP.
 	const path =
 		`/wp-json/wp/v2/integrations?slug=${encodeURIComponent(slug)}` +
-		'&_fields=id,slug,title,short_description,content,logo_image_url,collection_name,template,integrations_category,integrations_collection,integrations_require,link,link_url,install_url,plugin_url,vendor_name,vendor_url,tier,requires,recommended,screenshots,support_url';
+		'&_fields=id,slug,title,short_description,content,logo_image_url,collection_name,template,integrations_category,integrations_collection,integrations_require,link,link_url,install_url,plugin_url,vendor_name,vendor_url,tier,requires,recommended,screenshots,support_url,acf';
 	const cacheKey = `${CACHE_PREFIX}detail_${slug}`;
 
 	const cached = getFromCache(cacheKey, DETAIL_TTL_MS);

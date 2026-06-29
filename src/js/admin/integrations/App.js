@@ -30,6 +30,10 @@ const adminData = ( typeof window !== 'undefined' && window.bbIntegrationsData )
 
 const PER_PAGE = 20;
 
+// Tier tab → API `acf.type_label` filter value ('' = no filter / "All").
+// "Pro" maps to the paid label the API uses ("Premium").
+const TIER_PARAM = { all: '', free: 'Free', pro: 'Premium' };
+
 function AppInner() {
 	const { open: openKb } = useKb();
 	const [ items, setItems ] = useState( [] );
@@ -39,8 +43,8 @@ function AppInner() {
 	const [ total, setTotal ] = useState( 0 );
 	const [ search, setSearch ] = useState( '' );
 	const [ category, setCategory ] = useState( 0 );
-	// Tier tabs (All / Free / Pro). "all" is functional today; Free/Pro filtering
-	// is pending the API exposing a free/pro field (Q5) — see spec.
+	// Tier tabs (All / Free / Pro). Filters the list server-side by acf.type_label
+	// (TIER_PARAM); the API honors ?type_label=Free / Premium, paginated.
 	const [ tier, setTier ] = useState( 'all' );
 	const [ status, setStatus ] = useState( 'loading' ); // loading | ready | error | empty
 	const [ activeSlug, setActiveSlug ] = useState( null );
@@ -71,7 +75,7 @@ function AppInner() {
 		};
 	}, [] );
 
-	// Load a page whenever page / search / category changes.
+	// Load a page whenever page / search / category / tier changes.
 	useEffect( () => {
 		if ( listAbortRef.current ) {
 			listAbortRef.current.abort();
@@ -80,7 +84,7 @@ function AppInner() {
 		listAbortRef.current = controller;
 
 		setStatus( 'loading' );
-		fetchIntegrations( { page, perPage: PER_PAGE, search, category, signal: controller.signal } )
+		fetchIntegrations( { page, perPage: PER_PAGE, search, category, typeLabel: TIER_PARAM[ tier ] || '', signal: controller.signal } )
 			.then( ( res ) => {
 				if ( controller.signal.aborted ) {
 					return;
@@ -100,7 +104,7 @@ function AppInner() {
 		return () => {
 			controller.abort();
 		};
-	}, [ page, search, category, reloadToken ] );
+	}, [ page, search, category, tier, reloadToken ] );
 
 	// Debounced search setter — resets to page 1 on a new query.
 	const debouncedSearch = useMemo(
@@ -157,6 +161,28 @@ function AppInner() {
 	}, [] );
 	const handleDrawerClose = useCallback( () => setActiveSlug( null ), [] );
 
+	// Tier tab change — reset to page 1 so pagination starts fresh per filter.
+	const handleTierChange = useCallback( ( next ) => {
+		setPage( 1 );
+		setTier( next );
+	}, [] );
+
+	// WAI-ARIA tabs keyboard nav — Left/Right cycle focus between the tabs.
+	const handleTabKeyDown = useCallback( ( e ) => {
+		if ( 'ArrowRight' !== e.key && 'ArrowLeft' !== e.key ) {
+			return;
+		}
+		const tabs = Array.from( e.currentTarget.querySelectorAll( '[role="tab"]:not([disabled])' ) );
+		const index = tabs.indexOf( document.activeElement );
+		if ( index < 0 ) {
+			return;
+		}
+		const nextIndex = 'ArrowRight' === e.key
+			? Math.min( tabs.length - 1, index + 1 )
+			: Math.max( 0, index - 1 );
+		tabs[ nextIndex ].focus();
+	}, [] );
+
 	// Global header search → Settings search AJAX (stable identity so BBAdminHeader's
 	// search effect doesn't re-subscribe on every render). adminData is module-scoped.
 	const handleHeaderSearch = useCallback( ( query, signal ) => {
@@ -197,20 +223,16 @@ function AppInner() {
 			/>
 			<div className="bb-integrations">
 				<div className="bb-integrations__toolbar">
-					{ /* Tier tabs — Figma layout. Only "All" is wired today; Free/Pro
-					     are disabled (not no-op) until the API exposes a free/pro
-					     field (Q5), so a visible filter never silently returns the
-					     same results. Re-enable by: (1) removing `disabled`, (2) handling
-					     `tier` in the list query, and (3) adding WAI-ARIA arrow-key
-					     navigation (onKeyDown on the tablist — Left/Right cycles tabs);
-					     a11y nav is unnecessary while only one tab is focusable. */ }
-					<div className="bb-integrations__tabs" role="tablist">
+					{ /* Tier tabs — filter the list by acf.type_label server-side via
+					     TIER_PARAM ("Free" / "Premium"). Arrow keys cycle the tabs
+					     (WAI-ARIA tabs pattern). */ }
+					<div className="bb-integrations__tabs" role="tablist" onKeyDown={ handleTabKeyDown }>
 						<button
 							type="button"
 							role="tab"
 							aria-selected={ 'all' === tier }
 							className={ 'bb-integrations__tab' + ( 'all' === tier ? ' is-active' : '' ) }
-							onClick={ () => setTier( 'all' ) }
+							onClick={ () => handleTierChange( 'all' ) }
 						>
 							{ __( 'All', 'buddyboss' ) }
 						</button>
@@ -218,9 +240,8 @@ function AppInner() {
 							type="button"
 							role="tab"
 							aria-selected={ 'free' === tier }
-							className="bb-integrations__tab"
-							disabled
-							title={ __( 'Coming soon', 'buddyboss' ) }
+							className={ 'bb-integrations__tab' + ( 'free' === tier ? ' is-active' : '' ) }
+							onClick={ () => handleTierChange( 'free' ) }
 						>
 							{ __( 'Free', 'buddyboss' ) }
 						</button>
@@ -228,9 +249,8 @@ function AppInner() {
 							type="button"
 							role="tab"
 							aria-selected={ 'pro' === tier }
-							className="bb-integrations__tab"
-							disabled
-							title={ __( 'Coming soon', 'buddyboss' ) }
+							className={ 'bb-integrations__tab' + ( 'pro' === tier ? ' is-active' : '' ) }
+							onClick={ () => handleTierChange( 'pro' ) }
 						>
 							{ __( 'Pro', 'buddyboss' ) }
 						</button>
