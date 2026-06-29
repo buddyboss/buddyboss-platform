@@ -296,10 +296,12 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 
 						if ( ! isset( $selected_xprofile_fields_cache[ $cache_key ] ) ) {
 							// Build the main search query with character and word search.
+							// The REGEXP term is bound via a %s placeholder (do not interpolate the
+							// raw search term into the SQL literal); field id lists are int-cast.
 							$data_clause_xprofile_table = "( SELECT field_id, user_id FROM {$bp->profile->table_name_data} WHERE ( ExtractValue(value, '//text()') LIKE %s AND field_id IN ( ";
-							$data_clause_xprofile_table .= implode( ',', $selected_xprofile_fields['char_search'] );
-							$data_clause_xprofile_table .= ") ) OR ( value REGEXP '[[:<:]]{$search_term}[[:>:]]' AND field_id IN ( ";
-							$data_clause_xprofile_table .= implode( ',', $selected_xprofile_fields['word_search'] );
+							$data_clause_xprofile_table .= implode( ',', array_map( 'intval', $selected_xprofile_fields['char_search'] ) );
+							$data_clause_xprofile_table .= ') ) OR ( value REGEXP %s AND field_id IN ( ';
+							$data_clause_xprofile_table .= implode( ',', array_map( 'intval', $selected_xprofile_fields['word_search'] ) );
 							$data_clause_xprofile_table .= ') ) ';
 
 							// Add date search if date fields exist and search term is a date.
@@ -317,7 +319,7 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 
 							$data_clause_xprofile_table .= ' )';
 
-							$sql_xprofile        = $wpdb->prepare( $data_clause_xprofile_table, '%' . $search_term . '%' );
+							$sql_xprofile        = $wpdb->prepare( $data_clause_xprofile_table, '%' . $search_term . '%', '[[:<:]]' . $search_term . '[[:>:]]' );
 							$sql_xprofile_result = $wpdb->get_results( $sql_xprofile );
 
 							// check visiblity for field id with current user.
