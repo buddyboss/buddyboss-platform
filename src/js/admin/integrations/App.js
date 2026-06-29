@@ -172,9 +172,14 @@ function AppInner() {
 	// Plugin actions. Each updates the local installed map on success so the card
 	// flips to its next button (Install → Deactivate, etc.) without a refetch.
 	const handleInstall = useCallback( async ( slug ) => {
-		await installPlugin( slug );           // core wp.updates — installs (inactive)
-		const res = await activatePlugin( slug ); // one-click: activate right after
-		setInstalled( ( map ) => ( { ...map, [ slug ]: { file: res.file, active: true } } ) );
+		await installPlugin( slug ); // core wp.updates — installs (inactive)
+		// Mark installed-but-inactive so the button becomes "Activate". The user
+		// activates as a separate, deliberate step (standard WP flow); the plugin
+		// file is resolved server-side from the slug when they do.
+		setInstalled( ( map ) => ( {
+			...map,
+			[ slug ]: { file: ( map[ slug ] && map[ slug ].file ) || '', active: false },
+		} ) );
 	}, [] );
 
 	const handleActivate = useCallback( async ( slug ) => {
