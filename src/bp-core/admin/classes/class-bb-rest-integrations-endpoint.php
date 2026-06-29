@@ -95,6 +95,19 @@ class BB_REST_Integrations_Endpoint extends WP_REST_Controller {
 	const MAX_PATH_LENGTH = 2048;
 
 	/**
+	 * Transient cache TTL for upstream failures (negative cache).
+	 *
+	 * Short so a transient upstream hiccup self-heals quickly, but long enough
+	 * that a persistently slow/broken upstream isn't re-fetched (8s timeout) on
+	 * every admin page load while it's down.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @var int Seconds.
+	 */
+	const TRANSIENT_NEGATIVE_TTL = MINUTE_IN_SECONDS;
+
+	/**
 	 * Constructor.
 	 *
 	 * Uses the platform-api namespace when available so the route lives at
@@ -206,12 +219,35 @@ class BB_REST_Integrations_Endpoint extends WP_REST_Controller {
 
 		$transient_key = self::TRANSIENT_PREFIX . md5( $target );
 		$cached        = get_transient( $transient_key );
-		if ( false !== $cached && is_array( $cached ) && isset( $cached['body'] ) ) {
-			return rest_ensure_response( $cached );
+		if ( false !== $cached && is_array( $cached ) ) {
+			// Replay a recently-cached upstream failure without re-hitting the
+			// slow/broken upstream (negative cache, short TTL).
+			if ( isset( $cached['error'] ) && is_array( $cached['error'] ) ) {
+				return new WP_Error(
+					$cached['error']['code'],
+					$cached['error']['message'],
+					array( 'status' => $cached['error']['status'] )
+				);
+			}
+			if ( isset( $cached['body'] ) ) {
+				return rest_ensure_response( $cached );
+			}
 		}
 
 		$envelope = $this->fetch_remote( $target );
 		if ( is_wp_error( $envelope ) ) {
+			$error_data = $envelope->get_error_data();
+			set_transient(
+				$transient_key,
+				array(
+					'error' => array(
+						'code'    => $envelope->get_error_code(),
+						'message' => $envelope->get_error_message(),
+						'status'  => ( is_array( $error_data ) && isset( $error_data['status'] ) ) ? (int) $error_data['status'] : 502,
+					),
+				),
+				self::TRANSIENT_NEGATIVE_TTL
+			);
 			return $envelope;
 		}
 
@@ -226,8 +262,10 @@ class BB_REST_Integrations_Endpoint extends WP_REST_Controller {
 	 * The path must: be a non-empty string ≤ MAX_PATH_LENGTH; start with exactly
 	 * ONE forward slash (two leading slashes are rejected to defeat protocol-
 	 * relative `//evil.com` references); contain no `..` segments (directory
-	 * traversal); no control characters (HTTP request splitting); and no `#`
-	 * fragment (meaningless to wp_remote_get and a footgun).
+	 * traversal); no control characters (HTTP request splitting); no `#`
+	 * fragment (meaningless to wp_remote_get and a footgun); and match one of the
+	 * allowed path prefixes (the public Integrations directory endpoints) so an
+	 * admin cannot turn the proxy into a general-purpose buddyboss.com fetcher.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
@@ -259,6 +297,37 @@ class BB_REST_Integrations_Endpoint extends WP_REST_Controller {
 		if ( false !== strpos( $raw, '#' ) ) {
 			return $this->path_rejected_error();
 		}
+
+		/**
+		 * Filter the allowed upstream path prefixes for the integrations proxy.
+		 *
+		 * Each entry is matched against the start of the client-supplied path.
+		 * The defaults cover the public Integrations directory surface
+		 * (`integrations`, `integrations_category`, `integrations_collection`),
+		 * all of which share the `/wp-json/wp/v2/integrations` prefix. Anything
+		 * outside the allowlist is rejected so the proxy cannot be used to fetch
+		 * arbitrary buddyboss.com URLs.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param string[] $prefixes Allowed path prefixes.
+		 */
+		$allowed_prefixes = apply_filters(
+			'bb_integrations_allowed_path_prefixes',
+			array( '/wp-json/wp/v2/integrations' )
+		);
+
+		$allowed = false;
+		foreach ( (array) $allowed_prefixes as $prefix ) {
+			if ( is_string( $prefix ) && '' !== $prefix && 0 === strpos( $raw, $prefix ) ) {
+				$allowed = true;
+				break;
+			}
+		}
+		if ( ! $allowed ) {
+			return $this->path_rejected_error();
+		}
+
 		return $raw;
 	}
 

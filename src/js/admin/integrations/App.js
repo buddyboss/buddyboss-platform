@@ -119,6 +119,10 @@ function AppInner() {
 		[ debouncedSearch ]
 	);
 
+	// Cancel a pending debounced search on unmount so it can't fire setState
+	// after the component has torn down.
+	useEffect( () => () => debouncedSearch.cancel(), [ debouncedSearch ] );
+
 	const handleCategoryChange = useCallback( ( e ) => {
 		setPage( 1 );
 		setCategory( parseInt( e.target.value, 10 ) || 0 );

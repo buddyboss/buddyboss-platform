@@ -48,6 +48,29 @@ function bb_admin_integrations_page() {
 		return;
 	}
 
+	// The integrations bundle hard-depends on the shared admin-common layer (global
+	// header, Knowledge Base modal, sanitizer). If the common build is missing, the
+	// bundle would load with an unresolvable 404 dependency and silently break —
+	// surface an actionable notice instead, mirroring the bundle check above.
+	$common_asset = buddypress()->plugin_dir . 'bp-core/admin/bb-settings/common/build/index.asset.php';
+	if ( ! file_exists( $common_asset ) ) {
+		?>
+		<div class="wrap">
+			<div class="notice notice-error">
+				<p>
+					<?php
+					esc_html_e(
+						'BuddyBoss shared admin assets not found. Please run: npm run build:admin:common',
+						'buddyboss'
+					);
+					?>
+				</p>
+			</div>
+		</div>
+		<?php
+		return;
+	}
+
 	$asset = require $asset_file;
 	$min   = bp_core_get_minified_asset_suffix();
 
