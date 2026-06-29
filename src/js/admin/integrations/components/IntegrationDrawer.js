@@ -1,16 +1,10 @@
 /**
  * BuddyBoss Integrations marketplace — detail drawer (right slide-in).
  *
- * Single detail presentation (the centered "About" popup from Figma was
- * dropped). Fetches the integration's full record by slug, renders the header
- * card + sanitized `content.rendered`. Loading / error / empty states mirror the
- * Knowledge Base article view.
- *
- * PENDING TEAM (placeholders, isolated):
- *  - "Works with" badges (Q6): candidate source is integrations_require term
- *    names; hidden until the ID→badge mapping is confirmed.
- *  - Install vs Learn More (Q4): header shows Learn More for now.
- * See docs/superpowers/specs/2026-06-24-integrations-marketplace-design.md.
+ * Fetches the integration's full record by slug and renders the header (logo,
+ * title, collection, description, "Learn More ↗") plus the sanitized
+ * content.rendered. Loading / error / empty states mirror the Knowledge Base
+ * article view. Installing is done from the card, not here.
  *
  * @package BuddyBoss\Core\Administration
  * @since BuddyBoss [BBVERSION]
@@ -21,48 +15,10 @@ import { __ } from '@wordpress/i18n';
 import { decodeEntities } from '@wordpress/html-entities';
 import { fetchIntegrationBySlug } from '../../utils/integrationsApi';
 import { sanitizeKbArticle, safeUrl, safeImageUrl } from '@bb/admin-common';
+import { PluginActionButton } from './PluginActionButton';
+import { wporgSlug } from '../../utils/pluginActions';
 
-/**
- * Requires / Recommended dependency rows.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @param {Object} props
- * @param {string} props.label Section label ("Requires" / "Recommended").
- * @param {Array}  props.items Array of { name, url, tier } (tier optional: 'free' | 'pro').
- * @returns {JSX.Element}
- */
-function DependencyList( { label, items } ) {
-	return (
-		<div className="bb-integrations-drawer__deps">
-			<span className="bb-integrations-drawer__deps-label">{ label }</span>
-			<ul className="bb-integrations-drawer__deps-list">
-				{ items.map( ( dep, i ) => {
-					const name = dep && dep.name ? decodeEntities( dep.name ) : '';
-					if ( ! name ) {
-						return null;
-					}
-					const tierTag = 'pro' === dep.tier ? __( 'PREMIUM', 'buddyboss' )
-						: ( 'free' === dep.tier ? __( 'FREE', 'buddyboss' ) : '' );
-					return (
-						<li key={ ( dep && dep.url ) || name || i } className="bb-integrations-drawer__deps-item">
-							{ dep && dep.url ? (
-								<a href={ safeUrl( dep.url ) } target="_blank" rel="noopener noreferrer">{ name }</a>
-							) : (
-								name
-							) }
-							{ tierTag && (
-								<span className={ 'bb-integrations-drawer__deps-tag bb-integrations-drawer__deps-tag--' + dep.tier }>{ tierTag }</span>
-							) }
-						</li>
-					);
-				} ) }
-			</ul>
-		</div>
-	);
-}
-
-export function IntegrationDrawer( { slug, initialTitle, onClose } ) {
+export function IntegrationDrawer( { slug, initialTitle, plugins, onClose } ) {
 	const [ status, setStatus ] = useState( 'loading' ); // loading | ready | error | notfound
 	const [ item, setItem ] = useState( null );
 	const abortRef = useRef( null );
@@ -161,19 +117,28 @@ export function IntegrationDrawer( { slug, initialTitle, onClose } ) {
 	// from the clicked card so the header is never blank while loading.
 	const headerName = title || ( initialTitle ? decodeEntities( initialTitle ) : '' );
 	const description = item?.short_description ? decodeEntities( item.short_description ) : '';
-	const collection = item?.collection_name ? decodeEntities( item.collection_name ) : '';
 	const logo = item?.logo_image_url && 'string' === typeof item.logo_image_url ? item.logo_image_url : '';
 	const contentHtml = item?.content?.rendered ? item.content.rendered : '';
+	// "Learn More ↗" → the plugin's own page (acf.plugin_link), falling back to
+	// the integration page so there is always somewhere to go.
+	const learnMoreUrl = item?.acf?.plugin_link || item?.link || item?.link_url || '';
 
-	// API field contract — all optional; each block renders only when present.
-	const installUrl = item?.install_url && 'string' === typeof item.install_url ? item.install_url : '';
-	const learnMoreUrl = item?.plugin_url || item?.link || item?.link_url || '';
-	const supportUrl = item?.support_url && 'string' === typeof item.support_url ? item.support_url : '';
-	const vendorName = item?.vendor_name ? decodeEntities( item.vendor_name ) : '';
-	const vendorUrl = item?.vendor_url && 'string' === typeof item.vendor_url ? item.vendor_url : '';
-	const requires = Array.isArray( item?.requires ) ? item.requires : [];
-	const recommended = Array.isArray( item?.recommended ) ? item.recommended : [];
-	const screenshots = Array.isArray( item?.screenshots ) ? item.screenshots.filter( ( s ) => 'string' === typeof s ) : [];
+	// "Works with" shows only once the plugin is actually installed on this site
+	// (active or inactive) — not for pro plugins or ones not yet installed.
+	const planLabel = ( item?.acf?.type_label || '' ).trim().toLowerCase();
+	const isPaid = '' !== planLabel && 'free' !== planLabel;
+	const pluginSlug = isPaid ? null : wporgSlug( item?.acf?.plugin_link || '' );
+	const isInstalled = !! ( pluginSlug && plugins && plugins.installed && plugins.installed[ pluginSlug ] );
+
+	// "Works with" — the integration's required platforms (integrations_require-<slug>
+	// in class_list), resolved to name + ✓/✗ via the localized requirements map.
+	const requirements = ( typeof window !== 'undefined' && window.bbIntegrationsData && window.bbIntegrationsData.requirements ) || {};
+	const worksWith = ( Array.isArray( item?.class_list ) ? item.class_list : [] )
+		.map( ( cls ) => {
+			const match = /^integrations_require-(.+)$/.exec( cls );
+			return match ? requirements[ match[ 1 ] ] : null;
+		} )
+		.filter( Boolean );
 
 	return (
 		<div className="bb-integrations-drawer" role="dialog" aria-modal="true" aria-label={ title || __( 'Integration details', 'buddyboss' ) }>
@@ -222,58 +187,47 @@ export function IntegrationDrawer( { slug, initialTitle, onClose } ) {
 							</span>
 							<h2 className="bb-integrations-drawer__title">
 								{ title }
-								{ collection && (
-									<span className="bb-integrations-drawer__collection"> · { collection }</span>
-								) }
 							</h2>
-							{ vendorName && (
-								<p className="bb-integrations-drawer__vendor">
-									{ vendorUrl ? (
-										<a href={ safeUrl( vendorUrl ) } target="_blank" rel="noopener noreferrer">{ vendorName }</a>
-									) : (
-										vendorName
-									) }
-								</p>
-							) }
 							{ description && (
 								<p className="bb-integrations-drawer__desc">{ description }</p>
 							) }
 
 							<div className="bb-integrations-drawer__actions">
-								{ /* install_url → Install (primary); plugin_url → Learn More; support_url → Support. */ }
-								{ installUrl && (
-									<a href={ safeUrl( installUrl ) } className="button button-primary">
-										{ __( 'Install', 'buddyboss' ) }
-									</a>
-								) }
+								<PluginActionButton item={ item } plugins={ plugins } className="bb-integrations__btn bb-integrations__btn--fill" hideUnavailable />
 								{ learnMoreUrl && (
 									<a
 										href={ safeUrl( learnMoreUrl ) }
-										className={ installUrl ? 'button' : 'button button-primary' }
+										className="bb-integrations__btn bb-integrations__btn--outline"
 										target="_blank"
 										rel="noopener noreferrer"
 									>
 										{ __( 'Learn More', 'buddyboss' ) }
-									</a>
-								) }
-								{ supportUrl && (
-									<a href={ safeUrl( supportUrl ) } className="button" target="_blank" rel="noopener noreferrer">
-										{ __( 'Support', 'buddyboss' ) }
+										<i className="bb-icons-rl bb-icons-rl-arrow-up-right" aria-hidden="true" />
 									</a>
 								) }
 							</div>
-
-							{ ( requires.length > 0 || recommended.length > 0 ) && (
-								<div className="bb-integrations-drawer__requirements">
-									{ requires.length > 0 && (
-										<DependencyList label={ __( 'Requires', 'buddyboss' ) } items={ requires } />
-									) }
-									{ recommended.length > 0 && (
-										<DependencyList label={ __( 'Recommended', 'buddyboss' ) } items={ recommended } />
-									) }
-								</div>
-							) }
 						</div>
+
+						{ /* "Works with" compatibility — only once the plugin is installed. */ }
+						{ isInstalled && worksWith.length > 0 && (
+							<div className="bb-integrations-drawer__works-with">
+								<span className="bb-integrations-drawer__works-with-label">{ __( 'Works with:', 'buddyboss' ) }</span>
+								{ worksWith.map( ( req, i ) => (
+									<span key={ req.name } className="bb-integrations-drawer__works-with-item">
+										{ i > 0 && (
+											<span className="bb-integrations-drawer__works-with-sep" aria-hidden="true">·</span>
+										) }
+										<span className="bb-integrations-drawer__works-with-name">{ req.name }</span>
+										<span
+											className={ 'bb-integrations-drawer__works-with-icon bb-integrations-drawer__works-with-icon--' + ( req.met ? 'yes' : 'no' ) }
+											aria-label={ req.met ? __( 'Compatible', 'buddyboss' ) : __( 'Not compatible', 'buddyboss' ) }
+										>
+											<i className={ req.met ? 'bb-icons-rl bb-icons-rl-check' : 'bb-icons-rl bb-icons-rl-x' } aria-hidden="true" />
+										</span>
+									</span>
+								) ) }
+							</div>
+						) }
 
 						{ contentHtml && (
 							<div
@@ -283,14 +237,6 @@ export function IntegrationDrawer( { slug, initialTitle, onClose } ) {
 								// eslint-disable-next-line react/no-danger
 								dangerouslySetInnerHTML={ { __html: sanitizeKbArticle( contentHtml ) } }
 							/>
-						) }
-
-						{ screenshots.length > 0 && (
-							<div className="bb-integrations-drawer__screenshots">
-								{ screenshots.map( ( src, i ) => (
-									<img key={ src || i } src={ safeImageUrl( src ) } alt="" loading="lazy" />
-								) ) }
-							</div>
 						) }
 					</div>
 				) }

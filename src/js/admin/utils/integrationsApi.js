@@ -299,12 +299,12 @@ export const fetchIntegrationBySlug = async (slug, signal) => {
 	if (!slug || typeof slug !== 'string') {
 		throw new Error('Integration slug is required');
 	}
-	// TEAM CONTRACT (detail): install_url, vendor_name, vendor_url, tier, requires,
-	// recommended, screenshots, support_url are requested so the drawer renders them
-	// automatically once buddyboss.com adds them. Unknown fields are omitted by WP.
+	// Detail fields for the drawer (header + content). acf carries type_label /
+	// plugin_link; class_list carries integrations_require-<slug> for "Works with".
+	// Requesting an unknown field is harmless — WP omits it.
 	const path =
 		`/wp-json/wp/v2/integrations?slug=${encodeURIComponent(slug)}` +
-		'&_fields=id,slug,title,short_description,content,logo_image_url,collection_name,template,integrations_category,integrations_collection,integrations_require,link,link_url,install_url,plugin_url,vendor_name,vendor_url,tier,requires,recommended,screenshots,support_url,acf';
+		'&_fields=id,slug,title,short_description,content,logo_image_url,template,integrations_category,integrations_collection,integrations_require,class_list,link,link_url,acf';
 	const cacheKey = `${CACHE_PREFIX}detail_${slug}`;
 
 	const cached = getFromCache(cacheKey, DETAIL_TTL_MS);

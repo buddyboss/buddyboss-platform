@@ -272,6 +272,7 @@ function AppInner() {
 							type="button"
 							role="tab"
 							aria-selected={ 'all' === tier }
+							tabIndex={ 'all' === tier ? 0 : -1 }
 							className={ 'bb-integrations__tab' + ( 'all' === tier ? ' is-active' : '' ) }
 							onClick={ () => handleTierChange( 'all' ) }
 						>
@@ -281,6 +282,7 @@ function AppInner() {
 							type="button"
 							role="tab"
 							aria-selected={ 'free' === tier }
+							tabIndex={ 'free' === tier ? 0 : -1 }
 							className={ 'bb-integrations__tab' + ( 'free' === tier ? ' is-active' : '' ) }
 							onClick={ () => handleTierChange( 'free' ) }
 						>
@@ -290,6 +292,7 @@ function AppInner() {
 							type="button"
 							role="tab"
 							aria-selected={ 'pro' === tier }
+							tabIndex={ 'pro' === tier ? 0 : -1 }
 							className={ 'bb-integrations__tab' + ( 'pro' === tier ? ' is-active' : '' ) }
 							onClick={ () => handleTierChange( 'pro' ) }
 						>
@@ -332,6 +335,7 @@ function AppInner() {
 					<IntegrationDrawer
 						slug={ activeSlug }
 						initialTitle={ activeTitle }
+						plugins={ plugins }
 						onClose={ handleDrawerClose }
 					/>
 				) }

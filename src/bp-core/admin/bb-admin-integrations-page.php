@@ -154,22 +154,52 @@ function bb_admin_integrations_page() {
 		}
 	}
 
+	// Works-with compatibility — whether the current site satisfies each known
+	// BuddyBoss requirement. The drawer reads this per integrations_require term
+	// (matched by slug from the integration's class_list) to render the ✓ / ✗ row.
+	if ( ! function_exists( 'is_plugin_active' ) ) {
+		require_once ABSPATH . 'wp-admin/includes/plugin.php';
+	}
+	$bb_requirements = array(
+		'buddyboss-platform'        => array(
+			'name' => __( 'BuddyBoss Platform', 'buddyboss' ),
+			'met'  => true, // We are running inside Platform.
+		),
+		'buddyboss-theme'           => array(
+			'name' => __( 'BuddyBoss Theme', 'buddyboss' ),
+			'met'  => 'buddyboss-theme' === wp_get_theme()->get_template(),
+		),
+		'readylaunch'               => array(
+			'name' => __( 'ReadyLaunch', 'buddyboss' ),
+			'met'  => function_exists( 'bb_is_readylaunch_enabled' ) && (bool) bb_is_readylaunch_enabled(),
+		),
+		'buddyboss-app'             => array(
+			'name' => __( 'BuddyBoss App', 'buddyboss' ),
+			'met'  => is_plugin_active( 'buddyboss-app/buddyboss-app.php' ),
+		),
+		'third-party-plugin-or-app' => array(
+			'name' => __( 'Third-party plugin or App', 'buddyboss' ),
+			'met'  => true,
+		),
+	);
+
 	wp_localize_script(
 		'bb-admin-integrations',
 		'bbIntegrationsData',
 		array(
-			'apiUrl'    => rest_url( $api_namespace ),
-			'nonce'     => wp_create_nonce( 'wp_rest' ),
-			'adminUrl'  => esc_url( admin_url() ),
-			'version'   => defined( 'BP_PLATFORM_VERSION' ) ? BP_PLATFORM_VERSION : '0',
-			'logoUrl'     => esc_url( buddypress()->plugin_url . 'bp-core/images/admin/BBLogo.png' ),
-			'ipnRootId'   => $ipn_root_id,
+			'apiUrl'       => rest_url( $api_namespace ),
+			'nonce'        => wp_create_nonce( 'wp_rest' ),
+			'adminUrl'     => esc_url( admin_url() ),
+			'version'      => defined( 'BP_PLATFORM_VERSION' ) ? BP_PLATFORM_VERSION : '0',
+			'logoUrl'      => esc_url( buddypress()->plugin_url . 'bp-core/images/admin/BBLogo.png' ),
+			'ipnRootId'    => $ipn_root_id,
+			'requirements' => $bb_requirements,
 			// The shared header's global "Search for settings" box queries the
 			// Settings search AJAX (bb_admin_search_settings, nonce action
 			// bb_admin_settings); results deep-link into the Settings page.
-			'ajaxUrl'     => esc_url( admin_url( 'admin-ajax.php' ) ),
-			'searchNonce' => wp_create_nonce( 'bb_admin_settings' ),
-			'settingsUrl' => esc_url( admin_url( 'admin.php?page=bb-settings' ) ),
+			'ajaxUrl'      => esc_url( admin_url( 'admin-ajax.php' ) ),
+			'searchNonce'  => wp_create_nonce( 'bb_admin_settings' ),
+			'settingsUrl'  => esc_url( admin_url( 'admin.php?page=bb-settings' ) ),
 		)
 	);
 

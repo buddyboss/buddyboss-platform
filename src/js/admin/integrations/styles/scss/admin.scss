@@ -281,8 +281,15 @@ body.buddyboss_page_bb-integrations {
 	}
 
 	// Inline error surfaced when an install/activate/deactivate action fails.
-	&__card-error {
-		margin: 0;
+	// Shared plugin action (button + inline error), used by the card and drawer.
+	&__action {
+		display: inline-flex;
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 4px;
+	}
+
+	&__action-error {
 		font-size: 12px;
 		line-height: 16px;
 		color: #b3261e;
@@ -290,6 +297,13 @@ body.buddyboss_page_bb-integrations {
 
 	&__btn {
 		@include bb-button-primary-outline;
+		// Normalize every variant (fill / outline / link) to one height so the
+		// solid Install and the Learn More button line up. Figma: 32px tall.
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		box-sizing: border-box;
+		min-height: 32px;
 		text-decoration: none;
 		cursor: pointer; // rendered as a <button>, which doesn't get a pointer by default
 
@@ -299,6 +313,33 @@ body.buddyboss_page_bb-integrations {
 			color: #f9bead;
 			cursor: default;
 			pointer-events: none;
+		}
+	}
+
+	// Solid orange "Install" CTA (drawer header). Figma: fill #EF5D33, radius-lg.
+	&__btn--fill {
+		background: #ef5d33;
+		border-color: #ef5d33;
+		color: #fff;
+
+		&:hover,
+		&:focus {
+			background: #e04e23;
+			border-color: #e04e23;
+			color: #fff;
+		}
+	}
+
+	// "Learn More ↗" as an orange outline button (drawer header). Keeps the
+	// &__btn border; adds the inline arrow. Figma: 1px #EF5D33, radius-lg.
+	&__btn--outline {
+		display: inline-flex;
+		align-items: center;
+		gap: 4px;
+
+		i {
+			font-size: 16px;
+			line-height: 1;
 		}
 	}
 
@@ -452,6 +493,7 @@ body.buddyboss_page_bb-integrations {
 	}
 
 	&__header {
+		position: relative;
 		background-color: $bb-background-primary-color;
 		padding: 24px;
 		margin-bottom: 16px;
@@ -489,12 +531,6 @@ body.buddyboss_page_bb-integrations {
 		margin: 0 0 8px;
 	}
 
-	&__collection {
-		font-size: 13px;
-		font-weight: 400;
-		color: $bb-text-tertiary-color;
-	}
-
 	&__desc {
 		font-size: 13px;
 		color: $bb-text-secondary-color;
@@ -503,6 +539,7 @@ body.buddyboss_page_bb-integrations {
 
 	&__actions {
 		display: flex;
+		align-items: center; // keep the wrapped Install + Learn More the same height
 		justify-content: center;
 		gap: 16px;
 
@@ -514,6 +551,60 @@ body.buddyboss_page_bb-integrations {
 			&:focus {
 				background: $bb-background-brand-primary-color;
 			}
+		}
+	}
+
+	// "Works with" compatibility row (Design 2): label + name ✓/✗ · name ✓/✗.
+	&__works-with {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: 8px;
+		padding-bottom: 16px;
+		margin-bottom: 16px;
+		border-bottom: 1px solid $bb-border-secondary-color;
+		font-size: 13px;
+	}
+
+	&__works-with-label {
+		font-weight: 600;
+		color: $bb-text-color;
+	}
+
+	&__works-with-item {
+		display: inline-flex;
+		align-items: center;
+		gap: 8px;
+	}
+
+	&__works-with-sep {
+		color: $bb-text-tertiary-color;
+	}
+
+	&__works-with-name {
+		color: $bb-text-color;
+	}
+
+	&__works-with-icon {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 18px;
+		height: 18px;
+		border-radius: 50%;
+		color: #fff;
+
+		i {
+			font-size: 11px;
+			line-height: 1;
+		}
+
+		&--yes {
+			background: #46b450;
+		}
+
+		&--no {
+			background: #dc3232;
 		}
 	}
 
@@ -584,80 +675,4 @@ body.buddyboss_page_bb-integrations {
 		}
 	}
 
-	&__vendor {
-		font-size: 13px;
-		color: $bb-text-secondary-color;
-		margin: 0 0 8px;
-
-		a {
-			color: $bb-primary-color;
-			text-decoration: none;
-		}
-	}
-
-	&__requirements {
-		margin: 16px 0;
-	}
-
-	&__deps {
-		margin-bottom: 12px;
-
-		&-label {
-			display: block;
-			font-size: 12px;
-			font-weight: 600;
-			text-transform: uppercase;
-			color: #50575e;
-			margin-bottom: 6px;
-		}
-
-		&-list {
-			list-style: none;
-			margin: 0;
-			padding: 0;
-		}
-
-		&-item {
-			display: flex;
-			align-items: center;
-			gap: 8px;
-			font-size: 13px;
-			padding: 4px 0;
-
-			a {
-				color: #ef5d33;
-			}
-		}
-
-		&-tag {
-			font-size: 10px;
-			font-weight: 600;
-			text-transform: uppercase;
-			padding: 1px 6px;
-			border-radius: 3px;
-
-			&--free {
-				background: #edf7ed;
-				color: #1e7e34;
-			}
-
-			&--pro {
-				background: #fdecea;
-				color: #b3261e;
-			}
-		}
-	}
-
-	&__screenshots {
-		display: grid;
-		grid-template-columns: 1fr 1fr;
-		gap: 12px;
-		margin-top: 16px;
-
-		img {
-			width: 100%;
-			border: 1px solid #e2e4e7;
-			border-radius: 6px;
-		}
-	}
 }
