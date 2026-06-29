@@ -43,7 +43,9 @@ export function PluginActionButton( { item, plugins, className, hideUnavailable 
 		try {
 			await handler( slug );
 		} catch ( e ) {
-			setError( ( e && e.message ) || __( 'Something went wrong. Please try again.', 'buddyboss' ) );
+			// wp.updates rejects with { errorCode, errorMessage }; our AJAX path throws
+			// an Error with .message — accept either so the real reason surfaces.
+			setError( ( e && ( e.errorMessage || e.message ) ) || __( 'Something went wrong. Please try again.', 'buddyboss' ) );
 		} finally {
 			setBusy( false );
 		}

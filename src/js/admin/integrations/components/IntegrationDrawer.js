@@ -185,9 +185,10 @@ export function IntegrationDrawer( { slug, initialTitle, plugins, onClose } ) {
 									<i className="bb-icons-rl bb-icons-rl-puzzle-piece" aria-hidden="true" />
 								) }
 							</span>
-							<h2 className="bb-integrations-drawer__title">
+							{ /* h3: the topbar __name <h2> is the dialog's primary heading. */ }
+							<h3 className="bb-integrations-drawer__title">
 								{ title }
-							</h2>
+							</h3>
 							{ description && (
 								<p className="bb-integrations-drawer__desc">{ description }</p>
 							) }
