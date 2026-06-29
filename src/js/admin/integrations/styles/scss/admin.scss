@@ -280,11 +280,20 @@ body.buddyboss_page_bb-integrations {
 		gap: 16px;
 	}
 
+	// Inline error surfaced when an install/activate/deactivate action fails.
+	&__card-error {
+		margin: 0;
+		font-size: 12px;
+		line-height: 16px;
+		color: #b3261e;
+	}
+
 	&__btn {
 		@include bb-button-primary-outline;
 		text-decoration: none;
+		cursor: pointer; // rendered as a <button>, which doesn't get a pointer by default
 
-		// Disabled "Install" (no install_url yet) — greyed outline + label per Figma.
+		// Disabled "Install" (pro / non-wordpress.org) — greyed outline + label per Figma.
 		&:disabled {
 			border-color: #f7ae99;
 			color: #f9bead;

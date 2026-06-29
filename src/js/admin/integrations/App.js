@@ -19,11 +19,18 @@ import {
 	fetchIntegrationCategories,
 	debounce,
 } from '../utils/integrationsApi';
+import {
+	getPluginsData,
+	installPlugin,
+	activatePlugin,
+	deactivatePlugin,
+} from '../utils/pluginActions';
 import { IntegrationGrid } from './components/IntegrationGrid';
 import { IntegrationDrawer } from './components/IntegrationDrawer';
 import { Pagination } from './components/Pagination';
 
 const adminData = ( typeof window !== 'undefined' && window.bbIntegrationsData ) || {};
+const pluginsData = getPluginsData();
 
 const PER_PAGE = 20;
 
@@ -34,6 +41,10 @@ const TIER_PARAM = { all: '', free: 'Free', pro: 'Premium' };
 function AppInner() {
 	const { open: openKb } = useKb();
 	const [ items, setItems ] = useState( [] );
+	// Installed-plugin map (slug → { file, active }) seeded from the localized
+	// snapshot; mutated locally after install/activate/deactivate so the affected
+	// card re-renders with its new button — no refetch.
+	const [ installed, setInstalled ] = useState( () => pluginsData.installed || {} );
 	const [ categories, setCategories ] = useState( [] );
 	const [ page, setPage ] = useState( 1 );
 	const [ totalPages, setTotalPages ] = useState( 1 );
@@ -158,6 +169,34 @@ function AppInner() {
 	}, [] );
 	const handleDrawerClose = useCallback( () => setActiveSlug( null ), [] );
 
+	// Plugin actions. Each updates the local installed map on success so the card
+	// flips to its next button (Install → Deactivate, etc.) without a refetch.
+	const handleInstall = useCallback( async ( slug ) => {
+		await installPlugin( slug );           // core wp.updates — installs (inactive)
+		const res = await activatePlugin( slug ); // one-click: activate right after
+		setInstalled( ( map ) => ( { ...map, [ slug ]: { file: res.file, active: true } } ) );
+	}, [] );
+
+	const handleActivate = useCallback( async ( slug ) => {
+		const res = await activatePlugin( slug );
+		setInstalled( ( map ) => ( { ...map, [ slug ]: { file: res.file, active: true } } ) );
+	}, [] );
+
+	const handleDeactivate = useCallback( async ( slug ) => {
+		const res = await deactivatePlugin( slug );
+		setInstalled( ( map ) => ( { ...map, [ slug ]: { file: res.file, active: false } } ) );
+	}, [] );
+
+	// Bundle everything the card needs to render its plugin action button.
+	const plugins = useMemo( () => ( {
+		installed,
+		canInstall: !! pluginsData.canInstall,
+		canActivate: !! pluginsData.canActivate,
+		onInstall: handleInstall,
+		onActivate: handleActivate,
+		onDeactivate: handleDeactivate,
+	} ), [ installed, handleInstall, handleActivate, handleDeactivate ] );
+
 	// Tier tab change — reset to page 1 so pagination starts fresh per filter.
 	const handleTierChange = useCallback( ( next ) => {
 		setPage( 1 );
@@ -275,6 +314,7 @@ function AppInner() {
 					items={ items }
 					status={ status }
 					categoryMap={ categoryMap }
+					plugins={ plugins }
 					onSelect={ handleIntegrationSelect }
 					onRetry={ handleRetry }
 				/>

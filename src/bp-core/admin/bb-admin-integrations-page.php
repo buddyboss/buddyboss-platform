@@ -173,6 +173,48 @@ function bb_admin_integrations_page() {
 		)
 	);
 
+	// Plugin install/activate state — only for users who can act. Lets the cards
+	// render Install / Activate / Deactivate with no extra requests (the slug is
+	// derived client-side from acf.plugin_link and looked up in this map). Built
+	// fresh each load (never cached) so it always reflects reality after an action.
+	// get_plugins() is cached per-request and is_plugin_active() reads the
+	// autoloaded active_plugins option, so this is cheap and runs only on this page.
+	if ( current_user_can( 'install_plugins' ) || current_user_can( 'activate_plugins' ) ) {
+		if ( ! function_exists( 'get_plugins' ) ) {
+			require_once ABSPATH . 'wp-admin/includes/plugin.php';
+		}
+
+		$installed_plugins = array();
+		foreach ( get_plugins() as $plugin_file => $plugin_data ) {
+			$plugin_slug = dirname( $plugin_file );
+			if ( '.' === $plugin_slug ) {
+				continue; // Single-file plugin (no folder) — not installable by slug.
+			}
+			$installed_plugins[ $plugin_slug ] = array(
+				'file'   => $plugin_file,
+				'active' => is_plugin_active( $plugin_file ),
+			);
+		}
+
+		// Core wp.updates powers the client-side install flow (install-plugin action
+		// + its own nonce + the filesystem-credentials modal).
+		wp_enqueue_script( 'updates' );
+		add_action( 'admin_footer', 'wp_print_request_filesystem_credentials_modal' );
+		add_action( 'admin_footer', 'wp_print_admin_notice_templates' );
+
+		wp_localize_script(
+			'bb-admin-integrations',
+			'bbIntegrationsPlugins',
+			array(
+				'installed'   => $installed_plugins,
+				'canInstall'  => current_user_can( 'install_plugins' ),
+				'canActivate' => current_user_can( 'activate_plugins' ),
+				'nonce'       => wp_create_nonce( 'bb_integrations_plugin' ),
+				'ajaxUrl'     => esc_url( admin_url( 'admin-ajax.php' ) ),
+			)
+		);
+	}
+
 	// Render the React mount, then fire bb_admin_header_actions OUTSIDE the React
 	// tree (inside .wrap) so the Mothership IPN bell renders its root <div> +
 	// script synchronously; the shared header relocates that live node into its

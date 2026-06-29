@@ -13,7 +13,7 @@ import { IntegrationCard } from './IntegrationCard';
 
 const SKELETON_COUNT = 8;
 
-export function IntegrationGrid( { items, status, categoryMap, onSelect, onRetry } ) {
+export function IntegrationGrid( { items, status, categoryMap, plugins, onSelect, onRetry } ) {
 	if ( 'loading' === status ) {
 		return (
 			<div className="bb-integrations__grid" aria-busy="true">
@@ -49,7 +49,7 @@ export function IntegrationGrid( { items, status, categoryMap, onSelect, onRetry
 	return (
 		<div className="bb-integrations__grid">
 			{ items.map( ( item ) => (
-				<IntegrationCard key={ item.id } item={ item } categoryMap={ categoryMap } onSelect={ onSelect } />
+				<IntegrationCard key={ item.id } item={ item } categoryMap={ categoryMap } plugins={ plugins } onSelect={ onSelect } />
 			) ) }
 		</div>
 	);

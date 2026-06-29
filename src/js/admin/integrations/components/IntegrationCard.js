@@ -2,56 +2,91 @@
  * BuddyBoss Integrations marketplace — single card.
  *
  * Matches the Figma card: circular bordered logo, title, category subtitle,
- * 3-line-clamped description, and an orange-outline action button. Clicking the
- * title opens the detail drawer (the card body itself is not clickable).
+ * 3-line-clamped description, and the action buttons. Clicking the title opens
+ * the detail drawer (the card body itself is not clickable).
  *
- * The subtitle under the title is the integration's CATEGORY (resolved from the
- * integrations_category term ID via the categoryMap prop) — not a vendor name.
- *
- * API FIELD CONTRACT (team populates these on the wp/v2/integrations response;
- * the card reads them and lights up automatically when present — all optional):
- *  - install_url (string URL): the "Install" button → this URL. When absent, the
- *    Install button still renders but is disabled (greyed), and "Learn More" shows beside it.
- *  - plugin_url (string URL): the plugin's site — the "Learn More ↗" destination
- *    (falls back to `link` / `link_url`). Learn More shows when there's no
- *    install_url, or alongside Install when plugin_url is provided.
- *  - tier ('free' | 'pro'): when 'pro', renders the PRO badge.
- * See docs/superpowers/specs/2026-06-25-integrations-api-field-contract.md.
+ * Action button matrix (primary, left):
+ *  - Free + acf.plugin_link is a wordpress.org URL → derive the slug and show
+ *    Install → Activate → Deactivate based on the localized installed-plugin map
+ *    (window.bbIntegrationsPlugins). Install uses core wp.updates; activate/
+ *    deactivate hit our nonce + capability-guarded AJAX. Buttons are gated on the
+ *    user's install_plugins / activate_plugins capabilities.
+ *  - Pro/Premium, or free with a non-wordpress.org link (e.g. buddyboss.com) →
+ *    a disabled "Install" (not installable in-place; matches Figma).
+ * "Learn More ↗" (secondary, right) → acf.plugin_link.
  *
  * @package BuddyBoss\Core\Administration
  * @since BuddyBoss [BBVERSION]
  */
 
+import { useState, useCallback } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { decodeEntities } from '@wordpress/html-entities';
 import { safeUrl, safeImageUrl } from '@bb/admin-common';
+import { wporgSlug } from '../../utils/pluginActions';
 
-export function IntegrationCard( { item, categoryMap, onSelect } ) {
+export function IntegrationCard( { item, categoryMap, plugins, onSelect } ) {
 	const title = item?.title?.rendered ? decodeEntities( item.title.rendered ) : '';
 	const description = item?.short_description ? decodeEntities( item.short_description ) : '';
 	const logo = item?.logo_image_url && 'string' === typeof item.logo_image_url ? item.logo_image_url : '';
-	// API field contract (all optional; render only when the API provides them).
-	const installUrl = item?.install_url && 'string' === typeof item.install_url ? item.install_url : '';
-	// "Learn More" destination: prefer the dedicated plugin_url, fall back to the
-	// integration page (link / link_url) so there is always somewhere to go.
-	const pluginUrl = item?.plugin_url && 'string' === typeof item.plugin_url ? item.plugin_url : '';
-	const learnMoreUrl = pluginUrl || item?.link || item?.link_url || '';
-	// Show "Learn More" when there's no install_url (never show a dead Install), or
-	// alongside Install when the API provides a dedicated plugin_url (the pro case).
-	const showLearnMore = learnMoreUrl && ( ! installUrl || pluginUrl );
-	// Subtitle = the integration's category. integrations_category holds term IDs;
-	// resolve the first one to its name via the categoryMap (from the categories
-	// the dropdown already fetched).
-	const categoryId = Array.isArray( item?.integrations_category ) ? item.integrations_category[ 0 ] : null;
-	const categoryName = categoryId && categoryMap && categoryMap[ categoryId ] ? decodeEntities( categoryMap[ categoryId ] ) : '';
-	// Pro badge — the API returns the plan under acf.type_label (e.g. "Free" /
-	// "Premium"). Check for "free" (case-insensitive); anything else that's a
-	// non-empty label is a paid plan, so it gets the PRO badge — never match an
-	// exact paid value, since it varies (Premium / Pro / …).
+
+	// Plan — "free" (case-insensitive) is free; anything else non-empty is paid.
 	const planLabel = ( item?.acf?.type_label || '' ).trim().toLowerCase();
 	const isPaid = '' !== planLabel && 'free' !== planLabel;
 
+	// Links. plugin_link = wp.org URL (free) / purchase URL (pro) / vendor site.
+	// "Learn More ↗" → acf.plugin_link, falling back to the integration page so
+	// there is always somewhere to go.
+	const pluginLink = item?.acf?.plugin_link && 'string' === typeof item.acf.plugin_link ? item.acf.plugin_link : '';
+	const learnMoreUrl = pluginLink || item?.plugin_url || item?.link || item?.link_url || '';
+
+	// Free wordpress.org plugins are installable in-place; non-wp.org links are not.
+	const slug = isPaid ? null : wporgSlug( pluginLink );
+	const installedMap = ( plugins && plugins.installed ) || {};
+	const entry = slug ? installedMap[ slug ] : null;
+	const isInstalled = !! entry;
+	const isActive = !! ( entry && entry.active );
+	const canInstall = !! ( plugins && plugins.canInstall );
+	const canActivate = !! ( plugins && plugins.canActivate );
+
+	// Subtitle = the integration's category (integrations_category term ID → name).
+	const categoryId = Array.isArray( item?.integrations_category ) ? item.integrations_category[ 0 ] : null;
+	const categoryName = categoryId && categoryMap && categoryMap[ categoryId ] ? decodeEntities( categoryMap[ categoryId ] ) : '';
+
+	const [ busy, setBusy ] = useState( false );
+	const [ error, setError ] = useState( '' );
+
 	const open = () => onSelect( item.slug, title );
+
+	// Run a plugin action with busy + error handling.
+	const run = useCallback( async ( handler ) => {
+		if ( ! slug || ! handler ) {
+			return;
+		}
+		setBusy( true );
+		setError( '' );
+		try {
+			await handler( slug );
+		} catch ( e ) {
+			setError( ( e && e.message ) || __( 'Something went wrong. Please try again.', 'buddyboss' ) );
+		} finally {
+			setBusy( false );
+		}
+	}, [ slug ] );
+
+	// Resolve the primary (left) action. No wordpress.org slug — pro plugins, or
+	// free plugins whose link isn't a wp.org URL — render a disabled "Install"
+	// (matches Figma); a wp.org slug → Install / Activate / Deactivate.
+	let primary;
+	if ( ! slug ) {
+		primary = { kind: 'disabled', label: __( 'Install', 'buddyboss' ) };
+	} else if ( ! isInstalled ) {
+		primary = { kind: 'action', label: __( 'Install', 'buddyboss' ), busyLabel: __( 'Installing…', 'buddyboss' ), onClick: () => run( plugins.onInstall ), disabled: ! canInstall };
+	} else if ( ! isActive ) {
+		primary = { kind: 'action', label: __( 'Activate', 'buddyboss' ), busyLabel: __( 'Activating…', 'buddyboss' ), onClick: () => run( plugins.onActivate ), disabled: ! canActivate };
+	} else {
+		primary = { kind: 'action', label: __( 'Deactivate', 'buddyboss' ), busyLabel: __( 'Deactivating…', 'buddyboss' ), onClick: () => run( plugins.onDeactivate ), disabled: ! canActivate };
+	}
 
 	return (
 		<div className="bb-integrations__card">
@@ -92,28 +127,16 @@ export function IntegrationCard( { item, categoryMap, onSelect } ) {
 			</div>
 
 			<div className="bb-integrations__card-actions">
-				{ /* Install — primary, left. Active link when install_url exists; otherwise
-				     a disabled (greyed) button so the card layout stays consistent. */ }
-				{ installUrl ? (
-					<a
-						href={ safeUrl( installUrl ) }
-						className="bb-integrations__btn bb-integrations__btn--primary"
-					>
-						{ __( 'Install', 'buddyboss' ) }
-					</a>
-				) : (
-					<button
-						type="button"
-						className="bb-integrations__btn bb-integrations__btn--primary"
-						disabled
-						aria-disabled="true"
-					>
-						{ __( 'Install', 'buddyboss' ) }
-					</button>
-				) }
-				{ /* Learn More — borderless + ↗. Shown when there's no install_url, or
-				     alongside Install (right) when a dedicated plugin_url exists. */ }
-				{ showLearnMore && (
+				<button
+					type="button"
+					className="bb-integrations__btn bb-integrations__btn--primary"
+					onClick={ primary.onClick }
+					disabled={ 'disabled' === primary.kind || primary.disabled || busy }
+					aria-busy={ busy ? 'true' : undefined }
+				>
+					{ busy ? primary.busyLabel : primary.label }
+				</button>
+				{ learnMoreUrl && (
 					<a
 						href={ safeUrl( learnMoreUrl ) }
 						className="bb-integrations__btn bb-integrations__btn--link"
@@ -125,6 +148,10 @@ export function IntegrationCard( { item, categoryMap, onSelect } ) {
 					</a>
 				) }
 			</div>
+
+			{ error && (
+				<p className="bb-integrations__card-error" role="alert">{ error }</p>
+			) }
 		</div>
 	);
 }

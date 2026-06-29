@@ -89,6 +89,11 @@ function bb_admin_settings_init() {
 			}
 		}
 
+		// Integrations marketplace — plugin activate/deactivate AJAX handlers.
+		if ( file_exists( buddypress()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-integrations-ajax.php' ) ) {
+			require_once buddypress()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-integrations-ajax.php';
+		}
+
 		// Profile AJAX handlers (only when xprofile component is active).
 		if ( bp_is_active( 'xprofile' ) ) {
 			if ( file_exists( buddypress()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-member-types-ajax.php' ) ) {
