@@ -141,7 +141,7 @@ export function IntegrationDrawer( { slug, initialTitle, plugins, onClose } ) {
 		.filter( Boolean );
 
 	return (
-		<div className="bb-integrations-drawer" role="dialog" aria-modal="true" aria-label={ title || __( 'Integration details', 'buddyboss' ) }>
+		<div className="bb-integrations-drawer" role="dialog" aria-modal="true" aria-label={ headerName || __( 'Integration details', 'buddyboss' ) }>
 			<div className="bb-integrations-drawer__overlay" onClick={ onClose } aria-hidden="true" />
 
 			<div className="bb-integrations-drawer__panel" ref={ panelRef }>

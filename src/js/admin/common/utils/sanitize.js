@@ -230,7 +230,7 @@ function sanitizeStyle(style) {
 
 		// Block dangerous CSS values (url(), expression(), javascript:).
 		const valLower = val.toLowerCase();
-		if (/url\s*\(/.test(valLower) || /expression\s*\(/.test(valLower) || valLower.indexOf('javascript:') !== -1) {
+		if (/url\s*\(/.test(valLower) || /expression\s*\(/.test(valLower) || valLower.includes('javascript:')) {
 			continue;
 		}
 

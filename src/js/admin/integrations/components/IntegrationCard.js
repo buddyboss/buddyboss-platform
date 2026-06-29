@@ -62,6 +62,7 @@ export function IntegrationCard( { item, categoryMap, plugins, onSelect } ) {
 						<button
 							type="button"
 							className="bb-integrations__card-title"
+							aria-haspopup="dialog"
 							onClick={ open }
 						>
 							{ title }
