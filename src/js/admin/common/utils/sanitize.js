@@ -301,14 +301,14 @@ export function safeUrl(url) {
  * @returns {Array} New array with sanitized custom_columns.
  */
 export function sanitizeCustomColumns( items ) {
-	return items.map( function ( item ) {
+	return items.map( ( item ) => {
 		if ( ! item.custom_columns ) {
 			return item;
 		}
 		const sanitizedCols = {};
-		Object.keys( item.custom_columns ).forEach( function ( key ) {
+		Object.keys( item.custom_columns ).forEach( ( key ) => {
 			sanitizedCols[ key ] = sanitizeHtml( item.custom_columns[ key ] );
 		} );
-		return Object.assign( {}, item, { custom_columns: sanitizedCols } );
+		return { ...item, custom_columns: sanitizedCols };
 	} );
 }

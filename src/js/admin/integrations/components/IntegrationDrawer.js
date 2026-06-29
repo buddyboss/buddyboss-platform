@@ -221,6 +221,7 @@ export function IntegrationDrawer( { slug, initialTitle, plugins, onClose } ) {
 										<span className="bb-integrations-drawer__works-with-name">{ req.name }</span>
 										<span
 											className={ 'bb-integrations-drawer__works-with-icon bb-integrations-drawer__works-with-icon--' + ( req.met ? 'yes' : 'no' ) }
+											role="img"
 											aria-label={ req.met ? __( 'Compatible', 'buddyboss' ) : __( 'Not compatible', 'buddyboss' ) }
 										>
 											<i className={ req.met ? 'bb-icons-rl bb-icons-rl-check' : 'bb-icons-rl bb-icons-rl-x' } aria-hidden="true" />

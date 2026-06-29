@@ -206,6 +206,7 @@ export function BBAdminHeader( {
 					<span
 						ref={ ipnSlotRef }
 						className="bb-admin-header__ipn-slot"
+						role="region"
 						aria-label={ __( 'Notifications', 'buddyboss' ) }
 					/>
 					{ onHelp && (
