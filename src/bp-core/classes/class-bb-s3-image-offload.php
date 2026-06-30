@@ -145,6 +145,21 @@ class BB_S3_Image_Offload {
 		foreach ( $this->get_value_filters() as $filter ) {
 			add_filter( $filter, array( $this, 'filter_value' ), 99 );
 		}
+
+		// Rewrite directory base URLs localized to JS. The emoji picker is given
+		// a base directory (e.g. `.../bp-core/images/emojifilter/`) and builds
+		// the category SVG URLs client-side by appending the filename. A bare
+		// directory has no file extension, so the extension-anchored rewriters
+		// above never match it, and the runtime-built URLs 404 once the local
+		// files are stripped. Hooked late so core builds the value first.
+		add_filter( 'bp_core_get_js_strings', array( $this, 'filter_js_strings' ), 99 );
+
+		// ReadyLaunch onboarding wizard: its React app receives an `assetsUrl`
+		// base dir and builds the welcome-popup / setup-wizard preview image URLs
+		// client-side, plus a few full-URL image refs (logo). The wizard can mount
+		// via AJAX (output buffer skipped), so rewrite both the full-URL images
+		// and the bare base here. Hooked late so the wizard data is built first.
+		add_filter( 'bb_rl_onboarding_localize_data', array( $this, 'filter_onboarding_assets' ), 99 );
 	}
 
 	/**
@@ -175,6 +190,12 @@ class BB_S3_Image_Offload {
 			'bb_search_post_thumbnail_defaults',
 			// REST invite avatar.
 			'bp_sent_invite_email_avatar',
+			// Settings 2.0 per-field data. Field image URLs (reCAPTCHA badge
+			// previews, profile/group/appearance preview images, etc.) are built
+			// by raw plugin_url concatenation and surfaced through the settings
+			// AJAX response. AJAX skips the HTML output buffer, so without this
+			// the field images 404 once the local files are stripped to S3.
+			'bb_admin_settings_format_field_data',
 		);
 
 		/**
@@ -207,6 +228,130 @@ class BB_S3_Image_Offload {
 		}
 
 		return map_deep( $value, array( $this, 'rewrite' ) );
+	}
+
+	/**
+	 * Rewrite directory base URLs inside the localized JS strings array.
+	 *
+	 * Some scripts receive a base directory and assemble asset URLs client-side
+	 * by appending a filename (the emoji picker appends `recent.svg`, etc.).
+	 * Those bare directory URLs carry no file extension, so the extension-anchored
+	 * {@see BB_S3_Image_Offload::rewrite()} skips them and the runtime-built URLs
+	 * would 404 once local files are stripped. Rewrite each known base here.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array $strings Localized JS strings (passed via bp_core_get_js_strings).
+	 *
+	 * @return array
+	 */
+	public function filter_js_strings( $strings ) {
+		if ( ! is_array( $strings ) ) {
+			return $strings;
+		}
+
+		/**
+		 * Filters the localized JS string paths whose value is a Platform asset
+		 * directory base URL that should be offloaded to S3. Each entry is the
+		 * top-level group key paired with the inner key holding the base URL.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param array[] $base_url_keys List of array( $group_key, $inner_key ) pairs.
+		 */
+		$base_url_keys = apply_filters(
+			'bb_s3_image_offload_js_base_url_keys',
+			array(
+				array( 'media', 'emoji_filter_url' ),
+			)
+		);
+
+		foreach ( $base_url_keys as $keys ) {
+			if ( ! is_array( $keys ) || 2 !== count( $keys ) ) {
+				continue;
+			}
+
+			list( $group, $inner ) = $keys;
+
+			if ( isset( $strings[ $group ][ $inner ] ) && is_string( $strings[ $group ][ $inner ] ) ) {
+				$strings[ $group ][ $inner ] = $this->rewrite_base_url( $strings[ $group ][ $inner ] );
+			}
+		}
+
+		return $strings;
+	}
+
+	/**
+	 * Rewrite ReadyLaunch onboarding asset URLs to S3.
+	 *
+	 * The wizard's localized data carries both full-URL image refs (logo, preview
+	 * images) and an `assets.assetsUrl` base directory that the React app appends
+	 * filenames to client-side. The base has no extension (skipped by the
+	 * extension-anchored rewriter), and the wizard can mount via AJAX (output
+	 * buffer skipped), so rewrite both here.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array $data Localized wizard data (bb_rl_onboarding_localize_data).
+	 *
+	 * @return array
+	 */
+	public function filter_onboarding_assets( $data ) {
+		if ( ! is_array( $data ) ) {
+			return $data;
+		}
+
+		// Full-URL image refs (logo, wizard preview images).
+		$data = map_deep( $data, array( $this, 'rewrite' ) );
+
+		// Base directory the wizard appends filenames to client-side.
+		if ( isset( $data['assets']['assetsUrl'] ) && is_string( $data['assets']['assetsUrl'] ) ) {
+			$data['assets']['assetsUrl'] = $this->rewrite_base_url( $data['assets']['assetsUrl'] );
+		}
+
+		return $data;
+	}
+
+	/**
+	 * Rewrite a single Platform directory/base URL to its S3 equivalent.
+	 *
+	 * Unlike {@see BB_S3_Image_Offload::rewrite()}, this does not require the URL
+	 * to end in a file extension — it maps any URL under the plugin source path
+	 * (including a bare directory) onto the S3 base, preserving the source-relative
+	 * remainder so the 1:1 object-key mapping still holds.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $url A plugin-relative directory or asset URL.
+	 *
+	 * @return string The S3 URL, or the original URL when it is not under the plugin path.
+	 */
+	public function rewrite_base_url( $url ) {
+		if ( ! is_string( $url ) || '' === $url ) {
+			return $url;
+		}
+
+		if ( ! function_exists( 'buddypress' ) || empty( buddypress()->plugin_url ) ) {
+			return $url;
+		}
+
+		$source_path = wp_parse_url( buddypress()->plugin_url, PHP_URL_PATH );
+		if ( empty( $source_path ) ) {
+			return $url;
+		}
+		$source_path = trailingslashit( $source_path );
+
+		$pos = strpos( $url, $source_path );
+		if ( false === $pos ) {
+			return $url;
+		}
+
+		$relative = substr( $url, $pos + strlen( $source_path ) );
+
+		// esc_url_raw() the final URL: unlike rewrite(), this method may be fed
+		// future base-URL keys whose source-relative remainder is not strictly
+		// server-derived, so sanitize the assembled URL before it is localized.
+		return esc_url_raw( $this->get_base_url() . ltrim( $relative, '/' ) );
 	}
 
 	/**

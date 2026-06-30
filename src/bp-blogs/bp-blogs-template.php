@@ -584,7 +584,7 @@ function bp_get_blog_description() {
  * @param array $classes Array of custom classes.
  */
 function bp_blog_class( $classes = array() ) {
-	echo esc_attr( bp_get_blog_class( $classes ) );
+	echo bp_get_blog_class( $classes ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Pre-built `class="..."` attribute; the class list is escaped via esc_attr() inside bp_get_blog_class(). Wrapping the whole attribute in esc_attr() here would encode the quotes and corrupt the markup.
 }
 	/**
 	 * Return the row class of the current blog in the loop.
@@ -618,7 +618,7 @@ function bp_get_blog_class( $classes = array() ) {
 	 */
 	$classes = apply_filters( 'bp_get_blog_class', $classes );
 	$classes = array_merge( $classes, array() );
-	$retval  = 'class="' . join( ' ', $classes ) . '"';
+	$retval  = 'class="' . esc_attr( join( ' ', $classes ) ) . '"';
 
 	return $retval;
 }

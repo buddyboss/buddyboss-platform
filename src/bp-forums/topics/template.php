@@ -2594,7 +2594,7 @@ function bbp_get_topic_tag_list( $topic_id = 0, $args = '' ) {
  * @uses  bbp_get_topic_class() To get the topic class
  */
 function bbp_topic_class( $topic_id = 0, $classes = array() ) {
-	echo esc_attr( bbp_get_topic_class( $topic_id, $classes ) );
+	echo bbp_get_topic_class( $topic_id, $classes ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Pre-built `class="..."` attribute; the class list is escaped via esc_attr() inside bbp_get_topic_class(). Wrapping the whole attribute in esc_attr() here would encode the quotes and corrupt the markup.
 }
 
 /**
@@ -2626,7 +2626,7 @@ function bbp_get_topic_class( $topic_id = 0, $classes = array() ) {
 	$classes   = array_filter( $classes );
 	$classes   = get_post_class( $classes, $topic_id );
 	$classes   = apply_filters( 'bbp_get_topic_class', $classes, $topic_id );
-	$retval    = 'class="' . implode( ' ', $classes ) . '"';
+	$retval    = 'class="' . esc_attr( implode( ' ', $classes ) ) . '"';
 
 	return $retval;
 }
@@ -3666,7 +3666,6 @@ function bbp_get_form_topic_type_dropdown( $args = '' ) {
 		<select name="<?php echo esc_attr( $r['select_id'] ); ?>" id="<?php echo esc_attr( $r['select_id'] ); ?>_select"<?php echo $tab; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $tab is esc_attr()'d at assignment and is safe attribute markup. ?>>
 			<?php foreach ( $topic_sticky_types as $key => $label ) : ?>
 				<option value="<?php echo esc_attr( $key ); ?>"<?php selected( $key, $r['selected'] ); ?>>
-					<span><?php esc_html_e( 'Type: ', 'buddyboss-platform' ); ?></span>
 					<?php echo esc_html( $label ); ?>
 				</option>
 			<?php endforeach; ?>

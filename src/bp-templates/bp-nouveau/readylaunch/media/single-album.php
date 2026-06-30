@@ -194,8 +194,16 @@ if ( bp_has_albums( array( 'include' => $album_id ) ) ) : ?>
 						}
 						?>
 
-						<span class="bb-album-photo-count"><i class="bb-icons-rl-images"></i><?php echo esc_html( bp_core_number_format( $media_album_template->album->media['total'] ) ); ?></span><span class="bb-sep"></span>
-						<span class="bb-album-video-count"><i class="bb-icons-rl-video"></i><?php echo esc_html( bp_core_number_format( $media_album_template->album->media['total_video'] ) ); ?></span>
+						<span class="bb-album-photo-count"><i class="bb-icons-rl-images"></i><?php echo esc_html( bp_core_number_format( $media_album_template->album->media['total'] ) ); ?></span>
+						<?php
+						// Only show the album's video count when the video component is active
+						// and video support is enabled for this context (profile/group). Without
+						// this, a "0 videos" count appears even when video is disabled.
+						if ( bp_is_active( 'video' ) && ( $bp_is_profile_video_support_enabled || $bp_is_group_video_support_enabled ) ) :
+							?>
+							<span class="bb-sep"></span>
+							<span class="bb-album-video-count"><i class="bb-icons-rl-video"></i><?php echo esc_html( bp_core_number_format( $media_album_template->album->media['total_video'] ) ); ?></span>
+						<?php endif; ?>
 					</p>
 				</div>
 

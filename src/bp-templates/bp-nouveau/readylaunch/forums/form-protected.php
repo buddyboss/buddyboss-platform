@@ -16,7 +16,13 @@ defined( 'ABSPATH' ) || exit;
 	<fieldset class="bbp-form" id="bbp-protected">
 		<Legend><?php esc_html_e( 'Protected', 'buddyboss-platform' ); ?></legend>
 
-		<?php echo wp_kses_post( get_the_password_form() ); ?>
+		<?php
+		// get_the_password_form() returns core-generated markup (already filtered
+		// via the `the_password_form` hook). It must NOT be passed through
+		// wp_kses_post(), whose post allowlist strips <form> and <input>, leaving
+		// only the "Password:" label with no field. Echo the trusted form directly.
+		echo get_the_password_form(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Core-generated, already-filtered password form; escaping would strip its inputs.
+		?>
 
 	</fieldset>
 </div>
