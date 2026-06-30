@@ -173,6 +173,11 @@ function safeIframeSrc( src ) {
 		const url = new URL( src );
 		if ( url.protocol !== 'https:' && url.protocol !== 'http:' ) return null;
 		if ( ! isHostInAllowlist( url.hostname, IFRAME_HOST_ALLOWLIST ) ) return null;
+		// Force HTTPS — an http embed on an https admin page is mixed-content
+		// blocked anyway; coerce it to match safeImgSrc.
+		if ( url.protocol === 'http:' ) {
+			url.protocol = 'https:';
+		}
 		return url.toString();
 	} catch ( e ) {
 		return null;

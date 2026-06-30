@@ -18,8 +18,8 @@ defined( 'ABSPATH' ) || exit;
  * Render the Integrations marketplace page.
  *
  * Mirrors bb_admin_settings_page(): resolves the build asset manifest, enqueues
- * the bundle + CSS, localizes the same `bbAdminData` object the React app reads
- * (apiUrl + nonce), and prints the mount container.
+ * the bundle + CSS, localizes the `bbIntegrationsData` object the React app reads
+ * (apiUrl + nonce + requirements), and prints the mount container.
  *
  * @since BuddyBoss [BBVERSION]
  *
@@ -84,16 +84,16 @@ function bb_admin_integrations_page() {
 		$bb_icon_version
 	);
 
-	// Enqueue the shared admin-common layer (registered by bb-admin-common-assets.php at
-	// admin_enqueue_scripts priority 1) so the global header + CSS ship once.
-	if ( wp_script_is( 'bb-admin-common', 'registered' ) ) {
-		wp_enqueue_script( 'bb-admin-common' );
-	}
+	// Enqueue the shared admin-common stylesheet (registered by
+	// bb-admin-common-assets.php at admin_enqueue_scripts priority 1). The script
+	// half is pulled in automatically via the dependency merge below, so it is not
+	// enqueued explicitly here.
 	if ( wp_style_is( 'bb-admin-common-style', 'registered' ) ) {
 		wp_enqueue_style( 'bb-admin-common-style' );
 	}
 
-	// Merge bb-admin-common into the integrations bundle deps to guarantee load order.
+	// Merge bb-admin-common into the integrations bundle deps so WordPress enqueues
+	// it (and guarantees load order) when the bundle is enqueued.
 	$integrations_deps = array_unique( array_merge( $asset['dependencies'], array( 'bb-admin-common' ) ) );
 
 	wp_enqueue_script(
@@ -194,6 +194,8 @@ function bb_admin_integrations_page() {
 			'logoUrl'      => esc_url( buddypress()->plugin_url . 'bp-core/images/admin/BBLogo.png' ),
 			'ipnRootId'    => $ipn_root_id,
 			'requirements' => $bb_requirements,
+			// Gates client-side diagnostic console logging; off in production.
+			'debug'        => defined( 'WP_DEBUG' ) && WP_DEBUG,
 			// The shared header's global "Search for settings" box queries the
 			// Settings search AJAX (bb_admin_search_settings, nonce action
 			// bb_admin_settings); results deep-link into the Settings page.

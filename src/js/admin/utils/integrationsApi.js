@@ -16,6 +16,26 @@
  * @since BuddyBoss [BBVERSION]
  */
 
+// Diagnostic logging is gated on the server's WP_DEBUG flag (localized into
+// bbIntegrationsData.debug) so production consoles stay clean.
+const DEBUG = typeof window !== 'undefined' && !! ( window.bbIntegrationsData && window.bbIntegrationsData.debug );
+
+/**
+ * Log a fetch/cache error, but only when debugging is enabled.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {string} label   Context label.
+ * @param {*}      error   The error to report.
+ * @returns {void}
+ */
+const logError = ( label, error ) => {
+	if ( DEBUG ) {
+		// eslint-disable-next-line no-console
+		console.error( label, ( error && error.message ) || error );
+	}
+};
+
 const HOUR_IN_MILLIS = 60 * 60 * 1000;
 // List + categories: short TTL so newly published integrations surface promptly
 // (bounded further by the 12h server transient). Detail content: longer.
@@ -247,8 +267,7 @@ export const fetchIntegrations = async (params = {}) => {
 		if (error && error.name === 'AbortError') {
 			throw error;
 		}
-		// eslint-disable-next-line no-console
-		console.error('Error fetching integrations:', error.message || error);
+		logError( 'Error fetching integrations:', error );
 		throw error;
 	}
 };
@@ -279,8 +298,7 @@ export const fetchIntegrationCategories = async (signal) => {
 		if (error && error.name === 'AbortError') {
 			throw error;
 		}
-		// eslint-disable-next-line no-console
-		console.error('Error fetching integration categories:', error.message || error);
+		logError( 'Error fetching integration categories:', error );
 		throw error;
 	}
 };
@@ -323,8 +341,7 @@ export const fetchIntegrationBySlug = async (slug, signal) => {
 		if (error && error.name === 'AbortError') {
 			throw error;
 		}
-		// eslint-disable-next-line no-console
-		console.error('Error fetching integration detail:', error.message || error);
+		logError( 'Error fetching integration detail:', error );
 		throw error;
 	}
 };

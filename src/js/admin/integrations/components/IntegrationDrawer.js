@@ -10,7 +10,7 @@
  * @since BuddyBoss [BBVERSION]
  */
 
-import { useState, useEffect, useRef } from '@wordpress/element';
+import { useState, useEffect, useMemo, useRef } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { decodeEntities } from '@wordpress/html-entities';
 import { fetchIntegrationBySlug } from '../../utils/integrationsApi';
@@ -112,13 +112,45 @@ export function IntegrationDrawer( { slug, initialTitle, plugins, onClose } ) {
 		return () => document.removeEventListener( 'keydown', onTrap );
 	}, [] );
 
+	// Make the rest of the page inert while the dialog is open, so a screen
+	// reader's virtual cursor can't wander into the grid behind it (aria-modal
+	// alone doesn't stop that). Walk from the drawer up to the app root, marking
+	// every sibling along the way inert; the drawer's own ancestor chain is left
+	// interactive. Restored on unmount.
+	useEffect( () => {
+		const drawerEl = panelRef.current && panelRef.current.closest( '.bb-integrations-drawer' );
+		const root = document.getElementById( 'bb-admin-integrations' ) || document.querySelector( '.bb-admin-app' );
+		if ( ! drawerEl || ! root ) {
+			return undefined;
+		}
+		const inerted = [];
+		let node = drawerEl;
+		while ( node && node !== root && node.parentElement ) {
+			Array.from( node.parentElement.children ).forEach( ( sibling ) => {
+				if ( sibling !== node && ! sibling.hasAttribute( 'inert' ) ) {
+					sibling.setAttribute( 'inert', '' );
+					inerted.push( sibling );
+				}
+			} );
+			node = node.parentElement;
+		}
+		return () => inerted.forEach( ( el ) => el.removeAttribute( 'inert' ) );
+	}, [] );
+
 	const title = item?.title?.rendered ? decodeEntities( item.title.rendered ) : '';
 	// Top-bar name: prefer the fetched title, fall back to the title handed over
-	// from the clicked card so the header is never blank while loading.
-	const headerName = title || ( initialTitle ? decodeEntities( initialTitle ) : '' );
+	// from the clicked card. initialTitle is already decoded by the card, so it is
+	// used as-is (decoding it again would over-decode e.g. &amp;amp;).
+	const headerName = title || initialTitle || '';
 	const description = item?.short_description ? decodeEntities( item.short_description ) : '';
 	const logo = item?.logo_image_url && 'string' === typeof item.logo_image_url ? item.logo_image_url : '';
+	// Resolve the sanitized logo URL up front; safeImageUrl returns '' for a
+	// non-http(s) URL, in which case we fall back to the placeholder icon.
+	const logoSrc = logo ? safeImageUrl( logo ) : '';
 	const contentHtml = item?.content?.rendered ? item.content.rendered : '';
+	// Sanitize once per content change — DOMParser is expensive and the drawer
+	// re-renders on every plugins-prop identity change (activate/deactivate).
+	const sanitizedContent = useMemo( () => ( contentHtml ? sanitizeKbArticle( contentHtml ) : '' ), [ contentHtml ] );
 	// "Learn More ↗" → the plugin's own page (acf.plugin_link), falling back to
 	// the integration page so there is always somewhere to go.
 	const learnMoreUrl = item?.acf?.plugin_link || item?.link || item?.link_url || '';
@@ -179,8 +211,8 @@ export function IntegrationDrawer( { slug, initialTitle, plugins, onClose } ) {
 					<div className="bb-integrations-drawer__content">
 						<div className="bb-integrations-drawer__header">
 							<span className="bb-integrations-drawer__icon">
-								{ logo ? (
-									<img src={ safeImageUrl( logo ) } alt="" />
+								{ logoSrc ? (
+									<img src={ logoSrc } alt="" />
 								) : (
 									<i className="bb-icons-rl bb-icons-rl-puzzle-piece" aria-hidden="true" />
 								) }
@@ -231,13 +263,14 @@ export function IntegrationDrawer( { slug, initialTitle, plugins, onClose } ) {
 							</div>
 						) }
 
-						{ contentHtml && (
+						{ sanitizedContent && (
 							<div
 								className="bb-integrations-drawer__body"
 								// Same rich-content sanitizer the Knowledge Base modal uses — allows
 								// WP block markup, images and trusted video embeds (YouTube/Vimeo).
+								// Memoized above so DOMParser only re-runs when the HTML changes.
 								// eslint-disable-next-line react/no-danger
-								dangerouslySetInnerHTML={ { __html: sanitizeKbArticle( contentHtml ) } }
+								dangerouslySetInnerHTML={ { __html: sanitizedContent } }
 							/>
 						) }
 					</div>

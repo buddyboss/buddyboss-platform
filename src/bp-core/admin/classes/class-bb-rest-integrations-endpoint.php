@@ -108,14 +108,62 @@ class BB_REST_Integrations_Endpoint extends WP_REST_Controller {
 	const TRANSIENT_NEGATIVE_TTL = MINUTE_IN_SECONDS;
 
 	/**
+	 * Transient cache TTL for free-text `search=` queries.
+	 *
+	 * Search strings are volatile and effectively unbounded in key-space (one
+	 * wp_options row per unique query), so they get a short TTL while the
+	 * unfiltered list/category responses keep the long {@see self::TRANSIENT_TTL}.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @var int Seconds.
+	 */
+	const TRANSIENT_SEARCH_TTL = 10 * MINUTE_IN_SECONDS;
+
+	/**
+	 * How long a stale cached response survives past its soft-freshness window.
+	 *
+	 * Stored data outlives its `_fresh_until` mark by this much so a single
+	 * request can revalidate while the rest serve the stale copy
+	 * (stale-while-revalidate) instead of all hammering the slow upstream.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @var int Seconds.
+	 */
+	const STALE_GRACE = HOUR_IN_SECONDS;
+
+	/**
+	 * Refresh-lock TTL (thundering-herd guard).
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @var int Seconds.
+	 */
+	const LOCK_TTL = 30;
+
+	/**
+	 * Maximum upstream body size accepted/cached, in bytes.
+	 *
+	 * Caps `wp_remote_get()` and is re-checked on the returned body so a
+	 * pathological upstream cannot balloon a 12h transient.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @var int
+	 */
+	const MAX_RESPONSE_BYTES = 2 * MB_IN_BYTES;
+
+	/**
 	 * Constructor.
 	 *
 	 * Uses the platform-api namespace when available so the route lives at
 	 * `buddyboss/v1/integrations/...` — consistent with the rest of the
 	 * BuddyBoss REST surface and with the value `bb-admin-settings-page.php`
 	 * localizes into `bbAdminData.apiUrl` (`rest_url( 'buddyboss/v1/' )`).
-	 * Falls back to a private `bb/v1` namespace when platform-api is absent so
-	 * the admin screen still works on platform-only installs.
+	 * Falls back to `buddyboss/v1` when the helpers are absent — matching the
+	 * fallback in bb-admin-integrations-page.php so the registered route and the
+	 * URL the React app calls never diverge.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 */
@@ -123,7 +171,7 @@ class BB_REST_Integrations_Endpoint extends WP_REST_Controller {
 		if ( function_exists( 'bp_rest_namespace' ) && function_exists( 'bp_rest_version' ) ) {
 			$this->namespace = bp_rest_namespace() . '/' . bp_rest_version();
 		} else {
-			$this->namespace = 'bb/v1';
+			$this->namespace = 'buddyboss/v1';
 		}
 		$this->rest_base = 'integrations';
 	}
@@ -218,8 +266,12 @@ class BB_REST_Integrations_Endpoint extends WP_REST_Controller {
 		}
 
 		$transient_key = self::TRANSIENT_PREFIX . md5( $target );
-		$cached        = get_transient( $transient_key );
-		if ( false !== $cached && is_array( $cached ) ) {
+		$lock_key      = $transient_key . '_lock';
+		// Volatile search queries get a short TTL; everything else the long one.
+		$ttl = ( false !== strpos( $target, 'search=' ) ) ? self::TRANSIENT_SEARCH_TTL : self::TRANSIENT_TTL;
+
+		$cached = get_transient( $transient_key );
+		if ( is_array( $cached ) ) {
 			// Replay a recently-cached upstream failure without re-hitting the
 			// slow/broken upstream (negative cache, short TTL).
 			if ( isset( $cached['error'] ) && is_array( $cached['error'] ) ) {
@@ -230,12 +282,25 @@ class BB_REST_Integrations_Endpoint extends WP_REST_Controller {
 				);
 			}
 			if ( isset( $cached['body'] ) ) {
-				return rest_ensure_response( $cached );
+				$is_fresh = isset( $cached['_fresh_until'] ) && time() < (int) $cached['_fresh_until'];
+				// Fresh → serve. Stale → also serve, unless we win the refresh
+				// lock (stale-while-revalidate: one request rebuilds while the
+				// rest keep serving the old copy instead of all firing the 8s
+				// upstream fetch at once).
+				if ( $is_fresh || false !== get_transient( $lock_key ) ) {
+					return rest_ensure_response( $cached );
+				}
+				set_transient( $lock_key, 1, self::LOCK_TTL );
 			}
 		}
 
 		$envelope = $this->fetch_remote( $target );
 		if ( is_wp_error( $envelope ) ) {
+			delete_transient( $lock_key );
+			// Ride out a transient upstream blip on the previous good copy.
+			if ( is_array( $cached ) && isset( $cached['body'] ) ) {
+				return rest_ensure_response( $cached );
+			}
 			$error_data = $envelope->get_error_data();
 			set_transient(
 				$transient_key,
@@ -251,7 +316,11 @@ class BB_REST_Integrations_Endpoint extends WP_REST_Controller {
 			return $envelope;
 		}
 
-		set_transient( $transient_key, $envelope, self::TRANSIENT_TTL );
+		// Soft-freshness mark; the hard TTL outlasts it so stale data survives
+		// long enough for a single revalidation pass.
+		$envelope['_fresh_until'] = time() + $ttl;
+		set_transient( $transient_key, $envelope, $ttl + self::STALE_GRACE );
+		delete_transient( $lock_key );
 
 		return rest_ensure_response( $envelope );
 	}
@@ -320,8 +389,14 @@ class BB_REST_Integrations_Endpoint extends WP_REST_Controller {
 		$allowed = false;
 		foreach ( (array) $allowed_prefixes as $prefix ) {
 			if ( is_string( $prefix ) && '' !== $prefix && 0 === strpos( $raw, $prefix ) ) {
-				$allowed = true;
-				break;
+				// Require a path-segment boundary after the prefix so
+				// `/wp-json/wp/v2/integrationsEVIL` can't ride in on a substring
+				// match — the next char must end the path or start the query.
+				$next = substr( $raw, strlen( $prefix ), 1 );
+				if ( '' === $next || '/' === $next || '?' === $next ) {
+					$allowed = true;
+					break;
+				}
 			}
 		}
 		if ( ! $allowed ) {
@@ -401,10 +476,17 @@ class BB_REST_Integrations_Endpoint extends WP_REST_Controller {
 	 */
 	protected function fetch_remote( $target ) {
 		$args = array(
-			'timeout'     => 8,
-			'redirection' => 3,
-			'user-agent'  => 'BuddyBoss-Platform-Integrations-Proxy/' . ( defined( 'BP_PLATFORM_VERSION' ) ? BP_PLATFORM_VERSION : '0' ) . '; ' . home_url(),
-			'headers'     => array(
+			'timeout'             => 8,
+			// No redirect-follow: the upstream REST endpoints answer 200 directly,
+			// so a 30x Location could only steer the server-side fetch somewhere
+			// unintended. Paired with reject_unsafe_urls this closes the SSRF vector.
+			'redirection'         => 0,
+			'reject_unsafe_urls'  => true,
+			// Cap the body so a pathological/compromised upstream can't balloon the
+			// cached transient (re-checked on the returned body below).
+			'limit_response_size' => self::MAX_RESPONSE_BYTES,
+			'user-agent'          => 'BuddyBoss-Platform-Integrations-Proxy/' . ( defined( 'BP_PLATFORM_VERSION' ) ? BP_PLATFORM_VERSION : '0' ) . '; ' . home_url(),
+			'headers'             => array(
 				'Accept' => 'application/json',
 			),
 		);
@@ -448,6 +530,16 @@ class BB_REST_Integrations_Endpoint extends WP_REST_Controller {
 		}
 
 		$raw_body = wp_remote_retrieve_body( $response );
+
+		// Belt-and-suspenders: some transports ignore limit_response_size, so bail
+		// before decoding/caching an oversized body.
+		if ( strlen( $raw_body ) > self::MAX_RESPONSE_BYTES ) {
+			return new WP_Error(
+				'bb_rest_integrations_too_large',
+				__( 'Integrations service returned an unexpectedly large response.', 'buddyboss' ),
+				array( 'status' => 502 )
+			);
+		}
 
 		$decoded = json_decode( $raw_body, true );
 		$body    = is_array( $decoded ) ? $decoded : $raw_body;

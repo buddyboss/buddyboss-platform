@@ -12,15 +12,18 @@
  * @since BuddyBoss [BBVERSION]
  */
 
+import { memo } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { decodeEntities } from '@wordpress/html-entities';
 import { safeUrl, safeImageUrl } from '@bb/admin-common';
 import { PluginActionButton } from './PluginActionButton';
 
-export function IntegrationCard( { item, categoryMap, plugins, onSelect } ) {
+function IntegrationCardComponent( { item, categoryMap, plugins, onSelect } ) {
 	const title = item?.title?.rendered ? decodeEntities( item.title.rendered ) : '';
 	const description = item?.short_description ? decodeEntities( item.short_description ) : '';
 	const logo = item?.logo_image_url && 'string' === typeof item.logo_image_url ? item.logo_image_url : '';
+	// safeImageUrl returns '' for a non-http(s) URL — fall back to the placeholder.
+	const logoSrc = logo ? safeImageUrl( logo ) : '';
 
 	// Plan — "free" (case-insensitive) is free; anything else non-empty is paid.
 	const planLabel = ( item?.acf?.type_label || '' ).trim().toLowerCase();
@@ -41,8 +44,8 @@ export function IntegrationCard( { item, categoryMap, plugins, onSelect } ) {
 			<div className="bb-integrations__card-body">
 				<div className="bb-integrations__card-top">
 					<span className="bb-integrations__card-logo">
-						{ logo ? (
-							<img src={ safeImageUrl( logo ) } alt="" />
+						{ logoSrc ? (
+							<img src={ logoSrc } alt="" />
 						) : (
 							<i className="bb-icons-rl bb-icons-rl-puzzle-piece" aria-hidden="true" />
 						) }
@@ -92,3 +95,8 @@ export function IntegrationCard( { item, categoryMap, plugins, onSelect } ) {
 		</div>
 	);
 }
+
+// Memoized: the grid re-renders on every App state change (e.g. after a plugin
+// action updates the installed map), but a card only needs to re-render when its
+// own props change.
+export const IntegrationCard = memo( IntegrationCardComponent );

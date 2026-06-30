@@ -14,7 +14,7 @@
  * @since BuddyBoss [BBVERSION]
  */
 
-import { useState, useCallback } from '@wordpress/element';
+import { useState, useCallback, useEffect, useRef } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { wporgSlug } from '../../utils/pluginActions';
 
@@ -34,6 +34,14 @@ export function PluginActionButton( { item, plugins, className, hideUnavailable 
 	const [ busy, setBusy ] = useState( false );
 	const [ error, setError ] = useState( '' );
 
+	// The card can unmount mid-request (filter / page change), so gate the
+	// post-await setState calls — otherwise React warns about updating an
+	// unmounted component.
+	const mountedRef = useRef( true );
+	useEffect( () => () => {
+		mountedRef.current = false;
+	}, [] );
+
 	const run = useCallback( async ( handler ) => {
 		if ( ! slug || ! handler ) {
 			return;
@@ -45,9 +53,13 @@ export function PluginActionButton( { item, plugins, className, hideUnavailable 
 		} catch ( e ) {
 			// wp.updates rejects with { errorCode, errorMessage }; our AJAX path throws
 			// an Error with .message — accept either so the real reason surfaces.
-			setError( ( e && ( e.errorMessage || e.message ) ) || __( 'Something went wrong. Please try again.', 'buddyboss' ) );
+			if ( mountedRef.current ) {
+				setError( ( e && ( e.errorMessage || e.message ) ) || __( 'Something went wrong. Please try again.', 'buddyboss' ) );
+			}
 		} finally {
-			setBusy( false );
+			if ( mountedRef.current ) {
+				setBusy( false );
+			}
 		}
 	}, [ slug ] );
 

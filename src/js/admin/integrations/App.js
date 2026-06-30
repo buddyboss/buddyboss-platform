@@ -249,7 +249,7 @@ function AppInner() {
 				onChange={ handleSearchChange }
 				aria-label={ __( 'Search integrations', 'buddyboss' ) }
 			/>
-			<i className="bb-icon-search bb-admin-header__search-icon" aria-hidden="true"></i>
+			<i className="bb-icon-search bb-integrations__search-icon" aria-hidden="true"></i>
 		</div>
 	);
 
