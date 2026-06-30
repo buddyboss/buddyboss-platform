@@ -391,6 +391,7 @@ class BP_Document {
 		if ( ! empty( $r['privacy'] ) ) {
 			$privacy_values              = (array) $r['privacy'];
 			$privacy_placeholders        = implode( ', ', array_fill( 0, count( $privacy_values ), '%s' ) );
+			// phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare -- $privacy_placeholders is a list of %s tokens; values are passed as prepare() args.
 			$where_conditions['privacy'] = $wpdb->prepare( "d.privacy IN ({$privacy_placeholders})", $privacy_values );
 		}
 
@@ -410,6 +411,7 @@ class BP_Document {
 			if ( is_array( $r['status'] ) ) {
 				$status_values              = $r['status'];
 				$status_placeholders        = implode( ', ', array_fill( 0, count( $status_values ), '%s' ) );
+				// phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare -- $status_placeholders is a list of %s tokens; values are passed as prepare() args.
 				$where_conditions['status'] = $wpdb->prepare( "d.status IN ({$status_placeholders})", $status_values );
 			} else {
 				$where_conditions['status'] = $wpdb->prepare( 'd.status = %s', $r['status'] );
