@@ -298,12 +298,16 @@ body.buddyboss_page_bb-integrations {
 	&__btn {
 		@include bb-button-primary-outline;
 		// Normalize every variant (fill / outline / link) to one height so the
-		// solid Install and the Learn More button line up. Figma: 32px tall.
+		// solid Install and the Learn More button line up. Figma: 32px tall,
+		// padding 6px 16px, label heading/sm-regular 14px/20px.
 		display: inline-flex;
 		align-items: center;
 		justify-content: center;
 		box-sizing: border-box;
 		min-height: 32px;
+		padding: 6px 16px;
+		font-size: 14px;
+		line-height: 20px;
 		text-decoration: none;
 		cursor: pointer; // rendered as a <button>, which doesn't get a pointer by default
 
@@ -503,12 +507,14 @@ body.buddyboss_page_bb-integrations {
 
 	&__icon {
 		display: inline-flex;
+		box-sizing: border-box;
 		width: 56px;
 		height: 56px;
+		padding: 8px; // Figma: 8px inset around the 40px icon.
 		align-items: center;
 		justify-content: center;
 		background-color: $bb-background-base-color;
-		border: 1px solid $bb-border-primary-color;
+		border: 0.5px solid $bb-border-primary-color; // Figma: 0.5px #E5E5E5.
 		border-radius: $bb-border-radius-full;
 		margin-bottom: 8px;
 
@@ -525,14 +531,16 @@ body.buddyboss_page_bb-integrations {
 	}
 
 	&__title {
-		color: $bb-text-color;
+		color: #000000; // Figma: heading/lg-semiBold #000000.
 		font-size: 16px;
 		font-weight: 600;
+		line-height: 22px; // Figma: 22px.
 		margin: 0 0 8px;
 	}
 
 	&__desc {
 		font-size: 13px;
+		line-height: 18px; // Figma: body/regular 18px.
 		color: $bb-text-secondary-color;
 		margin: 0 0 16px;
 	}
