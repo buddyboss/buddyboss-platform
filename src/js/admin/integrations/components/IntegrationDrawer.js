@@ -16,7 +16,6 @@ import { decodeEntities } from '@wordpress/html-entities';
 import { fetchIntegrationBySlug } from '../../utils/integrationsApi';
 import { sanitizeKbArticle, safeUrl, safeImageUrl } from '@bb/admin-common';
 import { PluginActionButton } from './PluginActionButton';
-import { wporgSlug } from '../../utils/pluginActions';
 
 export function IntegrationDrawer( { slug, initialTitle, plugins, onClose } ) {
 	const [ status, setStatus ] = useState( 'loading' ); // loading | ready | error | notfound
@@ -155,15 +154,10 @@ export function IntegrationDrawer( { slug, initialTitle, plugins, onClose } ) {
 	// the integration page so there is always somewhere to go.
 	const learnMoreUrl = item?.acf?.plugin_link || item?.link || item?.link_url || '';
 
-	// "Works with" shows only once the plugin is actually installed on this site
-	// (active or inactive) — not for pro plugins or ones not yet installed.
-	const planLabel = ( item?.acf?.type_label || '' ).trim().toLowerCase();
-	const isPaid = '' !== planLabel && 'free' !== planLabel;
-	const pluginSlug = isPaid ? null : wporgSlug( item?.acf?.plugin_link || '' );
-	const isInstalled = !! ( pluginSlug && plugins && plugins.installed && plugins.installed[ pluginSlug ] );
-
 	// "Works with" — the integration's required platforms (integrations_require-<slug>
 	// in class_list), resolved to name + ✓/✗ via the localized requirements map.
+	// Shown whenever the integration declares requirements (installed or not) so a
+	// user can see compatibility before deciding to install.
 	const requirements = ( typeof window !== 'undefined' && window.bbIntegrationsData && window.bbIntegrationsData.requirements ) || {};
 	const worksWith = ( Array.isArray( item?.class_list ) ? item.class_list : [] )
 		.map( ( cls ) => {
@@ -241,8 +235,8 @@ export function IntegrationDrawer( { slug, initialTitle, plugins, onClose } ) {
 							</div>
 						</div>
 
-						{ /* "Works with" compatibility — only once the plugin is installed. */ }
-						{ isInstalled && worksWith.length > 0 && (
+						{ /* "Works with" compatibility — shown whenever requirements exist. */ }
+						{ worksWith.length > 0 && (
 							<div className="bb-integrations-drawer__works-with">
 								<span className="bb-integrations-drawer__works-with-label">{ __( 'Works with:', 'buddyboss' ) }</span>
 								{ worksWith.map( ( req, i ) => (
