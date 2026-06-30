@@ -129,6 +129,13 @@ class BB_Admin_Integrations_Ajax {
 	 * vast majority of plugins). Returns '' when nothing installed matches, so the
 	 * caller refuses the request.
 	 *
+	 * By design this resolves ANY installed plugin folder, not only marketplace
+	 * entries — the `activate_plugins` capability checked in validate_request() is
+	 * the real authorization gate, and a user with that capability can already
+	 * toggle any plugin from the core Plugins screen. Scoping to the marketplace
+	 * dataset would add no security (same capability) and isn't worth threading the
+	 * upstream list through this handler.
+	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @param string $slug The wordpress.org plugin slug.
