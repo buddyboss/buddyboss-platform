@@ -460,17 +460,19 @@ class BP_Video {
 		}
 
 		if ( ! empty( $r['privacy'] ) ) {
-			$privacy                     = "'" . implode( "', '", array_map( 'esc_sql', (array) $r['privacy'] ) ) . "'";
-			$where_conditions['privacy'] = "m.privacy IN ({$privacy})";
+			$privacy_values              = (array) $r['privacy'];
+			$privacy_placeholders        = implode( ', ', array_fill( 0, count( $privacy_values ), '%s' ) );
+			$where_conditions['privacy'] = $wpdb->prepare( "m.privacy IN ({$privacy_placeholders})", $privacy_values );
 		}
 
 		// Check the status of items.
 		if ( ! empty( $r['status'] ) ) {
 			if ( is_array( $r['status'] ) ) {
-				$status                     = "'" . implode( "', '", array_map( 'esc_sql', $r['status'] ) ) . "'";
-				$where_conditions['status'] = "m.status IN ({$status})";
+				$status_values              = $r['status'];
+				$status_placeholders        = implode( ', ', array_fill( 0, count( $status_values ), '%s' ) );
+				$where_conditions['status'] = $wpdb->prepare( "m.status IN ({$status_placeholders})", $status_values );
 			} else {
-				$where_conditions['status'] = "m.status = '" . esc_sql( $r['status'] ) . "'";
+				$where_conditions['status'] = $wpdb->prepare( 'm.status = %s', $r['status'] );
 			}
 		}
 

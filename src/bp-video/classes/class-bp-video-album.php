@@ -325,8 +325,9 @@ class BP_Video_Album {
 		}
 
 		if ( ! empty( $r['privacy'] ) ) {
-			$privacy                     = "'" . implode( "', '", array_map( 'esc_sql', (array) $r['privacy'] ) ) . "'";
-			$where_conditions['privacy'] = "m.privacy IN ({$privacy})";
+			$privacy_values              = (array) $r['privacy'];
+			$privacy_placeholders        = implode( ', ', array_fill( 0, count( $privacy_values ), '%s' ) );
+			$where_conditions['privacy'] = $wpdb->prepare( "m.privacy IN ({$privacy_placeholders})", $privacy_values );
 		}
 
 		/**
