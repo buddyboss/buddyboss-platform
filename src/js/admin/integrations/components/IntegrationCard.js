@@ -2,49 +2,40 @@
  * BuddyBoss Integrations marketplace — single card.
  *
  * Matches the Figma card: circular bordered logo, title, category subtitle,
- * 3-line-clamped description, and an orange-outline action button. Clicking the
- * title opens the detail drawer (the card body itself is not clickable).
+ * 3-line-clamped description, and the action buttons. Clicking the title opens
+ * the detail drawer (the card body itself is not clickable).
  *
- * The subtitle under the title is the integration's CATEGORY (resolved from the
- * integrations_category term ID via the categoryMap prop) — not a vendor name.
- *
- * API FIELD CONTRACT (team populates these on the wp/v2/integrations response;
- * the card reads them and lights up automatically when present — all optional):
- *  - install_url (string URL): the "Install" button → this URL. When absent, the
- *    Install button still renders but is disabled (greyed), and "Learn More" shows beside it.
- *  - plugin_url (string URL): the plugin's site — the "Learn More ↗" destination
- *    (falls back to `link` / `link_url`). Learn More shows when there's no
- *    install_url, or alongside Install when plugin_url is provided.
- *  - tier ('free' | 'pro'): when 'pro', renders the PRO badge.
- * See docs/superpowers/specs/2026-06-25-integrations-api-field-contract.md.
+ * The primary action (Install / Activate / Deactivate / disabled) is the shared
+ * <PluginActionButton>; "Learn More ↗" (secondary, right) → acf.plugin_link.
  *
  * @package BuddyBoss\Core\Administration
  * @since BuddyBoss [BBVERSION]
  */
 
+import { memo } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { decodeEntities } from '@wordpress/html-entities';
 import { safeUrl, safeImageUrl } from '@bb/admin-common';
+import { PluginActionButton } from './PluginActionButton';
 
-export function IntegrationCard( { item, categoryMap, onSelect } ) {
+function IntegrationCardComponent( { item, categoryMap, plugins, onSelect } ) {
 	const title = item?.title?.rendered ? decodeEntities( item.title.rendered ) : '';
 	const description = item?.short_description ? decodeEntities( item.short_description ) : '';
 	const logo = item?.logo_image_url && 'string' === typeof item.logo_image_url ? item.logo_image_url : '';
-	// API field contract (all optional; render only when the API provides them).
-	const installUrl = item?.install_url && 'string' === typeof item.install_url ? item.install_url : '';
-	// "Learn More" destination: prefer the dedicated plugin_url, fall back to the
-	// integration page (link / link_url) so there is always somewhere to go.
-	const pluginUrl = item?.plugin_url && 'string' === typeof item.plugin_url ? item.plugin_url : '';
-	const learnMoreUrl = pluginUrl || item?.link || item?.link_url || '';
-	// Show "Learn More" when there's no install_url (never show a dead Install), or
-	// alongside Install when the API provides a dedicated plugin_url (the pro case).
-	const showLearnMore = learnMoreUrl && ( ! installUrl || pluginUrl );
-	// Subtitle = the integration's category. integrations_category holds term IDs;
-	// resolve the first one to its name via the categoryMap (from the categories
-	// the dropdown already fetched).
+	// safeImageUrl returns '' for a non-http(s) URL — fall back to the placeholder.
+	const logoSrc = logo ? safeImageUrl( logo ) : '';
+
+	// Plan — "free" (case-insensitive) is free; anything else non-empty is paid.
+	const planLabel = ( item?.acf?.type_label || '' ).trim().toLowerCase();
+	const isPaid = '' !== planLabel && 'free' !== planLabel;
+
+	// "Learn More ↗" → acf.plugin_link, falling back to the integration page.
+	const pluginLink = item?.acf?.plugin_link && 'string' === typeof item.acf.plugin_link ? item.acf.plugin_link : '';
+	const learnMoreUrl = pluginLink || item?.plugin_url || item?.link || item?.link_url || '';
+
+	// Subtitle = the integration's category (integrations_category term ID → name).
 	const categoryId = Array.isArray( item?.integrations_category ) ? item.integrations_category[ 0 ] : null;
 	const categoryName = categoryId && categoryMap && categoryMap[ categoryId ] ? decodeEntities( categoryMap[ categoryId ] ) : '';
-	const isPro = 'pro' === item?.tier;
 
 	const open = () => onSelect( item.slug, title );
 
@@ -53,14 +44,17 @@ export function IntegrationCard( { item, categoryMap, onSelect } ) {
 			<div className="bb-integrations__card-body">
 				<div className="bb-integrations__card-top">
 					<span className="bb-integrations__card-logo">
-						{ logo ? (
-							<img src={ safeImageUrl( logo ) } alt="" />
+						{ logoSrc ? (
+							<img src={ logoSrc } alt="" />
 						) : (
 							<i className="bb-icons-rl bb-icons-rl-puzzle-piece" aria-hidden="true" />
 						) }
 					</span>
-					{ isPro && (
-						<span className="bb-integrations__card-badge">{ __( 'PRO', 'buddyboss' ) }</span>
+					{ isPaid && (
+						<span className="bb-integrations__card-badge">
+							<i className="bb-icons-rl bb-icons-rl-crown-simple" aria-hidden="true" />
+							<span>{ __( 'PRO', 'buddyboss' ) }</span>
+						</span>
 					) }
 				</div>
 
@@ -71,6 +65,7 @@ export function IntegrationCard( { item, categoryMap, onSelect } ) {
 						<button
 							type="button"
 							className="bb-integrations__card-title"
+							aria-haspopup="dialog"
 							onClick={ open }
 						>
 							{ title }
@@ -84,28 +79,8 @@ export function IntegrationCard( { item, categoryMap, onSelect } ) {
 			</div>
 
 			<div className="bb-integrations__card-actions">
-				{ /* Install — primary, left. Active link when install_url exists; otherwise
-				     a disabled (greyed) button so the card layout stays consistent. */ }
-				{ installUrl ? (
-					<a
-						href={ safeUrl( installUrl ) }
-						className="bb-integrations__btn bb-integrations__btn--primary"
-					>
-						{ __( 'Install', 'buddyboss' ) }
-					</a>
-				) : (
-					<button
-						type="button"
-						className="bb-integrations__btn bb-integrations__btn--primary"
-						disabled
-						aria-disabled="true"
-					>
-						{ __( 'Install', 'buddyboss' ) }
-					</button>
-				) }
-				{ /* Learn More — borderless + ↗. Shown when there's no install_url, or
-				     alongside Install (right) when a dedicated plugin_url exists. */ }
-				{ showLearnMore && (
+				<PluginActionButton item={ item } plugins={ plugins } />
+				{ learnMoreUrl && (
 					<a
 						href={ safeUrl( learnMoreUrl ) }
 						className="bb-integrations__btn bb-integrations__btn--link"
@@ -120,3 +95,8 @@ export function IntegrationCard( { item, categoryMap, onSelect } ) {
 		</div>
 	);
 }
+
+// Memoized: the grid re-renders on every App state change (e.g. after a plugin
+// action updates the installed map), but a card only needs to re-render when its
+// own props change.
+export const IntegrationCard = memo( IntegrationCardComponent );

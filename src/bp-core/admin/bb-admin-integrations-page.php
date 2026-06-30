@@ -18,8 +18,8 @@ defined( 'ABSPATH' ) || exit;
  * Render the Integrations marketplace page.
  *
  * Mirrors bb_admin_settings_page(): resolves the build asset manifest, enqueues
- * the bundle + CSS, localizes the same `bbAdminData` object the React app reads
- * (apiUrl + nonce), and prints the mount container.
+ * the bundle + CSS, localizes the `bbIntegrationsData` object the React app reads
+ * (apiUrl + nonce + requirements), and prints the mount container.
  *
  * @since BuddyBoss [BBVERSION]
  *
@@ -84,16 +84,16 @@ function bb_admin_integrations_page() {
 		$bb_icon_version
 	);
 
-	// Enqueue the shared admin-common layer (registered by bb-admin-common-assets.php at
-	// admin_enqueue_scripts priority 1) so the global header + CSS ship once.
-	if ( wp_script_is( 'bb-admin-common', 'registered' ) ) {
-		wp_enqueue_script( 'bb-admin-common' );
-	}
+	// Enqueue the shared admin-common stylesheet (registered by
+	// bb-admin-common-assets.php at admin_enqueue_scripts priority 1). The script
+	// half is pulled in automatically via the dependency merge below, so it is not
+	// enqueued explicitly here.
 	if ( wp_style_is( 'bb-admin-common-style', 'registered' ) ) {
 		wp_enqueue_style( 'bb-admin-common-style' );
 	}
 
-	// Merge bb-admin-common into the integrations bundle deps to guarantee load order.
+	// Merge bb-admin-common into the integrations bundle deps so WordPress enqueues
+	// it (and guarantees load order) when the bundle is enqueued.
 	$integrations_deps = array_unique( array_merge( $asset['dependencies'], array( 'bb-admin-common' ) ) );
 
 	wp_enqueue_script(
@@ -154,24 +154,98 @@ function bb_admin_integrations_page() {
 		}
 	}
 
+	// Works-with compatibility — whether the current site satisfies each known
+	// BuddyBoss requirement. The drawer reads this per integrations_require term
+	// (matched by slug from the integration's class_list) to render the ✓ / ✗ row.
+	if ( ! function_exists( 'is_plugin_active' ) ) {
+		require_once ABSPATH . 'wp-admin/includes/plugin.php';
+	}
+	$bb_requirements = array(
+		'buddyboss-platform'        => array(
+			'name' => __( 'BuddyBoss Platform', 'buddyboss' ),
+			'met'  => true, // We are running inside Platform.
+		),
+		'buddyboss-theme'           => array(
+			'name' => __( 'BuddyBoss Theme', 'buddyboss' ),
+			'met'  => 'buddyboss-theme' === wp_get_theme()->get_template(),
+		),
+		'readylaunch'               => array(
+			'name' => __( 'ReadyLaunch', 'buddyboss' ),
+			'met'  => function_exists( 'bb_is_readylaunch_enabled' ) && (bool) bb_is_readylaunch_enabled(),
+		),
+		'buddyboss-app'             => array(
+			'name' => __( 'BuddyBoss App', 'buddyboss' ),
+			'met'  => is_plugin_active( 'buddyboss-app/buddyboss-app.php' ),
+		),
+		'third-party-plugin-or-app' => array(
+			'name' => __( 'Third-party plugin or App', 'buddyboss' ),
+			'met'  => true,
+		),
+	);
+
 	wp_localize_script(
 		'bb-admin-integrations',
 		'bbIntegrationsData',
 		array(
-			'apiUrl'    => rest_url( $api_namespace ),
-			'nonce'     => wp_create_nonce( 'wp_rest' ),
-			'adminUrl'  => esc_url( admin_url() ),
-			'version'   => defined( 'BP_PLATFORM_VERSION' ) ? BP_PLATFORM_VERSION : '0',
-			'logoUrl'     => esc_url( buddypress()->plugin_url . 'bp-core/images/admin/BBLogo.png' ),
-			'ipnRootId'   => $ipn_root_id,
+			'apiUrl'       => rest_url( $api_namespace ),
+			'nonce'        => wp_create_nonce( 'wp_rest' ),
+			'adminUrl'     => esc_url( admin_url() ),
+			'version'      => defined( 'BP_PLATFORM_VERSION' ) ? BP_PLATFORM_VERSION : '0',
+			'logoUrl'      => esc_url( buddypress()->plugin_url . 'bp-core/images/admin/BBLogo.png' ),
+			'ipnRootId'    => $ipn_root_id,
+			'requirements' => $bb_requirements,
+			// Gates client-side diagnostic console logging; off in production.
+			'debug'        => defined( 'WP_DEBUG' ) && WP_DEBUG,
 			// The shared header's global "Search for settings" box queries the
 			// Settings search AJAX (bb_admin_search_settings, nonce action
 			// bb_admin_settings); results deep-link into the Settings page.
-			'ajaxUrl'     => esc_url( admin_url( 'admin-ajax.php' ) ),
-			'searchNonce' => wp_create_nonce( 'bb_admin_settings' ),
-			'settingsUrl' => esc_url( admin_url( 'admin.php?page=bb-settings' ) ),
+			'ajaxUrl'      => esc_url( admin_url( 'admin-ajax.php' ) ),
+			'searchNonce'  => wp_create_nonce( 'bb_admin_settings' ),
+			'settingsUrl'  => esc_url( admin_url( 'admin.php?page=bb-settings' ) ),
 		)
 	);
+
+	// Plugin install/activate state — only for users who can act. Lets the cards
+	// render Install / Activate / Deactivate with no extra requests (the slug is
+	// derived client-side from acf.plugin_link and looked up in this map). Built
+	// fresh each load (never cached) so it always reflects reality after an action.
+	// get_plugins() is cached per-request and is_plugin_active() reads the
+	// autoloaded active_plugins option, so this is cheap and runs only on this page.
+	if ( current_user_can( 'install_plugins' ) || current_user_can( 'activate_plugins' ) ) {
+		if ( ! function_exists( 'get_plugins' ) ) {
+			require_once ABSPATH . 'wp-admin/includes/plugin.php';
+		}
+
+		$installed_plugins = array();
+		foreach ( get_plugins() as $plugin_file => $plugin_data ) {
+			$plugin_slug = dirname( $plugin_file );
+			if ( '.' === $plugin_slug ) {
+				continue; // Single-file plugin (no folder) — not installable by slug.
+			}
+			$installed_plugins[ $plugin_slug ] = array(
+				'file'   => $plugin_file,
+				'active' => is_plugin_active( $plugin_file ),
+			);
+		}
+
+		// Core wp.updates powers the client-side install flow (install-plugin action
+		// + its own nonce + the filesystem-credentials modal).
+		wp_enqueue_script( 'updates' );
+		add_action( 'admin_footer', 'wp_print_request_filesystem_credentials_modal' );
+		add_action( 'admin_footer', 'wp_print_admin_notice_templates' );
+
+		wp_localize_script(
+			'bb-admin-integrations',
+			'bbIntegrationsPlugins',
+			array(
+				'installed'   => $installed_plugins,
+				'canInstall'  => current_user_can( 'install_plugins' ),
+				'canActivate' => current_user_can( 'activate_plugins' ),
+				'nonce'       => wp_create_nonce( 'bb_integrations_plugin' ),
+				'ajaxUrl'     => esc_url( admin_url( 'admin-ajax.php' ) ),
+			)
+		);
+	}
 
 	// Render the React mount, then fire bb_admin_header_actions OUTSIDE the React
 	// tree (inside .wrap) so the Mothership IPN bell renders its root <div> +

@@ -171,6 +171,8 @@ if (buildTarget === 'common') {
 } else if (buildTarget === 'integrations') {
     module.exports = integrationsConfig;
 } else {
-    // Default: export all configurations for combined builds.
-    module.exports = [rlOnboardingConfig, settingsConfig, integrationsConfig, commonConfig];
+    // Default: export all configurations for combined builds. common is listed
+    // before settings/integrations to mirror the package.json build order (they
+    // externalize @bb/admin-common as a runtime dep, so order is cosmetic here).
+    module.exports = [rlOnboardingConfig, commonConfig, settingsConfig, integrationsConfig];
 }

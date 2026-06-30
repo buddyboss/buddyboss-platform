@@ -85,6 +85,7 @@ export function Pagination( { page, totalPages, total, onChange } ) {
 						onClick={ () => onChange( Math.max( 1, page - 1 ) ) }
 						className={ p + '__pagination-btn ' + p + '__pagination-btn--previous' }
 						label={ __( 'Previous page', 'buddyboss' ) }
+						aria-label={ __( 'Previous page', 'buddyboss' ) }
 					>
 						&lsaquo;
 					</Button>
@@ -99,6 +100,7 @@ export function Pagination( { page, totalPages, total, onChange } ) {
 								key={ pageNum }
 								variant={ page === pageNum ? 'primary' : 'secondary' }
 								onClick={ () => onChange( pageNum ) }
+								aria-current={ page === pageNum ? 'page' : undefined }
 								className={ p + '__pagination-btn' + ( page === pageNum ? ' ' + p + '__pagination-btn--current' : '' ) }
 							>
 								{ pageNum }
@@ -112,6 +114,7 @@ export function Pagination( { page, totalPages, total, onChange } ) {
 						onClick={ () => onChange( Math.min( totalPages, page + 1 ) ) }
 						className={ p + '__pagination-btn ' + p + '__pagination-btn--next' }
 						label={ __( 'Next page', 'buddyboss' ) }
+						aria-label={ __( 'Next page', 'buddyboss' ) }
 					>
 						&rsaquo;
 					</Button>

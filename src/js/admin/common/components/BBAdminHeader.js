@@ -11,7 +11,7 @@
  */
 
 import { useEffect, useRef, useState } from '@wordpress/element';
-import { __ } from '@wordpress/i18n';
+import { __, _n, sprintf } from '@wordpress/i18n';
 
 /**
  * Shared admin header component.
@@ -196,6 +196,18 @@ export function BBAdminHeader( {
 									</div>
 								</div>
 							) }
+							{ /* Visually-hidden live region so screen readers hear that results
+							     appeared and how many (the dropdown itself isn't a combobox). */ }
+							<span className="screen-reader-text" aria-live="polite" aria-atomic="true">
+								{ showSearchResults && searchResults.length > 0 &&
+									sprintf(
+										/* translators: %d: number of search results. */
+										_n( '%d result found. Use Tab to navigate.', '%d results found. Use Tab to navigate.', searchResults.length, 'buddyboss' ),
+										searchResults.length
+									) }
+								{ showSearchResults && 0 === searchResults.length && ! isSearching && searchQuery.length >= 2 &&
+									__( 'No settings found.', 'buddyboss' ) }
+							</span>
 						</div>
 					) : (
 						centerSlot
@@ -206,6 +218,7 @@ export function BBAdminHeader( {
 					<span
 						ref={ ipnSlotRef }
 						className="bb-admin-header__ipn-slot"
+						role="region"
 						aria-label={ __( 'Notifications', 'buddyboss' ) }
 					/>
 					{ onHelp && (

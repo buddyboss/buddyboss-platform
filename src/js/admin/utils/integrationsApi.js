@@ -16,6 +16,26 @@
  * @since BuddyBoss [BBVERSION]
  */
 
+// Diagnostic logging is gated on the server's WP_DEBUG flag (localized into
+// bbIntegrationsData.debug) so production consoles stay clean.
+const DEBUG = typeof window !== 'undefined' && !! ( window.bbIntegrationsData && window.bbIntegrationsData.debug );
+
+/**
+ * Log a fetch/cache error, but only when debugging is enabled.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {string} label   Context label.
+ * @param {*}      error   The error to report.
+ * @returns {void}
+ */
+const logError = ( label, error ) => {
+	if ( DEBUG ) {
+		// eslint-disable-next-line no-console
+		console.error( label, ( error && error.message ) || error );
+	}
+};
+
 const HOUR_IN_MILLIS = 60 * 60 * 1000;
 // List + categories: short TTL so newly published integrations surface promptly
 // (bounded further by the 12h server transient). Detail content: longer.
@@ -187,7 +207,7 @@ const proxyFetch = async (path, signal) => {
  * @param {Object} params Listing params.
  * @returns {string} Path-only fragment with encoded query string.
  */
-const buildListPath = ({ page = 1, perPage = 20, search = '', category = 0 } = {}) => {
+const buildListPath = ({ page = 1, perPage = 20, search = '', category = 0, typeLabel = '' } = {}) => {
 	const query = [
 		`page=${encodeURIComponent(page)}`,
 		`per_page=${encodeURIComponent(perPage)}`,
@@ -196,13 +216,18 @@ const buildListPath = ({ page = 1, perPage = 20, search = '', category = 0 } = {
 		// card lights them up automatically once buddyboss.com adds them to the
 		// wp/v2/integrations response (requesting unknown fields is harmless — WP just
 		// omits them). See docs spec "API field contract".
-		'_fields=id,slug,title,short_description,logo_image_url,collection_name,template,integrations_category,integrations_collection,integrations_require,link,link_url,install_url,plugin_url,vendor_name,tier',
+		'_fields=id,slug,title,short_description,logo_image_url,collection_name,template,integrations_category,integrations_collection,integrations_require,link,link_url,install_url,plugin_url,vendor_name,tier,acf',
 	];
 	if (search) {
 		query.push(`search=${encodeURIComponent(search)}`);
 	}
 	if (category) {
 		query.push(`integrations_category=${encodeURIComponent(category)}`);
+	}
+	if (typeLabel) {
+		// Plan filter for the Free/Pro tabs. The API value is the acf type_label
+		// (e.g. "Free" / "Premium"), supplied by the caller.
+		query.push(`type_label=${encodeURIComponent(typeLabel)}`);
 	}
 	return `/wp-json/wp/v2/integrations?${query.join('&')}`;
 };
@@ -242,8 +267,7 @@ export const fetchIntegrations = async (params = {}) => {
 		if (error && error.name === 'AbortError') {
 			throw error;
 		}
-		// eslint-disable-next-line no-console
-		console.error('Error fetching integrations:', error.message || error);
+		logError( 'Error fetching integrations:', error );
 		throw error;
 	}
 };
@@ -274,8 +298,7 @@ export const fetchIntegrationCategories = async (signal) => {
 		if (error && error.name === 'AbortError') {
 			throw error;
 		}
-		// eslint-disable-next-line no-console
-		console.error('Error fetching integration categories:', error.message || error);
+		logError( 'Error fetching integration categories:', error );
 		throw error;
 	}
 };
@@ -294,12 +317,12 @@ export const fetchIntegrationBySlug = async (slug, signal) => {
 	if (!slug || typeof slug !== 'string') {
 		throw new Error('Integration slug is required');
 	}
-	// TEAM CONTRACT (detail): install_url, vendor_name, vendor_url, tier, requires,
-	// recommended, screenshots, support_url are requested so the drawer renders them
-	// automatically once buddyboss.com adds them. Unknown fields are omitted by WP.
+	// Detail fields for the drawer (header + content). acf carries type_label /
+	// plugin_link; class_list carries integrations_require-<slug> for "Works with".
+	// Requesting an unknown field is harmless — WP omits it.
 	const path =
 		`/wp-json/wp/v2/integrations?slug=${encodeURIComponent(slug)}` +
-		'&_fields=id,slug,title,short_description,content,logo_image_url,collection_name,template,integrations_category,integrations_collection,integrations_require,link,link_url,install_url,plugin_url,vendor_name,vendor_url,tier,requires,recommended,screenshots,support_url';
+		'&_fields=id,slug,title,short_description,content,logo_image_url,template,integrations_category,integrations_collection,integrations_require,class_list,link,link_url,acf';
 	const cacheKey = `${CACHE_PREFIX}detail_${slug}`;
 
 	const cached = getFromCache(cacheKey, DETAIL_TTL_MS);
@@ -318,8 +341,7 @@ export const fetchIntegrationBySlug = async (slug, signal) => {
 		if (error && error.name === 'AbortError') {
 			throw error;
 		}
-		// eslint-disable-next-line no-console
-		console.error('Error fetching integration detail:', error.message || error);
+		logError( 'Error fetching integration detail:', error );
 		throw error;
 	}
 };

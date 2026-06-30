@@ -285,3 +285,149 @@
 
 // Knowledge Base modal styles (shared so consumers get the in-app help modal).
 @import 'knowledge_base';
+
+/**
+ * Rendered WP-block content stylesheet for the Integrations drawer.
+ */
+.bb-integrations-drawer__body {
+	--wp--preset--spacing--10: 8px;
+	--wp--preset--spacing--20: 12px;
+	--wp--preset--spacing--25: 12px;
+	--wp--preset--spacing--30: 16px;
+	--wp--preset--spacing--40: 20px;
+	--wp--preset--spacing--50: 28px;
+	--wp--preset--spacing--60: 32px;
+	--wp--preset--spacing--70: 40px;
+	--wp--preset--spacing--80: 48px;
+
+	--wp--preset--font-size--small: 13px;
+	--wp--preset--font-size--medium: 14px;
+	--wp--preset--font-size--large: 16px;
+	--wp--preset--font-size--x-large: 22px;
+	--wp--preset--font-size--h-1: 23px;
+	--wp--preset--font-size--h-2: 20px;
+	--wp--preset--font-size--h-3: 18px;
+	--wp--preset--font-size--h-4: 16px;
+
+	--wp--preset--color--primary: #{$bb-primary-color};
+	--wp--preset--color--base: #fff;
+	--wp--preset--color--contrast: #1d2327;
+	--wp--preset--color--surface: #{$bb-background-primary-color};
+	--wp--preset--color--border: #{$bb-border-color};
+	--wp--preset--color--text-muted: #757575;
+
+	.is-layout-flex {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: 0.8em;
+
+		&.is-nowrap {
+			flex-wrap: nowrap;
+			align-items: flex-start;
+		}
+	}
+
+	.is-content-justification-center { justify-content: center; }
+	.is-content-justification-space-between { justify-content: space-between; }
+	.is-content-justification-right { justify-content: flex-end; }
+
+	.wp-block-columns {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: flex-start;
+		gap: 24px;
+
+		&.are-vertically-aligned-center { align-items: center; }
+	}
+
+	.wp-block-column {
+		flex: 1 1 0%;
+		min-width: 0;
+	}
+
+	> .alignfull {
+		margin-left: -24px;
+		margin-right: -24px;
+		padding-left: 24px;
+		padding-right: 24px;
+	}
+
+	// --- Colour presets, mapped to the admin palette. ---
+	.has-primary-background-color { background-color: var( --wp--preset--color--primary ); }
+	.has-base-background-color { background-color: var( --wp--preset--color--base ); }
+	.has-surface-background-color { background-color: var( --wp--preset--color--surface ); }
+	.has-contrast-background-color { background-color: var( --wp--preset--color--contrast ); }
+
+	.has-base-color { color: var( --wp--preset--color--base ); }
+	.has-base-color :is( p, h1, h2, h3, h4, h5, h6, span, li, strong ) { color: inherit; margin: 0; }
+	.has-base-color a:not( .wp-block-button__link ) { color: inherit; }
+	.has-contrast-color { color: var( --wp--preset--color--contrast ); }
+	.has-primary-color { color: var( --wp--preset--color--primary ); }
+	.has-text-muted-color { color: var( --wp--preset--color--text-muted ); }
+
+	// --- Font-size presets. ---
+	.has-h-1-font-size { font-size: var( --wp--preset--font-size--h-1 ); line-height: 1.25; }
+	.has-h-2-font-size { font-size: var( --wp--preset--font-size--h-2 ); }
+	.has-h-3-font-size { font-size: var( --wp--preset--font-size--h-3 ); }
+	.has-h-4-font-size { font-size: var( --wp--preset--font-size--h-4 ); }
+	.has-large-font-size { font-size: var( --wp--preset--font-size--large ); }
+	.has-medium-font-size { font-size: var( --wp--preset--font-size--medium ); }
+	.has-small-font-size { font-size: var( --wp--preset--font-size--small ); }
+
+	// --- Alignment presets. ---
+	.has-text-align-center { text-align: center; }
+	.has-text-align-right { text-align: right; }
+
+	// --- Buttons (core/buttons + core/button). ---
+	.wp-block-buttons {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 12px;
+		list-style: none;
+		margin: 16px 0 0;
+		padding: 0;
+
+		&.is-content-justification-center { justify-content: center; }
+	}
+
+	.wp-block-button {
+		margin: 0;
+	}
+
+	.wp-block-button__link {
+		display: inline-block;
+		padding: 10px 20px;
+		border-radius: 6px;
+		font-weight: 600;
+		text-decoration: none;
+		line-height: 1.3;
+
+		&:hover {
+			opacity: 0.9;
+		}
+
+		&.has-base-color { color: var( --wp--preset--color--base ); }
+		&.has-primary-color { color: var( --wp--preset--color--primary ); }
+		&.has-contrast-color { color: var( --wp--preset--color--contrast ); }
+	}
+
+	.wp-block-button.is-style-outline .wp-block-button__link {
+		background: transparent;
+		border: 2px solid currentColor;
+	}
+
+	// --- Lists rendered as WP blocks. ---
+	.wp-block-list {
+		padding-left: 1.2em;
+
+		li {
+			margin-bottom: 8px;
+		}
+	}
+
+	// Tighten heading rhythm for the larger preset sizes above.
+	h1, h2, h3, h4 {
+		line-height: 1.3;
+	}
+}

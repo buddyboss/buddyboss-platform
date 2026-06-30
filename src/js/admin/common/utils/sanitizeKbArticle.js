@@ -173,6 +173,11 @@ function safeIframeSrc( src ) {
 		const url = new URL( src );
 		if ( url.protocol !== 'https:' && url.protocol !== 'http:' ) return null;
 		if ( ! isHostInAllowlist( url.hostname, IFRAME_HOST_ALLOWLIST ) ) return null;
+		// Force HTTPS — an http embed on an https admin page is mixed-content
+		// blocked anyway; coerce it to match safeImgSrc.
+		if ( url.protocol === 'http:' ) {
+			url.protocol = 'https:';
+		}
 		return url.toString();
 	} catch ( e ) {
 		return null;
@@ -282,7 +287,7 @@ function sanitizeStyle( style ) {
 		const valLower = val.toLowerCase();
 		if ( /url\s*\(/.test( valLower ) ) return;
 		if ( /expression\s*\(/.test( valLower ) ) return;
-		if ( valLower.indexOf( 'javascript:' ) !== -1 ) return;
+		if ( valLower.includes( 'javascript:' ) ) return;
 		out.push( `${ prop }: ${ val }` );
 	} );
 	return out.join( '; ' );

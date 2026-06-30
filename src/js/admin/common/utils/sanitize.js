@@ -144,7 +144,7 @@ function sanitizeNode(node) {
 		const tagName = child.tagName.toLowerCase();
 
 		// Remove disallowed tags entirely (script, style, iframe, object, embed, etc.)
-		if (!ALLOWED_TAGS.hasOwnProperty(tagName)) {
+		if (!Object.prototype.hasOwnProperty.call(ALLOWED_TAGS, tagName)) {
 			child.remove();
 			continue;
 		}
@@ -168,7 +168,7 @@ function sanitizeNode(node) {
 
 			// Sanitize style attribute to prevent CSS injection.
 			if ('style' === attr.name) {
-				var safe = sanitizeStyle(attr.value);
+				const safe = sanitizeStyle(attr.value);
 				if (safe) {
 					child.setAttribute('style', safe);
 				} else {
@@ -207,31 +207,30 @@ function sanitizeStyle(style) {
 		return '';
 	}
 
-	var safe = [];
-	var declarations = style.split(';');
+	const safe = [];
 
-	for (var i = 0; i < declarations.length; i++) {
-		var decl = declarations[i].trim();
-		if (!decl) {
+	for (const decl of style.split(';')) {
+		const trimmed = decl.trim();
+		if (!trimmed) {
 			continue;
 		}
 
-		var colonIdx = decl.indexOf(':');
+		const colonIdx = trimmed.indexOf(':');
 		if (-1 === colonIdx) {
 			continue;
 		}
 
-		var prop = decl.substring(0, colonIdx).trim().toLowerCase();
-		var val = decl.substring(colonIdx + 1).trim();
+		const prop = trimmed.substring(0, colonIdx).trim().toLowerCase();
+		const val = trimmed.substring(colonIdx + 1).trim();
 
 		// Only allow known-safe CSS properties.
-		if (-1 === ALLOWED_CSS_PROPERTIES.indexOf(prop)) {
+		if (!ALLOWED_CSS_PROPERTIES.includes(prop)) {
 			continue;
 		}
 
 		// Block dangerous CSS values (url(), expression(), javascript:).
-		var valLower = val.toLowerCase();
-		if (/url\s*\(/.test(valLower) || /expression\s*\(/.test(valLower) || valLower.indexOf('javascript:') !== -1) {
+		const valLower = val.toLowerCase();
+		if (/url\s*\(/.test(valLower) || /expression\s*\(/.test(valLower) || valLower.includes('javascript:')) {
 			continue;
 		}
 
@@ -302,14 +301,14 @@ export function safeUrl(url) {
  * @returns {Array} New array with sanitized custom_columns.
  */
 export function sanitizeCustomColumns( items ) {
-	return items.map( function ( item ) {
+	return items.map( ( item ) => {
 		if ( ! item.custom_columns ) {
 			return item;
 		}
-		var sanitizedCols = {};
-		Object.keys( item.custom_columns ).forEach( function ( key ) {
+		const sanitizedCols = {};
+		Object.keys( item.custom_columns ).forEach( ( key ) => {
 			sanitizedCols[ key ] = sanitizeHtml( item.custom_columns[ key ] );
 		} );
-		return Object.assign( {}, item, { custom_columns: sanitizedCols } );
+		return { ...item, custom_columns: sanitizedCols };
 	} );
 }
