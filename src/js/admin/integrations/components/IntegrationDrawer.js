@@ -162,7 +162,11 @@ export function IntegrationDrawer( { slug, initialTitle, plugins, onClose } ) {
 	const worksWith = ( Array.isArray( item?.class_list ) ? item.class_list : [] )
 		.map( ( cls ) => {
 			const match = /^integrations_require-(.+)$/.exec( cls );
-			return match ? requirements[ match[ 1 ] ] : null;
+			// Carry the requirement slug so the render can key on it (a stable,
+			// guaranteed-unique id) rather than the human-readable name.
+			return match && requirements[ match[ 1 ] ]
+				? { slug: match[ 1 ], ...requirements[ match[ 1 ] ] }
+				: null;
 		} )
 		.filter( Boolean );
 
@@ -240,7 +244,7 @@ export function IntegrationDrawer( { slug, initialTitle, plugins, onClose } ) {
 							<div className="bb-integrations-drawer__works-with">
 								<span className="bb-integrations-drawer__works-with-label">{ __( 'Works with:', 'buddyboss' ) }</span>
 								{ worksWith.map( ( req, i ) => (
-									<span key={ req.name } className="bb-integrations-drawer__works-with-item">
+									<span key={ req.slug } className="bb-integrations-drawer__works-with-item">
 										{ i > 0 && (
 											<span className="bb-integrations-drawer__works-with-sep" aria-hidden="true">·</span>
 										) }
