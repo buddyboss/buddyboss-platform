@@ -1078,4 +1078,17 @@
 	.bb-admin-settings-modal__body {
 		padding: 20px 24px 8px;
 	}
+
+	// Hide the native number input spinner arrows on the ticket field only.
+	.bb-admin-add-ticket-modal__input input[type="number"] {
+
+		&::-webkit-outer-spin-button,
+		&::-webkit-inner-spin-button {
+			-webkit-appearance: none;
+			margin: 0;
+		}
+
+		-moz-appearance: textfield;
+		appearance: textfield;
+	}
 }
