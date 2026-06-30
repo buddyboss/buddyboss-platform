@@ -630,7 +630,7 @@ function bbp_get_reply_title_fallback( $post_title = '', $post_id = 0 ) {
  * @uses  bbp_get_reply_content() To get the reply content
  */
 function bbp_reply_content( $reply_id = 0 ) {
-	echo wp_kses_post( bbp_get_reply_content( $reply_id ) );
+	echo bbp_get_reply_content( $reply_id ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 }
 
 /**
@@ -672,7 +672,7 @@ function bbp_get_reply_content( $reply_id = 0 ) {
  * @uses  bbp_get_reply_excerpt() To get the reply excerpt
  */
 function bbp_reply_excerpt( $reply_id = 0, $length = 100 ) {
-	echo wp_kses_post( bbp_get_reply_excerpt( $reply_id, $length ) );
+	echo bbp_get_reply_excerpt( $reply_id, $length ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 }
 
 /**
@@ -803,7 +803,7 @@ function bbp_reply_content_append_revisions( $content = '', $reply_id = 0 ) {
  * @uses  bbp_get_reply_revision_log() To get the reply revision log
  */
 function bbp_reply_revision_log( $reply_id = 0 ) {
-	echo wp_kses_post( bbp_get_reply_revision_log( $reply_id ) );
+	echo bbp_get_reply_revision_log( $reply_id ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 }
 
 /**
@@ -1222,7 +1222,7 @@ function bbp_get_reply_author_display_name( $reply_id = 0, $viewer_user_id = 0 )
  * @uses  bbp_get_reply_author_avatar() To get the reply author id
  */
 function bbp_reply_author_avatar( $reply_id = 0, $size = 40 ) {
-	echo wp_kses_post( bbp_get_reply_author_avatar( $reply_id, $size ) );
+	echo bbp_get_reply_author_avatar( $reply_id, $size ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- bbp_get_reply_author_avatar() is self-escaping.
 }
 
 /**
@@ -1269,7 +1269,7 @@ function bbp_get_reply_author_avatar( $reply_id = 0, $size = 40 ) {
  * @uses  bbp_get_reply_author_link() To get the reply author link
  */
 function bbp_reply_author_link( $args = '' ) {
-	echo wp_kses_post( bbp_get_reply_author_link( $args ) );
+	echo bbp_get_reply_author_link( $args ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- bbp_get_reply_author_link() is self-escaping.
 }
 
 /**
@@ -1507,7 +1507,7 @@ function bbp_get_reply_author_email( $reply_id = 0 ) {
  * @uses  bbp_get_reply_author_role() To get the reply author role
  */
 function bbp_reply_author_role( $args = array() ) {
-	echo wp_kses_post( bbp_get_reply_author_role( $args ) );
+	echo bbp_get_reply_author_role( $args ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 }
 
 /**
@@ -1764,7 +1764,7 @@ function bbp_get_reply_to( $reply_id = 0 ) {
  * @uses  bbp_get_reply_to_link() To get the reply to link
  */
 function bbp_reply_to_link( $args = array() ) {
-	echo wp_kses_post( bbp_get_reply_to_link( $args ) );
+	echo bbp_get_reply_to_link( $args ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 }
 
 /**
@@ -1846,7 +1846,7 @@ function bbp_get_reply_to_link( $args = array() ) {
  * @uses  bbp_get_cancel_reply_to_link() To get the reply cancellation link
  */
 function bbp_cancel_reply_to_link( $text = '' ) {
-	echo wp_kses_post( bbp_get_cancel_reply_to_link( $text ) );
+	echo bbp_get_cancel_reply_to_link( $text ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 }
 
 /**
@@ -1961,7 +1961,7 @@ function bbp_get_reply_position( $reply_id = 0, $topic_id = 0 ) {
  * @uses  bbp_get_reply_admin_links() To get the reply admin links
  */
 function bbp_reply_admin_links( $args = array() ) {
-	echo wp_kses_post( bbp_get_reply_admin_links( $args ) );
+	echo bbp_get_reply_admin_links( $args ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 }
 
 /**
@@ -2075,7 +2075,7 @@ function bbp_get_reply_admin_links( $args = array() ) {
  * @uses  bbp_get_reply_edit_link() To get the reply edit link
  */
 function bbp_reply_edit_link( $args = '' ) {
-	echo wp_kses_post( bbp_get_reply_edit_link( $args ) );
+	echo bbp_get_reply_edit_link( $args ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 }
 
 /**
@@ -2205,7 +2205,7 @@ function bbp_get_reply_edit_url( $reply_id = 0 ) {
  * @uses  bbp_get_reply_trash_link() To get the reply trash link
  */
 function bbp_reply_trash_link( $args = '' ) {
-	echo wp_kses_post( bbp_get_reply_trash_link( $args ) );
+	echo bbp_get_reply_trash_link( $args ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 }
 
 /**
@@ -2333,7 +2333,7 @@ function bbp_get_reply_trash_link( $args = '' ) {
  * @uses  bbp_get_reply_spam_link() To get the reply spam link
  */
 function bbp_reply_spam_link( $args = '' ) {
-	echo wp_kses_post( bbp_get_reply_spam_link( $args ) );
+	echo bbp_get_reply_spam_link( $args ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 }
 
 /**
@@ -2407,7 +2407,7 @@ function bbp_get_reply_spam_link( $args = '' ) {
  * @uses  bbp_get_reply_move_link() To get the reply move link
  */
 function bbp_reply_move_link( $args = '' ) {
-	echo wp_kses_post( bbp_get_reply_move_link( $args ) );
+	echo bbp_get_reply_move_link( $args ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 }
 
 /**
@@ -2484,7 +2484,7 @@ function bbp_get_reply_move_link( $args = '' ) {
  * @uses  bbp_get_topic_split_link() To get the topic split link
  */
 function bbp_topic_split_link( $args = '' ) {
-	echo wp_kses_post( bbp_get_topic_split_link( $args ) );
+	echo bbp_get_topic_split_link( $args ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 }
 
 /**
@@ -2644,7 +2644,7 @@ function bbp_get_topic_pagination_count() {
  * @uses  bbp_get_topic_pagination_links() To get the topic pagination links
  */
 function bbp_topic_pagination_links() {
-	echo wp_kses_post( bbp_get_topic_pagination_links() );
+	echo bbp_get_topic_pagination_links(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 }
 
 /**
@@ -2676,7 +2676,7 @@ function bbp_get_topic_pagination_links() {
  * @uses  bbp_get_form_reply_content() To get value of reply content field
  */
 function bbp_form_reply_content() {
-	echo wp_kses_post( bbp_get_form_reply_content() );
+	echo bbp_get_form_reply_content(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- bbp_get_form_reply_content() returns an esc_attr'd value.
 }
 
 /**

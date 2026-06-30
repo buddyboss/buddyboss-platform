@@ -3485,7 +3485,7 @@ function bbp_get_forum_pagination_count() {
  * @uses  bbp_get_forum_pagination_links() To get the pagination links
  */
 function bbp_forum_pagination_links() {
-	echo wp_kses_post( bbp_get_forum_pagination_links() );
+	echo bbp_get_forum_pagination_links(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- bbp_forum_pagination_links() itself echoes esc_attr()'d output and returns void.
 }
 
 /**
@@ -3571,7 +3571,7 @@ function bbp_topic_notices() {
  *
  */
 function bbp_topic_type_select( $args = '' ) {
-	echo wp_kses_post( bbp_get_form_topic_type_dropdown( $args ) );
+	echo bbp_get_form_topic_type_dropdown( $args );
 }
 
 /**
@@ -3586,7 +3586,7 @@ function bbp_topic_type_select( $args = '' ) {
  *              - selected: Override the selected option
  */
 function bbp_form_topic_type_dropdown( $args = '' ) {
-	echo wp_kses_post( bbp_get_form_topic_type_dropdown( $args ) );
+	echo bbp_get_form_topic_type_dropdown( $args ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 }
 
 /**
