@@ -351,8 +351,8 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 
 						// Added user when visibility matched.
 						if ( ! empty( $user_ids ) ) {
-							$user_ids       = array_unique( $user_ids );
-							$where_fields[] = "u.id IN ( " . implode( ',', $user_ids ) . " )" . ( $member_type_sql ? ' AND ' . $member_type_sql : '' );
+							$user_ids       = array_unique( array_map( 'intval', $user_ids ) );
+							$where_fields[] = 'u.id IN ( ' . implode( ',', $user_ids ) . ' )' . ( $member_type_sql ? ' AND ' . $member_type_sql : '' );
 						} else {
 							$where_fields[] = "u.id = 0". ( $member_type_sql ? ' AND ' . $member_type_sql : '' );
 						}
