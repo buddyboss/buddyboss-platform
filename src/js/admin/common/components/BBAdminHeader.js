@@ -134,12 +134,23 @@ export function BBAdminHeader( {
 	};
 
 	// Escape dismisses the results dropdown (keyboard-only users otherwise have no
-	// way to close it). Clearing the query reuses the < 2 chars hide logic and
-	// keeps focus in the input.
+	// way to close it). Clearing the query reuses the < 2 chars hide logic.
+	//
+	// The handler is attached to the search container (not the input) so the
+	// bubbled keydown is caught whether focus is on the input OR on a focused
+	// result button (Tabbing into the popup moves focus off the input). After
+	// closing, focus is returned to the input — required because hiding the
+	// results unmounts the focused button, which would otherwise drop focus to
+	// <body>. This satisfies the ARIA combobox "Escape returns focus to the
+	// textbox" contract.
 	const handleSearchKeyDown = useCallback( ( e ) => {
 		if ( 'Escape' === e.key ) {
 			setSearchQuery( '' );
 			setShowSearchResults( false );
+			const input = searchRef.current && searchRef.current.querySelector( '.bb-admin-header__search-input' );
+			if ( input ) {
+				input.focus();
+			}
 		}
 	}, [] );
 
@@ -160,13 +171,12 @@ export function BBAdminHeader( {
 
 				<div className="bb-admin-header__center">
 					{ onSearch ? (
-						<div className="bb-admin-header__search" ref={ searchRef }>
+						<div className="bb-admin-header__search" ref={ searchRef } onKeyDown={ handleSearchKeyDown }>
 							<div className="bb-admin-header__search-wrapper">
 								<input
 									type="text"
 									value={ searchQuery }
 									onChange={ ( e ) => setSearchQuery( e.target.value ) }
-									onKeyDown={ handleSearchKeyDown }
 									placeholder={ placeholder }
 									aria-label={ placeholder }
 									className="bb-admin-header__search-input"

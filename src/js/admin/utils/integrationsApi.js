@@ -127,9 +127,10 @@ const saveToCache = (cacheKey, data) => {
  * Resolve the same-origin proxy URL.
  *
  * Reads `bbIntegrationsData.apiUrl` (set via wp_localize_script to
- * `rest_url( 'buddyboss/v1/' )`). Falls back to the WP-Admin REST root; the
- * controller registers under both `buddyboss/v1` and `bb/v1`, so the fallback
- * still resolves on platform-only installs.
+ * `rest_url( 'buddyboss/v1/' )`). Falls back to `/wp-json/buddyboss/v1/` — the
+ * single namespace the controller registers under (`bp_rest_namespace()` /
+ * `bp_rest_version()`, or that literal when those helpers are absent) — so the
+ * fallback still resolves on platform-only installs.
  *
  * @since BuddyBoss [BBVERSION]
  *
@@ -245,10 +246,17 @@ export const fetchIntegrations = async (params = {}) => {
 	const { signal, ...listParams } = params;
 	const path = buildListPath(listParams);
 	const cacheKey = `${CACHE_PREFIX}list_${path}`;
+	// Free-text searches are effectively unbounded in key-space — caching each
+	// one would grow localStorage until the quota trips. Skip the client cache
+	// for searches and lean on the proxy's short-TTL server transient instead;
+	// only the stable list/filter views get a localStorage entry.
+	const cacheable = ! listParams.search;
 
-	const cached = getFromCache(cacheKey, LIST_TTL_MS);
-	if (cached) {
-		return cached;
+	if (cacheable) {
+		const cached = getFromCache(cacheKey, LIST_TTL_MS);
+		if (cached) {
+			return cached;
+		}
 	}
 
 	try {
@@ -260,7 +268,9 @@ export const fetchIntegrations = async (params = {}) => {
 			total: parseInt(headers['x-wp-total'], 10) || items.length,
 			totalPages: parseInt(headers['x-wp-totalpages'], 10) || 1,
 		};
-		saveToCache(cacheKey, result);
+		if (cacheable) {
+			saveToCache(cacheKey, result);
+		}
 		return result;
 	} catch (error) {
 		// Abort is an expected cancellation, not an error to surface.

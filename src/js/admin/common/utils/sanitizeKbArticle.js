@@ -60,6 +60,12 @@ const DENYLIST_TAGS = new Set( [
 	'meta', 'base',
 	// Form controls — KB content is read-only.
 	'form', 'input', 'button', 'select', 'textarea', 'option', 'fieldset', 'legend',
+	// Foreign-content (SVG / MathML) roots. These are NOT in the allowlist, so
+	// without an explicit entry here they'd hit the "unwrap" branch below and
+	// have their children promoted into the surrounding HTML namespace — the
+	// classic namespace-confusion mutation-XSS setup. Remove them (subtree and
+	// all) instead; KB articles render their glyphs as <img>, not inline SVG.
+	'svg', 'math', 'foreignobject',
 ] );
 
 const ALLOWED_ATTRS = {
