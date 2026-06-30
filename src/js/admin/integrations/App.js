@@ -221,6 +221,7 @@ function AppInner() {
 		const nextIndex = 'ArrowRight' === e.key
 			? Math.min( tabs.length - 1, index + 1 )
 			: Math.max( 0, index - 1 );
+		e.preventDefault(); // APG tabs pattern — suppress any native arrow-key behavior.
 		tabs[ nextIndex ].focus();
 	}, [] );
 
