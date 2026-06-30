@@ -104,11 +104,17 @@ function bb_admin_integrations_page() {
 		true
 	);
 
-	// Resolve the LTR admin CSS path (RTL is auto-derived). The integrations
-	// build nests CSS under /styles/, matching the settings target layout.
+	// Resolve the admin CSS path. Unlike the Settings build (Grunt emits .min +
+	// RTL variants), the integrations SCSS step emits a single, already-compressed
+	// styles/admin.css. So prefer the $min-suffixed name if it exists, but fall
+	// back to the plain admin.css — otherwise on production (SCRIPT_DEBUG off,
+	// $min === '.min') the page would look for a non-existent admin.min.css and
+	// load with no styles at all.
 	$css_candidates = array(
 		"/styles/admin{$min}.css",
+		'/styles/admin.css',
 		"/admin{$min}.css",
+		'/admin.css',
 	);
 	foreach ( $css_candidates as $css_rel ) {
 		$css_file = $build_dir . $css_rel;
@@ -116,7 +122,10 @@ function bb_admin_integrations_page() {
 			$css_url = str_replace( buddypress()->plugin_dir, buddypress()->plugin_url, $css_file );
 			wp_register_style( 'bb-admin-integrations', $css_url, array( 'wp-components' ), $asset['version'] );
 			wp_style_add_data( 'bb-admin-integrations', 'rtl', 'replace' );
-			if ( $min ) {
+			// Only advertise the .min suffix when we actually matched a minified
+			// file, so WP's RTL 'replace' doesn't derive a -rtl.min.css that the
+			// integrations build never produces.
+			if ( $min && false !== strpos( $css_rel, $min . '.css' ) ) {
 				wp_style_add_data( 'bb-admin-integrations', 'suffix', $min );
 			}
 			wp_enqueue_style( 'bb-admin-integrations' );
