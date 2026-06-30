@@ -370,12 +370,15 @@ class BB_REST_Integrations_Endpoint extends WP_REST_Controller {
 		/**
 		 * Filter the allowed upstream path prefixes for the integrations proxy.
 		 *
-		 * Each entry is matched against the start of the client-supplied path.
-		 * The defaults cover the public Integrations directory surface
-		 * (`integrations`, `integrations_category`, `integrations_collection`),
-		 * all of which share the `/wp-json/wp/v2/integrations` prefix. Anything
-		 * outside the allowlist is rejected so the proxy cannot be used to fetch
-		 * arbitrary buddyboss.com URLs.
+		 * Each entry is matched against the start of the client-supplied path and
+		 * must be followed by a path-segment boundary (`/`, `?`, or end). The
+		 * defaults enumerate the public Integrations directory surface — the
+		 * `integrations` post type plus its `integrations_category` /
+		 * `integrations_collection` taxonomies. They are listed individually (not
+		 * relied on as a single `integrations` substring) so the boundary check
+		 * still rejects look-alikes like `integrationsEVIL`. Anything outside the
+		 * allowlist is rejected so the proxy cannot fetch arbitrary buddyboss.com
+		 * URLs.
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
@@ -383,7 +386,11 @@ class BB_REST_Integrations_Endpoint extends WP_REST_Controller {
 		 */
 		$allowed_prefixes = apply_filters(
 			'bb_integrations_allowed_path_prefixes',
-			array( '/wp-json/wp/v2/integrations' )
+			array(
+				'/wp-json/wp/v2/integrations',
+				'/wp-json/wp/v2/integrations_category',
+				'/wp-json/wp/v2/integrations_collection',
+			)
 		);
 
 		$allowed = false;
