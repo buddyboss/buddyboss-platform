@@ -10,7 +10,7 @@
  * @since BuddyBoss [BBVERSION]
  */
 
-import { useEffect, useRef, useState } from '@wordpress/element';
+import { useCallback, useEffect, useRef, useState } from '@wordpress/element';
 import { __, _n, sprintf } from '@wordpress/i18n';
 
 /**
@@ -133,6 +133,16 @@ export function BBAdminHeader( {
 		setShowSearchResults( false );
 	};
 
+	// Escape dismisses the results dropdown (keyboard-only users otherwise have no
+	// way to close it). Clearing the query reuses the < 2 chars hide logic and
+	// keeps focus in the input.
+	const handleSearchKeyDown = useCallback( ( e ) => {
+		if ( 'Escape' === e.key ) {
+			setSearchQuery( '' );
+			setShowSearchResults( false );
+		}
+	}, [] );
+
 	const placeholder = searchPlaceholder || __( 'Search for settings…', 'buddyboss' );
 
 	return (
@@ -156,6 +166,7 @@ export function BBAdminHeader( {
 									type="text"
 									value={ searchQuery }
 									onChange={ ( e ) => setSearchQuery( e.target.value ) }
+									onKeyDown={ handleSearchKeyDown }
 									placeholder={ placeholder }
 									aria-label={ placeholder }
 									className="bb-admin-header__search-input"
