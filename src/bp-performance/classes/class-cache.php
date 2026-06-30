@@ -394,10 +394,15 @@ class Cache {
 	/**
 	 * Purge cache by Component for setting screen
 	 *
-	 * @param array $component Array of components.
+	 * @param string $component Component cache-group prefix to purge (e.g. 'bp-activity').
 	 */
-	public function purge_by_component( $component = array() ) {
+	public function purge_by_component( $component = '' ) {
 		global $wpdb;
+
+		// Bail on an empty component so we never build a "LIKE '%%'" that wipes the whole table.
+		if ( '' === (string) $component ) {
+			return;
+		}
 
 		$like = '%' . $wpdb->esc_like( $component ) . '%';
 
