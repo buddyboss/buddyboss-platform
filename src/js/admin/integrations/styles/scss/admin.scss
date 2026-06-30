@@ -396,6 +396,30 @@ body.buddyboss_page_bb-integrations {
 		text-align: center;
 		color: #50575e;
 	}
+
+	@media screen and (max-width: 768px) {
+
+		&__controls,
+		&__tabs {
+			width: 100%;
+			justify-content: center;
+		}
+	}
+
+	@media screen and (max-width: 560px) {
+
+		&__controls{
+			flex-direction: column;
+		}
+
+		&__search-wrap,
+		&__category {
+
+			.bb-integrations & {
+				max-width: initial;
+			}
+		}
+	}
 }
 
 // Numbered page buttons + ellipsis, shared with the Settings 2.0 list screens.
