@@ -58,6 +58,19 @@ var OFFLOAD_EXTENSIONS = [ 'png', 'jpg', 'jpeg', 'gif', 'svg', 'webp', 'ico', 'b
 var OFFLOAD_EXCLUDED_TOP_LEVEL = [ 'vendor', 'node_modules' ];
 
 /**
+ * Webpack-emitted bundle image dirs (admin React apps live under
+ * `.../build/images/`) that must NOT be offloaded. Their URLs are assembled
+ * inside the JS bundle from webpack's runtime public path — a reference neither
+ * the PHP HTML rewriter nor the CSS `url()` rewriter can ever reach — so they
+ * cannot be served from S3. They ship in the zip instead (re-included by the
+ * Gruntfile S3_OFFLOAD_KEEP_GLOBS), and are excluded here so the debug manifest
+ * reflects what is actually stripped.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+var OFFLOAD_KEPT_PATH_RE = /(^|\/)build\/images\//;
+
+/**
  * Recursively walk a directory and return every regular file's path,
  * relative to the starting directory. Symlinks are not followed (to
  * avoid loops in misconfigured build trees).
@@ -221,6 +234,12 @@ function findOffloadedAssets( rootDir ) {
 		var firstSlash = rel.indexOf( '/' );
 		var topSegment = firstSlash === -1 ? rel : rel.substring( 0, firstSlash );
 		if ( OFFLOAD_EXCLUDED_TOP_LEVEL.indexOf( topSegment ) !== -1 ) {
+			continue;
+		}
+
+		// Webpack bundle images ship in the zip (not offloaded) — skip them so
+		// the manifest matches what is actually stripped.
+		if ( OFFLOAD_KEPT_PATH_RE.test( rel ) ) {
 			continue;
 		}
 
