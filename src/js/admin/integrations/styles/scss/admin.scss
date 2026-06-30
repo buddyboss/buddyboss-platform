@@ -567,8 +567,7 @@ body.buddyboss_page_bb-integrations {
 	}
 
 	&__works-with-label {
-		font-weight: 600;
-		color: $bb-text-color;
+		color: $bb-text-secondary-color;
 	}
 
 	&__works-with-item {
@@ -578,10 +577,15 @@ body.buddyboss_page_bb-integrations {
 	}
 
 	&__works-with-sep {
-		color: $bb-text-tertiary-color;
+		height: 6px;
+		width: 6px;
+		background-color: $bb-background-tertiary-color;
+		border-radius: $bb-border-radius-full;
+		font-size: 0;
 	}
 
 	&__works-with-name {
+		font-weight: 500;
 		color: $bb-text-color;
 	}
 
@@ -596,15 +600,16 @@ body.buddyboss_page_bb-integrations {
 
 		i {
 			font-size: 11px;
+			font-weight: 400;
 			line-height: 1;
 		}
 
 		&--yes {
-			background: #46b450;
+			background: $bb-icon-positive-primary-color;
 		}
 
 		&--no {
-			background: #dc3232;
+			background: $bb-icon-danger-secondary-color;
 		}
 	}
 
