@@ -913,6 +913,20 @@ module.exports = function (grunt) {
 		'**/*.woff2'
 	];
 
+	// Image dirs that must be KEPT in the zip despite matching the strip globs
+	// above. Webpack-emitted bundle images (admin React apps live under
+	// `.../build/images/`) are referenced inside the JS bundle via webpack's
+	// runtime public path — a URL neither the PHP HTML rewriter nor the CSS
+	// `url()` rewriter can reach — so they cannot be served from S3 and would
+	// 404 if stripped. Re-included AFTER the strip globs in the compress file
+	// list so these patterns win (minimatch: last match decides). Kept in
+	// lockstep with the pair-finder's OFFLOAD_KEPT_PATH_RE.
+	//
+	// @since BuddyBoss [BBVERSION]
+	var S3_OFFLOAD_KEEP_GLOBS = [
+		'**/build/images/**'
+	];
+
 	// Enable the paid-component strip for the current task run. Inserted into
 	// `build_test` before `configure_compress_exclusions` so only the test zip
 	// drops bp-video / bp-document.
@@ -1045,12 +1059,21 @@ module.exports = function (grunt) {
 			return '!' + BUILD_DIR + g;
 		} );
 
+		// Re-include (no leading '!') the webpack bundle images that the blanket
+		// image strip above would otherwise drop. Appended LAST so they override
+		// the strip — these images ship in the zip and load locally because their
+		// JS-built URLs can't be rewritten to S3. @since BuddyBoss [BBVERSION]
+		var s3OffloadKeepIncludes = S3_OFFLOAD_KEEP_GLOBS.map( function ( g ) {
+			return BUILD_DIR + g;
+		} );
+
 		var allExclusions = pairExclusions
 			.concat( fontExclusions )
 			.concat( translationExclusions )
 			.concat( devSourceExclusions )
 			.concat( paidComponentExclusions )
-			.concat( s3OffloadExclusions );
+			.concat( s3OffloadExclusions )
+			.concat( s3OffloadKeepIncludes );
 
 		grunt.config.set( 'compress.main.files', [ {
 			src:  [ BUILD_DIR + '**' ].concat( allExclusions ),
@@ -1063,7 +1086,8 @@ module.exports = function (grunt) {
 			+ TRANSLATION_STRIP_GLOBS.length + ' translation globs + '
 			+ DEV_SOURCE_STRIP_GLOBS.length + ' dev-source globs + '
 			+ paidComponentExclusions.length + ' paid-component globs + '
-			+ s3OffloadExclusions.length + ' S3-offload globs (images + woff2) from zip.'
+			+ s3OffloadExclusions.length + ' S3-offload globs (images + woff2) from zip; '
+			+ 're-included ' + s3OffloadKeepIncludes.length + ' webpack build-image keep-globs.'
 		);
 	} );
 
