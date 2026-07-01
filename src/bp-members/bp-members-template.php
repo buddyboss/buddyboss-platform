@@ -600,7 +600,7 @@ function bp_get_member_user_id() {
  * @param array $classes Array of custom classes.
  */
 function bp_member_class( $classes = array() ) {
-	echo bp_get_member_class( $classes ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- bp_get_member_class() returns escaped class="..." markup.
+	echo bp_get_member_class( $classes ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- bp_get_member_class returns class="..." attribute markup; esc_attr would corrupt it.
 }
 	/**
 	 * Return the row class of the current member in the loop.
