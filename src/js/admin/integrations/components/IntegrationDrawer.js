@@ -153,28 +153,34 @@ export function IntegrationDrawer( { slug, initialTitle, plugins, onClose } ) {
 	// "Learn More ↗" → the integration's site URL (acf.integration_site_url).
 	const learnMoreUrl = item?.acf?.integration_site_url || '';
 
-	// "Works with" — acf.works_with is a { slug: bool } map declaring the platforms
-	// this integration is compatible with (✓/✗ comes straight from the API, same
-	// for every site). Names come from the localized requirements map (falling back
-	// to the slug). An array shape (only-checked slugs) is still handled as all-✓.
-	const requirements = ( typeof window !== 'undefined' && window.bbIntegrationsData && window.bbIntegrationsData.requirements ) || {};
+	// "Works with" — acf.works_with is a { slug: { name, met } } map built entirely
+	// from the integration's ACF "works_with" checkbox: `name` is the choice label,
+	// `met` is whether that platform is checked for this integration. Both come from
+	// the API, so adding / renaming a choice needs no client change. Older cached
+	// responses may still use the flat { slug: bool } shape (or an array of checked
+	// slugs) — handle those too, humanizing the slug when no label is available.
+	const slugToLabel = ( value ) =>
+		String( value ).replace( /[-_]+/g, ' ' ).replace( /\b\w/g, ( c ) => c.toUpperCase() );
+	// Explicit truthy check — ACF can serialize a false boolean as the string "0",
+	// which is falsy in JS but would slip past a loose cast.
+	const isMet = ( v ) => true === v || 1 === v || '1' === v;
 	const worksWithRaw = item?.acf?.works_with;
-	const worksWith = ( worksWithRaw && 'object' === typeof worksWithRaw && ! Array.isArray( worksWithRaw ) )
-		? Object.keys( worksWithRaw ).map( ( slug ) => ( {
-			slug: slug,
-			name: ( requirements[ slug ] && requirements[ slug ].name ) || slug,
-			// Explicit truthy check — ACF can serialize a false boolean as the
-			// string "0", which is falsy in JS but would slip past a loose cast.
-			met: true === worksWithRaw[ slug ] || 1 === worksWithRaw[ slug ] || '1' === worksWithRaw[ slug ],
-		} ) )
-		: ( Array.isArray( worksWithRaw ) ? worksWithRaw : [] )
+	let worksWith = [];
+	if ( worksWithRaw && 'object' === typeof worksWithRaw && ! Array.isArray( worksWithRaw ) ) {
+		worksWith = Object.keys( worksWithRaw ).map( ( wSlug ) => {
+			const entry = worksWithRaw[ wSlug ];
+			// New shape: { name, met }. Legacy shape: a bare boolean.
+			return entry && 'object' === typeof entry
+				? { slug: wSlug, name: entry.name || slugToLabel( wSlug ), met: isMet( entry.met ) }
+				: { slug: wSlug, name: slugToLabel( wSlug ), met: isMet( entry ) };
+		} );
+	} else if ( Array.isArray( worksWithRaw ) ) {
+		// Legacy array of checked slugs — every listed slug is compatible.
+		worksWith = worksWithRaw
 			.map( ( entry ) => ( 'string' === typeof entry ? entry : ( entry && ( entry.slug || entry.value ) ) || '' ) )
 			.filter( Boolean )
-			.map( ( slug ) => ( {
-				slug: slug,
-				name: ( requirements[ slug ] && requirements[ slug ].name ) || slug,
-				met: true,
-			} ) );
+			.map( ( wSlug ) => ( { slug: wSlug, name: slugToLabel( wSlug ), met: true } ) );
+	}
 
 	return (
 		<div className="bb-integrations-drawer" role="dialog" aria-modal="true" aria-label={ headerName || __( 'Integration details', 'buddyboss' ) }>
@@ -245,7 +251,7 @@ export function IntegrationDrawer( { slug, initialTitle, plugins, onClose } ) {
 							</div>
 						</div>
 
-						{ /* "Works with" compatibility — shown whenever requirements exist. */ }
+						{ /* "Works with" compatibility — shown whenever the API returns works_with entries. */ }
 						{ worksWith.length > 0 && (
 							<div className="bb-integrations-drawer__works-with">
 								<span className="bb-integrations-drawer__works-with-label">{ __( 'Works with:', 'buddyboss' ) }</span>
