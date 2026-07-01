@@ -42,17 +42,29 @@ defined( 'ABSPATH' ) || exit;
 										</a>
 									</div>
 
+									<?php
+									// Only offer the video/document attach buttons when their component is
+									// active and video/document support is enabled for at least one context.
+									// This modal is a generic shell, so both profile and group support are checked.
+									if ( bp_is_active( 'video' ) && ( bp_is_profile_video_support_enabled() || bp_is_group_video_support_enabled() ) ) {
+										?>
 									<div class="post-elements-buttons-item post-video video-support">
 										<a href="#" class="toolbar-button bp-tooltip ac-reply-video-button" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Attach video', 'buddyboss-platform' ); ?>" data-ac-id="536" aria-label="<?php esc_attr_e( 'Attach video', 'buddyboss-platform' ); ?>">
 											<i class="bb-icon-l bb-icon-video"></i>
 										</a>
 									</div>
-
+										<?php
+									}
+									if ( bp_is_active( 'document' ) && ( bp_is_profile_document_support_enabled() || bp_is_group_document_support_enabled() ) ) {
+										?>
 									<div class="post-elements-buttons-item post-media document-support">
 										<a href="#" class="toolbar-button bp-tooltip ac-reply-document-button" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Attach document', 'buddyboss-platform' ); ?>" data-ac-id="536" aria-label="<?php esc_attr_e( 'Attach document', 'buddyboss-platform' ); ?>">
 											<i class="bb-icon-l bb-icon-attach"></i>
 										</a>
 									</div>
+										<?php
+									}
+									?>
 
 									<div class="post-elements-buttons-item post-gif">
 										<div class="gif-media-search">

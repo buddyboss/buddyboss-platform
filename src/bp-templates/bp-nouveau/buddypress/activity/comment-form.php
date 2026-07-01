@@ -49,16 +49,27 @@ $activity_id = bp_get_activity_id();
 								</a>
 							</div>
 
-							<div class="post-elements-buttons-item post-video video-support">
-								<a href="#" id="ac-reply-video-button-<?php echo esc_attr( $activity_id ); ?>" class="toolbar-button bp-tooltip ac-reply-video-button" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Attach video', 'buddyboss-platform' ); ?>" data-ac-id="<?php echo esc_attr( $activity_id ); ?>" aria-label="<?php esc_attr_e( 'Attach video', 'buddyboss-platform' ); ?>">
-									<i class="bb-icon-l bb-icon-video"></i>
-								</a>
-							</div>
-							<div class="post-elements-buttons-item post-media document-support">
-								<a href="#" id="ac-reply-document-button-<?php echo esc_attr( $activity_id ); ?>" class="toolbar-button bp-tooltip ac-reply-document-button" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Attach document', 'buddyboss-platform' ); ?>" data-ac-id="<?php echo esc_attr( $activity_id ); ?>" aria-label="<?php esc_attr_e( 'Attach document', 'buddyboss-platform' ); ?>">
+							<?php
+							// Video/document attach buttons must respect their own component being
+							// active (not just media) and the profile/group video support setting for
+							// the activity being commented on. Otherwise these buttons appear even when
+							// the Video/Document component is disabled.
+							$ac_is_group_activity = ( isset( $activities_template->activity->component ) && 'groups' === $activities_template->activity->component );
+							if ( bp_is_active( 'video' ) && ( $ac_is_group_activity ? bp_is_group_video_support_enabled() : bp_is_profile_video_support_enabled() ) ) :
+								?>
+								<div class="post-elements-buttons-item post-video video-support">
+									<a href="#" id="ac-reply-video-button-<?php echo esc_attr( $activity_id ); ?>" class="toolbar-button bp-tooltip ac-reply-video-button" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Attach video', 'buddyboss-platform' ); ?>" data-ac-id="<?php echo esc_attr( $activity_id ); ?>" aria-label="<?php esc_attr_e( 'Attach video', 'buddyboss-platform' ); ?>">
+										<i class="bb-icon-l bb-icon-video"></i>
+									</a>
+								</div>
+							<?php endif; ?>
+							<?php if ( bp_is_active( 'document' ) && ( $ac_is_group_activity ? bp_is_group_document_support_enabled() : bp_is_profile_document_support_enabled() ) ) : ?>
+								<div class="post-elements-buttons-item post-media document-support">
+									<a href="#" id="ac-reply-document-button-<?php echo esc_attr( $activity_id ); ?>" class="toolbar-button bp-tooltip ac-reply-document-button" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Attach document', 'buddyboss-platform' ); ?>" data-ac-id="<?php echo esc_attr( $activity_id ); ?>" aria-label="<?php esc_attr_e( 'Attach document', 'buddyboss-platform' ); ?>">
 									<i class="bb-icon-l bb-icon-attach"></i>
-								</a>
-							</div>
+									</a>
+								</div>
+							<?php endif; ?>
 
 							<div class="post-elements-buttons-item post-gif">
 								<div class="gif-media-search">
