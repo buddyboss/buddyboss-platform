@@ -129,6 +129,24 @@ function bb_admin_settings_page() {
 		}
 	}
 
+	// The Forums admin (create/edit forum modals) renders a custom featured-image
+	// Media Library picker that is NOT a registered field, so the registry scan
+	// above does not flag it. Force the media library when the forums meta
+	// component is registered so the picker has wp.media available without
+	// relying on another feature (e.g. appearance) happening to enqueue it.
+	//
+	// Note (tech debt): this proxies on "forums has any registered meta fields",
+	// not specifically on the feature-image picker. Today the picker always ships
+	// in the forum modals, so the proxy is accurate; but if forums ever registers
+	// non-image meta fields without an image picker, this becomes a harmless
+	// false positive (wp.media enqueued unnecessarily). If that happens, switch
+	// to a dedicated flag or check the field types here.
+	if ( ! $has_media_field && function_exists( 'bb_admin_meta_field_registry' ) ) {
+		if ( ! empty( bb_admin_meta_field_registry()->get_fields( 'forums' ) ) ) {
+			$has_media_field = true;
+		}
+	}
+
 	if ( $has_rich_text ) {
 		wp_enqueue_editor();
 	}
