@@ -924,7 +924,19 @@ module.exports = function (grunt) {
 	//
 	// @since BuddyBoss [BBVERSION]
 	var S3_OFFLOAD_KEEP_GLOBS = [
-		'**/build/images/**'
+		'**/build/images/**',
+
+		// Images read as LOCAL files by server-side PHP/GD (never emitted as a URL,
+		// so neither the HTML nor CSS rewriter can point them at S3). They must ship
+		// in the zip or the consuming feature silently fails on stripped builds:
+		//   - bp-core/images/blank.png: base canvas loaded via wp_get_image_editor()
+		//     in bb_generate_default_avatar() to render "Display Name" letter avatars.
+		//     Stripped -> WP_Error -> generation falls back to the default avatar.
+		//   - bp-core/images/suspended-mystery-man.jpg: read via file_get_contents()
+		//     in bb_core_upload_dummy_attachment().
+		// Kept in lockstep with the pair-finder's OFFLOAD_KEPT_PATH_RE.
+		'bp-core/images/blank.png',
+		'bp-core/images/suspended-mystery-man.jpg'
 	];
 
 	// Enable the paid-component strip for the current task run. Inserted into
