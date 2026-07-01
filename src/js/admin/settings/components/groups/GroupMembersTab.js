@@ -694,6 +694,52 @@ export function GroupMembersTab( { groupId, setNotice, saveRef } ) {
 		return result;
 	}, [ roleMembers, pendingRemoves, pendingRoleChanges, pendingAdds ] );
 
+	// Effective per-role total after pending changes. roleTotals is the raw server
+	// count, which still counts a member who has been moved out of a section (or
+	// removed) in this unsaved session — that's why an emptied section kept showing
+	// an empty bordered container. This adjusts the count so a section that pending
+	// changes have emptied collapses, while a large multi-page section (whose
+	// current page happens to be empty) still renders + paginates.
+	var effectiveRoleTotals = useMemo( function () {
+		var byId = {};
+		Object.keys( roleMembers ).forEach( function ( rk ) {
+			( roleMembers[ rk ] || [] ).forEach( function ( m ) {
+				byId[ m.user_id ] = m;
+			} );
+		} );
+
+		var totals = {};
+		roleSections.forEach( function ( section ) {
+			var total = roleTotals[ section.key ] || 0;
+
+			Object.keys( pendingRoleChanges ).forEach( function ( uid ) {
+				var orig = byId[ uid ] ? byId[ uid ].role : null;
+				var next = pendingRoleChanges[ uid ];
+				if ( orig === section.key && next !== section.key ) {
+					total -= 1; // moved out of this section
+				} else if ( orig !== section.key && next === section.key ) {
+					total += 1; // moved into this section
+				}
+			} );
+
+			pendingRemoves.forEach( function ( uid ) {
+				if ( byId[ uid ] && byId[ uid ].role === section.key ) {
+					total -= 1;
+				}
+			} );
+
+			pendingAdds.forEach( function ( user ) {
+				if ( ( user.role || 'member' ) === section.key ) {
+					total += 1;
+				}
+			} );
+
+			totals[ section.key ] = Math.max( 0, total );
+		} );
+
+		return totals;
+	}, [ roleMembers, roleTotals, pendingRoleChanges, pendingRemoves, pendingAdds ] );
+
 	/**
 	 * Server-side counts per role (used in the role-filter dropdown labels:
 	 * "All (23)", "Organizer (1)", etc.). Sourced from `roleTotals` so the
@@ -1182,6 +1228,10 @@ export function GroupMembersTab( { groupId, setNotice, saveRef } ) {
 						var rendered = visibleSections.map( function ( section ) {
 							var displayMembers = displayMembersByRole[ section.key ] || [];
 							var sectionTotal = roleTotals[ section.key ] || 0;
+							// Pending-adjusted total: used to decide whether an emptied
+							// section should collapse (roleTotals still counts moved-out
+							// members until save).
+							var sectionEffectiveTotal = effectiveRoleTotals[ section.key ] || 0;
 							var sectionIsLoading = roleLoading[ section.key ];
 
 							// Server returned only matching members when a search was active;
@@ -1198,7 +1248,7 @@ export function GroupMembersTab( { groupId, setNotice, saveRef } ) {
 							// active. Under an active search we silently omit
 							// zero-match sections so the matched section sits
 							// flush at the top.
-							if ( 0 === filteredMembers.length && 0 === sectionTotal && ! sectionIsLoading ) {
+							if ( 0 === filteredMembers.length && 0 === sectionEffectiveTotal && ! sectionIsLoading ) {
 								return null;
 							}
 							if ( 0 === filteredMembers.length && normalizedMemberFilter ) {
