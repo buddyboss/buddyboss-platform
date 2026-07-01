@@ -307,7 +307,7 @@ export function GroupMembersTab( { groupId, setNotice, saveRef } ) {
 			// had the same net effect.
 			var operations = [];
 
-			// Phase 1a — adds (add as member, then promote if a higher role was chosen).
+			// Adds (add as member, then promote if a higher role was chosen).
 			adds.forEach( function ( user ) {
 				operations.push( function () {
 					return updateGroupMember( {
@@ -329,7 +329,7 @@ export function GroupMembersTab( { groupId, setNotice, saveRef } ) {
 				} );
 			} );
 
-			// Phase 1b — promotions TO Organizer grow the admin pool first.
+			// Promotions TO Organizer grow the admin pool first.
 			Object.keys( roleChanges ).forEach( function ( userId ) {
 				if ( 'admin' !== roleChanges[ userId ] ) {
 					return;
@@ -343,7 +343,7 @@ export function GroupMembersTab( { groupId, setNotice, saveRef } ) {
 				} );
 			} );
 
-			// Phase 2a — removes.
+			// Removes.
 			removes.forEach( function ( userId ) {
 				operations.push( function () {
 					return updateGroupMember( {
@@ -354,7 +354,7 @@ export function GroupMembersTab( { groupId, setNotice, saveRef } ) {
 				} );
 			} );
 
-			// Phase 2b — remaining role changes (demotions, Moderator/Member/Banned).
+			// Remaining role changes (demotions, Moderator/Member/Banned).
 			Object.keys( roleChanges ).forEach( function ( userId ) {
 				if ( 'admin' === roleChanges[ userId ] ) {
 					return;
