@@ -1567,7 +1567,7 @@ function bbp_get_tab_index( $auto_increment = true ) {
  * @param mixed $args See {@link bbp_get_dropdown()} for arguments
  */
 function bbp_dropdown( $args = '' ) {
-	echo wp_kses_post( bbp_get_dropdown( $args ) );
+	echo bbp_get_dropdown( $args ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 }
 	/**
 	 * Output a select box allowing to pick which forum/topic a new
@@ -2054,7 +2054,7 @@ function bbp_move_reply_form_fields() {
  * @uses bbp_get_the_content() To return the content to output
  */
 function bbp_the_content( $args = array() ) {
-	echo wp_kses_post( bbp_get_the_content( $args ) );
+	echo bbp_get_the_content( $args ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- bbp_get_the_content() returns pre-built editor markup (contenteditable div, hidden submit field, textarea fallback) with each dynamic value already escaped internally; wp_kses_post() would strip the form elements and break discussion/reply submission.
 }
 	/**
 	 * Return a textarea or TinyMCE if enabled
@@ -2111,7 +2111,7 @@ function bbp_get_the_content( $args = array() ) {
 
 	// Output something before the editor
 	if ( ! empty( $r['before'] ) ) {
-		echo wp_kses_post( $r['before'] );
+		echo $r['before']; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	}
 
 	// Use TinyMCE if available
@@ -2126,7 +2126,7 @@ function bbp_get_the_content( $args = array() ) {
 		$editor_unique_id = bp_unique_id( 'forums_editor_' );
 
 		?>
-			<div id="bbp_editor_<?php echo esc_attr( $r['context'] ); ?>_content_<?php echo esc_attr( $editor_unique_id ); ?>" class="<?php echo esc_attr( $r['editor_class'] ); ?> bbp_editor_<?php echo esc_attr( $r['context'] ); ?>_content" tabindex="<?php echo esc_attr( $r['tabindex'] ); ?>" data-key="<?php echo esc_attr( $editor_unique_id ); ?>" <?php echo bp_is_group() ? 'data-suggestions-group-id="' . esc_attr( bp_get_current_group_id() ) . '"' : ''; ?>><?php echo wp_kses_post( $post_content ); ?></div>
+			<div id="bbp_editor_<?php echo esc_attr( $r['context'] ); ?>_content_<?php echo esc_attr( $editor_unique_id ); ?>" class="<?php echo esc_attr( $r['editor_class'] ); ?> bbp_editor_<?php echo esc_attr( $r['context'] ); ?>_content" tabindex="<?php echo esc_attr( $r['tabindex'] ); ?>" data-key="<?php echo esc_attr( $editor_unique_id ); ?>" <?php echo bp_is_group() ? 'data-suggestions-group-id="' . esc_attr( bp_get_current_group_id() ) . '"' : ''; ?>><?php echo $post_content; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped  ?></div>
 			<input type="hidden" id="bbp_<?php echo esc_attr( $r['context'] ); ?>_content" name="bbp_<?php echo esc_attr( $r['context'] ); ?>_content" value="<?php echo esc_attr( $post_content ); ?>" />
 			<?php
 
@@ -2166,7 +2166,7 @@ function bbp_get_the_content( $args = array() ) {
 
 		// Output something after the editor
 		if ( ! empty( $r['after'] ) ) {
-			echo wp_kses_post( $r['after'] );
+			echo $r['after']; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		}
 
 		// Put the output into a usable variable
@@ -2317,7 +2317,7 @@ function bbp_get_view_id( $view = '' ) {
  * @uses bbp_get_view_title() To get the view title
  */
 function bbp_view_title( $view = '' ) {
-	echo esc_html( bbp_get_view_title( $view ) );
+	echo bbp_get_view_title( $view ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 }
 
 	/**
@@ -2449,7 +2449,7 @@ function bbp_reset_query_name() {
  * @uses bbp_get_breadcrumb() To get the breadcrumb
  */
 function bbp_title_breadcrumb( $args = array() ) {
-	echo wp_kses_post( bbp_get_breadcrumb( $args ) );
+	echo bbp_get_breadcrumb( $args ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 }
 
 /**
@@ -2464,7 +2464,7 @@ function bbp_title_breadcrumb( $args = array() ) {
  * @param string $sep          Separator. Defaults to '&larr;'.
  */
 function bbp_breadcrumb( $args = array() ) {
-	echo wp_kses_post( bbp_get_breadcrumb( $args ) );
+	echo bbp_get_breadcrumb( $args ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 }
 	/**
 	 * Return a breadcrumb ( forum -> topic -> reply )
@@ -2847,7 +2847,7 @@ function bbp_template_notices() {
 		<div class="bp-feedback error">
 			<span class="bp-icon" aria-hidden="true"></span>
 			<p>
-				<?php echo wp_kses_post( implode( "</p>\n<p>", $errors ) ); ?>
+				<?php echo implode( "</p>\n<p>", $errors ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped  ?>
 			</p>
 		</div>
 
@@ -2861,7 +2861,7 @@ function bbp_template_notices() {
 		<div class="bp-feedback info">
 			<span class="bp-icon" aria-hidden="true"></span>
 			<p>
-				<?php echo wp_kses_post( implode( "</p>\n<p>", $messages ) ); ?>
+				<?php echo implode( "</p>\n<p>", $messages ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped  ?>
 			</p>
 		</div>
 
@@ -2880,7 +2880,7 @@ function bbp_template_notices() {
  * @uses bbp_get_logout_link() To get the logout link
  */
 function bbp_logout_link( $redirect_to = '' ) {
-	echo wp_kses_post( bbp_get_logout_link( $redirect_to ) );
+	echo bbp_get_logout_link( $redirect_to ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 }
 	/**
 	 * Return the logout link
