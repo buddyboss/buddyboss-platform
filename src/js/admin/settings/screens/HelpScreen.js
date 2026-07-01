@@ -466,9 +466,9 @@ export function HelpScreen( { onNavigate } ) {
 			return {
 				id:          term.id,
 				slug:        term.slug,
-				name:        decodeEntities( curated ? curated.title : ( term.name || '' ) ),
-				description: decodeEntities( curated ? curated.description : ( term.description || '' ) ),
-				icon:        curated ? curated.icon : 'bb-icons-rl-book',
+				name:        decodeEntities( curated && curated.title ? curated.title : ( term.name || '' ) ),
+				description: decodeEntities( curated && curated.description ? curated.description : ( term.description || '' ) ),
+				icon:        curated && curated.icon ? curated.icon : 'bb-icons-rl-book',
 				order:       curated ? curated.order : 999,
 				count:       'number' === typeof counts[ term.slug ] ? counts[ term.slug ] : 0,
 			};
@@ -481,6 +481,8 @@ export function HelpScreen( { onNavigate } ) {
 			}
 			return a.name.localeCompare( b.name );
 		} );
+
+		built = built.filter( item => item.count !== 0 );
 
 		return built;
 	}, [ kbTerms ] );
