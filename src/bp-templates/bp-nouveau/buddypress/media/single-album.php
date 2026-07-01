@@ -52,8 +52,19 @@ if ( bp_has_albums( array( 'include' => $album_id ) ) ) : ?>
 					<?php endif; ?>
 					<p>
 						<span><?php bp_core_format_date( $media_album_template->album->date_created ); ?></span><span class="bb-sep">&middot;</span>
-						<span class="bb-album-photo-count"><?php /* translators: %s: number of photos in the album. */ echo esc_html( sprintf( _n( '%s photo', '%s photos', $media_album_template->album->media['total'], 'buddyboss-platform' ), bp_core_number_format( $media_album_template->album->media['total'] ) ) ); ?></span><span class="bb-sep">&middot;</span>
-						<span class="bb-album-video-count"><?php /* translators: %s: number of videos in the album. */ echo esc_html( sprintf( _n( '%s video', '%s videos', $media_album_template->album->media['total_video'], 'buddyboss-platform' ), bp_core_number_format( $media_album_template->album->media['total_video'] ) ) ); ?></span>
+						<span class="bb-album-photo-count"><?php /* translators: %s: number of photos in the album. */ echo esc_html( sprintf( _n( '%s photo', '%s photos', $media_album_template->album->media['total'], 'buddyboss-platform' ), bp_core_number_format( $media_album_template->album->media['total'] ) ) ); ?></span>
+						<?php
+						// Only show the album's video count (and its separator) when the video
+						// component is active and video support is enabled for this context
+						// (profile/group). Without this, a "0 videos" count appears even when
+						// video is disabled.
+						if ( bp_is_active( 'video' ) && ( $bp_is_profile_video_support_enabled || $bp_is_group_video_support_enabled ) ) :
+							?>
+							<span class="bb-sep">&middot;</span>
+							<span class="bb-album-video-count"><?php /* translators: %s: number of videos in the album. */ echo esc_html( sprintf( _n( '%s video', '%s videos', $media_album_template->album->media['total_video'], 'buddyboss-platform' ), bp_core_number_format( $media_album_template->album->media['total_video'] ) ) ); ?></span>
+							<?php
+						endif;
+						?>
 					</p>
 				</div>
 
