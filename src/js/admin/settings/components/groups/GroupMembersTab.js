@@ -723,7 +723,12 @@ export function GroupMembersTab( { groupId, setNotice, saveRef } ) {
 			} );
 
 			pendingRemoves.forEach( function ( uid ) {
-				if ( byId[ uid ] && byId[ uid ].role === section.key ) {
+				// Decrement the member's EFFECTIVE (post-pending-change) section, not
+				// their original server role — otherwise a member promoted then removed
+				// in the same session is decremented from the wrong section (and their
+				// move-in +1 is never corrected).
+				var removedRole = pendingRoleChanges[ uid ] || ( byId[ uid ] ? byId[ uid ].role : null );
+				if ( removedRole === section.key ) {
 					total -= 1;
 				}
 			} );
