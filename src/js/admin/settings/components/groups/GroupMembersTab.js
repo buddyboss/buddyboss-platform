@@ -379,14 +379,32 @@ export function GroupMembersTab( { groupId, setNotice, saveRef } ) {
 			var errors = [];
 			var chain = Promise.resolve();
 			operations.forEach( function ( op ) {
-				chain = chain.then( op ).catch( function ( err ) {
+				chain = chain.then( function () {
+					// A member op that returns a wp_send_json_error() envelope
+					// (HTTP 200 with success:false) is a failure. Detected here — in
+					// the group members flow only — rather than in the shared
+					// ajaxFetch, so no other AJAX caller's behaviour changes.
+					return Promise.resolve( op() ).then( function ( response ) {
+						if ( response && false === response.success ) {
+							throw new Error( ( response.data && response.data.message ) || __( 'Failed to update member role.', 'buddyboss' ) );
+						}
+						return response;
+					} );
+				} ).catch( function ( err ) {
 					errors.push( err && err.message ? err.message : String( err ) );
 				} );
 			} );
 
 			return chain.then( function () {
 				if ( errors.length ) {
-					return Promise.reject( new Error( errors.join( ' ' ) ) );
+					// Surface the failure inside the modal (above the Members tab)
+					// rather than the page-level banner, and keep the modal open so
+					// the user can retry. Still reject so the parent knows the save
+					// did not fully succeed (it won't close the modal or show a
+					// duplicate page-level notice).
+					var message = errors.join( ' ' );
+					setNotice( { type: 'error', message: message } );
+					return Promise.reject( new Error( message ) );
 				}
 				// Clear pending state only when all operations succeeded.
 				setPendingAdds( [] );
