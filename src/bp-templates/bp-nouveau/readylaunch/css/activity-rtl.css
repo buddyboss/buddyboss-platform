@@ -6282,6 +6282,17 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
   margin: 0;
 }
 
+.activity-item.has-comments .bb-rl-acomment-foot-actions .bb-rl-comment-reactions .reactions_item i {
+  display: flex;
+  font-size: 20px;
+  font-weight: 200;
+  line-height: 1;
+}
+
+.activity-item.has-comments .bb-rl-acomment-foot-actions .bb-rl-comment-reactions .reactions_item i:before {
+  margin: 0;
+}
+
 .activity-item.has-comments .bb-rl-acomment-foot-actions .bb-rl-comment-reactions .reactions_item:not(:first-child) {
   margin-right: -4px;
 }
