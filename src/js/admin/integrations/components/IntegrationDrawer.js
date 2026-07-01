@@ -150,25 +150,31 @@ export function IntegrationDrawer( { slug, initialTitle, plugins, onClose } ) {
 	// Sanitize once per content change — DOMParser is expensive and the drawer
 	// re-renders on every plugins-prop identity change (activate/deactivate).
 	const sanitizedContent = useMemo( () => ( contentHtml ? sanitizeKbArticle( contentHtml ) : '' ), [ contentHtml ] );
-	// "Learn More ↗" → the plugin's own page (acf.plugin_link), falling back to
-	// the integration page so there is always somewhere to go.
-	const learnMoreUrl = item?.acf?.plugin_link || item?.link || item?.link_url || '';
+	// "Learn More ↗" → the integration's site URL (acf.integration_site_url).
+	const learnMoreUrl = item?.acf?.integration_site_url || '';
 
-	// "Works with" — the integration's required platforms (integrations_require-<slug>
-	// in class_list), resolved to name + ✓/✗ via the localized requirements map.
-	// Shown whenever the integration declares requirements (installed or not) so a
-	// user can see compatibility before deciding to install.
+	// "Works with" — acf.works_with is a { slug: bool } map declaring the platforms
+	// this integration is compatible with (✓/✗ comes straight from the API, same
+	// for every site). Names come from the localized requirements map (falling back
+	// to the slug). An array shape (only-checked slugs) is still handled as all-✓.
 	const requirements = ( typeof window !== 'undefined' && window.bbIntegrationsData && window.bbIntegrationsData.requirements ) || {};
-	const worksWith = ( Array.isArray( item?.class_list ) ? item.class_list : [] )
-		.map( ( cls ) => {
-			const match = /^integrations_require-(.+)$/.exec( cls );
-			// Carry the requirement slug so the render can key on it (a stable,
-			// guaranteed-unique id) rather than the human-readable name.
-			return match && requirements[ match[ 1 ] ]
-				? { slug: match[ 1 ], ...requirements[ match[ 1 ] ] }
-				: null;
-		} )
-		.filter( Boolean );
+	const worksWithRaw = item?.acf?.works_with;
+	const worksWith = ( worksWithRaw && 'object' === typeof worksWithRaw && ! Array.isArray( worksWithRaw ) )
+		? Object.keys( worksWithRaw ).map( ( slug ) => ( {
+			slug: slug,
+			name: ( requirements[ slug ] && requirements[ slug ].name ) || slug,
+			// Explicit truthy check — ACF can serialize a false boolean as the
+			// string "0", which is falsy in JS but would slip past a loose cast.
+			met: true === worksWithRaw[ slug ] || 1 === worksWithRaw[ slug ] || '1' === worksWithRaw[ slug ],
+		} ) )
+		: ( Array.isArray( worksWithRaw ) ? worksWithRaw : [] )
+			.map( ( entry ) => ( 'string' === typeof entry ? entry : ( entry && ( entry.slug || entry.value ) ) || '' ) )
+			.filter( Boolean )
+			.map( ( slug ) => ( {
+				slug: slug,
+				name: ( requirements[ slug ] && requirements[ slug ].name ) || slug,
+				met: true,
+			} ) );
 
 	return (
 		<div className="bb-integrations-drawer" role="dialog" aria-modal="true" aria-label={ headerName || __( 'Integration details', 'buddyboss' ) }>

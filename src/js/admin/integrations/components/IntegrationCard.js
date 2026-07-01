@@ -29,9 +29,8 @@ function IntegrationCardComponent( { item, categoryMap, plugins, onSelect } ) {
 	const planLabel = ( item?.acf?.type_label || '' ).trim().toLowerCase();
 	const isPaid = '' !== planLabel && 'free' !== planLabel;
 
-	// "Learn More ↗" → acf.plugin_link, falling back to the integration page.
-	const pluginLink = item?.acf?.plugin_link && 'string' === typeof item.acf.plugin_link ? item.acf.plugin_link : '';
-	const learnMoreUrl = pluginLink || item?.plugin_url || item?.link || item?.link_url || '';
+	// "Learn More ↗" → the integration's site URL (acf.integration_site_url).
+	const learnMoreUrl = item?.acf?.integration_site_url || '';
 
 	// Subtitle = the integration's category (integrations_category term ID → name).
 	const categoryId = Array.isArray( item?.integrations_category ) ? item.integrations_category[ 0 ] : null;
