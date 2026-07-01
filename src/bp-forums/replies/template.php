@@ -2560,7 +2560,7 @@ function bbp_get_topic_split_link( $args = '' ) {
  * @uses  bbp_get_reply_class() To get the reply class
  */
 function bbp_reply_class( $reply_id = 0, $classes = array() ) {
-	echo bbp_get_reply_class( $reply_id, $classes ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Pre-built `class="..."` attribute; the class list is escaped via esc_attr() inside bbp_get_reply_class(). Wrapping the whole attribute in esc_attr() here would encode the quotes and corrupt the markup.
+	echo bbp_get_reply_class( $reply_id, $classes ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- bbp_get_reply_class returns class="..." attribute markup; esc_attr would corrupt it.
 }
 
 /**
@@ -2592,7 +2592,7 @@ function bbp_get_reply_class( $reply_id = 0, $classes = array() ) {
 	$classes   = array_filter( $classes );
 	$classes   = get_post_class( $classes, $reply_id );
 	$classes   = apply_filters( 'bbp_get_reply_class', $classes, $reply_id );
-	$retval    = 'class="' . esc_attr( implode( ' ', $classes ) ) . '"';
+	$retval    = 'class="' . implode( ' ', $classes ) . '"';
 
 	return $retval;
 }

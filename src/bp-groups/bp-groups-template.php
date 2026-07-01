@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
  * @since BuddyPress 1.5.0
  */
 function bp_groups_slug() {
-	echo esc_attr( bp_get_groups_slug() );
+	echo bp_get_groups_slug(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 }
 	/**
 	 * Return the groups component slug.
@@ -695,7 +695,7 @@ function bp_get_group_class( $classes = array() ) {
  *                           Default: current group in loop.
  */
 function bp_group_name( $group = false ) {
-	echo esc_html( bp_get_group_name( $group ) );
+	echo bp_get_group_name( $group ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 }
 	/**
 	 * Get the name of the current group in the loop.
@@ -853,7 +853,7 @@ function bp_get_group_status( $group = false ) {
  *                           Default: current group in loop.
  */
 function bp_group_status_description( $group = false ) {
-	echo esc_html( bp_get_group_status_description( $group ) );
+	echo bp_get_group_status_description( $group ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 }
 
 	/**
@@ -1120,7 +1120,7 @@ function bp_get_group_cover_url( $group = false ) {
  * @param array|string $args Optional. {@see bp_get_group_last_active()}.
  */
 function bp_group_last_active( $group = false, $args = array() ) {
-	echo esc_html( bp_get_group_last_active( $group, $args ) );
+	echo bp_get_group_last_active( $group, $args ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 }
 	/**
 	 * Return the 'last active' string for the current group in the loop.
@@ -1249,7 +1249,7 @@ function bp_get_group_link( $group = null ) {
 		esc_url( bp_get_group_permalink( $group ) ),
 		esc_attr( bp_get_group_slug( $group ) ),
 		esc_attr( $group->id ),
-		esc_html( bp_get_group_name( $group ) )
+		bp_get_group_name( $group ) // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	);
 
 	/**
@@ -1351,7 +1351,7 @@ function bp_get_group_slug( $group = false ) {
  *                           Default: current group in loop.
  */
 function bp_group_description( $group = false ) {
-	echo esc_html( bp_get_group_description( $group ) );
+	echo bp_get_group_description( $group ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 }
 	/**
 	 * Return the description for the current group in the loop.
@@ -1579,7 +1579,7 @@ function bp_get_group_public_status( $group = false ) {
  *                           Default: current group in loop.
  */
 function bp_group_is_public( $group = false ) {
-	echo esc_html( bp_get_group_is_public( $group ) );
+	echo bp_get_group_is_public( $group ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 }
 	/**
 	 * Return whether the current group in the loop is public.
@@ -1618,7 +1618,7 @@ function bp_get_group_is_public( $group = false ) {
  * @param array|string $args  {@see bp_get_group_date_created()}.
  */
 function bp_group_date_created( $group = false, $args = array() ) {
-	echo esc_html( bp_get_group_date_created( $group, $args ) );
+	echo bp_get_group_date_created( $group, $args ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 }
 	/**
 	 * Return the created date of the current group in the loop.
@@ -1677,7 +1677,7 @@ function bp_get_group_date_created( $group = false, $args = array() ) {
  *                           Default: current group in loop.
  */
 function bp_group_creator_username( $group = false ) {
-	echo esc_html( bp_get_group_creator_username( $group ) );
+	echo bp_get_group_creator_username( $group ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 }
 	/**
 	 * Return the username of the creator of the current group in the loop.
@@ -2307,7 +2307,7 @@ function bp_get_groups_pagination_links() {
  * @since BuddyPress 1.2.0
  */
 function bp_groups_pagination_count() {
-	echo esc_html( bp_get_groups_pagination_count() );
+	echo bp_get_groups_pagination_count(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 }
 	/**
 	 * Generate the "Viewing x-y of z groups" pagination message.
@@ -2370,7 +2370,7 @@ function bp_groups_auto_join() {
  * @param object|bool $group Optional. Group object. Default: current group in loop.
  */
 function bp_group_total_members( $group = false ) {
-	echo esc_html( bp_get_group_total_members( $group ) );
+	echo bp_get_group_total_members( $group ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 }
 	/**
 	 * Get the total member count for a group.
@@ -2406,7 +2406,7 @@ function bp_get_group_total_members( $group = false ) {
  * @since BuddyPress 1.2.0
  */
 function bp_group_member_count() {
-	echo esc_html( bp_get_group_member_count() );
+	echo bp_get_group_member_count(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 }
 	/**
 	 * Generate the "x members" count string for a group.
@@ -3799,7 +3799,7 @@ function bp_group_admin_tabs_backcompat( $subnav_output = '', $subnav_item = '',
  * @since BuddyPress 1.1.0
  */
 function bp_group_total_for_member() {
-	echo esc_html( bp_get_group_total_for_member() );
+	echo bp_get_group_total_for_member(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 }
 	/**
 	 * Get the group count for the displayed user.
@@ -4668,7 +4668,7 @@ function bp_group_status_message( $group = null ) {
 	 * @param string $message Message to display to the current user.
 	 * @param object $group   Group to get status message for.
 	 */
-	echo esc_html( apply_filters( 'bp_group_status_message', $message, $group ) );
+	echo apply_filters( 'bp_group_status_message', $message, $group ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 }
 
 /**
@@ -4700,7 +4700,7 @@ function bp_group_hidden_fields() {
  * @since BuddyPress 1.0.0
  */
 function bp_total_group_count() {
-	echo esc_html( bp_get_total_group_count() );
+	echo bp_get_total_group_count(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 }
 	/**
 	 * Return the total number of groups.
@@ -4729,7 +4729,7 @@ function bp_get_total_group_count() {
  * @param int $user_id User ID to get group membership count.
  */
 function bp_total_group_count_for_user( $user_id = 0 ) {
-	echo esc_html( bp_get_total_group_count_for_user( $user_id ) );
+	echo bp_get_total_group_count_for_user( $user_id ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 }
 	/**
 	 * Return the total number of groups a user belongs to.
@@ -5067,7 +5067,7 @@ function bp_get_group_member_avatar_mini( $width = 30, $height = 30 ) {
  * @since BuddyPress 1.0.0
  */
 function bp_group_member_name() {
-	echo esc_html( bp_get_group_member_name() );
+	echo bp_get_group_member_name(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 }
 
 	/**
@@ -5154,7 +5154,7 @@ function bp_get_group_member_domain() {
  * @since BuddyPress 1.2.0
  */
 function bp_group_member_is_friend() {
-	echo esc_html( bp_get_group_member_is_friend() );
+	echo bp_get_group_member_is_friend(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 }
 
 	/**
@@ -5191,7 +5191,7 @@ function bp_get_group_member_is_friend() {
  * @since BuddyPress 1.0.0
  */
 function bp_group_member_is_banned() {
-	echo esc_html( bp_get_group_member_is_banned() );
+	echo bp_get_group_member_is_banned(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 }
 
 	/**
@@ -5245,7 +5245,7 @@ function bp_group_member_css_class() {
  * @return string|null
  */
 function bp_group_member_joined_since( $args = array() ) {
-	echo esc_html( bp_get_group_member_joined_since( $args ) );
+	echo bp_get_group_member_joined_since( $args ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 }
 	/**
 	 * Return the joined date for the current member in the group member loop.
@@ -5427,7 +5427,7 @@ function bp_get_group_member_pagination() {
  * @since BuddyPress 1.0.0
  */
 function bp_group_member_pagination_count() {
-	echo esc_html( bp_get_group_member_pagination_count() );
+	echo bp_get_group_member_pagination_count(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 }
 
 	/**
@@ -6016,7 +6016,7 @@ function bp_get_new_group_description() {
  * @since BuddyPress 1.1.0
  */
 function bp_new_group_enable_forum() {
-	echo esc_html( bp_get_new_group_enable_forum() );
+	echo bp_get_new_group_enable_forum(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 }
 
 	/**
@@ -6200,7 +6200,7 @@ function bp_get_group_creation_previous_link() {
  * @since BuddyPress 1.6.0
  */
 function bp_groups_current_create_step() {
-	echo esc_html( bp_get_groups_current_create_step() );
+	echo bp_get_groups_current_create_step(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 }
 	/**
 	 * Returns the current group creation step. If none is found, returns an empty string.
@@ -6554,7 +6554,7 @@ function bp_is_group_admin_screen( $slug = '' ) {
  * @since BuddyPress 1.6.0
  */
 function bp_group_current_admin_tab() {
-	echo esc_html( bp_get_group_current_admin_tab() );
+	echo bp_get_group_current_admin_tab(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 }
 	/**
 	 * Returns the current group admin tab slug.
@@ -6586,7 +6586,7 @@ function bp_get_group_current_admin_tab() {
  * @since BuddyBoss 1.0.0
  */
 function bp_group_current_members_tab() {
-	echo esc_html( bp_get_group_current_members_tab() );
+	echo bp_get_group_current_members_tab(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 }
 /**
  * Returns the current group members tab slug.
@@ -6986,7 +6986,7 @@ function bp_group_request_time_since_requested() {
 	 * @param string $value Formatted time since membership was requested.
 	 */
 	/* translators: %s: human-readable time since the request was made. */
-	echo esc_html( apply_filters( 'bp_group_request_time_since_requested', sprintf( __( 'requested %s', 'buddyboss-platform' ), bp_core_time_since( $requests_template->request->date_modified ) ) ) );
+	echo apply_filters( 'bp_group_request_time_since_requested', sprintf( __( 'requested %s', 'buddyboss-platform' ), bp_core_time_since( $requests_template->request->date_modified ) ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 }
 
 /**
@@ -7004,7 +7004,7 @@ function bp_group_request_comment() {
 	 *
 	 * @param string $value Membership request comment left by user.
 	 */
-	echo esc_html( apply_filters( 'bp_group_request_comment', wp_strip_all_tags( stripslashes( $requests_template->request->comments ) ) ) );
+	echo apply_filters( 'bp_group_request_comment', wp_strip_all_tags( stripslashes( $requests_template->request->comments ) ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 }
 
 /**
@@ -7041,7 +7041,7 @@ function bp_get_group_requests_pagination_links() {
  * @since BuddyPress 2.0.0
  */
 function bp_group_requests_pagination_count() {
-	echo esc_html( bp_get_group_requests_pagination_count() );
+	echo bp_get_group_requests_pagination_count(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 }
 	/**
 	 * Get pagination count text for group membership requests.
@@ -7247,7 +7247,7 @@ function bp_get_group_invite_user_link() {
  * @since BuddyPress 1.1.0
  */
 function bp_group_invite_user_last_active() {
-	echo esc_html( bp_get_group_invite_user_last_active() );
+	echo bp_get_group_invite_user_last_active(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 }
 
 	/**
@@ -7276,7 +7276,7 @@ function bp_get_group_invite_user_last_active() {
  * @since BuddyPress 1.1.0
  */
 function bp_group_invite_user_remove_invite_url() {
-	echo esc_url( bp_get_group_invite_user_remove_invite_url() );
+	echo bp_get_group_invite_user_remove_invite_url(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 }
 
 	/**
@@ -7306,7 +7306,7 @@ function bp_get_group_invite_user_remove_invite_url() {
  * @since BuddyPress 2.0.0
  */
 function bp_group_invite_pagination_links() {
-	echo wp_kses_post( bp_get_group_invite_pagination_links() );
+	echo bp_get_group_invite_pagination_links(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 }
 
 	/**
@@ -7335,7 +7335,7 @@ function bp_get_group_invite_pagination_links() {
  * @since BuddyPress 2.0.0
  */
 function bp_group_invite_pagination_count() {
-	echo esc_html( bp_get_group_invite_pagination_count() );
+	echo bp_get_group_invite_pagination_count(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 }
 	/**
 	 * Get pagination count text for group invitations.
@@ -7478,7 +7478,7 @@ function bp_get_current_group_slug() {
  * @since BuddyPress 1.5.0
  */
 function bp_current_group_name() {
-	echo esc_html( bp_get_current_group_name() );
+	echo bp_get_current_group_name(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 }
 	/**
 	 * Returns the name of the current group.
@@ -7508,7 +7508,7 @@ function bp_get_current_group_name() {
  * @since BuddyPress 2.1.0
  */
 function bp_current_group_description() {
-	echo esc_html( bp_get_current_group_description() );
+	echo bp_get_current_group_description(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 }
 	/**
 	 * Returns the description of the current group.
@@ -7681,7 +7681,7 @@ function bp_groups_get_profile_stats( $args = '' ) {
  * @since BuddyBoss 1.2.3
  */
 function bp_group_current_invite_tab() {
-	echo esc_html( bp_get_group_current_invite_tab() );
+	echo bp_get_group_current_invite_tab(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 }
 
 /**
@@ -7714,7 +7714,7 @@ function bp_get_group_current_invite_tab() {
  * @since BuddyBoss 1.5.7
  */
 function bp_group_current_messages_tab() {
-	echo esc_html( bp_get_group_current_messages_tab() );
+	echo bp_get_group_current_messages_tab(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 }
 /**
  * Returns the current group invite tab slug.
@@ -7848,7 +7848,7 @@ function bp_group_show_messages_status_setting( $setting, $group = false ) {
  * @since BuddyBoss 1.5.7
  */
 function bb_group_current_messages_tab() {
-	echo esc_html( bb_get_group_current_messages_tab() );
+	echo bb_get_group_current_messages_tab(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 }
 
 /**

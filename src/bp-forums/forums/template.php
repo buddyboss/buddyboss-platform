@@ -2296,7 +2296,7 @@ function bbp_suppress_private_author_link( $author_link, $args ) {
  * @uses  bbp_get_forum_class() To get the row class of the forum
  */
 function bbp_forum_class( $forum_id = 0, $classes = array() ) {
-	echo bbp_get_forum_class( $forum_id, $classes ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Pre-built `class="..."` attribute; the class list is escaped via esc_attr() inside bbp_get_forum_class(). Wrapping the whole attribute in esc_attr() here would encode the quotes and corrupt the markup.
+	echo bbp_get_forum_class( $forum_id, $classes ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- bbp_get_forum_class returns class="..." attribute markup; esc_attr would corrupt it.
 }
 
 /**
@@ -2337,7 +2337,7 @@ function bbp_get_forum_class( $forum_id = 0, $classes = array() ) {
 
 	// Filter the results
 	$classes = apply_filters( 'bbp_get_forum_class', $classes, $forum_id );
-	$retval  = 'class="' . esc_attr( implode( ' ', $classes ) ) . '"';
+	$retval  = 'class="' . implode( ' ', $classes ) . '"';
 
 	return $retval;
 }
