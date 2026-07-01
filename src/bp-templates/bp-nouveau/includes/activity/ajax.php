@@ -444,11 +444,19 @@ function bp_nouveau_ajax_get_single_activity_content() {
 	// Activity content retrieved through AJAX should run through normal filters, but not be truncated.
 	remove_filter( 'bp_get_activity_content_body', 'bp_activity_truncate_entry', 5 );
 
+	// Each append filter lives in its own component's files, which only load when
+	// that component is active. Gate each on its own component so we never register
+	// a callback for a disabled component (e.g. media on but video/document off),
+	// which would fatal when the filter runs.
 	if ( bp_is_active( 'media' ) ) {
 		add_filter( 'bp_get_activity_content_body', 'bp_media_activity_append_media', 20, 2 );
-		add_filter( 'bp_get_activity_content_body', 'bp_video_activity_append_video', 20, 2 );
-		add_filter( 'bp_get_activity_content_body', 'bp_document_activity_append_document', 20, 2 );
 		add_filter( 'bp_get_activity_content_body', 'bp_media_activity_append_gif', 20, 2 );
+	}
+	if ( bp_is_active( 'video' ) ) {
+		add_filter( 'bp_get_activity_content_body', 'bp_video_activity_append_video', 20, 2 );
+	}
+	if ( bp_is_active( 'document' ) ) {
+		add_filter( 'bp_get_activity_content_body', 'bp_document_activity_append_document', 20, 2 );
 	}
 
 	/** This filter is documented in bp-activity/bp-activity-template.php */
