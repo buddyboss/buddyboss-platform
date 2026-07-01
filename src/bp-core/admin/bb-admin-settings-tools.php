@@ -85,7 +85,7 @@ function bb_admin_settings_register_tools_feature() {
 			'title'       => __( 'Repair Platform', 'buddyboss' ),
 			'description' => __( 'BuddyBoss keeps track of various relationships between members, groups, and activity items. Occasionally these relationships become out of sync, most often after an import, update, or migration. Use the tools below to manually recalculate these relationships.', 'buddyboss' ),
 			// @todo: update when release.
-			'help_url'    => '123456',
+			'help_url'    => '644709',
 			'order'       => 10,
 		)
 	);
@@ -126,7 +126,7 @@ function bb_admin_settings_register_tools_feature() {
 			'title'       => __( 'Sample Data', 'buddyboss' ),
 			'description' => __( 'Select the data you want to import. Some of these tools utilize substantial database resources. Avoid running more than 1 import at a time.', 'buddyboss' ),
 			// @todo: update when release.
-			'help_url'    => '123456',
+			'help_url'    => '644711',
 			'order'       => 10,
 		)
 	);
