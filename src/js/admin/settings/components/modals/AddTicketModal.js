@@ -63,6 +63,7 @@ export function AddTicketModal( { isOpen, value, onClose, onSave } ) {
 		>
 			<div className="bb-admin-settings-modal__body">
 				<TextControl
+					className="bb-admin-add-ticket-modal__input"
 					label={ __( 'Ticket number', 'buddyboss' ) }
 					hideLabelFromVision
 					type="number"
