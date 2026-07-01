@@ -29,6 +29,15 @@ class BB_Admin_Member_Types_Ajax {
 	const NONCE_ACTION = 'bb_admin_settings';
 
 	/**
+	 * Maximum items allowed per paginated page.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @var int
+	 */
+	const PER_PAGE_CAP = 100;
+
+	/**
 	 * Verify AJAX request (capability + nonce).
 	 *
 	 * @since BuddyBoss 3.0.0
@@ -105,7 +114,7 @@ class BB_Admin_Member_Types_Ajax {
 
 		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified by bb_verify_request() above.
 		$page         = isset( $_POST['page'] ) ? max( 1, absint( wp_unslash( $_POST['page'] ) ) ) : 1;
-		$per_page     = isset( $_POST['per_page'] ) ? min( 100, max( 1, absint( wp_unslash( $_POST['per_page'] ) ) ) ) : 25;
+		$per_page     = isset( $_POST['per_page'] ) ? min( self::PER_PAGE_CAP, max( 1, absint( wp_unslash( $_POST['per_page'] ) ) ) ) : 25;
 		$include_meta = ! ( isset( $_POST['include_meta'] ) && '0' === sanitize_text_field( wp_unslash( $_POST['include_meta'] ) ) );
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
 
