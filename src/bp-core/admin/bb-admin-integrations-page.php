@@ -19,7 +19,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * Mirrors bb_admin_settings_page(): resolves the build asset manifest, enqueues
  * the bundle + CSS, localizes the `bbIntegrationsData` object the React app reads
- * (apiUrl + nonce + requirements), and prints the mount container.
+ * (apiUrl + nonce), and prints the mount container.
  *
  * @since BuddyBoss [BBVERSION]
  *
@@ -163,35 +163,10 @@ function bb_admin_integrations_page() {
 		}
 	}
 
-	// Works-with compatibility — whether the current site satisfies each known
-	// BuddyBoss requirement. The drawer reads this per integrations_require term
-	// (matched by slug from the integration's class_list) to render the ✓ / ✗ row.
-	if ( ! function_exists( 'is_plugin_active' ) ) {
-		require_once ABSPATH . 'wp-admin/includes/plugin.php';
-	}
-	$bb_requirements = array(
-		'buddyboss-platform'        => array(
-			'name' => __( 'BuddyBoss Platform', 'buddyboss' ),
-			'met'  => true, // We are running inside Platform.
-		),
-		'buddyboss-theme'           => array(
-			'name' => __( 'BuddyBoss Theme', 'buddyboss' ),
-			'met'  => 'buddyboss-theme' === wp_get_theme()->get_template(),
-		),
-		'readylaunch'               => array(
-			'name' => __( 'ReadyLaunch', 'buddyboss' ),
-			'met'  => function_exists( 'bb_is_readylaunch_enabled' ) && (bool) bb_is_readylaunch_enabled(),
-		),
-		'buddyboss-app'             => array(
-			'name' => __( 'BuddyBoss App', 'buddyboss' ),
-			'met'  => is_plugin_active( 'buddyboss-app/buddyboss-app.php' ),
-		),
-		'third-party-plugin-or-app' => array(
-			'name' => __( 'Third-party plugin or App', 'buddyboss' ),
-			'met'  => true,
-		),
-	);
-
+	// "Works with" is fully driven by the buddyboss.com API — each integration's
+	// acf.works_with is a { slug: { name, met } } map derived from its ACF
+	// "works_with" checkbox (label + checked state). The client renders it directly,
+	// so no site-side requirements list is needed here.
 	wp_localize_script(
 		'bb-admin-integrations',
 		'bbIntegrationsData',
@@ -202,7 +177,6 @@ function bb_admin_integrations_page() {
 			'version'      => defined( 'BP_PLATFORM_VERSION' ) ? BP_PLATFORM_VERSION : '0',
 			'logoUrl'      => esc_url( buddypress()->plugin_url . 'bp-core/images/admin/BBLogo.png' ),
 			'ipnRootId'    => $ipn_root_id,
-			'requirements' => $bb_requirements,
 			// Gates client-side diagnostic console logging; off in production.
 			'debug'        => defined( 'WP_DEBUG' ) && WP_DEBUG,
 			// The shared header's global "Search for settings" box queries the
