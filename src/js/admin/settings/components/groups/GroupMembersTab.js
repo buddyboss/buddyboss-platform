@@ -298,10 +298,16 @@ export function GroupMembersTab( { groupId, setNotice, saveRef } ) {
 			var removes = pendingRemovesRef.current;
 			var roleChanges = pendingRoleChangesRef.current;
 
-			// Collect all operations as promises executed sequentially.
+			// Collect all operations as promises executed sequentially, ordered so
+			// admin-INCREASING changes (adds + promotions to Organizer) run BEFORE
+			// admin-REDUCING ones (removes + demotions). The server guards each
+			// remove/demote against the live DB ("can't remove the only admin"), so a
+			// promote-then-remove done in one save must send the promote first — else
+			// the still-sole old admin is wrongly blocked. Legacy's single form pass
+			// had the same net effect.
 			var operations = [];
 
-			// Process adds — first add as member, then promote if different role.
+			// Phase 1a — adds (add as member, then promote if a higher role was chosen).
 			adds.forEach( function ( user ) {
 				operations.push( function () {
 					return updateGroupMember( {
@@ -323,7 +329,21 @@ export function GroupMembersTab( { groupId, setNotice, saveRef } ) {
 				} );
 			} );
 
-			// Process removes.
+			// Phase 1b — promotions TO Organizer grow the admin pool first.
+			Object.keys( roleChanges ).forEach( function ( userId ) {
+				if ( 'admin' !== roleChanges[ userId ] ) {
+					return;
+				}
+				operations.push( function () {
+					return updateGroupMember( {
+						group_id: groupId,
+						user_id: parseInt( userId, 10 ),
+						role: 'admin',
+					} );
+				} );
+			} );
+
+			// Phase 2a — removes.
 			removes.forEach( function ( userId ) {
 				operations.push( function () {
 					return updateGroupMember( {
@@ -334,8 +354,11 @@ export function GroupMembersTab( { groupId, setNotice, saveRef } ) {
 				} );
 			} );
 
-			// Process role changes.
+			// Phase 2b — remaining role changes (demotions, Moderator/Member/Banned).
 			Object.keys( roleChanges ).forEach( function ( userId ) {
+				if ( 'admin' === roleChanges[ userId ] ) {
+					return;
+				}
 				operations.push( function () {
 					return updateGroupMember( {
 						group_id: groupId,
@@ -656,6 +679,18 @@ export function GroupMembersTab( { groupId, setNotice, saveRef } ) {
 			result[ role ] = members;
 		} );
 
+		// Recompute "sole admin" from the CURRENT (pending-applied) admin count
+		// instead of the static server flag. Promoting another member to Organizer
+		// in the same session drops the last admin's lock, so the creator can be
+		// managed/removed without a save-and-reopen — matching legacy, which lets
+		// you promote + remove in one save.
+		var currentAdminCount = ( result.admin || [] ).length;
+		roleSections.forEach( function ( section ) {
+			( result[ section.key ] || [] ).forEach( function ( m ) {
+				m.is_sole_admin = ( 'admin' === m.role && currentAdminCount <= 1 );
+			} );
+		} );
+
 		return result;
 	}, [ roleMembers, pendingRemoves, pendingRoleChanges, pendingAdds ] );
 
@@ -955,7 +990,11 @@ export function GroupMembersTab( { groupId, setNotice, saveRef } ) {
 							{ member.name }
 						</span>
 					) }
-					{ ! member.is_creator && ! member.is_sole_admin && (
+					{ /* Removable unless they are the sole remaining admin. The group
+					     creator is NOT specially protected — legacy WP-admin
+					     (bp-groups-admin.php) always let the creator be removed; the
+					     is_creator gate here was a 3.0.0 migration regression. */ }
+					{ ! member.is_sole_admin && (
 						<button
 							type="button"
 							className="bb-group-members-tab__remove-btn"
