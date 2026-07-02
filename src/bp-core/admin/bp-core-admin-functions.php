@@ -82,6 +82,17 @@ function bp_core_modify_admin_menu_highlight() {
 		$submenu_file = 'bb-settings';
 	}
 
+	// The Help submenu is registered with a URL menu_slug
+	// (`admin.php?page=bb-settings&tab=help`). When the admin is on that tab,
+	// highlight the Help item server-side instead of the generic Settings item
+	// — this avoids the brief Settings-highlighted flash before the React
+	// `fixAdminMenuHighlight()` corrects it on mount.
+	// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only menu highlight, no state change.
+	$current_tab = isset( $_GET['tab'] ) ? sanitize_key( wp_unslash( $_GET['tab'] ) ) : '';
+	if ( 'bb-settings' === $plugin_page && 'help' === $current_tab ) {
+		$submenu_file = 'admin.php?page=bb-settings&tab=help';
+	}
+
 	// Network Admin > Tools.
 	if ( in_array( $plugin_page, array( 'bp-tools', 'available-tools' ) ) ) {
 		$submenu_file = $plugin_page;
@@ -695,11 +706,14 @@ function bp_core_get_admin_tabs( $active_tab = '' ) {
 	// tabs were also removed along with their submenus. The "Settings" tab
 	// was removed because Settings 2.0 (bb-settings) is now the canonical
 	// settings entry point — exposed via the BuddyBoss admin sidebar — and
-	// linking to it from the legacy tab bar created a redundant entry. Key
-	// positions of the remaining tabs are preserved (Components='0',
-	// Pages='1', Settings='2', Tools='5', Help='6') so any third-party
-	// code that references these filter-array keys continues to work —
-	// keys '2' (Settings), '3' (Integrations), '4' (Upgrade), and '7'
+	// linking to it from the legacy tab bar created a redundant entry. The
+	// "Help" tab was removed because Help now lives in Settings 2.0
+	// (bb-settings&tab=help); legacy `?page=bp-help` visits are redirected
+	// there by BP_Admin::bb_redirect_legacy_help_page(). Key positions of
+	// the remaining tabs are preserved (Components='0', Pages='1',
+	// Settings='2', Tools='5', Help='6') so any third-party code that
+	// references these filter-array keys continues to work — keys '2'
+	// (Settings), '3' (Integrations), '4' (Upgrade), '6' (Help), and '7'
 	// (Credits) are now intentionally absent rather than holding renumbered
 	// entries.
 	$tabs = array(
@@ -713,11 +727,7 @@ function bp_core_get_admin_tabs( $active_tab = '' ) {
 			'name'  => __( 'Tools', 'buddyboss' ),
 			'class' => 'bp-tools',
 		),
-		'6' => array(
-			'href'  => bp_get_admin_url( add_query_arg( array( 'page' => 'bp-help' ), 'admin.php' ) ),
-			'name'  => __( 'Help', 'buddyboss' ),
-			'class' => 'bp-help',
-		),
+		// '6' was the Help tab — intentionally left absent (Help moved to Settings 2.0).
 		// '7' was the Credits tab — intentionally left absent.
 	);
 
