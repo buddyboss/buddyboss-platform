@@ -1,0 +1,22 @@
+<?php
+/**
+ * ReadyLaunch WC4BP Orders Template
+ *
+ * This template is a Readylaunch-specific version of the WC4BP orders template
+ *
+ * @package BuddyBoss\Template
+ * @subpackage BP_Nouveau\ReadyLaunch\WC4BP
+ * @since BuddyBoss [BBVERSION]
+ * @version 1.0.0
+ */
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+?>
+<div class="woocommerce woocommerce--bb-rl">
+	<?php do_action( 'wc4bp_before_orders_body' ); ?>
+	<?php echo wp_kses_post( do_shortcode( '[orders]' ) ); ?>
+	<?php do_action( 'wc4bp_after_orders_body' ); ?>
+</div>
+
