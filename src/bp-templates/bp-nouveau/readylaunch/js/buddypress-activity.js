@@ -2532,8 +2532,20 @@ window.bp = window.bp || {};
 			if ( ! $.fn.emojioneArea ) {
 				return;
 			}
-			
-			$( parentSelector + '#ac-input-' + activityId ).emojioneArea(
+
+			var $acInput = $( parentSelector + '#ac-input-' + activityId );
+
+			// Scope to the last match so emojioneArea's wrapInner doesn't nest widgets on duplicate inputs.
+			if ( $acInput.length > 1 ) {
+				$acInput = $acInput.last();
+			}
+
+			// Skip if already initialized to avoid nested .emojionearea wrappers with dead outer buttons.
+			if ( $acInput.length && $acInput.data( 'emojioneArea' ) ) {
+				return;
+			}
+
+			$acInput.emojioneArea(
 				{
 					standalone: true,
 					hideSource: false,
@@ -2591,6 +2603,13 @@ window.bp = window.bp || {};
 				
 				// Bind to modal container instead of document for better cleanup
 				$modalContainer.on( 'click' + eventNamespace, '#bb-rl-ac-reply-emoji-button-' + activityId, function( e ) {
+					// Skip the manual toggle when the click came from the emoji button itself so that emojioneArea's built-in
+					// behavior is preserved. Clicks that reach this handler from elsewhere (edge cases)
+					// still fall through to the original logic.
+					if ( $( e.target ).closest( '.emojionearea-button' ).length ) {
+						return;
+					}
+
 					var $targetInput = $( parentSelector + '#ac-input-' + activityId );
 					var emojioneAreaInstance = $targetInput.data( 'emojioneArea' );
 					
@@ -4498,6 +4517,14 @@ window.bp = window.bp || {};
 					// Handle comment form if present
 					if ( 'undefined' !== typeof response.data.comment_form ) {
 						var $activityComments = $( '.bb-rl-internal-model .bb-rl-modal-activity-footer' );
+
+						// Drop any stale ac-form/emoji button left by launchActivityPopup to avoid duplicate IDs on re-init.
+						$activityComments.find( '#ac-form-' + settings.activityId ).remove();
+						$activityComments.find( '.bb-rl-post-elements-buttons-item.bb-rl-post-emoji #bb-rl-ac-reply-emoji-button-' + settings.activityId ).empty();
+
+						// Clear orphaned detached pickers left in the theatre by the removed form.
+						$( '.bb-rl-emojionearea-theatre' ).find( '.emojionearea-picker' ).remove();
+
 						$activityComments.find( '.bb-rl-ac-form-placeholder' ).after( response.data.comment_form );
 						$activityComments.find( '#ac-form-' + settings.activityId ).removeClass( 'not-initialized' ).addClass( 'root events-initiated' ).find( '#ac-input-' + settings.activityId ).focus();
 
