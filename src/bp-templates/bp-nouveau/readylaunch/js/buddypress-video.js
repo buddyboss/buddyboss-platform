@@ -46,10 +46,11 @@ window.bp = window.bp || {};
 		 * @return {[type]} [description]
 		 */
 		setupGlobals: function () {
-			var bodySelector              = $( 'body' );
-			this.thumbnail_xhr            = null;
-			this.thumbnail_interval       = null;
-			this.thumbnail_max_interval   = 6;
+			var bodySelector                = $( 'body' );
+			this.thumbnail_xhr              = null;
+			this.thumbnail_interval         = null;
+			this.thumbnail_max_interval     = 6;
+			this.thumbnail_cleanup_complete = false;
 			this.current_page             = 1;
 			this.video_dropzone_obj       = null;
 			this.video_thumb_dropzone_obj = [];
@@ -112,6 +113,87 @@ window.bp = window.bp || {};
 		},
 
 		/**
+		 * Update album photo and video counts in single album view.
+		 * Works for both Standard and ReadyLaunch modes.
+		 *
+		 * @param {Object} albumCounts - Album count data from server response
+		 * @param {number} albumCounts.album_media_count - Number of photos
+		 * @param {number} albumCounts.album_video_count - Number of videos
+		 */
+		updateAlbumCounts: function ( albumCounts ) {
+			// Check if we're in a single album view.
+			if ( ! $( '#buddypress #bp-media-single-album' ).length ) {
+				return;
+			}
+
+			var photoCount = parseInt( albumCounts.album_media_count ) || 0;
+			var videoCount = parseInt( albumCounts.album_video_count ) || 0;
+
+			// Format number with thousands separator.
+			var formatNumber = function( num ) {
+				return num.toString().replace( /\B(?=(\d{3})+(?!\d))/g, ',' );
+			};
+
+			// Update the photo count display.
+			var $photoCountSpan = $( '#buddypress .bb-album-photo-count' );
+			if ( $photoCountSpan.length > 0 ) {
+				// Check if this is ReadyLaunch mode (has icon element).
+				if ( $photoCountSpan.find( 'i' ).length > 0 ) {
+					// ReadyLaunch mode: preserve icon, update number only.
+					$photoCountSpan.contents().filter( function() {
+						return 3 === this.nodeType;
+					} ).remove();
+					$photoCountSpan.append( formatNumber( photoCount ) );
+				} else {
+					// Standard mode: update with label.
+					var photoLabel = 1 === photoCount ? BP_Nouveau.media.i18n_strings.photo : BP_Nouveau.media.i18n_strings.photos;
+					$photoCountSpan.text( formatNumber( photoCount ) + ' ' + photoLabel );
+				}
+			}
+
+			// Update the video count display.
+			var $videoCountSpan = $( '#buddypress .bb-album-video-count' );
+			if ( $videoCountSpan.length > 0 ) {
+				// Check if this is ReadyLaunch mode (has icon element).
+				if ( $videoCountSpan.find( 'i' ).length > 0 ) {
+					// ReadyLaunch mode: preserve icon, update number only.
+					$videoCountSpan.contents().filter( function() {
+						return 3 === this.nodeType;
+					} ).remove();
+					$videoCountSpan.append( formatNumber( videoCount ) );
+				} else {
+					// Standard mode: update with label.
+					var videoLabel = 1 === videoCount ? BP_Nouveau.media.i18n_strings.video : BP_Nouveau.media.i18n_strings.videos;
+					$videoCountSpan.text( formatNumber( videoCount ) + ' ' + videoLabel );
+				}
+			}
+		},
+
+		/**
+		 * Check if ffmpeg thumbnail generation is still in progress.
+		 * Returns true only if ffmpeg_generated has a value that is not 'no', 'yes', or empty.
+		 *
+		 * @param {Object} videoAttachments The video attachments object.
+		 * @return {boolean} True if generation is pending, false otherwise.
+		 */
+		isFFmpegGenerationPending: function ( videoAttachments ) {
+			return videoAttachments.ffmpeg_generated &&
+				'no' !== videoAttachments.ffmpeg_generated &&
+				'yes' !== videoAttachments.ffmpeg_generated;
+		},
+
+		/**
+		 * Check if the video has fewer than 2 auto-generated thumbnails.
+		 *
+		 * @param {Object} videoAttachments The video attachments object.
+		 * @return {boolean} True if thumbnails are insufficient, false otherwise.
+		 */
+		hasInsufficientThumbnails: function ( videoAttachments ) {
+			return typeof videoAttachments.default_images === 'undefined' ||
+				videoAttachments.default_images.length < 2;
+		},
+
+		/**
 		 * [addListeners description]
 		 */
 		addListeners: function () {
@@ -125,14 +207,14 @@ window.bp = window.bp || {};
 			$document.on( 'click', '#bp-video-uploader-close', this.closeUploader.bind( this ) );
 			$document.on( 'click', '#bp-video-submit', this.submitVideo.bind( this ) );
 			$document.on( 'click', '.bp-video-uploader .modal-container .bb-field-uploader-actions', this.uploadVideoNavigate.bind( this ) );
-			$document.on( 'click', '.bb-rl-more_dropdown-wrap .bb_rl_more_dropdown__action, .bb-rl-activity-video-elem .bb-rl-more_dropdown-wrap .video-action_list li a, .bb-rl-media-model-container .bb-rl-activity-list .bb-rl-more_dropdown-wrap > a, .bb-rl-media-model-container .bb-rl-activity-list .bb-rl-more_dropdown-wrap .video-action_list li a', this.videoActivityActionButton.bind( this ) );
+			$document.on( 'click', '.bb-rl-activity-video-elem .bb-rl-more_dropdown-wrap .bb_rl_more_dropdown__action, .bb-rl-activity-video-elem .bb-rl-more_dropdown-wrap .video-action_list li a, .bb-rl-media-model-container .bb-rl-activity-list .bb-rl-activity-video-elem .bb-rl-more_dropdown-wrap > a, .bb-rl-media-model-container .bb-rl-activity-list .bb-rl-more_dropdown-wrap .video-action_list li a', this.videoActivityActionButton.bind( this ) );
 			$document.on( 'click', '.activity .bb-rl-video-move-activity, #media-stream .bb-rl-video-move-activity, #video-stream .bb-rl-video-move-activity', this.moveVideoIntoAlbum.bind( this ) );
 			$document.on( 'click', '.bb-rl-video-open-create-popup-album', this.createAlbumInPopup.bind( this ) );
 			$document.on( 'click', '.bb-rl-ac-video-close-button', this.closeVideoMove.bind( this ) );
 			$document.on( 'click', '.bb-rl-ac-video-move', this.openVideoMove.bind( this ) );
 			$document.on( 'change', '.bb-video-check-wrap [name="bb-video-select"]', this.addSelectedClassToWrapper.bind( this ) );
 			$document.on( 'click', '#bb-select-deselect-all-video', this.toggleSelectAllVideo.bind( this ) );
-			$document.on( 'click', '.video-action_list .bb-rl-video-file-delete, #bb-delete-video', this.deleteVideo.bind( this ) );
+			$document.on( 'click', '.video-action_list .bb-rl-video-file-delete, .bb_rl_more_dropdown .bb-rl-video-file-delete, #bb-delete-video', this.deleteVideo.bind( this ) );
 			$document.on( 'click', '.bb-rl-video-thumbnail-uploader.opened-edit-thumbnail .bb-rl-video-thumbnail-custom .bb-rl-close-thumbnail-custom', this.deleteVideoThumb.bind( this ) );
 
 			if ( undefined !== BP_Nouveau.is_send_ajax_request && '1' === BP_Nouveau.is_send_ajax_request ) {
@@ -288,7 +370,7 @@ window.bp = window.bp || {};
 			}
 
 			if ( target.closest( '.bb-rl-media-model-container' ).length ) {
-				target.closest( '.bb-rl-more_dropdown-wrap' ).toggleClass( 'is-visible' ).find( '.bb_rl_more_dropdown' ).toggleClass( 'open' );
+				target.closest( '.video-action-wrap' ).toggleClass( 'is-visible' ).find( '.bb_rl_more_dropdown' ).toggleClass( 'open' );
 			}
 
 			if ( event.currentTarget.tagName.toLowerCase() === 'a' && (
@@ -476,6 +558,12 @@ window.bp = window.bp || {};
 									$buddypress.find( '.video-type-navs ul.video-nav li#video-personal a span.count' ).text( response.data.video_personal_count );
 									$buddypress.find( '.video-type-navs ul.video-nav li#video-groups a span.count' ).text( response.data.video_group_count );
 								}
+
+								// Update album counts if uploading to an album.
+								if ( response.data.album_total_count !== undefined ) {
+									self.updateAlbumCounts( response.data );
+									}
+
 								var videoLength = self.dropzone_video.length;
 								for ( var i = 0; i < videoLength; i++ ) {
 									self.dropzone_video[ i ].saved = true;
@@ -550,6 +638,28 @@ window.bp = window.bp || {};
 									}
 								);
 
+								// Update album counts for both source and destination albums if present.
+								if ( response.data.source_album_id !== undefined || response.data.dest_album_id !== undefined ) {
+									var $albumContainer = $( '#buddypress #bp-media-single-album' );
+									if ( $albumContainer.length ) {
+										// Determine which album we're currently viewing from the DOM (ReadyLaunch uses data-id).
+										var currentAlbumId = parseInt( $albumContainer.attr( 'data-id' ) || $albumContainer.attr( 'data-album-id' ) ) || 0;
+										var albumCounts = {};
+
+										// If we're viewing the source album, use source counts (item was removed).
+										// If we're viewing the destination album, use dest counts (item was added).
+										if ( currentAlbumId === response.data.source_album_id ) {
+											albumCounts.album_media_count = response.data.source_album_media_count;
+											albumCounts.album_video_count = response.data.source_album_video_count;
+										} else if ( currentAlbumId === response.data.dest_album_id ) {
+											albumCounts.album_media_count = response.data.dest_album_media_count;
+											albumCounts.album_video_count = response.data.dest_album_video_count;
+										}
+
+										self.updateAlbumCounts( albumCounts );
+									}
+								}
+
 								jQuery( window ).scroll();
 
 								self.closeUploader( event );
@@ -600,6 +710,12 @@ window.bp = window.bp || {};
 
 				var videoUploader = $( '#bp-video-uploader' );
 				videoUploader.show();
+
+				// Reinitialize select2 for privacy select if not already initialized.
+				if ( bp.Readylaunch && bp.Readylaunch.initSelect2Scoped ) {
+					bp.Readylaunch.initSelect2Scoped( videoUploader );
+				}
+
 				if ( videoUploader.find( '.bb-field-steps.bb-field-steps-2' ).length ) {
 					currentTarget       = '#bp-video-uploader.bp-video-uploader';
 					var albumSelectedId = $( currentTarget ).find( '.bb-rl-album-selected-id' ).val();
@@ -675,11 +791,11 @@ window.bp = window.bp || {};
 						var mediaPrivacy = eventCurrentTarget.closest( '#bp-video-uploader' ).find( '#bb-video-privacy' );
 						if ( Number( eventCurrentTarget.data( 'id' ) ) !== 0 ) {
 							mediaPrivacy.find( 'option' ).removeAttr( 'selected' );
-							mediaPrivacy.val( eventCurrentTarget.parent().data( 'privacy' ) );
+							mediaPrivacy.val( eventCurrentTarget.parent().data( 'privacy' ) ).trigger( 'change' );
 							mediaPrivacy.prop( 'disabled', true );
 						} else {
 							mediaPrivacy.find( 'option' ).removeAttr( 'selected' );
-							mediaPrivacy.val( 'public' );
+							mediaPrivacy.val( 'public' ).trigger( 'change' );
 							mediaPrivacy.prop( 'disabled', false );
 						}
 					}
@@ -711,11 +827,11 @@ window.bp = window.bp || {};
 						var selectedAlbumPrivacy = eventCurrentTarget.closest( '#bp-video-uploader' ).find( '.location-album-list li.is_active' ).data( 'privacy' );
 						if ( Number( fieldWrapElem.find( '.bb-rl-album-selected-id' ).val() ) !== 0 ) {
 							mediaPrivacy.find( 'option' ).removeAttr( 'selected' );
-							mediaPrivacy.val( selectedAlbumPrivacy === undefined ? 'public' : selectedAlbumPrivacy );
+							mediaPrivacy.val( selectedAlbumPrivacy === undefined ? 'public' : selectedAlbumPrivacy ).trigger( 'change' );
 							mediaPrivacy.prop( 'disabled', true );
 						} else {
 							mediaPrivacy.find( 'option' ).removeAttr( 'selected' );
-							mediaPrivacy.val( 'public' );
+							mediaPrivacy.val( 'public' ).trigger( 'change' );
 							mediaPrivacy.prop( 'disabled', false );
 						}
 					}
@@ -767,7 +883,7 @@ window.bp = window.bp || {};
 							}
 						} else {
 							if ( ! jQuery( '.media-error-popup' ).length ) {
-								$( 'body' ).append( '<div id="bp-media-create-folder" style="display: block;" class="open-popup media-error-popup"><transition name="modal"><div class="bb-rl-modal-mask bb-white bbm-model-wrap"><div class="bb-rl-modal-wrapper"><div id="bb-rl-media-create-album-popup" class="modal-container bb-rl-has-folderlocationUI"><header class="bb-model-header"><h4>' + bbRlVideo.invalid_video_type + '</h4><a class="bb-model-close-button errorPopup" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-rl-field-wrap"><p>' + response + '</p></div></div></div></div></transition></div>' );
+								$( 'body' ).append( '<div id="bp-media-create-folder" style="display: block;" class="open-popup media-error-popup"><transition name="modal"><div class="bb-rl-modal-mask bb-white bbm-model-wrap"><div class="bb-rl-modal-wrapper"><div id="bb-rl-media-create-album-popup" class="modal-container bb-rl-has-folderlocationUI"><header class="bb-model-header"><h4>' + bbRlVideo.invalid_video_type + '</h4><a class="bb-model-close-button errorPopup" href="#"><span class="bb-icon-l bb-icon-times"></span></a></header><div class="bb-rl-field-wrap"><p>' + response + '</p></div></div></div></div></transition></div>' );
 							}
 							this.removeFile( file );
 						}
@@ -834,7 +950,7 @@ window.bp = window.bp || {};
 							self.dropzone_video.push( response.data );
 						} else {
 							if ( ! jQuery( '.media-error-popup' ).length ) {
-								$( 'body' ).append( '<div id="bp-video-create-folder" style="display: block;" class="open-popup media-error-popup"><transition name="modal"><div class="bb-rl-modal-mask bb-white bbm-model-wrap"><div class="bb-rl-modal-wrapper"><div id="bb-rl-media-create-album-popup" class="modal-container bb-rl-has-folderlocationUI"><header class="bb-model-header"><h4>' + bbRlMedia.invalid_media_type + '</h4><a class="bb-model-close-button errorPopup" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-rl-field-wrap"><p>' + response.data.feedback + '</p></div></div></div></div></transition></div>' );
+								$( 'body' ).append( '<div id="bp-video-create-folder" style="display: block;" class="open-popup media-error-popup"><transition name="modal"><div class="bb-rl-modal-mask bb-white bbm-model-wrap"><div class="bb-rl-modal-wrapper"><div id="bb-rl-media-create-album-popup" class="modal-container bb-rl-has-folderlocationUI"><header class="bb-model-header"><h4>' + bbRlMedia.invalid_media_type + '</h4><a class="bb-model-close-button errorPopup" href="#"><span class="bb-icon-l bb-icon-times"></span></a></header><div class="bb-rl-field-wrap"><p>' + response.data.feedback + '</p></div></div></div></div></transition></div>' );
 							}
 							this.removeFile( file );
 						}
@@ -909,6 +1025,9 @@ window.bp = window.bp || {};
 
 			var uploader = popupSelector.find( '.bb-rl-video-thumbnail-uploader' );
 			uploader.addClass( 'opened-edit-thumbnail' ).show().removeClass( 'no_generated_thumb' );
+
+			// Reset cleanup flag for new modal session.
+			this.thumbnail_cleanup_complete = false;
 
 			$document.on(
 				'click',
@@ -1037,7 +1156,7 @@ window.bp = window.bp || {};
 							}
 						} else {
 							if ( ! jQuery( '.media-error-popup' ).length ) {
-								$( 'body' ).append( '<div id="bb-rl-video-move-popup" style="display: block;" class="open-popup video-error-popup"><transition name="modal"><div class="bb-rl-modal-mask bb-white bbm-model-wrap"><div class="bb-rl-modal-wrapper"><div id="bb-rl-media-create-album-popup" class="modal-container bb-rl-has-folderlocationUI"><header class="bb-model-header"><h4>' + bbRlMedia.invalid_media_type + '</h4><a class="bb-model-close-button errorPopup" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-rl-field-wrap"><p>' + response + '</p></div></div></div></div></transition></div>' );
+								$( 'body' ).append( '<div id="bb-rl-video-move-popup" style="display: block;" class="open-popup video-error-popup"><transition name="modal"><div class="bb-rl-modal-mask bb-white bbm-model-wrap"><div class="bb-rl-modal-wrapper"><div id="bb-rl-media-create-album-popup" class="modal-container bb-rl-has-folderlocationUI"><header class="bb-model-header"><h4>' + bbRlMedia.invalid_media_type + '</h4><a class="bb-model-close-button errorPopup" href="#"><span class="bb-icon-l bb-icon-times"></span></a></header><div class="bb-rl-field-wrap"><p>' + response + '</p></div></div></div></div></transition></div>' );
 							}
 							this.removeFile( file );
 							$( uploaderSelector + ' .bb-rl-video-thumbnail-dropzone-content .bb-action-check-wrap' ).hide();
@@ -1066,7 +1185,7 @@ window.bp = window.bp || {};
 							self.dropzone_video_thumb.push( response.data );
 						} else {
 							if ( ! jQuery( '.media-error-popup' ).length ) {
-								$( 'body' ).append( '<div id="bb-rl-video-move-popup" style="display: block;" class="open-popup media-error-popup"><transition name="modal"><div class="bb-rl-modal-mask bb-white bbm-model-wrap"><div class="bb-rl-modal-wrapper"><div id="bb-rl-media-create-album-popup" class="modal-container bb-rl-has-folderlocationUI"><header class="bb-model-header"><h4>' + bbRlMedia.invalid_media_type + '</h4><a class="bb-model-close-button errorPopup" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-rl-field-wrap"><p>' + response + '</p></div></div></div></div></transition></div>' );
+								$( 'body' ).append( '<div id="bb-rl-video-move-popup" style="display: block;" class="open-popup media-error-popup"><transition name="modal"><div class="bb-rl-modal-mask bb-white bbm-model-wrap"><div class="bb-rl-modal-wrapper"><div id="bb-rl-media-create-album-popup" class="modal-container bb-rl-has-folderlocationUI"><header class="bb-model-header"><h4>' + bbRlMedia.invalid_media_type + '</h4><a class="bb-model-close-button errorPopup" href="#"><span class="bb-icon-l bb-icon-times"></span></a></header><div class="bb-rl-field-wrap"><p>' + response + '</p></div></div></div></div></transition></div>' );
 							}
 							this.removeFile( file );
 						}
@@ -1137,11 +1256,14 @@ window.bp = window.bp || {};
 						if ( default_images_html !== '' ) {
 							$( uploaderSelector + ' .bb-rl-video-thumbnail-auto-generated ul.bb-rl-video-thumb-list' ).removeClass( 'loading' );
 							$( uploaderSelector + ' .bb-rl-video-thumbnail-auto-generated ul.bb-rl-video-thumb-list' ).html( default_images_html );
-							$videoThumbnailUploadeEle.removeClass( 'generating_thumb' );
-							if ( videoAttachments.default_images.length < 2 && bbRlVideo.is_ffpmeg_installed ) {
+							$videoThumbnailUploadeEle.removeClass( 'generating_thumb ffmpeg_failed' );
+							// Only show spinners if ffmpeg is actively generating.
+							if ( bp.Nouveau.Video.hasInsufficientThumbnails( videoAttachments ) && bbRlVideo.is_ffmpeg_installed && bp.Nouveau.Video.isFFmpegGenerationPending( videoAttachments ) ) {
 								$videoThumbnailUploadeEle.addClass( 'generating_thumb' );
 								$( uploaderSelector + ' .bb-rl-video-thumbnail-auto-generated ul.bb-rl-video-thumb-list' ).append( '<li class="lg-grid-1-5 md-grid-1-3 sm-grid-1-3 bb_rl_thumb_loader"><div class="bb-rl-video-thumb-block"><i class="bb-icon-spinner bb-icon-l animate-spin"></i><span>' + bbRlVideo.generating_thumb + '</span></div></li>' );
 								$( uploaderSelector + ' .bb-rl-video-thumbnail-auto-generated ul.bb-rl-video-thumb-list' ).append( '<li class="lg-grid-1-5 md-grid-1-3 sm-grid-1-3 bb_rl_thumb_loader"><div class="bb-rl-video-thumb-block"><i class="bb-icon-spinner bb-icon-l animate-spin"></i><span>' + bbRlVideo.generating_thumb + '</span></div></li>' );
+							} else if ( 'no' === videoAttachments.ffmpeg_generated || '' === videoAttachments.ffmpeg_generated ) {
+								$videoThumbnailUploadeEle.addClass( 'ffmpeg_failed' );
 							}
 						}
 					} else {
@@ -1177,11 +1299,13 @@ window.bp = window.bp || {};
 					'video_id'      : videoId,
 				};
 
-				if ( bbRlVideo.is_ffpmeg_installed && (
-					(
-						typeof videoAttachments.default_images === 'undefined'
-					) || videoAttachments.default_images.length < 2
-				) ) {
+				// Only trigger AJAX polling if ffmpeg is installed, we have fewer than 2 thumbnails,
+				// AND ffmpeg is actively generating (not empty, not 'no', not 'yes').
+				var shouldPollForThumbnails = bbRlVideo.is_ffmpeg_installed &&
+					bp.Nouveau.Video.hasInsufficientThumbnails( videoAttachments ) &&
+					bp.Nouveau.Video.isFFmpegGenerationPending( videoAttachments );
+
+				if ( shouldPollForThumbnails ) {
 					if ( this.thumbnail_xhr ) {
 						this.thumbnail_xhr.abort();
 					}
@@ -1224,20 +1348,35 @@ window.bp = window.bp || {};
 								ulSelector.html( response.data.default_images );
 							}
 
-							if ( response.data.ffmpeg_generated && 'no' === response.data.ffmpeg_generated ) {
-								ulSelector.html( '' );
-							}
+							// When ffmpeg_generated is 'no', 'yes', or empty, stop polling and clean up UI.
+							// Do NOT clear the list - we want to keep any existing thumbnails from default_images.
+							// Use flag to prevent multiple cleanup executions from overlapping AJAX requests.
+							var ffmpegDone = 'no' === response.data.ffmpeg_generated || 'yes' === response.data.ffmpeg_generated || '' === response.data.ffmpeg_generated;
 
-							var $thumbItems  = ulSelector.find( 'li' );
-							var $loaderItems = ulSelector.find( 'li.bb_rl_thumb_loader' );
-							if ( $thumbItems.find( 'li' ).length < 2 ) {
-								$thumbnailUploader.addClass( 'generating_thumb' ).removeClass( 'no_generated_thumb' );
-								if ( $loaderItems.length === 0 ) {
-									ulSelector.append( '<li class="lg-grid-1-5 md-grid-1-3 sm-grid-1-3 bb_rl_thumb_loader"><div class="bb-rl-video-thumb-block"><i class="bb-icon-l bb-icon-spinner animate-spin"></i><span>' + bbRlVideo.generating_thumb + '</span></div></li>' );
-									ulSelector.append( '<li class="lg-grid-1-5 md-grid-1-3 sm-grid-1-3 bb_rl_thumb_loader"><div class="bb-rl-video-thumb-block"><i class="bb-icon-l bb-icon-spinner animate-spin"></i><span>' + bbRlVideo.generating_thumb + '</span></div></li>' );
+							if ( ffmpegDone && ! bp.Nouveau.Video.thumbnail_cleanup_complete ) {
+								bp.Nouveau.Video.thumbnail_cleanup_complete = true;
+								// Stop the polling interval - no more thumbnails will be generated.
+								clearTimeout( bp.Nouveau.Video.thumbnail_interval );
+								// Remove any loading spinners since generation is complete/failed.
+								ulSelector.find( 'li.bb_rl_thumb_loader' ).remove();
+								// Update UI state - remove generating class.
+								$thumbnailUploader.removeClass( 'generating_thumb' );
+								// If we have no thumbnails at all, mark as no_generated_thumb.
+								if ( ulSelector.find( 'li' ).length === 0 ) {
+									$thumbnailUploader.addClass( 'no_generated_thumb' );
 								}
-							} else if ( $loaderItems.length === 0 ) {
-								$thumbnailUploader.removeClass( 'generating_thumb no_generated_thumb' );
+							} else if ( ! ffmpegDone ) {
+								var $thumbItems  = ulSelector.find( 'li' );
+								var $loaderItems = ulSelector.find( 'li.bb_rl_thumb_loader' );
+								if ( $thumbItems.length < 2 ) {
+									$thumbnailUploader.addClass( 'generating_thumb' ).removeClass( 'no_generated_thumb' );
+									if ( $loaderItems.length === 0 ) {
+										ulSelector.append( '<li class="lg-grid-1-5 md-grid-1-3 sm-grid-1-3 bb_rl_thumb_loader"><div class="bb-rl-video-thumb-block"><i class="bb-icon-l bb-icon-spinner animate-spin"></i><span>' + bbRlVideo.generating_thumb + '</span></div></li>' );
+										ulSelector.append( '<li class="lg-grid-1-5 md-grid-1-3 sm-grid-1-3 bb_rl_thumb_loader"><div class="bb-rl-video-thumb-block"><i class="bb-icon-l bb-icon-spinner animate-spin"></i><span>' + bbRlVideo.generating_thumb + '</span></div></li>' );
+									}
+								} else if ( $loaderItems.length === 0 ) {
+									$thumbnailUploader.removeClass( 'generating_thumb no_generated_thumb' );
+								}
 							}
 						} else {
 							// If found any error from the response then stop ajax request.
@@ -1295,6 +1434,11 @@ window.bp = window.bp || {};
 			if ( typeof window.Dropzone !== 'undefined' && $( 'div#video-album-uploader' ).length ) {
 				$( '#bp-video-uploader' ).show();
 
+				// Reinitialize select2 for privacy select if not already initialized.
+				if ( bp.Readylaunch && bp.Readylaunch.initSelect2Scoped ) {
+					bp.Readylaunch.initSelect2Scoped( $( '#bp-video-uploader' ) );
+				}
+
 				self.video_dropzone_obj = new Dropzone( 'div#video-album-uploader', self.videoOptions );
 
 				self.video_dropzone_obj.on(
@@ -1330,7 +1474,7 @@ window.bp = window.bp || {};
 							}
 						} else {
 							if ( ! jQuery( '.media-error-popup' ).length ) {
-								$( 'body' ).append( '<div id="bb-rl-video-move-popup" style="display: block;" class="open-popup media-error-popup"><transition name="modal"><div class="bb-rl-modal-mask bb-white bbm-model-wrap"><div class="bb-rl-modal-wrapper"><div id="bb-rl-media-create-album-popup" class="modal-container bb-rl-has-folderlocationUI"><header class="bb-model-header"><h4>' + bbRlMedia.invalid_media_type + '</h4><a class="bb-model-close-button errorPopup" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-rl-field-wrap"><p>' + response + '</p></div></div></div></div></transition></div>' );
+								$( 'body' ).append( '<div id="bb-rl-video-move-popup" style="display: block;" class="open-popup media-error-popup"><transition name="modal"><div class="bb-rl-modal-mask bb-white bbm-model-wrap"><div class="bb-rl-modal-wrapper"><div id="bb-rl-media-create-album-popup" class="modal-container bb-rl-has-folderlocationUI"><header class="bb-model-header"><h4>' + bbRlMedia.invalid_media_type + '</h4><a class="bb-model-close-button errorPopup" href="#"><span class="bb-icon-l bb-icon-times"></span></a></header><div class="bb-rl-field-wrap"><p>' + response + '</p></div></div></div></div></transition></div>' );
 							}
 							this.removeFile( file );
 						}
@@ -1365,7 +1509,7 @@ window.bp = window.bp || {};
 							self.dropzone_video.push( response.data );
 						} else {
 							if ( ! jQuery( '.media-error-popup' ).length ) {
-								$( 'body' ).append( '<div id="bb-rl-video-move-popup" style="display: block;" class="open-popup media-error-popup"><transition name="modal"><div class="bb-rl-modal-mask bb-white bbm-model-wrap"><div class="bb-rl-modal-wrapper"><div id="bb-rl-media-create-album-popup" class="modal-container bb-rl-has-folderlocationUI"><header class="bb-model-header"><h4>' + bbRlMedia.invalid_media_type + '</h4><a class="bb-model-close-button errorPopup" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-rl-field-wrap"><p>' + response + '</p></div></div></div></div></transition></div>' );
+								$( 'body' ).append( '<div id="bb-rl-video-move-popup" style="display: block;" class="open-popup media-error-popup"><transition name="modal"><div class="bb-rl-modal-mask bb-white bbm-model-wrap"><div class="bb-rl-modal-wrapper"><div id="bb-rl-media-create-album-popup" class="modal-container bb-rl-has-folderlocationUI"><header class="bb-model-header"><h4>' + bbRlMedia.invalid_media_type + '</h4><a class="bb-model-close-button errorPopup" href="#"><span class="bb-icon-l bb-icon-times"></span></a></header><div class="bb-rl-field-wrap"><p>' + response + '</p></div></div></div></div></transition></div>' );
 							}
 							this.removeFile( file );
 						}
@@ -1511,40 +1655,35 @@ window.bp = window.bp || {};
 								$.each(
 									video,
 									function ( index, value ) {
-										var videoElem = $( '#activity-stream ul.bb-rl-activity-list li.activity .activity-content .activity-inner .bb-activity-video-wrap div[data-id="' + value + '"]' );
+										var videoElem = $( '#bb-rl-activity-stream ul.bb-rl-activity-list li.activity .bb-rl-activity-content .bb-rl-activity-inner .bb-activity-video-wrap div[data-id="' + value + '"]' );
 										if ( videoElem.length ) {
 											videoElem.remove();
 										}
-										var activityElem = $( 'body .bb-activity-video-elem.' + value );
+										var activityElem = $( 'body .bb-rl-activity-video-elem.' + value );
 										if ( activityElem.length ) {
 											activityElem.remove();
 										}
 									}
 								);
 
-								var length = $( '#activity-stream ul.bb-rl-activity-list li[data-bp-activity-id="' + activityId + '"] .activity-content .activity-inner .bb-activity-video-elem' ).length;
-								if ( length === 0 ) {
-									$( '#activity-stream ul.bb-rl-activity-list li[data-bp-activity-id="' + activityId + '"]' ).remove();
-								}
-
 								if ( true === response.data.delete_activity ) {
-									$( 'body #buddypress .bb-rl-activity-list li#activity-' + activityId ).remove();
-									$( 'body .bb-activity-video-elem.video-activity.' + id ).remove();
-									$( 'body .activity-comments li#acomment-' + activityId ).remove();
+									$( 'body #buddypress .bb-rl-activity-list li#bb-rl-activity-' + activityId ).remove();
+									$( 'body .bb-rl-activity-video-elem.' + id ).remove();
+									$( 'body .bb-rl-activity-comments li#bb-rl-acomment-' + activityId ).remove();
 
 									if ( rootParentActivity && $( '.bb-rl-activity-list' ).length ) {
 										var liCount = $( '.bb-rl-activity-list li#activity-' + rootParentActivity + ' .activity-comments > ul > li' ).length;
 										if ( 0 === liCount ) {
 											$( '.bb-rl-activity-list li#activity-' + rootParentActivity + ' .activity-comments ul' ).remove();
-											var act_comments_text = $( '.bb-rl-activity-list li#activity-' + rootParentActivity + ' .activity-state .activity-state-comments .comments-count' );
+											var act_comments_text = $( '.bb-rl-activity-list li#bb-rl-activity-' + rootParentActivity + ' .activity-state .activity-state-comments .comments-count' );
 											if ( act_comments_text.length ) {
 												var commentLabelSingle = bbRlActivity.strings.commentLabel;
 												act_comments_text.text( commentLabelSingle.replace( '%d', 0 ) );
 											}
-											$( '.bb-rl-activity-list li#activity-' + rootParentActivity + ' .activity-content .activity-state' ).removeClass( 'has-comments' );
+											$( '.bb-rl-activity-list li#bb-rl-activity-' + rootParentActivity + ' .bb-rl-activity-content .activity-state' ).removeClass( 'has-comments' );
 										} else {
 											var totalLi         = parseInt( liCount ),
-												actCommentsText = $( '.bb-rl-activity-list li#activity-' + rootParentActivity + ' .activity-state .activity-state-comments .comments-count' );
+												actCommentsText = $( '.bb-rl-activity-list li#bb-rl-activity-' + rootParentActivity + ' .activity-state .activity-state-comments .comments-count' );
 											if ( actCommentsText.length ) {
 												var multipleCommentLabel = totalLi > 1 ? bbRlActivity.strings.commentsLabel : bbRlActivity.strings.commentLabel;
 												actCommentsText.text( multipleCommentLabel.replace( '%d', totalLi ) );
@@ -1552,7 +1691,7 @@ window.bp = window.bp || {};
 										}
 									}
 								} else {
-									$( 'body #buddypress .bb-rl-activity-list li#activity-' + activityId ).replaceWith( response.data.activity_content );
+									$( 'body #buddypress .bb-rl-activity-list li#bb-rl-activity-' + activityId ).replaceWith( response.data.activity_content );
 								}
 							}
 						} else if ( fromWhere && fromWhere.length && 'video' === fromWhere ) {
@@ -1645,6 +1784,11 @@ window.bp = window.bp || {};
 											}
 										);
 									}
+
+									// Update album counts if deleting from an album.
+									if ( response.data.album_total_count !== undefined ) {
+										self.updateAlbumCounts( response.data );
+										}
 								}
 							}
 						} else {
@@ -1802,7 +1946,20 @@ window.bp = window.bp || {};
 			event.preventDefault();
 
 			this.openAlbumUploader( event );
-			$( '#bp-video-create-album' ).show();
+			var $createAlbum = $( '#bp-video-create-album' );
+			$createAlbum.show();
+
+			// Reinitialize select2 for album privacy select after delay to ensure DOM is ready.
+			// Using 250ms to run after any ajaxComplete handlers (which have 100ms delay).
+			if ( bp.Readylaunch && bp.Readylaunch.initSelect2Scoped ) {
+				setTimeout( function () {
+					// Only initialize if not already initialized.
+					var $select = $createAlbum.find( '.bb-rl-filter select' );
+					if ( $select.length && ! $select.hasClass( 'select2-hidden-accessible' ) ) {
+						bp.Readylaunch.initSelect2Scoped( $createAlbum );
+					}
+				}, 250 );
+			}
 		},
 
 		closeCreateVideoAlbumModal: function ( event ) {
@@ -1831,10 +1988,21 @@ window.bp = window.bp || {};
 			event.preventDefault();
 
 			var video_move_popup,
-			eventCurrentTarget = $( event.currentTarget ),
-			$document          = $( document ),
-			video_id           = eventCurrentTarget.closest( '.video-action-wrap' ).siblings( 'a, div.video-js' ).data( 'id' ),
-			video_parent_id    = eventCurrentTarget.closest( '.video-action-wrap' ).siblings( 'a, div.video-js' ).data( 'album-id' );
+			    eventCurrentTarget = $( event.currentTarget ),
+			    $document          = $( document ),
+			    $videoActWrapper   = eventCurrentTarget.closest( '.video-action-wrap' ),
+			    $rlDDMenuWrapper   = eventCurrentTarget.closest( '.bb-rl-more_dropdown-wrap' ),
+			    video_id,
+			    video_parent_id;
+
+			// Determine the target element.
+			if ( $videoActWrapper.length ) {
+				video_id        = $videoActWrapper.siblings( 'a, div.video-js' ).data( 'id' );
+				video_parent_id = $videoActWrapper.siblings( 'a, div.video-js' ).data( 'album-id' );
+			} else if ( $rlDDMenuWrapper.length ) {
+				video_id        = $rlDDMenuWrapper.siblings( 'a' ).data( 'id' );
+				video_parent_id = $rlDDMenuWrapper.siblings( 'a' ).data( 'album-id' );
+			}
 
 			this.moveToIdPopup   = eventCurrentTarget.attr( 'id' );
 			this.moveToTypePopup = eventCurrentTarget.attr( 'data-type' );
@@ -1999,6 +2167,22 @@ window.bp = window.bp || {};
 			if ( $( '.video-list.bb-video-list' ).children().length ) {
 				$( '.bb-videos-actions' ).show();
 			}
+		},
+
+		removeVideoAndThumbnailAttachment: function ( id, action, nonce ) {
+			var data = {
+				'action'   : action + '_delete_attachment',
+				'_wpnonce' : nonce,
+				'id'       : id
+			};
+
+			$.ajax(
+				{
+					type : 'POST',
+					url  : bbRlAjaxUrl,
+					data : data
+				}
+			);
 		},
 	};
 
@@ -2824,27 +3008,27 @@ window.bp = window.bp || {};
 		/**
 		 * Pause all YouTube/Vimeo iframe embeds in activity posts
 		 * This prevents YouTube videos from playing when Video.js videos are active
-		 * 
+		 *
 		 * @param {boolean} quiet - If true, suppresses debug logs
 		 * @param {string} additionalSelector - Optional additional CSS selector for iframes (e.g., '.bb-rl-activity-video-elem iframe')
 		 */
 		pauseEmbeddedVideos: function( quiet, additionalSelector ) {
 			quiet = quiet || false;
 			additionalSelector = additionalSelector || '.bb-rl-activity-video-elem iframe';
-			
+
 			// Base selector for activity iframes
 			var baseSelector = '.activity-list iframe, .activity-item iframe, .bb-activity-video-elem iframe';
 			// Append additional selector if provided
 			var selector = additionalSelector ? baseSelector + ', ' + additionalSelector : baseSelector;
-			
+
 			// Find all YouTube and Vimeo iframes in activity posts
 			var iframes = $( selector );
-			
+
 			iframes.each(
 				function() {
 					var $iframe = $( this );
 					var src = $iframe.attr( 'src' ) || '';
-					
+
 					// Check if it's a YouTube or Vimeo iframe
 					if ( src.indexOf( 'youtube.com' ) !== -1 || src.indexOf( 'youtu.be' ) !== -1 || src.indexOf( 'vimeo.com' ) !== -1 ) {
 						try {
@@ -2852,40 +3036,40 @@ window.bp = window.bp || {};
 							var isYouTube = src.indexOf( 'youtube.com' ) !== -1 || src.indexOf( 'youtu.be' ) !== -1;
 							var hasEnableJsApi = src.indexOf( 'enablejsapi=1' ) !== -1;
 							var hasAutoplay = src.indexOf( 'autoplay=1' ) !== -1;
-							
+
 							// For YouTube: Try postMessage first
 							if ( isYouTube && iframe.contentWindow ) {
 								// Always try postMessage first
 								iframe.contentWindow.postMessage( '{"event":"command","func":"pauseVideo","args":""}', '*' );
-								
+
 								setTimeout( function() {
 									if ( iframe.contentWindow ) {
 										iframe.contentWindow.postMessage( '{"event":"command","func":"stopVideo","args":""}', '*' );
 									}
 								}, 100 );
 							}
-							
+
 							// Only reload iframe if we need to add enablejsapi=1 (required for postMessage to work reliably)
 							// If enablejsapi is already present, we can use postMessage without reloading
 							if ( isYouTube && ! hasEnableJsApi ) {
 								var newSrc = src;
 								var separator = src.indexOf( '?' ) !== -1 ? '&' : '?';
 								newSrc = src + separator + 'enablejsapi=1';
-								
+
 								// While we're reloading, also remove autoplay if present
 								if ( hasAutoplay ) {
 									newSrc = newSrc.replace( /[?&]autoplay=1(&|$)/g, '$1' );
 									newSrc = newSrc.replace( /^([^?]*)\?&/, '$1?' );
 								}
-								
+
 								// Reload iframe with enablejsapi=1
 								$iframe.attr( 'src', newSrc );
-								
+
 								// Wait for iframe to reload, then send pause commands
 								setTimeout( function() {
 									if ( iframe.contentWindow ) {
 										iframe.contentWindow.postMessage( '{"event":"command","func":"pauseVideo","args":""}', '*' );
-										
+
 										setTimeout( function() {
 											if ( iframe.contentWindow ) {
 												iframe.contentWindow.postMessage( '{"event":"command","func":"stopVideo","args":""}', '*' );
@@ -2919,7 +3103,7 @@ window.bp = window.bp || {};
 		 * Setup picture-in-picture event handlers for a video element
 		 * NOTE: This function is identical to the one in buddypress-video.js
 		 * Keep both in sync - any changes must be made in both files
-		 * 
+		 *
 		 * @param {HTMLElement} videoElement - The video element to setup PiP handlers for
 		 */
 		setupPictureInPictureHandlers: function( videoElement ) {
@@ -3037,7 +3221,7 @@ window.bp = window.bp || {};
 		addListeners: function () {
 
 			$( document ).on( 'click', '.video-js', this.openPlayer.bind( this ) );
-			
+
 			// Global listener for any clicks that might trigger YouTube videos
 			// This catches clicks even in picture-in-picture windows
 			// Namespaced for potential cleanup: .video-player
@@ -3050,7 +3234,7 @@ window.bp = window.bp || {};
 					}, 50 );
 				}
 			} );
-			
+
 			// Listen for any iframe load events (YouTube might reload when we change src)
 			// Namespaced for potential cleanup: .video-player
 			$( document ).on( 'load.video-player', 'iframe[src*="youtube"], iframe[src*="youtu.be"]', function() {
@@ -3102,12 +3286,12 @@ window.bp = window.bp || {};
 											}
 										}
 									);
-									
+
 									// Pause YouTube/Vimeo iframes
 									bp.Nouveau.Video.Player.pauseEmbeddedVideos();
 								}
 							);
-							
+
 							// Handle picture-in-picture events (only if PiP is supported)
 							var videoElement = this.el().querySelector( 'video' );
 							if ( videoElement ) {
@@ -3221,22 +3405,6 @@ window.bp = window.bp || {};
 				}
 			);
 
-		},
-
-		removeVideoAndThumbnailAttachment: function ( id, action, nonce ) {
-			var data = {
-				'action'   : action + '_delete_attachment',
-				'_wpnonce' : nonce,
-				'id'       : id
-			};
-
-			$.ajax(
-				{
-					type : 'POST',
-					url  : bbRlAjaxUrl,
-					data : data
-				}
-			);
 		},
 	};
 

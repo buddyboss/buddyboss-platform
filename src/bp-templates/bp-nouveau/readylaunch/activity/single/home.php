@@ -31,6 +31,7 @@ bp_nouveau_template_notices();
 bp_nouveau_before_single_activity_content();
 ?>
 
+<div class="bb-rl-screen-content">
 <div class="activity" data-bp-single="<?php echo esc_attr( bp_current_action() ); ?>">
 	<?php
 	do_action( 'bp_before_single_activity_content' );
@@ -43,20 +44,20 @@ bp_nouveau_before_single_activity_content();
 			?>
 			<div class="bb-rl-activity-placeholder">
 				<div class="bb-rl-activity-placeholder_head">
-					<div class="bb-rl-activity-placeholder_avatar bb-bg-animation bb-loading-bg"></div>
+					<div class="bb-rl-activity-placeholder_avatar bb-rl-loading-bg"></div>
 					<div class="bb-rl-activity-placeholder_details">
-						<div class="bb-rl-activity-placeholder_title bb-bg-animation bb-loading-bg"></div>
-						<div class="bb-rl-activity-placeholder_description bb-bg-animation bb-loading-bg"></div>
+						<div class="bb-rl-activity-placeholder_title bb-rl-loading-bg"></div>
+						<div class="bb-rl-activity-placeholder_description bb-rl-loading-bg"></div>
 					</div>
 				</div>
 				<div class="bb-rl-activity-placeholder_content">
-					<div class="bb-rl-activity-placeholder_title bb-bg-animation bb-loading-bg"></div>
-					<div class="bb-rl-activity-placeholder_title bb-bg-animation bb-loading-bg"></div>
+					<div class="bb-rl-activity-placeholder_title bb-rl-loading-bg"></div>
+					<div class="bb-rl-activity-placeholder_title bb-rl-loading-bg"></div>
 				</div>
 				<div class="bb-rl-activity-placeholder_actions">
-					<div class="bb-rl-activity-placeholder_description bb-bg-animation bb-loading-bg"></div>
-					<div class="bb-rl-activity-placeholder_description bb-bg-animation bb-loading-bg"></div>
-					<div class="bb-rl-activity-placeholder_description bb-bg-animation bb-loading-bg"></div>
+					<div class="bb-rl-activity-placeholder_description bb-rl-loading-bg"></div>
+					<div class="bb-rl-activity-placeholder_description bb-rl-loading-bg"></div>
+					<div class="bb-rl-activity-placeholder_description bb-rl-loading-bg"></div>
 				</div>
 			</div>
 			<?php
@@ -71,4 +72,5 @@ bp_nouveau_before_single_activity_content();
 	do_action( 'bp_after_single_activity_content' );
 	?>
 </div>
+</div><!-- .bb-rl-screen-content -->
 </div>

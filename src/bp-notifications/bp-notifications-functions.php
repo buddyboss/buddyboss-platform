@@ -1099,6 +1099,15 @@ function bb_notification_avatar() {
 			break;
 	}
 
+	// `BP_Groups_Group` and `bp_get_group_permalink()` are loaded by the
+	// groups component. A stale group-related notification can outlive a
+	// groups deactivation — fall through to the default-avatar branch in
+	// that case rather than fatalling on the missing class.
+	if ( isset( $object ) && 'group' === $object && ! bp_is_active( 'groups' ) ) {
+		$object  = 'notification';
+		$item_id = 0;
+	}
+
 	if ( isset( $item_id, $object ) ) {
 
 		if ( 'notification' === $object ) {
@@ -1354,6 +1363,14 @@ function bb_get_notification_conditional_icon( $notification ) {
 			break;
 		case 'bb_groups_new_message':
 		case 'bb_messages_new':
+			// `BP_Messages_Message` and `bp_messages_get_meta()` are loaded
+			// by the messages component. A stale messages notification can
+			// outlive a messages deactivation — return a neutral icon
+			// instead of fatalling on the missing class/function.
+			if ( ! bp_is_active( 'messages' ) ) {
+				$icon_class = 'bb-icon-f bb-icon-comment-square';
+				break;
+			}
 			$item_id = $notification->item_id;
 			// Get message thread ID.
 			$message      = new BP_Messages_Message( $item_id );
@@ -1395,6 +1412,13 @@ function bb_get_notification_conditional_icon( $notification ) {
 			break;
 		case 'bb_activity_following_post':
 		case 'bb_groups_subscribed_activity':
+			// `BP_Activity_Activity` is loaded by the activity component
+			// and is NOT in the always-on autoload list. Stale activity-
+			// related notifications can outlive an activity deactivation.
+			if ( ! bp_is_active( 'activity' ) ) {
+				$icon_class = 'bb-icon-f bb-icon-activity';
+				break;
+			}
 			$item_id        = $notification->item_id;
 			$activity       = new BP_Activity_Activity( $item_id );
 			$activity_metas = bb_activity_get_metadata( $item_id );

@@ -167,7 +167,8 @@ function bp_nouveau_ajax_mark_activity_favorite() {
 	if ( ! empty( $_POST['reaction_id'] ) ) {
 		$reaction_id = sanitize_text_field( $_POST['reaction_id'] );
 	} else {
-		$reaction_id = bb_load_reaction()->bb_reactions_reaction_id();
+		$reaction = bb_load_reaction();
+		$reaction_id = $reaction ? $reaction->bb_reactions_reaction_id() : 0;
 	}
 
 	$reacted = bp_activity_add_user_favorite(
@@ -186,8 +187,8 @@ function bp_nouveau_ajax_mark_activity_favorite() {
 	}
 
 	$response = array(
-		'reaction_button' => bb_get_activity_post_reaction_button_html( $item_id, $item_type, $reaction_id, true ),
-		'reaction_count'  => bb_get_activity_post_user_reactions_html( $item_id, $item_type, false ),
+		'reaction_button' => function_exists( 'bb_get_activity_post_reaction_button_html' ) ? bb_get_activity_post_reaction_button_html( $item_id, $item_type, $reaction_id, true ) : '',
+		'reaction_count'  => function_exists( 'bb_get_activity_post_user_reactions_html' ) ? bb_get_activity_post_user_reactions_html( $item_id, $item_type, false ) : '',
 	);
 
 	$fav_count = (int) bp_get_total_favorite_count_for_user( $user_id );
@@ -251,8 +252,8 @@ function bp_nouveau_ajax_unmark_activity_favorite() {
 	}
 
 	$response = array(
-		'reaction_button' => bb_get_activity_post_reaction_button_html( $item_id, $item_type ),
-		'reaction_count'  => bb_get_activity_post_user_reactions_html( $item_id, $item_type, false ),
+		'reaction_button' => function_exists( 'bb_get_activity_post_reaction_button_html' ) ? bb_get_activity_post_reaction_button_html( $item_id, $item_type ) : '',
+		'reaction_count'  => function_exists( 'bb_get_activity_post_user_reactions_html' ) ? bb_get_activity_post_user_reactions_html( $item_id, $item_type, false ) : '',
 	);
 
 	$fav_count = (int) bp_get_total_favorite_count_for_user( $user_id );
@@ -598,7 +599,11 @@ function bp_nouveau_ajax_new_activity_comment() {
 	add_filter( 'bp_get_activity_comment_css_class', 'bb_activity_recent_comment_class' );
 	bp_get_template_part( 'activity/comment', null, $comment_template_args );
 	remove_filter( 'bp_get_activity_comment_css_class', 'bb_activity_recent_comment_class' );
-	$response = array( 'contents' => ob_get_contents() );
+
+	$response = array(
+		'contents'  => ob_get_contents(),
+		'parent_id' => (int) $activity->secondary_item_id, // The actual parent (may differ from requested if redirected).
+	);
 	ob_end_clean();
 
 	unset( $activities_template );
@@ -1620,7 +1625,7 @@ function bb_nouveau_ajax_activity_load_more_comments() {
 	}
 	$comments = BP_Activity_Activity::append_comments(
 		array( $parent_commment ),
-		'',
+		'ham_only', // Filter spam comments - include orphaned comments (replies to spam).
 		true,
 		array(
 			'limit'                  => bb_get_activity_comment_loading(),

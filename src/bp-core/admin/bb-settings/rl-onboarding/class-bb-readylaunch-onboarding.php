@@ -30,6 +30,14 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 	private static $instance = null;
 
 	/**
+	 * Flag to prevent multiple configuration builds.
+	 *
+	 * @since BuddyBoss 2.18.0
+	 * @var   bool
+	 */
+	private $config_built = false;
+
+	/**
 	 * Ensures only one instance of BB_ReadyLaunch_Onboarding is loaded or can be loaded.
 	 *
 	 * @since  BuddyBoss 2.10.0
@@ -49,9 +57,27 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 	 * @since BuddyBoss 2.10.0
 	 */
 	private function __construct() {
+		// Delay configuration building until init to ensure text domain is loaded.
+		add_action( 'bp_init', array( $this, 'build_config' ), 5 );
+	}
+
+	/**
+	 * Build configuration array with ReadyLaunch-specific settings.
+	 * Called on init hook to ensure text domain is loaded.
+	 *
+	 * @since BuddyBoss 2.18.0
+	 */
+	public function build_config() {
+
+		// Prevent multiple initialization.
+		if ( $this->config_built ) {
+			return;
+		}
+		$this->config_built = true;
+
 		// Build configuration array with ReadyLaunch-specific settings.
 		$config = array(
-			'admin_page'            => 'bp-components',
+			'admin_page'            => 'bb-settings',
 			'option_prefix'         => 'bb_rl',
 			'completion_option'     => 'bb_rl_onboarding_completed',
 			'wizard_title'          => __( 'BuddyBoss ReadyLaunch Setup', 'buddyboss' ),
@@ -504,6 +530,42 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 	}
 
 	/**
+	 * Get the bootstrap payload used to mount the wizard on-demand
+	 * from the Settings 2.0 Appearance panel without a page reload.
+	 *
+	 * Bundles the same localised data that `enqueue_scripts()` would
+	 * inject on a full reload plus the build asset URLs so the client
+	 * can lazy-load `rl-onboarding.js` / `onboarding.css` on click.
+	 *
+	 * `shouldShow` is forced to `false` — the Welcome Banner flips it
+	 * to `true` right before it mounts the wizard.
+	 *
+	 * @since BuddyBoss 3.0.0
+	 *
+	 * @return array Bootstrap payload: { wizardData, assets }.
+	 */
+	public function get_bootstrap_data() {
+		$wizard_data               = $this->localize_wizard_data();
+		$wizard_data['shouldShow'] = false;
+
+		$asset_file = __DIR__ . '/build/rl-onboarding.asset.php';
+		$asset_data = file_exists( $asset_file ) ? include $asset_file : array(
+			'version' => $this->wizard_version,
+		);
+
+		$rtl = is_rtl() ? '-rtl' : '';
+
+		return array(
+			'wizardData' => $wizard_data,
+			'assets'     => array(
+				'js'  => buddypress()->plugin_url . 'bp-core/admin/bb-settings/rl-onboarding/build/rl-onboarding.js',
+				'css' => buddypress()->plugin_url . "bp-core/admin/bb-settings/rl-onboarding/build/onboarding{$rtl}.css",
+				'ver' => isset( $asset_data['version'] ) ? $asset_data['version'] : $this->wizard_version,
+			),
+		);
+	}
+
+	/**
 	 * AJAX handler to complete the wizard.
 	 *
 	 * @since BuddyBoss 2.10.0
@@ -619,9 +681,18 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 
 					case 'checkbox_group':
 						if ( is_array( $field_value ) ) {
-							// Ensure all values are sanitised and valid.
-							$allowed_values          = isset( $field_config['options'] ) ? array_keys( $field_config['options'] ) : array();
-							$sanitized[ $field_key ] = array_intersect( $field_value, $allowed_values );
+							// Build a string-keyed boolean map: option_key => (bool) enabled.
+							// array_intersect() preserves integer keys from the JS input, which
+							// causes REST validation failures. Use string keys from config instead.
+							// sanitize_key() keeps parity with bb_appearance_sanitize_sidebar_map()
+							// and guarantees the stored keys survive the REST validator's
+							// sanitize_key() equality check on a later save.
+							$allowed_keys = isset( $field_config['options'] ) ? array_keys( $field_config['options'] ) : array();
+							$boolean_map  = array();
+							foreach ( $allowed_keys as $option_key ) {
+								$boolean_map[ sanitize_key( $option_key ) ] = in_array( $option_key, $field_value, true );
+							}
+							$sanitized[ $field_key ] = $boolean_map;
 						} else {
 							// If not an array, default to an empty array.
 							$sanitized[ $field_key ] = array();
@@ -633,12 +704,22 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 						break;
 
 					case 'color':
-						$sanitized[ $field_key ] = sanitize_hex_color( $field_value ) ? sanitize_hex_color( $field_value ) : ( $field_config['default'] ?? '#e57e3a' );
+						// Delegate to shared Appearance sanitizer (appearance/admin/callbacks.php).
+						$default_color           = $field_config['default'] ?? '#e57e3a';
+						$sanitized[ $field_key ] = function_exists( 'bb_appearance_sanitize_color' )
+							? bb_appearance_sanitize_color( $field_value, $default_color )
+							: ( sanitize_hex_color( $field_value ) ? sanitize_hex_color( $field_value ) : $default_color );
 						break;
 
 					case 'media':
-						if ( is_array( $field_value ) && isset( $field_value['id'] ) ) {
-							// New format: complete image object with id, url, alt, etc.
+						// Delegate object/integer handling to shared Appearance sanitizer;
+						// retain onboarding-specific `<field>_url` companion handling inline.
+						if ( function_exists( 'bb_appearance_sanitize_media' ) ) {
+							$sanitized[ $field_key ] = bb_appearance_sanitize_media( $field_value );
+							if ( is_numeric( $field_value ) && isset( $step_data[ $field_key . '_url' ] ) ) {
+								$sanitized[ $field_key . '_url' ] = esc_url_raw( $step_data[ $field_key . '_url' ] );
+							}
+						} elseif ( is_array( $field_value ) && isset( $field_value['id'] ) ) {
 							$sanitized[ $field_key ] = array(
 								'id'    => intval( $field_value['id'] ),
 								'url'   => isset( $field_value['url'] ) ? esc_url_raw( $field_value['url'] ) : '',
@@ -646,14 +727,11 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 								'title' => isset( $field_value['title'] ) ? sanitize_text_field( $field_value['title'] ) : '',
 							);
 						} elseif ( is_numeric( $field_value ) ) {
-							// Legacy format: just the ID.
 							$sanitized[ $field_key ] = intval( $field_value );
-							// Also, save the URL if provided.
 							if ( isset( $step_data[ $field_key . '_url' ] ) ) {
 								$sanitized[ $field_key . '_url' ] = esc_url_raw( $step_data[ $field_key . '_url' ] );
 							}
 						} else {
-							// Invalid or empty value.
 							$sanitized[ $field_key ] = null;
 						}
 						break;
@@ -687,35 +765,20 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 							$sanitized[ $field_key ] = $sanitized_items;
 
 							// For some draggable fields, ReadyLaunch expects a specific structure.
+							// Delegate to shared Appearance sanitizers (appearance/admin/callbacks.php).
 							switch ( $field_key ) {
 								case 'bb_rl_side_menu':
-									// Convert sequential list into associative map id => {enabled, order, icon}.
-									$menu_map = array();
-									foreach ( $sanitized_items as $menu_item ) {
-										if ( empty( $menu_item['id'] ) ) {
-											continue;
-										}
-										$menu_map[ $menu_item['id'] ] = array(
-											'enabled' => isset( $menu_item['enabled'] ) ? (bool) $menu_item['enabled'] : true,
-											'order'   => isset( $menu_item['order'] ) ? (int) $menu_item['order'] : 0,
-											'icon'    => isset( $menu_item['icon'] ) ? $menu_item['icon'] : '',
-										);
-									}
-									$sanitized[ $field_key ] = $menu_map;
+									$sanitized[ $field_key ] = function_exists( 'bb_appearance_sanitize_side_menu' )
+										? bb_appearance_sanitize_side_menu( $sanitized_items )
+										: $sanitized_items;
 									break;
 
 								case 'bb_rl_activity_sidebars':
 								case 'bb_rl_member_profile_sidebars':
 								case 'bb_rl_groups_sidebars':
-									// Convert list into boolean map id => enabled.
-									$sidebar_map = array();
-									foreach ( $sanitized_items as $sidebar_item ) {
-										if ( empty( $sidebar_item['id'] ) ) {
-											continue;
-										}
-										$sidebar_map[ $sidebar_item['id'] ] = isset( $sidebar_item['enabled'] ) ? (bool) $sidebar_item['enabled'] : true;
-									}
-									$sanitized[ $field_key ] = $sidebar_map;
+									$sanitized[ $field_key ] = function_exists( 'bb_appearance_sanitize_sidebar_map' )
+										? bb_appearance_sanitize_sidebar_map( $sanitized_items )
+										: $sanitized_items;
 									break;
 
 								default:
@@ -735,17 +798,17 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 			}
 		}
 
-		// Sanitize pages settings.
+		// Sanitize pages settings — delegate to shared Appearance sanitizer.
 		if ( isset( $settings['pages'] ) ) {
 			$pages_settings = $settings['pages'];
 
-			// Handle the new checkbox_group: bb_rl_enabled_pages.
-			if ( isset( $pages_settings['bb_rl_enabled_pages'] ) && is_array( $pages_settings['bb_rl_enabled_pages'] ) ) {
-				$selected_pages                   = $pages_settings['bb_rl_enabled_pages'];
-				$sanitized['bb_rl_enabled_pages'] = array(
-					'registration' => in_array( 'registration', $selected_pages, true ),
-					'courses'      => in_array( 'courses', $selected_pages, true ),
-				);
+			if ( isset( $pages_settings['bb_rl_enabled_pages'] ) ) {
+				$sanitized['bb_rl_enabled_pages'] = function_exists( 'bb_appearance_sanitize_enabled_pages' )
+					? bb_appearance_sanitize_enabled_pages( $pages_settings['bb_rl_enabled_pages'] )
+					: array(
+						'registration' => is_array( $pages_settings['bb_rl_enabled_pages'] ) && in_array( 'registration', $pages_settings['bb_rl_enabled_pages'], true ),
+						'courses'      => is_array( $pages_settings['bb_rl_enabled_pages'] ) && in_array( 'courses', $pages_settings['bb_rl_enabled_pages'], true ),
+					);
 			}
 		}
 
@@ -827,110 +890,25 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 			$this->save_readylaunch_option( 'dark_logo', $final_settings['bb_rl_dark_logo'] );
 		}
 
-		// Force enabled registration when enabled from settings.
-		if ( ! empty( $final_settings['bb_rl_enabled_pages'] ) ) {
-			$pages = $final_settings['bb_rl_enabled_pages'];
-			if (
-				! empty( $pages['registration'] ) &&
-				! bp_enable_site_registration( false ) &&
-				! bp_allow_custom_registration()
-			) {
-				// Enable registration page.
-				bp_update_option( 'bp-enable-site-registration', true );
-				bp_update_option( 'allow-custom-registration', 0 );
-			}
+		// Component activation / registration force-enable / schema upgrade /
+		// the `bb_rl_configuration_applied` action all live in the shared
+		// `bb_appearance_apply_configuration()` function so Settings 2.0
+		// auto-save and the onboarding wizard run the same side-effect
+		// pipeline. The Appearance feature is always registered (required =>
+		// true, is_active_callback => __return_true), so the function is
+		// normally loaded by the time this method runs. The `function_exists`
+		// guard is defensive — if a customer somehow rolls Platform back below
+		// the version that ships the Appearance feature while the onboarding
+		// bundle is still cached in their browser, we'd rather no-op than fatal.
+		if ( function_exists( 'bb_appearance_apply_configuration' ) ) {
+			bb_appearance_apply_configuration( $final_settings );
 		}
 
-		$component_activated = false;
-
-		// Force enabled components based on side menu settings.
-		if ( ! empty( $final_settings['bb_rl_side_menu'] ) ) {
-			$side_menu = $final_settings['bb_rl_side_menu'];
-
-			// Enable or disable BuddyBoss components based on the side menu toggle.
-			$component_map = array(
-				'activity_feed' => 'activity',
-				'groups'        => 'groups',
-				'forums'        => 'forums',
-				'messages'      => 'messages',
-				'notifications' => 'notifications',
-			);
-
-			$active_components = bp_get_option( 'bp-active-components', array() );
-
-			foreach ( $component_map as $menu_id => $component_key ) {
-				if ( isset( $side_menu[ $menu_id ] ) ) {
-					$enabled = ! empty( $side_menu[ $menu_id ]['enabled'] );
-					if ( $enabled && empty( $active_components[ $component_key ] ) ) {
-						$active_components[ $component_key ] = 1;
-						$component_activated                 = true;
-					}
-				}
-			}
-
-			if ( $component_activated ) {
-				bp_update_option( 'bp-active-components', $active_components );
-			}
-		}
-
-		$component_map = array();
-		if ( ! empty( $final_settings['bb_rl_activity_sidebars'] ) ) {
-			$component_map[] = 'activity';
-		}
-
-		if ( ! empty( $final_settings['bb_rl_groups_sidebars'] ) ) {
-			$component_map[] = 'groups';
-		}
-
-		if (
-			! empty( $final_settings['bb_rl_member_profile_sidebars'] )
-		) {
-			if ( in_array( 'my_network', $final_settings['bb_rl_member_profile_sidebars'], true ) ) {
-				$component_map[] = 'activity';
-			}
-
-			if ( in_array( 'connections', $final_settings['bb_rl_member_profile_sidebars'], true ) ) {
-				$component_map[] = 'friends';
-			}
-
-			bp_update_option( '_bp_enable_activity_follow', true );
-		}
-
-		if ( ! empty( array_unique( $component_map ) ) ) {
-			$component_map     = array_unique( $component_map );
-			$active_components = bp_get_option( 'bp-active-components', array() );
-
-			foreach ( $component_map as $k => $component_key ) {
-				if ( empty( $active_components[ $component_key ] ) ) {
-					$active_components[ $component_key ] = 1;
-					$component_activated                 = true;
-				}
-			}
-
-			if ( $component_activated ) {
-				bp_update_option( 'bp-active-components', $active_components );
-			}
-		}
-
-		if ( true === $component_activated ) {
-			// Save settings and upgrade schema.
-			require_once ABSPATH . 'wp-admin/includes/upgrade.php';
-			require_once buddypress()->plugin_dir . '/bp-core/admin/bp-core-admin-schema.php';
-
-			bp_core_install();
-		}
-
-		// Apply remaining step settings dynamically.
+		// Apply remaining step settings dynamically — onboarding-specific path
+		// that reads dynamic step_options config to cover fields not handled
+		// above. Settings 2.0 saves those via the regular per-field option
+		// writes so this branch is onboarding-only.
 		$this->apply_remaining_step_settings( $final_settings );
-
-		/**
-		 * Fires after ReadyLaunch configuration has been applied.
-		 *
-		 * @since BuddyBoss 2.10.0
-		 *
-		 * @param array $final_settings The final configuration settings.
-		 */
-		do_action( 'bb_rl_configuration_applied', $final_settings );
 	}
 
 	/**
