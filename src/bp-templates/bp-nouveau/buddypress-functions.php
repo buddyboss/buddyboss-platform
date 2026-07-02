@@ -444,6 +444,21 @@ class BP_Nouveau extends BP_Theme_Compat {
 				if ( false === strpos( $style['file'], '://' ) ) {
 					$asset = bp_locate_template_asset( $file );
 
+					// Under SCRIPT_DEBUG ( $min === '' ) we ask for the unminified
+					// file first. On a stripped build it may be absent (removed from
+					// the zip and not restored by the debug-asset fetcher), in which
+					// case bp_locate_template_asset() returns nothing. Fall back to
+					// the minified twin so the style still enqueues instead of being
+					// dropped, matching the min logic used elsewhere.
+					if ( ( empty( $asset['uri'] ) || false === strpos( $asset['uri'], '://' ) ) && '' === $min ) {
+						if ( 'bp-nouveau-icons-map' === $handle ) {
+							$file = sprintf( $style['file'], '.min' );
+						} else {
+							$file = sprintf( $style['file'], $rtl, '.min' );
+						}
+						$asset = bp_locate_template_asset( $file );
+					}
+
 					if ( empty( $asset['uri'] ) || false === strpos( $asset['uri'], '://' ) ) {
 						continue;
 					}
@@ -555,6 +570,17 @@ class BP_Nouveau extends BP_Theme_Compat {
 			// Locate the asset if needed.
 			if ( false === strpos( $script['file'], '://' ) ) {
 				$asset = bp_locate_template_asset( $file );
+
+				// Under SCRIPT_DEBUG ( $min === '' ) we ask for the unminified
+				// file first. On a stripped build it may be absent (removed from
+				// the zip and not restored by the debug-asset fetcher), in which
+				// case bp_locate_template_asset() returns nothing. Fall back to
+				// the minified twin so the script still registers instead of being
+				// dropped, matching the min logic used elsewhere.
+				if ( ( empty( $asset['uri'] ) || false === strpos( $asset['uri'], '://' ) ) && '' === $min ) {
+					$file  = sprintf( $script['file'], '.min' );
+					$asset = bp_locate_template_asset( $file );
+				}
 
 				if ( empty( $asset['uri'] ) || false === strpos( $asset['uri'], '://' ) ) {
 					continue;
