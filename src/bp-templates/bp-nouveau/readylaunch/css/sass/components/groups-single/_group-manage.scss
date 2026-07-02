@@ -69,6 +69,27 @@
 				color: var(--bb-rl-text-secondary-color);
 				margin-bottom: var(--bb-rl-space-100);
 			}
+
+			.bb-rl-filter {
+				display: flex;
+				max-width: 245px;
+
+				.select2-container {
+					width: 100% !important;
+
+					.selection {
+						display: block;
+					}
+
+					.bb-rl-select2-container {
+						width: 100%;
+					}
+
+					.select2-selection__rendered {
+						flex: 1;
+					}
+				}
+			}
 		}
 
 		.bp-screen-title {
