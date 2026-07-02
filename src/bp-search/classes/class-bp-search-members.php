@@ -150,7 +150,7 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 				$COLUMNS .= ' COUNT( DISTINCT u.id ) ';
 			} else {
 				$COLUMNS             .= " DISTINCT u.id, 'members' as type, u.display_name LIKE %s AS relevance, a.date_recorded as entry_date ";
-				$query_placeholder[] = '%' . $search_term . '%';
+				$query_placeholder[] = '%' . $wpdb->esc_like( $search_term ) . '%';
 			}
 
 			$FROM = " {$wpdb->users} u LEFT JOIN {$bp->members->table_name_last_activity} a ON a.user_id=u.id AND a.component = 'members' AND a.type = 'last_activity'";
@@ -187,10 +187,10 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 					if ( 'user_meta' === $user_field ) {
 						// Search in user meta table for terms
 						$conditions_wp_user_table[] = " ID IN ( SELECT user_id FROM {$wpdb->usermeta} WHERE ExtractValue(meta_value, '//text()') LIKE %s AND meta_key NOT IN( 'first_name', 'last_name', 'nickname' ) ) ";
-						$query_placeholder[]        = '%' . $search_term . '%';
+						$query_placeholder[]        = '%' . $wpdb->esc_like( $search_term ) . '%';
 					} else {
 						$conditions_wp_user_table[] = $user_field . ' LIKE %s ';
-						$query_placeholder[]        = '%' . $search_term . '%';
+						$query_placeholder[]        = '%' . $wpdb->esc_like( $search_term ) . '%';
 					}
 				}
 
@@ -296,10 +296,14 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 
 						if ( ! isset( $selected_xprofile_fields_cache[ $cache_key ] ) ) {
 							// Build the main search query with character and word search.
+							// Bind the LIKE term (esc_like, so % and _ are literal) and the REGEXP
+							// term (preg_quote, so the term matches literally and cannot inject
+							// regex metacharacters or a catastrophic-backtracking pattern) via %s
+							// placeholders; field id lists are int-cast.
 							$data_clause_xprofile_table = "( SELECT field_id, user_id FROM {$bp->profile->table_name_data} WHERE ( ExtractValue(value, '//text()') LIKE %s AND field_id IN ( ";
-							$data_clause_xprofile_table .= implode( ',', $selected_xprofile_fields['char_search'] );
-							$data_clause_xprofile_table .= ") ) OR ( value REGEXP '[[:<:]]{$search_term}[[:>:]]' AND field_id IN ( ";
-							$data_clause_xprofile_table .= implode( ',', $selected_xprofile_fields['word_search'] );
+							$data_clause_xprofile_table .= implode( ',', array_map( 'intval', $selected_xprofile_fields['char_search'] ) );
+							$data_clause_xprofile_table .= ') ) OR ( value REGEXP %s AND field_id IN ( ';
+							$data_clause_xprofile_table .= implode( ',', array_map( 'intval', $selected_xprofile_fields['word_search'] ) );
 							$data_clause_xprofile_table .= ') ) ';
 
 							// Add date search if date fields exist and search term is a date.
@@ -317,7 +321,7 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 
 							$data_clause_xprofile_table .= ' )';
 
-							$sql_xprofile        = $wpdb->prepare( $data_clause_xprofile_table, '%' . $search_term . '%' );
+							$sql_xprofile        = $wpdb->prepare( $data_clause_xprofile_table, '%' . $wpdb->esc_like( $search_term ) . '%', '[[:<:]]' . preg_quote( $search_term ) . '[[:>:]]' );
 							$sql_xprofile_result = $wpdb->get_results( $sql_xprofile );
 
 							// check visiblity for field id with current user.
@@ -347,8 +351,8 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 
 						// Added user when visibility matched.
 						if ( ! empty( $user_ids ) ) {
-							$user_ids       = array_unique( $user_ids );
-							$where_fields[] = "u.id IN ( " . implode( ',', $user_ids ) . " )" . ( $member_type_sql ? ' AND ' . $member_type_sql : '' );
+							$user_ids       = array_unique( array_map( 'intval', $user_ids ) );
+							$where_fields[] = 'u.id IN ( ' . implode( ',', $user_ids ) . ' )' . ( $member_type_sql ? ' AND ' . $member_type_sql : '' );
 						} else {
 							$where_fields[] = "u.id = 0". ( $member_type_sql ? ' AND ' . $member_type_sql : '' );
 						}
@@ -372,10 +376,10 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 
 					if ( $k == 0 ) {
 						$clause_search_string_table .= ' meta_value LIKE %s ';
-						$query_placeholder[]        = '%' . $sterm . '%';
+						$query_placeholder[]        = '%' . $wpdb->esc_like( $sterm ) . '%';
 					} else {
 						$clause_search_string_table .= ' OR meta_value LIKE %s ';
-						$query_placeholder[]        = '%' . $sterm . '%';
+						$query_placeholder[]        = '%' . $wpdb->esc_like( $sterm ) . '%';
 					}
 				}
 
