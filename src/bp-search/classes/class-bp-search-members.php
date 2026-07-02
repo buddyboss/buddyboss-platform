@@ -295,32 +295,6 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 						$user_ids  = array();
 
 						if ( ! isset( $selected_xprofile_fields_cache[ $cache_key ] ) ) {
-							// Escape MySQL REGEXP metacharacters so the user's input is matched
-							// literally and so it cannot escape the surrounding quoted regex
-							// literal. Each metacharacter is wrapped in `[...]` (a character
-							// class) which MySQL's regex engine interprets as the literal
-							// character — this form survives `$wpdb->prepare()` escaping
-							// unchanged, unlike backslash-escaping which prepare's quote
-							// handling can double-escape into a literal backslash. The result
-							// is then passed as its own `%s` placeholder below so prepare
-							// applies SQL-level quoting (closing the SQL injection vector
-							// disclosed in CVE-pending security report — REGEXP literal
-							// previously took $search_term via direct PHP interpolation,
-							// outside prepare's placeholder substitution).
-							//
-							// Backslash needs a paired form `[\\]` rather than `[\]` because
-							// MySQL 8.0.4+ uses ICU regex syntax, where `\` inside a char
-							// class introduces an escape sequence and a bare `[\]` is rejected
-							// as "unknown POSIX class name". `[\\]` is interpreted by ICU as
-							// "char class containing an escaped backslash" = literal `\`.
-							$regex_safe_term = preg_replace_callback(
-								'/[.\[\](){}*+?|^$\\\\]/',
-								static function ( $match ) {
-									return '\\' === $match[0] ? '[\\\\]' : '[' . $match[0] . ']';
-								},
-								$search_term
-							);
-
 							// Build the main search query with character and word search.
 							// Bind the LIKE term (esc_like, so % and _ are literal) and the REGEXP
 							// term (preg_quote, so the term matches literally and cannot inject
@@ -347,7 +321,7 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 
 							$data_clause_xprofile_table .= ' )';
 
-							$sql_xprofile        = $wpdb->prepare( $data_clause_xprofile_table, '%' . $wpdb->esc_like( $search_term ) . '%', '[[:<:]]' . preg_quote( $search_term ) . '[[:>:]]', $regex_safe_term );
+							$sql_xprofile        = $wpdb->prepare( $data_clause_xprofile_table, '%' . $wpdb->esc_like( $search_term ) . '%', '[[:<:]]' . preg_quote( $search_term ) . '[[:>:]]' ); // phpcs:ignore WordPress.PHP.PregQuoteDelimiter.Missing -- $search_term feeds a MySQL REGEXP string literal, not a PHP preg_* pattern, so there is no PCRE delimiter to escape.
 							$sql_xprofile_result = $wpdb->get_results( $sql_xprofile );
 
 							// check visiblity for field id with current user.
