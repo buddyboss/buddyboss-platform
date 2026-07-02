@@ -367,15 +367,28 @@ class BB_S3_Image_Offload {
 		// original images and woff2 fonts into the plugin directory, so every
 		// asset must be served locally — exactly like a dev checkout — and
 		// nothing should be redirected to S3.
-		$enabled = ! ( defined( 'WP_DEBUG' ) && WP_DEBUG && defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG );
+		$debug   = ( defined( 'WP_DEBUG' ) && WP_DEBUG && defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG );
+		$enabled = ! $debug;
+
+		// Exception: a local `build_test` zip (sentinel manifest) strips images
+		// but the fetcher cannot restore them — there is no real GitHub commit to
+		// fetch the originals from. Standing down there would leave every offloaded
+		// image 404ing under SCRIPT_DEBUG (e.g. the admin logo). Keep serving from
+		// S3 in that case. Dev checkouts (no manifest) and production builds (real
+		// commit SHA -> fetcher restores) are unaffected and still serve locally.
+		if ( $debug && class_exists( 'BB_Debug_Asset_Fetcher' ) && BB_Debug_Asset_Fetcher::is_sentinel_build() ) {
+			$enabled = true;
+		}
 
 		/**
 		 * Filters whether Platform images are served from the external S3 bucket.
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
-		 * @param bool $enabled Default true, except false while WP_DEBUG && SCRIPT_DEBUG
-		 *                       are active (assets are restored and served locally).
+		 * @param bool $enabled Default true. False while WP_DEBUG && SCRIPT_DEBUG are
+		 *                       active (assets are restored and served locally), except
+		 *                       on a sentinel `build_test` zip where the fetcher cannot
+		 *                       restore and S3 remains the only source.
 		 */
 		return (bool) apply_filters( 'bb_s3_image_offload_enabled', $enabled );
 	}

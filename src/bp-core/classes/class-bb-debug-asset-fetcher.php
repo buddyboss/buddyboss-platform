@@ -143,6 +143,13 @@ class BB_Debug_Asset_Fetcher {
 	private static $active_cache = null;
 
 	/**
+	 * Boolean cache of the sentinel-build check for the current request.
+	 *
+	 * @var bool|null
+	 */
+	private static $sentinel_cache = null;
+
+	/**
 	 * Singleton accessor.
 	 *
 	 * @since BuddyBoss 3.0.3
@@ -204,6 +211,50 @@ class BB_Debug_Asset_Fetcher {
 			&& defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG
 		);
 		return self::$active_cache;
+	}
+
+	/**
+	 * Whether the running plugin is a local `build_test` zip whose manifest
+	 * carries the {@see SENTINEL_SHA} sentinel commit.
+	 *
+	 * Such builds strip images/woff2 from the zip (offloaded to S3) but cannot
+	 * be restored by the fetcher — the sentinel means there is no real GitHub
+	 * commit to fetch the originals from. A dev checkout (no manifest shipped)
+	 * and a production build (real 40-hex commit SHA -> restorable) both return
+	 * false. Consumers use this to decide whether stripped assets have any local
+	 * restore path at all.
+	 *
+	 * Reads the manifest file directly rather than via {@see load_manifest()}
+	 * so a sentinel build is distinguished from a missing/invalid manifest.
+	 * Cached per request — the shipped manifest doesn't change mid-request.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @return bool True on a sentinel `build_test` zip, false otherwise.
+	 */
+	public static function is_sentinel_build() {
+		if ( null !== self::$sentinel_cache ) {
+			return self::$sentinel_cache;
+		}
+
+		self::$sentinel_cache = false;
+
+		$path = trailingslashit( BP_PLUGIN_DIR ) . self::MANIFEST_FILE;
+		if ( ! is_readable( $path ) ) {
+			return self::$sentinel_cache;
+		}
+
+		$raw = file_get_contents( $path ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents -- reading a bundled plugin file, not a remote resource.
+		if ( false === $raw ) {
+			return self::$sentinel_cache;
+		}
+
+		$manifest = json_decode( $raw, true );
+		if ( is_array( $manifest ) && isset( $manifest['commit_sha'] ) && self::SENTINEL_SHA === $manifest['commit_sha'] ) {
+			self::$sentinel_cache = true;
+		}
+
+		return self::$sentinel_cache;
 	}
 
 	/**
