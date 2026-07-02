@@ -399,12 +399,12 @@ window.bp = window.bp || {};
 					if ( messageThreadList ) {
 						messageThreadList.addEventListener( 'scroll', bp.Nouveau.Media.throttledAutoPlayGifVideos.bind( bp.Nouveau.Media ), false );
 					}
-					
+
 					var activityModalBody = document.querySelector( '.bb-modal-activity-body' );
 					if ( activityModalBody ) {
 						activityModalBody.addEventListener( 'scroll', bp.Nouveau.Media.throttledAutoPlayGifVideos.bind( bp.Nouveau.Media ), false );
 					}
-					
+
 					var mediaModalActivityItem = document.querySelector( '.bb-media-model-container .activity-list .activity-item' );
 					if ( mediaModalActivityItem ) {
 						mediaModalActivityItem.addEventListener( 'scroll', bp.Nouveau.Media.throttledAutoPlayGifVideos.bind( bp.Nouveau.Media ), false );
@@ -1436,7 +1436,7 @@ window.bp = window.bp || {};
 									if (
 										'undefined' !== typeof response.data &&
 										'undefined' !== typeof response.data.media_personal_count &&
-										$( '#buddypress .bp-wrap .users-nav' ).length > 0 
+										$( '#buddypress .bp-wrap .users-nav' ).length > 0
 									) {
 										if ( $( '#buddypress .bb-item-count' ).length > 0 && 'yes' !== BP_Nouveau.media.is_media_directory && ! BP_Nouveau.media.current_album ) {
 											dir_label = BP_Nouveau.dir_labels.hasOwnProperty( 'media' ) ?
@@ -2584,7 +2584,7 @@ window.bp = window.bp || {};
 						function ( file, xhr, formData ) {
 							formData.append( 'action', 'media_upload' );
 							formData.append('_wpnonce', BP_Nouveau.nonces.media);
-							
+
 							var forumId = 0;
 							if ( $( '#bbp_forum_id' ).length ) {
 								forumId = $( '#bbp_forum_id' ).val();
@@ -3344,7 +3344,7 @@ window.bp = window.bp || {};
 						function ( file, xhr, formData ) {
 							formData.append( 'action', 'document_document_upload' );
 							formData.append( '_wpnonce', BP_Nouveau.nonces.media );
-							
+
 							var forumId = 0;
 							if ( $( '#bbp_forum_id' ).length ) {
 								forumId = $( '#bbp_forum_id' ).val();
@@ -3645,7 +3645,7 @@ window.bp = window.bp || {};
 						function ( file, xhr, formData ) {
 							formData.append( 'action', 'video_upload' );
 							formData.append( '_wpnonce', BP_Nouveau.nonces.video );
-							
+
 							var forumId = 0;
 							if ( $( '#bbp_forum_id' ).length ) {
 								forumId = $( '#bbp_forum_id' ).val();
@@ -3770,7 +3770,7 @@ window.bp = window.bp || {};
 										clearInterval( thumbnailCheck );
 									}
 								});
-								
+
 							} else {
 								var node, _i, _len, _ref, _results;
 								var message = response.data.feedback;
@@ -4746,7 +4746,7 @@ window.bp = window.bp || {};
 			}
 
 			// Convert to selector string for compatibility with existing code
-			currentTarget = $currentTarget.length > 0 ? ( $currentTarget.attr( 'id' ) ? '#' + $currentTarget.attr( 'id' ) : '.bp-media-move-file' ) : '.bp-media-move-file';
+			currentTarget = $currentTarget.attr( 'id' ) ? '#' + $currentTarget.attr( 'id' ) : '.bp-media-move-file';
 
 			$( currentTarget ).find( '.location-folder-list-wrap .location-folder-list' ).remove();
 			$( currentTarget ).find( '.location-folder-list-wrap' ).append( '<ul class="location-folder-list is-loading"><li><i class="bb-icon-l bb-icon-spinner animate-spin"></i></li></ul>' );
@@ -4833,7 +4833,7 @@ window.bp = window.bp || {};
 			var eventTarget = $( event.currentTarget ),
 				closest_parent = jQuery( event.currentTarget ).closest( '.has-folderlocationUI' );
 			var $modalToClose;
-			
+
 			if ( eventTarget.hasClass( 'ac-document-close-button' ) ) {
 				$modalToClose = eventTarget.closest( '.bp-media-move-file' );
 				// Close all visible document move modals to prevent duplicate modals issue
@@ -6602,24 +6602,24 @@ window.bp = window.bp || {};
 		isElementInScrollableContainer: function( element ) {
 			var $element = $( element );
 			var elementRect = element.getBoundingClientRect();
-			
+
 			// Find the closest scrollable container
 			var $scrollableContainer = $element.closest( '#bp-message-thread-list' );
-			
+
 			// Check for activity modal body
 			if ( !$scrollableContainer.length ) {
 				$scrollableContainer = $element.closest( '.bb-modal-activity-body' );
 			}
-			
+
 			// Check for media modal activity item
 			if ( !$scrollableContainer.length ) {
 				$scrollableContainer = $element.closest( '.bb-media-model-container .activity-list .activity-item' );
 			}
-			
+
 			if ( $scrollableContainer.length ) {
 				// Check if element is visible within the scrollable container
 				var containerRect = $scrollableContainer[0].getBoundingClientRect();
-				
+
 				// Element is visible if it overlaps with the container bounds (allows partial visibility)
 				var isVisible = (
 					elementRect.bottom > containerRect.top &&
@@ -6627,7 +6627,7 @@ window.bp = window.bp || {};
 					elementRect.right > containerRect.left &&
 					elementRect.left < containerRect.right
 				);
-				
+
 				return isVisible;
 			} else {
 				// Fallback to regular viewport check
@@ -6642,7 +6642,7 @@ window.bp = window.bp || {};
 			if ( this.throttleTimer ) {
 				return;
 			}
-			
+
 			this.throttleTimer = setTimeout( function() {
 				bp.Nouveau.Media.throttleTimer = null;
 				bp.Nouveau.Media.autoPlayGifVideos();
@@ -6673,20 +6673,20 @@ window.bp = window.bp || {};
 					}
 
 					var isVisible = bp.Nouveau.Media.isElementInScrollableContainer( this );
-					
+
 					if ( isVisible ) {
 						// Play the video.
 						video.play().catch( function( error ) {
 							// Silently handle play errors (e.g., user hasn't interacted with page yet)
 							console.debug( 'GIF autoplay failed:', error );
 						});
-						
+
 						// Update the button text to 'Pause'.
 						$button.hide();
 					} else {
 						// Pause the video
 						video.pause();
-						
+
 						// Update the button text to 'Play'.
 						$button.show();
 					}
@@ -6701,14 +6701,14 @@ window.bp = window.bp || {};
 			var retryCount = 0;
 			var maxRetries = 10;
 			var setupCompleted = false;
-			
+
 			function attemptSetup() {
 				if ( setupCompleted ) {
 					return;
 				}
-				
+
 				var mediaModalActivityItem = document.querySelector( '.bb-media-model-container .activity-list .activity-item' );
-				
+
 				if ( mediaModalActivityItem ) {
 					setupCompleted = true;
 					try {
@@ -6716,10 +6716,10 @@ window.bp = window.bp || {};
 						mediaModalActivityItem.removeEventListener( 'scroll', bp.Nouveau.Media.throttledAutoPlayGifVideos.bind( bp.Nouveau.Media ) );
 						// Add scroll event listener
 						mediaModalActivityItem.addEventListener( 'scroll', bp.Nouveau.Media.throttledAutoPlayGifVideos.bind( bp.Nouveau.Media ), false );
-						
+
 						// Trigger initial check for GIFs in the modal
 						bp.Nouveau.Media.invokeMediaFn( 'autoPlayGifVideos' );
-						
+
 					} catch ( error ) {
 						console.debug( 'Error setting up media modal GIF autoplay:', error );
 					}
@@ -6729,7 +6729,7 @@ window.bp = window.bp || {};
 					setTimeout( attemptSetup, 200 );
 				}
 			}
-			
+
 			// Start the setup process
 			setTimeout( attemptSetup, 100 );
 		},
@@ -7151,7 +7151,7 @@ window.bp = window.bp || {};
 			}
 							$( '.bb-media-model-wrapper.video' ).hide();
 				$( '.bb-media-model-wrapper.media' ).show();
-				
+
 				// Setup GIF autoplay for the newly shown media modal
 				bp.Nouveau.Media.invokeMediaFn( 'setupMediaModalGifAutoplay' );
 			self.is_open_media = true;
@@ -7272,12 +7272,12 @@ window.bp = window.bp || {};
 			self.is_open_document = true;
 
 			self.bodySelector.addClass( 'document-modal-open' );
-			
+
 			// Setup GIF autoplay for the newly shown document modal
 			setTimeout( function() {
 				bp.Nouveau.Media.invokeMediaFn( 'setupMediaModalGifAutoplay' );
 			}, 500 );
-			
+
 			//document.addEventListener( 'keyup', self.checkPressedKeyDocuments.bind( self ) );
 		},
 
@@ -7621,7 +7621,7 @@ window.bp = window.bp || {};
 				document_elements.find( '.bb-document-section .document-preview .document-text' ).attr( 'data-extension', extension );
 
 				var $textarea = document_elements.find( '.bb-document-section .document-preview .document-text textarea' );
-    
+
 				// Special handling for HTML files.
 				if ( 'html' === extension || 'htm' === extension ) {
 					$textarea.val(mirror_text_display);
@@ -7706,7 +7706,7 @@ window.bp = window.bp || {};
 				self.current_media = self.medias[ self.current_index ];
 				self.showMedia();
 				self.getMediasDescription();
-				
+
 				// Trigger GIF autoplay check when navigating to next media
 				setTimeout( function() {
 					bp.Nouveau.Media.invokeMediaFn( 'autoPlayGifVideos' );
@@ -7726,7 +7726,7 @@ window.bp = window.bp || {};
 				self.current_media = self.medias[ self.current_index ];
 				self.showMedia();
 				self.getMediasDescription();
-				
+
 				// Trigger GIF autoplay check when navigating to previous media
 				setTimeout( function() {
 					bp.Nouveau.Media.invokeMediaFn( 'autoPlayGifVideos' );
