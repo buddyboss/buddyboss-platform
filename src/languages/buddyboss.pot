@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 3.0.5\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2026-07-02 10:55:00+00:00\n"
+"POT-Creation-Date: 2026-07-02 10:58:53+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -900,7 +900,7 @@ msgstr ""
 
 #: bb-features/community/reactions/admin/settings.php:70
 #: bb-features/community/reactions/admin/settings.php:143
-#: bb-features/community/reactions/bb-activity-reactions.php:523
+#: bb-features/community/reactions/bb-activity-reactions.php:549
 #: bb-features/community/reactions/classes/class-bb-reaction.php:233
 #: bb-features/community/reactions/classes/class-bb-reaction.php:263
 #: bb-features/community/reactions/classes/class-bb-reaction.php:264
@@ -928,7 +928,7 @@ msgid "Activity Comments"
 msgstr ""
 
 #: bb-features/community/reactions/admin/settings.php:169
-#: bb-features/community/reactions/bb-activity-reactions.php:525
+#: bb-features/community/reactions/bb-activity-reactions.php:551
 #: bp-templates/bp-nouveau/includes/activity/ajax.php:202
 #: bp-core/admin/bb-settings/settings/build/index.js:2
 #: bp-core/admin/bb-settings/settings/build/index.js:3
@@ -950,8 +950,8 @@ msgstr ""
 
 #: bb-features/community/reactions/admin/settings.php:239
 #: bb-features/community/reactions/bb-activity-reactions.php:277
-#: bb-features/community/reactions/bb-activity-reactions.php:899
-#: bb-features/community/reactions/bb-activity-reactions.php:997
+#: bb-features/community/reactions/bb-activity-reactions.php:925
+#: bb-features/community/reactions/bb-activity-reactions.php:1023
 #: bp-activity/classes/class-bb-activity-readylaunch.php:179
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:995
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:1005
@@ -983,19 +983,20 @@ msgstr ""
 msgid "Item ID is required."
 msgstr ""
 
-#: bb-features/community/reactions/bb-activity-reactions.php:502
+#: bb-features/community/reactions/bb-activity-reactions.php:511
+#: bb-features/community/reactions/bb-activity-reactions.php:528
 #: bp-core/admin/classes/class-bb-activity-admin-ajax.php:630
 #: bp-core/admin/classes/class-bb-activity-admin-ajax.php:744
 #: bp-core/admin/classes/class-bb-activity-admin-ajax.php:1016
 msgid "Activity not found."
 msgstr ""
 
-#: bb-features/community/reactions/bb-activity-reactions.php:514
+#: bb-features/community/reactions/bb-activity-reactions.php:540
 msgid "No reactions found!"
 msgstr ""
 
 #. translators: 1: filter label, 2: count
-#: bb-features/community/reactions/bb-activity-reactions.php:583
+#: bb-features/community/reactions/bb-activity-reactions.php:609
 #: bp-activity/classes/class-bb-activity-topics-manager.php:982
 #: bp-core/admin/classes/class-bb-activity-admin-ajax.php:512
 #: bp-core/admin/classes/class-bb-admin-forums-ajax.php:340
@@ -1030,7 +1031,7 @@ msgstr ""
 msgid "All"
 msgstr ""
 
-#: bb-features/community/reactions/bb-activity-reactions.php:745
+#: bb-features/community/reactions/bb-activity-reactions.php:771
 #: bp-members/classes/class-bp-members-component.php:482
 #: bp-messages/classes/class-bb-messages-readylaunch.php:145
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-thread.php:233
@@ -1040,11 +1041,11 @@ msgid "You"
 msgstr ""
 
 #. translators: %s: Number of other users who reacted.
-#: bb-features/community/reactions/bb-activity-reactions.php:770
+#: bb-features/community/reactions/bb-activity-reactions.php:796
 msgid "%s others"
 msgstr ""
 
-#: bb-features/community/reactions/bb-activity-reactions.php:784
+#: bb-features/community/reactions/bb-activity-reactions.php:810
 #: bp-activity/bp-activity-functions.php:1761
 #: bp-activity/classes/class-bb-activity-readylaunch.php:715
 msgid " and "
@@ -7721,8 +7722,8 @@ msgstr ""
 #: bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php:269
 #: bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php:339
 #: bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php:390
-#: bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php:538
-#: bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php:593
+#: bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php:529
+#: bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php:584
 msgid "Profile component is not active."
 msgstr ""
 
@@ -7854,81 +7855,85 @@ msgstr ""
 msgid "Invalid field type."
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php:484
+#: bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php:449
+msgid "This field cannot be moved to that field set."
+msgstr ""
+
+#: bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php:475
 #: bp-core/admin/bb-settings/settings/build/517.js:1
 msgid "You can only have one instance of the \"Profile Type\" profile field."
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php:486
+#: bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php:477
 #: bp-core/admin/bb-settings/settings/build/517.js:1
 msgid "You can only have one instance of the \"Gender\" profile field."
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php:488
+#: bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php:479
 #: bp-core/admin/bb-settings/settings/build/517.js:1
 msgid "You can only have one instance of the \"Social Network\" profile field."
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php:491
+#: bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php:482
 msgid "There was an error saving the field. Please try again."
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php:521
+#: bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php:512
 msgid "Field saved successfully."
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php:545
+#: bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php:536
 msgid "Field ID is required."
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php:550
+#: bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php:541
 msgid "Invalid field."
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php:554
+#: bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php:545
 msgid "This field cannot be deleted."
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php:563
+#: bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php:554
 msgid "There was an error deleting the field. Please try again."
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php:576
+#: bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php:567
 msgid "Field deleted successfully."
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php:657
+#: bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php:658
 msgid "Order updated successfully."
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php:836
+#: bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php:937
 msgid "Single Line Input"
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php:837
+#: bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php:938
 msgid "Paragraph Input"
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php:838
+#: bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php:939
 msgid "Dropdown"
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php:839
+#: bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php:940
 #: bp-xprofile/classes/class-bp-xprofile-field-type-multiselectbox.php:28
 msgid "Multi Select"
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php:840
+#: bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php:941
 #: bp-xprofile/classes/class-bp-xprofile-field-type-checkbox.php:28
 msgid "Checkboxes"
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php:841
+#: bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php:942
 #: bp-xprofile/classes/class-bp-xprofile-field-type-radiobutton.php:28
 msgid "Radio Buttons"
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php:842
+#: bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php:943
 #: bp-core/admin/settings/emails/meta-fields.php:323
 #: bp-core/admin/settings/forums/meta-fields-replies.php:301
 #: bp-core/admin/settings/forums/meta-fields-topics.php:333
@@ -7938,21 +7943,21 @@ msgstr ""
 msgid "Date"
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php:843
+#: bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php:944
 #: bp-members/bp-members-functions.php:5090
 #: bp-xprofile/classes/class-bp-xprofile-field-type-number.php:28
 msgid "Number"
 msgstr ""
 
 #. translators: accessibility text
-#: bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php:844
+#: bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php:945
 #: bp-xprofile/classes/class-bp-xprofile-field-type-telephone.php:28
 #: bp-xprofile/classes/class-bp-xprofile-field-type-telephone.php:132
 msgid "Phone"
 msgstr ""
 
 #. translators: accessibility text
-#: bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php:845
+#: bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php:946
 #: bp-core/deprecated/buddypress/1.5.php:177
 #: bp-templates/bp-nouveau/includes/members/functions.php:472
 #: bp-xprofile/classes/class-bp-xprofile-field-type-url.php:28
@@ -7960,7 +7965,7 @@ msgstr ""
 msgid "Website"
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php:846
+#: bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php:947
 #: bp-core/profile-search/bps-xprofile.php:428
 #: bp-core/profile-search/bps-xprofile.php:431
 #: bp-core/profile-search/bps-xprofile.php:432
@@ -7968,14 +7973,14 @@ msgstr ""
 msgid "Gender"
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php:847
+#: bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php:948
 #: bp-core/admin/settings/members/settings-profile-headers.php:120
 #: bp-members/bp-members-admin.php:67
 #: bp-xprofile/classes/class-bp-xprofile-field-type-social-networks.php:28
 msgid "Social Networks"
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php:848
+#: bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php:949
 #: bp-core/admin/settings/members/settings-member-directory.php:115
 #: bp-core/admin/settings/members/settings-profile-headers.php:96
 #: bp-members/bp-members-admin.php:32
@@ -7990,55 +7995,55 @@ msgstr ""
 msgid "Profile Type"
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php:878
+#: bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php:979
 msgid "Displays a single-line text field where users can enter short text."
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php:879
+#: bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php:980
 msgid "Displays a multi-line text field where users can enter longer text."
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php:880
+#: bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php:981
 msgid "Displays a dropdown list where users can select one option from multiple predefined choices."
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php:881
+#: bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php:982
 msgid "Displays a list where users can select multiple options."
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php:882
+#: bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php:983
 msgid "Displays multiple options where users can select one or more choices."
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php:883
+#: bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php:984
 msgid "Displays multiple options where users can select one choice."
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php:884
+#: bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php:985
 msgid "Displays a date picker for selecting a specific date."
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php:885
+#: bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php:986
 msgid "Displays a field for entering a numeric value."
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php:886
+#: bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php:987
 msgid "Displays a field for entering a phone number."
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php:887
+#: bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php:988
 msgid "Displays a field for entering a website address (URL)."
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php:888
+#: bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php:989
 msgid "Allows users to select their gender from the options: Male, Female, or Other."
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php:889
+#: bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php:990
 msgid "Select one or more social networks to display as icons in the user's profile."
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php:890
+#: bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php:991
 msgid "Allows users to select their profile type."
 msgstr ""
 
@@ -39025,6 +39030,7 @@ msgid "Failed to save setting."
 msgstr ""
 
 #: bp-core/admin/bb-settings/settings/build/223.js:1
+#: bp-core/admin/bb-settings/settings/build/517.js:1
 msgid "Saving order…"
 msgstr ""
 
@@ -40004,6 +40010,18 @@ msgstr ""
 
 #: bp-core/admin/bb-settings/settings/build/517.js:1
 msgid "Failed to load profile fields."
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings/build/517.js:1
+msgid "This field is required by the platform and can’t be moved to another field set."
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings/build/517.js:1
+msgid "Fields can’t be moved into or out of a repeater field set."
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings/build/517.js:1
+msgid "This field can’t be moved here."
 msgstr ""
 
 #: bp-core/admin/bb-settings/settings/build/517.js:1
