@@ -4716,7 +4716,10 @@ window.bp = window.bp || {};
 				}
 			}
 
-			$currentTarget.find( '.bp-document-move' ).attr( 'id', eventTarget.closest( '.document-activity' ).attr( 'data-id' ) );
+			if ( $currentTarget && $currentTarget.length > 0 ) {
+				$currentTarget.find( '.bp-document-move' ).attr( 'id', eventTarget.closest( '.document-activity' ).attr( 'data-id' ) );
+			}
+
 			this.currentTargetParent = eventTarget.closest( '.bb-activity-media-elem' ).attr( 'data-parent-id' );
 
 			// Change if this is not from Activity Page.
@@ -4744,7 +4747,7 @@ window.bp = window.bp || {};
 			}
 
 			// Convert to selector string for compatibility with existing code
-			currentTarget = $currentTarget.length > 0 ? ( $currentTarget.attr( 'id' ) ? '#' + $currentTarget.attr( 'id' ) : '.bp-media-move-file' ) : '.bp-media-move-file';
+			currentTarget = $currentTarget.attr( 'id' ) ? '#' + $currentTarget.attr( 'id' ) : '.bp-media-move-file';
 
 			$( currentTarget ).find( '.location-folder-list-wrap .location-folder-list' ).remove();
 			$( currentTarget ).find( '.location-folder-list-wrap' ).append( '<ul class="location-folder-list is-loading"><li><i class="bb-icon-l bb-icon-spinner animate-spin"></i></li></ul>' );

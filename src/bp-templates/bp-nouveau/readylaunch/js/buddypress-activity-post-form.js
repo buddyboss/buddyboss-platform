@@ -1020,10 +1020,8 @@ window.bp = window.bp || {};
 
 			self.postForm.model.set( 'content', content, {silent: true} );
 
-			var activityPostTitle = self.postForm.$el.find( '#bb-rl-whats-new-title' ).val();
-			if ( activityPostTitle ) {
-				self.postForm.model.set( 'post_title', activityPostTitle, {silent: true} );
-			}
+			var activityPostTitle = self.postForm.$el.find( '#bb-rl-whats-new-title' ).val() || '';
+			self.postForm.model.set( 'post_title', activityPostTitle, {silent: true} );
 
 			// Silently add meta.
 			self.postForm.model.set( meta, {silent: true} );
@@ -5403,7 +5401,8 @@ window.bp = window.bp || {};
 
 			postUpdate: function ( event ) {
 				var self = this,
-					meta = {}, edit = false;
+					meta = {}, edit = false,
+					$form = ( event && event.target && $( event.target ).is( 'form' ) ) ? $( event.target ) : self.$el;
 
 				if ( event ) {
 					if ( 'keydown' === event.type && ( 13 !== event.keyCode || ! event.ctrlKey ) ) {
@@ -5416,9 +5415,9 @@ window.bp = window.bp || {};
 				// unset all errors before submit.
 				self.model.unset( 'errors' );
 
-				// Set the content and meta.
+				// Set the content and meta from the submitted form.
 				_.each(
-					self.$el.serializeArray(),
+					$form.serializeArray(),
 					function ( pair ) {
 						pair.name = pair.name.replace( '[]', '' );
 						if ( pair.name.startsWith( 'bb-poll-question-option[' ) ) {
@@ -5439,7 +5438,7 @@ window.bp = window.bp || {};
 				);
 
 				// Post content.
-				var $whatsNew        = self.$el.find( '#bb-rl-whats-new' ),
+				var $whatsNew        = $form.find( '#bb-rl-whats-new' ),
 					atwho_query      = $whatsNew.find( 'span.atwho-query' ),
 					atwhoQueryLength = atwho_query.length;
 				for ( var i = 0; i < atwhoQueryLength; i++ ) {
@@ -5469,16 +5468,15 @@ window.bp = window.bp || {};
 
 				self.model.set( 'content', content, { silent: true } );
 
-				var postTitle = self.$el.find( '#bb-rl-whats-new-title' );
-				if ( postTitle.length && postTitle.val() !== '' ) {
-					postTitle = postTitle.val();
+				var postTitle = $form.find( '#bb-rl-whats-new-title' ).val() || '';
+				if ( postTitle.length > 0 ) {
 					var maxPostTitleLength = BP_Nouveau.activity.params.activity_post_title_maxlength;
 					// Maximum 80 characters allowed.
 					if ( postTitle.length > maxPostTitleLength ) {
 						postTitle = postTitle.slice( 0, maxPostTitleLength );
 					}
-					self.model.set( 'post_title', postTitle, { silent: true } );
 				}
+				self.model.set( 'post_title', postTitle, { silent: true } );
 
 				// Silently add meta.
 				self.model.set( meta, { silent: true } );
@@ -5639,6 +5637,20 @@ window.bp = window.bp || {};
 						data  : data
 					}
 				);
+
+				// Force post_title from visible input right before send - ensures cleared title is always sent.
+				var $titleEl = $form.find( 'input#bb-rl-whats-new-title, input.bb-rl-whats-new-title' ).first();
+				if ( ! $titleEl.length ) {
+					$titleEl = $( 'input#bb-rl-whats-new-title, input.bb-rl-whats-new-title' ).filter( ':visible' ).first();
+				}
+				data.post_title = $titleEl.length ? ( $titleEl.val() || '' ).trim() : ( self.model.get( 'post_title' ) || '' );
+				if ( data.post_title.length > 0 && BP_Nouveau.activity.params.activity_post_title_maxlength ) {
+					data.post_title = data.post_title.slice( 0, BP_Nouveau.activity.params.activity_post_title_maxlength );
+				}
+				// Explicit flag when user cleared title during edit - ensures empty is saved even if empty params are stripped.
+				if ( edit && data.post_title.length === 0 ) {
+					data.post_title_cleared = 1;
+				}
 
 				bp.ajax.post( 'post_update', data ).done(
 					function ( response ) {
