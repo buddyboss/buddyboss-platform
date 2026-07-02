@@ -442,6 +442,21 @@ class BB_Support_Access {
 	 * @return mixed Whatever the callback returns.
 	 */
 	private function with_lock( $callback ) {
+		// The mutex and the data it guards must live on the same blog. get_data()
+		// and save() both operate on the root blog, so acquire the lock there too.
+		// Otherwise, on multisite, two writers running on different blogs would
+		// each take a separate current-blog lock and the read-modify-write would
+		// no longer serialize — the exact lost update this lock exists to prevent.
+		// Holding the root blog context for the whole critical section also means
+		// the save() inside $callback is already on the root blog, so its own
+		// switch is skipped. On single site current === root, so this is a no-op.
+		$root_blog_id = bp_get_root_blog_id();
+		$switched     = false;
+		if ( get_current_blog_id() !== $root_blog_id ) {
+			switch_to_blog( $root_blog_id );
+			$switched = true;
+		}
+
 		$acquired = false;
 		$attempts = 0;
 
@@ -473,6 +488,9 @@ class BB_Support_Access {
 			if ( $acquired ) {
 				delete_option( self::LOCK_KEY );
 			}
+			if ( $switched ) {
+				restore_current_blog();
+			}
 		}
 	}
 
@@ -492,10 +510,34 @@ class BB_Support_Access {
 	 * @return void
 	 */
 	private function save( $data ) {
-		// The third argument forces autoload off. On WordPress this also flips
-		// the stored autoload flag for an option that previously autoloaded, so
-		// a grant created before this change is corrected on its next save.
+		// This option is always read from the root blog: get_data() uses
+		// bp_get_option(), which reads via get_blog_option( bp_get_root_blog_id() ).
+		// On multisite the admin action can run on a non-root blog, so the write
+		// must target the root blog too — otherwise the grant lands where the
+		// login/read path never looks and reads back as inactive.
+		//
+		// The third argument to update_option() forces autoload off: the option
+		// carries the token hash and encrypted token and is only ever read on
+		// demand (front-end login handler / admin AJAX), never on a generic page
+		// load, so keeping it out of alloptions shrinks the in-memory exposure
+		// surface. bp_update_option()/update_blog_option() cannot set autoload,
+		// so switch into the root blog context and call update_option() directly.
+		// When already on the root blog the switch is skipped — always the case on
+		// single site, and also when invoked inside with_lock().
+		$root_blog_id = bp_get_root_blog_id();
+		$switched     = false;
+		if ( get_current_blog_id() !== $root_blog_id ) {
+			switch_to_blog( $root_blog_id );
+			$switched = true;
+		}
+
+		// The autoload flag also gets corrected here for a grant created before
+		// this change that previously autoloaded, on its next save.
 		update_option( self::OPTION, $data, false );
+
+		if ( $switched ) {
+			restore_current_blog();
+		}
 	}
 
 	/**
