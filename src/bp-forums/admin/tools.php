@@ -2135,6 +2135,11 @@ function bp_admin_forum_repair_tools_wrapper_function() {
 		),
 	);
 
+	// Capability check — repair tools require admin privileges.
+	if ( ! bp_current_user_can( 'bp_moderate' ) ) {
+		wp_send_json_error( $response );
+	}
+
 	// Bail if not a POST action.
 	if ( ! bp_is_post_request() ) {
 		wp_send_json_error( $response );

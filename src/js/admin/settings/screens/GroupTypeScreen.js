@@ -134,6 +134,11 @@ export function GroupTypeScreen( { onNavigate, helpUrl, onHelpClick, feature, ac
 	// payload (member_types); subsequent fetches skip it via `include_meta=0`.
 	var groupTypesAbortRef = useRef( null );
 
+	// AbortController ref for delete operations, aborted on unmount so a
+	// delete in flight during navigation doesn't setState on an unmounted
+	// component.
+	var actionAbortRef = useRef( null );
+
 	var loadGroupTypes = useCallback( function () {
 		if ( groupTypesAbortRef.current ) {
 			groupTypesAbortRef.current.abort();
@@ -172,6 +177,9 @@ export function GroupTypeScreen( { onNavigate, helpUrl, onHelpClick, feature, ac
 		return function () {
 			if ( groupTypesAbortRef.current ) {
 				groupTypesAbortRef.current.abort();
+			}
+			if ( actionAbortRef.current ) {
+				actionAbortRef.current.abort();
 			}
 		};
 		// `refetchTick` intentionally in deps — handlers bump it to re-run
@@ -263,7 +271,12 @@ export function GroupTypeScreen( { onNavigate, helpUrl, onHelpClick, feature, ac
 		var typeId = deleteConfirmId;
 		setDeleteConfirmId( null );
 
-		deleteGroupType( typeId )
+		if ( actionAbortRef.current ) {
+			actionAbortRef.current.abort();
+		}
+		actionAbortRef.current = new AbortController();
+
+		deleteGroupType( typeId, { signal: actionAbortRef.current.signal } )
 			.then( function ( response ) {
 				if ( response.success ) {
 					// With pagination, a local filter would leave the page
@@ -282,7 +295,10 @@ export function GroupTypeScreen( { onNavigate, helpUrl, onHelpClick, feature, ac
 					setToast( { status: 'error', message: ( response.data && response.data.message ) || __( 'Failed to delete group type.', 'buddyboss' ) } );
 				}
 			} )
-			.catch( function () {
+			.catch( function ( err ) {
+				if ( err && 'AbortError' === err.name ) {
+					return;
+				}
 				setToast( { status: 'error', message: __( 'Failed to delete group type.', 'buddyboss' ) } );
 			} );
 	}, [ deleteConfirmId, groupTypes, currentPage ] );

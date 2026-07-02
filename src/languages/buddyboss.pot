@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 3.0.5\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2026-07-01 04:49:01+00:00\n"
+"POT-Creation-Date: 2026-07-02 04:33:00+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -840,7 +840,6 @@ WP-CLI 2.7.1\n"
 
 
 #. Plugin Name of the plugin
-#: bp-core/admin/bb-admin-integrations-page.php:174
 #: bp-core/admin/settings/activity/settings-visibility.php:68
 #: bp-performance/bp-performance-includes.php:71
 #: bp-templates/bp-nouveau/includes/customizer.php:29
@@ -1110,7 +1109,6 @@ msgid "ReadyLaunch overrides your theme's styles on BuddyBoss pages."
 msgstr ""
 
 #: bb-features/community/appearance/admin/settings.php:393
-#: bp-core/admin/bb-admin-integrations-page.php:182
 #: bp-core/classes/class-bb-readylaunch.php:990
 #: bp-core/classes/class-bb-readylaunch.php:996
 msgid "ReadyLaunch"
@@ -1200,7 +1198,7 @@ msgid "Active Members"
 msgstr ""
 
 #: bb-features/community/appearance/admin/settings.php:584
-#: bp-core/admin/bb-admin-settings-tools.php:318
+#: bp-core/admin/bb-admin-settings-tools.php:326
 #: bp-core/admin/bb-settings/rl-onboarding/class-bb-readylaunch-onboarding.php:311
 #: bp-core/admin/settings/members/settings-profile-navigation.php:139
 #: bp-core/admin/settings/members/settings-profile-navigation.php:222
@@ -1411,7 +1409,7 @@ msgstr ""
 
 #: bb-features/community/appearance/admin/settings.php:888
 #: bb-features/community/appearance/admin/settings.php:1197
-#: bp-core/admin/bb-admin-settings-tools.php:293
+#: bp-core/admin/bb-admin-settings-tools.php:301
 #: bp-core/admin/bb-settings/rl-onboarding/class-bb-readylaunch-onboarding.php:1167
 #: bp-core/admin/settings/media/settings-documents.php:66
 #: bp-core/admin/settings/media/settings-emoji.php:66
@@ -1494,7 +1492,7 @@ msgid "Forums"
 msgstr ""
 
 #: bb-features/community/appearance/admin/settings.php:910
-#: bp-core/admin/bb-admin-settings-tools.php:308
+#: bp-core/admin/bb-admin-settings-tools.php:316
 #: bp-core/admin/bb-settings/rl-onboarding/class-bb-readylaunch-onboarding.php:1196
 #: bp-core/admin/settings/media/settings-documents.php:84
 #: bp-core/admin/settings/media/settings-emoji.php:84
@@ -2381,7 +2379,7 @@ msgid "Protect your community from spam and bot registrations with Google's invi
 msgstr ""
 
 #: bb-features/integrations/recaptcha/bb-recaptcha-actions.php:33
-#: bp-core/admin/bp-core-admin-actions.php:739
+#: bp-core/admin/bp-core-admin-actions.php:763
 #: bp-core/admin/bp-core-admin-tools.php:987
 #: bp-core/classes/class-bb-readylaunch.php:4366
 #: bp-forums/admin/tools.php:2134
@@ -5784,21 +5782,6 @@ msgstr ""
 msgid "BuddyBoss shared admin assets not found. Please run: npm run build:admin:common"
 msgstr ""
 
-#: bp-core/admin/bb-admin-integrations-page.php:178
-msgid "BuddyBoss Theme"
-msgstr ""
-
-#: bp-core/admin/bb-admin-integrations-page.php:186
-#: bp-core/admin/bp-core-admin-settings.php:179
-#: bp-integrations/buddyboss-app/templates/admin/integration-tab-intro.php:10
-#: bp-integrations/buddyboss-app/templates/admin/integration-tab-intro.php:20
-msgid "BuddyBoss App"
-msgstr ""
-
-#: bp-core/admin/bb-admin-integrations-page.php:190
-msgid "Third-party plugin or App"
-msgstr ""
-
 #: bp-core/admin/bb-admin-learndash-addon-ipn.php:217
 msgid "Are you using LearnDash? Install our Add-on"
 msgstr ""
@@ -5898,7 +5881,7 @@ msgstr ""
 
 #: bp-core/admin/bb-admin-settings-emails.php:30
 #: bp-core/admin/bb-admin-settings-emails.php:59
-#: bp-core/admin/bb-admin-settings-tools.php:328
+#: bp-core/admin/bb-admin-settings-tools.php:336
 #: bp-core/bp-core-functions.php:3343
 #: bp-core/classes/class-bp-admin.php:627
 #: bp-core/classes/class-bp-admin.php:628
@@ -6352,7 +6335,7 @@ msgid "Delay Message Notifications"
 msgstr ""
 
 #: bp-core/admin/bb-admin-settings-moderation.php:132
-#: bp-core/admin/bb-admin-settings-tools.php:313
+#: bp-core/admin/bb-admin-settings-tools.php:321
 #: bp-core/bp-core-functions.php:2635
 #: bp-moderation/bp-moderation-admin.php:35
 msgid "Moderation"
@@ -6560,39 +6543,39 @@ msgstr ""
 msgid "BuddyBoss keeps track of various relationships between members, groups, and activity items. Occasionally these relationships become out of sync, most often after an import, update, or migration. Use the tools below to manually recalculate these relationships."
 msgstr ""
 
-#: bp-core/admin/bb-admin-settings-tools.php:111
-#: bp-core/admin/bb-admin-settings-tools.php:126
+#: bp-core/admin/bb-admin-settings-tools.php:110
+#: bp-core/admin/bb-admin-settings-tools.php:125
 msgid "Sample Data"
 msgstr ""
 
-#: bp-core/admin/bb-admin-settings-tools.php:127
+#: bp-core/admin/bb-admin-settings-tools.php:126
 msgid "Select the data you want to import. Some of these tools utilize substantial database resources. Avoid running more than 1 import at a time."
 msgstr ""
 
-#: bp-core/admin/bb-admin-settings-tools.php:152
-#: bp-core/admin/bb-admin-settings-tools.php:167
+#: bp-core/admin/bb-admin-settings-tools.php:150
+#: bp-core/admin/bb-admin-settings-tools.php:165
 msgid "Migration Tools"
 msgstr ""
 
-#: bp-core/admin/bb-admin-settings-tools.php:168
+#: bp-core/admin/bb-admin-settings-tools.php:166
 msgid "Migrate content from other community, course, or forum platforms into BuddyBoss."
 msgstr ""
 
-#: bp-core/admin/bb-admin-settings-tools.php:288
+#: bp-core/admin/bb-admin-settings-tools.php:296
 msgid "Members & Profiles"
 msgstr ""
 
-#: bp-core/admin/bb-admin-settings-tools.php:298
+#: bp-core/admin/bb-admin-settings-tools.php:306
 #: bp-media/bp-media-filters.php:1383
 #: bp-templates/bp-nouveau/readylaunch/common/js-templates/messages/parts/bp-messages-right-panel.php:179
 msgid "Media"
 msgstr ""
 
-#: bp-core/admin/bb-admin-settings-tools.php:303
+#: bp-core/admin/bb-admin-settings-tools.php:311
 msgid "Forums & Discussions"
 msgstr ""
 
-#: bp-core/admin/bb-admin-settings-tools.php:323
+#: bp-core/admin/bb-admin-settings-tools.php:331
 msgid "Activity & Reactions"
 msgstr ""
 
@@ -6785,22 +6768,22 @@ msgstr ""
 msgid "Requires LearnDash or MemberPress courses to activate."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-actions.php:706
+#: bp-core/admin/bp-core-admin-actions.php:730
 msgid "Invalid Nickname"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-actions.php:727
+#: bp-core/admin/bp-core-admin-actions.php:751
 msgid "<strong>Error</strong>: Nickname already has been taken. Please try again."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-actions.php:807
+#: bp-core/admin/bp-core-admin-actions.php:833
 #: bp-members/bp-members-functions.php:1727
 #: bp-settings/actions/general.php:208
 #: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:1372
 msgid "This email address or domain has been blacklisted. If you think you are seeing this in error, please contact the site administrator."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-actions.php:868
+#: bp-core/admin/bp-core-admin-actions.php:896
 #: bp-core/admin/classes/class-bb-admin-settings-ajax.php:1422
 msgid "Settings saved successfully."
 msgstr ""
@@ -7132,6 +7115,12 @@ msgstr ""
 #: bp-groups/classes/class-bp-groups-component.php:935
 #: bp-integrations/compatibility/bp-compatibility-integration.php:80
 msgid "Settings"
+msgstr ""
+
+#: bp-core/admin/bp-core-admin-settings.php:179
+#: bp-integrations/buddyboss-app/templates/admin/integration-tab-intro.php:10
+#: bp-integrations/buddyboss-app/templates/admin/integration-tab-intro.php:20
+msgid "BuddyBoss App"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-settings.php:262
@@ -8240,10 +8229,10 @@ msgstr ""
 msgid "Published"
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-admin-member-types-ajax.php:103
-#: bp-core/admin/classes/class-bb-admin-member-types-ajax.php:369
-#: bp-core/admin/classes/class-bb-admin-member-types-ajax.php:460
-#: bp-core/admin/classes/class-bb-admin-member-types-ajax.php:555
+#: bp-core/admin/classes/class-bb-admin-member-types-ajax.php:112
+#: bp-core/admin/classes/class-bb-admin-member-types-ajax.php:378
+#: bp-core/admin/classes/class-bb-admin-member-types-ajax.php:469
+#: bp-core/admin/classes/class-bb-admin-member-types-ajax.php:564
 #: bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php:118
 #: bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php:209
 #: bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php:269
@@ -8254,45 +8243,45 @@ msgstr ""
 msgid "Profile component is not active."
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-admin-member-types-ajax.php:378
+#: bp-core/admin/classes/class-bb-admin-member-types-ajax.php:387
 msgid "Profile type name is required."
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-admin-member-types-ajax.php:413
+#: bp-core/admin/classes/class-bb-admin-member-types-ajax.php:422
 msgid "Failed to create profile type. Please try again."
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-admin-member-types-ajax.php:443
+#: bp-core/admin/classes/class-bb-admin-member-types-ajax.php:452
 msgid "Profile type created successfully."
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-admin-member-types-ajax.php:470
-#: bp-core/admin/classes/class-bb-admin-member-types-ajax.php:563
+#: bp-core/admin/classes/class-bb-admin-member-types-ajax.php:479
+#: bp-core/admin/classes/class-bb-admin-member-types-ajax.php:572
 msgid "Profile type ID is required."
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-admin-member-types-ajax.php:476
-#: bp-core/admin/classes/class-bb-admin-member-types-ajax.php:569
+#: bp-core/admin/classes/class-bb-admin-member-types-ajax.php:485
+#: bp-core/admin/classes/class-bb-admin-member-types-ajax.php:578
 msgid "Invalid profile type."
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-admin-member-types-ajax.php:523
+#: bp-core/admin/classes/class-bb-admin-member-types-ajax.php:532
 msgid "Failed to update profile type. Please try again."
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-admin-member-types-ajax.php:537
+#: bp-core/admin/classes/class-bb-admin-member-types-ajax.php:546
 msgid "Profile type updated successfully."
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-admin-member-types-ajax.php:577
+#: bp-core/admin/classes/class-bb-admin-member-types-ajax.php:586
 msgid "Failed to delete profile type."
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-admin-member-types-ajax.php:590
+#: bp-core/admin/classes/class-bb-admin-member-types-ajax.php:599
 msgid "Profile type deleted successfully."
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-admin-member-types-ajax.php:819
+#: bp-core/admin/classes/class-bb-admin-member-types-ajax.php:828
 msgid "As your profile is currently assigned to this profile type, you cannot change its associated WordPress role. Changing this setting would remove your Administrator role and lock you out of the WordPress admin. You first need to remove yourself from this profile type and then you can come back to update the associated WordPress role."
 msgstr ""
 
@@ -19824,11 +19813,11 @@ msgid "Deleting Roles and Capabilities&hellip; %s"
 msgstr ""
 
 #. translators: total members
-#: bp-forums/admin/tools.php:2289
+#: bp-forums/admin/tools.php:2294
 msgid "Copies %s favorites from user meta to topic meta."
 msgstr ""
 
-#: bp-forums/admin/tools.php:2304
+#: bp-forums/admin/tools.php:2309
 msgid "Copies favorites from user meta to topic meta&hellip; Complete!"
 msgstr ""
 

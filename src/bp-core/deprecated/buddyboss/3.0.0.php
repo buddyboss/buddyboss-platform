@@ -3531,6 +3531,44 @@ if ( ! function_exists( 'bbp_core_get_tools_settings_admin_tabs' ) ) {
 	}
 }
 
+if ( ! function_exists( 'bbp_core_get_import_forum_tools_settings_admin_tabs' ) ) {
+	/**
+	 * Filter callback that appended the legacy "Forum Import" sub-tab.
+	 *
+	 * The Forum Converter (bbPress importer) was extracted to the
+	 * buddyboss-tools plugin and now renders inside the Settings 2.0
+	 * Migration Tools panel, so this filter no longer fires anywhere.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 * @since BuddyBoss [BBVERSION] Deprecated. Filter no longer fires anywhere.
+	 * @deprecated [BBVERSION] admin.php?page=bb-settings&tab=tools&panel=migration_tools
+	 *
+	 * @param array $tabs Existing tabs.
+	 * @return array Tabs unchanged.
+	 */
+	function bbp_core_get_import_forum_tools_settings_admin_tabs( $tabs ) {
+		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'admin.php?page=bb-settings&tab=tools&panel=migration_tools' );
+		return $tabs;
+	}
+}
+
+if ( ! function_exists( 'bbp_converter_settings' ) ) {
+	/**
+	 * Rendered the legacy Forum Converter settings section.
+	 *
+	 * The Forum Converter (bbPress importer) was extracted to the
+	 * buddyboss-tools plugin and now renders inside the Settings 2.0
+	 * Migration Tools panel.
+	 *
+	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss [BBVERSION] Deprecated. Converter moved to buddyboss-tools.
+	 * @deprecated [BBVERSION] admin.php?page=bb-settings&tab=tools&panel=migration_tools
+	 */
+	function bbp_converter_settings() {
+		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'admin.php?page=bb-settings&tab=tools&panel=migration_tools' );
+	}
+}
+
 if ( ! function_exists( 'bp_media_get_tools_media_settings_admin_tabs' ) ) {
 	/**
 	 * Filter callback that appended the legacy "Import Media" sub-tab.

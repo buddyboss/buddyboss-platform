@@ -84,8 +84,7 @@ function bb_admin_settings_register_tools_feature() {
 		array(
 			'title'       => __( 'Repair Platform', 'buddyboss' ),
 			'description' => __( 'BuddyBoss keeps track of various relationships between members, groups, and activity items. Occasionally these relationships become out of sync, most often after an import, update, or migration. Use the tools below to manually recalculate these relationships.', 'buddyboss' ),
-			// @todo: update when release.
-			'help_url'    => '123456',
+			'help_url'    => '644709',
 			'order'       => 10,
 		)
 	);
@@ -125,8 +124,7 @@ function bb_admin_settings_register_tools_feature() {
 		array(
 			'title'       => __( 'Sample Data', 'buddyboss' ),
 			'description' => __( 'Select the data you want to import. Some of these tools utilize substantial database resources. Avoid running more than 1 import at a time.', 'buddyboss' ),
-			// @todo: update when release.
-			'help_url'    => '123456',
+			'help_url'    => '644711',
 			'order'       => 10,
 		)
 	);
@@ -185,6 +183,16 @@ function bb_admin_settings_register_tools_feature() {
 
 	// Load AJAX handlers for the Activation Required CTA install/activate buttons.
 	require_once __DIR__ . '/settings/tools/callbacks.php';
+
+	/**
+	 * Fires after the Tools feature side panels, sections, and fields are registered.
+	 *
+	 * Allows Pro and third-party plugins to register additional Tools side panels,
+	 * sections, or fields.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	do_action( 'bb_tools_after_register_settings_fields' );
 }
 add_action( 'bb_register_features', 'bb_admin_settings_register_tools_feature', 25 );
 
@@ -359,7 +367,10 @@ function bb_admin_settings_localize_tools_repair_config() {
 	// JS in the admin footer so the global is available before React mounts.
 	printf(
 		'<script id="bb-tools-repair-config-js">window.bbToolsRepairConfig = %s;</script>',
-		wp_json_encode( $config ) // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- wp_json_encode escapes for JS context.
+		// The JSON_HEX_* flags escape <, >, &, ', " so a value containing
+		// `</script>` (e.g. from a third-party repair label) cannot break out
+		// of the inline script tag.
+		wp_json_encode( $config, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT ) // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Encoded with JSON_HEX_* flags, safe for inline script context.
 	);
 }
 add_action( 'admin_print_footer_scripts', 'bb_admin_settings_localize_tools_repair_config' );
