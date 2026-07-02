@@ -723,7 +723,7 @@ function bp_core_get_admin_tabs( $active_tab = '' ) {
 		// '3' was the Integrations tab — intentionally left absent.
 		// '4' was the Upgrade tab — intentionally left absent.
 		'5' => array(
-			// Tools moved to Settings 2.0 in BuddyBoss [BBVERSION] — point the
+			// Tools moved to Settings 2.0 in BuddyBoss 3.1.0 — point the
 			// legacy top-tab Tools link directly at the new React panel so
 			// any page still rendering this tab bar (e.g. bp-help) doesn't
 			// have to depend on the bp-tools redirect to land users correctly.

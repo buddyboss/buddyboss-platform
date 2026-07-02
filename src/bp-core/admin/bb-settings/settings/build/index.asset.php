@@ -1,1 +1,1 @@
-<?php return array('dependencies' => array('bb-admin-common', 'react', 'react-dom', 'wp-components', 'wp-date', 'wp-element', 'wp-hooks', 'wp-html-entities', 'wp-i18n'), 'version' => '6a285feb235635d25b47');
+<?php return array('dependencies' => array('bb-admin-common', 'react', 'react-dom', 'wp-components', 'wp-date', 'wp-element', 'wp-hooks', 'wp-html-entities', 'wp-i18n'), 'version' => 'af3603d186dc5116bf01');

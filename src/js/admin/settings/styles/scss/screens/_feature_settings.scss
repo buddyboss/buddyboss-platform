@@ -67,6 +67,7 @@
             border: 0;
             width: 100%;
             box-sizing: border-box;
+            background-color: transparent;
 
             [class*="bb-icons-"] {
                 color: $bb-icon-tertiary-color;
@@ -80,7 +81,7 @@
 				color: $bb-text-color;
 				background-color: $bb-background-base-color;
 				outline: none;
-				box-shadow: inset 0 0 0 0.5px $bb-border-secondary-color;
+				box-shadow: inset 0 0 0 0.6px $bb-border-secondary-color;
 
 				[class*="bb-icons-"] {
 					color: $bb-icon-color;

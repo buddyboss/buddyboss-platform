@@ -460,4 +460,66 @@ class BB_Tests_Support_Access extends BP_UnitTestCase {
 			'A failed note must release the rate-limit window for retry.'
 		);
 	}
+
+	/* Multisite root-blog storage ------------------------------------------- */
+
+	/**
+	 * On multisite, a grant enabled while acting on a non-root blog must be
+	 * stored on — and read back from — the root blog. The login/read path only
+	 * ever looks at the root blog (get_data() -> bp_get_option() ->
+	 * get_blog_option( bp_get_root_blog_id() )), so a write pinned to the current
+	 * blog would land where nothing reads it and the grant would surface as
+	 * inactive. Regression guard for the root-blog switch in save()/with_lock().
+	 *
+	 * @group multisite
+	 */
+	public function test_enable_from_non_root_blog_stores_grant_on_root_blog() {
+		if ( ! is_multisite() ) {
+			$this->markTestSkipped( 'Test requires a multisite install.' );
+		}
+
+		$root_blog_id = bp_get_root_blog_id();
+		$other_blog   = self::factory()->blog->create();
+		$this->assertNotSame( $root_blog_id, $other_blog, 'The secondary blog must differ from the root blog.' );
+
+		switch_to_blog( $other_blog );
+
+		try {
+			$this->assertSame( $other_blog, get_current_blog_id(), 'Precondition: acting on the non-root blog.' );
+
+			$result = $this->sa->enable( 7 );
+			$this->assertIsArray( $result );
+
+			// The grant reads back as live: get_data() pulls from the root blog.
+			$this->assertTrue(
+				$this->sa->is_active(),
+				'A grant enabled on a non-root blog must be active when read from the root blog.'
+			);
+
+			// It is physically stored on the root blog...
+			$this->assertNotEmpty(
+				get_blog_option( $root_blog_id, BB_Support_Access::OPTION ),
+				'The grant must be persisted on the root blog.'
+			);
+
+			// ...and never leaks onto the current (non-root) blog.
+			$this->assertFalse(
+				get_blog_option( $other_blog, BB_Support_Access::OPTION ),
+				'The grant must not be written to the non-root blog.'
+			);
+
+			// Revocation from the non-root blog must clear the root-blog grant.
+			$this->sa->disable();
+			$this->assertFalse(
+				$this->sa->is_active(),
+				'disable() on a non-root blog must revoke the root-blog grant.'
+			);
+			$this->assertFalse(
+				get_blog_option( $root_blog_id, BB_Support_Access::OPTION ),
+				'disable() must delete the grant from the root blog.'
+			);
+		} finally {
+			restore_current_blog();
+		}
+	}
 }

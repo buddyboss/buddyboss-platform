@@ -1049,7 +1049,7 @@ function bp_admin_repair_tools_wrapper_function() {
 	// regex parsing. Existing third-party callers that only read the
 	// historical `message` field are unaffected.
 	//
-	// @since BuddyBoss [BBVERSION]
+	// @since BuddyBoss 3.1.0
 	if ( is_array( $status ) ) {
 		$enrichment = bb_admin_repair_extract_count_summary( $status );
 		$status     = array_merge( $status, $enrichment );
@@ -1072,7 +1072,7 @@ function bp_admin_repair_tools_wrapper_function() {
  * preferred from `records` when it carries the count, otherwise from the
  * "Complete!" tail of `message`.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.1.0
  *
  * @param array|string $status_or_html Result array from a repair handler, OR a raw HTML string.
  * @return array {

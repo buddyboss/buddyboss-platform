@@ -73,7 +73,7 @@ add_action( 'bbp_deactivation', 'bbp_delete_rewrite_rules' );
 add_action( 'bbp_new_site', 'bbp_create_initial_content', 8 );
 
 // Handle submission of Tools pages.
-// `load-tools_page_bbp-repair` retired in BuddyBoss [BBVERSION] — the Repair
+// `load-tools_page_bbp-repair` retired in BuddyBoss 3.1.0 — the Repair
 // Forums page moved into the Settings 2.0 Tools tab and the React UI
 // dispatches each item via wp_ajax_bp_admin_forum_repair_tools_wrapper_function.
 add_action( 'load-tools_page_bbp-reset', 'bbp_admin_reset_handler' );

@@ -477,33 +477,6 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			// the `bb-readylaunch` URL now redirects to Appearance in Settings 2.0
 			// via `bp_core_admin_backpat_menu()` (`bp-core-admin-actions.php`).
 
-			// For consistency with non-Multisite, we add a Tools menu in
-			// the Network Admin as a home for our Tools panel.
-			if ( is_multisite() && bp_core_do_network_admin() ) {
-				$tools_parent = 'network-tools';
-
-				$hooks[] = add_menu_page(
-					__( 'Tools', 'buddyboss' ),
-					__( 'Tools', 'buddyboss' ),
-					$this->capability,
-					$tools_parent,
-					'bp_core_tools_top_level_item',
-					'',
-					24 // Just above Settings.
-				);
-
-				$hooks[] = add_submenu_page(
-					$tools_parent,
-					__( 'Available Tools', 'buddyboss' ),
-					__( 'Available Tools', 'buddyboss' ),
-					$this->capability,
-					'available-tools',
-					'bp_core_admin_available_tools_page'
-				);
-			} else {
-				$tools_parent = 'tools.php';
-			}
-
 			// Help submenu points at the Settings 2.0 Help tab. WordPress treats
 			// a `menu_slug` containing a URL (with `?`) as a direct link rather
 			// than registering a new page — same trick used by the Emails
@@ -545,7 +518,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 		 * catches the redirect; `admin_init` is a fallback. The method is
 		 * idempotent: it no-ops unless `?page=bp-help` is the current request.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.1.0
 		 */
 		public function bb_redirect_legacy_help_page() {
 			// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only navigation redirect, no state change.
@@ -1030,4 +1003,3 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 		}
 	}
 endif; // End class_exists check.
-

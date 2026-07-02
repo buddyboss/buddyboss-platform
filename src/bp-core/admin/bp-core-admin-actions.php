@@ -303,13 +303,13 @@ function bb_redirect_bp_settings_before_permission_check() {
 	}
 
 	/*
-	 * `?page=bp-tools` (and every sub-tab) retired in BuddyBoss [BBVERSION].
+	 * `?page=bp-tools` (and every sub-tab) retired in BuddyBoss 3.1.0.
 	 * The whole legacy Tools page was replaced by the Settings 2.0 Tools
 	 * feature (`?page=bb-settings&tab=tools`). Map every known sub-tab to its
 	 * counterpart panel; fall back to the default Tools landing for anything
 	 * unrecognized (own sub-tabs from third-party filters, etc.).
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.1.0
 	 */
 	if ( 'bp-tools' === $page ) {
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only URL inspection.
@@ -356,12 +356,12 @@ function bb_redirect_bp_settings_before_permission_check() {
 	}
 
 	/*
-	 * `?page=bp-member-type-import` retired in BuddyBoss [BBVERSION]
+	 * `?page=bp-member-type-import` retired in BuddyBoss 3.1.0
 	 * — the Profile Types importer was extracted to the buddyboss-tools
 	 * plugin's `migration/profile-types/` folder and now renders as a card
 	 * inside the Settings 2.0 Migration Tools panel.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.1.0
 	 */
 	if ( 'bp-member-type-import' === $page ) {
 		wp_safe_redirect(
@@ -371,14 +371,14 @@ function bb_redirect_bp_settings_before_permission_check() {
 	}
 
 	/*
-	 * `?page=bbp-converter` retired in BuddyBoss [BBVERSION]
+	 * `?page=bbp-converter` retired in BuddyBoss 3.1.0
 	 * — the Forum Converter (bbPress importer) was extracted to the
 	 * buddyboss-tools plugin and now renders as a card inside the Settings 2.0
 	 * Migration Tools panel. Redirect old bookmarks and browser-history links
 	 * (Phase 4 forum-import migration). Preserves extra query args so
 	 * `?page=bbp-converter&foo=bar` lands at `…panel=migration_tools&foo=bar`.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.1.0
 	 */
 	if ( 'bbp-converter' === $page ) {
 		$converter_target = bp_get_admin_url( 'admin.php?page=bb-settings&tab=tools&panel=migration_tools' );
@@ -410,7 +410,7 @@ function bb_redirect_bp_settings_before_permission_check() {
 	 * NOTE: ?page=bp-tools (root) is NOT redirected here — that page still
 	 * hosts the legacy Forum Import sub-tab which migrates in Phase 3.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.1.0
 	 */
 	if ( in_array( $page, array( 'bp-repair-community', 'bbp-repair' ), true ) ) {
 		$tools_target = bp_get_admin_url( 'admin.php?page=bb-settings&tab=tools&panel=repair_platform' );
@@ -732,22 +732,29 @@ function bb_check_user_nickname( &$errors, $update, &$user ) {
 
 	$un_name = ( ! empty( $user->nickname ) ) ? $user->nickname : $user->user_login;
 
-	$where = array(
-		'meta_key = "nickname"',
-		'meta_value = "' . $un_name . '"',
-	);
+	// $user->nickname carries the magic-quote slashes from $_POST; unslash before
+	// passing to $wpdb->prepare() so the value is escaped exactly once and the
+	// comparison matches the unslashed value stored in usermeta.
+	$un_name = wp_unslash( $un_name );
 
 	if ( ! empty( $user->ID ) ) {
-		$where[] = 'user_id != ' . $user->ID;
+		$nickname_count = $wpdb->get_var(
+			$wpdb->prepare(
+				"SELECT count(*) FROM {$wpdb->usermeta} WHERE meta_key = 'nickname' AND meta_value = %s AND user_id != %d",
+				$un_name,
+				$user->ID
+			)
+		);
+	} else {
+		$nickname_count = $wpdb->get_var(
+			$wpdb->prepare(
+				"SELECT count(*) FROM {$wpdb->usermeta} WHERE meta_key = 'nickname' AND meta_value = %s",
+				$un_name
+			)
+		);
 	}
 
-	$sql = sprintf(
-		'SELECT count(*) FROM %s WHERE %s',
-		$wpdb->usermeta,
-		implode( ' AND ', $where )
-	);
-
-	if ( $wpdb->get_var( $sql ) > 0 ) {
+	if ( $nickname_count > 0 ) {
 		$errors->add( 'nickname_exists', __( '<strong>Error</strong>: Nickname already has been taken. Please try again.', 'buddyboss' ), array( 'form-field' => 'nickname' ) );
 	}
 }

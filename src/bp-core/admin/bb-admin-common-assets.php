@@ -7,7 +7,7 @@
  * dependencies so the layer ships once across all admin React apps.
  *
  * @package BuddyBoss\Core\Administration
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.1.0
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -20,7 +20,7 @@ defined( 'ABSPATH' ) || exit;
  * Consumer pages (e.g. the Integrations page) enqueue these handles so the
  * layer ships once and is never duplicated across bundles.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.1.0
  *
  * @return void
  */

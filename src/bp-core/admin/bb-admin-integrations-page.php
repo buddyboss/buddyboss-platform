@@ -8,7 +8,7 @@
  * through the same-origin proxy (BB_REST_Integrations_Endpoint).
  *
  * @package BuddyBoss\Core\Administration
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.1.0
  */
 
 // Exit if accessed directly.
@@ -21,7 +21,7 @@ defined( 'ABSPATH' ) || exit;
  * the bundle + CSS, localizes the `bbIntegrationsData` object the React app reads
  * (apiUrl + nonce), and prints the mount container.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.1.0
  *
  * @return void
  */

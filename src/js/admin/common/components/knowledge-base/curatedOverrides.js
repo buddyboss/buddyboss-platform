@@ -17,6 +17,10 @@ import { applyFilters } from '@wordpress/hooks';
  */
 export function getCuratedOverrides() {
 	const defaults = {
+		'buddyboss-theme-and-platform': {
+			icon:        'bb-icons-rl-browser',
+			order:       1,
+		},
 		'buddyboss-platform': {
 			icon:        'bb-icons-rl-app-window',
 			title:       __( 'BuddyBoss Platform', 'buddyboss' ),

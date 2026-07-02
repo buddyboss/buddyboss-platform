@@ -14,7 +14,7 @@
  *    admin can only act on a plugin that is actually installed (no path injection).
  *
  * @package BuddyBoss\Core\Administration
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.1.0
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -22,14 +22,14 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Activate / deactivate handlers for the Integrations marketplace.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.1.0
  */
 class BB_Admin_Integrations_Ajax {
 
 	/**
 	 * Nonce action shared by the integrations plugin actions.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.1.0
 	 *
 	 * @var string
 	 */
@@ -38,7 +38,7 @@ class BB_Admin_Integrations_Ajax {
 	/**
 	 * Register the AJAX handlers.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.1.0
 	 */
 	public function __construct() {
 		add_action( 'wp_ajax_bb_integrations_activate_plugin', array( $this, 'activate_plugin' ) );
@@ -48,7 +48,7 @@ class BB_Admin_Integrations_Ajax {
 	/**
 	 * Activate an installed wordpress.org plugin by slug.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.1.0
 	 *
 	 * @return void
 	 */
@@ -72,7 +72,7 @@ class BB_Admin_Integrations_Ajax {
 	/**
 	 * Deactivate an installed wordpress.org plugin by slug.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.1.0
 	 *
 	 * @return void
 	 */
@@ -95,7 +95,7 @@ class BB_Admin_Integrations_Ajax {
 	 * Sends a JSON error and exits on any failure; otherwise returns the resolved
 	 * plugin file. Capability runs before the nonce per project convention.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.1.0
 	 *
 	 * @return string The validated `folder/file.php` plugin path.
 	 */
@@ -136,7 +136,7 @@ class BB_Admin_Integrations_Ajax {
 	 * dataset would add no security (same capability) and isn't worth threading the
 	 * upstream list through this handler.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.1.0
 	 *
 	 * @param string $slug The wordpress.org plugin slug.
 	 * @return string The `folder/file.php` path, or '' if not installed.

@@ -962,7 +962,23 @@ function bb_mention_post_type_comment( $comment_id = 0, $is_approved = true ) {
 
 			/** Mail */
 			// Strip tags from text and setup mail data.
+			//
+			// Suppress BP_Moderation_Comment::add_report_button() for this
+			// filter pass. PROD-9232 (BuddyBoss 2.18.0) attached that callback
+			// to `comment_text` (display intent), and it would otherwise inject
+			// the "Options / Report Comment" dropdown markup into both the
+			// stripped `usermessage` token and the HTML `mentioned.content`
+			// token — leaking the visible "Options" / "Report Comment" strings
+			// as plain text into mention notification emails, and rendering a
+			// non-functional dropdown inside the HTML email body. The dropdown
+			// is a frontend display affordance, not an email one.
+			if ( class_exists( 'BP_Moderation_Comment' ) ) {
+				BP_Moderation_Comment::bb_set_skip_report_button( true );
+			}
 			$reply_content = apply_filters( 'comment_text', $post_type_comment->comment_content, $post_type_comment, array() );
+			if ( class_exists( 'BP_Moderation_Comment' ) ) {
+				BP_Moderation_Comment::bb_set_skip_report_button( false );
+			}
 			$reply_url     = get_comment_link( $post_type_comment );
 			$title_text    = get_the_title( $post );
 
