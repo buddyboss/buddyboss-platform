@@ -494,9 +494,19 @@ function bb_get_activity_reaction_ajax_callback() {
 	$reaction_id = ! empty( $_POST['reaction_id'] ) ? absint( wp_unslash( $_POST['reaction_id'] ) ) : 0;
 	$before      = ! empty( $_POST['before'] ) ? absint( wp_unslash( $_POST['before'] ) ) : 0;
 
-	// Verify the activity exists and is visible to the current user.
-	$activity_result = bp_activity_get_specific( array( 'activity_ids' => array( $item_id ) ) );
-	if ( empty( $activity_result['activities'] ) ) {
+	// Verify the item exists and is visible to the current user.
+	// Activity comments are stored in the activity table but are excluded from
+	// BP_Activity_Activity::get() (used by bp_activity_get_specific()), so load them
+	// directly to avoid a false "Activity not found." for comment reactions.
+	if ( 'activity_comment' === $item_type ) {
+		$activity_item = new BP_Activity_Activity( $item_id );
+		$item_exists   = ! empty( $activity_item->id );
+	} else {
+		$activity_result = bp_activity_get_specific( array( 'activity_ids' => array( $item_id ) ) );
+		$item_exists     = ! empty( $activity_result['activities'] );
+	}
+
+	if ( ! $item_exists ) {
 		wp_send_json_error(
 			array(
 				'message' => __( 'Activity not found.', 'buddyboss' ),
