@@ -16,20 +16,20 @@
  *                            runtime fetcher should pin to.
  *   - `grunt build_test`  — runs without a git push, so BUILD_DIR has no
  *                            `.git`. Instead of the sentinel, the script pins
- *                            the manifest to the current `origin/production`
- *                            HEAD — the last commit `grunt build` published,
- *                            and the only public commit whose flattened layout
- *                            matches the manifest's paths. That lets the runtime
- *                            fetcher download-and-restore the originals from
- *                            GitHub for a test build WITHOUT this build having
- *                            to commit or push anything. Files byte-identical to
- *                            that release (images/fonts that didn't change,
- *                            etc.) restore; files changed in the test build fail
- *                            SHA-256 verification and are left to the .min /
- *                            S3-fallback path. If `origin/production` can't be
- *                            resolved (never fetched, offline, private repo),
+ *                            the manifest to the SOURCE checkout's current HEAD
+ *                            commit — the exact commit being tested (e.g. your
+ *                            feature branch, PROD-9826) — provided that commit
+ *                            is already pushed to `origin`. Because a source
+ *                            branch keeps files under `src/` (the build flattens
+ *                            that away), the fetch base URL gets a `/src` suffix
+ *                            so the flattened manifest paths resolve on GitHub.
+ *                            This lets the runtime fetcher download-and-restore
+ *                            THIS build's originals — including files changed on
+ *                            the branch — WITHOUT this build committing or
+ *                            pushing anything itself. If HEAD isn't a 40-hex
+ *                            commit or isn't on any remote (unpushed / offline),
  *                            the script falls back to the sentinel and the
- *                            fetcher stays dormant.
+ *                            fetcher stays dormant (S3 / .min fallback).
  *
  * The manifest is written ONLY into BUILD_DIR (i.e. it ships inside the
  * customer zip). It is intentionally NOT included in the `production`
@@ -82,36 +82,59 @@ function git( gitArgs, cwd ) {
 }
 
 /**
- * Return the commit SHA the runtime fetcher should pin to.
+ * Resolve the commit the runtime fetcher should pin to, plus how its tree is
+ * laid out on GitHub.
  *
  *   - Production `build`: BUILD_DIR is a git working tree checked out from the
  *     production branch and committed, so its HEAD is the canonical pushed
- *     commit — pin to that.
- *   - `build_test`: BUILD_DIR has no `.git`. Pin to the source checkout's
- *     current `origin/production` HEAD — the last commit `grunt build`
- *     published, whose flattened layout matches the manifest paths — so the
- *     fetcher can download-and-restore from GitHub without this build pushing
- *     anything. A best-effort `git fetch` refreshes the ref first; if it can't
- *     be resolved at all, fall back to the sentinel (fetcher stays dormant).
+ *     commit. The production branch stores FLATTENED files, so the fetch base
+ *     is the bare commit (no `/src`).
+ *   - `build_test`: BUILD_DIR has no `.git`. Pin to the SOURCE checkout's
+ *     current HEAD — the exact commit under test (e.g. a feature branch) — as
+ *     long as it is already on a remote (fetchable). A source branch keeps
+ *     files under `src/`, so `srcLayout` is set and the caller appends `/src`
+ *     to the fetch base; the flattened manifest paths then resolve on GitHub.
+ *     If HEAD isn't a real pushed commit, fall back to the sentinel so the
+ *     fetcher stays dormant instead of pinning an unfetchable SHA.
  *
  * All git failures are swallowed so the manifest is still written.
  *
  * @param {string} buildDir Staged build directory.
- * @return {string} A 40-char commit SHA, or the SENTINEL_SHA.
+ * @return {{commitSha: string, srcLayout: boolean}} Pin descriptor.
  */
 function captureCommitSha( buildDir ) {
 	var gitDir = path.join( buildDir, '.git' );
 	if ( fs.existsSync( gitDir ) ) {
 		var headSha = git( [ '-C', buildDir, 'rev-parse', 'HEAD' ] );
-		return /^[0-9a-f]{40}$/.test( headSha ) ? headSha : SENTINEL_SHA;
+		return {
+			commitSha: /^[0-9a-f]{40}$/.test( headSha ) ? headSha : SENTINEL_SHA,
+			srcLayout: false
+		};
 	}
 
-	// build_test: resolve origin/production from the source checkout (the dir
-	// this script runs in). Refresh the remote-tracking ref best-effort first so
-	// a stale checkout still pins to the latest published production commit.
-	git( [ 'fetch', '--quiet', 'origin', 'production' ] );
-	var prodSha = git( [ 'rev-parse', 'origin/production' ] );
-	return /^[0-9a-f]{40}$/.test( prodSha ) ? prodSha : SENTINEL_SHA;
+	// build_test: pin the source checkout's current HEAD (the commit being
+	// tested). Only do so when the commit is actually published to a remote —
+	// otherwise the fetcher would pin a SHA that 404s every file. Refresh the
+	// current branch's remote-tracking ref best-effort first so the
+	// contains-check sees a freshly-pushed commit.
+	var srcSha = git( [ 'rev-parse', 'HEAD' ] );
+	if ( ! /^[0-9a-f]{40}$/.test( srcSha ) ) {
+		return { commitSha: SENTINEL_SHA, srcLayout: false };
+	}
+
+	var branch = git( [ 'rev-parse', '--abbrev-ref', 'HEAD' ] );
+	if ( branch && 'HEAD' !== branch ) {
+		git( [ 'fetch', '--quiet', 'origin', branch ] );
+	}
+
+	// `git branch -r --contains <sha>` lists remote branches holding the commit;
+	// empty output means it isn't pushed anywhere the fetcher could reach.
+	var onRemote = git( [ 'branch', '-r', '--contains', srcSha ] );
+	if ( '' === onRemote ) {
+		return { commitSha: SENTINEL_SHA, srcLayout: false };
+	}
+
+	return { commitSha: srcSha, srcLayout: true };
 }
 
 function main() {
@@ -125,16 +148,25 @@ function main() {
 		fail( 'build dir does not exist or is not a directory: ' + buildDir );
 	}
 
-	var pairs     = pairFinder.findPairFiles( buildDir );
-	var assets    = pairFinder.findOffloadedAssets( buildDir );
-	var commitSha = captureCommitSha( buildDir );
+	var pairs   = pairFinder.findPairFiles( buildDir );
+	var assets  = pairFinder.findOffloadedAssets( buildDir );
+	var pin     = captureCommitSha( buildDir );
+	var commitSha = pin.commitSha;
+
+	// Fetch base URL: bare commit for the flattened production branch, or the
+	// commit + `/src` for a source-branch build_test pin so the flattened
+	// manifest paths resolve against the repo's `src/` tree on GitHub.
+	var fetchBaseUrl = '';
+	if ( SENTINEL_SHA !== commitSha ) {
+		fetchBaseUrl = REPO_URL_BASE + '/' + commitSha + ( pin.srcLayout ? '/src' : '' );
+	}
 
 	// The manifest lists every file stripped from the zip that the runtime
 	// fetcher restores into the plugin under SCRIPT_DEBUG:
 	//   - unminified JS/CSS pairs (key = unminified rel path)
 	//   - offloaded images + woff2 fonts (key = asset rel path)
-	// All are fetched from the pinned production-branch commit and restored to
-	// their natural plugin paths so a debug install matches a dev checkout.
+	// All are fetched from the pinned commit and restored to their natural
+	// plugin paths so a debug install matches a dev checkout.
 	var files = Object.create( null );
 	for ( var i = 0; i < pairs.length; i++ ) {
 		var p = pairs[ i ];
@@ -149,7 +181,7 @@ function main() {
 		schema:         SCHEMA,
 		plugin_version: pluginVersion,
 		commit_sha:     commitSha,
-		fetch_base_url: SENTINEL_SHA === commitSha ? '' : ( REPO_URL_BASE + '/' + commitSha ),
+		fetch_base_url: fetchBaseUrl,
 		generated_at:   new Date().toISOString(),
 		files:          files
 	};
@@ -161,6 +193,7 @@ function main() {
 		'[generate-debug-manifest] wrote ' + manifestPath + '\n' +
 		'  plugin_version: ' + pluginVersion + '\n' +
 		'  commit_sha:     ' + commitSha + '\n' +
+		'  fetch_base_url: ' + ( fetchBaseUrl || '(none — sentinel)' ) + '\n' +
 		'  pair count:     ' + pairs.length + '\n' +
 		'  asset count:    ' + assets.length + '\n' +
 		'  total files:    ' + Object.keys( files ).length + '\n'
