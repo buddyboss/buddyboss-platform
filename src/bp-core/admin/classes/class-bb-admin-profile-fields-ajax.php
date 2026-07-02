@@ -432,48 +432,39 @@ class BB_Admin_Profile_Fields_Ajax {
 		if ( ! empty( $field_id ) ) {
 			$args['field_id'] = $field_id;
 
-			// Preserve existing field_order on edit so the field doesn't jump to position 0.
 			$existing_field = xprofile_get_field( $field_id );
 			if ( $existing_field ) {
-				$args['field_order'] = (int) $existing_field->field_order;
+				$existing_group_id = (int) $existing_field->group_id;
+
+				if ( $existing_group_id !== (int) $group_id ) {
+					// Cross-field-set reassignment on edit. Block it unless the
+					// move is permitted. Matches the drag guardrails enforced by
+					// `reorder_fields()` (which mirrors the legacy
+					// `accept: '.connectedSortable fieldset:not(.primary_field)'`
+					// drop rule from `bp-xprofile/admin/js/admin.js`). The React
+					// modal does not currently expose a group selector, so this
+					// is defense-in-depth against direct AJAX clients.
+					if ( ! $this->bb_can_move_field_to_group( $field_id, $existing_group_id, $group_id ) ) {
+						wp_send_json_error(
+							array( 'message' => __( 'This field cannot be moved to that field set.', 'buddyboss' ) )
+						);
+					}
+
+					// Allowed move: append to the end of the destination set.
+					// Reusing the source-group order would collide with whatever
+					// field already holds that position in the new set.
+					$args['field_order'] = $this->bb_get_next_field_order( $group_id );
+				} else {
+					// Same set: preserve existing field_order so the field
+					// doesn't jump to position 0.
+					$args['field_order'] = (int) $existing_field->field_order;
+				}
 			}
 		}
 
 		// Auto-assign field order for new fields (exclude repeater clones, matching legacy behavior).
 		if ( empty( $field_id ) ) {
-			global $wpdb;
-			$bp = buddypress();
-
-			// Cloned fields should not be considered when determining the max order of fields in given group.
-			// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- BuddyPress table name properties.
-			$cloned_field_ids = $wpdb->get_col(
-				$wpdb->prepare(
-					"SELECT f.id FROM {$bp->profile->table_name_fields} AS f JOIN {$bp->profile->table_name_meta} AS fm ON f.id = fm.object_id WHERE f.group_id = %d AND fm.meta_key = '_is_repeater_clone' AND fm.meta_value = 1",
-					$group_id
-				)
-			);
-			// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-
-			if ( ! empty( $cloned_field_ids ) ) {
-				$placeholders = implode( ',', array_fill( 0, count( $cloned_field_ids ), '%d' ) );
-				$query_args   = array_merge( array( $group_id ), array_map( 'absint', $cloned_field_ids ) );
-				$field_order  = (int) $wpdb->get_var(
-					$wpdb->prepare(
-						"SELECT MAX(field_order) FROM {$bp->profile->table_name_fields} WHERE group_id = %d AND id NOT IN ( {$placeholders} )", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Placeholders are generated dynamically.
-						$query_args
-					)
-				);
-			} else {
-				$field_order = (int) $wpdb->get_var(
-					$wpdb->prepare(
-						"SELECT MAX(field_order) FROM {$bp->profile->table_name_fields} WHERE group_id = %d", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- BuddyPress table name property.
-						$group_id
-					)
-				);
-			}
-
-			++$field_order;
-			$args['field_order'] = $field_order;
+			$args['field_order'] = $this->bb_get_next_field_order( $group_id );
 		}
 
 		$saved_id = xprofile_insert_field( $args );
@@ -643,8 +634,18 @@ class BB_Admin_Profile_Fields_Ajax {
 				foreach ( $fields as $position => $field_id ) {
 					$sanitized_field_id = absint( $field_id );
 
-					// Validate field exists and belongs to this group before repositioning.
-					if ( ! isset( $field_group_map[ $sanitized_field_id ] ) || $field_group_map[ $sanitized_field_id ] !== $sanitized_group_id ) {
+					// Validate field exists before repositioning.
+					if ( ! isset( $field_group_map[ $sanitized_field_id ] ) ) {
+						continue;
+					}
+
+					$current_group_id = $field_group_map[ $sanitized_field_id ];
+
+					// Cross-field-set move — only proceed when the move is permitted.
+					if (
+						$current_group_id !== $sanitized_group_id &&
+						! $this->bb_can_move_field_to_group( $sanitized_field_id, $current_group_id, $sanitized_group_id )
+					) {
 						continue;
 					}
 
@@ -744,29 +745,13 @@ class BB_Admin_Profile_Fields_Ajax {
 			}
 		}
 
-		// Mirror legacy `BP_XProfile_Field::is_default_field()` (see
-		// `class-bp-xprofile-field.php` ~line 1832) so the React modal can hide
-		// the same metaboxes legacy hides: Type, Required, Visibility (and
-		// Allow-members-override), Profile Types, Placeholder. The synced set is
-		// always the Nickname field, plus First/Last when fullname format needs
-		// them. WP object cache memoises the underlying lookups, so calling
-		// these per field in the loop has no extra DB cost.
-		$synced_field_ids = array( (int) bp_xprofile_nickname_field_id() );
-		$dn_format        = function_exists( 'bp_core_display_name_format' ) ? bp_core_display_name_format() : '';
-		if ( 'first_last_name' === $dn_format || 'first_name' === $dn_format ) {
-			$synced_field_ids[] = (int) bp_xprofile_firstname_field_id();
-		}
-		if ( 'first_last_name' === $dn_format ) {
-			$synced_field_ids[] = (int) bp_xprofile_lastname_field_id();
-		}
-
 		$data = array(
 			'id'                      => (int) $field->id,
 			'name'                    => $field->name,
 			'type'                    => $field->type,
 			'is_required'             => (bool) $field->is_required,
 			'can_delete'              => (bool) $field->can_delete,
-			'is_default_field'        => in_array( (int) $field->id, $synced_field_ids, true ),
+			'is_default_field'        => $this->bb_is_default_field( $field->id ),
 			'field_order'             => (int) $field->field_order,
 			'alternate_name'          => $alternate_name ? $alternate_name : '',
 			'description'             => $field->description,
@@ -785,6 +770,122 @@ class BB_Admin_Profile_Fields_Ajax {
 		}
 
 		return $data;
+	}
+
+	/**
+	 * Determine whether a field is a platform "default"/synced field.
+	 *
+	 * Based on legacy `BP_XProfile_Field::is_default_field()` (see
+	 * `class-bp-xprofile-field.php` ~line 1832), but intentionally a superset:
+	 * the synced set is always the Nickname field, plus First name when the
+	 * display-name format needs it, plus Last name when the format is
+	 * `first_last_name` (legacy omits Last name there, but it equally backs the
+	 * display name and must stay in the base field set, so it's protected from
+	 * cross-field-set moves here). WP object cache memoises the underlying
+	 * lookups, so calling this per field has no extra DB cost.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param int $field_id Field ID.
+	 * @return bool True when the field is a platform default field.
+	 */
+	private function bb_is_default_field( $field_id ) {
+		$synced_field_ids = array( (int) bp_xprofile_nickname_field_id() );
+		$dn_format        = function_exists( 'bp_core_display_name_format' ) ? bp_core_display_name_format() : '';
+		if ( 'first_last_name' === $dn_format || 'first_name' === $dn_format ) {
+			$synced_field_ids[] = (int) bp_xprofile_firstname_field_id();
+		}
+		if ( 'first_last_name' === $dn_format ) {
+			$synced_field_ids[] = (int) bp_xprofile_lastname_field_id();
+		}
+
+		return in_array( (int) $field_id, $synced_field_ids, true );
+	}
+
+	/**
+	 * Determine whether a field may be moved from one field set to another.
+	 *
+	 * Cross-field-set moves are blocked for fields the platform depends on
+	 * staying put, and for any field entering or leaving a repeater field set
+	 * (repeater sets manage their own cloned child fields and would break if a
+	 * stray field were dropped in or pulled out).
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param int $field_id      Field ID being moved.
+	 * @param int $from_group_id Field set the field currently belongs to.
+	 * @param int $to_group_id   Field set the field is being moved into.
+	 * @return bool True when the move is allowed.
+	 */
+	private function bb_can_move_field_to_group( $field_id, $from_group_id, $to_group_id ) {
+		$field = BP_XProfile_Field::get_instance( (int) $field_id );
+		if ( ! $field || empty( $field->id ) ) {
+			return false;
+		}
+
+		// Required/primary fields and platform default (display-name) fields
+		// must remain in their field set.
+		if ( empty( $field->can_delete ) || $this->bb_is_default_field( $field_id ) ) {
+			return false;
+		}
+
+		// Block moves into or out of a repeater field set.
+		if (
+			'on' === bp_xprofile_get_meta( (int) $from_group_id, 'group', 'is_repeater_enabled' ) ||
+			'on' === bp_xprofile_get_meta( (int) $to_group_id, 'group', 'is_repeater_enabled' )
+		) {
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
+	 * Get the next field order (max + 1) to assign within a field set.
+	 *
+	 * Repeater clone fields are excluded when determining the current max,
+	 * matching the legacy auto-assign behavior so a clone's order never shifts
+	 * the position of a newly added or moved-in field.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param int $group_id Field set (group) ID.
+	 * @return int Next field order to assign.
+	 */
+	private function bb_get_next_field_order( $group_id ) {
+		global $wpdb;
+		$bp       = buddypress();
+		$group_id = (int) $group_id;
+
+		// Cloned fields should not be considered when determining the max order of fields in given group.
+		// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- BuddyPress table name properties.
+		$cloned_field_ids = $wpdb->get_col(
+			$wpdb->prepare(
+				"SELECT f.id FROM {$bp->profile->table_name_fields} AS f JOIN {$bp->profile->table_name_meta} AS fm ON f.id = fm.object_id WHERE f.group_id = %d AND fm.meta_key = '_is_repeater_clone' AND fm.meta_value = 1",
+				$group_id
+			)
+		);
+		// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+
+		if ( ! empty( $cloned_field_ids ) ) {
+			$placeholders = implode( ',', array_fill( 0, count( $cloned_field_ids ), '%d' ) );
+			$query_args   = array_merge( array( $group_id ), array_map( 'absint', $cloned_field_ids ) );
+			$field_order  = (int) $wpdb->get_var(
+				$wpdb->prepare(
+					"SELECT MAX(field_order) FROM {$bp->profile->table_name_fields} WHERE group_id = %d AND id NOT IN ( {$placeholders} )", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Placeholders are generated dynamically.
+					$query_args
+				)
+			);
+		} else {
+			$field_order = (int) $wpdb->get_var(
+				$wpdb->prepare(
+					"SELECT MAX(field_order) FROM {$bp->profile->table_name_fields} WHERE group_id = %d", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- BuddyPress table name property.
+					$group_id
+				)
+			);
+		}
+
+		return $field_order + 1;
 	}
 
 	/**
