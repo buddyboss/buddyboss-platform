@@ -4663,8 +4663,20 @@ function bp_get_userid_from_mentionname( $mentionname ) {
 		// account for hyphens + spaces in the same user_login.
 		if ( empty( $userdata ) || ! is_a( $userdata, 'WP_User' ) ) {
 			global $wpdb;
-			$regex   = esc_sql( str_replace( '-', '[ \-]', $mentionname ) );
-			$user_id = $wpdb->get_var( "SELECT ID FROM {$wpdb->users} WHERE user_login REGEXP '{$regex}'" );
+			// Defense-in-depth: pass the regex value through prepare's %s
+			// placeholder so SQL-level quoting is enforced even though the
+			// upstream extractor at bp_find_mentions_by_at_sign() restricts
+			// $mentionname to [A-Za-z0-9-_.@]+ (no quotes possible today).
+			// The literal `-` is intentionally expanded to `[ \-]` so users
+			// stored with spaces match against hyphen-encoded mentions; only
+			// `-` is replaced, the rest stays literal.
+			$regex   = str_replace( '-', '[ \-]', $mentionname );
+			$user_id = $wpdb->get_var(
+				$wpdb->prepare(
+					"SELECT ID FROM {$wpdb->users} WHERE user_login REGEXP %s",
+					$regex
+				)
+			);
 		} else {
 			$user_id = $userdata->ID;
 		}
