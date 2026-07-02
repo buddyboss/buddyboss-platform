@@ -478,7 +478,8 @@
 					margin: 0 var(--bb-rl-space-100) 0 0;
 				}
 
-				&.edit:before {
+				&.edit:before,
+				&.edit-activity:before {
 					content: "\e3b4";
 				}
 
@@ -1087,6 +1088,7 @@
 			right: 35px;
 		}
 
+		&:has(.bb-rl-media-move-file.open-popup),
 		&:has(.activity-state-popup.active) {
 			backdrop-filter: none;
 		}
@@ -1110,6 +1112,10 @@
 	padding: var(--bb-rl-space-200) var(--bb-rl-space-300);
 	overflow-x: hidden;
 	flex-grow: 1;
+
+	@media screen and (min-height: 540px) {
+		min-height: 230px;
+	}
 }
 
 .bb-rl-modal-activity-header {
