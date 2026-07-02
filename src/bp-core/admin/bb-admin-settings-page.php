@@ -129,6 +129,24 @@ function bb_admin_settings_page() {
 		}
 	}
 
+	// The Forums admin (create/edit forum modals) renders a custom featured-image
+	// Media Library picker that is NOT a registered field, so the registry scan
+	// above does not flag it. Force the media library when the forums meta
+	// component is registered so the picker has wp.media available without
+	// relying on another feature (e.g. appearance) happening to enqueue it.
+	//
+	// Note (tech debt): this proxies on "forums has any registered meta fields",
+	// not specifically on the feature-image picker. Today the picker always ships
+	// in the forum modals, so the proxy is accurate; but if forums ever registers
+	// non-image meta fields without an image picker, this becomes a harmless
+	// false positive (wp.media enqueued unnecessarily). If that happens, switch
+	// to a dedicated flag or check the field types here.
+	if ( ! $has_media_field && function_exists( 'bb_admin_meta_field_registry' ) ) {
+		if ( ! empty( bb_admin_meta_field_registry()->get_fields( 'forums' ) ) ) {
+			$has_media_field = true;
+		}
+	}
+
 	if ( $has_rich_text ) {
 		wp_enqueue_editor();
 	}
@@ -263,6 +281,27 @@ function bb_admin_settings_page() {
 	$localize_data['isGroupAutoJoinEnabled']             = bp_is_active( 'groups' ) && bp_disable_group_type_creation() && bp_enable_group_auto_join();
 	$localize_data['isEmailInviteEnabled']               = bp_is_active( 'invites' ) && function_exists( 'bp_disable_invite_member_type' ) && bp_disable_invite_member_type();
 	$localize_data['isProfileTypesEnabled']              = bp_is_active( 'xprofile' ) && function_exists( 'bp_member_type_enable_disable' ) && bp_member_type_enable_disable();
+
+	// License/tier state for the Help tab upsell promos.
+	//
+	// - `hasActiveLicense`: true when the BuddyBoss license is activated
+	// (the raw Mothership activation status, not the DRM `is_valid()` gate).
+	// - `hasPlusTier`: true when the user's plan includes a Plus-tier product.
+	// Gamification is Plus-only, so its presence in the addon plan is the
+	// tier probe; `checkProductBySlug()` returns null when the license is
+	// not activated, so this is always false without an active license.
+	//
+	// Help tab logic (HelpScreen.js): no active license -> show the "Pro"
+	// promo; active license without Plus -> show the "Plus" promo.
+	$bb_license_connector  = new \BuddyBoss\Core\Admin\Mothership\BB_Plugin_Connector();
+	$bb_has_active_license = $bb_license_connector->getLicenseActivationStatus();
+	$bb_has_plus_tier      = false;
+	if ( $bb_has_active_license && class_exists( '\\BuddyBoss\\Core\\Admin\\Mothership\\BB_Addons_Manager' ) ) {
+		$bb_has_plus_tier = null !== \BuddyBoss\Core\Admin\Mothership\BB_Addons_Manager::checkProductBySlug( 'buddyboss-gamification' );
+	}
+	$localize_data['hasActiveLicense'] = $bb_has_active_license;
+	$localize_data['hasPlusTier']      = $bb_has_plus_tier;
+
 	// Upload nonces for image upload fields (avatar/cover).
 	// Only expose when the user has capability to manage group settings.
 	if ( bp_current_user_can( 'bp_moderate' ) ) {
@@ -333,6 +372,161 @@ function bb_admin_settings_page() {
 
 	wp_localize_script( 'bb-admin-settings', 'bbAdminData', $localize_data );
 
+	/*
+	 * DocsBot AI chat widget — Help tab only.
+	 *
+	 * The whole Settings 2.0 admin is a single React SPA, so `?tab=help` is a
+	 * client-side route, not a separate page load. This loader therefore (a)
+	 * only ships on the bb-settings screen at all (it is attached to the
+	 * bb-admin-settings script handle, enqueued exclusively by this render
+	 * callback), and (b) only initializes the widget when the active tab is
+	 * `help`, mounting/unmounting as the admin navigates between SPA tabs so the
+	 * chatbot never appears on any other Settings tab. The DocsBot ID is the
+	 * only configurable value and is JSON-encoded so it is safely escaped.
+	 *
+	 * The widget's own floating launcher button is hidden via CSS below; the
+	 * "Chat with Buddy" button in the Help footer (HelpScreen.js) is the sole
+	 * trigger and opens the chat through window.DocsBotAI.open().
+	 */
+	$bb_docsbot_id = 'l3C4F706DBbMAWB5BmYA/cgvg2Wd8vBWaRHNvIZVf';
+	wp_add_inline_script(
+		'bb-admin-settings',
+		'( function () {
+			window.DocsBotAI = window.DocsBotAI || {};
+			DocsBotAI.init = function ( e ) {
+				return new Promise( function ( resolve, reject ) {
+					var n = document.createElement( "script" );
+					n.type = "text/javascript";
+					n.async = true;
+					n.src = "https://widget.docsbot.ai/chat.js";
+					var o = document.getElementsByTagName( "script" )[0];
+					o.parentNode.insertBefore( n, o );
+					n.addEventListener( "load", function () {
+						var waitFor = function ( sel ) {
+							return new Promise( function ( res ) {
+								if ( document.querySelector( sel ) ) {
+									return res( document.querySelector( sel ) );
+								}
+								var obs = new MutationObserver( function () {
+									if ( document.querySelector( sel ) ) {
+										res( document.querySelector( sel ) );
+										obs.disconnect();
+									}
+								} );
+								obs.observe( document.body, { childList: true, subtree: true } );
+							} );
+						};
+						Promise.all( [
+							window.DocsBotAI.mount( Object.assign( {}, e ) ),
+							waitFor( "#docsbotai-root" )
+						] ).then( resolve ).catch( reject );
+					} );
+					n.addEventListener( "error", function ( err ) {
+						reject( err.message );
+					} );
+				} );
+			};
+
+			var DOCSBOT_ID = ' . wp_json_encode( $bb_docsbot_id ) . ';
+			var mounted = false;
+
+			function onHelpTab() {
+				var params = new URLSearchParams( window.location.search );
+				return "bb-settings" === params.get( "page" ) && "help" === params.get( "tab" );
+			}
+
+			function unmount() {
+				// Disconnect the launcher observer first: it watches the current
+				// shadow root, which DocsBotAI.unmount() is about to detach. Leaving
+				// it connected would (a) keep the old root alive (leak) and (b) make
+				// hideLauncher() skip re-observing the NEW root on the next Help
+				// visit, letting the floating launcher reappear.
+				if ( launcherObserver ) {
+					launcherObserver.disconnect();
+					launcherObserver = null;
+				}
+				if ( mounted && window.DocsBotAI && "function" === typeof window.DocsBotAI.unmount ) {
+					try { window.DocsBotAI.unmount(); } catch ( e ) {}
+				}
+				mounted = false;
+			}
+
+			// DocsBot renders inside an OPEN shadow root, so page CSS cannot reach
+			// its floating launcher button. Hide it from JS instead (the page can
+			// read an open shadow root), and keep it hidden with a MutationObserver
+			// since the widget re-renders the button when the chat opens/closes.
+			// The "Chat with Buddy" footer button is the only intended trigger; the
+			// chat panel still opens via window.DocsBotAI.open().
+			var launcherObserver = null;
+			function hideLauncher() {
+				var root = document.getElementById( "docsbotai-root" );
+				var sr = root && root.shadowRoot;
+				if ( ! sr ) {
+					return;
+				}
+				var apply = function () {
+					var btn = sr.querySelector( "button.floating-button, button[class*=\"floating\"]" );
+					if ( btn ) {
+						btn.style.setProperty( "display", "none", "important" );
+					}
+				};
+				apply();
+				if ( ! launcherObserver ) {
+					launcherObserver = new MutationObserver( apply );
+					launcherObserver.observe( sr, { childList: true, subtree: true } );
+				}
+			}
+
+			function sync() {
+				if ( onHelpTab() ) {
+					if ( ! mounted ) {
+						mounted = true;
+						window.bbDocsbotFailed = false;
+						DocsBotAI.init( { id: DOCSBOT_ID } )
+							.then( hideLauncher )
+							.catch( function () {
+								// chat.js failed to load (CSP, air-gapped, network)
+								// — flag it so the Help footer button can fall back
+								// instead of silently doing nothing.
+								mounted = false;
+								window.bbDocsbotFailed = true;
+							} );
+					}
+				} else {
+					unmount();
+				}
+			}
+
+			// The SPA navigates with history.replaceState/pushState (no full
+			// reload), so patch both to emit an event we can react to, alongside
+			// the native popstate. This keeps the widget in sync with the route.
+			// Guard so the wrappers are installed at most once per page — running
+			// this loader again (or wrapping an already-wrapped history) must not
+			// stack wrappers. The marker is also visible to other scripts.
+			if ( ! window.history.__bbDocsbotPatched ) {
+				window.history.__bbDocsbotPatched = true;
+				[ "pushState", "replaceState" ].forEach( function ( type ) {
+					var orig = window.history[ type ];
+					window.history[ type ] = function () {
+						var ret = orig.apply( this, arguments );
+						window.dispatchEvent( new Event( "bb-docsbot-locationchange" ) );
+						return ret;
+					};
+				} );
+			}
+			window.addEventListener( "popstate", sync );
+			window.addEventListener( "hashchange", sync );
+			window.addEventListener( "bb-docsbot-locationchange", sync );
+
+			if ( "loading" === document.readyState ) {
+				document.addEventListener( "DOMContentLoaded", sync );
+			} else {
+				sync();
+			}
+		} )();',
+		'after'
+	);
+
 	/**
 	 * Deprecated: bp_activity_admin_enqueue_scripts.
 	 *
@@ -356,8 +550,17 @@ function bb_admin_settings_page() {
 	// Render mount point.
 	?>
 	<div class="wrap bb-admin-settings-wrap">
+		<?php
+		/*
+		 * Anchor for WordPress core admin-notice relocation. Without this
+		 * marker, common.js falls back to the first <h1>/<h2> inside .wrap —
+		 * which is rendered by the React app (e.g. the Help hero <h1>) — and
+		 * injects third-party notices inside the React tree. The marker keeps
+		 * relocated notices at the top of .wrap, outside the React mount.
+		 */
+		?>
+		<hr class="wp-header-end">
 		<div id="bb-admin-settings"></div>
-		<!-- test -->
 		<?php
 		/*
 		 * Mothership IPN inbox — render outside the React tree.

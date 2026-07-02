@@ -149,6 +149,16 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			// add_action( bp_core_admin_hook(),       array( $this, 'admin_menus_components' ), 75 );
 			add_action( bp_core_admin_hook(), array( $this, 'adjust_buddyboss_menus' ), 100 );
 
+			// Redirect the legacy `?page=bp-help` admin URL to the new Settings 2.0
+			// Help tab. The `bp-help` submenu no longer exists, so WordPress denies
+			// access to that slug from wp-admin/includes/menu.php (via
+			// `admin_page_access_denied`) BEFORE `admin_init` fires. We hook the
+			// access-denied action so the redirect runs in that path, and keep the
+			// `admin_init` hook as a fallback for any context where the slug is
+			// still resolvable. Both run before output, so `wp_safe_redirect()` is safe.
+			add_action( 'admin_page_access_denied', array( $this, 'bb_redirect_legacy_help_page' ) );
+			add_action( 'admin_init', array( $this, 'bb_redirect_legacy_help_page' ) );
+
 			// Enqueue all admin JS and CSS.
 			add_action( 'bp_admin_enqueue_scripts', array( $this, 'admin_register_styles' ), 1 );
 			add_action( 'bp_admin_enqueue_scripts', array( $this, 'admin_register_scripts' ), 1 );
@@ -452,40 +462,18 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			// the `bb-readylaunch` URL now redirects to Appearance in Settings 2.0
 			// via `bp_core_admin_backpat_menu()` (`bp-core-admin-actions.php`).
 
-			// For consistency with non-Multisite, we add a Tools menu in
-			// the Network Admin as a home for our Tools panel.
-			if ( is_multisite() && bp_core_do_network_admin() ) {
-				$tools_parent = 'network-tools';
-
-				$hooks[] = add_menu_page(
-					__( 'Tools', 'buddyboss' ),
-					__( 'Tools', 'buddyboss' ),
-					$this->capability,
-					$tools_parent,
-					'bp_core_tools_top_level_item',
-					'',
-					24 // Just above Settings.
-				);
-
-				$hooks[] = add_submenu_page(
-					$tools_parent,
-					__( 'Available Tools', 'buddyboss' ),
-					__( 'Available Tools', 'buddyboss' ),
-					$this->capability,
-					'available-tools',
-					'bp_core_admin_available_tools_page'
-				);
-			} else {
-				$tools_parent = 'tools.php';
-			}
-
+			// Help submenu points at the Settings 2.0 Help tab. WordPress treats
+			// a `menu_slug` containing a URL (with `?`) as a direct link rather
+			// than registering a new page — same trick used by the Emails
+			// submenu below. Direct visits to the legacy `?page=bp-help` URL
+			// are redirected server-side by `bb_redirect_legacy_help_page()`.
 			$hooks[] = add_submenu_page(
 				$this->settings_page,
 				__( 'Help', 'buddyboss' ),
 				__( 'Help', 'buddyboss' ),
 				$this->capability,
-				'bp-help',
-				'bp_core_admin_help'
+				'admin.php?page=bb-settings&tab=help',
+				''
 			);
 
 			$hooks[] = add_submenu_page(
@@ -498,6 +486,38 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			);
 
 			// Network admin email menu removed — migrated to Settings 2.0.
+		}
+
+		/**
+		 * Redirect legacy `?page=bp-help` URLs to the new Settings 2.0 Help tab.
+		 *
+		 * The Help submenu now points at `?page=bb-settings&tab=help` directly and
+		 * the legacy `bp-help` submenu no longer exists, but bookmarks, plugin
+		 * links and old in-app links may still hit `bp-help`. Send those visitors
+		 * to the new URL so a single canonical Help page exists.
+		 *
+		 * Hooked on both `admin_page_access_denied` and `admin_init`. Because the
+		 * `bp-help` slug is no longer a registered submenu, WordPress denies access
+		 * to it in `wp-admin/includes/menu.php` (firing `admin_page_access_denied`)
+		 * before `admin_init` runs — so the access-denied hook is what actually
+		 * catches the redirect; `admin_init` is a fallback. The method is
+		 * idempotent: it no-ops unless `?page=bp-help` is the current request.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 */
+		public function bb_redirect_legacy_help_page() {
+			// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only navigation redirect, no state change.
+			$page = isset( $_GET['page'] ) ? sanitize_key( wp_unslash( $_GET['page'] ) ) : '';
+			if ( 'bp-help' !== $page ) {
+				return;
+			}
+
+			if ( ! current_user_can( $this->capability ) ) {
+				return;
+			}
+
+			wp_safe_redirect( bp_get_admin_url( 'admin.php?page=bb-settings&tab=help' ) );
+			exit;
 		}
 
 		public function adjust_buddyboss_menus() {

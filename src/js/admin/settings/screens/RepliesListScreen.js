@@ -5,7 +5,7 @@
  * @since BuddyBoss [BBVERSION]
  */
 
-import { useState, useEffect, useCallback, useRef, useMemo } from '@wordpress/element';
+import { useState, useEffect, useCallback, useRef, useMemo, Fragment } from '@wordpress/element';
 import {
 	Button,
 	CheckboxControl,
@@ -27,7 +27,7 @@ import { DeleteConfirmModal } from '../components/common/DeleteConfirmModal';
 import { BulkEditModal } from '../components/common/BulkEditModal';
 import { useListScreenHandlers } from '../hooks/useListScreenHandlers';
 import { useListScreenState } from '../hooks/useListScreenState';
-import { groupFieldsWithLayout, buildRegisteredFieldPayload, getVisibleFields, needsSeparator } from '../utils/format';
+import { groupFieldsWithLayout, buildRegisteredFieldPayload, getVisibleFields, isFieldConditionalDisabled, needsSeparator, splitFieldsByMetaboxGroup } from '../utils/format';
 import { ReplyCreateModal } from '../components/forums/ReplyCreateModal';
 import { RegisteredMetaField } from '../components/common/RegisteredMetaField';
 import { forceRemoveEditor } from '../components/common/RichTextEditor';
@@ -1090,7 +1090,10 @@ export default function RepliesListScreen( { onNavigate } ) {
 
 								{ editReply && editReply.registered_fields && ( function () {
 									var visibleFields = getVisibleFields( editReply.registered_fields, editRegisteredValues );
-									var grouped = groupFieldsWithLayout( visibleFields );
+									// Split into runs by source metabox so bridged third-party
+									// metaboxes (e.g. WP Fusion) render in a bordered section with
+									// their title heading at the end — matching the Forums screen.
+									var segments = splitFieldsByMetaboxGroup( visibleFields );
 
 									var getEditAsyncExtraParams = function ( field ) {
 										if ( ! field.async_depends_on ) {
@@ -1127,8 +1130,8 @@ export default function RepliesListScreen( { onNavigate } ) {
 										} );
 									};
 
-									return grouped.map( function ( item, idx ) {
-										var hasSeparator = needsSeparator( item, grouped[ idx + 1 ], [ 'reply_to', 'reply_status' ] );
+									var renderEditItem = function ( item, idx, groupedList ) {
+										var hasSeparator = needsSeparator( item, groupedList[ idx + 1 ], [ 'reply_to', 'reply_status' ] );
 
 										if ( 'row' === item.type ) {
 											return (
@@ -1143,6 +1146,7 @@ export default function RepliesListScreen( { onNavigate } ) {
 																	handleEditFieldChange( field.id, val );
 																} }
 																itemId={ editReply.id }
+																disabled={ isFieldConditionalDisabled( field, editRegisteredValues ) }
 															/>
 														);
 													} ) }
@@ -1159,7 +1163,35 @@ export default function RepliesListScreen( { onNavigate } ) {
 														handleEditFieldChange( item.field.id, val );
 													} }
 													itemId={ editReply.id }
+													disabled={ isFieldConditionalDisabled( item.field, editRegisteredValues ) }
 												/>
+											</div>
+										);
+									};
+
+									return segments.map( function ( segment, segIdx ) {
+										var grouped = groupFieldsWithLayout( segment.fields );
+
+										if ( ! segment.group ) {
+											return (
+												<Fragment key={ 'seg-flat-' + segIdx }>
+													{ grouped.map( function ( item, idx ) {
+														return renderEditItem( item, idx, grouped );
+													} ) }
+												</Fragment>
+											);
+										}
+
+										return (
+											<div key={ 'seg-group-' + segIdx } className="bb-admin-meta-field__group" data-group-id={ segment.group }>
+												{ segment.label && (
+													<h3 className="bb-admin-meta-field__group-title">{ segment.label }</h3>
+												) }
+												<div className="bb-admin-meta-field__group-fields">
+													{ grouped.map( function ( item, idx ) {
+														return renderEditItem( item, idx, grouped );
+													} ) }
+												</div>
 											</div>
 										);
 									} );
