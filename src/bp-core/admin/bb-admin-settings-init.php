@@ -42,6 +42,17 @@ function bb_admin_settings_init() {
 	bb_feature_registry();
 	bb_feature_loader();
 
+	// Support Access (BB_Support_Access singleton). Loaded unconditionally
+	// (outside the admin-only block below) because its token-login handler runs
+	// on regular front-end `init` requests — when the support team clicks the
+	// login URL they are not yet authenticated and not in wp-admin. The class
+	// self-boots via BB_Support_Access::instance() at the bottom of its file,
+	// registering the front-end `init` login, the expiry cron, and the admin
+	// AJAX handlers.
+	if ( file_exists( buddypress()->plugin_dir . 'bp-core/admin/classes/class-bb-support-access.php' ) ) {
+		require_once buddypress()->plugin_dir . 'bp-core/admin/classes/class-bb-support-access.php';
+	}
+
 	// Admin/AJAX-only: AJAX handlers, meta field registry, settings page, feature settings
 	// (panels, sections, fields), and icon registry. Skip on frontend for performance —
 	// frontend only needs the Feature Registry + Loader for conditional component loading.
@@ -89,6 +100,11 @@ function bb_admin_settings_init() {
 			}
 		}
 
+		// Integrations marketplace — plugin activate/deactivate AJAX handlers.
+		if ( file_exists( buddypress()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-integrations-ajax.php' ) ) {
+			require_once buddypress()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-integrations-ajax.php';
+		}
+
 		// Profile AJAX handlers (only when xprofile component is active).
 		if ( bp_is_active( 'xprofile' ) ) {
 			if ( file_exists( buddypress()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-member-types-ajax.php' ) ) {
@@ -127,6 +143,16 @@ function bb_admin_settings_init() {
 		// Admin settings page (menu registration, render function).
 		if ( file_exists( buddypress()->plugin_dir . 'bp-core/admin/bb-admin-settings-page.php' ) ) {
 			require_once buddypress()->plugin_dir . 'bp-core/admin/bb-admin-settings-page.php';
+		}
+
+		// Integrations marketplace page (render function for the bb-integrations submenu).
+		if ( file_exists( buddypress()->plugin_dir . 'bp-core/admin/bb-admin-integrations-page.php' ) ) {
+			require_once buddypress()->plugin_dir . 'bp-core/admin/bb-admin-integrations-page.php';
+		}
+
+		// Shared admin-common layer asset registration.
+		if ( file_exists( buddypress()->plugin_dir . 'bp-core/admin/bb-admin-common-assets.php' ) ) {
+			require_once buddypress()->plugin_dir . 'bp-core/admin/bb-admin-common-assets.php';
 		}
 
 		// Admin-only cover image upload + user crop AJAX handlers
@@ -273,6 +299,31 @@ function bb_register_help_content_rest_route() {
 	( new BB_REST_Help_Content_Endpoint() )->register_routes();
 }
 add_action( 'rest_api_init', 'bb_register_help_content_rest_route' );
+
+/**
+ * Register the Integrations marketplace REST proxy route.
+ *
+ * Same-origin server-side proxy for the buddyboss.com Integrations directory
+ * (`wp/v2/integrations` + taxonomies). Mirrors the help-content proxy with its
+ * own cache namespace and filters. The React Integrations screen POSTs path-only
+ * fragments to `buddyboss/v1/integrations/proxy`.
+ *
+ * @since BuddyBoss 3.1.0
+ *
+ * @return void
+ */
+function bb_register_integrations_rest_route() {
+	$controller_file = buddypress()->plugin_dir . 'bp-core/admin/classes/class-bb-rest-integrations-endpoint.php';
+	if ( ! file_exists( $controller_file ) ) {
+		return;
+	}
+	require_once $controller_file;
+	if ( ! class_exists( 'BB_REST_Integrations_Endpoint' ) ) {
+		return;
+	}
+	( new BB_REST_Integrations_Endpoint() )->register_routes();
+}
+add_action( 'rest_api_init', 'bb_register_integrations_rest_route' );
 
 /**
  * Initialize the Integration Bridge early.

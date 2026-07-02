@@ -87,6 +87,42 @@ function findFirstArticle( nodes ) {
 }
 
 /**
+ * Walk the recursive tree to find a specific article by slug and return the
+ * path of ancestor node slugs leading to its parent node.
+ *
+ * Mirrors `findFirstArticle`'s path semantics so callers can dispatch
+ * `expandSubcategory` for each slug to open the sidebar straight to the
+ * article — used when the modal is opened directly on a known article
+ * (e.g. from the Help search results) with no auto-select to lean on.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {Array}  nodes       Subcategory tree nodes.
+ * @param {string} articleSlug Article slug to locate.
+ * @return {?string[]} Ancestor slug path (top-level first), or null when not found.
+ */
+function findArticlePath( nodes, articleSlug ) {
+	if ( ! Array.isArray( nodes ) || ! articleSlug ) {
+		return null;
+	}
+	for ( const node of nodes ) {
+		if ( Array.isArray( node.children ) && node.children.length > 0 ) {
+			const childMatch = findArticlePath( node.children, articleSlug );
+			if ( childMatch ) {
+				return [ node.slug, ...childMatch ];
+			}
+		}
+		if (
+			Array.isArray( node.articles ) &&
+			node.articles.some( ( article ) => article.slug === articleSlug )
+		) {
+			return [ node.slug ];
+		}
+	}
+	return null;
+}
+
+/**
  * Knowledge Base category view.
  *
  * Owns the taxonomy + articles fetch sequence and renders breadcrumb +
@@ -122,6 +158,15 @@ export default function KBCategory() {
 						dispatch( { type: 'expandSubcategory', slug: s } );
 					} );
 					dispatch( { type: 'selectArticle', slug: match.article.slug } );
+				}
+			} else {
+				// Article already chosen (e.g. opened from Help search) —
+				// expand the sidebar groups leading to it.
+				const path = findArticlePath( cached.payload.subcategories, state.activeArticleSlug );
+				if ( path ) {
+					path.forEach( ( s ) => {
+						dispatch( { type: 'expandSubcategory', slug: s } );
+					} );
 				}
 			}
 			return () => controller.abort();
@@ -182,6 +227,15 @@ export default function KBCategory() {
 							dispatch( { type: 'expandSubcategory', slug } );
 						} );
 						dispatch( { type: 'selectArticle', slug: match.article.slug } );
+					}
+				} else {
+					// Article already chosen (e.g. opened from Help search) —
+					// expand the sidebar groups leading to it.
+					const path = findArticlePath( payload.subcategories, state.activeArticleSlug );
+					if ( path ) {
+						path.forEach( ( slug ) => {
+							dispatch( { type: 'expandSubcategory', slug } );
+						} );
 					}
 				}
 			} catch ( err ) {

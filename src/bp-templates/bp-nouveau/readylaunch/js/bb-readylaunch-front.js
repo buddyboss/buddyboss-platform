@@ -35,8 +35,6 @@ window.bp = window.bp || {};
 				// Initialize select2 filters with retry mechanism
 				this.initSelect2Filters();
 
-				this.styledSelect();
-
 				this.bbReloadWindow();
 				this.initBBNavOverflow();
 			},
@@ -297,30 +295,6 @@ window.bp = window.bp || {};
 				} );
 			},
 
-			styledSelect: function () {
-				$( '.bb-rl-styled-select select' ).each(
-					function () {
-						var $this   = $( this ),
-						customClass = '';
-
-						// Check if parent container has specific class
-						var $parent = $this.closest( '.bb-rl-styled-select' );
-						if ( $parent.hasClass( 'bb-rl-styled-select--default' ) ) {
-								customClass += ' bb-rl-select-default';
-						}
-
-						$this.select2(
-							{
-								theme: 'bb-rl-select2',
-								containerCssClass: 'bb-rl-select2-container ' + customClass,
-								dropdownCssClass: 'bb-rl-select2-dropdown',
-								dropdownParent: $this.parent()
-							}
-						);
-					}
-				);
-			},
-
 			/**
 			 * Handles "Load More" click or dropdown open
 			 *
@@ -424,7 +398,7 @@ window.bp = window.bp || {};
 						error   : function () {
 							// Reset the 'loading' flag in case of error.
 							mainContainerID.data( 'loading', false );
-							mainContainerID.find( '.notification-list' ).html( '<p>Failed to load data. Please try again.</p>' );
+							mainContainerID.find( '.notification-list' ).html( '<p class="bb-rl-notification-error">' + bbReadyLaunchFront.notification_error + '</p>' );
 						},
 						complete : function () {
 							// Always reset the loading state, regardless of success or error.

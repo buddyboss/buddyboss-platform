@@ -2135,6 +2135,11 @@ function bp_admin_forum_repair_tools_wrapper_function() {
 		),
 	);
 
+	// Capability check — repair tools require admin privileges.
+	if ( ! bp_current_user_can( 'bp_moderate' ) ) {
+		wp_send_json_error( $response );
+	}
+
 	// Bail if not a POST action.
 	if ( ! bp_is_post_request() ) {
 		wp_send_json_error( $response );
@@ -2212,7 +2217,7 @@ function bp_admin_forum_repair_tools_wrapper_function() {
 	// Pass the whole $status array so the helper can scan `message`, `records`,
 	// and `feedback` for a count. LOCKED-BC preserved (additive).
 	//
-	// @since BuddyBoss [BBVERSION]
+	// @since BuddyBoss 3.1.0
 	if ( is_array( $status ) && function_exists( 'bb_admin_repair_extract_count_summary' ) ) {
 		$enrichment = bb_admin_repair_extract_count_summary( $status );
 		$status     = array_merge( $status, $enrichment );

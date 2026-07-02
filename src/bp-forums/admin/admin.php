@@ -109,7 +109,7 @@ if ( ! class_exists( 'BBP_Admin' ) ) :
 		 */
 		private function includes() {
 			require $this->admin_dir . 'tools.php';
-			// converter.php retired in BuddyBoss [BBVERSION] — Forum Import
+			// converter.php retired in BuddyBoss 3.1.0 — Forum Import
 			// machinery moved to the buddyboss-tools plugin; legacy class names
 			// resolve via the class_alias autoloader in
 			// src/bp-core/deprecated/buddyboss/3.0.0.php when Tools is active.
@@ -198,7 +198,7 @@ if ( ! class_exists( 'BBP_Admin' ) ) :
 
 			$hooks = array();
 
-			// Forum Repair + Forum Import submenus retired in BuddyBoss [BBVERSION] —
+			// Forum Repair + Forum Import submenus retired in BuddyBoss 3.1.0 —
 			// ?page=bbp-repair and ?page=bbp-converter both redirect to the
 			// Settings 2.0 Tools tab via bb_redirect_bp_settings_before_permission_check().
 			// Bail if plugin is not network activated
@@ -539,7 +539,7 @@ if ( ! class_exists( 'BBP_Admin' ) ) :
 		 * @since 2.6.0 bbPress (r2521)
 		 */
 		public function register_admin_scripts() {
-			// Forum Import script (`bbp-converter`) retired in BuddyBoss [BBVERSION] —
+			// Forum Import script (`bbp-converter`) retired in BuddyBoss 3.1.0 —
 			// admin/js/converter.js was deleted alongside the legacy admin page.
 		}
 
@@ -733,7 +733,7 @@ endif; // class_exists check
  */
 function bbp_admin() {
 	bbpress()->admin = new BBP_Admin();
-	// BBP_Converter retired from Platform in BuddyBoss [BBVERSION]; the moved
+	// BBP_Converter retired from Platform in BuddyBoss 3.1.0; the moved
 	// orchestrator lives in buddyboss-tools. Any code still referencing
 	// bbpress()->admin->converter will see null — third-party callers should
 	// migrate to BB_Tools_BBP_Converter or rely on the legacy class_alias in

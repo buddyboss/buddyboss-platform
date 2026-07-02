@@ -19,6 +19,7 @@ export default function ActivationRequiredCTA() {
 	const [ pluginState, setPluginState ] = useState( 'loading' );
 	const [ isWorking, setIsWorking ] = useState( false );
 	const [ error, setError ] = useState( null );
+	const [ licenseUrl, setLicenseUrl ] = useState( '' );
 	const abortRef = useRef( null );
 
 	const ajaxUrl = ( window.bbAdminData && window.bbAdminData.ajaxUrl ) || window.ajaxurl;
@@ -43,6 +44,9 @@ export default function ActivationRequiredCTA() {
 			.then( function ( res ) {
 				if ( res && res.success && res.data ) {
 					setPluginState( res.data.state );
+					if ( res.data.license_url ) {
+						setLicenseUrl( res.data.license_url );
+					}
 				} else {
 					setPluginState( 'not-installed' );
 				}
@@ -133,6 +137,30 @@ export default function ActivationRequiredCTA() {
 				<p className="bb-tools-activation-cta__description">
 					{ __( 'The BuddyBoss Tools addon is installed, but this feature is not yet available. Update the addon to use it.', 'buddyboss' ) }
 				</p>
+			</div>
+		);
+	}
+
+	if ( 'needs-license' === pluginState ) {
+		// The addon is not installed and there is no active license to pull it
+		// from the BuddyBoss add-on server. Point the admin at the license page.
+		return (
+			<div className="bb-tools-activation-cta">
+				<div className="bb-tools-activation-cta__icon">
+					<span className="bb-icons-rl bb-icons-rl-info"></span>
+				</div>
+				<h2 className="bb-tools-activation-cta__title">
+					{ __( 'License Required', 'buddyboss' ) }
+				</h2>
+				<p className="bb-tools-activation-cta__description">
+					{ __( 'Please activate your BuddyBoss license to install and use this feature.', 'buddyboss' ) }
+				</p>
+				<Button
+					variant="primary"
+					href={ licenseUrl || '#' }
+				>
+					{ __( 'Activate License', 'buddyboss' ) }
+				</Button>
 			</div>
 		);
 	}

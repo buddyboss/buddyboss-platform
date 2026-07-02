@@ -299,11 +299,12 @@ export function updateGroupType( typeId, data ) {
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param {number} typeId - Group type post ID
+ * @param {number} typeId  - Group type post ID
+ * @param {Object} options - Optional fetch options (e.g. { signal } for AbortController).
  * @return {Promise} Promise resolving to response
  */
-export function deleteGroupType( typeId ) {
-	return ajaxFetch( 'bb_admin_delete_group_type', { type_id: typeId } );
+export function deleteGroupType( typeId, options ) {
+	return ajaxFetch( 'bb_admin_delete_group_type', { type_id: typeId }, options );
 }
 
 /**
