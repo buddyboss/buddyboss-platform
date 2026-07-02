@@ -589,22 +589,29 @@ function bb_check_user_nickname( &$errors, $update, &$user ) {
 
 	$un_name = ( ! empty( $user->nickname ) ) ? $user->nickname : $user->user_login;
 
-	$where = array(
-		'meta_key = "nickname"',
-		'meta_value = "' . $un_name . '"',
-	);
+	// $user->nickname carries the magic-quote slashes from $_POST; unslash before
+	// passing to $wpdb->prepare() so the value is escaped exactly once and the
+	// comparison matches the unslashed value stored in usermeta.
+	$un_name = wp_unslash( $un_name );
 
 	if ( ! empty( $user->ID ) ) {
-		$where[] = 'user_id != ' . $user->ID;
+		$nickname_count = $wpdb->get_var(
+			$wpdb->prepare(
+				"SELECT count(*) FROM {$wpdb->usermeta} WHERE meta_key = 'nickname' AND meta_value = %s AND user_id != %d",
+				$un_name,
+				$user->ID
+			)
+		);
+	} else {
+		$nickname_count = $wpdb->get_var(
+			$wpdb->prepare(
+				"SELECT count(*) FROM {$wpdb->usermeta} WHERE meta_key = 'nickname' AND meta_value = %s",
+				$un_name
+			)
+		);
 	}
 
-	$sql = sprintf(
-		'SELECT count(*) FROM %s WHERE %s',
-		$wpdb->usermeta,
-		implode( ' AND ', $where )
-	);
-
-	if ( $wpdb->get_var( $sql ) > 0 ) {
+	if ( $nickname_count > 0 ) {
 		$errors->add( 'nickname_exists', __( '<strong>Error</strong>: Nickname already has been taken. Please try again.', 'buddyboss' ), array( 'form-field' => 'nickname' ) );
 	}
 }
