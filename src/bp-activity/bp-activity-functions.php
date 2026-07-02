@@ -1184,7 +1184,7 @@ function bp_activity_favorites_upgrade_data() {
 	if ( ! $bp_activity_favorites && bp_is_active( 'activity' ) ) {
 
 		if ( bp_is_large_install() ) {
-			$admin_url = bp_get_admin_url( add_query_arg( array( 'page' => 'bp-tools' ), 'admin.php' ) );
+			$admin_url = bp_get_admin_url( add_query_arg( array( 'page' => 'bb-settings', 'tab' => 'tools', 'panel' => 'repair_platform' ), 'admin.php' ) );
 			$notice    = sprintf(
 				'%1$s <a href="%2$s">%3$s</a> %4$s',
 				__( 'Due to the large size of your users table, you need to manually update user activity favorites data via BuddyBoss > ', 'buddyboss' ),
