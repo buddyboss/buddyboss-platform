@@ -359,7 +359,7 @@ class BP_XProfile_Data_Template {
 
 		// Valid field values of 0 or '0' get caught by empty(), so we have an extra check for these. See #BP5731.
 		if ( ! empty( $field->data ) && ( ! empty( $field->data->value ) || ( '0' === $field->data->value ) ) ) {
-			$value = maybe_unserialize( $field->data->value );
+			$value = bb_xprofile_safe_unserialize( $field->data->value ); // Object injection guard.
 		} else {
 			$value = false;
 		}
