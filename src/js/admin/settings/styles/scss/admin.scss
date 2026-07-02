@@ -111,6 +111,10 @@
 			right: 35px;
 			top: 50%;
 			transform: translateY(-50%);
+
+			.spinner {
+				margin: 0;
+			}
 		}
 
 		&-results {
@@ -158,6 +162,10 @@
 				color: $bb-icon-tertiary-color;
 				font-size: 16px;
 				margin-right: 8px;
+
+				[class*="bb-icon"]:before {
+					margin: 0;
+				}
 			}
 
 			&-content {
