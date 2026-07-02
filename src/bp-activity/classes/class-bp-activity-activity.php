@@ -669,17 +669,21 @@ class BP_Activity_Activity {
 
 		// The filter activities by their privacy.
 		if ( ! empty( $r['privacy'] ) ) {
-			$privacy                     = "'" . implode( "', '", $r['privacy'] ) . "'";
-			$where_conditions['privacy'] = "a.privacy IN ({$privacy})";
+			$privacy_values              = (array) $r['privacy'];
+			$privacy_placeholders        = implode( ', ', array_fill( 0, count( $privacy_values ), '%s' ) );
+			// phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare -- $privacy_placeholders is a list of %s tokens; values are passed as prepare() args.
+			$where_conditions['privacy'] = $wpdb->prepare( "a.privacy IN ({$privacy_placeholders})", $privacy_values );
 		}
 
 		// Check the status of items.
 		if ( ! empty( $r['status'] ) ) {
 			if ( is_array( $r['status'] ) ) {
-				$status                     = "'" . implode( "', '", $r['status'] ) . "'";
-				$where_conditions['status'] = "a.status IN ({$status})";
+				$status_values              = $r['status'];
+				$status_placeholders        = implode( ', ', array_fill( 0, count( $status_values ), '%s' ) );
+				// phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare -- $status_placeholders is a list of %s tokens; values are passed as prepare() args.
+				$where_conditions['status'] = $wpdb->prepare( "a.status IN ({$status_placeholders})", $status_values );
 			} else {
-				$where_conditions['status'] = "a.status = '{$r['status']}'";
+				$where_conditions['status'] = $wpdb->prepare( 'a.status = %s', $r['status'] );
 			}
 		}
 
