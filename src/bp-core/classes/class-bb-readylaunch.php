@@ -1281,10 +1281,11 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				'bb-readylaunch-front',
 				'bbReadyLaunchFront',
 				array(
-					'ajax_url'   => admin_url( 'admin-ajax.php' ),
-					'nonce'      => wp_create_nonce( 'bb-readylaunch' ),
-					'more_nav'   => esc_html__( 'More', 'buddyboss' ),
-					'filter_all' => esc_html__( 'All', 'buddyboss' ),
+					'ajax_url'           => admin_url( 'admin-ajax.php' ),
+					'nonce'              => wp_create_nonce( 'bb-readylaunch' ),
+					'more_nav'           => esc_html__( 'More', 'buddyboss' ),
+					'filter_all'         => esc_html__( 'All', 'buddyboss' ),
+					'notification_error' => esc_html__( 'Failed to load data. Please try again.', 'buddyboss' ),
 				)
 			);
 
@@ -3069,10 +3070,11 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				'bb-readylaunch-header-view',
 				'bbReadyLaunchFront',
 				array(
-					'ajax_url'   => admin_url( 'admin-ajax.php' ),
-					'nonce'      => wp_create_nonce( 'bb-readylaunch' ),
-					'more_nav'   => esc_html__( 'More', 'buddyboss' ),
-					'filter_all' => esc_html__( 'All', 'buddyboss' ),
+					'ajax_url'           => admin_url( 'admin-ajax.php' ),
+					'nonce'              => wp_create_nonce( 'bb-readylaunch' ),
+					'more_nav'           => esc_html__( 'More', 'buddyboss' ),
+					'filter_all'         => esc_html__( 'All', 'buddyboss' ),
+					'notification_error' => esc_html__( 'Failed to load data. Please try again.', 'buddyboss' ),
 				)
 			);
 
