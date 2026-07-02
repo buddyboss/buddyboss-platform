@@ -28,7 +28,7 @@ import { DeleteConfirmModal } from '../components/common/DeleteConfirmModal';
 import { BulkEditModal } from '../components/common/BulkEditModal';
 import { useListScreenHandlers } from '../hooks/useListScreenHandlers';
 import { useListScreenState } from '../hooks/useListScreenState';
-import { toSlug, groupFieldsWithLayout as groupForumFieldsWithLayout, buildRegisteredFieldPayload, getVisibleFields, isFieldConditionalMet, needsSeparator, splitFieldsByMetaboxGroup } from '../utils/format';
+import { toSlug, groupFieldsWithLayout as groupForumFieldsWithLayout, buildRegisteredFieldPayload, getVisibleFields, isFieldConditionalMet, isFieldConditionalDisabled, needsSeparator, splitFieldsByMetaboxGroup } from '../utils/format';
 import { ForumCreateModal } from '../components/forums/ForumCreateModal';
 import { RegisteredMetaField } from '../components/common/RegisteredMetaField';
 import { forceRemoveEditor } from '../components/common/RichTextEditor';
@@ -1234,7 +1234,7 @@ function ForumEditModal( props ) {
 										handleRegisteredFieldChange( field.id, val );
 									} }
 									itemId={ forum.id }
-									disabled={ isForumFieldDisabled( field.id, isGroupForum, isGroupForumChild ) }
+									disabled={ isForumFieldDisabled( field.id, isGroupForum, isGroupForumChild ) || isFieldConditionalDisabled( field, registeredValues ) }
 								/>
 							);
 						} ) }
@@ -1250,7 +1250,7 @@ function ForumEditModal( props ) {
 							handleRegisteredFieldChange( item.field.id, val );
 						} }
 						itemId={ forum.id }
-						disabled={ isForumFieldDisabled( item.field.id, isGroupForum, isGroupForumChild ) }
+						disabled={ isForumFieldDisabled( item.field.id, isGroupForum, isGroupForumChild ) || isFieldConditionalDisabled( item.field, registeredValues ) }
 					/>
 				</div>
 			);

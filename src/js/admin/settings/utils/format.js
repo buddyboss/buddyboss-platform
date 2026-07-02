@@ -100,6 +100,13 @@ export function isFieldConditionalMet( field, values ) {
 		return true;
 	}
 
+	// A `disable`-action conditional never hides the field — it only greys it
+	// out (see isFieldConditionalDisabled). For visibility purposes such a
+	// field is always "met" so callers that filter by visibility keep it.
+	if ( 'disable' === field.conditional.action ) {
+		return true;
+	}
+
 	var currentVal = values[ field.conditional.field ];
 	var expectedVal = field.conditional.value;
 
@@ -110,6 +117,75 @@ export function isFieldConditionalMet( field, values ) {
 	}
 
 	return String( currentVal ) === String( expectedVal );
+}
+
+/**
+ * Whether a field value counts as "empty" for conditional evaluation.
+ *
+ * Needed because an empty multiselect value is an array (`[]`), which is truthy
+ * in JS — so the plain truthy test used elsewhere can't tell "no selection" from
+ * "has selection". Treats undefined / null / '' / empty-array as empty.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {*} value Field value.
+ * @returns {boolean} True when the value is empty.
+ */
+function isEmptyValue( value ) {
+	if ( undefined === value || null === value || '' === value ) {
+		return true;
+	}
+	if ( Array.isArray( value ) ) {
+		return 0 === value.length;
+	}
+	return false;
+}
+
+/**
+ * Check whether a field with a `disable`-action conditional should currently
+ * be disabled (greyed out but still rendered) given the form values.
+ *
+ * Returns false for fields without a conditional, or whose conditional is the
+ * default hide-style — those are handled by isFieldConditionalMet instead.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {Object} field  Field definition with optional conditional property.
+ * @param {Object} values Current form values keyed by field ID.
+ * @returns {boolean} True when the field should render disabled.
+ */
+export function isFieldConditionalDisabled( field, values ) {
+	if ( ! field.conditional || 'disable' !== field.conditional.action ) {
+		return false;
+	}
+
+	// Multi-field predicate (e.g. WP Fusion "Refresh access if denied": disabled
+	// until at least one required-tag field is non-empty, regardless of the
+	// "logged in" gate). `fields` lists sibling field ids; with the default
+	// `any_non_empty` compare the field is ACTIVE when any of them is non-empty,
+	// so it is DISABLED only while every listed field is empty. A plain truthy
+	// test can't express this — an empty multiselect array is truthy in JS — so
+	// emptiness is checked explicitly via isEmptyValue().
+	if ( Array.isArray( field.conditional.fields ) ) {
+		var anyNonEmpty = field.conditional.fields.some( function ( fieldId ) {
+			return ! isEmptyValue( values[ fieldId ] );
+		} );
+		return ! anyNonEmpty;
+	}
+
+	var currentVal = values[ field.conditional.field ];
+	var expectedVal = field.conditional.value;
+
+	var met;
+	if ( true === expectedVal || false === expectedVal ) {
+		var isTruthy = !! currentVal && '0' !== currentVal && 0 !== currentVal;
+		met = isTruthy === expectedVal;
+	} else {
+		met = String( currentVal ) === String( expectedVal );
+	}
+
+	// Disabled when the gating condition is NOT met.
+	return ! met;
 }
 
 /**
