@@ -213,7 +213,7 @@ function bbp_get_tools_admin_tabs( $active_tab = '' ) {
 				'href' => get_admin_url( '', add_query_arg( array( 'page' => 'bbp-repair' ), 'admin.php' ) ),
 				'name' => __( 'Repair Forums', 'buddyboss' ),
 			),
-			// '1' Import Forums tab retired in BuddyBoss [BBVERSION] — moved to buddyboss-tools.
+			// '1' Import Forums tab retired in BuddyBoss 3.1.0 — moved to buddyboss-tools.
 			'2' => array(
 				'href' => get_admin_url( '', add_query_arg( array( 'page' => 'bbp-reset' ), 'admin.php' ) ),
 				'name' => __( 'Reset Forums', 'buddyboss' ),
@@ -233,7 +233,7 @@ function bbp_get_tools_admin_tabs( $active_tab = '' ) {
 }
 
 
-// bbp_core_get_import_forum_tools_settings_admin_tabs() retired in BuddyBoss [BBVERSION] —
+// bbp_core_get_import_forum_tools_settings_admin_tabs() retired in BuddyBoss 3.1.0 —
 // Forum Import moved to buddyboss-tools (Settings 2.0 Tools → Migration Tools panel).
 
 /**

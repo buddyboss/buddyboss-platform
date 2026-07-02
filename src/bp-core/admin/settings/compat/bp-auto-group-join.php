@@ -39,7 +39,7 @@
  * `BP_AUTO_GROUP_JOIN_PLUGIN_VERSION` constant.
  *
  * @package BuddyBoss\Core\Administration
- * @since   BuddyBoss [BBVERSION]
+ * @since   BuddyBoss 3.1.0
  */
 
 // Exit if accessed directly.
@@ -54,7 +54,7 @@ defined( 'ABSPATH' ) || exit;
  * plugin singleton isn't reachable yet), the bridge omits the member-type
  * fields entirely — matching what an admin sees on the legacy screen.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.1.0
  *
  * @return bool True when BMT-driven member-type fields should be registered.
  */
@@ -75,7 +75,7 @@ function bb_legacy_bpagj_member_types_enabled() {
  * Return the registered member type slugs => labels, or an empty array when
  * none are registered or the BP members component isn't active.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.1.0
  *
  * @return array Map of slug => label.
  */
@@ -118,7 +118,7 @@ function bb_legacy_bpagj_member_types() {
  * Shaped the way `BB_Admin_Meta_Field_Registry` expects (`label`/`value`
  * pairs) and stable-ordered so React's React state diff is predictable.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.1.0
  *
  * @return array
  */
@@ -143,7 +143,7 @@ function bb_legacy_bpagj_member_type_options() {
  * being persisted as a member-type slug, while still letting admins clear
  * the field by submitting an empty array.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.1.0
  *
  * @param mixed $raw Raw POST value.
  * @return array Sanitized slug list.
@@ -160,7 +160,7 @@ function bb_legacy_bpagj_sanitize_member_types( $raw ) {
  * object map (`{ slug_a: 1, slug_b: 1 }`) that React's `toggle_list` field
  * expects. Unknown stored slugs are dropped to keep stale data out of the UI.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.1.0
  *
  * @param mixed $stored Raw groupmeta value.
  * @return array Map of slug => 1.
@@ -185,7 +185,7 @@ function bb_legacy_bpagj_meta_to_toggle_list( $stored ) {
  * array of "on" slugs the legacy plugin reads from groupmeta. Accepts a flat
  * array too in case a caller already pre-flattened.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.1.0
  *
  * @param mixed $raw React-side value.
  * @return array Flat list of selected slugs.
@@ -233,7 +233,7 @@ function bb_legacy_bpagj_toggle_list_to_meta( $raw ) {
 /**
  * Sanitize a policy radio value ("none" / "all_members" / "bp_member_types").
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.1.0
  *
  * @param mixed $raw Raw POST value.
  * @return string One of the allowed values; defaults to '' for "no opinion".
@@ -249,7 +249,7 @@ function bb_legacy_bpagj_sanitize_policy( $raw ) {
  * registered manually below, and re-bridging them would surface duplicate
  * radios.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.1.0
  *
  * @param string[] $skip Metabox ids the auto-bridge should ignore.
  * @return string[] Updated list.
@@ -275,7 +275,7 @@ add_filter( 'bb_legacy_meta_box_bridge_skip_groups', 'bb_legacy_bpagj_skip_auto_
  * bridged metabox fields. The classic editor placed the auto-join box near
  * the bottom of the group admin screen; we replicate that visually.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.1.0
  *
  * @param BB_Admin_Meta_Field_Registry $registry  Registry instance.
  * @param string                       $component Component identifier.
@@ -330,7 +330,7 @@ function bb_legacy_bpagj_register_fields( $registry, $component ) {
 	 * actually renders, so a consumer overriding this must return a known tab key
 	 * (the default `details` is always safe).
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.1.0
 	 *
 	 * @param string $tab       Target tab key. Default `details`.
 	 * @param string $component Component the fields are registered for (e.g. `groups`).
@@ -539,7 +539,7 @@ add_action( 'bb_register_groups_meta_fields', 'bb_legacy_bpagj_register_fields',
  * group edit that didn't change the auto-join settings is a no-op for
  * already-enrolled users.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.1.0
  *
  * @param int             $group_id Saved group ID.
  * @param BP_Groups_Group $group    Saved group object (unused).

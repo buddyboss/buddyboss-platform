@@ -19,7 +19,7 @@
  *    the support user account itself is never deleted.
  *
  * @package BuddyBoss\Core\Administration
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.1.0
  */
 
 // Exit if accessed directly.
@@ -33,14 +33,14 @@ defined( 'ABSPATH' ) || exit;
  * the Settings 2.0 "Support Access" screen. Procedural wrappers in
  * bb-support-access.php delegate to this class for backward compatibility.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.1.0
  */
 class BB_Support_Access {
 
 	/**
 	 * Option key for the support-access state.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.1.0
 	 *
 	 * @var string
 	 */
@@ -49,7 +49,7 @@ class BB_Support_Access {
 	/**
 	 * Query var carrying the raw login token on the public login URL.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.1.0
 	 *
 	 * @var string
 	 */
@@ -58,7 +58,7 @@ class BB_Support_Access {
 	/**
 	 * Cron hook that revokes expired support access.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.1.0
 	 *
 	 * @var string
 	 */
@@ -67,7 +67,7 @@ class BB_Support_Access {
 	/**
 	 * Default access duration in days when first enabled.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.1.0
 	 *
 	 * @var int
 	 */
@@ -76,7 +76,7 @@ class BB_Support_Access {
 	/**
 	 * Login (username) of the dedicated support account.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.1.0
 	 *
 	 * @var string
 	 */
@@ -85,7 +85,7 @@ class BB_Support_Access {
 	/**
 	 * Email of the dedicated support account.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.1.0
 	 *
 	 * @var string
 	 */
@@ -94,7 +94,7 @@ class BB_Support_Access {
 	/**
 	 * Maximum number of login-log entries retained in the option.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.1.0
 	 *
 	 * @var int
 	 */
@@ -104,7 +104,7 @@ class BB_Support_Access {
 	 * AJAX nonce action. Matches BB_Admin_Settings_Ajax so the existing React
 	 * nonce continues to authenticate these endpoints without any JS change.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.1.0
 	 *
 	 * @var string
 	 */
@@ -113,7 +113,7 @@ class BB_Support_Access {
 	/**
 	 * Transient key used as an advisory lock around option read-modify-write.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.1.0
 	 *
 	 * @var string
 	 */
@@ -127,7 +127,7 @@ class BB_Support_Access {
 	 * URL rather than emitting a forged one). Available since PHP 7.1 via the
 	 * by-reference $tag parameter; the plugin floor is 7.4.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.1.0
 	 *
 	 * @var string
 	 */
@@ -137,7 +137,7 @@ class BB_Support_Access {
 	 * Lock time-to-live, in seconds. A crashed request can never hold the lock
 	 * longer than this — it self-expires.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.1.0
 	 *
 	 * @var int
 	 */
@@ -154,7 +154,7 @@ class BB_Support_Access {
 	 *
 	 * Full URL: {base}/conversations/{conversation_id}/threads
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.1.0
 	 *
 	 * @var string
 	 */
@@ -164,7 +164,7 @@ class BB_Support_Access {
 	 * Outbound request timeout (seconds) for the support system proxy call. Kept
 	 * short so a slow/dead gateway can never noticeably delay the admin action.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.1.0
 	 *
 	 * @var int
 	 */
@@ -175,7 +175,7 @@ class BB_Support_Access {
 	 * the same ticket inside this window is suppressed, so rapid clicks or a
 	 * retry loop cannot hammer the gateway / helpdesk.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.1.0
 	 *
 	 * @var int
 	 */
@@ -186,7 +186,7 @@ class BB_Support_Access {
 	 * A defensive bound — the real payload is tiny; anything larger indicates
 	 * tampering and is rejected before the request leaves the site.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.1.0
 	 *
 	 * @var int
 	 */
@@ -195,7 +195,7 @@ class BB_Support_Access {
 	/**
 	 * HTTP header carrying the shared gateway gate-pass key.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.1.0
 	 *
 	 * @var string
 	 */
@@ -215,7 +215,7 @@ class BB_Support_Access {
 	 * secret — real bot defense leans on AWS WAF + throttling + Lambda checks.
 	 * It is sent only as an HTTP header (never in the note body, never logged).
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.1.0
 	 *
 	 * @var string
 	 */
@@ -224,7 +224,7 @@ class BB_Support_Access {
 	/**
 	 * Singleton instance.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.1.0
 	 *
 	 * @var BB_Support_Access|null
 	 */
@@ -233,7 +233,7 @@ class BB_Support_Access {
 	/**
 	 * Get the singleton instance.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.1.0
 	 *
 	 * @return BB_Support_Access
 	 */
@@ -248,7 +248,7 @@ class BB_Support_Access {
 	/**
 	 * Constructor — registers all hook surfaces.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.1.0
 	 */
 	private function __construct() {
 		$this->register_hooks();
@@ -263,7 +263,7 @@ class BB_Support_Access {
 	 * auth/cookie setup. AJAX handlers are only useful in the admin/AJAX
 	 * context but registering `wp_ajax_*` outside it is harmless.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.1.0
 	 *
 	 * @return void
 	 */
@@ -293,7 +293,7 @@ class BB_Support_Access {
 	 * user who happens to share the canonical email/login. The result is cached
 	 * for the request.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.1.0
 	 *
 	 * @return int Support user ID, or 0 if the account does not exist yet.
 	 */
@@ -333,7 +333,7 @@ class BB_Support_Access {
 	 * account is identified lazily via {@see get_support_user_id()} so this
 	 * filter never provisions it.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.1.0
 	 *
 	 * @param array         $sql   Array of SQL clauses for the user query.
 	 * @param BP_User_Query $query Current BP_User_Query instance (by reference).
@@ -373,7 +373,7 @@ class BB_Support_Access {
 	 * `bb_support_access_default_days` — so shortening this list does NOT shorten
 	 * the initial window.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.1.0
 	 *
 	 * @return int[] Allowed day counts.
 	 */
@@ -386,7 +386,7 @@ class BB_Support_Access {
 		 * Governs the durations accepted when extending a grant; the initial
 		 * grant length is filtered separately via `bb_support_access_default_days`.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.1.0
 		 *
 		 * @param int[] $days Allowed day counts.
 		 */
@@ -402,7 +402,7 @@ class BB_Support_Access {
 	 * sites that need a shorter initial window can cap it here without touching
 	 * the extension options.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.1.0
 	 *
 	 * @return int Default initial duration in days (always >= 1).
 	 */
@@ -414,7 +414,7 @@ class BB_Support_Access {
 		 * offered when EXTENDING an existing grant are filtered separately via
 		 * `bb_support_access_allowed_days`.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.1.0
 		 *
 		 * @param int $days Default initial duration in days.
 		 */
@@ -435,7 +435,7 @@ class BB_Support_Access {
 	 * for a colliding request. The lock self-expires after LOCK_TTL so a
 	 * crashed request can never deadlock it.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.1.0
 	 *
 	 * @param callable $callback Work to run while holding the lock.
 	 *
@@ -503,7 +503,7 @@ class BB_Support_Access {
 	 * out of the autoloaded option set shrinks the in-memory exposure surface
 	 * (the sensitive blob is loaded on demand, not into every request).
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.1.0
 	 *
 	 * @param array $data State to store.
 	 *
@@ -549,7 +549,7 @@ class BB_Support_Access {
 	 * full-state writes in enable()/disable() so all mutators serialize against
 	 * the same mutex.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.1.0
 	 *
 	 * @param callable $mutator Receives the fresh state by value, returns the
 	 *                          state to persist, or null to skip the write.
@@ -573,7 +573,7 @@ class BB_Support_Access {
 	/**
 	 * Get the support-access state, normalized to a known shape.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.1.0
 	 *
 	 * @return array {
 	 *     @type int      $enabled         1 if a grant exists, else 0.
@@ -646,7 +646,7 @@ class BB_Support_Access {
 	 * Accepts an array or a single scalar, sanitizes each entry, drops empties,
 	 * and removes duplicates while preserving insertion order.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.1.0
 	 *
 	 * @param mixed $value Raw ticket value (array or scalar).
 	 *
@@ -677,7 +677,7 @@ class BB_Support_Access {
 	 * deliberately ignored. Sites behind a known reverse proxy can override the
 	 * resolved value via the filter below.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.1.0
 	 *
 	 * @return string Sanitized IP address, or empty string if unavailable/invalid.
 	 */
@@ -690,7 +690,7 @@ class BB_Support_Access {
 		 *
 		 * Trusted-proxy setups may substitute a validated forwarded address here.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.1.0
 		 *
 		 * @param string $ip The REMOTE_ADDR-derived client IP.
 		 */
@@ -706,7 +706,7 @@ class BB_Support_Access {
 	/**
 	 * Append a successful-login entry to the bounded audit log.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.1.0
 	 *
 	 * @return void
 	 */
@@ -742,7 +742,7 @@ class BB_Support_Access {
 	 * an attacker deny the real support team access, and the token's entropy
 	 * already makes brute force infeasible. This is observability, not a gate.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.1.0
 	 *
 	 * @return void
 	 */
@@ -761,7 +761,7 @@ class BB_Support_Access {
 		/**
 		 * Fires with the running per-IP failed-attempt count for support login.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.1.0
 		 *
 		 * @param string $ip    Client IP.
 		 * @param int    $count Failed attempts from this IP within the window.
@@ -776,7 +776,7 @@ class BB_Support_Access {
 	 * computed from the stored expiry on every call, an expired grant reads as
 	 * inactive the instant it lapses — no background process required.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.1.0
 	 *
 	 * @return bool True if access is live.
 	 */
@@ -799,7 +799,7 @@ class BB_Support_Access {
 	 * our query var is present; it deliberately does NOT validate the token
 	 * value (only the hash is stored).
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.1.0
 	 *
 	 * @param string $url Candidate login URL.
 	 *
@@ -867,7 +867,7 @@ class BB_Support_Access {
 	 * reused. A pre-existing user that merely shares the canonical email/login is
 	 * never adopted — a conflict returns a WP_Error so the admin can resolve it.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.1.0
 	 *
 	 * @return int|WP_Error Support user ID on success, WP_Error on failure or
 	 *                      when the canonical email/login is already taken.
@@ -928,7 +928,7 @@ class BB_Support_Access {
 	/**
 	 * Build the public login URL for a raw token.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.1.0
 	 *
 	 * @param string $token Raw (unhashed) token.
 	 *
@@ -952,7 +952,7 @@ class BB_Support_Access {
 	 * which simply means notes stop including the URL until the next enable;
 	 * authentication is unaffected (it uses token_hash, not this).
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.1.0
 	 *
 	 * @return string 32-byte binary key.
 	 */
@@ -969,7 +969,7 @@ class BB_Support_Access {
 	 * cipher. When unavailable we simply do not persist the token (the URL then
 	 * relies on the browser round-trip), never falling back to plaintext.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.1.0
 	 *
 	 * @return bool True if AES-256-GCM encryption can be used.
 	 */
@@ -987,7 +987,7 @@ class BB_Support_Access {
 	 * ciphertext, so any tampering is detected on decrypt. Returns '' when
 	 * encryption is unavailable or fails, so the caller can degrade gracefully.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.1.0
 	 *
 	 * @param string $token Raw (unhashed) token.
 	 *
@@ -1028,7 +1028,7 @@ class BB_Support_Access {
 	 * key, truncated data, or a failed authentication tag — so a corrupted or
 	 * tampered blob can never yield a usable (or forged) value.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.1.0
 	 *
 	 * @param string $encrypted Encrypted blob produced by encrypt_token().
 	 *
@@ -1069,7 +1069,7 @@ class BB_Support_Access {
 	 * the browser no longer holds the URL. Returns '' if nothing is stored or
 	 * decryption is unavailable/fails (the note then omits the URL).
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.1.0
 	 *
 	 * @param array|null $data Optional pre-fetched state to avoid a re-read.
 	 *
@@ -1098,7 +1098,7 @@ class BB_Support_Access {
 	 * Regenerates the token every time it is called, so re-enabling invalidates
 	 * any previously issued URL.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.1.0
 	 *
 	 * @param int $days Number of days the grant is valid for.
 	 *
@@ -1165,7 +1165,7 @@ class BB_Support_Access {
 		/**
 		 * Fires after support access is enabled.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.1.0
 		 *
 		 * @param string $login_url The login URL (contains the raw token).
 		 * @param int    $expires   UTC unix timestamp of expiry.
@@ -1186,7 +1186,7 @@ class BB_Support_Access {
 	 * no active grant exists, this is equivalent to a fresh enable (which mints
 	 * a new token).
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.1.0
 	 *
 	 * @param int    $days      Days to add.
 	 * @param string $login_url Optional. The existing login URL the caller
@@ -1235,7 +1235,7 @@ class BB_Support_Access {
 		/**
 		 * Fires after support access is extended.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.1.0
 		 *
 		 * @param int $expires UTC unix timestamp of the new expiry.
 		 */
@@ -1264,7 +1264,7 @@ class BB_Support_Access {
 	 * because a duration change is a deliberate, infrequent admin action — not
 	 * the rapid-repeat case the limiter guards against. Fail-soft per ticket.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.1.0
 	 *
 	 * @param string[] $tickets   support system conversation IDs to notify.
 	 * @param int      $expires   New expiry (UTC unix timestamp).
@@ -1329,7 +1329,7 @@ class BB_Support_Access {
 	 * so we tear down the session tokens too. The next enable mints a fresh
 	 * token and support logs in anew.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.1.0
 	 *
 	 * @return void
 	 */
@@ -1362,7 +1362,7 @@ class BB_Support_Access {
 		/**
 		 * Fires after support access is disabled / revoked.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.1.0
 		 */
 		do_action( 'bb_support_access_disabled' );
 	}
@@ -1375,7 +1375,7 @@ class BB_Support_Access {
 	 * replacing it. An empty or duplicate value is a no-op for the list but
 	 * still returns the current set.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.1.0
 	 *
 	 * @param string $ticket_number Ticket number (support system conversation ID) to add.
 	 * @param string $login_url     Optional. The active login URL to embed in the
@@ -1480,7 +1480,7 @@ class BB_Support_Access {
 	 * hammer the gateway / helpdesk. Returns true (and arms the window) when the
 	 * call is allowed; false when it should be skipped.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.1.0
 	 *
 	 * @param int $conversation_id support system conversation ID.
 	 *
@@ -1507,7 +1507,7 @@ class BB_Support_Access {
 	 * arrived. The window only exists to dedupe successfully-sent notes and
 	 * rapid double-clicks while a request is in flight.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.1.0
 	 *
 	 * @param int $conversation_id Support system conversation ID.
 	 *
@@ -1525,7 +1525,7 @@ class BB_Support_Access {
 	 * wp-config, another plugin, or any hook. The matching value is configured
 	 * on the API Gateway. NOT the support system API token.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.1.0
 	 *
 	 * @return string The gate-pass key.
 	 */
@@ -1555,7 +1555,7 @@ class BB_Support_Access {
 	 *  - HTTP 404            -> WP_Error 'conversation_not_found'.
 	 *  - anything else / err -> WP_Error 'support_system_api_error'.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.1.0
 	 *
 	 * @param int|string $conversation_id   support system conversation ID.
 	 * @param string     $text              Note text (may contain HTML).
@@ -1608,7 +1608,7 @@ class BB_Support_Access {
 		 * Fires just before a support system note is dispatched. Read-only signal for
 		 * alternative integrations; it cannot alter the destination URL.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.1.0
 		 *
 		 * @param int    $conversation_id support system conversation ID.
 		 * @param string $text            Note text.
@@ -1689,7 +1689,7 @@ class BB_Support_Access {
 	/**
 	 * Schedule (or reschedule) the expiry-cleanup cron at the grant's expiry time.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.1.0
 	 *
 	 * @param int $expires UTC unix timestamp at which to run cleanup.
 	 *
@@ -1707,7 +1707,7 @@ class BB_Support_Access {
 	/**
 	 * Clear any scheduled expiry-cleanup cron event.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.1.0
 	 *
 	 * @return void
 	 */
@@ -1722,7 +1722,7 @@ class BB_Support_Access {
 	/**
 	 * Cron callback: revoke access if it has expired.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.1.0
 	 *
 	 * @return void
 	 */
@@ -1742,7 +1742,7 @@ class BB_Support_Access {
 	 * the admin dashboard. Any failure path is silent (no token oracle) and
 	 * simply lets the request continue as an anonymous visitor.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.1.0
 	 *
 	 * @return void
 	 */
@@ -1788,7 +1788,7 @@ class BB_Support_Access {
 			 * Lets security/monitoring code observe failed attempts that bypass the
 			 * normal WordPress login pipeline.
 			 *
-			 * @since BuddyBoss [BBVERSION]
+			 * @since BuddyBoss 3.1.0
 			 *
 			 * @param string $ip Client IP (REMOTE_ADDR-derived), or '' if unknown.
 			 */
@@ -1813,7 +1813,7 @@ class BB_Support_Access {
 		 * non-true value aborts the login silently (no token oracle), exactly like
 		 * an invalid token.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.1.0
 		 *
 		 * @param bool    $allow        Whether to allow the support login. Default true.
 		 * @param WP_User $support_user The support account about to be authenticated.
@@ -1841,7 +1841,7 @@ class BB_Support_Access {
 		/**
 		 * Fires after a successful support-access login.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.1.0
 		 *
 		 * @param int $support_user_id The authenticated support user ID.
 		 */
@@ -1863,7 +1863,7 @@ class BB_Support_Access {
 	/**
 	 * Verify the AJAX request: capability first (fail fast), then nonce.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.1.0
 	 *
 	 * @return void
 	 */
@@ -1879,7 +1879,7 @@ class BB_Support_Access {
 	 * fresh-grant extend); subsequent reads return an empty string because the
 	 * raw token is not recoverable from storage.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.1.0
 	 *
 	 * @param string $login_url Freshly minted login URL, if any.
 	 *
@@ -1919,7 +1919,7 @@ class BB_Support_Access {
 	/**
 	 * AJAX: get the current Support Access state.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.1.0
 	 *
 	 * @return void
 	 */
@@ -1936,7 +1936,7 @@ class BB_Support_Access {
 	 * deletes the token so the URL is permanently dead (the support user
 	 * account is kept).
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.1.0
 	 *
 	 * @return void
 	 */
@@ -1967,7 +1967,7 @@ class BB_Support_Access {
 	/**
 	 * AJAX: extend the Support Access window by N days.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.1.0
 	 *
 	 * @return void
 	 */
@@ -2032,7 +2032,7 @@ class BB_Support_Access {
 	 *
 	 * Tickets accumulate — the same login URL can cover several tickets.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.1.0
 	 *
 	 * @return void
 	 */

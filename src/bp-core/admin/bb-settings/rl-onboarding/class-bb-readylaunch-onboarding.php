@@ -386,7 +386,7 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 	 * key, so this handler bails for everything except the splash-screen
 	 * post.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.1.0
 	 *
 	 * @return void
 	 */

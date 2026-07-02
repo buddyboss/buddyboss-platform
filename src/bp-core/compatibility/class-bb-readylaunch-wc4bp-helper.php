@@ -2,7 +2,7 @@
 /**
  * ReadyLaunch WC4BP (WooCommerce BuddyPress Integration) Helper Functions
  *
- * @since   BuddyBoss [BBVERSION]
+ * @since   BuddyBoss 3.1.0
  * @package BuddyBoss\Core
  */
 
@@ -15,14 +15,14 @@ defined( 'ABSPATH' ) || exit;
  * This class provides helper functions for WC4BP integration
  * when using ReadyLaunch templates without BuddyBoss theme.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.1.0
  */
 class BB_Readylaunch_WC4BP_Helper {
 
 	/**
 	 * The single instance of the class.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.1.0
 	 * @var BB_Readylaunch_WC4BP_Helper
 	 */
 	protected static $instance = null;
@@ -32,7 +32,7 @@ class BB_Readylaunch_WC4BP_Helper {
 	 *
 	 * Ensures only one instance of BB_Readylaunch_WC4BP_Helper is loaded or can be loaded.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.1.0
 	 * @static
 	 * @return BB_Readylaunch_WC4BP_Helper - Main instance.
 	 */
@@ -47,7 +47,7 @@ class BB_Readylaunch_WC4BP_Helper {
 	/**
 	 * Constructor.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.1.0
 	 */
 	public function __construct() {
 		// Register Readylaunch template stack for WC4BP templates.
@@ -64,7 +64,7 @@ class BB_Readylaunch_WC4BP_Helper {
 	/**
 	 * Register Readylaunch template stack for WC4BP templates.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.1.0
 	 */
 	public function bb_rl_wc4bp_register_template_stack() {
 		// Only process if Readylaunch is enabled.
@@ -84,7 +84,7 @@ class BB_Readylaunch_WC4BP_Helper {
 	 * template path (e.g. by the members/single/plugins.php template) while
 	 * still serving as the template-stack callback registered above.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.1.0
 	 * @static
 	 *
 	 * @return string Template directory path.

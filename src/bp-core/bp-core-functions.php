@@ -10674,7 +10674,7 @@ function bb_email_get_type_group( $type_slug ) {
  *
  * Do not call this function directly; it is a marker for compatibility.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.1.0
  *
  * @param string $panel_slot_id Reserved for future use; ignored.
  * @return void
@@ -10694,7 +10694,7 @@ function bb_tools_register_panel_slot( $panel_slot_id = '' ) {
  * backstop for code paths that run before the addon has had a chance to
  * register its filter.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.1.0
  *
  * @return bool True if Tools is active and its panel React components are
  *              expected to be registered; false otherwise.
@@ -10712,7 +10712,7 @@ function bb_tools_addon_active() {
 	 * backstop if the filter has not been hooked yet (e.g. during very
 	 * early `plugins_loaded`).
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.1.0
 	 *
 	 * @param bool $active Default false.
 	 */
@@ -10731,7 +10731,7 @@ function bb_tools_addon_active() {
  * new area later, add one entry here — the recorder, reader, and seed all key
  * off this map.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.1.0
  *
  * @return array Map of area key => option name.
  */
@@ -10752,7 +10752,7 @@ function bb_tool_usage_areas() {
  * map. Read-modify-write; safe because the Tools panels dispatch their AJAX
  * sequentially (one in-flight write per click).
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.1.0
  *
  * @param string $area   Area key: 'repair' | 'sample_data' | 'migration'.
  * @param string $action Action key (repair slug / importer key / platform).
@@ -10811,7 +10811,7 @@ function bb_record_tool_usage( $area, $action, $label = '' ) {
  * One-time seed: create a Tools usage option with autoload 'no' on the
  * BuddyPress root blog.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.1.0
  *
  * @param string $option Option name to seed.
  *
@@ -10841,7 +10841,7 @@ function bb_tools_usage_seed_autoload_off( $option ) {
  * Get the full Tools usage map (also the telemetry source), assembled from the
  * per-area options into a single nested map. Root-blog scope.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.1.0
  *
  * @return array Map of area => action => { count, last_run }.
  */

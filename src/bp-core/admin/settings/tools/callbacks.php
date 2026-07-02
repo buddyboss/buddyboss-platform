@@ -11,7 +11,7 @@
  * Required CTA on the Sample Data and Migration Tools panels.
  *
  * @package BuddyBoss\Core\Administration
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.1.0
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -24,7 +24,7 @@ defined( 'ABSPATH' ) || exit;
  * classes are present, license status and the authorized download URL can be
  * resolved; otherwise the install path falls back to the generic plugin API.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.1.0
  *
  * @return bool True when both Mothership helper classes are loaded.
  */
@@ -36,7 +36,7 @@ function bb_tools_mothership_available() {
 /**
  * Whether the BuddyBoss license is currently activated.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.1.0
  *
  * @return bool True when the Mothership connector reports an active license.
  */
@@ -53,7 +53,7 @@ function bb_tools_is_license_active() {
 /**
  * Admin URL of the BuddyBoss license activation page.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.1.0
  *
  * @return string Admin URL for the license activation screen.
  */
@@ -69,7 +69,7 @@ function bb_tools_get_license_url() {
  * "Activate License" (when the addon is not installed and no valid license
  * is present to install it with).
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.1.0
  *
  * @return void
  */
@@ -114,7 +114,7 @@ add_action( 'wp_ajax_bb_tools_check_plugin_state', 'bb_tools_ajax_check_plugin_s
 /**
  * AJAX: Activate the buddyboss-tools plugin.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.1.0
  *
  * @return void
  */
@@ -158,7 +158,7 @@ add_action( 'wp_ajax_bb_tools_activate_plugin', 'bb_tools_ajax_activate_plugin' 
  * back to the generic plugin-install API (wordpress.org or a runtime
  * `plugins_api` filter).
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.1.0
  *
  * @return void
  */

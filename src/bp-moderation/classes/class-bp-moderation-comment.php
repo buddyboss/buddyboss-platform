@@ -31,7 +31,7 @@ class BP_Moderation_Comment extends BP_Moderation_Abstract {
 	 * without re-discovering the object via $wp_filter).
 	 *
 	 * @see BP_Moderation_Comment::bb_set_skip_report_button()
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.1.0
 	 *
 	 * @var bool
 	 */
@@ -41,7 +41,7 @@ class BP_Moderation_Comment extends BP_Moderation_Abstract {
 	 * Toggle the per-call skip flag for `add_report_button`. Always pair
 	 * a `true` call with a matching `false` call around the filter run.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.1.0
 	 *
 	 * @param bool $skip Whether the next `comment_text` filter run should
 	 *                   bypass the report-button decoration.

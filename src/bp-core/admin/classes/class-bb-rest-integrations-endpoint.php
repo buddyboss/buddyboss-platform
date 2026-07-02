@@ -30,7 +30,7 @@
  *
  * @package BuddyBoss\Core\Administration
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.1.0
  */
 
 // Exit if accessed directly.
@@ -41,7 +41,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * Read-only proxy for buddyboss.com Integrations directory endpoints.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.1.0
  */
 class BB_REST_Integrations_Endpoint extends WP_REST_Controller {
 
@@ -51,7 +51,7 @@ class BB_REST_Integrations_Endpoint extends WP_REST_Controller {
 	 * Hard-coded so the host is never derived from client input. Filterable via
 	 * `bb_integrations_proxy_base` for staging/self-hosted mirrors.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.1.0
 	 *
 	 * @var string
 	 */
@@ -64,7 +64,7 @@ class BB_REST_Integrations_Endpoint extends WP_REST_Controller {
 	 * in bursts. Matches the Knowledge Base proxy so cache behaviour is uniform
 	 * across the two buddyboss.com seams.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.1.0
 	 *
 	 * @var int Seconds.
 	 */
@@ -76,7 +76,7 @@ class BB_REST_Integrations_Endpoint extends WP_REST_Controller {
 	 * Distinct from the help-content prefix so an integrations cache flush never
 	 * sweeps KB caches and vice-versa.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.1.0
 	 *
 	 * @var string
 	 */
@@ -88,7 +88,7 @@ class BB_REST_Integrations_Endpoint extends WP_REST_Controller {
 	 * Generous enough for `?integrations_category=…` filter strings but tight
 	 * enough that pathological inputs never reach `wp_remote_get()`.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.1.0
 	 *
 	 * @var int
 	 */
@@ -101,7 +101,7 @@ class BB_REST_Integrations_Endpoint extends WP_REST_Controller {
 	 * that a persistently slow/broken upstream isn't re-fetched (8s timeout) on
 	 * every admin page load while it's down.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.1.0
 	 *
 	 * @var int Seconds.
 	 */
@@ -114,7 +114,7 @@ class BB_REST_Integrations_Endpoint extends WP_REST_Controller {
 	 * wp_options row per unique query), so they get a short TTL while the
 	 * unfiltered list/category responses keep the long {@see self::TRANSIENT_TTL}.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.1.0
 	 *
 	 * @var int Seconds.
 	 */
@@ -127,7 +127,7 @@ class BB_REST_Integrations_Endpoint extends WP_REST_Controller {
 	 * request can revalidate while the rest serve the stale copy
 	 * (stale-while-revalidate) instead of all hammering the slow upstream.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.1.0
 	 *
 	 * @var int Seconds.
 	 */
@@ -136,7 +136,7 @@ class BB_REST_Integrations_Endpoint extends WP_REST_Controller {
 	/**
 	 * Refresh-lock TTL (thundering-herd guard).
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.1.0
 	 *
 	 * @var int Seconds.
 	 */
@@ -148,7 +148,7 @@ class BB_REST_Integrations_Endpoint extends WP_REST_Controller {
 	 * Caps `wp_remote_get()` and is re-checked on the returned body so a
 	 * pathological upstream cannot balloon a 12h transient.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.1.0
 	 *
 	 * @var int
 	 */
@@ -165,7 +165,7 @@ class BB_REST_Integrations_Endpoint extends WP_REST_Controller {
 	 * fallback in bb-admin-integrations-page.php so the registered route and the
 	 * URL the React app calls never diverge.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.1.0
 	 */
 	public function __construct() {
 		if ( function_exists( 'bp_rest_namespace' ) && function_exists( 'bp_rest_version' ) ) {
@@ -184,7 +184,7 @@ class BB_REST_Integrations_Endpoint extends WP_REST_Controller {
 	 * server-controlled `https://buddyboss.com` base, fetches with a 12h
 	 * transient cache, and returns `{ body, headers, status }`.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.1.0
 	 *
 	 * @return void
 	 */
@@ -220,7 +220,7 @@ class BB_REST_Integrations_Endpoint extends WP_REST_Controller {
 	 * `rest_authorization_required_code()` (401 logged-out, 403 logged-in
 	 * non-admin).
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.1.0
 	 *
 	 * @param WP_REST_Request $request Current REST request.
 	 *
@@ -247,7 +247,7 @@ class BB_REST_Integrations_Endpoint extends WP_REST_Controller {
 	 * envelope. The `headers` sidecar exposes `x-wp-total` and `x-wp-totalpages`
 	 * so the React listing pagination can read them without another round-trip.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.1.0
 	 *
 	 * @param WP_REST_Request $request Current REST request.
 	 *
@@ -336,7 +336,7 @@ class BB_REST_Integrations_Endpoint extends WP_REST_Controller {
 	 * allowed path prefixes (the public Integrations directory endpoints) so an
 	 * admin cannot turn the proxy into a general-purpose buddyboss.com fetcher.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.1.0
 	 *
 	 * @param mixed $raw Client-provided value.
 	 *
@@ -380,7 +380,7 @@ class BB_REST_Integrations_Endpoint extends WP_REST_Controller {
 		 * allowlist is rejected so the proxy cannot fetch arbitrary buddyboss.com
 		 * URLs.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.1.0
 		 *
 		 * @param string[] $prefixes Allowed path prefixes.
 		 */
@@ -420,7 +420,7 @@ class BB_REST_Integrations_Endpoint extends WP_REST_Controller {
 	 * controlled) with the validated path and runs `wp_http_validate_url()` as a
 	 * final sanity check.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.1.0
 	 *
 	 * @param string $path Validated path fragment (starts with exactly one slash).
 	 *
@@ -434,7 +434,7 @@ class BB_REST_Integrations_Endpoint extends WP_REST_Controller {
 		 * The base is server-side only — NEVER influenced by client input.
 		 * Return an absolute https URL with no trailing slash.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.1.0
 		 *
 		 * @param string $base Default upstream base URL.
 		 */
@@ -457,7 +457,7 @@ class BB_REST_Integrations_Endpoint extends WP_REST_Controller {
 	 * Returns the same generic message regardless of which check failed so an
 	 * attacker cannot enumerate the rules.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.1.0
 	 *
 	 * @return WP_Error
 	 */
@@ -475,7 +475,7 @@ class BB_REST_Integrations_Endpoint extends WP_REST_Controller {
 	 * Returns the upstream body verbatim (JSON-decoded to an array when possible)
 	 * plus only the pagination headers the listing needs.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.1.0
 	 *
 	 * @param string $target Full upstream URL.
 	 *
@@ -501,7 +501,7 @@ class BB_REST_Integrations_Endpoint extends WP_REST_Controller {
 		/**
 		 * Filter the wp_remote_get() args used to fetch an integrations URL.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.1.0
 		 *
 		 * @param array  $args   Request args.
 		 * @param string $target Full upstream URL.
@@ -572,7 +572,7 @@ class BB_REST_Integrations_Endpoint extends WP_REST_Controller {
 	/**
 	 * Schema for the proxy envelope response.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.1.0
 	 *
 	 * @return array
 	 */

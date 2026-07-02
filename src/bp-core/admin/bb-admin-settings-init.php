@@ -308,7 +308,7 @@ add_action( 'rest_api_init', 'bb_register_help_content_rest_route' );
  * own cache namespace and filters. The React Integrations screen POSTs path-only
  * fragments to `buddyboss/v1/integrations/proxy`.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.1.0
  *
  * @return void
  */

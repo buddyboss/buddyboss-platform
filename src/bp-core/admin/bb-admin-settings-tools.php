@@ -17,7 +17,7 @@
  * 301-redirects via `bb_redirect_bp_settings_before_permission_check()`.
  *
  * @package BuddyBoss\Core\Administration
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.1.0
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -29,7 +29,7 @@ defined( 'ABSPATH' ) || exit;
  * features (priority 20) and alongside other non-component features
  * (advanced @ 25, emails @ 25, forums @ 25).
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.1.0
  *
  * @return void
  */
@@ -190,7 +190,7 @@ function bb_admin_settings_register_tools_feature() {
 	 * Allows Pro and third-party plugins to register additional Tools side panels,
 	 * sections, or fields.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.1.0
 	 */
 	do_action( 'bb_tools_after_register_settings_fields' );
 }
@@ -210,7 +210,7 @@ add_action( 'bb_register_features', 'bb_admin_settings_register_tools_feature', 
  * (nonce `bbpress-do-counts`) for forum items. Both are LOCKED BC and remain
  * untouched in Platform.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.1.0
  *
  * @return void
  */
@@ -382,7 +382,7 @@ add_action( 'admin_print_footer_scripts', 'bb_admin_settings_localize_tools_repa
  * items under five headings. This map decides which heading each item lands
  * under. Items not matched fall through to `connections`.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.1.0
  *
  * @param string $item_id The legacy repair-item id (e.g. "bp-last-activity").
  * @return string Category id matching the `item_categories` taxonomy above.

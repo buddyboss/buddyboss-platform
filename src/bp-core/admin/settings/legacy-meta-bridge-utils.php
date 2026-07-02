@@ -163,7 +163,7 @@ function bb_legacy_xpath_safe( $value ) {
  * safe; the single quote (the only literal-breaking char) is excluded by the
  * allow-list below.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.1.0
  *
  * @param string $value Raw input name.
  * @return string Bracket-preserving, XPath-literal-safe name.
@@ -571,7 +571,7 @@ function bb_legacy_detect_input_type( DOMElement $node ) {
  * whose class marks it as a tooltip/help affordance, then return the
  * remaining trimmed text.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.1.0
  *
  * @param DOMElement $label Label element.
  * @return string Cleaned label text.
@@ -942,7 +942,7 @@ function bb_legacy_extract_input_value( $html, $name, $type ) {
  * `wpf-settings[allow_tags][]` etc.). Returns the value attributes of every
  * `<option selected>` so the React checkboxes can be pre-checked.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.1.0
  *
  * @param string $html Captured metabox HTML.
  * @param string $name Select name attribute (may be array notation).
@@ -984,7 +984,7 @@ function bb_legacy_extract_multiselect_values( $html, $name ) {
  * `get_post_meta( $id, 'wpf-settings', true )['allow_tags']`. Only the named
  * leaf is read; nothing is written.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.1.0
  *
  * @param int    $post_id Post being edited.
  * @param string $name    Input name attribute (may use array notation).
@@ -1038,7 +1038,7 @@ function bb_legacy_read_multiselect_meta( $post_id, $name ) {
  * exactly what a browser submits for a `<select multiple>`. All other types
  * pass through unchanged.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.1.0
  *
  * @param string $type   Field type (from bb_legacy_detect_input_type()).
  * @param array  $parsed Parsed name (bb_legacy_parse_array_name()).
@@ -1366,7 +1366,7 @@ function bb_legacy_capture_post_box_html( $box, $post, $request_param = 'post', 
  * brackets, nested `[[`, characters outside the identifier set inside a
  * non-empty segment) so callers can reject them just as before.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.1.0
  *
  * @param string $name Raw HTML name attribute.
  * @return array|null { base: string, segments: string[], is_array: bool }, or null when malformed.
@@ -1433,7 +1433,7 @@ function bb_legacy_parse_array_name( $name ) {
  * field ids — the real $_POST key is always reconstructed from the parsed
  * structure, never from this slug.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.1.0
  *
  * @param string $name Raw input name.
  * @return string Flattened, separator-joined slug (pre-sanitize_key()).
@@ -1465,7 +1465,7 @@ function bb_legacy_flatten_input_name( $name ) {
  * caller's $_POST-isset guard handles the top level; here we merge deeper
  * so a metabox's `settings[b]` doesn't wipe React's `settings[a]`.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.1.0
  *
  * @param array $parsed Output of bb_legacy_parse_array_name().
  * @param mixed $value  Sanitized value to assign at the leaf.
@@ -2312,7 +2312,7 @@ function bb_legacy_run_cpt_bridge_box( $registry, $component, $box, &$order, $ex
 	 * Unknown keys are ignored. This runs once per metabox; the resulting map is
 	 * consulted per input inside the loop below.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.1.0
 	 *
 	 * @param array  $overrides Map of raw input name => override array. Default empty.
 	 * @param string $box_id    The metabox id being bridged.
@@ -2662,7 +2662,7 @@ function bb_legacy_run_cpt_bridge_box( $registry, $component, $box, &$order, $ex
  * compatibility modules under `compat/` (e.g. `compat/wp-fusion.php`), which
  * proves the filter is the real, supported extension surface.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.1.0
  *
  * @return array Map of resolver id => resolver definition.
  */
@@ -2670,7 +2670,7 @@ function bb_legacy_get_ajax_select_resolvers() {
 	/**
 	 * Filter the AJAX-select resolver registry.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.1.0
 	 *
 	 * @param array $resolvers Map of resolver id => resolver definition.
 	 */
@@ -2680,7 +2680,7 @@ function bb_legacy_get_ajax_select_resolvers() {
 /**
  * Find the resolver whose `match` substring appears in a widget's class.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.1.0
  *
  * @param string $class_attr Widget class attribute.
  * @return array|null Resolver definition with its `key` added, or null.
@@ -2705,7 +2705,7 @@ function bb_legacy_match_ajax_select_resolver( $class_attr ) {
 /**
  * Resolve a saved value to its display label via a resolver's `resolve_label`.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.1.0
  *
  * @param array  $resolver Resolver definition.
  * @param string $value    Saved value.
@@ -2739,7 +2739,7 @@ function bb_legacy_resolve_ajax_select_label( $resolver, $value ) {
  * Auth: the `bb_admin_settings` nonce (sent as `nonce`) plus `bp_moderate` —
  * the same boundary as every other Settings 2.0 admin AJAX endpoint.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.1.0
  *
  * @return void
  */

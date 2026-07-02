@@ -31,7 +31,7 @@ class BB_Admin_Member_Types_Ajax {
 	/**
 	 * Maximum items allowed per paginated page.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.1.0
 	 *
 	 * @var int
 	 */
@@ -100,7 +100,7 @@ class BB_Admin_Member_Types_Ajax {
 	 * `BB_Activity_Admin_Ajax::bb_admin_get_activities`.
 	 *
 	 * @since BuddyBoss 3.0.0
-	 * @since BuddyBoss [BBVERSION] Added pagination (page, per_page, total) +
+	 * @since BuddyBoss 3.1.0 Added pagination (page, per_page, total) +
 	 *        include_meta optimization.
 	 *
 	 * @return void
@@ -321,7 +321,7 @@ class BB_Admin_Member_Types_Ajax {
 	 * payload stays ~10x smaller per row than the heavy listing path and
 	 * `posts_per_page => -1` remains safe even for sites with hundreds of types.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.1.0
 	 *
 	 * @return array<int, array{id:int, post_title:string, key:string, plural_label:string}>
 	 */

@@ -518,7 +518,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 		 * catches the redirect; `admin_init` is a fallback. The method is
 		 * idempotent: it no-ops unless `?page=bp-help` is the current request.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.1.0
 		 */
 		public function bb_redirect_legacy_help_page() {
 			// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only navigation redirect, no state change.

@@ -1295,7 +1295,7 @@ function bbp_user_maybe_convert_pass() {
 	bbp_admin();
 
 	// Convert password.
-	// `bbp_new_converter()` is deprecated in BuddyBoss [BBVERSION] — the converter
+	// `bbp_new_converter()` is deprecated in BuddyBoss 3.1.0 — the converter
 	// machinery moved to the buddyboss-tools plugin. When Tools is active the
 	// deprecated wrapper in bp-core/deprecated/buddyboss/3.0.0.php delegates to
 	// `bb_tools_bbp_new_converter()`, which loads the vendor class on demand.
