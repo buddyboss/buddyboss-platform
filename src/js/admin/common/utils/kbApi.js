@@ -18,6 +18,8 @@
  * @since BuddyBoss [BBVERSION]
  */
 
+import { decodeEntities } from '@wordpress/html-entities';
+
 import { applyFilters } from '@wordpress/hooks';
 
 const DEFAULT_PATH_BASE = '/wp-json/wp/v2';
@@ -55,34 +57,44 @@ const ARTICLE_PAGE_CAP  = 12;  // ~1200 articles max per category — Customizat
 const SLUG_RE = /^[a-z0-9-]{1,80}$/i;
 
 /**
+ * Read the localized admin data, from whichever admin app is hosting the KB
+ * modal. The Settings app localizes `bbAdminData`; the Integrations app
+ * localizes `bbIntegrationsData`. Both expose `apiUrl` + `nonce`, so the shared
+ * KB layer reads whichever is present.
+ *
+ * @return {Object} Localized data, or an empty object.
+ */
+function kbAdminData() {
+	if ( typeof window === 'undefined' ) {
+		return {};
+	}
+	return window.bbAdminData || window.bbIntegrationsData || {};
+}
+
+/**
  * Resolve the same-origin help-content proxy URL.
  *
- * Reads `window.bbAdminData.apiUrl` (set by `bb-admin-settings-page.php` to
- * `rest_url( 'buddyboss/v1/' )`). Falls back to the WP-Admin REST root if
- * the localized data is missing — the controller registers under both
- * `buddyboss/v1` (with platform-api) and `bb/v1` (without), so the
- * fallback resolves on platform-only installs.
+ * Reads `apiUrl` from the host app's localized data (set to
+ * `rest_url( 'buddyboss/v1/' )`). Falls back to the WP-Admin REST root if the
+ * localized data is missing — the controller registers under both
+ * `buddyboss/v1` (with platform-api) and `bb/v1` (without), so the fallback
+ * resolves on platform-only installs.
  *
  * @return {string} Proxy POST endpoint URL.
  */
 function proxyEndpoint() {
-	const root = ( typeof window !== 'undefined' && window.bbAdminData && window.bbAdminData.apiUrl )
-		? window.bbAdminData.apiUrl
-		: '/wp-json/buddyboss/v1/';
+	const root = kbAdminData().apiUrl || '/wp-json/buddyboss/v1/';
 	const base = root.endsWith( '/' ) ? root : root + '/';
 	return base + 'help-content/proxy';
 }
 
 /**
- * Read the WP REST nonce from the localized admin data.
+ * Read the WP REST nonce from the host app's localized data.
  *
  * @return {string} REST nonce, or empty string if not localized.
  */
 function restNonce() {
-	if ( typeof window === 'undefined' || ! window.bbAdminData ) {
-		return '';
-	}
-	return window.bbAdminData.nonce || '';
+	return kbAdminData().nonce || '';
 }
 
 /**
@@ -118,7 +130,7 @@ async function jsonGet( path, signal ) {
 	const envelope        = await res.json();
 	const headers         = ( envelope && typeof envelope === 'object' && envelope.headers && typeof envelope.headers === 'object' ) ? envelope.headers : {};
 	const totalPagesHeader = headers[ 'x-wp-totalpages' ];
-	if ( ! totalPagesHeader && typeof window !== 'undefined' && window.bbAdminData?.debug ) {
+	if ( ! totalPagesHeader && kbAdminData().debug ) {
 		// eslint-disable-next-line no-console
 		console.warn( '[bb-kb] missing x-wp-totalpages header on', path );
 	}
@@ -225,69 +237,12 @@ export const kbApi = {
 	},
 };
 
-/**
- * Decode the small set of HTML entities WordPress emits in `title.rendered`
- * (mirrors PHP's `wp_specialchars_decode` default ENT_NOQUOTES + named-entity
- * coverage). Title strings are short, ASCII-only entities, and never injected
- * as HTML — the result is rendered as a React text child only — so a small
- * regex table is both safer (no DOM-API innerHTML write at all) and adequate.
- * For numeric entities (`&#039;`, `&#x27;`) we also handle the common forms.
- *
- * Numeric code points are bounds-checked against the Unicode range
- * (0..0x10FFFF) before being passed to `String.fromCodePoint`, which throws
- * on out-of-range inputs. Out-of-range entities pass through verbatim.
- *
- * @param {string} str Raw `title.rendered` from the WP REST envelope.
- * @return {string} Decoded text.
- */
-export function decodeEntities( str ) {
-	if ( typeof str !== 'string' || str === '' ) {
-		return '';
-	}
-	const named = {
-		'&amp;':   '&',
-		'&lt;':    '<',
-		'&gt;':    '>',
-		'&quot;':  '"',
-		'&#039;':  '\'',
-		'&#39;':   '\'',
-		'&apos;':  '\'',
-		'&nbsp;':  ' ',
-		'&hellip;': '…',
-		'&ndash;': '–',
-		'&mdash;': '—',
-		'&lsquo;': '‘',
-		'&rsquo;': '’',
-		'&ldquo;': '“',
-		'&rdquo;': '”',
-	};
-	let out = str.replace( /&(?:amp|lt|gt|quot|#0?39|apos|nbsp|hellip|ndash|mdash|lsquo|rsquo|ldquo|rdquo);/g, ( m ) => named[ m ] || m );
-	// Numeric decimal entities: &#NN;
-	out = out.replace( /&#(\d+);/g, ( _m, code ) => {
-		const n = parseInt( code, 10 );
-		if ( ! Number.isFinite( n ) || n < 0 || n > 0x10FFFF ) {
-			return _m;
-		}
-		try {
-			return String.fromCodePoint( n );
-		} catch ( e ) {
-			return _m;
-		}
-	} );
-	// Numeric hex entities: &#xNN;
-	out = out.replace( /&#x([0-9a-fA-F]+);/g, ( _m, code ) => {
-		const n = parseInt( code, 16 );
-		if ( ! Number.isFinite( n ) || n < 0 || n > 0x10FFFF ) {
-			return _m;
-		}
-		try {
-			return String.fromCodePoint( n );
-		} catch ( e ) {
-			return _m;
-		}
-	} );
-	return out;
-}
+// `decodeEntities` for KB title strings is re-exported from
+// @wordpress/html-entities (imported above) — the WP-canonical decoder with
+// full named-entity coverage, already used by the integration components — so
+// the whole admin surface decodes entities one consistent way. Re-exported here
+// so the existing KB consumers that import it from this module keep working.
+export { decodeEntities };
 
 /**
  * Coerce http: → https: on a buddyboss.com URL to avoid mixed-content

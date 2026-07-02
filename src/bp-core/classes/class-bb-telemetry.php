@@ -513,6 +513,9 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 
 			unset( $bp_prefix, $query, $results, $bb_platform_db_options );
 
+			// Tools usage → cumulative per-action counts for Repair / Sample Data / Migration.
+			$bb_telemetry_data['tools_usage'] = bb_get_tool_usage();
+
 			/**
 			 * Filters the telemetry platform data.
 			 *

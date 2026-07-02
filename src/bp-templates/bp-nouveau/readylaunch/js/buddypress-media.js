@@ -3428,7 +3428,7 @@ window.bp = window.bp || {};
 			if ( eventTarget.closest( '.bb-rl-media-move-file' ).find( '.bb-rl-location-album-list-wrap .breadcrumb .item span:last-child' ).data( 'id' ) !== 0 ) {
 				eventTarget.closest( '.bb-rl-media-move-file' ).find( '.bb-rl-location-album-list-wrap .breadcrumb .item span:last-child' ).remove();
 			}
-			eventTarget.closest( '.bb-rl-media-move-file' ).hide();
+			eventTarget.closest( '.bb-rl-media-move-file' ).hide().removeClass( 'open-popup' );
 
 		},
 
@@ -3453,6 +3453,10 @@ window.bp = window.bp || {};
 				// Close all visible folder move modals to prevent duplicate modals issue
 				$( '.bb-rl-media-move-folder.open-popup' ).hide().removeClass( 'open-popup' ).find( '.bb-rl-folder-move' ).attr( 'id', '' );
 			}
+
+			// Make sure the modal is closed.
+			$( '.bb-rl-media-move-file.open-popup' ).removeClass( 'open-popup' ).hide();
+			$( '.bb-rl-media-move-folder.open-popup' ).removeClass( 'open-popup' ).hide();
 
 			closest_parent.find( '.bb-rl-document-move.loading' ).removeClass( 'loading' );
 

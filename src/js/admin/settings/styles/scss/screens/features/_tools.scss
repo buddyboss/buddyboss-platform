@@ -18,7 +18,7 @@
 
 	&__select-all {
 		padding-bottom: 16px;
-		border-bottom: 0.5px solid #d9d9d9;
+		border-bottom: 0.5px solid $bb-border-secondary-color;
 
 		.components-checkbox-control__label {
 			font-size: 14px;
@@ -37,7 +37,7 @@
 		align-items: flex-start;
 		gap: 56px;
 		padding-bottom: 24px;
-		border-bottom: 0.5px solid #d9d9d9;
+		border-bottom: 0.5px solid $bb-border-secondary-color;
 	}
 
 	&__section-heading {
@@ -66,7 +66,7 @@
 			font-size: 14px;
 			font-weight: 400;
 			line-height: 20px;
-			color: #000;
+			color: $bb-text-color;
 		}
 
 		.components-base-control__field {
@@ -195,7 +195,7 @@
 	&__actions {
 		text-align: right;
 		padding-top: 16px;
-		border-top: 0.5px solid #d9d9d9;
+		border-top: 0.5px solid $bb-border-secondary-color;
 	}
 
 	&__result-text {

@@ -17,7 +17,7 @@
  * 301-redirects via `bb_redirect_bp_settings_before_permission_check()`.
  *
  * @package BuddyBoss\Core\Administration
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.1.0
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -29,7 +29,7 @@ defined( 'ABSPATH' ) || exit;
  * features (priority 20) and alongside other non-component features
  * (advanced @ 25, emails @ 25, forums @ 25).
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.1.0
  *
  * @return void
  */
@@ -84,8 +84,7 @@ function bb_admin_settings_register_tools_feature() {
 		array(
 			'title'       => __( 'Repair Platform', 'buddyboss' ),
 			'description' => __( 'BuddyBoss keeps track of various relationships between members, groups, and activity items. Occasionally these relationships become out of sync, most often after an import, update, or migration. Use the tools below to manually recalculate these relationships.', 'buddyboss' ),
-			// @todo: update when release.
-			'help_url'    => '123456',
+			'help_url'    => '644709',
 			'order'       => 10,
 		)
 	);
@@ -125,8 +124,7 @@ function bb_admin_settings_register_tools_feature() {
 		array(
 			'title'       => __( 'Sample Data', 'buddyboss' ),
 			'description' => __( 'Select the data you want to import. Some of these tools utilize substantial database resources. Avoid running more than 1 import at a time.', 'buddyboss' ),
-			// @todo: update when release.
-			'help_url'    => '123456',
+			'help_url'    => '644711',
 			'order'       => 10,
 		)
 	);
@@ -185,6 +183,16 @@ function bb_admin_settings_register_tools_feature() {
 
 	// Load AJAX handlers for the Activation Required CTA install/activate buttons.
 	require_once __DIR__ . '/settings/tools/callbacks.php';
+
+	/**
+	 * Fires after the Tools feature side panels, sections, and fields are registered.
+	 *
+	 * Allows Pro and third-party plugins to register additional Tools side panels,
+	 * sections, or fields.
+	 *
+	 * @since BuddyBoss 3.1.0
+	 */
+	do_action( 'bb_tools_after_register_settings_fields' );
 }
 add_action( 'bb_register_features', 'bb_admin_settings_register_tools_feature', 25 );
 
@@ -202,7 +210,7 @@ add_action( 'bb_register_features', 'bb_admin_settings_register_tools_feature', 
  * (nonce `bbpress-do-counts`) for forum items. Both are LOCKED BC and remain
  * untouched in Platform.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.1.0
  *
  * @return void
  */
@@ -359,7 +367,10 @@ function bb_admin_settings_localize_tools_repair_config() {
 	// JS in the admin footer so the global is available before React mounts.
 	printf(
 		'<script id="bb-tools-repair-config-js">window.bbToolsRepairConfig = %s;</script>',
-		wp_json_encode( $config ) // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- wp_json_encode escapes for JS context.
+		// The JSON_HEX_* flags escape <, >, &, ', " so a value containing
+		// `</script>` (e.g. from a third-party repair label) cannot break out
+		// of the inline script tag.
+		wp_json_encode( $config, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT ) // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Encoded with JSON_HEX_* flags, safe for inline script context.
 	);
 }
 add_action( 'admin_print_footer_scripts', 'bb_admin_settings_localize_tools_repair_config' );
@@ -371,7 +382,7 @@ add_action( 'admin_print_footer_scripts', 'bb_admin_settings_localize_tools_repa
  * items under five headings. This map decides which heading each item lands
  * under. Items not matched fall through to `connections`.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.1.0
  *
  * @param string $item_id The legacy repair-item id (e.g. "bp-last-activity").
  * @return string Category id matching the `item_categories` taxonomy above.

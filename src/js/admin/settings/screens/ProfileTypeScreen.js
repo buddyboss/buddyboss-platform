@@ -150,7 +150,7 @@ function ProfileTypeScreen( { onNavigate, helpUrl, onHelpClick, feature, activeP
 				setSettingsLoading( false );
 			} )
 			.catch( function ( err ) {
-				if ( 'AbortError' !== err.name ) {
+				if ( ! err || 'AbortError' !== err.name ) {
 					setSettingsLoading( false );
 				}
 			} );

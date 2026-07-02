@@ -107,15 +107,15 @@ export default function KBLanding() {
 		const overrides = getCuratedOverrides();
 		const topLevels = childrenByParent.get( 0 ) || [];
 
-		const built = topLevels.map( ( t ) => {
+		let built = topLevels.map( ( t ) => {
 			const aggregated = aggregateCount( t.id, childrenByParent, byId );
 			const curated    = overrides[ t.slug ] || null;
 			return {
 				id:          t.id,
 				slug:        t.slug,
-				name:        decodeEntities( curated ? curated.title : ( t.name || '' ) ),
-				description: decodeEntities( curated ? curated.description : ( t.description || '' ) ),
-				icon:        curated ? curated.icon : 'bb-icons-rl-book',
+				name:        decodeEntities( curated && curated.title ? curated.title : ( t.name || '' ) ),
+				description: decodeEntities( curated && curated.description ? curated.description : ( t.description || '' ) ),
+				icon:        curated && curated.icon ? curated.icon : 'bb-icons-rl-book',
 				order:       curated ? curated.order : 999,
 				count:       aggregated,
 			};
@@ -128,6 +128,8 @@ export default function KBLanding() {
 			}
 			return a.name.localeCompare( b.name );
 		} );
+
+		built = built.filter( item => item.count !== 0 );
 
 		return built;
 	}, [ terms ] );

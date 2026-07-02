@@ -1019,43 +1019,29 @@ function bp_admin_repair_tools_wrapper_function() {
 
 	$repair_list = bp_admin_repair_list();
 
-	$status = array();
+	$status       = array();
+	$repair_ran   = false;
+	$repair_label = '';
 	foreach ( $repair_list as $repair_item ) {
 		if ( $repair_item[0] === $type && is_callable( $repair_item[2] ) ) {
-			$status = call_user_func( $repair_item[2] );
+			$status       = call_user_func( $repair_item[2] );
+			$repair_ran   = true;
+			$repair_label = isset( $repair_item[1] ) ? $repair_item[1] : $type;
 			break;
 		}
 	}
 
-	// if ( 'bp-user-friends' === $type ) {
-	// $status = bp_admin_repair_friend_count();
-	// } elseif ( 'bp-group-count' === $type ) {
-	// $status = bp_admin_repair_group_count();
-	// } elseif ( 'bp-total-member-count' === $type ) {
-	// $status = bp_admin_repair_count_members();
-	// } elseif ( 'bp-last-activity' === $type ) {
-	// $status = bp_admin_repair_last_activity();
-	// } elseif ( 'bp-xprofile-fields' === $type ) {
-	// $status = repair_default_profiles_fields();
-	// } elseif ( 'bp-xprofile-wordpress-resync' === $type ) {
-	// $status = resync_xprofile_wordpress_fields();
-	// } elseif ( 'bp-wordpress-xprofile-resync' === $type ) {
-	// $status = resync_wordpress_xprofile_fields();
-	// } elseif ( 'bp-wordpress-update-display-name' === $type ) {
-	// $status = xprofile_update_display_names();
-	// } elseif ( 'bp-blog-records' === $type ) {
-	// $status = bp_admin_repair_blog_records();
-	// } elseif ( 'bp-reinstall-emails' === $type ) {
-	// $status = bp_admin_reinstall_emails();
-	// } elseif ( 'bp-assign-member-type' === $type ) {
-	// $status = bp_admin_assign_member_type();
-	// } elseif ( 'bp-sync-activity-favourite' === $type ) {
-	// $status = bp_admin_update_activity_favourite();
-	// } elseif ( 'bp-invitations-table' === $type ) {
-	// $status = bp_admin_invitations_table();
-	// } elseif ( 'bp-media-forum-privacy-repair' === $type ) {
-	// $status = bp_media_forum_privacy_repair();
-	// }
+	// Record one usage increment per repair RUN, not per paginated batch.
+	// Paginated repair tools re-call this handler with an incrementing offset
+	// until done; only the first request (no / zero offset) counts the run.
+	// The label is captured so the report can show third-party repair tools'
+	// human titles (registered via the bp_admin_repair_list filter).
+	if ( $repair_ran ) {
+		$repair_offset = isset( $_POST['offset'] ) ? (int) $_POST['offset'] : 0; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce verified above.
+		if ( $repair_offset <= 0 ) {
+			bb_record_tool_usage( 'repair', $type, $repair_label );
+		}
+	}
 
 	// Additive enrichment for the Settings 2.0 Repair Platform React UI:
 	// extract a clean count + summary from the legacy feedback HTML so the
@@ -1063,7 +1049,7 @@ function bp_admin_repair_tools_wrapper_function() {
 	// regex parsing. Existing third-party callers that only read the
 	// historical `message` field are unaffected.
 	//
-	// @since BuddyBoss [BBVERSION]
+	// @since BuddyBoss 3.1.0
 	if ( is_array( $status ) ) {
 		$enrichment = bb_admin_repair_extract_count_summary( $status );
 		$status     = array_merge( $status, $enrichment );
@@ -1086,7 +1072,7 @@ function bp_admin_repair_tools_wrapper_function() {
  * preferred from `records` when it carries the count, otherwise from the
  * "Complete!" tail of `message`.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.1.0
  *
  * @param array|string $status_or_html Result array from a repair handler, OR a raw HTML string.
  * @return array {

@@ -165,7 +165,7 @@ class BB_Admin_Groups_Ajax {
 	 * `BB_Activity_Admin_Ajax::bb_admin_get_activities`.
 	 *
 	 * @since BuddyBoss 3.0.0
-	 * @since BuddyBoss [BBVERSION] Added pagination (page, per_page, total) +
+	 * @since BuddyBoss 3.1.0 Added pagination (page, per_page, total) +
 	 *        include_meta optimization. Replaced the hardcoded LIST_CAP with
 	 *        a `WP_Query` that captures `found_posts`.
 	 *
@@ -2515,7 +2515,7 @@ class BB_Admin_Groups_Ajax {
 	 * listing path and `posts_per_page => -1` remains safe even for sites
 	 * with hundreds of types.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.1.0
 	 *
 	 * @return array<int, array{id:int, post_title:string, name:string, plural_label:string}>
 	 */
