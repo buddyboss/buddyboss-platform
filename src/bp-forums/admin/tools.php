@@ -112,6 +112,373 @@ function bbp_admin_repair() {
 	<?php
 }
 
+/** Converter Helpers *********************************************************/
+
+/**
+ * Output settings API option
+ *
+ * @since bbPress (r3203)
+ *
+ * @uses bbp_get_form_option()
+ *
+ * @param string $option
+ * @param string $default
+ * @param bool   $slug
+ */
+function bbp_form_option( $option, $default = '', $slug = false ) {
+	echo bbp_get_form_option( $option, $default, $slug );
+}
+
+/**
+ * Return settings API option
+ *
+ * @since bbPress (r3203)
+ *
+ * @uses get_option()
+ * @uses esc_attr()
+ * @uses apply_filters()
+ *
+ * @param string $option
+ * @param string $default
+ * @param bool   $slug
+ *
+ * @return string
+ */
+function bbp_get_form_option( $option, $default = '', $slug = false ) {
+
+	// Get the option and sanitize it.
+	$value = get_option( $option, $default );
+
+	// Slug?
+	if ( true === $slug ) {
+		$value = esc_attr( apply_filters( 'editable_slug', $value ) );
+
+		// Not a slug.
+	} else {
+		$value = esc_attr( $value );
+	}
+
+	// Fallback to default.
+	if ( empty( $value ) ) {
+		$value = $default;
+	}
+
+	// Allow plugins to further filter the output.
+	return apply_filters( 'bbp_get_form_option', $value, $option );
+}
+
+/** Converter Fields **********************************************************/
+
+/**
+ * Main settings section description for the settings page
+ *
+ * @since bbPress (r3813)
+ *
+ * @param array $args Array of section data.
+ */
+function bbp_converter_setting_callback_main_section( $args ) {
+	?>
+	<h2>
+		<?php
+		if ( isset( $args['icon'] ) && ! empty( $args['icon'] ) ) {
+			?>
+			<i class="<?php echo esc_attr( $args['icon'] ); ?>"></i>
+			<?php
+		}
+		esc_html_e( 'Import Forums', 'buddyboss' );
+		?>
+	</h2>
+	<h3><?php esc_html_e( 'Database Settings', 'buddyboss' ); ?></h3>
+	<p><?php _e( 'Information about your previous forums database so that they can be converted. <strong>Backup your database before proceeding.</strong>', 'buddyboss' ); ?></p>
+
+	<?php
+}
+
+/**
+ * Edit Platform setting field
+ *
+ * @since bbPress (r3813)
+ */
+function bbp_converter_setting_callback_platform() {
+
+	$current          = bbp_get_form_option( '_bbp_converter_platform' );
+	$platform_options = '';
+
+	if ( ! file_exists( bbpress()->admin->admin_dir . 'converters/' ) ) {
+		return;
+	}
+
+	$curdir = opendir( bbpress()->admin->admin_dir . 'converters/' );
+
+	// Bail if no directory was found (how did this happen?)
+	if ( empty( $curdir ) ) {
+		return;
+	}
+
+	// Loop through files in the converters folder and assemble some options.
+	while ( $file = readdir( $curdir ) ) {
+		if ( ( stristr( $file, '.php' ) ) && ( stristr( $file, 'index' ) === false ) ) {
+			$file              = preg_replace( '/.php/', '', $file );
+			$platform_options .= '<option value="' . $file . '"' . selected( $file, $current, false ) . '>' . esc_html( $file ) . '</option>';
+		}
+	}
+
+	closedir( $curdir );
+	?>
+
+	<select name="_bbp_converter_platform" id="_bbp_converter_platform"><?php echo $platform_options; ?></select>
+	<label for="_bbp_converter_platform"><?php esc_html_e( 'is the previous forum software', 'buddyboss' ); ?></label>
+
+	<?php
+}
+
+/**
+ * Edit Database Server setting field
+ *
+ * @since bbPress (r3813)
+ */
+function bbp_converter_setting_callback_dbserver() {
+	?>
+
+	<input name="_bbp_converter_db_server" id="_bbp_converter_db_server" type="text" value="<?php bbp_form_option( '_bbp_converter_db_server', 'localhost' ); ?>" class="medium-text" />
+	<label for="_bbp_converter_db_server"><?php esc_html_e( 'IP or hostname', 'buddyboss' ); ?></label>
+
+	<?php
+}
+
+/**
+ * Edit Database Server Port setting field
+ *
+ * @since bbPress (r3813)
+ */
+function bbp_converter_setting_callback_dbport() {
+	?>
+
+	<input name="_bbp_converter_db_port" id="_bbp_converter_db_port" type="text" value="<?php bbp_form_option( '_bbp_converter_db_port', '3306' ); ?>" class="small-text" />
+	<label for="_bbp_converter_db_port"><?php esc_html_e( 'Use default 3306 if unsure', 'buddyboss' ); ?></label>
+
+	<?php
+}
+
+/**
+ * Edit Database User setting field
+ *
+ * @since bbPress (r3813)
+ */
+function bbp_converter_setting_callback_dbuser() {
+	?>
+
+	<input name="_bbp_converter_db_user" id="_bbp_converter_db_user" type="text" value="<?php bbp_form_option( '_bbp_converter_db_user' ); ?>" class="medium-text" />
+	<label for="_bbp_converter_db_user"><?php esc_html_e( 'User for your database connection', 'buddyboss' ); ?></label>
+
+	<?php
+}
+
+/**
+ * Edit Database Pass setting field
+ *
+ * @since bbPress (r3813)
+ */
+function bbp_converter_setting_callback_dbpass() {
+	?>
+
+	<div class="_bbp_converter_db_pass_wrap">
+		<input name="_bbp_converter_db_pass" id="_bbp_converter_db_pass" type="password" value="<?php bbp_form_option( '_bbp_converter_db_pass' ); ?>" class="medium-text" />
+		<i class="bb-icon-l bb-icon-eye bbp-db-pass-toggle"></i>
+	</div>
+	<label for="_bbp_converter_db_pass"><?php esc_html_e( 'Password to access the database', 'buddyboss' ); ?></label>
+
+	<?php
+}
+
+/**
+ * Edit Database Name setting field
+ *
+ * @since bbPress (r3813)
+ */
+function bbp_converter_setting_callback_dbname() {
+	?>
+
+	<input name="_bbp_converter_db_name" id="_bbp_converter_db_name" type="text" value="<?php bbp_form_option( '_bbp_converter_db_name' ); ?>" class="medium-text" />
+	<label for="_bbp_converter_db_name"><?php esc_html_e( 'Name of the database with your old forum data', 'buddyboss' ); ?></label>
+
+	<?php
+}
+
+/**
+ * Options settings section description for the settings page
+ *
+ * @since bbPress (r3813)
+ */
+function bbp_converter_setting_callback_options_section() {
+	?>
+	<h3><?php _e( 'Options', 'buddyboss' ); ?></h3>
+	<p><?php esc_html_e( 'Some optional parameters to help tune the conversion process.', 'buddyboss' ); ?></p>
+
+	<?php
+}
+
+/**
+ * Edit Table Prefix setting field
+ *
+ * @since bbPress (r3813)
+ */
+function bbp_converter_setting_callback_dbprefix() {
+	?>
+
+	<input name="_bbp_converter_db_prefix" id="_bbp_converter_db_prefix" type="text" value="<?php bbp_form_option( '_bbp_converter_db_prefix' ); ?>" class="medium-text" />
+	<label for="_bbp_converter_db_prefix"><?php esc_html_e( '(If converting from BuddyBoss Forums, use "wp_bb_" or your custom prefix)', 'buddyboss' ); ?></label>
+
+	<?php
+}
+
+/**
+ * Edit Rows Limit setting field
+ *
+ * @since bbPress (r3813)
+ */
+function bbp_converter_setting_callback_rows() {
+	?>
+
+	<input name="_bbp_converter_rows" id="_bbp_converter_rows" type="text" value="<?php bbp_form_option( '_bbp_converter_rows', '100' ); ?>" class="small-text" />
+	<label for="_bbp_converter_rows"><?php esc_html_e( 'rows to process at a time', 'buddyboss' ); ?></label>
+	<p class="description"><?php esc_html_e( 'Keep this low if you experience out-of-memory issues.', 'buddyboss' ); ?></p>
+
+	<?php
+}
+
+/**
+ * Edit Delay Time setting field
+ *
+ * @since bbPress (r3813)
+ */
+function bbp_converter_setting_callback_delay_time() {
+	?>
+
+	<input name="_bbp_converter_delay_time" id="_bbp_converter_delay_time" type="text" value="<?php bbp_form_option( '_bbp_converter_delay_time', '1' ); ?>" class="small-text" />
+	<label for="_bbp_converter_delay_time"><?php esc_html_e( 'second(s) delay between each group of rows', 'buddyboss' ); ?></label>
+	<p class="description"><?php esc_html_e( 'Keep this high to prevent too-many-connection issues.', 'buddyboss' ); ?></p>
+
+	<?php
+}
+
+/**
+ * Edit Restart setting field
+ *
+ * @since bbPress (r3813)
+ */
+function bbp_converter_setting_callback_restart() {
+	?>
+
+	<input name="_bbp_converter_restart" id="_bbp_converter_restart" type="checkbox" value="1" <?php checked( get_option( '_bbp_converter_restart', false ) ); ?> />
+	<label for="_bbp_converter_restart"><?php esc_html_e( 'Start a fresh conversion from the beginning', 'buddyboss' ); ?></label>
+	<p class="description"><?php esc_html_e( 'You should clean old conversion information before starting over.', 'buddyboss' ); ?></p>
+
+	<?php
+}
+
+/**
+ * Edit Clean setting field
+ *
+ * @since bbPress (r3813)
+ */
+function bbp_converter_setting_callback_clean() {
+	?>
+
+	<input name="_bbp_converter_clean" id="_bbp_converter_clean" type="checkbox" value="1" <?php checked( get_option( '_bbp_converter_clean', false ) ); ?> />
+	<label for="_bbp_converter_clean"><?php esc_html_e( 'Purge all information from a previously attempted import', 'buddyboss' ); ?></label>
+	<p class="description"><?php esc_html_e( 'Use this if an import failed and you want to remove that incomplete data.', 'buddyboss' ); ?></p>
+
+	<?php
+}
+
+/**
+ * Edit Convert Users setting field
+ *
+ * @since bbPress (r3813)
+ */
+function bbp_converter_setting_callback_convert_users() {
+	?>
+
+	<input name="_bbp_converter_convert_users" id="_bbp_converter_convert_users" type="checkbox" value="1" <?php checked( get_option( '_bbp_converter_convert_users', false ) ); ?> />
+	<label for="_bbp_converter_convert_users"><?php esc_html_e( 'Attempt to import user accounts from previous forums', 'buddyboss' ); ?></label>
+	<p class="description"><?php esc_html_e( 'Non-Forums passwords cannot be automatically converted. They will be converted as each user logs in.', 'buddyboss' ); ?></p>
+
+	<?php
+}
+
+/** Converter Page ************************************************************/
+
+/**
+ * The main settings page
+ *
+ * @uses settings_fields() To output the hidden fields for the form
+ * @uses do_settings_sections() To output the settings sections
+ */
+function bbp_converter_settings() {
+
+	// Status.
+	$step = (int) get_option( '_bbp_converter_step', 0 );
+	$max  = (int) bbpress()->admin->converter->max_steps;
+
+	// Starting or continuing?
+	$status_text = ! empty( $step )
+		? sprintf( esc_html__( 'Up next: step %s', 'buddyboss' ), $step )
+		: esc_html__( 'Ready', 'buddyboss' );
+
+	// Starting or continuing?
+	$start_text = ! empty( $step )
+		? esc_html__( 'Resume', 'buddyboss' )
+		: esc_html__( 'Start', 'buddyboss' );
+
+	// Starting or continuing?
+	$progress_text = ! empty( $step )
+		? sprintf( esc_html__( 'Previously stopped at step %1$d of %2$d', 'buddyboss' ), $step, $max )
+		: esc_html__( 'Ready to go.', 'buddyboss' );
+	?>
+
+	<div class="wrap">
+		<h2 class="nav-tab-wrapper"><?php bp_core_admin_tabs( __( 'Tools', 'buddyboss' ) ); ?></h2>
+		<div class="nav-settings-subsubsub">
+			<ul class="subsubsub">
+				<?php bp_core_tools_settings_admin_tabs(); ?>
+			</ul>
+		</div>
+	</div>
+	<div class="wrap">
+		<div class="bp-admin-card">
+
+			<form action="#" method="post" id="bbp-converter-settings">
+
+				<?php settings_fields( 'bbpress_converter' ); ?>
+
+				<?php do_settings_sections( 'bbpress_converter' ); ?>
+
+				<p class="submit">
+					<input type="button" name="submit" class="button-primary" id="bbp-converter-start" value="<?php echo esc_attr( $start_text ); ?>" />
+					<input type="button" name="submit" class="button-primary" id="bbp-converter-stop" value="<?php esc_attr_e( 'Pause', 'buddyboss' ); ?>" />
+					<span class="spinner" id="bbp-converter-spinner"></span>
+				</p>
+
+				<div class="bbp-converter-states" id="bbp-converter-state-message" <?php echo ! empty( $step ) ? 'style="display:block;"' : ''; ?>>
+					<span id="bbp-converter-label"><?php esc_attr_e( 'Import Monitor', 'buddyboss' ); ?></span>
+					<span id="bbp-converter-status"><?php echo esc_html( $status_text ); ?></span>
+					<span id="bbp-converter-step-percentage" class="bbp-progress-bar"></span>
+					<span id="bbp-converter-total-percentage" class="bbp-progress-bar"></span>
+				</div>
+				<div class="bbp-converter-updated" id="bbp-converter-message" <?php echo ! empty( $step ) ? 'style="display:block;"' : ''; ?>>
+					<p><?php echo esc_html( $progress_text ); ?></p>
+				</div>
+			</form>
+
+		</div>
+	</div>
+
+	<?php
+}
+
+/** Repair Handler ************************************************************/
+
 /**
  * Handle the processing and feedback of the admin tools page
  *

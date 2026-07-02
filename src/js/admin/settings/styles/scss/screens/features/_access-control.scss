@@ -1,0 +1,189 @@
+/**
+ * Access Control Field Styles.
+ *
+ * Styles for the access_control field type used in Activity (and
+ * future components) Access Controls settings panel.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+
+// For every access_control field row (matched by data-field-name prefix —
+// covers all 9 access_control fields across Activity / Groups / Members /
+// Messages / Media), force the input-wrapper to behave as a plain block.
+// The default `display: flex; align-items: center` on the wrapper makes
+// flex-sizing of our child unpredictable: during the loading state with
+// only a small spinner, the block visually centered — only when toggles
+// loaded did `width: 100%` start working as expected. `display: block`
+// removes that ambiguity entirely.
+//
+// Using `[data-field-name^="bb-access-control"]` instead of `:has()` for
+// broader browser compat — `:has()` may silently fail in older browsers
+// or in browsers where the cached stylesheet doesn't include support yet.
+.bb-admin-settings-form__field[data-field-name^="bb-access-control"] {
+
+	.bb-admin-settings-form__field-input-wrapper {
+		display: block;
+		width: 100%;
+	}
+}
+
+.bb-access-control-field {
+	// Plain block layout — children (description, selects, toggle-list)
+	// stack vertically by default since they're all block-level divs.
+	// Avoid flex on this container; flex-sizing was causing the description
+	// and dropdown to render at unexpected horizontal positions.
+	display: block;
+	width: 100%;
+
+	// Description text rendered above the type select (Figma: helper text
+	// appears at the top of the right column, not under the dropdown).
+	// Typography matches Figma `body/medium` spec: weight 500, secondary text
+	// color (#2f2f2f) — overrides the lighter tertiary defaults inherited
+	// from .bb-admin-settings-form__field-description.
+	&__description {
+		display: block;
+		width: 100%;
+		margin: 0 0 8px 0;
+		color: $bb-text-secondary-color;
+		font-weight: 500;
+		text-align: left;
+	}
+
+	// Selects row (type + sub-type side by side).
+	&__selects {
+		display: flex;
+		gap: 8px;
+	}
+
+	// Type select dropdown.
+	.components-select-control {
+		max-width: 280px;
+		margin-bottom: 0;
+	}
+
+	// Toggle list.
+	&__toggle-list {
+		margin-top: 16px;
+	}
+
+	&__toggle-item {
+		padding: 16px;
+		margin-bottom: 16px;
+		border: 0.5px solid $bb-border-secondary-color;
+		border-radius: $bb-border-radius-xl;
+
+		.components-toggle-control {
+			margin-bottom: 0;
+		}
+	}
+
+	// Threaded toggle row — toggle + label on the left, All/Specific radios on
+	// the right. Per Figma the radios sit on the same baseline as the toggle.
+	&__toggle-row {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 16px;
+	}
+
+	// Bold role name in a threaded toggle label.
+	&__option-label {
+		font-weight: 600;
+		color: $bb-text-color;
+	}
+
+	// Lighter "can send message to" copy that follows the role name.
+	&__option-suffix {
+		font-weight: 400;
+		color: $bb-text-tertiary-color;
+	}
+
+	// All/Specific radio group.
+	&__threaded-radio {
+		display: flex;
+		gap: 16px;
+	}
+
+	&__threaded-radio-option {
+		display: flex;
+		align-items: center;
+		gap: 6px;
+		font-size: 13px;
+		color: $bb-text-color;
+		cursor: pointer;
+
+		input[type="radio"] {
+			margin: 0;
+		}
+	}
+
+	// Specific checkboxes list — rendered inside the same toggle-item card as
+	// a tinted panel directly under the toggle row, matching the Figma layout.
+	&__threaded-checkboxes {
+		display: flex;
+		flex-direction: column;
+		gap: 12px;
+		margin-top: 16px;
+		padding: 16px;
+		background-color: $bb-background-primary-color;
+		border-radius: $bb-border-radius-lg;
+		width: 100%;
+		box-sizing: border-box;
+	}
+
+	&__threaded-checkbox {
+		display: flex;
+		align-items: center;
+		gap: 6px;
+		font-size: 13px;
+		color: $bb-text-color;
+		cursor: pointer;
+
+		input[type="checkbox"] {
+			margin: 0;
+		}
+	}
+
+	// Info notice bar.
+	&__notice {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		padding: 10px 16px;
+		margin-top: 16px;
+		background-color: $bb-background-primary-color;
+		border: 1px solid $bb-border-primary-color;
+		border-radius: $bb-border-radius-lg;
+		font-size: 13px;
+		color: $bb-text-secondary-color;
+
+		i {
+			font-size: 16px;
+			color: $bb-icon-tertiary-color;
+		}
+	}
+
+	// Spinner shown during option fetch — render in normal block flow on its
+	// own line below the dropdown. Earlier this had a `:has(> .components-spinner)`
+	// flex rule that turned the whole .bb-access-control-field into a flex row,
+	// which since we added a description child caused description + dropdown
+	// to render side-by-side during the loading state. Block flow is what we
+	// want: description on top, dropdown below, spinner below dropdown.
+	.components-spinner {
+		display: block;
+		margin: 8px 0 0 0;
+	}
+
+	[data-field-name="bb-access-control-create-activity"] &,
+	[data-field-name="bb-access-control-create-groups"] &,
+	[data-field-name="bb-access-control-join-groups"] &,
+	[data-field-name="bb-access-control-upload-media"] &,
+	[data-field-name="bb-access-control-upload-video"] &,
+	[data-field-name="bb-access-control-upload-document"] & {
+
+		&__toggle-item {
+			padding: 0;
+			border: 0;
+		}
+	}
+}

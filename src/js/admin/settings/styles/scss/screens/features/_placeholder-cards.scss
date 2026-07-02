@@ -1,0 +1,264 @@
+/**
+ * BuddyBoss Admin Settings 2.0 - Placeholder Feature Cards
+ *
+ * Styles for placeholder add-on/integration cards, plan badges,
+ * and the upgrade modal.
+ *
+ * @package BuddyBoss\Core\Administration
+ * @since BuddyBoss [BBVERSION]
+ */
+
+// Placeholder feature card.
+.bb-admin-settings__feature-card--placeholder {
+	position: relative;
+
+	.bb-admin-settings__feature-settings-btn--placeholder {
+		opacity: 0.4;
+		pointer-events: none;
+	}
+
+	.bb-admin-settings__toggle--placeholder {
+		opacity: 0.4;
+		pointer-events: none;
+	}
+}
+
+// DRM-locked feature card — Settings and toggle disabled in admin UI only.
+.bb-admin-settings__feature-card--drm-locked {
+	position: relative;
+
+	.bb-admin-settings__toggle--drm-locked {
+		opacity: 0.4;
+		pointer-events: none;
+	}
+}
+
+// Plan badge — positioned in top-right of card.
+.bb-admin-settings__plan-badge {
+	position: absolute;
+	top: 16px;
+	right: 16px;
+	display: inline-flex;
+	align-items: center;
+	gap: 4px;
+	padding: 4px 8px;
+	border: 0.5px solid #e0623d;
+	border-radius: 99px;
+	font-family: inherit;
+	font-size: 11px;
+	font-weight: 500;
+	letter-spacing: 0;
+	line-height: 16px;
+	cursor: pointer;
+	transition: opacity 0.15s ease;
+	z-index: 1;
+
+	i {
+		font-size: 12px;
+		line-height: 1;
+
+		&:before {
+			margin: 0;
+		}
+	}
+
+	&:hover {
+		opacity: 0.85;
+	}
+
+	&:focus {
+		outline: none;
+		box-shadow: none;
+	}
+
+	// UPGRADE PLUS — solid gradient, white text.
+	&--plus {
+		background: linear-gradient(132.89deg, #E0623D 4.86%, #3E34FF 91.52%);
+		color: #fff;
+	}
+
+	// UPGRADE PRO — 10% opacity gradient, dark text.
+	&--pro {
+		background: linear-gradient(114.36deg, rgba(224, 98, 61, 0.1) 4.86%, rgba(62, 52, 255, 0.1) 91.52%);
+		color: #2f2f2f;
+	}
+}
+
+// Upgrade Modal.
+.bb-upgrade-modal {
+	&.bb-admin-settings-modal {
+		max-width: 650px;
+		max-height: 90%;
+
+		// Remove default WP Modal padding, let content control spacing.
+		.components-modal__content {
+			padding: 0;
+			margin-top: 0;
+
+			&::before {
+				display: none;
+			}
+		}
+
+		.components-modal__header {
+			padding: 16px 24px;
+			margin: 0;
+			position: relative;
+			z-index: 1;
+		}
+	}
+
+	&__body {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		padding: 16px 24px 24px;
+		gap: 24px;
+	}
+
+	&__image-wrapper {
+		width: 100%;
+		border: 0.5px solid $bb-border-secondary-color;
+		border-radius: $bb-border-radius-2xl;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		overflow: hidden;
+		min-height: 200px;
+
+		// Video variant — sized by aspect-ratio rather than the image's intrinsic
+		// height. 16/9 matches every supported provider (YouTube, Vimeo, mp4)
+		// and removes the static min-height so the iframe fills the wrapper.
+		&--video {
+			aspect-ratio: 16 / 9;
+			min-height: 0;
+		}
+	}
+
+	&__image {
+		width: 100%;
+		height: auto;
+		display: block;
+		object-fit: cover;
+	}
+
+	// YouTube/Vimeo iframe and HTML5 <video> share the same fill behavior:
+	// stretch to the wrapper, no border, cover-fit so letterboxing is hidden
+	// inside the rounded wrapper (which has overflow: hidden).
+	&__video {
+		width: 100%;
+		height: 100%;
+		display: block;
+		border: 0;
+		object-fit: cover;
+		background: #000;
+	}
+
+
+	&__content {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 24px;
+		text-align: center;
+		max-width: 768px;
+	}
+
+	// Headline rendered above the body copy (e.g. "Transform Your Community
+	// Engagement"). Optional — only present when the catalog item provides
+	// `upgrade_title`. Sits between the hero image and the description with
+	// a tighter gap so the title + paragraph read as one block.
+	&__title {
+		font-size: 18px;
+		font-weight: 600;
+		line-height: 26px;
+		color: $bb-text-color;
+		margin: 0;
+
+		// Pull the description closer when the title is present so the two
+		// read as a single content block instead of two equally-spaced rows.
+		& + .bb-upgrade-modal__description {
+			margin-top: -14px; // counteracts the parent's gap: 24px → effective 8px gap.
+		}
+	}
+
+	&__description {
+		font-size: 14px;
+		line-height: 20px;
+		font-weight: 400;
+		color: $bb-text-tertiary-color;
+		margin: 0;
+
+		// Marketing-supplied inline emphasis (wp_kses_post() allows these on
+		// the PHP side; sanitizeHtml() lets them through on the React side).
+		strong {
+			font-weight: 600;
+			color: $bb-text-color;
+		}
+
+		em {
+			font-style: italic;
+		}
+
+		a {
+			color: $bb-link-color;
+			text-decoration: underline;
+		}
+	}
+
+	// CTA button — inline within content, not in a footer.
+	&__cta {
+		display: inline-flex;
+		align-items: center;
+		gap: 8px;
+		padding: 8px 16px;
+		border-radius: $bb-border-radius-full;
+		border: 0.5px solid #e0623d;
+		font-size: 14px;
+		font-weight: 500;
+		line-height: 20px;
+		text-decoration: none;
+		cursor: pointer;
+		transition: opacity 0.15s ease;
+
+		i {
+			font-size: 18px;
+			line-height: 1;
+
+			&:before {
+				margin: 0;
+			}
+		}
+
+		&:hover {
+			opacity: 0.9;
+		}
+
+		&:focus {
+			outline: none;
+			box-shadow: none;
+		}
+
+		// UPGRADE PLUS — solid gradient, white text.
+		&--plus {
+			background: linear-gradient(100deg, #E0623D 4.86%, #3E34FF 91.52%);
+			color: $bb-text-inverse-color;
+
+			&:hover,
+			&:focus {
+				color: $bb-text-inverse-color;
+			}
+		}
+
+		// UPGRADE PRO — 10% opacity gradient, dark text.
+		&--pro {
+			background: linear-gradient(100deg, #F7DFDB 4.86%, #D8D6FF 91.52%);
+			color: $bb-text-secondary-color;
+
+			&:hover,
+			&:focus {
+				color: $bb-text-secondary-color;
+			}
+		}
+	}
+}

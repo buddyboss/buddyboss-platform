@@ -1,0 +1,626 @@
+/* ----------------------------------------------------------------
+   Forums List Screen
+   ---------------------------------------------------------------- */
+
+.bb-forums-list {
+	max-width: calc(100% - 64px);
+	padding: 0 24px 16px;
+	background-color: $bb-background-base-color;
+	border: 0.5px solid $bb-border-primary-color;
+	border-radius: $bb-border-radius-2xl;
+	box-shadow: 0px 1.5px 1px 0px rgba(0, 0, 0, 0.16);
+	margin: 32px 32px 0;
+
+	// Notice
+	.bb-admin-notice {
+		margin-top: 24px;
+	}
+
+	.bb-admin-notice--dismiss {
+		background: none;
+		border: none;
+		cursor: pointer;
+	}
+
+	// Header
+	&__header {
+		border-bottom: 1px solid $bb-border-secondary-color;
+		padding: 18px 0;
+		margin-bottom: 24px;
+	}
+
+	&__title {
+		font-size: 18px;
+		font-weight: 500;
+		color: $bb-text-color;
+		margin: 0;
+	}
+
+	// Toolbar — layout styled via .bb-admin-list-toolbar
+
+	// Bulk Actions
+	&__bulk-actions {
+		display: flex;
+		align-items: center;
+		gap: 4px;
+
+		select {
+			min-width: 140px;
+			height: 32px;
+			font-size: 13px;
+		}
+	}
+
+	&__bulk-apply.is-secondary {
+		@include bb-button-primary-outline;
+	}
+
+	// Filter Dropdowns
+	&__filter-select,
+	&__sort-select {
+		.components-select-control {
+			margin-bottom: 0;
+		}
+
+		select {
+			min-width: 100px;
+			height: 32px;
+			font-size: 13px;
+		}
+	}
+
+	// Search — styled via .bb-admin-list-search
+
+	// Table — base styled via .bb-admin-list-table
+	&__table-wrapper {
+		overflow: hidden;
+		background: $bb-background-base-color;
+	}
+
+	&__table td {
+		overflow: hidden;
+
+		> [class*="bb-icon"] {
+			display: inline-block;
+			vertical-align: middle;
+			color: $bb-icon-tertiary-color;
+			font-size: 16px;
+			margin-right: 8px;
+		}
+
+		&.bb-forums-list__td--last-post {
+
+			> [class*=bb-icon] {
+				margin-right: 6px;
+			}
+		}
+	}
+
+	&__table th.bb-forums-list__th--name {
+		color: $bb-text-color;
+		font-size: 14px;
+	}
+
+	&__th--checkbox {
+		width: 24px;
+	}
+
+	&__th--actions {
+		width: 40px;
+	}
+
+	&__th--privacy,
+	&__th--discussions,
+	&__th--replies,
+	&__th--author,
+	&__th--last-post {
+		white-space: nowrap;
+	}
+
+	&__td--name {
+		max-width: 200px;
+		overflow: hidden;
+	}
+
+	&__td--author {
+		white-space: nowrap;
+	}
+
+	&__td--actions {
+		width: 40px;
+	}
+
+	// Forum Name Column
+	&__forum-name {
+		display: block;
+		font-size: 14px;
+		font-weight: 400;
+		color: $bb-link-color;
+		line-height: 20px;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+		text-decoration: none;
+
+		&:hover {
+			color: $bb-link-color;
+			text-decoration: underline;
+		}
+	}
+
+	// Privacy Column
+	&__privacy-badge {
+		display: inline-flex;
+		align-items: center;
+		gap: 4px;
+		padding: 2px 8px;
+		font-size: 11px;
+		line-height: 1.4;
+		color: $bb-text-color;
+		background-color: $bb-background-secondary-color;
+		border: 1px solid $bb-border-tertiary-color;
+		border-radius: $bb-border-radius-full;
+		white-space: nowrap;
+
+		i {
+			font-size: 12px;
+			line-height: 1;
+		}
+	}
+
+	// Author Column
+	&__author-cell {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+	}
+
+	&__author-avatar {
+		width: 40px;
+		height: 40px;
+		border-radius: $bb-border-radius-full;
+		flex-shrink: 0;
+		object-fit: cover;
+		border: 0.5px solid $bb-border-secondary-color;
+	}
+
+	&__author-name {
+		font-size: 14px;
+		font-weight: 400;
+		color: $bb-link-color;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
+
+	// Last Post Column
+	&__date {
+		display: inline-flex;
+		align-items: center;
+		gap: 8px;
+		color: $bb-text-tertiary-color;
+		font-size: 13px;
+		line-height: 18px;
+	}
+
+	&__no-activity {
+		color: $bb-text-disabled-color;
+		font-size: 13px;
+	}
+
+	// Actions Column — toggle styled via .bb-admin-actions-toggle
+	&__td--actions {
+		text-align: center;
+	}
+
+	// Footer
+	&__footer {
+		display: flex;
+		align-items: center;
+		justify-content: flex-end;
+		gap: 16px;
+		padding: 16px 0;
+		margin-top: 8px;
+	}
+
+	// Item Count
+	&__item-count {
+		font-size: 13px;
+		color: $bb-text-secondary-color;
+	}
+
+	@media screen and (max-width: 960px) {
+		overflow: auto;
+
+		&__header,
+		&__toolbar,
+		&__table-wrapper,
+		&__footer {
+			min-width: 820px;
+		}
+	}
+
+}
+
+// Full-width for custom panel screen.
+.bb-admin-feature-settings__main--custom-panel {
+	.bb-forums-list {
+		max-width: 100%;
+	}
+}
+
+/* ----------------------------------------------------------------
+   Bulk Edit Forum Modal
+   ---------------------------------------------------------------- */
+.bb-forum-bulk-edit-modal {
+
+	&.components-modal__frame {
+		max-width: 500px;
+	}
+
+	&__body {
+		padding: 24px;
+
+		.components-base-control {
+			margin-bottom: 16px;
+		}
+
+		.components-input-control__label,
+		.components-base-control__label {
+			display: block;
+			text-transform: none !important;
+			font-size: 13px !important;
+			font-weight: 500 !important;
+			color: $bb-text-color;
+			margin-bottom: 8px;
+		}
+
+		.components-select-control .components-input-control__label {
+			margin-bottom: 0;
+		}
+
+		.components-input-control__container {
+
+			.components-select-control__input {
+				@include bb-admin-settings-select;
+			}
+
+			&:has(> .components-select-control__input) {
+				padding: 0 !important;
+
+				.components-input-control__suffix,
+				.components-input-control__backdrop {
+					display: none !important;
+				}
+			}
+		}
+	}
+
+	&__footer {
+		display: flex;
+		align-items: center;
+		justify-content: flex-end;
+		gap: 8px;
+		padding: 16px 24px;
+		border-top: 1px solid $bb-border-secondary-color;
+
+		.is-secondary {
+			@include bb-button-secondary;
+		}
+
+		.is-primary {
+			@include bb-button-primary;
+
+			&:disabled {
+				opacity: 0.5;
+				cursor: not-allowed;
+			}
+		}
+	}
+}
+
+/* ----------------------------------------------------------------
+   Delete Forum Modal
+   ---------------------------------------------------------------- */
+.bb-forum-delete-modal {
+
+	&.components-modal__frame {
+		max-width: 500px;
+	}
+
+	&__body {
+		padding: 24px;
+	}
+
+	&__description {
+		font-size: 13px;
+		line-height: 1.6;
+		color: $bb-text-color;
+		margin: 0 0 16px;
+	}
+
+	.components-checkbox-control {
+		margin-bottom: 0;
+	}
+
+	&__footer {
+		display: flex;
+		align-items: center;
+		justify-content: flex-end;
+		gap: 8px;
+		padding: 16px 24px;
+		border-top: 1px solid $bb-border-secondary-color;
+
+		.is-secondary {
+			@include bb-button-secondary;
+		}
+
+		.is-destructive.is-primary {
+			background-color: $bb-error-color;
+			border-color: $bb-error-color;
+			color: $bb-text-inverse-color;
+			border-radius: $bb-border-radius-md;
+			font-size: 13px;
+			font-weight: 500;
+			padding: 6px 16px;
+			height: 32px;
+			box-shadow: none;
+
+			&:hover {
+				background-color: darken($bb-error-color, 5%);
+				border-color: darken($bb-error-color, 5%);
+			}
+
+			&:disabled {
+				opacity: 0.5;
+				cursor: not-allowed;
+			}
+		}
+	}
+}
+
+/* ----------------------------------------------------------------
+   Forums List Header - Create Button
+   ---------------------------------------------------------------- */
+.bb-forums-list__header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+
+.bb-forums-list__create-btn.is-primary {
+	@include bb-button-primary;
+
+	i {
+		font-size: 16px;
+		font-weight: 700;
+		margin-right: 6px;
+	}
+}
+
+/* ----------------------------------------------------------------
+   Forums List - Edit Loading Overlay
+   ---------------------------------------------------------------- */
+.bb-forums-list__edit-loading {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background: rgba(255, 255, 255, 0.6);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	z-index: 100000;
+}
+
+/* ----------------------------------------------------------------
+   Forum Modals
+   ---------------------------------------------------------------- */
+.bb-forum-modal {
+
+	// Disabled field wrapper — reduces opacity and blocks interaction.
+	&__field--disabled {
+		opacity: 0.5;
+		pointer-events: none;
+	}
+
+	&__permalink-field {
+		margin-bottom: 16px;
+
+		.components-base-control {
+			margin-bottom: 4px;
+		}
+	}
+
+	&__image-field {
+		margin-bottom: 16px;
+
+		> .components-base-control__label {
+			display: block;
+			margin-bottom: 8px;
+			text-transform: none;
+			font-size: 13px;
+			font-weight: 500;
+			color: $bb-text-color;
+		}
+	}
+
+	&__image-preview {
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
+		position: relative;
+
+		img {
+			max-height: 150px;
+			border-radius: $bb-border-radius-md;
+			object-fit: cover;
+		}
+	}
+
+	&__remove-image {
+		font-size: 12px;
+	}
+
+	&__image-preview {
+		position: relative;
+
+		img {
+			width: 100%;
+		}
+	}
+
+	&__image-actions {
+		display: flex;
+		align-items: center;
+		gap: 12px;
+		position: absolute;
+		left: 50%;
+		top: 50%;
+		transform: translate(-50%, -50%);
+	}
+
+	&__replace-image.is-secondary {
+		@include bb-button-primary;
+		font-size: 12px;
+		padding: 4px 12px;
+		height: 28px;
+	}
+
+	&__remove-image.is-secondary {
+		@include bb-button-danger;
+		font-size: 12px;
+		text-decoration: none;
+	}
+}
+
+/* ----------------------------------------------------------------
+   Forum Create Modal (create-specific overrides)
+   ---------------------------------------------------------------- */
+.bb-forum-create-modal {
+
+	&__row {
+		display: flex;
+		gap: 16px;
+
+		.components-base-control {
+			flex: 1;
+			margin-bottom: 0;
+		}
+	}
+
+	&__permalink-preview {
+		font-size: 12px;
+		color: $bb-link-color;
+		margin: 0;
+		word-break: break-all;
+	}
+
+	&__upload-zone {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 100%;
+		height: 150px;
+		border: 1.5px dashed $bb-border-secondary-color;
+		border-radius: $bb-border-radius-lg;
+		background: $bb-background-color;
+		cursor: pointer;
+
+		&--uploading {
+			cursor: default;
+			opacity: 0.7;
+		}
+	}
+
+	&__upload-icon {
+		font-size: 24px;
+		color: $bb-icon-tertiary-color;
+		line-height: 1;
+	}
+
+	&__upload-spinner {
+		display: inline-block;
+		width: 24px;
+		height: 24px;
+		border: 3px solid $bb-border-secondary-color;
+		border-top-color: $bb-border-brand-primary-color;
+		border-radius: 50%;
+		animation: bb-forum-upload-spin 0.8s linear infinite;
+	}
+
+	@keyframes bb-forum-upload-spin {
+		to {
+			transform: rotate(360deg);
+		}
+	}
+
+	&__image-help {
+		font-size: 13px;
+		color: $bb-text-tertiary-color;
+		margin: 10px 0 0;
+	}
+}
+
+/* ----------------------------------------------------------------
+   Forum Edit Modal (edit-specific overrides)
+   ---------------------------------------------------------------- */
+.bb-forum-edit-modal {
+
+	&__body {
+
+		.components-base-control {
+
+			+ .bb-admin-meta-field__description {
+				margin-top: -6px;
+			}
+		}
+
+		.bb-admin-notice {
+			margin-top: 16px;
+		}
+	}
+
+	&__permalink-preview {
+		margin-top: 4px;
+
+		a {
+			font-size: 13px;
+			color: $bb-text-tertiary-color;
+			text-decoration: none;
+
+			strong {
+				color: $bb-text-color;
+				font-weight: 600;
+			}
+
+			&:hover {
+				text-decoration: underline;
+			}
+		}
+	}
+
+	&__image-preview {
+
+		img {
+			max-width: 200px;
+		}
+	}
+
+	&__tab-content {
+
+		> .components-base-control {
+			margin-bottom: 16px;
+		}
+	}
+}
+
+#section-forum_permalinks_section,
+#section-forum_profile_permalinks_section {
+
+	.bb-admin-settings-form__field-input-wrapper > .components-base-control {
+		width: 100%;
+		max-width: 270px;
+	}
+}
