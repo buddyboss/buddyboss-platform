@@ -951,7 +951,11 @@ function bb_render_admin_header() {
 					// submenu deleted, URL redirects to Settings 2.0. Screen ID
 					// no longer reachable so the check is dead weight.
 					'buddyboss_page_bb-upgrade' !== $screen->id &&
-					'buddyboss_page_bb-settings' !== $screen->id
+					'buddyboss_page_bb-settings' !== $screen->id &&
+					// Integrations renders the shared React header (.bb-admin-header)
+					// itself, like Settings — skip the legacy .bb-tab-header here so
+					// the page does not show two header bars.
+					'buddyboss_page_bb-integrations' !== $screen->id
 				)
 			)
 		) ||

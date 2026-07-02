@@ -60,6 +60,12 @@ const DENYLIST_TAGS = new Set( [
 	'meta', 'base',
 	// Form controls — KB content is read-only.
 	'form', 'input', 'button', 'select', 'textarea', 'option', 'fieldset', 'legend',
+	// Foreign-content (SVG / MathML) roots. These are NOT in the allowlist, so
+	// without an explicit entry here they'd hit the "unwrap" branch below and
+	// have their children promoted into the surrounding HTML namespace — the
+	// classic namespace-confusion mutation-XSS setup. Remove them (subtree and
+	// all) instead; KB articles render their glyphs as <img>, not inline SVG.
+	'svg', 'math', 'foreignobject',
 ] );
 
 const ALLOWED_ATTRS = {
@@ -173,6 +179,11 @@ function safeIframeSrc( src ) {
 		const url = new URL( src );
 		if ( url.protocol !== 'https:' && url.protocol !== 'http:' ) return null;
 		if ( ! isHostInAllowlist( url.hostname, IFRAME_HOST_ALLOWLIST ) ) return null;
+		// Force HTTPS — an http embed on an https admin page is mixed-content
+		// blocked anyway; coerce it to match safeImgSrc.
+		if ( url.protocol === 'http:' ) {
+			url.protocol = 'https:';
+		}
 		return url.toString();
 	} catch ( e ) {
 		return null;
@@ -282,7 +293,7 @@ function sanitizeStyle( style ) {
 		const valLower = val.toLowerCase();
 		if ( /url\s*\(/.test( valLower ) ) return;
 		if ( /expression\s*\(/.test( valLower ) ) return;
-		if ( valLower.indexOf( 'javascript:' ) !== -1 ) return;
+		if ( valLower.includes( 'javascript:' ) ) return;
 		out.push( `${ prop }: ${ val }` );
 	} );
 	return out.join( '; ' );

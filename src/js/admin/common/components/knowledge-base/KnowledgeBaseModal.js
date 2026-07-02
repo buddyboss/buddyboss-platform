@@ -5,8 +5,8 @@
  *   - Overlay + dialog markup
  *   - ESC key handling
  *   - Tab focus trap inside the dialog
- *   - Focus capture on open / restore on close (prefers `triggerRef`,
- *     falls back to whatever element had focus when the modal opened)
+ *   - Focus capture on open / restore on close (to whatever element had
+ *     focus when the modal opened)
  *   - A11y attributes (`role="dialog"`, `aria-modal`, `aria-labelledby`)
  *   - View routing — delegates body rendering to either `<KBLanding>`
  *     (Group I) or `<KBCategory>` (Group L). Until those land, both
@@ -32,16 +32,17 @@ import KBCategory from './KBCategory';
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param {Object}                          props            Component props.
- * @param {{ current: ?HTMLElement }} [props.triggerRef] Ref to the button that
- *                                                     opened the modal — used
- *                                                     to restore focus on close.
  * @return {?React.Element} Modal element, or `null` when closed.
  */
-export default function KnowledgeBaseModal( { triggerRef } ) {
+export default function KnowledgeBaseModal() {
 	const { state, close }       = useKb();
 	const dialogRef              = useRef( null );
 	const previouslyFocusedRef   = useRef( null );
+
+	// Brand logo from whichever admin app hosts the modal (Settings → bbAdminData,
+	// Integrations → bbIntegrationsData).
+	const adminData = ( typeof window !== 'undefined' && ( window.bbAdminData || window.bbIntegrationsData ) ) || {};
+	const brandLogoUrl = adminData.logoUrl || '';
 
 	// Focus capture on open, restore on close.
 	useEffect( () => {
@@ -52,17 +53,13 @@ export default function KnowledgeBaseModal( { triggerRef } ) {
 				closeBtn.focus();
 			}
 		} else if ( previouslyFocusedRef.current ) {
-			if ( triggerRef && triggerRef.current ) {
-				triggerRef.current.focus();
-			} else {
-				try {
-					previouslyFocusedRef.current.focus();
-				} catch ( e ) {
-					// Previously-focused node may be detached; swallow.
-				}
+			try {
+				previouslyFocusedRef.current.focus();
+			} catch ( e ) {
+				// Previously-focused node may be detached; swallow.
 			}
 		}
-	}, [ state.isOpen, triggerRef ] );
+	}, [ state.isOpen ] );
 
 	// ESC closes the modal.
 	useEffect( () => {
@@ -130,9 +127,9 @@ export default function KnowledgeBaseModal( { triggerRef } ) {
 			>
 				<header className="bb-kb-modal__header">
 					<span id="bb-kb-modal-title" className="bb-kb-modal__brand">
-						{ window.bbAdminData && window.bbAdminData.logoUrl ? (
+						{ brandLogoUrl ? (
 							<>
-								<img className="bb-kb-modal__brand-logo" src={ window.bbAdminData.logoUrl } alt="BuddyBoss" />
+								<img className="bb-kb-modal__brand-logo" src={ brandLogoUrl } alt="BuddyBoss" />
 								<span className="bb-kb-modal__brand-separator"></span>
 							</>
 						) : null }
