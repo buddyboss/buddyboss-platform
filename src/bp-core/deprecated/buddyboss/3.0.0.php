@@ -3367,3 +3367,1213 @@ add_action(
 	},
 	99
 );
+
+// ─────────────────────────────────────────────────────────────────────────
+// Tools page (?page=bp-tools), Repair Community (?page=bp-repair-community),
+// and Repair Forums (?page=bbp-repair) page renderers + form handlers
+// retired in BuddyBoss [BBVERSION]. All three URLs now redirect to
+// ?page=bb-settings&tab=tools&panel=repair_platform via
+// bb_redirect_bp_settings_before_permission_check(). The function stubs
+// below cover direct PHP callers (third-party code, legacy menu hooks).
+// ─────────────────────────────────────────────────────────────────────────
+
+if ( ! function_exists( 'bp_repair_community_submenu_page' ) ) {
+	/**
+	 * Render the legacy Repair Community standalone submenu page.
+	 *
+	 * @since BuddyBoss 1.5.6
+	 * @since BuddyBoss [BBVERSION] Deprecated.
+	 * @deprecated [BBVERSION] admin.php?page=bb-settings&tab=tools&panel=repair_platform
+	 */
+	function bp_repair_community_submenu_page() {
+		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'admin.php?page=bb-settings&tab=tools&panel=repair_platform' );
+	}
+}
+
+if ( ! function_exists( 'bbp_admin_repair' ) ) {
+	/**
+	 * Render the legacy Forums Repair admin page.
+	 *
+	 * @since bbPress (r2613)
+	 * @since BuddyBoss [BBVERSION] Deprecated. Replaced by Settings 2.0 Repair Platform.
+	 * @deprecated [BBVERSION] admin.php?page=bb-settings&tab=tools&panel=repair_platform
+	 */
+	function bbp_admin_repair() {
+		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'admin.php?page=bb-settings&tab=tools&panel=repair_platform' );
+	}
+}
+
+if ( ! function_exists( 'bbp_admin_repair_handler' ) ) {
+	/**
+	 * Process the legacy Forums Repair form POST submission.
+	 *
+	 * @since bbPress (r2613)
+	 * @since BuddyBoss [BBVERSION] Deprecated.
+	 * @deprecated [BBVERSION] wp_ajax_bp_admin_forum_repair_tools_wrapper_function
+	 */
+	function bbp_admin_repair_handler() {
+		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'wp_ajax_bp_admin_forum_repair_tools_wrapper_function' );
+	}
+}
+
+if ( ! function_exists( 'bbp_admin_tools_feedback' ) ) {
+	/**
+	 * Render the legacy admin notice for the Forums Repair page.
+	 *
+	 * @since bbPress (r2613)
+	 * @since BuddyBoss [BBVERSION] Deprecated.
+	 * @deprecated [BBVERSION] Legacy admin-page-only helper.
+	 *
+	 * @param string $message Ignored.
+	 * @param mixed  $class_name Ignored. Renamed from `$class` for PHP reserved-keyword compliance.
+	 * @return false
+	 */
+	function bbp_admin_tools_feedback( $message, $class_name = false ) {
+		unset( $message, $class_name );
+		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]' );
+		return false;
+	}
+}
+
+if ( ! function_exists( 'bp_core_admin_tools' ) ) {
+	/**
+	 * Render the legacy `?page=bp-tools` admin page (top-level Tools landing).
+	 *
+	 * @since BuddyPress 2.0.0
+	 * @since BuddyBoss [BBVERSION] Deprecated. Replaced by Settings 2.0 Tools panel.
+	 * @deprecated [BBVERSION] admin.php?page=bb-settings&tab=tools
+	 */
+	function bp_core_admin_tools() {
+		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'admin.php?page=bb-settings&tab=tools' );
+	}
+}
+
+if ( ! function_exists( 'bp_admin_repair_handler' ) ) {
+	/**
+	 * Process POST submissions from the legacy Tools page repair form.
+	 *
+	 * @since BuddyPress 2.0.0
+	 * @since BuddyBoss [BBVERSION] Deprecated. Form-driven flow replaced by
+	 *                              the React Repair Platform panel which calls
+	 *                              `wp_ajax_bp_admin_repair_tools_wrapper_function`.
+	 * @deprecated [BBVERSION] wp_ajax_bp_admin_repair_tools_wrapper_function
+	 */
+	function bp_admin_repair_handler() {
+		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'wp_ajax_bp_admin_repair_tools_wrapper_function' );
+	}
+}
+
+if ( ! function_exists( 'bp_core_tools_settings_admin_tabs' ) ) {
+	/**
+	 * Render the legacy Tools sub-tab bar (Default Data | Repair Community | …).
+	 *
+	 * @since BuddyPress 1.5.0
+	 * @since BuddyBoss [BBVERSION] Deprecated. Tab bar has no remaining live page.
+	 * @deprecated [BBVERSION] admin.php?page=bb-settings&tab=tools
+	 *
+	 * @param string $active_tab Ignored.
+	 */
+	function bp_core_tools_settings_admin_tabs( $active_tab = '' ) {
+		unset( $active_tab );
+		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'admin.php?page=bb-settings&tab=tools' );
+	}
+}
+
+if ( ! function_exists( 'bp_core_get_tools_settings_admin_tabs' ) ) {
+	/**
+	 * Return the legacy Tools sub-tab seed array.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 * @since BuddyBoss [BBVERSION] Deprecated alongside the bp-tools tab bar.
+	 * @deprecated [BBVERSION] admin.php?page=bb-settings&tab=tools
+	 *
+	 * @param string $active_tab Ignored.
+	 * @return array Empty array — no tabs remain.
+	 */
+	function bp_core_get_tools_settings_admin_tabs( $active_tab = '' ) {
+		unset( $active_tab );
+		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'admin.php?page=bb-settings&tab=tools' );
+		return array();
+	}
+}
+
+if ( ! function_exists( 'bp_core_get_tools_repair_community_settings_admin_tabs' ) ) {
+	/**
+	 * Filter callback that appended the legacy "Repair Community" sub-tab.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 * @since BuddyBoss [BBVERSION] Deprecated. Filter no longer fires anywhere.
+	 * @deprecated [BBVERSION] admin.php?page=bb-settings&tab=tools&panel=repair_platform
+	 *
+	 * @param array $tabs Existing tabs.
+	 * @return array Tabs unchanged.
+	 */
+	function bp_core_get_tools_repair_community_settings_admin_tabs( $tabs ) {
+		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'admin.php?page=bb-settings&tab=tools&panel=repair_platform' );
+		return $tabs;
+	}
+}
+
+if ( ! function_exists( 'bbp_core_get_tools_settings_admin_tabs' ) ) {
+	/**
+	 * Filter callback that appended the legacy "Repair Forums" sub-tab.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 * @since BuddyBoss [BBVERSION] Deprecated. Filter no longer fires anywhere.
+	 * @deprecated [BBVERSION] admin.php?page=bb-settings&tab=tools&panel=repair_platform
+	 *
+	 * @param array $tabs Existing tabs.
+	 * @return array Tabs unchanged.
+	 */
+	function bbp_core_get_tools_settings_admin_tabs( $tabs ) {
+		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'admin.php?page=bb-settings&tab=tools&panel=repair_platform' );
+		return $tabs;
+	}
+}
+
+if ( ! function_exists( 'bbp_core_get_import_forum_tools_settings_admin_tabs' ) ) {
+	/**
+	 * Filter callback that appended the legacy "Forum Import" sub-tab.
+	 *
+	 * The Forum Converter (bbPress importer) was extracted to the
+	 * buddyboss-tools plugin and now renders inside the Settings 2.0
+	 * Migration Tools panel, so this filter no longer fires anywhere.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 * @since BuddyBoss [BBVERSION] Deprecated. Filter no longer fires anywhere.
+	 * @deprecated [BBVERSION] admin.php?page=bb-settings&tab=tools&panel=migration_tools
+	 *
+	 * @param array $tabs Existing tabs.
+	 * @return array Tabs unchanged.
+	 */
+	function bbp_core_get_import_forum_tools_settings_admin_tabs( $tabs ) {
+		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'admin.php?page=bb-settings&tab=tools&panel=migration_tools' );
+		return $tabs;
+	}
+}
+
+if ( ! function_exists( 'bbp_converter_settings' ) ) {
+	/**
+	 * Rendered the legacy Forum Converter settings section.
+	 *
+	 * The Forum Converter (bbPress importer) was extracted to the
+	 * buddyboss-tools plugin and now renders inside the Settings 2.0
+	 * Migration Tools panel.
+	 *
+	 * @since BuddyBoss 2.0.0
+	 * @since BuddyBoss [BBVERSION] Deprecated. Converter moved to buddyboss-tools.
+	 * @deprecated [BBVERSION] admin.php?page=bb-settings&tab=tools&panel=migration_tools
+	 */
+	function bbp_converter_settings() {
+		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'admin.php?page=bb-settings&tab=tools&panel=migration_tools' );
+	}
+}
+
+if ( ! function_exists( 'bp_media_get_tools_media_settings_admin_tabs' ) ) {
+	/**
+	 * Filter callback that appended the legacy "Import Media" sub-tab.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 * @since BuddyBoss [BBVERSION] Deprecated. Filter no longer fires anywhere.
+	 *                              Import Media remains reachable at its own
+	 *                              standalone admin page (`?page=bp-media-import`).
+	 * @deprecated [BBVERSION] admin.php?page=bp-media-import
+	 *
+	 * @param array $tabs Existing tabs.
+	 * @return array Tabs unchanged.
+	 */
+	function bp_media_get_tools_media_settings_admin_tabs( $tabs ) {
+		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'admin.php?page=bp-media-import' );
+		return $tabs;
+	}
+}
+
+/**
+ * Fire `_deprecated_hook()` notices for the three retired Tools-page hooks
+ * (two filters + one action) when any third-party callback is registered.
+ *
+ * The calling functions (`bp_core_get_tools_settings_admin_tabs()` and
+ * `bp_core_tools_settings_admin_tabs()`) no longer fire these hooks because
+ * the legacy `?page=bp-tools` tab bar is gone. Third-party plugins that had
+ * `add_filter()` / `add_action()` callbacks on them would otherwise sit
+ * dormant with no signal that their integration broke. This hook-deprecation
+ * shim runs once per admin pageload (~3 µs when no callbacks are registered)
+ * and points the developer at the React feature-registry replacement.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_deprecated_tools_admin_tabs_hooks_notice() {
+	$retired = array(
+		'bp_core_get_tools_settings_admin_tabs' => "bb_register_side_panel( 'tools', \$panel_id, \$args ) on the bb_after_register_features action",
+		'bp_core_tools_settings_admin_tabs'     => "bb_register_side_panel( 'tools', \$panel_id, \$args ) on the bb_after_register_features action",
+		'bp_tools_settings_admin_tabs'          => 'bb_after_register_features',
+	);
+
+	foreach ( $retired as $hook => $replacement ) {
+		if ( has_filter( $hook ) || has_action( $hook ) ) {
+			_deprecated_hook( $hook, 'BuddyBoss [BBVERSION]', $replacement );
+		}
+	}
+}
+add_action( 'admin_init', 'bb_deprecated_tools_admin_tabs_hooks_notice' );
+
+// ─────────────────────────────────────────────────────────────────────────
+// Default Data (bp_dd_*) family — moved to the buddyboss-tools plugin in
+// BuddyBoss [BBVERSION]. Every legacy bp_dd_* function gets a wrapper here
+// that delegates to its bb_tools_dd_* counterpart when the addon is active
+// and no-ops with the original return type when the addon is inactive.
+//
+// `bp_admin_tools_default_data_save()` is included too — it shares the same
+// retirement schedule even though its name doesn't carry the bp_dd_ prefix.
+//
+// Return-type buckets below reflect ACTUAL legacy behavior (verified during
+// Phase 2 inventory). Removal scheduled BBVERSION + 2 per project
+// deprecation convention.
+// ─────────────────────────────────────────────────────────────────────────
+
+// `BP_DEFAULT_DATA_DIR` / `BP_DEFAULT_DATA_URL` were defined inside the
+// legacy `bp_core_admin_tools()` page renderer (bp-core-admin-tools.php
+// lines 18-25). Task 2.10 deletes that define block. Third-party code
+// reading either constant directly would hit "Use of undefined constant" —
+// notice on PHP 7.4, fatal on PHP 8.x. Define empty-string fallbacks so
+// callers degrade gracefully. The fixture data the constants pointed at
+// moved to buddyboss-tools/sample-data/data/.
+if ( ! defined( 'BP_DEFAULT_DATA_DIR' ) ) {
+	define( 'BP_DEFAULT_DATA_DIR', '' );
+}
+if ( ! defined( 'BP_DEFAULT_DATA_URL' ) ) {
+	define( 'BP_DEFAULT_DATA_URL', '' );
+}
+
+/* ─── Returns void (no return statement; some echo or call side-effects) ─── */
+
+if ( ! function_exists( 'bp_admin_tools_default_data_save' ) ) {
+	/**
+	 * Deprecated. Legacy Default-Data form-save handler.
+	 *
+	 * The Default Data form-post path was retired in BuddyBoss [BBVERSION] —
+	 * the React Sample Data panel in buddyboss-tools posts AJAX directly via
+	 * `wp_ajax_bb_tools_sample_data_import` instead. This wrapper preserves
+	 * the legacy name for third-party code that may post to a re-created
+	 * form, delegating to `bb_tools_dd_admin_default_data_save()` (in
+	 * buddyboss-tools) when the addon is active.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 * @since BuddyBoss [BBVERSION] Deprecated. Moved to buddyboss-tools plugin.
+	 * @deprecated [BBVERSION] bb_tools_dd_admin_default_data_save (in buddyboss-tools)
+	 *
+	 * @return void
+	 */
+	function bp_admin_tools_default_data_save() {
+		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'bb_tools_dd_admin_default_data_save' );
+		if ( function_exists( 'bb_tools_dd_admin_default_data_save' ) ) {
+			bb_tools_dd_admin_default_data_save();
+		}
+	}
+}
+
+if ( ! function_exists( 'bp_dd_clear_db' ) ) {
+	/**
+	 * @since BuddyBoss 1.0.0
+	 * @since BuddyBoss [BBVERSION] Deprecated. Moved to buddyboss-tools plugin.
+	 * @deprecated [BBVERSION] bb_tools_dd_clear_db (in buddyboss-tools)
+	 *
+	 * @return void
+	 */
+	function bp_dd_clear_db() {
+		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'bb_tools_dd_clear_db' );
+		if ( function_exists( 'bb_tools_dd_clear_db' ) ) {
+			bb_tools_dd_clear_db();
+		}
+	}
+}
+
+if ( ! function_exists( 'bp_dd_delete_dummy_members_related_data' ) ) {
+	/**
+	 * @since BuddyBoss 1.0.0
+	 * @since BuddyBoss [BBVERSION] Deprecated. Moved to buddyboss-tools plugin.
+	 * @deprecated [BBVERSION] bb_tools_dd_delete_dummy_members_related_data (in buddyboss-tools)
+	 *
+	 * @return void
+	 */
+	function bp_dd_delete_dummy_members_related_data() {
+		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'bb_tools_dd_delete_dummy_members_related_data' );
+		if ( function_exists( 'bb_tools_dd_delete_dummy_members_related_data' ) ) {
+			bb_tools_dd_delete_dummy_members_related_data();
+		}
+	}
+}
+
+if ( ! function_exists( 'bp_dd_delete_dummy_members' ) ) {
+	/**
+	 * @since BuddyBoss 1.0.0
+	 * @since BuddyBoss [BBVERSION] Deprecated. Moved to buddyboss-tools plugin.
+	 * @deprecated [BBVERSION] bb_tools_dd_delete_dummy_members (in buddyboss-tools)
+	 *
+	 * @return void
+	 */
+	function bp_dd_delete_dummy_members() {
+		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'bb_tools_dd_delete_dummy_members' );
+		if ( function_exists( 'bb_tools_dd_delete_dummy_members' ) ) {
+			bb_tools_dd_delete_dummy_members();
+		}
+	}
+}
+
+if ( ! function_exists( 'bp_dd_delete_dummy_reply' ) ) {
+	/**
+	 * @since BuddyBoss 1.0.0
+	 * @since BuddyBoss [BBVERSION] Deprecated. Moved to buddyboss-tools plugin.
+	 * @deprecated [BBVERSION] bb_tools_dd_delete_dummy_reply (in buddyboss-tools)
+	 *
+	 * @return void
+	 */
+	function bp_dd_delete_dummy_reply() {
+		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'bb_tools_dd_delete_dummy_reply' );
+		if ( function_exists( 'bb_tools_dd_delete_dummy_reply' ) ) {
+			bb_tools_dd_delete_dummy_reply();
+		}
+	}
+}
+
+if ( ! function_exists( 'bp_dd_delete_dummy_topic' ) ) {
+	/**
+	 * @since BuddyBoss 1.0.0
+	 * @since BuddyBoss [BBVERSION] Deprecated. Moved to buddyboss-tools plugin.
+	 * @deprecated [BBVERSION] bb_tools_dd_delete_dummy_topic (in buddyboss-tools)
+	 *
+	 * @return void
+	 */
+	function bp_dd_delete_dummy_topic() {
+		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'bb_tools_dd_delete_dummy_topic' );
+		if ( function_exists( 'bb_tools_dd_delete_dummy_topic' ) ) {
+			bb_tools_dd_delete_dummy_topic();
+		}
+	}
+}
+
+if ( ! function_exists( 'bp_dd_delete_dummy_forum' ) ) {
+	/**
+	 * @since BuddyBoss 1.0.0
+	 * @since BuddyBoss [BBVERSION] Deprecated. Moved to buddyboss-tools plugin.
+	 * @deprecated [BBVERSION] bb_tools_dd_delete_dummy_forum (in buddyboss-tools)
+	 *
+	 * @return void
+	 */
+	function bp_dd_delete_dummy_forum() {
+		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'bb_tools_dd_delete_dummy_forum' );
+		if ( function_exists( 'bb_tools_dd_delete_dummy_forum' ) ) {
+			bb_tools_dd_delete_dummy_forum();
+		}
+	}
+}
+
+if ( ! function_exists( 'bp_dd_delete_dummy_groups' ) ) {
+	/**
+	 * @since BuddyBoss 1.0.0
+	 * @since BuddyBoss [BBVERSION] Deprecated. Moved to buddyboss-tools plugin.
+	 * @deprecated [BBVERSION] bb_tools_dd_delete_dummy_groups (in buddyboss-tools)
+	 *
+	 * @return void
+	 */
+	function bp_dd_delete_dummy_groups() {
+		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'bb_tools_dd_delete_dummy_groups' );
+		if ( function_exists( 'bb_tools_dd_delete_dummy_groups' ) ) {
+			bb_tools_dd_delete_dummy_groups();
+		}
+	}
+}
+
+if ( ! function_exists( 'bp_dd_delete_dummy_xprofile' ) ) {
+	/**
+	 * @since BuddyBoss 1.0.0
+	 * @since BuddyBoss [BBVERSION] Deprecated. Moved to buddyboss-tools plugin.
+	 * @deprecated [BBVERSION] bb_tools_dd_delete_dummy_xprofile (in buddyboss-tools)
+	 *
+	 * @return void
+	 */
+	function bp_dd_delete_dummy_xprofile() {
+		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'bb_tools_dd_delete_dummy_xprofile' );
+		if ( function_exists( 'bb_tools_dd_delete_dummy_xprofile' ) ) {
+			bb_tools_dd_delete_dummy_xprofile();
+		}
+	}
+}
+
+if ( ! function_exists( 'bp_dd_imported_disabled' ) ) {
+	/**
+	 * Legacy echoed `disabled="disabled" checked="checked"` attrs for the
+	 * Default Data form inputs. Form is retired in BuddyBoss [BBVERSION]; the
+	 * React Sample Data panel reads import state via AJAX instead.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 * @since BuddyBoss [BBVERSION] Deprecated. Moved to buddyboss-tools plugin.
+	 * @deprecated [BBVERSION] bb_tools_dd_imported_disabled (in buddyboss-tools)
+	 *
+	 * @param string $group  Possible values: users, groups, forums.
+	 * @param string $import What exactly was imported.
+	 * @return void
+	 */
+	function bp_dd_imported_disabled( $group, $import ) {
+		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'bb_tools_dd_imported_disabled' );
+		if ( function_exists( 'bb_tools_dd_imported_disabled' ) ) {
+			bb_tools_dd_imported_disabled( $group, $import );
+		}
+	}
+}
+
+if ( ! function_exists( 'bp_dd_delete_import_records' ) ) {
+	/**
+	 * @since BuddyBoss 1.0.0
+	 * @since BuddyBoss [BBVERSION] Deprecated. Moved to buddyboss-tools plugin.
+	 * @deprecated [BBVERSION] bb_tools_dd_delete_import_records (in buddyboss-tools)
+	 *
+	 * @return void
+	 */
+	function bp_dd_delete_import_records() {
+		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'bb_tools_dd_delete_import_records' );
+		if ( function_exists( 'bb_tools_dd_delete_import_records' ) ) {
+			bb_tools_dd_delete_import_records();
+		}
+	}
+}
+
+/* ─── Returns array (fallback: empty array) ─── */
+
+if ( ! function_exists( 'bp_dd_get_random_groups_ids' ) ) {
+	/**
+	 * @since BuddyBoss 1.0.0
+	 * @since BuddyBoss [BBVERSION] Deprecated. Moved to buddyboss-tools plugin.
+	 * @deprecated [BBVERSION] bb_tools_dd_get_random_groups_ids (in buddyboss-tools)
+	 *
+	 * @param int    $count  If you need all, use 0.
+	 * @param string $output 'array' or 'string' (comma-separated).
+	 * @return array|string
+	 */
+	function bp_dd_get_random_groups_ids( $count = 1, $output = 'array' ) {
+		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'bb_tools_dd_get_random_groups_ids' );
+		if ( function_exists( 'bb_tools_dd_get_random_groups_ids' ) ) {
+			return bb_tools_dd_get_random_groups_ids( $count, $output );
+		}
+		return 'string' === $output ? '' : array();
+	}
+}
+
+if ( ! function_exists( 'bp_dd_get_forums_enable_groups_ids' ) ) {
+	/**
+	 * @since BuddyBoss 1.0.0
+	 * @since BuddyBoss [BBVERSION] Deprecated. Moved to buddyboss-tools plugin.
+	 * @deprecated [BBVERSION] bb_tools_dd_get_forums_enable_groups_ids (in buddyboss-tools)
+	 *
+	 * @param int    $count  Required — legacy signature has no default.
+	 * @param string $output 'array' or 'string' (comma-separated).
+	 * @return array|string
+	 */
+	function bp_dd_get_forums_enable_groups_ids( $count, $output = 'array' ) {
+		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'bb_tools_dd_get_forums_enable_groups_ids' );
+		if ( function_exists( 'bb_tools_dd_get_forums_enable_groups_ids' ) ) {
+			return bb_tools_dd_get_forums_enable_groups_ids( $count, $output );
+		}
+		return 'string' === $output ? '' : array();
+	}
+}
+
+if ( ! function_exists( 'bp_dd_get_random_forums_ids' ) ) {
+	/**
+	 * @since BuddyBoss 1.0.0
+	 * @since BuddyBoss [BBVERSION] Deprecated. Moved to buddyboss-tools plugin.
+	 * @deprecated [BBVERSION] bb_tools_dd_get_random_forums_ids (in buddyboss-tools)
+	 *
+	 * @param int    $count  If you need all, use 0.
+	 * @param string $output 'array' or 'string' (comma-separated).
+	 * @return array|string
+	 */
+	function bp_dd_get_random_forums_ids( $count = 1, $output = 'array' ) {
+		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'bb_tools_dd_get_random_forums_ids' );
+		if ( function_exists( 'bb_tools_dd_get_random_forums_ids' ) ) {
+			return bb_tools_dd_get_random_forums_ids( $count, $output );
+		}
+		return 'string' === $output ? '' : array();
+	}
+}
+
+if ( ! function_exists( 'bp_dd_get_random_topics_ids' ) ) {
+	/**
+	 * @since BuddyBoss 1.0.0
+	 * @since BuddyBoss [BBVERSION] Deprecated. Moved to buddyboss-tools plugin.
+	 * @deprecated [BBVERSION] bb_tools_dd_get_random_topics_ids (in buddyboss-tools)
+	 *
+	 * @param int    $count  If you need all, use 0.
+	 * @param string $output 'array' or 'string' (comma-separated).
+	 * @return array|string
+	 */
+	function bp_dd_get_random_topics_ids( $count = 1, $output = 'array' ) {
+		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'bb_tools_dd_get_random_topics_ids' );
+		if ( function_exists( 'bb_tools_dd_get_random_topics_ids' ) ) {
+			return bb_tools_dd_get_random_topics_ids( $count, $output );
+		}
+		return 'string' === $output ? '' : array();
+	}
+}
+
+if ( ! function_exists( 'bp_dd_get_random_users_ids' ) ) {
+	/**
+	 * @since BuddyBoss 1.0.0
+	 * @since BuddyBoss [BBVERSION] Deprecated. Moved to buddyboss-tools plugin.
+	 * @deprecated [BBVERSION] bb_tools_dd_get_random_users_ids (in buddyboss-tools)
+	 *
+	 * @param int    $count  If you need all, use 0.
+	 * @param string $output 'array' or 'string' (comma-separated).
+	 * @return array|string
+	 */
+	function bp_dd_get_random_users_ids( $count = 1, $output = 'array' ) {
+		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'bb_tools_dd_get_random_users_ids' );
+		if ( function_exists( 'bb_tools_dd_get_random_users_ids' ) ) {
+			return bb_tools_dd_get_random_users_ids( $count, $output );
+		}
+		return 'string' === $output ? '' : array();
+	}
+}
+
+if ( ! function_exists( 'bp_dd_import_users' ) ) {
+	/**
+	 * @since BuddyBoss 1.0.0
+	 * @since BuddyBoss [BBVERSION] Deprecated. Moved to buddyboss-tools plugin.
+	 * @deprecated [BBVERSION] bb_tools_dd_import_users (in buddyboss-tools)
+	 *
+	 * @return array Imported user IDs — empty when Tools inactive.
+	 */
+	function bp_dd_import_users() {
+		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'bb_tools_dd_import_users' );
+		if ( function_exists( 'bb_tools_dd_import_users' ) ) {
+			return bb_tools_dd_import_users();
+		}
+		return array();
+	}
+}
+
+if ( ! function_exists( 'bp_dd_import_users_messages' ) ) {
+	/**
+	 * @since BuddyBoss 1.0.0
+	 * @since BuddyBoss [BBVERSION] Deprecated. Moved to buddyboss-tools plugin.
+	 * @deprecated [BBVERSION] bb_tools_dd_import_users_messages (in buddyboss-tools)
+	 *
+	 * @return array Imported message IDs — empty when Tools inactive.
+	 */
+	function bp_dd_import_users_messages() {
+		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'bb_tools_dd_import_users_messages' );
+		if ( function_exists( 'bb_tools_dd_import_users_messages' ) ) {
+			return bb_tools_dd_import_users_messages();
+		}
+		return array();
+	}
+}
+
+if ( ! function_exists( 'bp_dd_import_groups' ) ) {
+	/**
+	 * @since BuddyBoss 1.0.0
+	 * @since BuddyBoss [BBVERSION] Deprecated. Moved to buddyboss-tools plugin.
+	 * @deprecated [BBVERSION] bb_tools_dd_import_groups (in buddyboss-tools)
+	 *
+	 * @param bool|array $users Users list (defaults to currently registered users).
+	 * @return array Group IDs — empty when Tools inactive.
+	 */
+	function bp_dd_import_groups( $users = false ) {
+		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'bb_tools_dd_import_groups' );
+		if ( function_exists( 'bb_tools_dd_import_groups' ) ) {
+			return bb_tools_dd_import_groups( $users );
+		}
+		return array();
+	}
+}
+
+if ( ! function_exists( 'bp_dd_import_groups_members' ) ) {
+	/**
+	 * @since BuddyBoss 1.0.0
+	 * @since BuddyBoss [BBVERSION] Deprecated. Moved to buddyboss-tools plugin.
+	 * @deprecated [BBVERSION] bb_tools_dd_import_groups_members (in buddyboss-tools)
+	 *
+	 * @param bool|array $groups Groups list (defaults to random imported groups).
+	 * @return array Group IDs joined — empty when Tools inactive.
+	 */
+	function bp_dd_import_groups_members( $groups = false ) {
+		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'bb_tools_dd_import_groups_members' );
+		if ( function_exists( 'bb_tools_dd_import_groups_members' ) ) {
+			return bb_tools_dd_import_groups_members( $groups );
+		}
+		return array();
+	}
+}
+
+if ( ! function_exists( 'bp_dd_import_forums' ) ) {
+	/**
+	 * @since BuddyBoss 1.0.0
+	 * @since BuddyBoss [BBVERSION] Deprecated. Moved to buddyboss-tools plugin.
+	 * @deprecated [BBVERSION] bb_tools_dd_import_forums (in buddyboss-tools)
+	 *
+	 * @param bool|array $users Users list (defaults to random imported users).
+	 * @return array Forum IDs — empty when Tools inactive.
+	 */
+	function bp_dd_import_forums( $users = false ) {
+		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'bb_tools_dd_import_forums' );
+		if ( function_exists( 'bb_tools_dd_import_forums' ) ) {
+			return bb_tools_dd_import_forums( $users );
+		}
+		return array();
+	}
+}
+
+if ( ! function_exists( 'bp_dd_import_forums_topics' ) ) {
+	/**
+	 * @since BuddyBoss 1.0.0
+	 * @since BuddyBoss [BBVERSION] Deprecated. Moved to buddyboss-tools plugin.
+	 * @deprecated [BBVERSION] bb_tools_dd_import_forums_topics (in buddyboss-tools)
+	 *
+	 * @param bool|array $forums Forum IDs list (defaults to random imported forums).
+	 * @return array Topic IDs — empty when Tools inactive.
+	 */
+	function bp_dd_import_forums_topics( $forums = false ) {
+		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'bb_tools_dd_import_forums_topics' );
+		if ( function_exists( 'bb_tools_dd_import_forums_topics' ) ) {
+			return bb_tools_dd_import_forums_topics( $forums );
+		}
+		return array();
+	}
+}
+
+if ( ! function_exists( 'bp_dd_import_forums_topics_replies' ) ) {
+	/**
+	 * @since BuddyBoss 1.0.0
+	 * @since BuddyBoss [BBVERSION] Deprecated. Moved to buddyboss-tools plugin.
+	 * @deprecated [BBVERSION] bb_tools_dd_import_forums_topics_replies (in buddyboss-tools)
+	 *
+	 * @param bool|array $topics Topic IDs list (defaults to random imported topics).
+	 * @return array Reply IDs — empty when Tools inactive.
+	 */
+	function bp_dd_import_forums_topics_replies( $topics = false ) {
+		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'bb_tools_dd_import_forums_topics_replies' );
+		if ( function_exists( 'bb_tools_dd_import_forums_topics_replies' ) ) {
+			return bb_tools_dd_import_forums_topics_replies( $topics );
+		}
+		return array();
+	}
+}
+
+if ( ! function_exists( 'bp_dd_import_forums_in_groups' ) ) {
+	/**
+	 * @since BuddyBoss 1.0.0
+	 * @since BuddyBoss [BBVERSION] Deprecated. Moved to buddyboss-tools plugin.
+	 * @deprecated [BBVERSION] bb_tools_dd_import_forums_in_groups (in buddyboss-tools)
+	 *
+	 * @return array Group IDs that received forums — empty when Tools inactive.
+	 */
+	function bp_dd_import_forums_in_groups() {
+		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'bb_tools_dd_import_forums_in_groups' );
+		if ( function_exists( 'bb_tools_dd_import_forums_in_groups' ) ) {
+			return bb_tools_dd_import_forums_in_groups();
+		}
+		return array();
+	}
+}
+
+/* ─── Returns int (fallback: 0) ─── */
+
+if ( ! function_exists( 'bp_dd_get_time' ) ) {
+	/**
+	 * @since BuddyBoss 1.0.0
+	 * @since BuddyBoss [BBVERSION] Deprecated. Moved to buddyboss-tools plugin.
+	 * @deprecated [BBVERSION] bb_tools_dd_get_time (in buddyboss-tools)
+	 *
+	 * @return int Current blog timestamp — 0 when Tools inactive.
+	 */
+	function bp_dd_get_time() {
+		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'bb_tools_dd_get_time' );
+		if ( function_exists( 'bb_tools_dd_get_time' ) ) {
+			return bb_tools_dd_get_time();
+		}
+		return 0;
+	}
+}
+
+if ( ! function_exists( 'bp_dd_import_users_profile' ) ) {
+	/**
+	 * @since BuddyBoss 1.0.0
+	 * @since BuddyBoss [BBVERSION] Deprecated. Moved to buddyboss-tools plugin.
+	 * @deprecated [BBVERSION] bb_tools_dd_import_users_profile (in buddyboss-tools)
+	 *
+	 * @return int Profile field entries created — 0 when Tools inactive.
+	 */
+	function bp_dd_import_users_profile() {
+		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'bb_tools_dd_import_users_profile' );
+		if ( function_exists( 'bb_tools_dd_import_users_profile' ) ) {
+			return bb_tools_dd_import_users_profile();
+		}
+		return 0;
+	}
+}
+
+if ( ! function_exists( 'bp_dd_import_users_activity' ) ) {
+	/**
+	 * @since BuddyBoss 1.0.0
+	 * @since BuddyBoss [BBVERSION] Deprecated. Moved to buddyboss-tools plugin.
+	 * @deprecated [BBVERSION] bb_tools_dd_import_users_activity (in buddyboss-tools)
+	 *
+	 * @return int Activity items created — 0 when Tools inactive.
+	 */
+	function bp_dd_import_users_activity() {
+		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'bb_tools_dd_import_users_activity' );
+		if ( function_exists( 'bb_tools_dd_import_users_activity' ) ) {
+			return bb_tools_dd_import_users_activity();
+		}
+		return 0;
+	}
+}
+
+if ( ! function_exists( 'bp_dd_import_users_friends' ) ) {
+	/**
+	 * @since BuddyBoss 1.0.0
+	 * @since BuddyBoss [BBVERSION] Deprecated. Moved to buddyboss-tools plugin.
+	 * @deprecated [BBVERSION] bb_tools_dd_import_users_friends (in buddyboss-tools)
+	 *
+	 * @return int Friendships created — 0 when Tools inactive.
+	 */
+	function bp_dd_import_users_friends() {
+		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'bb_tools_dd_import_users_friends' );
+		if ( function_exists( 'bb_tools_dd_import_users_friends' ) ) {
+			return bb_tools_dd_import_users_friends();
+		}
+		return 0;
+	}
+}
+
+if ( ! function_exists( 'bp_dd_import_groups_activity' ) ) {
+	/**
+	 * @since BuddyBoss 1.0.0
+	 * @since BuddyBoss [BBVERSION] Deprecated. Moved to buddyboss-tools plugin.
+	 * @deprecated [BBVERSION] bb_tools_dd_import_groups_activity (in buddyboss-tools)
+	 *
+	 * @return int Group activity items created — 0 when Tools inactive.
+	 */
+	function bp_dd_import_groups_activity() {
+		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'bb_tools_dd_import_groups_activity' );
+		if ( function_exists( 'bb_tools_dd_import_groups_activity' ) ) {
+			return bb_tools_dd_import_groups_activity();
+		}
+		return 0;
+	}
+}
+
+/* ─── Returns bool (fallback: false) ─── */
+
+if ( ! function_exists( 'bp_dd_is_imported' ) ) {
+	/**
+	 * @since BuddyBoss 1.0.0
+	 * @since BuddyBoss [BBVERSION] Deprecated. Moved to buddyboss-tools plugin.
+	 * @deprecated [BBVERSION] bb_tools_dd_is_imported (in buddyboss-tools)
+	 *
+	 * @param string $group  Possible values: users, groups, forums.
+	 * @param string $import What exactly was imported.
+	 * @return bool
+	 */
+	function bp_dd_is_imported( $group, $import ) {
+		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'bb_tools_dd_is_imported' );
+		if ( function_exists( 'bb_tools_dd_is_imported' ) ) {
+			return bb_tools_dd_is_imported( $group, $import );
+		}
+		return false;
+	}
+}
+
+if ( ! function_exists( 'bp_dd_update_import' ) ) {
+	/**
+	 * @since BuddyBoss 1.0.0
+	 * @since BuddyBoss [BBVERSION] Deprecated. Moved to buddyboss-tools plugin.
+	 * @deprecated [BBVERSION] bb_tools_dd_update_import (in buddyboss-tools)
+	 *
+	 * @param string $group  Possible values: users, groups, forums.
+	 * @param string $import What exactly was imported.
+	 * @return bool Result of `bp_update_option()`.
+	 */
+	function bp_dd_update_import( $group, $import ) {
+		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'bb_tools_dd_update_import' );
+		if ( function_exists( 'bb_tools_dd_update_import' ) ) {
+			return bb_tools_dd_update_import( $group, $import );
+		}
+		return false;
+	}
+}
+
+if ( ! function_exists( 'bp_dd_create_forums' ) ) {
+	/**
+	 * @since BuddyBoss 1.0.0
+	 * @since BuddyBoss [BBVERSION] Deprecated. Moved to buddyboss-tools plugin.
+	 * @deprecated [BBVERSION] bb_tools_dd_create_forums (in buddyboss-tools)
+	 *
+	 * @param array $forum Forum data.
+	 * @param array $users Optional creators list.
+	 * @return bool|int|\WP_Error Forum ID on success, false when Tools inactive.
+	 */
+	function bp_dd_create_forums( $forum, $users = array() ) {
+		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'bb_tools_dd_create_forums' );
+		if ( function_exists( 'bb_tools_dd_create_forums' ) ) {
+			return bb_tools_dd_create_forums( $forum, $users );
+		}
+		return false;
+	}
+}
+
+if ( ! function_exists( 'bp_dd_create_forums_topics' ) ) {
+	/**
+	 * @since BuddyBoss 1.0.0
+	 * @since BuddyBoss [BBVERSION] Deprecated. Moved to buddyboss-tools plugin.
+	 * @deprecated [BBVERSION] bb_tools_dd_create_forums_topics (in buddyboss-tools)
+	 *
+	 * @param array $topic_data Topic data.
+	 * @param int   $forum_id   Parent forum ID.
+	 * @param array $users      Optional creators list.
+	 * @return bool|int|\WP_Error Topic ID on success, false when Tools inactive.
+	 */
+	function bp_dd_create_forums_topics( $topic_data, $forum_id, $users = array() ) {
+		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'bb_tools_dd_create_forums_topics' );
+		if ( function_exists( 'bb_tools_dd_create_forums_topics' ) ) {
+			return bb_tools_dd_create_forums_topics( $topic_data, $forum_id, $users );
+		}
+		return false;
+	}
+}
+
+if ( ! function_exists( 'bp_dd_create_forums_topics_replies' ) ) {
+	/**
+	 * @since BuddyBoss 1.0.0
+	 * @since BuddyBoss [BBVERSION] Deprecated. Moved to buddyboss-tools plugin.
+	 * @deprecated [BBVERSION] bb_tools_dd_create_forums_topics_replies (in buddyboss-tools)
+	 *
+	 * @param string $reply_data Reply content.
+	 * @param int    $topic_id   Parent topic ID.
+	 * @param array  $users      Optional creators list.
+	 * @return bool|int|\WP_Error Reply ID on success, false when Tools inactive.
+	 */
+	function bp_dd_create_forums_topics_replies( $reply_data, $topic_id, $users = array() ) {
+		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'bb_tools_dd_create_forums_topics_replies' );
+		if ( function_exists( 'bb_tools_dd_create_forums_topics_replies' ) ) {
+			return bb_tools_dd_create_forums_topics_replies( $reply_data, $topic_id, $users );
+		}
+		return false;
+	}
+}
+
+/* ─── Returns string (fallback: '') ─── */
+
+if ( ! function_exists( 'bp_dd_get_random_date' ) ) {
+	/**
+	 * @since BuddyBoss 1.0.0
+	 * @since BuddyBoss [BBVERSION] Deprecated. Moved to buddyboss-tools plugin.
+	 * @deprecated [BBVERSION] bb_tools_dd_get_random_date (in buddyboss-tools)
+	 *
+	 * @param int $days_from
+	 * @param int $days_to
+	 * @return string Y-m-d H:i:s formatted date — empty string when Tools inactive.
+	 */
+	function bp_dd_get_random_date( $days_from = 30, $days_to = 0 ) {
+		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'bb_tools_dd_get_random_date' );
+		if ( function_exists( 'bb_tools_dd_get_random_date' ) ) {
+			return bb_tools_dd_get_random_date( $days_from, $days_to );
+		}
+		return '';
+	}
+}
+
+if ( ! function_exists( 'bp_dd_get_root_admin_page' ) ) {
+	/**
+	 * @since BuddyBoss 1.0.0
+	 * @since BuddyBoss [BBVERSION] Deprecated. Moved to buddyboss-tools plugin.
+	 * @deprecated [BBVERSION] bb_tools_dd_get_root_admin_page (in buddyboss-tools)
+	 *
+	 * @return string Settings 2.0 Sample Data URL — empty string when Tools inactive.
+	 */
+	function bp_dd_get_root_admin_page() {
+		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'bb_tools_dd_get_root_admin_page' );
+		if ( function_exists( 'bb_tools_dd_get_root_admin_page' ) ) {
+			return bb_tools_dd_get_root_admin_page();
+		}
+		return '';
+	}
+}
+
+/* ─── Filter-callback passthroughs (return the input arg unchanged when inactive) ─── */
+
+if ( ! function_exists( 'bp_dd_groups_join_group_date_fix' ) ) {
+	/**
+	 * @since BuddyBoss 1.0.0
+	 * @since BuddyBoss [BBVERSION] Deprecated. Moved to buddyboss-tools plugin.
+	 * @deprecated [BBVERSION] bb_tools_dd_groups_join_group_date_fix (in buddyboss-tools)
+	 *
+	 * @param array $args bp_activity_add() args.
+	 * @return array
+	 */
+	function bp_dd_groups_join_group_date_fix( $args ) {
+		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'bb_tools_dd_groups_join_group_date_fix' );
+		if ( function_exists( 'bb_tools_dd_groups_join_group_date_fix' ) ) {
+			return bb_tools_dd_groups_join_group_date_fix( $args );
+		}
+		return $args;
+	}
+}
+
+if ( ! function_exists( 'bp_dd_friends_add_friend_date_fix' ) ) {
+	/**
+	 * @since BuddyBoss 1.0.0
+	 * @since BuddyBoss [BBVERSION] Deprecated. Moved to buddyboss-tools plugin.
+	 * @deprecated [BBVERSION] bb_tools_dd_friends_add_friend_date_fix (in buddyboss-tools)
+	 *
+	 * @param string $current_time Default BuddyBoss current timestamp.
+	 * @return string
+	 */
+	function bp_dd_friends_add_friend_date_fix( $current_time ) {
+		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'bb_tools_dd_friends_add_friend_date_fix' );
+		if ( function_exists( 'bb_tools_dd_friends_add_friend_date_fix' ) ) {
+			return bb_tools_dd_friends_add_friend_date_fix( $current_time );
+		}
+		return $current_time;
+	}
+}
+
+// ─────────────────────────────────────────────────────────────────────────
+// Profile Types (bp_member_type_import_*, bp_import_profile_types_*,
+// bp_register_member_type_import_submenu_page,
+// bp_core_get_tools_import_profile_settings_admin_tabs) — moved to the
+// buddyboss-tools plugin's `migration/profile-types/` folder in BuddyBoss
+// [BBVERSION]. The legacy `?page=bp-member-type-import` admin page is
+// retired; 301 redirect lives in bp-core-admin-actions.php.
+//
+// Removal scheduled BBVERSION + 2 per project deprecation convention.
+// See PHASE-3-INVENTORY.md (gitignored) for the legacy code audit.
+// ─────────────────────────────────────────────────────────────────────────
+
+if ( ! function_exists( 'bp_register_member_type_import_submenu_page' ) ) {
+	/**
+	 * Deprecated stub for the hidden Profile Types submenu wrapper.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 * @since BuddyBoss [BBVERSION] Deprecated. Hidden submenu wrapper retired alongside the Profile Types page.
+	 * @deprecated BuddyBoss [BBVERSION]
+	 *
+	 * @return void
+	 */
+	function bp_register_member_type_import_submenu_page() {
+		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'Migration Tools panel in buddyboss-tools' );
+	}
+}
+
+if ( ! function_exists( 'bp_member_type_import_submenu_page' ) ) {
+	/**
+	 * Deprecated stub for the Profile Types admin page renderer + POST handler.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 * @since BuddyBoss [BBVERSION] Deprecated. Moved to buddyboss-tools plugin (Migration Tools panel).
+	 * @deprecated BuddyBoss [BBVERSION] Use the Migration Tools panel at ?page=bb-settings&tab=tools&panel=migration_tools.
+	 *
+	 * @return void
+	 */
+	function bp_member_type_import_submenu_page() {
+		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'Migration Tools panel in buddyboss-tools' );
+		// No delegation target — the legacy function rendered a full admin page
+		// and ran the import body inline. The new path is the React panel + AJAX.
+	}
+}
+
+if ( ! function_exists( 'bp_import_profile_types_admin_menu' ) ) {
+	/**
+	 * Deprecated stub for the Profile Types visible-submenu registrar.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 * @since BuddyBoss [BBVERSION] Deprecated. The submenu was retired in favor of the Settings 2.0 Migration Tools panel.
+	 * @deprecated BuddyBoss [BBVERSION] The Forum Import submenu was preserved via bb_register_legacy_bbp_converter_submenu() — Retired in Phase 4.
+	 *
+	 * @return void
+	 */
+	function bp_import_profile_types_admin_menu() {
+		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'Migration Tools panel in buddyboss-tools' );
+	}
+}
+
+if ( ! function_exists( 'bp_core_get_tools_import_profile_settings_admin_tabs' ) ) {
+	/**
+	 * Deprecated stub for the Profile Types Tools-tab filter callback.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 * @since BuddyBoss [BBVERSION] Deprecated. The Tools-tab entry was removed in favor of the Settings 2.0 Migration Tools panel.
+	 * @deprecated BuddyBoss [BBVERSION]
+	 *
+	 * @param array $tabs Existing tab list.
+	 * @return array The tab list unchanged (the legacy entry is no longer appended).
+	 */
+	function bp_core_get_tools_import_profile_settings_admin_tabs( $tabs ) {
+		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'Migration Tools panel in buddyboss-tools' );
+		return is_array( $tabs ) ? $tabs : array();
+	}
+}
+
+/* ============================================================================
+ * Phase 4 - Forum Import (PROD-9940 / PROD-9936)
+ * BBP_Converter, BBP_Converter_Base, 22 vendor classes, and bbp_new_converter()
+ * moved into the buddyboss-tools plugin.
+ *
+ * BC strategy:
+ *   - Tools active: spl_autoload registers class_alias on first lookup so
+ *     third-party `extends BBP_Converter` etc. work at parse time.
+ *   - Tools inactive: stub classes defined inline with magic-method dispatch
+ *     that emits _deprecated_function and otherwise no-ops.
+ *
+ * Known BC limitation when Tools is inactive: PHP's parent::method() uses
+ * compile-time static binding and bypasses __call() magic dispatch. Third-party
+ * `class MyImporter extends phpBB` whose methods call `parent::convert_topics()`
+ * will fatal because the stub `phpBB` has no real `convert_topics()` method.
+ * The _deprecated_function replacement message below surfaces this limitation
+ * so operators get an actionable hint. v1 accepts the hole; richer stubs are
+ * a follow-up if real-world fatal reports emerge.
+ *
+ * Removal schedule: BuddyBoss [BBVERSION + 2].
+ * ============================================================================ */
+
+if ( ! function_exists( 'bb_deprecated_forum_import_class_map' ) ) {
+	/**
+	 * Map legacy to moved class names for forum-import deprecation.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @return array Map of legacy => moved class name.
+	 */
+	function bb_deprecated_forum_import_class_map() {
+		return array(
+			'BBP_Converter'      => 'BB_Tools_BBP_Converter',
+			'BBP_Converter_Base' => 'BB_Tools_BBP_Converter_Base',
+			// 22 vendor classes - names preserved across the move; alias is from the
+			// LEGACY scope (where the alias is registered) to the same name in TOOLS'
+			// global scope (where the moved class actually lives).
+			'AEF'          => 'AEF',
+			'bbPress1'     => 'bbPress1',
+			'Drupal7'      => 'Drupal7',
+			'FluxBB'       => 'FluxBB',
+			'Invision'     => 'Invision',
+			'Kunena1'      => 'Kunena1',
+			'Kunena2'      => 'Kunena2',
+			'Kunena3'      => 'Kunena3',
+			'Mingle'       => 'Mingle',
+			'MyBB'         => 'MyBB',
+			'PHPFox3'      => 'PHPFox3',
+			'PHPWind'      => 'PHPWind',
+			'Phorum'       => 'Phorum',
+			'PunBB'        => 'PunBB',
+			'SMF'          => 'SMF',
+			'SimplePress5' => 'SimplePress5',
+			'Vanilla'      => 'Vanilla',
+			'XMB'          => 'XMB',
+			'XenForo'      => 'XenForo',
+			'phpBB'        => 'phpBB',
+			'vBulletin'    => 'vBulletin',
+			'vBulletin3'   => 'vBulletin3',
+		);
+	}
+}
+
+if ( ! function_exists( 'bb_deprecated_forum_import_autoload' ) ) {
+	/**
+	 * Autoload-driven BC for moved forum-import classes.
+	 *
+	 * Fires before WP's autoloader runs for an unknown class name. If the name
+	 * matches a moved class:
+	 *   - Tools active (target class exists): alias legacy to target.
+	 *   - Tools inactive: define a stub with magic-method dispatch that emits a
+	 *     _deprecated_function notice and no-ops on method calls.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $class_name Class name PHP is attempting to autoload.
+	 * @return void
+	 */
+	function bb_deprecated_forum_import_autoload( $class_name ) {
+		$map = bb_deprecated_forum_import_class_map();
+		if ( ! isset( $map[ $class_name ] ) ) {
+			return;
+		}
+
+		$target = $map[ $class_name ];
+
+		// Same-name alias (vendor classes): Tools' class is already loaded with
+		// the same name in global scope, so we'd be aliasing to ourselves.
+		// Only alias when the legacy name differs from the target.
+		if ( $class_name !== $target ) {
+			if ( class_exists( $target, false ) ) {
+				class_alias( $target, $class_name );
+				return;
+			}
+		} elseif ( class_exists( $target, false ) ) {
+			// Vendor class already loaded by Tools - nothing to do.
+			return;
+		} elseif ( defined( 'BB_TOOLS_PLUGIN_DIR' ) ) {
+			// Same-name vendor case (e.g. SMF -> SMF) and Tools IS active,
+			// but its bb_tools_bbp_new_converter() lazy loader hasn't yet
+			// required the file. Third-party code that triggered this autoload
+			// (e.g. `class MySMFExt extends SMF` or `new SMF()` from a custom
+			// converter extension) would otherwise get the eval-stub below,
+			// which then blocks Tools' own require_once with
+			// "Cannot declare class SMF, because the name is already in use".
+			// Load Tools' real converter file so the proper class wins; Tools'
+			// subsequent require_once on the same path is a no-op.
+			$vendor_file = BB_TOOLS_PLUGIN_DIR . 'migration/buddyboss-forums/converters/' . $class_name . '.php';
+			if ( is_readable( $vendor_file ) ) {
+				require_once $vendor_file;
+				return;
+			}
+		}
+
+		// Tools is inactive - define the stub inline using eval. The stub:
+		//   - emits _deprecated_function on construction
+		//   - dispatches all $this->method() calls to __call / __callStatic returning null
+		//   - declares no parent (the legacy parent class is itself stubbed)
+		$replacement = 'BB_Tools_BBP_Converter (install buddyboss-tools - third-party importers calling parent::* on these classes require Tools active)';
+		$code        = sprintf(
+			'class %1$s {
+				public function __construct() {
+					_deprecated_function( %2$s, "BuddyBoss [BBVERSION]", %3$s );
+				}
+				public function __call( $name, $args ) { return null; }
+				public static function __callStatic( $name, $args ) { return null; }
+			}',
+			$class_name,
+			var_export( $class_name, true ),
+			var_export( $replacement, true )
+		);
+		// phpcs:ignore Squiz.PHP.Eval.Discouraged -- Required: legacy class names must be defined dynamically so third-party `extends` declarations resolve without fataling. Input is constant (whitelisted via bb_deprecated_forum_import_class_map()).
+		eval( $code ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.eval_eval -- Same justification as above; whitelisted input only.
+	}
+
+	spl_autoload_register( 'bb_deprecated_forum_import_autoload' );
+}
+
+if ( ! function_exists( 'bbp_new_converter' ) ) {
+	/**
+	 * Deprecated factory wrapper for the moved bbp_new_converter().
+	 *
+	 * When Platform's own src/bp-forums/admin/converter.php is still present (Task 4.5
+	 * not yet run), that file defines bbp_new_converter() first and this wrapper is
+	 * silently skipped via the function_exists() guard - no redeclaration fatal occurs.
+	 * After Task 4.5 removes converter.php, this wrapper becomes the canonical stub.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 * @deprecated BuddyBoss [BBVERSION] Moved to buddyboss-tools as bb_tools_bbp_new_converter().
+	 *
+	 * @param string $platform Vendor class name (e.g. "phpBB").
+	 * @return object|null Vendor converter instance when Tools is active; null otherwise.
+	 */
+	function bbp_new_converter( $platform = '' ) {
+		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'bb_tools_bbp_new_converter' );
+		if ( function_exists( 'bb_tools_bbp_new_converter' ) ) {
+			return bb_tools_bbp_new_converter( $platform );
+		}
+		return null;
+	}
+}

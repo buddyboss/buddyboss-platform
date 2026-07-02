@@ -42,6 +42,17 @@ function bb_admin_settings_init() {
 	bb_feature_registry();
 	bb_feature_loader();
 
+	// Support Access (BB_Support_Access singleton). Loaded unconditionally
+	// (outside the admin-only block below) because its token-login handler runs
+	// on regular front-end `init` requests — when the support team clicks the
+	// login URL they are not yet authenticated and not in wp-admin. The class
+	// self-boots via BB_Support_Access::instance() at the bottom of its file,
+	// registering the front-end `init` login, the expiry cron, and the admin
+	// AJAX handlers.
+	if ( file_exists( buddypress()->plugin_dir . 'bp-core/admin/classes/class-bb-support-access.php' ) ) {
+		require_once buddypress()->plugin_dir . 'bp-core/admin/classes/class-bb-support-access.php';
+	}
+
 	// Admin/AJAX-only: AJAX handlers, meta field registry, settings page, feature settings
 	// (panels, sections, fields), and icon registry. Skip on frontend for performance —
 	// frontend only needs the Feature Registry + Loader for conditional component loading.
@@ -210,6 +221,10 @@ function bb_admin_settings_init() {
 
 		if ( file_exists( buddypress()->plugin_dir . 'bp-core/admin/bb-admin-settings-advanced.php' ) ) {
 			require_once buddypress()->plugin_dir . 'bp-core/admin/bb-admin-settings-advanced.php';
+		}
+
+		if ( file_exists( buddypress()->plugin_dir . 'bp-core/admin/bb-admin-settings-tools.php' ) ) {
+			require_once buddypress()->plugin_dir . 'bp-core/admin/bb-admin-settings-tools.php';
 		}
 
 		// Icon registry.

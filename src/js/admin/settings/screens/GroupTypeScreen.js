@@ -18,6 +18,7 @@ import { GroupTypeModal } from '../components/modals/GroupTypeModal';
 import { getSectionTitle, getFieldLabel, getFieldDescription, getFieldHelpText } from '../utils/feature';
 import { sanitizeHtml, safeUrl } from '../utils/sanitize';
 import { ConfirmToggleModal } from '../components/modals/ConfirmToggleModal';
+import { ListPagination } from '../components/common/ListPagination';
 
 /**
  * Group Types Screen Component
@@ -69,6 +70,31 @@ export function GroupTypeScreen( { onNavigate, helpUrl, onHelpClick, feature, ac
 	var memberTypes = memberTypesState[ 0 ];
 	var setMemberTypes = memberTypesState[ 1 ];
 
+	// Pagination state — see ProfileTypeScreen for the design notes; same
+	// shape, same shared `<ListPagination />` component.
+	var totalState = useState( 0 );
+	var total = totalState[ 0 ];
+	var setTotal = totalState[ 1 ];
+
+	var currentPageState = useState( 1 );
+	var currentPage = currentPageState[ 0 ];
+	var setCurrentPage = currentPageState[ 1 ];
+
+	var perPageState = useState( 25 );
+	var perPage = perPageState[ 0 ];
+
+	// First-load gate — `member_types` is only sent when `include_meta=1`.
+	// Subsequent paginated requests skip it.
+	var hasMetaRef = useRef( false );
+
+	// Refetch trigger — bumped to re-fire the load effect (and pick up its
+	// fresh AbortController) after operations like save/delete that don't
+	// change `currentPage`. Routes those refetches through the same
+	// abortable cleanup path as page-change re-fetches.
+	var refetchTickState = useState( 0 );
+	var refetchTick = refetchTickState[ 0 ];
+	var setRefetchTick = refetchTickState[ 1 ];
+
 	var toastState = useState( null );
 	var toast = toastState[ 0 ];
 	var setToast = toastState[ 1 ];
@@ -77,6 +103,9 @@ export function GroupTypeScreen( { onNavigate, helpUrl, onHelpClick, feature, ac
 	var deleteConfirmState = useState( null );
 	var deleteConfirmId = deleteConfirmState[ 0 ];
 	var setDeleteConfirmId = deleteConfirmState[ 1 ];
+
+	// Derived: total pages for the pagination control.
+	var totalPages = perPage > 0 ? Math.ceil( total / perPage ) : 0;
 
 	// Load platform settings.
 	useEffect( function () {
@@ -101,8 +130,14 @@ export function GroupTypeScreen( { onNavigate, helpUrl, onHelpClick, feature, ac
 		return function () { controller.abort(); };
 	}, [] );
 
-	// Load group types.
+	// Load group types — paginated. The first call fetches the heavy meta
+	// payload (member_types); subsequent fetches skip it via `include_meta=0`.
 	var groupTypesAbortRef = useRef( null );
+
+	// AbortController ref for delete operations, aborted on unmount so a
+	// delete in flight during navigation doesn't setState on an unmounted
+	// component.
+	var actionAbortRef = useRef( null );
 
 	var loadGroupTypes = useCallback( function () {
 		if ( groupTypesAbortRef.current ) {
@@ -111,11 +146,20 @@ export function GroupTypeScreen( { onNavigate, helpUrl, onHelpClick, feature, ac
 		groupTypesAbortRef.current = new AbortController();
 
 		setIsLoading( true );
-		getGroupTypes( { signal: groupTypesAbortRef.current.signal } )
+		var params = {
+			page:         currentPage,
+			per_page:     perPage,
+			include_meta: hasMetaRef.current ? 0 : 1,
+		};
+		getGroupTypes( params, { signal: groupTypesAbortRef.current.signal } )
 			.then( function ( response ) {
 				if ( response.success && response.data ) {
 					setGroupTypes( response.data.group_types || [] );
-					setMemberTypes( response.data.member_types || [] );
+					setTotal( response.data.total || 0 );
+					if ( response.data.member_types ) {
+						setMemberTypes( response.data.member_types );
+					}
+					hasMetaRef.current = true;
 				}
 				setIsLoading( false );
 			} )
@@ -125,7 +169,7 @@ export function GroupTypeScreen( { onNavigate, helpUrl, onHelpClick, feature, ac
 					setToast( { status: 'error', message: __( 'Failed to load group types.', 'buddyboss' ) } );
 				}
 			} );
-	}, [] );
+	}, [ currentPage, perPage ] );
 
 	useEffect( function () {
 		loadGroupTypes();
@@ -134,8 +178,14 @@ export function GroupTypeScreen( { onNavigate, helpUrl, onHelpClick, feature, ac
 			if ( groupTypesAbortRef.current ) {
 				groupTypesAbortRef.current.abort();
 			}
+			if ( actionAbortRef.current ) {
+				actionAbortRef.current.abort();
+			}
 		};
-	}, [ loadGroupTypes ] );
+		// `refetchTick` intentionally in deps — handlers bump it to re-run
+		// this effect (which calls loadGroupTypes() and which itself aborts
+		// any prior in-flight request via groupTypesAbortRef).
+	}, [ loadGroupTypes, refetchTick ] );
 
 	// Close menu on outside click or Escape key.
 	useEffect( function () {
@@ -187,7 +237,7 @@ export function GroupTypeScreen( { onNavigate, helpUrl, onHelpClick, feature, ac
 					// Refetch types when re-enabling — the list may be stale/empty
 					// from when the feature was disabled and the component remounted.
 					if ( isGroupTypeSetting && newValue ) {
-						loadGroupTypes();
+						setRefetchTick( function ( t ) { return t + 1; } );
 					}
 				} else {
 					// Rollback only the setting that failed.
@@ -208,7 +258,7 @@ export function GroupTypeScreen( { onNavigate, helpUrl, onHelpClick, feature, ac
 				}
 				setToast( { status: 'error', message: __( 'Failed to save setting.', 'buddyboss' ) } );
 			} );
-	}, [ enableGroupTypes, autoMembershipApproval, loadGroupTypes ] );
+	}, [ enableGroupTypes, autoMembershipApproval ] );
 
 	// Handle delete — open confirmation modal.
 	var handleDelete = useCallback( function ( typeId ) {
@@ -221,23 +271,37 @@ export function GroupTypeScreen( { onNavigate, helpUrl, onHelpClick, feature, ac
 		var typeId = deleteConfirmId;
 		setDeleteConfirmId( null );
 
-		deleteGroupType( typeId )
+		if ( actionAbortRef.current ) {
+			actionAbortRef.current.abort();
+		}
+		actionAbortRef.current = new AbortController();
+
+		deleteGroupType( typeId, { signal: actionAbortRef.current.signal } )
 			.then( function ( response ) {
 				if ( response.success ) {
-					setGroupTypes( function ( prev ) {
-						return prev.filter( function ( t ) {
-							return t.id !== typeId;
-						} );
-					} );
+					// With pagination, a local filter would leave the page
+					// partial. Refetch the current page; drop back one page
+					// if we just emptied a non-first page. Routed through
+					// the load effect via refetchTick so the AbortController
+					// cleanup path stays consistent (no orphan promises).
+					var isLastItemOnPage = groupTypes.length === 1 && currentPage > 1;
+					if ( isLastItemOnPage ) {
+						setCurrentPage( currentPage - 1 );
+					} else {
+						setRefetchTick( function ( t ) { return t + 1; } );
+					}
 					setToast( { status: 'success', message: __( 'Group type deleted.', 'buddyboss' ) } );
 				} else {
 					setToast( { status: 'error', message: ( response.data && response.data.message ) || __( 'Failed to delete group type.', 'buddyboss' ) } );
 				}
 			} )
-			.catch( function () {
+			.catch( function ( err ) {
+				if ( err && 'AbortError' === err.name ) {
+					return;
+				}
 				setToast( { status: 'error', message: __( 'Failed to delete group type.', 'buddyboss' ) } );
 			} );
-	}, [ deleteConfirmId ] );
+	}, [ deleteConfirmId, groupTypes, currentPage ] );
 
 	// Handle edit.
 	var handleEdit = useCallback( function ( groupType ) {
@@ -256,8 +320,8 @@ export function GroupTypeScreen( { onNavigate, helpUrl, onHelpClick, feature, ac
 	var handleModalSave = useCallback( function () {
 		setIsModalOpen( false );
 		setEditingGroupType( null );
-		loadGroupTypes();
-	}, [ loadGroupTypes ] );
+		setRefetchTick( function ( t ) { return t + 1; } );
+	}, [] );
 
 	// Handle modal close.
 	var handleModalClose = useCallback( function () {
@@ -444,6 +508,14 @@ export function GroupTypeScreen( { onNavigate, helpUrl, onHelpClick, feature, ac
 							<p>{ __( 'No group types found. Click "Add New Group Type" to create one.', 'buddyboss' ) }</p>
 						</div>
 					) }
+
+					<ListPagination
+						currentPage={ currentPage }
+						totalPages={ totalPages }
+						total={ total }
+						onPageChange={ function ( page ) { setCurrentPage( page ); } }
+						className="bb-admin-group-types"
+					/>
 				</div>
 			</div> }
 

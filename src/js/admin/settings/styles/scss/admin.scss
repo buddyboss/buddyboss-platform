@@ -123,3 +123,6 @@
 // Knowledge Base modal styles now ship from the shared common stylesheet
 // (loaded via the bb-admin-common-style handle), so Settings no longer imports
 // its own copy — single source for the KB modal CSS across all admin apps.
+
+/* Tools panel (Repair Platform + Activation Required CTA) */
+@import 'screens/features/tools';

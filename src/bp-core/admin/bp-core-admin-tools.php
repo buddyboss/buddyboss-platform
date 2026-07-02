@@ -9,321 +9,6 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-/**
- * Render the BuddyBoss Tools page.
- *
- * @since BuddyPress 2.0.0
- */
-function bp_core_admin_tools() {
-	if ( ! defined( 'BP_DEFAULT_DATA_DIR' ) ) {
-		define( 'BP_DEFAULT_DATA_DIR', buddypress()->plugin_dir . 'bp-core/' );
-	}
-
-	// Define overrides - only applicable to those running trunk
-	if ( ! defined( 'BP_DEFAULT_DATA_URL' ) ) {
-		define( 'BP_DEFAULT_DATA_URL', buddypress()->plugin_url . 'bp-core/' );
-	}
-
-	require_once BP_DEFAULT_DATA_DIR . 'bp-core-tools-default-data.php';
-
-	bp_admin_tools_default_data_save();
-
-	$users_data = require_once BP_DEFAULT_DATA_DIR . 'data/users.php';
-	?>
-	<div class="wrap">
-		<h2 class="nav-tab-wrapper"><?php bp_core_admin_tabs( __( 'Tools', 'buddyboss' ) ); ?></h2>
-		<div class="nav-settings-subsubsub">
-			<ul class="subsubsub">
-				<?php bp_core_tools_settings_admin_tabs(); ?>
-			</ul>
-		</div>
-	</div>
-	<div class="wrap">
-		<div class="bp-admin-card section-default_data">
-
-			<h2>
-				<?php
-				$meta_icon = bb_admin_icons( 'default_data' );
-				if ( ! empty( $meta_icon ) ) {
-					?>
-					<i class="<?php echo esc_attr( $meta_icon ); ?>"></i>
-					<?php
-				}
-				esc_html_e( 'Default Data', 'buddyboss' ); ?>
-			</h2>
-
-			<form action="" method="post" id="bp-admin-form" class="bp-admin-form">
-				<fieldset>
-					<legend><?php esc_html_e( 'What data do you want to import?', 'buddyboss' ); ?></legend>
-					<ul class="items">
-						<li class="users main">
-							<label for="import-users">
-								<input type="checkbox" class="main-header" name="bp[import-users]" id="import-users"
-									   value="1" <?php bp_dd_imported_disabled( 'users', 'users' ); ?>/>
-								<strong><?php _e( 'Members', 'buddyboss' ); ?></strong>
-							</label>
-							<ul>
-
-								<?php if ( bp_is_active( 'xprofile' ) ) : ?>
-									<li>
-										<label for="import-profile">
-											<input type="checkbox" class="checkbox" name="bp[import-profile]"
-												   id="import-profile"
-												   value="1" <?php bp_dd_imported_disabled( 'users', 'xprofile' ); ?>/>
-											<?php _e( 'Profile fields (with data)', 'buddyboss' ); ?>
-										</label>
-									</li>
-								<?php endif; ?>
-
-								<?php if ( bp_is_active( 'friends' ) ) : ?>
-									<li>
-										<label for="import-friends">
-											<input type="checkbox" class="checkbox" name="bp[import-friends]"
-												   id="import-friends"
-												   value="1" <?php bp_dd_imported_disabled( 'users', 'friends' ); ?>/>
-											<?php _e( 'Connections', 'buddyboss' ); ?>
-										</label>
-									</li>
-								<?php endif; ?>
-
-								<?php if ( bp_is_active( 'activity' ) ) : ?>
-									<li>
-										<label for="import-activity">
-											<input type="checkbox" class="checkbox" name="bp[import-activity]"
-												   id="import-activity"
-												   value="1" <?php bp_dd_imported_disabled( 'users', 'activity' ); ?>/>
-											<?php _e( 'Activity posts', 'buddyboss' ); ?>
-										</label>
-									</li>
-								<?php endif; ?>
-
-								<?php if ( bp_is_active( 'messages' ) ) : ?>
-									<li>
-										<label for="import-messages">
-											<input type="checkbox" class="checkbox" name="bp[import-messages]"
-												   id="import-messages"
-												   value="1" <?php bp_dd_imported_disabled( 'users', 'messages' ); ?>/>
-											<?php _e( 'Private messages', 'buddyboss' ); ?>
-										</label>
-									</li>
-								<?php endif; ?>
-
-							</ul>
-						</li>
-
-						<?php if ( bp_is_active( 'groups' ) ) : ?>
-							<li class="groups main">
-								<label for="import-groups">
-									<input type="checkbox" class="main-header" name="bp[import-groups]"
-										   id="import-groups"
-										   value="1" <?php bp_dd_imported_disabled( 'groups', 'groups' ); ?>/>
-									<strong><?php _e( 'Groups', 'buddyboss' ); ?></strong>
-								</label>
-								<ul>
-
-									<li>
-										<label for="import-g-members">
-											<input type="checkbox" class="checkbox" name="bp[import-g-members]"
-												   id="import-g-members"
-												   value="1" <?php bp_dd_imported_disabled( 'groups', 'members' ); ?>/>
-											<?php _e( 'Members', 'buddyboss' ); ?>
-										</label>
-									</li>
-
-									<?php
-									if ( bp_is_active( 'activity' ) ) :
-										?>
-										<li>
-											<label for="import-g-activity">
-
-												<input type="checkbox" class="checkbox" name="bp[import-g-activity]"
-													   id="import-g-activity"
-													   value="1" <?php bp_dd_imported_disabled( 'groups', 'activity' ); ?>/>
-												<?php _e( 'Activity posts', 'buddyboss' ); ?>
-											</label>
-										</li>
-									<?php endif; ?>
-
-									<?php
-									if ( bp_is_active( 'forums' ) ) {
-										?>
-										<li>
-											<label for="import-g-forums">
-
-												<input type="checkbox" class="checkbox" name="bp[import-g-forums]"
-													   id="import-g-forums"
-													   value="1" <?php bp_dd_imported_disabled( 'groups', 'forums' ); ?>/>
-												<?php _e( 'Forums in Groups (with data)', 'buddyboss' ); ?>
-											</label>
-										</li>
-										<?php
-									}
-									?>
-
-								</ul>
-							</li>
-						<?php endif; ?>
-
-						<?php
-						if ( bp_is_active( 'forums' ) ) {
-							?>
-							<li class="forums main">
-								<label for="import-forums">
-									<input type="checkbox" class="main-header" name="bp[import-forums]"
-										   id="import-forums"
-										   value="1" <?php bp_dd_imported_disabled( 'forums', 'forums' ); ?>/>
-									<strong><?php _e( 'Forums', 'buddyboss' ); ?></strong>
-								</label>
-								<ul>
-									<li>
-										<label for="import-f-topics">
-
-											<input type="checkbox" class="checkbox" name="bp[import-f-topics]"
-												   id="import-f-topics"
-												   value="1" <?php bp_dd_imported_disabled( 'forums', 'topics' ); ?>/>
-											<?php _e( 'Discussions', 'buddyboss' ); ?>
-										</label>
-									</li>
-									<li>
-										<label for="import-f-replies">
-
-											<input type="checkbox" class="checkbox" name="bp[import-f-replies]"
-												   id="import-f-replies"
-												   value="1" <?php bp_dd_imported_disabled( 'forums', 'replies' ); ?>/>
-											<?php _e( 'Replies', 'buddyboss' ); ?>
-										</label>
-									</li>
-								</ul>
-							</li>
-							<?php
-						}
-						?>
-
-					</ul>
-					<!-- .items -->
-
-					<p class="submit">
-						<input class="button-primary" type="submit" name="bp-admin-submit" id="bp-admin-submit"
-							   value="<?php esc_attr_e( 'Import Selected Data', 'buddyboss' ); ?>"/>
-						<input class="button" type="submit" name="bp-admin-clear" id="bp-admin-clear"
-							   value="<?php esc_attr_e( 'Clear Default Data', 'buddyboss' ); ?>"/>
-					</p>
-				</fieldset>
-
-				<?php wp_nonce_field( 'bp-admin-tools-default-data' ); ?>
-			</form>
-
-			<p class="description"><?php esc_html_e( 'Some of these tools utilize substantial database resources. Avoid running more than 1 import job at a time.', 'buddyboss' ); ?></p>
-
-		</div>
-	</div>
-	<?php
-}
-
-/**
- * Render the BuddyBoss Repair Community page.
- *
- * @since BuddyBoss 1.0.0
- */
-function bp_repair_community_submenu_page() {
-	?>
-	<div class="wrap">
-		<h2 class="nav-tab-wrapper"><?php bp_core_admin_tabs( __( 'Tools', 'buddyboss' ) ); ?></h2>
-		<div class="nav-settings-subsubsub">
-			<ul class="subsubsub">
-				<?php bp_core_tools_settings_admin_tabs(); ?>
-			</ul>
-		</div>
-	</div>
-	<div class="wrap">
-		<div class="bp-admin-card section-repair_community">
-
-			<h2>
-				<?php
-				$meta_icon = bb_admin_icons( 'repair_community' );
-				if ( ! empty( $meta_icon ) ) {
-					?>
-					<i class="<?php echo esc_attr( $meta_icon ); ?>"></i>
-					<?php
-				}
-				esc_html_e( 'Repair Community', 'buddyboss' );
-				?>
-			</h2>
-
-			<p><?php esc_html_e( 'BuddyBoss keeps track of various relationships between members, groups, and activity items. Occasionally these relationships become out of sync, most often after an import, update, or migration. Use the tools below to manually recalculate these relationships.', 'buddyboss' ); ?></p>
-
-			<form class="settings" method="post" action="">
-				<fieldset>
-					<legend><?php esc_html_e( 'Data to Repair:', 'buddyboss' ); ?></legend>
-
-					<div class="checkbox">
-						<?php
-						foreach ( bp_admin_repair_list() as $item ) :
-							$disabled = (bool) ( isset( $item[3] ) ? $item[3] : false );
-							?>
-							<label for="<?php echo esc_attr( str_replace( '_', '-', $item[0] ) ); ?>" class="<?php echo esc_attr( 'label-' . $item[0] ) . ( true === $disabled ? esc_attr( ' disabled' ) : '' ); ?>">
-								<input
-										type="checkbox"
-										class="checkbox"
-										name="<?php echo esc_attr( $item[0] ) . '" id="' . esc_attr( str_replace( '_', '-', $item[0] ) ); ?>"
-										value="<?php echo esc_attr( $item[0] ); ?>"
-									<?php
-									if ( isset( $_GET['tool'] ) && $_GET['tool'] == esc_attr( str_replace( '_', '-', $item[0] ) ) ) {
-										echo 'checked'; }
-									disabled( $disabled );
-									?>
-								/> <?php echo esc_html( $item[1] ); ?></label>
-						<?php endforeach; ?>
-					</div>
-
-					<p class="submit">
-						<?php wp_nonce_field( 'bp-do-counts' ); ?>
-						<a class="button-primary" id="bp-tools-submit"><?php esc_attr_e( 'Repair Items', 'buddyboss' ); ?></a>
-					</p>
-
-				</fieldset>
-			</form>
-		</div>
-	</div>
-
-	<?php
-}
-
-/**
- * Handle the processing and feedback of the admin tools page.
- *
- * @since BuddyPress 2.0.0
- */
-function bp_admin_repair_handler() {
-	if ( ! bp_is_post_request() || empty( $_POST['bp-tools-submit'] ) ) {
-		return;
-	}
-
-	check_admin_referer( 'bp-do-counts' );
-
-	// Bail if user cannot moderate.
-	$capability = bp_core_do_network_admin() ? 'manage_network_options' : 'manage_options';
-	if ( ! bp_current_user_can( $capability ) ) {
-		return;
-	}
-
-	wp_cache_flush();
-	$messages = array();
-
-	foreach ( (array) bp_admin_repair_list() as $item ) {
-		if ( isset( $item[2] ) && isset( $_POST[ $item[0] ] ) && 1 === absint( $_POST[ $item[0] ] ) && is_callable( $item[2] ) ) {
-			$messages[] = call_user_func( $item[2] );
-		}
-	}
-
-	if ( count( $messages ) ) {
-		foreach ( $messages as $message ) {
-			bp_admin_tools_feedback( $message[1] );
-		}
-	}
-}
-
-add_action( bp_core_admin_hook(), 'bp_admin_repair_handler' );
 
 /**
  * Get the array of the repair list.
@@ -1027,18 +712,44 @@ function bp_admin_install_emails() {
 		restore_current_blog();
 	}
 
+	$records_text = sprintf(
+		/* translators: %1$s for counts missing emails. */
+		__( '%1$s missing emails have been installed.', 'buddyboss' ),
+		$installed_email
+	);
+
+	// Only attach the "View Emails." link when at least one email was installed —
+	// otherwise the Settings 2.0 Repair Platform UI renders a stray link under
+	// the "0 missing emails have been installed." row, which reads as
+	// contradictory (nothing was installed but we're prompting to view it).
+	$view_emails_link = $installed_email > 0
+		? '<a href="' . esc_url(
+			add_query_arg(
+				array(
+					'page'  => 'bb-settings',
+					'tab'   => 'emails',
+					'panel' => 'all_emails',
+				),
+				get_admin_url( bp_get_root_blog_id(), 'admin.php' )
+			)
+		) . '">' . esc_html__( 'View Emails.', 'buddyboss' ) . '</a>'
+		: '';
+
 	return array(
 		'status'  => 1,
-		'records' => sprintf(
-		/* translators: %1$s for counts missing emails. */
-			__( '%1$s missing emails have been installed.', 'buddyboss' ),
-			$installed_email,
-		),
-		'message' => sprintf(
-		/* translators: %1$s for view emails url. */
-			__( 'Installing missing emails &hellip; Complete! %1$s', 'buddyboss' ),
-			'<a href="' . get_admin_url( bp_get_root_blog_id(), 'edit.php?post_type=' . bp_get_email_post_type() ) . '">' . esc_html__( 'View Emails.', 'buddyboss' ) . '</a>'
-		),
+		'records' => $records_text,
+		// Mirror of `records` with the View Emails link appended. Consumed by
+		// the Settings 2.0 Repair Platform UI which sanitizes via DOMPurify
+		// and renders as HTML so the link is clickable. Empty when zero
+		// emails were installed.
+		'summary_html' => $installed_email > 0 ? $records_text . ' ' . $view_emails_link : '',
+		'message' => $installed_email > 0
+			? sprintf(
+				/* translators: %1$s for view emails url. */
+				__( 'Installing missing emails &hellip; Complete! %1$s', 'buddyboss' ),
+				$view_emails_link
+			)
+			: __( 'Installing missing emails &hellip; Complete!', 'buddyboss' ),
 	);
 }
 
@@ -1101,12 +812,40 @@ function bp_admin_reinstall_emails() {
 		restore_current_blog();
 	}
 
+	$reset_count = is_array( $emails ) ? count( $emails ) : 0;
+
+	$records_text = sprintf(
+		/* translators: %s: number of emails reset to defaults. */
+		__( '%s emails reset to defaults.', 'buddyboss' ),
+		bp_core_number_format( $reset_count )
+	);
+
+	$view_emails_link = '<a href="' . esc_url(
+		add_query_arg(
+			array(
+				'page'  => 'bb-settings',
+				'tab'   => 'emails',
+				'panel' => 'all_emails',
+			),
+			get_admin_url( bp_get_root_blog_id(), 'admin.php' )
+		)
+	) . '">' . esc_html__( 'View Emails.', 'buddyboss' ) . '</a>';
+
 	return array(
 		'status'  => 1,
+		// Provide a `records` field so the Settings 2.0 Repair Platform UI
+		// renders a meaningful row label. Without it the summary extractor
+		// pulls just "View Emails." from the message tail and the result
+		// reads as a stray link with no context.
+		'records' => $records_text,
+		// Mirror of `records` with the View Emails link appended. Consumed by
+		// the Settings 2.0 Repair Platform UI which sanitizes via DOMPurify
+		// and renders as HTML so the link is clickable.
+		'summary_html' => $records_text . ' ' . $view_emails_link,
 		'message' => sprintf(
 		/* translators: %1$s for view emails url. */
 			__( 'Reseting emails &hellip; Complete! %1$s', 'buddyboss' ),
-			'<a href="' . get_admin_url( bp_get_root_blog_id(), 'edit.php?post_type=' . bp_get_email_post_type() ) . '">' . esc_html__( 'View Emails.', 'buddyboss' ) . '</a>'
+			$view_emails_link
 		),
 	);
 }
@@ -1270,7 +1009,7 @@ function bp_admin_repair_tools_wrapper_function() {
 	}
 
 	// Use default nonce
-	$nonce = $_POST['nonce'];
+	$nonce = isset( $_POST['nonce'] ) ? sanitize_text_field( wp_unslash( $_POST['nonce'] ) ) : '';
 	$check = 'bp-do-counts';
 
 	// Nonce check!
@@ -1280,44 +1019,122 @@ function bp_admin_repair_tools_wrapper_function() {
 
 	$repair_list = bp_admin_repair_list();
 
-	$status = array();
+	$status       = array();
+	$repair_ran   = false;
+	$repair_label = '';
 	foreach ( $repair_list as $repair_item ) {
 		if ( $repair_item[0] === $type && is_callable( $repair_item[2] ) ) {
-			$status = call_user_func( $repair_item[2] );
+			$status       = call_user_func( $repair_item[2] );
+			$repair_ran   = true;
+			$repair_label = isset( $repair_item[1] ) ? $repair_item[1] : $type;
 			break;
 		}
 	}
 
-	// if ( 'bp-user-friends' === $type ) {
-	// $status = bp_admin_repair_friend_count();
-	// } elseif ( 'bp-group-count' === $type ) {
-	// $status = bp_admin_repair_group_count();
-	// } elseif ( 'bp-total-member-count' === $type ) {
-	// $status = bp_admin_repair_count_members();
-	// } elseif ( 'bp-last-activity' === $type ) {
-	// $status = bp_admin_repair_last_activity();
-	// } elseif ( 'bp-xprofile-fields' === $type ) {
-	// $status = repair_default_profiles_fields();
-	// } elseif ( 'bp-xprofile-wordpress-resync' === $type ) {
-	// $status = resync_xprofile_wordpress_fields();
-	// } elseif ( 'bp-wordpress-xprofile-resync' === $type ) {
-	// $status = resync_wordpress_xprofile_fields();
-	// } elseif ( 'bp-wordpress-update-display-name' === $type ) {
-	// $status = xprofile_update_display_names();
-	// } elseif ( 'bp-blog-records' === $type ) {
-	// $status = bp_admin_repair_blog_records();
-	// } elseif ( 'bp-reinstall-emails' === $type ) {
-	// $status = bp_admin_reinstall_emails();
-	// } elseif ( 'bp-assign-member-type' === $type ) {
-	// $status = bp_admin_assign_member_type();
-	// } elseif ( 'bp-sync-activity-favourite' === $type ) {
-	// $status = bp_admin_update_activity_favourite();
-	// } elseif ( 'bp-invitations-table' === $type ) {
-	// $status = bp_admin_invitations_table();
-	// } elseif ( 'bp-media-forum-privacy-repair' === $type ) {
-	// $status = bp_media_forum_privacy_repair();
-	// }
+	// Record one usage increment per repair RUN, not per paginated batch.
+	// Paginated repair tools re-call this handler with an incrementing offset
+	// until done; only the first request (no / zero offset) counts the run.
+	// The label is captured so the report can show third-party repair tools'
+	// human titles (registered via the bp_admin_repair_list filter).
+	if ( $repair_ran ) {
+		$repair_offset = isset( $_POST['offset'] ) ? (int) $_POST['offset'] : 0; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce verified above.
+		if ( $repair_offset <= 0 ) {
+			bb_record_tool_usage( 'repair', $type, $repair_label );
+		}
+	}
+
+	// Additive enrichment for the Settings 2.0 Repair Platform React UI:
+	// extract a clean count + summary from the legacy feedback HTML so the
+	// React panel can render Figma-style result lines without client-side
+	// regex parsing. Existing third-party callers that only read the
+	// historical `message` field are unaffected.
+	//
+	// @since BuddyBoss [BBVERSION]
+	if ( is_array( $status ) ) {
+		$enrichment = bb_admin_repair_extract_count_summary( $status );
+		$status     = array_merge( $status, $enrichment );
+	}
+
 	wp_send_json_success( $status );
+}
+
+/**
+ * Parse a legacy `bp_admin_repair_*` result array into a `count` (int or
+ * fraction string like "23/26") and a clean `summary` text.
+ *
+ * Legacy repair handlers package result info in different fields:
+ *   - `message`  — verbose HTML feedback line (most handlers)
+ *   - `records`  — count-bearing sentence (e.g. emails: "5 missing emails have been installed.")
+ *   - `feedback` — sometimes the only field present
+ *
+ * Scans each candidate field, decodes HTML entities, strips tags, then
+ * extracts the first numeric count anywhere in the text. The summary is
+ * preferred from `records` when it carries the count, otherwise from the
+ * "Complete!" tail of `message`.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array|string $status_or_html Result array from a repair handler, OR a raw HTML string.
+ * @return array {
+ *     @type int|string|null $count   Numeric count when found ("23/26" or 42), null otherwise.
+ *     @type string          $summary Clean human-readable result text.
+ * }
+ */
+function bb_admin_repair_extract_count_summary( $status_or_html ) {
+	// Support both array (preferred) and string (BC).
+	if ( is_string( $status_or_html ) ) {
+		$status_or_html = array( 'message' => $status_or_html );
+	}
+	if ( ! is_array( $status_or_html ) ) {
+		return array(
+			'count'   => null,
+			'summary' => '',
+		);
+	}
+
+	$normalize = static function ( $raw ) {
+		$t = wp_strip_all_tags( (string) $raw );
+		$t = html_entity_decode( $t, ENT_QUOTES, 'UTF-8' );
+		return trim( preg_replace( '#\s+#', ' ', $t ) );
+	};
+
+	$message  = isset( $status_or_html['message'] ) ? $normalize( $status_or_html['message'] ) : '';
+	$records  = isset( $status_or_html['records'] ) ? $normalize( $status_or_html['records'] ) : '';
+	$feedback = isset( $status_or_html['feedback'] ) ? $normalize( $status_or_html['feedback'] ) : '';
+
+	$candidates = array_filter( array( $records, $message, $feedback ) );
+
+	$count = null;
+	foreach ( $candidates as $text ) {
+		if ( preg_match( '#\b(\d+\s*/\s*\d+)\b#', $text, $m ) ) {
+			$count = $m[1];
+			break;
+		}
+		if ( preg_match( '#\b(\d+)\b#', $text, $m ) ) {
+			$count = (int) $m[1];
+			break;
+		}
+	}
+
+	// Summary preference: records (usually a clean count sentence) →
+	// message tail after "Complete!" → message → feedback.
+	$summary = '';
+	if ( $records ) {
+		$summary = $records;
+	} elseif ( $message ) {
+		if ( preg_match( '#Complete[!.]\s*(.*)$#i', $message, $m ) && trim( $m[1] ) !== '' ) {
+			$summary = trim( $m[1] );
+		} else {
+			$summary = $message;
+		}
+	} elseif ( $feedback ) {
+		$summary = $feedback;
+	}
+
+	return array(
+		'count'   => $count,
+		'summary' => $summary,
+	);
 }
 add_action( 'wp_ajax_bp_admin_repair_tools_wrapper_function', 'bp_admin_repair_tools_wrapper_function' );
 
