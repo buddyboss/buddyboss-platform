@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 3.0.5\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2026-07-02 10:39:59+00:00\n"
+"POT-Creation-Date: 2026-07-02 10:55:00+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -4751,6 +4751,7 @@ msgstr ""
 #: bp-blogs/bp-blogs-template.php:1402
 #: bp-core/admin/settings/forums/settings-forum-features.php:110
 #: bp-core/admin/settings/forums/settings-forum-permalinks.php:120
+#: bp-core/admin/settings/legacy-meta-bridge-utils.php:2524
 #: bp-core/bb-core-blocks.php:284
 #: bp-core/bb-core-blocks.php:290
 #: bp-core/bp-core-cssjs.php:244
@@ -9606,6 +9607,7 @@ msgid "Load more via \"View more comments.\" High comment counts may slow scroll
 msgstr ""
 
 #: bp-core/admin/settings/activity/settings-comments.php:94
+#: bp-core/admin/settings/compat/bp-auto-group-join.php:299
 #: bp-core/admin/settings/forums/meta-fields.php:232
 #: bp-core/admin/settings/groups/settings-group-images.php:173
 #: bp-core/admin/settings/members/settings-member-directory.php:185
@@ -9978,6 +9980,81 @@ msgstr ""
 
 #: bp-core/admin/settings/advanced/settings-telemetry.php:76
 msgid "Disable telemetry"
+msgstr ""
+
+#: bp-core/admin/settings/compat/bp-auto-group-join.php:291
+msgid "All new registrations"
+msgstr ""
+
+#: bp-core/admin/settings/compat/bp-auto-group-join.php:295
+msgid "Select by member type"
+msgstr ""
+
+#: bp-core/admin/settings/compat/bp-auto-group-join.php:304
+msgid "All existing members"
+msgstr ""
+
+#: bp-core/admin/settings/compat/bp-auto-group-join.php:318
+msgid "Auto-Join Users to this Group"
+msgstr ""
+
+#: bp-core/admin/settings/compat/bp-auto-group-join.php:344
+msgid "Join New Registrations"
+msgstr ""
+
+#: bp-core/admin/settings/compat/bp-auto-group-join.php:387
+msgid "Member types for new registrations"
+msgstr ""
+
+#: bp-core/admin/settings/compat/bp-auto-group-join.php:388
+msgid "Choose which member types are auto-joined to this group when they register."
+msgstr ""
+
+#: bp-core/admin/settings/compat/bp-auto-group-join.php:434
+msgid "Join Existing Members"
+msgstr ""
+
+#: bp-core/admin/settings/compat/bp-auto-group-join.php:435
+msgid "Selecting \"All existing members\" or a set of member types will enroll matching users into this group on save."
+msgstr ""
+
+#: bp-core/admin/settings/compat/bp-auto-group-join.php:482
+msgid "Member types for existing members"
+msgstr ""
+
+#: bp-core/admin/settings/compat/bp-auto-group-join.php:483
+msgid "Choose which member types are enrolled into this group on save."
+msgstr ""
+
+#: bp-core/admin/settings/compat/wp-fusion.php:59
+msgid "Select tags"
+msgstr ""
+
+#. translators: %s: the tag name the admin typed.
+#: bp-core/admin/settings/compat/wp-fusion.php:95
+msgid "Create \"%s\""
+msgstr ""
+
+#: bp-core/admin/settings/compat/wp-fusion.php:105
+#: bp-core/admin/bb-settings/settings/build/499.js:1
+msgid "Select a page"
+msgstr ""
+
+#: bp-core/admin/settings/compat/wp-fusion.php:273
+#: bp-core/admin/settings/legacy-meta-bridge-utils.php:2759
+msgid "Unauthorized"
+msgstr ""
+
+#: bp-core/admin/settings/compat/wp-fusion.php:279
+msgid "This CRM does not support creating tags."
+msgstr ""
+
+#: bp-core/admin/settings/compat/wp-fusion.php:285
+msgid "Tag name is empty."
+msgstr ""
+
+#: bp-core/admin/settings/compat/wp-fusion.php:304
+msgid "Failed to create tag."
 msgstr ""
 
 #: bp-core/admin/settings/emails/meta-fields.php:59
@@ -38720,6 +38797,24 @@ msgstr ""
 
 #: bp-core/admin/bb-settings/settings/build/190.js:1
 #: bp-core/admin/bb-settings/settings/build/285.js:1
+#: bp-core/admin/bb-settings/settings/build/483.js:1
+#: bp-core/admin/bb-settings/settings/build/510.js:1
+#: bp-core/admin/bb-settings/settings/build/794.js:1
+#: bp-core/admin/bb-settings/settings/build/926.js:1
+msgid "(Add new)"
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings/build/190.js:1
+#: bp-core/admin/bb-settings/settings/build/285.js:1
+#: bp-core/admin/bb-settings/settings/build/483.js:1
+#: bp-core/admin/bb-settings/settings/build/510.js:1
+#: bp-core/admin/bb-settings/settings/build/794.js:1
+#: bp-core/admin/bb-settings/settings/build/926.js:1
+msgid "No options available yet."
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings/build/190.js:1
+#: bp-core/admin/bb-settings/settings/build/285.js:1
 #: bp-core/admin/bb-settings/settings/build/510.js:1
 #: bp-core/admin/bb-settings/settings/build/926.js:2
 msgid "Bulk Edit"
@@ -39566,10 +39661,6 @@ msgstr ""
 
 #: bp-core/admin/bb-settings/settings/build/499.js:1
 msgid "After Login Redirection"
-msgstr ""
-
-#: bp-core/admin/bb-settings/settings/build/499.js:1
-msgid "Select a page"
 msgstr ""
 
 #: bp-core/admin/bb-settings/settings/build/499.js:1
