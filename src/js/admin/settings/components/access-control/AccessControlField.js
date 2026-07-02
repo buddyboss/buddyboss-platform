@@ -90,6 +90,11 @@ export function AccessControlField( { field, value, onChange } ) {
 		return data.current_sub_type || '';
 	} );
 	var [ options, setOptions ]                   = useState( data.options || [] );
+	// Recipient list for threaded "Specific" checkboxes: the FULL role set
+	// (includes administrators + the sender's own role), unlike `options` which
+	// is the admin-excluded sender list. Falls back to `options` when the server
+	// provides no separate recipient list (legacy parity — see renderThreadedCheckboxes).
+	var [ recipientOptions, setRecipientOptions ] = useState( data.recipient_options || data.options || [] );
 	var [ selectedOptions, setSelectedOptions ]   = useState( value?.[ 'access-control-options' ] || [] );
 	var [ loading, setLoading ]                   = useState( false );
 	var [ fetchError, setFetchError ]             = useState( '' );
@@ -179,6 +184,7 @@ export function AccessControlField( { field, value, onChange } ) {
 		// Reset to placeholder — save to clear the setting.
 		if ( ! newType ) {
 			setOptions( [] );
+			setRecipientOptions( [] );
 			onChange( {
 				'access-control-type': '',
 				'access-control-options': [],
@@ -198,6 +204,7 @@ export function AccessControlField( { field, value, onChange } ) {
 		// If this type has sub-types, don't fetch options yet — wait for sub-type selection.
 		if ( typeConfig && typeConfig.sub_types && typeConfig.sub_types.items && typeConfig.sub_types.items.length > 0 ) {
 			setOptions( [] );
+			setRecipientOptions( [] );
 			return;
 		}
 
@@ -220,6 +227,7 @@ export function AccessControlField( { field, value, onChange } ) {
 			var newOptions = response?.data?.options || [];
 			newOptions = wp.hooks.applyFilters( 'bb.accessControl.options', newOptions, field, newType );
 			setOptions( newOptions );
+			setRecipientOptions( response?.data?.recipient_options || response?.data?.options || [] );
 			setLoading( false );
 		} ).catch( function( error ) {
 			if ( error && 'AbortError' === error.name ) {
@@ -244,6 +252,7 @@ export function AccessControlField( { field, value, onChange } ) {
 
 		if ( ! newSubType || ! typeConfig || ! typeConfig.sub_types ) {
 			setOptions( [] );
+			setRecipientOptions( [] );
 			return;
 		}
 
@@ -265,6 +274,7 @@ export function AccessControlField( { field, value, onChange } ) {
 			var newOptions = response?.data?.options || [];
 			newOptions = wp.hooks.applyFilters( 'bb.accessControl.options', newOptions, field, selectedType, newSubType );
 			setOptions( newOptions );
+			setRecipientOptions( response?.data?.recipient_options || response?.data?.options || [] );
 			setLoading( false );
 		} ).catch( function( error ) {
 			if ( error && 'AbortError' === error.name ) {
@@ -400,11 +410,15 @@ export function AccessControlField( { field, value, onChange } ) {
 	 * @return {JSX.Element} Checkbox list.
 	 */
 	var renderThreadedCheckboxes = function( optKey, subSettings ) {
+		// Recipient list = the FULL role set, including administrators and the
+		// sender's own role. The sender toggle rows (`options`) exclude
+		// administrators, but the recipient checkboxes must list every role —
+		// matching legacy multiple-options.php, which looped the full list. Fall
+		// back to `options` for types that have no separate recipient list.
+		var recipientList = ( recipientOptions && recipientOptions.length ) ? recipientOptions : options;
 		return (
 			<div className="bb-access-control-field__threaded-checkboxes">
-				{ options.filter( function( o ) {
-					return String( o.value ) !== optKey;
-				} ).map( function( o ) {
+				{ recipientList.map( function( o ) {
 					var specKey = String( o.value );
 					return (
 						<CheckboxControl
