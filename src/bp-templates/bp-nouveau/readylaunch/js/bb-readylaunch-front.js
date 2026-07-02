@@ -35,8 +35,6 @@ window.bp = window.bp || {};
 				// Initialize select2 filters with retry mechanism
 				this.initSelect2Filters();
 
-				this.styledSelect();
-
 				this.bbReloadWindow();
 				this.initBBNavOverflow();
 			},
@@ -131,24 +129,16 @@ window.bp = window.bp || {};
 
 			initSelect2Filters: function () {
 				var self = this;
-				var maxRetries = 3;
+				var maxRetries = 10;
 				var retryCount = 0;
+				var retryDelay = 200;
 
 				function tryInitSelect2() {
-					// Check if document is ready
-					if ( document.readyState !== 'complete' ) {
-						if ( retryCount < maxRetries ) {
-							retryCount++;
-							setTimeout( tryInitSelect2, 500 );
-						}
-						return;
-					}
-
 					// Check if select2 library is available
 					if ( typeof $.fn.select2 === 'undefined' ) {
 						if ( retryCount < maxRetries ) {
 							retryCount++;
-							setTimeout( tryInitSelect2, 500 );
+							setTimeout( tryInitSelect2, retryDelay );
 						}
 						return;
 					}
@@ -158,7 +148,7 @@ window.bp = window.bp || {};
 					if ( $selects.length === 0 ) {
 						if ( retryCount < maxRetries ) {
 							retryCount++;
-							setTimeout( tryInitSelect2, 500 );
+							setTimeout( tryInitSelect2, retryDelay );
 						}
 						return;
 					}
@@ -167,9 +157,17 @@ window.bp = window.bp || {};
 					self.gridListFilter();
 				}
 
-				// Start the initialization process
+				// Start the initialization process when document is ready.
 				$( document ).ready( function () {
 					tryInitSelect2();
+				} );
+
+				// Reinitialize select2 after AJAX requests complete (for dynamically loaded content).
+				$( document ).ajaxComplete( function () {
+					// Use a small delay to ensure DOM is updated.
+					setTimeout( function () {
+						self.initSelect2Scoped( $( document ) );
+					}, 100 );
 				} );
 			},
 
@@ -227,28 +225,74 @@ window.bp = window.bp || {};
 				);
 			},
 
-			styledSelect: function () {
-				$( '.bb-rl-styled-select select' ).each(
-					function () {
-						var $this   = $( this ),
-						customClass = '';
+			/**
+			 * Initialize select2 for .bb-rl-filter select elements within a container.
+			 * This is a utility function that can be called when modals or popups are opened
+			 * to ensure select2 is properly initialized on dynamically visible elements.
+			 *
+			 * @param {jQuery|string} $container - jQuery object or selector for the container element
+			 */
+			initSelect2Scoped: function ( $container ) {
+				if ( 'undefined' === typeof $ ) {
+					$ = jQuery;
+				}
 
-						// Check if parent container has specific class
-						var $parent = $this.closest( '.bb-rl-styled-select' );
-						if ( $parent.hasClass( 'bb-rl-styled-select--default' ) ) {
-								customClass += ' bb-rl-select-default';
+				if ( 'string' === typeof $container ) {
+					$container = $( $container );
+				}
+
+				if ( 'undefined' === typeof $.fn.select2 || ! $container.length ) {
+					return;
+				}
+
+				$container.find( '.bb-rl-filter select' ).each( function () {
+					var $selectEl = $( this );
+
+					// Skip if already initialized.
+					if ( $selectEl.hasClass( 'select2-hidden-accessible' ) ) {
+						return;
+					}
+
+					// Skip elements inside hidden containers (they should be initialized when shown).
+					if ( ! $selectEl.is( ':visible' ) ) {
+						return;
+					}
+
+					var customClass = '';
+
+					if ( $selectEl.data( 'bb-caret' ) ) {
+						customClass += ' bb-rl-caret-icon ';
+					}
+					if ( $selectEl.data( 'bb-icon' ) ) {
+						customClass += ' bb-rl-has-icon ';
+						customClass += ' ' + $selectEl.data( 'bb-icon' ) + ' ';
+					}
+					if ( $selectEl.data( 'bb-border' ) === 'rounded' ) {
+						customClass += ' bb-rl-rounded-border ';
+					}
+					if ( $selectEl.data( 'dropdown-align' ) ) {
+						customClass += ' bb-rl-align-adaptive ';
+					}
+
+					$selectEl.select2( {
+						theme: 'rl',
+						dropdownParent: $selectEl.parent()
+					} );
+
+					$selectEl.next( '.select2-container' ).find( '.select2-selection' ).addClass( 'bb-rl-select2-container' + customClass );
+
+					$selectEl.on( 'select2:open', function () {
+						var $this = $( this ),
+							customDropDownClass = '';
+
+						if ( $this.data( 'dropdown-align' ) ) {
+							customDropDownClass += ' bb-rl-dropdown-align-adaptive ';
 						}
 
-						$this.select2(
-							{
-								theme: 'bb-rl-select2',
-								containerCssClass: 'bb-rl-select2-container ' + customClass,
-								dropdownCssClass: 'bb-rl-select2-dropdown',
-								dropdownParent: $this.parent()
-							}
-						);
-					}
-				);
+						$( '.select2-dropdown' ).addClass( 'bb-rl-select2-dropdown' );
+						$this.closest( '.bb-rl-filter' ).find( '.bb-rl-select2-dropdown' ).addClass( customDropDownClass );
+					} );
+				} );
 			},
 
 			/**
@@ -354,7 +398,7 @@ window.bp = window.bp || {};
 						error   : function () {
 							// Reset the 'loading' flag in case of error.
 							mainContainerID.data( 'loading', false );
-							mainContainerID.find( '.notification-list' ).html( '<p>Failed to load data. Please try again.</p>' );
+							mainContainerID.find( '.notification-list' ).html( '<p class="bb-rl-notification-error">' + bbReadyLaunchFront.notification_error + '</p>' );
 						},
 						complete : function () {
 							// Always reset the loading state, regardless of success or error.

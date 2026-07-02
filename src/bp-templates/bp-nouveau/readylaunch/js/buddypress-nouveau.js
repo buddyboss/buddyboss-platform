@@ -1326,7 +1326,8 @@ window.bp = window.bp || {};
 			var onScreenElem = $( '.bb-onscreen-notification' ),
 				enable       = onScreenElem.data( 'enable' );
 
-			if ( '1' !== enable || ( 'undefined' === typeof data.on_screen_notifications && '' === data.on_screen_notifications ) ) {
+			// Loose equality is intentional: jQuery .data( 'enable' ) may return 1 (number) or "1" (string) depending on how the attribute was rendered.
+			if ( 1 != enable || 'undefined' === typeof data.on_screen_notifications || '' === data.on_screen_notifications ) { // jshint ignore:line
 				return;
 			}
 
@@ -1335,8 +1336,7 @@ window.bp = window.bp || {};
 				removedItems  = list.data( 'removed-items' ),
 				animatedItems = list.data( 'animated-items' ),
 				newItems      = [],
-				notifications = $( $.parseHTML( '<ul>' + data.on_screen_notifications + '</ul>' ) ),
-				appendItems   = notifications.find( '.read-item' );
+				notifications = $( $.parseHTML( '<ul>' + data.on_screen_notifications + '</ul>' ) );
 
 			// Ignore all view notifications.
 			$.each(
@@ -1349,6 +1349,8 @@ window.bp = window.bp || {};
 					}
 				}
 			);
+
+			var appendItems = notifications.find( '.read-item' );
 
 			appendItems.each(
 				function ( index, item ) {
@@ -1673,15 +1675,19 @@ window.bp = window.bp || {};
 		 * Set title tag in notification data attribute.
 		 */
 		visibilityOnScreenClearButton : function () {
-			var wrap        = $( '.bb-onscreen-notification' ),
-				list        = wrap.find( '.notification-list' ),
-				items       = list.find( '.read-item' ),
-				closeBtn    = wrap.find( '.bb-remove-all-notification .action-close' ),
-				hasMultiple = items.length > 1;
+			var wrap  = $( '.bb-onscreen-notification' ),
+				list  = wrap.find( '.notification-list' ),
+				items = list.find( '.read-item' );
 
-			wrap.toggleClass( 'single-notification', ! hasMultiple ).toggleClass( 'active-button', hasMultiple );
-
-			hasMultiple ? closeBtn.fadeIn( 600 ) : items.fadeOut( 200 );
+			if ( items.length > 1 ) {
+				wrap.removeClass( 'single-notification' );
+				wrap.addClass( 'active-button' );
+				wrap.find( '.bb-remove-all-notification .action-close' ).fadeIn( 600 );
+			} else {
+				wrap.addClass( 'single-notification' );
+				wrap.removeClass( 'active-button' );
+				wrap.find( '.bb-remove-all-notification .action-close' ).fadeOut( 200 );
+			}
 		},
 
 		/**
@@ -2025,7 +2031,10 @@ window.bp = window.bp || {};
 			event.preventDefault();
 
 			if ( target.hasClass( 'bp-toggle-action-button' ) ) {
-				target.html( target.data( 'title' ) );
+				// Don't replace icon with text for subscription buttons.
+				if ( ! target.hasClass( 'group-subscription' ) ) {
+					target.html( target.data( 'title' ) );
+				}
 				target.removeClass( 'bp-toggle-action-button' );
 				target.addClass( 'bp-toggle-action-button-clicked' );
 			}
@@ -2092,7 +2101,7 @@ window.bp = window.bp || {};
 					}
 
 					body.find( '[data-current-anchor="true"]' ).removeClass( 'bp-toggle-action-button bp-toggle-action-button-hover' ).addClass( 'bp-toggle-action-button-clicked' ); // Add clicked class manually to run function.
-					leave_group_popup.show();
+					leave_group_popup.addClass( 'is-visible' ).show();
 					$( target ).attr( 'data-current-anchor', 'true' );
 					$( target ).attr( 'data-popup-shown', 'true' );
 					return false;
@@ -2101,7 +2110,7 @@ window.bp = window.bp || {};
 				body.find( '[data-popup-shown="true"]' ).attr( 'data-popup-shown' , 'false' );
 				body.find( '[data-current-anchor="true"]' ).attr( 'data-current-anchor' , 'false' );
 				leave_group_popup.find( '.bb-leave-group-content .bb-group-name' ).html( '' );
-				leave_group_popup.hide();
+				leave_group_popup.removeClass( 'is-visible' ).hide();
 			}
 
 			// show popup if it is cancel_request_group action.
@@ -4610,7 +4619,7 @@ window.bp = window.bp || {};
 
 			// Clear content and hide popup.
 			popup.find( options.contentSelector ).html( options.contentPlaceholder );
-			popup.hide();
+			popup.removeClass( 'is-visible' ).hide();
 		},
 
 		openPopUp: function ( popupSelector ) {

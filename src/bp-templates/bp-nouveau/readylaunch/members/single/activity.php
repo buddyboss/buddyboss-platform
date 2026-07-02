@@ -26,6 +26,7 @@ bp_get_template_part( 'common/search-and-filters-bar' );
 bp_nouveau_member_hook( 'before', 'activity_content' );
 ?>
 
+<div class="bb-rl-screen-content">
 	<div id="bb-rl-activity-stream" class="activity single-user" data-bp-list="activity" data-ajax="<?php echo esc_attr( $is_send_ajax_request ? 'true' : 'false' ); ?>">
 	<?php
 	if ( $is_send_ajax_request ) {
@@ -34,20 +35,20 @@ bp_nouveau_member_hook( 'before', 'activity_content' );
 			?>
 			<div class="bb-rl-activity-placeholder">
 				<div class="bb-rl-activity-placeholder_head">
-					<div class="bb-rl-activity-placeholder_avatar bb-rl-bg-animation bb-rl-loading-bg"></div>
+					<div class="bb-rl-activity-placeholder_avatar bb-rl-loading-bg"></div>
 						<div class="bb-rl-activity-placeholder_details">
-						<div class="bb-rl-activity-placeholder_title bb-rl-bg-animation bb-rl-loading-bg"></div>
-						<div class="bb-rl-activity-placeholder_description bb-rl-bg-animation bb-rl-loading-bg"></div>
+						<div class="bb-rl-activity-placeholder_title bb-rl-loading-bg"></div>
+						<div class="bb-rl-activity-placeholder_description bb-rl-loading-bg"></div>
 					</div>
 				</div>
 				<div class="bb-rl-activity-placeholder_content">
-					<div class="bb-rl-activity-placeholder_title bb-rl-bg-animation bb-rl-loading-bg"></div>
-					<div class="bb-rl-activity-placeholder_title bb-rl-bg-animation bb-rl-loading-bg"></div>
+					<div class="bb-rl-activity-placeholder_title bb-rl-loading-bg"></div>
+					<div class="bb-rl-activity-placeholder_title bb-rl-loading-bg"></div>
 				</div>
 				<div class="bb-rl-activity-placeholder_actions">
-					<div class="bb-rl-activity-placeholder_description bb-rl-bg-animation bb-rl-loading-bg"></div>
-					<div class="bb-rl-activity-placeholder_description bb-rl-bg-animation bb-rl-loading-bg"></div>
-					<div class="bb-rl-activity-placeholder_description bb-rl-bg-animation bb-rl-loading-bg"></div>
+					<div class="bb-rl-activity-placeholder_description bb-rl-loading-bg"></div>
+					<div class="bb-rl-activity-placeholder_description bb-rl-loading-bg"></div>
+					<div class="bb-rl-activity-placeholder_description bb-rl-loading-bg"></div>
 				</div>
 			</div>
 			<?php
@@ -58,6 +59,7 @@ bp_nouveau_member_hook( 'before', 'activity_content' );
 	}
 	?>
 	</div><!-- .activity -->
+</div><!-- .bb-rl-screen-content -->
 
 <?php
 bp_nouveau_member_hook( 'after', 'activity_content' );

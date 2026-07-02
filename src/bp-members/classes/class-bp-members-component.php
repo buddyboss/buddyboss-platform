@@ -266,6 +266,24 @@ class BP_Members_Component extends BP_Component {
 			$default_tab = 'videos';
 		}
 
+		// Check if the default tab is hidden by admin in Navigation Order settings.
+		if ( function_exists( 'bp_nouveau_get_appearance_settings' ) ) {
+			$hidden_tabs = bp_nouveau_get_appearance_settings( 'user_nav_hide' );
+			if ( is_array( $hidden_tabs ) && in_array( $default_tab, $hidden_tabs, true ) ) {
+				// Fall back to the first visible tab in saved order, or 'profile' as last resort.
+				$default_tab = 'profile';
+				$nav_order   = bp_nouveau_get_appearance_settings( 'user_nav_order' );
+				if ( is_array( $nav_order ) ) {
+					foreach ( $nav_order as $slug ) {
+						if ( ! in_array( $slug, $hidden_tabs, true ) ) {
+							$default_tab = $slug;
+							break;
+						}
+					}
+				}
+			}
+		}
+
 		$bp->default_component = apply_filters( 'bp_member_default_component', ( '' === $default_tab ) ? $bp->default_component : $default_tab );
 
 		/** Canonical Component Stack ****************************************
@@ -517,7 +535,6 @@ class BP_Members_Component extends BP_Component {
 			'BP_REST_Members_Details_Endpoint',
 			'BP_REST_Attachments_Member_Avatar_Endpoint',
 			'BB_REST_Subscriptions_Endpoint',
-			'BB_REST_Reactions_Endpoint',
 		);
 
 		if ( function_exists( 'bp_core_get_suggestions' ) ) {

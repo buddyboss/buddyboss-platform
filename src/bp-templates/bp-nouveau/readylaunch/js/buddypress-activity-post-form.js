@@ -170,7 +170,16 @@ window.bp = window.bp || {};
 			this.dropzone = null;
 
 			// set up dropzones auto discover to false so it does not automatically set dropzones.
-			window.Dropzone.autoDiscover = false;
+			// Guarded — `bp-media-dropzone` (which loads the Dropzone library) is only
+			// enqueued when at least one media feature is active (see
+			// bp-templates/bp-nouveau/includes/media/functions.php). When all of
+			// profile/group/messages media + group docs/albums + GIF + emoji are off,
+			// Dropzone is undefined and the unguarded assignment throws TypeError,
+			// halting `start()` so the post form composer never renders. Mirrors
+			// the same guard pattern used at buddypress-activity.js:76.
+			if ( 'undefined' !== typeof window.Dropzone ) {
+				window.Dropzone.autoDiscover = false;
+			}
 
 			if ( ! _.isUndefined( bbRlMedia ) ) {
 				this.dropzone_options = {
@@ -306,7 +315,7 @@ window.bp = window.bp || {};
 				function () {
 					$( '#bb-rl-whats-new img.emoji' ).each(
 						function ( index, Obj) {
-							$( Obj ).addClass( 'bb-rl-emojioneemoji' );
+							$( Obj ).addClass( 'emojioneemoji' );
 							var emojis = $( Obj ).attr( 'alt' );
 							$( Obj ).attr( 'data-emoji-char', emojis );
 							$( Obj ).removeClass( 'emoji' );
@@ -737,7 +746,7 @@ window.bp = window.bp || {};
 					}
 				);
 
-				var emojiElement = $( '#bb-rl-whats-new-textarea' ).find( 'img.bb-rl-emojioneemoji' ),
+				var emojiElement = $( '#bb-rl-whats-new-textarea' ).find( 'img.emojioneemoji' ),
 					contextKey   = context === 'groups' ? 'groups' : 'profile';
 				if ( 'groups' === context ) {
 					bp.Nouveau.Activity.postForm.postGifGroup = new bp.Views.PostGifGroup( { model : this.model } );
@@ -2277,7 +2286,7 @@ window.bp = window.bp || {};
 					content     = content.replace( /&nbsp;/g, ' ' );
 
 					var content_text = tool_box_comment.find( '.ac-textarea' ).children( '.ac-input' ).text().trim();
-					if ( content_text !== '' || content.indexOf( 'bb-rl-emojioneemoji' ) >= 0 ) {
+					if ( content_text !== '' || content.indexOf( 'emojioneemoji' ) >= 0 ) {
 						$( tool_box_comment ).closest( 'form' ).addClass( 'has-content' );
 					} else {
 						$( tool_box_comment ).closest( 'form' ).removeClass( 'has-content' );
@@ -3486,7 +3495,7 @@ window.bp = window.bp || {};
 				this.$el.html( this.template( this.model.toJSON() ) );
 				var whats_new_form = $( '#bb-rl-whats-new-form' );
 
-				if ( ! _.isUndefined( bbRlActivity.params.object ) && 'group' === bbRlActivity.params.object && 'group' === bbRlActivity.params.object ) {
+				if ( ! _.isUndefined( bbRlActivity.params.object ) && 'group' === bbRlActivity.params.object ) {
 					this.model.set(
 						{
 							item_name : bbRlActivity.params.item_name,
@@ -3497,13 +3506,14 @@ window.bp = window.bp || {};
 					var group_name = bbRlActivity.params.item_name;
 					whats_new_form.find( '.bb-rl-activity-privacy-status' ).text( group_name );
 
-					this.$el.find( '#bb-rl-activity-privacy-point' ).removeClass().addClass( 'group bp-activity-focus-group-active' );
+					var $privacy_point = this.$el.find( '#bb-rl-activity-privacy-point' );
+					$privacy_point.removeClass().addClass( 'group bb-rl-activity-edit-group' );
 					// Display image of the group.
 					if ( bbRlActivity.params.group_avatar && false === bbRlActivity.params.group_avatar.includes( 'mystery-group' ) ) {
-						this.$el.find( '#bb-rl-activity-privacy-point span.bb-rl-bb-rl-privacy-point-icon' ).removeClass( 'bb-rl-privacy-point-icon' ).addClass( 'group-bb-rl-privacy-point-icon' ).html( '<img src="' + bbRlActivity.params.group_avatar + '" alt=""/>' );
+						$privacy_point.find( 'span.bb-rl-privacy-point-icon' ).removeClass( 'bb-rl-privacy-point-icon' ).addClass( 'group-bb-rl-privacy-point-icon' ).html( '<img src="' + bbRlActivity.params.group_avatar + '" alt="' + _.escape( group_name ) + '"/>' );
 					} else {
-						this.$el.find( '#bb-rl-activity-privacy-point span.group-bb-rl-privacy-point-icon img' ).remove();
-						this.$el.find( '#bb-rl-activity-privacy-point span.group-bb-rl-privacy-point-icon' ).removeClass( 'group-bb-rl-privacy-point-icon' ).addClass( 'bb-rl-privacy-point-icon' );
+						$privacy_point.find( 'span.group-bb-rl-privacy-point-icon img' ).remove();
+						$privacy_point.find( 'span.group-bb-rl-privacy-point-icon' ).removeClass( 'group-bb-rl-privacy-point-icon' ).addClass( 'bb-rl-privacy-point-icon' );
 					}
 
 					bp.draft_activity.data.item_id            = bbRlActivity.params.item_id;
@@ -3526,13 +3536,14 @@ window.bp = window.bp || {};
 
 					whats_new_form.find( '.bb-rl-activity-privacy-status' ).text( bp.draft_activity.data.item_name );
 
-					this.$el.find( '#bb-rl-activity-privacy-point' ).removeClass().addClass( 'group bp-activity-focus-group-active' );
+					var $privacy_point_draft = this.$el.find( '#bb-rl-activity-privacy-point' );
+					$privacy_point_draft.removeClass().addClass( 'group bb-rl-activity-edit-group' );
 					// display image of the group.
 					if ( bp.draft_activity.data.group_image && false === bp.draft_activity.data.group_image.includes( 'mystery-group' ) ) {
-						this.$el.find( '#bb-rl-activity-privacy-point span.bb-rl-privacy-point-icon' ).removeClass( 'bb-rl-privacy-point-icon' ).addClass( 'group-bb-rl-privacy-point-icon' ).html( '<img src="' + bp.draft_activity.data.group_image + '" alt=""/>' );
+						$privacy_point_draft.find( 'span.bb-rl-privacy-point-icon' ).removeClass( 'bb-rl-privacy-point-icon' ).addClass( 'group-bb-rl-privacy-point-icon' ).html( '<img src="' + bp.draft_activity.data.group_image + '" alt="' + _.escape( bp.draft_activity.data.item_name ) + '"/>' );
 					} else {
-						this.$el.find( '#bb-rl-activity-privacy-point span.group-bb-rl-privacy-point-icon img' ).remove();
-						this.$el.find( '#bb-rl-activity-privacy-point span.group-bb-rl-privacy-point-icon' ).removeClass( 'group-bb-rl-privacy-point-icon' ).addClass( 'bb-rl-privacy-point-icon' );
+						$privacy_point_draft.find( 'span.group-bb-rl-privacy-point-icon img' ).remove();
+						$privacy_point_draft.find( 'span.group-bb-rl-privacy-point-icon' ).removeClass( 'group-bb-rl-privacy-point-icon' ).addClass( 'bb-rl-privacy-point-icon' );
 					}
 				}
 
@@ -5438,7 +5449,7 @@ window.bp = window.bp || {};
 				// transform other emoji into emojionearea emoji.
 				$whatsNew.find( 'img.emoji' ).each(
 					function ( index, Obj) {
-						$( Obj ).addClass( 'bb-rl-emojioneemoji' );
+						$( Obj ).addClass( 'emojioneemoji' );
 						var emojis = $( Obj ).attr( 'alt' );
 						$( Obj ).attr( 'data-emoji-char', emojis );
 						$( Obj ).removeClass( 'emoji' );
@@ -5446,7 +5457,7 @@ window.bp = window.bp || {};
 				);
 
 				// Transform emoji image into emoji unicode.
-				$whatsNew.find( 'img.bb-rl-emojioneemoji' ).replaceWith(
+				$whatsNew.find( 'img.emojioneemoji, img.bb-rl-emojioneemoji' ).replaceWith(
 					function () {
 						return this.dataset.emojiChar;
 					}
@@ -6243,7 +6254,7 @@ window.bp = window.bp || {};
 			}
 		);
 
-		var emojiElement = $( '#bb-rl-whats-new-textarea' ).find( 'img.bb-rl-emojioneemoji' ),
+		var emojiElement = $( '#bb-rl-whats-new-textarea' ).find( 'img.emojioneemoji' ),
 			contextKey   = context === 'groups' ? 'groups' : 'profile';
 		if ( 'groups' === context ) {
 			bp.Nouveau.Activity.postForm.postGifGroup = new bp.Views.PostGifGroup( { model : this.model } );
