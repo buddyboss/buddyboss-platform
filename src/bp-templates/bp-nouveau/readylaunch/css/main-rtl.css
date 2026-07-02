@@ -9358,6 +9358,19 @@ input.bb-rl-zoom-slider::-moz-range-progress {
   height: 104px;
 }
 
+.bb-rl-profile-edit-wrapper .bb-rl-avatar-container .bp-uploader-window .bb-rl-drag-drop-wrapper .drag-drop-buttons {
+  margin: 0;
+}
+
+.bb-rl-profile-edit-wrapper .bb-rl-avatar-container .bp-uploader-window .bb-rl-drag-drop-wrapper .drag-drop-info,
+.bb-rl-profile-edit-wrapper .bb-rl-avatar-container .bp-uploader-window .bb-rl-drag-drop-wrapper .drag-drop-subtitle {
+  display: none;
+}
+
+.bb-rl-profile-edit-wrapper .bb-rl-avatar-container .bp-uploader-window #drag-drop-area {
+  height: auto;
+}
+
 .bb-rl-profile-edit-wrapper .bb-rl-avatar-container .bp-uploader-progress .filename,
 .bb-rl-profile-edit-wrapper .bb-rl-avatar-container .bp-uploader-progress .file-progress {
   display: none;
