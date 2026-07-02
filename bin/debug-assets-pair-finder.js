@@ -58,17 +58,23 @@ var OFFLOAD_EXTENSIONS = [ 'png', 'jpg', 'jpeg', 'gif', 'svg', 'webp', 'ico', 'b
 var OFFLOAD_EXCLUDED_TOP_LEVEL = [ 'vendor', 'node_modules' ];
 
 /**
- * Webpack-emitted bundle image dirs (admin React apps live under
- * `.../build/images/`) that must NOT be offloaded. Their URLs are assembled
- * inside the JS bundle from webpack's runtime public path — a reference neither
- * the PHP HTML rewriter nor the CSS `url()` rewriter can ever reach — so they
- * cannot be served from S3. They ship in the zip instead (re-included by the
- * Gruntfile S3_OFFLOAD_KEEP_GLOBS), and are excluded here so the debug manifest
- * reflects what is actually stripped.
+ * Paths that must NOT be offloaded and therefore ship in the zip. Excluded here
+ * so the debug manifest reflects what is actually stripped. Two classes:
+ *
+ *   1. Webpack-emitted bundle image dirs (admin React apps live under
+ *      `.../build/images/`). Their URLs are assembled inside the JS bundle from
+ *      webpack's runtime public path — a reference neither the PHP HTML rewriter
+ *      nor the CSS `url()` rewriter can ever reach — so they cannot be served
+ *      from S3.
+ *   2. Images read as LOCAL files by server-side PHP/GD (bp-core/images/blank.png,
+ *      bp-core/images/suspended-mystery-man.jpg). Never emitted as a URL, so they
+ *      cannot come from S3 and must ship locally.
+ *
+ * Kept in lockstep with the Gruntfile S3_OFFLOAD_KEEP_GLOBS.
  *
  * @since BuddyBoss [BBVERSION]
  */
-var OFFLOAD_KEPT_PATH_RE = /(^|\/)build\/images\//;
+var OFFLOAD_KEPT_PATH_RE = /(^|\/)build\/images\/|(^|\/)bp-core\/images\/(?:blank\.png|suspended-mystery-man\.jpg)$/;
 
 /**
  * Recursively walk a directory and return every regular file's path,

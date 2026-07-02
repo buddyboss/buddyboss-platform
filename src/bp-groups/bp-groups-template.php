@@ -275,14 +275,14 @@ function bp_get_group_type_list( $group_id = 0, $r = array() ) {
 				array(
 					'element'    => $r['label_element'],
 					'attr'       => $r['label_attr'],
-					'inner_html' => esc_html( $r['label'] ),
+					'inner_html' => $r['label'], // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 				)
 			);
 			$label = $label->contents() . ' ';
 
 			// No element, just the label.
 		} else {
-			$label = esc_html( $r['label'] );
+			$label = $r['label']; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		}
 
 		// Comma-delimit each type into the group type directory link.
@@ -5730,7 +5730,7 @@ function bp_group_creation_tabs() {
 				<?php
 			}
 
-			echo esc_html( apply_filters( 'bb_group_creation_tab_number', $counter . '. ', $counter ) . $step['name'] );
+			echo apply_filters( 'bb_group_creation_tab_number', $counter . '. ', $counter ) . $step['name']; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 
 			if ( $is_enabled ) {
 				?>
