@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 3.0.5\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2026-07-02 12:05:14+00:00\n"
+"POT-Creation-Date: 2026-07-02 13:44:05+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -44,7 +44,7 @@ msgid "The BuddyBoss Platform adds community features to WordPress. Member Profi
 msgstr ""
 
 #. Author of the plugin
-#: bp-core/admin/classes/class-bb-support-access.php:871
+#: bp-core/admin/classes/class-bb-support-access.php:913
 #: bp-core/admin/drm/class-bb-drm-controller.php:318
 #: bp-core/admin/drm/class-bb-drm-controller.php:336
 #: bp-core/admin/drm/class-bb-drm-controller.php:353
@@ -8677,77 +8677,77 @@ msgstr ""
 msgid "Integrations service returned an unexpectedly large response."
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-support-access.php:859
+#: bp-core/admin/classes/class-bb-support-access.php:901
 msgid "A user already exists with the BuddyBoss support email or login. Please rename or remove that account before enabling Support Access."
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-support-access.php:870
+#: bp-core/admin/classes/class-bb-support-access.php:912
 msgid "BuddyBoss Support"
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-support-access.php:872
+#: bp-core/admin/classes/class-bb-support-access.php:914
 msgid "Support"
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-support-access.php:1162
+#: bp-core/admin/classes/class-bb-support-access.php:1204
 msgid "Invalid duration."
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-support-access.php:1240
-#: bp-core/admin/classes/class-bb-support-access.php:1376
+#: bp-core/admin/classes/class-bb-support-access.php:1282
+#: bp-core/admin/classes/class-bb-support-access.php:1418
 msgid "n/a"
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-support-access.php:1534
+#: bp-core/admin/classes/class-bb-support-access.php:1576
 msgid "A valid ticket (conversation) ID is required."
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-support-access.php:1544
+#: bp-core/admin/classes/class-bb-support-access.php:1586
 msgid "A note for this ticket was just sent. Please wait a moment before trying again."
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-support-access.php:1562
+#: bp-core/admin/classes/class-bb-support-access.php:1604
 msgid "Could not build the note request."
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-support-access.php:1608
+#: bp-core/admin/classes/class-bb-support-access.php:1650
 msgid "Could not reach the support system. Please try adding the ticket again."
 msgstr ""
 
 #. translators: %d: support system conversation/ticket ID.
-#: bp-core/admin/classes/class-bb-support-access.php:1630
+#: bp-core/admin/classes/class-bb-support-access.php:1672
 msgid "Ticket %d was not found in the support system."
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-support-access.php:1642
+#: bp-core/admin/classes/class-bb-support-access.php:1684
 msgid "The support system rejected the note. Please try again."
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-support-access.php:1958
+#: bp-core/admin/classes/class-bb-support-access.php:2000
 msgid "Support access duration updated."
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-support-access.php:1975
+#: bp-core/admin/classes/class-bb-support-access.php:2017
 msgid "Duration updated and support notified of the new expiry."
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-support-access.php:1980
+#: bp-core/admin/classes/class-bb-support-access.php:2022
 msgid "Duration updated, but the support system could not be notified for some tickets."
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-support-access.php:2004
+#: bp-core/admin/classes/class-bb-support-access.php:2046
 msgid "Support access is not currently active."
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-support-access.php:2016
+#: bp-core/admin/classes/class-bb-support-access.php:2058
 msgid "Ticket number is required."
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-support-access.php:2023
+#: bp-core/admin/classes/class-bb-support-access.php:2065
 msgid "Ticket number must be a valid numeric ID."
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-support-access.php:2046
+#: bp-core/admin/classes/class-bb-support-access.php:2088
 msgid "Ticket added and note posted to support."
 msgstr ""
 
