@@ -2515,6 +2515,11 @@
   border-bottom: 0;
 }
 
+.bb-rl-single-forum-list > li:last-child .bb_more_dropdown.open {
+  top: inherit;
+  bottom: 100%;
+}
+
 .bb-rl-single-forum-list .bb-rl-forum-reply-list-item:hover > .bb-rl-reply-header .bb-rl-reply-meta {
   opacity: 1;
   visibility: visible;
@@ -2745,10 +2750,6 @@
 
 .bb-rl-forums-pagination .bp-pagination-links {
   margin-right: 0;
-}
-
-.bb-rl-forums-pagination .bp-pagination-links span {
-  margin-bottom: var(--bb-rl-space-200);
 }
 
 .bbp-no-reply .bp-feedback {

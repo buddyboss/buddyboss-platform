@@ -370,27 +370,29 @@ class BP_Document {
 		}
 
 		if ( ! empty( $r['activity_id'] ) ) {
-			$where_conditions['activity'] = $wpdb->prepare( 'd.activity_id = %d', $r['activity_id'] );
+			$where_conditions['activity'] = $wpdb->prepare( 'd.activity_id = %d', (int) $r['activity_id'] );
 		}
 
 		// existing-document check to query document which has no folders assigned.
 		if ( ! empty( $r['folder_id'] ) && 'existing-document' !== $r['folder_id'] ) {
-			$where_conditions['folder'] = "d.folder_id = {$r['folder_id']}";
+			$where_conditions['folder'] = 'd.folder_id = ' . (int) $r['folder_id'];
 		} elseif ( ! empty( $r['folder_id'] ) && 'existing-document' === $r['folder_id'] ) {
 			$where_conditions['folder'] = 'd.folder_id = 0';
 		}
 
 		if ( ! empty( $r['user_id'] ) ) {
-			$where_conditions['user'] = $wpdb->prepare( 'd.user_id = %d', $r['user_id'] );
+			$where_conditions['user'] = $wpdb->prepare( 'd.user_id = %d', (int) $r['user_id'] );
 		}
 
 		if ( ! empty( $r['group_id'] ) ) {
-			$where_conditions['group'] = $wpdb->prepare( 'd.group_id = %d', $r['group_id'] );
+			$where_conditions['group'] = $wpdb->prepare( 'd.group_id = %d', (int) $r['group_id'] );
 		}
 
 		if ( ! empty( $r['privacy'] ) ) {
-			$privacy                     = "'" . implode( "', '", $r['privacy'] ) . "'";
-			$where_conditions['privacy'] = "d.privacy IN ({$privacy})";
+			$privacy_values              = (array) $r['privacy'];
+			$privacy_placeholders        = implode( ', ', array_fill( 0, count( $privacy_values ), '%s' ) );
+			// phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare -- $privacy_placeholders is a list of %s tokens; values are passed as prepare() args.
+			$where_conditions['privacy'] = $wpdb->prepare( "d.privacy IN ({$privacy_placeholders})", $privacy_values );
 		}
 
 		// Process meta_query into SQL.
@@ -407,9 +409,10 @@ class BP_Document {
 		// Check the status of document item.
 		if ( ! empty( $r['status'] ) ) {
 			if ( is_array( $r['status'] ) ) {
-				$status_values              = array_values( (array) $r['status'] );
-				$placeholders               = implode( ', ', array_fill( 0, count( $status_values ), '%s' ) );
-				$where_conditions['status'] = $wpdb->prepare( "d.status IN ({$placeholders})", $status_values ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQLPlaceholders.ReplacementsButNoPlaceholders
+				$status_values              = $r['status'];
+				$status_placeholders        = implode( ', ', array_fill( 0, count( $status_values ), '%s' ) );
+				// phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare -- $status_placeholders is a list of %s tokens; values are passed as prepare() args.
+				$where_conditions['status'] = $wpdb->prepare( "d.status IN ({$status_placeholders})", $status_values );
 			} else {
 				$where_conditions['status'] = $wpdb->prepare( 'd.status = %s', $r['status'] );
 			}

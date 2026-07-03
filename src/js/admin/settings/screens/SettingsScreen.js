@@ -28,7 +28,7 @@ export function SettingsScreen({ onNavigate }) {
 	const [placeholderFeatures, setPlaceholderFeatures] = useState([]);
 	const [isLoading, setIsLoading] = useState(true);
 	const [activeFilter, setActiveFilter] = useState('all'); // 'all', 'active', 'inactive'
-	const [selectedCategory, setSelectedCategory] = useState(''); // 'community', 'add-ons', 'integrations'
+	const [selectedCategory, setSelectedCategory] = useState(''); // 'community', 'add-ons', 'integrations', 'tools'
 	const [searchQuery, setSearchQuery] = useState('');
 	const [toast, setToast] = useState(null);
 	const [upgradeModal, setUpgradeModal] = useState(null); // { feature } or null
@@ -141,7 +141,7 @@ export function SettingsScreen({ onNavigate }) {
 	}, [ features, placeholderFeatures, activeFilter, selectedCategory, searchQuery ] );
 
 	// Group features by category with defined display order.
-	const categoryOrder = [ 'community', 'add-ons', 'integrations' ];
+	const categoryOrder = [ 'community', 'add-ons', 'integrations', 'tools' ];
 	const groupedFeatures = filteredFeatures.reduce((acc, feature) => {
 		const category = feature.category || 'community';
 		if (!acc[category]) {
@@ -509,6 +509,8 @@ export function SettingsScreen({ onNavigate }) {
 										? __('Community', 'buddyboss-platform')
 										: 'add-ons' === category
 										? __('Add-ons', 'buddyboss-platform')
+										: 'tools' === category
+										? __('Tools', 'buddyboss')
 										: __('Integrations', 'buddyboss-platform') }
 								</option>
 							))}
@@ -527,6 +529,10 @@ export function SettingsScreen({ onNavigate }) {
 										? __('BUDDYBOSS COMMUNITY SETTINGS', 'buddyboss-platform')
 										: 'add-ons' === category
 										? __('BUDDYBOSS ADD-ONS', 'buddyboss-platform')
+										: 'integrations' === category
+										? __('BUDDYBOSS INTEGRATIONS', 'buddyboss')
+										: 'tools' === category
+										? __('TOOLS', 'buddyboss')
 										: __('BUDDYBOSS INTEGRATIONS', 'buddyboss-platform') }
 								</h2>
 							</div>

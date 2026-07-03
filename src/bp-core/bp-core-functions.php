@@ -4771,8 +4771,20 @@ function bp_get_userid_from_mentionname( $mentionname ) {
 		// account for hyphens + spaces in the same user_login.
 		if ( empty( $userdata ) || ! is_a( $userdata, 'WP_User' ) ) {
 			global $wpdb;
-			$regex   = esc_sql( str_replace( '-', '[ \-]', $mentionname ) );
-			$user_id = $wpdb->get_var( "SELECT ID FROM {$wpdb->users} WHERE user_login REGEXP '{$regex}'" );
+			// Defense-in-depth: pass the regex value through prepare's %s
+			// placeholder so SQL-level quoting is enforced even though the
+			// upstream extractor at bp_find_mentions_by_at_sign() restricts
+			// $mentionname to [A-Za-z0-9-_.@]+ (no quotes possible today).
+			// The literal `-` is intentionally expanded to `[ \-]` so users
+			// stored with spaces match against hyphen-encoded mentions; only
+			// `-` is replaced, the rest stays literal.
+			$regex   = str_replace( '-', '[ \-]', $mentionname );
+			$user_id = $wpdb->get_var(
+				$wpdb->prepare(
+					"SELECT ID FROM {$wpdb->users} WHERE user_login REGEXP %s",
+					$regex
+				)
+			);
 		} else {
 			$user_id = $userdata->ID;
 		}
@@ -10750,4 +10762,197 @@ function bb_email_get_type_group( $type_slug ) {
 	 * @param string $type_slug The email type taxonomy term slug.
 	 */
 	return apply_filters( 'bb_email_type_group', $group, $type_slug );
+}
+
+/**
+ * Probe function exposed for the buddyboss-tools addon to detect that the
+ * current Platform release supports the Settings 2.0 Tools panel slots.
+ *
+ * This function is intentionally a no-op — its mere existence is the signal
+ * Tools checks via `function_exists()` in its requirements probe. Platforms
+ * older than the Settings 2.0 Tools release do not define it, and Tools
+ * stays silent on those installs.
+ *
+ * Do not call this function directly; it is a marker for compatibility.
+ *
+ * @since BuddyBoss 3.1.0
+ *
+ * @param string $panel_slot_id Reserved for future use; ignored.
+ * @return void
+ */
+function bb_tools_register_panel_slot( $panel_slot_id = '' ) {
+	// Intentionally empty — this function is a presence-detection marker
+	// for the buddyboss-tools addon. The `$panel_slot_id` parameter exists
+	// so future revisions can extend the contract without breaking callers.
+	unset( $panel_slot_id );
+}
+
+/**
+ * Returns whether the buddyboss-tools addon is loaded and active.
+ *
+ * Resolves the `bb_tools_addon_active` filter (the addon subscribes with
+ * `__return_true`) and falls back to checking `is_plugin_active()` as a
+ * backstop for code paths that run before the addon has had a chance to
+ * register its filter.
+ *
+ * @since BuddyBoss 3.1.0
+ *
+ * @return bool True if Tools is active and its panel React components are
+ *              expected to be registered; false otherwise.
+ */
+function bb_tools_addon_active() {
+	if ( ! function_exists( 'is_plugin_active' ) ) {
+		require_once ABSPATH . 'wp-admin/includes/plugin.php';
+	}
+
+	/**
+	 * Filter whether the buddyboss-tools addon is active.
+	 *
+	 * The addon subscribes to this filter with `__return_true`. Platform
+	 * code reading this value falls through to `is_plugin_active()` as a
+	 * backstop if the filter has not been hooked yet (e.g. during very
+	 * early `plugins_loaded`).
+	 *
+	 * @since BuddyBoss 3.1.0
+	 *
+	 * @param bool $active Default false.
+	 */
+	$filtered = (bool) apply_filters( 'bb_tools_addon_active', false );
+	if ( $filtered ) {
+		return true;
+	}
+
+	return is_plugin_active( 'buddyboss-tools/buddyboss-tools.php' );
+}
+
+/**
+ * Map of Tools usage areas to their (root-blog) storage option names.
+ *
+ * Each area gets its own option so the data stays isolated per area. To add a
+ * new area later, add one entry here — the recorder, reader, and seed all key
+ * off this map.
+ *
+ * @since BuddyBoss 3.1.0
+ *
+ * @return array Map of area key => option name.
+ */
+function bb_tool_usage_areas() {
+	return array(
+		'repair'      => 'bb_repair_platform_usage',
+		'migration'   => 'bb_tools_migration_usage',
+		'sample_data' => 'bb_sample_data_usage',
+	);
+}
+
+/**
+ * Increment the usage counter for one Tools action and stamp last_run.
+ *
+ * Cumulative per-action usage counts (+ last_run) for the Tools areas
+ * (Repair, Sample Data, Migration). Each area is stored in its own root-blog
+ * option (see bb_tool_usage_areas()) as a flat `action => { count, last_run }`
+ * map. Read-modify-write; safe because the Tools panels dispatch their AJAX
+ * sequentially (one in-flight write per click).
+ *
+ * @since BuddyBoss 3.1.0
+ *
+ * @param string $area   Area key: 'repair' | 'sample_data' | 'migration'.
+ * @param string $action Action key (repair slug / importer key / platform).
+ *                       Normalized by sanitize_key() (lowercased).
+ * @param string $label  Optional human label for the action, captured so the
+ *                       report can display third-party / mixed-case names
+ *                       (e.g. 'phpBB', or a third-party repair tool's title)
+ *                       that can't be reconstructed from the slug. Stored once
+ *                       and refreshed whenever a non-empty label is supplied.
+ *
+ * @return bool True on write, false on no-op (empty/unknown args).
+ */
+function bb_record_tool_usage( $area, $action, $label = '' ) {
+	$area   = sanitize_key( $area );
+	$action = sanitize_key( $action );
+	if ( '' === $area || '' === $action ) {
+		return false;
+	}
+
+	$areas = bb_tool_usage_areas();
+	if ( ! isset( $areas[ $area ] ) ) {
+		return false;
+	}
+	$option = $areas[ $area ];
+
+	$usage = bp_get_option( $option, null );
+
+	// First write: create the option with autoload OFF (read only by the
+	// telemetry cron). bp_* wrappers cannot pass the autoload flag, so seed it
+	// explicitly; later bp_update_option() calls preserve autoload = 'no'.
+	if ( ! is_array( $usage ) ) {
+		$usage = array();
+		bb_tools_usage_seed_autoload_off( $option );
+	}
+
+	$entry             = ( isset( $usage[ $action ] ) && is_array( $usage[ $action ] ) ) ? $usage[ $action ] : array();
+	$entry['count']    = ( isset( $entry['count'] ) ? (int) $entry['count'] : 0 ) + 1;
+	$entry['last_run'] = gmdate( 'Y-m-d H:i:s' );
+
+	// Capture the human label (incl. third-party tools whose label the report
+	// can't otherwise know). Decode any pre-escaped source label (e.g. an
+	// esc_html'd repair title with &quot;) to raw text so the report — which
+	// escapes on output — doesn't double-encode it. Only overwrite when a
+	// non-empty label is supplied.
+	$label = sanitize_text_field( wp_specialchars_decode( (string) $label, ENT_QUOTES ) );
+	if ( '' !== $label ) {
+		$entry['label'] = $label;
+	}
+
+	$usage[ $action ] = $entry;
+
+	return bp_update_option( $option, $usage );
+}
+
+/**
+ * One-time seed: create a Tools usage option with autoload 'no' on the
+ * BuddyPress root blog.
+ *
+ * @since BuddyBoss 3.1.0
+ *
+ * @param string $option Option name to seed.
+ *
+ * @return void
+ */
+function bb_tools_usage_seed_autoload_off( $option ) {
+	$option = sanitize_key( $option );
+	if ( '' === $option ) {
+		return;
+	}
+
+	$root     = bp_get_root_blog_id();
+	$switched = false;
+	if ( is_multisite() && get_current_blog_id() !== $root ) {
+		switch_to_blog( $root );
+		$switched = true;
+	}
+	if ( false === get_option( $option, false ) ) {
+		add_option( $option, array(), '', 'no' );
+	}
+	if ( $switched ) {
+		restore_current_blog();
+	}
+}
+
+/**
+ * Get the full Tools usage map (also the telemetry source), assembled from the
+ * per-area options into a single nested map. Root-blog scope.
+ *
+ * @since BuddyBoss 3.1.0
+ *
+ * @return array Map of area => action => { count, last_run }.
+ */
+function bb_get_tool_usage() {
+	$out = array();
+	foreach ( bb_tool_usage_areas() as $area => $option ) {
+		$data = bp_get_option( $option, array() );
+		if ( is_array( $data ) && ! empty( $data ) ) {
+			$out[ $area ] = $data;
+		}
+	}
+	return $out;
 }

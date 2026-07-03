@@ -14,19 +14,19 @@ defined( 'ABSPATH' ) || exit;
 <script type="text/html" id="tmpl-bb-member-subscription-loading">
 	<div class="subscription-items-loader is_loading">
 		<div class="subscription-items_loading">
-			<div class="subscription-items-image_loading bb-loading-bg"></div>
+			<div class="subscription-items-image_loading bb-rl-loading-bg"></div>
 
-			<div class="subscription-items-text_loading bb-loading-bg"></div>
+			<div class="subscription-items-text_loading bb-rl-loading-bg"></div>
 		</div>
 		<div class="subscription-items_loading">
-			<div class="subscription-items-image_loading bb-loading-bg"></div>
+			<div class="subscription-items-image_loading bb-rl-loading-bg"></div>
 
-			<div class="subscription-items-text_loading bb-loading-bg"></div>
+			<div class="subscription-items-text_loading bb-rl-loading-bg"></div>
 		</div>
 		<div class="subscription-items_loading">
-			<div class="subscription-items-image_loading bb-loading-bg"></div>
+			<div class="subscription-items-image_loading bb-rl-loading-bg"></div>
 
-			<div class="subscription-items-text_loading bb-loading-bg"></div>
+			<div class="subscription-items-text_loading bb-rl-loading-bg"></div>
 		</div>
 	</div>
 </script>

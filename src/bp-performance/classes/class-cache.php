@@ -399,24 +399,21 @@ class Cache {
 	/**
 	 * Purge cache by Component for setting screen
 	 *
-	 * @param string $component Component cache-group fragment to match (LIKE).
+	 * @param string $component Component cache-group prefix to purge (e.g. 'bp-activity').
 	 */
-	public function purge_by_component( $component = array() ) {
+	public function purge_by_component( $component = '' ) {
 		global $wpdb;
 
-		// $component reaches here from request input (settings purge handler reads
-		// $_GET['component']); sanitize_text_field does NOT make it SQL-safe. Build
-		// the LIKE clause as a bound parameter and escape the wildcard literal so a
-		// crafted value cannot break out of the string and inject SQL.
-		$like = '%' . $wpdb->esc_like( (string) $component ) . '%';
+		// Bail on an empty component so we never build a "LIKE '%%'" that wipes the whole table.
+		if ( '' === (string) $component ) {
+			return;
+		}
+
+		$like = '%' . $wpdb->esc_like( $component ) . '%';
 
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$wpdb->query(
-			$wpdb->prepare(
-				// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- table name is a trusted internal property.
-				"DELETE FROM {$this->cache_table} WHERE cache_group LIKE %s",
-				$like
-			)
+			$wpdb->prepare( "DELETE FROM {$this->cache_table} WHERE cache_group LIKE %s", $like )
 		);
 	}
 

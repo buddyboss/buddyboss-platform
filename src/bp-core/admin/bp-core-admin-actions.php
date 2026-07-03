@@ -200,16 +200,18 @@ function bb_redirect_bp_settings_before_permission_check() {
 	// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only URL inspection.
 	$page = isset( $_GET['page'] ) ? sanitize_text_field( wp_unslash( $_GET['page'] ) ) : '';
 
-	// Retired Settings 2.0 standalone admin pages whose submenu items now
-	// register a Settings 2.0 URL as their slug (Groups / Moderation / Profile
-	// Fields). The legacy slug `?page=bp-groups` etc. is no longer registered
-	// with WP, so a direct visit would 403 at `user_can_access_admin_page()`
-	// without this early forward. Sidebar link clicks land on the new URL
-	// directly — this map only matters for direct old-URL hits
-	// (LearnDash, bookmarks, third-party links).
-	//
-	// Extend this map when retiring further standalone admin screens whose
-	// `add_submenu_page` registration has been switched to a URL slug.
+	/*
+	 * Retired Settings 2.0 standalone admin pages whose submenu items now
+	 * register a Settings 2.0 URL as their slug (Groups / Moderation / Profile
+	 * Fields). The legacy slug `?page=bp-groups` etc. is no longer registered
+	 * with WP, so a direct visit would 403 at `user_can_access_admin_page()`
+	 * without this early forward. Sidebar link clicks land on the new URL
+	 * directly — this map only matters for direct old-URL hits
+	 * (LearnDash, bookmarks, third-party links).
+	 *
+	 * Extend this map when retiring further standalone admin screens whose
+	 * `add_submenu_page` registration has been switched to a URL slug.
+	 */
 	$retired_pages = array(
 		'bp-groups'        => 'admin.php?page=bb-settings&tab=groups&panel=all_groups',
 		'bp-moderation'    => 'admin.php?page=bb-settings&tab=moderation&panel=flagged_members',
@@ -238,9 +240,11 @@ function bb_redirect_bp_settings_before_permission_check() {
 		exit;
 	}
 
-	// Other retired Settings 2.0 standalone admin pages whose submenu
-	// registrations were removed entirely (no replacement add_submenu_page
-	// call). Same 403-prevention rationale as the map above.
+	/*
+	 * Other retired Settings 2.0 standalone admin pages whose submenu
+	 * registrations were removed entirely (no replacement add_submenu_page
+	 * call). Same 403-prevention rationale as the map above.
+	 */
 	if ( 'bp-pages' === $page ) {
 		$bp_pages_target = bp_get_admin_url( 'admin.php?page=bb-settings&tab=appearance&panel=pages' );
 
@@ -267,13 +271,15 @@ function bb_redirect_bp_settings_before_permission_check() {
 		exit;
 	}
 
-	// Redirect legacy ReadyLaunch standalone admin page
-	// (`admin.php?page=bb-readylaunch`) to the Appearance feature in
-	// Settings 2.0. Must be handled here on `admin_menu @ PHP_INT_MAX`
-	// (not `bp_admin_init`) because the submenu was removed during the
-	// Settings 2.0 migration — without this early redirect WP's
-	// `user_can_access_admin_page()` check fires `wp_die()` before any
-	// `admin_init`-priority hook can intercept.
+	/*
+	 * Redirect legacy ReadyLaunch standalone admin page
+	 * (`admin.php?page=bb-readylaunch`) to the Appearance feature in
+	 * Settings 2.0. Must be handled here on `admin_menu @ PHP_INT_MAX`
+	 * (not `bp_admin_init`) because the submenu was removed during the
+	 * Settings 2.0 migration — without this early redirect WP's
+	 * `user_can_access_admin_page()` check fires `wp_die()` before any
+	 * `admin_init`-priority hook can intercept.
+	 */
 	if ( 'bb-readylaunch' === $page ) {
 		$rl_target = bp_get_admin_url( 'admin.php?page=bb-settings&tab=appearance' );
 
@@ -293,6 +299,139 @@ function bb_redirect_bp_settings_before_permission_check() {
 		}
 
 		wp_safe_redirect( $rl_target );
+		exit;
+	}
+
+	/*
+	 * `?page=bp-tools` (and every sub-tab) retired in BuddyBoss 3.1.0.
+	 * The whole legacy Tools page was replaced by the Settings 2.0 Tools
+	 * feature (`?page=bb-settings&tab=tools`). Map every known sub-tab to its
+	 * counterpart panel; fall back to the default Tools landing for anything
+	 * unrecognized (own sub-tabs from third-party filters, etc.).
+	 *
+	 * @since BuddyBoss 3.1.0
+	 */
+	if ( 'bp-tools' === $page ) {
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only URL inspection.
+		$bp_tools_tab = isset( $_GET['tab'] ) ? sanitize_text_field( wp_unslash( $_GET['tab'] ) ) : '';
+
+		$panel_for_tab = array(
+			'bp-tools-default-data' => 'sample_data',
+			'bp-repair-community'   => 'repair_platform',
+			'bbp-repair'            => 'repair_platform',
+			'bbp-converter'         => 'migration_tools',
+			'bp-tools-forum-import' => 'migration_tools',
+		);
+		$target_panel  = isset( $panel_for_tab[ $bp_tools_tab ] ) ? $panel_for_tab[ $bp_tools_tab ] : '';
+
+		$redirect_args = array(
+			'page' => 'bb-settings',
+			'tab'  => 'tools',
+		);
+		if ( '' !== $target_panel ) {
+			$redirect_args['panel'] = $target_panel;
+		}
+
+		/*
+		 * Preserve any extra query args (deep-link flags, etc.) — drop the
+		 * ones we're rewriting.
+		 */
+		$reserved_qs = array( 'page', 'tab', 'panel' );
+		foreach ( $_GET as $key => $value ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only URL inspection.
+			if ( in_array( $key, $reserved_qs, true ) ) {
+				continue;
+			}
+			if ( is_scalar( $value ) ) {
+				$redirect_args[ sanitize_key( $key ) ] = sanitize_text_field( wp_unslash( $value ) );
+			}
+		}
+
+		wp_safe_redirect(
+			esc_url_raw(
+				add_query_arg( $redirect_args, admin_url( 'admin.php' ) )
+			),
+			301
+		);
+		exit;
+	}
+
+	/*
+	 * `?page=bp-member-type-import` retired in BuddyBoss 3.1.0
+	 * — the Profile Types importer was extracted to the buddyboss-tools
+	 * plugin's `migration/profile-types/` folder and now renders as a card
+	 * inside the Settings 2.0 Migration Tools panel.
+	 *
+	 * @since BuddyBoss 3.1.0
+	 */
+	if ( 'bp-member-type-import' === $page ) {
+		wp_safe_redirect(
+			bp_get_admin_url( 'admin.php?page=bb-settings&tab=tools&panel=migration_tools' )
+		);
+		exit;
+	}
+
+	/*
+	 * `?page=bbp-converter` retired in BuddyBoss 3.1.0
+	 * — the Forum Converter (bbPress importer) was extracted to the
+	 * buddyboss-tools plugin and now renders as a card inside the Settings 2.0
+	 * Migration Tools panel. Redirect old bookmarks and browser-history links
+	 * (Phase 4 forum-import migration). Preserves extra query args so
+	 * `?page=bbp-converter&foo=bar` lands at `…panel=migration_tools&foo=bar`.
+	 *
+	 * @since BuddyBoss 3.1.0
+	 */
+	if ( 'bbp-converter' === $page ) {
+		$converter_target = bp_get_admin_url( 'admin.php?page=bb-settings&tab=tools&panel=migration_tools' );
+
+		// Preserve any non-routing query args (deep-link flags, etc.).
+		$reserved_qs = array( 'page', 'tab', 'panel' );
+		$extra_qs    = array();
+		foreach ( $_GET as $key => $value ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only URL inspection for redirect target construction.
+			if ( in_array( $key, $reserved_qs, true ) ) {
+				continue;
+			}
+			if ( is_scalar( $value ) ) {
+				$extra_qs[ sanitize_key( $key ) ] = sanitize_text_field( wp_unslash( $value ) );
+			}
+		}
+		if ( ! empty( $extra_qs ) ) {
+			$converter_target = add_query_arg( $extra_qs, $converter_target );
+		}
+
+		wp_safe_redirect( $converter_target );
+		exit;
+	}
+
+	/*
+	 * Retired Repair Community + Repair Forums standalone admin pages:
+	 * ?page=bp-repair-community  (standalone Repair Community page)
+	 * ?page=bbp-repair           (standalone Forum Repair page)
+	 * Both redirect to the new Settings 2.0 Tools → Repair Platform panel.
+	 * NOTE: ?page=bp-tools (root) is NOT redirected here — that page still
+	 * hosts the legacy Forum Import sub-tab which migrates in Phase 3.
+	 *
+	 * @since BuddyBoss 3.1.0
+	 */
+	if ( in_array( $page, array( 'bp-repair-community', 'bbp-repair' ), true ) ) {
+		$tools_target = bp_get_admin_url( 'admin.php?page=bb-settings&tab=tools&panel=repair_platform' );
+
+		// Preserve any non-routing query args (deep-link flags, etc.).
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only URL inspection.
+		$reserved_qs = array( 'page', 'tab', 'panel' );
+		$extra_qs    = array();
+		foreach ( $_GET as $key => $value ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only URL inspection.
+			if ( in_array( $key, $reserved_qs, true ) ) {
+				continue;
+			}
+			if ( is_scalar( $value ) ) {
+				$extra_qs[ sanitize_key( $key ) ] = sanitize_text_field( wp_unslash( $value ) );
+			}
+		}
+		if ( ! empty( $extra_qs ) ) {
+			$tools_target = add_query_arg( $extra_qs, $tools_target );
+		}
+
+		wp_safe_redirect( $tools_target );
 		exit;
 	}
 
@@ -322,18 +461,22 @@ function bb_redirect_bp_settings_before_permission_check() {
 			$target = bb_apply_legacy_tab_mapping_to_url( $target, $legacy_integration_tabs[ $tab ] );
 		}
 	} elseif ( 'bp-settings' === $page && ! empty( $tab ) ) {
-		// Normalize legacy Settings 1.0 tab slugs (bp-activity → activity, etc.)
-		// here so this single redirect lands the user directly on a valid
-		// Settings 2.0 route. The post-redirect handler can't do it: once the
-		// URL is already ?page=bb-settings it no longer matches its own guard.
+		/*
+		 * Normalize legacy Settings 1.0 tab slugs (bp-activity → activity, etc.)
+		 * here so this single redirect lands the user directly on a valid
+		 * Settings 2.0 route. The post-redirect handler can't do it: once the
+		 * URL is already ?page=bb-settings it no longer matches its own guard.
+		 */
 		$legacy_tabs_mapping = bb_get_legacy_settings_tabs_mapping();
 
 		if ( isset( $legacy_tabs_mapping[ $tab ] ) ) {
 			$target = bb_apply_legacy_tab_mapping_to_url( $target, $legacy_tabs_mapping[ $tab ] );
 		} else {
-			// Unknown tab — preserve as-is so Pro / third-party add-ons that
-			// registered custom tabs via the `bb_legacy_settings_tabs_mapping`
-			// filter (but weren't loaded this request) aren't silently dropped.
+			/*
+			 * Unknown tab — preserve as-is so Pro / third-party add-ons that
+			 * registered custom tabs via the `bb_legacy_settings_tabs_mapping`
+			 * filter (but weren't loaded this request) aren't silently dropped.
+			 */
 			$target = add_query_arg( 'tab', $tab, $target );
 		}
 	}
@@ -589,20 +732,29 @@ function bb_check_user_nickname( &$errors, $update, &$user ) {
 
 	$un_name = ( ! empty( $user->nickname ) ) ? $user->nickname : $user->user_login;
 
+	// $user->nickname carries the magic-quote slashes from $_POST; unslash before
+	// passing to $wpdb->prepare() so the value is escaped exactly once and the
+	// comparison matches the unslashed value stored in usermeta.
+	$un_name = wp_unslash( $un_name );
+
 	if ( ! empty( $user->ID ) ) {
-		$sql = $wpdb->prepare(
-			"SELECT count(*) FROM {$wpdb->usermeta} WHERE meta_key = 'nickname' AND meta_value = %s AND user_id != %d",
-			$un_name,
-			$user->ID
+		$nickname_count = $wpdb->get_var(
+			$wpdb->prepare(
+				"SELECT count(*) FROM {$wpdb->usermeta} WHERE meta_key = 'nickname' AND meta_value = %s AND user_id != %d",
+				$un_name,
+				$user->ID
+			)
 		);
 	} else {
-		$sql = $wpdb->prepare(
-			"SELECT count(*) FROM {$wpdb->usermeta} WHERE meta_key = 'nickname' AND meta_value = %s",
-			$un_name
+		$nickname_count = $wpdb->get_var(
+			$wpdb->prepare(
+				"SELECT count(*) FROM {$wpdb->usermeta} WHERE meta_key = 'nickname' AND meta_value = %s",
+				$un_name
+			)
 		);
 	}
 
-	if ( $wpdb->get_var( $sql ) > 0 ) { // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $sql is $wpdb->prepare()'d above.
+	if ( $nickname_count > 0 ) { // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $sql is $wpdb->prepare()'d above.
 		$errors->add( 'nickname_exists', __( '<strong>Error</strong>: Nickname already has been taken. Please try again.', 'buddyboss-platform' ), array( 'form-field' => 'nickname' ) );
 	}
 }
@@ -680,11 +832,13 @@ function bb_validate_restricted_email_on_registration( $errors, $update, $user )
 		if ( $update ) {
 			$old_user_data = get_userdata( $user->ID );
 
-			// `get_userdata()` returns false for non-existent users
-			// (e.g. when the filter fires mid-creation before the user
-			// row is committed, or for stale IDs from custom flows).
-			// Treat that as "no previously-saved email to honour" and
-			// fall through to the blacklist error.
+			/*
+			 * `get_userdata()` returns false for non-existent users
+			 * (e.g. when the filter fires mid-creation before the user
+			 * row is committed, or for stale IDs from custom flows).
+			 * Treat that as "no previously-saved email to honour" and
+			 * fall through to the blacklist error.
+			 */
 			if ( $old_user_data && $old_user_data->user_email === $user->user_email ) {
 				return $errors;
 			}
@@ -712,11 +866,13 @@ function bb_validate_restricted_email_on_profile_update( $user_id ) {
 		$email         = $_REQUEST['email']; // phpcs:ignore
 		$old_user_data = get_userdata( $user_id );
 
-		// `get_userdata()` returns false for non-existent users — bail
-		// rather than fatal on `false->user_email`. The downstream
-		// "prevent confirmation email" tweak is only meaningful when we
-		// know there's a prior email to compare against, so falling
-		// through is the correct behaviour for missing users too.
+		/*
+		 * `get_userdata()` returns false for non-existent users — bail
+		 * rather than fatal on `false->user_email`. The downstream
+		 * "prevent confirmation email" tweak is only meaningful when we
+		 * know there's a prior email to compare against, so falling
+		 * through is the correct behaviour for missing users too.
+		 */
 		if (
 			$old_user_data &&
 			$old_user_data->user_email !== $email &&
@@ -801,7 +957,11 @@ function bb_render_admin_header() {
 					// submenu deleted, URL redirects to Settings 2.0. Screen ID
 					// no longer reachable so the check is dead weight.
 					'buddyboss_page_bb-upgrade' !== $screen->id &&
-					'buddyboss_page_bb-settings' !== $screen->id
+					'buddyboss_page_bb-settings' !== $screen->id &&
+					// Integrations renders the shared React header (.bb-admin-header)
+					// itself, like Settings — skip the legacy .bb-tab-header here so
+					// the page does not show two header bars.
+					'buddyboss_page_bb-integrations' !== $screen->id
 				)
 			)
 		) ||
@@ -845,37 +1005,45 @@ function bb_redirect_legacy_settings_to_settings_2() {
 	$tab       = isset( $_GET['tab'] ) ? sanitize_text_field( wp_unslash( $_GET['tab'] ) ) : '';
 	$post_type = isset( $_GET['post_type'] ) ? sanitize_key( wp_unslash( $_GET['post_type'] ) ) : '';
 
-	// Always forward bp-settings → bb-settings (even before Settings 2.0 loads).
-	// This runs unconditionally because the bp-settings submenu is no longer
-	// registered; without this forward the user hits "you are not allowed"
-	// when clicking an old bookmark. The tab-mapping logic further down
-	// handles ?page=bp-settings&tab=... cases; here we only handle the bare
-	// ?page=bp-settings hit with no tab.
+	/*
+	 * Always forward bp-settings → bb-settings (even before Settings 2.0 loads).
+	 * This runs unconditionally because the bp-settings submenu is no longer
+	 * registered; without this forward the user hits "you are not allowed"
+	 * when clicking an old bookmark. The tab-mapping logic further down
+	 * handles ?page=bp-settings&tab=... cases; here we only handle the bare
+	 * ?page=bp-settings hit with no tab.
+	 */
 	if ( 'bp-settings' === $page && empty( $tab ) ) {
 		wp_safe_redirect( bp_get_admin_url( 'admin.php?page=bb-settings' ) );
 		exit;
 	}
 
-	// Everything below is Settings 2.0-aware redirect logic (tab mappings,
-	// CPT redirects, etc.). Skip when Settings 2.0 is not loaded so we don't
-	// redirect into a non-existent page.
+	/*
+	 * Everything below is Settings 2.0-aware redirect logic (tab mappings,
+	 * CPT redirects, etc.). Skip when Settings 2.0 is not loaded so we don't
+	 * redirect into a non-existent page.
+	 */
 	if ( ! function_exists( 'bb_register_feature' ) ) {
 		// phpcs:enable WordPress.Security.NonceVerification.Recommended
 		return;
 	}
 
-	// Redirect legacy CPT single edit screens (post.php?post=ID&action=edit) to Settings 2.0.
-	// These post types are now managed via React admin — the classic editor should not be accessible.
+	/*
+	 * Redirect legacy CPT single edit screens (post.php?post=ID&action=edit) to Settings 2.0.
+	 * These post types are now managed via React admin — the classic editor should not be accessible.
+	 */
 	$post_id = isset( $_GET['post'] ) ? absint( $_GET['post'] ) : 0;
 	$action  = isset( $_GET['action'] ) ? sanitize_key( wp_unslash( $_GET['action'] ) ) : '';
 	// phpcs:enable WordPress.Security.NonceVerification.Recommended
 
-	// Hoist component-active flags — read once at function entry rather than
-	// re-evaluating `bp_is_active( ... )` at each branch below. `bp_is_active()`
-	// is already cheap (in-memory hash lookup on `$bp->active_components`), but
-	// consolidating here makes the gating obvious to the reader and removes
-	// duplicate calls within this ~230-line function: groups 3x, members 3x,
-	// forums 2x, invites 2x. Same value within the request — no stale-read risk.
+	/*
+	 * Hoist component-active flags — read once at function entry rather than
+	 * re-evaluating `bp_is_active( ... )` at each branch below. `bp_is_active()`
+	 * is already cheap (in-memory hash lookup on `$bp->active_components`), but
+	 * consolidating here makes the gating obvious to the reader and removes
+	 * duplicate calls within this ~230-line function: groups 3x, members 3x,
+	 * forums 2x, invites 2x. Same value within the request — no stale-read risk.
+	 */
 	$groups_active  = bp_is_active( 'groups' );
 	$members_active = bp_is_active( 'members' );
 	$forums_active  = bp_is_active( 'forums' );
@@ -884,12 +1052,14 @@ function bb_redirect_legacy_settings_to_settings_2() {
 	if ( $post_id > 0 && 'edit' === $action ) {
 		$edit_post_type = get_post_type( $post_id );
 
-		// Map of migrated CPT slugs to their Settings 2.0 redirect URLs.
-		// Each entry is gated on its component being active *and* the
-		// CPT-getter function being defined, because the getter is loaded
-		// by the component's loader file — deactivating the component
-		// leaves the function undefined and an unguarded call here would
-		// fatal during the admin redirect.
+		/*
+		 * Map of migrated CPT slugs to their Settings 2.0 redirect URLs.
+		 * Each entry is gated on its component being active *and* the
+		 * CPT-getter function being defined, because the getter is loaded
+		 * by the component's loader file — deactivating the component
+		 * leaves the function undefined and an unguarded call here would
+		 * fatal during the admin redirect.
+		 */
 		$cpt_redirects = array();
 
 		// Emails CPT — part of bp-core, always available alongside Settings 2.0.
@@ -937,9 +1107,11 @@ function bb_redirect_legacy_settings_to_settings_2() {
 		}
 	}
 
-	// Redirect legacy Group Types CPT page (edit.php?post_type=bp-group-type).
-	// Only when groups component is active; otherwise the target panel is
-	// not registered and we'd redirect into a 404'd settings tab.
+	/*
+	 * Redirect legacy Group Types CPT page (edit.php?post_type=bp-group-type).
+	 * Only when groups component is active; otherwise the target panel is
+	 * not registered and we'd redirect into a 404'd settings tab.
+	 */
 	if ( 'bp-group-type' === $post_type && $groups_active ) {
 		wp_safe_redirect( bp_get_admin_url( 'admin.php?page=bb-settings&tab=groups&panel=group_types' ) );
 		exit;
@@ -957,9 +1129,11 @@ function bb_redirect_legacy_settings_to_settings_2() {
 		exit;
 	}
 
-	// Redirect legacy Member Types CPT page (edit.php?post_type=bp-member-type).
-	// `bp_get_member_type_post_type()` is loaded by the members component;
-	// guard the call so a deactivated members component doesn't fatal here.
+	/*
+	 * Redirect legacy Member Types CPT page (edit.php?post_type=bp-member-type).
+	 * `bp_get_member_type_post_type()` is loaded by the members component;
+	 * guard the call so a deactivated members component doesn't fatal here.
+	 */
 	if ( $members_active && function_exists( 'bp_get_member_type_post_type' ) && bp_get_member_type_post_type() === $post_type ) {
 		wp_safe_redirect( bp_get_admin_url( 'admin.php?page=bb-settings&tab=members&panel=profile_types' ) );
 		exit;
@@ -996,10 +1170,12 @@ function bb_redirect_legacy_settings_to_settings_2() {
 		}
 	}
 
-	// Redirect legacy Email Invites CPT page (edit.php?post_type=bp-invite).
-	// Mirrors the gating used in the `?action=edit` CPT map above: deactivating
-	// the invites component removes the target Settings 2.0 panel, so without
-	// the active check we'd redirect into a 404'd settings tab.
+	/*
+	 * Redirect legacy Email Invites CPT page (edit.php?post_type=bp-invite).
+	 * Mirrors the gating used in the `?action=edit` CPT map above: deactivating
+	 * the invites component removes the target Settings 2.0 panel, so without
+	 * the active check we'd redirect into a 404'd settings tab.
+	 */
 	if ( $invites_active && function_exists( 'bp_get_invite_post_type' ) && bp_get_invite_post_type() === $post_type ) {
 		wp_safe_redirect( bp_get_admin_url( 'admin.php?page=bb-settings&tab=invites&panel=invites_list' ) );
 		exit;
@@ -1011,12 +1187,14 @@ function bb_redirect_legacy_settings_to_settings_2() {
 		exit;
 	}
 
-	// Note: legacy `?page=bb-readylaunch` redirect is handled earlier in
-	// `bb_redirect_bp_settings_before_permission_check()` on
-	// `admin_menu @ PHP_INT_MAX`, which fires before WP's permission check
-	// — required because the standalone submenu was unregistered during the
-	// Settings 2.0 migration. Any redirect at `bp_admin_init` priority would
-	// be too late and the request would 403 before reaching this hook.
+	/*
+	 * Note: legacy `?page=bb-readylaunch` redirect is handled earlier in
+	 * `bb_redirect_bp_settings_before_permission_check()` on
+	 * `admin_menu @ PHP_INT_MAX`, which fires before WP's permission check
+	 * — required because the standalone submenu was unregistered during the
+	 * Settings 2.0 migration. Any redirect at `bp_admin_init` priority would
+	 * be too late and the request would 403 before reaching this hook.
+	 */
 
 	// Redirect legacy integration tabs (bp-integrations page).
 	if ( 'bp-integrations' === $page && ! empty( $tab ) ) {
@@ -1051,13 +1229,15 @@ function bb_redirect_legacy_settings_to_settings_2() {
 		}
 	}
 
-	// Bare ?page=bp-settings (no tab) was already forwarded at the top of
-	// this function, so by the time we reach here we only handle the
-	// tab-mapping path. Note: in the usual request flow the earlier
-	// `admin_menu`-priority redirect (`bb_redirect_bp_settings_before_permission_check`)
-	// already normalized the tab before this point, so this branch is mainly
-	// a safety net for callers that reach `bp_admin_init` with an unredirected
-	// `?page=bp-settings&tab=...` URL (e.g., REST / WP-CLI admin-init callers).
+	/*
+	 * Bare ?page=bp-settings (no tab) was already forwarded at the top of
+	 * this function, so by the time we reach here we only handle the
+	 * tab-mapping path. Note: in the usual request flow the earlier
+	 * `admin_menu`-priority redirect (`bb_redirect_bp_settings_before_permission_check`)
+	 * already normalized the tab before this point, so this branch is mainly
+	 * a safety net for callers that reach `bp_admin_init` with an unredirected
+	 * `?page=bp-settings&tab=...` URL (e.g., REST / WP-CLI admin-init callers).
+	 */
 	if ( 'bp-settings' !== $page || empty( $tab ) ) {
 		return;
 	}

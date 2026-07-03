@@ -31,7 +31,17 @@ bb_register_integration(
 		'standalone'         => true,
 		'integration_id'     => 'recaptcha',
 		'is_active_callback' => function () {
-			return (bool) apply_filters( 'bb_recaptcha_integration_is_active', true );
+			// Respect Settings 2.0 feature toggle (bb-active-features).
+			// Backward compat: if 'recaptcha' key not set, treat as enabled
+			// (same as before this toggle existed).
+			$active_features = bp_get_option( 'bb-active-features', array() );
+			if ( ! array_key_exists( 'recaptcha', $active_features ) ) {
+				$is_active = true;
+			} else {
+				$is_active = ! empty( $active_features['recaptcha'] );
+			}
+
+			return (bool) apply_filters( 'bb_recaptcha_integration_is_active', $is_active );
 		},
 		'settings_route'     => '/settings/recaptcha',
 		// First slot in the Integrations category. reCAPTCHA is not in the

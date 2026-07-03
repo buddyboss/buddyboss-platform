@@ -8,16 +8,17 @@
  * @since BuddyBoss [BBVERSION]
  */
 
-import { useState, useRef, useEffect, useCallback } from '@wordpress/element';
+import { useState, useRef, useEffect, useCallback, Fragment } from '@wordpress/element';
 import {
 	Modal,
 	Button,
 } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 
-import { createForum, uploadForumImage } from '../../utils/ajax';
-import { toSlug, groupFieldsWithLayout, buildRegisteredFieldPayload, getVisibleFields, needsSeparator } from '../../utils/format';
+import { createForum } from '../../utils/ajax';
+import { toSlug, groupFieldsWithLayout, buildRegisteredFieldPayload, getVisibleFields, isFieldConditionalDisabled, needsSeparator, splitFieldsByMetaboxGroup } from '../../utils/format';
 import { safeUrl } from '../../utils/sanitize';
+import { useMediaFrame } from '../../hooks/useMediaFrame';
 import { RegisteredMetaField } from '../common/RegisteredMetaField';
 import { forceRemoveEditor } from '../common/RichTextEditor';
 
@@ -52,10 +53,6 @@ export function ForumCreateModal( { isOpen, onClose, onCreated, forumBaseSlug, c
 	var imageUrl = imageUrlState[ 0 ];
 	var setImageUrl = imageUrlState[ 1 ];
 
-	var isUploadingState = useState( false );
-	var isUploading = isUploadingState[ 0 ];
-	var setIsUploading = isUploadingState[ 1 ];
-
 	var isSavingState = useState( false );
 	var isSaving = isSavingState[ 0 ];
 	var setIsSaving = isSavingState[ 1 ];
@@ -64,8 +61,8 @@ export function ForumCreateModal( { isOpen, onClose, onCreated, forumBaseSlug, c
 	var error = errorState[ 0 ];
 	var setError = errorState[ 1 ];
 
-	var fileInputRef = useRef( null );
-	var uploadAbortRef = useRef( null );
+	// Shared WordPress media frame opener (handles frame reuse + unmount teardown).
+	var openMediaFrame = useMediaFrame();
 
 	// Track mounted state.
 	var isMountedRef = useRef( true );
@@ -73,9 +70,6 @@ export function ForumCreateModal( { isOpen, onClose, onCreated, forumBaseSlug, c
 		isMountedRef.current = true;
 		return function () {
 			isMountedRef.current = false;
-			if ( uploadAbortRef.current ) {
-				uploadAbortRef.current.abort();
-			}
 		};
 	}, [] );
 
@@ -127,70 +121,26 @@ export function ForumCreateModal( { isOpen, onClose, onCreated, forumBaseSlug, c
 	}
 
 	/**
-	 * Trigger hidden file input for image selection.
+	 * Open the WordPress Media Library to select or upload the feature image.
+	 *
+	 * Replaces the previous direct-upload flow: selecting an existing Library
+	 * item reuses its attachment (no duplicate), and uploads made inside the
+	 * media frame route through WordPress core. The chosen attachment ID is
+	 * stored for set_post_thumbnail() on save. Frame behaviour is centralized
+	 * in the shared useMediaFrame hook (mirrors WP's native "Featured image").
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 */
-	var triggerFileInput = function () {
-		if ( fileInputRef.current ) {
-			fileInputRef.current.value = '';
-			fileInputRef.current.click();
-		}
-	};
-
-	/**
-	 * Handle file selection and upload via AJAX.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @param {Event} e File input change event.
-	 */
-	var handleFileSelect = function ( e ) {
-		var file = e.target.files && e.target.files[ 0 ];
-		if ( ! file ) {
-			return;
-		}
-
-		var allowedTypes = [ 'image/jpeg', 'image/png', 'image/gif', 'image/webp' ];
-		if ( -1 === allowedTypes.indexOf( file.type ) ) {
-			setError( __( 'Invalid file type. Only JPEG, PNG, GIF, and WebP images are allowed.', 'buddyboss-platform' ) );
-			return;
-		}
-
-		// 10MB limit.
-		if ( file.size > 10 * 1024 * 1024 ) {
-			setError( __( 'File size exceeds the maximum allowed size of 10MB.', 'buddyboss-platform' ) );
-			return;
-		}
-
-		if ( uploadAbortRef.current ) {
-			uploadAbortRef.current.abort();
-		}
-		uploadAbortRef.current = new AbortController();
-
-		setIsUploading( true );
-		setError( '' );
-
-		uploadForumImage( file, uploadAbortRef.current.signal ).then( function ( response ) {
-			if ( ! isMountedRef.current ) {
-				return;
-			}
-			setIsUploading( false );
-			if ( response.success && response.data ) {
-				setImageId( response.data.attachment_id );
-				setImageUrl( response.data.url );
-			} else {
-				setError( ( response.data && response.data.message ) || __( 'Failed to upload image.', 'buddyboss-platform' ) );
-			}
-		} ).catch( function ( err ) {
-			if ( ! isMountedRef.current ) {
-				return;
-			}
-			setIsUploading( false );
-			if ( 'AbortError' !== err.name ) {
-				setError( __( 'An error occurred while uploading. Please try again.', 'buddyboss-platform' ) );
-			}
+	var openMediaLibrary = function () {
+		var opened = openMediaFrame( function ( attachment ) {
+			setImageId( attachment.id );
+			setImageUrl( attachment.url );
+			setError( '' );
 		} );
+
+		if ( ! opened ) {
+			setError( __( 'The WordPress Media Library is not available.', 'buddyboss' ) );
+		}
 	};
 
 	/**
@@ -265,11 +215,7 @@ export function ForumCreateModal( { isOpen, onClose, onCreated, forumBaseSlug, c
 		permalinkEditedRef.current = false;
 		setImageId( 0 );
 		setImageUrl( '' );
-		setIsUploading( false );
 		setError( '' );
-		if ( uploadAbortRef.current ) {
-			uploadAbortRef.current.abort();
-		}
 
 		// Reset TinyMCE editors for richtext fields.
 		if ( window.tinymce ) {
@@ -300,14 +246,82 @@ export function ForumCreateModal( { isOpen, onClose, onCreated, forumBaseSlug, c
 		onClose();
 	};
 
-	// Render visible fields.
+	// Render visible fields, split into runs by source metabox so bridged
+	// third-party metaboxes (e.g. WP Fusion) render in a bordered section with
+	// their title heading at the end — matching the Forums edit screen.
 	var visibleFields = getVisibleFields( fields, registeredValues );
+	var segments      = splitFieldsByMetaboxGroup( visibleFields );
 
-	var grouped = groupFieldsWithLayout( visibleFields );
+	var renderGroupedItem = function ( item, idx, groupedList ) {
+		var hasSeparator = needsSeparator( item, groupedList[ idx + 1 ] );
+
+		if ( 'row' === item.type ) {
+			return (
+				<div key={ 'row-' + idx } className={ 'bb-admin-meta-field__row bb-admin-settings-modal__row' + ( hasSeparator ? ' bb-admin-settings-modal__row--separator' : '' ) }>
+					{ item.fields.map( function ( field ) {
+						return (
+							<RegisteredMetaField
+								key={ field.id }
+								field={ field }
+								value={ registeredValues[ field.id ] }
+								onChange={ function ( val ) {
+									handleFieldChange( field.id, val );
+								} }
+								itemId={ 0 }
+								disabled={ isFieldConditionalDisabled( field, registeredValues ) }
+							/>
+						);
+					} ) }
+				</div>
+			);
+		}
+		return (
+			<div key={ item.field.id } className={ 'components-base-control ' + ( hasSeparator ? 'bb-admin-settings-modal__row--separator' : '' ) }>
+				<RegisteredMetaField
+					field={ item.field }
+					value={ registeredValues[ item.field.id ] }
+					onChange={ function ( val ) {
+						handleFieldChange( item.field.id, val );
+					} }
+					itemId={ 0 }
+					disabled={ isFieldConditionalDisabled( item.field, registeredValues ) }
+				/>
+			</div>
+		);
+	};
+
+	var renderSegments = function () {
+		return segments.map( function ( segment, segIdx ) {
+			var grouped = groupFieldsWithLayout( segment.fields );
+
+			if ( ! segment.group ) {
+				return (
+					<Fragment key={ 'seg-flat-' + segIdx }>
+						{ grouped.map( function ( item, idx ) {
+							return renderGroupedItem( item, idx, grouped );
+						} ) }
+					</Fragment>
+				);
+			}
+
+			return (
+				<div key={ 'seg-group-' + segIdx } className="bb-admin-meta-field__group" data-group-id={ segment.group }>
+					{ segment.label && (
+						<h3 className="bb-admin-meta-field__group-title">{ segment.label }</h3>
+					) }
+					<div className="bb-admin-meta-field__group-fields">
+						{ grouped.map( function ( item, idx ) {
+							return renderGroupedItem( item, idx, grouped );
+						} ) }
+					</div>
+				</div>
+			);
+		} );
+	};
 
 	return (
 		<Modal
-			title={ __( 'Create New Forum', 'buddyboss-platform' ) }
+			title={ __( 'Create New Forum', 'buddyboss' ) }
 			onRequestClose={ handleClose }
 			className="bb-forum-modal bb-forum-create-modal bb-admin-settings-modal"
 			shouldCloseOnClickOutside={ false }
@@ -317,62 +331,20 @@ export function ForumCreateModal( { isOpen, onClose, onCreated, forumBaseSlug, c
 					<p className="bb-forum-modal__error">{ error }</p>
 				) }
 
-				{ grouped.map( function ( item, idx ) {
-					var hasSeparator = needsSeparator( item, grouped[ idx + 1 ] );
-
-					if ( 'row' === item.type ) {
-						return (
-							<div key={ 'row-' + idx } className={ 'bb-admin-meta-field__row bb-admin-settings-modal__row' + ( hasSeparator ? ' bb-admin-settings-modal__row--separator' : '' ) }>
-								{ item.fields.map( function ( field ) {
-									return (
-										<RegisteredMetaField
-											key={ field.id }
-											field={ field }
-											value={ registeredValues[ field.id ] }
-											onChange={ function ( val ) {
-												handleFieldChange( field.id, val );
-											} }
-											itemId={ 0 }
-										/>
-									);
-								} ) }
-							</div>
-						);
-					}
-					return (
-						<div key={ item.field.id } className={ 'components-base-control ' + ( hasSeparator ? 'bb-admin-settings-modal__row--separator' : '' ) }>
-							<RegisteredMetaField
-								field={ item.field }
-								value={ registeredValues[ item.field.id ] }
-								onChange={ function ( val ) {
-									handleFieldChange( item.field.id, val );
-								} }
-								itemId={ 0 }
-							/>
-						</div>
-					);
-				} ) }
+				{ renderSegments() }
 
 				<div className="bb-forum-modal__image-field bb-forum-create-modal__image-field">
 					<label className="components-base-control__label" htmlFor="bb-forum-create-image">
 						{ __( 'Feature Image (Optional)', 'buddyboss-platform' ) }
 					</label>
-					<input
-						type="file"
-						ref={ fileInputRef }
-						accept="image/jpeg,image/png,image/gif,image/webp"
-						onChange={ handleFileSelect }
-						style={ { display: 'none' } }
-					/>
 					{ imageUrl ? (
 						<div className="bb-forum-modal__image-preview">
 							<img src={ safeUrl( imageUrl ) } alt="" />
 							<div className="bb-forum-modal__image-actions">
 								<Button
 									variant="secondary"
-									onClick={ triggerFileInput }
+									onClick={ openMediaLibrary }
 									className="bb-forum-modal__replace-image"
-									disabled={ isUploading }
 								>
 									{ __( 'Replace', 'buddyboss-platform' ) }
 								</Button>
@@ -381,7 +353,6 @@ export function ForumCreateModal( { isOpen, onClose, onCreated, forumBaseSlug, c
 									isDestructive
 									onClick={ handleRemoveImage }
 									className="bb-forum-modal__remove-image"
-									disabled={ isUploading }
 								>
 									{ __( 'Reset', 'buddyboss-platform' ) }
 								</Button>
@@ -390,15 +361,10 @@ export function ForumCreateModal( { isOpen, onClose, onCreated, forumBaseSlug, c
 					) : (
 						<button
 							type="button"
-							onClick={ triggerFileInput }
-							className={ 'bb-forum-create-modal__upload-zone' + ( isUploading ? ' bb-forum-create-modal__upload-zone--uploading' : '' ) }
-							disabled={ isUploading }
+							onClick={ openMediaLibrary }
+							className="bb-forum-create-modal__upload-zone"
 						>
-							{ isUploading ? (
-								<span className="bb-forum-create-modal__upload-spinner"></span>
-							) : (
-								<span className="bb-forum-create-modal__upload-icon"><i className="bb-icons-rl-plus"></i></span>
-							) }
+							<span className="bb-forum-create-modal__upload-icon"><i className="bb-icons-rl-plus"></i></span>
 						</button>
 					) }
 					<p className="bb-forum-create-modal__image-help">
@@ -419,7 +385,7 @@ export function ForumCreateModal( { isOpen, onClose, onCreated, forumBaseSlug, c
 					variant="primary"
 					onClick={ handleCreate }
 					isBusy={ isSaving }
-					disabled={ isSaving || isUploading || ! ( registeredValues.name || '' ).trim() }
+					disabled={ isSaving || ! ( registeredValues.name || '' ).trim() }
 				>
 					{ __( 'Save', 'buddyboss-platform' ) }
 				</Button>

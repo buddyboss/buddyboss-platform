@@ -649,8 +649,9 @@ class BP_Document_Folder {
 		$folder_id_int = (int) $r['id'];
 
 		if ( ! empty( $r['id'] ) && empty( $r['date_created'] ) && empty( $r['group_id'] ) && empty( $r['user_id'] ) ) {
+			$parent_folder_id  = (int) $r['id'];
 			// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- Table name from $bp->document->table_name_folder; $folder_id_int is cast to int. db call ok; no-cache ok;
-			$recursive_folders = $wpdb->get_results( "SELECT * FROM {$bp->document->table_name_folder} WHERE FIND_IN_SET(ID,(SELECT GROUP_CONCAT(lv SEPARATOR ',') FROM ( SELECT @pv:=(SELECT GROUP_CONCAT(id SEPARATOR ',') FROM {$bp->document->table_name_folder} WHERE parent IN (@pv)) AS lv FROM {$bp->document->table_name_folder} JOIN (SELECT @pv:= {$folder_id_int})tmp WHERE parent IN (@pv)) a))" );
+			$recursive_folders = $wpdb->get_results( "SELECT * FROM {$bp->document->table_name_folder} WHERE FIND_IN_SET(ID,(SELECT GROUP_CONCAT(lv SEPARATOR ',') FROM ( SELECT @pv:=(SELECT GROUP_CONCAT(id SEPARATOR ',') FROM {$bp->document->table_name_folder} WHERE parent IN (@pv)) AS lv FROM {$bp->document->table_name_folder} JOIN (SELECT @pv:= {$parent_folder_id})tmp WHERE parent IN (@pv)) a))" ); // db call ok; no-cache ok;
 			$folders           = array_merge( $folders, $recursive_folders );
 		}
 
@@ -665,8 +666,9 @@ class BP_Document_Folder {
 		do_action_ref_array( 'bp_document_folder_before_delete', array( $folders, $r ) );
 
 		if ( ! empty( $r['id'] ) && empty( $r['date_created'] ) && empty( $r['group_id'] ) && empty( $r['user_id'] ) ) {
+			$parent_folder_id  = (int) $r['id'];
 			// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- Table name from $bp->document->table_name_folder; $folder_id_int is cast to int. db call ok; no-cache ok;
-			$recursive_folders = $wpdb->get_results( "SELECT * FROM {$bp->document->table_name_folder} WHERE FIND_IN_SET(ID,(SELECT GROUP_CONCAT(lv SEPARATOR ',') FROM ( SELECT @pv:=(SELECT GROUP_CONCAT(id SEPARATOR ',') FROM {$bp->document->table_name_folder} WHERE parent IN (@pv)) AS lv FROM {$bp->document->table_name_folder} JOIN (SELECT @pv:= {$folder_id_int})tmp WHERE parent IN (@pv)) a))" );
+			$recursive_folders = $wpdb->get_results( "SELECT * FROM {$bp->document->table_name_folder} WHERE FIND_IN_SET(ID,(SELECT GROUP_CONCAT(lv SEPARATOR ',') FROM ( SELECT @pv:=(SELECT GROUP_CONCAT(id SEPARATOR ',') FROM {$bp->document->table_name_folder} WHERE parent IN (@pv)) AS lv FROM {$bp->document->table_name_folder} JOIN (SELECT @pv:= {$parent_folder_id})tmp WHERE parent IN (@pv)) a))" ); // db call ok; no-cache ok;
 			$folders           = array_merge( $folders, $recursive_folders );
 
 			// Pluck the document folders IDs out of the $folders array.

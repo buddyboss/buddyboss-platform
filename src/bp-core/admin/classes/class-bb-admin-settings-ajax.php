@@ -60,6 +60,9 @@ class BB_Admin_Settings_Ajax {
 		add_action( 'wp_ajax_bb_admin_get_platform_settings', array( $this, 'bb_admin_get_platform_settings' ) );
 		add_action( 'wp_ajax_bb_admin_save_platform_setting', array( $this, 'bb_admin_save_platform_setting' ) );
 
+		// Support Access (Help tab) AJAX handlers live in BB_Support_Access,
+		// which registers its own wp_ajax_* hooks. See class-bb-support-access.php.
+
 		add_action( 'bb_admin_save_feature_settings_after', array( $this, 'bb_invalidate_search_index_after_save' ), 10, 3 );
 	}
 

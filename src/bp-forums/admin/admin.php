@@ -109,7 +109,10 @@ if ( ! class_exists( 'BBP_Admin' ) ) :
 		 */
 		private function includes() {
 			require $this->admin_dir . 'tools.php';
-			require $this->admin_dir . 'converter.php';
+			// converter.php retired in BuddyBoss 3.1.0 — Forum Import
+			// machinery moved to the buddyboss-tools plugin; legacy class names
+			// resolve via the class_alias autoloader in
+			// src/bp-core/deprecated/buddyboss/3.0.0.php when Tools is active.
 			require $this->admin_dir . 'functions.php';
 			require $this->admin_dir . 'metaboxes.php';
 			require $this->admin_dir . 'users.php';
@@ -137,9 +140,9 @@ if ( ! class_exists( 'BBP_Admin' ) ) :
 			add_action( 'bbp_admin_head', array( $this, 'admin_head' ) ); // Add some general styling to the admin area
 			add_action( 'bbp_admin_notices', array( $this, 'activation_notice' ) ); // Add notice if not using a Forums theme
 			add_action( 'bbp_register_admin_style', array( $this, 'register_admin_style' ) ); // Add green admin style
-			add_action( 'bbp_register_admin_scripts',  array( $this, 'register_admin_scripts'  ) ); // Add admin scripts
+			add_action( 'bbp_register_admin_scripts', array( $this, 'register_admin_scripts' ) ); // Add admin scripts
 			add_action( 'bbp_activation', array( $this, 'new_install' ) ); // Add menu item to settings menu
-			add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_styles' )     ); // Add enqueued CSS
+			add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_styles' ) ); // Add enqueued CSS
 			add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) ); // Add enqueued JS
 			add_action( 'wp_dashboard_setup', array( $this, 'dashboard_widget_right_now' ) ); // Forums 'Right now' Dashboard widget
 			add_action( 'admin_bar_menu', array( $this, 'admin_bar_about_link' ), 15 ); // Add a link to Forums about page to the admin bar
@@ -166,7 +169,6 @@ if ( ! class_exists( 'BBP_Admin' ) ) :
 
 			// Allow plugins to modify these actions
 			do_action_ref_array( 'bbp_admin_loaded', array( &$this ) );
-
 		}
 
 		/**
@@ -196,41 +198,13 @@ if ( ! class_exists( 'BBP_Admin' ) ) :
 
 			$hooks = array();
 
-			// These are later removed in admin_head
-			if ( ! is_network_admin() && ! bp_is_network_activated() ) {
-				if ( current_user_can( 'bbp_tools_page' ) ) {
-					if ( current_user_can( 'bbp_tools_repair_page' ) ) {
-						$hooks[] = add_submenu_page(
-							'buddyboss-platform',
-							__( 'Repair Forums', 'buddyboss-platform' ),
-							__( 'Forum Repair', 'buddyboss-platform' ),
-							$this->minimum_capability,
-							'bbp-repair',
-							'bbp_admin_repair'
-						);
-					}
-
-					if ( current_user_can( 'bbp_tools_import_page' ) ) {
-						$hooks[] = add_submenu_page(
-							'buddyboss-platform',
-							__( 'Import Forums', 'buddyboss-platform' ),
-							__( 'Forum Import', 'buddyboss-platform' ),
-							$this->minimum_capability,
-							'bbp-converter',
-							'bbp_converter_settings'
-						);
-					}
-
-					// Fudge the highlighted subnav item when on a Forums admin page
-					foreach ( $hooks as $hook ) {
-						add_action( "admin_head-$hook", 'bbp_tools_modify_menu_highlight' );
-					}
-
-				}
-			}
+			// Forum Repair + Forum Import submenus retired in BuddyBoss 3.1.0 —
+			// ?page=bbp-repair and ?page=bbp-converter both redirect to the
+			// Settings 2.0 Tools tab via bb_redirect_bp_settings_before_permission_check().
 			// Bail if plugin is not network activated
-			if ( ! is_plugin_active_for_network( bbpress()->basename ) )
+			if ( ! is_plugin_active_for_network( bbpress()->basename ) ) {
 				return;
+			}
 
 			add_submenu_page(
 				'index.php',
@@ -490,8 +464,6 @@ if ( ! class_exists( 'BBP_Admin' ) ) :
 		 * @uses remove_submenu_page() To remove menu items with alternat navigation
 		 */
 		public function admin_head() {
-			remove_submenu_page( 'admin.php', 'bbp-repair' );
-			remove_submenu_page( 'admin.php', 'bbp-converter' );
 			remove_submenu_page( 'admin.php', 'bbp-reset' );
 			remove_submenu_page( 'index.php', 'bbp-about' );
 			remove_submenu_page( 'index.php', 'bbp-credits' );
@@ -567,11 +539,8 @@ if ( ! class_exists( 'BBP_Admin' ) ) :
 		 * @since 2.6.0 bbPress (r2521)
 		 */
 		public function register_admin_scripts() {
-			// Get the version to use for JS.
-			$version = bp_get_version();
-			$min     = bp_core_get_minified_asset_suffix();
-
-			wp_register_script( 'bbp-converter', $this->js_url . "converter{$min}.js", array( 'jquery', 'postbox', 'dashboard' ), $version );
+			// Forum Import script (`bbp-converter`) retired in BuddyBoss 3.1.0 —
+			// admin/js/converter.js was deleted alongside the legacy admin page.
 		}
 
 
@@ -650,25 +619,25 @@ if ( ! class_exists( 'BBP_Admin' ) ) :
 
 				// Taking action
 				switch ( $action ) {
-				case 'bbpress-update':
-					// Site counter
-					$n = isset( $_GET['n'] ) ? intval( $_GET['n'] ) : 0;
+					case 'bbpress-update':
+						// Site counter
+						$n = isset( $_GET['n'] ) ? intval( $_GET['n'] ) : 0;
 
-					// Get blogs 5 at a time
-					$blogs = $bbp_db->get_results( "SELECT * FROM {$bbp_db->blogs} WHERE site_id = '{$bbp_db->siteid}' AND spam = '0' AND deleted = '0' AND archived = '0' ORDER BY registered DESC LIMIT {$n}, 5", ARRAY_A );
+						// Get blogs 5 at a time
+						$blogs = $bbp_db->get_results( "SELECT * FROM {$bbp_db->blogs} WHERE site_id = '{$bbp_db->siteid}' AND spam = '0' AND deleted = '0' AND archived = '0' ORDER BY registered DESC LIMIT {$n}, 5", ARRAY_A );
 
-					// No blogs so all done!
-				if ( empty( $blogs ) ) :
-					?>
+						// No blogs so all done!
+						if ( empty( $blogs ) ) :
+							?>
 
 					<p><?php esc_html_e( 'All done!', 'buddyboss-platform' ); ?></p>
 					<a class="button" href="update-core.php?page=bbpress-update"><?php esc_html_e( 'Go Back', 'buddyboss-platform' ); ?></a>
 
-				<?php
+							<?php
 
-				// Still have sites to loop through
-				else :
-				?>
+							// Still have sites to loop through
+					else :
+						?>
 
 					<ul>
 
@@ -714,7 +683,7 @@ if ( ! class_exists( 'BBP_Admin' ) ) :
 							do_action( 'after_bbpress_upgrade', $response );
 							do_action( 'bbp_upgrade_site', $details['blog_id'] );
 
-						endforeach;
+							endforeach;
 						?>
 
 					</ul>
@@ -724,28 +693,28 @@ if ( ! class_exists( 'BBP_Admin' ) ) :
 						<a class="button" href="update-core.php?page=bbpress-update&amp;action=bbpress-update&amp;n=<?php echo esc_attr( $n + 5 ); ?>"><?php esc_html_e( 'Next Forums', 'buddyboss-platform' ); ?></a>
 					</p>
 					<script type='text/javascript'>
-                        <!--
-                        function nextpage() {
-                            location.href = 'update-core.php?page=bbpress-update&action=bbpress-update&n=<?php echo esc_js( $n + 5 ); ?>';
-                        }
-                        setTimeout( 'nextpage()', 250 );
-                        //-->
+						<!--
+						function nextpage() {
+							location.href = 'update-core.php?page=bbpress-update&action=bbpress-update&n=<?php echo esc_js( $n + 5 ); ?>';
+						}
+						setTimeout( 'nextpage()', 250 );
+						//-->
 					</script>
-				<?php
+						<?php
 
-				endif;
+					endif;
 
-				break;
+						break;
 
-				case 'show':
-				default:
-				?>
+					case 'show':
+					default:
+						?>
 
 					<p><?php esc_html_e( 'You can update all the forums on your network through this page. It works by calling the update script of each site automatically. Hit the link below to update.', 'buddyboss-platform' ); ?></p>
 					<p><a class="button" href="update-core.php?page=bbpress-update&amp;action=bbpress-update"><?php esc_html_e( 'Update Forums', 'buddyboss-platform' ); ?></a></p>
 
-					<?php
-					break;
+						<?php
+						break;
 
 				}
 				?>
@@ -765,6 +734,9 @@ endif; // class_exists check
  */
 function bbp_admin() {
 	bbpress()->admin = new BBP_Admin();
-
-	bbpress()->admin->converter = new BBP_Converter();
+	// BBP_Converter retired from Platform in BuddyBoss 3.1.0; the moved
+	// orchestrator lives in buddyboss-tools. Any code still referencing
+	// bbpress()->admin->converter will see null — third-party callers should
+	// migrate to BB_Tools_BBP_Converter or rely on the legacy class_alias in
+	// bp-core/deprecated/buddyboss/3.0.0.php.
 }

@@ -82,6 +82,17 @@ function bp_core_modify_admin_menu_highlight() {
 		$submenu_file = 'bb-settings';
 	}
 
+	// The Help submenu is registered with a URL menu_slug
+	// (`admin.php?page=bb-settings&tab=help`). When the admin is on that tab,
+	// highlight the Help item server-side instead of the generic Settings item
+	// — this avoids the brief Settings-highlighted flash before the React
+	// `fixAdminMenuHighlight()` corrects it on mount.
+	// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only menu highlight, no state change.
+	$current_tab = isset( $_GET['tab'] ) ? sanitize_key( wp_unslash( $_GET['tab'] ) ) : '';
+	if ( 'bb-settings' === $plugin_page && 'help' === $current_tab ) {
+		$submenu_file = 'admin.php?page=bb-settings&tab=help';
+	}
+
 	// Network Admin > Tools.
 	if ( in_array( $plugin_page, array( 'bp-tools', 'available-tools' ) ) ) {
 		$submenu_file = $plugin_page;
@@ -702,11 +713,14 @@ function bp_core_get_admin_tabs( $active_tab = '' ) {
 	// tabs were also removed along with their submenus. The "Settings" tab
 	// was removed because Settings 2.0 (bb-settings) is now the canonical
 	// settings entry point — exposed via the BuddyBoss admin sidebar — and
-	// linking to it from the legacy tab bar created a redundant entry. Key
-	// positions of the remaining tabs are preserved (Components='0',
-	// Pages='1', Settings='2', Tools='5', Help='6') so any third-party
-	// code that references these filter-array keys continues to work —
-	// keys '2' (Settings), '3' (Integrations), '4' (Upgrade), and '7'
+	// linking to it from the legacy tab bar created a redundant entry. The
+	// "Help" tab was removed because Help now lives in Settings 2.0
+	// (bb-settings&tab=help); legacy `?page=bp-help` visits are redirected
+	// there by BP_Admin::bb_redirect_legacy_help_page(). Key positions of
+	// the remaining tabs are preserved (Components='0', Pages='1',
+	// Settings='2', Tools='5', Help='6') so any third-party code that
+	// references these filter-array keys continues to work — keys '2'
+	// (Settings), '3' (Integrations), '4' (Upgrade), '6' (Help), and '7'
 	// (Credits) are now intentionally absent rather than holding renumbered
 	// entries.
 	$tabs = array(
@@ -716,15 +730,15 @@ function bp_core_get_admin_tabs( $active_tab = '' ) {
 		// '3' was the Integrations tab — intentionally left absent.
 		// '4' was the Upgrade tab — intentionally left absent.
 		'5' => array(
-			'href'  => bp_get_admin_url( add_query_arg( array( 'page' => 'bp-tools' ), 'admin.php' ) ),
+			// Tools moved to Settings 2.0 in BuddyBoss 3.1.0 — point the
+			// legacy top-tab Tools link directly at the new React panel so
+			// any page still rendering this tab bar (e.g. bp-help) doesn't
+			// have to depend on the bp-tools redirect to land users correctly.
+			'href'  => bp_get_admin_url( add_query_arg( array( 'page' => 'bb-settings', 'tab' => 'tools' ), 'admin.php' ) ),
 			'name'  => __( 'Tools', 'buddyboss-platform' ),
 			'class' => 'bp-tools',
 		),
-		'6' => array(
-			'href'  => bp_get_admin_url( add_query_arg( array( 'page' => 'bp-help' ), 'admin.php' ) ),
-			'name'  => __( 'Help', 'buddyboss-platform' ),
-			'class' => 'bp-help',
-		),
+		// '6' was the Help tab — intentionally left absent (Help moved to Settings 2.0).
 		// '7' was the Credits tab — intentionally left absent.
 	);
 
@@ -1315,7 +1329,7 @@ function bp_admin_do_wp_nav_menu_meta_box() {
 					wp_nav_menu_disabled_check( $nav_menu_selected_id );
 				endif;
 				?>
-				 class="button-secondary submit-add-to-menu right" value="<?php esc_attr_e( 'Add to Menu', 'buddyboss-platform' ); ?>" name="add-custom-menu-item" id="submit-buddypress-menu"/>
+				class="button-secondary submit-add-to-menu right" value="<?php esc_attr_e( 'Add to Menu', 'buddyboss-platform' ); ?>" name="add-custom-menu-item" id="submit-buddypress-menu"/>
 				<span class="spinner"></span>
 			</span>
 		</p>
@@ -1474,7 +1488,7 @@ function bp_email_plaintext_metabox( $post ) {
 		?>
 	</label>
 	<textarea rows="5" cols="40" name="excerpt"
-					  id="excerpt"><?php echo esc_textarea( $post->post_excerpt ); ?></textarea>
+						id="excerpt"><?php echo esc_textarea( $post->post_excerpt ); ?></textarea>
 
 	<p><?php esc_html_e( 'Most email clients support HTML email. However, some people prefer to receive plain text email. Enter a plain text alternative version of your email here.', 'buddyboss-platform' ); ?></p>
 	<!-- accesslint:endignore -->
@@ -1646,10 +1660,10 @@ function bp_core_admin_user_manage_spammers() {
 		// Bail BEFORE consuming the nonce when moderation is deactivated.
 		// Both branches below depend on moderation infrastructure:
 		// - `BP_Suspend_Member::suspend_user()` writes to the suspend
-		//   table and fires `bp_suspend_hide_*` actions whose listeners
-		//   are only registered when the moderation component boots.
+		// table and fires `bp_suspend_hide_*` actions whose listeners
+		// are only registered when the moderation component boots.
 		// - `bp_moderation_is_user_suspended()` is loaded by the
-		//   moderation component and is undefined when it is off.
+		// moderation component and is undefined when it is off.
 		// Without this guard, a cached/bookmarked URL or stale redirect
 		// can re-enter the handler indefinitely (each call still issues
 		// a `wp_safe_redirect()` and carries `?updated=marked-*`, which
@@ -1825,159 +1839,6 @@ function bp_delete_member_type( $post_id ) {
 // delete post.
 add_action( 'before_delete_post', 'bp_delete_member_type' );
 
-// Register submenu page for profile type import.
-add_action( 'admin_menu', 'bp_register_member_type_import_submenu_page' );
-
-/**
- * Register submenu page for profile type import.
- *
- * @since BuddyBoss 1.0.0
- */
-function bp_register_member_type_import_submenu_page() {
-
-	add_submenu_page(
-		'',
-		__( 'Repair Community', 'buddyboss-platform' ),
-		__( 'Repair Community', 'buddyboss-platform' ),
-		'manage_options',
-		'bp-repair-community',
-		'bp_repair_community_submenu_page'
-	);
-
-	add_submenu_page(
-		'',
-		'Import Member Types',
-		'Import Member Types',
-		'manage_options',
-		'bp-member-type-import',
-		'bp_member_type_import_submenu_page'
-	);
-}
-
-/**
- * Import profile types.
- *
- * @since BuddyBoss 1.0.0
- */
-function bp_member_type_import_submenu_page() {
-	?>
-	<div class="wrap">
-		<h2 class="nav-tab-wrapper"><?php bp_core_admin_tabs( __( 'Tools', 'buddyboss-platform' ) ); ?></h2>
-		<div class="nav-settings-subsubsub">
-			<ul class="subsubsub">
-				<?php bp_core_tools_settings_admin_tabs(); ?>
-			</ul>
-		</div>
-	</div>
-	<div class="wrap">
-		<div class="bp-admin-card section-bp-member-type-import">
-			<div class="boss-import-area">
-				<form id="bp-member-type-import-form" method="post" action="">
-					<div class="import-panel-content">
-						<h2>
-							<?php
-							$meta_icon = bb_admin_icons( 'bp-member-type-import' );
-							if ( ! empty( $meta_icon ) ) {
-								?>
-								<i class="<?php echo esc_attr( $meta_icon ); ?>"></i>
-								<?php
-							}
-							esc_html_e( 'Import Profile Types', 'buddyboss-platform' ); ?>
-						</h2>
-						<p>
-							<?php
-							echo wp_kses_post(
-								sprintf(
-									/* translators: %s: profile types admin list URL. */
-									__( 'Import your existing <a href="%s">profile types</a> (or "member types" in BuddyPress). You may have created these types <strong>manually via code</strong> or by using a <strong>third party plugin</strong>. Click "Run Migration" below and all registered member types will be imported. Then you can remove the old code or plugin.', 'buddyboss-platform' ),
-									esc_url(
-										add_query_arg(
-											array(
-												'post_type' => bp_get_member_type_post_type(),
-											),
-											admin_url( 'edit.php' )
-										)
-									)
-								)
-							);
-							?>
-						</p><br/>
-						<input type="submit" value="<?php esc_attr_e( 'Run Migration', 'buddyboss-platform' ); ?>"
-							   id="bp-member-type-import-submit" name="bp-member-type-import-submit"
-							   class="button-primary">
-					</div>
-				</form>
-			</div>
-		</div>
-	</div>
-	<br/>
-
-	<?php
-	if ( isset( $_POST['bp-member-type-import-submit'] ) ) {
-
-		if ( is_multisite() && bp_is_network_activated() ) {
-			switch_to_blog( bp_get_root_blog_id() );
-		}
-
-		$registered_member_types = bp_get_member_types();
-		$created_member_types    = bp_get_active_member_types();
-		$active_member_types     = array();
-
-		foreach ( $created_member_types as $created_member_type ) {
-			$name = bp_get_member_type_key( $created_member_type );
-			array_push( $active_member_types, $name );
-		}
-
-		$registered_member_types = array_diff( $registered_member_types, $active_member_types );
-
-		if ( empty( $registered_member_types ) ) {
-			?>
-			<div class="wrap">
-				<div class="error notice " id="message"><p><?php esc_html_e( 'Nothing to import', 'buddyboss-platform' ); ?></p></div>
-			</div>
-			<?php
-		}
-
-		foreach ( $registered_member_types as $key => $import_types_data ) {
-			$sing_name = ucfirst( $import_types_data );
-			// Create post object.
-			$my_post = array(
-				'post_type'   => bp_get_member_type_post_type(),
-				'post_title'  => $sing_name,
-				'post_status' => 'publish',
-				'post_author' => get_current_user_id(),
-			);
-
-			// Insert the post into the database.
-			$post_id = wp_insert_post( $my_post );
-
-			if ( $post_id ) {
-				$key  = get_post_field( 'post_name', $post_id );
-				$term = term_exists( sanitize_key( $key ), bp_get_member_type_tax_name() );
-				if ( 0 !== $term && null !== $term ) {
-
-					$digits = 3;
-					$unique = wp_rand( pow( 10, $digits - 1 ), pow( 10, $digits ) - 1 );
-					$key    = $key . $unique;
-				}
-				update_post_meta( $post_id, '_bp_member_type_key', sanitize_key( $key ) );
-				update_post_meta( $post_id, '_bp_member_type_label_name', $sing_name );
-				update_post_meta( $post_id, '_bp_member_type_label_singular_name', $sing_name );
-
-				?>
-				<div class="updated notice " id="message"><p><?php esc_html_e( 'Successfully Imported', 'buddyboss-platform' ); ?></p>
-				</div>
-				<?php
-			}
-		}
-
-		if ( is_multisite() && bp_is_network_activated() ) {
-			restore_current_blog();
-		}
-	}
-
-}
-
 /**
  * Display error message on extended profile page in admin.
  *
@@ -2001,7 +1862,6 @@ function bp_member_type_invalid_role_extended_profile_error_callback() {
 	// Clear and the transient and unhook any other notices so we don't see duplicate messages.
 	delete_transient( 'bp_invalid_role_selection_extended_profile' );
 	remove_action( 'admin_notices', 'bp_member_type_invalid_role_extended_profile_error_callback' );
-
 }
 
 // Hook for display error message on extended profile page in admin.
@@ -2027,7 +1887,7 @@ function bp_core_admin_create_background_page() {
 	if ( isset( $valid_pages[ $_POST['page'] ] ) ) {
 
 		$default_title = bp_core_get_directory_page_default_titles();
-		$title = ( isset( $default_title[ $_POST['page'] ] ) ) ? $default_title[ $_POST['page'] ] : $valid_pages[ $_POST['page'] ];
+		$title         = ( isset( $default_title[ $_POST['page'] ] ) ) ? $default_title[ $_POST['page'] ] : $valid_pages[ $_POST['page'] ];
 
 		$new_page = array(
 			'post_title'     => $title,
@@ -2131,184 +1991,7 @@ function bb_discussion_page_show_notice_in_avatar_section() {
 // Legacy email admin tab functions (bp_core_admin_emails_tabs, bp_core_get_emails_admin_tabs) removed.
 // Migrated to Settings 2.0. Deprecation stubs in src/bp-core/deprecated/buddyboss/3.0.0.php.
 
-/**
- * Output the settings tabs in the admin area.
- *
- * @since BuddyPress 1.5.0
- *
- * @param string $active_tab Name of the tab that is active. Optional.
- */
-function bp_core_tools_settings_admin_tabs( $active_tab = '' ) {
 
-	$tabs_html    = '';
-	$idle_class   = '';
-	$active_class = 'current';
-	$active_tab   = isset( $_GET['tab'] ) ? sanitize_text_field( $_GET['tab'] ) : 'bp-tools';
-
-	/**
-	 * Filters the admin tabs to be displayed.
-	 *
-	 * @since BuddyPress 1.9.0
-	 *
-	 * @param array $value Array of tabs to output to the admin area.
-	 */
-	$tabs = apply_filters( 'bp_core_tools_settings_admin_tabs', bp_core_get_tools_settings_admin_tabs( $active_tab ) );
-
-	$count = count( array_values( $tabs ) );
-	$i     = 1;
-
-	// Loop through tabs and build navigation.
-	foreach ( array_values( $tabs ) as $tab_data ) {
-
-		$is_current = (bool) ( $tab_data['slug'] == $active_tab );
-		$tab_class  = $is_current ? $active_class : $idle_class;
-		if ( $i === $count ) {
-			$tabs_html .= '<li><a href="' . esc_url( $tab_data['href'] ) . '" class="' . esc_attr( $tab_class ) . '">' . esc_html( $tab_data['name'] ) . '</a></li>';
-		} else {
-			$tabs_html .= '<li><a href="' . esc_url( $tab_data['href'] ) . '" class="' . esc_attr( $tab_class ) . '">' . esc_html( $tab_data['name'] ) . '</a> |</li>';
-		}
-
-		$i = $i + 1;
-	}
-
-	echo wp_kses_post( $tabs_html );
-
-	/**
-	 * Fires after the output of tabs for the admin area.
-	 *
-	 * @since BuddyPress 1.5.0
-	 */
-	do_action( 'bp_tools_settings_admin_tabs' );
-}
-
-/**
- * Get the data for the settings tabs in the admin area.
- *
- * @since BuddyBoss 1.0.0
- *
- * @param string $active_tab Name of the tab that is active. Optional.
- *
- * @return string
- */
-function bp_core_get_tools_settings_admin_tabs( $active_tab = '' ) {
-
-	// Tabs for the BuddyBoss > Tools.
-	$tabs = array(
-		'0' => array(
-			'href' => bp_get_admin_url(
-				add_query_arg(
-					array(
-						'page' => 'bp-tools',
-						'tab'  => 'bp-tools',
-					),
-					'admin.php'
-				)
-			),
-			'name' => __( 'Default Data', 'buddyboss-platform' ),
-			'slug' => 'bp-tools',
-		),
-	);
-
-	/**
-	 * Filters the tab data used in our wp-admin screens.
-	 *
-	 * @since BuddyBoss 1.0.0
-	 *
-	 * @param array $tabs Tab data.
-	 */
-	return apply_filters( 'bp_core_get_tools_settings_admin_tabs', $tabs );
-}
-
-function bp_core_get_tools_import_profile_settings_admin_tabs( $tabs ) {
-
-	$tabs[] = array(
-		'href' => bp_get_admin_url(
-			add_query_arg(
-				array(
-					'page' => 'bp-member-type-import',
-					'tab'  => 'bp-member-type-import',
-				),
-				'admin.php'
-			)
-		),
-		'name' => __( 'Import Profile Types', 'buddyboss-platform' ),
-		'slug' => 'bp-member-type-import',
-	);
-
-	return $tabs;
-}
-
-add_filter( 'bp_core_get_tools_settings_admin_tabs', 'bp_core_get_tools_import_profile_settings_admin_tabs', 15, 1 );
-
-function bp_core_get_tools_repair_community_settings_admin_tabs( $tabs ) {
-
-	$tabs[] = array(
-		'href' => bp_get_admin_url(
-			add_query_arg(
-				array(
-					'page' => 'bp-repair-community',
-					'tab'  => 'bp-repair-community',
-				),
-				'admin.php'
-			)
-		),
-		'name' => __( 'Repair Community', 'buddyboss-platform' ),
-		'slug' => 'bp-repair-community',
-	);
-
-	return $tabs;
-}
-
-add_filter( 'bp_core_get_tools_settings_admin_tabs', 'bp_core_get_tools_repair_community_settings_admin_tabs', 1, 1 );
-
-/**
- * Add the 'Site Notices' admin menu item.
- *
- * @since BuddyPress 3.0.0
- */
-function bp_import_profile_types_admin_menu() {
-
-	add_submenu_page(
-		'buddyboss-platform',
-		__( 'Repair Community', 'buddyboss-platform' ),
-		__( 'Repair Community', 'buddyboss-platform' ),
-		'manage_options',
-		'bp-repair-community',
-		'bp_repair_community_submenu_page'
-	);
-
-	add_submenu_page(
-		'buddyboss-platform',
-		__( 'Import Profile Types', 'buddyboss-platform' ),
-		__( 'Import Profile Types', 'buddyboss-platform' ),
-		'manage_options',
-		'bp-member-type-import',
-		'bp_member_type_import_submenu_page'
-	);
-
-	if ( current_user_can( 'bbp_tools_page' ) && current_user_can( 'bbp_tools_repair_page' ) ) {
-		add_submenu_page(
-			'buddyboss-platform',
-			__( 'Repair Forums', 'buddyboss-platform' ),
-			__( 'Forum Repair', 'buddyboss-platform' ),
-			'manage_options',
-			'bbp-repair',
-			'bbp_admin_repair'
-		);
-
-		add_submenu_page(
-			'buddyboss-platform',
-			__( 'Import Forums', 'buddyboss-platform' ),
-			__( 'Forum Import', 'buddyboss-platform' ),
-			'manage_options',
-			'bbp-converter',
-			'bbp_converter_settings'
-		);
-	}
-
-}
-
-add_action( bp_core_admin_hook(), 'bp_import_profile_types_admin_menu' );
 
 /**
  * Set the forum slug on edit page from backend.

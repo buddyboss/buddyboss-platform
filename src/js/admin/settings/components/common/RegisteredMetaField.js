@@ -21,6 +21,7 @@ import { decodeEntities } from '@wordpress/html-entities';
 
 import { RichTextEditor } from './RichTextEditor';
 import { safeUrl } from '../../utils/sanitize';
+import { ajaxFetch } from '../../utils/ajax';
 import { AsyncSelectField } from '../fields/AsyncSelectField';
 import { DateInput } from '../fields/DateInput';
 import { TimeInput } from '../fields/TimeInput';
@@ -44,13 +45,33 @@ function AjaxMultiSelectField( { field, value, onChange, disabled } ) {
 	var nonceParam = extraData.nonce_param || 'security';
 	var placeholder = extraData.search_placeholder || '';
 
-	var selectedIds = Array.isArray( value ) ? value.map( Number ) : [];
+	// Opt-in "create new" support. When a caller sets `extra_data.allow_create`
+	// (+ `create_action`), typing a term that has no exact match shows a
+	// "Create <term>" row; committing it POSTs to `create_action` and adds the
+	// returned { value, label } as a chip. Mirrors WP Fusion's select2
+	// tags:true create-on-Enter behaviour. Off (and zero-impact) for every
+	// caller that doesn't set the flag.
+	var allowCreate = !! extraData.allow_create;
+	var createAction = extraData.create_action || '';
+	var createLabelTpl = extraData.create_label || '';
+
+	// Item ids are numeric by default (most callers pass post/term ids). When a
+	// caller opts in via `extra_data.string_ids` (e.g. the WP Fusion tag bridge,
+	// whose CRM tag ids can be non-numeric like "tag_alpha"), normalise ids as
+	// strings instead so `Number()` doesn't turn them into NaN. `coerceId` is
+	// used everywhere an id is stored, compared, or keyed below.
+	var useStringIds = !! extraData.string_ids;
+	var coerceId = function ( id ) {
+		return useStringIds ? String( id ) : Number( id );
+	};
+
+	var selectedIds = Array.isArray( value ) ? value.map( coerceId ) : [];
 
 	// Track labels for selected items.
 	var itemLabelsState = useState( function () {
 		var labels = {};
 		initialItems.forEach( function ( item ) {
-			labels[ Number( item.value ) ] = item.label;
+			labels[ coerceId( item.value ) ] = item.label;
 		} );
 		return labels;
 	} );
@@ -72,6 +93,19 @@ function AjaxMultiSelectField( { field, value, onChange, disabled } ) {
 	var showDropdownState = useState( false );
 	var showDropdown = showDropdownState[ 0 ];
 	var setShowDropdown = showDropdownState[ 1 ];
+
+	// Index of the keyboard-highlighted suggestion. -1 = none active. Lets the
+	// user navigate the dropdown with Arrow keys and commit with Enter, instead
+	// of only being able to click a suggestion with the mouse.
+	var activeIndexState = useState( -1 );
+	var activeIndex = activeIndexState[ 0 ];
+	var setActiveIndex = activeIndexState[ 1 ];
+
+	// True while a create-new request is in flight (prevents double-submit).
+	var isCreatingState = useState( false );
+	var isCreating = isCreatingState[ 0 ];
+	var setIsCreating = isCreatingState[ 1 ];
+
 	var abortRef = useRef( null );
 	var timerRef = useRef( null );
 	var wrapperRef = useRef( null );
@@ -112,6 +146,7 @@ function AjaxMultiSelectField( { field, value, onChange, disabled } ) {
 		if ( ! searchQuery || searchQuery.length < 2 || ! ajaxAction ) {
 			setSuggestions( [] );
 			setShowDropdown( false );
+			setActiveIndex( -1 );
 			return;
 		}
 
@@ -132,6 +167,16 @@ function AjaxMultiSelectField( { field, value, onChange, disabled } ) {
 			params.append( nonceParam, ajaxNonce );
 			params.append( 'q', searchQuery );
 			params.append( 'page', '1' );
+			// Forward any caller-supplied extra params (e.g. the bridge's
+			// `resolver` key, which tells the generic search shim which
+			// plugin behaviour to dispatch to). Reserved keys consumed by
+			// this component are skipped so they don't leak into the query.
+			Object.keys( extraData ).forEach( function ( key ) {
+				if ( -1 !== [ 'selected_items', 'ajax_action', 'ajax_nonce', 'nonce_param', 'search_placeholder', 'string_ids' ].indexOf( key ) ) {
+					return;
+				}
+				params.append( key, extraData[ key ] );
+			} );
 
 			fetch( ajaxUrl + '?' + params.toString(), {
 				method: 'GET',
@@ -146,14 +191,23 @@ function AjaxMultiSelectField( { field, value, onChange, disabled } ) {
 					var currentIds = selectedIdsRef.current;
 					// Filter out already selected items.
 					var filtered = matches.filter( function ( item ) {
-						return -1 === currentIds.indexOf( Number( item.value ) );
+						return -1 === currentIds.indexOf( coerceId( item.value ) );
 					} );
 					setSuggestions( filtered );
 					setShowDropdown( true );
+					// Highlight the first suggestion so Enter commits it without
+					// requiring an Arrow press first (the common "type + Enter"
+					// flow). -1 when there are no matches.
+					setActiveIndex( filtered.length > 0 ? 0 : -1 );
 					setIsLoading( false );
 				} )
 				.catch( function ( err ) {
 					if ( 'AbortError' !== err.name ) {
+						// Surface genuine search failures (network/server) for
+						// debugging; an aborted (superseded) request is expected.
+						if ( window.console && 'function' === typeof window.console.warn ) {
+							window.console.warn( 'RegisteredMetaField search failed:', err );
+						}
 						setIsLoading( false );
 						setSuggestions( [] );
 					}
@@ -168,16 +222,17 @@ function AjaxMultiSelectField( { field, value, onChange, disabled } ) {
 	}, [ searchQuery ] ); // eslint-disable-line react-hooks/exhaustive-deps
 
 	function handleSelect( item ) {
-		var newIds = selectedIds.concat( [ Number( item.value ) ] );
+		var newIds = selectedIds.concat( [ coerceId( item.value ) ] );
 		setItemLabels( function ( prev ) {
 			var updated = Object.assign( {}, prev );
-			updated[ Number( item.value ) ] = item.label;
+			updated[ coerceId( item.value ) ] = item.label;
 			return updated;
 		} );
 		onChange( newIds );
 		setSearchQuery( '' );
 		setSuggestions( [] );
 		setShowDropdown( false );
+		setActiveIndex( -1 );
 	}
 
 	function handleRemove( id ) {
@@ -186,6 +241,164 @@ function AjaxMultiSelectField( { field, value, onChange, disabled } ) {
 		} );
 		onChange( newIds );
 	}
+
+	/**
+	 * Create a brand-new item from the current search term, then select it.
+	 *
+	 * POSTs the typed term to `create_action`; the server creates the item
+	 * (e.g. WP Fusion appends the tag to its available list / mints it in the
+	 * CRM) and returns the canonical `{ value, label }`, which is added as a
+	 * chip. Mirrors the classic metabox's "type + Enter creates the tag" flow.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param {string} term The new item's name.
+	 */
+	function handleCreate( term ) {
+		term = ( term || '' ).trim();
+		if ( '' === term || ! createAction || isCreating ) {
+			return;
+		}
+
+		setIsCreating( true );
+
+		ajaxFetch( createAction, { term: term } )
+			.then( function ( response ) {
+				if ( response && response.success && response.data && response.data.value ) {
+					handleSelect( {
+						value: response.data.value,
+						label: response.data.label || term,
+					} );
+				}
+			} )
+			.catch( function ( err ) {
+				if ( window && window.console && 'function' === typeof window.console.warn ) {
+					window.console.warn( 'AjaxMultiSelectField create failed:', err );
+				}
+			} )
+			.finally( function () {
+				setIsCreating( false );
+			} );
+	}
+
+	// The "Create <term>" pseudo-option, present only when create is enabled,
+	// the term is non-empty, and it doesn't exactly match an existing
+	// suggestion or an already-selected chip (case-insensitive). Marked with
+	// `__create` so the commit dispatcher routes it to handleCreate.
+	var trimmedQuery = ( searchQuery || '' ).trim();
+	var hasExactMatch = function () {
+		var lc = trimmedQuery.toLowerCase();
+		var s;
+		for ( s = 0; s < suggestions.length; s++ ) {
+			if ( String( suggestions[ s ].label || '' ).toLowerCase() === lc ||
+				String( suggestions[ s ].value || '' ).toLowerCase() === lc ) {
+				return true;
+			}
+		}
+		for ( s = 0; s < selectedIds.length; s++ ) {
+			if ( String( itemLabels[ selectedIds[ s ] ] || selectedIds[ s ] ).toLowerCase() === lc ) {
+				return true;
+			}
+		}
+		return false;
+	};
+	var createOption = ( allowCreate && createAction && '' !== trimmedQuery && ! hasExactMatch() )
+		? {
+			value:    trimmedQuery,
+			label:    createLabelTpl
+				? createLabelTpl.replace( '%s', trimmedQuery )
+				: ( trimmedQuery + ' ' + __( '(Add new)', 'buddyboss' ) ),
+			__create: true,
+		}
+		: null;
+
+	// Unified, ordered list the dropdown renders and the keyboard navigates:
+	// the create row (if any) sits at the bottom, after server suggestions —
+	// matching select2, where typing an existing name surfaces it first and
+	// the "add new" row is the fallback.
+	var displayItems = createOption ? suggestions.concat( [ createOption ] ) : suggestions;
+
+	/**
+	 * Commit a chosen dropdown item — either an existing suggestion (added
+	 * directly) or the create row (sent through handleCreate first).
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param {Object} item The chosen item.
+	 */
+	function commitItem( item ) {
+		if ( ! item ) {
+			return;
+		}
+		if ( item.__create ) {
+			handleCreate( item.value );
+			return;
+		}
+		handleSelect( item );
+	}
+
+	/**
+	 * Keyboard navigation for the suggestions dropdown.
+	 *
+	 * ArrowDown / ArrowUp move the highlight; Enter commits the highlighted
+	 * row (so "type a tag + Enter" adds it — or creates it, when the create
+	 * row is highlighted — without reaching for the mouse); Escape closes the
+	 * dropdown. Enter is always prevented from bubbling so it never submits the
+	 * surrounding modal form.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param {KeyboardEvent} e Input keydown event.
+	 */
+	function handleKeyDown( e ) {
+		if ( disabled ) {
+			return;
+		}
+
+		if ( 'ArrowDown' === e.key ) {
+			if ( showDropdown && displayItems.length > 0 ) {
+				e.preventDefault();
+				setActiveIndex( function ( prev ) {
+					return prev + 1 < displayItems.length ? prev + 1 : prev;
+				} );
+			}
+			return;
+		}
+
+		if ( 'ArrowUp' === e.key ) {
+			if ( showDropdown && displayItems.length > 0 ) {
+				e.preventDefault();
+				setActiveIndex( function ( prev ) {
+					return prev > 0 ? prev - 1 : 0;
+				} );
+			}
+			return;
+		}
+
+		if ( 'Enter' === e.key ) {
+			// Commit the highlighted row (or the first). Always preventDefault
+			// so a stray Enter can't submit the modal form.
+			if ( showDropdown && displayItems.length > 0 ) {
+				e.preventDefault();
+				var idx = ( activeIndex >= 0 && activeIndex < displayItems.length ) ? activeIndex : 0;
+				commitItem( displayItems[ idx ] );
+			}
+			return;
+		}
+
+		if ( 'Escape' === e.key ) {
+			if ( showDropdown ) {
+				e.preventDefault();
+				setShowDropdown( false );
+				setActiveIndex( -1 );
+			}
+		}
+	}
+
+	// The dropdown is open when there are server matches OR a create row to
+	// offer. (The fetch effect only flips showDropdown for server matches, so
+	// a term with zero matches but a valid create option must still open.)
+	var dropdownOpen = showDropdown || ( !! createOption && trimmedQuery.length >= 2 );
 
 	return (
 		<div className={ 'bb-admin-meta-field__ajax-multiselect' + ( disabled ? ' bb-admin-meta-field--disabled' : '' ) } ref={ wrapperRef }>
@@ -222,23 +435,29 @@ function AjaxMultiSelectField( { field, value, onChange, disabled } ) {
 					onChange={ function ( e ) {
 						setSearchQuery( e.target.value );
 					} }
+					onKeyDown={ handleKeyDown }
 					placeholder={ placeholder }
 					disabled={ disabled }
 				/>
-				{ isLoading && (
+				{ ( isLoading || isCreating ) && (
 					<span className="bb-admin-meta-field__search-spinner spinner is-active"></span>
 				) }
 
-				{ showDropdown && suggestions.length > 0 && (
+				{ dropdownOpen && displayItems.length > 0 && (
 					<ul className="bb-admin-meta-field__suggestions">
-						{ suggestions.map( function ( item ) {
+						{ displayItems.map( function ( item, idx ) {
 							return (
 								<li
-									key={ item.value }
-									className="bb-admin-meta-field__suggestion-item"
+									key={ item.__create ? '__create__' : item.value }
+									className={ 'bb-admin-meta-field__suggestion-item' +
+										( idx === activeIndex ? ' is-active' : '' ) +
+										( item.__create ? ' bb-admin-meta-field__suggestion-item--create' : '' ) }
 									onMouseDown={ function ( e ) {
 										e.preventDefault();
-										handleSelect( item );
+										commitItem( item );
+									} }
+									onMouseEnter={ function () {
+										setActiveIndex( idx );
 									} }
 								>
 									{ item.label }
@@ -471,7 +690,29 @@ export function RegisteredMetaField( { field, value, onChange, activityId, itemI
 	if ( 'toggle_list' === field.type ) {
 		var toggleOptions = field.options && Array.isArray( field.options ) ? field.options : [];
 		if ( 0 === toggleOptions.length ) {
-			return null;
+			// A field bridged from a legacy third-party metabox (id prefixed
+			// `legacy_` or carrying a `field_group`) should still show its label
+			// + an empty-state when it has no options yet — e.g. a WP Fusion tag
+			// picker has zero options until the CRM tags are synced, and hiding
+			// it made the new UI look like it was missing fields the classic
+			// metabox displayed. Core registry fields keep the original
+			// "render nothing when empty" behavior so this change is zero-impact
+			// for non-bridged toggle lists.
+			var isBridged = ( field.id && 0 === String( field.id ).indexOf( 'legacy_' ) ) || !! field.field_group;
+			if ( ! isBridged ) {
+				return null;
+			}
+			return (
+				<div className={ 'bb-admin-meta-field__toggle-list-field' + ( isDisabled ? ' bb-admin-meta-field--disabled' : '' ) }>
+					<label className="bb-admin-meta-field__label">{ field.label }</label>
+					<p className="bb-admin-meta-field__empty">
+						{ field.placeholder || __( 'No options available yet.', 'buddyboss' ) }
+					</p>
+					{ field.description && (
+						<p className="bb-admin-meta-field__description">{ field.description }</p>
+					) }
+				</div>
+			);
 		}
 		var toggleValues = value && 'object' === typeof value ? value : {};
 
@@ -564,8 +805,13 @@ export function RegisteredMetaField( { field, value, onChange, activityId, itemI
 		// AJAX handler can scope its query (e.g. exclude descendants of the
 		// current group, exclude already-associated LD groups, etc.). Static
 		// `field.asyncExtraParams` still wins for any explicit overrides.
+		// A `resolver` key in `extra_data` (set by the legacy-meta bridge) is
+		// also forwarded so the generic search shim can dispatch to the right
+		// plugin behaviour. `initial_label` is display-only and not forwarded.
+		var asyncResolver = ( field.extra_data && field.extra_data.resolver ) ? { resolver: field.extra_data.resolver } : {};
 		var asyncParams = Object.assign(
 			{},
+			asyncResolver,
 			field.asyncExtraParams || {},
 			{ item_id: itemId || 0 }
 		);
@@ -582,6 +828,7 @@ export function RegisteredMetaField( { field, value, onChange, activityId, itemI
 					asyncExtraParams={ asyncParams }
 					placeholder={ field.placeholder || '' }
 					disabled={ isDisabled }
+					initialLabel={ ( field.extra_data && field.extra_data.initial_label ) || '' }
 				/>
 				{ field.description && (
 					<p className="bb-admin-meta-field__description">{ field.description }</p>
