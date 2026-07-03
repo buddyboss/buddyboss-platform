@@ -646,7 +646,16 @@ module.exports = function (grunt) {
 			compress: {
 				main: {
 					options: {
-						archive: 'buddyboss-platform-plugin.zip'
+						archive: 'buddyboss-platform-plugin.zip',
+						// Maximum DEFLATE level (default is 6). The zip format is
+						// fixed (WordPress installs .zip only), so level 9 is the
+						// only compression lever here — squeezes the text-heavy
+						// payload (PHP, minified JS/CSS, .pot) a few % smaller for
+						// a bit more CPU at build time. configure_compress_exclusions
+						// only rewrites `.files`, so this option persists.
+						//
+						// @since BuddyBoss [BBVERSION]
+						level: 9
 					},
 					files: [{
 						src: BUILD_DIR + '**',
