@@ -431,7 +431,20 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				add_filter( 'bbp_after_get_topic_stick_link_parse_args', array( $this, 'bb_rl_modify_get_topic_stick_link_parse_args' ), 10 );
 			}
 
-			add_filter( 'paginate_links_output', array( $this, 'bb_rl_filter_paginate_links_output' ), 10, 2 );
+			// Skip ReadyLaunch's pagination on the Courses tab (and its sub-tabs) of member profiles and group pages.
+			// LMS plugins (Tutor LMS, LearnDash, etc.) ship their own pagination for this context, which conflicts
+			// with the ReadyLaunch paginate_links_output filter. The check is intentionally LMS-agnostic so that
+			// it covers all current and future LMS integrations that use the courses tab in either context.
+			$current_action     = bp_current_action();
+			$current_component  = bp_current_component();
+			$is_courses_context = (
+				'courses' === $current_component ||
+				( ! empty( $current_action ) && 'courses' === $current_action )
+			);
+
+			if ( ! ( ( bp_is_user() || bp_is_group() ) && $is_courses_context ) ) {
+				add_filter( 'paginate_links_output', array( $this, 'bb_rl_filter_paginate_links_output' ), 10, 2 );
+			}
 
 			/**
 			 * Fires after ReadyLaunch has finished its own init work, so
