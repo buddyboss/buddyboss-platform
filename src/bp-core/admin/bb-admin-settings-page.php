@@ -148,15 +148,9 @@ function bb_admin_settings_page() {
 
 	// Resolve the LTR admin CSS path. Two build layouts are supported because the
 	// Settings 2.0 build nests under /styles/ while other targets (e.g.
-	// rl-onboarding) emit flat. Probe each layout against the ALWAYS-shipped
-	// `.min.css` file — NOT the `{$min}` variant. Under SCRIPT_DEBUG `$min` is ''
-	// and the unminified `admin.css` is stripped from the customer zip, so gating
-	// on it would register no stylesheet at all and leave the page unstyled.
-	// Instead we register the `{$min}`-suffixed URL and let the style_loader_src
-	// filter (BB_Debug_Asset_Fetcher) resolve it to the staged unminified override
-	// when available, or fall back to the minified file. WordPress does not derive
-	// the suffix at render time; it only uses the 'suffix' data to compute the
-	// -rtl variant.
+	// rl-onboarding) emit flat. The shipped zip carries only the minified CSS
+	// (the unminified `admin.css` is stripped), so always register the
+	// `.min.css` file regardless of SCRIPT_DEBUG.
 	$css_layouts = array( '/styles/admin', '/admin' );
 
 	foreach ( $css_layouts as $css_base ) {
@@ -164,7 +158,7 @@ function bb_admin_settings_page() {
 			continue;
 		}
 
-		$css_file = $build_dir . $css_base . $min . '.css';
+		$css_file = $build_dir . $css_base . '.min.css';
 		$css_url  = str_replace( buddypress()->plugin_dir, buddypress()->plugin_url, $css_file );
 		wp_register_style(
 			'bb-admin-settings',
@@ -175,12 +169,9 @@ function bb_admin_settings_page() {
 
 		// Match the platform convention (see bp_core_register_common_styles()):
 		// 'replace' tells WordPress to swap "{$suffix}.css" → "-rtl{$suffix}.css"
-		// on RTL sites, which matches the build output naming
-		// (admin-rtl.css / admin-rtl.min.css).
+		// on RTL sites, which matches the build output naming (admin-rtl.min.css).
 		wp_style_add_data( 'bb-admin-settings', 'rtl', 'replace' );
-		if ( $min ) {
-			wp_style_add_data( 'bb-admin-settings', 'suffix', $min );
-		}
+		wp_style_add_data( 'bb-admin-settings', 'suffix', '.min' );
 
 		wp_enqueue_style( 'bb-admin-settings' );
 		break;

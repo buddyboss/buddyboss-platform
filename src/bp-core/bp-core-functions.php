@@ -2512,23 +2512,11 @@ function bp_core_get_minified_asset_suffix() {
 }
 
 /**
- * Resolve the public URL for a paired asset, honouring SCRIPT_DEBUG.
+ * Resolve the public URL for a first-party asset.
  *
- * Pair set = first-party assets that ship both `<name>.<ext>` and
- * `<name>.min.<ext>`. The shipped zip only contains the minified files; the
- * unminified counterparts live on the production branch and are fetched at
- * runtime by {@see BB_Debug_Asset_Fetcher} when WP_DEBUG && SCRIPT_DEBUG.
- *
- * Resolution order:
- *   1. SCRIPT_DEBUG off  → `.min.<ext>` under the plugin URL.
- *   2. SCRIPT_DEBUG on  → uploads override if the fetcher has staged a
- *                          verified unminified copy.
- *   3. Fallback         → `.min.<ext>` (e.g. fetch in progress, network
- *                          unreachable, fetcher disabled). The admin notice
- *                          surface explains why the override is missing.
- *
- * Callers pass the extensionless basename so this helper can append either
- * `.min.<ext>` or `.<ext>` depending on resolution. Example:
+ * The shipped zip only contains the minified files, so this always resolves to
+ * `<name>.min.<ext>` under the plugin URL, regardless of SCRIPT_DEBUG. Callers
+ * pass the extensionless basename. Example:
  *
  *     wp_enqueue_style(
  *         'bp-foo',
@@ -2545,21 +2533,9 @@ function bp_core_get_minified_asset_suffix() {
  * @return string Public URL ready to pass to wp_enqueue_script/style.
  */
 function bb_asset_url( $relative, $ext ) {
-	$script_debug = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG;
-	$plugin_url   = trailingslashit( BP_PLUGIN_URL ) . $relative;
-
-	if ( ! $script_debug ) {
-		return $plugin_url . '.min.' . $ext;
-	}
-
-	if ( class_exists( 'BB_Debug_Asset_Fetcher' ) ) {
-		$override = BB_Debug_Asset_Fetcher::get_override_url( $relative . '.' . $ext );
-		if ( $override ) {
-			return $override;
-		}
-	}
-
-	return $plugin_url . '.min.' . $ext;
+	// The shipped zip contains only the minified assets, so always resolve to
+	// the `.min` file regardless of SCRIPT_DEBUG.
+	return trailingslashit( BP_PLUGIN_URL ) . $relative . '.min.' . $ext;
 }
 
 /**
@@ -2575,21 +2551,9 @@ function bb_asset_url( $relative, $ext ) {
  * @return string Absolute filesystem path.
  */
 function bb_asset_path( $relative, $ext ) {
-	$script_debug = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG;
-	$plugin_path  = trailingslashit( BP_PLUGIN_DIR ) . $relative;
-
-	if ( ! $script_debug ) {
-		return $plugin_path . '.min.' . $ext;
-	}
-
-	if ( class_exists( 'BB_Debug_Asset_Fetcher' ) ) {
-		$override = BB_Debug_Asset_Fetcher::get_override_path( $relative . '.' . $ext );
-		if ( $override ) {
-			return $override;
-		}
-	}
-
-	return $plugin_path . '.min.' . $ext;
+	// The shipped zip contains only the minified assets, so always resolve to
+	// the `.min` file regardless of SCRIPT_DEBUG.
+	return trailingslashit( BP_PLUGIN_DIR ) . $relative . '.min.' . $ext;
 }
 
 /**
@@ -2599,7 +2563,7 @@ function bb_asset_path( $relative, $ext ) {
  * document components removed from the free package). This checks for the
  * component's loader file on disk.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.5
  *
  * @param string $component Component ID (e.g. 'video', 'document').
  * @return bool True when the component's loader file exists.
