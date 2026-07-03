@@ -508,7 +508,7 @@ function bb_get_activity_reaction_ajax_callback() {
 	) {
 		wp_send_json_error(
 			array(
-				'message' => __( 'Activity not found.', 'buddyboss' ),
+				'message' => __( 'Activity not found.', 'buddyboss-platform' ),
 				'type'    => 'error',
 			)
 		);

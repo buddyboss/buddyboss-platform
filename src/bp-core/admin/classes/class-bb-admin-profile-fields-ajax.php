@@ -446,7 +446,7 @@ class BB_Admin_Profile_Fields_Ajax {
 					// is defense-in-depth against direct AJAX clients.
 					if ( ! $this->bb_can_move_field_to_group( $field_id, $existing_group_id, $group_id ) ) {
 						wp_send_json_error(
-							array( 'message' => __( 'This field cannot be moved to that field set.', 'buddyboss' ) )
+							array( 'message' => __( 'This field cannot be moved to that field set.', 'buddyboss-platform' ) )
 						);
 					}
 

@@ -605,7 +605,7 @@ function bbp_admin_repair_group_forum_relationship() {
 
 	// Nothing to repair when there are no converted forums on the site.
 	if ( empty( $bbp_db->last_result ) ) {
-		$nothing = __( 'Nothing to repair!', 'buddyboss' );
+		$nothing = __( 'Nothing to repair!', 'buddyboss-platform' );
 		return array(
 			0,
 			sprintf( $statement, $nothing ),
@@ -769,7 +769,7 @@ function bbp_admin_repair_forum_topic_count() {
 			bbp_update_forum_topic_count( $forum->ID );
 		}
 	} else {
-		$result = __( 'No forums to count!', 'buddyboss' );
+		$result = __( 'No forums to count!', 'buddyboss-platform' );
 		return array(
 			0,
 			sprintf( $statement, $result ),
@@ -838,7 +838,7 @@ function bbp_admin_repair_forum_reply_count() {
 			bbp_update_forum_reply_count( $forum->ID );
 		}
 	} else {
-		$result = __( 'No forums to count!', 'buddyboss' );
+		$result = __( 'No forums to count!', 'buddyboss-platform' );
 		return array(
 			0,
 			sprintf( $statement, $result ),
@@ -890,7 +890,7 @@ function bbp_admin_repair_user_topic_count() {
 	}
 
 	if ( ! count( $insert_values ) ) {
-		$result = __( 'No discussions to count!', 'buddyboss' );
+		$result = __( 'No discussions to count!', 'buddyboss-platform' );
 		return array(
 			0,
 			sprintf( $statement, $result ),
@@ -966,7 +966,7 @@ function bbp_admin_repair_user_reply_count() {
 	}
 
 	if ( ! count( $insert_values ) ) {
-		$result = __( 'No replies to count!', 'buddyboss' );
+		$result = __( 'No replies to count!', 'buddyboss-platform' );
 		return array(
 			0,
 			sprintf( $statement, $result ),
@@ -1603,7 +1603,7 @@ function bbp_admin_repair_sticky() {
 
 	// Nothing to recalculate when no forums exist on the site.
 	if ( empty( $forums ) ) {
-		$result = __( 'No stickies to recalculate!', 'buddyboss' );
+		$result = __( 'No stickies to recalculate!', 'buddyboss-platform' );
 		return array(
 			0,
 			sprintf( $statement, $result ),

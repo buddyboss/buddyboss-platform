@@ -104,9 +104,12 @@
   /* text-shadow: 1px 1px 1px rgba(127, 127, 127, 0.3); */
 }
 
-/* Default icon variant weight — see bb-icons.css. Pin plain `.bb-icon-*` to the
-   lined (400) variant so they don't inherit a stray weight (e.g. WP 7.0's
-   `.components-button { font-weight: 499 }`). Variant classes below override. */
+/* Default icon variant weight. Without this, a plain `.bb-icon-*` (no variant
+   suffix) inherits font-weight from its parent; WordPress 7.0 sets
+   `.components-button { font-weight: 499 }`, which made icons inside buttons
+   resolve to the box-lined (500) face. Pin the default to the lined (400)
+   variant here; the variant classes below have equal specificity and come
+   later, so they still override. */
 [class^="bb-icon-"],
 [class*=" bb-icon-"] {
   font-weight: 400;

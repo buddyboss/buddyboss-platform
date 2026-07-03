@@ -56,7 +56,7 @@ defined( 'ABSPATH' ) || exit;
 function bb_legacy_wpf_register_ajax_resolvers( $resolvers ) {
 	$resolvers['wpf_tags'] = array(
 		'match'         => 'select4-wpf-tags',
-		'placeholder'   => __( 'Select tags', 'buddyboss' ),
+		'placeholder'   => __( 'Select tags', 'buddyboss-platform' ),
 		'search'        => function ( $query, $page ) {
 			unset( $page ); // Tag lists are small — returned unpaginated.
 			if ( ! function_exists( 'wp_fusion' ) || empty( wp_fusion()->settings ) ) {
@@ -92,7 +92,7 @@ function bb_legacy_wpf_register_ajax_resolvers( $resolvers ) {
 		$resolvers['wpf_tags']['allow_create']  = true;
 		$resolvers['wpf_tags']['create_action'] = 'bb_legacy_wpf_create_tag';
 		/* translators: %s: the tag name the admin typed. */
-		$resolvers['wpf_tags']['create_label'] = __( 'Create "%s"', 'buddyboss' );
+		$resolvers['wpf_tags']['create_label'] = __( 'Create "%s"', 'buddyboss-platform' );
 	}
 
 	// Shared between this resolver's `search` and `has_more` closures so the page
@@ -102,7 +102,7 @@ function bb_legacy_wpf_register_ajax_resolvers( $resolvers ) {
 
 	$resolvers['wpf_redirect'] = array(
 		'match'         => 'select4-select-page',
-		'placeholder'   => __( 'Select a page', 'buddyboss' ),
+		'placeholder'   => __( 'Select a page', 'buddyboss-platform' ),
 		'search'        => function ( $query, $page ) use ( &$redirect_max_pages ) {
 			$wp_query = new WP_Query(
 				array(
@@ -270,19 +270,19 @@ function bb_legacy_wpf_crm_supports_tag_create() {
  */
 function bb_legacy_wpf_create_tag() {
 	if ( ! bp_current_user_can( 'bp_moderate' ) ) {
-		wp_send_json_error( array( 'message' => __( 'Unauthorized', 'buddyboss' ) ), 403 );
+		wp_send_json_error( array( 'message' => __( 'Unauthorized', 'buddyboss-platform' ) ), 403 );
 	}
 
 	check_ajax_referer( 'bb_admin_settings', 'nonce' );
 
 	if ( ! bb_legacy_wpf_crm_supports_tag_create() ) {
-		wp_send_json_error( array( 'message' => __( 'This CRM does not support creating tags.', 'buddyboss' ) ), 400 );
+		wp_send_json_error( array( 'message' => __( 'This CRM does not support creating tags.', 'buddyboss-platform' ) ), 400 );
 	}
 
 	$term = isset( $_POST['term'] ) ? sanitize_text_field( wp_unslash( $_POST['term'] ) ) : '';
 	$term = trim( $term );
 	if ( '' === $term ) {
-		wp_send_json_error( array( 'message' => __( 'Tag name is empty.', 'buddyboss' ) ), 400 );
+		wp_send_json_error( array( 'message' => __( 'Tag name is empty.', 'buddyboss-platform' ) ), 400 );
 	}
 
 	$crm      = wp_fusion()->crm;
@@ -301,7 +301,7 @@ function bb_legacy_wpf_create_tag() {
 				// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log -- Gated behind WP_DEBUG; intentional debug-only log.
 				error_log( 'bb_legacy_wpf_create_tag: ' . $created->get_error_code() );
 			}
-			wp_send_json_error( array( 'message' => __( 'Failed to create tag.', 'buddyboss' ) ), 400 );
+			wp_send_json_error( array( 'message' => __( 'Failed to create tag.', 'buddyboss-platform' ) ), 400 );
 		}
 		$tag_id = (string) $created;
 	}

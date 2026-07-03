@@ -139,7 +139,7 @@ export function ForumCreateModal( { isOpen, onClose, onCreated, forumBaseSlug, c
 		} );
 
 		if ( ! opened ) {
-			setError( __( 'The WordPress Media Library is not available.', 'buddyboss' ) );
+			setError( __( 'The WordPress Media Library is not available.', 'buddyboss-platform' ) );
 		}
 	};
 
@@ -321,7 +321,7 @@ export function ForumCreateModal( { isOpen, onClose, onCreated, forumBaseSlug, c
 
 	return (
 		<Modal
-			title={ __( 'Create New Forum', 'buddyboss' ) }
+			title={ __( 'Create New Forum', 'buddyboss-platform' ) }
 			onRequestClose={ handleClose }
 			className="bb-forum-modal bb-forum-create-modal bb-admin-settings-modal"
 			shouldCloseOnClickOutside={ false }

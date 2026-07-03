@@ -205,7 +205,7 @@ module.exports = function (grunt) {
 			checktextdomain: {
 				options: {
 					correct_domain: false,
-					text_domain: ['buddyboss'],
+					text_domain: ['buddyboss-platform'],
 					keywords: [
 					'__:1,2d',
 					'_e:1,2d',
@@ -236,7 +236,7 @@ module.exports = function (grunt) {
 						domainPath: '/languages',
 						exclude: ['node_modules/*'], // List of files or directories to ignore.
 						mainFile: 'bp-loader.php',
-						potFilename: 'buddyboss.pot',
+						potFilename: 'buddyboss-platform.pot',
 						potHeaders: { // Headers to add to the generated POT file.
 							poedit: true, // Includes common Poedit headers.
 							'Last-Translator': 'BuddyBoss <support@buddyboss.com>',
@@ -608,7 +608,7 @@ module.exports = function (grunt) {
 				},
 				// WP-CLI makepot with header fixing
 				makepot_wp: {
-					command: 'wp i18n make-pot src/ src/languages/buddyboss.pot --domain=buddyboss --ignore-domain --exclude="node_modules/*, vendor/*, src/vendor/*, js/*"',
+					command: 'wp i18n make-pot src/ src/languages/buddyboss-platform.pot --domain=buddyboss-platform --ignore-domain --exclude="node_modules/*, vendor/*, src/vendor/*, js/*"',
 					cwd: '.',
 					stdout: true
 				},
@@ -1068,11 +1068,11 @@ module.exports = function (grunt) {
 			return '!' + BUILD_DIR + g;
 		} );
 		// Paid components are stripped only when the build_test flag is set.
-		var paidComponentExclusions = stripPaidComponents
-			? PAID_COMPONENT_STRIP_GLOBS.map( function ( g ) {
+		var paidComponentExclusions = stripPaidComponents ?
+			PAID_COMPONENT_STRIP_GLOBS.map( function ( g ) {
 				return '!' + BUILD_DIR + g;
-			} )
-			: [];
+			} ) :
+			[];
 
 		// Images + woff2 fonts are offloaded to S3 (CSS refs already rewritten by
 		// rewrite_css_image_refs_to_s3, HTML refs rewritten at runtime).
@@ -1102,13 +1102,13 @@ module.exports = function (grunt) {
 		} ] );
 
 		grunt.log.writeln(
-			'[compress] excluded ' + pairExclusions.length + ' paired-unminified files + '
-			+ FONT_STRIP_GLOBS.length + ' font-strip globs + '
-			+ TRANSLATION_STRIP_GLOBS.length + ' translation globs + '
-			+ DEV_SOURCE_STRIP_GLOBS.length + ' dev-source globs + '
-			+ paidComponentExclusions.length + ' paid-component globs + '
-			+ s3OffloadExclusions.length + ' S3-offload globs (images + woff2) from zip; '
-			+ 're-included ' + s3OffloadKeepIncludes.length + ' webpack build-image keep-globs.'
+			'[compress] excluded ' + pairExclusions.length + ' paired-unminified files + ' +
+			FONT_STRIP_GLOBS.length + ' font-strip globs + ' +
+			TRANSLATION_STRIP_GLOBS.length + ' translation globs + ' +
+			DEV_SOURCE_STRIP_GLOBS.length + ' dev-source globs + ' +
+			paidComponentExclusions.length + ' paid-component globs + ' +
+			s3OffloadExclusions.length + ' S3-offload globs (images + woff2) from zip; ' +
+			're-included ' + s3OffloadKeepIncludes.length + ' webpack build-image keep-globs.'
 		);
 	} );
 

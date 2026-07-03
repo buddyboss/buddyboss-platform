@@ -1285,7 +1285,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 					'nonce'              => wp_create_nonce( 'bb-readylaunch' ),
 					'more_nav'           => esc_html__( 'More', 'buddyboss-platform' ),
 					'filter_all'         => esc_html__( 'All', 'buddyboss-platform' ),
-					'notification_error' => esc_html__( 'Failed to load data. Please try again.', 'buddyboss' ),
+					'notification_error' => esc_html__( 'Failed to load data. Please try again.', 'buddyboss-platform' ),
 				)
 			);
 
@@ -3076,7 +3076,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 					'nonce'              => wp_create_nonce( 'bb-readylaunch' ),
 					'more_nav'           => esc_html__( 'More', 'buddyboss-platform' ),
 					'filter_all'         => esc_html__( 'All', 'buddyboss-platform' ),
-					'notification_error' => esc_html__( 'Failed to load data. Please try again.', 'buddyboss' ),
+					'notification_error' => esc_html__( 'Failed to load data. Please try again.', 'buddyboss-platform' ),
 				)
 			);
 

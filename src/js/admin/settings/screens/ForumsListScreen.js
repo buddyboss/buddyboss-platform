@@ -1090,7 +1090,7 @@ function ForumEditModal( props ) {
 		} );
 
 		if ( ! opened ) {
-			setError( __( 'The WordPress Media Library is not available.', 'buddyboss' ) );
+			setError( __( 'The WordPress Media Library is not available.', 'buddyboss-platform' ) );
 		}
 	};
 

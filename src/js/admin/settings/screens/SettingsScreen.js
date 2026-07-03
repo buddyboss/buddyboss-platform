@@ -510,7 +510,7 @@ export function SettingsScreen({ onNavigate }) {
 										: 'add-ons' === category
 										? __('Add-ons', 'buddyboss-platform')
 										: 'tools' === category
-										? __('Tools', 'buddyboss')
+										? __('Tools', 'buddyboss-platform')
 										: __('Integrations', 'buddyboss-platform') }
 								</option>
 							))}
@@ -530,9 +530,9 @@ export function SettingsScreen({ onNavigate }) {
 										: 'add-ons' === category
 										? __('BUDDYBOSS ADD-ONS', 'buddyboss-platform')
 										: 'integrations' === category
-										? __('BUDDYBOSS INTEGRATIONS', 'buddyboss')
+										? __('BUDDYBOSS INTEGRATIONS', 'buddyboss-platform')
 										: 'tools' === category
-										? __('TOOLS', 'buddyboss')
+										? __('TOOLS', 'buddyboss-platform')
 										: __('BUDDYBOSS INTEGRATIONS', 'buddyboss-platform') }
 								</h2>
 							</div>

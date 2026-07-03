@@ -38,7 +38,7 @@ function bb_admin_integrations_page() {
 					<?php
 					esc_html_e(
 						'BuddyBoss Integrations assets not found. Please run: npm run build:admin:integrations',
-						'buddyboss'
+						'buddyboss-platform'
 					);
 					?>
 				</p>
@@ -61,7 +61,7 @@ function bb_admin_integrations_page() {
 					<?php
 					esc_html_e(
 						'BuddyBoss shared admin assets not found. Please run: npm run build:admin:common',
-						'buddyboss'
+						'buddyboss-platform'
 					);
 					?>
 				</p>

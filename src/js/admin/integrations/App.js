@@ -246,9 +246,9 @@ function AppInner() {
 			<input
 				type="search"
 				className="bb-integrations__search"
-				placeholder={ __( 'Search integrations…', 'buddyboss' ) }
+				placeholder={ __( 'Search integrations…', 'buddyboss-platform' ) }
 				onChange={ handleSearchChange }
-				aria-label={ __( 'Search integrations', 'buddyboss' ) }
+				aria-label={ __( 'Search integrations', 'buddyboss-platform' ) }
 			/>
 			<i className="bb-icon-search bb-integrations__search-icon" aria-hidden="true"></i>
 		</div>
@@ -279,7 +279,7 @@ function AppInner() {
 							className={ 'bb-integrations__tab' + ( 'all' === tier ? ' is-active' : '' ) }
 							onClick={ () => handleTierChange( 'all' ) }
 						>
-							{ __( 'All', 'buddyboss' ) }
+							{ __( 'All', 'buddyboss-platform' ) }
 						</button>
 						<button
 							type="button"
@@ -291,7 +291,7 @@ function AppInner() {
 							className={ 'bb-integrations__tab' + ( 'free' === tier ? ' is-active' : '' ) }
 							onClick={ () => handleTierChange( 'free' ) }
 						>
-							{ __( 'Free', 'buddyboss' ) }
+							{ __( 'Free', 'buddyboss-platform' ) }
 						</button>
 						<button
 							type="button"
@@ -303,7 +303,7 @@ function AppInner() {
 							className={ 'bb-integrations__tab' + ( 'pro' === tier ? ' is-active' : '' ) }
 							onClick={ () => handleTierChange( 'pro' ) }
 						>
-							{ __( 'Pro', 'buddyboss' ) }
+							{ __( 'Pro', 'buddyboss-platform' ) }
 						</button>
 					</div>
 
@@ -313,9 +313,9 @@ function AppInner() {
 							className="bb-integrations__category"
 							value={ category }
 							onChange={ handleCategoryChange }
-							aria-label={ __( 'Filter by category', 'buddyboss' ) }
+							aria-label={ __( 'Filter by category', 'buddyboss-platform' ) }
 						>
-							<option value={ 0 }>{ __( 'All Categories', 'buddyboss' ) }</option>
+							<option value={ 0 }>{ __( 'All Categories', 'buddyboss-platform' ) }</option>
 							{ visibleCategories.map( ( cat ) => (
 								<option key={ cat.id } value={ cat.id }>
 									{ cat.name }

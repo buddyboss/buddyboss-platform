@@ -751,7 +751,7 @@ function bp_admin_install_emails() {
 				),
 				get_admin_url( bp_get_root_blog_id(), 'admin.php' )
 			)
-		) . '">' . esc_html__( 'View Emails.', 'buddyboss' ) . '</a>'
+		) . '">' . esc_html__( 'View Emails.', 'buddyboss-platform' ) . '</a>'
 		: '';
 
 	return array(
@@ -835,7 +835,7 @@ function bp_admin_reinstall_emails() {
 
 	$records_text = sprintf(
 		/* translators: %s: number of emails reset to defaults. */
-		__( '%s emails reset to defaults.', 'buddyboss' ),
+		__( '%s emails reset to defaults.', 'buddyboss-platform' ),
 		bp_core_number_format( $reset_count )
 	);
 
@@ -848,7 +848,7 @@ function bp_admin_reinstall_emails() {
 			),
 			get_admin_url( bp_get_root_blog_id(), 'admin.php' )
 		)
-	) . '">' . esc_html__( 'View Emails.', 'buddyboss' ) . '</a>';
+	) . '">' . esc_html__( 'View Emails.', 'buddyboss-platform' ) . '</a>';
 
 	return array(
 		'status'  => 1,
@@ -863,7 +863,7 @@ function bp_admin_reinstall_emails() {
 		'summary_html' => $records_text . ' ' . $view_emails_link,
 		'message' => sprintf(
 		/* translators: %1$s for view emails url. */
-			__( 'Reseting emails &hellip; Complete! %1$s', 'buddyboss' ),
+			__( 'Reseting emails &hellip; Complete! %1$s', 'buddyboss-platform' ),
 			$view_emails_link
 		),
 	);

@@ -291,19 +291,19 @@ export default function ProfileFieldsScreen( { onNavigate, helpUrl, onHelpClick,
 
 		// Show a sticky "saving" toast while the request is in flight; it's
 		// replaced by the success or error toast once the request settles.
-		setToast( { status: 'saving', message: __( 'Saving order…', 'buddyboss' ) } );
+		setToast( { status: 'saving', message: __( 'Saving order…', 'buddyboss-platform' ) } );
 
 		reorderProfileFields( payload, { signal: reorderAbortRef.current.signal } )
 			.then( function ( response ) {
 				if ( response.success ) {
-					setToast( { status: 'success', message: __( 'Order updated.', 'buddyboss' ) } );
+					setToast( { status: 'success', message: __( 'Order updated.', 'buddyboss-platform' ) } );
 				}
 			} )
 			.catch( function ( error ) {
 				if ( error && 'AbortError' === error.name ) {
 					return;
 				}
-				setToast( { status: 'error', message: __( 'Failed to save order.', 'buddyboss' ) } );
+				setToast( { status: 'error', message: __( 'Failed to save order.', 'buddyboss-platform' ) } );
 				loadFieldGroups();
 			} );
 	}
@@ -332,13 +332,13 @@ export default function ProfileFieldsScreen( { onNavigate, helpUrl, onHelpClick,
 		var field = sourceGroup && sourceGroup.fields ? sourceGroup.fields[ fieldIdx ] : null;
 
 		if ( ! sourceGroup || ! targetGroup || ! field ) {
-			return __( 'This field can’t be moved here.', 'buddyboss' );
+			return __( 'This field can’t be moved here.', 'buddyboss-platform' );
 		}
 		if ( ! field.can_delete || field.is_default_field ) {
-			return __( 'This field is required by the platform and can’t be moved to another field set.', 'buddyboss' );
+			return __( 'This field is required by the platform and can’t be moved to another field set.', 'buddyboss-platform' );
 		}
 		if ( sourceGroup.is_repeater || targetGroup.is_repeater ) {
-			return __( 'Fields can’t be moved into or out of a repeater field set.', 'buddyboss' );
+			return __( 'Fields can’t be moved into or out of a repeater field set.', 'buddyboss-platform' );
 		}
 		return null;
 	}

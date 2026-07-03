@@ -199,7 +199,7 @@ class BB_REST_Integrations_Endpoint extends WP_REST_Controller {
 					'permission_callback' => array( $this, 'get_item_permissions_check' ),
 					'args'                => array(
 						'url' => array(
-							'description'       => __( 'Path-only URL fragment under buddyboss.com (e.g. /wp-json/wp/v2/integrations).', 'buddyboss' ),
+							'description'       => __( 'Path-only URL fragment under buddyboss.com (e.g. /wp-json/wp/v2/integrations).', 'buddyboss-platform' ),
 							'type'              => 'string',
 							'required'          => true,
 							'sanitize_callback' => 'wp_unslash',
@@ -231,7 +231,7 @@ class BB_REST_Integrations_Endpoint extends WP_REST_Controller {
 		if ( ! current_user_can( 'manage_options' ) ) {
 			return new WP_Error(
 				'bb_rest_integrations_forbidden',
-				__( 'Sorry, you are not allowed to access integrations.', 'buddyboss' ),
+				__( 'Sorry, you are not allowed to access integrations.', 'buddyboss-platform' ),
 				array( 'status' => rest_authorization_required_code() )
 			);
 		}
@@ -464,7 +464,7 @@ class BB_REST_Integrations_Endpoint extends WP_REST_Controller {
 	protected function path_rejected_error() {
 		return new WP_Error(
 			'bb_rest_integrations_url_not_allowed',
-			__( 'The requested integrations URL is not allowed.', 'buddyboss' ),
+			__( 'The requested integrations URL is not allowed.', 'buddyboss-platform' ),
 			array( 'status' => 400 )
 		);
 	}
@@ -514,7 +514,7 @@ class BB_REST_Integrations_Endpoint extends WP_REST_Controller {
 			return new WP_Error(
 				'bb_rest_integrations_upstream_error',
 				/* translators: %s: error message from wp_remote_get */
-				sprintf( __( 'Failed to load integrations: %s', 'buddyboss' ), $response->get_error_message() ),
+				sprintf( __( 'Failed to load integrations: %s', 'buddyboss-platform' ), $response->get_error_message() ),
 				array( 'status' => 502 )
 			);
 		}
@@ -523,7 +523,7 @@ class BB_REST_Integrations_Endpoint extends WP_REST_Controller {
 		if ( 404 === $status ) {
 			return new WP_Error(
 				'bb_rest_integrations_not_found',
-				__( 'Integration not found.', 'buddyboss' ),
+				__( 'Integration not found.', 'buddyboss-platform' ),
 				array( 'status' => 404 )
 			);
 		}
@@ -531,7 +531,7 @@ class BB_REST_Integrations_Endpoint extends WP_REST_Controller {
 			return new WP_Error(
 				'bb_rest_integrations_upstream_status',
 				/* translators: %d: HTTP status code returned by upstream */
-				sprintf( __( 'Integrations service returned an unexpected status (%d).', 'buddyboss' ), $status ),
+				sprintf( __( 'Integrations service returned an unexpected status (%d).', 'buddyboss-platform' ), $status ),
 				array( 'status' => 502 )
 			);
 		}
@@ -543,7 +543,7 @@ class BB_REST_Integrations_Endpoint extends WP_REST_Controller {
 		if ( strlen( $raw_body ) > self::MAX_RESPONSE_BYTES ) {
 			return new WP_Error(
 				'bb_rest_integrations_too_large',
-				__( 'Integrations service returned an unexpectedly large response.', 'buddyboss' ),
+				__( 'Integrations service returned an unexpectedly large response.', 'buddyboss-platform' ),
 				array( 'status' => 502 )
 			);
 		}
@@ -583,19 +583,19 @@ class BB_REST_Integrations_Endpoint extends WP_REST_Controller {
 			'type'       => 'object',
 			'properties' => array(
 				'body'    => array(
-					'description' => __( 'Upstream response body, JSON-decoded when possible.', 'buddyboss' ),
+					'description' => __( 'Upstream response body, JSON-decoded when possible.', 'buddyboss-platform' ),
 					'type'        => array( 'object', 'array', 'string' ),
 					'context'     => array( 'view' ),
 					'readonly'    => true,
 				),
 				'headers' => array(
-					'description' => __( 'Selected pagination headers from the upstream response.', 'buddyboss' ),
+					'description' => __( 'Selected pagination headers from the upstream response.', 'buddyboss-platform' ),
 					'type'        => 'object',
 					'context'     => array( 'view' ),
 					'readonly'    => true,
 				),
 				'status'  => array(
-					'description' => __( 'Upstream HTTP status code.', 'buddyboss' ),
+					'description' => __( 'Upstream HTTP status code.', 'buddyboss-platform' ),
 					'type'        => 'integer',
 					'context'     => array( 'view' ),
 					'readonly'    => true,
