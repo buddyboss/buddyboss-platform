@@ -2537,7 +2537,7 @@ function bp_core_get_minified_asset_suffix() {
  */
 function bb_asset_url( $relative, $ext ) {
 	$suffix = bb_get_asset_min_suffix( $relative, $ext );
-	return trailingslashit( BP_PLUGIN_URL ) . $relative . $suffix . '.' . $ext;
+	return trailingslashit( buddypress()->plugin_url ) . $relative . $suffix . '.' . $ext;
 }
 
 /**
@@ -2554,7 +2554,7 @@ function bb_asset_url( $relative, $ext ) {
  */
 function bb_asset_path( $relative, $ext ) {
 	$suffix = bb_get_asset_min_suffix( $relative, $ext );
-	return trailingslashit( BP_PLUGIN_DIR ) . $relative . $suffix . '.' . $ext;
+	return trailingslashit( buddypress()->plugin_dir ) . $relative . $suffix . '.' . $ext;
 }
 
 /**
@@ -2580,7 +2580,7 @@ function bb_get_asset_min_suffix( $relative, $ext ) {
 	$debug = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG;
 
 	if ( $debug ) {
-		$unminified = trailingslashit( BP_PLUGIN_DIR ) . $relative . '.' . $ext;
+		$unminified = trailingslashit( buddypress()->plugin_dir ) . $relative . '.' . $ext;
 		if ( file_exists( $unminified ) ) {
 			return '';
 		}
