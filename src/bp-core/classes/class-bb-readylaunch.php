@@ -2378,10 +2378,11 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 * @return string Filtered source URL.
 		 */
 		public function bb_rl_script_loader_src( $src, $handle ) {
-			global $bp;
-			$min = bp_core_get_minified_asset_suffix();
 			if ( ! empty( $src ) && 'bb-topics-manager' === $handle ) {
-				$src = trailingslashit( $bp->plugin_url ) . "bp-templates/bp-nouveau/readylaunch/js/bb-topics-manager{$min}.js";
+				// Resolve unminified vs minified per file: bb_asset_url() serves the
+				// unminified source only when SCRIPT_DEBUG is on and that file
+				// exists on disk, otherwise the shipped `.min` file.
+				$src = bb_asset_url( 'bp-templates/bp-nouveau/readylaunch/js/bb-topics-manager', 'js' );
 			}
 
 			return $src;

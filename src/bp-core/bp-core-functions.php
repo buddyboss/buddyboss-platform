@@ -2514,9 +2514,12 @@ function bp_core_get_minified_asset_suffix() {
 /**
  * Resolve the public URL for a first-party asset.
  *
- * The shipped zip only contains the minified files, so this always resolves to
- * `<name>.min.<ext>` under the plugin URL, regardless of SCRIPT_DEBUG. Callers
- * pass the extensionless basename. Example:
+ * Chooses the unminified `<name>.<ext>` file when debugging is on *and* that
+ * file actually exists on disk; otherwise falls back to the minified
+ * `<name>.min.<ext>`. The shipped customer zip contains only the minified
+ * files, so on a normal install this always resolves to `.min`. On a developer
+ * checkout with `SCRIPT_DEBUG` enabled, the readable source is served instead.
+ * Callers pass the extensionless basename. Example:
  *
  *     wp_enqueue_style(
  *         'bp-foo',
@@ -2533,9 +2536,8 @@ function bp_core_get_minified_asset_suffix() {
  * @return string Public URL ready to pass to wp_enqueue_script/style.
  */
 function bb_asset_url( $relative, $ext ) {
-	// The shipped zip contains only the minified assets, so always resolve to
-	// the `.min` file regardless of SCRIPT_DEBUG.
-	return trailingslashit( BP_PLUGIN_URL ) . $relative . '.min.' . $ext;
+	$suffix = bb_get_asset_min_suffix( $relative, $ext );
+	return trailingslashit( BP_PLUGIN_URL ) . $relative . $suffix . '.' . $ext;
 }
 
 /**
@@ -2551,9 +2553,40 @@ function bb_asset_url( $relative, $ext ) {
  * @return string Absolute filesystem path.
  */
 function bb_asset_path( $relative, $ext ) {
-	// The shipped zip contains only the minified assets, so always resolve to
-	// the `.min` file regardless of SCRIPT_DEBUG.
-	return trailingslashit( BP_PLUGIN_DIR ) . $relative . '.min.' . $ext;
+	$suffix = bb_get_asset_min_suffix( $relative, $ext );
+	return trailingslashit( BP_PLUGIN_DIR ) . $relative . $suffix . '.' . $ext;
+}
+
+/**
+ * Decide whether to serve the unminified or minified variant of a plugin asset.
+ *
+ * The rule, applied per file:
+ *   - If `SCRIPT_DEBUG` is on AND the unminified file exists on disk → serve the
+ *     unminified variant (empty suffix).
+ *   - Otherwise → serve the minified variant (`.min` suffix).
+ *
+ * This guarantees the plugin never enqueues a file that isn't present: shipped
+ * zips carry only the minified assets, so even with `SCRIPT_DEBUG` on the loader
+ * gracefully falls back to `.min` when the source file was stripped from the
+ * build. Developer checkouts (which keep both variants) get the readable source.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $relative Plugin-root-relative asset path WITHOUT extension or `.min`.
+ * @param string $ext      Extension without leading dot. Typically `js` or `css`.
+ * @return string Either '' (unminified) or '.min' (minified).
+ */
+function bb_get_asset_min_suffix( $relative, $ext ) {
+	$debug = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG;
+
+	if ( $debug ) {
+		$unminified = trailingslashit( BP_PLUGIN_DIR ) . $relative . '.' . $ext;
+		if ( file_exists( $unminified ) ) {
+			return '';
+		}
+	}
+
+	return '.min';
 }
 
 /**

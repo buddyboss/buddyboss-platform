@@ -1568,6 +1568,73 @@ function bp_remove_badgeos_conflict_ckeditor_dequeue_script( $src, $handle ) {
 }
 
 /**
+ * Fall back to the minified asset when an unminified plugin script/style is missing.
+ *
+ * With `SCRIPT_DEBUG` enabled, BuddyBoss enqueues resolve to the unminified
+ * `<name>.<ext>` URL. Shipped customer zips contain only the minified
+ * `<name>.min.<ext>` files, so those unminified URLs would 404. This filter
+ * rewrites any first-party, non-minified `.js`/`.css` URL to its `.min`
+ * counterpart when the unminified file is absent on disk but the minified twin
+ * exists. Developer checkouts (which keep both variants) are unaffected: the
+ * unminified file is present, so its URL is served as-is.
+ *
+ * Runs at PHP_INT_MAX so it observes the final `src` after any other loader
+ * filters have had their say. Cheap on production: minified URLs already carry
+ * `.min` and short-circuit before any filesystem check, and non-plugin URLs
+ * bail on the prefix test.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $src The source URL of the enqueued script or style.
+ * @return string The original URL, or its `.min` counterpart when the
+ *                unminified file is missing.
+ */
+function bb_core_asset_src_min_fallback( $src ) {
+	if ( empty( $src ) || ! is_string( $src ) ) {
+		return $src;
+	}
+
+	$plugin_url = trailingslashit( BP_PLUGIN_URL );
+
+	// Only touch this plugin's own assets.
+	if ( 0 !== strpos( $src, $plugin_url ) ) {
+		return $src;
+	}
+
+	// Split off any query string / fragment so the extension test is reliable.
+	$path_part = $src;
+	$tail      = '';
+	$cut       = strcspn( $src, '?#' );
+	if ( $cut < strlen( $src ) ) {
+		$path_part = substr( $src, 0, $cut );
+		$tail      = substr( $src, $cut );
+	}
+
+	// Only .js / .css, and only when NOT already minified.
+	if ( ! preg_match( '/(?<!\.min)\.(js|css)$/', $path_part, $matches ) ) {
+		return $src;
+	}
+
+	$relative   = substr( $path_part, strlen( $plugin_url ) );
+	$plugin_dir = trailingslashit( BP_PLUGIN_DIR );
+
+	// Unminified file present → serve it (the desired variant under SCRIPT_DEBUG).
+	if ( file_exists( $plugin_dir . $relative ) ) {
+		return $src;
+	}
+
+	// Unminified missing → use the .min twin when it exists.
+	$min_relative = preg_replace( '/\.(js|css)$/', '.min.$1', $relative );
+	if ( file_exists( $plugin_dir . $min_relative ) ) {
+		return $plugin_url . $min_relative . $tail;
+	}
+
+	return $src;
+}
+add_filter( 'script_loader_src', 'bb_core_asset_src_min_fallback', PHP_INT_MAX );
+add_filter( 'style_loader_src', 'bb_core_asset_src_min_fallback', PHP_INT_MAX );
+
+/**
  * Removed the non-component pages from $bp->pages from bp_core_set_uri_globals function.
  *
  * @since BuddyBoss 1.2.5
