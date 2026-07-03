@@ -31,7 +31,7 @@
  *   wpf-settings[message]           textarea (custom restricted message) — independent
  *
  * @package BuddyBoss\Core\Administration
- * @since   BuddyBoss [BBVERSION]
+ * @since   BuddyBoss 3.1.0
  */
 
 // Exit if accessed directly.
@@ -48,7 +48,7 @@ defined( 'ABSPATH' ) || exit;
  *                    a saved numeric value resolves to its title, a URL shows
  *                    verbatim.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.1.0
  *
  * @param array $resolvers Existing resolver map.
  * @return array Resolver map with WP Fusion entries added.
@@ -160,7 +160,7 @@ add_filter( 'bb_legacy_ajax_select_resolvers', 'bb_legacy_wpf_register_ajax_reso
  * Only applies to the WP Fusion metabox (`wpf-meta`); other metaboxes pass
  * through untouched.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.1.0
  *
  * @param array  $overrides Existing per-field overrides (keyed by raw $_POST name).
  * @param string $box_id    The metabox id being bridged.
@@ -238,7 +238,7 @@ add_filter( 'bb_legacy_field_overrides', 'bb_legacy_wpf_field_overrides', 10, 3 
  * created in the CRM lazily on first apply) or `add_tags_api` (the CRM mints an
  * id immediately via add_tag()). Anything else is search-only.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.1.0
  *
  * @return bool True when tag creation is supported.
  */
@@ -264,7 +264,7 @@ function bb_legacy_wpf_crm_supports_tag_create() {
  * Auth: `bp_moderate` + the `bb_admin_settings` nonce — same boundary as the
  * search shim.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.1.0
  *
  * @return void
  */

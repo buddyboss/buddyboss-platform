@@ -784,7 +784,7 @@ class BB_Admin_Profile_Fields_Ajax {
 	 * cross-field-set moves here). WP object cache memoises the underlying
 	 * lookups, so calling this per field has no extra DB cost.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.1.0
 	 *
 	 * @param int $field_id Field ID.
 	 * @return bool True when the field is a platform default field.
@@ -810,7 +810,7 @@ class BB_Admin_Profile_Fields_Ajax {
 	 * (repeater sets manage their own cloned child fields and would break if a
 	 * stray field were dropped in or pulled out).
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.1.0
 	 *
 	 * @param int $field_id      Field ID being moved.
 	 * @param int $from_group_id Field set the field currently belongs to.
@@ -847,7 +847,7 @@ class BB_Admin_Profile_Fields_Ajax {
 	 * matching the legacy auto-assign behavior so a clone's order never shifts
 	 * the position of a newly added or moved-in field.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.1.0
 	 *
 	 * @param int $group_id Field set (group) ID.
 	 * @return int Next field order to assign.

@@ -3,7 +3,7 @@ Contributors: buddyboss
 Requires at least: 4.9.1
 Tested up to: 6.8.1
 Requires PHP: 7.4.0
-Stable tag: 3.0.5
+Stable tag: 3.1.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,37 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 3.1.0 =
+* New Feature! - Introduced a new Help & Support Center page in the BuddyBoss admin, providing site administrators with quick access to documentation and the ability to grant site access to the support team by attaching support tickets
+* New Feature! - Introduced a new PeepSo Migration Tool to simplify the migration process from PeepSo to BuddyBoss platform and redesigned the Tools page in the BuddyBoss admin for improved usability
+* New Feature! - The Integrations page in BuddyBoss admin has been redesigned with a new grid layout, making it easier to browse, search, and install available third-party add-ons directly from your admin settings
+* Bug: Activity - Fixed an issue in the BuddyBoss App where the ‘Report Comment’ option was appearing multiple times for the same blog post comment
+* Bug: Activity - Fixed an issue where post and comment reactions were not working correctly
+* Bug: Activity - Fixed an issue where the emoji picker was not opening in the activity comment form when using ReadyLaunch
+* Bug: Core - Added backward compatibility so third-party plugin metaboxes now properly display and save in the new BuddyBoss backend settings modals
+* Bug: Core - Fixed a security vulnerability in the member search functionality by properly sanitizing search input to prevent potential SQL injection
+* Bug: Core - Fixed a UI display issue with the New Settings side panel that was affecting users on Mac Safari browser
+* Bug: Core - Fixed an issue where drag-and-drop reordering of profile fields between sections was not working in the BuddyBoss admin
+* Bug: Core - Fixed an issue where long usernames were not wrapping correctly on mobile, causing the last character to appear on a separate line
+* Bug: Core - Fixed an issue where reCAPTCHA could not be disabled through the BuddyBoss Settings and would re-enable itself after an update
+* Bug: Core - Fixed multiple UI alignment and display issues in the New Settings interface, including the search loader, search result icons, and reaction button icon picker
+* Bug: Forums - Fixed the Forum Feature Image picker to now include the WordPress Media Library, allowing you to select existing images instead of always uploading a new one
+* Bug: Groups - Fixed an issue where clearing a group activity title would automatically restore the previously saved title instead of leaving it empty
+* Bug: Groups - Fixed an issue where moving files between folders in the Group Documents section was not functioning correctly
+* Bug: Groups - Fixed an issue where the ‘Move’ button in the Group Documents section was not working and caused a JavaScript error
+* Bug: Login - Fixed a JavaScript error that occurred on the registration page when the email confirmation field was disabled in settings
+* Bug: Messages - Fixed a regression where subscribers were unable to send private messages to other subscribers even when the messaging access settings allowed it
+* Bug: Messages - Fixed an issue where the private messages dropdown was not showing messages when accessed from the activity detail page
+* Bug: Profiles - Fixed a security vulnerability in Advanced Profile Search where a search filter value was not properly sanitized before use in a database query
+* Bug: ReadyLaunch - Fixed a styling issue with the profile photo upload section on the mobile Edit Profile page in ReadyLaunch
+* Bug: ReadyLaunch - Fixed a UI issue in ReadyLaunch where navigation items with sub-menus were not displaying correctly when placed under the ‘More’ menu
+* Bug: ReadyLaunch - Fixed an issue in ReadyLaunch where the mentions dropdown in the activity post form was hidden behind the modal and not accessible
+* Bug: ReadyLaunch - Fixed an issue in ReadyLaunch where the privacy option was not properly disabled and the group avatar was not displaying in the group activity post form
+* Bug: ReadyLaunch - Fixed an issue where WooCommerce profile tabs were not visible on member profiles when ReadyLaunch was enabled
+* Bug: ReadyLaunch - Fixed the display of deleted messages in ReadyLaunch so they now appear visually distinct from normal message text
+* Bug: ReadyLaunch - Fixed the notifications dropdown in the admin bar to display correctly when ReadyLaunch is enabled
+* Bug: ReadyLaunch - Resolved ReadyLaunch issues including navigation flow, icons, console errors on the comment, and various UI issues
 
 = 3.0.5 =
 * Bug: Core - Enhanced xProfile REST API data handling to prevent object deserialization

@@ -1745,7 +1745,7 @@ function groups_is_user_creator( $user_id, $group_id ) {
  *
  * @since BuddyPress 1.2.0
  * @since BuddyPress 2.6.0 Added 'error_type' parameter to $args.
- * @since BuddyBoss [BBVERSION] Added 'post_title_cleared' parameter to $args.
+ * @since BuddyBoss 3.1.0 Added 'post_title_cleared' parameter to $args.
  *
  * @param array|string $args {
  *     Array of arguments.
