@@ -358,25 +358,25 @@ function bp_groups_filter_activity_scope( $retval = array(), $filter = array() )
 	 */
 	$is_group_moderator_view = bp_current_user_can( 'bp_moderate' );
 
-	if ( $is_group_moderator_view ) {
-		$show_hidden = array();
-	} elseif ( ! empty( $user_id ) && ( $user_id !== bp_loggedin_user_id() ) && is_user_logged_in() ) {
+	if ( ! $is_group_moderator_view ) {
+		if ( ! empty( $user_id ) && ( $user_id !== bp_loggedin_user_id() ) && is_user_logged_in() ) {
 
-		// Determine groups of user.
-		$logged_in_user_groups = groups_get_user_groups( bp_loggedin_user_id() );
-		if ( ! empty( $logged_in_user_groups['groups'] ) ) {
-			$private_group = array_intersect( $private_group, $logged_in_user_groups['groups'] );
-		} else {
+			// Determine groups of user.
+			$logged_in_user_groups = groups_get_user_groups( bp_loggedin_user_id() );
+			if ( ! empty( $logged_in_user_groups['groups'] ) ) {
+				$private_group = array_intersect( $private_group, $logged_in_user_groups['groups'] );
+			} else {
+				$show_hidden = array(
+					'column' => 'hide_sitewide',
+					'value'  => 0,
+				);
+			}
+		} elseif ( ! is_user_logged_in() ) {
 			$show_hidden = array(
 				'column' => 'hide_sitewide',
 				'value'  => 0,
 			);
 		}
-	} elseif ( ! is_user_logged_in() ) {
-		$show_hidden = array(
-			'column' => 'hide_sitewide',
-			'value'  => 0,
-		);
 	}
 
 	if ( empty( $public_groups ) ) {
