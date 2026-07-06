@@ -53,6 +53,19 @@ class BB_DRM_Update_Router {
 	const LOCK_KEY = 'bb_drm_paid_build_installing';
 
 	/**
+	 * Option key storing the UNIX timestamp of the last confirmed paid-active state.
+	 *
+	 * Used as a short "last known paid" grace so a transient Mothership
+	 * license-status hiccup cannot momentarily re-expose the Platform to
+	 * wordpress.org updates. Cleared on a definitive license deactivation.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @var string
+	 */
+	const LAST_PAID_OPTION = 'bb_drm_last_paid_active';
+
+	/**
 	 * The resolved dynamic plugin ID (edition) used for the license-status hook name.
 	 *
 	 * @since BuddyBoss [BBVERSION]
@@ -130,16 +143,75 @@ class BB_DRM_Update_Router {
 	}
 
 	/**
-	 * Whether a valid PAID Platform license is active.
+	 * Whether a valid PAID Platform license is active (with transient-blip grace).
 	 *
-	 * Free/developer editions and unlicensed sites return false so wordpress.org keeps
-	 * serving updates for them.
+	 * Wraps the live check {@see self::compute_paid_active()} with a short "last
+	 * known paid" grace window: `is_valid()` ultimately calls the Mothership
+	 * license-status API, and a single failed/slow call would otherwise flip
+	 * this to false and momentarily re-expose the Platform to wordpress.org
+	 * updates. So a positive check refreshes a persistent timestamp, and a
+	 * negative check is honored as still-paid while that timestamp is within the
+	 * grace window. A DEFINITIVE deactivation (the `license_status_changed=false`
+	 * event) clears the timestamp via {@see self::on_license_status_changed()},
+	 * and the window is itself bounded, so a genuine lapse still stops
+	 * suppression promptly.
+	 *
+	 * Free/developer editions and unlicensed sites return false so wordpress.org
+	 * keeps serving updates for them.
+	 *
+	 * @since BuddyBoss [BBVERSION] Added the last-known-paid grace window.
+	 *
+	 * @return bool True when a paid edition license is (or was very recently) active.
+	 */
+	public function is_paid_active() {
+		if ( $this->compute_paid_active() ) {
+			// Remember we are paid so a later transient blip can't flip suppression
+			// off. Throttle the write to at most hourly to avoid options churn.
+			$last = (int) get_option( self::LAST_PAID_OPTION, 0 );
+			if ( ( time() - $last ) > HOUR_IN_SECONDS ) {
+				update_option( self::LAST_PAID_OPTION, time(), false );
+			}
+			return true;
+		}
+
+		// Live check is negative. Ride out a transient license-status hiccup while
+		// the last confirmed paid-active state is still within the grace window.
+		$last = (int) get_option( self::LAST_PAID_OPTION, 0 );
+		if ( $last > 0 ) {
+			/**
+			 * Filters the "last known paid" grace window (in seconds).
+			 *
+			 * While the last confirmed paid-active state is within this window, a
+			 * negative live license check is still treated as paid so a transient
+			 * Mothership API blip cannot momentarily re-expose the Platform to
+			 * wordpress.org updates. A definitive deactivation clears the cache
+			 * regardless of this window.
+			 *
+			 * @since BuddyBoss [BBVERSION]
+			 *
+			 * @param int $grace Grace window in seconds. Default 3 days.
+			 */
+			$grace = (int) apply_filters( 'bb_drm_paid_active_grace', 3 * DAY_IN_SECONDS );
+
+			if ( ( time() - $last ) < $grace ) {
+				return true;
+			}
+
+			// Grace expired — forget the stale flag so future checks are honest.
+			delete_option( self::LAST_PAID_OPTION );
+		}
+
+		return false;
+	}
+
+	/**
+	 * The live paid-license check, without the grace window.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
-	 * @return bool True when a paid edition license is active.
+	 * @return bool True when a paid edition license is currently active.
 	 */
-	public function is_paid_active() {
+	private function compute_paid_active() {
 		if ( ! BB_DRM_Helper::is_valid() ) {
 			return false;
 		}
@@ -212,9 +284,9 @@ class BB_DRM_Update_Router {
 	 *
 	 * On a valid (paid) status we install the paid build (this event already fires inside the
 	 * vendor's background cron run, so the work is done directly). On an invalid/expired status
-	 * we intentionally do nothing here: `is_paid_active()` immediately returns false, so
-	 * `suppress_wporg_update_check()` stops suppressing and wordpress.org resumes serving the
-	 * (free) Platform build, which the normal update flow then installs. The currently
+	 * we clear the "last known paid" grace timestamp so `is_paid_active()` returns false at
+	 * once, `suppress_wporg_update_check()` stops suppressing, and wordpress.org resumes serving
+	 * the (free) Platform build, which the normal update flow then installs. The currently
 	 * installed paid build keeps working until that update lands.
 	 *
 	 * @since BuddyBoss [BBVERSION]
@@ -225,6 +297,11 @@ class BB_DRM_Update_Router {
 	public function on_license_status_changed( $is_valid, $status = null ) {
 		if ( $is_valid ) {
 			$this->install_paid_build();
+		} else {
+			// Definitive deactivation/expiry: drop the "last known paid" grace so
+			// suppression stops at once and wordpress.org resumes serving updates,
+			// rather than waiting for the grace window to lapse.
+			delete_option( self::LAST_PAID_OPTION );
 		}
 	}
 
