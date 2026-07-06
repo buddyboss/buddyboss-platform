@@ -93,6 +93,15 @@ class BB_S3_Image_Offload {
 	private $pattern = null;
 
 	/**
+	 * Cached result of {@see BB_S3_Image_Offload::is_stripped_build()}.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @var bool|null
+	 */
+	private static $is_stripped_build = null;
+
+	/**
 	 * Get the singleton instance.
 	 *
 	 * @since BuddyBoss [BBVERSION]
@@ -362,21 +371,52 @@ class BB_S3_Image_Offload {
 	 * @return bool
 	 */
 	public function is_enabled() {
-		// Stand down while WP_DEBUG && SCRIPT_DEBUG are active so images are
-		// served locally, exactly like a dev checkout.
-		$enabled = ! ( defined( 'WP_DEBUG' ) && WP_DEBUG && defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG );
+		$debug = defined( 'WP_DEBUG' ) && WP_DEBUG && defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG;
+
+		// Under WP_DEBUG && SCRIPT_DEBUG, serve images locally — but ONLY on a dev
+		// checkout, where the image files actually exist on disk. On a shipped /
+		// stripped build the images were removed from the zip and offloaded to S3,
+		// so S3 must remain the source even with debugging on, otherwise the local
+		// URLs 404.
+		$enabled = ! ( $debug && ! $this->is_stripped_build() );
 
 		/**
 		 * Filters whether Platform images are served from the external S3 bucket.
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
-		 * @param bool $enabled Default true. False while WP_DEBUG && SCRIPT_DEBUG are
-		 *                       active (assets are restored and served locally), except
-		 *                       on a sentinel `build_test` zip where the fetcher cannot
-		 *                       restore and S3 remains the only source.
+		 * @param bool $enabled Default true. False only on a dev checkout while
+		 *                       WP_DEBUG && SCRIPT_DEBUG are active (images exist
+		 *                       locally); a shipped/stripped build keeps S3 on
+		 *                       regardless of debug, as it is the only image source.
 		 */
 		return (bool) apply_filters( 'bb_s3_image_offload_enabled', $enabled );
+	}
+
+	/**
+	 * Whether this is a shipped/stripped build rather than a dev checkout.
+	 *
+	 * The Grunt build writes `unminified-manifest.json` to the (flattened) plugin
+	 * root and ships it in the customer zip; it also strips the offloaded image
+	 * files from that zip. A dev checkout never has this file and keeps every
+	 * image on disk. So the manifest's presence means "the images are not local —
+	 * S3 is the only source," which must hold even when debugging is enabled.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @return bool True when the build's strip manifest is present.
+	 */
+	private function is_stripped_build() {
+		if ( null === self::$is_stripped_build ) {
+			$manifest = 'unminified-manifest.json';
+
+			self::$is_stripped_build = (
+				( function_exists( 'buddypress' ) && ! empty( buddypress()->plugin_dir ) && file_exists( trailingslashit( buddypress()->plugin_dir ) . $manifest ) ) ||
+				( defined( 'BP_PLUGIN_DIR' ) && file_exists( trailingslashit( BP_PLUGIN_DIR ) . $manifest ) )
+			);
+		}
+
+		return self::$is_stripped_build;
 	}
 
 	/**
