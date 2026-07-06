@@ -349,7 +349,18 @@ function bp_groups_filter_activity_scope( $retval = array(), $filter = array() )
 
 	// Should we show all items regardless of sitewide visibility?
 	$show_hidden = array();
-	if ( ! empty( $user_id ) && ( $user_id !== bp_loggedin_user_id() ) && is_user_logged_in() ) {
+
+	/*
+	 * Site administrators/moderators are not restricted to the group
+	 * posts. This keeps the visibility of a single activity item
+	 * consistent with what a moderator already sees in the group's own
+	 * activity list.
+	 */
+	$is_group_moderator_view = bp_current_user_can( 'bp_moderate' );
+
+	if ( $is_group_moderator_view ) {
+		$show_hidden = array();
+	} elseif ( ! empty( $user_id ) && ( $user_id !== bp_loggedin_user_id() ) && is_user_logged_in() ) {
 
 		// Determine groups of user.
 		$logged_in_user_groups = groups_get_user_groups( bp_loggedin_user_id() );
@@ -383,6 +394,19 @@ function bp_groups_filter_activity_scope( $retval = array(), $filter = array() )
 			'value'  => buddypress()->groups->id,
 		),
 		array(
+			'column'  => 'privacy',
+			'compare' => '=',
+			'value'   => 'public',
+		),
+	);
+
+	/*
+	 * Only restrict by group membership (item_id) for non-moderators. Site
+	 * administrators can access every group's activity, matching their access
+	 * to the group itself.
+	 */
+	if ( ! $is_group_moderator_view ) {
+		$data[] = array(
 			'relation' => 'OR',
 			array(
 				'column'  => 'item_id',
@@ -394,13 +418,8 @@ function bp_groups_filter_activity_scope( $retval = array(), $filter = array() )
 				'compare' => 'IN',
 				'value'   => (array) $private_group,
 			),
-		),
-		array(
-			'column'  => 'privacy',
-			'compare' => '=',
-			'value'   => 'public',
-		),
-	);
+		);
+	}
 
 	if ( bp_is_user() ) {
 		$data[] = array(
