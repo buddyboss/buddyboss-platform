@@ -104,33 +104,28 @@ function bb_admin_integrations_page() {
 		true
 	);
 
-	// Resolve the admin CSS path. Unlike the Settings build (Grunt emits .min +
-	// RTL variants), the integrations SCSS step emits a single, already-compressed
-	// styles/admin.css. So prefer the $min-suffixed name if it exists, but fall
-	// back to the plain admin.css — otherwise on production (SCRIPT_DEBUG off,
-	// $min === '.min') the page would look for a non-existent admin.min.css and
-	// load with no styles at all.
-	$css_candidates = array(
-		"/styles/admin{$min}.css",
-		'/styles/admin.css',
-		"/admin{$min}.css",
-		'/admin.css',
-	);
-	foreach ( $css_candidates as $css_rel ) {
-		$css_file = $build_dir . $css_rel;
-		if ( file_exists( $css_file ) ) {
-			$css_url = str_replace( buddypress()->plugin_dir, buddypress()->plugin_url, $css_file );
-			wp_register_style( 'bb-admin-integrations', $css_url, array( 'wp-components' ), $asset['version'] );
-			wp_style_add_data( 'bb-admin-integrations', 'rtl', 'replace' );
-			// Only advertise the .min suffix when we actually matched a minified
-			// file, so WP's RTL 'replace' doesn't derive a -rtl.min.css that the
-			// integrations build never produces.
-			if ( $min && false !== strpos( $css_rel, $min . '.css' ) ) {
-				wp_style_add_data( 'bb-admin-integrations', 'suffix', $min );
-			}
-			wp_enqueue_style( 'bb-admin-integrations' );
-			break;
+	// Resolve the admin CSS path. Two build layouts are supported because the
+	// build nests under /styles/ while other targets emit flat. The shipped zip
+	// carries only the minified CSS (the unminified `admin.css` is stripped), so
+	// always register the `.min.css` regardless of SCRIPT_DEBUG — the same
+	// convention as the Settings 2.0 admin stylesheet. Checking/registering the
+	// unminified name here would leave the page unstyled on a shipped build.
+	$css_layouts = array( '/styles/admin', '/admin' );
+	foreach ( $css_layouts as $css_base ) {
+		if ( ! file_exists( $build_dir . $css_base . '.min.css' ) ) {
+			continue;
 		}
+
+		$css_file = $build_dir . $css_base . '.min.css';
+		$css_url  = str_replace( buddypress()->plugin_dir, buddypress()->plugin_url, $css_file );
+		wp_register_style( 'bb-admin-integrations', $css_url, array( 'wp-components' ), $asset['version'] );
+
+		// RTL sites load `admin-rtl.min.css` (matches the build output naming).
+		wp_style_add_data( 'bb-admin-integrations', 'rtl', 'replace' );
+		wp_style_add_data( 'bb-admin-integrations', 'suffix', '.min' );
+
+		wp_enqueue_style( 'bb-admin-integrations' );
+		break;
 	}
 
 	// The React app reads window.bbIntegrationsData — a distinct global name (not
