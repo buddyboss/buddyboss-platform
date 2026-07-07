@@ -354,6 +354,91 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 
 		// Initialise parent class with configuration.
 		parent::__construct( $config );
+
+		// Splash-screen "Configure/Activate BuddyBoss Theme" buttons POST a
+		// `bb_theme` flag through the standard step-progress AJAX. The parent
+		// handler at priority 10 only tracks the value for analytics — it
+		// doesn't flip `bb_rl_enabled`, so the fresh-install ReadyLaunch
+		// default stays on even when the admin has explicitly chosen the
+		// BuddyBoss WordPress theme. Hook a side-effect handler at priority 5
+		// to flip the option before the parent runs.
+		add_action(
+			'wp_ajax_' . $this->wizard_id . '_save_step_progress',
+			array( $this, 'maybe_apply_splash_theme_choice' ),
+			5
+		);
+	}
+
+	/**
+	 * Flip `bb_rl_enabled` to false when the welcome-splash "Configure" or
+	 * "Activate BuddyBoss Theme" button is clicked.
+	 *
+	 * Both buttons POST `step=0` and `form_data.bb_theme=1` (configure) or
+	 * `form_data.bb_theme=0` (activate). Either value means the admin chose
+	 * BuddyBoss Theme over ReadyLaunch on the splash screen, so the
+	 * fresh-install ReadyLaunch default (`bb_rl_enabled=true`, seeded in
+	 * `bb_appearance_set_readylaunch_default_on_install`) needs to flip off
+	 * before the admin lands on themes.php. Without this fix the admin
+	 * selects a WordPress theme but ReadyLaunch keeps overriding BuddyBoss
+	 * pages, which reads as a bug.
+	 *
+	 * Other steps (ReadyLaunch wizard steps 1–6) do not carry a `bb_theme`
+	 * key, so this handler bails for everything except the splash-screen
+	 * post.
+	 *
+	 * @since BuddyBoss 3.1.0
+	 *
+	 * @return void
+	 */
+	public function maybe_apply_splash_theme_choice() {
+		// Defensive duplication of parent's security gates — cap-before-nonce
+		// per project convention (CLAUDE.md). The parent handler's reversed
+		// order is grandfathered legacy. If either check fails we silently
+		// bail so the parent's handler still emits the expected JSON response
+		// without a state change.
+		if ( ! current_user_can( $this->config['capability_required'] ) ) {
+			return;
+		}
+		if (
+			! isset( $_POST['nonce'] ) ||
+			! wp_verify_nonce(
+				sanitize_text_field( wp_unslash( $_POST['nonce'] ) ),
+				$this->wizard_id . '_wizard_nonce'
+			)
+		) {
+			return;
+		}
+
+		$step = isset( $_POST['step'] ) ? intval( $_POST['step'] ) : 0;
+		if ( 0 !== $step ) {
+			return;
+		}
+
+		// `bb_theme` is buried inside the JSON-encoded `data` POST body.
+		// Nonce already verified above; raw JSON is validated via is_string +
+		// json_decode which silently rejects malformed input.
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing,WordPress.Security.ValidatedSanitizedInput.InputNotSanitized,WordPress.Security.ValidatedSanitizedInput.MissingUnslash
+		$raw_data = isset( $_POST['data'] ) ? wp_unslash( $_POST['data'] ) : '';
+		if ( ! is_string( $raw_data ) || '' === $raw_data ) {
+			return;
+		}
+		$decoded = json_decode( $raw_data, true );
+		if (
+			! is_array( $decoded ) ||
+			! isset( $decoded['form_data']['bb_theme'] )
+		) {
+			return;
+		}
+
+		// Accept both '0' (Activate) and '1' (Configure) — both signal the
+		// admin chose BuddyBoss Theme. Anything else (unexpected payload)
+		// is ignored.
+		$choice = (string) $decoded['form_data']['bb_theme'];
+		if ( '0' !== $choice && '1' !== $choice ) {
+			return;
+		}
+
+		$this->save_readylaunch_option( 'bb_rl_enabled', false );
 	}
 
 	/**
@@ -681,28 +766,18 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 
 					case 'checkbox_group':
 						if ( is_array( $field_value ) ) {
-							// Ensure all values are sanitised and valid.
-							$allowed_values = isset( $field_config['options'] ) ? array_keys( $field_config['options'] ) : array();
-							$filtered       = array_intersect( $field_value, $allowed_values );
-
-							// Sidebar widget fields persist as `{widget_id => bool}` maps
-							// (the shape Settings 2.0 React and the frontend sidebar
-							// template both read). `array_intersect` on a sequential list
-							// of string IDs preserves numeric keys — pivot to a map with
-							// `array_fill_keys` BEFORE delegating, otherwise
-							// `bb_appearance_sanitize_sidebar_map`'s associative branch
-							// would write `{0=>true, 1=>true, ...}` and lose the IDs
-							// (PROD-9859).
-							$sidebar_map_keys = array(
-								'bb_rl_activity_sidebars',
-								'bb_rl_member_profile_sidebars',
-								'bb_rl_groups_sidebars',
-							);
-							if ( in_array( $field_key, $sidebar_map_keys, true ) && function_exists( 'bb_appearance_sanitize_sidebar_map' ) ) {
-								$sanitized[ $field_key ] = bb_appearance_sanitize_sidebar_map( array_fill_keys( $filtered, true ) );
-							} else {
-								$sanitized[ $field_key ] = $filtered;
+							// Build a string-keyed boolean map: option_key => (bool) enabled.
+							// array_intersect() preserves integer keys from the JS input, which
+							// causes REST validation failures. Use string keys from config instead.
+							// sanitize_key() keeps parity with bb_appearance_sanitize_sidebar_map()
+							// and guarantees the stored keys survive the REST validator's
+							// sanitize_key() equality check on a later save.
+							$allowed_keys = isset( $field_config['options'] ) ? array_keys( $field_config['options'] ) : array();
+							$boolean_map  = array();
+							foreach ( $allowed_keys as $option_key ) {
+								$boolean_map[ sanitize_key( $option_key ) ] = in_array( $option_key, $field_value, true );
 							}
+							$sanitized[ $field_key ] = $boolean_map;
 						} else {
 							// If not an array, default to an empty array.
 							$sanitized[ $field_key ] = array();

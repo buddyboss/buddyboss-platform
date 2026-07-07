@@ -7,7 +7,8 @@
  * @since BuddyBoss [BBVERSION]
  */
 
-import { useState, useEffect } from '@wordpress/element';
+import { useState, useEffect, Fragment } from '@wordpress/element';
+import { splitFieldsByMetaboxGroup } from '../../utils/format';
 import {
 	Modal,
 	Button,
@@ -107,7 +108,10 @@ export function ActivityEditModal( { isOpen, activity, activityActions, onClose,
 
 	// Group normal fields for half-layout rows.
 	var groupedNormalFields = groupFieldsWithLayout( normalFields );
-	var groupedAfterFields = groupFieldsWithLayout( afterFields );
+	// "After" fields are where bridged third-party metaboxes live. Split them
+	// into runs by source metabox so each renders inside a bordered section
+	// headed by its title — parity with the Forums/Groups modals.
+	var afterSegments = splitFieldsByMetaboxGroup( afterFields );
 
 	/**
 	 * Handle change for a registered field.
@@ -177,6 +181,39 @@ export function ActivityEditModal( { isOpen, activity, activityActions, onClose,
 		} );
 	};
 
+	/**
+	 * Render the "after" fields split into runs by source metabox. Ungrouped
+	 * fields render flat; a grouped run renders inside a bordered section with
+	 * the metabox title as a heading.
+	 *
+	 * @param {Array} segments Segments from splitFieldsByMetaboxGroup().
+	 * @returns {Array} Rendered elements.
+	 */
+	var renderAfterSegments = function ( segments ) {
+		return segments.map( function ( segment, segIdx ) {
+			var grouped = groupFieldsWithLayout( segment.fields );
+
+			if ( ! segment.group ) {
+				return (
+					<Fragment key={ 'seg-flat-' + segIdx }>
+						{ renderGroupedFields( grouped ) }
+					</Fragment>
+				);
+			}
+
+			return (
+				<div key={ 'seg-group-' + segIdx } className="bb-admin-meta-field__group" data-group-id={ segment.group }>
+					{ segment.label && (
+						<h3 className="bb-admin-meta-field__group-title">{ segment.label }</h3>
+					) }
+					<div className="bb-admin-meta-field__group-fields">
+						{ renderGroupedFields( grouped ) }
+					</div>
+				</div>
+			);
+		} );
+	};
+
 	var handleSave = function () {
 		setError( '' );
 
@@ -222,7 +259,7 @@ export function ActivityEditModal( { isOpen, activity, activityActions, onClose,
 
 				{ renderGroupedFields( groupedNormalFields ) }
 
-				{ renderGroupedFields( groupedAfterFields ) }
+				{ renderAfterSegments( afterSegments ) }
 			</div>
 
 			<div className="bb-activity-edit-modal__footer bb-admin-settings-modal__footer">
