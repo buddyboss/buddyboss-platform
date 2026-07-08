@@ -3205,18 +3205,25 @@ function bb_core_update_repair_duplicate_following_notification() {
 	global $wpdb;
 	$bp = buddypress();
 
-	$sql  = "DELETE FROM {$bp->notifications->table_name}";
-	$sql .= ' WHERE id IN (';
-	$sql .= " SELECT * FROM ( SELECT DISTINCT n1.id FROM {$bp->notifications->table_name} n1";
+	$sql  = "SELECT DISTINCT n1.id FROM {$bp->notifications->table_name} n1";
 	$sql .= " JOIN {$bp->notifications->table_name} n2 ON n1.user_id = n2.user_id";
 	$sql .= ' WHERE n1.secondary_item_id = n2.secondary_item_id';
 	$sql .= ' AND n1.date_notified < n2.date_notified';
 	$sql .= ' AND n1.component_name = %s AND n1.component_action = %s';
-	$sql .= ' ORDER BY n1.id DESC) AS ids';
-	$sql .= ' )';
+	$sql .= ' ORDER BY n1.id DESC';
+
+	// Fetch the duplicate notification ids first so their metadata can be cleaned up too.
+	$notification_ids = $wpdb->get_col( $wpdb->prepare( $sql, 'activity', 'bb_following_new' ) );
 
 	// Remove duplicate notification ids.
-	$wpdb->query( $wpdb->prepare( $sql, 'activity', 'bb_following_new' ) );
+	if ( ! empty( $notification_ids ) ) {
+		foreach ( $notification_ids as $notification_id ) {
+			bp_notifications_delete_meta( $notification_id );
+		}
+
+		$notification_ids_sql = implode( ',', wp_parse_id_list( $notification_ids ) );
+		$wpdb->query( "DELETE FROM {$bp->notifications->table_name} WHERE id IN ({$notification_ids_sql})" );
+	}
 
 	// Purge all the cache for API.
 	if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
