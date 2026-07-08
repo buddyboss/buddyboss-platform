@@ -2050,9 +2050,13 @@ function bp_core_activate_signup( $key ) {
 		} elseif ( $key === bp_get_user_meta( $user_id, 'activation_key', true ) || $key === wp_hash( $user_id ) ) {
 
 			// Change the user's status so they become active.
-			if ( ! $wpdb->query( $wpdb->prepare( "UPDATE {$wpdb->users} SET user_status = 0 WHERE ID = %d", $user_id ) ) ) {
-				return new WP_Error( 'invalid_key', __( 'Invalid activation key.', 'buddyboss' ) );
-			}
+			// Note: $wpdb->query() returns the number of affected rows, which
+			// is 0 when user_status is already 0 (e.g. because wp_update_user()
+			// was called during registration, resetting the value set by
+			// BP_Signup::add_backcompat()). Since the activation key has already
+			// been validated above, we should not treat zero affected rows as an
+			// error — the user is legitimate either way.
+			$wpdb->query( $wpdb->prepare( "UPDATE {$wpdb->users} SET user_status = 0 WHERE ID = %d", $user_id ) );
 
 			bp_delete_user_meta( $user_id, 'activation_key' );
 
@@ -2100,6 +2104,39 @@ function bp_core_activate_signup( $key ) {
 			wp_new_user_notification( $user_id );
 		}
 
+		// Set any profile data.
+		// This must run before the $user_already_created early return to
+		// ensure xprofile data from signup meta is persisted even when
+		// the user was pre-created by BP_Signup::add_backcompat().
+		if ( bp_is_active( 'xprofile' ) ) {
+			if ( ! empty( $user['meta']['profile_field_ids'] ) ) {
+				$profile_field_ids = explode( ',', $user['meta']['profile_field_ids'] );
+
+				foreach ( (array) $profile_field_ids as $field_id ) {
+					$current_field = isset( $user['meta'][ "field_{$field_id}" ] ) ? $user['meta'][ "field_{$field_id}" ] : false;
+
+					if ( ! empty( $current_field ) ) {
+						xprofile_set_field_data( $field_id, $user_id, $current_field );
+					}
+
+					/*
+					 * Save the visibility level.
+					 *
+					 * Use the field's default visibility if not present, and 'public' if a
+					 * default visibility is not defined.
+					 */
+					$visibility_key = "field_{$field_id}_visibility";
+					if ( isset( $user['meta'][ $visibility_key ] ) ) {
+						$visibility_level = $user['meta'][ $visibility_key ];
+					} else {
+						$vfield           = xprofile_get_field( $field_id );
+						$visibility_level = isset( $vfield->default_visibility ) ? $vfield->default_visibility : 'public';
+					}
+					xprofile_set_field_visibility_level( $field_id, $user_id, $visibility_level );
+				}
+			}
+		}
+
 		if ( isset( $user_already_created ) ) {
 
 			/**
@@ -2113,36 +2150,6 @@ function bp_core_activate_signup( $key ) {
 			 */
 			do_action( 'bp_core_activated_user', $user_id, $key, $user );
 			return $user_id;
-		}
-	}
-
-	// Set any profile data.
-	if ( bp_is_active( 'xprofile' ) ) {
-		if ( ! empty( $user['meta']['profile_field_ids'] ) ) {
-			$profile_field_ids = explode( ',', $user['meta']['profile_field_ids'] );
-
-			foreach ( (array) $profile_field_ids as $field_id ) {
-				$current_field = isset( $user['meta'][ "field_{$field_id}" ] ) ? $user['meta'][ "field_{$field_id}" ] : false;
-
-				if ( ! empty( $current_field ) ) {
-					xprofile_set_field_data( $field_id, $user_id, $current_field );
-				}
-
-				/*
-				 * Save the visibility level.
-				 *
-				 * Use the field's default visibility if not present, and 'public' if a
-				 * default visibility is not defined.
-				 */
-				$key = "field_{$field_id}_visibility";
-				if ( isset( $user['meta'][ $key ] ) ) {
-					$visibility_level = $user['meta'][ $key ];
-				} else {
-					$vfield           = xprofile_get_field( $field_id );
-					$visibility_level = isset( $vfield->default_visibility ) ? $vfield->default_visibility : 'public';
-				}
-				xprofile_set_field_visibility_level( $field_id, $user_id, $visibility_level );
-			}
 		}
 	}
 
