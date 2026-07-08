@@ -218,6 +218,10 @@ function bp_friends_prefetch_activity_object_data( $activities ) {
 	$friend_ids = array();
 
 	foreach ( $activities as $activity ) {
+		if ( ! is_object( $activity ) ) {
+			continue;
+		}
+
 		if ( buddypress()->friends->id !== $activity->component ) {
 			continue;
 		}
