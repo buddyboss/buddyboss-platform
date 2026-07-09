@@ -314,51 +314,58 @@ function bp_groups_filter_activity_scope( $retval = array(), $filter = array() )
 			: bp_loggedin_user_id();
 	}
 
-	// Fetch public groups.
-	$public_groups = groups_get_groups(
-		array(
-			'fields'   => 'ids',
-			'status'   => 'public',
-			'per_page' => - 1,
-			'user_id'  => $user_id,
-		)
-	);
-	if ( ! empty( $public_groups['groups'] ) ) {
-		$public_groups = $public_groups['groups'];
-	} else {
-		$public_groups = array();
-	}
-
-	// Determine groups of user.
-	$groups = groups_get_groups(
-		array(
-			'fields'      => 'ids',
-			'per_page'    => - 1,
-			'user_id'     => bp_loggedin_user_id(),
-			'show_hidden' => true,
-		)
-	);
-
-	if ( empty( $groups['groups'] ) ) {
-		$groups = array( 'groups' => array() );
-	}
-
-	$groups = $groups['groups'];
-
-	$private_group = array_diff( $groups, $public_groups );
-
 	// Should we show all items regardless of sitewide visibility?
 	$show_hidden = array();
 
 	/*
-	 * Site administrators/moderators are not restricted to the group
-	 * posts. This keeps the visibility of a single activity item
+	 * Site administrators/moderators are not restricted to the groups they
+	 * belong to. This keeps the visibility of a single activity item
 	 * consistent with what a moderator already sees in the group's own
-	 * activity list.
+	 * activity list, and matches bp_activity_user_can_read(), which already
+	 * grants bp_moderate users read access to any group activity item.
 	 */
-	$is_group_moderator_view = bp_current_user_can( 'bp_moderate' );
+	$is_site_moderator = bp_current_user_can( 'bp_moderate' );
 
-	if ( ! $is_group_moderator_view ) {
+	// Group membership only constrains non-moderators, so skip the lookups
+	// (two unbounded groups_get_groups() queries) entirely for site moderators.
+	$public_groups = array();
+	$private_group = array();
+
+	if ( ! $is_site_moderator ) {
+
+		// Fetch public groups.
+		$public_groups = groups_get_groups(
+			array(
+				'fields'   => 'ids',
+				'status'   => 'public',
+				'per_page' => - 1,
+				'user_id'  => $user_id,
+			)
+		);
+		if ( ! empty( $public_groups['groups'] ) ) {
+			$public_groups = $public_groups['groups'];
+		} else {
+			$public_groups = array();
+		}
+
+		// Determine groups of user.
+		$groups = groups_get_groups(
+			array(
+				'fields'      => 'ids',
+				'per_page'    => - 1,
+				'user_id'     => bp_loggedin_user_id(),
+				'show_hidden' => true,
+			)
+		);
+
+		if ( empty( $groups['groups'] ) ) {
+			$groups = array( 'groups' => array() );
+		}
+
+		$groups = $groups['groups'];
+
+		$private_group = array_diff( $groups, $public_groups );
+
 		if ( ! empty( $user_id ) && ( $user_id !== bp_loggedin_user_id() ) && is_user_logged_in() ) {
 
 			// Determine groups of user.
@@ -377,14 +384,14 @@ function bp_groups_filter_activity_scope( $retval = array(), $filter = array() )
 				'value'  => 0,
 			);
 		}
-	}
 
-	if ( empty( $public_groups ) ) {
-		$public_groups = array( 0 );
-	}
+		if ( empty( $public_groups ) ) {
+			$public_groups = array( 0 );
+		}
 
-	if ( empty( $private_group ) ) {
-		$private_group = array( 0 );
+		if ( empty( $private_group ) ) {
+			$private_group = array( 0 );
+		}
 	}
 
 	$data = array(
@@ -405,7 +412,7 @@ function bp_groups_filter_activity_scope( $retval = array(), $filter = array() )
 	 * administrators can access every group's activity, matching their access
 	 * to the group itself.
 	 */
-	if ( ! $is_group_moderator_view ) {
+	if ( ! $is_site_moderator ) {
 		$data[] = array(
 			'relation' => 'OR',
 			array(
