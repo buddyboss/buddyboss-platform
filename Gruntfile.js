@@ -589,9 +589,14 @@ module.exports = function (grunt) {
 					cwd: SOURCE_DIR,
 					stdout: false
 				},
-				// WP-CLI makepot with header fixing
+				// WP-CLI makepot with header fixing.
+				// Exclude the compiled React bundles under bb-settings/*/build/* — they
+				// are minified single-line files that blow up WP-CLI's peast JS parser
+				// (memory exhaustion) and contribute no strings to the POT (JS admin i18n
+				// is handled separately; the POT only carries PHP strings). WP_CLI_PHP_ARGS
+				// raises the memory limit as a safety net for other large JS.
 				makepot_wp: {
-					command: 'wp i18n make-pot src/ src/languages/buddyboss.pot --domain=buddyboss --ignore-domain --exclude="node_modules/*, vendor/*, src/vendor/*, js/*"',
+					command: 'WP_CLI_PHP_ARGS="-d memory_limit=512M" wp i18n make-pot src/ src/languages/buddyboss.pot --domain=buddyboss --ignore-domain --exclude="node_modules/*, vendor/*, src/vendor/*, js/*, bp-core/admin/bb-settings/*/build/*"',
 					cwd: '.',
 					stdout: true
 				},

@@ -3680,11 +3680,10 @@ window.bp = window.bp || {};
 				privacyChanged            = ( document_privacy !== '' && document_privacy !== originalPrivacy ),
 				pattern                   = '';
 
-			// Use documentType to determine validation pattern.
-			if ( 'folder' === documentType ) {
-				pattern = /[\\/?%*:|"<>]+/g; // Folder: \ / ? % * : | " < >
+			if ( 'folder' !== documentType ) {
+				pattern = /[?\[\]=<>:;,'"&$#*()|~`!{}%+ \/]+/g; // regex to find not supported characters. ?[]/=<>:;,'"&$#*()|~`!{}%+ {space}.
 			} else {
-				pattern = /[?\[\]=<>:;,'"&$#*()|~`!{}%+ \/]+/g; // Document: ?[]/=<>:;,'"&$#*()|~`!{}%+ {space}
+				pattern = /[\\/?%*:|"<>]+/g; // regex to find not supported characters - \ / ? % * : | " < >
 			}
 
 			var matches     = pattern.exec( document_name_val ),
@@ -3704,9 +3703,8 @@ window.bp = window.bp || {};
 				}
 			}
 
-			// For documents, also check for backslash.
-			if ( 'document' === documentType ) {
-				if ( document_name_val.indexOf( '\\\\' ) !== -1 || matchStatus ) {
+			if ( 'folder' !== documentType && $mediaItem.length ) {
+				if ( document_name_val.indexOf( '\\\\' ) !== -1 || matchStatus ) { // Also check if filename has "\\".
 					document_edit.addClass( 'error' );
 					$errorBox.text( $errorBox.data( 'document-error' ) || $errorBox.text() ).show();
 				} else {
