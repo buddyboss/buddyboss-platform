@@ -837,6 +837,8 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				bp_get_template_part( 'learndash/ld30/assignment' );
 			} elseif ( $is_ld_exam ) {
 				bp_get_template_part( 'learndash/ld30/challenge-exam' );
+			} elseif ( is_singular( 'post' ) && $this->bb_rl_is_page_enabled_for_integration( 'blog' ) ) {
+				bp_get_template_part( 'blog/single-post' );
 			} elseif ( ( is_home() || is_author() || is_category() || is_tag() || is_date() ) && $this->bb_rl_is_page_enabled_for_integration( 'blog' ) ) {
 				bp_get_template_part( 'blog/loop-post' );
 			} else {

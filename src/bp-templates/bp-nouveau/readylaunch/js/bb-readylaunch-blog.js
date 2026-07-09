@@ -64,7 +64,9 @@
 		var selects = document.querySelectorAll( '.bb-rl-blog-filter__select' );
 		var i;
 
-		if ( ! document.querySelector( '.bb-rl-blog-grid' ) ) {
+		// Only pages with the switcher (the blog archive) get the saved view —
+		// other grids reusing the card markup (e.g. related posts) stay grid.
+		if ( ! buttons.length || ! document.querySelector( '.bb-rl-blog-grid' ) ) {
 			return;
 		}
 

@@ -13,6 +13,7 @@ defined( 'ABSPATH' ) || exit;
 
 require_once __DIR__ . '/bb-blogging-functions.php';
 
+add_filter( 'the_content', 'bb_blog_append_post_footer_sections', 20 );
 
 /**
  * Whether ReadyLaunch should take over blog pages.
