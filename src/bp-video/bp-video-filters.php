@@ -1003,18 +1003,34 @@ function bp_video_admin_repair_video() {
 function bp_video_forum_privacy_repair() {
 	global $wpdb;
 
-	$offset = filter_input( INPUT_POST, 'offset', FILTER_SANITIZE_NUMBER_INT );
+	// FILTER_SANITIZE_NUMBER_INT strips non-digits but returns a string; force
+	// integer for safe interpolation into LIMIT/OFFSET and arithmetic below.
+	$offset = (int) filter_input( INPUT_POST, 'offset', FILTER_SANITIZE_NUMBER_INT );
+	$offset = max( 0, $offset );
 	$bp     = buddypress();
 
-	$squery  = "SELECT p.ID as post_id FROM {$wpdb->posts} p, {$wpdb->postmeta} pm WHERE p.ID = pm.post_id and p.post_type in ( 'forum', 'topic', 'reply' ) and pm.meta_key = 'bp_video_ids' and pm.meta_value != '' LIMIT 20 OFFSET $offset ";
+	$squery  = $wpdb->prepare(
+		"SELECT p.ID as post_id FROM {$wpdb->posts} p, {$wpdb->postmeta} pm WHERE p.ID = pm.post_id and p.post_type in ( 'forum', 'topic', 'reply' ) and pm.meta_key = 'bp_video_ids' and pm.meta_value != '' LIMIT 20 OFFSET %d",
+		$offset
+	);
 	$records = $wpdb->get_col( $squery ); // phpcs:ignore
 	if ( ! empty( $records ) ) {
 		foreach ( $records as $record ) {
 			if ( ! empty( $record ) ) {
 				$video_ids = get_post_meta( $record, 'bp_video_ids', true );
 				if ( $video_ids ) {
-					$update_query = "UPDATE {$bp->video->table_name} SET `privacy`= 'forums' WHERE id in (" . $video_ids . ')';
-					$wpdb->query( $update_query ); // phpcs:ignore
+					// `bp_video_ids` is stored by Platform as a comma-separated list of
+					// integer attachment IDs (see bp_video_filters.php:554 and the
+					// implode/array_unique writers above). Normalize defensively before
+					// interpolating into the UPDATE — third-party plugins, REST writes,
+					// or restored backups could in principle leave non-integer payload
+					// in this meta key, and direct interpolation would then be an SQLi
+					// vector. wp_parse_id_list() drops empties, casts to int, dedupes.
+					$ids = wp_parse_id_list( explode( ',', (string) $video_ids ) );
+					if ( ! empty( $ids ) ) {
+						$update_query = "UPDATE {$bp->video->table_name} SET `privacy`= 'forums' WHERE id in (" . implode( ',', $ids ) . ')';
+						$wpdb->query( $update_query ); // phpcs:ignore
+					}
 				}
 			}
 			$offset ++;
