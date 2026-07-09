@@ -1877,10 +1877,10 @@ class BB_Admin_Groups_Ajax {
 					'id'    => $user_id,
 					'name'  => $user->name,
 					'label' => sprintf(
-						/* translators: 1: user display name, 2: user ID. */
+						/* translators: 1: user display name, 2: username (user_nicename). */
 						__( '%1$s (%2$s)', 'buddyboss' ),
 						$user->name,
-						$user_id
+						isset( $user->user_nicename ) && '' !== $user->user_nicename ? $user->user_nicename : $user_id
 					),
 					'image' => bp_core_fetch_avatar(
 						array(
