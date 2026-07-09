@@ -159,10 +159,16 @@ class BP_Core extends BP_Component {
 		 */
 		$unavailable_components = array();
 		foreach ( array_keys( (array) $bp->active_components ) as $component ) {
-			if (
-				in_array( $component, $bp->optional_components, true ) &&
-				! file_exists( $bp->plugin_dir . 'bp-' . $component . '/bp-' . $component . '-loader.php' )
-			) {
+			if ( ! in_array( $component, $bp->optional_components, true ) ) {
+				continue;
+			}
+
+			$directory_available = file_exists( $bp->plugin_dir . 'bp-' . $component . '/bp-' . $component . '-loader.php' );
+
+			/** This filter is documented in bp-core/bp-core-functions.php */
+			$directory_available = (bool) apply_filters( 'bb_component_directory_available', $directory_available, $component );
+
+			if ( ! $directory_available ) {
 				$unavailable_components[] = $component;
 				unset( $bp->active_components[ $component ] );
 			}
@@ -177,6 +183,18 @@ class BP_Core extends BP_Component {
 			$scrubbed_components = array_diff_key( $stored_components, array_flip( $unavailable_components ) );
 			if ( $scrubbed_components !== $stored_components ) {
 				bp_update_option( 'bp-active-components', $scrubbed_components );
+
+				// Remember WHY these were removed (code unavailable, not an admin
+				// choice) so a provider plugin (e.g. BuddyBoss Addons supplying
+				// video/document) can restore them on its (re)activation instead
+				// of the components staying permanently disabled.
+				$scrub_memory = (array) bp_get_option( 'bb_scrubbed_unavailable_components', array() );
+				foreach ( $unavailable_components as $unavailable_component ) {
+					if ( isset( $stored_components[ $unavailable_component ] ) ) {
+						$scrub_memory[ $unavailable_component ] = $stored_components[ $unavailable_component ];
+					}
+				}
+				bp_update_option( 'bb_scrubbed_unavailable_components', $scrub_memory );
 			}
 		}
 

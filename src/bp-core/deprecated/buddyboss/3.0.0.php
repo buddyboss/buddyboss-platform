@@ -4585,3 +4585,44 @@ if ( ! function_exists( 'bbp_new_converter' ) ) {
 		return null;
 	}
 }
+
+// ──────────────────────────────────────────────────────────────────────────────
+// Group Subscriptions extracted to the buddyboss-addons plugin.
+// `bb_enable_group_subscriptions()` used to live in `bp-core/bp-core-options.php`.
+// The group-subscription module of the buddyboss-addons plugin ships its own
+// guarded copy (group-subscription/includes/functions.php); this stub keeps the
+// same behaviour so callers keep working when the addon is inactive.
+// ──────────────────────────────────────────────────────────────────────────────
+
+if ( ! function_exists( 'bb_enable_group_subscriptions' ) ) {
+	/**
+	 * Is group subscription turned off?
+	 *
+	 * @since BuddyBoss 2.2.8
+	 * @deprecated BuddyBoss 3.0.0 Moved to the group-subscription module of the
+	 *             `buddyboss-addons` plugin, which registers its own copy.
+	 *
+	 * @param bool $default Optional. Fallback value if not found in the database.
+	 *                      Default: true.
+	 *
+	 * @return bool True if group subscription is enabled, otherwise false.
+	 */
+	function bb_enable_group_subscriptions( $default = true ) {
+		// This file loads before the addon's module includes, so this stub wins
+		// the function_exists race even when the addon is active — in that case
+		// the call is a LIVE addon-era API call, not a deprecated one. Only
+		// notice when the buddyboss-addons plugin is not providing the feature.
+		if ( ! function_exists( 'bb_addons_dir' ) ) {
+			_deprecated_function( __FUNCTION__, 'BuddyBoss 3.0.0', 'bb_enable_group_subscriptions() in the buddyboss-addons plugin' );
+		}
+
+		/**
+		 * Filters whether group subscription is turned off.
+		 *
+		 * @since BuddyBoss 2.2.8
+		 *
+		 * @param bool $value Whether group subscription is turned off.
+		 */
+		return (bool) apply_filters( 'bb_enable_group_subscriptions', (bool) bp_get_option( 'bb_enable_group_subscriptions', $default ) );
+	}
+}

@@ -1381,35 +1381,41 @@ function bbp_notify_forum_subscribers( $topic_id = 0, $forum_id = 0, $anonymous_
 		),
 	);
 
-	// Check if discussion is attached in a group then send group subscription notifications.
-	$group_ids = bp_is_active( 'groups' ) && function_exists( 'bbp_get_forum_group_ids' ) ? bbp_get_forum_group_ids( $forum_id ) : array();
-	$item_id   = ( ! empty( $group_ids ) ? current( $group_ids ) : 0 );
-	if ( bp_is_active( 'groups' ) && bb_is_enabled_subscription( 'group' ) && ! empty( $item_id ) ) {
-		$type  = 'group';
-		$group = groups_get_group( $item_id );
+	/**
+	 * Filters the routing of the new-discussion subscriber notification.
+	 *
+	 * Allows a subscription-type provider to claim the discussion and redirect the
+	 * notification to its own subscriber set (e.g. the group-subscription feature
+	 * routes discussions posted in a group forum to the group's subscribers — that
+	 * provider callback lives in bp-groups-filters.php and moves out with the
+	 * feature). Return values:
+	 *  - null (default): not claimed — the forum's own subscribers are notified.
+	 *  - false: claimed but unresolvable (e.g. the group no longer exists) — abort.
+	 *  - array { type, item_id, user_ids, notification_from, tokens }: claimed.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array|false|null $routing  The routing override. Default null.
+	 * @param int              $topic_id ID of the new topic (discussion).
+	 * @param int              $forum_id ID of the forum the topic was posted in.
+	 * @param array            $args     Email token arguments built so far.
+	 */
+	$routing = apply_filters( 'bb_forum_new_discussion_notification_routing', null, $topic_id, $forum_id, $args );
 
-		if ( empty( $group ) ) {
-			return false;
+	if ( false === $routing ) {
+		// A provider claimed this discussion but could not resolve its target.
+		return false;
+	}
+
+	if ( is_array( $routing ) && ! empty( $routing['type'] ) ) {
+		$type              = $routing['type'];
+		$item_id           = isset( $routing['item_id'] ) ? $routing['item_id'] : 0;
+		$user_ids          = isset( $routing['user_ids'] ) ? $routing['user_ids'] : array();
+		$notification_from = isset( $routing['notification_from'] ) ? $routing['notification_from'] : '';
+
+		if ( ! empty( $routing['tokens'] ) && is_array( $routing['tokens'] ) ) {
+			$args['tokens'] = array_merge( $args['tokens'], $routing['tokens'] );
 		}
-
-		// Get group subscribers and bail if empty.
-		$get_subscriptions = bb_get_subscription_users(
-			array(
-				'item_id' => $item_id,
-				'type'    => 'group',
-				'count'   => false,
-			),
-			true
-		);
-
-		$user_ids = array();
-		if ( ! empty( $get_subscriptions['subscriptions'] ) ) {
-			$user_ids = array_filter( wp_parse_id_list( $get_subscriptions['subscriptions'] ) );
-		}
-
-		$args['tokens']['group.name'] = bp_get_group_name( $group );
-		$args['tokens']['group.url']  = esc_url( bp_get_group_permalink( $group ) );
-		$notification_from            = 'bb_groups_subscribed_discussion';
 	} else {
 		// Get topic subscribers and bail if empty.
 		$user_ids          = bbp_get_forum_subscribers( $forum_id );

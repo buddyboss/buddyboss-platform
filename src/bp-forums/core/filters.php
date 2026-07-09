@@ -469,7 +469,8 @@ function bb_remove_group_forum_topic_subscriptions_add_group_meta( $group_id, $m
 	if (
 		! empty( $group_id ) &&
 		'forum_id' === $meta_key &&
-		bp_is_active( 'forums' )
+		bp_is_active( 'forums' ) &&
+		function_exists( 'bb_delete_group_forum_topic_subscriptions' )
 	) {
 		bb_delete_group_forum_topic_subscriptions( $group_id );
 	}
@@ -492,7 +493,8 @@ function bb_remove_group_forum_topic_subscriptions_update_group_meta( $meta_id, 
 	if (
 		! empty( $group_id ) &&
 		'forum_id' === $meta_key &&
-		bp_is_active( 'forums' )
+		bp_is_active( 'forums' ) &&
+		function_exists( 'bb_delete_group_forum_topic_subscriptions' )
 	) {
 		bb_delete_group_forum_topic_subscriptions( $group_id );
 	}

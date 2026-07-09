@@ -190,9 +190,6 @@ add_filter( 'the_content', 'bb_mention_add_user_dynamic_link', 20, 1 );
 add_action( 'bp_after_directory_activity_list', 'bb_activity_add_modal_template' );
 add_action( 'bp_after_group_activity_content', 'bb_activity_add_modal_template' );
 add_action( 'bp_after_member_activity_content', 'bb_activity_add_modal_template' );
-add_action( 'bp_after_directory_activity_list', 'bb_gifpicker_add_popup_template' );
-add_action( 'bp_after_group_activity_content', 'bb_gifpicker_add_popup_template' );
-add_action( 'bp_after_member_activity_content', 'bb_gifpicker_add_popup_template' );
 add_action( 'bp_before_directory_activity_list', 'bb_emojionearea_add_popup_template' );
 add_action( 'bp_before_group_activity_content', 'bb_emojionearea_add_popup_template' );
 add_action( 'bp_before_member_activity_content', 'bb_emojionearea_add_popup_template' );
@@ -436,7 +433,12 @@ function bp_activity_comment_privacy_update( $comment, $privacy ) {
 		}
 	}
 
-	add_action( 'bp_activity_after_save', 'bp_media_activity_save_gif_data', 2, 1 );
+	// GIF save handler is provided by the BuddyBoss Addons giphy module; only
+	// re-add it when a provider is loaded (adding a nonexistent callback would
+	// fatal on the next activity save).
+	if ( function_exists( 'bp_media_activity_save_gif_data' ) ) {
+		add_action( 'bp_activity_after_save', 'bp_media_activity_save_gif_data', 2, 1 );
+	}
 }
 
 /**
@@ -1381,7 +1383,6 @@ function bp_activity_filter_favorites_scope( $retval = array(), $filter = array(
 }
 add_filter( 'bp_activity_set_favorites_scope_args', 'bp_activity_filter_favorites_scope', 10, 2 );
 
-
 /**
  * Set up activity arguments for use with the 'favorites' scope.
  *
@@ -2052,7 +2053,9 @@ function bp_activity_create_parent_media_activity( $media_ids ) {
 		}
 
 		if ( bp_is_active( 'groups' ) && ! empty( $group_id ) && $group_id > 0 ) {
-			remove_action( 'bp_groups_posted_update', 'bb_subscription_send_subscribe_group_notifications', 11, 4 );
+			if ( function_exists( 'bb_subscription_send_subscribe_group_notifications' ) ) {
+				remove_action( 'bp_groups_posted_update', 'bb_subscription_send_subscribe_group_notifications', 11, 4 );
+			}
 			$activity_id = groups_post_update(
 				array(
 					'content'        => $content,
@@ -2060,7 +2063,9 @@ function bp_activity_create_parent_media_activity( $media_ids ) {
 					'title_required' => false,
 				)
 			);
-			add_action( 'bp_groups_posted_update', 'bb_subscription_send_subscribe_group_notifications', 11, 4 );
+			if ( function_exists( 'bb_subscription_send_subscribe_group_notifications' ) ) {
+				add_action( 'bp_groups_posted_update', 'bb_subscription_send_subscribe_group_notifications', 11, 4 );
+			}
 		} else {
 			remove_action( 'bp_activity_posted_update', 'bb_activity_send_email_to_following_post', 10, 3 );
 			$activity_id = bp_activity_post_update(
@@ -2481,7 +2486,9 @@ function bp_activity_create_parent_document_activity( $document_ids ) {
 		}
 
 		if ( bp_is_active( 'groups' ) && ! empty( $group_id ) && $group_id > 0 ) {
-			remove_action( 'bp_groups_posted_update', 'bb_subscription_send_subscribe_group_notifications', 11, 4 );
+			if ( function_exists( 'bb_subscription_send_subscribe_group_notifications' ) ) {
+				remove_action( 'bp_groups_posted_update', 'bb_subscription_send_subscribe_group_notifications', 11, 4 );
+			}
 			$activity_id = groups_post_update(
 				array(
 					'content'        => $content,
@@ -2489,7 +2496,9 @@ function bp_activity_create_parent_document_activity( $document_ids ) {
 					'title_required' => false,
 				)
 			);
-			add_action( 'bp_groups_posted_update', 'bb_subscription_send_subscribe_group_notifications', 11, 4 );
+			if ( function_exists( 'bb_subscription_send_subscribe_group_notifications' ) ) {
+				add_action( 'bp_groups_posted_update', 'bb_subscription_send_subscribe_group_notifications', 11, 4 );
+			}
 		} else {
 			remove_action( 'bp_activity_posted_update', 'bb_activity_send_email_to_following_post', 10, 3 );
 			$activity_id = bp_activity_post_update(
@@ -3241,7 +3250,9 @@ function bp_activity_create_parent_video_activity( $video_ids ) {
 		}
 
 		if ( bp_is_active( 'groups' ) && ! empty( $group_id ) && $group_id > 0 ) {
-			remove_action( 'bp_groups_posted_update', 'bb_subscription_send_subscribe_group_notifications', 11, 4 );
+			if ( function_exists( 'bb_subscription_send_subscribe_group_notifications' ) ) {
+				remove_action( 'bp_groups_posted_update', 'bb_subscription_send_subscribe_group_notifications', 11, 4 );
+			}
 			$activity_id = groups_post_update(
 				array(
 					'content'        => $content,
@@ -3249,7 +3260,9 @@ function bp_activity_create_parent_video_activity( $video_ids ) {
 					'title_required' => false,
 				)
 			);
-			add_action( 'bp_groups_posted_update', 'bb_subscription_send_subscribe_group_notifications', 11, 4 );
+			if ( function_exists( 'bb_subscription_send_subscribe_group_notifications' ) ) {
+				add_action( 'bp_groups_posted_update', 'bb_subscription_send_subscribe_group_notifications', 11, 4 );
+			}
 		} else {
 			remove_action( 'bp_activity_posted_update', 'bb_activity_send_email_to_following_post', 10, 3 );
 			$activity_id = bp_activity_post_update(
@@ -3899,15 +3912,6 @@ function bb_blogs_activity_comment_edit_content( $activity_comment_data ) {
 	}
 
 	return $activity_comment_data;
-}
-
-/**
- * Add template for gifpicker.
- *
- * @since BuddyBoss 2.5.80
- */
-function bb_gifpicker_add_popup_template() {
-	bp_get_template_part( 'activity/gifpicker-popup' );
 }
 
 /**

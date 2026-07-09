@@ -58,25 +58,6 @@ function bb_groups_register_settings_panel_fields() {
 		)
 	);
 
-	// FIELD: Subscriptions (conditional on notifications + activity/forums).
-	if ( bp_is_active( 'notifications' ) && ( bp_is_active( 'activity' ) || bp_is_active( 'forums' ) ) ) {
-		bb_register_feature_field(
-			'groups',
-			'group_settings',
-			'group_settings',
-			array(
-				'name'              => 'bb_enable_group_subscriptions',
-				'label'             => __( 'Subscriptions', 'buddyboss-platform' ),
-				'type'              => 'toggle',
-				'description'       => __( 'Allow members to subscribe to groups', 'buddyboss-platform' ),
-				'help_text'         => __( 'When a member is subscribed to a group, they can receive notifications of new activity posts and discussions created in the group.', 'buddyboss-platform' ),
-				'default'           => function_exists( 'bb_enable_group_subscriptions' ) ? bb_enable_group_subscriptions() : true,
-				'sanitize_callback' => 'absint',
-				'order'             => 20,
-			)
-		);
-	}
-
 	// FIELD: Group Messages (conditional on messages active).
 	// Note: Despite the option name "bp-disable-group-messages", the legacy UI treats
 	// value 1 as "Allow group messages" (checked). No inversion is needed.

@@ -63,7 +63,6 @@ function bb_admin_settings_register_media_feature() {
 	require_once __DIR__ . '/settings/media/callbacks.php';
 	require_once __DIR__ . '/settings/media/settings-photos.php';
 	require_once __DIR__ . '/settings/media/settings-emoji.php';
-	require_once __DIR__ . '/settings/media/settings-gifs.php';
 	require_once __DIR__ . '/settings/media/settings-security.php';
 	require_once __DIR__ . '/settings/media/settings-access-controls.php';
 
@@ -177,29 +176,6 @@ function bb_admin_settings_register_media_feature() {
 		)
 	);
 
-	// Side Panel 5: Animated GIFs.
-	bb_register_side_panel(
-		'media',
-		'animated_gifs',
-		array(
-			'title'    => __( 'Animated GIFs', 'buddyboss-platform' ),
-			'icon'     => array(
-				'type'  => 'font',
-				'class' => 'bb-icons-rl bb-icons-rl-gif',
-			),
-			'help_url' => bp_get_admin_url(
-				add_query_arg(
-					array(
-						'page'    => 'bp-help',
-						'article' => 62829,
-					),
-					'admin.php'
-				)
-			),
-			'order'    => 50,
-		)
-	);
-
 	// Side Panel 6: Security & Performance.
 	bb_register_side_panel(
 		'media',
@@ -279,9 +255,6 @@ function bb_admin_settings_register_media_feature() {
 
 	// Panel 4: Emoji.
 	bb_media_register_emoji_panel_fields();
-
-	// Panel 5: Animated GIFs.
-	bb_media_register_gifs_panel_fields();
 
 	// Panel 6: Security & Performance.
 	bb_media_register_security_panel_fields();

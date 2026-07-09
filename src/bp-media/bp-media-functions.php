@@ -1088,7 +1088,6 @@ function bp_media_object_results_media_all_scope( $querystring ) {
 	return http_build_query( $querystring );
 }
 
-
 /**
  * Object template results media personal scope.
  *
@@ -2834,7 +2833,6 @@ function bp_media_get_forum_id( $media_id ) {
 
 }
 
-
 /**
  * Return the breadcrumbs.
  *
@@ -4226,69 +4224,6 @@ add_action(
 		bp_core_schedule_cron( 'bb_media_deleter_older_symlink', 'bb_media_delete_older_symlinks', 'bb_schedule_15days' );
 	}
 );
-
-
-/**
- * Check the GIPHY key is valid or not.
- *
- * @param boolean $api_key GIPHY api key.
- * @param boolean $message GIPHY api key validation response message.
- *
- * @return mixed Whether the giphy key is valid or error object.
- *
- * @since BuddyBoss 2.1.2
- */
-function bb_check_valid_giphy_api_key( $api_key = '', $message = false ) {
-
-	static $cache = array();
-	$cache_key    = 'bb_check_valid_giphy_api_key';
-	$saved_key    = bp_media_get_gif_api_key();
-	$use_caching  = false;
-
-	if ( empty( $api_key ) && empty( $cache ) ) {
-
-		// Use caching if not user action.
-		$cache       = get_transient( $cache_key );
-		$use_caching = true;
-
-		// Remove old cache if empty key saved.
-		if ( ! empty( $cache ) && is_array( $cache ) && ! array_key_exists( $saved_key, $cache ) ) {
-			delete_transient( $cache_key );
-		}
-	}
-
-	$api_key = ! empty( $api_key ) ? $api_key : $saved_key;
-	if ( isset( $cache[ $api_key ] ) && ! empty( $cache[ $api_key ] ) ) {
-		if ( true === $message ) {
-			return $cache[ $api_key ];
-		}
-		return (bool) ( ! is_wp_error( $cache[ $api_key ] ) && isset( $cache[ $api_key ]['response']['code'] ) && 200 === $cache[ $api_key ]['response']['code'] );
-	}
-
-	if ( empty( $api_key ) ) {
-		return false;
-	}
-
-	$output = wp_remote_get( 'https://api.giphy.com/v1/gifs/trending?api_key=' . $api_key . '&limit=1' );
-	if ( $output && ! is_wp_error( $output ) ) {
-		$cache[ $api_key ] = $output;
-		if ( $use_caching ) {
-			$cache_expiry = MONTH_IN_SECONDS;
-			if ( 200 !== $cache[ $api_key ]['response']['code'] ) {
-				$cache_expiry = WEEK_IN_SECONDS;
-			}
-			set_transient( $cache_key, array( $api_key => $output ), $cache_expiry );
-		}
-	} elseif ( is_wp_error( $output ) ) {
-		$cache[ $api_key ] = $output;
-	} else {
-		return false;
-	}
-	if ( true === $message ) {
-		return $cache[ $api_key ];
-	}
-	return (bool) ( ! is_wp_error( $cache[ $api_key ] ) && isset( $cache[ $api_key ]['response']['code'] ) && 200 === $cache[ $api_key ]['response']['code'] );
-}
 
 /**
  * Run migration for media and video description from post table to media table.

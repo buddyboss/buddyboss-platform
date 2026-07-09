@@ -295,8 +295,12 @@ module.exports = function (grunt) {
 					'**/bp-groups/**',
 					'**/bp-invites/**',
 					'**/bp-media/**',
-					'**/bp-document/**',
-					'**/bp-video/**',
+					// bp-document / bp-video are NOT imported: the components
+					// were extracted from Platform to the buddyboss-addons
+					// plugin (Phase F of the extraction). Re-importing their
+					// REST controllers here would silently recreate the
+					// directories we deleted (same rationale as the LearnDash
+					// exclusion below, PROD-9792).
 					'**/bp-members/**',
 					'**/bp-messages/**',
 					'**/bp-moderation/**',
@@ -852,33 +856,31 @@ module.exports = function (grunt) {
 		'**/*.map'
 	];
 
-	// Paid-only component directories. Video and Document are not part of the
-	// free Platform — they are delivered only with a paid license via the
-	// Mothership build (which ships them bundled). PROD-9826 made the Platform
-	// load cleanly when these folders are absent (component-availability scrub +
-	// per-component guards), so dropping them from a zip produces no fatals.
+	// Extra paths dropped from the `build_test` zip only, gated by the
+	// `isBuildTestBuild` flag (the build_test marker). `endpoints/` is the
+	// apidoc output, and the CLI test-runner shell scripts are dev-only tooling
+	// — useful in the repo and the production branch, but dead weight in the free
+	// test zip. Files remain in src/ and on the production branch; only the
+	// build_test customer zip drops them.
 	//
-	// IMPORTANT: this strip applies to `build_test` ONLY (the free-zip test
-	// build), gated by `stripPaidComponents` below. The production `build` keeps
-	// these folders so the paid Mothership build still bundles video/document.
-	//
-	// Root-anchored on purpose (e.g. `bp-video/**`, not `**/bp-video/**`) so the
-	// component directories are excluded without catching unrelated nested paths
-	// such as bp-templates assets. Files remain in src/ and on the production
-	// branch; only the build_test customer zip drops them.
+	// NOTE: bp-video/bp-document strip globs used to live here too (PROD-9826
+	// "paid component strip"); they were removed when the components were
+	// physically extracted to the buddyboss-addons plugin — no build ships them
+	// because src/ no longer contains them.
 	//
 	// @since BuddyBoss [BBVERSION]
-	var PAID_COMPONENT_STRIP_GLOBS = [
-		'bp-video/**',
-		'bp-document/**'
+	var BUILD_TEST_EXTRA_STRIP_GLOBS = [
+		'endpoints/**',
+		'cli/bin/install-package-tests.sh',
+		'cli/bin/test.sh'
 	];
 
-	// Toggled true only by the `enable_paid_component_strip` task, which is wired
+	// Toggled true only by the `enable_build_test_strip` task, which is wired
 	// into the `build_test` chain. When false (the default, and the production
-	// `build` path) PAID_COMPONENT_STRIP_GLOBS is ignored and video/document ship.
+	// `build` path) BUILD_TEST_EXTRA_STRIP_GLOBS is ignored.
 	//
 	// @since BuddyBoss [BBVERSION]
-	var stripPaidComponents = false;
+	var isBuildTestBuild = false;
 
 	// Image assets are served from an external S3 bucket (see BB_S3_Image_Offload
 	// in bp-core). The bucket mirrors the SHIPPED (flattened) plugin tree at its
@@ -948,14 +950,14 @@ module.exports = function (grunt) {
 		'bp-core/images/suspended-mystery-man.jpg'
 	];
 
-	// Enable the paid-component strip for the current task run. Inserted into
-	// `build_test` before `configure_compress_exclusions` so only the test zip
-	// drops bp-video / bp-document.
+	// Mark the current run as a build_test build. Inserted into `build_test`
+	// before `configure_compress_exclusions` so only the test zip drops the
+	// BUILD_TEST_EXTRA_STRIP_GLOBS paths.
 	//
 	// @since BuddyBoss [BBVERSION]
-	grunt.registerTask( 'enable_paid_component_strip', 'Flag bp-video / bp-document for exclusion from this build_test zip.', function () {
-		stripPaidComponents = true;
-		grunt.log.writeln( '[build_test] paid-component strip enabled — bp-video / bp-document will be excluded from the zip.' );
+	grunt.registerTask( 'enable_build_test_strip', 'Flag build_test-only paths for exclusion from this test zip.', function () {
+		isBuildTestBuild = true;
+		grunt.log.writeln( '[build_test] test-zip strip enabled — build_test-only paths will be excluded from the zip.' );
 	} );
 
 	// Rewrite CSS inside BUILD_DIR to drop `url(...)` refs that would 404
@@ -1067,9 +1069,10 @@ module.exports = function (grunt) {
 		var devSourceExclusions = DEV_SOURCE_STRIP_GLOBS.map( function ( g ) {
 			return '!' + BUILD_DIR + g;
 		} );
-		// Paid components are stripped only when the build_test flag is set.
-		var paidComponentExclusions = stripPaidComponents ?
-			PAID_COMPONENT_STRIP_GLOBS.map( function ( g ) {
+		// build_test-only extras (e.g. the apidoc `endpoints/` output) —
+		// dropped from the test zip, kept in production.
+		var buildTestExtraExclusions = isBuildTestBuild ?
+			BUILD_TEST_EXTRA_STRIP_GLOBS.map( function ( g ) {
 				return '!' + BUILD_DIR + g;
 			} ) :
 			[];
@@ -1092,7 +1095,7 @@ module.exports = function (grunt) {
 			.concat( fontExclusions )
 			.concat( translationExclusions )
 			.concat( devSourceExclusions )
-			.concat( paidComponentExclusions )
+			.concat( buildTestExtraExclusions )
 			.concat( s3OffloadExclusions )
 			.concat( s3OffloadKeepIncludes );
 
@@ -1106,7 +1109,7 @@ module.exports = function (grunt) {
 			FONT_STRIP_GLOBS.length + ' font-strip globs + ' +
 			TRANSLATION_STRIP_GLOBS.length + ' translation globs + ' +
 			DEV_SOURCE_STRIP_GLOBS.length + ' dev-source globs + ' +
-			paidComponentExclusions.length + ' paid-component globs + ' +
+			buildTestExtraExclusions.length + ' build_test-extra globs (endpoints) + ' +
 			s3OffloadExclusions.length + ' S3-offload globs (images + woff2) from zip; ' +
 			're-included ' + s3OffloadKeepIncludes.length + ' webpack build-image keep-globs.'
 		);
@@ -1134,7 +1137,7 @@ module.exports = function (grunt) {
 	//   7. clean:composer                  — drop dev composer state from the staged dir
 	//   8. compress                        — zip → buddyboss-platform-plugin.zip
 	//   9. clean:all                       — final tidy
-	grunt.registerTask('build_test', ['string-replace:dist', 'exec:composer', 'clean:all', 'exec:init_build_dir_clean', 'exec:empty_build_dir', 'copy:files', 'clean:composer', 'exec:generate_debug_manifest', 'strip_orphan_font_refs', 'rewrite_css_image_refs_to_s3', 'enable_paid_component_strip', 'configure_compress_exclusions', 'compress', 'clean:all']);
+	grunt.registerTask('build_test', ['string-replace:dist', 'exec:composer', 'clean:all', 'exec:init_build_dir_clean', 'exec:empty_build_dir', 'copy:files', 'clean:composer', 'exec:generate_debug_manifest', 'strip_orphan_font_refs', 'rewrite_css_image_refs_to_s3', 'enable_build_test_strip', 'configure_compress_exclusions', 'compress', 'clean:all']);
 
 	grunt.registerTask('release', ['src', 'build']);
 

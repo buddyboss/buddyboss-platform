@@ -57,9 +57,11 @@ if ( bp_has_groups() ) {
 									bb_groups_members();
 									remove_action( 'bb_groups_members_after', 'BB_Group_Readylaunch::bb_readylaunch_invite', 10, 1 );
 
-									add_filter( 'bp_nouveau_get_groups_buttons', 'BB_Group_Readylaunch::bb_rl_group_buttons', 99, 1 );
-									bb_group_single_header_actions();
-									remove_filter( 'bp_nouveau_get_groups_buttons', 'BB_Group_Readylaunch::bb_rl_group_buttons', 99, 1 );
+									if ( function_exists( 'bb_group_single_header_actions' ) ) {
+										add_filter( 'bp_nouveau_get_groups_buttons', 'BB_Group_Readylaunch::bb_rl_group_buttons', 99, 1 );
+										bb_group_single_header_actions();
+										remove_filter( 'bp_nouveau_get_groups_buttons', 'BB_Group_Readylaunch::bb_rl_group_buttons', 99, 1 );
+									}
 								?>
 
 								<!-- Leave Group confirmation popup -->

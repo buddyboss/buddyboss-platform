@@ -450,7 +450,13 @@ function bp_nouveau_ajax_get_single_activity_content() {
 	// which would fatal when the filter runs.
 	if ( bp_is_active( 'media' ) ) {
 		add_filter( 'bp_get_activity_content_body', 'bp_media_activity_append_media', 20, 2 );
-		add_filter( 'bp_get_activity_content_body', 'bp_media_activity_append_gif', 20, 2 );
+
+		// GIF renderer is provided by the BuddyBoss Addons giphy module; without it
+		// there is no callback to add and registering the bare name would fatal
+		// when the filter runs.
+		if ( function_exists( 'bp_media_activity_append_gif' ) ) {
+			add_filter( 'bp_get_activity_content_body', 'bp_media_activity_append_gif', 20, 2 );
+		}
 	}
 	if ( bp_is_active( 'video' ) ) {
 		add_filter( 'bp_get_activity_content_body', 'bp_video_activity_append_video', 20, 2 );

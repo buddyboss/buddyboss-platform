@@ -2605,7 +2605,23 @@ function bb_is_component_directory_available( $component ) {
 	static $available = array();
 
 	if ( ! isset( $available[ $component ] ) ) {
-		$available[ $component ] = file_exists( buddypress()->plugin_dir . 'bp-' . $component . '/bp-' . $component . '-loader.php' );
+		$exists = file_exists( buddypress()->plugin_dir . 'bp-' . $component . '/bp-' . $component . '-loader.php' );
+
+		/**
+		 * Filters whether a component's code is available to load.
+		 *
+		 * By default this reflects whether the component's loader file exists
+		 * inside the Platform build. An external plugin that provides a
+		 * component (e.g. BuddyBoss Addons supplying video/document) returns
+		 * true for its component so the availability scrub keeps it active
+		 * and the admin UI keeps offering the toggle.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param bool   $exists    Whether the component's loader file exists in this build.
+		 * @param string $component Component ID (e.g. 'video', 'document').
+		 */
+		$available[ $component ] = (bool) apply_filters( 'bb_component_directory_available', $exists, $component );
 	}
 
 	return $available[ $component ];

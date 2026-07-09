@@ -132,6 +132,34 @@ function bp_is_forums_emoji_support_enabled( $default = 0 ) {
 }
 
 /**
+ * Whether a GIPHY integration provider is available to power the GIF feature.
+ *
+ * The provider is the code that saves, renders and deletes GIF attachments
+ * (`bp_media_activity_embed_gif()` and friends). Historically it ships inside
+ * the Platform's media component; it is being extracted to the BuddyBoss
+ * Addons plugin, whose copy keeps the same function names. When neither is
+ * loaded, every `bp_is_*_gif_support_enabled()` gate returns false (via
+ * {@see bb_media_gifs_force_disable()}), so GIF UI never renders against a
+ * missing backend.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return bool True when a GIF provider (Platform-bundled or addon) is loaded.
+ */
+function bb_giphy_provider_available() {
+	$available = function_exists( 'bp_media_activity_embed_gif' );
+
+	/**
+	 * Filters whether a GIPHY integration provider is available.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param bool $available True when the GIF save/render/delete functions are loaded.
+	 */
+	return (bool) apply_filters( 'bb_giphy_module_active', $available );
+}
+
+/**
  * Return GIFs API Key
  *
  * @param string $default Optional. Fallback value if not found in the database.
@@ -162,7 +190,7 @@ function bp_media_get_gif_api_key( $default = '' ) {
  */
 function bp_is_profiles_gif_support_enabled( $default = 0 ) {
 	$result = false;
-	if ( bb_check_valid_giphy_api_key() ) {
+	if ( function_exists( 'bb_check_valid_giphy_api_key' ) && bb_check_valid_giphy_api_key() ) {
 		$result = (bool) get_option( 'bp_media_profiles_gif_support', $default );
 	}
 	return (bool) apply_filters( 'bp_is_profiles_gif_support_enabled', $result );
@@ -178,7 +206,7 @@ function bp_is_profiles_gif_support_enabled( $default = 0 ) {
  */
 function bp_is_groups_gif_support_enabled( $default = 0 ) {
 	$result = false;
-	if ( bb_check_valid_giphy_api_key() ) {
+	if ( function_exists( 'bb_check_valid_giphy_api_key' ) && bb_check_valid_giphy_api_key() ) {
 		$result = (bool) get_option( 'bp_media_groups_gif_support', $default );
 	}
 	return (bool) apply_filters( 'bp_is_groups_gif_support_enabled', $result );
@@ -194,7 +222,7 @@ function bp_is_groups_gif_support_enabled( $default = 0 ) {
  */
 function bp_is_messages_gif_support_enabled( $default = 0 ) {
 	$result = false;
-	if ( bb_check_valid_giphy_api_key() ) {
+	if ( function_exists( 'bb_check_valid_giphy_api_key' ) && bb_check_valid_giphy_api_key() ) {
 		$result = (bool) get_option( 'bp_media_messages_gif_support', $default );
 	}
 	return (bool) apply_filters( 'bp_is_messages_gif_support_enabled', $result );
@@ -210,7 +238,7 @@ function bp_is_messages_gif_support_enabled( $default = 0 ) {
  */
 function bp_is_forums_gif_support_enabled( $default = 0 ) {
 	$result = false;
-	if ( bb_check_valid_giphy_api_key() ) {
+	if ( function_exists( 'bb_check_valid_giphy_api_key' ) && bb_check_valid_giphy_api_key() ) {
 		$result = (bool) get_option( 'bp_media_forums_gif_support', $default );
 	}
 	return (bool) apply_filters( 'bp_is_forums_gif_support_enabled', $result );

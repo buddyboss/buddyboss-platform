@@ -728,9 +728,13 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 		// Post a regular activity update.
 		if ( 'activity_update' === $type ) {
 			if ( bp_is_active( 'groups' ) && ! is_null( $prime ) ) {
-				remove_action( 'bp_groups_posted_update', 'bb_subscription_send_subscribe_group_notifications', 11, 4 );
+				if ( function_exists( 'bb_subscription_send_subscribe_group_notifications' ) ) {
+					remove_action( 'bp_groups_posted_update', 'bb_subscription_send_subscribe_group_notifications', 11, 4 );
+				}
 				$activity_id = groups_post_update( $prepared_activity );
-				add_action( 'bp_groups_posted_update', 'bb_subscription_send_subscribe_group_notifications', 11, 4 );
+				if ( function_exists( 'bb_subscription_send_subscribe_group_notifications' ) ) {
+					add_action( 'bp_groups_posted_update', 'bb_subscription_send_subscribe_group_notifications', 11, 4 );
+				}
 			} else {
 				remove_action( 'bp_activity_posted_update', 'bb_activity_send_email_to_following_post', 10, 3 );
 				$activity_id = bp_activity_post_update( $prepared_activity );
@@ -798,13 +802,15 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 
 		if ( 'activity_update' === $type ) {
 			if ( bp_is_active( 'groups' ) && ! is_null( $prime ) ) {
-				$group_id = ! empty( $prepared_activity->group_id ) ? $prepared_activity->group_id : ( ! empty( $prepared_activity->item_id ) ? $prepared_activity->item_id : 0 );
-				bb_subscription_send_subscribe_group_notifications(
-					$prepared_activity->content,
-					$prepared_activity->user_id,
-					$group_id,
-					$activity_id
-				);
+				if ( function_exists( 'bb_subscription_send_subscribe_group_notifications' ) ) {
+					$group_id = ! empty( $prepared_activity->group_id ) ? $prepared_activity->group_id : ( ! empty( $prepared_activity->item_id ) ? $prepared_activity->item_id : 0 );
+					bb_subscription_send_subscribe_group_notifications(
+						$prepared_activity->content,
+						$prepared_activity->user_id,
+						$group_id,
+						$activity_id
+					);
+				}
 			} else {
 				bb_activity_send_email_to_following_post( $prepared_activity->content, $prepared_activity->user_id, $activity_id );
 			}
@@ -1181,13 +1187,15 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			bp_activity_at_name_send_emails( $activity );
 
 			if ( bp_is_active( 'groups' ) && 'groups' === $activity->component ) {
-				$group_id = ! empty( $activity->item_id ) ? $activity->item_id : 0;
-				bb_subscription_send_subscribe_group_notifications(
-					$activity->content,
-					$activity->user_id,
-					$group_id,
-					$activity_id
-				);
+				if ( function_exists( 'bb_subscription_send_subscribe_group_notifications' ) ) {
+					$group_id = ! empty( $activity->item_id ) ? $activity->item_id : 0;
+					bb_subscription_send_subscribe_group_notifications(
+						$activity->content,
+						$activity->user_id,
+						$group_id,
+						$activity_id
+					);
+				}
 			} else {
 				bb_activity_send_email_to_following_post( $activity->content, $activity->user_id, $activity->id );
 			}
@@ -2060,7 +2068,9 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 
 			// removed combined gif data with content.
 			if ( function_exists( 'bp_media_activity_embed_gif' ) ) {
-				add_filter( 'bp_get_activity_content_body', 'bp_media_activity_embed_gif', 20, 2 );
+				if ( function_exists( 'bp_media_activity_embed_gif' ) ) {
+					add_filter( 'bp_get_activity_content_body', 'bp_media_activity_embed_gif', 20, 2 );
+				}
 			}
 
 			// Restore the `activities_template` global.
