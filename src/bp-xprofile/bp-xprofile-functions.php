@@ -1563,19 +1563,31 @@ function bp_xprofile_maybe_format_datebox_post_data( $field_id ) {
  * @return string $mentionname User name appropriate for @-mentions.
  */
 function bp_activity_get_user_mentionname( $user_id ) {
-	$mentionname = '';
 
 	$userdata = bp_core_get_core_userdata( $user_id );
 
-	if ( $userdata ) {
-		if ( bp_is_username_compatibility_mode() ) {
-			$mentionname = str_replace( ' ', '-', $userdata->user_login );
-		} else {
-			$mentionname = get_user_meta( $userdata->ID, 'nickname', true );
-		}
+	return bb_activity_format_mentionname( $userdata );
+}
+
+/**
+ * Format a user's mentionname based on username compatibility mode.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param object $user_data User data object. Must contain at least ID and
+ * user_login properties.
+ * @return string $mentionname Formatted mention name.
+ */
+function bb_activity_format_mentionname( $user_data ) {
+	if ( ! is_object( $user_data ) || empty( $user_data->ID ) || empty( $user_data->user_login ) ) {
+		return '';
 	}
 
-	return $mentionname;
+	if ( bp_is_username_compatibility_mode() ) {
+		return str_replace( ' ', '-', $user_data->user_login );
+	}
+
+	return get_user_meta( $user_data->ID, 'nickname', true );
 }
 
 /**
