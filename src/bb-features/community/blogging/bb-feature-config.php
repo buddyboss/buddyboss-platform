@@ -40,6 +40,40 @@ bb_register_feature(
 	)
 );
 
+/**
+ * Seed Blogs feature option defaults on activation.
+ *
+ * The Settings 2.0 AJAX handler reads toggle_list option_prefix values with
+ * a hardcoded default of 1, so mixed defaults must exist as real options.
+ * Only missing options are written; existing values are never overwritten.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $feature_id The activated feature ID.
+ *
+ * @return void
+ */
+function bb_blog_seed_default_options( $feature_id ) {
+	if ( 'blogging' !== $feature_id ) {
+		return;
+	}
+
+	$defaults = array(
+		'bb_blog_social_link_facebook' => 1,
+		'bb_blog_social_link_linkedin' => 1,
+		'bb_blog_social_link_x'        => 0,
+		'bb_blog_social_link_whatsapp' => 0,
+		'bb_blog_social_link_email'    => 0,
+	);
+
+	foreach ( $defaults as $option_name => $default_value ) {
+		if ( '__bb_blog_missing__' === bp_get_option( $option_name, '__bb_blog_missing__' ) ) {
+			bp_update_option( $option_name, $default_value );
+		}
+	}
+}
+add_action( 'bb_feature_activated', 'bb_blog_seed_default_options' );
+
 // Admin settings registration (admin, AJAX, REST and WP-CLI contexts).
 if ( is_admin() || wp_doing_ajax() || ( defined( 'REST_REQUEST' ) && REST_REQUEST ) || ( defined( 'WP_CLI' ) && WP_CLI ) ) {
 	require_once __DIR__ . '/admin/settings.php';
