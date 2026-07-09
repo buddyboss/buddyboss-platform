@@ -1,0 +1,3938 @@
+.bb-admin-feature-settings {
+
+    &__container {
+        display: flex;
+        background-color: $bb-background-primary-color;
+        min-height: calc(100vh - 50px);
+        margin: 0 -20px;
+    }
+
+    &__sidebar {
+        width: 248px;
+        background-color: $bb-background-secondary-color;
+        border-right: 1px solid $bb-border-secondary-color;
+        padding: 16px;
+        flex-shrink: 0;
+        box-sizing: border-box;
+    }
+
+    .bb-admin-side-nav {
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+
+        &__back-btn {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            width: 100%;
+            padding: 6px 16px;
+            font-size: 14px;
+            font-weight: 400;
+            line-height: 20px;
+            color: $bb-text-color;
+            background-color: $bb-background-secondary-color;
+            border: 1px solid $bb-border-secondary-color;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color .2s ease;
+            text-decoration: none;
+
+            &:hover ,
+                &:focus {
+			background-color: $bb-background-base-color;
+			box-shadow: none;
+			outline: none;
+            }
+        }
+
+        &__list {
+            margin: 0;
+        }
+
+        &__item {
+            margin: 0;
+        }
+
+        &__link {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: $bb-text-tertiary-color;
+            font-size: 13px;
+            font-weight: 500;
+            padding: 8px 16px;
+            cursor: pointer;
+            border-radius: $bb-border-radius-lg;
+            border: 0;
+            width: 100%;
+            box-sizing: border-box;
+            background-color: transparent;
+
+            [class*="bb-icons-"] {
+                color: $bb-icon-tertiary-color;
+                font-size: 20px;
+                line-height: 1;
+            }
+
+			&:hover,
+			&:focus,
+			&--active {
+				color: $bb-text-color;
+				background-color: $bb-background-base-color;
+				outline: none;
+				box-shadow: inset 0 0 0 0.6px $bb-border-secondary-color;
+
+				[class*="bb-icons-"] {
+					color: $bb-icon-color;
+				}
+			}
+
+            &:hover:not(.bb-admin-side-nav__link--active) {
+                background-color: $bb-background-primary-color;
+            }
+		}
+
+        &__icon {
+            display: flex;
+        }
+
+        &__divider {
+            height: 1px;
+            background-color: $bb-border-secondary-color;
+            margin: 8px;
+        }
+
+        // Link-out variant: anchor to another feature's settings (e.g. the
+        // Offload Media entry under Media). The underlying `<a>` inherits
+        // the shared `__link` styling above (flex row, hover background,
+        // icon colouring), so the rules here are purely additive —
+        // suppressing the default anchor decoration and pinning the
+        // trailing up-right indicator to the right edge.
+        &__link--external {
+            text-decoration: none;
+
+            &:hover,
+            &:focus {
+                text-decoration: none;
+            }
+        }
+
+        &__external-indicator {
+            display: inline-flex;
+            align-items: center;
+            margin-left: auto; // Pushes the ↗ glyph to the trailing edge.
+            flex-shrink: 0;
+
+            [class*="bb-icons-"] {
+                // Slightly smaller than the leading icon so it reads as an
+                // affordance ("this opens elsewhere") rather than a second
+                // primary icon. 16px matches the Figma spec.
+                font-size: 16px;
+            }
+        }
+    }
+
+    &__main {
+        flex: 1;
+        padding: 32px;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    &__content {
+        max-width: 985px;
+        margin: 0 auto;
+        width: 100%;
+    }
+
+    &__section {
+        background-color: $bb-background-base-color;
+        border: 0.5px solid $bb-border-primary-color;
+        border-radius: $bb-border-radius-2xl;
+        box-shadow: 0px 1.5px 1px 0px rgba(0, 0, 0, 0.16);
+        margin-bottom: 24px;
+
+        &-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid $bb-border-secondary-color;
+            padding: 20px 4px;
+            margin: 0 24px;
+
+            &-left {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                min-height: 24px;
+                flex: 1;
+            }
+
+            &-right {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                flex-shrink: 0;
+            }
+        }
+
+        &-title {
+            color: $bb-text-color;
+            font-size: 18px;
+            font-weight: 500;
+            margin: 0;
+        }
+
+        &-description {
+            color: $bb-text-tertiary-color;
+            font-size: 13px;
+            padding-bottom: 18px;
+            border-bottom: 0.5px solid $bb-border-secondary-color;
+            margin: 0 0 18px;
+
+            a {
+                color: $bb-link-color;
+                text-decoration: none;
+
+                &:hover {
+                    color: $bb-link-color;
+                    text-decoration: underline;
+                }
+            }
+        }
+
+        &-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 8px;
+            border-radius: $bb-border-radius-full;
+            font-size: 11px;
+            font-weight: 500;
+            line-height: 16px;
+            flex-shrink: 0;
+            outline: none;
+            box-shadow: none;
+
+            &-icon {
+                font-size: 16px;
+                line-height: 1;
+                flex-shrink: 0;
+                font-weight: 500;
+            }
+
+            &--warning {
+                background-color: $bb-background-warning-primary-color;
+                border: 0.5px solid $bb-border-warning-secondary-color;
+                color: $bb-text-warning-primary-color;
+
+                .bb-admin-feature-settings__section-status-icon {
+                    color: $bb-icon-warning-primary-color;
+                }
+            }
+
+            &--error {
+                background-color: $bb-background-secondary-color;
+                border: 0.5px solid $bb-border-tertiary-color;
+                color: $bb-text-disabled-color;
+
+                .bb-admin-feature-settings__section-status-icon {
+                    color: $bb-icon-disabled-color;
+                }
+            }
+
+            &--success {
+                background-color: $bb-background-positive-primary-color;
+                border: 0.5px solid $bb-border-positive-secondary-color;
+                color: $bb-text-positive-primary-color;
+
+                .bb-admin-feature-settings__section-status-icon {
+                    color: $bb-icon-positive-primary-color;
+                }
+            }
+
+            &--info {
+                background-color: $bb-background-secondary-color;
+                border: 0.5px solid $bb-border-tertiary-color;
+                color: $bb-text-color;
+
+                .bb-admin-feature-settings__section-status-icon {
+                    color: $bb-text-tertiary-color;
+                }
+            }
+        }
+
+        .help-icon {
+            color: $bb-icon-tertiary-color;
+            font-size: 24px;
+            cursor: pointer;
+            background: none;
+            border: none;
+            padding: 0;
+            margin: 0;
+            outline: none;
+            box-shadow: none;
+            text-decoration: none;
+        }
+
+        &-toggle {
+            display: flex;
+            align-items: center;
+            margin-left: 8px;
+
+            .components-toggle-control {
+                margin-bottom: 0;
+            }
+
+            .components-base-control__field {
+                margin-bottom: 0;
+            }
+        }
+
+        &-body {
+            padding: 32px 24px;
+
+            &--disabled {
+                opacity: 0.5;
+                pointer-events: none;
+            }
+        }
+
+        &-description {
+            font-size: 13px;
+            color: $bb-text-tertiary-color;
+            line-height: 18px;
+            margin: 0 0 24px;
+            padding-bottom: 24px;
+            border-bottom: 0.5px solid $bb-border-secondary-color;
+        }
+
+        // Section-level conditional action: 'disable' (e.g. OneSignal /
+        // reCAPTCHA "not connected"). The modifier class is retained as
+        // a hook for E2E / aria-disabled detection but intentionally
+        // carries no visual styling — per design, the section chrome
+        // (heading, description, dividers, field labels, helper text)
+        // renders at full intensity. Only the form controls inside dim,
+        // handled by each control's own `disabled` state, which the
+        // conditional cascade already propagates from the section down
+        // to every field. Note: `&-body--disabled` above is a separate
+        // case (user explicitly toggled the section's main switch off)
+        // and intentionally keeps the heavier dim to convey "you turned
+        // this off".
+        &--disabled {
+            // No-op by design — see comment above.
+        }
+    }
+
+    @media screen and (max-width: 1250px) {
+
+        &__container {
+            flex-wrap: wrap;
+        }
+
+        &__sidebar {
+            width: calc(100% - 64px);
+            margin: 0 32px;
+            border: 1px solid $bb-border-secondary-color;
+            border-radius: $bb-border-radius-2xl;
+        }
+    }
+
+    @media screen and (max-width: 980px) {
+
+        &__section-body {
+            overflow: auto;
+        }
+    }
+
+    @media screen and (max-width: 560px) {
+        overflow: auto;
+        
+        &__container {
+            min-width: 560px;
+        }
+    }
+}
+
+.bb-admin-settings-form__field {
+    display: flex;
+    gap: 32px;
+    padding-bottom: 24px;
+
+    &:empty {
+        margin-top: 0;
+        padding-bottom: 0;
+    }
+
+    &:not(.bb-admin-settings-form__field--full-width) {
+        border-bottom: 0.5px solid $bb-border-secondary-color;
+    }
+
+    &--full-width {
+        border-bottom: 0.5px solid $bb-border-secondary-color;
+    }
+
+    // Full-width status check notices (e.g., FFmpeg): block layout for HTML content.
+    &--full-width .bb-admin-status-check .bb-admin-notice {
+        display: block;
+        padding: 4px 8px;
+        line-height: 1.6;
+
+        &:before {
+            display: none;
+        }
+
+        code {
+            background-color: $bb-background-secondary-color;
+            padding: 1px 6px;
+            border-radius: $bb-border-radius-sm;
+            font-size: 12px;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: underline;
+        }
+    }
+
+    &:last-child {
+        padding-bottom: 0;
+        border-bottom: none;
+
+        .bb-admin-notice {
+            margin-bottom: 0;
+        }
+    }
+
+    + .bb-admin-settings-form__field {
+        margin-top: 24px;
+    }
+
+    &:has(.bb-admin-reaction-info-wrapper) {
+        margin-top: 0;
+        padding-bottom: 0;
+    }
+
+    // Disabled-field cursor affordance. The wrapper class is applied by
+    // SettingsForm whenever a field's computed `disabled` is true (section
+    // conditional, parent-toggle off, field-level conditional, or explicit
+    // field.disabled). `:disabled` on native form controls already gives
+    // the correct cursor in most browsers, but Components-library toggles
+    // render the visual track/thumb as a `<span>` and never inherit the
+    // pseudo-class. Explicitly target each interactive descendant so the
+    // affordance is consistent across native and WP-components controls.
+    //
+    // `!important` is used here because WP's own `.components-form-toggle.is-disabled`
+    // rule (loaded from wp-components style.css) sets `cursor: default` and
+    // beats us on specificity. Cursor is purely visual, so the override is
+    // safe — no behavior or layout depends on it.
+    &--disabled {
+        cursor: not-allowed !important;
+
+        input,
+        textarea,
+        select,
+        button,
+        label,
+        .components-form-toggle,
+        .components-form-toggle__track,
+        .components-form-toggle__thumb,
+        .components-toggle-control,
+        .components-toggle-control__label,
+        .components-checkbox-control__input,
+        .components-base-control__label {
+            cursor: not-allowed !important;
+        }
+    }
+
+    &-label {
+        color: $bb-text-color;
+        font-size: 14px;
+        font-weight: 500;
+        line-height: 1;
+        width: 245px;
+
+        > label {
+            display: flex;
+            align-items: center;
+        }
+    }
+
+    /* Optional secondary description rendered under the field label.
+       Use the `label_description` field arg to opt in. */
+    &-label-description {
+        color: $bb-text-tertiary-color;
+        font-size: 13px;
+        font-weight: 400;
+        line-height: 1.5;
+        margin: 8px 0 0;
+
+        a {
+            color: $bb-link-color;
+            text-decoration: none;
+
+            &:hover,
+            &:focus {
+                text-decoration: underline;
+            }
+        }
+    }
+
+    select {
+        @include bb-admin-settings-select;
+    }
+
+    &-content {
+        flex: 1;
+
+        &--inline {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+
+            .bb-admin-settings-form__field-description {
+                color: $bb-text-color;
+                font-size: 14px;
+                flex: 1;
+                min-width: 0;
+                margin: 0;
+            }
+
+            .bb-admin-settings-form__child-fields {
+                flex-basis: 100%;
+                margin-top: 16px;
+            }
+
+            .bb-admin-settings-form__child-field {
+                display: flex;
+                align-items: center;
+
+                &-description {
+                    color: $bb-text-color;
+                    font-size: 13px;
+                    font-weight: 400;
+                    line-height: 1.5;
+                    margin: 0;
+                }
+
+                &--disabled {
+                    opacity: 0.5;
+                    pointer-events: none;
+                }
+            }
+        }
+    }
+
+    &-input-wrapper {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+
+        &:has(.bb-admin-settings-form__field-head-description) {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        > div:not([class]) {
+            width: 100%;
+        }
+    }
+
+    &-text-wrapper {
+        width: 100%;
+    }
+
+    &-suffix {
+        color: $bb-text-secondary-color;
+        font-size: 13px;
+        font-weight: 400;
+        line-height: 1;
+        white-space: nowrap;
+    }
+
+    &-description {
+        color: $bb-text-tertiary-color;
+        font-size: 13px;
+        font-weight: 400;
+        line-height: 1.5;
+        margin: 12px 0 0 0;
+
+        // Inline links inside helper-text descriptions match the no-underline
+        // convention used in the field-head/section-description blocks above.
+        a {
+            color: $bb-link-color;
+            text-decoration: none;
+
+            &:hover {
+                color: $bb-link-color;
+                text-decoration: underline;
+            }
+        }
+
+        &--has-controls {
+            color: $bb-text-color;
+            font-size: 14px;
+            margin-top: 0;
+
+            .bb-admin-settings-form__inline-select {
+                margin: 0 6px 0 2px;
+                padding: 4px 24px 4px 8px;
+                min-width: 96px;
+                min-height: auto;
+            }
+        }
+    }
+
+    &-head-description {
+        color: $bb-text-secondary-color;
+        font-size: 13px;
+        font-weight: 500;
+        line-height: 1.5;
+        margin: 0 0 10px;
+    }
+
+    &-help-text {
+        color: $bb-text-tertiary-color;
+        font-size: 13px;
+        font-weight: 400;
+        line-height: 1.5;
+        margin: 10px 0 0 0;
+        opacity: 0.8;
+        width: 100%;
+
+        a {
+            color: $bb-link-color;
+            text-decoration: none;
+
+            &:focus,
+            &:hover {
+                color: $bb-link-color;
+                text-decoration: underline;
+            }
+        }
+    }
+
+    // Grouped fields: remove border/spacing between consecutive fields in same group.
+    // But keep spacing after --group-last (boundary between different groups).
+    &--grouped + &--grouped[data-group] {
+        margin-top: 0;
+        padding-top: 0;
+    }
+
+    &--group-last + &--grouped[data-group] {
+        margin-top: 0;
+        padding-top: 24px;
+    }
+
+    // Grouped no-label fields (e.g., Custom URL below dropdown): full-width input.
+    &--grouped#{&}--no-label {
+        .bb-admin-settings-form__field-input-wrapper {
+            display: block;
+
+            input[type="text"],
+            input[type="url"] {
+                width: 100%;
+            }
+        }
+    }
+
+    &--grouped:not(.bb-admin-settings-form__field--full-width) {
+        border-bottom: none;
+        padding-bottom: 18px;
+
+        // Last visible field in a group restores the bottom border.
+        &.bb-admin-settings-form__field--group-last,
+        &:has(+ :not([data-group])),
+        &:has(+ .bb-admin-settings-form__field:not(.bb-admin-settings-form__field--grouped)) {
+            border-bottom: 1px solid $bb-border-secondary-color;
+            padding-bottom: 24px;
+        }
+
+        // Last field in the section — no bottom border needed.
+        &:last-child {
+            border-bottom: none;
+            padding-bottom: 12px;
+        }
+
+        &[data-field-name="allow-custom-registration"] {
+            padding-bottom: 20px;
+        }
+    }
+
+    // Inline grouped fields rendered side-by-side.
+    &--grouped[data-group-inline="true"] {
+        display: inline-flex;
+        flex-direction: column;
+        width: calc(50% - 12px);
+        vertical-align: top;
+        gap: 8px;
+
+        // Second+ inline field: gap between siblings.
+        + .bb-admin-settings-form__field--grouped[data-group-inline="true"] {
+            margin-left: 24px;
+        }
+
+        // Stack label above input instead of side-by-side.
+        .bb-admin-settings-form__field-label {
+            width: 100%;
+        }
+
+        .bb-admin-settings-form__field-content {
+            width: 100%;
+        }
+
+        .bb-admin-settings-form__field-input-wrapper {
+            width: 100%;
+
+            .components-base-control {
+                width: 100%;
+            }
+
+            input[type="text"],
+            input[type="url"],
+            input[type="number"] {
+                width: 100%;
+            }
+        }
+
+        // No-label inline grouped fields
+        &.bb-admin-settings-form__field--no-label {
+
+            .bb-admin-settings-form__field-content {
+                margin-left: 0;
+            }
+
+            width: calc((100% - 277px - 24px) / 2);
+
+             @media screen and (max-width: 980px) {
+                width: calc(50% - 16px);
+            }
+        }
+    }
+
+    // First inline field after a non-inline sibling: offset to align with the content area.
+    &--grouped:not([data-group-inline="true"]) + &--grouped[data-group-inline="true"].bb-admin-settings-form__field--no-label {
+        margin-left: 277px;
+
+        @media screen and (max-width: 980px) {
+            margin-left: 0;
+        }
+    }
+
+    // Textarea wrapper ensures counter renders below (not beside) the textarea.
+    .bb-admin-settings-form__textarea-wrapper {
+        width: 100%;
+
+        .components-textarea-control {
+            width: 100%;
+        }
+    }
+
+    // Textarea character counter (e.g. "12/250").
+    .bb-admin-settings-form__textarea-counter {
+        display: block;
+        text-align: left;
+        font-size: 12px;
+        color: $bb-text-secondary-color;
+        margin-top: 4px;
+    }
+
+    // Group sub-label (e.g. "Width", "Height") shown above control within a group.
+    &-group-label {
+        display: block;
+        font-size: 14px;
+        font-weight: 500;
+        color: $bb-text-color;
+        margin-bottom: 6px;
+    }
+
+    // No-label fields: stack tightly with previous field (no separator, reduced spacing)
+    // and indent content to align with parent's content area.
+    &--no-label {
+        border-bottom: none;
+        padding-top: 8px;
+
+        .bb-admin-settings-form__field-content {
+            flex: 1;
+            // 245px (label width) + 32px (gap) = 277px offset to align with sibling field content.
+            margin-left: 277px;
+
+            &:has(> .bb-admin-settings-form__field-input-wrapper > .bb-admin-empty-state) {
+                margin-left: 0;
+            }
+        }
+
+        // Full-width field types (checkbox_list) should span the entire card when unlabeled.
+        &:has(.bb-admin-settings-field__checkbox-list) {
+            .bb-admin-settings-form__field-content {
+                margin-left: 0;
+            }
+
+            .bb-admin-settings-form__field-input-wrapper {
+                width: 100%;
+            }
+        }
+    }
+
+    .bb-admin-settings-form__child-fields {
+        margin-top: 16px;
+        padding-top: 16px;
+        border-top: 0.5px solid $bb-border-secondary-color;
+
+        // When child-fields is the first child in the content area (hidden parent field
+        // with no input wrapper), remove the separator border and top spacing.
+        &:first-child {
+            margin-top: 0;
+            padding-top: 0;
+            border-top: none;
+        }
+
+        // Inline toggle/checkbox children don't need a separator border from their parent.
+        // Only remove when ALL children are inline controls (no labeled inputs like number/select).
+        &:not(:has(.bb-admin-settings-form__child-field:not(.bb-admin-settings-form__child-field--toggle):not(.bb-admin-settings-form__child-field--checkbox))) {
+            border-top: none;
+            padding-top: 0;
+        }
+    }
+
+    &[data-field-name="bp_search_post_type_post"][class],
+    &[data-field-name="bp_search_post_type_page"][class] {
+
+        .bb-admin-settings-form__child-fields[class] {
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 0.5px solid $bb-border-secondary-color;
+        }
+    }
+
+    &[data-field-name*="bb-access-control"] {
+
+        .bb-access-control-field__selects .components-base-control {
+            width: 100%;
+        }
+    }
+
+    &[data-field-name="bb-pro-cover-group-width"] {
+        padding-bottom: 22px;
+
+        .bb-admin-settings-form__field-group-label {
+            margin-bottom: 10px;
+        }
+    }
+
+    .bb-admin-settings-form__child-group-label {
+        font-size: 13px;
+        font-weight: 500;
+        line-height: 18px;
+        color: $bb-text-secondary-color;
+        margin-top: 16px;
+        padding: 16px 0;
+        border-top: 1px solid $bb-border-secondary-color;
+
+        &:first-child {
+            border-top: none;
+            margin-top: 0;
+            padding-top: 0;
+        }
+    }
+
+    .bb-admin-settings-form__child-field--checkbox + .bb-admin-settings-form__child-field--checkbox,
+    .bb-admin-settings-form__child-field--toggle + .bb-admin-settings-form__child-field--toggle {
+        margin-top: 16px;
+    }
+
+    .bb-admin-settings-form__child-field {
+
+        &-label {
+            display: block;
+            color: $bb-text-secondary-color;
+            font-size: 13px;
+            font-weight: 500;
+            line-height: 18px;
+            margin-bottom: 8px;
+        }
+
+        &-control {
+            max-width: 272px;
+
+            select {
+                @include bb-admin-settings-select;
+                width: 100%;
+            }
+
+            .components-base-control {
+                margin-bottom: 0;
+
+                .components-select-control__input {
+                    @include bb-admin-settings-select;
+                    width: 100%;
+                }
+
+                .components-input-control-suffix-wrapper {
+                    display: none;
+                }
+
+                .components-input-control__backdrop {
+                    border-color: transparent;
+                }
+            }
+        }
+
+        &--disabled {
+            opacity: 0.5;
+            pointer-events: none;
+        }
+
+        &-description {
+            color: $bb-text-tertiary-color;
+            font-size: 13px;
+            font-weight: 400;
+            line-height: 18px;
+            margin: 8px 0 0 0;
+        }
+
+
+        // Checkbox child with inline description_controls (e.g., "Auto hide after [5] reports").
+        &--has-controls {
+            display: flex;
+            align-items: center;
+            gap: 0;
+        }
+
+        &-inline-desc {
+            font-size: 13px;
+            line-height: 18px;
+            color: $bb-text-color;
+        }
+    }
+
+    .bb-admin-reaction-info {
+        color: $bb-text-tertiary-color;
+        font-size: 13px;
+        padding-top: 24px;
+
+        a {
+            color: $bb-link-color;
+            text-decoration: none;
+
+            &:hover {
+                color: $bb-link-color;
+                text-decoration: underline;
+            }
+        }
+    }
+
+    .components-base-control {
+
+		.components-input-control__label {
+			color: $bb-text-secondary-color;
+			text-transform: none;
+			font-size: 13px;
+			font-weight: 500;
+		}
+
+        .components-input-control__container[disabled] {
+            background-color: transparent
+        }
+
+		.components-select-control__input {
+			@include bb-admin-settings-select;
+			max-width: 272px;
+		}
+
+		.components-input-control-suffix-wrapper,
+		.components-input-control__backdrop {
+			display: none;
+		}
+
+        .components-select-control {
+            max-width: 275px;
+        }
+	}
+
+    @media screen and (max-width: 1250px) {
+
+         &-label {
+            width: 195px;
+         }
+
+         &--no-label {
+
+            .bb-admin-settings-form__field-content {
+                margin-left: 227px;
+            }
+        }
+    }
+
+    @media screen and (max-width: 980px) {
+        flex-wrap: wrap;
+
+         &-label {
+            width: 100%;
+         }
+
+         &--no-label {
+
+            .bb-admin-settings-form__field-content {
+                margin-left: 0;
+            }
+        }
+    }
+}
+
+.bb-admin-settings-field__toggle-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+
+    [data-field-name="bb_all_reactions"] &,
+    [data-field-name="bb-group-headers-elements"] &,
+    [data-field-name="bp_platform_activity_types"] & {
+        gap: 16px;
+    }
+}
+
+.bb-admin-settings-field__manage-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 6px 16px;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 20px;
+    color: $bb-text-brand-primary-color;
+    background-color: transparent;
+    border: 1px solid $bb-border-brand-primary-color;
+    border-radius: $bb-border-radius-lg;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+
+    i {
+        font-size: 16px;
+        line-height: 1;
+    }
+
+    &:hover {
+        background-color: rgba($bb-background-brand-primary-color, 0.05);
+    }
+
+    &:focus {
+        outline: 2px solid $bb-border-brand-primary-color;
+        outline-offset: 1px;
+    }
+
+    &:disabled {
+        opacity: 0.5;
+        pointer-events: none;
+    }
+}
+
+/* Input Button Field (e.g. API key connect/disconnect) */
+.bb-admin-settings-field__input-button {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
+    &-row {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+    }
+
+    &-input {
+        width: 245px;
+        flex-shrink: 0;
+    }
+
+    &-text[type] {
+        @include bb-input-text;
+
+        &:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+    }
+
+    &-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 4px;
+        padding: 6px 16px;
+        font-size: 14px;
+        font-weight: 400;
+        line-height: 20px;
+        color: $bb-text-inverse-color;
+        background-color: $bb-background-brand-primary-color;
+        border: none;
+        border-radius: $bb-border-radius-lg;
+        cursor: pointer;
+        white-space: nowrap;
+        transition: background-color 0.2s ease;
+
+        &:hover {
+            background-color: darken($bb-background-brand-primary-color, 8%);
+        }
+
+        &:focus {
+            outline: 2px solid $bb-background-brand-primary-color;
+            outline-offset: 1px;
+        }
+
+        &:disabled {
+            background-color: $bb-icon-brand-disabled-color;
+            cursor: not-allowed;
+        }
+
+        &--connected {
+            background-color: transparent;
+            color: $bb-text-tertiary-color;
+            border: 1px solid $bb-border-secondary-color;
+
+            &:hover {
+                background-color: $bb-background-primary-color;
+            }
+        }
+
+        // Icon-only variant: compact square button with only an icon.
+        &--icon-only {
+            width: 32px;
+            height: 32px;
+            padding: 0;
+            border-radius: $bb-border-radius-md;
+            background-color: transparent;
+            color: $bb-text-tertiary-color;
+            border: 0.5px solid $bb-border-secondary-color;
+            flex-shrink: 0;
+
+            &:hover {
+                background-color: $bb-background-primary-color;
+                color: $bb-text-color;
+                border-color: $bb-border-brand-primary-color;
+            }
+
+            &:disabled {
+                background-color: transparent;
+                opacity: 0.5;
+            }
+
+            .bb-admin-settings-field__input-button-icon {
+                font-size: 16px;
+                line-height: 1;
+                display: inline-block;
+            }
+        }
+    }
+
+    &-icon {
+
+        &.is-spinning {
+            animation: bb-admin-spin 0.9s linear infinite;
+        }
+    }
+
+    &-error {
+        color: $bb-error-color;
+        font-size: 13px;
+        line-height: 18px;
+        margin: 0;
+    }
+
+    &-warning {
+        color: $bb-text-warning-primary-color;
+        font-size: 13px;
+        line-height: 18px;
+        margin: 0;
+    }
+}
+
+@keyframes bb-admin-spin {
+
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Password Field (e.g. API credentials with show/hide toggle) */
+.bb-admin-settings-field__password {
+    display: flex;
+    align-items: center;
+    position: relative;
+    width: 100%;
+    max-width: 500px;
+
+    &-input[type] {
+        @include bb-input-text;
+
+        &:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+    }
+
+    &-toggle {
+        position: absolute;
+        right: 4px;
+        top: 50%;
+        transform: translateY(-50%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 28px;
+        height: 28px;
+        padding: 0;
+        background: none;
+        border: none;
+        cursor: pointer;
+        color: $bb-text-tertiary-color;
+        border-radius: $bb-border-radius-sm;
+        transition: color 0.2s ease;
+
+        &:hover {
+            color: $bb-text-color;
+        }
+
+        &--visible {
+            color: $bb-text-secondary-color;
+        }
+
+        [class*="bb-icon"] {
+            color: $bb-icon-tertiary-color;
+            font-size: 20px;
+        }
+    }
+}
+
+.bb-admin-settings-form__field.bb-admin-settings-form__field--select-full {
+
+    .components-input-control__container {
+        background-color: transparent;
+    }
+
+    .components-select-control {
+        max-width: 500px;
+    }
+
+    .components-select-control__input {
+        max-width: 500px;
+        width: 100%;
+    }
+}
+
+.bb-admin-settings-form__field.bb-admin-settings-form__field--input-full {
+
+    .components-text-control__input {
+        max-width: 500px;
+        width: 100%;
+    }
+}
+
+// Appearance → General: Site Name input & Site Layout select render at full
+// content-column width (no 500px cap). Scoped so it does NOT affect the
+// shared `--input-full` / `--select-full` modifiers used elsewhere.
+.bb-admin-settings-form__field.bb-admin-settings-form__field--custom-full-width {
+
+    .bb-admin-settings-form__field-input-wrapper {
+        width: 100%;
+
+        > div {
+            width: 100%;
+        }
+    }
+
+    .components-base-control,
+    .components-select-control,
+    .components-text-control__input {
+        max-width: none;
+        width: 100%;
+    }
+
+    .components-base-control .components-select-control__input {
+        max-width: none;
+        width: 100%;
+    }
+}
+
+/* Extension List Field */
+.bb-extension-list {
+
+    &__items {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    &__item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    &__item-remove {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 0;
+        color: $bb-text-tertiary-color;
+        transition: color 0.2s ease;
+
+        i {
+            font-size: 20px;
+            line-height: 1;
+        }
+
+        &:hover {
+            color: $bb-error-color;
+        }
+
+        &:focus {
+            outline: none;
+        }
+
+        &:disabled {
+            opacity: 0.5;
+            pointer-events: none;
+        }
+    }
+
+    &__add-btn {
+        @include bb-button-primary;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        margin-top: 16px;
+
+        i {
+            font-size: 16px;
+            line-height: 1;
+        }
+    }
+}
+
+/* Document Extensions Modal Overlay */
+.bb-extension-modal-overlay {
+    z-index: 100100;
+    background-color: $bb-overlay-color;
+    backdrop-filter: blur(1px);
+}
+
+/* Add/Edit Extension form styles (used inside portaled modals) */
+.bb-extension-modal {
+
+    &.components-modal__frame {
+        max-width: 640px;
+    }
+
+    &__body {
+        padding: 24px;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    &__field {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+    }
+
+    &__label {
+        color: $bb-text-secondary-color;
+        font-size: 13px;
+        font-weight: 500;
+        line-height: 1;
+        padding: 3px 0;
+    }
+
+    &__required {
+        color: $bb-error-color;
+        margin-left: 2px;
+    }
+
+    &__field-hint {
+        color: $bb-text-tertiary-color;
+        font-size: 12px;
+        line-height: 16px;
+        margin: 0;
+    }
+
+    .components-base-control {
+        margin-bottom: 0;
+    }
+
+    .components-text-control__input {
+        background-color: $bb-background-primary-color;
+        border: 0.5px solid $bb-border-secondary-color;
+        border-radius: $bb-border-radius-md;
+        padding: 7px 8px;
+        font-size: 13px;
+        color: $bb-text-color;
+        line-height: 1.5;
+        box-shadow: none;
+        min-height: auto;
+
+        &:focus {
+            border-color: $bb-border-brand-primary-color;
+            box-shadow: none;
+            outline: none;
+        }
+
+        &::placeholder {
+            color: $bb-text-disabled-color;
+        }
+    }
+
+    .components-textarea-control__input {
+        background-color: $bb-background-primary-color;
+        border: 0.5px solid $bb-border-secondary-color;
+        border-radius: $bb-border-radius-md;
+        padding: 8px;
+        font-size: 13px;
+        color: $bb-text-color;
+        line-height: 1.5;
+        box-shadow: none;
+        resize: vertical;
+        min-height: 72px;
+
+        &:focus {
+            border-color: $bb-border-brand-primary-color;
+            box-shadow: none;
+            outline: none;
+        }
+
+        &::placeholder {
+            color: $bb-text-disabled-color;
+        }
+    }
+
+    &__icon-select {
+        position: relative;
+    }
+
+    &__icon-dropdown {
+        background-color: $bb-background-primary-color;
+        border: 0.5px solid $bb-border-tertiary-color;
+        border-radius: $bb-border-radius-md;
+        padding: 7px 8px;
+        font-size: 13px;
+        color: $bb-text-color;
+        line-height: 18px;
+        width: 100%;
+        box-sizing: border-box;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        min-width: 120px;
+
+        i {
+            font-size: 20px;
+            color: $bb-icon-secondary-color;
+            flex-shrink: 0;
+        }
+
+        &:focus {
+            border-color: $bb-border-brand-primary-color;
+            box-shadow: none;
+            outline: none;
+        }
+
+        &.is-open {
+            border-color: $bb-border-brand-primary-color;
+        }
+    }
+
+    &__icon-dropdown-label {
+        flex: 1 0 0;
+        font-size: 13px;
+        line-height: 18px;
+        color: $bb-text-color;
+    }
+
+    &__icon-dropdown-chevron {
+        font-size: 16px !important;
+        color: $bb-icon-secondary-color !important;
+    }
+
+    &__icon-dropdown-list {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        z-index: 10;
+        background-color: $bb-background-base-color;
+        border: 0.5px solid $bb-border-secondary-color;
+        border-radius: $bb-border-radius-md;
+        box-shadow: 0px 4px 12px 0px rgba(0, 0, 0, 0.12);
+        margin-top: 4px;
+        max-height: 200px;
+        overflow-y: auto;
+        padding: 4px;
+    }
+
+    &__icon-dropdown-item {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        padding: 6px 8px;
+        cursor: pointer;
+        border-radius: $bb-border-radius-sm;
+        font-size: 13px;
+        line-height: 18px;
+        color: $bb-text-color;
+
+        i {
+            font-size: 20px;
+            color: $bb-icon-secondary-color;
+            flex-shrink: 0;
+        }
+
+        &:hover {
+            background-color: $bb-background-primary-color;
+        }
+
+        &.is-selected {
+            background-color: $bb-background-primary-color;
+            font-weight: 500;
+        }
+    }
+
+    &__mime-row {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+
+        .components-base-control {
+            flex: 1;
+        }
+    }
+
+    &__mime-checker-toggle.components-button {
+        white-space: nowrap;
+        border: 1px solid $bb-border-brand-primary-color !important;
+        border-radius: $bb-border-radius-lg;
+        background: transparent !important;
+        color: $bb-text-brand-primary-color !important;
+        font-size: 14px;
+        font-weight: 400;
+        line-height: 20px;
+        padding: 6px 16px;
+        box-shadow: none !important;
+
+        &:hover {
+            background-color: rgba($bb-background-brand-primary-color, 0.05) !important;
+            box-shadow: none !important;
+        }
+
+        &:focus {
+            box-shadow: none !important;
+            outline: none;
+        }
+    }
+
+    &__mime-checker {
+        border: 0.5px solid $bb-border-tertiary-color;
+        border-radius: $bb-border-radius-xl;
+        padding: 8px 16px 16px;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    &__mime-checker-title {
+        font-size: 14px;
+        font-weight: 500;
+        color: $bb-text-color;
+        line-height: 20px;
+        padding: 6px 0;
+        margin: 0;
+    }
+
+    &__mime-checker-desc {
+        font-size: 13px;
+        color: $bb-text-secondary-color;
+        margin: 0;
+        line-height: 18px;
+    }
+
+    &__mime-checker-upload-row {
+        display: inline-flex;
+        align-items: center;
+        align-self: flex-start;
+        gap: 8px;
+        background-color: $bb-background-primary-color;
+        border: 0.5px solid $bb-border-primary-color;
+        border-radius: $bb-border-radius-lg;
+        padding: 8px 24px 8px 8px;
+    }
+
+    &__mime-checker-upload-btn {
+        white-space: nowrap;
+        border: 0.5px solid $bb-border-tertiary-color;
+        border-radius: $bb-border-radius-md;
+        background: transparent;
+        color: $bb-text-color;
+        font-size: 13px;
+        font-weight: 400;
+        line-height: 18px;
+        padding: 3px 8px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+
+        i {
+            font-size: 14px;
+        }
+    }
+
+    &__mime-checker-upload-name {
+        font-size: 11px;
+        color: $bb-text-color;
+        line-height: 16px;
+    }
+
+    &__mime-checker-file-hidden {
+        display: none;
+    }
+
+    &__mime-checker-btn.components-button {
+        font-size: 14px;
+        font-weight: 400;
+        line-height: 20px;
+        padding: 6px 16px;
+        border: none !important;
+        border-radius: $bb-border-radius-lg;
+        color: $bb-text-inverse-color !important;
+        background-color: $bb-background-brand-primary-color !important;
+        box-shadow: none !important;
+        align-self: flex-start;
+
+        &:hover {
+            background-color: darken($bb-background-brand-primary-color, 5%) !important;
+            color: $bb-text-inverse-color !important;
+            box-shadow: none !important;
+        }
+
+        &:focus {
+            box-shadow: none !important;
+            outline: none;
+            color: $bb-text-inverse-color !important;
+            background-color: $bb-background-brand-primary-color !important;
+        }
+
+        &:active {
+            background-color: darken($bb-background-brand-primary-color, 8%) !important;
+            box-shadow: none !important;
+            color: $bb-text-inverse-color !important;
+        }
+    }
+
+    &__mime-checker-result {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding-top: 12px;
+        border-top: 1px solid $bb-border-secondary-color;
+        flex-wrap: wrap;
+    }
+
+    &__mime-checker-result-label {
+        font-size: 13px;
+        font-weight: 400;
+        color: $bb-text-secondary-color;
+    }
+
+    &__mime-checker-result-value {
+        font-size: 13px;
+        font-weight: 500;
+        color: $bb-text-color;
+        background-color: $bb-background-primary-color;
+        padding: 4px 8px;
+        border-radius: $bb-border-radius-md;
+        border: 0.5px solid $bb-border-secondary-color;
+        font-family: inherit;
+        line-height: 18px;
+    }
+
+    &__mime-checker-use-btn.components-button {
+        font-size: 14px;
+        font-weight: 400;
+        line-height: 20px;
+        padding: 6px 16px;
+        border: none !important;
+        border-radius: $bb-border-radius-lg;
+        color: $bb-text-inverse-color !important;
+        background-color: $bb-background-brand-primary-color !important;
+        box-shadow: none !important;
+
+        &:hover {
+            background-color: darken($bb-background-brand-primary-color, 5%) !important;
+            color: $bb-text-inverse-color !important;
+            box-shadow: none !important;
+        }
+
+        &:focus {
+            box-shadow: none !important;
+            outline: none;
+            color: $bb-text-inverse-color !important;
+            background-color: $bb-background-brand-primary-color !important;
+        }
+
+        &:active {
+            background-color: darken($bb-background-brand-primary-color, 8%) !important;
+            box-shadow: none !important;
+            color: $bb-text-inverse-color !important;
+        }
+    }
+
+}
+
+/* Document Extensions Manage Modal — extends .bb-admin-settings-modal */
+.bb-doc-extensions-modal {
+
+    &.components-modal__frame {
+        max-width: 720px;
+        max-height: 80vh;
+    }
+
+    .components-modal__content {
+        overflow-y: auto;
+    }
+
+    &__body {
+        padding: 0 0 16px;
+    }
+
+    &__list {
+        display: flex;
+        flex-direction: column;
+        max-height: 400px;
+        overflow-y: auto;
+    }
+
+    &__item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 4px 8px;
+        margin: 8px 24px;
+        border: 1px solid transparent;
+        border-radius: $bb-border-radius-lg;
+
+        &:hover {
+            border-color: $bb-border-secondary-color;
+            background-color: $bb-background-primary-color;
+        }
+
+        &--disabled {
+            opacity: 0.6;
+        }
+
+        &--editing {
+            padding: 16px 24px;
+            background-color: $bb-background-primary-color;
+
+            &:hover {
+                background-color: $bb-background-primary-color;
+            }
+        }
+    }
+
+    &__checkbox {
+        display: flex;
+        align-items: center;
+        flex-shrink: 0;
+
+        .components-base-control {
+            margin-bottom: 0;
+        }
+
+        .components-base-control__field {
+            margin-bottom: 0;
+        }
+
+        .components-checkbox-control__input-container {
+            margin-right: 0;
+        }
+    }
+
+    &__ext-name {
+        font-size: 14px;
+        font-weight: 500;
+        color: $bb-text-color;
+        min-width: 60px;
+        flex-shrink: 0;
+    }
+
+    &__ext-icon {
+        font-size: 22px;
+        color: $bb-icon-tertiary-color;
+        flex-shrink: 0;
+        width: 24px;
+        text-align: center;
+    }
+
+    &__ext-desc {
+        flex: 1;
+        font-size: 13px;
+        font-weight: 400;
+        color: $bb-text-tertiary-color;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    &__ext-actions {
+        flex-shrink: 0;
+
+        .components-dropdown-menu__toggle {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+            min-width: auto;
+            height: auto;
+            color: $bb-icon-color;
+            padding: 4px;
+            border: 1px solid transparent;
+            border-radius: $bb-border-radius-md;
+
+            i {
+                font-size: 24px;
+                line-height: 1;
+                font-weight: 700;
+            }
+
+            &:hover,
+            &:focus,
+            &.is-opened {
+                color: $bb-text-color;
+                background: $bb-background-primary-hover-color;
+                border-color: $bb-border-secondary-color;
+                box-shadow: none;
+            }
+
+            .dashicon,
+            svg:not(:first-child) {
+                display: none;
+            }
+        }
+    }
+
+    &__ext-ellipsis {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: $bb-icon-tertiary-color;
+        padding: 0;
+        min-width: 24px;
+
+        i {
+            font-size: 18px;
+            line-height: 1;
+            font-weight: 700;
+        }
+    }
+
+    &__edit-form {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        width: 100%;
+    }
+
+    &__edit-field {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+
+        .components-text-control__input {
+            background-color: $bb-background-base-color;
+            border: 0.5px solid $bb-border-secondary-color;
+            border-radius: $bb-border-radius-md;
+            padding: 7px 8px;
+            font-size: 13px;
+            color: $bb-text-color;
+            line-height: 1.5;
+            box-shadow: none;
+            min-height: auto;
+
+            &:focus {
+                border-color: $bb-border-brand-primary-color;
+                box-shadow: none;
+                outline: none;
+            }
+        }
+    }
+
+    &__edit-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 8px;
+    }
+
+    &__add-btn-wrap {
+        padding: 16px 24px 0;
+        border-top: 1px solid $bb-border-secondary-color;
+    }
+
+    &__add-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 8px 16px;
+        font-size: 13px;
+        font-weight: 500;
+        line-height: 18px;
+        color: $bb-text-inverse-color;
+        background-color: $bb-background-brand-primary-color;
+        border: none;
+        border-radius: $bb-border-radius-lg;
+        cursor: pointer;
+        transition: opacity 0.2s ease;
+
+        i {
+            font-size: 16px;
+            line-height: 1;
+        }
+
+        &:hover {
+            opacity: 0.9;
+        }
+
+        &:disabled {
+            opacity: 0.5;
+            pointer-events: none;
+        }
+    }
+
+}
+
+/* Add/Edit Extension modal (portaled to body, rendered over the Manage modal) */
+.bb-extension-modal-overlay--nested {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 100200;
+    background-color: $bb-overlay-color;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.bb-extension-modal--nested {
+    position: relative;
+    z-index: 100201;
+    max-width: 640px;
+    width: 100%;
+    background: $bb-background-base-color;
+    border-radius: $bb-border-radius-2xl;
+    border: none;
+    box-shadow: 0px 4px 24px 0px rgba(0, 0, 0, 0.16);
+    overflow: visible;
+
+    &__header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-bottom: 1px solid $bb-border-secondary-color;
+        padding: 16px 16px 16px 24px;
+        background: $bb-background-base-color;
+        border-radius: $bb-border-radius-2xl $bb-border-radius-2xl 0 0;
+
+        h1 {
+            color: $bb-text-color;
+            font-size: 18px;
+            font-weight: 500;
+            line-height: 1;
+            margin: 0;
+            padding: 0;
+        }
+    }
+
+    .bb-extension-modal__body {
+        background: $bb-background-base-color;
+    }
+
+    .bb-extension-modal__error {
+        color: $bb-error-color;
+        font-size: 13px;
+        line-height: 18px;
+        padding: 0 16px;
+    }
+
+    .bb-admin-settings-modal__footer,
+    .bb-extension-modal__footer {
+        border-radius: 0 0 $bb-border-radius-2xl $bb-border-radius-2xl;
+    }
+
+    &__close {
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 4px;
+        color: $bb-text-secondary-color;
+        font-size: 20px;
+        line-height: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        &:hover {
+            color: $bb-text-color;
+        }
+    }
+}
+
+.bb-admin-settings-field__checkbox-list {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+
+    .bb-admin-settings-form__field-description {
+        margin: 0 0 8px 0;
+    }
+}
+
+.bb-admin-settings-field__checkbox-list-cards {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    max-width: 656px;
+    margin-top: 10px;
+}
+
+.bb-admin-settings-field__checkbox-list-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 0;
+    border-bottom: 0.5px solid $bb-border-secondary-color;
+
+    &:last-child {
+        border-bottom: none;
+    }
+
+    > i {
+        font-size: 20px;
+        color: $bb-icon-tertiary-color;
+        cursor: grab;
+        flex-shrink: 0;
+    }
+
+    .components-toggle-control {
+        margin-bottom: 0;
+        flex: 1;
+
+        .components-base-control__field {
+            display: flex;
+            flex-direction: row-reverse;
+            justify-content: space-between;
+            align-items: center;
+        }
+    }
+
+    &.is-dragging {
+        background: #fff;
+        border-radius: 4px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+        border-bottom: 1px solid $bb-border-secondary-color;
+    }
+}
+
+.bb-admin-settings-field__checkbox-list-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.bb-admin-settings-field__checkbox-list-badge {
+    font-size: 11px;
+    line-height: 1;
+    padding: 4px 8px;
+    border-radius: 4px;
+    background-color: $bb-text-color;
+    color: $bb-text-inverse-color;
+    white-space: nowrap;
+}
+
+// "Hidden" status tag rendered next to a navigation-order item's label when
+// its toggle is off (Group Navigation Order / Profile Navigation Order
+// screens). Matches Figma `statusTag` (state: normal, size: medium) from
+// Backend-Settings-2.0 node 2611-123377 — lighter pill, distinct from the
+// `__checkbox-list-badge` used for static "Pro" / "Coming Soon" badges.
+.bb-admin-settings-field__checkbox-list-status-tag {
+    display: inline-flex;
+    align-items: center;
+    flex-shrink: 0;
+    padding: 4px 8px;
+    background-color: $bb-background-secondary-color;
+    border: 0.5px solid $bb-border-tertiary-color;
+    border-radius: $bb-border-radius-full;
+    color: $bb-text-color;
+    font-size: 11px;
+    font-weight: 500;
+    line-height: 1.45;
+    white-space: nowrap;
+}
+
+.bb-admin-settings-field__checkbox-list-label-text {
+    min-width: 30%;
+}
+
+.bb-pro-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 8px;
+    border: 1px solid #e0623d;
+    border-radius: $bb-border-radius-full;
+    background: linear-gradient(100deg, #F7DFDB 4.86%, #D8D6FF 91.52%);
+
+
+    margin: 0 8px 0 16px;
+
+    span {
+        font-size: 11px;
+        font-weight: 500;
+        line-height: 16px;
+        color: $bb-text-secondary-color;
+    }
+
+    [class*="bb-icon"] {
+        font-size: 16px;
+        line-height: 1;
+        font-weight: 400;
+        margin-right: 4px;
+    }
+
+    &__play-link {
+        display: inline-flex;
+        vertical-align: middle;
+        text-decoration: none;
+        // Button reset — `__play-link` is rendered as a <button> when the
+        // field-upgrades catalog provides modal copy, and as an <a> when
+        // pro_notice falls back to a docs link. Both variants must look
+        // identical, so strip native button chrome here.
+        background: transparent;
+        border: 0;
+        padding: 0;
+        margin: 0;
+        cursor: pointer;
+        line-height: 0;
+
+        [class*="bb-icon"] {
+            color: $bb-icon-secondary-color;
+            font-size: 16px;
+            font-weight: 400;
+            padding: 4px;
+            background-color: $bb-background-color;
+            border: 1px solid $bb-border-secondary-color;
+            border-radius: $bb-border-radius-full;
+        }
+
+        &:focus {
+            outline: none;
+            box-shadow: none;
+        }
+    }
+}
+
+// Section-level PRO badge (e.g. UPGRADE PRO in section header).
+// Rendered as <button>, <a>, or <span> depending on whether the catalog
+// provides a modal payload, a fallback link_url, or neither — the visual
+// must stay identical across all three element types, so a button reset
+// is bundled here.
+.bb-admin-feature-settings__section-pro-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 8px;
+    border: 1px solid #e0623d;
+    border-radius: $bb-border-radius-full;
+    background: linear-gradient(100deg, rgba(224, 98, 61, 0.10) 4.86%, rgba(62, 52, 255, 0.10) 91.52%);
+    text-decoration: none;
+    cursor: pointer;
+    margin: 0;
+    font-family: inherit;
+
+    // Button reset — applies only when the badge is rendered as a <button>.
+    &:is(button) {
+        // Neutralize default button chrome so the <button> variant looks
+        // identical to the <a> and <span> variants.
+        appearance: none;
+    }
+
+    span {
+        font-size: 11px;
+        font-weight: 500;
+        line-height: 16px;
+        color: $bb-text-secondary-color;
+    }
+
+    [class*="bb-icon"] {
+        font-size: 16px;
+        line-height: 1;
+        font-weight: 400;
+        margin-right: 4px;
+    }
+
+    &:focus {
+        outline: none;
+        box-shadow: none;
+    }
+}
+
+.bb-admin-settings-form__field--pro-locked {
+
+    .bb-admin-settings-form__field-content {
+        opacity: 0.6;
+        pointer-events: none;
+        user-select: none;
+    }
+}
+
+.bb_emotions_item {
+    height: 96px;
+    width: 96px;
+    background: $bb-background-base-color;
+    border: 0.5px solid $bb-border-secondary-color;
+    border-radius: $bb-border-radius-lg;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+
+    &.is-disabled {
+        opacity: 0.5;
+        pointer-events: none;
+    }
+
+    .bb_emotions_icon {
+        height: 64px;
+        background: $bb-background-primary-color;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+
+        i.bb-icon-rf {
+            font-size: 32px;
+            line-height: 1;
+        }
+
+        img {
+            width: 32px;
+            height: 32px;
+            object-fit: contain;
+        }
+
+        .bbpro-icon-emoji {
+            font-size: 32px;
+            line-height: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            img {
+                width: 32px;
+                height: 32px;
+            }
+        }
+    }
+
+    .bb_emotions_footer {
+        min-height: 32px;
+        background: $bb-background-base-color;
+        border-top: 0.5px solid $bb-border-secondary-color;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 4px 8px;
+        gap: 4px;
+        box-sizing: border-box;
+
+        span {
+            font-size: 13px;
+            font-weight: 400;
+            line-height: 18px;
+            color: $bb-text-color;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            flex: 1;
+        }
+
+        .bb_emotions_actions {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+
+            // WordPress DropdownMenu toggle button
+            .components-dropdown-menu__toggle {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background: none;
+                border: none;
+                cursor: pointer;
+                padding: 0;
+                min-width: auto;
+                height: auto;
+                color: $bb-icon-tertiary-color;
+
+                i {
+                    font-size: 16px;
+                    line-height: 1;
+                    font-weight: 700;
+                }
+
+                &:hover,
+                &:focus,
+                &.is-pressed {
+                    color: $bb-text-color;
+                    background: none;
+                    box-shadow: none;
+                }
+
+                // Hide default WordPress icon if present
+                .dashicon,
+                svg:not(:first-child) {
+                    display: none;
+                }
+            }
+        }
+    }
+
+    &.bb_emotions_item_action {
+        background: $bb-background-primary-color;
+        cursor: pointer;
+        transition: background-color 0.2s ease;
+
+        &:hover {
+            background: $bb-background-primary-color;
+        }
+
+        .bb_emotions_add_new {
+            width: 100%;
+            height: 100%;
+            background: none;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+
+            i {
+                font-size: 32px;
+                line-height: 1;
+                color: $bb-text-tertiary-color;
+            }
+        }
+
+        &:hover .bb_emotions_add_new i {
+            color: $bb-text-color;
+        }
+    }
+}
+
+.bb-reaction-button-field {
+    display: flex;
+}
+
+.bb-reaction-button-card {
+    width: 96px;
+    height: 96px;
+    background: $bb-background-base-color;
+    border: 0.5px solid $bb-border-secondary-color;
+    border-radius: $bb-border-radius-lg;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+
+    &__preview {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+    }
+
+    &__icon-wrapper {
+        height: 64px;
+        background: $bb-background-primary-color;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    &__icon-btn {
+        background: none;
+        border: none;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0;
+
+        [class*="bb-icon"] {
+            font-size: 32px;
+            line-height: 1;
+            color: $bb-text-color;
+        }
+
+        &:hover i {
+            color: $bb-icon-color;
+        }
+    }
+
+    &__footer {
+        min-height: 32px;
+        background: $bb-background-base-color;
+        border-top: 0.5px solid $bb-border-secondary-color;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 4px 8px;
+        gap: 4px;
+        box-sizing: border-box;
+
+        input[type="text"] {
+            font-size: 13px;
+            font-weight: 400;
+            line-height: 1;
+            color: $bb-text-color;
+            border: none;
+            background: transparent;
+            padding: 0;
+            margin: 0;
+            outline: none;
+            flex: 1;
+            min-width: 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            min-height: auto;
+
+            &:focus {
+                outline: none;
+                box-shadow: none;
+            }
+
+            &::placeholder {
+                color: $bb-text-tertiary-color;
+            }
+        }
+    }
+
+    &__menu-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 0;
+        flex-shrink: 0;
+        color: $bb-text-tertiary-color;
+
+        // WordPress DropdownMenu toggle button
+        .components-dropdown-menu__toggle {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+            min-width: auto;
+            height: auto;
+            color: $bb-icon-tertiary-color;
+
+            i {
+                font-size: 16px;
+                line-height: 1;
+                font-weight: 700;
+            }
+
+            &:hover,
+            &:focus,
+            &.is-pressed {
+                color: $bb-text-color;
+                background: none;
+                box-shadow: none;
+            }
+
+            // Hide default WordPress icon if present
+            .dashicon,
+            svg:not(:first-child) {
+                display: none;
+            }
+        }
+    }
+}
+
+/* Emotions modal */
+#bbpro_emotion_modal {
+
+    .media-modal-content {
+        background: transparent;
+        box-shadow: none;
+
+        .bbpro-modal-box__header {
+            background-color: $bb-background-base-color;
+            border-bottom: 1px solid $bb-border-secondary-color;
+            border: 1px solid $bb-border-secondary-color;
+            border-radius: $bb-border-radius-xl $bb-border-radius-xl 0 0;
+            padding: 22px 24px;
+
+            h3 {
+                color: $bb-text-color;
+                font-size: 18px;
+                font-weight: 500;
+                line-height: 1;
+            }
+        }
+
+        .bbpro-modal-box__body {
+            height: calc(100% - 115px);
+        }
+
+        .bbpro-modal-box__footer {
+            background-color: $bb-background-base-color;
+            border-top: 1px solid $bb-border-secondary-color;
+            border-radius: 0 0 $bb-border-radius-xl $bb-border-radius-xl;
+            padding: 8px 16px;
+
+            .bbpro_select_icon {
+                font-size: 14px;
+                font-weight: 400;
+                line-height: 18px;
+                color: $bb-text-inverse-color;
+                background-color: $bb-background-brand-primary-color;
+                padding: 8px 16px;
+                border: none;
+                border-radius: $bb-border-radius-lg;
+            }
+        }
+    }
+
+    .media-modal-close {
+        top: 20px;
+        right: 20px;
+        width: auto;
+        height: auto;
+        box-shadow: none;
+
+        .media-modal-icon {
+            display: flex;
+
+            &:before {
+                content: "\e4f6";
+                color: $bb-icon-secondary-color;
+                font-size: 24px;
+                font-family: "bb-icons-rl";
+                font-weight: 400;
+            }
+        }
+
+        &:hover {
+            background-color: $bb-background-primary-color;
+        }
+
+        &:focus {
+            outline: none;
+        }
+    }
+
+    #bbpro-icon-left-section {
+        background-color: $bb-background-base-color;
+        border-right: 1px solid $bb-border-secondary-color;
+
+        .bbpro-icon-filters {
+            border-bottom: 1px solid $bb-border-secondary-color;
+
+            select {
+                @include bb-admin-settings-select;
+
+                &:hover {
+                    color: $bb-text-color;
+                }
+            }
+        }
+    }
+
+    #bbpro-icon-right-section {
+        background-color: $bb-background-base-color;
+    }
+
+    #bbpro_icon_preview {
+
+        h3 {
+            color: $bb-text-color;
+            font-size: 14px;
+            font-weight: 500;
+            line-height: 1;
+        }
+
+        > div[class*="bbpro-new-icon"] {
+
+            input[type="text"] {
+                background-color: $bb-background-primary-color;
+                border: 1px solid $bb-border-secondary-color;
+                color: $bb-text-color;
+                font-size: 13px;
+                font-weight: 400;
+                padding: 2px 8px;
+                border-radius: $bb-border-radius-md;
+            }
+
+            label {
+                color: $bb-text-secondary-color;
+                font-size: 13px;
+                font-weight: 500;
+            }
+
+            .wp-picker-container {
+
+                .wp-color-result {
+                    border-color: $bb-border-secondary-color;
+
+                    span {
+                        background-color: $bb-background-secondary-color;
+                    }
+                }
+
+                .wp-picker-default {
+                    background-color: $bb-background-secondary-color;
+                    border-color: $bb-border-secondary-color;
+                    color: $bb-text-color;
+                    font-size: 13px;
+                    font-weight: 400;
+                    padding: 4px 8px;
+                    border-radius: $bb-border-radius-md;
+                    line-height: 1.8;
+                    min-height: auto;
+                }
+
+                .iris-picker {
+                    background-color: $bb-background-base-color;
+                    border: 1px solid $bb-border-secondary-color;
+                    border-radius: $bb-border-radius-xl;
+                    box-shadow: none;
+
+                    .iris-picker-inner {
+                        background-color: $bb-background-base-color;
+                    }
+
+                    .iris-square,
+                    .iris-slider,
+                    .iris-square-inner,
+                    .iris-palette {
+                        border-radius: $bb-border-radius-xl;
+                    }
+                }
+            }
+        }
+
+        .bbpro-new-icon-text-wrp .bbpro-icon-text-limit {
+            color: $bb-text-tertiary-color;
+        }
+    }
+
+    .bbpro_icon_picker_preview  {
+
+        .icon-picker-preview {
+            background-color: $bb-background-base-color;
+            border: 1px solid $bb-border-secondary-color;
+            border-radius: $bb-border-radius-md;
+            box-shadow: none;
+        }
+    }
+
+    .bbpro-icon-search {
+        position: relative;
+
+        input.bbpro-icon-search-input {
+            background-color: $bb-background-primary-color;
+            border: 1px solid $bb-border-secondary-color;
+            color: $bb-text-color;
+            font-size: 13px;
+            font-weight: 400;
+            padding: 2px 8px 2px 30px;
+            border-radius: $bb-border-radius-md;
+
+            &:focus {
+                outline: none;
+                box-shadow: none;
+                border-color: $bb-border-primary-color;
+            }
+        }
+
+        [class*="bb-icon"] {
+            position: absolute;
+            left: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            padding: 0;
+
+            &:before {
+                content: "\e30c";
+                font-size: 16px;
+                font-family: "bb-icons-rl";
+                line-height: 1;
+                font-weight: 400;
+                color: $bb-icon-tertiary-color;
+            }
+        }
+    }
+
+    .bbpro-dialog-icon-picker a.bbpro-icon {
+        background-color: $bb-background-primary-color;
+        border-radius: $bb-border-radius-md;
+        box-shadow: none;
+        border: 1px solid $bb-border-secondary-color;
+
+        &:after {
+            display: none;
+        }
+
+        .bbpro-icon-title {
+            background-color: $bb-background-base-color;
+            border-top: 1px solid $bb-border-secondary-color;
+            box-shadow: none;
+            border-radius: 0 0 $bb-border-radius-md $bb-border-radius-md;
+
+            span {
+                color: $bb-text-color;
+                font-size: 12px;
+            }
+        }
+
+        .bbpro-icon-emoji {
+            font-size: 4rem;
+            width: 100%;
+            height: calc(100% - 30px);
+            top: 0;
+        }
+
+        img {
+            width: 50px;
+        }
+    }
+
+    .bbpro-icons-list {
+        max-height: calc(100% - 55px);
+
+        .bbpro-icon > i:before {
+            color: $bb-text-color;
+            font-size: 5em;
+        }
+    }
+
+    .bbpro-icon-uploader-main,
+    .bbpro-emojis-list {
+        max-height: calc(100% - 55px);
+        overflow: auto;
+    }
+
+
+}
+
+/* Delete Emotion Modal */
+.bbpro_reaction_delete_confirmation {
+
+    .media-modal-content {
+        background: rgba(0, 0, 0, 0);
+        box-shadow: none;
+    }
+
+    .media-modal-close .media-modal-icon:before {
+        content: "";
+        color: $bb-icon-secondary-color;
+        font-size: 24px;
+        font-family: "bb-icons-rl";
+        font-weight: 400;
+    }
+
+    .bbpro-modal-box__header {
+        background-color: $bb-background-base-color;
+        border-bottom: 1px solid $bb-border-secondary-color;
+        border: 1px solid $bb-border-secondary-color;
+        border-radius: $bb-border-radius-xl $bb-border-radius-xl 0 0;
+        padding: 22px 24px;
+
+        h3 {
+            color: $bb-text-color;
+            font-size: 18px;
+            font-weight: 500;
+            line-height: 1;
+        }
+    }
+
+    .bbpro-modal-box__body {
+        background-color: $bb-background-base-color;
+    }
+
+    .bbpro-modal-box__footer {
+        background-color: $bb-background-base-color;
+        border-top: 1px solid $bb-border-secondary-color;
+        border-radius: 0 0 $bb-border-radius-xl $bb-border-radius-xl;
+        padding: 8px 16px;
+    }
+
+    .bb-pro-reaction-cancel-delete-emotion {
+        background-color: $bb-background-base-color;
+        border-color: $bb-border-secondary-color;
+        color: $bb-text-color;
+        font-size: 13px;
+        font-weight: 400;
+        padding: 4px 8px;
+        border-radius: 8px;
+        line-height: 1.8;
+        min-height: auto;
+
+        &:hover {
+            background-color: $bb-background-secondary-color;
+            border-color: $bb-border-secondary-color;
+            color: $bb-text-color;
+        }
+    }
+
+    .bb-pro-reaction-delete-emotion {
+        font-size: 14px;
+        font-weight: 400;
+        line-height: 18px;
+        color: $bb-text-inverse-color !important;
+        background-color: $bb-background-brand-primary-color !important;
+        padding: 8px 16px;
+        border: none;
+        border-radius: 8px;
+        margin-left: 8px;
+    }
+
+    .bbpro-modal-box_loader {
+        background-color: $bb-background-base-color;
+        margin: 0 -20px;
+        border-radius: 0 0 $bb-border-radius-xl $bb-border-radius-xl;
+
+        .bb-icon-spinner:before {
+            content: "\e66a";
+            font-size: 28px;
+            color: $bb-icon-color;
+            font-family: "bb-icons-rl";
+            font-weight: 400;
+        }
+    }
+}
+
+/* Feature Disabled State */
+.bb-admin-feature-disabled {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: calc(100vh - 130px);
+    padding: 40px 24px;
+    text-align: center;
+
+    &__icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 16px;
+
+        [class*="bb-icon"] {
+            color: $bb-text-secondary-color;
+            font-size: 50px;
+        }
+    }
+
+    &__title {
+        color: $bb-text-color;
+        font-size: 18px;
+        font-weight: 500;
+        line-height: 1.4;
+        margin: 0 0 8px;
+    }
+
+    &__description {
+        color: $bb-text-tertiary-color;
+        font-size: 13px;
+        font-weight: 400;
+        line-height: 1.5;
+        margin: 0 0 24px;
+        max-width: 400px;
+    }
+
+    &__actions {
+
+        .components-button.is-primary {
+            background-color: $bb-background-brand-primary-color;
+            border: none;
+            border-radius: $bb-border-radius-lg;
+            color: $bb-text-inverse-color;
+            font-size: 14px;
+            font-weight: 400;
+            line-height: 20px;
+            padding: 8px 16px;
+            cursor: pointer;
+            transition: opacity 0.2s ease;
+            box-shadow: none;
+
+            &:hover {
+                background-color: $bb-background-brand-primary-color;
+                opacity: 0.9;
+            }
+
+            &:focus {
+                box-shadow: 0 0 0 1px $bb-background-brand-primary-color;
+            }
+        }
+    }
+}
+
+/* Share Platforms Field */
+
+/* Navigation Order (no-label) sections — full-width nav items */
+#section-group_navigation_order,
+#section-profile_navigation_order {
+
+	.bb-admin-settings-form__field--no-label .bb-admin-settings-form__field-content {
+		margin-left: 0;
+	}
+
+	.bb-admin-settings-field__checkbox-list-item:first-child {
+		padding-top: 0;
+	}
+
+	.bb-admin-settings-field__checkbox-list {
+
+		.components-form-toggle {
+			order: 2;
+		}
+
+		&-label {
+			width: 100%;
+		}
+
+		&-badge {
+			color: $bb-text-color;
+			font-size: 11px;
+			margin: 0 auto;
+			padding: 4px 8px;
+			background-color: $bb-background-secondary-color;
+			border: 1px solid $bb-border-tertiary-color;
+			border-radius: $bb-border-radius-full;
+		}
+	}
+}
+
+.bb_share_item {
+    height: 96px;
+    width: 96px;
+    background: $bb-background-base-color;
+    border: 0.5px solid $bb-border-secondary-color;
+    border-radius: $bb-border-radius-lg;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+
+    &_Messenger {
+        color: #447cff;
+    }
+
+    &_Facebook {
+        color: #1877f2;
+    }
+
+    &_X {
+        color: #0C0C0d;
+    }
+
+    &_Linkedin {
+        color: #0076b2;
+    }
+
+    &_Whatsapp {
+        color: #1faf38;
+    }
+
+    .bb_share_icon {
+        height: 64px;
+        background: $bb-background-primary-color;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+
+        [class*="bb-icon"] {
+            font-size: 32px;
+            line-height: 1;
+            font-weight: 500;
+        }
+    }
+
+    .bb_share_footer {
+        min-height: 32px;
+        background: $bb-background-base-color;
+        border-top: 0.5px solid $bb-border-secondary-color;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 4px 8px;
+        gap: 4px;
+        box-sizing: border-box;
+
+        > span {
+            font-size: 12px;
+            font-weight: 400;
+            line-height: 18px;
+            color: $bb-text-color;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            flex: 1;
+            margin: 0;
+        }
+
+        .components-checkbox-control__input-container {
+            margin: 0 4px 0 0;
+        }
+    }
+
+    .bb_share_checkbox {
+        position: absolute;
+        top: 5px;
+        right: 5px;
+    }
+}
+
+/* Custom Select Control */
+.bb-custom-select {
+	position: relative;
+
+	&--disabled {
+		opacity: 0.6;
+		pointer-events: none;
+	}
+
+	&__label {
+		display: block;
+		color: $bb-text-secondary-color;
+		font-size: 13px;
+		font-weight: 500;
+		line-height: 18px;
+		margin-bottom: 8px;
+		text-transform: none;
+	}
+
+	&__trigger {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		width: 100%;
+		min-height: 36px;
+		padding: 6px 8px 6px 12px;
+		background-color: $bb-background-primary-color;
+		border: 1px solid $bb-border-tertiary-color;
+		border-radius: $bb-border-radius-md;
+		color: $bb-text-color;
+		font-size: 13px;
+		font-weight: 500;
+		line-height: 18px;
+		cursor: pointer;
+		box-sizing: border-box;
+		text-align: left;
+		transition: border-color 0.15s ease;
+
+		&:focus {
+			outline: none;
+            border-color: $bb-border-quaternary-color;
+            box-shadow: none;
+		}
+
+		&--open {
+			border-color: $bb-border-tertiary-color;
+		}
+	}
+
+	&__trigger-content {
+		display: flex;
+		align-items: center;
+		gap: 6px;
+		flex: 1;
+		min-width: 0;
+
+		// Sizes ReadyLaunch (`bb-icons-rl-*`) and legacy lined
+		// (`bb-icon-l bb-icon-brand-*`) glyphs identically. Both fonts ship
+		// on Settings 2.0 admin; selecting both substrings keeps icon size
+		// consistent regardless of which font set the option came from.
+		[class*="bb-icons-rl"],
+		.bb-icon-l {
+			font-size: 16px;
+			line-height: 1;
+			color: $bb-icon-secondary-color;
+			flex-shrink: 0;
+
+            &:before {
+                margin: 0;
+            }
+		}
+
+		// Inline-SVG icon fallback (CustomSelectControl renders this when
+		// an option has no BB-font icon, e.g. Flickr / Meetup / Quora / VK
+		// social providers). Match the BB-font icon footprint so the
+		// trigger label aligns the same way regardless of icon source.
+		.bb-custom-select__option-svg {
+			display: inline-flex;
+			align-items: center;
+			justify-content: center;
+			width: 16px;
+			height: 16px;
+			flex-shrink: 0;
+			color: $bb-icon-tertiary-color;
+
+			svg {
+				width: 100%;
+				height: 100%;
+			}
+		}
+	}
+
+	&__trigger-text {
+        color: $bb-text-color;
+        font-size: 13px;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
+
+	&__arrow {
+		font-size: 16px;
+		line-height: 1;
+		color: $bb-icon-tertiary-color;
+		flex-shrink: 0;
+		transition: transform 0.15s ease;
+
+		.bb-custom-select__trigger--open & {
+			transform: rotate(180deg);
+		}
+	}
+
+	&__dropdown {
+		position: absolute;
+		top: calc(100% + 4px);
+		left: 0;
+		width: 100%;
+		min-width: 192px;
+		max-height: 320px;
+        max-width: 225px;
+		overflow-y: auto;
+		background-color: $bb-background-base-color;
+		border: 1px solid $bb-border-secondary-color;
+		border-radius: $bb-border-radius-lg;
+		box-shadow: 0px 4px 12px 0px rgba(0, 0, 0, 0.12);
+		z-index: 100060;
+		padding: 8px 0;
+		box-sizing: border-box;
+
+		// Custom scrollbar.
+		&::-webkit-scrollbar {
+			width: 4px;
+		}
+
+		&::-webkit-scrollbar-track {
+			background: transparent;
+		}
+
+		&::-webkit-scrollbar-thumb {
+			background-color: $bb-background-tertiary-color;
+			border-radius: $bb-border-radius-full;
+		}
+	}
+
+	&__group-title {
+		padding: 10px 8px 10px 16px;
+		color: $bb-text-disabled-color;
+		font-size: 13px;
+		font-weight: 500;
+		line-height: 18px;
+		white-space: nowrap;
+		border-bottom: 0.5px solid $bb-border-primary-color;
+		cursor: default;
+	}
+
+	&__option {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		width: 100%;
+		min-height: 40px;
+		padding: 10px 8px 10px 16px;
+		background: none;
+		border: none;
+		color: $bb-text-tertiary-color;
+		font-size: 13px;
+		font-weight: 500;
+		line-height: 18px;
+		cursor: pointer;
+		text-align: left;
+		box-sizing: border-box;
+
+		// Matches both ReadyLaunch (`bb-icons-rl-*`) and legacy lined
+		// (`bb-icon-l bb-icon-brand-*`) glyphs — see trigger-content above.
+		[class*="bb-icons-rl"],
+		.bb-icon-l {
+			font-size: 20px;
+			line-height: 1;
+			flex-shrink: 0;
+		}
+
+		// Inline-SVG icon fallback for options whose BB-font glyph is
+		// missing (e.g. social-network providers Flickr / Meetup / Quora
+		// / VK). 20×20 matches the BB-font footprint above so the option
+		// label aligns identically across icon sources.
+		.bb-custom-select__option-svg {
+			display: inline-flex;
+			align-items: center;
+			justify-content: center;
+			width: 20px;
+			height: 20px;
+			flex-shrink: 0;
+
+			svg {
+				width: 100%;
+				height: 100%;
+			}
+		}
+
+		&--active,
+		&:hover {
+			background-color: $bb-background-primary-color;
+			color: $bb-text-color;
+		}
+
+		&--selected {
+			color: $bb-text-color;
+		}
+
+		// Disabled option (e.g. a social network already picked in another
+		// row of the same Social Networks field). Not clickable, no hover or
+		// focus highlight — overrides the `&--active, &:hover` rule above so
+		// disabled rows always render in the dimmed neutral state.
+		&--disabled,
+		&--disabled:hover,
+		&--disabled:focus {
+			background-color: transparent;
+			color: $bb-text-tertiary-color;
+			opacity: 0.5;
+			cursor: not-allowed;
+		}
+
+		&:focus {
+			outline: none;
+			background-color: $bb-background-primary-color;
+		}
+	}
+
+	&__option-label {
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+
+	&__help {
+		color: $bb-text-tertiary-color;
+		font-size: 13px;
+		font-weight: 400;
+		line-height: 1.5;
+		margin: 8px 0 0 0;
+	}
+
+    &__type {
+
+        .bb-custom-select__dropdown {
+            top: calc(100% - 20px);
+        }
+    }
+}
+
+/* MediaPickerField — generic wp.media library picker (Appearance logos, OG image) */
+.bb-admin-media-picker {
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+	width: 100%;
+
+	&__preview-area,
+	&__multi-area {
+		display: flex;
+		flex-direction: row;
+		align-items: flex-start;
+		gap: 8px;
+		flex-wrap: wrap;
+	}
+
+	&__preview {
+		width: 184px;
+		height: 56px;
+		border: 1px solid $bb-border-color;
+		border-radius: $bb-border-radius-lg;
+		overflow: hidden;
+		background-color: $bb-background-base-color;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		padding: 8px 16px;
+		box-sizing: border-box;
+		flex-shrink: 0;
+	}
+
+	&__preview-image {
+		max-width: 100%;
+		max-height: 100%;
+		width: auto;
+		height: auto;
+		object-fit: contain;
+		display: block;
+	}
+
+	&__multi-list {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 8px;
+		list-style: none;
+		margin: 0;
+		padding: 0;
+	}
+
+	&__multi-item {
+		width: 80px;
+		height: 80px;
+		border: 1px solid $bb-border-color;
+		border-radius: $bb-border-radius-md;
+		overflow: hidden;
+
+		img {
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
+			display: block;
+		}
+	}
+
+	/* Vertical stack of Replace/Remove buttons on the right of the preview. */
+	&__actions {
+		display: flex;
+		flex-direction: column;
+		gap: 4px;
+		align-items: flex-start;
+	}
+
+	&__btn {
+		display: inline-flex;
+		align-items: center;
+		gap: 6px;
+		padding: 3px 6px;
+		background: $bb-background-primary-color;
+		border: 1px solid $bb-border-color;
+		border-radius: $bb-border-radius-sm;
+		color: $bb-text-color;
+		font-size: 13px;
+		font-weight: 500;
+		line-height: 1.4;
+		cursor: pointer;
+
+        &--remove {
+            background-color: transparent;
+        }
+
+		i {
+			font-size: 13px;
+			line-height: 1;
+		}
+
+		&:disabled {
+			opacity: 0.5;
+			cursor: not-allowed;
+		}
+
+        &:focus {
+            outline: 2px solid $bb-border-quinery;
+        }
+	}
+
+	&__placeholder-area {
+		display: flex;
+
+		&--large {
+			align-items: center;
+			gap: 16px;
+		}
+	}
+
+	&__placeholder {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 184px;
+		height: 56px;
+		background: $bb-background-primary-color;
+		border: 1px dashed $bb-border-primary-color;
+		border-radius: $bb-border-radius-md;
+		color: $bb-icon-tertiary-color;
+
+		i {
+            color: $bb-icon-tertiary-color;
+			font-size: 24px;
+			line-height: 1;
+		}
+
+		&:disabled {
+			opacity: 0.5;
+			cursor: not-allowed;
+		}
+
+		&--large {
+			width: 160px;
+			height: 160px;
+			border-radius: $bb-border-radius-xl;
+			color: $bb-text-tertiary-color;
+
+			i {
+				font-size: 40px;
+			}
+		}
+
+        &:focus {
+            outline: 2px solid $bb-border-quinery;
+        }
+	}
+
+	&__upload-btn {
+		@include bb-button-primary-outline;
+	}
+
+	&--large &__preview {
+		width: 120px;
+		height: 120px;
+		padding: 0;
+		border-radius: 8px;
+	}
+
+	&--large &__preview-image {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+	}
+}
+
+.bb-admin-settings-form__field-content:has(.bb-admin-settings-color-picker) {
+
+    .bb-admin-settings-form__field-group-label {
+        font-size: 13px;
+        margin-bottom: 10px;
+    }
+}
+
+.bb-admin-settings-form__field[data-field-name="bb_rl_dark_logo"] {
+
+    .bb-admin-media-picker__preview:has(img) {
+        background-color: $bb-background-inverse-color;
+    }
+}
+
+.bb-admin-settings-form__field[data-field-name="buddyboss_og_image"] {
+
+    .bb-admin-settings-form__field-group-label {
+        margin-bottom: 12px;
+    }
+
+    .bb-admin-settings-form__field-help-text {
+        padding-bottom: 24px;
+        margin-bottom: 6px;
+        border-bottom: 1px solid $bb-border-secondary-color;
+    }
+}
+
+[data-group="allowed_profile_types"] .bb-admin-settings-form__field-help-text {
+    margin-top: 16px;
+}
+
+// =============================================================================
+// Appearance -> Site SEO -> Social (social_preview field)
+// Mirrors a Facebook/X/LinkedIn share card: optional image, URL, title, desc.
+// =============================================================================
+.bb-admin-social-preview {
+	display: flex;
+	flex-direction: column;
+	background: $bb-background-secondary-color;
+	border-radius: $bb-border-radius-md;
+	overflow: hidden;
+	width: 100%;
+	max-width: 600px;
+
+	&__image {
+		width: 100%;
+		aspect-ratio: 1.91 / 1;
+		background: #e0e0e0;
+		overflow: hidden;
+
+		img {
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
+			display: block;
+		}
+	}
+
+	&__body {
+		display: flex;
+		flex-direction: column;
+		gap: 4px;
+		padding: 16px 20px;
+	}
+
+	&__url {
+		color: $bb-text-tertiary-color;
+		font-size: 13px;
+		line-height: 1.3;
+	}
+
+	&__title {
+		color: $bb-text-color;
+		font-size: 16px;
+		font-weight: 600;
+		line-height: 1.3;
+		word-break: break-word;
+	}
+
+	&__description {
+		color: $bb-text-color;
+		font-size: 14px;
+		line-height: 1.5;
+		word-break: break-word;
+		display: -webkit-box;
+		-webkit-line-clamp: 2;
+		-webkit-box-orient: vertical;
+		overflow: hidden;
+	}
+}
+
+// =============================================================================
+// Appearance -> Menus -> Side (sortable_toggle_list field)
+// =============================================================================
+.bb-admin-sortable-toggle-list {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+
+	&__item {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		padding: 4px 0;
+		background: transparent;
+		border: none;
+		transition: box-shadow 0.15s ease;
+
+		&.is-dragging {
+			background: #fff;
+			box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+			border-radius: $bb-border-radius-md;
+			padding: 8px 12px;
+		}
+	}
+
+	&__handle {
+		cursor: grab;
+		color: $bb-text-tertiary-color;
+		display: inline-flex;
+		align-items: center;
+		font-size: 20px;
+		line-height: 1;
+		flex-shrink: 0;
+        margin-right: 6px;
+
+		&:active {
+			cursor: grabbing;
+		}
+	}
+
+	&__toggle {
+		display: inline-flex;
+		align-items: center;
+		flex-shrink: 0;
+
+		.components-base-control,
+		.components-toggle-control,
+		.components-base-control__field {
+			margin: 0;
+		}
+
+		.components-form-toggle {
+			margin: 0;
+		}
+	}
+
+	&__icon {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		color: $bb-text-secondary-color;
+		font-size: 18px;
+		line-height: 1;
+		flex-shrink: 0;
+	}
+
+	&__label {
+		color: $bb-text-color;
+		font-size: 14px;
+		font-weight: 400;
+		line-height: 1.4;
+	}
+
+	&__empty {
+		color: $bb-text-tertiary-color;
+		font-size: 13px;
+		margin: 0;
+	}
+}
+
+// =============================================================================
+// Appearance -> Menus -> Link (editable_link_list field)
+// =============================================================================
+.bb-admin-editable-link-list {
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+	align-items: flex-start;
+    width: 100%;
+
+	&__list {
+		list-style: none;
+		margin: 0 0 10px;
+		padding: 0;
+		width: 100%;
+		display: flex;
+		flex-direction: column;
+        border-bottom: 1px solid $bb-border-secondary-color;
+	}
+
+	&__item {
+		display: flex;
+		align-items: flex-start;
+		gap: 16px;
+		margin-bottom: 16px;
+		background: transparent;
+	}
+
+	&__handle {
+		cursor: grab;
+		color: $bb-text-tertiary-color;
+		display: inline-flex;
+		align-items: center;
+		font-size: 20px;
+		line-height: 1;
+		flex-shrink: 0;
+		height: 28px;
+
+		&:active {
+			cursor: grabbing;
+		}
+	}
+
+	&__body {
+		flex: 1;
+		min-width: 0;
+		display: flex;
+		flex-direction: column;
+		gap: 2px;
+	}
+
+	&__title-row {
+		display: inline-flex;
+		align-items: center;
+		gap: 6px;
+	}
+
+	&__title-icon {
+		color: $bb-icon-color;
+		font-size: 16px;
+		line-height: 1;
+	}
+
+	&__title {
+		color: $bb-text-color;
+		font-size: 14px;
+		font-weight: 500;
+		line-height: 1.4;
+	}
+
+	&__url {
+		color: $bb-link-color;
+		font-size: 13px;
+		line-height: 1.4;
+		text-decoration: none;
+		word-break: break-all;
+
+		&:hover,
+		&:focus {
+			color: $bb-link-color;
+			text-decoration: underline;
+		}
+	}
+
+	&__actions {
+		display: inline-flex;
+		align-items: center;
+		gap: 2px;
+		flex-shrink: 0;
+		margin-left: 6px;
+	}
+
+	&__action-btn {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 28px;
+		height: 28px;
+		padding: 0;
+		border: none;
+		background: transparent;
+		color: $bb-icon-secondary-color;
+		cursor: pointer;
+		font-size: 16px;
+		line-height: 1;
+		transition: background-color 0.15s ease, color 0.15s ease;
+
+		&:disabled {
+			opacity: 0.5;
+			cursor: not-allowed;
+		}
+	}
+
+	&__add {
+		@include bb-button-primary;
+	}
+
+	&__modal.components-modal__frame {
+		max-width: 680px;
+	}
+}
+
+// =============================================================================
+// Appearance -> Site SEO -> SEO (seo_preview field)
+// =============================================================================
+.bb-admin-seo-preview {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+	padding: 16px;
+	background: $bb-background-primary-hover-color;
+	border-radius: $bb-border-radius-xl;
+	width: 100%;
+    box-sizing: border-box;
+
+	&__site-row {
+		display: flex;
+		align-items: center;
+		gap: 12px;
+	}
+
+	&__icon {
+		flex-shrink: 0;
+		width: 40px;
+		height:40px;
+		border-radius: 50%;
+		object-fit: cover;
+		background: $bb-background-brand-primary-color;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+
+		&--placeholder {
+			color: #fff;
+			font-size: 14px;
+			font-weight: 600;
+			line-height: 1;
+		}
+	}
+
+	&__site-info {
+		display: flex;
+		flex-direction: column;
+		line-height: 1.3;
+		min-width: 0;
+	}
+
+	&__site-name {
+		color: $bb-text-color;
+		font-size: 16px;
+		font-weight: 500;
+	}
+
+	&__site-url {
+		color: $bb-text-tertiary-color;
+		font-size: 13px;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
+
+	&__title {
+		color: #1a0dab;
+		font-size: 18px;
+		font-weight: 500;
+		line-height: 1.3;
+		word-break: break-word;
+	}
+
+	&__description {
+		color: $bb-text-secondary-color;
+		font-size: 14px;
+		line-height: 1.4;
+		word-break: break-word;
+		display: -webkit-box;
+		-webkit-line-clamp: 2;
+		-webkit-box-orient: vertical;
+		overflow: hidden;
+        margin-top: -4px;
+	}
+}
+
+.bb-admin-settings-form__field[data-field-name="buddyboss_seo_description"] .bb-admin-settings-form__field-description {
+    padding-bottom: 24px;
+    margin-bottom: 14px;
+    border-bottom: 1px solid $bb-border-secondary-color;
+}
+
+// =============================================================================
+// Appearance -> Site SEO -> per-template Available Tags reference card
+// =============================================================================
+.bb-admin-tags-reference {
+	display: block;
+	width: 100%;
+	padding: 16px;
+	border: 1px solid $bb-border-color;
+	border-radius: $bb-border-radius-lg;
+	box-sizing: border-box;
+
+	&__heading {
+		margin: 0 0 12px;
+		color: $bb-text-tertiary-color;
+		font-size: 14px;
+		font-weight: 500;
+		line-height: 1.3;
+	}
+
+	&__list {
+		list-style: disc;
+		padding-left: 20px;
+		margin: 0;
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
+	}
+
+	&__item {
+		color: $bb-text-color;
+		font-size: 13px;
+		line-height: 1.5;
+        margin-bottom: 0;
+	}
+
+	&__tag {
+        font-family: inherit;
+		display: inline-block;
+		background: $bb-background-primary-hover-color;
+		border-radius: $bb-border-radius-md;
+		padding: 3px 8px;
+		color: $bb-text-color;
+	}
+
+	&__description {
+		color: $bb-text-secondary-color;
+	}
+}
+
+// Empty-state slot used when the feature loaded successfully but no side
+// panels have been registered yet — typical race when the admin enables a
+// feature and clicks Settings before BB_Feature_Loader has included the
+// admin settings file. Auto-retries are firing in the background; this
+// shows a centered spinner + "Activating…" message instead of the
+// misleading "Please select a panel from the sidebar." fallback.
+.bb-admin-feature-settings__no-section--activating {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	gap: 12px;
+	padding: 60px 20px;
+	color: $bb-text-tertiary-color;
+	text-align: center;
+
+	p {
+		margin: 0;
+		font-size: 14px;
+	}
+
+	.components-spinner {
+		margin: 0;
+	}
+}
+
+/* ----------------------------------------------------------------
+   Network Search panel — scoped overrides
+   ----------------------------------------------------------------
+   The Network Search panel (registered in
+   src/bp-core/admin/settings/search/settings-network-search.php as
+   the section ID `network_search_components`) is the only consumer
+   of `child_group_label`, and its toggles always pair with one or
+   more child checkboxes (Albums under Photos, Folders under
+   Documents, Discussion/Tags/Replies under Forums, Activity
+   comments under Activity, Account/Details/Default Data under
+   Members). Figma puts a divider between the toggle row and that
+   children block in every case.
+
+   Scope this rule to `#section-network_search_components` so no
+   other panel that happens to have parent-with-children fields
+   picks up a stray border. */
+#section-network_search_components {
+
+	// Divider between the parent toggle row and its child-fields block.
+	// Provides the visual separation Figma shows between, e.g.,
+	// "Allow photo searching" and "Albums".
+	.bb-admin-settings-form__child-fields {
+		border-top: 1px solid $bb-border-secondary-color;
+		margin-top: 16px;
+		padding-top: 16px;
+	}
+
+	// Restore the divider above the FIRST sub-group label (Account)
+	// inside Members. The shared rule above strips it via &:first-child;
+	// Figma shows the divider between "Allow member searching" and
+	// "Account" exactly like the dividers between Account/Details/
+	// Default Data. Since `__child-fields` already provides a border-top
+	// on the children block, the first-child label can stay
+	// border-less — it now sits flush below the children-block border.
+}
+

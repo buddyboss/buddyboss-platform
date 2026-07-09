@@ -553,7 +553,11 @@ function bp_media_add( $args = '' ) {
 		$media->privacy = $r['privacy'];
 	} elseif ( ! empty( $media->group_id ) ) {
 		$media->privacy = 'grouponly';
-		if ( ! empty( $media->activity_id ) ) {
+		// `BP_Activity_Activity` is loaded by the activity component and is
+		// NOT in the always-on autoload list (src/class-buddypress.php). When
+		// activity is deactivated via Settings, the class is missing and
+		// the unguarded `new` would fatal during a group media upload.
+		if ( ! empty( $media->activity_id ) && bp_is_active( 'activity' ) ) {
 			$activity = new BP_Activity_Activity( $media->activity_id );
 			if ( ! empty( $activity ) && 'activity_comment' === $activity->type ) {
 				$media->privacy = $r['privacy'];
@@ -987,6 +991,59 @@ function bp_media_get_total_group_album_count( $group_id = 0 ) {
 	 * @since BuddyBoss 1.2.0
 	 */
 	return apply_filters( 'bp_media_get_total_group_album_count', (int) $count );
+}
+
+/**
+ * Get album counts including total, media, and video counts.
+ *
+ * @since BuddyBoss 2.20.0
+ *
+ * @param int $album_id Album ID.
+ * @param int $group_id Optional. Group ID if this is a group album.
+ *
+ * @return array Array containing album_total_count, album_media_count, and album_video_count.
+ */
+function bb_media_get_album_counts( $album_id = 0, $group_id = 0 ) {
+	$counts = array(
+		'album_total_count' => 0,
+		'album_media_count' => 0,
+		'album_video_count' => 0,
+	);
+
+	if ( empty( $album_id ) ) {
+		return $counts;
+	}
+
+	// Use bp_media_get to get both photo and video counts efficiently.
+	$media_args = array(
+		'album_id'    => $album_id,
+		'count_total' => true,
+		'video'       => true,
+		'per_page'    => 1,
+	);
+
+	if ( ! empty( $group_id ) ) {
+		$media_args['group_id'] = $group_id;
+	}
+
+	$media_data = bp_media_get( $media_args );
+
+	if ( ! empty( $media_data ) ) {
+		$counts['album_media_count'] = isset( $media_data['total'] ) ? (int) $media_data['total'] : 0;
+		$counts['album_video_count'] = isset( $media_data['total_video'] ) ? (int) $media_data['total_video'] : 0;
+		$counts['album_total_count'] = $counts['album_media_count'] + $counts['album_video_count'];
+	}
+
+	/**
+	 * Filters the album counts.
+	 *
+	 * @since BuddyBoss 2.20.0
+	 *
+	 * @param array $counts   Array of counts (album_total_count, album_media_count, album_video_count).
+	 * @param int   $album_id Album ID.
+	 * @param int   $group_id Group ID.
+	 */
+	return apply_filters( 'bb_media_get_album_counts', $counts, $album_id, $group_id );
 }
 
 /**
@@ -2847,7 +2904,21 @@ function bp_media_album_recursive_li_list( $array, $first = false ) {
 	}
 
 	foreach ( $array as $item ) {
-		$output .= '<li data-id="' . esc_attr( $item['id'] ) . '" data-privacy="' . esc_attr( $item['privacy'] ) . '"><span id="' . esc_attr( $item['id'] ) . '" data-id="' . esc_attr( $item['id'] ) . '">' . esc_html( stripslashes( $item['title'] ) ) . '</span>' . bp_media_album_recursive_li_list( $item['children'], true ) . '</li>';
+		$album_id = isset( $item['id'] ) ? (int) $item['id'] : 0;
+
+		/**
+		 * Filters the album title in the album tree list (move popup).
+		 *
+		 * @since BuddyBoss 2.18.0
+		 *
+		 * @param string $title    The album title.
+		 * @param int    $album_id The album ID.
+		 */
+		$album_title = apply_filters( 'bb_media_album_tree_item_title', $item['title'], $album_id );
+
+		if ( ! empty( $album_title ) ) {
+			$output .= '<li data-id="' . esc_attr( $item['id'] ) . '" data-privacy="' . esc_attr( $item['privacy'] ) . '"><span id="' . esc_attr( $item['id'] ) . '" data-id="' . esc_attr( $item['id'] ) . '">' . esc_html( stripslashes( $album_title ) ) . '</span>' . bp_media_album_recursive_li_list( $item['children'], true ) . '</li>';
+		}
 	}
 	$output .= '</ul>';
 
@@ -3085,7 +3156,12 @@ function bp_media_get_activity_media( $activity_id ) {
 			return;
 		}
 
-		$media_content = bb_media_get_activity_media( $activity_id, array( 'user_id' => false ) );
+		$activity = new BP_Activity_Activity( $activity_id );
+		if ( empty( $activity ) || empty( $activity->id ) ) {
+			return;
+		}
+
+		$media_content = bb_media_get_activity_media( $activity, array( 'user_id' => false ) );
 		if ( empty( $media_content ) ) {
 			return;
 		}
@@ -3880,6 +3956,18 @@ function bb_media_user_can_access( $id, $type, $attachment_id = 0 ) {
 					$can_delete   = true;
 				}
 
+				// Handle edit permission for album seperately.
+				if (
+					'album' === $type &&
+					(
+						bp_current_user_can( 'bp_moderate' ) ||
+						$is_admin ||
+						$media_user_id === $current_user_id
+					)
+				) {
+					$can_edit = true;
+				}
+
 				$the_group = groups_get_group( $media_group_id );
 				if ( $is_member || ( $the_group->id > 0 && $the_group->user_has_access ) ) {
 					$can_view     = true;
@@ -4152,8 +4240,8 @@ function bb_check_valid_giphy_api_key( $api_key = '', $message = false ) {
 		return false;
 	}
 
-	$output = wp_remote_get( 'http://api.giphy.com/v1/gifs/trending?api_key=' . $api_key . '&limit=1' );
-	if ( $output ) {
+	$output = wp_remote_get( 'https://api.giphy.com/v1/gifs/trending?api_key=' . $api_key . '&limit=1' );
+	if ( $output && ! is_wp_error( $output ) ) {
 		$cache[ $api_key ] = $output;
 		if ( $use_caching ) {
 			$cache_expiry = MONTH_IN_SECONDS;
@@ -4162,6 +4250,10 @@ function bb_check_valid_giphy_api_key( $api_key = '', $message = false ) {
 			}
 			set_transient( $cache_key, array( $api_key => $output ), $cache_expiry );
 		}
+	} elseif ( is_wp_error( $output ) ) {
+		$cache[ $api_key ] = $output;
+	} else {
+		return false;
 	}
 	if ( true === $message ) {
 		return $cache[ $api_key ];
@@ -4259,9 +4351,26 @@ function bb_media_get_activity_media( $activity = '', $args = array() ) {
 		$media_args['status'] = bb_media_get_scheduled_status();
 	}
 
-	if ( bp_is_active( 'groups' ) && buddypress()->groups->id === $activity->component ) {
+	// Determine if this is a group context.
+	// For activity comments, check the parent activity's component to ensure
+	// media attached to group activity comments inherit group privacy.
+	$is_group_context = false;
+
+	if ( 'activity_comment' === $activity->type && ! empty( $activity->item_id ) ) {
+		$parent_activity = new BP_Activity_Activity( $activity->item_id );
+		if ( bp_is_active( 'groups' ) && ! empty( $parent_activity->component ) ) {
+			$is_group_context = 'groups' === $parent_activity->component;
+		}
+	} else {
+		$is_group_context = bp_is_active( 'groups' ) && 'groups' === $activity->component;
+	}
+
+	if ( $is_group_context ) {
 		if ( bp_is_group_media_support_enabled() ) {
 			$media_args['privacy'] = array( 'grouponly' );
+			if ( 'activity_comment' === $activity->type ) {
+				$media_args['privacy'][] = 'comment';
+			}
 			if ( ! bp_is_group_albums_support_enabled() ) {
 				$media_args['album_id'] = 'existing-media';
 			}

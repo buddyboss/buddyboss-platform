@@ -1,0 +1,937 @@
+/* ----------------------------------------------------------------
+   Profile Fields Screen
+   ---------------------------------------------------------------- */
+
+.bb-profile-fields-screen {
+	display: flex;
+	flex-direction: column;
+	gap: 16px;
+	max-width: 985px;
+	margin: 0 auto;
+	width: 100%;
+	padding: 32px;
+	box-sizing: border-box;
+}
+
+/* Banner */
+.bb-pf-banner {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	margin-bottom: 8px;
+	background-color: $bb-background-primary-hover-color;
+	padding: 8px;
+	border: 1px solid $bb-border-tertiary-color;
+	border-radius: $bb-border-radius-lg;
+
+	p {
+		font-size: 13px;
+		color: $bb-text-color;
+		margin: 0;
+		line-height: 1.5;
+	}
+
+	&__select-link {
+		display: inline-flex;
+		align-items: center;
+		gap: 2px;
+		font-size: 13px;
+		font-weight: 500;
+		color: $bb-background-inverse-color;
+		text-decoration: none;
+		white-space: nowrap;
+
+		i {
+			font-size: 16px;
+		}
+
+		&:hover {
+			color: $bb-background-inverse-color;
+		}
+	}
+}
+
+/* Loading */
+.bb-pf-loading {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	min-height: 200px;
+	gap: 16px;
+
+	p {
+		font-size: 13px;
+		color: $bb-text-tertiary-color;
+		margin: 0;
+	}
+}
+
+/* ----------------------------------------------------------------
+   Field Set Card
+   ---------------------------------------------------------------- */
+
+.bb-pf-fieldset-card {
+	background: $bb-background-base-color;
+	border: 0.5px solid $bb-border-primary-color;
+	border-radius: $bb-border-radius-xl;
+	margin-bottom: 24px;
+	transition: border-color 0.15s ease;
+	box-shadow: 0 1.5px 1px 0 rgba(0, 0, 0, 0.16);
+
+	&.bb-pf-drag-over {
+		border-color: $bb-border-brand-primary-color;
+		border-style: dashed;
+	}
+}
+
+.bb-pf-fieldset-header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 12px 16px;
+	border-bottom: 1px solid transparent;
+
+	.bb-pf-fieldset-card:not(.collapsed) & {
+		border-bottom-color: $bb-border-primary-color;
+	}
+
+	.bb-pf-fieldset-card--collapsed & {
+		border-bottom-color: transparent !important;
+	}
+}
+
+.bb-pf-fieldset-header-left {
+	display: flex;
+	align-items: center;
+	gap: 4px;
+	min-width: 0;
+	flex: 1;
+
+	h3 {
+		font-size: 18px;
+		font-weight: 600;
+		color: $bb-text-color;
+		margin: 0;
+		line-height: 1.4;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		margin-left: 8px;
+	}
+}
+
+.bb-pf-fieldset-header-right {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	flex-shrink: 0;
+	margin-left: 16px;
+
+	.components-button.is-primary {
+		@include bb-button-primary;
+		padding: 6px 16px;
+		font-size: 14px;
+
+		i {
+			font-size: 16px;
+			margin-right: 4px;
+		}
+	}
+}
+
+/* Drag handle */
+.bb-pf-drag-handle {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 24px;
+	height: 24px;
+	color: $bb-icon-tertiary-color;
+	cursor: grab;
+	flex-shrink: 0;
+	opacity: 0.5;
+	transition: opacity 0.15s ease;
+
+	i {
+		color: $bb-icon-tertiary-color;
+		font-size: 24px;
+	}
+
+	&:hover {
+		opacity: 1;
+	}
+}
+
+/* Toggle button */
+.bb-pf-fieldset-toggle {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	background: none;
+	border: none;
+	cursor: pointer;
+	padding: 4px 0;
+	min-width: 0;
+
+	i {
+		font-size: 16px;
+		color: $bb-icon-tertiary-color;
+		flex-shrink: 0;
+	}
+}
+
+/* ----------------------------------------------------------------
+   Badges
+   ---------------------------------------------------------------- */
+
+.bb-pf-badge-text {
+	color: $bb-text-tertiary-color;
+	font-size: 13px;
+}
+
+.bb-pf-badge {
+	display: inline-flex;
+	align-items: center;
+	padding: 2px 8px;
+	font-size: 11px;
+	font-weight: 500;
+	line-height: 16px;
+	border-radius: $bb-border-radius-full;
+	white-space: nowrap;
+
+	&--repeater {
+		color: $bb-text-warning-primary-color;
+		background: $bb-background-warning-primary-color;
+		border: 0.5px solid $bb-border-warning-secondary-color;
+	}
+
+	&--required {
+		color: $bb-text-positive-primary-color;
+		background: $bb-background-positive-primary-color;
+		border: 0.5px solid $bb-border-positive-secondary-color;
+	}
+
+	&--signup {
+		color: $bb-text-brand-primary-color;
+		background: rgba($bb-primary-color, 0.08);
+		border: 0.5px solid $bb-border-brand-tertiary-color;
+	}
+
+	&--member-type {
+		color: $bb-text-color;
+		background: $bb-background-secondary-color;
+		border: 0.5px solid $bb-border-tertiary-color;
+		max-width: 140px;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
+
+	// Overflow chip (e.g. "+2") rendered when more profile types are
+	// assigned than fit in the row layout. Tighter min-width so the
+	// short count label stays compact.
+	&--overflow {
+		max-width: none;
+		min-width: 28px;
+		justify-content: center;
+		cursor: default;
+	}
+}
+
+/* ----------------------------------------------------------------
+   Field Set Body (Fields List)
+   ---------------------------------------------------------------- */
+
+.bb-pf-fieldset-body {
+	padding: 0 16px 16px;
+}
+
+.bb-pf-field-row {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	padding: 16px 0;
+	border-bottom: 0.5px solid $bb-border-primary-color;
+	transition: background-color 0.15s ease;
+
+	&.bb-pf-drag-over {
+		border-bottom-color: $bb-border-brand-primary-color;
+		border-bottom-width: 2px;
+	}
+
+	&:first-child {
+
+		.bb-ps-field-list  & {
+			padding-top: 0;
+		}
+	}
+}
+
+/* Field left section (drag handle + icon + name + required text) */
+.bb-pf-field-left {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	width: 50%;
+	flex-shrink: 0;
+}
+
+/* Field type icon */
+.bb-pf-field-type-icon {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 32px;
+	height: 32px;
+	background: $bb-background-primary-color;
+	border-radius: $bb-border-radius-full;
+	flex-shrink: 0;
+
+	i {
+		font-size: 20px;
+		color: $bb-icon-tertiary-color;
+	}
+}
+
+/* Field name */
+.bb-pf-field-name {
+	font-size: 14px;
+	font-weight: 500;
+	color: $bb-text-color;
+	line-height: 1.4;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	min-width: 0;
+}
+
+/* Field badge text (e.g. "required") */
+.bb-pf-field-row > .bb-pf-badge-text {
+	flex-shrink: 0;
+	margin-left: 4px;
+}
+
+/* Field badges (pill badges) */
+.bb-pf-field-badges {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	flex: 1;
+	min-width: 0;
+	justify-content: flex-start;
+}
+
+/* Field actions (ellipsis menu) */
+.bb-pf-field-actions {
+	position: relative;
+	flex-shrink: 0;
+	margin-left: auto;
+}
+
+.bb-pf-ellipsis-btn {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 32px;
+	height: 32px;
+	background: none;
+	border: none;
+	border-radius: $bb-border-radius-md;
+	cursor: pointer;
+	color: $bb-icon-tertiary-color;
+	border: 1px solid transparent;
+
+	i {
+		font-size: 24px;
+		font-weight: 700;
+	}
+
+	&:hover {
+		background: $bb-background-secondary-color;
+		border-color: $bb-border-secondary-color;
+	}
+}
+
+/* Dropdown menu */
+.bb-pf-dropdown-menu {
+	position: absolute;
+	top: 100%;
+	right: 0;
+	min-width: 120px;
+	background: $bb-background-base-color;
+	border: 1px solid $bb-border-secondary-color;
+	border-radius: $bb-border-radius-lg;
+	box-shadow: 0px 4px 12px 0px rgba(0, 0, 0, 0.12);
+	z-index: 100;
+	padding: 4px 0;
+
+	button {
+		display: block;
+		width: 100%;
+		padding: 8px 16px;
+		font-size: 13px;
+		font-weight: 500;
+		color: $bb-text-tertiary-color;
+		background: none;
+		border: none;
+		cursor: pointer;
+		text-align: left;
+		line-height: 1.4;
+
+		&:hover {
+			background: $bb-background-primary-hover-color;
+		}
+	}
+
+	.bb-pf-dropdown-delete {
+		color: $bb-error-color;
+
+		&:hover {
+			background: rgba($bb-error-color, 0.06);
+		}
+	}
+}
+
+/* No fields message */
+.bb-pf-no-fields {
+	font-size: 13px;
+	color: $bb-text-tertiary-color;
+	padding: 16px 8px;
+	margin: 0;
+}
+
+/* Add New Field button */
+.bb-pf-add-field-btn.components-button {
+	@include bb-button-primary-outline;
+	font-size: 14px;
+	margin-top: 16px;
+	margin-bottom: 8px;
+
+	i {
+		font-size: 16px;
+		margin-right: 4px;
+	}
+}
+
+/* Add New Field Set button */
+.bb-pf-add-fieldset-btn.components-button {
+	@include bb-button-primary;
+	font-size: 14px;
+	align-self: flex-start;
+
+	i {
+		font-size: 16px;
+		margin-right: 4px;
+	}
+}
+
+
+.bb-admin-profile-fields__add-btn {
+	@include bb-button-primary-outline;
+	display: flex;
+	align-items: center;
+	cursor: pointer;
+	
+	i {
+		font-size: 16px;
+		font-weight: 700;
+		margin-right: 6px;
+	}
+}
+
+/* ----------------------------------------------------------------
+   Field Set Modal (WordPress Modal overrides)
+   ---------------------------------------------------------------- */
+
+.bb-pf-fieldset-modal {
+
+	&.components-modal__frame {
+		max-width: 680px;
+	}
+
+	.bb-pf-modal-footer {
+		justify-content: space-between;
+
+		.bb-pf-modal-footer-right {
+			display: flex;
+			align-items: center;
+			gap: 8px;
+			margin-left: auto;
+		}
+	}
+}
+
+/* ----------------------------------------------------------------
+   Delete Field Set Modal
+   ---------------------------------------------------------------- */
+
+.bb-pf-delete-fieldset-modal {
+
+	&.components-modal__frame {
+		max-width: 500px;
+	}
+
+	&__description {
+		font-size: 13px;
+		line-height: 1.6;
+		color: $bb-text-color;
+		margin: 0 0 16px;
+	}
+
+	.components-checkbox-control {
+		margin-bottom: 0;
+	}
+}
+
+/* ----------------------------------------------------------------
+   Profile Field Modal (Add/Edit Field)
+   ---------------------------------------------------------------- */
+
+.bb-pf-field-modal {
+
+	/* WordPress modal animation ends with transform:scale(1) + fill-mode:forwards,
+	   which creates a containing block that breaks fixed positioning for
+	   draggable items. Override to remove the transform. */
+	&.components-modal__frame {
+		animation: none;
+		position: relative;
+	}
+
+	.components-modal__content {
+		padding: 0;
+	}
+
+	.bb-admin-settings-modal__body {
+
+		.bb-pf-field-member-types {
+			margin-bottom: 20px;
+
+			.bb-pf-member-type-checkboxes {
+				margin: 20px 0;
+			}
+		}
+
+		.bb-pf-field-visibility {
+			display: flex;
+			align-items: flex-end;
+			gap: 24px;
+
+			> .components-base-control {
+				flex: 1;
+
+				.components-base-control__field {
+					margin-bottom: 0;
+				}
+			}
+
+			> .components-radio-control {
+				margin: 0 0 8px auto;
+			}
+		}
+	}
+
+	/* Options list for multi-option field types */
+	.bb-pf-field-options {
+		display: flex;
+		flex-direction: column;
+		gap: 16px;
+		margin: 24px 0;
+
+		&__list {
+			display: flex;
+			flex-direction: column;
+			gap: 12px;
+		}
+	}
+
+	.bb-pf-option-item {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		padding: 8px;
+		border: 0.5px solid $bb-border-secondary-color;
+		border-radius: $bb-border-radius-lg;
+		background: $bb-white;
+
+		&.is-dragging {
+			box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+		}
+
+		&__left {
+			display: flex;
+			align-items: center;
+			gap: 16px;
+			width: calc(60% - 100px);
+
+			> i {
+				font-size: 24px;
+				color: $bb-icon-tertiary-color;
+				cursor: grab;
+				flex-shrink: 0;
+			}
+		}
+
+		&__input[type="text"] {
+			@include bb-input-text;
+			width: 100%;
+		}
+
+		// Wrapper around the CustomSelectControl used for Social Networks
+		// provider rows. Pure layout container — the visible "field" (border,
+		// padding, background, caret) is rendered by the inner
+		// `.bb-custom-select__trigger` button (see _feature_settings.scss).
+		// The previous `@include bb-admin-settings-select` here painted a
+		// second styled box around the trigger, producing the
+		// "two dropdowns" visual seen in screenshots.
+		&__select {
+			flex: 1;
+			min-width: 0;
+		}
+
+		&__right {
+			display: flex;
+			align-items: center;
+			gap: 24px;
+		}
+
+		&__default {
+			display: flex;
+			align-items: center;
+			gap: 8px;
+			background: none;
+			border: none;
+			cursor: pointer;
+			padding: 0;
+		}
+
+		&__radio {
+			display: inline-block;
+			width: 18px;
+			height: 18px;
+			border: 1px solid $bb-border-brand-primary-color;
+			border-radius: $bb-border-radius-full;
+			flex-shrink: 0;
+			position: relative;
+			box-sizing: border-box;
+		}
+
+		&__default--selected .bb-pf-option-item__radio {
+			&:after {
+				content: '';
+				position: absolute;
+				top: 3px;
+				left: 3px;
+				width: 10px;
+				height: 10px;
+				border-radius: $bb-border-radius-full;
+				background: $bb-background-brand-primary-color;
+			}
+		}
+
+		&__checkbox {
+			display: inline-block;
+			width: 18px;
+			height: 18px;
+			border: 1px solid $bb-border-brand-primary-color;
+			border-radius: 3px;
+			flex-shrink: 0;
+			position: relative;
+			box-sizing: border-box;
+		}
+
+		&__default--selected .bb-pf-option-item__checkbox {
+			background: $bb-background-brand-primary-color;
+			border-color: $bb-background-brand-primary-color;
+
+			&:after {
+				content: '';
+				position: absolute;
+				top: 2px;
+				left: 5px;
+				width: 5px;
+				height: 9px;
+				border: solid #fff;
+				border-width: 0 2px 2px 0;
+				transform: rotate(45deg);
+			}
+		}
+
+		&__default-label {
+			font-size: 14px;
+			font-weight: 400;
+			line-height: 20px;
+			color: $bb-text-color;
+			white-space: nowrap;
+		}
+
+		// Fixed underlying value label shown on Gender option rows
+		// (Male / Female / Other). Picks up the same typography as the
+		// Default Value label so the row alignment matches other types.
+		&__gender-value {
+			font-size: 14px;
+			font-weight: 400;
+			line-height: 20px;
+			color: $bb-text-color;
+			white-space: nowrap;
+		}
+
+		&__remove {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			background: none;
+			border: none;
+			cursor: pointer;
+			padding: 0;
+			flex-shrink: 0;
+
+			i {
+				font-size: 24px;
+				color: $bb-icon-secondary-color;
+			}
+
+			&:hover:not(:disabled) i {
+				color: $bb-error-color;
+			}
+
+			&:disabled {
+				cursor: not-allowed;
+				opacity: 0.3;
+			}
+		}
+	}
+
+	.bb-pf-add-option-btn.components-button.is-secondary {
+		@include bb-button-primary-outline;
+		font-size: 14px;
+		align-self: flex-start;
+
+		i {
+			font-size: 16px;
+			margin-right: 4px;
+		}
+	}
+
+	/* Member types section */
+	.bb-pf-member-types-grid {
+		display: grid;
+		grid-template-columns: 180px 180px;
+		gap: 8px;
+		margin-top: 8px;
+
+		.components-checkbox-control {
+			margin-bottom: 0;
+
+			.components-flex {
+				display: flex;
+				align-items: center;
+			}
+		}
+
+		.components-checkbox-control__label {
+			font-size: 13px;
+		}
+	}
+
+	/* Footer */
+	.bb-pf-modal-footer {
+
+		.components-button.is-secondary {
+			@include bb-button-secondary;
+			padding: 8px 16px;
+		}
+
+		.components-button.is-primary {
+			@include bb-button-primary;
+			padding: 8px 16px;
+		}
+	}
+}
+
+/* ----------------------------------------------------------------
+   Social Networks Field Settings
+   ---------------------------------------------------------------- */
+
+/* Social Networks reuses .bb-pf-option-item pattern with select dropdown */
+
+/* ----------------------------------------------------------------
+   Datebox Field Settings
+   ---------------------------------------------------------------- */
+
+.bb-pf-datebox-format {
+	border: none;
+	margin: 0;
+	padding-bottom: 12px;
+	margin-bottom: 24px;
+	border-bottom: 1px solid $bb-border-secondary-color;
+
+	&__legend {
+		@include bb-input-label;
+		font-weight: 500;
+		margin-bottom: 12px;
+	}
+
+	&__options {
+		display: flex;
+		flex-direction: column;
+		gap: 10px;
+	}
+
+	&__option {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+
+		input[type="radio"] {
+			margin: 0;
+			min-width: 18px;
+		}
+
+		label {
+			display: flex;
+			align-items: center;
+			gap: 8px;
+			cursor: pointer;
+			font-size: 13px;
+		}
+
+		&-custom {
+
+			label {
+				flex-wrap: wrap;
+				width: 100%;
+			}
+		}
+	}
+
+	&__example {
+		min-width: 130px;
+		color: $bb-text-color;
+	}
+
+	&__code {
+		font-size: 13px;
+		background: $bb-background-primary-color;
+		padding: 3px 8px;
+		border-radius: $bb-border-radius-md;
+	}
+
+	&__custom-input.bb-pf-datebox-format__custom-input {
+		width: 120px;
+		@include bb-input-text;
+
+		&:disabled {
+			opacity: 0.5;
+			cursor: not-allowed;
+		}
+	}
+
+	&__doc-link {
+		display: block;
+		margin: 12px 0;
+		font-size: 13px;
+		color: $bb-link-color;
+		text-decoration: none;
+
+		&:hover {
+			color: $bb-link-color;
+		}
+	}
+}
+
+.bb-pf-datebox-range {
+
+	> .components-radio-control {
+		margin-bottom: 12px;
+	}
+
+	&__values {
+		display: flex;
+		gap: 16px;
+		margin-top: 8px;
+	}
+
+	&__relative-row {
+		display: flex;
+		gap: 12px;
+		align-items: flex-end;
+	}
+}
+
+.bb-pf-field-telephone-settings {
+	margin-top: 16px;
+
+	.components-radio-control__option {
+		display: inline-flex;
+		margin-right: 24px;
+	}
+
+	.components-radio-control > legend {
+		display: block;
+		font-weight: 500 !important;
+	}
+}
+
+.bb-ps-field-list {
+	margin-bottom: 16px;
+}
+
+/* ----------------------------------------------------------------
+   Delete Field Confirmation Overlay
+   ---------------------------------------------------------------- */
+
+.bb-pf-confirm-overlay {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background: $bb-overlay-color;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	z-index: 100050;
+}
+
+.bb-pf-confirm-dialog {
+	background: $bb-background-base-color;
+	border-radius: $bb-border-radius-2xl;
+	padding: 24px;
+	max-width: 420px;
+	width: 90%;
+	box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+
+	p {
+		font-size: 13px;
+		color: $bb-text-color;
+		line-height: 1.5;
+		margin: 0 0 16px;
+	}
+}
+
+.bb-pf-confirm-actions {
+	display: flex;
+	justify-content: flex-end;
+	gap: 8px;
+
+	.components-button.is-secondary {
+		@include bb-button-secondary;
+		padding: 8px 16px;
+	}
+
+	.components-button.is-primary.is-destructive {
+		color: $bb-text-inverse-color;
+		background: $bb-background-danger-secondary-color;
+		border: none;
+		box-shadow: none;
+		border-radius: $bb-border-radius-lg;
+		padding: 8px 16px;
+		height: auto;
+
+		&:hover {
+			background: $bb-background-danger-secondary-hover-color !important;
+			color: $bb-text-inverse-color !important;
+		}
+	}
+}

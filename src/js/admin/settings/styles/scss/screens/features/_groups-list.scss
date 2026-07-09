@@ -1,0 +1,1318 @@
+/* ----------------------------------------------------------------
+   Groups List Screen
+   ---------------------------------------------------------------- */
+
+.bb-groups-list {
+	max-width: calc(100% - 64px);
+	padding: 0 24px 16px;
+	background-color: $bb-background-base-color;
+	border: 0.5px solid $bb-border-primary-color;
+	border-radius: $bb-border-radius-2xl;
+	box-shadow: 0px 1.5px 1px 0px rgba(0, 0, 0, 0.16);
+	margin: 32px 32px 0;
+
+	// Notice
+	.bb-admin-notice {
+		margin-top: 24px;
+	}
+
+	.bb-admin-notice--dismiss {
+		background: none;
+		border: none;
+		cursor: pointer;
+	}
+
+	// Header
+	&__header {
+		border-bottom: 1px solid $bb-border-secondary-color;
+		padding: 18px 0;
+		margin-bottom: 24px;
+	}
+
+	&__title {
+		font-size: 18px;
+		font-weight: 500;
+		color: $bb-text-color;
+		margin: 0;
+	}
+
+	// Toolbar — layout styled via .bb-admin-list-toolbar
+
+	// Search — styled via .bb-admin-list-search
+
+	// Bulk Actions
+	&__bulk-actions {
+		display: flex;
+		align-items: center;
+		gap: 4px;
+
+		select {
+			min-width: 140px;
+			height: 32px;
+			font-size: 13px;
+		}
+	}
+
+	&__bulk-apply.is-secondary {
+		@include bb-button-primary-outline;
+	}
+
+	// Filter Dropdowns
+	&__filter-select,
+	&__sort-select,
+	&__type-filter {
+		.components-select-control {
+			margin-bottom: 0;
+		}
+
+		select {
+			min-width: 100px;
+			height: 32px;
+			font-size: 13px;
+		}
+	}
+
+	// Table — base styled via .bb-admin-list-table
+
+	&__table {
+		table-layout: fixed;
+	}
+
+	&__table th.bb-groups-list__th--name {
+		font-size: 14px;
+		color: $bb-text-color;
+		width: 30%;
+	}
+
+	&__th--checkbox {
+		width: 24px;
+		box-sizing: border-box;
+	}
+
+	&__th--actions {
+		width: 30px;
+	}
+
+	&__th--privacy {
+		width: 100px;
+	}
+
+	&__th--members {
+		width: 100px;
+	}
+
+	&__th--group-type {
+		width: 130px;
+	}
+
+	&__th--last-active {
+		width: 140px;
+	}
+
+	// Name Column
+	&__name-cell {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+	}
+
+	&__avatar {
+		width: 40px;
+		height: 40px;
+		border-radius: $bb-border-radius-full;
+		flex-shrink: 0;
+		object-fit: cover;
+		border: 0.5px solid $bb-border-secondary-color;
+	}
+
+	&__group-name {
+		font-size: 14px;
+		font-weight: 400;
+		color: $bb-link-color;
+		line-height: 20px;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+		text-decoration: none;
+
+		&:hover {
+			color: $bb-link-color;
+			text-decoration: underline;
+		}
+	}
+
+	// Privacy Column
+	&__privacy-badge {
+		display: inline-flex;
+		align-items: center;
+		gap: 4px;
+		padding: 2px 8px;
+		font-size: 11px;
+		line-height: 1.4;
+		color: $bb-text-color;
+		background-color: $bb-background-secondary-color;
+		border: 1px solid $bb-border-tertiary-color;
+		border-radius: $bb-border-radius-full;
+		white-space: nowrap;
+
+		i {
+			font-size: 12px;
+			line-height: 1;
+		}
+	}
+
+	// Members Column
+	&__members-count {
+		display: flex;
+		align-items: center;
+		gap: 6px;
+		color: $bb-link-color;
+		font-size: 13px;
+		font-weight: 400;
+
+		i {
+			font-size: 16px;
+			color: $bb-icon-tertiary-color;
+			line-height: 1;
+		}
+	}
+
+	// Group Type Column
+	&__type-badge {
+		display: inline-flex;
+		align-items: center;
+		padding: 3px 8px;
+		font-size: 11px;
+		font-weight: 500;
+		line-height: 1.4;
+		color: $bb-text-color;
+		background-color: $bb-background-secondary-color;
+		border: 1px solid $bb-border-tertiary-color;
+		border-radius: $bb-border-radius-full;
+		white-space: nowrap;
+	}
+
+	&__type-empty {
+		color: $bb-text-disabled-color;
+	}
+
+	// Last Active Column
+	&__td--last-active {
+		white-space: nowrap;
+		font-size: 13px;
+		color: $bb-text-tertiary-color;
+	}
+
+	&__date {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		color: $bb-text-tertiary-color;
+		font-size: 13px;
+		line-height: 18px;
+
+		i {
+			font-size: 16px;
+			color: $bb-icon-tertiary-color;
+			line-height: 1;
+		}
+	}
+
+	// Actions Column — toggle styled via .bb-admin-actions-toggle
+	&__td--actions {
+		text-align: center;
+	}
+
+	// Footer
+	&__footer {
+		display: flex;
+		align-items: center;
+		justify-content: flex-end;
+		gap: 16px;
+		padding: 16px 0;
+		margin-top: 8px;
+	}
+
+	// Item Count
+	&__item-count {
+		font-size: 13px;
+		color: $bb-text-secondary-color;
+	}
+
+	@media screen and (max-width: 960px) {
+		overflow: auto;
+
+		&__toolbar,
+		&__table-wrapper,
+		&__footer {
+			min-width: 820px;
+		}
+	}
+
+}
+
+// Full-width for custom panel screen.
+.bb-admin-feature-settings__main--custom-panel {
+	.bb-groups-list {
+		max-width: 100%;
+	}
+}
+
+/* ----------------------------------------------------------------
+   Delete Group Modal
+   ---------------------------------------------------------------- */
+.bb-group-delete-modal {
+
+	&.components-modal__frame {
+		max-width: 500px;
+	}
+
+	&__body {
+		padding: 24px;
+	}
+
+	&__description {
+		font-size: 13px;
+		line-height: 1.6;
+		color: $bb-text-color;
+		margin: 0 0 16px;
+	}
+
+	.components-checkbox-control {
+		margin-bottom: 0;
+	}
+
+	&__footer {
+		display: flex;
+		align-items: center;
+		justify-content: flex-end;
+		gap: 8px;
+		padding: 16px 24px;
+		border-top: 1px solid $bb-border-secondary-color;
+
+		.is-secondary {
+			@include bb-button-secondary;
+		}
+
+		.is-destructive.is-primary {
+			background-color: $bb-error-color;
+			border-color: $bb-error-color;
+			color: #fff;
+			border-radius: $bb-border-radius-md;
+			font-size: 13px;
+			font-weight: 500;
+			padding: 6px 16px;
+			height: 32px;
+			box-shadow: none;
+
+			&:hover {
+				background-color: darken($bb-error-color, 5%);
+				border-color: darken($bb-error-color, 5%);
+			}
+
+			&:disabled {
+				opacity: 0.5;
+				cursor: not-allowed;
+			}
+		}
+	}
+}
+
+/* ----------------------------------------------------------------
+   Change Group Type Modal
+   ---------------------------------------------------------------- */
+/* ----------------------------------------------------------------
+   Groups List Header - Create Button
+   ---------------------------------------------------------------- */
+.bb-groups-list__header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+
+.bb-groups-list__create-btn.is-primary {
+	@include bb-button-primary;
+
+	i {
+		font-size: 16px;
+		font-weight: 700;
+		margin-right: 6px;
+	}
+}
+
+/* ----------------------------------------------------------------
+   Groups List - Edit Loading Overlay
+   ---------------------------------------------------------------- */
+.bb-groups-list__edit-loading {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background: rgba(255, 255, 255, 0.6);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	z-index: 100000;
+}
+
+/* ----------------------------------------------------------------
+   Group Edit Modal
+   ---------------------------------------------------------------- */
+.bb-group-edit-modal {
+
+	&.components-modal__frame {
+		max-height: 72%;
+	}
+
+	&__body {
+		padding: 0 24px 24px;
+
+		.components-base-control {
+			margin-bottom: 16px;
+
+			+ .bb-admin-meta-field__description {
+				margin-top: -6px;
+			}
+		}
+
+		.bb-admin-notice {
+			margin-top: 16px;
+		}
+	}
+
+	// Per Figma: checkbox help text should start at the left edge of the row,
+	// not indented under the label. WP defaults to `margin-inline-start:
+	// calc(--checkbox-input-size + --checkbox-input-margin)` on the help span.
+	// Scoped to this modal so other admin checkboxes keep the WP default.
+	.components-checkbox-control__help {
+		margin-inline-start: 0;
+	}
+
+	&__tabs {
+		.components-tab-panel__tabs {
+			border-bottom: none;
+			margin: 0;
+			padding: 16px 0 24px;
+			gap: 8px;
+		}
+
+		.components-tab-panel__tabs-item {
+			padding: 6px 16px;
+			font-size: 13px;
+			font-weight: 500;
+			line-height: 1.5;
+			color: $bb-text-tertiary-color;
+			border: 1px solid $bb-border-tertiary-color;
+			border-radius: 20px;
+			background: none;
+			cursor: pointer;
+			height: auto !important;
+
+			// Remove default underline indicator.
+			&:after,
+			&:before {
+				display: none !important;
+			}
+
+			&:hover {
+				color: $bb-text-color;
+				background-color: $bb-background-secondary-color;
+			}
+
+			&.is-active {
+				color: $bb-text-color;
+				background-color: $bb-background-primary-hover-color;
+				border-color: $bb-border-quaternary-color;
+				box-shadow: none;
+				font-weight: 500;
+			}
+
+			&:focus:not(:disabled) {
+				box-shadow: none;
+			}
+		}
+	}
+
+	.components-tab-panel__tab-content {
+		min-height: 400px;
+	}
+
+	&__empty-tab {
+		color: $bb-text-tertiary-color;
+		font-size: 13px;
+		text-align: center;
+		padding: 40px 0;
+	}
+
+	&__error {
+		color: $bb-error-color;
+		font-size: 13px;
+		margin: 0 0 16px;
+	}
+
+	&__footer {
+
+		.is-secondary {
+			@include bb-button-secondary;
+		}
+
+		.is-primary {
+			@include bb-button-primary;
+
+			&:disabled {
+				opacity: 0.5;
+				cursor: not-allowed;
+			}
+		}
+	}
+}
+
+/* ----------------------------------------------------------------
+   Radio Field Styles (shared across modals)
+   ---------------------------------------------------------------- */
+.bb-admin-meta-field__radio-field {
+	margin-bottom: 16px;
+}
+
+.bb-admin-meta-field__radio-options {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	gap: 4px 24px;
+}
+
+// Group Edit modal → Integrations tab.
+// Per Figma: each "section" (Zoom block, Group Parent, Forum block, LearnDash block)
+// gets one divider at its end — not after every internal field.
+.bb-group-edit-modal__tab-content--integrations {
+
+	// Radios stack vertically (Permissions tab keeps default horizontal layout).
+	.bb-admin-meta-field__radio-options {
+		flex-direction: column;
+		gap: 10px;
+	}
+
+	// Drop the checkbox divider ONLY when its conditional partner is rendered
+	// right after it (Zoom checkbox + Zoom radios; Forum checkbox + async
+	// forum select; LearnDash checkbox + plain select; MemberPress LMS
+	// checkbox + course-activities toggle list / courses ajax multiselect).
+	// When the partner is hidden by the conditional (Zoom unchecked, Forum
+	// unchecked, etc.) the default checkbox divider stays and closes the
+	// section.
+	.bb-admin-meta-field__checkbox-field:has(+ .bb-admin-meta-field__radio-field),
+	.bb-admin-meta-field__checkbox-field:has(+ .bb-admin-meta-field__async-select-field),
+	.bb-admin-meta-field__checkbox-field:has(+ .bb-admin-meta-field__select-field),
+	.bb-admin-meta-field__checkbox-field:has(+ .bb-admin-meta-field__toggle-list-field),
+	.bb-admin-meta-field__checkbox-field:has(+ .bb-admin-meta-field__ajax-multiselect) {
+		border-bottom: 0;
+		padding-bottom: 0;
+	}
+
+	// Last radio in a block (a radio followed by anything that isn't another
+	// radio) closes the Zoom section.
+	.bb-admin-meta-field__radio-field:has(+ :not(.bb-admin-meta-field__radio-field)) {
+		padding-bottom: 20px;
+		margin-bottom: 20px;
+		border-bottom: 1px solid $bb-border-secondary-color;
+	}
+
+	> [class*="bb-admin-meta-field"] {
+		margin-bottom: 24px;
+	}
+}
+
+.bb-admin-meta-field__radio-option {
+	display: grid;
+	grid-template-columns: 18px 1fr;
+	gap: 4px 8px;
+	align-items: center;
+	cursor: pointer;
+	padding: 4px 0;
+
+	input[type="radio"] {
+		margin: 2px 0 0;
+		grid-row: 1;
+		grid-column: 1;
+	}
+
+	.bb-admin-meta-field__radio-label {
+		font-size: 13px;
+		font-weight: 400;
+		color: $bb-text-color;
+		grid-row: 1;
+		grid-column: 2;
+	}
+
+	.bb-admin-meta-field__radio-description {
+		font-size: 12px;
+		color: $bb-text-tertiary-color;
+		grid-row: 2;
+		grid-column: 2;
+		line-height: 1.4;
+	}
+}
+
+/* ----------------------------------------------------------------
+   Checkbox Field Styles (shared across modals)
+   ---------------------------------------------------------------- */
+.bb-admin-meta-field__checkbox-field {
+	margin-bottom: 16px;
+	padding-bottom: 16px;
+	border-bottom: 0.5px solid $bb-border-secondary-color;
+
+	.components-checkbox-control__input[type="checkbox"]:checked {
+		background-color: $bb-background-brand-primary-color;
+		border-color: $bb-background-brand-primary-color;
+	}
+
+	&:last-child {
+		padding-bottom: 0;
+		border-bottom: 0;
+	}
+}
+
+.bb-admin-meta-field__async-select-field {
+	margin-bottom: 16px;
+
+	.components-base-control__label {
+		display: block;
+		margin-bottom: 8px;
+	}
+
+	.bb-admin-settings-modal__row--separator & {
+		margin-bottom: 0;
+	}
+}
+
+.bb-admin-meta-field__checkbox-field .bb-admin-meta-field__description,
+.bb-admin-meta-field__checkbox-field .components-checkbox-control__help {
+	margin-top: 2px;
+	font-size: 12px;
+	color: $bb-text-tertiary-color;
+}
+
+/* Toggle list (checkbox group) inside group edit modal */
+.bb-admin-meta-field__toggle-list-field {
+	margin-bottom: 16px;
+
+	.bb-admin-meta-field__label {
+		margin-bottom: 8px;
+		font-weight: 500;
+	}
+
+	.components-checkbox-control__input[type="checkbox"]:checked {
+		background-color: $bb-background-brand-primary-color;
+		border-color: $bb-background-brand-primary-color;
+	}
+}
+
+.bb-admin-meta-field__toggle-list-options {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+}
+
+/* AJAX multi-select field */
+.bb-admin-meta-field__ajax-multiselect {
+	margin-bottom: 16px;
+
+	.bb-admin-meta-field__label {
+		margin-bottom: 8px;
+		font-weight: 500;
+	}
+}
+
+.bb-admin-meta-field__selected-items {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 6px;
+	margin-bottom: 8px;
+}
+
+.bb-admin-meta-field__selected-tag {
+	display: inline-flex;
+	align-items: center;
+	gap: 4px;
+	padding: 4px 8px;
+	color: $bb-text-color;
+	background-color: $bb-background-primary-color;
+	border: 1px solid $bb-border-tertiary-color;
+	border-radius: $bb-border-radius-full;
+	font-size: 13px;
+	line-height: 1.4;
+
+	i {
+		color: $bb-icon-secondary-color;
+		font-size: 14px;
+	}
+}
+
+.bb-admin-meta-field__remove-tag {
+	background: none;
+	border: none;
+	cursor: pointer;
+	font-size: 16px;
+	line-height: 1;
+	padding: 0 2px;
+	color: $bb-text-tertiary-color;
+
+	&:hover {
+		color: $bb-text-brand-primary-color;
+	}
+}
+
+.bb-admin-meta-field__search-wrapper {
+	position: relative;
+
+	.spinner {
+		position: absolute;
+		right: 8px;
+		top: 50%;
+		transform: translateY(-50%);
+		margin: 0
+	}
+}
+
+input.bb-admin-meta-field__search-input {
+	@include bb-input-text;
+}
+
+.bb-admin-meta-field__suggestions {
+	position: absolute;
+	z-index: 100;
+	width: 100%;
+	max-height: 200px;
+	overflow-y: auto;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	background: $bb-background-base-color;
+	border: 1px solid $bb-border-secondary-color;
+	border-top: none;
+	border-radius: 0 0 $bb-border-radius-sm $bb-border-radius-sm;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.bb-admin-meta-field__suggestion-item {
+	padding: 8px 12px;
+	cursor: pointer;
+	font-size: 13px;
+
+	&:hover,
+	&.is-active {
+		background-color: $bb-background-secondary-color;
+	}
+}
+
+/* ----------------------------------------------------------------
+   Meta Field Shared Styles (labels, permalink, etc.)
+   ---------------------------------------------------------------- */
+.bb-admin-meta-field__label {
+	display: block;
+	font-size: 13px;
+	font-weight: 500;
+	color: $bb-text-color;
+	margin-bottom: 10px;
+}
+
+.bb-admin-meta-field__permalink-field {
+	margin-bottom: 16px;
+
+	.components-base-control {
+		margin-bottom: 4px;
+	}
+}
+
+.bb-admin-meta-field__permalink-preview {
+	margin-top: 4px;
+
+	a {
+		font-size: 13px;
+		color: $bb-text-tertiary-color;
+		text-decoration: none;
+
+		strong {
+			color: $bb-text-color;
+			font-weight: 600;
+		}
+
+		&:hover {
+			text-decoration: underline;
+		}
+	}
+}
+
+.bb-admin-meta-field__select-field {
+	margin-bottom: 16px;
+
+	.bb-admin-settings-modal__row--separator & {
+		margin-bottom: 0;
+	}
+}
+
+// Integration tab: add dividers between select fields that follow checkboxes.
+.bb-group-edit-modal__tab-content {
+
+	// Divider between integration sections (select after checkbox or select after select).
+	> [class*="bb-admin-meta-field"] + [class*="bb-admin-meta-field__checkbox"] {
+		padding-top: 16px;
+	}
+
+	.bb-admin-meta-field__async-select-field,
+	.bb-admin-meta-field__select-field {
+		padding-bottom: 16px;
+		border-bottom: 1px solid $bb-border-secondary-color;
+
+		&:last-child {
+			border-bottom: none;
+			padding-bottom: 0;
+		}
+	}
+
+	.bb-admin-meta-field__checkbox-field:first-child {
+
+		> .components-base-control {
+			margin-bottom: 0;
+		}
+	}
+}
+
+.bb-admin-meta-field__readonly-field {
+	margin-bottom: 16px;
+}
+
+/* ----------------------------------------------------------------
+   Group Members Tab
+   ---------------------------------------------------------------- */
+.bb-group-members-tab {
+
+	&__add-member {
+		margin-bottom: 16px;
+	}
+
+	// Filter row (Figma 2026-05-08): full-width search input on the left,
+	// role-filter dropdown on the right. Sits between the "Add New Members"
+	// section and the per-role list so admins narrow the visible list
+	// without scrolling.
+	&__filters {
+		display: flex;
+		align-items: center;
+		gap: 12px;
+		margin-bottom: 24px;
+		padding: 16px 0;
+		border-top: 0.5px solid $bb-border-secondary-color;
+	}
+
+	&__filter-search {
+		position: relative;
+		flex: 1 1 auto;
+		min-width: 0;
+	}
+
+	&__filter-search-icon {
+		position: absolute;
+		top: 50%;
+		right: 8px;
+		transform: translateY(-50%);
+		color: $bb-icon-tertiary-color;
+		font-size: 20px;
+		pointer-events: none;
+	}
+
+	&__filter-search-input[type="search"] {
+		@include bb-input-text;
+		padding-right: 30px;
+
+		&::-webkit-search-cancel-button {
+			display: none;
+		}
+
+		&::placeholder {
+			color: $bb-text-tertiary-color;
+		}
+	}
+
+	&__filter-role {
+		flex: 0 0 auto;
+		min-width: 200px;
+
+		// Tighten the WP SelectControl spacing — the wrapping
+		// `.components-base-control` defaults to 12px bottom margin
+		// which would push the row out of vertical alignment with
+		// the search input.
+		.components-base-control {
+			margin-bottom: 0;
+		}
+
+		.components-base-control__field {
+			margin-bottom: 0;
+		}
+
+		.components-select-control__input {
+			height: 36px;
+			min-width: 160px;
+		}
+	}
+
+	&__filter-empty {
+		padding: 24px 12px;
+		font-size: 13px;
+		color: $bb-text-secondary-color;
+		text-align: center;
+	}
+
+	&__add-row {
+		display: flex;
+		align-items: flex-start;
+		gap: 12px;
+	}
+
+	&__autocomplete-wrapper {
+		position: relative;
+		flex: 1;
+		min-width: 0;
+	}
+
+	&__add-btn.is-secondary {
+		@include bb-button-primary-outline;
+
+		&[disabled],
+		&[aria-disabled="true"] {
+			color: $bb-text-brand-primary-color;
+			border-color: $bb-border-brand-primary-color;
+			opacity: 0.6;
+		}
+
+		i {
+			font-size: 16px;
+			font-weight: 700;
+			margin-right: 6px;
+			color: inherit;
+		}
+	}
+
+	&__search-input[type="text"] {
+		@include bb-input-text;
+		width: 100%;
+	}
+
+	&__suggestions {
+		position: absolute;
+		top: 100%;
+		left: 0;
+		right: 0;
+		background: $bb-background-base-color;
+		border: 1px solid $bb-border-secondary-color;
+		border-radius: $bb-border-radius-md;
+		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+		max-height: 240px;
+		overflow-y: auto;
+		z-index: 10;
+	}
+
+	&__suggestions-loading,
+	&__suggestions-empty {
+		padding: 12px 16px;
+		text-align: center;
+		font-size: 13px;
+		color: $bb-text-tertiary-color;
+	}
+
+	&__suggestion-item {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		padding: 8px 16px;
+		width: 100%;
+		border: none;
+		background: none;
+		cursor: pointer;
+		text-align: left;
+		font-size: 13px;
+		color: $bb-text-color;
+
+		&:hover {
+			background-color: $bb-background-secondary-color;
+		}
+	}
+
+	&__suggestion-avatar {
+		width: 28px;
+		height: 28px;
+		border-radius: $bb-border-radius-full;
+		flex-shrink: 0;
+		object-fit: cover;
+	}
+
+	&__loading {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		padding: 40px 0;
+	}
+
+	&__empty {
+		text-align: center;
+		color: $bb-text-tertiary-color;
+		font-size: 13px;
+		padding: 24px 0;
+	}
+
+	&__list {
+		display: flex;
+		flex-direction: column;
+		gap: 24px;
+	}
+
+	&__role-group {
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
+		border: 0.5px solid $bb-border-secondary-color;
+		border-radius: $bb-border-radius-xl;
+		padding: 16px;
+	}
+
+	&__section-loading {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		padding: 16px 0;
+	}
+
+	&__member-row {
+		display: flex;
+		align-items: flex-start;
+		justify-content: space-between;
+
+		&--pending {
+			opacity: 0.7;
+		}
+	}
+
+	&__member-pill {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		padding: 4px 8px;
+		border: 0.5px solid $bb-border-secondary-color;
+		border-radius: $bb-border-radius-full;
+	}
+
+	&__member-avatar {
+		width: 24px;
+		height: 24px;
+		border-radius: $bb-border-radius-full;
+		flex-shrink: 0;
+		object-fit: cover;
+	}
+
+	&__member-name {
+		font-size: 13px;
+		font-weight: 400;
+		color: $bb-link-color;
+		white-space: nowrap;
+		line-height: 18px;
+		padding: 3px 0;
+		text-decoration: none;
+
+		&:hover {
+			color: $bb-link-color;
+			text-decoration: underline;
+		}
+	}
+
+	&__member-actions {
+		flex-shrink: 0;
+		width: 245px;
+
+		> .components-base-control {
+			margin-bottom: 0;
+		}
+
+		.components-select-control {
+			margin-bottom: 0;
+
+			.components-select-control__input {
+				@include bb-admin-settings-select;
+				width: 100%;
+				font-size: 13px;
+			}
+
+			.components-input-control-suffix-wrapper,
+			.components-input-control__backdrop {
+				display: none;
+			}
+		}
+	}
+
+	&__remove-btn {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		border: none;
+		background: none;
+		cursor: pointer;
+		color: $bb-text-tertiary-color;
+		padding: 4px;
+
+		i {
+			font-size: 16px;
+		}
+
+		&:hover {
+			color: $bb-text-color;
+		}
+	}
+
+	&__pagination {
+		display: flex;
+		align-items: center;
+		gap: 16px;
+		margin-top: 16px;
+	}
+
+	&__page-arrow {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		padding: 4px;
+		border: none;
+		background: transparent;
+		cursor: pointer;
+
+		i {
+			font-size: 16px;
+			color: $bb-icon-secondary-color;
+		}
+
+		&:hover:not(:disabled) i {
+			color: $bb-text-color;
+		}
+
+		&:disabled {
+			opacity: 0.5;
+			pointer-events: none;
+		}
+	}
+
+	&__page-numbers {
+		display: flex;
+		align-items: center;
+		gap: 4px;
+	}
+
+	&__page-number {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 32px;
+		height: 32px;
+		padding: 2px;
+		border: 1px solid transparent;
+		border-radius: $bb-border-radius-md;
+		background: transparent;
+		color: $bb-text-tertiary-color;
+		font-size: 13px;
+		font-weight: 500;
+		line-height: 18px;
+		cursor: pointer;
+
+		&:hover:not(&--active),
+		&:focus:not(&--active) {
+			background-color: $bb-background-primary-color;
+			border-color: $bb-border-secondary-color;
+		}
+
+		&--active {
+			background-color: $bb-background-primary-color;
+			border-color: $bb-border-quinery;
+			color: $bb-text-color;
+			font-weight: 500;
+			cursor: default;
+		}
+	}
+
+	&__page-ellipsis {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 32px;
+		height: 32px;
+		font-size: 13px;
+		font-weight: 500;
+		line-height: 18px;
+		color: $bb-text-tertiary-color;
+	}
+}
+
+/* ----------------------------------------------------------------
+   Group Topics Tab
+   Reuses .bb-topic-list, .bb-topic-modal, .bb-topic-delete-modal
+   styles from _topics.scss (same design as Activity Topics).
+   ---------------------------------------------------------------- */
+.bb-group-topics-tab {
+
+	&__loading {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		padding: 40px 0;
+	}
+
+	.bb-topic-list__items {
+		margin-top: 0;
+	}
+}
+
+/* Global topic icon in group topic list. */
+.bb-topic-list__global-icon {
+	display: inline-flex;
+	align-items: center;
+	margin-left: 6px;
+	color: #757575;
+	font-size: 16px;
+}
+
+/* Custom searchable dropdown for "Allow both" topic mode in Group Topics modal. */
+.bb-topic-modal__searchable-select {
+	position: relative;
+	margin-bottom: 16px;
+
+	.components-base-control__label {
+		display: block;
+		margin-bottom: 8px;
+	}
+}
+
+.bb-topic-modal__search-input-wrap {
+	position: relative;
+}
+
+.bb-topic-modal__search-input {
+	width: 100%;
+	padding: 8px 12px;
+	border: 1px solid $bb-border-primary-color;
+	border-radius: $bb-border-radius-md;
+	font-size: 14px;
+	line-height: 1.4;
+	box-sizing: border-box;
+
+	&:focus {
+		border-color: var(--bb-primary-color, #ef5b34);
+		box-shadow: 0 0 0 1px var(--bb-primary-color, #ef5b34);
+		outline: none;
+	}
+}
+
+.bb-topic-modal__dropdown-list {
+	position: absolute;
+	z-index: 100;
+	width: 100%;
+	max-height: 200px;
+	overflow-y: auto;
+	margin: 0;
+	padding: 4px 0;
+	background: $bb-background-base-color;
+	border: 1px solid $bb-border-primary-color;
+	border-top: none;
+	border-radius: 0 0 $bb-border-radius-lg $bb-border-radius-lg;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+	list-style: none;
+}
+
+.bb-topic-modal__dropdown-item {
+	padding: 8px 12px;
+	cursor: pointer;
+	font-size: 14px;
+
+	&:hover {
+		background-color: #f0f0f0;
+	}
+
+	&--create {
+		color: var(--bb-primary-color, #ef5b34);
+		font-weight: 500;
+
+		.bb-topic-modal__create-icon {
+			margin-right: 4px;
+			font-weight: 700;
+		}
+	}
+
+	&--empty {
+		color: #757575;
+		cursor: default;
+		font-style: italic;
+
+		&:hover {
+			background-color: transparent;
+		}
+	}
+}
+
+.bb-group-change-type-modal {
+	.components-modal__content {
+		padding: 0;
+	}
+
+	.components-modal__header {
+		padding: 16px 24px;
+		border-bottom: 1px solid $bb-border-secondary-color;
+		margin: 0;
+
+		.components-modal__header-heading {
+			font-size: 16px;
+			font-weight: 600;
+		}
+	}
+
+	&__body {
+		padding: 24px;
+
+		.components-select-control {
+			margin-bottom: 0;
+
+			.components-select-control__input {
+				@include bb-admin-settings-select;
+				width: 100%;
+			}
+
+			.components-input-control-suffix-wrapper,
+			.components-input-control__backdrop {
+				display: none;
+			}
+		}
+	}
+
+	&__label {
+		display: block;
+		font-size: 13px;
+		font-weight: 500;
+		color: $bb-text-color;
+		margin-bottom: 8px;
+	}
+
+	&__footer {
+		display: flex;
+		align-items: center;
+		justify-content: flex-end;
+		gap: 8px;
+		padding: 16px 24px;
+		border-top: 1px solid $bb-border-secondary-color;
+
+		.is-secondary {
+			@include bb-button-secondary;
+		}
+
+		.is-primary {
+			@include bb-button-primary;
+
+			&:disabled {
+				opacity: 0.5;
+				cursor: not-allowed;
+			}
+		}
+	}
+}

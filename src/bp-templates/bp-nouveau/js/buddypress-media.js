@@ -286,11 +286,37 @@ window.bp = window.bp || {};
 			$( document ).on( 'click', '.activity .bp-media-move-activity, #media-stream .bp-media-move-activity', this.moveMediaIntoAlbum.bind( this ) );
 
 			// Document move option.
-			var mediaStream = $( '#bb-media-model-container .activity-list, #media-stream' );
-			$( '#buddypress .activity-list, #buddypress [data-bp-list="activity"], #bb-media-model-container .activity-list, #media-stream' ).on( 'click', '.ac-document-move, .ac-folder-move', this.openDocumentMove.bind( this ) );
-			$( '#buddypress .activity-list, #buddypress [data-bp-list="activity"], #bb-media-model-container .activity-list, #media-stream, .group-media #media-stream' ).on( 'click', '.ac-media-move', this.openMediaMove.bind( this ) );
-			$( '#buddypress .activity-list, #buddypress [data-bp-list="activity"], #bb-media-model-container .activity-list, #media-stream' ).on( 'click', '.ac-document-close-button, .ac-folder-close-button', this.closeDocumentMove.bind( this ) );
-			$( '#buddypress .activity-list, #buddypress [data-bp-list="activity"], #bb-media-model-container .activity-list, #media-stream' ).on( 'click', '.ac-media-close-button', this.closeMediaMove.bind( this ) );
+			var mediaStream = $( '#bb-media-model-container .activity-list, #media-stream' ),
+				activityListSelector = '#buddypress .activity-list',
+				activityDataSelector = '#buddypress [data-bp-list="activity"]',
+				modalListSelector = '#bb-media-model-container .activity-list',
+				mediaStreamSelector = '#media-stream';
+
+			$( document ).on( 'click',
+				activityListSelector + ' .ac-document-move, ' + activityDataSelector + ' .ac-document-move, ' +
+				activityListSelector + ' .ac-folder-move, ' + activityDataSelector + ' .ac-folder-move, ' +
+				modalListSelector + ' .ac-document-move, ' + modalListSelector + ' .ac-folder-move, ' +
+				mediaStreamSelector + ' .ac-document-move, ' + mediaStreamSelector + ' .ac-folder-move',
+				this.openDocumentMove.bind( this )
+			);
+			$( document ).on( 'click',
+				activityListSelector + ' .ac-media-move, ' + activityDataSelector + ' .ac-media-move, ' +
+				modalListSelector + ' .ac-media-move, ' + mediaStreamSelector + ' .ac-media-move, ' +
+				'.group-media ' + mediaStreamSelector + ' .ac-media-move',
+				this.openMediaMove.bind( this )
+			);
+			$( document ).on( 'click',
+				activityListSelector + ' .ac-document-close-button, ' + activityDataSelector + ' .ac-document-close-button, ' +
+				activityListSelector + ' .ac-folder-close-button, ' + activityDataSelector + ' .ac-folder-close-button, ' +
+				modalListSelector + ' .ac-document-close-button, ' + modalListSelector + ' .ac-folder-close-button, ' +
+				mediaStreamSelector + ' .ac-document-close-button, ' + mediaStreamSelector + ' .ac-folder-close-button',
+				this.closeDocumentMove.bind( this )
+			);
+			$( document ).on( 'click',
+				activityListSelector + ' .ac-media-close-button, ' + activityDataSelector + ' .ac-media-close-button, ' +
+				modalListSelector + ' .ac-media-close-button, ' + mediaStreamSelector + ' .ac-media-close-button',
+				this.closeMediaMove.bind( this )
+			);
 			mediaStream.on( 'click', '.ac-document-rename', this.renameDocument.bind( this ) );
 			mediaStream.on( 'click', '.ac-document-privacy', this.editPrivacyDocument.bind( this ) );
 			//mediaStream.on( 'mouseup', '#bb-folder-privacy', this.editPrivacyDocumentSubmit.bind( this ) );
@@ -373,12 +399,12 @@ window.bp = window.bp || {};
 					if ( messageThreadList ) {
 						messageThreadList.addEventListener( 'scroll', bp.Nouveau.Media.throttledAutoPlayGifVideos.bind( bp.Nouveau.Media ), false );
 					}
-					
+
 					var activityModalBody = document.querySelector( '.bb-modal-activity-body' );
 					if ( activityModalBody ) {
 						activityModalBody.addEventListener( 'scroll', bp.Nouveau.Media.throttledAutoPlayGifVideos.bind( bp.Nouveau.Media ), false );
 					}
-					
+
 					var mediaModalActivityItem = document.querySelector( '.bb-media-model-container .activity-list .activity-item' );
 					if ( mediaModalActivityItem ) {
 						mediaModalActivityItem.addEventListener( 'scroll', bp.Nouveau.Media.throttledAutoPlayGifVideos.bind( bp.Nouveau.Media ), false );
@@ -439,6 +465,45 @@ window.bp = window.bp || {};
 
 			if ( this.bbp_is_reply_edit || this.bbp_is_topic_edit || this.bbp_is_forum_edit ) {
 				bp.Nouveau.Media.reply_topic_allow_delete_media = true;
+			}
+		},
+
+		/**
+		 * Update album photo and video counts in single album view.
+		 * Works for both Standard and ReadyLaunch modes.
+		 *
+		 * @param {Object} albumCounts - Album count data from server response
+		 * @param {number} albumCounts.album_media_count - Number of photos
+		 * @param {number} albumCounts.album_video_count - Number of videos
+		 */
+		updateAlbumCounts: function ( albumCounts ) {
+			// Check if we're in a single album view.
+			if ( ! $( '#buddypress #bp-media-single-album' ).length ) {
+				return;
+			}
+
+			var photoCount = parseInt( albumCounts.album_media_count ) || 0;
+			var videoCount = parseInt( albumCounts.album_video_count ) || 0;
+
+			// Format number with thousands separator.
+			var formatNumber = function( num ) {
+				return num.toString().replace( /\B(?=(\d{3})+(?!\d))/g, ',' );
+			};
+
+			// Update the photo count display.
+			var $photoCountSpan = $( '#buddypress .bb-album-photo-count' );
+			if ( $photoCountSpan.length > 0 ) {
+				// Standard mode: update with label.
+				var photoLabel = 1 === photoCount ? BP_Nouveau.media.i18n_strings.photo : BP_Nouveau.media.i18n_strings.photos;
+				$photoCountSpan.text( formatNumber( photoCount ) + ' ' + photoLabel );
+			}
+
+			// Update the video count display.
+			var $videoCountSpan = $( '#buddypress .bb-album-video-count' );
+			if ( $videoCountSpan.length > 0 ) {
+				// Standard mode: update with label.
+				var videoLabel = 1 === videoCount ? BP_Nouveau.media.i18n_strings.video : BP_Nouveau.media.i18n_strings.videos;
+				$videoCountSpan.text( formatNumber( videoCount ) + ' ' + videoLabel );
 			}
 		},
 
@@ -533,7 +598,7 @@ window.bp = window.bp || {};
 								targetPopup.find( '.location-folder-list-wrap .location-folder-list' ).remove();
 								targetPopup.find( '.location-folder-list-wrap' ).append( response.data.tree_view );
 
-								var targetPopupID = '#' + $( targetPopup ).attr( 'id' );
+								var targetPopupID = '#' + $( targetPopup ).attr( 'id' ) + '.open-popup';
 
 								if ( bp.Nouveau.Media.folderLocationUI ) {
 									bp.Nouveau.Media.folderLocationUI( targetPopupID, response.data.folder_id );
@@ -1128,6 +1193,7 @@ window.bp = window.bp || {};
 								target.removeClass( 'loading' );
 								$( document ).removeClass( 'open-popup' );
 							}
+							target.closest( '.bb-activity-media-wrap' ).find( '.bb-activity-media-elem.document-activity' ).attr( 'data-parent-id', folder_id );
 							target.closest( '.bp-media-move-file' ).find( '.ac-document-close-button' ).trigger( 'click' );
 						} else {
 							/* jshint ignore:start */
@@ -1193,7 +1259,13 @@ window.bp = window.bp || {};
 									$( document ).find( 'li#media-all' ).trigger( 'click' );
 								}
 							} else {
-								if ( parseInt( BP_Nouveau.media.current_album ) > 0 ) {
+								if (
+									parseInt( BP_Nouveau.media.current_album ) > 0 ||
+									(
+										'group' === BP_Nouveau.media.current_type &&
+										parseInt( BP_Nouveau.media.album_id ) > 0
+									)
+								) {
 									$( '#media-stream ul.media-list li[data-id="' + media_id + '"]' ).remove();
 								} else if ( $( '#activity-stream ul.activity-list li .activity-content .activity-inner .bb-activity-media-wrap div[data-id="' + media_id + '"]' ).length && !$( '#activity-stream ul.activity-list li .activity-content .activity-inner .bb-activity-media-wrap div[data-id="' + media_id + '"]' ).parent().hasClass( 'bb-media-length-1' ) ) {
 									$( '#activity-stream ul.activity-list li .activity-content .activity-inner .bb-activity-media-wrap div[data-id="' + media_id + '"]' ).remove();
@@ -1211,6 +1283,28 @@ window.bp = window.bp || {};
 							}
 							target.closest('.bp-media-move-file').find('.ac-media-close-button').trigger('click');
 							$(document).find('a.bb-open-media-theatre[data-id="' + media_id + '"]').data('album-id', album_id);
+
+							// Update album counts for both source and destination albums if present.
+							if ( response.data.source_album_id !== undefined || response.data.dest_album_id !== undefined ) {
+								var $albumContainer = $( '#buddypress #bp-media-single-album' );
+								if ( $albumContainer.length ) {
+									// Determine which album we're currently viewing from the DOM.
+									var currentAlbumId = parseInt( $albumContainer.attr( 'data-album-id' ) ) || 0;
+									var albumCounts = {};
+
+									// If we're viewing the source album, use source counts (item was removed).
+									// If we're viewing the destination album, use dest counts (item was added).
+									if ( currentAlbumId === response.data.source_album_id ) {
+										albumCounts.album_media_count = response.data.source_album_media_count;
+										albumCounts.album_video_count = response.data.source_album_video_count;
+									} else if ( currentAlbumId === response.data.dest_album_id ) {
+										albumCounts.album_media_count = response.data.dest_album_media_count;
+										albumCounts.album_video_count = response.data.dest_album_video_count;
+									}
+
+									self.updateAlbumCounts( albumCounts );
+								}
+							}
 
 						} else {
 							/* jshint ignore:start */
@@ -1315,11 +1409,6 @@ window.bp = window.bp || {};
 								$( '#activity-stream ul.activity-list li[data-bp-activity-id="' + activityId + '"] .activity-content .activity-inner .bb-activity-media-wrap' ).remove();
 								$( '#activity-stream ul.activity-list li[data-bp-activity-id="' + activityId + '"] .activity-content .activity-inner' ).append( response.data.media_content );
 
-								var length = $( '#activity-stream ul.activity-list li[data-bp-activity-id="' + activityId + '"] .activity-content .activity-inner .bb-activity-media-elem' ).length;
-								if ( length == 0 ) {
-									$( '#activity-stream ul.activity-list li[data-bp-activity-id="' + activityId + '"]' ).remove();
-								}
-
 								if ( true === response.data.delete_activity ) {
 									$( 'body #buddypress .activity-list li#activity-' + activityId ).remove();
 									$( 'body .bb-activity-media-elem.media-activity.' + id ).remove();
@@ -1347,7 +1436,7 @@ window.bp = window.bp || {};
 									if (
 										'undefined' !== typeof response.data &&
 										'undefined' !== typeof response.data.media_personal_count &&
-										$( '#buddypress .bp-wrap .users-nav' ).length > 0 
+										$( '#buddypress .bp-wrap .users-nav' ).length > 0
 									) {
 										if ( $( '#buddypress .bb-item-count' ).length > 0 && 'yes' !== BP_Nouveau.media.is_media_directory && ! BP_Nouveau.media.current_album ) {
 											dir_label = BP_Nouveau.dir_labels.hasOwnProperty( 'media' ) ?
@@ -1400,6 +1489,11 @@ window.bp = window.bp || {};
 												$( '#media-stream ul.media-list li[data-id="' + value + '"]' ).remove();
 											}
 										} );
+									}
+
+									// Update album counts if deleting from an album.
+									if ( response.data.album_total_count !== undefined ) {
+										self.updateAlbumCounts( response.data );
 									}
 								}
 							}
@@ -1483,6 +1577,11 @@ window.bp = window.bp || {};
 											$( '#media-stream ul.media-list li[data-id="' + value + '"]' ).remove();
 										}
 									} );
+								}
+
+								// Update album counts if deleting from an album.
+								if ( response.data.album_total_count !== undefined ) {
+									self.updateAlbumCounts( response.data );
 								}
 							} else {
 								$( '#buddypress #media-stream.media' ).prepend( response.data.feedback );
@@ -2485,7 +2584,7 @@ window.bp = window.bp || {};
 						function ( file, xhr, formData ) {
 							formData.append( 'action', 'media_upload' );
 							formData.append('_wpnonce', BP_Nouveau.nonces.media);
-							
+
 							var forumId = 0;
 							if ( $( '#bbp_forum_id' ).length ) {
 								forumId = $( '#bbp_forum_id' ).val();
@@ -3245,7 +3344,7 @@ window.bp = window.bp || {};
 						function ( file, xhr, formData ) {
 							formData.append( 'action', 'document_document_upload' );
 							formData.append( '_wpnonce', BP_Nouveau.nonces.media );
-							
+
 							var forumId = 0;
 							if ( $( '#bbp_forum_id' ).length ) {
 								forumId = $( '#bbp_forum_id' ).val();
@@ -3546,7 +3645,7 @@ window.bp = window.bp || {};
 						function ( file, xhr, formData ) {
 							formData.append( 'action', 'video_upload' );
 							formData.append( '_wpnonce', BP_Nouveau.nonces.video );
-							
+
 							var forumId = 0;
 							if ( $( '#bbp_forum_id' ).length ) {
 								forumId = $( '#bbp_forum_id' ).val();
@@ -3671,7 +3770,7 @@ window.bp = window.bp || {};
 										clearInterval( thumbnailCheck );
 									}
 								});
-								
+
 							} else {
 								var node, _i, _len, _ref, _results;
 								var message = response.data.feedback;
@@ -4169,6 +4268,7 @@ window.bp = window.bp || {};
 									action: 'document_get_folder_view',
 									id: this.moveToIdPopup,
 									type: this.moveToTypePopup,
+									_wpnonce: BP_Nouveau.nonces.media,
 								}, success: function ( response ) {
 									$( document ).find( '.bp-media-document-uploader .location-folder-list-wrap h4 span.where-to-move-profile-or-group-document' ).html( response.data.first_span_text );
 									if ( '' === response.data.html ) {
@@ -4570,39 +4670,83 @@ window.bp = window.bp || {};
 		openDocumentMove: function ( event ) {
 			event.preventDefault();
 
-			var currentTarget;
+			var currentTarget,
+				$currentTarget,
+				eventTarget = $( event.currentTarget );
 			/* jshint ignore:start */
-			var currentTargetName = $( event.currentTarget ).closest( '.bb-activity-media-elem' ).find( '.document-title' ).text();
+			var currentTargetName = eventTarget.closest( '.bb-activity-media-elem' ).find( '.document-title' ).text();
 			/* jshint ignore:end */
-			this.moveToIdPopup = $( event.currentTarget ).attr( 'id' );
-			this.moveToTypePopup = $( event.currentTarget ).attr( 'data-type' );
-			var action = $( event.currentTarget ).attr( 'data-action' );
+			this.moveToIdPopup = eventTarget.attr( 'id' );
+			this.moveToTypePopup = eventTarget.attr( 'data-type' );
+			var action = eventTarget.attr( 'data-action' );
 
-			// For Activity Feed.
-			if ( $( event.currentTarget ).closest( '.conflict-activity-ul-li-comment' ).closest( 'li.comment-item' ).length ) {
-				currentTarget = '#' + $( event.currentTarget ).closest( '.conflict-activity-ul-li-comment' ).closest( 'li' ).attr( 'id' ) + '.comment-item .bp-media-move-file';
-			} else {
-				currentTarget = '#' + $( event.currentTarget ).closest( 'li.activity-item' ).attr( 'id' ) + ' > .activity-content .bp-media-move-file';
+			// Hide all other open document move modals first to prevent duplicates
+			$( '.bp-media-move-file.open-popup, .bp-media-move-folder.open-popup' ).hide().removeClass( 'open-popup' );
+
+			// Find the modal within the closest context to avoid duplicates when activity modal is open
+			// First, determine the closest container (activity modal or main page)
+			var $contextContainer = eventTarget.closest( '#activity-modal' );
+			if ( $contextContainer.length === 0 ) {
+				$contextContainer = $( 'body' );
 			}
 
-			$( currentTarget ).find( '.bp-document-move' ).attr( 'id', $( event.currentTarget ).closest( '.document-activity' ).attr( 'data-id' ) );
-			this.currentTargetParent = $( event.currentTarget ).closest( '.bb-activity-media-elem' ).attr( 'data-parent-id' );
-
-			// Change if this is not from Activity Page.
-			if ( $( event.currentTarget ).closest( '.media-folder_items' ).length > 0 ) {
-				/* jshint ignore:start */
-				currentTargetName = $( event.currentTarget ).closest( '.media-folder_items' ).find( '.media-folder_name' ).text();
-				this.currentTargetParent = $( event.currentTarget ).closest( '.media-folder_items' ).attr( 'data-parent-id' );
-				/* jshint ignore:end */
-				if ( $( event.currentTarget ).hasClass( 'ac-document-move' ) ) { // Check if target is file or folder.
-					currentTarget = '.bp-media-move-file';
-					$( currentTarget ).find( '.bp-document-move' ).attr( 'id', $( event.currentTarget ).closest( '.media-folder_items' ).attr( 'data-id' ) );
-				} else {
-					currentTarget = '.bp-media-move-folder';
-					$( currentTarget ).find( '.bp-folder-move' ).attr( 'id', $( event.currentTarget ).closest( '.media-folder_items' ).attr( 'data-id' ) );
-
+			// For Activity Feed - find modal within the same context
+			if ( eventTarget.closest( '.conflict-activity-ul-li-comment' ).closest( 'li.comment-item' ).length ) {
+				var $commentItem = eventTarget.closest( 'li.comment-item' );
+				// Find modal within the comment item, but only in our context container
+				$currentTarget = $contextContainer.find( '#' + $commentItem.attr( 'id' ) + '.comment-item .bp-media-move-file' ).first();
+			} else {
+				var $activityItem = eventTarget.closest( 'li.activity-item' );
+				if ( $activityItem.length > 0 ) {
+					// Find modal within the activity item, but only in our context container
+					$currentTarget = $contextContainer.find( '#' + $activityItem.attr( 'id' ) + ' > .activity-content .bp-media-move-file' ).first();
 				}
 			}
+
+			// Fallback: if we still didn't find it, use the original selector but scoped to context
+			if ( !$currentTarget || $currentTarget.length === 0 ) {
+				if ( eventTarget.closest( '.conflict-activity-ul-li-comment' ).closest( 'li.comment-item' ).length ) {
+					var commentId = eventTarget.closest( 'li.comment-item' ).attr( 'id' );
+					$currentTarget = $contextContainer.find( '#' + commentId + '.comment-item .bp-media-move-file' ).first();
+				} else {
+					var activityId = eventTarget.closest( 'li.activity-item' ).attr( 'id' );
+					if ( activityId ) {
+						$currentTarget = $contextContainer.find( '#' + activityId + ' > .activity-content .bp-media-move-file' ).first();
+					}
+				}
+			}
+
+			if ( $currentTarget && $currentTarget.length > 0 ) {
+				$currentTarget.find( '.bp-document-move' ).attr( 'id', eventTarget.closest( '.document-activity' ).attr( 'data-id' ) );
+			}
+			this.currentTargetParent = eventTarget.closest( '.bb-activity-media-elem' ).attr( 'data-parent-id' );
+
+			// Change if this is not from Activity Page.
+			if ( eventTarget.closest( '.media-folder_items' ).length > 0 ) {
+				/* jshint ignore:start */
+				currentTargetName = eventTarget.closest( '.media-folder_items' ).find( '.media-folder_name' ).text();
+				this.currentTargetParent = eventTarget.closest( '.media-folder_items' ).attr( 'data-parent-id' );
+				/* jshint ignore:end */
+				if ( eventTarget.hasClass( 'ac-document-move' ) ) { // Check if target is file or folder.
+					$currentTarget = $contextContainer.find( '.bp-media-move-file' ).first();
+					if ( $currentTarget.length > 0 ) {
+						$currentTarget.find( '.bp-document-move' ).attr( 'id', eventTarget.closest( '.media-folder_items' ).attr( 'data-id' ) );
+					}
+				} else {
+					$currentTarget = $contextContainer.find( '.bp-media-move-folder' ).first();
+					if ( $currentTarget.length > 0 ) {
+						$currentTarget.find( '.bp-folder-move' ).attr( 'id', eventTarget.closest( '.media-folder_items' ).attr( 'data-id' ) );
+					}
+				}
+			}
+
+			if ( !$currentTarget || $currentTarget.length === 0 ) {
+				// Last resort: find any modal in the context, but this should rarely happen
+				$currentTarget = $contextContainer.find( '.bp-media-move-file' ).first();
+			}
+
+			// Convert to selector string for compatibility with existing code
+			currentTarget = $currentTarget.attr( 'id' ) ? '#' + $currentTarget.attr( 'id' ) : '.bp-media-move-file';
 
 			$( currentTarget ).find( '.location-folder-list-wrap .location-folder-list' ).remove();
 			$( currentTarget ).find( '.location-folder-list-wrap' ).append( '<ul class="location-folder-list is-loading"><li><i class="bb-icon-l bb-icon-spinner animate-spin"></i></li></ul>' );
@@ -4634,6 +4778,7 @@ window.bp = window.bp || {};
 							action: 'document_get_folder_view',
 							id: this.moveToIdPopup,
 							type: this.moveToTypePopup,
+							_wpnonce: BP_Nouveau.nonces.media,
 						}, success: function ( response ) {
 							$( document ).find( '.location-folder-list-wrap h4 span.where-to-move-profile-or-group-document' ).html( response.data.first_span_text );
 							if ( '' === response.data.html ) {
@@ -4685,12 +4830,18 @@ window.bp = window.bp || {};
 		 */
 		closeDocumentMove: function ( event ) {
 			event.preventDefault();
-			var closest_parent = jQuery( event.currentTarget ).closest( '.has-folderlocationUI' );
-			if ( $( event.currentTarget ).hasClass( 'ac-document-close-button' ) ) {
-				$( event.currentTarget ).closest( '.bp-media-move-file' ).hide().find( '.bp-document-move' ).attr( 'id', '' );
+			var eventTarget = $( event.currentTarget ),
+				closest_parent = jQuery( event.currentTarget ).closest( '.has-folderlocationUI' );
+			var $modalToClose;
 
+			if ( eventTarget.hasClass( 'ac-document-close-button' ) ) {
+				$modalToClose = eventTarget.closest( '.bp-media-move-file' );
+				// Close all visible document move modals to prevent duplicate modals issue
+				$( '.bp-media-move-file.open-popup' ).hide().removeClass( 'open-popup' ).find( '.bp-document-move' ).attr( 'id', '' );
 			} else {
-				$( event.currentTarget ).closest( '.bp-media-move-folder' ).hide().find( '.bp-folder-move' ).attr( 'id', '' );
+				$modalToClose = eventTarget.closest( '.bp-media-move-folder' );
+				// Close all visible folder move modals to prevent duplicate modals issue
+				$( '.bp-media-move-folder.open-popup' ).hide().removeClass( 'open-popup' ).find( '.bp-folder-move' ).attr( 'id', '' );
 			}
 
 			closest_parent.find( '.bp-document-move.loading' ).removeClass( 'loading' );
@@ -4963,6 +5114,7 @@ window.bp = window.bp || {};
 						action: 'document_get_folder_view',
 						id: id,
 						type: type,
+						_wpnonce: BP_Nouveau.nonces.media,
 					}, success: function ( response ) {
 						$( document ).find( '.location-folder-list-wrap h4 span.where-to-move-profile-or-group-document' ).html( response.data.first_span_text );
 						$( '.location-folder-list-wrap .location-folder-list' ).remove();
@@ -5066,7 +5218,7 @@ window.bp = window.bp || {};
 								$( this ).show();
 							} );
 
-							if ( currentTargetParent === $( targetPopup ).find( '.breadcrumbs-append-ul-li .item > span:last-child' ).attr( 'data-id' ) && ( $( targetPopup ).hasClass( 'bp-media-move-file' ) || $( targetPopup ).hasClass( 'bp-media-move-folder' ) ) ) {
+							if ( currentTargetParent === $( targetPopup ).find( '.breadcrumbs-append-ul-li .item > span[data-id]' ).last().attr( 'data-id' ) && ( $( targetPopup ).hasClass( 'bp-media-move-file' ) || $( targetPopup ).hasClass( 'bp-media-move-folder' ) ) ) {
 								$( targetPopup ).find( '.bp-document-move' ).addClass( 'is-disabled' );
 								$( targetPopup ).find( '.bp-folder-move' ).addClass( 'is-disabled' );
 							} else {
@@ -5077,14 +5229,13 @@ window.bp = window.bp || {};
 							//Disable move button if current folder is already a parent
 							setTimeout( function () {
 
-								var fileID = 0;
-
+								var fileID = 0, currentParentId =  $( targetPopup ).closest( '.bb-activity-media-wrap' ).find( '.bb-activity-media-elem.document-activity' ).attr( 'data-parent-id' );
 								if ( $( targetPopup ).find( '.breadcrumbs-append-ul-li .item > span:last-child' ).hasClass( 'hidden' ) ) {
 									fileID = $( targetPopup ).find( '.breadcrumbs-append-ul-li .item > span:last-child' ).prev().attr( 'id' );
 								} else {
 									fileID = $( targetPopup ).find( '.breadcrumbs-append-ul-li .item > span:last-child' ).attr( 'id' );
 								}
-								if ( currentTargetParent === fileID && ( $( targetPopup ).hasClass( 'bp-media-move-file' ) || $( targetPopup ).hasClass( 'bp-media-move-folder' ) ) ) {
+								if ( currentParentId === fileID && ( $( targetPopup ).hasClass( 'bp-media-move-file' ) || $( targetPopup ).hasClass( 'bp-media-move-folder' ) ) ) {
 									$( targetPopup ).find( '.bp-document-move' ).addClass( 'is-disabled' );
 									$( targetPopup ).find( '.bp-folder-move' ).addClass( 'is-disabled' );
 								} else {
@@ -5139,7 +5290,10 @@ window.bp = window.bp || {};
 
 							$( event.currentTarget ).nextAll().remove();
 
-							if ( currentTargetParent === $( targetPopup ).find( '.breadcrumbs-append-ul-li .item > span:last-child' ).attr( 'data-id' ) && ( $( targetPopup ).hasClass( 'bp-media-move-file' ) || $( targetPopup ).hasClass( 'bp-media-move-folder' ) ) ) {
+							if (
+								currentTargetParent === $( targetPopup ).find( '.breadcrumbs-append-ul-li .item > span[data-id]' ).last().attr( 'data-id' ) &&
+								( $( targetPopup ).hasClass( 'bp-media-move-file' ) || $( targetPopup ).hasClass( 'bp-media-move-folder' ) )
+							) {
 								$( targetPopup ).find( '.bp-document-move' ).addClass( 'is-disabled' );
 								$( targetPopup ).find( '.bp-folder-move' ).addClass( 'is-disabled' );
 							} else {
@@ -5242,7 +5396,7 @@ window.bp = window.bp || {};
 					} else {
 						fileID = $( targetPopup ).find( '.breadcrumbs-append-ul-li .item > span:last-child' ).attr( 'id' );
 					}
-					if ( currentTargetParent === fileID && ( $( targetPopup ).hasClass( 'bp-media-move-file' ) || $( targetPopup ).hasClass( 'bp-media-move-folder' ) ) ) {
+					if ( currentTargetParent === parseInt( fileID ) && ( $( targetPopup ).hasClass( 'bp-media-move-file' ) || $( targetPopup ).hasClass( 'bp-media-move-folder' ) ) ) {
 						$( targetPopup ).find( '.bp-document-move' ).addClass( 'is-disabled' );
 						$( targetPopup ).find( '.bp-folder-move' ).addClass( 'is-disabled' );
 					} else {
@@ -5450,6 +5604,11 @@ window.bp = window.bp || {};
 									}
 								}
 
+								// Update album counts if uploading to an album.
+								if ( response.data.album_total_count !== undefined ) {
+									self.updateAlbumCounts( response.data );
+								}
+
 								for ( var i = 0; i < self.dropzone_media.length; i++ ) {
 									self.dropzone_media[ i ].saved = true;
 								}
@@ -5524,6 +5683,28 @@ window.bp = window.bp || {};
 										}
 									}
 								);
+
+								// Update album counts for both source and destination albums if present.
+								if ( response.data.source_album_id !== undefined || response.data.dest_album_id !== undefined ) {
+									var $albumContainer = $( '#buddypress #bp-media-single-album' );
+									if ( $albumContainer.length ) {
+										// Determine which album we're currently viewing from the DOM.
+										var currentAlbumId = parseInt( $albumContainer.attr( 'data-album-id' ) ) || 0;
+										var albumCounts = {};
+
+										// If we're viewing the source album, use source counts (item was removed).
+										// If we're viewing the destination album, use dest counts (item was added).
+										if ( currentAlbumId === response.data.source_album_id ) {
+											albumCounts.album_media_count = response.data.source_album_media_count;
+											albumCounts.album_video_count = response.data.source_album_video_count;
+										} else if ( currentAlbumId === response.data.dest_album_id ) {
+											albumCounts.album_media_count = response.data.dest_album_media_count;
+											albumCounts.album_video_count = response.data.dest_album_video_count;
+										}
+
+										self.updateAlbumCounts( albumCounts );
+									}
+								}
 
 								jQuery( window ).scroll();
 
@@ -6421,24 +6602,24 @@ window.bp = window.bp || {};
 		isElementInScrollableContainer: function( element ) {
 			var $element = $( element );
 			var elementRect = element.getBoundingClientRect();
-			
+
 			// Find the closest scrollable container
 			var $scrollableContainer = $element.closest( '#bp-message-thread-list' );
-			
+
 			// Check for activity modal body
 			if ( !$scrollableContainer.length ) {
 				$scrollableContainer = $element.closest( '.bb-modal-activity-body' );
 			}
-			
+
 			// Check for media modal activity item
 			if ( !$scrollableContainer.length ) {
 				$scrollableContainer = $element.closest( '.bb-media-model-container .activity-list .activity-item' );
 			}
-			
+
 			if ( $scrollableContainer.length ) {
 				// Check if element is visible within the scrollable container
 				var containerRect = $scrollableContainer[0].getBoundingClientRect();
-				
+
 				// Element is visible if it overlaps with the container bounds (allows partial visibility)
 				var isVisible = (
 					elementRect.bottom > containerRect.top &&
@@ -6446,7 +6627,7 @@ window.bp = window.bp || {};
 					elementRect.right > containerRect.left &&
 					elementRect.left < containerRect.right
 				);
-				
+
 				return isVisible;
 			} else {
 				// Fallback to regular viewport check
@@ -6461,7 +6642,7 @@ window.bp = window.bp || {};
 			if ( this.throttleTimer ) {
 				return;
 			}
-			
+
 			this.throttleTimer = setTimeout( function() {
 				bp.Nouveau.Media.throttleTimer = null;
 				bp.Nouveau.Media.autoPlayGifVideos();
@@ -6492,20 +6673,20 @@ window.bp = window.bp || {};
 					}
 
 					var isVisible = bp.Nouveau.Media.isElementInScrollableContainer( this );
-					
+
 					if ( isVisible ) {
 						// Play the video.
 						video.play().catch( function( error ) {
 							// Silently handle play errors (e.g., user hasn't interacted with page yet)
 							console.debug( 'GIF autoplay failed:', error );
 						});
-						
+
 						// Update the button text to 'Pause'.
 						$button.hide();
 					} else {
 						// Pause the video
 						video.pause();
-						
+
 						// Update the button text to 'Play'.
 						$button.show();
 					}
@@ -6520,14 +6701,14 @@ window.bp = window.bp || {};
 			var retryCount = 0;
 			var maxRetries = 10;
 			var setupCompleted = false;
-			
+
 			function attemptSetup() {
 				if ( setupCompleted ) {
 					return;
 				}
-				
+
 				var mediaModalActivityItem = document.querySelector( '.bb-media-model-container .activity-list .activity-item' );
-				
+
 				if ( mediaModalActivityItem ) {
 					setupCompleted = true;
 					try {
@@ -6535,10 +6716,10 @@ window.bp = window.bp || {};
 						mediaModalActivityItem.removeEventListener( 'scroll', bp.Nouveau.Media.throttledAutoPlayGifVideos.bind( bp.Nouveau.Media ) );
 						// Add scroll event listener
 						mediaModalActivityItem.addEventListener( 'scroll', bp.Nouveau.Media.throttledAutoPlayGifVideos.bind( bp.Nouveau.Media ), false );
-						
+
 						// Trigger initial check for GIFs in the modal
 						bp.Nouveau.Media.invokeMediaFn( 'autoPlayGifVideos' );
-						
+
 					} catch ( error ) {
 						console.debug( 'Error setting up media modal GIF autoplay:', error );
 					}
@@ -6548,7 +6729,7 @@ window.bp = window.bp || {};
 					setTimeout( attemptSetup, 200 );
 				}
 			}
-			
+
 			// Start the setup process
 			setTimeout( attemptSetup, 100 );
 		},
@@ -6970,7 +7151,7 @@ window.bp = window.bp || {};
 			}
 							$( '.bb-media-model-wrapper.video' ).hide();
 				$( '.bb-media-model-wrapper.media' ).show();
-				
+
 				// Setup GIF autoplay for the newly shown media modal
 				bp.Nouveau.Media.invokeMediaFn( 'setupMediaModalGifAutoplay' );
 			self.is_open_media = true;
@@ -7091,12 +7272,12 @@ window.bp = window.bp || {};
 			self.is_open_document = true;
 
 			self.bodySelector.addClass( 'document-modal-open' );
-			
+
 			// Setup GIF autoplay for the newly shown document modal
 			setTimeout( function() {
 				bp.Nouveau.Media.invokeMediaFn( 'setupMediaModalGifAutoplay' );
 			}, 500 );
-			
+
 			//document.addEventListener( 'keyup', self.checkPressedKeyDocuments.bind( self ) );
 		},
 
@@ -7440,7 +7621,7 @@ window.bp = window.bp || {};
 				document_elements.find( '.bb-document-section .document-preview .document-text' ).attr( 'data-extension', extension );
 
 				var $textarea = document_elements.find( '.bb-document-section .document-preview .document-text textarea' );
-    
+
 				// Special handling for HTML files.
 				if ( 'html' === extension || 'htm' === extension ) {
 					$textarea.val(mirror_text_display);
@@ -7525,7 +7706,7 @@ window.bp = window.bp || {};
 				self.current_media = self.medias[ self.current_index ];
 				self.showMedia();
 				self.getMediasDescription();
-				
+
 				// Trigger GIF autoplay check when navigating to next media
 				setTimeout( function() {
 					bp.Nouveau.Media.invokeMediaFn( 'autoPlayGifVideos' );
@@ -7545,7 +7726,7 @@ window.bp = window.bp || {};
 				self.current_media = self.medias[ self.current_index ];
 				self.showMedia();
 				self.getMediasDescription();
-				
+
 				// Trigger GIF autoplay check when navigating to previous media
 				setTimeout( function() {
 					bp.Nouveau.Media.invokeMediaFn( 'autoPlayGifVideos' );

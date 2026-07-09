@@ -1,0 +1,101 @@
+.bb-admin-settings-color-picker {
+	position: relative;
+	display: inline-block;
+	width: auto !important;
+
+	&__button {
+		display: inline-flex;
+		align-items: center;
+		gap: 0;
+		padding: 0;
+		height: 40px;
+		border: 1px solid $bb-border-secondary-color;
+		border-radius: $bb-border-radius-lg;
+		background-color: $bb-background-primary-color;
+		box-shadow: none;
+		cursor: pointer;
+		transition: $bb-transition;
+
+		&:focus:not(:disabled),
+		&:focus-visible:not(:disabled) {
+			outline: 2px solid $bb-border-quinery;
+		}
+
+		&:disabled,
+		&[aria-disabled='true'] {
+			opacity: 0.5;
+			cursor: not-allowed;
+		}
+	}
+
+	&__swatch {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 40px;
+		height: 100%;
+
+		.component-color-indicator {
+			width: 24px;
+			height: 24px;
+			border-radius: $bb-border-radius-sm;
+			border: 1px solid $bb-border-primary-color;
+			margin: 0;
+			box-shadow: none;
+		}
+	}
+
+	&__value {
+		display: inline-flex;
+		align-items: center;
+		height: 100%;
+		padding: 0 16px 0 4px;
+		font-size: 14px;
+		font-weight: 400;
+		line-height: 1;
+		color: $bb-text-secondary-color;
+		text-transform: uppercase;
+		letter-spacing: 0.01em;
+	}
+
+	&__popover {
+
+		.components-popover__content {
+			padding: 0;
+			border-radius: $bb-border-radius-lg;
+			border: 1px solid $bb-border-primary-color;
+			box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+			overflow: hidden;
+			background-color: $bb-background-base-color;
+		}
+	}
+
+	&__popover-content {
+		display: flex;
+		flex-direction: column;
+		min-width: 240px;
+
+		.components-color-picker {
+			padding: 12px 12px 0;
+			width: 100%;
+
+			.components-input-control__container {
+				width: 100%;
+			}
+		}
+	}
+
+	&__popover-footer {
+		display: flex;
+		align-items: center;
+		justify-content: flex-end;
+		padding: 8px 12px 12px;
+	}
+
+	&__apply {
+
+		&.components-button {
+			@include bb-button-primary;
+		}
+	}
+}

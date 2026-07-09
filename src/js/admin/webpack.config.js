@@ -1,4 +1,5 @@
 const defaultConfig = require('@wordpress/scripts/config/webpack.config');
+const DependencyExtractionWebpackPlugin = require('@wordpress/dependency-extraction-webpack-plugin');
 const path = require('path');
 
 // Find the CSS rule in the default WordPress webpack config
@@ -29,26 +30,40 @@ const scssRule = {
 // Check if we're building for a specific target
 const buildTarget = process.env.BUILD_TARGET || 'all';
 
-// ReadyLaunch configuration
-const readylaunchConfig = {
-    ...defaultConfig,
-    name: 'readylaunch',
-    entry: {
-        'index': path.resolve(__dirname, 'readylaunch/index.js'),
-    },
-    output: {
-        path: path.resolve(__dirname, '../../bp-core/admin/bb-settings/readylaunch/build'),
-        filename: '[name].js',
-        clean: false, // Prevent cleaning other build directories
-    },
-    module: {
-        ...defaultConfig.module,
-        rules: [
-            ...rules,
-            scssRule,
-        ],
-    },
-};
+/**
+ * Replace the inherited DependencyExtractionWebpackPlugin instance with one
+ * that also externalizes `@bb/admin-common` → `window.bbAdminCommon` and
+ * declares the `bb-admin-common` WP script handle as a dependency.
+ *
+ * Must NOT add a second instance — `defaultConfig` already contains one.
+ * Two instances fight over the generated `.asset.php` file.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {Object} config - A webpack config object that inherits from defaultConfig.
+ * @returns {Object} Config with the DependencyExtractionWebpackPlugin replaced.
+ */
+function withCommonExternal(config) {
+    const plugins = (config.plugins || []).filter(
+        (p) => p.constructor && p.constructor.name !== 'DependencyExtractionWebpackPlugin'
+    );
+    plugins.push(
+        new DependencyExtractionWebpackPlugin({
+            requestToExternal(request) {
+                if (request === '@bb/admin-common') {
+                    return 'bbAdminCommon';
+                }
+                // return undefined → default @wordpress/* handling applies.
+            },
+            requestToHandle(request) {
+                if (request === '@bb/admin-common') {
+                    return 'bb-admin-common';
+                }
+            },
+        })
+    );
+    return { ...config, plugins };
+}
 
 // RL Onboarding configuration
 const rlOnboardingConfig = {
@@ -71,12 +86,93 @@ const rlOnboardingConfig = {
     },
 };
 
-// Export configuration based on build target
-if (buildTarget === 'readylaunch') {
-    module.exports = readylaunchConfig;
+// Settings configuration
+const settingsConfig = withCommonExternal({
+    ...defaultConfig,
+    name: 'settings',
+    entry: {
+        'index': path.resolve(__dirname, 'settings/index.js'),
+    },
+    output: {
+        path: path.resolve(__dirname, '../../bp-core/admin/bb-settings/settings/build'),
+        filename: '[name].js',
+        clean: {
+            keep: /styles/, // Keep the styles directory (SCSS output)
+        },
+    },
+    module: {
+        ...defaultConfig.module,
+        rules: [
+            ...rules,
+            scssRule,
+        ],
+    },
+});
+
+// Integrations marketplace configuration.
+// Standalone admin page (BuddyBoss → Integrations); its own bundle so it never
+// loads on the Settings page and vice-versa.
+const integrationsConfig = withCommonExternal({
+    ...defaultConfig,
+    name: 'integrations',
+    entry: {
+        'index': path.resolve(__dirname, 'integrations/index.js'),
+    },
+    output: {
+        path: path.resolve(__dirname, '../../bp-core/admin/bb-settings/integrations/build'),
+        filename: '[name].js',
+        clean: {
+            keep: /styles/, // Keep the styles directory (SCSS output)
+        },
+    },
+    module: {
+        ...defaultConfig.module,
+        rules: [
+            ...rules,
+            scssRule,
+        ],
+    },
+});
+
+// Shared admin-common layer — built ONCE, consumed by every admin app as an external.
+// Exposes its exports on window.bbAdminCommon so app bundles can import
+// `@bb/admin-common` as an external (no code duplication across bundles).
+//
+// NOTE: commonConfig intentionally does NOT use withCommonExternal() — it IS
+// window.bbAdminCommon, so it must not externalize itself. Only consumer configs
+// (settings, integrations) are wrapped with withCommonExternal().
+const commonConfig = {
+    ...defaultConfig,
+    name: 'common',
+    entry: {
+        index: path.resolve(__dirname, 'common/index.js'),
+    },
+    output: {
+        path: path.resolve(__dirname, '../../bp-core/admin/bb-settings/common/build'),
+        filename: '[name].js',
+        library: { name: 'bbAdminCommon', type: 'window' },
+        clean: { keep: /styles/ },
+    },
+    module: {
+        ...defaultConfig.module,
+        rules: [...rules, scssRule],
+    },
+};
+
+// Export configuration based on build target.
+// `readylaunch` target retired in BuddyBoss [BBVERSION] — legacy admin page
+// folded into Settings Appearance feature.
+if (buildTarget === 'common') {
+    module.exports = commonConfig;
 } else if (buildTarget === 'rl-onboarding') {
     module.exports = rlOnboardingConfig;
+} else if (buildTarget === 'settings') {
+    module.exports = settingsConfig;
+} else if (buildTarget === 'integrations') {
+    module.exports = integrationsConfig;
 } else {
-    // Default: export both configurations for combined builds
-    module.exports = [readylaunchConfig, rlOnboardingConfig];
-} 
+    // Default: export all configurations for combined builds. common is listed
+    // before settings/integrations to mirror the package.json build order (they
+    // externalize @bb/admin-common as a runtime dep, so order is cosmetic here).
+    module.exports = [rlOnboardingConfig, commonConfig, settingsConfig, integrationsConfig];
+}

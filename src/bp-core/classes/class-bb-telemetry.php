@@ -68,7 +68,16 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 			global $wpdb;
 			self::$wpdb = $wpdb;
 
-			self::$bb_telemetry_option = bp_get_option( 'bb_advanced_telemetry_reporting', 'anonymous' );
+			/**
+			 * Filters the telemetry reporting mode.
+			 *
+			 * Pro uses this to force 'complete' mode for paid users.
+			 *
+			 * @since BuddyBoss 3.0.0
+			 *
+			 * @param string $mode Telemetry mode: 'complete', 'anonymous', or 'disable'.
+			 */
+			self::$bb_telemetry_option = apply_filters( 'bb_advanced_telemetry_reporting_value', bp_get_option( 'bb_advanced_telemetry_reporting', 'disable' ) );
 
 			// Schedule the CRON event only if it's not already scheduled.
 			if ( ! wp_next_scheduled( 'bb_telemetry_report_cron_event' ) ) {
@@ -134,20 +143,22 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 				'sslverify' => apply_filters( 'https_local_ssl_verify', false ), // Local requests.
 			);
 
-			$raw_response = wp_safe_remote_post( base64_decode( $api_url ), $args );
-			if ( ! empty( $raw_response ) && is_wp_error( $raw_response ) ) {
-				unset( $data, $auth_key, $api_url, $args );
+			$raw_response = wp_safe_remote_post( base64_decode( $api_url ), $args ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_decode
+			if ( is_wp_error( $raw_response ) ) {
+				unset( $data, $api_url, $args );
 
 				return $raw_response;
-			} elseif ( ! empty( $raw_response ) && 200 !== wp_remote_retrieve_response_code( $raw_response ) ) {
-				unset( $data, $auth_key, $api_url, $args );
+			}
+
+			if ( 200 !== wp_remote_retrieve_response_code( $raw_response ) ) {
+				unset( $data, $api_url, $args );
 
 				return new WP_Error( 'server_error', wp_remote_retrieve_response_message( $raw_response ) );
-			} else {
-				unset( $data, $auth_key, $api_url, $args, $raw_response );
-
-				return new WP_Error( 'server_error', __( 'An error occurred while sending the telemetry report.', 'buddyboss' ) );
 			}
+
+			unset( $data, $api_url, $args, $raw_response );
+
+			return true;
 		}
 
 		/**
@@ -187,7 +198,7 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 				'mysql_version' => self::$wpdb->db_version(),
 				'db_provider'   => self::$wpdb->dbhost,
 				'os'            => php_uname( 's' ),
-				'webserver'     => $_SERVER['SERVER_SOFTWARE'],
+				'webserver'     => isset( $_SERVER['SERVER_SOFTWARE'] ) ? sanitize_text_field( wp_unslash( $_SERVER['SERVER_SOFTWARE'] ) ) : '', // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotValidated
 				'plugins'       => $this->bb_get_plugins_data(),
 				'themes'        => $this->bb_get_themes_data(),
 				'is_multisite'  => is_multisite(),
@@ -300,7 +311,7 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 		 * @return bool True if the domain is not allowlisted, false otherwise.
 		 */
 		public function bb_whitelist_domain_for_telemetry() {
-			$server_name = ! empty( $_SERVER['SERVER_NAME'] ) ? wp_unslash( $_SERVER['SERVER_NAME'] ) : ''; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+			$server_name = ! empty( $_SERVER['SERVER_NAME'] ) ? sanitize_text_field( wp_unslash( $_SERVER['SERVER_NAME'] ) ) : '';
 
 			$whitelist_domain = array(
 				'.test',
@@ -419,10 +430,10 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 					'bp_media_symlink_direct_access',
 					'bp_video_extensions_support',
 					'_bp_on_screen_notifications_enable',
-					'_bp_on_screen_notification_position',
-					'_bp_on_screen_notification_mobile_support',
-					'_bp_on_screen_notification_visibility',
-					'_bp_on_screen_notification_browser_tab',
+					'_bp_on_screen_notifications_position',
+					'_bp_on_screen_notifications_mobile_support',
+					'_bp_on_screen_notifications_visibility',
+					'_bp_on_screen_notifications_browser_tab',
 					'_bp_db_version',
 					'bb_pinned_post',
 					'bp_document_extensions_support',
@@ -486,10 +497,12 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 			}
 			$bb_telemetry_data['bp-active-components'] = $active_components;
 
-			// Fetch options from the database.
-			$bp_prefix = bp_core_get_table_prefix();
-			$query     = "SELECT option_name, option_value FROM {$bp_prefix}options WHERE option_name IN ('" . implode( "','", $bb_platform_db_options ) . "');";
-			$results   = $wpdb->get_results( $query, ARRAY_A );
+			// Fetch options from the database using parameterized query.
+			$bp_prefix    = bp_core_get_table_prefix();
+			$sanitized    = array_map( 'sanitize_key', $bb_platform_db_options );
+			$placeholders = implode( ', ', array_fill( 0, count( $sanitized ), '%s' ) );
+			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table prefix is safe; placeholders are parameterized.
+			$results = $wpdb->get_results( $wpdb->prepare( "SELECT option_name, option_value FROM {$bp_prefix}options WHERE option_name IN ({$placeholders})", $sanitized ), ARRAY_A );
 
 			if ( ! empty( $results ) ) {
 				foreach ( $results as $result ) {
@@ -498,6 +511,9 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 			}
 
 			unset( $bp_prefix, $query, $results, $bb_platform_db_options );
+
+			// Tools usage → cumulative per-action counts for Repair / Sample Data / Migration.
+			$bb_telemetry_data['tools_usage'] = bb_get_tool_usage();
 
 			/**
 			 * Filters the telemetry platform data.
@@ -524,22 +540,31 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 				'bp-learndash' => false,
 				'bb-recaptcha' => false,
 			);
-			if ( is_plugin_active( 'sfwd-lms/sfwd_lms.php' ) ) {
-				$options = bp_get_option( 'bp_ld_sync_settings', array() );
-				if (
-					! empty( $options['buddypress']['enabled'] ) ||
-					! empty( $options['learndash']['enabled'] )
-				) {
-					$active_integrations['bp-learndash'] = true;
-				}
-			}
+
 			if ( function_exists( 'bb_recaptcha_site_key' ) && ! empty( bb_recaptcha_site_key() ) ) {
 				$active_integrations['bb-recaptcha'] = true;
 			}
 
+			// Legacy Pro integration function — runs before the filter for
+			// backwards compat with existing Pro versions. Pro can migrate
+			// to the filter at its own pace.
 			if ( function_exists( 'bb_pro_active_integrations' ) ) {
 				$active_integrations = bb_pro_active_integrations( $active_integrations );
 			}
+
+			/**
+			 * Filter the telemetry active-integrations map. Addons set their
+			 * own status here instead of Platform knowing how to detect them.
+			 *
+			 * The pre-3.0.0 inline LearnDash detection
+			 * (sfwd-lms + bp_ld_sync_settings) moved to buddyboss-learndash
+			 * as a subscriber to this filter.
+			 *
+			 * @since BuddyBoss 3.0.0
+			 *
+			 * @param array $active_integrations Map of integration_id => bool.
+			 */
+			$active_integrations = apply_filters( 'bb_telemetry_active_integrations', $active_integrations );
 
 			return $active_integrations;
 		}
@@ -556,7 +581,7 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 				return; // Do not display the notice if it's been dismissed.
 			}
 			// URL for the telemetry settings page.
-			$settings_url  = admin_url( 'admin.php?page=bp-settings&tab=bp-advanced' );
+			$settings_url  = admin_url( 'admin.php?page=bb-settings&tab=advanced&panel=telemetry' );
 			$telemetry_url = 'https://www.buddyboss.com/usage-tracking/?utm_source=product&utm_medium=platform&utm_campaign=telemetry';
 			?>
 			<div class="notice notice-info is-dismissible bb-telemetry-notice" data-nonce="<?php echo esc_attr( wp_create_nonce( 'bb-telemetry-notice-nonce' ) ); ?>">
@@ -599,17 +624,23 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 		 */
 		public function bb_telemetry_notice_dismissed() {
 
+			// Capability check before nonce — cheaper, avoids consuming nonce for unauthorized users.
+			// Use manage_options to match the audience that sees the admin notice
+			// (admin_notices fires for any admin viewer; manage_options matches
+			// the network-admin-friendly subset that can dismiss it).
+			if ( ! current_user_can( 'manage_options' ) ) {
+				wp_send_json_error( array( 'error' => __( 'You do not have permission to perform this action.', 'buddyboss' ) ) );
+			}
+
 			$bb_telemetry_nonce = bb_filter_input_string( INPUT_POST, 'nonce' );
 
 			// Nonce check.
 			if ( empty( $bb_telemetry_nonce ) || ! wp_verify_nonce( $bb_telemetry_nonce, 'bb-telemetry-notice-nonce' ) ) {
 				wp_send_json_error( array( 'error' => __( 'Sorry, something goes wrong please try again.', 'buddyboss' ) ) );
-				unset( $bb_telemetry_nonce );
 			}
 
 			bp_update_option( 'bb_telemetry_notice_dismissed', 1 );
 			wp_send_json_success();
-			unset( $bb_telemetry_nonce );
 		}
 	}
 }

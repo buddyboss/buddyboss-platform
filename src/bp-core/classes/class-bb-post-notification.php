@@ -95,7 +95,7 @@ class BB_Post_Notification extends BP_Core_Notification_Abstract {
 				'email_plain_content' => __( "{{commenter.name}} replied to your comment:\n\n{{{comment_reply}}}\n\nView the comment: {{{comment.url}}}", 'buddyboss' ),
 				'situation_label'     => __( 'A member receives a reply to their WordPress post comment', 'buddyboss' ),
 				'unsubscribe_text'    => __( 'You will no longer receive emails when someone replies to your comments.', 'buddyboss' ),
-
+				'group'               => 'activity',
 			),
 			'bb_posts_new_comment_reply'
 		);

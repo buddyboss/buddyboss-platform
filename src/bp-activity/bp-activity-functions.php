@@ -286,8 +286,16 @@ function bp_activity_get_userid_from_mentionname( $mentionname ) {
 		// account for hyphens + spaces in the same user_login.
 		if ( empty( $userdata ) || ! is_a( $userdata, 'WP_User' ) ) {
 			global $wpdb;
-			$regex   = esc_sql( str_replace( '-', '[ \-]', $mentionname ) );
-			$user_id = $wpdb->get_var( "SELECT ID FROM {$wpdb->users} WHERE user_login REGEXP '{$regex}'" );
+			// Defense-in-depth: pass the regex through prepare's %s placeholder.
+			// See bp_get_userid_from_mentionname() in bp-core-functions.php for
+			// the canonical implementation — this deprecated copy mirrors it.
+			$regex   = str_replace( '-', '[ \-]', $mentionname );
+			$user_id = $wpdb->get_var(
+				$wpdb->prepare(
+					"SELECT ID FROM {$wpdb->users} WHERE user_login REGEXP %s",
+					$regex
+				)
+			);
 		} else {
 			$user_id = $userdata->ID;
 		}
@@ -931,7 +939,9 @@ function bp_activity_get_user_favorites( $user_id = 0, $activity_type = 'activit
 	}
 
 	// Get favorites for user.
-	$favs = bb_activity_get_user_reacted_item_ids( $user_id, $activity_type );
+	$favs = function_exists( 'bb_activity_get_user_reacted_item_ids' )
+		? bb_activity_get_user_reacted_item_ids( $user_id, $activity_type )
+		: array();
 
 	/**
 	 * Filters the favorited activity items for a specified user.
@@ -956,14 +966,24 @@ function bp_activity_get_user_favorites( $user_id = 0, $activity_type = 'activit
  * @return WP_Error|object|bool Object on success, WP_Error on failure.
  */
 function bp_activity_add_user_favorite( $activity_id, $user_id = 0, $args = array() ) {
+	$reaction = bb_load_reaction();
+
 	$r = bp_parse_args(
 		$args,
 		array(
 			'type'        => 'activity',
-			'reaction_id' => bb_load_reaction()->bb_reactions_reaction_id(),
+			'reaction_id' => $reaction ? $reaction->bb_reactions_reaction_id() : 0,
 			'error_type'  => 'bool',
 		)
 	);
+
+	// If reaction system is not loaded, bail.
+	if ( ! $reaction ) {
+		return ( 'bool' === $r['error_type'] ) ? false : new WP_Error(
+			'bp_activity_add_user_favorite_disabled',
+			esc_html__( 'Reactions are not available.', 'buddyboss' )
+		);
+	}
 
 	// Fallback to logged in user if no user_id is passed.
 	if ( empty( $user_id ) ) {
@@ -996,7 +1016,7 @@ function bp_activity_add_user_favorite( $activity_id, $user_id = 0, $args = arra
 		}
 	}
 
-	$reacted = bb_load_reaction()->bb_add_user_item_reaction(
+	$reacted = $reaction->bb_add_user_item_reaction(
 		array(
 			'item_type'   => $r['type'],
 			'reaction_id' => $r['reaction_id'],
@@ -1073,6 +1093,15 @@ function bp_activity_remove_user_favorite( $activity_id, $user_id = 0, $args = a
 		$user_id = bp_loggedin_user_id();
 	}
 
+	// If reaction system is not loaded, bail.
+	$reaction = bb_load_reaction();
+	if ( ! $reaction ) {
+		return ( 'bool' === $r['error_type'] ) ? false : new WP_Error(
+			'bp_activity_remove_user_favorite_disabled',
+			esc_html__( 'Reactions are not available.', 'buddyboss' )
+		);
+	}
+
 	// Check if migration is in progress.
 	if (
 		function_exists( 'bb_pro_reaction_get_migration_status' ) &&
@@ -1089,7 +1118,7 @@ function bp_activity_remove_user_favorite( $activity_id, $user_id = 0, $args = a
 	}
 
 	// Check if user try to un-react but there is no reaction id as per current reaction mode.
-	$reacted_reaction_id = bb_load_reaction()->bb_user_reacted_reaction_id(
+	$reacted_reaction_id = $reaction->bb_user_reacted_reaction_id(
 		array(
 			'item_id'   => $activity_id,
 			'item_type' => $r['type'],
@@ -1108,7 +1137,7 @@ function bp_activity_remove_user_favorite( $activity_id, $user_id = 0, $args = a
 		}
 	}
 
-	$un_reacted = bb_load_reaction()->bb_remove_user_item_reactions(
+	$un_reacted = $reaction->bb_remove_user_item_reactions(
 		array(
 			'item_type'  => $r['type'],
 			'item_id'    => $activity_id,
@@ -1155,7 +1184,7 @@ function bp_activity_favorites_upgrade_data() {
 	if ( ! $bp_activity_favorites && bp_is_active( 'activity' ) ) {
 
 		if ( bp_is_large_install() ) {
-			$admin_url = bp_get_admin_url( add_query_arg( array( 'page' => 'bp-tools' ), 'admin.php' ) );
+			$admin_url = bp_get_admin_url( add_query_arg( array( 'page' => 'bb-settings', 'tab' => 'tools', 'panel' => 'repair_platform' ), 'admin.php' ) );
 			$notice    = sprintf(
 				'%1$s <a href="%2$s">%3$s</a> %4$s',
 				__( 'Due to the large size of your users table, you need to manually update user activity favorites data via BuddyBoss > ', 'buddyboss' ),
@@ -1432,11 +1461,14 @@ function bp_activity_remove_all_user_data( $user_id = 0 ) {
 	bp_delete_user_meta( $user_id, 'bp_favorite_activities' );
 
 	// Remove user reactions from reactions table.
-	bb_load_reaction()->bb_remove_user_item_reactions(
-		array(
-			'user_id' => $user_id,
-		)
-	);
+	$reaction = bb_load_reaction();
+	if ( $reaction ) {
+		$reaction->bb_remove_user_item_reactions(
+			array(
+				'user_id' => $user_id,
+			)
+		);
+	}
 
 	// Execute additional code
 	do_action( 'bp_activity_remove_data', $user_id ); // Deprecated! Do not use!
@@ -2980,6 +3012,19 @@ function bp_activity_new_comment( $args = '' ) {
 		)
 	);
 
+	/**
+	 * Filters the parsed arguments for a new activity comment before processing.
+	 *
+	 * This filter allows modification of comment arguments before any validation
+	 * or database operations occur. It can be used to redirect replies to different
+	 * parent comments (e.g., for threading depth limits).
+	 *
+	 * @since BuddyBoss 2.20.0
+	 *
+	 * @param array $r Parsed arguments for the new comment.
+	 */
+	$r = apply_filters( 'bb_activity_new_comment_pre_validate', $r );
+
 	// Error type is boolean; need to initialize some variables for backpat.
 	if ( 'bool' === $r['error_type'] ) {
 		if ( empty( $bp->activity->errors ) ) {
@@ -3167,9 +3212,14 @@ function bp_activity_new_comment( $args = '' ) {
 	wp_cache_delete( $activity_id, 'bp_activity_comments' );
 	wp_cache_delete( 'bp_get_child_comments_' . $activity_id, 'bp_activity_comments' );
 
+	// Clear comment chain cache for the parent comment.
+	if ( ! empty( $r['parent_id'] ) && (int) $r['parent_id'] !== (int) $activity_id ) {
+		wp_cache_delete( 'bb_comment_chain_' . (int) $r['parent_id'] . '_' . (int) $activity_id, 'bp_activity_comments' );
+	}
+
 	// Walk the tree to clear caches for all parent items.
 	$clear_id = $r['parent_id'];
-	while ( $clear_id != $activity_id ) {
+	while ( (int) $clear_id !== (int) $activity_id ) {
 		$clear_object = new BP_Activity_Activity( $clear_id );
 		wp_cache_delete( $clear_id, 'bp_activity' );
 		$clear_id = intval( $clear_object->secondary_item_id );
@@ -3569,6 +3619,9 @@ function bp_activity_delete_comment( $activity_id, $comment_id ) {
 	// Purge comment cache for the root activity update.
 	wp_cache_delete( $activity_id, 'bp_activity_comments' );
 	wp_cache_delete( 'bp_get_child_comments_' . $activity_id, 'bp_activity_comments' );
+
+	// Clear comment chain cache for the deleted comment.
+	wp_cache_delete( 'bb_comment_chain_' . (int) $comment_id . '_' . (int) $activity_id, 'bp_activity_comments' );
 
 	// Recalculate the comment tree.
 	BP_Activity_Activity::rebuild_activity_comment_tree( $activity_id );
@@ -6213,7 +6266,12 @@ function bb_activity_migration( $raw_db_version, $current_db ) {
 function bb_migrate_activity_like_reaction( $paged = 1 ) {
 	global $wpdb, $bp, $bb_background_updater;
 
-	$reaction_id = bb_load_reaction()->bb_reactions_get_like_reaction_id();
+	$reaction = bb_load_reaction();
+	if ( ! $reaction ) {
+		return;
+	}
+
+	$reaction_id = $reaction->bb_reactions_get_like_reaction_id();
 
 	if ( empty( $paged ) ) {
 		$paged = 1;
@@ -6271,7 +6329,12 @@ function bb_migrate_activity_like_reaction( $paged = 1 ) {
 function bb_activity_like_reaction_background_process_migration( $results, $paged, $reaction_id ) {
 	global $wpdb, $bb_background_updater;
 
-	$user_reaction_table = bb_load_reaction()::$user_reaction_table;
+	$reaction = bb_load_reaction();
+	if ( ! $reaction ) {
+		return;
+	}
+
+	$user_reaction_table = $reaction::$user_reaction_table;
 
 	if ( empty( $results ) ) {
 		return;
@@ -6336,8 +6399,13 @@ function bb_activity_like_reaction_background_process_migration( $results, $page
  * @return void
  */
 function bb_update_users_like_reaction( $user_ids, $activity_id, $reaction_id ) {
+	$reaction = bb_load_reaction();
+	if ( ! $reaction ) {
+		return;
+	}
+
 	foreach ( $user_ids as $user_id ) {
-		bb_load_reaction()->bb_add_user_item_reaction(
+		$reaction->bb_add_user_item_reaction(
 			array(
 				'user_id'     => $user_id,
 				'reaction_id' => $reaction_id,
@@ -7067,6 +7135,159 @@ function bb_get_activity_comment_loading( $default = 10 ) {
 	 * @param bool $default Value of activity comments loading.
 	 */
 	return (int) apply_filters( 'bb_get_activity_comment_loading', bp_get_option( '_bb_activity_comment_loading', $default ) );
+}
+
+/**
+ * Get the ancestor chain info for an activity comment.
+ *
+ * Traverses up the comment tree in a single pass to build the full ancestor
+ * chain, compute depth, and allow lookup of ancestors at any depth level.
+ *
+ * Uses optimized single-column queries instead of loading full activity objects.
+ *
+ * @since BuddyBoss 2.20.0
+ *
+ * @param int $comment_id  The ID of the comment to check.
+ * @param int $activity_id The ID of the root activity.
+ *
+ * @return array {
+ *     @type int   $depth     The depth of the comment (1 = first level).
+ *     @type int[] $ancestors Array of ancestor IDs from depth 1 to the comment's depth.
+ * }
+ */
+function bb_get_activity_comment_chain_info( $comment_id, $activity_id ) {
+	global $wpdb;
+
+	$comment_id  = (int) $comment_id;
+	$activity_id = (int) $activity_id;
+
+	$cache_key = 'bb_comment_chain_' . $comment_id . '_' . $activity_id;
+	$info      = wp_cache_get( $cache_key, 'bp_activity_comments' );
+
+	if ( false !== $info ) {
+		return $info;
+	}
+
+	$bp             = buddypress();
+	$current_id     = $comment_id;
+	$max_iterations = 50;
+	$iterations     = 0;
+	$ancestors      = array();
+
+	while ( $current_id !== $activity_id && $iterations < $max_iterations ) {
+		$iterations++;
+
+		$parent_id = $wpdb->get_var(
+			$wpdb->prepare(
+				"SELECT secondary_item_id FROM {$bp->activity->table_name} WHERE id = %d AND type = 'activity_comment'",
+				$current_id
+			)
+		);
+
+		if ( ! $parent_id || (int) $parent_id === $current_id ) {
+			break;
+		}
+
+		$ancestors[] = $current_id;
+		$current_id  = (int) $parent_id;
+	}
+
+	// Reverse so index 0 = depth 1 (shallowest ancestor).
+	$ancestors = array_reverse( $ancestors );
+
+	$info = array(
+		'depth'     => max( 1, count( $ancestors ) ),
+		'ancestors' => $ancestors,
+	);
+
+	wp_cache_set( $cache_key, $info, 'bp_activity_comments' );
+
+	return $info;
+}
+
+/**
+ * Calculate the depth of an activity comment.
+ *
+ * Wrapper around bb_get_activity_comment_chain_info() for backward compatibility.
+ *
+ * @since BuddyBoss 2.20.0
+ *
+ * @param int $comment_id  The ID of the comment to check.
+ * @param int $activity_id The ID of the root activity.
+ *
+ * @return int The depth of the comment (1 = first level, 2 = second level, etc.).
+ */
+function bb_get_activity_comment_depth_by_id( $comment_id, $activity_id ) {
+	$info = bb_get_activity_comment_chain_info( $comment_id, $activity_id );
+
+	return $info['depth'];
+}
+
+/**
+ * Find the ancestor comment at a specific depth level.
+ *
+ * Wrapper around bb_get_activity_comment_chain_info() for backward compatibility.
+ *
+ * @since BuddyBoss 2.20.0
+ *
+ * @param int $comment_id   The ID of the starting comment.
+ * @param int $activity_id  The ID of the root activity.
+ * @param int $target_depth The depth level to find (1 = first level comment).
+ *
+ * @return int The ID of the ancestor at the target depth, or the activity_id if not found.
+ */
+function bb_get_activity_comment_ancestor_at_depth( $comment_id, $activity_id, $target_depth ) {
+	$info         = bb_get_activity_comment_chain_info( $comment_id, $activity_id );
+	$target_index = $target_depth - 1;
+	$activity_id  = (int) $activity_id;
+
+	if ( isset( $info['ancestors'][ $target_index ] ) ) {
+		return $info['ancestors'][ $target_index ];
+	} elseif ( $target_depth > 0 && ! empty( $info['ancestors'] ) ) {
+		return end( $info['ancestors'] );
+	}
+
+	return $activity_id;
+}
+
+/**
+ * Adjust the parent ID for activity comments at max threading depth.
+ *
+ * When a user replies to a comment that is already at the maximum threading depth,
+ * this function redirects the reply to an ancestor comment so that the new comment
+ * is stored at the maximum depth level instead of exceeding it.
+ *
+ * @since BuddyBoss 2.20.0
+ *
+ * @param array $args Arguments for the new activity comment.
+ *
+ * @return array Modified arguments with adjusted parent_id if necessary.
+ */
+function bb_adjust_activity_comment_threading_parent( $args ) {
+
+	if ( ! bb_is_activity_comment_threading_enabled() ) {
+		return $args;
+	}
+
+	$parent_id   = (int) $args['parent_id'];
+	$activity_id = (int) $args['activity_id'];
+
+	if ( empty( $parent_id ) || $parent_id === $activity_id ) {
+		return $args;
+	}
+
+	$max_depth = bb_get_activity_comment_threading_depth();
+	$info      = bb_get_activity_comment_chain_info( $parent_id, $activity_id );
+
+	if ( $info['depth'] >= $max_depth ) {
+		$target_index = $max_depth - 2; // (max_depth - 1) depth, zero-indexed.
+
+		if ( isset( $info['ancestors'][ $target_index ] ) ) {
+			$args['parent_id'] = $info['ancestors'][ $target_index ];
+		}
+	}
+
+	return $args;
 }
 
 /**

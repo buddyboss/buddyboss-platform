@@ -24,6 +24,35 @@ class BP_Moderation_Comment extends BP_Moderation_Abstract {
 	public static $moderation_type = 'comment';
 
 	/**
+	 * Process-local override that lets a caller skip the
+	 * `add_report_button` decoration for one `comment_text` filter pass
+	 * without unhooking the filter (the moderation component instance is
+	 * not stored anywhere reachable, so `remove_filter` cannot be called
+	 * without re-discovering the object via $wp_filter).
+	 *
+	 * @see BP_Moderation_Comment::bb_set_skip_report_button()
+	 * @since BuddyBoss 3.1.0
+	 *
+	 * @var bool
+	 */
+	protected static $bb_skip_report_button = false;
+
+	/**
+	 * Toggle the per-call skip flag for `add_report_button`. Always pair
+	 * a `true` call with a matching `false` call around the filter run.
+	 *
+	 * @since BuddyBoss 3.1.0
+	 *
+	 * @param bool $skip Whether the next `comment_text` filter run should
+	 *                   bypass the report-button decoration.
+	 *
+	 * @return void
+	 */
+	public static function bb_set_skip_report_button( $skip ) {
+		self::$bb_skip_report_button = (bool) $skip;
+	}
+
+	/**
 	 * BP_Moderation_Comment constructor.
 	 *
 	 * @since BuddyBoss 1.5.6
@@ -35,7 +64,8 @@ class BP_Moderation_Comment extends BP_Moderation_Abstract {
 		// Register moderation data.
 		add_filter( 'bp_moderation_content_types', array( $this, 'add_content_types' ), 11 );
 
-		add_filter( 'comment_reply_link', array( $this, 'add_report_button' ), 999, 3 );
+		// Add report button for all comments via comment_text filter.
+		add_filter( 'comment_text', array( $this, 'add_report_button' ), 100, 2 );
 
 		// Update report button.
 		add_filter( "bp_moderation_{$this->item_type}_button", array( $this, 'update_button' ), 10, 2 );
@@ -301,41 +331,76 @@ class BP_Moderation_Comment extends BP_Moderation_Abstract {
 	}
 
 	/**
-	 * Add report buttong
+	 * Add report button
 	 *
 	 * @since BuddyBoss 1.5.6
 	 *
-	 * @param string     $link    The HTML markup for the comment reply link.
-	 * @param array      $args    An array of arguments overriding the defaults.
-	 * @param WP_Comment $comment The object of the comment being replied.
+	 * @param string     $comment_text The comment text.
+	 * @param WP_Comment $comment      The comment object.
 	 *
 	 * @return string
 	 */
-	public function add_report_button( $link, $args, $comment ) {
-
+	public function add_report_button( $comment_text, $comment ) {
 		if ( ! $comment instanceof WP_Comment ) {
-			return $link;
+			return $comment_text;
 		}
 
-		if ( ! empty( $link ) && bp_is_moderation_content_reporting_enable( 0, self::$moderation_type ) ) {
-			$comment_report_link = bp_moderation_get_report_button(
-				array(
-					'id'                => 'comment_report',
-					'component'         => 'moderation',
-					'must_be_logged_in' => true,
-					'button_attr'       => array(
-						'data-bp-content-id'   => $comment->comment_ID,
-						'data-bp-content-type' => self::$moderation_type,
-						'class'                => 'report-content',
-					),
-				)
-			);
-			if ( ! empty( $comment_report_link ) ) {
-				$link .= sprintf( '<div class="bb_more_options"><span class="bb_more_options_action" data-balloon-pos="up" data-balloon="%1$s"><i class="bb-icon-f bb-icon-ellipsis-h"></i></span><div class="bb_more_options_list bb_more_dropdown"><div class="bb_more_dropdown__title"><span class="bb_more_dropdown__title__text">%2$s</span><span class="bb_more_dropdown__close_button" role="button"><i class="bb-icon-l bb-icon-times"></i></span></div>%3$s</div><div class="bb_more_dropdown_overlay"></div></div>', esc_html__( 'More Options', 'buddyboss' ), esc_html__( 'Options', 'buddyboss' ), $comment_report_link );
-			}
+		// Check if comment ID exists.
+		if ( empty( $comment->comment_ID ) ) {
+			return $comment_text;
 		}
 
-		return $link;
+		// Skip in non-display contexts so the raw comment HTML stays clean.
+		//
+		// PROD-9232 (BuddyBoss 2.18.0) switched the report-button markup from
+		// the `comment_reply_link` filter (display-only) to `comment_text`
+		// (every render path, including non-display ones). The new hook also
+		// fires from:
+		//
+		//   - WP_REST_Comments_Controller (wp/v2/comments) — leaks the dropdown
+		//     markup into `content.rendered`. REST clients have dedicated
+		//     `can_report` / `report_button_text` fields on the moderation
+		//     endpoint for rendering their own affordances.
+		//   - The RSS2 / Atom comment feeds — leaks visible "Options" /
+		//     "Report Comment" strings into the XML payload, which feed readers
+		//     either render as a foreign dropdown or strip into plain text
+		//     appended to every comment.
+		//   - Mention notification emails (bp-core-actions.php) — fires the
+		//     filter to build the email body. The caller flips the static skip
+		//     flag below for its single filter pass so we don't pollute the
+		//     `usermessage` / `mentioned.content` tokens.
+		if (
+			self::$bb_skip_report_button ||
+			( defined( 'REST_REQUEST' ) && REST_REQUEST ) ||
+			is_feed()
+		) {
+			return $comment_text;
+		}
+
+		// Check if moderation is enabled.
+		if ( ! bp_is_moderation_content_reporting_enable( 0, self::$moderation_type ) ) {
+			return $comment_text;
+		}
+
+		// Add report button to all comments.
+		$comment_report_link = bp_moderation_get_report_button(
+			array(
+				'id'                => 'comment_report',
+				'component'         => 'moderation',
+				'must_be_logged_in' => true,
+				'button_attr'       => array(
+					'data-bp-content-id'   => $comment->comment_ID,
+					'data-bp-content-type' => self::$moderation_type,
+					'class'                => 'report-content',
+				),
+			)
+		);
+
+		if ( ! empty( $comment_report_link ) ) {
+			$comment_text .= sprintf( '<div class="bb_more_options"><span class="bb_more_options_action" data-balloon-pos="up" data-balloon="%1$s"><i class="bb-icon-f bb-icon-ellipsis-h"></i></span><div class="bb_more_options_list bb_more_dropdown"><div class="bb_more_dropdown__title"><span class="bb_more_dropdown__title__text">%2$s</span><span class="bb_more_dropdown__close_button" role="button"><i class="bb-icon-l bb-icon-times"></i></span></div>%3$s</div><div class="bb_more_dropdown_overlay"></div></div>', esc_html__( 'More Options', 'buddyboss' ), esc_html__( 'Options', 'buddyboss' ), $comment_report_link );
+		}
+
+		return $comment_text;
 	}
 
 	/**
