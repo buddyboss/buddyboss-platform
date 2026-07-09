@@ -837,6 +837,8 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				bp_get_template_part( 'learndash/ld30/assignment' );
 			} elseif ( $is_ld_exam ) {
 				bp_get_template_part( 'learndash/ld30/challenge-exam' );
+			} elseif ( ( is_home() || is_author() || is_category() || is_tag() || is_date() ) && $this->bb_rl_is_page_enabled_for_integration( 'blog' ) ) {
+				bp_get_template_part( 'blog/loop-post' );
 			} else {
 				the_content();
 			}
@@ -1246,6 +1248,17 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			wp_style_add_data( 'bb-icons-rl-css', 'rtl', 'replace' );
 			if ( $min ) {
 				wp_style_add_data( 'bb-icons-rl-css', 'suffix', $min );
+			}
+
+			// Register only if it's a Blog page, or the member profile Blogs tab.
+			if ( ( $this->bb_rl_is_page_enabled_for_integration( 'blog' ) && ( is_home() || is_singular( 'post' ) || is_author() || is_category() || is_tag() || is_date() ) ) || ( function_exists( 'bp_is_current_component' ) && bp_is_current_component( 'blog' ) ) ) {
+				wp_enqueue_style( 'bb-readylaunch-blog', buddypress()->plugin_url . "bp-templates/bp-nouveau/readylaunch/css/blog{$min}.css", array(), bp_get_version() );
+				wp_style_add_data( 'bb-readylaunch-blog', 'rtl', 'replace' );
+				if ( $min ) {
+					wp_style_add_data( 'bb-readylaunch-blog', 'suffix', $min );
+				}
+
+				wp_enqueue_script( 'bb-readylaunch-blog', buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/js/bb-readylaunch-blog.js', array(), bp_get_version(), true );
 			}
 
 			if ( bp_is_members_directory() ) {
