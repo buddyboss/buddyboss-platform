@@ -1119,6 +1119,11 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 				'icon'    => 'bb-icons-rl-file-text',
 				'default' => true,
 			),
+			'blog'         => array(
+				'label'   => __( 'Blog', 'buddyboss' ),
+				'icon'    => 'bb-icons-rl-book-open',
+				'default' => true,
+			),
 		);
 
 		if ( bb_load_readylaunch()->bb_is_sidebar_enabled_for_courses() ) {
