@@ -272,11 +272,6 @@ class BP_Tests_Groups_Activity extends BP_UnitTestCase {
 	 * @ticket PROD-9608
 	 */
 	public function test_non_member_site_admin_can_see_hidden_group_activity_in_scope() {
-		// grant_super_admin() (bp_moderate) is only meaningful on multisite.
-		if ( ! is_multisite() ) {
-			return;
-		}
-
 		$old_user = get_current_user_id();
 		$owner_id = self::factory()->user->create();
 
@@ -300,8 +295,8 @@ class BP_Tests_Groups_Activity extends BP_UnitTestCase {
 
 		// Site admin (bp_moderate) who is not a member of the hidden group.
 		$admin_id = self::factory()->user->create();
-		grant_super_admin( $admin_id );
 		$this->set_current_user( $admin_id );
+		$this->grant_bp_moderate( $admin_id );
 
 		$activity = bp_activity_get(
 			array(
@@ -312,8 +307,9 @@ class BP_Tests_Groups_Activity extends BP_UnitTestCase {
 
 		$ids = wp_list_pluck( $activity['activities'], 'id' );
 
-		$this->assertContains( $a, $ids, 'Non-member site admin should see hidden group activity in the groups scope.' );
+		$this->assertContains( $a, $ids, 'Non-member site admin (bp_moderate) should see hidden group activity in the groups scope.' );
 
+		$this->revoke_bp_moderate( $admin_id );
 		$this->set_current_user( $old_user );
 	}
 
