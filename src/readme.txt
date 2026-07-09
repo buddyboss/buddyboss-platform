@@ -57,6 +57,13 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 
 == Changelog ==
 
+= 3.1.1 =
+* Bug: Activity - Fixed an issue where clicking a mention notification wouldn’t open the feed post if the Activity tab was hidden from profile navigation
+* Bug: Activity - Fixed an issue where site admins could see private/hidden group activity in the activity feed but couldn’t open the individual activity post
+* Bug: Core - Fixed a fatal error that could prevent members from logging in when the Imagick PHP extension isn’t installed on the server
+* Bug: Core - Fixed an issue in the WordPress Dashboard where the original group creator couldn’t be removed from a group’s member list
+* Bug: ReadyLaunch - Fixed an issue where renaming or saving a document folder incorrectly showed a “special characters not supported” error and prevented saving
+
 = 3.1.0 =
 * New Feature! - Introduced a new Help & Support Center page in the BuddyBoss admin, providing site administrators with quick access to documentation and the ability to grant site access to the support team by attaching support tickets
 * New Feature! - Introduced a new PeepSo Migration Tool to simplify the migration process from PeepSo to BuddyBoss platform and redesigned the Tools page in the BuddyBoss admin for improved usability
