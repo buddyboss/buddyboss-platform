@@ -9548,7 +9548,7 @@ function bb_generate_default_avatar( $args ) {
 		$property->setAccessible( true );
 		$image = $property->getValue( $image_editor );
 
-		if ( strpos( $chose_editor, 'WP_Image_Editor_GD' ) !== false ) {
+		if ( false !== strpos( $chose_editor, 'WP_Image_Editor_GD' ) || ! class_exists( 'Imagick' ) ) {
 			// Define the background color.
 			$filtered_bg_color = imagecolorallocate( $image, hexdec( substr( $bg_color, 1, 2 ) ), hexdec( substr( $bg_color, 3, 2 ) ), hexdec( substr( $bg_color, 5, 2 ) ) );
 			$text_color        = imagecolorallocate( $image, hexdec( substr( $png_text_color, 1, 2 ) ), hexdec( substr( $png_text_color, 3, 2 ) ), hexdec( substr( $png_text_color, 5, 2 ) ) );
