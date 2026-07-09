@@ -2744,7 +2744,7 @@ body.bb-rl-activity-modal-open .bb-rl-activity-update-form.modal-popup {
   margin: 0 var(--bb-rl-space-100) 0 0;
 }
 
-.bb-rl-activity-list .bb-activity-more-options-wrap .bb_more_dropdown .generic-button a.edit:before {
+.bb-rl-activity-list .bb-activity-more-options-wrap .bb_more_dropdown .generic-button a.edit:before, .bb-rl-activity-list .bb-activity-more-options-wrap .bb_more_dropdown .generic-button a.edit-activity:before {
   content: "\e3b4";
 }
 
@@ -3316,7 +3316,7 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
   right: 35px;
 }
 
-.bb-rl-internal-model .bb-rl-activity-modal:has(.activity-state-popup.active) {
+.bb-rl-internal-model .bb-rl-activity-modal:has(.bb-rl-media-move-file.open-popup), .bb-rl-internal-model .bb-rl-activity-modal:has(.activity-state-popup.active) {
   backdrop-filter: none;
 }
 
@@ -3337,6 +3337,12 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
   padding: var(--bb-rl-space-200) var(--bb-rl-space-300);
   overflow-x: hidden;
   flex-grow: 1;
+}
+
+@media screen and (min-height: 540px) {
+  .bb-rl-modal-activity-body {
+    min-height: 230px;
+  }
 }
 
 .bb-rl-modal-activity-header {

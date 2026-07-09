@@ -29,6 +29,15 @@ class BB_Admin_Member_Types_Ajax {
 	const NONCE_ACTION = 'bb_admin_settings';
 
 	/**
+	 * Maximum items allowed per paginated page.
+	 *
+	 * @since BuddyBoss 3.1.0
+	 *
+	 * @var int
+	 */
+	const PER_PAGE_CAP = 100;
+
+	/**
 	 * Verify AJAX request (capability + nonce).
 	 *
 	 * @since BuddyBoss 3.0.0
@@ -80,9 +89,19 @@ class BB_Admin_Member_Types_Ajax {
 	}
 
 	/**
-	 * Get all member/profile types with meta.
+	 * Get a page of member/profile types with meta.
+	 *
+	 * Server-side paginated. The React panel sends `page` + `per_page` and
+	 * uses the `total` field in the response to drive `<ListPagination />`.
+	 * Heavy auxiliary payload (group_types / wp_roles / published_pages /
+	 * member_types_summary — only needed by the create/edit modal) is shipped
+	 * on the first load and skipped on subsequent page-change requests via
+	 * `include_meta=0`. Mirrors the optimization pattern in
+	 * `BB_Activity_Admin_Ajax::bb_admin_get_activities`.
 	 *
 	 * @since BuddyBoss 3.0.0
+	 * @since BuddyBoss 3.1.0 Added pagination (page, per_page, total) +
+	 *        include_meta optimization.
 	 *
 	 * @return void
 	 */
@@ -93,6 +112,12 @@ class BB_Admin_Member_Types_Ajax {
 			wp_send_json_error( array( 'message' => __( 'Profile component is not active.', 'buddyboss' ) ) );
 		}
 
+		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified by bb_verify_request() above.
+		$page         = isset( $_POST['page'] ) ? max( 1, absint( wp_unslash( $_POST['page'] ) ) ) : 1;
+		$per_page     = isset( $_POST['per_page'] ) ? min( self::PER_PAGE_CAP, max( 1, absint( wp_unslash( $_POST['per_page'] ) ) ) ) : 25;
+		$include_meta = ! ( isset( $_POST['include_meta'] ) && '0' === sanitize_text_field( wp_unslash( $_POST['include_meta'] ) ) );
+		// phpcs:enable WordPress.Security.NonceVerification.Missing
+
 		// Admin listing order (per design spec): private items first,
 		// then oldest → newest within each visibility group so newly
 		// added types fall to the END of their group. The callback is
@@ -102,28 +127,51 @@ class BB_Admin_Member_Types_Ajax {
 		// docblock for the full rationale.
 		add_filter( 'posts_orderby', 'bb_admin_member_types_listing_orderby', 10, 2 );
 
-		$member_type_ids = bp_get_active_member_types(
+		// Direct WP_Query so we can capture `found_posts` for pagination
+		// alongside the page slice. `bp_get_active_member_types()` returns
+		// only `$query->posts` and discards the total — its static cache
+		// would also re-trigger queries for each unique args combination,
+		// which we don't need in the admin-listing context.
+		$type_query = new WP_Query(
 			array(
-				'post_status' => array( 'publish', 'private', 'draft' ),
+				'post_type'      => bp_get_member_type_post_type(),
+				'post_status'    => array( 'publish', 'private', 'draft' ),
+				'orderby'        => 'menu_order',
+				'order'          => 'ASC',
+				'fields'         => 'ids',
+				'posts_per_page' => $per_page,
+				'paged'          => $page,
+				'no_found_rows'  => false,
 			)
 		);
 
 		remove_filter( 'posts_orderby', 'bb_admin_member_types_listing_orderby', 10 );
 
+		$member_type_ids = $type_query->posts;
+		$total           = (int) $type_query->found_posts;
+
 		if ( empty( $member_type_ids ) ) {
 			$response = array(
 				'member_types' => array(),
+				'total'        => $total,
+				'page'         => $page,
+				'per_page'     => $per_page,
 			);
 
-			// Include group types if groups component is active.
-			if ( bp_is_active( 'groups' ) ) {
-				$response['group_types'] = $this->bb_get_available_group_types();
+			if ( $include_meta ) {
+				// Include group types if groups component is active.
+				if ( bp_is_active( 'groups' ) ) {
+					$response['group_types'] = $this->bb_get_available_group_types();
+				}
+
+				$response['wp_roles'] = $this->bb_get_wp_roles();
+
+				// Include published pages for redirection dropdowns (Create modal needs them).
+				$response['published_pages'] = bb_get_published_pages( true );
+
+				// Empty list means no summary to ship either.
+				$response['member_types_summary'] = array();
 			}
-
-			$response['wp_roles'] = $this->bb_get_wp_roles();
-
-			// Include published pages for redirection dropdowns (Create modal needs them).
-			$response['published_pages'] = bb_get_published_pages( true );
 
 			wp_send_json_success( $response );
 		}
@@ -233,19 +281,84 @@ class BB_Admin_Member_Types_Ajax {
 
 		$response = array(
 			'member_types' => $member_types,
+			'total'        => $total,
+			'page'         => $page,
+			'per_page'     => $per_page,
 		);
 
-		// Include group types if groups component is active.
-		if ( bp_is_active( 'groups' ) ) {
-			$response['group_types'] = $this->bb_get_available_group_types();
+		if ( $include_meta ) {
+			// Include group types if groups component is active.
+			if ( bp_is_active( 'groups' ) ) {
+				$response['group_types'] = $this->bb_get_available_group_types();
+			}
+
+			$response['wp_roles'] = $this->bb_get_wp_roles();
+
+			// Include published pages for redirection dropdowns.
+			$response['published_pages'] = bb_get_published_pages( true );
+
+			// Slim {id, post_title} list of ALL member types, used by the
+			// create/edit modal's Email Invites checkbox grid. Separate from
+			// the paginated `member_types` because the modal needs the full
+			// list regardless of which page is currently displayed.
+			$response['member_types_summary'] = $this->bb_get_member_types_summary();
 		}
 
-		$response['wp_roles'] = $this->bb_get_wp_roles();
-
-		// Include published pages for redirection dropdowns.
-		$response['published_pages'] = bb_get_published_pages( true );
-
 		wp_send_json_success( $response );
+	}
+
+	/**
+	 * Slim list of every registered profile type (one row per type).
+	 *
+	 * Used by consumers that need the full registry independent of the heavy
+	 * paginated `member_types` payload — currently:
+	 *   - the create/edit modal's Email Invites checkbox grid (needs id + title),
+	 *   - the Default Profile Type dropdown on the settings screen (needs key +
+	 *     plural_label for option value/label).
+	 *
+	 * Each row ships id + post_title + key + plural_label. That's intentionally
+	 * narrow — no label_color, no redirect fields, no permissions — so the
+	 * payload stays ~10x smaller per row than the heavy listing path and
+	 * `posts_per_page => -1` remains safe even for sites with hundreds of types.
+	 *
+	 * @since BuddyBoss 3.1.0
+	 *
+	 * @return array<int, array{id:int, post_title:string, key:string, plural_label:string}>
+	 */
+	protected function bb_get_member_types_summary() {
+		$summary_posts = get_posts(
+			array(
+				'post_type'              => bp_get_member_type_post_type(),
+				'post_status'            => array( 'publish', 'private', 'draft' ),
+				'posts_per_page'         => -1,
+				'orderby'                => 'title',
+				'order'                  => 'ASC',
+				'no_found_rows'          => true,
+				'update_post_meta_cache' => false,
+				'update_post_term_cache' => false,
+			)
+		);
+
+		if ( empty( $summary_posts ) ) {
+			return array();
+		}
+
+		// Batch-prime the two meta keys we read below in one query so the
+		// per-row `get_post_meta()` calls below are memory reads. Without this,
+		// a site with N types would issue 2N meta queries.
+		$summary_ids = wp_list_pluck( $summary_posts, 'ID' );
+		update_postmeta_cache( $summary_ids );
+
+		$out = array();
+		foreach ( $summary_posts as $p ) {
+			$out[] = array(
+				'id'           => (int) $p->ID,
+				'post_title'   => $p->post_title,
+				'key'          => (string) get_post_meta( $p->ID, '_bp_member_type_key', true ),
+				'plural_label' => (string) get_post_meta( $p->ID, '_bp_member_type_label_name', true ),
+			);
+		}
+		return $out;
 	}
 
 	/**
