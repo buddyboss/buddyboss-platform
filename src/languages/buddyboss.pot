@@ -2,9 +2,9 @@
 # This file is distributed under the GPLv2 or later (license.txt).
 msgid ""
 msgstr ""
-"Project-Id-Version: BuddyBoss Platform 3.1.0\n"
+"Project-Id-Version: BuddyBoss Platform 3.1.1\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2026-07-02 16:04:53+00:00\n"
+"POT-Creation-Date: 2026-07-09 13:23:43+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -3140,7 +3140,7 @@ msgid "User account has not yet been activated."
 msgstr ""
 
 #: bp-activity/bp-activity-functions.php:2340
-#: bp-groups/bp-groups-activity.php:479
+#: bp-groups/bp-groups-activity.php:505
 msgid "Allowed time for editing this activity is passed already, you can not edit now."
 msgstr ""
 
@@ -8111,7 +8111,7 @@ msgstr ""
 msgid "Failed to update member role."
 msgstr ""
 
-#. translators: 1: user display name, 2: user ID.
+#. translators: 1: user display name, 2: username (user_nicename).
 #: bp-core/admin/classes/class-bb-admin-groups-ajax.php:1881
 msgid "%1$s (%2$s)"
 msgstr ""
@@ -24358,7 +24358,7 @@ msgstr ""
 msgid "You do not have access to this group."
 msgstr ""
 
-#: bp-groups/actions/access.php:90
+#: bp-groups/actions/access.php:75
 msgid "You are not an organizer or moderator of this group."
 msgstr ""
 
@@ -24445,7 +24445,7 @@ msgid "%1$s created the group %2$s"
 msgstr ""
 
 #: bp-groups/bp-groups-activity.php:140
-#: bp-groups/bp-groups-activity.php:649
+#: bp-groups/bp-groups-activity.php:675
 #: cli/components/activity.php:948
 msgid "%1$s joined the group %2$s"
 msgstr ""
