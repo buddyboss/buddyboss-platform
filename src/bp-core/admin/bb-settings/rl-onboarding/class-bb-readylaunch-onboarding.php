@@ -893,6 +893,7 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 					: array(
 						'registration' => is_array( $pages_settings['bb_rl_enabled_pages'] ) && in_array( 'registration', $pages_settings['bb_rl_enabled_pages'], true ),
 						'courses'      => is_array( $pages_settings['bb_rl_enabled_pages'] ) && in_array( 'courses', $pages_settings['bb_rl_enabled_pages'], true ),
+						'blog'         => is_array( $pages_settings['bb_rl_enabled_pages'] ) && in_array( 'blog', $pages_settings['bb_rl_enabled_pages'], true ),
 					);
 			}
 		}
