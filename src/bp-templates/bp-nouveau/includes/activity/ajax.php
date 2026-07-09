@@ -1127,13 +1127,26 @@ function bp_nouveau_ajax_post_update() {
 	// Delete draft activity.
 	delete_user_meta( bp_loggedin_user_id(), $draft_activity_meta_key );
 
+	$activity_args = array(
+		'include'     => $activity_id,
+		'show_hidden' => $is_private,
+	);
+
+	/*
+	 * In ReadyLaunch, activity comments are displayed only inside the activity modal
+	 * (or on the single activity screen), never inline in the feed. The feed loop
+	 * enforces this with 'display_comments=false' (see readylaunch/activity/activity-loop.php).
+	 *
+	 * Mirror that here so a re-rendered (newly posted or edited) activity injected back
+	 * into the stream stays consistent and doesn't render a comment thread whose reply
+	 * form is absent in this context, which would leave the "Comment"/"Reply" buttons dead.
+	 */
+	if ( bb_is_readylaunch_enabled() && ! bp_is_single_activity() ) {
+		$activity_args['display_comments'] = false;
+	}
+
 	ob_start();
-	if ( bp_has_activities(
-		array(
-			'include'     => $activity_id,
-			'show_hidden' => $is_private,
-		)
-	) ) {
+	if ( bp_has_activities( $activity_args ) ) {
 		while ( bp_activities() ) {
 			bp_the_activity();
 			bp_get_template_part( 'activity/entry' );
