@@ -88,7 +88,7 @@ $bb_rl_blog_comment_count = (int) get_comments_number();
 			<i class="bb-icons-rl bb-icons-rl-caret-right" aria-hidden="true"></i>
 		</a>
 		<a class="bb-rl-blog-card__comments" href="<?php echo esc_url( get_comments_link() ); ?>">
-			<i class="bb-icons-rl bb-icons-rl-chat-circle" aria-hidden="true"></i>
+			<i class="bb-icons-rl bb-icons-rl-chat-teardrop" aria-hidden="true"></i>
 			<?php echo esc_html( number_format_i18n( $bb_rl_blog_comment_count ) ); ?>
 		</a>
 	</div>

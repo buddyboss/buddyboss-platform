@@ -1,3 +1,6 @@
+@import "base/variables";
+@import "base/mixins";
+
 // ReadyLaunch — Blog styles.
 // Compiled by the Grunt `ready_launch` sass target to css/blog.css.
 
@@ -166,12 +169,13 @@
 		font-size: 13px;
 		font-weight: 500;
 		padding: 6px 14px;
-		border: 1px solid var(--bb-rl-border-secondary-color, #e7e9ec);
 		border-radius: 8px;
 		color: inherit;
 
+		@include bb-rl-button-secondary-fill;
+
 		i {
-			font-size: 12px;
+			font-size: 16px;
 		}
 	}
 
@@ -187,7 +191,7 @@
 		color: var(--bb-rl-text-secondary-color, #555556);
 
 		i {
-			color: --bb-rl-icon-tertiary-color;
+			color: var(--bb-rl-icon-tertiary-color);
 			font-size: 20px;
 		}
 	}
@@ -197,17 +201,19 @@
 .bb-rl-blog-grid--list {
 	grid-template-columns: 1fr;
 	gap: 16px;
+	max-width: 848px;
+    margin: 0 auto;
 
 	.bb-rl-blog-card {
 		flex-direction: row;
 
 		&__image {
-			flex: 0 0 190px;
+			flex: 0 0 330px;
 			padding: 16px 0 16px 16px;
 
 			img {
-				height: 140px;
-				border-radius: 8px;
+				height: 224px;
+				border-radius: var(--bb-rl-radius-base);
 			}
 		}
 
@@ -219,10 +225,11 @@
 				"author author"
 				"excerpt excerpt"
 				"view comments";
+			padding-left: 24px;
 		}
 
 		&__author {
-			margin-bottom: 10px;
+			margin-bottom: 12px;
 			align-self: start;
 		}
 
