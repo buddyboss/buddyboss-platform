@@ -64,6 +64,8 @@ $bb_rl_blog_current_url = is_category() ? get_category_link( $bb_rl_blog_current
 			</button>
 		</div>
 
+		<span class="bb-rl-blog-header-divider" aria-hidden="true"></span>
+
 		<?php if ( ! empty( $bb_rl_blog_categories ) ) : ?>
 			<label class="bb-rl-blog-filter">
 				<span class="bb-rl-blog-filter__label"><?php esc_html_e( 'Category', 'buddyboss' ); ?></span>
