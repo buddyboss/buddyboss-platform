@@ -9,7 +9,7 @@
 	grid-template-columns: repeat(4, 1fr);
 	gap: 24px;
 	margin: 24px 0;
-	padding: 0 24px;
+	padding: 0 var(--bb-rl-space-400);
 
 	@media screen and (max-width: 1450px) {
 		grid-template-columns: repeat(3, 1fr);
@@ -18,13 +18,14 @@
 	@media screen and (max-width: 1120px) and (min-width: 993px) {
 		grid-template-columns: repeat(2, 1fr);
 	}
-	
+
 	@media screen and (max-width: 768px) {
 		grid-template-columns: repeat(2, 1fr);
 	}
 
 	@media screen and (max-width: 560px) {
 		grid-template-columns: repeat(1, 1fr);
+		padding: 0 var(--bb-rl-space-200);
 	}
 }
 
@@ -202,7 +203,7 @@
 	grid-template-columns: 1fr;
 	gap: 16px;
 	max-width: 848px;
-    margin: 0 auto;
+	margin: 0 auto;
 
 	.bb-rl-blog-card {
 		flex-direction: row;
@@ -236,6 +237,11 @@
 		&__view {
 			display: inline-flex;
 		}
+	}
+
+	+ .navigation.pagination {
+		max-width: 848px;
+		margin: 0 auto;
 	}
 
 	@media screen and (max-width: 600px) {
@@ -342,10 +348,11 @@
 		width: auto;
 		min-width: 0;
 		max-width: 180px;
-		field-sizing: content; // Hug the selected value (Chrome 123+); full names stay in the dropdown.
+		// stylelint-disable-next-line property-no-unknown
+		field-sizing: content;
 		border: 0;
 		background-color: transparent;
-		background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 16 16' fill='none'%3E%3Cpath d='M4 6l4 4 4-4' stroke='%23242425' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+		background-image: url(data:image/svg+xml,%3Csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20width=%2712%27%20height=%2712%27%20viewBox=%270%200%2016%2016%27%20fill=%27none%27%3E%3Cpath%20d=%27M4%206l4%204%204-4%27%20stroke=%27%23242425%27%20stroke-width=%271.5%27%20stroke-linecap=%27round%27%20stroke-linejoin=%27round%27/%3E%3C/svg%3E);
 		background-repeat: no-repeat;
 		background-position: right 8px center;
 		background-size: 12px 12px;
@@ -362,6 +369,113 @@
 			outline: none;
 			box-shadow: none;
 		}
+	}
+}
+
+.navigation.pagination {
+	display: flex;
+	align-items: center;
+	padding: var(--bb-rl-space-400);
+
+	.nav-links {
+		display: flex;
+		align-items: center;
+		margin-left: auto;
+		gap: var(--bb-rl-space-100);
+	}
+
+	span,
+	a {
+		font-size: var(--bb-rl-font-size-sm);
+		font-weight: 500;
+		line-height: var(--bb-rl-space-400);
+	}
+
+	.prev,
+	.next {
+		display: inline-flex;
+		align-items: center;
+		gap: var(--bb-rl-space-50);
+		font-size: 0;
+		padding: 0 var(--bb-rl-space-200);
+		border: 1px solid var(--bb-rl-border-tertiary-color);
+		border-radius: var(--bb-rl-radius-md);
+
+		&::before {
+			font-size: var(--bb-rl-font-size-sm);
+			content: attr(data-bb-rl-label);
+		}
+
+		&::after {
+			font-size: var(--bb-rl-font-size-base);
+			content: "";
+			font-weight: 400;
+			font-family: bb-icons-rl;
+			font-style: normal;
+			line-height: 1;
+			position: relative;
+			top: 1px;
+		}
+	}
+
+	.prev {
+		flex-direction: row-reverse;
+		margin-right: var(--bb-rl-space-500);
+
+		&::after {
+			content: "\e138";
+		}
+
+		@media screen and (max-width: 768px) {
+			margin-right: var(--bb-rl-space-200);
+		}
+	}
+
+	.next {
+		margin-left: var(--bb-rl-space-500);
+
+		&::after {
+			content: "\e13a";
+		}
+
+		@media screen and (max-width: 768px) {
+			margin-left: var(--bb-rl-space-200);
+		}
+	}
+
+	.bb-rl-page-numbers:not(.prev):not(.next) {
+		display: inline-flex;
+		align-items: center;
+		min-width: var(--bb-rl-space-400);
+		height: var(--bb-rl-space-400);
+		border: 1px solid transparent;
+		border-radius: var(--bb-rl-radius-md);
+		justify-content: center;
+		color: var(--bb-rl-text-tertiary-color);
+
+		&.current {
+			color: var(--bb-rl-text-color);
+			border: 1px solid var(--bb-rl-border-quaternary-color);
+			background-color: var(--bb-rl-background-color);
+		}
+
+		&:hover {
+			border-color: var(--bb-rl-border-tertiary-color);
+		}
+	}
+
+	a.prev,
+	a.next {
+		color: var(--bb-rl-text-color);
+	}
+
+	span.prev,
+	span.next {
+		color: var(--bb-rl-text-disabled-color);
+	}
+
+	@media screen and (max-width: 560px) {
+		padding: var(--bb-rl-space-400) var(--bb-rl-space-200);
 	}
 }
 

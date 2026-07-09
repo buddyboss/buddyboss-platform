@@ -191,7 +191,7 @@
   grid-template-columns: repeat(4, 1fr);
   gap: 24px;
   margin: 24px 0;
-  padding: 0 24px;
+  padding: 0 var(--bb-rl-space-400);
 }
 
 @media screen and (max-width: 1450px) {
@@ -215,6 +215,7 @@
 @media screen and (max-width: 560px) {
   .bb-rl-blog-grid {
     grid-template-columns: repeat(1, 1fr);
+    padding: 0 var(--bb-rl-space-200);
   }
 }
 
@@ -434,6 +435,11 @@
   display: inline-flex;
 }
 
+.bb-rl-blog-grid--list + .navigation.pagination {
+  max-width: 848px;
+  margin: 0 auto;
+}
+
 @media screen and (max-width: 600px) {
   .bb-rl-blog-grid--list .bb-rl-blog-card {
     flex-direction: column;
@@ -537,7 +543,7 @@
   field-sizing: content;
   border: 0;
   background-color: transparent;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 16 16' fill='none'%3E%3Cpath d='M4 6l4 4 4-4' stroke='%23242425' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-image: url(data:image/svg+xml,%3Csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20width=%2712%27%20height=%2712%27%20viewBox=%270%200%2016%2016%27%20fill=%27none%27%3E%3Cpath%20d=%27M4%206l4%204%204-4%27%20stroke=%27%23242425%27%20stroke-width=%271.5%27%20stroke-linecap=%27round%27%20stroke-linejoin=%27round%27/%3E%3C/svg%3E);
   background-repeat: no-repeat;
   background-position: right 8px center;
   background-size: 12px 12px;
@@ -554,6 +560,121 @@
 .bb-rl-blog-filter .bb-rl-blog-filter__select:focus {
   outline: none;
   box-shadow: none;
+}
+
+.navigation.pagination {
+  display: flex;
+  align-items: center;
+  padding: var(--bb-rl-space-400);
+}
+
+.navigation.pagination .nav-links {
+  display: flex;
+  align-items: center;
+  margin-left: auto;
+  gap: var(--bb-rl-space-100);
+}
+
+.navigation.pagination span,
+.navigation.pagination a {
+  font-size: var(--bb-rl-font-size-sm);
+  font-weight: 500;
+  line-height: var(--bb-rl-space-400);
+}
+
+.navigation.pagination .prev,
+.navigation.pagination .next {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--bb-rl-space-50);
+  font-size: 0;
+  padding: 0 var(--bb-rl-space-200);
+  border: 1px solid var(--bb-rl-border-tertiary-color);
+  border-radius: var(--bb-rl-radius-md);
+}
+
+.navigation.pagination .prev::before,
+.navigation.pagination .next::before {
+  font-size: var(--bb-rl-font-size-sm);
+  content: attr(data-bb-rl-label);
+}
+
+.navigation.pagination .prev::after,
+.navigation.pagination .next::after {
+  font-size: var(--bb-rl-font-size-base);
+  content: "";
+  font-weight: 400;
+  font-family: bb-icons-rl;
+  font-style: normal;
+  line-height: 1;
+  position: relative;
+  top: 1px;
+}
+
+.navigation.pagination .prev {
+  flex-direction: row-reverse;
+  margin-right: var(--bb-rl-space-500);
+}
+
+.navigation.pagination .prev::after {
+  content: "\e138";
+}
+
+@media screen and (max-width: 768px) {
+  .navigation.pagination .prev {
+    margin-right: var(--bb-rl-space-200);
+  }
+}
+
+.navigation.pagination .next {
+  margin-left: var(--bb-rl-space-500);
+}
+
+.navigation.pagination .next::after {
+  content: "\e13a";
+}
+
+@media screen and (max-width: 768px) {
+  .navigation.pagination .next {
+    margin-left: var(--bb-rl-space-200);
+  }
+}
+
+.navigation.pagination .bb-rl-page-numbers:not(.prev):not(.next) {
+  display: inline-flex;
+  align-items: center;
+  min-width: var(--bb-rl-space-400);
+  height: var(--bb-rl-space-400);
+  border: 1px solid transparent;
+  border-radius: var(--bb-rl-radius-md);
+  justify-content: center;
+  color: var(--bb-rl-text-tertiary-color);
+}
+
+.navigation.pagination .bb-rl-page-numbers:not(.prev):not(.next).current {
+  color: var(--bb-rl-text-color);
+  border: 1px solid var(--bb-rl-border-quaternary-color);
+  background-color: var(--bb-rl-background-color);
+}
+
+.navigation.pagination .bb-rl-page-numbers:not(.prev):not(.next):hover {
+  border-color: var(--bb-rl-border-tertiary-color);
+}
+
+.navigation.pagination a.prev,
+.navigation.pagination a.next {
+  color: var(--bb-rl-text-color);
+}
+
+.navigation.pagination span.prev,
+.navigation.pagination span.next {
+  color: var(--bb-rl-text-disabled-color);
+}
+
+@media screen and (max-width: 560px) {
+  .navigation.pagination {
+    padding: var(--bb-rl-space-400) var(--bb-rl-space-200);
+  }
 }
 
 .bb-rl-blog-single-header {
