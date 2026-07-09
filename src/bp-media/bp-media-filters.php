@@ -2334,16 +2334,21 @@ add_filter( 'bp_is_forums_media_support_enabled', 'bb_media_photos_force_disable
 
 /**
  * Force video-related support functions to return false when the Videos
- * section toggle (bb_media_videos_support) is disabled.
+ * section toggle (bb_media_videos_support) is disabled, or when the video
+ * component is not active at all.
  *
  * @since BuddyBoss 3.0.0
+ * @since BuddyBoss [BBVERSION] Also disabled when the video component is
+ *                              inactive — the UI must never render against a
+ *                              missing component (moved to the BuddyBoss
+ *                              Addons plugin).
  *
  * @param bool $enabled Current value.
  *
- * @return bool False if videos section is off, otherwise the original value.
+ * @return bool False if videos section is off or the component is inactive, otherwise the original value.
  */
 function bb_media_videos_force_disable( $enabled ) {
-	if ( ! (bool) bp_get_option( 'bb_media_videos_support', 1 ) ) {
+	if ( ! bp_is_active( 'video' ) || ! (bool) bp_get_option( 'bb_media_videos_support', 1 ) ) {
 		return false;
 	}
 
@@ -2356,16 +2361,28 @@ add_filter( 'bp_is_forums_video_support_enabled', 'bb_media_videos_force_disable
 
 /**
  * Force document-related support functions to return false when the Documents
- * section toggle (bb_media_documents_support) is disabled.
+ * section toggle (bb_media_documents_support) is disabled, or when the
+ * document component is not active at all.
+ *
+ * The `bp_is_*_document_support_enabled()` helpers live in bp-media (documents
+ * grew out of the media component) and read options only, so they keep
+ * returning true even when the document component itself is unavailable — the
+ * component moved to the BuddyBoss Addons plugin and the addon may be
+ * inactive. Consumers such as the BuddyBoss theme gate document UI on these
+ * helpers and then call component functions like `bp_get_document_slug()`, so
+ * advertising support without the component loaded causes fatals.
  *
  * @since BuddyBoss 3.0.0
+ * @since BuddyBoss [BBVERSION] Also disabled when the document component is
+ *                              inactive — the UI must never render against a
+ *                              missing component.
  *
  * @param bool $enabled Current value.
  *
- * @return bool False if documents section is off, otherwise the original value.
+ * @return bool False if documents section is off or the component is inactive, otherwise the original value.
  */
 function bb_media_documents_force_disable( $enabled ) {
-	if ( ! (bool) bp_get_option( 'bb_media_documents_support', 1 ) ) {
+	if ( ! bp_is_active( 'document' ) || ! (bool) bp_get_option( 'bb_media_documents_support', 1 ) ) {
 		return false;
 	}
 
