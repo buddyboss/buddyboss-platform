@@ -286,8 +286,16 @@ function bp_activity_get_userid_from_mentionname( $mentionname ) {
 		// account for hyphens + spaces in the same user_login.
 		if ( empty( $userdata ) || ! is_a( $userdata, 'WP_User' ) ) {
 			global $wpdb;
-			$regex   = esc_sql( str_replace( '-', '[ \-]', $mentionname ) );
-			$user_id = $wpdb->get_var( "SELECT ID FROM {$wpdb->users} WHERE user_login REGEXP '{$regex}'" );
+			// Defense-in-depth: pass the regex through prepare's %s placeholder.
+			// See bp_get_userid_from_mentionname() in bp-core-functions.php for
+			// the canonical implementation — this deprecated copy mirrors it.
+			$regex   = str_replace( '-', '[ \-]', $mentionname );
+			$user_id = $wpdb->get_var(
+				$wpdb->prepare(
+					"SELECT ID FROM {$wpdb->users} WHERE user_login REGEXP %s",
+					$regex
+				)
+			);
 		} else {
 			$user_id = $userdata->ID;
 		}
@@ -1176,7 +1184,7 @@ function bp_activity_favorites_upgrade_data() {
 	if ( ! $bp_activity_favorites && bp_is_active( 'activity' ) ) {
 
 		if ( bp_is_large_install() ) {
-			$admin_url = bp_get_admin_url( add_query_arg( array( 'page' => 'bp-tools' ), 'admin.php' ) );
+			$admin_url = bp_get_admin_url( add_query_arg( array( 'page' => 'bb-settings', 'tab' => 'tools', 'panel' => 'repair_platform' ), 'admin.php' ) );
 			$notice    = sprintf(
 				'%1$s <a href="%2$s">%3$s</a> %4$s',
 				__( 'Due to the large size of your users table, you need to manually update user activity favorites data via BuddyBoss > ', 'buddyboss' ),

@@ -262,4 +262,99 @@ class BP_Tests_Groups_Activity extends BP_UnitTestCase {
 
 		$this->set_current_user( $old_user );
 	}
+
+	/**
+	 * A non-member site admin (bp_moderate) should see activity from a
+	 * hidden/private group in the "groups" activity scope, staying consistent
+	 * with the access they already have to the group's own activity list.
+	 *
+	 * @group bp_groups_filter_activity_scope
+	 * @ticket PROD-9608
+	 */
+	public function test_non_member_site_admin_can_see_hidden_group_activity_in_scope() {
+		$old_user = get_current_user_id();
+		$owner_id = self::factory()->user->create();
+
+		// Hidden group the admin is NOT a member of.
+		$g = self::factory()->group->create(
+			array(
+				'status'     => 'hidden',
+				'creator_id' => $owner_id,
+			)
+		);
+
+		$a = self::factory()->activity->create(
+			array(
+				'component'     => buddypress()->groups->id,
+				'type'          => 'activity_update',
+				'user_id'       => $owner_id,
+				'item_id'       => $g,
+				'hide_sitewide' => true,
+			)
+		);
+
+		// Site admin (bp_moderate) who is not a member of the hidden group.
+		$admin_id = self::factory()->user->create();
+		$this->set_current_user( $admin_id );
+		$this->grant_bp_moderate( $admin_id );
+
+		$activity = bp_activity_get(
+			array(
+				'scope'       => 'groups',
+				'show_hidden' => true,
+			)
+		);
+
+		$ids = wp_list_pluck( $activity['activities'], 'id' );
+
+		$this->assertContains( $a, $ids, 'Non-member site admin (bp_moderate) should see hidden group activity in the groups scope.' );
+
+		$this->revoke_bp_moderate( $admin_id );
+		$this->set_current_user( $old_user );
+	}
+
+	/**
+	 * A non-member, non-moderator user must NOT see activity from a
+	 * hidden/private group in the "groups" activity scope.
+	 *
+	 * @group bp_groups_filter_activity_scope
+	 * @ticket PROD-9608
+	 */
+	public function test_non_member_regular_user_cannot_see_hidden_group_activity_in_scope() {
+		$old_user = get_current_user_id();
+		$owner_id = self::factory()->user->create();
+
+		$g = self::factory()->group->create(
+			array(
+				'status'     => 'hidden',
+				'creator_id' => $owner_id,
+			)
+		);
+
+		$a = self::factory()->activity->create(
+			array(
+				'component'     => buddypress()->groups->id,
+				'type'          => 'activity_update',
+				'user_id'       => $owner_id,
+				'item_id'       => $g,
+				'hide_sitewide' => true,
+			)
+		);
+
+		// A regular user who is not a member and not a moderator.
+		$u = self::factory()->user->create();
+		$this->set_current_user( $u );
+
+		$activity = bp_activity_get(
+			array(
+				'scope' => 'groups',
+			)
+		);
+
+		$ids = wp_list_pluck( $activity['activities'], 'id' );
+
+		$this->assertNotContains( $a, $ids, 'Non-member non-moderator user should not see hidden group activity in the groups scope.' );
+
+		$this->set_current_user( $old_user );
+	}
 }
