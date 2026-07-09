@@ -1088,7 +1088,6 @@ class BP_Friends_Friendship {
 		// Delete friend request notifications for members who have a
 		// notification from this user.
 		if ( bp_is_active( 'notifications' ) ) {
-			// Fetch the notification ids first so their metadata can be cleaned up too.
 			$notification_ids = $wpdb->get_col( $wpdb->prepare( "SELECT id FROM {$bp->notifications->table_name} WHERE component_name = 'friends' AND component_action IN ( 'friendship_request', 'friendship_accepted', 'bb_connections_new_request', 'bb_connections_request_accepted' ) AND item_id = %d", $user_id ) );
 
 			if ( ! empty( $notification_ids ) ) {

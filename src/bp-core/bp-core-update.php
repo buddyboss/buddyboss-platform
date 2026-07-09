@@ -3212,10 +3212,9 @@ function bb_core_update_repair_duplicate_following_notification() {
 	$sql .= ' AND n1.component_name = %s AND n1.component_action = %s';
 	$sql .= ' ORDER BY n1.id DESC';
 
-	// Fetch the duplicate notification ids first so their metadata can be cleaned up too.
 	$notification_ids = $wpdb->get_col( $wpdb->prepare( $sql, 'activity', 'bb_following_new' ) );
 
-	// Remove duplicate notification ids.
+	// Remove duplicate notifications along with their metadata.
 	if ( ! empty( $notification_ids ) ) {
 		foreach ( $notification_ids as $notification_id ) {
 			bp_notifications_delete_meta( $notification_id );

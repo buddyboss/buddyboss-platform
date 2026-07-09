@@ -198,7 +198,6 @@ class BP_Core_Notification {
 
 		$bp = buddypress();
 
-		// Clean up the metadata of the notifications being deleted.
 		if ( bp_is_active( 'notifications' ) ) {
 			$notification_ids = $wpdb->get_col( $wpdb->prepare( "SELECT id FROM {$bp->core->table_name_notifications} WHERE user_id = %d AND component_name = %s AND component_action = %s", $user_id, $component_name, $component_action ) );
 			foreach ( $notification_ids as $notification_id ) {
@@ -233,7 +232,6 @@ class BP_Core_Notification {
 			? $wpdb->prepare( ' AND secondary_item_id = %d', $secondary_item_id )
 			: '';
 
-		// Clean up the metadata of the notifications being deleted.
 		if ( bp_is_active( 'notifications' ) ) {
 			$notification_ids = $wpdb->get_col( $wpdb->prepare( "SELECT id FROM {$bp->core->table_name_notifications} WHERE user_id = %d AND item_id = %d AND component_name = %s AND component_action = %s{$secondary_item_sql}", $user_id, $item_id, $component_name, $component_action ) );
 			foreach ( $notification_ids as $notification_id ) {
@@ -261,7 +259,6 @@ class BP_Core_Notification {
 
 		$bp = buddypress();
 
-		// Clean up the metadata of the notifications being deleted.
 		if ( bp_is_active( 'notifications' ) ) {
 			$notification_ids = $wpdb->get_col( $wpdb->prepare( "SELECT id FROM {$bp->core->table_name_notifications} WHERE item_id = %d AND component_name = %s AND component_action = %s", $user_id, $component_name, $component_action ) );
 			foreach ( $notification_ids as $notification_id ) {
@@ -303,7 +300,6 @@ class BP_Core_Notification {
 
 		$bp = buddypress();
 
-		// Clean up the metadata of the notifications being deleted.
 		if ( bp_is_active( 'notifications' ) ) {
 			$notification_ids = $wpdb->get_col( $wpdb->prepare( "SELECT id FROM {$bp->core->table_name_notifications} WHERE item_id = %d AND component_name = %s {$component_action_sql} {$secondary_item_sql}", $item_id, $component_name ) );
 			foreach ( $notification_ids as $notification_id ) {
