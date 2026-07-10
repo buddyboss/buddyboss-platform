@@ -22,6 +22,17 @@ if ( '' === trim( (string) $bb_rl_blog_author_name ) ) {
 $bb_rl_blog_status        = get_post_status();
 $bb_rl_blog_status_obj    = get_post_status_object( $bb_rl_blog_status );
 $bb_rl_blog_comment_count = (int) get_comments_number();
+
+/**
+ * Filter whether to show the post status tag on the card image (member
+ * profile Blogs tab). When off, non-publish statuses show inline after
+ * the title instead.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param bool $show Whether to show the on-image status tag.
+ */
+$bb_rl_blog_show_status_tag = apply_filters( 'bb_rl_blog_card_show_status', false );
 ?>
 <article class="bb-rl-blog-card" id="post-<?php the_ID(); ?>">
 	<div class="bb-rl-blog-card__image">
@@ -34,6 +45,9 @@ $bb_rl_blog_comment_count = (int) get_comments_number();
 				<img src="<?php echo esc_url( buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/images/group_cover_image.jpeg' ); ?>" alt="<?php esc_attr_e( 'Blog post placeholder image', 'buddyboss' ); ?>">
 			<?php endif; ?>
 		</a>
+		<?php if ( $bb_rl_blog_show_status_tag && $bb_rl_blog_status_obj ) : ?>
+			<span class="bb-rl-blog-card__status-tag bb-rl-blog-card__status-tag--<?php echo esc_attr( $bb_rl_blog_status ); ?>"><?php echo esc_html( $bb_rl_blog_status_obj->label ); ?></span>
+		<?php endif; ?>
 		<?php
 		/**
 		 * Fires inside the blog card image wrapper, for overlay controls
@@ -49,7 +63,7 @@ $bb_rl_blog_comment_count = (int) get_comments_number();
 	<div class="bb-rl-blog-card__content">
 		<h2 class="bb-rl-blog-card__title">
 			<a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
-			<?php if ( 'publish' !== $bb_rl_blog_status ) : ?>
+			<?php if ( ! $bb_rl_blog_show_status_tag && 'publish' !== $bb_rl_blog_status ) : ?>
 				<span class="bb-rl-blog-card__status bb-rl-blog-card__status--<?php echo esc_attr( $bb_rl_blog_status ); ?>"><?php echo esc_html( $bb_rl_blog_status_obj ? $bb_rl_blog_status_obj->label : ucfirst( $bb_rl_blog_status ) ); ?></span>
 			<?php endif; ?>
 		</h2>

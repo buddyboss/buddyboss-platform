@@ -122,6 +122,27 @@
 		vertical-align: middle;
 	}
 
+	// Status pill overlaid on the cover image (member profile Blogs tab).
+	&__status-tag {
+		display: inline-flex;
+		align-items: center;
+		padding: 4px 8px;
+		border-radius: var(--bb-rl-radius-full);
+		background: var(--bb-rl-background-secondary-color, #f6f6f6);
+		border: 0.5px solid var(--bb-rl-border-secondary-color, #e7e7e7);
+		color: var(--bb-rl-text-secondary-color, #555556);
+		font-size: 11px;
+		font-weight: 500;
+		line-height: 16px;
+		letter-spacing: -0.055px;
+
+		&--publish {
+			background: var(--bb-rl-background-positive-secondary-color, #ebffee);
+			border-color: var(--bb-rl-border-positive-secondary-color, #14ae5c);
+			color: var(--bb-rl-text-positive-primary-color, #02542d);
+		}
+	}
+
 	&__excerpt {
 		grid-area: excerpt;
 		font-size: 13px;
@@ -199,17 +220,17 @@
 }
 
 // List layout — same markup, horizontal cards in a single column.
-.bb-rl-blog-grid--list {
+// Shared by the archive list view and the member profile Blogs tab.
+.bb-rl-blog-grid--list,
+.bb-rl-blog-grid--profile {
 	grid-template-columns: 1fr;
 	gap: 16px;
-	max-width: 848px;
-	margin: 0 auto;
 
 	.bb-rl-blog-card {
 		flex-direction: row;
 
 		&__image {
-			flex: 0 0 330px;
+			flex: 0 0 328px;
 			padding: 16px 0 16px 16px;
 
 			img {
@@ -226,22 +247,23 @@
 				"author author"
 				"excerpt excerpt"
 				"view comments";
-			padding-left: 24px;
+			padding: 16px 24px;
 		}
 
 		&__author {
-			margin-bottom: 12px;
+			margin-bottom: 16px;
 			align-self: start;
+		}
+
+		&__excerpt {
+			color: var(--bb-rl-text-secondary-color, #555556);
 		}
 
 		&__view {
 			display: inline-flex;
+			padding: 6px 16px;
+			border-radius: var(--bb-rl-radius-md);
 		}
-	}
-
-	+ .navigation.pagination {
-		max-width: 848px;
-		margin: 0 auto;
 	}
 
 	@media screen and (max-width: 600px) {
@@ -258,6 +280,40 @@
 					border-radius: 0;
 				}
 			}
+		}
+	}
+}
+
+.bb-rl-blog-grid--list {
+	max-width: 848px;
+	margin: 0 auto;
+
+	+ .navigation.pagination {
+		max-width: 848px;
+		margin: 0 auto;
+	}
+}
+
+// Member profile Blogs tab — full-width list cards with the status tag
+// pinned to the cover image (8px inside the 16px image inset).
+.bb-rl-blog-grid--profile {
+	padding: 0;
+
+	.bb-rl-blog-card__status-tag {
+		position: absolute;
+		top: 24px;
+		left: 24px;
+	}
+
+	+ .navigation.pagination {
+		padding-top: 0;
+	}
+
+	@media screen and (max-width: 600px) {
+
+		.bb-rl-blog-card__status-tag {
+			top: 8px;
+			left: 8px;
 		}
 	}
 }
@@ -288,7 +344,7 @@
 		flex-wrap: wrap;
 	}
 
-	.bb-rl-blog-actions {
+	.bb-rl-blog-actions:has(a) {
 		display: flex;
 		align-items: center;
 		gap: 8px;
@@ -587,7 +643,7 @@
 
 	&__date {
 		color: var(--bb-rl-text-tertiary-color);
-		font-size: 13px;	
+		font-size: 13px;
 		line-height: 1;
 		margin-left: var(--bb-rl-space-100);
 
@@ -758,8 +814,8 @@
 // Post footer sections (theme-agnostic markup from bb-blogging-functions.php).
 .bb-blog-share {
 	display: flex;
-    align-items: center;
-    gap: 12px;
+	align-items: center;
+	gap: 12px;
 
 	&__label {
 		font-weight: 600;
@@ -1045,6 +1101,7 @@
 		}
 
 		#submit {
+
 			@include bb-rl-button;
 			@include bb-rl-button--brand-fill;
 			font-size: 14px;

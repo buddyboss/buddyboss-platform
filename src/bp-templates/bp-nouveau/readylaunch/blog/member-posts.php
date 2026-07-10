@@ -40,21 +40,37 @@ $bb_blog_member_query = new WP_Query( apply_filters( 'bb_blog_member_posts_query
 	<?php if ( $bb_blog_member_query->have_posts() ) : ?>
 		<div class="bb-rl-blog-grid bb-rl-blog-grid--profile">
 			<?php
+			// Profile cards carry the post status tag on the cover image.
+			add_filter( 'bb_rl_blog_card_show_status', '__return_true' );
 			while ( $bb_blog_member_query->have_posts() ) :
 				$bb_blog_member_query->the_post();
 				bp_get_template_part( 'blog/loop-post' );
 			endwhile;
+			remove_filter( 'bb_rl_blog_card_show_status', '__return_true' );
 			?>
 		</div>
 		<?php
-		echo paginate_links( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- core pagination HTML.
+		$bb_blog_pagination_links = paginate_links(
 			array(
-				'total'   => (int) $bb_blog_member_query->max_num_pages,
-				'current' => max( 1, (int) get_query_var( 'paged' ) ),
-				'base'    => get_pagenum_link( 1 ) . '%_%',
-				'format'  => '?paged=%#%',
+				'total'     => (int) $bb_blog_member_query->max_num_pages,
+				'current'   => max( 1, (int) get_query_var( 'paged' ), (int) get_query_var( 'page' ) ),
+				'base'      => get_pagenum_link( 1 ) . '%_%',
+				'format'    => '?paged=%#%',
+				'mid_size'  => 2,
+				'prev_text' => esc_html__( 'Previous', 'buddyboss' ),
+				'next_text' => esc_html__( 'Next', 'buddyboss' ),
 			)
 		);
+
+		if ( $bb_blog_pagination_links ) {
+			// Same wrapper as core `the_posts_pagination()` so the shared
+			// `.navigation.pagination` styles apply.
+			printf(
+				'<nav class="navigation pagination" aria-label="%1$s"><div class="nav-links">%2$s</div></nav>',
+				esc_attr__( 'Posts pagination', 'buddyboss' ),
+				$bb_blog_pagination_links // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- core pagination HTML.
+			);
+		}
 		wp_reset_postdata();
 		?>
 	<?php else : ?>
