@@ -522,9 +522,17 @@
 	padding: 0 var(--bb-rl-space-300);
 
 	&__image img {
+		display: block;
 		width: 100%;
+		height: auto;
+		aspect-ratio: 21 / 9;
+		object-fit: cover;
 		border-radius: var(--bb-rl-radius-lg);
 		margin-bottom: var(--bb-rl-space-300);
+
+		@media screen and (max-width: 768px) {
+			aspect-ratio: 16 / 9;
+		}
 	}
 
 	&__title {
