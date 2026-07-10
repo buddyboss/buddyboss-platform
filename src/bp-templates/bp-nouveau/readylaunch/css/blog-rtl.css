@@ -1430,3 +1430,24 @@
   color: var(--bb-rl-text-secondary-color, #5a5f6d);
   margin-top: 4px;
 }
+
+.bb-rl-member-blog--filters {
+  display: flex;
+  align-items: center;
+  padding: var(--bb-rl-space-100) 0 var(--bb-rl-space-200);
+  margin-top: var(--bb-rl-space-300);
+  border-bottom: 1px solid var(--bb-rl-border-secondary-color);
+}
+
+.bb-rl-member-blog--actions {
+  margin-right: auto;
+}
+
+.bb-rl-member-blog .bb-member-blog-add-new {
+  font-weight: 500;
+}
+
+.bb-rl-member-blog .bb-member-blog-add-new i {
+  font-size: 16px;
+  margin-left: 4px;
+}

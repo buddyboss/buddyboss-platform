@@ -1196,3 +1196,29 @@
 		margin-top: 4px;
 	}
 }
+
+// Profile blogs filter bar
+
+.bb-rl-member-blog {
+
+	&--filters {
+		display: flex;
+		align-items: center;
+		padding: var(--bb-rl-space-100) 0 var(--bb-rl-space-200);
+		margin-top: var(--bb-rl-space-300);
+		border-bottom: 1px solid var(--bb-rl-border-secondary-color);
+	}
+
+	&--actions {
+		margin-left: auto;
+	}
+
+	.bb-member-blog-add-new {
+		font-weight: 500;
+
+		i {
+			font-size: 16px;
+			margin-right: 4px;
+		}
+	}
+}

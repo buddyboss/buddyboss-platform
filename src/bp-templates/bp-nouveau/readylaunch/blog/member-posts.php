@@ -28,15 +28,19 @@ $bb_blog_query_args = array(
 $bb_blog_member_query = new WP_Query( apply_filters( 'bb_blog_member_posts_query_args', $bb_blog_query_args ) );
 ?>
 <div class="bb-rl-screen-content bb-rl-member-blog">
-	<?php
-	/**
-	 * Fires at the start of the member profile Blogs tab content, before the
-	 * blog post grid — used to render the "Add New" button.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 */
-	do_action( 'bb_blog_member_posts_before' );
-	?>
+	<div class="bb-rl-member-blog--filters">
+		<div class="bb-rl-member-blog--actions">
+			<?php
+			/**
+			 * Fires at the start of the member profile Blogs tab content, before the
+			 * blog post grid — used to render the "Add New" button.
+			 *
+			 * @since BuddyBoss [BBVERSION]
+			 */
+			do_action( 'bb_blog_member_posts_before' );
+			?>
+		</div>
+	</div>
 	<?php if ( $bb_blog_member_query->have_posts() ) : ?>
 		<div class="bb-rl-blog-grid bb-rl-blog-grid--profile">
 			<?php
