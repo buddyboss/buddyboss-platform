@@ -704,6 +704,13 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  max-width: calc(100% - 42px);
+}
+
+@media screen and (max-width: 782px) {
+  .bb-rl-blog-single-header {
+    flex-direction: row;
+  }
 }
 
 .bb-rl-blog-single {
@@ -827,6 +834,12 @@
 
 .bb-rl-blog-single__content .wp-block-image img {
   border-radius: var(--bb-rl-radius-base);
+}
+
+@media screen and (max-width: 768px) {
+  .bb-rl-blog-single {
+    padding: 0 var(--bb-rl-space-100);
+  }
 }
 
 .bb-rl-blog-related-cards {
@@ -984,6 +997,15 @@
   width: 1px;
   background-color: var(--bb-rl-border-tertiary-color);
   margin: 0 56px;
+}
+
+@media screen and (max-width: 768px) {
+  .bb-blog-author-bio {
+    flex-direction: column;
+  }
+  .bb-blog-author-bio__right:before {
+    display: none;
+  }
 }
 
 /* Comments (ReadyLaunch course/lesson comments) */

@@ -508,6 +508,11 @@
 		overflow: hidden;
 		text-overflow: ellipsis;
 		white-space: nowrap;
+		max-width: calc(100% - 42px);
+	}
+
+	@media screen and (max-width: 782px) {
+		flex-direction: row;
 	}
 }
 
@@ -632,6 +637,10 @@
 		.wp-block-image img {
 			border-radius: var(--bb-rl-radius-base);
 		}
+	}
+
+	@media screen and (max-width: 768px) {
+		padding: 0 var(--bb-rl-space-100);
 	}
 }
 
@@ -785,6 +794,14 @@
 			width: 1px;
 			background-color: var(--bb-rl-border-tertiary-color);
 			margin: 0 56px;
+		}
+	}
+
+	@media screen and (max-width: 768px) {
+		flex-direction: column;
+
+		&__right:before {
+			display: none;
 		}
 	}
 }
