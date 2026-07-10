@@ -287,6 +287,29 @@
 		gap: 16px;
 		flex-wrap: wrap;
 	}
+
+	.bb-rl-blog-actions {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+
+		&:before {
+			content: "";
+			background-color: var(--bb-rl-border-tertiary-color);
+			width: 1px;
+			height: 16px;
+			margin: 0 8px 0 0;
+		}
+	}
+
+	.bb-member-blog-create-new {
+		font-weight: 500;
+
+		i {
+			font-size: 16px;
+			margin-right: 4px;
+		}
+	}
 }
 
 // Thin vertical divider between header control groups.

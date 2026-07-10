@@ -93,13 +93,15 @@ $bb_rl_blog_current_url = is_category() ? get_category_link( $bb_rl_blog_current
 			</select>
 		</label>
 
-		<?php
-		/**
-		 * Fires inside the ReadyLaunch blog archive header, after the filters.
-		 *
-		 * @since BuddyBoss [BBVERSION]
-		 */
-		do_action( 'bb_blog_archive_header_actions' );
-		?>
+		<div class="bb-rl-blog-actions">
+			<?php
+			/**
+			 * Fires inside the ReadyLaunch blog archive header, after the filters.
+			 *
+			 * @since BuddyBoss [BBVERSION]
+			 */
+			do_action( 'bb_blog_archive_header_actions' );
+			?>
+		</div>
 	</div>
 </div>
