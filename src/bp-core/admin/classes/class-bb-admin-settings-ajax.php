@@ -326,7 +326,27 @@ class BB_Admin_Settings_Ajax {
 		$registry      = bb_feature_registry();
 		$icon_registry = bb_icon_registry();
 		$activate      = 'active' === $status;
-		$result        = $activate
+
+		// Defense-in-depth: refuse to activate a DRM-locked add-on feature via
+		// a crafted request — the card's toggle is already disabled in the UI
+		// (see bb_admin_mark_drm_locked_features()). Deactivation stays
+		// allowed so admins can still turn a locked feature off.
+		if ( $activate ) {
+			$registered = $registry->bb_get_feature( $feature_id );
+
+			if (
+				$registered &&
+				! empty( $registered['drm_product_slug'] ) &&
+				class_exists( '\\BuddyBoss\\Core\\Admin\\DRM\\BB_DRM_Registry' ) &&
+				\BuddyBoss\Core\Admin\DRM\BB_DRM_Registry::should_lock_addon_features( $registered['drm_product_slug'] )
+			) {
+				wp_send_json_error(
+					array( 'message' => __( 'This feature requires an active license.', 'buddyboss' ) )
+				);
+			}
+		}
+
+		$result = $activate
 			? $registry->bb_activate_feature( $feature_id )
 			: $registry->bb_deactivate_feature( $feature_id );
 
