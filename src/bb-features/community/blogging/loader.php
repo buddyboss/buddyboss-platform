@@ -92,3 +92,72 @@ function bb_blog_rl_archive_close() {
 	);
 }
 add_action( 'bb_rl_layout_after_loop', 'bb_blog_rl_archive_close' );
+
+/**
+ * Register the member profile "Blogs" navigation item.
+ *
+ * Slug is `blog` (singular) — `blogs` is reserved by the BuddyPress
+ * multisite Sites component.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_blog_setup_profile_nav() {
+	/**
+	 * Whether the member profile Blogs tab renders.
+	 *
+	 * Off by default — consumers opt in: the Member Blogging add-on when
+	 * member blogging is enabled, Platform Pro when bookmarking is enabled.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param bool $enabled Whether to register the Blogs profile nav.
+	 */
+	if ( ! apply_filters( 'bb_blog_profile_nav_enabled', false ) ) {
+		return;
+	}
+
+	bp_core_new_nav_item(
+		array(
+			'name'                    => __( 'Blogs', 'buddyboss' ),
+			'slug'                    => 'blog',
+			'position'                => 90,
+			'screen_function'         => 'bb_blog_screen_member_posts',
+			'default_subnav_slug'     => apply_filters( 'bb_blog_profile_default_subnav', 'blog' ),
+			'show_for_displayed_user' => true,
+		)
+	);
+}
+add_action( 'bp_setup_nav', 'bb_blog_setup_profile_nav', 100 );
+
+/**
+ * Screen handler for the member "Blogs" tab.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_blog_screen_member_posts() {
+	add_action( 'bp_template_content', 'bb_blog_member_posts_content' );
+
+	/**
+	 * Filter the template loaded for the member Blogs screen.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $template Template name.
+	 */
+	bp_core_load_template( apply_filters( 'bb_blog_screen_member_posts_template', 'members/single/home' ) );
+}
+
+/**
+ * Output the member "Blogs" tab content.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_blog_member_posts_content() {
+	bp_get_template_part( 'blog/member-posts' );
+}
