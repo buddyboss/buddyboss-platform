@@ -518,10 +518,11 @@ class BB_Admin_Settings_Ajax {
 				}
 
 				// Include pro_notice if set (e.g. UPGRADE PRO badge in section header).
-				// Section-level badges intentionally do NOT trigger the field-upgrades
-				// modal — only field-level pro badges open UpgradeModal in-page.
-				// Section badges keep their original behavior: open `link_url` in a new
-				// tab when set, otherwise render as a static label.
+				// The badge opens the UpgradeModal in-page when a modal payload is
+				// available — resolved from the field-upgrades catalog first
+				// (feature/panel/section lookup), then from a payload supplied at
+				// registration time. With no modal payload the badge keeps its
+				// original behavior: open `link_url` in a new tab.
 				if ( ! empty( $section['pro_notice'] ) && is_array( $section['pro_notice'] ) ) {
 					$formatted_section['pro_notice'] = array(
 						'show'       => ! empty( $section['pro_notice']['show'] ),
@@ -529,6 +530,42 @@ class BB_Admin_Settings_Ajax {
 						'badge_icon' => sanitize_text_field( $section['pro_notice']['badge_icon'] ?? 'bb-icons-rl-crown-simple' ),
 						'link_url'   => esc_url_raw( $section['pro_notice']['link_url'] ?? '' ),
 					);
+
+					$section_modal = null;
+
+					if ( function_exists( 'bb_get_field_upgrade_for' ) ) {
+						$catalog_entry = bb_get_field_upgrade_for( $feature_id, $side_panel_id, $section_id );
+
+						if ( $catalog_entry ) {
+							$section_modal = bb_field_upgrade_to_modal_payload( $catalog_entry, $section['title'] );
+						}
+					}
+
+					if ( empty( $section_modal ) && ! empty( $section['pro_notice']['modal'] ) && is_array( $section['pro_notice']['modal'] ) ) {
+						$registered_modal = $section['pro_notice']['modal'];
+
+						$registered_media = function_exists( 'bb_admin_build_upgrade_media' )
+							? bb_admin_build_upgrade_media( $registered_modal['video_url'] ?? '', $registered_modal['image_url'] ?? '' )
+							: array(
+								'type'   => ! empty( $registered_modal['image_url'] ) ? 'image' : '',
+								'url'    => esc_url_raw( $registered_modal['image_url'] ?? '' ),
+								'poster' => '',
+							);
+
+						$section_modal = array(
+							'tier'        => sanitize_key( $registered_modal['tier'] ?? 'pro' ),
+							'label'       => sanitize_text_field( $registered_modal['label'] ?? $section['title'] ),
+							'title'       => sanitize_text_field( $registered_modal['title'] ?? '' ),
+							'description' => wp_kses_post( $registered_modal['description'] ?? '' ),
+							'image_url'   => esc_url_raw( $registered_modal['image_url'] ?? '' ),
+							'media'       => $registered_media,
+							'url'         => esc_url_raw( $registered_modal['url'] ?? 'https://www.buddyboss.com/pricing/' ),
+						);
+					}
+
+					if ( ! empty( $section_modal ) ) {
+						$formatted_section['pro_notice']['modal'] = $section_modal;
+					}
 				}
 
 				// Section-level help URL (renders a (?) icon in the section header).
