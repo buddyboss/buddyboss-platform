@@ -267,29 +267,33 @@ function bb_blog_render_post_footer_sections() {
 		$author_url = function_exists( 'bp_core_get_user_domain' ) ? bp_core_get_user_domain( $author_id ) : get_author_posts_url( $author_id );
 		?>
 		<div class="bb-blog-author-bio">
-			<a class="bb-blog-author-bio__avatar" href="<?php echo esc_url( $author_url ); ?>">
-				<?php
-				if ( function_exists( 'bp_core_fetch_avatar' ) ) {
-					echo bp_core_fetch_avatar( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- avatar HTML built by BuddyPress.
-						array(
-							'item_id' => $author_id,
-							'html'    => true,
-						)
-					);
-				} else {
-					echo get_avatar( $author_id, 96 ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- core avatar HTML.
-				}
-				?>
-			</a>
-			<div class="bb-blog-author-bio__content">
+			<div class="bb-blog-author-bio__left">
+				<a class="bb-blog-author-bio__avatar" href="<?php echo esc_url( $author_url ); ?>">
+					<?php
+					if ( function_exists( 'bp_core_fetch_avatar' ) ) {
+						echo bp_core_fetch_avatar( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- avatar HTML built by BuddyPress.
+							array(
+								'item_id' => $author_id,
+								'html'    => true,
+							)
+						);
+					} else {
+						echo get_avatar( $author_id, 96 ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- core avatar HTML.
+					}
+					?>
+				</a>
 				<h4 class="bb-blog-author-bio__name">
 					<a href="<?php echo esc_url( $author_url ); ?>">
 						<?php echo esc_html( function_exists( 'bp_core_get_user_displayname' ) ? bp_core_get_user_displayname( $author_id ) : get_the_author_meta( 'display_name', $author_id ) ); ?>
 					</a>
 				</h4>
-				<?php if ( ! empty( $author_bio ) ) : ?>
-					<p class="bb-blog-author-bio__description"><?php echo esc_html( $author_bio ); ?></p>
-				<?php endif; ?>
+			</div>
+			<div class="bb-blog-author-bio__right">
+				<div class="bb-blog-author-bio__content">
+					<?php if ( ! empty( $author_bio ) ) : ?>
+						<p class="bb-blog-author-bio__description"><?php echo esc_html( $author_bio ); ?></p>
+					<?php endif; ?>
+				</div>
 			</div>
 		</div>
 		<?php
