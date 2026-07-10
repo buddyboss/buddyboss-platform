@@ -92,14 +92,24 @@ add_filter( 'bb_blog_suppress_related_for_theme', '__return_true' );
 	}
 
 	$bb_rl_blog_related_query = function_exists( 'bb_blog_is_related_posts_enabled' ) && bb_blog_is_related_posts_enabled()
-		? bb_blog_get_related_posts( get_the_ID() )
+		? bb_blog_get_related_posts( get_the_ID(), 9 )
 		: null;
 
 	if ( $bb_rl_blog_related_query && $bb_rl_blog_related_query->have_posts() ) :
 		?>
 		<section class="bb-rl-blog-related-cards">
-			<h2 class="bb-rl-blog-related-cards__title"><?php esc_html_e( 'Related Blogs', 'buddyboss' ); ?></h2>
-			<div class="bb-rl-blog-grid">
+			<div class="bb-rl-blog-related-cards__header">
+				<h2 class="bb-rl-blog-related-cards__title"><?php esc_html_e( 'Related Blogs', 'buddyboss' ); ?></h2>
+				<div class="bb-rl-blog-related-cards__nav">
+					<button type="button" class="bb-rl-blog-related-cards__nav-button" data-bb-rl-related-nav="prev" aria-label="<?php esc_attr_e( 'Previous related blogs', 'buddyboss' ); ?>" disabled>
+						<i class="bb-icons-rl bb-icons-rl-caret-left" aria-hidden="true"></i>
+					</button>
+					<button type="button" class="bb-rl-blog-related-cards__nav-button" data-bb-rl-related-nav="next" aria-label="<?php esc_attr_e( 'Next related blogs', 'buddyboss' ); ?>" disabled>
+						<i class="bb-icons-rl bb-icons-rl-caret-right" aria-hidden="true"></i>
+					</button>
+				</div>
+			</div>
+			<div class="bb-rl-blog-related-cards__track">
 				<?php
 				while ( $bb_rl_blog_related_query->have_posts() ) :
 					$bb_rl_blog_related_query->the_post();

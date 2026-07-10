@@ -1,8 +1,9 @@
 /**
  * ReadyLaunch — Blog archive interactions.
  *
- * Grid/list view switcher (persisted in localStorage) and the Category /
- * Activity filter dropdowns (each option value is the URL to navigate to).
+ * Grid/list view switcher (persisted in localStorage), the Category /
+ * Activity filter dropdowns (each option value is the URL to navigate to),
+ * and the Related Blogs prev/next carousel on single posts.
  *
  * @since BuddyBoss [BBVERSION]
  */
@@ -59,7 +60,78 @@
 		}
 	}
 
+	/**
+	 * Initialize the Related Blogs prev/next carousel (single post).
+	 *
+	 * The track is a native horizontal scroller; the buttons scroll it by
+	 * one card and enable/disable themselves at the edges.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	function bbRlBlogRelatedCarouselInit() {
+		var section = document.querySelector( '.bb-rl-blog-related-cards' );
+
+		if ( ! section ) {
+			return;
+		}
+
+		var track      = section.querySelector( '.bb-rl-blog-related-cards__track' );
+		var prevButton = section.querySelector( '[data-bb-rl-related-nav="prev"]' );
+		var nextButton = section.querySelector( '[data-bb-rl-related-nav="next"]' );
+
+		if ( ! track || ! prevButton || ! nextButton ) {
+			return;
+		}
+
+		/**
+		 * Sync the buttons' disabled state with the track scroll position.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 */
+		function bbRlBlogRelatedUpdateNav() {
+			var maxScroll = track.scrollWidth - track.clientWidth;
+			var position  = Math.abs( track.scrollLeft );
+
+			prevButton.disabled = position <= 1;
+			nextButton.disabled = position >= maxScroll - 1;
+		}
+
+		/**
+		 * Scroll the track by one card in the given direction.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param {number} direction `1` for next, `-1` for previous.
+		 */
+		function bbRlBlogRelatedScroll( direction ) {
+			var card = track.querySelector( '.bb-rl-blog-card' );
+			var gap  = 16;
+			var step = card ? card.offsetWidth + gap : track.clientWidth;
+
+			if ( document.documentElement && 'rtl' === document.documentElement.dir ) {
+				direction = -direction;
+			}
+
+			track.scrollBy( { left: direction * step, behavior: 'smooth' } );
+		}
+
+		prevButton.addEventListener( 'click', function () {
+			bbRlBlogRelatedScroll( -1 );
+		} );
+
+		nextButton.addEventListener( 'click', function () {
+			bbRlBlogRelatedScroll( 1 );
+		} );
+
+		track.addEventListener( 'scroll', bbRlBlogRelatedUpdateNav, { passive: true } );
+		window.addEventListener( 'resize', bbRlBlogRelatedUpdateNav );
+
+		bbRlBlogRelatedUpdateNav();
+	}
+
 	function bbRlBlogInit() {
+		bbRlBlogRelatedCarouselInit();
+
 		var buttons = document.querySelectorAll( '.bb-rl-blog-view-switcher__button' );
 		var selects = document.querySelectorAll( '.bb-rl-blog-filter__select' );
 		var i;
