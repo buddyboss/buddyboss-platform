@@ -136,6 +136,16 @@
 		var selects = document.querySelectorAll( '.bb-rl-blog-filter__select' );
 		var i;
 
+		// URL-valued filter selects (archive header + member profile toolbar)
+		// bind regardless of the view switcher below.
+		for ( i = 0; i < selects.length; i++ ) {
+			selects[ i ].addEventListener( 'change', function () {
+				if ( this.value ) {
+					window.location.href = this.value;
+				}
+			} );
+		}
+
 		// Only pages with the switcher (the blog archive) get the saved view —
 		// other grids reusing the card markup (e.g. related posts) stay grid.
 		if ( ! buttons.length || ! document.querySelector( '.bb-rl-blog-grid' ) ) {
@@ -157,15 +167,57 @@
 				}
 			} );
 		}
+	}
 
-		for ( i = 0; i < selects.length; i++ ) {
-			selects[ i ].addEventListener( 'change', function () {
-				if ( this.value ) {
-					window.location.href = this.value;
-				}
-			} );
+	/**
+	 * Close a blog card more-options menu.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param {Element} menu Menu wrapper element.
+	 */
+	function bbRlBlogCloseCardMenu( menu ) {
+		var toggle = menu.querySelector( '.bb-rl-blog-card__menu-toggle' );
+
+		menu.className = menu.className.replace( /\s*is-open/g, '' );
+
+		if ( toggle ) {
+			toggle.setAttribute( 'aria-expanded', 'false' );
 		}
 	}
+
+	// Blog card more-options menu (member profile cards) — delegated so it
+	// covers every card without per-card bindings.
+	document.addEventListener( 'click', function ( event ) {
+		var toggle = event.target.closest ? event.target.closest( '.bb-rl-blog-card__menu-toggle' ) : null;
+		var open   = document.querySelectorAll( '.bb-rl-blog-card__menu.is-open' );
+		var menu;
+		var i;
+
+		if ( toggle ) {
+			event.preventDefault();
+			menu = toggle.parentNode;
+
+			for ( i = 0; i < open.length; i++ ) {
+				if ( open[ i ] !== menu ) {
+					bbRlBlogCloseCardMenu( open[ i ] );
+				}
+			}
+
+			if ( -1 !== menu.className.indexOf( 'is-open' ) ) {
+				bbRlBlogCloseCardMenu( menu );
+			} else {
+				menu.className += ' is-open';
+				toggle.setAttribute( 'aria-expanded', 'true' );
+			}
+
+			return;
+		}
+
+		for ( i = 0; i < open.length; i++ ) {
+			bbRlBlogCloseCardMenu( open[ i ] );
+		}
+	} );
 
 	if ( 'loading' === document.readyState ) {
 		document.addEventListener( 'DOMContentLoaded', bbRlBlogInit );

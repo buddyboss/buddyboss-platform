@@ -23,6 +23,17 @@ $bb_rl_blog_status        = get_post_status();
 $bb_rl_blog_status_obj    = get_post_status_object( $bb_rl_blog_status );
 $bb_rl_blog_comment_count = (int) get_comments_number();
 
+// Display labels per the design (WP's own label for anything unmapped).
+$bb_rl_blog_status_labels = array(
+	'publish' => __( 'Published', 'buddyboss' ),
+	'pending' => __( 'In Review', 'buddyboss' ),
+	'draft'   => __( 'Draft', 'buddyboss' ),
+	'future'  => __( 'Scheduled', 'buddyboss' ),
+);
+$bb_rl_blog_status_label  = isset( $bb_rl_blog_status_labels[ $bb_rl_blog_status ] )
+	? $bb_rl_blog_status_labels[ $bb_rl_blog_status ]
+	: ( $bb_rl_blog_status_obj ? $bb_rl_blog_status_obj->label : ucfirst( $bb_rl_blog_status ) );
+
 /**
  * Filter whether to show the post status tag on the card image (member
  * profile Blogs tab). When off, non-publish statuses show inline after
@@ -45,8 +56,8 @@ $bb_rl_blog_show_status_tag = apply_filters( 'bb_rl_blog_card_show_status', fals
 				<img src="<?php echo esc_url( buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/images/group_cover_image.jpeg' ); ?>" alt="<?php esc_attr_e( 'Blog post placeholder image', 'buddyboss' ); ?>">
 			<?php endif; ?>
 		</a>
-		<?php if ( $bb_rl_blog_show_status_tag && $bb_rl_blog_status_obj ) : ?>
-			<span class="bb-rl-blog-card__status-tag bb-rl-blog-card__status-tag--<?php echo esc_attr( $bb_rl_blog_status ); ?>"><?php echo esc_html( $bb_rl_blog_status_obj->label ); ?></span>
+		<?php if ( $bb_rl_blog_show_status_tag ) : ?>
+			<span class="bb-rl-blog-card__status-tag bb-rl-blog-card__status-tag--<?php echo esc_attr( $bb_rl_blog_status ); ?>"><?php echo esc_html( $bb_rl_blog_status_label ); ?></span>
 		<?php endif; ?>
 		<?php
 		/**
@@ -64,9 +75,31 @@ $bb_rl_blog_show_status_tag = apply_filters( 'bb_rl_blog_card_show_status', fals
 		<h2 class="bb-rl-blog-card__title">
 			<a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
 			<?php if ( ! $bb_rl_blog_show_status_tag && 'publish' !== $bb_rl_blog_status ) : ?>
-				<span class="bb-rl-blog-card__status bb-rl-blog-card__status--<?php echo esc_attr( $bb_rl_blog_status ); ?>"><?php echo esc_html( $bb_rl_blog_status_obj ? $bb_rl_blog_status_obj->label : ucfirst( $bb_rl_blog_status ) ); ?></span>
+				<span class="bb-rl-blog-card__status bb-rl-blog-card__status--<?php echo esc_attr( $bb_rl_blog_status ); ?>"><?php echo esc_html( $bb_rl_blog_status_label ); ?></span>
 			<?php endif; ?>
 		</h2>
+		<?php if ( $bb_rl_blog_show_status_tag ) : ?>
+			<div class="bb-rl-blog-card__menu">
+				<button type="button" class="bb-rl-blog-card__menu-toggle" aria-haspopup="true" aria-expanded="false" aria-label="<?php esc_attr_e( 'More options', 'buddyboss' ); ?>">
+					<i class="bb-icons-rl bb-icons-rl-dots-three" aria-hidden="true"></i>
+				</button>
+				<ul class="bb-rl-blog-card__menu-list">
+					<li><a href="<?php the_permalink(); ?>"><?php esc_html_e( 'View Post', 'buddyboss' ); ?></a></li>
+					<?php
+					/**
+					 * Fires inside the blog card more-options menu (member profile
+					 * cards) — used to add extra items, e.g. the Member Blogging
+					 * add-on's Edit Post link.
+					 *
+					 * @since BuddyBoss [BBVERSION]
+					 *
+					 * @param int $post_id Post ID.
+					 */
+					do_action( 'bb_blog_card_menu_items', get_the_ID() );
+					?>
+				</ul>
+			</div>
+		<?php endif; ?>
 		<div class="bb-rl-blog-card__byline">
 			<span class="bb-rl-blog-card__date"><?php echo esc_html( get_the_date() ); ?></span>
 			<?php if ( ! empty( $bb_rl_blog_categories ) && ! is_wp_error( $bb_rl_blog_categories ) ) : ?>

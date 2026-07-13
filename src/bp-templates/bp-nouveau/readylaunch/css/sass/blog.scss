@@ -141,6 +141,108 @@
 			border-color: var(--bb-rl-border-positive-secondary-color);
 			color: var(--bb-rl-text-positive-primary-color);
 		}
+
+		&--pending {
+			background: var(--bb-rl-background-warning-secondary-color);
+			border-color: var(--bb-rl-border-warning-secondary-color);
+			color: var(--bb-rl-text-warning-primary-color);
+		}
+	}
+
+	// Bookmark toggle chip on the cover image (rendered by Pro via the
+	// `bb_blog_card_actions` hook). High specificity so Pro's own
+	// single-post `.bb-blog-bookmark` button styles can't restyle it.
+	&__image .bb-rl-blog-card__bookmark.bb-blog-bookmark {
+		position: absolute;
+		top: 8px;
+		right: 8px;
+		display: flex;
+		margin: 0;
+		padding: 4px;
+		border: 0;
+		border-radius: var(--bb-rl-radius-full);
+		background: rgba(0, 0, 0, 0.4);
+		color: var(--bb-rl-text-white-color, #fff);
+		cursor: pointer;
+		line-height: 1;
+
+		&:hover,
+		&:focus,
+		&.is-bookmarked {
+			border: 0;
+			background: rgba(0, 0, 0, 0.55);
+			color: var(--bb-rl-text-white-color, #fff);
+		}
+
+		i {
+			font-size: 16px;
+			line-height: 1;
+			color: var(--bb-rl-text-white-color, #fff);
+		}
+
+		&.is-bookmarked i::before {
+			font-weight: 700; // filled glyph set
+		}
+	}
+
+	// More-options menu (member profile cards).
+	&__menu {
+		position: relative;
+		justify-self: end;
+
+		&-toggle {
+			display: flex;
+			padding: 4px;
+			border: 0.5px solid var(--bb-rl-border-secondary-color, #e7e7e7);
+			border-radius: var(--bb-rl-radius-md);
+			background: var(--bb-rl-background-secondary-hover-color, #f3f3f3);
+			cursor: pointer;
+			line-height: 1;
+
+			i {
+				font-size: 24px;
+				line-height: 1;
+				color: var(--bb-rl-text-secondary-color, #555556);
+			}
+		}
+
+		&-list {
+			position: absolute;
+			top: calc(100% + 4px);
+			right: 0;
+			z-index: 20;
+			display: none;
+			min-width: 140px;
+			margin: 0;
+			padding: 6px 0;
+			list-style: none;
+			background: var(--bb-rl-background-color, #fff);
+			border: 1px solid var(--bb-rl-border-secondary-color, #e7e7e7);
+			border-radius: var(--bb-rl-radius-lg);
+			box-shadow: 0 8px 24px 0 rgba(0, 0, 0, 0.12);
+
+			li {
+				margin: 0;
+
+				a {
+					display: block;
+					padding: 8px 16px;
+					color: var(--bb-rl-text-color, #242425);
+					font-size: 13px;
+					font-weight: 500;
+					line-height: 20px;
+					white-space: nowrap;
+
+					&:hover {
+						background: var(--bb-rl-background-secondary-color, #f6f6f6);
+					}
+				}
+			}
+		}
+
+		&.is-open &-list {
+			display: block;
+		}
 	}
 
 	&__excerpt {
@@ -242,12 +344,22 @@
 		&__content {
 			grid-template-rows: auto auto auto 1fr auto;
 			grid-template-areas:
-				"title title"
+				"title menu"
 				"byline byline"
 				"author author"
 				"excerpt excerpt"
 				"view comments";
 			padding: 16px 24px;
+		}
+
+		&__menu {
+			grid-area: menu;
+		}
+
+		// Cover image is inset 16px in the horizontal layouts — keep the
+		// bookmark chip 8px inside the image, mirroring the status tag.
+		.bb-rl-blog-card__bookmark.bb-blog-bookmark {
+			top: 24px;
 		}
 
 		&__author {
@@ -1197,20 +1309,76 @@
 	}
 }
 
-// Profile blogs filter bar
+// Profile blogs toolbar — one row: sub-tab pills left, sort + Create right.
+// The default profile sub-nav is hidden on blog screens (the toolbar renders
+// its own tabs so everything sits on the same line, per the design).
+.bp-user.blog .bb-rl-profile-subnav {
+	display: none;
+}
 
 .bb-rl-member-blog {
 
-	&--filters {
+	&__toolbar {
 		display: flex;
 		align-items: center;
+		justify-content: space-between;
+		gap: var(--bb-rl-space-200);
 		padding: var(--bb-rl-space-100) 0 var(--bb-rl-space-200);
 		margin-top: var(--bb-rl-space-300);
+		margin-bottom: var(--bb-rl-space-300);
 		border-bottom: 1px solid var(--bb-rl-border-secondary-color);
 	}
 
-	&--actions {
-		margin-left: auto;
+	&__tabs {
+		display: flex;
+		align-items: center;
+		flex-wrap: wrap;
+		gap: var(--bb-rl-space-100);
+	}
+
+	&__tab {
+		display: inline-flex;
+		align-items: center;
+		padding: 6px 16px;
+		border: 1px solid var(--bb-rl-border-secondary-color, #e7e7e7);
+		border-radius: var(--bb-rl-radius-full);
+		color: var(--bb-rl-text-secondary-color, #555556);
+		font-size: 13px;
+		font-weight: 500;
+		line-height: 20px;
+		letter-spacing: -0.065px;
+
+		&:hover {
+			color: var(--bb-rl-text-color, #242425);
+		}
+
+		&--active {
+			background: var(--bb-rl-background-color, #fff);
+			border-color: var(--bb-rl-border-quinery-color, #6d6d6e);
+			color: var(--bb-rl-text-color, #242425);
+		}
+	}
+
+	&__toolbar-actions {
+		display: flex;
+		align-items: center;
+		gap: var(--bb-rl-space-200);
+	}
+
+	.bb-rl-blog-filter--sort {
+		background: transparent;
+		border-radius: var(--bb-rl-radius-full);
+		padding-left: 8px;
+
+		> i {
+			font-size: 20px;
+			line-height: 1;
+			color: var(--bb-rl-icon-secondary-color, #555556);
+		}
+
+		.bb-rl-blog-filter__select {
+			padding-left: 4px;
+		}
 	}
 
 	.bb-member-blog-add-new {
@@ -1219,6 +1387,13 @@
 		i {
 			font-size: 16px;
 			margin-right: 4px;
+		}
+	}
+
+	@media screen and (max-width: 600px) {
+
+		&__toolbar {
+			flex-wrap: wrap;
 		}
 	}
 }

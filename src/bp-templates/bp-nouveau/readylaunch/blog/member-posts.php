@@ -10,12 +10,18 @@ defined( 'ABSPATH' ) || exit;
 
 $bb_blog_is_owner = bp_is_my_profile() || current_user_can( 'edit_others_posts' );
 
+$bb_blog_sort = isset( $_GET['bb-sort'] ) ? sanitize_key( wp_unslash( $_GET['bb-sort'] ) ) : 'newest'; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only sort.
+if ( ! in_array( $bb_blog_sort, array( 'newest', 'oldest' ), true ) ) {
+	$bb_blog_sort = 'newest';
+}
+
 $bb_blog_query_args = array(
 	'post_type'      => 'post',
 	'author'         => bp_displayed_user_id(),
 	'post_status'    => $bb_blog_is_owner ? array( 'publish', 'draft', 'pending', 'future' ) : array( 'publish' ),
 	'posts_per_page' => 12,
 	'paged'          => max( 1, (int) get_query_var( 'paged' ), (int) get_query_var( 'page' ) ),
+	'order'          => 'oldest' === $bb_blog_sort ? 'ASC' : 'DESC',
 );
 
 /**
@@ -28,19 +34,15 @@ $bb_blog_query_args = array(
 $bb_blog_member_query = new WP_Query( apply_filters( 'bb_blog_member_posts_query_args', $bb_blog_query_args ) );
 ?>
 <div class="bb-rl-screen-content bb-rl-member-blog">
-	<div class="bb-rl-member-blog--filters">
-		<div class="bb-rl-member-blog--actions">
-			<?php
-			/**
-			 * Fires at the start of the member profile Blogs tab content, before the
-			 * blog post grid — used to render the "Add New" button.
-			 *
-			 * @since BuddyBoss [BBVERSION]
-			 */
-			do_action( 'bb_blog_member_posts_before' );
-			?>
-		</div>
-	</div>
+	<?php
+	/**
+	 * Fires at the start of the member profile Blogs tab content, before the
+	 * blog post grid — renders the toolbar (sub-tabs, sort, Create button).
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	do_action( 'bb_blog_member_posts_before' );
+	?>
 	<?php if ( $bb_blog_member_query->have_posts() ) : ?>
 		<div class="bb-rl-blog-grid bb-rl-blog-grid--profile">
 			<?php

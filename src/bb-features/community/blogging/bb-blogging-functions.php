@@ -376,3 +376,131 @@ function bb_blog_append_post_footer_sections( $content ) {
 
 	return $content . bb_blog_render_post_footer_sections();
 }
+
+/**
+ * Render the ReadyLaunch toolbar on the member profile Blogs screens.
+ *
+ * One row per the design: sub-tab pills (My Blogs / Bookmarked, counts gated
+ * by the Content Counts setting) on the left; the Newest/Oldest sort dropdown
+ * and the Member Blogging add-on's Create button on the right. Hooked to both
+ * the My Blogs and Bookmarked screens; the default profile sub-nav is hidden
+ * on these screens via `blog.scss`.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_blog_rl_member_blog_toolbar() {
+	if ( ! function_exists( 'bb_is_readylaunch_enabled' ) || ! bb_is_readylaunch_enabled() ) {
+		return;
+	}
+
+	if ( ! function_exists( 'buddypress' ) || ! function_exists( 'bp_is_user' ) || ! bp_is_user() ) {
+		return;
+	}
+
+	// Re-home the add-on's Create button inside the toolbar (the add-on hooks
+	// the same actions at priority 10; this runs at 5, so removal wins).
+	$bb_blog_render_create = false;
+	if ( function_exists( 'bb_member_blog_render_add_new_button' ) ) {
+		$bb_blog_render_create = remove_action( 'bb_blog_member_posts_before', 'bb_member_blog_render_add_new_button' );
+		remove_action( 'bb_blog_bookmarks_before', 'bb_member_blog_render_add_new_button' );
+	}
+
+	$bb_blog_create_button = '';
+	if ( $bb_blog_render_create ) {
+		ob_start();
+		bb_member_blog_render_add_new_button();
+		$bb_blog_create_button = trim( ob_get_clean() );
+	}
+
+	$bb_blog_nav_items = array();
+	if ( isset( buddypress()->members->nav ) ) {
+		$bb_blog_nav_items = buddypress()->members->nav->get_secondary(
+			array(
+				'parent_slug'     => 'blog',
+				'user_has_access' => true,
+			)
+		);
+	}
+	$bb_blog_nav_items = ! empty( $bb_blog_nav_items ) ? array_values( (array) $bb_blog_nav_items ) : array();
+
+	$bb_blog_is_bookmarks = function_exists( 'bp_is_current_action' ) && bp_is_current_action( 'bookmarks' );
+
+	$bb_blog_sort = isset( $_GET['bb-sort'] ) ? sanitize_key( wp_unslash( $_GET['bb-sort'] ) ) : 'newest'; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only sort.
+	if ( ! in_array( $bb_blog_sort, array( 'newest', 'oldest' ), true ) ) {
+		$bb_blog_sort = 'newest';
+	}
+
+	$bb_blog_displayed_id = bp_displayed_user_id();
+	$bb_blog_is_owner     = bp_is_my_profile() || current_user_can( 'edit_others_posts' );
+	$bb_blog_counts_on    = function_exists( 'bb_enable_content_counts' ) && bb_enable_content_counts();
+	$bb_blog_tab_base     = trailingslashit( bp_displayed_user_domain() . 'blog' );
+	$bb_blog_sort_base    = $bb_blog_is_bookmarks ? $bb_blog_tab_base . 'bookmarks/' : $bb_blog_tab_base;
+	// A single tab still renders (visitors don't get the own-profile
+	// "Bookmarked" subnav but should still see the "My Blogs" pill).
+	$bb_blog_show_tabs    = count( $bb_blog_nav_items ) > 0;
+	?>
+	<div class="bb-rl-member-blog__toolbar">
+		<?php if ( $bb_blog_show_tabs ) : ?>
+			<div class="bb-rl-member-blog__tabs">
+				<?php
+				foreach ( $bb_blog_nav_items as $bb_blog_nav_item ) {
+					$bb_blog_count = null;
+
+					if ( $bb_blog_counts_on && 'blog' === $bb_blog_nav_item->slug ) {
+						if ( function_exists( 'bb_member_blog_get_profile_posts_count' ) ) {
+							$bb_blog_count = bb_member_blog_get_profile_posts_count( $bb_blog_displayed_id );
+						} else {
+							$bb_blog_count_query = new WP_Query(
+								array(
+									'post_type'      => 'post',
+									'author'         => $bb_blog_displayed_id,
+									'post_status'    => $bb_blog_is_owner ? array( 'publish', 'draft', 'pending', 'future' ) : array( 'publish' ),
+									'posts_per_page' => 1,
+									'fields'         => 'ids',
+								)
+							);
+							$bb_blog_count       = (int) $bb_blog_count_query->found_posts;
+						}
+					} elseif ( $bb_blog_counts_on && 'bookmarks' === $bb_blog_nav_item->slug && function_exists( 'bb_blog_pro_get_user_bookmarks' ) ) {
+						$bb_blog_count = count( (array) bb_blog_pro_get_user_bookmarks( $bb_blog_displayed_id ) );
+					}
+
+					$bb_blog_label = wp_strip_all_tags( $bb_blog_nav_item->name );
+					if ( null !== $bb_blog_count ) {
+						/* translators: 1: sub-tab label, 2: item count. */
+						$bb_blog_label = sprintf( __( '%1$s (%2$s)', 'buddyboss' ), $bb_blog_label, number_format_i18n( $bb_blog_count ) );
+					}
+
+					$bb_blog_is_current = bp_current_action() === $bb_blog_nav_item->slug;
+
+					printf(
+						'<a class="bb-rl-member-blog__tab%s" href="%s"%s>%s</a>',
+						$bb_blog_is_current ? ' bb-rl-member-blog__tab--active' : '',
+						esc_url( $bb_blog_nav_item->link ),
+						$bb_blog_is_current ? ' aria-current="page"' : '',
+						esc_html( $bb_blog_label )
+					);
+				}
+				?>
+			</div>
+		<?php endif; ?>
+		<div class="bb-rl-member-blog__toolbar-actions">
+			<label class="bb-rl-blog-filter bb-rl-blog-filter--sort">
+				<i class="bb-icons-rl bb-icons-rl-funnel-simple" aria-hidden="true"></i>
+				<select class="bb-rl-blog-filter__select" data-bb-rl-blog-filter="sort" aria-label="<?php esc_attr_e( 'Sort posts', 'buddyboss' ); ?>">
+					<option value="<?php echo esc_url( $bb_blog_sort_base ); ?>" <?php selected( 'newest' === $bb_blog_sort ); ?>><?php esc_html_e( 'Newest', 'buddyboss' ); ?></option>
+					<option value="<?php echo esc_url( add_query_arg( 'bb-sort', 'oldest', $bb_blog_sort_base ) ); ?>" <?php selected( 'oldest' === $bb_blog_sort ); ?>><?php esc_html_e( 'Oldest', 'buddyboss' ); ?></option>
+				</select>
+			</label>
+			<?php if ( '' !== $bb_blog_create_button ) : ?>
+				<span class="bb-rl-blog-header-divider" aria-hidden="true"></span>
+				<?php echo $bb_blog_create_button; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped by the add-on renderer. ?>
+			<?php endif; ?>
+		</div>
+	</div>
+	<?php
+}
+add_action( 'bb_blog_member_posts_before', 'bb_blog_rl_member_blog_toolbar', 5 );
+add_action( 'bb_blog_bookmarks_before', 'bb_blog_rl_member_blog_toolbar', 5 );
