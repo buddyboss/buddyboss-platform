@@ -523,11 +523,19 @@ function bp_nouveau_ajax_new_activity_comment() {
 			'content'     => $_POST['content'],
 			'parent_id'   => $_POST['comment_id'],
 			'skip_error'  => false === $content ? false : true, // Pass true when $content will be not empty.
+			'error_type'  => 'wp_error',
 		)
 	);
 
-	if ( ! $comment_id ) {
-		if ( ! empty( $bp->activity->errors['new_comment'] ) && is_wp_error( $bp->activity->errors['new_comment'] ) ) {
+	if ( ! $comment_id || is_wp_error( $comment_id ) ) {
+		if ( is_wp_error( $comment_id ) ) {
+			$response = array(
+				'feedback' => sprintf(
+					'<div class="bp-feedback bp-messages error">%s</div>',
+					esc_html( $comment_id->get_error_message() )
+				),
+			);
+		} elseif ( ! empty( $bp->activity->errors['new_comment'] ) && is_wp_error( $bp->activity->errors['new_comment'] ) ) {
 			$response = array(
 				'feedback' => sprintf(
 					'<div class="bp-feedback bp-messages error">%s</div>',
