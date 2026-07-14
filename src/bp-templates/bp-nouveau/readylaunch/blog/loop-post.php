@@ -84,7 +84,7 @@ $bb_rl_blog_show_status_tag = apply_filters( 'bb_rl_blog_card_show_status', fals
 					<i class="bb-icons-rl bb-icons-rl-dots-three" aria-hidden="true"></i>
 				</button>
 				<ul class="bb-rl-blog-card__menu-list">
-					<li><a href="<?php the_permalink(); ?>"><?php esc_html_e( 'View Post', 'buddyboss' ); ?></a></li>
+					<li><a href="<?php the_permalink(); ?>"><i class="bb-icons-rl bb-icons-rl-eye" aria-hidden="true"></i><?php esc_html_e( 'View Post', 'buddyboss' ); ?></a></li>
 					<?php
 					/**
 					 * Fires inside the blog card more-options menu (member profile

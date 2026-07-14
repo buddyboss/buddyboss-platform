@@ -193,48 +193,86 @@
 		&-toggle {
 			display: flex;
 			padding: 4px;
-			border: 0.5px solid var(--bb-rl-border-secondary-color, #e7e7e7);
+			border: 0.5px solid transparent;
 			border-radius: var(--bb-rl-radius-md);
-			background: var(--bb-rl-background-secondary-hover-color, #f3f3f3);
+			background-color: transparent;
 			cursor: pointer;
 			line-height: 1;
 
 			i {
 				font-size: 24px;
 				line-height: 1;
-				color: var(--bb-rl-text-secondary-color, #555556);
+				color: var(--bb-rl-icon-tertiary-color);
+			}
+
+			&:hover {
+				border-color: var(--bb-rl-border-secondary-color);
+				background: var(--bb-rl-background-secondary-hover-color);
 			}
 		}
 
+		&.is-open {
+
+			.bb-rl-blog-card__menu-toggle {
+				border-color: var(--bb-rl-border-secondary-color);
+				background: var(--bb-rl-background-secondary-hover-color);
+
+				i {
+					color: var(--bb-rl-icon-secondary-color);
+				}
+			}
+		}
+
+		// Dropdown menu (Figma 233-21906): white 8px-radius panel, 8px
+		// vertical padding, dropdown shadow; each row is a 20px icon + label
+		// with 16px/8px padding, going secondary-hover on hover. A
+		// `--danger` row (e.g. Delete) turns red.
 		&-list {
 			position: absolute;
 			top: calc(100% + 4px);
 			right: 0;
 			z-index: 20;
 			display: none;
-			min-width: 140px;
+			min-width: 180px;
 			margin: 0;
-			padding: 6px 0;
+			padding: 8px 0;
 			list-style: none;
 			background: var(--bb-rl-background-color, #fff);
 			border: 1px solid var(--bb-rl-border-secondary-color, #e7e7e7);
-			border-radius: var(--bb-rl-radius-lg);
-			box-shadow: 0 8px 24px 0 rgba(0, 0, 0, 0.12);
+			border-radius: var(--bb-rl-radius-base, 8px);
+			box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.12);
 
 			li {
 				margin: 0;
 
 				a {
-					display: block;
+					display: flex;
+					align-items: center;
+					gap: 8px;
 					padding: 8px 16px;
 					color: var(--bb-rl-text-color, #242425);
 					font-size: 13px;
 					font-weight: 500;
 					line-height: 20px;
+					letter-spacing: -0.065px;
 					white-space: nowrap;
 
+					i {
+						font-size: 20px;
+						line-height: 1;
+						color: var(--bb-rl-icon-primary-color);
+					}
+
 					&:hover {
-						background: var(--bb-rl-background-secondary-color, #f6f6f6);
+						background: var(--bb-rl-background-secondary-hover-color, #f3f3f3);
+					}
+
+					&.is-danger {
+						color: var(--bb-rl-text-danger-secondary-color, #ec221f);
+
+						i {
+							color: var(--bb-rl-icon-danger-secondary-color, #ec221f);
+						}
 					}
 				}
 			}
