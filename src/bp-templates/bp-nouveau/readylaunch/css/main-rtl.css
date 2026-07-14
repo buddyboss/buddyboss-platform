@@ -15413,7 +15413,7 @@ body.bb-rl-activity-modal-open .bb-rl-activity-update-form.modal-popup {
   flex-flow: column;
   background-color: var(--bb-rl-background-secondary-color);
   border: 1px solid var(--bb-rl-border-secondary-color);
-  border-radius: var(--bb-rl-radius-md);
+  border-radius: var(--bb-rl-radius-lg);
   padding: var(--bb-rl-space-300);
   gap: var(--bb-rl-space-200);
   margin-top: var(--bb-rl-space-100);
