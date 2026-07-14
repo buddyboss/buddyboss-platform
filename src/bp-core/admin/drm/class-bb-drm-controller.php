@@ -81,11 +81,13 @@ class BB_DRM_Controller {
 		// Site Health integration.
 		add_filter( 'site_status_tests', array( $this, 'add_site_health_tests' ) );
 
-		// License-driven update routing + paid build delivery (video/document).
-		// Pass the already-resolved $plugin_id so the router hooks the identical
-		// `{plugin_id}_license_status_changed` event this controller listens to.
-		$update_router = new BB_DRM_Update_Router();
-		$update_router->setup_hooks( $plugin_id );
+		// NOTE: The Platform is a single free build distributed from wordpress.org for
+		// every site, paid or free (PROD-9826 "Model B"). Paid features live in the
+		// separate buddyboss-addons plugin, delivered from the Mothership by the vendor
+		// AddonsManager. The former BB_DRM_Update_Router — which suppressed the
+		// wordpress.org update check for licensed sites and installed a paid Platform
+		// build bundling the video/document components — was removed with those
+		// components; the Platform now always updates from wordpress.org.
 	}
 
 	/**
