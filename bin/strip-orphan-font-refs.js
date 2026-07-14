@@ -191,7 +191,14 @@ function stripOrphanRefs( cssText, cssDir, strippedSet ) {
 		//    just promoting the next entry naturally.
 
 		// Append unchanged region + skip orphan.
-		out.push( cssText.substring( lastEnd, leftCursor ) );
+		// Guard: when two orphan entries sit adjacently at the tail of a cascade,
+		// the second's left-scan can walk back past a comma the first already
+		// consumed, leaving leftCursor < lastEnd. String#substring() SWAPS reversed
+		// arguments (unlike slice()), which would re-emit the consumed comma and
+		// corrupt the CSS (`format("woff2"),,`). Only emit a forward, non-empty region.
+		if ( leftCursor > lastEnd ) {
+			out.push( cssText.substring( lastEnd, leftCursor ) );
+		}
 		lastEnd  = rightCursor;
 		modified = true;
 
@@ -203,6 +210,15 @@ function stripOrphanRefs( cssText, cssDir, strippedSet ) {
 
 	out.push( cssText.substring( lastEnd ) );
 	var result = out.join( '' );
+
+	// Separator normalization (must run BEFORE the empty-declaration cleanup below):
+	// stripping an entry can leave a doubled or dangling separator, e.g.
+	// `format("woff2"),,` or `format("woff2"),;`. Collapse `,,`→`,` and `,;`→`;`
+	// (whitespace-tolerant) so a fully-stripped cascade reduces to `src:;` and is
+	// then removed. The leftCursor guard above alone is insufficient — it still
+	// leaves `format("woff2"),;`.
+	result = result.replace( /,\s*,/g, ',' );
+	result = result.replace( /,\s*;/g, ';' );
 
 	// Cleanup pass: a `src: ;` (empty declaration) means we stripped the
 	// only entry in a cascade. Drop the whole declaration line.

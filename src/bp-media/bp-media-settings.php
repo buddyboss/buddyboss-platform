@@ -292,6 +292,69 @@ function bp_is_profile_document_support_enabled( $default = 0 ) {
 	return (bool) apply_filters( 'bp_is_profile_document_support_enabled', (bool) get_option( 'bp_media_profile_document_support', $default ) );
 }
 
+/*
+ * Video support helpers.
+ *
+ * These mirror the document twins above and live in the Platform (not the video
+ * component) on purpose: the video component was extracted to the buddyboss-addons
+ * plugin, but Platform code (REST endpoints, group settings, templates) calls these
+ * helpers directly and unconditionally. Keeping them here means those callers resolve
+ * whether or not the addon is present. When the video component is inactive,
+ * bb_media_videos_force_disable() (bp-media-filters.php) forces all four to false via
+ * their filters — so an unlicensed/absent addon degrades cleanly instead of fataling.
+ * Option names are the frozen video contract (bp_video_*_video_support).
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+
+/**
+ * Checks if profile video support is enabled.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int $default Default value.
+ * @return bool Whether profile video support is enabled.
+ */
+function bp_is_profile_video_support_enabled( $default = 0 ) {
+	return (bool) apply_filters( 'bp_is_profile_video_support_enabled', (bool) get_option( 'bp_video_profile_video_support', $default ) );
+}
+
+/**
+ * Checks if group video support is enabled.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int $default Default value.
+ * @return bool Whether group video support is enabled.
+ */
+function bp_is_group_video_support_enabled( $default = 0 ) {
+	return (bool) apply_filters( 'bp_is_group_video_support_enabled', (bool) get_option( 'bp_video_group_video_support', $default ) );
+}
+
+/**
+ * Checks if messages video support is enabled.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int $default Default value.
+ * @return bool Whether messages video support is enabled.
+ */
+function bp_is_messages_video_support_enabled( $default = 0 ) {
+	return (bool) apply_filters( 'bp_is_messages_video_support_enabled', (bool) get_option( 'bp_video_messages_video_support', $default ) );
+}
+
+/**
+ * Checks if forums video support is enabled.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int $default Default value.
+ * @return bool Whether forums video support is enabled.
+ */
+function bp_is_forums_video_support_enabled( $default = 0 ) {
+	return (bool) apply_filters( 'bp_is_forums_video_support_enabled', (bool) get_option( 'bp_video_forums_video_support', $default ) );
+}
+
 /**
  * Checks if extension support is enabled.
  *

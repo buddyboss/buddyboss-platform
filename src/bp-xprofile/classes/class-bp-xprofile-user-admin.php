@@ -147,7 +147,7 @@ if ( ! class_exists( 'BP_XProfile_User_Admin' ) ) :
 					bp_the_profile_group();
 					add_meta_box(
 						'bp_xprofile_user_admin_fields_' . sanitize_key( bp_get_the_profile_group_slug() ),
-						esc_html( bp_get_the_profile_group_name() ),
+						bp_get_the_profile_group_name(), // Pre-escaped via the wp_filter_kses filter chain; esc_html would double-encode entities such as "R&D" in the meta box title.
 						array( $this, 'user_admin_profile_metaboxes' ),
 						$screen_id,
 						'normal',

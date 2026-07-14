@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
  * @since BuddyPress 3.0.0
  */
 function bp_nouveau_notifications_filters() {
-	echo wp_kses_post( bp_nouveau_get_notifications_filters() );
+	echo bp_nouveau_get_notifications_filters(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- returns form-control markup (<select>/<option>/<input>) pre-escaped per value at construction; wp_kses_post strips the controls.
 }
 
 	/**

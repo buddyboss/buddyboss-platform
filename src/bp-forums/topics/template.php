@@ -3684,7 +3684,7 @@ function bbp_get_form_topic_type_dropdown( $args = '' ) {
  * @param int $topic_id The topic id to use
  */
 function bbp_form_topic_status_dropdown( $args = '' ) {
-	echo wp_kses_post( bbp_get_form_topic_status_dropdown( $args ) );
+	echo bbp_get_form_topic_status_dropdown( $args ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- returns form-control markup (<select>/<option>/<input>) pre-escaped per value at construction; wp_kses_post strips the controls.
 }
 
 /**

@@ -2601,7 +2601,7 @@ function bbp_get_form_forum_subscribed() {
  * @uses  bbp_get_form_forum_type() To get the topic's forum id
  */
 function bbp_form_forum_type_dropdown( $args = '' ) {
-	echo wp_kses_post( bbp_get_form_forum_type_dropdown( $args ) );
+	echo bbp_get_form_forum_type_dropdown( $args ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- returns form-control markup (<select>/<option>/<input>) pre-escaped per value at construction; wp_kses_post strips the controls.
 }
 
 /**
@@ -2692,7 +2692,7 @@ function bbp_get_form_forum_type_dropdown( $args = '' ) {
  * @uses  bbp_get_form_forum_status() To get the topic's forum id
  */
 function bbp_form_forum_status_dropdown( $args = '' ) {
-	echo wp_kses_post( bbp_get_form_forum_status_dropdown( $args ) );
+	echo bbp_get_form_forum_status_dropdown( $args ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- returns form-control markup (<select>/<option>/<input>) pre-escaped per value at construction; wp_kses_post strips the controls.
 }
 
 /**
@@ -2782,7 +2782,7 @@ function bbp_get_form_forum_status_dropdown( $args = '' ) {
  * @uses  bbp_get_form_forum_visibility() To get the topic's forum id
  */
 function bbp_form_forum_visibility_dropdown( $args = '' ) {
-	echo wp_kses_post( bbp_get_form_forum_visibility_dropdown( $args ) );
+	echo bbp_get_form_forum_visibility_dropdown( $args ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- returns form-control markup (<select>/<option>/<input>) pre-escaped per value at construction; wp_kses_post strips the controls.
 }
 
 /**

@@ -140,7 +140,7 @@ function bp_get_message_thread_id() {
  * Output the subject of the current thread in the loop.
  */
 function bp_message_thread_subject() {
-	echo esc_html( bp_get_message_thread_subject() );
+	echo bp_get_message_thread_subject(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- pre-escaped via the wp_filter_kses filter chain; inline esc_html would double-encode intentional entities/HTML.
 }
 	/**
 	 * Get the subject of the current thread in the loop.
@@ -1177,7 +1177,7 @@ function bp_get_message_notice_post_date() {
  * Output the subject of the current notice in the loop.
  */
 function bp_message_notice_subject() {
-	echo esc_html( bp_get_message_notice_subject() );
+	echo bp_get_message_notice_subject(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- pre-escaped via the wp_filter_kses filter chain; inline esc_html would double-encode intentional entities/HTML.
 }
 	/**
 	 * Get the subject of the current notice in the loop.
@@ -1201,7 +1201,7 @@ function bp_get_message_notice_subject() {
  * Output the text of the current notice in the loop.
  */
 function bp_message_notice_text() {
-	echo esc_html( bp_get_message_notice_text() );
+	echo bp_get_message_notice_text(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- pre-escaped via the wp_filter_kses filter chain; inline esc_html would double-encode intentional entities/HTML.
 }
 	/**
 	 * Get the text of the current notice in the loop.

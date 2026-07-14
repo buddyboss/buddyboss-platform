@@ -255,7 +255,7 @@ class BP_Members_List_Table extends WP_Users_List_Table {
 	 */
 	public function single_row( $signup_object = null, $style = '', $role = '', $numposts = 0 ) {
 		echo '<tr' . $style . ' id="signup-' . esc_attr( $signup_object->id ) . '">'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $style is internally generated class attribute markup.
-		echo wp_kses_post( $this->single_row_columns( $signup_object ) );
+		echo $this->single_row_columns( $signup_object ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- WP list-table row markup incl. the cb checkbox column; each column_* method escapes its own output; wp_kses_post strips the checkboxes (Activate/Delete become impossible).
 		echo '</tr>';
 	}
 

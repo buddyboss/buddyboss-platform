@@ -473,12 +473,22 @@ if ( ! function_exists( 'bp_core_load_buddypress_textdomain' ) ) {
 	 * @see   load_textdomain() for a description of return values.
 	 */
 	function bp_core_load_buddypress_textdomain() {
+		static $loaded = false;
+
 		$domain     = 'buddyboss-platform'; // New text domain — matches the plugin slug.
 		$old_domain = 'buddyboss';           // Legacy domain — existing customer .mo/.po files are keyed to this.
 
-		if ( is_textdomain_loaded( $domain ) ) {
-			return false;
+		/*
+		 * Run-once guard — deliberately NOT is_textdomain_loaded( $domain ). On WP 6.7+
+		 * a just-in-time __( '…', 'buddyboss-platform' ) call can load ONLY the new-domain
+		 * .mo before this function runs; an is_textdomain_loaded() check would then bail and
+		 * skip the legacy "buddyboss" merge below, silently reverting existing customer
+		 * translations to English. A private static flag runs the merge exactly once.
+		 */
+		if ( $loaded ) {
+			return true;
 		}
+		$loaded = true;
 
 		$locale          = get_locale();
 		$plugin_dir_path = defined( 'BP_PLUGIN_DIR' ) ? BP_PLUGIN_DIR : plugin_dir_path( __FILE__ );
@@ -508,36 +518,46 @@ if ( ! function_exists( 'bp_core_load_buddypress_textdomain' ) ) {
 			)
 		);
 
-		unload_textdomain( $domain );
-
 		$new_mofile = sprintf( '%s-%s.mo', $domain, $locale );
 		$old_mofile = sprintf( '%s-%s.mo', $old_domain, $locale );
+		$loaded_any = false;
 
 		/*
-		 * 1) Load any new-domain translation files first. When a string is translated
-		 *    under both domains, the new-domain entry wins (loaded into the domain first).
+		 * 1) Load the highest-priority new-domain translation file, then stop. When a
+		 *    string is translated under both domains, the new-domain entry wins because
+		 *    it is loaded into the domain first.
 		 */
 		foreach ( $locations as $location ) {
-			load_textdomain( $domain, $location . $new_mofile );
+			if ( load_textdomain( $domain, $location . $new_mofile ) ) {
+				$loaded_any = true;
+				break;
+			}
 		}
 
 		/*
-		 * 2) Merge the legacy "buddyboss" translation files INTO the new domain. WordPress
-		 *    merges entries for an already-loaded domain, so every existing customer
-		 *    translation stays available under "buddyboss-platform" with zero per-string
-		 *    runtime cost (no gettext filter). Legacy .mo files are intentionally NOT renamed.
+		 * 2) Merge the highest-priority legacy "buddyboss" file INTO the new domain, then
+		 *    stop. WordPress merges entries for an already-loaded domain WITHOUT overwriting,
+		 *    so new-domain entries (loaded above) win and legacy entries backfill — existing
+		 *    customer translations keep resolving with no per-string runtime cost. Legacy
+		 *    .mo files are intentionally NOT renamed.
 		 */
 		foreach ( $locations as $location ) {
-			load_textdomain( $domain, $location . $old_mofile );
+			if ( load_textdomain( $domain, $location . $old_mofile ) ) {
+				$loaded_any = true;
+				break;
+			}
 		}
 
-		// Standard bundled-path fallback (also covers the wp.org plugin-translations directory).
-		$plugin_folder       = plugin_basename( $plugin_dir_path );
-		$buddyboss_lang_path = $plugin_folder . '/languages';
-		if ( defined( 'BP_SOURCE_SUBDIRECTORY' ) && ! empty( constant( 'BP_SOURCE_SUBDIRECTORY' ) ) ) {
-			$buddyboss_lang_path = $plugin_folder . '/src/languages';
+		// Bundled-path fallback (also covers the wp.org plugin-translations directory) —
+		// only when neither lookup above resolved a file.
+		if ( ! $loaded_any ) {
+			$plugin_folder       = plugin_basename( $plugin_dir_path );
+			$buddyboss_lang_path = $plugin_folder . '/languages';
+			if ( defined( 'BP_SOURCE_SUBDIRECTORY' ) && ! empty( constant( 'BP_SOURCE_SUBDIRECTORY' ) ) ) {
+				$buddyboss_lang_path = $plugin_folder . '/src/languages';
+			}
+			load_plugin_textdomain( $domain, false, $buddyboss_lang_path );
 		}
-		load_plugin_textdomain( $domain, false, $buddyboss_lang_path );
 
 		return is_textdomain_loaded( $domain );
 	}

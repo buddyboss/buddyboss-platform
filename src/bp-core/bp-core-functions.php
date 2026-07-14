@@ -2507,8 +2507,30 @@ function _bp_strip_spans_from_title( $title_part = '' ) {
  * @return string
  */
 function bp_core_get_minified_asset_suffix() {
-	$ext = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
-	return $ext;
+	static $suffix = null;
+
+	if ( null === $suffix ) {
+		$debug = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG;
+
+		/*
+		 * SCRIPT_DEBUG is only honoured when the unminified assets actually
+		 * exist on disk. The shipped customer zip strips every unminified
+		 * .js/.css that has a .min twin, so on such a build the '' (unminified)
+		 * suffix would 404 the ~40 enqueues that use this helper. Probe one
+		 * canonical first-party paired asset — present on a source checkout,
+		 * absent from a minified-only zip — and cache the result (a single
+		 * file_exists per request). plugin_dir already accounts for the source
+		 * sub-directory on developer checkouts.
+		 */
+		if ( $debug && function_exists( 'buddypress' ) && ! empty( buddypress()->plugin_dir )
+			&& file_exists( buddypress()->plugin_dir . 'bp-templates/bp-nouveau/css/buddypress.css' ) ) {
+			$suffix = '';
+		} else {
+			$suffix = '.min';
+		}
+	}
+
+	return $suffix;
 }
 
 /**
@@ -8716,12 +8738,16 @@ if ( ! function_exists( 'bb_filter_input_string' ) ) {
 			return $string;
 		}
 
-		/**
-		 * This differs from strip_tags() because it removes the contents of
-		 * the `<script>` and `<style>` tags. E.g. `strip_tags( '<script>something</script>' )`
-		 * will return 'something'. wp_strip_all_tags will return ''
+		/*
+		 * strip_tags() is used deliberately here, NOT wp_strip_all_tags().
+		 * These are the plugin's general-purpose $_POST / $_GET readers used by
+		 * 160+ call sites. wp_strip_all_tags() is NOT an equivalent: it also
+		 * removes the CONTENTS of <script>/<style> tags and TRIMS leading and
+		 * trailing whitespace, silently mutating any input where whitespace is
+		 * significant (e.g. API keys, passwords). strip_tags() strips only the
+		 * tags. Both branches must stay identical.
 		 */
-		$string = $require_array ? array_map( 'strip_tags', $string ) : wp_strip_all_tags( $string );
+		$string = $require_array ? array_map( 'strip_tags', $string ) : strip_tags( $string ); // phpcs:ignore WordPress.WP.AlternativeFunctions.strip_tags_strip_tags -- see comment above; wp_strip_all_tags is not a safe substitute here.
 
 		if ( ! in_array( FILTER_FLAG_NO_ENCODE_QUOTES, $flags, true ) ) {
 			$string = str_replace( array( "'", '"' ), array( '&#39;', '&#34;' ), $string );
@@ -8758,12 +8784,16 @@ if ( ! function_exists( 'bb_filter_var_string' ) ) {
 			return $string;
 		}
 
-		/**
-		 * This differs from strip_tags() because it removes the contents of
-		 * the `<script>` and `<style>` tags. E.g. `strip_tags( '<script>something</script>' )`
-		 * will return 'something'. wp_strip_all_tags will return ''
+		/*
+		 * strip_tags() is used deliberately here, NOT wp_strip_all_tags().
+		 * These are the plugin's general-purpose $_POST / $_GET readers used by
+		 * 160+ call sites. wp_strip_all_tags() is NOT an equivalent: it also
+		 * removes the CONTENTS of <script>/<style> tags and TRIMS leading and
+		 * trailing whitespace, silently mutating any input where whitespace is
+		 * significant (e.g. API keys, passwords). strip_tags() strips only the
+		 * tags. Both branches must stay identical.
 		 */
-		$string = $require_array ? array_map( 'strip_tags', $string ) : wp_strip_all_tags( $string );
+		$string = $require_array ? array_map( 'strip_tags', $string ) : strip_tags( $string ); // phpcs:ignore WordPress.WP.AlternativeFunctions.strip_tags_strip_tags -- see comment above; wp_strip_all_tags is not a safe substitute here.
 
 		if ( ! in_array( FILTER_FLAG_NO_ENCODE_QUOTES, $flags, true ) ) {
 			$string = str_replace( array( "'", '"' ), array( '&#39;', '&#34;' ), $string );

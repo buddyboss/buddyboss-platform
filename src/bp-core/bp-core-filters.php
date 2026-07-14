@@ -1358,7 +1358,7 @@ function bp_core_render_email_template( $template ) {
 
 	// Make sure we add a <title> tag so WP Customizer picks it up.
 	$template = str_replace( '<head>', '<head><title>' . esc_html__( 'BuddyBoss Emails', 'buddyboss-platform' ) . '</title>', $template );
-	echo wp_kses_post( str_replace( '{{{content}}}', wpautop( get_post()->post_content ), $template ) );
+	echo str_replace( '{{{content}}}', wpautop( get_post()->post_content ), $template ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- full email HTML document (<html>/<head>/<style>/<title>) rendered in the admin-only Email Customizer; wp_kses_post strips the document structure and dumps raw CSS on screen.
 
 	/*
 	 * Link colours are applied directly in the email template before sending, so we

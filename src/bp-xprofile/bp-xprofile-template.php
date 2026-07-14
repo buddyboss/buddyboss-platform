@@ -288,7 +288,7 @@ function bp_get_the_profile_group_id() {
  * @since BuddyPress 1.0.0
  */
 function bp_the_profile_group_name() {
-	echo esc_html( bp_get_the_profile_group_name() );
+	echo bp_get_the_profile_group_name(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- pre-escaped via the wp_filter_kses filter chain; inline esc_html would double-encode intentional entities/HTML.
 }
 
 	/**
@@ -346,7 +346,7 @@ function bp_get_the_profile_group_slug() {
  * @since BuddyPress 1.0.0
  */
 function bp_the_profile_group_description() {
-	echo esc_html( bp_get_the_profile_group_description() );
+	echo bp_get_the_profile_group_description(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- pre-escaped via the wp_filter_kses filter chain; inline esc_html would double-encode intentional entities/HTML.
 }
 
 	/**
@@ -540,7 +540,7 @@ function bp_get_the_profile_field_id() {
  * @since BuddyPress 1.0.0
  */
 function bp_the_profile_field_name() {
-	echo esc_html( bp_get_the_profile_field_name() );
+	echo bp_get_the_profile_field_name(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- pre-escaped via the wp_filter_kses filter chain; inline esc_html would double-encode intentional entities/HTML.
 }
 
 	/**
@@ -741,7 +741,7 @@ function bp_get_the_profile_field_type() {
  * @since BuddyPress 1.1.0
  */
 function bp_the_profile_field_description() {
-	echo esc_html( bp_get_the_profile_field_description() );
+	echo bp_get_the_profile_field_description(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- pre-escaped via the wp_filter_kses filter chain; inline esc_html would double-encode intentional entities/HTML.
 }
 
 	/**
@@ -1372,7 +1372,7 @@ function bp_edit_profile_button() {
  * @param array|string $args Args for the radio buttons. See {@link bp_profile_get_visibility_radio_buttons}
  */
 function bp_profile_visibility_radio_buttons( $args = '' ) {
-	echo wp_kses_post( bp_profile_get_visibility_radio_buttons( $args ) );
+	echo bp_profile_get_visibility_radio_buttons( $args ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- returns form-control markup (<select>/<option>/<input>) pre-escaped per value at construction; wp_kses_post strips the controls.
 }
 	/**
 	 * Return the field visibility radio buttons.

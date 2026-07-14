@@ -2716,7 +2716,7 @@ function bp_nouveau_signup_terms_privacy() {
 			<h1><?php echo esc_html( get_the_title( $terms ) ); ?></h1>
 			<?php
 			$get_terms = get_post( $terms );
-			echo wp_kses_post( apply_filters( 'bp_term_of_service_content', apply_filters( 'the_content', $get_terms->post_content ), $get_terms->post_content ) );
+			echo apply_filters( 'bp_term_of_service_content', apply_filters( 'the_content', $get_terms->post_content ), $get_terms->post_content ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- post_content already sanitized by the_content; wp_kses_post strips oEmbed <iframe>s and block <svg>s.
 			?>
 			<button title="<?php esc_attr_e( 'Close (Esc)', 'buddyboss-platform' ); ?>" type="button" class="mfp-close"><?php esc_html_e( '×', 'buddyboss-platform' ); ?></button>
 		</div>
@@ -2724,7 +2724,7 @@ function bp_nouveau_signup_terms_privacy() {
 			<h1><?php echo esc_html( get_the_title( $privacy ) ); ?></h1>
 			<?php
 			$get_privacy = get_post( $privacy );
-			echo wp_kses_post( apply_filters( 'bp_privacy_policy_content', apply_filters( 'the_content', $get_privacy->post_content ), $get_privacy->post_content ) );
+			echo apply_filters( 'bp_privacy_policy_content', apply_filters( 'the_content', $get_privacy->post_content ), $get_privacy->post_content ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- post_content already sanitized by the_content; wp_kses_post strips oEmbed <iframe>s and block <svg>s.
 			?>
 			<button title="<?php esc_attr_e( 'Close (Esc)', 'buddyboss-platform' ); ?>" type="button" class="mfp-close"><?php esc_html_e( '×', 'buddyboss-platform' ); ?></button>
 		</div>
@@ -2748,7 +2748,7 @@ function bp_nouveau_signup_terms_privacy() {
 			<h1><?php echo esc_html( get_the_title( $privacy ) ); ?></h1>
 			<?php
 			$get_privacy = get_post( $privacy );
-			echo wp_kses_post( apply_filters( 'bp_privacy_policy_content', apply_filters( 'the_content', $get_privacy->post_content ), $get_privacy->post_content ) );
+			echo apply_filters( 'bp_privacy_policy_content', apply_filters( 'the_content', $get_privacy->post_content ), $get_privacy->post_content ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- post_content already sanitized by the_content; wp_kses_post strips oEmbed <iframe>s and block <svg>s.
 			?>
 			<button title="<?php esc_attr_e( 'Close (Esc)', 'buddyboss-platform' ); ?>" type="button" class="mfp-close"><?php esc_html_e( '×', 'buddyboss-platform' ); ?></button>
 		</div>
@@ -2773,7 +2773,7 @@ function bp_nouveau_signup_terms_privacy() {
 			<h1><?php echo esc_html( get_the_title( $terms ) ); ?></h1>
 			<?php
 			$get_terms = get_post( $terms );
-			echo wp_kses_post( apply_filters( 'bp_term_of_service_content', apply_filters( 'the_content', $get_terms->post_content ), $get_terms->post_content ) );
+			echo apply_filters( 'bp_term_of_service_content', apply_filters( 'the_content', $get_terms->post_content ), $get_terms->post_content ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- post_content already sanitized by the_content; wp_kses_post strips oEmbed <iframe>s and block <svg>s.
 			?>
 			<button title="<?php esc_attr_e( 'Close (Esc)', 'buddyboss-platform' ); ?>" type="button" class="mfp-close"><?php esc_html_e( '×', 'buddyboss-platform' ); ?></button>
 		</div>

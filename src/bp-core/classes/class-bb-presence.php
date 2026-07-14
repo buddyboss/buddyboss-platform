@@ -1053,39 +1053,56 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 		 *                             so existing customer translations keep resolving.
 		 */
 		public function bb_load_translations() {
+			static $loaded = false;
+
+			/*
+			 * Run-once guard — deliberately NOT is_textdomain_loaded(): on WP 6.7+ a
+			 * just-in-time new-domain load would make that check bail and skip the legacy
+			 * merge, reverting existing translations to English. Mirrors
+			 * bp_core_load_buddypress_textdomain() in bp-loader.php. This runs on the
+			 * presence/heartbeat endpoint, so the redundant per-location loads it replaces
+			 * fired on every heartbeat.
+			 */
+			if ( $loaded || ! function_exists( 'load_textdomain' ) ) {
+				return;
+			}
+			$loaded = true;
+
 			$domain     = 'buddyboss-platform';
 			$old_domain = 'buddyboss';
-			if ( function_exists( 'is_textdomain_loaded' ) && ! is_textdomain_loaded( $domain ) ) {
-				$locale         = get_locale();
-				$new_mofile     = sprintf( '%s-%s.mo', $domain, $locale );
-				$old_mofile     = sprintf( '%s-%s.mo', $old_domain, $locale );
-				$buddyboss_lang = WP_PLUGIN_DIR . '/buddyboss-platform/languages/';
-				if ( ! is_dir( $buddyboss_lang ) ) {
-					// File from the development version.
-					$buddyboss_lang = WP_PLUGIN_DIR . '/buddyboss-platform/src/languages/';
-				}
-				if ( ! empty( $buddyboss_lang ) && function_exists( 'load_textdomain' ) ) {
+			$locale     = get_locale();
+			$new_mofile = sprintf( '%s-%s.mo', $domain, $locale );
+			$old_mofile = sprintf( '%s-%s.mo', $old_domain, $locale );
 
-					$locations = array(
-						trailingslashit( WP_LANG_DIR . '/' . $domain ),
-						trailingslashit( WP_LANG_DIR . '/' . $old_domain ),
-						trailingslashit( WP_LANG_DIR ),
-						trailingslashit( WP_LANG_DIR . '/plugins' ),
-						trailingslashit( WP_LANG_DIR . '/loco/plugins' ), // Loco Translate "Custom" location.
-						trailingslashit( $buddyboss_lang ),
-					);
+			$buddyboss_lang = WP_PLUGIN_DIR . '/buddyboss-platform/languages/';
+			if ( ! is_dir( $buddyboss_lang ) ) {
+				// File from the development version.
+				$buddyboss_lang = WP_PLUGIN_DIR . '/buddyboss-platform/src/languages/';
+			}
 
-					// Load new-domain files first, then merge legacy "buddyboss" files into the same domain.
-					foreach ( $locations as $location ) {
-						load_textdomain( $domain, $location . $new_mofile );
-					}
-					foreach ( $locations as $location ) {
-						load_textdomain( $domain, $location . $old_mofile );
-					}
+			$locations = array(
+				trailingslashit( WP_LANG_DIR . '/' . $domain ),
+				trailingslashit( WP_LANG_DIR . '/' . $old_domain ),
+				trailingslashit( WP_LANG_DIR ),
+				trailingslashit( WP_LANG_DIR . '/plugins' ),
+				trailingslashit( WP_LANG_DIR . '/loco/plugins' ), // Loco Translate "Custom" location.
+				trailingslashit( $buddyboss_lang ),
+			);
 
-					return is_textdomain_loaded( $domain );
+			// Load the highest-priority new-domain file, then merge the highest-priority
+			// legacy "buddyboss" file into the same domain (new entries win, legacy backfills).
+			foreach ( $locations as $location ) {
+				if ( load_textdomain( $domain, $location . $new_mofile ) ) {
+					break;
 				}
 			}
+			foreach ( $locations as $location ) {
+				if ( load_textdomain( $domain, $location . $old_mofile ) ) {
+					break;
+				}
+			}
+
+			return is_textdomain_loaded( $domain );
 		}
 	}
 

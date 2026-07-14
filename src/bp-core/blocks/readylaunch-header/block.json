@@ -13,7 +13,7 @@
     "BB",
     "Navigation"
   ],
-  "textdomain": "buddyboss",
+  "textdomain": "buddyboss-platform",
   "attributes": {
     "showSearch": {
       "type": "boolean",

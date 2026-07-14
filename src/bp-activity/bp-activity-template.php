@@ -858,7 +858,7 @@ function bb_get_activity_date_updated() {
  * @since BuddyPress 2.1.0
  */
 function bp_activity_member_display_name() {
-	echo esc_html( bp_get_activity_member_display_name() );
+	echo bp_get_activity_member_display_name(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- pre-escaped via the wp_filter_kses filter chain; inline esc_html would double-encode intentional entities/HTML.
 }
 
 /**

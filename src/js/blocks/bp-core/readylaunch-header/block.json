@@ -7,7 +7,7 @@
     "icon": "align-wide",
     "description": "Use with page templates to add the BuddyBoss ReadyLaunch menu as a Block theme heading",
     "keywords": [ "BuddyBoss", "Header", "ReadyLaunch", "BB", "Navigation" ],
-    "textdomain": "buddyboss",
+    "textdomain": "buddyboss-platform",
     "attributes": {
         "showSearch": {
             "type": "boolean",

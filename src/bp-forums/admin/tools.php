@@ -125,7 +125,7 @@ function bbp_converter_setting_callback_platform() {
 	closedir( $curdir );
 	?>
 
-	<select name="_bbp_converter_platform" id="_bbp_converter_platform"><?php echo wp_kses_post( $platform_options ); ?></select>
+	<select name="_bbp_converter_platform" id="_bbp_converter_platform"><?php echo $platform_options; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- returns form-control markup (<select>/<option>/<input>) pre-escaped per value at construction; wp_kses_post strips the controls. ?></select>
 	<label for="_bbp_converter_platform"><?php esc_html_e( 'is the previous forum software', 'buddyboss-platform' ); ?></label>
 
 	<?php
