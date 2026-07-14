@@ -14,6 +14,12 @@ import { ErrorBoundary } from './components/ErrorBoundary';
 // import: the file registers `addFilter` handlers on `bb_admin_settings_custom_field`.
 import './components/tools';
 
+// Register the Custom Profile Tabs (Member Profiles) custom field type fallback. Side-
+// effect-only import: the file registers the `bb_admin_settings_custom_field`
+// handler that renders the Activation Required CTA when BuddyBoss Platform Pro
+// is inactive.
+import './components/profile-tabs';
+
 // Initialize the React app.
 const container = document.getElementById( 'bb-admin-settings' );
 if ( container ) {

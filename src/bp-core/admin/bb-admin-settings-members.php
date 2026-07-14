@@ -63,6 +63,7 @@ function bb_admin_settings_register_members_feature() {
 	require_once __DIR__ . '/settings/members/settings-member-directory.php';
 	require_once __DIR__ . '/settings/members/settings-member-connection.php';
 	require_once __DIR__ . '/settings/members/settings-access-control.php';
+	require_once __DIR__ . '/settings/members/settings-custom-profile-tabs.php';
 	require_once __DIR__ . '/settings/members/settings-profile-types.php';
 	require_once __DIR__ . '/settings/members/settings-profile-search.php';
 	require_once __DIR__ . '/settings/members/settings-profile-navigation.php';
@@ -170,6 +171,22 @@ function bb_admin_settings_register_members_feature() {
 
 	// Divider before custom screen panels.
 
+	// Side Panel: Custom Profile Tabs (BuddyBoss Platform Pro placeholder, custom screen).
+	bb_register_side_panel(
+		'members',
+		'custom_profile_tabs',
+		array(
+			'title'      => __( 'Custom Profile Tabs', 'buddyboss' ),
+			'icon'       => array(
+				'type'  => 'font',
+				'class' => 'bb-icons-rl bb-icons-rl-cards-three',
+			),
+			'divider'    => true,
+			'order'      => 55,
+			'is_default' => false,
+		)
+	);
+
 	// Side Panel 6: Profile Fields (custom screen).
 	bb_register_side_panel(
 		'members',
@@ -189,7 +206,6 @@ function bb_admin_settings_register_members_feature() {
 					'admin.php'
 				)
 			),
-			'divider'    => true,
 			'order'      => 60,
 			'is_default' => false,
 		)
@@ -272,6 +288,9 @@ function bb_admin_settings_register_members_feature() {
 
 	// Access Controls (Connection Access) — follows same pattern as Groups/Activity.
 	bb_members_register_access_control_fields();
+
+	// Panel: Custom Profile Tabs (BuddyBoss Platform Pro).
+	bb_members_register_custom_profile_tabs_panel_fields();
 
 	// Panel 6: Profile Types.
 	bb_members_register_profile_types_panel_fields();
