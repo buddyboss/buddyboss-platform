@@ -857,11 +857,31 @@
 		line-height: 1.7;
 		margin-top: var(--bb-rl-space-300);
 
-		h2 {
+		h2,
+		h3,
+		h4,
+		h5,
+		h6 {
 			color: var(--bb-rl-text-color);
 			font-size: 18px;
 			font-weight: 600;
 			margin-bottom: var(--bb-rl-space-300);
+		}
+
+		h3 {
+			font-size: 17px;
+		}
+
+		h4 {
+			font-size: 16px;
+		}
+
+		h5 {
+			font-size: 15px;
+		}
+
+		h5 {
+			font-size: 14px;
 		}
 
 		p {
@@ -871,8 +891,33 @@
 			margin-bottom: var(--bb-rl-space-300);
 		}
 
+		ul,
+		ol {
+			color: var(--bb-rl-text-color);
+			font-size: 14px;
+			line-height: 1.57;
+			margin: 0 0 24px 18px;
+			padding: 0;
+		}
+
+		.wp-block-gallery {
+			margin-bottom: var(--bb-rl-space-300);
+		}
+
 		.wp-block-image img {
 			border-radius: var(--bb-rl-radius-base);
+		}
+
+		.wp-block-video > video {
+			border-radius: var(--bb-rl-radius-lg);
+		}
+
+		.wp-block-embed-spotify,
+		.wp-block-embed-youtube {
+
+			iframe {
+				border-radius: var(--bb-rl-radius-lg);
+			}
 		}
 	}
 
