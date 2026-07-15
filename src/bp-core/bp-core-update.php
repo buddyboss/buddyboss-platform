@@ -3205,6 +3205,9 @@ function bb_core_update_repair_duplicate_following_notification() {
 	global $wpdb;
 	$bp = buddypress();
 
+	// Identify the duplicate "following" notifications once (keep the newest per
+	// user + secondary item, mark the older ones for deletion), then remove them in
+	// chunks so a site with many duplicates cannot time out this one-time upgrade.
 	$sql  = "SELECT DISTINCT n1.id FROM {$bp->notifications->table_name} n1";
 	$sql .= " JOIN {$bp->notifications->table_name} n2 ON n1.user_id = n2.user_id";
 	$sql .= ' WHERE n1.secondary_item_id = n2.secondary_item_id';
@@ -3212,21 +3215,18 @@ function bb_core_update_repair_duplicate_following_notification() {
 	$sql .= ' AND n1.component_name = %s AND n1.component_action = %s';
 	$sql .= ' ORDER BY n1.id DESC';
 
-	$notification_ids = $wpdb->get_col( $wpdb->prepare( $sql, 'activity', 'bb_following_new' ) );
+	$notification_ids = wp_parse_id_list( $wpdb->get_col( $wpdb->prepare( $sql, 'activity', 'bb_following_new' ) ) );
 
-	// Remove duplicate notifications along with their metadata. Delete in chunks with
-	// bulk queries so an old site with many duplicates cannot time out the upgrade.
-	if ( ! empty( $notification_ids ) ) {
-		$notification_ids = wp_parse_id_list( $notification_ids );
+	// Delete the duplicate notifications in chunks (bounded lock time on large sites).
+	foreach ( array_chunk( $notification_ids, 500 ) as $chunk ) {
+		$ids_sql = implode( ',', $chunk );
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		$wpdb->query( "DELETE FROM {$bp->notifications->table_name} WHERE id IN ({$ids_sql})" );
+	}
 
-		foreach ( array_chunk( $notification_ids, 500 ) as $chunk ) {
-			$ids_sql = implode( ',', $chunk );
-			// Delete meta first (while notification_id references still exist), then the notifications.
-			// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-			$wpdb->query( "DELETE FROM {$bp->notifications->table_name_meta} WHERE notification_id IN ({$ids_sql})" );
-			// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-			$wpdb->query( "DELETE FROM {$bp->notifications->table_name} WHERE id IN ({$ids_sql})" );
-		}
+	// Clean up the now-orphaned metadata after the notifications are gone.
+	if ( ! empty( $notification_ids ) && function_exists( 'bb_notifications_delete_meta_for_ids' ) ) {
+		bb_notifications_delete_meta_for_ids( $notification_ids );
 	}
 
 	// Purge all the cache for API.
