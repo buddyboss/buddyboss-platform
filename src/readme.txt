@@ -57,6 +57,9 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 
 == Changelog ==
 
+= 3.1.2 =
+* Enhancement: Notification - Added notification cleanup support with cleanup orphan notification meta
+
 = 3.1.1 =
 * Bug: Activity - Fixed an issue where clicking a mention notification wouldn’t open the feed post if the Activity tab was hidden from profile navigation
 * Bug: Activity - Fixed an issue where site admins could see private/hidden group activity in the activity feed but couldn’t open the individual activity post
