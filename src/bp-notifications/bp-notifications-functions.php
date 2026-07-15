@@ -2222,7 +2222,7 @@ add_action( 'bb_post_new_comment_reply_notification', 'bb_post_new_comment_reply
  * failure here can only ever leave inert orphaned meta rows, never a notification stripped
  * of the meta it still needs.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.1.2
  *
  * @global wpdb $wpdb WordPress database abstraction object.
  *
@@ -2274,7 +2274,7 @@ function bb_notifications_delete_meta_for_ids( $notification_ids ) {
  * the query simply removes zero rows on each run, which is a cheap indexed no-op. Cache
  * invalidation is unnecessary because the parent notifications are already gone.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.1.2
  *
  * @global wpdb $wpdb WordPress database abstraction object.
  *
@@ -2302,7 +2302,7 @@ function bb_notifications_remove_orphaned_meta_on_cron() {
 	 * Runs on the daily maintenance cron, so this is sized to make steady progress on large
 	 * backlogs while keeping each delete bounded and cheap.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.1.2
 	 *
 	 * @param int $limit Number of rows to delete per pass. Default 5000.
 	 */
