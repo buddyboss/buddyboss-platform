@@ -37,6 +37,55 @@ function bb_blogging_register_admin_settings() {
 		)
 	);
 
+	// Section: Post Settings.
+	//
+	// The two fields (Bookmarking, Subscriptions) are registered pro_only —
+	// their behaviour is provided by BuddyBoss Platform Pro's blog module.
+	// Without Pro they render as locked "UPGRADE PRO" placeholders; Pro flips
+	// them live via the `bb_admin_settings_format_field_data` filter when the
+	// license is valid (see BB_Blog's settings enrichment).
+	bb_register_feature_section(
+		'blogging',
+		'blog_settings',
+		'post_settings',
+		array(
+			'title' => __( 'Post Settings', 'buddyboss' ),
+			'order' => 10,
+		)
+	);
+
+	// Field: Bookmarking (Pro).
+	bb_register_feature_field(
+		'blogging',
+		'blog_settings',
+		'post_settings',
+		array(
+			'name'        => 'bb_blog_enable_bookmarking',
+			'label'       => __( 'Bookmarking', 'buddyboss' ),
+			'type'        => 'toggle',
+			'description' => __( 'Allow users to bookmark blog posts', 'buddyboss' ),
+			'default'     => 0,
+			'pro_only'    => true,
+			'order'       => 10,
+		)
+	);
+
+	// Field: Subscriptions (Pro).
+	bb_register_feature_field(
+		'blogging',
+		'blog_settings',
+		'post_settings',
+		array(
+			'name'        => 'bb_blog_enable_subscriptions',
+			'label'       => __( 'Subscriptions', 'buddyboss' ),
+			'type'        => 'toggle',
+			'description' => __( 'Allow users to subscribe to blog post categories', 'buddyboss' ),
+			'default'     => 0,
+			'pro_only'    => true,
+			'order'       => 20,
+		)
+	);
+
 	// Section: Page Settings.
 	bb_register_feature_section(
 		'blogging',
