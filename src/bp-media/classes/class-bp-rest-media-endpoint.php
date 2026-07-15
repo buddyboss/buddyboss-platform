@@ -1016,7 +1016,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 				} else {
 					$status[ $media->id ] = bp_media_delete( array( 'id' => $media->id ) );
 				}
-			} else {
+			} elseif ( bp_is_active( 'video' ) ) {
 				if ( ! bp_video_user_can_delete( $media->id ) ) {
 					$status[ $media->id ] = new WP_Error(
 						'bp_rest_authorization_required',
@@ -1028,6 +1028,17 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 				} else {
 					$status[ $media->id ] = bp_video_delete( array( 'id' => $media->id ) );
 				}
+			} else {
+				// Video component is unavailable (e.g. moved to the buddyboss-addons plugin), but legacy
+				// video rows still exist in the shared bp_media table. Fail gracefully instead of fataling
+				// on the now-undefined bp_video_* functions.
+				$status[ $media->id ] = new WP_Error(
+					'bp_rest_video_component_inactive',
+					__( 'Sorry, video support is not available on this site.', 'buddyboss-platform' ),
+					array(
+						'status' => 400,
+					)
+				);
 			}
 		}
 
@@ -1494,7 +1505,10 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 			}
 		}
 
-		if ( 'video' === $media->type ) {
+		// Guard on bp_is_active( 'video' ): legacy video rows survive in the shared bp_media table even
+		// after the video component moves to the buddyboss-addons plugin. Without this guard, surfacing
+		// such a row would call the now-undefined bb_video_get_symlink()/bp_video_download_link() and fatal.
+		if ( 'video' === $media->type && bp_is_active( 'video' ) ) {
 			add_filter( 'bb_check_ios_device', array( $this, 'bb_rest_disable_symlink' ), 1 );
 			$data['url'] = bb_video_get_symlink( $media->id );
 			remove_filter( 'bb_check_ios_device', array( $this, 'bb_rest_disable_symlink' ), 1 );

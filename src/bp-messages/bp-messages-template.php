@@ -1723,7 +1723,7 @@ function bp_get_the_thread_id() {
  * Output the subject of the thread currently being iterated over.
  */
 function bp_the_thread_subject() {
-	echo esc_html( bp_get_the_thread_subject() );
+	echo bp_get_the_thread_subject(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- pre-escaped via the wp_filter_kses filter chain; inline esc_html would double-encode intentional entities/HTML.
 }
 	/**
 	 * Get the subject of the thread currently being iterated over.

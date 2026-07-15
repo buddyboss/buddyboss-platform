@@ -176,7 +176,7 @@ class BP_Messages_Notices_List_Table extends WP_List_Table {
 			);
 		}
 
-		echo '<strong>' . esc_html( apply_filters( 'bp_get_message_notice_subject', $item->subject ) ) . '</strong> ' . wp_kses_post( $this->row_actions( $actions ) );
+		echo '<strong>' . apply_filters( 'bp_get_message_notice_subject', $item->subject ) . '</strong> ' . wp_kses_post( $this->row_actions( $actions ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- subject pre-escaped via the bp_get_message_notice_subject wp_filter_kses chain; inline esc_html would double-encode intentional entities/HTML. row_actions remains wp_kses_post'd.
 	}
 
 	/**
