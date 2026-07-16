@@ -82,6 +82,7 @@ $bb_blog_member_query = new WP_Query( apply_filters( 'bb_blog_member_posts_query
 	<?php else : ?>
 		<div class="bb-rl-blog-empty">
 			<p>
+				<i class="bb-icons-rl-info"></i>
 				<?php
 				if ( $bb_blog_is_owner ) {
 					esc_html_e( "You haven't written any blog posts yet.", 'buddyboss' );

@@ -1456,6 +1456,22 @@
 	}
 }
 
+.bb-rl-blog-empty > p {
+	color: var(--bb-rl-text-color);
+	font-size: 18px;
+	font-weight: 600;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 16px;
+	margin: 34px 8px;
+
+	i {
+		color: var(--bb-rl-icon-secondary-color);
+		font-size: 40px;
+	}
+}
+
 .bb-rl-blog-filter--sort {
 	background: transparent;
 	border-radius: var(--bb-rl-radius-full);
