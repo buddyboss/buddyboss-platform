@@ -577,50 +577,20 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 		 * @return int
 		 */
 		public function bb_cookie_support( $user_id ) {
-			$scheme = apply_filters( 'auth_redirect_scheme', '' );
-
-			$header = $this->bb_get_all_headers();
-
-			$cookies = '';
-			if ( ! empty( $header ) ) {
-				foreach ( $header as $k => $v ) {
-					if ( 'cookie' === strtolower( $k ) ) {
-						$cookies = $v;
-						break;
-					}
-				}
+			if ( ! function_exists( 'wp_validate_auth_cookie' ) ) {
+				require_once ABSPATH . WPINC . '/pluggable.php';
 			}
 
-			$wp_cookie = '';
-
-			if ( ! empty( $cookies ) ) {
-				$cookies = explode( ';', trim( $cookies ) );
-				if ( ! empty( $cookies ) ) {
-					foreach ( $cookies as $cookie ) {
-						$cookie = trim( $cookie );
-						if (
-							strpos( $cookie, 'wordpress_test_' ) === false &&
-							strpos( $cookie, 'wordpress_' ) !== false
-						) {
-							$wp_cookie = $cookie;
-							break;
-						}
-					}
-				}
+			// Cookie constants (LOGGED_IN_COOKIE, etc.) may not be set yet at MU level.
+			if ( ! defined( 'LOGGED_IN_COOKIE' ) ) {
+				require_once ABSPATH . WPINC . '/default-constants.php';
+				wp_cookie_constants();
 			}
 
-			$cookie_elements = $this->bb_wp_parse_auth_cookie( $wp_cookie, $scheme );
+			$scheme            = apply_filters( 'auth_redirect_scheme', '' );
+			$validated_user_id = wp_validate_auth_cookie( '', $scheme );
 
-			if ( $cookie_elements && isset( $cookie_elements['username'] ) ) {
-				global $wpdb;
-
-				// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-				$get_user = $wpdb->get_row( $wpdb->prepare( "SELECT ID FROM $wpdb->users WHERE user_login=%s", $cookie_elements['username'] ) );
-
-				if ( $get_user ) {
-					return $get_user->ID;
-				}
-			}
+			return $validated_user_id ? $validated_user_id : $user_id;
 		}
 
 		/**
