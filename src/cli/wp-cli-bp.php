@@ -1,6 +1,9 @@
 <?php
 namespace Buddypress\CLI;
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 use WP_CLI;
 
 // Bail if WP-CLI is not present.

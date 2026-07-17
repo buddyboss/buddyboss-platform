@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
  * @since BuddyPress 1.9.0
  */
 function bp_notifications_slug() {
-	echo bp_get_notifications_slug();
+	echo bp_get_notifications_slug(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 }
 	/**
 	 * Return the notifications component slug.
@@ -45,7 +45,7 @@ function bp_get_notifications_slug() {
  * @param int $user_id The user ID.
  */
 function bp_notifications_permalink( $user_id = 0 ) {
-	echo bp_get_notifications_permalink( $user_id );
+	echo bp_get_notifications_permalink( $user_id ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 }
 	/**
 	 * Return the notifications permalink.
@@ -87,7 +87,7 @@ function bp_get_notifications_permalink( $user_id = 0 ) {
  * @param int $user_id The user ID.
  */
 function bp_notifications_unread_permalink( $user_id = 0 ) {
-	echo bp_get_notifications_unread_permalink( $user_id );
+	echo bp_get_notifications_unread_permalink( $user_id ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 }
 	/**
 	 * Return the unread notifications permalink.
@@ -128,7 +128,7 @@ function bp_get_notifications_unread_permalink( $user_id = 0 ) {
  * @param int $user_id The user ID.
  */
 function bp_notifications_read_permalink( $user_id = 0 ) {
-	echo bp_get_notifications_read_permalink( $user_id );
+	echo bp_get_notifications_read_permalink( $user_id ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 }
 	/**
 	 * Return the read notifications permalink.
@@ -292,7 +292,7 @@ function bp_the_notification() {
  * @since BuddyPress 1.9.0
  */
 function bp_the_notification_id() {
-	echo bp_get_the_notification_id();
+	echo bp_get_the_notification_id(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 }
 	/**
 	 * Return the ID of the notification currently being iterated on.
@@ -319,7 +319,7 @@ function bp_get_the_notification_id() {
  * @since BuddyPress 1.9.0
  */
 function bp_the_notification_item_id() {
-	echo bp_get_the_notification_item_id();
+	echo bp_get_the_notification_item_id(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 }
 	/**
 	 * Return the associated item ID of the notification currently being iterated on.
@@ -346,7 +346,7 @@ function bp_get_the_notification_item_id() {
  * @since BuddyPress 1.9.0
  */
 function bp_the_notification_secondary_item_id() {
-	echo bp_get_the_notification_secondary_item_id();
+	echo bp_get_the_notification_secondary_item_id(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 }
 	/**
 	 * Return the secondary associated item ID of the notification currently being iterated on.
@@ -373,7 +373,7 @@ function bp_get_the_notification_secondary_item_id() {
  * @since BuddyPress 1.9.0
  */
 function bp_the_notification_component_name() {
-	echo bp_get_the_notification_component_name();
+	echo bp_get_the_notification_component_name(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 }
 	/**
 	 * Return the name of the component associated with the notification currently being iterated on.
@@ -400,7 +400,7 @@ function bp_get_the_notification_component_name() {
  * @since BuddyPress 1.9.0
  */
 function bp_the_notification_component_action() {
-	echo bp_get_the_notification_component_action();
+	echo bp_get_the_notification_component_action(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 }
 	/**
 	 * Return the name of the action associated with the notification currently being iterated on.
@@ -427,7 +427,7 @@ function bp_get_the_notification_component_action() {
  * @since BuddyPress 1.9.0
  */
 function bp_the_notification_date_notified() {
-	echo bp_get_the_notification_date_notified();
+	echo bp_get_the_notification_date_notified(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 }
 	/**
 	 * Return the timestamp of the current notification.
@@ -454,7 +454,7 @@ function bp_get_the_notification_date_notified() {
  * @since BuddyPress 1.9.0
  */
 function bp_the_notification_time_since() {
-	echo bp_get_the_notification_time_since();
+	echo bp_get_the_notification_time_since(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 }
 	/**
 	 * Return the timestamp of the current notification.
@@ -474,7 +474,7 @@ function bp_get_the_notification_time_since() {
 
 		// Notified date is empty, so return a fun string.
 	} else {
-		$retval = __( 'Date not found', 'buddyboss' );
+		$retval = __( 'Date not found', 'buddyboss-platform' );
 	}
 
 	/**
@@ -493,7 +493,7 @@ function bp_get_the_notification_time_since() {
  * @since BuddyPress 1.9.0
  */
 function bp_the_notification_description() {
-	echo bp_get_the_notification_description();
+	echo bp_get_the_notification_description(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 }
 
 /**
@@ -561,7 +561,7 @@ function bp_get_the_notification_description( $notification = '' ) {
  * @param int $user_id The user ID.
  */
 function bp_the_notification_mark_read_link( $user_id = 0 ) {
-	echo bp_get_the_notification_mark_read_link( $user_id );
+	echo bp_get_the_notification_mark_read_link( $user_id ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 }
 	/**
 	 * Return the mark read link for the current notification.
@@ -576,7 +576,7 @@ function bp_get_the_notification_mark_read_link( $user_id = 0 ) {
 	// Set default user ID to use.
 	$user_id = 0 === $user_id ? bp_displayed_user_id() : $user_id;
 
-	$retval = sprintf( '<a href="%1$s" class="mark-read primary">%2$s</a>', esc_url( bp_get_the_notification_mark_read_url( $user_id ) ), __( 'Read', 'buddyboss' ) );
+	$retval = sprintf( '<a href="%1$s" class="mark-read primary">%2$s</a>', esc_url( bp_get_the_notification_mark_read_url( $user_id ) ), __( 'Read', 'buddyboss-platform' ) );
 
 	/**
 	 * Filters the mark read link for the current notification.
@@ -601,7 +601,7 @@ function bp_get_the_notification_mark_read_link( $user_id = 0 ) {
  * @param int $user_id The user ID.
  */
 function bp_the_notification_mark_read_url( $user_id = 0 ) {
-	echo esc_url( bp_get_the_notification_mark_read_url( $user_id ) );
+	echo bp_get_the_notification_mark_read_url( $user_id ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 }
 	/**
 	 * Return the URL used for marking a single notification as read.
@@ -653,7 +653,7 @@ function bp_get_the_notification_mark_read_url( $user_id = 0 ) {
  * @param int $user_id The user ID.
  */
 function bp_the_notification_mark_unread_link( $user_id = 0 ) {
-	echo bp_get_the_notification_mark_unread_link( $user_id );
+	echo bp_get_the_notification_mark_unread_link( $user_id ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 }
 	/**
 	 * Return the mark unread link for the current notification.
@@ -668,7 +668,7 @@ function bp_get_the_notification_mark_unread_link( $user_id = 0 ) {
 	// Set default user ID to use.
 	$user_id = 0 === $user_id ? bp_displayed_user_id() : $user_id;
 
-	$retval = sprintf( '<a href="%1$s" class="mark-unread primary">%2$s</a>', esc_url( bp_get_the_notification_mark_unread_url( $user_id ) ), __( 'Unread', 'buddyboss' ) );
+	$retval = sprintf( '<a href="%1$s" class="mark-unread primary">%2$s</a>', esc_url( bp_get_the_notification_mark_unread_url( $user_id ) ), __( 'Unread', 'buddyboss-platform' ) );
 
 	/**
 	 * Filters the link used for marking a single notification as unread.
@@ -693,7 +693,7 @@ function bp_get_the_notification_mark_unread_link( $user_id = 0 ) {
  * @param int $user_id The user ID.
  */
 function bp_the_notification_mark_unread_url( $user_id = 0 ) {
-	echo esc_url( bp_get_the_notification_mark_unread_url( $user_id ) );
+	echo bp_get_the_notification_mark_unread_url( $user_id ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 }
 	/**
 	 * Return the URL used for marking a single notification as unread.
@@ -745,7 +745,7 @@ function bp_get_the_notification_mark_unread_url( $user_id = 0 ) {
  * @param int $user_id The user ID.
  */
 function bp_the_notification_mark_link( $user_id = 0 ) {
-	echo bp_get_the_notification_mark_link( $user_id );
+	echo bp_get_the_notification_mark_link( $user_id ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 }
 	/**
 	 * Return the mark link for the current notification.
@@ -787,7 +787,7 @@ function bp_get_the_notification_mark_link( $user_id = 0 ) {
  * @param int $user_id The user ID.
  */
 function bp_the_notification_delete_link( $user_id = 0 ) {
-	echo bp_get_the_notification_delete_link( $user_id );
+	echo bp_get_the_notification_delete_link( $user_id ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 }
 	/**
 	 * Return the delete link for the current notification.
@@ -802,7 +802,7 @@ function bp_get_the_notification_delete_link( $user_id = 0 ) {
 	// Set default user ID to use.
 	$user_id = 0 === $user_id ? bp_displayed_user_id() : $user_id;
 
-	$retval = sprintf( '<a href="%1$s" class="delete secondary confirm">%2$s</a>', esc_url( bp_get_the_notification_delete_url( $user_id ) ), __( 'Delete', 'buddyboss' ) );
+	$retval = sprintf( '<a href="%1$s" class="delete secondary confirm">%2$s</a>', esc_url( bp_get_the_notification_delete_url( $user_id ) ), __( 'Delete', 'buddyboss-platform' ) );
 
 	/**
 	 * Filters the delete link for the current notification.
@@ -827,7 +827,7 @@ function bp_get_the_notification_delete_link( $user_id = 0 ) {
  * @param int $user_id The user ID.
  */
 function bp_the_notification_delete_url( $user_id = 0 ) {
-	echo esc_url( bp_get_the_notification_delete_url( $user_id ) );
+	echo bp_get_the_notification_delete_url( $user_id ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 }
 	/**
 	 * Return the URL used for deleting a single notification.
@@ -885,7 +885,7 @@ function bp_get_the_notification_delete_url( $user_id = 0 ) {
  * @param array|string $args Array of arguments.
  */
 function bp_the_notification_action_links( $args = '' ) {
-	echo bp_get_the_notification_action_links( $args );
+	echo bp_get_the_notification_action_links( $args ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 }
 	/**
 	 * Return the action links for the current notification.
@@ -941,7 +941,7 @@ function bp_get_the_notification_action_links( $args = '' ) {
  * @since BuddyPress 1.9.0
  */
 function bp_notifications_pagination_count() {
-	echo bp_get_notifications_pagination_count();
+	echo bp_get_notifications_pagination_count(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 }
 	/**
 	 * Return the pagination count for the current notification loop.
@@ -957,7 +957,8 @@ function bp_get_notifications_pagination_count() {
 	$to_num     = bp_core_number_format( ( $start_num + ( $query_loop->pag_num - 1 ) > $query_loop->total_notification_count ) ? $query_loop->total_notification_count : $start_num + ( $query_loop->pag_num - 1 ) );
 	$total      = bp_core_number_format( $query_loop->total_notification_count );
 
-	$pag = sprintf( _n( 'Viewing 1 notification', 'Viewing %1$s - %2$s of %3$s notifications', $query_loop->total_notification_count, 'buddyboss' ), $from_num, $to_num, $total );
+	/* translators: 1: starting notification number, 2: ending notification number, 3: total number of notifications. */
+	$pag = sprintf( _n( 'Viewing 1 notification', 'Viewing %1$s - %2$s of %3$s notifications', $query_loop->total_notification_count, 'buddyboss-platform' ), $from_num, $to_num, $total ); // phpcs:ignore WordPress.WP.I18n.MissingSingularPlaceholder -- Singular keeps its literal form to preserve existing translations (msgid unchanged); upstream BuddyPress pagination string.
 
 	/**
 	 * Filters the pagination count for the current notification loop.
@@ -975,7 +976,7 @@ function bp_get_notifications_pagination_count() {
  * @since BuddyPress 1.9.0
  */
 function bp_notifications_pagination_links() {
-	echo bp_get_notifications_pagination_links();
+	echo bp_get_notifications_pagination_links(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 }
 	/**
 	 * Return the pagination links for the current notification loop.
@@ -1017,15 +1018,15 @@ function bp_notifications_sort_order_form() {
 	} ?>
 
 	<form action="" method="get" id="notifications-sort-order">
-		<label for="notifications-sort-order-list"><?php esc_html_e( 'Order By:', 'buddyboss' ); ?></label>
+		<label for="notifications-sort-order-list"><?php esc_html_e( 'Order By:', 'buddyboss-platform' ); ?></label>
 
 		<select id="notifications-sort-order-list" name="sort_order" onchange="this.form.submit();">
-			<option value="DESC" <?php selected( $selected, 'DESC' ); ?>><?php _e( 'Newest First', 'buddyboss' ); ?></option>
-			<option value="ASC"  <?php selected( $selected, 'ASC' ); ?>><?php _e( 'Oldest First', 'buddyboss' ); ?></option>
+			<option value="DESC" <?php selected( $selected, 'DESC' ); ?>><?php esc_html_e( 'Newest First', 'buddyboss-platform' ); ?></option>
+			<option value="ASC"  <?php selected( $selected, 'ASC' ); ?>><?php esc_html_e( 'Oldest First', 'buddyboss-platform' ); ?></option>
 		</select>
 
 		<noscript>
-			<input id="submit" type="submit" name="form-submit" class="submit" value="<?php esc_attr_e( 'Go', 'buddyboss' ); ?>" />
+			<input id="submit" type="submit" name="form-submit" class="submit" value="<?php esc_attr_e( 'Go', 'buddyboss-platform' ); ?>" />
 		</noscript>
 	</form>
 
@@ -1042,20 +1043,20 @@ function bp_notifications_bulk_management_dropdown() {
 	<label class="bp-screen-reader-text" for="notification-select">
 	<?php
 		/* translators: accessibility text */
-		_e( 'Select Bulk Action', 'buddyboss' );
+		esc_html_e( 'Select Bulk Action', 'buddyboss-platform' );
 	?>
 	</label>
 	<select name="notification_bulk_action" id="notification-select">
-		<option value="" selected="selected"><?php _e( 'Bulk Actions', 'buddyboss' ); ?></option>
+		<option value="" selected="selected"><?php esc_html_e( 'Bulk Actions', 'buddyboss-platform' ); ?></option>
 
 		<?php if ( bp_is_current_action( 'unread' ) ) : ?>
-			<option value="read"><?php _e( 'Mark read', 'buddyboss' ); ?></option>
+			<option value="read"><?php esc_html_e( 'Mark read', 'buddyboss-platform' ); ?></option>
 		<?php elseif ( bp_is_current_action( 'read' ) ) : ?>
-			<option value="unread"><?php _e( 'Mark unread', 'buddyboss' ); ?></option>
+			<option value="unread"><?php esc_html_e( 'Mark unread', 'buddyboss-platform' ); ?></option>
 		<?php endif; ?>
-		<option value="delete"><?php _e( 'Delete', 'buddyboss' ); ?></option>
+		<option value="delete"><?php esc_html_e( 'Delete', 'buddyboss-platform' ); ?></option>
 	</select>
-	<input type="submit" id="notification-bulk-manage" class="button action" value="<?php esc_attr_e( 'Apply', 'buddyboss' ); ?>">
+	<input type="submit" id="notification-bulk-manage" class="button action" value="<?php esc_attr_e( 'Apply', 'buddyboss-platform' ); ?>">
 	<?php
 }
 
@@ -1112,8 +1113,8 @@ function bb_on_screen_notification_template() {
 			</ul>
 			<div class="bb-remove-all-notification">
 				<a class="action-close primary">
-					<span class="bb-for-desktop"><?php _e( 'Clear', 'buddyboss' ); ?></span>
-					<span class="bb-for-mobile"><?php _e( 'Clear All', 'buddyboss' ); ?></span>
+					<span class="bb-for-desktop"><?php esc_html_e( 'Clear', 'buddyboss-platform' ); ?></span>
+					<span class="bb-for-mobile"><?php esc_html_e( 'Clear All', 'buddyboss-platform' ); ?></span>
 					<span class="dashicons dashicons-no" aria-hidden="true"></span>
 				</a>
 			</div>

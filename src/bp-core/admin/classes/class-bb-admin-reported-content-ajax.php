@@ -69,7 +69,7 @@ class BB_Admin_Reported_Content_Ajax {
 	private function bb_verify_request() {
 		if ( ! bp_current_user_can( 'bp_moderate' ) ) {
 			wp_send_json_error(
-				array( 'message' => __( 'You do not have permission to perform this action.', 'buddyboss' ) ),
+				array( 'message' => __( 'You do not have permission to perform this action.', 'buddyboss-platform' ) ),
 				403
 			);
 		}
@@ -339,7 +339,7 @@ class BB_Admin_Reported_Content_Ajax {
 		$moderation_id = isset( $_POST['moderation_id'] ) ? absint( $_POST['moderation_id'] ) : 0;
 
 		if ( empty( $moderation_id ) ) {
-			wp_send_json_error( array( 'message' => __( 'Invalid moderation ID.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Invalid moderation ID.', 'buddyboss-platform' ) ) );
 		}
 
 		// Load the moderation record directly by ID.
@@ -348,7 +348,7 @@ class BB_Admin_Reported_Content_Ajax {
 		$row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$bp->moderation->table_name} WHERE id = %d", $moderation_id ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 
 		if ( empty( $row ) ) {
-			wp_send_json_error( array( 'message' => __( 'No moderation record found.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'No moderation record found.', 'buddyboss-platform' ) ) );
 		}
 
 		$item_id      = (int) $row->item_id;
@@ -435,7 +435,7 @@ class BB_Admin_Reported_Content_Ajax {
 					'profile_url'   => $this->bb_get_admin_profile_url( $reporter->user_id ),
 					'category_name' => ( ! is_wp_error( $term_data ) && ! empty( $term_data->name ) )
 						? wp_specialchars_decode( $term_data->name, ENT_QUOTES )
-						: __( 'Other', 'buddyboss' ),
+						: __( 'Other', 'buddyboss-platform' ),
 					'category_desc' => ( ! is_wp_error( $term_data ) && ! empty( $term_data->description ) )
 						? wp_specialchars_decode( $term_data->description, ENT_QUOTES )
 						: sanitize_text_field( $reporter->content ),
@@ -477,12 +477,12 @@ class BB_Admin_Reported_Content_Ajax {
 		$item_type = isset( $_POST['item_type'] ) ? sanitize_text_field( wp_unslash( $_POST['item_type'] ) ) : '';
 
 		if ( empty( $item_id ) || empty( $item_type ) ) {
-			wp_send_json_error( array( 'message' => __( 'Invalid content ID or type.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Invalid content ID or type.', 'buddyboss-platform' ) ) );
 		}
 
 		// Whitelist validate content type.
 		if ( ! array_key_exists( $item_type, bp_moderation_content_types() ) ) {
-			wp_send_json_error( array( 'message' => __( 'Invalid content type.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Invalid content type.', 'buddyboss-platform' ) ) );
 		}
 
 		$result = bp_moderation_hide(
@@ -493,11 +493,11 @@ class BB_Admin_Reported_Content_Ajax {
 		);
 
 		if ( ! $result ) {
-			wp_send_json_error( array( 'message' => __( 'Failed to hide content.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Failed to hide content.', 'buddyboss-platform' ) ) );
 		}
 
 		wp_send_json_success(
-			array( 'message' => __( 'Content hidden successfully.', 'buddyboss' ) )
+			array( 'message' => __( 'Content hidden successfully.', 'buddyboss-platform' ) )
 		);
 	}
 
@@ -513,12 +513,12 @@ class BB_Admin_Reported_Content_Ajax {
 		$item_type = isset( $_POST['item_type'] ) ? sanitize_text_field( wp_unslash( $_POST['item_type'] ) ) : '';
 
 		if ( empty( $item_id ) || empty( $item_type ) ) {
-			wp_send_json_error( array( 'message' => __( 'Invalid content ID or type.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Invalid content ID or type.', 'buddyboss-platform' ) ) );
 		}
 
 		// Whitelist validate content type.
 		if ( ! array_key_exists( $item_type, bp_moderation_content_types() ) ) {
-			wp_send_json_error( array( 'message' => __( 'Invalid content type.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Invalid content type.', 'buddyboss-platform' ) ) );
 		}
 
 		$result = bp_moderation_unhide(
@@ -529,11 +529,11 @@ class BB_Admin_Reported_Content_Ajax {
 		);
 
 		if ( ! $result ) {
-			wp_send_json_error( array( 'message' => __( 'Failed to unhide content.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Failed to unhide content.', 'buddyboss-platform' ) ) );
 		}
 
 		wp_send_json_success(
-			array( 'message' => __( 'Content unhidden successfully.', 'buddyboss' ) )
+			array( 'message' => __( 'Content unhidden successfully.', 'buddyboss-platform' ) )
 		);
 	}
 
@@ -548,22 +548,22 @@ class BB_Admin_Reported_Content_Ajax {
 		$user_id = isset( $_POST['user_id'] ) ? absint( $_POST['user_id'] ) : 0;
 
 		if ( empty( $user_id ) ) {
-			wp_send_json_error( array( 'message' => __( 'Invalid user ID.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Invalid user ID.', 'buddyboss-platform' ) ) );
 		}
 
 		// Don't allow suspending administrators.
 		if ( user_can( $user_id, 'administrator' ) ) {
-			wp_send_json_error( array( 'message' => __( 'Cannot suspend an administrator.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Cannot suspend an administrator.', 'buddyboss-platform' ) ) );
 		}
 
 		if ( bp_moderation_is_user_suspended( $user_id ) ) {
-			wp_send_json_error( array( 'message' => __( 'This user is already suspended.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'This user is already suspended.', 'buddyboss-platform' ) ) );
 		}
 
 		BP_Suspend_Member::suspend_user( $user_id );
 
 		wp_send_json_success(
-			array( 'message' => __( 'User suspended successfully.', 'buddyboss' ) )
+			array( 'message' => __( 'User suspended successfully.', 'buddyboss-platform' ) )
 		);
 	}
 
@@ -578,17 +578,17 @@ class BB_Admin_Reported_Content_Ajax {
 		$user_id = isset( $_POST['user_id'] ) ? absint( $_POST['user_id'] ) : 0;
 
 		if ( empty( $user_id ) ) {
-			wp_send_json_error( array( 'message' => __( 'Invalid user ID.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Invalid user ID.', 'buddyboss-platform' ) ) );
 		}
 
 		if ( ! bp_moderation_is_user_suspended( $user_id ) ) {
-			wp_send_json_error( array( 'message' => __( 'This user is not currently suspended.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'This user is not currently suspended.', 'buddyboss-platform' ) ) );
 		}
 
 		BP_Suspend_Member::unsuspend_user( $user_id );
 
 		wp_send_json_success(
-			array( 'message' => __( 'User unsuspended successfully.', 'buddyboss' ) )
+			array( 'message' => __( 'User unsuspended successfully.', 'buddyboss-platform' ) )
 		);
 	}
 
@@ -606,12 +606,12 @@ class BB_Admin_Reported_Content_Ajax {
 		$ids    = isset( $_POST['ids'] ) ? array_map( 'absint', wp_unslash( (array) $_POST['ids'] ) ) : array();
 
 		if ( empty( $action ) || empty( $ids ) ) {
-			wp_send_json_error( array( 'message' => __( 'Invalid action or no items selected.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Invalid action or no items selected.', 'buddyboss-platform' ) ) );
 		}
 
 		$allowed_actions = array( 'hide', 'unhide' );
 		if ( ! in_array( $action, $allowed_actions, true ) ) {
-			wp_send_json_error( array( 'message' => __( 'Invalid bulk action.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Invalid bulk action.', 'buddyboss-platform' ) ) );
 		}
 
 		global $wpdb;
@@ -654,7 +654,7 @@ class BB_Admin_Reported_Content_Ajax {
 		wp_send_json_success(
 			array(
 				/* translators: %d: Number of items. */
-				'message' => sprintf( __( '%d item(s) updated successfully.', 'buddyboss' ), $success ),
+				'message' => sprintf( __( '%d item(s) updated successfully.', 'buddyboss-platform' ), $success ),
 				'count'   => $success,
 			)
 		);

@@ -167,15 +167,15 @@ class BP_Media_Component extends BP_Component {
 
 		// Register the visibility levels. See bp_media_get_visibility_levels() to filter.
 		$this->visibility_levels = array(
-			'public'   => __( 'Public', 'buddyboss' ),
-			'loggedin' => __( 'All Members', 'buddyboss' ),
+			'public'   => __( 'Public', 'buddyboss-platform' ),
+			'loggedin' => __( 'All Members', 'buddyboss-platform' ),
 		);
 
 		if ( bp_is_active( 'friends' ) ) {
-			$this->visibility_levels['friends'] = __( 'My Connections', 'buddyboss' );
+			$this->visibility_levels['friends'] = __( 'My Connections', 'buddyboss-platform' );
 		}
 
-		$this->visibility_levels['onlyme'] = __( 'Only Me', 'buddyboss' );
+		$this->visibility_levels['onlyme'] = __( 'Only Me', 'buddyboss-platform' );
 
 		$this->published_status = 'published';
 		$this->scheduled_status = 'scheduled';
@@ -199,7 +199,7 @@ class BP_Media_Component extends BP_Component {
 				'has_directory'   => true,
 				'global_tables'   => $global_tables,
 				'directory_title' => isset( $bp->pages->media->title ) ? $bp->pages->media->title : $default_directory_title,
-				'search_string'   => __( 'Search Photos&hellip;', 'buddyboss' ),
+				'search_string'   => __( 'Search Photos&hellip;', 'buddyboss-platform' ),
 			)
 		);
 
@@ -261,7 +261,7 @@ class BP_Media_Component extends BP_Component {
 
 			$slug       = bp_get_media_slug();
 			$media_link = trailingslashit( $user_domain . $slug );
-			$nav_name   = __( 'Photos', 'buddyboss' );
+			$nav_name   = __( 'Photos', 'buddyboss-platform' );
 
 			// Add 'Photos' to the main navigation.
 			$main_nav = array(
@@ -288,7 +288,7 @@ class BP_Media_Component extends BP_Component {
 
 				// Add the subnav items to the profile.
 				$sub_nav[] = array(
-					'name'            => __( 'Albums', 'buddyboss' ),
+					'name'            => __( 'Albums', 'buddyboss-platform' ),
 					'slug'            => 'albums',
 					'parent_url'      => $media_link,
 					'parent_slug'     => $slug,
@@ -323,7 +323,7 @@ class BP_Media_Component extends BP_Component {
 			$wp_admin_nav[] = array(
 				'parent' => buddypress()->my_account_menu_id,
 				'id'     => 'my-account-' . $this->id,
-				'title'  => __( 'Photos', 'buddyboss' ),
+				'title'  => __( 'Photos', 'buddyboss-platform' ),
 				'href'   => $media_link,
 			);
 
@@ -331,7 +331,7 @@ class BP_Media_Component extends BP_Component {
 			$wp_admin_nav[] = array(
 				'parent'   => 'my-account-' . $this->id,
 				'id'       => 'my-account-' . $this->id . '-my-media',
-				'title'    => __( 'My Photos', 'buddyboss' ),
+				'title'    => __( 'My Photos', 'buddyboss-platform' ),
 				'href'     => $media_link,
 				'position' => 10,
 			);
@@ -341,7 +341,7 @@ class BP_Media_Component extends BP_Component {
 				$wp_admin_nav[] = array(
 					'parent'   => 'my-account-' . $this->id,
 					'id'       => 'my-account-' . $this->id . '-albums',
-					'title'    => __( 'My Albums', 'buddyboss' ),
+					'title'    => __( 'My Albums', 'buddyboss-platform' ),
 					'href'     => trailingslashit( $media_link . 'albums' ),
 					'position' => 20,
 				);
@@ -362,14 +362,15 @@ class BP_Media_Component extends BP_Component {
 			$bp = buddypress();
 
 			if ( bp_is_my_profile() && ! bp_is_single_album() ) {
-				$bp->bp_options_title = __( 'My Photos', 'buddyboss' );
+				$bp->bp_options_title = __( 'My Photos', 'buddyboss-platform' );
 
 			} elseif ( ! bp_is_my_profile() && ! bp_is_single_album() ) {
 				$bp->bp_options_avatar = bp_core_fetch_avatar(
 					array(
 						'item_id' => bp_displayed_user_id(),
 						'type'    => 'thumb',
-						'alt'     => sprintf( __( 'Profile photo of %s', 'buddyboss' ), bp_get_displayed_user_fullname() ),
+						/* translators: %s: displayed user's full name. */
+					'alt'     => sprintf( __( 'Profile photo of %s', 'buddyboss-platform' ), bp_get_displayed_user_fullname() ),
 					)
 				);
 				$bp->bp_options_title  = bp_get_displayed_user_fullname();

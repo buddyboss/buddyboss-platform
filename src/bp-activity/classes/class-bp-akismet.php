@@ -145,7 +145,7 @@ class BP_Akismet {
 				'id'         => 'activity_make_spam_' . bp_get_activity_id(),
 				'link_class' => 'bp-secondary-action spam-activity confirm button item-button',
 				'link_href'  => wp_nonce_url( bp_get_root_domain() . '/' . bp_get_activity_slug() . '/spam/' . bp_get_activity_id() . '/', 'bp_activity_akismet_spam_' . bp_get_activity_id() ),
-				'link_text'  => __( 'Spam', 'buddyboss' ),
+				'link_text'  => __( 'Spam', 'buddyboss-platform' ),
 				'wrapper'    => false,
 			)
 		);
@@ -176,7 +176,7 @@ class BP_Akismet {
 				'id'         => 'activity_make_spam_' . bp_get_activity_comment_id(),
 				'link_class' => 'bp-secondary-action spam-activity-comment confirm',
 				'link_href'  => wp_nonce_url( bp_get_root_domain() . '/' . bp_get_activity_slug() . '/spam/' . bp_get_activity_comment_id() . '/?cid=' . bp_get_activity_comment_id(), 'bp_activity_akismet_spam_' . bp_get_activity_comment_id() ),
-				'link_text'  => __( 'Spam', 'buddyboss' ),
+				'link_text'  => __( 'Spam', 'buddyboss-platform' ),
 				'wrapper'    => false,
 			)
 		);
@@ -392,7 +392,8 @@ class BP_Akismet {
 			return;
 		}
 
-		$this->update_activity_history( $activity->id, sprintf( __( '%s reported this activity as spam', 'buddyboss' ), bp_get_loggedin_user_username() ), 'report-spam' );
+		/* translators: %s: username of the user who reported the activity. */
+		$this->update_activity_history( $activity->id, sprintf( __( '%s reported this activity as spam', 'buddyboss-platform' ), bp_get_loggedin_user_username() ), 'report-spam' );
 		bp_activity_update_meta( $activity->id, '_bp_akismet_user_result', 'true' );
 		bp_activity_update_meta( $activity->id, '_bp_akismet_user', bp_get_loggedin_user_username() );
 	}
@@ -410,7 +411,8 @@ class BP_Akismet {
 			return;
 		}
 
-		$this->update_activity_history( $activity->id, sprintf( __( '%s reported this activity as not spam', 'buddyboss' ), bp_get_loggedin_user_username() ), 'report-ham' );
+		/* translators: %s: username of the user who reported the activity. */
+		$this->update_activity_history( $activity->id, sprintf( __( '%s reported this activity as not spam', 'buddyboss-platform' ), bp_get_loggedin_user_username() ), 'report-ham' );
 		bp_activity_update_meta( $activity->id, '_bp_akismet_user_result', 'false' );
 		bp_activity_update_meta( $activity->id, '_bp_akismet_user', bp_get_loggedin_user_username() );
 	}
@@ -436,17 +438,18 @@ class BP_Akismet {
 		// Spam.
 		if ( 'true' == $this->last_activity->akismet_submission['bp_as_result'] ) {
 			bp_activity_update_meta( $activity->id, '_bp_akismet_result', 'true' );
-			$this->update_activity_history( $activity->id, __( 'Akismet caught this item as spam', 'buddyboss' ), 'check-spam' );
+			$this->update_activity_history( $activity->id, __( 'Akismet caught this item as spam', 'buddyboss-platform' ), 'check-spam' );
 
 			// Not spam.
 		} elseif ( 'false' == $this->last_activity->akismet_submission['bp_as_result'] ) {
 			bp_activity_update_meta( $activity->id, '_bp_akismet_result', 'false' );
-			$this->update_activity_history( $activity->id, __( 'Akismet cleared this item', 'buddyboss' ), 'check-ham' );
+			$this->update_activity_history( $activity->id, __( 'Akismet cleared this item', 'buddyboss-platform' ), 'check-ham' );
 
 			// Uh oh, something's gone horribly wrong. Unexpected result.
 		} else {
 			bp_activity_update_meta( $activity->id, '_bp_akismet_error', bp_core_current_time() );
-			$this->update_activity_history( $activity->id, sprintf( __( 'Akismet was unable to check this item (response: %s), will automatically retry again later.', 'buddyboss' ), $this->last_activity->akismet_submission['bp_as_result'] ), 'check-error' );
+			/* translators: %s: Akismet response code. */
+			$this->update_activity_history( $activity->id, sprintf( __( 'Akismet was unable to check this item (response: %s), will automatically retry again later.', 'buddyboss-platform' ), $this->last_activity->akismet_submission['bp_as_result'] ), 'check-error' );
 		}
 
 		// Record the original data which was submitted to Akismet for checking.
@@ -607,7 +610,7 @@ class BP_Akismet {
 			$component,
 			'activity_history',
 			array(
-				'label'      => __( 'Activity History', 'buddyboss' ),
+				'label'      => __( 'Activity History', 'buddyboss-platform' ),
 				'type'       => 'readonly',
 				'order'      => 200,
 				'context'    => 'after',

@@ -40,10 +40,12 @@ function friends_format_notifications( $action, $item_id, $secondary_item_id, $t
 
 			// Set up the string and the filter.
 			if ( (int) $total_items > 1 ) {
-				$text   = sprintf( __( '%d members accepted your connection requests', 'buddyboss' ), (int) $total_items );
+				/* translators: %d: number of members who accepted connection requests. */
+				$text   = sprintf( __( '%d members accepted your connection requests', 'buddyboss-platform' ), (int) $total_items );
 				$amount = 'multiple';
 			} else {
-				$text   = sprintf( __( '%s accepted your request to connect', 'buddyboss' ), bp_core_get_user_displayname( $item_id ) );
+				/* translators: %s: member display name. */
+				$text   = sprintf( __( '%s accepted your request to connect', 'buddyboss-platform' ), bp_core_get_user_displayname( $item_id ) );
 				$amount = 'single';
 			}
 
@@ -56,10 +58,12 @@ function friends_format_notifications( $action, $item_id, $secondary_item_id, $t
 
 			// Set up the string and the filter.
 			if ( (int) $total_items > 1 ) {
-				$text   = sprintf( __( 'You have %d pending requests to connect', 'buddyboss' ), (int) $total_items );
+				/* translators: %d: number of pending connection requests. */
+				$text   = sprintf( __( 'You have %d pending requests to connect', 'buddyboss-platform' ), (int) $total_items );
 				$amount = 'multiple';
 			} else {
-				$text   = sprintf( __( '%s sent you an invitation to connect', 'buddyboss' ), bp_core_get_user_displayname( $item_id ) );
+				/* translators: %s: member display name. */
+				$text   = sprintf( __( '%s sent you an invitation to connect', 'buddyboss-platform' ), bp_core_get_user_displayname( $item_id ) );
 				$amount = 'single';
 			}
 

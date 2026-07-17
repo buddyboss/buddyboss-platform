@@ -26,7 +26,7 @@ function bb_groups_register_images_panel_fields() {
 		'group_images',
 		'group_avatar',
 		array(
-			'title'       => __( 'Group Avatar', 'buddyboss' ),
+			'title'       => __( 'Group Avatar', 'buddyboss-platform' ),
 			'description' => '',
 			'order'       => 10,
 			'help_url'    => '636128',
@@ -42,10 +42,10 @@ function bb_groups_register_images_panel_fields() {
 		'group_avatar',
 		array(
 			'name'              => 'bp-disable-group-avatar-uploads',
-			'label'             => __( 'Group Avatars', 'buddyboss' ),
+			'label'             => __( 'Group Avatars', 'buddyboss-platform' ),
 			'type'              => 'toggle',
-			'description'       => __( 'Enable avatars for groups', 'buddyboss' ),
-			'help_text'         => __( 'When enabled, group organizers will be able to upload avatars in the group\'s settings.', 'buddyboss' ),
+			'description'       => __( 'Enable avatars for groups', 'buddyboss-platform' ),
+			'help_text'         => __( 'When enabled, group organizers will be able to upload avatars in the group\'s settings.', 'buddyboss-platform' ),
 			'default'           => bp_disable_group_avatar_uploads(),
 			'sanitize_callback' => 'absint',
 			'invert_value'      => true,
@@ -60,12 +60,12 @@ function bb_groups_register_images_panel_fields() {
 		'group_avatar',
 		array(
 			'name'              => 'bp-default-group-avatar-type',
-			'label'             => __( 'Default Group Avatar', 'buddyboss' ),
+			'label'             => __( 'Default Group Avatar', 'buddyboss-platform' ),
 			'type'              => 'image_radio',
 			'description'       => empty( _wp_image_editor_choose() )
 				? sprintf(
 					/* translators: %s: Imagick link. */
-					__( 'Note: Your server needs %s installed to use the "Group Name" option.', 'buddyboss' ),
+					__( 'Note: Your server needs %s installed to use the "Group Name" option.', 'buddyboss-platform' ),
 					'<a href="https://github.com/ImageMagick/ImageMagick" target="_blank">Imagick</a>'
 				)
 				: '',
@@ -73,17 +73,17 @@ function bb_groups_register_images_panel_fields() {
 			'sanitize_callback' => 'bb_groups_sanitize_avatar_type',
 			'options'           => array(
 				array(
-					'label' => __( 'BuddyBoss', 'buddyboss' ),
+					'label' => __( 'BuddyBoss', 'buddyboss-platform' ),
 					'value' => 'buddyboss',
 					'image' => 'avatar-buddyboss',
 				),
 				array(
-					'label' => __( 'Group Name', 'buddyboss' ),
+					'label' => __( 'Group Name', 'buddyboss-platform' ),
 					'value' => 'group-name',
 					'image' => 'avatar-name',
 				),
 				array(
-					'label' => __( 'Custom', 'buddyboss' ),
+					'label' => __( 'Custom', 'buddyboss-platform' ),
 					'value' => 'custom',
 					'image' => 'avatar-custom',
 				),
@@ -94,7 +94,7 @@ function bb_groups_register_images_panel_fields() {
 				'item_id'     => 0,
 				'item_type'   => 'default',
 				'url_getter'  => 'bb_get_default_custom_upload_group_avatar',
-				'label'       => __( 'Upload Custom Avatar', 'buddyboss' ),
+				'label'       => __( 'Upload Custom Avatar', 'buddyboss-platform' ),
 				/* translators: 1: avatar width in pixels, 2: avatar height in pixels. */
 				'help_text'   => '', // Injected at AJAX time via bb_groups_enrich_avatar_upload_help_text() — avatar dimensions not available at registration.
 				'conditional' => array(
@@ -124,7 +124,7 @@ function bb_groups_register_images_panel_fields() {
 		'group_images',
 		'group_cover',
 		array(
-			'title'       => __( 'Group Cover Image', 'buddyboss' ),
+			'title'       => __( 'Group Cover Image', 'buddyboss-platform' ),
 			'description' => '',
 			'order'       => 20,
 			'help_url'    => '636133',
@@ -140,10 +140,10 @@ function bb_groups_register_images_panel_fields() {
 		'group_cover',
 		array(
 			'name'              => 'bp-disable-group-cover-image-uploads',
-			'label'             => __( 'Group Cover Image', 'buddyboss' ),
+			'label'             => __( 'Group Cover Image', 'buddyboss-platform' ),
 			'type'              => 'toggle',
-			'description'       => __( 'Enable cover images for groups', 'buddyboss' ),
-			'help_text'         => __( 'When enabled, group organizers will be able to upload cover images in the group\'s settings.', 'buddyboss' ),
+			'description'       => __( 'Enable cover images for groups', 'buddyboss-platform' ),
+			'help_text'         => __( 'When enabled, group organizers will be able to upload cover images in the group\'s settings.', 'buddyboss-platform' ),
 			'default'           => bp_disable_group_cover_image_uploads(),
 			'sanitize_callback' => 'absint',
 			'invert_value'      => true,
@@ -158,24 +158,24 @@ function bb_groups_register_images_panel_fields() {
 		'group_cover',
 		array(
 			'name'              => 'bp-default-group-cover-type',
-			'label'             => __( 'Default Group Cover Image', 'buddyboss' ),
+			'label'             => __( 'Default Group Cover Image', 'buddyboss-platform' ),
 			'type'              => 'image_radio',
 			'description'       => '',
 			'default'           => bb_get_default_group_cover_type(),
 			'sanitize_callback' => 'bb_groups_sanitize_cover_type',
 			'options'           => array(
 				array(
-					'label' => __( 'BuddyBoss', 'buddyboss' ),
+					'label' => __( 'BuddyBoss', 'buddyboss-platform' ),
 					'value' => 'buddyboss',
 					'image' => 'cover-buddyboss',
 				),
 				array(
-					'label' => __( 'None', 'buddyboss' ),
+					'label' => __( 'None', 'buddyboss-platform' ),
 					'value' => 'none',
 					'image' => 'cover-none',
 				),
 				array(
-					'label' => __( 'Custom', 'buddyboss' ),
+					'label' => __( 'Custom', 'buddyboss-platform' ),
 					'value' => 'custom',
 					'image' => 'cover-custom',
 				),
@@ -186,7 +186,7 @@ function bb_groups_register_images_panel_fields() {
 				'item_id'     => 0,
 				'item_type'   => 'default',
 				'url_getter'  => 'bb_get_default_custom_upload_group_cover',
-				'label'       => __( 'Upload Custom Cover', 'buddyboss' ),
+				'label'       => __( 'Upload Custom Cover', 'buddyboss-platform' ),
 				'help_text'   => '', // help_text + dimensions both injected at AJAX time via bb_groups_enrich_cover_upload_help_text() — theme compat is not loaded at registration time and bb_attachments_get_default_custom_cover_image_dimensions() would fatal.
 				'conditional' => array(
 					'value' => 'custom',
@@ -208,7 +208,7 @@ function bb_groups_register_images_panel_fields() {
 		'group_cover',
 		array(
 			'name'              => 'bb-cover-group-width',
-			'label'             => __( 'Cover Image Sizes', 'buddyboss' ),
+			'label'             => __( 'Cover Image Sizes', 'buddyboss-platform' ),
 			'type'              => 'select',
 			'description'       => '',
 			'default'           => bb_get_group_cover_image_width(),
@@ -216,11 +216,11 @@ function bb_groups_register_images_panel_fields() {
 			'pro_only'          => true,
 			'options'           => array(
 				array(
-					'label' => __( 'Default', 'buddyboss' ),
+					'label' => __( 'Default', 'buddyboss-platform' ),
 					'value' => 'default',
 				),
 				array(
-					'label' => __( 'Full Width', 'buddyboss' ),
+					'label' => __( 'Full Width', 'buddyboss-platform' ),
 					'value' => 'full',
 				),
 			),
@@ -230,7 +230,7 @@ function bb_groups_register_images_panel_fields() {
 			),
 			'group'             => array(
 				'key'   => 'cover_image_sizes',
-				'label' => __( 'Width', 'buddyboss' ),
+				'label' => __( 'Width', 'buddyboss-platform' ),
 			),
 			'order'             => 30,
 		)
@@ -245,17 +245,17 @@ function bb_groups_register_images_panel_fields() {
 			'name'              => 'bb-cover-group-height',
 			'label'             => '',
 			'type'              => 'select',
-			'description'       => __( 'Changing the size of your cover images will reposition those already uploaded by members.', 'buddyboss' ),
+			'description'       => __( 'Changing the size of your cover images will reposition those already uploaded by members.', 'buddyboss-platform' ),
 			'default'           => bb_get_group_cover_image_height(),
 			'sanitize_callback' => 'bb_groups_sanitize_cover_height',
 			'pro_only'          => true,
 			'options'           => array(
 				array(
-					'label' => __( 'Small', 'buddyboss' ),
+					'label' => __( 'Small', 'buddyboss-platform' ),
 					'value' => 'small',
 				),
 				array(
-					'label' => __( 'Large', 'buddyboss' ),
+					'label' => __( 'Large', 'buddyboss-platform' ),
 					'value' => 'large',
 				),
 			),
@@ -265,7 +265,7 @@ function bb_groups_register_images_panel_fields() {
 			),
 			'group'             => array(
 				'key'   => 'cover_image_sizes',
-				'label' => __( 'Height', 'buddyboss' ),
+				'label' => __( 'Height', 'buddyboss-platform' ),
 			),
 			'order'             => 40,
 		)

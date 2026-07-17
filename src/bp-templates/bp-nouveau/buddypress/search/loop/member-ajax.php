@@ -8,6 +8,10 @@
  * @since   BuddyBoss 1.0.0
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 ?>
 <div class="bp-search-ajax-item bboss_ajax_search_member">
 	<a href="<?php echo esc_url( add_query_arg( array( 'no_frame' => '1' ), bp_get_member_permalink() ) ); ?>">
@@ -18,12 +22,12 @@
 		<div class="item">
 			<div class="item-title"><?php bp_member_name(); ?></div>
 			<?php
-			echo bp_get_user_member_type( bp_get_member_user_id() );
+			echo wp_kses_post( bp_get_user_member_type( bp_get_member_user_id() ) );
 			if ( bp_nouveau_member_has_meta() ) :
 				?>
 				<p class="item-meta last-activity">
 					<span class="middot">&middot;</span>
-					<?php echo esc_html__( 'Last active', 'buddyboss' ) . ' ' . wp_kses_post( bb_get_member_last_activity_time() ); ?>
+					<?php echo esc_html__( 'Last active', 'buddyboss-platform' ) . ' ' . wp_kses_post( bb_get_member_last_activity_time() ); ?>
 				</p><!-- #item-meta -->
 			<?php endif; ?>
 		</div>

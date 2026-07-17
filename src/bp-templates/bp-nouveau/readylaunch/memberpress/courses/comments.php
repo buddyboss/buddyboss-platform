@@ -12,7 +12,7 @@ defined( 'ABSPATH' ) || exit;
 <div id="comments" class="comments-area">
 
 	<!-- .comments-title -->
-	<h4 class="comments-title"><?php esc_html_e( 'Responses', 'buddyboss' ); ?></h4>
+	<h4 class="comments-title"><?php esc_html_e( 'Responses', 'buddyboss-platform' ); ?></h4>
 
 	<?php
 	if ( function_exists( 'bp_core_get_user_domain' ) ) {
@@ -23,7 +23,7 @@ defined( 'ABSPATH' ) || exit;
 
 	// You can start editing here -- including this comment!
 	$args = array(
-		'comment_field'      => '<p class="comment-form-comment"><textarea id="comment" name="comment" cols="45" rows="8" aria-required="true" placeholder="' . __( 'Write a response...', 'buddyboss' ) . '"></textarea></p>',
+		'comment_field'      => '<p class="comment-form-comment"><textarea id="comment" name="comment" cols="45" rows="8" aria-required="true" placeholder="' . __( 'Write a response...', 'buddyboss-platform' ) . '"></textarea></p>',
 		'title_reply'        => '',
 
 		/*
@@ -31,11 +31,11 @@ defined( 'ABSPATH' ) || exit;
 		 * %1$s - user avatar html
 		 * %3$s - User Name
 		 */
-		'logged_in_as'       => '<p class="logged-in-as">' . sprintf( __( '<a class="comment-author" href="%1$s"><span class="vcard">%2$s</span><span class="name">%3$s</span></a>', 'buddyboss' ), $user_link, get_avatar( get_current_user_id(), 80, '', $user_identity ), $user_identity ) . '</p>',
+		'logged_in_as'       => '<p class="logged-in-as">' . sprintf( __( '<a class="comment-author" href="%1$s"><span class="vcard">%2$s</span><span class="name">%3$s</span></a>', 'buddyboss-platform' ), $user_link, get_avatar( get_current_user_id(), 80, '', $user_identity ), $user_identity ) . '</p>',
 		'class_submit'       => 'submit button small',
 		'title_reply_before' => '<div id="reply-title" class="comment-reply-title">',
 		'title_reply_after'  => '</div>',
-		'label_submit'       => __( 'Publish', 'buddyboss' ),
+		'label_submit'       => __( 'Publish', 'buddyboss-platform' ),
 	);
 
 	comment_form( $args );
@@ -71,7 +71,7 @@ defined( 'ABSPATH' ) || exit;
 		// If comments are closed and there are comments, let's leave a little note, shall we?
 		if ( ! comments_open() ) :
 			?>
-			<p class="no-comments"><?php esc_html_e( 'Comments are closed.', 'buddyboss' ); ?></p>
+			<p class="no-comments"><?php esc_html_e( 'Comments are closed.', 'buddyboss-platform' ); ?></p>
 			<?php
 		endif;
 

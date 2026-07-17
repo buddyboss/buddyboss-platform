@@ -90,7 +90,7 @@ function bbp_convert_date( $time, $d = 'U', $translate = false ) {
  * @uses bbp_get_time_since() To get the formatted time
  */
 function bbp_time_since( $older_date, $newer_date = false, $gmt = false ) {
-	echo bbp_get_time_since( $older_date, $newer_date, $gmt );
+	echo esc_html( bbp_get_time_since( $older_date, $newer_date, $gmt ) );
 }
 	/**
 	 * Return formatted time to display human readable time difference.
@@ -110,19 +110,20 @@ function bbp_time_since( $older_date, $newer_date = false, $gmt = false ) {
 function bbp_get_time_since( $older_date, $newer_date = false, $gmt = false ) {
 
 	// Setup the strings
-	$unknown_text   = apply_filters( 'bbp_core_time_since_unknown_text', __( 'sometime', 'buddyboss' ) );
-	$right_now_text = apply_filters( 'bbp_core_time_since_right_now_text', __( 'right now', 'buddyboss' ) );
-	$ago_text       = apply_filters( 'bbp_core_time_since_ago_text', __( '%s ago', 'buddyboss' ) );
+	$unknown_text   = apply_filters( 'bbp_core_time_since_unknown_text', __( 'sometime', 'buddyboss-platform' ) );
+	$right_now_text = apply_filters( 'bbp_core_time_since_right_now_text', __( 'right now', 'buddyboss-platform' ) );
+	/* translators: %s: human-readable time difference. */
+	$ago_text       = apply_filters( 'bbp_core_time_since_ago_text', __( '%s ago', 'buddyboss-platform' ) );
 
 	// array of time period chunks
 	$chunks = array(
-		array( 60 * 60 * 24 * 365, __( 'year', 'buddyboss' ), __( 'years', 'buddyboss' ) ),
-		array( 60 * 60 * 24 * 30, __( 'month', 'buddyboss' ), __( 'months', 'buddyboss' ) ),
-		array( 60 * 60 * 24 * 7, __( 'week', 'buddyboss' ), __( 'weeks', 'buddyboss' ) ),
-		array( 60 * 60 * 24, __( 'day', 'buddyboss' ), __( 'days', 'buddyboss' ) ),
-		array( 60 * 60, __( 'hour', 'buddyboss' ), __( 'hours', 'buddyboss' ) ),
-		array( 60, __( 'minute', 'buddyboss' ), __( 'minutes', 'buddyboss' ) ),
-		array( 1, __( 'second', 'buddyboss' ), __( 'seconds', 'buddyboss' ) ),
+		array( 60 * 60 * 24 * 365, __( 'year', 'buddyboss-platform' ), __( 'years', 'buddyboss-platform' ) ),
+		array( 60 * 60 * 24 * 30, __( 'month', 'buddyboss-platform' ), __( 'months', 'buddyboss-platform' ) ),
+		array( 60 * 60 * 24 * 7, __( 'week', 'buddyboss-platform' ), __( 'weeks', 'buddyboss-platform' ) ),
+		array( 60 * 60 * 24, __( 'day', 'buddyboss-platform' ), __( 'days', 'buddyboss-platform' ) ),
+		array( 60 * 60, __( 'hour', 'buddyboss-platform' ), __( 'hours', 'buddyboss-platform' ) ),
+		array( 60, __( 'minute', 'buddyboss-platform' ), __( 'minutes', 'buddyboss-platform' ) ),
+		array( 1, __( 'second', 'buddyboss-platform' ), __( 'seconds', 'buddyboss-platform' ) ),
 	);
 
 	if ( ! empty( $older_date ) && ! is_numeric( $older_date ) ) {
@@ -177,7 +178,7 @@ function bbp_get_time_since( $older_date, $newer_date = false, $gmt = false ) {
 
 				// Add to output var
 				if ( 0 != $count2 ) {
-					$output .= ( 1 == $count2 ) ? _x( ',', 'Separator in time since', 'buddyboss' ) . ' 1 ' . $name2 : _x( ',', 'Separator in time since', 'buddyboss' ) . ' ' . $count2 . ' ' . $chunks[ $i + 1 ][2];
+					$output .= ( 1 == $count2 ) ? _x( ',', 'Separator in time since', 'buddyboss-platform' ) . ' 1 ' . $name2 : _x( ',', 'Separator in time since', 'buddyboss-platform' ) . ' ' . $count2 . ' ' . $chunks[ $i + 1 ][2];
 				}
 			}
 
@@ -575,11 +576,11 @@ function bbp_get_statistics( $args = '' ) {
 
 			// Generate the hidden topic count's title attribute.
 			/* translators: %s: private topics count */
-			$topic_titles[] = ! empty( $topics['private'] ) ? sprintf( __( 'Private: %s', 'buddyboss' ), bbp_number_format_i18n( $topics['private'] ) ) : '';
+			$topic_titles[] = ! empty( $topics['private'] ) ? sprintf( __( 'Private: %s', 'buddyboss-platform' ), bbp_number_format_i18n( $topics['private'] ) ) : '';
 			/* translators: %s: spammed topics count */
-			$topic_titles[] = ! empty( $topics['spammed'] ) ? sprintf( __( 'Spammed: %s', 'buddyboss' ), bbp_number_format_i18n( $topics['spammed'] ) ) : '';
+			$topic_titles[] = ! empty( $topics['spammed'] ) ? sprintf( __( 'Spammed: %s', 'buddyboss-platform' ), bbp_number_format_i18n( $topics['spammed'] ) ) : '';
 			/* translators: %s: trashed topics count */
-			$topic_titles[] = ! empty( $topics['trashed'] ) ? sprintf( __( 'Trashed: %s', 'buddyboss' ), bbp_number_format_i18n( $topics['trashed'] ) ) : '';
+			$topic_titles[] = ! empty( $topics['trashed'] ) ? sprintf( __( 'Trashed: %s', 'buddyboss-platform' ), bbp_number_format_i18n( $topics['trashed'] ) ) : '';
 
 			// Compile the hidden topic title.
 			$hidden_topic_title = implode( ' | ', array_filter( $topic_titles ) );
@@ -614,11 +615,11 @@ function bbp_get_statistics( $args = '' ) {
 
 			// Generate the hidden topic count's title attribute.
 			/* translators: %s: private replies count */
-			$reply_titles[] = ! empty( $replies['private'] ) ? sprintf( __( 'Private: %s', 'buddyboss' ), bbp_number_format_i18n( $replies['private'] ) ) : '';
+			$reply_titles[] = ! empty( $replies['private'] ) ? sprintf( __( 'Private: %s', 'buddyboss-platform' ), bbp_number_format_i18n( $replies['private'] ) ) : '';
 			/* translators: %s: spammed replies count */
-			$reply_titles[] = ! empty( $replies['spammed'] ) ? sprintf( __( 'Spammed: %s', 'buddyboss' ), bbp_number_format_i18n( $replies['spammed'] ) ) : '';
+			$reply_titles[] = ! empty( $replies['spammed'] ) ? sprintf( __( 'Spammed: %s', 'buddyboss-platform' ), bbp_number_format_i18n( $replies['spammed'] ) ) : '';
 			/* translators: %s: trashed replies count */
-			$reply_titles[] = ! empty( $replies['trashed'] ) ? sprintf( __( 'Trashed: %s', 'buddyboss' ), bbp_number_format_i18n( $replies['trashed'] ) ) : '';
+			$reply_titles[] = ! empty( $replies['trashed'] ) ? sprintf( __( 'Trashed: %s', 'buddyboss-platform' ), bbp_number_format_i18n( $replies['trashed'] ) ) : '';
 
 			// Compile the hidden replies title.
 			$hidden_reply_title = implode( ' | ', array_filter( $reply_titles ) );
@@ -630,7 +631,7 @@ function bbp_get_statistics( $args = '' ) {
 	if ( ! empty( $r['count_tags'] ) && bbp_allow_topic_tags() ) {
 
 		// Get the count.
-		$topic_tag_count = wp_count_terms( bbp_get_topic_tag_tax_id(), array( 'hide_empty' => true ) );
+		$topic_tag_count = wp_count_terms( array( 'taxonomy' => bbp_get_topic_tag_tax_id(), 'hide_empty' => true ) );
 
 		// Empty tags.
 		if ( ! empty( $r['count_empty_tags'] ) && current_user_can( 'edit_topic_tags' ) ) {
@@ -714,12 +715,12 @@ function bbp_filter_anonymous_post_data( $args = '' ) {
 	// Filter variables and add errors if necessary
 	$r['bbp_anonymous_name'] = apply_filters( 'bbp_pre_anonymous_post_author_name', $r['bbp_anonymous_name'] );
 	if ( empty( $r['bbp_anonymous_name'] ) ) {
-		bbp_add_error( 'bbp_anonymous_name', __( '<strong>ERROR</strong>: Invalid author name submitted!', 'buddyboss' ) );
+		bbp_add_error( 'bbp_anonymous_name', __( '<strong>ERROR</strong>: Invalid author name submitted!', 'buddyboss-platform' ) );
 	}
 
 	$r['bbp_anonymous_email'] = apply_filters( 'bbp_pre_anonymous_post_author_email', $r['bbp_anonymous_email'] );
 	if ( empty( $r['bbp_anonymous_email'] ) ) {
-		bbp_add_error( 'bbp_anonymous_email', __( '<strong>ERROR</strong>: Invalid email address submitted!', 'buddyboss' ) );
+		bbp_add_error( 'bbp_anonymous_email', __( '<strong>ERROR</strong>: Invalid email address submitted!', 'buddyboss-platform' ) );
 	}
 
 	// Website is optional
@@ -1380,35 +1381,41 @@ function bbp_notify_forum_subscribers( $topic_id = 0, $forum_id = 0, $anonymous_
 		),
 	);
 
-	// Check if discussion is attached in a group then send group subscription notifications.
-	$group_ids = bp_is_active( 'groups' ) && function_exists( 'bbp_get_forum_group_ids' ) ? bbp_get_forum_group_ids( $forum_id ) : array();
-	$item_id   = ( ! empty( $group_ids ) ? current( $group_ids ) : 0 );
-	if ( bp_is_active( 'groups' ) && bb_is_enabled_subscription( 'group' ) && ! empty( $item_id ) ) {
-		$type  = 'group';
-		$group = groups_get_group( $item_id );
+	/**
+	 * Filters the routing of the new-discussion subscriber notification.
+	 *
+	 * Allows a subscription-type provider to claim the discussion and redirect the
+	 * notification to its own subscriber set (e.g. the group-subscription feature
+	 * routes discussions posted in a group forum to the group's subscribers — that
+	 * provider callback lives in bp-groups-filters.php and moves out with the
+	 * feature). Return values:
+	 *  - null (default): not claimed — the forum's own subscribers are notified.
+	 *  - false: claimed but unresolvable (e.g. the group no longer exists) — abort.
+	 *  - array { type, item_id, user_ids, notification_from, tokens }: claimed.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array|false|null $routing  The routing override. Default null.
+	 * @param int              $topic_id ID of the new topic (discussion).
+	 * @param int              $forum_id ID of the forum the topic was posted in.
+	 * @param array            $args     Email token arguments built so far.
+	 */
+	$routing = apply_filters( 'bb_forum_new_discussion_notification_routing', null, $topic_id, $forum_id, $args );
 
-		if ( empty( $group ) ) {
-			return false;
+	if ( false === $routing ) {
+		// A provider claimed this discussion but could not resolve its target.
+		return false;
+	}
+
+	if ( is_array( $routing ) && ! empty( $routing['type'] ) ) {
+		$type              = $routing['type'];
+		$item_id           = isset( $routing['item_id'] ) ? $routing['item_id'] : 0;
+		$user_ids          = isset( $routing['user_ids'] ) ? $routing['user_ids'] : array();
+		$notification_from = isset( $routing['notification_from'] ) ? $routing['notification_from'] : '';
+
+		if ( ! empty( $routing['tokens'] ) && is_array( $routing['tokens'] ) ) {
+			$args['tokens'] = array_merge( $args['tokens'], $routing['tokens'] );
 		}
-
-		// Get group subscribers and bail if empty.
-		$get_subscriptions = bb_get_subscription_users(
-			array(
-				'item_id' => $item_id,
-				'type'    => 'group',
-				'count'   => false,
-			),
-			true
-		);
-
-		$user_ids = array();
-		if ( ! empty( $get_subscriptions['subscriptions'] ) ) {
-			$user_ids = array_filter( wp_parse_id_list( $get_subscriptions['subscriptions'] ) );
-		}
-
-		$args['tokens']['group.name'] = bp_get_group_name( $group );
-		$args['tokens']['group.url']  = esc_url( bp_get_group_permalink( $group ) );
-		$notification_from            = 'bb_groups_subscribed_discussion';
 	} else {
 		// Get topic subscribers and bail if empty.
 		$user_ids          = bbp_get_forum_subscribers( $forum_id );
@@ -1941,7 +1948,7 @@ function bbp_verify_nonce_request( $action = '', $query_arg = '_wpnonce' ) {
 
 	// Parse home_url() into pieces to remove query-strings, strange characters,
 	// and other funny things that plugins might to do to it.
-	$parsed_home = parse_url( home_url( '/', ( is_ssl() ? 'https' : 'http' ) ) );
+	$parsed_home = wp_parse_url( home_url( '/', ( is_ssl() ? 'https' : 'http' ) ) );
 
 	// Maybe include the port, if it's included
 	if ( isset( $parsed_home['port'] ) ) {
@@ -2263,7 +2270,7 @@ function bbp_set_404() {
 	global $wp_query;
 
 	if ( ! isset( $wp_query ) ) {
-		_doing_it_wrong( __FUNCTION__, esc_html__( 'Conditional query tags do not work before the query is run. Before then, they always return false.', 'buddyboss' ), '3.1' );
+		_doing_it_wrong( __FUNCTION__, esc_html__( 'Conditional query tags do not work before the query is run. Before then, they always return false.', 'buddyboss-platform' ), '3.1' );
 		return false;
 	}
 
@@ -2694,7 +2701,7 @@ function bb_forums_delete_topic_reply_media_attachments( $post_id = 0, $post = n
 		$video_ids_array = array_map( 'intval', $video_ids_array );
 
 		if ( ! empty( $video_ids_array ) ) {
-			if ( bp_is_active( 'media' ) ) {
+			if ( bp_is_active( 'video' ) ) {
 				foreach ( $video_ids_array as $video_id ) {
 					bp_video_delete( array( 'id' => $video_id ) );
 				}
@@ -2757,7 +2764,7 @@ function bb_forums_delete_topic_reply_media_attachments( $post_id = 0, $post = n
 		$document_ids_array = array_map( 'intval', $document_ids_array );
 
 		if ( ! empty( $document_ids_array ) ) {
-			if ( bp_is_active( 'media' ) ) {
+			if ( bp_is_active( 'document' ) ) {
 				foreach ( $document_ids_array as $document_id ) {
 					bp_document_delete( array( 'id' => $document_id ) );
 				}

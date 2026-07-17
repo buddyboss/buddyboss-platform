@@ -41,7 +41,7 @@ function bbp_is_anonymous() {
  *                                              data
  */
 function bbp_current_anonymous_user_data( $key = '' ) {
-	echo bbp_get_current_anonymous_user_data( $key );
+	echo esc_html( bbp_get_current_anonymous_user_data( $key ) );
 }
 
 /**
@@ -925,15 +925,15 @@ function bbp_forum_subscriptions_handler( $action = '' ) {
 
 	// Check for empty forum
 	if ( empty( $forum_id ) ) {
-		bbp_add_error( 'bbp_subscription_forum_id', __( '<strong>ERROR</strong>: No forum was found! Which forum are you subscribing/unsubscribing to?', 'buddyboss' ) );
+		bbp_add_error( 'bbp_subscription_forum_id', __( '<strong>ERROR</strong>: No forum was found! Which forum are you subscribing/unsubscribing to?', 'buddyboss-platform' ) );
 
 		// Check nonce
 	} elseif ( ! bbp_verify_nonce_request( 'toggle-subscription_' . $forum_id ) ) {
-		bbp_add_error( 'bbp_subscription_forum_id', __( '<strong>ERROR</strong>: Are you sure you wanted to do that?', 'buddyboss' ) );
+		bbp_add_error( 'bbp_subscription_forum_id', __( '<strong>ERROR</strong>: Are you sure you wanted to do that?', 'buddyboss-platform' ) );
 
 		// Check current user's ability to edit the user
 	} elseif ( ! current_user_can( 'edit_user', $user_id ) ) {
-		bbp_add_error( 'bbp_subscription_permissions', __( '<strong>ERROR</strong>: You don\'t have the permission to edit favorites of that user!', 'buddyboss' ) );
+		bbp_add_error( 'bbp_subscription_permissions', __( '<strong>ERROR</strong>: You don\'t have the permission to edit favorites of that user!', 'buddyboss-platform' ) );
 	}
 
 	// Bail if we have errors
@@ -975,9 +975,9 @@ function bbp_forum_subscriptions_handler( $action = '' ) {
 
 		// Fail! Handle errors
 	} elseif ( true === $is_subscription && 'bbp_unsubscribe' === $action ) {
-		bbp_add_error( 'bbp_unsubscribe', __( '<strong>ERROR</strong>: There was a problem unsubscribing from that forum!', 'buddyboss' ) );
+		bbp_add_error( 'bbp_unsubscribe', __( '<strong>ERROR</strong>: There was a problem unsubscribing from that forum!', 'buddyboss-platform' ) );
 	} elseif ( false === $is_subscription && 'bbp_subscribe' === $action ) {
-		bbp_add_error( 'bbp_subscribe', __( '<strong>ERROR</strong>: There was a problem subscribing to that forum!', 'buddyboss' ) );
+		bbp_add_error( 'bbp_subscribe', __( '<strong>ERROR</strong>: There was a problem subscribing to that forum!', 'buddyboss-platform' ) );
 	}
 }
 
@@ -1029,15 +1029,15 @@ function bbp_subscriptions_handler( $action = '' ) {
 
 	// Check for empty topic
 	if ( empty( $topic_id ) ) {
-		bbp_add_error( 'bbp_subscription_topic_id', __( '<strong>ERROR</strong>: No discussion was found! Which discussion are you subscribing/unsubscribing to?', 'buddyboss' ) );
+		bbp_add_error( 'bbp_subscription_topic_id', __( '<strong>ERROR</strong>: No discussion was found! Which discussion are you subscribing/unsubscribing to?', 'buddyboss-platform' ) );
 
 		// Check nonce
 	} elseif ( ! bbp_verify_nonce_request( 'toggle-subscription_' . $topic_id ) ) {
-		bbp_add_error( 'bbp_subscription_topic_id', __( '<strong>ERROR</strong>: Are you sure you wanted to do that?', 'buddyboss' ) );
+		bbp_add_error( 'bbp_subscription_topic_id', __( '<strong>ERROR</strong>: Are you sure you wanted to do that?', 'buddyboss-platform' ) );
 
 		// Check current user's ability to edit the user
 	} elseif ( ! current_user_can( 'edit_user', $user_id ) ) {
-		bbp_add_error( 'bbp_subscription_permissions', __( '<strong>ERROR</strong>: You don\'t have the permission to edit favorites of that user!', 'buddyboss' ) );
+		bbp_add_error( 'bbp_subscription_permissions', __( '<strong>ERROR</strong>: You don\'t have the permission to edit favorites of that user!', 'buddyboss-platform' ) );
 	}
 
 	// Bail if we have errors
@@ -1079,9 +1079,9 @@ function bbp_subscriptions_handler( $action = '' ) {
 
 		// Fail! Handle errors
 	} elseif ( true === $is_subscription && 'bbp_unsubscribe' === $action ) {
-		bbp_add_error( 'bbp_unsubscribe', __( '<strong>ERROR</strong>: There was a problem unsubscribing from that discussion!', 'buddyboss' ) );
+		bbp_add_error( 'bbp_unsubscribe', __( '<strong>ERROR</strong>: There was a problem unsubscribing from that discussion!', 'buddyboss-platform' ) );
 	} elseif ( false === $is_subscription && 'bbp_subscribe' === $action ) {
-		bbp_add_error( 'bbp_subscribe', __( '<strong>ERROR</strong>: There was a problem subscribing to that discussion!', 'buddyboss' ) );
+		bbp_add_error( 'bbp_subscribe', __( '<strong>ERROR</strong>: There was a problem subscribing to that discussion!', 'buddyboss-platform' ) );
 	}
 }
 

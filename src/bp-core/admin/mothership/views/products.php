@@ -16,11 +16,11 @@ defined( 'ABSPATH' ) || exit;
 			<input type="submit"
 				class="button button-secondary"
 				name="submit-button-mosh-refresh-addon"
-				value="<?php esc_attr_e( 'Refresh Add-ons', 'buddyboss' ); ?>"
+				value="<?php esc_attr_e( 'Refresh Add-ons', 'buddyboss-platform' ); ?>"
 			>
 			<input type="search"
 				id="mosh-products-search"
-				placeholder="<?php esc_attr_e( 'Search add-ons', 'buddyboss' ); ?>"
+				placeholder="<?php esc_attr_e( 'Search add-ons', 'buddyboss-platform' ); ?>"
 			>
 		</form>
 	</h3>
@@ -33,8 +33,8 @@ defined( 'ABSPATH' ) || exit;
 						<?php if ( $product->updateAvailable ) : ?>
 						<div class="update-message notice inline notice-warning notice-alt mosh-product-update-message">
 							<p>
-								<?php esc_html_e( 'New version available.', 'buddyboss' ); ?>
-								<button class="button-link mosh-product-update-button" type="button"><?php esc_html_e( 'Update now', 'buddyboss' ); ?></button>
+								<?php esc_html_e( 'New version available.', 'buddyboss-platform' ); ?>
+								<button class="button-link mosh-product-update-button" type="button"><?php esc_html_e( 'Update now', 'buddyboss-platform' ); ?></button>
 							</p>
 						</div>
 						<?php endif; ?>
@@ -57,7 +57,7 @@ defined( 'ABSPATH' ) || exit;
 									<?php
 									printf(
 										// Translators: %s: add-on status label.
-										esc_html__( 'Status: %s', 'buddyboss' ),
+										esc_html__( 'Status: %s', 'buddyboss-platform' ),
 										sprintf( '<span class="mosh-product-status-label">%s</span>', esc_html( $product->statusLabel ) )
 									);
 									?>
@@ -79,6 +79,6 @@ defined( 'ABSPATH' ) || exit;
 			</div>
 		</div>
 	<?php else : ?>
-		<h3><?php esc_html_e( 'There were no Add-ons found for your License Key.', 'buddyboss' ); ?></h3>
+		<h3><?php esc_html_e( 'There were no Add-ons found for your License Key.', 'buddyboss-platform' ); ?></h3>
 	<?php endif; ?>
 </div>

@@ -42,8 +42,8 @@ function bb_admin_settings_register_tools_feature() {
 	bb_register_feature(
 		'tools',
 		array(
-			'label'              => __( 'Tools', 'buddyboss' ),
-			'description'        => __( 'Repair and re-sync specific site functions, migrations and import default data to help you build and maintain your site.', 'buddyboss' ),
+			'label'              => __( 'Tools', 'buddyboss-platform' ),
+			'description'        => __( 'Repair and re-sync specific site functions, migrations and import default data to help you build and maintain your site.', 'buddyboss-platform' ),
 			'icon'               => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-wrench',
@@ -67,7 +67,7 @@ function bb_admin_settings_register_tools_feature() {
 		'tools',
 		'repair_platform',
 		array(
-			'title'      => __( 'Repair Platform', 'buddyboss' ),
+			'title'      => __( 'Repair Platform', 'buddyboss-platform' ),
 			'icon'       => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-wrench',
@@ -82,8 +82,8 @@ function bb_admin_settings_register_tools_feature() {
 		'repair_platform',
 		'repair_platform_section',
 		array(
-			'title'       => __( 'Repair Platform', 'buddyboss' ),
-			'description' => __( 'BuddyBoss keeps track of various relationships between members, groups, and activity items. Occasionally these relationships become out of sync, most often after an import, update, or migration. Use the tools below to manually recalculate these relationships.', 'buddyboss' ),
+			'title'       => __( 'Repair Platform', 'buddyboss-platform' ),
+			'description' => __( 'BuddyBoss keeps track of various relationships between members, groups, and activity items. Occasionally these relationships become out of sync, most often after an import, update, or migration. Use the tools below to manually recalculate these relationships.', 'buddyboss-platform' ),
 			'help_url'    => '644709',
 			'order'       => 10,
 		)
@@ -107,7 +107,7 @@ function bb_admin_settings_register_tools_feature() {
 		'tools',
 		'sample_data',
 		array(
-			'title'      => __( 'Sample Data', 'buddyboss' ),
+			'title'      => __( 'Sample Data', 'buddyboss-platform' ),
 			'icon'       => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-database',
@@ -122,8 +122,8 @@ function bb_admin_settings_register_tools_feature() {
 		'sample_data',
 		'sample_data_section',
 		array(
-			'title'       => __( 'Sample Data', 'buddyboss' ),
-			'description' => __( 'Select the data you want to import. Some of these tools utilize substantial database resources. Avoid running more than 1 import at a time.', 'buddyboss' ),
+			'title'       => __( 'Sample Data', 'buddyboss-platform' ),
+			'description' => __( 'Select the data you want to import. Some of these tools utilize substantial database resources. Avoid running more than 1 import at a time.', 'buddyboss-platform' ),
 			'help_url'    => '644711',
 			'order'       => 10,
 		)
@@ -147,7 +147,7 @@ function bb_admin_settings_register_tools_feature() {
 		'tools',
 		'migration_tools',
 		array(
-			'title'      => __( 'Migration Tools', 'buddyboss' ),
+			'title'      => __( 'Migration Tools', 'buddyboss-platform' ),
 			'icon'       => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-upload-simple',
@@ -162,8 +162,8 @@ function bb_admin_settings_register_tools_feature() {
 		'migration_tools',
 		'migration_tools_section',
 		array(
-			'title'       => __( 'Migration Tools', 'buddyboss' ),
-			'description' => __( 'Migrate content from other community, course, or forum platforms into BuddyBoss.', 'buddyboss' ),
+			'title'       => __( 'Migration Tools', 'buddyboss-platform' ),
+			'description' => __( 'Migrate content from other community, course, or forum platforms into BuddyBoss.', 'buddyboss-platform' ),
 			'order'       => 10,
 		)
 	);
@@ -293,47 +293,47 @@ function bb_admin_settings_localize_tools_repair_config() {
 	$item_categories = array(
 		array(
 			'id'    => 'members_profiles',
-			'label' => __( 'Members & Profiles', 'buddyboss' ),
+			'label' => __( 'Members & Profiles', 'buddyboss-platform' ),
 			'order' => 10,
 		),
 		array(
 			'id'    => 'groups',
-			'label' => __( 'Groups', 'buddyboss' ),
+			'label' => __( 'Groups', 'buddyboss-platform' ),
 			'order' => 20,
 		),
 		array(
 			'id'    => 'media',
-			'label' => __( 'Media', 'buddyboss' ),
+			'label' => __( 'Media', 'buddyboss-platform' ),
 			'order' => 25,
 		),
 		array(
 			'id'    => 'forums_discussions',
-			'label' => __( 'Forums & Discussions', 'buddyboss' ),
+			'label' => __( 'Forums & Discussions', 'buddyboss-platform' ),
 			'order' => 30,
 		),
 		array(
 			'id'    => 'messages',
-			'label' => __( 'Messages', 'buddyboss' ),
+			'label' => __( 'Messages', 'buddyboss-platform' ),
 			'order' => 35,
 		),
 		array(
 			'id'    => 'moderation',
-			'label' => __( 'Moderation', 'buddyboss' ),
+			'label' => __( 'Moderation', 'buddyboss-platform' ),
 			'order' => 38,
 		),
 		array(
 			'id'    => 'connections',
-			'label' => __( 'Connections', 'buddyboss' ),
+			'label' => __( 'Connections', 'buddyboss-platform' ),
 			'order' => 40,
 		),
 		array(
 			'id'    => 'activity_reactions',
-			'label' => __( 'Activity & Reactions', 'buddyboss' ),
+			'label' => __( 'Activity & Reactions', 'buddyboss-platform' ),
 			'order' => 50,
 		),
 		array(
 			'id'    => 'emails',
-			'label' => __( 'Emails', 'buddyboss' ),
+			'label' => __( 'Emails', 'buddyboss-platform' ),
 			'order' => 60,
 		),
 	);

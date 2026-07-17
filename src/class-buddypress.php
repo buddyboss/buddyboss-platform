@@ -168,7 +168,7 @@ class BuddyPress {
 	 * @since BuddyPress 1.7.0
 	 */
 	public function __clone() {
-		_doing_it_wrong( __FUNCTION__, __( 'Cheatin\' huh?', 'buddyboss' ), '1.7' ); }
+		_doing_it_wrong( __FUNCTION__, esc_html__( 'Cheatin\' huh?', 'buddyboss-platform' ), '1.7' ); }
 
 	/**
 	 * A dummy magic method to prevent BuddyPress from being unserialized.
@@ -176,7 +176,7 @@ class BuddyPress {
 	 * @since BuddyPress 1.7.0
 	 */
 	public function __wakeup() {
-		_doing_it_wrong( __FUNCTION__, __( 'Cheatin\' huh?', 'buddyboss' ), '1.7' ); }
+		_doing_it_wrong( __FUNCTION__, esc_html__( 'Cheatin\' huh?', 'buddyboss-platform' ), '1.7' ); }
 
 	/**
 	 * Magic method for checking the existence of a certain custom field.
@@ -816,6 +816,11 @@ class BuddyPress {
 		$class = strtolower( str_replace( '_', '-', $class ) );
 		if ( 'bp-rest-attachments' === $class ) {
 			$path = dirname( __FILE__ ) . "/bp-{$component}/classes/trait-bp-rest-attachments.php";
+		} elseif ( 'bp-phpmailer' === $class ) {
+			// File deliberately named without the "phpmailer.php" suffix to avoid being
+			// misidentified as the bundled PHPMailer library core file. The class name
+			// BP_PHPMailer is kept for backward compatibility.
+			$path = dirname( __FILE__ ) . "/bp-{$component}/classes/class-bp-php-mailer.php";
 		} elseif ( 'gdpr' === $component ) {
 			$path = dirname( __FILE__ ) . "/bp-core/gdpr/class-{$class}.php";
 		} elseif ( 'suspend' === $component ) {

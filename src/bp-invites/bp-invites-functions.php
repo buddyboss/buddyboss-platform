@@ -52,16 +52,16 @@ function bp_get_invite_post_type_labels() {
 	return apply_filters(
 		'bp_get_invite_post_type_labels',
 		array(
-			'add_new_item'       => __( 'Send Invite', 'buddyboss' ),
-			'all_items'          => __( 'Sent Invites', 'buddyboss' ),
-			'edit_item'          => __( 'Edit Sent Invite', 'buddyboss' ),
-			'menu_name'          => __( 'Invites', 'buddyboss' ),
-			'name'               => __( 'Email Invites', 'buddyboss' ),
-			'new_item'           => __( 'New Sent Invite', 'buddyboss' ),
-			'not_found'          => __( 'No Sent Invites found', 'buddyboss' ),
-			'not_found_in_trash' => __( 'No Sent Invites found in trash', 'buddyboss' ),
-			'search_items'       => __( 'Search Sent Invites', 'buddyboss' ),
-			'singular_name'      => __( 'Sent Invite', 'buddyboss' ),
+			'add_new_item'       => __( 'Send Invite', 'buddyboss-platform' ),
+			'all_items'          => __( 'Sent Invites', 'buddyboss-platform' ),
+			'edit_item'          => __( 'Edit Sent Invite', 'buddyboss-platform' ),
+			'menu_name'          => __( 'Invites', 'buddyboss-platform' ),
+			'name'               => __( 'Email Invites', 'buddyboss-platform' ),
+			'new_item'           => __( 'New Sent Invite', 'buddyboss-platform' ),
+			'not_found'          => __( 'No Sent Invites found', 'buddyboss-platform' ),
+			'not_found_in_trash' => __( 'No Sent Invites found in trash', 'buddyboss-platform' ),
+			'search_items'       => __( 'Search Sent Invites', 'buddyboss-platform' ),
+			'singular_name'      => __( 'Sent Invite', 'buddyboss-platform' ),
 		)
 	);
 
@@ -155,7 +155,7 @@ function bp_invites_member_invite_remove_registration_lock() {
 	$bp_get_invitee_email = new WP_Query( $args );
 
 	if ( ! $bp_get_invitee_email->have_posts() ) {
-		bp_core_add_message( __( "We couldn't find any invitations associated with the provided email address.", 'buddyboss' ), 'error' );
+		bp_core_add_message( __( "We couldn't find any invitations associated with the provided email address.", 'buddyboss-platform' ), 'error' );
 		return;
 	}
 
@@ -198,7 +198,7 @@ function bp_invites_member_invite_register_screen_message() {
 
 	?>
 	<?php if ( empty( $email ) ) : ?>
-		<div id="message" class="error"><p><?php _e( "It looks like you're trying to accept an invitation to join the site, but some information is missing. Please try again by clicking on the link in the invitation email.", 'buddyboss' ); ?></p></div>
+		<div id="message" class="error"><p><?php esc_html_e( "It looks like you're trying to accept an invitation to join the site, but some information is missing. Please try again by clicking on the link in the invitation email.", 'buddyboss-platform' ); ?></p></div>
 	<?php endif; ?>
 
 	<?php if ( $bp->signup->step == 'request-details' && ! empty( $email ) ) : ?>
@@ -230,7 +230,8 @@ function bp_invites_member_invite_register_screen_message() {
 		}
 
 		if ( ! empty( $inviters_names ) ) {
-			$message = sprintf( _n( 'Welcome! You\'ve been invited to join the site by the following user: %s. Please fill out the information below to create your account.', 'Welcome! You\'ve been invited to join the site by the following users: %s. Please fill out the information below to create your account.', count( $inviters_names ), 'buddyboss' ), implode( ', ', $inviters_names ) );
+			/* translators: %s: comma-separated list of inviter display names. */
+			$message = sprintf( _n( 'Welcome! You\'ve been invited to join the site by the following user: %s. Please fill out the information below to create your account.', 'Welcome! You\'ve been invited to join the site by the following users: %s. Please fill out the information below to create your account.', count( $inviters_names ), 'buddyboss-platform' ), implode( ', ', $inviters_names ) );
 
 			echo '<aside class="bp-feedback bp-messages info"><span class="bp-icon" aria-hidden="true"></span><p>' . esc_html( $message ) . '</p></aside>';
 		}
@@ -397,7 +398,7 @@ function bp_get_member_invitation_message() {
  */
 function bp_get_invites_member_invite_url() {
 
-	$invite_link = apply_filters( 'bp_get_invites_member_invite_url', __( 'To accept this invitation, please visit %%ACCEPTURL%%', 'buddyboss' ) );
+	$invite_link = apply_filters( 'bp_get_invites_member_invite_url', __( 'To accept this invitation, please visit %%ACCEPTURL%%', 'buddyboss-platform' ) );
 
 	return stripslashes( $invite_link );
 }
@@ -495,7 +496,7 @@ function bp_invites_member_invite_activate_user( $user_id, $key, $user ) {
 
 			// Mark as accepted
 			update_post_meta( get_the_ID(), '_bp_invitee_status', 1 );
-			update_post_meta( get_the_ID(), '_bp_invitee_registered_date', date( 'Y-m-d H:i:s' ) );
+			update_post_meta( get_the_ID(), '_bp_invitee_registered_date', gmdate( 'Y-m-d H:i:s' ) );
 
 			$member_type = get_post_meta( get_the_ID(), '_bp_invitee_member_type', true );
 			if ( isset( $member_type ) && ! empty( $member_type ) ) {
@@ -579,7 +580,7 @@ function bp_invites_member_invite_mark_register_user( $user_id ) {
 
 			// Mark as accepted
 			update_post_meta( get_the_ID(), '_bp_invitee_status', 1 );
-			update_post_meta( get_the_ID(), '_bp_invitee_registered_date', date( 'Y-m-d H:i:s' ) );
+			update_post_meta( get_the_ID(), '_bp_invitee_registered_date', gmdate( 'Y-m-d H:i:s' ) );
 
 			$member_type = get_post_meta( get_the_ID(), '_bp_invitee_member_type', true );
 			if ( isset( $member_type ) && ! empty( $member_type ) ) {

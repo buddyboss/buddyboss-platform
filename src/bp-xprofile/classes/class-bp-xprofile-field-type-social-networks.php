@@ -24,8 +24,8 @@ class BP_XProfile_Field_Type_Social_Networks extends BP_XProfile_Field_Type {
 	public function __construct() {
 		parent::__construct();
 
-		$this->category = __( 'Multi Fields', 'buddyboss' );
-		$this->name     = __( 'Social Networks', 'buddyboss' );
+		$this->category = __( 'Multi Fields', 'buddyboss-platform' );
+		$this->name     = __( 'Social Networks', 'buddyboss-platform' );
 
 		$this->supports_options = true;
 
@@ -132,11 +132,11 @@ class BP_XProfile_Field_Type_Social_Networks extends BP_XProfile_Field_Type {
 			);
 
 			$key   = bp_social_network_search_key( $option->name, $providers );
-			$html .= '<div class="editfield"><legend id="field_' . $option->id . '-1">' . $providers[ $key ]->name . '</legend>
+			$html .= '<div class="editfield"><legend id="field_' . esc_attr( $option->id ) . '-1">' . esc_html( $providers[ $key ]->name ) . '</legend>
 						<input ' . $field . '></div>';
 		}
 
-		echo $html;
+		echo $html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $html is built from escaped pieces; $field is attribute markup escaped via bp_get_form_field_attributes() and cannot be passed through wp_kses_post() without stripping the input element.
 	}
 
 	/**
@@ -154,10 +154,10 @@ class BP_XProfile_Field_Type_Social_Networks extends BP_XProfile_Field_Type {
 		<label for="<?php bp_the_profile_field_input_name(); ?>" class="screen-reader-text">
 															 <?php
 																/* translators: accessibility text */
-																esc_html_e( 'Select', 'buddyboss' );
+																esc_html_e( 'Select', 'buddyboss-platform' );
 																?>
 			</label>
-		<select <?php echo $this->get_edit_field_html_elements( $raw_properties ); ?>>
+		<select <?php echo $this->get_edit_field_html_elements( $raw_properties ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- get_edit_field_html_elements() returns attribute markup already escaped via bp_get_form_field_attributes(). ?>>
 			<?php bp_the_profile_field_options(); ?>
 		</select>
 
@@ -186,14 +186,14 @@ class BP_XProfile_Field_Type_Social_Networks extends BP_XProfile_Field_Type {
 		?>
 
 		<div id="<?php echo esc_attr( $type ); ?>" class="postbox bp-options-box" style="<?php echo esc_attr( $class ); ?> margin-top: 15px;">
-			<h3><?php esc_html_e( 'Please select the social networks to allow. If entered, they will display as icons in the user\'s profile.', 'buddyboss' ); ?></h3>
+			<h3><?php esc_html_e( 'Please select the social networks to allow. If entered, they will display as icons in the user\'s profile.', 'buddyboss-platform' ); ?></h3>
 			<div class="inside" aria-live="polite" aria-atomic="true" aria-relevant="all">
 				<p style="display: none;">
-					<label for="sort_order_<?php echo esc_attr( $type ); ?>"><?php esc_html_e( 'Sort Order:', 'buddyboss' ); ?></label>
+					<label for="sort_order_<?php echo esc_attr( $type ); ?>"><?php esc_html_e( 'Sort Order:', 'buddyboss-platform' ); ?></label>
 					<select name="sort_order_<?php echo esc_attr( $type ); ?>" id="sort_order_<?php echo esc_attr( $type ); ?>" >
-						<option value="custom" <?php selected( 'custom', $current_field->order_by ); ?>><?php esc_html_e( 'Custom', 'buddyboss' ); ?></option>
-						<option value="asc"    <?php selected( 'asc', $current_field->order_by ); ?>><?php esc_html_e( 'Ascending', 'buddyboss' ); ?></option>
-						<option value="desc"   <?php selected( 'desc', $current_field->order_by ); ?>><?php esc_html_e( 'Descending', 'buddyboss' ); ?></option>
+						<option value="custom" <?php selected( 'custom', $current_field->order_by ); ?>><?php esc_html_e( 'Custom', 'buddyboss-platform' ); ?></option>
+						<option value="asc"    <?php selected( 'asc', $current_field->order_by ); ?>><?php esc_html_e( 'Ascending', 'buddyboss-platform' ); ?></option>
+						<option value="desc"   <?php selected( 'desc', $current_field->order_by ); ?>><?php esc_html_e( 'Descending', 'buddyboss-platform' ); ?></option>
 					</select>
 				</p>
 
@@ -278,7 +278,7 @@ class BP_XProfile_Field_Type_Social_Networks extends BP_XProfile_Field_Type {
 							<label for="<?php echo esc_attr( "{$type}_option{$j}" ); ?>" class="screen-reader-text">
 												   <?php
 													/* translators: accessibility text */
-													esc_html_e( 'Add an option', 'buddyboss' );
+													esc_html_e( 'Add an option', 'buddyboss-platform' );
 													?>
 								</label>
 							<select class="select-social-networks" name="<?php echo esc_attr( "{$type}_option[{$j}]" ); ?>" id="<?php echo esc_attr( "{$type}_option{$j}" ); ?>">
@@ -286,7 +286,7 @@ class BP_XProfile_Field_Type_Social_Networks extends BP_XProfile_Field_Type {
 								foreach ( bp_xprofile_social_network_provider() as $option ) {
 									$compare = ( true === $fresh_setup ) ? $options[ $i ]->value : $options[ $i ]->name;
 									?>
-									<option class="<?php echo $options[ $i ]->name . ' ' . $option->value; ?>" value="<?php echo esc_attr( $option->value ); ?>" <?php echo ( $compare === $option->value ) ? 'selected' : ''; ?>><?php echo $option->name; ?></option>
+									<option class="<?php echo esc_attr( $options[ $i ]->name . ' ' . $option->value ); ?>" value="<?php echo esc_attr( $option->value ); ?>" <?php echo ( $compare === $option->value ) ? 'selected' : ''; ?>><?php echo esc_html( $option->name ); ?></option>
 									<?php
 
 								}
@@ -297,7 +297,7 @@ class BP_XProfile_Field_Type_Social_Networks extends BP_XProfile_Field_Type {
 
 							<?php if ( 1 !== $j && 1 !== $j ) : ?>
 								<div class ="delete-button">
-									<a href='javascript:hide("<?php echo esc_attr( "{$type}_div{$j}" ); ?>")' class="delete"><?php esc_html_e( 'Delete', 'buddyboss' ); ?></a>
+									<a href='javascript:hide("<?php echo esc_attr( "{$type}_div{$j}" ); ?>")' class="delete"><?php esc_html_e( 'Delete', 'buddyboss-platform' ); ?></a>
 								</div>
 							<?php endif; ?>
 
@@ -312,7 +312,7 @@ class BP_XProfile_Field_Type_Social_Networks extends BP_XProfile_Field_Type {
 				if ( $options < bp_xprofile_social_network_provider() ) {
 					?>
 					<div id="<?php echo esc_attr( "{$type}_more" ); ?>"></div>					<p>
-					<a class="social_networks_add_more" href="javascript:add_option('<?php echo esc_js( $type ); ?>')"><?php esc_html_e( 'Add Another Option', 'buddyboss' ); ?></a></p>
+					<a class="social_networks_add_more" href="javascript:add_option('<?php echo esc_js( $type ); ?>')"><?php esc_html_e( 'Add Another Option', 'buddyboss-platform' ); ?></a></p>
 																								<?php
 				}
 				?>

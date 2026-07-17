@@ -35,8 +35,8 @@ function bb_search_register_network_search_fields() {
 		'network_search',
 		'network_search_components',
 		array(
-			'title'       => __( 'Network Search', 'buddyboss' ),
-			'description' => __( 'All listed BuddyBoss components are searchable. The switches indicate which ones are included in searches.', 'buddyboss' ),
+			'title'       => __( 'Network Search', 'buddyboss-platform' ),
+			'description' => __( 'All listed BuddyBoss components are searchable. The switches indicate which ones are included in searches.', 'buddyboss-platform' ),
 			'order'       => 10,
 		)
 	);
@@ -50,8 +50,8 @@ function bb_search_register_network_search_fields() {
 		'network_search_components',
 		array(
 			'name'              => 'bp_search_members',
-			'label'             => __( 'Members', 'buddyboss' ),
-			'description'       => __( 'Allow member searching', 'buddyboss' ),
+			'label'             => __( 'Members', 'buddyboss-platform' ),
+			'description'       => __( 'Allow member searching', 'buddyboss-platform' ),
 			'type'              => 'toggle',
 			'default'           => absint( bp_get_option( 'bp_search_members', 1 ) ),
 			'sanitize_callback' => 'absint',
@@ -65,10 +65,10 @@ function bb_search_register_network_search_fields() {
 	$user_fields = function_exists( 'bp_get_search_user_fields' )
 		? bp_get_search_user_fields()
 		: array(
-			'user_meta'    => __( 'User Meta', 'buddyboss' ),
-			'display_name' => __( 'Display Name', 'buddyboss' ),
-			'user_email'   => __( 'User Email', 'buddyboss' ),
-			'user_login'   => __( 'Username', 'buddyboss' ),
+			'user_meta'    => __( 'User Meta', 'buddyboss-platform' ),
+			'display_name' => __( 'Display Name', 'buddyboss-platform' ),
+			'user_email'   => __( 'User Email', 'buddyboss-platform' ),
+			'user_login'   => __( 'Username', 'buddyboss-platform' ),
 		);
 
 	$child_order = 20;
@@ -85,7 +85,7 @@ function bb_search_register_network_search_fields() {
 				'default'           => absint( bp_get_option( $option_name, 0 ) ),
 				'sanitize_callback' => 'absint',
 				'parent_field'      => 'bp_search_members',
-				'child_group_label' => __( 'Account', 'buddyboss' ),
+				'child_group_label' => __( 'Account', 'buddyboss-platform' ),
 				'order'             => $child_order,
 			)
 		);
@@ -104,8 +104,8 @@ function bb_search_register_network_search_fields() {
 			'network_search_components',
 			array(
 				'name'              => 'bp_search_post_type_forum',
-				'label'             => __( 'Forums', 'buddyboss' ),
-				'description'       => __( 'Allow forum searching', 'buddyboss' ),
+				'label'             => __( 'Forums', 'buddyboss-platform' ),
+				'description'       => __( 'Allow forum searching', 'buddyboss-platform' ),
 				'type'              => 'toggle',
 				'default'           => absint( bp_get_option( 'bp_search_post_type_forum', 1 ) ),
 				'sanitize_callback' => 'absint',
@@ -120,7 +120,7 @@ function bb_search_register_network_search_fields() {
 			'network_search_components',
 			array(
 				'name'              => 'bp_search_post_type_topic',
-				'label'             => __( 'Discussion', 'buddyboss' ),
+				'label'             => __( 'Discussion', 'buddyboss-platform' ),
 				'type'              => 'checkbox',
 				'default'           => absint( bp_get_option( 'bp_search_post_type_topic', 1 ) ),
 				'sanitize_callback' => 'absint',
@@ -136,7 +136,7 @@ function bb_search_register_network_search_fields() {
 			'network_search_components',
 			array(
 				'name'              => 'bp_search_topic_tax_topic-tag',
-				'label'             => __( 'Discussion Tags', 'buddyboss' ),
+				'label'             => __( 'Discussion Tags', 'buddyboss-platform' ),
 				'type'              => 'checkbox',
 				'default'           => absint( bp_get_option( 'bp_search_topic_tax_topic-tag', 0 ) ),
 				'sanitize_callback' => 'absint',
@@ -152,7 +152,7 @@ function bb_search_register_network_search_fields() {
 			'network_search_components',
 			array(
 				'name'              => 'bp_search_post_type_reply',
-				'label'             => __( 'Replies', 'buddyboss' ),
+				'label'             => __( 'Replies', 'buddyboss-platform' ),
 				'type'              => 'checkbox',
 				'default'           => absint( bp_get_option( 'bp_search_post_type_reply', 1 ) ),
 				'sanitize_callback' => 'absint',
@@ -172,8 +172,8 @@ function bb_search_register_network_search_fields() {
 			'network_search_components',
 			array(
 				'name'              => 'bp_search_groups',
-				'label'             => __( 'Groups', 'buddyboss' ),
-				'description'       => __( 'Allow group searching', 'buddyboss' ),
+				'label'             => __( 'Groups', 'buddyboss-platform' ),
+				'description'       => __( 'Allow group searching', 'buddyboss-platform' ),
 				'type'              => 'toggle',
 				'default'           => absint( bp_get_option( 'bp_search_groups', 1 ) ),
 				'sanitize_callback' => 'absint',
@@ -192,8 +192,8 @@ function bb_search_register_network_search_fields() {
 			'network_search_components',
 			array(
 				'name'              => 'bp_search_photos',
-				'label'             => __( 'Photos', 'buddyboss' ),
-				'description'       => __( 'Allow photo searching', 'buddyboss' ),
+				'label'             => __( 'Photos', 'buddyboss-platform' ),
+				'description'       => __( 'Allow photo searching', 'buddyboss-platform' ),
 				'type'              => 'toggle',
 				'default'           => absint( bp_get_option( 'bp_search_photos', 0 ) ),
 				'sanitize_callback' => 'absint',
@@ -208,7 +208,7 @@ function bb_search_register_network_search_fields() {
 			'network_search_components',
 			array(
 				'name'              => 'bp_search_albums',
-				'label'             => __( 'Albums', 'buddyboss' ),
+				'label'             => __( 'Albums', 'buddyboss-platform' ),
 				'type'              => 'checkbox',
 				'default'           => absint( bp_get_option( 'bp_search_albums', 0 ) ),
 				'sanitize_callback' => 'absint',
@@ -216,18 +216,20 @@ function bb_search_register_network_search_fields() {
 				'order'             => 310,
 			)
 		);
+	}
 
-		// =====================================================================
-		// Videos.
-		// =====================================================================
+	// =========================================================================
+	// Videos (conditional).
+	// =========================================================================
+	if ( bp_is_active( 'video' ) ) {
 		bb_register_feature_field(
 			'search',
 			'network_search',
 			'network_search_components',
 			array(
 				'name'              => 'bp_search_videos',
-				'label'             => __( 'Videos', 'buddyboss' ),
-				'description'       => __( 'Allow video searching', 'buddyboss' ),
+				'label'             => __( 'Videos', 'buddyboss-platform' ),
+				'description'       => __( 'Allow video searching', 'buddyboss-platform' ),
 				'type'              => 'toggle',
 				'default'           => absint( bp_get_option( 'bp_search_videos', 0 ) ),
 				'sanitize_callback' => 'absint',
@@ -246,8 +248,8 @@ function bb_search_register_network_search_fields() {
 			'network_search_components',
 			array(
 				'name'              => 'bp_search_documents',
-				'label'             => __( 'Documents', 'buddyboss' ),
-				'description'       => __( 'Allow document searching', 'buddyboss' ),
+				'label'             => __( 'Documents', 'buddyboss-platform' ),
+				'description'       => __( 'Allow document searching', 'buddyboss-platform' ),
 				'type'              => 'toggle',
 				'default'           => absint( bp_get_option( 'bp_search_documents', 0 ) ),
 				'sanitize_callback' => 'absint',
@@ -262,7 +264,7 @@ function bb_search_register_network_search_fields() {
 			'network_search_components',
 			array(
 				'name'              => 'bp_search_folders',
-				'label'             => __( 'Folders', 'buddyboss' ),
+				'label'             => __( 'Folders', 'buddyboss-platform' ),
 				'type'              => 'checkbox',
 				'default'           => absint( bp_get_option( 'bp_search_folders', 0 ) ),
 				'sanitize_callback' => 'absint',
@@ -282,8 +284,8 @@ function bb_search_register_network_search_fields() {
 			'network_search_components',
 			array(
 				'name'              => 'bp_search_activity',
-				'label'             => __( 'Activity', 'buddyboss' ),
-				'description'       => __( 'Allow activity searching', 'buddyboss' ),
+				'label'             => __( 'Activity', 'buddyboss-platform' ),
+				'description'       => __( 'Allow activity searching', 'buddyboss-platform' ),
 				'type'              => 'toggle',
 				'default'           => absint( bp_get_option( 'bp_search_activity', 1 ) ),
 				'sanitize_callback' => 'absint',
@@ -298,7 +300,7 @@ function bb_search_register_network_search_fields() {
 			'network_search_components',
 			array(
 				'name'              => 'bp_search_activity_comments',
-				'label'             => __( 'Activity comments', 'buddyboss' ),
+				'label'             => __( 'Activity comments', 'buddyboss-platform' ),
 				'type'              => 'checkbox',
 				'default'           => absint( bp_get_option( 'bp_search_activity_comments', 1 ) ),
 				'sanitize_callback' => 'absint',

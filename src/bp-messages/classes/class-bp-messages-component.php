@@ -187,7 +187,7 @@ class BP_Messages_Component extends BP_Component {
 				'slug'                  => BP_MESSAGES_SLUG,
 				'has_directory'         => false,
 				'notification_callback' => 'messages_format_notifications',
-				'search_string'         => __( 'Search Messages&hellip;', 'buddyboss' ),
+				'search_string'         => __( 'Search Messages&hellip;', 'buddyboss-platform' ),
 				'global_tables'         => $global_tables,
 				'meta_tables'           => $meta_tables,
 			)
@@ -219,14 +219,14 @@ class BP_Messages_Component extends BP_Component {
 		if ( bp_is_user() && bp_user_has_access() ) {
 			$count     = bp_get_total_unread_messages_count( bp_displayed_user_id() );
 			$class     = ( 0 === $count ) ? 'no-count' : 'count';
-			$nav_name  = __( 'Messages', 'buddyboss' );
+			$nav_name  = __( 'Messages', 'buddyboss-platform' );
 			$nav_name .= sprintf(
 				' <span class="%s">%s</span>',
 				esc_attr( $class ),
 				bp_core_number_format( $count )
 			);
 		} else {
-			$nav_name = __( 'Messages', 'buddyboss' );
+			$nav_name = __( 'Messages', 'buddyboss-platform' );
 		}
 
 		// Add 'Messages' to the main navigation.
@@ -242,7 +242,7 @@ class BP_Messages_Component extends BP_Component {
 
 		// Add the subnav items to the profile.
 		$sub_nav[] = array(
-			'name'            => __( 'Messages', 'buddyboss' ),
+			'name'            => __( 'Messages', 'buddyboss-platform' ),
 			'slug'            => 'inbox',
 			'parent_url'      => $messages_link,
 			'parent_slug'     => $slug,
@@ -257,7 +257,7 @@ class BP_Messages_Component extends BP_Component {
 			if ( bp_is_user_messages() && bp_is_active( 'notifications' ) ) {
 				// Show "Actions" on the logged-in user's profile only.
 				$sub_nav[] = array(
-					'name'            => __( 'Actions', 'buddyboss' ),
+					'name'            => __( 'Actions', 'buddyboss-platform' ),
 					'slug'            => 'compose-action',
 					'parent_url'      => 'javascript:void(0);',
 					'parent_slug'     => $slug,
@@ -269,7 +269,7 @@ class BP_Messages_Component extends BP_Component {
 
 			// Show "Compose" on the logged-in user's profile only.
 			$sub_nav[] = array(
-				'name'            => __( 'New Message', 'buddyboss' ),
+				'name'            => __( 'New Message', 'buddyboss-platform' ),
 				'slug'            => 'compose',
 				'parent_url'      => $messages_link,
 				'parent_slug'     => $slug,
@@ -280,7 +280,7 @@ class BP_Messages_Component extends BP_Component {
 
 			// Show "Archived" on the logged-in user's profile only.
 			$sub_nav[] = array(
-				'name'            => __( 'Archived', 'buddyboss' ),
+				'name'            => __( 'Archived', 'buddyboss-platform' ),
 				'slug'            => 'archived',
 				'parent_url'      => $messages_link,
 				'parent_slug'     => $slug,
@@ -295,7 +295,7 @@ class BP_Messages_Component extends BP_Component {
 			 */
 			if ( bp_current_user_can( 'bp_moderate' ) ) {
 				$sub_nav[] = array(
-					'name'            => __( 'Notices', 'buddyboss' ),
+					'name'            => __( 'Notices', 'buddyboss-platform' ),
 					'slug'            => 'notices',
 					'parent_url'      => $messages_link,
 					'parent_slug'     => $slug,
@@ -327,17 +327,17 @@ class BP_Messages_Component extends BP_Component {
 			if ( ! empty( $count ) ) {
 				$title = sprintf(
 					/* translators: %s: Unread message count for the current user */
-					__( 'Messages %s', 'buddyboss' ),
+					__( 'Messages %s', 'buddyboss-platform' ),
 					'<span class="count">' . bp_core_number_format( $count ) . '</span>'
 				);
 				$inbox = sprintf(
 					/* translators: %s: Unread message count for the current user */
-					__( 'Messages %s', 'buddyboss' ),
+					__( 'Messages %s', 'buddyboss-platform' ),
 					'<span class="count">' . bp_core_number_format( $count ) . '</span>'
 				);
 			} else {
-				$title = __( 'Messages', 'buddyboss' );
-				$inbox = __( 'Messages', 'buddyboss' );
+				$title = __( 'Messages', 'buddyboss-platform' );
+				$inbox = __( 'Messages', 'buddyboss-platform' );
 			}
 
 			// Add main Messages menu.
@@ -361,7 +361,7 @@ class BP_Messages_Component extends BP_Component {
 			$wp_admin_nav[] = array(
 				'parent'   => 'my-account-' . $this->id,
 				'id'       => 'my-account-' . $this->id . '-compose',
-				'title'    => __( 'New Message', 'buddyboss' ),
+				'title'    => __( 'New Message', 'buddyboss-platform' ),
 				'href'     => trailingslashit( $messages_link . 'compose' ),
 				'position' => 30,
 			);
@@ -371,7 +371,7 @@ class BP_Messages_Component extends BP_Component {
 				$wp_admin_nav[] = array(
 					'parent'   => 'my-account-' . $this->id,
 					'id'       => 'my-account-' . $this->id . '-notices',
-					'title'    => __( 'Site Notices', 'buddyboss' ),
+					'title'    => __( 'Site Notices', 'buddyboss-platform' ),
 					'href'     => trailingslashit( $messages_link . 'notices' ),
 					'position' => 90,
 				);
@@ -390,13 +390,14 @@ class BP_Messages_Component extends BP_Component {
 			$bp = buddypress();
 
 			if ( bp_is_my_profile() ) {
-				$bp->bp_options_title = __( 'My Messages', 'buddyboss' );
+				$bp->bp_options_title = __( 'My Messages', 'buddyboss-platform' );
 			} else {
 				$bp->bp_options_avatar = bp_core_fetch_avatar(
 					array(
 						'item_id' => bp_displayed_user_id(),
 						'type'    => 'thumb',
-						'alt'     => sprintf( __( 'Profile photo of %s', 'buddyboss' ), bp_get_displayed_user_fullname() ),
+						/* translators: %s: member display name. */
+						'alt'     => sprintf( __( 'Profile photo of %s', 'buddyboss-platform' ), bp_get_displayed_user_fullname() ),
 					)
 				);
 				$bp->bp_options_title  = bp_get_displayed_user_fullname();

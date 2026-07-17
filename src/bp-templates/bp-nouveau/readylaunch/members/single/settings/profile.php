@@ -34,7 +34,7 @@ bp_nouveau_member_hook( 'before', 'settings_template' ); ?>
 					<thead>
 					<tr>
 						<th class="title field-group-name"><?php bp_the_profile_group_name(); ?></th>
-						<th class="title"><?php esc_html_e( 'Visibility', 'buddyboss' ); ?></th>
+						<th class="title"><?php esc_html_e( 'Visibility', 'buddyboss-platform' ); ?></th>
 					</tr>
 					</thead>
 
@@ -48,7 +48,7 @@ bp_nouveau_member_hook( 'before', 'settings_template' ); ?>
 							<td class="field-name"><?php bp_the_profile_field_name(); ?></td>
 							<?php if ( $is_group_repeater ) : ?>
 								<td class="field-visibility">
-									<a title="<?php esc_html_e( 'Manage Privacy', 'buddyboss' ); ?>" href="<?php echo esc_url( $group_url ); ?>" ><?php esc_html_e( 'Manage Privacy', 'buddyboss' ); ?></a>
+									<a title="<?php esc_html_e( 'Manage Privacy', 'buddyboss-platform' ); ?>" href="<?php echo esc_url( $group_url ); ?>" ><?php esc_html_e( 'Manage Privacy', 'buddyboss-platform' ); ?></a>
 								</td>
 							<?php else : ?>
 								<td class="field-visibility"><?php bp_profile_settings_visibility_select(); ?></td>

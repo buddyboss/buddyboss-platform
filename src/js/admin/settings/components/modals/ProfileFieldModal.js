@@ -392,7 +392,7 @@ export function ProfileFieldModal( {
 
 		if ( fieldTypes.multi_fields && fieldTypes.multi_fields.length > 0 ) {
 			result.push( {
-				label: __( 'Multi Fields', 'buddyboss' ),
+				label: __( 'Multi Fields', 'buddyboss-platform' ),
 				options: fieldTypes.multi_fields.map( function ( ft ) {
 					return {
 						label: decodeEntities( ft.label ),
@@ -405,7 +405,7 @@ export function ProfileFieldModal( {
 
 		if ( fieldTypes.single_fields && fieldTypes.single_fields.length > 0 ) {
 			result.push( {
-				label: __( 'Single Fields', 'buddyboss' ),
+				label: __( 'Single Fields', 'buddyboss-platform' ),
 				options: fieldTypes.single_fields.map( function ( ft ) {
 					return {
 						label: decodeEntities( ft.label ),
@@ -605,18 +605,18 @@ export function ProfileFieldModal( {
 	 */
 	function handleSave() {
 		if ( ! name.trim() ) {
-			setError( __( 'Field name is required.', 'buddyboss' ) );
+			setError( __( 'Field name is required.', 'buddyboss-platform' ) );
 			return;
 		}
 
 		// Singleton check (applies to both new and type-changed fields).
 		if ( isSingletonExists( type ) ) {
 			var singletonMessages = {
-				gender: __( 'You can only have one instance of the "Gender" profile field.', 'buddyboss' ),
-				socialnetworks: __( 'You can only have one instance of the "Social Network" profile field.', 'buddyboss' ),
-				membertypes: __( 'You can only have one instance of the "Profile Type" profile field.', 'buddyboss' ),
+				gender: __( 'You can only have one instance of the "Gender" profile field.', 'buddyboss-platform' ),
+				socialnetworks: __( 'You can only have one instance of the "Social Network" profile field.', 'buddyboss-platform' ),
+				membertypes: __( 'You can only have one instance of the "Profile Type" profile field.', 'buddyboss-platform' ),
 			};
-			setError( singletonMessages[ type ] || __( 'This field type can only have one instance.', 'buddyboss' ) );
+			setError( singletonMessages[ type ] || __( 'This field type can only have one instance.', 'buddyboss-platform' ) );
 			return;
 		}
 
@@ -679,7 +679,7 @@ export function ProfileFieldModal( {
 		if ( 'datebox' === type ) {
 			// Validate range: start must be before end.
 			if ( 'absolute' === rangeType && parseInt( rangeAbsoluteStart, 10 ) >= parseInt( rangeAbsoluteEnd, 10 ) ) {
-				setToast( { status: 'error', message: __( 'Start year must be before end year.', 'buddyboss' ) } );
+				setToast( { status: 'error', message: __( 'Start year must be before end year.', 'buddyboss-platform' ) } );
 				setIsSaving( false );
 				return;
 			}
@@ -688,7 +688,7 @@ export function ProfileFieldModal( {
 				var resolvedStart = CURRENT_YEAR + ( 'past' === rangeRelativeStartType ? -1 : 1 ) * parseInt( rangeRelativeStart, 10 );
 				var resolvedEnd = CURRENT_YEAR + ( 'past' === rangeRelativeEndType ? -1 : 1 ) * parseInt( rangeRelativeEnd, 10 );
 				if ( resolvedStart >= resolvedEnd ) {
-					setToast( { status: 'error', message: __( 'Start year must be before end year.', 'buddyboss' ) } );
+					setToast( { status: 'error', message: __( 'Start year must be before end year.', 'buddyboss-platform' ) } );
 					setIsSaving( false );
 					return;
 				}
@@ -720,16 +720,16 @@ export function ProfileFieldModal( {
 				if ( response.success ) {
 					setToast( {
 						status: 'success',
-						message: response.data.message || __( 'Field saved.', 'buddyboss' ),
+						message: response.data.message || __( 'Field saved.', 'buddyboss-platform' ),
 					} );
 					onSave();
 				} else {
-					setError( ( response.data && response.data.message ) || __( 'Failed to save field.', 'buddyboss' ) );
+					setError( ( response.data && response.data.message ) || __( 'Failed to save field.', 'buddyboss-platform' ) );
 				}
 			} )
 			.catch( function ( err ) {
 				setIsSaving( false );
-				setError( err.message || __( 'Failed to save field.', 'buddyboss' ) );
+				setError( err.message || __( 'Failed to save field.', 'buddyboss-platform' ) );
 			} );
 	}
 
@@ -742,11 +742,11 @@ export function ProfileFieldModal( {
 		<Modal
 			title={ isEditing
 				? ( groupName
-					? sprintf( __( 'Edit Field - %s', 'buddyboss' ), decodeEntities( groupName ) )
-					: __( 'Edit Field', 'buddyboss' ) )
+					? sprintf( __( 'Edit Field - %s', 'buddyboss-platform' ), decodeEntities( groupName ) )
+					: __( 'Edit Field', 'buddyboss-platform' ) )
 				: ( groupName
-					? sprintf( __( 'Add New Field - %s', 'buddyboss' ), decodeEntities( groupName ) )
-					: __( 'Add New Field', 'buddyboss' ) )
+					? sprintf( __( 'Add New Field - %s', 'buddyboss-platform' ), decodeEntities( groupName ) )
+					: __( 'Add New Field', 'buddyboss-platform' ) )
 			}
 			onRequestClose={ onClose }
 			className="bb-pf-field-modal bb-admin-settings-modal"
@@ -762,10 +762,10 @@ export function ProfileFieldModal( {
 				<div className="bb-admin-settings--divided-section">
 					{ /* Name */ }
 					<TextControl
-						label={ __( 'Name', 'buddyboss' ) }
+						label={ __( 'Name', 'buddyboss-platform' ) }
 						value={ name }
 						onChange={ setName }
-						placeholder={ __( 'Enter field name', 'buddyboss' ) }
+						placeholder={ __( 'Enter field name', 'buddyboss-platform' ) }
 						required
 					/>
 				</div>
@@ -775,7 +775,7 @@ export function ProfileFieldModal( {
 					{ /* Type */ }
 					<CustomSelectControl
 					className="bb-custom-select__type"
-						label={ __( 'Type', 'buddyboss' ) }
+						label={ __( 'Type', 'buddyboss-platform' ) }
 						value={ type }
 						groups={ typeGroups }
 						onChange={ function ( val ) {
@@ -783,7 +783,7 @@ export function ProfileFieldModal( {
 								setType( val );
 							}
 						} }
-						help={ typeDescriptions[ type ] || __( 'Select the input field type members will use to enter information.', 'buddyboss' ) }
+						help={ typeDescriptions[ type ] || __( 'Select the input field type members will use to enter information.', 'buddyboss-platform' ) }
 					/>
 
 					{ /* Options (for multi-option types) */ }
@@ -812,13 +812,13 @@ export function ProfileFieldModal( {
 																			<i
 																				className="bb-icons-rl bb-icons-rl-list"
 																				{ ...providedDrag.dragHandleProps }
-																				aria-label={ __( 'Reorder option', 'buddyboss' ) }
+																				aria-label={ __( 'Reorder option', 'buddyboss-platform' ) }
 																			></i>
 																			<input
 																				type="text"
 																				value={ option.name }
 																				onChange={ function ( e ) { updateOptionName( index, e.target.value ); } }
-																				placeholder={ __( 'Option label', 'buddyboss' ) }
+																				placeholder={ __( 'Option label', 'buddyboss-platform' ) }
 																				className="bb-pf-option-item__input"
 																			/>
 																		</div>
@@ -830,20 +830,20 @@ export function ProfileFieldModal( {
 																				// label but the underlying value never changes. Extra
 																				// admin-added options past index 2 have no fixed value.
 																				<span className="bb-pf-option-item__gender-value">
-																					{ 0 === index && __( 'Male', 'buddyboss' ) }
-																					{ 1 === index && __( 'Female', 'buddyboss' ) }
-																					{ 2 === index && __( 'Other', 'buddyboss' ) }
+																					{ 0 === index && __( 'Male', 'buddyboss-platform' ) }
+																					{ 1 === index && __( 'Female', 'buddyboss-platform' ) }
+																					{ 2 === index && __( 'Other', 'buddyboss-platform' ) }
 																				</span>
 																			) : (
 																				<button
 																					type="button"
 																					className={ 'bb-pf-option-item__default' + ( option.is_default ? ' bb-pf-option-item__default--selected' : '' ) }
 																					onClick={ function () { toggleDefaultOption( index, allowMultiDefault ); } }
-																					aria-label={ __( 'Set as default value', 'buddyboss' ) }
+																					aria-label={ __( 'Set as default value', 'buddyboss-platform' ) }
 																				>
 																					<span className={ allowMultiDefault ? "bb-pf-option-item__checkbox" : "bb-pf-option-item__radio" }></span>
 																					<span className="bb-pf-option-item__default-label">
-																						{ __( 'Default Value', 'buddyboss' ) }
+																						{ __( 'Default Value', 'buddyboss-platform' ) }
 																					</span>
 																				</button>
 																			) }
@@ -851,7 +851,7 @@ export function ProfileFieldModal( {
 																				type="button"
 																				className="bb-pf-option-item__remove"
 																				onClick={ function () { removeOption( index ); } }
-																				aria-label={ __( 'Remove option', 'buddyboss' ) }
+																				aria-label={ __( 'Remove option', 'buddyboss-platform' ) }
 																				disabled={ 'gender' === type ? index < 2 : 0 === index }
 																			>
 																				<i className="bb-icons-rl bb-icons-rl-trash" aria-hidden="true"></i>
@@ -875,7 +875,7 @@ export function ProfileFieldModal( {
 								onClick={ addOption }
 							>
 								<i className="bb-icons-rl bb-icons-rl-plus" aria-hidden="true"></i>
-								{ __( 'Add Another Option', 'buddyboss' ) }
+								{ __( 'Add Another Option', 'buddyboss-platform' ) }
 							</Button>
 						</div>
 					) }
@@ -884,11 +884,11 @@ export function ProfileFieldModal( {
 					{ 'telephone' === type && (
 						<div className="bb-pf-field-telephone-settings">
 							<RadioControl
-								label={ __( 'Phone Format', 'buddyboss' ) }
+								label={ __( 'Phone Format', 'buddyboss-platform' ) }
 								selected={ phoneFormat }
 								options={ [
-									{ label: __( 'International', 'buddyboss' ), value: 'international' },
-									{ label: __( '(###) ### ####', 'buddyboss' ), value: 'standard' },
+									{ label: __( 'International', 'buddyboss-platform' ), value: 'international' },
+									{ label: __( '(###) ### ####', 'buddyboss-platform' ), value: 'standard' },
 								] }
 								onChange={ setPhoneFormat }
 							/>
@@ -924,7 +924,7 @@ export function ProfileFieldModal( {
 																			<i
 																				className="bb-icons-rl bb-icons-rl-list"
 																				{ ...providedDrag.dragHandleProps }
-																				aria-label={ __( 'Reorder option', 'buddyboss' ) }
+																				aria-label={ __( 'Reorder option', 'buddyboss-platform' ) }
 																			></i>
 																			<CustomSelectControl
 																				className="bb-pf-option-item__select"
@@ -947,7 +947,7 @@ export function ProfileFieldModal( {
 																				type="button"
 																				className="bb-pf-option-item__remove"
 																				onClick={ function () { removeSocialNetwork( index ); } }
-																				aria-label={ __( 'Remove option', 'buddyboss' ) }
+																				aria-label={ __( 'Remove option', 'buddyboss-platform' ) }
 																				disabled={ 0 === index }
 																			>
 																				<i className="bb-icons-rl bb-icons-rl-trash" aria-hidden="true"></i>
@@ -972,7 +972,7 @@ export function ProfileFieldModal( {
 									onClick={ addSocialNetwork }
 								>
 									<i className="bb-icons-rl bb-icons-rl-plus" aria-hidden="true"></i>
-									{ __( 'Add Another Option', 'buddyboss' ) }
+									{ __( 'Add Another Option', 'buddyboss-platform' ) }
 								</Button>
 							) }
 						</div>
@@ -986,7 +986,7 @@ export function ProfileFieldModal( {
 					<div className="bb-pf-field-datebox-settings bb-admin-settings--divided-section">
 						<fieldset className="bb-pf-datebox-format">
 							<legend className="bb-pf-datebox-format__legend">
-								{ __( 'Date format', 'buddyboss' ) }
+								{ __( 'Date format', 'buddyboss-platform' ) }
 							</legend>
 							<div className="bb-pf-datebox-format__options">
 								{ DATE_FORMAT_OPTIONS.map( function ( opt ) {
@@ -1020,14 +1020,14 @@ export function ProfileFieldModal( {
 											onChange={ function () { setDateFormat( 'elapsed' ); } }
 										/>
 										<span className="bb-pf-datebox-format__example">
-											{ __( 'Time elapsed', 'buddyboss' ) }
+											{ __( 'Time elapsed', 'buddyboss-platform' ) }
 										</span>
 										<code className="bb-pf-datebox-format__code">
-											{ __( '4 years ago', 'buddyboss' ) }
+											{ __( '4 years ago', 'buddyboss-platform' ) }
 										</code>
 										{ ', ' }
 										<code className="bb-pf-datebox-format__code">
-											{ __( '4 years from now', 'buddyboss' ) }
+											{ __( '4 years from now', 'buddyboss-platform' ) }
 										</code>
 									</label>
 								</div>
@@ -1041,7 +1041,7 @@ export function ProfileFieldModal( {
 											onChange={ function () { setDateFormat( 'custom' ); } }
 										/>
 										<span className="bb-pf-datebox-format__example">
-											{ __( 'Custom:', 'buddyboss' ) }
+											{ __( 'Custom:', 'buddyboss-platform' ) }
 										</span>
 										<input
 											type="text"
@@ -1059,17 +1059,17 @@ export function ProfileFieldModal( {
 								target="_blank"
 								rel="noopener noreferrer"
 							>
-								{ __( 'Documentation on date and time formatting.', 'buddyboss' ) }
+								{ __( 'Documentation on date and time formatting.', 'buddyboss-platform' ) }
 							</a>
 						</fieldset>
 
 						<div className="bb-pf-datebox-range">
 							<RadioControl
-								label={ __( 'Range', 'buddyboss' ) }
+								label={ __( 'Range', 'buddyboss-platform' ) }
 								selected={ rangeType }
 								options={ [
-									{ label: __( 'Absolute', 'buddyboss' ), value: 'absolute' },
-									{ label: __( 'Relative', 'buddyboss' ), value: 'relative' },
+									{ label: __( 'Absolute', 'buddyboss-platform' ), value: 'absolute' },
+									{ label: __( 'Relative', 'buddyboss-platform' ), value: 'relative' },
 								] }
 								onChange={ setRangeType }
 							/>
@@ -1077,13 +1077,13 @@ export function ProfileFieldModal( {
 							{ 'absolute' === rangeType && (
 								<div className="bb-pf-datebox-range__values">
 									<TextControl
-										label={ __( 'Start', 'buddyboss' ) }
+										label={ __( 'Start', 'buddyboss-platform' ) }
 										type="number"
 										value={ rangeAbsoluteStart }
 										onChange={ setRangeAbsoluteStart }
 									/>
 									<TextControl
-										label={ __( 'End', 'buddyboss' ) }
+										label={ __( 'End', 'buddyboss-platform' ) }
 										type="number"
 										value={ rangeAbsoluteEnd }
 										onChange={ setRangeAbsoluteEnd }
@@ -1095,34 +1095,34 @@ export function ProfileFieldModal( {
 								<div className="bb-pf-datebox-range__values">
 									<div className="bb-pf-datebox-range__relative-row">
 										<TextControl
-											label={ __( 'Start', 'buddyboss' ) }
+											label={ __( 'Start', 'buddyboss-platform' ) }
 											type="number"
 											value={ rangeRelativeStart }
 											onChange={ setRangeRelativeStart }
 										/>
 										<SelectControl
-											label={ __( 'Direction', 'buddyboss' ) }
+											label={ __( 'Direction', 'buddyboss-platform' ) }
 											value={ rangeRelativeStartType }
 											options={ [
-												{ label: __( 'years ago', 'buddyboss' ), value: 'past' },
-												{ label: __( 'years from now', 'buddyboss' ), value: 'future' },
+												{ label: __( 'years ago', 'buddyboss-platform' ), value: 'past' },
+												{ label: __( 'years from now', 'buddyboss-platform' ), value: 'future' },
 											] }
 											onChange={ setRangeRelativeStartType }
 										/>
 									</div>
 									<div className="bb-pf-datebox-range__relative-row">
 										<TextControl
-											label={ __( 'End', 'buddyboss' ) }
+											label={ __( 'End', 'buddyboss-platform' ) }
 											type="number"
 											value={ rangeRelativeEnd }
 											onChange={ setRangeRelativeEnd }
 										/>
 										<SelectControl
-											label={ __( 'Direction', 'buddyboss' ) }
+											label={ __( 'Direction', 'buddyboss-platform' ) }
 											value={ rangeRelativeEndType }
 											options={ [
-												{ label: __( 'years ago', 'buddyboss' ), value: 'past' },
-												{ label: __( 'years from now', 'buddyboss' ), value: 'future' },
+												{ label: __( 'years ago', 'buddyboss-platform' ), value: 'past' },
+												{ label: __( 'years from now', 'buddyboss-platform' ), value: 'future' },
 											] }
 											onChange={ setRangeRelativeEndType }
 										/>
@@ -1135,44 +1135,44 @@ export function ProfileFieldModal( {
 
 				{ /* Alternate Title */ }
 				<TextControl
-					label={ __( 'Alternate Title (Optional)', 'buddyboss' ) }
+					label={ __( 'Alternate Title (Optional)', 'buddyboss-platform' ) }
 					value={ alternateName }
 					onChange={ setAlternateName }
-					placeholder={ __( 'Enter alternate text', 'buddyboss' ) }
-					help={ __( 'Appears as the input title. If left blank, the field name will be used instead.', 'buddyboss' ) }
+					placeholder={ __( 'Enter alternate text', 'buddyboss-platform' ) }
+					help={ __( 'Appears as the input title. If left blank, the field name will be used instead.', 'buddyboss-platform' ) }
 				/>
 
 				{ /* Placeholder (for text-like types) */ }
 				{ showPlaceholder && ! isDefaultField && (
 					<TextControl
-						label={ __( 'Placeholder Text (Optional)', 'buddyboss' ) }
+						label={ __( 'Placeholder Text (Optional)', 'buddyboss-platform' ) }
 						value={ placeholder }
 						onChange={ setPlaceholder }
-						placeholder={ __( 'Enter placeholder text', 'buddyboss' ) }
-						help={ __( 'Appears inside the input field when no input is entered.', 'buddyboss' ) }
+						placeholder={ __( 'Enter placeholder text', 'buddyboss-platform' ) }
+						help={ __( 'Appears inside the input field when no input is entered.', 'buddyboss-platform' ) }
 					/>
 				) }
 
 				{ /* Instructions (description) */ }
 				<TextareaControl
-					label={ __( 'Instructions (Optional)', 'buddyboss' ) }
-					placeholder={ __( 'Enter instructions text', 'buddyboss' ) }
+					label={ __( 'Instructions (Optional)', 'buddyboss-platform' ) }
+					placeholder={ __( 'Enter instructions text', 'buddyboss-platform' ) }
 					value={ description }
 					onChange={ setDescription }
-					help={ __( 'Appears below the input. Provide instructions or examples for how users should respond.', 'buddyboss' ) }
+					help={ __( 'Appears below the input. Provide instructions or examples for how users should respond.', 'buddyboss-platform' ) }
 				/>
 
 				{ /* Member Types */ }
 				{ memberTypes.length > 0 && ! isDefaultField && (
 					<div className="bb-pf-field-member-types">
 						<SelectControl
-							label={ __( 'Profile Types', 'buddyboss' ) }
-							help={ __( 'Select which profile types this field should be available to.', 'buddyboss' ) }
+							label={ __( 'Profile Types', 'buddyboss-platform' ) }
+							help={ __( 'Select which profile types this field should be available to.', 'buddyboss-platform' ) }
 							value={ memberTypeMode }
 							options={ [
-								{ label: __( 'All Profile Types', 'buddyboss' ), value: 'all' },
-								{ label: __( 'Selected Profile Types', 'buddyboss' ), value: 'selected' },
-								{ label: __( 'No Profile Type Users', 'buddyboss' ), value: 'none' },
+								{ label: __( 'All Profile Types', 'buddyboss-platform' ), value: 'all' },
+								{ label: __( 'Selected Profile Types', 'buddyboss-platform' ), value: 'selected' },
+								{ label: __( 'No Profile Type Users', 'buddyboss-platform' ), value: 'none' },
 							] }
 							onChange={ setMemberTypeMode }
 						/>
@@ -1197,7 +1197,7 @@ export function ProfileFieldModal( {
 				{ visibilityLevels.length > 0 && ! isDefaultField && (
 					<div className="bb-pf-field-visibility bb-admin-settings--divided-section">
 						<SelectControl
-							label={ __( 'Visibility', 'buddyboss' ) }
+							label={ __( 'Visibility', 'buddyboss-platform' ) }
 							value={ visibility }
 							options={ visibilityLevels.map( function ( level ) {
 								return { label: decodeEntities( level.label ), value: level.id };
@@ -1207,8 +1207,8 @@ export function ProfileFieldModal( {
 						<RadioControl
 							selected={ allowCustomVisibility }
 							options={ [
-								{ label: __( 'Allow members to override', 'buddyboss' ), value: 'allowed' },
-								{ label: __( 'Enforce Visibility', 'buddyboss' ), value: 'disabled' },
+								{ label: __( 'Allow members to override', 'buddyboss-platform' ), value: 'allowed' },
+								{ label: __( 'Enforce Visibility', 'buddyboss-platform' ), value: 'disabled' },
 							] }
 							onChange={ setAllowCustomVisibility }
 						/>
@@ -1218,7 +1218,7 @@ export function ProfileFieldModal( {
 				{ /* Required */ }
 				{ ! isDefaultField && (
 					<CheckboxControl
-						label={ __( 'Make this field required', 'buddyboss' ) }
+						label={ __( 'Make this field required', 'buddyboss-platform' ) }
 						checked={ isRequired }
 						onChange={ setIsRequired }
 					/>
@@ -1232,7 +1232,7 @@ export function ProfileFieldModal( {
 					onClick={ onClose }
 					disabled={ isSaving }
 				>
-					{ __( 'Cancel', 'buddyboss' ) }
+					{ __( 'Cancel', 'buddyboss-platform' ) }
 				</Button>
 				<Button
 					variant="primary"
@@ -1240,7 +1240,7 @@ export function ProfileFieldModal( {
 					isBusy={ isSaving }
 					disabled={ isSaving || ! name.trim() }
 				>
-					{ __( 'Save', 'buddyboss' ) }
+					{ __( 'Save', 'buddyboss-platform' ) }
 				</Button>
 			</div>
 		</Modal>

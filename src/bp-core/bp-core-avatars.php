@@ -352,7 +352,7 @@ function bp_core_fetch_avatar( $args = '' ) {
 
 	// Get a fallback for the 'alt' parameter, create html output.
 	if ( empty( $params['alt'] ) ) {
-		$params['alt'] = __( 'Profile Photo', 'buddyboss' );
+		$params['alt'] = __( 'Profile Photo', 'buddyboss-platform' );
 	}
 	$html_alt = ' alt="' . esc_attr( $params['alt'] ) . '"';
 
@@ -932,13 +932,13 @@ function bp_core_delete_existing_avatar( $args = '' ) {
 	if ( $av_dir = opendir( $avatar_folder_dir ) ) {
 		while ( false !== ( $avatar_file = readdir( $av_dir ) ) ) {
 			if ( ( preg_match( '/-bpfull/', $avatar_file ) || preg_match( '/-bpthumb/', $avatar_file ) ) && '.' != $avatar_file && '..' != $avatar_file ) {
-				@unlink( $avatar_folder_dir . '/' . $avatar_file );
+				@wp_delete_file( $avatar_folder_dir . '/' . $avatar_file );
 			}
 		}
 		closedir( $av_dir );
 	}
 
-	@rmdir( $avatar_folder_dir );
+	@rmdir( $avatar_folder_dir ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_rmdir -- Removing emptied avatar directory; WP_Filesystem offers no streaming equivalent.
 
 	/**
 	 * Fires after deleting an existing avatar.
@@ -1071,7 +1071,8 @@ function bp_core_avatar_handle_upload( $file, $upload_dir_filter ) {
 
 	// In case of an error, stop the process and display a feedback to the user.
 	if ( ! empty( $bp->avatar_admin->original['error'] ) ) {
-		bp_core_add_message( sprintf( __( 'Upload Failed! Error was: %s', 'buddyboss' ), $bp->avatar_admin->original['error'] ), 'error' );
+		/* translators: %s: the upload error message. */
+		bp_core_add_message( sprintf( __( 'Upload Failed! Error was: %s', 'buddyboss-platform' ), $bp->avatar_admin->original['error'] ), 'error' );
 		return false;
 	}
 
@@ -1088,7 +1089,8 @@ function bp_core_avatar_handle_upload( $file, $upload_dir_filter ) {
 	$bp->avatar_admin->image   = new stdClass();
 
 	if ( is_wp_error( $bp->avatar_admin->resized ) ) {
-		bp_core_add_message( sprintf( __( 'Upload Error: %s', 'buddyboss' ), $bp->avatar_admin->resized->get_error_message() ), 'error' );
+		/* translators: %s: the upload error message. */
+		bp_core_add_message( sprintf( __( 'Upload Error: %s', 'buddyboss-platform' ), $bp->avatar_admin->resized->get_error_message() ), 'error' );
 		return false;
 	}
 
@@ -1099,18 +1101,20 @@ function bp_core_avatar_handle_upload( $file, $upload_dir_filter ) {
 	} else {
 		$bp->avatar_admin->image->file = $bp->avatar_admin->resized['path'];
 		$bp->avatar_admin->image->dir  = str_replace( $upload_path, '', $bp->avatar_admin->resized['path'] );
-		@unlink( $bp->avatar_admin->original['file'] );
+		@wp_delete_file( $bp->avatar_admin->original['file'] );
 	}
 
 	// Check for WP_Error on what should be an image.
 	if ( is_wp_error( $bp->avatar_admin->image->dir ) ) {
-		bp_core_add_message( sprintf( __( 'Upload Error: %s', 'buddyboss' ), $bp->avatar_admin->image->dir->get_error_message() ), 'error' );
+		/* translators: %s: the upload error message. */
+		bp_core_add_message( sprintf( __( 'Upload Error: %s', 'buddyboss-platform' ), $bp->avatar_admin->image->dir->get_error_message() ), 'error' );
 		return false;
 	}
 
 	// If the uploaded image is smaller than the "full" dimensions, throw a warning.
 	if ( $avatar_attachment->is_too_small( $bp->avatar_admin->image->file ) ) {
-		bp_core_add_message( sprintf( __( 'For best results, upload an image that is %1$spx by %2$spx or larger.', 'buddyboss' ), bp_core_avatar_full_width(), bp_core_avatar_full_height() ), 'error' );
+		/* translators: 1: recommended width in pixels, 2: recommended height in pixels. */
+		bp_core_add_message( sprintf( __( 'For best results, upload an image that is %1$spx by %2$spx or larger.', 'buddyboss-platform' ), bp_core_avatar_full_width(), bp_core_avatar_full_height() ), 'error' );
 	}
 
 	// Set the url value for the image.
@@ -1240,7 +1244,7 @@ function bp_avatar_ajax_upload() {
 
 	if ( empty( $avatar ) ) {
 		// Default upload error.
-		$message = __( 'Upload failed.', 'buddyboss' );
+		$message = __( 'Upload failed.', 'buddyboss-platform' );
 
 		// Use the template message if set.
 		if ( ! empty( $feedback_message ) ) {

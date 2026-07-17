@@ -289,7 +289,7 @@ if ( ! class_exists( 'BB_WPML_Helpers' ) ) {
 						AND t.element_id = p.ID
 					)";
 
-				$sql_query = $wpdb->prepare( $sql_query, $args['post_type'], ICL_LANGUAGE_CODE );
+				$sql_query = $wpdb->prepare( $sql_query, $args['post_type'], ICL_LANGUAGE_CODE ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Appended fragment uses %s placeholders for post_type/language_code; table from $wpdb->prefix.
 			} else {
 				add_filter( 'wpml_post_parse_query', array( $this, 'bb_remove_wpml_post_parse_query' ) );
 			}

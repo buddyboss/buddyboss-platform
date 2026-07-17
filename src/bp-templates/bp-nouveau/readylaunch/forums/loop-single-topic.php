@@ -34,7 +34,7 @@ if ( function_exists( 'bbp_is_forum_group_forum' ) && bbp_is_forum_group_forum( 
 						'html'    => true,
 						'alt'     => sprintf(
 							/* translators: %s is the group name */
-							__( '%s logo', 'buddyboss' ),
+							__( '%s logo', 'buddyboss-platform' ),
 							$group->name
 						),
 						'class'   => 'bb-rl-group-avatar',
@@ -57,15 +57,15 @@ if ( function_exists( 'bbp_is_forum_group_forum' ) && bbp_is_forum_group_forum( 
 		<div class="bb-rl-topic-status-wrapper">
 
 			<?php if ( ! bbp_is_topic_open() ) { ?>
-				<span class="bb-rl-topic-state" data-balloon-pos="up" data-balloon="<?php esc_attr_e( 'Closed', 'buddyboss' ); ?>"><i class="bb-icons-rl-lock-simple bb-rl-topic-status closed"></i></span>
+				<span class="bb-rl-topic-state" data-balloon-pos="up" data-balloon="<?php esc_attr_e( 'Closed', 'buddyboss-platform' ); ?>"><i class="bb-icons-rl-lock-simple bb-rl-topic-status closed"></i></span>
 				<?php
 			}
 
 			if ( bbp_is_topic_super_sticky() ) {
 				?>
-				<span class="bb-rl-topic-state" data-balloon-pos="up" data-balloon="<?php esc_attr_e( 'Super Sticky', 'buddyboss' ); ?>"><i class="bb-icons-rl-push-pin bb-rl-topic-status super-sticky"></i></span>
+				<span class="bb-rl-topic-state" data-balloon-pos="up" data-balloon="<?php esc_attr_e( 'Super Sticky', 'buddyboss-platform' ); ?>"><i class="bb-icons-rl-push-pin bb-rl-topic-status super-sticky"></i></span>
 			<?php } elseif ( bbp_is_topic_sticky() ) { ?>
-				<span class="bb-rl-topic-state" data-balloon-pos="up" data-balloon="<?php esc_attr_e( 'Sticky', 'buddyboss' ); ?>"><i class="bb-icons-rl-push-pin bb-rl-topic-status sticky"></i></span>
+				<span class="bb-rl-topic-state" data-balloon-pos="up" data-balloon="<?php esc_attr_e( 'Sticky', 'buddyboss-platform' ); ?>"><i class="bb-icons-rl-push-pin bb-rl-topic-status sticky"></i></span>
 				<?php
 			}
 
@@ -73,7 +73,7 @@ if ( function_exists( 'bbp_is_forum_group_forum' ) && bbp_is_forum_group_forum( 
 				$is_subscribed = bbp_is_user_subscribed_to_topic( get_current_user_id(), bbp_get_topic_id() );
 				if ( $is_subscribed ) {
 					?>
-					<span class="bb-rl-topic-state" data-balloon-pos="up" data-balloon="<?php esc_attr_e( 'Subscribed', 'buddyboss' ); ?>"><i class="bb-icons-rl-rss"></i></span>
+					<span class="bb-rl-topic-state" data-balloon-pos="up" data-balloon="<?php esc_attr_e( 'Subscribed', 'buddyboss-platform' ); ?>"><i class="bb-icons-rl-rss"></i></span>
 					<?php
 				}
 
@@ -81,7 +81,7 @@ if ( function_exists( 'bbp_is_forum_group_forum' ) && bbp_is_forum_group_forum( 
 					?>
 					<div class="bb_more_options forum-dropdown bb-rl-context-wrap">
 
-						<a href="#" class="bb-rl-context-btn bb_more_options_action bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="More Options" aria-label="<?php esc_attr_e( 'More Options', 'buddyboss' ); ?>">
+						<a href="#" class="bb-rl-context-btn bb_more_options_action bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="More Options" aria-label="<?php esc_attr_e( 'More Options', 'buddyboss-platform' ); ?>">
 							<i class="bb-icons-rl-dots-three"></i>
 						</a>
 
@@ -129,7 +129,7 @@ if ( function_exists( 'bbp_is_forum_group_forum' ) && bbp_is_forum_group_forum( 
 			do_action( 'bbp_theme_before_topic_started_in' );
 			?>
 			<div class="bb-rl-topic-started-in">
-				<?php printf( wp_kses_post( '<a href="%1$s">%2$s%3$s</a>', 'buddyboss' ), bbp_get_forum_permalink( bbp_get_topic_forum_id() ), $group_avatar, bbp_get_forum_title( bbp_get_topic_forum_id() ) ); ?>
+				<?php printf( wp_kses_post( '<a href="%1$s">%2$s%3$s</a>' ), esc_url( bbp_get_forum_permalink( bbp_get_topic_forum_id() ) ), wp_kses_post( $group_avatar ), esc_html( bbp_get_forum_title( bbp_get_topic_forum_id() ) ) ); ?>
 			</div>
 			<?php
 			do_action( 'bbp_theme_after_topic_started_in' );
@@ -140,7 +140,7 @@ if ( function_exists( 'bbp_is_forum_group_forum' ) && bbp_is_forum_group_forum( 
 		</div>
 
 		<p class="bb-rl-topic-description">
-			<?php echo get_the_excerpt( bbp_get_topic_id() ); ?>
+			<?php echo wp_kses_post( get_the_excerpt( bbp_get_topic_id() ) ); ?>
 		</p>
 
 		<?php
@@ -217,7 +217,7 @@ if ( function_exists( 'bbp_is_forum_group_forum' ) && bbp_is_forum_group_forum( 
 
 				<?php do_action( 'bbp_theme_before_topic_started_by' ); ?>
 
-				<span class="bb-rl-topic-started-by"><?php printf( esc_html__( 'By:%1$s', 'buddyboss' ), bbp_get_topic_author_link( array( 'size' => '14' ) ) ); ?></span>
+				<span class="bb-rl-topic-started-by"><?php /* translators: %s: topic author link. */ printf( esc_html__( 'By:%1$s', 'buddyboss-platform' ), wp_kses_post( bbp_get_topic_author_link( array( 'size' => '14' ) ) ) ); ?></span>
 
 				<?php do_action( 'bbp_theme_after_topic_started_by' ); ?>
 

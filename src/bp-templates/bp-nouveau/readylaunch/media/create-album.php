@@ -21,13 +21,13 @@ defined( 'ABSPATH' ) || exit;
 				<div id="boss-media-create-album-popup" class="modal-container">
 
 					<header class="bb-model-header">
-						<h4><?php esc_html_e( 'Create new album', 'buddyboss' ); ?></h4>
+						<h4><?php esc_html_e( 'Create new album', 'buddyboss-platform' ); ?></h4>
 						<a class="bb-model-close-button" id="bp-media-create-album-close" href="#"><span class="bb-icon-l bb-icon-times"></span></a>
 					</header>
 
 					<div class="bb-field-wrap">
-						<label for="bb-album-title" class="bb-label"><?php esc_html_e( 'Title', 'buddyboss' ); ?></label>
-						<input id="bb-album-title" type="text" placeholder="<?php esc_html_e( 'Enter album title', 'buddyboss' ); ?>" />
+						<label for="bb-album-title" class="bb-label"><?php esc_html_e( 'Title', 'buddyboss-platform' ); ?></label>
+						<input id="bb-album-title" type="text" placeholder="<?php esc_html_e( 'Enter album title', 'buddyboss-platform' ); ?>" />
 					</div>
 
 					<?php
@@ -44,7 +44,7 @@ defined( 'ABSPATH' ) || exit;
 										<div class="dz-image">
 											<img data-dz-thumbnail />
 										</div>
-										<div class="dz-error-title"><?php esc_html_e( 'Upload Failed', 'buddyboss' ); ?></div>
+										<div class="dz-error-title"><?php esc_html_e( 'Upload Failed', 'buddyboss-platform' ); ?></div>
 										<div class="dz-details">
 											<div class="dz-filename"><span data-dz-name></span></div>
 											<div class="dz-size" data-dz-size></div>
@@ -76,7 +76,7 @@ defined( 'ABSPATH' ) || exit;
 								</select>
 							</div>
 						<?php endif; ?>
-						<a class="button" id="bp-media-create-album-submit" href="#"><?php esc_html_e( 'Create Album', 'buddyboss' ); ?></a>
+						<a class="button" id="bp-media-create-album-submit" href="#"><?php esc_html_e( 'Create Album', 'buddyboss-platform' ); ?></a>
 					</footer>
 
 				</div>

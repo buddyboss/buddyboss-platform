@@ -1,5 +1,8 @@
 <?php
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 use Behat\Behat\Context\ClosuredContextInterface,
 	Behat\Behat\Context\TranslatedContextInterface,
 	Behat\Behat\Context\BehatContext,
@@ -21,7 +24,7 @@ if ( file_exists( __DIR__ . '/utils.php' ) ) {
 			foreach ( $composer->autoload->files as $file ) {
 				$contents .= '  - ' . dirname( dirname( dirname( __FILE__ ) ) ) . '/' . $file . PHP_EOL;
 			}
-			@mkdir( sys_get_temp_dir() . '/wp-cli-package-test/' );
+			@mkdir( sys_get_temp_dir() . '/wp-cli-package-test/' ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_mkdir -- WP-CLI/Behat command context (stdout output, developer-supplied CLI args); not a web request runtime path.
 			$project_config = sys_get_temp_dir() . '/wp-cli-package-test/config.yml';
 			file_put_contents( $project_config, $contents );
 			putenv( 'WP_CLI_CONFIG_PATH=' . $project_config );
@@ -170,11 +173,11 @@ class FeatureContext extends BehatContext implements ClosuredContextInterface {
 
 		$result = Process::create( 'wp cli info', null, self::get_process_env_variables() )->run_check();
 		echo PHP_EOL;
-		echo $result->stdout;
+		echo $result->stdout; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- WP-CLI/Behat command context (stdout output, developer-supplied CLI args); not a web request runtime path.
 		echo PHP_EOL;
 		self::cache_wp_files();
 		$result = Process::create( Utils\esc_cmd( 'wp core version --path=%s', self::$cache_dir ), null, self::get_process_env_variables() )->run_check();
-		echo 'WordPress ' . $result->stdout;
+		echo 'WordPress ' . $result->stdout; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- WP-CLI/Behat command context (stdout output, developer-supplied CLI args); not a web request runtime path.
 		echo PHP_EOL;
 
 		// Remove install cache if any (not setting the static var).
@@ -256,7 +259,7 @@ class FeatureContext extends BehatContext implements ClosuredContextInterface {
 	 */
 	private static function terminate_proc( $master_pid ) {
 
-		$output = `ps -o ppid,pid,command | grep $master_pid`;
+		$output = `ps -o ppid,pid,command | grep $master_pid`; // phpcs:ignore Generic.PHP.BacktickOperator.Found -- WP-CLI/Behat command context (stdout output, developer-supplied CLI args); not a web request runtime path.
 
 		foreach ( explode( PHP_EOL, $output ) as $line ) {
 			if ( preg_match( '/^\s*(\d+)\s+(\d+)/', $line, $matches ) ) {
@@ -273,7 +276,7 @@ class FeatureContext extends BehatContext implements ClosuredContextInterface {
 			$errno = posix_get_last_error();
 			// Ignore "No such process" error as that's what we want.
 			if ( 3 /*ESRCH*/ !== $errno ) {
-				throw new RuntimeException( posix_strerror( $errno ) );
+				throw new RuntimeException( posix_strerror( $errno ) ); // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- WP-CLI/Behat command context (stdout output, developer-supplied CLI args); not a web request runtime path.
 			}
 		}
 	}
@@ -286,7 +289,7 @@ class FeatureContext extends BehatContext implements ClosuredContextInterface {
 			self::remove_dir( self::$suite_cache_dir );
 		}
 		self::$suite_cache_dir = sys_get_temp_dir() . '/' . uniqid( 'wp-cli-test-suite-cache-' . self::$temp_dir_infix . '-', true );
-		mkdir( self::$suite_cache_dir );
+		mkdir( self::$suite_cache_dir ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_mkdir -- WP-CLI/Behat command context (stdout output, developer-supplied CLI args); not a web request runtime path.
 		return self::$suite_cache_dir;
 	}
 
@@ -400,7 +403,7 @@ class FeatureContext extends BehatContext implements ClosuredContextInterface {
 	public function create_run_dir() {
 		if ( ! isset( $this->variables['RUN_DIR'] ) ) {
 			self::$run_dir = $this->variables['RUN_DIR'] = sys_get_temp_dir() . '/' . uniqid( 'wp-cli-test-run-' . self::$temp_dir_infix . '-', true );
-			mkdir( $this->variables['RUN_DIR'] );
+			mkdir( $this->variables['RUN_DIR'] ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_mkdir -- WP-CLI/Behat command context (stdout output, developer-supplied CLI args); not a web request runtime path.
 		}
 	}
 
@@ -458,7 +461,7 @@ class FeatureContext extends BehatContext implements ClosuredContextInterface {
 	private function set_cache_dir() {
 		$path = sys_get_temp_dir() . '/wp-cli-test-cache';
 		if ( ! file_exists( $path ) ) {
-			mkdir( $path );
+			mkdir( $path ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_mkdir -- WP-CLI/Behat command context (stdout output, developer-supplied CLI args); not a web request runtime path.
 		}
 		$this->variables['CACHE_DIR'] = $path;
 	}
@@ -525,21 +528,21 @@ class FeatureContext extends BehatContext implements ClosuredContextInterface {
 			2 => array( 'pipe', 'w' ),
 		);
 
-		$proc = proc_open( $cmd, $descriptors, $pipes, $this->variables['RUN_DIR'], self::get_process_env_variables() );
+		$proc = proc_open( $cmd, $descriptors, $pipes, $this->variables['RUN_DIR'], self::get_process_env_variables() ); // phpcs:ignore Generic.PHP.ForbiddenFunctions.Found -- WP-CLI/Behat command context (stdout output, developer-supplied CLI args); not a web request runtime path.
 
 		sleep( 1 );
 
 		$status = proc_get_status( $proc );
 
 		if ( ! $status['running'] ) {
-			throw new RuntimeException( stream_get_contents( $pipes[2] ) );
+			throw new RuntimeException( stream_get_contents( $pipes[2] ) ); // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- WP-CLI/Behat command context (stdout output, developer-supplied CLI args); not a web request runtime path.
 		} else {
 			$this->running_procs[] = $proc;
 		}
 	}
 
 	public function move_files( $src, $dest ) {
-		rename( $this->variables['RUN_DIR'] . "/$src", $this->variables['RUN_DIR'] . "/$dest" );
+		rename( $this->variables['RUN_DIR'] . "/$src", $this->variables['RUN_DIR'] . "/$dest" ); // phpcs:ignore WordPress.WP.AlternativeFunctions.rename_rename -- WP-CLI/Behat command context (stdout output, developer-supplied CLI args); not a web request runtime path.
 	}
 
 	/**
@@ -566,13 +569,13 @@ class FeatureContext extends BehatContext implements ClosuredContextInterface {
 		$dest_dir = $this->variables['RUN_DIR'] . "/$subdir";
 
 		if ( $subdir ) {
-			mkdir( $dest_dir );
+			mkdir( $dest_dir ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_mkdir -- WP-CLI/Behat command context (stdout output, developer-supplied CLI args); not a web request runtime path.
 		}
 
 		self::copy_dir( self::$cache_dir, $dest_dir );
 
 		// disable emailing
-		mkdir( $dest_dir . '/wp-content/mu-plugins' );
+		mkdir( $dest_dir . '/wp-content/mu-plugins' ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_mkdir -- WP-CLI/Behat command context (stdout output, developer-supplied CLI args); not a web request runtime path.
 		copy( __DIR__ . '/../extra/no-mail.php', $dest_dir . '/wp-content/mu-plugins/no-mail.php' );
 	}
 
@@ -608,7 +611,7 @@ class FeatureContext extends BehatContext implements ClosuredContextInterface {
 		$wp_version_suffix       = ( $wp_version = getenv( 'WP_VERSION' ) ) ? "-$wp_version" : '';
 		self::$install_cache_dir = sys_get_temp_dir() . '/wp-cli-test-core-install-cache' . $wp_version_suffix;
 		if ( ! file_exists( self::$install_cache_dir ) ) {
-			mkdir( self::$install_cache_dir );
+			mkdir( self::$install_cache_dir ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_mkdir -- WP-CLI/Behat command context (stdout output, developer-supplied CLI args); not a web request runtime path.
 		}
 
 		$subdir = $this->replace_variables( $subdir );
@@ -638,7 +641,7 @@ class FeatureContext extends BehatContext implements ClosuredContextInterface {
 		} else {
 			$this->proc( 'wp core install', $install_args, $subdir )->run_check();
 			if ( $install_cache_path ) {
-				mkdir( $install_cache_path );
+				mkdir( $install_cache_path ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_mkdir -- WP-CLI/Behat command context (stdout output, developer-supplied CLI args); not a web request runtime path.
 				self::dir_diff_copy( $run_dir, self::$cache_dir, $install_cache_path );
 				self::run_sql( 'mysqldump --no-defaults', array( 'result-file' => "{$install_cache_path}.sql" ), true /*add_database*/ );
 			}
@@ -673,7 +676,7 @@ class FeatureContext extends BehatContext implements ClosuredContextInterface {
 	public function composer_add_wp_cli_local_repository() {
 		if ( ! self::$composer_local_repository ) {
 			self::$composer_local_repository = sys_get_temp_dir() . '/' . uniqid( 'wp-cli-composer-local-', true );
-			mkdir( self::$composer_local_repository );
+			mkdir( self::$composer_local_repository ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_mkdir -- WP-CLI/Behat command context (stdout output, developer-supplied CLI args); not a web request runtime path.
 
 			$env = self::get_process_env_variables();
 			$src = isset( $env['TRAVIS_BUILD_DIR'] ) ? $env['TRAVIS_BUILD_DIR'] : realpath( __DIR__ . '/../../' );
@@ -790,7 +793,7 @@ class FeatureContext extends BehatContext implements ClosuredContextInterface {
 	private static function dir_diff_copy( $upd_dir, $src_dir, $cop_dir ) {
 		if ( false === ( $files = scandir( $upd_dir ) ) ) {
 			$error = error_get_last();
-			throw new \RuntimeException( sprintf( "Failed to open updated directory '%s': %s. " . __FILE__ . ':' . __LINE__, $upd_dir, $error['message'] ) );
+			throw new \RuntimeException( sprintf( "Failed to open updated directory '%s': %s. " . __FILE__ . ':' . __LINE__, $upd_dir, $error['message'] ) ); // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- WP-CLI/Behat command context (stdout output, developer-supplied CLI args); not a web request runtime path.
 		}
 		foreach ( array_diff( $files, array( '.', '..' ) ) as $file ) {
 			$upd_file = $upd_dir . '/' . $file;
@@ -798,15 +801,15 @@ class FeatureContext extends BehatContext implements ClosuredContextInterface {
 			$cop_file = $cop_dir . '/' . $file;
 			if ( ! file_exists( $src_file ) ) {
 				if ( is_dir( $upd_file ) ) {
-					if ( ! file_exists( $cop_file ) && ! mkdir( $cop_file, 0777, true /*recursive*/ ) ) {
+					if ( ! file_exists( $cop_file ) && ! mkdir( $cop_file, 0777, true /*recursive*/ ) ) { // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_mkdir -- WP-CLI/Behat command context (stdout output, developer-supplied CLI args); not a web request runtime path.
 						$error = error_get_last();
-						throw new \RuntimeException( sprintf( "Failed to create copy directory '%s': %s. " . __FILE__ . ':' . __LINE__, $cop_file, $error['message'] ) );
+						throw new \RuntimeException( sprintf( "Failed to create copy directory '%s': %s. " . __FILE__ . ':' . __LINE__, $cop_file, $error['message'] ) ); // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- WP-CLI/Behat command context (stdout output, developer-supplied CLI args); not a web request runtime path.
 					}
 					self::copy_dir( $upd_file, $cop_file );
 				} else {
 					if ( ! copy( $upd_file, $cop_file ) ) {
 						$error = error_get_last();
-						throw new \RuntimeException( sprintf( "Failed to copy '%s' to '%s': %s. " . __FILE__ . ':' . __LINE__, $upd_file, $cop_file, $error['message'] ) );
+						throw new \RuntimeException( sprintf( "Failed to copy '%s' to '%s': %s. " . __FILE__ . ':' . __LINE__, $upd_file, $cop_file, $error['message'] ) ); // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- WP-CLI/Behat command context (stdout output, developer-supplied CLI args); not a web request runtime path.
 					}
 				}
 			} elseif ( is_dir( $upd_file ) ) {
@@ -924,7 +927,7 @@ class FeatureContext extends BehatContext implements ClosuredContextInterface {
 		if ( 'error_log' === self::$output_to ) {
 			error_log( $log );
 		} else {
-			echo PHP_EOL . $log;
+			echo PHP_EOL . $log; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- WP-CLI/Behat command context (stdout output, developer-supplied CLI args); not a web request runtime path.
 		}
 	}
 

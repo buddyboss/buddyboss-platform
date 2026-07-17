@@ -175,7 +175,7 @@ class BB_Admin_Groups_Ajax {
 		$this->bb_verify_request();
 
 		if ( ! bp_is_active( 'groups' ) ) {
-			wp_send_json_error( array( 'message' => __( 'Groups component is not active.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Groups component is not active.', 'buddyboss-platform' ) ) );
 		}
 
 		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified by bb_verify_request() above.
@@ -293,7 +293,7 @@ class BB_Admin_Groups_Ajax {
 		$this->bb_verify_request();
 
 		if ( ! bp_is_active( 'groups' ) ) {
-			wp_send_json_error( array( 'message' => __( 'Groups component is not active.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Groups component is not active.', 'buddyboss-platform' ) ) );
 		}
 
 		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified by $this->bb_verify_request() above.
@@ -304,7 +304,7 @@ class BB_Admin_Groups_Ajax {
 		$meta_data = $this->bb_extract_group_type_meta_from_post();
 
 		if ( empty( $name ) ) {
-			wp_send_json_error( array( 'message' => __( 'Group type name is required.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Group type name is required.', 'buddyboss-platform' ) ) );
 		}
 
 		$post_type   = bp_groups_get_group_type_post_type();
@@ -340,7 +340,7 @@ class BB_Admin_Groups_Ajax {
 
 		wp_send_json_success(
 			array(
-				'message' => __( 'Group type created successfully.', 'buddyboss' ),
+				'message' => __( 'Group type created successfully.', 'buddyboss-platform' ),
 				'id'      => $post_id,
 			)
 		);
@@ -360,7 +360,7 @@ class BB_Admin_Groups_Ajax {
 		$this->bb_verify_request();
 
 		if ( ! bp_is_active( 'groups' ) ) {
-			wp_send_json_error( array( 'message' => __( 'Groups component is not active.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Groups component is not active.', 'buddyboss-platform' ) ) );
 		}
 
 		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified by $this->bb_verify_request() above.
@@ -372,13 +372,13 @@ class BB_Admin_Groups_Ajax {
 		$meta_data = $this->bb_extract_group_type_meta_from_post();
 
 		if ( empty( $type_id ) ) {
-			wp_send_json_error( array( 'message' => __( 'Group type ID is required.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Group type ID is required.', 'buddyboss-platform' ) ) );
 		}
 
 		// Verify post exists and is correct type.
 		$post = get_post( $type_id );
 		if ( ! $post || bp_groups_get_group_type_post_type() !== $post->post_type ) {
-			wp_send_json_error( array( 'message' => __( 'Invalid group type.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Invalid group type.', 'buddyboss-platform' ) ) );
 		}
 
 		// Update title and/or visibility if provided.
@@ -411,7 +411,7 @@ class BB_Admin_Groups_Ajax {
 
 		wp_send_json_success(
 			array(
-				'message' => __( 'Group type updated successfully.', 'buddyboss' ),
+				'message' => __( 'Group type updated successfully.', 'buddyboss-platform' ),
 				'id'      => $type_id,
 			)
 		);
@@ -428,7 +428,7 @@ class BB_Admin_Groups_Ajax {
 		$this->bb_verify_request();
 
 		if ( ! bp_is_active( 'groups' ) ) {
-			wp_send_json_error( array( 'message' => __( 'Groups component is not active.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Groups component is not active.', 'buddyboss-platform' ) ) );
 		}
 
 		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified by $this->bb_verify_request() above.
@@ -436,23 +436,23 @@ class BB_Admin_Groups_Ajax {
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
 
 		if ( empty( $type_id ) ) {
-			wp_send_json_error( array( 'message' => __( 'Group type ID is required.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Group type ID is required.', 'buddyboss-platform' ) ) );
 		}
 
 		// Verify post exists and is correct type.
 		$post = get_post( $type_id );
 		if ( ! $post || bp_groups_get_group_type_post_type() !== $post->post_type ) {
-			wp_send_json_error( array( 'message' => __( 'Invalid group type.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Invalid group type.', 'buddyboss-platform' ) ) );
 		}
 
 		$result = wp_delete_post( $type_id, true );
 
 		if ( ! $result ) {
-			wp_send_json_error( array( 'message' => __( 'Failed to delete group type.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Failed to delete group type.', 'buddyboss-platform' ) ) );
 		}
 
 		wp_send_json_success(
-			array( 'message' => __( 'Group type deleted successfully.', 'buddyboss' ) )
+			array( 'message' => __( 'Group type deleted successfully.', 'buddyboss-platform' ) )
 		);
 	}
 
@@ -481,7 +481,7 @@ class BB_Admin_Groups_Ajax {
 		$this->bb_verify_request();
 
 		if ( ! bp_is_active( 'groups' ) ) {
-			wp_send_json_error( array( 'message' => __( 'Groups component is not active.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Groups component is not active.', 'buddyboss-platform' ) ) );
 		}
 
 		/**
@@ -655,11 +655,11 @@ class BB_Admin_Groups_Ajax {
 			'bp_groups_list_table_get_columns',
 			array(
 				'cb'          => '<input name type="checkbox" />',
-				'comment'     => __( 'Name', 'buddyboss' ),
-				'description' => __( 'Description', 'buddyboss' ),
-				'status'      => __( 'Status', 'buddyboss' ),
-				'members'     => __( 'Members', 'buddyboss' ),
-				'last_active' => __( 'Last Active', 'buddyboss' ),
+				'comment'     => __( 'Name', 'buddyboss-platform' ),
+				'description' => __( 'Description', 'buddyboss-platform' ),
+				'status'      => __( 'Status', 'buddyboss-platform' ),
+				'members'     => __( 'Members', 'buddyboss-platform' ),
+				'last_active' => __( 'Last Active', 'buddyboss-platform' ),
 			)
 		);
 
@@ -689,13 +689,13 @@ class BB_Admin_Groups_Ajax {
 			$status_desc = '';
 			switch ( $group->status ) {
 				case 'public':
-					$status_desc = __( 'Public', 'buddyboss' );
+					$status_desc = __( 'Public', 'buddyboss-platform' );
 					break;
 				case 'private':
-					$status_desc = __( 'Private', 'buddyboss' );
+					$status_desc = __( 'Private', 'buddyboss-platform' );
 					break;
 				case 'hidden':
-					$status_desc = __( 'Hidden', 'buddyboss' );
+					$status_desc = __( 'Hidden', 'buddyboss-platform' );
 					break;
 			}
 			$status_desc = apply_filters_ref_array( 'bp_groups_admin_get_group_status', array( $status_desc, $item_array ) );
@@ -799,19 +799,19 @@ class BB_Admin_Groups_Ajax {
 
 			$response['views'] = array(
 				'all'     => array(
-					'label' => __( 'All', 'buddyboss' ),
+					'label' => __( 'All', 'buddyboss-platform' ),
 					'count' => $count_all,
 				),
 				'public'  => array(
-					'label' => __( 'Public', 'buddyboss' ),
+					'label' => __( 'Public', 'buddyboss-platform' ),
 					'count' => isset( $counts_map['public'] ) ? $counts_map['public'] : 0,
 				),
 				'private' => array(
-					'label' => __( 'Private', 'buddyboss' ),
+					'label' => __( 'Private', 'buddyboss-platform' ),
 					'count' => isset( $counts_map['private'] ) ? $counts_map['private'] : 0,
 				),
 				'hidden'  => array(
-					'label' => __( 'Hidden', 'buddyboss' ),
+					'label' => __( 'Hidden', 'buddyboss-platform' ),
 					'count' => isset( $counts_map['hidden'] ) ? $counts_map['hidden'] : 0,
 				),
 			);
@@ -821,7 +821,7 @@ class BB_Admin_Groups_Ajax {
 			$legacy_bulk_actions = apply_filters(
 				'bp_groups_list_table_get_bulk_actions',
 				array(
-					'delete' => __( 'Delete', 'buddyboss' ),
+					'delete' => __( 'Delete', 'buddyboss-platform' ),
 				)
 			);
 
@@ -831,8 +831,8 @@ class BB_Admin_Groups_Ajax {
 
 			// Group type actions first (when types exist).
 			if ( ! empty( $type_objects ) ) {
-				$bulk_actions['bulk_change_group_type'] = __( 'Change Group Type to', 'buddyboss' );
-				$bulk_actions['bulk_remove_group_type'] = __( 'Remove Group Type', 'buddyboss' );
+				$bulk_actions['bulk_change_group_type'] = __( 'Change Group Type to', 'buddyboss-platform' );
+				$bulk_actions['bulk_remove_group_type'] = __( 'Remove Group Type', 'buddyboss-platform' );
 			}
 
 			// Append legacy + third-party actions, with Delete pulled out so
@@ -937,29 +937,29 @@ class BB_Admin_Groups_Ajax {
 		$this->bb_verify_request();
 
 		if ( ! bp_is_active( 'groups' ) ) {
-			wp_send_json_error( array( 'message' => __( 'Groups component is not active.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Groups component is not active.', 'buddyboss-platform' ) ) );
 		}
 
 		// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce verified by $this->bb_verify_request() above.
 		$group_id = isset( $_POST['group_id'] ) ? absint( wp_unslash( $_POST['group_id'] ) ) : 0;
 
 		if ( empty( $group_id ) ) {
-			wp_send_json_error( array( 'message' => __( 'Group ID is required.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Group ID is required.', 'buddyboss-platform' ) ) );
 		}
 
 		$group = groups_get_group( $group_id );
 		if ( empty( $group->id ) ) {
-			wp_send_json_error( array( 'message' => __( 'Group not found.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Group not found.', 'buddyboss-platform' ) ) );
 		}
 
 		$result = groups_delete_group( $group_id );
 
 		if ( ! $result ) {
-			wp_send_json_error( array( 'message' => __( 'Failed to delete group.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Failed to delete group.', 'buddyboss-platform' ) ) );
 		}
 
 		wp_send_json_success(
-			array( 'message' => __( 'Group deleted successfully.', 'buddyboss' ) )
+			array( 'message' => __( 'Group deleted successfully.', 'buddyboss-platform' ) )
 		);
 	}
 
@@ -974,7 +974,7 @@ class BB_Admin_Groups_Ajax {
 		$this->bb_verify_request();
 
 		if ( ! bp_is_active( 'groups' ) ) {
-			wp_send_json_error( array( 'message' => __( 'Groups component is not active.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Groups component is not active.', 'buddyboss-platform' ) ) );
 		}
 
 		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified by $this->bb_verify_request() above.
@@ -987,7 +987,7 @@ class BB_Admin_Groups_Ajax {
 		$allowed_bulk_actions = apply_filters(
 			'bp_groups_list_table_get_bulk_actions',
 			array(
-				'delete' => __( 'Delete', 'buddyboss' ),
+				'delete' => __( 'Delete', 'buddyboss-platform' ),
 			)
 		);
 
@@ -995,17 +995,17 @@ class BB_Admin_Groups_Ajax {
 		$type_actions = array( 'change_group_type', 'remove_group_type' );
 
 		if ( ! array_key_exists( $do_action, $allowed_bulk_actions ) && ! in_array( $do_action, $type_actions, true ) ) {
-			wp_send_json_error( array( 'message' => __( 'Invalid action.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Invalid action.', 'buddyboss-platform' ) ) );
 		}
 
 		if ( empty( $raw_ids ) ) {
-			wp_send_json_error( array( 'message' => __( 'No groups selected.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'No groups selected.', 'buddyboss-platform' ) ) );
 		}
 
 		$group_ids = array_filter( array_map( 'absint', explode( ',', $raw_ids ) ) );
 
 		if ( empty( $group_ids ) ) {
-			wp_send_json_error( array( 'message' => __( 'No valid group IDs provided.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'No valid group IDs provided.', 'buddyboss-platform' ) ) );
 		}
 
 		// Cap bulk operations to prevent timeout on large selections.
@@ -1020,7 +1020,7 @@ class BB_Admin_Groups_Ajax {
 			// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce verified by $this->bb_verify_request() above.
 			$new_group_type = isset( $_POST['group_type'] ) ? sanitize_key( wp_unslash( $_POST['group_type'] ) ) : '';
 			if ( empty( $new_group_type ) || ! bp_groups_get_group_type_object( $new_group_type ) ) {
-				wp_send_json_error( array( 'message' => __( 'Invalid group type.', 'buddyboss' ) ) );
+				wp_send_json_error( array( 'message' => __( 'Invalid group type.', 'buddyboss-platform' ) ) );
 			}
 		}
 
@@ -1079,7 +1079,7 @@ class BB_Admin_Groups_Ajax {
 						'%d group deleted successfully.',
 						'%d groups deleted successfully.',
 						$processed,
-						'buddyboss'
+						'buddyboss-platform'
 					),
 					$processed
 				);
@@ -1090,7 +1090,7 @@ class BB_Admin_Groups_Ajax {
 						'Group type changed for %d group.',
 						'Group type changed for %d groups.',
 						$processed,
-						'buddyboss'
+						'buddyboss-platform'
 					),
 					$processed
 				);
@@ -1101,7 +1101,7 @@ class BB_Admin_Groups_Ajax {
 						'Group type removed from %d group.',
 						'Group type removed from %d groups.',
 						$processed,
-						'buddyboss'
+						'buddyboss-platform'
 					),
 					$processed
 				);
@@ -1112,7 +1112,7 @@ class BB_Admin_Groups_Ajax {
 						'%d group updated successfully.',
 						'%d groups updated successfully.',
 						$processed,
-						'buddyboss'
+						'buddyboss-platform'
 					),
 					$processed
 				);
@@ -1126,7 +1126,7 @@ class BB_Admin_Groups_Ajax {
 				)
 			);
 		} else {
-			wp_send_json_error( array( 'message' => __( 'No groups were processed.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'No groups were processed.', 'buddyboss-platform' ) ) );
 		}
 	}
 
@@ -1141,7 +1141,7 @@ class BB_Admin_Groups_Ajax {
 		$this->bb_verify_request();
 
 		if ( ! bp_is_active( 'groups' ) ) {
-			wp_send_json_error( array( 'message' => __( 'Groups component is not active.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Groups component is not active.', 'buddyboss-platform' ) ) );
 		}
 
 		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified by $this->bb_verify_request() above.
@@ -1151,7 +1151,7 @@ class BB_Admin_Groups_Ajax {
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
 
 		if ( empty( $name ) ) {
-			wp_send_json_error( array( 'message' => __( 'Group name is required.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Group name is required.', 'buddyboss-platform' ) ) );
 		}
 
 		/**
@@ -1177,12 +1177,12 @@ class BB_Admin_Groups_Ajax {
 		);
 
 		if ( ! $group_id ) {
-			wp_send_json_error( array( 'message' => __( 'Failed to create group.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Failed to create group.', 'buddyboss-platform' ) ) );
 		}
 
 		wp_send_json_success(
 			array(
-				'message'  => __( 'Group created successfully.', 'buddyboss' ),
+				'message'  => __( 'Group created successfully.', 'buddyboss-platform' ),
 				'group_id' => $group_id,
 			)
 		);
@@ -1199,19 +1199,19 @@ class BB_Admin_Groups_Ajax {
 		$this->bb_verify_request();
 
 		if ( ! bp_is_active( 'groups' ) ) {
-			wp_send_json_error( array( 'message' => __( 'Groups component is not active.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Groups component is not active.', 'buddyboss-platform' ) ) );
 		}
 
 		// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce verified by $this->bb_verify_request() above.
 		$group_id = isset( $_POST['group_id'] ) ? absint( wp_unslash( $_POST['group_id'] ) ) : 0;
 
 		if ( empty( $group_id ) ) {
-			wp_send_json_error( array( 'message' => __( 'Group ID is required.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Group ID is required.', 'buddyboss-platform' ) ) );
 		}
 
 		$group = groups_get_group( $group_id );
 		if ( empty( $group->id ) ) {
-			wp_send_json_error( array( 'message' => __( 'Group not found.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Group not found.', 'buddyboss-platform' ) ) );
 		}
 
 		/**
@@ -1328,19 +1328,19 @@ class BB_Admin_Groups_Ajax {
 		$this->bb_verify_request();
 
 		if ( ! bp_is_active( 'groups' ) ) {
-			wp_send_json_error( array( 'message' => __( 'Groups component is not active.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Groups component is not active.', 'buddyboss-platform' ) ) );
 		}
 
 		// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce verified by $this->bb_verify_request() above.
 		$group_id = isset( $_POST['group_id'] ) ? absint( wp_unslash( $_POST['group_id'] ) ) : 0;
 
 		if ( empty( $group_id ) ) {
-			wp_send_json_error( array( 'message' => __( 'Group ID is required.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Group ID is required.', 'buddyboss-platform' ) ) );
 		}
 
 		$group = groups_get_group( $group_id );
 		if ( empty( $group->id ) ) {
-			wp_send_json_error( array( 'message' => __( 'Group not found.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Group not found.', 'buddyboss-platform' ) ) );
 		}
 
 		$registry = bb_admin_meta_field_registry();
@@ -1493,7 +1493,7 @@ class BB_Admin_Groups_Ajax {
 		 */
 		apply_filters_deprecated( 'bp_group_admin_edit_redirect', array( '' ), 'BuddyBoss 3.0.0', 'bb_admin_save_group_response' );
 
-		$response = array( 'message' => __( 'Group updated successfully.', 'buddyboss' ) );
+		$response = array( 'message' => __( 'Group updated successfully.', 'buddyboss-platform' ) );
 
 		/**
 		 * Filters the response data after saving a group from the admin edit modal.
@@ -1521,7 +1521,7 @@ class BB_Admin_Groups_Ajax {
 		$this->bb_verify_request();
 
 		if ( ! bp_is_active( 'groups' ) ) {
-			wp_send_json_error( array( 'message' => __( 'Groups component is not active.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Groups component is not active.', 'buddyboss-platform' ) ) );
 		}
 
 		$allowed_roles = array( 'admin', 'mod', 'member', 'banned' );
@@ -1536,17 +1536,17 @@ class BB_Admin_Groups_Ajax {
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
 
 		if ( empty( $group_id ) ) {
-			wp_send_json_error( array( 'message' => __( 'Group ID is required.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Group ID is required.', 'buddyboss-platform' ) ) );
 		}
 
 		$group = groups_get_group( $group_id );
 		if ( empty( $group->id ) ) {
-			wp_send_json_error( array( 'message' => __( 'Group not found.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Group not found.', 'buddyboss-platform' ) ) );
 		}
 
 		// Validate role param if provided.
 		if ( ! empty( $role ) && ! in_array( $role, $allowed_roles, true ) ) {
-			wp_send_json_error( array( 'message' => __( 'Invalid role.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Invalid role.', 'buddyboss-platform' ) ) );
 		}
 
 		$per_page = max( 1, min( self::PER_PAGE_CAP, $per_page ) );
@@ -1728,7 +1728,7 @@ class BB_Admin_Groups_Ajax {
 		$this->bb_verify_request();
 
 		if ( ! bp_is_active( 'groups' ) ) {
-			wp_send_json_error( array( 'message' => __( 'Groups component is not active.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Groups component is not active.', 'buddyboss-platform' ) ) );
 		}
 
 		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified by $this->bb_verify_request() above.
@@ -1739,17 +1739,17 @@ class BB_Admin_Groups_Ajax {
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
 
 		if ( empty( $group_id ) || empty( $user_id ) ) {
-			wp_send_json_error( array( 'message' => __( 'Group ID and User ID are required.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Group ID and User ID are required.', 'buddyboss-platform' ) ) );
 		}
 
 		$group = groups_get_group( $group_id );
 		if ( empty( $group->id ) ) {
-			wp_send_json_error( array( 'message' => __( 'Group not found.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Group not found.', 'buddyboss-platform' ) ) );
 		}
 
 		$user = get_userdata( $user_id );
 		if ( ! $user ) {
-			wp_send_json_error( array( 'message' => __( 'User not found.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'User not found.', 'buddyboss-platform' ) ) );
 		}
 
 		// Add a new member.
@@ -1764,9 +1764,9 @@ class BB_Admin_Groups_Ajax {
 			unset( $_POST['bp-groups-new-members'] );
 
 			if ( $result ) {
-				wp_send_json_success( array( 'message' => __( 'Member added successfully.', 'buddyboss' ) ) );
+				wp_send_json_success( array( 'message' => __( 'Member added successfully.', 'buddyboss-platform' ) ) );
 			} else {
-				wp_send_json_error( array( 'message' => __( 'Failed to add member.', 'buddyboss' ) ) );
+				wp_send_json_error( array( 'message' => __( 'Failed to add member.', 'buddyboss-platform' ) ) );
 			}
 			return;
 		}
@@ -1774,7 +1774,7 @@ class BB_Admin_Groups_Ajax {
 		// Validate role.
 		$allowed_roles = array( 'admin', 'mod', 'member', 'banned', 'remove' );
 		if ( ! in_array( $role, $allowed_roles, true ) ) {
-			wp_send_json_error( array( 'message' => __( 'Invalid role.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Invalid role.', 'buddyboss-platform' ) ) );
 		}
 
 		// Single instantiation for all role-change paths (avoids N+1 DB hits).
@@ -1784,14 +1784,14 @@ class BB_Admin_Groups_Ajax {
 		if ( 'remove' === $role ) {
 			// Guard: do not allow removal of the last group admin (mirrors legacy bp-groups-admin.php behaviour).
 			if ( $member_obj->is_admin && ! $this->bb_group_has_other_admins( $group_id, $user_id ) ) {
-				wp_send_json_error( array( 'message' => __( 'You cannot remove the only group administrator.', 'buddyboss' ) ) );
+				wp_send_json_error( array( 'message' => __( 'You cannot remove the only group administrator.', 'buddyboss-platform' ) ) );
 			}
 
 			$result = groups_remove_member( $user_id, $group_id );
 			if ( $result ) {
-				wp_send_json_success( array( 'message' => __( 'Member removed successfully.', 'buddyboss' ) ) );
+				wp_send_json_success( array( 'message' => __( 'Member removed successfully.', 'buddyboss-platform' ) ) );
 			} else {
-				wp_send_json_error( array( 'message' => __( 'Failed to remove member.', 'buddyboss' ) ) );
+				wp_send_json_error( array( 'message' => __( 'Failed to remove member.', 'buddyboss-platform' ) ) );
 			}
 			return;
 		}
@@ -1809,30 +1809,30 @@ class BB_Admin_Groups_Ajax {
 			case 'mod':
 				// Guard: do not allow demoting the last group admin to moderator.
 				if ( $member_obj->is_admin && ! $this->bb_group_has_other_admins( $group_id, $user_id ) ) {
-					wp_send_json_error( array( 'message' => __( 'You cannot demote the only group administrator.', 'buddyboss' ) ) );
+					wp_send_json_error( array( 'message' => __( 'You cannot demote the only group administrator.', 'buddyboss-platform' ) ) );
 				}
 				$result = groups_promote_member( $user_id, $group_id, $role );
 				break;
 			case 'member':
 				// Guard: do not allow demotion of the last group admin.
 				if ( $member_obj->is_admin && ! $this->bb_group_has_other_admins( $group_id, $user_id ) ) {
-					wp_send_json_error( array( 'message' => __( 'You cannot demote the only group administrator.', 'buddyboss' ) ) );
+					wp_send_json_error( array( 'message' => __( 'You cannot demote the only group administrator.', 'buddyboss-platform' ) ) );
 				}
 				$result = groups_demote_member( $user_id, $group_id );
 				break;
 			case 'banned':
 				// Guard: do not allow banning the last group admin.
 				if ( $member_obj->is_admin && ! $this->bb_group_has_other_admins( $group_id, $user_id ) ) {
-					wp_send_json_error( array( 'message' => __( 'You cannot ban the only group administrator.', 'buddyboss' ) ) );
+					wp_send_json_error( array( 'message' => __( 'You cannot ban the only group administrator.', 'buddyboss-platform' ) ) );
 				}
 				$result = groups_ban_member( $user_id, $group_id );
 				break;
 		}
 
 		if ( $result ) {
-			wp_send_json_success( array( 'message' => __( 'Member role updated successfully.', 'buddyboss' ) ) );
+			wp_send_json_success( array( 'message' => __( 'Member role updated successfully.', 'buddyboss-platform' ) ) );
 		} else {
-			wp_send_json_error( array( 'message' => __( 'Failed to update member role.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Failed to update member role.', 'buddyboss-platform' ) ) );
 		}
 	}
 
@@ -1878,7 +1878,7 @@ class BB_Admin_Groups_Ajax {
 					'name'  => $user->name,
 					'label' => sprintf(
 						/* translators: 1: user display name, 2: username (user_nicename). */
-						__( '%1$s (%2$s)', 'buddyboss' ),
+						__( '%1$s (%2$s)', 'buddyboss-platform' ),
 						$user->name,
 						isset( $user->user_nicename ) && '' !== $user->user_nicename ? $user->user_nicename : $user_id
 					),
@@ -1925,11 +1925,11 @@ class BB_Admin_Groups_Ajax {
 			|| ! function_exists( 'bbp_is_user_keymaster' )
 			|| ! bbp_is_user_keymaster()
 		) {
-			wp_send_json_error( array( 'message' => __( 'Forums are not available.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Forums are not available.', 'buddyboss-platform' ) ) );
 		}
 
 		if ( ! function_exists( 'bbp_get_forum_post_type' ) ) {
-			wp_send_json_error( array( 'message' => __( 'Forums component is not active.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Forums component is not active.', 'buddyboss-platform' ) ) );
 		}
 
 		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified by $this->bb_verify_request() above.
@@ -2030,7 +2030,7 @@ class BB_Admin_Groups_Ajax {
 		$this->bb_verify_request();
 
 		if ( ! function_exists( 'bp_enable_group_hierarchies' ) || ! bp_enable_group_hierarchies() ) {
-			wp_send_json_error( array( 'message' => __( 'Group hierarchies are disabled.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Group hierarchies are disabled.', 'buddyboss-platform' ) ) );
 		}
 
 		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified by $this->bb_verify_request() above.
@@ -2143,24 +2143,24 @@ class BB_Admin_Groups_Ajax {
 		$this->bb_verify_request();
 
 		if ( ! bp_is_active( 'groups' ) ) {
-			wp_send_json_error( array( 'message' => __( 'Groups component is not active.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Groups component is not active.', 'buddyboss-platform' ) ) );
 		}
 
 		// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce verified by $this->bb_verify_request() above.
 		$group_id = isset( $_POST['group_id'] ) ? absint( wp_unslash( $_POST['group_id'] ) ) : 0;
 
 		if ( empty( $group_id ) ) {
-			wp_send_json_error( array( 'message' => __( 'Group ID is required.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Group ID is required.', 'buddyboss-platform' ) ) );
 		}
 
 		$group = groups_get_group( $group_id );
 		if ( empty( $group->id ) ) {
-			wp_send_json_error( array( 'message' => __( 'Group not found.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Group not found.', 'buddyboss-platform' ) ) );
 		}
 
 		// Check if group activity topics feature is enabled (Pro function).
 		if ( ! function_exists( 'bb_is_enabled_group_activity_topics' ) || ! bb_is_enabled_group_activity_topics() ) {
-			wp_send_json_error( array( 'message' => __( 'Group activity topics feature is not enabled.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Group activity topics feature is not enabled.', 'buddyboss-platform' ) ) );
 		}
 
 		// Fetch topics for this group.

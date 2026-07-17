@@ -159,7 +159,7 @@ class BB_REST_Help_Content_Endpoint extends WP_REST_Controller {
 					'permission_callback' => array( $this, 'get_item_permissions_check' ),
 					'args'                => array(
 						'url' => array(
-							'description'       => __( 'Path-only URL fragment under buddyboss.com (e.g. /wp-json/wp/v2/ht-kb/123).', 'buddyboss' ),
+							'description'       => __( 'Path-only URL fragment under buddyboss.com (e.g. /wp-json/wp/v2/ht-kb/123).', 'buddyboss-platform' ),
 							'type'              => 'string',
 							'required'          => true,
 							'sanitize_callback' => 'wp_unslash',
@@ -198,7 +198,7 @@ class BB_REST_Help_Content_Endpoint extends WP_REST_Controller {
 		if ( ! current_user_can( 'manage_options' ) ) {
 			return new WP_Error(
 				'bb_rest_help_content_forbidden',
-				__( 'Sorry, you are not allowed to access help content.', 'buddyboss' ),
+				__( 'Sorry, you are not allowed to access help content.', 'buddyboss-platform' ),
 				array( 'status' => rest_authorization_required_code() )
 			);
 		}
@@ -362,7 +362,7 @@ class BB_REST_Help_Content_Endpoint extends WP_REST_Controller {
 	protected function path_rejected_error() {
 		return new WP_Error(
 			'bb_rest_help_content_url_not_allowed',
-			__( 'The requested help content URL is not allowed.', 'buddyboss' ),
+			__( 'The requested help content URL is not allowed.', 'buddyboss-platform' ),
 			array( 'status' => 400 )
 		);
 	}
@@ -410,7 +410,7 @@ class BB_REST_Help_Content_Endpoint extends WP_REST_Controller {
 			return new WP_Error(
 				'bb_rest_help_content_upstream_error',
 				/* translators: %s: error message from wp_remote_get */
-				sprintf( __( 'Failed to load help content: %s', 'buddyboss' ), $response->get_error_message() ),
+				sprintf( __( 'Failed to load help content: %s', 'buddyboss-platform' ), $response->get_error_message() ),
 				array( 'status' => 502 )
 			);
 		}
@@ -419,7 +419,7 @@ class BB_REST_Help_Content_Endpoint extends WP_REST_Controller {
 		if ( 404 === $status ) {
 			return new WP_Error(
 				'bb_rest_help_content_not_found',
-				__( 'Help content not found.', 'buddyboss' ),
+				__( 'Help content not found.', 'buddyboss-platform' ),
 				array( 'status' => 404 )
 			);
 		}
@@ -427,7 +427,7 @@ class BB_REST_Help_Content_Endpoint extends WP_REST_Controller {
 			return new WP_Error(
 				'bb_rest_help_content_upstream_status',
 				/* translators: %d: HTTP status code returned by upstream */
-				sprintf( __( 'Help content service returned an unexpected status (%d).', 'buddyboss' ), $status ),
+				sprintf( __( 'Help content service returned an unexpected status (%d).', 'buddyboss-platform' ), $status ),
 				array( 'status' => 502 )
 			);
 		}
@@ -476,19 +476,19 @@ class BB_REST_Help_Content_Endpoint extends WP_REST_Controller {
 			'type'       => 'object',
 			'properties' => array(
 				'body'    => array(
-					'description' => __( 'Upstream response body, JSON-decoded when possible.', 'buddyboss' ),
+					'description' => __( 'Upstream response body, JSON-decoded when possible.', 'buddyboss-platform' ),
 					'type'        => array( 'object', 'array', 'string' ),
 					'context'     => array( 'view' ),
 					'readonly'    => true,
 				),
 				'headers' => array(
-					'description' => __( 'Selected pagination headers from the upstream response.', 'buddyboss' ),
+					'description' => __( 'Selected pagination headers from the upstream response.', 'buddyboss-platform' ),
 					'type'        => 'object',
 					'context'     => array( 'view' ),
 					'readonly'    => true,
 				),
 				'status'  => array(
-					'description' => __( 'Upstream HTTP status code.', 'buddyboss' ),
+					'description' => __( 'Upstream HTTP status code.', 'buddyboss-platform' ),
 					'type'        => 'integer',
 					'context'     => array( 'view' ),
 					'readonly'    => true,

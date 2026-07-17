@@ -5,6 +5,10 @@
  * @since   BuddyBoss 2.9.00
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 ?>
 
 <script type="text/html" id="tmpl-messages-media">
@@ -14,7 +18,7 @@
 			<div class="dz-image">
 				<img data-dz-thumbnail/>
 			</div>
-			<div class="dz-error-title"><?php esc_html_e( 'Upload Failed', 'buddyboss' ); ?></div>
+			<div class="dz-error-title"><?php esc_html_e( 'Upload Failed', 'buddyboss-platform' ); ?></div>
 			<div class="dz-details">
 				<div class="dz-filename"><span data-dz-name></span></div>
 				<div class="dz-size" data-dz-size></div>

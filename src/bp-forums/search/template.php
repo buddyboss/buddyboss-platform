@@ -196,7 +196,7 @@ function bbp_the_search_result() {
  * @uses bbp_get_search_title()
  */
 function bbp_search_title() {
-	echo bbp_get_search_title();
+	echo bbp_get_search_title(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- bbp_get_search_title() is self-escaping.
 }
 
 /**
@@ -213,11 +213,12 @@ function bbp_get_search_title() {
 
 	// No search terms specified
 	if ( empty( $search_terms ) ) {
-		$title = esc_html__( 'Search', 'buddyboss' );
+		$title = esc_html__( 'Search', 'buddyboss-platform' );
 
 		// Include search terms in title
 	} else {
-		$title = sprintf( esc_html__( "Search Results for '%s'", 'buddyboss' ), esc_attr( $search_terms ) );
+		/* translators: %s: search terms. */
+		$title = sprintf( esc_html__( "Search Results for '%s'", 'buddyboss-platform' ), esc_attr( $search_terms ) );
 	}
 
 	return apply_filters( 'bbp_get_search_title', $title, $search_terms );
@@ -435,7 +436,7 @@ function bbp_get_search_pagination_base() {
  * @uses bbp_get_search_pagination_count() To get the search result pagination count
  */
 function bbp_search_pagination_count() {
-	echo bbp_get_search_pagination_count();
+	echo bbp_get_search_pagination_count(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- bbp_get_search_pagination_count() is self-escaping.
 }
 
 /**
@@ -463,11 +464,13 @@ function bbp_get_search_pagination_count() {
 
 	// Single page of results
 	if ( empty( $to_num ) ) {
-		$retstr = sprintf( _n( 'Viewing %1$s result', 'Viewing %1$s results', $total_int, 'buddyboss' ), $total );
+		/* translators: %1$s: total number of results. */
+		$retstr = sprintf( _n( 'Viewing %1$s result', 'Viewing %1$s results', $total_int, 'buddyboss-platform' ), $total );
 
 		// Several pages of results
 	} else {
-		$retstr = sprintf( _n( 'Viewing %2$s of %4$s results', 'Viewing %2$s - %3$s of %4$s results', $bbp->search_query->post_count, 'buddyboss' ), $bbp->search_query->post_count, $from_num, $to_num, $total );
+		/* translators: 2: number shown on this page, 3: last item number on this page, 4: total number of results. */
+		$retstr = sprintf( _n( 'Viewing %2$s of %4$s results', 'Viewing %2$s - %3$s of %4$s results', $bbp->search_query->post_count, 'buddyboss-platform' ), $bbp->search_query->post_count, $from_num, $to_num, $total ); // phpcs:ignore WordPress.WP.I18n.MissingSingularPlaceholder -- Singular keeps its literal form to preserve existing translations (msgid unchanged); upstream BuddyPress pagination string.
 
 	}
 
@@ -483,7 +486,7 @@ function bbp_get_search_pagination_count() {
  * @uses bbp_get_search_pagination_links() To get the search pagination links
  */
 function bbp_search_pagination_links() {
-	echo bbp_get_search_pagination_links();
+	echo wp_kses_post( bbp_get_search_pagination_links() );
 }
 
 /**

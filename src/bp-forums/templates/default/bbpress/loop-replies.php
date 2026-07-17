@@ -6,6 +6,9 @@
  * @package BuddyBoss\Theme
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 ?>
 
 <?php do_action( 'bbp_template_before_replies_loop' ); ?>
@@ -14,13 +17,13 @@
 
 	<li class="bbp-header">
 
-		<div class="bbp-reply-author"><?php _e( 'Author', 'buddyboss' ); ?></div><!-- .bbp-reply-author -->
+		<div class="bbp-reply-author"><?php esc_html_e( 'Author', 'buddyboss-platform' ); ?></div><!-- .bbp-reply-author -->
 
 		<div class="bbp-reply-content">
 
 			<?php if ( ! bbp_show_lead_topic() ) : ?>
 
-				<?php _e( 'Posts', 'buddyboss' ); ?>
+				<?php esc_html_e( 'Posts', 'buddyboss-platform' ); ?>
 
 				<?php bbp_topic_subscription_link(); ?>
 
@@ -28,7 +31,7 @@
 
 			<?php else : ?>
 
-				<?php _e( 'Replies', 'buddyboss' ); ?>
+				<?php esc_html_e( 'Replies', 'buddyboss-platform' ); ?>
 
 			<?php endif; ?>
 
@@ -59,17 +62,17 @@
 
 	<li class="bbp-footer">
 
-		<div class="bbp-reply-author"><?php _e( 'Author', 'buddyboss' ); ?></div>
+		<div class="bbp-reply-author"><?php esc_html_e( 'Author', 'buddyboss-platform' ); ?></div>
 
 		<div class="bbp-reply-content">
 
 			<?php if ( ! bbp_show_lead_topic() ) : ?>
 
-				<?php _e( 'Posts', 'buddyboss' ); ?>
+				<?php esc_html_e( 'Posts', 'buddyboss-platform' ); ?>
 
 			<?php else : ?>
 
-				<?php _e( 'Replies', 'buddyboss' ); ?>
+				<?php esc_html_e( 'Replies', 'buddyboss-platform' ); ?>
 
 			<?php endif; ?>
 

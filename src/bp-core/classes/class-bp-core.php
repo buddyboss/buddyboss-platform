@@ -150,6 +150,54 @@ class BP_Core extends BP_Component {
 			$bp->active_components = apply_filters( 'bp_active_components', $bp->active_components );
 		}
 
+		/*
+		 * Drop active components whose directories are not present in this build
+		 * (e.g. premium-only components stripped from the free package), so that
+		 * bp_is_active() reflects what is actually loadable. The stored option is
+		 * scrubbed too, so code reading `bp-active-components` directly (performance
+		 * must-use integrations, feature registry migration fallback) stays in sync.
+		 */
+		$unavailable_components = array();
+		foreach ( array_keys( (array) $bp->active_components ) as $component ) {
+			if ( ! in_array( $component, $bp->optional_components, true ) ) {
+				continue;
+			}
+
+			$directory_available = file_exists( $bp->plugin_dir . 'bp-' . $component . '/bp-' . $component . '-loader.php' );
+
+			/** This filter is documented in bp-core/bp-core-functions.php */
+			$directory_available = (bool) apply_filters( 'bb_component_directory_available', $directory_available, $component );
+
+			if ( ! $directory_available ) {
+				$unavailable_components[] = $component;
+				unset( $bp->active_components[ $component ] );
+			}
+		}
+
+		if ( ! empty( $unavailable_components ) ) {
+			$bp->deactivated_components = array_unique( array_merge( (array) $bp->deactivated_components, $unavailable_components ) );
+
+			// Scrub only the unavailable keys from the stored option, leaving
+			// runtime-filtered values out of the database write.
+			$stored_components   = (array) bp_get_option( 'bp-active-components', array() );
+			$scrubbed_components = array_diff_key( $stored_components, array_flip( $unavailable_components ) );
+			if ( $scrubbed_components !== $stored_components ) {
+				bp_update_option( 'bp-active-components', $scrubbed_components );
+
+				// Remember WHY these were removed (code unavailable, not an admin
+				// choice) so a provider plugin (e.g. BuddyBoss Addons supplying
+				// video/document) can restore them on its (re)activation instead
+				// of the components staying permanently disabled.
+				$scrub_memory = (array) bp_get_option( 'bb_scrubbed_unavailable_components', array() );
+				foreach ( $unavailable_components as $unavailable_component ) {
+					if ( isset( $stored_components[ $unavailable_component ] ) ) {
+						$scrub_memory[ $unavailable_component ] = $stored_components[ $unavailable_component ];
+					}
+				}
+				bp_update_option( 'bb_scrubbed_unavailable_components', $scrub_memory );
+			}
+		}
+
 		// Loop through optional components.
 		foreach ( $bp->optional_components as $component ) {
 			if ( bp_is_active( $component ) && file_exists( $bp->plugin_dir . 'bp-' . $component . '/bp-' . $component . '-loader.php' ) ) {
@@ -407,7 +455,7 @@ class BP_Core extends BP_Component {
 				apply_filters(
 					'bp_register_email_post_type',
 					array(
-						'description'        => __( 'BuddyBoss emails', 'buddyboss' ),
+						'description'        => __( 'BuddyBoss emails', 'buddyboss-platform' ),
 						'labels'             => bp_get_email_post_type_labels(),
 						'menu_icon'          => 'dashicons-email-alt',
 						'public'             => false,
@@ -430,7 +478,7 @@ class BP_Core extends BP_Component {
 				apply_filters(
 					'bp_register_group_type_post_type',
 					array(
-						'description'        => __( 'BuddyBoss group type', 'buddyboss' ),
+						'description'        => __( 'BuddyBoss group type', 'buddyboss-platform' ),
 						'labels'             => bp_groups_get_group_type_post_type_labels(),
 						'public'             => false,
 						'publicly_queryable' => false,

@@ -77,8 +77,8 @@ export function MediaPickerField( { value, onChange, disabled, config } ) {
 	var mergedConfig   = config || {};
 	var libraryType    = mergedConfig.library_type || 'image';
 	var allowMultiple  = !! mergedConfig.multiple;
-	var frameTitle     = mergedConfig.frame_title || __( 'Select or Upload Media', 'buddyboss' );
-	var frameButton    = mergedConfig.frame_button_text || __( 'Use this media', 'buddyboss' );
+	var frameTitle     = mergedConfig.frame_title || __( 'Select or Upload Media', 'buddyboss-platform' );
+	var frameButton    = mergedConfig.frame_button_text || __( 'Use this media', 'buddyboss-platform' );
 	var placeholderIcn = mergedConfig.placeholder_icon || 'plus';
 	// 'compact' (default) renders a small +-tile placeholder. 'large' renders a
 	// square picture placeholder plus a separate "Upload" button — used by OG image.
@@ -133,7 +133,7 @@ export function MediaPickerField( { value, onChange, disabled, config } ) {
 
 	function openMediaLibrary() {
 		if ( typeof window.wp === 'undefined' || ! window.wp.media ) {
-			window.alert( __( 'WordPress Media API is not available.', 'buddyboss' ) );
+			window.alert( __( 'WordPress Media API is not available.', 'buddyboss-platform' ) );
 			return;
 		}
 
@@ -241,7 +241,7 @@ export function MediaPickerField( { value, onChange, disabled, config } ) {
 							disabled={ disabled }
 						>
 							<i className="bb-icons-rl bb-icons-rl-upload-simple"></i>
-							{ __( 'Replace', 'buddyboss' ) }
+							{ __( 'Replace', 'buddyboss-platform' ) }
 						</button>
 						<button
 							type="button"
@@ -250,7 +250,7 @@ export function MediaPickerField( { value, onChange, disabled, config } ) {
 							disabled={ disabled }
 						>
 							<i className="bb-icons-rl bb-icons-rl-x"></i>
-							{ __( 'Remove', 'buddyboss' ) }
+							{ __( 'Remove', 'buddyboss-platform' ) }
 						</button>
 					</div>
 				</div>
@@ -275,7 +275,7 @@ export function MediaPickerField( { value, onChange, disabled, config } ) {
 							disabled={ disabled }
 						>
 							<i className="bb-icons-rl bb-icons-rl-upload-simple"></i>
-							{ __( 'Replace selection', 'buddyboss' ) }
+							{ __( 'Replace selection', 'buddyboss-platform' ) }
 						</button>
 						<button
 							type="button"
@@ -284,7 +284,7 @@ export function MediaPickerField( { value, onChange, disabled, config } ) {
 							disabled={ disabled }
 						>
 							<i className="bb-icons-rl bb-icons-rl-x"></i>
-							{ __( 'Clear', 'buddyboss' ) }
+							{ __( 'Clear', 'buddyboss-platform' ) }
 						</button>
 					</div>
 				</div>
@@ -297,7 +297,7 @@ export function MediaPickerField( { value, onChange, disabled, config } ) {
 						className="bb-admin-media-picker__placeholder"
 						onClick={ openMediaLibrary }
 						disabled={ disabled }
-						aria-label={ __( 'Select media', 'buddyboss' ) }
+						aria-label={ __( 'Select media', 'buddyboss-platform' ) }
 					>
 						<i className={ 'bb-icons-rl bb-icons-rl-' + placeholderIcn } aria-hidden="true"></i>
 					</button>
@@ -316,7 +316,7 @@ export function MediaPickerField( { value, onChange, disabled, config } ) {
 						disabled={ disabled }
 					>
 						<i className="bb-icons-rl bb-icons-rl-upload-simple"></i>
-						{ __( 'Upload', 'buddyboss' ) }
+						{ __( 'Upload', 'buddyboss-platform' ) }
 					</button>
 				</div>
 			) }

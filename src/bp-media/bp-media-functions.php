@@ -25,7 +25,7 @@ function bp_media_upload() {
 	 * Make sure user is logged in
 	 */
 	if ( ! is_user_logged_in() ) {
-		return new WP_Error( 'not_logged_in', __( 'Please login in order to upload file media.', 'buddyboss' ), array( 'status' => 500 ) );
+		return new WP_Error( 'not_logged_in', __( 'Please login in order to upload file media.', 'buddyboss-platform' ), array( 'status' => 500 ) );
 	}
 
 	/**
@@ -205,13 +205,14 @@ function bp_media_upload_handler( $file_id = 'file' ) {
 			'test_form'            => false,
 			'upload_error_strings' => array(
 				false,
-				sprintf( __( 'The uploaded file exceeds %d MB', 'buddyboss' ), bp_media_file_upload_max_size() ),
-				__( 'The uploaded file was only partially uploaded.', 'buddyboss' ),
-				__( 'No file was uploaded.', 'buddyboss' ),
+				/* translators: %d: maximum allowed upload size in MB. */
+				sprintf( __( 'The uploaded file exceeds %d MB', 'buddyboss-platform' ), bp_media_file_upload_max_size() ),
+				__( 'The uploaded file was only partially uploaded.', 'buddyboss-platform' ),
+				__( 'No file was uploaded.', 'buddyboss-platform' ),
 				'',
-				__( 'Missing a temporary folder.', 'buddyboss' ),
-				__( 'Failed to write file to disk.', 'buddyboss' ),
-				__( 'File upload stopped by extension.', 'buddyboss' ),
+				__( 'Missing a temporary folder.', 'buddyboss-platform' ),
+				__( 'Failed to write file to disk.', 'buddyboss-platform' ),
+				__( 'File upload stopped by extension.', 'buddyboss-platform' ),
 			),
 		)
 	);
@@ -239,7 +240,7 @@ function bp_media_upload_handler( $file_id = 'file' ) {
 		return $attachment;
 	}
 
-	return new WP_Error( 'error_uploading', __( 'Error while uploading media.', 'buddyboss' ), array( 'status' => 500 ) );
+	return new WP_Error( 'error_uploading', __( 'Error while uploading media.', 'buddyboss-platform' ), array( 'status' => 500 ) );
 
 }
 
@@ -1087,7 +1088,6 @@ function bp_media_object_results_media_all_scope( $querystring ) {
 	return http_build_query( $querystring );
 }
 
-
 /**
  * Object template results media personal scope.
  *
@@ -1454,7 +1454,7 @@ function bp_media_delete_orphaned_attachments() {
 	$post_table              = $wpdb->posts;
 	$postmeta_table          = $wpdb->postmeta;
 	$six_hours_ago_timestamp = strtotime( '-6 hours', current_time( 'timestamp', 1 ) );
-	$six_hours_ago           = date( 'Y-m-d H:i:s', $six_hours_ago_timestamp );
+	$six_hours_ago           = gmdate( 'Y-m-d H:i:s', $six_hours_ago_timestamp );
 
 	$query = "SELECT {$post_table}.ID
 				FROM {$post_table}
@@ -1475,7 +1475,7 @@ function bp_media_delete_orphaned_attachments() {
 				GROUP BY {$post_table}.ID
 				ORDER BY {$post_table}.post_date DESC";
 
-	$media_wp_query_posts = $wpdb->get_col( $query );
+	$media_wp_query_posts = $wpdb->get_col( $query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- query interpolates only internal table names ($wpdb->posts/postmeta) and an internally gmdate()-generated timestamp; no user input.
 
 	if ( ! empty( $media_wp_query_posts ) ) {
 		foreach ( $media_wp_query_posts as $post_id ) {
@@ -2317,6 +2317,14 @@ function bp_media_import_reset_options() {
  */
 function bp_media_import_status_request() {
 
+	// This AJAX handler runs destructive site-wide media import/reset operations,
+	// so restrict it to administrators. Without this any logged-in user could
+	// trigger imports/resets (privilege escalation). Nonce verification is
+	// handled separately.
+	if ( ! current_user_can( 'manage_options' ) ) {
+		wp_send_json_error( array( 'message' => __( 'Sorry, you are not allowed to do that.', 'buddyboss-platform' ) ) );
+	}
+
 	$import_status = get_option( 'bp_media_import_status' );
 
 	if ( 'reset_albums' == $import_status ) {
@@ -2407,8 +2415,8 @@ function bp_media_import_status_request() {
 			'topics_total'  => $topics_total,
 			'replies_total' => $replies_total,
 			'import_status' => $import_status,
-			'success_msg'   => __( 'BuddyBoss Media data update is complete! Any previously uploaded member photos should display in their profiles now.', 'buddyboss' ),
-			'error_msg'     => __( 'BuddyBoss Media data update is failing!', 'buddyboss' ),
+			'success_msg'   => __( 'BuddyBoss Media data update is complete! Any previously uploaded member photos should display in their profiles now.', 'buddyboss-platform' ),
+			'error_msg'     => __( 'BuddyBoss Media data update is failing!', 'buddyboss-platform' ),
 		)
 	);
 }
@@ -2424,7 +2432,7 @@ function bp_media_directory_page_content() {
 
 	if ( ! empty( $page_ids['media'] ) ) {
 		$media_page_content = get_post_field( 'post_content', $page_ids['media'] );
-		echo apply_filters( 'the_content', $media_page_content );
+		echo wp_kses_post( apply_filters( 'the_content', $media_page_content ) );
 	}
 }
 
@@ -2449,7 +2457,7 @@ function bp_get_attachment_media_id( $attachment_id = 0 ) {
 	$attachment_media_id = wp_cache_get( $cache_key, 'bp_media' );
 
 	if ( false === $attachment_media_id ) {
-		$attachment_media_id = (int) $wpdb->get_var( "SELECT DISTINCT m.id FROM {$bp->media->table_name} m WHERE m.attachment_id = {$attachment_id}" );
+		$attachment_media_id = (int) $wpdb->get_var( $wpdb->prepare( "SELECT DISTINCT m.id FROM {$bp->media->table_name} m WHERE m.attachment_id = %d", $attachment_id ) );
 		wp_cache_set( $cache_key, $attachment_media_id, 'bp_media' );
 	}
 
@@ -2825,7 +2833,6 @@ function bp_media_get_forum_id( $media_id ) {
 
 }
 
-
 /**
  * Return the breadcrumbs.
  *
@@ -2851,7 +2858,7 @@ function bp_media_user_media_album_tree_view_li_html( $user_id = 0, $group_id = 
 	}
 
 	// db call ok; no-cache ok;
-	$data = $wpdb->get_results( $media_album_query, ARRAY_A );
+	$data = $wpdb->get_results( $media_album_query, ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- $media_album_query is prepared above (%d for user_id/group_id; internal table name).
 
 	// Build array of item references.
 	foreach ( $data as $key => &$item ) {
@@ -3336,13 +3343,13 @@ function bp_media_symlink_path() {
 	$platform_previews_path = $upload_dir . '/bb-platform-previews';
 	if ( ! is_dir( $platform_previews_path ) ) {
 		wp_mkdir_p( $platform_previews_path );
-		chmod( $platform_previews_path, 0755 );
+		chmod( $platform_previews_path, 0755 ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_chmod -- explicit permission set on a freshly-created directory.
 	}
 
 	$media_symlinks_path = $platform_previews_path . '/' . md5( 'bb-media' );
 	if ( ! is_dir( $media_symlinks_path ) ) {
 		wp_mkdir_p( $media_symlinks_path );
-		chmod( $media_symlinks_path, 0755 );
+		chmod( $media_symlinks_path, 0755 ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_chmod -- explicit permission set on a freshly-created directory.
 	}
 
 	return $media_symlinks_path;
@@ -3529,13 +3536,13 @@ function bp_media_delete_symlinks( $media ) {
 		foreach ( $all_attachments as $attachment_path ) {
 			// Delete symlink without an extension.
 			if ( file_exists( $attachment_path ) ) {
-				unlink( $attachment_path );
+				wp_delete_file( $attachment_path );
 			}
 
 			// Delete symlink with an extension.
 			$attachment_path = ! empty( $symlink_extension ) ? $attachment_path . '.' . $symlink_extension : $attachment_path;
 			if ( file_exists( $attachment_path ) ) {
-				unlink( $attachment_path );
+				wp_delete_file( $attachment_path );
 			}
 		}
 	}
@@ -3806,6 +3813,26 @@ function bp_media_regenerate_attachment_thumbnails( $attachment_id ) {
  * @since BuddyBoss X.X.X
  */
 function bb_media_user_can_access( $id, $type, $attachment_id = 0 ) {
+
+	// Bail with no access when the component for the requested type is not
+	// active (e.g. the video/document components are not present in this build),
+	// since their classes and functions are not loaded.
+	if (
+		( 'video' === $type && ! bp_is_active( 'video' ) ) ||
+		( in_array( $type, array( 'document', 'folder' ), true ) && ! bp_is_active( 'document' ) )
+	) {
+		$data = array(
+			'can_view'     => false,
+			'can_download' => false,
+			'can_add'      => false,
+			'can_edit'     => false,
+			'can_delete'   => false,
+			'can_move'     => false,
+		);
+
+		/** This filter is documented in bp-media/bp-media-functions.php */
+		return apply_filters( 'bb_media_user_can_access', $data, $id, $type, 0 );
+	}
 
 	$can_view        = false;
 	$can_download    = false;
@@ -4178,7 +4205,7 @@ function bb_media_delete_older_symlinks() {
 
 		if ( file_exists( $file ) && $file_time < $limit ) {
 			$list[] = $file;
-			unlink( $file );
+			wp_delete_file( $file );
 		}
 	}
 	closedir( $dh );
@@ -4197,69 +4224,6 @@ add_action(
 		bp_core_schedule_cron( 'bb_media_deleter_older_symlink', 'bb_media_delete_older_symlinks', 'bb_schedule_15days' );
 	}
 );
-
-
-/**
- * Check the GIPHY key is valid or not.
- *
- * @param boolean $api_key GIPHY api key.
- * @param boolean $message GIPHY api key validation response message.
- *
- * @return mixed Whether the giphy key is valid or error object.
- *
- * @since BuddyBoss 2.1.2
- */
-function bb_check_valid_giphy_api_key( $api_key = '', $message = false ) {
-
-	static $cache = array();
-	$cache_key    = 'bb_check_valid_giphy_api_key';
-	$saved_key    = bp_media_get_gif_api_key();
-	$use_caching  = false;
-
-	if ( empty( $api_key ) && empty( $cache ) ) {
-
-		// Use caching if not user action.
-		$cache       = get_transient( $cache_key );
-		$use_caching = true;
-
-		// Remove old cache if empty key saved.
-		if ( ! empty( $cache ) && is_array( $cache ) && ! array_key_exists( $saved_key, $cache ) ) {
-			delete_transient( $cache_key );
-		}
-	}
-
-	$api_key = ! empty( $api_key ) ? $api_key : $saved_key;
-	if ( isset( $cache[ $api_key ] ) && ! empty( $cache[ $api_key ] ) ) {
-		if ( true === $message ) {
-			return $cache[ $api_key ];
-		}
-		return (bool) ( ! is_wp_error( $cache[ $api_key ] ) && isset( $cache[ $api_key ]['response']['code'] ) && 200 === $cache[ $api_key ]['response']['code'] );
-	}
-
-	if ( empty( $api_key ) ) {
-		return false;
-	}
-
-	$output = wp_remote_get( 'https://api.giphy.com/v1/gifs/trending?api_key=' . $api_key . '&limit=1' );
-	if ( $output && ! is_wp_error( $output ) ) {
-		$cache[ $api_key ] = $output;
-		if ( $use_caching ) {
-			$cache_expiry = MONTH_IN_SECONDS;
-			if ( 200 !== $cache[ $api_key ]['response']['code'] ) {
-				$cache_expiry = WEEK_IN_SECONDS;
-			}
-			set_transient( $cache_key, array( $api_key => $output ), $cache_expiry );
-		}
-	} elseif ( is_wp_error( $output ) ) {
-		$cache[ $api_key ] = $output;
-	} else {
-		return false;
-	}
-	if ( true === $message ) {
-		return $cache[ $api_key ];
-	}
-	return (bool) ( ! is_wp_error( $cache[ $api_key ] ) && isset( $cache[ $api_key ]['response']['code'] ) && 200 === $cache[ $api_key ]['response']['code'] );
-}
 
 /**
  * Run migration for media and video description from post table to media table.

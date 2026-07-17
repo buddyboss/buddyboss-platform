@@ -17,7 +17,7 @@ defined( 'ABSPATH' ) || exit;
  * @since BuddyPress 1.6.0
  */
 function bp_version() {
-	echo bp_get_version();
+	echo esc_html( bp_get_version() );
 }
 	/**
 	 * Return the BuddyPress version.
@@ -36,7 +36,7 @@ function bp_get_version() {
  * @since BuddyPress 1.6.0
  */
 function bp_db_version() {
-	echo bp_get_db_version();
+	echo esc_html( bp_get_db_version() );
 }
 	/**
 	 * Return the BuddyPress database version.
@@ -55,7 +55,7 @@ function bp_get_db_version() {
  * @since BuddyPress 1.6.0
  */
 function bp_db_version_raw() {
-	echo bp_get_db_version_raw();
+	echo esc_html( bp_get_db_version_raw() );
 }
 	/**
 	 * Return the BuddyPress database version.
@@ -116,7 +116,7 @@ function bp_core_get_table_prefix() {
  * @return array $items The sorted array.
  */
 function bp_sort_by_key( $items, $key, $type = 'alpha', $preserve_keys = false ) {
-	$callback = function( $a, $b ) use ( $key, $type ) {
+	$callback = function ( $a, $b ) use ( $key, $type ) {
 		$values = array(
 			0 => false,
 			1 => false,
@@ -789,18 +789,18 @@ function bp_core_add_page_mappings( $components, $existing = 'keep', $map_regist
  */
 function bp_core_get_directory_page_default_titles() {
 	$page_default_titles = array(
-		'activity'        => __( 'News Feed', 'buddyboss' ),
-		'groups'          => __( 'Groups', 'buddyboss' ),
-		'blogs'           => __( 'Sites', 'buddyboss' ),
-		'members'         => __( 'Members', 'buddyboss' ),
-		'media'           => __( 'Photos', 'buddyboss' ),
-		'document'        => __( 'Documents', 'buddyboss' ),
-		'video'           => __( 'Videos', 'buddyboss' ),
-		'activate'        => __( 'Activate', 'buddyboss' ),
-		'register'        => __( 'Register', 'buddyboss' ),
-		'new_forums_page' => __( 'Forums', 'buddyboss' ),
-		'terms'           => __( 'Terms of Service', 'buddyboss' ),
-		'privacy'         => __( 'Privacy Policy', 'buddyboss' ),
+		'activity'        => __( 'News Feed', 'buddyboss-platform' ),
+		'groups'          => __( 'Groups', 'buddyboss-platform' ),
+		'blogs'           => __( 'Sites', 'buddyboss-platform' ),
+		'members'         => __( 'Members', 'buddyboss-platform' ),
+		'media'           => __( 'Photos', 'buddyboss-platform' ),
+		'document'        => __( 'Documents', 'buddyboss-platform' ),
+		'video'           => __( 'Videos', 'buddyboss-platform' ),
+		'activate'        => __( 'Activate', 'buddyboss-platform' ),
+		'register'        => __( 'Register', 'buddyboss-platform' ),
+		'new_forums_page' => __( 'Forums', 'buddyboss-platform' ),
+		'terms'           => __( 'Terms of Service', 'buddyboss-platform' ),
+		'privacy'         => __( 'Privacy Policy', 'buddyboss-platform' ),
 	);
 
 	/**
@@ -1004,9 +1004,9 @@ function bp_core_get_component_search_query_arg( $component = null ) {
  *
  * @since BuddyBoss 2.9.00
  *
- * @param array $args {
- *     Optional. An array of key => value arguments to match against the component objects.
- *     Default empty array.
+ * @param array  $args {
+ *      Optional. An array of key => value arguments to match against the component objects.
+ *      Default empty array.
  *
  *     @type string $name          Translatable name for the component.
  *     @type string $id            Unique ID for the component.
@@ -1237,7 +1237,7 @@ function bp_core_time_since( $older_date, $newer_date = false ) {
 	 *
 	 * @param string $value String representing the time since the older date.
 	 */
-	$unknown_text = apply_filters( 'bp_core_time_since_unknown_text', esc_html__( 'sometime', 'buddyboss' ) );
+	$unknown_text = apply_filters( 'bp_core_time_since_unknown_text', esc_html__( 'sometime', 'buddyboss-platform' ) );
 
 	/**
 	 * Filters the value to use if the time since is right now.
@@ -1246,7 +1246,7 @@ function bp_core_time_since( $older_date, $newer_date = false ) {
 	 *
 	 * @param string $value String representing the time since the older date.
 	 */
-	$right_now_text = apply_filters( 'bp_core_time_since_right_now_text', esc_html__( 'Just now', 'buddyboss' ) );
+	$right_now_text = apply_filters( 'bp_core_time_since_right_now_text', esc_html__( 'Just now', 'buddyboss-platform' ) );
 
 	/**
 	 * Filters the value to use if the time since is some time ago.
@@ -1256,7 +1256,7 @@ function bp_core_time_since( $older_date, $newer_date = false ) {
 	 * @param string $value String representing the time since the older date.
 	 */
 	/* translators: The time since the older date. */
-	$ago_text = apply_filters( 'bp_core_time_since_ago_text', esc_html__( '%s ago', 'buddyboss' ) );
+	$ago_text = apply_filters( 'bp_core_time_since_ago_text', esc_html__( '%s ago', 'buddyboss-platform' ) );
 
 	// Array of time period chunks.
 	$chunks = array(
@@ -1322,9 +1322,9 @@ function bp_core_time_since( $older_date, $newer_date = false ) {
 			// Set output var.
 			switch ( $seconds ) {
 				case YEAR_IN_SECONDS:
-					$output = $count < 2 ? esc_html__( 'a year', 'buddyboss' ) : sprintf(
+					$output = $count < 2 ? esc_html__( 'a year', 'buddyboss-platform' ) : sprintf(
 						/* translators: The display years count from the older date. */
-						_n( '%s year', '%s years', $count, 'buddyboss' ),
+						_n( '%s year', '%s years', $count, 'buddyboss-platform' ),
 						$count
 					);
 					break;
@@ -1332,7 +1332,7 @@ function bp_core_time_since( $older_date, $newer_date = false ) {
 					$month_seconds = floor( $since / ( 30 * DAY_IN_SECONDS ) );
 					$output        = sprintf(
 						/* translators: The display months count from the older date. */
-						_n( '%s month', '%s months', $month_seconds, 'buddyboss' ),
+						_n( '%s month', '%s months', $month_seconds, 'buddyboss-platform' ),
 						$month_seconds
 					);
 					break;
@@ -1340,39 +1340,39 @@ function bp_core_time_since( $older_date, $newer_date = false ) {
 					$week_seconds = floor( $since / WEEK_IN_SECONDS );
 					$output       = $count < 2 ? sprintf(
 						/* translators: The display weeks count from the older date. */
-						_n( '%s week', '%s weeks', $week_seconds, 'buddyboss' ),
+						_n( '%s week', '%s weeks', $week_seconds, 'buddyboss-platform' ),
 						$week_seconds
 					) : sprintf(
 						/* translators: The display months count from the older date. */
-						_n( '%s month', '%s months', $count, 'buddyboss' ),
+						_n( '%s month', '%s months', $count, 'buddyboss-platform' ),
 						$count
 					);
 					break;
 				case WEEK_IN_SECONDS:
-					$output = $count < 2 ? esc_html__( 'a week', 'buddyboss' ) : sprintf(
+					$output = $count < 2 ? esc_html__( 'a week', 'buddyboss-platform' ) : sprintf(
 						/* translators: The display weeks count from the older date. */
-						_n( '%s week', '%s weeks', $count, 'buddyboss' ),
+						_n( '%s week', '%s weeks', $count, 'buddyboss-platform' ),
 						$count
 					);
 					break;
 				case DAY_IN_SECONDS:
-					$output = $count < 2 ? esc_html__( 'a day', 'buddyboss' ) : sprintf(
+					$output = $count < 2 ? esc_html__( 'a day', 'buddyboss-platform' ) : sprintf(
 						/* translators: The display days count from the older date. */
-						_n( '%s day', '%s days', $count, 'buddyboss' ),
+						_n( '%s day', '%s days', $count, 'buddyboss-platform' ),
 						$count
 					);
 					break;
 				case HOUR_IN_SECONDS:
-					$output = $count < 2 ? esc_html__( 'an hour', 'buddyboss' ) : sprintf(
+					$output = $count < 2 ? esc_html__( 'an hour', 'buddyboss-platform' ) : sprintf(
 						/* translators: The display hours count from the older date.. */
-						_n( '%s hour', '%s hours', $count, 'buddyboss' ),
+						_n( '%s hour', '%s hours', $count, 'buddyboss-platform' ),
 						$count
 					);
 					break;
 				case MINUTE_IN_SECONDS:
-					$output = $count < 2 ? esc_html__( 'a minute', 'buddyboss' ) : sprintf(
+					$output = $count < 2 ? esc_html__( 'a minute', 'buddyboss-platform' ) : sprintf(
 						/* translators: The display minutes count from the older date. */
-						_n( '%s minute', '%s minutes', $count, 'buddyboss' ),
+						_n( '%s minute', '%s minutes', $count, 'buddyboss-platform' ),
 						$count
 					);
 					break;
@@ -1381,7 +1381,8 @@ function bp_core_time_since( $older_date, $newer_date = false ) {
 						$output = $right_now_text;
 					} else {
 						$output = sprintf(
-							_n( '%s second', '%s seconds', $count, 'buddyboss' ),
+							/* translators: %s: number of seconds. */
+							_n( '%s second', '%s seconds', $count, 'buddyboss-platform' ),
 							$count
 						);
 					}
@@ -1421,7 +1422,7 @@ function bp_core_time_since( $older_date, $newer_date = false ) {
  * @return string|null
  */
 function bp_core_iso8601_date( $timestamp = '' ) {
-	echo bp_core_get_iso8601_date( $timestamp );
+	echo esc_html( bp_core_get_iso8601_date( $timestamp ) );
 }
 	/**
 	 * Return an ISO-8601 date from a date string.
@@ -1476,7 +1477,7 @@ function bp_core_date_format( $time = false, $date = true, $symbol = ' @ ' ) {
  * @return string|null
  */
 function bp_core_format_date( $date = '', $format = '' ) {
-	echo bp_core_get_format_date( $date, $format );
+	echo esc_html( bp_core_get_format_date( $date, $format ) );
 }
 
 /**
@@ -1606,7 +1607,7 @@ function bp_core_render_message() {
 
 		<div id="message" class="bp-template-notice <?php echo esc_attr( $type ); ?>">
 
-			<?php echo $content; ?>
+			<?php echo wp_kses_post( $content ); ?>
 
 		</div>
 
@@ -1680,8 +1681,7 @@ function bp_core_record_activity() {
 	}
 
 	// updated users last activity on each page refresh.
-	bp_update_user_last_activity( $user_id, date( 'Y-m-d H:i:s', $current_time ) );
-
+	bp_update_user_last_activity( $user_id, gmdate( 'Y-m-d H:i:s', $current_time ) );
 }
 add_action( 'wp_head', 'bp_core_record_activity' );
 
@@ -1705,7 +1705,7 @@ function bp_core_get_last_activity( $last_activity_date = '', $string = '' ) {
 
 	// Use the string if a last activity date was passed.
 	$last_active = empty( $last_activity_date )
-		? __( 'Not recently active', 'buddyboss' )
+		? __( 'Not recently active', 'buddyboss-platform' )
 		: sprintf( $string, bp_core_time_since( $last_activity_date ) );
 
 	/**
@@ -2306,7 +2306,7 @@ function bp_verify_nonce_request( $action = '', $query_arg = '_wpnonce' ) {
 
 	// Parse home_url() into pieces to remove query-strings, strange characters,
 	// and other funny things that plugins might to do to it.
-	$parsed_home = parse_url( home_url( '/', ( is_ssl() ? 'https' : 'http' ) ) );
+	$parsed_home = wp_parse_url( home_url( '/', ( is_ssl() ? 'https' : 'http' ) ) );
 
 	// Maybe include the port, if it's included in home_url().
 	if ( isset( $parsed_home['port'] ) ) {
@@ -2507,8 +2507,146 @@ function _bp_strip_spans_from_title( $title_part = '' ) {
  * @return string
  */
 function bp_core_get_minified_asset_suffix() {
-	$ext = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
-	return $ext;
+	static $suffix = null;
+
+	if ( null === $suffix ) {
+		$debug = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG;
+
+		/*
+		 * SCRIPT_DEBUG is only honoured when the unminified assets actually
+		 * exist on disk. The shipped customer zip strips every unminified
+		 * .js/.css that has a .min twin, so on such a build the '' (unminified)
+		 * suffix would 404 the ~40 enqueues that use this helper. Probe one
+		 * canonical first-party paired asset — present on a source checkout,
+		 * absent from a minified-only zip — and cache the result (a single
+		 * file_exists per request). plugin_dir already accounts for the source
+		 * sub-directory on developer checkouts.
+		 */
+		if ( $debug && function_exists( 'buddypress' ) && ! empty( buddypress()->plugin_dir )
+			&& file_exists( buddypress()->plugin_dir . 'bp-templates/bp-nouveau/css/buddypress.css' ) ) {
+			$suffix = '';
+		} else {
+			$suffix = '.min';
+		}
+	}
+
+	return $suffix;
+}
+
+/**
+ * Resolve the public URL for a first-party asset.
+ *
+ * Chooses the unminified `<name>.<ext>` file when debugging is on *and* that
+ * file actually exists on disk; otherwise falls back to the minified
+ * `<name>.min.<ext>`. The shipped customer zip contains only the minified
+ * files, so on a normal install this always resolves to `.min`. On a developer
+ * checkout with `SCRIPT_DEBUG` enabled, the readable source is served instead.
+ * Callers pass the extensionless basename. Example:
+ *
+ *     wp_enqueue_style(
+ *         'bp-foo',
+ *         bb_asset_url( 'bp-core/css/foo', 'css' ),
+ *         array(),
+ *         bp_get_version()
+ *     );
+ *
+ * @since BuddyBoss 3.0.3
+ *
+ * @param string $relative Plugin-root-relative asset path WITHOUT extension
+ *                         or `.min` suffix, e.g. `bp-core/css/foo`.
+ * @param string $ext      Extension without leading dot. Typically `js` or `css`.
+ * @return string Public URL ready to pass to wp_enqueue_script/style.
+ */
+function bb_asset_url( $relative, $ext ) {
+	$suffix = bb_get_asset_min_suffix( $relative, $ext );
+	return trailingslashit( buddypress()->plugin_url ) . $relative . $suffix . '.' . $ext;
+}
+
+/**
+ * Filesystem-path counterpart to {@see bb_asset_url()}.
+ *
+ * Used by enqueue callers that pass `filemtime()` as the cache-busting
+ * version — they need the on-disk path that backs the resolved URL.
+ *
+ * @since BuddyBoss 3.0.3
+ *
+ * @param string $relative Plugin-root-relative asset path WITHOUT extension or `.min`.
+ * @param string $ext      Extension without leading dot.
+ * @return string Absolute filesystem path.
+ */
+function bb_asset_path( $relative, $ext ) {
+	$suffix = bb_get_asset_min_suffix( $relative, $ext );
+	return trailingslashit( buddypress()->plugin_dir ) . $relative . $suffix . '.' . $ext;
+}
+
+/**
+ * Decide whether to serve the unminified or minified variant of a plugin asset.
+ *
+ * The rule, applied per file:
+ *   - If `SCRIPT_DEBUG` is on AND the unminified file exists on disk → serve the
+ *     unminified variant (empty suffix).
+ *   - Otherwise → serve the minified variant (`.min` suffix).
+ *
+ * This guarantees the plugin never enqueues a file that isn't present: shipped
+ * zips carry only the minified assets, so even with `SCRIPT_DEBUG` on the loader
+ * gracefully falls back to `.min` when the source file was stripped from the
+ * build. Developer checkouts (which keep both variants) get the readable source.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $relative Plugin-root-relative asset path WITHOUT extension or `.min`.
+ * @param string $ext      Extension without leading dot. Typically `js` or `css`.
+ * @return string Either '' (unminified) or '.min' (minified).
+ */
+function bb_get_asset_min_suffix( $relative, $ext ) {
+	$debug = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG;
+
+	if ( $debug ) {
+		$unminified = trailingslashit( buddypress()->plugin_dir ) . $relative . '.' . $ext;
+		if ( file_exists( $unminified ) ) {
+			return '';
+		}
+	}
+
+	return '.min';
+}
+
+/**
+ * Check whether a component's directory is present in this build.
+ *
+ * Optional components can be stripped from a distribution (e.g. the video and
+ * document components removed from the free package). This checks for the
+ * component's loader file on disk.
+ *
+ * @since BuddyBoss 3.0.5
+ *
+ * @param string $component Component ID (e.g. 'video', 'document').
+ * @return bool True when the component's loader file exists.
+ */
+function bb_is_component_directory_available( $component ) {
+	static $available = array();
+
+	if ( ! isset( $available[ $component ] ) ) {
+		$exists = file_exists( buddypress()->plugin_dir . 'bp-' . $component . '/bp-' . $component . '-loader.php' );
+
+		/**
+		 * Filters whether a component's code is available to load.
+		 *
+		 * By default this reflects whether the component's loader file exists
+		 * inside the Platform build. An external plugin that provides a
+		 * component (e.g. BuddyBoss Addons supplying video/document) returns
+		 * true for its component so the availability scrub keeps it active
+		 * and the admin UI keeps offering the toggle.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param bool   $exists    Whether the component's loader file exists in this build.
+		 * @param string $component Component ID (e.g. 'video', 'document').
+		 */
+		$available[ $component ] = (bool) apply_filters( 'bb_component_directory_available', $exists, $component );
+	}
+
+	return $available[ $component ];
 }
 
 /**
@@ -2523,31 +2661,31 @@ function bp_core_get_components( $type = 'all' ) {
 
 	$required_components = array(
 		'members'  => array(
-			'title'       => __( 'Member Profiles', 'buddyboss' ),
+			'title'       => __( 'Member Profiles', 'buddyboss-platform' ),
 			'settings'    => bp_get_admin_url( 'admin.php?page=bb-settings&tab=members' ),
-			'description' => __( 'Everything in a community website revolves around its members. All website users are given member profiles.', 'buddyboss' ),
+			'description' => __( 'Everything in a community website revolves around its members. All website users are given member profiles.', 'buddyboss-platform' ),
 		),
 		'xprofile' => array(
-			'title'       => __( 'Profile Fields', 'buddyboss' ),
+			'title'       => __( 'Profile Fields', 'buddyboss-platform' ),
 			'settings'    => bp_get_admin_url( 'admin.php?page=bb-settings&tab=members&panel=profile_fields' ),
-			'description' => __( 'Customize your community with fully editable profile fields that allow members to share details about themselves.', 'buddyboss' ),
+			'description' => __( 'Customize your community with fully editable profile fields that allow members to share details about themselves.', 'buddyboss-platform' ),
 			'default'     => true,
 		),
 	);
 
 	$optional_components = array(
 		'settings'      => array(
-			'title'       => __( 'Account Settings', 'buddyboss' ),
-			'description' => __( 'Allow members to modify their account and notification settings from within their profile.', 'buddyboss' ),
+			'title'       => __( 'Account Settings', 'buddyboss-platform' ),
+			'description' => __( 'Allow members to modify their account and notification settings from within their profile.', 'buddyboss-platform' ),
 			'default'     => true,
 		),
 		'notifications' => array(
-			'title'       => __( 'Notifications', 'buddyboss' ),
-			'description' => __( 'Notify members of relevant activity with a toolbar bubble and/or via email and allow them to customize their notification settings.', 'buddyboss' ),
+			'title'       => __( 'Notifications', 'buddyboss-platform' ),
+			'description' => __( 'Notify members of relevant activity with a toolbar bubble and/or via email and allow them to customize their notification settings.', 'buddyboss-platform' ),
 			'default'     => true,
 		),
 		'groups'        => array(
-			'title'       => __( 'Social Groups', 'buddyboss' ),
+			'title'       => __( 'Social Groups', 'buddyboss-platform' ),
 			'settings'    => bp_get_admin_url(
 				add_query_arg(
 					array(
@@ -2557,11 +2695,11 @@ function bp_core_get_components( $type = 'all' ) {
 					'admin.php'
 				)
 			),
-			'description' => __( 'Allow members to organize themselves into public, private or hidden social groups with separate activity feeds and member listings.', 'buddyboss' ),
+			'description' => __( 'Allow members to organize themselves into public, private or hidden social groups with separate activity feeds and member listings.', 'buddyboss-platform' ),
 			'default'     => false,
 		),
 		'forums'        => array(
-			'title'       => __( 'Forum Discussions', 'buddyboss' ),
+			'title'       => __( 'Forum Discussions', 'buddyboss-platform' ),
 			'settings'    => bp_get_admin_url(
 				add_query_arg(
 					array(
@@ -2571,11 +2709,11 @@ function bp_core_get_components( $type = 'all' ) {
 					'admin.php'
 				)
 			),
-			'description' => __( 'Allow members to have discussions using Q&A style message boards. Forums can be standalone or connected to social groups.', 'buddyboss' ),
+			'description' => __( 'Allow members to have discussions using Q&A style message boards. Forums can be standalone or connected to social groups.', 'buddyboss-platform' ),
 			'default'     => false,
 		),
 		'activity'      => array(
-			'title'       => __( 'Activity Feeds', 'buddyboss' ),
+			'title'       => __( 'Activity Feeds', 'buddyboss-platform' ),
 			'settings'    => bp_get_admin_url(
 				add_query_arg(
 					array(
@@ -2585,40 +2723,40 @@ function bp_core_get_components( $type = 'all' ) {
 					'admin.php'
 				)
 			),
-			'description' => __( 'Global, personal, and group activity feeds with threaded commenting, direct posting, and @mentions, with email notification support.', 'buddyboss' ),
+			'description' => __( 'Global, personal, and group activity feeds with threaded commenting, direct posting, and @mentions, with email notification support.', 'buddyboss-platform' ),
 			'default'     => false,
 		),
 		'media'         => array(
-			'title'       => __( 'Media Uploading', 'buddyboss' ),
+			'title'       => __( 'Media Uploading', 'buddyboss-platform' ),
 			'settings'    => bb_get_feature_settings_url( 'media' ),
-			'description' => __( 'Allow members to upload photos, documents, videos, emojis and animated GIFs, and to organize photos and videos into albums and documents into folders.', 'buddyboss' ),
+			'description' => __( 'Allow members to upload photos, documents, videos, emojis and animated GIFs, and to organize photos and videos into albums and documents into folders.', 'buddyboss-platform' ),
 			'default'     => false,
 		),
 		'document'      => array(
-			'title'       => __( 'Document Uploading', 'buddyboss' ),
+			'title'       => __( 'Document Uploading', 'buddyboss-platform' ),
 			'settings'    => bb_get_feature_settings_url( 'media', 'documents' ),
-			'description' => __( 'Allow members to upload documents, and to organize documents into folders.', 'buddyboss' ),
+			'description' => __( 'Allow members to upload documents, and to organize documents into folders.', 'buddyboss-platform' ),
 			'default'     => false,
 		),
 		'video'         => array(
-			'title'       => __( 'Video Uploading', 'buddyboss' ),
+			'title'       => __( 'Video Uploading', 'buddyboss-platform' ),
 			'settings'    => bb_get_feature_settings_url( 'media', 'videos' ),
-			'description' => __( 'Allow members to upload videos, and to organize videos into albums.', 'buddyboss' ),
+			'description' => __( 'Allow members to upload videos, and to organize videos into albums.', 'buddyboss-platform' ),
 			'default'     => false,
 		),
 		'messages'      => array(
-			'title'       => __( 'Private Messaging', 'buddyboss' ),
-			'description' => __( 'Allow members to send private messages. Messages can be sent to one member or a group of members.', 'buddyboss' ),
+			'title'       => __( 'Private Messaging', 'buddyboss-platform' ),
+			'description' => __( 'Allow members to send private messages. Messages can be sent to one member or a group of members.', 'buddyboss-platform' ),
 			'default'     => false,
 		),
 		'friends'       => array(
-			'title'       => __( 'Member Connections', 'buddyboss' ),
+			'title'       => __( 'Member Connections', 'buddyboss-platform' ),
 			'settings'    => bp_get_admin_url( 'admin.php?page=bb-settings&tab=members&panel=member_connection' ),
-			'description' => __( 'Allow members to make connections with one another and focus on those they care about most.', 'buddyboss' ),
+			'description' => __( 'Allow members to make connections with one another and focus on those they care about most.', 'buddyboss-platform' ),
 			'default'     => false,
 		),
 		'invites'       => array(
-			'title'       => __( 'Email Invites', 'buddyboss' ),
+			'title'       => __( 'Email Invites', 'buddyboss-platform' ),
 			'settings'    => bp_get_admin_url(
 				add_query_arg(
 					array(
@@ -2628,23 +2766,23 @@ function bp_core_get_components( $type = 'all' ) {
 					'admin.php'
 				)
 			),
-			'description' => __( 'Allow members to send email invitations to non-members to join the network.', 'buddyboss' ),
+			'description' => __( 'Allow members to send email invitations to non-members to join the network.', 'buddyboss-platform' ),
 			'default'     => false,
 		),
 		'moderation'    => array(
-			'title'                => __( 'Moderation', 'buddyboss' ),
-			'description'          => __( 'Allow members to block each other, and report inappropriate content to be reviewed by the site admin.', 'buddyboss' ),
+			'title'                => __( 'Moderation', 'buddyboss-platform' ),
+			'description'          => __( 'Allow members to block each other, and report inappropriate content to be reviewed by the site admin.', 'buddyboss-platform' ),
 			'settings'             => bp_get_admin_url( 'admin.php?page=bb-settings&tab=moderation&panel=member_moderation' ),
 			'default'              => false,
 			'deactivation_confirm' => true,
-			'deactivation_message' => '<p>' . __( 'Please confirm you want to deactivate the Moderation component.', 'buddyboss' ) . '</p>' .
-										'<h4>' . __( 'On Deactivation:', 'buddyboss' ) . '</h4>' .
+			'deactivation_message' => '<p>' . __( 'Please confirm you want to deactivate the Moderation component.', 'buddyboss-platform' ) . '</p>' .
+										'<h4>' . __( 'On Deactivation:', 'buddyboss-platform' ) . '</h4>' .
 										'<ul>' .
-											'<li>' . __( 'All suspended members will regain permission to login and their content will be unhidden', 'buddyboss' ) . '</li>' .
-											'<li>' . __( 'Members on the network will no longer be able to block other members. Any members they have blocked will be unblocked.', 'buddyboss' ) . '</li>' .
-											'<li>' . __( 'All hidden content will be unhidden', 'buddyboss' ) . '</li>' .
+											'<li>' . __( 'All suspended members will regain permission to login and their content will be unhidden', 'buddyboss-platform' ) . '</li>' .
+											'<li>' . __( 'Members on the network will no longer be able to block other members. Any members they have blocked will be unblocked.', 'buddyboss-platform' ) . '</li>' .
+											'<li>' . __( 'All hidden content will be unhidden', 'buddyboss-platform' ) . '</li>' .
 										'</ul>' .
-										'<p>' . __( 'Please note: Data will not be deleted when you deactivate the Moderation component. On reactivation, members who have previously been suspended or blocked will once again have their access removed or limited. Content that was previously unhidden will be hidden again.', 'buddyboss' ) . '</p>',
+										'<p>' . __( 'Please note: Data will not be deleted when you deactivate the Moderation component. On reactivation, members who have previously been suspended or blocked will once again have their access removed or limited. Content that was previously unhidden will be hidden again.', 'buddyboss-platform' ) . '</p>',
 		),
 		// @todo: used for bp-performance will enable in feature.
 		/*
@@ -2664,7 +2802,7 @@ function bp_core_get_components( $type = 'all' ) {
 		),
 		*/
 		'search'        => array(
-			'title'       => __( 'Network Search', 'buddyboss' ),
+			'title'       => __( 'Network Search', 'buddyboss-platform' ),
 			'settings'    => bp_get_admin_url(
 				add_query_arg(
 					array(
@@ -2674,12 +2812,12 @@ function bp_core_get_components( $type = 'all' ) {
 					'admin.php'
 				)
 			),
-			'description' => __( 'Allow members to search the entire network, along with custom post types of your choice, all in one unified search bar.', 'buddyboss' ),
+			'description' => __( 'Allow members to search the entire network, along with custom post types of your choice, all in one unified search bar.', 'buddyboss-platform' ),
 			'default'     => false,
 		),
 		'blogs'         => array(
-			'title'       => __( 'Blog Feeds', 'buddyboss' ),
-			'description' => __( 'Have new blog posts and comments appear in site activity feeds. Make sure to enable Activity Feeds first.', 'buddyboss' ),
+			'title'       => __( 'Blog Feeds', 'buddyboss-platform' ),
+			'description' => __( 'Have new blog posts and comments appear in site activity feeds. Make sure to enable Activity Feeds first.', 'buddyboss-platform' ),
 			'default'     => false,
 		),
 	);
@@ -2702,7 +2840,15 @@ function bp_core_get_components( $type = 'all' ) {
 
 	// Add blogs tracking if multisite.
 	if ( is_multisite() ) {
-		$optional_components['blogs']['description'] = __( 'Record activity for new sites, posts, and comments across your network.', 'buddyboss' );
+		$optional_components['blogs']['description'] = __( 'Record activity for new sites, posts, and comments across your network.', 'buddyboss-platform' );
+	}
+
+	// Hide optional components whose directories are not present in this build
+	// (e.g. the video and document components stripped from the free package).
+	foreach ( array_keys( $optional_components ) as $component_key ) {
+		if ( ! bb_is_component_directory_available( $component_key ) ) {
+			unset( $optional_components[ $component_key ] );
+		}
 	}
 
 	$default_components = array();
@@ -2787,7 +2933,7 @@ function bp_nav_menu_get_loggedin_pages() {
 	// Some BP nav menu items will not be represented in bp_nav, because
 	// they are not real BP components. We add them manually here.
 	$bp_menu_items[] = array(
-		'name' => __( 'Log Out', 'buddyboss' ),
+		'name' => __( 'Log Out', 'buddyboss-platform' ),
 		'slug' => 'logout',
 		'link' => wp_logout_url(),
 	);
@@ -2829,7 +2975,7 @@ function bp_nav_menu_get_loggedin_pages() {
 			$page_args['compose-messages'] =
 			(object) array(
 				'ID'             => hexdec( uniqid() ),
-				'post_title'     => __( 'New Messages', 'buddyboss' ),
+				'post_title'     => __( 'New Messages', 'buddyboss-platform' ),
 				'object_id'      => hexdec( uniqid() ),
 				'post_author'    => 0,
 				'post_date'      => 0,
@@ -2844,7 +2990,7 @@ function bp_nav_menu_get_loggedin_pages() {
 			// Add archived menu to display archived threads.
 			$page_args['archived-messages'] = (object) array(
 				'ID'             => hexdec( uniqid() ),
-				'post_title'     => __( 'Archived', 'buddyboss' ),
+				'post_title'     => __( 'Archived', 'buddyboss-platform' ),
 				'object_id'      => hexdec( uniqid() ),
 				'post_author'    => 0,
 				'post_date'      => 0,
@@ -2859,7 +3005,7 @@ function bp_nav_menu_get_loggedin_pages() {
 			if ( bp_current_user_can( 'bp_moderate' ) ) {
 				$page_args['site-notice'] = (object) array(
 					'ID'             => hexdec( uniqid() ),
-					'post_title'     => __( 'Site Notices', 'buddyboss' ),
+					'post_title'     => __( 'Site Notices', 'buddyboss-platform' ),
 					'object_id'      => hexdec( uniqid() ),
 					'post_author'    => 0,
 					'post_date'      => 0,
@@ -2876,7 +3022,7 @@ function bp_nav_menu_get_loggedin_pages() {
 		if ( 'groups' === $bp_item['slug'] && bp_is_active( 'groups' ) && bp_user_can_create_groups() ) {
 			$page_args['groups-create'] = (object) array(
 				'ID'             => hexdec( uniqid() ),
-				'post_title'     => __( 'Create Group', 'buddyboss' ),
+				'post_title'     => __( 'Create Group', 'buddyboss-platform' ),
 				'object_id'      => hexdec( uniqid() ),
 				'post_author'    => 0,
 				'post_date'      => 0,
@@ -2918,10 +3064,10 @@ function bp_nav_menu_get_loggedin_pages() {
 
 							if ( false === bb_enabled_legacy_email_preference() && bp_is_active( 'notifications' ) ) {
 								/* translators: Navigation name */
-								$c_sub_name = sprintf( __( 'Notification %s', 'buddyboss' ), $c_sub_name );
+								$c_sub_name = sprintf( __( 'Notification %s', 'buddyboss-platform' ), $c_sub_name );
 							} else {
 								/* translators: Navigation name */
-								$c_sub_name = sprintf( __( 'Email %s', 'buddyboss' ), $c_sub_name );
+								$c_sub_name = sprintf( __( 'Email %s', 'buddyboss-platform' ), $c_sub_name );
 							}
 
 							$page_args[ $c_arr_key ] =
@@ -2949,19 +3095,19 @@ function bp_nav_menu_get_loggedin_pages() {
 				}
 
 				if ( 'my-friends' === $s_nav['slug'] ) {
-					$sub_name = __( 'My Connections', 'buddyboss' );
+					$sub_name = __( 'My Connections', 'buddyboss-platform' );
 				}
 
 				if ( 'my-document' === $s_nav['slug'] ) {
-					$sub_name = __( 'My Documents', 'buddyboss' );
+					$sub_name = __( 'My Documents', 'buddyboss-platform' );
 				}
 
 				if ( 'my-media' === $s_nav['slug'] ) {
-					$sub_name = __( 'My Photos', 'buddyboss' );
+					$sub_name = __( 'My Photos', 'buddyboss-platform' );
 				}
 
 				if ( 'my-video' === $s_nav['slug'] ) {
-					$sub_name = __( 'My Videos', 'buddyboss' );
+					$sub_name = __( 'My Videos', 'buddyboss-platform' );
 				}
 
 				if ( 'my-courses' === $s_nav['slug'] ) {
@@ -2985,11 +3131,11 @@ function bp_nav_menu_get_loggedin_pages() {
 					 */
 					$course_label = apply_filters(
 						'bb_nav_sub_item_course_label',
-						__( 'Course', 'buddyboss' )
+						__( 'Course', 'buddyboss-platform' )
 					);
 
 					/* translators: My Course, e.g. "My Course". */
-					$sub_name = sprintf( __( 'My %s', 'buddyboss' ), $course_label );
+					$sub_name = sprintf( __( 'My %s', 'buddyboss-platform' ), $course_label );
 				}
 
 				if ( 'settings' === $bp_item['slug'] && 'invites' === $s_nav['slug'] ) {
@@ -3018,7 +3164,7 @@ function bp_nav_menu_get_loggedin_pages() {
 		if ( 'settings' === $bp_item['slug'] && ! bp_disable_account_deletion() ) {
 			$page_args['delete-account'] = (object) array(
 				'ID'             => hexdec( uniqid() ),
-				'post_title'     => __( 'Delete Account', 'buddyboss' ),
+				'post_title'     => __( 'Delete Account', 'buddyboss-platform' ),
 				'object_id'      => hexdec( uniqid() ),
 				'post_author'    => 0,
 				'post_date'      => 0,
@@ -3067,7 +3213,7 @@ function bp_nav_menu_get_loggedout_pages() {
 	// Some BP nav menu items will not be represented in bp_nav, because
 	// they are not real BP components. We add them manually here.
 	$bp_menu_items[] = array(
-		'name' => __( 'Log In', 'buddyboss' ),
+		'name' => __( 'Log In', 'buddyboss-platform' ),
 		'slug' => 'login',
 		'link' => wp_login_url(),
 	);
@@ -3293,7 +3439,7 @@ function bp_upload_dir() {
  * @since BuddyPress 2.5.0
  */
 function bp_email_post_type() {
-	echo bp_get_email_post_type();
+	echo esc_attr( bp_get_email_post_type() );
 }
 	/**
 	 * Returns the name of the email post type.
@@ -3333,22 +3479,22 @@ function bp_get_email_post_type_labels() {
 	return apply_filters(
 		'bp_get_email_post_type_labels',
 		array(
-			'add_new'               => __( 'New Email', 'buddyboss' ),
-			'add_new_item'          => __( 'Add New Email', 'buddyboss' ),
-			'all_items'             => __( 'All Emails', 'buddyboss' ),
-			'edit_item'             => __( 'Edit Email', 'buddyboss' ),
-			'filter_items_list'     => __( 'Filter email list', 'buddyboss' ),
-			'items_list'            => __( 'Email list', 'buddyboss' ),
-			'items_list_navigation' => __( 'Email list navigation', 'buddyboss' ),
-			'menu_name'             => __( 'Emails', 'buddyboss' ),
-			'name'                  => __( 'Email Templates', 'buddyboss' ),
-			'new_item'              => __( 'New Email', 'buddyboss' ),
-			'not_found'             => __( 'No emails found', 'buddyboss' ),
-			'not_found_in_trash'    => __( 'No emails found in trash', 'buddyboss' ),
-			'search_items'          => __( 'Search Emails', 'buddyboss' ),
-			'singular_name'         => __( 'Email', 'buddyboss' ),
-			'uploaded_to_this_item' => __( 'Uploaded to this email', 'buddyboss' ),
-			'view_item'             => __( 'View Email', 'buddyboss' ),
+			'add_new'               => __( 'New Email', 'buddyboss-platform' ),
+			'add_new_item'          => __( 'Add New Email', 'buddyboss-platform' ),
+			'all_items'             => __( 'All Emails', 'buddyboss-platform' ),
+			'edit_item'             => __( 'Edit Email', 'buddyboss-platform' ),
+			'filter_items_list'     => __( 'Filter email list', 'buddyboss-platform' ),
+			'items_list'            => __( 'Email list', 'buddyboss-platform' ),
+			'items_list_navigation' => __( 'Email list navigation', 'buddyboss-platform' ),
+			'menu_name'             => __( 'Emails', 'buddyboss-platform' ),
+			'name'                  => __( 'Email Templates', 'buddyboss-platform' ),
+			'new_item'              => __( 'New Email', 'buddyboss-platform' ),
+			'not_found'             => __( 'No emails found', 'buddyboss-platform' ),
+			'not_found_in_trash'    => __( 'No emails found in trash', 'buddyboss-platform' ),
+			'search_items'          => __( 'Search Emails', 'buddyboss-platform' ),
+			'singular_name'         => __( 'Email', 'buddyboss-platform' ),
+			'uploaded_to_this_item' => __( 'Uploaded to this email', 'buddyboss-platform' ),
+			'view_item'             => __( 'View Email', 'buddyboss-platform' ),
 		)
 	);
 }
@@ -3390,7 +3536,7 @@ function bp_get_email_post_type_supports() {
  * @since BuddyPress 2.5.0
  */
 function bp_email_tax_type() {
-	echo bp_get_email_tax_type();
+	echo esc_attr( bp_get_email_tax_type() );
 }
 	/**
 	 * Return the name of the email type taxonomy.
@@ -3430,21 +3576,21 @@ function bp_get_email_tax_type_labels() {
 	return apply_filters(
 		'bp_get_email_tax_type_labels',
 		array(
-			'add_new_item'          => __( 'New Email Situation', 'buddyboss' ),
-			'all_items'             => __( 'All Email Situations', 'buddyboss' ),
-			'edit_item'             => __( 'Edit Email Situations', 'buddyboss' ),
-			'items_list'            => __( 'Email list', 'buddyboss' ),
-			'items_list_navigation' => __( 'Email list navigation', 'buddyboss' ),
-			'menu_name'             => __( 'Situations', 'buddyboss' ),
-			'name'                  => __( 'Situation', 'buddyboss' ),
-			'new_item_name'         => __( 'New email situation name', 'buddyboss' ),
-			'not_found'             => __( 'No email situations found', 'buddyboss' ),
-			'no_terms'              => __( 'No email situations', 'buddyboss' ),
-			'popular_items'         => __( 'Popular Email Situation', 'buddyboss' ),
-			'search_items'          => __( 'Search Emails', 'buddyboss' ),
-			'singular_name'         => __( 'Email', 'buddyboss' ),
-			'update_item'           => __( 'Update Email Situation', 'buddyboss' ),
-			'view_item'             => __( 'View Email Situation', 'buddyboss' ),
+			'add_new_item'          => __( 'New Email Situation', 'buddyboss-platform' ),
+			'all_items'             => __( 'All Email Situations', 'buddyboss-platform' ),
+			'edit_item'             => __( 'Edit Email Situations', 'buddyboss-platform' ),
+			'items_list'            => __( 'Email list', 'buddyboss-platform' ),
+			'items_list_navigation' => __( 'Email list navigation', 'buddyboss-platform' ),
+			'menu_name'             => __( 'Situations', 'buddyboss-platform' ),
+			'name'                  => __( 'Situation', 'buddyboss-platform' ),
+			'new_item_name'         => __( 'New email situation name', 'buddyboss-platform' ),
+			'not_found'             => __( 'No email situations found', 'buddyboss-platform' ),
+			'no_terms'              => __( 'No email situations', 'buddyboss-platform' ),
+			'popular_items'         => __( 'Popular Email Situation', 'buddyboss-platform' ),
+			'search_items'          => __( 'Search Emails', 'buddyboss-platform' ),
+			'singular_name'         => __( 'Email', 'buddyboss-platform' ),
+			'update_item'           => __( 'Update Email Situation', 'buddyboss-platform' ),
+			'view_item'             => __( 'View Email Situation', 'buddyboss-platform' ),
 		)
 	);
 }
@@ -3786,7 +3932,7 @@ function bp_email_get_appearance_settings() {
 
 		'footer_text'               => sprintf(
 			/* translators: email disclaimer, e.g. "© 2016 Site Name". */
-			__( '&copy; %1$s %2$s', 'buddyboss' ),
+			__( '&copy; %1$s %2$s', 'buddyboss-platform' ),
 			date_i18n( 'Y' ),
 			bp_get_option( 'blogname' )
 		),
@@ -3892,70 +4038,70 @@ function bp_email_get_schema() {
 	$schema = array(
 		'activity-at-message'              => array(
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_title'   => __( '[{{{site.name}}}] {{poster.name}} mentioned you in a status update', 'buddyboss' ),
+			'post_title'   => __( '[{{{site.name}}}] {{poster.name}} mentioned you in a status update', 'buddyboss-platform' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_content' => __( "<a href=\"{{{poster.url}}}\">{{poster.name}}</a> mentioned you in a status update:\n\n{{{status_update}}}", 'buddyboss' ),
+			'post_content' => __( "<a href=\"{{{poster.url}}}\">{{poster.name}}</a> mentioned you in a status update:\n\n{{{status_update}}}", 'buddyboss-platform' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_excerpt' => __( "{{poster.name}} mentioned you in a status update:\n\n{{{status_update}}}\n\nGo to the discussion to reply or catch up on the conversation: {{{mentioned.url}}}", 'buddyboss' ),
+			'post_excerpt' => __( "{{poster.name}} mentioned you in a status update:\n\n{{{status_update}}}\n\nGo to the discussion to reply or catch up on the conversation: {{{mentioned.url}}}", 'buddyboss-platform' ),
 		),
 		'groups-at-message'                => array(
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_title'   => __( '[{{{site.name}}}] {{poster.name}} mentioned you in a group update', 'buddyboss' ),
+			'post_title'   => __( '[{{{site.name}}}] {{poster.name}} mentioned you in a group update', 'buddyboss-platform' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_content' => __( "<a href=\"{{{poster.url}}}\">{{poster.name}}</a> mentioned you in the group \"<a href=\"{{{group.url}}}\">{{group.name}}</a>\":\n\n{{{status_update}}}", 'buddyboss' ),
+			'post_content' => __( "<a href=\"{{{poster.url}}}\">{{poster.name}}</a> mentioned you in the group \"<a href=\"{{{group.url}}}\">{{group.name}}</a>\":\n\n{{{status_update}}}", 'buddyboss-platform' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_excerpt' => __( "{{poster.name}} mentioned you in the group \"{{group.name}}\":\n\n{{{status_update}}}\n\nGo to the discussion to reply or catch up on the conversation: {{{mentioned.url}}}", 'buddyboss' ),
+			'post_excerpt' => __( "{{poster.name}} mentioned you in the group \"{{group.name}}\":\n\n{{{status_update}}}\n\nGo to the discussion to reply or catch up on the conversation: {{{mentioned.url}}}", 'buddyboss-platform' ),
 		),
 		'core-user-registration'           => array(
 			/* translators: do not remove {} brackets or translate its contents. */
-				'post_title'   => __( '[{{{site.name}}}] Activate your account', 'buddyboss' ),
+				'post_title'   => __( '[{{{site.name}}}] Activate your account', 'buddyboss-platform' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-				'post_content' => __( "Thanks for registering!\n\nTo complete the activation of your account, go to the following link: <a href=\"{{{activate.url}}}\">{{{activate.url}}}</a>", 'buddyboss' ),
+				'post_content' => __( "Thanks for registering!\n\nTo complete the activation of your account, go to the following link: <a href=\"{{{activate.url}}}\">{{{activate.url}}}</a>", 'buddyboss-platform' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-				'post_excerpt' => __( "Thanks for registering!\n\nTo complete the activation of your account, go to the following link: {{{activate.url}}}", 'buddyboss' ),
+				'post_excerpt' => __( "Thanks for registering!\n\nTo complete the activation of your account, go to the following link: {{{activate.url}}}", 'buddyboss-platform' ),
 		),
 		'core-user-registration-with-blog' => array(
 			/* translators: do not remove {} brackets or translate its contents. */
-				'post_title'   => __( '[{{{site.name}}}] Activate {{{user-site.url}}}', 'buddyboss' ),
+				'post_title'   => __( '[{{{site.name}}}] Activate {{{user-site.url}}}', 'buddyboss-platform' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-				'post_content' => __( "Thanks for registering!\n\nTo complete the activation of your account and site, go to the following link: <a href=\"{{{activate-site.url}}}\">{{{activate-site.url}}}</a>.\n\nAfter you activate, you can visit your site at <a href=\"{{{user-site.url}}}\">{{{user-site.url}}}</a>.", 'buddyboss' ),
+				'post_content' => __( "Thanks for registering!\n\nTo complete the activation of your account and site, go to the following link: <a href=\"{{{activate-site.url}}}\">{{{activate-site.url}}}</a>.\n\nAfter you activate, you can visit your site at <a href=\"{{{user-site.url}}}\">{{{user-site.url}}}</a>.", 'buddyboss-platform' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-				'post_excerpt' => __( "Thanks for registering!\n\nTo complete the activation of your account and site, go to the following link: {{{activate-site.url}}}\n\nAfter you activate, you can visit your site at {{{user-site.url}}}.", 'buddyboss' ),
+				'post_excerpt' => __( "Thanks for registering!\n\nTo complete the activation of your account and site, go to the following link: {{{activate-site.url}}}\n\nAfter you activate, you can visit your site at {{{user-site.url}}}.", 'buddyboss-platform' ),
 			'args'             => array(
 				'multisite' => true,
 			),
 		),
 		'settings-verify-email-change'     => array(
 			/* translators: do not remove {} brackets or translate its contents. */
-				'post_title'   => __( '[{{{site.name}}}] Verify your new email address', 'buddyboss' ),
+				'post_title'   => __( '[{{{site.name}}}] Verify your new email address', 'buddyboss-platform' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-				'post_content' => __( "You recently changed the email address associated with your account on {{site.name}} to {{user.email}}. If this is correct, <a href=\"{{{verify.url}}}\">click here</a> to confirm the change. \n\nOtherwise, you can safely ignore and delete this email if you have changed your mind, or if you think you have received this email in error.", 'buddyboss' ),
+				'post_content' => __( "You recently changed the email address associated with your account on {{site.name}} to {{user.email}}. If this is correct, <a href=\"{{{verify.url}}}\">click here</a> to confirm the change. \n\nOtherwise, you can safely ignore and delete this email if you have changed your mind, or if you think you have received this email in error.", 'buddyboss-platform' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-				'post_excerpt' => __( "You recently changed the email address associated with your account on {{site.name}} to {{user.email}}. If this is correct, go to the following link to confirm the change: {{{verify.url}}}\n\nOtherwise, you can safely ignore and delete this email if you have changed your mind, or if you think you have received this email in error.", 'buddyboss' ),
+				'post_excerpt' => __( "You recently changed the email address associated with your account on {{site.name}} to {{user.email}}. If this is correct, go to the following link to confirm the change: {{{verify.url}}}\n\nOtherwise, you can safely ignore and delete this email if you have changed your mind, or if you think you have received this email in error.", 'buddyboss-platform' ),
 		),
 		'invites-member-invite'            => array(
 			/* translators: do not remove {} brackets or translate its contents. */
-				'post_title'   => __( 'An invitation from {{inviter.name}} to join [{{{site.name}}}]', 'buddyboss' ),
+				'post_title'   => __( 'An invitation from {{inviter.name}} to join [{{{site.name}}}]', 'buddyboss-platform' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-				'post_content' => __( 'You have been invited by {{inviter.name}} to join the <a href="{{{site.url}}}">[{{{site.name}}}]</a> community.', 'buddyboss' ),
+				'post_content' => __( 'You have been invited by {{inviter.name}} to join the <a href="{{{site.url}}}">[{{{site.name}}}]</a> community.', 'buddyboss-platform' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-				'post_excerpt' => __( 'You have been invited by {{inviter.name}} to join the [{{{site.name}}}] community.', 'buddyboss' ),
+				'post_excerpt' => __( 'You have been invited by {{inviter.name}} to join the [{{{site.name}}}] community.', 'buddyboss-platform' ),
 		),
 		'content-moderation-email'         => array(
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_title'   => __( '[{{{site.name}}}] Content has been automatically hidden', 'buddyboss' ),
+			'post_title'   => __( '[{{{site.name}}}] Content has been automatically hidden', 'buddyboss-platform' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_content' => __( "<a href='{{{content.link}}}'>{{content.type}}</a> has been automatically hidden from your network as it has been reported {{timesreported}} time(s). \n\n <a href='{{{reportlink}}}' style='color: #007CFF;font-size: 14px;text-decoration: none;border: 1px solid #007CFF;border-radius: 100px;min-width: 64px;text-align: center;height: 16px;line-height: 16px;padding: 8px 12px; display: inline-block;'>View Reports</a>", 'buddyboss' ),
+			'post_content' => __( "<a href='{{{content.link}}}'>{{content.type}}</a> has been automatically hidden from your network as it has been reported {{timesreported}} time(s). \n\n <a href='{{{reportlink}}}' style='color: #007CFF;font-size: 14px;text-decoration: none;border: 1px solid #007CFF;border-radius: 100px;min-width: 64px;text-align: center;height: 16px;line-height: 16px;padding: 8px 12px; display: inline-block;'>View Reports</a>", 'buddyboss-platform' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_excerpt' => __( "{{content.type}} [{{content.link}}] has been automatically hidden from your network as it has been reported {{timesreported}} time(s). \n\n View Reports: {{reportlink}}", 'buddyboss' ),
+			'post_excerpt' => __( "{{content.type}} [{{content.link}}] has been automatically hidden from your network as it has been reported {{timesreported}} time(s). \n\n View Reports: {{reportlink}}", 'buddyboss-platform' ),
 		),
 		'user-moderation-email'            => array(
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_title'   => __( '[{{{site.name}}}] {{user.name}} has been suspended', 'buddyboss' ),
+			'post_title'   => __( '[{{{site.name}}}] {{user.name}} has been suspended', 'buddyboss-platform' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_content' => __( "<a href='{{{user.link}}}'>{{user.name}}</a> has been automatically suspended from your network as they have been reported {{timesblocked}} time(s). \n\n <a href='{{{reportlink}}}' style='font-size: 14px;color: #007CFF;text-decoration: none;border: 1px solid #007CFF;border-radius: 100px;min-width: 64px;text-align: center;height: 16px;line-height: 16px;padding: 8px 12px;display: inline-block;'>View Reports</a>", 'buddyboss' ),
+			'post_content' => __( "<a href='{{{user.link}}}'>{{user.name}}</a> has been automatically suspended from your network as they have been reported {{timesblocked}} time(s). \n\n <a href='{{{reportlink}}}' style='font-size: 14px;color: #007CFF;text-decoration: none;border: 1px solid #007CFF;border-radius: 100px;min-width: 64px;text-align: center;height: 16px;line-height: 16px;padding: 8px 12px;display: inline-block;'>View Reports</a>", 'buddyboss-platform' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_excerpt' => __( "{{user.name}} [{{user.link}}] has been automatically suspended from your network as they have been reported {{user.timesblocked}} time(s). \n\n View Reports: {{reportlink}}", 'buddyboss' ),
+			'post_excerpt' => __( "{{user.name}} [{{user.link}}] has been automatically suspended from your network as they have been reported {{user.timesblocked}} time(s). \n\n View Reports: {{reportlink}}", 'buddyboss-platform' ),
 		),
 	);
 
@@ -3991,55 +4137,55 @@ function bp_email_get_schema() {
  */
 function bp_email_get_type_schema( $field = 'description' ) {
 	$core_user_registration = array(
-		'description' => esc_html__( 'Activate a new account', 'buddyboss' ),
+		'description' => esc_html__( 'Activate a new account', 'buddyboss-platform' ),
 		'unsubscribe' => false,
 		'group'       => 'account',
 	);
 
 	$core_user_registration_with_blog = array(
-		'description' => esc_html__( 'Activate a new account and site', 'buddyboss' ),
+		'description' => esc_html__( 'Activate a new account and site', 'buddyboss-platform' ),
 		'unsubscribe' => false,
 		'group'       => 'account',
 	);
 
 	$activity_at_message = array(
-		'description' => esc_html__( 'A member is mentioned in an activity post', 'buddyboss' ),
+		'description' => esc_html__( 'A member is mentioned in an activity post', 'buddyboss-platform' ),
 		'unsubscribe' => array(
 			'meta_key' => 'notification_activity_new_mention',
-			'message'  => esc_html__( 'You will no longer receive emails when someone mentions you in an update.', 'buddyboss' ),
+			'message'  => esc_html__( 'You will no longer receive emails when someone mentions you in an update.', 'buddyboss-platform' ),
 		),
 		'group'       => 'activity',
 	);
 
 	$groups_at_message = array(
-		'description' => esc_html__( 'A member is mentioned in a group activity post', 'buddyboss' ),
+		'description' => esc_html__( 'A member is mentioned in a group activity post', 'buddyboss-platform' ),
 		'unsubscribe' => array(
 			'meta_key' => 'notification_activity_new_mention',
-			'message'  => esc_html__( 'You will no longer receive emails when someone mentions you in an update.', 'buddyboss' ),
+			'message'  => esc_html__( 'You will no longer receive emails when someone mentions you in an update.', 'buddyboss-platform' ),
 		),
 		'group'       => 'groups_discussions',
 	);
 
 	$settings_verify_email_change = array(
-		'description' => esc_html__( 'A member\'s email is changed', 'buddyboss' ),
+		'description' => esc_html__( 'A member\'s email is changed', 'buddyboss-platform' ),
 		'unsubscribe' => false,
 		'group'       => 'account',
 	);
 
 	$invites_member_invite = array(
-		'description' => esc_html__( 'Recepient is invited to the site by a member', 'buddyboss' ),
+		'description' => esc_html__( 'Recepient is invited to the site by a member', 'buddyboss-platform' ),
 		'unsubscribe' => false,
 		'group'       => 'account',
 	);
 
 	$content_moderation_email = array(
-		'description' => esc_html__( 'Content is automatically hidden due to reaching the reporting threshold', 'buddyboss' ), // Todo: Add proper description of email.
+		'description' => esc_html__( 'Content is automatically hidden due to reaching the reporting threshold', 'buddyboss-platform' ), // Todo: Add proper description of email.
 		'unsubscribe' => false,
 		'group'       => 'account',
 	);
 
 	$user_moderation_email = array(
-		'description' => esc_html__( 'A member is automatically suspended due to reaching the reporting threshold', 'buddyboss' ), // Todo: Add proper description of email.
+		'description' => esc_html__( 'A member is automatically suspended due to reaching the reporting threshold', 'buddyboss-platform' ), // Todo: Add proper description of email.
 		'unsubscribe' => false,
 		'group'       => 'account',
 	);
@@ -4087,13 +4233,13 @@ function bp_email_unsubscribe_handler() {
 	// Check required values.
 	if ( ! $raw_user_id || ! $raw_email_type || ! $raw_hash || ! array_key_exists( $raw_email_type, $emails ) ) {
 		$redirect_to = wp_login_url();
-		$result_msg  = __( 'Something has gone wrong.', 'buddyboss' );
-		$unsub_msg   = __( 'Please log in and go to your settings to unsubscribe from notification emails.', 'buddyboss' );
+		$result_msg  = __( 'Something has gone wrong.', 'buddyboss-platform' );
+		$unsub_msg   = __( 'Please log in and go to your settings to unsubscribe from notification emails.', 'buddyboss-platform' );
 
 		// Don't let authenticated users unsubscribe other users' email notifications.
 	} elseif ( is_user_logged_in() && get_current_user_id() !== $raw_user_id ) {
-		$result_msg = __( 'Something has gone wrong.', 'buddyboss' );
-		$unsub_msg  = __( 'Please go to your notifications settings to unsubscribe from emails.', 'buddyboss' );
+		$result_msg = __( 'Something has gone wrong.', 'buddyboss-platform' );
+		$unsub_msg  = __( 'Please go to your notifications settings to unsubscribe from emails.', 'buddyboss-platform' );
 
 		if ( bp_is_active( 'settings' ) ) {
 			$redirect_to = sprintf(
@@ -4107,8 +4253,8 @@ function bp_email_unsubscribe_handler() {
 		// Check valid hash
 	} elseif ( ! hash_equals( $new_hash, $raw_hash ) ) {
 		$redirect_to = wp_login_url();
-		$result_msg  = __( 'Something has gone wrong.', 'buddyboss' );
-		$unsub_msg   = __( 'Please log in and go to your settings to unsubscribe from notification emails.', 'buddyboss' );
+		$result_msg  = __( 'Something has gone wrong.', 'buddyboss-platform' );
+		$unsub_msg   = __( 'Please log in and go to your settings to unsubscribe from notification emails.', 'buddyboss-platform' );
 	} else {
 		if ( bp_is_active( 'settings' ) ) {
 			$redirect_to = sprintf(
@@ -4125,7 +4271,7 @@ function bp_email_unsubscribe_handler() {
 		bp_update_user_meta( $raw_user_id, $meta_key, 'no' );
 
 		$result_msg   = $emails[ $raw_email_type ]['unsubscribe']['message'];
-		$unsub_msg    = __( 'You can change this or any other email notification preferences in your email settings.', 'buddyboss' );
+		$unsub_msg    = __( 'You can change this or any other email notification preferences in your email settings.', 'buddyboss-platform' );
 		$message_type = 'success';
 	}
 
@@ -4136,7 +4282,7 @@ function bp_email_unsubscribe_handler() {
 		esc_html( $unsub_msg )
 	);
 
-	bp_core_add_message( $message , $message_type );
+	bp_core_add_message( $message, $message_type );
 	bp_core_redirect( bp_core_get_user_domain( $raw_user_id ) );
 
 	exit;
@@ -4415,11 +4561,11 @@ function bp_platform_default_activity_types() {
 	$settings_fields = array(
 		array(
 			'activity_name'  => 'new_avatar',
-			'activity_label' => __( 'Member changes their profile photo', 'buddyboss' ),
+			'activity_label' => __( 'Member changes their profile photo', 'buddyboss-platform' ),
 		),
 		array(
 			'activity_name'  => 'updated_profile',
-			'activity_label' => __( 'Member updates their profile details', 'buddyboss' ),
+			'activity_label' => __( 'Member updates their profile details', 'buddyboss-platform' ),
 		),
 	);
 
@@ -4430,11 +4576,11 @@ function bp_platform_default_activity_types() {
 			array(
 				array(
 					'activity_name'  => 'new_member',
-					'activity_label' => __( 'Member registers to the site', 'buddyboss' ),
+					'activity_label' => __( 'Member registers to the site', 'buddyboss-platform' ),
 				),
 				array(
 					'activity_name'  => 'friendship_created',
-					'activity_label' => __( 'Two members become connected', 'buddyboss' ),
+					'activity_label' => __( 'Two members become connected', 'buddyboss-platform' ),
 				),
 			)
 		);
@@ -4447,15 +4593,15 @@ function bp_platform_default_activity_types() {
 			array(
 				array(
 					'activity_name'  => 'created_group',
-					'activity_label' => __( 'Member creates a group', 'buddyboss' ),
+					'activity_label' => __( 'Member creates a group', 'buddyboss-platform' ),
 				),
 				array(
 					'activity_name'  => 'joined_group',
-					'activity_label' => __( 'Member joins a group', 'buddyboss' ),
+					'activity_label' => __( 'Member joins a group', 'buddyboss-platform' ),
 				),
 				array(
 					'activity_name'  => 'group_details_updated',
-					'activity_label' => __( 'Group details are updated', 'buddyboss' ),
+					'activity_label' => __( 'Group details are updated', 'buddyboss-platform' ),
 				),
 			)
 		);
@@ -4468,11 +4614,11 @@ function bp_platform_default_activity_types() {
 			array(
 				array(
 					'activity_name'  => 'bbp_topic_create',
-					'activity_label' => __( 'Member creates a forum discussion', 'buddyboss' ),
+					'activity_label' => __( 'Member creates a forum discussion', 'buddyboss-platform' ),
 				),
 				array(
 					'activity_name'  => 'bbp_reply_create',
-					'activity_label' => __( 'Member replies to a forum discussion', 'buddyboss' ),
+					'activity_label' => __( 'Member replies to a forum discussion', 'buddyboss-platform' ),
 				),
 			)
 		);
@@ -4558,9 +4704,9 @@ function bp_ajax_get_suggestions() {
 	}
 
 	$args = array(
-			'term'        => sanitize_text_field( $_GET['term'] ),
-			'type'        => sanitize_text_field( $_GET['type'] ),
-			'count_total' => 'count_query',
+		'term'        => sanitize_text_field( $_GET['term'] ),
+		'type'        => sanitize_text_field( $_GET['type'] ),
+		'count_total' => 'count_query',
 	);
 
 	if ( ! empty( $_GET['page'] ) ) {
@@ -4813,8 +4959,8 @@ function bp_core_parse_url( $url ) {
 		$response = wp_safe_remote_get(
 			$url,
 			array(
-				'stream'      => true,
-				'headers'     => array(
+				'stream'  => true,
+				'headers' => array(
 					'user-agent' => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:71.0) Gecko/20100101 Firefox/71.0',
 				),
 			),
@@ -4948,7 +5094,7 @@ function bp_core_parse_url( $url ) {
 			// Parse DOM to get Meta Description.
 			if ( empty( $description ) ) {
 				$metas = $dom->getElementsByTagName( 'meta' );
-				for ( $i = 0; $i < $metas->length; $i ++ ) {
+				for ( $i = 0; $i < $metas->length; $i++ ) {
 					$meta = $metas->item( $i );
 					if ( 'description' === $meta->getAttribute( 'name' ) ) {
 						$description = $meta->getAttribute( 'content' );
@@ -4959,7 +5105,7 @@ function bp_core_parse_url( $url ) {
 
 			// Parse DOM to get Images.
 			$image_elements = $dom->getElementsByTagName( 'img' );
-			for ( $i = 0; $i < $image_elements->length; $i ++ ) {
+			for ( $i = 0; $i < $image_elements->length; $i++ ) {
 				$image = $image_elements->item( $i );
 				$src   = $image->getAttribute( 'src' );
 
@@ -5046,20 +5192,18 @@ function bp_core_format_size_units( $bytes, $unit_label = false, $type = '' ) {
 		} else {
 			$bytes = '0' . ' bytes';
 		}
-	} else {
-		if ( 'GB' === $type ) {
+	} elseif ( 'GB' === $type ) {
 			$bytes = number_format( ( $bytes / 1073741824 ), 2, '.', '' ) . ' GB';
-		} elseif ( 'MB' === $type ) {
-			$bytes = number_format( ( $bytes / 1048576 ), 2, '.', '' ) . ' MB';
-		} elseif ( 'KB' === $type ) {
-			$bytes = number_format( ( $bytes / 1024 ), 2, '.', '' ) . ' KB';
-		} elseif ( 'bytes' === $type ) {
-			$bytes = $bytes . ' bytes';
-		} elseif ( 1 === $bytes ) {
-			$bytes = $bytes . ' byte';
-		} else {
-			$bytes = '0' . ' bytes';
-		}
+	} elseif ( 'MB' === $type ) {
+		$bytes = number_format( ( $bytes / 1048576 ), 2, '.', '' ) . ' MB';
+	} elseif ( 'KB' === $type ) {
+		$bytes = number_format( ( $bytes / 1024 ), 2, '.', '' ) . ' KB';
+	} elseif ( 'bytes' === $type ) {
+		$bytes = $bytes . ' bytes';
+	} elseif ( 1 === $bytes ) {
+		$bytes = $bytes . ' byte';
+	} else {
+		$bytes = '0' . ' bytes';
 	}
 
 	return $bytes;
@@ -5164,7 +5308,6 @@ function bp_core_upload_max_size() {
 	 * @since BuddyBoss 1.4.8
 	 */
 	return apply_filters( 'bp_core_upload_max_size', $max_size );
-
 }
 
 /**
@@ -5216,7 +5359,6 @@ function bp_core_xprofile_update_profile_completion_user_progress( $user_id = ''
 	// Get logged in user Progress.
 	$user_progress_arr = bp_xprofile_get_user_progress( $profile_groups, $profile_photo_type );
 	bp_update_user_meta( $user_id, 'bp_profile_completion_widgets', $user_progress_arr );
-
 }
 
 /**
@@ -5261,15 +5403,15 @@ function bp_xprofile_get_selected_options_user_progress( $settings ) {
 		foreach ( $profile_photo_type as $option ) {
 			if ( 'profile_photo' === $option && isset( $get_user_data['photo_type'] ) && isset( $get_user_data['photo_type']['profile_photo'] ) ) {
 				$response['photo_type']['profile_photo'] = $get_user_data['photo_type']['profile_photo'];
-				$total_count                             = ++ $total_count;
+				$total_count                             = ++$total_count;
 				if ( isset( $get_user_data['photo_type']['profile_photo']['is_uploaded'] ) && 1 === (int) $get_user_data['photo_type']['profile_photo']['is_uploaded'] ) {
-					$total_completed_count = ++ $total_completed_count;
+					$total_completed_count = ++$total_completed_count;
 				}
 			} elseif ( 'cover_photo' === $option && isset( $get_user_data['photo_type'] ) && isset( $get_user_data['photo_type']['cover_photo'] ) ) {
 				$response['photo_type']['cover_photo'] = $get_user_data['photo_type']['cover_photo'];
-				$total_count                           = ++ $total_count;
+				$total_count                           = ++$total_count;
 				if ( isset( $get_user_data['photo_type']['cover_photo']['is_uploaded'] ) && 1 === (int) $get_user_data['photo_type']['cover_photo']['is_uploaded'] ) {
-					$total_completed_count = ++ $total_completed_count;
+					$total_completed_count = ++$total_completed_count;
 				}
 			}
 		}
@@ -5306,7 +5448,6 @@ function bp_xprofile_get_selected_options_user_progress( $settings ) {
 	 * @since BuddyBoss 1.5.4
 	 */
 	return apply_filters( 'bp_xprofile_get_selected_options_user_progress', $response, $profile_groups, $profile_photo_type, $get_user_data );
-
 }
 
 /**
@@ -5323,7 +5464,6 @@ function bp_core_xprofile_clear_all_user_progress_cache() {
 		'',            // this also doesn't actually matter in this call.
 		true           // tells the function "yes, please remove them all".
 	);
-
 }
 
 /**
@@ -5389,15 +5529,15 @@ function bb_xprofile_search_bp_user_query_search_first_last_nickname( $sql, BP_U
 	$where_condition = array();
 	if ( ! empty( $enabled_fields ) ) {
 		foreach ( $enabled_fields as $field_name => $field_id ) {
-			$where_condition[] = ' ( ( field_id = ' . $field_id . " ) AND ( value LIKE '" . $search_terms_nospace . "' OR value LIKE '" . $search_terms_space . "' ) )";
+			$where_condition[] = $wpdb->prepare( ' ( ( field_id = %d ) AND ( value LIKE %s OR value LIKE %s ) )', $field_id, $search_terms_nospace, $search_terms_space );
 		}
 	}
 	// Combine the core search (against wp_users) into a single OR clause with the xprofile_data search.
-	$matched_user_ids = $wpdb->get_col( "SELECT DISTINCT user_id FROM {$bp->profile->table_name_data} WHERE " . implode( ' OR ', $where_condition ) );
+	$matched_user_ids = $wpdb->get_col( "SELECT DISTINCT user_id FROM {$bp->profile->table_name_data} WHERE " . implode( ' OR ', $where_condition ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Table name from $bp->profile->table_name_data; $where_condition is built from $wpdb->prepare()'d fragments above.
 
 	// Checked profile fields based on privacy settings of particular user while searching.
 	if ( ! empty( $matched_user_ids ) ) {
-		$matched_user_data = $wpdb->get_results( "SELECT * FROM {$bp->profile->table_name_data} WHERE " . implode( ' OR ', $where_condition ) );
+		$matched_user_data = $wpdb->get_results( "SELECT * FROM {$bp->profile->table_name_data} WHERE " . implode( ' OR ', $where_condition ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Table name from $bp->profile->table_name_data; $where_condition is built from $wpdb->prepare()'d fragments above.
 
 		if ( ! empty( $matched_user_data ) ) {
 			foreach ( $matched_user_data as $k => $user ) {
@@ -5509,12 +5649,12 @@ function bp_core_remove_temp_directory( $directory = '' ) {
 				if ( 'dir' === filetype( $directory . '/' . $object ) ) {
 					bp_core_remove_temp_directory( $directory . '/' . $object );
 				} else {
-					unlink( $directory . '/' . $object );
+					wp_delete_file( $directory . '/' . $object );
 				}
 			}
 		}
 		reset( $objects );
-		rmdir( $directory );
+		rmdir( $directory ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_rmdir -- direct removal of an emptied temp directory; WP_Filesystem offers no drop-in equivalent.
 	}
 }
 
@@ -5648,7 +5788,6 @@ function bb_core_symlink_generator( $type, $item, $size, $file, $output_file_src
 			}
 		}
 	}
-
 }
 
 function bb_core_symlink_absolute_path( $preview_attachment_path, $upload_directory ) {
@@ -5971,7 +6110,7 @@ function bb_moderation_update_suspend_data( $moderated_activities, $offset = 0 )
 					}
 				}
 			}
-			$offset ++;
+			++$offset;
 		}
 	}
 
@@ -6114,7 +6253,7 @@ function bb_restricate_rss_feed() {
 			'mode'     => 2,
 			'redirect' => $actual_link,
 			'root'     => bp_get_root_domain(),
-			'message'  => __( 'Please login to access this website.', 'buddyboss' ),
+			'message'  => __( 'Please login to access this website.', 'buddyboss-platform' ),
 		);
 		bp_core_no_access( $defaults );
 		exit();
@@ -6170,7 +6309,7 @@ function bb_restricate_rest_api( $response, $handler, $request ) {
 	}
 
 	if ( ! bb_is_allowed_endpoint( $current_endpoint ) ) {
-		$error_message = esc_html__( 'Only authenticated users can access the REST API.', 'buddyboss' );
+		$error_message = esc_html__( 'Only authenticated users can access the REST API.', 'buddyboss-platform' );
 		$error         = new WP_Error( 'bb_rest_authorization_required', $error_message, array( 'status' => rest_authorization_required_code() ) );
 		$response      = rest_ensure_response( $error );
 	}
@@ -6745,7 +6884,7 @@ function bb_get_settings_live_preview_default_profile_group_images() {
 	$is_buddyboss_app_plugin_active = class_exists( 'bbapp' ) ? true : false;
 	$is_buddyboss_theme_active      = function_exists( 'buddyboss_theme' ) ? true : false;
 
-	$info_text                  = __( 'The <strong>Cover Image Background</strong> color can be changed with custom CSS.', 'buddyboss' );
+	$info_text                  = __( 'The <strong>Cover Image Background</strong> color can be changed with custom CSS.', 'buddyboss-platform' );
 	$web_cover_background_color = '#e2e9ef';
 	$app_cover_background_color = '#EDEEF2';
 
@@ -6764,20 +6903,20 @@ function bb_get_settings_live_preview_default_profile_group_images() {
 	if ( $is_buddyboss_theme_active && $is_buddyboss_app_plugin_active ) {
 		$info_text = sprintf(
 			/* translators: 1: theme setting url 2: app plugin url */
-			__( 'In a browser, the <strong>Cover Image Background</strong> color can be changed in the <a href="%1$s">Theme Options</a>. In the app, it can be changed in the <a href="%2$s">Color</a> settings.', 'buddyboss' ),
+			__( 'In a browser, the <strong>Cover Image Background</strong> color can be changed in the <a href="%1$s">Theme Options</a>. In the app, it can be changed in the <a href="%2$s">Color</a> settings.', 'buddyboss-platform' ),
 			admin_url( 'admin.php?page=buddyboss_theme_options&tab=5#info-color_options_info' ),
 			admin_url( 'admin.php?page=bbapp-appearance&setting=styling&screen=color-general' )
 		);
 	} elseif ( $is_buddyboss_theme_active && ! $is_buddyboss_app_plugin_active ) {
 		$info_text = sprintf(
 			/* translators: 1: theme setting url */
-			__( 'The <strong>Cover Image Background</strong> color can be changed in the <a href="%s">Theme Options</a>.', 'buddyboss' ),
+			__( 'The <strong>Cover Image Background</strong> color can be changed in the <a href="%s">Theme Options</a>.', 'buddyboss-platform' ),
 			admin_url( 'admin.php?page=buddyboss_theme_options&tab=5#info-color_options_info' )
 		);
 	} elseif ( ! $is_buddyboss_theme_active && $is_buddyboss_app_plugin_active ) {
 		$info_text = sprintf(
 			/* translators: 1: app plugin url */
-			__( 'In a browser, the <strong>Cover Image Background</strong> color can be changed with custom CSS. In the app, it can be changed in the <a href="%s">Color</a> settings.', 'buddyboss' ),
+			__( 'In a browser, the <strong>Cover Image Background</strong> color can be changed with custom CSS. In the app, it can be changed in the <a href="%s">Color</a> settings.', 'buddyboss-platform' ),
 			admin_url( 'admin.php?page=bbapp-appearance&setting=styling&screen=color-general' )
 		);
 	}
@@ -6857,7 +6996,6 @@ function bb_is_notification_enabled( $user_id, $notification_type, $type = 'emai
 			) {
 				return $n;
 			}
-
 		},
 		$all_notifications
 	);
@@ -7118,7 +7256,7 @@ function bb_notification_preferences_types( $field, $user_id = 0 ) {
 	$options['email'] = array(
 		'is_render'  => bb_check_email_type_registered( $field['key'] ),
 		'is_checked' => $email_checked,
-		'label'      => esc_html_x( 'Email', 'Notification preference label', 'buddyboss' ),
+		'label'      => esc_html_x( 'Email', 'Notification preference label', 'buddyboss-platform' ),
 		'disabled'   => 'no' === bp_get_user_meta( $user_id, 'enable_notification', true ),
 	);
 
@@ -7131,7 +7269,7 @@ function bb_notification_preferences_types( $field, $user_id = 0 ) {
 		$options['web'] = array(
 			'is_render'  => bb_check_notification_registered( $field['key'] ),
 			'is_checked' => $web_checked,
-			'label'      => esc_html_x( 'Web', 'Notification preference label', 'buddyboss' ),
+			'label'      => esc_html_x( 'Web', 'Notification preference label', 'buddyboss-platform' ),
 			'disabled'   => 'no' === bp_get_user_meta( $user_id, 'enable_notification_web', true ),
 		);
 	}
@@ -7145,13 +7283,12 @@ function bb_notification_preferences_types( $field, $user_id = 0 ) {
 		$options['app'] = array(
 			'is_render'  => bb_check_notification_registered( $field['key'] ),
 			'is_checked' => $app_checked,
-			'label'      => esc_html_x( 'App', 'Notification preference label', 'buddyboss' ),
+			'label'      => esc_html_x( 'App', 'Notification preference label', 'buddyboss-platform' ),
 			'disabled'   => 'no' === bp_get_user_meta( $user_id, 'enable_notification_app', true ),
 		);
 	}
 
 	return apply_filters( 'bb_notifications_types', $options );
-
 }
 
 /**
@@ -7353,7 +7490,7 @@ function bb_render_notification( $notification_group ) {
 							} else {
 								?>
 								<td class="<?php echo esc_attr( $key ); ?> notification_no_option">
-									<?php esc_html_e( '-', 'buddyboss' ); ?>
+									<?php esc_html_e( '-', 'buddyboss-platform' ); ?>
 								</td>
 								<?php
 							}
@@ -7402,35 +7539,35 @@ function bb_render_notification( $notification_group ) {
  * @return array Settings data.
  */
 function bb_core_notification_preferences_data() {
-	$menu_title   = esc_html__( 'Email Preferences', 'buddyboss' );
-	$screen_title = esc_html__( 'Email Preferences', 'buddyboss' );
+	$menu_title   = esc_html__( 'Email Preferences', 'buddyboss-platform' );
+	$screen_title = esc_html__( 'Email Preferences', 'buddyboss-platform' );
 	if ( ! empty( bb_get_subscriptions_types() ) ) {
-		$menu_title   = esc_html__( 'Email Settings', 'buddyboss' );
-		$screen_title = esc_html__( 'Email Settings', 'buddyboss' );
+		$menu_title   = esc_html__( 'Email Settings', 'buddyboss-platform' );
+		$screen_title = esc_html__( 'Email Settings', 'buddyboss-platform' );
 	}
 
 	$data = array(
 		'menu_title'          => $menu_title,
 		'screen_title'        => $screen_title,
-		'screen_description'  => esc_html__( 'Choose your email notification preferences.', 'buddyboss' ),
+		'screen_description'  => esc_html__( 'Choose your email notification preferences.', 'buddyboss-platform' ),
 		'show_checkbox_label' => false,
 		'item_css_class'      => 'email-preferences',
 	);
 
 	if ( false === bb_enabled_legacy_email_preference() && bp_is_active( 'notifications' ) ) {
-		$data['menu_title']   = esc_html__( 'Notification Preferences', 'buddyboss' );
-		$data['screen_title'] = esc_html__( 'Notification Preferences', 'buddyboss' );
+		$data['menu_title']   = esc_html__( 'Notification Preferences', 'buddyboss-platform' );
+		$data['screen_title'] = esc_html__( 'Notification Preferences', 'buddyboss-platform' );
 		if ( ! empty( bb_get_subscriptions_types() ) ) {
-			$data['menu_title']   = esc_html__( 'Notification Settings', 'buddyboss' );
-			$data['screen_title'] = esc_html__( 'Notification Settings', 'buddyboss' );
+			$data['menu_title']   = esc_html__( 'Notification Settings', 'buddyboss-platform' );
+			$data['screen_title'] = esc_html__( 'Notification Settings', 'buddyboss-platform' );
 		}
 
-		$data['screen_description']  = esc_html__( 'Choose which notifications to receive across all your devices.', 'buddyboss' );
+		$data['screen_description']  = esc_html__( 'Choose which notifications to receive across all your devices.', 'buddyboss-platform' );
 		$data['show_checkbox_label'] = true;
 		$data['item_css_class']      = 'notification-preferences';
 
 		if ( ! ( bb_web_notification_enabled() || bb_app_notification_enabled() ) ) {
-			$data['screen_description'] = esc_html__( 'Choose which notifications to receive by email.', 'buddyboss' );
+			$data['screen_description'] = esc_html__( 'Choose which notifications to receive by email.', 'buddyboss-platform' );
 		}
 	}
 
@@ -7451,18 +7588,18 @@ function bb_enable_notifications_options() {
 	}
 
 	$data = array(
-		'label'  => esc_html__( 'Enable Notifications', 'buddyboss' ),
+		'label'  => esc_html__( 'Enable Notifications', 'buddyboss-platform' ),
 		'fields' => array(
-			'enable_notification' => esc_html__( 'Email', 'buddyboss' ),
+			'enable_notification' => esc_html__( 'Email', 'buddyboss-platform' ),
 		),
 	);
 
 	if ( bb_web_notification_enabled() ) {
-		$data['fields']['enable_notification_web'] = esc_html__( 'Web', 'buddyboss' );
+		$data['fields']['enable_notification_web'] = esc_html__( 'Web', 'buddyboss-platform' );
 	}
 
 	if ( bb_app_notification_enabled() ) {
-		$data['fields']['enable_notification_app'] = esc_html__( 'App', 'buddyboss' );
+		$data['fields']['enable_notification_app'] = esc_html__( 'App', 'buddyboss-platform' );
 	}
 
 	return apply_filters( 'bb_enable_notification_options', $data );
@@ -7483,7 +7620,7 @@ function bb_render_enable_notification_options() {
 	$user_id = bp_loggedin_user_id();
 
 	?>
-	<table class="main-notification-settings" data-text-all="<?php esc_html_e( 'All', 'buddyboss' ); ?> " data-text-none="<?php esc_html_e( 'None', 'buddyboss' ); ?> ">
+	<table class="main-notification-settings" data-text-all="<?php esc_html_e( 'All', 'buddyboss-platform' ); ?> " data-text-none="<?php esc_html_e( 'None', 'buddyboss-platform' ); ?> ">
 		<thead>
 			<tr>
 				<th class="title"><?php echo esc_html( $enable_notifications['label'] ); ?></th>
@@ -7533,18 +7670,18 @@ function bb_manual_notification_options() {
 	}
 
 	$data = array(
-		'label'  => esc_html__( 'A manual notification from a site admin', 'buddyboss' ),
+		'label'  => esc_html__( 'A manual notification from a site admin', 'buddyboss-platform' ),
 		'fields' => array(),
 	);
 
 	if ( bb_web_notification_enabled() && bb_web_push_notification_enabled() ) {
-		$data['fields']['notification_web_push'] = esc_html__( 'Web', 'buddyboss' );
+		$data['fields']['notification_web_push'] = esc_html__( 'Web', 'buddyboss-platform' );
 	} elseif ( bb_web_notification_enabled() ) {
 		$data['fields']['notification_web_push'] = '';
 	}
 
 	if ( bb_app_notification_enabled() ) {
-		$data['fields']['notification_app_push'] = esc_html__( 'App', 'buddyboss' );
+		$data['fields']['notification_app_push'] = esc_html__( 'App', 'buddyboss-platform' );
 	}
 
 	return apply_filters( 'bb_manual_notification_options', $data );
@@ -7573,7 +7710,7 @@ function bb_render_manual_notification() {
 				<tr>
 					<td><?php echo isset( $manual_notifications['label'] ) ? esc_html( $manual_notifications['label'] ) : ''; ?></td>
 					<td class="email notification_no_option">
-						<?php esc_html_e( '-', 'buddyboss' ); ?>
+						<?php esc_html_e( '-', 'buddyboss-platform' ); ?>
 					</td>
 					<?php
 					foreach ( $manual_notifications['fields'] as $key => $label ) {
@@ -7602,7 +7739,7 @@ function bb_render_manual_notification() {
 						} else {
 							?>
 							<td class="<?php echo esc_attr( $class ); ?> notification_no_option">
-								<?php esc_html_e( '-', 'buddyboss' ); ?>
+								<?php esc_html_e( '-', 'buddyboss-platform' ); ?>
 							</td>
 							<?php
 						}
@@ -7918,12 +8055,12 @@ function bb_admin_icons( $id ) {
 			break;
 		case 'activity_access_control_block':
 		case 'messages_access_control_block':
-		case 'media_access_control_block';
+		case 'media_access_control_block':
 		case 'connection_access_control_block':
 			$meta_icon = $bb_icon_bf . ' bb-icon-lock-alt-open';
 			break;
 		case 'bp_zoom_settings_section':
-		case 'bp_zoom_gutenberg_section';
+		case 'bp_zoom_gutenberg_section':
 			$meta_icon = $bb_icon_bf . ' bb-icon-brand-zoom';
 			break;
 		case 'bp_notification_settings_automatic':
@@ -8211,7 +8348,7 @@ function bb_autop( $pee, $br = true ) {
 			$pre_tags[ $name ] = substr( $pee_part, $start ) . '</pre>';
 
 			$pee .= substr( $pee_part, 0, $start ) . $name;
-			$i++;
+			++$i;
 		}
 
 		$pee .= $last_pee;
@@ -8543,7 +8680,7 @@ function bb_mention_remove_deleted_users_link( $content ) {
 
 	foreach ( (array) $usernames as $user_id => $username ) {
 		if ( bp_is_user_inactive( $user_id ) ) {
-			preg_match_all( "'<a\b[^>]*>@(.*?)<\/a>'si", $content, $content_matches, PREG_SET_ORDER );			/*preg_match_all( "'<a.*?>@(.*?)<\/a>'si", $content, $content_matches, PREG_SET_ORDER );*/
+			preg_match_all( "'<a\b[^>]*>@(.*?)<\/a>'si", $content, $content_matches, PREG_SET_ORDER );          /*preg_match_all( "'<a.*?>@(.*?)<\/a>'si", $content, $content_matches, PREG_SET_ORDER );*/
 			if ( ! empty( $content_matches ) ) {
 				foreach ( $content_matches as $match ) {
 					if ( false !== strpos( $match[0], '@' . $username ) ) {
@@ -8601,19 +8738,22 @@ if ( ! function_exists( 'bb_filter_input_string' ) ) {
 			return $string;
 		}
 
-		/**
-		 * This differs from strip_tags() because it removes the contents of
-		 * the `<script>` and `<style>` tags. E.g. `strip_tags( '<script>something</script>' )`
-		 * will return 'something'. wp_strip_all_tags will return ''
+		/*
+		 * strip_tags() is used deliberately here, NOT wp_strip_all_tags().
+		 * These are the plugin's general-purpose $_POST / $_GET readers used by
+		 * 160+ call sites. wp_strip_all_tags() is NOT an equivalent: it also
+		 * removes the CONTENTS of <script>/<style> tags and TRIMS leading and
+		 * trailing whitespace, silently mutating any input where whitespace is
+		 * significant (e.g. API keys, passwords). strip_tags() strips only the
+		 * tags. Both branches must stay identical.
 		 */
-		$string = $require_array ? array_map( 'strip_tags', $string ) : strip_tags( $string );
+		$string = $require_array ? array_map( 'strip_tags', $string ) : strip_tags( $string ); // phpcs:ignore WordPress.WP.AlternativeFunctions.strip_tags_strip_tags -- see comment above; wp_strip_all_tags is not a safe substitute here.
 
 		if ( ! in_array( FILTER_FLAG_NO_ENCODE_QUOTES, $flags, true ) ) {
 			$string = str_replace( array( "'", '"' ), array( '&#39;', '&#34;' ), $string );
 		}
 
 		return $string;
-
 	}
 }
 
@@ -8644,19 +8784,22 @@ if ( ! function_exists( 'bb_filter_var_string' ) ) {
 			return $string;
 		}
 
-		/**
-		 * This differs from strip_tags() because it removes the contents of
-		 * the `<script>` and `<style>` tags. E.g. `strip_tags( '<script>something</script>' )`
-		 * will return 'something'. wp_strip_all_tags will return ''
+		/*
+		 * strip_tags() is used deliberately here, NOT wp_strip_all_tags().
+		 * These are the plugin's general-purpose $_POST / $_GET readers used by
+		 * 160+ call sites. wp_strip_all_tags() is NOT an equivalent: it also
+		 * removes the CONTENTS of <script>/<style> tags and TRIMS leading and
+		 * trailing whitespace, silently mutating any input where whitespace is
+		 * significant (e.g. API keys, passwords). strip_tags() strips only the
+		 * tags. Both branches must stay identical.
 		 */
-		$string = $require_array ? array_map( 'strip_tags', $string ) : strip_tags( $string );
+		$string = $require_array ? array_map( 'strip_tags', $string ) : strip_tags( $string ); // phpcs:ignore WordPress.WP.AlternativeFunctions.strip_tags_strip_tags -- see comment above; wp_strip_all_tags is not a safe substitute here.
 
 		if ( ! in_array( FILTER_FLAG_NO_ENCODE_QUOTES, $flags, true ) ) {
 			$string = str_replace( array( "'", '"' ), array( '&#39;', '&#34;' ), $string );
 		}
 
 		return $string;
-
 	}
 }
 
@@ -9322,7 +9465,7 @@ function bb_get_predefined_palette() {
 			18 => '#008000',
 			19 => '#006400',
 			20 => '#8b4513',
-			21 => '#a0522d'
+			21 => '#a0522d',
 		)
 	);
 }
@@ -9341,7 +9484,7 @@ function bb_get_default_png_avatar( $params ) {
 	$item_id = $params['item_id'] ?? 0;
 
 	$user_fallback_avatar  = buddypress()->plugin_url . 'bp-core/images/profile-avatar-buddyboss.png';
-	$group_fallback_avatar  = buddypress()->plugin_url . 'bp-core/images/group-avatar-buddyboss.png';
+	$group_fallback_avatar = buddypress()->plugin_url . 'bp-core/images/group-avatar-buddyboss.png';
 
 	if ( empty( $item_id ) ) {
 		return ( 'user' === $object ) ? $user_fallback_avatar : $group_fallback_avatar;
@@ -9619,12 +9762,12 @@ function bb_generate_default_avatar( $args ) {
 function bb_delete_default_user_png_avatar( $item_ids = array(), $is_delete_dir = true ) {
 	global $wpdb;
 
-	$delete_query = $wpdb->prepare("DELETE FROM $wpdb->usermeta WHERE meta_key = %s", 'default-user-avatar-png' );
+	$delete_query = $wpdb->prepare( "DELETE FROM $wpdb->usermeta WHERE meta_key = %s", 'default-user-avatar-png' );
 	if ( ! empty( $item_ids ) ) {
-		$delete_query .= " AND user_id IN (" . implode( ',', $item_ids ) . ")";
+		$delete_query .= ' AND user_id IN (' . implode( ',', array_map( 'absint', (array) $item_ids ) ) . ')';
 	}
 
-	$wpdb->query( $delete_query );
+	$wpdb->query( $delete_query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $delete_query base is $wpdb->prepare()'d; appended IN() list is absint-mapped above.
 
 	if ( $is_delete_dir ) {
 		$wp_filesystem   = bb_wp_filesystem();
@@ -9656,10 +9799,10 @@ function bb_delete_default_group_png_avatar( $item_ids = array(), $is_delete_dir
 
 	$delete_query = $wpdb->prepare( "DELETE FROM {$bp->groups->table_name_groupmeta} WHERE meta_key = %s", 'default-group-avatar-png' );
 	if ( ! empty( $item_ids ) ) {
-		$delete_query .= " AND group_id IN (" . implode( ',', $item_ids ) . ")";
+		$delete_query .= ' AND group_id IN (' . implode( ',', array_map( 'absint', (array) $item_ids ) ) . ')';
 	}
 
-	$wpdb->query( $delete_query );
+	$wpdb->query( $delete_query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $delete_query base is $wpdb->prepare()'d; appended IN() list is absint-mapped above.
 
 	if ( $is_delete_dir ) {
 		$wp_filesystem    = bb_wp_filesystem();
@@ -9698,7 +9841,6 @@ function bb_mention_add_user_dynamic_link( $content ) {
 		$user_id = $matches[1];                     // Extract the user ID from the match.
 
 		return bp_core_get_user_domain( $user_id ); // Replace this with your actual BuddyPress URL format.
-
 	};
 
 	return preg_replace_callback( '/{{mention_user_id_(\d+)}}/', $replace_callback, $content );
@@ -9718,7 +9860,7 @@ function bb_pro_schedule_posts_version() {
 /**
  * Function for writing logs to debug.log
  *
- * @param [mixed] $log The log entry that needs to be written into the debug.log.
+ * @param [mixed]   $log The log entry that needs to be written into the debug.log.
  * @param [boolean] $always_print Optional. True then always print the log. Default false.
  *
  * @since BuddyBoss 2.6.40
@@ -9757,8 +9899,8 @@ function bb_is_gd_or_imagick_library_enabled() {
 		if ( function_exists( '_wp_image_editor_choose' ) ) {
 			$lib_loaded = _wp_image_editor_choose();
 			if (
-				! empty( $lib_loaded  ) &&
-				! is_wp_error( $lib_loaded  ) &&
+				! empty( $lib_loaded ) &&
+				! is_wp_error( $lib_loaded ) &&
 				(
 					strpos( $lib_loaded, 'WP_Image_Editor_GD' ) !== false ||
 					'WP_Image_Editor_Imagick' === $lib_loaded
@@ -9846,7 +9988,12 @@ function bb_pro_poll_version() {
  */
 function bb_create_jwt( $payload ) {
 	$secret_key        = wp_salt( 'nonce' );
-	$header            = json_encode( [ 'typ' => 'JWT', 'alg' => 'HS256' ] );
+	$header            = json_encode(
+		array(
+			'typ' => 'JWT',
+			'alg' => 'HS256',
+		)
+	);
 	$encoded_header    = base64_encode( $header );
 	$encoded_payload   = base64_encode( json_encode( $payload ) );
 	$signature         = hash_hmac( 'sha256', $encoded_header . '.' . $encoded_payload, $secret_key, true );
@@ -10184,8 +10331,8 @@ function bb_admin_settings_get_pro_notice( $args = array() ) {
 	$data = array(
 		'show'       => false,
 		'badge_text' => $is_section
-			? __( 'UPGRADE PRO', 'buddyboss' )
-			: __( 'PRO', 'buddyboss' ),
+			? __( 'UPGRADE PRO', 'buddyboss-platform' )
+			: __( 'PRO', 'buddyboss-platform' ),
 		'badge_icon' => 'bb-icons-rl-crown-simple',
 		'link_url'   => $is_section ? 'https://www.buddyboss.com/pricing/' : '',
 		'link_icon'  => 'bb-icons-rl-play',
@@ -10592,12 +10739,12 @@ function bb_register_icon( $icon_id, $args = array() ) {
  */
 function bb_email_get_type_groups() {
 	$groups = array(
-		'activity'           => __( 'Activity', 'buddyboss' ),
-		'groups_discussions' => __( 'Groups & Discussions', 'buddyboss' ),
-		'messages'           => __( 'Messages', 'buddyboss' ),
-		'connections'        => __( 'Connections', 'buddyboss' ),
-		'account'            => __( 'Account', 'buddyboss' ),
-		'other'              => __( 'Other', 'buddyboss' ),
+		'activity'           => __( 'Activity', 'buddyboss-platform' ),
+		'groups_discussions' => __( 'Groups & Discussions', 'buddyboss-platform' ),
+		'messages'           => __( 'Messages', 'buddyboss-platform' ),
+		'connections'        => __( 'Connections', 'buddyboss-platform' ),
+		'account'            => __( 'Account', 'buddyboss-platform' ),
+		'other'              => __( 'Other', 'buddyboss-platform' ),
 	);
 
 	/**

@@ -183,7 +183,7 @@ function groups_create_group( $args = '' ) {
 		$member->group_id      = $group->id;
 		$member->user_id       = $group->creator_id;
 		$member->is_admin      = 1;
-		$member->user_title    = __( 'Group Organizer', 'buddyboss' );
+		$member->user_title    = __( 'Group Organizer', 'buddyboss-platform' );
 		$member->is_confirmed  = 1;
 		$member->date_modified = bp_core_current_time();
 		$member->save();
@@ -255,7 +255,8 @@ function groups_edit_base_group_details( $args = array() ) {
 
 	// Backward compatibility with old method of passing arguments.
 	if ( ! is_array( $args ) || count( $function_args ) > 1 ) {
-		_deprecated_argument( __METHOD__, '2.9.0', sprintf( __( 'Arguments passed to %1$s should be in an associative array. See the inline documentation at %2$s for more details.', 'buddyboss' ), __METHOD__, __FILE__ ) );
+		/* translators: 1: method name, 2: file path. */
+		_deprecated_argument( __METHOD__, '2.9.0', sprintf( esc_html__( 'Arguments passed to %1$s should be in an associative array. See the inline documentation at %2$s for more details.', 'buddyboss-platform' ), __METHOD__, __FILE__ ) );
 
 		$old_args_keys = array(
 			0 => 'group_id',
@@ -559,12 +560,12 @@ function groups_check_slug( $slug ) {
 	}
 
 	if ( in_array( $slug, (array) $bp->groups->forbidden_names ) ) {
-		$slug = $slug . '-' . rand();
+		$slug = $slug . '-' . wp_rand();
 	}
 
 	if ( BP_Groups_Group::check_slug( $slug ) ) {
 		do {
-			$slug = $slug . '-' . rand();
+			$slug = $slug . '-' . wp_rand();
 		} while ( BP_Groups_Group::check_slug( $slug ) );
 	}
 
@@ -629,7 +630,7 @@ function groups_leave_group( $group_id, $user_id = 0 ) {
 	// Don't let single admins leave the group.
 	if ( count( groups_get_group_admins( $group_id ) ) < 2 ) {
 		if ( groups_is_user_admin( $user_id, $group_id ) ) {
-			bp_core_add_message( __( 'This group must have at least one organizer.', 'buddyboss' ), 'error' );
+			bp_core_add_message( __( 'This group must have at least one organizer.', 'buddyboss-platform' ), 'error' );
 			return false;
 		}
 	}
@@ -653,7 +654,7 @@ function groups_leave_group( $group_id, $user_id = 0 ) {
 		}
 	}
 
-	bp_core_add_message( __( 'You successfully left the group.', 'buddyboss' ) );
+	bp_core_add_message( __( 'You successfully left the group.', 'buddyboss-platform' ) );
 
 	/**
 	 * Fires after a user leaves a group.
@@ -853,7 +854,8 @@ function groups_get_group_members( $args = array() ) {
 
 	// Backward compatibility with old method of passing arguments.
 	if ( ! is_array( $args ) || count( $function_args ) > 1 ) {
-		_deprecated_argument( __METHOD__, '2.0.0', sprintf( __( 'Arguments passed to %1$s should be in an associative array. See the inline documentation at %2$s for more details.', 'buddyboss' ), __METHOD__, __FILE__ ) );
+		/* translators: 1: method name, 2: file path. */
+		_deprecated_argument( __METHOD__, '2.0.0', sprintf( esc_html__( 'Arguments passed to %1$s should be in an associative array. See the inline documentation at %2$s for more details.', 'buddyboss-platform' ), __METHOD__, __FILE__ ) );
 
 		$old_args_keys = array(
 			0 => 'group_id',
@@ -1418,7 +1420,7 @@ function bp_groups_get_group_roles() {
 	return array(
 		'admin'  => (object) array(
 			'id'           => 'admin',
-			'name'         => __( 'Organizer', 'buddyboss' ),
+			'name'         => __( 'Organizer', 'buddyboss-platform' ),
 			'is_admin'     => true,
 			'is_banned'    => false,
 			'is_confirmed' => true,
@@ -1426,7 +1428,7 @@ function bp_groups_get_group_roles() {
 		),
 		'mod'    => (object) array(
 			'id'           => 'mod',
-			'name'         => __( 'Moderator', 'buddyboss' ),
+			'name'         => __( 'Moderator', 'buddyboss-platform' ),
 			'is_admin'     => false,
 			'is_banned'    => false,
 			'is_confirmed' => true,
@@ -1434,7 +1436,7 @@ function bp_groups_get_group_roles() {
 		),
 		'member' => (object) array(
 			'id'           => 'member',
-			'name'         => __( 'Member', 'buddyboss' ),
+			'name'         => __( 'Member', 'buddyboss-platform' ),
 			'is_admin'     => false,
 			'is_banned'    => false,
 			'is_confirmed' => true,
@@ -1442,7 +1444,7 @@ function bp_groups_get_group_roles() {
 		),
 		'banned' => (object) array(
 			'id'           => 'banned',
-			'name'         => __( 'Banned', 'buddyboss' ),
+			'name'         => __( 'Banned', 'buddyboss-platform' ),
 			'is_admin'     => false,
 			'is_banned'    => true,
 			'is_confirmed' => true,
@@ -2195,7 +2197,8 @@ function groups_send_invites( $args = array() ) {
 
 	// Backward compatibility with old method of passing arguments.
 	if ( ! is_array( $args ) || count( $function_args ) > 1 ) {
-		_deprecated_argument( __METHOD__, '1.3.5', sprintf( __( 'Arguments passed to %1$s should be in an associative array. See the inline documentation at %2$s for more details.', 'buddyboss' ), __METHOD__, __FILE__ ) );
+		/* translators: 1: method name, 2: file path. */
+		_deprecated_argument( __METHOD__, '1.3.5', sprintf( esc_html__( 'Arguments passed to %1$s should be in an associative array. See the inline documentation at %2$s for more details.', 'buddyboss-platform' ), __METHOD__, __FILE__ ) );
 
 		$old_args_keys = array(
 			0 => 'inviter_id',
@@ -2578,7 +2581,8 @@ function groups_send_membership_request( $args = array() ) {
 
 	// Backward compatibility with old method of passing arguments.
 	if ( ! is_array( $args ) || count( $function_args ) > 1 ) {
-		_deprecated_argument( __METHOD__, '1.3.5', sprintf( __( 'Arguments passed to %1$s should be in an associative array. See the inline documentation at %2$s for more details.', 'buddyboss' ), __METHOD__, __FILE__ ) );
+		/* translators: 1: method name, 2: file path. */
+		_deprecated_argument( __METHOD__, '1.3.5', sprintf( esc_html__( 'Arguments passed to %1$s should be in an associative array. See the inline documentation at %2$s for more details.', 'buddyboss-platform' ), __METHOD__, __FILE__ ) );
 
 		$old_args_keys = array(
 			0 => 'user_id',
@@ -2676,7 +2680,8 @@ function groups_send_membership_request( $args = array() ) {
 function groups_accept_membership_request( $membership_id, $user_id = 0, $group_id = 0 ) {
 
 	if ( ! empty( $membership_id ) ) {
-		_deprecated_argument( __METHOD__, '1.3.5', sprintf( __( 'Argument `membership_id` passed to %1$s  is deprecated. See the inline documentation at %2$s for more details.', 'buddyboss' ), __METHOD__, __FILE__ ) );
+		/* translators: 1: method name, 2: file path. */
+		_deprecated_argument( __METHOD__, '1.3.5', sprintf( esc_html__( 'Argument `membership_id` passed to %1$s  is deprecated. See the inline documentation at %2$s for more details.', 'buddyboss-platform' ), __METHOD__, __FILE__ ) );
 	}
 
 	if ( ! $user_id || ! $group_id ) {
@@ -2709,7 +2714,8 @@ function groups_accept_membership_request( $membership_id, $user_id = 0, $group_
 function groups_reject_membership_request( $membership_id, $user_id = 0, $group_id = 0 ) {
 
 	if ( ! empty( $membership_id ) ) {
-		_deprecated_argument( __METHOD__, '1.3.5', sprintf( __( 'Argument `membership_id` passed to %1$s  is deprecated. See the inline documentation at %2$s for more details.', 'buddyboss' ), __METHOD__, __FILE__ ) );
+		/* translators: 1: method name, 2: file path. */
+		_deprecated_argument( __METHOD__, '1.3.5', sprintf( esc_html__( 'Argument `membership_id` passed to %1$s  is deprecated. See the inline documentation at %2$s for more details.', 'buddyboss-platform' ), __METHOD__, __FILE__ ) );
 	}
 
 	if ( ! groups_delete_membership_request( false, $user_id, $group_id ) ) {
@@ -2746,7 +2752,8 @@ function groups_reject_membership_request( $membership_id, $user_id = 0, $group_
  */
 function groups_delete_membership_request( $membership_id, $user_id = 0, $group_id = 0 ) {
 	if ( ! empty( $membership_id ) ) {
-		_deprecated_argument( __METHOD__, '1.3.5', sprintf( __( 'Argument `membership_id` passed to %1$s  is deprecated. See the inline documentation at %2$s for more details.', 'buddyboss' ), __METHOD__, __FILE__ ) );
+		/* translators: 1: method name, 2: file path. */
+		_deprecated_argument( __METHOD__, '1.3.5', sprintf( esc_html__( 'Argument `membership_id` passed to %1$s  is deprecated. See the inline documentation at %2$s for more details.', 'buddyboss-platform' ), __METHOD__, __FILE__ ) );
 	}
 
 	if ( empty( $user_id ) || empty( $group_id ) ) {
@@ -2873,7 +2880,7 @@ function groups_change_all_activity_feed_status( $group_id = 0, $status = 0 ) {
 	}
 
 	$q = $wpdb->prepare( "UPDATE {$bp->activity->table_name} SET hide_sitewide = %d WHERE item_id = %d and component = 'groups' AND privacy = 'public' ", $status, $group_id );
-	if ( false === $wpdb->query( $q ) ) {
+	if ( false === $wpdb->query( $q ) ) { // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- $q is %d-prepared above; table from $bp->activity->table_name.
 		return false;
 	}
 
@@ -2948,8 +2955,8 @@ function groups_delete_groupmeta( $group_id, $meta_key = false, $meta_value = fa
 	if ( empty( $meta_key ) ) {
 		$table_name = buddypress()->groups->table_name_groupmeta;
 		$sql        = "SELECT meta_key FROM {$table_name} WHERE group_id = %d";
-		$query      = $wpdb->prepare( $sql, $group_id );
-		$keys       = $wpdb->get_col( $query );
+		$query      = $wpdb->prepare( $sql, $group_id ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- $table_name from groups->table_name_groupmeta; group_id is %d.
+		$keys       = $wpdb->get_col( $query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- $query is %d-prepared above.
 
 		// With no meta_key, ignore $delete_all.
 		$delete_all = false;
@@ -3059,8 +3066,8 @@ function groups_delete_membermeta( $member_id, $meta_key = false, $meta_value = 
 	if ( empty( $meta_key ) ) {
 		$table_name = buddypress()->groups->table_name_membermeta;
 		$sql        = "SELECT meta_key FROM {$table_name} WHERE member_id = %d";
-		$query      = $wpdb->prepare( $sql, $member_id );
-		$keys       = $wpdb->get_col( $query );
+		$query      = $wpdb->prepare( $sql, $member_id ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- $table_name from groups->table_name_membermeta; member_id is %d.
+		$keys       = $wpdb->get_col( $query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- $query is %d-prepared above.
 
 		// With no meta_key, ignore $delete_all.
 		$delete_all = false;
@@ -3253,7 +3260,7 @@ function bp_groups_register_group_type( $group_type, $args = array() ) {
 	$bp = buddypress();
 
 	if ( isset( $bp->groups->types[ $group_type ] ) ) {
-		return new WP_Error( 'bp_group_type_exists', __( 'Group type already exists.', 'buddyboss' ), $group_type );
+		return new WP_Error( 'bp_group_type_exists', __( 'Group type already exists.', 'buddyboss-platform' ), $group_type );
 	}
 
 	$r = bp_parse_args(
@@ -3284,7 +3291,7 @@ function bp_groups_register_group_type( $group_type, $args = array() ) {
 	 */
 	$illegal_names = apply_filters( 'bp_group_type_illegal_names', array( 'any', 'null', '_none' ) );
 	if ( in_array( $group_type, $illegal_names, true ) ) {
-		return new WP_Error( 'bp_group_type_illegal_name', __( 'You may not register a group type with this name.', 'buddyboss' ), $group_type );
+		return new WP_Error( 'bp_group_type_illegal_name', __( 'You may not register a group type with this name.', 'buddyboss-platform' ), $group_type );
 	}
 
 	// Store the group type name as data in the object (not just as the array key).
@@ -3790,7 +3797,7 @@ add_action( 'groups_remove_member', 'bp_groups_clear_invite_message_on_uninvite'
  * @return string   custom post type of group type.
  */
 function bp_groups_group_type_post_type() {
-	echo bp_groups_get_group_type_post_type();
+	echo esc_attr( bp_groups_get_group_type_post_type() );
 }
 
 /**
@@ -3831,18 +3838,18 @@ function bp_groups_get_group_type_post_type_labels() {
 	return apply_filters(
 		'bp_groups_get_group_type_post_type_labels',
 		array(
-			'add_new'            => __( 'Add New', 'buddyboss' ),
-			'add_new_item'       => __( 'New Group Type', 'buddyboss' ),
-			'all_items'          => __( 'Group Types', 'buddyboss' ),
-			'edit_item'          => __( 'Edit Group Type', 'buddyboss' ),
-			'menu_name'          => __( 'Social Groups', 'buddyboss' ),
-			'name'               => __( 'Group Types', 'buddyboss' ),
-			'new_item'           => __( 'New Group Type', 'buddyboss' ),
-			'not_found'          => __( 'No Group Types found', 'buddyboss' ),
-			'not_found_in_trash' => __( 'No Group Types found in trash', 'buddyboss' ),
-			'search_items'       => __( 'Search Group Types', 'buddyboss' ),
-			'singular_name'      => __( 'Group Type', 'buddyboss' ),
-			'attributes'         => __( 'Dropdown Order', 'buddyboss' ),
+			'add_new'            => __( 'Add New', 'buddyboss-platform' ),
+			'add_new_item'       => __( 'New Group Type', 'buddyboss-platform' ),
+			'all_items'          => __( 'Group Types', 'buddyboss-platform' ),
+			'edit_item'          => __( 'Edit Group Type', 'buddyboss-platform' ),
+			'menu_name'          => __( 'Social Groups', 'buddyboss-platform' ),
+			'name'               => __( 'Group Types', 'buddyboss-platform' ),
+			'new_item'           => __( 'New Group Type', 'buddyboss-platform' ),
+			'not_found'          => __( 'No Group Types found', 'buddyboss-platform' ),
+			'not_found_in_trash' => __( 'No Group Types found in trash', 'buddyboss-platform' ),
+			'search_items'       => __( 'Search Group Types', 'buddyboss-platform' ),
+			'singular_name'      => __( 'Group Type', 'buddyboss-platform' ),
+			'attributes'         => __( 'Dropdown Order', 'buddyboss-platform' ),
 		)
 	);
 }
@@ -3895,7 +3902,7 @@ function bp_group_get_group_type_key( $post_id ) {
 		$term = term_exists( sanitize_key( $key ), 'bp_group_type' );
 		if ( 0 !== $term && null !== $term ) {
 			$digits = 3;
-			$unique = rand( pow( 10, $digits - 1 ), pow( 10, $digits ) - 1 );
+			$unique = wp_rand( pow( 10, $digits - 1 ), pow( 10, $digits ) - 1 );
 			$key    = $key . $unique;
 		}
 		update_post_meta( $post_id, '_bp_group_type_key', sanitize_key( $key ) );
@@ -4029,7 +4036,7 @@ function bp_group_get_count_by_group_type( $group_type = '', $taxonomy = 'bp_gro
 		'on'     => 'ON tt.term_id = t.term_id',
 		'where'  => $wpdb->prepare( 'WHERE tt.taxonomy = %s', $taxonomy ),
 	);
-	$bp_get_group_type_count = $wpdb->get_results( join( ' ', $bp_group_type_query ) );
+	$bp_get_group_type_count = $wpdb->get_results( join( ' ', $bp_group_type_query ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Tables from $wpdb->term_taxonomy/terms; taxonomy is %s-prepared in the 'where' fragment.
 
 	restore_current_blog();
 
@@ -4304,13 +4311,13 @@ function bp_get_group_ids_by_group_types( $group_type = '', $taxonomy = 'bp_grou
 		return false;
 	}
 
-	$taxonomy_id        = $bp_group_type_query->term_taxonomy_id;
+	$taxonomy_id        = absint( $bp_group_type_query->term_taxonomy_id );
 	$groups             = $bp->table_prefix . 'bp_groups';
 	$group_meta         = $bp->table_prefix . 'bp_groups_groupmeta';
 	$term_relationships = $wpdb->term_relationships;
 
 	$query   = "SELECT g.id as id FROM $groups g JOIN $group_meta gm_last_activity on ( g.id = gm_last_activity.group_id ) WHERE  g.id IN ( SELECT object_id FROM $term_relationships WHERE $term_relationships.term_taxonomy_id IN ($taxonomy_id) ) AND gm_last_activity.meta_key = 'last_activity'";
-	$results = $wpdb->get_results( $query, ARRAY_A );
+	$results = $wpdb->get_results( $query, ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- Tables from $bp->table_prefix/$wpdb->term_relationships; $taxonomy_id is absint()'d.
 
 	return $results;
 }
@@ -4376,17 +4383,17 @@ function get_group_role_label( $group_id, $label_name ) {
 	if ( ! $get_group_type ) {
 
 		if ( 'organizer_plural_label_name' === $label_name ) {
-			$label = __( 'Organizers', 'buddyboss' );
+			$label = __( 'Organizers', 'buddyboss-platform' );
 		} elseif ( 'moderator_plural_label_name' === $label_name ) {
-			$label = __( 'Moderators', 'buddyboss' );
+			$label = __( 'Moderators', 'buddyboss-platform' );
 		} elseif ( 'member_plural_label_name' === $label_name ) {
-			$label = __( 'Members', 'buddyboss' );
+			$label = __( 'Members', 'buddyboss-platform' );
 		} elseif ( 'organizer_singular_label_name' === $label_name ) {
-			$label = __( 'Organizer', 'buddyboss' );
+			$label = __( 'Organizer', 'buddyboss-platform' );
 		} elseif ( 'moderator_singular_label_name' === $label_name ) {
-			$label = __( 'Moderator', 'buddyboss' );
+			$label = __( 'Moderator', 'buddyboss-platform' );
 		} elseif ( 'member_singular_label_name' === $label_name ) {
-			$label = __( 'Member', 'buddyboss' );
+			$label = __( 'Member', 'buddyboss-platform' );
 		}
 	} else {
 
@@ -4395,34 +4402,34 @@ function get_group_role_label( $group_id, $label_name ) {
 		if ( '' === $group_type_post_id ) {
 
 			if ( 'organizer_plural_label_name' === $label_name ) {
-				$label = __( 'Organizers', 'buddyboss' );
+				$label = __( 'Organizers', 'buddyboss-platform' );
 			} elseif ( 'moderator_plural_label_name' === $label_name ) {
-				$label = __( 'Moderators', 'buddyboss' );
+				$label = __( 'Moderators', 'buddyboss-platform' );
 			} elseif ( 'member_plural_label_name' === $label_name ) {
-				$label = __( 'Members', 'buddyboss' );
+				$label = __( 'Members', 'buddyboss-platform' );
 			} elseif ( 'organizer_singular_label_name' === $label_name ) {
-				$label = __( 'Organizer', 'buddyboss' );
+				$label = __( 'Organizer', 'buddyboss-platform' );
 			} elseif ( 'moderator_singular_label_name' === $label_name ) {
-				$label = __( 'Moderator', 'buddyboss' );
+				$label = __( 'Moderator', 'buddyboss-platform' );
 			} elseif ( 'member_singular_label_name' === $label_name ) {
-				$label = __( 'Member', 'buddyboss' );
+				$label = __( 'Member', 'buddyboss-platform' );
 			}
 		}
 
 		$group_type_roles = get_post_meta( $group_type_post_id, '_bp_group_type_role_labels', true ) ?: array();
 
 		if ( 'organizer_plural_label_name' === $label_name ) {
-			$label = ( isset( $group_type_roles['organizer_plural_label_name'] ) && $group_type_roles['organizer_plural_label_name'] ) ? $group_type_roles['organizer_plural_label_name'] : __( 'Organizers', 'buddyboss' );
+			$label = ( isset( $group_type_roles['organizer_plural_label_name'] ) && $group_type_roles['organizer_plural_label_name'] ) ? $group_type_roles['organizer_plural_label_name'] : __( 'Organizers', 'buddyboss-platform' );
 		} elseif ( 'moderator_plural_label_name' === $label_name ) {
-			$label = ( isset( $group_type_roles['moderator_plural_label_name'] ) && $group_type_roles['moderator_plural_label_name'] ) ? $group_type_roles['moderator_plural_label_name'] : __( 'Moderators', 'buddyboss' );
+			$label = ( isset( $group_type_roles['moderator_plural_label_name'] ) && $group_type_roles['moderator_plural_label_name'] ) ? $group_type_roles['moderator_plural_label_name'] : __( 'Moderators', 'buddyboss-platform' );
 		} elseif ( 'member_plural_label_name' === $label_name ) {
-			$label = ( isset( $group_type_roles['member_plural_label_name'] ) && $group_type_roles['member_plural_label_name'] ) ? $group_type_roles['member_plural_label_name'] : __( 'Members', 'buddyboss' );
+			$label = ( isset( $group_type_roles['member_plural_label_name'] ) && $group_type_roles['member_plural_label_name'] ) ? $group_type_roles['member_plural_label_name'] : __( 'Members', 'buddyboss-platform' );
 		} elseif ( 'organizer_singular_label_name' === $label_name ) {
-			$label = ( isset( $group_type_roles['organizer_singular_label_name'] ) && $group_type_roles['organizer_singular_label_name'] ) ? $group_type_roles['organizer_singular_label_name'] : __( 'Organizer', 'buddyboss' );
+			$label = ( isset( $group_type_roles['organizer_singular_label_name'] ) && $group_type_roles['organizer_singular_label_name'] ) ? $group_type_roles['organizer_singular_label_name'] : __( 'Organizer', 'buddyboss-platform' );
 		} elseif ( 'moderator_singular_label_name' === $label_name ) {
-			$label = ( isset( $group_type_roles['moderator_singular_label_name'] ) && $group_type_roles['moderator_singular_label_name'] ) ? $group_type_roles['moderator_singular_label_name'] : __( 'Moderator', 'buddyboss' );
+			$label = ( isset( $group_type_roles['moderator_singular_label_name'] ) && $group_type_roles['moderator_singular_label_name'] ) ? $group_type_roles['moderator_singular_label_name'] : __( 'Moderator', 'buddyboss-platform' );
 		} elseif ( 'member_singular_label_name' === $label_name ) {
-			$label = ( isset( $group_type_roles['member_singular_label_name'] ) && $group_type_roles['member_singular_label_name'] ) ? $group_type_roles['member_singular_label_name'] : __( 'Member', 'buddyboss' );
+			$label = ( isset( $group_type_roles['member_singular_label_name'] ) && $group_type_roles['member_singular_label_name'] ) ? $group_type_roles['member_singular_label_name'] : __( 'Member', 'buddyboss-platform' );
 		}
 	}
 
@@ -4441,7 +4448,7 @@ function bp_group_directory_page_content() {
 
 	if ( ! empty( $page_ids['groups'] ) && ! bp_is_group_subgroups() ) {
 		$group_page_content = get_post_field( 'post_content', $page_ids['groups'] );
-		echo apply_filters( 'the_content', $group_page_content );
+		echo wp_kses_post( apply_filters( 'the_content', $group_page_content ) );
 	}
 }
 
@@ -4677,11 +4684,11 @@ function bp_groups_migrate_invitations() {
 	$query      = "INSERT INTO {$table_name} (user_id, inviter_id, invitee_email, class, item_id, secondary_item_id, type, content, date_modified, invite_sent, accepted) VALUES ";
 	$query     .= implode( ', ', $values );
 	$query     .= ';';
-	$wpdb->query( $query );
+	$wpdb->query( $query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- Table from BP_Invitation_Manager::get_table_name(); each VALUES row is $wpdb->prepare()'d above.
 
 	$ids_to_delete = implode( ',', $processed );
 	if ( $ids_to_delete ) {
-		$wpdb->query( "DELETE FROM {$bp->groups->table_name_members} WHERE ID IN ($ids_to_delete)" );
+		$wpdb->query( "DELETE FROM {$bp->groups->table_name_members} WHERE ID IN ($ids_to_delete)" ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- $ids_to_delete is implode of (int)-cast IDs; table from $bp->groups->table_name_members.
 	}
 }
 
@@ -4850,10 +4857,10 @@ function bb_groups_loop_members( $group_id = 0, $role = array( 'member', 'mod', 
 			<span class="bs-group-member" data-bp-tooltip-pos="up-left" data-bp-tooltip="+
 			<?php
 			/* translators: Group member count. */
-			printf( wp_kses_post( _nx( '%s member', '%s members', $member_count, 'group member count', 'buddyboss' ) ), esc_html( number_format_i18n( $member_count ) ) );
+			printf( wp_kses_post( _nx( '%s member', '%s members', $member_count, 'group member count', 'buddyboss-platform' ) ), esc_html( number_format_i18n( $member_count ) ) );
 			?>
 			">
-				<a href="<?php echo esc_url( bp_get_group_permalink() . 'members' ); ?>" aria-label="<?php esc_attr_e( 'More members', 'buddyboss' ); ?>">
+				<a href="<?php echo esc_url( bp_get_group_permalink() . 'members' ); ?>" aria-label="<?php esc_attr_e( 'More members', 'buddyboss-platform' ); ?>">
 					<span class="bb-icon-f bb-icon-ellipsis-h"></span>
 				</a>
 			</span>
@@ -4997,206 +5004,11 @@ function bb_get_all_members_for_groups( $args = array() ) {
 		}
 
 		// Get the specific user ids.
-		$results = $wpdb->get_col( "{$sql['select']} {$sql['where']} {$sql['limit']}" );
+		$results = $wpdb->get_col( "{$sql['select']} {$sql['where']} {$sql['limit']}" ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- Table from $bp->groups->table_name_members; group_ids via wp_parse_id_list(); limit %d-prepared.
 	}
 
 	return apply_filters( 'bb_get_all_members_for_groups', array_map( 'intval', $results ), $results );
 }
-
-/**
- * Function to check the user subscribed group or not.
- *
- * @since BuddyBoss 2.2.8
- *
- * @param int $group_id Group ID.
- * @param int $user_id  User ID.
- *
- * @return bool|int
- */
-function bb_is_member_subscribed_group( $group_id, $user_id ) {
-
-	if ( empty( $user_id ) ) {
-		$user_id = get_current_user_id();
-	}
-
-	if ( empty( $group_id ) || empty( $user_id ) ) {
-		return false;
-	}
-
-	if ( function_exists( 'bb_is_enabled_subscription' ) && bb_is_enabled_subscription( 'group' ) ) {
-		$subscription_ids = bb_get_subscriptions(
-			array(
-				'type'    => 'group',
-				'item_id' => $group_id,
-				'user_id' => $user_id,
-				'fields'  => 'id',
-				'status'  => null,
-			),
-			true
-		);
-
-		if ( ! empty( $subscription_ids ) && ! empty( $subscription_ids['subscriptions'] ) ) {
-			return current( $subscription_ids['subscriptions'] );
-		}
-	}
-
-	return false;
-}
-
-/**
- * Function to get Group Subscription button.
- *
- * @since BuddyBoss 2.2.8
- *
- * @param array $args button args.
- * @param bool  $html Should return button html or not.
- *
- * @return string|array
- */
-function bb_get_group_subscription_button( $args, $html = true ) {
-	global $wp;
-
-	if ( ! bb_is_enabled_subscription( 'group' ) || ! is_user_logged_in() ) {
-		return ! empty( $html ) ? '' : array();
-	}
-
-	$r = bp_parse_args(
-		$args,
-		array(
-			'show_link_text' => false,
-			'button_attr'    => array(
-				'data-bp-content-id' => false,
-			),
-		),
-	);
-
-	$item_id = $r['button_attr']['data-bp-content-id'];
-	$user_id = get_current_user_id();
-	$group   = groups_get_group( $item_id );
-
-	if ( empty( $item_id ) || empty( $r ) ) {
-		return ! empty( $html ) ? '' : array();
-	}
-
-	// Check the current user's permission.
-	$is_group_member = groups_is_user_member( $user_id, $item_id );
-	if ( false === (bool) $is_group_member ) {
-		return ! empty( $html ) ? '' : array();
-	}
-
-	$button_icon         = '<i class="bb-icon-l bb-icon-bell"></i>';
-	$button_text         = __( 'Subscribe', 'buddyboss' );
-	$button_hover_text   = __( 'Unsubscribe', 'buddyboss' );
-	$subscription_status = 'not-subscribed';
-	$action              = 'subscribe';
-	if ( bb_is_member_subscribed_group( $item_id, $user_id ) ) {
-		$button_text         = __( 'Unsubscribe', 'buddyboss' );
-		$button_hover_text   = __( 'Subscribe', 'buddyboss' );
-		$subscription_status = 'subscribed';
-		$action              = 'unsubscribe';
-	}
-
-	$url = esc_url(
-		wp_nonce_url(
-			add_query_arg(
-				array(
-					'action'   => $action,
-					'group_id' => $item_id,
-				),
-				trailingslashit( home_url( $wp->request ) )
-			),
-			'bb-group-subscription-' . $item_id
-		)
-	);
-
-	$button = array(
-		'id'                => 'group_subscription',
-		'component'         => 'groups',
-		'must_be_logged_in' => true,
-		'block_self'        => false,
-		'wrapper_class'     => 'group-button ' . $subscription_status,
-		'wrapper_id'        => 'groupbutton-' . $item_id,
-		'link_href'         => $url,
-		'link_text'         => ( $r['show_link_text'] ) ? $button_icon . $button_text : $button_icon,
-		'link_class'        => 'group-button bp-toggle-action-button group-subscription ' . $subscription_status,
-		'is_tooltips'       => true,
-		'data-balloon'      => $button_text,
-		'data-balloon-pos'  => 'up',
-		'button_attr'       => array(
-			'data-title'           => ( $r['show_link_text'] ) ? $button_icon . $button_hover_text : $button_icon,
-			'data-title-displayed' => ( $r['show_link_text'] ) ? $button_icon . $button_text : $button_icon,
-			'data-bb-group-name'   => esc_attr( $group->name ),
-			'add_pre_post_text'    => false,
-			'href'                 => $url,
-			'data-bp-btn-action'   => $action,
-			'aria-label'           => $button_text,
-		),
-	);
-
-	$button = bp_parse_args( $button, $r );
-
-	/**
-	 * Filter to update group subscription button arguments.
-	 *
-	 * @since BuddyBoss 2.2.8
-	 *
-	 * @param array $button Button args.
-	 * @param array $r      Button args.
-	 */
-	$button = apply_filters( 'bb_group_subscription_button_args', $button, $r );
-
-	if ( ! empty( $html ) ) {
-		$button = sprintf(
-			'<a href="%s" id="%s" class="%s" data-bp-content-id="%s" data-bp-content-type="%s" data-bp-nonce="%s" data-bp-btn-action="%s" aria-label="%s">%s</a>',
-			esc_url( $button['link_href'] ),
-			esc_attr( $button['id'] ),
-			esc_attr( $button['link_class'] ),
-			esc_attr( $item_id ),
-			'group',
-			esc_url( $button['link_href'] ),
-			esc_attr( $action ),
-			esc_attr( $button['aria-label'] ),
-			wp_kses_post( $button['link_text'] )
-		);
-	}
-
-	/**
-	 * Filter to update group subscription link.
-	 *
-	 * @since BuddyBoss 2.2.8
-	 *
-	 * @param mixed $button Button args or HTML.
-	 * @param array $r      Button args.
-	 * @param bool  $html   Should return button html or not.
-	 */
-	return apply_filters( 'bb_get_group_subscription_button', $button, $r, $html );
-
-}
-
-/**
- * Function to display group action buttons.
- *
- * @since BuddyBoss 2.2.8
- *
- * @return void
- */
-function bb_group_single_header_actions() {
-	?>
-	<div class="group-actions-absolute">
-		<?php
-		bp_nouveau_group_header_buttons();
-		bp_nouveau_group_header_buttons(
-			array(
-				'type'           => 'subscription',
-				'button_element' => 'button',
-			)
-		);
-		bb_nouveau_group_header_bubble_buttons();
-		?>
-	</div>
-	<?php
-}
-
 
 /**
  * Update the group member count.
@@ -5713,14 +5525,14 @@ function bb_groups_members( $group_id = 0, $role = array( 'member', 'mod', 'admi
 
 		if ( $total - count( $members ) !== 0 ) {
 			$member_count = (int) ( $total - count( $members ) );
-			$member_label = ( 1 === (int) $member_count ) ? esc_html__( 'Member', 'buddyboss' ) : esc_html__( 'Members', 'buddyboss' );
+			$member_label = ( 1 === (int) $member_count ) ? esc_html__( 'Member', 'buddyboss-platform' ) : esc_html__( 'Members', 'buddyboss-platform' );
 			?>
 			<span class="bb-group-member count-wrap">
 				<a href="<?php echo esc_url( bp_get_group_permalink() . 'members' ); ?>">+
 					<?php
 					printf(
 						'%s<span class="bb-rl-group-member-count-label"> %s</span>',
-						$member_count,
+						esc_html( $member_count ),
 						esc_html( $member_label )
 					);
 					?>

@@ -20,10 +20,6 @@ add_action( 'bp_groups_posted_update', 'bp_media_groups_activity_update_media_me
 add_action( 'bp_activity_comment_posted', 'bp_media_activity_comments_update_media_meta', 10, 3 );
 add_action( 'bp_activity_comment_posted_notification_skipped', 'bp_media_activity_comments_update_media_meta', 10, 3 );
 add_action( 'bp_activity_after_delete', 'bp_media_delete_activity_media' ); // Delete activity medias.
-add_action( 'bp_activity_after_delete', 'bp_media_delete_activity_gif' ); // Delete activity gif.
-add_action( 'bp_activity_entry_content', 'bp_media_activity_embed_gif' );
-add_action( 'bp_activity_after_comment_content', 'bp_media_comment_embed_gif', 20, 1 );
-add_action( 'bp_activity_after_save', 'bp_media_activity_save_gif_data', 2, 1 );
 add_action( 'bp_activity_after_save', 'bp_media_activity_update_media_privacy', 2 );
 add_filter( 'bp_activity_get_edit_data', 'bp_media_get_edit_activity_data' );
 
@@ -32,25 +28,16 @@ add_action( 'bbp_template_after_single_topic', 'bp_media_add_theatre_template' )
 add_action( 'bbp_new_reply', 'bp_media_forums_new_post_media_save', 999 );
 add_action( 'bbp_new_topic', 'bp_media_forums_new_post_media_save', 999 );
 add_action( 'edit_post', 'bp_media_forums_new_post_media_save', 999 );
-add_action( 'bbp_new_reply', 'bp_media_forums_save_gif_data', 999 );
-add_action( 'bbp_new_topic', 'bp_media_forums_save_gif_data', 999 );
-add_action( 'edit_post', 'bp_media_forums_save_gif_data', 999 );
 
 add_filter( 'bbp_get_reply_content', 'bp_media_forums_embed_attachments', 98, 2 );
 add_filter( 'bbp_get_topic_content', 'bp_media_forums_embed_attachments', 98, 2 );
-add_filter( 'bbp_get_reply_content', 'bp_media_forums_embed_gif', 98, 2 );
-add_filter( 'bbp_get_topic_content', 'bp_media_forums_embed_gif', 98, 2 );
 
 // Messages..
 add_action( 'messages_message_sent', 'bp_media_attach_media_to_message' );
-add_action( 'messages_message_sent', 'bp_media_messages_save_gif_data' );
 add_action( 'bp_messages_thread_after_delete', 'bp_media_messages_delete_attached_media', 10, 2 ); // Delete thread medias.
 add_action( 'bp_messages_thread_messages_after_update', 'bp_media_user_messages_delete_attached_media', 10, 4 ); // Delete messages medias.
-add_action( 'bp_messages_thread_after_delete', 'bp_media_messages_delete_gif_data', 10, 2 ); // Delete thread gifs.
-add_action( 'bp_messages_thread_messages_after_update', 'bp_media_user_messages_delete_attached_gif', 10, 4 ); // Delete messages gifs.
 // add_action( 'bp_messages_thread_after_delete', 'bp_group_messages_delete_meta', 10, 2 );.
 add_filter( 'bp_messages_message_validated_content', 'bp_media_message_validated_content', 20, 3 );
-add_filter( 'bp_messages_message_validated_content', 'bp_media_gif_message_validated_content', 20, 3 );
 
 add_action( 'bp_core_activation_notice', 'bp_media_activation_notice' );
 add_action( 'wp_ajax_bp_media_import_status_request', 'bp_media_import_status_request' );
@@ -94,9 +81,9 @@ add_filter( 'bb_activity_comment_get_edit_data', 'bp_media_get_edit_activity_dat
 function bp_media_search_label_search( $type ) {
 
 	if ( 'albums' === $type ) {
-		$type = __( 'Albums', 'buddyboss' );
+		$type = __( 'Albums', 'buddyboss-platform' );
 	} elseif ( 'photos' === $type ) {
-		$type = __( 'Photos', 'buddyboss' );
+		$type = __( 'Photos', 'buddyboss-platform' );
 	}
 
 	return $type;
@@ -132,7 +119,7 @@ function bp_media_activity_entry() {
 	);
 
 	if ( ! empty( $is_media ) ) {
-		print $is_media;
+		print $is_media; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Returns trusted, internally-built activity media markup that wp_kses_post() would corrupt.
 	}
 }
 
@@ -445,32 +432,6 @@ function bp_media_delete_activity_media( $activities ) {
 }
 
 /**
- * Delete media gif when related activity is deleted.
- *
- * @since BuddyBoss 1.4.9
- *
- * @param array $activities Array of activities.
- */
-function bp_media_delete_activity_gif( $activities ) {
-	if ( ! empty( $activities ) ) {
-		foreach ( $activities as $activity ) {
-			$activity_id  = $activity->id;
-			$activity_gif = bp_activity_get_meta( $activity_id, '_gif_data', true );
-
-			if ( ! empty( $activity_gif ) ) {
-				if ( ! empty( $activity_gif['still'] ) && is_int( $activity_gif['still'] ) ) {
-					wp_delete_attachment( (int) $activity_gif['still'], true );
-				}
-
-				if ( ! empty( $activity_gif['mp4'] ) && is_int( $activity_gif['mp4'] ) ) {
-					wp_delete_attachment( (int) $activity_gif['mp4'], true );
-				}
-			}
-		}
-	}
-}
-
-/**
  * Update media privacy according to album's privacy
  *
  * @since BuddyBoss 1.0.0
@@ -691,7 +652,7 @@ function bp_media_forums_embed_attachments( $content, $id ) {
 		?>
 		<div class="bb-activity-media-wrap forums-media-wrap
 		<?php
-		echo 'bb-media-length-' . $media_template->media_count;
+		echo 'bb-media-length-' . esc_attr( $media_template->media_count );
 		echo $media_template->media_count > 5 ? ' bb-media-length-more' : '';
 		?>
 		">
@@ -707,144 +668,6 @@ function bp_media_forums_embed_attachments( $content, $id ) {
 	}
 
 	return $content;
-}
-
-/**
- * Embed topic or reply gif in a post
- *
- * @since BuddyBoss 1.0.0
- *
- * @param $content
- * @param $id
- *
- * @return string
- */
-function bp_media_forums_embed_gif( $content, $id ) {
-
-	// Do not embed attachment in wp-admin area.
-	if ( is_admin() ) {
-		return $content;
-	}
-
-	$forum_id = 0;
-
-	// Get current forum ID.
-	if ( bbp_get_reply_post_type() === get_post_type( $id ) ) {
-		$forum_id = bbp_get_reply_forum_id( $id );
-	} elseif ( bbp_get_topic_post_type() === get_post_type( $id ) ) {
-		$forum_id = bbp_get_topic_forum_id( $id );
-	} elseif ( bbp_get_forum_post_type() === get_post_type( $id ) ) {
-		$forum_id = $id;
-	}
-
-	$group_ids = bbp_get_forum_group_ids( $forum_id );
-	$group_id  = ( ! empty( $group_ids ) ? current( $group_ids ) : 0 );
-
-	if (
-		(
-			(
-				empty( $group_id ) ||
-				(
-					! empty( $group_id ) &&
-					! bp_is_active( 'groups' )
-				)
-			) &&
-			! bp_is_forums_gif_support_enabled()
-		) ||
-		(
-			bp_is_active( 'groups' ) &&
-			! empty( $group_id ) &&
-			! bp_is_groups_gif_support_enabled()
-		)
-	) {
-		return $content;
-	}
-
-	$gif_data = get_post_meta( $id, '_gif_data', true );
-
-	if ( empty( $gif_data ) ) {
-		return $content;
-	}
-
-	$preview_url = ( is_int( $gif_data['still'] ) ) ? wp_get_attachment_url( $gif_data['still'] ) : $gif_data['still'];
-	$video_url   = ( is_int( $gif_data['mp4'] ) ) ? wp_get_attachment_url( $gif_data['mp4'] ) : $gif_data['mp4'];
-
-	ob_start();
-	?>
-	<div class="activity-attached-gif-container">
-		<div class="gif-image-container">
-			<div class="gif-player">
-				<video preload="auto" playsinline poster="<?php echo $preview_url; ?>" loop muted>
-					<source src="<?php echo $video_url; ?>" type="video/mp4">
-				</video>
-				<a href="#" class="gif-play-button" aria-label="<?php esc_attr_e( 'Play GIF', 'buddyboss' ); ?>">
-					<span class="bb-icon-bl bb-icon-play"></span>
-				</a>
-				<span class="gif-icon"></span>
-			</div>
-		</div>
-	</div>
-	<?php
-	$content .= ob_get_clean();
-
-	return $content;
-}
-
-/**
- * save gif data for forum, topic, reply
- *
- * @since BuddyBoss 1.0.0
- *
- * @param $post_id
- */
-function bp_media_forums_save_gif_data( $post_id ) {
-
-	if ( ! empty( $_POST['bbp_media_gif'] ) ) {
-
-		// save activity id if it is saved in forums and enabled in platform settings.
-		$main_activity_id = get_post_meta( $post_id, '_bbp_activity_id', true );
-
-		// save gif data.
-		$gif_data = json_decode( stripslashes( $_POST['bbp_media_gif'] ), true );
-
-		if ( ! empty( $gif_data['saved'] ) && $gif_data['saved'] ) {
-			return;
-		}
-
-		$still = $gif_data['images']['480w_still']['url'];
-		$mp4   = $gif_data['images']['original_mp4']['mp4'];
-
-		$gdata = array(
-			'still' => $still,
-			'mp4'   => $mp4,
-		);
-
-		update_post_meta( $post_id, '_gif_data', $gdata );
-
-		$gif_data['saved'] = true;
-
-		update_post_meta( $post_id, '_gif_raw_data', $gif_data );
-
-		// save media meta for forum.
-		if ( ! empty( $main_activity_id ) && bp_is_active( 'activity' ) ) {
-			bp_activity_update_meta( $main_activity_id, '_gif_data', $gdata );
-			bp_activity_update_meta( $main_activity_id, '_gif_raw_data', $gif_data );
-		}
-	} elseif (
-		isset( $_POST['action'] ) &&
-		in_array( $_POST['action'], array( 'bbp-edit-reply', 'bbp-edit-topic', 'bbp-edit-forum' ), true ) &&
-		empty( $_POST['bbp_media_gif'] )
-	) {
-		delete_post_meta( $post_id, '_gif_data' );
-		delete_post_meta( $post_id, '_gif_raw_data' );
-
-		// Delete activity meta as well.
-		$main_activity_id = get_post_meta( $post_id, '_bbp_activity_id', true );
-		if ( ! empty( $main_activity_id ) && bp_is_active( 'activity' ) ) {
-			bp_activity_delete_meta( $main_activity_id, '_gif_data' );
-			bp_activity_delete_meta( $main_activity_id, '_gif_raw_data' );
-		}
-	}
 }
 
 /**
@@ -957,101 +780,6 @@ function bp_media_user_messages_delete_attached_media( $thread_id, $message_ids,
 }
 
 /**
- * Delete gif attached to thread messages.
- *
- * @since BuddyBoss 1.2.9
- *
- * @param int   $thread_id   ID of the thread being deleted.
- * @param array $message_ids IDs of messages being deleted.
- */
-function bp_media_messages_delete_gif_data( $thread_id, $message_ids ) {
-
-	if ( ! empty( $message_ids ) ) {
-		foreach ( $message_ids as $message_id ) {
-			$message_gif = bp_messages_get_meta( $message_id, '_gif_data', true );
-
-			if ( ! empty( $message_gif ) ) {
-				if ( ! empty( $message_gif['still'] ) && is_int( $message_gif['still'] ) ) {
-					wp_delete_attachment( (int) $message_gif['still'], true );
-				}
-
-				if ( ! empty( $message_gif['mp4'] ) && is_int( $message_gif['mp4'] ) ) {
-					wp_delete_attachment( (int) $message_gif['mp4'], true );
-				}
-			}
-
-			bp_messages_delete_meta( $message_id, '_gif_data' );
-			bp_messages_delete_meta( $message_id, '_gif_raw_data' );
-		}
-	}
-}
-
-/**
- * Delete gif attached to messages.
- *
- * @since BuddyBoss 1.4.9
- *
- * @param int   $thread_id          ID of the thread being deleted.
- * @param array $message_ids        IDs of messages being deleted.
- * @param int   $user_id            ID of the user the threads messages update for.
- * @param array $update_message_ids IDs of messages being updated.
- */
-function bp_media_user_messages_delete_attached_gif( $thread_id, $message_ids, $user_id, $update_message_ids ) {
-
-	if ( ! empty( $update_message_ids ) ) {
-		foreach ( $update_message_ids as $message_id ) {
-			$message_gif = bp_messages_get_meta( $message_id, '_gif_data', true );
-
-			if ( ! empty( $message_gif ) ) {
-				if ( ! empty( $message_gif['still'] ) && is_int( $message_gif['still'] ) ) {
-					wp_delete_attachment( (int) $message_gif['still'], true );
-				}
-
-				if ( ! empty( $message_gif['mp4'] ) && is_int( $message_gif['mp4'] ) ) {
-					wp_delete_attachment( (int) $message_gif['mp4'], true );
-				}
-			}
-
-			bp_messages_delete_meta( $message_id, '_gif_data' );
-			bp_messages_delete_meta( $message_id, '_gif_raw_data' );
-		}
-	}
-}
-
-/**
- * Save gif data into messages meta key "_gif_data"
- *
- * @since BuddyBoss 1.0.0
- *
- * @param $message
- */
-function bp_media_messages_save_gif_data( &$message ) {
-	$group_id = ! empty( $_POST['group'] ) ? (int) sanitize_text_field( wp_unslash( $_POST['group'] ) ) : 0;
-
-	if (
-		bb_user_has_access_upload_gif( $group_id, $message->sender_id, 0, $message->thread_id, 'message' ) &&
-		! empty( $message->id ) &&
-		! empty( $_POST['gif_data'] )
-	) {
-		$gif_data = $_POST['gif_data'];
-
-		$still = $gif_data['images']['480w_still']['url'];
-		$mp4   = $gif_data['images']['original_mp4']['mp4'];
-
-		bp_messages_update_meta(
-			$message->id,
-			'_gif_data',
-			array(
-				'still' => $still,
-				'mp4'   => $mp4,
-			)
-		);
-
-		bp_messages_update_meta( $message->id, '_gif_raw_data', $gif_data );
-	}
-}
-
-/**
  * Validate message if media is not empty.
  *
  * @since BuddyBoss 2.0.4
@@ -1077,196 +805,6 @@ function bp_media_message_validated_content( $validated_content, $content, $post
 }
 
 /**
- * Validate message if media is not empty.
- *
- * @since BuddyBoss 2.0.4
- *
- * @param bool         $validated_content True if message is valid, false otherwise.
- * @param string       $content           Message content.
- * @param array|object $post              Request object.
- *
- * @return bool
- */
-function bp_media_gif_message_validated_content( $validated_content, $content, $post ) {
-	$group_id  = ! empty( $post['group'] ) ? (int) sanitize_text_field( wp_unslash( $post['group'] ) ) : 0;
-	$thread_id = ! empty( $post['thread_id'] ) ? (int) sanitize_text_field( wp_unslash( $post['thread_id'] ) ) : 0;
-
-	if (
-		! bb_user_has_access_upload_gif( $group_id, bp_loggedin_user_id(), 0, $thread_id, 'message' ) ||
-		! isset( $post['gif_data'] )
-	) {
-		return (bool) $validated_content;
-	}
-
-	return (bool) ! empty( $post['gif_data'] );
-}
-
-/**
- * Return activity gif embed HTML.
- *
- * @since BuddyBoss 1.0.0
- *
- * @param int $activity_id Activity id.
- *
- * @return false|string|void
- */
-function bp_media_activity_embed_gif_content( $activity_id ) {
-	// Get activity metas
-	$activity_metas = bb_activity_get_metadata( $activity_id );
-	$gif_data       = ! empty( $activity_metas['_gif_data'][0] ) ? maybe_unserialize( $activity_metas['_gif_data'][0] ) : array();
-
-	if ( empty( $gif_data ) ) {
-		return;
-	}
-
-	$preview_url = ( is_int( $gif_data['still'] ) ) ? wp_get_attachment_url( $gif_data['still'] ) : $gif_data['still'];
-	$video_url   = ( is_int( $gif_data['mp4'] ) ) ? wp_get_attachment_url( $gif_data['mp4'] ) : $gif_data['mp4'];
-	$preview_url = $preview_url . '?' . wp_rand() . '=' . wp_rand();
-	$video_url   = $video_url . '?' . wp_rand() . '=' . wp_rand();
-
-	/**
-	 * If the content has been changed by these filters bb_moderation_has_blocked_message,
-	 * bb_moderation_is_blocked_message, bb_moderation_is_suspended_message then
-	 * it will hide gif content which is created by blocked/blocked/suspended member.
-	 */
-	$hide_forum_activity = function_exists( 'bb_moderation_to_hide_forum_activity' ) ? bb_moderation_to_hide_forum_activity( $activity_id ) : false;
-
-	if ( true === $hide_forum_activity ) {
-		return;
-	}
-
-	ob_start();
-	?>
-	<div class="activity-attached-gif-container">
-		<div class="gif-image-container">
-			<div class="gif-player">
-				<video preload="auto" playsinline poster="<?php echo $preview_url; ?>" loop muted>
-					<source src="<?php echo $video_url; ?>" type="video/mp4">
-				</video>
-				<a href="#" class="gif-play-button" aria-label="<?php esc_attr_e( 'Play GIF', 'buddyboss' ); ?>">
-					<span class="bb-icon-bl bb-icon-play"></span>
-				</a>
-				<span class="gif-icon"></span>
-			</div>
-		</div>
-	</div>
-	<?php
-	$content = ob_get_clean();
-
-	return $content;
-}
-
-/**
- * Embed gif in activity content.
- *
- * @since BuddyBoss 1.0.0
- *
- * @return string
- */
-function bp_media_activity_embed_gif() {
-
-	// check if profile and groups activity gif support enabled.
-	if ( ( buddypress()->activity->id === bp_get_activity_object_name() && ! bp_is_profiles_gif_support_enabled() ) || ( bp_is_active( 'groups' ) && buddypress()->groups->id === bp_get_activity_object_name() && ! bp_is_groups_gif_support_enabled() ) ) {
-		return false;
-	}
-
-	echo bp_media_activity_embed_gif_content( bp_get_activity_id() );
-}
-
-/**
- * Embed gif in activity comment content.
- *
- * @param int $comment_id Comment id for the activity.
- *
- * @since BuddyBoss 1.0.0
- *
- * @return string
- */
-function bp_media_comment_embed_gif( $comment_id ) {
-	global $activities_template;
-
-	// check if profile and groups comments gif support enabled.
-	if ( ! empty( $activities_template ) ) {
-		$parent_activity_id = $activities_template->activity->current_comment->item_id;
-	} else {
-		$comment            = new BP_Activity_Activity( $comment_id );
-		$parent_activity_id = $comment->item_id;
-	}
-
-	$parent_activity = new BP_Activity_Activity( $parent_activity_id );
-	$component       = $parent_activity->component;
-
-	if ( ( buddypress()->activity->id === $component && ! bp_is_profiles_gif_support_enabled() ) || ( bp_is_active( 'groups' ) && buddypress()->groups->id === $component && ! bp_is_groups_gif_support_enabled() ) ) {
-		return false;
-	}
-
-	$gif_content = bp_media_activity_embed_gif_content( $comment_id );
-
-	if ( ! empty( $gif_content ) ) {
-		echo $gif_content;
-	}
-}
-
-/**
- * Save gif data into activity meta key "_gif_attachment_id"
- *
- * @since BuddyBoss 1.0.0
- *
- * @param $activity
- */
-function bp_media_activity_save_gif_data( $activity ) {
-	global $bp_activity_edit, $bb_activity_comment_edit;
-
-	if ( !
-		(
-			( $bp_activity_edit && isset( $_POST['edit'] ) ) ||
-			( $bb_activity_comment_edit && isset( $_POST['edit_comment'] ) )
-		) &&
-		empty( $_POST['gif_data'] )
-	) {
-		return;
-	}
-
-	$gif_data     = ! empty( $_POST['gif_data'] ) ? $_POST['gif_data'] : array();
-	$gif_old_data = bp_activity_get_meta( $activity->id, '_gif_data', true );
-
-	// if edit activity/comment, then delete attachment and clear activity meta.
-	$is_delete_gif = false;
-	if ( $bp_activity_edit && isset( $_POST['edit'] ) && empty( $gif_data ) && isset( $_POST['id'] ) && $activity->id === intval( $_POST['id'] ) ) {
-		$is_delete_gif = true;
-	} elseif ( $bb_activity_comment_edit && isset( $_POST['edit_comment'] ) && empty( $gif_data ) ) {
-		$is_delete_gif = true;
-	}
-
-	// if edit activity then delete attachment and clear activity meta.
-	if ( $is_delete_gif ) {
-		if ( ! empty( $gif_old_data ) ) {
-			wp_delete_attachment( $gif_old_data['still'], true );
-			wp_delete_attachment( $gif_old_data['mp4'], true );
-		}
-
-		bp_activity_delete_meta( $activity->id, '_gif_data' );
-		bp_activity_delete_meta( $activity->id, '_gif_raw_data' );
-	}
-
-	if ( ! empty( $gif_data ) && ! isset( $gif_data['bp_gif_current_data'] ) ) {
-		$still = $gif_data['images']['480w_still']['url'];
-		$mp4   = $gif_data['images']['original_mp4']['mp4'];
-
-		bp_activity_update_meta(
-			$activity->id,
-			'_gif_data',
-			array(
-				'still' => $still,
-				'mp4'   => $mp4,
-			)
-		);
-
-		bp_activity_update_meta( $activity->id, '_gif_raw_data', $gif_data );
-	}
-}
-
-/**
  * Add Import Media admin menu in tools
  *
  * @since BuddyPress 3.0.0
@@ -1275,8 +813,8 @@ function bp_media_import_admin_menu() {
 
 	add_submenu_page(
 		'buddyboss-platform',
-		__( 'Import Media', 'buddyboss' ),
-		__( 'Import Media', 'buddyboss' ),
+		__( 'Import Media', 'buddyboss-platform' ),
+		__( 'Import Media', 'buddyboss-platform' ),
 		'manage_options',
 		'bp-media-import',
 		'bp_media_import_submenu_page'
@@ -1340,14 +878,14 @@ function bp_media_import_submenu_page() {
 							if ( ! empty( $meta_icon ) ) {
 								echo '<i class="' . esc_attr( $meta_icon ) . '"></i>';
 							}
-							esc_html_e( 'Import Media', 'buddyboss' );
+							esc_html_e( 'Import Media', 'buddyboss-platform' );
 							?>
 						</h2>
 
 						<?php
 						if ( $check ) {
 							?>
-							<p><?php _e( 'BuddyBoss Media plugin database tables do not exist, meaning you have nothing to import.', 'buddyboss' ); ?></p>
+							<p><?php esc_html_e( 'BuddyBoss Media plugin database tables do not exist, meaning you have nothing to import.', 'buddyboss-platform' ); ?></p>
 							<?php
 						} elseif ( $is_updating ) {
 							$total_media   = get_option( 'bp_media_import_total_media', 0 );
@@ -1364,40 +902,40 @@ function bp_media_import_submenu_page() {
 							$media_ids     = get_option( 'bp_media_import_media_ids', array() );
 							?>
 							<p>
-								<?php esc_html_e( 'Your database is being updated in the background.', 'buddyboss' ); ?>
+								<?php esc_html_e( 'Your database is being updated in the background.', 'buddyboss-platform' ); ?>
 							</p>
 							<label style="display: none;"
-								   id="bp-media-resetting"><strong><?php echo __( 'Migration in progress', 'buddyboss' ) . '...'; ?></strong></label>
+								   id="bp-media-resetting"><strong><?php echo esc_html__( 'Migration in progress', 'buddyboss-platform' ) . '...'; ?></strong></label>
 							<table class="form-table">
 								<tr>
-									<th scope="row"><?php _e( 'Albums', 'buddyboss' ); ?></th>
+									<th scope="row"><?php esc_html_e( 'Albums', 'buddyboss-platform' ); ?></th>
 									<td>
-										<span id="bp-media-import-albums-done"><?php echo $albums_done; ?></span> <?php _e( 'out of', 'buddyboss' ); ?>
-										<span id="bp-media-import-albums-total"><?php echo $total_albums; ?></span></td>
+										<span id="bp-media-import-albums-done"><?php echo esc_html( $albums_done ); ?></span> <?php esc_html_e( 'out of', 'buddyboss-platform' ); ?>
+										<span id="bp-media-import-albums-total"><?php echo esc_html( $total_albums ); ?></span></td>
 								</tr>
 								<tr>
-									<th scope="row"><?php _e( 'Media', 'buddyboss' ); ?></th>
+									<th scope="row"><?php esc_html_e( 'Media', 'buddyboss-platform' ); ?></th>
 									<td>
-										<span id="bp-media-import-media-done"><?php echo $media_done; ?></span> <?php _e( 'out of', 'buddyboss' ); ?>
-										<span id="bp-media-import-media-total"><?php echo $total_media; ?></span></td>
+										<span id="bp-media-import-media-done"><?php echo esc_html( $media_done ); ?></span> <?php esc_html_e( 'out of', 'buddyboss-platform' ); ?>
+										<span id="bp-media-import-media-total"><?php echo esc_html( $total_media ); ?></span></td>
 								</tr>
 								<tr>
-									<th scope="row"><?php _e( 'Forums', 'buddyboss' ); ?></th>
+									<th scope="row"><?php esc_html_e( 'Forums', 'buddyboss-platform' ); ?></th>
 									<td>
-										<span id="bp-media-import-forums-done"><?php echo $forums_done; ?></span> <?php _e( 'out of', 'buddyboss' ); ?>
-										<span id="bp-media-import-media-total"><?php echo $forums_total; ?></span></td>
+										<span id="bp-media-import-forums-done"><?php echo esc_html( $forums_done ); ?></span> <?php esc_html_e( 'out of', 'buddyboss-platform' ); ?>
+										<span id="bp-media-import-media-total"><?php echo esc_html( $forums_total ); ?></span></td>
 								</tr>
 								<tr>
-									<th scope="row"><?php _e( 'Discussions', 'buddyboss' ); ?></th>
+									<th scope="row"><?php esc_html_e( 'Discussions', 'buddyboss-platform' ); ?></th>
 									<td>
-										<span id="bp-media-import-forums-done"><?php echo $topics_done; ?></span> <?php _e( 'out of', 'buddyboss' ); ?>
-										<span id="bp-media-import-media-total"><?php echo $topics_total; ?></span></td>
+										<span id="bp-media-import-forums-done"><?php echo esc_html( $topics_done ); ?></span> <?php esc_html_e( 'out of', 'buddyboss-platform' ); ?>
+										<span id="bp-media-import-media-total"><?php echo esc_html( $topics_total ); ?></span></td>
 								</tr>
 								<tr>
-									<th scope="row"><?php _e( 'Replies', 'buddyboss' ); ?></th>
+									<th scope="row"><?php esc_html_e( 'Replies', 'buddyboss-platform' ); ?></th>
 									<td>
-										<span id="bp-media-import-forums-done"><?php echo $replies_done; ?></span> <?php _e( 'out of', 'buddyboss' ); ?>
-										<span id="bp-media-import-media-total"><?php echo $replies_total; ?></span></td>
+										<span id="bp-media-import-forums-done"><?php echo esc_html( $replies_done ); ?></span> <?php esc_html_e( 'out of', 'buddyboss-platform' ); ?>
+										<span id="bp-media-import-media-total"><?php echo esc_html( $replies_total ); ?></span></td>
 								</tr>
 							</table>
 							<p>
@@ -1408,7 +946,7 @@ function bp_media_import_submenu_page() {
 								<input type="hidden" value="1" name="bp-media-re-run-import"
 									   id="bp-media-re-run-import"/>
 								<input type="submit" style="display: none;"
-									   value="<?php _e( 'Re-Run Migration', 'buddyboss' ); ?>"
+									   value="<?php esc_html_e( 'Re-Run Migration', 'buddyboss-platform' ); ?>"
 									   id="bp-media-import-submit" name="bp-media-import-submit"
 									   class="button-primary"/>
 								<?php
@@ -1417,20 +955,20 @@ function bp_media_import_submenu_page() {
 							$albums_ids = get_option( 'bp_media_import_albums_ids', array() );
 							$media_ids  = get_option( 'bp_media_import_media_ids', array() );
 							?>
-							<p><?php _e( 'BuddyBoss Media data update is complete! Any previously uploaded member photos should display in their profiles now.', 'buddyboss' ); ?></p>
+							<p><?php esc_html_e( 'BuddyBoss Media data update is complete! Any previously uploaded member photos should display in their profiles now.', 'buddyboss-platform' ); ?></p>
 
 							<?php if ( ! empty( $albums_ids ) || ! empty( $media_ids ) ) { ?>
 								<input type="hidden" value="1" name="bp-media-re-run-import"
 									   id="bp-media-re-run-import"/>
-								<input type="submit" value="<?php _e( 'Re-Run Migration', 'buddyboss' ); ?>"
+								<input type="submit" value="<?php esc_html_e( 'Re-Run Migration', 'buddyboss-platform' ); ?>"
 									   id="bp-media-import-submit" name="bp-media-import-submit"
 									   class="button-primary"/>
 								<?php
 							}
 						} else {
 							?>
-							<p><?php _e( 'Import your existing members photo uploads, if you were previously using <a href="https://www.buddyboss.com/product/buddyboss-media/">BuddyBoss Media</a> with BuddyPress. Click "Run Migration" below to migrate your old photos into the new Media component.', 'buddyboss' ); ?></p>
-							<input type="submit" value="<?php _e( 'Run Migration', 'buddyboss' ); ?>"
+							<p><?php echo wp_kses_post( __( 'Import your existing members photo uploads, if you were previously using <a href="https://www.buddyboss.com/product/buddyboss-media/">BuddyBoss Media</a> with BuddyPress. Click "Run Migration" below to migrate your old photos into the new Media component.', 'buddyboss-platform' ) ); ?></p>
+							<input type="submit" value="<?php esc_html_e( 'Run Migration', 'buddyboss-platform' ); ?>"
 								   id="bp-media-import-submit" name="bp-media-import-submit" class="button-primary"/>
 						<?php } ?>
 					</div>
@@ -1476,9 +1014,9 @@ function bp_media_activation_notice() {
 			);
 			$notice    = sprintf(
 				'%1$s <a href="%2$s">%3$s</a>',
-				__( 'We have found some media uploaded from the <strong>BuddyBoss Media</strong></strong> plugin, which is not compatible with BuddyBoss Platform as it has its own media component. You should  import the media into BuddyBoss Platform, and then remove the BuddyBoss Media plugin if you are still using it.', 'buddyboss' ),
+				__( 'We have found some media uploaded from the <strong>BuddyBoss Media</strong></strong> plugin, which is not compatible with BuddyBoss Platform as it has its own media component. You should  import the media into BuddyBoss Platform, and then remove the BuddyBoss Media plugin if you are still using it.', 'buddyboss-platform' ),
 				esc_url( $admin_url ),
-				__( 'Import Media', 'buddyboss' )
+				__( 'Import Media', 'buddyboss-platform' )
 			);
 
 			bp_core_add_admin_notice( $notice );
@@ -1623,17 +1161,17 @@ function bp_media_add_admin_repair_items( $repair_list ) {
 	if ( bp_is_active( 'activity' ) ) {
 		$repair_list[] = array(
 			'bp-repair-media',
-			esc_html__( 'Repair media', 'buddyboss' ),
+			esc_html__( 'Repair media', 'buddyboss-platform' ),
 			'bp_media_admin_repair_media',
 		);
 		$repair_list[] = array(
 			'bp-media-forum-privacy-repair',
-			esc_html__( 'Repair forum media privacy', 'buddyboss' ),
+			esc_html__( 'Repair forum media privacy', 'buddyboss-platform' ),
 			'bp_media_forum_privacy_repair',
 		);
 		$repair_list[] = array(
 			'bp-media-message-repair',
-			esc_html__( 'Repair messages media', 'buddyboss' ),
+			esc_html__( 'Repair messages media', 'buddyboss-platform' ),
 			'bp_media_message_privacy_repair',
 		);
 	}
@@ -1652,7 +1190,7 @@ function bp_media_message_privacy_repair() {
 	$bp     = buddypress();
 
 	$media_query = "SELECT id FROM {$bp->media->table_name} WHERE privacy = 'message' AND type = 'photo' LIMIT 20 OFFSET $offset ";
-	$medias      = $wpdb->get_results( $media_query );
+	$medias      = $wpdb->get_results( $media_query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Table name from $bp->media; $offset is an (int)-cast integer.
 
 	if ( ! empty( $medias ) ) {
 		foreach ( $medias as $media ) {
@@ -1666,7 +1204,8 @@ function bp_media_message_privacy_repair() {
 			}
 			$offset ++;
 		}
-		$records_updated = sprintf( __( '%s messages updated successfully.', 'buddyboss' ), bp_core_number_format( $offset ) );
+		/* translators: %s: number of messages updated. */
+		$records_updated = sprintf( __( '%s messages updated successfully.', 'buddyboss-platform' ), bp_core_number_format( $offset ) );
 
 		return array(
 			'status'  => 'running',
@@ -1676,7 +1215,7 @@ function bp_media_message_privacy_repair() {
 	} else {
 		return array(
 			'status'  => 1,
-			'message' => __( 'Repairing messages media &hellip; Complete!', 'buddyboss' ),
+			'message' => __( 'Repairing messages media &hellip; Complete!', 'buddyboss-platform' ),
 		);
 	}
 }
@@ -1692,7 +1231,7 @@ function bp_media_admin_repair_media() {
 	$bp     = buddypress();
 
 	$media_query = "SELECT id, activity_id FROM {$bp->media->table_name} WHERE activity_id != 0 AND type = 'photo' LIMIT 50 OFFSET $offset ";
-	$medias      = $wpdb->get_results( $media_query );
+	$medias      = $wpdb->get_results( $media_query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Table name from $bp->media; $offset is an (int)-cast integer.
 
 	if ( ! empty( $medias ) ) {
 		foreach ( $medias as $media ) {
@@ -1703,8 +1242,8 @@ function bp_media_admin_repair_media() {
 						$activity = new BP_Activity_Activity( $activity->item_id );
 					}
 					if ( bp_is_active( 'groups' ) && buddypress()->groups->id === $activity->component ) {
-						$update_query = "UPDATE {$bp->media->table_name} SET group_id=" . $activity->item_id . ", privacy='grouponly' WHERE id=" . $media->id . ' ';
-						$wpdb->query( $update_query );
+						$update_query = $wpdb->prepare( "UPDATE {$bp->media->table_name} SET group_id = %d, privacy = 'grouponly' WHERE id = %d", $activity->item_id, $media->id );
+						$wpdb->query( $update_query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- $update_query is built via $wpdb->prepare() above.
 					}
 					if ( 'media' === $activity->privacy ) {
 						if ( ! empty( $activity->secondary_item_id ) ) {
@@ -1714,8 +1253,8 @@ function bp_media_admin_repair_media() {
 									$media_activity = new BP_Activity_Activity( $media_activity->item_id );
 								}
 								if ( bp_is_active( 'groups' ) && buddypress()->groups->id === $media_activity->component ) {
-									$update_query = "UPDATE {$bp->media->table_name} SET group_id=" . $media_activity->item_id . ", privacy='grouponly' WHERE id=" . $media->id . ' ';
-									$wpdb->query( $update_query );
+									$update_query = $wpdb->prepare( "UPDATE {$bp->media->table_name} SET group_id = %d, privacy = 'grouponly' WHERE id = %d", $media_activity->item_id, $media->id );
+									$wpdb->query( $update_query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- $update_query is built via $wpdb->prepare() above.
 									$activity->item_id   = $media_activity->item_id;
 									$activity->component = buddypress()->groups->id;
 								}
@@ -1729,7 +1268,8 @@ function bp_media_admin_repair_media() {
 			}
 			$offset ++;
 		}
-		$records_updated = sprintf( __( '%s media updated successfully.', 'buddyboss' ), bp_core_number_format( $offset ) );
+		/* translators: %s: number of media items updated. */
+		$records_updated = sprintf( __( '%s media updated successfully.', 'buddyboss-platform' ), bp_core_number_format( $offset ) );
 
 		return array(
 			'status'  => 'running',
@@ -1739,7 +1279,7 @@ function bp_media_admin_repair_media() {
 	} else {
 		return array(
 			'status'  => 1,
-			'message' => __( 'Repairing media &hellip; Complete!', 'buddyboss' ),
+			'message' => __( 'Repairing media &hellip; Complete!', 'buddyboss-platform' ),
 		);
 	}
 }
@@ -1755,19 +1295,21 @@ function bp_media_forum_privacy_repair() {
 	$bp     = buddypress();
 
 	$squery  = "SELECT p.ID as post_id FROM {$wpdb->posts} p, {$wpdb->postmeta} pm WHERE p.ID = pm.post_id and p.post_type in ( 'forum', 'topic', 'reply' ) and pm.meta_key = 'bp_media_ids' and pm.meta_value != '' LIMIT 20 OFFSET $offset ";
-	$records = $wpdb->get_col( $squery );
+	$records = $wpdb->get_col( $squery ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Table names from $wpdb; $offset is an (int)-cast integer.
 	if ( ! empty( $records ) ) {
 		foreach ( $records as $record ) {
 			if ( ! empty( $record ) ) {
-				$media_ids = get_post_meta( $record, 'bp_media_ids', true );
-				if ( $media_ids ) {
-					$update_query = "UPDATE {$bp->media->table_name} SET `privacy`= 'forums' WHERE id in (" . $media_ids . ')';
-					$wpdb->query( $update_query );
+				$media_ids = wp_parse_id_list( get_post_meta( $record, 'bp_media_ids', true ) );
+				if ( ! empty( $media_ids ) ) {
+					$ids_in       = implode( ',', $media_ids );
+					$update_query = "UPDATE {$bp->media->table_name} SET `privacy`= 'forums' WHERE id IN ({$ids_in})";
+					$wpdb->query( $update_query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table name from $bp->media; $ids_in is an implode of wp_parse_id_list() integers.
 				}
 			}
 			$offset ++;
 		}
-		$records_updated = sprintf( __( '%s forums media privacy updated successfully.', 'buddyboss' ), bp_core_number_format( $offset ) );
+		/* translators: %s: number of forums media items whose privacy was updated. */
+		$records_updated = sprintf( __( '%s forums media privacy updated successfully.', 'buddyboss-platform' ), bp_core_number_format( $offset ) );
 
 		return array(
 			'status'  => 'running',
@@ -1775,15 +1317,15 @@ function bp_media_forum_privacy_repair() {
 			'records' => $records_updated,
 		);
 	} else {
-		$statement = __( 'Repair forum media privacy &hellip; %s', 'buddyboss' );
+		/* translators: %s: completion status text. */
+		$statement = __( 'Repair forum media privacy &hellip; %s', 'buddyboss-platform' );
 
 		return array(
 			'status'  => 1,
-			'message' => sprintf( $statement, __( 'Complete!', 'buddyboss' ) ),
+			'message' => sprintf( $statement, __( 'Complete!', 'buddyboss-platform' ) ),
 		);
 	}
 }
-
 
 /**
  * Set up media arguments for use with the 'public' scope.
@@ -1882,7 +1424,7 @@ function bp_media_download_file_force( $file_path, $filename ) {
 		if ( $parsed_file_path['remote_file'] ) {
 			bp_media_download_file_redirect( $file_path );
 		} else {
-			bp_media_download_error( __( 'File not found', 'buddyboss' ) );
+			bp_media_download_error( __( 'File not found', 'buddyboss-platform' ) );
 		}
 	}
 
@@ -1900,9 +1442,9 @@ function bp_media_download_file_force( $file_path, $filename ) {
  */
 function bp_media_download_error( $message, $title = '', $status = 404 ) {
 	if ( ! strstr( $message, '<a ' ) ) {
-		$message .= ' <a href="' . esc_url( site_url() ) . '" class="bp-media-forward">' . esc_html__( 'Go to media', 'buddyboss' ) . '</a>';
+		$message .= ' <a href="' . esc_url( site_url() ) . '" class="bp-media-forward">' . esc_html__( 'Go to media', 'buddyboss-platform' ) . '</a>';
 	}
-	wp_die( $message, $title, array( 'response' => $status ) ); // WPCS: XSS ok.
+	wp_die( wp_kses_post( $message ), esc_html( $title ), array( 'response' => absint( $status ) ) );
 }
 
 /**
@@ -1935,7 +1477,7 @@ function bp_media_readfile_chunked( $file, $start = 0, $length = 0 ) {
 	if ( ! defined( 'BP_MEDIA_CHUNK_SIZE' ) ) {
 		define( 'BP_MEDIA_CHUNK_SIZE', 1024 * 1024 );
 	}
-	$handle = @fopen( $file, 'r' ); // phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged, WordPress.WP.AlternativeFunctions.file_system_read_fopen
+	$handle = @fopen( $file, 'r' ); // phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged, WordPress.WP.AlternativeFunctions.file_system_read_fopen, WordPress.WP.AlternativeFunctions.file_system_operations_fopen -- direct stream I/O for chunked media download; WP_Filesystem offers no streaming equivalent.
 
 	if ( false === $handle ) {
 		return false;
@@ -1959,7 +1501,7 @@ function bp_media_readfile_chunked( $file, $start = 0, $length = 0 ) {
 				$read_length = $end - $p + 1;
 			}
 
-			echo @fread( $handle, $read_length ); // phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged, WordPress.XSS.EscapeOutput.OutputNotEscaped, WordPress.WP.AlternativeFunctions.file_system_read_fread
+			echo @fread( $handle, $read_length ); // phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged, WordPress.Security.EscapeOutput.OutputNotEscaped, WordPress.WP.AlternativeFunctions.file_system_read_fread, WordPress.WP.AlternativeFunctions.file_system_operations_fread -- Raw binary file stream for media download; escaping would corrupt the output and WP_Filesystem offers no streaming equivalent.
 			$p = @ftell( $handle ); // phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged
 
 			if ( ob_get_length() ) {
@@ -1977,7 +1519,7 @@ function bp_media_readfile_chunked( $file, $start = 0, $length = 0 ) {
 		}
 	}
 
-	return @fclose( $handle ); // phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged, WordPress.WP.AlternativeFunctions.file_system_read_fclose
+	return @fclose( $handle ); // phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged, WordPress.WP.AlternativeFunctions.file_system_read_fclose, WordPress.WP.AlternativeFunctions.file_system_operations_fclose -- closes the direct media-download stream handle; WP_Filesystem offers no streaming equivalent.
 }
 
 /**
@@ -2478,10 +2020,10 @@ Options -ExecCGI
 
 	foreach ( $files as $file ) {
 		if ( wp_mkdir_p( $file['base'] ) && ! file_exists( trailingslashit( $file['base'] ) . $file['file'] ) ) {
-			$file_handle = @fopen( trailingslashit( $file['base'] ) . $file['file'], 'wb' ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged, WordPress.WP.AlternativeFunctions.file_system_read_fopen
+			$file_handle = @fopen( trailingslashit( $file['base'] ) . $file['file'], 'wb' ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged, WordPress.WP.AlternativeFunctions.file_system_read_fopen, WordPress.WP.AlternativeFunctions.file_system_operations_fopen -- direct stream I/O to write .htaccess code-execution protection file; WP_Filesystem offers no streaming equivalent.
 			if ( $file_handle ) {
-				fwrite( $file_handle, $file['content'] ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_read_fwrite
-				fclose( $file_handle ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_read_fclose
+				fwrite( $file_handle, $file['content'] ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_read_fwrite, WordPress.WP.AlternativeFunctions.file_system_operations_fwrite -- direct stream I/O to write .htaccess code-execution protection file; WP_Filesystem offers no streaming equivalent.
+				fclose( $file_handle ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_read_fclose, WordPress.WP.AlternativeFunctions.file_system_operations_fclose -- closes the protection-file write stream; WP_Filesystem offers no streaming equivalent.
 			}
 		}
 	}
@@ -2605,27 +2147,6 @@ function bb_setup_template_for_media_preview( $template ) {
 }
 
 /**
- * Embed gif in single activity content.
- *
- * @since BuddyBoss 2.0.2
- *
- * @param string $content  content.
- * @param object $activity Activity object.
- *
- * @return string
- */
-function bp_media_activity_append_gif( $content, $activity ) {
-
-	// check if profile and groups activity gif support enabled.
-	if ( ( buddypress()->activity->id === $activity->component && ! bp_is_profiles_gif_support_enabled() ) || ( bp_is_active( 'groups' ) && buddypress()->groups->id === $activity->component && ! bp_is_groups_gif_support_enabled() ) ) {
-		return $content;
-	}
-
-	return $content . bp_media_activity_embed_gif_content( $activity->id );
-}
-
-
-/**
  * Add rewrite rule to setup attachment media preview.
  *
  * @since BuddyBoss 2.0.4
@@ -2680,7 +2201,6 @@ function bb_setup_attachment_media_preview_template( $template ) {
 
 	return $template;
 }
-
 
 /**
  * Enable media preview without trailing slash.
@@ -2814,16 +2334,21 @@ add_filter( 'bp_is_forums_media_support_enabled', 'bb_media_photos_force_disable
 
 /**
  * Force video-related support functions to return false when the Videos
- * section toggle (bb_media_videos_support) is disabled.
+ * section toggle (bb_media_videos_support) is disabled, or when the video
+ * component is not active at all.
  *
  * @since BuddyBoss 3.0.0
+ * @since BuddyBoss [BBVERSION] Also disabled when the video component is
+ *                              inactive — the UI must never render against a
+ *                              missing component (moved to the BuddyBoss
+ *                              Addons plugin).
  *
  * @param bool $enabled Current value.
  *
- * @return bool False if videos section is off, otherwise the original value.
+ * @return bool False if videos section is off or the component is inactive, otherwise the original value.
  */
 function bb_media_videos_force_disable( $enabled ) {
-	if ( ! (bool) bp_get_option( 'bb_media_videos_support', 1 ) ) {
+	if ( ! bp_is_active( 'video' ) || ! (bool) bp_get_option( 'bb_media_videos_support', 1 ) ) {
 		return false;
 	}
 
@@ -2836,16 +2361,28 @@ add_filter( 'bp_is_forums_video_support_enabled', 'bb_media_videos_force_disable
 
 /**
  * Force document-related support functions to return false when the Documents
- * section toggle (bb_media_documents_support) is disabled.
+ * section toggle (bb_media_documents_support) is disabled, or when the
+ * document component is not active at all.
+ *
+ * The `bp_is_*_document_support_enabled()` helpers live in bp-media (documents
+ * grew out of the media component) and read options only, so they keep
+ * returning true even when the document component itself is unavailable — the
+ * component moved to the BuddyBoss Addons plugin and the addon may be
+ * inactive. Consumers such as the BuddyBoss theme gate document UI on these
+ * helpers and then call component functions like `bp_get_document_slug()`, so
+ * advertising support without the component loaded causes fatals.
  *
  * @since BuddyBoss 3.0.0
+ * @since BuddyBoss [BBVERSION] Also disabled when the document component is
+ *                              inactive — the UI must never render against a
+ *                              missing component.
  *
  * @param bool $enabled Current value.
  *
- * @return bool False if documents section is off, otherwise the original value.
+ * @return bool False if documents section is off or the component is inactive, otherwise the original value.
  */
 function bb_media_documents_force_disable( $enabled ) {
-	if ( ! (bool) bp_get_option( 'bb_media_documents_support', 1 ) ) {
+	if ( ! bp_is_active( 'document' ) || ! (bool) bp_get_option( 'bb_media_documents_support', 1 ) ) {
 		return false;
 	}
 
@@ -2880,16 +2417,21 @@ add_filter( 'bp_is_forums_emoji_support_enabled', 'bb_media_emoji_force_disable'
 
 /**
  * Force GIF-related support functions to return false when the Animated GIFs
- * section toggle (bb_media_gif_support) is disabled.
+ * section toggle (bb_media_gif_support) is disabled, or when no GIPHY
+ * provider is loaded at all.
  *
  * @since BuddyBoss 3.0.0
+ * @since BuddyBoss [BBVERSION] Also disabled when {@see bb_giphy_provider_available()}
+ *                              is false — the GIF save/render backend is being
+ *                              extracted to the BuddyBoss Addons plugin, and the
+ *                              UI must never render against a missing backend.
  *
  * @param bool $enabled Current value.
  *
- * @return bool False if GIFs section is off, otherwise the original value.
+ * @return bool False if GIFs section is off or no provider is loaded, otherwise the original value.
  */
 function bb_media_gifs_force_disable( $enabled ) {
-	if ( ! (bool) bp_get_option( 'bb_media_gif_support', 1 ) ) {
+	if ( ! bb_giphy_provider_available() || ! (bool) bp_get_option( 'bb_media_gif_support', 1 ) ) {
 		return false;
 	}
 

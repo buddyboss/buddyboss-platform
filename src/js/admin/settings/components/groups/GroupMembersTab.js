@@ -31,10 +31,10 @@ import { safeUrl } from '../../utils/sanitize';
  * @type {Array}
  */
 var roleOptions = [
-	{ label: __( 'Organizer', 'buddyboss' ), value: 'admin' },
-	{ label: __( 'Moderator', 'buddyboss' ), value: 'mod' },
-	{ label: __( 'Member', 'buddyboss' ), value: 'member' },
-	{ label: __( 'Banned', 'buddyboss' ), value: 'banned' },
+	{ label: __( 'Organizer', 'buddyboss-platform' ), value: 'admin' },
+	{ label: __( 'Moderator', 'buddyboss-platform' ), value: 'mod' },
+	{ label: __( 'Member', 'buddyboss-platform' ), value: 'member' },
+	{ label: __( 'Banned', 'buddyboss-platform' ), value: 'banned' },
 ];
 
 /**
@@ -975,7 +975,7 @@ export function GroupMembersTab( { groupId, setNotice, saveRef } ) {
 		var pageNumbers = getPageNumbers( currentPage, totalPages );
 
 		return (
-			<div className="bb-group-members-tab__pagination" role="navigation" aria-label={ __( 'Pagination', 'buddyboss' ) }>
+			<div className="bb-group-members-tab__pagination" role="navigation" aria-label={ __( 'Pagination', 'buddyboss-platform' ) }>
 				<button
 					type="button"
 					className="bb-group-members-tab__page-arrow"
@@ -983,7 +983,7 @@ export function GroupMembersTab( { groupId, setNotice, saveRef } ) {
 					onClick={ function () {
 						handlePageChange( role, currentPage - 1 );
 					} }
-					aria-label={ __( 'Previous page', 'buddyboss' ) }
+					aria-label={ __( 'Previous page', 'buddyboss-platform' ) }
 				>
 					<i className="bb-icons-rl bb-icons-rl-caret-left" aria-hidden="true"></i>
 				</button>
@@ -1023,7 +1023,7 @@ export function GroupMembersTab( { groupId, setNotice, saveRef } ) {
 					onClick={ function () {
 						handlePageChange( role, currentPage + 1 );
 					} }
-					aria-label={ __( 'Next page', 'buddyboss' ) }
+					aria-label={ __( 'Next page', 'buddyboss-platform' ) }
 				>
 					<i className="bb-icons-rl bb-icons-rl-caret-right" aria-hidden="true"></i>
 				</button>
@@ -1074,7 +1074,7 @@ export function GroupMembersTab( { groupId, setNotice, saveRef } ) {
 									handleRemoveMember( member.user_id );
 								}
 							} }
-							title={ __( 'Remove member', 'buddyboss' ) }
+							title={ __( 'Remove member', 'buddyboss-platform' ) }
 						>
 							<i className="bb-icons-rl bb-icons-rl-x"></i>
 						</button>
@@ -1104,7 +1104,7 @@ export function GroupMembersTab( { groupId, setNotice, saveRef } ) {
 			{ /* Add Member Autocomplete */ }
 			<div className="bb-group-members-tab__add-member">
 				<label className="bb-admin-meta-field__label">
-					{ __( 'Add New Members', 'buddyboss' ) }
+					{ __( 'Add New Members', 'buddyboss-platform' ) }
 				</label>
 				<div className="bb-group-members-tab__add-row">
 					<div className="bb-group-members-tab__autocomplete-wrapper">
@@ -1123,22 +1123,22 @@ export function GroupMembersTab( { groupId, setNotice, saveRef } ) {
 									setShowSuggestions( false );
 								}, 200 );
 							} }
-							placeholder={ __( 'Type username to add', 'buddyboss' ) }
+							placeholder={ __( 'Type username to add', 'buddyboss-platform' ) }
 							className="bb-group-members-tab__search-input"
 							role="combobox"
 							aria-autocomplete="list"
 							aria-expanded={ showSuggestions }
-							aria-label={ __( 'Search members', 'buddyboss' ) }
+							aria-label={ __( 'Search members', 'buddyboss-platform' ) }
 						/>
 						{ showSuggestions && (
-						<div className="bb-group-members-tab__suggestions" role="listbox" aria-label={ __( 'User suggestions', 'buddyboss' ) }>
+						<div className="bb-group-members-tab__suggestions" role="listbox" aria-label={ __( 'User suggestions', 'buddyboss-platform' ) }>
 							{ isSearching ? (
 								<div className="bb-group-members-tab__suggestions-loading">
 									<Spinner />
 								</div>
 							) : 0 === suggestions.length ? (
 								<div className="bb-group-members-tab__suggestions-empty">
-									{ __( 'No users found.', 'buddyboss' ) }
+									{ __( 'No users found.', 'buddyboss-platform' ) }
 								</div>
 							) : (
 								suggestions.map( function ( user ) {
@@ -1177,7 +1177,7 @@ export function GroupMembersTab( { groupId, setNotice, saveRef } ) {
 						onClick={ handleAddMember }
 					>
 						<i className="bb-icons-rl-plus"></i>
-						{ __( 'Add', 'buddyboss' ) }
+						{ __( 'Add', 'buddyboss-platform' ) }
 					</Button>
 				</div>
 			</div>
@@ -1194,8 +1194,8 @@ export function GroupMembersTab( { groupId, setNotice, saveRef } ) {
 					<input
 						type="search"
 						className="bb-group-members-tab__filter-search-input"
-						placeholder={ __( 'Search member', 'buddyboss' ) }
-						aria-label={ __( 'Search member', 'buddyboss' ) }
+						placeholder={ __( 'Search member', 'buddyboss-platform' ) }
+						aria-label={ __( 'Search member', 'buddyboss-platform' ) }
 						value={ memberFilterQuery }
 						onChange={ function ( e ) {
 							setMemberFilterQuery( e.target.value );
@@ -1209,15 +1209,15 @@ export function GroupMembersTab( { groupId, setNotice, saveRef } ) {
 				<div className="bb-group-members-tab__filter-role">
 					<SelectControl
 						hideLabelFromVision
-						label={ __( 'Filter by role', 'buddyboss' ) }
+						label={ __( 'Filter by role', 'buddyboss-platform' ) }
 						value={ roleFilter }
 						onChange={ setRoleFilter }
 						options={ [
-							{ value: 'all',    label: hasLoadedOnce ? sprintf( __( 'All (%d)', 'buddyboss' ),       roleCounts.all )    : __( 'All', 'buddyboss' ) },
-							{ value: 'admin',  label: hasLoadedOnce ? sprintf( __( 'Organizer (%d)', 'buddyboss' ), roleCounts.admin )  : __( 'Organizer', 'buddyboss' ) },
-							{ value: 'mod',    label: hasLoadedOnce ? sprintf( __( 'Moderator (%d)', 'buddyboss' ), roleCounts.mod )    : __( 'Moderator', 'buddyboss' ) },
-							{ value: 'member', label: hasLoadedOnce ? sprintf( __( 'Member (%d)', 'buddyboss' ),    roleCounts.member ) : __( 'Member', 'buddyboss' ) },
-							{ value: 'banned', label: hasLoadedOnce ? sprintf( __( 'Banned (%d)', 'buddyboss' ),    roleCounts.banned ) : __( 'Banned', 'buddyboss' ) },
+							{ value: 'all',    label: hasLoadedOnce ? sprintf( __( 'All (%d)', 'buddyboss-platform' ),       roleCounts.all )    : __( 'All', 'buddyboss-platform' ) },
+							{ value: 'admin',  label: hasLoadedOnce ? sprintf( __( 'Organizer (%d)', 'buddyboss-platform' ), roleCounts.admin )  : __( 'Organizer', 'buddyboss-platform' ) },
+							{ value: 'mod',    label: hasLoadedOnce ? sprintf( __( 'Moderator (%d)', 'buddyboss-platform' ), roleCounts.mod )    : __( 'Moderator', 'buddyboss-platform' ) },
+							{ value: 'member', label: hasLoadedOnce ? sprintf( __( 'Member (%d)', 'buddyboss-platform' ),    roleCounts.member ) : __( 'Member', 'buddyboss-platform' ) },
+							{ value: 'banned', label: hasLoadedOnce ? sprintf( __( 'Banned (%d)', 'buddyboss-platform' ),    roleCounts.banned ) : __( 'Banned', 'buddyboss-platform' ) },
 						] }
 					/>
 				</div>
@@ -1312,7 +1312,7 @@ export function GroupMembersTab( { groupId, setNotice, saveRef } ) {
 									<div className="bb-group-members-tab__filter-empty" role="status">
 										{ sprintf(
 											/* translators: %s is the current search query. */
-											__( 'No members match “%s”.', 'buddyboss' ),
+											__( 'No members match “%s”.', 'buddyboss-platform' ),
 											memberFilterQuery
 										) }
 									</div>
@@ -1325,14 +1325,14 @@ export function GroupMembersTab( { groupId, setNotice, saveRef } ) {
 							//    e.g. an admin selects "Moderator (0)".
 							if ( 'all' !== roleFilter ) {
 								var emptyRoleLabels = {
-									admin:  __( 'No organizers in this group yet.', 'buddyboss' ),
-									mod:    __( 'No moderators in this group yet.', 'buddyboss' ),
-									member: __( 'No members in this group yet.', 'buddyboss' ),
-									banned: __( 'No banned members in this group.', 'buddyboss' ),
+									admin:  __( 'No organizers in this group yet.', 'buddyboss-platform' ),
+									mod:    __( 'No moderators in this group yet.', 'buddyboss-platform' ),
+									member: __( 'No members in this group yet.', 'buddyboss-platform' ),
+									banned: __( 'No banned members in this group.', 'buddyboss-platform' ),
 								};
 								return (
 									<div className="bb-group-members-tab__filter-empty" role="status">
-										{ emptyRoleLabels[ roleFilter ] || __( 'No members found.', 'buddyboss' ) }
+										{ emptyRoleLabels[ roleFilter ] || __( 'No members found.', 'buddyboss-platform' ) }
 									</div>
 								);
 							}
@@ -1341,7 +1341,7 @@ export function GroupMembersTab( { groupId, setNotice, saveRef } ) {
 							//    happened) → fall back to a generic notice.
 							return (
 								<div className="bb-group-members-tab__filter-empty" role="status">
-									{ __( 'This group has no members yet.', 'buddyboss' ) }
+									{ __( 'This group has no members yet.', 'buddyboss-platform' ) }
 								</div>
 							);
 						}

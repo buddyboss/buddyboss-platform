@@ -115,7 +115,7 @@ class BB_Admin_Profile_Fields_Ajax {
 		$this->bb_verify_request();
 
 		if ( ! bp_is_active( 'xprofile' ) ) {
-			wp_send_json_error( array( 'message' => __( 'Profile component is not active.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Profile component is not active.', 'buddyboss-platform' ) ) );
 		}
 
 		$groups = bp_xprofile_get_groups(
@@ -206,7 +206,7 @@ class BB_Admin_Profile_Fields_Ajax {
 		$this->bb_verify_request();
 
 		if ( ! bp_is_active( 'xprofile' ) ) {
-			wp_send_json_error( array( 'message' => __( 'Profile component is not active.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Profile component is not active.', 'buddyboss-platform' ) ) );
 		}
 
 		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified by $this->bb_verify_request() above.
@@ -216,7 +216,7 @@ class BB_Admin_Profile_Fields_Ajax {
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
 
 		if ( empty( $name ) ) {
-			wp_send_json_error( array( 'message' => __( 'Field set name is required.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Field set name is required.', 'buddyboss-platform' ) ) );
 		}
 
 		$group_id = xprofile_insert_field_group(
@@ -227,7 +227,7 @@ class BB_Admin_Profile_Fields_Ajax {
 		);
 
 		if ( ! $group_id ) {
-			wp_send_json_error( array( 'message' => __( 'There was an error creating the field set. Please try again.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'There was an error creating the field set. Please try again.', 'buddyboss-platform' ) ) );
 		}
 
 		// Save repeater meta.
@@ -249,7 +249,7 @@ class BB_Admin_Profile_Fields_Ajax {
 
 		wp_send_json_success(
 			array(
-				'message'  => __( 'Field set created successfully.', 'buddyboss' ),
+				'message'  => __( 'Field set created successfully.', 'buddyboss-platform' ),
 				'group_id' => $group_id,
 			)
 		);
@@ -266,7 +266,7 @@ class BB_Admin_Profile_Fields_Ajax {
 		$this->bb_verify_request();
 
 		if ( ! bp_is_active( 'xprofile' ) ) {
-			wp_send_json_error( array( 'message' => __( 'Profile component is not active.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Profile component is not active.', 'buddyboss-platform' ) ) );
 		}
 
 		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified by $this->bb_verify_request() above.
@@ -277,12 +277,12 @@ class BB_Admin_Profile_Fields_Ajax {
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
 
 		if ( empty( $group_id ) ) {
-			wp_send_json_error( array( 'message' => __( 'Field set ID is required.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Field set ID is required.', 'buddyboss-platform' ) ) );
 		}
 
 		$group = xprofile_get_field_group( $group_id );
 		if ( ! $group ) {
-			wp_send_json_error( array( 'message' => __( 'Invalid field set.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Invalid field set.', 'buddyboss-platform' ) ) );
 		}
 
 		$result = xprofile_insert_field_group(
@@ -294,7 +294,7 @@ class BB_Admin_Profile_Fields_Ajax {
 		);
 
 		if ( ! $result ) {
-			wp_send_json_error( array( 'message' => __( 'There was an error updating the field set. Please try again.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'There was an error updating the field set. Please try again.', 'buddyboss-platform' ) ) );
 		}
 
 		// Update base group name option for group_id=1, matching legacy bp-xprofile-admin.php:431.
@@ -319,7 +319,7 @@ class BB_Admin_Profile_Fields_Ajax {
 
 		wp_send_json_success(
 			array(
-				'message'  => __( 'Field set updated successfully.', 'buddyboss' ),
+				'message'  => __( 'Field set updated successfully.', 'buddyboss-platform' ),
 				'group_id' => $group_id,
 			)
 		);
@@ -336,30 +336,30 @@ class BB_Admin_Profile_Fields_Ajax {
 		$this->bb_verify_request();
 
 		if ( ! bp_is_active( 'xprofile' ) ) {
-			wp_send_json_error( array( 'message' => __( 'Profile component is not active.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Profile component is not active.', 'buddyboss-platform' ) ) );
 		}
 
 		// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce verified by $this->bb_verify_request() above.
 		$group_id = isset( $_POST['group_id'] ) ? absint( wp_unslash( $_POST['group_id'] ) ) : 0;
 
 		if ( empty( $group_id ) ) {
-			wp_send_json_error( array( 'message' => __( 'Field set ID is required.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Field set ID is required.', 'buddyboss-platform' ) ) );
 		}
 
 		$group = xprofile_get_field_group( $group_id );
 		if ( ! $group ) {
-			wp_send_json_error( array( 'message' => __( 'Invalid field set.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Invalid field set.', 'buddyboss-platform' ) ) );
 		}
 
 		if ( ! $group->can_delete ) {
-			wp_send_json_error( array( 'message' => __( 'This field set cannot be deleted.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'This field set cannot be deleted.', 'buddyboss-platform' ) ) );
 		}
 
 		// Delete fires xprofile_group_before_delete and xprofile_group_after_delete internally.
 		$result = xprofile_delete_field_group( $group_id );
 
 		if ( ! $result ) {
-			wp_send_json_error( array( 'message' => __( 'There was an error deleting the field set. Please try again.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'There was an error deleting the field set. Please try again.', 'buddyboss-platform' ) ) );
 		}
 
 		/**
@@ -372,7 +372,7 @@ class BB_Admin_Profile_Fields_Ajax {
 		do_action( 'xprofile_groups_deleted_group', $group );
 
 		wp_send_json_success(
-			array( 'message' => __( 'Field set deleted successfully.', 'buddyboss' ) )
+			array( 'message' => __( 'Field set deleted successfully.', 'buddyboss-platform' ) )
 		);
 	}
 
@@ -387,7 +387,7 @@ class BB_Admin_Profile_Fields_Ajax {
 		$this->bb_verify_request();
 
 		if ( ! bp_is_active( 'xprofile' ) ) {
-			wp_send_json_error( array( 'message' => __( 'Profile component is not active.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Profile component is not active.', 'buddyboss-platform' ) ) );
 		}
 
 		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified by $this->bb_verify_request() above.
@@ -400,21 +400,21 @@ class BB_Admin_Profile_Fields_Ajax {
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
 
 		if ( empty( $group_id ) ) {
-			wp_send_json_error( array( 'message' => __( 'Field set ID is required.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Field set ID is required.', 'buddyboss-platform' ) ) );
 		}
 
 		if ( empty( $name ) ) {
-			wp_send_json_error( array( 'message' => __( 'Field name is required.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Field name is required.', 'buddyboss-platform' ) ) );
 		}
 
 		if ( empty( $type ) ) {
-			wp_send_json_error( array( 'message' => __( 'Field type is required.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Field type is required.', 'buddyboss-platform' ) ) );
 		}
 
 		// Validate field type against registered types.
 		$allowed_types = array_keys( bp_xprofile_get_field_types() );
 		if ( ! in_array( $type, $allowed_types, true ) ) {
-			wp_send_json_error( array( 'message' => __( 'Invalid field type.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Invalid field type.', 'buddyboss-platform' ) ) );
 		}
 
 		// Handle options for multi-option field types before insert.
@@ -446,7 +446,7 @@ class BB_Admin_Profile_Fields_Ajax {
 					// is defense-in-depth against direct AJAX clients.
 					if ( ! $this->bb_can_move_field_to_group( $field_id, $existing_group_id, $group_id ) ) {
 						wp_send_json_error(
-							array( 'message' => __( 'This field cannot be moved to that field set.', 'buddyboss' ) )
+							array( 'message' => __( 'This field cannot be moved to that field set.', 'buddyboss-platform' ) )
 						);
 					}
 
@@ -472,14 +472,14 @@ class BB_Admin_Profile_Fields_Ajax {
 		if ( empty( $saved_id ) ) {
 			// Singleton validation error messages.
 			if ( 'membertypes' === $type ) {
-				wp_send_json_error( array( 'message' => __( 'You can only have one instance of the "Profile Type" profile field.', 'buddyboss' ) ) );
+				wp_send_json_error( array( 'message' => __( 'You can only have one instance of the "Profile Type" profile field.', 'buddyboss-platform' ) ) );
 			} elseif ( 'gender' === $type ) {
-				wp_send_json_error( array( 'message' => __( 'You can only have one instance of the "Gender" profile field.', 'buddyboss' ) ) );
+				wp_send_json_error( array( 'message' => __( 'You can only have one instance of the "Gender" profile field.', 'buddyboss-platform' ) ) );
 			} elseif ( 'socialnetworks' === $type ) {
-				wp_send_json_error( array( 'message' => __( 'You can only have one instance of the "Social Network" profile field.', 'buddyboss' ) ) );
+				wp_send_json_error( array( 'message' => __( 'You can only have one instance of the "Social Network" profile field.', 'buddyboss-platform' ) ) );
 			}
 
-			wp_send_json_error( array( 'message' => __( 'There was an error saving the field. Please try again.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'There was an error saving the field. Please try again.', 'buddyboss-platform' ) ) );
 		}
 
 		// Save field metadata.
@@ -509,7 +509,7 @@ class BB_Admin_Profile_Fields_Ajax {
 
 		wp_send_json_success(
 			array(
-				'message'  => __( 'Field saved successfully.', 'buddyboss' ),
+				'message'  => __( 'Field saved successfully.', 'buddyboss-platform' ),
 				'field_id' => $saved_id,
 			)
 		);
@@ -526,23 +526,23 @@ class BB_Admin_Profile_Fields_Ajax {
 		$this->bb_verify_request();
 
 		if ( ! bp_is_active( 'xprofile' ) ) {
-			wp_send_json_error( array( 'message' => __( 'Profile component is not active.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Profile component is not active.', 'buddyboss-platform' ) ) );
 		}
 
 		// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce verified by $this->bb_verify_request() above.
 		$field_id = isset( $_POST['field_id'] ) ? absint( wp_unslash( $_POST['field_id'] ) ) : 0;
 
 		if ( empty( $field_id ) ) {
-			wp_send_json_error( array( 'message' => __( 'Field ID is required.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Field ID is required.', 'buddyboss-platform' ) ) );
 		}
 
 		$field = xprofile_get_field( $field_id, null, false );
 		if ( ! $field ) {
-			wp_send_json_error( array( 'message' => __( 'Invalid field.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Invalid field.', 'buddyboss-platform' ) ) );
 		}
 
 		if ( ! $field->can_delete ) {
-			wp_send_json_error( array( 'message' => __( 'This field cannot be deleted.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'This field cannot be deleted.', 'buddyboss-platform' ) ) );
 		}
 
 		// Delete field and its user data, matching legacy xprofile_admin_delete_field() behavior.
@@ -551,7 +551,7 @@ class BB_Admin_Profile_Fields_Ajax {
 		$result    = $field_obj->delete( true );
 
 		if ( ! $result ) {
-			wp_send_json_error( array( 'message' => __( 'There was an error deleting the field. Please try again.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'There was an error deleting the field. Please try again.', 'buddyboss-platform' ) ) );
 		}
 
 		/**
@@ -564,7 +564,7 @@ class BB_Admin_Profile_Fields_Ajax {
 		do_action( 'xprofile_fields_deleted_field', $field );
 
 		wp_send_json_success(
-			array( 'message' => __( 'Field deleted successfully.', 'buddyboss' ) )
+			array( 'message' => __( 'Field deleted successfully.', 'buddyboss-platform' ) )
 		);
 	}
 
@@ -581,7 +581,7 @@ class BB_Admin_Profile_Fields_Ajax {
 		$this->bb_verify_request();
 
 		if ( ! bp_is_active( 'xprofile' ) ) {
-			wp_send_json_error( array( 'message' => __( 'Profile component is not active.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Profile component is not active.', 'buddyboss-platform' ) ) );
 		}
 
 		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified by $this->bb_verify_request() above.
@@ -655,7 +655,7 @@ class BB_Admin_Profile_Fields_Ajax {
 		}
 
 		wp_send_json_success(
-			array( 'message' => __( 'Order updated successfully.', 'buddyboss' ) )
+			array( 'message' => __( 'Order updated successfully.', 'buddyboss-platform' ) )
 		);
 	}
 
@@ -934,19 +934,19 @@ class BB_Admin_Profile_Fields_Ajax {
 	 */
 	private function bb_get_field_type_label( $type_key ) {
 		$labels = array(
-			'textbox'        => __( 'Single Line Input', 'buddyboss' ),
-			'textarea'       => __( 'Paragraph Input', 'buddyboss' ),
-			'selectbox'      => __( 'Dropdown', 'buddyboss' ),
-			'multiselectbox' => __( 'Multi Select', 'buddyboss' ),
-			'checkbox'       => __( 'Checkboxes', 'buddyboss' ),
-			'radio'          => __( 'Radio Buttons', 'buddyboss' ),
-			'datebox'        => __( 'Date', 'buddyboss' ),
-			'number'         => __( 'Number', 'buddyboss' ),
-			'telephone'      => __( 'Phone', 'buddyboss' ),
-			'url'            => __( 'Website', 'buddyboss' ),
-			'gender'         => __( 'Gender', 'buddyboss' ),
-			'socialnetworks' => __( 'Social Networks', 'buddyboss' ),
-			'membertypes'    => __( 'Profile Type', 'buddyboss' ),
+			'textbox'        => __( 'Single Line Input', 'buddyboss-platform' ),
+			'textarea'       => __( 'Paragraph Input', 'buddyboss-platform' ),
+			'selectbox'      => __( 'Dropdown', 'buddyboss-platform' ),
+			'multiselectbox' => __( 'Multi Select', 'buddyboss-platform' ),
+			'checkbox'       => __( 'Checkboxes', 'buddyboss-platform' ),
+			'radio'          => __( 'Radio Buttons', 'buddyboss-platform' ),
+			'datebox'        => __( 'Date', 'buddyboss-platform' ),
+			'number'         => __( 'Number', 'buddyboss-platform' ),
+			'telephone'      => __( 'Phone', 'buddyboss-platform' ),
+			'url'            => __( 'Website', 'buddyboss-platform' ),
+			'gender'         => __( 'Gender', 'buddyboss-platform' ),
+			'socialnetworks' => __( 'Social Networks', 'buddyboss-platform' ),
+			'membertypes'    => __( 'Profile Type', 'buddyboss-platform' ),
 		);
 
 		if ( isset( $labels[ $type_key ] ) ) {
@@ -976,19 +976,19 @@ class BB_Admin_Profile_Fields_Ajax {
 	 */
 	private function bb_get_field_type_description( $type_key ) {
 		$descriptions = array(
-			'textbox'        => __( 'Displays a single-line text field where users can enter short text.', 'buddyboss' ),
-			'textarea'       => __( 'Displays a multi-line text field where users can enter longer text.', 'buddyboss' ),
-			'selectbox'      => __( 'Displays a dropdown list where users can select one option from multiple predefined choices.', 'buddyboss' ),
-			'multiselectbox' => __( 'Displays a list where users can select multiple options.', 'buddyboss' ),
-			'checkbox'       => __( 'Displays multiple options where users can select one or more choices.', 'buddyboss' ),
-			'radio'          => __( 'Displays multiple options where users can select one choice.', 'buddyboss' ),
-			'datebox'        => __( 'Displays a date picker for selecting a specific date.', 'buddyboss' ),
-			'number'         => __( 'Displays a field for entering a numeric value.', 'buddyboss' ),
-			'telephone'      => __( 'Displays a field for entering a phone number.', 'buddyboss' ),
-			'url'            => __( 'Displays a field for entering a website address (URL).', 'buddyboss' ),
-			'gender'         => __( 'Allows users to select their gender from the options: Male, Female, or Other.', 'buddyboss' ),
-			'socialnetworks' => __( 'Select one or more social networks to display as icons in the user\'s profile.', 'buddyboss' ),
-			'membertypes'    => __( 'Allows users to select their profile type.', 'buddyboss' ),
+			'textbox'        => __( 'Displays a single-line text field where users can enter short text.', 'buddyboss-platform' ),
+			'textarea'       => __( 'Displays a multi-line text field where users can enter longer text.', 'buddyboss-platform' ),
+			'selectbox'      => __( 'Displays a dropdown list where users can select one option from multiple predefined choices.', 'buddyboss-platform' ),
+			'multiselectbox' => __( 'Displays a list where users can select multiple options.', 'buddyboss-platform' ),
+			'checkbox'       => __( 'Displays multiple options where users can select one or more choices.', 'buddyboss-platform' ),
+			'radio'          => __( 'Displays multiple options where users can select one choice.', 'buddyboss-platform' ),
+			'datebox'        => __( 'Displays a date picker for selecting a specific date.', 'buddyboss-platform' ),
+			'number'         => __( 'Displays a field for entering a numeric value.', 'buddyboss-platform' ),
+			'telephone'      => __( 'Displays a field for entering a phone number.', 'buddyboss-platform' ),
+			'url'            => __( 'Displays a field for entering a website address (URL).', 'buddyboss-platform' ),
+			'gender'         => __( 'Allows users to select their gender from the options: Male, Female, or Other.', 'buddyboss-platform' ),
+			'socialnetworks' => __( 'Select one or more social networks to display as icons in the user\'s profile.', 'buddyboss-platform' ),
+			'membertypes'    => __( 'Allows users to select their profile type.', 'buddyboss-platform' ),
 		);
 
 		$description = isset( $descriptions[ $type_key ] ) ? $descriptions[ $type_key ] : '';

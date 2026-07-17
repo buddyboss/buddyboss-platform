@@ -31,7 +31,7 @@ $avatar_label    = '';
 if ( bp_is_group() ) {
 	$group_id     = bp_get_current_group_id();
 	$avatar_id    = $group_id;
-	$avatar_label = __( 'Group', 'buddyboss' );
+	$avatar_label = __( 'Group', 'buddyboss-platform' );
 	if ( bp_get_group_has_avatar( $group_id ) ) {
 		$has_avatar = true;
 		$avatar_url = bp_core_fetch_avatar(
@@ -40,7 +40,7 @@ if ( bp_is_group() ) {
 				'object'     => 'group',
 				'type'       => 'full',
 				'avatar_dir' => 'group-avatars',
-				'alt'        => __( 'Group Profile Photo', 'buddyboss' ),
+				'alt'        => __( 'Group Profile Photo', 'buddyboss-platform' ),
 				'html'       => false,
 			)
 		);
@@ -50,7 +50,7 @@ if ( bp_is_group() ) {
 } elseif ( bp_is_user() ) {
 	$user_id           = bp_displayed_user_id();
 	$avatar_id         = $user_id;
-	$avatar_label      = __( 'Profile', 'buddyboss' );
+	$avatar_label      = __( 'Profile', 'buddyboss-platform' );
 	$has_avatar        = bp_get_user_has_avatar( $user_id );
 	$avatar_url        = bp_core_fetch_avatar(
 		array(
@@ -71,25 +71,25 @@ $container_class .= $has_avatar ? ' bb-rl-avatar-container--has-avatar' : ' bb-r
 	<h3>
 		<?php
 		if ( bp_is_group() ) {
-			esc_html_e( 'Group photo', 'buddyboss' );
+			esc_html_e( 'Group photo', 'buddyboss-platform' );
 		} else {
-			esc_html_e( 'Profile photo', 'buddyboss' );
+			esc_html_e( 'Profile photo', 'buddyboss-platform' );
 		}
 		?>
 	</h3>
 </div>
 <div class="bb-rl-image-caption">
-	<?php esc_html_e( 'For best results, upload an image that is 300px by 300px or larger.', 'buddyboss' ); ?>
+	<?php esc_html_e( 'For best results, upload an image that is 300px by 300px or larger.', 'buddyboss-platform' ); ?>
 </div>
 <div class="<?php echo esc_attr( $container_class ); ?>">
 	<div class="bb-rl-avatar-photo">
-		<a class="bb-rl-remove-avatar-button <?php echo bp_is_group() ? '' : 'bb-rl-edit-avatar'; ?>" href="#" data-balloon-pos="up" data-balloon="<?php echo bp_is_group() ? esc_attr__( 'Delete Group Photo', 'buddyboss' ) : esc_attr__( 'Delete Profile Photo', 'buddyboss' ); ?>">
+		<a class="bb-rl-remove-avatar-button <?php echo bp_is_group() ? '' : 'bb-rl-edit-avatar'; ?>" href="#" data-balloon-pos="up" data-balloon="<?php echo bp_is_group() ? esc_attr__( 'Delete Group Photo', 'buddyboss-platform' ) : esc_attr__( 'Delete Profile Photo', 'buddyboss-platform' ); ?>">
 			<i class="<?php echo esc_attr( $avatar_icon_class ); ?>"></i>
 		</a>
 		<img src="<?php echo esc_url( $avatar_url ); ?>" class="<?php echo bp_is_group() ? 'group' : 'user'; ?>-<?php echo esc_attr( $avatar_id ); ?>-avatar" alt="
 			<?php
 				/* translators: %s: Avatar type (Group or Profile) */
-				echo esc_attr( sprintf( __( '%s avatar', 'buddyboss' ), $avatar_label ) );
+				echo esc_attr( sprintf( __( '%s avatar', 'buddyboss-platform' ), $avatar_label ) );
 			?>
 		" />
 	</div>
@@ -110,14 +110,14 @@ $container_class .= $has_avatar ? ' bb-rl-avatar-container--has-avatar' : ' bb-r
 
 <script id="tmpl-bp-avatar-delete" type="text/html">
 	<# if ( 'user' === data.object && 'custom' === data.item_id ) { #>
-		<p><?php esc_html_e( "If you'd like to delete default custom profile photo, use the delete profile photo button.", 'buddyboss' ); ?></p>
-		<button type="button" class="button edit bb-rl-delete-avatar" id="bp-delete-avatar"><?php esc_html_e( 'Delete Profile Photo', 'buddyboss' ); ?></button>
+		<p><?php esc_html_e( "If you'd like to delete default custom profile photo, use the delete profile photo button.", 'buddyboss-platform' ); ?></p>
+		<button type="button" class="button edit bb-rl-delete-avatar" id="bp-delete-avatar"><?php esc_html_e( 'Delete Profile Photo', 'buddyboss-platform' ); ?></button>
 	<# } else if ( 'user' === data.object && 'custom' !== data.item_id ) { #>
-		<p><?php esc_html_e( "If you'd like to delete your current profile photo, use the delete profile photo button.", 'buddyboss' ); ?></p>
-		<button type="button" class="button edit bb-rl-delete-avatar" id="bp-delete-avatar"><?php esc_html_e( 'Delete My Profile Photo', 'buddyboss' ); ?></button>
+		<p><?php esc_html_e( "If you'd like to delete your current profile photo, use the delete profile photo button.", 'buddyboss-platform' ); ?></p>
+		<button type="button" class="button edit bb-rl-delete-avatar" id="bp-delete-avatar"><?php esc_html_e( 'Delete My Profile Photo', 'buddyboss-platform' ); ?></button>
 	<# } else if ( 'group' === data.object ) { #>
 		<?php bp_nouveau_user_feedback( 'group-avatar-delete-info' ); ?>
-		<button type="button" class="button edit bb-rl-delete-avatar" id="bp-delete-avatar"><?php esc_html_e( 'Delete Group Profile Photo', 'buddyboss' ); ?></button>
+		<button type="button" class="button edit bb-rl-delete-avatar" id="bp-delete-avatar"><?php esc_html_e( 'Delete Group Profile Photo', 'buddyboss-platform' ); ?></button>
 	<# } else { #>
 		<?php
 			/**

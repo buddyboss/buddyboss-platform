@@ -36,7 +36,7 @@ require_once __DIR__ . '/pages-panel.php';
  * @return string Translated section title.
  */
 function bb_appearance_site_seo_section_title() {
-	return __( 'Site SEO', 'buddyboss' );
+	return __( 'Site SEO', 'buddyboss-platform' );
 }
 
 /**
@@ -124,7 +124,7 @@ function bb_appearance_site_seo_add_pro_badge_when_no_sharing( $args ) {
 
 	$args['pro_notice'] = array(
 		'show'       => true,
-		'badge_text' => __( 'UPGRADE PRO', 'buddyboss' ),
+		'badge_text' => __( 'UPGRADE PRO', 'buddyboss-platform' ),
 		'badge_icon' => 'bb-icons-rl-crown-simple',
 		'link_url'   => 'https://www.buddyboss.com/pricing/',
 	);
@@ -172,7 +172,7 @@ function bb_admin_settings_register_appearance_settings() {
 		'appearance',
 		'general',
 		array(
-			'title'      => __( 'General', 'buddyboss' ),
+			'title'      => __( 'General', 'buddyboss-platform' ),
 			'icon'       => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-toggle-right',
@@ -189,7 +189,7 @@ function bb_admin_settings_register_appearance_settings() {
 		'appearance',
 		'branding',
 		array(
-			'title'       => __( 'Branding', 'buddyboss' ),
+			'title'       => __( 'Branding', 'buddyboss-platform' ),
 			'icon'        => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-palette',
@@ -209,7 +209,7 @@ function bb_admin_settings_register_appearance_settings() {
 		'appearance',
 		'menus',
 		array(
-			'title'       => __( 'Menus', 'buddyboss' ),
+			'title'       => __( 'Menus', 'buddyboss-platform' ),
 			'icon'        => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-list-bullets',
@@ -232,7 +232,7 @@ function bb_admin_settings_register_appearance_settings() {
 		'appearance',
 		'pages',
 		array(
-			'title'   => __( 'Pages', 'buddyboss' ),
+			'title'   => __( 'Pages', 'buddyboss-platform' ),
 			'icon'    => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-file-text',
@@ -249,7 +249,7 @@ function bb_admin_settings_register_appearance_settings() {
 		'appearance',
 		'site_seo',
 		array(
-			'title' => __( 'Site SEO', 'buddyboss' ),
+			'title' => __( 'Site SEO', 'buddyboss-platform' ),
 			'icon'  => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-list-magnifying-glass',
@@ -305,9 +305,9 @@ function bb_admin_settings_register_appearance_settings() {
 				'label'                   => '',
 				'type'                    => 'empty_state',
 				'icon'                    => 'bb-icons-rl bb-icons-rl-warning-circle',
-				'empty_state_title'       => __( 'BuddyBoss Sharing Update Required', 'buddyboss' ),
-				'empty_state_description' => __( 'Please update to the latest version of BuddyBoss Sharing to manage your site SEO and Open Graph settings here.', 'buddyboss' ),
-				'button_label'            => __( 'Update Now', 'buddyboss' ),
+				'empty_state_title'       => __( 'BuddyBoss Sharing Update Required', 'buddyboss-platform' ),
+				'empty_state_description' => __( 'Please update to the latest version of BuddyBoss Sharing to manage your site SEO and Open Graph settings here.', 'buddyboss-platform' ),
+				'button_label'            => __( 'Update Now', 'buddyboss-platform' ),
 				'button_url'              => admin_url( 'update-core.php' ),
 				'sanitize_callback'       => '__return_empty_string',
 				'order'                   => 10,
@@ -333,7 +333,7 @@ function bb_admin_settings_register_appearance_settings() {
 		'general',
 		'site_name',
 		array(
-			'title'    => __( 'Site Name', 'buddyboss' ),
+			'title'    => __( 'Site Name', 'buddyboss-platform' ),
 			'order'    => 10,
 			'help_url' => '637134',
 		)
@@ -345,10 +345,10 @@ function bb_admin_settings_register_appearance_settings() {
 		'site_name',
 		array(
 			'name'              => 'blogname',
-			'label'             => __( 'Site Name', 'buddyboss' ),
+			'label'             => __( 'Site Name', 'buddyboss-platform' ),
 			'type'              => 'text',
-			'label_description' => __( 'Displays in the browser title, search engine results and site header.', 'buddyboss' ),
-			'description'       => __( 'This matches the WordPress Site Title. Updating it here will update it site-wide.', 'buddyboss' ),
+			'label_description' => __( 'Displays in the browser title, search engine results and site header.', 'buddyboss-platform' ),
+			'description'       => __( 'This matches the WordPress Site Title. Updating it here will update it site-wide.', 'buddyboss-platform' ),
 			'default'           => get_option( 'blogname', '' ),
 			'sanitize_callback' => 'sanitize_text_field',
 			'field_class'       => 'bb-admin-settings-form__field--custom-full-width',
@@ -364,7 +364,7 @@ function bb_admin_settings_register_appearance_settings() {
 		'general',
 		'site_layout',
 		array(
-			'title'    => __( 'Site Layout', 'buddyboss' ),
+			'title'    => __( 'Site Layout', 'buddyboss-platform' ),
 			'order'    => 20,
 			'help_url' => '637133',
 		)
@@ -381,20 +381,20 @@ function bb_admin_settings_register_appearance_settings() {
 		'site_layout',
 		array(
 			'name'                => 'bb_rl_enabled',
-			'label'               => __( 'Layout', 'buddyboss' ),
+			'label'               => __( 'Layout', 'buddyboss-platform' ),
 			'type'                => 'select',
-			'label_description'   => __( 'Choose between ReadyLaunch or WordPress Theme', 'buddyboss' ),
+			'label_description'   => __( 'Choose between ReadyLaunch or WordPress Theme', 'buddyboss-platform' ),
 			// Fallback description used when `option_descriptions` doesn't
 			// cover the current value — kept for backward compat with the
 			// ReadyLaunch default.
-			'description'         => __( 'ReadyLaunch overrides your theme\'s styles on BuddyBoss pages.', 'buddyboss' ),
+			'description'         => __( 'ReadyLaunch overrides your theme\'s styles on BuddyBoss pages.', 'buddyboss-platform' ),
 			'options'             => array(
 				array(
-					'label' => __( 'ReadyLaunch', 'buddyboss' ),
+					'label' => __( 'ReadyLaunch', 'buddyboss-platform' ),
 					'value' => '1',
 				),
 				array(
-					'label' => __( 'WordPress Theme', 'buddyboss' ),
+					'label' => __( 'WordPress Theme', 'buddyboss-platform' ),
 					'value' => '0',
 				),
 			),
@@ -402,8 +402,8 @@ function bb_admin_settings_register_appearance_settings() {
 			// dropdown. SettingsForm keys into this map by the current value
 			// string so option labels and values must match verbatim.
 			'option_descriptions' => array(
-				'1' => __( 'ReadyLaunch overrides your theme\'s styles on BuddyBoss pages.', 'buddyboss' ),
-				'0' => __( 'BuddyBoss pages will use your active theme\'s templates. Any templates not overridden will fall back to the platform default layouts.', 'buddyboss' ),
+				'1' => __( 'ReadyLaunch overrides your theme\'s styles on BuddyBoss pages.', 'buddyboss-platform' ),
+				'0' => __( 'BuddyBoss pages will use your active theme\'s templates. Any templates not overridden will fall back to the platform default layouts.', 'buddyboss-platform' ),
 			),
 			'default'             => bp_get_option( 'bb_rl_enabled', false ) ? '1' : '0',
 			'sanitize_callback'   => 'bb_appearance_sanitize_layout',
@@ -420,7 +420,7 @@ function bb_admin_settings_register_appearance_settings() {
 		'general',
 		'template_pages',
 		array(
-			'title'       => __( 'Template Pages', 'buddyboss' ),
+			'title'       => __( 'Template Pages', 'buddyboss-platform' ),
 			'order'       => 30,
 			'help_url'    => '637139',
 			'conditional' => array(
@@ -444,7 +444,7 @@ function bb_admin_settings_register_appearance_settings() {
 
 	if ( function_exists( 'bp_enable_site_registration' ) && bp_enable_site_registration() && function_exists( 'bp_allow_custom_registration' ) && ! bp_allow_custom_registration() ) {
 		$template_page_options[] = array(
-			'label' => __( 'Login & Registration', 'buddyboss' ),
+			'label' => __( 'Login & Registration', 'buddyboss-platform' ),
 			'value' => 'registration',
 		);
 	}
@@ -457,7 +457,7 @@ function bb_admin_settings_register_appearance_settings() {
 		$readylaunch_helper = BB_Readylaunch::instance();
 		if ( $readylaunch_helper && method_exists( $readylaunch_helper, 'bb_is_sidebar_enabled_for_courses' ) && $readylaunch_helper->bb_is_sidebar_enabled_for_courses() ) {
 			$template_page_options[] = array(
-				'label' => __( 'Courses', 'buddyboss' ),
+				'label' => __( 'Courses', 'buddyboss-platform' ),
 				'value' => 'courses',
 			);
 		}
@@ -470,9 +470,9 @@ function bb_admin_settings_register_appearance_settings() {
 			'template_pages',
 			array(
 				'name'              => 'bb_rl_enabled_pages',
-				'label'             => __( 'Enable Pages', 'buddyboss' ),
+				'label'             => __( 'Enable Pages', 'buddyboss-platform' ),
 				'type'              => 'toggle_list',
-				'label_description' => __( 'Enable pages that should have styles from the template.', 'buddyboss' ),
+				'label_description' => __( 'Enable pages that should have styles from the template.', 'buddyboss-platform' ),
 				'options'           => $template_page_options,
 				'default'           => $enabled_pages_default,
 				'sanitize_callback' => 'bb_appearance_sanitize_enabled_pages',
@@ -491,8 +491,8 @@ function bb_admin_settings_register_appearance_settings() {
 				'label'                   => '',
 				'type'                    => 'empty_state',
 				'icon'                    => 'bb-icons-rl bb-icons-rl-warning-circle',
-				'empty_state_title'       => __( 'No template pages available', 'buddyboss' ),
-				'empty_state_description' => __( 'Template pages appear here once features like Login & Registration, Courses, or other compatible modules are enabled.', 'buddyboss' ),
+				'empty_state_title'       => __( 'No template pages available', 'buddyboss-platform' ),
+				'empty_state_description' => __( 'Template pages appear here once features like Login & Registration, Courses, or other compatible modules are enabled.', 'buddyboss-platform' ),
 				'sanitize_callback'       => '__return_empty_string',
 				'order'                   => 10,
 			)
@@ -507,7 +507,7 @@ function bb_admin_settings_register_appearance_settings() {
 		'general',
 		'template_sidebars',
 		array(
-			'title'       => __( 'Template Sidebar Widgets', 'buddyboss' ),
+			'title'       => __( 'Template Sidebar Widgets', 'buddyboss-platform' ),
 			'order'       => 40,
 			'help_url'    => '637141',
 			'conditional' => array(
@@ -531,24 +531,24 @@ function bb_admin_settings_register_appearance_settings() {
 			'template_sidebars',
 			array(
 				'name'              => 'bb_rl_activity_sidebars',
-				'label'             => __( 'Activity Feed', 'buddyboss' ),
+				'label'             => __( 'Activity Feed', 'buddyboss-platform' ),
 				'type'              => 'toggle_list',
 				'label_description' => bb_appearance_render_sidebar_description( 'bb_rl_activity_sidebars' ),
 				'options'           => array(
 					array(
-						'label' => __( 'Complete Profile', 'buddyboss' ),
+						'label' => __( 'Complete Profile', 'buddyboss-platform' ),
 						'value' => 'complete_profile',
 					),
 					array(
-						'label' => __( 'Latest Updates', 'buddyboss' ),
+						'label' => __( 'Latest Updates', 'buddyboss-platform' ),
 						'value' => 'latest_updates',
 					),
 					array(
-						'label' => __( 'Recent Blog Posts', 'buddyboss' ),
+						'label' => __( 'Recent Blog Posts', 'buddyboss-platform' ),
 						'value' => 'recent_blog_posts',
 					),
 					array(
-						'label' => __( 'Active Members', 'buddyboss' ),
+						'label' => __( 'Active Members', 'buddyboss-platform' ),
 						'value' => 'active_members',
 					),
 				),
@@ -574,21 +574,21 @@ function bb_admin_settings_register_appearance_settings() {
 	// time — see the Activity Feed block above.
 	$member_profile_options = array(
 		array(
-			'label' => __( 'Complete Profile', 'buddyboss' ),
+			'label' => __( 'Complete Profile', 'buddyboss-platform' ),
 			'value' => 'complete_profile',
 		),
 	);
 
 	if ( bp_is_active( 'friends' ) ) {
 		$member_profile_options[] = array(
-			'label' => __( 'Connections', 'buddyboss' ),
+			'label' => __( 'Connections', 'buddyboss-platform' ),
 			'value' => 'connections',
 		);
 	}
 
 	if ( bp_is_active( 'activity' ) && function_exists( 'bp_is_activity_follow_active' ) && bp_is_activity_follow_active() ) {
 		$member_profile_options[] = array(
-			'label' => __( 'My Network (Follow, Followers)', 'buddyboss' ),
+			'label' => __( 'My Network (Follow, Followers)', 'buddyboss-platform' ),
 			'value' => 'my_network',
 		);
 	}
@@ -599,7 +599,7 @@ function bb_admin_settings_register_appearance_settings() {
 		'template_sidebars',
 		array(
 			'name'              => 'bb_rl_member_profile_sidebars',
-			'label'             => __( 'Member Profile', 'buddyboss' ),
+			'label'             => __( 'Member Profile', 'buddyboss-platform' ),
 			'type'              => 'toggle_list',
 			'label_description' => bb_appearance_render_sidebar_description( 'bb_rl_member_profile_sidebars' ),
 			'options'           => $member_profile_options,
@@ -634,16 +634,16 @@ function bb_admin_settings_register_appearance_settings() {
 			'template_sidebars',
 			array(
 				'name'              => 'bb_rl_groups_sidebars',
-				'label'             => __( 'Group', 'buddyboss' ),
+				'label'             => __( 'Group', 'buddyboss-platform' ),
 				'type'              => 'toggle_list',
 				'label_description' => bb_appearance_render_sidebar_description( 'bb_rl_groups_sidebars' ),
 				'options'           => array(
 					array(
-						'label' => __( 'About Group', 'buddyboss' ),
+						'label' => __( 'About Group', 'buddyboss-platform' ),
 						'value' => 'about_group',
 					),
 					array(
-						'label' => __( 'Group Members', 'buddyboss' ),
+						'label' => __( 'Group Members', 'buddyboss-platform' ),
 						'value' => 'group_members',
 					),
 				),
@@ -668,7 +668,7 @@ function bb_admin_settings_register_appearance_settings() {
 		'branding',
 		'branding',
 		array(
-			'title'    => __( 'Branding', 'buddyboss' ),
+			'title'    => __( 'Branding', 'buddyboss-platform' ),
 			'order'    => 10,
 			'help_url' => '637143',
 		)
@@ -682,28 +682,28 @@ function bb_admin_settings_register_appearance_settings() {
 		'branding',
 		array(
 			'name'                => 'bb_rl_theme_mode',
-			'label'               => __( 'Appearance', 'buddyboss' ),
+			'label'               => __( 'Appearance', 'buddyboss-platform' ),
 			'type'                => 'radio',
-			'description'         => __( 'This site will be shown in the selected mode.', 'buddyboss' ),
+			'description'         => __( 'This site will be shown in the selected mode.', 'buddyboss-platform' ),
 			'options'             => array(
 				array(
-					'label' => __( 'Light Mode', 'buddyboss' ),
+					'label' => __( 'Light Mode', 'buddyboss-platform' ),
 					'value' => 'light',
 				),
 				array(
-					'label' => __( 'Dark Mode', 'buddyboss' ),
+					'label' => __( 'Dark Mode', 'buddyboss-platform' ),
 					'value' => 'dark',
 				),
 				array(
-					'label' => __( 'Both', 'buddyboss' ),
+					'label' => __( 'Both', 'buddyboss-platform' ),
 					'value' => 'choice',
 				),
 			),
 			// Per-option description — swaps live as the user changes the radio.
 			'option_descriptions' => array(
-				'light'  => __( 'This site will be shown in light mode.', 'buddyboss' ),
-				'dark'   => __( 'This site will be shown in dark mode.', 'buddyboss' ),
-				'choice' => __( 'Users will be able switch between the modes.', 'buddyboss' ),
+				'light'  => __( 'This site will be shown in light mode.', 'buddyboss-platform' ),
+				'dark'   => __( 'This site will be shown in dark mode.', 'buddyboss-platform' ),
+				'choice' => __( 'Users will be able switch between the modes.', 'buddyboss-platform' ),
 			),
 			'default'             => $theme_mode_default,
 			'sanitize_callback'   => 'bb_appearance_sanitize_theme_mode',
@@ -721,9 +721,9 @@ function bb_admin_settings_register_appearance_settings() {
 		'branding',
 		array(
 			'name'                => 'bb_rl_light_logo',
-			'label'               => __( 'Logo', 'buddyboss' ),
+			'label'               => __( 'Logo', 'buddyboss-platform' ),
 			'type'                => 'media_picker',
-			'description'         => __( 'Recommended to use a dark-colored logo, 280x80 px, in JPG or PNG format.', 'buddyboss' ),
+			'description'         => __( 'Recommended to use a dark-colored logo, 280x80 px, in JPG or PNG format.', 'buddyboss-platform' ),
 			'default'             => bp_get_option( 'bb_rl_light_logo', array() ),
 			'sanitize_callback'   => 'bb_appearance_sanitize_media',
 			'media_picker_config' => array(
@@ -732,7 +732,7 @@ function bb_admin_settings_register_appearance_settings() {
 			),
 			'group'               => array(
 				'key'   => 'logo',
-				'label' => __( 'Logo (Light mode)', 'buddyboss' ),
+				'label' => __( 'Logo (Light mode)', 'buddyboss-platform' ),
 			),
 			'conditional'         => array(
 				'field'    => 'bb_rl_theme_mode',
@@ -749,9 +749,9 @@ function bb_admin_settings_register_appearance_settings() {
 		'branding',
 		array(
 			'name'                => 'bb_rl_dark_logo',
-			'label'               => __( 'Logo', 'buddyboss' ),
+			'label'               => __( 'Logo', 'buddyboss-platform' ),
 			'type'                => 'media_picker',
-			'description'         => __( 'Recommended to use a white-colored logo, 280x80 px, in JPG or PNG format.', 'buddyboss' ),
+			'description'         => __( 'Recommended to use a white-colored logo, 280x80 px, in JPG or PNG format.', 'buddyboss-platform' ),
 			'default'             => bp_get_option( 'bb_rl_dark_logo', array() ),
 			'sanitize_callback'   => 'bb_appearance_sanitize_media',
 			'media_picker_config' => array(
@@ -760,7 +760,7 @@ function bb_admin_settings_register_appearance_settings() {
 			),
 			'group'               => array(
 				'key'   => 'logo',
-				'label' => __( 'Logo (Dark mode)', 'buddyboss' ),
+				'label' => __( 'Logo (Dark mode)', 'buddyboss-platform' ),
 			),
 			'conditional'         => array(
 				'field'    => 'bb_rl_theme_mode',
@@ -778,14 +778,14 @@ function bb_admin_settings_register_appearance_settings() {
 		'branding',
 		array(
 			'name'              => 'bb_rl_color_light',
-			'label'             => __( 'Theme Color', 'buddyboss' ),
+			'label'             => __( 'Theme Color', 'buddyboss-platform' ),
 			'type'              => 'color',
-			'label_description' => __( 'Select the primary color of your community. This is used across buttons, links and secondary elements.', 'buddyboss' ),
+			'label_description' => __( 'Select the primary color of your community. This is used across buttons, links and secondary elements.', 'buddyboss-platform' ),
 			'default'           => bp_get_option( 'bb_rl_color_light', '#3E34FF' ),
 			'sanitize_callback' => 'bb_appearance_sanitize_color',
 			'group'             => array(
 				'key'   => 'primary_color',
-				'label' => __( 'Primary Color (Light mode)', 'buddyboss' ),
+				'label' => __( 'Primary Color (Light mode)', 'buddyboss-platform' ),
 			),
 			'conditional'       => array(
 				'field'    => 'bb_rl_theme_mode',
@@ -802,14 +802,14 @@ function bb_admin_settings_register_appearance_settings() {
 		'branding',
 		array(
 			'name'              => 'bb_rl_color_dark',
-			'label'             => __( 'Theme Color', 'buddyboss' ),
-			'label_description' => __( 'Select the primary color of your community. This is used across buttons, links and secondary elements.', 'buddyboss' ),
+			'label'             => __( 'Theme Color', 'buddyboss-platform' ),
+			'label_description' => __( 'Select the primary color of your community. This is used across buttons, links and secondary elements.', 'buddyboss-platform' ),
 			'type'              => 'color',
 			'default'           => bp_get_option( 'bb_rl_color_dark', '#A347FF' ),
 			'sanitize_callback' => 'bb_appearance_sanitize_color',
 			'group'             => array(
 				'key'   => 'primary_color',
-				'label' => __( 'Primary Color (Dark mode)', 'buddyboss' ),
+				'label' => __( 'Primary Color (Dark mode)', 'buddyboss-platform' ),
 			),
 			'conditional'       => array(
 				'field'    => 'bb_rl_theme_mode',
@@ -828,7 +828,7 @@ function bb_admin_settings_register_appearance_settings() {
 		'menus',
 		'menus',
 		array(
-			'title'    => __( 'Menus', 'buddyboss' ),
+			'title'    => __( 'Menus', 'buddyboss-platform' ),
 			'order'    => 10,
 			'help_url' => '637144',
 		)
@@ -846,7 +846,7 @@ function bb_admin_settings_register_appearance_settings() {
 	}
 	if ( empty( $header_menu_options ) ) {
 		$header_menu_options[] = array(
-			'label' => __( 'ReadyLaunch (Default)', 'buddyboss' ),
+			'label' => __( 'ReadyLaunch (Default)', 'buddyboss-platform' ),
 			'value' => 'readylaunch',
 		);
 	}
@@ -857,9 +857,9 @@ function bb_admin_settings_register_appearance_settings() {
 		'menus',
 		array(
 			'name'              => 'bb_rl_header_menu',
-			'label'             => __( 'Header', 'buddyboss' ),
+			'label'             => __( 'Header', 'buddyboss-platform' ),
 			'type'              => 'select',
-			'description'       => __( 'Update your header menu from the Menus tab, where you\'ll find a dedicated ReadyLaunch header menu location.', 'buddyboss' ),
+			'description'       => __( 'Update your header menu from the Menus tab, where you\'ll find a dedicated ReadyLaunch header menu location.', 'buddyboss-platform' ),
 			'options'           => $header_menu_options,
 			'default'           => bp_get_option( 'bb_rl_header_menu', 'readylaunch' ),
 			'sanitize_callback' => 'sanitize_text_field',
@@ -873,26 +873,26 @@ function bb_admin_settings_register_appearance_settings() {
 	if ( bp_is_active( 'activity' ) ) {
 		$side_menu_items[] = array(
 			'id'    => 'activity_feed',
-			'label' => __( 'Activity Feed', 'buddyboss' ),
+			'label' => __( 'Activity Feed', 'buddyboss-platform' ),
 			'icon'  => 'pulse',
 		);
 	}
 	$side_menu_items[] = array(
 		'id'    => 'members',
-		'label' => __( 'Members', 'buddyboss' ),
+		'label' => __( 'Members', 'buddyboss-platform' ),
 		'icon'  => 'users',
 	);
 	if ( bp_is_active( 'groups' ) ) {
 		$side_menu_items[] = array(
 			'id'    => 'groups',
-			'label' => __( 'Groups', 'buddyboss' ),
+			'label' => __( 'Groups', 'buddyboss-platform' ),
 			'icon'  => 'users-three',
 		);
 	}
 	if ( bp_is_active( 'forums' ) ) {
 		$side_menu_items[] = array(
 			'id'    => 'forums',
-			'label' => __( 'Forums', 'buddyboss' ),
+			'label' => __( 'Forums', 'buddyboss-platform' ),
 			'icon'  => 'chat-text',
 		);
 	}
@@ -900,21 +900,21 @@ function bb_admin_settings_register_appearance_settings() {
 	if ( ! empty( $courses_integration ) ) {
 		$side_menu_items[] = array(
 			'id'    => 'courses',
-			'label' => __( 'Courses', 'buddyboss' ),
+			'label' => __( 'Courses', 'buddyboss-platform' ),
 			'icon'  => 'graduation-cap',
 		);
 	}
 	if ( bp_is_active( 'messages' ) ) {
 		$side_menu_items[] = array(
 			'id'    => 'messages',
-			'label' => __( 'Messages', 'buddyboss' ),
+			'label' => __( 'Messages', 'buddyboss-platform' ),
 			'icon'  => 'chat-teardrop-text',
 		);
 	}
 	if ( bp_is_active( 'notifications' ) ) {
 		$side_menu_items[] = array(
 			'id'    => 'notifications',
-			'label' => __( 'Notifications', 'buddyboss' ),
+			'label' => __( 'Notifications', 'buddyboss-platform' ),
 			'icon'  => 'bell',
 		);
 	}
@@ -925,9 +925,9 @@ function bb_admin_settings_register_appearance_settings() {
 		'menus',
 		array(
 			'name'              => 'bb_rl_side_menu',
-			'label'             => __( 'Side', 'buddyboss' ),
+			'label'             => __( 'Side', 'buddyboss-platform' ),
 			'type'              => 'sortable_toggle_list',
-			'label_description' => __( 'Enable and re-order menu items shown on the left sidebar.', 'buddyboss' ),
+			'label_description' => __( 'Enable and re-order menu items shown on the left sidebar.', 'buddyboss-platform' ),
 			'available_items'   => $side_menu_items,
 			'default'           => bp_get_option( 'bb_rl_side_menu', array() ),
 			'sanitize_callback' => 'bb_appearance_sanitize_side_menu',
@@ -942,15 +942,15 @@ function bb_admin_settings_register_appearance_settings() {
 		'menus',
 		array(
 			'name'                      => 'bb_rl_custom_links',
-			'label'                     => __( 'Link', 'buddyboss' ),
+			'label'                     => __( 'Link', 'buddyboss-platform' ),
 			'type'                      => 'editable_link_list',
-			'label_description'         => __( 'Add and re-order custom links which are shown on the left sidebar.', 'buddyboss' ),
+			'label_description'         => __( 'Add and re-order custom links which are shown on the left sidebar.', 'buddyboss-platform' ),
 			'default'                   => bp_get_option( 'bb_rl_custom_links', array() ),
 			'sanitize_callback'         => 'bb_appearance_sanitize_custom_links',
 			'editable_link_list_config' => array(
-				'add_label'        => __( 'Add New Link', 'buddyboss' ),
-				'modal_title_add'  => __( 'Add Link', 'buddyboss' ),
-				'modal_title_edit' => __( 'Edit Link', 'buddyboss' ),
+				'add_label'        => __( 'Add New Link', 'buddyboss-platform' ),
+				'modal_title_add'  => __( 'Add Link', 'buddyboss-platform' ),
+				'modal_title_edit' => __( 'Edit Link', 'buddyboss-platform' ),
 			),
 			'order'                     => 30,
 		)
@@ -997,7 +997,7 @@ function bb_appearance_register_site_seo_pro_placeholder_fields() {
 	// the badge visible in that combination.
 	$pro_notice_field = array(
 		'show'       => true,
-		'badge_text' => __( 'PRO', 'buddyboss' ),
+		'badge_text' => __( 'PRO', 'buddyboss-platform' ),
 		'badge_icon' => 'bb-icons-rl-crown-simple',
 		'link_url'   => 'https://www.buddyboss.com/platform/',
 		'link_icon'  => 'bb-icons-rl-play',
@@ -1024,7 +1024,7 @@ function bb_appearance_register_site_seo_pro_placeholder_fields() {
 			'merge'      => true,
 			'pro_notice' => array(
 				'show'       => true,
-				'badge_text' => __( 'UPGRADE PRO', 'buddyboss' ),
+				'badge_text' => __( 'UPGRADE PRO', 'buddyboss-platform' ),
 				'badge_icon' => 'bb-icons-rl-crown-simple',
 				'link_url'   => 'https://www.buddyboss.com/pricing/',
 			),
@@ -1038,17 +1038,17 @@ function bb_appearance_register_site_seo_pro_placeholder_fields() {
 		$section_id,
 		array(
 			'name'              => 'buddyboss_seo_title',
-			'label'             => __( 'SEO', 'buddyboss' ),
+			'label'             => __( 'SEO', 'buddyboss-platform' ),
 			'type'              => 'text',
 			'placeholder'       => get_bloginfo( 'name' ),
-			'description'       => __( 'Set the main title of your website that Google will index. The optimal length is about 55 characters.', 'buddyboss' ),
+			'description'       => __( 'Set the main title of your website that Google will index. The optimal length is about 55 characters.', 'buddyboss-platform' ),
 			'default'           => '',
 			'pro_only'          => true,
 			'pro_notice'        => $pro_notice_field,
 			'sanitize_callback' => '__return_empty_string',
 			'group'             => array(
 				'key'   => 'seo',
-				'label' => __( 'SEO Title', 'buddyboss' ),
+				'label' => __( 'SEO Title', 'buddyboss-platform' ),
 			),
 			'order'             => 10,
 		)
@@ -1060,17 +1060,17 @@ function bb_appearance_register_site_seo_pro_placeholder_fields() {
 		$section_id,
 		array(
 			'name'              => 'buddyboss_seo_description',
-			'label'             => __( 'SEO', 'buddyboss' ),
+			'label'             => __( 'SEO', 'buddyboss-platform' ),
 			'type'              => 'textarea',
 			'placeholder'       => get_bloginfo( 'description' ),
-			'description'       => __( 'Set the default description that will accompany your SEO title in search engine results. The optimal description length is 155 to 300 characters.', 'buddyboss' ),
+			'description'       => __( 'Set the default description that will accompany your SEO title in search engine results. The optimal description length is 155 to 300 characters.', 'buddyboss-platform' ),
 			'default'           => '',
 			'pro_only'          => true,
 			'pro_notice'        => $pro_notice_field,
 			'sanitize_callback' => '__return_empty_string',
 			'group'             => array(
 				'key'   => 'seo',
-				'label' => __( 'SEO Description', 'buddyboss' ),
+				'label' => __( 'SEO Description', 'buddyboss-platform' ),
 			),
 			'order'             => 20,
 		)
@@ -1083,7 +1083,7 @@ function bb_appearance_register_site_seo_pro_placeholder_fields() {
 		$section_id,
 		array(
 			'name'              => 'buddyboss_seo_preview',
-			'label'             => __( 'SEO', 'buddyboss' ),
+			'label'             => __( 'SEO', 'buddyboss-platform' ),
 			'type'              => 'seo_preview',
 			'default'           => '',
 			'group'             => array(
@@ -1114,10 +1114,10 @@ function bb_appearance_register_site_seo_pro_placeholder_fields() {
 		$section_id,
 		array(
 			'name'              => 'buddyboss_enable_open_graph',
-			'label'             => __( 'Social', 'buddyboss' ),
+			'label'             => __( 'Social', 'buddyboss-platform' ),
 			'type'              => 'toggle',
-			'description'       => __( 'Enable Open-graph', 'buddyboss' ),
-			'help_text'         => __( 'Open Graph support improves how your content appears when shared on social platforms such as Facebook, LinkedIn, and X.', 'buddyboss' ),
+			'description'       => __( 'Enable Open-graph', 'buddyboss-platform' ),
+			'help_text'         => __( 'Open Graph support improves how your content appears when shared on social platforms such as Facebook, LinkedIn, and X.', 'buddyboss-platform' ),
 			'default'           => 0,
 			'pro_only'          => true,
 			'pro_notice'        => $pro_notice_field,
@@ -1134,10 +1134,10 @@ function bb_appearance_register_site_seo_pro_placeholder_fields() {
 		$section_id,
 		array(
 			'name'              => 'buddyboss_activity_og_title_template',
-			'label'             => __( 'Activity Title Template', 'buddyboss' ),
+			'label'             => __( 'Activity Title Template', 'buddyboss-platform' ),
 			'type'              => 'text',
 			'placeholder'       => '{activity_action} | {site_title}',
-			'description'       => __( 'Template for activity Open Graph titles. Use the tags below to dynamically insert activity data.', 'buddyboss' ),
+			'description'       => __( 'Template for activity Open Graph titles. Use the tags below to dynamically insert activity data.', 'buddyboss-platform' ),
 			'default'           => '',
 			'pro_only'          => true,
 			'pro_notice'        => $pro_notice_field,
@@ -1157,19 +1157,19 @@ function bb_appearance_register_site_seo_pro_placeholder_fields() {
 			'tags'              => array(
 				array(
 					'tag'         => '{activity_title}',
-					'description' => __( 'Activity post title (falls back to activity_action if empty)', 'buddyboss' ),
+					'description' => __( 'Activity post title (falls back to activity_action if empty)', 'buddyboss-platform' ),
 				),
 				array(
 					'tag'         => '{activity_action}',
-					'description' => __( 'Activity action text (e.g., "John posted an update")', 'buddyboss' ),
+					'description' => __( 'Activity action text (e.g., "John posted an update")', 'buddyboss-platform' ),
 				),
 				array(
 					'tag'         => '{activity_content}',
-					'description' => __( 'Activity content (limited to 60 characters)', 'buddyboss' ),
+					'description' => __( 'Activity content (limited to 60 characters)', 'buddyboss-platform' ),
 				),
 				array(
 					'tag'         => '{author_name}',
-					'description' => __( 'Activity author display name', 'buddyboss' ),
+					'description' => __( 'Activity author display name', 'buddyboss-platform' ),
 				),
 			),
 			'default'           => '',
@@ -1192,10 +1192,10 @@ function bb_appearance_register_site_seo_pro_placeholder_fields() {
 	// so "Choose whether search engines should index…" renders once below
 	// the cluster, matching the Figma.
 	$indexing_toggles = array(
-		'buddyboss_seo_index_posts'    => __( 'Posts', 'buddyboss' ),
-		'buddyboss_seo_index_profiles' => __( 'Profiles', 'buddyboss' ),
-		'buddyboss_seo_index_groups'   => __( 'Groups', 'buddyboss' ),
-		'buddyboss_seo_index_forums'   => __( 'Forums', 'buddyboss' ),
+		'buddyboss_seo_index_posts'    => __( 'Posts', 'buddyboss-platform' ),
+		'buddyboss_seo_index_profiles' => __( 'Profiles', 'buddyboss-platform' ),
+		'buddyboss_seo_index_groups'   => __( 'Groups', 'buddyboss-platform' ),
+		'buddyboss_seo_index_forums'   => __( 'Forums', 'buddyboss-platform' ),
 	);
 	$indexing_order   = 60;
 	$indexing_total   = count( $indexing_toggles );
@@ -1209,10 +1209,10 @@ function bb_appearance_register_site_seo_pro_placeholder_fields() {
 			$section_id,
 			array(
 				'name'              => $toggle_name,
-				'label'             => __( 'Indexing', 'buddyboss' ),
+				'label'             => __( 'Indexing', 'buddyboss-platform' ),
 				'type'              => 'toggle',
 				'description'       => $toggle_label,
-				'help_text'         => $is_last_toggle ? __( 'Choose whether search engines should index this content. Turning it off will hide it from search results.', 'buddyboss' ) : '',
+				'help_text'         => $is_last_toggle ? __( 'Choose whether search engines should index this content. Turning it off will hide it from search results.', 'buddyboss-platform' ) : '',
 				'default'           => 0,
 				'pro_only'          => true,
 				'pro_notice'        => $pro_notice_field,

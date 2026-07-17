@@ -67,7 +67,7 @@ if ( bp_group_has_membership_requests( bp_ajax_querystring( 'membership_requests
 			?>
 			<li class="bb-rl-view-more bb-rl-view-more--pagination" data-bp-pagination="<?php echo esc_attr( $requests_page_arg ); ?>">
 				<a class="bb-rl-button bb-rl-button--secondaryFill bb-rl-button--small" href="<?php echo esc_url( $next_page_url ); ?>" data-method="append">
-					<?php esc_html_e( 'Show More', 'buddyboss' ); ?>
+					<?php esc_html_e( 'Show More', 'buddyboss-platform' ); ?>
 					<i class="bb-icons-rl-caret-down"></i>
 				</a>
 			</li>

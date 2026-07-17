@@ -86,7 +86,7 @@ function messages_new_message( $args = '' ) {
 	if ( empty( $r['sender_id'] ) ) {
 		if ( 'wp_error' === $r['error_type'] ) {
 			$error_code = 'messages_empty_sender';
-			$feedback   = __( 'Your message was not sent. Please use a valid sender.', 'buddyboss' );
+			$feedback   = __( 'Your message was not sent. Please use a valid sender.', 'buddyboss-platform' );
 
 			return new WP_Error( $error_code, $feedback );
 		} else {
@@ -112,7 +112,7 @@ function messages_new_message( $args = '' ) {
 	if ( ! $validated_content ) {
 		if ( 'wp_error' === $r['error_type'] ) {
 			$error_code = 'messages_empty_content';
-			$feedback   = __( 'Your message was not sent. Please enter some content.', 'buddyboss' );
+			$feedback   = __( 'Your message was not sent. Please enter some content.', 'buddyboss-platform' );
 			return new WP_Error( $error_code, $feedback );
 		} else {
 			return false;
@@ -123,7 +123,7 @@ function messages_new_message( $args = '' ) {
 		$can_send_media = bb_user_has_access_upload_media( $group_id, bp_loggedin_user_id(), 0, $r['thread_id'], 'message' );
 		if ( ! $can_send_media ) {
 			$error_code = 'messages_empty_content';
-			$feedback   = __( 'You don\'t have access to send the media. ', 'buddyboss' );
+			$feedback   = __( 'You don\'t have access to send the media. ', 'buddyboss-platform' );
 			return new WP_Error( $error_code, $feedback );
 		}
 	}
@@ -132,7 +132,7 @@ function messages_new_message( $args = '' ) {
 		$can_send_document = bb_user_has_access_upload_document( $group_id, bp_loggedin_user_id(), 0, $r['thread_id'], 'message' );
 		if ( ! $can_send_document ) {
 			$error_code = 'messages_empty_content';
-			$feedback   = __( 'You don\'t have access to send the document. ', 'buddyboss' );
+			$feedback   = __( 'You don\'t have access to send the document. ', 'buddyboss-platform' );
 			return new WP_Error( $error_code, $feedback );
 		}
 	}
@@ -141,7 +141,7 @@ function messages_new_message( $args = '' ) {
 		$can_send_video = bb_user_has_access_upload_video( $group_id, bp_loggedin_user_id(), 0, $r['thread_id'], 'message' );
 		if ( ! $can_send_video ) {
 			$error_code = 'messages_empty_content';
-			$feedback   = __( 'You don\'t have access to send the video. ', 'buddyboss' );
+			$feedback   = __( 'You don\'t have access to send the video. ', 'buddyboss-platform' );
 			return new WP_Error( $error_code, $feedback );
 		}
 	}
@@ -150,7 +150,7 @@ function messages_new_message( $args = '' ) {
 		$can_send_gif = bb_user_has_access_upload_gif( $group_id, bp_loggedin_user_id(), 0, $r['thread_id'], 'message' );
 		if ( ! $can_send_gif ) {
 			$error_code = 'messages_empty_content';
-			$feedback   = __( 'You don\'t have access to send the gif. ', 'buddyboss' );
+			$feedback   = __( 'You don\'t have access to send the gif. ', 'buddyboss-platform' );
 			return new WP_Error( $error_code, $feedback );
 		}
 	}
@@ -193,7 +193,7 @@ function messages_new_message( $args = '' ) {
 
 		// Set a default reply subject if none was sent.
 		if ( empty( $message->subject ) ) {
-			$re = __( 'Re', 'buddyboss' ) . ': ';
+			$re = __( 'Re', 'buddyboss-platform' ) . ': ';
 
 			if ( strpos( $thread->messages[0]->subject, $re ) === 0 ) {
 				$message->subject = $thread->messages[0]->subject;
@@ -228,7 +228,7 @@ function messages_new_message( $args = '' ) {
 		// Bail if no recipients.
 		if ( empty( $r['recipients'] ) ) {
 			if ( 'wp_error' === $r['error_type'] ) {
-				return new WP_Error( 'message_empty_recipients', __( 'Message could not be sent. Please enter a recipient.', 'buddyboss' ) );
+				return new WP_Error( 'message_empty_recipients', __( 'Message could not be sent. Please enter a recipient.', 'buddyboss-platform' ) );
 			} else {
 				return false;
 			}
@@ -236,7 +236,7 @@ function messages_new_message( $args = '' ) {
 
 		// Set a default subject if none exists.
 		if ( empty( $message->subject ) ) {
-			$message->subject = __( 'No Subject', 'buddyboss' );
+			$message->subject = __( 'No Subject', 'buddyboss-platform' );
 		}
 
 		// Setup the recipients array.
@@ -298,7 +298,7 @@ function messages_new_message( $args = '' ) {
 		$recipient_ids = array_unique( $recipient_ids );
 		if ( empty( $recipient_ids ) ) {
 			if ( 'wp_error' === $r['error_type'] ) {
-				return new WP_Error( 'message_invalid_recipients', __( 'Message could not be sent because you have entered an invalid username. Please try again.', 'buddyboss' ) );
+				return new WP_Error( 'message_invalid_recipients', __( 'Message could not be sent because you have entered an invalid username. Please try again.', 'buddyboss-platform' ) );
 			} else {
 				return false;
 			}
@@ -359,10 +359,7 @@ function messages_new_message( $args = '' ) {
 
 			// Set a default reply subject if none was sent.
 			if ( empty( $message->subject ) ) {
-				$message->subject = sprintf(
-					__( '%s', 'buddyboss' ),
-					wp_trim_words( $thread->messages[0]->subject, messages_get_default_subject_length() )
-				);
+				$message->subject = wp_trim_words( $thread->messages[0]->subject, messages_get_default_subject_length() );
 			}
 		}
 	}
@@ -371,10 +368,10 @@ function messages_new_message( $args = '' ) {
 	if ( true !== $is_group_thread && ( count( $message->recipients ) < 2 ) ) {
 
 		$error_messages = array(
-			'new_message'       => __( 'You need to be connected with this member in order to send a message.', 'buddyboss' ),
-			'new_reply'         => __( 'You need to be connected with this member to continue this conversation.', 'buddyboss' ),
-			'new_group_message' => __( 'You need to be connected with all recipients in order to send them a message.', 'buddyboss' ),
-			'new_group_reply'   => __( 'You need to be connected with all recipients to continue this conversation.', 'buddyboss' ),
+			'new_message'       => __( 'You need to be connected with this member in order to send a message.', 'buddyboss-platform' ),
+			'new_reply'         => __( 'You need to be connected with this member to continue this conversation.', 'buddyboss-platform' ),
+			'new_group_message' => __( 'You need to be connected with all recipients in order to send them a message.', 'buddyboss-platform' ),
+			'new_group_reply'   => __( 'You need to be connected with all recipients to continue this conversation.', 'buddyboss-platform' ),
 		);
 
 		foreach ( (array) $message->recipients as $i => $recipient ) {
@@ -421,7 +418,7 @@ function messages_new_message( $args = '' ) {
 			if ( is_wp_error( $send ) ) {
 				return $send;
 			} else {
-				return new WP_Error( 'message_generic_error', __( 'There was a problem sending your message.', 'buddyboss' ) );
+				return new WP_Error( 'message_generic_error', __( 'There was a problem sending your message.', 'buddyboss-platform' ) );
 			}
 		}
 
@@ -1376,7 +1373,8 @@ function bp_messages_get_avatars( $thread_id, $user_id ) {
 							'object'     => 'group',
 							'type'       => 'full',
 							'avatar_dir' => 'group-avatars',
-							'alt'        => sprintf( __( 'Group logo of %s', 'buddyboss' ), $group_name ),
+							/* translators: %s: group name. */
+							'alt'        => sprintf( __( 'Group logo of %s', 'buddyboss-platform' ), $group_name ),
 							'title'      => $group_name,
 							'html'       => false,
 						)
@@ -1422,7 +1420,7 @@ function bp_messages_get_avatars( $thread_id, $user_id ) {
 
 				$group_avatar = array(
 					'url'  => ! empty( $group_avatar_url ) ? $group_avatar_url : $default_group_avatar_url,
-					'name' => ( empty( $group_name ) ) ? __( 'Deleted Group', 'buddyboss' ) : $group_name,
+					'name' => ( empty( $group_name ) ) ? __( 'Deleted Group', 'buddyboss-platform' ) : $group_name,
 					'id'   => $group_id,
 					'type' => 'group',
 					'link' => '',
@@ -1783,7 +1781,7 @@ function bb_messaged_set_friend_button_args( $args = array() ) {
 	}
 
 	if ( isset( $args['id'] ) && 'not_friends' === $args['id'] ) {
-		$args['link_text'] = __( 'Send Connection Request', 'buddyboss' );
+		$args['link_text'] = __( 'Send Connection Request', 'buddyboss-platform' );
 	} elseif ( isset( $args['id'] ) && 'pending' === $args['id'] ) {
 		$args['link_href'] = '';
 	}
@@ -1960,7 +1958,7 @@ function bb_render_digest_messages_template( $recipient_messages, $thread_id ) {
 			$group_name   = $wpdb->get_var( "SELECT `name` FROM `{$groups_table}` WHERE `id` = '{$group_id}';" ); // db call ok; no-cache ok.
 		}
 
-		$group_name = ( empty( $group_name ) ) ? __( 'Deleted Group', 'buddyboss' ) : $group_name;
+		$group_name = ( empty( $group_name ) ) ? __( 'Deleted Group', 'buddyboss-platform' ) : $group_name;
 
 		// Get notification type key.
 		$type_key = 'notification_group_messages_new_message';
@@ -2114,7 +2112,7 @@ function bb_notification_get_digest_cron_times() {
 		array(
 			'label'        => sprintf(
 			/* translators: %s: The admin setting field label. */
-				__( '%d mins', 'buddyboss' ),
+				__( '%d mins', 'buddyboss-platform' ),
 				5
 			),
 			'value'        => 5,
@@ -2123,7 +2121,7 @@ function bb_notification_get_digest_cron_times() {
 		array(
 			'label'        => sprintf(
 			/* translators: %s: The admin setting field label. */
-				__( '%d mins', 'buddyboss' ),
+				__( '%d mins', 'buddyboss-platform' ),
 				15
 			),
 			'value'        => 15,
@@ -2132,7 +2130,7 @@ function bb_notification_get_digest_cron_times() {
 		array(
 			'label'        => sprintf(
 			/* translators: %s: The admin setting field label. */
-				__( '%d mins', 'buddyboss' ),
+				__( '%d mins', 'buddyboss-platform' ),
 				30
 			),
 			'value'        => 30,
@@ -2141,7 +2139,7 @@ function bb_notification_get_digest_cron_times() {
 		array(
 			'label'        => sprintf(
 			/* translators: %s: The admin setting field label. */
-				__( '%d hour', 'buddyboss' ),
+				__( '%d hour', 'buddyboss-platform' ),
 				1
 			),
 			'value'        => 60,
@@ -2150,7 +2148,7 @@ function bb_notification_get_digest_cron_times() {
 		array(
 			'label'        => sprintf(
 			/* translators: %s: The admin setting field label. */
-				__( '%d hours', 'buddyboss' ),
+				__( '%d hours', 'buddyboss-platform' ),
 				3
 			),
 			'value'        => 180,
@@ -2159,7 +2157,7 @@ function bb_notification_get_digest_cron_times() {
 		array(
 			'label'        => sprintf(
 			/* translators: %s: The admin setting field label. */
-				__( '%d hours', 'buddyboss' ),
+				__( '%d hours', 'buddyboss-platform' ),
 				12
 			),
 			'value'        => 720,
@@ -2168,7 +2166,7 @@ function bb_notification_get_digest_cron_times() {
 		array(
 			'label'        => sprintf(
 			/* translators: %s: The admin setting field label. */
-				__( '%d hours', 'buddyboss' ),
+				__( '%d hours', 'buddyboss-platform' ),
 				24
 			),
 			'value'        => 1440,
@@ -2195,7 +2193,7 @@ function bb_get_message_response_object( $message ) {
 	$sender_id = $message->sender_id;
 	// If user was deleted, mark content as deleted.
 	if ( false === bp_core_get_core_userdata( $sender_id ) ) {
-		$content = esc_html__( 'This message was deleted', 'buddyboss' );
+		$content = esc_html__( 'This message was deleted', 'buddyboss-platform' );
 	}
 	$content    = preg_replace( '#(<p></p>)#', '<p><br></p>', apply_filters( 'bp_get_the_thread_message_content', $content, $message->id ) );
 	$excerpt    = apply_filters( 'bb_get_the_thread_message_excerpt', preg_replace( '#(<br\s*?\/?>|</(\w+)><(\w+)>)#', ' ', $content ) );
@@ -2206,7 +2204,7 @@ function bb_get_message_response_object( $message ) {
 	$sender_display_name = bp_core_get_user_displayname( $sender_id );
 
 	if ( empty( $sender_display_name ) ) {
-		$sender_display_name = __( 'Deleted User', 'buddyboss' );
+		$sender_display_name = __( 'Deleted User', 'buddyboss-platform' );
 	}
 	$sender_display_name = apply_filters( 'bp_get_the_thread_message_sender_name', $sender_display_name );
 
@@ -2225,9 +2223,9 @@ function bb_get_message_response_object( $message ) {
 				$has_media = true;
 				$media_ids = explode( ',', $media_ids );
 				if ( count( $media_ids ) < 2 ) {
-					$excerpt = __( 'Sent a photo', 'buddyboss' );
+					$excerpt = __( 'Sent a photo', 'buddyboss-platform' );
 				} else {
-					$excerpt = __( 'Sent some photos', 'buddyboss' );
+					$excerpt = __( 'Sent some photos', 'buddyboss-platform' );
 				}
 			}
 		}
@@ -2239,9 +2237,9 @@ function bb_get_message_response_object( $message ) {
 				$has_media = true;
 				$video_ids = explode( ',', $video_ids );
 				if ( count( $video_ids ) < 2 ) {
-					$excerpt = __( 'Sent a video', 'buddyboss' );
+					$excerpt = __( 'Sent a video', 'buddyboss-platform' );
 				} else {
-					$excerpt = __( 'Sent some videos', 'buddyboss' );
+					$excerpt = __( 'Sent some videos', 'buddyboss-platform' );
 				}
 			}
 		}
@@ -2253,9 +2251,9 @@ function bb_get_message_response_object( $message ) {
 				$has_media    = true;
 				$document_ids = explode( ',', $document_ids );
 				if ( count( $document_ids ) < 2 ) {
-					$excerpt = __( 'Sent a document', 'buddyboss' );
+					$excerpt = __( 'Sent a document', 'buddyboss-platform' );
 				} else {
-					$excerpt = __( 'Sent some documents', 'buddyboss' );
+					$excerpt = __( 'Sent some documents', 'buddyboss-platform' );
 				}
 			}
 		}
@@ -2265,7 +2263,7 @@ function bb_get_message_response_object( $message ) {
 
 			if ( ! empty( $gif_data ) ) {
 				$has_media = true;
-				$excerpt   = __( 'Sent a gif', 'buddyboss' );
+				$excerpt   = __( 'Sent a gif', 'buddyboss-platform' );
 			}
 		}
 	}
@@ -2423,7 +2421,7 @@ function bb_get_message_response_object( $message ) {
 		}
 	}
 
-	if ( bp_is_active( 'media' ) && $has_message_document_access ) {
+	if ( bp_is_active( 'document' ) && $has_message_document_access ) {
 		$document_ids = bp_messages_get_meta( $message_id, 'bp_document_ids', true );
 
 		if ( ! empty( $document_ids ) && bp_has_document(
@@ -2477,7 +2475,7 @@ function bb_get_message_response_object( $message ) {
 					<div class="document-audio-wrap">
 						<audio controls controlsList="nodownload">
 							<source src="<?php echo esc_url( $audio_url ); ?>" type="audio/mpeg">
-							<?php esc_html_e( 'Your browser does not support the audio element.', 'buddyboss' ); ?>
+							<?php esc_html_e( 'Your browser does not support the audio element.', 'buddyboss-platform' ); ?>
 						</audio>
 					</div>
 					<?php
@@ -2506,7 +2504,7 @@ function bb_get_message_response_object( $message ) {
 							</div>
 							<div class="document-expand">
 								<a href="#" class="document-expand-anchor">
-									<i class="bb-icon-l bb-icon-expand document-icon-plus"></i> <?php esc_html_e( 'Expand', 'buddyboss' ); ?>
+									<i class="bb-icon-l bb-icon-expand document-icon-plus"></i> <?php esc_html_e( 'Expand', 'buddyboss-platform' ); ?>
 								</a>
 							</div>
 						</div> <!-- .document-text-wrap -->
@@ -2518,7 +2516,7 @@ function bb_get_message_response_object( $message ) {
 								'<div class="more_text_view">%s</div>',
 								sprintf(
 								/* translators: %s: download url */
-									wp_kses_post( 'This file was truncated for preview. Please <a href="%s">download</a> to view the full file.', 'buddyboss' ),
+									wp_kses_post( __( 'This file was truncated for preview. Please <a href="%s">download</a> to view the full file.', 'buddyboss-platform' ) ),
 									esc_url( $download_url )
 								)
 							);
@@ -2539,13 +2537,13 @@ function bb_get_message_response_object( $message ) {
 					'filename'              => $filename,
 					'size'                  => $size,
 					'meta'                  => $document_template->document->attachment_data->meta,
-					'download_text'         => __( 'Click to view', 'buddyboss' ),
+					'download_text'         => __( 'Click to view', 'buddyboss-platform' ),
 					'extension_description' => $extension_description,
-					'download'              => __( 'Download', 'buddyboss' ),
-					'collapse'              => __( 'Collapse', 'buddyboss' ),
-					'expand'                => __( 'Expand', 'buddyboss' ),
-					'copy_download_link'    => __( 'Copy Download Link', 'buddyboss' ),
-					'more_action'           => __( 'More actions', 'buddyboss' ),
+					'download'              => __( 'Download', 'buddyboss-platform' ),
+					'collapse'              => __( 'Collapse', 'buddyboss-platform' ),
+					'expand'                => __( 'Expand', 'buddyboss-platform' ),
+					'copy_download_link'    => __( 'Copy Download Link', 'buddyboss-platform' ),
+					'more_action'           => __( 'More actions', 'buddyboss-platform' ),
 					'privacy'               => bp_get_db_document_privacy(),
 					'author'                => bp_get_document_user_id(),
 					'preview'               => $attachment_url,
@@ -2595,7 +2593,7 @@ function bb_get_message_response_object( $message ) {
 	return array(
 		'messages'                      => array( $reply ),
 		'thread_id'                     => $thread_id,
-		'feedback'                      => __( 'Your reply was sent successfully', 'buddyboss' ),
+		'feedback'                      => __( 'Your reply was sent successfully', 'buddyboss-platform' ),
 		'hash'                          => $hash,
 		'recipient_inbox_unread_counts' => $inbox_unread_cnt,
 		'type'                          => 'success',
@@ -2630,7 +2628,8 @@ function bb_messages_get_group_join_leave_text( $args ) {
 	if ( ! empty( $r['sender_id'] ) ) {
 		/* translators: 1. Member Name. */
 		$content = sprintf(
-			( 'left' === $r['type'] ? __( '%1$s left the group.', 'buddyboss' ) : __( '%1$s joined the group.', 'buddyboss' ) ),
+			// translators: %s: the member name.
+			( 'left' === $r['type'] ? __( '%1$s left the group.', 'buddyboss-platform' ) : __( '%1$s joined the group.', 'buddyboss-platform' ) ),
 			'<strong>' . bp_core_get_user_displayname( $r['sender_id'] ) . '</strong>'
 		);
 	}
@@ -2660,7 +2659,7 @@ function bb_messages_get_group_join_leave_text( $args ) {
 
 	if ( is_array( $users ) ) {
 		$users   = array_filter( array_column( $users, 'user_id' ) );
-		$content = __( 'Left group', 'buddyboss' );
+		$content = __( 'Left group', 'buddyboss-platform' );
 
 		/*
 		 * Member 1 : John joined/left the group
@@ -2670,7 +2669,8 @@ function bb_messages_get_group_join_leave_text( $args ) {
 			if ( ! empty( $user_id ) ) {
 				/* translators: 1. Member Name. */
 				$content = sprintf(
-					( 'left' === $r['type'] ? __( '%1$s left the group.', 'buddyboss' ) : __( '%1$s joined the group.', 'buddyboss' ) ),
+					// translators: %s: the member name.
+					( 'left' === $r['type'] ? __( '%1$s left the group.', 'buddyboss-platform' ) : __( '%1$s joined the group.', 'buddyboss-platform' ) ),
 					'<strong>' . bp_core_get_user_displayname( $user_id ) . '</strong>'
 				);
 			}
@@ -2685,20 +2685,23 @@ function bb_messages_get_group_join_leave_text( $args ) {
 			if ( ! empty( $first_user_id ) && ! empty( $last_user_id ) ) {
 				/* translators: 1. Member Name. 2. Member Name. */
 				$content = sprintf(
-					( 'left' === $r['type'] ? __( '%1$s and %2$s left the group.', 'buddyboss' ) : __( '%1$s and %2$s joined the group.', 'buddyboss' ) ),
+					// translators: 1: first member name, 2: second member name.
+					( 'left' === $r['type'] ? __( '%1$s and %2$s left the group.', 'buddyboss-platform' ) : __( '%1$s and %2$s joined the group.', 'buddyboss-platform' ) ),
 					'<strong>' . bp_core_get_user_displayname( $first_user_id ) . '</strong>',
 					'<strong>' . bp_core_get_user_displayname( $last_user_id ) . '</strong>'
 				);
 			} elseif ( ! empty( $first_user_id ) ) {
 				/* translators: 1. Member Name */
 				$content = sprintf(
-					( 'left' === $r['type'] ? __( '%1$s left the group.', 'buddyboss' ) : __( '%1$s joined the group.', 'buddyboss' ) ),
+					// translators: %s: the member name.
+					( 'left' === $r['type'] ? __( '%1$s left the group.', 'buddyboss-platform' ) : __( '%1$s joined the group.', 'buddyboss-platform' ) ),
 					'<strong>' . bp_core_get_user_displayname( $first_user_id ) . '</strong>',
 				);
 			} elseif ( ! empty( $last_user_id ) ) {
 				/* translators: 1. Member Name. */
 				$content = sprintf(
-					( 'left' === $r['type'] ? __( '%1$s left the group.', 'buddyboss' ) : __( '%1$s joined the group.', 'buddyboss' ) ),
+					// translators: %s: the member name.
+					( 'left' === $r['type'] ? __( '%1$s left the group.', 'buddyboss-platform' ) : __( '%1$s joined the group.', 'buddyboss-platform' ) ),
 					'<strong>' . bp_core_get_user_displayname( $last_user_id ) . '</strong>'
 				);
 			}
@@ -2732,7 +2735,8 @@ function bb_messages_get_group_join_leave_text( $args ) {
 				'<strong class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="%1$s">%2$s</strong>',
 				$member_names,
 				sprintf(
-					__( '%d others', 'buddyboss' ),
+					/* translators: %d: number of other members. */
+					__( '%d others', 'buddyboss-platform' ),
 					( $total_user_ids - 1 )
 				)
 			);
@@ -2751,7 +2755,8 @@ function bb_messages_get_group_join_leave_text( $args ) {
 
 			/* translators: 1. Member Name, 2. Other member list. */
 			$content = sprintf(
-				( 'left' === $r['type'] ? __( '%1$s left the group, along with %2$s', 'buddyboss' ) : __( '%1$s joined the group, along with %2$s', 'buddyboss' ) ),
+				// translators: 1: member name, 2: comma-separated list of the other members who joined/left.
+				( 'left' === $r['type'] ? __( '%1$s left the group, along with %2$s', 'buddyboss-platform' ) : __( '%1$s joined the group, along with %2$s', 'buddyboss-platform' ) ),
 				'<strong>' . bp_core_get_user_displayname( $first_user_id ) . '</strong>',
 				$to_others
 			);

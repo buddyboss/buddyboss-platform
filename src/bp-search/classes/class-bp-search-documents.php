@@ -129,10 +129,10 @@ if ( ! class_exists( 'Bp_Search_Documents' ) ) :
 					)
 					AND
 					(
-							( d.privacy IN ( '" . implode( "','", $privacy ) . "' ) ) " .
-				( isset( $user_groups ) && ! empty( $user_groups ) ? " OR ( d.group_id IN ( '" . implode( "','", $user_groups ) . "' ) AND d.privacy = 'grouponly' )" : '' ) .
-				( bp_is_active( 'friends' ) && ! empty( $friends ) ? " OR ( d.user_id IN ( '" . implode( "','", $friends ) . "' ) AND d.privacy = 'friends' )" : '' ) .
-				( is_user_logged_in() ? " OR ( d.user_id = '" . bp_loggedin_user_id() . "' AND d.privacy = 'onlyme' )" : '' ) .
+							( d.privacy IN ( '" . implode( "','", array_map( 'esc_sql', $privacy ) ) . "' ) ) " . // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.PreparedSQLPlaceholders.QuotedDynamicPlaceholderGeneration -- $privacy is a hardcoded whitelist (public/loggedin) run through esc_sql().
+				( isset( $user_groups ) && ! empty( $user_groups ) ? " OR ( d.group_id IN ( '" . implode( "','", array_map( 'absint', $user_groups ) ) . "' ) AND d.privacy = 'grouponly' )" : '' ) . // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.PreparedSQLPlaceholders.QuotedDynamicPlaceholderGeneration -- $user_groups are internally-derived group IDs cast via absint().
+				( bp_is_active( 'friends' ) && ! empty( $friends ) ? " OR ( d.user_id IN ( '" . implode( "','", array_map( 'absint', $friends ) ) . "' ) AND d.privacy = 'friends' )" : '' ) . // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.PreparedSQLPlaceholders.QuotedDynamicPlaceholderGeneration -- $friends are internally-derived user IDs cast via absint().
+				( is_user_logged_in() ? " OR ( d.user_id = '" . bp_loggedin_user_id() . "' AND d.privacy = 'onlyme' )" : '' ) . // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- bp_loggedin_user_id() returns an internal integer ID.
 				')
 				)',
 				'%' . $wpdb->esc_like( $search_term ) . '%',

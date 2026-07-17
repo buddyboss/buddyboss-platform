@@ -8,18 +8,21 @@
  * @version 1.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 bp_nouveau_wp_profile_hooks( 'before' ); ?>
 
 <div class="bp-widget wp-profile">
 	<h2 class="screen-heading wp-profile-screen">
 		<?php
 		if ( bp_is_my_profile() ) {
-			esc_html_e( 'My Profile', 'buddyboss' );
+			esc_html_e( 'My Profile', 'buddyboss-platform' );
 		} else {
 			printf(
 				/* Translators: a member's profile, e.g. "Paul's profile". */
-				__( "%s's Profile", 'buddyboss' ),
-				bp_get_displayed_user_fullname()
+				esc_html__( "%s's Profile", 'buddyboss-platform' ),
+				esc_html( bp_get_displayed_user_fullname() )
 			);
 		}
 		?>

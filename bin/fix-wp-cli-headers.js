@@ -1,7 +1,7 @@
 const fs = require('fs');
 const { execSync } = require('child_process');
 
-const potFilePath = 'src/languages/buddyboss.pot';
+const potFilePath = 'src/languages/buddyboss-platform.pot';
 
 try {
     // Read the current POT file
@@ -49,7 +49,7 @@ msgstr ""
 "X-Poedit-Bookmarks: \\n"
 "X-Textdomain-Support: yes\\n"
 "X-Generator: ${wpCliVersion}\\n"
-"X-Domain: buddyboss\\n"
+"X-Domain: buddyboss-platform\\n"
 
 `;
 

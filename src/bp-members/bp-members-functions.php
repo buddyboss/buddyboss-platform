@@ -571,7 +571,7 @@ function bp_core_get_user_displayname( $user_id_or_username, $current_user_id = 
 
 	$user_data = get_userdata( $user_id );
 	if ( empty( $full_name ) && empty( $user_data ) ) {
-		$full_name = __( 'Deleted User', 'buddyboss' );
+		$full_name = __( 'Deleted User', 'buddyboss-platform' );
 	}
 
 	/**
@@ -657,6 +657,7 @@ function bp_core_get_total_member_count() {
 
 	if ( false === $count ) {
 		$status_sql = bp_core_get_status_sql();
+		// phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter -- $status_sql is internal bp_core_get_status_sql() output; table from $wpdb->users; no user input.
 		$count      = $wpdb->get_var( "SELECT COUNT(ID) FROM {$wpdb->users} WHERE {$status_sql}" );
 		wp_cache_set( 'bp_total_member_count', $count, 'bp' );
 	}
@@ -752,8 +753,10 @@ function bp_core_get_active_member_count() {
 			$sql = "SELECT ID FROM {$wpdb->users} WHERE user_status != 0";
 		}
 
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- $sql is a hardcoded constant string (no interpolated user input); table from $wpdb->users.
 		$exclude_users     = $wpdb->get_col( $sql );
 		$exclude_users_sql = ! empty( $exclude_users ) ? 'AND user_id NOT IN (' . implode( ',', wp_parse_id_list( $exclude_users ) ) . ')' : '';
+		// phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter -- $exclude_users_sql is implode of wp_parse_id_list() integers; table internal; component %s-prepared.
 		$count             = (int) $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(user_id) FROM {$bp->members->table_name_last_activity} WHERE component = %s AND type = 'last_activity' {$exclude_users_sql}", $bp->members->id ) );
 
 		set_transient( 'bp_active_member_count', $count );
@@ -832,7 +835,7 @@ function bp_core_process_spammer_status( $user_id, $status, $do_wp_cleanup = tru
 
 		// Finally, mark this user as a spammer.
 		if ( is_multisite() ) {
-			update_user_status( $user_id, 'spam', $is_spam );
+			update_user_status( $user_id, 'spam', $is_spam ); // phpcs:ignore WordPress.WP.DeprecatedFunctions.update_user_statusFound -- No non-deprecated API updates the multisite users.spam column; wp_update_user() does not handle the spam flag.
 		}
 	}
 
@@ -1193,7 +1196,7 @@ function _bp_get_user_meta_last_activity_warning( $retval, $object_id, $meta_key
 	if ( 'last_activity' === $meta_key ) {
 		// Don't send the warning more than once per pageload.
 		if ( false === $warned ) {
-			_doing_it_wrong( 'get_user_meta( $user_id, \'last_activity\' )', __( 'User last_activity data is no longer stored in usermeta. Use bp_get_user_last_activity() instead.', 'buddyboss' ), '2.0.0' );
+			_doing_it_wrong( 'get_user_meta( $user_id, \'last_activity\' )', esc_html__( 'User last_activity data is no longer stored in usermeta. Use bp_get_user_last_activity() instead.', 'buddyboss-platform' ), '2.0.0' );
 			$warned = true;
 		}
 
@@ -1228,7 +1231,7 @@ add_filter( 'get_user_metadata', '_bp_get_user_meta_last_activity_warning', 10, 
  */
 function _bp_update_user_meta_last_activity_warning( $meta_id, $object_id, $meta_key, $meta_value ) {
 	if ( 'last_activity' === $meta_key ) {
-		_doing_it_wrong( 'update_user_meta( $user_id, \'last_activity\' )', __( 'User last_activity data is no longer stored in usermeta. Use bp_update_user_last_activity() instead.', 'buddyboss' ), '2.0.0' );
+		_doing_it_wrong( 'update_user_meta( $user_id, \'last_activity\' )', esc_html__( 'User last_activity data is no longer stored in usermeta. Use bp_update_user_last_activity() instead.', 'buddyboss-platform' ), '2.0.0' );
 		bp_update_user_last_activity( $object_id, $meta_value );
 	}
 }
@@ -1468,7 +1471,7 @@ function bp_core_boot_spammer( $user ) {
 	// The user exists; now do a check to see if the user is a spammer
 	// if the user is a spammer, stop them in their tracks!
 	if ( is_a( $user, 'WP_User' ) && ( ( is_multisite() && (int) $user->spam ) || 1 == $user->user_status ) ) {
-		return new WP_Error( 'invalid_username', __( '<strong>ERROR</strong>: Your account has been marked as a spammer.', 'buddyboss' ) );
+		return new WP_Error( 'invalid_username', __( '<strong>ERROR</strong>: Your account has been marked as a spammer.', 'buddyboss-platform' ) );
 	}
 
 	// User is good to go!
@@ -1708,23 +1711,23 @@ function bp_core_validate_email_address( $user_email ) {
  */
 function bp_core_add_validation_error_messages( WP_Error $errors, $validation_results ) {
 	if ( ! empty( $validation_results['invalid'] ) ) {
-		$errors->add( 'user_email', __( 'Please enter a valid email address.', 'buddyboss' ) );
+		$errors->add( 'user_email', __( 'Please enter a valid email address.', 'buddyboss-platform' ) );
 	}
 
 	if ( ! empty( $validation_results['domain_banned'] ) ) {
-		$errors->add( 'user_email', __( 'Sorry, that email address is not allowed!', 'buddyboss' ) );
+		$errors->add( 'user_email', __( 'Sorry, that email address is not allowed!', 'buddyboss-platform' ) );
 	}
 
 	if ( ! empty( $validation_results['domain_not_allowed'] ) ) {
-		$errors->add( 'user_email', __( 'Sorry, that email address is not allowed!', 'buddyboss' ) );
+		$errors->add( 'user_email', __( 'Sorry, that email address is not allowed!', 'buddyboss-platform' ) );
 	}
 
 	if ( ! empty( $validation_results['in_use'] ) ) {
-		$errors->add( 'user_email', __( 'Sorry, that email address is already used!', 'buddyboss' ) );
+		$errors->add( 'user_email', __( 'Sorry, that email address is already used!', 'buddyboss-platform' ) );
 	}
 
 	if ( ! empty( $validation_results['bb_restricted_email'] ) ) {
-		$errors->add( 'user_email', __( 'This email address or domain has been blacklisted. If you think you are seeing this in error, please contact the site administrator.', 'buddyboss' ) );
+		$errors->add( 'user_email', __( 'This email address or domain has been blacklisted. If you think you are seeing this in error, please contact the site administrator.', 'buddyboss-platform' ) );
 	}
 }
 
@@ -1764,24 +1767,25 @@ function bp_core_validate_user_signup( $user_name, $user_email ) {
 
 		// User name can't be empty.
 		if ( empty( $user_name ) ) {
-			$errors->add( 'user_name', __( 'Please enter a username', 'buddyboss' ) );
+			$errors->add( 'user_name', __( 'Please enter a username', 'buddyboss-platform' ) );
 		}
 
 		// User name can't be on the blacklist.
 		$illegal_names = get_site_option( 'illegal_names' );
 		if ( in_array( $user_name, (array) $illegal_names ) ) {
-			$errors->add( 'user_name', __( 'That username is not allowed', 'buddyboss' ) );
+			$errors->add( 'user_name', __( 'That username is not allowed', 'buddyboss-platform' ) );
 		}
 
 		// User name must pass WP's validity check.
 		if ( ! validate_username( $user_name ) ) {
 			$field_name = xprofile_get_field( bp_xprofile_nickname_field_id() )->name;
-			$errors->add( 'user_name', sprintf( __( 'Invalid %s. Only "a-z", "0-9", "-", "_" and "." are allowed.', 'buddyboss' ), $field_name ) );
+			/* translators: %s: profile field name (e.g. nickname). */
+			$errors->add( 'user_name', sprintf( __( 'Invalid %s. Only "a-z", "0-9", "-", "_" and "." are allowed.', 'buddyboss-platform' ), $field_name ) );
 		}
 
 		// Minimum of 4 characters.
 		if ( strlen( $user_name ) < 3 ) {
-			$errors->add( 'user_name', __( 'Username must be at least 3 characters', 'buddyboss' ) );
+			$errors->add( 'user_name', __( 'Username must be at least 3 characters', 'buddyboss-platform' ) );
 		}
 
 		// Check into signups.
@@ -1795,7 +1799,7 @@ function bp_core_validate_user_signup( $user_name, $user_email ) {
 
 		// Check if the username has been used already.
 		if ( username_exists( $user_name ) || ! empty( $signup ) ) {
-			$errors->add( 'user_name', __( 'Sorry, that username already exists!', 'buddyboss' ) );
+			$errors->add( 'user_name', __( 'Sorry, that username already exists!', 'buddyboss-platform' ) );
 		}
 
 		// Validate the email address and process the validation results into
@@ -2024,16 +2028,16 @@ function bp_core_activate_signup( $key ) {
 		);
 
 		if ( empty( $signups['signups'] ) ) {
-			return new WP_Error( 'invalid_key', __( 'Invalid activation key.', 'buddyboss' ) );
+			return new WP_Error( 'invalid_key', __( 'Invalid activation key.', 'buddyboss-platform' ) );
 		}
 
 		$signup = $signups['signups'][0];
 
 		if ( $signup->active ) {
 			if ( empty( $signup->domain ) ) {
-				return new WP_Error( 'already_active', __( 'The user is already active.', 'buddyboss' ), $signup );
+				return new WP_Error( 'already_active', __( 'The user is already active.', 'buddyboss-platform' ), $signup );
 			} else {
-				return new WP_Error( 'already_active', __( 'The site is already active.', 'buddyboss' ), $signup );
+				return new WP_Error( 'already_active', __( 'The site is already active.', 'buddyboss-platform' ), $signup );
 			}
 		}
 
@@ -2051,7 +2055,7 @@ function bp_core_activate_signup( $key ) {
 
 			// Change the user's status so they become active.
 			if ( ! $wpdb->query( $wpdb->prepare( "UPDATE {$wpdb->users} SET user_status = 0 WHERE ID = %d", $user_id ) ) ) {
-				return new WP_Error( 'invalid_key', __( 'Invalid activation key.', 'buddyboss' ) );
+				return new WP_Error( 'invalid_key', __( 'Invalid activation key.', 'buddyboss-platform' ) );
 			}
 
 			bp_delete_user_meta( $user_id, 'activation_key' );
@@ -2063,7 +2067,7 @@ function bp_core_activate_signup( $key ) {
 		}
 
 		if ( ! $user_id ) {
-			return new WP_Error( 'create_user', __( 'Could not create user', 'buddyboss' ), $signup );
+			return new WP_Error( 'create_user', __( 'Could not create user', 'buddyboss-platform' ), $signup );
 		}
 
 		// Fetch the signup so we have the data later on.
@@ -2079,7 +2083,7 @@ function bp_core_activate_signup( $key ) {
 		BP_Signup::validate( $key );
 
 		if ( isset( $user_already_exists ) ) {
-			return new WP_Error( 'user_already_exists', __( 'That username is already activated.', 'buddyboss' ), $signup );
+			return new WP_Error( 'user_already_exists', __( 'That username is already activated.', 'buddyboss-platform' ), $signup );
 		}
 
 		// Set up data to pass to the legacy filter.
@@ -2229,7 +2233,8 @@ function bp_members_migrate_signups() {
 
 		// Fetch activation keys separately, to avoid the all_with_meta
 		// overhead.
-		$status_2_ids_sql = implode( ',', $status_2_ids );
+		$status_2_ids_sql = implode( ',', array_map( 'absint', $status_2_ids ) );
+		// phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter -- $status_2_ids_sql is implode of absint()-mapped IDs; table from $wpdb->usermeta; no user input.
 		$ak_data          = $wpdb->get_results( "SELECT user_id, meta_value FROM {$wpdb->usermeta} WHERE meta_key = 'activation_key' AND user_id IN ({$status_2_ids_sql})" );
 
 		// Rekey.
@@ -2466,9 +2471,10 @@ function bp_core_signup_disable_inactive( $user = null, $username = '', $passwor
 		'bp-resend-activation'
 	);
 
-	$resend_string = '<br /><br />' . sprintf( __( 'If you have not received an email yet, <a href="%s">click here to resend it</a>.', 'buddyboss' ), esc_url( $resend_url ) );
+	/* translators: %s: resend activation email URL. */
+	$resend_string = '<br /><br />' . sprintf( __( 'If you have not received an email yet, <a href="%s">click here to resend it</a>.', 'buddyboss-platform' ), esc_url( $resend_url ) );
 
-	return new WP_Error( 'bp_account_not_activated', __( '<strong>ERROR</strong>: Your account has not been activated. Check your email for the activation link.', 'buddyboss' ) . $resend_string );
+	return new WP_Error( 'bp_account_not_activated', __( '<strong>ERROR</strong>: Your account has not been activated. Check your email for the activation link.', 'buddyboss-platform' ) . $resend_string );
 }
 add_filter( 'authenticate', 'bp_core_signup_disable_inactive', 30, 3 );
 
@@ -2499,9 +2505,9 @@ function bp_members_login_resend_activation_email() {
 
 	// Add feedback message.
 	if ( ! empty( $resend['errors'] ) ) {
-		$error = __( '<strong>ERROR</strong>: Your account has already been activated.', 'buddyboss' );
+		$error = __( '<strong>ERROR</strong>: Your account has already been activated.', 'buddyboss-platform' );
 	} else {
-		$error = __( 'Activation email resent! Please check your inbox or spam folder.', 'buddyboss' );
+		$error = __( 'Activation email resent! Please check your inbox or spam folder.', 'buddyboss-platform' );
 	}
 }
 add_action( 'login_form_bp-resend-activation', 'bp_members_login_resend_activation_email' );
@@ -2621,7 +2627,7 @@ add_action( 'bp_init', 'bp_stop_live_spammer', 5 );
 function bp_live_spammer_login_error() {
 	global $error;
 
-	$error = __( '<strong>ERROR</strong>: Your account has been marked as a spammer.', 'buddyboss' );
+	$error = __( '<strong>ERROR</strong>: Your account has been marked as a spammer.', 'buddyboss-platform' );
 
 	// Shake shake shake!
 	add_action( 'login_head', 'wp_shake_js', 12 );
@@ -2661,7 +2667,7 @@ function bp_get_displayed_user() {
  * @since BuddyPress 2.7.0
  */
 function bp_member_type_tax_name() {
-	echo bp_get_member_type_tax_name();
+	echo esc_html( bp_get_member_type_tax_name() );
 }
 
 	/**
@@ -2708,7 +2714,7 @@ function bp_register_member_type( $member_type, $args = array() ) {
 	$bp = buddypress();
 
 	if ( isset( $bp->members->types[ $member_type ] ) ) {
-		return new WP_Error( 'bp_member_type_exists', __( 'Profile type already exists.', 'buddyboss' ), $member_type );
+		return new WP_Error( 'bp_member_type_exists', __( 'Profile type already exists.', 'buddyboss-platform' ), $member_type );
 	}
 
 	$r = bp_parse_args(
@@ -2735,7 +2741,7 @@ function bp_register_member_type( $member_type, $args = array() ) {
 	 */
 	$illegal_names = apply_filters( 'bp_member_type_illegal_names', array( 'any', 'null', '_none' ) );
 	if ( in_array( $member_type, $illegal_names, true ) ) {
-		return new WP_Error( 'bp_member_type_illegal_name', __( 'You may not register a profile type with this name.', 'buddyboss' ), $member_type );
+		return new WP_Error( 'bp_member_type_illegal_name', __( 'You may not register a profile type with this name.', 'buddyboss-platform' ), $member_type );
 	}
 
 	// Store the post type name as data in the object (not just as the array key).
@@ -3055,7 +3061,7 @@ function bp_register_member_type_section() {
 		apply_filters(
 			'bp_register_member_type_post_type',
 			array(
-				'description'        => __( 'BuddyBoss profile type', 'buddyboss' ),
+				'description'        => __( 'BuddyBoss profile type', 'buddyboss-platform' ),
 				'labels'             => bp_get_member_type_post_type_labels(),
 				'public'             => false,
 				'publicly_queryable' => false,
@@ -3099,7 +3105,7 @@ add_action( 'bp_register_member_types', 'bp_register_active_member_types' );
  * @return string   custom post type of profile type.
  */
 function bp_member_type_post_type() {
-	echo bp_get_member_type_post_type();
+	echo esc_attr( bp_get_member_type_post_type() );
 }
 
 /**
@@ -3140,18 +3146,18 @@ function bp_get_member_type_post_type_labels() {
 	return apply_filters(
 		'bp_get_member_type_post_type_labels',
 		array(
-			'add_new'            => __( 'Add New', 'buddyboss' ),
-			'add_new_item'       => __( 'New Profile Type', 'buddyboss' ),
-			'all_items'          => __( 'Profile Types', 'buddyboss' ),
-			'edit_item'          => __( 'Edit Profile Type', 'buddyboss' ),
-			'menu_name'          => __( 'Users', 'buddyboss' ),
-			'name'               => __( 'Profile Types', 'buddyboss' ),
-			'new_item'           => __( 'New Profile Type', 'buddyboss' ),
-			'not_found'          => __( 'No Profile Types found', 'buddyboss' ),
-			'not_found_in_trash' => __( 'No Profile Types found in trash', 'buddyboss' ),
-			'search_items'       => __( 'Search Profile Types', 'buddyboss' ),
-			'singular_name'      => __( 'Profile Type', 'buddyboss' ),
-			'attributes'         => __( 'Dropdown Order', 'buddyboss' ),
+			'add_new'            => __( 'Add New', 'buddyboss-platform' ),
+			'add_new_item'       => __( 'New Profile Type', 'buddyboss-platform' ),
+			'all_items'          => __( 'Profile Types', 'buddyboss-platform' ),
+			'edit_item'          => __( 'Edit Profile Type', 'buddyboss-platform' ),
+			'menu_name'          => __( 'Users', 'buddyboss-platform' ),
+			'name'               => __( 'Profile Types', 'buddyboss-platform' ),
+			'new_item'           => __( 'New Profile Type', 'buddyboss-platform' ),
+			'not_found'          => __( 'No Profile Types found', 'buddyboss-platform' ),
+			'not_found_in_trash' => __( 'No Profile Types found in trash', 'buddyboss-platform' ),
+			'search_items'       => __( 'Search Profile Types', 'buddyboss-platform' ),
+			'singular_name'      => __( 'Profile Type', 'buddyboss-platform' ),
+			'attributes'         => __( 'Dropdown Order', 'buddyboss-platform' ),
 		)
 	);
 }
@@ -3204,7 +3210,7 @@ function bp_get_member_type_key( $post_id ) {
 		$term = term_exists( sanitize_key( $key ), bp_get_member_type_tax_name() );
 		if ( 0 !== $term && null !== $term ) {
 			$digits = 3;
-			$unique = rand( pow( 10, $digits - 1 ), pow( 10, $digits ) - 1 );
+			$unique = wp_rand( pow( 10, $digits - 1 ), pow( 10, $digits ) - 1 );
 			$key    = $key . $unique;
 		}
 		update_post_meta( $post_id, '_bp_member_type_key', sanitize_key( $key ) );
@@ -3394,15 +3400,19 @@ function bp_member_type_post_by_type( $member_type ) {
 		return $member_type_post[ $cache_key ];
 	}
 
-	$query   = "SELECT post_id FROM {$wpdb->postmeta} WHERE meta_key = '%s' AND LOWER(meta_value) = '%s'";
+	$query   = "SELECT post_id FROM {$wpdb->postmeta} WHERE meta_key = %s AND LOWER(meta_value) = %s";
+	// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $query is a literal SQL string with %s placeholders; values bound here via prepare().
 	$query   = $wpdb->prepare( $query, '_bp_member_type_key', $member_type );
+	// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- $query is the $wpdb->prepare() result from the line above.
 	$post_id = $wpdb->get_var( $query );
 
 	// Fallback to legacy way to retrieve profile type from name by using singular label.
 	if ( ! $post_id ) {
 		$name    = str_replace( array( '-', '-' ), array( ' ', ',' ), $member_type );
-		$query   = "SELECT post_id FROM {$wpdb->postmeta} WHERE meta_key = '%s' AND LOWER(meta_value) = '%s'";
+		$query   = "SELECT post_id FROM {$wpdb->postmeta} WHERE meta_key = %s AND LOWER(meta_value) = %s";
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $query is a literal SQL string with %s placeholders; values bound here via prepare().
 		$query   = $wpdb->prepare( $query, '_bp_member_type_label_singular_name', $name );
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- $query is the $wpdb->prepare() result from the line above.
 		$post_id = $wpdb->get_var( $query );
 	}
 
@@ -3433,7 +3443,7 @@ function bp_member_type_by_type( $type_id ) {
 	$cache_key  = 'bp_member_type_by_type_' . $type_id;
 	$member_ids = wp_cache_get( $cache_key, 'bp_member_member_type' );
 	if ( false === $member_ids ) {
-		$member_ids = $wpdb->get_col( "SELECT u.ID FROM {$wpdb->users} u INNER JOIN {$wpdb->term_relationships} r ON u.ID = r.object_id WHERE u.user_status = 0 AND r.term_taxonomy_id = " . $type_id );
+		$member_ids = $wpdb->get_col( $wpdb->prepare( "SELECT u.ID FROM {$wpdb->users} u INNER JOIN {$wpdb->term_relationships} r ON u.ID = r.object_id WHERE u.user_status = 0 AND r.term_taxonomy_id = %d", $type_id ) );
 		wp_cache_set( $cache_key, $member_ids, 'bp_member_member_type' );
 	}
 
@@ -3640,8 +3650,8 @@ function bp_member_type_directory() {
 			$type_id = 0;
 		}
 		?>
-		<li id="members-<?php echo $type_id; ?>">
-			<a href="<?php echo bp_member_type_directory_permalink( $type_name ); ?>"><?php printf( '%s <span>%s</span>', $member_type_name, $members_count ); // @todo no variables in the text domain please ?></a>
+		<li id="members-<?php echo esc_attr( $type_id ); ?>">
+			<a href="<?php echo esc_url( bp_member_type_directory_permalink( $type_name ) ); ?>"><?php printf( '%s <span>%s</span>', esc_html( $member_type_name ), esc_html( $members_count ) ); // @todo no variables in the text domain please ?></a>
 		</li>
 		<?php
 	}
@@ -3753,7 +3763,7 @@ function bp_get_user_member_type( $user_id ) {
 		$user_id = bp_displayed_user_id();
 	}
 
-	$member_type = __( 'Member', 'buddyboss' );
+	$member_type = __( 'Member', 'buddyboss-platform' );
 
 	if (
 		true === bp_member_type_enable_disable() &&
@@ -3791,7 +3801,7 @@ function bp_get_user_gender_pronoun_type( $user_id = '' ) {
 	static $static_cache = '';
 
 	if ( '' === $user_id ) {
-		$gender_pronoun = esc_html__( 'their', 'buddyboss' );
+		$gender_pronoun = esc_html__( 'their', 'buddyboss-platform' );
 	} else {
 		if ( empty( $static_cache ) ) {
 			$table         = bp_core_get_table_prefix() . 'bp_xprofile_fields';
@@ -3805,19 +3815,19 @@ function bp_get_user_gender_pronoun_type( $user_id = '' ) {
 			$field_id = $exists_gender[0]->id;
 			$gender   = xprofile_get_field_data( $field_id, $user_id );
 			if ( empty( $gender ) ) {
-				$gender_pronoun = esc_html__( 'their', 'buddyboss' );
+				$gender_pronoun = esc_html__( 'their', 'buddyboss-platform' );
 			} else {
 				$split_value = explode( '_', $gender );
 				if ( 'his' === $split_value[0] ) {
-					$gender_pronoun = esc_html__( 'his', 'buddyboss' );
+					$gender_pronoun = esc_html__( 'his', 'buddyboss-platform' );
 				} elseif ( 'her' === $split_value[0] ) {
-					$gender_pronoun = esc_html__( 'her', 'buddyboss' );
+					$gender_pronoun = esc_html__( 'her', 'buddyboss-platform' );
 				} else {
-					$gender_pronoun = esc_html__( 'their', 'buddyboss' );
+					$gender_pronoun = esc_html__( 'their', 'buddyboss-platform' );
 				}
 			}
 		} else {
-			$gender_pronoun = esc_html__( 'their', 'buddyboss' );
+			$gender_pronoun = esc_html__( 'their', 'buddyboss-platform' );
 		}
 	}
 	return $gender_pronoun;
@@ -4538,7 +4548,7 @@ function bp_members_directory_page_content() {
 
 	if ( ! empty( $page_ids['members'] ) ) {
 		$members_page_content = get_post_field( 'post_content', $page_ids['members'] );
-		echo apply_filters( 'the_content', $members_page_content );
+		echo apply_filters( 'the_content', $members_page_content ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Output of the 'the_content' filter (WP post content pipeline); escaping would corrupt valid markup/embeds.
 	}
 }
 add_action( 'bp_before_directory_members_page', 'bp_members_directory_page_content' );
@@ -4554,7 +4564,7 @@ function bp_activate_page_content() {
 
 	if ( ! empty( $page_ids['activate'] ) ) {
 		$activate_page_content = get_post_field( 'post_content', $page_ids['activate'] );
-		echo apply_filters( 'the_content', $activate_page_content );
+		echo apply_filters( 'the_content', $activate_page_content ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Output of the 'the_content' filter (WP post content pipeline); escaping would corrupt valid markup/embeds.
 	}
 }
 add_action( 'bp_before_activation_page', 'bp_activate_page_content' );
@@ -4570,7 +4580,7 @@ function bp_register_page_content() {
 
 	if ( ! empty( $page_ids['register'] ) ) {
 		$register_page_content = get_post_field( 'post_content', $page_ids['register'] );
-		echo apply_filters( 'the_content', $register_page_content );
+		echo apply_filters( 'the_content', $register_page_content ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Output of the 'the_content' filter (WP post content pipeline); escaping would corrupt valid markup/embeds.
 	}
 }
 add_action( 'bp_before_register_page', 'bp_register_page_content' );
@@ -5087,7 +5097,7 @@ function bb_profile_drop_down_order_metabox_translate_order_text( $translated_te
 	}
 
 	if ( 'Order' === $untranslated_text ) {
-		return __( 'Number', 'buddyboss' );
+		return __( 'Number', 'buddyboss-platform' );
 	}
 
 	return $translated_text;
@@ -5311,12 +5321,12 @@ function bb_set_bulk_user_profile_slug( $user_ids ) {
 		return;
 	}
 
-	$implode_user_ids = implode( ',', $user_ids );
+	$implode_user_ids = implode( ',', array_map( 'absint', $user_ids ) );
 
 	// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 	$wpdb->query(
 		$wpdb->prepare(
-			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.LikeWildcardsInQuery
+			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.LikeWildcardsInQuery -- literal LIKE 'bb_profile_slug_%' prefix wildcard (not a placeholder); $implode_user_ids is absint()-mapped IDs.
 			"UPDATE {$wpdb->usermeta} SET meta_key = REPLACE(meta_key, %s, %s) WHERE meta_key LIKE 'bb_profile_slug_%' AND LENGTH(meta_key) >= 56 AND user_id IN ({$implode_user_ids})",
 			'bb_profile_slug_',
 			'bb_profile_long_slug_'
@@ -5326,10 +5336,10 @@ function bb_set_bulk_user_profile_slug( $user_ids ) {
 	foreach ( $user_ids as $key => $user_id ) {
 
 		// removed old user meta which have value length 40.
-		$wpdb->query( "DELETE FROM {$wpdb->usermeta} WHERE meta_key LIKE 'bb_profile_slug' AND user_id = {$user_id} AND LENGTH(meta_value) = 40" );
+		$wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->usermeta} WHERE meta_key LIKE 'bb_profile_slug' AND user_id = %d AND LENGTH(meta_value) = 40", $user_id ) ); // phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.LikeWildcardsInQuery -- Literal LIKE term with no wildcard; not user input.
 
 		// Remove duplicate log slug with same value.
-		$wpdb->query( "DELETE um1 FROM {$wpdb->usermeta} um1, {$wpdb->usermeta} um2 WHERE um1.umeta_id > um2.umeta_id AND um1.meta_key = um2.meta_key AND um1.meta_key LIKE 'bb_profile_long_slug_%' AND LENGTH(um1.meta_key) >= 61 AND um1.user_id = {$user_id}" );
+		$wpdb->query( $wpdb->prepare( "DELETE um1 FROM {$wpdb->usermeta} um1, {$wpdb->usermeta} um2 WHERE um1.umeta_id > um2.umeta_id AND um1.meta_key = um2.meta_key AND um1.meta_key LIKE 'bb_profile_long_slug_%%' AND LENGTH(um1.meta_key) >= 61 AND um1.user_id = %d", $user_id ) ); // phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.LikeWildcardsInQuery -- Literal LIKE prefix wildcard on an internal meta_key; not user input.
 
 		// fetch user slug if already exists.
 		$p_slug = bb_core_get_user_slug( $user_id );
@@ -5563,16 +5573,18 @@ function bb_remove_orphaned_profile_slug( $user_id ) {
 		return;
 	}
 
+	// phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.LikeWildcardsInQuery -- literal LIKE 'bb_profile_slug_%' prefix wildcard (not a placeholder); %s value is bound.
 	$condition[] = $wpdb->prepare( "( meta_key LIKE 'bb_profile_slug_%' AND meta_key != %s )", "bb_profile_slug_{$p_slug}" );
 	$condition[] = "( meta_key LIKE 'bb_profile_long_slug_%' AND LENGTH(meta_key) < 61 )";
-	$condition[] = $wpdb->prepare( "( meta_key LIKE 'bb_profile_slug' AND meta_value != %s )", $p_slug );
+	$condition[] = $wpdb->prepare( "( meta_key LIKE 'bb_profile_slug' AND meta_value != %s )", $p_slug ); // phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.LikeWildcardsInQuery -- Literal LIKE term with no wildcard; not user input.
 
 	$condition_join = '(' . implode( ' OR ', $condition ) . ') AND ' . $wpdb->prepare( 'user_id = %d', $user_id );
 
 	// Initial deletion query
 	$delete_query = "DELETE FROM {$table_name} WHERE {$condition_join} LIMIT 500";
 
-	// Execute the initial deletion
+	// Execute the initial deletion.
+	// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $condition_join is composed entirely of $wpdb->prepare()'d fragments + literal wildcards; $table_name from $wpdb->usermeta.
 	$wpdb->query( $delete_query );
 
 	// Recursive deletion until no more rows are affected

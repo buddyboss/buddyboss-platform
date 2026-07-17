@@ -7,6 +7,10 @@
  * @since   BuddyBoss 2.8.20
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 ?>
 <script type="text/html" id="tmpl-group-card-popup">
 	<div id="group-card" class="bb-group-card bb-popup-card" data-bp-item-id="" data-bp-item-component="groups">
@@ -48,7 +52,7 @@
 					<div class="bb-card-action bb-card-action-join bb-card-action-primary"></div>
 				<?php endif; ?>
 				<div class="bb-card-action bb-card-action-outline">
-					<a href="" class="card-button card-button-group"><?php esc_html_e( 'View Group', 'buddyboss' ); ?></a>
+					<a href="" class="card-button card-button-group"><?php esc_html_e( 'View Group', 'buddyboss-platform' ); ?></a>
 				</div>
 			</div>
 		</div>

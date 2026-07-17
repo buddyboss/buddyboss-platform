@@ -133,7 +133,7 @@ function bp_core_check_for_moderation( $user_id = 0, $title = '', $content = '',
 			if ( 'bool' === $error_type ) {
 				return false;
 			} else {
-				return new WP_Error( 'bp_moderation_too_many_links', __( 'You have posted too many links', 'buddyboss' ) );
+				return new WP_Error( 'bp_moderation_too_many_links', __( 'You have posted too many links', 'buddyboss-platform' ) );
 			}
 		}
 	}
@@ -174,7 +174,7 @@ function bp_core_check_for_moderation( $user_id = 0, $title = '', $content = '',
 					if ( 'bool' === $error_type ) {
 						return false;
 					} else {
-						return new WP_Error( 'bp_moderation_word_match', __( 'You have posted an inappropriate word.', 'buddyboss' ) );
+						return new WP_Error( 'bp_moderation_word_match', __( 'You have posted an inappropriate word.', 'buddyboss-platform' ) );
 					}
 				}
 			}
@@ -292,7 +292,7 @@ function bp_core_check_for_blacklist( $user_id = 0, $title = '', $content = '', 
 				if ( 'bool' === $error_type ) {
 					return false;
 				} else {
-					return new WP_Error( 'bp_moderation_blacklist_match', __( 'You have posted an inappropriate word.', 'buddyboss' ) );
+					return new WP_Error( 'bp_moderation_blacklist_match', __( 'You have posted an inappropriate word.', 'buddyboss-platform' ) );
 				}
 			}
 		}

@@ -305,7 +305,7 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 
 			// If mu-plugin directory not exists then create automatically.
 			if ( ! is_dir( WPMU_PLUGIN_DIR ) ) {
-				mkdir( WPMU_PLUGIN_DIR, 0755 );
+				wp_mkdir_p( WPMU_PLUGIN_DIR );
 			}
 
 			$mu_plugins = get_mu_plugins();
@@ -330,14 +330,14 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 			set_transient( 'bb_presence_api_mu_download', 'true', WEEK_IN_SECONDS );
 
 			if ( ! file_exists( WPMU_PLUGIN_DIR . '/buddyboss-performance-api.php' ) ) {
-				self::$download_plugin_text = __( 'Download the plugin', 'buddyboss' );
+				self::$download_plugin_text = __( 'Download the plugin', 'buddyboss-platform' );
 				add_action( 'admin_notices', array( get_called_class(), 'bb_add_sitewide_notice_for_presence_api_mu_file' ) );
 			} elseif (
 				! empty( $mu_plugins ) &&
 				array_key_exists( 'buddyboss-performance-api.php', $mu_plugins ) &&
 				version_compare( $mu_plugins['buddyboss-performance-api.php']['Version'], '1.0.0', '<' )
 			) {
-				self::$download_plugin_text = __( 'Download v1.0.0', 'buddyboss' );
+				self::$download_plugin_text = __( 'Download v1.0.0', 'buddyboss-platform' );
 				add_action( 'admin_notices', array( get_called_class(), 'bb_add_sitewide_notice_for_presence_api_mu_file' ) );
 			}
 		}
@@ -354,12 +354,12 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 			$download_path = admin_url( 'admin.php?page=bb-settings&download_mu_bpa_file=' . $bp_performance_download_nonce );
 			$notice        = sprintf(
 				'%1$s <a href="%2$s">%3$s</a>. <br /><strong><a href="%4$s">%5$s</a></strong> %6$s',
-				__( 'BuddyBoss Performance API cannot be automatically installed on your server. To improve performance, you need to manually install the "BuddyBoss Performance API" plugin in your', 'buddyboss' ),
+				__( 'BuddyBoss Performance API cannot be automatically installed on your server. To improve performance, you need to manually install the "BuddyBoss Performance API" plugin in your', 'buddyboss-platform' ),
 				'https://wordpress.org/support/article/must-use-plugins/',
-				__( 'must-use plugins', 'buddyboss' ),
+				__( 'must-use plugins', 'buddyboss-platform' ),
 				$download_path,
 				self::$download_plugin_text,
-				__( 'and then upload it into the "/wp-content/mu-plugins/" directory on your server.', 'buddyboss' )
+				__( 'and then upload it into the "/wp-content/mu-plugins/" directory on your server.', 'buddyboss-platform' )
 			);
 
 			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
@@ -938,7 +938,7 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 				header( 'Content-Type: application/json' );
 				$retval = new WP_Error(
 					'bp_rest_authorization_required',
-					__( 'Sorry, you are not allowed to perform this action.', 'buddyboss' ),
+					__( 'Sorry, you are not allowed to perform this action.', 'buddyboss-platform' ),
 					array(
 						'status' => 401,
 					)
@@ -953,7 +953,7 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 				$retval = new WP_Error(
 					'rest_missing_callback_param',
 					/* translators: %s: List of required parameters. */
-					sprintf( __( 'Missing parameter(s): %s', 'buddyboss' ), 'ids' ),
+					sprintf( __( 'Missing parameter(s): %s', 'buddyboss-platform' ), 'ids' ),
 					array(
 						'status' => 400,
 						'params' => array( 'ids' ),
@@ -971,7 +971,7 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 			$arguments = array(
 				'args' => array(
 					'ids' => array(
-						'description'       => __( 'A unique users IDs of the member.', 'buddyboss' ),
+						'description'       => __( 'A unique users IDs of the member.', 'buddyboss-platform' ),
 						'type'              => 'array',
 						'required'          => true,
 						'items'             => array( 'type' => 'integer' ),
@@ -989,7 +989,7 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 			$invalid_params = array();
 
 			if ( false === $valid_check ) {
-				$invalid_params['ids'] = __( 'Invalid parameter.', 'buddyboss' );
+				$invalid_params['ids'] = __( 'Invalid parameter.', 'buddyboss-platform' );
 			}
 
 			if ( is_wp_error( $valid_check ) ) {
@@ -1001,7 +1001,7 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 				$retval = new WP_Error(
 					'rest_invalid_param',
 					/* translators: %s: List of invalid parameters. */
-					sprintf( __( 'Invalid parameter(s): %s', 'buddyboss' ), implode( ', ', array_keys( $invalid_params ) ) ),
+					sprintf( __( 'Invalid parameter(s): %s', 'buddyboss-platform' ), implode( ', ', array_keys( $invalid_params ) ) ),
 					array(
 						'status'  => 400,
 						'params'  => $invalid_params,
@@ -1048,33 +1048,61 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 		 * Function to load translations at mu level.
 		 *
 		 * @since BuddyBoss 2.7.90
+		 * @since BuddyBoss [BBVERSION] Text domain renamed to "buddyboss-platform"; legacy
+		 *                             "buddyboss-{locale}.mo" files are merged into the new domain
+		 *                             so existing customer translations keep resolving.
 		 */
 		public function bb_load_translations() {
-			$domain = 'buddyboss';
-			if ( function_exists( 'is_textdomain_loaded' ) && ! is_textdomain_loaded( $domain ) ) {
-				$mofile_custom  = sprintf( '%s-%s.mo', $domain, get_locale() );
-				$buddyboss_lang = WP_PLUGIN_DIR . '/buddyboss-platform/languages/';
-				if ( ! is_dir( $buddyboss_lang ) ) {
-					// File from the development version.
-					$buddyboss_lang = WP_PLUGIN_DIR . '/buddyboss-platform/src/languages/';
-				}
-				if ( ! empty( $buddyboss_lang ) && function_exists( 'load_textdomain' ) ) {
+			static $loaded = false;
 
-					$locations = array(
-						trailingslashit( WP_LANG_DIR . '/' . $domain ),
-						trailingslashit( WP_LANG_DIR ),
-						trailingslashit( WP_LANG_DIR . '/plugins' ),
-						trailingslashit( $buddyboss_lang ),
-					);
-			
-					// Try to load the translations from locations.
-					foreach ( $locations as $location ) {
-						if ( load_textdomain( $domain, $location . $mofile_custom ) ) {
-							return true;
-						}
-					}
+			/*
+			 * Run-once guard — deliberately NOT is_textdomain_loaded(): on WP 6.7+ a
+			 * just-in-time new-domain load would make that check bail and skip the legacy
+			 * merge, reverting existing translations to English. Mirrors
+			 * bp_core_load_buddypress_textdomain() in bp-loader.php. This runs on the
+			 * presence/heartbeat endpoint, so the redundant per-location loads it replaces
+			 * fired on every heartbeat.
+			 */
+			if ( $loaded || ! function_exists( 'load_textdomain' ) ) {
+				return;
+			}
+			$loaded = true;
+
+			$domain     = 'buddyboss-platform';
+			$old_domain = 'buddyboss';
+			$locale     = get_locale();
+			$new_mofile = sprintf( '%s-%s.mo', $domain, $locale );
+			$old_mofile = sprintf( '%s-%s.mo', $old_domain, $locale );
+
+			$buddyboss_lang = WP_PLUGIN_DIR . '/buddyboss-platform/languages/';
+			if ( ! is_dir( $buddyboss_lang ) ) {
+				// File from the development version.
+				$buddyboss_lang = WP_PLUGIN_DIR . '/buddyboss-platform/src/languages/';
+			}
+
+			$locations = array(
+				trailingslashit( WP_LANG_DIR . '/' . $domain ),
+				trailingslashit( WP_LANG_DIR . '/' . $old_domain ),
+				trailingslashit( WP_LANG_DIR ),
+				trailingslashit( WP_LANG_DIR . '/plugins' ),
+				trailingslashit( WP_LANG_DIR . '/loco/plugins' ), // Loco Translate "Custom" location.
+				trailingslashit( $buddyboss_lang ),
+			);
+
+			// Load the highest-priority new-domain file, then merge the highest-priority
+			// legacy "buddyboss" file into the same domain (new entries win, legacy backfills).
+			foreach ( $locations as $location ) {
+				if ( load_textdomain( $domain, $location . $new_mofile ) ) {
+					break;
 				}
 			}
+			foreach ( $locations as $location ) {
+				if ( load_textdomain( $domain, $location . $old_mofile ) ) {
+					break;
+				}
+			}
+
+			return is_textdomain_loaded( $domain );
 		}
 	}
 

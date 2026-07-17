@@ -39,8 +39,8 @@ function bb_search_register_pages_posts_fields() {
 		'pages_posts',
 		'pages_posts_content',
 		array(
-			'title'       => __( 'Pages & Posts Search', 'buddyboss' ),
-			'description' => __( 'All listed WordPress content and custom post types are searchable. The switches indicate which ones are included in searches.', 'buddyboss' ),
+			'title'       => __( 'Pages & Posts Search', 'buddyboss-platform' ),
+			'description' => __( 'All listed WordPress content and custom post types are searchable. The switches indicate which ones are included in searches.', 'buddyboss-platform' ),
 			'order'       => 10,
 		)
 	);
@@ -57,13 +57,13 @@ function bb_search_register_pages_posts_fields() {
 		// Determine display label and toggle description.
 		$label = $post_type_obj->labels->name;
 		if ( 'post' === $post_type ) {
-			$label = __( 'Blog Posts', 'buddyboss' );
+			$label = __( 'Blog Posts', 'buddyboss-platform' );
 		}
 
 		$toggle_descriptions = array(
-			'post'       => __( 'Allow blog posts searching', 'buddyboss' ),
-			'page'       => __( 'Allow Pages searching', 'buddyboss' ),
-			'attachment' => __( 'Allow media searching', 'buddyboss' ),
+			'post'       => __( 'Allow blog posts searching', 'buddyboss-platform' ),
+			'page'       => __( 'Allow Pages searching', 'buddyboss-platform' ),
+			'attachment' => __( 'Allow media searching', 'buddyboss-platform' ),
 		);
 
 		$toggle_description = isset( $toggle_descriptions[ $post_type ] )
@@ -175,7 +175,7 @@ function bb_search_register_meta_field( $post_type, $base_order = 10, $taxonomy_
 		'pages_posts_content',
 		array(
 			'name'              => 'bp_search_post_type_meta_' . $post_type,
-			'label'             => __( 'Meta Data', 'buddyboss' ),
+			'label'             => __( 'Meta Data', 'buddyboss-platform' ),
 			'type'              => 'checkbox',
 			'default'           => absint( bp_get_option( 'bp_search_post_type_meta_' . $post_type, 0 ) ),
 			'sanitize_callback' => 'absint',
@@ -237,7 +237,7 @@ function bb_search_lazy_register_cpt_fields( $feature_id ) {
 		'pages_posts_content',
 		array(
 			'name'  => 'bp_search_custom_post_types',
-			'label' => __( 'Custom Post Types', 'buddyboss' ),
+			'label' => __( 'Custom Post Types', 'buddyboss-platform' ),
 			'type'  => 'hidden',
 			'order' => $parent_order,
 		)

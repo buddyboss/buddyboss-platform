@@ -80,9 +80,9 @@ class BP_Messages_Notices_List_Table extends WP_List_Table {
 		return apply_filters(
 			'bp_notices_list_table_get_columns',
 			array(
-				'subject'   => __( 'Subject', 'buddyboss' ),
-				'message'   => __( 'Content', 'buddyboss' ),
-				'date_sent' => __( 'Created', 'buddyboss' ),
+				'subject'   => __( 'Subject', 'buddyboss-platform' ),
+				'message'   => __( 'Content', 'buddyboss-platform' ),
+				'date_sent' => __( 'Created', 'buddyboss-platform' ),
 			)
 		);
 	}
@@ -101,7 +101,7 @@ class BP_Messages_Notices_List_Table extends WP_List_Table {
 			$class = ' class="notice-active"';
 		}
 
-		echo "<tr{$class}>";
+		echo wp_kses_post( "<tr{$class}>" );
 		$this->single_row_columns( $item );
 		echo '</tr>';
 	}
@@ -131,7 +131,7 @@ class BP_Messages_Notices_List_Table extends WP_List_Table {
 					)
 				),
 				(int) $item->id,
-				esc_html__( 'Activate Notice', 'buddyboss' )
+				esc_html__( 'Activate Notice', 'buddyboss-platform' )
 			),
 			'delete'              => sprintf(
 				'<a href="%s" data-bp-notice-id="%d" data-bp-action="delete">%s</a>',
@@ -149,12 +149,13 @@ class BP_Messages_Notices_List_Table extends WP_List_Table {
 					)
 				),
 				(int) $item->id,
-				esc_html__( 'Delete Notice', 'buddyboss' )
+				esc_html__( 'Delete Notice', 'buddyboss-platform' )
 			),
 		);
 
 		if ( ! empty( $item->is_active ) ) {
-			$item->subject                  = sprintf( _x( 'Active: %s', 'Tag prepended to active site-wide notice titles on WP Admin notices list table', 'buddyboss' ), $item->subject );
+			/* translators: %s: notice subject/title. */
+			$item->subject                  = sprintf( _x( 'Active: %s', 'Tag prepended to active site-wide notice titles on WP Admin notices list table', 'buddyboss-platform' ), $item->subject );
 			$actions['activate_deactivate'] = sprintf(
 				'<a href="%s" data-bp-notice-id="%d" data-bp-action="deactivate">%s</a>',
 				esc_url(
@@ -171,11 +172,11 @@ class BP_Messages_Notices_List_Table extends WP_List_Table {
 					)
 				),
 				(int) $item->id,
-				esc_html__( 'Deactivate Notice', 'buddyboss' )
+				esc_html__( 'Deactivate Notice', 'buddyboss-platform' )
 			);
 		}
 
-		echo '<strong>' . apply_filters( 'bp_get_message_notice_subject', $item->subject ) . '</strong> ' . $this->row_actions( $actions );
+		echo '<strong>' . apply_filters( 'bp_get_message_notice_subject', $item->subject ) . '</strong> ' . wp_kses_post( $this->row_actions( $actions ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- subject pre-escaped via the bp_get_message_notice_subject wp_filter_kses chain; inline esc_html would double-encode intentional entities/HTML. row_actions remains wp_kses_post'd.
 	}
 
 	/**
@@ -186,7 +187,7 @@ class BP_Messages_Notices_List_Table extends WP_List_Table {
 	 * @param object $item The current item
 	 */
 	public function column_message( $item ) {
-		echo apply_filters( 'bp_get_message_notice_text', $item->message );
+		echo wp_kses_post( apply_filters( 'bp_get_message_notice_text', $item->message ) );
 	}
 
 	/**
@@ -197,6 +198,6 @@ class BP_Messages_Notices_List_Table extends WP_List_Table {
 	 * @param object $item The current item
 	 */
 	public function column_date_sent( $item ) {
-		echo apply_filters( 'bp_get_message_notice_post_date', bp_format_time( strtotime( $item->date_sent ) ) );
+		echo esc_html( apply_filters( 'bp_get_message_notice_post_date', bp_format_time( strtotime( $item->date_sent ) ) ) );
 	}
 }

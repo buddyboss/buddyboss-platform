@@ -29,8 +29,8 @@ function bb_admin_settings_register_members_feature() {
 	bb_register_feature(
 		'members',
 		array(
-			'label'              => __( 'Member Profiles', 'buddyboss' ),
-			'description'        => __( 'Create customizable member profiles with extended fields, avatars, cover images, profile types, and member directories.', 'buddyboss' ),
+			'label'              => __( 'Member Profiles', 'buddyboss-platform' ),
+			'description'        => __( 'Create customizable member profiles with extended fields, avatars, cover images, profile types, and member directories.', 'buddyboss-platform' ),
 			'icon'               => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-user-square',
@@ -76,7 +76,7 @@ function bb_admin_settings_register_members_feature() {
 		'members',
 		'profile_name',
 		array(
-			'title'      => __( 'Profile Name', 'buddyboss' ),
+			'title'      => __( 'Profile Name', 'buddyboss-platform' ),
 			'icon'       => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-identification-card',
@@ -92,7 +92,7 @@ function bb_admin_settings_register_members_feature() {
 		'members',
 		'profile_image',
 		array(
-			'title'      => __( 'Profile Image', 'buddyboss' ),
+			'title'      => __( 'Profile Image', 'buddyboss-platform' ),
 			'icon'       => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-image',
@@ -116,7 +116,7 @@ function bb_admin_settings_register_members_feature() {
 		'members',
 		'profile_headers',
 		array(
-			'title'      => __( 'Profile Headers', 'buddyboss' ),
+			'title'      => __( 'Profile Headers', 'buddyboss-platform' ),
 			'icon'       => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-arrows-out-simple',
@@ -132,7 +132,7 @@ function bb_admin_settings_register_members_feature() {
 		'members',
 		'member_directory',
 		array(
-			'title'      => __( 'Member Directory', 'buddyboss' ),
+			'title'      => __( 'Member Directory', 'buddyboss-platform' ),
 			'icon'       => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-grid-nine',
@@ -149,7 +149,7 @@ function bb_admin_settings_register_members_feature() {
 		'members',
 		'member_connection',
 		array(
-			'title'      => __( 'Member Connection', 'buddyboss' ),
+			'title'      => __( 'Member Connection', 'buddyboss-platform' ),
 			'icon'       => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-user-plus',
@@ -175,7 +175,7 @@ function bb_admin_settings_register_members_feature() {
 		'members',
 		'profile_fields',
 		array(
-			'title'      => __( 'Profile Fields', 'buddyboss' ),
+			'title'      => __( 'Profile Fields', 'buddyboss-platform' ),
 			'icon'       => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-user-list',
@@ -200,7 +200,7 @@ function bb_admin_settings_register_members_feature() {
 		'members',
 		'profile_types',
 		array(
-			'title'    => __( 'Profile Types', 'buddyboss' ),
+			'title'    => __( 'Profile Types', 'buddyboss-platform' ),
 			'icon'     => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-tag',
@@ -223,7 +223,7 @@ function bb_admin_settings_register_members_feature() {
 		'members',
 		'profile_search',
 		array(
-			'title'      => __( 'Profile Search', 'buddyboss' ),
+			'title'      => __( 'Profile Search', 'buddyboss-platform' ),
 			'icon'       => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-magnifying-glass-plus',
@@ -239,7 +239,7 @@ function bb_admin_settings_register_members_feature() {
 		'members',
 		'profile_navigation',
 		array(
-			'title'      => __( 'Profile Navigation', 'buddyboss' ),
+			'title'      => __( 'Profile Navigation', 'buddyboss-platform' ),
 			'icon'       => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-tabs',

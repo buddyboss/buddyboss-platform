@@ -6,6 +6,9 @@
  * @since BuddyBoss 1.7.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 /**
  * Handle the loading of a single group's videos.
  *

@@ -37,7 +37,7 @@ $product_thumb = get_the_post_thumbnail_url();
 
 		<div class="item">
 			<h3 class="entry-title item-title">
-				<a href="<?php echo esc_url( get_permalink() ); ?>" title="<?php echo esc_attr( sprintf( __( 'Permalink to %s', 'buddyboss' ), the_title_attribute( 'echo=0' ) ) ); ?>" rel="bookmark"><?php the_title(); ?></a>
+				<a href="<?php echo esc_url( get_permalink() ); ?>" title="<?php echo esc_attr( sprintf( /* translators: %s: product title. */ __( 'Permalink to %s', 'buddyboss-platform' ), the_title_attribute( 'echo=0' ) ) ); ?>" rel="bookmark"><?php the_title(); ?></a>
 			</h3>
 			<?php wc_get_template( 'single-product/short-description.php' ); ?>
 			<span class="entry-meta">
@@ -45,13 +45,13 @@ $product_thumb = get_the_post_thumbnail_url();
 					<?php
 					$category = wc_get_product_category_list( $product_id );
 					if ( $category ) {
-						echo wc_get_product_category_list( $product_id, '<span class="middot">&middot;</span>' );
+						echo wp_kses_post( wc_get_product_category_list( $product_id, '<span class="middot">&middot;</span>' ) );
 					}
 					?>
 				</span>
 				<span class="middot">&middot;</span>
 				<div class="item-meta-amount">
-					<?php echo wc_price( wc_get_price_to_display( $product ) ) . $product->get_price_suffix(); ?>
+					<?php echo wp_kses_post( wc_price( wc_get_price_to_display( $product ) ) . $product->get_price_suffix() ); ?>
 				</div>
 			</span>
 		</div>

@@ -160,9 +160,9 @@ class BB_Email_Templates_Admin_Ajax {
 			'bb_admin_email_templates_column_headers',
 			array(
 				'cb'          => '<input type="checkbox" />',
-				'title'       => __( 'Title', 'buddyboss' ),
-				'description' => __( 'Situations', 'buddyboss' ),
-				'date'        => __( 'Published', 'buddyboss' ),
+				'title'       => __( 'Title', 'buddyboss-platform' ),
+				'description' => __( 'Situations', 'buddyboss-platform' ),
+				'date'        => __( 'Published', 'buddyboss-platform' ),
 			)
 		);
 
@@ -179,10 +179,10 @@ class BB_Email_Templates_Admin_Ajax {
 		ob_start();
 
 		$status_labels_map = array(
-			'future'  => __( 'Scheduled', 'buddyboss' ),
-			'pending' => __( 'Pending Review', 'buddyboss' ),
-			'draft'   => __( 'Draft', 'buddyboss' ),
-			'private' => __( 'Private', 'buddyboss' ),
+			'future'  => __( 'Scheduled', 'buddyboss-platform' ),
+			'pending' => __( 'Pending Review', 'buddyboss-platform' ),
+			'draft'   => __( 'Draft', 'buddyboss-platform' ),
+			'private' => __( 'Private', 'buddyboss-platform' ),
 		);
 
 		$items = array();
@@ -261,7 +261,7 @@ class BB_Email_Templates_Admin_Ajax {
 		// Include metadata on first request.
 		if ( $include_meta ) {
 			$response['bulk_actions']  = array(
-				'trash' => __( 'Move to Trash', 'buddyboss' ),
+				'trash' => __( 'Move to Trash', 'buddyboss-platform' ),
 			);
 
 			// Provide registered field definitions for the create modal.
@@ -327,17 +327,17 @@ class BB_Email_Templates_Admin_Ajax {
 
 		$allowed_actions = array( 'trash' );
 		if ( ! in_array( $do_action, $allowed_actions, true ) ) {
-			wp_send_json_error( array( 'message' => __( 'Invalid action.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Invalid action.', 'buddyboss-platform' ) ) );
 		}
 
 		if ( empty( $raw_ids ) ) {
-			wp_send_json_error( array( 'message' => __( 'No email templates selected.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'No email templates selected.', 'buddyboss-platform' ) ) );
 		}
 
 		$email_ids = array_filter( array_map( 'absint', explode( ',', $raw_ids ) ) );
 
 		if ( empty( $email_ids ) ) {
-			wp_send_json_error( array( 'message' => __( 'No valid email template IDs provided.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'No valid email template IDs provided.', 'buddyboss-platform' ) ) );
 		}
 
 		// Cap bulk operations to prevent timeout.
@@ -377,7 +377,7 @@ class BB_Email_Templates_Admin_Ajax {
 					'%d email template moved to trash.',
 					'%d email templates moved to trash.',
 					$processed,
-					'buddyboss'
+					'buddyboss-platform'
 				),
 				$processed
 			);
@@ -390,7 +390,7 @@ class BB_Email_Templates_Admin_Ajax {
 				)
 			);
 		} else {
-			wp_send_json_error( array( 'message' => __( 'No email templates were processed.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'No email templates were processed.', 'buddyboss-platform' ) ) );
 		}
 	}
 
@@ -411,12 +411,12 @@ class BB_Email_Templates_Admin_Ajax {
 		$email_id = isset( $_POST['email_id'] ) ? absint( wp_unslash( $_POST['email_id'] ) ) : 0;
 
 		if ( empty( $email_id ) ) {
-			wp_send_json_error( array( 'message' => __( 'Invalid email template ID.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Invalid email template ID.', 'buddyboss-platform' ) ) );
 		}
 
 		$post = get_post( $email_id );
 		if ( ! $post || bp_get_email_post_type() !== $post->post_type ) {
-			wp_send_json_error( array( 'message' => __( 'Email template not found.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Email template not found.', 'buddyboss-platform' ) ) );
 		}
 
 		// Get custom meta (exclude internal WP/BP meta keys).
@@ -478,7 +478,7 @@ class BB_Email_Templates_Admin_Ajax {
 			// Update existing — load post as object for registry to modify.
 			$post = get_post( $email_id );
 			if ( ! $post || $email_post_type !== $post->post_type ) {
-				wp_send_json_error( array( 'message' => __( 'Email template not found.', 'buddyboss' ) ) );
+				wp_send_json_error( array( 'message' => __( 'Email template not found.', 'buddyboss-platform' ) ) );
 			}
 		} else {
 			// Create new — build a stub post object for registry to populate.
@@ -500,7 +500,7 @@ class BB_Email_Templates_Admin_Ajax {
 
 		// Validate title.
 		if ( empty( $post->post_title ) ) {
-			wp_send_json_error( array( 'message' => __( 'Title is required.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Title is required.', 'buddyboss-platform' ) ) );
 		}
 
 		// Build post data array for wp_insert_post / wp_update_post.
@@ -566,14 +566,14 @@ class BB_Email_Templates_Admin_Ajax {
 		}
 
 		if ( is_wp_error( $result ) ) {
-			wp_send_json_error( array( 'message' => __( 'Failed to save email template.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Failed to save email template.', 'buddyboss-platform' ) ) );
 		}
 
 		$saved_id   = absint( $result );
 		$saved_post = get_post( $saved_id );
 
 		if ( ! $saved_post ) {
-			wp_send_json_error( array( 'message' => __( 'Failed to retrieve saved email template.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Failed to retrieve saved email template.', 'buddyboss-platform' ) ) );
 		}
 
 		// Apply "after" phase — saves taxonomy terms, post meta, etc.
@@ -637,8 +637,8 @@ class BB_Email_Templates_Admin_Ajax {
 		do_action( 'bb_admin_save_email_template_after', $saved_id, $saved_post );
 
 		$message = $email_id > 0
-			? __( 'Email template updated successfully.', 'buddyboss' )
-			: __( 'Email template created successfully.', 'buddyboss' );
+			? __( 'Email template updated successfully.', 'buddyboss-platform' )
+			: __( 'Email template created successfully.', 'buddyboss-platform' );
 
 		wp_send_json_success(
 			array(
@@ -662,7 +662,7 @@ class BB_Email_Templates_Admin_Ajax {
 		$raw_ids = isset( $_POST['email_ids'] ) ? sanitize_text_field( wp_unslash( $_POST['email_ids'] ) ) : '';
 
 		if ( empty( $raw_ids ) ) {
-			wp_send_json_error( array( 'message' => __( 'No email templates selected.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'No email templates selected.', 'buddyboss-platform' ) ) );
 		}
 
 		$email_ids       = array_filter( array_map( 'absint', explode( ',', $raw_ids ) ) );
@@ -688,7 +688,7 @@ class BB_Email_Templates_Admin_Ajax {
 		}
 
 		if ( 0 === $deleted ) {
-			wp_send_json_error( array( 'message' => __( 'No email templates were deleted.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'No email templates were deleted.', 'buddyboss-platform' ) ) );
 		}
 
 		wp_send_json_success(
@@ -699,7 +699,7 @@ class BB_Email_Templates_Admin_Ajax {
 						'%d email template permanently deleted.',
 						'%d email templates permanently deleted.',
 						$deleted,
-						'buddyboss'
+						'buddyboss-platform'
 					),
 					$deleted
 				),
@@ -725,7 +725,7 @@ class BB_Email_Templates_Admin_Ajax {
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
 
 		if ( empty( $raw_ids ) ) {
-			wp_send_json_error( array( 'message' => __( 'No email templates selected.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'No email templates selected.', 'buddyboss-platform' ) ) );
 		}
 
 		$email_ids       = array_filter( array_map( 'absint', explode( ',', $raw_ids ) ) );
@@ -735,7 +735,7 @@ class BB_Email_Templates_Admin_Ajax {
 		// Validate status if provided.
 		$allowed_statuses = array( 'publish', 'draft', 'pending', 'private' );
 		if ( ! empty( $new_status ) && ! in_array( $new_status, $allowed_statuses, true ) ) {
-			wp_send_json_error( array( 'message' => __( 'Invalid status.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Invalid status.', 'buddyboss-platform' ) ) );
 		}
 
 		$updated  = 0;
@@ -784,7 +784,7 @@ class BB_Email_Templates_Admin_Ajax {
 		}
 
 		if ( 0 === $updated ) {
-			wp_send_json_error( array( 'message' => __( 'No email templates were updated.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'No email templates were updated.', 'buddyboss-platform' ) ) );
 		}
 
 		wp_send_json_success(
@@ -795,7 +795,7 @@ class BB_Email_Templates_Admin_Ajax {
 						'%d email template updated.',
 						'%d email templates updated.',
 						$updated,
-						'buddyboss'
+						'buddyboss-platform'
 					),
 					$updated
 				),
@@ -826,7 +826,7 @@ class BB_Email_Templates_Admin_Ajax {
 		);
 
 		if ( is_wp_error( $terms ) ) {
-			wp_send_json_error( array( 'message' => __( 'Failed to load email situations.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Failed to load email situations.', 'buddyboss-platform' ) ) );
 		}
 
 		// Batch-prime term meta cache to avoid N+1 queries in bb_email_get_type_group().

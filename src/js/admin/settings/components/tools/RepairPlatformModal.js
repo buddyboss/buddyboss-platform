@@ -63,7 +63,7 @@ function formatResultText( item ) {
 	}
 
 	// True fallback: no server enrichment (e.g. network error, abort).
-	const status = item.success ? __( 'completed successfully', 'buddyboss' ) : __( 'failed', 'buddyboss' );
+	const status = item.success ? __( 'completed successfully', 'buddyboss-platform' ) : __( 'failed', 'buddyboss-platform' );
 	return label ? label + ' — ' + status : ( decodeMessage( item.message ) || status );
 }
 
@@ -100,7 +100,7 @@ export default function RepairPlatformModal( { variant, results, onCancel, onClo
 	if ( 'progress' === variant ) {
 		return (
 			<Modal
-				title={ __( 'Repair Community', 'buddyboss' ) }
+				title={ __( 'Repair Community', 'buddyboss-platform' ) }
 				onRequestClose={ onCancel }
 				className="bb-tools-repair-modal is-progress bb-admin-settings-modal"
 				shouldCloseOnClickOutside={ false }
@@ -108,13 +108,13 @@ export default function RepairPlatformModal( { variant, results, onCancel, onClo
 				<div className="bb-tools-repair-modal__body bb-admin-settings-modal__body">
 					<span className="bb-tools-repair-modal__icon bb-icons-rl bb-icons-rl-wrench"></span>
 					<div className="bb-tools-repair-modal__status">
-						<p>{ __( 'Repairing Community', 'buddyboss' ) }</p>
+						<p>{ __( 'Repairing Community', 'buddyboss-platform' ) }</p>
 						<Spinner />
 					</div>
 				</div>
 				<div className="bb-tools-repair-modal__actions bb-admin-settings-modal__footer">
 					<Button variant="primary" onClick={ onCancel }>
-						{ __( 'Cancel', 'buddyboss' ) }
+						{ __( 'Cancel', 'buddyboss-platform' ) }
 					</Button>
 				</div>
 			</Modal>
@@ -123,7 +123,7 @@ export default function RepairPlatformModal( { variant, results, onCancel, onClo
 
 	return (
 		<Modal
-			title={ __( 'Repair Community', 'buddyboss' ) }
+			title={ __( 'Repair Community', 'buddyboss-platform' ) }
 			onRequestClose={ onClose }
 			className="bb-tools-repair-modal bb-admin-settings-modal is-complete"
 			shouldCloseOnClickOutside={ false }
@@ -132,7 +132,7 @@ export default function RepairPlatformModal( { variant, results, onCancel, onClo
 				<div className="bb-tools-repair-modal__checkmark">
 					<span className="bb-icons-rl bb-icons-rl-check-circle"></span>
 				</div>
-				<h3>{ __( 'Repair community complete', 'buddyboss' ) }</h3>
+				<h3>{ __( 'Repair community complete', 'buddyboss-platform' ) }</h3>
 				<ul className="bb-tools-repair-modal__results">
 					{ ( results || [] ).map( function ( item ) {
 						const state = classifyResult( item );
@@ -165,7 +165,7 @@ export default function RepairPlatformModal( { variant, results, onCancel, onClo
 			</div>
 			<div className="bb-tools-repair-modal__actions bb-admin-settings-modal__footer">
 				<Button variant="primary" onClick={ onClose }>
-					{ __( 'Ok', 'buddyboss' ) }
+					{ __( 'Ok', 'buddyboss-platform' ) }
 				</Button>
 			</div>
 		</Modal>

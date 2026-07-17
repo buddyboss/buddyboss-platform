@@ -6,6 +6,10 @@
  * @package BuddyBoss\Members
  * @since BuddyBoss 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 class BP_Core_Members_Switching {
 
 	/**
@@ -83,8 +87,8 @@ class BP_Core_Members_Switching {
 
 		?>
 		<tr>
-			<th scope="row"><?php echo esc_html__( 'Member Switching', 'buddyboss' ); ?></th>
-			<td><a href="<?php echo esc_url( $link ); ?>"><?php esc_html_e( 'View As', 'buddyboss' ); ?></a>
+			<th scope="row"><?php echo esc_html__( 'Member Switching', 'buddyboss-platform' ); ?></th>
+			<td><a href="<?php echo esc_url( $link ); ?>"><?php esc_html_e( 'View As', 'buddyboss-platform' ); ?></a>
 			</td>
 		</tr>
 		<?php
@@ -134,7 +138,7 @@ class BP_Core_Members_Switching {
 				// Check authentication:
 				$old_user = bp_current_member_switched();
 				if ( ! current_user_can( 'switch_to_user', $user_id ) && ( ! $old_user || ! user_can( $old_user, 'switch_to_user' ) ) ) {
-					wp_die( esc_html__( 'Could not switch users.', 'buddyboss' ) );
+					wp_die( esc_html__( 'Could not switch users.', 'buddyboss-platform' ) );
 				}
 
 				// Check intent:
@@ -159,7 +163,7 @@ class BP_Core_Members_Switching {
 					}
 					exit;
 				} else {
-					wp_die( esc_html__( 'Could not switch users.', 'buddyboss' ) );
+					wp_die( esc_html__( 'Could not switch users.', 'buddyboss-platform' ) );
 				}
 				break;
 
@@ -168,12 +172,12 @@ class BP_Core_Members_Switching {
 				// Fetch the originating user data:
 				$old_user = self::get_old_user();
 				if ( ! $old_user ) {
-					wp_die( esc_html__( 'Could not switch users.', 'buddyboss' ) );
+					wp_die( esc_html__( 'Could not switch users.', 'buddyboss-platform' ) );
 				}
 
 				// Check authentication:
 				if ( ! self::authenticate_old_user( $old_user ) ) {
-					wp_die( esc_html__( 'Could not switch users.', 'buddyboss' ) );
+					wp_die( esc_html__( 'Could not switch users.', 'buddyboss-platform' ) );
 				}
 
 				// Check intent:
@@ -201,7 +205,7 @@ class BP_Core_Members_Switching {
 					}
 					exit;
 				} else {
-					wp_die( esc_html__( 'Could not switch users.', 'buddyboss' ) );
+					wp_die( esc_html__( 'Could not switch users.', 'buddyboss-platform' ) );
 				}
 				break;
 
@@ -249,7 +253,7 @@ class BP_Core_Members_Switching {
 						$message = esc_html(
 							sprintf(
 								/* Translators: 1: user display name; 2: username; */
-								__( 'Switched to %1$s (%2$s).', 'buddyboss' ),
+								__( 'Switched to %1$s (%2$s).', 'buddyboss-platform' ),
 								$user->display_name,
 								$user->user_login
 							)
@@ -268,7 +272,7 @@ class BP_Core_Members_Switching {
 						esc_html(
 							sprintf(
 								/* Translators: 1: user display name; 2: username; */
-								__( 'Switch back to %1$s (%2$s)', 'buddyboss' ),
+								__( 'Switch back to %1$s (%2$s)', 'buddyboss-platform' ),
 								$old_user->display_name,
 								$old_user->user_login
 							)
@@ -287,7 +291,7 @@ class BP_Core_Members_Switching {
 					 * @param bool $just_switched Whether the user made the switch on this page request.
 					 */
 					$message = apply_filters( 'bp_member_switching_switched_message', $message, $user, $old_user, $switch_back_url, $just_switched );
-					echo $message; // WPCS: XSS ok.
+					echo wp_kses_post( $message );
 					?>
 				</p>
 			</div>
@@ -301,7 +305,7 @@ class BP_Core_Members_Switching {
 						echo esc_html(
 							sprintf(
 								/* Translators: 1: user display name; 2: username; */
-								__( 'Switched back to %1$s (%2$s).', 'buddyboss' ),
+								__( 'Switched back to %1$s (%2$s).', 'buddyboss-platform' ),
 								$user->display_name,
 								$user->user_login
 							)
@@ -310,7 +314,7 @@ class BP_Core_Members_Switching {
 						echo esc_html(
 							sprintf(
 								/* Translators: 1: user display name; 2: username; */
-								__( 'Switched to %1$s (%2$s).', 'buddyboss' ),
+								__( 'Switched to %1$s (%2$s).', 'buddyboss-platform' ),
 								$user->display_name,
 								$user->user_login
 							)
@@ -395,7 +399,7 @@ class BP_Core_Members_Switching {
 					'id'     => 'switch-back',
 					'title'  => esc_html(
 						sprintf(
-							__( 'Switch back to Admin', 'buddyboss' ),
+							__( 'Switch back to Admin', 'buddyboss-platform' ),
 							$old_user->display_name,
 							$old_user->user_login
 						)
@@ -423,7 +427,7 @@ class BP_Core_Members_Switching {
 		if ( $old_user instanceof WP_User ) {
 			$link = sprintf(
 				/* Translators: 1: user display name; 2: username; */
-				__( 'Switch back to %1$s (%2$s)', 'buddyboss' ),
+				__( 'Switch back to %1$s (%2$s)', 'buddyboss-platform' ),
 				$old_user->display_name,
 				$old_user->user_login
 			);
@@ -459,8 +463,8 @@ class BP_Core_Members_Switching {
 				<style>
 					/* Member Switching */
 					#wpadminbar #wp-admin-bar-top-secondary li#wp-admin-bar-switch-back a {
-						background: <?php echo $colors['background']; ?>;
-						color: <?php echo $colors['color']; ?>;;
+						background: <?php echo esc_attr( $colors['background'] ); ?>;
+						color: <?php echo esc_attr( $colors['color'] ); ?>;;
 					}
 				</style>
 				<?php
@@ -483,7 +487,7 @@ class BP_Core_Members_Switching {
 		if ( $old_user instanceof WP_User ) {
 			$link = sprintf(
 				/* Translators: 1: user display name; 2: username; */
-				__( 'Switch back to %1$s (%2$s)', 'buddyboss' ),
+				__( 'Switch back to %1$s (%2$s)', 'buddyboss-platform' ),
 				$old_user->display_name,
 				$old_user->user_login
 			);
@@ -530,7 +534,7 @@ class BP_Core_Members_Switching {
 			return $actions;
 		}
 
-		$actions['switch_to_user'] = '<a href="' . esc_url( $link ) . '">' . esc_html__( 'View As', 'buddyboss' ) . '</a>';
+		$actions['switch_to_user'] = '<a href="' . esc_url( $link ) . '">' . esc_html__( 'View As', 'buddyboss-platform' ) . '</a>';
 
 		return $actions;
 	}
@@ -568,15 +572,15 @@ class BP_Core_Members_Switching {
 
 		$components = array_keys( buddypress()->active_components );
 
-		echo bp_get_button(
+		echo wp_kses_post( bp_get_button(
 			array(
 				'id'         => 'bp_member_switching',
 				'component'  => reset( $components ),
 				'link_href'  => esc_url( $link ),
-				'link_text'  => esc_html__( 'View As', 'buddyboss' ),
+				'link_text'  => esc_html__( 'View As', 'buddyboss-platform' ),
 				'wrapper_id' => 'bp_member_switching_switch_to',
 			)
-		);
+		) );
 	}
 
 	/**
@@ -606,7 +610,7 @@ class BP_Core_Members_Switching {
 
 		?>
 		<ul id="bp_member_switching_switch_to">
-			<li><a href="<?php echo esc_url( $link ); ?>"><?php esc_html_e( 'View As', 'buddyboss' ); ?></a>
+			<li><a href="<?php echo esc_url( $link ); ?>"><?php esc_html_e( 'View As', 'buddyboss-platform' ); ?></a>
 			</li>
 		</ul>
 		<?php
@@ -760,7 +764,7 @@ class BP_Core_Members_Switching {
 	 * @return bool Should the old user cookie be secure?
 	 */
 	public static function secure_olduser_cookie() {
-		return ( is_ssl() && ( 'https' === parse_url( home_url(), PHP_URL_SCHEME ) ) );
+		return ( is_ssl() && ( 'https' === wp_parse_url( home_url(), PHP_URL_SCHEME ) ) );
 	}
 
 	/**
@@ -773,7 +777,7 @@ class BP_Core_Members_Switching {
 	 * @return bool Should the auth cookie be secure?
 	 */
 	public static function secure_auth_cookie() {
-		return ( is_ssl() && ( 'https' === parse_url( wp_login_url(), PHP_URL_SCHEME ) ) );
+		return ( is_ssl() && ( 'https' === wp_parse_url( wp_login_url(), PHP_URL_SCHEME ) ) );
 	}
 
 	/**

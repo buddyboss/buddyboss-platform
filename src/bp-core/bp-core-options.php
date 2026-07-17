@@ -99,9 +99,6 @@ function bp_get_default_options() {
 		// Group Types.
 		'bp-disable-group-type-creation'             => false,
 
-		// Group Subscriptions.
-		'bb_enable_group_subscriptions'              => true,
-
 		// Auto Group Membership Approval.
 		'bp-enable-group-auto-join'                  => false,
 
@@ -458,6 +455,7 @@ function bp_core_get_root_options() {
 		$blog_options_keys      = "'" . join( "', '", (array) $root_blog_option_keys ) . "'";
 		$blog_options_table     = bp_is_multiblog_mode() ? $wpdb->options : $wpdb->get_blog_prefix( bp_get_root_blog_id() ) . 'options';
 		$blog_options_query     = "SELECT option_name AS name, option_value AS value FROM {$blog_options_table} WHERE option_name IN ( {$blog_options_keys} )";
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $blog_options_keys is a quoted join of hardcoded bp_get_default_options() keys (not user input); $blog_options_table is an internally-built options table name.
 		$root_blog_options_meta = $wpdb->get_results( $blog_options_query );
 
 		// On Multisite installations, some options must always be fetched from sitemeta.
@@ -484,6 +482,7 @@ function bp_core_get_root_options() {
 			$network_option_keys    = array_keys( $network_options );
 			$sitemeta_options_keys  = "'" . join( "', '", (array) $network_option_keys ) . "'";
 			$sitemeta_options_query = $wpdb->prepare( "SELECT meta_key AS name, meta_value AS value FROM {$wpdb->sitemeta} WHERE meta_key IN ( {$sitemeta_options_keys} ) AND site_id = %d", $current_site->id );
+			// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $sitemeta_options_query is the $wpdb->prepare() result above; $sitemeta_options_keys is a quoted join of hardcoded network option keys.
 			$network_options_meta   = $wpdb->get_results( $sitemeta_options_query );
 
 			// Sitemeta comes second in the merge, so that network 'registration' value wins.
@@ -1083,23 +1082,23 @@ function bp_activity_edit_times( $time = null ) {
 		array(
 			'thirty_days' => array(
 				'value' => ( 60 * 60 * 24 * 30 ),
-				'label' => __( '30 Days', 'buddyboss' ),
+				'label' => __( '30 Days', 'buddyboss-platform' ),
 			),
 			'seven_days'  => array(
 				'value' => ( 60 * 60 * 24 * 7 ),
-				'label' => __( '7 Days', 'buddyboss' ),
+				'label' => __( '7 Days', 'buddyboss-platform' ),
 			),
 			'one_day'     => array(
 				'value' => ( 60 * 60 * 24 ),
-				'label' => __( '1 Day', 'buddyboss' ),
+				'label' => __( '1 Day', 'buddyboss-platform' ),
 			),
 			'one_hour'    => array(
 				'value' => ( 60 * 60 ),
-				'label' => __( '1 Hour', 'buddyboss' ),
+				'label' => __( '1 Hour', 'buddyboss-platform' ),
 			),
 			'ten_minutes' => array(
 				'value' => ( 60 * 10 ),
-				'label' => __( '10 Minutes', 'buddyboss' ),
+				'label' => __( '10 Minutes', 'buddyboss-platform' ),
 			),
 		)
 	);
@@ -2353,28 +2352,6 @@ function bb_get_default_custom_upload_group_cover() {
 }
 
 /**
- * Is group subscription turned off?
- *
- * @since BuddyBoss 2.2.8
- *
- * @param bool $default Optional. Fallback value if not found in the database.
- *                      Default: true.
- *
- * @return bool True if group subscription is enabled, otherwise false.
- */
-function bb_enable_group_subscriptions( $default = true ) {
-
-	/**
-	 * Filters whether group subscription is turned off.
-	 *
-	 * @since BuddyBoss 2.2.8
-	 *
-	 * @param bool $value Whether group subscription is turned off.
-	 */
-	return (bool) apply_filters( 'bb_enable_group_subscriptions', (bool) bp_get_option( 'bb_enable_group_subscriptions', $default ) );
-}
-
-/**
  * Get profile slug format.
  *
  * @since BuddyBoss 2.3.1
@@ -2608,12 +2585,12 @@ function bb_custom_logout_redirection( $default = '' ) {
 function bb_get_all_reactions() {
 	return array(
 		'activity'         => array(
-			'label'     => esc_html__( 'Activity posts', 'buddyboss' ),
+			'label'     => esc_html__( 'Activity posts', 'buddyboss-platform' ),
 			'disabled'  => ! bp_is_active( 'activity' ),
 			'component' => 'activity',
 		),
 		'activity_comment' => array(
-			'label'     => esc_html__( 'Activity comments', 'buddyboss' ),
+			'label'     => esc_html__( 'Activity comments', 'buddyboss-platform' ),
 			'disabled'  => ! bp_is_active( 'activity' ),
 			'component' => 'activity',
 		),
@@ -2834,51 +2811,51 @@ function bb_get_activity_filter_options_labels( $context = 'default' ) {
 	$filters = array(
 		'all'        => array(
 			/* translators: Activity filter label shown in dropdown menus */
-			'default'      => __( 'All Updates', 'buddyboss' ),
+			'default'      => __( 'All Updates', 'buddyboss-platform' ),
 			/* translators: Activity filter label shown after "Show:" text - use lowercase */
-			'show_context' => __( 'all updates', 'buddyboss' ),
+			'show_context' => __( 'all updates', 'buddyboss-platform' ),
 		),
 		'just-me'    => array(
 			/* translators: Activity filter label shown in dropdown menus */
-			'default'      => __( 'Created by Me', 'buddyboss' ),
+			'default'      => __( 'Created by Me', 'buddyboss-platform' ),
 			/* translators: Activity filter label shown after "Show:" text - use lowercase */
-			'show_context' => __( 'created by me', 'buddyboss' ),
+			'show_context' => __( 'created by me', 'buddyboss-platform' ),
 		),
 		'favorites'  => array(
 			/* translators: Activity filter label shown in dropdown menus */
-			'default'      => __( "I've Reacted To", 'buddyboss' ),
+			'default'      => __( "I've Reacted To", 'buddyboss-platform' ),
 			/* translators: Activity filter label shown after "Show:" text - use lowercase */
-			'show_context' => __( "I've reacted to", 'buddyboss' ),
+			'show_context' => __( "I've reacted to", 'buddyboss-platform' ),
 		),
 		'groups'     => array(
 			/* translators: Activity filter label shown in dropdown menus */
-			'default'      => __( 'From My Groups', 'buddyboss' ),
+			'default'      => __( 'From My Groups', 'buddyboss-platform' ),
 			/* translators: Activity filter label shown after "Show:" text - use lowercase */
-			'show_context' => __( 'from my groups', 'buddyboss' ),
+			'show_context' => __( 'from my groups', 'buddyboss-platform' ),
 		),
 		'friends'    => array(
 			/* translators: Activity filter label shown in dropdown menus */
-			'default'      => __( 'From My Connections', 'buddyboss' ),
+			'default'      => __( 'From My Connections', 'buddyboss-platform' ),
 			/* translators: Activity filter label shown after "Show:" text - use lowercase */
-			'show_context' => __( 'from my connections', 'buddyboss' ),
+			'show_context' => __( 'from my connections', 'buddyboss-platform' ),
 		),
 		'mentions'   => array(
 			/* translators: Activity filter label shown in dropdown menus */
-			'default'      => __( "I'm Mentioned In", 'buddyboss' ),
+			'default'      => __( "I'm Mentioned In", 'buddyboss-platform' ),
 			/* translators: Activity filter label shown after "Show:" text - use lowercase */
-			'show_context' => __( "I'm mentioned in", 'buddyboss' ),
+			'show_context' => __( "I'm mentioned in", 'buddyboss-platform' ),
 		),
 		'following'  => array(
 			/* translators: Activity filter label shown in dropdown menus */
-			'default'      => __( "I'm Following", 'buddyboss' ),
+			'default'      => __( "I'm Following", 'buddyboss-platform' ),
 			/* translators: Activity filter label shown after "Show:" text - use lowercase */
-			'show_context' => __( "I'm following", 'buddyboss' ),
+			'show_context' => __( "I'm following", 'buddyboss-platform' ),
 		),
 		'unanswered' => array(
 			/* translators: Activity filter label shown in dropdown menus */
-			'default'      => __( 'Unanswered', 'buddyboss' ),
+			'default'      => __( 'Unanswered', 'buddyboss-platform' ),
 			/* translators: Activity filter label shown after "Show:" text - use lowercase */
-			'show_context' => __( 'unanswered', 'buddyboss' ),
+			'show_context' => __( 'unanswered', 'buddyboss-platform' ),
 		),
 	);
 
@@ -2961,39 +2938,39 @@ function bb_get_activity_timeline_filter_options_labels( $context = 'default' ) 
 	$filters = array(
 		'just-me'   => array(
 			/* translators: Timeline filter label shown in dropdown menus */
-			'default'      => __( 'Personal Posts', 'buddyboss' ),
+			'default'      => __( 'Personal Posts', 'buddyboss-platform' ),
 			/* translators: Timeline filter label shown after "Show:" text - use lowercase if grammatically appropriate in your language */
-			'show_context' => __( 'personal posts', 'buddyboss' ),
+			'show_context' => __( 'personal posts', 'buddyboss-platform' ),
 		),
 		'favorites' => array(
 			/* translators: Timeline filter label shown in dropdown menus */
-			'default'      => __( 'Reacted To', 'buddyboss' ),
+			'default'      => __( 'Reacted To', 'buddyboss-platform' ),
 			/* translators: Timeline filter label shown after "Show:" text - use lowercase if grammatically appropriate in your language */
-			'show_context' => __( 'reacted to', 'buddyboss' ),
+			'show_context' => __( 'reacted to', 'buddyboss-platform' ),
 		),
 		'groups'    => array(
 			/* translators: Timeline filter label shown in dropdown menus */
-			'default'      => __( 'From Groups', 'buddyboss' ),
+			'default'      => __( 'From Groups', 'buddyboss-platform' ),
 			/* translators: Timeline filter label shown after "Show:" text - use lowercase if grammatically appropriate in your language */
-			'show_context' => __( 'from groups', 'buddyboss' ),
+			'show_context' => __( 'from groups', 'buddyboss-platform' ),
 		),
 		'friends'   => array(
 			/* translators: Timeline filter label shown in dropdown menus */
-			'default'      => __( 'From Connections', 'buddyboss' ),
+			'default'      => __( 'From Connections', 'buddyboss-platform' ),
 			/* translators: Timeline filter label shown after "Show:" text - use lowercase if grammatically appropriate in your language */
-			'show_context' => __( 'from connections', 'buddyboss' ),
+			'show_context' => __( 'from connections', 'buddyboss-platform' ),
 		),
 		'mentions'  => array(
 			/* translators: Timeline filter label shown in dropdown menus */
-			'default'      => __( 'Mentioned In', 'buddyboss' ),
+			'default'      => __( 'Mentioned In', 'buddyboss-platform' ),
 			/* translators: Timeline filter label shown after "Show:" text - use lowercase if grammatically appropriate in your language */
-			'show_context' => __( 'mentioned in', 'buddyboss' ),
+			'show_context' => __( 'mentioned in', 'buddyboss-platform' ),
 		),
 		'following' => array(
 			/* translators: Timeline filter label shown in dropdown menus */
-			'default'      => __( 'Following', 'buddyboss' ),
+			'default'      => __( 'Following', 'buddyboss-platform' ),
 			/* translators: Timeline filter label shown after "Show:" text - use lowercase if grammatically appropriate in your language */
-			'show_context' => __( 'following', 'buddyboss' ),
+			'show_context' => __( 'following', 'buddyboss-platform' ),
 		),
 	);
 
@@ -3074,15 +3051,15 @@ function bb_get_activity_sorting_options_labels( $context = 'default' ) {
 	$sorting_options = array(
 		'date_recorded' => array(
 			/* translators: Sorting option label shown in dropdown menus */
-			'default'    => __( 'New Posts', 'buddyboss' ),
+			'default'    => __( 'New Posts', 'buddyboss-platform' ),
 			/* translators: Sorting option label shown after "by" text - use lowercase if grammatically appropriate in your language */
-			'by_context' => __( 'new posts', 'buddyboss' ),
+			'by_context' => __( 'new posts', 'buddyboss-platform' ),
 		),
 		'date_updated'  => array(
 			/* translators: Sorting option label shown in dropdown menus */
-			'default'    => __( 'Recent Activity', 'buddyboss' ),
+			'default'    => __( 'Recent Activity', 'buddyboss-platform' ),
 			/* translators: Sorting option label shown after "by" text - use lowercase if grammatically appropriate in your language */
-			'by_context' => __( 'recent activity', 'buddyboss' ),
+			'by_context' => __( 'recent activity', 'buddyboss-platform' ),
 		),
 	);
 

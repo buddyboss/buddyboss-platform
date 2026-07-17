@@ -180,24 +180,24 @@ class BP_XProfile_Component extends BP_Component {
 		$this->visibility_levels = array(
 			'public'     => array(
 				'id'    => 'public',
-				'label' => __( 'Public', 'buddyboss' ),
+				'label' => __( 'Public', 'buddyboss-platform' ),
 			),
 			'loggedin'   => array(
 				'id'    => 'loggedin',
-				'label' => __( 'All Members', 'buddyboss' ),
+				'label' => __( 'All Members', 'buddyboss-platform' ),
 			),
 		);
 
 		if ( bp_is_active( 'friends' ) ) {
 			$this->visibility_levels['friends'] = array(
 				'id'    => 'friends',
-				'label' => __( 'My Connections', 'buddyboss' ),
+				'label' => __( 'My Connections', 'buddyboss-platform' ),
 			);
 		}
 
 		$this->visibility_levels['adminsonly'] = array(
 			'id'    => 'adminsonly',
-			'label' => __( 'Only Me', 'buddyboss' ),
+			'label' => __( 'Only Me', 'buddyboss-platform' ),
 		);
 
 		// Tables.
@@ -253,7 +253,7 @@ class BP_XProfile_Component extends BP_Component {
 
 		// Add 'Profile' to the main navigation.
 		$main_nav = array(
-			'name'                => __( 'Profile', 'buddyboss' ),
+			'name'                => __( 'Profile', 'buddyboss-platform' ),
 			'slug'                => $slug,
 			'position'            => 20,
 			'screen_function'     => 'xprofile_screen_display_profile',
@@ -263,7 +263,7 @@ class BP_XProfile_Component extends BP_Component {
 
 		// Add the subnav items to the profile.
 		$sub_nav[] = array(
-			'name'            => __( 'View', 'buddyboss' ),
+			'name'            => __( 'View', 'buddyboss-platform' ),
 			'slug'            => 'public',
 			'parent_url'      => $profile_link,
 			'parent_slug'     => $slug,
@@ -273,7 +273,7 @@ class BP_XProfile_Component extends BP_Component {
 
 		// Edit Profile.
 		$sub_nav[] = array(
-			'name'            => __( 'Edit', 'buddyboss' ),
+			'name'            => __( 'Edit', 'buddyboss-platform' ),
 			'slug'            => 'edit',
 			'parent_url'      => $profile_link,
 			'parent_slug'     => $slug,
@@ -285,7 +285,7 @@ class BP_XProfile_Component extends BP_Component {
 		// Change Avatar.
 		if ( buddypress()->avatar->show_avatars && ! bp_disable_avatar_uploads() ) {
 			$sub_nav[] = array(
-				'name'            => __( 'Profile Photo', 'buddyboss' ),
+				'name'            => __( 'Profile Photo', 'buddyboss-platform' ),
 				'slug'            => 'change-avatar',
 				'parent_url'      => $profile_link,
 				'parent_slug'     => $slug,
@@ -298,7 +298,7 @@ class BP_XProfile_Component extends BP_Component {
 		// Change cover photo.
 		if ( bp_displayed_user_use_cover_image_header() ) {
 			$sub_nav[] = array(
-				'name'            => __( 'Cover Photo', 'buddyboss' ),
+				'name'            => __( 'Cover Photo', 'buddyboss-platform' ),
 				'slug'            => 'change-cover-image',
 				'parent_url'      => $profile_link,
 				'parent_slug'     => $slug,
@@ -342,7 +342,7 @@ class BP_XProfile_Component extends BP_Component {
 
 		bp_core_new_subnav_item(
 			array(
-				'name'            => __( 'Privacy', 'buddyboss' ),
+				'name'            => __( 'Privacy', 'buddyboss-platform' ),
 				'slug'            => 'profile',
 				'parent_url'      => trailingslashit( $user_domain . $settings_slug ),
 				'parent_slug'     => $settings_slug,
@@ -373,7 +373,7 @@ class BP_XProfile_Component extends BP_Component {
 			$wp_admin_nav[] = array(
 				'parent' => buddypress()->my_account_menu_id,
 				'id'     => 'my-account-' . $this->id,
-				'title'  => __( 'Profile', 'buddyboss' ),
+				'title'  => __( 'Profile', 'buddyboss-platform' ),
 				'href'   => $profile_link,
 			);
 
@@ -381,7 +381,7 @@ class BP_XProfile_Component extends BP_Component {
 			$wp_admin_nav[] = array(
 				'parent'   => 'my-account-' . $this->id,
 				'id'       => 'my-account-' . $this->id . '-public',
-				'title'    => __( 'View', 'buddyboss' ),
+				'title'    => __( 'View', 'buddyboss-platform' ),
 				'href'     => $profile_link,
 				'position' => 10,
 			);
@@ -390,7 +390,7 @@ class BP_XProfile_Component extends BP_Component {
 			$wp_admin_nav[] = array(
 				'parent'   => 'my-account-' . $this->id,
 				'id'       => 'my-account-' . $this->id . '-edit',
-				'title'    => __( 'Edit', 'buddyboss' ),
+				'title'    => __( 'Edit', 'buddyboss-platform' ),
 				'href'     => trailingslashit( $profile_link . 'edit' ),
 				'position' => 20,
 			);
@@ -400,7 +400,7 @@ class BP_XProfile_Component extends BP_Component {
 				$wp_admin_nav[] = array(
 					'parent'   => 'my-account-' . $this->id,
 					'id'       => 'my-account-' . $this->id . '-change-avatar',
-					'title'    => __( 'Profile Photo', 'buddyboss' ),
+					'title'    => __( 'Profile Photo', 'buddyboss-platform' ),
 					'href'     => trailingslashit( $profile_link . 'change-avatar' ),
 					'position' => 30,
 				);
@@ -410,7 +410,7 @@ class BP_XProfile_Component extends BP_Component {
 				$wp_admin_nav[] = array(
 					'parent'   => 'my-account-' . $this->id,
 					'id'       => 'my-account-' . $this->id . '-change-cover-image',
-					'title'    => __( 'Cover Photo', 'buddyboss' ),
+					'title'    => __( 'Cover Photo', 'buddyboss-platform' ),
 					'href'     => trailingslashit( $profile_link . 'change-cover-image' ),
 					'position' => 40,
 				);
@@ -440,13 +440,14 @@ class BP_XProfile_Component extends BP_Component {
 			$bp = buddypress();
 
 			if ( bp_is_my_profile() ) {
-				$bp->bp_options_title = __( 'My Profile', 'buddyboss' );
+				$bp->bp_options_title = __( 'My Profile', 'buddyboss-platform' );
 			} else {
 				$bp->bp_options_avatar = bp_core_fetch_avatar(
 					array(
 						'item_id' => bp_displayed_user_id(),
 						'type'    => 'thumb',
-						'alt'     => sprintf( __( 'Profile photo of %s', 'buddyboss' ), bp_get_displayed_user_fullname() ),
+						/* translators: %s: member display name. */
+						'alt'     => sprintf( __( 'Profile photo of %s', 'buddyboss-platform' ), bp_get_displayed_user_fullname() ),
 					)
 				);
 				$bp->bp_options_title  = bp_get_displayed_user_fullname();
@@ -495,7 +496,7 @@ class BP_XProfile_Component extends BP_Component {
 		$wp_admin_nav[] = array(
 			'parent'   => 'my-account-' . buddypress()->settings->id,
 			'id'       => 'my-account-' . buddypress()->settings->id . '-profile',
-			'title'    => __( 'Privacy', 'buddyboss' ),
+			'title'    => __( 'Privacy', 'buddyboss-platform' ),
 			'href'     => trailingslashit( $settings_link . 'profile' ),
 			'position' => 30,
 		);

@@ -74,7 +74,7 @@ class BP_REST_Moderation_Report_Endpoint extends WP_REST_Controller {
 		$fields = array(
 			'type'        => 'radio',
 			'name'        => 'report_category',
-			'label'       => esc_html__( 'Report Content', 'buddyboss' ),
+			'label'       => esc_html__( 'Report Content', 'buddyboss-platform' ),
 			'description' => '',
 			'is_required' => true,
 			'options'     => array(),
@@ -82,7 +82,7 @@ class BP_REST_Moderation_Report_Endpoint extends WP_REST_Controller {
 
 		$count = 1;
 
-		$reports_terms = get_terms( 'bpm_category', array( 'hide_empty' => false ) );
+		$reports_terms = get_terms( array( 'taxonomy' => 'bpm_category', 'hide_empty' => false ) );
 		if ( ! empty( $reports_terms ) ) {
 			foreach ( $reports_terms as $reports_term ) {
 				$show_when           = get_term_meta( $reports_term->term_id, 'bb_category_show_when_reporting', true );
@@ -101,7 +101,7 @@ class BP_REST_Moderation_Report_Endpoint extends WP_REST_Controller {
 		$fields['options'][] = array(
 			'id'                => '',
 			'type'              => 'option',
-			'name'              => esc_html__( 'Other', 'buddyboss' ),
+			'name'              => esc_html__( 'Other', 'buddyboss-platform' ),
 			'description'       => '',
 			'show_when'         => 'content_members',
 			'is_default_option' => ( 1 === $count ),
@@ -160,7 +160,7 @@ class BP_REST_Moderation_Report_Endpoint extends WP_REST_Controller {
 		$retval[] = array(
 			'type'        => 'submit',
 			'name'        => '',
-			'label'       => esc_attr__( 'Send Report', 'buddyboss' ),
+			'label'       => esc_attr__( 'Send Report', 'buddyboss-platform' ),
 			'description' => '',
 			'is_required' => false,
 			'options'     => array(),
@@ -197,7 +197,7 @@ class BP_REST_Moderation_Report_Endpoint extends WP_REST_Controller {
 	public function get_items_permissions_check( $request ) {
 		$retval = new WP_Error(
 			'bp_rest_authorization_required',
-			__( 'Sorry, you need to be logged in to view the block members.', 'buddyboss' ),
+			__( 'Sorry, you need to be logged in to view the block members.', 'buddyboss-platform' ),
 			array(
 				'status' => rest_authorization_required_code(),
 			)
@@ -249,7 +249,7 @@ class BP_REST_Moderation_Report_Endpoint extends WP_REST_Controller {
 		if ( 'other' === $args['category_id'] && empty( $args['note'] ) ) {
 			return new WP_Error(
 				'rest_missing_callback_param',
-				__( 'Missing parameter(s): note', 'buddyboss' ),
+				__( 'Missing parameter(s): note', 'buddyboss-platform' ),
 				array(
 					'status' => 400,
 					'params' => array( 'note' ),
@@ -266,7 +266,7 @@ class BP_REST_Moderation_Report_Endpoint extends WP_REST_Controller {
 		if ( empty( $item_sub_id ) || empty( $item_sub_type ) ) {
 			return new WP_Error(
 				'bp_rest_moderation_invalid_report',
-				__( 'Sorry, Invalid item to report.', 'buddyboss' ),
+				__( 'Sorry, Invalid item to report.', 'buddyboss-platform' ),
 				array(
 					'status' => 400,
 				)
@@ -275,8 +275,8 @@ class BP_REST_Moderation_Report_Endpoint extends WP_REST_Controller {
 
 		if ( bp_moderation_report_exist( $item_sub_id, $item_sub_type ) ) {
 			$message = ( BP_Moderation_Members::$moderation_type_report === $item_sub_type ) ?
-			__( 'You have already reported this Member.', 'buddyboss' ) :
-			__( 'Sorry, Already reported this item.', 'buddyboss' );
+			__( 'You have already reported this Member.', 'buddyboss-platform' ) :
+			__( 'Sorry, Already reported this item.', 'buddyboss-platform' );
 			return new WP_Error(
 				'bp_rest_moderation_already_reported',
 				$message,
@@ -298,7 +298,7 @@ class BP_REST_Moderation_Report_Endpoint extends WP_REST_Controller {
 		if ( empty( $report->id ) || empty( $report->report_id ) ) {
 			return new WP_Error(
 				'bp_rest_moderation_report_error',
-				__( 'Sorry, something goes wrong please try again.', 'buddyboss' ),
+				__( 'Sorry, something goes wrong please try again.', 'buddyboss-platform' ),
 				array(
 					'status' => 400,
 				)
@@ -335,7 +335,7 @@ class BP_REST_Moderation_Report_Endpoint extends WP_REST_Controller {
 	public function create_item_permissions_check( $request ) {
 		$retval = new WP_Error(
 			'bp_rest_authorization_required',
-			__( 'Sorry, you are not allowed to report a moderation.', 'buddyboss' ),
+			__( 'Sorry, you are not allowed to report a moderation.', 'buddyboss-platform' ),
 			array(
 				'status' => rest_authorization_required_code(),
 			)
@@ -349,7 +349,7 @@ class BP_REST_Moderation_Report_Endpoint extends WP_REST_Controller {
 			if ( ! bp_moderation_user_can( (int) $request['item_id'], $content_type ) ) {
 				$retval = new WP_Error(
 					'bp_rest_invalid_item',
-					__( 'Sorry, you are not allowed to report this item.', 'buddyboss' ),
+					__( 'Sorry, you are not allowed to report this item.', 'buddyboss-platform' ),
 					array(
 						'status' => rest_authorization_required_code(),
 					)
@@ -431,12 +431,12 @@ class BP_REST_Moderation_Report_Endpoint extends WP_REST_Controller {
 			if ( ! empty( $media->activity_id ) ) {
 				$report_links = $this->prepare_report_link( $media->activity_id, BP_Suspend_Activity::$type );
 			}
-		} elseif ( 'document' === $request['item_type'] && bp_is_active( 'activity' ) ) {
+		} elseif ( 'document' === $request['item_type'] && bp_is_active( 'document' ) && bp_is_active( 'activity' ) ) {
 			$document = new BP_Document( $request['item_id'] );
 			if ( ! empty( $document->activity_id ) ) {
 				$report_links = $this->prepare_report_link( $document->activity_id, BP_Suspend_Activity::$type );
 			}
-		} elseif ( 'video' === $request['item_type'] && bp_is_active( 'activity' ) ) {
+		} elseif ( 'video' === $request['item_type'] && bp_is_active( 'video' ) && bp_is_active( 'activity' ) ) {
 			$video = new BP_Video( $request['item_id'] );
 			if ( ! empty( $video->activity_id ) ) {
 				$report_links = $this->prepare_report_link( $video->activity_id, BP_Suspend_Activity::$type );
@@ -572,8 +572,8 @@ class BP_REST_Moderation_Report_Endpoint extends WP_REST_Controller {
 			$params['context']['default'] = 'edit';
 
 			$reports_terms   = get_terms(
-				'bpm_category',
 				array(
+					'taxonomy'   => 'bpm_category',
 					'hide_empty' => false,
 					'fields'     => 'ids',
 				)
@@ -583,7 +583,7 @@ class BP_REST_Moderation_Report_Endpoint extends WP_REST_Controller {
 			$reports_terms = array_map( 'strval', $reports_terms );
 
 			$args['report_category'] = array(
-				'description'       => __( 'Report Content', 'buddyboss' ),
+				'description'       => __( 'Report Content', 'buddyboss-platform' ),
 				'type'              => 'string',
 				'required'          => true,
 				'sanitize_callback' => 'sanitize_key',
@@ -592,7 +592,7 @@ class BP_REST_Moderation_Report_Endpoint extends WP_REST_Controller {
 			);
 
 			$args['note'] = array(
-				'description'       => __( 'User Notes for the other type of report.', 'buddyboss' ),
+				'description'       => __( 'User Notes for the other type of report.', 'buddyboss-platform' ),
 				'type'              => 'string',
 				'default'           => '',
 				'sanitize_callback' => 'sanitize_key',
@@ -600,7 +600,7 @@ class BP_REST_Moderation_Report_Endpoint extends WP_REST_Controller {
 			);
 
 			$args['item_id'] = array(
-				'description'       => __( 'Unique identifier for the content to report.', 'buddyboss' ),
+				'description'       => __( 'Unique identifier for the content to report.', 'buddyboss-platform' ),
 				'type'              => 'integer',
 				'required'          => true,
 				'sanitize_callback' => 'sanitize_key',
@@ -614,7 +614,7 @@ class BP_REST_Moderation_Report_Endpoint extends WP_REST_Controller {
 			}
 
 			$args['item_type'] = array(
-				'description'       => __( 'Component type to report.', 'buddyboss' ),
+				'description'       => __( 'Component type to report.', 'buddyboss-platform' ),
 				'type'              => 'string',
 				'required'          => true,
 				'enum'              => array_keys( $content_types ),
@@ -670,111 +670,111 @@ class BP_REST_Moderation_Report_Endpoint extends WP_REST_Controller {
 			'properties' => array(
 				'type'          => array(
 					'context'     => array( 'view' ),
-					'description' => __( 'Field type name.', 'buddyboss' ),
+					'description' => __( 'Field type name.', 'buddyboss-platform' ),
 					'readonly'    => true,
 					'type'        => 'string',
 				),
 				'name'          => array(
 					'context'     => array( 'view' ),
-					'description' => __( 'Name of the field.', 'buddyboss' ),
+					'description' => __( 'Name of the field.', 'buddyboss-platform' ),
 					'readonly'    => true,
 					'type'        => 'string',
 				),
 				'label'         => array(
 					'context'     => array( 'view' ),
-					'description' => __( 'Label of the field.', 'buddyboss' ),
+					'description' => __( 'Label of the field.', 'buddyboss-platform' ),
 					'readonly'    => true,
 					'type'        => 'string',
 				),
 				'description'   => array(
 					'context'     => array( 'view' ),
-					'description' => __( 'Field explanation to understand the purpose.', 'buddyboss' ),
+					'description' => __( 'Field explanation to understand the purpose.', 'buddyboss-platform' ),
 					'readonly'    => true,
 					'type'        => 'string',
 				),
 				'is_required'   => array(
 					'context'     => array( 'view' ),
-					'description' => __( 'Check the field if required or not.', 'buddyboss' ),
+					'description' => __( 'Check the field if required or not.', 'buddyboss-platform' ),
 					'readonly'    => true,
 					'type'        => 'boolean',
 				),
 				'options'       => array(
 					'context'     => array( 'view' ),
-					'description' => __( 'Options set for the fields.', 'buddyboss' ),
+					'description' => __( 'Options set for the fields.', 'buddyboss-platform' ),
 					'readonly'    => true,
 					'type'        => 'object',
 				),
 				'id'            => array(
 					'context'     => array( 'edit' ),
-					'description' => __( 'A unique numeric ID for the moderation.', 'buddyboss' ),
+					'description' => __( 'A unique numeric ID for the moderation.', 'buddyboss-platform' ),
 					'readonly'    => true,
 					'type'        => 'integer',
 				),
 				'report_id'     => array(
 					'context'     => array( 'edit' ),
-					'description' => __( 'A unique numeric ID for the moderation report.', 'buddyboss' ),
+					'description' => __( 'A unique numeric ID for the moderation report.', 'buddyboss-platform' ),
 					'readonly'    => true,
 					'type'        => 'integer',
 				),
 				'blog_id'       => array(
 					'context'     => array( 'edit' ),
-					'description' => __( 'Current Site ID.', 'buddyboss' ),
+					'description' => __( 'Current Site ID.', 'buddyboss-platform' ),
 					'readonly'    => true,
 					'type'        => 'integer',
 				),
 				'user_id'       => array(
 					'context'     => array( 'edit' ),
-					'description' => __( 'Reported user ID.', 'buddyboss' ),
+					'description' => __( 'Reported user ID.', 'buddyboss-platform' ),
 					'readonly'    => true,
 					'type'        => 'integer',
 				),
 				'item_id'       => array(
 					'context'     => array( 'edit' ),
-					'description' => __( 'Reported Item ID.', 'buddyboss' ),
+					'description' => __( 'Reported Item ID.', 'buddyboss-platform' ),
 					'readonly'    => true,
 					'type'        => 'integer',
 				),
 				'item_type'     => array(
 					'context'     => array( 'edit' ),
-					'description' => __( 'Reported Item Type.', 'buddyboss' ),
+					'description' => __( 'Reported Item Type.', 'buddyboss-platform' ),
 					'readonly'    => true,
 					'type'        => 'string',
 				),
 				'content'       => array(
 					'context'     => array( 'edit' ),
-					'description' => __( 'The report description.', 'buddyboss' ),
+					'description' => __( 'The report description.', 'buddyboss-platform' ),
 					'readonly'    => true,
 					'type'        => 'string',
 				),
 				'category_id'   => array(
 					'context'     => array( 'edit' ),
-					'description' => __( 'Report Category ID.', 'buddyboss' ),
+					'description' => __( 'Report Category ID.', 'buddyboss-platform' ),
 					'readonly'    => true,
 					'type'        => 'integer',
 				),
 				'date_created'  => array(
 					'context'     => array( 'edit' ),
-					'description' => __( 'Report created date.', 'buddyboss' ),
+					'description' => __( 'Report created date.', 'buddyboss-platform' ),
 					'readonly'    => true,
 					'type'        => 'string',
 					'format'      => 'date-time',
 				),
 				'last_updated'  => array(
 					'context'     => array( 'edit' ),
-					'description' => __( 'Report updated date.', 'buddyboss' ),
+					'description' => __( 'Report updated date.', 'buddyboss-platform' ),
 					'readonly'    => true,
 					'type'        => 'string',
 					'format'      => 'date-time',
 				),
 				'hide_sitewide' => array(
 					'context'     => array( 'edit' ),
-					'description' => __( 'Whether it is hidden of all or not.', 'buddyboss' ),
+					'description' => __( 'Whether it is hidden of all or not.', 'buddyboss-platform' ),
 					'readonly'    => true,
 					'type'        => 'boolean',
 				),
 				'count'         => array(
 					'context'     => array( 'edit' ),
-					'description' => __( 'Number of time item was reported.', 'buddyboss' ),
+					'description' => __( 'Number of time item was reported.', 'buddyboss-platform' ),
 					'readonly'    => true,
 					'type'        => 'integer',
 				),

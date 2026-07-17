@@ -24,8 +24,8 @@ class BB_Core_Connections_Widget extends WP_Widget {
 	public function __construct() {
 		parent::__construct(
 			'bb_connections_widget',
-			esc_html__( 'Connections', 'buddyboss' ),
-			array( 'description' => esc_html__( 'Displays user connections (friends) in a grid.', 'buddyboss' ) )
+			esc_html__( 'Connections', 'buddyboss-platform' ),
+			array( 'description' => esc_html__( 'Displays user connections (friends) in a grid.', 'buddyboss-platform' ) )
 		);
 	}
 
@@ -64,9 +64,9 @@ class BB_Core_Connections_Widget extends WP_Widget {
 		$see_all_url = bp_core_get_user_domain( $user_id ) . bp_get_friends_slug() . '/';
 		?>
 		<div class="widget-header">
-			<h2 class="widget-title"><?php esc_html_e( 'Connections', 'buddyboss' ); ?></h2>
+			<h2 class="widget-title"><?php esc_html_e( 'Connections', 'buddyboss-platform' ); ?></h2>
 			<a href="<?php echo esc_url( $see_all_url ); ?>" class="widget-link">
-				<?php esc_html_e( 'See all', 'buddyboss' ); ?>
+				<?php esc_html_e( 'See all', 'buddyboss-platform' ); ?>
 			</a>
 		</div>
 		<ul class="bb-connections-grid">

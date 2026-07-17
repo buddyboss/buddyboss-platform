@@ -24,8 +24,8 @@ class BP_XProfile_Field_Type_Number extends BP_XProfile_Field_Type {
 	public function __construct() {
 		parent::__construct();
 
-		$this->category = __( 'Single Fields', 'buddyboss' );
-		$this->name     = __( 'Number', 'buddyboss' );
+		$this->category = __( 'Single Fields', 'buddyboss-platform' );
+		$this->name     = __( 'Number', 'buddyboss-platform' );
 
 		$this->set_format( '/^\d+|-\d+$/', 'replace' );
 
@@ -86,7 +86,7 @@ class BP_XProfile_Field_Type_Number extends BP_XProfile_Field_Type {
 		do_action( bp_get_the_profile_field_errors_action() );
 		?>
 
-		<input <?php echo $this->get_edit_field_html_elements( $r ); ?> aria-labelledby="<?php bp_the_profile_field_input_name(); ?>-1" aria-describedby="<?php bp_the_profile_field_input_name(); ?>-3">
+		<input <?php echo $this->get_edit_field_html_elements( $r ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- bp_get_form_field_attributes() esc_attr()s each value. ?> aria-labelledby="<?php bp_the_profile_field_input_name(); ?>-1" aria-describedby="<?php bp_the_profile_field_input_name(); ?>-3">
 
 		<?php
 	}
@@ -112,10 +112,10 @@ class BP_XProfile_Field_Type_Number extends BP_XProfile_Field_Type {
 		<label for="<?php bp_the_profile_field_input_name(); ?>" class="screen-reader-text">
 															 <?php
 																/* translators: accessibility text */
-																esc_html_e( 'Number field', 'buddyboss' );
+																esc_html_e( 'Number field', 'buddyboss-platform' );
 																?>
 		</label>
-		<input <?php echo $this->get_edit_field_html_elements( $r ); ?>>
+		<input <?php echo $this->get_edit_field_html_elements( $r ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- bp_get_form_field_attributes() esc_attr()s each value. ?>>
 		<?php
 	}
 

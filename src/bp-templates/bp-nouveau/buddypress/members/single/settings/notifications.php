@@ -8,6 +8,9 @@
  * @version 1.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 // Added this condition for theme backward compatibility.
 if ( bp_action_variables() && 'subscriptions' === bp_action_variable( 0 ) ) {
 	bp_get_template_part( 'members/single/settings/subscriptions' );
@@ -43,43 +46,43 @@ if ( $is_web_enabled && $is_app_enabled ) {
 		<div class="notification_info">
 
 			<div class="notification_type email_notification">
-				<span class="notification_type_icon" aria-label="<?php esc_attr_e( 'Email', 'buddyboss' ); ?>">
+				<span class="notification_type_icon" aria-label="<?php esc_attr_e( 'Email', 'buddyboss-platform' ); ?>">
 					<i class="bb-icon bb-icon-mail"></i>
 				</span>
 
 				<div class="notification_type_info">
-					<h3><?php esc_attr_e( 'Email', 'buddyboss' ); ?></h3>
-					<p><?php esc_attr_e( 'A notification sent to your inbox', 'buddyboss' ); ?></p>
+					<h3><?php esc_attr_e( 'Email', 'buddyboss-platform' ); ?></h3>
+					<p><?php esc_attr_e( 'A notification sent to your inbox', 'buddyboss-platform' ); ?></p>
 				</div>
 			</div><!-- .notification_type -->
 
 			<?php if ( $is_web_enabled ) { ?>
 			<div class="notification_type web_notification">
-				<span class="notification_type_icon" aria-label="<?php esc_attr_e( 'Web', 'buddyboss' ); ?>">
+				<span class="notification_type_icon" aria-label="<?php esc_attr_e( 'Web', 'buddyboss-platform' ); ?>">
 					<i class="bb-icon bb-icon-monitor"></i>
 				</span>
 
 				<div class="notification_type_info">
-					<h3><?php esc_attr_e( 'Web', 'buddyboss' ); ?></h3>
-					<p><?php esc_attr_e( 'A notification in the corner of your screen', 'buddyboss' ); ?></p>
+					<h3><?php esc_attr_e( 'Web', 'buddyboss-platform' ); ?></h3>
+					<p><?php esc_attr_e( 'A notification in the corner of your screen', 'buddyboss-platform' ); ?></p>
 				</div>
 			</div><!-- .notification_type -->
 			<?php } ?>
 
 			<?php if ( $is_app_enabled ) { ?>
 			<div class="notification_type app_notification">
-				<span class="notification_type_icon" aria-label="<?php esc_attr_e( 'App', 'buddyboss' ); ?>">
+				<span class="notification_type_icon" aria-label="<?php esc_attr_e( 'App', 'buddyboss-platform' ); ?>">
 					<i class="bb-icon bb-icon-smartphone"></i>
 				</span>
 
 				<div class="notification_type_info">
-					<h3><?php esc_attr_e( 'App', 'buddyboss' ); ?></h3>
-					<p><?php esc_attr_e( 'A notification pushed to your mobile device', 'buddyboss' ); ?></p>
+					<h3><?php esc_attr_e( 'App', 'buddyboss-platform' ); ?></h3>
+					<p><?php esc_attr_e( 'A notification pushed to your mobile device', 'buddyboss-platform' ); ?></p>
 				</div>
 			</div><!-- .notification_type -->
 			<?php } ?>
 
-			<p class="notification_learn_more"><a href="#"><?php esc_html_e( 'Learn more', 'buddyboss' ); ?><span class="bb-icon-chevron-down"></span></a></p>
+			<p class="notification_learn_more"><a href="#"><?php esc_html_e( 'Learn more', 'buddyboss-platform' ); ?><span class="bb-icon-chevron-down"></span></a></p>
 
 		</div><!-- .notification_info -->
 		<?php

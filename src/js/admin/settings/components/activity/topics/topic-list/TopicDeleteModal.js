@@ -57,7 +57,7 @@ export function TopicDeleteModal( { isOpen, onClose, onConfirm, topic, available
 
 	// Add a default empty option.
 	topicOptions.unshift( {
-		label: __( 'Select topic', 'buddyboss' ),
+		label: __( 'Select topic', 'buddyboss-platform' ),
 		value: '',
 	} );
 
@@ -77,7 +77,7 @@ export function TopicDeleteModal( { isOpen, onClose, onConfirm, topic, available
 			title={
 				/* translators: %s: Topic name. */
 				wp.i18n.sprintf(
-					__( 'Deleting "%s"?', 'buddyboss' ),
+					__( 'Deleting "%s"?', 'buddyboss-platform' ),
 					topic.name
 				)
 			}
@@ -87,18 +87,18 @@ export function TopicDeleteModal( { isOpen, onClose, onConfirm, topic, available
 		>
 			<div className="bb-topic-delete-modal__body">
 				<p className="bb-topic-delete-modal__warning">
-					{ __( 'Deleting this topic will remove it from all posts it is assigned to and cannot be undone. Those posts will have no topic unless you assign a new one using the options below.', 'buddyboss' ) }
+					{ __( 'Deleting this topic will remove it from all posts it is assigned to and cannot be undone. Those posts will have no topic unless you assign a new one using the options below.', 'buddyboss-platform' ) }
 				</p>
 
 				<RadioControl
 					selected={ migrateType }
 					options={ [
 						{
-							label: __( 'Move posts to another topic', 'buddyboss' ),
+							label: __( 'Move posts to another topic', 'buddyboss-platform' ),
 							value: 'migrate',
 						},
 						{
-							label: __( 'Delete the topic', 'buddyboss' ),
+							label: __( 'Delete the topic', 'buddyboss-platform' ),
 							value: 'delete',
 						},
 					] }
@@ -123,7 +123,7 @@ export function TopicDeleteModal( { isOpen, onClose, onConfirm, topic, available
 					onClick={ onClose }
 					disabled={ isSaving }
 				>
-					{ __( 'Cancel', 'buddyboss' ) }
+					{ __( 'Cancel', 'buddyboss-platform' ) }
 				</Button>
 				<Button
 					variant="primary"
@@ -132,7 +132,7 @@ export function TopicDeleteModal( { isOpen, onClose, onConfirm, topic, available
 					isBusy={ isSaving }
 					disabled={ isConfirmDisabled }
 				>
-					{ __( 'Confirm & Delete', 'buddyboss' ) }
+					{ __( 'Confirm & Delete', 'buddyboss-platform' ) }
 				</Button>
 			</div>
 		</Modal>

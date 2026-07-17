@@ -24,8 +24,8 @@ class BP_XProfile_Field_Type_Telephone extends BP_XProfile_Field_Type {
 	public function __construct() {
 		parent::__construct();
 
-		$this->category = __( 'Single Fields', 'buddyboss' );
-		$this->name     = __( 'Phone', 'buddyboss' );
+		$this->category = __( 'Single Fields', 'buddyboss-platform' );
+		$this->name     = __( 'Phone', 'buddyboss-platform' );
 
 		$this->set_format( '/^.*$/', 'replace' );
 
@@ -100,7 +100,7 @@ class BP_XProfile_Field_Type_Telephone extends BP_XProfile_Field_Type {
 		do_action( bp_get_the_profile_field_errors_action() );
 		?>
 
-		<input <?php echo $this->get_edit_field_html_elements( $r ); ?> aria-labelledby="<?php bp_the_profile_field_input_name(); ?>-1" aria-describedby="<?php bp_the_profile_field_input_name(); ?>-3">
+		<input <?php echo $this->get_edit_field_html_elements( $r ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- get_edit_field_html_elements() returns esc_attr'd attribute markup. ?> aria-labelledby="<?php bp_the_profile_field_input_name(); ?>-1" aria-describedby="<?php bp_the_profile_field_input_name(); ?>-3">
 
 		<span class="input_mask_details" data-field_id="<?php echo esc_attr( bp_get_the_profile_field_input_name() ); ?>" data-val="<?php echo esc_attr( $mask ); ?>"></span>
 			
@@ -129,10 +129,10 @@ class BP_XProfile_Field_Type_Telephone extends BP_XProfile_Field_Type {
 		<label for="<?php bp_the_profile_field_input_name(); ?>" class="screen-reader-text">
 															 <?php
 																/* translators: accessibility text */
-																esc_html_e( 'Phone', 'buddyboss' );
+																esc_html_e( 'Phone', 'buddyboss-platform' );
 																?>
 		</label>
-		<input <?php echo $this->get_edit_field_html_elements( $r ); ?>>
+		<input <?php echo $this->get_edit_field_html_elements( $r ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- get_edit_field_html_elements() returns esc_attr'd attribute markup. ?>>
 
 		<?php
 		global $field;
@@ -160,11 +160,11 @@ class BP_XProfile_Field_Type_Telephone extends BP_XProfile_Field_Type {
 
 		$settings = $this->get_field_settings( $current_field );
 		?>
-		<div id="<?php echo esc_attr( $type ); ?>" class="postbox bp-options-box <?php echo $current_field->type; ?>" style="<?php echo esc_attr( $class ); ?> margin-top: 15px;">
+		<div id="<?php echo esc_attr( $type ); ?>" class="postbox bp-options-box <?php echo esc_attr( $current_field->type ); ?>" style="<?php echo esc_attr( $class ); ?> margin-top: 15px;">
 			<table class="form-table bp-date-options">
 				<tr>
 					<th scope="row">
-						<label for="phone-format-elapsed"><?php _e( 'Phone Format', 'buddyboss' ); ?></label>
+						<label for="phone-format-elapsed"><?php esc_html_e( 'Phone Format', 'buddyboss-platform' ); ?></label>
 					</th>
 
 					<td>
@@ -173,9 +173,9 @@ class BP_XProfile_Field_Type_Telephone extends BP_XProfile_Field_Type {
 							foreach ( $this->get_phone_formats() as $format => $details ) {
 								printf(
 									"<option value='%s' %s >%s</option>",
-									$format,
+									esc_attr( $format ),
 									selected( $settings['phone_format'], $format, false ),
-									$details['label']
+									esc_html( $details['label'] )
 								);
 							}
 							?>
@@ -202,7 +202,7 @@ class BP_XProfile_Field_Type_Telephone extends BP_XProfile_Field_Type {
 				'placeholder' => '(###) ###-####',
 			),
 			'international' => array(
-				'label'       => __( 'International', 'buddyboss' ),
+				'label'       => __( 'International', 'buddyboss-platform' ),
 				'mask'        => false,
 				'placeholder' => '',
 			),
@@ -296,11 +296,11 @@ class BP_XProfile_Field_Type_Telephone extends BP_XProfile_Field_Type {
 			?>
 			<script type='text/javascript'>
 				jQuery(document).ready(function($){
-					jQuery('#field_<?php echo $current_field->id; ?>').mask('<?php echo $selected_format_details['mask']; ?>').bind('keypress', function(e){if(e.which == 13){jQuery(this).blur();} } );
+					jQuery('#field_<?php echo esc_attr( $current_field->id ); ?>').mask('<?php echo esc_js( $selected_format_details['mask'] ); ?>').bind('keypress', function(e){if(e.which == 13){jQuery(this).blur();} } );
 				});
 			</script>
 			<?php
-			echo ob_get_clean();
+			echo ob_get_clean(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Output is a <script> block built from values escaped inline above; wp_kses_post would strip the script.
 		}
 	}
 
@@ -316,7 +316,7 @@ class BP_XProfile_Field_Type_Telephone extends BP_XProfile_Field_Type {
 	 */
 	public static function display_filter( $field_value, $field_id = '' ) {
 		$url   = wp_strip_all_tags( html_entity_decode( $field_value, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ) );
-		$parts = parse_url( $url );
+		$parts = wp_parse_url( $url );
 
 		// Add the tel: protocol to the field value.
 		if ( isset( $parts['scheme'] ) ) {

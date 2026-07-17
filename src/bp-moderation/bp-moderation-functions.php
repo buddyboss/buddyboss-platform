@@ -248,11 +248,11 @@ function bp_moderation_get_report_button( $args, $html = true ) {
 
 	// Check moderation setting enabled or not.
 	if ( BP_Moderation_Members::$moderation_type === $item_type ) {
-		$button_text          = __( 'Block', 'buddyboss' );
-		$reported_button_text = __( 'Blocked', 'buddyboss' );
+		$button_text          = __( 'Block', 'buddyboss-platform' );
+		$reported_button_text = __( 'Blocked', 'buddyboss-platform' );
 	} elseif ( BP_Moderation_Members::$moderation_type_report === $item_type ) {
-		$button_text          = __( 'Report Member', 'buddyboss' );
-		$reported_button_text = __( 'Report Member', 'buddyboss' );
+		$button_text          = __( 'Report Member', 'buddyboss-platform' );
+		$reported_button_text = __( 'Report Member', 'buddyboss-platform' );
 	} else {
 		$button_text          = bp_moderation_get_report_button_text( $item_type, $item_id );
 		$reported_button_text = bp_moderation_get_reported_button_text( $item_type, $item_id );
@@ -1313,7 +1313,7 @@ function bp_moderation_get_report_type( $item_type, $item_id ) {
 	 * @param string $content_type Content type.
 	 * @param int    $item_id      Item id.
 	 */
-	return apply_filters( "bp_moderation_{$item_type}_report_content_type", esc_html__( 'Post', 'buddyboss' ), $item_id );
+	return apply_filters( "bp_moderation_{$item_type}_report_content_type", esc_html__( 'Post', 'buddyboss-platform' ), $item_id );
 }
 
 /**
@@ -1339,7 +1339,7 @@ function bp_moderation_get_report_button_text( $item_type, $item_id ) {
 	 * @param string $button_text Button text.
 	 * @param int    $item_id     Item id.
 	 */
-	return apply_filters( "bb_moderation_{$item_type}_report_button_text", esc_html__( 'Report', 'buddyboss' ), $item_id );
+	return apply_filters( "bb_moderation_{$item_type}_report_button_text", esc_html__( 'Report', 'buddyboss-platform' ), $item_id );
 }
 
 /**
@@ -1365,7 +1365,7 @@ function bp_moderation_get_reported_button_text( $item_type, $item_id ) {
 	 * @param string $button_text Button text.
 	 * @param int    $item_id     Item id.
 	 */
-	return apply_filters( "bb_moderation_{$item_type}_reported_button_text", esc_html__( 'Reported', 'buddyboss' ), $item_id );
+	return apply_filters( "bb_moderation_{$item_type}_reported_button_text", esc_html__( 'Reported', 'buddyboss-platform' ), $item_id );
 }
 
 /**
@@ -1378,9 +1378,9 @@ function bp_moderation_get_reported_button_text( $item_type, $item_id ) {
 function bb_moderation_get_reporting_category_fields_array() {
 
 	$result = array(
-		'content'         => esc_html__( 'Content', 'buddyboss' ),
-		'members'         => esc_html__( 'Members', 'buddyboss' ),
-		'content_members' => esc_html__( 'Content & Members', 'buddyboss' ),
+		'content'         => esc_html__( 'Content', 'buddyboss-platform' ),
+		'members'         => esc_html__( 'Members', 'buddyboss-platform' ),
+		'content_members' => esc_html__( 'Content & Members', 'buddyboss-platform' ),
 	);
 
 	/**
@@ -1647,7 +1647,7 @@ function bb_moderation_is_suspended_label( $user_id = 0 ) {
 	 * @param string Default suspended label.
 	 * @param int $user_id User id.
 	 */
-	return apply_filters( 'bb_moderation_is_suspended_label', esc_html__( 'Unknown Member', 'buddyboss' ), $user_id );
+	return apply_filters( 'bb_moderation_is_suspended_label', esc_html__( 'Unknown Member', 'buddyboss-platform' ), $user_id );
 }
 
 /**
@@ -1690,7 +1690,7 @@ function bb_moderation_is_deleted_label() {
 	 *
 	 * @param string Default delete label.
 	 */
-	return apply_filters( 'bb_moderation_is_deleted_label', esc_html__( 'Unknown Member', 'buddyboss' ) );
+	return apply_filters( 'bb_moderation_is_deleted_label', esc_html__( 'Unknown Member', 'buddyboss-platform' ) );
 }
 
 /**
@@ -2275,8 +2275,8 @@ function bb_moderation_moderated_user_ids_sql( $user_id = 0 ) {
 		) ) AS combined_results";
 
 	// Prepare the query with parameters.
-	$retval = $wpdb->prepare(
-		$query,
+	$retval = $wpdb->prepare( // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- $query is a hardcoded query with %s/%d placeholders and table names from $bp->moderation, prepared here.
+		$query, // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $query interpolates only $bp->moderation table names and %s/%d placeholders bound below.
 		BP_Moderation_Members::$moderation_type, // ms.item_type = 'user'.
 		$user_id,                                // m.user_id = 2.
 		BP_Moderation_Members::$moderation_type, // ms.item_type = 'user'.

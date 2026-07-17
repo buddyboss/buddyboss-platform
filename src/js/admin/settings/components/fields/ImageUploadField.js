@@ -65,7 +65,7 @@ function sendAjax( ajaxUrl, action, formData, signal ) {
 		// that's hard for an admin to diagnose.
 		var contentType = response.headers.get( 'content-type' ) || '';
 		if ( -1 === contentType.indexOf( 'application/json' ) ) {
-			throw new Error( __( 'Unexpected server response.', 'buddyboss' ) );
+			throw new Error( __( 'Unexpected server response.', 'buddyboss-platform' ) );
 		}
 		return response.json();
 	} );
@@ -145,13 +145,13 @@ export function ImageUploadField( { uploadConfig, uploadUrl, onUpload, onRemove,
 
 		// Validate file type.
 		if ( ! /^image\/(jpe?g|png)$/i.test( file.type ) ) {
-			setError( __( 'Please select a JPG or PNG image.', 'buddyboss' ) );
+			setError( __( 'Please select a JPG or PNG image.', 'buddyboss-platform' ) );
 			return;
 		}
 
 		// Validate file size.
 		if ( file.size > MAX_FILE_SIZE ) {
-			setError( __( 'File size must be less than 10 MB.', 'buddyboss' ) );
+			setError( __( 'File size must be less than 10 MB.', 'buddyboss-platform' ) );
 			return;
 		}
 
@@ -204,7 +204,7 @@ export function ImageUploadField( { uploadConfig, uploadUrl, onUpload, onRemove,
 				} );
 				setStatus( 'cropping' );
 			} else {
-				var msg = ( response.data && response.data.message ) || __( 'Upload failed.', 'buddyboss' );
+				var msg = ( response.data && response.data.message ) || __( 'Upload failed.', 'buddyboss-platform' );
 				setError( msg );
 				setStatus( 'idle' );
 			}
@@ -212,7 +212,7 @@ export function ImageUploadField( { uploadConfig, uploadUrl, onUpload, onRemove,
 			if ( 'AbortError' === err.name ) {
 				return;
 			}
-			setError( err.message || __( 'Upload failed.', 'buddyboss' ) );
+			setError( err.message || __( 'Upload failed.', 'buddyboss-platform' ) );
 			setStatus( 'idle' );
 		} );
 	};
@@ -262,7 +262,7 @@ export function ImageUploadField( { uploadConfig, uploadUrl, onUpload, onRemove,
 				} );
 				setStatus( 'cropping' );
 			} else {
-				var msg = ( response.data && response.data.message ) || __( 'Upload failed.', 'buddyboss' );
+				var msg = ( response.data && response.data.message ) || __( 'Upload failed.', 'buddyboss-platform' );
 				setError( msg );
 				setStatus( 'idle' );
 			}
@@ -270,7 +270,7 @@ export function ImageUploadField( { uploadConfig, uploadUrl, onUpload, onRemove,
 			if ( 'AbortError' === err.name ) {
 				return;
 			}
-			setError( err.message || __( 'Upload failed.', 'buddyboss' ) );
+			setError( err.message || __( 'Upload failed.', 'buddyboss-platform' ) );
 			setStatus( 'idle' );
 		} );
 	};
@@ -324,7 +324,7 @@ export function ImageUploadField( { uploadConfig, uploadUrl, onUpload, onRemove,
 					onRemove();
 				}
 			} else {
-				var msg = ( response.data && response.data.message ) || __( 'Remove failed.', 'buddyboss' );
+				var msg = ( response.data && response.data.message ) || __( 'Remove failed.', 'buddyboss-platform' );
 				setError( msg );
 				setStatus( 'preview' );
 			}
@@ -332,7 +332,7 @@ export function ImageUploadField( { uploadConfig, uploadUrl, onUpload, onRemove,
 			if ( 'AbortError' === err.name ) {
 				return;
 			}
-			setError( err.message || __( 'Remove failed.', 'buddyboss' ) );
+			setError( err.message || __( 'Remove failed.', 'buddyboss-platform' ) );
 			setStatus( 'preview' );
 		} );
 	};
@@ -397,7 +397,7 @@ export function ImageUploadField( { uploadConfig, uploadUrl, onUpload, onRemove,
 							disabled={ disabled || isLoading }
 						>
 							{ ! isLoading && <i className="bb-icons-rl bb-icons-rl-upload-simple"></i> }
-							{ isLoading ? __( 'Uploading...', 'buddyboss' ) : __( 'Upload', 'buddyboss' ) }
+							{ isLoading ? __( 'Uploading...', 'buddyboss-platform' ) : __( 'Upload', 'buddyboss-platform' ) }
 						</button>
 					</div>
 				</div>
@@ -407,7 +407,7 @@ export function ImageUploadField( { uploadConfig, uploadUrl, onUpload, onRemove,
 			{ 'preview' === status && previewUrl && (
 				<div className="bb-admin-image-upload__preview-area">
 					<div className="bb-admin-image-upload__preview">
-						<img src={ safeUrl( previewUrl ) } alt={ __( 'Uploaded image', 'buddyboss' ) } />
+						<img src={ safeUrl( previewUrl ) } alt={ __( 'Uploaded image', 'buddyboss-platform' ) } />
 					</div>
 					<div className="bb-admin-image-upload__actions">
 						<button
@@ -417,7 +417,7 @@ export function ImageUploadField( { uploadConfig, uploadUrl, onUpload, onRemove,
 							disabled={ disabled }
 						>
 							<i className="bb-icons-rl bb-icons-rl-upload-simple"></i>
-							{ __( 'Upload', 'buddyboss' ) }
+							{ __( 'Upload', 'buddyboss-platform' ) }
 						</button>
 						<button
 							type="button"
@@ -426,7 +426,7 @@ export function ImageUploadField( { uploadConfig, uploadUrl, onUpload, onRemove,
 							disabled={ disabled }
 						>
 							<i className="bb-icons-rl bb-icons-rl-x"></i>
-							{ __( 'Remove', 'buddyboss' ) }
+							{ __( 'Remove', 'buddyboss-platform' ) }
 						</button>
 					</div>
 				</div>
@@ -440,7 +440,7 @@ export function ImageUploadField( { uploadConfig, uploadUrl, onUpload, onRemove,
 					</div>
 					<div className="bb-admin-image-upload__actions">
 						<button type="button" className="bb-admin-image-upload__btn bb-admin-image-upload__btn--upload" disabled>
-							{ __( 'Removing...', 'buddyboss' ) }
+							{ __( 'Removing...', 'buddyboss-platform' ) }
 						</button>
 					</div>
 				</div>

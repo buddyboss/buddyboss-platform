@@ -9,6 +9,9 @@
  * @version 1.5.6
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 $is_send_ajax_request = bb_is_send_ajax_request();
 
 switch ( bp_current_action() ) :

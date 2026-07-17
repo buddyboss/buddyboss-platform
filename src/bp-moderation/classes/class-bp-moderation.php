@@ -1117,9 +1117,9 @@ class BP_Moderation {
 				return false;
 			} else {
 				if ( empty( $this->item_id ) ) {
-					$this->errors->add( 'bp_moderation_missing_item_id', esc_html__( 'Item ID field missing.', 'buddyboss' ) );
+					$this->errors->add( 'bp_moderation_missing_item_id', esc_html__( 'Item ID field missing.', 'buddyboss-platform' ) );
 				} else {
-					$this->errors->add( 'bp_moderation_missing_item_type', esc_html__( 'Item type field missing.', 'buddyboss' ) );
+					$this->errors->add( 'bp_moderation_missing_item_type', esc_html__( 'Item type field missing.', 'buddyboss-platform' ) );
 				}
 			}
 		}

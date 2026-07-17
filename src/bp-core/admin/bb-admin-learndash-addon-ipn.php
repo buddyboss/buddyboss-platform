@@ -214,11 +214,11 @@ function bb_learndash_addon_sync_ipn() {
 		array(
 			'id'      => BB_LEARNDASH_ADDON_IPN_ID,
 			'type'    => BB_LEARNDASH_ADDON_IPN_TYPE,
-			'title'   => __( 'Are you using LearnDash? Install our Add-on', 'buddyboss' ),
+			'title'   => __( 'Are you using LearnDash? Install our Add-on', 'buddyboss-platform' ),
 			'content' => sprintf(
 				'<p>%1$s</p><p>%2$s</p>',
-				esc_html__( 'As part of our update to 3.0 we’ve moved our LearnDash Integration from core into it’s own add-on.', 'buddyboss' ),
-				esc_html__( 'If you are using LearnDash with BuddyBoss Platform/Theme, please install it now or your user’s experience will be impacted.', 'buddyboss' )
+				esc_html__( 'As part of our update to 3.0 we’ve moved our LearnDash Integration from core into it’s own add-on.', 'buddyboss-platform' ),
+				esc_html__( 'If you are using LearnDash with BuddyBoss Platform/Theme, please install it now or your user’s experience will be impacted.', 'buddyboss-platform' )
 			),
 			'segment' => '',
 			'saved'   => time(),
@@ -226,7 +226,7 @@ function bb_learndash_addon_sync_ipn() {
 			'icon'    => $icon_svg,
 			'buttons' => array(
 				'main' => array(
-					'text'   => __( 'Install LearnDash Add-on', 'buddyboss' ),
+					'text'   => __( 'Install LearnDash Add-on', 'buddyboss-platform' ),
 					'url'    => admin_url( 'admin.php?page=buddyboss-addons' ),
 					'target' => '_self',
 				),

@@ -9,6 +9,9 @@
  * @version 1.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 $topic_id = get_the_ID();
 $total    = bbp_get_topic_reply_count( $topic_id );
 ?>
@@ -39,15 +42,16 @@ $total    = bbp_get_topic_reply_count( $topic_id );
 				<span><?php echo wp_kses_post( wp_trim_words( bbp_get_topic_content( $topic_id ), 30, '...' ) ); ?></span><br>
 			</div>
 			<div class="entry-meta">
-				<span><?php echo esc_html__( 'By ', 'buddyboss' ) . esc_html( bp_core_get_user_displayname( bbp_get_topic_author_id( $topic_id ) ) ); ?></span>
+				<span><?php echo esc_html__( 'By ', 'buddyboss-platform' ) . esc_html( bp_core_get_user_displayname( bbp_get_topic_author_id( $topic_id ) ) ); ?></span>
 				<span class="middot">&middot;</span>
 				<?php
-				printf( _n( '%d reply', '%d replies', $total, 'buddyboss' ), $total );
+				/* translators: %d: number of replies. */
+				echo esc_html( sprintf( _n( '%d reply', '%d replies', $total, 'buddyboss-platform' ), $total ) );
 				?>
 				<span class="middot">&middot;</span>
 				<span>
 					<?php
-					esc_html_e( 'Started ', 'buddyboss' );
+					esc_html_e( 'Started ', 'buddyboss-platform' );
 					echo wp_kses_post( bbp_get_topic_created_time( $topic_id ) );
 					?>
 				</span>

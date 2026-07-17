@@ -19,7 +19,7 @@ defined( 'ABSPATH' ) || exit;
  * @uses  bbp_get_topic_post_type() To get the topic post type
  */
 function bbp_topic_post_type() {
-	echo bbp_get_topic_post_type();
+	echo esc_attr( bbp_get_topic_post_type() );
 }
 
 /**
@@ -46,21 +46,21 @@ function bbp_get_topic_post_type_labels() {
 	return apply_filters(
 		'bbp_get_topic_post_type_labels',
 		array(
-			'name'               => __( 'Discussions', 'buddyboss' ),
-			'menu_name'          => __( 'Discussions', 'buddyboss' ),
-			'singular_name'      => __( 'Discussion', 'buddyboss' ),
-			'all_items'          => __( 'All Discussions', 'buddyboss' ),
-			'add_new'            => __( 'New Discussion', 'buddyboss' ),
-			'add_new_item'       => __( 'Start New Discussion', 'buddyboss' ),
-			'edit'               => __( 'Edit', 'buddyboss' ),
-			'edit_item'          => __( 'Edit Discussion', 'buddyboss' ),
-			'new_item'           => __( 'New Discussion', 'buddyboss' ),
-			'view'               => __( 'View Discussion', 'buddyboss' ),
-			'view_item'          => __( 'View Discussion', 'buddyboss' ),
-			'search_items'       => __( 'Search Discussions', 'buddyboss' ),
-			'not_found'          => __( 'No discussions found', 'buddyboss' ),
-			'not_found_in_trash' => __( 'No discussions found in trash', 'buddyboss' ),
-			'parent_item_colon'  => __( 'Forum:', 'buddyboss' ),
+			'name'               => __( 'Discussions', 'buddyboss-platform' ),
+			'menu_name'          => __( 'Discussions', 'buddyboss-platform' ),
+			'singular_name'      => __( 'Discussion', 'buddyboss-platform' ),
+			'all_items'          => __( 'All Discussions', 'buddyboss-platform' ),
+			'add_new'            => __( 'New Discussion', 'buddyboss-platform' ),
+			'add_new_item'       => __( 'Start New Discussion', 'buddyboss-platform' ),
+			'edit'               => __( 'Edit', 'buddyboss-platform' ),
+			'edit_item'          => __( 'Edit Discussion', 'buddyboss-platform' ),
+			'new_item'           => __( 'New Discussion', 'buddyboss-platform' ),
+			'view'               => __( 'View Discussion', 'buddyboss-platform' ),
+			'view_item'          => __( 'View Discussion', 'buddyboss-platform' ),
+			'search_items'       => __( 'Search Discussions', 'buddyboss-platform' ),
+			'not_found'          => __( 'No discussions found', 'buddyboss-platform' ),
+			'not_found_in_trash' => __( 'No discussions found in trash', 'buddyboss-platform' ),
+			'parent_item_colon'  => __( 'Forum:', 'buddyboss-platform' ),
 		)
 	);
 }
@@ -535,7 +535,7 @@ function bbp_add_sticky_topics( &$query, $args = array() ) {
  * @uses  bbp_get_topic_id() To get the topic id
  */
 function bbp_topic_id( $topic_id = 0 ) {
-	echo bbp_get_topic_id( $topic_id );
+	echo esc_attr( bbp_get_topic_id( $topic_id ) );
 }
 
 /**
@@ -694,7 +694,7 @@ function bbp_get_topic_permalink( $topic_id = 0, $redirect_to = '' ) {
  * @uses  bbp_get_topic_title() To get the topic title
  */
 function bbp_topic_title( $topic_id = 0 ) {
-	echo bbp_get_topic_title( $topic_id );
+	echo bbp_get_topic_title( $topic_id ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- bbp_get_topic_title() self-escapes its return value.
 }
 
 /**
@@ -725,7 +725,7 @@ function bbp_get_topic_title( $topic_id = 0 ) {
  * @param string $title Default text to use as title
  */
 function bbp_topic_archive_title( $title = '' ) {
-	echo bbp_get_topic_archive_title( $title );
+	echo esc_html( bbp_get_topic_archive_title( $title ) );
 }
 
 /**
@@ -774,7 +774,7 @@ function bbp_get_topic_archive_title( $title = '' ) {
  * @uses  bbp_get_topic_content() To get the topic content
  */
 function bbp_topic_content( $topic_id = 0 ) {
-	echo bbp_get_topic_content( $topic_id );
+	echo wp_kses_post( bbp_get_topic_content( $topic_id ) );
 }
 
 /**
@@ -816,7 +816,7 @@ function bbp_get_topic_content( $topic_id = 0 ) {
  * @uses  bbp_get_topic_excerpt() To get the topic excerpt
  */
 function bbp_topic_excerpt( $topic_id = 0, $length = 100 ) {
-	echo bbp_get_topic_excerpt( $topic_id, $length );
+	echo wp_kses_post( bbp_get_topic_excerpt( $topic_id, $length ) );
 }
 
 /**
@@ -844,7 +844,7 @@ function bbp_get_topic_excerpt( $topic_id = 0, $length = 100 ) {
 		$excerpt = bbp_get_topic_content( $topic_id );
 	}
 
-	$excerpt = trim( strip_tags( $excerpt ) );
+	$excerpt = trim( wp_strip_all_tags( $excerpt ) );
 
 	// Multibyte support
 	if ( function_exists( 'mb_strlen' ) ) {
@@ -873,7 +873,7 @@ function bbp_get_topic_excerpt( $topic_id = 0, $length = 100 ) {
  * @uses  bbp_get_topic_post_date() to get the output
  */
 function bbp_topic_post_date( $topic_id = 0, $humanize = false, $gmt = false ) {
-	echo bbp_get_topic_post_date( $topic_id, $humanize, $gmt );
+	echo esc_html( bbp_get_topic_post_date( $topic_id, $humanize, $gmt ) );
 }
 
 /**
@@ -904,7 +904,8 @@ function bbp_get_topic_post_date( $topic_id = 0, $humanize = false, $gmt = false
 	} else {
 		$date   = get_post_time( get_option( 'date_format' ), $gmt, $topic_id, true );
 		$time   = get_post_time( get_option( 'time_format' ), $gmt, $topic_id, true );
-		$result = sprintf( _x( '%1$s at %2$s', 'date at time', 'buddyboss' ), $date, $time );
+		/* translators: 1: date, 2: time. */
+		$result = sprintf( _x( '%1$s at %2$s', 'date at time', 'buddyboss-platform' ), $date, $time );
 	}
 
 	return apply_filters( 'bbp_get_topic_post_date', $result, $topic_id, $humanize, $gmt, $date, $time );
@@ -920,7 +921,7 @@ function bbp_get_topic_post_date( $topic_id = 0, $humanize = false, $gmt = false
  * @uses  bbp_get_topic_pagination() To get the topic pagination links
  */
 function bbp_topic_pagination( $args = '' ) {
-	echo bbp_get_topic_pagination( $args );
+	echo wp_kses_post( bbp_get_topic_pagination( $args ) );
 }
 
 /**
@@ -1045,7 +1046,7 @@ function bbp_topic_content_append_revisions( $content = '', $topic_id = 0 ) {
  * @uses  bbp_get_topic_revision_log() To get the topic revision log
  */
 function bbp_topic_revision_log( $topic_id = 0 ) {
-	echo bbp_get_topic_revision_log( $topic_id );
+	echo wp_kses_post( bbp_get_topic_revision_log( $topic_id ) );
 }
 
 /**
@@ -1104,9 +1105,11 @@ function bbp_get_topic_revision_log( $topic_id = 0 ) {
 
 		$r .= "\t" . '<li id="bbp-topic-revision-log-' . esc_attr( $topic_id ) . '-item-' . esc_attr( $revision->ID ) . '" class="bbp-topic-revision-log-item">' . "\n";
 		if ( ! empty( $reason ) ) {
-			$r .= "\t\t" . sprintf( __( 'This discussion was modified %1$s by %2$s. Reason: %3$s', 'buddyboss' ), esc_html( $since ), $author, esc_html( $reason ) ) . "\n";
+			/* translators: 1: time since modification, 2: author name, 3: reason for modification. */
+			$r .= "\t\t" . sprintf( __( 'This discussion was modified %1$s by %2$s. Reason: %3$s', 'buddyboss-platform' ), esc_html( $since ), $author, esc_html( $reason ) ) . "\n";
 		} else {
-			$r .= "\t\t" . sprintf( __( 'This discussion was modified %1$s by %2$s.', 'buddyboss' ), esc_html( $since ), $author ) . "\n";
+			/* translators: 1: time since modification, 2: author name. */
+			$r .= "\t\t" . sprintf( __( 'This discussion was modified %1$s by %2$s.', 'buddyboss-platform' ), esc_html( $since ), $author ) . "\n";
 		}
 		$r .= "\t" . '</li>' . "\n";
 
@@ -1188,7 +1191,7 @@ function bbp_get_topic_revision_count( $topic_id = 0, $integer = false ) {
  * @uses  bbp_get_topic_status() To get the topic status
  */
 function bbp_topic_status( $topic_id = 0 ) {
-	echo bbp_get_topic_status( $topic_id );
+	echo esc_attr( bbp_get_topic_status( $topic_id ) );
 }
 
 /**
@@ -1389,7 +1392,7 @@ function bbp_is_topic_anonymous( $topic_id = 0 ) {
  * @uses       bbp_get_topic_author() To get the topic author
  */
 function bbp_topic_author( $topic_id = 0 ) {
-	echo bbp_get_topic_author( $topic_id );
+	echo esc_html( bbp_get_topic_author( $topic_id ) );
 }
 
 /**
@@ -1435,7 +1438,7 @@ function bbp_get_topic_author( $topic_id = 0 ) {
  * @uses  bbp_get_topic_author_id() To get the topic author id
  */
 function bbp_topic_author_id( $topic_id = 0 ) {
-	echo bbp_get_topic_author_id( $topic_id );
+	echo esc_attr( bbp_get_topic_author_id( $topic_id ) );
 }
 
 /**
@@ -1469,7 +1472,7 @@ function bbp_get_topic_author_id( $topic_id = 0 ) {
  *                                            name
  */
 function bbp_topic_author_display_name( $topic_id = 0 ) {
-	echo bbp_get_topic_author_display_name( $topic_id );
+	echo bbp_get_topic_author_display_name( $topic_id ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- bbp_get_topic_author_display_name() self-escapes its return value.
 }
 
 /**
@@ -1517,7 +1520,7 @@ function bbp_get_topic_author_display_name( $topic_id = 0 ) {
 
 	// If nothing could be found anywhere, use Anonymous
 	if ( empty( $author_name ) ) {
-		$author_name = __( 'Anonymous', 'buddyboss' );
+		$author_name = __( 'Anonymous', 'buddyboss-platform' );
 	}
 
 	// Encode possible UTF8 display names
@@ -1539,7 +1542,7 @@ function bbp_get_topic_author_display_name( $topic_id = 0 ) {
  * @uses  bbp_get_topic_author_avatar() To get the topic author avatar
  */
 function bbp_topic_author_avatar( $topic_id = 0, $size = 40 ) {
-	echo bbp_get_topic_author_avatar( $topic_id, $size );
+	echo wp_kses_post( bbp_get_topic_author_avatar( $topic_id, $size ) );
 }
 
 /**
@@ -1585,7 +1588,7 @@ function bbp_get_topic_author_avatar( $topic_id = 0, $size = 40 ) {
  * @uses  bbp_get_topic_author_link() To get the topic author link
  */
 function bbp_topic_author_link( $args = '' ) {
-	echo bbp_get_topic_author_link( $args );
+	echo wp_kses_post( bbp_get_topic_author_link( $args ) );
 }
 
 /**
@@ -1645,7 +1648,8 @@ function bbp_get_topic_author_link( $args = '' ) {
 
 		// Tweak link title if empty
 		if ( empty( $r['link_title'] ) ) {
-			$link_title = sprintf( empty( $anonymous ) ? __( 'View %s\'s profile', 'buddyboss' ) : __( 'Visit %s\'s website', 'buddyboss' ), bbp_get_topic_author_display_name( $topic_id ) );
+			/* translators: %s: topic author display name. */
+			$link_title = sprintf( empty( $anonymous ) ? __( 'View %s\'s profile', 'buddyboss-platform' ) : __( 'Visit %s\'s website', 'buddyboss-platform' ), bbp_get_topic_author_display_name( $topic_id ) );
 
 			// Use what was passed if not
 		} else {
@@ -1770,7 +1774,7 @@ function bbp_get_topic_author_url( $topic_id = 0 ) {
  * @uses  bbp_get_topic_author_email() To get the topic author email
  */
 function bbp_topic_author_email( $topic_id = 0 ) {
-	echo bbp_get_topic_author_email( $topic_id );
+	echo esc_html( bbp_get_topic_author_email( $topic_id ) );
 }
 
 /**
@@ -1826,7 +1830,7 @@ function bbp_get_topic_author_email( $topic_id = 0 ) {
  * @uses  bbp_get_topic_author_role() To get the topic author role
  */
 function bbp_topic_author_role( $args = array() ) {
-	echo bbp_get_topic_author_role( $args );
+	echo wp_kses_post( bbp_get_topic_author_role( $args ) );
 }
 
 /**
@@ -1875,7 +1879,7 @@ function bbp_get_topic_author_role( $args = array() ) {
  * @uses  bbp_get_topic_forum_title() To get the topic's forum title
  */
 function bbp_topic_forum_title( $topic_id = 0 ) {
-	echo bbp_get_topic_forum_title( $topic_id );
+	echo esc_html( bbp_get_topic_forum_title( $topic_id ) );
 }
 
 /**
@@ -1908,7 +1912,7 @@ function bbp_get_topic_forum_title( $topic_id = 0 ) {
  * @uses  bbp_get_topic_forum_id()
  */
 function bbp_topic_forum_id( $topic_id = 0 ) {
-	echo bbp_get_topic_forum_id( $topic_id );
+	echo esc_attr( bbp_get_topic_forum_id( $topic_id ) );
 }
 
 /**
@@ -1941,7 +1945,7 @@ function bbp_get_topic_forum_id( $topic_id = 0 ) {
  * @uses  bbp_get_topic_last_active_id() To get the topic's last active id
  */
 function bbp_topic_last_active_id( $topic_id = 0 ) {
-	echo bbp_get_topic_last_active_id( $topic_id );
+	echo esc_attr( bbp_get_topic_last_active_id( $topic_id ) );
 }
 
 /**
@@ -1974,7 +1978,7 @@ function bbp_get_topic_last_active_id( $topic_id = 0 ) {
  * @uses  bbp_get_topic_last_active_time() To get topic freshness
  */
 function bbp_topic_last_active_time( $topic_id = 0 ) {
-	echo bbp_get_topic_last_active_time( $topic_id );
+	echo esc_html( bbp_get_topic_last_active_time( $topic_id ) );
 }
 
 /**
@@ -2024,7 +2028,7 @@ function bbp_get_topic_last_active_time( $topic_id = 0 ) {
  * @uses  bbp_get_topic_subscription_link()
  */
 function bbp_topic_subscription_link( $args = array() ) {
-	echo bbp_get_topic_subscription_link( $args );
+	echo wp_kses_post( bbp_get_topic_subscription_link( $args ) );
 }
 
 /**
@@ -2051,8 +2055,8 @@ function bbp_get_topic_subscription_link( $args = array() ) {
 			'topic_id'    => 0,
 			'before'      => '&nbsp;|&nbsp;',
 			'after'       => '',
-			'subscribe'   => __( 'Subscribe', 'buddyboss' ),
-			'unsubscribe' => __( 'Unsubscribe', 'buddyboss' ),
+			'subscribe'   => __( 'Subscribe', 'buddyboss-platform' ),
+			'unsubscribe' => __( 'Unsubscribe', 'buddyboss-platform' ),
 		),
 		'get_forum_subscribe_link'
 	);
@@ -2073,7 +2077,7 @@ function bbp_get_topic_subscription_link( $args = array() ) {
  * @uses  bbp_get_topic_favorite_link()
  */
 function bbp_topic_favorite_link( $args = array() ) {
-	echo bbp_get_topic_favorite_link( $args );
+	echo wp_kses_post( bbp_get_topic_favorite_link( $args ) );
 }
 
 /**
@@ -2100,8 +2104,8 @@ function bbp_get_topic_favorite_link( $args = array() ) {
 			'topic_id'  => 0,
 			'before'    => '',
 			'after'     => '',
-			'favorite'  => __( 'Favorite', 'buddyboss' ),
-			'favorited' => __( 'Unfavorite', 'buddyboss' ),
+			'favorite'  => __( 'Favorite', 'buddyboss-platform' ),
+			'favorited' => __( 'Unfavorite', 'buddyboss-platform' ),
 		),
 		'get_forum_favorite_link'
 	);
@@ -2124,7 +2128,7 @@ function bbp_get_topic_favorite_link( $args = array() ) {
  * @uses  bbp_get_topic_last_reply_id() To get the topic last reply id
  */
 function bbp_topic_last_reply_id( $topic_id = 0 ) {
-	echo bbp_get_topic_last_reply_id( $topic_id );
+	echo esc_attr( bbp_get_topic_last_reply_id( $topic_id ) );
 }
 
 /**
@@ -2159,7 +2163,7 @@ function bbp_get_topic_last_reply_id( $topic_id = 0 ) {
  * @uses bbp_get_topic_last_reply_title() To get the topic last reply title
  */
 function bbp_topic_last_reply_title( $topic_id = 0 ) {
-	echo bbp_get_topic_last_reply_title( $topic_id );
+	echo esc_html( bbp_get_topic_last_reply_title( $topic_id ) );
 }
 
 /**
@@ -2265,7 +2269,7 @@ function bbp_get_topic_last_reply_url( $topic_id = 0 ) {
  * @uses  bbp_get_topic_freshness_link() To get the topic freshness link
  */
 function bbp_topic_freshness_link( $topic_id = 0 ) {
-	echo bbp_get_topic_freshness_link( $topic_id );
+	echo wp_kses_post( bbp_get_topic_freshness_link( $topic_id ) );
 }
 
 /**
@@ -2293,7 +2297,7 @@ function bbp_get_topic_freshness_link( $topic_id = 0 ) {
 	if ( ! empty( $time_since ) ) {
 		$anchor = '<a href="' . esc_url( $link_url ) . '" title="' . esc_attr( $title ) . '">' . esc_html( $time_since ) . '</a>';
 	} else {
-		$anchor = __( 'No Replies', 'buddyboss' );
+		$anchor = __( 'No Replies', 'buddyboss-platform' );
 	}
 
 	return apply_filters( 'bbp_get_topic_freshness_link', $anchor, $topic_id, $time_since, $link_url, $title );
@@ -2309,7 +2313,7 @@ function bbp_get_topic_freshness_link( $topic_id = 0 ) {
  * @uses  bbp_get_topic_replies_link() To get the topic replies link
  */
 function bbp_topic_replies_link( $topic_id = 0 ) {
-	echo bbp_get_topic_replies_link( $topic_id );
+	echo wp_kses_post( bbp_get_topic_replies_link( $topic_id ) );
 }
 
 /**
@@ -2334,7 +2338,8 @@ function bbp_get_topic_replies_link( $topic_id = 0 ) {
 
 	$topic    = bbp_get_topic( bbp_get_topic_id( (int) $topic_id ) );
 	$topic_id = $topic->ID;
-	$replies  = sprintf( _n( '%s reply', '%s replies', bbp_get_topic_reply_count( $topic_id, true ), 'buddyboss' ), bbp_get_topic_reply_count( $topic_id ) );
+	/* translators: %s: number of replies. */
+	$replies  = sprintf( _n( '%s reply', '%s replies', bbp_get_topic_reply_count( $topic_id, true ), 'buddyboss-platform' ), bbp_get_topic_reply_count( $topic_id ) );
 	$retval   = '';
 	$link     = bbp_get_topic_permalink( $topic_id );
 
@@ -2353,7 +2358,8 @@ function bbp_get_topic_replies_link( $topic_id = 0 ) {
 
 		// Hidden replies.
 		$deleted_num = bbp_get_topic_reply_count_hidden( $topic_id, false );
-		$extra       = ' ' . sprintf( _n( '(+%s hidden)', '(+%s hidden)', $deleted_int, 'buddyboss' ), $deleted_num );
+		/* translators: %s: number of hidden replies. */
+		$extra       = ' ' . sprintf( _n( '(+%s hidden)', '(+%s hidden)', $deleted_int, 'buddyboss-platform' ), $deleted_num );
 
 		// Hidden link.
 		$retval .= ! bbp_get_view_all( 'edit_others_replies' )
@@ -2375,7 +2381,7 @@ function bbp_get_topic_replies_link( $topic_id = 0 ) {
  * @uses  bbp_get_topic_reply_count() To get the topic reply count
  */
 function bbp_topic_reply_count( $topic_id = 0, $integer = false ) {
-	echo bbp_get_topic_reply_count( $topic_id, $integer );
+	echo esc_html( bbp_get_topic_reply_count( $topic_id, $integer ) );
 }
 
 /**
@@ -2411,7 +2417,7 @@ function bbp_get_topic_reply_count( $topic_id = 0, $integer = false ) {
  * @uses  bbp_get_topic_post_count() To get the topic post count
  */
 function bbp_topic_post_count( $topic_id = 0, $integer = false ) {
-	echo bbp_get_topic_post_count( $topic_id, $integer );
+	echo esc_html( bbp_get_topic_post_count( $topic_id, $integer ) );
 }
 
 /**
@@ -2448,7 +2454,7 @@ function bbp_get_topic_post_count( $topic_id = 0, $integer = false ) {
  * @uses  bbp_get_topic_reply_count_hidden() To get the topic hidden reply count
  */
 function bbp_topic_reply_count_hidden( $topic_id = 0, $integer = false ) {
-	echo bbp_get_topic_reply_count_hidden( $topic_id, $integer );
+	echo esc_html( bbp_get_topic_reply_count_hidden( $topic_id, $integer ) );
 }
 
 /**
@@ -2484,7 +2490,7 @@ function bbp_get_topic_reply_count_hidden( $topic_id = 0, $integer = false ) {
  * @uses  bbp_get_topic_voice_count() To get the topic voice count
  */
 function bbp_topic_voice_count( $topic_id = 0, $integer = false ) {
-	echo bbp_get_topic_voice_count( $topic_id, $integer );
+	echo esc_html( bbp_get_topic_voice_count( $topic_id, $integer ) );
 }
 
 /**
@@ -2517,7 +2523,7 @@ function bbp_get_topic_voice_count( $topic_id = 0, $integer = false ) {
  * @uses bbp_get_topic_tag_list() To get the topic tag list
  */
 function bbp_topic_tag_list( $topic_id = 0, $args = '' ) {
-	echo bbp_get_topic_tag_list( $topic_id, $args );
+	echo wp_kses_post( bbp_get_topic_tag_list( $topic_id, $args ) );
 }
 
 /**
@@ -2544,7 +2550,7 @@ function bbp_get_topic_tag_list( $topic_id = 0, $args = '' ) {
 	$r = bbp_parse_args(
 		$args,
 		array(
-			'before' => '<div class="bbp-topic-tags"><p>' . esc_html__( 'Tagged:', 'buddyboss' ) . '&nbsp;',
+			'before' => '<div class="bbp-topic-tags"><p>' . esc_html__( 'Tagged:', 'buddyboss-platform' ) . '&nbsp;',
 			'sep'    => ', ',
 			'after'  => '</p></div>',
 		),
@@ -2588,7 +2594,7 @@ function bbp_get_topic_tag_list( $topic_id = 0, $args = '' ) {
  * @uses  bbp_get_topic_class() To get the topic class
  */
 function bbp_topic_class( $topic_id = 0, $classes = array() ) {
-	echo bbp_get_topic_class( $topic_id, $classes );
+	echo bbp_get_topic_class( $topic_id, $classes ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- bbp_get_topic_class returns class="..." attribute markup; esc_attr would corrupt it.
 }
 
 /**
@@ -2635,7 +2641,7 @@ function bbp_get_topic_class( $topic_id = 0, $classes = array() ) {
  * @uses bbp_get_topic_admin_links() To get the topic admin links
  */
 function bbp_topic_admin_links( $args = array() ) {
-	echo bbp_get_topic_admin_links( $args );
+	echo wp_kses_post( bbp_get_topic_admin_links( $args ) );
 }
 
 /**
@@ -2732,7 +2738,7 @@ function bbp_get_topic_admin_links( $args = array() ) {
  * @uses  bbp_get_topic_edit_link() To get the topic edit link
  */
 function bbp_topic_edit_link( $args = '' ) {
-	echo bbp_get_topic_edit_link( $args );
+	echo wp_kses_post( bbp_get_topic_edit_link( $args ) );
 }
 
 /**
@@ -2764,7 +2770,7 @@ function bbp_get_topic_edit_link( $args = '' ) {
 			'id'          => 0,
 			'link_before' => '',
 			'link_after'  => '',
-			'edit_text'   => esc_html__( 'Edit', 'buddyboss' ),
+			'edit_text'   => esc_html__( 'Edit', 'buddyboss-platform' ),
 		),
 		'get_topic_edit_link'
 	);
@@ -2865,7 +2871,7 @@ function bbp_get_topic_edit_url( $topic_id = 0 ) {
  * @uses  bbp_get_topic_trash_link() To get the topic trash link
  */
 function bbp_topic_trash_link( $args = '' ) {
-	echo bbp_get_topic_trash_link( $args );
+	echo wp_kses_post( bbp_get_topic_trash_link( $args ) );
 }
 
 /**
@@ -2905,9 +2911,9 @@ function bbp_get_topic_trash_link( $args = '' ) {
 			'link_before'  => '',
 			'link_after'   => '',
 			'sep'          => ' | ',
-			'trash_text'   => esc_html__( 'Trash', 'buddyboss' ),
-			'restore_text' => esc_html__( 'Restore', 'buddyboss' ),
-			'delete_text'  => esc_html__( 'Delete', 'buddyboss' ),
+			'trash_text'   => esc_html__( 'Trash', 'buddyboss-platform' ),
+			'restore_text' => esc_html__( 'Restore', 'buddyboss-platform' ),
+			'delete_text'  => esc_html__( 'Delete', 'buddyboss-platform' ),
 		),
 		'get_topic_trash_link'
 	);
@@ -2934,7 +2940,7 @@ function bbp_get_topic_trash_link( $args = '' ) {
 	}
 
 	if ( bbp_is_topic_trash( $topic->ID ) ) {
-		$actions['untrash'] = '<a title="' . esc_attr__( 'Restore this item from the Trash', 'buddyboss' ) . '" href="' . esc_url(
+		$actions['untrash'] = '<a title="' . esc_attr__( 'Restore this item from the Trash', 'buddyboss-platform' ) . '" href="' . esc_url(
 				wp_nonce_url(
 					add_query_arg(
 						array(
@@ -2947,7 +2953,7 @@ function bbp_get_topic_trash_link( $args = '' ) {
 				)
 			) . '" class="bbp-topic-restore-link">' . $r['restore_text'] . '</a>';
 	} elseif ( EMPTY_TRASH_DAYS ) {
-		$actions['trash'] = '<a title="' . esc_attr__( 'Move this item to the Trash', 'buddyboss' ) . '" href="' . esc_url(
+		$actions['trash'] = '<a title="' . esc_attr__( 'Move this item to the Trash', 'buddyboss-platform' ) . '" href="' . esc_url(
 				wp_nonce_url(
 					add_query_arg(
 						array(
@@ -2962,7 +2968,7 @@ function bbp_get_topic_trash_link( $args = '' ) {
 	}
 
 	if ( bbp_is_topic_trash( $topic->ID ) || ! EMPTY_TRASH_DAYS ) {
-		$actions['delete'] = '<a title="' . esc_attr__( 'Delete this item permanently', 'buddyboss' ) . '" href="' . esc_url(
+		$actions['delete'] = '<a title="' . esc_attr__( 'Delete this item permanently', 'buddyboss-platform' ) . '" href="' . esc_url(
 				wp_nonce_url(
 					add_query_arg(
 						array(
@@ -2973,7 +2979,7 @@ function bbp_get_topic_trash_link( $args = '' ) {
 					),
 					'delete-' . $topic->post_type . '_' . $topic->ID
 				)
-			) . '" onclick="return confirm(\'' . esc_js( __( 'Are you sure you want to delete that permanently?', 'buddyboss' ) ) . '\' );" class="bbp-topic-delete-link">' . $r['delete_text'] . '</a>';
+			) . '" onclick="return confirm(\'' . esc_js( __( 'Are you sure you want to delete that permanently?', 'buddyboss-platform' ) ) . '\' );" class="bbp-topic-delete-link">' . $r['delete_text'] . '</a>';
 	}
 
 	// Process the admin links
@@ -2992,7 +2998,7 @@ function bbp_get_topic_trash_link( $args = '' ) {
  * @uses  bbp_get_topic_close_link() To get the topic close link
  */
 function bbp_topic_close_link( $args = '' ) {
-	echo bbp_get_topic_close_link( $args );
+	echo wp_kses_post( bbp_get_topic_close_link( $args ) );
 }
 
 /**
@@ -3028,8 +3034,8 @@ function bbp_get_topic_close_link( $args = '' ) {
 			'link_before' => '',
 			'link_after'  => '',
 			'sep'         => ' | ',
-			'close_text'  => __( 'Close', 'buddyboss' ),
-			'open_text'   => __( 'Open', 'buddyboss' ),
+			'close_text'  => __( 'Close', 'buddyboss-platform' ),
+			'open_text'   => __( 'Open', 'buddyboss-platform' ),
 		),
 		'get_topic_close_link'
 	);
@@ -3063,7 +3069,7 @@ function bbp_get_topic_close_link( $args = '' ) {
  * @uses  bbp_get_topic_stick_link() To get the topic stick link
  */
 function bbp_topic_stick_link( $args = '' ) {
-	echo bbp_get_topic_stick_link( $args );
+	echo wp_kses_post( bbp_get_topic_stick_link( $args ) );
 }
 
 /**
@@ -3100,9 +3106,9 @@ function bbp_get_topic_stick_link( $args = '' ) {
 			'id'           => 0,
 			'link_before'  => '',
 			'link_after'   => '',
-			'stick_text'   => esc_html__( 'Stick', 'buddyboss' ),
-			'unstick_text' => esc_html__( 'Unstick', 'buddyboss' ),
-			'super_text'   => esc_html__( '(to front)', 'buddyboss' ),
+			'stick_text'   => esc_html__( 'Stick', 'buddyboss-platform' ),
+			'unstick_text' => esc_html__( 'Unstick', 'buddyboss-platform' ),
+			'super_text'   => esc_html__( '(to front)', 'buddyboss-platform' ),
 		),
 		'get_topic_stick_link'
 	);
@@ -3157,7 +3163,7 @@ function bbp_get_topic_stick_link( $args = '' ) {
  * @uses  bbp_get_topic_merge_link() To get the topic merge link
  */
 function bbp_topic_merge_link( $args = '' ) {
-	echo bbp_get_topic_merge_link( $args );
+	echo wp_kses_post( bbp_get_topic_merge_link( $args ) );
 }
 
 /**
@@ -3189,7 +3195,7 @@ function bbp_get_topic_merge_link( $args = '' ) {
 			'id'          => 0,
 			'link_before' => '',
 			'link_after'  => '',
-			'merge_text'  => esc_html__( 'Merge', 'buddyboss' ),
+			'merge_text'  => esc_html__( 'Merge', 'buddyboss-platform' ),
 		),
 		'get_topic_merge_link'
 	);
@@ -3216,7 +3222,7 @@ function bbp_get_topic_merge_link( $args = '' ) {
  * @uses  bbp_get_topic_spam_link() Topic spam link
  */
 function bbp_topic_spam_link( $args = '' ) {
-	echo bbp_get_topic_spam_link( $args );
+	echo wp_kses_post( bbp_get_topic_spam_link( $args ) );
 }
 
 /**
@@ -3252,8 +3258,8 @@ function bbp_get_topic_spam_link( $args = '' ) {
 			'link_before' => '',
 			'link_after'  => '',
 			'sep'         => ' | ',
-			'spam_text'   => esc_html__( 'Spam', 'buddyboss' ),
-			'unspam_text' => esc_html__( 'Unspam', 'buddyboss' ),
+			'spam_text'   => esc_html__( 'Spam', 'buddyboss-platform' ),
+			'unspam_text' => esc_html__( 'Unspam', 'buddyboss-platform' ),
 		),
 		'get_topic_spam_link'
 	);
@@ -3335,7 +3341,7 @@ function bbp_get_topic_report_link( $args = '' ) {
  * @uses  bbp_get_reply_to_link() To get the reply to link
  */
 function bbp_topic_reply_link( $args = array() ) {
-	echo bbp_get_topic_reply_link( $args );
+	echo wp_kses_post( bbp_get_topic_reply_link( $args ) );
 }
 
 /**
@@ -3361,7 +3367,7 @@ function bbp_get_topic_reply_link( $args = array() ) {
 			'id'          => 0,
 			'link_before' => '',
 			'link_after'  => '',
-			'reply_text'  => esc_html__( 'Reply', 'buddyboss' ),
+			'reply_text'  => esc_html__( 'Reply', 'buddyboss-platform' ),
 		),
 		'get_topic_reply_link'
 	);
@@ -3429,7 +3435,7 @@ function bbp_get_reply_report_link( $args = array() ) {
  * @uses  bbp_get_forum_pagination_count() To get the forum pagination count
  */
 function bbp_forum_pagination_count() {
-	echo bbp_get_forum_pagination_count();
+	echo bbp_get_forum_pagination_count(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- bbp_get_forum_pagination_count() self-escapes its return value.
 }
 
 /**
@@ -3458,11 +3464,13 @@ function bbp_get_forum_pagination_count() {
 
 	// Several topics in a forum with a single page
 	if ( empty( $to_num ) ) {
-		$retstr = sprintf( _n( 'Viewing %1$s discussion', 'Viewing %1$s discussions', $total_int, 'buddyboss' ), $total );
+		/* translators: %1$s: total number of discussions. */
+		$retstr = sprintf( _n( 'Viewing %1$s discussion', 'Viewing %1$s discussions', $total_int, 'buddyboss-platform' ), $total );
 
 		// Several topics in a forum with several pages
 	} else {
-		$retstr = sprintf( _n( 'Viewing %2$s of %4$s discussions', 'Viewing %2$s - %3$s of %4$s discussions', $total_int, 'buddyboss' ), $bbp->topic_query->post_count, $from_num, $to_num, $total );
+		/* translators: 2: number shown on this page, 3: last item number on this page, 4: total number of discussions. */
+		$retstr = sprintf( _n( 'Viewing %2$s of %4$s discussions', 'Viewing %2$s - %3$s of %4$s discussions', $total_int, 'buddyboss-platform' ), $bbp->topic_query->post_count, $from_num, $to_num, $total ); // phpcs:ignore WordPress.WP.I18n.MissingSingularPlaceholder -- Singular keeps its literal form to preserve existing translations (msgid unchanged); upstream BuddyPress pagination string.
 	}
 
 	// Filter and return
@@ -3477,7 +3485,7 @@ function bbp_get_forum_pagination_count() {
  * @uses  bbp_get_forum_pagination_links() To get the pagination links
  */
 function bbp_forum_pagination_links() {
-	echo bbp_get_forum_pagination_links();
+	echo bbp_get_forum_pagination_links(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- bbp_forum_pagination_links() itself echoes esc_attr()'d output and returns void.
 }
 
 /**
@@ -3525,12 +3533,12 @@ function bbp_topic_notices() {
 
 		// Spam notice
 		case bbp_get_spam_status_id():
-			$notice_text = __( 'This topic is marked as spam.', 'buddyboss' );
+			$notice_text = __( 'This topic is marked as spam.', 'buddyboss-platform' );
 			break;
 
 		// Trashed notice
 		case bbp_get_trash_status_id():
-			$notice_text = __( 'This topic is in the trash.', 'buddyboss' );
+			$notice_text = __( 'This topic is in the trash.', 'buddyboss-platform' );
 			break;
 
 		// Standard status
@@ -3578,7 +3586,7 @@ function bbp_topic_type_select( $args = '' ) {
  *              - selected: Override the selected option
  */
 function bbp_form_topic_type_dropdown( $args = '' ) {
-	echo bbp_get_form_topic_type_dropdown( $args );
+	echo bbp_get_form_topic_type_dropdown( $args ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 }
 
 /**
@@ -3655,10 +3663,9 @@ function bbp_get_form_topic_type_dropdown( $args = '' ) {
 		unset( $topic_sticky_types['super'] );
 	}
 	?>
-		<select name="<?php echo esc_attr( $r['select_id'] ); ?>" id="<?php echo esc_attr( $r['select_id'] ); ?>_select"<?php echo $tab; ?>>
+		<select name="<?php echo esc_attr( $r['select_id'] ); ?>" id="<?php echo esc_attr( $r['select_id'] ); ?>_select"<?php echo $tab; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $tab is esc_attr()'d at assignment and is safe attribute markup. ?>>
 			<?php foreach ( $topic_sticky_types as $key => $label ) : ?>
 				<option value="<?php echo esc_attr( $key ); ?>"<?php selected( $key, $r['selected'] ); ?>>
-					<span><?php _e( 'Type: ', 'buddyboss' ); ?></span>
 					<?php echo esc_html( $label ); ?>
 				</option>
 			<?php endforeach; ?>
@@ -3677,7 +3684,7 @@ function bbp_get_form_topic_type_dropdown( $args = '' ) {
  * @param int $topic_id The topic id to use
  */
 function bbp_form_topic_status_dropdown( $args = '' ) {
-	echo bbp_get_form_topic_status_dropdown( $args );
+	echo bbp_get_form_topic_status_dropdown( $args ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- returns form-control markup (<select>/<option>/<input>) pre-escaped per value at construction; wp_kses_post strips the controls.
 }
 
 /**
@@ -3739,7 +3746,7 @@ function bbp_get_form_topic_status_dropdown( $args = '' ) {
 	?>
 
     <select name="<?php echo esc_attr( $r['select_id'] ); ?>"
-            id="<?php echo esc_attr( $r['select_id'] ); ?>_select"<?php echo $tab; ?>>
+            id="<?php echo esc_attr( $r['select_id'] ); ?>_select"<?php echo $tab; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $tab is built from an (int) cast and is safe attribute markup. ?>>
 
 		<?php foreach ( bbp_get_topic_statuses( $r['topic_id'] ) as $key => $label ) : ?>
 
@@ -3765,7 +3772,7 @@ function bbp_get_form_topic_status_dropdown( $args = '' ) {
  * @uses  bbp_get_topic_post_type() To get the topic post type
  */
 function bbp_topic_tag_tax_id() {
-	echo bbp_get_topic_tag_tax_id();
+	echo esc_attr( bbp_get_topic_tag_tax_id() );
 }
 
 /**
@@ -3791,16 +3798,16 @@ function bbp_get_topic_tag_tax_labels() {
 	return apply_filters(
 		'bbp_get_topic_tag_tax_labels',
 		array(
-			'name'          => __( 'Discussion Tags', 'buddyboss' ),
-			'singular_name' => __( 'Discussion Tag', 'buddyboss' ),
-			'search_items'  => __( 'Search Tags', 'buddyboss' ),
-			'popular_items' => __( 'Popular Tags', 'buddyboss' ),
-			'all_items'     => __( 'All Tags', 'buddyboss' ),
-			'edit_item'     => __( 'Edit Tag', 'buddyboss' ),
-			'update_item'   => __( 'Update Tag', 'buddyboss' ),
-			'add_new_item'  => __( 'Add New Tag', 'buddyboss' ),
-			'new_item_name' => __( 'New Tag Name', 'buddyboss' ),
-			'view_item'     => __( 'View Discussion Tag', 'buddyboss' ),
+			'name'          => __( 'Discussion Tags', 'buddyboss-platform' ),
+			'singular_name' => __( 'Discussion Tag', 'buddyboss-platform' ),
+			'search_items'  => __( 'Search Tags', 'buddyboss-platform' ),
+			'popular_items' => __( 'Popular Tags', 'buddyboss-platform' ),
+			'all_items'     => __( 'All Tags', 'buddyboss-platform' ),
+			'edit_item'     => __( 'Edit Tag', 'buddyboss-platform' ),
+			'update_item'   => __( 'Update Tag', 'buddyboss-platform' ),
+			'add_new_item'  => __( 'Add New Tag', 'buddyboss-platform' ),
+			'new_item_name' => __( 'New Tag Name', 'buddyboss-platform' ),
+			'view_item'     => __( 'View Discussion Tag', 'buddyboss-platform' ),
 		)
 	);
 }
@@ -3830,7 +3837,7 @@ function bbp_get_topic_tag_tax_rewrite() {
  * @uses  bbp_get_topic_tag_id()
  */
 function bbp_topic_tag_id( $tag = '' ) {
-	echo bbp_get_topic_tag_id( $tag );
+	echo esc_attr( bbp_get_topic_tag_id( $tag ) );
 }
 
 /**
@@ -3875,7 +3882,7 @@ function bbp_get_topic_tag_id( $tag = '' ) {
  * @uses  bbp_get_topic_tag_name()
  */
 function bbp_topic_tag_name( $tag = '' ) {
-	echo bbp_get_topic_tag_name( $tag );
+	echo esc_html( bbp_get_topic_tag_name( $tag ) );
 }
 
 /**
@@ -3920,7 +3927,7 @@ function bbp_get_topic_tag_name( $tag = '' ) {
  * @uses  bbp_get_topic_tag_slug()
  */
 function bbp_topic_tag_slug( $tag = '' ) {
-	echo bbp_get_topic_tag_slug( $tag );
+	echo esc_attr( bbp_get_topic_tag_slug( $tag ) );
 }
 
 /**
@@ -4060,7 +4067,7 @@ function bbp_get_topic_tag_edit_link( $tag = '' ) {
  * @uses  bbp_get_topic_tag_description()
  */
 function bbp_topic_tag_description( $args = array() ) {
-	echo bbp_get_topic_tag_description( $args );
+	echo wp_kses_post( bbp_get_topic_tag_description( $args ) );
 }
 
 /**
@@ -4120,7 +4127,7 @@ function bbp_get_topic_tag_description( $args = array() ) {
  * @uses  bbp_get_form_topic_title() To get the value of topic title field
  */
 function bbp_form_topic_title() {
-	echo bbp_get_form_topic_title();
+	echo bbp_get_form_topic_title(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- bbp_get_form_topic_title() returns esc_html()'d value.
 }
 
 /**
@@ -4156,7 +4163,7 @@ function bbp_get_form_topic_title() {
  * @uses  bbp_get_form_topic_content() To get value of topic content field
  */
 function bbp_form_topic_content() {
-	echo bbp_get_form_topic_content();
+	echo wp_kses_post( bbp_get_form_topic_content() );
 }
 
 /**
@@ -4209,7 +4216,7 @@ function bbp_topic_row_actions() {
  * @uses  bbp_get_form_topic_tags() To get the value of topic tags field
  */
 function bbp_form_topic_tags() {
-	echo bbp_get_form_topic_tags();
+	echo bbp_get_form_topic_tags(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- bbp_get_form_topic_tags() returns esc_attr()'d value.
 }
 
 /**
@@ -4283,7 +4290,7 @@ function bbp_get_form_topic_tags() {
  * @uses  bbp_get_form_topic_forum() To get the topic's forum id
  */
 function bbp_form_topic_forum() {
-	echo bbp_get_form_topic_forum();
+	echo esc_html( bbp_get_form_topic_forum() );
 }
 
 /**
@@ -4322,7 +4329,7 @@ function bbp_get_form_topic_forum() {
  * @uses  bbp_get_form_topic_subscribed() To get the subscribed checkbox value
  */
 function bbp_form_topic_subscribed() {
-	echo bbp_get_form_topic_subscribed();
+	echo bbp_get_form_topic_subscribed(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- bbp_get_form_topic_subscribed() returns checked() attribute markup.
 }
 
 /**
@@ -4372,7 +4379,7 @@ function bbp_get_form_topic_subscribed() {
  * @uses  bbp_get_form_topic_log_edit() To get the topic log edit value
  */
 function bbp_form_topic_log_edit() {
-	echo bbp_get_form_topic_log_edit();
+	echo bbp_get_form_topic_log_edit(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- bbp_get_form_topic_log_edit() returns checked() attribute markup.
 }
 
 /**
@@ -4409,7 +4416,7 @@ function bbp_get_form_topic_log_edit() {
  * @uses  bbp_get_form_topic_edit_reason() To get the topic edit reason value
  */
 function bbp_form_topic_edit_reason() {
-	echo bbp_get_form_topic_edit_reason();
+	echo bbp_get_form_topic_edit_reason(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- bbp_get_form_topic_edit_reason() returns esc_attr()'d value.
 }
 
 /**

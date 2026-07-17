@@ -22,7 +22,7 @@ function bp_performance_get_settings_sections() {
 	$settings = array(
 		'bp_performance_settings' => array(
 			'page'  => 'performance',
-			'title' => __( 'API Caching', 'buddyboss' ),
+			'title' => __( 'API Caching', 'buddyboss-platform' ),
 		),
 	);
 

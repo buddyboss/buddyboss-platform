@@ -6,6 +6,9 @@
  * @package BuddyBoss
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 ?>
 
 <div id="content-report" class="content-report-popup moderation-popup mfp-hide">
@@ -13,19 +16,19 @@
 		<div class="modal-wrapper">
 			<div class="modal-container">
 				<header class="bb-model-header">
-					<h4><?php esc_html_e( 'Report', 'buddyboss' ); ?> <span class="bp-reported-type"></span></h4>
-					<button title="<?php esc_html_e( 'Close (Esc)', 'buddyboss' ); ?>" type="button" class="mfp-close">
+					<h4><?php esc_html_e( 'Report', 'buddyboss-platform' ); ?> <span class="bp-reported-type"></span></h4>
+					<button title="<?php esc_html_e( 'Close (Esc)', 'buddyboss-platform' ); ?>" type="button" class="mfp-close">
 						<span class="bb-icon-l bb-icon-times"></span>
 					</button>
 				</header>
 				<div class="bp-feedback bp-feedback-v2 error" id="notes-error" style="display: none;">
 					<span class="bp-icon" aria-hidden="true"></span>
-					<p><?php esc_html_e( 'There was a problem reporting this post.', 'buddyboss' ); ?></p>
+					<p><?php esc_html_e( 'There was a problem reporting this post.', 'buddyboss-platform' ); ?></p>
 				</div>
 				<?php
 				$reports_terms = get_terms(
-					'bpm_category',
 					array(
+						'taxonomy'   => 'bpm_category',
 						'hide_empty' => false,
 					)
 				);
@@ -56,18 +59,18 @@
 						<div class="form-item">
 							<label for="report-category-other">
 								<input type="radio" id="report-category-other" name="report_category" value="other">
-								<span><?php esc_html_e( 'Other', 'buddyboss' ); ?></span>
+								<span><?php esc_html_e( 'Other', 'buddyboss-platform' ); ?></span>
 							</label>
 						</div>
 						<div class="form-item bp-hide">
 							<label for="report-note">
-								<span class="screen-reader-text"><?php esc_html_e( 'Report note', 'buddyboss' ); ?></span>
-								<textarea id="report-note" placeholder="<?php esc_attr_e( 'Enter your reason for reporting...', 'buddyboss' ); ?>" name="note" class="bp-other-report-cat"></textarea>
+								<span class="screen-reader-text"><?php esc_html_e( 'Report note', 'buddyboss-platform' ); ?></span>
+								<textarea id="report-note" placeholder="<?php esc_attr_e( 'Enter your reason for reporting...', 'buddyboss-platform' ); ?>" name="note" class="bp-other-report-cat"></textarea>
 							</label>
 						</div>
 						<footer class="bb-model-footer">
-							<input type="button" class="bb-cancel-report-content button" value="<?php esc_attr_e( 'Cancel', 'buddyboss' ); ?>"/>
-							<button type="submit" class="report-submit button"><?php esc_attr_e( 'Report', 'buddyboss' ); ?></button>
+							<input type="button" class="bb-cancel-report-content button" value="<?php esc_attr_e( 'Cancel', 'buddyboss-platform' ); ?>"/>
+							<button type="submit" class="report-submit button"><?php esc_attr_e( 'Report', 'buddyboss-platform' ); ?></button>
 							<input type="hidden" name="content_id" class="bp-content-id"/>
 							<input type="hidden" name="content_type" class="bp-content-type"/>
 							<input type="hidden" name="_wpnonce" class="bp-nonce"/>

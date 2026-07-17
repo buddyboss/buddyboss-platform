@@ -8,6 +8,9 @@
  * @version 1.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 global $media_album_template;
 
 $is_send_ajax_request = bb_is_send_ajax_request();
@@ -42,15 +45,26 @@ if ( bp_has_albums( array( 'include' => $album_id ) ) ) : ?>
 					<?php
 					if ( ( $bp_is_my_profile || bp_current_user_can( 'bp_moderate' ) ) || ( $bp_is_group && $can_edit ) ) :
 						?>
-						<input type="text" value="<?php bp_album_title(); ?>" placeholder="<?php esc_attr_e( 'Title', 'buddyboss' ); ?>" id="bb-album-title" style="display: none;" />
-						<a href="#" class="button small" id="bp-edit-album-title"><?php esc_html_e( 'Edit', 'buddyboss' ); ?></a>
-						<a href="#" class="button small" id="bp-save-album-title" style="display: none;" ><?php esc_html_e( 'Save', 'buddyboss' ); ?></a>
-						<a href="#" class="button small" id="bp-cancel-edit-album-title" style="display: none;" ><?php esc_html_e( 'Cancel', 'buddyboss' ); ?></a>
+						<input type="text" value="<?php bp_album_title(); ?>" placeholder="<?php esc_attr_e( 'Title', 'buddyboss-platform' ); ?>" id="bb-album-title" style="display: none;" />
+						<a href="#" class="button small" id="bp-edit-album-title"><?php esc_html_e( 'Edit', 'buddyboss-platform' ); ?></a>
+						<a href="#" class="button small" id="bp-save-album-title" style="display: none;" ><?php esc_html_e( 'Save', 'buddyboss-platform' ); ?></a>
+						<a href="#" class="button small" id="bp-cancel-edit-album-title" style="display: none;" ><?php esc_html_e( 'Cancel', 'buddyboss-platform' ); ?></a>
 					<?php endif; ?>
 					<p>
 						<span><?php bp_core_format_date( $media_album_template->album->date_created ); ?></span><span class="bb-sep">&middot;</span>
-						<span class="bb-album-photo-count"><?php printf( _n( '%s photo', '%s photos', $media_album_template->album->media['total'], 'buddyboss' ), bp_core_number_format( $media_album_template->album->media['total'] ) ); ?></span><span class="bb-sep">&middot;</span>
-						<span class="bb-album-video-count"><?php printf( _n( '%s video', '%s videos', $media_album_template->album->media['total_video'], 'buddyboss' ), bp_core_number_format( $media_album_template->album->media['total_video'] ) ); ?></span>
+						<span class="bb-album-photo-count"><?php /* translators: %s: number of photos in the album. */ echo esc_html( sprintf( _n( '%s photo', '%s photos', $media_album_template->album->media['total'], 'buddyboss-platform' ), bp_core_number_format( $media_album_template->album->media['total'] ) ) ); ?></span>
+						<?php
+						// Only show the album's video count (and its separator) when the video
+						// component is active and video support is enabled for this context
+						// (profile/group). Without this, a "0 videos" count appears even when
+						// video is disabled.
+						if ( bp_is_active( 'video' ) && ( $bp_is_profile_video_support_enabled || $bp_is_group_video_support_enabled ) ) :
+							?>
+							<span class="bb-sep">&middot;</span>
+							<span class="bb-album-video-count"><?php /* translators: %s: number of videos in the album. */ echo esc_html( sprintf( _n( '%s video', '%s videos', $media_album_template->album->media['total_video'], 'buddyboss-platform' ), bp_core_number_format( $media_album_template->album->media['total_video'] ) ) ); ?></span>
+							<?php
+						endif;
+						?>
 					</p>
 				</div>
 
@@ -62,7 +76,7 @@ if ( bp_has_albums( array( 'include' => $album_id ) ) ) : ?>
 						if ( $can_delete ) {
 							?>
 							<a class="bb-delete button small outline error" id="bb-delete-album" href="#">
-								<?php esc_html_e( 'Delete Album', 'buddyboss' ); ?>
+								<?php esc_html_e( 'Delete Album', 'buddyboss-platform' ); ?>
 							</a>
 							<?php
 						}
@@ -70,7 +84,7 @@ if ( bp_has_albums( array( 'include' => $album_id ) ) ) : ?>
 						if ( ( $bp_is_my_profile || $bp_is_user_media ) && bb_user_can_create_media() && $can_edit ) {
 							?>
 							<a class="bb-add-photos button small outline" id="bp-add-media" href="#" >
-								<?php esc_html_e( 'Add Photos', 'buddyboss' ); ?>
+								<?php esc_html_e( 'Add Photos', 'buddyboss-platform' ); ?>
 							</a>
 							<?php
 						} elseif ( $bp_is_group_active && $bp_is_group ) {
@@ -78,7 +92,7 @@ if ( bp_has_albums( array( 'include' => $album_id ) ) ) : ?>
 							if ( $manage ) {
 								?>
 								<a class="bb-add-photos button small outline" id="bp-add-media" href="#" >
-									<?php esc_html_e( 'Add Photos', 'buddyboss' ); ?>
+									<?php esc_html_e( 'Add Photos', 'buddyboss-platform' ); ?>
 								</a>
 								<?php
 							}
@@ -86,13 +100,13 @@ if ( bp_has_albums( array( 'include' => $album_id ) ) ) : ?>
 
 						if ( ( $bp_is_my_profile || $bp_is_user_media ) && $bp_is_profile_video_support_enabled && $can_edit && bb_user_can_create_video() ) {
 							?>
-							<a href="#" id="bp-add-video" class="bb-add-video button small outline"><?php esc_html_e( 'Add Videos', 'buddyboss' ); ?></a>
+							<a href="#" id="bp-add-video" class="bb-add-video button small outline"><?php esc_html_e( 'Add Videos', 'buddyboss-platform' ); ?></a>
 							<?php
 						} elseif ( $bp_is_group_active && $bp_is_group && $bp_is_group_video_support_enabled ) {
 							$manage = groups_can_user_manage_video( $bp_loggedin_user_id, $bp_get_current_group_id );
 							if ( $manage ) {
 								?>
-								<a href="#" id="bp-add-video" class="bb-add-video button small outline"><?php esc_html_e( 'Add Videos', 'buddyboss' ); ?></a>
+								<a href="#" id="bp-add-video" class="bb-add-video button small outline"><?php esc_html_e( 'Add Videos', 'buddyboss-platform' ); ?></a>
 								<?php
 							}
 						}
@@ -117,7 +131,9 @@ if ( bp_has_albums( array( 'include' => $album_id ) ) ) : ?>
 
 					<?php
 					bp_get_template_part( 'media/uploader' );
-					bp_get_template_part( 'video/uploader' );
+					if ( bp_is_active( 'video' ) ) {
+						bp_get_template_part( 'video/uploader' );
+					}
 				endif;
 
 				if ( $can_delete ) {

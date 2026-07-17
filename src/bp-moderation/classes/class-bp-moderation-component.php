@@ -134,7 +134,7 @@ class BP_Moderation_Component extends BP_Component {
 			$bp = buddypress();
 
 			if ( bp_is_my_profile() ) {
-				$bp->bp_options_title = __( 'My Moderation', 'buddyboss' );
+				$bp->bp_options_title = __( 'My Moderation', 'buddyboss-platform' );
 			}
 		}
 
@@ -169,24 +169,24 @@ class BP_Moderation_Component extends BP_Component {
 			'bpm_category',
 			'bp_moderation',
 			array(
-				'label'              => __( 'Reporting Category', 'buddyboss' ),
-				'description'        => __( 'Create reporting categories for members to select when reporting content and members on the front-end. An additional "Other" category will also be available for members to specify their own reason for reporting.', 'buddyboss' ),
+				'label'              => __( 'Reporting Category', 'buddyboss-platform' ),
+				'description'        => __( 'Create reporting categories for members to select when reporting content and members on the front-end. An additional "Other" category will also be available for members to specify their own reason for reporting.', 'buddyboss-platform' ),
 				'labels'             => array(
-					'name'                       => _x( 'Reporting Categories', 'taxonomy general name', 'buddyboss' ),
-					'singular_name'              => _x( 'Reporting Category', 'taxonomy singular name', 'buddyboss' ),
-					'search_items'               => __( 'Search Categories', 'buddyboss' ),
-					'popular_items'              => __( 'Popular Categories', 'buddyboss' ),
-					'all_items'                  => __( 'All Categories', 'buddyboss' ),
-					'edit_item'                  => __( 'Edit Category', 'buddyboss' ),
-					'update_item'                => __( 'Update Category', 'buddyboss' ),
-					'add_new_item'               => __( 'Add New Category', 'buddyboss' ),
-					'new_item_name'              => __( 'New Category Name', 'buddyboss' ),
-					'separate_items_with_commas' => __( 'Separate categories with commas', 'buddyboss' ),
-					'add_or_remove_items'        => __( 'Add or remove categories', 'buddyboss' ),
-					'choose_from_most_used'      => __( 'Choose from the most used categories', 'buddyboss' ),
-					'not_found'                  => __( 'No reporting categories found.', 'buddyboss' ),
-					'menu_name'                  => __( 'Reporting Categories', 'buddyboss' ),
-					'back_to_items'              => __( '&larr; Back to Reporting Categories', 'buddyboss' ),
+					'name'                       => _x( 'Reporting Categories', 'taxonomy general name', 'buddyboss-platform' ),
+					'singular_name'              => _x( 'Reporting Category', 'taxonomy singular name', 'buddyboss-platform' ),
+					'search_items'               => __( 'Search Categories', 'buddyboss-platform' ),
+					'popular_items'              => __( 'Popular Categories', 'buddyboss-platform' ),
+					'all_items'                  => __( 'All Categories', 'buddyboss-platform' ),
+					'edit_item'                  => __( 'Edit Category', 'buddyboss-platform' ),
+					'update_item'                => __( 'Update Category', 'buddyboss-platform' ),
+					'add_new_item'               => __( 'Add New Category', 'buddyboss-platform' ),
+					'new_item_name'              => __( 'New Category Name', 'buddyboss-platform' ),
+					'separate_items_with_commas' => __( 'Separate categories with commas', 'buddyboss-platform' ),
+					'add_or_remove_items'        => __( 'Add or remove categories', 'buddyboss-platform' ),
+					'choose_from_most_used'      => __( 'Choose from the most used categories', 'buddyboss-platform' ),
+					'not_found'                  => __( 'No reporting categories found.', 'buddyboss-platform' ),
+					'menu_name'                  => __( 'Reporting Categories', 'buddyboss-platform' ),
+					'back_to_items'              => __( '&larr; Back to Reporting Categories', 'buddyboss-platform' ),
 				),
 				'public'             => true,
 				'publicly_queryable' => false,
@@ -201,24 +201,24 @@ class BP_Moderation_Component extends BP_Component {
 
 			$moderation_terms = array(
 				'offensive'      => array(
-					'name'        => __( 'Offensive', 'buddyboss' ),
-					'description' => __( 'Contains abusive or derogatory content', 'buddyboss' ),
+					'name'        => __( 'Offensive', 'buddyboss-platform' ),
+					'description' => __( 'Contains abusive or derogatory content', 'buddyboss-platform' ),
 				),
 				'inappropriate'  => array(
-					'name'        => __( 'Inappropriate', 'buddyboss' ),
-					'description' => __( 'Contains mature or sensitive content', 'buddyboss' ),
+					'name'        => __( 'Inappropriate', 'buddyboss-platform' ),
+					'description' => __( 'Contains mature or sensitive content', 'buddyboss-platform' ),
 				),
 				'misinformation' => array(
-					'name'        => __( 'Misinformation', 'buddyboss' ),
-					'description' => __( 'Contains misleading or false information', 'buddyboss' ),
+					'name'        => __( 'Misinformation', 'buddyboss-platform' ),
+					'description' => __( 'Contains misleading or false information', 'buddyboss-platform' ),
 				),
 				'suspicious'     => array(
-					'name'        => __( 'Suspicious', 'buddyboss' ),
-					'description' => __( 'Contains spam, fake content or potential malware', 'buddyboss' ),
+					'name'        => __( 'Suspicious', 'buddyboss-platform' ),
+					'description' => __( 'Contains spam, fake content or potential malware', 'buddyboss-platform' ),
 				),
 				'harassment'     => array(
-					'name'        => __( 'Harassment', 'buddyboss' ),
-					'description' => __( 'Harassment or bullying behavior', 'buddyboss' ),
+					'name'        => __( 'Harassment', 'buddyboss-platform' ),
+					'description' => __( 'Harassment or bullying behavior', 'buddyboss-platform' ),
 				),
 			);
 

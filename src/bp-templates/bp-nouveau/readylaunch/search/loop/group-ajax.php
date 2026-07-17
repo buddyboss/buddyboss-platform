@@ -26,7 +26,7 @@ defined( 'ABSPATH' ) || exit;
 		<div class="entry-meta">
 			<div class="item-meta group-details">
 				<?php
-				echo bp_create_excerpt(
+				echo wp_kses_post( bp_create_excerpt(
 					bp_get_group_description(),
 					255,
 					array(
@@ -34,7 +34,7 @@ defined( 'ABSPATH' ) || exit;
 						'strip_tags' => true,
 						'ending'     => '&hellip;',
 					)
-				);
+				) );
 				?>
 			</div><!-- //.group_description -->
 			<span class="item-meta">
@@ -43,7 +43,7 @@ defined( 'ABSPATH' ) || exit;
 			<span class="middot">&middot;</span>
 			<p class="item-meta last-active">
 				<?php
-				esc_html_e( 'Last active ', 'buddyboss' );
+				esc_html_e( 'Last active ', 'buddyboss-platform' );
 				bp_group_last_active();
 				?>
 			</p>

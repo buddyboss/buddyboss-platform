@@ -23,5 +23,5 @@ function _bp_core_moment_js_config_footer() {
 		return;
 	}
 
-	printf( '<script>%s</script>', bp_core_moment_js_config() );
+	printf( '<script>%s</script>', bp_core_moment_js_config() ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- JS-context output from a deprecated stub that returns an empty string; HTML output escapers do not apply.
 }

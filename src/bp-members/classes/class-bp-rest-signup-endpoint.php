@@ -37,7 +37,7 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 
 		$this->default_password_fields = array(
 			'signup_password'         => array(
-				'label'          => __( 'Password', 'buddyboss' ),
+				'label'          => __( 'Password', 'buddyboss-platform' ),
 				'required'       => true,
 				'value'          => '',
 				'attribute_type' => 'password',
@@ -45,7 +45,7 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 				'class'          => 'password-entry',
 			),
 			'signup_password_confirm' => array(
-				'label'          => __( 'Confirm Password', 'buddyboss' ),
+				'label'          => __( 'Confirm Password', 'buddyboss-platform' ),
 				'required'       => true,
 				'value'          => '',
 				'attribute_type' => 'password',
@@ -100,7 +100,7 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 			array(
 				'args'   => array(
 					'id' => array(
-						'description' => __( 'Identifier for the signup. Can be a signup ID, an email address, or a user_login.', 'buddyboss' ),
+						'description' => __( 'Identifier for the signup. Can be a signup ID, an email address, or a user_login.', 'buddyboss-platform' ),
 						'type'        => 'string',
 					),
 				),
@@ -135,7 +135,7 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 			array(
 				'args'   => array(
 					'activation_key' => array(
-						'description' => __( 'Activation key of the signup.', 'buddyboss' ),
+						'description' => __( 'Activation key of the signup.', 'buddyboss-platform' ),
 						'type'        => 'string',
 						'required'    => true,
 					),
@@ -251,7 +251,7 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 			}
 			$fields[] = array(
 				'id'          => 'signup_with_blog',
-				'label'       => __( "Yes, I'd like to create a new site", 'buddyboss' ),
+				'label'       => __( "Yes, I'd like to create a new site", 'buddyboss-platform' ),
 				'description' => '',
 				'type'        => 'checkbox',
 				'required'    => '',
@@ -273,7 +273,7 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 
 			$fields[] = array(
 				'id'          => 'signup_blog_privacy',
-				'label'       => __( 'I would like my site to appear in search engines, and in public listings around this network.', 'buddyboss' ),
+				'label'       => __( 'I would like my site to appear in search engines, and in public listings around this network.', 'buddyboss-platform' ),
 				'description' => '',
 				'type'        => 'radio',
 				'required'    => true,
@@ -281,14 +281,14 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 					array(
 						'id'                => '',
 						'type'              => 'option',
-						'name'              => __( 'Yes', 'buddyboss' ),
+						'name'              => __( 'Yes', 'buddyboss-platform' ),
 						'value'             => 'public',
 						'is_default_option' => true,
 					),
 					array(
 						'id'                => '',
 						'type'              => 'option',
-						'name'              => __( 'No', 'buddyboss' ),
+						'name'              => __( 'No', 'buddyboss-platform' ),
 						'value'             => 'private',
 						'is_default_option' => false,
 					),
@@ -308,20 +308,20 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 			if ( ! empty( $terms ) && ! empty( $privacy ) ) {
 				$headline = sprintf(
 					/* translators: 1. Term agreement page. 2. Privacy page. */
-					__( 'I agree to the %1$s and %2$s.', 'buddyboss' ),
+					__( 'I agree to the %1$s and %2$s.', 'buddyboss-platform' ),
 					'<a href="' . esc_url( get_permalink( $terms ) ) . '">' . get_the_title( $terms ) . '</a>',
 					'<a href="' . esc_url( get_permalink( $privacy ) ) . '">' . get_the_title( $privacy ) . '</a>'
 				);
 			} elseif ( ! empty( $terms ) && empty( $privacy ) ) {
 				$headline = sprintf(
 					/* translators: Term agreement page. */
-					__( 'I agree to the %s.', 'buddyboss' ),
+					__( 'I agree to the %s.', 'buddyboss-platform' ),
 					'<a href="' . esc_url( get_permalink( $terms ) ) . '">' . get_the_title( $terms ) . '</a>'
 				);
 			} elseif ( empty( $terms ) && ! empty( $privacy ) ) {
 				$headline = sprintf(
 					/* translators: Privacy page. */
-					__( 'I agree to the %s.', 'buddyboss' ),
+					__( 'I agree to the %s.', 'buddyboss-platform' ),
 					'<a href="' . esc_url( get_permalink( $privacy ) ) . '">' . get_the_title( $privacy ) . '</a>'
 				);
 			}
@@ -364,7 +364,7 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 	public function signup_form_items_permissions_check( $request ) {
 		$retval = new WP_Error(
 			'bp_rest_authorization_required',
-			__( 'Sorry, you are not able to view the register form fields.', 'buddyboss' ),
+			__( 'Sorry, you are not able to view the register form fields.', 'buddyboss-platform' ),
 			array(
 				'status' => rest_authorization_required_code(),
 			)
@@ -468,7 +468,7 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 	public function get_items_permissions_check( $request ) {
 		$retval = new WP_Error(
 			'bp_rest_authorization_required',
-			__( 'Sorry, you need to be logged in to perform this action.', 'buddyboss' ),
+			__( 'Sorry, you need to be logged in to perform this action.', 'buddyboss-platform' ),
 			array(
 				'status' => rest_authorization_required_code(),
 			)
@@ -540,7 +540,7 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 	public function get_item_permissions_check( $request ) {
 		$retval = new WP_Error(
 			'bp_rest_authorization_required',
-			__( 'Sorry, you need to be logged in to perform this action.', 'buddyboss' ),
+			__( 'Sorry, you need to be logged in to perform this action.', 'buddyboss-platform' ),
 			array(
 				'status' => rest_authorization_required_code(),
 			)
@@ -553,7 +553,7 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 			if ( empty( $signup ) ) {
 				$retval = new WP_Error(
 					'bp_rest_invalid_id',
-					__( 'Invalid signup id.', 'buddyboss' ),
+					__( 'Invalid signup id.', 'buddyboss-platform' ),
 					array(
 						'status' => 404,
 					)
@@ -561,7 +561,7 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 			} elseif ( ! bp_current_user_can( 'bp_moderate' ) ) {
 				$retval = new WP_Error(
 					'bp_rest_authorization_required',
-					__( 'Sorry, you are not authorized to perform this action.', 'buddyboss' ),
+					__( 'Sorry, you are not authorized to perform this action.', 'buddyboss-platform' ),
 					array(
 						'status' => rest_authorization_required_code(),
 					)
@@ -629,7 +629,7 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 		if ( empty( $posted_data ) ) {
 			return new WP_Error(
 				'bp_rest_signup_cannot_create',
-				__( 'Cannot create new signup.', 'buddyboss' ),
+				__( 'Cannot create new signup.', 'buddyboss-platform' ),
 				array(
 					'status' => 500,
 				)
@@ -678,7 +678,7 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 
 		// Check that both password fields are filled in.
 		if ( isset( $_POST['signup_password'] ) && empty( $_POST['signup_password'] ) ) {
-			$bp->signup->errors['signup_password'] = __( 'Please make sure to enter your password.', 'buddyboss' );
+			$bp->signup->errors['signup_password'] = __( 'Please make sure to enter your password.', 'buddyboss-platform' );
 		}
 
 		// if email opt enabled.
@@ -686,7 +686,7 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 
 			// Check that both password fields are filled in.
 			if ( empty( $_POST['signup_email'] ) || empty( $_POST['signup_email_confirm'] ) ) {
-				$bp->signup->errors['signup_email'] = __( 'Please make sure to enter your email twice.', 'buddyboss' );
+				$bp->signup->errors['signup_email'] = __( 'Please make sure to enter your email twice.', 'buddyboss-platform' );
 			}
 
 			// Check that the passwords match.
@@ -694,7 +694,7 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 				( ! empty( $_POST['signup_email'] ) && ! empty( $_POST['signup_email_confirm'] ) )
 				&& $_POST['signup_email'] !== $_POST['signup_email_confirm']
 			) {
-				$bp->signup->errors['signup_email'] = __( 'The emails entered do not match.', 'buddyboss' );
+				$bp->signup->errors['signup_email'] = __( 'The emails entered do not match.', 'buddyboss-platform' );
 			}
 		}
 
@@ -703,7 +703,7 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 
 			// Check that both password fields are filled in.
 			if ( empty( $_POST['signup_password'] ) || empty( $_POST['signup_password_confirm'] ) ) {
-				$bp->signup->errors['signup_password'] = __( 'Please make sure to enter your password twice.', 'buddyboss' );
+				$bp->signup->errors['signup_password'] = __( 'Please make sure to enter your password twice.', 'buddyboss-platform' );
 			}
 
 			// Check that the passwords match.
@@ -711,13 +711,13 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 				( ! empty( $_POST['signup_password'] ) && ! empty( $_POST['signup_password_confirm'] ) )
 				&& $_POST['signup_password'] !== $_POST['signup_password_confirm']
 			) {
-				$bp->signup->errors['signup_password'] = __( 'The passwords entered do not match.', 'buddyboss' );
+				$bp->signup->errors['signup_password'] = __( 'The passwords entered do not match.', 'buddyboss-platform' );
 			}
 		}
 
 		// Adding error message for the legal agreement checkbox.
 		if ( function_exists( 'bb_register_legal_agreement' ) && true === bb_register_legal_agreement() && empty( $_POST['legal_agreement'] ) ) {
-			$bp->signup->errors['legal_agreement'] = __( 'This is a required field.', 'buddyboss' );
+			$bp->signup->errors['legal_agreement'] = __( 'This is a required field.', 'buddyboss-platform' );
 		}
 
 		$bp->signup->username = $user_name;
@@ -787,7 +787,7 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 
 					// Create errors for required fields without values.
 					if ( xprofile_check_is_required_field( $field_id ) && empty( $_POST[ 'field_' . $field_id ] ) && ! bp_current_user_can( 'bp_moderate' ) ) {
-						$bp->signup->errors[ 'field_' . $field_id ] = __( 'This is a required field.', 'buddyboss' );
+						$bp->signup->errors[ 'field_' . $field_id ] = __( 'This is a required field.', 'buddyboss-platform' );
 					} else {
 						// Validate xprofile.
 						$message = ( function_exists( 'xprofile_validate_field' ) ? xprofile_validate_field( $field_id, $_POST[ 'field_' . $field_id ], '' ) : '' ); // phpcs:ignore
@@ -840,7 +840,7 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 		if ( 'none' === $active_signup ) {
 			return new WP_Error(
 				'bp_rest_signup_disabled',
-				__( 'Sorry, you are not authorized to perform this action.', 'buddyboss' ),
+				__( 'Sorry, you are not authorized to perform this action.', 'buddyboss-platform' ),
 				array(
 					'status' => rest_authorization_required_code(),
 				)
@@ -929,7 +929,7 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 		if ( is_wp_error( $signup_update ) ) {
 			return new WP_Error(
 				'bp_rest_rest_errors',
-				__( 'Sorry, you are not authorized to perform this action.', 'buddyboss' ),
+				__( 'Sorry, you are not authorized to perform this action.', 'buddyboss-platform' ),
 				array(
 					'status' => rest_authorization_required_code(),
 				)
@@ -942,7 +942,7 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 
 		$retval            = array();
 		$retval['success'] = true;
-		$retval['message'] = __( 'Before you can login, you need to confirm your email address via the email we just sent to you.', 'buddyboss' );
+		$retval['message'] = __( 'Before you can login, you need to confirm your email address via the email we just sent to you.', 'buddyboss-platform' );
 		$retval['data']    = array();
 
 		$retval['data'] = $this->prepare_response_for_collection(
@@ -976,7 +976,7 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 	public function create_item_permissions_check( $request ) {
 		$retval = new WP_Error(
 			'bp_rest_authorization_required',
-			__( 'Sorry, you are not authorized to perform this action.', 'buddyboss' ),
+			__( 'Sorry, you are not authorized to perform this action.', 'buddyboss-platform' ),
 			array(
 				'status' => rest_authorization_required_code(),
 			)
@@ -1024,7 +1024,7 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 		if ( ! $deleted ) {
 			return new WP_Error(
 				'bp_rest_signup_cannot_delete',
-				__( 'Could not delete signup.', 'buddyboss' ),
+				__( 'Could not delete signup.', 'buddyboss-platform' ),
 				array(
 					'status' => 500,
 				)
@@ -1104,7 +1104,7 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 		if ( is_wp_error( $activated ) ) {
 			return new WP_Error(
 				'bp_rest_signup_activate_fail',
-				__( 'Fail to activate the signup.', 'buddyboss' ),
+				__( 'Fail to activate the signup.', 'buddyboss-platform' ),
 				array(
 					'status' => 500,
 				)
@@ -1142,7 +1142,7 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 	public function activate_item_permissions_check( $request ) {
 		$retval = new WP_Error(
 			'bp_rest_invalid_activation_key',
-			__( 'Invalid activation key.', 'buddyboss' ),
+			__( 'Invalid activation key.', 'buddyboss-platform' ),
 			array(
 				'status' => 404,
 			)
@@ -1256,7 +1256,7 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 			if ( ! function_exists( 'bp_xprofile_nickname_field_id' ) ) {
 				$args['signup_username'] = array(
 					'context'           => array( 'edit' ),
-					'description'       => __( 'New user Username .', 'buddyboss' ),
+					'description'       => __( 'New user Username .', 'buddyboss-platform' ),
 					'type'              => 'string',
 					'required'          => true,
 					'sanitize_callback' => 'sanitize_user',
@@ -1266,7 +1266,7 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 
 			$args['signup_email'] = array(
 				'context'           => array( 'edit' ),
-				'description'       => __( 'New user email address.', 'buddyboss' ),
+				'description'       => __( 'New user email address.', 'buddyboss-platform' ),
 				'type'              => 'string',
 				'required'          => true,
 				'sanitize_callback' => 'sanitize_email',
@@ -1276,7 +1276,7 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 			if ( function_exists( 'bp_register_confirm_email' ) && true === bp_register_confirm_email() ) {
 				$args['signup_email_confirm'] = array(
 					'context'           => array( 'edit' ),
-					'description'       => __( 'New user confirm email address.', 'buddyboss' ),
+					'description'       => __( 'New user confirm email address.', 'buddyboss-platform' ),
 					'type'              => 'string',
 					'required'          => true,
 					'sanitize_callback' => 'sanitize_email',
@@ -1286,7 +1286,7 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 
 			$args['signup_password'] = array(
 				'context'           => array( 'edit' ),
-				'description'       => __( 'New user account password.', 'buddyboss' ),
+				'description'       => __( 'New user account password.', 'buddyboss-platform' ),
 				'type'              => 'string',
 				'required'          => true,
 				'sanitize_callback' => 'sanitize_text_field',
@@ -1299,7 +1299,7 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 			) {
 				$args['signup_password_confirm'] = array(
 					'context'           => array( 'edit' ),
-					'description'       => __( 'New user confirm account password.', 'buddyboss' ),
+					'description'       => __( 'New user confirm account password.', 'buddyboss-platform' ),
 					'type'              => 'string',
 					'required'          => true,
 					'sanitize_callback' => 'sanitize_text_field',
@@ -1310,7 +1310,7 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 			if ( bp_get_blog_signup_allowed() ) {
 				$args['signup_with_blog'] = array(
 					'context'           => array( 'edit' ),
-					'description'       => __( 'If user likes to create a new site.', 'buddyboss' ),
+					'description'       => __( 'If user likes to create a new site.', 'buddyboss-platform' ),
 					'type'              => 'boolean',
 					'sanitize_callback' => 'rest_sanitize_boolean',
 					'validate_callback' => 'rest_validate_request_arg',
@@ -1318,7 +1318,7 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 
 				$args['signup_blog_url'] = array(
 					'context'           => array( 'edit' ),
-					'description'       => __( 'New Site URL.', 'buddyboss' ),
+					'description'       => __( 'New Site URL.', 'buddyboss-platform' ),
 					'type'              => 'string',
 					'sanitize_callback' => 'sanitize_text_field',
 					'validate_callback' => 'rest_validate_request_arg',
@@ -1326,7 +1326,7 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 
 				$args['signup_blog_title'] = array(
 					'context'           => array( 'edit' ),
-					'description'       => __( 'New Site Title.', 'buddyboss' ),
+					'description'       => __( 'New Site Title.', 'buddyboss-platform' ),
 					'type'              => 'string',
 					'sanitize_callback' => 'sanitize_text_field',
 					'validate_callback' => 'rest_validate_request_arg',
@@ -1334,7 +1334,7 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 
 				$args['signup_blog_privacy'] = array(
 					'context'           => array( 'edit' ),
-					'description'       => __( 'If user would like to site appear in search engines, and in public listings around this network.', 'buddyboss' ),
+					'description'       => __( 'If user would like to site appear in search engines, and in public listings around this network.', 'buddyboss-platform' ),
 					'type'              => 'string',
 					'enum'              => array( 'public', 'private' ),
 					'sanitize_callback' => 'sanitize_text_field',
@@ -1410,20 +1410,20 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 			'properties' => array(
 				'id'             => array(
 					'context'     => array( 'view', 'edit' ),
-					'description' => __( 'A unique numeric ID for the signup.', 'buddyboss' ),
+					'description' => __( 'A unique numeric ID for the signup.', 'buddyboss-platform' ),
 					'readonly'    => true,
 					'type'        => 'integer',
 				),
 				'user_login'     => array(
 					'context'     => array( 'view', 'edit' ),
-					'description' => __( 'The username of the user the signup is for.', 'buddyboss' ),
+					'description' => __( 'The username of the user the signup is for.', 'buddyboss-platform' ),
 					'required'    => true,
 					'type'        => 'string',
 					'readonly'    => true,
 				),
 				'user_name'      => array(
 					'context'     => array( 'view', 'edit' ),
-					'description' => __( 'The full name of the user the signup is for.', 'buddyboss' ),
+					'description' => __( 'The full name of the user the signup is for.', 'buddyboss-platform' ),
 					'type'        => 'string',
 					'readonly'    => true,
 					'arg_options' => array(
@@ -1432,19 +1432,19 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 				),
 				'user_email'     => array(
 					'context'     => array( 'edit' ),
-					'description' => __( 'The email for the user the signup is for.', 'buddyboss' ),
+					'description' => __( 'The email for the user the signup is for.', 'buddyboss-platform' ),
 					'type'        => 'string',
 					'readonly'    => true,
 				),
 				'activation_key' => array(
 					'context'     => array(),
-					'description' => __( 'Activation key of the signup.', 'buddyboss' ),
+					'description' => __( 'Activation key of the signup.', 'buddyboss-platform' ),
 					'type'        => 'string',
 					'readonly'    => true,
 				),
 				'registered'     => array(
 					'context'     => array( 'view', 'edit' ),
-					'description' => __( 'The registered date for the user, in the site\'s timezone.', 'buddyboss' ),
+					'description' => __( 'The registered date for the user, in the site\'s timezone.', 'buddyboss-platform' ),
 					'type'        => 'string',
 					'readonly'    => true,
 					'format'      => 'date-time',
@@ -1473,7 +1473,7 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 		unset( $params['page'], $params['per_page'], $params['search'] );
 
 		$params['number'] = array(
-			'description'       => __( 'Total number of signups to return.', 'buddyboss' ),
+			'description'       => __( 'Total number of signups to return.', 'buddyboss-platform' ),
 			'default'           => 1,
 			'type'              => 'integer',
 			'sanitize_callback' => 'absint',
@@ -1481,7 +1481,7 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['offset'] = array(
-			'description'       => __( 'Offset the result set by a specific number of items.', 'buddyboss' ),
+			'description'       => __( 'Offset the result set by a specific number of items.', 'buddyboss-platform' ),
 			'default'           => 0,
 			'type'              => 'integer',
 			'sanitize_callback' => 'absint',
@@ -1489,7 +1489,7 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['include'] = array(
-			'description'       => __( 'Ensure result set includes specific IDs.', 'buddyboss' ),
+			'description'       => __( 'Ensure result set includes specific IDs.', 'buddyboss-platform' ),
 			'default'           => array(),
 			'type'              => 'array',
 			'items'             => array( 'type' => 'integer' ),
@@ -1498,7 +1498,7 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['order'] = array(
-			'description'       => __( 'Order sort attribute ascending or descending.', 'buddyboss' ),
+			'description'       => __( 'Order sort attribute ascending or descending.', 'buddyboss-platform' ),
 			'default'           => 'desc',
 			'type'              => 'string',
 			'enum'              => array( 'asc', 'desc' ),
@@ -1507,7 +1507,7 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['orderby'] = array(
-			'description'       => __( 'Order by a specific parameter (default: signup_id).', 'buddyboss' ),
+			'description'       => __( 'Order by a specific parameter (default: signup_id).', 'buddyboss-platform' ),
 			'default'           => 'signup_id',
 			'type'              => 'string',
 			'sanitize_callback' => 'sanitize_key',
@@ -1515,7 +1515,7 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['user_login'] = array(
-			'description'       => __( 'Specific user login to return.', 'buddyboss' ),
+			'description'       => __( 'Specific user login to return.', 'buddyboss-platform' ),
 			'default'           => '',
 			'type'              => 'string',
 			'sanitize_callback' => 'sanitize_key',

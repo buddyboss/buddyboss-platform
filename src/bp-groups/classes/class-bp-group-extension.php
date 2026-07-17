@@ -521,7 +521,7 @@ class BP_Group_Extension {
 				'position' => 81,
 			),
 			'edit'   => array(
-				'submit_text' => __( 'Save Changes', 'buddyboss' ),
+				'submit_text' => __( 'Save Changes', 'buddyboss-platform' ),
 			),
 			'admin'  => array(
 				'metabox_context'  => 'normal',
@@ -883,7 +883,7 @@ class BP_Group_Extension {
 		if ( ! $user_can_visit && is_user_logged_in() ) {
 			$current_group = groups_get_group( $this->group_id );
 
-			$no_access_args['message']  = __( 'You do not have access to this content.', 'buddyboss' );
+			$no_access_args['message']  = __( 'You do not have access to this content.', 'buddyboss-platform' );
 			$no_access_args['root']     = bp_get_group_permalink( $current_group ) . 'home/';
 			$no_access_args['redirect'] = false;
 		}
@@ -1048,7 +1048,7 @@ class BP_Group_Extension {
 		$screen = ob_get_contents();
 		ob_end_clean();
 
-		echo $this->maybe_add_submit_button( $screen );
+		echo $this->maybe_add_submit_button( $screen ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $screen is buffered group-extension edit-screen HTML (forms/inputs/submit button); escaping would strip required form controls.
 
 		$this->nonce_field( 'edit' );
 	}

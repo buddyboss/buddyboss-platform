@@ -9,6 +9,9 @@
  * @version 1.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 $member_user_id   = bp_get_member_user_id();
 $member_user_link = bp_get_member_permalink();
 ?>
@@ -23,12 +26,12 @@ $member_user_link = bp_get_member_permalink();
 				<a href="<?php echo esc_url( $member_user_link ); ?>" data-bb-hp-profile="<?php echo esc_attr( $member_user_id ); ?>"><?php bp_member_name(); ?></a>
 			</h2>
 			<?php
-			echo bp_get_user_member_type( $member_user_id );
+			echo wp_kses_post( bp_get_user_member_type( $member_user_id ) );
 			if ( bp_nouveau_member_has_meta() ) :
 				?>
 				<p class="item-meta last-activity">
 					<span class="middot">&middot;</span>
-					<?php echo esc_html__( 'Last active', 'buddyboss' ) . ' ' . wp_kses_post( bb_get_member_last_activity_time() ); ?>
+					<?php echo esc_html__( 'Last active', 'buddyboss-platform' ) . ' ' . wp_kses_post( bb_get_member_last_activity_time() ); ?>
 				</p>
 			<?php endif; ?>
 		</div>

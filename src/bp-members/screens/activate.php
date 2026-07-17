@@ -6,6 +6,9 @@
  * @since BuddyPress 3.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 /**
  * Handle the loading of the Activate screen.
  *
@@ -102,7 +105,7 @@ function bp_members_action_activate_account() {
 		bp_core_redirect( trailingslashit( bp_get_root_domain() . '/' . $bp->pages->activate->slug ) );
 	}
 
-	bp_core_add_message( __( 'Your account is now active!', 'buddyboss' ) );
+	bp_core_add_message( __( 'Your account is now active!', 'buddyboss-platform' ) );
 	bp_core_redirect( add_query_arg( 'activated', '1', bp_get_activation_page() ) );
 
 }

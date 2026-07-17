@@ -65,7 +65,7 @@ class BP_REST_Invites_Endpoint extends WP_REST_Controller {
 			array(
 				'args'        => array(
 					'id' => array(
-						'description' => __( 'A unique numeric ID for the member invitation.', 'buddyboss' ),
+						'description' => __( 'A unique numeric ID for the member invitation.', 'buddyboss-platform' ),
 						'type'        => 'integer',
 						'required'    => true,
 					),
@@ -165,7 +165,7 @@ class BP_REST_Invites_Endpoint extends WP_REST_Controller {
 	public function get_items_permissions_check( $request ) {
 		$retval = new WP_Error(
 			'bp_rest_authorization_required',
-			__( 'Sorry, you need to be logged in to view invites.', 'buddyboss' ),
+			__( 'Sorry, you need to be logged in to view invites.', 'buddyboss-platform' ),
 			array(
 				'status' => rest_authorization_required_code(),
 			)
@@ -177,7 +177,7 @@ class BP_REST_Invites_Endpoint extends WP_REST_Controller {
 			if ( function_exists( 'bp_allow_user_to_send_invites' ) && false === bp_allow_user_to_send_invites() ) {
 				$retval = new WP_Error(
 					'bp_rest_authorization_required',
-					__( 'Sorry, you don\'t have permission to view invites.', 'buddyboss' ),
+					__( 'Sorry, you don\'t have permission to view invites.', 'buddyboss-platform' ),
 					array(
 						'status' => rest_authorization_required_code(),
 					)
@@ -221,7 +221,7 @@ class BP_REST_Invites_Endpoint extends WP_REST_Controller {
 		if ( empty( $fields ) ) {
 			return new WP_Error(
 				'bp_rest_required_fields',
-				__( 'Sorry, you need to set the fields parameter.', 'buddyboss' ),
+				__( 'Sorry, you need to set the fields parameter.', 'buddyboss-platform' ),
 				array(
 					'status' => 400,
 				)
@@ -418,28 +418,28 @@ class BP_REST_Invites_Endpoint extends WP_REST_Controller {
 		}
 
 		if ( ! empty( $invite_exists_array ) ) {
-			$retval['exists'] = trim( __( 'Invitations did not send to the following email addresses, because they are already members:', 'buddyboss' ) . ' ' . implode( ', ', $invite_exists_array ) );
+			$retval['exists'] = trim( __( 'Invitations did not send to the following email addresses, because they are already members:', 'buddyboss-platform' ) . ' ' . implode( ', ', $invite_exists_array ) );
 		}
 
 		if ( ! empty( $invite_duplicate_array ) ) {
 			if ( ! empty( $invite_exists_array ) ) {
 				$merged_emails    = array_unique( array_merge( $invite_exists_array, $invite_duplicate_array ) );
-				$retval['exists'] = trim( __( 'Invitations did not send to the following email addresses, because they are already invited or already members:', 'buddyboss' ) . ' ' . implode( ', ', $merged_emails ) );
+				$retval['exists'] = trim( __( 'Invitations did not send to the following email addresses, because they are already invited or already members:', 'buddyboss-platform' ) . ' ' . implode( ', ', $merged_emails ) );
 			} else {
-				$retval['exists'] = trim( __( 'Invitations did not send to the following email addresses, because they are already invited:', 'buddyboss' ) . ' ' . implode( ', ', $invite_duplicate_array ) );
+				$retval['exists'] = trim( __( 'Invitations did not send to the following email addresses, because they are already invited:', 'buddyboss-platform' ) . ' ' . implode( ', ', $invite_duplicate_array ) );
 			}
 		}
 
 		if ( ! empty( $failed_invite ) ) {
-			$retval['failed'] = trim( __( 'Invitations did not send because these email addresses are invalid:', 'buddyboss' ) . ' ' . implode( ', ', wp_list_pluck( array_filter( $failed_invite ), 'email' ) ) );
+			$retval['failed'] = trim( __( 'Invitations did not send because these email addresses are invalid:', 'buddyboss-platform' ) . ' ' . implode( ', ', wp_list_pluck( array_filter( $failed_invite ), 'email' ) ) );
 		}
 
 		if ( ! empty( $invite_restricted_array ) ) {
 			if ( ! empty( $failed_invite ) ) {
 				$merged_emails    = array_unique( array_merge( $failed_invite, $invite_restricted_array ) );
-				$retval['failed'] = trim( __( 'Invitations did not send to the following email addresses, because they are invalid email addresses or the address or domain has been blacklisted:', 'buddyboss' ) . ' ' . implode( ', ', $merged_emails ) );
+				$retval['failed'] = trim( __( 'Invitations did not send to the following email addresses, because they are invalid email addresses or the address or domain has been blacklisted:', 'buddyboss-platform' ) . ' ' . implode( ', ', $merged_emails ) );
 			} else {
-				$retval['failed'] = trim( __( 'Invitations did not send to the following email addresses, because the address or domain has been blacklisted:', 'buddyboss' ) . ' ' . implode( ', ', $invite_restricted_array ) );
+				$retval['failed'] = trim( __( 'Invitations did not send to the following email addresses, because the address or domain has been blacklisted:', 'buddyboss-platform' ) . ' ' . implode( ', ', $invite_restricted_array ) );
 			}
 		}
 
@@ -487,7 +487,7 @@ class BP_REST_Invites_Endpoint extends WP_REST_Controller {
 	public function create_item_permissions_check( $request ) {
 		$retval = new WP_Error(
 			'bp_rest_authorization_required',
-			__( 'Sorry, you need to be logged in to create invites.', 'buddyboss' ),
+			__( 'Sorry, you need to be logged in to create invites.', 'buddyboss-platform' ),
 			array(
 				'status' => rest_authorization_required_code(),
 			)
@@ -499,7 +499,7 @@ class BP_REST_Invites_Endpoint extends WP_REST_Controller {
 			if ( function_exists( 'bp_allow_user_to_send_invites' ) && false === bp_allow_user_to_send_invites() ) {
 				$retval = new WP_Error(
 					'bp_rest_authorization_required',
-					__( 'Sorry, you don\'t have permission to create invites.', 'buddyboss' ),
+					__( 'Sorry, you don\'t have permission to create invites.', 'buddyboss-platform' ),
 					array(
 						'status' => rest_authorization_required_code(),
 					)
@@ -580,7 +580,7 @@ class BP_REST_Invites_Endpoint extends WP_REST_Controller {
 	public function delete_item_permissions_check( $request ) {
 		$retval = new WP_Error(
 			'bp_rest_authorization_required',
-			__( 'Sorry, you need to be logged in to revoke invite.', 'buddyboss' ),
+			__( 'Sorry, you need to be logged in to revoke invite.', 'buddyboss-platform' ),
 			array(
 				'status' => rest_authorization_required_code(),
 			)
@@ -593,7 +593,7 @@ class BP_REST_Invites_Endpoint extends WP_REST_Controller {
 			if ( function_exists( 'bp_allow_user_to_send_invites' ) && false === bp_allow_user_to_send_invites() ) {
 				$retval = new WP_Error(
 					'bp_rest_authorization_required',
-					__( 'Sorry, you don\'t have permission to revoke invite.', 'buddyboss' ),
+					__( 'Sorry, you don\'t have permission to revoke invite.', 'buddyboss-platform' ),
 					array(
 						'status' => rest_authorization_required_code(),
 					)
@@ -601,7 +601,7 @@ class BP_REST_Invites_Endpoint extends WP_REST_Controller {
 			} elseif ( empty( $invite->ID ) ) {
 				$retval = new WP_Error(
 					'bp_rest_invite_invalid_id',
-					__( 'Invalid invite ID.', 'buddyboss' ),
+					__( 'Invalid invite ID.', 'buddyboss-platform' ),
 					array(
 						'status' => 404,
 					)
@@ -609,9 +609,23 @@ class BP_REST_Invites_Endpoint extends WP_REST_Controller {
 			} elseif ( ! isset( $invite->post_type ) || 'bp-invite' !== $invite->post_type ) {
 				$retval = new WP_Error(
 					'bp_rest_invite_invalid_id',
-					__( 'Invalid invite ID.', 'buddyboss' ),
+					__( 'Invalid invite ID.', 'buddyboss-platform' ),
 					array(
 						'status' => 404,
+					)
+				);
+			} elseif (
+				bp_loggedin_user_id() !== (int) $invite->post_author
+				&& ! bp_current_user_can( 'bp_moderate' )
+			) {
+				// Object-level authorization: a member may only revoke their own
+				// invites. Site moderators may revoke any. Without this, any
+				// logged-in user could delete another user's invite (IDOR).
+				$retval = new WP_Error(
+					'bp_rest_authorization_required',
+					__( 'Sorry, you are not allowed to revoke this invite.', 'buddyboss-platform' ),
+					array(
+						'status' => rest_authorization_required_code(),
 					)
 				);
 			}
@@ -702,7 +716,7 @@ class BP_REST_Invites_Endpoint extends WP_REST_Controller {
 	public function get_invite_profile_type_permissions_check( $request ) {
 		$retval = new WP_Error(
 			'bp_rest_authorization_required',
-			__( 'Sorry, you need to be logged in to view invites profile type.', 'buddyboss' ),
+			__( 'Sorry, you need to be logged in to view invites profile type.', 'buddyboss-platform' ),
 			array(
 				'status' => rest_authorization_required_code(),
 			)
@@ -714,7 +728,7 @@ class BP_REST_Invites_Endpoint extends WP_REST_Controller {
 			if ( function_exists( 'bp_allow_user_to_send_invites' ) && false === bp_allow_user_to_send_invites() ) {
 				$retval = new WP_Error(
 					'bp_rest_authorization_required',
-					__( 'Sorry, you don\'t have permission to view invites profile type.', 'buddyboss' ),
+					__( 'Sorry, you don\'t have permission to view invites profile type.', 'buddyboss-platform' ),
 					array(
 						'status' => rest_authorization_required_code(),
 					)
@@ -760,9 +774,9 @@ class BP_REST_Invites_Endpoint extends WP_REST_Controller {
 			&& bp_allow_custom_registration()
 			&& '' !== bp_custom_register_page_url()
 		) {
-			$data['status'] = ( '1' === get_post_meta( $item->ID, '_bp_invitee_status', true ) ) ? __( 'Registered', 'buddyboss' ) : __( 'Invited', 'buddyboss' );
+			$data['status'] = ( '1' === get_post_meta( $item->ID, '_bp_invitee_status', true ) ) ? __( 'Registered', 'buddyboss-platform' ) : __( 'Invited', 'buddyboss-platform' );
 		} else {
-			$data['status']        = ( '1' === get_post_meta( $item->ID, '_bp_invitee_status', true ) ) ? __( 'Registered', 'buddyboss' ) : __( 'Revoke Invite', 'buddyboss' );
+			$data['status']        = ( '1' === get_post_meta( $item->ID, '_bp_invitee_status', true ) ) ? __( 'Registered', 'buddyboss-platform' ) : __( 'Revoke Invite', 'buddyboss-platform' );
 			$data['revoke-invite'] = ( '1' === get_post_meta( $item->ID, '_bp_invitee_status', true ) ) ? false : true;
 		}
 
@@ -798,20 +812,20 @@ class BP_REST_Invites_Endpoint extends WP_REST_Controller {
 		if ( WP_REST_Server::CREATABLE === $method ) {
 			$args = array(
 				'fields' => array(
-					'description' => __( 'Fields array with name and email_id to create an invites.', 'buddyboss' ),
+					'description' => __( 'Fields array with name and email_id to create an invites.', 'buddyboss-platform' ),
 					'type'        => 'array',
 					'items'       => array( 'type' => 'object' ),
 					'required'    => true,
 					'properties'  => array(
 						'name'     => array(
-							'description'       => __( 'Recipient Name for the invite.', 'buddyboss' ),
+							'description'       => __( 'Recipient Name for the invite.', 'buddyboss-platform' ),
 							'type'              => 'string',
 							'required'          => true,
 							'sanitize_callback' => 'sanitize_text_field',
 							'validate_callback' => 'rest_validate_request_arg',
 						),
 						'email_id' => array(
-							'description'       => __( 'Recipient Email for the invite.', 'buddyboss' ),
+							'description'       => __( 'Recipient Email for the invite.', 'buddyboss-platform' ),
 							'type'              => 'string',
 							'required'          => true,
 							'sanitize_callback' => 'sanitize_text_field',
@@ -822,9 +836,9 @@ class BP_REST_Invites_Endpoint extends WP_REST_Controller {
 			);
 
 			if ( true === bp_check_member_send_invites_tab_member_type_allowed() ) {
-				$args['fields']['description']                = __( 'Fields array with name, email_id and profile_type to create an invites.', 'buddyboss' );
+				$args['fields']['description']                = __( 'Fields array with name, email_id and profile_type to create an invites.', 'buddyboss-platform' );
 				$args['fields']['properties']['profile_type'] = array(
-					'description'       => __( 'Profile Type for the invite.', 'buddyboss' ),
+					'description'       => __( 'Profile Type for the invite.', 'buddyboss-platform' ),
 					'type'              => 'string',
 					'required'          => true,
 					'sanitize_callback' => 'sanitize_text_field',
@@ -834,7 +848,7 @@ class BP_REST_Invites_Endpoint extends WP_REST_Controller {
 
 			if ( true === bp_disable_invite_member_email_subject() ) {
 				$args['email_subject'] = array(
-					'description'       => __( 'Subject for invite a member.', 'buddyboss' ),
+					'description'       => __( 'Subject for invite a member.', 'buddyboss-platform' ),
 					'type'              => 'string',
 					'default'           => stripslashes( wp_strip_all_tags( bp_get_member_invitation_subject() ) ),
 					'validate_callback' => 'rest_validate_request_arg',
@@ -843,7 +857,7 @@ class BP_REST_Invites_Endpoint extends WP_REST_Controller {
 
 			if ( true === bp_disable_invite_member_email_content() ) {
 				$args['email_content'] = array(
-					'description'       => __( 'Content for invite a member.', 'buddyboss' ),
+					'description'       => __( 'Content for invite a member.', 'buddyboss-platform' ),
 					'type'              => 'string',
 					'default'           => bp_get_member_invites_wildcard_replace( bp_get_member_invitation_message() ),
 					'validate_callback' => 'rest_validate_request_arg',
@@ -875,47 +889,47 @@ class BP_REST_Invites_Endpoint extends WP_REST_Controller {
 			'type'       => 'object',
 			'properties' => array(
 				'id'             => array(
-					'description' => __( 'Unique identifier for the invite.', 'buddyboss' ),
+					'description' => __( 'Unique identifier for the invite.', 'buddyboss-platform' ),
 					'type'        => 'integer',
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'readonly'    => true,
 				),
 				'name'           => array(
-					'description' => __( 'Member\'s name.', 'buddyboss' ),
+					'description' => __( 'Member\'s name.', 'buddyboss-platform' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'readonly'    => true,
 				),
 				'email'          => array(
-					'description' => __( 'Member\'s email address', 'buddyboss' ),
+					'description' => __( 'Member\'s email address', 'buddyboss-platform' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'readonly'    => true,
 				),
 				'date'           => array(
-					'description' => __( 'The date the object was published, in the site\'s timezone.', 'buddyboss' ),
+					'description' => __( 'The date the object was published, in the site\'s timezone.', 'buddyboss-platform' ),
 					'type'        => 'string',
 					'format'      => 'date-time',
 					'context'     => array( 'embed', 'view', 'edit' ),
 				),
 				'date_gmt'       => array(
-					'description' => __( 'The date the object was published, as GMT.', 'buddyboss' ),
+					'description' => __( 'The date the object was published, as GMT.', 'buddyboss-platform' ),
 					'type'        => 'string',
 					'format'      => 'date-time',
 					'context'     => array( 'embed', 'view', 'edit' ),
 				),
 				'status'         => array(
-					'description' => __( 'Status to perform on it.', 'buddyboss' ),
+					'description' => __( 'Status to perform on it.', 'buddyboss-platform' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view', 'edit' ),
 				),
 				'invitee-status' => array(
-					'description' => __( 'Whether invitee is registered or not.', 'buddyboss' ),
+					'description' => __( 'Whether invitee is registered or not.', 'buddyboss-platform' ),
 					'type'        => 'boolean',
 					'context'     => array( 'embed', 'view', 'edit' ),
 				),
 				'revoke-invite'  => array(
-					'description' => __( 'Whether revoke invite or not.', 'buddyboss' ),
+					'description' => __( 'Whether revoke invite or not.', 'buddyboss-platform' ),
 					'type'        => 'boolean',
 					'context'     => array( 'embed', 'view', 'edit' ),
 				),
@@ -943,7 +957,7 @@ class BP_REST_Invites_Endpoint extends WP_REST_Controller {
 		unset( $params['search'] );
 
 		$params['order'] = array(
-			'description'       => __( 'Designates ascending or descending order of invites.', 'buddyboss' ),
+			'description'       => __( 'Designates ascending or descending order of invites.', 'buddyboss-platform' ),
 			'default'           => 'desc',
 			'type'              => 'string',
 			'enum'              => array( 'asc', 'desc' ),
@@ -952,7 +966,7 @@ class BP_REST_Invites_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['orderby'] = array(
-			'description'       => __( 'Sort retrieved invites by parameter.', 'buddyboss' ),
+			'description'       => __( 'Sort retrieved invites by parameter.', 'buddyboss-platform' ),
 			'type'              => 'array',
 			'items'             => array(
 				'type' => 'string',

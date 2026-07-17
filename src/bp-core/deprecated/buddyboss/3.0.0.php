@@ -6,6 +6,10 @@
  * @deprecated BuddyBoss 3.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
+
 // ──────────────────────────────────────────────────────────────────────────────
 // Search Settings 2.0 deprecated functions and hook compatibility.
 // Legacy settings API functions were removed from bp-search-settings.php.
@@ -286,7 +290,7 @@ add_action(
 			),
 			'BuddyBoss 3.0.0',
 			'bb_registration_after_general_settings_fields',
-			__( 'Registration fields are now registered via bb_register_feature_field() in Settings 2.0.', 'buddyboss' )
+			__( 'Registration fields are now registered via bb_register_feature_field() in Settings 2.0.', 'buddyboss-platform' )
 		);
 	}
 );
@@ -809,7 +813,7 @@ function bp_core_get_groups_admin_tabs( $active_tab = '' ) {
 
 	$tabs[] = array(
 		'href'  => bp_get_admin_url( add_query_arg( array( 'page' => 'bp-groups' ), 'admin.php' ) ),
-		'name'  => __( 'All Groups', 'buddyboss' ),
+		'name'  => __( 'All Groups', 'buddyboss-platform' ),
 		'class' => 'bp-all-groups',
 	);
 
@@ -886,10 +890,10 @@ function bp_groups_admin() {
 	if ( ! empty( $settings_url ) ) {
 		printf(
 			'<div class="wrap"><h1>%s</h1><p>%s <a href="%s">%s</a></p></div>',
-			esc_html__( 'Groups', 'buddyboss' ),
-			esc_html__( 'Groups admin has moved.', 'buddyboss' ),
+			esc_html__( 'Groups', 'buddyboss-platform' ),
+			esc_html__( 'Groups admin has moved.', 'buddyboss-platform' ),
 			esc_url( $settings_url ),
-			esc_html__( 'Go to Groups Settings', 'buddyboss' )
+			esc_html__( 'Go to Groups Settings', 'buddyboss-platform' )
 		);
 	}
 }
@@ -1579,33 +1583,35 @@ add_action( 'bb_admin_save_feature_settings_after', 'bb_members_fire_deprecated_
  */
 function bb_deprecated_xprofile_admin_rendering_hooks() {
 	$deprecated_hooks = array(
-		'xprofile_group_admin_after_description' => __( 'XProfile group admin after description', 'buddyboss' ),
-		'xprofile_group_before_submitbox'        => __( 'XProfile group before submitbox', 'buddyboss' ),
-		'xprofile_group_submitbox_start'         => __( 'XProfile group submitbox start', 'buddyboss' ),
-		'xprofile_group_after_submitbox'         => __( 'XProfile group after submitbox', 'buddyboss' ),
-		'xprofile_field_before_contentbox'       => __( 'XProfile field before contentbox', 'buddyboss' ),
-		'xprofile_field_after_contentbox'        => __( 'XProfile field after contentbox', 'buddyboss' ),
-		'xprofile_field_before_submitbox'        => __( 'XProfile field before submitbox', 'buddyboss' ),
-		'xprofile_field_submitbox_start'         => __( 'XProfile field submitbox start', 'buddyboss' ),
-		'xprofile_field_after_submitbox'         => __( 'XProfile field after submitbox', 'buddyboss' ),
-		'xprofile_field_after_sidebarbox'        => __( 'XProfile field after sidebarbox', 'buddyboss' ),
-		'xprofile_field_additional_options'      => __( 'XProfile field additional options', 'buddyboss' ),
-		'xprofile_admin_field_name_legend'       => __( 'XProfile admin field name legend', 'buddyboss' ),
-		'xprofile_admin_field_action'            => __( 'XProfile admin field action', 'buddyboss' ),
+		'xprofile_group_admin_after_description' => __( 'XProfile group admin after description', 'buddyboss-platform' ),
+		'xprofile_group_before_submitbox'        => __( 'XProfile group before submitbox', 'buddyboss-platform' ),
+		'xprofile_group_submitbox_start'         => __( 'XProfile group submitbox start', 'buddyboss-platform' ),
+		'xprofile_group_after_submitbox'         => __( 'XProfile group after submitbox', 'buddyboss-platform' ),
+		'xprofile_field_before_contentbox'       => __( 'XProfile field before contentbox', 'buddyboss-platform' ),
+		'xprofile_field_after_contentbox'        => __( 'XProfile field after contentbox', 'buddyboss-platform' ),
+		'xprofile_field_before_submitbox'        => __( 'XProfile field before submitbox', 'buddyboss-platform' ),
+		'xprofile_field_submitbox_start'         => __( 'XProfile field submitbox start', 'buddyboss-platform' ),
+		'xprofile_field_after_submitbox'         => __( 'XProfile field after submitbox', 'buddyboss-platform' ),
+		'xprofile_field_after_sidebarbox'        => __( 'XProfile field after sidebarbox', 'buddyboss-platform' ),
+		'xprofile_field_additional_options'      => __( 'XProfile field additional options', 'buddyboss-platform' ),
+		'xprofile_admin_field_name_legend'       => __( 'XProfile admin field name legend', 'buddyboss-platform' ),
+		'xprofile_admin_field_action'            => __( 'XProfile admin field action', 'buddyboss-platform' ),
 	);
 
 	foreach ( $deprecated_hooks as $hook => $description ) {
 		if ( has_action( $hook ) ) {
+			// phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped -- Arguments to _deprecated_hook(), a core API that escapes its own debug output; not direct output.
 			_deprecated_hook(
 				$hook,
 				'BuddyBoss 3.0.0',
 				'',
 				sprintf(
 					/* translators: %s: hook name */
-					__( 'The %s hook is no longer fired in the Settings 2.0 React admin interface. Extend the React UI via custom JavaScript instead.', 'buddyboss' ),
+					__( 'The %s hook is no longer fired in the Settings 2.0 React admin interface. Extend the React UI via custom JavaScript instead.', 'buddyboss-platform' ),
 					$hook
 				)
 			);
+			// phpcs:enable WordPress.Security.EscapeOutput.OutputNotEscaped
 		}
 	}
 }
@@ -1630,16 +1636,18 @@ function bb_deprecated_profile_admin_tab_hooks() {
 
 	foreach ( $deprecated_filters as $hook ) {
 		if ( has_filter( $hook ) ) {
+			// phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped -- Arguments to _deprecated_hook(), a core API that escapes its own debug output; not direct output.
 			_deprecated_hook(
 				$hook,
 				'BuddyBoss 3.0.0',
 				'bb_register_side_panel()',
 				sprintf(
 					/* translators: %s: hook name */
-					__( 'The %s filter is no longer used. Profile admin tabs are now managed via Settings 2.0 side panels.', 'buddyboss' ),
+					__( 'The %s filter is no longer used. Profile admin tabs are now managed via Settings 2.0 side panels.', 'buddyboss-platform' ),
 					$hook
 				)
 			);
+			// phpcs:enable WordPress.Security.EscapeOutput.OutputNotEscaped
 		}
 	}
 }
@@ -1907,7 +1915,7 @@ add_action(
 	'wp_ajax_bbp_suggest_topic',
 	static function () {
 		_deprecated_function( 'bbp_suggest_topic AJAX action', 'BuddyBoss 3.0.0', 'bb_admin_discussion_autocomplete' );
-		wp_send_json_error( array( 'message' => __( 'This endpoint has been deprecated. Use bb_admin_discussion_autocomplete instead.', 'buddyboss' ) ) );
+		wp_send_json_error( array( 'message' => __( 'This endpoint has been deprecated. Use bb_admin_discussion_autocomplete instead.', 'buddyboss-platform' ) ) );
 	}
 );
 
@@ -1921,7 +1929,7 @@ add_action(
 	'wp_ajax_bbp_suggest_reply',
 	static function () {
 		_deprecated_function( 'bbp_suggest_reply AJAX action', 'BuddyBoss 3.0.0', 'bb_admin_reply_autocomplete' );
-		wp_send_json_error( array( 'message' => __( 'This endpoint has been deprecated. Use bb_admin_reply_autocomplete instead.', 'buddyboss' ) ) );
+		wp_send_json_error( array( 'message' => __( 'This endpoint has been deprecated. Use bb_admin_reply_autocomplete instead.', 'buddyboss-platform' ) ) );
 	}
 );
 
@@ -1935,7 +1943,7 @@ add_action(
 	'wp_ajax_bbp_suggest_user',
 	static function () {
 		_deprecated_function( 'bbp_suggest_user AJAX action', 'BuddyBoss 3.0.0', 'WordPress user search' );
-		wp_send_json_error( array( 'message' => __( 'This endpoint has been deprecated.', 'buddyboss' ) ) );
+		wp_send_json_error( array( 'message' => __( 'This endpoint has been deprecated.', 'buddyboss-platform' ) ) );
 	}
 );
 
@@ -4575,5 +4583,46 @@ if ( ! function_exists( 'bbp_new_converter' ) ) {
 			return bb_tools_bbp_new_converter( $platform );
 		}
 		return null;
+	}
+}
+
+// ──────────────────────────────────────────────────────────────────────────────
+// Group Subscriptions extracted to the buddyboss-addons plugin.
+// `bb_enable_group_subscriptions()` used to live in `bp-core/bp-core-options.php`.
+// The group-subscription module of the buddyboss-addons plugin ships its own
+// guarded copy (group-subscription/includes/functions.php); this stub keeps the
+// same behaviour so callers keep working when the addon is inactive.
+// ──────────────────────────────────────────────────────────────────────────────
+
+if ( ! function_exists( 'bb_enable_group_subscriptions' ) ) {
+	/**
+	 * Is group subscription turned off?
+	 *
+	 * @since BuddyBoss 2.2.8
+	 * @deprecated BuddyBoss 3.0.0 Moved to the group-subscription module of the
+	 *             `buddyboss-addons` plugin, which registers its own copy.
+	 *
+	 * @param bool $default Optional. Fallback value if not found in the database.
+	 *                      Default: true.
+	 *
+	 * @return bool True if group subscription is enabled, otherwise false.
+	 */
+	function bb_enable_group_subscriptions( $default = true ) {
+		// This file loads before the addon's module includes, so this stub wins
+		// the function_exists race even when the addon is active — in that case
+		// the call is a LIVE addon-era API call, not a deprecated one. Only
+		// notice when the buddyboss-addons plugin is not providing the feature.
+		if ( ! function_exists( 'bb_addons_dir' ) ) {
+			_deprecated_function( __FUNCTION__, 'BuddyBoss 3.0.0', 'bb_enable_group_subscriptions() in the buddyboss-addons plugin' );
+		}
+
+		/**
+		 * Filters whether group subscription is turned off.
+		 *
+		 * @since BuddyBoss 2.2.8
+		 *
+		 * @param bool $value Whether group subscription is turned off.
+		 */
+		return (bool) apply_filters( 'bb_enable_group_subscriptions', (bool) bp_get_option( 'bb_enable_group_subscriptions', $default ) );
 	}
 }

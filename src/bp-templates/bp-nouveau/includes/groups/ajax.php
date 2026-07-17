@@ -80,18 +80,6 @@ add_action(
 					'nopriv'   => false,
 				),
 			),
-			array(
-				'groups_subscribe' => array(
-					'function' => 'bb_nouveau_ajax_group_subscription',
-					'nopriv'   => false,
-				),
-			),
-			array(
-				'groups_unsubscribe' => array(
-					'function' => 'bb_nouveau_ajax_group_subscription',
-					'nopriv'   => false,
-				),
-			),
 		);
 
 		foreach ( $ajax_actions as $ajax_action ) {
@@ -115,7 +103,7 @@ add_action(
  */
 function bp_nouveau_ajax_joinleave_group() {
 	$response = array(
-		'feedback' => sprintf( '<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>', esc_html__( 'There was a problem performing this action. Please try again.', 'buddyboss' ) ),
+		'feedback' => sprintf( '<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>', esc_html__( 'There was a problem performing this action. Please try again.', 'buddyboss-platform' ) ),
 	);
 
 	// Bail if not a POST action.
@@ -146,8 +134,8 @@ function bp_nouveau_ajax_joinleave_group() {
 	$group_id = (int) $_POST['item_id'];
 
 	$errors = array(
-		'cannot' => sprintf( '<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>', esc_html__( 'You cannot join this group.', 'buddyboss' ) ),
-		'member' => sprintf( '<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>', esc_html__( 'You are already a member of the group.', 'buddyboss' ) ),
+		'cannot' => sprintf( '<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>', esc_html__( 'You cannot join this group.', 'buddyboss-platform' ) ),
+		'member' => sprintf( '<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>', esc_html__( 'You are already a member of the group.', 'buddyboss-platform' ) ),
 	);
 
 	if ( groups_is_user_banned( bp_loggedin_user_id(), $group_id ) ) {
@@ -173,7 +161,7 @@ function bp_nouveau_ajax_joinleave_group() {
 
 			if ( ! groups_accept_invite( bp_loggedin_user_id(), $group_id ) ) {
 				$response = array(
-					'feedback' => sprintf( '<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>', esc_html__( 'Group invitation could not be accepted.', 'buddyboss' ) ),
+					'feedback' => sprintf( '<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>', esc_html__( 'Group invitation could not be accepted.', 'buddyboss-platform' ) ),
 					'type'     => 'error',
 				);
 
@@ -191,7 +179,7 @@ function bp_nouveau_ajax_joinleave_group() {
 				$group->is_member = '1';
 
 				$response = array(
-					'feedback'  => sprintf( '<div class="bp-feedback success"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>', esc_html__( 'Group invite accepted.', 'buddyboss' ) ),
+					'feedback'  => sprintf( '<div class="bp-feedback success"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>', esc_html__( 'Group invite accepted.', 'buddyboss-platform' ) ),
 					'type'      => 'success',
 					'is_user'   => bp_is_user(),
 					'contents'  => bp_get_group_join_button( $group ),
@@ -204,12 +192,12 @@ function bp_nouveau_ajax_joinleave_group() {
 		case 'groups_reject_invite':
 			if ( ! groups_reject_invite( bp_loggedin_user_id(), $group_id ) ) {
 				$response = array(
-					'feedback' => sprintf( '<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>', esc_html__( 'Group invite could not be rejected', 'buddyboss' ) ),
+					'feedback' => sprintf( '<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>', esc_html__( 'Group invite could not be rejected', 'buddyboss-platform' ) ),
 					'type'     => 'error',
 				);
 			} else {
 				$response = array(
-					'feedback'  => sprintf( '<div class="bp-feedback success"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>', esc_html__( 'Group invite rejected', 'buddyboss' ) ),
+					'feedback'  => sprintf( '<div class="bp-feedback success"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>', esc_html__( 'Group invite rejected', 'buddyboss-platform' ) ),
 					'type'      => 'success',
 					'is_user'   => bp_is_user(),
 					'group_url' => bp_get_group_permalink( $group ),
@@ -230,7 +218,7 @@ function bp_nouveau_ajax_joinleave_group() {
 				);
 			} elseif ( ! groups_join_group( $group->id ) ) {
 				$response = array(
-					'feedback' => sprintf( '<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>', esc_html__( 'Error joining this group.', 'buddyboss' ) ),
+					'feedback' => sprintf( '<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>', esc_html__( 'Error joining this group.', 'buddyboss-platform' ) ),
 					'type'     => 'error',
 				);
 			} else {
@@ -255,7 +243,7 @@ function bp_nouveau_ajax_joinleave_group() {
 				$response = array(
 					'feedback' => sprintf(
 						'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
-						esc_html__( 'Error requesting membership.', 'buddyboss' )
+						esc_html__( 'Error requesting membership.', 'buddyboss-platform' )
 					),
 					'type'     => 'error',
 				);
@@ -275,7 +263,7 @@ function bp_nouveau_ajax_joinleave_group() {
 		case 'groups_leave_group':
 			if ( ! groups_leave_group( $group->id ) ) {
 				$response = array(
-					'feedback' => sprintf( '<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>', esc_html__( 'Error leaving group.', 'buddyboss' ) ),
+					'feedback' => sprintf( '<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>', esc_html__( 'Error leaving group.', 'buddyboss-platform' ) ),
 					'type'     => 'error',
 				);
 			} else {
@@ -337,7 +325,7 @@ function bp_nouveau_ajax_get_users_to_invite() {
 	$bp = buddypress();
 
 	$response = array(
-		'feedback' => __( 'There was a problem performing this action. Please try again.', 'buddyboss' ),
+		'feedback' => __( 'There was a problem performing this action. Please try again.', 'buddyboss-platform' ),
 		'type'     => 'error',
 	);
 
@@ -403,7 +391,7 @@ function bp_nouveau_ajax_get_users_to_invite() {
 					if ( empty( $request['include'] ) ) {
 						wp_send_json_error(
 							array(
-								'feedback' => __( 'No members found in parent group.', 'buddyboss' ),
+								'feedback' => __( 'No members found in parent group.', 'buddyboss-platform' ),
 								'type'     => 'info',
 							)
 						);
@@ -450,12 +438,12 @@ function bp_nouveau_ajax_get_users_to_invite() {
 	}
 
 	$bp->groups->invites_scope = 'members';
-	$message                   = __( 'Select members to invite by clicking the + button next to each member.', 'buddyboss' );
+	$message                   = __( 'Select members to invite by clicking the + button next to each member.', 'buddyboss-platform' );
 
 	if ( 'friends' === $request['scope'] ) {
 		$request['user_id']        = bp_loggedin_user_id();
 		$bp->groups->invites_scope = 'friends';
-		$message                   = __( 'Select which connections to invite by clicking the + button next to each member.', 'buddyboss' );
+		$message                   = __( 'Select which connections to invite by clicking the + button next to each member.', 'buddyboss-platform' );
 	}
 
 	if ( 'invited' === $request['scope'] ) {
@@ -471,7 +459,7 @@ function bp_nouveau_ajax_get_users_to_invite() {
 				// This message displays if you search in pending invites screen and if no results found in search.
 				wp_send_json_error(
 					array(
-						'feedback' => __( 'All members already received invitations.', 'buddyboss' ),
+						'feedback' => __( 'All members already received invitations.', 'buddyboss-platform' ),
 						'type'     => 'info',
 					)
 				);
@@ -479,7 +467,7 @@ function bp_nouveau_ajax_get_users_to_invite() {
 				// This message displays when pending invites screen doesn't have any users invitation.
 				wp_send_json_error(
 					array(
-						'feedback' => __( 'No pending group invitations found.', 'buddyboss' ),
+						'feedback' => __( 'No pending group invitations found.', 'buddyboss-platform' ),
 						'type'     => 'info',
 					)
 				);
@@ -488,7 +476,7 @@ function bp_nouveau_ajax_get_users_to_invite() {
 
 		$request['is_confirmed']   = false;
 		$bp->groups->invites_scope = 'invited';
-		$message                   = __( 'You can view the group\'s pending invitations from this screen.', 'buddyboss' );
+		$message                   = __( 'You can view the group\'s pending invitations from this screen.', 'buddyboss-platform' );
 	}
 
 	$potential_invites = bp_nouveau_get_group_potential_invites( $request );
@@ -497,26 +485,26 @@ function bp_nouveau_ajax_get_users_to_invite() {
 		if ( isset( $request ) && isset( $request['search_terms'] ) && '' !== $request['search_terms'] ) {
 			// This message displays if you search in Pending Invites screen and if no results found.
 			$error = array(
-				'feedback' => __( 'No members found.', 'buddyboss' ),
+				'feedback' => __( 'No members found.', 'buddyboss-platform' ),
 				'type'     => 'info',
 			);
 		} else {
 			if ( isset( $request ) && isset( $request['search_terms'] ) && '' !== $request['search_terms'] && 'members' === $bp->groups->invites_scope ) {
 				// This message displays in Send Invites screen in Members tab, if you search members and if no results found.
 				$error = array(
-					'feedback' => __( 'No members found.', 'buddyboss' ),
+					'feedback' => __( 'No members found.', 'buddyboss-platform' ),
 					'type'     => 'info',
 				);
 			} elseif ( isset( $request ) && ! isset( $request['search_terms'] ) && 'members' === $bp->groups->invites_scope ) {
 				// This message displays when all site members are in the group, already invited or already requested to join.
 				$error = array(
-					'feedback' => __( 'All site members are already members of this group, or have already received an invite to join this group, or have requested to join it.', 'buddyboss' ),
+					'feedback' => __( 'All site members are already members of this group, or have already received an invite to join this group, or have requested to join it.', 'buddyboss-platform' ),
 					'type'     => 'info',
 				);
 			} else {
 				// General default message.
 				$error = array(
-					'feedback' => __( 'No members found.', 'buddyboss' ),
+					'feedback' => __( 'No members found.', 'buddyboss-platform' ),
 					'type'     => 'info',
 				);
 			}
@@ -526,13 +514,13 @@ function bp_nouveau_ajax_get_users_to_invite() {
 			if ( isset( $request ) && isset( $request['search_terms'] ) && '' !== $request['search_terms'] ) {
 				// This message displays if you search in Send Invites screen and if no results found.
 				$error = array(
-					'feedback' => __( 'No members found.', 'buddyboss' ),
+					'feedback' => __( 'No members found.', 'buddyboss-platform' ),
 					'type'     => 'info',
 				);
 			} else {
 				// This message displays when all of your connections are in the group, already invited or already requested to join.
 				$error = array(
-					'feedback' => __( 'All your connections are already members of this group, or have already received an invite to join this group, or have requested to join it.', 'buddyboss' ),
+					'feedback' => __( 'All your connections are already members of this group, or have already received an invite to join this group, or have requested to join it.', 'buddyboss-platform' ),
 					'type'     => 'info',
 				);
 			}
@@ -540,7 +528,7 @@ function bp_nouveau_ajax_get_users_to_invite() {
 			// This message displays if you have no connections.
 			if ( 0 === (int) bp_get_total_friend_count( bp_loggedin_user_id() ) ) {
 				$error = array(
-					'feedback' => __( 'You have no connections.', 'buddyboss' ),
+					'feedback' => __( 'You have no connections.', 'buddyboss-platform' ),
 					'type'     => 'info',
 				);
 			}
@@ -561,16 +549,16 @@ function bp_nouveau_ajax_get_users_to_invite() {
 
 	foreach ( $potential_invites->users as $user ) {
 		?>
-		<li class="<?php echo $user['id']; ?>">
+		<li class="<?php echo esc_attr( $user['id'] ); ?>">
 			<div class="item-avatar">
 				<a href="<?php echo esc_url( bp_core_get_user_domain( $user['id'] ) ); ?>">
-					<img src="<?php echo $user['avatar']; ?>" class="avatar" alt=""/> </a>
+					<img src="<?php echo esc_url( $user['avatar'] ); ?>" class="avatar" alt=""/> </a>
 			</div>
 
 			<div class="item">
 				<div class="list-title member-name">
 					<a href="<?php echo esc_url( bp_core_get_user_domain( $user['id'] ) ); ?>">
-						<?php echo $user['name']; ?>
+						<?php echo esc_html( $user['name'] ); ?>
 					</a>
 				</div>
 
@@ -578,13 +566,13 @@ function bp_nouveau_ajax_get_users_to_invite() {
 					<div class="item-meta">
 						<?php if ( isset( $user ) && isset( $user['invited_by'] ) && '' !== $user['invited_by'] ) { ?>
 							<ul class="group-inviters">
-								<li><?php esc_html_e( 'Invited by:', 'buddyboss' ); ?></li>
+								<li><?php esc_html_e( 'Invited by:', 'buddyboss-platform' ); ?></li>
 								<?php foreach ( $user['invited_by'] as $inviter ) { ?>
 									<li>
-										<a href="<?php echo $inviter['user_link']; ?>" class="bp-tooltip"
-										   data-bp-tooltip-pos="up" data-bp-tooltip="<?php echo $inviter['name']; ?>">
-											<img src="<?php echo $inviter['avatar']; ?>" width="30px"
-												 class="avatar mini" alt="<?php echo $inviter['name']; ?>">
+										<a href="<?php echo esc_url( $inviter['user_link'] ); ?>" class="bp-tooltip"
+										   data-bp-tooltip-pos="up" data-bp-tooltip="<?php echo esc_attr( $inviter['name'] ); ?>">
+											<img src="<?php echo esc_url( $inviter['avatar'] ); ?>" width="30px"
+												 class="avatar mini" alt="<?php echo esc_attr( $inviter['name'] ); ?>">
 										</a>
 									</li>
 								<?php } ?>
@@ -593,9 +581,9 @@ function bp_nouveau_ajax_get_users_to_invite() {
 						<p class="status">
 							<?php
 							if ( isset( $user ) && isset( $user['is_sent'] ) && '' !== $user['is_sent'] && false === $user['is_sent'] ) {
-								esc_html_e( 'The invite has not been sent.', 'buddyboss' );
+								esc_html_e( 'The invite has not been sent.', 'buddyboss-platform' );
 							} else {
-								esc_html_e( 'The invite has been sent.', 'buddyboss' );
+								esc_html_e( 'The invite has been sent.', 'buddyboss-platform' );
 							}
 							?>
 						</p>
@@ -604,19 +592,19 @@ function bp_nouveau_ajax_get_users_to_invite() {
 			</div>
 			<div class="action">
 				<?php if ( empty( $user['is_sent'] ) || ( false === $user['is_sent'] && true === $user['is_sent'] ) ) { ?>
-					<button data-bp-user-id="<?php echo $user['id']; ?>"
-							data-bp-user-name="<?php echo $user['name']; ?>" type="button" class="button invite-button group-add-remove-invite-button bp-tooltip bp-icons
+					<button data-bp-user-id="<?php echo esc_attr( $user['id'] ); ?>"
+							data-bp-user-name="<?php echo esc_attr( $user['name'] ); ?>" type="button" class="button invite-button group-add-remove-invite-button bp-tooltip bp-icons
 														<?php
 														if ( isset( $user['selected'] ) && $user['selected'] ) {
 															?>
                             selected<?php } ?>" data-bp-tooltip-pos="left"
-                            data-bp-tooltip="<?php echo ( isset( $user['selected'] ) && $user['selected'] ) ? esc_attr__( 'Cancel invitation', 'buddyboss' ) : esc_attr__( 'Invite', 'buddyboss' ); ?>">
+                            data-bp-tooltip="<?php echo ( isset( $user['selected'] ) && $user['selected'] ) ? esc_attr__( 'Cancel invitation', 'buddyboss-platform' ) : esc_attr__( 'Invite', 'buddyboss-platform' ); ?>">
 						<span class="icons" aria-hidden="true"></span> <span class="bp-screen-reader-text">
 						<?php
 						if ( isset( $user['selected'] ) && $user['selected'] ) {
-							esc_html_e( 'Cancel invitation', 'buddyboss' );
+							esc_html_e( 'Cancel invitation', 'buddyboss-platform' );
 						} else {
-							esc_html_e( 'Invite', 'buddyboss' );
+							esc_html_e( 'Invite', 'buddyboss-platform' );
 						}
 						?>
 					</span>
@@ -627,24 +615,24 @@ function bp_nouveau_ajax_get_users_to_invite() {
 				if ( isset( $user['can_edit'] ) && true === $user['can_edit'] ) {
 					if ( 'invited' === $request['scope'] ) {
 						?>
-						<button data-bp-user-id="<?php echo $user['id']; ?>"
-								data-bp-user-name="<?php echo $user['name']; ?>" type="button"
+						<button data-bp-user-id="<?php echo esc_attr( $user['id'] ); ?>"
+								data-bp-user-name="<?php echo esc_attr( $user['name'] ); ?>" type="button"
 								class="button remove-button group-remove-invite-button bp-tooltip bp-icons"
 								data-bp-tooltip-pos="left"
-								data-bp-tooltip="<?php esc_attr_e( 'Cancel invitation', 'buddyboss' ); ?>">
+								data-bp-tooltip="<?php esc_attr_e( 'Cancel invitation', 'buddyboss-platform' ); ?>">
 							<span class=" icons" aria-hidden="true"></span>
-							<span class="bp-screen-reader-text"><?php esc_attr_e( 'Cancel invitation', 'buddyboss' ); ?></span>
+							<span class="bp-screen-reader-text"><?php esc_attr_e( 'Cancel invitation', 'buddyboss-platform' ); ?></span>
 						</button>
 						<?php
 					} else {
 						?>
-						<button data-bp-user-id="<?php echo $user['id']; ?>"
-								data-bp-user-name="<?php echo $user['name']; ?>" type="button"
+						<button data-bp-user-id="<?php echo esc_attr( $user['id'] ); ?>"
+								data-bp-user-name="<?php echo esc_attr( $user['name'] ); ?>" type="button"
 								class="button invite-button group-remove-invite-button bp-tooltip bp-icons"
 								data-bp-tooltip-pos="left"
-								data-bp-tooltip="<?php esc_attr_e( 'Cancel invitation', 'buddyboss' ); ?>">
+								data-bp-tooltip="<?php esc_attr_e( 'Cancel invitation', 'buddyboss-platform' ); ?>">
 							<span class=" icons" aria-hidden="true"></span>
-							<span class="bp-screen-reader-text"><?php esc_attr_e( 'Cancel invitation', 'buddyboss' ); ?></span>
+							<span class="bp-screen-reader-text"><?php esc_attr_e( 'Cancel invitation', 'buddyboss-platform' ); ?></span>
 						</button>
 						<?php
 					}
@@ -677,9 +665,9 @@ function bp_nouveau_ajax_get_users_to_invite() {
 		if ( 1 !== $page ) {
 			?>
 			<a href="javascript:void(0);" id="bp-group-invites-prev-page" class="button group-invite-button bp-tooltip"
-			   data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Previous page', 'buddyboss' ); ?>">
+			   data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Previous page', 'buddyboss-platform' ); ?>">
 				<span class="dashicons dashicons-arrow-left" aria-hidden="true"></span>
-				<span class="bp-screen-reader-text"><?php esc_html_e( 'Previous page', 'buddyboss' ); ?></span> </a>
+				<span class="bp-screen-reader-text"><?php esc_html_e( 'Previous page', 'buddyboss-platform' ); ?></span> </a>
 			<?php
 		}
 
@@ -687,8 +675,8 @@ function bp_nouveau_ajax_get_users_to_invite() {
 			$page = $page + 1;
 			?>
 			<a href="javascript:void(0);" id="bp-group-invites-next-page" class="button group-invite-button bp-tooltip"
-			   data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Next page', 'buddyboss' ); ?>"> <span
-						class="bp-screen-reader-text"><?php esc_html_e( 'Next page', 'buddyboss' ); ?></span>
+			   data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Next page', 'buddyboss-platform' ); ?>"> <span
+						class="bp-screen-reader-text"><?php esc_html_e( 'Next page', 'buddyboss-platform' ); ?></span>
 				<span class="dashicons dashicons-arrow-right" aria-hidden="true"></span> </a>
 			<?php
 		}
@@ -718,7 +706,7 @@ function bp_nouveau_ajax_send_group_invites() {
 	$bp = buddypress();
 
 	$response = array(
-		'feedback' => __( 'Invites could not be sent. Please try again.', 'buddyboss' ),
+		'feedback' => __( 'Invites could not be sent. Please try again.', 'buddyboss-platform' ),
 		'type'     => 'error',
 	);
 
@@ -734,12 +722,12 @@ function bp_nouveau_ajax_send_group_invites() {
 	}
 
 	if ( ! bp_groups_user_can_send_invites( $group_id ) ) {
-		$response['feedback'] = __( 'You are not allowed to send invitations for this group.', 'buddyboss' );
+		$response['feedback'] = __( 'You are not allowed to send invitations for this group.', 'buddyboss-platform' );
 		wp_send_json_error( $response );
 	}
 
 	if ( empty( $_POST['users'] ) ) {
-		$response['feedback'] = __( 'Please select members to send invitations for this group.', 'buddyboss' );
+		$response['feedback'] = __( 'Please select members to send invitations for this group.', 'buddyboss-platform' );
 		wp_send_json_error( $response );
 	}
 
@@ -786,7 +774,7 @@ function bp_nouveau_ajax_send_group_invites() {
 		$errors = array_keys( $invited, false );
 
 		$error_count   = count( $errors );
-		$error_message = sprintf( /* translators: count of users affected */ _n( 'Invitation failed for %s user.', 'Invitation failed for %s users.', $error_count, 'buddyboss' ), bp_core_number_format( $error_count ) );
+		$error_message = sprintf( /* translators: count of users affected */ _n( 'Invitation failed for %s user.', 'Invitation failed for %s users.', $error_count, 'buddyboss-platform' ), bp_core_number_format( $error_count ) );
 
 		wp_send_json_error(
 			array(
@@ -799,7 +787,7 @@ function bp_nouveau_ajax_send_group_invites() {
 
 	wp_send_json_success(
 		array(
-			'feedback' => __( 'Invitations sent.', 'buddyboss' ),
+			'feedback' => __( 'Invitations sent.', 'buddyboss-platform' ),
 			'type'     => 'success',
 		)
 	);
@@ -815,7 +803,7 @@ function bp_nouveau_ajax_remove_group_invite() {
 	$group_id = bp_get_current_group_id();
 
 	$response = array(
-		'feedback' => __( 'Group invitation could not be removed.', 'buddyboss' ),
+		'feedback' => __( 'Group invitation could not be removed.', 'buddyboss-platform' ),
 		'type'     => 'error',
 	);
 
@@ -849,7 +837,7 @@ function bp_nouveau_ajax_remove_group_invite() {
 	if ( groups_is_user_member( $user_id, $group_id ) ) {
 		wp_send_json_error(
 			array(
-				'feedback' => __( 'The member is already a member of the group.', 'buddyboss' ),
+				'feedback' => __( 'The member is already a member of the group.', 'buddyboss-platform' ),
 				'type'     => 'warning',
 				'code'     => 1,
 			)
@@ -860,7 +848,7 @@ function bp_nouveau_ajax_remove_group_invite() {
 	if ( ! groups_uninvite_user( $user_id, $group_id, $inviter_id ) ) {
 		wp_send_json_error(
 			array(
-				'feedback' => __( 'Group invitation could not be removed.', 'buddyboss' ),
+				'feedback' => __( 'Group invitation could not be removed.', 'buddyboss-platform' ),
 				'type'     => 'error',
 				'code'     => 0,
 			)
@@ -869,7 +857,7 @@ function bp_nouveau_ajax_remove_group_invite() {
 
 	wp_send_json_success(
 		array(
-			'feedback'    => __( 'There are no more pending invitations for the group.', 'buddyboss' ),
+			'feedback'    => __( 'There are no more pending invitations for the group.', 'buddyboss-platform' ),
 			'type'        => 'info',
 			'has_invites' => bp_group_has_invites( array( 'user_id' => 'any' ) ),
 		)
@@ -892,7 +880,7 @@ function bp_nouveau_ajax_groups_get_group_members_listing() {
 	}
 
 	$response = array(
-		'feedback' => '<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>' . __( 'There was a problem loading recipients. Please try again.', 'buddyboss' ) . '</p></div>',
+		'feedback' => '<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>' . __( 'There was a problem loading recipients. Please try again.', 'buddyboss-platform' ) . '</p></div>',
 		'type'     => 'error',
 	);
 
@@ -970,19 +958,19 @@ function bp_nouveau_ajax_groups_get_group_members_listing() {
 			?>
 			<li class="group-message-member-li
 			<?php
-			echo $member->ID;
+			echo esc_attr( $member->ID );
 			echo ( $is_friends_connection ) ? ' can-grp-msg ' : ' is_disabled can-not-grp-msg';
 			?>
 			">
 				<div class="item-avatar">
 					<a href="<?php echo esc_url( bp_core_get_user_domain( $member->ID ) ); ?>">
-						<?php echo $image; ?>
+						<?php echo wp_kses_post( $image ); ?>
 					</a>
 				</div>
 				<div class="item">
 					<div class="list-title member-name">
 						<a href="<?php echo esc_url( bp_core_get_user_domain( $member->ID ) ); ?>">
-							<?php echo $name; ?>
+							<?php echo esc_html( $name ); ?>
 						</a>
 					</div>
 				</div>
@@ -994,15 +982,15 @@ function bp_nouveau_ajax_groups_get_group_members_listing() {
 								class="button invite-button group-add-remove-invite-button bp-tooltip bp-icons"
 								data-bp-user-id="<?php echo esc_attr( $member->ID ); ?>"
 								data-bp-user-name="<?php echo esc_attr( $name ); ?>" data-bp-tooltip-pos="left"
-								data-bp-tooltip="<?php esc_attr_e( 'Add Member', 'buddyboss' ); ?>">
+								data-bp-tooltip="<?php esc_attr_e( 'Add Member', 'buddyboss-platform' ); ?>">
 							<span class="icons" aria-hidden="true"></span> <span class="bp-screen-reader-text">
-							<?php esc_html_e( 'Add Member', 'buddyboss' ); ?>
+							<?php esc_html_e( 'Add Member', 'buddyboss-platform' ); ?>
 						</span>
 						</button>
 						<?php
 					} else {
 						?>
-						<span data-bp-tooltip-pos="left" data-bp-tooltip="<?php esc_attr_e( 'Restricted', 'buddyboss' ); ?>">
+						<span data-bp-tooltip-pos="left" data-bp-tooltip="<?php esc_attr_e( 'Restricted', 'buddyboss-platform' ); ?>">
 							<i class="bb-icon-l bb-icon-cancel" aria-hidden="true"></i>
 						</span>
 						<?php
@@ -1034,9 +1022,9 @@ function bp_nouveau_ajax_groups_get_group_members_listing() {
 				?>
 				<a href="javascript:void(0);" id="bp-group-messages-prev-page"
 				   class="button group-message-button bp-tooltip" data-bp-tooltip-pos="up"
-				   data-bp-tooltip="<?php esc_attr_e( 'Previous page', 'buddyboss' ); ?>">
+				   data-bp-tooltip="<?php esc_attr_e( 'Previous page', 'buddyboss-platform' ); ?>">
 					<span class="dashicons dashicons-arrow-left" aria-hidden="true"></span>
-					<span class="bp-screen-reader-text"><?php esc_html_e( 'Previous page', 'buddyboss' ); ?></span> </a>
+					<span class="bp-screen-reader-text"><?php esc_html_e( 'Previous page', 'buddyboss-platform' ); ?></span> </a>
 				<?php
 			}
 
@@ -1045,8 +1033,8 @@ function bp_nouveau_ajax_groups_get_group_members_listing() {
 				?>
 				<a href="javascript:void(0);" id="bp-group-messages-next-page"
 				   class="button group-message-button bp-tooltip" data-bp-tooltip-pos="up"
-				   data-bp-tooltip="<?php esc_attr_e( 'Next page', 'buddyboss' ); ?>"> <span
-							class="bp-screen-reader-text"><?php esc_html_e( 'Next page', 'buddyboss' ); ?></span>
+				   data-bp-tooltip="<?php esc_attr_e( 'Next page', 'buddyboss-platform' ); ?>"> <span
+							class="bp-screen-reader-text"><?php esc_html_e( 'Next page', 'buddyboss-platform' ); ?></span>
 					<span class="dashicons dashicons-arrow-right" aria-hidden="true"></span> </a>
 				<?php
 			}
@@ -1067,7 +1055,7 @@ function bp_nouveau_ajax_groups_get_group_members_listing() {
 				'total_page'  => $total_page,
 				'page'        => $page,
 				'pagination'  => $paginate,
-				'total_count' => __( 'Members', 'buddyboss' ),
+				'total_count' => __( 'Members', 'buddyboss-platform' ),
 			)
 		);
 
@@ -1092,7 +1080,7 @@ function bp_nouveau_ajax_groups_send_message() {
 	}
 
 	$response = array(
-		'feedback' => '<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>' . __( 'There was a problem loading recipients. Please try again.', 'buddyboss' ) . '</p></div>',
+		'feedback' => '<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>' . __( 'There was a problem loading recipients. Please try again.', 'buddyboss-platform' ) . '</p></div>',
 		'type'     => 'error',
 	);
 
@@ -1154,7 +1142,7 @@ function bp_nouveau_ajax_groups_send_message() {
 	$validated_content = (bool) apply_filters( 'bp_messages_message_validated_content', ! empty( $content ) && strlen( trim( html_entity_decode( wp_strip_all_tags( $content ), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ) ) ), $content, $_POST );
 
 	if ( ! $validated_content ) {
-		$response['feedback'] = __( 'Your message was not sent. Please enter some content.', 'buddyboss' );
+		$response['feedback'] = __( 'Your message was not sent. Please enter some content.', 'buddyboss-platform' );
 
 		wp_send_json_error( $response );
 	}
@@ -1240,7 +1228,7 @@ function bp_nouveau_ajax_groups_send_message() {
 		if ( ! empty( $not_access_list ) ) {
 			$response['feedback'] = sprintf(
 				'%1$s <strong>%2$s</strong>',
-				( count( $not_access_list ) > 1 ) ? __( 'You don\'t have access to send the message to this members:  ', 'buddyboss' ) : __( 'You don\'t have access to send the message to this member:  ', 'buddyboss' ),
+				( count( $not_access_list ) > 1 ) ? __( 'You don\'t have access to send the message to this members:  ', 'buddyboss-platform' ) : __( 'You don\'t have access to send the message to this member:  ', 'buddyboss-platform' ),
 				implode( ', ', $not_access_list )
 			);
 			wp_send_json_error( $response );
@@ -1249,20 +1237,20 @@ function bp_nouveau_ajax_groups_send_message() {
 		if ( ! empty( $not_friends ) ) {
 			$response['feedback'] = sprintf(
 				'%1$s <strong>%2$s</strong>',
-				( count( $not_friends ) > 1 ) ? __( 'You need to be connected with this members in order to send a message:  ', 'buddyboss' ) : __( 'You need to be connected with this member in order to send a message:  ', 'buddyboss' ),
+				( count( $not_friends ) > 1 ) ? __( 'You need to be connected with this members in order to send a message:  ', 'buddyboss-platform' ) : __( 'You need to be connected with this member in order to send a message:  ', 'buddyboss-platform' ),
 				implode( ', ', $not_friends )
 			);
 			wp_send_json_error( $response );
 		}
 
 		if ( empty( $members ) ) {
-			$response['feedback'] = __( 'No Members Selected.', 'buddyboss' );
+			$response['feedback'] = __( 'No Members Selected.', 'buddyboss-platform' );
 			wp_send_json_error( $response );
 		}
 	}
 
 	if ( empty( $group ) ) {
-		$response['feedback'] = __( 'No group Selected.', 'buddyboss' );
+		$response['feedback'] = __( 'No group Selected.', 'buddyboss-platform' );
 		wp_send_json_error( $response );
 	}
 
@@ -1804,12 +1792,12 @@ function bp_nouveau_ajax_groups_send_message() {
 			wp_send_json_error( $response );
 		} elseif ( ! empty( $message ) ) {
 			if ( 'all' !== $message_users ) {
-				$response['feedback'] = __( 'Your message was sent privately to %%count%% members of this group.', 'buddyboss' );
+				$response['feedback'] = __( 'Your message was sent privately to %%count%% members of this group.', 'buddyboss-platform' );
 			} else {
-				$response['feedback'] = __( 'Your message was sent privately to all members of this group you can message.', 'buddyboss' );
+				$response['feedback'] = __( 'Your message was sent privately to all members of this group you can message.', 'buddyboss-platform' );
 			}
 
-			$response['redirect_link'] = '<a href="' . bp_loggedin_user_domain() . bp_get_messages_slug() . '"> ' . __( 'View message.', 'buddyboss' ) . '</a>';
+			$response['redirect_link'] = '<a href="' . bp_loggedin_user_domain() . bp_get_messages_slug() . '"> ' . __( 'View message.', 'buddyboss-platform' ) . '</a>';
 			$response['type']          = 'success';
 			wp_send_json_success( $response );
 		}
@@ -1828,192 +1816,12 @@ function bp_groups_messages_validate_message( $send, $type = 'all' ) {
 		wp_send_json_error( $response );
 	} elseif ( ! empty( $send ) ) {
 		if ( 'individual' === $type ) {
-			$response['feedback'] = __( 'Your message was sent to %%count%% members of this group.', 'buddyboss' );
+			$response['feedback'] = __( 'Your message was sent to %%count%% members of this group.', 'buddyboss-platform' );
 		} else {
-			$response['feedback'] = __( 'Your message was sent to all members of this group.', 'buddyboss' );
+			$response['feedback'] = __( 'Your message was sent to all members of this group.', 'buddyboss-platform' );
 		}
-		$response['redirect_link'] = '<a href="' . bp_loggedin_user_domain() . bp_get_messages_slug() . '"> ' . __( 'View message.', 'buddyboss' ) . '</a>';
+		$response['redirect_link'] = '<a href="' . bp_loggedin_user_domain() . bp_get_messages_slug() . '"> ' . __( 'View message.', 'buddyboss-platform' ) . '</a>';
 		$response['type']          = 'success';
 		wp_send_json_success( $response );
 	}
-}
-
-/**
- * Subscribe or un-subscribe a group when clicking the bell button via a POST request.
- *
- * @since BuddyBoss 2.2.9
- */
-function bb_nouveau_ajax_group_subscription() {
-	$response = array(
-		'feedback'              => esc_html__( 'There was a problem subscribing/unsubscribing.', 'buddyboss' ),
-		'is_group_subscription' => true,
-		'type'                  => 'error',
-	);
-
-	// Bail if not a POST action.
-	if ( ! bp_is_post_request() || empty( $_POST['action'] ) ) {
-		wp_send_json_error( $response );
-	}
-
-	if ( empty( $_POST['nonce'] ) || empty( $_POST['item_id'] ) || ! bp_is_active( 'groups' ) ) {
-		wp_send_json_error( $response );
-	}
-
-	// Cast gid as integer.
-	$group_id = (int) sanitize_text_field( wp_unslash( $_POST['item_id'] ) );
-	$user_id  = bp_loggedin_user_id();
-
-	// Use default nonce.
-	$nonce = sanitize_text_field( wp_unslash( $_POST['nonce'] ) );
-	$check = 'bb-group-subscription-' . $group_id;
-
-	// Use a specific one for actions needed it.
-	if ( ! empty( $_POST['_wpnonce'] ) ) {
-		$nonce = sanitize_text_field( wp_unslash( $_POST['_wpnonce'] ) );
-	}
-
-	// Nonce check!
-	if ( empty( $nonce ) || ! wp_verify_nonce( $nonce, $check ) ) {
-		wp_send_json_error( $response );
-	}
-
-	if ( ! bb_is_enabled_subscription( 'group' ) ) {
-		wp_send_json_error(
-			array(
-				'feedback'              => esc_html__( 'Subscriptions are no longer active.', 'buddyboss' ),
-				'is_group_subscription' => true,
-			)
-		);
-	}
-
-	// Validate and get the group.
-	$group = groups_get_group( $group_id );
-
-	if ( empty( $group->id ) ) {
-		wp_send_json_error( $response );
-	}
-
-	$group_name = bp_get_group_name( $group );
-	$group_name = bp_create_excerpt( $group_name, 35, array( 'ending' => __( '&hellip;', 'buddyboss' ) ) );
-	$group_name = sprintf(
-		'<strong>%s</strong>',
-		$group_name
-	);
-
-	// Check the current user's member of the group or not.
-	$is_group_member = groups_is_user_member( $user_id, $group_id );
-	if ( false === (bool) $is_group_member ) {
-		wp_send_json_error( $response );
-	}
-
-	$is_subscription = bb_is_member_subscribed_group( $group_id, $user_id );
-
-	// Manage all button's possible actions here.
-	switch ( $_POST['action'] ) {
-
-		case 'groups_subscribe':
-			if ( $is_subscription ) {
-				$response = array(
-					'feedback'              => esc_html__( 'You are already subscribe this group.', 'buddyboss' ),
-					'type'                  => 'error',
-					'is_group_subscription' => true,
-				);
-			} else {
-
-				$subscription_id = bb_create_subscription(
-					array(
-						'user_id'           => $user_id,
-						'item_id'           => $group_id,
-						'type'              => 'group',
-						'secondary_item_id' => $group->parent_id,
-					)
-				);
-
-				if ( is_wp_error( $subscription_id ) ) {
-					$response = array(
-						'feedback'              => sprintf(
-							/* translators: Group name. */
-							esc_html__( 'There was a problem subscribing to %s.', 'buddyboss' ),
-							$group_name
-						),
-						'type'                  => 'error',
-						'is_group_subscription' => true,
-					);
-				} else {
-
-					ob_start();
-					bp_nouveau_group_header_buttons(
-						array(
-							'type'           => 'subscription',
-							'button_element' => 'button',
-							'container'      => '',
-						)
-					);
-					$contents = ob_get_clean();
-
-					$response = array(
-						'contents'              => $contents,
-						'is_group_subscription' => true,
-						'type'                  => 'success',
-						'feedback'              => sprintf(
-						/* translators: Group name. */
-							esc_html__( 'You\'ve been subscribed to %s.', 'buddyboss' ),
-							$group_name
-						),
-					);
-				}
-			}
-			break;
-
-		case 'groups_unsubscribe':
-			if ( $is_subscription && bb_delete_subscription( $is_subscription ) ) {
-				ob_start();
-				bp_nouveau_group_header_buttons(
-					array(
-						'type'           => 'subscription',
-						'button_element' => 'button',
-						'container'      => '',
-					)
-				);
-				$contents = ob_get_clean();
-
-				$response = array(
-					'contents'              => $contents,
-					'is_group_subscription' => true,
-					'type'                  => 'success',
-					'feedback'              => sprintf(
-					/* translators: Group name. */
-						esc_html__( 'You\'ve been unsubscribed from %s.', 'buddyboss' ),
-						$group_name
-					),
-				);
-			} else {
-				$response = array(
-					'feedback'              => sprintf(
-					/* translators: Group name. */
-						esc_html__( 'There was a problem unsubscribing from %s.', 'buddyboss' ),
-						$group_name
-					),
-					'type'                  => 'error',
-					'is_group_subscription' => true,
-				);
-			}
-			break;
-	}
-
-	/**
-	 * Filters change the success/fail message.
-	 *
-	 * @since BuddyBoss 2.2.9
-	 *
-	 * @param array $response Array of response message.
-	 * @param int   $group_id Group id.
-	 */
-	$response = apply_filters( 'bb_nouveau_ajax_group_subscription', $response, $group_id );
-
-	if ( 'error' === $response['type'] ) {
-		wp_send_json_error( $response );
-	}
-
-	wp_send_json_success( $response );
 }

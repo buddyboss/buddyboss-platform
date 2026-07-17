@@ -137,7 +137,7 @@ function bp_profile_group_has_fields() {
  *                     space-delimited string.
  */
 function bp_field_css_class( $class = false ) {
-	echo bp_get_field_css_class( $class );
+	echo bp_get_field_css_class( $class ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- returns class="..." attribute markup; esc_attr would corrupt it.
 }
 
 	/**
@@ -259,7 +259,7 @@ function bp_field_has_public_data() {
  * @since BuddyPress 1.0.0
  */
 function bp_the_profile_group_id() {
-	echo bp_get_the_profile_group_id();
+	echo esc_attr( bp_get_the_profile_group_id() );
 }
 
 	/**
@@ -288,7 +288,7 @@ function bp_get_the_profile_group_id() {
  * @since BuddyPress 1.0.0
  */
 function bp_the_profile_group_name() {
-	echo bp_get_the_profile_group_name();
+	echo bp_get_the_profile_group_name(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- pre-escaped via the wp_filter_kses filter chain; inline esc_html would double-encode intentional entities/HTML.
 }
 
 	/**
@@ -317,7 +317,7 @@ function bp_get_the_profile_group_name() {
  * @since BuddyPress 1.1.0
  */
 function bp_the_profile_group_slug() {
-	echo bp_get_the_profile_group_slug();
+	echo esc_attr( bp_get_the_profile_group_slug() );
 }
 
 	/**
@@ -346,7 +346,7 @@ function bp_get_the_profile_group_slug() {
  * @since BuddyPress 1.0.0
  */
 function bp_the_profile_group_description() {
-	echo bp_get_the_profile_group_description();
+	echo bp_get_the_profile_group_description(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- pre-escaped via the wp_filter_kses filter chain; inline esc_html would double-encode intentional entities/HTML.
 }
 
 	/**
@@ -375,7 +375,7 @@ function bp_get_the_profile_group_description() {
  * @since BuddyPress 1.1.0
  */
 function bp_the_profile_group_edit_form_action() {
-	echo bp_get_the_profile_group_edit_form_action();
+	echo esc_url( bp_get_the_profile_group_edit_form_action() );
 }
 
 	/**
@@ -408,7 +408,7 @@ function bp_get_the_profile_group_edit_form_action() {
  * @since BuddyPress 1.1.0
  */
 function bp_the_profile_group_field_ids() {
-	echo bp_get_the_profile_group_field_ids();
+	echo esc_attr( bp_get_the_profile_group_field_ids() );
 }
 
 	/**
@@ -438,7 +438,7 @@ function bp_get_the_profile_group_field_ids() {
  * @since BuddyPress 2.1.0
  */
 function bp_the_profile_field_ids() {
-	echo bp_get_the_profile_field_ids();
+	echo esc_attr( bp_get_the_profile_field_ids() );
 }
 	/**
 	 * Generate a comma-separated list of field IDs that are to be submitted on profile edit.
@@ -511,7 +511,7 @@ function bp_the_profile_field() {
  * @since BuddyPress 1.1.0
  */
 function bp_the_profile_field_id() {
-	echo bp_get_the_profile_field_id();
+	echo esc_attr( bp_get_the_profile_field_id() );
 }
 
 	/**
@@ -540,7 +540,7 @@ function bp_get_the_profile_field_id() {
  * @since BuddyPress 1.0.0
  */
 function bp_the_profile_field_name() {
-	echo bp_get_the_profile_field_name();
+	echo bp_get_the_profile_field_name(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- pre-escaped via the wp_filter_kses filter chain; inline esc_html would double-encode intentional entities/HTML.
 }
 
 	/**
@@ -594,7 +594,7 @@ function bp_get_the_profile_field_alternate_name( $the_field = false ) {
  * @since BuddyPress 1.0.0
  */
 function bp_the_profile_field_value() {
-	echo bp_get_the_profile_field_value();
+	echo bp_get_the_profile_field_value(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- filter-escaped via bp_xprofile_escape_field_data (esc_html / xprofile_filter_kses).
 }
 
 	/**
@@ -664,7 +664,7 @@ function bp_get_the_profile_field_value() {
  * @since BuddyPress 1.1.0
  */
 function bp_the_profile_field_edit_value() {
-	echo bp_get_the_profile_field_edit_value();
+	echo bp_get_the_profile_field_edit_value(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- filter-escaped via bp_xprofile_escape_field_data (esc_html / xprofile_filter_kses).
 }
 
 	/**
@@ -712,7 +712,7 @@ function bp_get_the_profile_field_edit_value() {
  * @since BuddyPress 1.1.0
  */
 function bp_the_profile_field_type() {
-	echo bp_get_the_profile_field_type();
+	echo esc_attr( bp_get_the_profile_field_type() );
 }
 
 	/**
@@ -741,7 +741,7 @@ function bp_get_the_profile_field_type() {
  * @since BuddyPress 1.1.0
  */
 function bp_the_profile_field_description() {
-	echo bp_get_the_profile_field_description();
+	echo bp_get_the_profile_field_description(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- pre-escaped via the wp_filter_kses filter chain; inline esc_html would double-encode intentional entities/HTML.
 }
 
 	/**
@@ -770,7 +770,7 @@ function bp_get_the_profile_field_description() {
  * @since BuddyPress 1.1.0
  */
 function bp_the_profile_field_input_name() {
-	echo bp_get_the_profile_field_input_name();
+	echo esc_html( bp_get_the_profile_field_input_name() );
 }
 
 	/**
@@ -820,7 +820,7 @@ function bp_get_the_profile_field_errors_action() {
  * @param array $args Specify type for datebox. Allowed 'day', 'month', 'year'.
  */
 function bp_the_profile_field_options( $args = array() ) {
-	echo bp_get_the_profile_field_options( $args );
+	echo bp_get_the_profile_field_options( $args ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- returns field option markup pre-escaped per option (esc_attr/esc_html); contains form controls wp_kses_post would strip.
 }
 	/**
 	 * Retrieves field options HTML for field types of 'selectbox', 'multiselectbox', 'radio', 'checkbox', and 'datebox'.
@@ -879,7 +879,7 @@ function bp_get_the_profile_field_options( $args = array() ) {
  * @since BuddyPress 1.1.0
  */
 function bp_the_profile_field_is_required() {
-	echo bp_get_the_profile_field_is_required();
+	echo esc_html( bp_get_the_profile_field_is_required() );
 }
 
 	/**
@@ -916,7 +916,7 @@ function bp_get_the_profile_field_is_required() {
  * @since BuddyPress 1.6.0
  */
 function bp_the_profile_field_visibility_level() {
-	echo bp_get_the_profile_field_visibility_level();
+	echo esc_attr( bp_get_the_profile_field_visibility_level() );
 }
 
 	/**
@@ -954,7 +954,7 @@ function bp_get_the_profile_field_visibility_level() {
  * @since BuddyPress 1.6.0
  */
 function bp_the_profile_field_visibility_level_label() {
-	echo bp_get_the_profile_field_visibility_level_label();
+	echo esc_html( bp_get_the_profile_field_visibility_level_label() );
 }
 
 	/**
@@ -1020,7 +1020,7 @@ function bp_unserialize_profile_field( $value ) {
  * @param string|array $args Array of arguments for field data. See {@link bp_get_profile_field_data}
  */
 function bp_profile_field_data( $args = '' ) {
-	echo bp_get_profile_field_data( $args );
+	echo wp_kses_post( bp_get_profile_field_data( $args ) );
 }
 
 	/**
@@ -1126,7 +1126,7 @@ function bp_profile_has_multiple_groups() {
  * @since BuddyPress 1.0.0
  */
 function bp_profile_group_tabs() {
-	echo bp_get_profile_group_tabs();
+	echo wp_kses_post( bp_get_profile_group_tabs() );
 
 	/**
 	 * Fires at the end of the tab output for switching between profile field
@@ -1204,7 +1204,7 @@ function bp_profile_group_name( $deprecated = true ) {
 	if ( ! $deprecated ) {
 		return bp_get_profile_group_name();
 	} else {
-		echo bp_get_profile_group_name();
+		echo esc_html( bp_get_profile_group_name() );
 	}
 }
 
@@ -1248,9 +1248,9 @@ function bp_profile_last_updated() {
 	$last_updated = bp_get_profile_last_updated();
 
 	if ( empty( $last_updated ) ) {
-		_e( 'Profile not recently updated.', 'buddyboss' );
+		esc_html_e( 'Profile not recently updated.', 'buddyboss-platform' );
 	} else {
-		echo $last_updated;
+		echo esc_html( $last_updated );
 	}
 }
 
@@ -1274,7 +1274,8 @@ function bp_get_profile_last_updated() {
 		 *
 		 * @param string $value Formatted last updated indicator string.
 		 */
-		return apply_filters( 'bp_get_profile_last_updated', sprintf( __( 'Profile updated %s', 'buddyboss' ), bp_core_time_since( strtotime( $last_updated ) ) ) );
+		/* translators: %s: human-readable time since the profile was last updated. */
+		return apply_filters( 'bp_get_profile_last_updated', sprintf( __( 'Profile updated %s', 'buddyboss-platform' ), bp_core_time_since( strtotime( $last_updated ) ) ) );
 	}
 
 	return false;
@@ -1286,7 +1287,7 @@ function bp_get_profile_last_updated() {
  * @since BuddyPress 1.1.0
  */
 function bp_current_profile_group_id() {
-	echo bp_get_current_profile_group_id();
+	echo esc_attr( bp_get_current_profile_group_id() );
 }
 
 	/**
@@ -1320,7 +1321,7 @@ function bp_get_current_profile_group_id() {
  * @since BuddyPress 1.1.0
  */
 function bp_avatar_delete_link() {
-	echo bp_get_avatar_delete_link();
+	echo wp_kses_post( bp_get_avatar_delete_link() );
 }
 
 	/**
@@ -1356,7 +1357,7 @@ function bp_edit_profile_button() {
 			'block_self'        => true,
 			'link_href'         => trailingslashit( bp_displayed_user_domain() . bp_get_profile_slug() . '/edit' ),
 			'link_class'        => 'edit',
-			'link_text'         => __( 'Edit Profile', 'buddyboss' ),
+			'link_text'         => __( 'Edit Profile', 'buddyboss-platform' ),
 		)
 	);
 }
@@ -1371,7 +1372,7 @@ function bp_edit_profile_button() {
  * @param array|string $args Args for the radio buttons. See {@link bp_profile_get_visibility_radio_buttons}
  */
 function bp_profile_visibility_radio_buttons( $args = '' ) {
-	echo bp_profile_get_visibility_radio_buttons( $args );
+	echo bp_profile_get_visibility_radio_buttons( $args ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- returns form-control markup (<select>/<option>/<input>) pre-escaped per value at construction; wp_kses_post strips the controls.
 }
 	/**
 	 * Return the field visibility radio buttons.
@@ -1416,20 +1417,20 @@ function bp_profile_get_visibility_radio_buttons( $args = '' ) {
 		ob_start();
 
 		// Output anything before.
-		echo $r['before']; ?>
+		echo wp_kses_post( $r['before'] ); ?>
 
 			<?php if ( bp_current_user_can( 'bp_xprofile_change_field_visibility' ) ) : ?>
 
 				<?php foreach ( bp_xprofile_get_visibility_levels() as $level ) : ?>
 
-					<?php printf( $r['before_radio'], esc_attr( $level['id'] ) ); ?>
+					<?php echo wp_kses_post( sprintf( $r['before_radio'], esc_attr( $level['id'] ) ) ); ?>
 
 					<div class="bp-radio-wrap">
 						<input class="bs-styled-radio" type="radio" id="<?php echo esc_attr( 'see-field_' . $r['field_id'] . '_' . $level['id'] ); ?>" name="<?php echo esc_attr( 'field_' . $r['field_id'] . '_visibility' ); ?>" value="<?php echo esc_attr( $level['id'] ); ?>" <?php checked( $level['id'], bp_get_the_profile_field_visibility_level() ); ?> />
 						<label for="<?php echo esc_attr( 'see-field_' . $r['field_id'] . '_' . $level['id'] ); ?>"><span class="field-visibility-text"><?php echo esc_html( $level['label'] ); ?></span></label>
 					</div>
 
-					<?php echo $r['after_radio']; ?>
+					<?php echo wp_kses_post( $r['after_radio'] ); ?>
 
 				<?php endforeach; ?>
 
@@ -1437,7 +1438,7 @@ function bp_profile_get_visibility_radio_buttons( $args = '' ) {
 			endif;
 
 			// Output anything after.
-			echo $r['after'];
+			echo wp_kses_post( $r['after'] );
 
 			// Get the output buffer and empty it.
 			$retval = ob_get_clean();
@@ -1463,7 +1464,7 @@ function bp_profile_get_visibility_radio_buttons( $args = '' ) {
  * @param array|string $args Args for the select list. See {@link bp_profile_get_settings_visibility_select}
  */
 function bp_profile_settings_visibility_select( $args = '' ) {
-	echo bp_profile_get_settings_visibility_select( $args );
+	echo bp_profile_get_settings_visibility_select( $args ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- returns pre-escaped select/radio markup (esc_attr/esc_html, wp_kses_post on wrappers); contains form controls wp_kses_post would strip.
 }
 	/**
 	 * Return the XProfile field visibility select list for settings.
@@ -1514,15 +1515,15 @@ function bp_profile_get_settings_visibility_select( $args = '' ) {
 		ob_start();
 
 		// Output anything before.
-		echo $r['before'];
+		echo wp_kses_post( $r['before'] );
 		?>
 
 			<?php if ( bp_current_user_can( 'bp_xprofile_change_field_visibility' ) ) : ?>
 
-				<?php echo $r['before_controls']; ?>
+				<?php echo wp_kses_post( $r['before_controls'] ); ?>
 
 				<label for="<?php echo esc_attr( 'field_' . $r['field_id'] ); ?>_visibility" class="<?php echo esc_attr( $r['label_class'] ); ?>">
-					<?php _e( 'Select visibility', 'buddyboss' ); /* translators: accessibility text */ ?>
+					<?php esc_html_e( 'Select visibility', 'buddyboss-platform' ); /* translators: accessibility text */ ?>
 				</label>
 				<select class="<?php echo esc_attr( $r['class'] ); ?>" name="<?php echo esc_attr( 'field_' . $r['field_id'] ); ?>_visibility" id="<?php echo esc_attr( 'field_' . $r['field_id'] ); ?>_visibility">
 
@@ -1534,7 +1535,7 @@ function bp_profile_get_settings_visibility_select( $args = '' ) {
 
 				</select>
 
-				<?php echo $r['after_controls']; ?>
+				<?php echo wp_kses_post( $r['after_controls'] ); ?>
 
 			<?php else : ?>
 
@@ -1544,7 +1545,7 @@ function bp_profile_get_settings_visibility_select( $args = '' ) {
 			endif;
 
 			// Output anything after.
-			echo $r['after'];
+			echo wp_kses_post( $r['after'] );
 
 			// Get the output buffer and empty it.
 			$retval = ob_get_clean();
@@ -1568,7 +1569,7 @@ function bp_profile_get_settings_visibility_select( $args = '' ) {
  * @since BuddyPress 2.4.0
  */
 function bp_the_profile_field_required_label() {
-	echo bp_get_the_profile_field_required_label();
+	echo wp_kses_post( bp_get_the_profile_field_required_label() );
 }
 
 	/**
@@ -1582,7 +1583,7 @@ function bp_get_the_profile_field_required_label() {
 	$retval = '';
 
 	if ( bp_get_the_profile_field_is_required() ) {
-		$translated_string = __( '(required)', 'buddyboss' );
+		$translated_string = __( '(required)', 'buddyboss-platform' );
 
 		$retval  = ' <span class="bp-required-field-label">';
 		$retval .= apply_filters( 'bp_get_the_profile_field_required_label', $translated_string, bp_get_the_profile_field_id() );
@@ -1599,7 +1600,7 @@ function bp_get_the_profile_field_required_label() {
  * @since BuddyBoss 1.0.0
  */
 function bp_the_profile_field_optional_label() {
-	echo bp_get_the_profile_field_optional_label();
+	echo wp_kses_post( bp_get_the_profile_field_optional_label() );
 }
 
 /**
@@ -1615,7 +1616,7 @@ function bp_get_the_profile_field_optional_label() {
 	if ( ! bp_get_the_profile_field_is_required() ) {
 
 		// @note Removed (optional) text from here for the future reference.
-		$translated_string = __( '(optional)', 'buddyboss' );
+		$translated_string = __( '(optional)', 'buddyboss-platform' );
 
 		$retval  = ' <span class="bp-optional-field-label">';
 		$retval .= apply_filters( 'bp_get_the_profile_field_optional_label', $translated_string, bp_get_the_profile_field_id() );
@@ -1636,7 +1637,7 @@ function bp_get_the_profile_field_optional_label() {
  *                     space-delimited string.
  */
 function bp_field_data_attribute( $attribute = false ) {
-	echo bp_get_field_data_attribute( $attribute );
+	echo bp_get_field_data_attribute( $attribute ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- returns built data-attribute markup; escaping would corrupt the attribute string.
 }
 
 	/**

@@ -6,6 +6,9 @@
  * @since BuddyPress 3.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 /**
  * Handle the display of a group's Send Invites page.
  *
@@ -38,7 +41,7 @@ function groups_screen_group_invite() {
 
 		// Send the invites.
 		groups_send_invites( array( 'group_id' => $bp->groups->current_group->id ) );
-		bp_core_add_message( __( 'Group invites sent.', 'buddyboss' ) );
+		bp_core_add_message( __( 'Group invites sent.', 'buddyboss-platform' ) );
 
 		/**
 		 * Fires after the sending of a group invite inside the group's Send Invites page.
@@ -115,18 +118,18 @@ function groups_remove_group_invite() {
 
 	$friend_id = intval( bp_action_variable( 1 ) );
 	$group_id  = bp_get_current_group_id();
-	$message   = __( 'Invite successfully removed', 'buddyboss' );
+	$message   = __( 'Invite successfully removed', 'buddyboss-platform' );
 	$redirect  = wp_get_referer();
 	$error     = false;
 
 	if ( ! bp_groups_user_can_send_invites( $group_id ) ) {
-		$message = __( 'You are not allowed to send or remove invites', 'buddyboss' );
+		$message = __( 'You are not allowed to send or remove invites', 'buddyboss-platform' );
 		$error   = 'error';
 	} elseif ( groups_check_for_membership_request( $friend_id, $group_id ) ) {
-		$message = __( 'The member requested to join the group', 'buddyboss' );
+		$message = __( 'The member requested to join the group', 'buddyboss-platform' );
 		$error   = 'error';
 	} elseif ( ! groups_uninvite_user( $friend_id, $group_id ) ) {
-		$message = __( 'There was an error removing the invite', 'buddyboss' );
+		$message = __( 'There was an error removing the invite', 'buddyboss-platform' );
 		$error   = 'error';
 	}
 

@@ -27,7 +27,7 @@ defined( 'ABSPATH' ) || exit;
  * @return string Translated section title.
  */
 function bb_activity_sharing_section_title() {
-	return __( 'Activity Sharing', 'buddyboss' );
+	return __( 'Activity Sharing', 'buddyboss-platform' );
 }
 
 /**
@@ -140,7 +140,7 @@ function bb_activity_sharing_add_pro_badge_when_no_sharing( $args ) {
 
 	$args['pro_notice'] = array(
 		'show'       => true,
-		'badge_text' => __( 'UPGRADE PRO', 'buddyboss' ),
+		'badge_text' => __( 'UPGRADE PRO', 'buddyboss-platform' ),
 		'badge_icon' => 'bb-icons-rl-crown-simple',
 		'link_url'   => 'https://www.buddyboss.com/pricing/',
 	);
@@ -209,9 +209,9 @@ function bb_activity_register_sharing_panel_fields() {
 				'label'                   => '',
 				'type'                    => 'empty_state',
 				'icon'                    => 'bb-icons-rl bb-icons-rl-warning-circle',
-				'empty_state_title'       => __( 'BuddyBoss Sharing Update Required', 'buddyboss' ),
-				'empty_state_description' => __( 'Please update to the latest version of BuddyBoss Sharing to manage activity sharing from Settings 2.0.', 'buddyboss' ),
-				'button_label'            => __( 'Update Now', 'buddyboss' ),
+				'empty_state_title'       => __( 'BuddyBoss Sharing Update Required', 'buddyboss-platform' ),
+				'empty_state_description' => __( 'Please update to the latest version of BuddyBoss Sharing to manage activity sharing from Settings 2.0.', 'buddyboss-platform' ),
+				'button_label'            => __( 'Update Now', 'buddyboss-platform' ),
 				'button_url'              => admin_url( 'update-core.php' ),
 				'sanitize_callback'       => '__return_empty_string',
 				'order'                   => 10,
@@ -286,7 +286,7 @@ function bb_activity_register_sharing_pro_placeholder_fields() {
 	// and keep the badge visible in that combination.
 	$pro_notice_field = array(
 		'show'       => true,
-		'badge_text' => __( 'PRO', 'buddyboss' ),
+		'badge_text' => __( 'PRO', 'buddyboss-platform' ),
 		'badge_icon' => 'bb-icons-rl-crown-simple',
 		'link_url'   => 'https://www.buddyboss.com/platform/',
 		'link_icon'  => 'bb-icons-rl-play',
@@ -308,7 +308,7 @@ function bb_activity_register_sharing_pro_placeholder_fields() {
 			'merge'      => true,
 			'pro_notice' => array(
 				'show'       => true,
-				'badge_text' => __( 'UPGRADE PRO', 'buddyboss' ),
+				'badge_text' => __( 'UPGRADE PRO', 'buddyboss-platform' ),
 				'badge_icon' => 'bb-icons-rl-crown-simple',
 				'link_url'   => 'https://www.buddyboss.com/pricing/',
 			),
@@ -321,32 +321,32 @@ function bb_activity_register_sharing_pro_placeholder_fields() {
 	$toggle_fields = array(
 		array(
 			'name'        => 'buddyboss_enable_activity_sharing',
-			'label'       => __( 'Enable Sharing', 'buddyboss' ),
-			'description' => __( 'Allow members to share activity posts', 'buddyboss' ),
+			'label'       => __( 'Enable Sharing', 'buddyboss-platform' ),
+			'description' => __( 'Allow members to share activity posts', 'buddyboss-platform' ),
 			'order'       => 10,
 		),
 		array(
 			'name'        => 'buddyboss_activity_sharing_custom_message',
-			'label'       => __( 'Custom Message', 'buddyboss' ),
-			'description' => __( 'Allow members to add a custom message while sharing', 'buddyboss' ),
+			'label'       => __( 'Custom Message', 'buddyboss-platform' ),
+			'description' => __( 'Allow members to add a custom message while sharing', 'buddyboss-platform' ),
 			'order'       => 20,
 		),
 		array(
 			'name'        => 'buddyboss_activity_sharing_to_groups',
-			'label'       => __( 'Share to Groups', 'buddyboss' ),
-			'description' => __( 'Allow members to share public posts in their groups', 'buddyboss' ),
+			'label'       => __( 'Share to Groups', 'buddyboss-platform' ),
+			'description' => __( 'Allow members to share public posts in their groups', 'buddyboss-platform' ),
 			'order'       => 30,
 		),
 		array(
 			'name'        => 'buddyboss_activity_sharing_to_friends',
-			'label'       => __( 'Share to Friends', 'buddyboss' ),
-			'description' => __( "Allow members to share public posts to their friends' profiles", 'buddyboss' ),
+			'label'       => __( 'Share to Friends', 'buddyboss-platform' ),
+			'description' => __( "Allow members to share public posts to their friends' profiles", 'buddyboss-platform' ),
 			'order'       => 40,
 		),
 		array(
 			'name'        => 'buddyboss_activity_sharing_to_message',
-			'label'       => __( 'Share to Message', 'buddyboss' ),
-			'description' => __( 'Allow members to send via direct message', 'buddyboss' ),
+			'label'       => __( 'Share to Message', 'buddyboss-platform' ),
+			'description' => __( 'Allow members to send via direct message', 'buddyboss-platform' ),
 			'order'       => 50,
 		),
 	);
@@ -388,9 +388,9 @@ function bb_activity_register_sharing_pro_placeholder_fields() {
 		$section_id,
 		array(
 			'name'              => 'buddyboss_activity_sharing_as_link',
-			'label'             => __( 'Share as Link', 'buddyboss' ),
+			'label'             => __( 'Share as Link', 'buddyboss-platform' ),
 			'type'              => 'toggle',
-			'description'       => __( 'Allow members to share public posts as link', 'buddyboss' ),
+			'description'       => __( 'Allow members to share public posts as link', 'buddyboss-platform' ),
 			'default'           => 0,
 			'pro_only'          => true,
 			'pro_notice'        => $pro_notice_field,
@@ -418,27 +418,27 @@ function bb_activity_register_sharing_pro_placeholder_fields() {
 			'default'           => array(),
 			'options'           => array(
 				array(
-					'label' => __( 'Messenger', 'buddyboss' ),
+					'label' => __( 'Messenger', 'buddyboss-platform' ),
 					'value' => 'messenger',
 					'icon' => 'bb-icons-rl bb-icons-rl-messenger-logo',
 				),
 				array(
-					'label' => __( 'Facebook', 'buddyboss' ),
+					'label' => __( 'Facebook', 'buddyboss-platform' ),
 					'value' => 'facebook',
 					'icon' => 'bb-icons-rl bb-icons-rl-facebook-logo',
 				),
 				array(
-					'label' => __( 'X', 'buddyboss' ),
+					'label' => __( 'X', 'buddyboss-platform' ),
 					'value' => 'twitter',
 					'icon' => 'bb-icons-rl bb-icons-rl-x-logo',
 				),
 				array(
-					'label' => __( 'Linkedin', 'buddyboss' ),
+					'label' => __( 'Linkedin', 'buddyboss-platform' ),
 					'value' => 'linkedin',
 					'icon' => 'bb-icons-rl bb-icons-rl-linkedin-logo',
 				),
 				array(
-					'label' => __( 'Whatsapp', 'buddyboss' ),
+					'label' => __( 'Whatsapp', 'buddyboss-platform' ),
 					'value' => 'whatsapp',
 					'icon' => 'bb-icons-rl bb-icons-rl-whatsapp-logo',
 				),

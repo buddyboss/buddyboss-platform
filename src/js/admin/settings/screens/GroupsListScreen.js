@@ -38,12 +38,12 @@ import { ConfirmToggleModal } from '../components/modals/ConfirmToggleModal';
  * @type {Array}
  */
 var sortOptions = [
-	{ label: __( 'Newest', 'buddyboss' ), value: 'newest' },
-	{ label: __( 'Oldest', 'buddyboss' ), value: 'oldest' },
-	{ label: __( 'Highest Users', 'buddyboss' ), value: 'highest_users' },
-	{ label: __( 'Lowest Users', 'buddyboss' ), value: 'lowest_users' },
-	{ label: __( 'Group Types', 'buddyboss' ), value: 'group_types' },
-	{ label: __( 'Last Active', 'buddyboss' ), value: 'last_active' },
+	{ label: __( 'Newest', 'buddyboss-platform' ), value: 'newest' },
+	{ label: __( 'Oldest', 'buddyboss-platform' ), value: 'oldest' },
+	{ label: __( 'Highest Users', 'buddyboss-platform' ), value: 'highest_users' },
+	{ label: __( 'Lowest Users', 'buddyboss-platform' ), value: 'lowest_users' },
+	{ label: __( 'Group Types', 'buddyboss-platform' ), value: 'group_types' },
+	{ label: __( 'Last Active', 'buddyboss-platform' ), value: 'last_active' },
 ];
 
 /**
@@ -76,9 +76,9 @@ var PRIVACY_ICONS = {
  * @type {Object}
  */
 var PRIVACY_LABELS = {
-	'public': __( 'Public', 'buddyboss' ),
-	'private': __( 'Private', 'buddyboss' ),
-	'hidden': __( 'Hidden', 'buddyboss' ),
+	'public': __( 'Public', 'buddyboss-platform' ),
+	'private': __( 'Private', 'buddyboss-platform' ),
+	'hidden': __( 'Hidden', 'buddyboss-platform' ),
 };
 
 /**
@@ -279,7 +279,7 @@ export function GroupsListScreen( { onNavigate } ) {
 			setIsLoading( false );
 			setNotice( {
 				type: 'error',
-				message: __( 'Failed to load groups. Please try again.', 'buddyboss' ),
+				message: __( 'Failed to load groups. Please try again.', 'buddyboss-platform' ),
 			} );
 		} );
 	}, [ currentPage, searchQuery, filter, sortBy, groupTypeFilter, refetchCounter ] );
@@ -374,11 +374,11 @@ export function GroupsListScreen( { onNavigate } ) {
 				setBulkAction( '' );
 				resetAndRefetch();
 			} else {
-				setNotice( { type: 'error', message: ( response.data && response.data.message ) || __( 'Action failed.', 'buddyboss' ) } );
+				setNotice( { type: 'error', message: ( response.data && response.data.message ) || __( 'Action failed.', 'buddyboss-platform' ) } );
 			}
 		} ).catch( function () {
 			setIsBulkProcessing( false );
-			setNotice( { type: 'error', message: __( 'An error occurred.', 'buddyboss' ) } );
+			setNotice( { type: 'error', message: __( 'An error occurred.', 'buddyboss-platform' ) } );
 		} );
 	};
 
@@ -470,14 +470,14 @@ export function GroupsListScreen( { onNavigate } ) {
 			if ( response.success && response.data ) {
 				setEditGroup( response.data );
 			} else {
-				setNotice( { type: 'error', message: ( response.data && response.data.message ) || __( 'Failed to load group data.', 'buddyboss' ) } );
+				setNotice( { type: 'error', message: ( response.data && response.data.message ) || __( 'Failed to load group data.', 'buddyboss-platform' ) } );
 			}
 		} ).catch( function ( err ) {
 			if ( err && 'AbortError' === err.name ) {
 				return;
 			}
 			setIsEditLoading( false );
-			setNotice( { type: 'error', message: __( 'An error occurred loading group data.', 'buddyboss' ) } );
+			setNotice( { type: 'error', message: __( 'An error occurred loading group data.', 'buddyboss-platform' ) } );
 		} );
 	};
 
@@ -518,7 +518,7 @@ export function GroupsListScreen( { onNavigate } ) {
 		} ).catch( function ( err ) {
 			// Group-level save failure (HTTP / AJAX error) → page-level notice.
 			setIsEditSaving( false );
-			setNotice( { type: 'error', message: err.message || __( 'An error occurred saving the group.', 'buddyboss' ) } );
+			setNotice( { type: 'error', message: err.message || __( 'An error occurred saving the group.', 'buddyboss-platform' ) } );
 		} );
 	};
 
@@ -529,7 +529,7 @@ export function GroupsListScreen( { onNavigate } ) {
 	 */
 	var handleGroupCreated = function () {
 		setCreateModalOpen( false );
-		setNotice( { type: 'success', message: __( 'Group created successfully.', 'buddyboss' ) } );
+		setNotice( { type: 'success', message: __( 'Group created successfully.', 'buddyboss-platform' ) } );
 		resetAndRefetch();
 	};
 
@@ -598,14 +598,14 @@ export function GroupsListScreen( { onNavigate } ) {
 				options.push( { label: label, value: key } );
 			} );
 		} else {
-			options.push( { label: __( 'All', 'buddyboss' ), value: 'all' } );
+			options.push( { label: __( 'All', 'buddyboss-platform' ), value: 'all' } );
 		}
 		return options;
 	}, [ views ] );
 
 	// Group type filter options (memoized).
 	var groupTypeOptions = useMemo( function () {
-		var options = [ { label: __( 'All Types', 'buddyboss' ), value: '' } ];
+		var options = [ { label: __( 'All Types', 'buddyboss-platform' ), value: '' } ];
 		groupTypes.forEach( function ( type ) {
 			options.push( { label: decodeEntities( type.label ), value: type.value } );
 		} );
@@ -621,7 +621,7 @@ export function GroupsListScreen( { onNavigate } ) {
 
 			{ /* Header */ }
 			<div className="bb-groups-list__header">
-				<h2 className="bb-groups-list__title">{ __( 'Groups', 'buddyboss' ) }</h2>
+				<h2 className="bb-groups-list__title">{ __( 'Groups', 'buddyboss-platform' ) }</h2>
 				<Button
 					variant="primary"
 					className="bb-groups-list__create-btn"
@@ -630,7 +630,7 @@ export function GroupsListScreen( { onNavigate } ) {
 					} }
 				>
 					<i className="bb-icons-rl bb-icons-rl-plus"></i>
-					{ __( 'Create New Group', 'buddyboss' ) }
+					{ __( 'Create New Group', 'buddyboss-platform' ) }
 				</Button>
 			</div>
 
@@ -645,7 +645,7 @@ export function GroupsListScreen( { onNavigate } ) {
 				isBulkProcessing={ isBulkProcessing }
 				searchInput={ searchInput }
 				onSearchChange={ handleSearchChange }
-				searchPlaceholder={ __( 'Search groups', 'buddyboss' ) }
+				searchPlaceholder={ __( 'Search groups', 'buddyboss-platform' ) }
 			>
 				<SelectControl
 					value={ filter }
@@ -680,7 +680,7 @@ export function GroupsListScreen( { onNavigate } ) {
 					</div>
 				) : 0 === groups.length ? (
 					<div className="bb-groups-list__empty bb-admin-list-table__empty">
-						<p>{ __( 'No groups found.', 'buddyboss' ) }</p>
+						<p>{ __( 'No groups found.', 'buddyboss-platform' ) }</p>
 					</div>
 				) : (
 					<table className="bb-groups-list__table bb-admin-list-table">
@@ -694,19 +694,19 @@ export function GroupsListScreen( { onNavigate } ) {
 									/>
 								</th>
 								<th className="bb-groups-list__th--name">
-									{ __( 'Name', 'buddyboss' ) }
+									{ __( 'Name', 'buddyboss-platform' ) }
 								</th>
 								<th className="bb-groups-list__th--privacy">
-									{ __( 'Privacy', 'buddyboss' ) }
+									{ __( 'Privacy', 'buddyboss-platform' ) }
 								</th>
 								<th className="bb-groups-list__th--members">
-									{ __( 'Members', 'buddyboss' ) }
+									{ __( 'Members', 'buddyboss-platform' ) }
 								</th>
 								<th className="bb-groups-list__th--group-type">
-									{ __( 'Group Type', 'buddyboss' ) }
+									{ __( 'Group Type', 'buddyboss-platform' ) }
 								</th>
 								<th className="bb-groups-list__th--last-active">
-									{ __( 'Last Active', 'buddyboss' ) }
+									{ __( 'Last Active', 'buddyboss-platform' ) }
 								</th>
 								{ /* Custom columns from bp_groups_list_table_get_columns filter */ }
 								{ customColumnKeys.map( function ( key ) {
@@ -793,7 +793,7 @@ export function GroupsListScreen( { onNavigate } ) {
 										<td className="bb-groups-list__td--actions bb-admin-actions-toggle">
 											<DropdownMenu
 												icon={ <i className="bb-icons-rl-dots-three"></i> }
-												label={ __( 'More options', 'buddyboss' ) }
+												label={ __( 'More options', 'buddyboss-platform' ) }
 											>
 												{ function ( dropdownProps ) {
 													var onClose = dropdownProps.onClose;
@@ -810,7 +810,7 @@ export function GroupsListScreen( { onNavigate } ) {
 																	} }
 																>
 																	<i className="bb-icons-rl bb-icons-rl-eye"></i>
-																	{ __( 'View', 'buddyboss' ) }
+																	{ __( 'View', 'buddyboss-platform' ) }
 																	<i className="bb-icons-rl bb-icons-rl-arrow-up-right bb-icons-external"></i>
 																</MenuItem>
 															) }
@@ -821,7 +821,7 @@ export function GroupsListScreen( { onNavigate } ) {
 																} }
 															>
 																<i className="bb-icons-rl bb-icons-rl-note-pencil"></i>
-																{ __( 'Edit', 'buddyboss' ) }
+																{ __( 'Edit', 'buddyboss-platform' ) }
 															</MenuItem>
 															<MenuItem
 																isDestructive
@@ -831,7 +831,7 @@ export function GroupsListScreen( { onNavigate } ) {
 																} }
 															>
 																<i className="bb-icons-rl bb-icons-rl-trash"></i>
-																{ __( 'Delete', 'buddyboss' ) }
+																{ __( 'Delete', 'buddyboss-platform' ) }
 															</MenuItem>
 														</MenuGroup>
 													);
@@ -860,7 +860,7 @@ export function GroupsListScreen( { onNavigate } ) {
 			{ /* Delete Group Modal */ }
 			{ deleteModalOpen && (
 				<Modal
-					title={ __( 'Delete Group?', 'buddyboss' ) }
+					title={ __( 'Delete Group?', 'buddyboss-platform' ) }
 					onRequestClose={ function () {
 						setDeleteModalOpen( false );
 					} }
@@ -872,18 +872,18 @@ export function GroupsListScreen( { onNavigate } ) {
 							<i className="bb-icons-rl bb-icons-rl-warning-circle"></i>
 							<div className="bb-admin-delete__warning-text">
 								<span className="bb-admin-delete__warning-title">
-									{ __( 'Warning', 'buddyboss' ) }
+									{ __( 'Warning', 'buddyboss-platform' ) }
 								</span>
 								<span className="bb-admin-delete__warning-desc">
-									{ __( 'This permanently deletes selected groups from the community and cannot be undone.', 'buddyboss' ) }
+									{ __( 'This permanently deletes selected groups from the community and cannot be undone.', 'buddyboss-platform' ) }
 								</span>
 							</div>
 						</div>
 						<p className="bb-group-delete-modal__description">
-							{ __( 'Deleting groups will remove them from the community and the WordPress backend listings. They will no longer appear in the group directory, and all associated data and posts will be permanently deleted.', 'buddyboss' ) }
+							{ __( 'Deleting groups will remove them from the community and the WordPress backend listings. They will no longer appear in the group directory, and all associated data and posts will be permanently deleted.', 'buddyboss-platform' ) }
 						</p>
 						<CheckboxControl
-							label={ __( 'I understand this will permanently delete the group.', 'buddyboss' ) }
+							label={ __( 'I understand this will permanently delete the group.', 'buddyboss-platform' ) }
 							checked={ deleteConfirmChecked }
 							onChange={ setDeleteConfirmChecked }
 							__nextHasNoMarginBottom
@@ -896,7 +896,7 @@ export function GroupsListScreen( { onNavigate } ) {
 								setDeleteModalOpen( false );
 							} }
 						>
-							{ __( 'Cancel', 'buddyboss' ) }
+							{ __( 'Cancel', 'buddyboss-platform' ) }
 						</Button>
 						<Button
 							variant="primary"
@@ -904,7 +904,7 @@ export function GroupsListScreen( { onNavigate } ) {
 							onClick={ handleConfirmDelete }
 							disabled={ ! deleteConfirmChecked }
 						>
-							{ __( 'Delete', 'buddyboss' ) }
+							{ __( 'Delete', 'buddyboss-platform' ) }
 						</Button>
 					</div>
 				</Modal>
@@ -941,10 +941,10 @@ export function GroupsListScreen( { onNavigate } ) {
 			{ /* Remove Group Type Confirm Modal */ }
 			<ConfirmToggleModal
 				isOpen={ removeTypeModalOpen }
-				title={ __( 'Remove Group Type', 'buddyboss' ) }
-				message={ __( 'Are you sure you want to remove the group type from the selected groups?', 'buddyboss' ) }
-				confirmLabel={ __( 'Remove', 'buddyboss' ) }
-				cancelLabel={ __( 'Cancel', 'buddyboss' ) }
+				title={ __( 'Remove Group Type', 'buddyboss-platform' ) }
+				message={ __( 'Are you sure you want to remove the group type from the selected groups?', 'buddyboss-platform' ) }
+				confirmLabel={ __( 'Remove', 'buddyboss-platform' ) }
+				cancelLabel={ __( 'Cancel', 'buddyboss-platform' ) }
 				isDestructive={ true }
 				onConfirm={ function () {
 					setRemoveTypeModalOpen( false );
@@ -958,7 +958,7 @@ export function GroupsListScreen( { onNavigate } ) {
 			{ /* Change Group Type Modal */ }
 			{ changeTypeModalOpen && (
 				<Modal
-					title={ __( 'Bulk Action', 'buddyboss' ) }
+					title={ __( 'Bulk Action', 'buddyboss-platform' ) }
 					onRequestClose={ function () {
 						setChangeTypeModalOpen( false );
 					} }
@@ -967,11 +967,11 @@ export function GroupsListScreen( { onNavigate } ) {
 				>
 					<div className="bb-group-change-type-modal__body">
 						<label className="bb-group-change-type-modal__label">
-							{ __( 'Change Group Type to', 'buddyboss' ) }
+							{ __( 'Change Group Type to', 'buddyboss-platform' ) }
 						</label>
 						<SelectControl
 							value={ selectedGroupType }
-							options={ [ { label: __( 'Select group type', 'buddyboss' ), value: '' } ].concat(
+							options={ [ { label: __( 'Select group type', 'buddyboss-platform' ), value: '' } ].concat(
 								groupTypes.map( function ( type ) {
 									return { label: decodeEntities( type.label ), value: type.value };
 								} )
@@ -987,14 +987,14 @@ export function GroupsListScreen( { onNavigate } ) {
 								setChangeTypeModalOpen( false );
 							} }
 						>
-							{ __( 'Cancel', 'buddyboss' ) }
+							{ __( 'Cancel', 'buddyboss-platform' ) }
 						</Button>
 						<Button
 							variant="primary"
 							onClick={ handleConfirmChangeType }
 							disabled={ ! selectedGroupType }
 						>
-							{ __( 'Save', 'buddyboss' ) }
+							{ __( 'Save', 'buddyboss-platform' ) }
 						</Button>
 					</div>
 				</Modal>

@@ -83,34 +83,35 @@ function bp_nouveau_document_localize_scripts( $params = array() ) {
 		'messages_document'               => bp_is_messages_document_support_enabled() && bb_user_can_create_document(),
 		'messages_document_active'        => bp_is_messages_document_support_enabled(),
 		'document_type'                   => implode( ',', array_unique( $exclude ) ),
-		'empty_document_type'             => __( 'Empty documents will not be uploaded.', 'buddyboss' ),
+		'empty_document_type'             => __( 'Empty documents will not be uploaded.', 'buddyboss-platform' ),
 		'current_folder'                  => $folder_id,
 		'current_type'                    => $type,
 		'move_to_id_popup'                => $move_to_id_popup,
 		'current_user_id'                 => $user_id,
 		'current_group_id'                => $group_id,
-		'target_text'                     => __( 'Documents', 'buddyboss' ),
-		'create_folder_error_title'       => __( 'Please enter title of folder', 'buddyboss' ),
-		'invalid_file_type'               => __( 'Unable to upload the file', 'buddyboss' ),
-		'document_select_error'           => __( 'Please upload only the following file types: ', 'buddyboss' ) . '<br /><div class="bb-allowed-file-types">' . implode( ', ', array_unique( $extensions ) ) . '</div>',
-		'dropzone_document_message'       => sprintf( '<strong>%s</strong> %s', esc_html__( 'Add Files', 'buddyboss' ), esc_html__( 'Or drag and drop', 'buddyboss' ) ),
+		'target_text'                     => __( 'Documents', 'buddyboss-platform' ),
+		'create_folder_error_title'       => __( 'Please enter title of folder', 'buddyboss-platform' ),
+		'invalid_file_type'               => __( 'Unable to upload the file', 'buddyboss-platform' ),
+		'document_select_error'           => __( 'Please upload only the following file types: ', 'buddyboss-platform' ) . '<br /><div class="bb-allowed-file-types">' . implode( ', ', array_unique( $extensions ) ) . '</div>',
+		'dropzone_document_message'       => sprintf( '<strong>%s</strong> %s', esc_html__( 'Add Files', 'buddyboss-platform' ), esc_html__( 'Or drag and drop', 'buddyboss-platform' ) ),
 		'is_document_directory'           => ( bp_is_document_directory() ) ? 'yes' : 'no',
-		'document_preview_error'          => __( 'Sorry! something went wrong we are not able to preview.', 'buddyboss' ),
-		'move_to_folder'                  => __( 'Move folder to...', 'buddyboss' ),
-		'move_to_file'                    => __( 'Move document to...', 'buddyboss' ),
-		'copy_to_clip_board_text'         => __( 'Copied to Clipboard', 'buddyboss' ),
-		'download_button'                 => __( 'Download', 'buddyboss' ),
-		'document_size_error_header'      => __( 'File too large ', 'buddyboss' ),
-		'document_size_error_description' => __( 'This file type is too large.', 'buddyboss' ),
-		'sidebar_download_text'           => __( 'Download', 'buddyboss' ),
-		'sidebar_view_text'               => __( 'View', 'buddyboss' ),
-		'create_folder'                   => __( 'Create Folder', 'buddyboss' ),
-		'document_dict_file_exceeded'     => sprintf( __( 'You are allowed to upload only %s documents at a time.', 'buddyboss' ), bp_core_number_format( bp_media_allowed_upload_document_per_batch() ) ),
+		'document_preview_error'          => __( 'Sorry! something went wrong we are not able to preview.', 'buddyboss-platform' ),
+		'move_to_folder'                  => __( 'Move folder to...', 'buddyboss-platform' ),
+		'move_to_file'                    => __( 'Move document to...', 'buddyboss-platform' ),
+		'copy_to_clip_board_text'         => __( 'Copied to Clipboard', 'buddyboss-platform' ),
+		'download_button'                 => __( 'Download', 'buddyboss-platform' ),
+		'document_size_error_header'      => __( 'File too large ', 'buddyboss-platform' ),
+		'document_size_error_description' => __( 'This file type is too large.', 'buddyboss-platform' ),
+		'sidebar_download_text'           => __( 'Download', 'buddyboss-platform' ),
+		'sidebar_view_text'               => __( 'View', 'buddyboss-platform' ),
+		'create_folder'                   => __( 'Create Folder', 'buddyboss-platform' ),
+		/* translators: %s: maximum number of documents allowed per upload batch. */
+		'document_dict_file_exceeded'     => sprintf( __( 'You are allowed to upload only %s documents at a time.', 'buddyboss-platform' ), bp_core_number_format( bp_media_allowed_upload_document_per_batch() ) ),
 		'can_manage_document'             => ( is_user_logged_in() && bb_user_can_create_document() ),
 	);
 
 	$document_options = array(
-		'dictInvalidFileType'   => __( 'Please upload only the following file types: ', 'buddyboss' ) . '<br /><div class="bb-allowed-file-types">' . implode( ', ', array_unique( $extensions ) ) . '</div>',
+		'dictInvalidFileType'   => __( 'Please upload only the following file types: ', 'buddyboss-platform' ) . '<br /><div class="bb-allowed-file-types">' . implode( ', ', array_unique( $extensions ) ) . '</div>',
 		'max_upload_size'       => bp_document_file_upload_max_size(),
 		'maxFiles'              => bp_media_allowed_upload_document_per_batch(),
 		'mp3_preview_extension' => implode( ',', bp_get_document_preview_music_extensions() ),
@@ -129,10 +130,10 @@ function bp_nouveau_document_localize_scripts( $params = array() ) {
 	}
 
 	$document_i18n_strings = array(
-		'folder_delete_confirm'   => __( 'Are you sure you want to delete this folder? Documents in this folder will also be deleted?', 'buddyboss' ),
-		'document_delete_confirm' => __( 'Are you sure you want to delete this document?', 'buddyboss' ),
-		'folder_delete_error'     => __( 'There was a problem deleting the folder.', 'buddyboss' ),
-		'folder_move_error'       => __( 'Please select destination folder.', 'buddyboss' ),
+		'folder_delete_confirm'   => __( 'Are you sure you want to delete this folder? Documents in this folder will also be deleted?', 'buddyboss-platform' ),
+		'document_delete_confirm' => __( 'Are you sure you want to delete this document?', 'buddyboss-platform' ),
+		'folder_delete_error'     => __( 'There was a problem deleting the folder.', 'buddyboss-platform' ),
+		'folder_move_error'       => __( 'Please select destination folder.', 'buddyboss-platform' ),
 	);
 
 	$old_i18n_strings = $params['media']['i18n_strings'];
@@ -156,7 +157,7 @@ function bp_nouveau_get_document_directory_nav_items() {
 		'slug'      => 'all', // slug is used because BP_Core_Nav requires it, but it's the scope.
 		'li_class'  => array( 'selected' ),
 		'link'      => bp_get_document_directory_permalink(),
-		'text'      => __( 'All Documents', 'buddyboss' ),
+		'text'      => __( 'All Documents', 'buddyboss-platform' ),
 		// 'count'     => bp_get_total_document_count(),
 		'position'  => 5,
 	);
@@ -167,7 +168,7 @@ function bp_nouveau_get_document_directory_nav_items() {
 			'slug'      => 'personal', // slug is used because BP_Core_Nav requires it, but it's the scope.
 			'li_class'  => array(),
 			'link'      => bp_loggedin_user_domain() . bp_get_document_slug() . '/my-document/',
-			'text'      => __( 'My Documents', 'buddyboss' ),
+			'text'      => __( 'My Documents', 'buddyboss-platform' ),
 			// 'count'     => bp_document_get_total_document_count(),
 			'position'  => 15,
 		);
@@ -179,7 +180,7 @@ function bp_nouveau_get_document_directory_nav_items() {
 			'slug'      => 'groups', // slug is used because BP_Core_Nav requires it, but it's the scope.
 			'li_class'  => array(),
 			'link'      => bp_loggedin_user_domain() . bp_get_document_slug() . '/groups-document/',
-			'text'      => __( 'My Groups', 'buddyboss' ),
+			'text'      => __( 'My Groups', 'buddyboss-platform' ),
 			// 'count'     => bp_document_get_total_document_count(),
 			'position'  => 15,
 		);
@@ -208,7 +209,7 @@ function bp_media_allowed_document_type() {
 		'bb_doc_1'  => array(
 			'extension'   => '.abw',
 			'mime_type'   => 'application/x-abiword',
-			'description' => __( 'AbiWord Document', 'buddyboss' ),
+			'description' => __( 'AbiWord Document', 'buddyboss-platform' ),
 			'is_default'  => 1,
 			'is_active'   => 1,
 			'icon'        => '',
@@ -216,7 +217,7 @@ function bp_media_allowed_document_type() {
 		'bb_doc_2'  => array(
 			'extension'   => '.abw',
 			'mime_type'   => 'text/xml',
-			'description' => __( 'AbiWord Document', 'buddyboss' ),
+			'description' => __( 'AbiWord Document', 'buddyboss-platform' ),
 			'is_default'  => 1,
 			'is_active'   => 1,
 			'icon'        => '',
@@ -224,7 +225,7 @@ function bp_media_allowed_document_type() {
 		'bb_doc_3'  => array(
 			'extension'   => '.ace',
 			'mime_type'   => 'application/x-ace-compressed',
-			'description' => __( 'ACE Archive', 'buddyboss' ),
+			'description' => __( 'ACE Archive', 'buddyboss-platform' ),
 			'is_default'  => 1,
 			'is_active'   => 1,
 			'icon'        => '',
@@ -232,7 +233,7 @@ function bp_media_allowed_document_type() {
 		'bb_doc_4'  => array(
 			'extension'   => '.ai',
 			'mime_type'   => 'application/postscript',
-			'description' => __( 'Illustrator File', 'buddyboss' ),
+			'description' => __( 'Illustrator File', 'buddyboss-platform' ),
 			'is_default'  => 1,
 			'is_active'   => 1,
 			'icon'        => '',
@@ -240,7 +241,7 @@ function bp_media_allowed_document_type() {
 		'bb_doc_5'  => array(
 			'extension'   => '.ai',
 			'mime_type'   => 'application/pdf',
-			'description' => __( 'Illustrator File', 'buddyboss' ),
+			'description' => __( 'Illustrator File', 'buddyboss-platform' ),
 			'is_default'  => 1,
 			'is_active'   => 1,
 			'icon'        => '',
@@ -248,7 +249,7 @@ function bp_media_allowed_document_type() {
 		'bb_doc_6'  => array(
 			'extension'   => '.apk',
 			'mime_type'   => 'application/vnd.android.package-archive',
-			'description' => __( 'Android Package', 'buddyboss' ),
+			'description' => __( 'Android Package', 'buddyboss-platform' ),
 			'is_default'  => 1,
 			'is_active'   => 1,
 			'icon'        => '',
@@ -256,7 +257,7 @@ function bp_media_allowed_document_type() {
 		'bb_doc_7'  => array(
 			'extension'   => '.apk',
 			'mime_type'   => 'application/java-archive',
-			'description' => __( 'Android Package', 'buddyboss' ),
+			'description' => __( 'Android Package', 'buddyboss-platform' ),
 			'is_default'  => 1,
 			'is_active'   => 1,
 			'icon'        => '',
@@ -264,7 +265,7 @@ function bp_media_allowed_document_type() {
 		'bb_doc_8'  => array(
 			'extension'   => '.css',
 			'mime_type'   => 'text/css',
-			'description' => __( 'CSS', 'buddyboss' ),
+			'description' => __( 'CSS', 'buddyboss-platform' ),
 			'is_default'  => 1,
 			'is_active'   => 1,
 			'icon'        => '',
@@ -272,7 +273,7 @@ function bp_media_allowed_document_type() {
 		'bb_doc_9'  => array(
 			'extension'   => '.css',
 			'mime_type'   => 'text/plain',
-			'description' => __( 'CSS', 'buddyboss' ),
+			'description' => __( 'CSS', 'buddyboss-platform' ),
 			'is_default'  => 1,
 			'is_active'   => 1,
 			'icon'        => '',
@@ -280,7 +281,7 @@ function bp_media_allowed_document_type() {
 		'bb_doc_10' => array(
 			'extension'   => '.csv',
 			'mime_type'   => 'text/csv',
-			'description' => __( 'CSV', 'buddyboss' ),
+			'description' => __( 'CSV', 'buddyboss-platform' ),
 			'is_default'  => 1,
 			'is_active'   => 1,
 			'icon'        => '',
@@ -288,7 +289,7 @@ function bp_media_allowed_document_type() {
 		'bb_doc_11' => array(
 			'extension'   => '.doc',
 			'mime_type'   => 'application/msword',
-			'description' => __( 'Word Document', 'buddyboss' ),
+			'description' => __( 'Word Document', 'buddyboss-platform' ),
 			'is_default'  => 1,
 			'is_active'   => 1,
 			'icon'        => '',
@@ -296,7 +297,7 @@ function bp_media_allowed_document_type() {
 		'bb_doc_12' => array(
 			'extension'   => '.docm',
 			'mime_type'   => 'application/vnd.ms-word.document.macroenabled.12',
-			'description' => __( 'Word Document (Macro Enabled)', 'buddyboss' ),
+			'description' => __( 'Word Document (Macro Enabled)', 'buddyboss-platform' ),
 			'is_default'  => 1,
 			'is_active'   => 1,
 			'icon'        => '',
@@ -304,7 +305,7 @@ function bp_media_allowed_document_type() {
 		'bb_doc_13' => array(
 			'extension'   => '.docm',
 			'mime_type'   => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-			'description' => __( 'Word Document (Macro Enabled)', 'buddyboss' ),
+			'description' => __( 'Word Document (Macro Enabled)', 'buddyboss-platform' ),
 			'is_default'  => 1,
 			'is_active'   => 1,
 			'icon'        => '',
@@ -312,7 +313,7 @@ function bp_media_allowed_document_type() {
 		'bb_doc_14' => array(
 			'extension'   => '.docx',
 			'mime_type'   => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-			'description' => __( 'Word Document', 'buddyboss' ),
+			'description' => __( 'Word Document', 'buddyboss-platform' ),
 			'is_default'  => 1,
 			'is_active'   => 1,
 			'icon'        => '',
@@ -320,7 +321,7 @@ function bp_media_allowed_document_type() {
 		'bb_doc_15' => array(
 			'extension'   => '.dotm',
 			'mime_type'   => 'application/vnd.ms-word.template.macroenabled.12',
-			'description' => __( 'Word Template (Macro Enabled)', 'buddyboss' ),
+			'description' => __( 'Word Template (Macro Enabled)', 'buddyboss-platform' ),
 			'is_default'  => 1,
 			'is_active'   => 1,
 			'icon'        => '',
@@ -328,7 +329,7 @@ function bp_media_allowed_document_type() {
 		'bb_doc_16' => array(
 			'extension'   => '.dotx',
 			'mime_type'   => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-			'description' => __( 'Word Template', 'buddyboss' ),
+			'description' => __( 'Word Template', 'buddyboss-platform' ),
 			'is_default'  => 1,
 			'is_active'   => 1,
 			'icon'        => '',
@@ -336,7 +337,7 @@ function bp_media_allowed_document_type() {
 		'bb_doc_17' => array(
 			'extension'   => '.eps',
 			'mime_type'   => 'application/postscript',
-			'description' => __( 'Encapsulated Postscript', 'buddyboss' ),
+			'description' => __( 'Encapsulated Postscript', 'buddyboss-platform' ),
 			'is_default'  => 1,
 			'is_active'   => 1,
 			'icon'        => '',
@@ -344,7 +345,7 @@ function bp_media_allowed_document_type() {
 		'bb_doc_18' => array(
 			'extension'   => '.eps',
 			'mime_type'   => 'image/x-eps',
-			'description' => __( 'Encapsulated Postscript', 'buddyboss' ),
+			'description' => __( 'Encapsulated Postscript', 'buddyboss-platform' ),
 			'is_default'  => 1,
 			'is_active'   => 1,
 			'icon'        => '',
@@ -352,7 +353,7 @@ function bp_media_allowed_document_type() {
 		'bb_doc_19' => array(
 			'extension'   => '.gif',
 			'mime_type'   => 'image/gif',
-			'description' => __( 'Graphics Interchange Format', 'buddyboss' ),
+			'description' => __( 'Graphics Interchange Format', 'buddyboss-platform' ),
 			'is_default'  => 1,
 			'is_active'   => 1,
 			'icon'        => '',
@@ -360,7 +361,7 @@ function bp_media_allowed_document_type() {
 		'bb_doc_20' => array(
 			'extension'   => '.gz',
 			'mime_type'   => 'application/x-gzip',
-			'description' => __( 'Gzip Archive', 'buddyboss' ),
+			'description' => __( 'Gzip Archive', 'buddyboss-platform' ),
 			'is_default'  => 1,
 			'is_active'   => 1,
 			'icon'        => '',
@@ -368,7 +369,7 @@ function bp_media_allowed_document_type() {
 		'bb_doc_21' => array(
 			'extension'   => '.gzip',
 			'mime_type'   => 'application/gzip',
-			'description' => __( 'Gzip Archive', 'buddyboss' ),
+			'description' => __( 'Gzip Archive', 'buddyboss-platform' ),
 			'is_default'  => 1,
 			'is_active'   => 1,
 			'icon'        => '',
@@ -376,7 +377,7 @@ function bp_media_allowed_document_type() {
 		'bb_doc_22' => array(
 			'extension'   => '.htm',
 			'mime_type'   => 'text/html',
-			'description' => __( 'HTML', 'buddyboss' ),
+			'description' => __( 'HTML', 'buddyboss-platform' ),
 			'is_default'  => 1,
 			'is_active'   => 1,
 			'icon'        => '',
@@ -384,7 +385,7 @@ function bp_media_allowed_document_type() {
 		'bb_doc_23' => array(
 			'extension'   => '.html',
 			'mime_type'   => 'text/html',
-			'description' => __( 'HTML', 'buddyboss' ),
+			'description' => __( 'HTML', 'buddyboss-platform' ),
 			'is_default'  => 1,
 			'is_active'   => 1,
 			'icon'        => '',
@@ -392,7 +393,7 @@ function bp_media_allowed_document_type() {
 		'bb_doc_24' => array(
 			'extension'   => '.ico',
 			'mime_type'   => 'image/x-icon',
-			'description' => __( 'ICO', 'buddyboss' ),
+			'description' => __( 'ICO', 'buddyboss-platform' ),
 			'is_default'  => 1,
 			'is_active'   => 1,
 			'icon'        => '',
@@ -400,7 +401,7 @@ function bp_media_allowed_document_type() {
 		'bb_doc_25' => array(
 			'extension'   => '.ics',
 			'mime_type'   => 'text/calendar',
-			'description' => __( 'iCalendar', 'buddyboss' ),
+			'description' => __( 'iCalendar', 'buddyboss-platform' ),
 			'is_default'  => 1,
 			'is_active'   => 1,
 			'icon'        => '',
@@ -408,7 +409,7 @@ function bp_media_allowed_document_type() {
 		'bb_doc_26' => array(
 			'extension'   => '.ipa',
 			'mime_type'   => 'application/octet-stream',
-			'description' => __( 'iOS Package', 'buddyboss' ),
+			'description' => __( 'iOS Package', 'buddyboss-platform' ),
 			'is_default'  => 1,
 			'is_active'   => 1,
 			'icon'        => '',
@@ -416,7 +417,7 @@ function bp_media_allowed_document_type() {
 		'bb_doc_27' => array(
 			'extension'   => '.jar',
 			'mime_type'   => 'application/java-archive',
-			'description' => __( 'JAR Archive', 'buddyboss' ),
+			'description' => __( 'JAR Archive', 'buddyboss-platform' ),
 			'is_default'  => 1,
 			'is_active'   => 1,
 			'icon'        => '',
@@ -424,7 +425,7 @@ function bp_media_allowed_document_type() {
 		'bb_doc_28' => array(
 			'extension'   => '.jpeg',
 			'mime_type'   => 'image/jpeg',
-			'description' => __( 'Image File', 'buddyboss' ),
+			'description' => __( 'Image File', 'buddyboss-platform' ),
 			'is_default'  => 1,
 			'is_active'   => 1,
 			'icon'        => '',
@@ -432,7 +433,7 @@ function bp_media_allowed_document_type() {
 		'bb_doc_29' => array(
 			'extension'   => '.jpg',
 			'mime_type'   => 'image/jpeg',
-			'description' => __( 'Image File', 'buddyboss' ),
+			'description' => __( 'Image File', 'buddyboss-platform' ),
 			'is_default'  => 1,
 			'is_active'   => 1,
 			'icon'        => '',
@@ -440,7 +441,7 @@ function bp_media_allowed_document_type() {
 		'bb_doc_30' => array(
 			'extension'   => '.js',
 			'mime_type'   => 'application/javascript',
-			'description' => __( 'JavaScript', 'buddyboss' ),
+			'description' => __( 'JavaScript', 'buddyboss-platform' ),
 			'is_default'  => 1,
 			'is_active'   => 1,
 			'icon'        => '',
@@ -448,7 +449,7 @@ function bp_media_allowed_document_type() {
 		'bb_doc_31' => array(
 			'extension'   => '.js',
 			'mime_type'   => 'text/plain',
-			'description' => __( 'JavaScript', 'buddyboss' ),
+			'description' => __( 'JavaScript', 'buddyboss-platform' ),
 			'is_default'  => 1,
 			'is_active'   => 1,
 			'icon'        => '',
@@ -456,7 +457,7 @@ function bp_media_allowed_document_type() {
 		'bb_doc_32' => array(
 			'extension'   => '.mp3',
 			'mime_type'   => 'audio/mpeg',
-			'description' => __( 'MP3', 'buddyboss' ),
+			'description' => __( 'MP3', 'buddyboss-platform' ),
 			'is_default'  => 1,
 			'is_active'   => 1,
 			'icon'        => '',
@@ -464,7 +465,7 @@ function bp_media_allowed_document_type() {
 		'bb_doc_33' => array(
 			'extension'   => '.ods',
 			'mime_type'   => 'application/vnd.oasis.opendocument.spreadsheet',
-			'description' => __( 'OpenDocument Spreadsheet', 'buddyboss' ),
+			'description' => __( 'OpenDocument Spreadsheet', 'buddyboss-platform' ),
 			'is_default'  => 1,
 			'is_active'   => 1,
 			'icon'        => '',
@@ -472,7 +473,7 @@ function bp_media_allowed_document_type() {
 		'bb_doc_34' => array(
 			'extension'   => '.odt',
 			'mime_type'   => 'application/vnd.oasis.opendocument.text',
-			'description' => __( 'OpenDocument Text', 'buddyboss' ),
+			'description' => __( 'OpenDocument Text', 'buddyboss-platform' ),
 			'is_default'  => 1,
 			'is_active'   => 1,
 			'icon'        => '',
@@ -480,7 +481,7 @@ function bp_media_allowed_document_type() {
 		'bb_doc_35' => array(
 			'extension'   => '.pdf',
 			'mime_type'   => 'application/pdf',
-			'description' => __( 'PDF', 'buddyboss' ),
+			'description' => __( 'PDF', 'buddyboss-platform' ),
 			'is_default'  => 1,
 			'is_active'   => 1,
 			'icon'        => '',
@@ -488,7 +489,7 @@ function bp_media_allowed_document_type() {
 		'bb_doc_36' => array(
 			'extension'   => '.png',
 			'mime_type'   => 'image/png',
-			'description' => __( 'Image File', 'buddyboss' ),
+			'description' => __( 'Image File', 'buddyboss-platform' ),
 			'is_default'  => 1,
 			'is_active'   => 1,
 			'icon'        => '',
@@ -496,7 +497,7 @@ function bp_media_allowed_document_type() {
 		'bb_doc_37' => array(
 			'extension'   => '.potm',
 			'mime_type'   => 'application/vnd.ms-powerpoint.template.macroenabled.12',
-			'description' => __( 'PowerPoint Template (Macro Enabled)', 'buddyboss' ),
+			'description' => __( 'PowerPoint Template (Macro Enabled)', 'buddyboss-platform' ),
 			'is_default'  => 1,
 			'is_active'   => 1,
 			'icon'        => '',
@@ -504,7 +505,7 @@ function bp_media_allowed_document_type() {
 		'bb_doc_38' => array(
 			'extension'   => '.potx',
 			'mime_type'   => 'application/vnd.openxmlformats-officedocument.presentationml.template',
-			'description' => __( 'PowerPoint Template', 'buddyboss' ),
+			'description' => __( 'PowerPoint Template', 'buddyboss-platform' ),
 			'is_default'  => 1,
 			'is_active'   => 1,
 			'icon'        => '',
@@ -512,7 +513,7 @@ function bp_media_allowed_document_type() {
 		'bb_doc_39' => array(
 			'extension'   => '.potx',
 			'mime_type'   => 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
-			'description' => __( 'PowerPoint Template', 'buddyboss' ),
+			'description' => __( 'PowerPoint Template', 'buddyboss-platform' ),
 			'is_default'  => 1,
 			'is_active'   => 1,
 			'icon'        => '',
@@ -520,7 +521,7 @@ function bp_media_allowed_document_type() {
 		'bb_doc_40' => array(
 			'extension'   => '.pps',
 			'mime_type'   => 'application/vnd.ms-powerpoint',
-			'description' => __( 'PowerPoint Template', 'buddyboss' ),
+			'description' => __( 'PowerPoint Template', 'buddyboss-platform' ),
 			'is_default'  => 1,
 			'is_active'   => 1,
 			'icon'        => '',
@@ -528,7 +529,7 @@ function bp_media_allowed_document_type() {
 		'bb_doc_41' => array(
 			'extension'   => '.ppsx',
 			'mime_type'   => 'application/vnd.openxmlformats-officedocument.presentationml.slideshow',
-			'description' => __( 'PowerPoint Slideshow', 'buddyboss' ),
+			'description' => __( 'PowerPoint Slideshow', 'buddyboss-platform' ),
 			'is_default'  => 1,
 			'is_active'   => 1,
 			'icon'        => '',
@@ -536,7 +537,7 @@ function bp_media_allowed_document_type() {
 		'bb_doc_42' => array(
 			'extension'   => '.ppsx',
 			'mime_type'   => 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
-			'description' => __( 'PowerPoint Slideshow', 'buddyboss' ),
+			'description' => __( 'PowerPoint Slideshow', 'buddyboss-platform' ),
 			'is_default'  => 1,
 			'is_active'   => 1,
 			'icon'        => '',
@@ -544,7 +545,7 @@ function bp_media_allowed_document_type() {
 		'bb_doc_43' => array(
 			'extension'   => '.ppt',
 			'mime_type'   => 'application/vnd.ms-powerpoint',
-			'description' => __( 'PowerPoint Presentation', 'buddyboss' ),
+			'description' => __( 'PowerPoint Presentation', 'buddyboss-platform' ),
 			'is_default'  => 1,
 			'is_active'   => 1,
 			'icon'        => '',
@@ -552,7 +553,7 @@ function bp_media_allowed_document_type() {
 		'bb_doc_44' => array(
 			'extension'   => '.pptm',
 			'mime_type'   => 'application/vnd.ms-powerpoint.presentation.macroenabled.12',
-			'description' => __( 'PowerPoint Presentation (Macro Enabled)', 'buddyboss' ),
+			'description' => __( 'PowerPoint Presentation (Macro Enabled)', 'buddyboss-platform' ),
 			'is_default'  => 1,
 			'is_active'   => 1,
 			'icon'        => '',
@@ -560,7 +561,7 @@ function bp_media_allowed_document_type() {
 		'bb_doc_45' => array(
 			'extension'   => '.pptm',
 			'mime_type'   => 'application/octet-stream',
-			'description' => __( 'PowerPoint Presentation (Macro Enabled)', 'buddyboss' ),
+			'description' => __( 'PowerPoint Presentation (Macro Enabled)', 'buddyboss-platform' ),
 			'is_default'  => 1,
 			'is_active'   => 1,
 			'icon'        => '',
@@ -568,7 +569,7 @@ function bp_media_allowed_document_type() {
 		'bb_doc_46' => array(
 			'extension'   => '.pptm',
 			'mime_type'   => 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
-			'description' => __( 'PowerPoint Presentation (Macro Enabled)', 'buddyboss' ),
+			'description' => __( 'PowerPoint Presentation (Macro Enabled)', 'buddyboss-platform' ),
 			'is_default'  => 1,
 			'is_active'   => 1,
 			'icon'        => '',
@@ -576,7 +577,7 @@ function bp_media_allowed_document_type() {
 		'bb_doc_47' => array(
 			'extension'   => '.pptx',
 			'mime_type'   => 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
-			'description' => __( 'PowerPoint Presentation', 'buddyboss' ),
+			'description' => __( 'PowerPoint Presentation', 'buddyboss-platform' ),
 			'is_default'  => 1,
 			'is_active'   => 1,
 			'icon'        => '',
@@ -584,7 +585,7 @@ function bp_media_allowed_document_type() {
 		'bb_doc_48' => array(
 			'extension'   => '.psd',
 			'mime_type'   => 'image/vnd.adobe.photoshop',
-			'description' => __( 'Photoshop Document', 'buddyboss' ),
+			'description' => __( 'Photoshop Document', 'buddyboss-platform' ),
 			'is_default'  => 1,
 			'is_active'   => 1,
 			'icon'        => '',
@@ -592,7 +593,7 @@ function bp_media_allowed_document_type() {
 		'bb_doc_49' => array(
 			'extension'   => '.rar',
 			'mime_type'   => 'application/x-rar-compressed',
-			'description' => __( 'RAR Archive', 'buddyboss' ),
+			'description' => __( 'RAR Archive', 'buddyboss-platform' ),
 			'is_default'  => 1,
 			'is_active'   => 1,
 			'icon'        => '',
@@ -600,7 +601,7 @@ function bp_media_allowed_document_type() {
 		'bb_doc_50' => array(
 			'extension'   => '.rar',
 			'mime_type'   => 'application/x-rar',
-			'description' => __( 'RAR Archive', 'buddyboss' ),
+			'description' => __( 'RAR Archive', 'buddyboss-platform' ),
 			'is_default'  => 1,
 			'is_active'   => 1,
 			'icon'        => '',
@@ -608,7 +609,7 @@ function bp_media_allowed_document_type() {
 		'bb_doc_51' => array(
 			'extension'   => '.rss',
 			'mime_type'   => 'application/rss+xml',
-			'description' => __( 'RSS', 'buddyboss' ),
+			'description' => __( 'RSS', 'buddyboss-platform' ),
 			'is_default'  => 1,
 			'is_active'   => 1,
 			'icon'        => '',
@@ -616,7 +617,7 @@ function bp_media_allowed_document_type() {
 		'bb_doc_52' => array(
 			'extension'   => '.rtf',
 			'mime_type'   => 'application/rtf',
-			'description' => __( 'Rich Text Format', 'buddyboss' ),
+			'description' => __( 'Rich Text Format', 'buddyboss-platform' ),
 			'is_default'  => 1,
 			'is_active'   => 1,
 			'icon'        => '',
@@ -624,7 +625,7 @@ function bp_media_allowed_document_type() {
 		'bb_doc_53' => array(
 			'extension'   => '.sketch',
 			'mime_type'   => 'application/x-sqlite3',
-			'description' => __( 'Sketch Document', 'buddyboss' ),
+			'description' => __( 'Sketch Document', 'buddyboss-platform' ),
 			'is_default'  => 1,
 			'is_active'   => 1,
 			'icon'        => '',
@@ -632,7 +633,7 @@ function bp_media_allowed_document_type() {
 		'bb_doc_54' => array(
 			'extension'   => '.svg',
 			'mime_type'   => 'image/svg+xml',
-			'description' => __( 'SVG', 'buddyboss' ),
+			'description' => __( 'SVG', 'buddyboss-platform' ),
 			'is_default'  => 1,
 			'is_active'   => 1,
 			'icon'        => '',
@@ -640,7 +641,7 @@ function bp_media_allowed_document_type() {
 		'bb_doc_55' => array(
 			'extension'   => '.tar',
 			'mime_type'   => 'application/x-tar',
-			'description' => __( 'TAR Archive', 'buddyboss' ),
+			'description' => __( 'TAR Archive', 'buddyboss-platform' ),
 			'is_default'  => 1,
 			'is_active'   => 1,
 			'icon'        => '',
@@ -648,7 +649,7 @@ function bp_media_allowed_document_type() {
 		'bb_doc_56' => array(
 			'extension'   => '.tiff',
 			'mime_type'   => 'image/tiff',
-			'description' => __( 'Tagged Image File', 'buddyboss' ),
+			'description' => __( 'Tagged Image File', 'buddyboss-platform' ),
 			'is_default'  => 1,
 			'is_active'   => 1,
 			'icon'        => '',
@@ -656,7 +657,7 @@ function bp_media_allowed_document_type() {
 		'bb_doc_57' => array(
 			'extension'   => '.txt',
 			'mime_type'   => 'text/plain',
-			'description' => __( 'Text File', 'buddyboss' ),
+			'description' => __( 'Text File', 'buddyboss-platform' ),
 			'is_default'  => 1,
 			'is_active'   => 1,
 			'icon'        => '',
@@ -664,7 +665,7 @@ function bp_media_allowed_document_type() {
 		'bb_doc_58' => array(
 			'extension'   => '.vcf',
 			'mime_type'   => 'text/x-vcard',
-			'description' => __( 'vCard', 'buddyboss' ),
+			'description' => __( 'vCard', 'buddyboss-platform' ),
 			'is_default'  => 1,
 			'is_active'   => 1,
 			'icon'        => '',
@@ -672,7 +673,7 @@ function bp_media_allowed_document_type() {
 		'bb_doc_59' => array(
 			'extension'   => '.vcf',
 			'mime_type'   => 'text/vcard',
-			'description' => __( 'vCard', 'buddyboss' ),
+			'description' => __( 'vCard', 'buddyboss-platform' ),
 			'is_default'  => 1,
 			'is_active'   => 1,
 			'icon'        => '',
@@ -680,7 +681,7 @@ function bp_media_allowed_document_type() {
 		'bb_doc_60' => array(
 			'extension'   => '.wav',
 			'mime_type'   => 'audio/x-wav',
-			'description' => __( 'Waveform Audio', 'buddyboss' ),
+			'description' => __( 'Waveform Audio', 'buddyboss-platform' ),
 			'is_default'  => 1,
 			'is_active'   => 1,
 			'icon'        => '',
@@ -688,7 +689,7 @@ function bp_media_allowed_document_type() {
 		'bb_doc_61' => array(
 			'extension'   => '.xlam',
 			'mime_type'   => 'application/vnd.ms-excel.sheet.binary.macroenabled.12',
-			'description' => __( 'Excel Spreadsheet (Binary, Macro Enabled)', 'buddyboss' ),
+			'description' => __( 'Excel Spreadsheet (Binary, Macro Enabled)', 'buddyboss-platform' ),
 			'is_default'  => 1,
 			'is_active'   => 1,
 			'icon'        => '',
@@ -696,7 +697,7 @@ function bp_media_allowed_document_type() {
 		'bb_doc_62' => array(
 			'extension'   => '.xls',
 			'mime_type'   => 'application/vnd.ms-excel',
-			'description' => __( 'Excel Spreadsheet', 'buddyboss' ),
+			'description' => __( 'Excel Spreadsheet', 'buddyboss-platform' ),
 			'is_default'  => 1,
 			'is_active'   => 1,
 			'icon'        => '',
@@ -704,7 +705,7 @@ function bp_media_allowed_document_type() {
 		'bb_doc_63' => array(
 			'extension'   => '.xlsb',
 			'mime_type'   => 'application/vnd.ms-excel.sheet.binary.macroenabled.12',
-			'description' => __( 'Excel Spreadsheet (Binary, Macro Enabled)', 'buddyboss' ),
+			'description' => __( 'Excel Spreadsheet (Binary, Macro Enabled)', 'buddyboss-platform' ),
 			'is_default'  => 1,
 			'is_active'   => 1,
 			'icon'        => '',
@@ -712,7 +713,7 @@ function bp_media_allowed_document_type() {
 		'bb_doc_64' => array(
 			'extension'   => '.xlsb',
 			'mime_type'   => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-			'description' => __( 'Excel Spreadsheet (Binary, Macro Enabled)', 'buddyboss' ),
+			'description' => __( 'Excel Spreadsheet (Binary, Macro Enabled)', 'buddyboss-platform' ),
 			'is_default'  => 1,
 			'is_active'   => 1,
 			'icon'        => '',
@@ -720,7 +721,7 @@ function bp_media_allowed_document_type() {
 		'bb_doc_65' => array(
 			'extension'   => '.xlsb',
 			'mime_type'   => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-			'description' => __( 'Excel Spreadsheet (Binary, Macro Enabled)', 'buddyboss' ),
+			'description' => __( 'Excel Spreadsheet (Binary, Macro Enabled)', 'buddyboss-platform' ),
 			'is_default'  => 1,
 			'is_active'   => 1,
 			'icon'        => '',
@@ -728,7 +729,7 @@ function bp_media_allowed_document_type() {
 		'bb_doc_66' => array(
 			'extension'   => '.xlsm',
 			'mime_type'   => 'application/vnd.ms-excel.sheet.macroenabled.12',
-			'description' => __( 'Excel Spreadsheet (Macro Enabled)', 'buddyboss' ),
+			'description' => __( 'Excel Spreadsheet (Macro Enabled)', 'buddyboss-platform' ),
 			'is_default'  => 1,
 			'is_active'   => 1,
 			'icon'        => '',
@@ -736,7 +737,7 @@ function bp_media_allowed_document_type() {
 		'bb_doc_67' => array(
 			'extension'   => '.xlsm',
 			'mime_type'   => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-			'description' => __( 'Excel Spreadsheet (Macro Enabled)', 'buddyboss' ),
+			'description' => __( 'Excel Spreadsheet (Macro Enabled)', 'buddyboss-platform' ),
 			'is_default'  => 1,
 			'is_active'   => 1,
 			'icon'        => '',
@@ -744,7 +745,7 @@ function bp_media_allowed_document_type() {
 		'bb_doc_68' => array(
 			'extension'   => '.xlsx',
 			'mime_type'   => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-			'description' => __( 'Excel Spreadsheet', 'buddyboss' ),
+			'description' => __( 'Excel Spreadsheet', 'buddyboss-platform' ),
 			'is_default'  => 1,
 			'is_active'   => 1,
 			'icon'        => '',
@@ -752,7 +753,7 @@ function bp_media_allowed_document_type() {
 		'bb_doc_69' => array(
 			'extension'   => '.xltm',
 			'mime_type'   => 'application/vnd.ms-excel.template.macroenabled.12',
-			'description' => __( 'Excel Template (Macro Enabled)', 'buddyboss' ),
+			'description' => __( 'Excel Template (Macro Enabled)', 'buddyboss-platform' ),
 			'is_default'  => 1,
 			'is_active'   => 1,
 			'icon'        => '',
@@ -760,7 +761,7 @@ function bp_media_allowed_document_type() {
 		'bb_doc_70' => array(
 			'extension'   => '.xltx',
 			'mime_type'   => 'application/vnd.openxmlformats-officedocument.spreadsheetml.template',
-			'description' => __( 'Excel Template', 'buddyboss' ),
+			'description' => __( 'Excel Template', 'buddyboss-platform' ),
 			'is_default'  => 1,
 			'is_active'   => 1,
 			'icon'        => '',
@@ -768,7 +769,7 @@ function bp_media_allowed_document_type() {
 		'bb_doc_71' => array(
 			'extension'   => '.xltx',
 			'mime_type'   => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-			'description' => __( 'Excel Template', 'buddyboss' ),
+			'description' => __( 'Excel Template', 'buddyboss-platform' ),
 			'is_default'  => 1,
 			'is_active'   => 1,
 			'icon'        => '',
@@ -776,7 +777,7 @@ function bp_media_allowed_document_type() {
 		'bb_doc_72' => array(
 			'extension'   => '.xml',
 			'mime_type'   => 'application/rss+xml',
-			'description' => __( 'XML', 'buddyboss' ),
+			'description' => __( 'XML', 'buddyboss-platform' ),
 			'is_default'  => 1,
 			'is_active'   => 1,
 			'icon'        => '',
@@ -784,7 +785,7 @@ function bp_media_allowed_document_type() {
 		'bb_doc_73' => array(
 			'extension'   => '.xml',
 			'mime_type'   => 'text/xml',
-			'description' => __( 'XML', 'buddyboss' ),
+			'description' => __( 'XML', 'buddyboss-platform' ),
 			'is_default'  => 1,
 			'is_active'   => 1,
 			'icon'        => '',
@@ -792,7 +793,7 @@ function bp_media_allowed_document_type() {
 		'bb_doc_74' => array(
 			'extension'   => '.yaml',
 			'mime_type'   => 'text/yaml',
-			'description' => __( 'YAML', 'buddyboss' ),
+			'description' => __( 'YAML', 'buddyboss-platform' ),
 			'is_default'  => 1,
 			'is_active'   => 1,
 			'icon'        => '',
@@ -800,7 +801,7 @@ function bp_media_allowed_document_type() {
 		'bb_doc_75' => array(
 			'extension'   => '.zip',
 			'mime_type'   => 'application/zip',
-			'description' => __( 'Zip', 'buddyboss' ),
+			'description' => __( 'Zip', 'buddyboss-platform' ),
 			'is_default'  => 1,
 			'is_active'   => 1,
 			'icon'        => '',
@@ -808,7 +809,7 @@ function bp_media_allowed_document_type() {
 		'bb_doc_76' => array(
 			'extension'   => '.7z',
 			'mime_type'   => 'application/x-7z-compressed',
-			'description' => __( '7z Archive', 'buddyboss' ),
+			'description' => __( '7z Archive', 'buddyboss-platform' ),
 			'is_default'  => 1,
 			'is_active'   => 1,
 			'icon'        => '',
@@ -826,8 +827,8 @@ function bp_document_download_file( $attachment_id, $type = 'document' ) {
 	$attachment_id = absint( $attachment_id );
 	if ( $attachment_id <= 0 ) {
 		wp_die(
-			esc_html__( 'Invalid attachment ID', 'buddyboss' ),
-			esc_html__( 'Security Error', 'buddyboss' ),
+			esc_html__( 'Invalid attachment ID', 'buddyboss-platform' ),
+			esc_html__( 'Security Error', 'buddyboss-platform' ),
 			array( 'response' => 400 )
 		);
 		return;
@@ -836,8 +837,8 @@ function bp_document_download_file( $attachment_id, $type = 'document' ) {
 	$type = sanitize_text_field( $type );
 	if ( ! in_array( $type, array( 'document', 'folder' ), true ) ) {
 		wp_die(
-			esc_html__( 'Invalid document type', 'buddyboss' ),
-			esc_html__( 'Security Error', 'buddyboss' ),
+			esc_html__( 'Invalid document type', 'buddyboss-platform' ),
+			esc_html__( 'Security Error', 'buddyboss-platform' ),
 			array( 'response' => 400 )
 		);
 		return;
@@ -900,8 +901,8 @@ function bp_document_download_file( $attachment_id, $type = 'document' ) {
 		// Security: Validate folder exists and is valid.
 		if ( ! $folder || ! isset( $folder->id ) || $folder->id <= 0 ) {
 			wp_die(
-				esc_html__( 'Invalid folder', 'buddyboss' ),
-				esc_html__( 'Security Error', 'buddyboss' ),
+				esc_html__( 'Invalid folder', 'buddyboss-platform' ),
+				esc_html__( 'Security Error', 'buddyboss-platform' ),
 				array( 'response' => 404 )
 			);
 			return;
@@ -910,8 +911,8 @@ function bp_document_download_file( $attachment_id, $type = 'document' ) {
 		// Security: Prevent downloading all folders (ID 0).
 		if ( 0 === $folder->id || 0 === $attachment_id ) {
 			wp_die(
-				esc_html__( 'Access denied', 'buddyboss' ),
-				esc_html__( 'Security Error', 'buddyboss' ),
+				esc_html__( 'Access denied', 'buddyboss-platform' ),
+				esc_html__( 'Security Error', 'buddyboss-platform' ),
 				array( 'response' => 403 )
 			);
 			return;
@@ -931,7 +932,7 @@ function bp_document_download_file( $attachment_id, $type = 'document' ) {
 			// Create temp folder.
 			wp_mkdir_p( $upload_dir );
 			// Security: Use safer permissions.
-			chmod( $upload_dir, 0755 );
+			chmod( $upload_dir, 0755 ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_chmod -- explicit permission set on a freshly-created directory.
 
 			// Create given main parent folder with sanitized name.
 			$safe_folder_title = sanitize_file_name( $folder->title );
@@ -965,7 +966,7 @@ function bp_document_download_file( $attachment_id, $type = 'document' ) {
 			) {
 				$options = \BuddyBoss\Library\Composer::instance()->zipstream_instance()->archive();
 				$options->setSendHttpHeaders( false ); // Disable sending HTTP headers.
-				$options->setOutputStream( fopen( $zip_name, 'w' ) ); // Specify the output file path.
+				$options->setOutputStream( fopen( $zip_name, 'w' ) ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fopen -- direct stream handle required by ZipStream output stream; WP_Filesystem offers no streaming equivalent.
 
 				// Create a new ZipFile instance.
 				$zip = \BuddyBoss\Library\Composer::instance()->zipstream_instance()->zipstream( $file_name, $options );
@@ -1044,12 +1045,12 @@ function bb_document_force_download( $file_path, $file_name ) {
 	header( 'Content-Disposition: attachment; filename="' . $file_name . '"' );
 	header( 'Content-Length: ' . filesize( $file_path ) );
 
-	$handle = fopen( $file_path, 'rb' );
+	$handle = fopen( $file_path, 'rb' ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fopen -- direct stream I/O for chunked binary document download; WP_Filesystem offers no streaming equivalent.
 	while ( ! feof( $handle ) ) {
-		echo fread( $handle, $chunk_size );
+		echo fread( $handle, $chunk_size ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped,WordPress.WP.AlternativeFunctions.file_system_operations_fread -- raw binary file stream for octet-stream download; escaping would corrupt the file; WP_Filesystem offers no streaming equivalent.
 		flush();
 	}
-	fclose( $handle );
+	fclose( $handle ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose -- closing the direct binary stream opened above.
 }
 
 function bp_document_get_child_folders( $folder_id = 0, $parent_folder = '' ) {
@@ -1067,7 +1068,7 @@ function bp_document_get_child_folders( $folder_id = 0, $parent_folder = '' ) {
 	$query_where            = "find_in_set(parent, @pv) and length(@pv := concat(@pv, ',', id))";
 	$query_from             = $wpdb->prepare( "( select * from {$document_folder_table} order by parent, id) folder_sorted, (select @pv := %d) initialisation", $folder_id );
 	$documents_folder_query = "select * from $query_from where $query_where";
-	$data                   = $wpdb->get_results( $documents_folder_query, ARRAY_A ); // db call ok; no-cache ok;
+	$data                   = $wpdb->get_results( $documents_folder_query, ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $query_from is prepared above (%d for $folder_id, internal table name); $query_where is a hardcoded literal.
 
 	// Build array of item references.
 	foreach ( $data as $key => &$item ) {
@@ -1150,14 +1151,14 @@ function bp_document_get_preview_text_from_attachment( $attachment_id ) {
 
 	$data = get_transient( 'attachment_text' . $attachment_id );
 	if ( false === $data ) {
-		$file_open = fopen( get_attached_file( $attachment_id ), 'r' );
-		$file_data = fread( $file_open, 10000 );
+		$file_open = fopen( get_attached_file( $attachment_id ), 'r' ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fopen -- direct stream I/O to read a leading text chunk of a document file; WP_Filesystem offers no streaming equivalent.
+		$file_data = fread( $file_open, 10000 ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fread -- direct stream read of the document preview chunk; WP_Filesystem offers no streaming equivalent.
 		$more_text = false;
 		if ( strlen( $file_data ) >= 9999 ) {
 			$file_data .= '...';
 			$more_text  = true;
 		}
-		fclose( $file_open );
+		fclose( $file_open ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose -- closing the direct stream opened above.
 
 		$data              = array();
 		$data['text']      = $file_data;

@@ -8,6 +8,9 @@
  * @version 1.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 $options = array(
 	'theme' => 'base',
 );
@@ -19,9 +22,9 @@ $F = bp_profile_search_escaped_form_data( $form_id );
 
 <aside id="bp-profile-search-form-outer" class="bp-profile-search-widget widget">
 
-	<h2 class="bps-form-title widget-title"><?php echo $F->title; ?></h2>
+	<h2 class="bps-form-title widget-title"><?php echo esc_html( $F->title ); ?></h2>
 
-	<form action="<?php echo $F->action; ?>" method="<?php echo $F->method; ?>" id="<?php echo $F->unique_id; ?>" class="bps-form standard-form">
+	<form action="<?php echo esc_url( $F->action ); ?>" method="<?php echo esc_attr( $F->method ); ?>" id="<?php echo esc_attr( $F->unique_id ); ?>" class="bps-form standard-form">
 
 		<?php
 		if ( isset( $F->fields ) && ! empty( $F->fields ) && count( $F->fields ) > 1 ) {
@@ -37,17 +40,17 @@ $F = bp_profile_search_escaped_form_data( $form_id );
 
 				if ( $display == 'hidden' ) {
 					?>
-					<input type="hidden" name="<?php echo $name; ?>" value="<?php echo $value; ?>" />
+					<input type="hidden" name="<?php echo esc_attr( $name ); ?>" value="<?php echo $value; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- scalar $f->value is esc_attr() escaped at assignment in bp_profile_search_escaped_form_data(). ?>" />
 					<?php
 					continue;
 				}
 
 				if ( 'heading_contains' == $f->code ) {
 					?>
-					<div id="<?php echo $id; ?>_wrap" class="bp-field-wrap bp-heading-field-wrap bps-<?php echo $display; ?>">
-						<strong><?php echo $f->label; ?></strong><br>
+					<div id="<?php echo esc_attr( $id ); ?>_wrap" class="bp-field-wrap bp-heading-field-wrap bps-<?php echo esc_attr( $display ); ?>">
+						<strong><?php echo $f->label; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $f->label is esc_attr() escaped at assignment in bp_profile_search_escaped_form_data(). ?></strong><br>
 						<?php if ( ! empty( $f->description ) ) : ?>
-							<p class="bps-description"><?php echo stripslashes( $f->description ); ?></p>
+							<p class="bps-description"><?php echo stripslashes( $f->description ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $f->description is esc_attr() escaped at assignment in bp_profile_search_escaped_form_data(). ?></p>
 						<?php endif; ?>
 					</div>
 					<?php
@@ -55,64 +58,64 @@ $F = bp_profile_search_escaped_form_data( $form_id );
 				}
 				?>
 
-				<div id="<?php echo $id; ?>_wrap" class="bp-field-wrap bps-<?php echo $display; ?>">
-					<label for="<?php echo $id; ?>" class="bps-label"><?php echo $f->label; ?></label>
+				<div id="<?php echo esc_attr( $id ); ?>_wrap" class="bp-field-wrap bps-<?php echo esc_attr( $display ); ?>">
+					<label for="<?php echo esc_attr( $id ); ?>" class="bps-label"><?php echo $f->label; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $f->label is esc_attr() escaped at assignment in bp_profile_search_escaped_form_data(). ?></label>
 					<?php
 					switch ( $display ) {
 						case 'range':
 							?>
-							<input type="text" id="<?php echo $id; ?>" name="<?php echo $name . '[min]'; ?>" value="<?php echo $value['min']; ?>"/>
+							<input type="text" id="<?php echo esc_attr( $id ); ?>" name="<?php echo esc_attr( $name . '[min]' ); ?>" value="<?php echo esc_attr( $value['min'] ); ?>"/>
 							<span> - </span>
-							<input type="text" name="<?php echo $name . '[max]'; ?>" value="<?php echo $value['max']; ?>"/>
+							<input type="text" name="<?php echo esc_attr( $name . '[max]' ); ?>" value="<?php echo esc_attr( $value['max'] ); ?>"/>
 							<?php
 							break;
 
 						case 'date_range':
 							?>
-							<span class="date-from date-label"><?php _e( 'From', 'buddyboss' ); ?></span>
+							<span class="date-from date-label"><?php esc_html_e( 'From', 'buddyboss-platform' ); ?></span>
 							<div class="date-wrapper">
-								<select name="<?php echo $name . '[min][day]'; ?>">
+								<select name="<?php echo esc_attr( $name . '[min][day]' ); ?>">
 										<?php
 										printf(
 											'<option value="" %1$s>%2$s</option>',
 											selected( $value['min']['day'], 0, false ),
-											/* translators: no option picked in select box */ __( 'Select Day', 'buddyboss' )
+											/* translators: no option picked in select box */ esc_html__( 'Select Day', 'buddyboss-platform' )
 										);
 
 										for ( $i = 1; $i < 32; ++ $i ) {
 											$day = str_pad( $i, 2, '0', STR_PAD_LEFT );
 											printf(
 												'<option value="%1$s" %2$s>%3$s</option>',
-												$day,
+												esc_attr( $day ),
 												selected( $value['min']['day'], $day, false ),
-												$i
+												esc_html( $i )
 											);
 										}
 										?>
 								</select>
 
-								<select name="<?php echo $name . '[min][month]'; ?>">
+								<select name="<?php echo esc_attr( $name . '[min][month]' ); ?>">
 									<?php
 									$months = array(
-										__( 'January', 'buddyboss' ),
-										__( 'February', 'buddyboss' ),
-										__( 'March', 'buddyboss' ),
-										__( 'April', 'buddyboss' ),
-										__( 'May', 'buddyboss' ),
-										__( 'June', 'buddyboss' ),
-										__( 'July', 'buddyboss' ),
-										__( 'August', 'buddyboss' ),
-										__( 'September', 'buddyboss' ),
-										__( 'October', 'buddyboss' ),
-										__( 'November', 'buddyboss' ),
-										__( 'December', 'buddyboss' ),
+										__( 'January', 'buddyboss-platform' ),
+										__( 'February', 'buddyboss-platform' ),
+										__( 'March', 'buddyboss-platform' ),
+										__( 'April', 'buddyboss-platform' ),
+										__( 'May', 'buddyboss-platform' ),
+										__( 'June', 'buddyboss-platform' ),
+										__( 'July', 'buddyboss-platform' ),
+										__( 'August', 'buddyboss-platform' ),
+										__( 'September', 'buddyboss-platform' ),
+										__( 'October', 'buddyboss-platform' ),
+										__( 'November', 'buddyboss-platform' ),
+										__( 'December', 'buddyboss-platform' ),
 									);
 
 									printf(
 										'<option value="" %1$s>%2$s</option>',
 										selected( $value['min']['month'], 0, false ),
 										/* translators: no option picked in select box */
-										__( 'Select Month', 'buddyboss' )
+										esc_html__( 'Select Month', 'buddyboss-platform' )
 									);
 
 									for ( $i = 0; $i < 12; ++ $i ) {
@@ -120,21 +123,21 @@ $F = bp_profile_search_escaped_form_data( $form_id );
 										$month = str_pad( $month, 2, '0', STR_PAD_LEFT );
 										printf(
 											'<option value="%1$s" %2$s>%3$s</option>',
-											$month,
+											esc_attr( $month ),
 											selected( $value['min']['month'], $month, false ),
-											$months[ $i ]
+											esc_html( $months[ $i ] )
 										);
 									}
 									?>
 								</select>
 
-								<select name="<?php echo $name . '[min][year]'; ?>">
+								<select name="<?php echo esc_attr( $name . '[min][year]' ); ?>">
 									<?php
 									printf(
 										'<option value="" %1$s>%2$s</option>',
 										selected( $value['min']['year'], 0, false ),
 										/* translators: no option picked in select box */
-										__( 'Select Year', 'buddyboss' )
+										esc_html__( 'Select Year', 'buddyboss-platform' )
 									);
 
 										$date_range_type = bp_xprofile_get_meta( $f->id, 'field', 'range_type', true );
@@ -142,14 +145,14 @@ $F = bp_profile_search_escaped_form_data( $form_id );
 									if ( 'relative' === $date_range_type ) {
 										$range_relative_start = bp_xprofile_get_meta( $f->id, 'field', 'range_relative_start', true );
 										$range_relative_end   = bp_xprofile_get_meta( $f->id, 'field', 'range_relative_end', true );
-										$start                = date( 'Y' ) - abs( $range_relative_start );
-										$end                  = date( 'Y' ) + $range_relative_end;
+										$start                = gmdate( 'Y' ) - abs( $range_relative_start );
+										$end                  = gmdate( 'Y' ) + $range_relative_end;
 									} elseif ( 'absolute' === $date_range_type ) {
 										$start = bp_xprofile_get_meta( $f->id, 'field', 'range_absolute_start', true );
 										$end   = bp_xprofile_get_meta( $f->id, 'field', 'range_absolute_end', true );
 									} else {
-										$start = date( 'Y' ) - 50;// 50 years ago
-										$end   = date( 'Y' ) + 50;// 50 years in future
+										$start = gmdate( 'Y' ) - 50;// 50 years ago
+										$end   = gmdate( 'Y' ) + 50;// 50 years in future
 									}
 
 									for ( $i = $end; $i >= $start; $i -- ) {
@@ -164,35 +167,35 @@ $F = bp_profile_search_escaped_form_data( $form_id );
 								</select>
 							</div>
 
-							<span class="date-to date-label"><?php _e( 'To', 'buddyboss' ); ?></span>
+							<span class="date-to date-label"><?php esc_html_e( 'To', 'buddyboss-platform' ); ?></span>
 							<div class="date-wrapper">
-								<select name="<?php echo $name . '[max][day]'; ?>">
+								<select name="<?php echo esc_attr( $name . '[max][day]' ); ?>">
 										<?php
 										printf(
 											'<option value="" %1$s>%2$s</option>',
 											selected( $value['max']['day'], 0, false ),
-											/* translators: no option picked in select box */ __( 'Select Day', 'buddyboss' )
+											/* translators: no option picked in select box */ esc_html__( 'Select Day', 'buddyboss-platform' )
 										);
 
 										for ( $i = 1; $i < 32; ++ $i ) {
 											$day = str_pad( $i, 2, '0', STR_PAD_LEFT );
 											printf(
 												'<option value="%1$s" %2$s>%3$s</option>',
-												$day,
+												esc_attr( $day ),
 												selected( $value['max']['day'], $day, false ),
-												$i
+												esc_html( $i )
 											);
 										}
 										?>
 								</select>
 
-								<select name="<?php echo $name . '[max][month]'; ?>">
+								<select name="<?php echo esc_attr( $name . '[max][month]' ); ?>">
 									<?php
 									printf(
 										'<option value="" %1$s>%2$s</option>',
 										selected( $value['max']['month'], 0, false ),
 										/* translators: no option picked in select box */
-										__( 'Select Month', 'buddyboss' )
+										esc_html__( 'Select Month', 'buddyboss-platform' )
 									);
 
 									for ( $i = 0; $i < 12; ++ $i ) {
@@ -200,21 +203,21 @@ $F = bp_profile_search_escaped_form_data( $form_id );
 										$month = str_pad( $month, 2, '0', STR_PAD_LEFT );
 										printf(
 											'<option value="%1$s" %2$s>%3$s</option>',
-											$month,
+											esc_attr( $month ),
 											selected( $value['max']['month'], $month, false ),
-											$months[ $i ]
+											esc_html( $months[ $i ] )
 										);
 									}
 									?>
 								</select>
 
-								<select name="<?php echo $name . '[max][year]'; ?>">
+								<select name="<?php echo esc_attr( $name . '[max][year]' ); ?>">
 									<?php
 									printf(
 										'<option value="" %1$s>%2$s</option>',
 										selected( $value['max']['year'], 0, false ),
 										/* translators: no option picked in select box */
-										__( 'Select Year', 'buddyboss' )
+										esc_html__( 'Select Year', 'buddyboss-platform' )
 									);
 									for ( $i = $end; $i >= $start; $i -- ) {
 										printf(
@@ -232,61 +235,61 @@ $F = bp_profile_search_escaped_form_data( $form_id );
 
 						case 'range-select':
 							?>
-							<select id="<?php echo $id; ?>" name="<?php echo $name . '[min]'; ?>">
+							<select id="<?php echo esc_attr( $id ); ?>" name="<?php echo esc_attr( $name . '[min]' ); ?>">
 								<?php foreach ( $f->options as $option ) { ?>
-									<option <?php selected( $value['min'], $option ); ?> value="<?php echo $option; ?>"><?php echo $option; ?></option>
+									<option <?php selected( $value['min'], $option ); ?> value="<?php echo $option; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- options are esc_attr() escaped in bp_profile_search_escaped_form_data(). ?>"><?php echo $option; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- options are esc_attr() escaped in bp_profile_search_escaped_form_data(). ?></option>
 								<?php } ?>
 							</select>
 							<span> - </span>
-							<select name="<?php echo $name . '[max]'; ?>">
+							<select name="<?php echo esc_attr( $name . '[max]' ); ?>">
 								<?php foreach ( $f->options as $option ) { ?>
-									<option <?php selected( $value['max'], $option ); ?> value="<?php echo $option; ?>"><?php echo $option; ?></option>
+									<option <?php selected( $value['max'], $option ); ?> value="<?php echo $option; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- options are esc_attr() escaped in bp_profile_search_escaped_form_data(). ?>"><?php echo $option; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- options are esc_attr() escaped in bp_profile_search_escaped_form_data(). ?></option>
 								<?php } ?>
-							</select>                        
+							</select>                       
 							<?php
 							break;
 
 						case 'textbox':
 							?>
-							<input type="search" id="<?php echo $id; ?>" name="<?php echo $name; ?>" value="<?php echo $value; ?>"/>
+							<input type="search" id="<?php echo esc_attr( $id ); ?>" name="<?php echo esc_attr( $name ); ?>" value="<?php echo $value; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- scalar $f->value is esc_attr() escaped at assignment in bp_profile_search_escaped_form_data(). ?>"/>
 							<?php
 							break;
 
 						case 'number':
 							?>
-							<input type="number" id="<?php echo $id; ?>" name="<?php echo $name; ?>" value="<?php echo $value; ?>"/>
+							<input type="number" id="<?php echo esc_attr( $id ); ?>" name="<?php echo esc_attr( $name ); ?>" value="<?php echo $value; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- scalar $f->value is esc_attr() escaped at assignment in bp_profile_search_escaped_form_data(). ?>"/>
 							<?php
 							break;
 
 						case 'distance':
-							$of          = __( 'of', 'buddyboss' );
-							$km          = __( 'km', 'buddyboss' );
-							$miles       = __( 'miles', 'buddyboss' );
-							$placeholder = __( 'Start typing, then select a location', 'buddyboss' );
+							$of          = __( 'of', 'buddyboss-platform' );
+							$km          = __( 'km', 'buddyboss-platform' );
+							$miles       = __( 'miles', 'buddyboss-platform' );
+							$placeholder = __( 'Start typing, then select a location', 'buddyboss-platform' );
 							$icon_url    = buddypress()->plugin_url . 'bp-core/profile-search/templates/members/locator.png';
-							$icon_title  = __( 'get current location', 'buddyboss' );
+							$icon_title  = __( 'get current location', 'buddyboss-platform' );
 							?>
 
-							<input type="number" min="1" name="<?php echo $name . '[distance]'; ?>" value="<?php echo $value['distance']; ?>"/>
+							<input type="number" min="1" name="<?php echo esc_attr( $name . '[distance]' ); ?>" value="<?php echo esc_attr( $value['distance'] ); ?>"/>
 
-							<select name="<?php echo $name . '[units]'; ?>">
-								<option value="km" <?php selected( $value['units'], 'km' ); ?>><?php echo $km; ?></option>
-								<option value="miles" <?php selected( $value['units'], 'miles' ); ?>><?php echo $miles; ?></option>
+							<select name="<?php echo esc_attr( $name . '[units]' ); ?>">
+								<option value="km" <?php selected( $value['units'], 'km' ); ?>><?php echo esc_html( $km ); ?></option>
+								<option value="miles" <?php selected( $value['units'], 'miles' ); ?>><?php echo esc_html( $miles ); ?></option>
 							</select>
 
-							<span><?php echo $of; ?></span>
+							<span><?php echo esc_html( $of ); ?></span>
 
-							<input type="search" id="<?php echo $id; ?>" name="<?php echo $name . '[location]'; ?>" value="<?php echo $value['location']; ?>" placeholder="<?php echo $placeholder; ?>"/>
-							<img id="<?php echo $id; ?>_icon" src="<?php echo $icon_url; ?>" alt="<?php echo $icon_title; ?>"/>
+							<input type="search" id="<?php echo esc_attr( $id ); ?>" name="<?php echo esc_attr( $name . '[location]' ); ?>" value="<?php echo esc_attr( $value['location'] ); ?>" placeholder="<?php echo esc_attr( $placeholder ); ?>"/>
+							<img id="<?php echo esc_attr( $id ); ?>_icon" src="<?php echo esc_url( $icon_url ); ?>" alt="<?php echo esc_attr( $icon_title ); ?>"/>
 
-							<input type="hidden" id="<?php echo $id; ?>_lat" name="<?php echo $name . '[lat]'; ?>" value="<?php echo $value['lat']; ?>"/>
-							<input type="hidden" id="<?php echo $id; ?>_lng" name="<?php echo $name . '[lng]'; ?>" value="<?php echo $value['lng']; ?>"/>
+							<input type="hidden" id="<?php echo esc_attr( $id ); ?>_lat" name="<?php echo esc_attr( $name . '[lat]' ); ?>" value="<?php echo esc_attr( $value['lat'] ); ?>"/>
+							<input type="hidden" id="<?php echo esc_attr( $id ); ?>_lng" name="<?php echo esc_attr( $name . '[lng]' ); ?>" value="<?php echo esc_attr( $value['lng'] ); ?>"/>
 
 							<script>
 								jQuery(function ($) {
-									bp_ps_autocomplete('<?php echo $id; ?>', '<?php echo $id; ?>_lat', '<?php echo $id; ?>_lng');
-									$('#<?php echo $id; ?>_icon').click(function () {
-										bp_ps_locate('<?php echo $id; ?>', '<?php echo $id; ?>_lat', '<?php echo $id; ?>_lng')
+									bp_ps_autocomplete('<?php echo esc_js( $id ); ?>', '<?php echo esc_js( $id ); ?>_lat', '<?php echo esc_js( $id ); ?>_lng');
+									$('#<?php echo esc_js( $id ); ?>_icon').click(function () {
+										bp_ps_locate('<?php echo esc_js( $id ); ?>', '<?php echo esc_js( $id ); ?>_lat', '<?php echo esc_js( $id ); ?>_lng')
 									});
 								});
 							</script>
@@ -295,33 +298,33 @@ $F = bp_profile_search_escaped_form_data( $form_id );
 
 						case 'selectbox':
 							?>
-							<select id="<?php echo $id; ?>" name="<?php echo $name; ?>">
+							<select id="<?php echo esc_attr( $id ); ?>" name="<?php echo esc_attr( $name ); ?>">
 								<?php foreach ( $f->options as $key => $label ) { ?>
-									<option 
+									<option
 									<?php
 									if ( $key == $value ) {
 										echo 'selected="selected"';
 									}
 									?>
-									 value="<?php echo $key; ?>"><?php echo $label; ?></option>
+									 value="<?php echo $key; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- option keys are esc_attr() escaped in bp_profile_search_escaped_form_data(). ?>"><?php echo $label; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- option labels are esc_attr() escaped in bp_profile_search_escaped_form_data(). ?></option>
 								<?php } ?>
-							</select>                        
+							</select>                       
 							<?php
 							break;
 
 						case 'multiselectbox':
 							?>
-							<select id="<?php echo $id; ?>" name="<?php echo $name . '[]'; ?>" multiple="multiple">
+							<select id="<?php echo esc_attr( $id ); ?>" name="<?php echo esc_attr( $name . '[]' ); ?>" multiple="multiple">
 								<?php foreach ( $f->options as $key => $label ) { ?>
-								<option 
+								<option
 									<?php
 									if ( in_array( $key, $f->values ) ) {
 										echo 'selected="selected"';
 									}
 									?>
-								 value="<?php echo $key; ?>"><?php echo $label; ?></option>
+								 value="<?php echo $key; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- option keys are esc_attr() escaped in bp_profile_search_escaped_form_data(). ?>"><?php echo $label; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- option labels are esc_attr() escaped in bp_profile_search_escaped_form_data(). ?></option>
 							<?php } ?>
-						</select>                        
+						</select>                       
 							<?php
 							break;
 
@@ -329,14 +332,14 @@ $F = bp_profile_search_escaped_form_data( $form_id );
 							foreach ( $f->options as $key => $label ) {
 								?>
 								<div class="bp-radio-wrap">
-									<input class="bs-styled-radio" id="bb-search-<?php echo str_replace( ' ', '', $key . '-' . $id ); ?>" type="radio"
+									<input class="bs-styled-radio" id="bb-search-<?php echo esc_attr( str_replace( ' ', '', $key . '-' . $id ) ); ?>" type="radio"
 										<?php
 										if ( $key == $value ) {
 												echo 'checked="checked"';
 										}
 										?>
-										name="<?php echo $name; ?>" value="<?php echo $key; ?>" />
-									<label for="bb-search-<?php echo str_replace( ' ', '', $key . '-' . $id ); ?>"><?php echo $label; ?></label>
+										name="<?php echo esc_attr( $name ); ?>" value="<?php echo $key; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- option keys are esc_attr() escaped in bp_profile_search_escaped_form_data(). ?>" />
+									<label for="bb-search-<?php echo esc_attr( str_replace( ' ', '', $key . '-' . $id ) ); ?>"><?php echo $label; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- option labels are esc_attr() escaped in bp_profile_search_escaped_form_data(). ?></label>
 								</div>
 								<?php
 							}
@@ -347,14 +350,14 @@ $F = bp_profile_search_escaped_form_data( $form_id );
 							foreach ( $f->options as $key => $label ) {
 								?>
 								<div class="bp-checkbox-wrap">
-									<input class="bs-styled-checkbox" id="bb-search-<?php echo str_replace( ' ', '', $key . '-' . $id ); ?>" type="checkbox"
+									<input class="bs-styled-checkbox" id="bb-search-<?php echo esc_attr( str_replace( ' ', '', $key . '-' . $id ) ); ?>" type="checkbox"
 									   <?php
 										if ( in_array( $key, $f->values ) ) {
 											echo 'checked="checked"';
 										}
 										?>
-										name="<?php echo $name . '[]'; ?>" value="<?php echo $key; ?>" />
-									<label for="bb-search-<?php echo str_replace( ' ', '', $key . '-' . $id ); ?>"><?php echo $label; ?></label>
+										name="<?php echo esc_attr( $name . '[]' ); ?>" value="<?php echo $key; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- option keys are esc_attr() escaped in bp_profile_search_escaped_form_data(). ?>" />
+									<label for="bb-search-<?php echo esc_attr( str_replace( ' ', '', $key . '-' . $id ) ); ?>"><?php echo $label; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- option labels are esc_attr() escaped in bp_profile_search_escaped_form_data(). ?></label>
 								</div>
 								<?php
 							}
@@ -362,14 +365,14 @@ $F = bp_profile_search_escaped_form_data( $form_id );
 
 						default:
 							?>
-							<p class="bps-error"><?php echo "BP Profile Search: unknown display <em>$display</em> for field <em>$f->name</em>."; ?></p>
+							<p class="bps-error"><?php echo wp_kses_post( "BP Profile Search: unknown display <em>$display</em> for field <em>$f->name</em>." ); ?></p>
 							<?php
 							break;
 					}
 					?>
 
 					<?php if ( ! empty( $f->description ) ) { ?>
-						<p class="bps-description"><?php echo $f->description; ?></p>
+						<p class="bps-description"><?php echo $f->description; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $f->description is escaped (esc_attr) at assignment in bp_profile_search_escaped_form_data() for this front-end template context. ?></p>
 					<?php } ?>
 				</div>
 				<?php
@@ -379,17 +382,17 @@ $F = bp_profile_search_escaped_form_data( $form_id );
 			<div class="submit-wrapper">
 				<p class="clear-from-wrap">
 					<a href='javascript:void(0);' onclick="return bp_ps_clear_form_elements(this);">
-					    <?php _e( 'Reset', 'buddyboss' ); ?>
+					    <?php esc_html_e( 'Reset', 'buddyboss-platform' ); ?>
 					</a>
 				</p>
-				<input type="submit" class="submit" value="<?php _e( 'Search', 'buddyboss' ); ?>"/>
+				<input type="submit" class="submit" value="<?php esc_html_e( 'Search', 'buddyboss-platform' ); ?>"/>
 			</div>
 
 			<?php
 		} else {
 			?>
 			<div class="submit-wrapper">
-				<span class="no-field"><?php _e( 'Please add fields to search members.', 'buddyboss' ); ?></span>
+				<span class="no-field"><?php esc_html_e( 'Please add fields to search members.', 'buddyboss-platform' ); ?></span>
 			</div>
 			<?php
 		}

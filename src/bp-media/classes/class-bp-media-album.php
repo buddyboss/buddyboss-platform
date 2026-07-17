@@ -178,7 +178,7 @@ class BP_Media_Album {
 			$q = $wpdb->prepare( "INSERT INTO {$bp->media->table_name_albums} ( user_id, group_id, title, privacy, date_created ) VALUES ( %d, %d, %s, %s, %s )", $this->user_id, $this->group_id, $this->title, $this->privacy, $this->date_created );
 		}
 
-		if ( false === $wpdb->query( $q ) ) {
+		if ( false === $wpdb->query( $q ) ) { // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- $q is prepared above with %d/%s placeholders for all values.
 			return false;
 		}
 
@@ -392,7 +392,7 @@ class BP_Media_Album {
 
 		$cached = bp_core_get_incremented_cache( $album_ids_sql, $cache_group );
 		if ( false === $cached ) {
-			$album_ids = $wpdb->get_col( $album_ids_sql );
+			$album_ids = $wpdb->get_col( $album_ids_sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- query built from internal table names, wp_parse_id_list()/%d-bound WHERE pieces, and whitelisted $order_by/$sort tokens; LIMIT is %d-prepared.
 			bp_core_set_incremented_cache( $album_ids_sql, $cache_group, $album_ids );
 		} else {
 			$album_ids = $cached;
@@ -437,7 +437,7 @@ class BP_Media_Album {
 			$total_albums_sql = apply_filters( 'bp_media_album_total_medias_sql', "SELECT count(DISTINCT m.id) FROM {$bp->media->table_name_albums} m {$join_sql} {$where_sql}", $where_sql, $sort );
 			$cached           = bp_core_get_incremented_cache( $total_albums_sql, $cache_group );
 			if ( false === $cached ) {
-				$total_albums = $wpdb->get_var( $total_albums_sql );
+				$total_albums = $wpdb->get_var( $total_albums_sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- query built from internal table names and the same internally-sanitized $where_sql/$join_sql as the IDs query above.
 				bp_core_set_incremented_cache( $total_albums_sql, $cache_group, $total_albums );
 			} else {
 				$total_albums = $cached;
@@ -519,7 +519,7 @@ class BP_Media_Album {
 				$group_name = bp_get_group_name( $group );
 				$status     = bp_get_group_status( $group );
 				if ( 'hidden' === $status || 'private' === $status ) {
-					$visibility = esc_html__( 'Group Members', 'buddyboss' );
+					$visibility = esc_html__( 'Group Members', 'buddyboss-platform' );
 				} else {
 					$visibility = ucfirst( $status );
 				}
@@ -632,7 +632,7 @@ class BP_Media_Album {
 		$total_count    = wp_cache_get( $cache_key, 'bp_media_album' );
 
 		if ( false === $total_count ) {
-			$total_count = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$bp->media->table_name_albums} WHERE group_id = {$group_id}" );
+			$total_count = (int) $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM {$bp->media->table_name_albums} WHERE group_id = %d", $group_id ) );
 			wp_cache_set( $cache_key, $total_count, 'bp_media_album' );
 		}
 

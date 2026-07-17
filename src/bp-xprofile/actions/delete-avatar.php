@@ -6,6 +6,9 @@
  * @since BuddyPress 3.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 /**
  * Deletes the active avatar for a user.
  *
@@ -28,9 +31,9 @@ function xprofile_action_delete_avatar() {
 	}
 
 	if ( bp_core_delete_existing_avatar( array( 'item_id' => bp_displayed_user_id() ) ) ) {
-		bp_core_add_message( __( 'Your profile photo was deleted successfully!', 'buddyboss' ) );
+		bp_core_add_message( __( 'Your profile photo was deleted successfully!', 'buddyboss-platform' ) );
 	} else {
-		bp_core_add_message( __( 'There was a problem deleting your profile photo. Please try again.', 'buddyboss' ), 'error' );
+		bp_core_add_message( __( 'There was a problem deleting your profile photo. Please try again.', 'buddyboss-platform' ), 'error' );
 	}
 
 	bp_core_redirect( wp_get_referer() );

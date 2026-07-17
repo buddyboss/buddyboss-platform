@@ -302,6 +302,10 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 							// placeholders; field id lists are int-cast.
 							$data_clause_xprofile_table = "( SELECT field_id, user_id FROM {$bp->profile->table_name_data} WHERE ( ExtractValue(value, '//text()') LIKE %s AND field_id IN ( ";
 							$data_clause_xprofile_table .= implode( ',', array_map( 'intval', $selected_xprofile_fields['char_search'] ) );
+							// Bind the REGEXP operand as a placeholder (filled by the
+							// $wpdb->prepare() below) instead of interpolating the raw
+							// search term into the SQL string literal, which sanitize_text_field
+							// does not make SQL-safe (single quotes survive).
 							$data_clause_xprofile_table .= ') ) OR ( value REGEXP %s AND field_id IN ( ';
 							$data_clause_xprofile_table .= implode( ',', array_map( 'intval', $selected_xprofile_fields['word_search'] ) );
 							$data_clause_xprofile_table .= ') ) ';
@@ -314,7 +318,12 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 								if ( ! empty( $date_field_ids ) && ! empty( $date_values ) ) {
 									$date_sql = $this->bb_generate_date_search_sql( $date_values, $date_field_ids );
 									if ( ! empty( $date_sql ) ) {
-										$data_clause_xprofile_table .= ' OR ( ' . $date_sql . ' ) ';
+										// $date_sql is ALREADY prepared by bb_generate_date_search_sql()
+										// and can contain literal '%' (e.g. DATE_FORMAT '%m-%d'). Escape
+										// them to '%%' so the outer $wpdb->prepare() below treats them as
+										// literals and does not mistake them for placeholders (which would
+										// shift our %s args and make prepare() return '').
+										$data_clause_xprofile_table .= ' OR ( ' . str_replace( '%', '%%', $date_sql ) . ' ) ';
 									}
 								}
 							}
@@ -322,7 +331,7 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 							$data_clause_xprofile_table .= ' )';
 
 							$sql_xprofile        = $wpdb->prepare( $data_clause_xprofile_table, '%' . $wpdb->esc_like( $search_term ) . '%', '[[:<:]]' . preg_quote( $search_term ) . '[[:>:]]' ); // phpcs:ignore WordPress.PHP.PregQuoteDelimiter.Missing -- $search_term feeds a MySQL REGEXP string literal, not a PHP preg_* pattern, so there is no PCRE delimiter to escape.
-							$sql_xprofile_result = $wpdb->get_results( $sql_xprofile );
+							$sql_xprofile_result = $wpdb->get_results( $sql_xprofile ); // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.PreparedSQL.NotPrepared -- $sql_xprofile is $wpdb->prepare()'d above.
 
 							// check visiblity for field id with current user.
 							if ( ! empty( $sql_xprofile_result ) ) {
@@ -415,7 +424,7 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 			}
 
 			if ( ! empty( $query_placeholder ) ) {
-				$sql = $wpdb->prepare( $sql, $query_placeholder );
+				$sql = $wpdb->prepare( $sql, $query_placeholder ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- $sql assembled from internal $COLUMNS/$FROM/$WHERE clauses; search term bound via $query_placeholder here.
 			}
 
 			return apply_filters(
@@ -471,18 +480,23 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 		 */
 		function print_search_options( $items_to_search ) {
 			echo "<div class='wp-user-fields' style='margin: 10px 0 0 30px'>";
-			echo "<p class='xprofile-group-name' style='margin: 5px 0'><strong>" . __( 'Account', 'buddyboss' ) . '</strong></p>';
+			echo "<p class='xprofile-group-name' style='margin: 5px 0'><strong>" . esc_html__( 'Account', 'buddyboss-platform' ) . '</strong></p>';
 
 			$fields = array(
-				'user_login'   => __( 'Username/Login', 'buddyboss' ),
-				'display_name' => __( 'Display Name', 'buddyboss' ),
-				'user_email'   => __( 'Email', 'buddyboss' ),
-				'user_meta'    => __( 'User Meta', 'buddyboss' ),
+				'user_login'   => __( 'Username/Login', 'buddyboss-platform' ),
+				'display_name' => __( 'Display Name', 'buddyboss-platform' ),
+				'user_email'   => __( 'Email', 'buddyboss-platform' ),
+				'user_meta'    => __( 'User Meta', 'buddyboss-platform' ),
 			);
 			foreach ( $fields as $field => $label ) {
 				$item    = 'member_field_' . $field;
 				$checked = ! empty( $items_to_search ) && in_array( $item, $items_to_search ) ? ' checked' : '';
-				echo "<label><input type='checkbox' value='{$item}' name='bp_search_plugin_options[items-to-search][]' {$checked}>{$label}</label><br>";
+				printf(
+					'<label><input type="checkbox" value="%1$s" name="bp_search_plugin_options[items-to-search][]"%2$s>%3$s</label><br>',
+					esc_attr( $item ),
+					$checked ? ' checked' : '',
+					esc_html( $label )
+				);
 			}
 
 			echo '</div><!-- .wp-user-fields -->';
@@ -500,14 +514,19 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 			if ( ! empty( $groups ) ) {
 				echo "<div class='xprofile-fields' style='margin: 0 0 10px 30px'>";
 				foreach ( $groups as $group ) {
-					echo "<p class='xprofile-group-name' style='margin: 5px 0'><strong>" . $group->name . '</strong></p>';
+					echo "<p class='xprofile-group-name' style='margin: 5px 0'><strong>" . esc_html( $group->name ) . '</strong></p>';
 
 					if ( ! empty( $group->fields ) ) {
 						foreach ( $group->fields as $field ) {
 							// lets save these as xprofile_field_{field_id}
 							$item    = 'xprofile_field_' . $field->id;
 							$checked = ! empty( $items_to_search ) && in_array( $item, $items_to_search ) ? ' checked' : '';
-							echo "<label><input type='checkbox' value='{$item}' name='bp_search_plugin_options[items-to-search][]' {$checked}>{$field->name}</label><br>";
+							printf(
+								'<label><input type="checkbox" value="%1$s" name="bp_search_plugin_options[items-to-search][]"%2$s>%3$s</label><br>',
+								esc_attr( $item ),
+								$checked ? ' checked' : '',
+								esc_html( $field->name )
+							);
 						}
 					}
 				}
@@ -1572,9 +1591,9 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 					if ( ! isset( $translation_cache[ $cache_key ] ) ) {
 						$translation_cache[ $cache_key ] = array(
 							// Get singular form translation (e.g., "one year" for "year").
-							'singular' => _n( '%s ' . $unit['singular'], '%s ' . $unit['plural'], 1, 'buddyboss' ),
+							'singular' => _n( '%s ' . $unit['singular'], '%s ' . $unit['plural'], 1, 'buddyboss-platform' ), // phpcs:ignore WordPress.WP.I18n.NonSingularStringLiteralSingle,WordPress.WP.I18n.NonSingularStringLiteralPlural -- Intentional runtime lookup of WordPress core's existing time-unit translations; cannot be a static literal.
 							// Get plural form translation (e.g., "two years" for "years").
-							'plural'   => _n( '%s ' . $unit['singular'], '%s ' . $unit['plural'], 2, 'buddyboss' ),
+							'plural'   => _n( '%s ' . $unit['singular'], '%s ' . $unit['plural'], 2, 'buddyboss-platform' ), // phpcs:ignore WordPress.WP.I18n.NonSingularStringLiteralSingle,WordPress.WP.I18n.NonSingularStringLiteralPlural -- Intentional runtime lookup of WordPress core's existing time-unit translations; cannot be a static literal.
 						);
 
 						// Clean up cache if it exceeds the size limit.
@@ -1596,8 +1615,8 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 
 						if ( ! isset( $translation_cache[ $cache_key ] ) ) {
 							$translation_cache[ $cache_key ] = array(
-								'singular' => __( $unit, 'buddyboss' ),
-								'plural'   => __( $unit, 'buddyboss' ),
+								'singular' => __( $unit, 'buddyboss-platform' ), // phpcs:ignore WordPress.WP.I18n.NonSingularStringLiteralText -- Intentional runtime lookup of WordPress core's existing time-unit translations; cannot be a static literal.
+								'plural'   => __( $unit, 'buddyboss-platform' ), // phpcs:ignore WordPress.WP.I18n.NonSingularStringLiteralText -- Intentional runtime lookup of WordPress core's existing time-unit translations; cannot be a static literal.
 							);
 
 							// Clean up cache if it exceeds the size limit.
@@ -1641,7 +1660,7 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 				// Cache WordPress translations for direction words.
 				if ( ! isset( $translation_cache[ $cache_key ] ) ) {
 					// Get the translation for this direction word (e.g., "ago" for "ago").
-					$translation_cache[ $cache_key ] = __( '%s ' . $direction, 'buddyboss' );
+					$translation_cache[ $cache_key ] = __( '%s ' . $direction, 'buddyboss-platform' ); // phpcs:ignore WordPress.WP.I18n.NonSingularStringLiteralText -- Intentional runtime lookup of WordPress core's existing time-direction translations; cannot be a static literal.
 
 					// Clean up cache if it exceeds the size limit.
 					if ( count( $translation_cache ) > self::$max_cache_size ) {
@@ -1812,7 +1831,7 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 			foreach ( $directions as $direction ) {
 				// Get the WordPress translation for this direction word.
 				// Example: __('%s ago', 'buddyboss') → "since".
-				$direction_translation = __( '%s ' . $direction, 'buddyboss' );
+				$direction_translation = __( '%s ' . $direction, 'buddyboss-platform' ); // phpcs:ignore WordPress.WP.I18n.NonSingularStringLiteralText -- Intentional runtime lookup of WordPress core's existing time-direction translations; cannot be a static literal.
 
 				// Remove the %s placeholder to get just the direction word.
 				// Example: "since %s" → "since".

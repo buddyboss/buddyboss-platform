@@ -6,6 +6,9 @@
  * @since BuddyPress 1.6.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 /** Display Filters **********************************************************/
 
 add_filter( 'bp_get_blog_latest_post_title', 'wptexturize' );
@@ -158,7 +161,7 @@ function bb_nouveau_get_activity_inner_blogs_buttons( $buttons ) {
 					'position'       => 4,
 					'component'      => 'activity',
 					'button_element' => 'a',
-					'link_text'      => sprintf( '<span class="text">%1$s %2$s</span>', esc_html__( 'View', 'buddyboss' ), esc_attr( ucfirst( $post_type_obj->labels->singular_name ) ) ),
+					'link_text'      => sprintf( '<span class="text">%1$s %2$s</span>', esc_html__( 'View', 'buddyboss-platform' ), esc_attr( ucfirst( $post_type_obj->labels->singular_name ) ) ),
 					'button_attr'    => array(
 						'href'  => esc_url( get_permalink( $blog_post->ID ) ),
 						'class' => 'button bb-icon-arrow-down bb-icons bp-secondary-action',
@@ -251,7 +254,7 @@ function bb_blogs_comment_mention_notification( $activity_id, $comment, $activit
 					'notification_type' => $email_type,
 				);
 
-				$notification_type_html = esc_html__( 'comment', 'buddyboss' );
+				$notification_type_html = esc_html__( 'comment', 'buddyboss-platform' );
 
 				$args = array(
 					'tokens' => array(
@@ -263,7 +266,7 @@ function bb_blogs_comment_mention_notification( $activity_id, $comment, $activit
 						'mentioned.type'    => $notification_type_html,
 						'mentioned.content' => $reply_content,
 						'author_id'         => $activity->user_id,
-						'reply_text'        => esc_html__( 'View Comment', 'buddyboss' ),
+						'reply_text'        => esc_html__( 'View Comment', 'buddyboss-platform' ),
 						'title_text'        => $title_text,
 					),
 				);

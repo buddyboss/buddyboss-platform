@@ -142,6 +142,7 @@ if ( ! class_exists( 'BP_Search_CPT' ) ) :
 
 			$query_placeholder[] = $this->cpt_name;
 
+			// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- $sql uses %s placeholders bound via $query_placeholder; interpolated parts are core table names, registered-taxonomy slugs ($tax_in), and absint'd course IDs ($courses_id_in).
 			$sql = $wpdb->prepare( $sql, $query_placeholder );
 
 			return apply_filters(
@@ -197,7 +198,7 @@ if ( ! class_exists( 'BP_Search_CPT' ) ) :
 		 * post type e.g $this->cpt_name
 		 */
 		public function print_search_options( $items_to_search ) {
-			echo "<div class='wp-{$this->cpt_name}-fields' style='margin: 10px 0 10px 30px'>";
+			echo "<div class='wp-" . esc_attr( $this->cpt_name ) . "-fields' style='margin: 10px 0 10px 30px'>";
 
 			$cpt_taxonomy = get_object_taxonomies( $this->cpt_name );
 
@@ -207,7 +208,7 @@ if ( ! class_exists( 'BP_Search_CPT' ) ) :
 				$value   = $this->search_type . '-tax-' . $tax;
 				$checked = ! empty( $items_to_search ) && in_array( $value, $items_to_search ) ? ' checked' : '';
 
-				echo "<label><input type='checkbox' value='{$value}' name='bp_search_plugin_options[items-to-search][]' {$checked}>{$label}</label><br>";
+				echo "<label><input type='checkbox' value='" . esc_attr( $value ) . "' name='bp_search_plugin_options[items-to-search][]'" . esc_attr( $checked ) . '>' . esc_html( $label ) . '</label><br>';
 			}
 
 			echo '</div><!-- .wp-user-fields -->';

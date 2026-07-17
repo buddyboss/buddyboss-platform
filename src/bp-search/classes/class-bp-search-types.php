@@ -46,7 +46,7 @@ if ( ! class_exists( 'Bp_Search_Type' ) ) :
 		 * @since BuddyBoss 1.0.0
 		 */
 		public function __clone() {
-			_doing_it_wrong( __FUNCTION__, __( 'Cheatin\' huh?', 'buddyboss' ), '1.7' );
+			_doing_it_wrong( __FUNCTION__, esc_html__( 'Cheatin\' huh?', 'buddyboss-platform' ), '1.7' );
 		}
 
 		/**
@@ -55,7 +55,7 @@ if ( ! class_exists( 'Bp_Search_Type' ) ) :
 		 * @since BuddyBoss 1.0.0
 		 */
 		public function __wakeup() {
-			_doing_it_wrong( __FUNCTION__, __( 'Cheatin\' huh?', 'buddyboss' ), '1.7' );
+			_doing_it_wrong( __FUNCTION__, esc_html__( 'Cheatin\' huh?', 'buddyboss-platform' ), '1.7' );
 		}
 
 		/**
@@ -105,7 +105,7 @@ if ( ! class_exists( 'Bp_Search_Type' ) ) :
 			}
 			if ( ! isset( $bbp_search_term[ $cache_key ] ) ) {
 				$sql    = $this->sql( $search_term, true );
-				$result = $wpdb->get_var( $sql );
+				$result = $wpdb->get_var( $sql ); // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.PreparedSQL.NotPrepared -- $sql is returned by the subclass sql() implementation which binds the search term via $wpdb->prepare().
 
 				$bbp_search_term[ $cache_key ] = $result;
 			} else {

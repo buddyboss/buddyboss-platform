@@ -8,6 +8,9 @@
  * @version 1.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 $search_term = ( is_search() && isset( $_GET['s'] ) ) ? $_GET['s'] : '';
 ?>
 
@@ -16,16 +19,16 @@ $search_term = ( is_search() && isset( $_GET['s'] ) ) ? $_GET['s'] : '';
 
 		<label for="<?php bp_nouveau_search_selector_id( 'search' ); ?>" class="bp-screen-reader-text"><?php bp_nouveau_search_default_text( '', false ); ?></label>
 
-		<input id="<?php bp_nouveau_search_selector_id( 'search' ); ?>" name="<?php bp_nouveau_search_selector_name(); ?>" type="search"  value="<?php echo $search_term ?>" placeholder="<?php bp_nouveau_search_default_text(); ?>" />
+		<input id="<?php bp_nouveau_search_selector_id( 'search' ); ?>" name="<?php bp_nouveau_search_selector_name(); ?>" type="search"  value="<?php echo esc_attr( $search_term ); ?>" placeholder="<?php bp_nouveau_search_default_text(); ?>" />
 
 		<button type="submit" id="<?php bp_nouveau_search_selector_id( 'search-submit' ); ?>" class="nouveau-search-submit search-form_submit" name="<?php bp_nouveau_search_selector_name( 'search_submit' ); ?>">
 			<span class="bb-icon-l bb-icon-search" aria-hidden="true"></span>
-			<span id="button-text" class="bp-screen-reader-text"><?php esc_html_e( 'Search', 'buddyboss' ); ?></span>
+			<span id="button-text" class="bp-screen-reader-text"><?php esc_html_e( 'Search', 'buddyboss-platform' ); ?></span>
 		</button>
 
 		<button type="reset" class="search-form_reset">
 			<span class="bb-icon-rf bb-icon-times" aria-hidden="true"></span>
-			<span class="bp-screen-reader-text"><?php esc_html_e( 'Reset', 'buddyboss' ); ?></span>
+			<span class="bp-screen-reader-text"><?php esc_html_e( 'Reset', 'buddyboss-platform' ); ?></span>
 		</button>
 
 	</form>

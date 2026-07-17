@@ -1,5 +1,8 @@
 <?php
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 use Behat\Gherkin\Node\PyStringNode,
 	Behat\Gherkin\Node\TableNode;
 
@@ -7,7 +10,7 @@ $steps->Then(
 	'/^the return code should be (\d+)$/',
 	function ( $world, $return_code ) {
 		if ( $return_code != $world->result->return_code ) {
-			throw new RuntimeException( $world->result );
+			throw new RuntimeException( $world->result ); // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- WP-CLI/Behat command context (stdout output, developer-supplied CLI args); not a web request runtime path.
 		}
 	}
 );
@@ -72,7 +75,7 @@ $steps->Then(
 		$start = array_search( $expected_rows[0], $actual_rows );
 
 		if ( false === $start ) {
-			throw new \Exception( $world->result );
+			throw new \Exception( $world->result ); // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- WP-CLI/Behat command context (stdout output, developer-supplied CLI args); not a web request runtime path.
 		}
 
 		compareTables( $expected_rows, array_slice( $actual_rows, $start ), $output );
@@ -86,7 +89,7 @@ $steps->Then(
 		$expected = $world->replace_variables( (string) $expected );
 
 		if ( ! checkThatJsonStringContainsJsonString( $output, $expected ) ) {
-			throw new \Exception( $world->result );
+			throw new \Exception( $world->result ); // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- WP-CLI/Behat command context (stdout output, developer-supplied CLI args); not a web request runtime path.
 		}
 	}
 );
@@ -102,7 +105,7 @@ $steps->Then(
 
 		$missing = array_diff( $expectedValues, $actualValues );
 		if ( ! empty( $missing ) ) {
-			throw new \Exception( $world->result );
+			throw new \Exception( $world->result ); // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- WP-CLI/Behat command context (stdout output, developer-supplied CLI args); not a web request runtime path.
 		}
 	}
 );
@@ -120,7 +123,7 @@ $steps->Then(
 		}
 
 		if ( ! checkThatCsvStringContainsValues( $output, $expected_rows ) ) {
-			throw new \Exception( $world->result );
+			throw new \Exception( $world->result ); // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- WP-CLI/Behat command context (stdout output, developer-supplied CLI args); not a web request runtime path.
 		}
 	}
 );
@@ -132,7 +135,7 @@ $steps->Then(
 		$expected = $world->replace_variables( (string) $expected );
 
 		if ( ! checkThatYamlStringContainsYamlString( $output, $expected ) ) {
-			throw new \Exception( $world->result );
+			throw new \Exception( $world->result ); // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- WP-CLI/Behat command context (stdout output, developer-supplied CLI args); not a web request runtime path.
 		}
 	}
 );
@@ -144,7 +147,7 @@ $steps->Then(
 		$stream = strtolower( $stream );
 
 		if ( ! empty( $world->result->$stream ) ) {
-			throw new \Exception( $world->result );
+			throw new \Exception( $world->result ); // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- WP-CLI/Behat command context (stdout output, developer-supplied CLI args); not a web request runtime path.
 		}
 	}
 );
@@ -156,7 +159,7 @@ $steps->Then(
 		$stream = strtolower( $stream );
 
 		if ( '' === rtrim( $world->result->$stream, "\n" ) ) {
-			throw new Exception( $world->result );
+			throw new Exception( $world->result ); // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- WP-CLI/Behat command context (stdout output, developer-supplied CLI args); not a web request runtime path.
 		}
 	}
 );
@@ -167,7 +170,7 @@ $steps->Then(
 		$goal_ver = $world->replace_variables( $goal_ver );
 		$stream   = strtolower( $stream );
 		if ( false === version_compare( trim( $world->result->$stream, "\n" ), $goal_ver, $operator ) ) {
-			throw new Exception( $world->result );
+			throw new Exception( $world->result ); // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- WP-CLI/Behat command context (stdout output, developer-supplied CLI args); not a web request runtime path.
 		}
 	}
 );
@@ -191,17 +194,17 @@ $steps->Then(
 		switch ( $action ) {
 			case 'exist':
 				if ( ! $test( $path ) ) {
-					throw new Exception( "$path doesn't exist." );
+					throw new Exception( "$path doesn't exist." ); // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- WP-CLI/Behat command context (stdout output, developer-supplied CLI args); not a web request runtime path.
 				}
 				break;
 			case 'not exist':
 				if ( $test( $path ) ) {
-					throw new Exception( "$path exists." );
+					throw new Exception( "$path exists." ); // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- WP-CLI/Behat command context (stdout output, developer-supplied CLI args); not a web request runtime path.
 				}
 				break;
 			default:
 				if ( ! $test( $path ) ) {
-					throw new Exception( "$path doesn't exist." );
+					throw new Exception( "$path doesn't exist." ); // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- WP-CLI/Behat command context (stdout output, developer-supplied CLI args); not a web request runtime path.
 				}
 				$action   = substr( $action, 0, -1 );
 				$expected = $world->replace_variables( (string) $expected );

@@ -1,5 +1,8 @@
 <?php
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 use Behat\Gherkin\Node\PyStringNode,
 	Behat\Gherkin\Node\TableNode,
 	WP_CLI\Process;
@@ -19,11 +22,11 @@ $steps->Given(
 			$dir = $world->variables['RUN_DIR'] . "/$dir";
 		}
 		if ( 0 !== strpos( $dir, sys_get_temp_dir() ) ) {
-			throw new RuntimeException( sprintf( "Attempted to delete directory '%s' that is not in the temp directory '%s'. " . __FILE__ . ':' . __LINE__, $dir, sys_get_temp_dir() ) );
+			throw new RuntimeException( sprintf( "Attempted to delete directory '%s' that is not in the temp directory '%s'. " . __FILE__ . ':' . __LINE__, $dir, sys_get_temp_dir() ) ); // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- WP-CLI/Behat command context (stdout output, developer-supplied CLI args); not a web request runtime path.
 		}
 		$world->remove_dir( $dir );
 		if ( 'empty' === $empty_or_nonexistent ) {
-			mkdir( $dir, 0777, true /*recursive*/ );
+			mkdir( $dir, 0777, true /*recursive*/ ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_mkdir -- WP-CLI/Behat command context (stdout output, developer-supplied CLI args); not a web request runtime path.
 		}
 	}
 );
@@ -42,7 +45,7 @@ $steps->Given(
 		$full_path = $world->variables['RUN_DIR'] . "/$path";
 		$dir       = dirname( $full_path );
 		if ( ! file_exists( $dir ) ) {
-			mkdir( $dir, 0777, true /*recursive*/ );
+			mkdir( $dir, 0777, true /*recursive*/ ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_mkdir -- WP-CLI/Behat command context (stdout output, developer-supplied CLI args); not a web request runtime path.
 		}
 		file_put_contents( $full_path, $content );
 	}

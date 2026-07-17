@@ -1134,14 +1134,14 @@ function bb_notification_avatar() {
 				}
 			}
 			?>
-			<a href="<?php echo ! empty( $link ) ? esc_url( $link ) : ''; ?>" class="<?php echo esc_attr( $moderation_class ); ?>" <?php echo $data_hp; ?>>
+			<a href="<?php echo ! empty( $link ) ? esc_url( $link ) : ''; ?>" class="<?php echo esc_attr( $moderation_class ); ?>" <?php echo $data_hp; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $data_hp is a pre-built attribute string with esc_attr'd value or empty. ?>>
 				<?php
-				echo bp_core_fetch_avatar(
+				echo wp_kses_post( bp_core_fetch_avatar(
 					array(
 						'item_id' => $item_id,
 						'object'  => $object,
 					)
-				);
+				) );
 
 				// Get the small icon for the notification which will print beside the avatar.
 				$notification_icon = bb_notification_small_icon( $component_action, true, $notification );
@@ -1259,7 +1259,7 @@ function bb_get_default_notification_avatar( $size = 'full', $notification = '' 
 		esc_url( $image_url ),
 		esc_attr( ( 'thumb' === $size ? 'avatar-150' : 'avatar-300 ' ) ),
 		esc_attr( ( 'thumb' === $size ? '150' : '300 ' ) ),
-		esc_attr__( 'Notification Icon', 'buddyboss' )
+		esc_attr__( 'Notification Icon', 'buddyboss-platform' )
 	);
 }
 
@@ -1387,7 +1387,7 @@ function bb_get_notification_conditional_icon( $notification ) {
 					$excerpt,
 					50,
 					array(
-						'ending' => __( '&hellip;', 'buddyboss' ),
+						'ending' => __( '&hellip;', 'buddyboss-platform' ),
 					)
 				) . '"';
 
@@ -1436,7 +1436,7 @@ function bb_get_notification_conditional_icon( $notification ) {
 					$excerpt,
 					50,
 					array(
-						'ending' => __( '&hellip;', 'buddyboss' ),
+						'ending' => __( '&hellip;', 'buddyboss-platform' ),
 					)
 				) . '"';
 

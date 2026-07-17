@@ -2,27 +2,30 @@
 
 // Utility functions used by Behat steps
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 function assertEquals( $expected, $actual ) {
 	if ( $expected != $actual ) {
-		throw new Exception( 'Actual value: ' . var_export( $actual, true ) );
+		throw new Exception( 'Actual value: ' . var_export( $actual, true ) ); // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- WP-CLI/Behat command context (stdout output, developer-supplied CLI args); not a web request runtime path.
 	}
 }
 
 function assertNotEquals( $expected, $actual ) {
 	if ( $expected == $actual ) {
-		throw new Exception( 'Actual value: ' . var_export( $actual, true ) );
+		throw new Exception( 'Actual value: ' . var_export( $actual, true ) ); // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- WP-CLI/Behat command context (stdout output, developer-supplied CLI args); not a web request runtime path.
 	}
 }
 
 function assertNumeric( $actual ) {
 	if ( ! is_numeric( $actual ) ) {
-		throw new Exception( 'Actual value: ' . var_export( $actual, true ) );
+		throw new Exception( 'Actual value: ' . var_export( $actual, true ) ); // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- WP-CLI/Behat command context (stdout output, developer-supplied CLI args); not a web request runtime path.
 	}
 }
 
 function assertNotNumeric( $actual ) {
 	if ( is_numeric( $actual ) ) {
-		throw new Exception( 'Actual value: ' . var_export( $actual, true ) );
+		throw new Exception( 'Actual value: ' . var_export( $actual, true ) ); // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- WP-CLI/Behat command context (stdout output, developer-supplied CLI args); not a web request runtime path.
 	}
 }
 
@@ -49,14 +52,14 @@ function checkString( $output, $expected, $action, $message = false ) {
 		if ( false === $message ) {
 			$message = $output;
 		}
-		throw new Exception( $message );
+		throw new Exception( $message ); // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- WP-CLI/Behat command context (stdout output, developer-supplied CLI args); not a web request runtime path.
 	}
 }
 
 function compareTables( $expected_rows, $actual_rows, $output ) {
 	// the first row is the header and must be present
 	if ( $expected_rows[0] != $actual_rows[0] ) {
-		throw new \Exception( $output );
+		throw new \Exception( $output ); // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- WP-CLI/Behat command context (stdout output, developer-supplied CLI args); not a web request runtime path.
 	}
 
 	unset( $actual_rows[0] );
@@ -64,7 +67,7 @@ function compareTables( $expected_rows, $actual_rows, $output ) {
 
 	$missing_rows = array_diff( $expected_rows, $actual_rows );
 	if ( ! empty( $missing_rows ) ) {
-		throw new \Exception( $output );
+		throw new \Exception( $output ); // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- WP-CLI/Behat command context (stdout output, developer-supplied CLI args); not a web request runtime path.
 	}
 }
 

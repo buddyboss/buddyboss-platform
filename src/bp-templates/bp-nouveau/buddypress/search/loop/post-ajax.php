@@ -9,6 +9,9 @@
  * @version 1.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 $result = bp_search_is_post_restricted( get_the_ID(), get_current_user_id(), 'post' );
 ?>
 <div class="bp-search-ajax-item bp-search-ajax-item_post">
@@ -40,7 +43,7 @@ $result = bp_search_is_post_restricted( get_the_ID(), get_current_user_id(), 'po
 				<span class="author">
 					<?php
 					/* translators: %s author name */
-					printf( esc_html__( 'By %s', 'buddyboss' ), get_the_author_link() );
+					printf( esc_html__( 'By %s', 'buddyboss-platform' ), get_the_author_link() );
 					?>
 				</span>
 				<span class="middot">&middot;</span>

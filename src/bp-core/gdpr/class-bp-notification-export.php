@@ -24,7 +24,7 @@ final class BP_Notification_Export extends BP_Export {
 
 		if ( null === $instance ) {
 			$instance = new BP_Notification_Export();
-			$instance->setup( 'bp_notification', __( 'Notifications', 'buddyboss' ) );
+			$instance->setup( 'bp_notification', __( 'Notifications', 'buddyboss-platform' ) );
 		}
 
 		return $instance;
@@ -54,7 +54,7 @@ final class BP_Notification_Export extends BP_Export {
 		foreach ( $data_items['items'] as $item ) {
 
 			$group_id    = 'bp_notifications';
-			$group_label = __( 'Notifications', 'buddyboss' );
+			$group_label = __( 'Notifications', 'buddyboss-platform' );
 			$item_id     = "{$this->exporter_name}-{$group_id}-{$item->id}";
 
 			$notification = bp_notifications_get_notification( $item->id );
@@ -63,22 +63,22 @@ final class BP_Notification_Export extends BP_Export {
 			$action = wp_strip_all_tags( $action );
 			$action = apply_filters( 'buddyboss_bp_gdpr_bp_notification_item_action', $action, $item, $data_items );
 
-			$mark_as_read = __( 'No', 'buddyboss' );
+			$mark_as_read = __( 'No', 'buddyboss-platform' );
 			if ( '0' === $item->is_new ) {
-				$mark_as_read = __( 'Yes', 'buddyboss' );
+				$mark_as_read = __( 'Yes', 'buddyboss-platform' );
 			}
 
 			$data = array(
 				array(
-					'name'  => __( 'Notification Action', 'buddyboss' ),
+					'name'  => __( 'Notification Action', 'buddyboss-platform' ),
 					'value' => $action,
 				),
 				array(
-					'name'  => __( 'Notified Date (GMT)', 'buddyboss' ),
+					'name'  => __( 'Notified Date (GMT)', 'buddyboss-platform' ),
 					'value' => $item->date_notified,
 				),
 				array(
-					'name'  => __( 'Mark as Read', 'buddyboss' ),
+					'name'  => __( 'Mark as Read', 'buddyboss-platform' ),
 					'value' => $mark_as_read,
 				),
 			);
@@ -156,12 +156,12 @@ final class BP_Notification_Export extends BP_Export {
 		$limit  = "LIMIT {$this->items_per_batch} OFFSET {$offset}";
 
 		$query       = "SELECT {$query_select} FROM {$table} WHERE {$query_where} {$limit}";
-		$query       = $wpdb->prepare( $query, $user->ID );
+		$query       = $wpdb->prepare( $query, $user->ID ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Table from bp_core_get_table_prefix(); WHERE is %d; LIMIT/OFFSET are integer arithmetic from $page.
 		$query_count = "SELECT {$query_select_count} FROM {$table} WHERE {$query_where}";
-		$query_count = $wpdb->prepare( $query_count, $user->ID );
+		$query_count = $wpdb->prepare( $query_count, $user->ID ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Table from bp_core_get_table_prefix(); WHERE is %d-prepared with $user->ID.
 
-		$count = (int) $wpdb->get_var( $query_count );
-		$items = $wpdb->get_results( $query );
+		$count = (int) $wpdb->get_var( $query_count ); // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.PreparedSQL.NotPrepared -- $query_count is $wpdb->prepare()'d above.
+		$items = $wpdb->get_results( $query ); // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.PreparedSQL.NotPrepared -- $query is $wpdb->prepare()'d above.
 
 		return array(
 			'total'  => $count,

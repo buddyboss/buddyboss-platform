@@ -24,9 +24,9 @@ class BP_Core_Login_Widget extends WP_Widget {
 	public function __construct() {
 		parent::__construct(
 			false,
-			__( '(BB) Log In', 'buddyboss' ),
+			__( '(BB) Log In', 'buddyboss-platform' ),
 			array(
-				'description'                 => __( 'Show a Log In form to logged-out visitors, and a Log Out link to those who are logged in.', 'buddyboss' ),
+				'description'                 => __( 'Show a Log In form to logged-out visitors, and a Log Out link to those who are logged in.', 'buddyboss-platform' ),
 				'classname'                   => 'widget_bp_core_login_widget buddypress widget',
 				'customize_selective_refresh' => true,
 			)
@@ -58,9 +58,9 @@ class BP_Core_Login_Widget extends WP_Widget {
 		 */
 		$title = apply_filters( 'widget_title', $title, $instance, $this->id_base );
 
-		echo $args['before_widget'];
+		echo wp_kses_post( $args['before_widget'] );
 
-		echo $args['before_title'] . esc_html( $title ) . $args['after_title']; ?>
+		echo wp_kses_post( $args['before_title'] ) . esc_html( $title ) . wp_kses_post( $args['after_title'] ); ?>
 
 		<?php if ( is_user_logged_in() ) : ?>
 
@@ -74,14 +74,14 @@ class BP_Core_Login_Widget extends WP_Widget {
 			?>
 
 			<div class="bp-login-widget-user-avatar">
-				<a href="<?php echo bp_loggedin_user_domain(); ?>">
+				<a href="<?php echo esc_url( bp_loggedin_user_domain() ); ?>">
 					<?php bp_loggedin_user_avatar( 'type=thumb&width=50&height=50' ); ?>
 				</a>
 			</div>
 
 			<div class="bp-login-widget-user-links">
-				<h4 class="bp-login-widget-user-link"><?php echo bp_core_get_userlink( bp_loggedin_user_id() ); ?></h4>
-				<div class="bp-login-widget-user-logout"><a class="logout" href="<?php echo wp_logout_url( bp_get_requested_url() ); ?>"><?php _e( 'Log Out', 'buddyboss' ); ?></a></div>
+				<h4 class="bp-login-widget-user-link"><?php echo wp_kses_post( bp_core_get_userlink( bp_loggedin_user_id() ) ); ?></h4>
+				<div class="bp-login-widget-user-logout"><a class="logout" href="<?php echo esc_url( wp_logout_url( bp_get_requested_url() ) ); ?>"><?php esc_html_e( 'Log Out', 'buddyboss-platform' ); ?></a></div>
 			</div>
 
 			<?php
@@ -107,24 +107,24 @@ class BP_Core_Login_Widget extends WP_Widget {
 			?>
 
 			<form name="bp-login-form" id="bp-login-widget-form" class="standard-form" action="<?php echo esc_url( site_url( 'wp-login.php', 'login_post' ) ); ?>" method="post">
-				<label for="bp-login-widget-user-login"><?php _e( 'Username', 'buddyboss' ); ?></label>
+				<label for="bp-login-widget-user-login"><?php esc_html_e( 'Username', 'buddyboss-platform' ); ?></label>
 				<input type="text" name="log" id="bp-login-widget-user-login" class="input" value="" />
 
-				<label for="bp-login-widget-user-pass"><?php _e( 'Password', 'buddyboss' ); ?></label>
+				<label for="bp-login-widget-user-pass"><?php esc_html_e( 'Password', 'buddyboss-platform' ); ?></label>
 				<input type="password" name="pwd" id="bp-login-widget-user-pass" class="input" value="" <?php bp_form_field_attributes( 'password' ); ?> />
 
 				<div class="forgetmenot">
 					<input name="rememberme" type="checkbox" id="bp-login-widget-rememberme" class="bs-styled-checkbox" value="forever" />
-					<label for="bp-login-widget-rememberme"><?php _e( 'Remember Me', 'buddyboss' ); ?></label>
+					<label for="bp-login-widget-rememberme"><?php esc_html_e( 'Remember Me', 'buddyboss-platform' ); ?></label>
 				</div>
 
 				<div class="bbp-submit-wrapper">
-					<input type="submit" name="wp-submit" id="bp-login-widget-submit" value="<?php esc_attr_e( 'Log In', 'buddyboss' ); ?>" />
+					<input type="submit" name="wp-submit" id="bp-login-widget-submit" value="<?php esc_attr_e( 'Log In', 'buddyboss-platform' ); ?>" />
 				</div>
 
 				<?php if ( bp_get_signup_allowed() ) : ?>
 
-					<span class="bp-login-widget-register-link"><a href="<?php echo esc_url( bp_get_signup_page() ); ?>"><?php _e( 'Register', 'buddyboss' ); ?></a></span>
+					<span class="bp-login-widget-register-link"><a href="<?php echo esc_url( bp_get_signup_page() ); ?>"><?php esc_html_e( 'Register', 'buddyboss-platform' ); ?></a></span>
 
 				<?php endif; ?>
 
@@ -153,7 +153,7 @@ class BP_Core_Login_Widget extends WP_Widget {
 			<?php
 		endif;
 
-		echo $args['after_widget'];
+		echo wp_kses_post( $args['after_widget'] );
 	}
 
 	/**
@@ -167,7 +167,7 @@ class BP_Core_Login_Widget extends WP_Widget {
 	 */
 	public function update( $new_instance, $old_instance ) {
 		$instance          = $old_instance;
-		$instance['title'] = isset( $new_instance['title'] ) ? strip_tags( $new_instance['title'] ) : '';
+		$instance['title'] = isset( $new_instance['title'] ) ? wp_strip_all_tags( $new_instance['title'] ) : '';
 
 		return $instance;
 	}
@@ -191,8 +191,8 @@ class BP_Core_Login_Widget extends WP_Widget {
 		?>
 
 		<p>
-			<label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _e( 'Title:', 'buddyboss' ); ?>
-			<input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo esc_attr( $settings['title'] ); ?>" /></label>
+			<label for="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>"><?php esc_html_e( 'Title:', 'buddyboss-platform' ); ?>
+			<input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'title' ) ); ?>" type="text" value="<?php echo esc_attr( $settings['title'] ); ?>" /></label>
 		</p>
 
 		<?php

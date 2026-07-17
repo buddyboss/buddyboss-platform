@@ -74,7 +74,7 @@ class BB_REST_Reactions_Endpoint extends WP_REST_Controller {
 			array(
 				'args'   => array(
 					'id' => array(
-						'description' => __( 'A unique numeric ID for the user reaction.', 'buddyboss' ),
+						'description' => __( 'A unique numeric ID for the user reaction.', 'buddyboss-platform' ),
 						'type'        => 'integer',
 					),
 				),
@@ -111,7 +111,7 @@ class BB_REST_Reactions_Endpoint extends WP_REST_Controller {
 	public function get_reactions( $request ) {
 		$reaction_instance = function_exists( 'bb_load_reaction' ) ? bb_load_reaction() : null;
 		if ( ! $reaction_instance ) {
-			return new WP_Error( 'bb_rest_reactions_not_available', __( 'Reactions are not available.', 'buddyboss' ), array( 'status' => 500 ) );
+			return new WP_Error( 'bb_rest_reactions_not_available', __( 'Reactions are not available.', 'buddyboss-platform' ), array( 'status' => 500 ) );
 		}
 		$reactions = $reaction_instance->bb_get_reactions( bb_get_reaction_mode() );
 
@@ -149,7 +149,7 @@ class BB_REST_Reactions_Endpoint extends WP_REST_Controller {
 		if ( function_exists( 'bp_rest_enable_private_network' ) && true === bp_rest_enable_private_network() && ! is_user_logged_in() ) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
-				__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss' ),
+				__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss-platform' ),
 				array(
 					'status' => rest_authorization_required_code(),
 				)
@@ -210,7 +210,7 @@ class BB_REST_Reactions_Endpoint extends WP_REST_Controller {
 
 		$reaction_instance = function_exists( 'bb_load_reaction' ) ? bb_load_reaction() : null;
 		if ( ! $reaction_instance ) {
-			return new WP_Error( 'bb_rest_reactions_not_available', __( 'Reactions are not available.', 'buddyboss' ), array( 'status' => 500 ) );
+			return new WP_Error( 'bb_rest_reactions_not_available', __( 'Reactions are not available.', 'buddyboss-platform' ), array( 'status' => 500 ) );
 		}
 		$user_reactions = $reaction_instance->bb_get_user_reactions( $args );
 
@@ -251,7 +251,7 @@ class BB_REST_Reactions_Endpoint extends WP_REST_Controller {
 		if ( function_exists( 'bp_rest_enable_private_network' ) && true === bp_rest_enable_private_network() && ! is_user_logged_in() ) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
-				__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss' ),
+				__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss-platform' ),
 				array(
 					'status' => rest_authorization_required_code(),
 				)
@@ -290,7 +290,7 @@ class BB_REST_Reactions_Endpoint extends WP_REST_Controller {
 	public function get_item( $request ) {
 		$reaction_instance = function_exists( 'bb_load_reaction' ) ? bb_load_reaction() : null;
 		if ( ! $reaction_instance ) {
-			return new WP_Error( 'bb_rest_reactions_not_available', __( 'Reactions are not available.', 'buddyboss' ), array( 'status' => 500 ) );
+			return new WP_Error( 'bb_rest_reactions_not_available', __( 'Reactions are not available.', 'buddyboss-platform' ), array( 'status' => 500 ) );
 		}
 		$id            = (int) $request->get_param( 'id' );
 		$user_reaction = $reaction_instance->bb_get_user_reaction( $id );
@@ -298,7 +298,7 @@ class BB_REST_Reactions_Endpoint extends WP_REST_Controller {
 		if ( empty( $user_reaction->id ) ) {
 			return new WP_Error(
 				'bp_rest_user_reaction_invalid_id',
-				__( 'Invalid user reaction ID.', 'buddyboss' ),
+				__( 'Invalid user reaction ID.', 'buddyboss-platform' ),
 				array(
 					'status' => 404,
 				)
@@ -336,7 +336,7 @@ class BB_REST_Reactions_Endpoint extends WP_REST_Controller {
 		if ( function_exists( 'bp_rest_enable_private_network' ) && true === bp_rest_enable_private_network() && ! is_user_logged_in() ) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
-				__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss' ),
+				__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss-platform' ),
 				array(
 					'status' => rest_authorization_required_code(),
 				)
@@ -378,7 +378,7 @@ class BB_REST_Reactions_Endpoint extends WP_REST_Controller {
 	public function create_item( $request ) {
 		$reaction_instance = function_exists( 'bb_load_reaction' ) ? bb_load_reaction() : null;
 		if ( ! $reaction_instance ) {
-			return new WP_Error( 'bb_rest_reactions_not_available', __( 'Reactions are not available.', 'buddyboss' ), array( 'status' => 500 ) );
+			return new WP_Error( 'bb_rest_reactions_not_available', __( 'Reactions are not available.', 'buddyboss-platform' ), array( 'status' => 500 ) );
 		}
 
 		$args = array(
@@ -402,7 +402,7 @@ class BB_REST_Reactions_Endpoint extends WP_REST_Controller {
 		} elseif ( empty( $user_reaction ) ) {
 			return new WP_Error(
 				'bp_rest_user_cannot_create_user_reaction',
-				__( 'There is an error while adding the user reaction.', 'buddyboss' ),
+				__( 'There is an error while adding the user reaction.', 'buddyboss-platform' ),
 				array(
 					'status' => 500,
 				)
@@ -438,7 +438,7 @@ class BB_REST_Reactions_Endpoint extends WP_REST_Controller {
 		if ( ! is_user_logged_in() ) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
-				__( 'Sorry, you are not allowed to create user reaction.', 'buddyboss' ),
+				__( 'Sorry, you are not allowed to create user reaction.', 'buddyboss-platform' ),
 				array(
 					'status' => rest_authorization_required_code(),
 				)
@@ -480,7 +480,7 @@ class BB_REST_Reactions_Endpoint extends WP_REST_Controller {
 	public function delete_item( $request ) {
 		$reaction_instance = function_exists( 'bb_load_reaction' ) ? bb_load_reaction() : null;
 		if ( ! $reaction_instance ) {
-			return new WP_Error( 'bb_rest_reactions_not_available', __( 'Reactions are not available.', 'buddyboss' ), array( 'status' => 500 ) );
+			return new WP_Error( 'bb_rest_reactions_not_available', __( 'Reactions are not available.', 'buddyboss-platform' ), array( 'status' => 500 ) );
 		}
 
 		// Get the user reaction before it's deleted.
@@ -490,7 +490,7 @@ class BB_REST_Reactions_Endpoint extends WP_REST_Controller {
 		if ( empty( $user_reaction->id ) ) {
 			return new WP_Error(
 				'bp_rest_user_reaction_invalid_id',
-				__( 'Invalid user reaction ID.', 'buddyboss' ),
+				__( 'Invalid user reaction ID.', 'buddyboss-platform' ),
 				array(
 					'status' => 404,
 				)
@@ -505,7 +505,7 @@ class BB_REST_Reactions_Endpoint extends WP_REST_Controller {
 		) {
 			return new WP_Error(
 				'bp_rest_authorization_required',
-				__( 'Sorry, you are not allowed to delete user reaction.', 'buddyboss' ),
+				__( 'Sorry, you are not allowed to delete user reaction.', 'buddyboss-platform' ),
 				array(
 					'status' => rest_authorization_required_code(),
 				)
@@ -527,7 +527,7 @@ class BB_REST_Reactions_Endpoint extends WP_REST_Controller {
 		if ( ! $deleted ) {
 			return new WP_Error(
 				'bp_rest_user_reaction_cannot_delete',
-				__( 'There was a problem to remove user reaction.', 'buddyboss' ),
+				__( 'There was a problem to remove user reaction.', 'buddyboss-platform' ),
 				array(
 					'status' => 500,
 				)
@@ -565,7 +565,7 @@ class BB_REST_Reactions_Endpoint extends WP_REST_Controller {
 	public function delete_item_permissions_check( $request ) {
 		$retval = new WP_Error(
 			'bp_rest_authorization_required',
-			__( 'Sorry, you need to be logged in to delete this user reaction.', 'buddyboss' ),
+			__( 'Sorry, you need to be logged in to delete this user reaction.', 'buddyboss-platform' ),
 			array(
 				'status' => rest_authorization_required_code(),
 			)
@@ -584,7 +584,7 @@ class BB_REST_Reactions_Endpoint extends WP_REST_Controller {
 			if ( empty( $user_reaction->id ) ) {
 				$retval = new WP_Error(
 					'bp_rest_user_reaction_invalid_id',
-					__( 'Invalid user reaction ID.', 'buddyboss' ),
+					__( 'Invalid user reaction ID.', 'buddyboss-platform' ),
 					array(
 						'status' => 404,
 					)
@@ -616,7 +616,7 @@ class BB_REST_Reactions_Endpoint extends WP_REST_Controller {
 
 		if ( WP_REST_Server::CREATABLE === $method ) {
 			$args['reaction_id'] = array(
-				'description'       => __( 'Reaction ID.', 'buddyboss' ),
+				'description'       => __( 'Reaction ID.', 'buddyboss-platform' ),
 				'type'              => 'integer',
 				'required'          => true,
 				'enum'              => $reaction_instance ? array_column( $reaction_instance->bb_get_reactions( bb_get_reaction_mode() ), 'id' ) : array(),
@@ -625,7 +625,7 @@ class BB_REST_Reactions_Endpoint extends WP_REST_Controller {
 			);
 
 			$args['item_type'] = array(
-				'description'       => __( 'Item type', 'buddyboss' ),
+				'description'       => __( 'Item type', 'buddyboss-platform' ),
 				'type'              => 'string',
 				'required'          => true,
 				'enum'              => $reaction_instance ? array_keys( $reaction_instance->bb_get_registered_reaction_item_types() ) : array(),
@@ -634,7 +634,7 @@ class BB_REST_Reactions_Endpoint extends WP_REST_Controller {
 			);
 
 			$args['item_id'] = array(
-				'description'       => __( 'Item ID.', 'buddyboss' ),
+				'description'       => __( 'Item ID.', 'buddyboss-platform' ),
 				'type'              => 'integer',
 				'required'          => true,
 				'sanitize_callback' => 'absint',
@@ -642,7 +642,7 @@ class BB_REST_Reactions_Endpoint extends WP_REST_Controller {
 			);
 
 			$args['user_id'] = array(
-				'description'       => __( 'User ID.', 'buddyboss' ),
+				'description'       => __( 'User ID.', 'buddyboss-platform' ),
 				'type'              => 'integer',
 				'default'           => bp_loggedin_user_id(),
 				'required'          => true,
@@ -741,7 +741,7 @@ class BB_REST_Reactions_Endpoint extends WP_REST_Controller {
 
 		$retval = new WP_Error(
 			'bp_rest_authorization_required',
-			__( 'Sorry, you are not allowed to create user reaction.', 'buddyboss' ),
+			__( 'Sorry, you are not allowed to create user reaction.', 'buddyboss-platform' ),
 			array(
 				'status' => rest_authorization_required_code(),
 			)
@@ -750,7 +750,7 @@ class BB_REST_Reactions_Endpoint extends WP_REST_Controller {
 		if ( empty( $reaction_id ) ) {
 			$retval = new WP_Error(
 				'bp_rest_user_reaction_required_item_id',
-				__( 'The reaction ID is required.', 'buddyboss' ),
+				__( 'The reaction ID is required.', 'buddyboss-platform' ),
 				array(
 					'status' => 400,
 				)
@@ -758,7 +758,7 @@ class BB_REST_Reactions_Endpoint extends WP_REST_Controller {
 		} elseif ( empty( $item_id ) ) {
 			$retval = new WP_Error(
 				'bp_rest_user_reaction_required_item_id',
-				__( 'The item ID is required.', 'buddyboss' ),
+				__( 'The item ID is required.', 'buddyboss-platform' ),
 				array(
 					'status' => 400,
 				)
@@ -766,7 +766,7 @@ class BB_REST_Reactions_Endpoint extends WP_REST_Controller {
 		} elseif ( empty( $item_type ) ) {
 			$retval = new WP_Error(
 				'bp_rest_user_reaction_required_item_type',
-				__( 'The item type is required.', 'buddyboss' ),
+				__( 'The item type is required.', 'buddyboss-platform' ),
 				array(
 					'status' => 400,
 				)
@@ -774,7 +774,7 @@ class BB_REST_Reactions_Endpoint extends WP_REST_Controller {
 		} elseif ( ! empty( $user_id ) && $user_id !== bp_loggedin_user_id() ) {
 			$retval = new WP_Error(
 				'bp_rest_user_reaction_invalid_user_id',
-				__( 'You cannot create reactions on behalf of another user.', 'buddyboss' ),
+				__( 'You cannot create reactions on behalf of another user.', 'buddyboss-platform' ),
 				array(
 					'status' => 403,
 				)
@@ -807,7 +807,7 @@ class BB_REST_Reactions_Endpoint extends WP_REST_Controller {
 		}
 
 		$params['reaction_id'] = array(
-			'description'       => __( 'Limit result set to items with a specific Reaction ID.', 'buddyboss' ),
+			'description'       => __( 'Limit result set to items with a specific Reaction ID.', 'buddyboss-platform' ),
 			'type'              => 'integer',
 			'sanitize_callback' => 'absint',
 			'validate_callback' => 'rest_validate_request_arg',
@@ -815,7 +815,7 @@ class BB_REST_Reactions_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['item_type'] = array(
-			'description'       => __( 'Limit result set to items with a specific item type.', 'buddyboss' ),
+			'description'       => __( 'Limit result set to items with a specific item type.', 'buddyboss-platform' ),
 			'type'              => 'string',
 			'sanitize_callback' => 'sanitize_key',
 			'validate_callback' => 'rest_validate_request_arg',
@@ -823,7 +823,7 @@ class BB_REST_Reactions_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['item_id'] = array(
-			'description'       => __( 'Limit result set to items with a specific item ID.', 'buddyboss' ),
+			'description'       => __( 'Limit result set to items with a specific item ID.', 'buddyboss-platform' ),
 			'default'           => 0,
 			'type'              => 'integer',
 			'sanitize_callback' => 'absint',
@@ -831,7 +831,7 @@ class BB_REST_Reactions_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['user_id'] = array(
-			'description'       => __( 'Limit result set to items with a specific user ID.', 'buddyboss' ),
+			'description'       => __( 'Limit result set to items with a specific user ID.', 'buddyboss-platform' ),
 			'default'           => 0,
 			'type'              => 'integer',
 			'sanitize_callback' => 'absint',
@@ -839,7 +839,7 @@ class BB_REST_Reactions_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['order'] = array(
-			'description'       => __( 'Order sort attribute ascending or descending.', 'buddyboss' ),
+			'description'       => __( 'Order sort attribute ascending or descending.', 'buddyboss-platform' ),
 			'default'           => 'desc',
 			'type'              => 'string',
 			'enum'              => array( 'asc', 'desc' ),
@@ -848,7 +848,7 @@ class BB_REST_Reactions_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['order_by'] = array(
-			'description'       => __( 'Order by a specific parameter.', 'buddyboss' ),
+			'description'       => __( 'Order by a specific parameter.', 'buddyboss-platform' ),
 			'default'           => 'id',
 			'type'              => 'string',
 			'enum'              => array( 'id', 'date_created' ),
@@ -878,19 +878,19 @@ class BB_REST_Reactions_Endpoint extends WP_REST_Controller {
 			'properties' => array(
 				'id'   => array(
 					'context'     => array( 'embed', 'view' ),
-					'description' => __( 'The ID of the reaction.', 'buddyboss' ),
+					'description' => __( 'The ID of the reaction.', 'buddyboss-platform' ),
 					'type'        => 'integer',
 					'readonly'    => true,
 				),
 				'name' => array(
 					'context'     => array( 'embed', 'view' ),
-					'description' => __( 'The name of the reaction.', 'buddyboss' ),
+					'description' => __( 'The name of the reaction.', 'buddyboss-platform' ),
 					'type'        => 'string',
 					'readonly'    => true,
 				),
 				'icon' => array(
 					'context'     => array( 'embed', 'view' ),
-					'description' => __( 'The icon of the reaction.', 'buddyboss' ),
+					'description' => __( 'The icon of the reaction.', 'buddyboss-platform' ),
 					'type'        => 'string',
 					'readonly'    => true,
 				),
@@ -922,37 +922,37 @@ class BB_REST_Reactions_Endpoint extends WP_REST_Controller {
 			'properties' => array(
 				'id'           => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'The ID of the user reaction.', 'buddyboss' ),
+					'description' => __( 'The ID of the user reaction.', 'buddyboss-platform' ),
 					'type'        => 'integer',
 					'readonly'    => true,
 				),
 				'user_id'      => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'The ID of the user.', 'buddyboss' ),
+					'description' => __( 'The ID of the user.', 'buddyboss-platform' ),
 					'type'        => 'integer',
 					'readonly'    => true,
 				),
 				'reaction_id'  => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'The ID of the reaction.', 'buddyboss' ),
+					'description' => __( 'The ID of the reaction.', 'buddyboss-platform' ),
 					'type'        => 'integer',
 					'readonly'    => true,
 				),
 				'item_type'    => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'The type of the item.', 'buddyboss' ),
+					'description' => __( 'The type of the item.', 'buddyboss-platform' ),
 					'type'        => 'string',
 					'readonly'    => true,
 				),
 				'item_id'      => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'The ID of the item.', 'buddyboss' ),
+					'description' => __( 'The ID of the item.', 'buddyboss-platform' ),
 					'type'        => 'integer',
 					'readonly'    => true,
 				),
 				'date_created' => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'The date the user reaction was created.', 'buddyboss' ),
+					'description' => __( 'The date the user reaction was created.', 'buddyboss-platform' ),
 					'type'        => 'string',
 					'format'      => 'date-time',
 					'readonly'    => true,
@@ -980,7 +980,7 @@ class BB_REST_Reactions_Endpoint extends WP_REST_Controller {
 		if ( function_exists( 'bb_is_reactions_feature_enabled' ) && ! bb_is_reactions_feature_enabled() ) {
 			return new WP_Error(
 				'bb_rest_reactions_feature_disabled',
-				__( 'The reactions feature is currently disabled.', 'buddyboss' ),
+				__( 'The reactions feature is currently disabled.', 'buddyboss-platform' ),
 				array( 'status' => 403 )
 			);
 		}

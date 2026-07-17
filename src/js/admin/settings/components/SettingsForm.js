@@ -67,8 +67,8 @@ import { evaluateConditional } from '../utils/conditional';
 // than shared so the two surfaces (global redirects vs profile-type rows)
 // can evolve independently.
 var REDIRECT_STATIC_OPTIONS = [
-	{ value: '', label: __( 'Default', 'buddyboss' ) },
-	{ value: '0', label: __( 'Custom URL', 'buddyboss' ) },
+	{ value: '', label: __( 'Default', 'buddyboss-platform' ) },
+	{ value: '0', label: __( 'Custom URL', 'buddyboss-platform' ) },
 ];
 
 /**
@@ -151,7 +151,7 @@ function PageCreateButton( { field, disabled, onCreated } ) {
 			aria-busy={ isCreating }
 			aria-disabled={ disabled || isCreating }
 		>
-			{ isCreating ? __( 'Creating…', 'buddyboss' ) : __( 'Create Page', 'buddyboss' ) }
+			{ isCreating ? __( 'Creating…', 'buddyboss-platform' ) : __( 'Create Page', 'buddyboss-platform' ) }
 			<i className="bb-icons-rl-plus"></i>
 		</button>
 	);
@@ -529,18 +529,18 @@ export function SettingsForm({ fields, values, onChange, onProBadgeClick, disabl
 							<button
 								type="button"
 								className="bb-admin-settings-form__copy-btn"
-								title={ __( 'Copy to clipboard', 'buddyboss' ) }
+								title={ __( 'Copy to clipboard', 'buddyboss-platform' ) }
 								onClick={ function() {
 									if ( ! navigator.clipboard || ! value ) {
 										return;
 									}
 									navigator.clipboard.writeText( value ).then( function () {
 										window.dispatchEvent( new CustomEvent( 'bb-settings-toast', {
-											detail: { status: 'success', message: __( 'Copied to clipboard.', 'buddyboss' ) },
+											detail: { status: 'success', message: __( 'Copied to clipboard.', 'buddyboss-platform' ) },
 										} ) );
 									} ).catch( function () {
 										window.dispatchEvent( new CustomEvent( 'bb-settings-toast', {
-											detail: { status: 'error', message: __( 'Failed to copy to clipboard.', 'buddyboss' ) },
+											detail: { status: 'error', message: __( 'Failed to copy to clipboard.', 'buddyboss-platform' ) },
 										} ) );
 									} );
 								} }
@@ -596,7 +596,7 @@ export function SettingsForm({ fields, values, onChange, onProBadgeClick, disabl
 							key={field.name}
 							label=""
 							value=""
-							options={ [ { value: '', label: selectOverrides.loadingText || __( 'Loading...', 'buddyboss' ) } ] }
+							options={ [ { value: '', label: selectOverrides.loadingText || __( 'Loading...', 'buddyboss-platform' ) } ] }
 							disabled
 							__nextHasNoMarginBottom
 						/>
@@ -704,7 +704,7 @@ export function SettingsForm({ fields, values, onChange, onProBadgeClick, disabl
 								target="_blank"
 								rel="noopener noreferrer"
 							>
-								{ __( 'View', 'buddyboss' ) }
+								{ __( 'View', 'buddyboss-platform' ) }
 								<i className="bb-icons-rl-arrow-up-right"></i>
 							</a>
 						) }
@@ -1149,7 +1149,7 @@ export function SettingsForm({ fields, values, onChange, onProBadgeClick, disabl
 						{ field.manage_icon && (
 							<i className={ field.manage_icon } />
 						) }
-						<span>{ field.manage_label || __( 'Manage', 'buddyboss' ) }</span>
+						<span>{ field.manage_label || __( 'Manage', 'buddyboss-platform' ) }</span>
 					</button>
 				);
 
@@ -1212,7 +1212,7 @@ export function SettingsForm({ fields, values, onChange, onProBadgeClick, disabl
 
 				return (
 					<p className="bb-admin-settings-field__unsupported">
-						{__('Field type not yet supported in React UI.', 'buddyboss')}
+						{__('Field type not yet supported in React UI.', 'buddyboss-platform')}
 					</p>
 				);
 			}
@@ -1451,7 +1451,7 @@ export function SettingsForm({ fields, values, onChange, onProBadgeClick, disabl
 											type="button"
 											onClick={ () => onProBadgeClick( field ) }
 											className="bb-pro-badge__play-link"
-											aria-label={ __( 'Learn more', 'buddyboss' ) }
+											aria-label={ __( 'Learn more', 'buddyboss-platform' ) }
 										>
 											<i className={field.pro_notice.link_icon || 'bb-icons-rl bb-icons-rl-play'} />
 										</button>
@@ -1461,7 +1461,7 @@ export function SettingsForm({ fields, values, onChange, onProBadgeClick, disabl
 											target="_blank"
 											rel="noopener noreferrer"
 											className="bb-pro-badge__play-link"
-											aria-label={__('Learn more about PRO', 'buddyboss')}
+											aria-label={__('Learn more about PRO', 'buddyboss-platform')}
 										>
 											<i className={field.pro_notice.link_icon || ''} />
 										</a>

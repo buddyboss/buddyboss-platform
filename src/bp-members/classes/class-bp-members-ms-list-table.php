@@ -139,12 +139,12 @@ class BP_Members_MS_List_Table extends WP_MS_Users_List_Table {
 			'bp_members_ms_signup_columns',
 			array(
 				'cb'         => '<input type="checkbox" />',
-				'username'   => __( 'Username', 'buddyboss' ),
-				'name'       => __( 'Name', 'buddyboss' ),
-				'email'      => __( 'Email', 'buddyboss' ),
-				'registered' => __( 'Registered', 'buddyboss' ),
-				'date_sent'  => __( 'Last Sent', 'buddyboss' ),
-				'count_sent' => __( 'Emails Sent', 'buddyboss' ),
+				'username'   => __( 'Username', 'buddyboss-platform' ),
+				'name'       => __( 'Name', 'buddyboss-platform' ),
+				'email'      => __( 'Email', 'buddyboss-platform' ),
+				'registered' => __( 'Registered', 'buddyboss-platform' ),
+				'date_sent'  => __( 'Last Sent', 'buddyboss-platform' ),
+				'count_sent' => __( 'Emails Sent', 'buddyboss-platform' ),
 			)
 		);
 	}
@@ -156,12 +156,12 @@ class BP_Members_MS_List_Table extends WP_MS_Users_List_Table {
 	 */
 	public function get_bulk_actions() {
 		$actions = array(
-			'activate' => __( 'Activate', 'buddyboss' ),
-			'resend'   => __( 'Email', 'buddyboss' ),
+			'activate' => __( 'Activate', 'buddyboss-platform' ),
+			'resend'   => __( 'Email', 'buddyboss-platform' ),
 		);
 
 		if ( current_user_can( 'delete_users' ) ) {
-			$actions['delete'] = __( 'Delete', 'buddyboss' );
+			$actions['delete'] = __( 'Delete', 'buddyboss-platform' );
 		}
 
 		return $actions;
@@ -176,15 +176,16 @@ class BP_Members_MS_List_Table extends WP_MS_Users_List_Table {
 	 */
 	public function no_items() {
 		if ( bp_get_signup_allowed() ) {
-			esc_html_e( 'No pending accounts found.', 'buddyboss' );
+			esc_html_e( 'No pending accounts found.', 'buddyboss-platform' );
 		} else {
 			$link = false;
 
 			if ( current_user_can( 'manage_network_users' ) ) {
-				$link = sprintf( '<a href="%1$s">%2$s</a>', esc_url( network_admin_url( 'settings.php' ) ), esc_html__( 'Edit settings', 'buddyboss' ) );
+				$link = sprintf( '<a href="%1$s">%2$s</a>', esc_url( network_admin_url( 'settings.php' ) ), esc_html__( 'Edit settings', 'buddyboss-platform' ) );
 			}
 
-			printf( __( 'Registration is disabled. %s', 'buddyboss' ), $link );
+			/* translators: %s: link to edit registration settings. */
+			printf( esc_html__( 'Registration is disabled. %s', 'buddyboss-platform' ), wp_kses_post( $link ) );
 		}
 	}
 
@@ -216,7 +217,7 @@ class BP_Members_MS_List_Table extends WP_MS_Users_List_Table {
 			}
 
 			$style = ( ' class="alternate"' == $style ) ? '' : ' class="alternate"';
-			echo "\n\t" . $this->single_row( $signup_object, $style );
+			echo "\n\t" . $this->single_row( $signup_object, $style ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- single_row() echoes internally with escaped columns; concatenated return is empty.
 		}
 	}
 
@@ -231,8 +232,8 @@ class BP_Members_MS_List_Table extends WP_MS_Users_List_Table {
 	 * @param string      $style         Styles for the row.
 	 */
 	public function single_row( $signup_object = null, $style = '' ) {
-		echo '<tr' . $style . ' id="signup-' . esc_attr( $signup_object->id ) . '">';
-		echo $this->single_row_columns( $signup_object );
+		echo '<tr' . $style . ' id="signup-' . esc_attr( $signup_object->id ) . '">'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $style is a hardcoded class attribute fragment.
+		echo $this->single_row_columns( $signup_object ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- WP list-table row markup incl. the cb checkbox column; each column_* method escapes its own output; wp_kses_post strips the checkboxes (Activate/Delete become impossible).
 		echo '</tr>';
 	}
 
@@ -263,8 +264,8 @@ class BP_Members_MS_List_Table extends WP_MS_Users_List_Table {
 																 <?php
 																	printf(
 																		/* translators: accessibility text */
-																		esc_html__( 'Select user: %s', 'buddyboss' ),
-																		$signup_object->user_login
+																		esc_html__( 'Select user: %s', 'buddyboss-platform' ),
+																		esc_html( $signup_object->user_login )
 																	);
 																	?>
 		</label>
@@ -312,21 +313,21 @@ class BP_Members_MS_List_Table extends WP_MS_Users_List_Table {
 			network_admin_url( 'users.php' )
 		);
 
-		echo $avatar . sprintf( '<strong><a href="%1$s" class="edit">%2$s</a></strong><br/>', esc_url( $activate_link ), $signup_object->user_login );
+		echo wp_kses_post( $avatar ) . sprintf( '<strong><a href="%1$s" class="edit">%2$s</a></strong><br/>', esc_url( $activate_link ), esc_html( $signup_object->user_login ) );
 
 		$actions = array();
 
-		$actions['activate'] = sprintf( '<a href="%1$s">%2$s</a>', esc_url( $activate_link ), __( 'Activate', 'buddyboss' ) );
-		$actions['resend']   = sprintf( '<a href="%1$s">%2$s</a>', esc_url( $email_link ), __( 'Email', 'buddyboss' ) );
+		$actions['activate'] = sprintf( '<a href="%1$s">%2$s</a>', esc_url( $activate_link ), __( 'Activate', 'buddyboss-platform' ) );
+		$actions['resend']   = sprintf( '<a href="%1$s">%2$s</a>', esc_url( $email_link ), __( 'Email', 'buddyboss-platform' ) );
 
 		if ( current_user_can( 'delete_users' ) ) {
-			$actions['delete'] = sprintf( '<a href="%1$s" class="delete">%2$s</a>', esc_url( $delete_link ), __( 'Delete', 'buddyboss' ) );
+			$actions['delete'] = sprintf( '<a href="%1$s" class="delete">%2$s</a>', esc_url( $delete_link ), __( 'Delete', 'buddyboss-platform' ) );
 		}
 
 		/** This filter is documented in bp-members/admin/bp-members-classes.php */
 		$actions = apply_filters( 'bp_members_ms_signup_row_actions', $actions, $signup_object );
 
-		echo $this->row_actions( $actions );
+		echo wp_kses_post( $this->row_actions( $actions ) );
 	}
 
 	/**
@@ -367,7 +368,7 @@ class BP_Members_MS_List_Table extends WP_MS_Users_List_Table {
 			$date = 'Y/m/d \<\b\r \/\> g:i:s a';
 		}
 
-		echo mysql2date( $date, $signup_object->registered ) . '</td>';
+		echo esc_html( mysql2date( $date, $signup_object->registered ) ) . '</td>';
 	}
 
 	/**
@@ -386,7 +387,7 @@ class BP_Members_MS_List_Table extends WP_MS_Users_List_Table {
 			$date = 'Y/m/d \<\b\r \/\> g:i:s a';
 		}
 
-		echo mysql2date( $date, $signup_object->date_sent );
+		echo esc_html( mysql2date( $date, $signup_object->date_sent ) );
 	}
 
 	/**

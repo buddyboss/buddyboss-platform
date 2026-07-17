@@ -9,6 +9,9 @@
  * @version 1.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 $product_id    = get_the_ID();
 $product       = wc_get_product( $product_id );
 $product_thumb = get_the_post_thumbnail_url();
@@ -36,7 +39,7 @@ $product_thumb = get_the_post_thumbnail_url();
 				<?php
 				$category = wc_get_product_category_list( $product_id );
 				if ( $category ) {
-					echo wc_get_product_category_list( $product_id, '<span class="middot">&middot;</span>' );
+					echo wp_kses_post( wc_get_product_category_list( $product_id, '<span class="middot">&middot;</span>' ) );
 				}
 				?>
 				<span class="middot">&middot;</span>

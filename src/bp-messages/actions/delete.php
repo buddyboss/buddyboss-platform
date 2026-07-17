@@ -6,6 +6,9 @@
  * @since BuddyPress 3.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 /**
  * Process a request to delete a message.
  *
@@ -28,9 +31,9 @@ function messages_action_delete_message() {
 
 		// Delete message.
 		if ( ! messages_delete_thread( $thread_id ) ) {
-			bp_core_add_message( __( 'There was an error deleting that message.', 'buddyboss' ), 'error' );
+			bp_core_add_message( __( 'There was an error deleting that message.', 'buddyboss-platform' ), 'error' );
 		} else {
-			bp_core_add_message( __( 'Message deleted.', 'buddyboss' ) );
+			bp_core_add_message( __( 'Message deleted.', 'buddyboss-platform' ) );
 		}
 		bp_core_redirect( trailingslashit( bp_displayed_user_domain() . bp_get_messages_slug() . '/' . bp_current_action() ) );
 	}

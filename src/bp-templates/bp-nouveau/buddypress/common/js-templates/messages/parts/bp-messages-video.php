@@ -7,6 +7,10 @@
  * @since   1.0.0
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 ?>
 
 <script type="text/html" id="tmpl-messages-video">
@@ -16,7 +20,7 @@
             <div class="dz-details">
 				<div class="dz-filename"><span data-dz-name></span></div>
 			</div>
-            <div class="dz-error-title"><?php esc_html_e( 'Upload Failed', 'buddyboss' ); ?></div>
+            <div class="dz-error-title"><?php esc_html_e( 'Upload Failed', 'buddyboss-platform' ); ?></div>
             <div class="dz-progress-ring-wrap">
 				<i class="bb-icon-f bb-icon-video"></i>
 				<svg class="dz-progress-ring" width="54" height="54">
@@ -41,7 +45,7 @@
                     </g>
                 </svg>
             </div>
-            <div class="dz-progress-count"><?php esc_html_e( '0% Uploaded', 'buddyboss' ); ?></div>
+            <div class="dz-progress-count"><?php esc_html_e( '0% Uploaded', 'buddyboss-platform' ); ?></div>
             <div class="dz-video-thumbnail"></div>
         </div>
     </div>

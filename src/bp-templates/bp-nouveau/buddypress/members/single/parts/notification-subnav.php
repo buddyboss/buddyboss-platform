@@ -7,9 +7,13 @@
  * @since BuddyBoss 2.2.6
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 ?>
 
-<nav class="subnav_tab" id="subnav" role="navigation" aria-label="<?php esc_attr_e( 'Notification administration menu', 'buddyboss' ); ?>">
+<nav class="subnav_tab" id="subnav" role="navigation" aria-label="<?php esc_attr_e( 'Notification administration menu', 'buddyboss-platform' ); ?>">
 	<?php
 	if ( bp_nouveau_has_nav(
 		array(

@@ -6,12 +6,15 @@
  * @version 1.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 ?>
 <script type="text/html" id="tmpl-activity-post-form-feedback">
 	<span class="bb-icons-rl-fill" aria-hidden="true"></span>
 	<div class="bb-rl-notice--content">
 		{{{data.message}}}
-		<button class="bb-rl-notice__close" aria-label="<?php esc_attr_e( 'Close', 'buddyboss' ); ?>">
+		<button class="bb-rl-notice__close" aria-label="<?php esc_attr_e( 'Close', 'buddyboss-platform' ); ?>">
 			<i class="bb-icons-rl-x"></i>
 		</button>
 	</div>

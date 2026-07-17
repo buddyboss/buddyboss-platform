@@ -51,13 +51,13 @@ class BP_Nouveau_Nav_Customize_Control extends WP_Customize_Control {
 
 		// It's a group
 		if ( 'group' === $this->type ) {
-			$guide = __( 'Customizing the Groups navigation requires you to create a group first.', 'buddyboss' );
+			$guide = __( 'Customizing the Groups navigation requires you to create a group first.', 'buddyboss-platform' );
 
 			$slug = array();
 			$type = 'group';
 
 			if ( isset( $_GET['url'] ) && ! empty( $_GET['url'] ) ) {
-				$parse_url = parse_url( $_GET['url'] );
+				$parse_url = wp_parse_url( $_GET['url'] );
 				$path_arr  = explode( '/', $parse_url['path'] );
 				if ( 'groups' === $path_arr[1] && '' !== $path_arr[2] ) {
 					$slug = array( $path_arr[2] );
@@ -79,7 +79,7 @@ class BP_Nouveau_Nav_Customize_Control extends WP_Customize_Control {
 			}
 
 			if ( $item_nav ) {
-				$guide = __( 'Drag and drop each tab to change the group navigation order.', 'buddyboss' );
+				$guide = __( 'Drag and drop each tab to change the group navigation order.', 'buddyboss-platform' );
 			}
 
 			// It's a user!
@@ -87,7 +87,7 @@ class BP_Nouveau_Nav_Customize_Control extends WP_Customize_Control {
 			$item_nav = bp_nouveau_member_customizer_nav();
 			$type     = 'user';
 
-			$guide = __( 'Drag and drop each tab to change the profile navigation order.', 'buddyboss' );
+			$guide = __( 'Drag and drop each tab to change the profile navigation order.', 'buddyboss-platform' );
 		}
 		?>
 
@@ -145,13 +145,13 @@ class BP_Nouveau_Nav_Customize_Control extends WP_Customize_Control {
 											} ?>
 										<?php if ( $hide ) { ?>
 											<span class="checkbox-wrap <?php echo esc_attr( $class ); ?>">
-												<input data-bp-hide="<?php echo esc_attr( $item->slug ); ?>" <?php echo $checked; ?> type="checkbox" class="hidden-checkboxes" id="hidden_<?php echo esc_attr( $item->slug ); ?>" name="<?php echo esc_attr( 'hidden_' . $item->slug ); ?>" value="1" data-bp-which-type="<?php echo esc_attr( $this->type ); ?>">
-												<label for="hidden_<?php echo esc_attr( $item->slug ); ?>"><?php echo esc_html( __( 'Hide', 'buddyboss') ); ?></label><br>
+												<input data-bp-hide="<?php echo esc_attr( $item->slug ); ?>" <?php echo $checked; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $checked is a static 'checked="checked"' attribute literal. ?> type="checkbox" class="hidden-checkboxes" id="hidden_<?php echo esc_attr( $item->slug ); ?>" name="<?php echo esc_attr( 'hidden_' . $item->slug ); ?>" value="1" data-bp-which-type="<?php echo esc_attr( $this->type ); ?>">
+												<label for="hidden_<?php echo esc_attr( $item->slug ); ?>"><?php echo esc_html( __( 'Hide', 'buddyboss-platform') ); ?></label><br>
 											</span>
 										<?php } else { ?>
 											<span class="checkbox-wrap <?php echo esc_attr( $class ); ?>">
-												<input data-bp-hide="<?php echo esc_attr( $item->slug ); ?>" <?php echo $checked; ?> type="checkbox" class="visible-checkboxes" id="visible_<?php echo esc_attr( $item->slug ); ?>" name="<?php echo esc_attr( 'visible_' . $item->slug ); ?>" value="1" data-bp-which-type="<?php echo esc_attr( $this->type ); ?>">
-												<label for="visible_<?php echo esc_attr( $item->slug ); ?>"><?php echo esc_html( __( 'Hide', 'buddyboss') ); ?></label><br>
+												<input data-bp-hide="<?php echo esc_attr( $item->slug ); ?>" <?php echo $checked; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $checked is a static 'checked="checked"' attribute literal. ?> type="checkbox" class="visible-checkboxes" id="visible_<?php echo esc_attr( $item->slug ); ?>" name="<?php echo esc_attr( 'visible_' . $item->slug ); ?>" value="1" data-bp-which-type="<?php echo esc_attr( $this->type ); ?>">
+												<label for="visible_<?php echo esc_attr( $item->slug ); ?>"><?php echo esc_html( __( 'Hide', 'buddyboss-platform') ); ?></label><br>
 											</span>
 										<?php } ?>
 									</span>
@@ -179,13 +179,13 @@ class BP_Nouveau_Nav_Customize_Control extends WP_Customize_Control {
 											if ( 'user' === $this->type ) {
 												if ( $hide ) { ?>
 													<span class="checkbox-wrap <?php echo esc_attr( $class ); ?>">
-														<input data-bp-hide="<?php echo esc_attr( $item->slug ); ?>" <?php echo $checked; ?> type="checkbox" class="hidden-checkboxes" id="hidden_<?php echo esc_attr( $item->slug ); ?>" name="<?php echo esc_attr( 'hidden_' . $item->slug ); ?>" value="1" data-bp-which-type="<?php echo esc_attr( $this->type ); ?>">
-														<label for="hidden_<?php echo esc_attr( $item->slug ); ?>"><?php echo esc_html( __( 'Hide', 'buddyboss') ); ?></label><br>
+														<input data-bp-hide="<?php echo esc_attr( $item->slug ); ?>" <?php echo $checked; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $checked is a static 'checked="checked"' attribute literal. ?> type="checkbox" class="hidden-checkboxes" id="hidden_<?php echo esc_attr( $item->slug ); ?>" name="<?php echo esc_attr( 'hidden_' . $item->slug ); ?>" value="1" data-bp-which-type="<?php echo esc_attr( $this->type ); ?>">
+														<label for="hidden_<?php echo esc_attr( $item->slug ); ?>"><?php echo esc_html( __( 'Hide', 'buddyboss-platform') ); ?></label><br>
 													</span> <?php
 												} else { ?>
 													<span class="checkbox-wrap <?php echo esc_attr( $class ); ?>">
-														<input data-bp-hide="<?php echo esc_attr( $item->slug ); ?>" <?php echo $checked; ?> type="checkbox" class="visible-checkboxes" id="visible_<?php echo esc_attr( $item->slug ); ?>" name="<?php echo esc_attr( 'visible_' . $item->slug ); ?>" value="1" data-bp-which-type="<?php echo esc_attr( $this->type ); ?>">
-														<label for="visible_<?php echo esc_attr( $item->slug ); ?>"><?php echo esc_html( __( 'Hide', 'buddyboss') ); ?></label><br>
+														<input data-bp-hide="<?php echo esc_attr( $item->slug ); ?>" <?php echo $checked; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $checked is a static 'checked="checked"' attribute literal. ?> type="checkbox" class="visible-checkboxes" id="visible_<?php echo esc_attr( $item->slug ); ?>" name="<?php echo esc_attr( 'visible_' . $item->slug ); ?>" value="1" data-bp-which-type="<?php echo esc_attr( $this->type ); ?>">
+														<label for="visible_<?php echo esc_attr( $item->slug ); ?>"><?php echo esc_html( __( 'Hide', 'buddyboss-platform') ); ?></label><br>
 													</span> <?php
 												}
 											}

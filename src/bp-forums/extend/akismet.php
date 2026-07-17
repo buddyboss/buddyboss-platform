@@ -316,14 +316,16 @@ if ( ! class_exists( 'BBP_Akismet' ) ) :
 
 					// Spammy
 					case 'spam':
-						$this->update_post_history( $post_id, sprintf( esc_html__( '%1$s reported this %2$s as spam', 'buddyboss' ), $post_data['reporter'], $post_data['comment_type'] ), 'report-spam' );
+						/* translators: 1: reporter name, 2: post type (topic or reply). */
+						$this->update_post_history( $post_id, sprintf( esc_html__( '%1$s reported this %2$s as spam', 'buddyboss-platform' ), $post_data['reporter'], $post_data['comment_type'] ), 'report-spam' );
 						update_post_meta( $post_id, '_bbp_akismet_user_result', 'true' );
 						update_post_meta( $post_id, '_bbp_akismet_user', $post_data['reporter'] );
 						break;
 
 					// Hammy
 					case 'ham':
-						$this->update_post_history( $post_id, sprintf( esc_html__( '%1$s reported this %2$s as not spam', 'buddyboss' ), $post_data['reporter'], $post_data['comment_type'] ), 'report-ham' );
+						/* translators: 1: reporter name, 2: post type (topic or reply). */
+						$this->update_post_history( $post_id, sprintf( esc_html__( '%1$s reported this %2$s as not spam', 'buddyboss-platform' ), $post_data['reporter'], $post_data['comment_type'] ), 'report-ham' );
 						update_post_meta( $post_id, '_bbp_akismet_user_result', 'false' );
 						update_post_meta( $post_id, '_bbp_akismet_user', $post_data['reporter'] );
 
@@ -416,7 +418,7 @@ if ( ! class_exists( 'BBP_Akismet' ) ) :
 			if ( ! empty( $response[1] ) ) {
 				$post_data['bbp_akismet_result'] = $response[1];
 			} else {
-				$post_data['bbp_akismet_result'] = esc_html__( 'No response', 'buddyboss' );
+				$post_data['bbp_akismet_result'] = esc_html__( 'No response', 'buddyboss-platform' );
 			}
 
 			// This is ham
@@ -476,11 +478,12 @@ if ( ! class_exists( 'BBP_Akismet' ) ) :
 
 						// Leave a trail so other's know what we did
 						update_post_meta( $post_id, '_bbp_akismet_result', 'true' );
-						$this->update_post_history( $post_id, esc_html__( 'Akismet caught this post as spam', 'buddyboss' ), 'check-spam' );
+						$this->update_post_history( $post_id, esc_html__( 'Akismet caught this post as spam', 'buddyboss-platform' ), 'check-spam' );
 
 						// If post_status isn't the spam status, as expected, leave a note
 						if ( bbp_get_spam_status_id() !== $_post->post_status ) {
-							$this->update_post_history( $post_id, sprintf( esc_html__( 'Post status was changed to %s', 'buddyboss' ), $_post->post_status ), 'status-changed-' . $_post->post_status );
+							/* translators: %s: new post status. */
+							$this->update_post_history( $post_id, sprintf( esc_html__( 'Post status was changed to %s', 'buddyboss-platform' ), $_post->post_status ), 'status-changed-' . $_post->post_status );
 						}
 
 						// Normal result: false
@@ -488,21 +491,23 @@ if ( ! class_exists( 'BBP_Akismet' ) ) :
 
 						// Leave a trail so other's know what we did
 						update_post_meta( $post_id, '_bbp_akismet_result', 'false' );
-						$this->update_post_history( $post_id, esc_html__( 'Akismet cleared this post as not spam', 'buddyboss' ), 'check-ham' );
+						$this->update_post_history( $post_id, esc_html__( 'Akismet cleared this post as not spam', 'buddyboss-platform' ), 'check-ham' );
 
 						// If post_status is the spam status, which isn't expected, leave a note
 						if ( bbp_get_spam_status_id() === $_post->post_status ) {
 
 							// @todo Use wp_blacklist_check()
 
-							$this->update_post_history( $post_id, sprintf( esc_html__( 'Post status was changed to %s', 'buddyboss' ), $_post->post_status ), 'status-changed-' . $_post->post_status );
+							/* translators: %s: new post status. */
+							$this->update_post_history( $post_id, sprintf( esc_html__( 'Post status was changed to %s', 'buddyboss-platform' ), $_post->post_status ), 'status-changed-' . $_post->post_status );
 						}
 
 						// Abnormal result: error
 					} else {
 						// Leave a trail so other's know what we did
 						update_post_meta( $post_id, '_bbp_akismet_error', time() );
-						$this->update_post_history( $post_id, sprintf( esc_html__( 'Akismet was unable to check this post (response: %s), will automatically retry again later.', 'buddyboss' ), $this->last_post['bbp_akismet_result'] ), 'check-error' );
+						/* translators: %s: Akismet response. */
+						$this->update_post_history( $post_id, sprintf( esc_html__( 'Akismet was unable to check this post (response: %s), will automatically retry again later.', 'buddyboss-platform' ), $this->last_post['bbp_akismet_result'] ), 'check-error' );
 					}
 
 					// Record the complete original data as submitted for checking
@@ -685,9 +690,11 @@ if ( ! class_exists( 'BBP_Akismet' ) ) :
 				$http_request .= $request;
 
 				// Open a socket connection
+				// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fsockopen -- direct socket I/O for Akismet HTTP fallback; WP_Filesystem offers no streaming socket equivalent.
 				if ( false !== ( $fs = @fsockopen( $http_host, $port, $errno, $errstr, 10 ) ) ) {
 
 					// Write our request to the pointer
+					// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fwrite -- direct socket I/O for Akismet HTTP fallback; WP_Filesystem offers no streaming socket equivalent.
 					fwrite( $fs, $http_request );
 
 					// Loop through pointer and compile a response
@@ -697,6 +704,7 @@ if ( ! class_exists( 'BBP_Akismet' ) ) :
 					}
 
 					// Close our socket
+					// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose -- direct socket I/O for Akismet HTTP fallback; WP_Filesystem offers no streaming socket equivalent.
 					fclose( $fs );
 
 					// Explode the response into usable data
@@ -752,7 +760,7 @@ if ( ! class_exists( 'BBP_Akismet' ) ) :
 			// Topics
 			add_meta_box(
 				'bbp_akismet_topic_history',
-				__( 'Akismet History', 'buddyboss' ),
+				__( 'Akismet History', 'buddyboss-platform' ),
 				array( $this, 'history_metabox' ),
 				bbp_get_topic_post_type(),
 				'normal',
@@ -762,7 +770,7 @@ if ( ! class_exists( 'BBP_Akismet' ) ) :
 			// Replies
 			add_meta_box(
 				'bbp_akismet_reply_history',
-				__( 'Akismet History', 'buddyboss' ),
+				__( 'Akismet History', 'buddyboss-platform' ),
 				array( $this, 'history_metabox' ),
 				bbp_get_reply_post_type(),
 				'normal',
@@ -795,7 +803,7 @@ if ( ! class_exists( 'BBP_Akismet' ) ) :
 
 							<tr>
 								<td style="color: #999; text-align: right; white-space: nowrap;">
-									<span title="<?php echo esc_attr( date( 'D d M Y @ h:i:m a', $row['time'] ) . ' GMT' ); ?>">
+									<span title="<?php echo esc_attr( gmdate( 'D d M Y @ h:i:m a', $row['time'] ) . ' GMT' ); ?>">
 										<?php bbp_time_since( $row['time'], false, true ); ?>
 									</span>
 								</td>
@@ -810,7 +818,7 @@ if ( ! class_exists( 'BBP_Akismet' ) ) :
 
 			<?php else : ?>
 
-				<p><?php esc_html_e( 'No recorded history. Akismet has not checked this post.', 'buddyboss' ); ?></p>
+				<p><?php esc_html_e( 'No recorded history. Akismet has not checked this post.', 'buddyboss-platform' ); ?></p>
 
 			<?php endif; ?>
 

@@ -102,7 +102,7 @@ class BB_Admin_Integrations_Ajax {
 	private function validate_request() {
 		if ( ! current_user_can( 'activate_plugins' ) ) {
 			wp_send_json_error(
-				array( 'message' => __( 'Sorry, you are not allowed to manage plugins.', 'buddyboss' ) ),
+				array( 'message' => __( 'Sorry, you are not allowed to manage plugins.', 'buddyboss-platform' ) ),
 				403
 			);
 		}
@@ -111,12 +111,12 @@ class BB_Admin_Integrations_Ajax {
 
 		$slug = isset( $_POST['slug'] ) ? sanitize_key( wp_unslash( $_POST['slug'] ) ) : '';
 		if ( empty( $slug ) ) {
-			wp_send_json_error( array( 'message' => __( 'Missing plugin.', 'buddyboss' ) ), 400 );
+			wp_send_json_error( array( 'message' => __( 'Missing plugin.', 'buddyboss-platform' ) ), 400 );
 		}
 
 		$file = $this->resolve_plugin_file( $slug );
 		if ( empty( $file ) ) {
-			wp_send_json_error( array( 'message' => __( 'Plugin is not installed.', 'buddyboss' ) ), 404 );
+			wp_send_json_error( array( 'message' => __( 'Plugin is not installed.', 'buddyboss-platform' ) ), 404 );
 		}
 
 		return $file;

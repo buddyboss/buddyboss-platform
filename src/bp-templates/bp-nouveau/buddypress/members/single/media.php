@@ -8,6 +8,9 @@
  * @version 1.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 $is_send_ajax_request = bb_is_send_ajax_request();
 $bp_current_action    = bp_current_action();
 $count                = false;
@@ -34,7 +37,7 @@ if ( bp_is_user() && bb_enable_content_counts() ) {
 								'<span class="bb-count">%d</span> Album',
 								'<span class="bb-count">%d</span> Albums',
 								$count,
-								'buddyboss'
+								'buddyboss-platform'
 							),
 							array( 'span' => array( 'class' => true ) )
 						),
@@ -48,7 +51,7 @@ if ( bp_is_user() && bb_enable_content_counts() ) {
 								'<span class="bb-count">%d</span> Photo',
 								'<span class="bb-count">%d</span> Photos',
 								$count,
-								'buddyboss'
+								'buddyboss-platform'
 							),
 							array( 'span' => array( 'class' => true ) )
 						),
@@ -67,7 +70,7 @@ if ( bp_is_user() && bb_enable_content_counts() ) {
 <div class="bb-media-container member-media">
 	<?php
 	bp_get_template_part( 'media/theatre' );
-	if ( bp_is_profile_video_support_enabled() ) {
+	if ( bp_is_active( 'video' ) && bp_is_profile_video_support_enabled() ) {
 		bp_get_template_part( 'video/theatre' );
 		bp_get_template_part( 'video/add-video-thumbnail' );
 	}

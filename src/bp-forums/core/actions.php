@@ -304,7 +304,6 @@ add_action( 'bbp_login_form_login', 'bbp_user_maybe_convert_pass' );
 add_action( 'wp_ajax_post_topic_reply_draft', 'bb_post_topic_reply_draft' );
 
 add_action( 'wp_footer', 'bb_forum_add_content_popup' );
-add_action( 'wp_footer', 'bb_forums_gifpicker_add_popup_template' );
 
 add_action( 'bbp_new_topic', 'bb_forums_save_link_preview_data' );
 add_action( 'bbp_new_reply', 'bb_forums_save_link_preview_data' );
@@ -359,41 +358,41 @@ function forums_notification_settings() {
 		<thead>
 		<tr>
 			<th class="icon"></th>
-			<th class="title"><?php esc_html_e( 'Forums', 'buddyboss' ); ?></th>
-			<th class="yes"><?php esc_html_e( 'Yes', 'buddyboss' ); ?></th>
-			<th class="no"><?php esc_html_e( 'No', 'buddyboss' ); ?></th>
+			<th class="title"><?php esc_html_e( 'Forums', 'buddyboss-platform' ); ?></th>
+			<th class="yes"><?php esc_html_e( 'Yes', 'buddyboss-platform' ); ?></th>
+			<th class="no"><?php esc_html_e( 'No', 'buddyboss-platform' ); ?></th>
 		</tr>
 		</thead>
 		<tbody>
 		<tr id="forums-notification-settings-new-message">
 			<td></td>
-			<td><?php esc_html_e( 'A member replies to a discussion you are subscribed to', 'buddyboss' ); ?></td>
+			<td><?php esc_html_e( 'A member replies to a discussion you are subscribed to', 'buddyboss-platform' ); ?></td>
 			<td class="yes">
 				<div class="bp-radio-wrap">
 					<input type="radio" name="notifications[notification_forums_following_reply]" id="notification-forums-reply-new-messages-yes" class="bs-styled-radio" value="yes" <?php checked( $notification_forums_following_reply, 'yes', true ); ?> />
-					<label for="notification-forums-reply-new-messages-yes"><span class="bp-screen-reader-text"><?php esc_html_e( 'Yes, send email', 'buddyboss' ); ?></span></label>
+					<label for="notification-forums-reply-new-messages-yes"><span class="bp-screen-reader-text"><?php esc_html_e( 'Yes, send email', 'buddyboss-platform' ); ?></span></label>
 				</div>
 			</td>
 			<td class="no">
 				<div class="bp-radio-wrap">
 					<input type="radio" name="notifications[notification_forums_following_reply]" id="notification-forums-reply-new-messages-no" class="bs-styled-radio" value="no" <?php checked( $notification_forums_following_reply, 'no', true ); ?> />
-					<label for="notification-forums-reply-new-messages-no"><span class="bp-screen-reader-text"><?php esc_html_e( 'No, do not send email', 'buddyboss' ); ?></span></label>
+					<label for="notification-forums-reply-new-messages-no"><span class="bp-screen-reader-text"><?php esc_html_e( 'No, do not send email', 'buddyboss-platform' ); ?></span></label>
 				</div>
 			</td>
 		</tr>
 		<tr id="forums-notification-settings-new-message">
 			<td></td>
-			<td><?php esc_html_e( 'A member creates a discussion in a forum you are subscribed to', 'buddyboss' ); ?></td>
+			<td><?php esc_html_e( 'A member creates a discussion in a forum you are subscribed to', 'buddyboss-platform' ); ?></td>
 			<td class="yes">
 				<div class="bp-radio-wrap">
 					<input type="radio" name="notifications[notification_forums_following_topic]" id="notification-forums-topic-new-messages-yes" class="bs-styled-radio" value="yes" <?php checked( $notification_forums_following_topic, 'yes', true ); ?> />
-					<label for="notification-forums-topic-new-messages-yes"><span class="bp-screen-reader-text"><?php esc_html_e( 'Yes, send email', 'buddyboss' ); ?></span></label>
+					<label for="notification-forums-topic-new-messages-yes"><span class="bp-screen-reader-text"><?php esc_html_e( 'Yes, send email', 'buddyboss-platform' ); ?></span></label>
 				</div>
 			</td>
 			<td class="no">
 				<div class="bp-radio-wrap">
 					<input type="radio" name="notifications[notification_forums_following_topic]" id="notification-forums-topic-new-messages-no" class="bs-styled-radio" value="no" <?php checked( $notification_forums_following_topic, 'no', true ); ?> />
-					<label for="notification-forums-topic-new-messages-no"><span class="bp-screen-reader-text"><?php esc_html_e( 'No, do not send email', 'buddyboss' ); ?></span></label>
+					<label for="notification-forums-topic-new-messages-no"><span class="bp-screen-reader-text"><?php esc_html_e( 'No, do not send email', 'buddyboss-platform' ); ?></span></label>
 				</div>
 			</td>
 		</tr>
@@ -592,8 +591,8 @@ function bb_forum_add_content_popup() {
 					<div class="modal-wrapper">
 						<div class="modal-container">
 							<header class="bb-model-header">
-								<h4><span class="target_name"><?php echo esc_html__( 'Forum Description', 'buddyboss' ); ?></span></h4>
-								<a class="bb-close-action-popup bb-model-close-button" href="#" aria-label="<?php esc_attr_e( 'Close', 'buddyboss' ); ?>">
+								<h4><span class="target_name"><?php echo esc_html__( 'Forum Description', 'buddyboss-platform' ); ?></span></h4>
+								<a class="bb-close-action-popup bb-model-close-button" href="#" aria-label="<?php esc_attr_e( 'Close', 'buddyboss-platform' ); ?>">
 									<span class="bb-icon-l bb-icon-times"></span>
 								</a>
 							</header>
@@ -609,27 +608,6 @@ function bb_forum_add_content_popup() {
 	}
 
 	unset( $template_forum_ids );
-}
-
-/**
- * Add template for gifpicker popup on forums pages.
- *
- * This renders the standalone GIF picker popup outside of modals.
- *
- * @since BuddyBoss 2.20.0
- */
-function bb_forums_gifpicker_add_popup_template() {
-	// Only load on forum pages when media component is active and GIF support is enabled.
-	if (
-		! bp_is_active( 'media' ) ||
-		! function_exists( 'is_bbpress' ) ||
-		! is_bbpress() ||
-		! bp_is_forums_gif_support_enabled()
-	) {
-		return;
-	}
-
-	bp_get_template_part( 'activity/gifpicker-popup' );
 }
 
 /**

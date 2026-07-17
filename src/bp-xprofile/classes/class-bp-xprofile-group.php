@@ -159,7 +159,7 @@ class BP_XProfile_Group {
 		}
 
 		// Attempt to insert or update.
-		$query = $wpdb->query( $sql );
+		$query = $wpdb->query( $sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- $sql is $wpdb->prepare()'d above.
 
 		// Bail if query fails. If `$query` is 0, it means the save was successful, but no fields were updated.
 		if ( false === $query || is_wp_error( $query ) ) {
@@ -215,7 +215,7 @@ class BP_XProfile_Group {
 
 		$bp      = buddypress();
 		$sql     = $wpdb->prepare( "DELETE FROM {$bp->profile->table_name_groups} WHERE id = %d", $this->id );
-		$deleted = $wpdb->query( $sql );
+		$deleted = $wpdb->query( $sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- $sql is $wpdb->prepare()'d above.
 
 		// Delete field group.
 		if ( empty( $deleted ) || is_wp_error( $deleted ) ) {
@@ -373,7 +373,7 @@ class BP_XProfile_Group {
 		}
 
 		// Setup IN query from group IDs.
-		$group_ids_in = implode( ',', (array) $group_ids );
+		$group_ids_in = implode( ',', array_map( 'intval', (array) $group_ids ) );
 
 		// Support arrays and comma-separated strings.
 		$exclude_fields_cs = wp_parse_id_list( $r['exclude_fields'] );
@@ -454,7 +454,7 @@ class BP_XProfile_Group {
 		// Fetch the fields.
 		$cache_field_key = 'bp_xprofile_field_ids_' . md5( maybe_serialize( $r ) );
 		if ( ! isset( $bp_xprofile_field_ids[ $cache_field_key ] ) || is_admin() ) {
-			$field_ids                           = $wpdb->get_col( "SELECT id FROM {$bp->profile->table_name_fields} WHERE group_id IN ( {$group_ids_in} ) AND parent_id = 0 {$exclude_fields_sql} {$in_sql} ORDER BY field_order" );
+			$field_ids                           = $wpdb->get_col( "SELECT id FROM {$bp->profile->table_name_fields} WHERE group_id IN ( {$group_ids_in} ) AND parent_id = 0 {$exclude_fields_sql} {$in_sql} ORDER BY field_order" ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- Table name internal; $group_ids_in/$exclude_fields_sql/$in_sql are all intval/wp_parse_id_list-built ID lists; ORDER BY is hardcoded.
 			$bp_xprofile_field_ids[ $cache_field_key ] = $field_ids;
 		} else {
 			$field_ids = $bp_xprofile_field_ids[ $cache_field_key ];
@@ -709,7 +709,7 @@ class BP_XProfile_Group {
 
 		// Validate Form.
 		if ( empty( $_POST['group_name'] ) ) {
-			$message = __( 'Please make sure you give the group a name.', 'buddyboss' );
+			$message = __( 'Please make sure you give the group a name.', 'buddyboss-platform' );
 			return false;
 		} else {
 			return true;
@@ -820,6 +820,7 @@ class BP_XProfile_Group {
 			}
 
 			$levels = $wpdb->get_results(
+				// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- Only internal table names ($profile_table/$profile_meta_table from $bp->profile / table prefix) interpolated; no user input, hardcoded WHERE/ORDER BY.
 				"SELECT xf.id,
 				GROUP_CONCAT(xm.meta_key ORDER BY xf.id) meta_keys,
 				GROUP_CONCAT(xm.meta_value ORDER BY xf.id) meta_values
@@ -879,8 +880,8 @@ class BP_XProfile_Group {
 
 		// New field group.
 		if ( empty( $this->id ) ) {
-			$title  = __( 'New Field Set', 'buddyboss' );
-			$button = __( 'Save', 'buddyboss' );
+			$title  = __( 'New Field Set', 'buddyboss-platform' );
+			$button = __( 'Save', 'buddyboss-platform' );
 			$action = add_query_arg(
 				array(
 					'page' => 'bp-profile-setup',
@@ -891,8 +892,8 @@ class BP_XProfile_Group {
 
 			// Existing field group.
 		} else {
-			$title  = __( 'Edit Field Set', 'buddyboss' );
-			$button = __( 'Update', 'buddyboss' );
+			$title  = __( 'Edit Field Set', 'buddyboss-platform' );
+			$button = __( 'Update', 'buddyboss-platform' );
 			$action = add_query_arg(
 				array(
 					'page'     => 'bp-profile-setup',
@@ -908,7 +909,7 @@ class BP_XProfile_Group {
 			$users_tab = count( bp_core_get_users_admin_tabs() );
 			if ( $users_tab > 1 ) {
 				?>
-				<h2 class="nav-tab-wrapper"><?php bp_core_admin_users_tabs( __( 'Profile Fields', 'buddyboss' ) ); ?></h2>
+				<h2 class="nav-tab-wrapper"><?php bp_core_admin_users_tabs( __( 'Profile Fields', 'buddyboss-platform' ) ); ?></h2>
 																			<?php
 			}
 			?>
@@ -928,17 +929,17 @@ class BP_XProfile_Group {
 						<div id="post-body-content">
 							<div id="titlediv">
 								<div class="titlewrap">
-									<label id="title-prompt-text" for="title" class="screen-reader-text"><?php esc_html_e( 'Field Set Name (required)', 'buddyboss' ); ?></label>
+									<label id="title-prompt-text" for="title" class="screen-reader-text"><?php esc_html_e( 'Field Set Name (required)', 'buddyboss-platform' ); ?></label>
 									<input type="text" name="group_name" id="title" value="<?php echo esc_attr( $this->name ); ?>" autocomplete="off" />
 								</div>
 							</div>
 							<div class="postbox">
-								<h2><?php esc_html_e( 'Field Set Description', 'buddyboss' ); ?></h2>
+								<h2><?php esc_html_e( 'Field Set Description', 'buddyboss-platform' ); ?></h2>
 								<div class="inside">
 									<label for="group_description" class="screen-reader-text">
 									<?php
 										/* translators: accessibility text */
-										esc_html_e( 'Add description', 'buddyboss' );
+										esc_html_e( 'Add description', 'buddyboss-platform' );
 									?>
 									</label>
 									<textarea name="group_description" id="group_description" rows="8" cols="60"><?php echo ! empty( $this->description ) ? esc_textarea( $this->description ) : ''; ?></textarea>
@@ -974,7 +975,7 @@ class BP_XProfile_Group {
 							?>
 
 							<div id="submitdiv" class="postbox">
-								<h2><?php _e( 'Submit', 'buddyboss' ); ?></h2>
+								<h2><?php esc_html_e( 'Submit', 'buddyboss-platform' ); ?></h2>
 								<div class="inside">
 									<div id="submitcomment" class="submitbox">
 										<div id="major-publishing-actions">
@@ -999,7 +1000,7 @@ class BP_XProfile_Group {
 												<input type="submit" name="save_group" value="<?php echo esc_attr( $button ); ?>" class="button-primary"/>
 											</div>
 											<div id="delete-action">
-												<a href="<?php echo esc_url( $cancel_url ); ?>" class="deletion"><?php _e( 'Cancel', 'buddyboss' ); ?></a>
+												<a href="<?php echo esc_url( $cancel_url ); ?>" class="deletion"><?php esc_html_e( 'Cancel', 'buddyboss-platform' ); ?></a>
 											</div>
 											<div class="clear"></div>
 										</div>
@@ -1030,12 +1031,12 @@ class BP_XProfile_Group {
 								<?php $enabled = 'on' == self::get_group_meta( $this->id, 'is_repeater_enabled' ) ? 'on' : 'off'; ?>
 
 								<div id="repeatersetdiv" class="postbox">
-									<h2><?php _e( 'Repeater Set', 'buddyboss' ); ?></h2>
+									<h2><?php esc_html_e( 'Repeater Set', 'buddyboss-platform' ); ?></h2>
 									<div class="inside">
-										<p style="margin-top: 0;"><?php _e( 'Allow the profile fields within this set to be repeated again and again, so the user can add multiple instances of their data.', 'buddyboss' ); ?></p>
+										<p style="margin-top: 0;"><?php esc_html_e( 'Allow the profile fields within this set to be repeated again and again, so the user can add multiple instances of their data.', 'buddyboss-platform' ); ?></p>
 										<select name="group_is_repeater" id="group_is_repeater" >
-											<option value="off" <?php selected( $enabled, 'off' ); ?>><?php _e( 'Disabled', 'buddyboss' ); ?></option>
-											<option value="on" <?php selected( $enabled, 'on' ); ?>><?php _e( 'Enabled', 'buddyboss' ); ?></option>
+											<option value="off" <?php selected( $enabled, 'off' ); ?>><?php esc_html_e( 'Disabled', 'buddyboss-platform' ); ?></option>
+											<option value="on" <?php selected( $enabled, 'on' ); ?>><?php esc_html_e( 'Enabled', 'buddyboss-platform' ); ?></option>
 										</select>
 									</div>
 								</div>

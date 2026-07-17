@@ -98,7 +98,7 @@ class BP_REST_Activity_Details_Endpoint extends WP_REST_Controller {
 	public function get_items_permissions_check( $request ) {
 		$retval = new WP_Error(
 			'bp_rest_component_required',
-			__( 'Sorry, Activity component was not enabled.', 'buddyboss' ),
+			__( 'Sorry, Activity component was not enabled.', 'buddyboss-platform' ),
 			array(
 				'status' => '404',
 			)
@@ -133,7 +133,7 @@ class BP_REST_Activity_Details_Endpoint extends WP_REST_Controller {
 			'properties' => array(
 				'nav'     => array(
 					'context'     => array( 'embed', 'view' ),
-					'description' => __( 'Activity directory tabs.', 'buddyboss' ),
+					'description' => __( 'Activity directory tabs.', 'buddyboss-platform' ),
 					'type'        => 'object',
 					'readonly'    => true,
 					'items'       => array(
@@ -142,13 +142,13 @@ class BP_REST_Activity_Details_Endpoint extends WP_REST_Controller {
 				),
 				'filters' => array(
 					'context'     => array( 'embed', 'view' ),
-					'description' => __( 'Activity Filter options', 'buddyboss' ),
+					'description' => __( 'Activity Filter options', 'buddyboss-platform' ),
 					'type'        => 'array',
 					'readonly'    => true,
 				),
 				'post_in' => array(
 					'context'     => array( 'embed', 'view' ),
-					'description' => __( 'Activity contains from.', 'buddyboss' ),
+					'description' => __( 'Activity contains from.', 'buddyboss-platform' ),
 					'type'        => 'array',
 					'readonly'    => true,
 				),
@@ -158,7 +158,7 @@ class BP_REST_Activity_Details_Endpoint extends WP_REST_Controller {
 		if ( function_exists( 'bp_activity_get_visibility_levels' ) ) {
 			$schema['properties']['privacy'] = array(
 				'context'     => array( 'embed', 'view' ),
-				'description' => __( 'Activity Privacy.', 'buddyboss' ),
+				'description' => __( 'Activity Privacy.', 'buddyboss-platform' ),
 				'type'        => 'array',
 				'readonly'    => true,
 			);
@@ -244,7 +244,7 @@ class BP_REST_Activity_Details_Endpoint extends WP_REST_Controller {
 			$activity_filters = $this->bp_rest_legacy_get_activity_filters();
 		}
 
-		$filters = array( '-1' => __( '-- Everything --', 'buddyboss' ) ) + $activity_filters;
+		$filters = array( '-1' => __( '-- Everything --', 'buddyboss-platform' ) ) + $activity_filters;
 		return $filters;
 	}
 
@@ -255,7 +255,7 @@ class BP_REST_Activity_Details_Endpoint extends WP_REST_Controller {
 	 */
 	public function get_activities_post_in() {
 		$post_in    = array();
-		$post_in[0] = __( 'My Profile', 'buddyboss' );
+		$post_in[0] = __( 'My Profile', 'buddyboss-platform' );
 
 		if ( bp_is_active( 'groups' ) ) {
 			$args   = array(
@@ -283,7 +283,7 @@ class BP_REST_Activity_Details_Endpoint extends WP_REST_Controller {
 		$nav_items = array();
 
 		$nav_items['all'] = array(
-			'text'     => __( 'All Members', 'buddyboss' ),
+			'text'     => __( 'All Members', 'buddyboss-platform' ),
 			'position' => 5,
 		);
 
@@ -291,21 +291,21 @@ class BP_REST_Activity_Details_Endpoint extends WP_REST_Controller {
 
 			if ( bp_is_active( 'friends' ) && bp_get_total_friend_count( bp_loggedin_user_id() ) ) {
 				$nav_items['friends'] = array(
-					'text'     => __( 'My Friends', 'buddyboss' ),
+					'text'     => __( 'My Friends', 'buddyboss-platform' ),
 					'position' => 15,
 				);
 			}
 
 			if ( bp_is_active( 'groups' ) && bp_get_total_group_count_for_user( bp_loggedin_user_id() ) ) {
 				$nav_items['groups'] = array(
-					'text'     => __( 'My Groups', 'buddyboss' ),
+					'text'     => __( 'My Groups', 'buddyboss-platform' ),
 					'position' => 25,
 				);
 			}
 
 			if ( bp_get_total_favorite_count_for_user( bp_loggedin_user_id() ) ) {
 				$nav_items['favorites'] = array(
-					'text'     => __( 'My Favorites', 'buddyboss' ),
+					'text'     => __( 'My Favorites', 'buddyboss-platform' ),
 					'position' => 35,
 				);
 			}
@@ -313,7 +313,7 @@ class BP_REST_Activity_Details_Endpoint extends WP_REST_Controller {
 			if ( bp_activity_do_mentions() ) {
 				if ( bp_get_total_mention_count_for_user( bp_loggedin_user_id() ) ) {
 					$nav_items['mentions'] = array(
-						'text'     => __( 'Mentions', 'buddyboss' ),
+						'text'     => __( 'Mentions', 'buddyboss-platform' ),
 						'position' => 45,
 					);
 				}

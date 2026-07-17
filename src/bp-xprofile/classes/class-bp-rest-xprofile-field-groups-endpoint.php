@@ -70,7 +70,7 @@ class BP_REST_XProfile_Field_Groups_Endpoint extends WP_REST_Controller {
 			array(
 				'args'   => array(
 					'id' => array(
-						'description' => __( 'A unique numeric ID for the group of profile fields.', 'buddyboss' ),
+						'description' => __( 'A unique numeric ID for the group of profile fields.', 'buddyboss-platform' ),
 						'type'        => 'integer',
 					),
 				),
@@ -234,7 +234,7 @@ class BP_REST_XProfile_Field_Groups_Endpoint extends WP_REST_Controller {
 		if ( function_exists( 'bp_rest_enable_private_network' ) && true === bp_rest_enable_private_network() && ! is_user_logged_in() ) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
-				__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss' ),
+				__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss-platform' ),
 				array(
 					'status' => rest_authorization_required_code(),
 				)
@@ -282,7 +282,7 @@ class BP_REST_XProfile_Field_Groups_Endpoint extends WP_REST_Controller {
 		if ( empty( $field_group->id ) ) {
 			return new WP_Error(
 				'bp_rest_invalid_id',
-				__( 'Invalid field group ID.', 'buddyboss' ),
+				__( 'Invalid field group ID.', 'buddyboss-platform' ),
 				array(
 					'status' => 404,
 				)
@@ -373,7 +373,7 @@ class BP_REST_XProfile_Field_Groups_Endpoint extends WP_REST_Controller {
 		if ( empty( $args['name'] ) ) {
 			return new WP_Error(
 				'bp_rest_required_param_missing',
-				__( 'Required param missing.', 'buddyboss' ),
+				__( 'Required param missing.', 'buddyboss-platform' ),
 				array(
 					'status' => 400,
 				)
@@ -385,7 +385,7 @@ class BP_REST_XProfile_Field_Groups_Endpoint extends WP_REST_Controller {
 		if ( ! $group_id ) {
 			return new WP_Error(
 				'bp_rest_user_cannot_create_xprofile_field_group',
-				__( 'Cannot create new XProfile field group.', 'buddyboss' ),
+				__( 'Cannot create new XProfile field group.', 'buddyboss-platform' ),
 				array(
 					'status' => 500,
 				)
@@ -432,7 +432,7 @@ class BP_REST_XProfile_Field_Groups_Endpoint extends WP_REST_Controller {
 	public function create_item_permissions_check( $request ) {
 		$retval = new WP_Error(
 			'bp_rest_authorization_required',
-			__( 'Sorry, you are not allowed to view this XProfile field group.', 'buddyboss' ),
+			__( 'Sorry, you are not allowed to view this XProfile field group.', 'buddyboss-platform' ),
 			array(
 				'status' => rest_authorization_required_code(),
 			)
@@ -483,7 +483,7 @@ class BP_REST_XProfile_Field_Groups_Endpoint extends WP_REST_Controller {
 		if ( empty( $field_group->id ) ) {
 			return new WP_Error(
 				'bp_rest_invalid_id',
-				__( 'Invalid field group ID.', 'buddyboss' ),
+				__( 'Invalid field group ID.', 'buddyboss-platform' ),
 				array(
 					'status' => 404,
 				)
@@ -502,7 +502,7 @@ class BP_REST_XProfile_Field_Groups_Endpoint extends WP_REST_Controller {
 		if ( ! $group_id ) {
 			return new WP_Error(
 				'bp_rest_user_cannot_update_xprofile_field_group',
-				__( 'Cannot update XProfile field group.', 'buddyboss' ),
+				__( 'Cannot update XProfile field group.', 'buddyboss-platform' ),
 				array(
 					'status' => 500,
 				)
@@ -607,7 +607,7 @@ class BP_REST_XProfile_Field_Groups_Endpoint extends WP_REST_Controller {
 		if ( empty( $field_group->id ) ) {
 			return new WP_Error(
 				'bp_rest_invalid_id',
-				__( 'Invalid field group ID.', 'buddyboss' ),
+				__( 'Invalid field group ID.', 'buddyboss-platform' ),
 				array(
 					'status' => 404,
 				)
@@ -617,7 +617,7 @@ class BP_REST_XProfile_Field_Groups_Endpoint extends WP_REST_Controller {
 		if ( ! xprofile_delete_field_group( $field_group->id ) ) {
 			return new WP_Error(
 				'bp_rest_xprofile_field_group_cannot_delete',
-				__( 'Could not delete XProfile field group.', 'buddyboss' ),
+				__( 'Could not delete XProfile field group.', 'buddyboss-platform' ),
 				array(
 					'status' => 500,
 				)
@@ -829,13 +829,13 @@ class BP_REST_XProfile_Field_Groups_Endpoint extends WP_REST_Controller {
 			'properties' => array(
 				'id'               => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'A unique numeric ID for the group of profile fields.', 'buddyboss' ),
+					'description' => __( 'A unique numeric ID for the group of profile fields.', 'buddyboss-platform' ),
 					'readonly'    => true,
 					'type'        => 'integer',
 				),
 				'name'             => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'The name of group of profile fields.', 'buddyboss' ),
+					'description' => __( 'The name of group of profile fields.', 'buddyboss-platform' ),
 					'type'        => 'string',
 					'arg_options' => array(
 						'sanitize_callback' => 'sanitize_text_field',
@@ -843,7 +843,7 @@ class BP_REST_XProfile_Field_Groups_Endpoint extends WP_REST_Controller {
 				),
 				'description'      => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'The description of the group of profile fields.', 'buddyboss' ),
+					'description' => __( 'The description of the group of profile fields.', 'buddyboss-platform' ),
 					'type'        => 'object',
 					'arg_options' => array(
 						'sanitize_callback' => null,
@@ -853,12 +853,12 @@ class BP_REST_XProfile_Field_Groups_Endpoint extends WP_REST_Controller {
 					),
 					'properties'  => array(
 						'raw'      => array(
-							'description' => __( 'Content for the group of profile fields, as it exists in the database.', 'buddyboss' ),
+							'description' => __( 'Content for the group of profile fields, as it exists in the database.', 'buddyboss-platform' ),
 							'type'        => 'string',
 							'context'     => array( 'edit' ),
 						),
 						'rendered' => array(
-							'description' => __( 'HTML content for the group of profile fields, transformed for display.', 'buddyboss' ),
+							'description' => __( 'HTML content for the group of profile fields, transformed for display.', 'buddyboss-platform' ),
 							'type'        => 'string',
 							'context'     => array( 'embed', 'view', 'edit' ),
 							'readonly'    => true,
@@ -867,22 +867,22 @@ class BP_REST_XProfile_Field_Groups_Endpoint extends WP_REST_Controller {
 				),
 				'group_order'      => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'The order of the group of profile fields.', 'buddyboss' ),
+					'description' => __( 'The order of the group of profile fields.', 'buddyboss-platform' ),
 					'type'        => 'integer',
 				),
 				'can_delete'       => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Whether the group of profile fields can be deleted or not.', 'buddyboss' ),
+					'description' => __( 'Whether the group of profile fields can be deleted or not.', 'buddyboss-platform' ),
 					'type'        => 'boolean',
 				),
 				'repeater_enabled' => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Whether the group of profile fields can be repeated or not.', 'buddyboss' ),
+					'description' => __( 'Whether the group of profile fields can be repeated or not.', 'buddyboss-platform' ),
 					'type'        => 'boolean',
 				),
 				'fields'           => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'The fields associated with this group of profile fields.', 'buddyboss' ),
+					'description' => __( 'The fields associated with this group of profile fields.', 'buddyboss-platform' ),
 					'type'        => 'array',
 					'readonly'    => true,
 				),
@@ -908,7 +908,7 @@ class BP_REST_XProfile_Field_Groups_Endpoint extends WP_REST_Controller {
 		$params['context']['default'] = 'view';
 
 		$params['profile_group_id'] = array(
-			'description'       => __( 'ID of the field group that have fields.', 'buddyboss' ),
+			'description'       => __( 'ID of the field group that have fields.', 'buddyboss-platform' ),
 			'default'           => 0,
 			'type'              => 'integer',
 			'sanitize_callback' => 'absint',
@@ -916,7 +916,7 @@ class BP_REST_XProfile_Field_Groups_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['hide_empty_groups'] = array(
-			'description'       => __( 'Whether to hide profile groups of fields that do not have any profile fields or not.', 'buddyboss' ),
+			'description'       => __( 'Whether to hide profile groups of fields that do not have any profile fields or not.', 'buddyboss-platform' ),
 			'default'           => false,
 			'type'              => 'boolean',
 			'sanitize_callback' => 'rest_sanitize_boolean',
@@ -924,7 +924,7 @@ class BP_REST_XProfile_Field_Groups_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['user_id'] = array(
-			'description'       => __( 'Required if you want to load a specific user\'s data.', 'buddyboss' ),
+			'description'       => __( 'Required if you want to load a specific user\'s data.', 'buddyboss-platform' ),
 			'default'           => bp_loggedin_user_id(),
 			'type'              => 'integer',
 			'sanitize_callback' => 'absint',
@@ -932,7 +932,7 @@ class BP_REST_XProfile_Field_Groups_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['member_type'] = array(
-			'description'       => __( 'Limit fields by those restricted to a given member type, or array of member types. If `$user_id` is provided, the value of `$member_type` will be overridden by the member types of the provided user. The special value of \'any\' will return only those fields that are unrestricted by member type - i.e., those applicable to any type.', 'buddyboss' ),
+			'description'       => __( 'Limit fields by those restricted to a given member type, or array of member types. If `$user_id` is provided, the value of `$member_type` will be overridden by the member types of the provided user. The special value of \'any\' will return only those fields that are unrestricted by member type - i.e., those applicable to any type.', 'buddyboss-platform' ),
 			'default'           => array(),
 			'type'              => 'array',
 			'items'             => array( 'type' => 'string' ),
@@ -941,7 +941,7 @@ class BP_REST_XProfile_Field_Groups_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['hide_empty_fields'] = array(
-			'description'       => __( 'Whether to hide profile groups of fields that do not have any profile fields or not.', 'buddyboss' ),
+			'description'       => __( 'Whether to hide profile groups of fields that do not have any profile fields or not.', 'buddyboss-platform' ),
 			'default'           => false,
 			'type'              => 'boolean',
 			'sanitize_callback' => 'rest_sanitize_boolean',
@@ -949,7 +949,7 @@ class BP_REST_XProfile_Field_Groups_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['fetch_fields'] = array(
-			'description'       => __( 'Whether to fetch the fields for each group.', 'buddyboss' ),
+			'description'       => __( 'Whether to fetch the fields for each group.', 'buddyboss-platform' ),
 			'default'           => false,
 			'type'              => 'boolean',
 			'sanitize_callback' => 'rest_sanitize_boolean',
@@ -957,7 +957,7 @@ class BP_REST_XProfile_Field_Groups_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['fetch_field_data'] = array(
-			'description'       => __( 'Whether to fetch data for each field. Requires a $user_id.', 'buddyboss' ),
+			'description'       => __( 'Whether to fetch data for each field. Requires a $user_id.', 'buddyboss-platform' ),
 			'default'           => false,
 			'type'              => 'boolean',
 			'sanitize_callback' => 'rest_sanitize_boolean',
@@ -965,7 +965,7 @@ class BP_REST_XProfile_Field_Groups_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['fetch_visibility_level'] = array(
-			'description'       => __( 'Whether to fetch the visibility level for each field.', 'buddyboss' ),
+			'description'       => __( 'Whether to fetch the visibility level for each field.', 'buddyboss-platform' ),
 			'default'           => false,
 			'type'              => 'boolean',
 			'sanitize_callback' => 'rest_sanitize_boolean',
@@ -973,7 +973,7 @@ class BP_REST_XProfile_Field_Groups_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['exclude_groups'] = array(
-			'description'       => __( 'Ensure result set excludes specific profile field groups.', 'buddyboss' ),
+			'description'       => __( 'Ensure result set excludes specific profile field groups.', 'buddyboss-platform' ),
 			'default'           => array(),
 			'type'              => 'array',
 			'items'             => array( 'type' => 'integer' ),
@@ -982,7 +982,7 @@ class BP_REST_XProfile_Field_Groups_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['exclude_fields'] = array(
-			'description'       => __( 'Ensure result set excludes specific profile fields.', 'buddyboss' ),
+			'description'       => __( 'Ensure result set excludes specific profile fields.', 'buddyboss-platform' ),
 			'default'           => array(),
 			'type'              => 'array',
 			'items'             => array( 'type' => 'string' ),
@@ -991,7 +991,7 @@ class BP_REST_XProfile_Field_Groups_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['update_meta_cache'] = array(
-			'description'       => __( 'Whether to pre-fetch xprofilemeta for all retrieved groups, fields, and data.', 'buddyboss' ),
+			'description'       => __( 'Whether to pre-fetch xprofilemeta for all retrieved groups, fields, and data.', 'buddyboss-platform' ),
 			'default'           => true,
 			'type'              => 'boolean',
 			'sanitize_callback' => 'rest_sanitize_boolean',

@@ -22,13 +22,13 @@ defined( 'ABSPATH' ) || exit;
 	<div class="item">
 		<div class="item-title">
 			<a href="<?php echo esc_url( bp_get_member_permalink() ); ?>"><?php bp_member_name(); ?></a>
-			<span class="bb-rl-member-type"><?php echo bp_get_user_member_type( bp_get_member_user_id() ); ?></span>
+			<span class="bb-rl-member-type"><?php echo wp_kses_post( bp_get_user_member_type( bp_get_member_user_id() ) ); ?></span>
 		</div>
 		<?php
 		if ( bp_nouveau_member_has_meta() ) :
 			?>
 			<p class="entry-meta item-meta last-activity">
-				<?php echo esc_html__( 'Last active', 'buddyboss' ) . ' ' . wp_kses_post( bb_get_member_last_activity_time() ); ?>
+				<?php echo esc_html__( 'Last active', 'buddyboss-platform' ) . ' ' . wp_kses_post( bb_get_member_last_activity_time() ); ?>
 			</p><!-- #item-meta -->
 		<?php endif; ?>
 	</div>

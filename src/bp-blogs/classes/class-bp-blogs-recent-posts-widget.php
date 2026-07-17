@@ -19,11 +19,11 @@ class BP_Blogs_Recent_Posts_Widget extends WP_Widget {
 	 */
 	public function __construct() {
 		$widget_ops                       = array(
-			'description'                 => __( 'A list of recently published posts from across your network.', 'buddyboss' ),
+			'description'                 => __( 'A list of recently published posts from across your network.', 'buddyboss-platform' ),
 			'classname'                   => 'widget_bp_blogs_widget buddypress widget',
 			'customize_selective_refresh' => true,
 		);
-		parent::__construct( false, $name = __( '(BB) Recent Networkwide Posts', 'buddyboss' ), $widget_ops );
+		parent::__construct( false, $name = __( '(BB) Recent Networkwide Posts', 'buddyboss-platform' ), $widget_ops );
 	}
 
 	/**
@@ -39,7 +39,7 @@ class BP_Blogs_Recent_Posts_Widget extends WP_Widget {
 
 		$title = ! empty( $instance['title'] )
 			? esc_html( $instance['title'] )
-			: __( 'Recent Networkwide Posts', 'buddyboss' );
+			: __( 'Recent Networkwide Posts', 'buddyboss-platform' );
 
 		if ( ! empty( $instance['link_title'] ) ) {
 			$title = '<a href="' . bp_get_blogs_directory_permalink() . '">' . esc_html( $title ) . '</a>';
@@ -57,8 +57,8 @@ class BP_Blogs_Recent_Posts_Widget extends WP_Widget {
 		 */
 		$title = apply_filters( 'widget_title', $title, $instance, $this->id_base );
 
-		echo $args['before_widget'];
-		echo $args['before_title'] . $title . $args['after_title'];
+		echo wp_kses_post( $args['before_widget'] );
+		echo wp_kses_post( $args['before_title'] ) . wp_kses_post( $title ) . wp_kses_post( $args['after_title'] );
 
 		if ( empty( $instance['max_posts'] ) || empty( $instance['max_posts'] ) ) {
 			$instance['max_posts'] = 10;
@@ -111,13 +111,13 @@ class BP_Blogs_Recent_Posts_Widget extends WP_Widget {
 		<?php else : ?>
 
 			<div id="message" class="info">
-				<p><?php _e( 'Sorry, there were no posts found. Why not write one?', 'buddyboss' ); ?></p>
+				<p><?php esc_html_e( 'Sorry, there were no posts found. Why not write one?', 'buddyboss-platform' ); ?></p>
 			</div>
 
 		<?php endif; ?>
 
 		<?php
-		echo $after_widget;
+		echo wp_kses_post( $after_widget );
 
 		// Restore the global.
 		$activities_template = $old_activities_template;
@@ -132,8 +132,8 @@ class BP_Blogs_Recent_Posts_Widget extends WP_Widget {
 	 */
 	public function update( $new_instance, $old_instance ) {
 		$instance               = $old_instance;
-		$instance['title']      = strip_tags( $new_instance['title'] );
-		$instance['max_posts']  = strip_tags( $new_instance['max_posts'] );
+		$instance['title']      = wp_strip_all_tags( $new_instance['title'] );
+		$instance['max_posts']  = wp_strip_all_tags( $new_instance['max_posts'] );
 		$instance['link_title'] = (bool) $new_instance['link_title'];
 
 		return $instance;
@@ -150,21 +150,21 @@ class BP_Blogs_Recent_Posts_Widget extends WP_Widget {
 		$instance = bp_parse_args(
 			(array) $instance,
 			array(
-				'title'      => __( 'Recent Networkwide Posts', 'buddyboss' ),
+				'title'      => __( 'Recent Networkwide Posts', 'buddyboss-platform' ),
 				'max_posts'  => 10,
 				'link_title' => false,
 			)
 		);
 
-		$title      = strip_tags( $instance['title'] );
-		$max_posts  = strip_tags( $instance['max_posts'] );
+		$title      = wp_strip_all_tags( $instance['title'] );
+		$max_posts  = wp_strip_all_tags( $instance['max_posts'] );
 		$link_title = (bool) $instance['link_title'];
 
 		?>
 
-		<p><label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _ex( 'Title:', 'Label for the Title field of the Recent Networkwide Posts widget', 'buddyboss' ); ?> <input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo esc_attr( $title ); ?>" style="width: 100%;" /></label></p>
-		<p><label for="<?php echo $this->get_field_id( 'link_title' ); ?>"><input type="checkbox" name="<?php echo $this->get_field_name( 'link_title' ); ?>" value="1" <?php checked( $link_title ); ?> /> <?php _e( 'Link widget title to Blogs directory', 'buddyboss' ); ?></label></p>
-		<p><label for="<?php echo $this->get_field_id( 'max_posts' ); ?>"><?php _e( 'Max posts to show:', 'buddyboss' ); ?> <input class="widefat" id="<?php echo $this->get_field_id( 'max_posts' ); ?>" name="<?php echo $this->get_field_name( 'max_posts' ); ?>" type="text" value="<?php echo esc_attr( $max_posts ); ?>" style="width: 30%" /></label></p>
+		<p><label for="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>"><?php echo esc_html_x( 'Title:', 'Label for the Title field of the Recent Networkwide Posts widget', 'buddyboss-platform' ); ?> <input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'title' ) ); ?>" type="text" value="<?php echo esc_attr( $title ); ?>" style="width: 100%;" /></label></p>
+		<p><label for="<?php echo esc_attr( $this->get_field_id( 'link_title' ) ); ?>"><input type="checkbox" name="<?php echo esc_attr( $this->get_field_name( 'link_title' ) ); ?>" value="1" <?php checked( $link_title ); ?> /> <?php esc_html_e( 'Link widget title to Blogs directory', 'buddyboss-platform' ); ?></label></p>
+		<p><label for="<?php echo esc_attr( $this->get_field_id( 'max_posts' ) ); ?>"><?php esc_html_e( 'Max posts to show:', 'buddyboss-platform' ); ?> <input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'max_posts' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'max_posts' ) ); ?>" type="text" value="<?php echo esc_attr( $max_posts ); ?>" style="width: 30%" /></label></p>
 		<?php
 	}
 }

@@ -60,8 +60,8 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 	public function load() {
 		$this->register_notification_group(
 			'activity',
-			esc_html__( 'Activity Feeds', 'buddyboss' ),
-			esc_html__( 'Activity Feeds', 'buddyboss' ),
+			esc_html__( 'Activity Feeds', 'buddyboss-platform' ),
+			esc_html__( 'Activity Feeds', 'buddyboss-platform' ),
 			6
 		);
 
@@ -80,8 +80,8 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 	public function register_notification_for_reply() {
 		$this->register_notification_type(
 			'bb_activity_comment',
-			esc_html__( 'A member replies to your post or comment', 'buddyboss' ),
-			esc_html__( 'A member receives a reply to their post or comment', 'buddyboss' ),
+			esc_html__( 'A member replies to your post or comment', 'buddyboss-platform' ),
+			esc_html__( 'A member receives a reply to their post or comment', 'buddyboss-platform' ),
 			'activity'
 		);
 
@@ -89,13 +89,13 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 			'activity-comment',
 			array(
 				/* translators: do not remove {} brackets or translate its contents. */
-				'email_title'         => __( '[{{{site.name}}}] {{poster.name}} replied to one of your updates', 'buddyboss' ),
+				'email_title'         => __( '[{{{site.name}}}] {{poster.name}} replied to one of your updates', 'buddyboss-platform' ),
 				/* translators: do not remove {} brackets or translate its contents. */
-				'email_content'       => __( "<a href=\"{{{poster.url}}}\">{{poster.name}}</a> replied to one of your updates:\n\n{{{activity_reply}}}", 'buddyboss' ),
+				'email_content'       => __( "<a href=\"{{{poster.url}}}\">{{poster.name}}</a> replied to one of your updates:\n\n{{{activity_reply}}}", 'buddyboss-platform' ),
 				/* translators: do not remove {} brackets or translate its contents. */
-				'email_plain_content' => __( "{{poster.name}} replied to one of your updates:\n\n{{{activity_reply}}}\n\nGo to the discussion to reply or catch up on the conversation: {{{thread.url}}}", 'buddyboss' ),
-				'situation_label'     => __( 'A member receives a reply to their activity post', 'buddyboss' ),
-				'unsubscribe_text'    => __( 'You will no longer receive emails when someone replies to an update or comment you posted.', 'buddyboss' ),
+				'email_plain_content' => __( "{{poster.name}} replied to one of your updates:\n\n{{{activity_reply}}}\n\nGo to the discussion to reply or catch up on the conversation: {{{thread.url}}}", 'buddyboss-platform' ),
+				'situation_label'     => __( 'A member receives a reply to their activity post', 'buddyboss-platform' ),
+				'unsubscribe_text'    => __( 'You will no longer receive emails when someone replies to an update or comment you posted.', 'buddyboss-platform' ),
 				'group'               => 'activity',
 			),
 			'bb_activity_comment'
@@ -105,13 +105,13 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 			'activity-comment-author',
 			array(
 				/* translators: do not remove {} brackets or translate its contents. */
-				'email_title'         => __( '[{{{site.name}}}] {{poster.name}} replied to one of your comments', 'buddyboss' ),
+				'email_title'         => __( '[{{{site.name}}}] {{poster.name}} replied to one of your comments', 'buddyboss-platform' ),
 				/* translators: do not remove {} brackets or translate its contents. */
-				'email_content'       => __( "<a href=\"{{{poster.url}}}\">{{poster.name}}</a> replied to one of your comments:\n\n{{{activity_reply}}}", 'buddyboss' ),
+				'email_content'       => __( "<a href=\"{{{poster.url}}}\">{{poster.name}}</a> replied to one of your comments:\n\n{{{activity_reply}}}", 'buddyboss-platform' ),
 				/* translators: do not remove {} brackets or translate its contents. */
-				'email_plain_content' => __( "{{poster.name}} replied to one of your comments:\n\n{{{activity_reply}}}\n\nGo to the discussion to reply or catch up on the conversation: {{{thread.url}}}", 'buddyboss' ),
-				'situation_label'     => __( 'A member receives a reply to their activity comment', 'buddyboss' ),
-				'unsubscribe_text'    => __( 'You will no longer receive emails when someone replies to an update or comment you posted.', 'buddyboss' ),
+				'email_plain_content' => __( "{{poster.name}} replied to one of your comments:\n\n{{{activity_reply}}}\n\nGo to the discussion to reply or catch up on the conversation: {{{thread.url}}}", 'buddyboss-platform' ),
+				'situation_label'     => __( 'A member receives a reply to their activity comment', 'buddyboss-platform' ),
+				'unsubscribe_text'    => __( 'You will no longer receive emails when someone replies to an update or comment you posted.', 'buddyboss-platform' ),
 				'group'               => 'activity',
 			),
 			'bb_activity_comment'
@@ -125,7 +125,7 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 		);
 
 		$this->register_notification_filter(
-			esc_html__( 'New activity comments', 'buddyboss' ),
+			esc_html__( 'New activity comments', 'buddyboss-platform' ),
 			array( 'bb_activity_comment' ),
 			15
 		);
@@ -158,11 +158,11 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 			$notification_link = add_query_arg( 'rid', (int) $notification_id, bp_core_get_user_domain( $user_id ) );
 
 			if ( 'web_push' === $screen ) {
-				$text = esc_html__( 'Started following you', 'buddyboss' );
+				$text = esc_html__( 'Started following you', 'buddyboss-platform' );
 			} else {
 				$text = sprintf(
 				/* translators: %s: User full name. */
-					__( '%1$s started following you', 'buddyboss' ),
+					__( '%1$s started following you', 'buddyboss-platform' ),
 					$user_fullname
 				);
 			}
@@ -213,9 +213,9 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 
 			if ( $notification_type ) {
 				if ( 'activity_comment' === $notification_type ) {
-					$notification_type_html = esc_html__( 'comment', 'buddyboss' );
+					$notification_type_html = esc_html__( 'comment', 'buddyboss-platform' );
 				} elseif ( 'post_comment' === $notification_type || 'activity_post' === $notification_type ) {
-					$notification_type_html = esc_html__( 'post', 'buddyboss' );
+					$notification_type_html = esc_html__( 'post', 'buddyboss-platform' );
 				}
 			}
 
@@ -224,7 +224,7 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 				wp_strip_all_tags( $activity->content ),
 				50,
 				array(
-					'ending' => __( '&hellip;', 'buddyboss' ),
+					'ending' => __( '&hellip;', 'buddyboss-platform' ),
 				)
 			);
 
@@ -239,7 +239,7 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 					wp_strip_all_tags( $activity_excerpt ),
 					50,
 					array(
-						'ending' => __( '&hellip;', 'buddyboss' ),
+						'ending' => __( '&hellip;', 'buddyboss-platform' ),
 					)
 				);
 
@@ -267,7 +267,7 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 					if ( ! empty( $activity_excerpt ) ) {
 						$text = sprintf(
 						/* translators: 1: Activity type, 2: Activity content. */
-							__( 'Replied to your %1$s: %2$s', 'buddyboss' ),
+							__( 'Replied to your %1$s: %2$s', 'buddyboss-platform' ),
 							$notification_type_html,
 							$activity_excerpt
 						);
@@ -276,13 +276,13 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 						if ( count( $media_ids ) > 1 ) {
 							$text = sprintf(
 							/* translators: Activity type. */
-								__( 'Replied to your %s: some photos', 'buddyboss' ),
+								__( 'Replied to your %s: some photos', 'buddyboss-platform' ),
 								$notification_type_html
 							);
 						} else {
 							$text = sprintf(
 							/* translators: Activity type. */
-								__( 'Replied to your %s: a photo', 'buddyboss' ),
+								__( 'Replied to your %s: a photo', 'buddyboss-platform' ),
 								$notification_type_html
 							);
 						}
@@ -291,13 +291,13 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 						if ( count( $document_ids ) > 1 ) {
 							$text = sprintf(
 							/* translators: Activity type. */
-								__( 'Replied to your %s: some documents', 'buddyboss' ),
+								__( 'Replied to your %s: some documents', 'buddyboss-platform' ),
 								$notification_type_html
 							);
 						} else {
 							$text = sprintf(
 							/* translators: Activity type. */
-								__( 'Replied to your %s: a document', 'buddyboss' ),
+								__( 'Replied to your %s: a document', 'buddyboss-platform' ),
 								$notification_type_html
 							);
 						}
@@ -306,26 +306,26 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 						if ( count( $video_ids ) > 1 ) {
 							$text = sprintf(
 							/* translators: Activity type. */
-								__( 'Replied to your %s: some videos', 'buddyboss' ),
+								__( 'Replied to your %s: some videos', 'buddyboss-platform' ),
 								$notification_type_html
 							);
 						} else {
 							$text = sprintf(
 							/* translators: Activity type. */
-								__( 'Replied to your %s: a video', 'buddyboss' ),
+								__( 'Replied to your %s: a video', 'buddyboss-platform' ),
 								$notification_type_html
 							);
 						}
 					} elseif ( ! empty( $gif_data ) ) {
 						$text = sprintf(
 						/* translators: Activity type. */
-							__( 'Replied to your %s: a gif', 'buddyboss' ),
+							__( 'Replied to your %s: a gif', 'buddyboss-platform' ),
 							$notification_type_html
 						);
 					} else {
 						$text = sprintf(
 						/* translators: Activity type. */
-							__( 'Replied to your %s', 'buddyboss' ),
+							__( 'Replied to your %s', 'buddyboss-platform' ),
 							$notification_type_html
 						);
 					}
@@ -333,34 +333,34 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 					if ( ! empty( $activity_excerpt ) ) {
 						$text = sprintf(
 						/* translators: Activity content. */
-							__( 'Replied: %s', 'buddyboss' ),
+							__( 'Replied: %s', 'buddyboss-platform' ),
 							$activity_excerpt
 						);
 					} elseif ( $media_ids ) {
 						$media_ids = array_filter( ! is_array( $media_ids ) ? explode( ',', $media_ids ) : $media_ids );
 						if ( count( $media_ids ) > 1 ) {
-							$text = __( 'Replied: some photos', 'buddyboss' );
+							$text = __( 'Replied: some photos', 'buddyboss-platform' );
 						} else {
-							$text = __( 'Replied: a photo', 'buddyboss' );
+							$text = __( 'Replied: a photo', 'buddyboss-platform' );
 						}
 					} elseif ( $document_ids ) {
 						$document_ids = array_filter( ! is_array( $document_ids ) ? explode( ',', $document_ids ) : $document_ids );
 						if ( count( $document_ids ) > 1 ) {
-							$text = __( 'Replied: some documents', 'buddyboss' );
+							$text = __( 'Replied: some documents', 'buddyboss-platform' );
 						} else {
-							$text = __( 'Replied: a document', 'buddyboss' );
+							$text = __( 'Replied: a document', 'buddyboss-platform' );
 						}
 					} elseif ( $video_ids ) {
 						$video_ids = array_filter( ! is_array( $video_ids ) ? explode( ',', $video_ids ) : $video_ids );
 						if ( count( $video_ids ) > 1 ) {
-							$text = __( 'Replied: some videos', 'buddyboss' );
+							$text = __( 'Replied: some videos', 'buddyboss-platform' );
 						} else {
-							$text = __( 'Replied: a video', 'buddyboss' );
+							$text = __( 'Replied: a video', 'buddyboss-platform' );
 						}
 					} elseif ( ! empty( $gif_data ) ) {
-						$text = __( 'Replied: a gif', 'buddyboss' );
+						$text = __( 'Replied: a gif', 'buddyboss-platform' );
 					} else {
-						$text = __( 'Replied', 'buddyboss' );
+						$text = __( 'Replied', 'buddyboss-platform' );
 					}
 				}
 			} else {
@@ -368,7 +368,7 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 					$notification_link = add_query_arg( 'type', $notification->component_action, $notification_link );
 					$text              = sprintf(
 					/* translators: %s: Total reply count. */
-						__( 'You have %1$d new replies', 'buddyboss' ),
+						__( 'You have %1$d new replies', 'buddyboss-platform' ),
 						(int) $total_items
 					);
 					$amount = 'multiple';
@@ -379,7 +379,7 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 						if ( ! empty( $activity_excerpt ) ) {
 							$text = sprintf(
 							/* translators: 1: User full name, 2: Activity type, 3: Activity content. */
-								__( '%1$s replied to your %2$s: %3$s', 'buddyboss' ),
+								__( '%1$s replied to your %2$s: %3$s', 'buddyboss-platform' ),
 								$user_fullname,
 								$notification_type_html,
 								$activity_excerpt
@@ -389,14 +389,14 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 							if ( count( $media_ids ) > 1 ) {
 								$text = sprintf(
 								/* translators: 1: User full name, 2: Activity type. */
-									__( '%1$s replied to your %2$s: some photos', 'buddyboss' ),
+									__( '%1$s replied to your %2$s: some photos', 'buddyboss-platform' ),
 									$user_fullname,
 									$notification_type_html
 								);
 							} else {
 								$text = sprintf(
 								/* translators: 1: User full name, 2: Activity type. */
-									__( '%1$s replied to your %2$s: a photo', 'buddyboss' ),
+									__( '%1$s replied to your %2$s: a photo', 'buddyboss-platform' ),
 									$user_fullname,
 									$notification_type_html
 								);
@@ -406,14 +406,14 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 							if ( count( $document_ids ) > 1 ) {
 								$text = sprintf(
 								/* translators: 1: User full name, 2: Activity type. */
-									__( '%1$s replied to your %2$s: some documents', 'buddyboss' ),
+									__( '%1$s replied to your %2$s: some documents', 'buddyboss-platform' ),
 									$user_fullname,
 									$notification_type_html
 								);
 							} else {
 								$text = sprintf(
 								/* translators: 1: User full name, 2: Activity type. */
-									__( '%1$s replied to your %2$s: a document', 'buddyboss' ),
+									__( '%1$s replied to your %2$s: a document', 'buddyboss-platform' ),
 									$user_fullname,
 									$notification_type_html
 								);
@@ -423,14 +423,14 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 							if ( count( $video_ids ) > 1 ) {
 								$text = sprintf(
 								/* translators: 1: User full name, 2: Activity type. */
-									__( '%1$s replied to your %2$s: some videos', 'buddyboss' ),
+									__( '%1$s replied to your %2$s: some videos', 'buddyboss-platform' ),
 									$user_fullname,
 									$notification_type_html
 								);
 							} else {
 								$text = sprintf(
 								/* translators: 1: User full name, 2: Activity type. */
-									__( '%1$s replied to your %2$s: a video', 'buddyboss' ),
+									__( '%1$s replied to your %2$s: a video', 'buddyboss-platform' ),
 									$user_fullname,
 									$notification_type_html
 								);
@@ -438,14 +438,14 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 						} elseif ( ! empty( $gif_data ) ) {
 							$text = sprintf(
 							/* translators: 1: User full name, 2: Activity type. */
-								__( '%1$s replied to your %2$s: a gif', 'buddyboss' ),
+								__( '%1$s replied to your %2$s: a gif', 'buddyboss-platform' ),
 								$user_fullname,
 								$notification_type_html
 							);
 						} else {
 							$text = sprintf(
 							/* translators: 1: User full name, 2: Activity type. */
-								__( '%1$s replied to your %2$s', 'buddyboss' ),
+								__( '%1$s replied to your %2$s', 'buddyboss-platform' ),
 								$user_fullname,
 								$notification_type_html
 							);
@@ -454,7 +454,7 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 						if ( ! empty( $activity_excerpt ) ) {
 							$text = sprintf(
 							/* translators: 1: User full name, 2: Activity content. */
-								__( '%1$s replied: %2$s', 'buddyboss' ),
+								__( '%1$s replied: %2$s', 'buddyboss-platform' ),
 								$user_fullname,
 								$activity_excerpt
 							);
@@ -463,13 +463,13 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 							if ( count( $media_ids ) > 1 ) {
 								$text = sprintf(
 								/* translators: User full name. */
-									__( '%1$s replied: some photos', 'buddyboss' ),
+									__( '%1$s replied: some photos', 'buddyboss-platform' ),
 									$user_fullname
 								);
 							} else {
 								$text = sprintf(
 								/* translators: User full name. */
-									__( '%1$s replied: a photo', 'buddyboss' ),
+									__( '%1$s replied: a photo', 'buddyboss-platform' ),
 									$user_fullname
 								);
 							}
@@ -478,13 +478,13 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 							if ( count( $document_ids ) > 1 ) {
 								$text = sprintf(
 								/* translators: User full name. */
-									__( '%1$s replied: some documents', 'buddyboss' ),
+									__( '%1$s replied: some documents', 'buddyboss-platform' ),
 									$user_fullname
 								);
 							} else {
 								$text = sprintf(
 								/* translators: User full name. */
-									__( '%1$s replied: a document', 'buddyboss' ),
+									__( '%1$s replied: a document', 'buddyboss-platform' ),
 									$user_fullname
 								);
 							}
@@ -493,26 +493,26 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 							if ( count( $video_ids ) > 1 ) {
 								$text = sprintf(
 								/* translators: User full name. */
-									__( '%1$s replied: some videos', 'buddyboss' ),
+									__( '%1$s replied: some videos', 'buddyboss-platform' ),
 									$user_fullname
 								);
 							} else {
 								$text = sprintf(
 								/* translators: User full name. */
-									__( '%1$s replied: a video', 'buddyboss' ),
+									__( '%1$s replied: a video', 'buddyboss-platform' ),
 									$user_fullname
 								);
 							}
 						} elseif ( ! empty( $gif_data ) ) {
 							$text = sprintf(
 							/* translators: User full name. */
-								__( '%1$s replied: a gif', 'buddyboss' ),
+								__( '%1$s replied: a gif', 'buddyboss-platform' ),
 								$user_fullname
 							);
 						} else {
 							$text = sprintf(
 							/* translators: %s: User full name. */
-								__( '%1$s replied', 'buddyboss' ),
+								__( '%1$s replied', 'buddyboss-platform' ),
 								$user_fullname
 							);
 						}
@@ -568,17 +568,17 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 	 */
 	public function register_notification_for_activity_post_following() {
 		$notification_read_only    = true;
-		$notification_tooltip_text = __( 'Requires following to enable', 'buddyboss' );
+		$notification_tooltip_text = __( 'Requires following to enable', 'buddyboss-platform' );
 
 		if ( function_exists( 'bp_is_activity_follow_active' ) && true === bp_is_activity_follow_active() ) {
-			$notification_tooltip_text = __( 'Required by activity follow', 'buddyboss' );
+			$notification_tooltip_text = __( 'Required by activity follow', 'buddyboss-platform' );
 			$notification_read_only    = false;
 		}
 
 		$this->register_notification_type(
 			'bb_activity_following_post',
-			__( 'New post by a member you\'re following', 'buddyboss' ),
-			esc_html__( 'A new post by someone a member is following', 'buddyboss' ),
+			__( 'New post by a member you\'re following', 'buddyboss-platform' ),
+			esc_html__( 'A new post by someone a member is following', 'buddyboss-platform' ),
 			'activity',
 			function_exists( 'bp_is_activity_follow_active' ) && true === bp_is_activity_follow_active(),
 			$notification_read_only,
@@ -589,13 +589,13 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 			'new-activity-following',
 			array(
 				/* translators: do not remove {} brackets or translate its contents. */
-				'email_title'         => __( '[{{{site.name}}}] {{poster.name}} posted {{activity.type}}.', 'buddyboss' ),
+				'email_title'         => __( '[{{{site.name}}}] {{poster.name}} posted {{activity.type}}.', 'buddyboss-platform' ),
 				/* translators: do not remove {} brackets or translate its contents. */
-				'email_content'       => __( "<a href=\"{{{poster.url}}}\">{{poster.name}}</a> posted {{activity.type}}:\n\n{{{activity.content}}}", 'buddyboss' ),
+				'email_content'       => __( "<a href=\"{{{poster.url}}}\">{{poster.name}}</a> posted {{activity.type}}:\n\n{{{activity.content}}}", 'buddyboss-platform' ),
 				/* translators: do not remove {} brackets or translate its contents. */
-				'email_plain_content' => __( "{{poster.name}} posted {{activity.type}}:\n\n{{{activity.content}}}\\n\nView the post: {{{activity.url}}}", 'buddyboss' ),
-				'situation_label'     => __( 'New activity post by someone a member is following', 'buddyboss' ),
-				'unsubscribe_text'    => __( 'You will no longer receive emails when someone you are following posts an update.', 'buddyboss' ),
+				'email_plain_content' => __( "{{poster.name}} posted {{activity.type}}:\n\n{{{activity.content}}}\\n\nView the post: {{{activity.url}}}", 'buddyboss-platform' ),
+				'situation_label'     => __( 'New activity post by someone a member is following', 'buddyboss-platform' ),
+				'unsubscribe_text'    => __( 'You will no longer receive emails when someone you are following posts an update.', 'buddyboss-platform' ),
 				'group'               => 'activity',
 			),
 			'bb_activity_following_post'
@@ -609,7 +609,7 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 		);
 
 		$this->register_notification_filter(
-			esc_html__( 'New activity posts', 'buddyboss' ),
+			esc_html__( 'New activity posts', 'buddyboss-platform' ),
 			array( 'bb_activity_following_post' ),
 			16
 		);
@@ -645,7 +645,7 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 				wp_strip_all_tags( $activity->content ),
 				50,
 				array(
-					'ending' => __( '&hellip;', 'buddyboss' ),
+					'ending' => __( '&hellip;', 'buddyboss-platform' ),
 				)
 			) . '"';
 
@@ -671,47 +671,47 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 				if ( ! empty( $activity_excerpt ) ) {
 					$text = sprintf(
 					/* translators: Activity content. */
-						__( 'Posted an update: %s', 'buddyboss' ),
+						__( 'Posted an update: %s', 'buddyboss-platform' ),
 						$activity_excerpt
 					);
 				} elseif ( $media_ids ) {
 					$media_ids = array_filter( ! is_array( $media_ids ) ? explode( ',', $media_ids ) : $media_ids );
 					if ( count( $media_ids ) > 1 ) {
-						$text = __( 'Posted some photos', 'buddyboss' );
+						$text = __( 'Posted some photos', 'buddyboss-platform' );
 					} else {
-						$text = __( 'Posted a photo', 'buddyboss' );
+						$text = __( 'Posted a photo', 'buddyboss-platform' );
 					}
 				} elseif ( $document_ids ) {
 					$document_ids = array_filter( ! is_array( $document_ids ) ? explode( ',', $document_ids ) : $document_ids );
 					if ( count( $document_ids ) > 1 ) {
-						$text = __( 'Posted some documents', 'buddyboss' );
+						$text = __( 'Posted some documents', 'buddyboss-platform' );
 					} else {
-						$text = __( 'Posted a document', 'buddyboss' );
+						$text = __( 'Posted a document', 'buddyboss-platform' );
 					}
 				} elseif ( $video_ids ) {
 					$video_ids = array_filter( ! is_array( $video_ids ) ? explode( ',', $video_ids ) : $video_ids );
 					if ( count( $video_ids ) > 1 ) {
-						$text = __( 'Posted some videos', 'buddyboss' );
+						$text = __( 'Posted some videos', 'buddyboss-platform' );
 					} else {
-						$text = __( 'Posted a video', 'buddyboss' );
+						$text = __( 'Posted a video', 'buddyboss-platform' );
 					}
 				} elseif ( ! empty( $gif_data ) ) {
-					$text = __( 'Posted an update', 'buddyboss' );
+					$text = __( 'Posted an update', 'buddyboss-platform' );
 				} elseif ( ! empty( $question ) ) {
 					$text = sprintf(
 					/* translators: %s: question. */
-						__( 'Posted a poll "%1$s"', 'buddyboss' ),
+						__( 'Posted a poll "%1$s"', 'buddyboss-platform' ),
 						$question
 					);
 				} else {
-					$text = __( 'Posted an update', 'buddyboss' );
+					$text = __( 'Posted an update', 'buddyboss-platform' );
 				}
 			} else {
 				if ( (int) $total_items > 1 ) {
 					$notification_link = add_query_arg( 'type', $notification->component_action, $notification_link );
 					$text              = sprintf(
 						/* translators: %s: Total reply count. */
-						__( 'You have %1$d new posts', 'buddyboss' ),
+						__( 'You have %1$d new posts', 'buddyboss-platform' ),
 						(int) $total_items
 					);
 					$amount = 'multiple';
@@ -720,7 +720,7 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 					if ( ! empty( $activity_excerpt ) ) {
 						$text = sprintf(
 						/* translators: 1: User full name, 2: Activity content. */
-							__( '%1$s posted an update: %2$s', 'buddyboss' ),
+							__( '%1$s posted an update: %2$s', 'buddyboss-platform' ),
 							$user_fullname,
 							$activity_excerpt
 						);
@@ -729,13 +729,13 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 						if ( count( $media_ids ) > 1 ) {
 							$text = sprintf(
 							/* translators: User full name. */
-								__( '%1$s posted some photos', 'buddyboss' ),
+								__( '%1$s posted some photos', 'buddyboss-platform' ),
 								$user_fullname
 							);
 						} else {
 							$text = sprintf(
 							/* translators: User full name. */
-								__( '%1$s posted a photo', 'buddyboss' ),
+								__( '%1$s posted a photo', 'buddyboss-platform' ),
 								$user_fullname
 							);
 						}
@@ -744,13 +744,13 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 						if ( count( $document_ids ) > 1 ) {
 							$text = sprintf(
 							/* translators: User full name. */
-								__( '%1$s posted some documents', 'buddyboss' ),
+								__( '%1$s posted some documents', 'buddyboss-platform' ),
 								$user_fullname
 							);
 						} else {
 							$text = sprintf(
 							/* translators: User full name. */
-								__( '%1$s posted a document', 'buddyboss' ),
+								__( '%1$s posted a document', 'buddyboss-platform' ),
 								$user_fullname
 							);
 						}
@@ -759,33 +759,33 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 						if ( count( $video_ids ) > 1 ) {
 							$text = sprintf(
 							/* translators: User full name. */
-								__( '%1$s posted some videos', 'buddyboss' ),
+								__( '%1$s posted some videos', 'buddyboss-platform' ),
 								$user_fullname
 							);
 						} else {
 							$text = sprintf(
 							/* translators: User full name. */
-								__( '%1$s posted a video', 'buddyboss' ),
+								__( '%1$s posted a video', 'buddyboss-platform' ),
 								$user_fullname
 							);
 						}
 					} elseif ( ! empty( $gif_data ) ) {
 						$text = sprintf(
 						/* translators: User full name. */
-							__( '%1$s posted an update', 'buddyboss' ),
+							__( '%1$s posted an update', 'buddyboss-platform' ),
 							$user_fullname
 						);
 					} elseif ( ! empty( $question ) ) {
 						$text = sprintf(
 						/* translators: %1$s: User full name, %2$s: question. */
-							__( '%1$s posted a poll "%2$s"', 'buddyboss' ),
+							__( '%1$s posted a poll "%2$s"', 'buddyboss-platform' ),
 							$user_fullname,
 							$question
 						);
 					} else {
 						$text = sprintf(
 						/* translators: %s: User full name. */
-							__( '%1$s posted an update', 'buddyboss' ),
+							__( '%1$s posted an update', 'buddyboss-platform' ),
 							$user_fullname
 						);
 					}
@@ -840,17 +840,17 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 	 */
 	public function register_notification_for_following() {
 		$notification_read_only    = true;
-		$notification_tooltip_text = __( 'Requires following to enable', 'buddyboss' );
+		$notification_tooltip_text = __( 'Requires following to enable', 'buddyboss-platform' );
 
 		if ( function_exists( 'bp_is_activity_follow_active' ) && true === bp_is_activity_follow_active() ) {
-			$notification_tooltip_text = __( 'Required by activity follow', 'buddyboss' );
+			$notification_tooltip_text = __( 'Required by activity follow', 'buddyboss-platform' );
 			$notification_read_only    = false;
 		}
 
 		$this->register_notification_type(
 			'bb_following_new',
-			esc_html__( 'A member starts following you', 'buddyboss' ),
-			esc_html__( 'A member is followed by someone', 'buddyboss' ),
+			esc_html__( 'A member starts following you', 'buddyboss-platform' ),
+			esc_html__( 'A member is followed by someone', 'buddyboss-platform' ),
 			'activity',
 			function_exists( 'bp_is_activity_follow_active' ) && true === bp_is_activity_follow_active(),
 			$notification_read_only,
@@ -861,13 +861,13 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 			'new-follower',
 			array(
 				/* translators: do not remove {} brackets or translate its contents. */
-				'email_title'         => __( '[{{{site.name}}}] {{follower.name}} started following you', 'buddyboss' ),
+				'email_title'         => __( '[{{{site.name}}}] {{follower.name}} started following you', 'buddyboss-platform' ),
 				/* translators: do not remove {} brackets or translate its contents. */
-				'email_content'       => __( "<a href=\"{{{follower.url}}}\">{{follower.name}}</a> started following you.\n\n{{{member.card}}}", 'buddyboss' ),
+				'email_content'       => __( "<a href=\"{{{follower.url}}}\">{{follower.name}}</a> started following you.\n\n{{{member.card}}}", 'buddyboss-platform' ),
 				/* translators: do not remove {} brackets or translate its contents. */
-				'email_plain_content' => __( "{{follower.name}} started following you.\n\nTo learn more about them, visit their profile: {{{follower.url}}}", 'buddyboss' ),
-				'situation_label'     => __( 'A member receives a new follower', 'buddyboss' ),
-				'unsubscribe_text'    => __( 'You will no longer receive emails when someone follows you.', 'buddyboss' ),
+				'email_plain_content' => __( "{{follower.name}} started following you.\n\nTo learn more about them, visit their profile: {{{follower.url}}}", 'buddyboss-platform' ),
+				'situation_label'     => __( 'A member receives a new follower', 'buddyboss-platform' ),
+				'unsubscribe_text'    => __( 'You will no longer receive emails when someone follows you.', 'buddyboss-platform' ),
 				'group'               => 'connections',
 			),
 			'bb_following_new'
@@ -881,7 +881,7 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 		);
 
 		$this->register_notification_filter(
-			esc_html__( 'New followers', 'buddyboss' ),
+			esc_html__( 'New followers', 'buddyboss-platform' ),
 			array( 'bb_following_new' ),
 			17
 		);

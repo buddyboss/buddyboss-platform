@@ -400,9 +400,9 @@ if ( class_exists( 'Walker' ) ) :
 
 			// Style for div or list element.
 			if ( ! empty( $args['style'] ) && ( 'div' === $args['style'] ) ) {
-				echo "<div class='depth-$depth' data-depth='$depth'>\n";
+				echo "<div class='depth-" . esc_attr( $depth ) . "' data-depth='" . esc_attr( $depth ) . "'>\n";
 			} else {
-				echo "<li class='depth-$depth' data-depth='$depth'>\n";
+				echo "<li class='depth-" . esc_attr( $depth ) . "' data-depth='" . esc_attr( $depth ) . "'>\n";
 			}
 
 			bbp_get_template_part( 'loop', 'single-reply' );

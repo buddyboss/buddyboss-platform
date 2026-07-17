@@ -238,13 +238,13 @@ function bb_media_symlink_validate( $updated_value ) {
 	$platform_previews_path = $upload_dir . '/bb-platform-previews';
 	if ( ! is_dir( $platform_previews_path ) ) {
 		wp_mkdir_p( $platform_previews_path );
-		chmod( $platform_previews_path, 0755 );
+		chmod( $platform_previews_path, 0755 ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_chmod -- explicit permission set on a freshly-created directory.
 	}
 
 	$media_symlinks_path = $platform_previews_path . '/' . md5( 'bb-media' );
 	if ( ! is_dir( $media_symlinks_path ) ) {
 		wp_mkdir_p( $media_symlinks_path );
-		chmod( $media_symlinks_path, 0755 );
+		chmod( $media_symlinks_path, 0755 ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_chmod -- explicit permission set on a freshly-created directory.
 	}
 
 	foreach ( $keys as $k ) {
@@ -309,7 +309,7 @@ function bb_media_symlink_validate( $updated_value ) {
 					}
 
 					if ( false === $status && ! empty( $symlink_url ) && file_exists( $attachment_path ) ) {
-						unlink( $attachment_path );
+						wp_delete_file( $attachment_path );
 						bp_update_option( 'bp_media_symlink_support', 0 );
 
 						foreach ( $keys as $k ) {
@@ -362,7 +362,7 @@ function bb_media_symlink_validate( $updated_value ) {
 						}
 
 						if ( false === $status && ! empty( $symlink_url ) && file_exists( $attachment_path ) ) {
-							unlink( $attachment_path );
+							wp_delete_file( $attachment_path );
 							bp_update_option( 'bp_media_symlink_support', 0 );
 							bp_update_option( 'bb_display_support_error', 1 );
 							foreach ( $keys as $k ) {
@@ -989,7 +989,7 @@ function bb_mention_post_type_comment( $comment_id = 0, $is_approved = true ) {
 				'notification_type' => $email_type,
 			);
 
-			$notification_type_html = esc_html__( 'comment', 'buddyboss' );
+			$notification_type_html = esc_html__( 'comment', 'buddyboss-platform' );
 
 			$args = array(
 				'tokens' => array(
@@ -1001,7 +1001,7 @@ function bb_mention_post_type_comment( $comment_id = 0, $is_approved = true ) {
 					'mentioned.type'    => $notification_type_html,
 					'mentioned.content' => $reply_content,
 					'author_id'         => $author_id,
-					'reply_text'        => esc_html__( 'View Comment', 'buddyboss' ),
+					'reply_text'        => esc_html__( 'View Comment', 'buddyboss-platform' ),
 					'title_text'        => $title_text,
 				),
 			);
@@ -1115,7 +1115,7 @@ function bb_background_remove_duplicate_async_request_batch_process( $batch ) {
 		)
 	);
 
-	$wpdb->query( $del_sql );
+	$wpdb->query( $del_sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $del_sql is $wpdb->prepare()'d above; table name from class static property.
 }
 
 add_action( 'bb_async_request_batch_process', 'bb_background_remove_duplicate_async_request_batch_process', 1, 1 );
@@ -1132,21 +1132,21 @@ function buddyboss_directory_save_layout() {
 	$object = bb_filter_input_string( INPUT_POST, 'object' );
 	if ( empty( $object ) ) {
 		wp_send_json_error( array(
-			'message' => __( 'Invalid object.', 'buddyboss' ),
+			'message' => __( 'Invalid object.', 'buddyboss-platform' ),
 		) );
 	}
 
 	$nonce = bb_filter_input_string( INPUT_POST, 'nonce' );
 	if ( ! wp_verify_nonce( $nonce, 'bp_nouveau_' . $object ) ) {
 		wp_send_json_error( array(
-			'message' => __( 'Invalid request.', 'buddyboss' ),
+			'message' => __( 'Invalid request.', 'buddyboss-platform' ),
 		) );
 	}
 
 	$option_name = bb_filter_input_string( INPUT_POST, 'option' );
 	if ( empty( $option_name ) || 'bb_layout_view' !== $option_name ) {
 		wp_send_json_error( array(
-			'message' => __( 'Not a valid option', 'buddyboss' ),
+			'message' => __( 'Not a valid option', 'buddyboss-platform' ),
 		) );
 		wp_die();
 	}
@@ -1154,7 +1154,7 @@ function buddyboss_directory_save_layout() {
 	$option_value = bb_filter_input_string( INPUT_POST, 'type' );
 	if ( ! in_array( $option_value, array( 'grid', 'list' ), true ) ) {
 		wp_send_json_error( array(
-			'message' => __( 'Not a valid value', 'buddyboss' ),
+			'message' => __( 'Not a valid value', 'buddyboss-platform' ),
 		) );
 		wp_die();
 	}

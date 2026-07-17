@@ -11,6 +11,9 @@
  * @version 1.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 bp_nouveau_member_hook( 'before', 'plugin_template' );
 
 if ( ! bp_is_current_component_core() ) {

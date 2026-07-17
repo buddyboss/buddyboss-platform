@@ -32,7 +32,7 @@ function bb_registration_register_panel_fields() {
 		$panel_id,
 		'registration_general',
 		array(
-			'title'       => __( 'Registration', 'buddyboss' ),
+			'title'       => __( 'Registration', 'buddyboss-platform' ),
 			'description' => '',
 			'order'       => 10,
 			'help_url'    => '636020',
@@ -46,8 +46,8 @@ function bb_registration_register_panel_fields() {
 		'registration_general',
 		array(
 			'name'              => 'bp-enable-site-registration',
-			'label'             => __( 'Enable Registration', 'buddyboss' ),
-			'description'       => __( 'Allow non-members to register new accounts.', 'buddyboss' ),
+			'label'             => __( 'Enable Registration', 'buddyboss-platform' ),
+			'description'       => __( 'Allow non-members to register new accounts.', 'buddyboss-platform' ),
 			'type'              => 'toggle',
 			'default'           => 0,
 			'sanitize_callback' => 'absint',
@@ -77,10 +77,10 @@ function bb_registration_register_panel_fields() {
 	// Field 3: Registration Form (radio: BuddyBoss Registration / Custom URL).
 	$reg_form_args = array(
 		'name'              => 'allow-custom-registration',
-		'label'             => __( 'Registration Form', 'buddyboss' ),
+		'label'             => __( 'Registration Form', 'buddyboss-platform' ),
 		'description'       => sprintf(
 			/* translators: %s: URL to BuddyBoss Settings 2.0 → Appearance → Pages panel */
-			__( 'Use the default BuddyBoss registration form. Make sure to configure the <a href="%s">registration pages</a>.', 'buddyboss' ),
+			__( 'Use the default BuddyBoss registration form. Make sure to configure the <a href="%s">registration pages</a>.', 'buddyboss-platform' ),
 			esc_url( bb_get_feature_settings_url( 'appearance', 'pages' ) )
 		),
 		'type'              => 'radio',
@@ -89,11 +89,11 @@ function bb_registration_register_panel_fields() {
 		'options'           => array(
 			array(
 				'value' => '0',
-				'label' => __( 'BuddyBoss Registration', 'buddyboss' ),
+				'label' => __( 'BuddyBoss Registration', 'buddyboss-platform' ),
 			),
 			array(
 				'value' => '1',
-				'label' => __( 'Custom URL', 'buddyboss' ),
+				'label' => __( 'Custom URL', 'buddyboss-platform' ),
 			),
 		),
 		'group'             => 'registration_form',
@@ -115,7 +115,7 @@ function bb_registration_register_panel_fields() {
 			'type'              => 'text',
 			'default'           => '',
 			'sanitize_callback' => 'esc_url_raw',
-			'placeholder'       => __( 'Enter custom URL', 'buddyboss' ),
+			'placeholder'       => __( 'Enter custom URL', 'buddyboss-platform' ),
 			'conditional'       => array(
 				'field'  => 'allow-custom-registration',
 				'value'  => true,
@@ -136,8 +136,8 @@ function bb_registration_register_panel_fields() {
 		array(
 			'name'              => 'register-legal-agreement',
 			'label'             => '',
-			'description'       => __( 'Add Legal Agreement checkbox to register form', 'buddyboss' ),
-			'help_text'         => __( 'Require non-members to explicitly agree to your Terms of Service and Privacy Policy before registering.', 'buddyboss' ),
+			'description'       => __( 'Add Legal Agreement checkbox to register form', 'buddyboss-platform' ),
+			'help_text'         => __( 'Require non-members to explicitly agree to your Terms of Service and Privacy Policy before registering.', 'buddyboss-platform' ),
 			'type'              => 'toggle',
 			'default'           => 0,
 			'sanitize_callback' => 'absint',
@@ -160,7 +160,7 @@ function bb_registration_register_panel_fields() {
 		array(
 			'name'              => 'register-confirm-email',
 			'label'             => '',
-			'description'       => __( 'Add Email confirmation to register form.', 'buddyboss' ),
+			'description'       => __( 'Add Email confirmation to register form.', 'buddyboss-platform' ),
 			'type'              => 'toggle',
 			'default'           => 0,
 			'sanitize_callback' => 'absint',
@@ -183,7 +183,7 @@ function bb_registration_register_panel_fields() {
 		array(
 			'name'              => 'register-confirm-password',
 			'label'             => '',
-			'description'       => __( 'Add Password confirmation to register form.', 'buddyboss' ),
+			'description'       => __( 'Add Password confirmation to register form.', 'buddyboss-platform' ),
 			'type'              => 'toggle',
 			'default'           => 0,
 			'sanitize_callback' => 'absint',
@@ -224,8 +224,8 @@ function bb_registration_register_panel_fields() {
 		$panel_id,
 		'registration_restrictions',
 		array(
-			'title'       => __( 'Registration Restrictions', 'buddyboss' ),
-			'description' => __( 'Domain restrictions can be configured to limit new user registrations to specific domains or extensions. This setting is only available when using the BuddyBoss Registration Form.', 'buddyboss' ),
+			'title'       => __( 'Registration Restrictions', 'buddyboss-platform' ),
+			'description' => __( 'Domain restrictions can be configured to limit new user registrations to specific domains or extensions. This setting is only available when using the BuddyBoss Registration Form.', 'buddyboss-platform' ),
 			'order'       => 20,
 			'conditional' => $restrictions_section_conditional,
 			'help_url'    => '636023',
@@ -239,8 +239,8 @@ function bb_registration_register_panel_fields() {
 		'registration_restrictions',
 		array(
 			'name'              => 'bb-domain-restrictions',
-			'label'             => __( 'Domain Restrictions', 'buddyboss' ),
-			'description'       => __( 'Add domain(s) to restrict new users from being able to register, you can use a wildcard (*) symbol to apply restrictions to an entire extension. When multiple restrictions are in place, a domain will always take priority over an extension.', 'buddyboss' ),
+			'label'             => __( 'Domain Restrictions', 'buddyboss-platform' ),
+			'description'       => __( 'Add domain(s) to restrict new users from being able to register, you can use a wildcard (*) symbol to apply restrictions to an entire extension. When multiple restrictions are in place, a domain will always take priority over an extension.', 'buddyboss-platform' ),
 			'type'              => 'domain_restrictions',
 			'default'           => array(),
 			'sanitize_callback' => 'bb_registration_sanitize_domain_restrictions',
@@ -255,8 +255,8 @@ function bb_registration_register_panel_fields() {
 		'registration_restrictions',
 		array(
 			'name'              => 'bb-email-restrictions',
-			'label'             => __( 'Email Restrictions', 'buddyboss' ),
-			'description'       => __( 'Enter the email addresses you want to allow for user registrations. Add one address per field.', 'buddyboss' ),
+			'label'             => __( 'Email Restrictions', 'buddyboss-platform' ),
+			'description'       => __( 'Enter the email addresses you want to allow for user registrations. Add one address per field.', 'buddyboss-platform' ),
 			'type'              => 'email_restrictions',
 			'default'           => array(),
 			'sanitize_callback' => 'bb_registration_sanitize_email_restrictions',
@@ -280,8 +280,8 @@ function bb_registration_register_panel_fields() {
 		'registration_general',
 		array(
 			'name'              => 'bb-social-login',
-			'label'             => __( 'Enable Social Login', 'buddyboss' ),
-			'description'       => __( 'Allow users to sign in with social login.', 'buddyboss' ),
+			'label'             => __( 'Enable Social Login', 'buddyboss-platform' ),
+			'description'       => __( 'Allow users to sign in with social login.', 'buddyboss-platform' ),
 			'type'              => 'toggle',
 			'default'           => 0,
 			'sanitize_callback' => 'absint',
@@ -314,27 +314,27 @@ function bb_registration_register_panel_fields() {
 			'providers'         => array(
 				array(
 					'id'    => 'google',
-					'label' => __( 'Google', 'buddyboss' ),
+					'label' => __( 'Google', 'buddyboss-platform' ),
 					'icon'  => '',
 				),
 				array(
 					'id'    => 'facebook',
-					'label' => __( 'Facebook', 'buddyboss' ),
+					'label' => __( 'Facebook', 'buddyboss-platform' ),
 					'icon'  => '',
 				),
 				array(
 					'id'    => 'twitter',
-					'label' => __( 'X', 'buddyboss' ),
+					'label' => __( 'X', 'buddyboss-platform' ),
 					'icon'  => '',
 				),
 				array(
 					'id'    => 'linkedin',
-					'label' => __( 'Linkedin', 'buddyboss' ),
+					'label' => __( 'Linkedin', 'buddyboss-platform' ),
 					'icon'  => '',
 				),
 				array(
 					'id'    => 'apple',
-					'label' => __( 'Apple', 'buddyboss' ),
+					'label' => __( 'Apple', 'buddyboss-platform' ),
 					'icon'  => '',
 				),
 			),
@@ -352,7 +352,7 @@ function bb_registration_register_panel_fields() {
 			'label'             => '',
 			'type'              => 'notice',
 			'notice_type'       => 'info',
-			'description'       => __( 'Any changes will require new iOS and Android app builds.', 'buddyboss' ),
+			'description'       => __( 'Any changes will require new iOS and Android app builds.', 'buddyboss-platform' ),
 			'sanitize_callback' => '__return_empty_string',
 			'group'             => 'social_login',
 			'hidden'            => true,

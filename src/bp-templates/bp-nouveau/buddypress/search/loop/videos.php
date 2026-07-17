@@ -9,6 +9,9 @@
  * @version 1.7.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 $listing_class = '';
 $attachment_id = bp_get_video_attachment_id();
 $video_id      = bp_get_video_id();
@@ -53,7 +56,7 @@ $video_visibility = bp_get_video_visibility();
 						<?php
 						if ( ! bp_is_user() ) {
 							?>
-							<span class="media-album_author"><?php esc_html_e( 'By ', 'buddyboss' ); ?>
+							<span class="media-album_author"><?php esc_html_e( 'By ', 'buddyboss-platform' ); ?>
 							<a href="<?php echo esc_url( $video_link ); ?>" data-bb-hp-profile="<?php echo esc_attr( bp_get_video_user_id() ); ?>"><?php bp_video_author(); ?></a></span>
 							<?php
 						}
@@ -71,7 +74,7 @@ $video_visibility = bp_get_video_visibility();
 							if ( $group_id > 0 ) {
 								?>
 								<span class="middot">&middot;</span>
-								<span class="bp-tooltip" data-bp-tooltip-pos="down" data-bp-tooltip="<?php esc_attr_e( 'Based on group privacy', 'buddyboss' ); ?>">
+								<span class="bp-tooltip" data-bp-tooltip-pos="down" data-bp-tooltip="<?php esc_attr_e( 'Based on group privacy', 'buddyboss-platform' ); ?>">
 									<?php echo esc_html( $video_visibility ); ?>
 								</span>
 								<?php

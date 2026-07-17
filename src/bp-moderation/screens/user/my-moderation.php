@@ -6,6 +6,9 @@
  * @package BuddyBoss\Moderation\Screens
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 /**
  * Handle the loading of the My Groups page.
  *

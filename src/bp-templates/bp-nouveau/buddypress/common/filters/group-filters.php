@@ -8,6 +8,9 @@
  * @version 1.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 // Check group type enable?
 if ( false === bp_disable_group_type_creation() ) {
 	return '';
@@ -50,7 +53,7 @@ if ( ! empty( $group_types ) ) {
 			</label>
 			<div class="select-wrap">
 				<select id="group-type-order-by" data-bp-group-type-filter="<?php bp_nouveau_search_object_data_attr() ?>">
-					<option value=""><?php _e( 'All Types', 'buddyboss' ); ?></option><?php
+					<option value=""><?php esc_html_e( 'All Types', 'buddyboss-platform' ); ?></option><?php
 					foreach ( $group_types as $group_type_id ) {
 						$group_type_key   = bp_group_get_group_type_key( $group_type_id );
 						$group_type_label = bp_groups_get_group_type_object( $group_type_key )->labels['name'];

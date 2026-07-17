@@ -8,6 +8,9 @@
  * @version 1.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 $is_send_ajax_request = bb_is_send_ajax_request();
 if ( bb_enable_content_counts() && 'photos' === bp_current_action() ) {
 	?>
@@ -16,14 +19,14 @@ if ( bb_enable_content_counts() && 'photos' === bp_current_action() ) {
 		if ( ! $is_send_ajax_request ) {
 			$count = bp_media_get_total_group_media_count();
 
-			/* translators: %d is the photo count */
 			printf(
 				wp_kses(
+					/* translators: %d is the photo count */
 					_n(
 						'<span class="bb-count">%d</span> Photo',
 						'<span class="bb-count">%d</span> Photos',
 						$count,
-						'buddyboss'
+						'buddyboss-platform'
 					),
 					array( 'span' => array( 'class' => true ) )
 				),
@@ -41,7 +44,7 @@ if ( bb_enable_content_counts() && 'photos' === bp_current_action() ) {
 <div class="bb-media-container group-media">
 	<?php
 	bp_get_template_part( 'media/theatre' );
-	if ( bp_is_profile_video_support_enabled() ) {
+	if ( bp_is_active( 'video' ) && bp_is_profile_video_support_enabled() ) {
 		bp_get_template_part( 'video/theatre' );
 	}
 
@@ -67,7 +70,7 @@ if ( bb_enable_content_counts() && 'photos' === bp_current_action() ) {
 						bp_get_template_part( 'media/add-media' );
 					} else {
 						?>
-						<h2 class="bb-title"><?php esc_html_e( 'Photos', 'buddyboss' ); ?></h2>
+						<h2 class="bb-title"><?php esc_html_e( 'Photos', 'buddyboss-platform' ); ?></h2>
 						<?php
 					}
 					?>

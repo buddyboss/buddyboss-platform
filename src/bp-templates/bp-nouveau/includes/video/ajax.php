@@ -152,7 +152,7 @@ function bp_nouveau_ajax_video_albums_loader() {
 	$response = array(
 		'feedback' => sprintf(
 			'<div class="bp-feedback error bp-ajax-message"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
-			esc_html__( 'There was a problem performing this action. Please try again.', 'buddyboss' )
+			esc_html__( 'There was a problem performing this action. Please try again.', 'buddyboss-platform' )
 		),
 	);
 
@@ -184,7 +184,7 @@ function bp_nouveau_ajax_video_albums_loader() {
 		if ( bp_video_album_has_more_items() ) : ?>
 
 			<li class="load-more">
-				<a class="button outline" href="<?php bp_video_album_has_more_items(); ?>"><?php esc_html_e( 'Load More', 'buddyboss' ); ?></a>
+				<a class="button outline" href="<?php bp_video_album_has_more_items(); ?>"><?php esc_html_e( 'Load More', 'buddyboss-platform' ); ?></a>
 			</li>
 
 			<?php
@@ -207,7 +207,7 @@ function bp_nouveau_ajax_video_albums_loader() {
  */
 function bp_nouveau_ajax_video_upload() {
 	$response = array(
-		'feedback' => __( 'There was a problem when trying to upload this file.', 'buddyboss' ),
+		'feedback' => __( 'There was a problem when trying to upload this file.', 'buddyboss-platform' ),
 	);
 
 	// Bail if not a POST action.
@@ -228,7 +228,7 @@ function bp_nouveau_ajax_video_upload() {
 	$result = bp_video_upload();
 
 	if ( 'in_progress' === $result ) {
-		$response['feedback']    = __( 'Video is being processed. Please wait.', 'buddyboss' );
+		$response['feedback']    = __( 'Video is being processed. Please wait.', 'buddyboss-platform' );
 		$response['in_progress'] = true;
 		wp_send_json_success( $response );
 	}
@@ -248,7 +248,7 @@ function bp_nouveau_ajax_video_upload() {
  */
 function bp_nouveau_ajax_video_thumbnail_upload() {
 	$response = array(
-		'feedback' => __( 'There was a problem when trying to upload this file.', 'buddyboss' ),
+		'feedback' => __( 'There was a problem when trying to upload this file.', 'buddyboss-platform' ),
 	);
 
 	// Bail if not a POST action.
@@ -285,7 +285,7 @@ function bp_nouveau_ajax_video_thumbnail_delete_attachment() {
 	$response = array(
 		'feedback' => sprintf(
 			'<div class="bp-feedback bp-messages error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
-			esc_html__( 'There was a problem deleting the content. Please try again.', 'buddyboss' )
+			esc_html__( 'There was a problem deleting the content. Please try again.', 'buddyboss-platform' )
 		),
 	);
 
@@ -307,7 +307,7 @@ function bp_nouveau_ajax_video_thumbnail_delete_attachment() {
 	if ( empty( $id ) ) {
 		$response['feedback'] = sprintf(
 			'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
-			esc_html__( 'Please provide attachment id to delete.', 'buddyboss' )
+			esc_html__( 'Please provide attachment id to delete.', 'buddyboss-platform' )
 		);
 
 		wp_send_json_error( $response );
@@ -318,7 +318,7 @@ function bp_nouveau_ajax_video_thumbnail_delete_attachment() {
 	if ( empty( $attachment ) ) {
 		$response['feedback'] = sprintf(
 			'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
-			esc_html__( 'Please provide valid attachment id to delete.', 'buddyboss' )
+			esc_html__( 'Please provide valid attachment id to delete.', 'buddyboss-platform' )
 		);
 
 		wp_send_json_error( $response );
@@ -328,7 +328,7 @@ function bp_nouveau_ajax_video_thumbnail_delete_attachment() {
 	if ( ! ( bp_current_user_can( 'bp_moderate' ) || (int) $attachment->post_author === bp_loggedin_user_id() ) ) {
 		$response['feedback'] = sprintf(
 			'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
-			esc_html__( 'You do not have permission to delete this attachment.', 'buddyboss' )
+			esc_html__( 'You do not have permission to delete this attachment.', 'buddyboss-platform' )
 		);
 
 		wp_send_json_error( $response );
@@ -353,7 +353,7 @@ function bp_nouveau_ajax_video_save() {
 	$response = array(
 		'feedback' => sprintf(
 			'<div class="bp-feedback error bp-ajax-message"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
-			esc_html__( 'There was a problem performing this action. Please try again.', 'buddyboss' )
+			esc_html__( 'There was a problem performing this action. Please try again.', 'buddyboss-platform' )
 		),
 	);
 
@@ -387,7 +387,7 @@ function bp_nouveau_ajax_video_save() {
 	if ( ! empty( $album_id ) && bp_is_single_album() && $current_album_id !== $album_id ) {
 		$response['feedback'] = sprintf(
 			'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
-			esc_html__( 'There was a problem saving media.', 'buddyboss' )
+			esc_html__( 'There was a problem saving media.', 'buddyboss-platform' )
 		);
 
 		$album = new BP_Video_Album( $album_id );
@@ -430,7 +430,7 @@ function bp_nouveau_ajax_video_save() {
 			if ( ! $can_add ) {
 				$response['feedback'] = sprintf(
 					'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
-					esc_html__( 'You do not have permission to add media to this album.', 'buddyboss' )
+					esc_html__( 'You do not have permission to add media to this album.', 'buddyboss-platform' )
 				);
 				wp_send_json_error( $response );
 			}
@@ -442,7 +442,7 @@ function bp_nouveau_ajax_video_save() {
 	if ( empty( $videos ) ) {
 		$response['feedback'] = sprintf(
 			'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
-			esc_html__( 'Please upload video before saving.', 'buddyboss' )
+			esc_html__( 'Please upload video before saving.', 'buddyboss-platform' )
 		);
 
 		wp_send_json_error( $response );
@@ -452,7 +452,7 @@ function bp_nouveau_ajax_video_save() {
 		if ( ! in_array( $album_id, $album_ids, true ) ) {
 			$response['feedback'] = sprintf(
 				'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
-				esc_html__( 'There was a problem saving media.', 'buddyboss' )
+				esc_html__( 'There was a problem saving media.', 'buddyboss-platform' )
 			);
 			wp_send_json_error( $response );
 		}
@@ -508,7 +508,7 @@ function bp_nouveau_ajax_video_save() {
 	if ( empty( $video ) && ! $skip_error ) {
 		$response['feedback'] = sprintf(
 			'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
-			esc_html__( 'There was a problem saving video.', 'buddyboss' )
+			esc_html__( 'There was a problem saving video.', 'buddyboss-platform' )
 		);
 		wp_send_json_error( $response );
 	}
@@ -579,7 +579,7 @@ function bp_nouveau_ajax_video_delete() {
 	$response = array(
 		'feedback' => sprintf(
 			'<div class="bp-feedback error bp-ajax-message"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
-			esc_html__( 'There was a problem performing this action. Please try again.', 'buddyboss' )
+			esc_html__( 'There was a problem performing this action. Please try again.', 'buddyboss-platform' )
 		),
 	);
 
@@ -604,7 +604,7 @@ function bp_nouveau_ajax_video_delete() {
 	if ( empty( $video ) ) {
 		$response['feedback'] = sprintf(
 			'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
-			esc_html__( 'Please select video to delete.', 'buddyboss' )
+			esc_html__( 'Please select video to delete.', 'buddyboss-platform' )
 		);
 
 		wp_send_json_error( $response );
@@ -636,7 +636,7 @@ function bp_nouveau_ajax_video_delete() {
 	if ( count( $video_ids ) !== count( $video ) ) {
 		$response['feedback'] = sprintf(
 			'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
-			esc_html__( 'There was a problem deleting video.', 'buddyboss' )
+			esc_html__( 'There was a problem deleting video.', 'buddyboss-platform' )
 		);
 		wp_send_json_error( $response );
 	}
@@ -697,7 +697,7 @@ function bp_nouveau_ajax_video_delete() {
 			if ( bp_video_has_more_items() ) {
 				?>
 				<li class="load-more">
-					<a class="button outline full" href="<?php bp_video_load_more_link(); ?>"><?php esc_html_e( 'Load More', 'buddyboss' ); ?></a>
+					<a class="button outline full" href="<?php bp_video_load_more_link(); ?>"><?php esc_html_e( 'Load More', 'buddyboss-platform' ); ?></a>
 				</li>
 				<?php
 			}
@@ -735,7 +735,7 @@ function bp_nouveau_ajax_video_delete() {
 			if ( bp_video_has_more_items() ) {
 				?>
 				<li class="load-more">
-					<a class="button outline full" href="<?php bp_video_load_more_link(); ?>"><?php esc_html_e( 'Load More', 'buddyboss' ); ?></a>
+					<a class="button outline full" href="<?php bp_video_load_more_link(); ?>"><?php esc_html_e( 'Load More', 'buddyboss-platform' ); ?></a>
 				</li>
 				<?php
 			}
@@ -789,7 +789,7 @@ function bp_nouveau_ajax_video_move_to_album() {
 	$response = array(
 		'feedback' => sprintf(
 			'<div class="bp-feedback error bp-ajax-message"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
-			esc_html__( 'There was a problem performing this action. Please try again.', 'buddyboss' )
+			esc_html__( 'There was a problem performing this action. Please try again.', 'buddyboss-platform' )
 		),
 	);
 
@@ -812,7 +812,7 @@ function bp_nouveau_ajax_video_move_to_album() {
 	if ( empty( $videos ) ) {
 		$response['feedback'] = sprintf(
 			'<div class="bp-feedback error">%s</div>',
-			esc_html__( 'Please upload video before saving.', 'buddyboss' )
+			esc_html__( 'Please upload video before saving.', 'buddyboss-platform' )
 		);
 
 		wp_send_json_error( $response );
@@ -823,7 +823,7 @@ function bp_nouveau_ajax_video_move_to_album() {
 	if ( empty( $album_id ) ) {
 		$response['feedback'] = sprintf(
 			'<div class="bp-feedback error">%s</div>',
-			esc_html__( 'Please provide album to move video.', 'buddyboss' )
+			esc_html__( 'Please provide album to move video.', 'buddyboss-platform' )
 		);
 
 		wp_send_json_error( $response );
@@ -849,7 +849,7 @@ function bp_nouveau_ajax_video_move_to_album() {
 		if ( ! $video ) {
 			$response['feedback'] = sprintf(
 				'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
-				esc_html__( 'There was a problem when trying to move the video.', 'buddyboss' )
+				esc_html__( 'There was a problem when trying to move the video.', 'buddyboss-platform' )
 			);
 
 			wp_send_json_error( $response );
@@ -925,7 +925,7 @@ function bp_nouveau_ajax_video_album_save() {
 	$response = array(
 		'feedback' => sprintf(
 			'<div class="bp-feedback error bp-ajax-message"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
-			esc_html__( 'There was a problem performing this action. Please try again.', 'buddyboss' )
+			esc_html__( 'There was a problem performing this action. Please try again.', 'buddyboss-platform' )
 		),
 	);
 
@@ -948,7 +948,7 @@ function bp_nouveau_ajax_video_album_save() {
 	if ( empty( $title ) ) {
 		$response['feedback'] = sprintf(
 			'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
-			esc_html__( 'Please enter title of album.', 'buddyboss' )
+			esc_html__( 'Please enter title of album.', 'buddyboss-platform' )
 		);
 
 		wp_send_json_error( $response );
@@ -968,7 +968,7 @@ function bp_nouveau_ajax_video_album_save() {
 		if ( ! bp_video_album_user_can_edit( $id ) ) {
 			$response['feedback'] = sprintf(
 				'<div class="bp-feedback error bp-ajax-message"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
-				esc_html__( 'You don\'t have permission to edit this album.', 'buddyboss' )
+				esc_html__( 'You don\'t have permission to edit this album.', 'buddyboss-platform' )
 			);
 			wp_send_json_error( $response );
 		}
@@ -980,7 +980,7 @@ function bp_nouveau_ajax_video_album_save() {
 	if ( ! array_key_exists( $privacy, bp_video_get_visibility_levels() ) && ! empty( $id ) ) {
 		$response['feedback'] = sprintf(
 			'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
-			esc_html__( 'Invalid privacy status.', 'buddyboss' )
+			esc_html__( 'Invalid privacy status.', 'buddyboss-platform' )
 		);
 		wp_send_json_error( $response );
 	}
@@ -998,7 +998,7 @@ function bp_nouveau_ajax_video_album_save() {
 	if ( ! $album_id ) {
 		$response['feedback'] = sprintf(
 			'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
-			esc_html__( 'There was a problem when trying to create the album.', 'buddyboss' )
+			esc_html__( 'There was a problem when trying to create the album.', 'buddyboss-platform' )
 		);
 		wp_send_json_error( $response );
 	}
@@ -1038,7 +1038,7 @@ function bp_nouveau_ajax_video_album_delete() {
 	$response = array(
 		'feedback' => sprintf(
 			'<div class="bp-feedback error bp-ajax-message"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
-			esc_html__( 'There was a problem performing this action. Please try again.', 'buddyboss' )
+			esc_html__( 'There was a problem performing this action. Please try again.', 'buddyboss-platform' )
 		),
 	);
 
@@ -1062,7 +1062,7 @@ function bp_nouveau_ajax_video_album_delete() {
 	if ( empty( $album_id ) ) {
 		$response['feedback'] = sprintf(
 			'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
-			esc_html__( 'Please provide ID of album to delete.', 'buddyboss' )
+			esc_html__( 'Please provide ID of album to delete.', 'buddyboss-platform' )
 		);
 
 		wp_send_json_error( $response );
@@ -1071,7 +1071,7 @@ function bp_nouveau_ajax_video_album_delete() {
 	if ( ! bp_video_album_user_can_delete( $album_id ) ) {
 		$response['feedback'] = sprintf(
 			'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
-			esc_html__( 'You do not have permission to delete this album.', 'buddyboss' )
+			esc_html__( 'You do not have permission to delete this album.', 'buddyboss-platform' )
 		);
 
 		wp_send_json_error( $response );
@@ -1107,7 +1107,7 @@ function bp_nouveau_ajax_video_get_activity() {
 	$response = array(
 		'feedback' => sprintf(
 			'<div class="bp-feedback bp-messages error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
-			esc_html__( 'There was a problem displaying the content. Please try again.', 'buddyboss' )
+			esc_html__( 'There was a problem displaying the content. Please try again.', 'buddyboss-platform' )
 		),
 	);
 
@@ -1226,7 +1226,7 @@ function bp_nouveau_ajax_video_delete_attachment() {
 	$response = array(
 		'feedback' => sprintf(
 			'<div class="bp-feedback bp-messages error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
-			esc_html__( 'There was a problem deleting the content. Please try again.', 'buddyboss' )
+			esc_html__( 'There was a problem deleting the content. Please try again.', 'buddyboss-platform' )
 		),
 	);
 
@@ -1248,7 +1248,7 @@ function bp_nouveau_ajax_video_delete_attachment() {
 	if ( empty( $id ) ) {
 		$response['feedback'] = sprintf(
 			'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
-			esc_html__( 'Please provide attachment id to delete.', 'buddyboss' )
+			esc_html__( 'Please provide attachment id to delete.', 'buddyboss-platform' )
 		);
 
 		wp_send_json_error( $response );
@@ -1259,7 +1259,7 @@ function bp_nouveau_ajax_video_delete_attachment() {
 	if ( empty( $attachment ) ) {
 		$response['feedback'] = sprintf(
 			'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
-			esc_html__( 'Please provide valid attachment id to delete.', 'buddyboss' )
+			esc_html__( 'Please provide valid attachment id to delete.', 'buddyboss-platform' )
 		);
 
 		wp_send_json_error( $response );
@@ -1269,7 +1269,7 @@ function bp_nouveau_ajax_video_delete_attachment() {
 	if ( ! ( bp_current_user_can( 'bp_moderate' ) || (int) $attachment->post_author === bp_loggedin_user_id() ) ) {
 		$response['feedback'] = sprintf(
 			'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
-			esc_html__( 'You do not have permission to delete this attachment.', 'buddyboss' )
+			esc_html__( 'You do not have permission to delete this attachment.', 'buddyboss-platform' )
 		);
 
 		wp_send_json_error( $response );
@@ -1294,7 +1294,7 @@ function bp_nouveau_ajax_video_update_privacy() {
 	$response = array(
 		'feedback' => sprintf(
 			'<div class="bp-feedback bp-messages error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
-			esc_html__( 'There was a problem displaying the content. Please try again.', 'buddyboss' )
+			esc_html__( 'There was a problem displaying the content. Please try again.', 'buddyboss-platform' )
 		),
 	);
 
@@ -1312,7 +1312,7 @@ function bp_nouveau_ajax_video_update_privacy() {
 	if ( empty( $video_id ) ) {
 		$response['feedback'] = sprintf(
 			'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
-			esc_html__( 'Please provide video id to update.', 'buddyboss' )
+			esc_html__( 'Please provide video id to update.', 'buddyboss-platform' )
 		);
 
 		wp_send_json_error( $response );
@@ -1323,7 +1323,7 @@ function bp_nouveau_ajax_video_update_privacy() {
 	if ( empty( $privacy ) ) {
 		$response['feedback'] = sprintf(
 			'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
-			esc_html__( 'Please provide privacy to update.', 'buddyboss' )
+			esc_html__( 'Please provide privacy to update.', 'buddyboss-platform' )
 		);
 
 		wp_send_json_error( $response );
@@ -1332,7 +1332,7 @@ function bp_nouveau_ajax_video_update_privacy() {
 	if ( ! in_array( $privacy, array_keys( bp_video_get_visibility_levels() ), true ) ) {
 		$response['feedback'] = sprintf(
 			'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
-			esc_html__( 'Privacy option is not valid.', 'buddyboss' )
+			esc_html__( 'Privacy option is not valid.', 'buddyboss-platform' )
 		);
 
 		wp_send_json_error( $response );
@@ -1344,7 +1344,7 @@ function bp_nouveau_ajax_video_update_privacy() {
 	if ( ! bp_video_user_can_edit( $video ) ) {
 		$response['feedback'] = sprintf(
 			'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
-			esc_html__( 'You do not have permission to update this video\'s privacy.', 'buddyboss' )
+			esc_html__( 'You do not have permission to update this video\'s privacy.', 'buddyboss-platform' )
 		);
 
 		wp_send_json_error( $response );
@@ -1365,7 +1365,7 @@ function bp_nouveau_ajax_video_description_save() {
 	$response = array(
 		'feedback' => sprintf(
 			'<div class="bp-feedback bp-messages error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
-			esc_html__( 'There was a problem. Please try again.', 'buddyboss' )
+			esc_html__( 'There was a problem. Please try again.', 'buddyboss-platform' )
 		),
 	);
 
@@ -1383,7 +1383,7 @@ function bp_nouveau_ajax_video_description_save() {
 	if ( empty( $description ) ) {
 		$response['feedback'] = sprintf(
 			'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
-			esc_html__( 'There was an error in updating a description. Please try again.', 'buddyboss' )
+			esc_html__( 'There was an error in updating a description. Please try again.', 'buddyboss-platform' )
 		);
 
 		wp_send_json_error( $response );
@@ -1394,7 +1394,7 @@ function bp_nouveau_ajax_video_description_save() {
 	if ( empty( $attachment ) && ( 'attachment' !== $attachment->post_type ) ) {
 		$response['feedback'] = sprintf(
 			'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
-			esc_html__( 'There was an error in updating a description. Please try again.', 'buddyboss' )
+			esc_html__( 'There was an error in updating a description. Please try again.', 'buddyboss-platform' )
 		);
 
 		wp_send_json_error( $response );
@@ -1414,7 +1414,7 @@ function bp_nouveau_ajax_video_description_save() {
 			if ( ! bp_video_user_can_edit( $video ) ) {
 				$response['feedback'] = sprintf(
 					'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
-					esc_html__( 'You do not have permission to update this video\'s description.', 'buddyboss' )
+					esc_html__( 'You do not have permission to update this video\'s description.', 'buddyboss-platform' )
 				);
 
 				wp_send_json_error( $response );
@@ -1504,7 +1504,7 @@ function bp_nouveau_ajax_video_get_video_description() {
 	$response = array(
 		'feedback' => sprintf(
 			'<div class="bp-feedback bp-messages error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
-			esc_html__( 'There was a problem displaying the content. Please try again.', 'buddyboss' )
+			esc_html__( 'There was a problem displaying the content. Please try again.', 'buddyboss-platform' )
 		),
 	);
 
@@ -1555,15 +1555,15 @@ function bp_nouveau_ajax_video_get_video_description() {
 				if ( $download_url ) {
 					?>
 					<div class="bb-activity-more-options-wrap action">
-							<span class="bb-activity-more-options-action" data-balloon-pos="up" data-balloon="<?php echo esc_html__( 'More Options', 'buddyboss' ); ?>">
+							<span class="bb-activity-more-options-action" data-balloon-pos="up" data-balloon="<?php echo esc_html__( 'More Options', 'buddyboss-platform' ); ?>">
 								<i class="bb-icon-f bb-icon-ellipsis-h"></i>
 							</span>
 						<div class="bb-activity-more-options bb_more_dropdown">
 							<?php bp_get_template_part( 'common/more-options-view' ); ?>
 							<div class="generic-button">
 								<a id="activity-video-download-<?php echo esc_attr( $attachment_id ); ?>" href="<?php echo esc_url( $download_url ); ?>" class="button item-button bp-secondary-action activity-video-download download-activity">
-									<span class="bp-screen-reader-text"><?php echo esc_html__( 'Download', 'buddyboss' ); ?></span>
-									<span class="download-label"><?php echo esc_html__( 'Download', 'buddyboss' ); ?></span>
+									<span class="bp-screen-reader-text"><?php echo esc_html__( 'Download', 'buddyboss-platform' ); ?></span>
+									<span class="download-label"><?php echo esc_html__( 'Download', 'buddyboss-platform' ); ?></span>
 								</a>
 							</div>
 						</div>
@@ -1578,7 +1578,7 @@ function bp_nouveau_ajax_video_get_video_description() {
 				</div>
 
 				<div class="activity-header">
-					<p><a href="<?php echo esc_url( $user_domain ); ?>"><?php echo esc_html( $display_name ); ?></a> <?php esc_html_e( 'uploaded an video', 'buddyboss' ); ?><a href="<?php echo esc_url( $user_domain ); ?>" class="view activity-time-since"></p>
+					<p><a href="<?php echo esc_url( $user_domain ); ?>"><?php echo esc_html( $display_name ); ?></a> <?php esc_html_e( 'uploaded an video', 'buddyboss-platform' ); ?><a href="<?php echo esc_url( $user_domain ); ?>" class="view activity-time-since"></p>
 					<p class="activity-date"><a href="<?php echo esc_url( $user_domain ); ?>"><?php echo wp_kses_post( $time_since ); ?></a></p>
 				</div>
 			</div>
@@ -1589,18 +1589,18 @@ function bp_nouveau_ajax_video_get_video_description() {
 					?>
 					<a class="bp-add-video-activity-description <?php echo( ! empty( $content ) ? 'show-edit' : 'show-add' ); ?>" href="#">
 						<span class="bb-icon-l bb-icon-edit"></span>
-						<span class="add"><?php esc_html_e( 'Add a description', 'buddyboss' ); ?></span>
-						<span class="edit"><?php esc_html_e( 'Edit', 'buddyboss' ); ?></span>
+						<span class="add"><?php esc_html_e( 'Add a description', 'buddyboss-platform' ); ?></span>
+						<span class="edit"><?php esc_html_e( 'Edit', 'buddyboss-platform' ); ?></span>
 					</a>
 
 					<div class="bp-edit-video-activity-description" style="display: none;">
 						<div class="innerWrap">
-							<textarea id="add-activity-description" title="<?php esc_html_e( 'Add a description', 'buddyboss' ); ?>" class="textInput" name="caption_text" placeholder="<?php esc_html_e( 'Add a description', 'buddyboss' ); ?>" role="textbox"><?php echo wp_kses_post( $content ); ?></textarea>
+							<textarea id="add-activity-description" title="<?php esc_html_e( 'Add a description', 'buddyboss-platform' ); ?>" class="textInput" name="caption_text" placeholder="<?php esc_html_e( 'Add a description', 'buddyboss-platform' ); ?>" role="textbox"><?php echo wp_kses_post( $content ); ?></textarea>
 						</div>
 						<div class="in-profile description-new-submit">
 							<input type="hidden" id="bp-attachment-id" value="<?php echo esc_attr( $attachment_id ); ?>">
-							<input type="submit" id="bp-activity-description-new-submit" class="button small" name="description-new-submit" value="<?php esc_html_e( 'Done Editing', 'buddyboss' ); ?>">
-							<input type="reset" id="bp-activity-description-new-reset" class="text-button small" value="<?php esc_html_e( 'Cancel', 'buddyboss' ); ?>">
+							<input type="submit" id="bp-activity-description-new-submit" class="button small" name="description-new-submit" value="<?php esc_html_e( 'Done Editing', 'buddyboss-platform' ); ?>">
+							<input type="reset" id="bp-activity-description-new-reset" class="text-button small" value="<?php esc_html_e( 'Cancel', 'buddyboss-platform' ); ?>">
 						</div>
 					</div>
 					<?php
@@ -1688,7 +1688,7 @@ function bp_nouveau_ajax_video_get_album_view() {
 
 	$first_text = '';
 	if ( 'profile' === $type ) {
-		$first_text = esc_html__( ' Videos', 'buddyboss' );
+		$first_text = esc_html__( ' Videos', 'buddyboss-platform' );
 	} elseif ( bp_is_active( 'groups' ) ) {
 			$group      = groups_get_group( (int) $id );
 			$first_text = bp_get_group_name( $group );
@@ -1711,7 +1711,7 @@ function bp_nouveau_ajax_video_get_album_view() {
 function bp_nouveau_ajax_video_move() {
 
 	$response = array(
-		'feedback' => esc_html__( 'There was a problem performing this action. Please try again.', 'buddyboss' ),
+		'feedback' => esc_html__( 'There was a problem performing this action. Please try again.', 'buddyboss-platform' ),
 	);
 
 	// Bail if not a POST action.
@@ -1752,7 +1752,7 @@ function bp_nouveau_ajax_video_move() {
 	if ( (int) $video_id > 0 ) {
 		$has_access = bp_video_user_can_edit( $video_id );
 		if ( ! $has_access ) {
-			$response['feedback'] = esc_html__( 'You don\'t have permission to move this video.', 'buddyboss' );
+			$response['feedback'] = esc_html__( 'You don\'t have permission to move this video.', 'buddyboss-platform' );
 			wp_send_json_error( $response );
 		}
 	}
@@ -1760,7 +1760,7 @@ function bp_nouveau_ajax_video_move() {
 	if ( (int) $album_id > 0 ) {
 		$has_access = bp_video_album_user_can_edit( $album_id );
 		if ( ! $has_access ) {
-			$response['feedback'] = esc_html__( 'You don\'t have permission to move this video.', 'buddyboss' );
+			$response['feedback'] = esc_html__( 'You don\'t have permission to move this video.', 'buddyboss-platform' );
 			wp_send_json_error( $response );
 		}
 	}
@@ -1823,7 +1823,7 @@ function bp_nouveau_ajax_video_move() {
 function bp_nouveau_ajax_video_get_edit_thumbnail_data() {
 
 	$response = array(
-		'feedback' => esc_html__( 'There was a problem performing this action. Please try again.', 'buddyboss' ),
+		'feedback' => esc_html__( 'There was a problem performing this action. Please try again.', 'buddyboss-platform' ),
 	);
 
 	// Bail if not a POST action.
@@ -1871,7 +1871,7 @@ function bp_nouveau_ajax_video_get_edit_thumbnail_data() {
 				<li class="lg-grid-1-5 md-grid-1-3 sm-grid-1-3">
 					<div class="">
 						<input <?php checked( $preview_thumbnail_id, $auto_generated_thumbnail ); ?> id="bb-video-<?php echo esc_attr( $auto_generated_thumbnail ); ?>" class="bb-custom-check" type="radio" value="<?php echo esc_attr( $auto_generated_thumbnail ); ?>" name="bb-video-thumbnail-select" />
-						<label class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_html_e( 'Select', 'buddyboss' ); ?>" for="bb-video-<?php echo esc_attr( $auto_generated_thumbnail ); ?>">
+						<label class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_html_e( 'Select', 'buddyboss-platform' ); ?>" for="bb-video-<?php echo esc_attr( $auto_generated_thumbnail ); ?>">
 							<span class="bb-icon-l bb-icon-check"></span>
 						</label>
 						<a class="" href="#">
@@ -1930,7 +1930,7 @@ function bp_nouveau_ajax_video_thumbnail_save() {
 	$response = array(
 		'feedback' => sprintf(
 			'<div class="bp-feedback error bp-ajax-message"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
-			esc_html__( 'There was a problem performing this action. Please try again.', 'buddyboss' )
+			esc_html__( 'There was a problem performing this action. Please try again.', 'buddyboss-platform' )
 		),
 	);
 
@@ -1960,7 +1960,7 @@ function bp_nouveau_ajax_video_thumbnail_save() {
 		if ( ! empty( $video->id ) && ! bp_video_user_can_edit( $video ) ) {
 			$response['feedback'] = sprintf(
 				'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
-				esc_html__( 'You do not have permission to update this video\'s thumbnail.', 'buddyboss' )
+				esc_html__( 'You do not have permission to update this video\'s thumbnail.', 'buddyboss-platform' )
 			);
 
 			wp_send_json_error( $response );
@@ -2015,7 +2015,7 @@ function bp_nouveau_ajax_video_thumbnail_delete() {
 	$response = array(
 		'feedback' => sprintf(
 			'<div class="bp-feedback error bp-ajax-message"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
-			esc_html__( 'There was a problem performing this action. Please try again.', 'buddyboss' )
+			esc_html__( 'There was a problem performing this action. Please try again.', 'buddyboss-platform' )
 		),
 	);
 
@@ -2047,7 +2047,7 @@ function bp_nouveau_ajax_video_thumbnail_delete() {
 		if ( ! empty( $video->id ) && ! bp_video_user_can_delete( $video ) ) {
 			$response['feedback'] = sprintf(
 				'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
-				esc_html__( 'You do not have permission to delete this video\'s thumbnail.', 'buddyboss' )
+				esc_html__( 'You do not have permission to delete this video\'s thumbnail.', 'buddyboss-platform' )
 			);
 
 			wp_send_json_error( $response );

@@ -9,6 +9,9 @@
  * @version 1.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 global $current_comment;
 ?>
 <li class="bp-search-item bp-search-item_posts_comments">
@@ -21,7 +24,7 @@ global $current_comment;
 
 		<div class="item">
 			<a href="<?php comment_link( $current_comment ); ?>">
-				<div class="item-desc"><?php echo bp_search_result_intro( $current_comment->comment_content, 150 ); ?></div>
+				<div class="item-desc"><?php echo wp_kses_post( bp_search_result_intro( $current_comment->comment_content, 150 ) ); ?></div>
 			</a>
 		</div>
 	</div>

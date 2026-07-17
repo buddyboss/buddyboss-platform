@@ -6,6 +6,9 @@
  * @since BuddyPress 3.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 /**
  * Catch and route the 'read' notifications screen.
  *
@@ -56,9 +59,9 @@ function bp_notifications_action_mark_unread() {
 
 	// Check the nonce and mark the notification.
 	if ( bp_verify_nonce_request( 'bp_notification_mark_unread_' . $id ) && bp_notifications_mark_notification( $id, true ) ) {
-		bp_core_add_message( __( 'Notification successfully marked unread.', 'buddyboss' ) );
+		bp_core_add_message( __( 'Notification successfully marked unread.', 'buddyboss-platform' ) );
 	} else {
-		bp_core_add_message( __( 'There was a problem marking that notification.', 'buddyboss' ), 'error' );
+		bp_core_add_message( __( 'There was a problem marking that notification.', 'buddyboss-platform' ), 'error' );
 	}
 
 	// Redirect.

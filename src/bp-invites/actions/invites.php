@@ -51,7 +51,7 @@ function bp_member_invite_submit() {
 	check_admin_referer( 'bp_member_invite_submit' );
 
 	if ( empty( $_POST ) ) {
-		bp_core_add_message( __( 'You didn\'t include any email addresses!', 'buddyboss' ), 'error' );
+		bp_core_add_message( __( 'You didn\'t include any email addresses!', 'buddyboss-platform' ), 'error' );
 		bp_core_redirect( $bp->loggedin_user->domain . '/invites' );
 		die();
 	}
@@ -103,13 +103,13 @@ function bp_member_invite_submit() {
 		if ( true === bp_disable_invite_member_email_subject() ) {
 			$subject = sanitize_textarea_field( wp_unslash( $_POST['bp_member_invites_custom_subject'] ) );
 		} else {
-			$subject = stripslashes( strip_tags( bp_get_member_invitation_subject() ) );
+			$subject = stripslashes( wp_strip_all_tags( bp_get_member_invitation_subject() ) );
 		}
 
 		if ( true === bp_disable_invite_member_email_content() ) {
-			$message = stripslashes( strip_tags( $_POST['bp_member_invites_custom_content'] ) );
+			$message = stripslashes( wp_strip_all_tags( $_POST['bp_member_invites_custom_content'] ) );
 		} else {
-			$message = stripslashes( strip_tags( bp_get_member_invitation_message() ) );
+			$message = stripslashes( wp_strip_all_tags( bp_get_member_invitation_message() ) );
 		}
 
 		$email          = sanitize_email( wp_unslash( $value['email'] ) );
@@ -120,7 +120,7 @@ function bp_member_invite_submit() {
 
 		$message .= '
 
-' . bp_get_member_invites_wildcard_replace( stripslashes( strip_tags( bp_get_invites_member_invite_url() ) ), $email );
+' . bp_get_member_invites_wildcard_replace( stripslashes( wp_strip_all_tags( bp_get_invites_member_invite_url() ) ), $email );
 
 		$inviter_name = bp_core_get_user_displayname( bp_loggedin_user_id() );
 		$site_name    = get_bloginfo( 'name' );
@@ -245,7 +245,8 @@ function bp_invites_member_invite_filter_content( $content, $email ) {
 		$content .= '<br>' .
 		            bp_get_member_invites_wildcard_replace(
 			            wp_kses(
-				            sprintf( __( 'To accept this invitation, please <a href="%s">click here</a>.', 'buddyboss' ), '{{invitee.url}}' ),
+				            /* translators: %s: invitation acceptance URL. */
+				            sprintf( __( 'To accept this invitation, please <a href="%s">click here</a>.', 'buddyboss-platform' ), '{{invitee.url}}' ),
 				            bp_invites_kses_allowed_tags()
 			            )
 		            );
