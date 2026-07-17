@@ -1,7 +1,7 @@
 === BuddyBoss Platform ===
 Contributors: buddyboss
 Requires at least: 4.9.1
-Tested up to: 7.0.0
+Tested up to: 7.0.1
 Requires PHP: 7.4.0
 Stable tag: 3.0.3
 License: GPLv2 or later
