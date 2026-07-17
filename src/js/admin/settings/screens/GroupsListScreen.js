@@ -495,19 +495,28 @@ export function GroupsListScreen( { onNavigate } ) {
 
 		setIsEditSaving( true );
 		saveGroup( payload ).then( function ( response ) {
-			if ( response.success ) {
-				// Process pending member changes after main save succeeds.
-				var membersPromise = 'function' === typeof membersSaveFn ? membersSaveFn() : Promise.resolve();
-				return ( membersPromise || Promise.resolve() ).then( function () {
-					setIsEditSaving( false );
-					setEditGroup( null );
-					setNotice( { type: 'success', message: response.data.message } );
-					resetAndRefetch();
-				} );
+			if ( ! response.success ) {
+				setIsEditSaving( false );
+				setNotice( { type: 'error', message: ( response.data && response.data.message ) || __( 'Failed to save group.', 'buddyboss' ) } );
+				return;
 			}
-			setIsEditSaving( false );
-			setNotice( { type: 'error', message: ( response.data && response.data.message ) || __( 'Failed to save group.', 'buddyboss-platform' ) } );
+
+			// Process pending member changes after the main save succeeds.
+			var membersPromise = 'function' === typeof membersSaveFn ? membersSaveFn() : Promise.resolve();
+			return ( membersPromise || Promise.resolve() ).then( function () {
+				// Full success — close and refresh.
+				setIsEditSaving( false );
+				setEditGroup( null );
+				setNotice( { type: 'success', message: response.data.message } );
+				resetAndRefetch();
+			} ).catch( function () {
+				// A member change failed. GroupMembersTab has already shown the
+				// error inside the modal (Members tab), so keep the modal open and
+				// just stop the spinner — no duplicate page-level notice.
+				setIsEditSaving( false );
+			} );
 		} ).catch( function ( err ) {
+			// Group-level save failure (HTTP / AJAX error) → page-level notice.
 			setIsEditSaving( false );
 			setNotice( { type: 'error', message: err.message || __( 'An error occurred saving the group.', 'buddyboss-platform' ) } );
 		} );

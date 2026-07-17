@@ -71,21 +71,6 @@ function bp_groups_group_access_protection() {
 		}
 	}
 
-	// Block access to hidden navigation items — redirect to group home.
-	// Only applies when the user already has access; otherwise, let the
-	// normal access-protection logic below handle it (e.g., private group → login redirect).
-	if ( $user_has_access
-		&& bp_current_action()
-		&& 'home' !== bp_current_action()
-		&& function_exists( 'bp_nouveau_get_appearance_settings' )
-	) {
-		$hidden_tabs = bp_nouveau_get_appearance_settings( 'group_nav_hide' );
-
-		if ( is_array( $hidden_tabs ) && in_array( bp_current_action(), $hidden_tabs, true ) ) {
-			bp_core_redirect( bp_get_group_permalink( $current_group ) );
-		}
-	}
-
 	// Protect the admin tab from non-admins.
 	if ( bp_is_current_action( 'admin' ) && ! bp_is_item_admin() ) {
 		$user_has_access = false;
