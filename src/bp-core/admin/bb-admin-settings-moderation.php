@@ -284,7 +284,7 @@ function bb_admin_settings_register_moderation_feature() {
 		'moderation',
 		'blog_posts',
 		array(
-			'title' => __( 'Blog Posts', 'buddyboss' ),
+			'title' => __( 'Blog Posts', 'buddyboss-platform' ),
 			'icon'  => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-article',

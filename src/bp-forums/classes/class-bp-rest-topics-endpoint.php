@@ -1993,10 +1993,14 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 			add_filter( 'bbp_get_topic_content', 'bp_media_forums_embed_gif', 98, 2 );
 		}
 		add_filter( 'bbp_get_topic_content', 'bp_media_forums_embed_attachments', 98, 2 );
-		add_filter( 'bbp_get_topic_content', 'bp_video_forums_embed_attachments', 98, 2 );
+		if ( function_exists( 'bp_video_forums_embed_attachments' ) ) {
+			add_filter( 'bbp_get_topic_content', 'bp_video_forums_embed_attachments', 98, 2 );
+		}
 		add_filter( 'bbp_get_topic_content', 'bb_forums_link_preview', 999, 2 ); // Restore link preview to content.
 		add_filter( 'bbp_get_topic_content', 'bbp_topic_content_autoembed_paragraph', 99999, 1 ); // Restore link embed to content.
-		add_filter( 'bbp_get_topic_content', 'bp_document_forums_embed_attachments', 999999, 2 );
+		if ( function_exists( 'bp_document_forums_embed_attachments' ) ) {
+			add_filter( 'bbp_get_topic_content', 'bp_document_forums_embed_attachments', 999999, 2 );
+		}
 
 		// Don't leave our cookie lying around: https://github.com/WP-API/WP-API/issues/1055.
 		if ( ! empty( $topic->post_password ) ) {
