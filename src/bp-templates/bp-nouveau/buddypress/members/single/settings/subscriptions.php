@@ -20,6 +20,20 @@ $data = bb_core_notification_preferences_data();
 		<?php
 		$types               = bb_get_subscriptions_types();
 		$types_with_singular = bb_get_subscriptions_types( true );
+
+		/**
+		 * Filters the subscription types displayed in the member Subscriptions
+		 * settings tab. Display-only — does NOT affect subscribe/unsubscribe;
+		 * the REST endpoint validates the `type` param against the unfiltered
+		 * list, so removing a type here only hides its accordion.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param array $types               Plural-label types map.
+		 * @param array $types_with_singular Singular-label types map.
+		 */
+		$types               = apply_filters( 'bb_subscriptions_settings_visible_types', $types, $types_with_singular );
+		$types_with_singular = array_intersect_key( $types_with_singular, $types );
 		if ( ! empty( $types ) ) {
 			foreach ( $types as $sub_type => $label ) {
 				?>
