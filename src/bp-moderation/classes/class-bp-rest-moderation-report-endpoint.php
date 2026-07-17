@@ -431,12 +431,12 @@ class BP_REST_Moderation_Report_Endpoint extends WP_REST_Controller {
 			if ( ! empty( $media->activity_id ) ) {
 				$report_links = $this->prepare_report_link( $media->activity_id, BP_Suspend_Activity::$type );
 			}
-		} elseif ( 'document' === $request['item_type'] && bp_is_active( 'activity' ) ) {
+		} elseif ( 'document' === $request['item_type'] && bp_is_active( 'document' ) && bp_is_active( 'activity' ) ) {
 			$document = new BP_Document( $request['item_id'] );
 			if ( ! empty( $document->activity_id ) ) {
 				$report_links = $this->prepare_report_link( $document->activity_id, BP_Suspend_Activity::$type );
 			}
-		} elseif ( 'video' === $request['item_type'] && bp_is_active( 'activity' ) ) {
+		} elseif ( 'video' === $request['item_type'] && bp_is_active( 'video' ) && bp_is_active( 'activity' ) ) {
 			$video = new BP_Video( $request['item_id'] );
 			if ( ! empty( $video->activity_id ) ) {
 				$report_links = $this->prepare_report_link( $video->activity_id, BP_Suspend_Activity::$type );
