@@ -1115,6 +1115,18 @@
   }
 }
 
+.bb-blog-single-subscribe-bell {
+  background-color: transparent;
+  border: 0;
+  padding: 4px;
+  cursor: pointer;
+}
+
+.bb-blog-single-subscribe-bell i {
+  color: var(--bb-rl-icon-secondary-color);
+  font-size: 24px;
+}
+
 .bb-rl-blog-related-cards {
   margin-top: 40px;
 }
