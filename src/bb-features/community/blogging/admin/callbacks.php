@@ -52,7 +52,16 @@ function bb_blog_sanitize_social_links( $value ) {
  * @return bool
  */
 function bb_blog_page_settings_is_available() {
-	$available = function_exists( 'buddyboss_theme_get_option' ) || bb_is_readylaunch_enabled();
+	/*
+	 * Detect the theme by slug, NOT by `function_exists( 'buddyboss_theme_get_option' )`.
+	 * This runs from `bb_register_features` (bp_loaded -> plugins_loaded), and
+	 * WordPress does not load the active theme's functions.php until after
+	 * `plugins_loaded` -- so no theme function is defined yet and that test is
+	 * false on every site, disabling Page Settings even when the BuddyBoss
+	 * Theme is active. `get_template()` is option-backed and safe this early;
+	 * it returns the parent slug, so BuddyBoss Theme child themes match too.
+	 */
+	$available = 'buddyboss-theme' === get_template() || bb_is_readylaunch_enabled();
 
 	/**
 	 * Filter whether the Blog Page Settings are available.
