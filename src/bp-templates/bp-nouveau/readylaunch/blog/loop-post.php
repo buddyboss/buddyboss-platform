@@ -84,7 +84,25 @@ $bb_rl_blog_show_status_tag = apply_filters( 'bb_rl_blog_card_show_status', fals
 					<i class="bb-icons-rl bb-icons-rl-dots-three" aria-hidden="true"></i>
 				</button>
 				<ul class="bb-rl-blog-card__menu-list">
-					<li><a href="<?php the_permalink(); ?>"><i class="bb-icons-rl bb-icons-rl-eye" aria-hidden="true"></i><?php esc_html_e( 'View Post', 'buddyboss' ); ?></a></li>
+					<?php
+					/**
+					 * Filter whether the "View Post" item appears in the blog card
+					 * menu. Add-ons that inject owner actions (e.g. Member
+					 * Blogging's Edit/Delete) suppress the redundant item — the
+					 * card already carries its own "View Post" button — so the menu
+					 * shows only the management actions.
+					 *
+					 * @since BuddyBoss [BBVERSION]
+					 *
+					 * @param bool $show    Whether to show the View Post menu item.
+					 * @param int  $post_id Post ID.
+					 */
+					if ( apply_filters( 'bb_blog_card_show_view_post_menu_item', true, get_the_ID() ) ) :
+						?>
+						<li><a href="<?php the_permalink(); ?>"><i class="bb-icons-rl bb-icons-rl-eye" aria-hidden="true"></i><?php esc_html_e( 'View Post', 'buddyboss' ); ?></a></li>
+						<?php
+					endif;
+					?>
 					<?php
 					/**
 					 * Fires inside the blog card more-options menu (member profile
