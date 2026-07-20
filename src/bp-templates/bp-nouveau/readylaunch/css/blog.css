@@ -1072,7 +1072,8 @@
   font-size: 15px;
 }
 
-.bb-rl-blog-single__content h5 {
+.bb-rl-blog-single__content h5,
+.bb-rl-blog-single__content h6 {
   font-size: 14px;
 }
 
