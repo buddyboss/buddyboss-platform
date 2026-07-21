@@ -3,14 +3,22 @@
  *
  * Reducer + Context provider that holds the Knowledge Base modal's UI state
  * (open/closed, current view, active category/article slugs, expanded
- * subcategories). The components in `components/knowledge-base/` consume this
- * context via the `useKb()` hook.
+ * subcategories, and the per-product documentation scope `rootCategory`). The
+ * components in `components/knowledge-base/` consume this context via the
+ * `useKb()` hook.
  *
  * Action contracts (see plan §7) are exact — Tasks 13-18 dispatch with these
  * exact action shapes:
  *
- * - `{ type: 'open' }`               → isOpen=true; other state unchanged.
- * - `{ type: 'close' }`              → isOpen=false; other state unchanged.
+ * - `{ type: 'open', rootCategory?, resetToLanding? }` → isOpen=true. When
+ *                                    `rootCategory` is provided it is set
+ *                                    (omitted → unchanged); when
+ *                                    `resetToLanding` is true, view='landing',
+ *                                    slugs=null and expanded={} are reset in the
+ *                                    same atomic transition. Bare `{ type:'open' }`
+ *                                    is backwards-compatible (isOpen=true only).
+ * - `{ type: 'close' }`              → isOpen=false; other state unchanged
+ *                                    (rootCategory is preserved across close).
  * - `{ type: 'goToLanding' }`        → view='landing', slugs=null, expanded={}.
  * - `{ type: 'selectCategory', slug }` → view='category', activeCategorySlug=slug,
  *                                       activeArticleSlug=null, expanded={}.
@@ -44,7 +52,8 @@ import { createContext, useReducer, useContext, useCallback } from '@wordpress/e
  *   view: 'landing'|'category',
  *   activeCategorySlug: ?string,
  *   activeArticleSlug: ?string,
- *   expandedSubcategories: Set<string>
+ *   expandedSubcategories: Set<string>,
+ *   rootCategory: ?string
  * }>}
  */
 export const INITIAL_STATE = Object.freeze( {
@@ -53,6 +62,7 @@ export const INITIAL_STATE = Object.freeze( {
 	activeCategorySlug: null,
 	activeArticleSlug: null,
 	expandedSubcategories: new Set(),
+	rootCategory: null,
 } );
 
 /**
@@ -73,6 +83,7 @@ function createInitialState() {
 		activeCategorySlug: null,
 		activeArticleSlug: null,
 		expandedSubcategories: new Set(),
+		rootCategory: null,
 	};
 }
 
@@ -87,8 +98,19 @@ function createInitialState() {
  */
 export function kbReducer( state, action ) {
 	switch ( action.type ) {
-		case 'open':
-			return { ...state, isOpen: true };
+		case 'open': {
+			const next = { ...state, isOpen: true };
+			if ( action.rootCategory !== undefined ) {
+				next.rootCategory = action.rootCategory;
+			}
+			if ( action.resetToLanding ) {
+				next.view = 'landing';
+				next.activeCategorySlug = null;
+				next.activeArticleSlug = null;
+				next.expandedSubcategories = new Set();
+			}
+			return next;
+		}
 		case 'close':
 			return { ...state, isOpen: false };
 		case 'goToLanding':
@@ -149,7 +171,11 @@ const KbContext = createContext( null );
 export function KbProvider( { children } ) {
 	const [ state, dispatch ] = useReducer( kbReducer, undefined, createInitialState );
 
-	const open  = useCallback( () => dispatch( { type: 'open' } ), [] );
+	const open  = useCallback( ( options = {} ) => dispatch( {
+		type: 'open',
+		rootCategory: options.rootCategory,
+		resetToLanding: options.resetToLanding,
+	} ), [] );
 	const close = useCallback( () => dispatch( { type: 'close' } ), [] );
 
 	return (

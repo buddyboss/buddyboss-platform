@@ -30,6 +30,7 @@ import { useKb } from '../../context/KbContext';
 import { decodeEntities } from '../../utils/kbApi';
 import { getTaxonomy, clearTaxonomy } from './taxonomyCache';
 import { getCuratedOverrides } from './curatedOverrides';
+import { resolveRootParentId } from './landingScope';
 
 /**
  * Walk the parent→children map and sum descendant counts for the given
@@ -63,7 +64,7 @@ function aggregateCount( parentId, childrenByParent, byId ) {
  * @return {React.Element} Landing grid element.
  */
 export default function KBLanding() {
-	const { dispatch }              = useKb();
+	const { dispatch, state }       = useKb();
 	const [ status, setStatus ]     = useState( 'loading' );
 	const [ terms, setTerms ]       = useState( [] );
 	const [ retryCount, setRetry ]  = useState( 0 );
@@ -105,7 +106,8 @@ export default function KBLanding() {
 		}
 
 		const overrides = getCuratedOverrides();
-		const topLevels = childrenByParent.get( 0 ) || [];
+		const rootParentId = resolveRootParentId( terms, state.rootCategory );
+		const topLevels    = childrenByParent.get( rootParentId ) || [];
 
 		let built = topLevels.map( ( t ) => {
 			const aggregated = aggregateCount( t.id, childrenByParent, byId );
@@ -132,7 +134,7 @@ export default function KBLanding() {
 		built = built.filter( item => item.count !== 0 );
 
 		return built;
-	}, [ terms ] );
+	}, [ terms, state.rootCategory ] );
 
 	if ( status === 'loading' ) {
 		return (
