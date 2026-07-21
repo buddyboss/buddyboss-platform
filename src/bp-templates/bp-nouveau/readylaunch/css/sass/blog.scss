@@ -714,6 +714,14 @@
 	.site.bb-readylaunch {
 		background-color: var(--bb-rl-background-color);
 	}
+
+	.bb-rl-left-panel {
+		display: none;
+
+		~ .site.bb-readylaunch {
+			margin-left: 0;
+		}
+	}
 }
 
 .bb-rl-blog-single-header {
@@ -747,7 +755,7 @@
 }
 
 .bb-rl-blog-single {
-	max-width: 912px;
+	max-width: 960px;
 	margin: 32px auto;
 	padding: 0 var(--bb-rl-space-300);
 

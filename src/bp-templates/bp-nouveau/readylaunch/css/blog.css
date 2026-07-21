@@ -907,6 +907,14 @@
   background-color: var(--bb-rl-background-color);
 }
 
+.single.single-post .bb-rl-left-panel {
+  display: none;
+}
+
+.single.single-post .bb-rl-left-panel ~ .site.bb-readylaunch {
+  margin-left: 0;
+}
+
 .bb-rl-blog-single-header {
   display: flex;
   align-items: center;
@@ -940,7 +948,7 @@
 }
 
 .bb-rl-blog-single {
-  max-width: 912px;
+  max-width: 960px;
   margin: 32px auto;
   padding: 0 var(--bb-rl-space-300);
 }
