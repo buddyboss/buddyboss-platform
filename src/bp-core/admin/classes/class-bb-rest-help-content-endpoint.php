@@ -195,7 +195,21 @@ class BB_REST_Help_Content_Endpoint extends WP_REST_Controller {
 	 */
 	public function get_item_permissions_check( $request ) {
 		unset( $request );
-		if ( ! current_user_can( 'manage_options' ) ) {
+
+		/**
+		 * Filter the capability required to read help content through the proxy.
+		 *
+		 * Only the capability string is filterable — the permission callback,
+		 * nonce requirement, and same-origin auth are unchanged. The endpoint
+		 * never becomes public. Default matches every Settings 2.0 endpoint.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param string $capability Default 'manage_options'.
+		 */
+		$capability = apply_filters( 'bb_help_content_capability', 'manage_options' );
+
+		if ( ! current_user_can( $capability ) ) {
 			return new WP_Error(
 				'bb_rest_help_content_forbidden',
 				__( 'Sorry, you are not allowed to access help content.', 'buddyboss' ),

@@ -68,7 +68,7 @@ function kbAdminData() {
 	if ( typeof window === 'undefined' ) {
 		return {};
 	}
-	return window.bbAdminData || window.bbIntegrationsData || {};
+	return window.bbAdminData || window.bbIntegrationsData || window.bbKb || {};
 }
 
 /**
