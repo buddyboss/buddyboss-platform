@@ -1028,6 +1028,11 @@
   padding-bottom: 16px;
 }
 
+.bb-rl-blog-single:not(:has(.bb-rl-blog-single__tags)) .bb-rl-blog-single__categories {
+  border-bottom: 0.5px solid var(--bb-rl-border-secondary-color);
+  padding-bottom: 16px;
+}
+
 .bb-rl-blog-single__label {
   display: inline-flex;
   align-items: center;
