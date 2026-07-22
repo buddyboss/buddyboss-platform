@@ -159,5 +159,5 @@ function bb_blog_screen_member_posts() {
  * @return void
  */
 function bb_blog_member_posts_content() {
-	bp_get_template_part( 'blog/member-posts' );
+	bp_get_template_part( 'members/single/blog' );
 }

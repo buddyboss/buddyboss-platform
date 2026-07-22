@@ -1,9 +1,17 @@
 <?php
 /**
- * BuddyBoss - Member profile Blogs tab content (legacy template pack).
+ * The template for the member profile "Blogs" tab (Member Blogging feature).
+ *
+ * Loaded for the member profile `blog` (singular) nav item — the Member
+ * Blogging feature (native WP posts authored by the member), distinct from the
+ * multisite Sites component template `members/single/blogs.php`. Queries the
+ * member's posts and renders each one through the `blog/loop-post.php` part.
+ *
+ * This template can be overridden by copying it to
+ * yourtheme/buddypress/members/single/blog.php.
  *
  * @since   BuddyBoss [BBVERSION]
- * @package BuddyBoss\Blogging
+ * @version 1.0.0
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -18,39 +26,20 @@ $bb_blog_query_args = array(
 	'paged'          => max( 1, (int) get_query_var( 'paged' ), (int) get_query_var( 'page' ) ),
 );
 
-/** This filter is documented in bp-templates/bp-nouveau/readylaunch/blog/member-posts.php */
+/** This filter is documented in bp-templates/bp-nouveau/readylaunch/members/single/blog.php */
 $bb_blog_member_query = new WP_Query( apply_filters( 'bb_blog_member_posts_query_args', $bb_blog_query_args ) );
 ?>
 <div class="bb-member-blog">
 	<?php
-	/** This action is documented in bp-templates/bp-nouveau/readylaunch/blog/member-posts.php */
-	do_action( 'bb_blog_member_posts_before' );
+		/** This action is documented in bp-templates/bp-nouveau/readylaunch/members/single/blog.php */
+		do_action( 'bb_blog_member_posts_before' );
 	?>
 	<?php if ( $bb_blog_member_query->have_posts() ) : ?>
 		<ul class="bb-member-blog__list">
 			<?php
 			while ( $bb_blog_member_query->have_posts() ) :
 				$bb_blog_member_query->the_post();
-				?>
-				<li class="bb-member-blog__item">
-					<?php if ( has_post_thumbnail() ) : ?>
-						<a class="bb-member-blog__thumb" href="<?php the_permalink(); ?>"><?php the_post_thumbnail( 'thumbnail' ); ?></a>
-					<?php endif; ?>
-					<div class="bb-member-blog__body">
-						<h3 class="bb-member-blog__title">
-							<a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
-							<?php
-							$bb_blog_status     = get_post_status();
-							$bb_blog_status_obj = get_post_status_object( $bb_blog_status );
-							if ( 'publish' !== $bb_blog_status ) :
-								?>
-								<span class="bb-member-blog__status"><?php echo esc_html( $bb_blog_status_obj ? $bb_blog_status_obj->label : ucfirst( $bb_blog_status ) ); ?></span>
-							<?php endif; ?>
-						</h3>
-						<span class="bb-member-blog__date"><?php echo esc_html( get_the_date() ); ?></span>
-					</div>
-				</li>
-				<?php
+				bp_get_template_part( 'blog/loop-post' );
 			endwhile;
 			wp_reset_postdata();
 			?>
@@ -64,8 +53,9 @@ $bb_blog_member_query = new WP_Query( apply_filters( 'bb_blog_member_posts_query
 				'format'  => '?paged=%#%',
 			)
 		);
+
+	else :
 		?>
-	<?php else : ?>
 		<p class="bb-member-blog__empty">
 			<?php
 			if ( $bb_blog_is_owner ) {
@@ -78,3 +68,4 @@ $bb_blog_member_query = new WP_Query( apply_filters( 'bb_blog_member_posts_query
 		</p>
 	<?php endif; ?>
 </div>
+
