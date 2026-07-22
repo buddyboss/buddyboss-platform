@@ -1,0 +1,301 @@
+/**
+ * Member profile "Blogs" tab — base layout for the standard (non-ReadyLaunch)
+ * template pack.
+ *
+ * Self-contained structural styling (no theme design tokens). Themes may skin
+ * these same `.bb-member-blog*` selectors on top of this base.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+
+.bb-member-blog {
+	margin-top: 8px;
+}
+
+/* Toolbar ----------------------------------------------------------------- */
+.bb-member-blog__toolbar {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	flex-wrap: wrap;
+	gap: 12px;
+	margin-bottom: 20px;
+}
+
+.bb-member-blog__toolbar-tabs {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+}
+
+.bb-member-blog__tab {
+	display: inline-flex;
+	align-items: center;
+	padding: 6px 14px;
+	border: 1px solid rgba(0, 0, 0, 0.1);
+	border-radius: 100px;
+	font-size: 13px;
+	font-weight: 500;
+	line-height: 1.4;
+	color: inherit;
+	text-decoration: none;
+	transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.bb-member-blog__tab:hover,
+.bb-member-blog__tab:focus {
+	background-color: rgba(0, 0, 0, 0.04);
+}
+
+.bb-member-blog__tab--active {
+	background-color: #1c1d20;
+	border-color: #1c1d20;
+	color: #fff;
+}
+
+.bb-member-blog__toolbar-actions {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+}
+
+.bb-member-blog__sort > .bb_more_options_action {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	padding: 6px 12px;
+	border: 1px solid rgba(0, 0, 0, 0.1);
+	border-radius: 6px;
+	font-size: 13px;
+	color: inherit;
+	text-decoration: none;
+}
+
+.bb-member-blog__toolbar-divider {
+	width: 1px;
+	height: 24px;
+	background-color: rgba(0, 0, 0, 0.1);
+}
+
+/* Card list --------------------------------------------------------------- */
+.bb-member-blog__list {
+	display: flex;
+	flex-direction: column;
+	gap: 16px;
+}
+
+.bb-member-blog__item {
+	display: flex;
+	gap: 20px;
+	padding: 16px;
+	border: 1px solid rgba(0, 0, 0, 0.08);
+	border-radius: 12px;
+	background-color: #fff;
+}
+
+/* Media ------------------------------------------------------------------- */
+.bb-member-blog__media {
+	position: relative;
+	flex: 0 0 240px;
+	max-width: 240px;
+}
+
+.bb-member-blog__thumb {
+	display: block;
+	position: relative;
+	width: 100%;
+	aspect-ratio: 16 / 10;
+	border-radius: 8px;
+	overflow: hidden;
+	background-color: rgba(0, 0, 0, 0.04);
+}
+
+.bb-member-blog__thumb img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+.bb-member-blog__thumb-placeholder {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 100%;
+	height: 100%;
+	font-size: 32px;
+	color: rgba(0, 0, 0, 0.2);
+}
+
+.bb-member-blog__status {
+	position: absolute;
+	top: 10px;
+	left: 10px;
+	padding: 3px 10px;
+	border-radius: 100px;
+	font-size: 11px;
+	font-weight: 600;
+	line-height: 1.4;
+	color: #fff;
+	background-color: #1c1d20;
+}
+
+.bb-member-blog__status--draft {
+	background-color: #8a8f98;
+}
+
+.bb-member-blog__status--pending {
+	background-color: #c77700;
+}
+
+.bb-member-blog__status--future {
+	background-color: #2a7de1;
+}
+
+.bb-member-blog__bookmark {
+	position: absolute;
+	top: 10px;
+	right: 10px;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 32px;
+	height: 32px;
+	padding: 0;
+	border: 0;
+	border-radius: 50%;
+	background-color: rgba(255, 255, 255, 0.92);
+	color: #1c1d20;
+	cursor: pointer;
+}
+
+.bb-member-blog__bookmark.is-bookmarked {
+	color: #2a7de1;
+}
+
+/* Body -------------------------------------------------------------------- */
+.bb-member-blog__body {
+	display: flex;
+	flex-direction: column;
+	flex: 1 1 auto;
+	min-width: 0;
+	gap: 12px;
+}
+
+.bb-member-blog__main {
+	flex: 1 1 auto;
+	min-width: 0;
+}
+
+.bb-member-blog__heading {
+	display: flex;
+	align-items: flex-start;
+	justify-content: space-between;
+	gap: 10px;
+}
+
+.bb-member-blog__title {
+	margin: 0;
+	font-size: 16px;
+	font-weight: 600;
+	line-height: 1.4;
+}
+
+.bb-member-blog__title a {
+	color: inherit;
+	text-decoration: none;
+}
+
+.bb-member-blog__excerpt {
+	margin-top: 6px;
+	font-size: 14px;
+	line-height: 1.5;
+	color: rgba(0, 0, 0, 0.6);
+	display: -webkit-box;
+	-webkit-line-clamp: 2;
+	-webkit-box-orient: vertical;
+	overflow: hidden;
+}
+
+/* Footer ------------------------------------------------------------------ */
+.bb-member-blog__footer {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 12px;
+}
+
+.bb-member-blog__author {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	min-width: 0;
+}
+
+.bb-member-blog__avatar img {
+	width: 32px;
+	height: 32px;
+	border-radius: 50%;
+}
+
+.bb-member-blog__author-name {
+	font-size: 13px;
+	font-weight: 500;
+	color: inherit;
+	text-decoration: none;
+}
+
+.bb-member-blog__meta {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	font-size: 12px;
+	color: rgba(0, 0, 0, 0.5);
+}
+
+.bb-member-blog__meta-sep {
+	width: 3px;
+	height: 3px;
+	border-radius: 50%;
+	background-color: currentColor;
+	opacity: 0.5;
+}
+
+.bb-member-blog__category {
+	color: inherit;
+	text-decoration: none;
+}
+
+.bb-member-blog__comments {
+	display: inline-flex;
+	align-items: center;
+	gap: 5px;
+	font-size: 13px;
+	color: rgba(0, 0, 0, 0.55);
+	text-decoration: none;
+	white-space: nowrap;
+}
+
+/* Empty state ------------------------------------------------------------- */
+.bb-member-blog__empty {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	padding: 24px;
+	border: 1px solid rgba(0, 0, 0, 0.08);
+	border-radius: 12px;
+	font-size: 14px;
+	color: rgba(0, 0, 0, 0.6);
+}
+
+/* Responsive -------------------------------------------------------------- */
+@media screen and (max-width: 600px) {
+
+	.bb-member-blog__item {
+		flex-direction: column;
+	}
+
+	.bb-member-blog__media {
+		flex-basis: auto;
+		max-width: none;
+	}
+}

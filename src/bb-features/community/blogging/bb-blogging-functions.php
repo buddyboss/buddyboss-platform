@@ -504,3 +504,175 @@ function bb_blog_rl_member_blog_toolbar() {
 }
 add_action( 'bb_blog_member_posts_before', 'bb_blog_rl_member_blog_toolbar', 5 );
 add_action( 'bb_blog_bookmarks_before', 'bb_blog_rl_member_blog_toolbar', 5 );
+
+/**
+ * Render the member profile Blogs toolbar for the standard (non-ReadyLaunch)
+ * template pack.
+ *
+ * Standard-mode sibling of bb_blog_rl_member_blog_toolbar(): outputs the
+ * sub-tab pills (My Blogs / Bookmarked, with counts), the Newest/Oldest sort
+ * dropdown and the add-on's Create Post button on a single row. Hooked to both
+ * the My Blogs and Bookmarked screens; bails in ReadyLaunch mode so the RL
+ * toolbar renders instead.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_blog_member_blog_toolbar() {
+	// ReadyLaunch renders its own toolbar (bb_blog_rl_member_blog_toolbar).
+	if ( function_exists( 'bb_is_readylaunch_enabled' ) && bb_is_readylaunch_enabled() ) {
+		return;
+	}
+
+	if ( ! function_exists( 'buddypress' ) || ! function_exists( 'bp_is_user' ) || ! bp_is_user() ) {
+		return;
+	}
+
+	// Re-home the add-on's Create button inside the toolbar (the add-on hooks
+	// the same actions at priority 10; this runs at 5, so removal wins).
+	$bb_blog_render_create = false;
+	if ( function_exists( 'bb_member_blog_render_add_new_button' ) ) {
+		$bb_blog_render_create = remove_action( 'bb_blog_member_posts_before', 'bb_member_blog_render_add_new_button' );
+		remove_action( 'bb_blog_bookmarks_before', 'bb_member_blog_render_add_new_button' );
+	}
+
+	$bb_blog_create_button = '';
+	if ( $bb_blog_render_create ) {
+		ob_start();
+		bb_member_blog_render_add_new_button();
+		$bb_blog_create_button = trim( ob_get_clean() );
+	}
+
+	$bb_blog_nav_items = array();
+	if ( isset( buddypress()->members->nav ) ) {
+		$bb_blog_nav_items = buddypress()->members->nav->get_secondary(
+			array(
+				'parent_slug'     => 'blog',
+				'user_has_access' => true,
+			)
+		);
+	}
+	$bb_blog_nav_items = ! empty( $bb_blog_nav_items ) ? array_values( (array) $bb_blog_nav_items ) : array();
+
+	$bb_blog_is_bookmarks = function_exists( 'bp_is_current_action' ) && bp_is_current_action( 'bookmarks' );
+
+	$bb_blog_sort = isset( $_GET['bb-sort'] ) ? sanitize_key( wp_unslash( $_GET['bb-sort'] ) ) : 'newest'; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only sort.
+	if ( ! in_array( $bb_blog_sort, array( 'newest', 'oldest' ), true ) ) {
+		$bb_blog_sort = 'newest';
+	}
+
+	$bb_blog_displayed_id = bp_displayed_user_id();
+	$bb_blog_is_owner     = bp_is_my_profile() || current_user_can( 'edit_others_posts' );
+	$bb_blog_counts_on    = function_exists( 'bb_enable_content_counts' ) && bb_enable_content_counts();
+	$bb_blog_tab_base     = trailingslashit( bp_displayed_user_domain() . 'blog' );
+	$bb_blog_sort_base    = $bb_blog_is_bookmarks ? $bb_blog_tab_base . 'bookmarks/' : $bb_blog_tab_base;
+	// A single tab still renders (visitors don't get the own-profile
+	// "Bookmarked" subnav but should still see the "My Blogs" pill).
+	$bb_blog_show_tabs    = count( $bb_blog_nav_items ) > 0;
+
+	$bb_blog_sort_options = array(
+		'newest' => __( 'Newest', 'buddyboss' ),
+		'oldest' => __( 'Oldest', 'buddyboss' ),
+	);
+	?>
+	<div class="bb-member-blog__toolbar">
+		<?php if ( $bb_blog_show_tabs ) : ?>
+			<div class="bb-member-blog__toolbar-tabs">
+				<?php
+				foreach ( $bb_blog_nav_items as $bb_blog_nav_item ) {
+					$bb_blog_count = null;
+
+					if ( $bb_blog_counts_on && 'blog' === $bb_blog_nav_item->slug ) {
+						if ( function_exists( 'bb_member_blog_get_profile_posts_count' ) ) {
+							$bb_blog_count = bb_member_blog_get_profile_posts_count( $bb_blog_displayed_id );
+						} else {
+							$bb_blog_count_query = new WP_Query(
+								array(
+									'post_type'      => 'post',
+									'author'         => $bb_blog_displayed_id,
+									'post_status'    => $bb_blog_is_owner ? array( 'publish', 'draft', 'pending', 'future' ) : array( 'publish' ),
+									'posts_per_page' => 1,
+									'fields'         => 'ids',
+								)
+							);
+							$bb_blog_count       = (int) $bb_blog_count_query->found_posts;
+						}
+					} elseif ( $bb_blog_counts_on && 'bookmarks' === $bb_blog_nav_item->slug && function_exists( 'bb_blog_pro_get_user_bookmarks' ) ) {
+						$bb_blog_count = count( (array) bb_blog_pro_get_user_bookmarks( $bb_blog_displayed_id ) );
+					}
+
+					$bb_blog_label = wp_strip_all_tags( $bb_blog_nav_item->name );
+					if ( null !== $bb_blog_count ) {
+						/* translators: 1: sub-tab label, 2: item count. */
+						$bb_blog_label = sprintf( __( '%1$s (%2$s)', 'buddyboss' ), $bb_blog_label, number_format_i18n( $bb_blog_count ) );
+					}
+
+					$bb_blog_is_current = bp_current_action() === $bb_blog_nav_item->slug;
+
+					printf(
+						'<a class="bb-member-blog__tab%s" href="%s"%s>%s</a>',
+						$bb_blog_is_current ? ' bb-member-blog__tab--active' : '',
+						esc_url( $bb_blog_nav_item->link ),
+						$bb_blog_is_current ? ' aria-current="page"' : '',
+						esc_html( $bb_blog_label )
+					);
+				}
+				?>
+			</div>
+		<?php endif; ?>
+		<div class="bb-member-blog__toolbar-actions">
+			<div class="bb-member-blog__sort bb_more_options">
+				<a href="#" class="bb_more_options_action" aria-label="<?php esc_attr_e( 'Sort posts', 'buddyboss' ); ?>">
+					<i class="bb-icon-l bb-icon-filter-alt" aria-hidden="true"></i>
+					<span><?php echo esc_html( $bb_blog_sort_options[ $bb_blog_sort ] ); ?></span>
+					<i class="bb-icon-l bb-icon-angle-down" aria-hidden="true"></i>
+				</a>
+				<ul class="bb_more_options_list">
+					<?php foreach ( $bb_blog_sort_options as $bb_blog_sort_key => $bb_blog_sort_label ) : ?>
+						<li class="<?php echo $bb_blog_sort_key === $bb_blog_sort ? 'selected' : ''; ?>">
+							<a href="<?php echo esc_url( add_query_arg( 'bb-sort', $bb_blog_sort_key, $bb_blog_sort_base ) ); ?>"><?php echo esc_html( $bb_blog_sort_label ); ?></a>
+						</li>
+					<?php endforeach; ?>
+				</ul>
+			</div>
+			<?php if ( '' !== $bb_blog_create_button ) : ?>
+				<span class="bb-member-blog__toolbar-divider" aria-hidden="true"></span>
+				<?php echo $bb_blog_create_button; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped by the add-on renderer. ?>
+			<?php endif; ?>
+		</div>
+	</div>
+	<?php
+}
+add_action( 'bb_blog_member_posts_before', 'bb_blog_member_blog_toolbar', 5 );
+add_action( 'bb_blog_bookmarks_before', 'bb_blog_member_blog_toolbar', 5 );
+
+/**
+ * Force the "View Post" item into the standard-pack blog card menu.
+ *
+ * The Member Blogging add-on hides it (bb_member_blog_hide_card_view_post at
+ * priority 10) on the assumption the card carries its own standalone view
+ * button — true of the ReadyLaunch card (.bb-rl-blog-card__view), but NOT of
+ * the standard .bb-member-blog__item card, which links the post only from its
+ * title and thumbnail. Scoped via the `bb_blog_card_context` query var, which
+ * is set only while the standard My Blogs / Bookmarked loops run (ReadyLaunch
+ * loops don't set it), so the RL card keeps the add-on's suppression. Priority
+ * 20 lands after the add-on's filter at 10.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param bool $show    Whether to show the View Post menu item.
+ * @param int  $post_id Post ID.
+ *
+ * @return bool
+ */
+function bb_blog_force_card_view_post_menu_item( $show, $post_id ) {
+	$bb_blog_context = get_query_var( 'bb_blog_card_context' );
+
+	if ( ! in_array( $bb_blog_context, array( 'member-posts', 'bookmarks' ), true ) ) {
+		return $show;
+	}
+
+	return true;
+}
+add_filter( 'bb_blog_card_show_view_post_menu_item', 'bb_blog_force_card_view_post_menu_item', 20, 2 );

@@ -161,3 +161,33 @@ function bb_blog_screen_member_posts() {
 function bb_blog_member_posts_content() {
 	bp_get_template_part( 'members/single/blog' );
 }
+
+/**
+ * Enqueue the member profile Blogs tab base stylesheet.
+ *
+ * Loads the self-contained structural styles for the standard (non-ReadyLaunch)
+ * template pack. Themes may skin the same `.bb-member-blog*` selectors on top.
+ * ReadyLaunch ships its own blog stylesheet, so this bails in RL mode.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_blog_enqueue_member_blog_assets() {
+	if ( ! function_exists( 'bp_is_user' ) || ! bp_is_user() || ! bp_is_current_component( 'blog' ) ) {
+		return;
+	}
+
+	// ReadyLaunch enqueues its own blog stylesheet.
+	if ( function_exists( 'bb_is_readylaunch_enabled' ) && bb_is_readylaunch_enabled() ) {
+		return;
+	}
+
+	wp_enqueue_style(
+		'bb-member-blog',
+		buddypress()->plugin_url . 'bp-templates/bp-nouveau/buddypress/css/member-blog.css',
+		array(),
+		bp_get_version()
+	);
+}
+add_action( 'bp_enqueue_scripts', 'bb_blog_enqueue_member_blog_assets' );
