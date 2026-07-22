@@ -904,6 +904,77 @@ function bp_messages_add_meta( $message_id, $meta_key, $meta_value, $unique = fa
 	return $retval;
 }
 
+/**
+ * Sanitize and chunk an arbitrary id list into safe, pre-escaped comma-joined chunks for
+ * direct interpolation into a raw IN (...) clause.
+ *
+ * WHY: a previous pattern at several call sites built this clause as
+ * `$wpdb->prepare( "... IN(%s)", implode( ',', $ids ) )`, which quotes the whole imploded id
+ * list as a SINGLE %s value — MySQL then coerces that one quoted string to its leading numeric
+ * prefix, so only the first id in the list is actually matched. This is the one shared
+ * primitive behind bb_messages_delete_meta_for_ids() (the three meta-DELETE call sites) and the
+ * recipient-restore fix in BP_Messages_Thread::update_last_message_status() — both previously
+ * had their own instance of that broken pattern.
+ *
+ * @since BuddyBoss [version]
+ *
+ * @param array $ids        Raw id list (ints or numeric strings).
+ * @param int   $chunk_size Max ids per chunk. Default 500.
+ * @return array Array of comma-joined, sanitized-int strings, one per chunk. Empty array on
+ *               empty/invalid input.
+ */
+function bb_messages_chunk_ids_for_in_clause( $ids, $chunk_size = 500 ) {
+	$ids = wp_parse_id_list( $ids );
+
+	if ( empty( $ids ) ) {
+		return array();
+	}
+
+	return array_map(
+		static function ( $chunk ) {
+			return implode( ',', $chunk );
+		},
+		array_chunk( $ids, max( 1, (int) $chunk_size ) )
+	);
+}
+
+/**
+ * Bulk-delete bp_messages_meta rows for a set of message ids, in safe chunks.
+ *
+ * Replaces the previous single-placeholder `IN(%s)` pattern at the three meta-delete call
+ * sites (thread hard-delete, the nouveau AJAX delete-thread handler, and the REST delete
+ * endpoint), which quoted the whole imploded id list as one value and so silently deleted meta
+ * for only the first message id in the list (PLAT-01).
+ *
+ * @since BuddyBoss [version]
+ *
+ * @global wpdb $wpdb WordPress database abstraction object.
+ *
+ * @param array $message_ids Message IDs to delete meta for.
+ * @return void
+ */
+function bb_messages_delete_meta_for_ids( $message_ids ) {
+	global $wpdb;
+
+	$bp = buddypress();
+
+	if ( empty( $bp->messages->table_name_meta ) ) {
+		return;
+	}
+
+	foreach ( bb_messages_chunk_ids_for_in_clause( $message_ids ) as $ids_sql ) {
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		$wpdb->query( "DELETE FROM {$bp->messages->table_name_meta} WHERE message_id IN ({$ids_sql})" );
+
+		// Raw SQL bypasses bp_messages_delete_meta()/delete_metadata(), which would normally
+		// clear the `message_meta` cache group for each deleted id — replicate that side effect
+		// here so a later request doesn't serve stale meta from a persistent object cache.
+		foreach ( explode( ',', $ids_sql ) as $message_id ) {
+			wp_cache_delete( (int) $message_id, 'message_meta' );
+		}
+	}
+}
+
 /** Email *********************************************************************/
 
 /**
