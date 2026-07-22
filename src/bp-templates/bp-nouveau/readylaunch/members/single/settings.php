@@ -20,6 +20,20 @@ defined( 'ABSPATH' ) || exit;
 		case 'notifications':
 			if ( bp_action_variables() && 'subscriptions' === bp_action_variable( 0 ) ) {
 				bp_get_template_part( 'members/single/settings/subscriptions' );
+			} elseif ( bp_action_variables() ) {
+				/**
+				 * Fires to render a custom notifications settings sub-tab
+				 * (e.g. a plugin-registered tab such as "Blog Subscriptions").
+				 * The screen handler (`bp_settings_screen_notification()`)
+				 * 404s any sub-action without a registered handler, so this
+				 * only fires for recognised sub-tabs. Handlers echo their
+				 * content.
+				 *
+				 * @since BuddyBoss [BBVERSION]
+				 *
+				 * @param string $action_variable The sub-tab slug.
+				 */
+				do_action( 'bb_member_settings_notifications_custom_tab', bp_action_variable( 0 ) );
 			} else {
 				bp_get_template_part( 'members/single/settings/notifications' );
 			}

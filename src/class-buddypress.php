@@ -330,7 +330,7 @@ class BuddyPress {
 
 		/** Versions */
 		$this->version    = defined( 'BP_PLATFORM_VERSION' ) ? BP_PLATFORM_VERSION : ( defined( 'BP_VERSION' ) ? BP_VERSION : '1.0.0' );
-		$this->db_version = 23601;
+		$this->db_version = 23602;
 
 		/** Loading */
 
@@ -562,6 +562,7 @@ class BuddyPress {
 		require $this->plugin_dir . 'bp-core/bp-core-notification.php';
 		require $this->plugin_dir . 'bp-core/bp-core-invitation.php';
 		require $this->plugin_dir . 'bp-core/bb-core-subscriptions.php';
+		require $this->plugin_dir . 'bp-core/bb-core-bookmarks.php';
 		require $this->plugin_dir . 'bp-core/bb-core-blocks.php';
 
 		// Maybe load deprecated buddypress functionality (this double negative is proof positive!).
@@ -726,6 +727,8 @@ class BuddyPress {
 			'BP_Suspend_Comment'                           => 'suspend',
 			'BP_Suspend_Message'                           => 'suspend',
 			'BB_Subscriptions'                             => 'core',
+			'BB_Bookmarks'                                 => 'core',
+			'BB_Bookmark_Type'                             => 'core',
 			'BB_Background_Updater'                        => 'core',
 			'BB_BG_Process_Log'                            => 'core',
 			'BB_Telemetry'                                 => 'core',

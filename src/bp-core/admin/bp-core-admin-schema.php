@@ -60,6 +60,9 @@ function bp_core_install( $active_components = false ) {
 	// Install item subscriptions.
 	bb_core_install_subscription();
 
+	// Install bookmarks.
+	bb_core_install_bookmarks();
+
 	// Install background process logs.
 	if ( class_exists( 'BB_BG_Process_Log' ) ) {
 		BB_BG_Process_Log::instance()->create_table();
@@ -1404,6 +1407,47 @@ function bb_core_install_subscription() {
 	   KEY status (status),
 	   KEY date_recorded (date_recorded)
    	) {$charset_collate};";
+
+	dbDelta( $sql );
+}
+
+/**
+ * Install database table for bookmarks.
+ *
+ * The schema deliberately mirrors the BuddyBoss App plugin's `bbapp_bookmarks`
+ * table so rows can be mirrored between the two stores column-for-column, with
+ * one addition: a UNIQUE key on (blog_id, user_id, type, item_id). That key is
+ * load-bearing — it makes a bookmark write idempotent at the database level, so
+ * concurrent writes cannot create duplicate rows and a merge from the App store
+ * can safely be re-run.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @uses get_charset_collate()
+ * @uses bp_core_get_table_prefix()
+ * @uses dbDelta()
+ */
+function bb_core_install_bookmarks() {
+	$sql             = array();
+	$charset_collate = $GLOBALS['wpdb']->get_charset_collate();
+	$bp_prefix       = bp_core_get_table_prefix();
+
+	$sql[] = "CREATE TABLE {$bp_prefix}bb_bookmark (
+		id bigint(20) NOT NULL AUTO_INCREMENT,
+		blog_id bigint(20) NOT NULL,
+		user_id bigint(20) NOT NULL,
+		type varchar(20) NOT NULL,
+		item_id bigint(20) NOT NULL,
+		status tinyint(1) NOT NULL DEFAULT '1',
+		date_recorded datetime NULL DEFAULT '0000-00-00 00:00:00',
+		PRIMARY KEY  (id),
+		UNIQUE KEY bookmark_item (blog_id, user_id, type, item_id),
+		KEY user_id (user_id),
+		KEY type (type),
+		KEY item_id (item_id),
+		KEY status (status),
+		KEY date_recorded (date_recorded)
+	) {$charset_collate};";
 
 	dbDelta( $sql );
 }

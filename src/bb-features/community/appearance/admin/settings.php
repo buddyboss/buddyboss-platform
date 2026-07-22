@@ -435,6 +435,7 @@ function bb_admin_settings_register_appearance_settings() {
 		array(
 			'registration' => true,
 			'courses'      => false,
+			'blog'         => false,
 		)
 	);
 
@@ -462,6 +463,11 @@ function bb_admin_settings_register_appearance_settings() {
 			);
 		}
 	}
+
+	$template_page_options[] = array(
+		'label' => __( 'Blog', 'buddyboss' ),
+		'value' => 'blog',
+	);
 
 	if ( ! empty( $template_page_options ) ) {
 		bb_register_feature_field(
