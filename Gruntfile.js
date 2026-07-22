@@ -144,6 +144,15 @@ module.exports = function (grunt) {
 					src: ['bp-templates/bp-nouveau/sass/buddypress.scss'],
 					dest: SOURCE_DIR + 'bp-templates/bp-nouveau/css/'
 				},
+				member_blog: {
+					cwd: SOURCE_DIR,
+					extDot: 'last',
+					expand: true,
+					ext: '.css',
+					flatten: true,
+					src: ['bp-templates/bp-nouveau/sass/member-blog.scss'],
+					dest: SOURCE_DIR + 'bp-templates/bp-nouveau/buddypress/css/'
+				},
 				ready_launch: {
 					cwd: SOURCE_DIR,
 					extDot: 'last',
