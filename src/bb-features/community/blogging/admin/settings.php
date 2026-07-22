@@ -195,6 +195,76 @@ function bb_blogging_register_admin_settings() {
 		)
 	);
 
+	// Member Blogs upsell panel — registered only when the Member Blogging
+	// add-on is NOT active. When the add-on is present it registers the real
+	// "Member Blogs" panel (or its own enable/locked gate) on the later
+	// `bb_after_register_features` hook, so this placeholder is skipped. This
+	// keeps the "Member Blogs" tab visible for discovery/upsell even on sites
+	// that have not installed the Plus add-on.
+	if ( ! defined( 'BB_MEMBER_BLOG_VERSION' ) ) {
+		bb_register_side_panel(
+			'blogging',
+			'member_blogs',
+			array(
+				'title' => __( 'Member Blogs', 'buddyboss' ),
+				'icon'  => array(
+					'type'  => 'font',
+					'class' => 'bb-icons-rl bb-icons-rl-newspaper',
+				),
+				'order' => 20,
+			)
+		);
+
+		bb_register_feature_section(
+			'blogging',
+			'member_blogs',
+			'member_blogs',
+			array(
+				'title' => __( 'Member Blogs', 'buddyboss' ),
+				'order' => 10,
+			)
+		);
+
+		// The add-on's constant is undefined here, so the plugin is either not
+		// installed or installed-but-inactive. When it is present on disk, tell
+		// the admin to activate it; otherwise show the Plus upgrade CTA.
+		$bb_member_blog_plugin_file = 'buddyboss-member-blogging/buddyboss-member-blogging.php';
+
+		if ( file_exists( WP_PLUGIN_DIR . '/' . $bb_member_blog_plugin_file ) ) {
+			$bb_member_blog_upsell_description = __( 'The Member Blogging add-on is installed but not activated. Activate it to let your community members create blog posts from the frontend.', 'buddyboss' );
+			$bb_member_blog_upsell_button      = __( 'Activate Plugin', 'buddyboss' );
+			$bb_member_blog_upsell_url         = wp_nonce_url(
+				self_admin_url( 'plugins.php?action=activate&plugin=' . $bb_member_blog_plugin_file ),
+				'activate-plugin_' . $bb_member_blog_plugin_file
+			);
+			$bb_member_blog_upsell_target      = '';
+		} else {
+			$bb_member_blog_upsell_description = __( 'Allow your community members to contribute by creating blogs for your site via the frontend blog creator form. Available with the Member Blogging add-on on the Plus plan.', 'buddyboss' );
+			$bb_member_blog_upsell_button      = __( 'Upgrade to Plus', 'buddyboss' );
+			$bb_member_blog_upsell_url         = 'https://www.buddyboss.com/pricing/';
+			$bb_member_blog_upsell_target      = '_blank';
+		}
+
+		bb_register_feature_field(
+			'blogging',
+			'member_blogs',
+			'member_blogs',
+			array(
+				'name'                    => 'bb_member_blogging_upsell',
+				'label'                   => '',
+				'type'                    => 'empty_state',
+				'icon'                    => 'bb-icons-rl bb-icons-rl-newspaper',
+				'empty_state_title'       => __( 'Member Blogging', 'buddyboss' ),
+				'empty_state_description' => $bb_member_blog_upsell_description,
+				'button_label'            => $bb_member_blog_upsell_button,
+				'button_url'              => $bb_member_blog_upsell_url,
+				'button_target'           => $bb_member_blog_upsell_target,
+				'sanitize_callback'       => '__return_empty_string',
+				'order'                   => 10,
+			)
+		);
+	}
+
 	/**
 	 * Fires after the Blogs feature settings fields are registered.
 	 *
