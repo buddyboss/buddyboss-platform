@@ -61,6 +61,7 @@ function bb_admin_settings_register_groups_feature() {
 	require_once __DIR__ . '/settings/groups/settings-group-headers.php';
 	require_once __DIR__ . '/settings/groups/settings-group-directory.php';
 	require_once __DIR__ . '/settings/groups/settings-access-control.php';
+	require_once __DIR__ . '/settings/groups/settings-custom-group-tabs.php';
 	require_once __DIR__ . '/settings/groups/settings-group-navigation.php';
 	require_once __DIR__ . '/settings/groups/settings-group-types.php';
 
@@ -194,6 +195,21 @@ function bb_admin_settings_register_groups_feature() {
 		)
 	);
 
+	// Side Panel: Custom Group Tabs (BuddyBoss Platform Pro placeholder, custom screen).
+	bb_register_side_panel(
+		'groups',
+		'custom_group_tabs',
+		array(
+			'title'      => __( 'Custom Group Tabs', 'buddyboss' ),
+			'icon'       => array(
+				'type'  => 'font',
+				'class' => 'bb-icons-rl bb-icons-rl-cards-three',
+			),
+			'order'      => 105,
+			'is_default' => false,
+		)
+	);
+
 	// Side Panel: Group Types (custom panel screen).
 	bb_register_side_panel(
 		'groups',
@@ -249,6 +265,9 @@ function bb_admin_settings_register_groups_feature() {
 
 	// Panel 5: Access Controls.
 	bb_groups_register_access_control_fields();
+
+	// Panel: Custom Group Tabs (BuddyBoss Platform Pro).
+	bb_groups_register_custom_group_tabs_panel_fields();
 
 	// Panel 6: Group Navigation.
 	bb_groups_register_navigation_panel_fields();
