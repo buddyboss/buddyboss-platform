@@ -49,8 +49,9 @@ function bb_blogging_register_admin_settings() {
 		'blog_settings',
 		'post_settings',
 		array(
-			'title' => __( 'Post Settings', 'buddyboss' ),
-			'order' => 10,
+			'title'    => __( 'Post Settings', 'buddyboss' ),
+			'help_url' => '648796',
+			'order'    => 10,
 		)
 	);
 
@@ -92,8 +93,9 @@ function bb_blogging_register_admin_settings() {
 		'blog_settings',
 		'page_settings',
 		array(
-			'title' => __( 'Page Settings', 'buddyboss' ),
-			'order' => 20,
+			'title'    => __( 'Page Settings', 'buddyboss' ),
+			'help_url' => '648801',
+			'order'    => 20,
 		)
 	);
 
