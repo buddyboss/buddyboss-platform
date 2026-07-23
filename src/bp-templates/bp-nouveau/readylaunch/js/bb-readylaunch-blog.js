@@ -154,18 +154,23 @@
 
 		bbRlBlogApplyView( bbRlBlogSavedView() );
 
+		// Declared once outside the loop — a handler created inside the loop
+		// that closes over bbRlBlogApplyView / BB_RL_BLOG_VIEW_KEY trips
+		// JSHint's loopfunc rule (W083). `this` is the clicked button.
+		var bbRlBlogOnViewButtonClick = function () {
+			var view = this.getAttribute( 'data-bb-rl-blog-view' );
+
+			bbRlBlogApplyView( view );
+
+			try {
+				window.localStorage.setItem( BB_RL_BLOG_VIEW_KEY, view );
+			} catch ( e ) {
+				// Storage unavailable — the view still switches for this page.
+			}
+		};
+
 		for ( i = 0; i < buttons.length; i++ ) {
-			buttons[ i ].addEventListener( 'click', function () {
-				var view = this.getAttribute( 'data-bb-rl-blog-view' );
-
-				bbRlBlogApplyView( view );
-
-				try {
-					window.localStorage.setItem( BB_RL_BLOG_VIEW_KEY, view );
-				} catch ( e ) {
-					// Storage unavailable — the view still switches for this page.
-				}
-			} );
+			buttons[ i ].addEventListener( 'click', bbRlBlogOnViewButtonClick );
 		}
 	}
 
