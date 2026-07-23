@@ -59,17 +59,6 @@ $bb_rl_blog_show_status_tag = apply_filters( 'bb_rl_blog_card_show_status', fals
 		<?php if ( $bb_rl_blog_show_status_tag ) : ?>
 			<span class="bb-rl-blog-card__status-tag bb-rl-blog-card__status-tag--<?php echo esc_attr( $bb_rl_blog_status ); ?>"><?php echo esc_html( $bb_rl_blog_status_label ); ?></span>
 		<?php endif; ?>
-		<?php
-		/**
-		 * Fires inside the blog card image wrapper, for overlay controls
-		 * (e.g. Pro's bookmark toggle).
-		 *
-		 * @since BuddyBoss [BBVERSION]
-		 *
-		 * @param int $post_id Post ID.
-		 */
-		do_action( 'bb_blog_card_actions', get_the_ID() );
-		?>
 	</div>
 	<div class="bb-rl-blog-card__content">
 		<h2 class="bb-rl-blog-card__title">

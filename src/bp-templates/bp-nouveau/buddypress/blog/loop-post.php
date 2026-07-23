@@ -24,8 +24,6 @@ $bb_blog_author_id   = (int) get_the_author_meta( 'ID' );
 $bb_blog_author_url  = function_exists( 'bp_core_get_user_domain' ) ? bp_core_get_user_domain( $bb_blog_author_id ) : get_author_posts_url( $bb_blog_author_id );
 $bb_blog_author_name = function_exists( 'bp_core_get_user_displayname' ) ? bp_core_get_user_displayname( $bb_blog_author_id ) : get_the_author();
 
-$bb_blog_bookmarking = function_exists( 'bb_blog_pro_is_bookmarking_enabled' ) && bb_blog_pro_is_bookmarking_enabled() && is_user_logged_in();
-$bb_blog_bookmarked  = $bb_blog_bookmarking && function_exists( 'bb_blog_pro_is_bookmarked' ) && bb_blog_pro_is_bookmarked( $bb_blog_post_id );
 $bb_blog_show_status = 'member-posts' === $bb_blog_card_context && $bb_blog_is_owner;
 $bb_blog_show_menu   = 'member-posts' === $bb_blog_card_context;
 
@@ -53,17 +51,6 @@ if ( '' === trim( (string) $bb_blog_author_name ) ) {
 		</a>
 		<?php if ( $bb_blog_show_status && isset( $bb_blog_status_labels[ $bb_blog_status ] ) ) : ?>
 			<span class="bb-member-blog__status bb-member-blog__status--<?php echo esc_attr( $bb_blog_status ); ?>"><?php echo esc_html( $bb_blog_status_labels[ $bb_blog_status ] ); ?></span>
-		<?php endif; ?>
-		<?php if ( $bb_blog_bookmarking && 'publish' === $bb_blog_status ) : ?>
-			<button
-				type="button"
-				class="bb-blog-bookmark bb-member-blog__bookmark<?php echo $bb_blog_bookmarked ? ' is-bookmarked' : ''; ?>"
-				data-post-id="<?php echo esc_attr( $bb_blog_post_id ); ?>"
-				aria-pressed="<?php echo $bb_blog_bookmarked ? 'true' : 'false'; ?>"
-				aria-label="<?php echo $bb_blog_bookmarked ? esc_attr__( 'Remove bookmark', 'buddyboss' ) : esc_attr__( 'Bookmark this post', 'buddyboss' ); ?>"
-			>
-				<i class="bb-icon-l bb-icon-bookmark" aria-hidden="true"></i>
-			</button>
 		<?php endif; ?>
 	</div>
 	<div class="bb-member-blog__body">
