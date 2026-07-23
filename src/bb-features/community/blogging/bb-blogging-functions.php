@@ -268,7 +268,7 @@ function bb_blog_render_post_footer_sections() {
 		?>
 		<div class="bb-blog-author-bio">
 			<div class="bb-blog-author-bio__left">
-				<a class="bb-blog-author-bio__avatar" href="<?php echo esc_url( $author_url ); ?>">
+				<a class="bb-blog-author-bio__avatar" href="<?php echo esc_url( $author_url ); ?>" data-bb-hp-profile="<?php echo esc_attr( $author_id ); ?>">
 					<?php
 					if ( function_exists( 'bp_core_fetch_avatar' ) ) {
 						echo bp_core_fetch_avatar( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- avatar HTML built by BuddyPress.
@@ -283,7 +283,7 @@ function bb_blog_render_post_footer_sections() {
 					?>
 				</a>
 				<h4 class="bb-blog-author-bio__name">
-					<a href="<?php echo esc_url( $author_url ); ?>">
+					<a href="<?php echo esc_url( $author_url ); ?>" data-bb-hp-profile="<?php echo esc_attr( $author_id ); ?>">
 						<?php echo esc_html( function_exists( 'bp_core_get_user_displayname' ) ? bp_core_get_user_displayname( $author_id ) : get_the_author_meta( 'display_name', $author_id ) ); ?>
 					</a>
 				</h4>

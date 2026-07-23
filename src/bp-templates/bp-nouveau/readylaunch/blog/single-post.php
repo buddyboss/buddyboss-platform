@@ -39,7 +39,7 @@ add_filter( 'bb_blog_suppress_related_for_theme', '__return_true' );
 	<?php endif; ?>
 	<h1 class="bb-rl-blog-single__title"><?php the_title(); ?></h1>
 	<div class="bb-rl-blog-single__meta">
-		<a href="<?php echo esc_url( $bb_rl_blog_author_url ); ?>" class="item-avatar bb-rl-author-avatar">
+		<a href="<?php echo esc_url( $bb_rl_blog_author_url ); ?>" class="item-avatar bb-rl-author-avatar" data-bb-hp-profile="<?php echo esc_attr( $bb_rl_blog_author_id ); ?>">
 			<?php
 			if ( function_exists( 'bp_core_fetch_avatar' ) ) {
 				echo bp_core_fetch_avatar( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- avatar HTML built by BuddyPress.
@@ -52,7 +52,7 @@ add_filter( 'bb_blog_suppress_related_for_theme', '__return_true' );
 			?>
 		</a>
 		<span class="bb-rl-author-name">
-			<a href="<?php echo esc_url( $bb_rl_blog_author_url ); ?>"><?php echo esc_html( $bb_rl_blog_author_name ); ?></a>
+			<a href="<?php echo esc_url( $bb_rl_blog_author_url ); ?>" data-bb-hp-profile="<?php echo esc_attr( $bb_rl_blog_author_id ); ?>"><?php echo esc_html( $bb_rl_blog_author_name ); ?></a>
 		</span>
 		<span class="bb-rl-blog-single__date"><?php echo esc_html( get_the_date() ); ?></span>
 		<?php
