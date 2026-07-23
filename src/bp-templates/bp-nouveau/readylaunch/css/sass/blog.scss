@@ -1402,6 +1402,35 @@
 			}
 		}
 
+		.comment-form-author,
+		.comment-form-email,
+		.comment-form-url {
+			display: flex;
+			flex-direction: column;
+			margin-bottom: var(--bb-rl-space-200, 16px);
+		}
+
+		label,
+		.comment-notes {
+			font-size: 14px;
+			font-weight: 500;
+			line-height: 22px;
+			margin-bottom: var(--bb-rl-space-100, 8px);
+			color: var(--bb-rl-text-secondary-color);
+		}
+
+		input[type="checkbox"]#wp-comment-cookies-consent:checked + label {
+
+			&:before {
+				content: "\e182";
+				font-family: bb-icons-rl;
+			}
+
+			&:after {
+				display: none;
+			}
+		}
+
 		.form-submit {
 			align-items: center;
 			display: flex;

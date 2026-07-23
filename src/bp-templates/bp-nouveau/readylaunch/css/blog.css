@@ -1589,6 +1589,32 @@
   outline: none;
 }
 
+.bb-rl-blog-single .comments-area .comment-respond .comment-form-author,
+.bb-rl-blog-single .comments-area .comment-respond .comment-form-email,
+.bb-rl-blog-single .comments-area .comment-respond .comment-form-url {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: var(--bb-rl-space-200, 16px);
+}
+
+.bb-rl-blog-single .comments-area .comment-respond label,
+.bb-rl-blog-single .comments-area .comment-respond .comment-notes {
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 22px;
+  margin-bottom: var(--bb-rl-space-100, 8px);
+  color: var(--bb-rl-text-secondary-color);
+}
+
+.bb-rl-blog-single .comments-area .comment-respond input[type="checkbox"]#wp-comment-cookies-consent:checked + label:before {
+  content: "\e182";
+  font-family: bb-icons-rl;
+}
+
+.bb-rl-blog-single .comments-area .comment-respond input[type="checkbox"]#wp-comment-cookies-consent:checked + label:after {
+  display: none;
+}
+
 .bb-rl-blog-single .comments-area .comment-respond .form-submit {
   align-items: center;
   display: flex;
