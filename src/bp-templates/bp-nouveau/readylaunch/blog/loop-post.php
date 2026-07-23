@@ -110,7 +110,7 @@ $bb_rl_blog_show_status_tag = apply_filters( 'bb_rl_blog_card_show_status', fals
 		<div class="bb-rl-blog-card__byline">
 			<span class="bb-rl-blog-card__date"><?php echo esc_html( get_the_date() ); ?></span>
 			<?php if ( ! empty( $bb_rl_blog_categories ) && ! is_wp_error( $bb_rl_blog_categories ) ) : ?>
-				<a class="bb-rl-blog-card__category" href="<?php echo esc_url( get_category_link( $bb_rl_blog_categories[0] ) ); ?>"><?php echo esc_html( $bb_rl_blog_categories[0]->name ); ?></a>
+				<a class="bb-rl-blog-card__category" href="<?php echo esc_url( get_category_link( $bb_rl_blog_categories[0] ) ); ?>" title="<?php echo esc_attr( $bb_rl_blog_categories[0]->name ); ?>"><?php echo esc_html( $bb_rl_blog_categories[0]->name ); ?></a>
 			<?php endif; ?>
 		</div>
 		<div class="bb-rl-blog-card__author">

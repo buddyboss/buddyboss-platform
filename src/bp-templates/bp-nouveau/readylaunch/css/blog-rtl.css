@@ -279,17 +279,28 @@
   font-size: 13px;
   color: var(--bb-rl-text-tertiary-color, #858586);
   margin-bottom: 12px;
+  min-width: 0;
+}
+
+.bb-rl-blog-card__date {
+  flex: 0 0 auto;
+  white-space: nowrap;
 }
 
 .bb-rl-blog-card__category {
-  display: flex;
-  align-items: center;
+  display: block;
+  flex: 0 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
   color: var(--bb-rl-text-tertiary-color, #858586);
 }
 
 .bb-rl-blog-card__category::before {
   content: "";
-  display: block;
+  display: inline-block;
+  vertical-align: middle;
   border-radius: var(--bb-rl-radius-full);
   background-color: var(--bb-rl-background-tertiary-color);
   margin-left: 6px;
