@@ -76,6 +76,10 @@
   text-decoration: none;
 }
 
+.bb-member-blog__sort .bb_more_options_list {
+  list-style: none;
+}
+
 .bb-member-blog__toolbar-divider {
   width: 1px;
   height: 24px;
@@ -286,6 +290,10 @@
   border-radius: 12px;
   font-size: 14px;
   color: rgba(0, 0, 0, 0.6);
+}
+
+.bb-member-blog__menu .bb_more_options_list {
+  list-style: none;
 }
 
 @media screen and (max-width: 600px) {

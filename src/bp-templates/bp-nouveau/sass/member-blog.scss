@@ -58,16 +58,23 @@
 		gap: 10px;
 	}
 
-	&__sort > .bb_more_options_action {
-		display: inline-flex;
-		align-items: center;
-		gap: 6px;
-		padding: 6px 12px;
-		border: 1px solid rgba(0, 0, 0, 0.1);
-		border-radius: 6px;
-		font-size: 13px;
-		color: inherit;
-		text-decoration: none;
+	&__sort {
+
+		> .bb_more_options_action {
+			display: inline-flex;
+			align-items: center;
+			gap: 6px;
+			padding: 6px 12px;
+			border: 1px solid rgba(0, 0, 0, 0.1);
+			border-radius: 6px;
+			font-size: 13px;
+			color: inherit;
+			text-decoration: none;
+		}
+
+		.bb_more_options_list {
+			list-style: none;
+		}
 	}
 
 	&__toolbar-divider {
@@ -285,6 +292,13 @@
 		border-radius: 12px;
 		font-size: 14px;
 		color: rgba(0, 0, 0, 0.6);
+	}
+
+	&__menu {
+
+		.bb_more_options_list {
+			list-style: none;
+		}
 	}
 
 	/* Responsive ---------------------------------------------------------- */
