@@ -230,14 +230,24 @@ function bb_blogging_register_admin_settings() {
 		// the admin to activate it; otherwise show the Plus upgrade CTA.
 		$bb_member_blog_plugin_file = 'buddyboss-member-blogging/buddyboss-member-blogging.php';
 
+		// Add-on action for the empty-state button. When the plugin is installed
+		// but inactive, activate it in place via the Mothership AJAX flow
+		// (mosh_addon_activate) instead of a full-page plugins.php redirect.
+		$bb_member_blog_addon_action = '';
+		$bb_member_blog_addon_slug   = '';
+
 		if ( file_exists( WP_PLUGIN_DIR . '/' . $bb_member_blog_plugin_file ) ) {
 			$bb_member_blog_upsell_description = __( 'The Member Blogging add-on is installed but not activated. Activate it to let your community members create blog posts from the frontend.', 'buddyboss' );
 			$bb_member_blog_upsell_button      = __( 'Activate Plugin', 'buddyboss' );
-			$bb_member_blog_upsell_url         = wp_nonce_url(
+			// Kept as a no-JS fallback; the React empty-state button prefers the
+			// AJAX action below when it is present.
+			$bb_member_blog_upsell_url    = wp_nonce_url(
 				self_admin_url( 'plugins.php?action=activate&plugin=' . $bb_member_blog_plugin_file ),
 				'activate-plugin_' . $bb_member_blog_plugin_file
 			);
-			$bb_member_blog_upsell_target      = '';
+			$bb_member_blog_upsell_target = '';
+			$bb_member_blog_addon_action  = 'mosh_addon_activate';
+			$bb_member_blog_addon_slug    = dirname( $bb_member_blog_plugin_file );
 		} else {
 			$bb_member_blog_upsell_description = __( 'Allow your community members to contribute by creating blogs for your site via the frontend blog creator form. Available with the Member Blogging add-on on the Plus plan.', 'buddyboss' );
 			$bb_member_blog_upsell_button      = __( 'Upgrade to Plus', 'buddyboss' );
@@ -259,6 +269,8 @@ function bb_blogging_register_admin_settings() {
 				'button_label'            => $bb_member_blog_upsell_button,
 				'button_url'              => $bb_member_blog_upsell_url,
 				'button_target'           => $bb_member_blog_upsell_target,
+				'addon_action'            => $bb_member_blog_addon_action,
+				'addon_slug'              => $bb_member_blog_addon_slug,
 				'sanitize_callback'       => '__return_empty_string',
 				'order'                   => 10,
 			)

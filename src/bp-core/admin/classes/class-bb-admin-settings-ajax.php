@@ -961,6 +961,12 @@ class BB_Admin_Settings_Ajax {
 				// Empty state fields (centered card with icon + title + description + button).
 				'empty_state_title'         => $field['empty_state_title'] ?? null,
 				'empty_state_description'   => $field['empty_state_description'] ?? null,
+				// Optional add-on install/activate action for empty-state buttons. When
+				// set, the button triggers the Mothership AJAX flow (mosh_addon_install /
+				// mosh_addon_activate) in place of a plugins.php redirect. 'addon_slug' is
+				// the plugin folder slug (e.g. "buddyboss-member-blogging").
+				'addon_action'              => ! empty( $field['addon_action'] ) ? sanitize_key( $field['addon_action'] ) : null,
+				'addon_slug'                => ! empty( $field['addon_slug'] ) ? sanitize_key( $field['addon_slug'] ) : null,
 				'related_fields'            => ! empty( $field['related_fields'] ) && is_array( $field['related_fields'] ) ? array_map( 'sanitize_key', $field['related_fields'] ) : null,
 				// Per-option descriptions for select fields (description swaps on value change).
 				// map_deep handles nested structures safely; each leaf string is kses-filtered.
