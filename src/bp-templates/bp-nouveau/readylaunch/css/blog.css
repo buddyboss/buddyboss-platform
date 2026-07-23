@@ -1316,11 +1316,13 @@
 .bb-blog-share {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 8px;
 }
 
 .bb-blog-share__label {
-  font-weight: 600;
+  font-size: 14px;
+  font-weight: 500;
+  margin-right: 4px;
 }
 
 .bb-blog-share__link {
