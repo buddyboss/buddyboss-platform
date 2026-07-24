@@ -458,10 +458,13 @@ class BP_Core_Suspend {
 		$hidden_users_ids = bp_moderation_get_hidden_user_ids();
 		if ( ! empty( $hidden_users_ids ) ) {
 
-			$blocked_content_sql = $wpdb->prepare( "SELECT s.id FROM {$bp->moderation->table_name} as s, {$bp->table_prefix}bp_suspend_details as sd WHERE s.id = sd.suspend_id AND s.item_id = %d AND s.item_type = %s and `user_id` IN (" . implode( ',', $hidden_users_ids ) . ') limit 1', (int) $item_id, $item_type );
+			$hidden_users_in = implode( ',', array_map( 'absint', $hidden_users_ids ) );
+			// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Table names from $bp->moderation->table_name/$bp->table_prefix; $hidden_users_in is an absint'd ID list; $item_id is %d and $item_type is %s bound.
+			$blocked_content_sql = $wpdb->prepare( "SELECT s.id FROM {$bp->moderation->table_name} as s, {$bp->table_prefix}bp_suspend_details as sd WHERE s.id = sd.suspend_id AND s.item_id = %d AND s.item_type = %s and `user_id` IN (" . $hidden_users_in . ') limit 1', (int) $item_id, $item_type );
 
 			$cached = bp_core_get_incremented_cache( $blocked_content_sql, 'bp_moderation' );
 			if ( false === $cached ) {
+				// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $blocked_content_sql is a $wpdb->prepare()'d statement built above.
 				$result = $wpdb->get_var( $blocked_content_sql );
 				bp_core_set_incremented_cache( $blocked_content_sql, 'bp_moderation', $result );
 			} else {

@@ -135,8 +135,8 @@ export function UpgradeModal( { feature, onClose } ) {
 	}
 
 	var tierLabel = 'plus' === feature.upgrade_tier
-		? __( 'UPGRADE PLUS', 'buddyboss' )
-		: __( 'UPGRADE PRO', 'buddyboss' );
+		? __( 'UPGRADE PLUS', 'buddyboss-platform' )
+		: __( 'UPGRADE PRO', 'buddyboss-platform' );
 
 	// PHP wraps upgrade_description with wp_kses_post so marketing can use
 	// modest emphasis (<strong>, <em>, <a>). DOMPurify (via sanitizeHtml)

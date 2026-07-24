@@ -46,7 +46,7 @@ function bp_nouveau_ajax_xprofile_get_field() {
 	$response = array(
 		'feedback' => sprintf(
 			'<div class="bp-feedback error bp-ajax-message"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
-			esc_html__( 'There was a problem performing this action. Please try again.', 'buddyboss' )
+			esc_html__( 'There was a problem performing this action. Please try again.', 'buddyboss-platform' )
 		),
 	);
 
@@ -82,7 +82,9 @@ function bp_nouveau_ajax_xprofile_get_field() {
 	//FOr prev data
 	$get_prev_ids = [];
 	if ( 0 < strlen( $prev_type_key ) ) {
-		$query           = "SELECT object_id FROM {$bp->profile->table_name_meta} WHERE meta_key = 'member_type' AND meta_value = '{$prev_type_key}' AND object_type = 'field'";
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- Table name from $bp->profile->table_name_meta; $prev_type_key bound as %s.
+		$query           = $wpdb->prepare( "SELECT object_id FROM {$bp->profile->table_name_meta} WHERE meta_key = 'member_type' AND meta_value = %s AND object_type = 'field'", $prev_type_key );
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $query is the $wpdb->prepare() result from the line above.
 		$get_db_prev_ids = $wpdb->get_results( $query );
 		if ( isset( $get_db_prev_ids ) ) {
 			foreach ( $get_db_prev_ids as $id ) {
@@ -91,7 +93,9 @@ function bp_nouveau_ajax_xprofile_get_field() {
 		}
 	}
 
-	$query      = "SELECT object_id FROM {$bp->profile->table_name_meta} WHERE meta_key = 'member_type' AND meta_value = '{$member_type_key}' AND object_type = 'field'";
+	// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- Table name from $bp->profile->table_name_meta; $member_type_key bound as %s.
+	$query      = $wpdb->prepare( "SELECT object_id FROM {$bp->profile->table_name_meta} WHERE meta_key = 'member_type' AND meta_value = %s AND object_type = 'field'", $member_type_key );
+	// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $query is the $wpdb->prepare() result from the line above.
 	$get_db_ids = $wpdb->get_results( $query );
 
 	$new_fields = array();

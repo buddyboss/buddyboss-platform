@@ -66,7 +66,7 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 			array(
 				'args'        => array(
 					'id' => array(
-						'description' => __( 'A unique numeric ID for the forum.', 'buddyboss' ),
+						'description' => __( 'A unique numeric ID for the forum.', 'buddyboss-platform' ),
 						'type'        => 'integer',
 						'required'    => true,
 					),
@@ -87,7 +87,7 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 			array(
 				'args'   => array(
 					'id' => array(
-						'description' => __( 'A unique numeric ID for the forum.', 'buddyboss' ),
+						'description' => __( 'A unique numeric ID for the forum.', 'buddyboss-platform' ),
 						'type'        => 'integer',
 						'required'    => true,
 					),
@@ -266,7 +266,7 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 		if ( function_exists( 'bp_rest_enable_private_network' ) && true === bp_rest_enable_private_network() && ! is_user_logged_in() ) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
-				__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss' ),
+				__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss-platform' ),
 				array(
 					'status' => rest_authorization_required_code(),
 				)
@@ -338,7 +338,7 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 		if ( function_exists( 'bp_rest_enable_private_network' ) && true === bp_rest_enable_private_network() && ! is_user_logged_in() ) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
-				__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss' ),
+				__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss-platform' ),
 				array(
 					'status' => rest_authorization_required_code(),
 				)
@@ -350,7 +350,7 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 		if ( true === $retval && empty( $forum->ID ) ) {
 			$retval = new WP_Error(
 				'bp_rest_forum_invalid_id',
-				__( 'Invalid forum ID.', 'buddyboss' ),
+				__( 'Invalid forum ID.', 'buddyboss-platform' ),
 				array(
 					'status' => 404,
 				)
@@ -360,7 +360,7 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 		if ( true === $retval && ( ! isset( $forum->post_type ) || 'forum' !== $forum->post_type ) ) {
 			$retval = new WP_Error(
 				'bp_rest_forum_invalid_id',
-				__( 'Invalid forum ID.', 'buddyboss' ),
+				__( 'Invalid forum ID.', 'buddyboss-platform' ),
 				array(
 					'status' => 404,
 				)
@@ -373,7 +373,7 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 			if ( ! current_user_can( $post_type->cap->read_post, $forum->ID ) ) {
 				$retval = new WP_Error(
 					'bp_rest_authorization_required',
-					__( 'Sorry, you are not allowed to access this forum.', 'buddyboss' ),
+					__( 'Sorry, you are not allowed to access this forum.', 'buddyboss-platform' ),
 					array(
 						'status' => rest_authorization_required_code(),
 					)
@@ -464,7 +464,7 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 	public function update_item_permissions_check( $request ) {
 		$retval = new WP_Error(
 			'bp_rest_authorization_required',
-			__( 'Sorry, you are not allowed to subscribe/unsubscribe the forum.', 'buddyboss' ),
+			__( 'Sorry, you are not allowed to subscribe/unsubscribe the forum.', 'buddyboss-platform' ),
 			array(
 				'status' => rest_authorization_required_code(),
 			)
@@ -477,7 +477,7 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 			if ( ! bb_is_enabled_subscription( 'forum' ) ) {
 				$retval = new WP_Error(
 					'bp_rest_authorization_required',
-					__( 'Subscription was disabled.', 'buddyboss' ),
+					__( 'Subscription was disabled.', 'buddyboss-platform' ),
 					array(
 						'status' => 404,
 					)
@@ -489,7 +489,7 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 			) {
 				$retval = new WP_Error(
 					'bp_rest_forum_invalid_id',
-					__( 'Invalid forum ID.', 'buddyboss' ),
+					__( 'Invalid forum ID.', 'buddyboss-platform' ),
 					array(
 						'status' => 404,
 					)
@@ -501,7 +501,7 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 			if ( true === $retval && ! current_user_can( 'edit_user', $user_id ) ) {
 				$retval = new WP_Error(
 					'bp_rest_authorization_required',
-					__( 'You don\'t have the permission to update favorites.', 'buddyboss' ),
+					__( 'You don\'t have the permission to update favorites.', 'buddyboss-platform' ),
 					array(
 						'status' => rest_authorization_required_code(),
 					)
@@ -674,62 +674,62 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 			'type'       => 'object',
 			'properties' => array(
 				'id'                 => array(
-					'description' => __( 'Unique identifier for the Forum.', 'buddyboss' ),
+					'description' => __( 'Unique identifier for the Forum.', 'buddyboss-platform' ),
 					'type'        => 'integer',
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'readonly'    => true,
 				),
 				'date'               => array(
-					'description' => __( 'The date the object was published, in the site\'s timezone.', 'buddyboss' ),
+					'description' => __( 'The date the object was published, in the site\'s timezone.', 'buddyboss-platform' ),
 					'type'        => 'string',
 					'format'      => 'date-time',
 					'context'     => array( 'embed', 'view', 'edit' ),
 				),
 				'date_gmt'           => array(
-					'description' => __( 'The date the object was published, as GMT.', 'buddyboss' ),
+					'description' => __( 'The date the object was published, as GMT.', 'buddyboss-platform' ),
 					'type'        => 'string',
 					'format'      => 'date-time',
 					'context'     => array( 'embed', 'view', 'edit' ),
 				),
 				'guid'               => array(
-					'description' => __( 'The url identifier for the forum.', 'buddyboss' ),
+					'description' => __( 'The url identifier for the forum.', 'buddyboss-platform' ),
 					'type'        => 'object',
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'readonly'    => true,
 					'properties'  => array(
 						'raw'      => array(
-							'description' => __( 'GUID for the forum, as it exists in the database.', 'buddyboss' ),
+							'description' => __( 'GUID for the forum, as it exists in the database.', 'buddyboss-platform' ),
 							'type'        => 'string',
 							'context'     => array( 'embed', 'view', 'edit' ),
 						),
 						'rendered' => array(
-							'description' => __( 'GUID for the forum, transformed for display.', 'buddyboss' ),
+							'description' => __( 'GUID for the forum, transformed for display.', 'buddyboss-platform' ),
 							'type'        => 'string',
 							'context'     => array( 'embed', 'view', 'edit' ),
 						),
 					),
 				),
 				'modified'           => array(
-					'description' => __( 'The date for forum was last modified, in the site\'s timezone.', 'buddyboss' ),
+					'description' => __( 'The date for forum was last modified, in the site\'s timezone.', 'buddyboss-platform' ),
 					'type'        => 'string',
 					'format'      => 'date-time',
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'readonly'    => true,
 				),
 				'modified_gmt'       => array(
-					'description' => __( 'The date for forum was last modified, as GMT.', 'buddyboss' ),
+					'description' => __( 'The date for forum was last modified, as GMT.', 'buddyboss-platform' ),
 					'type'        => 'string',
 					'format'      => 'date-time',
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'readonly'    => true,
 				),
 				'password'           => array(
-					'description' => __( 'A password to protect access to the post.', 'buddyboss' ),
+					'description' => __( 'A password to protect access to the post.', 'buddyboss-platform' ),
 					'type'        => 'string',
 					'context'     => array( 'edit' ),
 				),
 				'slug'               => array(
-					'description' => __( 'An alphanumeric unique identifier for the forum.', 'buddyboss' ),
+					'description' => __( 'An alphanumeric unique identifier for the forum.', 'buddyboss-platform' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'arg_options' => array(
@@ -737,145 +737,145 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 					),
 				),
 				'status'             => array(
-					'description' => __( 'The current status of the forum.', 'buddyboss' ),
+					'description' => __( 'The current status of the forum.', 'buddyboss-platform' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view', 'edit' ),
 				),
 				'link'               => array(
-					'description' => __( 'The permalink to this forum on the site.', 'buddyboss' ),
+					'description' => __( 'The permalink to this forum on the site.', 'buddyboss-platform' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'format'      => 'uri',
 				),
 				'author'             => array(
-					'description' => __( 'The ID for the author of the forum.', 'buddyboss' ),
+					'description' => __( 'The ID for the author of the forum.', 'buddyboss-platform' ),
 					'type'        => 'integer',
 					'context'     => array( 'embed', 'view', 'edit' ),
 				),
 				'parent'             => array(
-					'description' => __( 'ID of the parent forum.', 'buddyboss' ),
+					'description' => __( 'ID of the parent forum.', 'buddyboss-platform' ),
 					'type'        => 'integer',
 					'context'     => array( 'embed', 'view', 'edit' ),
 				),
 				'menu_order'         => array(
-					'description' => __( 'Menu order for the forum.', 'buddyboss' ),
+					'description' => __( 'Menu order for the forum.', 'buddyboss-platform' ),
 					'type'        => 'integer',
 					'context'     => array( 'embed', 'view', 'edit' ),
 				),
 				'sticky'             => array(
-					'description' => __( 'Whether the Forum is sticky or not.', 'buddyboss' ),
+					'description' => __( 'Whether the Forum is sticky or not.', 'buddyboss-platform' ),
 					'type'        => 'boolean',
 					'context'     => array( 'embed', 'view', 'edit' ),
 				),
 				'featured_media'     => array(
-					'description' => __( 'Featured Image URLs for the forum.', 'buddyboss' ),
+					'description' => __( 'Featured Image URLs for the forum.', 'buddyboss-platform' ),
 					'type'        => 'object',
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'readonly'    => true,
 					'properties'  => array(
 						'full'  => array(
-							'description' => __( 'Forum featured image URL with full image size.', 'buddyboss' ),
+							'description' => __( 'Forum featured image URL with full image size.', 'buddyboss-platform' ),
 							'type'        => 'string',
 							'context'     => array( 'embed', 'view', 'edit' ),
 						),
 						'thumb' => array(
-							'description' => __( 'Forum featured image URL with thumbnail image size.', 'buddyboss' ),
+							'description' => __( 'Forum featured image URL with thumbnail image size.', 'buddyboss-platform' ),
 							'type'        => 'string',
 							'context'     => array( 'embed', 'view', 'edit' ),
 						),
 					),
 				),
 				'total_topic_count'  => array(
-					'description' => __( 'Total topics count in the forum.', 'buddyboss' ),
+					'description' => __( 'Total topics count in the forum.', 'buddyboss-platform' ),
 					'type'        => 'integer',
 					'context'     => array( 'embed', 'view', 'edit' ),
 				),
 				'last_topic_id'      => array(
-					'description' => __( 'Recently edited topic id into the forum.', 'buddyboss' ),
+					'description' => __( 'Recently edited topic id into the forum.', 'buddyboss-platform' ),
 					'type'        => 'integer',
 					'context'     => array( 'embed', 'view', 'edit' ),
 				),
 				'total_reply_count'  => array(
-					'description' => __( 'Total replies count in the forum.', 'buddyboss' ),
+					'description' => __( 'Total replies count in the forum.', 'buddyboss-platform' ),
 					'type'        => 'integer',
 					'context'     => array( 'embed', 'view', 'edit' ),
 				),
 				'last_reply_id'      => array(
-					'description' => __( 'Recently posted reply id into the forum.', 'buddyboss' ),
+					'description' => __( 'Recently posted reply id into the forum.', 'buddyboss-platform' ),
 					'type'        => 'integer',
 					'context'     => array( 'embed', 'view', 'edit' ),
 				),
 				'last_active_author' => array(
-					'description' => __( 'Last updated the user\'s ID in forum.', 'buddyboss' ),
+					'description' => __( 'Last updated the user\'s ID in forum.', 'buddyboss-platform' ),
 					'type'        => 'integer',
 					'context'     => array( 'embed', 'view', 'edit' ),
 				),
 				'last_active_time'   => array(
-					'description' => __( 'Last updated time for the forum.', 'buddyboss' ),
+					'description' => __( 'Last updated time for the forum.', 'buddyboss-platform' ),
 					'type'        => 'date-time',
 					'context'     => array( 'embed', 'view', 'edit' ),
 				),
 				'is_closed'          => array(
-					'description' => __( 'Whether the Forum is closed or not.', 'buddyboss' ),
+					'description' => __( 'Whether the Forum is closed or not.', 'buddyboss-platform' ),
 					'type'        => 'boolean',
 					'context'     => array( 'embed', 'view', 'edit' ),
 				),
 				'is_forum_category'  => array(
-					'description' => __( 'Whether the Forum is assigned as category or not.', 'buddyboss' ),
+					'description' => __( 'Whether the Forum is assigned as category or not.', 'buddyboss-platform' ),
 					'type'        => 'boolean',
 					'context'     => array( 'embed', 'view', 'edit' ),
 				),
 				'title'              => array(
-					'description' => __( 'The title of the forum.', 'buddyboss' ),
+					'description' => __( 'The title of the forum.', 'buddyboss-platform' ),
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'type'        => 'object',
 					'properties'  => array(
 						'raw'      => array(
-							'description' => __( 'Content for the title of the forum, as it exists in the database.', 'buddyboss' ),
+							'description' => __( 'Content for the title of the forum, as it exists in the database.', 'buddyboss-platform' ),
 							'type'        => 'string',
 							'context'     => array( 'embed', 'view', 'edit' ),
 						),
 						'rendered' => array(
-							'description' => __( 'The title of the forum, transformed for display.', 'buddyboss' ),
+							'description' => __( 'The title of the forum, transformed for display.', 'buddyboss-platform' ),
 							'type'        => 'string',
 							'context'     => array( 'embed', 'view', 'edit' ),
 						),
 					),
 				),
 				'short_content'      => array(
-					'description' => __( 'Short Content of the forum.', 'buddyboss' ),
+					'description' => __( 'Short Content of the forum.', 'buddyboss-platform' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view', 'edit' ),
 				),
 				'content'            => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'The content of the forum.', 'buddyboss' ),
+					'description' => __( 'The content of the forum.', 'buddyboss-platform' ),
 					'type'        => 'object',
 					'properties'  => array(
 						'raw'      => array(
-							'description' => __( 'Content for the Forum, as it exists in the database.', 'buddyboss' ),
+							'description' => __( 'Content for the Forum, as it exists in the database.', 'buddyboss-platform' ),
 							'type'        => 'string',
 							'context'     => array( 'embed', 'view', 'edit' ),
 						),
 						'rendered' => array(
-							'description' => __( 'HTML content for the Forum, transformed for display.', 'buddyboss' ),
+							'description' => __( 'HTML content for the Forum, transformed for display.', 'buddyboss-platform' ),
 							'type'        => 'string',
 							'context'     => array( 'embed', 'view', 'edit' ),
 						),
 					),
 				),
 				'group'              => array(
-					'description' => __( 'Forum\'s group.', 'buddyboss' ),
+					'description' => __( 'Forum\'s group.', 'buddyboss-platform' ),
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'type'        => 'object',
 				),
 				'action_states'      => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Available actions with current user for Forum.', 'buddyboss' ),
+					'description' => __( 'Available actions with current user for Forum.', 'buddyboss-platform' ),
 					'type'        => 'object',
 					'properties'  => array(
 						'subscribed' => array(
-							'description' => __( 'Check whether the current user is subscribed or not in the forum.', 'buddyboss' ),
+							'description' => __( 'Check whether the current user is subscribed or not in the forum.', 'buddyboss-platform' ),
 							'type'        => 'boolean',
 							'context'     => array( 'embed', 'view', 'edit' ),
 						),
@@ -883,28 +883,28 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 				),
 				'user_permission'    => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Current user\'s permission with the Forum.', 'buddyboss' ),
+					'description' => __( 'Current user\'s permission with the Forum.', 'buddyboss-platform' ),
 					'type'        => 'object',
 					'properties'  => array(
 						'show_topics'   => array(
-							'description' => __( 'Whether shows the topics for the current user or not.', 'buddyboss' ),
+							'description' => __( 'Whether shows the topics for the current user or not.', 'buddyboss-platform' ),
 							'type'        => 'boolean',
 							'context'     => array( 'embed', 'view', 'edit' ),
 						),
 						'show_subforum' => array(
-							'description' => __( 'Whether shows the sub-forums for the current user or not.', 'buddyboss' ),
+							'description' => __( 'Whether shows the sub-forums for the current user or not.', 'buddyboss-platform' ),
 							'type'        => 'boolean',
 							'context'     => array( 'embed', 'view', 'edit' ),
 						),
 						'create_topic'  => array(
-							'description' => __( 'Whether the current user can create a topic in the forum or not.', 'buddyboss' ),
+							'description' => __( 'Whether the current user can create a topic in the forum or not.', 'buddyboss-platform' ),
 							'type'        => 'boolean',
 							'context'     => array( 'embed', 'view', 'edit' ),
 						),
 					),
 				),
 				'sub_forums'         => array(
-					'description' => __( 'Child forums with current forum.', 'buddyboss' ),
+					'description' => __( 'Child forums with current forum.', 'buddyboss-platform' ),
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'type'        => 'object',
 				),
@@ -931,7 +931,7 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 		$params['per_page']['default'] = ( function_exists( 'bbp_get_forums_per_page' ) ? bbp_get_forums_per_page() : get_option( '_bbp_forums_per_page', 15 ) );
 
 		$params['author'] = array(
-			'description'       => __( 'Author ID, or comma-separated list of IDs.', 'buddyboss' ),
+			'description'       => __( 'Author ID, or comma-separated list of IDs.', 'buddyboss-platform' ),
 			'default'           => '',
 			'type'              => 'string',
 			'sanitize_callback' => 'sanitize_key',
@@ -939,7 +939,7 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['author_exclude'] = array(
-			'description'       => __( 'An array of author IDs not to query from.', 'buddyboss' ),
+			'description'       => __( 'An array of author IDs not to query from.', 'buddyboss-platform' ),
 			'type'              => 'array',
 			'items'             => array( 'type' => 'integer' ),
 			'sanitize_callback' => 'wp_parse_id_list',
@@ -947,7 +947,7 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['exclude'] = array(
-			'description'       => __( 'An array of forums IDs not to retrieve.', 'buddyboss' ),
+			'description'       => __( 'An array of forums IDs not to retrieve.', 'buddyboss-platform' ),
 			'type'              => 'array',
 			'items'             => array( 'type' => 'integer' ),
 			'sanitize_callback' => 'wp_parse_id_list',
@@ -955,7 +955,7 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['include'] = array(
-			'description'       => __( 'An array of forums IDs to retrieve.', 'buddyboss' ),
+			'description'       => __( 'An array of forums IDs to retrieve.', 'buddyboss-platform' ),
 			'type'              => 'array',
 			'items'             => array( 'type' => 'integer' ),
 			'sanitize_callback' => 'wp_parse_id_list',
@@ -963,14 +963,14 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['offset'] = array(
-			'description'       => __( 'The number of forums to offset before retrieval.', 'buddyboss' ),
+			'description'       => __( 'The number of forums to offset before retrieval.', 'buddyboss-platform' ),
 			'type'              => 'integer',
 			'sanitize_callback' => 'absint',
 			'validate_callback' => 'rest_validate_request_arg',
 		);
 
 		$params['order'] = array(
-			'description'       => __( 'Designates ascending or descending order of forums.', 'buddyboss' ),
+			'description'       => __( 'Designates ascending or descending order of forums.', 'buddyboss-platform' ),
 			'default'           => 'asc',
 			'type'              => 'string',
 			'enum'              => array( 'asc', 'desc' ),
@@ -979,7 +979,7 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['orderby'] = array(
-			'description'       => __( 'Sort retrieved forums by parameter.', 'buddyboss' ),
+			'description'       => __( 'Sort retrieved forums by parameter.', 'buddyboss-platform' ),
 			'type'              => 'array',
 			'items'             => array(
 				'type' => 'string',
@@ -1004,7 +1004,7 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['status'] = array(
-			'description'       => __( 'Limit result set to forums assigned a specific status.', 'buddyboss' ),
+			'description'       => __( 'Limit result set to forums assigned a specific status.', 'buddyboss-platform' ),
 			'default'           => array( 'publish', 'private' ),
 			'type'              => 'array',
 			'items'             => array(
@@ -1016,7 +1016,7 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['parent'] = array(
-			'description'       => __( 'Forum ID to retrieve child pages for. Use 0 to only retrieve top-level forums.', 'buddyboss' ),
+			'description'       => __( 'Forum ID to retrieve child pages for. Use 0 to only retrieve top-level forums.', 'buddyboss-platform' ),
 			'default'           => '0',
 			'type'              => 'integer',
 			'sanitize_callback' => 'absint',
@@ -1024,7 +1024,7 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['subscriptions'] = array(
-			'description'       => __( 'Retrieve subscribed forums by user.', 'buddyboss' ),
+			'description'       => __( 'Retrieve subscribed forums by user.', 'buddyboss-platform' ),
 			'default'           => false,
 			'type'              => 'boolean',
 			'validate_callback' => 'rest_validate_request_arg',

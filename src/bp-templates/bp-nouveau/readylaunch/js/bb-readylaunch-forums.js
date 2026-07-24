@@ -575,8 +575,17 @@ window.bp = window.bp || {};
 						window.bb_rl_forums_medium_topic_editor[key].subscribe(
 							'editableInput',
 							function () {
-								jQuery(element).closest('form').find( '#bbp_topic_content' ).val( window.bb_rl_forums_medium_topic_editor[key].getContent() );
-								var bbp_topic_content = jQuery(element).closest('form').find( '#bbp_topic_content' );
+								var $topic_form = jQuery(element).closest('form');
+								// The hidden #bbp_topic_content field can be dropped from the form
+								// when the emoji/editor widgets restructure the editor markup. The
+								// topic form submits natively, so recreate it here (its sync point)
+								// — otherwise an empty bbp_topic_content is posted and the discussion
+								// is silently not created.
+								if ( ! $topic_form.find( '#bbp_topic_content' ).length ) {
+									jQuery( '<input>', { type: 'hidden', id: 'bbp_topic_content', name: 'bbp_topic_content' } ).appendTo( $topic_form );
+								}
+								$topic_form.find( '#bbp_topic_content' ).val( window.bb_rl_forums_medium_topic_editor[key].getContent() );
+								var bbp_topic_content = $topic_form.find( '#bbp_topic_content' );
 
 								var html = window.bb_rl_forums_medium_topic_editor[key].getContent();
 								var dummy_element = document.createElement( 'div' );
@@ -1436,7 +1445,20 @@ window.bp = window.bp || {};
 								);
 
 								raw_content = submit_dummy.innerHTML;
-								$( this ).find( '#bbp_reply_content' ).val( raw_content );
+								// The hidden #bbp_reply_content field can be absent from the
+								// reply form by submit time (the MediumEditor / emoji widgets
+								// restructure the editor markup after render). Recreate it when
+								// missing so the editor content is actually serialized and
+								// submitted — otherwise the server rejects the reply as empty.
+								var $reply_content_field = $( this ).find( '#bbp_reply_content' );
+								if ( ! $reply_content_field.length ) {
+									$reply_content_field = $( '<input>', {
+										type: 'hidden',
+										id: 'bbp_reply_content',
+										name: 'bbp_reply_content'
+									} ).appendTo( this );
+								}
+								$reply_content_field.val( raw_content );
 							}
 
 							bp.Readylaunch.Forums.bbp_reply_ajax_call( 'reply', window.bbpReplyAjaxJS.reply_nonce, $( this ).serializeArray(), $( this ) );

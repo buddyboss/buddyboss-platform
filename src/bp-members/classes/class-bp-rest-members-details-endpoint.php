@@ -66,7 +66,7 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 			array(
 				'args'   => array(
 					'id' => array(
-						'description' => __( 'A unique numeric ID for the member.', 'buddyboss' ),
+						'description' => __( 'A unique numeric ID for the member.', 'buddyboss-platform' ),
 						'type'        => 'integer',
 						'required'    => 'true',
 					),
@@ -86,7 +86,7 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 			array(
 				'args'   => array(
 					'default' => array(
-						'description' => __( 'Whichever menu you have to retrieve.', 'buddyboss' ),
+						'description' => __( 'Whichever menu you have to retrieve.', 'buddyboss-platform' ),
 						'type'        => 'boolean',
 					),
 				),
@@ -105,7 +105,7 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 			array(
 				'args'   => array(
 					'id' => array(
-						'description' => __( 'A unique numeric ID for the member.', 'buddyboss' ),
+						'description' => __( 'A unique numeric ID for the member.', 'buddyboss-platform' ),
 						'type'        => 'integer',
 						'required'    => 'true',
 					),
@@ -166,7 +166,7 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 	public function get_items_permissions_check( $request ) {
 		$retval = new WP_Error(
 			'bp_rest_component_required',
-			__( 'Sorry, Members component was not enabled.', 'buddyboss' ),
+			__( 'Sorry, Members component was not enabled.', 'buddyboss-platform' ),
 			array(
 				'status' => '404',
 			)
@@ -220,7 +220,7 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 		if ( empty( $current_user_id ) ) {
 			return new WP_Error(
 				'bp_rest_component_required',
-				__( 'Sorry, Invalid member ID.', 'buddyboss' ),
+				__( 'Sorry, Invalid member ID.', 'buddyboss-platform' ),
 				array(
 					'status' => '404',
 				)
@@ -232,7 +232,7 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 		if ( ! $user instanceof WP_User ) {
 			return new WP_Error(
 				'bp_rest_member_invalid_id',
-				__( 'Invalid member ID.', 'buddyboss' ),
+				__( 'Invalid member ID.', 'buddyboss-platform' ),
 				array(
 					'status' => 404,
 				)
@@ -480,7 +480,7 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 		if ( function_exists( 'bp_rest_enable_private_network' ) && true === bp_rest_enable_private_network() && ! is_user_logged_in() ) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
-				__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss' ),
+				__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss-platform' ),
 				array(
 					'status' => rest_authorization_required_code(),
 				)
@@ -490,7 +490,7 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 		if ( true === $retval && ! bp_is_active( 'members' ) ) {
 			$retval = new WP_Error(
 				'bp_rest_component_required',
-				__( 'Sorry, Members component was not enabled.', 'buddyboss' ),
+				__( 'Sorry, Members component was not enabled.', 'buddyboss-platform' ),
 				array(
 					'status' => '404',
 				)
@@ -564,7 +564,7 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 	public function get_profile_dropdown_items_permissions_check( $request ) {
 		$retval = new WP_Error(
 			'bp_rest_authorization_required',
-			__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss' ),
+			__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss-platform' ),
 			array(
 				'status' => rest_authorization_required_code(),
 			)
@@ -686,7 +686,7 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 			'properties' => array(
 				'tabs'          => array(
 					'context'     => array( 'embed', 'view' ),
-					'description' => __( 'Members directory tabs.', 'buddyboss' ),
+					'description' => __( 'Members directory tabs.', 'buddyboss-platform' ),
 					'type'        => 'object',
 					'readonly'    => true,
 					'items'       => array(
@@ -695,7 +695,7 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 				),
 				'order_options' => array(
 					'context'     => array( 'embed', 'view' ),
-					'description' => __( 'Members order by options.', 'buddyboss' ),
+					'description' => __( 'Members order by options.', 'buddyboss-platform' ),
 					'type'        => 'array',
 					'readonly'    => true,
 				),
@@ -822,7 +822,7 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 		$nav_items    = array();
 
 		$nav_items['all'] = array(
-			'text'     => __( 'All Members', 'buddyboss' ),
+			'text'     => __( 'All Members', 'buddyboss-platform' ),
 			'position' => 5,
 		);
 		if ( $enable_count ) {
@@ -833,7 +833,7 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 			$total_friend_count = bp_get_total_friend_count( bp_loggedin_user_id() );
 			if ( $total_friend_count ) {
 				$nav_items['friends'] = array(
-					'text'     => __( 'My Friends', 'buddyboss' ),
+					'text'     => __( 'My Friends', 'buddyboss-platform' ),
 					'position' => 15,
 				);
 				if ( $enable_count ) {
@@ -856,11 +856,11 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 
 		$filters_data = array();
 
-		$filters_data['active'] = __( 'Last Active', 'buddyboss' );
-		$filters_data['newest'] = __( 'Newest Registered', 'buddyboss' );
+		$filters_data['active'] = __( 'Last Active', 'buddyboss-platform' );
+		$filters_data['newest'] = __( 'Newest Registered', 'buddyboss-platform' );
 		if ( is_user_logged_in() ) {
 			if ( bp_is_active( 'xprofile' ) ) {
-				$filters_data['alphabetical'] = __( 'Alphabetical', 'buddyboss' );
+				$filters_data['alphabetical'] = __( 'Alphabetical', 'buddyboss-platform' );
 			}
 		}
 
@@ -914,19 +914,19 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 			$profile_link  = trailingslashit( bp_loggedin_user_domain() . bp_get_profile_slug() );
 			$item_xprofile = array(
 				'ID'       => 'profile',
-				'title'    => __( 'Profile', 'buddyboss' ),
+				'title'    => __( 'Profile', 'buddyboss-platform' ),
 				'url'      => esc_url( $profile_link ),
 				'count'    => '',
 				'children' => array(
 					array(
 						'ID'    => 'view',
-						'title' => __( 'View', 'buddyboss' ),
+						'title' => __( 'View', 'buddyboss-platform' ),
 						'url'   => esc_url( $profile_link ),
 						'count' => '',
 					),
 					array(
 						'ID'    => 'edit',
-						'title' => __( 'Edit', 'buddyboss' ),
+						'title' => __( 'Edit', 'buddyboss-platform' ),
 						'url'   => esc_url( $profile_link ),
 						'count' => '',
 					),
@@ -936,7 +936,7 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 			if ( buddypress()->avatar->show_avatars ) {
 				$item_xprofile['children'][] = array(
 					'ID'    => 'profile-photo',
-					'title' => __( 'Profile Photo', 'buddyboss' ),
+					'title' => __( 'Profile Photo', 'buddyboss-platform' ),
 					'url'   => esc_url( trailingslashit( $profile_link . 'change-avatar' ) ),
 					'count' => '',
 				);
@@ -945,7 +945,7 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 			if ( function_exists( 'bp_displayed_user_use_cover_image_header' ) && bp_displayed_user_use_cover_image_header() ) {
 				$item_xprofile['children'][] = array(
 					'ID'    => 'cover-photo',
-					'title' => __( 'Cover Photo', 'buddyboss' ),
+					'title' => __( 'Cover Photo', 'buddyboss-platform' ),
 					'url'   => esc_url( trailingslashit( $profile_link . 'change-cover-image' ) ),
 					'count' => '',
 				);
@@ -958,7 +958,7 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 			$settings_link = trailingslashit( bp_loggedin_user_domain() . bp_get_settings_slug() );
 			$item_settings = array(
 				'ID'       => bp_get_settings_slug(),
-				'title'    => __( 'Account', 'buddyboss' ),
+				'title'    => __( 'Account', 'buddyboss-platform' ),
 				'url'      => esc_url( $settings_link ),
 				'count'    => '',
 				'children' => array(),
@@ -966,13 +966,13 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 
 			$item_settings['children'][] = array(
 				'ID'    => 'general',
-				'title' => __( 'Login Information', 'buddyboss' ),
+				'title' => __( 'Login Information', 'buddyboss-platform' ),
 				'url'   => esc_url( $settings_link ),
 				'count' => '',
 			);
 
 			if ( has_action( 'bp_notification_settings' ) ) {
-				$title = esc_html__( 'Email Preferences', 'buddyboss' );
+				$title = esc_html__( 'Email Preferences', 'buddyboss-platform' );
 				if ( function_exists( 'bb_core_notification_preferences_data' ) ) {
 					$data  = bb_core_notification_preferences_data();
 					$title = esc_html( $data['menu_title'] );
@@ -987,7 +987,7 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 
 			$item_settings['children'][] = array(
 				'ID'    => 'profile',
-				'title' => __( 'Privacy', 'buddyboss' ),
+				'title' => __( 'Privacy', 'buddyboss-platform' ),
 				'url'   => esc_url( trailingslashit( $settings_link . 'profile' ) ),
 				'count' => '',
 			);
@@ -995,7 +995,7 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 			if ( bp_core_can_edit_settings() ) {
 				$item_settings['children'][] = array(
 					'ID'    => 'invites',
-					'title' => __( 'Group Invites', 'buddyboss' ),
+					'title' => __( 'Group Invites', 'buddyboss-platform' ),
 					'url'   => esc_url( trailingslashit( $settings_link . 'invites' ) ),
 					'count' => '',
 				);
@@ -1003,7 +1003,7 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 
 			$item_settings['children'][] = array(
 				'ID'    => 'export',
-				'title' => __( 'Export Data', 'buddyboss' ),
+				'title' => __( 'Export Data', 'buddyboss-platform' ),
 				'url'   => esc_url( trailingslashit( $settings_link . 'export' ) ),
 				'count' => '',
 			);
@@ -1011,7 +1011,7 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 			if ( ! bp_current_user_can( 'bp_moderate' ) && ! bp_core_get_root_option( 'bp-disable-account-deletion' ) ) {
 				$item_settings['children'][] = array(
 					'ID'    => 'delete-account',
-					'title' => __( 'Delete Account', 'buddyboss' ),
+					'title' => __( 'Delete Account', 'buddyboss-platform' ),
 					'url'   => esc_url( trailingslashit( $settings_link . 'delete-account' ) ),
 					'count' => '',
 				);
@@ -1024,7 +1024,7 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 			$activity_link = trailingslashit( bp_loggedin_user_domain() . bp_get_activity_slug() );
 			$item_activity = array(
 				'ID'       => 'activities',
-				'title'    => __( 'Timeline', 'buddyboss' ),
+				'title'    => __( 'Timeline', 'buddyboss-platform' ),
 				'url'      => esc_url( $activity_link ),
 				'count'    => '',
 				'children' => $this->bb_rest_get_timeline_sub_nav( true ),
@@ -1041,19 +1041,19 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 			$count             = $enable_count ? bp_notifications_get_unread_notification_count( bp_loggedin_user_id() ) : '';
 			$item_notification = array(
 				'ID'       => 'notifications',
-				'title'    => __( 'Notifications', 'buddyboss' ),
+				'title'    => __( 'Notifications', 'buddyboss-platform' ),
 				'url'      => esc_url( $notifications_link ),
 				'count'    => ! empty( $count ) ? bp_core_number_format( $count ) : '',
 				'children' => array(
 					array(
 						'ID'    => 'unread',
-						'title' => __( 'Unread', 'buddyboss' ),
+						'title' => __( 'Unread', 'buddyboss-platform' ),
 						'url'   => esc_url( $notifications_link ),
 						'count' => ! empty( $count ) ? bp_core_number_format( $count ) : '',
 					),
 					array(
 						'ID'    => 'read',
-						'title' => __( 'Read', 'buddyboss' ),
+						'title' => __( 'Read', 'buddyboss-platform' ),
 						'url'   => esc_url( trailingslashit( $notifications_link . 'read' ) ),
 						'count' => '',
 					),
@@ -1072,19 +1072,19 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 
 			$item_messages = array(
 				'ID'       => 'messages',
-				'title'    => __( 'Messages', 'buddyboss' ),
+				'title'    => __( 'Messages', 'buddyboss-platform' ),
 				'url'      => esc_url( $messages_link ),
 				'count'    => ! empty( $count ) ? bp_core_number_format( $count ) : '',
 				'children' => array(
 					array(
 						'ID'    => 'inbox',
-						'title' => __( 'Messages', 'buddyboss' ),
+						'title' => __( 'Messages', 'buddyboss-platform' ),
 						'url'   => esc_url( $messages_link ),
 						'count' => ! empty( $count ) ? bp_core_number_format( $count ) : '',
 					),
 					array(
 						'ID'    => 'compose',
-						'title' => __( 'New Message', 'buddyboss' ),
+						'title' => __( 'New Message', 'buddyboss-platform' ),
 						'url'   => esc_url( trailingslashit( $messages_link . 'compose' ) ),
 						'count' => '',
 					),
@@ -1103,19 +1103,19 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 
 			$item_friends = array(
 				'ID'       => 'friends',
-				'title'    => __( 'Connections', 'buddyboss' ),
+				'title'    => __( 'Connections', 'buddyboss-platform' ),
 				'url'      => esc_url( $friends_link ),
 				'count'    => ! empty( $count ) ? bp_core_number_format( $count ) : '',
 				'children' => array(
 					array(
 						'ID'    => 'my-friends',
-						'title' => __( 'My Connections', 'buddyboss' ),
+						'title' => __( 'My Connections', 'buddyboss-platform' ),
 						'url'   => esc_url( $friends_link ),
 						'count' => '',
 					),
 					array(
 						'ID'    => 'requests',
-						'title' => ( ! empty( $count ) ? __( 'Pending Requests', 'buddyboss' ) : __( 'No Pending Requests', 'buddyboss' ) ),
+						'title' => ( ! empty( $count ) ? __( 'Pending Requests', 'buddyboss-platform' ) : __( 'No Pending Requests', 'buddyboss-platform' ) ),
 						'url'   => esc_url( trailingslashit( $friends_link . 'requests' ) ),
 						'count' => ! empty( $count ) ? bp_core_number_format( $count ) : '',
 					),
@@ -1134,19 +1134,19 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 
 			$item_groups = array(
 				'ID'       => 'groups',
-				'title'    => __( 'Groups', 'buddyboss' ),
+				'title'    => __( 'Groups', 'buddyboss-platform' ),
 				'url'      => esc_url( $groups_link ),
 				'count'    => ! empty( $count ) ? bp_core_number_format( $count ) : 0,
 				'children' => array(
 					array(
 						'ID'    => 'my-groups',
-						'title' => __( 'My Groups', 'buddyboss' ),
+						'title' => __( 'My Groups', 'buddyboss-platform' ),
 						'url'   => esc_url( $groups_link ),
 						'count' => '',
 					),
 					array(
 						'ID'    => 'invites',
-						'title' => ( ! empty( $count ) ? __( 'Pending Invites', 'buddyboss' ) : __( 'No Pending Invites', 'buddyboss' ) ),
+						'title' => ( ! empty( $count ) ? __( 'Pending Invites', 'buddyboss-platform' ) : __( 'No Pending Invites', 'buddyboss-platform' ) ),
 						'url'   => esc_url( trailingslashit( $groups_link . 'invites' ) ),
 						'count' => ! empty( $count ) ? bp_core_number_format( $count ) : '',
 					),
@@ -1156,7 +1156,7 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 			if ( bp_user_can_create_groups() ) {
 				$item_groups['children'][] = array(
 					'ID'    => 'create-group',
-					'title' => __( 'Create Group', 'buddyboss' ),
+					'title' => __( 'Create Group', 'buddyboss-platform' ),
 					'url'   => esc_url( trailingslashit( bp_get_groups_directory_permalink() . 'create' ) ),
 					'count' => '',
 				);
@@ -1186,7 +1186,7 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 		) {
 			$slug        = bb_meprlms_profile_courses_slug();
 			$course_link = trailingslashit( bp_loggedin_user_domain() . $slug );
-			$name        = esc_html__( 'Courses', 'buddyboss' );
+			$name        = esc_html__( 'Courses', 'buddyboss-platform' );
 
 			$item_courses = array(
 				'ID'       => $slug,
@@ -1198,7 +1198,7 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 						'ID'    => $slug,
 						'title' => sprintf(
 							/* translators: My Courses */
-							__( 'My %s', 'buddyboss' ),
+							__( 'My %s', 'buddyboss-platform' ),
 							$name
 						),
 						'url'   => esc_url( $course_link ),
@@ -1210,7 +1210,7 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 			if ( user_can( bp_loggedin_user_id(), 'administrator' ) ) {
 				$item_courses['children'][] = array(
 					'ID'    => bb_meprlms_profile_instructor_courses_slug(),
-					'title' => esc_html__( 'My Created Courses', 'buddyboss' ),
+					'title' => esc_html__( 'My Created Courses', 'buddyboss-platform' ),
 					'url'   => esc_url( trailingslashit( $course_link . 'instructor-courses' ) ),
 					'count' => '',
 				);
@@ -1225,19 +1225,19 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 
 			$item_forums = array(
 				'ID'       => 'forums',
-				'title'    => __( 'Forums', 'buddyboss' ),
+				'title'    => __( 'Forums', 'buddyboss-platform' ),
 				'url'      => esc_url( $forums_link ),
 				'count'    => '',
 				'children' => array(
 					array(
 						'ID'    => 'topics',
-						'title' => __( 'My Discussions', 'buddyboss' ),
+						'title' => __( 'My Discussions', 'buddyboss-platform' ),
 						'url'   => esc_url( trailingslashit( $forums_link . bbp_get_topic_archive_slug() ) ),
 						'count' => '',
 					),
 					array(
 						'ID'    => 'replies',
-						'title' => __( 'My Replies', 'buddyboss' ),
+						'title' => __( 'My Replies', 'buddyboss-platform' ),
 						'url'   => esc_url( trailingslashit( $forums_link . bbp_get_reply_archive_slug() ) ),
 						'count' => '',
 					),
@@ -1247,7 +1247,7 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 			if ( function_exists( 'bbp_is_favorites_active' ) && bbp_is_favorites_active() ) {
 				$item_forums['children'][] = array(
 					'ID'    => 'favorite',
-					'title' => __( 'My Favorites', 'buddyboss' ),
+					'title' => __( 'My Favorites', 'buddyboss-platform' ),
 					'url'   => esc_url( trailingslashit( $forums_link . bbp_get_user_favorites_slug() ) ),
 					'count' => '',
 				);
@@ -1262,13 +1262,13 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 
 			$item_media = array(
 				'ID'       => 'photos',
-				'title'    => __( 'Photos', 'buddyboss' ),
+				'title'    => __( 'Photos', 'buddyboss-platform' ),
 				'url'      => esc_url( $media_link ),
 				'count'    => '',
 				'children' => array(
 					array(
 						'ID'    => 'my-media',
-						'title' => __( 'My Photos', 'buddyboss' ),
+						'title' => __( 'My Photos', 'buddyboss-platform' ),
 						'url'   => esc_url( $media_link ),
 						'count' => '',
 					),
@@ -1278,7 +1278,7 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 			if ( function_exists( 'bp_is_profile_albums_support_enabled' ) && bp_is_profile_albums_support_enabled() ) {
 				$item_media['children'][] = array(
 					'ID'    => 'albums',
-					'title' => __( 'My Albums', 'buddyboss' ),
+					'title' => __( 'My Albums', 'buddyboss-platform' ),
 					'url'   => esc_url( trailingslashit( $media_link . 'albums' ) ),
 					'count' => '',
 				);
@@ -1287,19 +1287,19 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 			$items[] = $item_media;
 		}
 
-		if ( bp_is_active( 'media' ) && function_exists( 'bp_is_profile_document_support_enabled' ) && bp_is_profile_document_support_enabled() ) {
+		if ( bp_is_active( 'media' ) && bp_is_active( 'document' ) && function_exists( 'bp_is_profile_document_support_enabled' ) && bp_is_profile_document_support_enabled() ) {
 			// Setup the logged in user variables.
 			$document_link = trailingslashit( bp_loggedin_user_domain() . bp_get_document_slug() );
 
 			$item_documents = array(
 				'ID'       => 'documents',
-				'title'    => __( 'Documents', 'buddyboss' ),
+				'title'    => __( 'Documents', 'buddyboss-platform' ),
 				'url'      => esc_url( $document_link ),
 				'count'    => '',
 				'children' => array(
 					array(
 						'ID'    => 'my-document',
-						'title' => __( 'My Documents', 'buddyboss' ),
+						'title' => __( 'My Documents', 'buddyboss-platform' ),
 						'url'   => esc_url( $document_link ),
 						'count' => '',
 					),
@@ -1313,19 +1313,19 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 			$invites_link = trailingslashit( bp_loggedin_user_domain() . bp_get_invites_slug() );
 			$item_invites = array(
 				'ID'       => 'invites',
-				'title'    => __( 'Email Invites', 'buddyboss' ),
+				'title'    => __( 'Email Invites', 'buddyboss-platform' ),
 				'url'      => esc_url( $invites_link ),
 				'count'    => '',
 				'children' => array(
 					array(
 						'ID'    => 'send-invites',
-						'title' => __( 'Send Invites', 'buddyboss' ),
+						'title' => __( 'Send Invites', 'buddyboss-platform' ),
 						'url'   => esc_url( $invites_link ),
 						'count' => '',
 					),
 					array(
 						'ID'    => 'sent-invites',
-						'title' => __( 'Sent Invites', 'buddyboss' ),
+						'title' => __( 'Sent Invites', 'buddyboss-platform' ),
 						'url'   => esc_url( trailingslashit( $invites_link . 'sent-invites' ) ),
 						'count' => '',
 					),
@@ -1336,7 +1336,7 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 
 		$items[] = array(
 			'ID'    => 'log-out',
-			'title' => __( 'Log Out', 'buddyboss' ),
+			'title' => __( 'Log Out', 'buddyboss-platform' ),
 			'url'   => esc_url( wp_logout_url() ),
 			'count' => '',
 		);
@@ -1436,7 +1436,7 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 		if ( empty( $user_id ) || ! is_numeric( $user_id ) ) {
 			return new WP_Error(
 				'bp_rest_member_id_required',
-				__( 'Sorry, a valid Member ID is required.', 'buddyboss' ),
+				__( 'Sorry, a valid Member ID is required.', 'buddyboss-platform' ),
 				array( 'status' => rest_authorization_required_code() )
 			);
 		}
@@ -1445,7 +1445,7 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 		if ( empty( $user ) ) {
 			return new WP_Error(
 				'bp_rest_member_not_found',
-				__( 'Sorry, the requested member does not exist.', 'buddyboss' ),
+				__( 'Sorry, the requested member does not exist.', 'buddyboss-platform' ),
 				array( 'status' => 404 )
 			);
 		}
@@ -1519,7 +1519,8 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 			'registered_date'    => bp_rest_prepare_date_response( $user->user_registered ),
 			'profile_name'       => bp_core_get_user_displayname( $user_id ),
 			'last_activity'      => function_exists( 'bp_get_last_activity' ) ? bp_get_last_activity( $user_id ) : '',
-			'followers'          => sprintf( _n( '%d follower', '%d followers', $followers_count, 'buddyboss' ), $followers_count ),
+			/* translators: %d: number of followers. */
+			'followers'          => sprintf( _n( '%d follower', '%d followers', $followers_count, 'buddyboss-platform' ), $followers_count ),
 			'avatar_urls'        => $avatar_urls,
 			'message_url'        => wp_specialchars_decode( $message_url ),
 			'can_send_message'   => $can_send_message,

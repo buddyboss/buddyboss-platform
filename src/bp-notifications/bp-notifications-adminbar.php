@@ -76,7 +76,7 @@ function bp_notifications_toolbar_menu() {
 				array(
 					'parent' => 'bp-notifications',
 					'id'     => 'notification-view-all',
-					'title'  => esc_html__( 'View Notifications', 'buddyboss' ),
+					'title'  => esc_html__( 'View Notifications', 'buddyboss-platform' ),
 					'href'   => $menu_link,
 				)
 			);
@@ -87,7 +87,7 @@ function bp_notifications_toolbar_menu() {
 			array(
 				'parent' => 'bp-notifications',
 				'id'     => 'no-notifications',
-				'title'  => __( 'No new notifications', 'buddyboss' ),
+				'title'  => __( 'No new notifications', 'buddyboss-platform' ),
 				'href'   => $menu_link,
 			)
 		);

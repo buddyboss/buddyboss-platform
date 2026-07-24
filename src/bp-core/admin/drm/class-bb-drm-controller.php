@@ -80,6 +80,14 @@ class BB_DRM_Controller {
 
 		// Site Health integration.
 		add_filter( 'site_status_tests', array( $this, 'add_site_health_tests' ) );
+
+		// NOTE: The Platform is a single free build distributed from wordpress.org for
+		// every site, paid or free (PROD-9826 "Model B"). Paid features live in the
+		// separate buddyboss-addons plugin, delivered from the Mothership by the vendor
+		// AddonsManager. The former BB_DRM_Update_Router — which suppressed the
+		// wordpress.org update check for licensed sites and installed a paid Platform
+		// build bundling the video/document components — was removed with those
+		// components; the Platform now always updates from wordpress.org.
 	}
 
 	/**
@@ -207,11 +215,11 @@ class BB_DRM_Controller {
 		check_ajax_referer( 'bb_dismiss_notice', 'nonce' );
 
 		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_send_json_error( __( 'You do not have permission to do this.', 'buddyboss' ) );
+			wp_send_json_error( __( 'You do not have permission to do this.', 'buddyboss-platform' ) );
 		}
 
 		if ( ! isset( $_POST['notice'] ) || ! is_string( $_POST['notice'] ) ) {
-			wp_send_json_error( __( 'Invalid notice key.', 'buddyboss' ) );
+			wp_send_json_error( __( 'Invalid notice key.', 'buddyboss-platform' ) );
 		}
 
 		$notice     = sanitize_key( $_POST['notice'] );
@@ -224,7 +232,7 @@ class BB_DRM_Controller {
 		$event_hash   = $secret_parts[1] ?? '';
 
 		if ( hash( 'sha256', $notice ) !== $notice_hash ) {
-			wp_send_json_error( __( 'Invalid security hash.', 'buddyboss' ) );
+			wp_send_json_error( __( 'Invalid security hash.', 'buddyboss-platform' ) );
 		}
 
 		// Find the event.
@@ -265,9 +273,9 @@ class BB_DRM_Controller {
 				$result = BB_DRM_Helper::dismiss_notice_for_user( $event, $notice_key );
 
 				if ( $result ) {
-					wp_send_json_success( array( 'message' => __( 'Notice dismissed for 24 hours.', 'buddyboss' ) ) );
+					wp_send_json_success( array( 'message' => __( 'Notice dismissed for 24 hours.', 'buddyboss-platform' ) ) );
 				} else {
-					wp_send_json_error( __( 'Failed to dismiss notice.', 'buddyboss' ) );
+					wp_send_json_error( __( 'Failed to dismiss notice.', 'buddyboss-platform' ) );
 				}
 			}
 
@@ -294,7 +302,7 @@ class BB_DRM_Controller {
 	 */
 	public function add_site_health_tests( $tests ) {
 		$tests['direct']['buddyboss_license_status'] = array(
-			'label' => __( 'BuddyBoss License Status', 'buddyboss' ),
+			'label' => __( 'BuddyBoss License Status', 'buddyboss-platform' ),
 			'test'  => array( $this, 'site_health_license_test' ),
 		);
 
@@ -312,15 +320,15 @@ class BB_DRM_Controller {
 		// Dev environment bypass.
 		if ( BB_DRM_Helper::is_dev_environment() ) {
 			return array(
-				'label'       => __( 'License check bypassed (development environment)', 'buddyboss' ),
+				'label'       => __( 'License check bypassed (development environment)', 'buddyboss-platform' ),
 				'status'      => 'good',
 				'badge'       => array(
-					'label' => __( 'BuddyBoss', 'buddyboss' ),
+					'label' => __( 'BuddyBoss', 'buddyboss-platform' ),
 					'color' => 'blue',
 				),
 				'description' => sprintf(
 					'<p>%s</p>',
-					__( 'License validation is automatically disabled on development environments.', 'buddyboss' )
+					__( 'License validation is automatically disabled on development environments.', 'buddyboss-platform' )
 				),
 				'actions'     => '',
 				'test'        => 'buddyboss_license_status',
@@ -330,15 +338,15 @@ class BB_DRM_Controller {
 		// Check if license is valid.
 		if ( BB_DRM_Helper::is_valid() ) {
 			return array(
-				'label'       => __( 'BuddyBoss license is active and valid', 'buddyboss' ),
+				'label'       => __( 'BuddyBoss license is active and valid', 'buddyboss-platform' ),
 				'status'      => 'good',
 				'badge'       => array(
-					'label' => __( 'BuddyBoss', 'buddyboss' ),
+					'label' => __( 'BuddyBoss', 'buddyboss-platform' ),
 					'color' => 'blue',
 				),
 				'description' => sprintf(
 					'<p>%s</p>',
-					__( 'Your BuddyBoss license is active and valid. You have full access to all features and updates.', 'buddyboss' )
+					__( 'Your BuddyBoss license is active and valid. You have full access to all features and updates.', 'buddyboss-platform' )
 				),
 				'actions'     => '',
 				'test'        => 'buddyboss_license_status',
@@ -347,21 +355,21 @@ class BB_DRM_Controller {
 
 		// No license found - Platform still works, just show recommendation.
 		return array(
-			'label'       => __( 'BuddyBoss license not activated', 'buddyboss' ),
+			'label'       => __( 'BuddyBoss license not activated', 'buddyboss-platform' ),
 			'status'      => 'recommended',
 			'badge'       => array(
-				'label' => __( 'BuddyBoss', 'buddyboss' ),
+				'label' => __( 'BuddyBoss', 'buddyboss-platform' ),
 				'color' => 'blue',
 			),
 			'description' => sprintf(
 				'<p>%s</p><p>%s</p>',
-				__( 'No license key has been activated for BuddyBoss Platform. While Platform features will continue to work, add-on plugins require license activation.', 'buddyboss' ),
-				__( 'Activate your license to manage add-on plugins and ensure access to updates and support.', 'buddyboss' )
+				__( 'No license key has been activated for BuddyBoss Platform. While Platform features will continue to work, add-on plugins require license activation.', 'buddyboss-platform' ),
+				__( 'Activate your license to manage add-on plugins and ensure access to updates and support.', 'buddyboss-platform' )
 			),
 			'actions'     => sprintf(
 				'<p><a href="%s" class="button button-primary">%s</a></p>',
 				admin_url( 'admin.php?page=buddyboss-settings' ),
-				__( 'Activate Your License', 'buddyboss' )
+				__( 'Activate Your License', 'buddyboss-platform' )
 			),
 			'test'        => 'buddyboss_license_status',
 		);

@@ -752,7 +752,7 @@ class BP_Messages_Message {
 			$message_data_objects_cached = bp_core_get_incremented_cache( $message_data_objects_sql, 'bp_messages' );
 
 			if ( false === $message_data_objects_cached ) {
-				$message_data_objects = $wpdb->get_results( $message_data_objects_sql ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
+				$message_data_objects = $wpdb->get_results( $message_data_objects_sql ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- internal table name; $message_ids_sql is an intval()-mapped ID list built above.
 				bp_core_set_incremented_cache( $message_data_objects_sql, 'bp_messages', $message_data_objects );
 			} else {
 				$message_data_objects = $message_data_objects_cached;

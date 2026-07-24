@@ -54,14 +54,14 @@ add_action( 'init', 'bp_profile_search_register_post_type' );
 function bp_profile_search_register_post_type() {
 	$args = array(
 		'labels'          => array(
-			'name'               => __( 'Profile Search Forms', 'buddyboss' ),
-			'singular_name'      => __( 'Profile Search Form', 'buddyboss' ),
-			'all_items'          => __( 'Profile Search', 'buddyboss' ),
-			'add_new'            => __( 'Add New', 'buddyboss' ),
-			'add_new_item'       => __( 'Add New Form', 'buddyboss' ),
-			'edit_item'          => __( 'Profile Search', 'buddyboss' ),
-			'not_found'          => __( 'No forms found', 'buddyboss' ),
-			'not_found_in_trash' => __( 'No forms found in trash', 'buddyboss' ),
+			'name'               => __( 'Profile Search Forms', 'buddyboss-platform' ),
+			'singular_name'      => __( 'Profile Search Form', 'buddyboss-platform' ),
+			'all_items'          => __( 'Profile Search', 'buddyboss-platform' ),
+			'add_new'            => __( 'Add New', 'buddyboss-platform' ),
+			'add_new_item'       => __( 'Add New Form', 'buddyboss-platform' ),
+			'edit_item'          => __( 'Profile Search', 'buddyboss-platform' ),
+			'not_found'          => __( 'No forms found', 'buddyboss-platform' ),
+			'not_found_in_trash' => __( 'No forms found in trash', 'buddyboss-platform' ),
 		),
 		'show_ui'         => false,
 		'show_in_menu'    => '',
@@ -156,7 +156,7 @@ function bp_profile_search_main_form() {
  */
 function bp_profile_search_add_main_form() {
 	$post_args = array(
-		'post_title'  => __( 'Filter Results', 'buddyboss' ),
+		'post_title'  => __( 'Filter Results', 'buddyboss-platform' ),
 		'post_type'   => 'bp_ps_form',
 		'post_status' => 'publish',
 	);

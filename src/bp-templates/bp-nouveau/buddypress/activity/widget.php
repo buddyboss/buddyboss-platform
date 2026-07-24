@@ -8,6 +8,9 @@
  * @version 1.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 if ( bp_has_activities( bp_nouveau_activity_widget_query() ) ) : ?>
 	<div class="activity-list item-list">
 		<?php

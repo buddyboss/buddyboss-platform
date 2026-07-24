@@ -16,8 +16,8 @@ defined( 'ABSPATH' ) || exit;
 ?>
 <script id="tmpl-bp-avatar-item" type="text/html">
 	<div class="bb-rl-avatar-panel-header">
-		<h3><?php esc_html_e( 'Crop photo', 'buddyboss' ); ?></h3>
-		<a class="bb-rl-modal-close-button avatar-crop-cancel" href="#" aria-label="<?php esc_attr_e( 'Close', 'buddyboss' ); ?>">
+		<h3><?php esc_html_e( 'Crop photo', 'buddyboss-platform' ); ?></h3>
+		<a class="bb-rl-modal-close-button avatar-crop-cancel" href="#" aria-label="<?php esc_attr_e( 'Close', 'buddyboss-platform' ); ?>">
 			<i class="bb-icons-rl-x"></i>
 		</a>
 	</div>
@@ -31,8 +31,8 @@ defined( 'ABSPATH' ) || exit;
 	</div>
 	<div class="avatar-crop-management">
 		<div id="avatar-crop-actions">
-			<button type="button" class="button avatar-crop-submit"><?php esc_html_e( 'Crop', 'buddyboss' ); ?></button>
-			<a class="avatar-crop-cancel" href="#"><?php esc_html_e( 'Cancel', 'buddyboss' ); ?></a>
+			<button type="button" class="button avatar-crop-submit"><?php esc_html_e( 'Crop', 'buddyboss-platform' ); ?></button>
+			<a class="avatar-crop-cancel" href="#"><?php esc_html_e( 'Cancel', 'buddyboss-platform' ); ?></a>
 		</div>
 	</div>
 </script>

@@ -742,7 +742,7 @@ function bb_members_enrich_cover_upload_help_text( $field_data, $field, $feature
 		if ( empty( $field_data['upload_config']['help_text'] ) ) {
 			$field_data['upload_config']['help_text'] = sprintf(
 				/* translators: 1: width in pixels, 2: height in pixels. */
-				__( 'Upload a default cover image (JPG or PNG, recommended size: %1$s×%2$s px).', 'buddyboss' ),
+				__( 'Upload a default cover image (JPG or PNG, recommended size: %1$s×%2$s px).', 'buddyboss-platform' ),
 				(int) $cover_dimensions['width'],
 				(int) $cover_dimensions['height']
 			);
@@ -809,7 +809,7 @@ function bb_members_enrich_avatar_upload_help_text( $field_data, $field, $featur
 	if ( ! empty( $field_data['upload_config'] ) && empty( $field_data['upload_config']['help_text'] ) ) {
 		$field_data['upload_config']['help_text'] = sprintf(
 			/* translators: 1: width in pixels, 2: height in pixels. */
-			__( 'Upload a default avatar image (JPG or PNG, recommended size: %1$s×%2$s px).', 'buddyboss' ),
+			__( 'Upload a default avatar image (JPG or PNG, recommended size: %1$s×%2$s px).', 'buddyboss-platform' ),
 			absint( bp_core_avatar_full_width() ),
 			absint( bp_core_avatar_full_height() )
 		);
@@ -846,7 +846,7 @@ function bb_members_enrich_profile_type_options( $field_data, $field, $feature_i
 
 	$type_options = array(
 		array(
-			'label' => __( 'Select', 'buddyboss' ),
+			'label' => __( 'Select', 'buddyboss-platform' ),
 			'value' => '',
 		),
 	);

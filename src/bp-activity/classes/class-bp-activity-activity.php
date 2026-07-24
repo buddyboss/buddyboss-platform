@@ -347,7 +347,7 @@ class BP_Activity_Activity {
 			$q = $wpdb->prepare( "INSERT INTO {$bp->activity->table_name} ( user_id, component, type, action, post_title, content, primary_link, date_recorded, date_updated, item_id, secondary_item_id, hide_sitewide, is_spam, privacy, status ) VALUES ( %d, %s, %s, %s, %s, %s, %s, %s, %s, %d, %d, %d, %d, %s, %s )", $this->user_id, $this->component, $this->type, $this->action, $this->post_title, $this->content, $this->primary_link, $this->date_recorded, $this->date_updated, $this->item_id, $this->secondary_item_id, $this->hide_sitewide, $this->is_spam, $this->privacy, $this->status );
 		}
 
-		if ( false === $wpdb->query( $q ) ) {
+		if ( false === $wpdb->query( $q ) ) { // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- $q is built with $wpdb->prepare() above (INSERT/UPDATE branches).
 			return false;
 		}
 
@@ -431,7 +431,8 @@ class BP_Activity_Activity {
 
 		// Backward compatibility with old method of passing arguments.
 		if ( ! is_array( $args ) || count( $function_args ) > 1 ) {
-			_deprecated_argument( __METHOD__, '1.6', sprintf( __( 'Arguments passed to %1$s should be in an associative array. See the inline documentation at %2$s for more details.', 'buddyboss' ), __METHOD__, __FILE__ ) );
+			/* translators: 1: method name, 2: file path. */
+			_deprecated_argument( __METHOD__, '1.6', sprintf( esc_html__( 'Arguments passed to %1$s should be in an associative array. See the inline documentation at %2$s for more details.', 'buddyboss-platform' ), __METHOD__, __FILE__ ) );
 
 			$old_args_keys = array(
 				0  => 'max',
@@ -823,7 +824,7 @@ class BP_Activity_Activity {
 				$cache_group = 'bp_activity_with_last_activity';
 			}
 
-			$activities = $wpdb->get_results( $activity_sql );
+			$activities = $wpdb->get_results( $activity_sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $activity_sql built from $bp table names, column whitelist, wp_parse_id_list()/esc_sql() lists and $wpdb->prepare()'d LIMIT/pinned fragments.
 
 			// Integer casting for legacy activity query.
 			foreach ( (array) $activities as $i => $ac ) {
@@ -868,7 +869,7 @@ class BP_Activity_Activity {
 
 			$cached = bp_core_get_incremented_cache( $activity_ids_sql, $cache_group );
 			if ( false === $cached ) {
-				$activity_ids = $wpdb->get_col( $activity_ids_sql );
+				$activity_ids = $wpdb->get_col( $activity_ids_sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $activity_ids_sql built from $bp table names, column whitelist, wp_parse_id_list()/esc_sql() lists and $wpdb->prepare()'d LIMIT fragment.
 				bp_core_set_incremented_cache( $activity_ids_sql, $cache_group, $activity_ids );
 			} else {
 				$activity_ids = $cached;
@@ -931,7 +932,7 @@ class BP_Activity_Activity {
 			$total_activities_sql = apply_filters( 'bp_activity_total_activities_sql', "SELECT count(DISTINCT a.id) FROM {$bp->activity->table_name} a {$join_sql} {$where_sql}", $where_sql, $sort );
 			$cached               = bp_core_get_incremented_cache( $total_activities_sql, $cache_group );
 			if ( false === $cached ) {
-				$total_activities = $wpdb->get_var( $total_activities_sql );
+				$total_activities = $wpdb->get_var( $total_activities_sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $total_activities_sql built from $bp table name and the same internally-sanitized $where_sql/$join_sql fragments.
 				bp_core_set_incremented_cache( $total_activities_sql, $cache_group, $total_activities );
 			} else {
 				$total_activities = $cached;
@@ -1794,9 +1795,9 @@ class BP_Activity_Activity {
 				 * @param int    $right       Right-most node boundary.
 				 * @param string $spam_sql    SQL Statement portion to differentiate between ham or spam.
 				 */
-				$sql = apply_filters( 'bp_activity_comments_user_join_filter', $wpdb->prepare( $sql, $top_level_parent_id, $left, $right ), $activity_id, $left, $right, $spam_sql );
+				$sql = apply_filters( 'bp_activity_comments_user_join_filter', $wpdb->prepare( $sql, $top_level_parent_id, $left, $right ), $activity_id, $left, $right, $spam_sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- $sql template uses %d placeholders, passed through $wpdb->prepare() here.
 
-				$descendants = $wpdb->get_results( $sql );
+				$descendants = $wpdb->get_results( $sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $sql is the $wpdb->prepare()'d statement assigned on the line above.
 
 				// We use the mptt BETWEEN clause to limit returned
 				// descendants to the correct part of the tree.
@@ -1896,7 +1897,7 @@ class BP_Activity_Activity {
 								a.id {$comparison_op} %d
 								OR (
 									a.id {$comparison_eq_op} %d
-									AND a.date_recorded {$comparison_op} '%s'
+									AND a.date_recorded {$comparison_op} %s
 								)
 							) ",
 							$args['last_comment_id'],
@@ -1930,7 +1931,7 @@ class BP_Activity_Activity {
 
 				$sql = "{$sql['select']} {$sql['from']} {$sql['where']} {$sql['misc']} {$sql['limit']}";
 
-				$descendant_ids = $wpdb->get_col( $sql );
+				$descendant_ids = $wpdb->get_col( $sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $sql built from $bp table name, hardcoded $spam_sql branch, intval()'d ID lists and integer node bounds ($activity_id/$top_level_parent_id/$left/$right) passed internally from the activity tree.
 				$descendants    = self::get_activity_data( $descendant_ids );
 				$descendants    = self::append_user_fullnames( $descendants );
 			}
@@ -2137,7 +2138,7 @@ class BP_Activity_Activity {
 
 		for ( $i = 0, $count = count( $activities ); $i < $count; ++$i ) {
 			$title                              = explode( '<span', $activities[ $i ]['content'] );
-			$activity_feed[ $i ]['title']       = trim( strip_tags( $title[0] ) );
+			$activity_feed[ $i ]['title']       = trim( wp_strip_all_tags( $title[0] ) );
 			$activity_feed[ $i ]['link']        = $activities[ $i ]['primary_link'];
 			$activity_feed[ $i ]['description'] = @sprintf( $activities[ $i ]['content'], '' );
 			$activity_feed[ $i ]['pubdate']     = $activities[ $i ]['date_recorded'];
@@ -2256,7 +2257,7 @@ class BP_Activity_Activity {
 		if ( ! empty( $filter_array['since'] ) ) {
 			// Validate that this is a proper Y-m-d H:i:s date.
 			// Trick: parse to UNIX date then translate back.
-			$translated_date = date( 'Y-m-d H:i:s', strtotime( $filter_array['since'] ) );
+			$translated_date = gmdate( 'Y-m-d H:i:s', strtotime( $filter_array['since'] ) );
 			if ( $translated_date === $filter_array['since'] ) {
 				if ( ! empty( $filter_array['since_date_column'] ) && 'date_updated' === $filter_array['since_date_column'] ) {
 					$filter_sql[] = "a.date_updated > '{$translated_date}'";
@@ -2496,7 +2497,7 @@ class BP_Activity_Activity {
 		$cache_group = 'bp_activity_comment_count_' . $comment_id;
 		$cached      = wp_cache_get( $cache_group, 'bp_activity_comments' );
 		if ( false === $cached ) {
-			$counts          = $wpdb->get_row( $total_comment_sql, ARRAY_A );
+			$counts          = $wpdb->get_row( $total_comment_sql, ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $total_comment_sql built from $bp table name and integer mptt bounds from the $activity object's own DB columns.
 			$all_child_count = isset( $counts['all_child_count'] ) ? intval( $counts['all_child_count'] ) : 0;
 			$top_level_count = isset( $counts['top_level_count'] ) ? intval( $counts['top_level_count'] ) : 0;
 

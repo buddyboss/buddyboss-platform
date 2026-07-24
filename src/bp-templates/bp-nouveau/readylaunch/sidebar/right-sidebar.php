@@ -109,7 +109,7 @@ if ( count( $available_widgets ) || ! empty( $static_sidebar_widget ) ) {
 					// Cover photo is excluded in ReadyLaunch as the functionality is removed
 					
 					$args['profile_hide_widget'] = true;
-					$args['title']               = esc_html__( 'Complete your profile', 'buddyboss' );
+					$args['title']               = esc_html__( 'Complete your profile', 'buddyboss-platform' );
 				} elseif ( 'BB_Core_Follow_My_Network_Widget' === $widget ) {
 					$widget::enqueue_scripts();
 				}

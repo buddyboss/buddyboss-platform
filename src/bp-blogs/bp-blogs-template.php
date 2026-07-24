@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
  * @since BuddyPress 1.5.0
  */
 function bp_blogs_slug() {
-	echo bp_get_blogs_slug();
+	echo esc_attr( bp_get_blogs_slug() );
 }
 	/**
 	 * Return the blogs component slug.
@@ -42,7 +42,7 @@ function bp_get_blogs_slug() {
  * @since BuddyPress 1.5.0
  */
 function bp_blogs_root_slug() {
-	echo bp_get_blogs_root_slug();
+	echo esc_attr( bp_get_blogs_root_slug() );
 }
 	/**
 	 * Return the blogs component root slug.
@@ -227,7 +227,7 @@ function bp_the_blog() {
  * @since BuddyPress 1.0.0
  */
 function bp_blogs_pagination_count() {
-	echo bp_get_blogs_pagination_count();
+	echo esc_html( bp_get_blogs_pagination_count() );
 }
 
 /**
@@ -247,7 +247,8 @@ function bp_get_blogs_pagination_count() {
 	$to_num    = bp_core_number_format( ( $start_num + ( $blogs_template->pag_num - 1 ) > $blogs_template->total_blog_count ) ? $blogs_template->total_blog_count : $start_num + ( $blogs_template->pag_num - 1 ) );
 	$total     = bp_core_number_format( $blogs_template->total_blog_count );
 
-	$message = sprintf( _n( 'Viewing 1 site', 'Viewing %1$s - %2$s of %3$s sites', $blogs_template->total_blog_count, 'buddyboss' ), $from_num, $to_num, $total );
+	/* translators: 1: low value in the range, 2: high value in the range, 3: total number of sites. */
+	$message = sprintf( _n( 'Viewing 1 site', 'Viewing %1$s - %2$s of %3$s sites', $blogs_template->total_blog_count, 'buddyboss-platform' ), $from_num, $to_num, $total ); // phpcs:ignore WordPress.WP.I18n.MissingSingularPlaceholder -- Singular keeps its literal form to preserve existing translations (msgid unchanged); upstream BuddyPress pagination string.
 
 	/**
 	 * Filters the "Viewing x-y of z blogs" pagination message.
@@ -266,7 +267,7 @@ function bp_get_blogs_pagination_count() {
  * Output the blogs pagination links.
  */
 function bp_blogs_pagination_links() {
-	echo bp_get_blogs_pagination_links();
+	echo wp_kses_post( bp_get_blogs_pagination_links() );
 }
 	/**
 	 * Return the blogs pagination links.
@@ -296,7 +297,7 @@ function bp_get_blogs_pagination_links() {
  * @param array|string $args See {@link bp_get_blog_avatar()}.
  */
 function bp_blog_avatar( $args = '' ) {
-	echo bp_get_blog_avatar( $args );
+	echo wp_kses_post( bp_get_blog_avatar( $args ) );
 }
 	/**
 	 * Get a blog's avatar.
@@ -360,7 +361,8 @@ function bp_get_blog_avatar( $args = '' ) {
 			'height'  => false,
 			'class'   => 'avatar',
 			'id'      => false,
-			'alt'     => sprintf( __( 'Profile photo of site author %s', 'buddyboss' ), esc_attr( $author_displayname ) ),
+			/* translators: %s: site author display name. */
+			'alt'     => sprintf( __( 'Profile photo of site author %s', 'buddyboss-platform' ), esc_attr( $author_displayname ) ),
 			'no_grav' => true,
 		)
 	);
@@ -417,7 +419,8 @@ function bp_get_blog_avatar( $args = '' ) {
 				esc_url( $site_icon ),
 				esc_attr( "{$r['class']} avatar-{$size}" ),
 				esc_attr( $size ),
-				sprintf( esc_attr__( 'Site icon for %s', 'buddyboss' ), bp_get_blog_name() )
+				/* translators: %s: site name. */
+				sprintf( esc_attr__( 'Site icon for %s', 'buddyboss-platform' ), bp_get_blog_name() )
 			);
 		}
 	}
@@ -463,7 +466,7 @@ function bp_get_blog_avatar( $args = '' ) {
 }
 
 function bp_blog_permalink() {
-	echo bp_get_blog_permalink();
+	echo esc_url( bp_get_blog_permalink() );
 }
 function bp_get_blog_permalink() {
 	global $blogs_template;
@@ -493,7 +496,7 @@ function bp_get_blog_permalink() {
  * Output the name of the current blog in the loop.
  */
 function bp_blog_name() {
-	echo bp_get_blog_name();
+	echo esc_html( bp_get_blog_name() );
 }
 	/**
 	 * Return the name of the current blog in the loop.
@@ -519,7 +522,7 @@ function bp_get_blog_name() {
  * @since BuddyPress 1.7.0
  */
 function bp_blog_id() {
-	echo bp_get_blog_id();
+	echo esc_attr( bp_get_blog_id() );
 }
 	/**
 	 * Return the ID of the current blog in the loop.
@@ -553,7 +556,7 @@ function bp_blog_description() {
 	 *
 	 * @param string $value Description of the current blog in the loop.
 	 */
-	echo apply_filters( 'bp_blog_description', bp_get_blog_description() );
+	echo esc_html( apply_filters( 'bp_blog_description', bp_get_blog_description() ) );
 }
 	/**
 	 * Return the description of the current blog in the loop.
@@ -581,7 +584,7 @@ function bp_get_blog_description() {
  * @param array $classes Array of custom classes.
  */
 function bp_blog_class( $classes = array() ) {
-	echo bp_get_blog_class( $classes );
+	echo bp_get_blog_class( $classes ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- bp_get_blog_class returns class="..." attribute markup; esc_attr would corrupt it.
 }
 	/**
 	 * Return the row class of the current blog in the loop.
@@ -626,7 +629,7 @@ function bp_get_blog_class( $classes = array() ) {
  * @param array $args See {@link bp_get_blog_last_active()}.
  */
 function bp_blog_last_active( $args = array() ) {
-	echo bp_get_blog_last_active( $args );
+	echo esc_html( bp_get_blog_last_active( $args ) );
 }
 	/**
 	 * Return the last active date of the current blog in the loop.
@@ -652,7 +655,8 @@ function bp_get_blog_last_active( $args = array() ) {
 
 	// Backwards compatibility for anyone forcing a 'true' active_format.
 	if ( true === $r['active_format'] ) {
-		$r['active_format'] = __( 'active %s', 'buddyboss' );
+		// translators: %s: human-readable time-since string (e.g. "2 hours ago").
+		$r['active_format'] = __( 'active %s', 'buddyboss-platform' );
 	}
 
 	// Blog has been posted to at least once.
@@ -665,7 +669,7 @@ function bp_get_blog_last_active( $args = array() ) {
 
 		// Blog has never been posted to.
 	} else {
-		$last_activity = __( 'Never active', 'buddyboss' );
+		$last_activity = __( 'Never active', 'buddyboss-platform' );
 	}
 
 	/**
@@ -685,7 +689,7 @@ function bp_get_blog_last_active( $args = array() ) {
  * @param array $args See {@link bp_get_blog_latest_post()}.
  */
 function bp_blog_latest_post( $args = array() ) {
-	echo bp_get_blog_latest_post( $args );
+	echo wp_kses_post( bp_get_blog_latest_post( $args ) );
 }
 	/**
 	 * Return the latest post from the current blog in the loop.
@@ -720,7 +724,8 @@ function bp_get_blog_latest_post( $args = array() ) {
 			 *
 			 * @param string $retval Title of the latest post.
 			 */
-			$retval = sprintf( __( 'Latest Post: %s', 'buddyboss' ), '<a href="' . $blogs_template->blog->latest_post->guid . '">' . apply_filters( 'the_title', $retval, $blogs_template->blog->latest_post->ID ) . '</a>' );
+			/* translators: %s: latest post link. */
+			$retval = sprintf( __( 'Latest Post: %s', 'buddyboss-platform' ), '<a href="' . $blogs_template->blog->latest_post->guid . '">' . apply_filters( 'the_title', $retval, $blogs_template->blog->latest_post->ID ) . '</a>' );
 		} else {
 
 			/** This filter is documented in bp-blogs/bp-blogs-template.php */
@@ -748,7 +753,7 @@ function bp_get_blog_latest_post( $args = array() ) {
  * @see bp_get_blog_latest_post_title()
  */
 function bp_blog_latest_post_title() {
-	echo bp_get_blog_latest_post_title();
+	echo esc_html( bp_get_blog_latest_post_title() );
 }
 	/**
 	 * Return the title of the latest post on the current blog in the loop.
@@ -822,7 +827,7 @@ function bp_get_blog_latest_post_permalink() {
  * @since BuddyPress 1.7.0
  */
 function bp_blog_latest_post_content() {
-	echo bp_get_blog_latest_post_content();
+	echo wp_kses_post( bp_get_blog_latest_post_content() );
 }
 	/**
 	 * Return the content of the latest post on the current blog in the loop.
@@ -862,7 +867,7 @@ function bp_get_blog_latest_post_content() {
  * @param string $size See {@link bp_get_blog_latest_post_featured_image()}.
  */
 function bp_blog_latest_post_featured_image( $size = 'thumbnail' ) {
-	echo bp_get_blog_latest_post_featured_image( $size );
+	echo esc_url( bp_get_blog_latest_post_featured_image( $size ) );
 }
 	/**
 	 * Return the featured image of the latest post on the current blog in the loop.
@@ -944,7 +949,7 @@ function bp_blog_hidden_fields() {
  * Output the total number of blogs on the site.
  */
 function bp_total_blog_count() {
-	echo bp_get_total_blog_count();
+	echo esc_html( bp_get_total_blog_count() );
 }
 	/**
 	 * Return the total number of blogs on the site.
@@ -970,7 +975,7 @@ function bp_get_total_blog_count() {
  * @param int $user_id ID of the user.
  */
 function bp_total_blog_count_for_user( $user_id = 0 ) {
-	echo bp_get_total_blog_count_for_user( $user_id );
+	echo esc_html( bp_get_total_blog_count_for_user( $user_id ) );
 }
 	/**
 	 * Return the total number of blogs for a given user.
@@ -1071,12 +1076,12 @@ function bp_show_blog_signup_form( $blogname = '', $blog_title = '', $errors = '
 		$errors           = $filtered_results['errors'];
 
 		if ( $errors->get_error_code() ) {
-			echo '<p>' . __( 'There was a problem; please correct the form below and try again.', 'buddyboss' ) . '</p>';
+			echo '<p>' . esc_html__( 'There was a problem; please correct the form below and try again.', 'buddyboss-platform' ) . '</p>';
 		}
 		?>
-		<p><?php printf( __( "By filling out the form below, you can <strong>add a site to your account</strong>. There is no limit to the number of sites that you can have, so create to your heart's content, but blog responsibly!", 'buddyboss' ), $current_user->data->display_name ); ?></p>
+		<p><?php echo wp_kses_post( sprintf( __( "By filling out the form below, you can <strong>add a site to your account</strong>. There is no limit to the number of sites that you can have, so create to your heart's content, but blog responsibly!", 'buddyboss-platform' ), $current_user->data->display_name ) ); ?></p>
 
-		<p><?php _e( "If you\'re not going to use a great domain, leave it for a new user. Now have at it!", 'buddyboss' ); ?></p>
+		<p><?php esc_html_e( "If you\'re not going to use a great domain, leave it for a new user. Now have at it!", 'buddyboss-platform' ); ?></p>
 
 		<form class="standard-form" id="setupform" method="post" action="">
 
@@ -1093,7 +1098,7 @@ function bp_show_blog_signup_form( $blogname = '', $blog_title = '', $errors = '
 
 			<?php bp_blogs_signup_blog( $blogname, $blog_title, $errors ); ?>
 			<p>
-				<input id="submit" type="submit" name="submit" class="submit" value="<?php esc_attr_e( 'Create Site', 'buddyboss' ); ?>" />
+				<input id="submit" type="submit" name="submit" class="submit" value="<?php esc_attr_e( 'Create Site', 'buddyboss-platform' ); ?>" />
 			</p>
 
 			<?php wp_nonce_field( 'bp_blog_signup_form' ); ?>
@@ -1115,45 +1120,45 @@ function bp_blogs_signup_blog( $blogname = '', $blog_title = '', $errors = '' ) 
 
 	// Blog name.
 	if ( ! is_subdomain_install() ) {
-		echo '<label for="blogname">' . __( 'Site Name:', 'buddyboss' ) . '</label>';
+		echo '<label for="blogname">' . esc_html__( 'Site Name:', 'buddyboss-platform' ) . '</label>';
 	} else {
-		echo '<label for="blogname">' . __( 'Site Domain:', 'buddyboss' ) . '</label>';
+		echo '<label for="blogname">' . esc_html__( 'Site Domain:', 'buddyboss-platform' ) . '</label>';
 	}
 
 	if ( $errmsg = $errors->get_error_message( 'blogname' ) ) {
 		?>
 
-		<p class="error"><?php echo $errmsg; ?></p>
+		<p class="error"><?php echo esc_html( $errmsg ); ?></p>
 
 		<?php
 	}
 
 	if ( ! is_subdomain_install() ) {
-		echo '<span class="prefix_address">' . $current_site->domain . $current_site->path . '</span> <input name="blogname" type="text" id="blogname" value="' . $blogname . '" maxlength="63" /><br />';
+		echo '<span class="prefix_address">' . esc_html( $current_site->domain . $current_site->path ) . '</span> <input name="blogname" type="text" id="blogname" value="' . esc_attr( $blogname ) . '" maxlength="63" /><br />';
 	} else {
-		echo '<input name="blogname" type="text" id="blogname" value="' . $blogname . '" maxlength="63" ' . bp_get_form_field_attributes( 'blogname' ) . '/> <span class="suffix_address">.' . bp_signup_get_subdomain_base() . '</span><br />';
+		echo '<input name="blogname" type="text" id="blogname" value="' . esc_attr( $blogname ) . '" maxlength="63" ' . bp_get_form_field_attributes( 'blogname' ) . '/> <span class="suffix_address">.' . esc_html( bp_signup_get_subdomain_base() ) . '</span><br />'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- bp_get_form_field_attributes() returns esc_attr'd attribute markup; other interpolations are escaped inline.
 	}
 
 	if ( ! is_user_logged_in() ) {
-		print '(<strong>' . __( 'Your address will be ', 'buddyboss' );
+		print '(<strong>' . esc_html__( 'Your address will be ', 'buddyboss-platform' );
 
 		if ( ! is_subdomain_install() ) {
-			print $current_site->domain . $current_site->path . __( 'blogname', 'buddyboss' );
+			print esc_html( $current_site->domain . $current_site->path ) . esc_html__( 'blogname', 'buddyboss-platform' );
 		} else {
-			print __( 'domain.', 'buddyboss' ) . $current_site->domain . $current_site->path;
+			print esc_html__( 'domain.', 'buddyboss-platform' ) . esc_html( $current_site->domain . $current_site->path );
 		}
 
-		echo '.</strong> ' . __( 'Must be at least 4 characters, letters and numbers only. It cannot be changed so choose carefully!)', 'buddyboss' ) . '</p>';
+		echo '.</strong> ' . esc_html__( 'Must be at least 4 characters, letters and numbers only. It cannot be changed so choose carefully!)', 'buddyboss-platform' ) . '</p>';
 	}
 
 	// Blog Title.
 	?>
 
-	<label for="blog_title"><?php _e( 'Site Title:', 'buddyboss' ); ?></label>
+	<label for="blog_title"><?php esc_html_e( 'Site Title:', 'buddyboss-platform' ); ?></label>
 
 	<?php if ( $errmsg = $errors->get_error_message( 'blog_title' ) ) { ?>
 
-		<p class="error"><?php echo $errmsg; ?></p>
+		<p class="error"><?php echo esc_html( $errmsg ); ?></p>
 
 		<?php
 	}
@@ -1161,7 +1166,7 @@ function bp_blogs_signup_blog( $blogname = '', $blog_title = '', $errors = '' ) 
 	?>
 
 	<fieldset class="create-site">
-		<legend class="label"><?php _e( 'Privacy: I would like my site to appear in search engines, and in public listings around this network', 'buddyboss' ); ?></legend>
+		<legend class="label"><?php esc_html_e( 'Privacy: I would like my site to appear in search engines, and in public listings around this network', 'buddyboss-platform' ); ?></legend>
 
 		<label class="checkbox" for="blog_public_on">
 			<input type="radio" id="blog_public_on" name="blog_public" value="1"
@@ -1169,7 +1174,7 @@ function bp_blogs_signup_blog( $blogname = '', $blog_title = '', $errors = '' ) 
 			if ( ! isset( $_POST['blog_public'] ) || '1' == $_POST['blog_public'] ) {
 				?>
 				checked="checked"<?php } ?> />
-			<strong><?php _e( 'Yes', 'buddyboss' ); ?></strong>
+			<strong><?php esc_html_e( 'Yes', 'buddyboss-platform' ); ?></strong>
 		</label>
 		<label class="checkbox" for="blog_public_off">
 			<input type="radio" id="blog_public_off" name="blog_public" value="0"
@@ -1177,7 +1182,7 @@ function bp_blogs_signup_blog( $blogname = '', $blog_title = '', $errors = '' ) 
 			if ( isset( $_POST['blog_public'] ) && '0' == $_POST['blog_public'] ) {
 				?>
 				checked="checked"<?php } ?> />
-			<strong><?php _e( 'No', 'buddyboss' ); ?></strong>
+			<strong><?php esc_html_e( 'No', 'buddyboss-platform' ); ?></strong>
 		</label>
 	</fieldset>
 
@@ -1291,20 +1296,23 @@ function bp_blogs_confirm_blog_signup( $domain, $path, $blog_title, $user_name, 
 	restore_current_blog();
 
 	?>
-	<p><?php _e( 'Congratulations! You have successfully registered a new site.', 'buddyboss' ); ?></p>
+	<p><?php esc_html_e( 'Congratulations! You have successfully registered a new site.', 'buddyboss-platform' ); ?></p>
 	<p>
 		<?php
-		printf(
-			'%s %s',
+		echo wp_kses_post(
 			sprintf(
-				__( '%s is your new site.', 'buddyboss' ),
-				sprintf( '<a href="%s">%s</a>', esc_url( $blog_url ), esc_url( $blog_url ) )
-			),
-			sprintf(
-				/* translators: 1: Login URL, 2: User name */
-				__( '<a href="%1$s">Log in</a> as "%2$s" using your existing password.', 'buddyboss' ),
-				esc_url( $login_url ),
-				esc_html( $user_name )
+				'%s %s',
+				sprintf(
+					// translators: %s: the URL of the newly registered site.
+					esc_html__( '%s is your new site.', 'buddyboss-platform' ),
+					sprintf( '<a href="%s">%s</a>', esc_url( $blog_url ), esc_url( $blog_url ) )
+				),
+				sprintf(
+					/* translators: 1: Login URL, 2: User name */
+					__( '<a href="%1$s">Log in</a> as "%2$s" using your existing password.', 'buddyboss-platform' ),
+					esc_url( $login_url ),
+					esc_html( $user_name )
+				)
 			)
 		);
 		?>
@@ -1340,7 +1348,7 @@ function bp_create_blog_link() {
 	 *
 	 * @param string $value HTML link for creating a site.
 	 */
-	echo apply_filters( 'bp_create_blog_link', '<a href="' . trailingslashit( bp_get_blogs_directory_permalink() . 'create' ) . '">' . __( 'Create a Site', 'buddyboss' ) . '</a>' );
+	echo wp_kses_post( apply_filters( 'bp_create_blog_link', '<a href="' . esc_url( trailingslashit( bp_get_blogs_directory_permalink() . 'create' ) ) . '">' . esc_html__( 'Create a Site', 'buddyboss-platform' ) . '</a>' ) );
 }
 
 /**
@@ -1361,17 +1369,17 @@ function bp_blogs_blog_tabs() {
 		<?php
 		if ( bp_is_current_action( 'my-blogs' ) || ! bp_current_action() ) :
 			?>
-			 class="current"<?php endif; ?>><a href="<?php echo trailingslashit( bp_displayed_user_domain() . bp_get_blogs_slug() . '/my-blogs' ); ?>"><?php printf( __( "%s's Sites", 'buddyboss' ), bp_get_displayed_user_fullname() ); ?></a></li>
+			 class="current"<?php endif; ?>><a href="<?php echo esc_url( trailingslashit( bp_displayed_user_domain() . bp_get_blogs_slug() . '/my-blogs' ) ); ?>"><?php /* translators: %s: member display name. */ printf( esc_html__( "%s's Sites", 'buddyboss-platform' ), esc_html( bp_get_displayed_user_fullname() ) ); ?></a></li>
 		<li
 		<?php
 		if ( bp_is_current_action( 'recent-posts' ) ) :
 			?>
-			 class="current"<?php endif; ?>><a href="<?php echo trailingslashit( bp_displayed_user_domain() . bp_get_blogs_slug() . '/recent-posts' ); ?>"><?php printf( __( "%s's Recent Posts", 'buddyboss' ), bp_get_displayed_user_fullname() ); ?></a></li>
+			 class="current"<?php endif; ?>><a href="<?php echo esc_url( trailingslashit( bp_displayed_user_domain() . bp_get_blogs_slug() . '/recent-posts' ) ); ?>"><?php /* translators: %s: member display name. */ printf( esc_html__( "%s's Recent Posts", 'buddyboss-platform' ), esc_html( bp_get_displayed_user_fullname() ) ); ?></a></li>
 		<li
 		<?php
 		if ( bp_is_current_action( 'recent-comments' ) ) :
 			?>
-			 class="current"<?php endif; ?>><a href="<?php echo trailingslashit( bp_displayed_user_domain() . bp_get_blogs_slug() . '/recent-comments' ); ?>"><?php printf( __( "%s's Recent Comments", 'buddyboss' ), bp_get_displayed_user_fullname() ); ?></a></li>
+			 class="current"<?php endif; ?>><a href="<?php echo esc_url( trailingslashit( bp_displayed_user_domain() . bp_get_blogs_slug() . '/recent-comments' ) ); ?>"><?php /* translators: %s: member display name. */ printf( esc_html__( "%s's Recent Comments", 'buddyboss-platform' ), esc_html( bp_get_displayed_user_fullname() ) ); ?></a></li>
 	</ul>
 
 	<?php
@@ -1399,7 +1407,7 @@ function bp_directory_blogs_search_form() {
 
 	$search_form_html = '<form action="" method="get" id="search-blogs-form">
 		<label for="blogs_search"><input type="text" name="' . esc_attr( $query_arg ) . '" id="blogs_search" placeholder="' . esc_attr( $search_value ) . '" /></label>
-		<input type="submit" id="blogs_search_submit" name="blogs_search_submit" value="' . __( 'Search', 'buddyboss' ) . '" />
+		<input type="submit" id="blogs_search_submit" name="blogs_search_submit" value="' . __( 'Search', 'buddyboss-platform' ) . '" />
 	</form>';
 
 	/**
@@ -1409,7 +1417,7 @@ function bp_directory_blogs_search_form() {
 	 *
 	 * @param string $search_form_html HTML markup for blog directory search form.
 	 */
-	echo apply_filters( 'bp_directory_blogs_search_form', $search_form_html );
+	echo apply_filters( 'bp_directory_blogs_search_form', $search_form_html ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $search_form_html is a <form> built with esc_attr'd values; wp_kses_post would strip form/input tags.
 }
 
 /**
@@ -1418,7 +1426,7 @@ function bp_directory_blogs_search_form() {
  * @since BuddyPress 2.0.0
  */
 function bp_blog_create_button() {
-	echo bp_get_blog_create_button();
+	echo wp_kses_post( bp_get_blog_create_button() );
 }
 	/**
 	 * Get the Create a Site button.
@@ -1439,7 +1447,7 @@ function bp_get_blog_create_button() {
 	$button_args = array(
 		'id'         => 'create_blog',
 		'component'  => 'blogs',
-		'link_text'  => __( 'Create a Site', 'buddyboss' ),
+		'link_text'  => __( 'Create a Site', 'buddyboss-platform' ),
 		'link_class' => 'blog-create no-ajax',
 		'link_href'  => trailingslashit( bp_get_blogs_directory_permalink() . 'create' ),
 		'wrapper'    => false,
@@ -1462,7 +1470,7 @@ function bp_get_blog_create_button() {
  * @since BuddyPress 2.2.0
  */
 function bp_blog_create_nav_item() {
-	echo bp_get_blog_create_nav_item();
+	echo wp_kses_post( bp_get_blog_create_nav_item() );
 }
 
 	/**
@@ -1519,7 +1527,7 @@ add_action( 'bp_blogs_directory_blog_types', 'bp_blog_backcompat_create_nav_item
  * @param array|string $args See {@link bp_get_blogs_visit_blog_button()}.
  */
 function bp_blogs_visit_blog_button( $args = '' ) {
-	echo bp_get_blogs_visit_blog_button( $args );
+	echo wp_kses_post( bp_get_blogs_visit_blog_button( $args ) );
 }
 	/**
 	 * Return button for visiting a blog in a loop.
@@ -1550,7 +1558,7 @@ function bp_get_blogs_visit_blog_button( $args = '' ) {
 		'wrapper_class'     => 'blog-button visit',
 		'link_href'         => bp_get_blog_permalink(),
 		'link_class'        => 'blog-button visit',
-		'link_text'         => __( 'Visit Site', 'buddyboss' ),
+		'link_text'         => __( 'Visit Site', 'buddyboss-platform' ),
 	);
 
 	$button = bp_parse_args( $args, $defaults );
@@ -1575,7 +1583,7 @@ function bp_get_blogs_visit_blog_button( $args = '' ) {
  * @param array|string $args Before|after|user_id.
  */
 function bp_blogs_profile_stats( $args = '' ) {
-	echo bp_blogs_get_profile_stats( $args );
+	echo wp_kses_post( bp_blogs_get_profile_stats( $args ) );
 }
 add_action( 'bp_members_admin_user_stats', 'bp_blogs_profile_stats', 9, 1 );
 
@@ -1614,7 +1622,8 @@ function bp_blogs_get_profile_stats( $args = '' ) {
 			}
 
 			// If blogs exist, show some formatted output.
-			$r['output'] = $r['before'] . sprintf( _n( '%s site', '%s sites', $r['blogs'], 'buddyboss' ), '<strong>' . $r['blogs'] . '</strong>' ) . $r['after'];
+			/* translators: %s: number of sites. */
+			$r['output'] = $r['before'] . sprintf( _n( '%s site', '%s sites', $r['blogs'], 'buddyboss-platform' ), '<strong>' . $r['blogs'] . '</strong>' ) . $r['after'];
 		}
 	}
 

@@ -26,11 +26,11 @@ global $post;
 					<?php
 					if ( ! empty( $forum_cover_photo ) ) {
 						?>
-						<img src="<?php echo esc_url( $forum_cover_photo ); ?>" alt="<?php the_title_attribute( array( 'post' => $post->ID ) ); ?>" class="banner-img wp-post-image" alt="<?php esc_attr_e( 'Forum cover image', 'buddyboss' ); ?>"/>
+						<img src="<?php echo esc_url( $forum_cover_photo ); ?>" alt="<?php the_title_attribute( array( 'post' => $post->ID ) ); ?>" class="banner-img wp-post-image" alt="<?php esc_attr_e( 'Forum cover image', 'buddyboss-platform' ); ?>"/>
 						<?php
 					} else {
 						?>
-						<img src="<?php echo esc_url( buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/images/group_cover_image.jpeg' ); ?>" alt="<?php esc_attr_e( 'Forum placeholder image', 'buddyboss' ); ?>">
+						<img src="<?php echo esc_url( buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/images/group_cover_image.jpeg' ); ?>" alt="<?php esc_attr_e( 'Forum placeholder image', 'buddyboss-platform' ); ?>">
 						<?php
 					}
 					?>
@@ -45,7 +45,7 @@ global $post;
 						// get forum visibility/privacy status.
 						$forum_visibility   = bbp_get_forum_visibility( $forum_id );
 						$forum_visibilities = bbp_get_forum_visibilities( $forum_id );
-						$privacy_label      = isset( $forum_visibilities[ $forum_visibility ] ) ? $forum_visibilities[ $forum_visibility ] : __( 'Public', 'buddyboss' );
+						$privacy_label      = isset( $forum_visibilities[ $forum_visibility ] ) ? $forum_visibilities[ $forum_visibility ] : __( 'Public', 'buddyboss-platform' );
 					?>
 						<div class="bb-rl-forum-meta-item">
 						<?php echo esc_html( $privacy_label ); ?>
@@ -55,7 +55,7 @@ global $post;
 							?>
 							<div class="bb-rl-forum-meta-item <?php echo 0 === $discussion_count ? 'bb-rl-forum-meta-item-inactive' : ''; ?>">
 								<span class="bb-rl-forum-topic-count-value"><?php echo esc_html( $discussion_count ); ?></span>
-								<span class="bb-rl-forum-topic-count-label"><?php echo esc_html( _n( 'Discussion', 'Discussions', $discussion_count, 'buddyboss' ) ); ?></span>
+								<span class="bb-rl-forum-topic-count-label"><?php echo esc_html( _n( 'Discussion', 'Discussions', $discussion_count, 'buddyboss-platform' ) ); ?></span>
 							</div>
 							<?php
 						}
@@ -71,7 +71,7 @@ global $post;
 					</div>
 					<div class="bb-rl-forum-actions">
 						<?php if ( bbp_is_single_forum() && ! bbp_is_forum_category() && ( bbp_current_user_can_access_create_topic_form() || bbp_current_user_can_access_anonymous_user_form() ) ) { ?>
-							<a href="#new-post" class="bb-rl-button bb-rl-button--brandFill bb-rl-button--small bb-rl-new-discussion-btn" data-modal-id="bb-rl-topic-form"><i class="bb-icons-rl-plus"></i> <?php esc_html_e( 'New discussion', 'buddyboss' ); ?></a>
+							<a href="#new-post" class="bb-rl-button bb-rl-button--brandFill bb-rl-button--small bb-rl-new-discussion-btn" data-modal-id="bb-rl-topic-form"><i class="bb-icons-rl-plus"></i> <?php esc_html_e( 'New discussion', 'buddyboss-platform' ); ?></a>
 							<?php
 							// Remove subscription link if forum assigned to the group.
 							if ( ! function_exists( 'bb_is_forum_group_forum' ) || ! bb_is_forum_group_forum( bbp_get_forum_id() ) ) {
@@ -93,7 +93,7 @@ global $post;
 				<div class="bb-rl-group-forum-header">
 					<div class="bb-rl-forum-actions">
 						<?php if ( bbp_is_single_forum() && ! bbp_is_forum_category() && ( bbp_current_user_can_access_create_topic_form() || bbp_current_user_can_access_anonymous_user_form() ) ) { ?>
-							<a href="#new-post" class="bb-rl-button bb-rl-button--brandFill bb-rl-button--small bb-rl-new-discussion-btn" data-modal-id="bb-rl-topic-form"><i class="bb-icons-rl-plus"></i> <?php esc_html_e( 'New discussion', 'buddyboss' ); ?></a>
+							<a href="#new-post" class="bb-rl-button bb-rl-button--brandFill bb-rl-button--small bb-rl-new-discussion-btn" data-modal-id="bb-rl-topic-form"><i class="bb-icons-rl-plus"></i> <?php esc_html_e( 'New discussion', 'buddyboss-platform' ); ?></a>
 							<?php
 							// Remove subscription link if forum assigned to the group.
 							if ( ! function_exists( 'bb_is_forum_group_forum' ) || ! bb_is_forum_group_forum( bbp_get_forum_id() ) ) {
@@ -118,9 +118,9 @@ global $post;
 								<?php
 								if ( 0 < (int) $discussion_count ) {
 									/* translators: %d: number of discussions */
-									echo esc_html( sprintf( _n( 'Discussion (%d)', 'Discussions (%d)', $discussion_count, 'buddyboss' ), $discussion_count ) );
+									echo esc_html( sprintf( _n( 'Discussion (%d)', 'Discussions (%d)', $discussion_count, 'buddyboss-platform' ), $discussion_count ) );
 								} else {
-									echo esc_html__( 'Discussions', 'buddyboss' );
+									echo esc_html__( 'Discussions', 'buddyboss-platform' );
 								}
 								?>
 							</a>
@@ -132,7 +132,7 @@ global $post;
 								<a href="#" id="private-message">
 									<?php
 									/* translators: %d: number of subforums */
-									echo esc_html( sprintf( _n( 'Sub Forum (%d)', 'Sub Forums (%d)', $subforum_count, 'buddyboss' ), $subforum_count ) );
+									echo esc_html( sprintf( _n( 'Sub Forum (%d)', 'Sub Forums (%d)', $subforum_count, 'buddyboss-platform' ), $subforum_count ) );
 									?>
 								</a>
 							</li>

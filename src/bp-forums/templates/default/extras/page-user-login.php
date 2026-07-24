@@ -6,6 +6,9 @@
  * @package BuddyBoss\Theme
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 // No logged in users
 bbp_logged_in_redirect();
 

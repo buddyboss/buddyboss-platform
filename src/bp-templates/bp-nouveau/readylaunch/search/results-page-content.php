@@ -20,7 +20,7 @@ $no_results_class = ! BP_Search::instance()->has_search_results() ? 'bp-search-n
 
 <div class="bp-search-page buddypress-wrap bp-dir-hori-nav">
 
-	<div class="bp-search-results-wrapper dir-form <?php echo $no_results_class; ?>">
+	<div class="bp-search-results-wrapper dir-form <?php echo esc_attr( $no_results_class ); ?>">
 
 		<div id="bb-rl-search-modal" class="bb-rl-search-modal" style="display: none;">
 			<transition name="modal">

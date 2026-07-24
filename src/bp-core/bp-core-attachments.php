@@ -459,7 +459,7 @@ function bp_attachments_create_item_type( $type = 'avatar', $args = array() ) {
 
 	// Remove copied file if it fails.
 	if ( ! $created ) {
-		@unlink( $image_file_path );
+		@wp_delete_file( $image_file_path );
 	}
 
 	// Return the response.
@@ -713,7 +713,7 @@ function bp_attachments_delete_file( $args = array() ) {
 		return false;
 	}
 
-	@unlink( $attachment_path );
+	@wp_delete_file( $attachment_path );
 	return true;
 }
 
@@ -787,31 +787,36 @@ function bp_attachments_get_plupload_l10n() {
 	return apply_filters(
 		'bp_attachments_get_plupload_l10n',
 		array(
-			'queue_limit_exceeded'      => __( 'You have attempted to queue too many files.', 'buddyboss' ),
-			'file_exceeds_size_limit'   => __( '%1$s exceeds the maximum upload size of %2$s for this site.', 'buddyboss' ),
-			'zero_byte_file'            => __( 'This file is empty. Please try another.', 'buddyboss' ),
-			'invalid_filetype'          => __( 'This file type is not allowed. Please try another.', 'buddyboss' ),
-			'not_an_image'              => __( 'This file is not an image. Please try another.', 'buddyboss' ),
-			'image_memory_exceeded'     => __( 'Memory exceeded. Please try another smaller file.', 'buddyboss' ),
-			'image_dimensions_exceeded' => __( 'This is larger than the maximum size. Please try another.', 'buddyboss' ),
-			'default_error'             => __( 'An error occurred. Please try again later.', 'buddyboss' ),
-			'missing_upload_url'        => __( 'There was a configuration error. Please contact the server administrator.', 'buddyboss' ),
-			'upload_limit_exceeded'     => __( 'You may only upload 1 file.', 'buddyboss' ),
-			'http_error'                => __( 'HTTP error.', 'buddyboss' ),
-			'upload_failed'             => __( 'Upload failed.', 'buddyboss' ),
-			'big_upload_failed'         => __( 'Please try uploading this file with the %1$sbrowser uploader%2$s.', 'buddyboss' ),
-			'big_upload_queued'         => __( '%s exceeds the maximum upload size for the multi-file uploader when used in your browser.', 'buddyboss' ),
-			'io_error'                  => __( 'IO error.', 'buddyboss' ),
-			'security_error'            => __( 'Security error.', 'buddyboss' ),
-			'file_cancelled'            => __( 'File canceled.', 'buddyboss' ),
-			'upload_stopped'            => __( 'Upload stopped.', 'buddyboss' ),
-			'dismiss'                   => __( 'Dismiss', 'buddyboss' ),
-			'crunching'                 => __( 'Crunching&hellip;', 'buddyboss' ),
-			'unique_file_warning'       => __( 'Make sure to upload a unique file', 'buddyboss' ),
-			'error_uploading'           => __( '"%s" has failed to upload.', 'buddyboss' ),
-			'has_avatar_warning'        => __( 'If you\'d like to delete the existing profile photo but not upload a new one, please use the delete tab.', 'buddyboss' ),
+			'queue_limit_exceeded'      => __( 'You have attempted to queue too many files.', 'buddyboss-platform' ),
+			/* translators: 1: file name, 2: maximum upload size. */
+			'file_exceeds_size_limit'   => __( '%1$s exceeds the maximum upload size of %2$s for this site.', 'buddyboss-platform' ),
+			'zero_byte_file'            => __( 'This file is empty. Please try another.', 'buddyboss-platform' ),
+			'invalid_filetype'          => __( 'This file type is not allowed. Please try another.', 'buddyboss-platform' ),
+			'not_an_image'              => __( 'This file is not an image. Please try another.', 'buddyboss-platform' ),
+			'image_memory_exceeded'     => __( 'Memory exceeded. Please try another smaller file.', 'buddyboss-platform' ),
+			'image_dimensions_exceeded' => __( 'This is larger than the maximum size. Please try another.', 'buddyboss-platform' ),
+			'default_error'             => __( 'An error occurred. Please try again later.', 'buddyboss-platform' ),
+			'missing_upload_url'        => __( 'There was a configuration error. Please contact the server administrator.', 'buddyboss-platform' ),
+			'upload_limit_exceeded'     => __( 'You may only upload 1 file.', 'buddyboss-platform' ),
+			'http_error'                => __( 'HTTP error.', 'buddyboss-platform' ),
+			'upload_failed'             => __( 'Upload failed.', 'buddyboss-platform' ),
+			/* translators: 1: opening anchor tag, 2: closing anchor tag. */
+			'big_upload_failed'         => __( 'Please try uploading this file with the %1$sbrowser uploader%2$s.', 'buddyboss-platform' ),
+			/* translators: %s: file name. */
+			'big_upload_queued'         => __( '%s exceeds the maximum upload size for the multi-file uploader when used in your browser.', 'buddyboss-platform' ),
+			'io_error'                  => __( 'IO error.', 'buddyboss-platform' ),
+			'security_error'            => __( 'Security error.', 'buddyboss-platform' ),
+			'file_cancelled'            => __( 'File canceled.', 'buddyboss-platform' ),
+			'upload_stopped'            => __( 'Upload stopped.', 'buddyboss-platform' ),
+			'dismiss'                   => __( 'Dismiss', 'buddyboss-platform' ),
+			'crunching'                 => __( 'Crunching&hellip;', 'buddyboss-platform' ),
+			'unique_file_warning'       => __( 'Make sure to upload a unique file', 'buddyboss-platform' ),
+			/* translators: %s: file name. */
+			'error_uploading'           => __( '"%s" has failed to upload.', 'buddyboss-platform' ),
+			'has_avatar_warning'        => __( 'If you\'d like to delete the existing profile photo but not upload a new one, please use the delete tab.', 'buddyboss-platform' ),
 			'avatar_size_warning'       => sprintf(
-				__( 'For best results, upload an image that is %1$spx by %2$spx or larger.', 'buddyboss' ),
+				/* translators: 1: recommended width in pixels, 2: recommended height in pixels. */
+				__( 'For best results, upload an image that is %1$spx by %2$spx or larger.', 'buddyboss-platform' ),
 				bp_core_avatar_full_height(),
 				bp_core_avatar_full_width()
 			),
@@ -926,14 +931,14 @@ function bp_attachments_enqueue_scripts( $class = '' ) {
 		$avatar_nav = array(
 			'upload' => array(
 				'id'      => 'upload',
-				'caption' => __( 'Upload', 'buddyboss' ),
+				'caption' => __( 'Upload', 'buddyboss-platform' ),
 				'order'   => 0,
 			),
 
 			// The delete view will only show if the object has an avatar.
 			'delete' => array(
 				'id'      => 'delete',
-				'caption' => __( 'Delete', 'buddyboss' ),
+				'caption' => __( 'Delete', 'buddyboss-platform' ),
 				'order'   => 100,
 				'hide'    => (int) ! $has_avatar,
 			),
@@ -943,20 +948,20 @@ function bp_attachments_enqueue_scripts( $class = '' ) {
 		if ( bp_avatar_use_webcam() && 'user' === $object ) {
 			$avatar_nav['camera'] = array(
 				'id'      => 'camera',
-				'caption' => __( 'Take Photo', 'buddyboss' ),
+				'caption' => __( 'Take Photo', 'buddyboss-platform' ),
 				'order'   => 10,
 			);
 
 			// Set warning messages.
 			$strings['camera_warnings'] = array(
-				'requesting' => __( 'Please allow application access to your camera.', 'buddyboss' ),
-				'loading'    => __( 'Please wait while your camera connects.', 'buddyboss' ),
-				'loaded'     => __( 'Camera loaded. Click "Capture" to take a photo.', 'buddyboss' ),
-				'noaccess'   => __( 'Webcam not found or permission was denied. Please upload a photo.', 'buddyboss' ),
-				'errormsg'   => __( 'Your browser is not supported. Please upload a photo instead.', 'buddyboss' ),
-				'videoerror' => __( 'Video error. Please upload a photo instead.', 'buddyboss' ),
-				'ready'      => __( 'Your profile photo is ready. Click "Save" to use this photo.', 'buddyboss' ),
-				'nocapture'  => __( 'No photo captured. Click "Capture" to take your photo.', 'buddyboss' ),
+				'requesting' => __( 'Please allow application access to your camera.', 'buddyboss-platform' ),
+				'loading'    => __( 'Please wait while your camera connects.', 'buddyboss-platform' ),
+				'loaded'     => __( 'Camera loaded. Click "Capture" to take a photo.', 'buddyboss-platform' ),
+				'noaccess'   => __( 'Webcam not found or permission was denied. Please upload a photo.', 'buddyboss-platform' ),
+				'errormsg'   => __( 'Your browser is not supported. Please upload a photo instead.', 'buddyboss-platform' ),
+				'videoerror' => __( 'Video error. Please upload a photo instead.', 'buddyboss-platform' ),
+				'ready'      => __( 'Your profile photo is ready. Click "Save" to use this photo.', 'buddyboss-platform' ),
+				'nocapture'  => __( 'No photo captured. Click "Capture" to take your photo.', 'buddyboss-platform' ),
 			);
 		}
 
@@ -1005,7 +1010,8 @@ function bp_attachments_enqueue_scripts( $class = '' ) {
 			'bp_attachments_cover_image_ui_warnings',
 			array(
 				'dimensions' => sprintf(
-					__( 'For best results, upload an image that is %1$spx by %2$spx or larger.', 'buddyboss' ),
+					/* translators: 1: recommended width in pixels, 2: recommended height in pixels. */
+					__( 'For best results, upload an image that is %1$spx by %2$spx or larger.', 'buddyboss-platform' ),
 					(int) $cover_dimensions['width'],
 					(int) $cover_dimensions['height']
 				),
@@ -1416,7 +1422,7 @@ function bp_attachments_cover_image_generate_file( $args = array(), $cover_image
 	// Image is too small in width and height.
 	if ( empty( $cover_image ) ) {
 		$cover_file = $cover_image_class->generate_filename( $args['file'] );
-		@rename( $args['file'], $cover_file );
+		@rename( $args['file'], $cover_file ); // phpcs:ignore WordPress.WP.AlternativeFunctions.rename_rename -- direct filesystem move of a freshly-generated local cover image; WP_Filesystem offers no equivalent atomic rename.
 
 		// It's too small!
 		$is_too_small = true;
@@ -1441,7 +1447,7 @@ function bp_attachments_cover_image_generate_file( $args = array(), $cover_image
 		while ( false !== ( $attachment_file = readdir( $att_dir ) ) ) {
 			// Skip directories and the new cover photo.
 			if ( 2 < strlen( $attachment_file ) && 0 !== strpos( $attachment_file, '.' ) && $cover_basename !== $attachment_file ) {
-				@unlink( $args['cover_image_dir'] . '/' . $attachment_file );
+				@wp_delete_file( $args['cover_image_dir'] . '/' . $attachment_file );
 			}
 		}
 	}
@@ -1579,12 +1585,13 @@ function bp_attachments_cover_image_ajax_upload() {
 			$is_html4,
 			array(
 				'type'    => 'upload_error',
-				'message' => sprintf( __( 'Upload Error: %s', 'buddyboss' ), $uploaded['error'] ),
+				/* translators: %s: the upload error message. */
+				'message' => sprintf( __( 'Upload Error: %s', 'buddyboss-platform' ), $uploaded['error'] ),
 			)
 		);
 	}
 
-	$error_message = __( 'There was a problem uploading the cover photo.', 'buddyboss' );
+	$error_message = __( 'There was a problem uploading the cover photo.', 'buddyboss-platform' );
 
 	$bp_attachments_uploads_dir = bp_attachments_cover_image_upload_dir();
 
@@ -1664,7 +1671,8 @@ function bp_attachments_cover_image_ajax_upload() {
 
 		$error_code = 'upload_error';
 		if ( ! bb_is_gd_or_imagick_library_enabled() ) {
-			$error_message = sprintf( esc_html__( 'Upload Error: %s', 'buddyboss' ), esc_html__( 'Missing image editor! Enable GD or Imagick library.', 'buddyboss' ) );
+			/* translators: %s: the image editor error message. */
+			$error_message = sprintf( esc_html__( 'Upload Error: %s', 'buddyboss-platform' ), esc_html__( 'Missing image editor! Enable GD or Imagick library.', 'buddyboss-platform' ) );
 			$error_code    = 'image_no_editor';
 		}
 

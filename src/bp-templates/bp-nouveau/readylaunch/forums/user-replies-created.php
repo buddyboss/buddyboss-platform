@@ -27,7 +27,7 @@ defined( 'ABSPATH' ) || exit;
 
 				<aside class="bp-feedback bp-messages info">
 					<span class="bp-icon" aria-hidden="true"></span>
-					<p><?php bbp_is_user_home() ? esc_html_e( 'You have not replied to any discussions.', 'buddyboss' ) : esc_html_e( 'This user has not replied to any topics.', 'buddyboss' ); ?></p>
+					<p><?php bbp_is_user_home() ? esc_html_e( 'You have not replied to any discussions.', 'buddyboss-platform' ) : esc_html_e( 'This user has not replied to any topics.', 'buddyboss-platform' ); ?></p>
 				</aside>
 
 			<?php endif; ?>

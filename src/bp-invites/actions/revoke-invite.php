@@ -43,17 +43,28 @@ function bp_member_revoke_invite() {
 	}
 
 	if ( empty( $_POST ) ) {
-		bp_core_add_message( __( 'You didn\'t include any email addresses!', 'buddyboss' ), 'error' );
+		bp_core_add_message( __( 'You didn\'t include any email addresses!', 'buddyboss-platform' ), 'error' );
 		bp_core_redirect( $bp->loggedin_user->domain . '/invites/sent-invites' );
 		die();
 	}
 
 	$post_id = filter_input( INPUT_POST, 'item_id', FILTER_VALIDATE_INT );
-	if ( isset( $post_id ) && '' !== $post_id ) {
-		wp_delete_post( $post_id, true );
+	if ( ! empty( $post_id ) ) {
+		$invite = get_post( $post_id );
+
+		// Object-level authorization: only delete a post that is actually an
+		// invite AND owned by the current (logged-in, own-profile) user. Without
+		// this an authenticated member could force-delete ANY post by id.
+		if (
+			$invite instanceof WP_Post
+			&& bp_get_invite_post_type() === $invite->post_type
+			&& bp_loggedin_user_id() === (int) $invite->post_author
+		) {
+			wp_delete_post( $post_id, true );
+		}
 	}
 
-	bp_core_add_message( __( 'You didn\'t include any email addresses!', 'buddyboss' ), 'error' );
+	bp_core_add_message( __( 'You didn\'t include any email addresses!', 'buddyboss-platform' ), 'error' );
 	bp_core_redirect( bp_displayed_user_domain() . 'invites/' );
 
 }

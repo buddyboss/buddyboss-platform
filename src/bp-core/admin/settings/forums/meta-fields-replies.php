@@ -30,7 +30,7 @@ function bb_replies_register_core_meta_fields( $registry, $component ) {
 		$component,
 		'content',
 		array(
-			'label'             => __( 'Description', 'buddyboss' ),
+			'label'             => __( 'Description', 'buddyboss-platform' ),
 			'type'              => 'richtext',
 			'tab'               => 'details',
 			'order'             => 10,
@@ -71,10 +71,10 @@ function bb_replies_register_core_meta_fields( $registry, $component ) {
 		$component,
 		'forum_id',
 		array(
-			'label'             => __( 'Forum', 'buddyboss' ),
+			'label'             => __( 'Forum', 'buddyboss-platform' ),
 			'type'              => 'async_select',
 			'async_action'      => 'bb_admin_forum_autocomplete',
-			'placeholder'       => __( 'Select Forum', 'buddyboss' ),
+			'placeholder'       => __( 'Select Forum', 'buddyboss-platform' ),
 			'tab'               => 'details',
 			'order'             => 20,
 			'save_phase'        => 'after',
@@ -95,10 +95,10 @@ function bb_replies_register_core_meta_fields( $registry, $component ) {
 		$component,
 		'topic_id',
 		array(
-			'label'             => __( 'Discussion', 'buddyboss' ),
+			'label'             => __( 'Discussion', 'buddyboss-platform' ),
 			'type'              => 'async_select',
 			'async_action'      => 'bb_admin_discussion_autocomplete',
-			'placeholder'       => __( 'Select Discussion', 'buddyboss' ),
+			'placeholder'       => __( 'Select Discussion', 'buddyboss-platform' ),
 			'tab'               => 'details',
 			'order'             => 30,
 			'save_phase'        => 'after',
@@ -120,10 +120,10 @@ function bb_replies_register_core_meta_fields( $registry, $component ) {
 		$component,
 		'reply_to',
 		array(
-			'label'             => __( 'Reply to', 'buddyboss' ),
+			'label'             => __( 'Reply to', 'buddyboss-platform' ),
 			'type'              => 'async_select',
 			'async_action'      => 'bb_admin_reply_autocomplete',
-			'placeholder'       => __( 'Select Reply', 'buddyboss' ),
+			'placeholder'       => __( 'Select Reply', 'buddyboss-platform' ),
 			'tab'               => 'details',
 			'order'             => 40,
 			'save_phase'        => 'after',
@@ -145,7 +145,7 @@ function bb_replies_register_core_meta_fields( $registry, $component ) {
 		$component,
 		'visibility',
 		array(
-			'label'             => __( 'Visibility', 'buddyboss' ),
+			'label'             => __( 'Visibility', 'buddyboss-platform' ),
 			'type'              => 'select',
 			'tab'               => 'details',
 			'order'             => 45,
@@ -166,15 +166,15 @@ function bb_replies_register_core_meta_fields( $registry, $component ) {
 				return array(
 					array(
 						'value' => 'publish',
-						'label' => __( 'Public', 'buddyboss' ),
+						'label' => __( 'Public', 'buddyboss-platform' ),
 					),
 					array(
 						'value' => 'private',
-						'label' => __( 'Private', 'buddyboss' ),
+						'label' => __( 'Private', 'buddyboss-platform' ),
 					),
 					array(
 						'value' => 'password',
-						'label' => __( 'Password Protected', 'buddyboss' ),
+						'label' => __( 'Password Protected', 'buddyboss-platform' ),
 					),
 				);
 			},
@@ -197,7 +197,7 @@ function bb_replies_register_core_meta_fields( $registry, $component ) {
 		$component,
 		'post_password',
 		array(
-			'label'             => __( 'Password', 'buddyboss' ),
+			'label'             => __( 'Password', 'buddyboss-platform' ),
 			'type'              => 'text',
 			'tab'               => 'details',
 			'order'             => 46,
@@ -224,7 +224,7 @@ function bb_replies_register_core_meta_fields( $registry, $component ) {
 		$component,
 		'reply_status',
 		array(
-			'label'             => __( 'Status', 'buddyboss' ),
+			'label'             => __( 'Status', 'buddyboss-platform' ),
 			'type'              => 'select',
 			'tab'               => 'details',
 			'order'             => 47,
@@ -239,15 +239,15 @@ function bb_replies_register_core_meta_fields( $registry, $component ) {
 				return array(
 					array(
 						'value' => 'publish',
-						'label' => __( 'Published', 'buddyboss' ),
+						'label' => __( 'Published', 'buddyboss-platform' ),
 					),
 					array(
 						'value' => 'pending',
-						'label' => __( 'Pending Review', 'buddyboss' ),
+						'label' => __( 'Pending Review', 'buddyboss-platform' ),
 					),
 					array(
 						'value' => 'draft',
-						'label' => __( 'Draft', 'buddyboss' ),
+						'label' => __( 'Draft', 'buddyboss-platform' ),
 					),
 				);
 			},
@@ -262,7 +262,7 @@ function bb_replies_register_core_meta_fields( $registry, $component ) {
 		$component,
 		'publish_mode',
 		array(
-			'label'             => __( 'Publish', 'buddyboss' ),
+			'label'             => __( 'Publish', 'buddyboss-platform' ),
 			'type'              => 'select',
 			'tab'               => 'details',
 			'order'             => 50,
@@ -279,11 +279,11 @@ function bb_replies_register_core_meta_fields( $registry, $component ) {
 				return array(
 					array(
 						'value' => 'immediately',
-						'label' => __( 'Immediately', 'buddyboss' ),
+						'label' => __( 'Immediately', 'buddyboss-platform' ),
 					),
 					array(
 						'value' => 'schedule',
-						'label' => __( 'Schedule', 'buddyboss' ),
+						'label' => __( 'Schedule', 'buddyboss-platform' ),
 					),
 				);
 			},
@@ -298,7 +298,7 @@ function bb_replies_register_core_meta_fields( $registry, $component ) {
 		$component,
 		'schedule_date',
 		array(
-			'label'             => __( 'Date', 'buddyboss' ),
+			'label'             => __( 'Date', 'buddyboss-platform' ),
 			'type'              => 'date',
 			'tab'               => 'details',
 			'order'             => 51,
@@ -325,7 +325,7 @@ function bb_replies_register_core_meta_fields( $registry, $component ) {
 		$component,
 		'schedule_time',
 		array(
-			'label'             => __( 'Time', 'buddyboss' ),
+			'label'             => __( 'Time', 'buddyboss-platform' ),
 			'type'              => 'time',
 			'tab'               => 'details',
 			'order'             => 52,
@@ -352,7 +352,7 @@ function bb_replies_register_core_meta_fields( $registry, $component ) {
 		$component,
 		'author_id',
 		array(
-			'label'             => __( 'Author ID', 'buddyboss' ),
+			'label'             => __( 'Author ID', 'buddyboss-platform' ),
 			'type'              => 'number',
 			'tab'               => 'details',
 			'order'             => 60,
@@ -407,7 +407,7 @@ function bb_replies_register_core_meta_fields( $registry, $component ) {
 		$component,
 		'author_ip',
 		array(
-			'label'      => __( 'Author IP', 'buddyboss' ),
+			'label'      => __( 'Author IP', 'buddyboss-platform' ),
 			'type'       => 'text',
 			'tab'        => 'details',
 			'order'      => 65,

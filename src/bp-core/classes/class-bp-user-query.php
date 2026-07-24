@@ -500,7 +500,7 @@ class BP_User_Query {
 				$meta_sql .= $wpdb->prepare( ' AND meta_value = %s', $meta_value );
 			}
 
-			$found_user_ids = $wpdb->get_col( $meta_sql );
+			$found_user_ids = $wpdb->get_col( $meta_sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- $meta_sql is built entirely via $wpdb->prepare() (meta_key/meta_value as %s).
 
 			if ( ! empty( $found_user_ids ) ) {
 				$sql['where'][] = "u.{$this->uid_name} IN (" . implode( ',', wp_parse_id_list( $found_user_ids ) ) . ')';
@@ -599,12 +599,12 @@ class BP_User_Query {
 			 * @param string        $value SQL statement to select FOUND_ROWS().
 			 * @param BP_User_Query $this  Current BP_User_Query instance.
 			 */
-			$this->total_users = $wpdb->get_var( apply_filters( 'bp_found_user_query', 'SELECT FOUND_ROWS()', $this ) );
+			$this->total_users = $wpdb->get_var( apply_filters( 'bp_found_user_query', 'SELECT FOUND_ROWS()', $this ) ); // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.PreparedSQL.NotPrepared -- Hardcoded 'SELECT FOUND_ROWS()' constant; no interpolated values.
 		} elseif ( 'count_query' == $this->query_vars['count_total'] ) {
 			$count_select = preg_replace( '/^SELECT.*?FROM (\S+) u/', "SELECT COUNT(u.{$this->uid_name}) FROM $1 u", $this->uid_clauses['select'] );
 
 			/** This filter is documented in bp-core/classes/class-bp-user-query.php */
-			$this->total_users = $wpdb->get_var( apply_filters( 'bp_found_user_query', "{$count_select} {$this->uid_clauses['where']}", $this ) );
+			$this->total_users = $wpdb->get_var( apply_filters( 'bp_found_user_query', "{$count_select} {$this->uid_clauses['where']}", $this ) ); // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.PreparedSQL.NotPrepared -- $count_select and uid_clauses['where'] are internally-built query clauses (no raw user input).
 		}
 	}
 

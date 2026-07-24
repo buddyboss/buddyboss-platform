@@ -214,7 +214,7 @@ class BP_Invites_Component extends BP_Component {
 				return;
 			}
 
-			$nav_name     = __( 'Email Invites', 'buddyboss' );
+			$nav_name     = __( 'Email Invites', 'buddyboss-platform' );
 			$slug         = bp_get_invites_slug();
 			$access       = bp_core_can_edit_settings();
 			$invites_link = trailingslashit( $user_domain . $slug );
@@ -234,7 +234,7 @@ class BP_Invites_Component extends BP_Component {
 
 				// Add the Invite by Email nav item.
 				$sub_nav[] = array(
-					'name'            => __( 'Send Invites', 'buddyboss' ),
+					'name'            => __( 'Send Invites', 'buddyboss-platform' ),
 					'slug'            => 'send-invites',
 					'parent_url'      => $invites_link,
 					'parent_slug'     => $slug,
@@ -246,7 +246,7 @@ class BP_Invites_Component extends BP_Component {
 
 				// Add the Sent Invites nav item.
 				$sub_nav[] = array(
-					'name'            => __( 'Sent Invites', 'buddyboss' ),
+					'name'            => __( 'Sent Invites', 'buddyboss-platform' ),
 					'slug'            => 'sent-invites',
 					'parent_url'      => $invites_link,
 					'parent_slug'     => $slug,
@@ -281,7 +281,7 @@ class BP_Invites_Component extends BP_Component {
 				// Setup the logged in user variables.
 				$invites_link = trailingslashit( bp_loggedin_user_domain() . bp_get_invites_slug() );
 
-				$title = __( 'Email Invites', 'buddyboss' );
+				$title = __( 'Email Invites', 'buddyboss-platform' );
 
 				// Add the "My Account" sub menus.
 				$wp_admin_nav[] = array(
@@ -295,7 +295,7 @@ class BP_Invites_Component extends BP_Component {
 				$wp_admin_nav[] = array(
 					'parent'   => 'my-account-' . $this->id,
 					'id'       => 'my-account-' . $this->id . '-invites',
-					'title'    => __( 'Send Invites', 'buddyboss' ),
+					'title'    => __( 'Send Invites', 'buddyboss-platform' ),
 					'href'     => $invites_link,
 					'position' => 10,
 				);
@@ -304,7 +304,7 @@ class BP_Invites_Component extends BP_Component {
 				$wp_admin_nav[] = array(
 					'parent'   => 'my-account-' . $this->id,
 					'id'       => 'my-account-' . $this->id . '-sent',
-					'title'    => __( 'Sent Invites', 'buddyboss' ),
+					'title'    => __( 'Sent Invites', 'buddyboss-platform' ),
 					'href'     => $invites_link . 'sent-invites',
 					'position' => 20,
 				);
@@ -337,7 +337,7 @@ class BP_Invites_Component extends BP_Component {
 			apply_filters(
 				'bp_invite_post_type',
 				array(
-					'description'        => __( 'BuddyBoss Invites', 'buddyboss' ),
+					'description'        => __( 'BuddyBoss Invites', 'buddyboss-platform' ),
 					'labels'             => bp_get_invite_post_type_labels(),
 					'public'             => false,
 					'publicly_queryable' => bp_current_user_can( 'bp_moderate' ),

@@ -54,7 +54,7 @@ export function FieldSetModal( { fieldSet, onClose, onSave, onDelete, setToast }
 	 */
 	function handleSave() {
 		if ( ! name.trim() ) {
-			setToast( { status: 'error', message: __( 'Field set name is required.', 'buddyboss' ) } );
+			setToast( { status: 'error', message: __( 'Field set name is required.', 'buddyboss-platform' ) } );
 			return;
 		}
 
@@ -79,25 +79,25 @@ export function FieldSetModal( { fieldSet, onClose, onSave, onDelete, setToast }
 				if ( response.success ) {
 					setToast( {
 						status: 'success',
-						message: response.data.message || __( 'Field set saved.', 'buddyboss' ),
+						message: response.data.message || __( 'Field set saved.', 'buddyboss-platform' ),
 					} );
 					onSave();
 				} else {
 					setToast( {
 						status: 'error',
-						message: ( response.data && response.data.message ) || __( 'Failed to save field set.', 'buddyboss' ),
+						message: ( response.data && response.data.message ) || __( 'Failed to save field set.', 'buddyboss-platform' ),
 					} );
 				}
 			} )
 			.catch( function ( error ) {
 				setIsSaving( false );
-				setToast( { status: 'error', message: error.message || __( 'Failed to save field set.', 'buddyboss' ) } );
+				setToast( { status: 'error', message: error.message || __( 'Failed to save field set.', 'buddyboss-platform' ) } );
 			} );
 	}
 
 	return (
 		<Modal
-			title={ isEditing ? __( 'Edit Field Set', 'buddyboss' ) : __( 'Add New Field Set', 'buddyboss' ) }
+			title={ isEditing ? __( 'Edit Field Set', 'buddyboss-platform' ) : __( 'Add New Field Set', 'buddyboss-platform' ) }
 			onRequestClose={ onClose }
 			className="bb-pf-fieldset-modal bb-admin-settings-modal"
 			shouldCloseOnClickOutside={ false }
@@ -105,22 +105,22 @@ export function FieldSetModal( { fieldSet, onClose, onSave, onDelete, setToast }
 			<div className="bb-admin-settings-modal__body">
 				<div className={(! isEditing || fieldSet.can_delete) ? 'bb-admin-settings-modal__row--separator' : ''}>
 					<TextControl
-						label={ __( 'Name', 'buddyboss' ) }
+						label={ __( 'Name', 'buddyboss-platform' ) }
 						value={ name }
 						onChange={ setName }
-						placeholder={ __( 'Enter field set name', 'buddyboss' ) }
+						placeholder={ __( 'Enter field set name', 'buddyboss-platform' ) }
 						required
 					/>
 				</div>
 				{ /* Repeater toggle: not available for base group (can_delete=false). */ }
 				{ ( ! isEditing || fieldSet.can_delete ) && (
 					<RadioControl
-						label={ __( 'Repeater Set', 'buddyboss' ) }
-						help={ __( 'Allow the profile fields within this set to be repeated again and again, so the user can add multiple instances of their data.', 'buddyboss' ) }
+						label={ __( 'Repeater Set', 'buddyboss-platform' ) }
+						help={ __( 'Allow the profile fields within this set to be repeated again and again, so the user can add multiple instances of their data.', 'buddyboss-platform' ) }
 						selected={ isRepeater }
 						options={ [
-							{ label: __( 'Enabled', 'buddyboss' ), value: 'on' },
-							{ label: __( 'Disabled', 'buddyboss' ), value: 'off' },
+							{ label: __( 'Enabled', 'buddyboss-platform' ), value: 'on' },
+							{ label: __( 'Disabled', 'buddyboss-platform' ), value: 'off' },
 						] }
 						onChange={ setIsRepeater }
 					/>
@@ -138,7 +138,7 @@ export function FieldSetModal( { fieldSet, onClose, onSave, onDelete, setToast }
 							onDelete();
 						} }
 					>
-						{ __( 'Delete Field Set', 'buddyboss' ) }
+						{ __( 'Delete Field Set', 'buddyboss-platform' ) }
 					</Button>
 				) }
 
@@ -148,7 +148,7 @@ export function FieldSetModal( { fieldSet, onClose, onSave, onDelete, setToast }
 						onClick={ onClose }
 						disabled={ isSaving }
 					>
-						{ __( 'Cancel', 'buddyboss' ) }
+						{ __( 'Cancel', 'buddyboss-platform' ) }
 					</Button>
 					<Button
 						variant="primary"
@@ -156,7 +156,7 @@ export function FieldSetModal( { fieldSet, onClose, onSave, onDelete, setToast }
 						isBusy={ isSaving }
 						disabled={ isSaving || ! name.trim() }
 					>
-						{ __( 'Save', 'buddyboss' ) }
+						{ __( 'Save', 'buddyboss-platform' ) }
 					</Button>
 				</div>
 			</div>

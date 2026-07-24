@@ -154,7 +154,7 @@ export function BBAdminHeader( {
 		}
 	}, [] );
 
-	const placeholder = searchPlaceholder || __( 'Search for settings…', 'buddyboss' );
+	const placeholder = searchPlaceholder || __( 'Search for settings…', 'buddyboss-platform' );
 
 	return (
 		<header className="bb-admin-header">
@@ -163,7 +163,7 @@ export function BBAdminHeader( {
 					<div className="bb-admin-header__logo">
 						<img
 							src={ logoUrl || '' }
-							alt={ __( 'BuddyBoss', 'buddyboss' ) }
+							alt={ __( 'BuddyBoss', 'buddyboss-platform' ) }
 							className="bb-admin-header__logo-img"
 						/>
 					</div>
@@ -213,7 +213,7 @@ export function BBAdminHeader( {
 							{ showSearchResults && 0 === searchResults.length && ! isSearching && searchQuery.length >= 2 && (
 								<div className="bb-admin-header__search-results">
 									<div className="bb-admin-header__search-result bb-admin-header__search-result--no-results">
-										{ __( 'No settings found', 'buddyboss' ) }
+										{ __( 'No settings found', 'buddyboss-platform' ) }
 									</div>
 								</div>
 							) }
@@ -223,11 +223,11 @@ export function BBAdminHeader( {
 								{ showSearchResults && searchResults.length > 0 &&
 									sprintf(
 										/* translators: %d: number of search results. */
-										_n( '%d result found. Use Tab to navigate.', '%d results found. Use Tab to navigate.', searchResults.length, 'buddyboss' ),
+										_n( '%d result found. Use Tab to navigate.', '%d results found. Use Tab to navigate.', searchResults.length, 'buddyboss-platform' ),
 										searchResults.length
 									) }
 								{ showSearchResults && 0 === searchResults.length && ! isSearching && searchQuery.length >= 2 &&
-									__( 'No settings found.', 'buddyboss' ) }
+									__( 'No settings found.', 'buddyboss-platform' ) }
 							</span>
 						</div>
 					) : (
@@ -240,13 +240,13 @@ export function BBAdminHeader( {
 						ref={ ipnSlotRef }
 						className="bb-admin-header__ipn-slot"
 						role="region"
-						aria-label={ __( 'Notifications', 'buddyboss' ) }
+						aria-label={ __( 'Notifications', 'buddyboss-platform' ) }
 					/>
 					{ onHelp && (
 						<button
 							type="button"
 							className="bb-admin-header__icon-button"
-							aria-label={ __( 'Documentation', 'buddyboss' ) }
+							aria-label={ __( 'Documentation', 'buddyboss-platform' ) }
 							onClick={ onHelp }
 						>
 							<i className="bb-icons-rl-graduation-cap" aria-hidden="true"></i>

@@ -32,7 +32,7 @@ function bp_moderation_add_admin_menu() {
 		: admin_url( 'admin.php?page=bb-settings&tab=moderation&panel=flagged_members' );
 
 	$submenu['buddyboss-platform'][] = array(
-		esc_html__( 'Moderation', 'buddyboss' ),
+		esc_html__( 'Moderation', 'buddyboss-platform' ),
 		'bp_moderate',
 		$settings_url,
 	);

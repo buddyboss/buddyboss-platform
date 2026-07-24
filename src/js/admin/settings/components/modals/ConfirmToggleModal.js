@@ -9,11 +9,11 @@
  *   bb_register_feature_field( 'feature', 'panel', 'section', array(
  *       'name'            => 'my-setting',
  *       'type'            => 'toggle',
- *       'confirm_message' => __( 'Warning message here.', 'buddyboss' ),
+ *       'confirm_message' => __( 'Warning message here.', 'buddyboss-platform' ),
  *       // Optional overrides:
- *       'confirm_title'   => __( 'Custom Title', 'buddyboss' ),
- *       'confirm_ok'      => __( 'Enable', 'buddyboss' ),
- *       'confirm_cancel'  => __( 'Go Back', 'buddyboss' ),
+ *       'confirm_title'   => __( 'Custom Title', 'buddyboss-platform' ),
+ *       'confirm_ok'      => __( 'Enable', 'buddyboss-platform' ),
+ *       'confirm_cancel'  => __( 'Go Back', 'buddyboss-platform' ),
  *       'confirm_destructive' => true,
  *   ) );
  *
@@ -78,7 +78,7 @@ export function ConfirmToggleModal( {
 
 	return (
 		<Modal
-			title={ title || __( 'Are you sure?', 'buddyboss' ) }
+			title={ title || __( 'Are you sure?', 'buddyboss-platform' ) }
 			onRequestClose={ onCancel }
 			className="bb-confirm-toggle-modal bb-admin-settings-modal"
 			shouldCloseOnClickOutside={ false }
@@ -105,14 +105,14 @@ export function ConfirmToggleModal( {
 					variant="secondary"
 					onClick={ onCancel }
 				>
-					{ cancelLabel || __( 'Cancel', 'buddyboss' ) }
+					{ cancelLabel || __( 'Cancel', 'buddyboss-platform' ) }
 				</Button>
 				<Button
 					variant="primary"
 					isDestructive={ !!isDestructive }
 					onClick={ onConfirm }
 				>
-					{ confirmLabel || __( 'OK', 'buddyboss' ) }
+					{ confirmLabel || __( 'OK', 'buddyboss-platform' ) }
 				</Button>
 			</div>
 		</Modal>

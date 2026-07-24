@@ -70,7 +70,7 @@ if ( bp_has_message_threads( bp_ajax_querystring( 'messages' ) . '&user_id=' . g
 							'type'       => 'full',
 							'avatar_dir' => 'group-avatars',
 							/* translators: %s: Group name */
-							'alt'        => sprintf( __( 'Group logo of %s', 'buddyboss' ), $group_name ),
+							'alt'        => sprintf( __( 'Group logo of %s', 'buddyboss-platform' ), $group_name ),
 							'title'      => $group_name,
 							'html'       => false,
 						)
@@ -147,7 +147,7 @@ if ( bp_has_message_threads( bp_ajax_querystring( 'messages' ) . '&user_id=' . g
 			}
 
 			$is_deleted_group = ( empty( $group_name ) ) ? 1 : 0;
-			$group_name       = ( empty( $group_name ) ) ? __( 'Deleted Group', 'buddyboss' ) : $group_name;
+			$group_name       = ( empty( $group_name ) ) ? __( 'Deleted Group', 'buddyboss-platform' ) : $group_name;
 
 		}
 
@@ -378,14 +378,14 @@ if ( bp_has_message_threads( bp_ajax_querystring( 'messages' ) . '&user_id=' . g
 									$recipient_name = bp_core_get_user_displayname( $recipient->user_id );
 
 									if ( empty( $recipient_name ) ) :
-										$recipient_name = esc_html__( 'Deleted User', 'buddyboss' );
+										$recipient_name = esc_html__( 'Deleted User', 'buddyboss-platform' );
 									endif;
 
 									if ( bp_is_active( 'moderation' ) ) {
 										if ( function_exists( 'bp_moderation_is_user_suspended' ) && bp_moderation_is_user_suspended( $recipient->user_id ) ) {
-											$recipient_name = function_exists( 'bb_moderation_is_suspended_label' ) ? bb_moderation_is_suspended_label( $recipient->user_id ) : esc_html__( 'Suspended Member', 'buddyboss' );
+											$recipient_name = function_exists( 'bb_moderation_is_suspended_label' ) ? bb_moderation_is_suspended_label( $recipient->user_id ) : esc_html__( 'Suspended Member', 'buddyboss-platform' );
 										} elseif ( function_exists( 'bp_moderation_is_user_blocked' ) && bp_moderation_is_user_blocked( $recipient->user_id ) ) {
-											$recipient_name = function_exists( 'bb_moderation_has_blocked_label' ) ? bb_moderation_has_blocked_label( $recipient_name, $recipient->user_id ) : esc_html__( 'Blocked Member', 'buddyboss' );
+											$recipient_name = function_exists( 'bb_moderation_has_blocked_label' ) ? bb_moderation_has_blocked_label( $recipient_name, $recipient->user_id ) : esc_html__( 'Blocked Member', 'buddyboss-platform' );
 										}
 									}
 
@@ -398,7 +398,7 @@ if ( bp_has_message_threads( bp_ajax_querystring( 'messages' ) . '&user_id=' . g
 							endforeach;
 
 							if ( ! empty( $recipients ) && count( $recipients ) > 5 ) {
-								$recipient_names[] = esc_html__( 'others', 'buddyboss' );
+								$recipient_names[] = esc_html__( 'others', 'buddyboss-platform' );
 							}
 							echo esc_html( ! empty( $recipient_names ) ? implode( ', ', $recipient_names ) : '' );
 							?>
@@ -429,10 +429,10 @@ if ( bp_has_message_threads( bp_ajax_querystring( 'messages' ) . '&user_id=' . g
 
 								if ( count( $media_ids ) < 2 ) :
 									$send_media = true;
-									$exerpt     = esc_html__( 'Sent a photo', 'buddyboss' );
+									$exerpt     = esc_html__( 'Sent a photo', 'buddyboss-platform' );
 								else :
 									$send_media = true;
-									$exerpt     = esc_html__( 'Sent some photos', 'buddyboss' );
+									$exerpt     = esc_html__( 'Sent some photos', 'buddyboss-platform' );
 								endif;
 							endif;
 						endif;
@@ -445,10 +445,10 @@ if ( bp_has_message_threads( bp_ajax_querystring( 'messages' ) . '&user_id=' . g
 
 								if ( count( $video_ids ) < 2 ) :
 									$send_media = true;
-									$exerpt     = esc_html__( 'Sent a video', 'buddyboss' );
+									$exerpt     = esc_html__( 'Sent a video', 'buddyboss-platform' );
 								else :
 									$send_media = true;
-									$exerpt     = esc_html__( 'Sent some videos', 'buddyboss' );
+									$exerpt     = esc_html__( 'Sent some videos', 'buddyboss-platform' );
 								endif;
 							endif;
 						endif;
@@ -461,10 +461,10 @@ if ( bp_has_message_threads( bp_ajax_querystring( 'messages' ) . '&user_id=' . g
 
 								if ( count( $document_ids ) < 2 ) :
 									$send_media = true;
-									$exerpt     = esc_html__( 'Sent a document', 'buddyboss' );
+									$exerpt     = esc_html__( 'Sent a document', 'buddyboss-platform' );
 								else :
 									$send_media = true;
-									$exerpt     = esc_html__( 'Sent some documents', 'buddyboss' );
+									$exerpt     = esc_html__( 'Sent some documents', 'buddyboss-platform' );
 								endif;
 							endif;
 						endif;
@@ -474,7 +474,7 @@ if ( bp_has_message_threads( bp_ajax_querystring( 'messages' ) . '&user_id=' . g
 
 							if ( ! empty( $gif_data ) ) :
 								$send_media = true;
-								$exerpt     = esc_html__( 'Sent a gif', 'buddyboss' );
+								$exerpt     = esc_html__( 'Sent a gif', 'buddyboss-platform' );
 							endif;
 						endif;
 					endif;
@@ -499,9 +499,9 @@ if ( bp_has_message_threads( bp_ajax_querystring( 'messages' ) . '&user_id=' . g
 						$last_sender = bp_core_get_user_displayname( $messages_template->thread->last_sender_id );
 						if ( bp_is_active( 'moderation' ) ) {
 							if ( $is_last_sender_suspended ) {
-								$last_sender = function_exists( 'bb_moderation_is_suspended_label' ) ? bb_moderation_is_suspended_label( $messages_template->thread->last_sender_id ) : esc_html__( 'Suspended Member', 'buddyboss' );
+								$last_sender = function_exists( 'bb_moderation_is_suspended_label' ) ? bb_moderation_is_suspended_label( $messages_template->thread->last_sender_id ) : esc_html__( 'Suspended Member', 'buddyboss-platform' );
 							} elseif ( $is_last_sender_blocked ) {
-								$last_sender = function_exists( 'bb_moderation_has_blocked_label' ) ? bb_moderation_has_blocked_label( $last_sender, $messages_template->thread->last_sender_id ) : esc_html__( 'Blocked Member', 'buddyboss' );
+								$last_sender = function_exists( 'bb_moderation_has_blocked_label' ) ? bb_moderation_has_blocked_label( $last_sender, $messages_template->thread->last_sender_id ) : esc_html__( 'Blocked Member', 'buddyboss-platform' );
 							}
 						}
 						// For conversations with a single recipient - Don't include the name of the last person to message before the message content.
@@ -531,14 +531,14 @@ else :
 		<div class="notification-content">
 			<div class="bb-rl-no-messages">
 				<i class="bb-icons-rl-chats-circle"></i>
-				<h3><?php esc_html_e( 'No message found', 'buddyboss' ); ?></h3>
+				<h3><?php esc_html_e( 'No message found', 'buddyboss-platform' ); ?></h3>
 				<div class="bb-rl-no-messages-description">
-					<?php esc_html_e( 'When you have new messages, they will appear here.', 'buddyboss' ); ?>
+					<?php esc_html_e( 'When you have new messages, they will appear here.', 'buddyboss-platform' ); ?>
 				</div>
 				<div class="bb-rl-no-messages-button">
 					<a href="<?php echo esc_url( trailingslashit( bp_loggedin_user_domain() . bp_get_messages_slug() ) ); ?>" class="bb-rl-button bb-rl-button--brandFill bb-rl-button--small">
 						<i class="bb-icons-rl-plus"></i>
-						<?php esc_html_e( 'New', 'buddyboss' ); ?>
+						<?php esc_html_e( 'New', 'buddyboss-platform' ); ?>
 					</a>
 				</div>
 			</div>

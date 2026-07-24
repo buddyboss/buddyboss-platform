@@ -102,7 +102,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 		 * @since BuddyBoss 1.0.0
 		 */
 		public function __clone() {
-			_doing_it_wrong( __FUNCTION__, __( 'Cheatin\' huh?', 'buddyboss' ), '1.7' );
+			_doing_it_wrong( __FUNCTION__, esc_html__( 'Cheatin\' huh?', 'buddyboss-platform' ), '1.7' );
 		}
 
 		/**
@@ -111,7 +111,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 		 * @since BuddyBoss 1.0.0
 		 */
 		public function __wakeup() {
-			_doing_it_wrong( __FUNCTION__, __( 'Cheatin\' huh?', 'buddyboss' ), '1.7' );
+			_doing_it_wrong( __FUNCTION__, esc_html__( 'Cheatin\' huh?', 'buddyboss-platform' ), '1.7' );
 		}
 
 		/**
@@ -186,7 +186,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 				$this->searchable_items[]       = 'albums';
 			}
 
-			if ( bp_is_active( 'media' ) && bp_is_search_documents_enable() && ( bp_is_group_document_support_enabled() || bp_is_profile_document_support_enabled() ) ) {
+			if ( bp_is_active( 'media' ) && bp_is_active( 'document' ) && bp_is_search_documents_enable() && ( bp_is_group_document_support_enabled() || bp_is_profile_document_support_enabled() ) ) {
 				require_once $bp->plugin_dir . 'bp-search/classes/class-bp-search-documents.php';
 				$this->search_helpers['documents'] = Bp_Search_Documents::instance();
 				$this->searchable_items[]          = 'documents';
@@ -198,7 +198,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 				$this->searchable_items[]       = 'videos';
 			}
 
-			if ( bp_is_active( 'media' ) && bp_is_search_folders_enable() && ( bp_is_group_document_support_enabled() || bp_is_profile_document_support_enabled() ) ) {
+			if ( bp_is_active( 'media' ) && bp_is_active( 'document' ) && bp_is_search_folders_enable() && ( bp_is_group_document_support_enabled() || bp_is_profile_document_support_enabled() ) ) {
 				require_once $bp->plugin_dir . 'bp-search/classes/class-bp-search-folders.php';
 				$this->search_helpers['folders'] = Bp_Search_Folders::instance();
 				$this->searchable_items[]        = 'folders';
@@ -253,7 +253,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 				self::instance()->prepare_search_page();
 				$content = bp_search_buffer_template_part( 'results-page-content', '', false );
 
-				echo $content;
+				echo $content; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- buffered search template (form/input/button), escaped internally; wp_kses_post would strip form controls.
 
 				die();
 			}
@@ -262,7 +262,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 				'search_term'   => $_REQUEST['search_term'],
 				// How many results should be displyed in autosuggest?
 				// @todo: give a settings field for this value.
-				'ajax_per_page' => $_REQUEST['per_page'],
+				'ajax_per_page' => isset( $_REQUEST['per_page'] ) ? absint( wp_unslash( $_REQUEST['per_page'] ) ) : 0, // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 				'count_total'   => true,
 				'template_type' => 'ajax',
 			);
@@ -374,7 +374,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 				// Show "View All" link.
 				if ( absint( $this->search_results[$key]['total_match_count'] ) > absint( bp_search_get_form_option( 'bp_search_number_of_results', 5 ) ) ) {
 					$all_results_row  = array(
-						'value'      => "<div class='bp-search-ajax-item allresults'><a href='" . esc_url( $url ) . "'>" . __( 'View all', 'buddyboss' ) . '</a></div>',
+						'value'      => "<div class='bp-search-ajax-item allresults'><a href='" . esc_url( $url ) . "'>" . __( 'View all', 'buddyboss-platform' ) . '</a></div>',
 						'type'       => 'view_all_type',
 						'type_label' => '',
 					);
@@ -384,7 +384,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 				// @todo give a settings screen for this field
 				$search_results[] = array(
 					'value' => '<div class="bp-search-ajax-item ui-state-disabled noresult">' .
-						esc_html__( 'No results found.', 'buddyboss' ) .
+						esc_html__( 'No results found.', 'buddyboss-platform' ) .
 					'</div>',
 					'label' => $this->search_args['search_term'],
 				);
@@ -541,11 +541,14 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 					$pre_search_query = "SELECT * FROM ( {$pre_search_query} ) as t1 ORDER BY t1.entry_date DESC, t1.id DESC";
 				}
 
-				if ( isset( $args['ajax_per_page'] ) && $args['ajax_per_page'] > 0 ) {
-					$pre_search_query .= " LIMIT {$args['ajax_per_page']} ";
+				if ( isset( $args['ajax_per_page'] ) && absint( $args['ajax_per_page'] ) > 0 ) {
+					// Cast to int at the sink: ajax_per_page is request-derived and
+					// interpolated into the LIMIT clause, so it must never carry
+					// anything but a positive integer.
+					$pre_search_query .= ' LIMIT ' . absint( $args['ajax_per_page'] ) . ' ';
 				}
 
-				$results = $wpdb->get_results( $pre_search_query );
+				$results = $wpdb->get_results( $pre_search_query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $pre_search_query is a UNION of per-handler prepared subqueries; the only request value (ajax_per_page) is absint()-cast into LIMIT above.
 				/*
 				 $results will have a structure like below */
 				/*
@@ -622,7 +625,8 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 							$start_html          = "<div class='results-group results-group-{$type} " . apply_filters( 'bp_search_class_search_wrap', 'bp-search-results-wrap', $label ) . "'>"
 										  . "<header class='results-group-header clearfix'>"
 										  . "<h3 class='results-group-title'><span>" . apply_filters( 'bp_search_label_search_type', $label ) . '</span></h3>'
-										  . "<span class='total-results'>" . sprintf( _n( '%d result', '%d results', $total_results, 'buddyboss' ), $total_results ) . '</a>'
+										  /* translators: %d: total number of results. */
+										  . "<span class='total-results'>" . sprintf( _n( '%d result', '%d results', $total_results, 'buddyboss-platform' ), $total_results ) . '</a>'
 										  . '</header>'
 										  . "<ul id='{$type}-stream' class='item-list {$type}-list bp-list " . apply_filters( 'bp_search_class_search_list', 'bp-search-results-list', $label ) . "'>";
 
@@ -638,7 +642,8 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 							if ( $total_results > $args['number'] ) {
 								$end_html .= "<footer class='results-group-footer'>";
 								$end_html .= "<a href='" . $category_search_url . "' class='view-all-link'>" .
-											   sprintf( esc_html__( 'View (%d) more', 'buddyboss' ), $total_results - $args['number'] ) .
+											   /* translators: %d: number of additional results not shown. */
+											   sprintf( esc_html__( 'View (%d) more', 'buddyboss-platform' ), $total_results - $args['number'] ) .
 											 '</a>';
 								$end_html .= '</footer>';
 							}
@@ -697,14 +702,23 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 					$pre_search_query = $obj->union_sql( $args['search_term'] ) . ' ORDER BY relevance DESC, entry_date DESC ';
 				}
 
-				if ( isset( $args['ajax_per_page'] ) && $args['ajax_per_page'] > 0 ) {
-					$pre_search_query .= " LIMIT {$args['ajax_per_page']} ";
+				if ( isset( $args['ajax_per_page'] ) && absint( $args['ajax_per_page'] ) > 0 ) {
+					// Cast to int at the sink: ajax_per_page is request-derived and
+					// interpolated into the LIMIT clause, so it must never carry
+					// anything but a positive integer.
+					$pre_search_query .= ' LIMIT ' . absint( $args['ajax_per_page'] ) . ' ';
 				} elseif ( $args['per_page'] > 0 ) {
-					$offset           = ( $args['current_page'] * $args['per_page'] ) - $args['per_page'];
-					$pre_search_query .= " LIMIT {$offset}, {$args['per_page']} ";
+					// Cast to int at the sink: per_page/current_page are request-derived
+					// and interpolated into the LIMIT clause, so they must never carry
+					// anything but positive integers.
+					$per_page          = absint( $args['per_page'] );
+					$current_page      = absint( $args['current_page'] );
+					$offset            = ( $current_page * $per_page ) - $per_page;
+					$offset            = max( 0, $offset );
+					$pre_search_query .= " LIMIT {$offset}, {$per_page} ";
 				}
 
-				$results = $wpdb->get_results( $pre_search_query );
+				$results = $wpdb->get_results( $pre_search_query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $pre_search_query is a UNION of per-handler prepared subqueries; LIMIT/OFFSET values are absint()-cast above.
 
 				/*
 				 $results will have a structure like below */
@@ -899,7 +913,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 			// first print the 'all results' tab.
 			$class = 'all' == $this->search_args['search_subset'] ? 'active current selected' : '';
 			// this filter can be used to change display of 'all' to 'Everything' etc..
-			$all_label = __( 'All Results', 'buddyboss' );
+			$all_label = __( 'All Results', 'buddyboss-platform' );
 			$label     = apply_filters( 'bp_search_label_search_type', $all_label );
 
 			if ( $this->search_args['count_total'] && isset( $this->search_results['all'] ) ) {
@@ -907,7 +921,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 			}
 
 			$tab_url = $search_url;
-			echo "<li class='{$class}'><a href='" . esc_url( $tab_url ) . "'>{$label}</a></li>";
+			echo "<li class='" . esc_attr( $class ) . "'><a href='" . esc_url( $tab_url ) . "'>" . wp_kses_post( $label ) . '</a></li>';
 
 			// then other tabs.
 			$search_items = bp_search_items();
@@ -933,7 +947,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 				}
 
 				$tab_url = esc_url( add_query_arg( 'subset', $item, $search_url ) );
-				echo "<li class='{$class} {$item}' data-item='{$item}'><a href='" . esc_url( $tab_url ) . "'>{$label}</a></li>";
+				echo "<li class='" . esc_attr( $class ) . ' ' . esc_attr( $item ) . "' data-item='" . esc_attr( $item ) . "'><a href='" . esc_url( $tab_url ) . "'>" . wp_kses_post( $label ) . '</a></li>';
 			}
 		}
 
@@ -943,7 +957,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 				$current_tab = $this->search_args['search_subset'];
 
 				foreach ( $this->search_results[ $current_tab ]['items'] as $item_id => $item ) {
-					echo $item['html'];
+					echo wp_kses_post( $item['html'] );
 				}
 
 				if ( $current_tab != 'all' ) {
@@ -986,7 +1000,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 		 */
 		public function get_available_search() {
 			$retval = array(
-				'' => __( 'All', 'buddyboss' ),
+				'' => __( 'All', 'buddyboss-platform' ),
 			);
 
 			if ( ! empty( $this->searchable_items ) && is_array( $this->searchable_items ) ) {

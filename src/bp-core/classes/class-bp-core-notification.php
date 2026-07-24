@@ -109,7 +109,7 @@ class BP_Core_Notification {
 			$sql = $wpdb->prepare( "INSERT INTO {$bp->core->table_name_notifications} ( item_id, secondary_item_id, user_id, component_name, component_action, date_notified, is_new ) VALUES ( %d, %d, %d, %s, %s, %s, %d )", $this->item_id, $this->secondary_item_id, $this->user_id, $this->component_name, $this->component_action, $this->date_notified, $this->is_new );
 		}
 
-		if ( ! $result = $wpdb->query( $sql ) ) {
+		if ( ! $result = $wpdb->query( $sql ) ) { // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- $sql is fully built via $wpdb->prepare() above.
 			return false;
 		}
 
@@ -178,7 +178,7 @@ class BP_Core_Notification {
 			? ' AND is_new = 1 '
 			: '';
 
-		return $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$bp->core->table_name_notifications} WHERE user_id = %d {$is_new}", $user_id ) );
+		return $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$bp->core->table_name_notifications} WHERE user_id = %d {$is_new}", $user_id ) ); // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter -- Table from $bp->core; user_id is %d; $is_new is a hardcoded constant fragment.
 	}
 
 	/**

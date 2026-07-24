@@ -7,6 +7,10 @@
  * @since   BuddyPress 1.0.0
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 ?>
 
 <div class="messages-wrapper">

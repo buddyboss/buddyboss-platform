@@ -16,9 +16,9 @@ defined( 'ABSPATH' ) || exit;
 ?>
 <script type="text/html" id="tmpl-upload-window">
 	<?php if ( ! _device_can_upload() ) : ?>
-		<h3 class="upload-instructions"><?php esc_html_e( 'The web browser on your device cannot be used to upload files.', 'buddyboss' ); ?></h3>
+		<h3 class="upload-instructions"><?php esc_html_e( 'The web browser on your device cannot be used to upload files.', 'buddyboss-platform' ); ?></h3>
 	<?php elseif ( is_multisite() && ! is_upload_space_available() ) : ?>
-		<h3 class="upload-instructions"><?php esc_html_e( 'Upload Limit Exceeded', 'buddyboss' ); ?></h3>
+		<h3 class="upload-instructions"><?php esc_html_e( 'Upload Limit Exceeded', 'buddyboss-platform' ); ?></h3>
 	<?php else : ?>
 		<div id="{{data.container}}">
 			<div id="{{data.drop_element}}">
@@ -28,14 +28,14 @@ defined( 'ABSPATH' ) || exit;
 						<div class="bb-rl-drag-drop-button-wrap">
 							<i class="bb-icons-rl-camera"></i>
 							<label for="{{data.browse_button}}" class="<?php echo is_admin() ? 'screen-reader-text' : 'bp-screen-reader-text'; ?>">
-								<?php esc_html_e( 'Select your file', 'buddyboss' ); ?>
+								<?php esc_html_e( 'Select your file', 'buddyboss-platform' ); ?>
 							</label>
-							<input id="{{data.browse_button}}" type="button" value="<?php esc_attr_e( 'Select your file', 'buddyboss' ); ?>" class="button" />
+							<input id="{{data.browse_button}}" type="button" value="<?php esc_attr_e( 'Select your file', 'buddyboss-platform' ); ?>" class="button" />
 						</div>
 					</p>
 
-					<p class="drag-drop-info"><?php esc_html_e( 'Add Photos', 'buddyboss' ); ?></p>
-					<p class="drag-drop-subtitle"><?php esc_html_e( 'Or drag and drop', 'buddyboss' ); ?></p>
+					<p class="drag-drop-info"><?php esc_html_e( 'Add Photos', 'buddyboss-platform' ); ?></p>
+					<p class="drag-drop-subtitle"><?php esc_html_e( 'Or drag and drop', 'buddyboss-platform' ); ?></p>
 				</div>
 			</div>
 		</div>
@@ -47,7 +47,7 @@ defined( 'ABSPATH' ) || exit;
 		<div class="bp-progress">
 			<div class="bp-bar"></div>
 		</div>
-		<div class="file-progress"><span class="percent-value">0</span><?php esc_html_e( '% complete', 'buddyboss' ); ?></div>
+		<div class="file-progress"><span class="percent-value">0</span><?php esc_html_e( '% complete', 'buddyboss-platform' ); ?></div>
 		<div class="filename">{{data.filename}}</div>
 	</div>
 </script>

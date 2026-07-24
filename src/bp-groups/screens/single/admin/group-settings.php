@@ -6,6 +6,9 @@
  * @since BuddyPress 3.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 /**
  * Handle the display of a group's admin/group-settings page.
  *
@@ -102,9 +105,9 @@ function groups_screen_group_admin_settings() {
 		}
 
 		if ( ! groups_edit_group_settings( $_POST['group-id'], $enable_forum, $status, $invite_status, $activity_feed_status, $parent_id, $media_status, $document_status, $video_status, $album_status, $message_status ) ) {
-			bp_core_add_message( __( 'There was an error updating group settings. Please try again.', 'buddyboss' ), 'error' );
+			bp_core_add_message( __( 'There was an error updating group settings. Please try again.', 'buddyboss-platform' ), 'error' );
 		} else {
-			bp_core_add_message( __( 'Group settings were successfully updated.', 'buddyboss' ) );
+			bp_core_add_message( __( 'Group settings were successfully updated.', 'buddyboss-platform' ) );
 		}
 
 		/**

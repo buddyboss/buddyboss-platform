@@ -112,7 +112,7 @@ function bp_core_ajax_widget_friends() {
 
 	<?php else : ?>
 		<?php echo '-1[[SPLIT]]<li>'; ?>
-		<?php _e( 'There were no members found, please try another filter.', 'buddyboss' ); ?>
+		<?php esc_html_e( 'There were no members found, please try another filter.', 'buddyboss-platform' ); ?>
 		<?php echo '</li>'; ?>
 		<?php
 	endif;

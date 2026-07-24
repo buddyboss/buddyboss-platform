@@ -75,7 +75,7 @@ function bb_tools_get_license_url() {
  */
 function bb_tools_ajax_check_plugin_state() {
 	if ( ! current_user_can( 'manage_options' ) ) {
-		wp_send_json_error( array( 'message' => __( 'Permission denied.', 'buddyboss' ) ), 403 );
+		wp_send_json_error( array( 'message' => __( 'Permission denied.', 'buddyboss-platform' ) ), 403 );
 	}
 	check_ajax_referer( 'bb_admin_settings', '_ajax_nonce' );
 
@@ -120,7 +120,7 @@ add_action( 'wp_ajax_bb_tools_check_plugin_state', 'bb_tools_ajax_check_plugin_s
  */
 function bb_tools_ajax_activate_plugin() {
 	if ( ! current_user_can( 'activate_plugins' ) ) {
-		wp_send_json_error( array( 'message' => __( 'Permission denied.', 'buddyboss' ) ), 403 );
+		wp_send_json_error( array( 'message' => __( 'Permission denied.', 'buddyboss-platform' ) ), 403 );
 	}
 	check_ajax_referer( 'bb_admin_settings', '_ajax_nonce' );
 
@@ -137,7 +137,7 @@ function bb_tools_ajax_activate_plugin() {
 		}
 		wp_send_json_error(
 			array(
-				'message' => __( 'Plugin activation failed. Please try again.', 'buddyboss' ),
+				'message' => __( 'Plugin activation failed. Please try again.', 'buddyboss-platform' ),
 				'detail'  => defined( 'WP_DEBUG' ) && WP_DEBUG ? $result->get_error_message() : '',
 			)
 		);
@@ -164,7 +164,7 @@ add_action( 'wp_ajax_bb_tools_activate_plugin', 'bb_tools_ajax_activate_plugin' 
  */
 function bb_tools_ajax_install_plugin() {
 	if ( ! current_user_can( 'install_plugins' ) ) {
-		wp_send_json_error( array( 'message' => __( 'Permission denied.', 'buddyboss' ) ), 403 );
+		wp_send_json_error( array( 'message' => __( 'Permission denied.', 'buddyboss-platform' ) ), 403 );
 	}
 	check_ajax_referer( 'bb_admin_settings', '_ajax_nonce' );
 
@@ -182,7 +182,7 @@ function bb_tools_ajax_install_plugin() {
 		if ( ! bb_tools_is_license_active() ) {
 			wp_send_json_error(
 				array(
-					'message'     => __( 'Please activate your BuddyBoss license to install this add-on.', 'buddyboss' ),
+					'message'     => __( 'Please activate your BuddyBoss license to install this add-on.', 'buddyboss-platform' ),
 					'license_url' => bb_tools_get_license_url(),
 				)
 			);
@@ -193,7 +193,7 @@ function bb_tools_ajax_install_plugin() {
 		if ( empty( $product ) || empty( $product->_embedded->{'version-latest'}->url ) ) {
 			wp_send_json_error(
 				array(
-					'message'     => __( 'The BuddyBoss Tools add-on is not available under your current license.', 'buddyboss' ),
+					'message'     => __( 'The BuddyBoss Tools add-on is not available under your current license.', 'buddyboss-platform' ),
 					'license_url' => bb_tools_get_license_url(),
 				)
 			);
@@ -218,7 +218,7 @@ function bb_tools_ajax_install_plugin() {
 			}
 			wp_send_json_error(
 				array(
-					'message' => __( 'Could not look up plugin information. Please try again.', 'buddyboss' ),
+					'message' => __( 'Could not look up plugin information. Please try again.', 'buddyboss-platform' ),
 					'detail'  => defined( 'WP_DEBUG' ) && WP_DEBUG ? $api->get_error_message() : '',
 				)
 			);
@@ -238,7 +238,7 @@ function bb_tools_ajax_install_plugin() {
 		}
 		wp_send_json_error(
 			array(
-				'message' => __( 'Plugin installation failed. Please try again.', 'buddyboss' ),
+				'message' => __( 'Plugin installation failed. Please try again.', 'buddyboss-platform' ),
 				'detail'  => defined( 'WP_DEBUG' ) && WP_DEBUG ? $result->get_error_message() : '',
 			)
 		);
@@ -252,7 +252,7 @@ function bb_tools_ajax_install_plugin() {
 		}
 		wp_send_json_error(
 			array(
-				'message' => __( 'Plugin installed but activation failed. Please try again.', 'buddyboss' ),
+				'message' => __( 'Plugin installed but activation failed. Please try again.', 'buddyboss-platform' ),
 				'detail'  => defined( 'WP_DEBUG' ) && WP_DEBUG ? $activate->get_error_message() : '',
 			)
 		);

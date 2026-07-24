@@ -18,8 +18,8 @@ $notifications             = bp_notifications_get_unread_notification_count( bp_
 $unread_notification_count = ! empty( $notifications ) ? $notifications : 0;
 ?>
 <div id="header-notifications-dropdown-elem" class="notification-wrap menu-item-has-children">
-	<a href="javascript:void(0);" ref="notification_bell" class="notification-link" aria-label="<?php esc_html_e( 'Notifications', 'buddyboss' ); ?>">
-		<span data-balloon-pos="down" data-balloon="<?php esc_attr_e( 'Notifications', 'buddyboss' ); ?>">
+	<a href="javascript:void(0);" ref="notification_bell" class="notification-link" aria-label="<?php esc_html_e( 'Notifications', 'buddyboss-platform' ); ?>">
+		<span data-balloon-pos="down" data-balloon="<?php esc_attr_e( 'Notifications', 'buddyboss-platform' ); ?>">
 			<i class="bb-icons-rl-bell-simple"></i>
 			<?php if ( $unread_notification_count > 0 ) : ?>
 				<span class="count"><?php echo esc_html( $unread_notification_count ); ?></span>
@@ -28,11 +28,11 @@ $unread_notification_count = ! empty( $notifications ) ? $notifications : 0;
 	</a>
 	<section class="notification-dropdown">
 		<header class="notification-header flex items-center justify-between">
-			<h2 class="title"><?php esc_html_e( 'Notifications', 'buddyboss' ); ?></h2>
-			<a href="<?php echo esc_url( $menu_link ); ?>" class="bb-rl-button bb-rl-button--secondaryFill message-view-all-link"><?php esc_html_e( 'View all', 'buddyboss' ); ?></a>
-			<button class="mark-read-all action-unread" data-notification-id="all" data-balloon-pos="down" data-balloon="<?php esc_html_e( 'Mark all as read', 'buddyboss' ); ?>" style="<?php echo esc_attr( $unread_notification_count > 0 ? 'display:flex;' : 'display:none;' ); ?>">
+			<h2 class="title"><?php esc_html_e( 'Notifications', 'buddyboss-platform' ); ?></h2>
+			<a href="<?php echo esc_url( $menu_link ); ?>" class="bb-rl-button bb-rl-button--secondaryFill message-view-all-link"><?php esc_html_e( 'View all', 'buddyboss-platform' ); ?></a>
+			<button class="mark-read-all action-unread" data-notification-id="all" data-balloon-pos="down" data-balloon="<?php esc_html_e( 'Mark all as read', 'buddyboss-platform' ); ?>" style="<?php echo esc_attr( $unread_notification_count > 0 ? 'display:flex;' : 'display:none;' ); ?>">
 				<i class="bb-icons-rl-bold bb-icons-rl-checks"></i>
-				<span class="screen-reader-text"><?php esc_html_e( 'Mark all as read', 'buddyboss' ); ?></span>
+				<span class="screen-reader-text"><?php esc_html_e( 'Mark all as read', 'buddyboss-platform' ); ?></span>
 			</button>
 		</header>
 

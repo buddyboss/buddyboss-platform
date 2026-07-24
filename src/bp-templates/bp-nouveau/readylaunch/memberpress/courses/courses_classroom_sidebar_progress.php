@@ -28,6 +28,6 @@ use memberpress\courses\helpers as helpers;
 	</div>
 	<p class="progress-text">
 		<span><?php echo esc_html( $course->user_progress( $current_user->ID ) . '% ' ); ?></span>
-		<?php esc_html_e( 'Complete', 'buddyboss' ); ?>
+		<?php esc_html_e( 'Complete', 'buddyboss-platform' ); ?>
 	</p>
 <?php endif; ?>

@@ -18,9 +18,10 @@ function bp_ps_escaped_form_data47( $version ) {
 
 	$meta   = bp_ps_meta( $form );
 	$fields = bp_ps_parse_request( bp_ps_get_request( 'form', $form ) );
+	$min    = bp_core_get_minified_asset_suffix();
 	wp_register_script(
 		'bp-ps-template',
-		buddypress()->plugin_url . 'bp-core/profile-search/bp-ps-template.js',
+		buddypress()->plugin_url . "bp-core/profile-search/bp-ps-template{$min}.js",
 		array(),
 		bp_get_version()
 	);
@@ -30,7 +31,7 @@ function bp_ps_escaped_form_data47( $version ) {
 	$F->title     = get_the_title( $form );
 	$F->location  = $location;
 	$F->unique_id = bp_ps_unique_id( 'form_' . $form );
-	$F->page      = parse_url( $_SERVER['REQUEST_URI'], PHP_URL_PATH );
+	$F->page      = wp_parse_url( $_SERVER['REQUEST_URI'], PHP_URL_PATH );
 
 	$template_options = $meta['template_options'][ $meta['template'] ];
 	if ( isset( $template_options['header'] ) ) {
@@ -43,10 +44,10 @@ function bp_ps_escaped_form_data47( $version ) {
 		$F->toggle_text = $template_options['button'];
 	}
 
-	$F->action = parse_url( $_SERVER['REQUEST_URI'], PHP_URL_PATH );
+	$F->action = wp_parse_url( $_SERVER['REQUEST_URI'], PHP_URL_PATH );
 
 	if ( defined( 'DOING_AJAX' ) ) {
-		$F->action = parse_url( $_SERVER['HTTP_REFERER'], PHP_URL_PATH );
+		$F->action = wp_parse_url( $_SERVER['HTTP_REFERER'], PHP_URL_PATH );
 	}
 
 	$F->method = $meta['method'];
@@ -186,7 +187,7 @@ function bp_ps_escaped_filters_data47() {
 	list ( $request, $full ) = bp_ps_template_args();
 
 	$F         = new stdClass();
-	$action    = parse_url( $_SERVER['REQUEST_URI'], PHP_URL_PATH );
+	$action    = wp_parse_url( $_SERVER['REQUEST_URI'], PHP_URL_PATH );
 	$action    = add_query_arg( BP_PS_FORM, 'clear', $action );
 	$F->action = $full ? esc_url( $action ) : '';
 	$F->fields = array();
@@ -249,16 +250,26 @@ function bp_ps_escaped_filters_data47() {
  */
 function bp_ps_full_label( $f ) {
 	$labels = array(
-		'contains'   => __( '<strong>%1$s</strong><span></span>', 'buddyboss' ),
-		''           => __( '<strong>%1$s</strong><span> is:<span>', 'buddyboss' ),
-		'like'       => __( '<strong>%1$s</strong><span> is like:<span>', 'buddyboss' ),
-		'range'      => __( '<strong>%1$s</strong><span> range:<span>', 'buddyboss' ),
-		'date_range' => __( '<strong>%1$s</strong><span> range:<span>', 'buddyboss' ),
-		'distance'   => __( '<strong>%1$s</strong><span> is within:<span>', 'buddyboss' ),
-		'one_of'     => __( '<strong>%1$s</strong><span> is one of:<span>', 'buddyboss' ),
-		'match_any'  => __( '<strong>%1$s</strong><span> match any:<span>', 'buddyboss' ),
-		'match_all'  => __( '<strong>%1$s</strong><span> match all:<span>', 'buddyboss' ),
-		'unknown'    => __( '<strong>%1$s</strong>:', 'buddyboss' ),
+		/* translators: %1$s: field label. */
+		'contains'   => __( '<strong>%1$s</strong><span></span>', 'buddyboss-platform' ),
+		/* translators: %1$s: field label. */
+		''           => __( '<strong>%1$s</strong><span> is:<span>', 'buddyboss-platform' ),
+		/* translators: %1$s: field label. */
+		'like'       => __( '<strong>%1$s</strong><span> is like:<span>', 'buddyboss-platform' ),
+		/* translators: %1$s: field label. */
+		'range'      => __( '<strong>%1$s</strong><span> range:<span>', 'buddyboss-platform' ),
+		/* translators: %1$s: field label. */
+		'date_range' => __( '<strong>%1$s</strong><span> range:<span>', 'buddyboss-platform' ),
+		/* translators: %1$s: field label. */
+		'distance'   => __( '<strong>%1$s</strong><span> is within:<span>', 'buddyboss-platform' ),
+		/* translators: %1$s: field label. */
+		'one_of'     => __( '<strong>%1$s</strong><span> is one of:<span>', 'buddyboss-platform' ),
+		/* translators: %1$s: field label. */
+		'match_any'  => __( '<strong>%1$s</strong><span> match any:<span>', 'buddyboss-platform' ),
+		/* translators: %1$s: field label. */
+		'match_all'  => __( '<strong>%1$s</strong><span> match all:<span>', 'buddyboss-platform' ),
+		/* translators: %1$s: field label. */
+		'unknown'    => __( '<strong>%1$s</strong>:', 'buddyboss-platform' ),
 	);
 
 	$mode  = isset( $labels[ $f->mode ] ) ? $f->mode : 'unknown';
@@ -287,59 +298,74 @@ function bp_ps_print_filter( $f ) {
 			case 'range':
 			case 'date_range':
 				if ( ! isset( $f->value['max'] ) ) {
-					return sprintf( esc_html__( 'min: %1$s', 'buddyboss' ), $f->value['min'] );
+					/* translators: %1$s: minimum value. */
+					return sprintf( esc_html__( 'min: %1$s', 'buddyboss-platform' ), $f->value['min'] );
 				}
 				if ( ! isset( $f->value['min'] ) ) {
-					return sprintf( esc_html__( 'max: %1$s', 'buddyboss' ), $f->value['max'] );
+					/* translators: %1$s: maximum value. */
+					return sprintf( esc_html__( 'max: %1$s', 'buddyboss-platform' ), $f->value['max'] );
 				}
 
-				return sprintf( esc_html__( 'min: %1$s, max: %2$s', 'buddyboss' ), $f->value['min'], $f->value['max'] );
+				/* translators: 1: minimum value, 2: maximum value. */
+				return sprintf( esc_html__( 'min: %1$s, max: %2$s', 'buddyboss-platform' ), $f->value['min'], $f->value['max'] );
 
 			case '':
 				if ( isset( $values ) ) {
-					return sprintf( esc_html__( 'is: %1$s', 'buddyboss' ), $values[0] );
+					/* translators: %1$s: field value. */
+					return sprintf( esc_html__( 'is: %1$s', 'buddyboss-platform' ), $values[0] );
 				}
 
-				return sprintf( esc_html__( 'is: %1$s', 'buddyboss' ), $f->value );
+				/* translators: %1$s: field value. */
+				return sprintf( esc_html__( 'is: %1$s', 'buddyboss-platform' ), $f->value );
 
 			case 'contains':
-				return sprintf( esc_html__( 'contains: %1$s', 'buddyboss' ), $f->value );
+				/* translators: %1$s: field value. */
+				return sprintf( esc_html__( 'contains: %1$s', 'buddyboss-platform' ), $f->value );
 
 			case 'like':
-				return sprintf( esc_html__( 'is like: %1$s', 'buddyboss' ), $f->value );
+				/* translators: %1$s: field value. */
+				return sprintf( esc_html__( 'is like: %1$s', 'buddyboss-platform' ), $f->value );
 
 			case 'one_of':
 				if ( count( $values ) == 1 ) {
-					return sprintf( esc_html__( 'is: %1$s', 'buddyboss' ), $values[0] );
+					/* translators: %1$s: field value. */
+					return sprintf( esc_html__( 'is: %1$s', 'buddyboss-platform' ), $values[0] );
 				}
 
-				return sprintf( esc_html__( 'is one of: %1$s', 'buddyboss' ), implode( ', ', $values ) );
+				/* translators: %1$s: comma-separated field values. */
+				return sprintf( esc_html__( 'is one of: %1$s', 'buddyboss-platform' ), implode( ', ', $values ) );
 
 			case 'match_any':
 				if ( count( $values ) == 1 ) {
-					return sprintf( esc_html__( 'match: %1$s', 'buddyboss' ), $values[0] );
+					/* translators: %1$s: field value. */
+					return sprintf( esc_html__( 'match: %1$s', 'buddyboss-platform' ), $values[0] );
 				}
 
-				return sprintf( esc_html__( 'match any: %1$s', 'buddyboss' ), implode( ', ', $values ) );
+				/* translators: %1$s: comma-separated field values. */
+				return sprintf( esc_html__( 'match any: %1$s', 'buddyboss-platform' ), implode( ', ', $values ) );
 
 			case 'match_all':
 				if ( count( $values ) == 1 ) {
-					return sprintf( esc_html__( 'match: %1$s', 'buddyboss' ), $values[0] );
+					/* translators: %1$s: field value. */
+					return sprintf( esc_html__( 'match: %1$s', 'buddyboss-platform' ), $values[0] );
 				}
 
-				return sprintf( esc_html__( 'match all: %1$s', 'buddyboss' ), implode( ', ', $values ) );
+				/* translators: %1$s: comma-separated field values. */
+				return sprintf( esc_html__( 'match all: %1$s', 'buddyboss-platform' ), implode( ', ', $values ) );
 
 			case 'distance':
 				if ( $f->value['units'] == 'km' ) {
 					return sprintf(
-						esc_html__( 'is within: %1$s km of %2$s', 'buddyboss' ),
+						/* translators: 1: distance in km, 2: location. */
+						esc_html__( 'is within: %1$s km of %2$s', 'buddyboss-platform' ),
 						$f->value['distance'],
 						$f->value['location']
 					);
 				}
 
 				return sprintf(
-					esc_html__( 'is within: %1$s miles of %2$s', 'buddyboss' ),
+					/* translators: 1: distance in miles, 2: location. */
+					esc_html__( 'is within: %1$s miles of %2$s', 'buddyboss-platform' ),
 					$f->value['distance'],
 					$f->value['location']
 				);
@@ -360,30 +386,30 @@ function bp_ps_autocomplete_script( $f ) {
 	$autocomplete_options = apply_filters( 'bp_ps_autocomplete_options', "{types: ['geocode']}", $f );
 	$geolocation_options  = apply_filters( 'bp_ps_geolocation_options', '{timeout: 5000}', $f );
 	?>
-	<input type="hidden" id="Lat_<?php echo $f->unique_id; ?>" name="<?php echo $f->code . '[lat]'; ?>" value="<?php echo $f->value['lat']; ?>">
-	<input type="hidden" id="Lng_<?php echo $f->unique_id; ?>" name="<?php echo $f->code . '[lng]'; ?>" value="<?php echo $f->value['lng']; ?>">
+	<input type="hidden" id="Lat_<?php echo esc_attr( $f->unique_id ); ?>" name="<?php echo esc_attr( $f->code . '[lat]' ); ?>" value="<?php echo esc_attr( $f->value['lat'] ); ?>">
+	<input type="hidden" id="Lng_<?php echo esc_attr( $f->unique_id ); ?>" name="<?php echo esc_attr( $f->code . '[lng]' ); ?>" value="<?php echo esc_attr( $f->value['lng'] ); ?>">
 
 	<script>
-		function bp_ps_<?php echo $f->unique_id; ?>() {
-			var input = document.getElementById('<?php echo $f->unique_id; ?>');
-			var options = <?php echo $autocomplete_options; ?>;
+		function bp_ps_<?php echo esc_js( $f->unique_id ); ?>() {
+			var input = document.getElementById('<?php echo esc_js( $f->unique_id ); ?>');
+			var options = <?php echo $autocomplete_options; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- raw JS object literal (default "{types: ['geocode']}") emitted inside <script>; esc_js would corrupt the literal. ?>;
 			var autocomplete = new google.maps.places.Autocomplete(input, options);
 			google.maps.event.addListener(autocomplete, 'place_changed', function () {
 				var place = autocomplete.getPlace();
-				document.getElementById('Lat_<?php echo $f->unique_id; ?>').value = place.geometry.location.lat();
-				document.getElementById('Lng_<?php echo $f->unique_id; ?>').value = place.geometry.location.lng();
+				document.getElementById('Lat_<?php echo esc_js( $f->unique_id ); ?>').value = place.geometry.location.lat();
+				document.getElementById('Lng_<?php echo esc_js( $f->unique_id ); ?>').value = place.geometry.location.lng();
 			});
 		}
 
-		jQuery(document).ready(bp_ps_<?php echo $f->unique_id; ?>);
+		jQuery(document).ready(bp_ps_<?php echo esc_js( $f->unique_id ); ?>);
 
-		function bp_ps_locate_<?php echo $f->unique_id; ?>() {
+		function bp_ps_locate_<?php echo esc_js( $f->unique_id ); ?>() {
 			if (navigator.geolocation) {
-				var options = <?php echo $geolocation_options; ?>;
+				var options = <?php echo $geolocation_options; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- raw JS object literal (default "{timeout: 5000}") emitted inside <script>; esc_js would corrupt the literal. ?>;
 				navigator.geolocation.getCurrentPosition(function (position) {
-					document.getElementById('Lat_<?php echo $f->unique_id; ?>').value = position.coords.latitude;
-					document.getElementById('Lng_<?php echo $f->unique_id; ?>').value = position.coords.longitude;
-					bp_ps_address_<?php echo $f->unique_id; ?>(position);
+					document.getElementById('Lat_<?php echo esc_js( $f->unique_id ); ?>').value = position.coords.latitude;
+					document.getElementById('Lng_<?php echo esc_js( $f->unique_id ); ?>').value = position.coords.longitude;
+					bp_ps_address_<?php echo esc_js( $f->unique_id ); ?>(position);
 				}, function (error) {
 					alert('ERROR ' + error.code + ': ' + error.message);
 				}, options);
@@ -392,15 +418,15 @@ function bp_ps_autocomplete_script( $f ) {
 			}
 		}
 
-		jQuery('#Btn_<?php echo $f->unique_id; ?>').click(bp_ps_locate_<?php echo $f->unique_id; ?>);
+		jQuery('#Btn_<?php echo esc_js( $f->unique_id ); ?>').click(bp_ps_locate_<?php echo esc_js( $f->unique_id ); ?>);
 
-		function bp_ps_address_<?php echo $f->unique_id; ?>(position) {
+		function bp_ps_address_<?php echo esc_js( $f->unique_id ); ?>(position) {
 			var geocoder = new google.maps.Geocoder;
 			var latlng = {lat: position.coords.latitude, lng: position.coords.longitude};
 			geocoder.geocode({'location': latlng}, function (results, status) {
 				if (status === 'OK') {
 					if (results[0]) {
-						document.getElementById('<?php echo $f->unique_id; ?>').value = results[0].formatted_address;
+						document.getElementById('<?php echo esc_js( $f->unique_id ); ?>').value = results[0].formatted_address;
 					} else {
 						alert('ERROR: Geocoder found no results');
 					}

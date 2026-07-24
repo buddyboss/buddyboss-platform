@@ -61,12 +61,12 @@ class BP_REST_Reply_Actions_Endpoint extends BP_REST_Reply_Endpoint {
 			array(
 				'args'   => array(
 					'id'     => array(
-						'description' => __( 'A unique numeric ID for the reply.', 'buddyboss' ),
+						'description' => __( 'A unique numeric ID for the reply.', 'buddyboss-platform' ),
 						'type'        => 'integer',
 						'required'    => true,
 					),
 					'action' => array(
-						'description'       => __( 'Action name to perform on the reply.', 'buddyboss' ),
+						'description'       => __( 'Action name to perform on the reply.', 'buddyboss-platform' ),
 						'type'              => 'string',
 						'required'          => true,
 						'enum'              => array(
@@ -77,7 +77,7 @@ class BP_REST_Reply_Actions_Endpoint extends BP_REST_Reply_Endpoint {
 						'validate_callback' => 'rest_validate_request_arg',
 					),
 					'value'  => array(
-						'description'       => __( 'Value for the action on reply.', 'buddyboss' ),
+						'description'       => __( 'Value for the action on reply.', 'buddyboss-platform' ),
 						'type'              => 'boolean',
 						'sanitize_callback' => 'rest_sanitize_boolean',
 						'validate_callback' => 'rest_validate_request_arg',
@@ -98,12 +98,12 @@ class BP_REST_Reply_Actions_Endpoint extends BP_REST_Reply_Endpoint {
 			array(
 				'args'   => array(
 					'id'                      => array(
-						'description' => __( 'A unique numeric ID for the reply.', 'buddyboss' ),
+						'description' => __( 'A unique numeric ID for the reply.', 'buddyboss-platform' ),
 						'type'        => 'integer',
 						'required'    => true,
 					),
 					'move_option'             => array(
-						'description'       => __( 'Options for Move the reply.', 'buddyboss' ),
+						'description'       => __( 'Options for Move the reply.', 'buddyboss-platform' ),
 						'type'              => 'string',
 						'required'          => true,
 						'enum'              => array(
@@ -114,13 +114,13 @@ class BP_REST_Reply_Actions_Endpoint extends BP_REST_Reply_Endpoint {
 						'validate_callback' => 'rest_validate_request_arg',
 					),
 					'destination_topic_id'    => array(
-						'description'       => __( 'Destination Topic ID.', 'buddyboss' ),
+						'description'       => __( 'Destination Topic ID.', 'buddyboss-platform' ),
 						'type'              => 'integer',
 						'sanitize_callback' => 'absint',
 						'validate_callback' => 'rest_validate_request_arg',
 					),
 					'destination_topic_title' => array(
-						'description'       => __( 'New Topic Title.', 'buddyboss' ),
+						'description'       => __( 'New Topic Title.', 'buddyboss-platform' ),
 						'type'              => 'string',
 						'sanitize_callback' => 'sanitize_text_field',
 						'validate_callback' => 'rest_validate_request_arg',
@@ -192,7 +192,7 @@ class BP_REST_Reply_Actions_Endpoint extends BP_REST_Reply_Endpoint {
 	public function action_items_permissions_check( $request ) {
 		$retval = new WP_Error(
 			'bp_rest_authorization_required',
-			__( 'Sorry, you need to be logged in to perform the action on the reply.', 'buddyboss' ),
+			__( 'Sorry, you need to be logged in to perform the action on the reply.', 'buddyboss-platform' ),
 			array(
 				'status' => rest_authorization_required_code(),
 			)
@@ -238,7 +238,7 @@ class BP_REST_Reply_Actions_Endpoint extends BP_REST_Reply_Endpoint {
 		if ( empty( $request['id'] ) ) {
 			return new WP_Error(
 				'bp_rest_bbp_move_reply_reply_id',
-				__( 'A reply ID is required.', 'buddyboss' ),
+				__( 'A reply ID is required.', 'buddyboss-platform' ),
 				array(
 					'status' => 400,
 				)
@@ -253,7 +253,7 @@ class BP_REST_Reply_Actions_Endpoint extends BP_REST_Reply_Endpoint {
 		if ( empty( $move_reply ) ) {
 			return new WP_Error(
 				'bp_rest_bbp_mover_reply_r_not_found',
-				__( 'The reply you want to move was not found.', 'buddyboss' ),
+				__( 'The reply you want to move was not found.', 'buddyboss-platform' ),
 				array(
 					'status' => 400,
 				)
@@ -268,7 +268,7 @@ class BP_REST_Reply_Actions_Endpoint extends BP_REST_Reply_Endpoint {
 		if ( empty( $source_topic ) ) {
 			return new WP_Error(
 				'bp_rest_bbp_move_reply_source_not_found',
-				__( 'The topic you want to move from was not found.', 'buddyboss' ),
+				__( 'The topic you want to move from was not found.', 'buddyboss-platform' ),
 				array(
 					'status' => 400,
 				)
@@ -279,7 +279,7 @@ class BP_REST_Reply_Actions_Endpoint extends BP_REST_Reply_Endpoint {
 		if ( ! current_user_can( 'edit_topic', $source_topic->ID ) ) {
 			return new WP_Error(
 				'bp_rest_bbp_move_reply_source_permission',
-				__( 'You do not have permission to edit the source topic.', 'buddyboss' ),
+				__( 'You do not have permission to edit the source topic.', 'buddyboss-platform' ),
 				array(
 					'status' => rest_authorization_required_code(),
 				)
@@ -295,7 +295,7 @@ class BP_REST_Reply_Actions_Endpoint extends BP_REST_Reply_Endpoint {
 		if ( empty( $move_option ) || ! in_array( $move_option, array( 'existing', 'topic' ), true ) ) {
 			return new WP_Error(
 				'bp_rest_bbp_move_reply_option',
-				__( 'You need to choose a valid move option.', 'buddyboss' ),
+				__( 'You need to choose a valid move option.', 'buddyboss-platform' ),
 				array(
 					'status' => 400,
 				)
@@ -313,7 +313,7 @@ class BP_REST_Reply_Actions_Endpoint extends BP_REST_Reply_Endpoint {
 					if ( empty( $request['destination_topic_id'] ) ) {
 						return new WP_Error(
 							'bp_rest_bbp_move_reply_destination_id',
-							__( 'A topic ID is required.', 'buddyboss' ),
+							__( 'A topic ID is required.', 'buddyboss-platform' ),
 							array(
 								'status' => 400,
 							)
@@ -329,7 +329,7 @@ class BP_REST_Reply_Actions_Endpoint extends BP_REST_Reply_Endpoint {
 					if ( empty( $destination_topic ) ) {
 						return new WP_Error(
 							'bp_rest_bbp_move_reply_destination_not_found',
-							__( 'The topic you want to move to was not found.', 'buddyboss' ),
+							__( 'The topic you want to move to was not found.', 'buddyboss-platform' ),
 							array(
 								'status' => 400,
 							)
@@ -340,7 +340,7 @@ class BP_REST_Reply_Actions_Endpoint extends BP_REST_Reply_Endpoint {
 					if ( ! current_user_can( 'edit_topic', $destination_topic->ID ) ) {
 						return new WP_Error(
 							'bp_rest_bbp_move_reply_destination_permission',
-							__( 'You do not have permission to edit the destination topic.', 'buddyboss' ),
+							__( 'You do not have permission to edit the destination topic.', 'buddyboss-platform' ),
 							array(
 								'status' => 400,
 							)
@@ -407,7 +407,7 @@ class BP_REST_Reply_Actions_Endpoint extends BP_REST_Reply_Endpoint {
 						) {
 							return new WP_Error(
 								'bp_rest_bbp_move_reply_destination_reply',
-								__( 'There was a problem converting the reply into the topic. Please try again.', 'buddyboss' ),
+								__( 'There was a problem converting the reply into the topic. Please try again.', 'buddyboss-platform' ),
 								array(
 									'status' => 400,
 								)
@@ -418,7 +418,7 @@ class BP_REST_Reply_Actions_Endpoint extends BP_REST_Reply_Endpoint {
 					} else {
 						return new WP_Error(
 							'bp_rest_bbp_move_reply_destination_permission',
-							__( 'You do not have permission to create new topics. The reply could not be converted into a topic.', 'buddyboss' ),
+							__( 'You do not have permission to create new topics. The reply could not be converted into a topic.', 'buddyboss-platform' ),
 							array(
 								'status' => rest_authorization_required_code(),
 							)
@@ -517,7 +517,7 @@ class BP_REST_Reply_Actions_Endpoint extends BP_REST_Reply_Endpoint {
 	public function move_item_permissions_check( $request ) {
 		$retval = new WP_Error(
 			'bp_rest_authorization_required',
-			__( 'Sorry, you need to be logged in to perform the action on the reply.', 'buddyboss' ),
+			__( 'Sorry, you need to be logged in to perform the action on the reply.', 'buddyboss-platform' ),
 			array(
 				'status' => rest_authorization_required_code(),
 			)
@@ -583,7 +583,7 @@ class BP_REST_Reply_Actions_Endpoint extends BP_REST_Reply_Endpoint {
 		if ( ! current_user_can( 'moderate', $reply_id ) ) {
 			return new WP_Error(
 				'bp_rest_authorization_required',
-				__( 'You do not have permission to do this.', 'buddyboss' ),
+				__( 'You do not have permission to do this.', 'buddyboss-platform' ),
 				array(
 					'status' => 404,
 				)

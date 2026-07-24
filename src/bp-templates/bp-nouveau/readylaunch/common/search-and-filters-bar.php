@@ -112,7 +112,7 @@ if ( bp_is_activity_directory() || bp_is_user_activity() ) {
 		?>
 		<i class="bb-rl-loader"></i>
 		<div class="bb-subnav-filters-container-main">
-			<span class="bb-subnav-filters-label"><?php echo esc_html_e( 'Show', 'buddyboss' ); ?></span>
+			<span class="bb-subnav-filters-label"><?php echo esc_html_e( 'Show', 'buddyboss-platform' ); ?></span>
 			<div class="bb-subnav-filters-container bb-subnav-filters-filtering">
 
 				<button class="subnav-filters-opener" aria-expanded="false" aria-controls="bb-subnav-filter-show">
@@ -164,7 +164,7 @@ if ( bp_is_activity_directory() || bp_is_user_activity() ) {
 		$sorting_labels = bb_get_activity_sorting_options_labels();
 		?>
 		<div class='<?php echo esc_attr( $hide_class ); ?> bb-subnav-filters-container-main'>
-			<span class="bb-subnav-filters-label"><?php echo esc_html_e( 'by', 'buddyboss' ); ?></span>
+			<span class="bb-subnav-filters-label"><?php echo esc_html_e( 'by', 'buddyboss-platform' ); ?></span>
 			<div class="bb-subnav-filters-container bb-subnav-filters-filtering">
 				<button class="subnav-filters-opener" aria-expanded="false" aria-controls="bb-subnav-filter-by">
 					<span class="selected"><?php echo isset( $sorting_labels[ $default_selected ] ) ? esc_html( $sorting_labels[ $default_selected ] ) : ''; ?></span>

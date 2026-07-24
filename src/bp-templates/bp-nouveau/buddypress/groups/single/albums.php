@@ -10,6 +10,9 @@
  * @version 1.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 if ( bb_enable_content_counts() && 'albums' === bp_current_action() && ! bp_is_single_album() ) {
 	$count = bp_media_get_total_group_album_count();
 	?>
@@ -22,7 +25,7 @@ if ( bb_enable_content_counts() && 'albums' === bp_current_action() && ! bp_is_s
 					'<span class="bb-count">%d</span> Album',
 					'<span class="bb-count">%d</span> Albums',
 					$count,
-					'buddyboss'
+					'buddyboss-platform'
 				),
 				array( 'span' => array( 'class' => true ) )
 			),
@@ -39,14 +42,14 @@ if ( bb_enable_content_counts() && 'albums' === bp_current_action() && ! bp_is_s
 	<?php
 	bp_get_template_part( 'media/theatre' );
 
-	if ( bp_is_group_video_support_enabled() ) {
+	if ( bp_is_active( 'video' ) && bp_is_group_video_support_enabled() ) {
 		bp_get_template_part( 'video/theatre' );
 	}
 
 	if ( bp_is_group_document_support_enabled() ) {
 		bp_get_template_part( 'document/theatre' );
 	}
-	if ( bp_is_group_video_support_enabled() ) {
+	if ( bp_is_active( 'video' ) && bp_is_group_video_support_enabled() ) {
 		bp_get_template_part( 'video/add-video-thumbnail' );
 	}
 

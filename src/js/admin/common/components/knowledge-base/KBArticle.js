@@ -158,13 +158,13 @@ export default function KBArticle( { slug } ) {
 		return (
 			<article className="bb-kb-article">
 				<div className="bb-kb-article__error" role="alert">
-					{ __( 'Couldn’t load this article.', 'buddyboss' ) }{ ' ' }
+					{ __( 'Couldn’t load this article.', 'buddyboss-platform' ) }{ ' ' }
 					<a
 						href={ `${ docsBaseUrl }${ slug }/` }
 						target="_blank"
 						rel="noopener noreferrer"
 					>
-						{ __( 'Open on BuddyBoss.com →', 'buddyboss' ) }
+						{ __( 'Open on BuddyBoss.com →', 'buddyboss-platform' ) }
 					</a>
 				</div>
 			</article>
@@ -175,13 +175,13 @@ export default function KBArticle( { slug } ) {
 		return (
 			<article className="bb-kb-article">
 				<div className="bb-kb-article__error" role="alert">
-					{ __( 'This article was moved or removed.', 'buddyboss' ) }{ ' ' }
+					{ __( 'This article was moved or removed.', 'buddyboss-platform' ) }{ ' ' }
 					<a
 						href={ docsBaseUrl }
 						target="_blank"
 						rel="noopener noreferrer"
 					>
-						{ __( 'Browse all docs →', 'buddyboss' ) }
+						{ __( 'Browse all docs →', 'buddyboss-platform' ) }
 					</a>
 				</div>
 			</article>
@@ -192,13 +192,13 @@ export default function KBArticle( { slug } ) {
 		return (
 			<article className="bb-kb-article">
 				<p className="bb-kb-article__empty">
-					{ __( 'This article is empty.', 'buddyboss' ) }{ ' ' }
+					{ __( 'This article is empty.', 'buddyboss-platform' ) }{ ' ' }
 					<a
 						href={ `${ docsBaseUrl }${ slug }/` }
 						target="_blank"
 						rel="noopener noreferrer"
 					>
-						{ __( 'Open on BuddyBoss.com →', 'buddyboss' ) }
+						{ __( 'Open on BuddyBoss.com →', 'buddyboss-platform' ) }
 					</a>
 				</p>
 			</article>

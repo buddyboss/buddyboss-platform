@@ -8,6 +8,10 @@
  * @since   BuddyBoss 1.0.0
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 ?>
 <li <?php bp_group_class( array( 'item-entry bp-search-item bp-search-item_group' ) ); ?> data-bp-item-id="<?php bp_group_id(); ?>" data-bp-item-component="groups">
 	<div class="list-wrap">
@@ -28,7 +32,7 @@
 				<span class="middot">&middot;</span>
 				<span class="item-meta group-details">
 					<?php
-					esc_html_e( 'Last active ', 'buddyboss' );
+					esc_html_e( 'Last active ', 'buddyboss-platform' );
 					bp_group_last_active();
 					?>
 				</span>

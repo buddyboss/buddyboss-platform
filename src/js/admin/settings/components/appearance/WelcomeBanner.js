@@ -296,17 +296,17 @@ export function WelcomeBanner( props ) {
 				setThemeActiveOverride( true );
 				dispatchToast(
 					'success',
-					( response.data && response.data.message ) || __( 'BuddyBoss Theme activated.', 'buddyboss' )
+					( response.data && response.data.message ) || __( 'BuddyBoss Theme activated.', 'buddyboss-platform' )
 				);
 			} else {
 				var errMsg = ( response && response.data && response.data.message )
-					|| __( 'Activation failed. Please try again.', 'buddyboss' );
+					|| __( 'Activation failed. Please try again.', 'buddyboss-platform' );
 				dispatchToast( 'error', errMsg );
 			}
 		} ).catch( function ( err ) {
 			dispatchToast(
 				'error',
-				( err && err.message ) || __( 'Activation failed. Please try again.', 'buddyboss' )
+				( err && err.message ) || __( 'Activation failed. Please try again.', 'buddyboss-platform' )
 			);
 		} ).then( function () {
 			setActivating( false );
@@ -319,25 +319,25 @@ export function WelcomeBanner( props ) {
 				<div className="bb-admin-welcome-banner__content">
 					<div className="bb-admin-welcome-banner__text">
 						<h2 className="bb-admin-welcome-banner__title">
-							{ __( 'Welcome to ReadyLaunch', 'buddyboss' ) }
+							{ __( 'Welcome to ReadyLaunch', 'buddyboss-platform' ) }
 						</h2>
 						<div className="bb-admin-welcome-banner__intro">
 							<h3 className="bb-admin-welcome-banner__subtitle">
-								{ __( 'Theme-free community interface', 'buddyboss' ) }
+								{ __( 'Theme-free community interface', 'buddyboss-platform' ) }
 							</h3>
 							<div className="bb-admin-welcome-banner__intro-body">
 								<p className="bb-admin-welcome-banner__description">
 									{ __(
 										'ReadyLaunch provides a complete, ready-to-use UI for your community, directly connected to the BuddyBoss Platform backend.',
-										'buddyboss'
+										'buddyboss-platform'
 									) }
 								</p>
 								<ul className="bb-admin-welcome-banner__checks">
 									<li className="bb-admin-welcome-banner__check">
-										{ __( 'Simple management', 'buddyboss' ) }
+										{ __( 'Simple management', 'buddyboss-platform' ) }
 									</li>
 									<li className="bb-admin-welcome-banner__check">
-										{ __( 'No theme required', 'buddyboss' ) }
+										{ __( 'No theme required', 'buddyboss-platform' ) }
 									</li>
 								</ul>
 							</div>
@@ -349,7 +349,7 @@ export function WelcomeBanner( props ) {
 									variant="secondary"
 									onClick={ handleSetupWizardClick }
 								>
-									{ __( 'Setup Wizard', 'buddyboss' ) }
+									{ __( 'Setup Wizard', 'buddyboss-platform' ) }
 								</Button>
 							</div>
 						) }
@@ -357,7 +357,7 @@ export function WelcomeBanner( props ) {
 					<div className="bb-admin-welcome-banner__preview">
 						<img
 							src={ readylaunchPreview }
-							alt={ __( 'ReadyLaunch interface preview', 'buddyboss' ) }
+							alt={ __( 'ReadyLaunch interface preview', 'buddyboss-platform' ) }
 							loading="lazy"
 						/>
 					</div>
@@ -371,25 +371,25 @@ export function WelcomeBanner( props ) {
 			<div className="bb-admin-welcome-banner__content">
 				<div className="bb-admin-welcome-banner__text">
 					<h2 className="bb-admin-welcome-banner__title">
-						{ __( 'Welcome to BuddyBoss Theme', 'buddyboss' ) }
+						{ __( 'Welcome to BuddyBoss Theme', 'buddyboss-platform' ) }
 					</h2>
 					<div className="bb-admin-welcome-banner__intro">
 						<h3 className="bb-admin-welcome-banner__subtitle">
-							{ __( 'Customizable WordPress theme', 'buddyboss' ) }
+							{ __( 'Customizable WordPress theme', 'buddyboss-platform' ) }
 						</h3>
 						<div className="bb-admin-welcome-banner__intro-body">
 							<p className="bb-admin-welcome-banner__description">
 								{ __(
 									'A premium theme designed to work with BuddyBoss Platform, offering deep design control for courses and communities.',
-									'buddyboss'
+									'buddyboss-platform'
 								) }
 							</p>
 							<ul className="bb-admin-welcome-banner__checks">
 								<li className="bb-admin-welcome-banner__check">
-									{ __( 'Advanced customization', 'buddyboss' ) }
+									{ __( 'Advanced customization', 'buddyboss-platform' ) }
 								</li>
 								<li className="bb-admin-welcome-banner__check">
-									{ __( 'BuddyBoss theme required', 'buddyboss' ) }
+									{ __( 'BuddyBoss theme required', 'buddyboss-platform' ) }
 								</li>
 							</ul>
 						</div>
@@ -408,13 +408,13 @@ export function WelcomeBanner( props ) {
 								// switch_themes — without this the button
 								// would just look broken).
 								title={ ! canSwitchThemes
-									? __( 'Theme activation requires the switch_themes capability — contact your network administrator.', 'buddyboss' )
+									? __( 'Theme activation requires the switch_themes capability — contact your network administrator.', 'buddyboss-platform' )
 									: undefined
 								}
 							>
 								{ activating
-									? __( 'Activating…', 'buddyboss' )
-									: __( 'Activate Theme', 'buddyboss' )
+									? __( 'Activating…', 'buddyboss-platform' )
+									: __( 'Activate Theme', 'buddyboss-platform' )
 								}
 							</Button>
 						) }
@@ -426,7 +426,7 @@ export function WelcomeBanner( props ) {
 								target="_blank"
 								rel="noopener noreferrer"
 							>
-								{ __( 'Buy Theme', 'buddyboss' ) }
+								{ __( 'Buy Theme', 'buddyboss-platform' ) }
 							</Button>
 						) }
 						{ isThemeActive && themeOptionsUrl && (
@@ -435,7 +435,7 @@ export function WelcomeBanner( props ) {
 								variant="primary"
 								href={ themeOptionsUrl }
 							>
-								{ __( 'Customize Theme', 'buddyboss' ) }
+								{ __( 'Customize Theme', 'buddyboss-platform' ) }
 							</Button>
 						) }
 						<Button
@@ -443,14 +443,14 @@ export function WelcomeBanner( props ) {
 							variant="secondary"
 							onClick={ handleUseReadyLaunch }
 						>
-							{ __( 'Use ReadyLaunch', 'buddyboss' ) }
+							{ __( 'Use ReadyLaunch', 'buddyboss-platform' ) }
 						</Button>
 					</div>
 				</div>
 				<div className="bb-admin-welcome-banner__preview">
 					<img
 						src={ themePreview }
-						alt={ __( 'BuddyBoss Theme interface preview', 'buddyboss' ) }
+						alt={ __( 'BuddyBoss Theme interface preview', 'buddyboss-platform' ) }
 						loading="lazy"
 					/>
 				</div>

@@ -32,13 +32,13 @@ class BB_Core_Follow_My_Network_Widget extends WP_Widget {
 		// Set up optional widget args.
 		$widget_ops = array(
 			'classname'   => 'widget-bb-rl-follow-my-network-widget widget buddypress',
-			'description' => __( 'A list of member avatars that are followers and following the logged-in user.', 'buddyboss' ),
+			'description' => __( 'A list of member avatars that are followers and following the logged-in user.', 'buddyboss-platform' ),
 		);
 
 		// Set up the widget.
 		parent::__construct(
 			false,
-			__( '(BB) Members My Network', 'buddyboss' ),
+			__( '(BB) Members My Network', 'buddyboss-platform' ),
 			$widget_ops
 		);
 
@@ -115,9 +115,9 @@ class BB_Core_Follow_My_Network_Widget extends WP_Widget {
 
 		$instance['title'] = (
 			bp_loggedin_user_id() === bp_displayed_user_id()
-			? __( 'My Network', 'buddyboss' )
+			? __( 'My Network', 'buddyboss-platform' )
 			/* translators: %s is the user's display name */
-			: sprintf( __( "%s's Network", 'buddyboss' ), $this->get_user_display_name( $id ) )
+			: sprintf( __( "%s's Network", 'buddyboss-platform' ), $this->get_user_display_name( $id ) )
 		);
 
 		// Remove the filter.
@@ -136,16 +136,16 @@ class BB_Core_Follow_My_Network_Widget extends WP_Widget {
 				<a href="<?php echo esc_url( $members_dir_url ); ?>">
 					<?php
 					if ( bp_loggedin_user_id() === bp_displayed_user_id() ) {
-						esc_html_e( 'My Network', 'buddyboss' );
+						esc_html_e( 'My Network', 'buddyboss-platform' );
 					} else {
 						/* translators: %s is the user's display name */
-						printf( esc_html__( "%s's Network", 'buddyboss' ), esc_html( $this->get_user_display_name( $id ) ) );
+						printf( esc_html__( "%s's Network", 'buddyboss-platform' ), esc_html( $this->get_user_display_name( $id ) ) );
 					}
 					?>
 				</a>
 				<div class="bb-rl-see-all">
 					<a target="_blank" href="<?php echo esc_url( $members_dir_url . $see_all_query_string ); ?>" class="count-more">
-						<?php esc_html_e( 'See all', 'buddyboss' ); ?>
+						<?php esc_html_e( 'See all', 'buddyboss-platform' ); ?>
 						<i class="bb-icon-l bb-icon-angle-right"></i>
 					</a>
 				</div>
@@ -153,7 +153,7 @@ class BB_Core_Follow_My_Network_Widget extends WP_Widget {
 			<div class="bb-rl-members-item-options">
 				<a href="javascript:void(0);" id="bb-rl-my-network-followers" data-see-all-link="<?php echo esc_url( $members_dir_url . '?bb-rl-scope=followers' ); ?>" <?php echo ( empty( $settings['member_default'] ) || 'followers' === $settings['member_default'] ) ? 'class="selected"' : ''; ?>>
 					<?php
-					esc_html_e( 'Followers', 'buddyboss' );
+					esc_html_e( 'Followers', 'buddyboss-platform' );
 					if ( $follower_count > 0 ) {
 						?>
 						<span class="bb-rl-widget-tab-count"><?php echo absint( $follower_count ); ?></span>
@@ -163,7 +163,7 @@ class BB_Core_Follow_My_Network_Widget extends WP_Widget {
 				</a>
 				<a href="javascript:void(0);" id="bb-rl-my-network-following" data-max="<?php echo esc_attr( $settings['max_users'] ); ?>" data-see-all-link="<?php echo esc_url( $members_dir_url . '?bb-rl-scope=following' ); ?>" <?php echo ( 'following' === $settings['member_default'] ) ? 'class="selected"' : ''; ?>>
 					<?php
-					esc_html_e( 'Following', 'buddyboss' );
+					esc_html_e( 'Following', 'buddyboss-platform' );
 					if ( $following_count > 0 ) {
 						?>
 						<span class="bb-rl-widget-tab-count"><?php echo absint( $following_count ); ?></span>
@@ -202,7 +202,7 @@ class BB_Core_Follow_My_Network_Widget extends WP_Widget {
 		} else {
 			?>
 			<div class="bb-rl-widget-empty-state">
-				<p><?php esc_html_e( 'There were no members found, please try another filter.', 'buddyboss' ); ?></p>
+				<p><?php esc_html_e( 'There were no members found, please try another filter.', 'buddyboss-platform' ); ?></p>
 			</div>
 			<?php
 		}
@@ -329,7 +329,7 @@ class BB_Core_Follow_My_Network_Widget extends WP_Widget {
 
 		$result = array(
 			'success' => 0,
-			'data'    => '<div class="bb-rl-widget-empty-state"><p>' . esc_html__( 'There were no members found, please try another filter.', 'buddyboss' ) . '</p></div>',
+			'data'    => '<div class="bb-rl-widget-empty-state"><p>' . esc_html__( 'There were no members found, please try another filter.', 'buddyboss-platform' ) . '</p></div>',
 		);
 
 		// No data.

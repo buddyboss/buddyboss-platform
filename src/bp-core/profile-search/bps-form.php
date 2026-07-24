@@ -41,19 +41,20 @@ function bp_profile_search_escaped_form_data( $form = false ) {
 
 	$meta   = bp_ps_meta( $form );
 	$fields = bp_ps_parse_request( bp_ps_get_request( 'form', $form ) );
-	wp_register_script( 'bp-ps-template-form', buddypress()->plugin_url . 'bp-core/profile-search/bp-ps-template.js', array(), bp_get_version() );
+	$min = bp_core_get_minified_asset_suffix();
+	wp_register_script( 'bp-ps-template-form', buddypress()->plugin_url . "bp-core/profile-search/bp-ps-template{$min}.js", array(), bp_get_version() );
 	wp_enqueue_script( 'bp-ps-template-form' );
 	$F            = new stdClass();
 	$F->id        = $form;
 	$F->title     = get_the_title( $form );
 	$F->location  = $location;
 	$F->unique_id = bp_ps_unique_id( 'form_' . $form );
-	$F->page      = parse_url( $_SERVER['REQUEST_URI'], PHP_URL_PATH );
+	$F->page      = wp_parse_url( $_SERVER['REQUEST_URI'], PHP_URL_PATH );
 
-	$F->action = parse_url( $_SERVER['REQUEST_URI'], PHP_URL_PATH );
+	$F->action = wp_parse_url( $_SERVER['REQUEST_URI'], PHP_URL_PATH );
 
 	if ( defined( 'DOING_AJAX' ) ) {
-		$F->action = parse_url( $_SERVER['HTTP_REFERER'], PHP_URL_PATH );
+		$F->action = wp_parse_url( $_SERVER['HTTP_REFERER'], PHP_URL_PATH );
 	}
 
 	$F->method = 'POST';

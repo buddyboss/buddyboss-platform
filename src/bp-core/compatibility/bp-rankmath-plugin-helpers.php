@@ -34,11 +34,11 @@ class BP_RankMath_Title implements IPaper {
 			$action       = bp_current_action();
 			$custom_title = isset( buddypress()->groups->current_group->name ) ? buddypress()->groups->current_group->name : get_the_title();
 			if ( 'admin' === $action ) {
-				$action = esc_html__( 'Manage', 'buddyboss' );
+				$action = esc_html__( 'Manage', 'buddyboss-platform' );
 			}
 
 			if ( 'my-groups' === $action ) {
-				$action = esc_html__( 'Groups', 'buddyboss' );
+				$action = esc_html__( 'Groups', 'buddyboss-platform' );
 			}
 
 			if ( isset( $action ) && ! empty( $action ) ) {

@@ -6,6 +6,9 @@
  * @since BuddyPress 3.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 /**
  * Catch and route requests for single activity item permalinks.
  *
@@ -163,7 +166,7 @@ function bp_activity_screen_single_activity_permalink() {
 
 			// Redirect away.
 		} else {
-			bp_core_add_message( __( 'You do not have access to this activity.', 'buddyboss' ), 'error' );
+			bp_core_add_message( __( 'You do not have access to this activity.', 'buddyboss-platform' ), 'error' );
 			bp_core_redirect( bp_loggedin_user_domain() );
 		}
 	}

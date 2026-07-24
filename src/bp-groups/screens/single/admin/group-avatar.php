@@ -6,6 +6,9 @@
  * @since BuddyPress 3.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 /**
  * Handle the display of a group's Change Avatar page.
  *
@@ -36,9 +39,9 @@ function groups_screen_group_admin_avatar() {
 				'object'  => 'group',
 			)
 		) ) {
-			bp_core_add_message( __( 'The group profile photo was deleted successfully!', 'buddyboss' ) );
+			bp_core_add_message( __( 'The group profile photo was deleted successfully!', 'buddyboss-platform' ) );
 		} else {
-			bp_core_add_message( __( 'There was a problem deleting the group profile photo. Please try again.', 'buddyboss' ), 'error' );
+			bp_core_add_message( __( 'There was a problem deleting the group profile photo. Please try again.', 'buddyboss-platform' ), 'error' );
 		}
 	}
 
@@ -80,7 +83,7 @@ function groups_screen_group_admin_avatar() {
 		);
 
 		if ( ! bp_core_avatar_handle_crop( $args ) ) {
-			bp_core_add_message( __( 'There was a problem cropping the group profile photo.', 'buddyboss' ), 'error' );
+			bp_core_add_message( __( 'There was a problem cropping the group profile photo.', 'buddyboss-platform' ), 'error' );
 		} else {
 			/**
 			 * Fires after a group avatar is uploaded.
@@ -92,7 +95,7 @@ function groups_screen_group_admin_avatar() {
 			 * @param array  $args     Array of parameters passed to the avatar handler.
 			 */
 			do_action( 'groups_avatar_uploaded', bp_get_current_group_id(), 'crop', $args );
-			bp_core_add_message( __( 'The new group profile photo was uploaded successfully.', 'buddyboss' ) );
+			bp_core_add_message( __( 'The new group profile photo was uploaded successfully.', 'buddyboss-platform' ) );
 		}
 	}
 

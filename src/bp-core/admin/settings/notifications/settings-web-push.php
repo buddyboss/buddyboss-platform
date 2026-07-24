@@ -65,7 +65,7 @@ function bb_notifications_register_web_push_panel_fields() {
 		'onesignal',
 		'onesignal',
 		array(
-			'title'       => $show_web_push_title ? __( 'Web Push Notifications', 'buddyboss' ) : '',
+			'title'       => $show_web_push_title ? __( 'Web Push Notifications', 'buddyboss-platform' ) : '',
 			'description' => '',
 			'order'       => 10,
 			'help_url'    => '636150',
@@ -84,9 +84,9 @@ function bb_notifications_register_web_push_panel_fields() {
 				'label'                 => '',
 				'type'                  => 'empty_state',
 				'icon'                  => 'bb-icons-rl bb-icons-rl-warning-circle',
-				'empty_state_title'     => __( 'OneSignal Integration is Disabled', 'buddyboss' ),
-				'empty_state_description' => __( 'OneSignal integration for BuddyBoss is currently disabled. Enable it to configure web push notifications.', 'buddyboss' ),
-				'button_label'          => __( 'BuddyBoss Settings', 'buddyboss' ),
+				'empty_state_title'     => __( 'OneSignal Integration is Disabled', 'buddyboss-platform' ),
+				'empty_state_description' => __( 'OneSignal integration for BuddyBoss is currently disabled. Enable it to configure web push notifications.', 'buddyboss-platform' ),
+				'button_label'          => __( 'BuddyBoss Settings', 'buddyboss-platform' ),
 				'button_url'            => admin_url( 'admin.php?page=bb-settings' ),
 				'sanitize_callback'     => '__return_empty_string',
 				'order'                 => 10,
@@ -107,9 +107,9 @@ function bb_notifications_register_web_push_panel_fields() {
 				'label'                   => '',
 				'type'                    => 'empty_state',
 				'icon'                    => 'bb-icons-rl bb-icons-rl-warning-circle',
-				'empty_state_title'       => __( 'BuddyBoss Platform Pro Update Required', 'buddyboss' ),
-				'empty_state_description' => __( 'Please update to the latest version of BuddyBoss Pro to manage your web push notification settings.', 'buddyboss' ),
-				'button_label'            => __( 'Update Now', 'buddyboss' ),
+				'empty_state_title'       => __( 'BuddyBoss Platform Pro Update Required', 'buddyboss-platform' ),
+				'empty_state_description' => __( 'Please update to the latest version of BuddyBoss Pro to manage your web push notification settings.', 'buddyboss-platform' ),
+				'button_label'            => __( 'Update Now', 'buddyboss-platform' ),
 				'button_url'              => admin_url( 'update-core.php' ),
 				'sanitize_callback'       => '__return_empty_string',
 				'order'                   => 10,
@@ -130,8 +130,8 @@ function bb_notifications_register_web_push_panel_fields() {
 				'type'              => 'notice',
 				'description'       => sprintf(
 					/* translators: %s: BuddyBoss Pro link. */
-					__( 'Please update %s to version 2.0.3 to use web push notifications on your site.', 'buddyboss' ),
-					'<a target="_blank" rel="noopener noreferrer" href="' . esc_url( 'https://www.buddyboss.com/platform' ) . '">' . __( 'BuddyBoss Platform Pro', 'buddyboss' ) . '</a>'
+					__( 'Please update %s to version 2.0.3 to use web push notifications on your site.', 'buddyboss-platform' ),
+					'<a target="_blank" rel="noopener noreferrer" href="' . esc_url( 'https://www.buddyboss.com/platform' ) . '">' . __( 'BuddyBoss Platform Pro', 'buddyboss-platform' ) . '</a>'
 				),
 				'sanitize_callback' => '__return_empty_string',
 				'order'             => 10,
@@ -151,7 +151,7 @@ function bb_notifications_register_web_push_panel_fields() {
 				'name'              => '_bb_web_push_legacy_notice',
 				'label'             => '',
 				'type'              => 'notice',
-				'description'       => __( 'Web Push Notifications are not supported when using the legacy notifications system.', 'buddyboss' ),
+				'description'       => __( 'Web Push Notifications are not supported when using the legacy notifications system.', 'buddyboss-platform' ),
 				'sanitize_callback' => '__return_empty_string',
 				'order'             => 10,
 			)
@@ -194,21 +194,21 @@ function bb_notifications_register_web_push_pro_placeholder_fields() {
 		$panel_id,
 		'onesignal_connection',
 		array(
-			'title'       => __( 'OneSignal', 'buddyboss' ),
+			'title'       => __( 'OneSignal', 'buddyboss-platform' ),
 			'order'       => 20,
 			'status'      => array(
 				'type' => 'warning',
-				'text' => __( 'Not Connected', 'buddyboss' ),
+				'text' => __( 'Not Connected', 'buddyboss-platform' ),
 			),
 			'pro_notice'  => array(
 				'show'       => true,
-				'badge_text' => __( 'UPGRADE PRO', 'buddyboss' ),
+				'badge_text' => __( 'UPGRADE PRO', 'buddyboss-platform' ),
 				'badge_icon' => 'bb-icons-rl-crown-simple',
 				'link_url'   => 'https://www.buddyboss.com/platform/',
 			),
 			'description' => sprintf(
 				/* translators: %s: OneSignal URL */
-				__( 'To use <a href="%s" target="_blank" rel="noopener noreferrer">OneSignal</a> for web push notifications, create an app in your account and enter the API credentials from the settings below.', 'buddyboss' ),
+				__( 'To use <a href="%s" target="_blank" rel="noopener noreferrer">OneSignal</a> for web push notifications, create an app in your account and enter the API credentials from the settings below.', 'buddyboss-platform' ),
 				'https://onesignal.com/'
 			),
 		)
@@ -221,15 +221,15 @@ function bb_notifications_register_web_push_pro_placeholder_fields() {
 		'onesignal_connection',
 		array(
 			'name'              => 'bb-web-push-app-id',
-			'label'             => __( 'API Credentials', 'buddyboss' ),
+			'label'             => __( 'API Credentials', 'buddyboss-platform' ),
 			'type'              => 'password',
 			'default'           => '',
 			'sanitize_callback' => '__return_empty_string',
-			'placeholder'       => __( 'Enter OneSignal APP ID', 'buddyboss' ),
+			'placeholder'       => __( 'Enter OneSignal APP ID', 'buddyboss-platform' ),
 			'pro_only'          => true,
 			'group'             => array(
 				'key'   => 'web_push_credentials',
-				'label' => __( 'App ID', 'buddyboss' ),
+				'label' => __( 'App ID', 'buddyboss-platform' ),
 			),
 			'order'             => 10,
 		)
@@ -246,11 +246,11 @@ function bb_notifications_register_web_push_pro_placeholder_fields() {
 			'type'              => 'password',
 			'default'           => '',
 			'sanitize_callback' => '__return_empty_string',
-			'placeholder'       => __( 'Enter Rest API key', 'buddyboss' ),
+			'placeholder'       => __( 'Enter Rest API key', 'buddyboss-platform' ),
 			'pro_only'          => true,
 			'group'             => array(
 				'key'   => 'web_push_credentials',
-				'label' => __( 'Rest API Key', 'buddyboss' ),
+				'label' => __( 'Rest API Key', 'buddyboss-platform' ),
 			),
 			'order'             => 20,
 		)
@@ -265,7 +265,7 @@ function bb_notifications_register_web_push_pro_placeholder_fields() {
 			'name'              => '_bb_web_push_connect',
 			'label'             => '',
 			'type'              => 'input_button',
-			'button_label'      => __( 'Connect', 'buddyboss' ),
+			'button_label'      => __( 'Connect', 'buddyboss-platform' ),
 			'button_only'       => true,
 			'pro_only'          => true,
 			'sanitize_callback' => '__return_empty_string',

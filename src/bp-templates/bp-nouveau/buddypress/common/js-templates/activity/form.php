@@ -8,6 +8,9 @@
  * @version 1.8.6
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 /**
  * Split each js template to its own file. Easier for child theme to
  * overwrite individual parts.

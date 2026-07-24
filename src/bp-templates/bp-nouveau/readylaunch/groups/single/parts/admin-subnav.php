@@ -15,7 +15,7 @@
 defined( 'ABSPATH' ) || exit;
 ?>
 
-<nav class="<?php bp_nouveau_single_item_subnav_classes(); ?> bb-rl-admin-subnav bb-rl-group-admin-subnav" id="subnav" role="navigation" aria-label="<?php esc_attr_e( 'Group administration menu', 'buddyboss' ); ?>">
+<nav class="<?php bp_nouveau_single_item_subnav_classes(); ?> bb-rl-admin-subnav bb-rl-group-admin-subnav" id="subnav" role="navigation" aria-label="<?php esc_attr_e( 'Group administration menu', 'buddyboss-platform' ); ?>">
 	<?php if ( bp_nouveau_has_nav( array( 'object' => 'group_manage' ) ) ) : ?>
 		<ul class="subnav">
 			<?php

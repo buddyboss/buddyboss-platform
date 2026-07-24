@@ -68,16 +68,16 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 			array(
 				'args'   => array(
 					'term'     => array(
-						'description' => __( 'Text for search recipients.', 'buddyboss' ),
+						'description' => __( 'Text for search recipients.', 'buddyboss-platform' ),
 						'type'        => 'string',
 						'required'    => true,
 					),
 					'group_id' => array(
-						'description' => __( 'Group id to search members.', 'buddyboss' ),
+						'description' => __( 'Group id to search members.', 'buddyboss-platform' ),
 						'type'        => 'integer',
 					),
 					'exclude'  => array(
-						'description'       => __( 'Ensure result set excludes specific member IDs.', 'buddyboss' ),
+						'description'       => __( 'Ensure result set excludes specific member IDs.', 'buddyboss-platform' ),
 						'default'           => array(),
 						'type'              => 'array',
 						'items'             => array( 'type' => 'integer' ),
@@ -85,14 +85,14 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 						'validate_callback' => 'rest_validate_request_arg',
 					),
 					'page'     => array(
-						'description' => __( 'Current page of the collection.', 'buddyboss' ),
+						'description' => __( 'Current page of the collection.', 'buddyboss-platform' ),
 						'type'        => 'integer',
 						'default'     => 1,
 						'minimum'     => 1,
 						'required'    => false,
 					),
 					'per_page' => array(
-						'description' => __( 'Maximum number of items to be returned in result set.', 'buddyboss' ),
+						'description' => __( 'Maximum number of items to be returned in result set.', 'buddyboss-platform' ),
 						'type'        => 'integer',
 						'default'     => 10,
 						'minimum'     => 1,
@@ -115,16 +115,16 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 			array(
 				'args'   => array(
 					'user_id'              => array(
-						'description' => __( 'Sender users ID.', 'buddyboss' ),
+						'description' => __( 'Sender users ID.', 'buddyboss-platform' ),
 						'type'        => 'integer',
 					),
 					'recipient_id'         => array(
-						'description' => __( 'Thread recipient ID.', 'buddyboss' ),
+						'description' => __( 'Thread recipient ID.', 'buddyboss-platform' ),
 						'type'        => 'integer',
 						'required'    => true,
 					),
 					'include_group_thread' => array(
-						'description' => __( 'Include group thread or not.', 'buddyboss' ),
+						'description' => __( 'Include group thread or not.', 'buddyboss-platform' ),
 						'type'        => 'boolean',
 						'required'    => false,
 						'default'     => false,
@@ -179,7 +179,7 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 				array(
 					'args'   => array(
 						'id' => array(
-							'description' => __( 'ID of one of the message of the Thread.', 'buddyboss' ),
+							'description' => __( 'ID of one of the message of the Thread.', 'buddyboss-platform' ),
 							'type'        => 'integer',
 						),
 					),
@@ -307,7 +307,7 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 	public function get_items_permissions_check( $request ) {
 		$retval = new WP_Error(
 			'bp_rest_authorization_required',
-			__( 'Sorry, you are not allowed to perform this action.', 'buddyboss' ),
+			__( 'Sorry, you are not allowed to perform this action.', 'buddyboss-platform' ),
 			array(
 				'status' => rest_authorization_required_code(),
 			)
@@ -319,7 +319,7 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 			if ( ! $user instanceof WP_User ) {
 				$retval = new WP_Error(
 					'bp_rest_invalid_id',
-					__( 'Invalid member ID.', 'buddyboss' ),
+					__( 'Invalid member ID.', 'buddyboss-platform' ),
 					array(
 						'status' => 404,
 					)
@@ -329,7 +329,7 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 			} else {
 				$retval = new WP_Error(
 					'bp_rest_authorization_required',
-					__( 'Sorry, you cannot view the messages.', 'buddyboss' ),
+					__( 'Sorry, you cannot view the messages.', 'buddyboss-platform' ),
 					array(
 						'status' => rest_authorization_required_code(),
 					)
@@ -413,7 +413,7 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 	public function get_item_permissions_check( $request ) {
 		$error = new WP_Error(
 			'bp_rest_authorization_required',
-			__( 'Sorry, you are not allowed to see this thread.', 'buddyboss' ),
+			__( 'Sorry, you are not allowed to see this thread.', 'buddyboss-platform' ),
 			array(
 				'status' => rest_authorization_required_code(),
 			)
@@ -427,7 +427,7 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 			if ( empty( $thread->thread_id ) ) {
 				$retval = new WP_Error(
 					'bp_rest_invalid_id',
-					__( 'Sorry, this thread does not exist.', 'buddyboss' ),
+					__( 'Sorry, this thread does not exist.', 'buddyboss-platform' ),
 					array(
 						'status' => 404,
 					)
@@ -477,7 +477,7 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 		if ( empty( $request['id'] ) && empty( $request['recipients'] ) ) {
 			return new WP_Error(
 				'bp_rest_empty_recipients',
-				__( 'Please, enter recipients user IDs.', 'buddyboss' ),
+				__( 'Please, enter recipients user IDs.', 'buddyboss-platform' ),
 				array(
 					'status' => 400,
 				)
@@ -503,7 +503,7 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 		) {
 			return new WP_Error(
 				'bp_rest_messages_empty_message',
-				__( 'Sorry, Your message cannot be empty.', 'buddyboss' ),
+				__( 'Sorry, Your message cannot be empty.', 'buddyboss-platform' ),
 				array(
 					'status' => 400,
 				)
@@ -517,7 +517,7 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 			if ( ! $can_send_media ) {
 				return new WP_Error(
 					'bp_rest_bp_message_media',
-					__( 'You don\'t have access to send the media.', 'buddyboss' ),
+					__( 'You don\'t have access to send the media.', 'buddyboss-platform' ),
 					array(
 						'status' => 400,
 					)
@@ -530,7 +530,7 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 			if ( ! $can_send_document ) {
 				return new WP_Error(
 					'bp_rest_bp_message_document',
-					__( 'You don\'t have access to send the document.', 'buddyboss' ),
+					__( 'You don\'t have access to send the document.', 'buddyboss-platform' ),
 					array(
 						'status' => 400,
 					)
@@ -543,7 +543,7 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 			if ( ! $can_send_video ) {
 				return new WP_Error(
 					'bp_rest_bp_message_video',
-					__( 'You don\'t have access to send the video.', 'buddyboss' ),
+					__( 'You don\'t have access to send the video.', 'buddyboss-platform' ),
 					array(
 						'status' => 400,
 					)
@@ -556,7 +556,7 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 			if ( ! $can_send_gif ) {
 				return new WP_Error(
 					'bp_rest_bp_message_gif',
-					__( 'You don\'t have access to send the gif.', 'buddyboss' ),
+					__( 'You don\'t have access to send the gif.', 'buddyboss-platform' ),
 					array(
 						'status' => 400,
 					)
@@ -592,7 +592,7 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 		) {
 			return new WP_Error(
 				'bp_rest_messages_empty_message',
-				__( 'Sorry, Your message cannot be empty.', 'buddyboss' ),
+				__( 'Sorry, Your message cannot be empty.', 'buddyboss-platform' ),
 				array(
 					'status' => 400,
 				)
@@ -639,7 +639,7 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 		if ( ! isset( $message->id ) || ! is_int( $message->id ) ) {
 			return new WP_Error(
 				'bp_rest_messages_create_failed',
-				__( 'There was a problem sending your message.', 'buddyboss' ),
+				__( 'There was a problem sending your message.', 'buddyboss-platform' ),
 				array(
 					'status' => 500,
 				)
@@ -717,7 +717,7 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 	public function create_item_permissions_check( $request ) {
 		$retval = new WP_Error(
 			'bp_rest_authorization_required',
-			__( 'Sorry, you are not allowed to perform this action.', 'buddyboss' ),
+			__( 'Sorry, you are not allowed to perform this action.', 'buddyboss-platform' ),
 			array(
 				'status' => rest_authorization_required_code(),
 			)
@@ -726,7 +726,7 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 		if ( ! is_user_logged_in() ) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
-				__( 'Sorry, you need to be logged in to create a message.', 'buddyboss' ),
+				__( 'Sorry, you need to be logged in to create a message.', 'buddyboss-platform' ),
 				array(
 					'status' => rest_authorization_required_code(),
 				)
@@ -790,7 +790,7 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 		if ( empty( $term ) ) {
 			return new WP_Error(
 				'bp_rest_term_required',
-				__( 'Sorry, term is required parameter.', 'buddyboss' ),
+				__( 'Sorry, term is required parameter.', 'buddyboss-platform' ),
 				array(
 					'status' => rest_authorization_required_code(),
 				)
@@ -895,7 +895,7 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 	public function search_recipients_items_permissions_check( $request ) {
 		$retval = new WP_Error(
 			'bp_rest_authorization_required',
-			__( 'Sorry, you are not allowed to search recipients.', 'buddyboss' ),
+			__( 'Sorry, you are not allowed to search recipients.', 'buddyboss-platform' ),
 			array(
 				'status' => rest_authorization_required_code(),
 			)
@@ -995,7 +995,7 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 	public function search_thread_items_permissions_check( $request ) {
 		$retval = new WP_Error(
 			'bp_rest_authorization_required',
-			__( 'Sorry, you are not allowed to search thread.', 'buddyboss' ),
+			__( 'Sorry, you are not allowed to search thread.', 'buddyboss-platform' ),
 			array(
 				'status' => rest_authorization_required_code(),
 			)
@@ -1043,7 +1043,7 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 		$thread = $this->get_thread_object( $request['id'], $request );
 		$error  = new WP_Error(
 			'bp_rest_messages_update_failed',
-			__( 'There was an error trying to update the message.', 'buddyboss' ),
+			__( 'There was an error trying to update the message.', 'buddyboss-platform' ),
 			array(
 				'status' => 500,
 			)
@@ -1168,7 +1168,7 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 		if ( empty( $message->id ) ) {
 			return new WP_Error(
 				'bp_rest_invalid_id',
-				__( 'Sorry, this message does not exist.', 'buddyboss' ),
+				__( 'Sorry, this message does not exist.', 'buddyboss-platform' ),
 				array(
 					'status' => 404,
 				)
@@ -1178,11 +1178,11 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 		$user_id = bp_loggedin_user_id();
 		$result  = false;
 		$action  = 'star';
-		$info    = __( 'Sorry, you cannot add the message to your starred box.', 'buddyboss' );
+		$info    = __( 'Sorry, you cannot add the message to your starred box.', 'buddyboss-platform' );
 
 		if ( bp_messages_is_message_starred( $message->id, $user_id ) ) {
 			$action = 'unstar';
-			$info   = __( 'Sorry, you cannot remove the message from your starred box.', 'buddyboss' );
+			$info   = __( 'Sorry, you cannot remove the message from your starred box.', 'buddyboss-platform' );
 		}
 
 		$result = bp_messages_star_set_action(
@@ -1237,7 +1237,7 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 	public function update_starred_permissions_check( $request ) {
 		$retval = new WP_Error(
 			'bp_rest_authorization_required',
-			__( 'Sorry, you are not allowed to star/unstar messages.', 'buddyboss' ),
+			__( 'Sorry, you are not allowed to star/unstar messages.', 'buddyboss-platform' ),
 			array(
 				'status' => rest_authorization_required_code(),
 			)
@@ -1310,7 +1310,7 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 		if ( ! in_array( $user_id, $recipient_ids, true ) ) {
 			return new WP_Error(
 				'bp_rest_messages_delete_thread_failed',
-				__( 'There was a problem deleting your conversation.', 'buddyboss' ),
+				__( 'There was a problem deleting your conversation.', 'buddyboss-platform' ),
 				array(
 					'status' => 500,
 				)
@@ -1424,7 +1424,7 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 		if ( true === $retval && ! bp_user_can( $user_id, 'bp_moderate', array( 'site_id' => bp_get_root_blog_id() ) ) ) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
-				__( 'Sorry, you are not allowed to delete this thread messages.', 'buddyboss' ),
+				__( 'Sorry, you are not allowed to delete this thread messages.', 'buddyboss-platform' ),
 				array(
 					'status' => rest_authorization_required_code(),
 				)
@@ -1543,13 +1543,14 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 		if ( ! empty( $group_id ) && ! empty( $message_from ) && 'group' === $message_from ) {
 
 			if ( empty( $group_name ) ) {
-				$group_name = '"' . __( 'Deleted Group', 'buddyboss' ) . '"';
+				$group_name = '"' . __( 'Deleted Group', 'buddyboss-platform' ) . '"';
 				if ( $group_message_users && $group_message_type && 'individual' === $group_message_users && ( 'private' === $group_message_type || 'open' === $group_message_type ) ) {
-					$group_text = sprintf( __( 'Sent from %s', 'buddyboss' ), $group_name );
+					/* translators: %s: group name. */
+					$group_text = sprintf( __( 'Sent from %s', 'buddyboss-platform' ), $group_name );
 				}
 			} else {
 				if ( $group_message_users && $group_message_type && 'individual' === $group_message_users && ( 'private' === $group_message_type || 'open' === $group_message_type ) ) {
-					$group_text = sprintf( '%1$s <a href="%2$s">%3$s</a>', __( 'Sent from', 'buddyboss' ), $group_link, $group_name );
+					$group_text = sprintf( '%1$s <a href="%2$s">%3$s</a>', __( 'Sent from', 'buddyboss-platform' ), $group_link, $group_name );
 				}
 			}
 		}
@@ -1557,7 +1558,7 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 		if ( $message_left && 'yes' === $message_left ) {
 			$message->message = sprintf(
 			/* translators: %s: Group name */
-				__( 'Left "%s"', 'buddyboss' ),
+				__( 'Left "%s"', 'buddyboss-platform' ),
 				ucwords( $group_name )
 			);
 			$group_member_action_type        = 'left';
@@ -1565,23 +1566,23 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 		} elseif ( 'yes' === $message_joined ) {
 			$message->message = sprintf(
 			/* translators: %s: Group name */
-				__( 'Joined "%s"', 'buddyboss' ),
+				__( 'Joined "%s"', 'buddyboss-platform' ),
 				ucwords( $group_name )
 			);
 			$group_member_action_type        = 'join';
 			$group_message_left_join_members = bp_messages_get_meta( $message->id, 'group_message_group_joined_users' );
 		} elseif ( $message_deleted && 'yes' === $message_deleted ) {
-			$message->message = __( 'This message was deleted', 'buddyboss' );
+			$message->message = __( 'This message was deleted', 'buddyboss-platform' );
 		} elseif ( $message_unbanned && 'yes' === $message_unbanned ) {
 			$message->message = sprintf(
 			/* translators: %s: Group name */
-				__( 'Removed Ban "%s"', 'buddyboss' ),
+				__( 'Removed Ban "%s"', 'buddyboss-platform' ),
 				ucwords( $group_name )
 			);
 		} elseif ( $message_banned && 'yes' === $message_banned ) {
 			$message->message = sprintf(
 			/* translators: %s: Group name */
-				__( 'Ban "%s"', 'buddyboss' ),
+				__( 'Ban "%s"', 'buddyboss-platform' ),
 				ucwords( $group_name )
 			);
 		} elseif ( 'This message was deleted' === wp_strip_all_tags( $message->message ) ) {
@@ -1839,7 +1840,7 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 				$group_link = '';
 			}
 
-			$group_name = ( empty( $group_name ) ) ? __( 'Deleted Group', 'buddyboss' ) : $group_name;
+			$group_name = ( empty( $group_name ) ) ? __( 'Deleted Group', 'buddyboss-platform' ) : $group_name;
 		}
 
 		if (
@@ -2155,18 +2156,18 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 	public function get_endpoint_args_for_item_schema( $method = WP_REST_Server::CREATABLE ) {
 		$key                       = 'get_item';
 		$args                      = WP_REST_Controller::get_endpoint_args_for_item_schema( $method );
-		$args['id']['description'] = __( 'ID of the Messages Thread.', 'buddyboss' );
+		$args['id']['description'] = __( 'ID of the Messages Thread.', 'buddyboss-platform' );
 
 		if ( WP_REST_Server::CREATABLE === $method ) {
 			$key = 'create_item';
 
 			// Edit the Thread ID description and default properties.
-			$args['id']['description'] = __( 'ID of the Messages Thread. Required when replying to an existing Thread.', 'buddyboss' );
+			$args['id']['description'] = __( 'ID of the Messages Thread. Required when replying to an existing Thread.', 'buddyboss-platform' );
 			$args['id']['default']     = 0;
 
 			// Add the sender_id argument.
 			$args['sender_id'] = array(
-				'description'       => __( 'The user ID of the Message sender.', 'buddyboss' ),
+				'description'       => __( 'The user ID of the Message sender.', 'buddyboss-platform' ),
 				'required'          => false,
 				'default'           => bp_loggedin_user_id(),
 				'type'              => 'integer',
@@ -2177,25 +2178,25 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 			// Edit subject's properties.
 			$args['subject']['type']        = 'string';
 			$args['subject']['default']     = false;
-			$args['subject']['description'] = __( 'Subject of the Message initializing the Thread.', 'buddyboss' );
+			$args['subject']['description'] = __( 'Subject of the Message initializing the Thread.', 'buddyboss-platform' );
 
 			// Edit message's properties.
 			$args['message']['type']        = 'string';
 			$args['message']['required']    = false;
-			$args['message']['description'] = __( 'Content of the Message to add to the Thread.', 'buddyboss' );
+			$args['message']['description'] = __( 'Content of the Message to add to the Thread.', 'buddyboss-platform' );
 
 			// Edit recipients properties.
 			$args['recipients']['required']          = false;
 			$args['recipients']['items']             = array( 'type' => 'integer' );
 			$args['recipients']['sanitize_callback'] = 'wp_parse_id_list';
 			$args['recipients']['validate_callback'] = 'rest_validate_request_arg';
-			$args['recipients']['description']       = __( 'The list of the recipients user IDs of the Message.', 'buddyboss' );
+			$args['recipients']['description']       = __( 'The list of the recipients user IDs of the Message.', 'buddyboss-platform' );
 
 			// Remove unused properties for this transport method.
 			unset( $args['subject']['properties'], $args['message']['properties'] );
 
 			$args['send_at'] = array(
-				'description'       => __( 'Messages send date according UTC time and date.', 'buddyboss' ),
+				'description'       => __( 'Messages send date according UTC time and date.', 'buddyboss-platform' ),
 				'required'          => false,
 				'type'              => 'string',
 				'format'            => 'date-time',
@@ -2211,14 +2212,14 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 				WP_REST_Server::DELETABLE === $method
 			) {
 				$args['recipients_pagination'] = array(
-					'description' => __( 'Load recipients in a paginated manner.', 'buddyboss' ),
+					'description' => __( 'Load recipients in a paginated manner.', 'buddyboss-platform' ),
 					'required'    => false,
 					'default'     => false,
 					'type'        => 'boolean',
 				);
 
 				$args['recipients_page'] = array(
-					'description'       => __( 'Current page of the recipients.', 'buddyboss' ),
+					'description'       => __( 'Current page of the recipients.', 'buddyboss-platform' ),
 					'required'          => false,
 					'default'           => 1,
 					'minimum'           => 1,
@@ -2232,7 +2233,7 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 				$key = 'update_item';
 
 				$args['message_id'] = array(
-					'description'       => __( 'By default the latest message of the thread will be updated. Specify this message ID to edit another message of the thread.', 'buddyboss' ),
+					'description'       => __( 'By default the latest message of the thread will be updated. Specify this message ID to edit another message of the thread.', 'buddyboss-platform' ),
 					'required'          => false,
 					'type'              => 'integer',
 					'sanitize_callback' => 'absint',
@@ -2244,7 +2245,7 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 				$key = 'delete_item';
 
 				$args['user_id'] = array(
-					'description'       => __( 'The user ID to remove from the thread', 'buddyboss' ),
+					'description'       => __( 'The user ID to remove from the thread', 'buddyboss-platform' ),
 					'required'          => true,
 					'type'              => 'integer',
 					'sanitize_callback' => 'absint',
@@ -2255,7 +2256,7 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 
 			if ( WP_REST_Server::READABLE === $method ) {
 				$args['is_hidden'] = array(
-					'description'       => __( 'List the archived threads.', 'buddyboss' ),
+					'description'       => __( 'List the archived threads.', 'buddyboss-platform' ),
 					'required'          => false,
 					'default'           => false,
 					'type'              => 'boolean',
@@ -2271,7 +2272,7 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 			WP_REST_Server::DELETABLE === $method
 		) {
 			$args['before'] = array(
-				'description'       => __( 'Messages to get before a specific date.', 'buddyboss' ),
+				'description'       => __( 'Messages to get before a specific date.', 'buddyboss-platform' ),
 				'required'          => false,
 				'type'              => 'string',
 				'format'            => 'date-time',
@@ -2304,24 +2305,24 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 			'properties' => array(
 				'id'                        => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'A unique numeric ID for the Thread.', 'buddyboss' ),
+					'description' => __( 'A unique numeric ID for the Thread.', 'buddyboss-platform' ),
 					'type'        => 'integer',
 				),
 				'message_id'                => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'The ID of the latest message of the Thread.', 'buddyboss' ),
+					'description' => __( 'The ID of the latest message of the Thread.', 'buddyboss-platform' ),
 					'readonly'    => true,
 					'type'        => 'integer',
 				),
 				'last_sender_id'            => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'The ID of latest sender of the Thread.', 'buddyboss' ),
+					'description' => __( 'The ID of latest sender of the Thread.', 'buddyboss-platform' ),
 					'readonly'    => true,
 					'type'        => 'integer',
 				),
 				'subject'                   => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Title of the latest message of the Thread.', 'buddyboss' ),
+					'description' => __( 'Title of the latest message of the Thread.', 'buddyboss-platform' ),
 					'type'        => 'object',
 					'arg_options' => array(
 						'sanitize_callback' => null,
@@ -2329,13 +2330,13 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 					),
 					'properties'  => array(
 						'raw'      => array(
-							'description' => __( 'Title of the latest message of the Thread, as it exists in the database.', 'buddyboss' ),
+							'description' => __( 'Title of the latest message of the Thread, as it exists in the database.', 'buddyboss-platform' ),
 							'type'        => 'string',
 							'context'     => array( 'embed', 'edit' ),
 							'default'     => false,
 						),
 						'rendered' => array(
-							'description' => __( 'Title of the latest message of the Thread, transformed for display.', 'buddyboss' ),
+							'description' => __( 'Title of the latest message of the Thread, transformed for display.', 'buddyboss-platform' ),
 							'type'        => 'string',
 							'context'     => array( 'embed', 'view', 'edit' ),
 							'readonly'    => true,
@@ -2345,7 +2346,7 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 				),
 				'excerpt'                   => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Summary of the latest message of the Thread.', 'buddyboss' ),
+					'description' => __( 'Summary of the latest message of the Thread.', 'buddyboss-platform' ),
 					'type'        => 'object',
 					'readonly'    => true,
 					'arg_options' => array(
@@ -2354,12 +2355,12 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 					),
 					'properties'  => array(
 						'raw'      => array(
-							'description' => __( 'Summary for the latest message of the Thread, as it exists in the database.', 'buddyboss' ),
+							'description' => __( 'Summary for the latest message of the Thread, as it exists in the database.', 'buddyboss-platform' ),
 							'type'        => 'string',
 							'context'     => array( 'embed', 'edit' ),
 						),
 						'rendered' => array(
-							'description' => __( 'HTML summary for the latest message of the Thread, transformed for display.', 'buddyboss' ),
+							'description' => __( 'HTML summary for the latest message of the Thread, transformed for display.', 'buddyboss-platform' ),
 							'type'        => 'string',
 							'context'     => array( 'embed', 'view', 'edit' ),
 						),
@@ -2367,7 +2368,7 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 				),
 				'message'                   => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Content of the latest message of the Thread.', 'buddyboss' ),
+					'description' => __( 'Content of the latest message of the Thread.', 'buddyboss-platform' ),
 					'type'        => 'object',
 					'required'    => true,
 					'arg_options' => array(
@@ -2376,12 +2377,12 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 					),
 					'properties'  => array(
 						'raw'      => array(
-							'description' => __( 'Content for the latest message of the Thread, as it exists in the database.', 'buddyboss' ),
+							'description' => __( 'Content for the latest message of the Thread, as it exists in the database.', 'buddyboss-platform' ),
 							'type'        => 'string',
 							'context'     => array( 'embed', 'edit' ),
 						),
 						'rendered' => array(
-							'description' => __( 'HTML content for the latest message of the Thread, transformed for display.', 'buddyboss' ),
+							'description' => __( 'HTML content for the latest message of the Thread, transformed for display.', 'buddyboss-platform' ),
 							'type'        => 'string',
 							'context'     => array( 'embed', 'view', 'edit' ),
 							'readonly'    => true,
@@ -2390,27 +2391,27 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 				),
 				'date'                      => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( "The date the latest message of the Thread, in the site's timezone.", 'buddyboss' ),
+					'description' => __( "The date the latest message of the Thread, in the site's timezone.", 'buddyboss-platform' ),
 					'readonly'    => true,
 					'type'        => 'string',
 					'format'      => 'date-time',
 				),
 				'start_date'                => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( "The date the first message of the Thread, in the site's timezone.", 'buddyboss' ),
+					'description' => __( "The date the first message of the Thread, in the site's timezone.", 'buddyboss-platform' ),
 					'readonly'    => true,
 					'type'        => 'string',
 					'format'      => 'date-time',
 				),
 				'unread_count'              => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Total count of unread messages into the Thread for the requested user.', 'buddyboss' ),
+					'description' => __( 'Total count of unread messages into the Thread for the requested user.', 'buddyboss-platform' ),
 					'readonly'    => true,
 					'type'        => 'integer',
 				),
 				'sender_ids'                => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'The list of user IDs for all messages in the Thread.', 'buddyboss' ),
+					'description' => __( 'The list of user IDs for all messages in the Thread.', 'buddyboss-platform' ),
 					'readonly'    => true,
 					'type'        => 'array',
 					'items'       => array(
@@ -2419,33 +2420,33 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 				),
 				'current_user'              => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Current Logged in user\'s ID.', 'buddyboss' ),
+					'description' => __( 'Current Logged in user\'s ID.', 'buddyboss-platform' ),
 					'readonly'    => true,
 					'type'        => 'integer',
 				),
 				'can_send_message'          => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Current user can send message or not.', 'buddyboss' ),
+					'description' => __( 'Current user can send message or not.', 'buddyboss-platform' ),
 					'readonly'    => true,
 					'type'        => 'boolean',
 				),
 				'avatar'                    => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Avatar URLs for the author of the activity.', 'buddyboss' ),
+					'description' => __( 'Avatar URLs for the author of the activity.', 'buddyboss-platform' ),
 					'type'        => 'object',
 					'readonly'    => true,
 					'properties'  => array(
 						'full'  => array(
 							'context'     => array( 'embed', 'view', 'edit' ),
 							/* translators: 1: Full avatar width in pixels. 2: Full avatar height in pixels */
-							'description' => sprintf( __( 'Avatar URL with full image size (%1$d x %2$d pixels).', 'buddyboss' ), bp_core_number_format( bp_core_avatar_full_width() ), bp_core_number_format( bp_core_avatar_full_height() ) ),
+							'description' => sprintf( __( 'Avatar URL with full image size (%1$d x %2$d pixels).', 'buddyboss-platform' ), bp_core_number_format( bp_core_avatar_full_width() ), bp_core_number_format( bp_core_avatar_full_height() ) ),
 							'type'        => 'string',
 							'format'      => 'uri',
 						),
 						'thumb' => array(
 							'context'     => array( 'embed', 'view', 'edit' ),
 							/* translators: 1: Thumb avatar width in pixels. 2: Thumb avatar height in pixels */
-							'description' => sprintf( __( 'Avatar URL with thumb image size (%1$d x %2$d pixels).', 'buddyboss' ), bp_core_number_format( bp_core_avatar_thumb_width() ), bp_core_number_format( bp_core_avatar_thumb_height() ) ),
+							'description' => sprintf( __( 'Avatar URL with thumb image size (%1$d x %2$d pixels).', 'buddyboss-platform' ), bp_core_number_format( bp_core_avatar_thumb_width() ), bp_core_number_format( bp_core_avatar_thumb_height() ) ),
 							'type'        => 'string',
 							'format'      => 'uri',
 						),
@@ -2453,62 +2454,62 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 				),
 				'is_group'                  => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Group ID if message sent from group.', 'buddyboss' ),
+					'description' => __( 'Group ID if message sent from group.', 'buddyboss-platform' ),
 					'readonly'    => true,
 					'type'        => 'integer',
 				),
 				'is_group_thread'           => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Whether is a group thread or not.', 'buddyboss' ),
+					'description' => __( 'Whether is a group thread or not.', 'buddyboss-platform' ),
 					'readonly'    => true,
 					'type'        => 'boolean',
 				),
 				'group_name'                => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Group name if thread created from group.  ', 'buddyboss' ),
+					'description' => __( 'Group name if thread created from group.  ', 'buddyboss-platform' ),
 					'readonly'    => true,
 					'type'        => 'string',
 				),
 				'group_link'                => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'The permalink to the Group on the site.', 'buddyboss' ),
+					'description' => __( 'The permalink to the Group on the site.', 'buddyboss-platform' ),
 					'type'        => 'string',
 					'format'      => 'uri',
 					'readonly'    => true,
 				),
 				'group_message_users'       => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Thread for all group users or selected one.', 'buddyboss' ),
+					'description' => __( 'Thread for all group users or selected one.', 'buddyboss-platform' ),
 					'type'        => 'string',
 				),
 				'group_message_type'        => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Thread type its from all or private one.', 'buddyboss' ),
+					'description' => __( 'Thread type its from all or private one.', 'buddyboss-platform' ),
 					'type'        => 'string',
 				),
 				'group_message_from'        => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Message from group or not.', 'buddyboss' ),
+					'description' => __( 'Message from group or not.', 'buddyboss-platform' ),
 					'type'        => 'string',
 				),
 				'recipients_count'          => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Recipient users count.', 'buddyboss' ),
+					'description' => __( 'Recipient users count.', 'buddyboss-platform' ),
 					'type'        => 'integer',
 				),
 				'recipients_per_page'       => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Number of recipient loading per page.', 'buddyboss' ),
+					'description' => __( 'Number of recipient loading per page.', 'buddyboss-platform' ),
 					'type'        => 'integer',
 				),
 				'recipients_total_pages'    => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Total number of pages for the recipients.', 'buddyboss' ),
+					'description' => __( 'Total number of pages for the recipients.', 'buddyboss-platform' ),
 					'type'        => 'integer',
 				),
 				'recipients'                => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'The list of recipient User Objects involved into the Thread.', 'buddyboss' ),
+					'description' => __( 'The list of recipient User Objects involved into the Thread.', 'buddyboss-platform' ),
 					'type'        => 'array',
 					'items'       => array(
 						'type' => 'object',
@@ -2516,26 +2517,26 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 				),
 				'message_per_page'          => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Number of message loading per page.', 'buddyboss' ),
+					'description' => __( 'Number of message loading per page.', 'buddyboss-platform' ),
 					'readonly'    => true,
 					'type'        => 'integer',
 				),
 				'messages_count'            => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Total message count into the thread.', 'buddyboss' ),
+					'description' => __( 'Total message count into the thread.', 'buddyboss-platform' ),
 					'readonly'    => true,
 					'type'        => 'integer',
 				),
 				'next_messages_timestamp'   => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Last Message time stamp from response.', 'buddyboss' ),
+					'description' => __( 'Last Message time stamp from response.', 'buddyboss-platform' ),
 					'readonly'    => true,
 					'type'        => 'string',
 					'format'      => 'date-time',
 				),
 				'messages'                  => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'List of message objects for the thread.', 'buddyboss' ),
+					'description' => __( 'List of message objects for the thread.', 'buddyboss-platform' ),
 					'readonly'    => true,
 					'type'        => 'array',
 					'items'       => array(
@@ -2544,7 +2545,7 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 				),
 				'loggedin_user_permissions' => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'List of user permission for loggedin user.', 'buddyboss' ),
+					'description' => __( 'List of user permission for loggedin user.', 'buddyboss-platform' ),
 					'readonly'    => true,
 					'type'        => 'array',
 					'items'       => array(
@@ -2553,13 +2554,13 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 				),
 				'is_hidden'                 => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Whether to check the thread archived or not for loggedin user.', 'buddyboss' ),
+					'description' => __( 'Whether to check the thread archived or not for loggedin user.', 'buddyboss-platform' ),
 					'readonly'    => true,
 					'type'        => 'boolean',
 				),
 				'starred_message_ids'       => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'List of starred message IDs.', 'buddyboss' ),
+					'description' => __( 'List of starred message IDs.', 'buddyboss-platform' ),
 					'readonly'    => true,
 					'type'        => 'array',
 					'items'       => array(
@@ -2596,7 +2597,7 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 		}
 
 		$params['box'] = array(
-			'description'       => __( 'Filter the result by box.', 'buddyboss' ),
+			'description'       => __( 'Filter the result by box.', 'buddyboss-platform' ),
 			'default'           => 'inbox',
 			'type'              => 'string',
 			'enum'              => $boxes,
@@ -2605,7 +2606,7 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['type'] = array(
-			'description'       => __( 'Filter the result by thread status.', 'buddyboss' ),
+			'description'       => __( 'Filter the result by thread status.', 'buddyboss-platform' ),
 			'default'           => 'all',
 			'type'              => 'string',
 			'enum'              => array( 'all', 'read', 'unread' ),
@@ -2614,7 +2615,7 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['user_id'] = array(
-			'description'       => __( 'Limit result to messages created by a specific user.', 'buddyboss' ),
+			'description'       => __( 'Limit result to messages created by a specific user.', 'buddyboss-platform' ),
 			'default'           => bp_loggedin_user_id(),
 			'type'              => 'integer',
 			'required'          => true,
@@ -2749,23 +2750,23 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 			'properties' => array(
 				'id'         => array(
 					'context'     => array( 'view', 'edit' ),
-					'description' => __( 'A unique numeric ID for user.', 'buddyboss' ),
+					'description' => __( 'A unique numeric ID for user.', 'buddyboss-platform' ),
 					'type'        => 'integer',
 				),
 				'userhandle' => array(
 					'context'     => array( 'view', 'edit' ),
-					'description' => __( 'User\'s nickname as handle.', 'buddyboss' ),
+					'description' => __( 'User\'s nickname as handle.', 'buddyboss-platform' ),
 					'type'        => 'string',
 				),
 				'text'       => array(
 					'context'     => array( 'view', 'edit' ),
-					'description' => __( 'Display Name for the user.', 'buddyboss' ),
+					'description' => __( 'Display Name for the user.', 'buddyboss-platform' ),
 					'readonly'    => true,
 					'type'        => 'string',
 				),
 				'image'      => array(
 					'context'     => array( 'view', 'edit' ),
-					'description' => __( 'Avatar URL for the user.', 'buddyboss' ),
+					'description' => __( 'Avatar URL for the user.', 'buddyboss-platform' ),
 					'readonly'    => true,
 					'type'        => 'string',
 				),
@@ -3005,7 +3006,7 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 		if ( ! empty( $current_recepient ) && $current_recepient->is_hidden ) {
 			return new WP_Error(
 				'bp_rest_archived_conversation',
-				__( 'You can\'t send messages in conversations you\'ve archived.', 'buddyboss' ),
+				__( 'You can\'t send messages in conversations you\'ve archived.', 'buddyboss-platform' ),
 				array( 'status' => rest_authorization_required_code() )
 			);
 		}
@@ -3030,13 +3031,13 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 				if ( 'admins' === $status ) {
 					return new WP_Error(
 						'bp_rest_authorization_required',
-						__( 'Only group organizers can send messages to this group.', 'buddyboss' ),
+						__( 'Only group organizers can send messages to this group.', 'buddyboss-platform' ),
 						array( 'status' => rest_authorization_required_code() )
 					);
 				} elseif ( 'mods' === $status ) {
 					return new WP_Error(
 						'bp_rest_authorization_required',
-						__( 'Only group organizers and moderators can send messages to this group.', 'buddyboss' ),
+						__( 'Only group organizers and moderators can send messages to this group.', 'buddyboss-platform' ),
 						array( 'status' => rest_authorization_required_code() )
 					);
 				}
@@ -3053,7 +3054,7 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 				if ( ! $is_deleted ) {
 					return new WP_Error(
 						'bp_rest_deleted_unset',
-						__( 'Unable to send new messages at this time.', 'buddyboss' ),
+						__( 'Unable to send new messages at this time.', 'buddyboss-platform' ),
 						array( 'status' => rest_authorization_required_code() )
 					);
 				}
@@ -3072,19 +3073,19 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 				if ( bp_moderation_is_user_suspended( $recipient_id ) ) {
 					return new WP_Error(
 						'bp_rest_user_suspended',
-						__( 'Unable to send new messages to this member.', 'buddyboss' ),
+						__( 'Unable to send new messages to this member.', 'buddyboss-platform' ),
 						array( 'status' => 400 )
 					);
 				} elseif ( function_exists( 'bb_moderation_is_user_blocked_by' ) && bb_moderation_is_user_blocked_by( $recipient_id ) ) {
 					return new WP_Error(
 						'bp_rest_user_suspended',
-						__( 'Unable to send new messages to this member.', 'buddyboss' ),
+						__( 'Unable to send new messages to this member.', 'buddyboss-platform' ),
 						array( 'status' => 400 )
 					);
 				} elseif ( bp_moderation_is_user_blocked( $recipient_id ) ) {
 					return new WP_Error(
 						'bp_rest_user_blocked',
-						__( 'You can\'t send messages to members you have blocked.', 'buddyboss' ),
+						__( 'You can\'t send messages to members you have blocked.', 'buddyboss-platform' ),
 						array( 'status' => 400 )
 					);
 				}
@@ -3104,7 +3105,7 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 					) {
 						return new WP_Error(
 							'bp_rest_friendship_required',
-							__( 'You must be connected to this member to send them a message.', 'buddyboss' ),
+							__( 'You must be connected to this member to send them a message.', 'buddyboss-platform' ),
 							array( 'status' => rest_authorization_required_code() )
 						);
 					}

@@ -26,7 +26,7 @@ function bb_media_register_videos_panel_fields() {
 		'videos',
 		'videos_settings',
 		array(
-			'title'          => __( 'Videos', 'buddyboss' ),
+			'title'          => __( 'Videos', 'buddyboss-platform' ),
 			'order'          => 10,
 			'help_url'       => '636178',
 			'section_toggle' => 'bb_media_videos_support',
@@ -57,10 +57,10 @@ function bb_media_register_videos_panel_fields() {
 		'videos_settings',
 		array(
 			'name'              => 'bp_video_profile_video_support',
-			'label'             => __( 'Profiles', 'buddyboss' ),
+			'label'             => __( 'Profiles', 'buddyboss-platform' ),
 			'description'       => bp_is_active( 'activity' )
-				? __( 'Allow members to upload videos in profiles and activity posts', 'buddyboss' )
-				: __( 'Allow members to upload videos in profiles', 'buddyboss' ),
+				? __( 'Allow members to upload videos in profiles and activity posts', 'buddyboss-platform' )
+				: __( 'Allow members to upload videos in profiles', 'buddyboss-platform' ),
 			'type'              => 'toggle',
 			'default'           => 0,
 			'sanitize_callback' => 'absint',
@@ -71,7 +71,7 @@ function bb_media_register_videos_panel_fields() {
 	// FIELD: Groups — video support.
 	if ( bp_is_active( 'groups' ) ) {
 		$group_description = bb_media_get_group_context_description(
-			__( 'Allow members to upload videos in', 'buddyboss' )
+			__( 'Allow members to upload videos in', 'buddyboss-platform' )
 		);
 
 		bb_register_feature_field(
@@ -80,7 +80,7 @@ function bb_media_register_videos_panel_fields() {
 			'videos_settings',
 			array(
 				'name'              => 'bp_video_group_video_support',
-				'label'             => __( 'Groups', 'buddyboss' ),
+				'label'             => __( 'Groups', 'buddyboss-platform' ),
 				'description'       => $group_description,
 				'type'              => 'toggle',
 				'default'           => 0,
@@ -98,8 +98,8 @@ function bb_media_register_videos_panel_fields() {
 			'videos_settings',
 			array(
 				'name'              => 'bp_video_messages_video_support',
-				'label'             => __( 'Messages', 'buddyboss' ),
-				'description'       => __( 'Allow members to upload videos in private messages', 'buddyboss' ),
+				'label'             => __( 'Messages', 'buddyboss-platform' ),
+				'description'       => __( 'Allow members to upload videos in private messages', 'buddyboss-platform' ),
 				'type'              => 'toggle',
 				'default'           => 0,
 				'sanitize_callback' => 'absint',
@@ -116,8 +116,8 @@ function bb_media_register_videos_panel_fields() {
 			'videos_settings',
 			array(
 				'name'              => 'bp_video_forums_video_support',
-				'label'             => __( 'Forums', 'buddyboss' ),
-				'description'       => __( 'Allow members to upload videos in forum discussions and replies', 'buddyboss' ),
+				'label'             => __( 'Forums', 'buddyboss-platform' ),
+				'description'       => __( 'Allow members to upload videos in forum discussions and replies', 'buddyboss-platform' ),
 				'type'              => 'toggle',
 				'default'           => 0,
 				'sanitize_callback' => 'absint',
@@ -136,15 +136,15 @@ function bb_media_register_videos_panel_fields() {
 		'videos_settings',
 		array(
 			'name'              => 'bp_video_allowed_size',
-			'label'             => __( 'Upload Size', 'buddyboss' ),
+			'label'             => __( 'Upload Size', 'buddyboss-platform' ),
 			'description'       => sprintf(
 				/* translators: %d: Server max upload size in MB */
-				__( 'Set max file size for video uploads, in megabytes. Your server\'s maximum upload size is %d MB.', 'buddyboss' ),
+				__( 'Set max file size for video uploads, in megabytes. Your server\'s maximum upload size is %d MB.', 'buddyboss-platform' ),
 				$server_max_mb
 			),
 			'type'              => 'number',
 			'default'           => $server_max_mb,
-			'suffix'            => __( 'MB', 'buddyboss' ),
+			'suffix'            => __( 'MB', 'buddyboss-platform' ),
 			'sanitize_callback' => 'bb_media_sanitize_upload_size',
 			'order'             => 50,
 		)
@@ -157,11 +157,11 @@ function bb_media_register_videos_panel_fields() {
 		'videos_settings',
 		array(
 			'name'              => 'bp_video_allowed_per_batch',
-			'label'             => __( 'Upload Limit', 'buddyboss' ),
-			'description'       => __( 'Set max number of videos that can be added to one activity post or video upload.', 'buddyboss' ),
+			'label'             => __( 'Upload Limit', 'buddyboss-platform' ),
+			'description'       => __( 'Set max number of videos that can be added to one activity post or video upload.', 'buddyboss-platform' ),
 			'type'              => 'number',
 			'default'           => 10,
-			'suffix'            => __( 'per batch', 'buddyboss' ),
+			'suffix'            => __( 'per batch', 'buddyboss-platform' ),
 			'sanitize_callback' => 'bb_media_sanitize_upload_limit',
 			'order'             => 60,
 		)
@@ -174,14 +174,14 @@ function bb_media_register_videos_panel_fields() {
 		'videos_settings',
 		array(
 			'name'              => 'bp_video_extensions_support',
-			'label'             => __( 'File Extensions', 'buddyboss' ),
-			'description'       => __( 'Enable the video file types that users are allowed to upload. For best performance and compatibility, we recommend MP4 and WebM.', 'buddyboss' ),
+			'label'             => __( 'File Extensions', 'buddyboss-platform' ),
+			'description'       => __( 'Enable the video file types that users are allowed to upload. For best performance and compatibility, we recommend MP4 and WebM.', 'buddyboss-platform' ),
 			'type'              => 'toggle_list',
 			'options'           => bb_media_get_video_extension_options(),
 			'default'           => array(),
 			'sanitize_callback' => 'bb_media_sanitize_video_extensions',
 			'allow_add'         => true,
-			'add_button_label'  => __( 'Add Extension', 'buddyboss' ),
+			'add_button_label'  => __( 'Add Extension', 'buddyboss-platform' ),
 			'extension_data'    => bb_media_get_video_extension_data(),
 			'order'             => 70,
 		)

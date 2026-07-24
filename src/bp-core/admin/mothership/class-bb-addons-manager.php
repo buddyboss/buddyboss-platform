@@ -34,11 +34,11 @@ class BB_Addons_Manager extends AddonsManager {
 	public static function generateAddonsHtml(): string {
 		// Check if license is activated before making API calls.
 		if ( ! self::getContainer()->get( AbstractPluginConnection::class )->getLicenseActivationStatus() ) {
-			return '<div class="notice notice-warning is-dismissible"><p>' . esc_html__( 'Please activate your license to access add-ons.', 'buddyboss' ) . '</p></div>';
+			return '<div class="notice notice-warning is-dismissible"><p>' . esc_html__( 'Please activate your license to access add-ons.', 'buddyboss-platform' ) . '</p></div>';
 		}
 
 		if ( ! self::getContainer()->get( AbstractPluginConnection::class )->getLicenseKey() ) {
-			return '<div class="notice notice-error is-dismissible"><p>' . esc_html__( 'Please enter your license key to access add-ons.', 'buddyboss' ) . '</p></div>';
+			return '<div class="notice notice-error is-dismissible"><p>' . esc_html__( 'Please enter your license key to access add-ons.', 'buddyboss-platform' ) . '</p></div>';
 		}
 
 		// Refresh the add-ons if the button is clicked.
@@ -52,7 +52,7 @@ class BB_Addons_Manager extends AddonsManager {
 		$addons = self::getAddons( true );
 
 		if ( $addons instanceof Response && $addons->isError() ) {
-			return sprintf( '<div class=""><p>%s <b>%s</b></p></div>', esc_html__( 'There was an issue connecting with the API.', 'buddyboss' ), $addons->error );
+			return sprintf( '<div class=""><p>%s <b>%s</b></p></div>', esc_html__( 'There was an issue connecting with the API.', 'buddyboss-platform' ), $addons->error );
 		}
 
 		self::enqueueAssets();

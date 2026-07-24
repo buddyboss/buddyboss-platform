@@ -78,5 +78,5 @@ function bp_nouveau_message_search_form() {
 	 *
 	 * @param string $search_form_html HTML markup for the message search form.
 	 */
-	echo apply_filters( 'bp_message_search_form', $search_form_html );
+	echo apply_filters( 'bp_message_search_form', $search_form_html ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- buffered search-form template HTML (contains <form>/<input> controls); wp_kses_post would strip the form controls.
 }

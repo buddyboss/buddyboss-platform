@@ -28,7 +28,7 @@ function bb_notifications_register_on_screen_panel_fields() {
 		'on_screen_notifications',
 		'on_screen_notifications',
 		array(
-			'title'       => __( 'On-screen Notifications', 'buddyboss' ),
+			'title'       => __( 'On-screen Notifications', 'buddyboss-platform' ),
 			'description' => '',
 			'order'       => 10,
 			'help_url'    => '636147',
@@ -42,10 +42,10 @@ function bb_notifications_register_on_screen_panel_fields() {
 		'on_screen_notifications',
 		array(
 			'name'              => '_bp_on_screen_notifications_enable',
-			'label'             => __( 'On-screen notifications', 'buddyboss' ),
+			'label'             => __( 'On-screen notifications', 'buddyboss-platform' ),
 			'type'              => 'toggle',
-			'description'       => __( 'Enable on-screen notifications', 'buddyboss' ),
-			'help_text'         => __( 'Show members new notifications received while on a page on-screen.', 'buddyboss' ),
+			'description'       => __( 'Enable on-screen notifications', 'buddyboss-platform' ),
+			'help_text'         => __( 'Show members new notifications received while on a page on-screen.', 'buddyboss-platform' ),
 			'default'           => bp_get_option( '_bp_on_screen_notifications_enable', 0 ),
 			'sanitize_callback' => 'absint',
 			'order'             => 10,
@@ -59,18 +59,18 @@ function bb_notifications_register_on_screen_panel_fields() {
 		'on_screen_notifications',
 		array(
 			'name'              => '_bp_on_screen_notifications_position',
-			'label'             => __( 'Position on Screen', 'buddyboss' ),
+			'label'             => __( 'Position on Screen', 'buddyboss-platform' ),
 			'type'              => 'image_radio',
 			'default'           => bp_get_option( '_bp_on_screen_notifications_position', 'right' ),
 			'sanitize_callback' => 'bb_notifications_sanitize_position',
 			'options'           => array(
 				array(
-					'label' => __( 'Bottom Left', 'buddyboss' ),
+					'label' => __( 'Bottom Left', 'buddyboss-platform' ),
 					'value' => 'left',
 					'image' => 'notification-position-left',
 				),
 				array(
-					'label' => __( 'Bottom Right', 'buddyboss' ),
+					'label' => __( 'Bottom Right', 'buddyboss-platform' ),
 					'value' => 'right',
 					'image' => 'notification-position-right',
 				),
@@ -91,10 +91,10 @@ function bb_notifications_register_on_screen_panel_fields() {
 		'on_screen_notifications',
 		array(
 			'name'              => '_bp_on_screen_notifications_mobile_support',
-			'label'             => __( 'Mobile Support', 'buddyboss' ),
+			'label'             => __( 'Mobile Support', 'buddyboss-platform' ),
 			'type'              => 'toggle',
-			'description'       => __( 'Show on-screen notifications on small screens', 'buddyboss' ),
-			'help_text'         => __( 'Enable this option to show on-screen notifications at the bottom of the screen smaller than 500px wide.', 'buddyboss' ),
+			'description'       => __( 'Show on-screen notifications on small screens', 'buddyboss-platform' ),
+			'help_text'         => __( 'Enable this option to show on-screen notifications at the bottom of the screen smaller than 500px wide.', 'buddyboss-platform' ),
 			'default'           => bp_get_option( '_bp_on_screen_notifications_mobile_support', 0 ),
 			'sanitize_callback' => 'absint',
 			'order'             => 30,
@@ -109,39 +109,39 @@ function bb_notifications_register_on_screen_panel_fields() {
 	// FIELD: Automatically Hide.
 	$visibility_options = array(
 		array(
-			'label' => __( 'Never Hide', 'buddyboss' ),
+			'label' => __( 'Never Hide', 'buddyboss-platform' ),
 			'value' => 'never',
 		),
 		array(
-			'label' => __( '5 Seconds', 'buddyboss' ),
+			'label' => __( '5 Seconds', 'buddyboss-platform' ),
 			'value' => '5',
 		),
 		array(
-			'label' => __( '10 Seconds', 'buddyboss' ),
+			'label' => __( '10 Seconds', 'buddyboss-platform' ),
 			'value' => '10',
 		),
 		array(
-			'label' => __( '30 Seconds', 'buddyboss' ),
+			'label' => __( '30 Seconds', 'buddyboss-platform' ),
 			'value' => '30',
 		),
 		array(
-			'label' => __( '1 Minute', 'buddyboss' ),
+			'label' => __( '1 Minute', 'buddyboss-platform' ),
 			'value' => '60',
 		),
 		array(
-			'label' => __( '2 Minutes', 'buddyboss' ),
+			'label' => __( '2 Minutes', 'buddyboss-platform' ),
 			'value' => '120',
 		),
 		array(
-			'label' => __( '3 Minutes', 'buddyboss' ),
+			'label' => __( '3 Minutes', 'buddyboss-platform' ),
 			'value' => '180',
 		),
 		array(
-			'label' => __( '4 Minutes', 'buddyboss' ),
+			'label' => __( '4 Minutes', 'buddyboss-platform' ),
 			'value' => '240',
 		),
 		array(
-			'label' => __( '5 Minutes', 'buddyboss' ),
+			'label' => __( '5 Minutes', 'buddyboss-platform' ),
 			'value' => '300',
 		),
 	);
@@ -152,7 +152,7 @@ function bb_notifications_register_on_screen_panel_fields() {
 		'on_screen_notifications',
 		array(
 			'name'              => '_bp_on_screen_notifications_visibility',
-			'label'             => __( 'Automatically Hide', 'buddyboss' ),
+			'label'             => __( 'Automatically Hide', 'buddyboss-platform' ),
 			'type'              => 'select',
 			'default'           => bp_get_option( '_bp_on_screen_notifications_visibility', 'never' ),
 			'sanitize_callback' => 'bb_notifications_sanitize_visibility',
@@ -173,10 +173,10 @@ function bb_notifications_register_on_screen_panel_fields() {
 		'on_screen_notifications',
 		array(
 			'name'              => '_bp_on_screen_notifications_browser_tab',
-			'label'             => __( 'Show in Browser Tab', 'buddyboss' ),
+			'label'             => __( 'Show in Browser Tab', 'buddyboss-platform' ),
 			'type'              => 'toggle',
-			'description'       => __( 'Show new notifications in the title of the browser tab', 'buddyboss' ),
-			'help_text'         => __( 'Update the page &lt;title&gt; tab when new notifications are received.', 'buddyboss' ),
+			'description'       => __( 'Show new notifications in the title of the browser tab', 'buddyboss-platform' ),
+			'help_text'         => __( 'Update the page &lt;title&gt; tab when new notifications are received.', 'buddyboss-platform' ),
 			'default'           => bp_get_option( '_bp_on_screen_notifications_browser_tab', 0 ),
 			'sanitize_callback' => 'absint',
 			'order'             => 50,
@@ -198,7 +198,7 @@ function bb_notifications_register_on_screen_panel_fields() {
 				'name'              => '_bp_on_screen_notifications_notice',
 				'label'             => '',
 				'type'              => 'notice',
-				'description'       => __( 'Members can manage which on-screen notifications they receive in their notification preferences by enabling or disabling the "Web" options.', 'buddyboss' ),
+				'description'       => __( 'Members can manage which on-screen notifications they receive in their notification preferences by enabling or disabling the "Web" options.', 'buddyboss-platform' ),
 				'notice_type'       => 'info',
 				'sanitize_callback' => '__return_empty_string',
 				'order'             => 60,

@@ -77,7 +77,7 @@ class BP_REST_Attachments_Group_Avatar_Endpoint extends WP_REST_Controller {
 			array(
 				'args'   => array(
 					'group_id' => array(
-						'description' => __( 'A unique numeric ID for the Group.', 'buddyboss' ),
+						'description' => __( 'A unique numeric ID for the Group.', 'buddyboss-platform' ),
 						'type'        => 'integer',
 					),
 				),
@@ -141,7 +141,7 @@ class BP_REST_Attachments_Group_Avatar_Endpoint extends WP_REST_Controller {
 		if ( ! $avatar->full && ! $avatar->thumb ) {
 			return new WP_Error(
 				'bp_rest_attachments_group_avatar_no_image',
-				__( 'Sorry, there was a problem fetching this group avatar.', 'buddyboss' ),
+				__( 'Sorry, there was a problem fetching this group avatar.', 'buddyboss-platform' ),
 				array(
 					'status' => 500,
 				)
@@ -182,7 +182,7 @@ class BP_REST_Attachments_Group_Avatar_Endpoint extends WP_REST_Controller {
 		if ( function_exists( 'bp_rest_enable_private_network' ) && true === bp_rest_enable_private_network() && ! is_user_logged_in() ) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
-				__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss' ),
+				__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss-platform' ),
 				array(
 					'status' => rest_authorization_required_code(),
 				)
@@ -194,7 +194,7 @@ class BP_REST_Attachments_Group_Avatar_Endpoint extends WP_REST_Controller {
 		if ( true === $retval && ! $this->group ) {
 			$retval = new WP_Error(
 				'bp_rest_group_invalid_id',
-				__( 'Invalid group ID.', 'buddyboss' ),
+				__( 'Invalid group ID.', 'buddyboss-platform' ),
 				array(
 					'status' => 404,
 				)
@@ -238,7 +238,7 @@ class BP_REST_Attachments_Group_Avatar_Endpoint extends WP_REST_Controller {
 		if ( empty( $files ) ) {
 			return new WP_Error(
 				'bp_rest_attachments_group_avatar_no_image_file',
-				__( 'Sorry, you need an image file to upload.', 'buddyboss' ),
+				__( 'Sorry, you need an image file to upload.', 'buddyboss-platform' ),
 				array(
 					'status' => 500,
 				)
@@ -301,7 +301,7 @@ class BP_REST_Attachments_Group_Avatar_Endpoint extends WP_REST_Controller {
 			if ( bp_disable_group_avatar_uploads() || false === buddypress()->avatar->show_avatars ) {
 				$retval = new WP_Error(
 					'bp_rest_attachments_group_avatar_disabled',
-					__( 'Sorry, group avatar upload is disabled.', 'buddyboss' ),
+					__( 'Sorry, group avatar upload is disabled.', 'buddyboss-platform' ),
 					array(
 						'status' => 500,
 					)
@@ -311,7 +311,7 @@ class BP_REST_Attachments_Group_Avatar_Endpoint extends WP_REST_Controller {
 			} else {
 				$retval = new WP_Error(
 					'bp_rest_authorization_required',
-					__( 'Sorry, you are not authorized to perform this action.', 'buddyboss' ),
+					__( 'Sorry, you are not authorized to perform this action.', 'buddyboss-platform' ),
 					array(
 						'status' => rest_authorization_required_code(),
 					)
@@ -353,7 +353,7 @@ class BP_REST_Attachments_Group_Avatar_Endpoint extends WP_REST_Controller {
 		if ( ! bp_get_group_has_avatar( $group_id ) ) {
 			return new WP_Error(
 				'bp_rest_attachments_group_avatar_no_uploaded_avatar',
-				__( 'Sorry, there are no uploaded avatars for this group on this site.', 'buddyboss' ),
+				__( 'Sorry, there are no uploaded avatars for this group on this site.', 'buddyboss-platform' ),
 				array(
 					'status' => 404,
 				)
@@ -386,7 +386,7 @@ class BP_REST_Attachments_Group_Avatar_Endpoint extends WP_REST_Controller {
 		if ( ! $deleted ) {
 			return new WP_Error(
 				'bp_rest_attachments_group_avatar_delete_failed',
-				__( 'Sorry, there was a problem deleting this group avatar.', 'buddyboss' ),
+				__( 'Sorry, there was a problem deleting this group avatar.', 'buddyboss-platform' ),
 				array(
 					'status' => 500,
 				)
@@ -485,13 +485,13 @@ class BP_REST_Attachments_Group_Avatar_Endpoint extends WP_REST_Controller {
 			'properties' => array(
 				'full'  => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Full size of the image file.', 'buddyboss' ),
+					'description' => __( 'Full size of the image file.', 'buddyboss-platform' ),
 					'type'        => 'string',
 					'readonly'    => true,
 				),
 				'thumb' => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Thumb size of the image file.', 'buddyboss' ),
+					'description' => __( 'Thumb size of the image file.', 'buddyboss-platform' ),
 					'type'        => 'string',
 					'readonly'    => true,
 				),
@@ -520,7 +520,7 @@ class BP_REST_Attachments_Group_Avatar_Endpoint extends WP_REST_Controller {
 		unset( $params['search'], $params['page'], $params['per_page'] );
 
 		$params['html'] = array(
-			'description'       => __( 'Whether to return an <img> HTML element, vs a raw URL to a group avatar.', 'buddyboss' ),
+			'description'       => __( 'Whether to return an <img> HTML element, vs a raw URL to a group avatar.', 'buddyboss-platform' ),
 			'default'           => false,
 			'type'              => 'boolean',
 			'sanitize_callback' => 'rest_sanitize_boolean',
@@ -528,7 +528,7 @@ class BP_REST_Attachments_Group_Avatar_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['alt'] = array(
-			'description'       => __( 'The alt attribute for the <img> element.', 'buddyboss' ),
+			'description'       => __( 'The alt attribute for the <img> element.', 'buddyboss-platform' ),
 			'default'           => '',
 			'type'              => 'string',
 			'sanitize_callback' => 'sanitize_text_field',

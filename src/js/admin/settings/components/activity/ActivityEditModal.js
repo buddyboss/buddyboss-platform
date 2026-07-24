@@ -247,7 +247,7 @@ export function ActivityEditModal( { isOpen, activity, activityActions, onClose,
 
 	return (
 		<Modal
-			title={ __( 'Edit Activity', 'buddyboss' ) + ' #' + activity.id }
+			title={ __( 'Edit Activity', 'buddyboss-platform' ) + ' #' + activity.id }
 			onRequestClose={ onClose }
 			className="bb-activity-edit-modal bb-admin-settings-modal"
 			shouldCloseOnClickOutside={ false }
@@ -270,7 +270,7 @@ export function ActivityEditModal( { isOpen, activity, activityActions, onClose,
 						rel="noopener noreferrer"
 						className="bb-activity-edit-modal__view-link"
 					>
-						{ __( 'View Activity', 'buddyboss' ) }
+						{ __( 'View Activity', 'buddyboss-platform' ) }
 						<i className="bb-icons-rl bb-icons-rl-arrow-up-right"></i>
 					</a>
 				</div>
@@ -280,7 +280,7 @@ export function ActivityEditModal( { isOpen, activity, activityActions, onClose,
 						onClick={ onClose }
 						disabled={ isSaving }
 					>
-						{ __( 'Cancel', 'buddyboss' ) }
+						{ __( 'Cancel', 'buddyboss-platform' ) }
 					</Button>
 					<Button
 						variant="primary"
@@ -288,7 +288,7 @@ export function ActivityEditModal( { isOpen, activity, activityActions, onClose,
 						isBusy={ isSaving }
 						disabled={ isSaving }
 					>
-						{ __( 'Save', 'buddyboss' ) }
+						{ __( 'Save', 'buddyboss-platform' ) }
 					</Button>
 				</div>
 			</div>

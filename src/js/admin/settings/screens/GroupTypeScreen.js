@@ -166,7 +166,7 @@ export function GroupTypeScreen( { onNavigate, helpUrl, onHelpClick, feature, ac
 			.catch( function ( err ) {
 				if ( ! err || 'AbortError' !== err.name ) {
 					setIsLoading( false );
-					setToast( { status: 'error', message: __( 'Failed to load group types.', 'buddyboss' ) } );
+					setToast( { status: 'error', message: __( 'Failed to load group types.', 'buddyboss-platform' ) } );
 				}
 			} );
 	}, [ currentPage, perPage ] );
@@ -232,7 +232,7 @@ export function GroupTypeScreen( { onNavigate, helpUrl, onHelpClick, feature, ac
 		savePlatformSetting( optionName, newValue ? 1 : 0 )
 			.then( function ( response ) {
 				if ( response.success ) {
-					setToast( { status: 'success', message: __( 'Setting saved.', 'buddyboss' ) } );
+					setToast( { status: 'success', message: __( 'Setting saved.', 'buddyboss-platform' ) } );
 
 					// Refetch types when re-enabling — the list may be stale/empty
 					// from when the feature was disabled and the component remounted.
@@ -246,7 +246,7 @@ export function GroupTypeScreen( { onNavigate, helpUrl, onHelpClick, feature, ac
 					} else {
 						setAutoMembershipApproval( prevValue );
 					}
-					setToast( { status: 'error', message: __( 'Failed to save setting.', 'buddyboss' ) } );
+					setToast( { status: 'error', message: __( 'Failed to save setting.', 'buddyboss-platform' ) } );
 				}
 			} )
 			.catch( function () {
@@ -256,7 +256,7 @@ export function GroupTypeScreen( { onNavigate, helpUrl, onHelpClick, feature, ac
 				} else {
 					setAutoMembershipApproval( prevValue );
 				}
-				setToast( { status: 'error', message: __( 'Failed to save setting.', 'buddyboss' ) } );
+				setToast( { status: 'error', message: __( 'Failed to save setting.', 'buddyboss-platform' ) } );
 			} );
 	}, [ enableGroupTypes, autoMembershipApproval ] );
 
@@ -290,16 +290,16 @@ export function GroupTypeScreen( { onNavigate, helpUrl, onHelpClick, feature, ac
 					} else {
 						setRefetchTick( function ( t ) { return t + 1; } );
 					}
-					setToast( { status: 'success', message: __( 'Group type deleted.', 'buddyboss' ) } );
+					setToast( { status: 'success', message: __( 'Group type deleted.', 'buddyboss-platform' ) } );
 				} else {
-					setToast( { status: 'error', message: ( response.data && response.data.message ) || __( 'Failed to delete group type.', 'buddyboss' ) } );
+					setToast( { status: 'error', message: ( response.data && response.data.message ) || __( 'Failed to delete group type.', 'buddyboss-platform' ) } );
 				}
 			} )
 			.catch( function ( err ) {
 				if ( err && 'AbortError' === err.name ) {
 					return;
 				}
-				setToast( { status: 'error', message: __( 'Failed to delete group type.', 'buddyboss' ) } );
+				setToast( { status: 'error', message: __( 'Failed to delete group type.', 'buddyboss-platform' ) } );
 			} );
 	}, [ deleteConfirmId, groupTypes, currentPage ] );
 
@@ -342,7 +342,7 @@ export function GroupTypeScreen( { onNavigate, helpUrl, onHelpClick, feature, ac
 			<div className="bb-admin-feature-settings__section bb-admin-group-types__card">
 				<div className="bb-admin-feature-settings__section-header">
 					<h3 className="bb-admin-feature-settings__section-title">
-						{ getSectionTitle( feature, activePanelId, 'group_type_settings' ) || __( 'Group Type Settings', 'buddyboss' ) }
+						{ getSectionTitle( feature, activePanelId, 'group_type_settings' ) || __( 'Group Type Settings', 'buddyboss-platform' ) }
 					</h3>
 					{ helpUrl && (
 						<HelpIcon
@@ -358,11 +358,11 @@ export function GroupTypeScreen( { onNavigate, helpUrl, onHelpClick, feature, ac
 						<>
 							<div className="bb-admin-group-types__setting-row">
 								<span className="bb-admin-group-types__setting-label">
-									{ getFieldLabel( feature, activePanelId, 'bp-disable-group-type-creation' ) || __( 'Group Types', 'buddyboss' ) }
+									{ getFieldLabel( feature, activePanelId, 'bp-disable-group-type-creation' ) || __( 'Group Types', 'buddyboss-platform' ) }
 								</span>
 								<div className="bb-admin-group-types__setting-control">
 									<ToggleControl
-										label={ getFieldDescription( feature, activePanelId, 'bp-disable-group-type-creation' ) || __( 'Enable group types', 'buddyboss' ) }
+										label={ getFieldDescription( feature, activePanelId, 'bp-disable-group-type-creation' ) || __( 'Enable group types', 'buddyboss-platform' ) }
 										checked={ enableGroupTypes }
 										onChange={ function ( val ) {
 											handleSettingChange( 'bp-disable-group-type-creation', val );
@@ -378,11 +378,11 @@ export function GroupTypeScreen( { onNavigate, helpUrl, onHelpClick, feature, ac
 							</div>
 							<div className="bb-admin-group-types__setting-row">
 								<span className="bb-admin-group-types__setting-label">
-									{ getFieldLabel( feature, activePanelId, 'bp-enable-group-auto-join' ) || __( 'Auto Membership Approval', 'buddyboss' ) }
+									{ getFieldLabel( feature, activePanelId, 'bp-enable-group-auto-join' ) || __( 'Auto Membership Approval', 'buddyboss-platform' ) }
 								</span>
 								<div className="bb-admin-group-types__setting-control">
 									<ToggleControl
-										label={ getFieldDescription( feature, activePanelId, 'bp-enable-group-auto-join' ) || __( 'Allow selected profile types to automatically join groups', 'buddyboss' ) }
+										label={ getFieldDescription( feature, activePanelId, 'bp-enable-group-auto-join' ) || __( 'Allow selected profile types to automatically join groups', 'buddyboss-platform' ) }
 										checked={ autoMembershipApproval }
 										onChange={ function ( val ) {
 											handleSettingChange( 'bp-enable-group-auto-join', val );
@@ -405,14 +405,14 @@ export function GroupTypeScreen( { onNavigate, helpUrl, onHelpClick, feature, ac
 			{ enableGroupTypes && <div className="bb-admin-feature-settings__section">
 				<div className="bb-admin-feature-settings__section-header">
 					<h3 className="bb-admin-feature-settings__section-title">
-						{ __( 'Group Types', 'buddyboss' ) }
+						{ __( 'Group Types', 'buddyboss-platform' ) }
 					</h3>
 					<button
 						className="bb-admin-group-types__add-btn"
 						onClick={ handleAddNewType }
 					>
 						<i className="bb-icons-rl bb-icons-rl-plus"></i>
-						{ __( 'Add New Group Type', 'buddyboss' ) }
+						{ __( 'Add New Group Type', 'buddyboss-platform' ) }
 					</button>
 				</div>
 				<div className="bb-admin-feature-settings__section-body bb-admin-group-types__list-body">
@@ -422,7 +422,7 @@ export function GroupTypeScreen( { onNavigate, helpUrl, onHelpClick, feature, ac
 						<ul className="bb-admin-group-types__list">
 							{ groupTypes.map( function ( type ) {
 								var isPublic = 'private' !== type.visibility;
-								var countText = sprintf( _n( '%s group', '%s groups', type.groups_count, 'buddyboss' ), type.groups_count );
+								var countText = sprintf( _n( '%s group', '%s groups', type.groups_count, 'buddyboss-platform' ), type.groups_count );
 
 								return (
 									<li key={ type.id } className="bb-admin-group-types__list-item">
@@ -457,7 +457,7 @@ export function GroupTypeScreen( { onNavigate, helpUrl, onHelpClick, feature, ac
 										<div className="bb-admin-group-types__list-item-visibility-col">
 											<span className={ 'bb-admin-group-types__list-item-visibility-badge' + ( isPublic ? '' : ' bb-admin-group-types__list-item-visibility-badge--private' ) }>
 												<span className={ 'bb-icons-rl ' + ( isPublic ? 'bb-icons-rl-globe-simple' : 'bb-icons-rl-lock' ) }></span>
-												{ isPublic ? __( 'Public', 'buddyboss' ) : __( 'Private', 'buddyboss' ) }
+												{ isPublic ? __( 'Public', 'buddyboss-platform' ) : __( 'Private', 'buddyboss-platform' ) }
 											</span>
 										</div>
 										<div className="bb-admin-group-types__list-item-actions-col">
@@ -467,7 +467,7 @@ export function GroupTypeScreen( { onNavigate, helpUrl, onHelpClick, feature, ac
 													onClick={ function () {
 														setOpenMenuId( type.id === openMenuId ? null : type.id );
 													} }
-													aria-label={ __( 'Actions', 'buddyboss' ) }
+													aria-label={ __( 'Actions', 'buddyboss-platform' ) }
 													aria-haspopup="true"
 													aria-expanded={ type.id === openMenuId ? 'true' : 'false' }
 												>
@@ -483,7 +483,7 @@ export function GroupTypeScreen( { onNavigate, helpUrl, onHelpClick, feature, ac
 															} }
 														>
 															<i className="bb-icons-rl bb-icons-rl-pencil-simple"></i>
-															{ __( 'Edit', 'buddyboss' ) }
+															{ __( 'Edit', 'buddyboss-platform' ) }
 														</button>
 														<button
 															className="bb-admin-group-types__menu-item bb-admin-group-types__menu-item--danger"
@@ -493,7 +493,7 @@ export function GroupTypeScreen( { onNavigate, helpUrl, onHelpClick, feature, ac
 															} }
 														>
 															<i className="bb-icons-rl bb-icons-rl-trash"></i>
-															{ __( 'Delete', 'buddyboss' ) }
+															{ __( 'Delete', 'buddyboss-platform' ) }
 														</button>
 													</div>
 												) }
@@ -505,7 +505,7 @@ export function GroupTypeScreen( { onNavigate, helpUrl, onHelpClick, feature, ac
 						</ul>
 					) : (
 						<div className="bb-admin-group-types__empty">
-							<p>{ __( 'No group types found. Click "Add New Group Type" to create one.', 'buddyboss' ) }</p>
+							<p>{ __( 'No group types found. Click "Add New Group Type" to create one.', 'buddyboss-platform' ) }</p>
 						</div>
 					) }
 
@@ -531,10 +531,10 @@ export function GroupTypeScreen( { onNavigate, helpUrl, onHelpClick, feature, ac
 			{/* Delete Confirmation Modal */}
 			<ConfirmToggleModal
 				isOpen={ null !== deleteConfirmId }
-				title={ __( 'Delete Group Type', 'buddyboss' ) }
-				message={ __( 'Are you sure you want to delete this group type?', 'buddyboss' ) }
-				confirmLabel={ __( 'Delete', 'buddyboss' ) }
-				cancelLabel={ __( 'Cancel', 'buddyboss' ) }
+				title={ __( 'Delete Group Type', 'buddyboss-platform' ) }
+				message={ __( 'Are you sure you want to delete this group type?', 'buddyboss-platform' ) }
+				confirmLabel={ __( 'Delete', 'buddyboss-platform' ) }
+				cancelLabel={ __( 'Cancel', 'buddyboss-platform' ) }
 				isDestructive={ true }
 				onConfirm={ performDelete }
 				onCancel={ function () {

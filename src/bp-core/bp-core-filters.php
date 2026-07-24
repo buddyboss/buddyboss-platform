@@ -472,7 +472,7 @@ function bp_core_filter_user_welcome_email( $welcome_email ) {
 	}
 
 	// [User Set] Replaces 'PASSWORD' in welcome email; Represents value set by user
-	return str_replace( 'PASSWORD', __( '[User Set]', 'buddyboss' ), $welcome_email );
+	return str_replace( 'PASSWORD', __( '[User Set]', 'buddyboss-platform' ), $welcome_email );
 }
 add_filter( 'update_welcome_user_email', 'bp_core_filter_user_welcome_email' );
 
@@ -506,7 +506,7 @@ function bp_core_filter_blog_welcome_email( $welcome_email, $blog_id, $user_id, 
 	}
 
 	// [User Set] Replaces $password in welcome email; Represents value set by user
-	return str_replace( $password, __( '[User Set]', 'buddyboss' ), $welcome_email );
+	return str_replace( $password, __( '[User Set]', 'buddyboss-platform' ), $welcome_email );
 }
 add_filter( 'update_welcome_email', 'bp_core_filter_blog_welcome_email', 10, 4 );
 
@@ -651,7 +651,8 @@ function bp_modify_page_title( $title = '', $sep = '&raquo;', $seplocation = 'ri
 		$bp_title_parts['site'] = $blogname;
 
 		if ( ( $paged >= 2 || $page >= 2 ) && ! is_404() && ! bp_is_single_activity() && ! bp_is_user_messages() ) {
-			$bp_title_parts['page'] = sprintf( __( 'Page %s', 'buddyboss' ), max( $paged, $page ) );
+			/* translators: %s: page number. */
+			$bp_title_parts['page'] = sprintf( __( 'Page %s', 'buddyboss-platform' ), max( $paged, $page ) );
 		}
 	}
 
@@ -1006,12 +1007,12 @@ function bp_customizer_nav_menus_set_item_types( $item_types = array() ) {
 		$item_types,
 		array(
 			'bp_loggedin_nav'  => array(
-				'title'  => __( 'BuddyBoss (logged-in)', 'buddyboss' ),
+				'title'  => __( 'BuddyBoss (logged-in)', 'buddyboss-platform' ),
 				'type'   => 'bp_nav',
 				'object' => 'bp_loggedin_nav',
 			),
 			'bp_loggedout_nav' => array(
-				'title'  => __( 'BuddyBoss (logged-out)', 'buddyboss' ),
+				'title'  => __( 'BuddyBoss (logged-out)', 'buddyboss-platform' ),
 				'type'   => 'bp_nav',
 				'object' => 'bp_loggedout_nav',
 			),
@@ -1356,8 +1357,8 @@ function bp_core_render_email_template( $template ) {
 	ob_end_clean();
 
 	// Make sure we add a <title> tag so WP Customizer picks it up.
-	$template = str_replace( '<head>', '<head><title>' . esc_html__( 'BuddyBoss Emails', 'buddyboss' ) . '</title>', $template );
-	echo str_replace( '{{{content}}}', wpautop( get_post()->post_content ), $template );
+	$template = str_replace( '<head>', '<head><title>' . esc_html__( 'BuddyBoss Emails', 'buddyboss-platform' ) . '</title>', $template );
+	echo str_replace( '{{{content}}}', wpautop( get_post()->post_content ), $template ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- full email HTML document (<html>/<head>/<style>/<title>) rendered in the admin-only Email Customizer; wp_kses_post strips the document structure and dumps raw CSS on screen.
 
 	/*
 	 * Link colours are applied directly in the email template before sending, so we
@@ -1567,6 +1568,73 @@ function bp_remove_badgeos_conflict_ckeditor_dequeue_script( $src, $handle ) {
 }
 
 /**
+ * Fall back to the minified asset when an unminified plugin script/style is missing.
+ *
+ * With `SCRIPT_DEBUG` enabled, BuddyBoss enqueues resolve to the unminified
+ * `<name>.<ext>` URL. Shipped customer zips contain only the minified
+ * `<name>.min.<ext>` files, so those unminified URLs would 404. This filter
+ * rewrites any first-party, non-minified `.js`/`.css` URL to its `.min`
+ * counterpart when the unminified file is absent on disk but the minified twin
+ * exists. Developer checkouts (which keep both variants) are unaffected: the
+ * unminified file is present, so its URL is served as-is.
+ *
+ * Runs at PHP_INT_MAX so it observes the final `src` after any other loader
+ * filters have had their say. Cheap on production: minified URLs already carry
+ * `.min` and short-circuit before any filesystem check, and non-plugin URLs
+ * bail on the prefix test.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $src The source URL of the enqueued script or style.
+ * @return string The original URL, or its `.min` counterpart when the
+ *                unminified file is missing.
+ */
+function bb_core_asset_src_min_fallback( $src ) {
+	if ( empty( $src ) || ! is_string( $src ) ) {
+		return $src;
+	}
+
+	$plugin_url = trailingslashit( BP_PLUGIN_URL );
+
+	// Only touch this plugin's own assets.
+	if ( 0 !== strpos( $src, $plugin_url ) ) {
+		return $src;
+	}
+
+	// Split off any query string / fragment so the extension test is reliable.
+	$path_part = $src;
+	$tail      = '';
+	$cut       = strcspn( $src, '?#' );
+	if ( $cut < strlen( $src ) ) {
+		$path_part = substr( $src, 0, $cut );
+		$tail      = substr( $src, $cut );
+	}
+
+	// Only .js / .css, and only when NOT already minified.
+	if ( ! preg_match( '/(?<!\.min)\.(js|css)$/', $path_part, $matches ) ) {
+		return $src;
+	}
+
+	$relative   = substr( $path_part, strlen( $plugin_url ) );
+	$plugin_dir = trailingslashit( BP_PLUGIN_DIR );
+
+	// Unminified file present → serve it (the desired variant under SCRIPT_DEBUG).
+	if ( file_exists( $plugin_dir . $relative ) ) {
+		return $src;
+	}
+
+	// Unminified missing → use the .min twin when it exists.
+	$min_relative = preg_replace( '/\.(js|css)$/', '.min.$1', $relative );
+	if ( file_exists( $plugin_dir . $min_relative ) ) {
+		return $plugin_url . $min_relative . $tail;
+	}
+
+	return $src;
+}
+add_filter( 'script_loader_src', 'bb_core_asset_src_min_fallback', PHP_INT_MAX );
+add_filter( 'style_loader_src', 'bb_core_asset_src_min_fallback', PHP_INT_MAX );
+
+/**
  * Removed the non-component pages from $bp->pages from bp_core_set_uri_globals function.
  *
  * @since BuddyBoss 1.2.5
@@ -1621,7 +1689,7 @@ if ( ! function_exists( 'buddyboss_platform_plugin_update_notice' ) ) {
 		$buddyboss_theme = wp_get_theme( 'buddyboss-theme' );
 		if ( $buddyboss_theme->exists() && $buddyboss_theme->get( 'Version' ) && function_exists( 'buddyboss_theme' ) && version_compare( $buddyboss_theme->get( 'Version' ), '1.5.0', '<' ) ) {
 			$class   = 'notice notice-error';
-			$message = __( 'Please update BuddyBoss Theme to v1.5.0 to maintain compatibility with BuddyBoss Platform. Some icons in your theme will look wrong until you update.', 'buddyboss' );
+			$message = __( 'Please update BuddyBoss Theme to v1.5.0 to maintain compatibility with BuddyBoss Platform. Some icons in your theme will look wrong until you update.', 'buddyboss-platform' );
 			printf( '<div class="%1$s"><p>%2$s</p></div>', esc_attr( $class ), esc_html( $message ) );
 		}
 	}
@@ -1734,47 +1802,47 @@ function bp_core_cron_schedules( $schedules = array() ) {
 	$bb_schedules = array(
 		'bb_schedule_1min'    => array(
 			'interval' => MINUTE_IN_SECONDS,
-			'display'  => __( 'Every minute', 'buddyboss' ),
+			'display'  => __( 'Every minute', 'buddyboss-platform' ),
 		),
 		'bb_schedule_5min'    => array(
 			'interval' => 5 * MINUTE_IN_SECONDS,
-			'display'  => __( 'Once in 5 minutes', 'buddyboss' ),
+			'display'  => __( 'Once in 5 minutes', 'buddyboss-platform' ),
 		),
 		'bb_schedule_10min'   => array(
 			'interval' => 10 * MINUTE_IN_SECONDS,
-			'display'  => __( 'Once in 10 minutes', 'buddyboss' ),
+			'display'  => __( 'Once in 10 minutes', 'buddyboss-platform' ),
 		),
 		'bb_schedule_15min'   => array(
 			'interval' => 15 * MINUTE_IN_SECONDS,
-			'display'  => __( 'Once in 15 minutes', 'buddyboss' ),
+			'display'  => __( 'Once in 15 minutes', 'buddyboss-platform' ),
 		),
 		'bb_schedule_30min'   => array(
 			'interval' => 30 * MINUTE_IN_SECONDS,
-			'display'  => __( 'Once in 30 minutes', 'buddyboss' ),
+			'display'  => __( 'Once in 30 minutes', 'buddyboss-platform' ),
 		),
 		'bb_schedule_1hour'   => array(
 			'interval' => 60 * MINUTE_IN_SECONDS,
-			'display'  => __( 'Once Hourly', 'buddyboss' ),
+			'display'  => __( 'Once Hourly', 'buddyboss-platform' ),
 		),
 		'bb_schedule_3hours'  => array(
 			'interval' => 180 * MINUTE_IN_SECONDS,
-			'display'  => __( 'Once in 3 hours', 'buddyboss' ),
+			'display'  => __( 'Once in 3 hours', 'buddyboss-platform' ),
 		),
 		'bb_schedule_12hours' => array(
 			'interval' => 720 * MINUTE_IN_SECONDS,
-			'display'  => __( 'Once in 12 hours', 'buddyboss' ),
+			'display'  => __( 'Once in 12 hours', 'buddyboss-platform' ),
 		),
 		'bb_schedule_24hours' => array(
 			'interval' => 1440 * MINUTE_IN_SECONDS,
-			'display'  => __( 'Once in 24 hours', 'buddyboss' ),
+			'display'  => __( 'Once in 24 hours', 'buddyboss-platform' ),
 		),
 		'bb_schedule_15days'  => array(
 			'interval' => 15 * DAY_IN_SECONDS,
-			'display'  => __( 'Every 15 days', 'buddyboss' ),
+			'display'  => __( 'Every 15 days', 'buddyboss-platform' ),
 		),
 		'bb_schedule_30days'  => array(
 			'interval' => 30 * DAY_IN_SECONDS,
-			'display'  => __( 'Every 30 days', 'buddyboss' ),
+			'display'  => __( 'Every 30 days', 'buddyboss-platform' ),
 		),
 	);
 
@@ -1852,10 +1920,10 @@ function bb_admin_setting_profile_group_add_script_data( $script_data, $object =
 
 		// Set feedback messages.
 		$script_data['feedback_messages'] = array(
-			1 => esc_html__( 'There was a problem cropping custom profile avatar.', 'buddyboss' ),
-			2 => esc_html__( 'The custom profile avatar was uploaded successfully.', 'buddyboss' ),
-			3 => esc_html__( 'There was a problem deleting custom profile avatar. Please try again.', 'buddyboss' ),
-			4 => esc_html__( 'The custom profile avatar was deleted successfully!', 'buddyboss' ),
+			1 => esc_html__( 'There was a problem cropping custom profile avatar.', 'buddyboss-platform' ),
+			2 => esc_html__( 'The custom profile avatar was uploaded successfully.', 'buddyboss-platform' ),
+			3 => esc_html__( 'There was a problem deleting custom profile avatar. Please try again.', 'buddyboss-platform' ),
+			4 => esc_html__( 'The custom profile avatar was deleted successfully!', 'buddyboss-platform' ),
 		);
 	}
 
@@ -1873,10 +1941,10 @@ function bb_admin_setting_profile_group_add_script_data( $script_data, $object =
 
 		// Set feedback messages.
 		$script_data['feedback_messages'] = array(
-			1 => esc_html__( 'There was a problem cropping custom group avatar.', 'buddyboss' ),
-			2 => esc_html__( 'The custom group avatar was uploaded successfully.', 'buddyboss' ),
-			3 => esc_html__( 'There was a problem deleting custom group avatar. Please try again.', 'buddyboss' ),
-			4 => esc_html__( 'The custom group avatar was deleted successfully!', 'buddyboss' ),
+			1 => esc_html__( 'There was a problem cropping custom group avatar.', 'buddyboss-platform' ),
+			2 => esc_html__( 'The custom group avatar was uploaded successfully.', 'buddyboss-platform' ),
+			3 => esc_html__( 'There was a problem deleting custom group avatar. Please try again.', 'buddyboss-platform' ),
+			4 => esc_html__( 'The custom group avatar was deleted successfully!', 'buddyboss-platform' ),
 		);
 	}
 
@@ -2774,7 +2842,7 @@ function bb_redirection_allowed_third_party_domains( $hosts ) {
 
 	if ( count( $allow_custom_url_domains ) > 0 ) {
 		foreach ( $allow_custom_url_domains as $url ) {
-			$parsed_url   = parse_url( $url );
+			$parsed_url   = wp_parse_url( $url );
 			$current_host = $_SERVER['HTTP_HOST'];
 
 			if (

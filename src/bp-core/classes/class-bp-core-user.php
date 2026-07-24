@@ -171,9 +171,10 @@ class BP_Core_User {
 				'item_id' => $this->id,
 				'type'    => 'full',
 				'alt'     => sprintf(
+					/* translators: %s: member full name. */
 					__(
 						'Profile photo of %s',
-						'buddyboss'
+						'buddyboss-platform'
 					),
 					$this->fullname
 				),
@@ -184,9 +185,10 @@ class BP_Core_User {
 				'item_id' => $this->id,
 				'type'    => 'thumb',
 				'alt'     => sprintf(
+					/* translators: %s: member full name. */
 					__(
 						'Profile photo of %s',
-						'buddyboss'
+						'buddyboss-platform'
 					),
 					$this->fullname
 				),
@@ -196,12 +198,14 @@ class BP_Core_User {
 			array(
 				'item_id' => $this->id,
 				'type'    => 'thumb',
-				'alt'     => sprintf( __( 'Profile photo of %s', 'buddyboss' ), $this->fullname ),
+				/* translators: %s: member full name. */
+				'alt'     => sprintf( __( 'Profile photo of %s', 'buddyboss-platform' ), $this->fullname ),
 				'width'   => 30,
 				'height'  => 30,
 			)
 		);
-		$this->last_active  = bp_core_get_last_activity( bp_get_user_last_activity( $this->id ), __( 'active %s', 'buddyboss' ) );
+		/* translators: %s: human-readable time difference, e.g. "2 hours ago". */
+		$this->last_active  = bp_core_get_last_activity( bp_get_user_last_activity( $this->id ), __( 'active %s', 'buddyboss-platform' ) );
 	}
 
 	/**
@@ -215,7 +219,8 @@ class BP_Core_User {
 
 		if ( bp_is_active( 'groups' ) ) {
 			$this->total_groups = BP_Groups_Member::total_group_count( $this->id );
-			$this->total_groups = sprintf( _n( '%d group', '%d groups', $this->total_groups, 'buddyboss' ), $this->total_groups );
+			/* translators: %d: number of groups. */
+			$this->total_groups = sprintf( _n( '%d group', '%d groups', $this->total_groups, 'buddyboss-platform' ), $this->total_groups );
 		}
 	}
 
@@ -403,6 +408,7 @@ class BP_Core_User {
 		 * @param array  $sql   Array of SQL statement parts for the query.
 		 */
 		$paged_users_sql = apply_filters( 'bp_core_get_paged_users_sql', join( ' ', (array) $sql ), $sql );
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $sql parts are internally built (table names + prior $wpdb->prepare()'d pagination fragment); no raw user input concatenated.
 		$paged_users     = $wpdb->get_results( $paged_users_sql );
 
 		// Re-jig the SQL so we can get the total user count.
@@ -435,6 +441,7 @@ class BP_Core_User {
 		 * @param array  $sql   Array of SQL statement parts for the query.
 		 */
 		$total_users_sql = apply_filters( 'bp_core_get_total_users_sql', join( ' ', (array) $sql ), $sql );
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $sql parts are internally built (table names + prior $wpdb->prepare()'d fragments); no raw user input concatenated.
 		$total_users     = $wpdb->get_var( $total_users_sql );
 
 		/**
@@ -522,7 +529,9 @@ class BP_Core_User {
 		 */
 		$paged_users_sql = apply_filters( 'bp_core_users_by_letter_sql', $wpdb->prepare( "SELECT DISTINCT u.ID as id, u.user_registered, u.user_nicename, u.user_login, u.user_email FROM {$wpdb->users} u LEFT JOIN {$bp->profile->table_name_data} pd ON u.ID = pd.user_id LEFT JOIN {$bp->profile->table_name_fields} pf ON pd.field_id = pf.id WHERE {$status_sql} AND pf.name = %s {$exclude_sql} AND pd.value LIKE %s ORDER BY pd.value ASC{$pag_sql}", bp_xprofile_fullname_field_name(), $letter_like ) );
 
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $total_users_sql fully built with $wpdb->prepare() above (line ~519); only safe interpolations are table names + filtered prepared string.
 		$total_users = $wpdb->get_var( $total_users_sql );
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $paged_users_sql fully built with $wpdb->prepare() above (line ~528); only safe interpolations are table names + filtered prepared string.
 		$paged_users = $wpdb->get_results( $paged_users_sql );
 
 		/**
@@ -627,7 +636,9 @@ class BP_Core_User {
 		 */
 		$paged_users_sql = apply_filters( 'bp_core_user_get_specific_users_paged_sql', $paged_users_sql, $user_ids, $limit, $page, $populate_extras );
 
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $total_users_sql built internally; ID IN list is implode of wp_parse_id_list() integers, status SQL internal, table from $wpdb->users.
 		$total_users = $wpdb->get_var( $total_users_sql );
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $paged_users_sql built internally; ID IN list is implode of wp_parse_id_list() integers, $pag_sql is $wpdb->prepare()'d, table from $wpdb->users.
 		$paged_users = $wpdb->get_results( $paged_users_sql );
 
 		/**
@@ -690,7 +701,9 @@ class BP_Core_User {
 		 */
 		$paged_users_sql = apply_filters( 'bp_core_search_users_sql', $wpdb->prepare( "SELECT DISTINCT u.ID as id, u.user_registered, u.user_nicename, u.user_login, u.user_email FROM {$wpdb->users} u LEFT JOIN {$bp->profile->table_name_data} pd ON u.ID = pd.user_id WHERE {$status_sql} AND pd.value LIKE %s ORDER BY pd.value ASC{$pag_sql}", $search_terms_like ), $search_terms, $pag_sql );
 
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $total_users_sql fully built with $wpdb->prepare() above ($search_terms_like is %s-bound); only safe interpolations are table names + status SQL.
 		$total_users = $wpdb->get_var( $total_users_sql );
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $paged_users_sql fully built with $wpdb->prepare() above ($search_terms_like is %s-bound, $pag_sql is %d-prepared); only safe interpolations are table names + status SQL.
 		$paged_users = $wpdb->get_results( $paged_users_sql );
 
 		/**
@@ -832,6 +845,7 @@ class BP_Core_User {
 			$user_ids_sql = implode( ',', $uncached_user_ids );
 			$user_count   = count( $uncached_user_ids );
 
+			// phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter -- $user_ids_sql is implode of bp_get_non_cached_ids/wp_parse_id_list integers, $user_count is count() integer, table name internal; component %s-prepared.
 			$last_activities = $wpdb->get_results( $wpdb->prepare( "SELECT id, user_id, date_recorded FROM {$bp->members->table_name_last_activity} WHERE component = %s AND type = 'last_activity' AND user_id IN ({$user_ids_sql}) LIMIT {$user_count}", $bp->members->id ) );
 
 			foreach ( $last_activities as $last_activity ) {

@@ -8,6 +8,9 @@
  * @version 1.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 $is_send_ajax_request = bb_is_send_ajax_request();
 $bp_current_action    = bp_current_action();
 bp_get_template_part( 'members/single/parts/item-subnav' );
@@ -26,7 +29,7 @@ if ( 'my-friends' === $bp_current_action && bb_enable_content_counts() ) {
 								'<span class="bb-count">%d</span> Request',
 								'<span class="bb-count">%d</span> Requests',
 								$count,
-								'buddyboss'
+								'buddyboss-platform'
 							),
 							array( 'span' => array( 'class' => true ) )
 						),
@@ -40,7 +43,7 @@ if ( 'my-friends' === $bp_current_action && bb_enable_content_counts() ) {
 								'<span class="bb-count">%d</span> Connection',
 								'<span class="bb-count">%d</span> Connections',
 								$count,
-								'buddyboss'
+								'buddyboss-platform'
 							),
 							array( 'span' => array( 'class' => true ) )
 						),

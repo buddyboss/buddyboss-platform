@@ -175,6 +175,7 @@ class BP_Activity_Follow {
 		$cached = bp_core_get_incremented_cache( $followers_sql, 'bp_activity_follow' );
 
 		if ( false === $cached ) {
+			// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $followers_sql built from internal table name + $wpdb->prepare()'d WHERE (%d leader_id) and LIMIT (%d).
 			$follower_ids = $wpdb->get_col( $followers_sql );
 			bp_core_set_incremented_cache( $followers_sql, 'bp_activity_follow', $follower_ids );
 		} else {
@@ -220,6 +221,7 @@ class BP_Activity_Follow {
 		$cached = bp_core_get_incremented_cache( $following_sql, 'bp_activity_follow' );
 
 		if ( false === $cached ) {
+			// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $following_sql built from internal table name + $wpdb->prepare()'d WHERE (%d follower_id) and LIMIT (%d).
 			$following_ids = $wpdb->get_col( $following_sql );
 			bp_core_set_incremented_cache( $following_sql, 'bp_activity_follow', $following_ids );
 		} else {
@@ -280,6 +282,7 @@ class BP_Activity_Follow {
 			$where_sql = 'WHERE ' . join( ' AND ', $sql['where'] );
 
 			$sql       = "{$sql['select']} {$where_sql}";
+			// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $sql built from internal table name + $wpdb->prepare()'d WHERE (%d leader_id).
 			$followers = $wpdb->get_var( $sql );
 			wp_cache_set( 'bp_total_follower_for_user_' . $user_id, $followers, 'bp' );
 		}
@@ -325,6 +328,7 @@ class BP_Activity_Follow {
 			$where_sql = 'WHERE ' . join( ' AND ', $sql['where'] );
 
 			$sql       = "{$sql['select']} {$where_sql}";
+			// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $sql built from internal table name + $wpdb->prepare()'d WHERE (%d follower_id).
 			$following = $wpdb->get_var( $sql );
 			wp_cache_set( 'bp_total_following_for_user_' . $user_id, $following, 'bp' );
 		}

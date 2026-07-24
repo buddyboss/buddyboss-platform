@@ -280,7 +280,7 @@ abstract class BB_Base_DRM {
 
 		// Default values for optional keys.
 		$support_link = isset( $drm_info['support_link'] ) ? $drm_info['support_link'] : bp_get_admin_url( 'admin.php?page=buddyboss-license' );
-		$help_message = isset( $drm_info['help_message'] ) ? $drm_info['help_message'] : __( 'Activate Your License', 'buddyboss' );
+		$help_message = isset( $drm_info['help_message'] ) ? $drm_info['help_message'] : __( 'Activate Your License', 'buddyboss-platform' );
 
 		// Generate unique notice ID for dismissal (only for warnings).
 		$notice_key = $drm_info['notice_key'] ?? '';
@@ -304,8 +304,8 @@ abstract class BB_Base_DRM {
 					<?php echo esc_html( $help_message ); ?>
 				</a>
 				<?php if ( $is_warning ) : ?>
-				<button type="button" class="notice-dismiss bb-drm-dismiss" aria-label="<?php esc_attr_e( 'Dismiss this notice for 24 hours', 'buddyboss' ); ?>">
-					<span class="screen-reader-text"><?php esc_html_e( 'Dismiss this notice for 24 hours.', 'buddyboss' ); ?></span>
+				<button type="button" class="notice-dismiss bb-drm-dismiss" aria-label="<?php esc_attr_e( 'Dismiss this notice for 24 hours', 'buddyboss-platform' ); ?>">
+					<span class="screen-reader-text"><?php esc_html_e( 'Dismiss this notice for 24 hours.', 'buddyboss-platform' ); ?></span>
 				</button>
 				<?php endif; ?>
 			</p>
@@ -355,7 +355,7 @@ abstract class BB_Base_DRM {
 					action: 'bb_dismiss_notice_drm',
 					notice: noticeKey,
 					secret: secret,
-					nonce: '<?php echo wp_create_nonce( 'bb_dismiss_notice' ); ?>'
+					nonce: '<?php echo esc_js( wp_create_nonce( 'bb_dismiss_notice' ) ); ?>'
 				}, function(response) {
 					if (response.success) {
 						console.log('DRM notice dismissed for 24 hours');
@@ -503,7 +503,7 @@ abstract class BB_Base_DRM {
 				'icon'    => $icon_url,
 				'buttons' => array(
 					'main' => array(
-						'text'   => __( 'Contact Us', 'buddyboss' ),
+						'text'   => __( 'Contact Us', 'buddyboss-platform' ),
 						'url'    => $drm_info['support_link'],
 						'target' => '_blank',
 					),

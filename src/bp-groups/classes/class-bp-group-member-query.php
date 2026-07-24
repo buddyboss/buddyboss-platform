@@ -239,7 +239,7 @@ class BP_Group_Member_Query extends BP_User_Query {
 
 		$sql['order'] = 'first_joined' === $this->query_vars['type'] ? 'ASC' : 'DESC';
 
-		$group_member_ids = $wpdb->get_col( "{$sql['select']} {$sql['where']} {$sql['orderby']} {$sql['order']}" );
+		$group_member_ids = $wpdb->get_col( "{$sql['select']} {$sql['where']} {$sql['orderby']} {$sql['order']}" ); // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter -- $bp table name; WHERE built from wp_parse_id_list()/$wpdb->prepare() fragments and a whitelisted role-column list; ORDER BY/order are hardcoded.
 
 		$invited_member_ids = array();
 
@@ -389,7 +389,7 @@ class BP_Group_Member_Query extends BP_User_Query {
 			// Call $wpdb->prepare passing the values of the array as separate arguments.
 			$query = call_user_func_array( array( $wpdb, 'prepare' ), array_merge( array( $sql ), $group_ids ) );
 
-			$extras              = $wpdb->get_results( $query );
+			$extras              = $wpdb->get_results( $query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $query is $wpdb->prepare()'d (group_ids as %s) above; $user_ids_sql is the sanitized comma-separated ID list passed by BP_User_Query.
 			$cache[ $cache_key ] = $extras;
 		} else {
 			$extras = $cache[ $cache_key ];
@@ -495,7 +495,7 @@ class BP_Group_Member_Query extends BP_User_Query {
 
 		$sql['where'] = 'WHERE ' . implode( ' AND ', $sql['where'] );
 
-		$group_user_ids = $wpdb->get_results( "{$sql['select']} {$sql['where']} {$sql['groupby']} {$sql['orderby']} {$sql['order']}" );
+		$group_user_ids = $wpdb->get_results( "{$sql['select']} {$sql['where']} {$sql['groupby']} {$sql['orderby']} {$sql['order']}" ); // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter -- WHERE built from wp_parse_id_list()/absint() IDs and a $wpdb->prepare()'d component clause; GROUP BY/ORDER BY are hardcoded.
 
 		return wp_list_pluck( $group_user_ids, 'user_id' );
 	}

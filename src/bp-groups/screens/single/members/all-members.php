@@ -6,6 +6,9 @@
  * @since BuddyBoss 1.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 /**
  * Handle the display of a group's members/all-members page.
  *

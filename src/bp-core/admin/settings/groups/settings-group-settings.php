@@ -26,7 +26,7 @@ function bb_groups_register_settings_panel_fields() {
 		'group_settings',
 		'group_settings',
 		array(
-			'title'       => __( 'Group Settings', 'buddyboss' ),
+			'title'       => __( 'Group Settings', 'buddyboss-platform' ),
 			'description' => '',
 			'order'       => 10,
 			'help_url'    => '636124',
@@ -43,13 +43,13 @@ function bb_groups_register_settings_panel_fields() {
 		'group_settings',
 		array(
 			'name'              => 'bp_restrict_group_creation',
-			'label'             => __( 'Group Creation', 'buddyboss' ),
+			'label'             => __( 'Group Creation', 'buddyboss-platform' ),
 			'type'              => 'toggle',
-			'description'       => __( 'Enable social group creation by all members', 'buddyboss' ),
+			'description'       => __( 'Enable social group creation by all members', 'buddyboss-platform' ),
 			'help_text'         => sprintf(
 				/* translators: %s: Access Controls link. */
-				__( 'Administrators can always create groups, regardless of this setting. You can configure who can create groups in %s.', 'buddyboss' ),
-				'<a href="' . esc_url( bb_get_feature_settings_url( 'groups', 'access_controls' ) ) . '">' . __( 'Access Controls', 'buddyboss' ) . '</a>'
+				__( 'Administrators can always create groups, regardless of this setting. You can configure who can create groups in %s.', 'buddyboss-platform' ),
+				'<a href="' . esc_url( bb_get_feature_settings_url( 'groups', 'access_controls' ) ) . '">' . __( 'Access Controls', 'buddyboss-platform' ) . '</a>'
 			),
 			'default'           => bp_restrict_group_creation(),
 			'sanitize_callback' => 'absint',
@@ -57,25 +57,6 @@ function bb_groups_register_settings_panel_fields() {
 			'order'             => 10,
 		)
 	);
-
-	// FIELD: Subscriptions (conditional on notifications + activity/forums).
-	if ( bp_is_active( 'notifications' ) && ( bp_is_active( 'activity' ) || bp_is_active( 'forums' ) ) ) {
-		bb_register_feature_field(
-			'groups',
-			'group_settings',
-			'group_settings',
-			array(
-				'name'              => 'bb_enable_group_subscriptions',
-				'label'             => __( 'Subscriptions', 'buddyboss' ),
-				'type'              => 'toggle',
-				'description'       => __( 'Allow members to subscribe to groups', 'buddyboss' ),
-				'help_text'         => __( 'When a member is subscribed to a group, they can receive notifications of new activity posts and discussions created in the group.', 'buddyboss' ),
-				'default'           => function_exists( 'bb_enable_group_subscriptions' ) ? bb_enable_group_subscriptions() : true,
-				'sanitize_callback' => 'absint',
-				'order'             => 20,
-			)
-		);
-	}
 
 	// FIELD: Group Messages (conditional on messages active).
 	// Note: Despite the option name "bp-disable-group-messages", the legacy UI treats
@@ -87,9 +68,9 @@ function bb_groups_register_settings_panel_fields() {
 			'group_settings',
 			array(
 				'name'              => 'bp-disable-group-messages',
-				'label'             => __( 'Group Messages', 'buddyboss' ),
+				'label'             => __( 'Group Messages', 'buddyboss-platform' ),
 				'type'              => 'toggle',
-				'description'       => __( 'Allow for sending group messages to group members', 'buddyboss' ),
+				'description'       => __( 'Allow for sending group messages to group members', 'buddyboss-platform' ),
 				'default'           => bp_disable_group_messages(),
 				'sanitize_callback' => 'absint',
 				'order'             => 30,
@@ -113,7 +94,7 @@ function bb_groups_register_settings_panel_fields() {
 		'group_settings',
 		'subgroups',
 		array(
-			'title'       => __( 'Subgroups', 'buddyboss' ),
+			'title'       => __( 'Subgroups', 'buddyboss-platform' ),
 			'description' => '',
 			'order'       => 20,
 			'help_url'    => '636126',
@@ -127,9 +108,9 @@ function bb_groups_register_settings_panel_fields() {
 		'subgroups',
 		array(
 			'name'              => 'bp-enable-group-hierarchies',
-			'label'             => __( 'Hierarchies', 'buddyboss' ),
+			'label'             => __( 'Hierarchies', 'buddyboss-platform' ),
 			'type'              => 'toggle',
-			'description'       => __( 'Allow groups to have subgroups', 'buddyboss' ),
+			'description'       => __( 'Allow groups to have subgroups', 'buddyboss-platform' ),
 			'default'           => bp_enable_group_hierarchies(),
 			'sanitize_callback' => 'absint',
 			'order'             => 10,
@@ -143,9 +124,9 @@ function bb_groups_register_settings_panel_fields() {
 		'subgroups',
 		array(
 			'name'              => 'bp-enable-group-hide-subgroups',
-			'label'             => __( 'Hide Subgroups', 'buddyboss' ),
+			'label'             => __( 'Hide Subgroups', 'buddyboss-platform' ),
 			'type'              => 'toggle',
-			'description'       => __( 'Hide subgroups from Groups Directory & Group Type Shortcode', 'buddyboss' ),
+			'description'       => __( 'Hide subgroups from Groups Directory & Group Type Shortcode', 'buddyboss-platform' ),
 			'default'           => bp_enable_group_hide_subgroups(),
 			'sanitize_callback' => 'absint',
 			'conditional'       => array(
@@ -163,13 +144,13 @@ function bb_groups_register_settings_panel_fields() {
 		'subgroups',
 		array(
 			'name'              => 'bp-enable-group-restrict-invites',
-			'label'             => __( 'Restrict Invitations', 'buddyboss' ),
+			'label'             => __( 'Restrict Invitations', 'buddyboss-platform' ),
 			'type'              => 'toggle',
-			'description'       => __( 'Restrict subgroup invites to members of the parent group', 'buddyboss' ),
-			'help_text'         => __( 'Members must first be a member of the parent group prior to being invited to a subgroup', 'buddyboss' ),
+			'description'       => __( 'Restrict subgroup invites to members of the parent group', 'buddyboss-platform' ),
+			'help_text'         => __( 'Members must first be a member of the parent group prior to being invited to a subgroup', 'buddyboss-platform' ),
 			'default'           => bp_enable_group_restrict_invites(),
 			'sanitize_callback' => 'absint',
-			'confirm_message'   => __( 'By enabling this option members that are already part of sub-groups and not the parent groups will automatically be removed from all sub-groups.', 'buddyboss' ),
+			'confirm_message'   => __( 'By enabling this option members that are already part of sub-groups and not the parent groups will automatically be removed from all sub-groups.', 'buddyboss-platform' ),
 			'conditional'       => array(
 				'field' => 'bp-enable-group-hierarchies',
 				'value' => true,

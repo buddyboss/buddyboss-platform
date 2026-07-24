@@ -19,7 +19,7 @@ defined( 'ABSPATH' ) || exit;
 			<div class="bb-rl-modal-wrapper">
 				<div id="bb-rl-media-create-album-popup" class="bb-rl-modal-container bb-rl-has-folderlocationUI">
 					<header class="bb-rl-modal-header">
-						<h4><span class="target_name"><?php esc_html_e( 'Move Photo to...', 'buddyboss' ); ?></span>
+						<h4><span class="target_name"><?php esc_html_e( 'Move Photo to...', 'buddyboss-platform' ); ?></span>
 						</h4>
 					</header>
 					<div class="bb-rl-field-wrap">
@@ -27,9 +27,9 @@ defined( 'ABSPATH' ) || exit;
 						<?php bp_get_template_part( 'media/media-create-album' ); ?>
 					</div>
 					<footer class="bb-rl-model-footer">
-						<a href="#" class="bb-rl-create-album bb-rl-media-open-create-popup-folder"><i class="bb-icons-rl-plus"></i><?php esc_html_e( 'Create Album', 'buddyboss' ); ?></a>
-						<a class="bb-rl-button bb-rl-button--secondaryFill bb-rl-button--small bb-rl-ac-media-close-button" href="#"><?php esc_html_e( 'Cancel', 'buddyboss' ); ?></a>
-						<a class="bb-rl-button bb-rl-button--brandFill bb-rl-button--small bb-rl-media-move bb-rl-media-move-activity" id="" href="#"><?php esc_html_e( 'Move', 'buddyboss' ); ?></a>
+						<a href="#" class="bb-rl-create-album bb-rl-media-open-create-popup-folder"><i class="bb-icons-rl-plus"></i><?php esc_html_e( 'Create Album', 'buddyboss-platform' ); ?></a>
+						<a class="bb-rl-button bb-rl-button--secondaryFill bb-rl-button--small bb-rl-ac-media-close-button" href="#"><?php esc_html_e( 'Cancel', 'buddyboss-platform' ); ?></a>
+						<a class="bb-rl-button bb-rl-button--brandFill bb-rl-button--small bb-rl-media-move bb-rl-media-move-activity" id="" href="#"><?php esc_html_e( 'Move', 'buddyboss-platform' ); ?></a>
 					</footer>
 				</div>
 			</div>

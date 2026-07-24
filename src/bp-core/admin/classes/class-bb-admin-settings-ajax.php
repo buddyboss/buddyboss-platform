@@ -88,7 +88,7 @@ class BB_Admin_Settings_Ajax {
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
 
 		if ( empty( $options ) ) {
-			wp_send_json_error( array( 'message' => __( 'Options parameter is required.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Options parameter is required.', 'buddyboss-platform' ) ) );
 		}
 
 		$requested = array_map( 'sanitize_text_field', explode( ',', $options ) );
@@ -120,13 +120,13 @@ class BB_Admin_Settings_Ajax {
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
 
 		if ( empty( $option_name ) ) {
-			wp_send_json_error( array( 'message' => __( 'Option name is required.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Option name is required.', 'buddyboss-platform' ) ) );
 		}
 
 		$allowed = $this->bb_admin_get_allowed_platform_options();
 
 		if ( ! array_key_exists( $option_name, $allowed ) ) {
-			wp_send_json_error( array( 'message' => __( 'Option not allowed.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Option not allowed.', 'buddyboss-platform' ) ) );
 		}
 
 		// Apply per-option sanitize callback (defined in bb_admin_get_allowed_platform_options).
@@ -144,7 +144,7 @@ class BB_Admin_Settings_Ajax {
 		}
 
 		wp_send_json_success(
-			array( 'message' => __( 'Setting saved successfully.', 'buddyboss' ) )
+			array( 'message' => __( 'Setting saved successfully.', 'buddyboss-platform' ) )
 		);
 	}
 
@@ -312,15 +312,15 @@ class BB_Admin_Settings_Ajax {
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
 
 		if ( empty( $feature_id ) ) {
-			wp_send_json_error( array( 'message' => __( 'Feature ID is required.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Feature ID is required.', 'buddyboss-platform' ) ) );
 		}
 
 		if ( ! in_array( $status, array( 'active', 'inactive' ), true ) ) {
-			wp_send_json_error( array( 'message' => __( 'Invalid status. Must be "active" or "inactive".', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Invalid status. Must be "active" or "inactive".', 'buddyboss-platform' ) ) );
 		}
 
 		if ( ! function_exists( 'bb_feature_registry' ) || ! function_exists( 'bb_icon_registry' ) ) {
-			wp_send_json_error( array( 'message' => __( 'Feature registry not available.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Feature registry not available.', 'buddyboss-platform' ) ) );
 		}
 
 		$registry      = bb_feature_registry();
@@ -348,9 +348,9 @@ class BB_Admin_Settings_Ajax {
 			'data'    => $formatted,
 			'message' => sprintf(
 				/* translators: 1: feature label, 2: activated/deactivated */
-				__( 'Feature "%1$s" %2$s successfully.', 'buddyboss' ),
+				__( 'Feature "%1$s" %2$s successfully.', 'buddyboss-platform' ),
 				$feature['label'],
-				$activate ? __( 'activated', 'buddyboss' ) : __( 'deactivated', 'buddyboss' )
+				$activate ? __( 'activated', 'buddyboss-platform' ) : __( 'deactivated', 'buddyboss-platform' )
 			),
 		);
 
@@ -395,11 +395,11 @@ class BB_Admin_Settings_Ajax {
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
 
 		if ( empty( $feature_id ) ) {
-			wp_send_json_error( array( 'message' => __( 'Feature ID is required.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Feature ID is required.', 'buddyboss-platform' ) ) );
 		}
 
 		if ( ! function_exists( 'bb_feature_registry' ) ) {
-			wp_send_json_error( array( 'message' => __( 'Feature registry not available.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Feature registry not available.', 'buddyboss-platform' ) ) );
 		}
 
 		$registry = bb_feature_registry();
@@ -407,7 +407,7 @@ class BB_Admin_Settings_Ajax {
 		// Get feature.
 		$feature = $registry->bb_get_feature( $feature_id );
 		if ( ! $feature ) {
-			wp_send_json_error( array( 'message' => __( 'Feature not found.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Feature not found.', 'buddyboss-platform' ) ) );
 		}
 
 		/**
@@ -525,7 +525,7 @@ class BB_Admin_Settings_Ajax {
 				if ( ! empty( $section['pro_notice'] ) && is_array( $section['pro_notice'] ) ) {
 					$formatted_section['pro_notice'] = array(
 						'show'       => ! empty( $section['pro_notice']['show'] ),
-						'badge_text' => sanitize_text_field( $section['pro_notice']['badge_text'] ?? __( 'UPGRADE PRO', 'buddyboss' ) ),
+						'badge_text' => sanitize_text_field( $section['pro_notice']['badge_text'] ?? __( 'UPGRADE PRO', 'buddyboss-platform' ) ),
 						'badge_icon' => sanitize_text_field( $section['pro_notice']['badge_icon'] ?? 'bb-icons-rl-crown-simple' ),
 						'link_url'   => esc_url_raw( $section['pro_notice']['link_url'] ?? '' ),
 					);
@@ -1203,15 +1203,15 @@ class BB_Admin_Settings_Ajax {
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
 
 		if ( ! is_string( $raw_json ) ) {
-			wp_send_json_error( array( 'message' => __( 'Invalid settings format.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Invalid settings format.', 'buddyboss-platform' ) ) );
 		}
 
 		if ( empty( $feature_id ) ) {
-			wp_send_json_error( array( 'message' => __( 'Feature ID is required.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Feature ID is required.', 'buddyboss-platform' ) ) );
 		}
 
 		if ( ! function_exists( 'bb_feature_registry' ) ) {
-			wp_send_json_error( array( 'message' => __( 'Feature registry not available.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Feature registry not available.', 'buddyboss-platform' ) ) );
 		}
 
 		// Cap nesting depth at 8 — Settings 2.0 payloads never exceed
@@ -1220,10 +1220,10 @@ class BB_Admin_Settings_Ajax {
 		try {
 			$settings = json_decode( $raw_json, true, 8, JSON_THROW_ON_ERROR );
 		} catch ( \JsonException $e ) {
-			wp_send_json_error( array( 'message' => __( 'Invalid settings data.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Invalid settings data.', 'buddyboss-platform' ) ) );
 		}
 		if ( ! is_array( $settings ) ) {
-			wp_send_json_error( array( 'message' => __( 'Invalid settings data.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Invalid settings data.', 'buddyboss-platform' ) ) );
 		}
 
 		$registry = bb_feature_registry();
@@ -1260,7 +1260,7 @@ class BB_Admin_Settings_Ajax {
 		$all_fields = $registry->bb_get_all_fields( $feature_id );
 
 		if ( empty( $all_fields ) ) {
-			wp_send_json_error( array( 'message' => __( 'No fields registered for this feature.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'No fields registered for this feature.', 'buddyboss-platform' ) ) );
 		}
 
 		$saved = array();
@@ -1419,7 +1419,7 @@ class BB_Admin_Settings_Ajax {
 		}
 
 		$response_data = array(
-			'message'        => __( 'Settings saved successfully.', 'buddyboss' ),
+			'message'        => __( 'Settings saved successfully.', 'buddyboss-platform' ),
 			'saved'          => $saved,
 			'refresh_panels' => $refresh_panels,
 		);
@@ -2194,11 +2194,11 @@ class BB_Admin_Settings_Ajax {
 		$all_options = array(
 			array(
 				'value' => '',
-				'label' => __( 'Default', 'buddyboss' ),
+				'label' => __( 'Default', 'buddyboss-platform' ),
 			),
 			array(
 				'value' => '0',
-				'label' => __( 'Custom URL', 'buddyboss' ),
+				'label' => __( 'Custom URL', 'buddyboss-platform' ),
 			),
 		);
 
@@ -2303,12 +2303,12 @@ class BB_Admin_Settings_Ajax {
 			if ( $switched ) {
 				restore_current_blog();
 			}
-			wp_send_json_error( array( 'message' => __( 'Insufficient permissions on the target site.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Insufficient permissions on the target site.', 'buddyboss-platform' ) ) );
 		}
 
 		$empty_option = array(
 			'value' => '',
-			'label' => __( '— Select a page —', 'buddyboss' ),
+			'label' => __( '— Select a page —', 'buddyboss-platform' ),
 		);
 
 		// Selected-ID resolve path: bypass pagination + search so the dropdown
@@ -2321,7 +2321,7 @@ class BB_Admin_Settings_Ajax {
 				$result = array(
 					'value' => (string) $post->ID,
 					/* translators: %d: WordPress page ID, used as a fallback when a page has no title. */
-					'label' => $post->post_title ? $post->post_title : sprintf( __( '(no title) #%d', 'buddyboss' ), $post->ID ),
+					'label' => $post->post_title ? $post->post_title : sprintf( __( '(no title) #%d', 'buddyboss-platform' ), $post->ID ),
 				);
 			}
 			if ( $switched ) {
@@ -2382,7 +2382,7 @@ class BB_Admin_Settings_Ajax {
 				$results[] = array(
 					'value' => (string) $page_id,
 					/* translators: %d: WordPress page ID, used as a fallback when a page has no title. */
-					'label' => $title ? $title : sprintf( __( '(no title) #%d', 'buddyboss' ), $page_id ),
+					'label' => $title ? $title : sprintf( __( '(no title) #%d', 'buddyboss-platform' ), $page_id ),
 				);
 			}
 		}
@@ -2426,7 +2426,7 @@ class BB_Admin_Settings_Ajax {
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
 
 		if ( '' === $slug ) {
-			wp_send_json_error( array( 'message' => __( 'Missing page slug.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Missing page slug.', 'buddyboss-platform' ) ) );
 		}
 
 		// Allow-list the slug against the set of directory keys that the
@@ -2444,7 +2444,7 @@ class BB_Admin_Settings_Ajax {
 			$allowed_slugs = array_merge( $allowed_slugs, array_keys( (array) bp_core_admin_get_static_pages() ) );
 		}
 		if ( ! in_array( $slug, $allowed_slugs, true ) ) {
-			wp_send_json_error( array( 'message' => __( 'Unknown directory slug.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Unknown directory slug.', 'buddyboss-platform' ) ) );
 		}
 
 		$switched = false;
@@ -2467,7 +2467,7 @@ class BB_Admin_Settings_Ajax {
 			if ( $switched ) {
 				restore_current_blog();
 			}
-			wp_send_json_error( array( 'message' => __( 'Insufficient permissions on the target site.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Insufficient permissions on the target site.', 'buddyboss-platform' ) ) );
 		}
 
 		$title = '' !== $label ? $label : ucfirst( str_replace( array( '-', '_' ), ' ', $slug ) );

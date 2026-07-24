@@ -8,6 +8,9 @@
  * @version 1.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 ?>
 <script type="text/html" id="tmpl-bp-invites-selection">
 	<a href="#uninvite-user-{{data.id}}" class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="{{data.uninviteTooltip}}" aria-label="{{data.uninviteTooltip}}">

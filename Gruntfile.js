@@ -205,7 +205,7 @@ module.exports = function (grunt) {
 			checktextdomain: {
 				options: {
 					correct_domain: false,
-					text_domain: ['buddyboss'],
+					text_domain: ['buddyboss-platform'],
 					keywords: [
 					'__:1,2d',
 					'_e:1,2d',
@@ -236,7 +236,7 @@ module.exports = function (grunt) {
 						domainPath: '/languages',
 						exclude: ['node_modules/*'], // List of files or directories to ignore.
 						mainFile: 'bp-loader.php',
-						potFilename: 'buddyboss.pot',
+						potFilename: 'buddyboss-platform.pot',
 						potHeaders: { // Headers to add to the generated POT file.
 							poedit: true, // Includes common Poedit headers.
 							'Last-Translator': 'BuddyBoss <support@buddyboss.com>',
@@ -295,8 +295,12 @@ module.exports = function (grunt) {
 					'**/bp-groups/**',
 					'**/bp-invites/**',
 					'**/bp-media/**',
-					'**/bp-document/**',
-					'**/bp-video/**',
+					// bp-document / bp-video are NOT imported: the components
+					// were extracted from Platform to the buddyboss-addons
+					// plugin (Phase F of the extraction). Re-importing their
+					// REST controllers here would silently recreate the
+					// directories we deleted (same rationale as the LearnDash
+					// exclusion below, PROD-9792).
 					'**/bp-members/**',
 					'**/bp-messages/**',
 					'**/bp-moderation/**',
@@ -568,6 +572,23 @@ module.exports = function (grunt) {
 					cwd: '.',
 					stdout: true
 				},
+				// Generate the unminified-asset manifest consumed at runtime
+				// by BB_Debug_Asset_Fetcher. Runs AFTER the production push
+				// so it can stamp the manifest with the pushed commit SHA;
+				// the manifest is written into BUILD_DIR only, so it ships
+				// inside the customer zip but stays out of the production
+				// branch commit (production carries the unminified files,
+				// the zip's manifest pins back to that exact commit).
+				//
+				// Safe to run when BUILD_DIR is not a git repo (the
+				// build_test flow) — the script falls back to a sentinel
+				// SHA and the runtime fetcher refuses to act on it, so
+				// test zips gracefully degrade to .min loading.
+				generate_debug_manifest: {
+					command: 'node bin/generate-debug-manifest.js ' + BUILD_DIR + ' <%= pkg.BBVersion %>',
+					cwd: '.',
+					stdout: true
+				},
 
 				rest_api: {
 					command: 'git clone ' + bbGithubCloneUrl( 'buddyboss-platform-api' ),
@@ -596,7 +617,7 @@ module.exports = function (grunt) {
 				// is handled separately; the POT only carries PHP strings). WP_CLI_PHP_ARGS
 				// raises the memory limit as a safety net for other large JS.
 				makepot_wp: {
-					command: 'WP_CLI_PHP_ARGS="-d memory_limit=512M" wp i18n make-pot src/ src/languages/buddyboss.pot --domain=buddyboss --ignore-domain --exclude="node_modules/*, vendor/*, src/vendor/*, js/*, bp-core/admin/bb-settings/*/build/*"',
+					command: 'WP_CLI_PHP_ARGS="-d memory_limit=512M" wp i18n make-pot src/ src/languages/buddyboss-platform.pot --domain=buddyboss-platform --exclude="node_modules/*, vendor/*, src/vendor/*, js/*, bp-core/admin/bb-settings/*/build/*"',
 					cwd: '.',
 					stdout: true
 				},
@@ -634,7 +655,16 @@ module.exports = function (grunt) {
 			compress: {
 				main: {
 					options: {
-						archive: 'buddyboss-platform-plugin.zip'
+						archive: 'buddyboss-platform-plugin.zip',
+						// Maximum DEFLATE level (default is 6). The zip format is
+						// fixed (WordPress installs .zip only), so level 9 is the
+						// only compression lever here — squeezes the text-heavy
+						// payload (PHP, minified JS/CSS, .pot) a few % smaller for
+						// a bit more CPU at build time. configure_compress_exclusions
+						// only rewrites `.files`, so this option persists.
+						//
+						// @since BuddyBoss [BBVERSION]
+						level: 9
 					},
 					files: [{
 						src: BUILD_DIR + '**',
@@ -721,8 +751,380 @@ module.exports = function (grunt) {
 	grunt.registerTask('bp_rest', ['clean:bp_rest', 'exec:rest_api', 'copy:bp_rest_components', 'copy:bp_rest_core', 'copy:bp_rest_reactions', 'clean:bp_rest', 'apidoc' ]);
 	grunt.registerTask('bp_performance', ['clean:bp_rest', 'exec:rest_performance', 'copy:bp_rest_performance', 'copy:bp_rest_mu', 'clean:bp_rest']);
 
-	// Build task: Creates production build in BUILD_DIR, initializes git, performs build operations, then commits to production
-	grunt.registerTask('build', ['string-replace:dist', 'exec:composer', 'clean:all', 'exec:init_build_dir_git', 'exec:empty_build_dir', 'copy:files', 'clean:composer', 'exec:commit_build_to_mothership_release', 'compress', 'clean:all']);
+	// Static list of font-format dead weight to strip from the customer zip.
+	// Files remain in src/ and on the production branch — only the shipped
+	// archive drops them.  Two classes of file:
+	//
+	//   1. EOT format — only needed for IE 6-8 and shipped only as a legacy
+	//      fallback inside @font-face cascades. Modern WordPress minimums
+	//      put this years past relevance.
+	//   2. TTF copies of icon fonts that ALSO ship woff2 + woff. The browser
+	//      cascade prefers woff2 first; ttf was a 2014-era fallback for
+	//      pre-woff2 browsers. Coverage is now > 97 % globally.
+	//
+	// Excludes specific files only — never `**/*.ttf`, because
+	// SFUIText-Medium.ttf is consumed server-side by PHP/GD for PNG avatar
+	// rendering and must remain in the zip even though no browser loads it.
+	// Future cleanup of that font requires a permissive-licensed replacement,
+	// not a strip.
+	//
+	// @since BuddyBoss [BBVERSION]
+	var FONT_STRIP_GLOBS = [
+		// 1. Every EOT in the build, anywhere. EOT was an IE 6-8 fallback
+		//    format. Modern WordPress minimums put this past relevance.
+		'**/*.eot',
+
+		// 2. Every WOFF in the build, anywhere. WOFF2 has been universally
+		//    supported across Chrome/Firefox/Safari/Edge since 2015-2016;
+		//    coverage is > 98 % of WP traffic globally. The few clients
+		//    that still need WOFF (iOS Safari ≤ 11, IE) get the system
+		//    font cascade as a graceful degradation. None of the platform
+		//    WOFFs live under vendor/ or any third-party tree — safe to
+		//    blanket-strip.
+		'**/*.woff',
+
+		// 3. Icon-font TTFs whose woff2 + woff siblings already cover the
+		//    browser cascade. Listed explicitly so unrelated TTFs (server-
+		//    side fonts under bp-core/fonts/) stay shipped.
+		'bp-templates/bp-nouveau/icons/fonts/box-filled.ttf',
+		'bp-templates/bp-nouveau/icons/fonts/box-lined.ttf',
+		'bp-templates/bp-nouveau/icons/fonts/filled.ttf',
+		'bp-templates/bp-nouveau/icons/fonts/lined.ttf',
+		'bp-templates/bp-nouveau/icons/fonts/round-filled.ttf',
+		'bp-templates/bp-nouveau/icons/fonts/round-lined.ttf',
+		'bp-templates/bp-nouveau/readylaunch/icons/fonts/bb-icons.ttf',
+		'bp-templates/bp-nouveau/readylaunch/icons/fonts/bb-icons-Bold.ttf',
+		'bp-templates/bp-nouveau/readylaunch/icons/fonts/bb-icons-Duotone.ttf',
+		'bp-templates/bp-nouveau/readylaunch/icons/fonts/bb-icons-Fill.ttf',
+		'bp-templates/bp-nouveau/readylaunch/icons/fonts/bb-icons-Light.ttf',
+		'bp-templates/bp-nouveau/readylaunch/icons/fonts/bb-icons-Thin.ttf',
+
+		// 3. Duplicate Glyphicons. endpoints/fonts/ is the actually-used set
+		//    (bootstrap.min.css references via ../fonts/). endpoints/assets/
+		//    is a byte-identical copy that nothing references.
+		'endpoints/assets/glyphicons-halflings-regular.eot',
+		'endpoints/assets/glyphicons-halflings-regular.svg',
+		'endpoints/assets/glyphicons-halflings-regular.ttf',
+		'endpoints/assets/glyphicons-halflings-regular.woff',
+		'endpoints/assets/glyphicons-halflings-regular.woff2',
+
+		// 4. Inter UI font TTFs. Each Inter weight ships ttf + woff + woff2
+		//    after the WOFF2 conversion; the woff2 file is ~20% of the TTF
+		//    size with identical rendering, so the TTF copy is no longer
+		//    needed in the customer zip. WOFF stays as the cascade fallback
+		//    for browsers without WOFF2 support (< 1 % of WP traffic).
+		'bp-templates/bp-nouveau/readylaunch/assets/fonts/Inter-Bold.ttf',
+		'bp-templates/bp-nouveau/readylaunch/assets/fonts/Inter-Italic.ttf',
+		'bp-templates/bp-nouveau/readylaunch/assets/fonts/Inter-Light.ttf',
+		'bp-templates/bp-nouveau/readylaunch/assets/fonts/Inter-LightItalic.ttf',
+		'bp-templates/bp-nouveau/readylaunch/assets/fonts/Inter-Medium.ttf',
+		'bp-templates/bp-nouveau/readylaunch/assets/fonts/Inter-MediumItalic.ttf',
+		'bp-templates/bp-nouveau/readylaunch/assets/fonts/Inter-Regular.ttf',
+		'bp-templates/bp-nouveau/readylaunch/assets/fonts/Inter-SemiBold.ttf'
+	];
+
+	// Compiled translation bundles and source `.po` files. WordPress fetches
+	// these on demand from translate.wordpress.org for plugins hosted on the
+	// .org repo, so shipping per-locale `.po`/`.mo` inside the zip is dead
+	// weight for the typical online install. The `.pot` template stays so
+	// translators (and third-party tooling) can derive new locales locally.
+	//
+	// Files remain in src/ and on the production branch — only the customer
+	// zip drops them. A site running entirely offline (no outbound HTTPS to
+	// translate.wordpress.org) will fall back to English on first load until
+	// an admin installs locales manually or wp-cron re-fetches.
+	//
+	// @since BuddyBoss [BBVERSION]
+	var TRANSLATION_STRIP_GLOBS = [
+		'languages/*.po',
+		'languages/*.mo'
+	];
+
+	// Dev-only build artefacts that never serve a runtime purpose for the
+	// shipped plugin: SCSS sources (consumed by `grunt sass` at build time
+	// to emit the compiled CSS that DOES ship) and CSS source maps (consumed
+	// only by browser DevTools when a developer happens to be inspecting
+	// the running plugin's compiled styles, which never happens on a
+	// customer install).
+	//
+	// Source SCSS lives in src/ and ships to the production branch so devs
+	// can edit and recompile from a checkout. The .map files reference
+	// source paths that the customer zip never had anyway, so dropping the
+	// .map causes zero functional change.
+	//
+	// No vendor SCSS / .map in the platform build dir — vendor PHP under
+	// vendor/ doesn't ship SCSS. Safe to blanket-glob both extensions.
+	//
+	// @since BuddyBoss [BBVERSION]
+	var DEV_SOURCE_STRIP_GLOBS = [
+		'**/*.scss',
+		'**/*.map'
+	];
+
+	// Extra paths dropped from the `build_test` zip only, gated by the
+	// `isBuildTestBuild` flag (the build_test marker). `endpoints/` is the
+	// apidoc output, and the CLI test-runner shell scripts are dev-only tooling
+	// — useful in the repo and the production branch, but dead weight in the free
+	// test zip. Files remain in src/ and on the production branch; only the
+	// build_test customer zip drops them.
+	//
+	// NOTE: bp-video/bp-document strip globs used to live here too (PROD-9826
+	// "paid component strip"); they were removed when the components were
+	// physically extracted to the buddyboss-addons plugin — no build ships them
+	// because src/ no longer contains them.
+	//
+	// @since BuddyBoss [BBVERSION]
+	var BUILD_TEST_EXTRA_STRIP_GLOBS = [
+		'endpoints/**',
+		'cli/bin/install-package-tests.sh',
+		'cli/bin/test.sh'
+	];
+
+	// Toggled true only by the `enable_build_test_strip` task, which is wired
+	// into the `build_test` chain. When false (the default, and the production
+	// `build` path) BUILD_TEST_EXTRA_STRIP_GLOBS is ignored.
+	//
+	// @since BuddyBoss [BBVERSION]
+	var isBuildTestBuild = false;
+
+	// Image assets are served from an external S3 bucket (see BB_S3_Image_Offload
+	// in bp-core). The bucket mirrors the SHIPPED (flattened) plugin tree at its
+	// root — e.g. `bp-core/images/foo.png`, no `src/` directory (that exists only
+	// in the dev checkout). The shipped zip drops all images to stay small. Two
+	// things have to happen before they can be stripped:
+	//   1. The runtime PHP rewriter handles image URLs emitted into the HTML.
+	//   2. `rewrite_css_image_refs_to_s3` (below) rewrites the relative
+	//      `url(...)` image refs baked into compiled CSS — those are served as
+	//      static files and the PHP rewriter can never reach them.
+	// Both must be in place or CSS background images / inline images would 404.
+	//
+	// Keep this base URL in lockstep with BB_S3_Image_Offload::DEFAULT_BASE_URL +
+	// DEFAULT_KEY_PREFIX so build-time and runtime rewrites resolve to the same
+	// object keys.
+	//
+	// @since BuddyBoss [BBVERSION]
+	var S3_IMAGE_BASE_URL = 'https://buddyboss-platform-assets.s3.us-east-1.amazonaws.com/';
+
+	// Asset file types offloaded to S3 and therefore stripped from the customer
+	// zip: images + woff2 fonts. Matches BB_S3_Image_Offload::EXTENSIONS and the
+	// CSS rewriter's DEFAULT_EXTENSIONS. Root-relative globs evaluated against
+	// BUILD_DIR. Files remain in src/ and on the production branch; only the
+	// customer zip drops them.
+	//
+	// NOTE: woff2 lives HERE (offload list), NOT in FONT_STRIP_GLOBS. The latter
+	// drives `strip_orphan_font_refs`, which DELETES the matching url() refs from
+	// CSS — we instead want `rewrite_css_image_refs_to_s3` to REWRITE the woff2
+	// refs to S3. The legacy fallback fonts (woff/eot/ttf) stay in FONT_STRIP_GLOBS.
+	//
+	// @since BuddyBoss [BBVERSION]
+	var S3_OFFLOAD_STRIP_GLOBS = [
+		'**/*.png',
+		'**/*.jpg',
+		'**/*.jpeg',
+		'**/*.gif',
+		'**/*.svg',
+		'**/*.webp',
+		'**/*.ico',
+		'**/*.bmp',
+		'**/*.woff2'
+	];
+
+	// Image dirs that must be KEPT in the zip despite matching the strip globs
+	// above. Webpack-emitted bundle images (admin React apps live under
+	// `.../build/images/`) are referenced inside the JS bundle via webpack's
+	// runtime public path — a URL neither the PHP HTML rewriter nor the CSS
+	// `url()` rewriter can reach — so they cannot be served from S3 and would
+	// 404 if stripped. Re-included AFTER the strip globs in the compress file
+	// list so these patterns win (minimatch: last match decides). Kept in
+	// lockstep with the pair-finder's OFFLOAD_KEPT_PATH_RE.
+	//
+	// @since BuddyBoss [BBVERSION]
+	var S3_OFFLOAD_KEEP_GLOBS = [
+		'**/build/images/**',
+
+		// Images read as LOCAL files by server-side PHP/GD (never emitted as a URL,
+		// so neither the HTML nor CSS rewriter can point them at S3). They must ship
+		// in the zip or the consuming feature silently fails on stripped builds:
+		//   - bp-core/images/blank.png: base canvas loaded via wp_get_image_editor()
+		//     in bb_generate_default_avatar() to render "Display Name" letter avatars.
+		//     Stripped -> WP_Error -> generation falls back to the default avatar.
+		//   - bp-core/images/suspended-mystery-man.jpg: read via file_get_contents()
+		//     in bb_core_upload_dummy_attachment().
+		// Kept in lockstep with the pair-finder's OFFLOAD_KEPT_PATH_RE.
+		'bp-core/images/blank.png',
+		'bp-core/images/suspended-mystery-man.jpg'
+	];
+
+	// Mark the current run as a build_test build. Inserted into `build_test`
+	// before `configure_compress_exclusions` so only the test zip drops the
+	// BUILD_TEST_EXTRA_STRIP_GLOBS paths.
+	//
+	// @since BuddyBoss [BBVERSION]
+	grunt.registerTask( 'enable_build_test_strip', 'Flag build_test-only paths for exclusion from this test zip.', function () {
+		isBuildTestBuild = true;
+		grunt.log.writeln( '[build_test] test-zip strip enabled — build_test-only paths will be excluded from the zip.' );
+	} );
+
+	// Rewrite CSS inside BUILD_DIR to drop `url(...)` refs that would 404
+	// against fonts about to be excluded from the customer zip. Production
+	// branch keeps the original CSS (this runs AFTER the production push);
+	// only the staged BUILD_DIR copies are mutated, which then feed the
+	// compress step.
+	//
+	// Skipped silently when no font files match the strip globs in BUILD_DIR
+	// (e.g. someone runs `compress` standalone without prior copy:files).
+	//
+	// @since BuddyBoss [BBVERSION]
+	grunt.registerTask( 'strip_orphan_font_refs', 'Rewrite BUILD_DIR CSS to drop refs to about-to-be-stripped fonts.', function () {
+		var done = this.async();
+
+		// Expand FONT_STRIP_GLOBS against BUILD_DIR into concrete file paths.
+		// Each entry's path passed to the script is RELATIVE to BUILD_DIR so
+		// the script can resolve CSS-side url() references in the same frame.
+		var expanded = grunt.file.expand(
+			{ cwd: BUILD_DIR, dot: false },
+			FONT_STRIP_GLOBS
+		);
+
+		if ( expanded.length === 0 ) {
+			grunt.log.writeln( '[strip_orphan_font_refs] no matching fonts in BUILD_DIR — skipping.' );
+			return done();
+		}
+
+		grunt.util.spawn(
+			{
+				cmd:  'node',
+				args: [ 'bin/strip-orphan-font-refs.js', BUILD_DIR, expanded.join( ',' ) ],
+				opts: { stdio: 'inherit' }
+			},
+			function ( err, result, code ) {
+				if ( err || code !== 0 ) {
+					grunt.fail.warn( 'strip-orphan-font-refs failed (exit ' + code + ')' );
+				}
+				done();
+			}
+		);
+	} );
+
+	// Rewrite relative `url(...)` image refs in BUILD_DIR CSS to absolute S3
+	// URLs, so the compiled CSS keeps working once the local image files are
+	// excluded from the customer zip. Runs AFTER copy:files (CSS + images are
+	// staged in BUILD_DIR, so the existence check resolves) and BEFORE
+	// configure_compress_exclusions/compress (which drop the images). The
+	// production branch keeps the original relative CSS — only the staged
+	// BUILD_DIR copy is mutated.
+	//
+	// @since BuddyBoss [BBVERSION]
+	grunt.registerTask( 'rewrite_css_image_refs_to_s3', 'Rewrite BUILD_DIR CSS image url() refs to the external S3 bucket.', function () {
+		var done = this.async();
+
+		grunt.util.spawn(
+			{
+				cmd:  'node',
+				args: [ 'bin/rewrite-css-image-refs-to-s3.js', BUILD_DIR, S3_IMAGE_BASE_URL ],
+				opts: { stdio: 'inherit' }
+			},
+			function ( err, result, code ) {
+				if ( err || code !== 0 ) {
+					grunt.fail.warn( 'rewrite-css-image-refs-to-s3 failed (exit ' + code + ')' );
+				}
+				done();
+			}
+		);
+	} );
+
+	// Read the just-written debug manifest and rebuild `compress.main.files` so
+	// every paired unminified asset is excluded from the shipped zip. Customer
+	// zips ship `.min.{js,css}` only; the unminified counterparts live on the
+	// production branch and are fetched at runtime when WP_DEBUG && SCRIPT_DEBUG.
+	//
+	// Also folds in the static font-format dead weight (FONT_STRIP_GLOBS above)
+	// so the EOT + duplicate-icon-TTF + glyphicons-duplicate trim happens in
+	// the same compress pass. All stripped files remain in src/ and on the
+	// production branch; only the customer zip drops them.
+	//
+	// Idempotent and safe to skip — when the manifest is absent (someone ran
+	// `grunt compress` standalone) the existing static config is left alone
+	// and the zip contains everything in BUILD_DIR.
+	//
+	// @since BuddyBoss [BBVERSION]
+	grunt.registerTask( 'configure_compress_exclusions', 'Rebuild compress:main file list using debug-manifest pair set + static font strip list.', function () {
+		var manifestPath = BUILD_DIR + 'unminified-manifest.json';
+		var pairExclusions = [];
+
+		if ( grunt.file.exists( manifestPath ) ) {
+			var manifest = grunt.file.readJSON( manifestPath );
+			var paths    = Object.keys( manifest.files || {} );
+			pairExclusions = paths.map( function ( rel ) {
+				return '!' + BUILD_DIR + rel;
+			} );
+		} else {
+			grunt.log.warn( '[compress] ' + manifestPath + ' missing — paired unminified files will ship in the zip.' );
+		}
+
+		// Font + translation + dev-source strip globs are evaluated against
+		// the BUILD_DIR root, same as the pair exclusions. Use forward
+		// slashes regardless of host OS so minimatch works on Windows too.
+		var fontExclusions = FONT_STRIP_GLOBS.map( function ( g ) {
+			return '!' + BUILD_DIR + g;
+		} );
+		var translationExclusions = TRANSLATION_STRIP_GLOBS.map( function ( g ) {
+			return '!' + BUILD_DIR + g;
+		} );
+		var devSourceExclusions = DEV_SOURCE_STRIP_GLOBS.map( function ( g ) {
+			return '!' + BUILD_DIR + g;
+		} );
+		// build_test-only extras (e.g. the apidoc `endpoints/` output) —
+		// dropped from the test zip, kept in production.
+		var buildTestExtraExclusions = isBuildTestBuild ?
+			BUILD_TEST_EXTRA_STRIP_GLOBS.map( function ( g ) {
+				return '!' + BUILD_DIR + g;
+			} ) :
+			[];
+
+		// Images + woff2 fonts are offloaded to S3 (CSS refs already rewritten by
+		// rewrite_css_image_refs_to_s3, HTML refs rewritten at runtime).
+		var s3OffloadExclusions = S3_OFFLOAD_STRIP_GLOBS.map( function ( g ) {
+			return '!' + BUILD_DIR + g;
+		} );
+
+		// Re-include (no leading '!') the webpack bundle images that the blanket
+		// image strip above would otherwise drop. Appended LAST so they override
+		// the strip — these images ship in the zip and load locally because their
+		// JS-built URLs can't be rewritten to S3. @since BuddyBoss [BBVERSION]
+		var s3OffloadKeepIncludes = S3_OFFLOAD_KEEP_GLOBS.map( function ( g ) {
+			return BUILD_DIR + g;
+		} );
+
+		var allExclusions = pairExclusions
+			.concat( fontExclusions )
+			.concat( translationExclusions )
+			.concat( devSourceExclusions )
+			.concat( buildTestExtraExclusions )
+			.concat( s3OffloadExclusions )
+			.concat( s3OffloadKeepIncludes );
+
+		grunt.config.set( 'compress.main.files', [ {
+			src:  [ BUILD_DIR + '**' ].concat( allExclusions ),
+			dest: '.'
+		} ] );
+
+		grunt.log.writeln(
+			'[compress] excluded ' + pairExclusions.length + ' paired-unminified files + ' +
+			FONT_STRIP_GLOBS.length + ' font-strip globs + ' +
+			TRANSLATION_STRIP_GLOBS.length + ' translation globs + ' +
+			DEV_SOURCE_STRIP_GLOBS.length + ' dev-source globs + ' +
+			buildTestExtraExclusions.length + ' build_test-extra globs (endpoints) + ' +
+			s3OffloadExclusions.length + ' S3-offload globs (images + woff2) from zip; ' +
+			're-included ' + s3OffloadKeepIncludes.length + ' webpack build-image keep-globs.'
+		);
+	} );
+
+	// Build task: Creates production build in BUILD_DIR, initializes git, performs build operations, then commits to production.
+	// `exec:generate_debug_manifest` runs AFTER the production push but BEFORE compress, so the manifest ships in the
+	// customer zip while production keeps the unminified files but not the per-version manifest pointer.
+	// `configure_compress_exclusions` rewrites compress.main.files from the manifest so the zip stays in lockstep.
+	grunt.registerTask('build', ['string-replace:dist', 'exec:composer', 'clean:all', 'exec:init_build_dir_git', 'exec:empty_build_dir', 'copy:files', 'clean:composer', 'exec:commit_build_to_mothership_release', 'exec:generate_debug_manifest', 'strip_orphan_font_refs', 'rewrite_css_image_refs_to_s3', 'configure_compress_exclusions', 'compress', 'clean:all']);
 
 	// Build-test task: identical to `build` except it never touches the
 	// production branch — no git init, no fetch, no checkout, no commit,
@@ -740,7 +1142,7 @@ module.exports = function (grunt) {
 	//   7. clean:composer                  — drop dev composer state from the staged dir
 	//   8. compress                        — zip → buddyboss-platform-plugin.zip
 	//   9. clean:all                       — final tidy
-	grunt.registerTask('build_test', ['string-replace:dist', 'exec:composer', 'clean:all', 'exec:init_build_dir_clean', 'exec:empty_build_dir', 'copy:files', 'clean:composer', 'compress', 'clean:all']);
+	grunt.registerTask('build_test', ['string-replace:dist', 'exec:composer', 'clean:all', 'exec:init_build_dir_clean', 'exec:empty_build_dir', 'copy:files', 'clean:composer', 'exec:generate_debug_manifest', 'strip_orphan_font_refs', 'rewrite_css_image_refs_to_s3', 'enable_build_test_strip', 'configure_compress_exclusions', 'compress', 'clean:all']);
 
 	grunt.registerTask('release', ['src', 'build']);
 

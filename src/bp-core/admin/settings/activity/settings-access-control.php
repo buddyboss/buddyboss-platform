@@ -35,7 +35,7 @@ function bb_activity_register_access_control_fields() {
 		'access_controls',
 		'member_access_controls',
 		array(
-			'title'      => __( 'Member Access Controls', 'buddyboss' ),
+			'title'      => __( 'Member Access Controls', 'buddyboss-platform' ),
 			'order'      => 10,
 			'help_url'   => '638203',
 			'pro_notice' => bb_admin_settings_get_pro_notice(
@@ -54,9 +54,9 @@ function bb_activity_register_access_control_fields() {
 		'member_access_controls',
 		array(
 			'name'              => 'bb-access-control-create-activity',
-			'label'             => __( 'Activity Posts', 'buddyboss' ),
+			'label'             => __( 'Activity Posts', 'buddyboss-platform' ),
 			'type'              => 'access_control',
-			'description'       => __( 'Select which members can create activity posts based on:', 'buddyboss' ),
+			'description'       => __( 'Select which members can create activity posts based on:', 'buddyboss-platform' ),
 			'default'           => '',
 			'pro_only'          => true,
 			'order'             => 10,
@@ -73,7 +73,7 @@ function bb_activity_register_access_control_fields() {
 			'name'        => 'bb-activity-access-control-notice',
 			'label'       => '',
 			'type'        => 'notice',
-			'description' => __( 'These settings do not apply to administrators.', 'buddyboss' ),
+			'description' => __( 'These settings do not apply to administrators.', 'buddyboss-platform' ),
 			'notice_type' => 'info',
 			'order'       => 100,
 		)

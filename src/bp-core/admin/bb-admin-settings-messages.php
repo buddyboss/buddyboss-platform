@@ -29,8 +29,8 @@ function bb_admin_settings_register_messages_feature() {
 	bb_register_feature(
 		'messages',
 		array(
-			'label'              => __( 'Private Messaging', 'buddyboss' ),
-			'description'        => __( 'Allow members to send private messages to other users or within social groups.', 'buddyboss' ),
+			'label'              => __( 'Private Messaging', 'buddyboss-platform' ),
+			'description'        => __( 'Allow members to send private messages to other users or within social groups.', 'buddyboss-platform' ),
 			'icon'               => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-chats-circle',
@@ -65,7 +65,7 @@ function bb_admin_settings_register_messages_feature() {
 		'messages',
 		'messaging_notifications',
 		array(
-			'title'      => __( 'Messaging Notifications', 'buddyboss' ),
+			'title'      => __( 'Messaging Notifications', 'buddyboss-platform' ),
 			'icon'       => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-bell-simple',
@@ -89,7 +89,7 @@ function bb_admin_settings_register_messages_feature() {
 		'messages',
 		'access_controls',
 		array(
-			'title' => __( 'Access Controls', 'buddyboss' ),
+			'title' => __( 'Access Controls', 'buddyboss-platform' ),
 			'icon'  => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-lock-simple',
@@ -116,7 +116,7 @@ function bb_admin_settings_register_messages_feature() {
 			'messaging_notifications',
 			'messaging_notifications',
 			array(
-				'title'       => __( 'Messaging Notifications', 'buddyboss' ),
+				'title'       => __( 'Messaging Notifications', 'buddyboss-platform' ),
 				'description' => '',
 				'order'       => 10,
 				'help_url'    => '636152',
@@ -159,7 +159,7 @@ function bb_admin_settings_register_messages_feature() {
 					'type'        => 'notice',
 					'description' => sprintf(
 						/* translators: %s: Live Messages link. */
-						__( 'When using %s, we recommend enabling these settings to ensure the optimal experience for your members.', 'buddyboss' ),
+						__( 'When using %s, we recommend enabling these settings to ensure the optimal experience for your members.', 'buddyboss-platform' ),
 						'<a href="' . esc_url(
 							add_query_arg(
 								array(
@@ -168,7 +168,7 @@ function bb_admin_settings_register_messages_feature() {
 								),
 								admin_url( 'admin.php' )
 							)
-						) . '">' . __( 'Live Messages', 'buddyboss' ) . '</a>'
+						) . '">' . __( 'Live Messages', 'buddyboss-platform' ) . '</a>'
 					),
 					'notice_type' => 'warning',
 					'conditional' => array(
@@ -190,10 +190,10 @@ function bb_admin_settings_register_messages_feature() {
 				'messaging_notifications',
 				array(
 					'name'              => 'hide_message_notification',
-					'label'             => __( 'Hide From Notifications', 'buddyboss' ),
+					'label'             => __( 'Hide From Notifications', 'buddyboss-platform' ),
 					'type'              => 'toggle',
-					'description'       => __( 'Hide messages from notifications', 'buddyboss' ),
-					'help_text'         => __( 'When enabled, notifications for group and private messages will not appear in a member\'s notification list or count toward unread notifications. However, they will still be sent externally (email, web, or app) and shown in the member\'s message list, including the unread message count.', 'buddyboss' ),
+					'description'       => __( 'Hide messages from notifications', 'buddyboss-platform' ),
+					'help_text'         => __( 'When enabled, notifications for group and private messages will not appear in a member\'s notification list or count toward unread notifications. However, they will still be sent externally (email, web, or app) and shown in the member\'s message list, including the unread message count.', 'buddyboss-platform' ),
 					'default'           => absint( bp_get_option( 'hide_message_notification', 1 ) ),
 					'sanitize_callback' => 'absint',
 					'order'             => 10,
@@ -208,10 +208,10 @@ function bb_admin_settings_register_messages_feature() {
 			'messaging_notifications',
 			array(
 				'name'              => 'delay_email_notification',
-				'label'             => __( 'Delay Email Notifications', 'buddyboss' ),
+				'label'             => __( 'Delay Email Notifications', 'buddyboss-platform' ),
 				'type'              => 'toggle',
-				'description'       => __( 'Delay email notifications for new messages', 'buddyboss' ),
-				'help_text'         => __( 'When enabled, email notifications for new group and private messages will be delayed, giving members time to read them on your site. After the delay, emails are sent only if the messages remain unread. Multiple unread messages in the same conversation will be combined into a single email notification.', 'buddyboss' ),
+				'description'       => __( 'Delay email notifications for new messages', 'buddyboss-platform' ),
+				'help_text'         => __( 'When enabled, email notifications for new group and private messages will be delayed, giving members time to read them on your site. After the delay, emails are sent only if the messages remain unread. Multiple unread messages in the same conversation will be combined into a single email notification.', 'buddyboss-platform' ),
 				'default'           => absint( bp_get_option( 'delay_email_notification', 1 ) ),
 				'sanitize_callback' => 'absint',
 				'order'             => 20,
@@ -235,7 +235,7 @@ function bb_admin_settings_register_messages_feature() {
 			'messaging_notifications',
 			array(
 				'name'              => 'time_delay_email_notification',
-				'label'             => __( 'Delay Message Notifications', 'buddyboss' ),
+				'label'             => __( 'Delay Message Notifications', 'buddyboss-platform' ),
 				'type'              => 'select',
 				'description'       => '',
 				'options'           => $delay_options,

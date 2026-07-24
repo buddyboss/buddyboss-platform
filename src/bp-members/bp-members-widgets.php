@@ -135,7 +135,7 @@ function bp_core_ajax_widget_members() {
 		$result['show_more'] = false;
 		ob_start();
 		?>
-		<?php esc_html_e( 'There were no members found, please try another filter.', 'buddyboss' ); ?>
+		<?php esc_html_e( 'There were no members found, please try another filter.', 'buddyboss-platform' ); ?>
 		<?php echo '</li>'; ?>
 		<?php
 		$content .= ob_get_clean();

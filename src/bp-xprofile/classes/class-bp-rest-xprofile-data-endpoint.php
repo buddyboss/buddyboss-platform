@@ -49,11 +49,11 @@ class BP_REST_XProfile_Data_Endpoint extends WP_REST_Controller {
 			array(
 				'args'   => array(
 					'field_id' => array(
-						'description' => __( 'The ID of the field the data is from.', 'buddyboss' ),
+						'description' => __( 'The ID of the field the data is from.', 'buddyboss-platform' ),
 						'type'        => 'integer',
 					),
 					'user_id'  => array(
-						'description' => __( 'The ID of user the field data is from.', 'buddyboss' ),
+						'description' => __( 'The ID of user the field data is from.', 'buddyboss-platform' ),
 						'type'        => 'integer',
 					),
 				),
@@ -68,7 +68,7 @@ class BP_REST_XProfile_Data_Endpoint extends WP_REST_Controller {
 					'permission_callback' => array( $this, 'update_item_permissions_check' ),
 					'args'                => array(
 						'value' => array(
-							'description' => __( 'The list of values for the field data.', 'buddyboss' ),
+							'description' => __( 'The list of values for the field data.', 'buddyboss-platform' ),
 
 							// @todo Removed to support array and object both.
 
@@ -150,7 +150,7 @@ class BP_REST_XProfile_Data_Endpoint extends WP_REST_Controller {
 		if ( function_exists( 'bp_rest_enable_private_network' ) && true === bp_rest_enable_private_network() && ! is_user_logged_in() ) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
-				__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss' ),
+				__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss-platform' ),
 				array(
 					'status' => rest_authorization_required_code(),
 				)
@@ -163,7 +163,7 @@ class BP_REST_XProfile_Data_Endpoint extends WP_REST_Controller {
 		if ( true === $retval && empty( $field->id ) ) {
 			$retval = new WP_Error(
 				'bp_rest_invalid_id',
-				__( 'Invalid field ID.', 'buddyboss' ),
+				__( 'Invalid field ID.', 'buddyboss-platform' ),
 				array(
 					'status' => 404,
 				)
@@ -178,7 +178,7 @@ class BP_REST_XProfile_Data_Endpoint extends WP_REST_Controller {
 		if ( true === $retval && ! bp_rest_get_user( $request->get_param( 'user_id' ) ) ) {
 			$retval = new WP_Error(
 				'bp_rest_member_invalid_id',
-				__( 'Invalid member ID.', 'buddyboss' ),
+				__( 'Invalid member ID.', 'buddyboss-platform' ),
 				array(
 					'status' => 404,
 				)
@@ -191,7 +191,7 @@ class BP_REST_XProfile_Data_Endpoint extends WP_REST_Controller {
 		if ( true === $retval && in_array( $field->id, $hidden_user_fields, true ) ) {
 			$retval = new WP_Error(
 				'bp_rest_hidden_profile_field',
-				__( 'Sorry, the profile field value is not viewable for this user.', 'buddyboss' ),
+				__( 'Sorry, the profile field value is not viewable for this user.', 'buddyboss-platform' ),
 				array(
 					'status' => 403,
 				)
@@ -236,7 +236,7 @@ class BP_REST_XProfile_Data_Endpoint extends WP_REST_Controller {
 		if ( empty( $field->id ) ) {
 			return new WP_Error(
 				'bp_rest_invalid_id',
-				__( 'Invalid field ID.', 'buddyboss' ),
+				__( 'Invalid field ID.', 'buddyboss-platform' ),
 				array(
 					'status' => 404,
 				)
@@ -284,7 +284,7 @@ class BP_REST_XProfile_Data_Endpoint extends WP_REST_Controller {
 		if ( ! xprofile_set_field_data( $field->id, $user->ID, $value ) ) {
 			return new WP_Error(
 				'rest_user_cannot_save_xprofile_data',
-				__( 'Cannot save XProfile data.', 'buddyboss' ),
+				__( 'Cannot save XProfile data.', 'buddyboss-platform' ),
 				array(
 					'status' => 500,
 				)
@@ -334,7 +334,7 @@ class BP_REST_XProfile_Data_Endpoint extends WP_REST_Controller {
 	public function update_item_permissions_check( $request ) {
 		$retval = new WP_Error(
 			'bp_rest_authorization_required',
-			__( 'Sorry, you need to be logged in to save XProfile data.', 'buddyboss' ),
+			__( 'Sorry, you need to be logged in to save XProfile data.', 'buddyboss-platform' ),
 			array(
 				'status' => rest_authorization_required_code(),
 			)
@@ -349,7 +349,7 @@ class BP_REST_XProfile_Data_Endpoint extends WP_REST_Controller {
 		if ( true === $retval && ! $user instanceof WP_User ) {
 			$retval = new WP_Error(
 				'bp_rest_invalid_id',
-				__( 'Invalid member ID.', 'buddyboss' ),
+				__( 'Invalid member ID.', 'buddyboss-platform' ),
 				array(
 					'status' => 404,
 				)
@@ -360,7 +360,7 @@ class BP_REST_XProfile_Data_Endpoint extends WP_REST_Controller {
 		if ( true === $retval && empty( $field->id ) ) {
 			return new WP_Error(
 				'bp_rest_invalid_id',
-				__( 'Invalid field ID.', 'buddyboss' ),
+				__( 'Invalid field ID.', 'buddyboss-platform' ),
 				array(
 					'status' => 404,
 				)
@@ -374,7 +374,7 @@ class BP_REST_XProfile_Data_Endpoint extends WP_REST_Controller {
 		if ( true === $retval && ! $this->can_see( $user->ID ) ) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
-				__( 'Sorry, you cannot save XProfile field data.', 'buddyboss' ),
+				__( 'Sorry, you cannot save XProfile field data.', 'buddyboss-platform' ),
 				array(
 					'status' => rest_authorization_required_code(),
 				)
@@ -418,7 +418,7 @@ class BP_REST_XProfile_Data_Endpoint extends WP_REST_Controller {
 		if ( empty( $field->id ) ) {
 			return new WP_Error(
 				'bp_rest_invalid_id',
-				__( 'Invalid field ID.', 'buddyboss' ),
+				__( 'Invalid field ID.', 'buddyboss-platform' ),
 				array(
 					'status' => 404,
 				)
@@ -437,7 +437,7 @@ class BP_REST_XProfile_Data_Endpoint extends WP_REST_Controller {
 		if ( false === $field_data->delete() ) {
 			return new WP_Error(
 				'bp_rest_xprofile_data_cannot_delete',
-				__( 'Could not delete XProfile data.', 'buddyboss' ),
+				__( 'Could not delete XProfile data.', 'buddyboss-platform' ),
 				array(
 					'status' => 500,
 				)
@@ -616,25 +616,25 @@ class BP_REST_XProfile_Data_Endpoint extends WP_REST_Controller {
 			'properties' => array(
 				'id'           => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'A unique numeric ID for the profile data.', 'buddyboss' ),
+					'description' => __( 'A unique numeric ID for the profile data.', 'buddyboss-platform' ),
 					'readonly'    => true,
 					'type'        => 'integer',
 				),
 				'field_id'     => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'The ID of the field the data is from.', 'buddyboss' ),
+					'description' => __( 'The ID of the field the data is from.', 'buddyboss-platform' ),
 					'readonly'    => true,
 					'type'        => 'integer',
 				),
 				'user_id'      => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'The ID of the user the field data is from.', 'buddyboss' ),
+					'description' => __( 'The ID of the user the field data is from.', 'buddyboss-platform' ),
 					'readonly'    => true,
 					'type'        => 'integer',
 				),
 				'value'        => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'The value of the field data.', 'buddyboss' ),
+					'description' => __( 'The value of the field data.', 'buddyboss-platform' ),
 					'type'        => 'object',
 					'arg_options' => array(
 						'sanitize_callback' => null,
@@ -642,12 +642,12 @@ class BP_REST_XProfile_Data_Endpoint extends WP_REST_Controller {
 					),
 					'properties'  => array(
 						'raw'          => array(
-							'description' => __( 'Value for the field, as it exists in the database.', 'buddyboss' ),
+							'description' => __( 'Value for the field, as it exists in the database.', 'buddyboss-platform' ),
 							'type'        => 'string',
 							'context'     => array( 'edit' ),
 						),
 						'unserialized' => array(
-							'description' => __( 'Unserialized value for the field, regular string will be casted as array.', 'buddyboss' ),
+							'description' => __( 'Unserialized value for the field, regular string will be casted as array.', 'buddyboss-platform' ),
 							'type'        => 'array',
 							'context'     => array( 'embed', 'view', 'edit' ),
 							'items'       => array(
@@ -656,7 +656,7 @@ class BP_REST_XProfile_Data_Endpoint extends WP_REST_Controller {
 							'readonly'    => true,
 						),
 						'rendered'     => array(
-							'description' => __( 'HTML value for the field, transformed for display.', 'buddyboss' ),
+							'description' => __( 'HTML value for the field, transformed for display.', 'buddyboss-platform' ),
 							'type'        => 'string',
 							'context'     => array( 'embed', 'view', 'edit' ),
 							'readonly'    => true,
@@ -665,7 +665,7 @@ class BP_REST_XProfile_Data_Endpoint extends WP_REST_Controller {
 				),
 				'last_updated' => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'The date the field data was last updated, in the site\'s timezone.', 'buddyboss' ),
+					'description' => __( 'The date the field data was last updated, in the site\'s timezone.', 'buddyboss-platform' ),
 					'type'        => 'string',
 					'format'      => 'date-time',
 				),

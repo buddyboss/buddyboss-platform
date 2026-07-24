@@ -44,23 +44,23 @@ defined( 'ABSPATH' ) || exit;
 function bb_platform_3_required_addons() {
 	return array(
 		'buddyboss-platform-pro/buddyboss-platform-pro.php'   => array(
-			'name'    => __( 'BuddyBoss Platform Pro', 'buddyboss' ),
+			'name'    => __( 'BuddyBoss Platform Pro', 'buddyboss-platform' ),
 			'version' => '3.0.0',
 		),
 		'buddyboss-gamification/buddyboss-gamification.php'   => array(
-			'name'    => __( 'BuddyBoss Gamification', 'buddyboss' ),
+			'name'    => __( 'BuddyBoss Gamification', 'buddyboss-platform' ),
 			'version' => '2.0.0',
 		),
 		'buddyboss-learndash/buddyboss-learndash.php'         => array(
-			'name'    => __( 'BuddyBoss LearnDash', 'buddyboss' ),
+			'name'    => __( 'BuddyBoss LearnDash', 'buddyboss-platform' ),
 			'version' => '1.0.0',
 		),
 		'buddyboss-offload-media/buddyboss-offload-media.php' => array(
-			'name'    => __( 'BuddyBoss Offload Media', 'buddyboss' ),
+			'name'    => __( 'BuddyBoss Offload Media', 'buddyboss-platform' ),
 			'version' => '2.0.0',
 		),
 		'buddyboss-sharing/buddyboss-sharing.php'             => array(
-			'name'    => __( 'BuddyBoss Sharing', 'buddyboss' ),
+			'name'    => __( 'BuddyBoss Sharing', 'buddyboss-platform' ),
 			'version' => '2.0.0',
 		),
 	);
@@ -186,7 +186,7 @@ function bb_platform_3_render_addon_compat_notice() {
 				<?php
 				printf(
 					/* translators: %s: Platform version */
-					esc_html__( 'BuddyBoss Platform %s requires updates to the following plugins:', 'buddyboss' ),
+					esc_html__( 'BuddyBoss Platform %s requires updates to the following plugins:', 'buddyboss-platform' ),
 					esc_html( $platform_version )
 				);
 				?>
@@ -198,7 +198,7 @@ function bb_platform_3_render_addon_compat_notice() {
 					<?php
 					printf(
 						/* translators: 1: Plugin name. 2: Required version. 3: Currently installed version. */
-						esc_html__( '%1$s (%2$s or higher) — currently %3$s', 'buddyboss' ),
+						esc_html__( '%1$s (%2$s or higher) — currently %3$s', 'buddyboss-platform' ),
 						'<strong>' . esc_html( $row['name'] ) . '</strong>',
 						esc_html( $row['required'] ),
 						esc_html( $row['current'] )
@@ -209,7 +209,7 @@ function bb_platform_3_render_addon_compat_notice() {
 		</ul>
 		<p>
 			<a href="<?php echo esc_url( $update_url ); ?>" class="button button-primary">
-				<?php esc_html_e( 'Update plugins now', 'buddyboss' ); ?>
+				<?php esc_html_e( 'Update plugins now', 'buddyboss-platform' ); ?>
 			</a>
 		</p>
 	</div>

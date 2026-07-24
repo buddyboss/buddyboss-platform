@@ -242,8 +242,8 @@ function bp_ps_hidden_filters() {
  */
 function bp_ps_current_page() {
 	 $current = defined( 'DOING_AJAX' ) ?
-		parse_url( $_SERVER['HTTP_REFERER'], PHP_URL_PATH ) :
-		parse_url( $_SERVER['REQUEST_URI'], PHP_URL_PATH );
+		wp_parse_url( $_SERVER['HTTP_REFERER'], PHP_URL_PATH ) :
+		wp_parse_url( $_SERVER['REQUEST_URI'], PHP_URL_PATH );
 
 	return $current;
 }

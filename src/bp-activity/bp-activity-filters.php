@@ -190,9 +190,6 @@ add_filter( 'the_content', 'bb_mention_add_user_dynamic_link', 20, 1 );
 add_action( 'bp_after_directory_activity_list', 'bb_activity_add_modal_template' );
 add_action( 'bp_after_group_activity_content', 'bb_activity_add_modal_template' );
 add_action( 'bp_after_member_activity_content', 'bb_activity_add_modal_template' );
-add_action( 'bp_after_directory_activity_list', 'bb_gifpicker_add_popup_template' );
-add_action( 'bp_after_group_activity_content', 'bb_gifpicker_add_popup_template' );
-add_action( 'bp_after_member_activity_content', 'bb_gifpicker_add_popup_template' );
 add_action( 'bp_before_directory_activity_list', 'bb_emojionearea_add_popup_template' );
 add_action( 'bp_before_group_activity_content', 'bb_emojionearea_add_popup_template' );
 add_action( 'bp_before_member_activity_content', 'bb_emojionearea_add_popup_template' );
@@ -436,7 +433,12 @@ function bp_activity_comment_privacy_update( $comment, $privacy ) {
 		}
 	}
 
-	add_action( 'bp_activity_after_save', 'bp_media_activity_save_gif_data', 2, 1 );
+	// GIF save handler is provided by the BuddyBoss Addons giphy module; only
+	// re-add it when a provider is loaded (adding a nonexistent callback would
+	// fatal on the next activity save).
+	if ( function_exists( 'bp_media_activity_save_gif_data' ) ) {
+		add_action( 'bp_activity_after_save', 'bp_media_activity_save_gif_data', 2, 1 );
+	}
 }
 
 /**
@@ -663,8 +665,8 @@ function bp_activity_make_nofollow_filter_callback( $matches ) {
 	// Extract URL from href
 	preg_match_all( '#\bhttps?://[^,\s()<>]+(?:\([\w\d]+\)|([^,[:punct:]\s]|/))#', $text, $match );
 
-	$url_host      = ( isset( $match[0] ) && isset( $match[0][0] ) ? parse_url( $match[0][0], PHP_URL_HOST ) : '' );
-	$base_url_host = parse_url( site_url(), PHP_URL_HOST );
+	$url_host      = ( isset( $match[0] ) && isset( $match[0][0] ) ? wp_parse_url( $match[0][0], PHP_URL_HOST ) : '' );
+	$base_url_host = wp_parse_url( site_url(), PHP_URL_HOST );
 
 	// If site link then nothing to do.
 	if ( $url_host == $base_url_host || empty( $url_host ) ) {
@@ -718,11 +720,11 @@ function bp_activity_truncate_entry( $text, $args = array() ) {
 	 *
 	 * @param string $value Internationalized "Read more" text.
 	 */
-	$append_text = apply_filters( 'bp_activity_excerpt_append_text', __( ' Read more', 'buddyboss' ) );
+	$append_text = apply_filters( 'bp_activity_excerpt_append_text', __( ' Read more', 'buddyboss-platform' ) );
 
 	$excerpt_length = bp_activity_get_excerpt_length();
 
-	$args = bp_parse_args( $args, array( 'ending' => __( '&hellip;', 'buddyboss' ) ) );
+	$args = bp_parse_args( $args, array( 'ending' => __( '&hellip;', 'buddyboss-platform' ) ) );
 
 	// Run the text through the excerpt function. If it's too short, the original text will be returned.
 	$excerpt = bp_create_excerpt( $text, $excerpt_length, $args );
@@ -784,7 +786,7 @@ function bp_activity_link_preview( $content, $activity ) {
 	}
 
 	$description = $preview_data['description'];
-	$read_more   = ' &hellip; <a class="activity-link-preview-more" href="' . esc_url( $preview_data['url'] ) . '" target="_blank" rel="nofollow">' . __( 'Continue reading', 'buddyboss' ) . '</a>';
+	$read_more   = ' &hellip; <a class="activity-link-preview-more" href="' . esc_url( $preview_data['url'] ) . '" target="_blank" rel="nofollow">' . __( 'Continue reading', 'buddyboss-platform' ) . '</a>';
 	$description = wp_trim_words( $description, 40, $read_more );
 
 	$content = make_clickable( $content );
@@ -1058,7 +1060,7 @@ function bp_activity_heartbeat_strings( $strings = array() ) {
 	$strings = array_merge(
 		$strings,
 		array(
-			'newest' => __( 'Load Newest', 'buddyboss' ),
+			'newest' => __( 'Load Newest', 'buddyboss-platform' ),
 			'pulse'  => absint( $pulse ),
 		)
 	);
@@ -1380,7 +1382,6 @@ function bp_activity_filter_favorites_scope( $retval = array(), $filter = array(
 	return $retval;
 }
 add_filter( 'bp_activity_set_favorites_scope_args', 'bp_activity_filter_favorites_scope', 10, 2 );
-
 
 /**
  * Set up activity arguments for use with the 'favorites' scope.
@@ -1808,7 +1809,7 @@ function bp_activity_has_media_activity_filter( $has_activities, $activities ) {
 					$attachment_id = BP_Media::get_activity_attachment_id( $activity->id );
 					if ( ! empty( $attachment_id ) ) {
 						$parent_activity_id = get_post_meta( $attachment_id, 'bp_media_parent_activity_id', true );
-					} else {
+					} elseif ( bp_is_active( 'video' ) ) {
 						$attachment_id = BP_Video::get_activity_attachment_id( $activity->id );
 						if ( ! empty( $attachment_id ) ) {
 							$parent_activity_id = get_post_meta( $attachment_id, 'bp_video_parent_activity_id', true );
@@ -2052,7 +2053,9 @@ function bp_activity_create_parent_media_activity( $media_ids ) {
 		}
 
 		if ( bp_is_active( 'groups' ) && ! empty( $group_id ) && $group_id > 0 ) {
-			remove_action( 'bp_groups_posted_update', 'bb_subscription_send_subscribe_group_notifications', 11, 4 );
+			if ( function_exists( 'bb_subscription_send_subscribe_group_notifications' ) ) {
+				remove_action( 'bp_groups_posted_update', 'bb_subscription_send_subscribe_group_notifications', 11, 4 );
+			}
 			$activity_id = groups_post_update(
 				array(
 					'content'        => $content,
@@ -2060,7 +2063,9 @@ function bp_activity_create_parent_media_activity( $media_ids ) {
 					'title_required' => false,
 				)
 			);
-			add_action( 'bp_groups_posted_update', 'bb_subscription_send_subscribe_group_notifications', 11, 4 );
+			if ( function_exists( 'bb_subscription_send_subscribe_group_notifications' ) ) {
+				add_action( 'bp_groups_posted_update', 'bb_subscription_send_subscribe_group_notifications', 11, 4 );
+			}
 		} else {
 			remove_action( 'bp_activity_posted_update', 'bb_activity_send_email_to_following_post', 10, 3 );
 			$activity_id = bp_activity_post_update(
@@ -2481,7 +2486,9 @@ function bp_activity_create_parent_document_activity( $document_ids ) {
 		}
 
 		if ( bp_is_active( 'groups' ) && ! empty( $group_id ) && $group_id > 0 ) {
-			remove_action( 'bp_groups_posted_update', 'bb_subscription_send_subscribe_group_notifications', 11, 4 );
+			if ( function_exists( 'bb_subscription_send_subscribe_group_notifications' ) ) {
+				remove_action( 'bp_groups_posted_update', 'bb_subscription_send_subscribe_group_notifications', 11, 4 );
+			}
 			$activity_id = groups_post_update(
 				array(
 					'content'        => $content,
@@ -2489,7 +2496,9 @@ function bp_activity_create_parent_document_activity( $document_ids ) {
 					'title_required' => false,
 				)
 			);
-			add_action( 'bp_groups_posted_update', 'bb_subscription_send_subscribe_group_notifications', 11, 4 );
+			if ( function_exists( 'bb_subscription_send_subscribe_group_notifications' ) ) {
+				add_action( 'bp_groups_posted_update', 'bb_subscription_send_subscribe_group_notifications', 11, 4 );
+			}
 		} else {
 			remove_action( 'bp_activity_posted_update', 'bb_activity_send_email_to_following_post', 10, 3 );
 			$activity_id = bp_activity_post_update(
@@ -2757,7 +2766,7 @@ function bp_blogs_activity_content_with_read_more( $content, $activity ) {
 				$content = bp_create_excerpt( bp_strip_script_and_style_tags( html_entity_decode( $blog_post->post_content, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ) ) );
 			}
 
-			if ( false !== strrpos( $content, __( '&hellip;', 'buddyboss' ) ) ) {
+			if ( false !== strrpos( $content, __( '&hellip;', 'buddyboss-platform' ) ) ) {
 				$content = str_replace( ' [&hellip;]', '&hellip;', $content );
 				$content = apply_filters_ref_array( 'bp_get_activity_content', array( $content, $activity ) );
 				preg_match( '/<iframe.*src=\"(.*)\".*><\/iframe>/isU', $content, $matches );
@@ -2781,9 +2790,9 @@ function bp_blogs_activity_content_with_read_more( $content, $activity ) {
 	} elseif ( 'blogs' === $activity->component && 'new_blog_comment' === $activity->type && $activity->secondary_item_id && $activity->secondary_item_id > 0 ) {
 		$comment = get_comment( $activity->secondary_item_id );
 		$content = bp_create_excerpt( html_entity_decode( $comment->comment_content ) );
-		if ( false !== strrpos( $content, __( '&hellip;', 'buddyboss' ) ) ) {
+		if ( false !== strrpos( $content, __( '&hellip;', 'buddyboss-platform' ) ) ) {
 			$content     = str_replace( ' [&hellip;]', '&hellip;', $content );
-			$append_text = apply_filters( 'bp_activity_excerpt_append_text', __( ' Read more', 'buddyboss' ) );
+			$append_text = apply_filters( 'bp_activity_excerpt_append_text', __( ' Read more', 'buddyboss-platform' ) );
 			$content     = wpautop( sprintf( '%1$s<span class="activity-blog-post-link"><a href="%2$s" rel="nofollow">%3$s</a></span>', $content, get_comment_link( $activity->secondary_item_id ), $append_text ) );
 		}
 	}
@@ -2818,9 +2827,9 @@ function bp_blogs_activity_comment_content_with_read_more( $content, $activity )
 				if ( ! empty( $comment->comment_content ) ) {
 					if ( apply_filters( 'bp_blogs_activity_comment_content_with_read_more', true ) ) {
 						$content = bp_create_excerpt( make_clickable( html_entity_decode( $comment->comment_content, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ) ) );
-						if ( false !== strrpos( $content, __( '&hellip;', 'buddyboss' ) ) ) {
+						if ( false !== strrpos( $content, __( '&hellip;', 'buddyboss-platform' ) ) ) {
 							$content = str_replace( ' [&hellip;]', '&hellip;', $content );
-							$append_text = apply_filters( 'bp_activity_excerpt_append_text', __( ' Read more', 'buddyboss' ) );
+							$append_text = apply_filters( 'bp_activity_excerpt_append_text', __( ' Read more', 'buddyboss-platform' ) );
 							$content = sprintf( '%1$s<span class="activity-blog-post-link"><a href="%2$s" rel="nofollow">%3$s</a></span>', $content, get_comment_link( $comment_id ), $append_text );
 						}
 					} else {
@@ -3241,7 +3250,9 @@ function bp_activity_create_parent_video_activity( $video_ids ) {
 		}
 
 		if ( bp_is_active( 'groups' ) && ! empty( $group_id ) && $group_id > 0 ) {
-			remove_action( 'bp_groups_posted_update', 'bb_subscription_send_subscribe_group_notifications', 11, 4 );
+			if ( function_exists( 'bb_subscription_send_subscribe_group_notifications' ) ) {
+				remove_action( 'bp_groups_posted_update', 'bb_subscription_send_subscribe_group_notifications', 11, 4 );
+			}
 			$activity_id = groups_post_update(
 				array(
 					'content'        => $content,
@@ -3249,7 +3260,9 @@ function bp_activity_create_parent_video_activity( $video_ids ) {
 					'title_required' => false,
 				)
 			);
-			add_action( 'bp_groups_posted_update', 'bb_subscription_send_subscribe_group_notifications', 11, 4 );
+			if ( function_exists( 'bb_subscription_send_subscribe_group_notifications' ) ) {
+				add_action( 'bp_groups_posted_update', 'bb_subscription_send_subscribe_group_notifications', 11, 4 );
+			}
 		} else {
 			remove_action( 'bp_activity_posted_update', 'bb_activity_send_email_to_following_post', 10, 3 );
 			$activity_id = bp_activity_post_update(
@@ -3524,9 +3537,9 @@ function bp_activity_screen_notification_settings() {
 		<thead>
 		<tr>
 			<th class="icon">&nbsp;</th>
-			<th class="title"><?php esc_html_e( 'Activity Feed', 'buddyboss' ); ?></th>
-			<th class="yes"><?php esc_html_e( 'Yes', 'buddyboss' ); ?></th>
-			<th class="no"><?php esc_html_e( 'No', 'buddyboss' ); ?></th>
+			<th class="title"><?php esc_html_e( 'Activity Feed', 'buddyboss-platform' ); ?></th>
+			<th class="yes"><?php esc_html_e( 'Yes', 'buddyboss-platform' ); ?></th>
+			<th class="no"><?php esc_html_e( 'No', 'buddyboss-platform' ); ?></th>
 		</tr>
 		</thead>
 
@@ -3537,19 +3550,19 @@ function bp_activity_screen_notification_settings() {
 			?>
 			<tr id="activity-notification-settings-mentions">
 				<td>&nbsp;</td>
-				<td><?php printf( esc_html__( 'A member mentions you in an update using "@%s"', 'buddyboss' ), bp_activity_get_user_mentionname( $current_user->ID ) ); ?></td>
+				<td><?php /* translators: %s: current user's mention name. */ printf( esc_html__( 'A member mentions you in an update using "@%s"', 'buddyboss-platform' ), esc_html( bp_activity_get_user_mentionname( $current_user->ID ) ) ); ?></td>
 				<td class="yes">
 					<div class="bp-radio-wrap">
 						<input type="radio" name="notifications[notification_activity_new_mention]" id="notification-activity-new-mention-yes" class="bs-styled-radio"
 							   value="yes" <?php checked( $mention, 'yes', true ); ?> />
-						<label for="notification-activity-new-mention-yes"><span class="bp-screen-reader-text"><?php esc_html_e( 'Yes, send email', 'buddyboss' ); ?></span></label>
+						<label for="notification-activity-new-mention-yes"><span class="bp-screen-reader-text"><?php esc_html_e( 'Yes, send email', 'buddyboss-platform' ); ?></span></label>
 					</div>
 				</td>
 				<td class="no">
 					<div class="bp-radio-wrap">
 						<input type="radio" name="notifications[notification_activity_new_mention]" id="notification-activity-new-mention-no" class="bs-styled-radio"
 							   value="no" <?php checked( $mention, 'no', true ); ?> />
-						<label for="notification-activity-new-mention-no"><span class="bp-screen-reader-text"><?php esc_html_e( 'No, do not send email', 'buddyboss' ); ?></span></label>
+						<label for="notification-activity-new-mention-no"><span class="bp-screen-reader-text"><?php esc_html_e( 'No, do not send email', 'buddyboss-platform' ); ?></span></label>
 					</div>
 				</td>
 			</tr>
@@ -3557,19 +3570,19 @@ function bp_activity_screen_notification_settings() {
 
 		<tr id="activity-notification-settings-replies">
 			<td>&nbsp;</td>
-			<td><?php esc_html_e( "A member replies to an update or comment you've posted", 'buddyboss' ); ?></td>
+			<td><?php esc_html_e( "A member replies to an update or comment you've posted", 'buddyboss-platform' ); ?></td>
 			<td class="yes">
 				<div class="bp-radio-wrap">
 					<input type="radio" name="notifications[notification_activity_new_reply]" id="notification-activity-new-reply-yes" class="bs-styled-radio"
 						   value="yes" <?php checked( $reply, 'yes', true ); ?> />
-					<label for="notification-activity-new-reply-yes"><span class="bp-screen-reader-text"><?php esc_html_e( 'Yes, send email', 'buddyboss' ); ?></span></label>
+					<label for="notification-activity-new-reply-yes"><span class="bp-screen-reader-text"><?php esc_html_e( 'Yes, send email', 'buddyboss-platform' ); ?></span></label>
 				</div>
 			</td>
 			<td class="no">
 				<div class="bp-radio-wrap">
 					<input type="radio" name="notifications[notification_activity_new_reply]" id="notification-activity-new-reply-no" class="bs-styled-radio"
 						   value="no" <?php checked( $reply, 'no', true ); ?> />
-					<label for="notification-activity-new-reply-no"><span class="bp-screen-reader-text"><?php esc_html_e( 'No, do not send email', 'buddyboss' ); ?></span></label>
+					<label for="notification-activity-new-reply-no"><span class="bp-screen-reader-text"><?php esc_html_e( 'No, do not send email', 'buddyboss-platform' ); ?></span></label>
 				</div>
 			</td>
 		</tr>
@@ -3899,15 +3912,6 @@ function bb_blogs_activity_comment_edit_content( $activity_comment_data ) {
 	}
 
 	return $activity_comment_data;
-}
-
-/**
- * Add template for gifpicker.
- *
- * @since BuddyBoss 2.5.80
- */
-function bb_gifpicker_add_popup_template() {
-	bp_get_template_part( 'activity/gifpicker-popup' );
 }
 
 /**

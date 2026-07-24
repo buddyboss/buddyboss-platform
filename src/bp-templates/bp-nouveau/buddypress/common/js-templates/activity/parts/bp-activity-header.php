@@ -8,23 +8,26 @@
  * @version 1.8.6
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 ?>
 <script type="text/html" id="tmpl-activity-header">
 	<h3>
 		<span class="activity-header-data">
 			<# if ( data.privacy_modal === 'profile' ) {  #>
-				<?php esc_html_e( 'Who can see your post?', 'buddyboss' ); ?>
+				<?php esc_html_e( 'Who can see your post?', 'buddyboss-platform' ); ?>
 			<# } else if ( data.privacy_modal === 'group' ) { #>
-				<?php esc_html_e( 'Select a group', 'buddyboss' ); ?>
+				<?php esc_html_e( 'Select a group', 'buddyboss-platform' ); ?>
 			<# } else { #>
 				<# if ( data.edit_activity === true ) {  #>
 					<# if ( data.activity_action_type === 'scheduled' ) {  #>
-						<?php esc_html_e( 'Edit Scheduled Post', 'buddyboss' ); ?>
+						<?php esc_html_e( 'Edit Scheduled Post', 'buddyboss-platform' ); ?>
 					<# } else { #>
-						<?php esc_html_e( 'Edit post', 'buddyboss' ); ?>
+						<?php esc_html_e( 'Edit post', 'buddyboss-platform' ); ?>
 					<# } #>
 				<# } else { #>
-					<?php esc_html_e( 'Create a post', 'buddyboss' ); ?>
+					<?php esc_html_e( 'Create a post', 'buddyboss-platform' ); ?>
 				<# } #>
 			<# } #>
 		</span>

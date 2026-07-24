@@ -186,7 +186,7 @@ function bp_nouveau_dismiss_button_type() {
  * @since BuddyPress 3.0.0
  */
 function bp_nouveau_template_message() {
-	echo bp_nouveau_get_template_message();
+	echo wp_kses_post( bp_nouveau_get_template_message() );
 }
 
 	/**
@@ -1039,7 +1039,7 @@ function bp_nouveau_get_nav_classes() {
  * @since BuddyPress 3.0.0
  */
 function bp_nouveau_nav_scope() {
-	echo bp_nouveau_get_nav_scope();  // Escaped by bp_get_form_field_attributes().
+	echo bp_nouveau_get_nav_scope();  // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Output is escaped attribute markup built by bp_get_form_field_attributes().
 }
 
 	/**
@@ -1297,7 +1297,7 @@ function bp_nouveau_nav_has_count() {
 					} elseif ( 'groups' === $nav_item->slug ) {
 						$count = bp_media_get_user_total_group_media_count();
 					}
-				} elseif ( bp_is_video_directory() ) {
+				} elseif ( bp_is_active( 'video' ) && bp_is_video_directory() ) {
 					if ( 'all' === $nav_item->slug ) {
 						$count = bp_get_total_video_count();
 					} elseif ( 'personal' === $nav_item->slug ) {
@@ -1312,7 +1312,7 @@ function bp_nouveau_nav_has_count() {
 			$count = 0 !== (int) groups_get_current_group()->total_member_count;
 		} elseif ( 'groups' === $bp_nouveau->displayed_nav && bp_is_active( 'media' ) && bp_is_group_media_support_enabled() && 'photos' === $nav_item->slug ) {
 			$count = 0 !== (int) bp_media_get_total_group_media_count();
-		} elseif ( 'groups' === $bp_nouveau->displayed_nav && bp_is_active( 'media' ) && bp_is_group_video_support_enabled() && 'videos' === $nav_item->slug ) {
+		} elseif ( 'groups' === $bp_nouveau->displayed_nav && bp_is_active( 'video' ) && bp_is_group_video_support_enabled() && 'videos' === $nav_item->slug ) {
 			$count = 0 !== (int) bp_video_get_total_group_video_count();
 		} elseif ( 'groups' === $bp_nouveau->displayed_nav && bp_is_active( 'media' ) && bp_is_group_albums_support_enabled() && 'albums' === $nav_item->slug ) {
 			$count = 0 !== (int) bp_media_get_total_group_album_count();
@@ -1387,7 +1387,7 @@ function bp_nouveau_get_nav_count() {
 					} elseif ( 'groups' === $nav_item->slug ) {
 						$count = bp_media_get_user_total_group_media_count();
 					}
-				} elseif ( bp_is_video_directory() ) {
+				} elseif ( bp_is_active( 'video' ) && bp_is_video_directory() ) {
 					if ( 'all' === $nav_item->slug ) {
 						$count = bp_get_total_video_count();
 					} elseif ( 'personal' === $nav_item->slug ) {
@@ -2029,6 +2029,7 @@ function bp_nouveau_search_form() {
 		 *
 		 * @param string $search_form_html The HTML output for the directory search form.
 		 */
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $search_form_html is a buffered search-form template part (contains <form>/<input>); wp_kses_post would strip it.
 		echo apply_filters( "bp_directory_{$objects['secondary']}_search_form", $search_form_html );
 
 		if ( 'activity' === $objects['secondary'] ) {
@@ -2072,6 +2073,7 @@ function bp_nouveau_search_form() {
 			 *
 			 * @param string $search_form_html The HTML output for the directory search form.
 			 */
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $search_form_html is a buffered search-form template part (contains <form>/<input>); wp_kses_post would strip it.
 			echo apply_filters( "bp_group_{$objects['secondary']}_search_form", $search_form_html );
 
 		} else {
@@ -2082,6 +2084,7 @@ function bp_nouveau_search_form() {
 			 *
 			 * @param string $search_form_html HTML markup for the member search form.
 			 */
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $search_form_html is a buffered search-form template part (contains <form>/<input>); wp_kses_post would strip it.
 			echo apply_filters( 'bp_directory_members_search_form', $search_form_html );
 		}
 
@@ -2105,6 +2108,7 @@ function bp_nouveau_search_form() {
 		}
 	} elseif ( 'member' === $objects['primary'] && 'activity' === $objects['secondary'] ) {
 
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $search_form_html is a buffered search-form template part (contains <form>/<input>); wp_kses_post would strip it.
 		echo apply_filters( "bp_directory_{$objects['secondary']}_search_form", $search_form_html );
 
 		/**
@@ -2258,10 +2262,10 @@ function bp_nouveau_filter_label() {
 	 */
 function bp_nouveau_get_filter_label() {
 	$component = bp_nouveau_current_object();
-	$label     = __( 'Order By:', 'buddyboss' );
+	$label     = __( 'Order By:', 'buddyboss-platform' );
 
 	if ( 'activity' === $component['object'] || 'friends' === $component['object'] ) {
-		$label = __( 'Show:', 'buddyboss' );
+		$label = __( 'Show:', 'buddyboss-platform' );
 	}
 
 	/**
@@ -2291,7 +2295,7 @@ function bp_nouveau_filter_component() {
  * @since BuddyPress 3.0.0
  */
 function bp_nouveau_filter_options() {
-	echo bp_nouveau_get_filter_options();  // Escaped in inner functions.
+	echo bp_nouveau_get_filter_options();  // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Returns <option> markup with each value escaped via esc_attr()/esc_html(); wp_kses_post would strip the <option> tags.
 }
 
 	/**
@@ -2498,14 +2502,16 @@ function bp_nouveau_signup_form( $section = 'account_details' ) {
 
 		if ( $required ) {
 			/* translators: Do not translate placeholders. 2 = form field name, 3 = "(required)". */
-			$label_output = __( '<label for="%1$s">%2$s %3$s</label>', 'buddyboss' );
+			$label_output = __( '<label for="%1$s">%2$s %3$s</label>', 'buddyboss-platform' );
 		}
 
 		// Output the label for regular fields
 		if ( 'radio' !== $type ) {
 			if ( $required ) {
+				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $label_output is a fixed <label> markup template; all substituted args are escaped.
 				printf( $label_output, esc_attr( $name ), esc_html( $label ), '' );
 			} else {
+				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $label_output is a fixed <label> markup template; all substituted args are escaped.
 				printf( $label_output, esc_attr( $name ), esc_html( $label ) );
 			}
 
@@ -2517,7 +2523,7 @@ function bp_nouveau_signup_form( $section = 'account_details' ) {
 		} elseif ( 'signup_blog_privacy_private' !== $name ) {
 			?>
 				<label for="signup_blog_privacy">
-					<?php esc_html_e( 'I would like my site to appear in search engines, and in public listings around this network.', 'buddyboss' ); ?>
+					<?php esc_html_e( 'I would like my site to appear in search engines, and in public listings around this network.', 'buddyboss-platform' ); ?>
 				</label>
 			<?php
 		}
@@ -2601,10 +2607,10 @@ function bp_nouveau_signup_form( $section = 'account_details' ) {
 
 				if ( ( 'signup_password' === $name ) || ( 'signup_password_confirm' === $name ) ) {
 					echo '<div class="bb-password-wrap">';
-					echo '<a href="#" class="bb-toggle-password" tabindex="-1" aria-label="' . esc_attr__( 'Toggle password visibility', 'buddyboss' ) . '"><i class="bb-icon-l bb-icon-eye"></i></a>';
+					echo '<a href="#" class="bb-toggle-password" tabindex="-1" aria-label="' . esc_attr__( 'Toggle password visibility', 'buddyboss-platform' ) . '"><i class="bb-icon-l bb-icon-eye"></i></a>';
 				}
 
-				print( $field_output );  // Constructed safely above.
+				print( $field_output );  // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $field_output is an <input> element built with escaped attributes above.
 
 				if ( ( 'signup_password' === $name ) || ( 'signup_password_confirm' === $name ) ) {
 					echo '</div>';
@@ -2612,26 +2618,25 @@ function bp_nouveau_signup_form( $section = 'account_details' ) {
 
 				// If it's the signup blog url, it's specific to Multisite config.
 			} elseif ( is_subdomain_install() ) {
-				// Constructed safely above.
 				printf(
 					'<small>%1$s</small> %2$s <small>. %3$s</small><br /><br />',
 					is_ssl() ? 'https://' : 'http://',
-					$field_output,
-					bp_signup_get_subdomain_base()
+					$field_output, // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $field_output is an <input> element built with escaped attributes above.
+					esc_html( bp_signup_get_subdomain_base() )
 				);
 
 				// Subfolders!
 			} else {
 				printf(
 					'<small>%1$s</small> %2$s',
-					home_url( '/' ),
-					$field_output  // Constructed safely above.
+					esc_url( home_url( '/' ) ),
+					$field_output // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $field_output is an <input> element built with escaped attributes above.
 				);
 			}
 
 			// It's a radio, let's output the field inside the label
 		} else {
-			// $label_output and $field_output are constructed safely above.
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $label_output is a fixed <label> markup template; $field_output is an <input> built with escaped attributes; $label is escaped via esc_html().
 			printf( $label_output, esc_attr( $name ), $field_output . ' ' . esc_html( $label ) );
 		}
 
@@ -2699,29 +2704,29 @@ function bp_nouveau_signup_terms_privacy() {
 			<div class="input-options checkbox-options">
 				<div class="bp-checkbox-wrap">
 					<input type="checkbox" name="legal_agreement" id="legal_agreement" value="1" class="bs-styled-checkbox">
-					<label for="legal_agreement" class="option-label"><?php printf( __( 'I agree to the %1$s and %2$s.', 'buddyboss' ), $terms_link, $privacy_link ); ?></label>
+					<label for="legal_agreement" class="option-label"><?php /* translators: 1: terms of service link, 2: privacy policy link. */ echo wp_kses_post( sprintf( __( 'I agree to the %1$s and %2$s.', 'buddyboss-platform' ), $terms_link, $privacy_link ) ); ?></label>
 				</div>
 			</div>
 		<?php } else { ?>
 			<p class="register-privacy-info">
-				<?php printf( __( 'By creating an account you are agreeing to the %1$s and %2$s.', 'buddyboss' ), $terms_link, $privacy_link ); ?>
+				<?php /* translators: 1: terms of service link, 2: privacy policy link. */ echo wp_kses_post( sprintf( __( 'By creating an account you are agreeing to the %1$s and %2$s.', 'buddyboss-platform' ), $terms_link, $privacy_link ) ); ?>
 			</p>
 		<?php } ?>
 		<div id="terms-modal" class="mfp-hide registration-popup bb-modal">
 			<h1><?php echo esc_html( get_the_title( $terms ) ); ?></h1>
 			<?php
 			$get_terms = get_post( $terms );
-			echo apply_filters( 'bp_term_of_service_content', apply_filters( 'the_content', $get_terms->post_content ), $get_terms->post_content );
+			echo apply_filters( 'bp_term_of_service_content', apply_filters( 'the_content', $get_terms->post_content ), $get_terms->post_content ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- post_content already sanitized by the_content; wp_kses_post strips oEmbed <iframe>s and block <svg>s.
 			?>
-			<button title="<?php esc_attr_e( 'Close (Esc)', 'buddyboss' ); ?>" type="button" class="mfp-close"><?php esc_html_e( '×', 'buddyboss' ); ?></button>
+			<button title="<?php esc_attr_e( 'Close (Esc)', 'buddyboss-platform' ); ?>" type="button" class="mfp-close"><?php esc_html_e( '×', 'buddyboss-platform' ); ?></button>
 		</div>
 		<div id="privacy-modal" class="mfp-hide registration-popup bb-modal">
 			<h1><?php echo esc_html( get_the_title( $privacy ) ); ?></h1>
 			<?php
 			$get_privacy = get_post( $privacy );
-			echo apply_filters( 'bp_privacy_policy_content', apply_filters( 'the_content', $get_privacy->post_content ), $get_privacy->post_content );
+			echo apply_filters( 'bp_privacy_policy_content', apply_filters( 'the_content', $get_privacy->post_content ), $get_privacy->post_content ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- post_content already sanitized by the_content; wp_kses_post strips oEmbed <iframe>s and block <svg>s.
 			?>
-			<button title="<?php esc_attr_e( 'Close (Esc)', 'buddyboss' ); ?>" type="button" class="mfp-close"><?php esc_html_e( '×', 'buddyboss' ); ?></button>
+			<button title="<?php esc_attr_e( 'Close (Esc)', 'buddyboss-platform' ); ?>" type="button" class="mfp-close"><?php esc_html_e( '×', 'buddyboss-platform' ); ?></button>
 		</div>
 		<?php
 	} elseif ( empty( $terms ) && ! empty( $privacy ) ) {
@@ -2731,21 +2736,21 @@ function bp_nouveau_signup_terms_privacy() {
 			<div class="input-options checkbox-options">
 				<div class="bp-checkbox-wrap">
 					<input type="checkbox" name="legal_agreement" id="legal_agreement" value="1" class="bs-styled-checkbox">
-					<label for="legal_agreement" class="option-label"><?php printf( __( 'I agree to the %s.', 'buddyboss' ), $privacy_link ); ?></label>
+					<label for="legal_agreement" class="option-label"><?php /* translators: %s: privacy policy link. */ echo wp_kses_post( sprintf( __( 'I agree to the %s.', 'buddyboss-platform' ), $privacy_link ) ); ?></label>
 				</div>
 			</div>
 		<?php } else { ?>
 			<p class="register-privacy-info">
-				<?php printf( __( 'By creating an account you are agreeing to the %s.', 'buddyboss' ), $privacy_link ); ?>
+				<?php /* translators: %s: privacy policy link. */ echo wp_kses_post( sprintf( __( 'By creating an account you are agreeing to the %s.', 'buddyboss-platform' ), $privacy_link ) ); ?>
 			</p>
 		<?php } ?>
 		<div id="privacy-modal" class="mfp-hide registration-popup bb-modal">
 			<h1><?php echo esc_html( get_the_title( $privacy ) ); ?></h1>
 			<?php
 			$get_privacy = get_post( $privacy );
-			echo apply_filters( 'bp_privacy_policy_content', apply_filters( 'the_content', $get_privacy->post_content ), $get_privacy->post_content );
+			echo apply_filters( 'bp_privacy_policy_content', apply_filters( 'the_content', $get_privacy->post_content ), $get_privacy->post_content ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- post_content already sanitized by the_content; wp_kses_post strips oEmbed <iframe>s and block <svg>s.
 			?>
-			<button title="<?php esc_attr_e( 'Close (Esc)', 'buddyboss' ); ?>" type="button" class="mfp-close"><?php esc_html_e( '×', 'buddyboss' ); ?></button>
+			<button title="<?php esc_attr_e( 'Close (Esc)', 'buddyboss-platform' ); ?>" type="button" class="mfp-close"><?php esc_html_e( '×', 'buddyboss-platform' ); ?></button>
 		</div>
 		<?php
 	} elseif ( ! empty( $terms ) && empty( $privacy ) ) {
@@ -2755,12 +2760,12 @@ function bp_nouveau_signup_terms_privacy() {
 			<div class="input-options checkbox-options">
 				<div class="bp-checkbox-wrap">
 					<input type="checkbox" name="legal_agreement" id="legal_agreement" value="1" class="bs-styled-checkbox">
-					<label for="legal_agreement" class="option-label"><?php printf( __( 'I agree to the %s.', 'buddyboss' ), $terms_link ); ?></label>
+					<label for="legal_agreement" class="option-label"><?php /* translators: %s: terms of service link. */ echo wp_kses_post( sprintf( __( 'I agree to the %s.', 'buddyboss-platform' ), $terms_link ) ); ?></label>
 				</div>
 			</div>
 		<?php } else { ?>
 			<p class="register-privacy-info">
-				<?php printf( __( 'By creating an account you are agreeing to the %s.', 'buddyboss' ), $terms_link ); ?>
+				<?php /* translators: %s: terms of service link. */ echo wp_kses_post( sprintf( __( 'By creating an account you are agreeing to the %s.', 'buddyboss-platform' ), $terms_link ) ); ?>
 			</p>
 		<?php } ?>
 
@@ -2768,9 +2773,9 @@ function bp_nouveau_signup_terms_privacy() {
 			<h1><?php echo esc_html( get_the_title( $terms ) ); ?></h1>
 			<?php
 			$get_terms = get_post( $terms );
-			echo apply_filters( 'bp_term_of_service_content', apply_filters( 'the_content', $get_terms->post_content ), $get_terms->post_content );
+			echo apply_filters( 'bp_term_of_service_content', apply_filters( 'the_content', $get_terms->post_content ), $get_terms->post_content ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- post_content already sanitized by the_content; wp_kses_post strips oEmbed <iframe>s and block <svg>s.
 			?>
-			<button title="<?php esc_attr_e( 'Close (Esc)', 'buddyboss' ); ?>" type="button" class="mfp-close"><?php esc_html_e( '×', 'buddyboss' ); ?></button>
+			<button title="<?php esc_attr_e( 'Close (Esc)', 'buddyboss-platform' ); ?>" type="button" class="mfp-close"><?php esc_html_e( '×', 'buddyboss-platform' ); ?></button>
 		</div>
 		<?php
 	}
@@ -2812,10 +2817,11 @@ function bp_nouveau_submit_button( $action ) {
 
 	// Output the submit button.
 	if ( isset( $submit_data['wrapper'] ) && false === $submit_data['wrapper'] ) {
-		echo $submit_input;
+		echo $submit_input; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $submit_input is an <input> element built with escaped attributes via bp_get_form_field_attributes().
 
 		// Output the submit button into a wrapper.
 	} else {
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $submit_input is an <input> element built with escaped attributes via bp_get_form_field_attributes().
 		printf( '<div class="submit">%s</div>', $submit_input );
 	}
 

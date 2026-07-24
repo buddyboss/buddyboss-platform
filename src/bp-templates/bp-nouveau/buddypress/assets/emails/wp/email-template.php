@@ -64,7 +64,7 @@ $width = wp_is_mobile() ? '100%' : '600px';
 			padding: 0 !important;
 			direction: <?php echo is_rtl() ? 'rtl' : 'ltr'; ?>;
 			unicode-bidi: embed;
-			<?php echo wp_is_mobile() ? "width:{$width} !important" : ""; ?>;
+			<?php echo esc_attr( wp_is_mobile() ? "width:{$width} !important" : "" ); ?>;
 		}
 
 		pre {
@@ -97,8 +97,8 @@ $width = wp_is_mobile() ? '100%' : '600px';
 
 		/* What it does: Stops email clients resizing small text. */
 		* {
-			-ms-text-size-adjust: <?php echo $width; ?>;
-			-webkit-text-size-adjust: <?php echo $width; ?>;
+			-ms-text-size-adjust: <?php echo esc_attr( $width ); ?>;
+			-webkit-text-size-adjust: <?php echo esc_attr( $width ); ?>;
 		}
 
 		/* What is does: Centers email on Android 4.4 */
@@ -130,7 +130,7 @@ $width = wp_is_mobile() ? '100%' : '600px';
 		img {
 			-ms-interpolation-mode:bicubic;
 			height: auto;
-			max-width: <?php echo $width; ?>;
+			max-width: <?php echo esc_attr( $width ); ?>;
 		}
 
 		/* What it does: A work-around for email clients meddling in triggered links. */
@@ -172,7 +172,7 @@ $width = wp_is_mobile() ? '100%' : '600px';
 
 		/* What it does: Forces Outlook.com to display emails full width. */
 		.ExternalClass {
-			width: <?php echo $width; ?>;
+			width: <?php echo esc_attr( $width ); ?>;
 		}
 
 		.recipient_text_color table {
@@ -183,8 +183,8 @@ $width = wp_is_mobile() ? '100%' : '600px';
 		@media screen and (max-width: 768px) {
 			/* ALLOWS FOR FLUID TABLES */
 			.wrapper {
-				width: <?php echo $width; ?> !important;
-				max-width: <?php echo $width; ?> !important;
+				width: <?php echo esc_attr( $width ); ?> !important;
+				max-width: <?php echo esc_attr( $width ); ?> !important;
 			}
 
 			/* ADJUSTS LAYOUT OF LOGO IMAGE */
@@ -198,14 +198,14 @@ $width = wp_is_mobile() ? '100%' : '600px';
 			}
 
 			.img-max {
-				max-width: <?php echo $width; ?> !important;
-				width: <?php echo $width; ?> !important;
+				max-width: <?php echo esc_attr( $width ); ?> !important;
+				width: <?php echo esc_attr( $width ); ?> !important;
 				height: auto !important;
 			}
 
 			/* FULL-WIDTH TABLES */
 			.responsive-table {
-				width: <?php echo $width; ?> !important;
+				width: <?php echo esc_attr( $width ); ?> !important;
 			}
 
 			.mobile-text-center {
@@ -228,13 +228,13 @@ $width = wp_is_mobile() ? '100%' : '600px';
 
 			.mobile-block-full {
 				display: block !important;
-				width: <?php echo $width; ?> !important;
+				width: <?php echo esc_attr( $width ); ?> !important;
 			}
 
 			.mobile-block-padding-full {
 				display: block !important;
 				padding: 0 20px !important;
-				width: <?php echo $width; ?> !important;
+				width: <?php echo esc_attr( $width ); ?> !important;
 				box-sizing: border-box;
 			}
 
@@ -297,12 +297,12 @@ $width = wp_is_mobile() ? '100%' : '600px';
 											if ( !empty( $attachment_id ) ) {
 												$image_src = wp_get_attachment_image_src( $attachment_id, array( 180, 45 ) );
 												if ( !empty( $image_src ) ) {
-													echo apply_filters( 'bp_email_header_blog_image',"<img src='" . esc_attr( $image_src[ 0 ] ) . "' alt='" . esc_attr( $blogname ) . "' style='margin:0; padding:0; border:none; display:block; max-height:auto; height:auto; width:" . esc_attr( $settings['site_title_logo_size'] ) . "px;' border='0' />" );
+													echo wp_kses_post( apply_filters( 'bp_email_header_blog_image',"<img src='" . esc_attr( $image_src[ 0 ] ) . "' alt='" . esc_attr( $blogname ) . "' style='margin:0; padding:0; border:none; display:block; max-height:auto; height:auto; width:" . esc_attr( $settings['site_title_logo_size'] ) . "px;' border='0' />" ) );
 												} else {
-													echo apply_filters( 'bp_email_header_blog_name_with_no_image', $blogname );
+													echo esc_html( apply_filters( 'bp_email_header_blog_name_with_no_image', $blogname ) );
 												}
 											} else {
-												echo apply_filters( 'bp_email_header_blog_name', $blogname );
+												echo esc_html( apply_filters( 'bp_email_header_blog_name', $blogname ) );
 											}
 
 											/**
@@ -323,10 +323,10 @@ $width = wp_is_mobile() ? '100%' : '600px';
 											do_action( 'bp_before_email_recipient' );
 
 											if ( ! empty( $email_user->ID ) ) {
-												echo $email_user->display_name . ' <img src="' . bp_core_fetch_avatar( array(
+												echo esc_html( $email_user->display_name ) . ' <img src="' . esc_url( bp_core_fetch_avatar( array(
 														'item_id' => $email_user->ID,
 														'html'    => false
-													) ) . '" " width="34" height="34" style="border: 1px solid #b9babc; border-radius: 50%; margin-left: 12px; vertical-align: middle;" />';
+													) ) ) . '" " width="34" height="34" style="border: 1px solid #b9babc; border-radius: 50%; margin-left: 12px; vertical-align: middle;" />';
 											}
 
 											/**
@@ -351,7 +351,7 @@ $width = wp_is_mobile() ? '100%' : '600px';
 										<table role="presentation" cellspacing="0" cellpadding="0" border="0" style="width: 100%;">
 											<tr>
 												<td style="padding: 20px 40px; font-family: sans-serif; mso-height-rule: exactly; line-height: <?php echo esc_attr( floor( $settings['body_text_size'] * 1.618 ) . 'px' ); ?>; color: <?php echo esc_attr( $settings['body_text_color'] ); ?>; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>" class="body_text_color body_text_size repsonsive-padding">
-													<?php echo $email_content; ?>
+													<?php echo wp_kses_post( $email_content ); ?>
 												</td>
 											</tr>
 										</table>
@@ -376,7 +376,7 @@ $width = wp_is_mobile() ? '100%' : '600px';
 										do_action( 'bp_before_email_footer' );
 										?>
 
-										<span class="footer_text"><?php echo apply_filters( 'bp_email_footer_text', nl2br( stripslashes( $settings['footer_text'] ) ) ); ?></span>
+										<span class="footer_text"><?php echo wp_kses_post( apply_filters( 'bp_email_footer_text', nl2br( stripslashes( $settings['footer_text'] ) ) ) ); ?></span>
 
 										<?php
 										/**

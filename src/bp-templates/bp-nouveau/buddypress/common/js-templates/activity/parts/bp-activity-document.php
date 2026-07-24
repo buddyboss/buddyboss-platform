@@ -8,12 +8,15 @@
  * @version 1.8.6
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 ?>
 <script type="text/html" id="tmpl-activity-document">
 	<div class="dropzone closed document-dropzone" id="activity-post-document-uploader"></div>
 	<div class="activity-post-document-template" style="display:none;">
 		<div class="dz-preview dz-file-preview">
-			<div class="dz-error-title"><?php esc_html_e( 'Upload Failed', 'buddyboss' ); ?></div>
+			<div class="dz-error-title"><?php esc_html_e( 'Upload Failed', 'buddyboss-platform' ); ?></div>
 			<div class="dz-details">
 				<div class="dz-icon"><span class="bb-icon-l bb-icon-file"></span></div>
 				<div class="dz-filename"><span data-dz-name></span></div>

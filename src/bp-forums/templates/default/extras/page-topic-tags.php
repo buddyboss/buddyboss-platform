@@ -6,6 +6,9 @@
  * @package BuddyBoss\Theme
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 get_header(); ?>
 
 	<?php do_action( 'bbp_before_main_content' ); ?>
@@ -21,7 +24,7 @@ get_header(); ?>
 			<h1 class="entry-title"><?php the_title(); ?></h1>
 			<div class="entry-content">
 
-				<?php get_the_content() ? the_content() : _e( '<p>This is a collection of tags that are currently popular on our forums.</p>', 'buddyboss' ); ?>
+				<?php get_the_content() ? the_content() : print( wp_kses_post( __( '<p>This is a collection of tags that are currently popular on our forums.</p>', 'buddyboss-platform' ) ) ); // phpcs:ignore WordPress.WP.I18n.NoHtmlWrappedStrings -- HTML wrapper kept to preserve existing translations (msgid unchanged). ?>
 
 				<div id="bbpress-forums">
 

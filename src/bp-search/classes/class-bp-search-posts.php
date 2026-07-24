@@ -246,7 +246,7 @@ if ( ! class_exists( 'Bp_Search_Posts' ) ) :
 
 			$label = sprintf(
 			/* translators: %s: The post type */
-				__( '%s Meta', 'buddyboss' ),
+				__( '%s Meta', 'buddyboss-platform' ),
 				ucfirst( $this->pt_name )
 			);
 			$item    = 'post_field_' . $this->pt_name . '_meta';

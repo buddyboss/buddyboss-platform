@@ -28,8 +28,8 @@ function bb_admin_settings_register_invites_feature() {
 	bb_register_feature(
 		'invites',
 		array(
-			'label'              => __( 'Email Invites', 'buddyboss' ),
-			'description'        => __( 'Allow members to send email invitations to help encourage others to register and join your community.', 'buddyboss' ),
+			'label'              => __( 'Email Invites', 'buddyboss-platform' ),
+			'description'        => __( 'Allow members to send email invitations to help encourage others to register and join your community.', 'buddyboss-platform' ),
 			'icon'               => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-paper-plane-tilt',
@@ -63,7 +63,7 @@ function bb_admin_settings_register_invites_feature() {
 		'invites',
 		'email_invite_settings',
 		array(
-			'title'      => __( 'Email Invite Settings', 'buddyboss' ),
+			'title'      => __( 'Email Invite Settings', 'buddyboss-platform' ),
 			'icon'       => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-gear',
@@ -87,7 +87,7 @@ function bb_admin_settings_register_invites_feature() {
 		'invites',
 		'invites_list',
 		array(
-			'title' => __( 'Email Invites', 'buddyboss' ),
+			'title' => __( 'Email Invites', 'buddyboss-platform' ),
 			'icon'  => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-envelope-simple-open',
@@ -109,7 +109,7 @@ function bb_admin_settings_register_invites_feature() {
 		'email_invite_settings',
 		'email_invite_general',
 		array(
-			'title'    => __( 'Email Invite Settings', 'buddyboss' ),
+			'title'    => __( 'Email Invite Settings', 'buddyboss-platform' ),
 			'order'    => 10,
 			'help_url' => '636156',
 		)
@@ -122,9 +122,9 @@ function bb_admin_settings_register_invites_feature() {
 		'email_invite_general',
 		array(
 			'name'              => 'bp-disable-invite-member-email-subject',
-			'label'             => __( 'Email Subject', 'buddyboss' ),
+			'label'             => __( 'Email Subject', 'buddyboss-platform' ),
 			'type'              => 'toggle',
-			'description'       => __( 'Allow members to customize the email subject', 'buddyboss' ),
+			'description'       => __( 'Allow members to customize the email subject', 'buddyboss-platform' ),
 			'default'           => absint( bp_get_option( 'bp-disable-invite-member-email-subject', 0 ) ),
 			'sanitize_callback' => 'absint',
 			'order'             => 10,
@@ -138,9 +138,9 @@ function bb_admin_settings_register_invites_feature() {
 		'email_invite_general',
 		array(
 			'name'              => 'bp-disable-invite-member-email-content',
-			'label'             => __( 'Email Content', 'buddyboss' ),
+			'label'             => __( 'Email Content', 'buddyboss-platform' ),
 			'type'              => 'toggle',
-			'description'       => __( 'Allow members to customize the email body content', 'buddyboss' ),
+			'description'       => __( 'Allow members to customize the email body content', 'buddyboss-platform' ),
 			'default'           => absint( bp_get_option( 'bp-disable-invite-member-email-content', 1 ) ),
 			'sanitize_callback' => 'absint',
 			'order'             => 20,
@@ -156,13 +156,13 @@ function bb_admin_settings_register_invites_feature() {
 			'email_invite_general',
 			array(
 				'name'              => 'bp-disable-invite-member-type',
-				'label'             => __( 'Set Profile Type', 'buddyboss' ),
+				'label'             => __( 'Set Profile Type', 'buddyboss-platform' ),
 				'type'              => 'toggle',
-				'description'       => __( 'Allow members to select profile type of invitee', 'buddyboss' ),
+				'description'       => __( 'Allow members to select profile type of invitee', 'buddyboss-platform' ),
 				'help_text'         => sprintf(
 					/* translators: %s: profile type link. */
-					__( 'Customize this setting while editing any of your %s.', 'buddyboss' ),
-					'<a href="' . esc_url( bb_get_feature_settings_url( 'members', 'profile_types' ) ) . '">' . __( 'profile type', 'buddyboss' ) . '</a>'
+					__( 'Customize this setting while editing any of your %s.', 'buddyboss-platform' ),
+					'<a href="' . esc_url( bb_get_feature_settings_url( 'members', 'profile_types' ) ) . '">' . __( 'profile type', 'buddyboss-platform' ) . '</a>'
 				),
 				'default'           => absint( bp_get_option( 'bp-disable-invite-member-type', 0 ) ),
 				'sanitize_callback' => 'absint',

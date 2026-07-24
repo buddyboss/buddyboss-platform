@@ -22,7 +22,7 @@ defined( 'ABSPATH' ) || exit;
  * @uses bbp_get_user_id() To get the user id
  */
 function bbp_user_id( $user_id = 0, $displayed_user_fallback = true, $current_user_fallback = false ) {
-	echo bbp_get_user_id( $user_id, $displayed_user_fallback, $current_user_fallback );
+	echo esc_attr( bbp_get_user_id( $user_id, $displayed_user_fallback, $current_user_fallback ) );
 }
 	/**
 	 * Return a validated user id
@@ -67,7 +67,7 @@ function bbp_get_user_id( $user_id = 0, $displayed_user_fallback = true, $curren
  * @uses bbp_get_current_user_id() To get the current user id
  */
 function bbp_current_user_id() {
-	echo bbp_get_current_user_id();
+	echo esc_attr( bbp_get_current_user_id() );
 }
 	/**
 	 * Return ID of current user
@@ -90,7 +90,7 @@ function bbp_get_current_user_id() {
  * @uses bbp_get_displayed_user_id() To get the displayed user id
  */
 function bbp_displayed_user_id() {
-	echo bbp_get_displayed_user_id();
+	echo esc_attr( bbp_get_displayed_user_id() );
 }
 	/**
 	 * Return ID of displayed user
@@ -119,7 +119,7 @@ function bbp_get_displayed_user_id() {
  * @uses bbp_get_displayed_user_field() To get the field
  */
 function bbp_displayed_user_field( $field = '', $filter = 'display' ) {
-	echo bbp_get_displayed_user_field( $field, $filter );
+	echo bbp_get_displayed_user_field( $field, $filter ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- value sanitized for display context via WP_User::__get()/sanitize_user_field().
 }
 	/**
 	 * Return a sanitized user field value
@@ -166,7 +166,7 @@ function bbp_get_displayed_user_field( $field = '', $filter = 'display' ) {
  * @uses bbp_get_current_user_name() To get the current user name
  */
 function bbp_current_user_name() {
-	echo bbp_get_current_user_name();
+	echo esc_html( bbp_get_current_user_name() );
 }
 	/**
 	 * Return name of current user
@@ -180,7 +180,7 @@ function bbp_current_user_name() {
 function bbp_get_current_user_name() {
 	global $user_identity;
 
-	$current_user_name = is_user_logged_in() ? $user_identity : __( 'Anonymous', 'buddyboss' );
+	$current_user_name = is_user_logged_in() ? $user_identity : __( 'Anonymous', 'buddyboss-platform' );
 
 	return apply_filters( 'bbp_get_current_user_name', $current_user_name );
 }
@@ -194,7 +194,7 @@ function bbp_get_current_user_name() {
  * @uses bbp_get_current_user_avatar() To get the current user avatar
  */
 function bbp_current_user_avatar( $size = 40 ) {
-	echo bbp_get_current_user_avatar( $size );
+	echo wp_kses_post( bbp_get_current_user_avatar( $size ) );
 }
 
 	/**
@@ -232,7 +232,7 @@ function bbp_get_current_user_avatar( $size = 40 ) {
  * @uses bbp_get_user_profile_link() To get user profile link
  */
 function bbp_user_profile_link( $user_id = 0 ) {
-	echo bbp_get_user_profile_link( $user_id );
+	echo wp_kses_post( bbp_get_user_profile_link( $user_id ) );
 }
 	/**
 	 * Return link to the profile page of a user
@@ -254,7 +254,7 @@ function bbp_get_user_profile_link( $user_id = 0 ) {
  * @param array $args before|after|user_id|force
  */
 function bbp_user_nicename( $user_id = 0, $args = array() ) {
-	echo bbp_get_user_nicename( $user_id, $args );
+	echo esc_html( bbp_get_user_nicename( $user_id, $args ) );
 }
 	/**
 	 * Return a users nicename to the screen
@@ -372,7 +372,7 @@ function bbp_get_user_profile_url( $user_id = 0, $user_nicename = '' ) {
  * @uses bbp_get_user_profile_edit_link() To get user profile edit link
  */
 function bbp_user_profile_edit_link( $user_id = 0 ) {
-	echo bbp_get_user_profile_edit_link( $user_id );
+	echo wp_kses_post( bbp_get_user_profile_edit_link( $user_id ) );
 }
 	/**
 	 * Return link to the profile edit page of a user
@@ -475,7 +475,7 @@ function bbp_get_user_profile_edit_url( $user_id = 0, $user_nicename = '' ) {
  * @uses bbp_get_user_display_role To get the user display role
  */
 function bbp_user_display_role( $user_id = 0 ) {
-	echo bbp_get_user_display_role( $user_id );
+	echo bbp_get_user_display_role( $user_id ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- bbp_get_user_display_role() self-escapes.
 }
 	/**
 	 * Return a user's main role for display
@@ -497,11 +497,11 @@ function bbp_get_user_display_role( $user_id = 0 ) {
 
 	// User is not registered
 	if ( empty( $user_id ) ) {
-		$role = __( 'Guest', 'buddyboss' );
+		$role = __( 'Guest', 'buddyboss-platform' );
 
 		// User is not active
 	} elseif ( bbp_is_user_inactive( $user_id ) ) {
-		$role = __( 'Inactive', 'buddyboss' );
+		$role = __( 'Inactive', 'buddyboss-platform' );
 
 		// User have a role
 	} else {
@@ -511,7 +511,7 @@ function bbp_get_user_display_role( $user_id = 0 ) {
 
 	// No role found so default to generic "Member"
 	if ( empty( $role ) ) {
-		$role = __( 'Member', 'buddyboss' );
+		$role = __( 'Member', 'buddyboss-platform' );
 	}
 
 	return apply_filters( 'bbp_get_user_display_role', $role, $user_id );
@@ -526,7 +526,7 @@ function bbp_get_user_display_role( $user_id = 0 ) {
  * @uses bbp_get_admin_link() To get the admin link
  */
 function bbp_admin_link( $args = '' ) {
-	echo bbp_get_admin_link( $args );
+	echo wp_kses_post( bbp_get_admin_link( $args ) );
 }
 	/**
 	 * Return the link to the admin section
@@ -555,7 +555,7 @@ function bbp_get_admin_link( $args = '' ) {
 	$r = bbp_parse_args(
 		$args,
 		array(
-			'text'   => __( 'Admin', 'buddyboss' ),
+			'text'   => __( 'Admin', 'buddyboss-platform' ),
 			'before' => '',
 			'after'  => '',
 		),
@@ -578,7 +578,7 @@ function bbp_get_admin_link( $args = '' ) {
  * @uses bbp_get_author_ip() To get the post author link
  */
 function bbp_author_ip( $args = '' ) {
-	echo bbp_get_author_ip( $args );
+	echo wp_kses_post( bbp_get_author_ip( $args ) );
 }
 	/**
 	 * Return the author IP address of a post
@@ -633,7 +633,7 @@ function bbp_get_author_ip( $args = '' ) {
  * @uses bbp_get_author_display_name() to get the author name
  */
 function bbp_author_display_name( $post_id = 0 ) {
-	echo bbp_get_author_display_name( $post_id );
+	echo esc_html( bbp_get_author_display_name( $post_id ) );
 }
 
 	/**
@@ -689,7 +689,7 @@ function bbp_get_author_display_name( $post_id = 0 ) {
  * @uses bbp_get_author_email() to get the author email
  */
 function bbp_author_email( $post_id = 0 ) {
-	echo bbp_get_author_email( $post_id );
+	echo esc_html( bbp_get_author_email( $post_id ) );
 }
 
 	/**
@@ -745,7 +745,7 @@ function bbp_get_author_email( $post_id = 0 ) {
  * @uses bbp_get_author_url() to get the author url
  */
 function bbp_author_url( $post_id = 0 ) {
-	echo bbp_get_author_url( $post_id );
+	echo esc_url( bbp_get_author_url( $post_id ) );
 }
 
 	/**
@@ -864,7 +864,7 @@ function bbp_get_favorites_permalink( $user_id = 0 ) {
  * @uses bbp_get_user_favorites_link() To get the user favorites link
  */
 function bbp_user_favorites_link( $args = array(), $user_id = 0, $wrap = true ) {
-	echo bbp_get_user_favorites_link( $args, $user_id, $wrap );
+	echo wp_kses_post( bbp_get_user_favorites_link( $args, $user_id, $wrap ) );
 }
 	/**
 	 * User favorites link
@@ -904,8 +904,8 @@ function bbp_get_user_favorites_link( $args = '', $user_id = 0, $wrap = true ) {
 	$r = bbp_parse_args(
 		$args,
 		array(
-			'favorite'  => __( 'Favorite', 'buddyboss' ),
-			'favorited' => __( 'Unfavorite', 'buddyboss' ),
+			'favorite'  => __( 'Favorite', 'buddyboss-platform' ),
+			'favorited' => __( 'Unfavorite', 'buddyboss-platform' ),
 			'user_id'   => 0,
 			'topic_id'  => 0,
 			'before'    => '',
@@ -1019,7 +1019,7 @@ function bbp_get_subscriptions_permalink( $user_id = 0 ) {
  * @uses bbp_get_user_subscribe_link() To get the subscribe link
  */
 function bbp_user_subscribe_link( $args = '', $user_id = 0, $wrap = true ) {
-	echo bbp_get_user_subscribe_link( $args, $user_id, $wrap );
+	echo wp_kses_post( bbp_get_user_subscribe_link( $args, $user_id, $wrap ) );
 }
 
 /**
@@ -1057,8 +1057,8 @@ function bbp_get_user_subscribe_link( $args = '', $user_id = 0, $wrap = true ) {
 	$r = bbp_parse_args(
 		$args,
 		array(
-			'subscribe'   => __( 'Subscribe', 'buddyboss' ),
-			'unsubscribe' => __( 'Unsubscribe', 'buddyboss' ),
+			'subscribe'   => __( 'Subscribe', 'buddyboss-platform' ),
+			'unsubscribe' => __( 'Unsubscribe', 'buddyboss-platform' ),
 			'user_id'     => 0,
 			'topic_id'    => 0,
 			'forum_id'    => 0,
@@ -1189,7 +1189,7 @@ function bbp_notice_edit_user_success() {
 
 	<div class="bp-feedback updated">
 		<span class="bp-icon" aria-hidden="true"></span>
-		<p><?php esc_html_e( 'User updated.', 'buddyboss' ); ?></p>
+		<p><?php esc_html_e( 'User updated.', 'buddyboss-platform' ); ?></p>
 	</div>
 
 		<?php
@@ -1217,7 +1217,7 @@ function bbp_notice_edit_user_is_super_admin() {
 
 	<div class="bp-feedback warning">
 		<span class="bp-icon" aria-hidden="true"></span>
-		<p><?php bbp_is_user_home() || bbp_is_user_home_edit() ? esc_html_e( 'You have super admin privileges.', 'buddyboss' ) : esc_html_e( 'This user has super admin privileges.', 'buddyboss' ); ?></p>
+		<p><?php bbp_is_user_home() || bbp_is_user_home_edit() ? esc_html_e( 'You have super admin privileges.', 'buddyboss-platform' ) : esc_html_e( 'This user has super admin privileges.', 'buddyboss-platform' ); ?></p>
 	</div>
 
 		<?php
@@ -1263,7 +1263,7 @@ function bbp_edit_user_display_name() {
 
 	<?php foreach ( $public_display as $id => $item ) : ?>
 
-		<option id="<?php echo $id; ?>" value="<?php echo esc_attr( $item ); ?>"<?php selected( $bbp->displayed_user->display_name, $item ); ?>><?php echo $item; ?></option>
+		<option id="<?php echo esc_attr( $id ); ?>" value="<?php echo esc_attr( $item ); ?>"<?php selected( $bbp->displayed_user->display_name, $item ); ?>><?php echo esc_html( $item ); ?></option>
 
 	<?php endforeach; ?>
 
@@ -1292,11 +1292,11 @@ function bbp_edit_user_blog_role() {
 	?>
 
 	<select name="role" id="role">
-		<option value=""><?php esc_html_e( '- No role for this site -', 'buddyboss' ); ?></option>
+		<option value=""><?php esc_html_e( '- No role for this site -', 'buddyboss-platform' ); ?></option>
 
 		<?php foreach ( $blog_roles as $role => $details ) : ?>
 
-			<option <?php selected( $user_role, $role ); ?> value="<?php echo esc_attr( $role ); ?>"><?php echo bbp_translate_user_role( $details['name'] ); ?></option>
+			<option <?php selected( $user_role, $role ); ?> value="<?php echo esc_attr( $role ); ?>"><?php echo bbp_translate_user_role( $details['name'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- bbp_translate_user_role() self-escapes. ?></option>
 
 		<?php endforeach; ?>
 
@@ -1330,11 +1330,11 @@ function bbp_edit_user_forums_role() {
 	?>
 
 	<select name="bbp-forums-role" id="bbp-forums-role">
-		<option value=""><?php esc_html_e( '- No role for these forums -', 'buddyboss' ); ?></option>
+		<option value=""><?php esc_html_e( '- No role for these forums -', 'buddyboss-platform' ); ?></option>
 
 		<?php foreach ( $dynamic_roles as $role => $details ) : ?>
 
-			<option <?php selected( $user_role, $role ); ?> value="<?php echo esc_attr( $role ); ?>"><?php echo bbp_translate_user_role( $details['name'] ); ?></option>
+			<option <?php selected( $user_role, $role ); ?> value="<?php echo esc_attr( $role ); ?>"><?php echo bbp_translate_user_role( $details['name'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- bbp_translate_user_role() self-escapes. ?></option>
 
 		<?php endforeach; ?>
 
@@ -1488,11 +1488,11 @@ function bbp_login_notices() {
 
 	// loggedout was passed
 	if ( ! empty( $_GET['loggedout'] ) && ( true === $_GET['loggedout'] ) ) {
-		bbp_add_error( 'loggedout', __( 'You are now logged out.', 'buddyboss' ), 'message' );
+		bbp_add_error( 'loggedout', __( 'You are now logged out.', 'buddyboss-platform' ), 'message' );
 
 		// registration is disabled
 	} elseif ( ! empty( $_GET['registration'] ) && ( 'disabled' === $_GET['registration'] ) ) {
-		bbp_add_error( 'registerdisabled', __( 'New user registration is currently not allowed.', 'buddyboss' ) );
+		bbp_add_error( 'registerdisabled', __( 'New user registration is currently not allowed.', 'buddyboss-platform' ) );
 
 		// Prompt user to check their email
 	} elseif ( ! empty( $_GET['checkemail'] ) && in_array( $_GET['checkemail'], array( 'confirm', 'newpass', 'registered' ) ) ) {
@@ -1501,17 +1501,17 @@ function bbp_login_notices() {
 
 			// Email needs confirmation
 			case 'confirm':
-				bbp_add_error( 'confirm', __( 'Check your e-mail for the confirmation link.', 'buddyboss' ), 'message' );
+				bbp_add_error( 'confirm', __( 'Check your e-mail for the confirmation link.', 'buddyboss-platform' ), 'message' );
 				break;
 
 			// User requested a new password
 			case 'newpass':
-				bbp_add_error( 'newpass', __( 'Check your e-mail for your new password.', 'buddyboss' ), 'message' );
+				bbp_add_error( 'newpass', __( 'Check your e-mail for your new password.', 'buddyboss-platform' ), 'message' );
 				break;
 
 			// User is newly registered
 			case 'registered':
-				bbp_add_error( 'registered', __( 'Registration complete. Please check your e-mail.', 'buddyboss' ), 'message' );
+				bbp_add_error( 'registered', __( 'Registration complete. Please check your e-mail.', 'buddyboss-platform' ), 'message' );
 				break;
 		}
 	}
@@ -1640,7 +1640,7 @@ function bbp_user_lost_pass_fields() {
  * @todo deprecate?
  */
 function bbp_author_link( $args = '' ) {
-	echo bbp_get_author_link( $args );
+	echo wp_kses_post( bbp_get_author_link( $args ) );
 }
 	/**
 	 * Return the author link of the post
@@ -1695,7 +1695,8 @@ function bbp_get_author_link( $args = '' ) {
 
 		// Generate title with the display name of the author
 		if ( empty( $r['link_title'] ) ) {
-			$r['link_title'] = sprintf( ! bbp_is_reply_anonymous( $r['post_id'] ) ? __( 'View %s\'s profile', 'buddyboss' ) : __( 'Visit %s\'s website', 'buddyboss' ), get_the_author_meta( 'display_name', $user_id ) );
+			/* translators: %s: author display name. */
+			$r['link_title'] = sprintf( ! bbp_is_reply_anonymous( $r['post_id'] ) ? __( 'View %s\'s profile', 'buddyboss-platform' ) : __( 'Visit %s\'s website', 'buddyboss-platform' ), get_the_author_meta( 'display_name', $user_id ) );
 		}
 
 		// Assemble some link bits

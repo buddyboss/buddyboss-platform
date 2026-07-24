@@ -28,8 +28,8 @@ function bb_admin_settings_register_advanced_feature() {
 	bb_register_feature(
 		'advanced',
 		array(
-			'label'              => __( 'Advanced', 'buddyboss' ),
-			'description'        => __( 'Find your site extended performance and privacy settings.', 'buddyboss' ),
+			'label'              => __( 'Advanced', 'buddyboss-platform' ),
+			'description'        => __( 'Find your site extended performance and privacy settings.', 'buddyboss-platform' ),
 			'icon'               => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-gear-six',
@@ -59,7 +59,7 @@ function bb_admin_settings_register_advanced_feature() {
 		'advanced',
 		'general',
 		array(
-			'title'      => __( 'General', 'buddyboss' ),
+			'title'      => __( 'General', 'buddyboss-platform' ),
 			'icon'       => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-gear',
@@ -83,7 +83,7 @@ function bb_admin_settings_register_advanced_feature() {
 		'advanced',
 		'privacy',
 		array(
-			'title'    => __( 'Privacy', 'buddyboss' ),
+			'title'    => __( 'Privacy', 'buddyboss-platform' ),
 			'icon'     => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-lock-simple',
@@ -107,7 +107,7 @@ function bb_admin_settings_register_advanced_feature() {
 			'advanced',
 			'telemetry',
 			array(
-				'title'    => __( 'Telemetry', 'buddyboss' ),
+				'title'    => __( 'Telemetry', 'buddyboss-platform' ),
 				'icon'     => array(
 					'type'  => 'font',
 					'class' => 'bb-icons-rl bb-icons-rl-cylinder',

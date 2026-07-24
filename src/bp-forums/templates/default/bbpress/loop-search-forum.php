@@ -6,13 +6,16 @@
  * @package BuddyBoss\Theme
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 ?>
 
 <div class="bbp-forum-header">
 
 	<div class="bbp-meta">
 
-		<span class="bbp-forum-post-date"><?php printf( __( 'Last updated %s', 'buddyboss' ), bbp_get_forum_last_active_time() ); ?></span>
+		<span class="bbp-forum-post-date"><?php /* translators: %s: time since the forum was last active. */ printf( esc_html__( 'Last updated %s', 'buddyboss-platform' ), esc_html( bbp_get_forum_last_active_time() ) ); ?></span>
 
 		<a href="<?php bbp_forum_permalink(); ?>" class="bbp-forum-permalink">#<?php bbp_forum_id(); ?></a>
 
@@ -22,7 +25,7 @@
 
 		<?php do_action( 'bbp_theme_before_forum_title' ); ?>
 
-		<h3><?php _e( 'Forum: ', 'buddyboss' ); ?><a href="<?php bbp_forum_permalink(); ?>"><?php bbp_forum_title(); ?></a></h3>
+		<h3><?php esc_html_e( 'Forum: ', 'buddyboss-platform' ); ?><a href="<?php bbp_forum_permalink(); ?>"><?php bbp_forum_title(); ?></a></h3>
 
 		<?php do_action( 'bbp_theme_after_forum_title' ); ?>
 

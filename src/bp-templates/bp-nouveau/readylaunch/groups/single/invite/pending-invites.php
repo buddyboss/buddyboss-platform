@@ -16,7 +16,7 @@ defined( 'ABSPATH' ) || exit;
 ?>
 <div class="bb-rl-group-invites-dashboard bb-rl-group-dashboard-panel bb-rl-group-invites-dashboard--pending-invites">
 	<div class="bb-rl-group-invites-header">
-		<h2 class="bb-rl-entry-title"><?php esc_html_e( 'Group invites', 'buddyboss' ); ?></h2>
+		<h2 class="bb-rl-entry-title"><?php esc_html_e( 'Group invites', 'buddyboss-platform' ); ?></h2>
 	</div>
 	<?php
 	bp_get_template_part( 'groups/single/parts/invite-subnav' );
@@ -28,15 +28,15 @@ defined( 'ABSPATH' ) || exit;
 					<div class="group-invites-search subnav-search clearfix" role="search">
 						<div class="bp-search">
 							<form action="" method="get" id="group_invites_search_form" class="bp-invites-search-form search-form-has-reset" data-bp-search="group-invites">
-								<label for="group_invites_search" class="bp-screen-reader-text"><?php bp_nouveau_search_default_text( esc_html__( 'Search members', 'buddyboss' ), false ); ?></label>
-								<input type="search" id="group_invites_search" placeholder="<?php esc_attr_e( 'Search members', 'buddyboss' ); ?>"/>
+								<label for="group_invites_search" class="bp-screen-reader-text"><?php bp_nouveau_search_default_text( esc_html__( 'Search members', 'buddyboss-platform' ), false ); ?></label>
+								<input type="search" id="group_invites_search" placeholder="<?php esc_attr_e( 'Search members', 'buddyboss-platform' ); ?>"/>
 								<button type="submit" id="group_invites_search_submit" class="nouveau-search-submit search-form_submit">
 									<span class="bb-icons-rl-magnifying-glass" aria-hidden="true"></span>
-									<span id="button-text" class="bp-screen-reader-text"><?php esc_html_e( 'Search members', 'buddyboss' ); ?></span>
+									<span id="button-text" class="bp-screen-reader-text"><?php esc_html_e( 'Search members', 'buddyboss-platform' ); ?></span>
 								</button>
 								<button type="reset" class="search-form_reset">
 									<span class="bb-icons-rl-x" aria-hidden="true"></span>
-									<span class="bp-screen-reader-text"><?php esc_html_e( 'Reset', 'buddyboss' ); ?></span>
+									<span class="bp-screen-reader-text"><?php esc_html_e( 'Reset', 'buddyboss-platform' ); ?></span>
 								</button>
 							</form>
 						</div>
@@ -49,7 +49,7 @@ defined( 'ABSPATH' ) || exit;
 				<div class="bp-invites-feedback">
 					<div class="bp-feedback loading">
 						<span class="bp-icon" aria-hidden="true"></span>
-						<p><?php esc_html_e( 'Loading Members. Please Wait.', 'buddyboss' ); ?></p>
+						<p><?php esc_html_e( 'Loading Members. Please Wait.', 'buddyboss-platform' ); ?></p>
 					</div>
 				</div>
 			</div>

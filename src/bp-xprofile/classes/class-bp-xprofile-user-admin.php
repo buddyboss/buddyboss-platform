@@ -133,7 +133,7 @@ if ( ! class_exists( 'BP_XProfile_User_Admin' ) ) :
 				// If member is already a suspended , show a generic metabox.
 				add_meta_box(
 					'bp_xprofile_user_admin_empty_profile',
-					__( 'Member marked as suspended', 'buddyboss' ),
+					__( 'Member marked as suspended', 'buddyboss-platform' ),
 					array( $this, 'user_admin_suspended_metabox' ),
 					$screen_id,
 					'normal',
@@ -147,7 +147,7 @@ if ( ! class_exists( 'BP_XProfile_User_Admin' ) ) :
 					bp_the_profile_group();
 					add_meta_box(
 						'bp_xprofile_user_admin_fields_' . sanitize_key( bp_get_the_profile_group_slug() ),
-						esc_html( bp_get_the_profile_group_name() ),
+						bp_get_the_profile_group_name(), // Pre-escaped via the wp_filter_kses filter chain; esc_html would double-encode entities such as "R&D" in the meta box title.
 						array( $this, 'user_admin_profile_metaboxes' ),
 						$screen_id,
 						'normal',
@@ -159,7 +159,7 @@ if ( ! class_exists( 'BP_XProfile_User_Admin' ) ) :
 				// If member is already a spammer, show a generic metabox.
 				add_meta_box(
 					'bp_xprofile_user_admin_empty_profile',
-					__( 'User marked as a spammer', 'buddyboss' ),
+					__( 'User marked as a spammer', 'buddyboss-platform' ),
 					array( $this, 'user_admin_spammer_metabox' ),
 					$screen_id,
 					'normal',
@@ -171,7 +171,7 @@ if ( ! class_exists( 'BP_XProfile_User_Admin' ) ) :
 				// Avatar Metabox.
 				add_meta_box(
 					'bp_xprofile_user_admin_avatar',
-					__( 'Profile Photo', 'buddyboss' ),
+					__( 'Profile Photo', 'buddyboss-platform' ),
 					array( $this, 'user_admin_avatar_metabox' ),
 					$screen_id,
 					'side',
@@ -454,15 +454,16 @@ if ( ! class_exists( 'BP_XProfile_User_Admin' ) ) :
 
 						<?php
 						printf(
-							__( 'This field can be seen by: %s', 'buddyboss' ),
-							'<span class="current-visibility-level">' . bp_get_the_profile_field_visibility_level_label() . '</span>'
+							/* translators: %s: field visibility level label. */
+							esc_html__( 'This field can be seen by: %s', 'buddyboss-platform' ),
+							'<span class="current-visibility-level">' . esc_html( bp_get_the_profile_field_visibility_level_label() ) . '</span>'
 						);
 						?>
 						</span>
 
 						<?php if ( $can_change_visibility ) : ?>
 
-							<button type="button" class="button visibility-toggle-link" aria-describedby="<?php bp_the_profile_field_input_name(); ?>-2" aria-expanded="false"><?php esc_html_e( 'Change', 'buddyboss' ); ?></button>
+							<button type="button" class="button visibility-toggle-link" aria-describedby="<?php bp_the_profile_field_input_name(); ?>-2" aria-expanded="false"><?php esc_html_e( 'Change', 'buddyboss-platform' ); ?></button>
 
 						<?php endif; ?>
 					</p>
@@ -471,12 +472,12 @@ if ( ! class_exists( 'BP_XProfile_User_Admin' ) ) :
 
 						<div class="field-visibility-settings" id="field-visibility-settings-<?php bp_the_profile_field_id(); ?>">
 							<fieldset>
-								<legend><?php _e( 'Who can see this field?', 'buddyboss' ); ?></legend>
+								<legend><?php esc_html_e( 'Who can see this field?', 'buddyboss-platform' ); ?></legend>
 
 								<?php bp_profile_visibility_radio_buttons(); ?>
 
 							</fieldset>
-							<button type="button" class="button field-visibility-settings-close"><?php esc_html_e( 'Close', 'buddyboss' ); ?></button>
+							<button type="button" class="button field-visibility-settings-close"><?php esc_html_e( 'Close', 'buddyboss-platform' ); ?></button>
 						</div>
 
 						<?php
@@ -514,7 +515,9 @@ if ( ! class_exists( 'BP_XProfile_User_Admin' ) ) :
 		 */
 		public function user_admin_spammer_metabox( $user = null ) {
 			?>
-			<p><?php printf( __( '%s has been marked as a spammer. All BuddyBoss data associated with the user has been removed.', 'buddyboss' ), esc_html( bp_core_get_user_displayname( $user->ID ) ) ); ?></p>
+			<p><?php
+			/* translators: %s: user display name. */
+			printf( esc_html__( '%s has been marked as a spammer. All BuddyBoss data associated with the user has been removed.', 'buddyboss-platform' ), esc_html( bp_core_get_user_displayname( $user->ID ) ) ); ?></p>
 			<?php
 		}
 
@@ -527,7 +530,9 @@ if ( ! class_exists( 'BP_XProfile_User_Admin' ) ) :
 		 */
 		public function user_admin_suspended_metabox( $user = null ) {
 			?>
-			<p><?php printf( __( 'Member "%s" marked suspended. All BuddyBoss data associated with the member has been disabled.', 'buddyboss' ), esc_html( bp_core_get_user_displayname( $user->ID ) ) ); ?></p>
+			<p><?php
+			/* translators: %s: member display name. */
+			printf( esc_html__( 'Member "%s" marked suspended. All BuddyBoss data associated with the member has been disabled.', 'buddyboss-platform' ), esc_html( bp_core_get_user_displayname( $user->ID ) ) ); ?></p>
 			<?php
 		}
 
@@ -548,14 +553,14 @@ if ( ! class_exists( 'BP_XProfile_User_Admin' ) ) :
 		<div class="avatar">
 
 			<?php
-			echo bp_core_fetch_avatar(
+			echo wp_kses_post( bp_core_fetch_avatar(
 				array(
 					'item_id' => $user->ID,
 					'object'  => 'user',
 					'type'    => 'full',
 					'title'   => $user->display_name,
 				)
-			);
+			) );
 			?>
 
 				<?php
@@ -577,7 +582,7 @@ if ( ! class_exists( 'BP_XProfile_User_Admin' ) ) :
 					$delete_link   = wp_nonce_url( $community_url, 'delete_avatar' );
 					?>
 
-				<a href="<?php echo esc_url( $delete_link ); ?>" class="bp-xprofile-avatar-user-admin"><?php esc_html_e( 'Delete Profile Photo', 'buddyboss' ); ?></a>
+				<a href="<?php echo esc_url( $delete_link ); ?>" class="bp-xprofile-avatar-user-admin"><?php esc_html_e( 'Delete Profile Photo', 'buddyboss-platform' ); ?></a>
 
 					<?php
 			endif;
@@ -585,7 +590,7 @@ if ( ! class_exists( 'BP_XProfile_User_Admin' ) ) :
 				// Load the Avatar UI templates if user avatar uploads are enabled and current WordPress version is supported.
 				if ( ! bp_core_get_root_option( 'bp-disable-avatar-uploads' ) && bp_attachments_is_wp_version_supported() ) :
 					?>
-				<a href="#TB_inline?width=800px&height=400px&inlineId=bp-xprofile-avatar-editor" class="thickbox bp-xprofile-avatar-user-edit"><?php esc_html_e( 'Edit Profile Photo', 'buddyboss' ); ?></a>
+				<a href="#TB_inline?width=800px&height=400px&inlineId=bp-xprofile-avatar-editor" class="thickbox bp-xprofile-avatar-user-edit"><?php esc_html_e( 'Edit Profile Photo', 'buddyboss-platform' ); ?></a>
 				<div id="bp-xprofile-avatar-editor" style="display:none;">
 						<?php bp_attachments_get_template_part( 'avatars/index' ); ?>
 				</div>

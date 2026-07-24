@@ -354,7 +354,11 @@ class BP_Messages_Thread {
 		global $wpdb;
 		$bp = buddypress();
 
-		$query = $wpdb->prepare( "UPDATE {$bp->messages->table_name_recipients} SET is_deleted = 0 WHERE thread_id = %d AND user_id IN (%s)", $thread_id, implode( ',', wp_list_pluck( $deleted_recipients, 'user_id' ) ) );
+		$user_ids     = array_map( 'intval', wp_list_pluck( $deleted_recipients, 'user_id' ) );
+		$placeholders = implode( ',', array_fill( 0, count( $user_ids ), '%d' ) );
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare -- Table name internal; user_id IN() list uses %d placeholders built from a counted integer array.
+		$query = $wpdb->prepare( "UPDATE {$bp->messages->table_name_recipients} SET is_deleted = 0 WHERE thread_id = %d AND user_id IN ({$placeholders})", array_merge( array( $thread_id ), $user_ids ) );
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- $query is the $wpdb->prepare() result above; table name internal.
 		$wpdb->query( $query );
 	}
 
@@ -891,7 +895,8 @@ class BP_Messages_Thread {
 
 		// Backward compatibility with old method of passing arguments.
 		if ( ! is_array( $args ) || count( $function_args ) > 1 ) {
-			_deprecated_argument( __METHOD__, '2.2.0', sprintf( __( 'Arguments passed to %1$s should be in an associative array. See the inline documentation at %2$s for more details.', 'buddyboss' ), __METHOD__, __FILE__ ) );
+			/* translators: 1: method name, 2: file path. */
+			_deprecated_argument( __METHOD__, '2.2.0', sprintf( esc_html__( 'Arguments passed to %1$s should be in an associative array. See the inline documentation at %2$s for more details.', 'buddyboss-platform' ), __METHOD__, __FILE__ ) );
 
 			$old_args_keys = array(
 				0 => 'user_id',
@@ -1626,7 +1631,8 @@ class BP_Messages_Thread {
 	public static function get_recipient_links( $recipients ) {
 
 		if ( count( $recipients ) >= 5 ) {
-			return sprintf( __( '%s Recipients', 'buddyboss' ), bp_core_number_format( count( $recipients ) ) );
+			/* translators: %s: number of recipients. */
+			return sprintf( __( '%s Recipients', 'buddyboss-platform' ), bp_core_number_format( count( $recipients ) ) );
 		}
 
 		$recipient_links = array();
@@ -1635,7 +1641,7 @@ class BP_Messages_Thread {
 			$recipient_link = bp_core_get_userlink( $recipient->user_id );
 
 			if ( empty( $recipient_link ) ) {
-				$recipient_link = __( 'Deleted User', 'buddyboss' );
+				$recipient_link = __( 'Deleted User', 'buddyboss-platform' );
 			}
 
 			$recipient_links[] = $recipient_link;
@@ -1670,10 +1676,10 @@ class BP_Messages_Thread {
 			$message_ids = maybe_unserialize( $thread->message_ids );
 
 			if ( ! empty( $message_ids ) ) {
-				$message_ids = implode( ',', $message_ids );
+				$message_ids = implode( ',', array_map( 'absint', (array) $message_ids ) );
 
 				// Add the thread_id to the messages table.
-				if ( ! $wpdb->query( $wpdb->prepare( "UPDATE {$bp->messages->table_name_messages} SET thread_id = %d WHERE id IN ({$message_ids})", $thread->id ) ) ) {
+				if ( ! $wpdb->query( $wpdb->prepare( "UPDATE {$bp->messages->table_name_messages} SET thread_id = %d WHERE id IN ({$message_ids})", $thread->id ) ) ) { // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $message_ids is implode of absint()-mapped IDs; thread_id %d-prepared; table name internal.
 					$errors = true;
 				}
 			}
@@ -1881,7 +1887,7 @@ class BP_Messages_Thread {
 			$cached                     = bp_core_get_incremented_cache( $recipient_data_objects_sql, 'bp_messages' );
 
 			if ( false === $cached ) {
-				$recipient_data_objects = $wpdb->get_results( $recipient_data_objects_sql ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
+				$recipient_data_objects = $wpdb->get_results( $recipient_data_objects_sql ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- $recipient_ids_sql is intval()-mapped IDs; table name internal.
 				bp_core_set_incremented_cache( $recipient_data_objects_sql, 'bp_messages', $recipient_data_objects );
 			} else {
 				$recipient_data_objects = $cached;

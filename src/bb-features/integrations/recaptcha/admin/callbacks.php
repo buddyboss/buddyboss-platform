@@ -55,9 +55,9 @@ function bb_recaptcha_admin_get_combined_version( $settings = array() ) {
  */
 function bb_recaptcha_admin_get_version_description( $version = '' ) {
 	$descriptions = array(
-		'recaptcha_v3'           => __( 'reCAPTCHA v3 runs silently in the background to detect spam and bot activity using a score system. No user action needed.', 'buddyboss' ),
-		'recaptcha_v2_checkbox'  => __( 'reCAPTCHA v2 (Checkbox) validate request with the "I\'m not a robot" checkbox.', 'buddyboss' ),
-		'recaptcha_v2_invisible' => __( 'Shows invisible reCaptcha badge. It is invoked directly when the user clicks on an existing button on your site.', 'buddyboss' ),
+		'recaptcha_v3'           => __( 'reCAPTCHA v3 runs silently in the background to detect spam and bot activity using a score system. No user action needed.', 'buddyboss-platform' ),
+		'recaptcha_v2_checkbox'  => __( 'reCAPTCHA v2 (Checkbox) validate request with the "I\'m not a robot" checkbox.', 'buddyboss-platform' ),
+		'recaptcha_v2_invisible' => __( 'Shows invisible reCaptcha badge. It is invoked directly when the user clicks on an existing button on your site.', 'buddyboss-platform' ),
 	);
 
 	// Return all descriptions when no version specified (for option_descriptions map).
@@ -341,7 +341,7 @@ function bb_recaptcha_verify_settings_2() {
 	if ( ! bp_current_user_can( 'bp_moderate' ) ) {
 		wp_send_json_error(
 			array(
-				'message' => esc_html__( 'Unauthorized.', 'buddyboss' ),
+				'message' => esc_html__( 'Unauthorized.', 'buddyboss-platform' ),
 			)
 		);
 	}
@@ -369,11 +369,11 @@ function bb_recaptcha_verify_settings_2() {
 		wp_send_json_success(
 			array(
 				'is_connected'   => false,
-				'button_label'   => __( 'Verify', 'buddyboss' ),
-				'message'        => __( 'reCAPTCHA disconnected.', 'buddyboss' ),
+				'button_label'   => __( 'Verify', 'buddyboss-platform' ),
+				'message'        => __( 'reCAPTCHA disconnected.', 'buddyboss-platform' ),
 				'status'         => array(
 					'type' => 'warning',
-					'text' => __( 'Not Connected', 'buddyboss' ),
+					'text' => __( 'Not Connected', 'buddyboss-platform' ),
 				),
 				'updated_fields' => array(
 					'bb_recaptcha_site_key'      => '',
@@ -387,7 +387,7 @@ function bb_recaptcha_verify_settings_2() {
 	if ( empty( $site_key ) || empty( $secret_key ) ) {
 		wp_send_json_error(
 			array(
-				'message' => esc_html__( 'Please enter both Site Key and Secret Key.', 'buddyboss' ),
+				'message' => esc_html__( 'Please enter both Site Key and Secret Key.', 'buddyboss-platform' ),
 			)
 		);
 	}
@@ -417,11 +417,11 @@ function bb_recaptcha_verify_settings_2() {
 		wp_send_json_success(
 			array(
 				'is_connected'   => true,
-				'button_label'   => __( 'Connected', 'buddyboss' ),
-				'message'        => __( 'reCAPTCHA verification was successful.', 'buddyboss' ),
+				'button_label'   => __( 'Connected', 'buddyboss-platform' ),
+				'message'        => __( 'reCAPTCHA verification was successful.', 'buddyboss-platform' ),
 				'status'         => array(
 					'type' => 'success',
-					'text' => __( 'Connected', 'buddyboss' ),
+					'text' => __( 'Connected', 'buddyboss-platform' ),
 				),
 				'updated_fields' => array(
 					'bb_recaptcha_site_key'      => $site_key,
@@ -433,7 +433,7 @@ function bb_recaptcha_verify_settings_2() {
 
 	wp_send_json_error(
 		array(
-			'message'      => esc_html__( 'reCAPTCHA verification failed, please try again.', 'buddyboss' ),
+			'message'      => esc_html__( 'reCAPTCHA verification failed, please try again.', 'buddyboss-platform' ),
 			'is_connected' => false,
 		)
 	);

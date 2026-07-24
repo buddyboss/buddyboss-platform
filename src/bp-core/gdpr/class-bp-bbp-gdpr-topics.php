@@ -36,7 +36,7 @@ class BP_Bbp_Gdpr_Topics {
 	 */
 	function register_exporter( $exporters ) {
 		$exporters['bbp-topic'] = array(
-			'exporter_friendly_name' => __( 'Forum Discussions', 'buddyboss' ),
+			'exporter_friendly_name' => __( 'Forum Discussions', 'buddyboss-platform' ),
 			'callback'               => array( $this, 'topics_exporter' ),
 		);
 
@@ -54,7 +54,7 @@ class BP_Bbp_Gdpr_Topics {
 	 */
 	function erase_exporter( $erasers ) {
 		$erasers['bbp-topic'] = array(
-			'eraser_friendly_name' => __( 'Forum Discussions', 'buddyboss' ),
+			'eraser_friendly_name' => __( 'Forum Discussions', 'buddyboss-platform' ),
 			'callback'             => array( $this, 'topics_eraser' ),
 		);
 
@@ -95,38 +95,38 @@ class BP_Bbp_Gdpr_Topics {
 
 				$group_id = 'bbp-topics';
 
-				$group_label = __( 'Forum Discussions', 'buddyboss' );
+				$group_label = __( 'Forum Discussions', 'buddyboss-platform' );
 
 				$permalink = get_permalink( $topic->ID );
 
 				// Plugins can add as many items in the item data array as they want
 				$data = array(
 					array(
-						'name'  => __( 'Discussion Author', 'buddyboss' ),
+						'name'  => __( 'Discussion Author', 'buddyboss-platform' ),
 						'value' => $user->display_name,
 					),
 					array(
-						'name'  => __( 'Discussion Author Email', 'buddyboss' ),
+						'name'  => __( 'Discussion Author Email', 'buddyboss-platform' ),
 						'value' => $user->user_email,
 					),
 					array(
-						'name'  => __( 'Discussion Title', 'buddyboss' ),
+						'name'  => __( 'Discussion Title', 'buddyboss-platform' ),
 						'value' => $topic->post_title,
 					),
 					array(
-						'name'  => __( 'Discussion Content', 'buddyboss' ),
+						'name'  => __( 'Discussion Content', 'buddyboss-platform' ),
 						'value' => $topic->post_content,
 					),
 					array(
-						'name'  => __( 'Discussion Date', 'buddyboss' ),
+						'name'  => __( 'Discussion Date', 'buddyboss-platform' ),
 						'value' => $topic->post_date,
 					),
 					array(
-						'name'  => __( 'Discussion URL', 'buddyboss' ),
+						'name'  => __( 'Discussion URL', 'buddyboss-platform' ),
 						'value' => $permalink,
 					),
 					array(
-						'name'  => __( 'Discussion Name', 'buddyboss' ),
+						'name'  => __( 'Discussion Name', 'buddyboss-platform' ),
 						'value' => get_the_title( $topic->post_parent ),
 					),
 				);

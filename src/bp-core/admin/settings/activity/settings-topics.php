@@ -26,7 +26,7 @@ function bb_activity_register_topics_panel_fields() {
 		'activity_topics',
 		'activity_topics',
 		array(
-			'title'       => __( 'Activity Topics', 'buddyboss' ),
+			'title'       => __( 'Activity Topics', 'buddyboss-platform' ),
 			'description' => '',
 			'order'       => 10,
 			'help_url'    => '636120',
@@ -40,9 +40,9 @@ function bb_activity_register_topics_panel_fields() {
 		'activity_topics',
 		array(
 			'name'              => 'bb_enable_activity_topics',
-			'label'             => __( 'Activity Topics', 'buddyboss' ),
+			'label'             => __( 'Activity Topics', 'buddyboss-platform' ),
 			'type'              => 'toggle',
-			'description'       => __( 'Enable topics in activity feed', 'buddyboss' ),
+			'description'       => __( 'Enable topics in activity feed', 'buddyboss-platform' ),
 			'default'           => bb_is_enabled_activity_topics(),
 			'sanitize_callback' => 'absint',
 			'order'             => 10,
@@ -59,7 +59,7 @@ function bb_activity_register_topics_panel_fields() {
 			'name'              => 'bb_activity_topic_required',
 			'label'             => '',
 			'type'              => 'toggle',
-			'description'       => __( 'Require users to select a topic before posting in activity feed', 'buddyboss' ),
+			'description'       => __( 'Require users to select a topic before posting in activity feed', 'buddyboss-platform' ),
 			'default'           => bb_is_activity_topic_required(),
 			'sanitize_callback' => 'absint',
 			'order'             => 20,
@@ -80,9 +80,9 @@ function bb_activity_register_topics_panel_fields() {
 		'activity_topics',
 		array(
 			'name'              => 'bb_activity_topics',
-			'label'             => __( 'Topics', 'buddyboss' ),
+			'label'             => __( 'Topics', 'buddyboss-platform' ),
 			'type'              => 'topic_list',
-			'description'       => __( 'Maximum of 20 topics can be added.', 'buddyboss' ),
+			'description'       => __( 'Maximum of 20 topics can be added.', 'buddyboss-platform' ),
 			'default'           => array(),
 			'sanitize_callback' => 'bb_sanitize_topic_list_noop',
 			'order'             => 30,
@@ -98,7 +98,7 @@ function bb_activity_register_topics_panel_fields() {
 	// -------------------------------------------------------------------------
 	if ( bp_is_active( 'groups' ) ) {
 		$group_topics_section_args = array(
-			'title'       => __( 'Group Topics', 'buddyboss' ),
+			'title'       => __( 'Group Topics', 'buddyboss-platform' ),
 			'description' => '',
 			'order'       => 20,
 			'help_url'    => '636122',
@@ -130,10 +130,10 @@ function bb_activity_register_topics_panel_fields() {
 		// FIELD: Group Topics (Pro only).
 		$group_topics_field_args = array(
 			'name'              => 'bb-enable-group-activity-topics',
-			'label'             => __( 'Group Topics', 'buddyboss' ),
+			'label'             => __( 'Group Topics', 'buddyboss-platform' ),
 			'type'              => 'toggle',
-			'description'       => __( 'Enable topics for groups', 'buddyboss' ),
-			'help_text'         => __( 'Allow group organizers to set topics for members to use in group posts.', 'buddyboss' ),
+			'description'       => __( 'Enable topics for groups', 'buddyboss-platform' ),
+			'help_text'         => __( 'Allow group organizers to set topics for members to use in group posts.', 'buddyboss-platform' ),
 			'default'           => function_exists( 'bb_is_enabled_group_activity_topics' ) && bb_is_enabled_group_activity_topics(),
 			'sanitize_callback' => 'absint',
 			'order'             => 10,

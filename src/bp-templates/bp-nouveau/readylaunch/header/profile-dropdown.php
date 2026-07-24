@@ -24,7 +24,7 @@ $profile_url = trailingslashit( bp_loggedin_user_domain() . bp_get_profile_slug(
 	<li class="bb-rl-profile-list-item">
 		<a href="<?php echo esc_url( $profile_url ); ?>" class="bb-rl-profile-list-link">
 			<i class="bb-icons-rl-user"></i>
-			<?php esc_html_e( 'View profile', 'buddyboss' ); ?>
+			<?php esc_html_e( 'View profile', 'buddyboss-platform' ); ?>
 			<span class="bb-rl-profile-list-item--after"><i class="bb-icons-rl-caret-right"></i></span>
 		</a>
 
@@ -103,7 +103,7 @@ $profile_url = trailingslashit( bp_loggedin_user_domain() . bp_get_profile_slug(
 		<li class="bb-rl-profile-list-item">
 			<a href="<?php echo esc_url( bp_loggedin_user_domain() ); ?>" class="bb-rl-profile-list-link">
 				<i class="bb-icons-rl-pencil-simple"></i>
-				<?php esc_html_e( 'Edit profile', 'buddyboss' ); ?>
+				<?php esc_html_e( 'Edit profile', 'buddyboss-platform' ); ?>
 				<span class="bb-rl-profile-list-item--after"><i class="bb-icons-rl-caret-right"></i></span>
 			</a>
 
@@ -120,7 +120,7 @@ $profile_url = trailingslashit( bp_loggedin_user_domain() . bp_get_profile_slug(
 				if ( $is_enable_profile_avatar && buddypress()->avatar->show_avatars ) {
 					?>
 					<li class="bb-rl-profile-sublist-link" id="bb-rl-xprofile-change-avatar">
-						<a href="<?php echo esc_url( trailingslashit( $profile_link . 'change-avatar' ) ); ?>"><?php esc_html_e( 'Profile Photo', 'buddyboss' ); ?></a>
+						<a href="<?php echo esc_url( trailingslashit( $profile_link . 'change-avatar' ) ); ?>"><?php esc_html_e( 'Profile Photo', 'buddyboss-platform' ); ?></a>
 					</li>
 					<?php
 				}
@@ -159,7 +159,7 @@ $profile_url = trailingslashit( bp_loggedin_user_domain() . bp_get_profile_slug(
 		<li class="bb-rl-profile-list-item">
 			<a href="<?php echo esc_url( $settings_link ); ?>" class="bb-rl-profile-list-link">
 				<i class="bb-icons-rl-user-gear"></i>
-				<?php esc_html_e( 'Account settings', 'buddyboss' ); ?>
+				<?php esc_html_e( 'Account settings', 'buddyboss-platform' ); ?>
 				<span class="bb-rl-profile-list-item--after"><i class="bb-icons-rl-caret-right"></i></span>
 			</a>
 
@@ -188,7 +188,7 @@ $profile_url = trailingslashit( bp_loggedin_user_domain() . bp_get_profile_slug(
 				) {
 					$delete_nav_item = new BP_Core_Nav_Item(
 						array(
-							'name'            => __( 'Delete Account', 'buddyboss' ),
+							'name'            => __( 'Delete Account', 'buddyboss-platform' ),
 							'slug'            => 'delete-account',
 							'parent_url'      => $settings_link,
 							'link'            => trailingslashit( $settings_link . 'delete-account' ),
@@ -240,19 +240,19 @@ $profile_url = trailingslashit( bp_loggedin_user_domain() . bp_get_profile_slug(
 		<li class="bb-rl-profile-list-item">
 			<a href="#" class="bb-rl-profile-list-link">
 				<i class="bb-icons-rl-sun"></i>
-				<?php esc_html_e( 'Theme', 'buddyboss' ); ?>
+				<?php esc_html_e( 'Theme', 'buddyboss-platform' ); ?>
 				<span class="bb-rl-profile-list-item--after"><i class="bb-icons-rl-caret-right"></i></span>
 			</a>
 
 			<ul class="bb-profile-submenu-lists">
 				<li class="bb-rl-profile-sublist-link" id="bb-rl-profile-theme-light">
 					<a href="#">
-						<?php esc_html_e( 'Light', 'buddyboss' ); ?>
+						<?php esc_html_e( 'Light', 'buddyboss-platform' ); ?>
 					</a>
 				</li>
 				<li class="bb-rl-profile-sublist-link" id="bb-rl-profile-theme-dark">
 					<a href="#">
-						<?php esc_html_e( 'Dark', 'buddyboss' ); ?>
+						<?php esc_html_e( 'Dark', 'buddyboss-platform' ); ?>
 					</a>
 				</li>
 			</ul>
@@ -264,7 +264,7 @@ $profile_url = trailingslashit( bp_loggedin_user_domain() . bp_get_profile_slug(
 	<li class="bb-rl-profile-list-item">
 		<a href="<?php echo esc_url( wp_logout_url( bp_get_requested_url() ) ); ?>">
 			<i class="bb-icons-rl-sign-out"></i>
-			<?php esc_html_e( 'Log out', 'buddyboss' ); ?>
+			<?php esc_html_e( 'Log out', 'buddyboss-platform' ); ?>
 		</a>
 	</li>
 
