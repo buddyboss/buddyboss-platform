@@ -19,7 +19,7 @@ bb_register_feature(
 	'blogging',
 	array(
 		'label'              => __( 'Blogs', 'buddyboss' ),
-		'description'        => __( "Easily manage your community's general, privacy, and SEO settings.", 'buddyboss' ),
+		'description'        => __( 'Manage your blog settings, such as author blocks, Bookmarking and member subscriptions.', 'buddyboss' ),
 		'icon'               => array(
 			'type'  => 'font',
 			'class' => 'bb-icons-rl bb-icons-rl-book-open',
