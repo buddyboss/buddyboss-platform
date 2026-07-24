@@ -161,6 +161,59 @@ function bp_version_bump() {
 }
 
 /**
+ * One-time upgrade routine: activate the BuddyBoss Addons plugin after update.
+ *
+ * The Video and Document components were removed from BuddyBoss Platform and are
+ * now provided by the separate "BuddyBoss Addons" plugin (served through the
+ * Mothership add-on catalogue). On update, if that add-on is available in the
+ * site's Mothership add-on list and its plugin is installed but not active, it is
+ * activated a single time so existing communities do not silently lose their
+ * Video/Document functionality. Activation is intentionally NOT silent so the
+ * add-on's own activation hooks run (restoring the scrubbed components). The site
+ * owner is free to deactivate it afterwards — this routine never runs again.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_update_activate_buddyboss_addons() {
+
+	// The add-on catalogue is an admin-only, license-gated surface.
+	if ( ! is_admin() ) {
+		return;
+	}
+
+	// The Mothership add-on manager provides the catalogue and availability check.
+	if ( ! class_exists( '\BuddyBoss\Core\Admin\Mothership\BB_Addons_Manager' ) ) {
+		return;
+	}
+
+	// A catalogue/network problem must never break the upgrade routine.
+	try {
+		$product = \BuddyBoss\Core\Admin\Mothership\BB_Addons_Manager::checkProductBySlug( 'buddyboss-addons' );
+	} catch ( \Exception $e ) {
+		return;
+	}
+
+	// Not offered in this site's Mothership catalogue (or license inactive) — nothing to do.
+	if ( empty( $product ) ) {
+		return;
+	}
+
+	// Resolve the add-on's plugin entry file from the catalogue, with a safe fallback.
+	$plugin_file = ( ! empty( $product->main_file ) && is_string( $product->main_file ) )
+		? $product->main_file
+		: 'buddyboss-addons/buddyboss-addons.php';
+
+	require_once ABSPATH . 'wp-admin/includes/plugin.php';
+
+	// Only activate when the plugin is present locally and currently inactive.
+	if ( file_exists( WP_PLUGIN_DIR . '/' . $plugin_file ) && ! is_plugin_active( $plugin_file ) ) {
+		activate_plugin( $plugin_file );
+	}
+}
+
+/**
  * Set up the BuddyPress updater.
  *
  * @since BuddyPress 1.6.0
@@ -560,6 +613,16 @@ function bp_version_updater() {
 		// type") and must be preserved.
 		if ( $raw_db_version >= 23584 && $raw_db_version < 23601 ) {
 			bb_update_to_3_0_3();
+		}
+
+		// DB version 23602 — the Video and Document components were removed from
+		// BuddyBoss Platform and are now provided by the standalone "BuddyBoss
+		// Addons" plugin (served via Mothership). On the upgrade that crosses this
+		// version, activate that add-on once — when it is available in the site's
+		// Mothership add-on catalog and installed but not active — so existing
+		// communities keep their Video/Document functionality.
+		if ( $raw_db_version < 23602 ) {
+			bb_update_activate_buddyboss_addons();
 		}
 
 		if ( $raw_db_version !== $current_db ) {
