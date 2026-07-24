@@ -184,13 +184,13 @@ function bb_bookmark_delete( $bookmark_id ) {
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param array $args        Query args. See BB_Bookmarks::get().
- * @param bool  $force_cache Bypass the object cache when true.
+ * @param array $args         Query args. See BB_Bookmarks::get().
+ * @param bool  $bypass_cache Bypass the object cache when true.
  *
  * @return array `array( 'bookmarks' => array, 'total' => int )`
  */
-function bb_bookmark_query( $args = array(), $force_cache = false ) {
-	if ( $force_cache ) {
+function bb_bookmark_query( $args = array(), $bypass_cache = false ) {
+	if ( $bypass_cache ) {
 		$args['cache'] = false;
 	}
 
@@ -202,19 +202,19 @@ function bb_bookmark_query( $args = array(), $force_cache = false ) {
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param array $args        Query args. `user_id` defaults to the current user.
- * @param bool  $force_cache Bypass the object cache when true.
+ * @param array $args         Query args. `user_id` defaults to the current user.
+ * @param bool  $bypass_cache Bypass the object cache when true.
  *
  * @return array `array( 'bookmarks' => array, 'total' => int )`
  */
-function bb_bookmark_get_user_items( $args = array(), $force_cache = false ) {
+function bb_bookmark_get_user_items( $args = array(), $bypass_cache = false ) {
 	$args = bp_parse_args(
 		$args,
 		array( 'user_id' => get_current_user_id() ),
 		'bb_bookmark_get_user_items'
 	);
 
-	return bb_bookmark_query( $args, $force_cache );
+	return bb_bookmark_query( $args, $bypass_cache );
 }
 
 /**

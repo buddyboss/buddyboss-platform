@@ -464,10 +464,15 @@ function bb_admin_settings_register_appearance_settings() {
 		}
 	}
 
-	$template_page_options[] = array(
-		'label' => __( 'Blog', 'buddyboss' ),
-		'value' => 'blog',
-	);
+	// Gated like the sibling options above: only offer the Blog template page
+	// when the Blogs feature is active (registration/courses are each gated on
+	// their own backing feature, so Blog must be too).
+	if ( function_exists( 'bp_is_active' ) && bp_is_active( 'blogging' ) ) {
+		$template_page_options[] = array(
+			'label' => __( 'Blog', 'buddyboss' ),
+			'value' => 'blog',
+		);
+	}
 
 	if ( ! empty( $template_page_options ) ) {
 		bb_register_feature_field(
