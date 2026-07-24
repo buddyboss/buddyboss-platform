@@ -1904,34 +1904,36 @@ function bb_notification_is_read_only( $notification ) {
 		return $cache[ $cache_key ];
 	}
 
+	/*
+	 * Resolve the ID that actually represents the user who triggered the
+	 * notification. For the allowed connection actions the triggering user is
+	 * stored in item_id; for every other notification type it is stored in
+	 * secondary_item_id. Using the wrong field means bp_is_user_inactive() would
+	 * receive a non-user ID (post, group, activity, etc.) and return false
+	 * positives, incorrectly marking active notifications as read-only.
+	 */
+	if ( in_array( $notification->component_action, $allowed_component_action, true ) ) {
+		$triggering_user_id = ! empty( $notification->item_id ) ? (int) $notification->item_id : 0;
+	} else {
+		$triggering_user_id = ! empty( $notification->secondary_item_id ) ? (int) $notification->secondary_item_id : 0;
+	}
+
 	$retval = ! empty( $notification ) &&
 	(
 		(
-				! in_array( $notification->component_action, $allowed_component_action, true ) &&
-				! empty( $notification->secondary_item_id ) &&
-				bp_is_user_inactive( $notification->secondary_item_id )
-		) ||
-		(
-				in_array( $notification->component_action, $allowed_component_action, true ) &&
-				! empty( $notification->item_id ) &&
-				bp_is_user_inactive( $notification->item_id )
+			! empty( $triggering_user_id ) &&
+			bp_is_user_inactive( $triggering_user_id )
 		) ||
 		(
 			bp_is_active( 'moderation' ) &&
 			(
 				(
-					! in_array( $notification->component_action, $allowed_component_action, true ) &&
-					! empty( $notification->secondary_item_id ) &&
-					bb_moderation_moderated_user_ids( $notification->secondary_item_id )
-				) ||
-				(
-					in_array( $notification->component_action, $allowed_component_action, true ) &&
-					! empty( $notification->item_id ) &&
-					bb_moderation_moderated_user_ids( $notification->item_id )
+					! empty( $triggering_user_id ) &&
+					bb_moderation_moderated_user_ids( $triggering_user_id )
 				) ||
 				(
 					! empty( $notification->user_id ) &&
-					bb_moderation_moderated_user_ids( $notification->user_id )
+					bb_moderation_moderated_user_ids( (int) $notification->user_id )
 				)
 			)
 		)
