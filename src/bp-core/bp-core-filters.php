@@ -2420,6 +2420,65 @@ function bb_update_digest_schedule_event_on_change_component_status( $active_com
 add_action( 'bp_core_install', 'bb_update_digest_schedule_event_on_change_component_status', 10, 1 );
 
 /**
+ * Schedule the digest email cron when "Private Messaging" is activated
+ * from the Settings 2.0 feature card.
+ *
+ * BB_Feature_Registry::bb_activate_feature() writes 'bp-active-components'
+ * to the database before firing `bp_core_install`, so by the time
+ * bb_update_digest_schedule_event_on_change_component_status() above runs,
+ * the old-vs-new component diff it relies on is already identical and never
+ * detects the activation. Hook directly into the feature lifecycle instead.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $feature_id Feature ID that was activated.
+ */
+function bb_messages_schedule_digest_cron_on_feature_activate( $feature_id ) {
+	if ( 'messages' !== $feature_id || wp_next_scheduled( 'bb_digest_email_notifications_hook' ) ) {
+		return;
+	}
+
+	$time_delay_email_notification = (int) bp_get_option( 'time_delay_email_notification', 15 );
+	$schedule_key                  = 'bb_schedule_15min';
+	if ( 5 === $time_delay_email_notification ) {
+		$schedule_key = 'bb_schedule_5min';
+	} elseif ( 30 === $time_delay_email_notification ) {
+		$schedule_key = 'bb_schedule_30min';
+	} elseif ( 60 === $time_delay_email_notification ) {
+		$schedule_key = 'bb_schedule_1hour';
+	} elseif ( 180 === $time_delay_email_notification ) {
+		$schedule_key = 'bb_schedule_3hours';
+	} elseif ( 720 === $time_delay_email_notification ) {
+		$schedule_key = 'bb_schedule_12hours';
+	} elseif ( 1440 === $time_delay_email_notification ) {
+		$schedule_key = 'bb_schedule_24hours';
+	}
+
+	wp_schedule_event( time(), $schedule_key, 'bb_digest_email_notifications_hook' );
+}
+add_action( 'bb_feature_activated', 'bb_messages_schedule_digest_cron_on_feature_activate' );
+
+/**
+ * Unschedule the digest email cron when "Private Messaging" is deactivated
+ * from the Settings 2.0 feature card.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $feature_id Feature ID that was deactivated.
+ */
+function bb_messages_unschedule_digest_cron_on_feature_deactivate( $feature_id ) {
+	if ( 'messages' !== $feature_id ) {
+		return;
+	}
+
+	$timestamp = wp_next_scheduled( 'bb_digest_email_notifications_hook' );
+	if ( $timestamp ) {
+		wp_unschedule_event( $timestamp, 'bb_digest_email_notifications_hook' );
+	}
+}
+add_action( 'bb_feature_deactivated', 'bb_messages_unschedule_digest_cron_on_feature_deactivate' );
+
+/**
  * Get member presence information.
  *
  * @since BuddyBoss 2.1.4
