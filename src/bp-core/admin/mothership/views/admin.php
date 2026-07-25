@@ -17,7 +17,7 @@ namespace BuddyBoss\Core\Admin\Mothership;
 		<div class="buddyboss-mothership-block">
 			<div class="inside">
 				<h2><?php esc_html_e( 'Manual Connect', 'buddyboss' ); ?></h2>
-				<p>
+				<ol>
 					<li>
 						<?php
 						/* translators: %s: Link to BuddyBoss.com */
@@ -40,12 +40,9 @@ namespace BuddyBoss\Core\Admin\Mothership;
 						<?php esc_html_e( 'Enter your license key below', 'buddyboss' ); ?>
 					</li>
 					<li>
-						<?php esc_html_e( 'Enter your BuddyBoss account email', 'buddyboss' ); ?>
+						<?php esc_html_e( 'Click "Activate License"', 'buddyboss' ); ?>
 					</li>
-					<li>
-						<?php esc_html_e( 'Click "Update License"', 'buddyboss' ); ?>
-					</li>
-				</p>
+				</ol>
 			</div>
 		</div>
 

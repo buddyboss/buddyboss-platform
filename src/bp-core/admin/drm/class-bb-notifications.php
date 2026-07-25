@@ -38,7 +38,7 @@ class BB_Notifications {
 
 		// Get the GroundLevel container from the loader.
 		$loader    = $this->get_mothership_loader();
-		$container = $loader->getContainer();
+		$container = $loader->get_container();
 
 		/** @var \BuddyBossPlatform\GroundLevel\InProductNotifications\Services\Store $store */
 		$store = $container->get( Store::class )->fetch();
@@ -90,7 +90,7 @@ class BB_Notifications {
 	public function dismiss_events( $type ) {
 		// Get the GroundLevel container from the loader.
 		$loader    = $this->get_mothership_loader();
-		$container = $loader->getContainer();
+		$container = $loader->get_container();
 
 		/**
 		 * Get the GroundLevel notification store.

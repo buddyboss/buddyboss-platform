@@ -49,7 +49,7 @@ class BB_DRM_Controller {
 		try {
 			// Use a singleton instance to avoid duplicate hook registration.
 			$loader           = \BuddyBoss\Core\Admin\Mothership\BB_Mothership_Loader::instance();
-			$plugin_connector = $loader->getContainer()->get( \BuddyBossPlatform\GroundLevel\Mothership\AbstractPluginConnection::class );
+			$plugin_connector = $loader->get_container()->get( \BuddyBossPlatform\GroundLevel\Mothership\AbstractPluginConnection::class );
 			return $plugin_connector->pluginId;
 		} catch ( \Exception $e ) {
 			// Fallback to PLATFORM_EDITION constant or default if container access fails.

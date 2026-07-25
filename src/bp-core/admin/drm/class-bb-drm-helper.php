@@ -108,11 +108,27 @@ class BB_DRM_Helper {
 	 */
 	public static function has_key() {
 		try {
-			$key = Credentials::getLicenseKey();
+			$key = self::get_credentials()->getLicenseKey();
 			return ! empty( $key );
 		} catch ( \Exception $e ) {
 			return false;
 		}
+	}
+
+	/**
+	 * Resolve the GroundLevel Credentials service from the Mothership container.
+	 *
+	 * GroundLevel 7.3.1 replaced the static {@see Credentials} API with an instance
+	 * resolved from the container, so the license key is read through this service.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @return Credentials
+	 */
+	private static function get_credentials(): Credentials {
+		return \BuddyBoss\Core\Admin\Mothership\BB_Mothership_Loader::instance()
+			->get_container()
+			->get( Credentials::class );
 	}
 
 	/**
@@ -124,7 +140,7 @@ class BB_DRM_Helper {
 	 */
 	public static function get_key() {
 		try {
-			return Credentials::getLicenseKey();
+			return self::get_credentials()->getLicenseKey();
 		} catch ( \Exception $e ) {
 			return '';
 		}
