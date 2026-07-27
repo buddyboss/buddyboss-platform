@@ -298,10 +298,16 @@ export function GroupMembersTab( { groupId, setNotice, saveRef } ) {
 			var removes = pendingRemovesRef.current;
 			var roleChanges = pendingRoleChangesRef.current;
 
-			// Collect all operations as promises executed sequentially.
+			// Collect all operations as promises executed sequentially, ordered so
+			// admin-INCREASING changes (adds + promotions to Organizer) run BEFORE
+			// admin-REDUCING ones (removes + demotions). The server guards each
+			// remove/demote against the live DB ("can't remove the only admin"), so a
+			// promote-then-remove done in one save must send the promote first — else
+			// the still-sole old admin is wrongly blocked. Legacy's single form pass
+			// had the same net effect.
 			var operations = [];
 
-			// Process adds — first add as member, then promote if different role.
+			// Adds (add as member, then promote if a higher role was chosen).
 			adds.forEach( function ( user ) {
 				operations.push( function () {
 					return updateGroupMember( {
@@ -323,7 +329,21 @@ export function GroupMembersTab( { groupId, setNotice, saveRef } ) {
 				} );
 			} );
 
-			// Process removes.
+			// Promotions TO Organizer grow the admin pool first.
+			Object.keys( roleChanges ).forEach( function ( userId ) {
+				if ( 'admin' !== roleChanges[ userId ] ) {
+					return;
+				}
+				operations.push( function () {
+					return updateGroupMember( {
+						group_id: groupId,
+						user_id: parseInt( userId, 10 ),
+						role: 'admin',
+					} );
+				} );
+			} );
+
+			// Removes.
 			removes.forEach( function ( userId ) {
 				operations.push( function () {
 					return updateGroupMember( {
@@ -334,8 +354,11 @@ export function GroupMembersTab( { groupId, setNotice, saveRef } ) {
 				} );
 			} );
 
-			// Process role changes.
+			// Remaining role changes (demotions, Moderator/Member/Banned).
 			Object.keys( roleChanges ).forEach( function ( userId ) {
+				if ( 'admin' === roleChanges[ userId ] ) {
+					return;
+				}
 				operations.push( function () {
 					return updateGroupMember( {
 						group_id: groupId,
@@ -356,14 +379,32 @@ export function GroupMembersTab( { groupId, setNotice, saveRef } ) {
 			var errors = [];
 			var chain = Promise.resolve();
 			operations.forEach( function ( op ) {
-				chain = chain.then( op ).catch( function ( err ) {
+				chain = chain.then( function () {
+					// A member op that returns a wp_send_json_error() envelope
+					// (HTTP 200 with success:false) is a failure. Detected here — in
+					// the group members flow only — rather than in the shared
+					// ajaxFetch, so no other AJAX caller's behaviour changes.
+					return Promise.resolve( op() ).then( function ( response ) {
+						if ( response && false === response.success ) {
+							throw new Error( ( response.data && response.data.message ) || __( 'Failed to update member role.', 'buddyboss' ) );
+						}
+						return response;
+					} );
+				} ).catch( function ( err ) {
 					errors.push( err && err.message ? err.message : String( err ) );
 				} );
 			} );
 
 			return chain.then( function () {
 				if ( errors.length ) {
-					return Promise.reject( new Error( errors.join( ' ' ) ) );
+					// Surface the failure inside the modal (above the Members tab)
+					// rather than the page-level banner, and keep the modal open so
+					// the user can retry. Still reject so the parent knows the save
+					// did not fully succeed (it won't close the modal or show a
+					// duplicate page-level notice).
+					var message = errors.join( ' ' );
+					setNotice( { type: 'error', message: message } );
+					return Promise.reject( new Error( message ) );
 				}
 				// Clear pending state only when all operations succeeded.
 				setPendingAdds( [] );
@@ -656,8 +697,71 @@ export function GroupMembersTab( { groupId, setNotice, saveRef } ) {
 			result[ role ] = members;
 		} );
 
+		// Recompute "sole admin" from the CURRENT (pending-applied) admin count
+		// instead of the static server flag. Promoting another member to Organizer
+		// in the same session drops the last admin's lock, so the creator can be
+		// managed/removed without a save-and-reopen — matching legacy, which lets
+		// you promote + remove in one save.
+		var currentAdminCount = ( result.admin || [] ).length;
+		roleSections.forEach( function ( section ) {
+			( result[ section.key ] || [] ).forEach( function ( m ) {
+				m.is_sole_admin = ( 'admin' === m.role && currentAdminCount <= 1 );
+			} );
+		} );
+
 		return result;
 	}, [ roleMembers, pendingRemoves, pendingRoleChanges, pendingAdds ] );
+
+	// Effective per-role total after pending changes. roleTotals is the raw server
+	// count, which still counts a member who has been moved out of a section (or
+	// removed) in this unsaved session — that's why an emptied section kept showing
+	// an empty bordered container. This adjusts the count so a section that pending
+	// changes have emptied collapses, while a large multi-page section (whose
+	// current page happens to be empty) still renders + paginates.
+	var effectiveRoleTotals = useMemo( function () {
+		var byId = {};
+		Object.keys( roleMembers ).forEach( function ( rk ) {
+			( roleMembers[ rk ] || [] ).forEach( function ( m ) {
+				byId[ m.user_id ] = m;
+			} );
+		} );
+
+		var totals = {};
+		roleSections.forEach( function ( section ) {
+			var total = roleTotals[ section.key ] || 0;
+
+			Object.keys( pendingRoleChanges ).forEach( function ( uid ) {
+				var orig = byId[ uid ] ? byId[ uid ].role : null;
+				var next = pendingRoleChanges[ uid ];
+				if ( orig === section.key && next !== section.key ) {
+					total -= 1; // moved out of this section
+				} else if ( orig !== section.key && next === section.key ) {
+					total += 1; // moved into this section
+				}
+			} );
+
+			pendingRemoves.forEach( function ( uid ) {
+				// Decrement the member's EFFECTIVE (post-pending-change) section, not
+				// their original server role — otherwise a member promoted then removed
+				// in the same session is decremented from the wrong section (and their
+				// move-in +1 is never corrected).
+				var removedRole = pendingRoleChanges[ uid ] || ( byId[ uid ] ? byId[ uid ].role : null );
+				if ( removedRole === section.key ) {
+					total -= 1;
+				}
+			} );
+
+			pendingAdds.forEach( function ( user ) {
+				if ( ( user.role || 'member' ) === section.key ) {
+					total += 1;
+				}
+			} );
+
+			totals[ section.key ] = Math.max( 0, total );
+		} );
+
+		return totals;
+	}, [ roleMembers, roleTotals, pendingRoleChanges, pendingRemoves, pendingAdds ] );
 
 	/**
 	 * Server-side counts per role (used in the role-filter dropdown labels:
@@ -955,7 +1059,11 @@ export function GroupMembersTab( { groupId, setNotice, saveRef } ) {
 							{ member.name }
 						</span>
 					) }
-					{ ! member.is_creator && ! member.is_sole_admin && (
+					{ /* Removable unless they are the sole remaining admin. The group
+					     creator is NOT specially protected — legacy WP-admin
+					     (bp-groups-admin.php) always let the creator be removed; the
+					     is_creator gate here was a 3.0.0 migration regression. */ }
+					{ ! member.is_sole_admin && (
 						<button
 							type="button"
 							className="bb-group-members-tab__remove-btn"
@@ -1143,6 +1251,10 @@ export function GroupMembersTab( { groupId, setNotice, saveRef } ) {
 						var rendered = visibleSections.map( function ( section ) {
 							var displayMembers = displayMembersByRole[ section.key ] || [];
 							var sectionTotal = roleTotals[ section.key ] || 0;
+							// Pending-adjusted total: used to decide whether an emptied
+							// section should collapse (roleTotals still counts moved-out
+							// members until save).
+							var sectionEffectiveTotal = effectiveRoleTotals[ section.key ] || 0;
 							var sectionIsLoading = roleLoading[ section.key ];
 
 							// Server returned only matching members when a search was active;
@@ -1159,7 +1271,7 @@ export function GroupMembersTab( { groupId, setNotice, saveRef } ) {
 							// active. Under an active search we silently omit
 							// zero-match sections so the matched section sits
 							// flush at the top.
-							if ( 0 === filteredMembers.length && 0 === sectionTotal && ! sectionIsLoading ) {
+							if ( 0 === filteredMembers.length && 0 === sectionEffectiveTotal && ! sectionIsLoading ) {
 								return null;
 							}
 							if ( 0 === filteredMembers.length && normalizedMemberFilter ) {

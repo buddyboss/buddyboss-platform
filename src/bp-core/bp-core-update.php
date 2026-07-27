@@ -3205,18 +3205,29 @@ function bb_core_update_repair_duplicate_following_notification() {
 	global $wpdb;
 	$bp = buddypress();
 
-	$sql  = "DELETE FROM {$bp->notifications->table_name}";
-	$sql .= ' WHERE id IN (';
-	$sql .= " SELECT * FROM ( SELECT DISTINCT n1.id FROM {$bp->notifications->table_name} n1";
+	// Identify the duplicate "following" notifications once (keep the newest per
+	// user + secondary item, mark the older ones for deletion), then remove them in
+	// chunks so a site with many duplicates cannot time out this one-time upgrade.
+	$sql  = "SELECT DISTINCT n1.id FROM {$bp->notifications->table_name} n1";
 	$sql .= " JOIN {$bp->notifications->table_name} n2 ON n1.user_id = n2.user_id";
 	$sql .= ' WHERE n1.secondary_item_id = n2.secondary_item_id';
 	$sql .= ' AND n1.date_notified < n2.date_notified';
 	$sql .= ' AND n1.component_name = %s AND n1.component_action = %s';
-	$sql .= ' ORDER BY n1.id DESC) AS ids';
-	$sql .= ' )';
+	$sql .= ' ORDER BY n1.id DESC';
 
-	// Remove duplicate notification ids.
-	$wpdb->query( $wpdb->prepare( $sql, 'activity', 'bb_following_new' ) );
+	$notification_ids = wp_parse_id_list( $wpdb->get_col( $wpdb->prepare( $sql, 'activity', 'bb_following_new' ) ) );
+
+	// Delete the duplicate notifications in chunks (bounded lock time on large sites).
+	foreach ( array_chunk( $notification_ids, 500 ) as $chunk ) {
+		$ids_sql = implode( ',', $chunk );
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		$wpdb->query( "DELETE FROM {$bp->notifications->table_name} WHERE id IN ({$ids_sql})" );
+	}
+
+	// Clean up the now-orphaned metadata after the notifications are gone.
+	if ( ! empty( $notification_ids ) && function_exists( 'bb_notifications_delete_meta_for_ids' ) ) {
+		bb_notifications_delete_meta_for_ids( $notification_ids );
+	}
 
 	// Purge all the cache for API.
 	if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
