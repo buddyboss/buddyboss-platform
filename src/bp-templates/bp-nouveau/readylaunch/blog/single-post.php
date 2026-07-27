@@ -73,17 +73,21 @@ add_filter( 'bb_blog_suppress_related_for_theme', '__return_true' );
 			<?php if ( ! empty( $bb_rl_blog_categories ) && ! is_wp_error( $bb_rl_blog_categories ) ) : ?>
 				<div class="bb-rl-blog-single__categories">
 					<span class="bb-rl-blog-single__label"><i class="bb-icons-rl bb-icons-rl-folder" aria-hidden="true"></i> <?php esc_html_e( 'Categories:', 'buddyboss' ); ?></span>
-					<?php foreach ( $bb_rl_blog_categories as $bb_rl_blog_category ) : ?>
-						<a class="bb-rl-blog-single__category" href="<?php echo esc_url( get_category_link( $bb_rl_blog_category ) ); ?>"><?php echo esc_html( $bb_rl_blog_category->name ); ?></a>
-					<?php endforeach; ?>
+					<div class="bb-rl-blog-single__category_list">
+						<?php foreach ( $bb_rl_blog_categories as $bb_rl_blog_category ) : ?>
+							<a class="bb-rl-blog-single__category" href="<?php echo esc_url( get_category_link( $bb_rl_blog_category ) ); ?>"><?php echo esc_html( $bb_rl_blog_category->name ); ?></a>
+						<?php endforeach; ?>
+					</div>
 				</div>
 			<?php endif; ?>
 			<?php if ( ! empty( $bb_rl_blog_tags ) && ! is_wp_error( $bb_rl_blog_tags ) ) : ?>
 				<div class="bb-rl-blog-single__tags">
 					<span class="bb-rl-blog-single__label"><i class="bb-icons-rl bb-icons-rl-tag" aria-hidden="true"></i> <?php esc_html_e( 'Tags:', 'buddyboss' ); ?></span>
-					<?php foreach ( $bb_rl_blog_tags as $bb_rl_blog_tag ) : ?>
-						<a class="bb-rl-blog-single__tag" href="<?php echo esc_url( get_tag_link( $bb_rl_blog_tag ) ); ?>"><?php echo esc_html( $bb_rl_blog_tag->name ); ?></a>
-					<?php endforeach; ?>
+					<div class="bb-rl-blog-single__tags_list">
+						<?php foreach ( $bb_rl_blog_tags as $bb_rl_blog_tag ) : ?>
+							<a class="bb-rl-blog-single__tag" href="<?php echo esc_url( get_tag_link( $bb_rl_blog_tag ) ); ?>"><?php echo esc_html( $bb_rl_blog_tag->name ); ?></a>
+						<?php endforeach; ?>
+					</div>
 				</div>
 			<?php endif; ?>
 		</div>

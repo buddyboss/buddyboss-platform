@@ -1091,14 +1091,21 @@
 
 .bb-rl-blog-single__categories, .bb-rl-blog-single__tags {
   display: flex;
-  align-items: center;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
+  align-items: flex-start;
   gap: 8px;
   font-size: 13px;
 }
 
 .bb-rl-blog-single__tags {
   margin-top: 12px;
+}
+
+.bb-rl-blog-single__tags_list {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
 }
 
 .bb-rl-blog-single__label {

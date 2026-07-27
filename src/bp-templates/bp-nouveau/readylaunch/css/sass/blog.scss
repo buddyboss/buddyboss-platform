@@ -903,14 +903,21 @@
 	&__categories,
 	&__tags {
 		display: flex;
-		align-items: center;
-		flex-wrap: wrap;
+		flex-wrap: nowrap;
+		align-items: flex-start;
 		gap: 8px;
 		font-size: 13px;
 	}
 
 	&__tags {
 		margin-top: 12px;
+
+		&_list {
+			display: flex;
+			flex-wrap: wrap;
+			align-items: center;
+			gap: 8px;
+		}
 	}
 
 	&__label {
