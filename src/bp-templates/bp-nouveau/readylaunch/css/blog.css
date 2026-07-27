@@ -1204,6 +1204,18 @@
   border-radius: var(--bb-rl-radius-lg);
 }
 
+.bb-rl-blog-single__content blockquote {
+  background-color: var(--bb-rl-background-secondary-color);
+  border-left: 2px solid var(--bb-rl-border-tertiary-color);
+  margin: 0 0 var(--bb-rl-space-300);
+  padding: 5px 0 5px 16px;
+  border-radius: 0 var(--bb-rl-radius-md) var(--bb-rl-radius-md) 0;
+}
+
+.bb-rl-blog-single__content blockquote p {
+  margin-bottom: 0;
+}
+
 @media screen and (max-width: 768px) {
   .bb-rl-blog-single {
     padding: 0 var(--bb-rl-space-100);
