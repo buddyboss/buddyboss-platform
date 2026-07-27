@@ -121,6 +121,39 @@ function bb_blogging_register_admin_settings() {
 	}
 
 	// Field: Social Links.
+	//
+	// The platform keys and their defaults are single-sourced from
+	// bb_blog_social_link_platforms() so they cannot drift from the sanitize
+	// callback, the activation seed, or the front-end share links. The helper
+	// (admin/callbacks.php) is loaded before this runs, but guard anyway and
+	// fall back to the canonical list. Labels are UI strings owned by this
+	// field registration and are looked up per key.
+	$bb_blog_social_defaults = function_exists( 'bb_blog_social_link_platforms' )
+		? bb_blog_social_link_platforms()
+		: array(
+			'facebook' => 1,
+			'linkedin' => 1,
+			'x'        => 0,
+			'whatsapp' => 0,
+			'email'    => 0,
+		);
+
+	$bb_blog_social_labels = array(
+		'facebook' => __( 'Facebook', 'buddyboss' ),
+		'linkedin' => __( 'Linkedin', 'buddyboss' ),
+		'x'        => __( 'X', 'buddyboss' ),
+		'whatsapp' => __( 'Whatsapp', 'buddyboss' ),
+		'email'    => __( 'Email', 'buddyboss' ),
+	);
+
+	$bb_blog_social_options = array();
+	foreach ( $bb_blog_social_defaults as $bb_blog_platform => $bb_blog_platform_default ) {
+		$bb_blog_social_options[] = array(
+			'label' => isset( $bb_blog_social_labels[ $bb_blog_platform ] ) ? $bb_blog_social_labels[ $bb_blog_platform ] : $bb_blog_platform,
+			'value' => $bb_blog_platform,
+		);
+	}
+
 	bb_register_feature_field(
 		'blogging',
 		'blog_settings',
@@ -129,35 +162,8 @@ function bb_blogging_register_admin_settings() {
 			'name'              => 'bb_blog_social_links',
 			'label'             => __( 'Social Links', 'buddyboss' ),
 			'type'              => 'toggle_list',
-			'options'           => array(
-				array(
-					'label' => __( 'Facebook', 'buddyboss' ),
-					'value' => 'facebook',
-				),
-				array(
-					'label' => __( 'Linkedin', 'buddyboss' ),
-					'value' => 'linkedin',
-				),
-				array(
-					'label' => __( 'X', 'buddyboss' ),
-					'value' => 'x',
-				),
-				array(
-					'label' => __( 'Whatsapp', 'buddyboss' ),
-					'value' => 'whatsapp',
-				),
-				array(
-					'label' => __( 'Email', 'buddyboss' ),
-					'value' => 'email',
-				),
-			),
-			'default'           => array(
-				'facebook' => 1,
-				'linkedin' => 1,
-				'x'        => 0,
-				'whatsapp' => 0,
-				'email'    => 0,
-			),
+			'options'           => $bb_blog_social_options,
+			'default'           => $bb_blog_social_defaults,
 			'option_prefix'     => 'bb_blog_social_link_',
 			'sanitize_callback' => 'bb_blog_sanitize_social_links',
 			'disabled'          => ! $bb_blog_page_settings_available,

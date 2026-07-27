@@ -58,13 +58,23 @@ function bb_blog_seed_default_options( $feature_id ) {
 		return;
 	}
 
-	$defaults = array(
-		'bb_blog_social_link_facebook' => 1,
-		'bb_blog_social_link_linkedin' => 1,
-		'bb_blog_social_link_x'        => 0,
-		'bb_blog_social_link_whatsapp' => 0,
-		'bb_blog_social_link_email'    => 0,
-	);
+	// Single-source the platform keys + defaults from the shared helper. The
+	// helper lives in admin/callbacks.php, which is not loaded in every context
+	// this action can fire in, so fall back to the canonical list when absent.
+	$platforms = function_exists( 'bb_blog_social_link_platforms' )
+		? bb_blog_social_link_platforms()
+		: array(
+			'facebook' => 1,
+			'linkedin' => 1,
+			'x'        => 0,
+			'whatsapp' => 0,
+			'email'    => 0,
+		);
+
+	$defaults = array();
+	foreach ( $platforms as $platform => $platform_default ) {
+		$defaults[ 'bb_blog_social_link_' . $platform ] = $platform_default;
+	}
 
 	foreach ( $defaults as $option_name => $default_value ) {
 		if ( '__bb_blog_missing__' === bp_get_option( $option_name, '__bb_blog_missing__' ) ) {

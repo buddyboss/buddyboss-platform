@@ -27,13 +27,18 @@ function bb_blog_is_blog_context() {
  * @return string[] Enabled platform keys.
  */
 function bb_blog_get_enabled_social_links() {
-	$defaults = array(
-		'facebook' => 1,
-		'linkedin' => 1,
-		'x'        => 0,
-		'whatsapp' => 0,
-		'email'    => 0,
-	);
+	// Single-source the platform keys + defaults from the shared helper. On the
+	// front end the helper (admin/callbacks.php) is not loaded, so fall back to
+	// the canonical list.
+	$defaults = function_exists( 'bb_blog_social_link_platforms' )
+		? bb_blog_social_link_platforms()
+		: array(
+			'facebook' => 1,
+			'linkedin' => 1,
+			'x'        => 0,
+			'whatsapp' => 0,
+			'email'    => 0,
+		);
 
 	$enabled = array();
 	foreach ( $defaults as $platform => $default ) {
@@ -90,27 +95,27 @@ function bb_blog_get_share_links( $post_id ) {
 	$all = array(
 		'facebook' => array(
 			'label' => __( 'Facebook', 'buddyboss' ),
-			'url'   => 'https://www.facebook.com/sharer/sharer.php?u=' . $permalink,
+			'url'   => esc_url( 'https://www.facebook.com/sharer/sharer.php?u=' . $permalink ),
 			'icon'  => 'bb-icons-rl-facebook-logo',
 		),
 		'linkedin' => array(
 			'label' => __( 'Linkedin', 'buddyboss' ),
-			'url'   => 'https://www.linkedin.com/sharing/share-offsite/?url=' . $permalink,
+			'url'   => esc_url( 'https://www.linkedin.com/sharing/share-offsite/?url=' . $permalink ),
 			'icon'  => 'bb-icons-rl-linkedin-logo',
 		),
 		'x'        => array(
 			'label' => __( 'X', 'buddyboss' ),
-			'url'   => 'https://twitter.com/intent/tweet?url=' . $permalink . '&text=' . $title,
+			'url'   => esc_url( 'https://twitter.com/intent/tweet?url=' . $permalink . '&text=' . $title ),
 			'icon'  => 'bb-icons-rl-x-logo',
 		),
 		'whatsapp' => array(
 			'label' => __( 'Whatsapp', 'buddyboss' ),
-			'url'   => 'https://api.whatsapp.com/send?text=' . $title . '%20' . $permalink,
+			'url'   => esc_url( 'https://api.whatsapp.com/send?text=' . $title . '%20' . $permalink ),
 			'icon'  => 'bb-icons-rl-whatsapp-logo',
 		),
 		'email'    => array(
 			'label' => __( 'Email', 'buddyboss' ),
-			'url'   => 'mailto:?subject=' . $title . '&body=' . $permalink,
+			'url'   => esc_url( 'mailto:?subject=' . $title . '&body=' . $permalink ),
 			'icon'  => 'bb-icons-rl-envelope-simple',
 		),
 	);

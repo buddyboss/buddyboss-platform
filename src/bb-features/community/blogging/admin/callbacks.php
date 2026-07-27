@@ -18,7 +18,7 @@ defined( 'ABSPATH' ) || exit;
  * @return array Sanitized platform => 0|1 map limited to known platforms.
  */
 function bb_blog_sanitize_social_links( $value ) {
-	$allowed = array( 'facebook', 'linkedin', 'x', 'whatsapp', 'email' );
+	$allowed = array_keys( bb_blog_social_link_platforms() );
 	$clean   = array();
 
 	if ( ! is_array( $value ) ) {
@@ -204,7 +204,6 @@ function bb_blog_sync_platform_option_to_theme( $option, $value ) {
 function bb_blog_sync_platform_option_updated( $option, $old_value, $value ) {
 	bb_blog_sync_platform_option_to_theme( $option, $value );
 }
-add_action( 'updated_option', 'bb_blog_sync_platform_option_updated', 10, 3 );
 
 /**
  * `added_option` bridge into the platform->theme sync.
@@ -221,7 +220,6 @@ add_action( 'updated_option', 'bb_blog_sync_platform_option_updated', 10, 3 );
 function bb_blog_sync_platform_option_added( $option, $value ) {
 	bb_blog_sync_platform_option_to_theme( $option, $value );
 }
-add_action( 'added_option', 'bb_blog_sync_platform_option_added', 10, 2 );
 
 /**
  * Sync buddyboss-theme Redux blog option changes back into platform options.
@@ -288,4 +286,21 @@ function bb_blog_sync_theme_options_to_platform( $old_value, $value ) {
 
 	bb_blog_theme_sync_in_progress( false );
 }
-add_action( 'update_option_buddyboss_theme_options', 'bb_blog_sync_theme_options_to_platform', 10, 2 );
+
+/*
+ * Wire the bidirectional BuddyBoss Theme <-> platform blog option sync only
+ * while the Blogs feature is active.
+ *
+ * These listeners live in callbacks.php, which loads in every admin/AJAX/REST/
+ * WP-CLI request regardless of the feature's activation state, so they must be
+ * gated explicitly. This mirrors how the feature registry's php_loader gates
+ * loader.php's front-end hooks: both keyed off the same active check
+ * (`bb_is_feature_active( 'blogging' )`). Without this guard, changing a mapped
+ * option (e.g. Related Posts) in the Theme Customizer would still write the
+ * `bb_blog_*` options after Blogs has been deactivated in Settings 2.0.
+ */
+if ( function_exists( 'bb_feature_registry' ) && bb_feature_registry()->bb_is_feature_active( 'blogging' ) ) {
+	add_action( 'updated_option', 'bb_blog_sync_platform_option_updated', 10, 3 );
+	add_action( 'added_option', 'bb_blog_sync_platform_option_added', 10, 2 );
+	add_action( 'update_option_buddyboss_theme_options', 'bb_blog_sync_theme_options_to_platform', 10, 2 );
+}
