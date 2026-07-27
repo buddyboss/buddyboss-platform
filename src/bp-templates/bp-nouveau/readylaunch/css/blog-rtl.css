@@ -1017,7 +1017,8 @@
 }
 
 .bb-rl-blog-single__info_row:last-child {
-  min-width: 70px;
+  flex: 0 0 auto;
+  padding-right: 10px;
 }
 
 .bb-rl-blog-single__info_row [aria-label] {
