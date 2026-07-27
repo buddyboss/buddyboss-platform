@@ -1076,14 +1076,6 @@
   pointer-events: auto;
 }
 
-.bb-rl-blog-single__info_row [aria-label].bb-blog-bookmark:after {
-  content: attr(data-add-bookmark);
-}
-
-.bb-rl-blog-single__info_row [aria-label].bb-blog-bookmark.is-bookmarked:after {
-  content: attr(data-remove-bookmark);
-}
-
 .bb-rl-blog-single__date {
   color: var(--bb-rl-text-tertiary-color);
   font-size: 13px;

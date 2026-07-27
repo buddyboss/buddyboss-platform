@@ -883,17 +883,6 @@
 						pointer-events: auto;
 					}
 				}
-
-				&.bb-blog-bookmark {
-
-					&:after {
-						content: attr(data-add-bookmark);
-					}
-
-					&.is-bookmarked:after {
-						content: attr(data-remove-bookmark);
-					}
-				}
 			}
 		}
 	}
