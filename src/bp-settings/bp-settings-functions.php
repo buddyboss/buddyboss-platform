@@ -159,3 +159,23 @@ function bp_settings_get_registered_notification_keys() {
 
 	return $key_whitelist;
 }
+
+/**
+ * Whether the Settings component supports plugin-registered notification
+ * sub-tabs under Settings > Notifications.
+ *
+ * A capability marker for the `bb_settings_notification_subnav_template`
+ * filter (in `bp_settings_screen_notification()`) and the
+ * `bb_member_settings_notifications_custom_tab` action (in the member settings
+ * template routers). Plugins that register a custom notifications sub-tab
+ * should gate their sub-nav registration on `function_exists()` of this
+ * function so an older Platform (without the seam) does not surface a tab that
+ * would 404.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return bool
+ */
+function bb_settings_supports_notification_subnav() {
+	return true;
+}
