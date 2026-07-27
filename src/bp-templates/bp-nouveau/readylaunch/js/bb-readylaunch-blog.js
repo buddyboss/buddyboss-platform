@@ -1,3 +1,6 @@
+/* jshint browser: true */
+/* global jQuery */
+/* @version 1.0.0 */
 /**
  * ReadyLaunch — Blog archive interactions.
  *
@@ -7,7 +10,7 @@
  *
  * @since BuddyBoss [BBVERSION]
  */
-( function () {
+( function ( exports, $ ) {
 	'use strict';
 
 	var BB_RL_BLOG_VIEW_KEY = 'bbRlBlogView';
@@ -22,6 +25,7 @@
 	function bbRlBlogApplyView( view ) {
 		var grid    = document.querySelector( '.bb-rl-blog-grid' );
 		var buttons = document.querySelectorAll( '.bb-rl-blog-view-switcher__button' );
+		var isActive;
 		var i;
 
 		if ( ! grid ) {
@@ -29,19 +33,21 @@
 		}
 
 		if ( 'list' === view ) {
-			grid.className += ' bb-rl-blog-grid--list';
+			grid.classList.add( 'bb-rl-blog-grid--list' );
 		} else {
-			grid.className = grid.className.replace( /\s*bb-rl-blog-grid--list/g, '' );
+			grid.classList.remove( 'bb-rl-blog-grid--list' );
 		}
 
 		for ( i = 0; i < buttons.length; i++ ) {
-			if ( buttons[ i ].getAttribute( 'data-bb-rl-blog-view' ) === view ) {
-				buttons[ i ].className += ' is-active';
-				buttons[ i ].setAttribute( 'aria-pressed', 'true' );
+			isActive = buttons[ i ].getAttribute( 'data-bb-rl-blog-view' ) === view;
+
+			if ( isActive ) {
+				buttons[ i ].classList.add( 'is-active' );
 			} else {
-				buttons[ i ].className = buttons[ i ].className.replace( /\s*is-active/g, '' );
-				buttons[ i ].setAttribute( 'aria-pressed', 'false' );
+				buttons[ i ].classList.remove( 'is-active' );
 			}
+
+			buttons[ i ].setAttribute( 'aria-pressed', isActive ? 'true' : 'false' );
 		}
 	}
 
@@ -184,7 +190,7 @@
 	function bbRlBlogCloseCardMenu( menu ) {
 		var toggle = menu.querySelector( '.bb-rl-blog-card__menu-toggle' );
 
-		menu.className = menu.className.replace( /\s*is-open/g, '' );
+		menu.classList.remove( 'is-open' );
 
 		if ( toggle ) {
 			toggle.setAttribute( 'aria-expanded', 'false' );
@@ -209,10 +215,10 @@
 				}
 			}
 
-			if ( -1 !== menu.className.indexOf( 'is-open' ) ) {
+			if ( menu.classList.contains( 'is-open' ) ) {
 				bbRlBlogCloseCardMenu( menu );
 			} else {
-				menu.className += ' is-open';
+				menu.classList.add( 'is-open' );
 				toggle.setAttribute( 'aria-expanded', 'true' );
 			}
 
@@ -224,9 +230,8 @@
 		}
 	} );
 
-	if ( 'loading' === document.readyState ) {
-		document.addEventListener( 'DOMContentLoaded', bbRlBlogInit );
-	} else {
-		bbRlBlogInit();
-	}
-} )();
+	// jQuery's ready runs bbRlBlogInit immediately when the DOM is already
+	// parsed (script loaded late), matching the previous readyState guard.
+	$( bbRlBlogInit );
+
+} )( window, jQuery );

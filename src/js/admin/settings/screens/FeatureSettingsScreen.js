@@ -1053,7 +1053,7 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 																</button>
 															) : (
 																<a
-																	href={section.pro_notice.link_url || 'https://www.buddyboss.com/pricing/'}
+																	href={safeUrl( section.pro_notice.link_url || 'https://www.buddyboss.com/pricing/' )}
 																	target="_blank"
 																	rel="noopener noreferrer"
 																	className="bb-admin-feature-settings__section-pro-badge"

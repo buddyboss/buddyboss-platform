@@ -10,7 +10,7 @@
  * @since BuddyBoss [BBVERSION]
  */
 
-import { useState } from '@wordpress/element';
+import { useState, useEffect, useRef } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 
 /**
@@ -23,6 +23,18 @@ import { __ } from '@wordpress/i18n';
 export function AddonActivateButton( { action, slug, label, className } ) {
 	const [ busy, setBusy ] = useState( false );
 	const [ error, setError ] = useState( '' );
+
+	// Hold the in-flight request's AbortController so the fetch can be
+	// cancelled if the component unmounts before it resolves.
+	const abortRef = useRef( null );
+
+	useEffect( function () {
+		return function () {
+			if ( abortRef.current ) {
+				abortRef.current.abort();
+			}
+		};
+	}, [] );
 
 	const handleClick = () => {
 		if ( busy ) {
@@ -44,7 +56,10 @@ export function AddonActivateButton( { action, slug, label, className } ) {
 		formData.append( 'slug', slug );
 		formData.append( 'extension_type', 'plugin' );
 
-		fetch( adminData.ajaxUrl, { method: 'POST', body: formData } )
+		const controller = new AbortController();
+		abortRef.current = controller;
+
+		fetch( adminData.ajaxUrl, { method: 'POST', body: formData, signal: controller.signal } )
 			.then( function ( response ) {
 				return response.json();
 			} )
@@ -62,7 +77,11 @@ export function AddonActivateButton( { action, slug, label, className } ) {
 				setError( message );
 				setBusy( false );
 			} )
-			.catch( function () {
+			.catch( function ( err ) {
+				// Ignore aborted requests (component unmounted).
+				if ( err && 'AbortError' === err.name ) {
+					return;
+				}
 				setError( __( 'Activation failed. Please try again.', 'buddyboss' ) );
 				setBusy( false );
 			} );

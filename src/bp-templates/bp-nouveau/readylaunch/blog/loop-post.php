@@ -5,6 +5,12 @@
  * Shared markup for the grid and list layouts — the two arrangements are
  * CSS-only (`.bb-rl-blog-grid--list` modifier on the container).
  *
+ * The status tag and the more-options menu are gated by two independent flags
+ * (`bb_rl_blog_card_show_status` / `bb_rl_blog_card_show_menu`), both seeded
+ * from the `bb_blog_card_context` query var — mirroring the non-RL sibling
+ * `bp-templates/bp-nouveau/buddypress/blog/loop-post.php`. This lets a
+ * bookmark list keep the menu while hiding the status tag (or vice-versa).
+ *
  * @since   BuddyBoss [BBVERSION]
  * @package BuddyBoss\Blogging
  */
@@ -34,6 +40,16 @@ $bb_rl_blog_status_label  = isset( $bb_rl_blog_status_labels[ $bb_rl_blog_status
 	? $bb_rl_blog_status_labels[ $bb_rl_blog_status ]
 	: ( $bb_rl_blog_status_obj ? $bb_rl_blog_status_obj->label : ucfirst( $bb_rl_blog_status ) );
 
+// Card context, mirrored from the non-RL sibling
+// (bp-templates/bp-nouveau/buddypress/blog/loop-post.php). Empty on the public
+// blog archive; set to 'member-posts' or 'bookmarks' on the member profile
+// Blogs tab. Drives the status-tag and menu defaults below and is passed to
+// each filter so consumers can branch on it. Unknown/absent values fall back
+// to '' so the public archive keeps its historical defaults (no status tag,
+// no menu, inline status for non-publish posts).
+$bb_rl_blog_card_context = get_query_var( 'bb_blog_card_context' );
+$bb_rl_blog_card_context = in_array( $bb_rl_blog_card_context, array( 'member-posts', 'bookmarks' ), true ) ? $bb_rl_blog_card_context : '';
+
 /**
  * Filter whether to show the post status tag on the card image (member
  * profile Blogs tab). When off, non-publish statuses show inline after
@@ -41,9 +57,24 @@ $bb_rl_blog_status_label  = isset( $bb_rl_blog_status_labels[ $bb_rl_blog_status
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param bool $show Whether to show the on-image status tag.
+ * @param bool   $show    Whether to show the on-image status tag.
+ * @param string $context Card context: '', 'member-posts', or 'bookmarks'.
  */
-$bb_rl_blog_show_status_tag = apply_filters( 'bb_rl_blog_card_show_status', false );
+$bb_rl_blog_show_status_tag = (bool) apply_filters( 'bb_rl_blog_card_show_status', false, $bb_rl_blog_card_context );
+
+/**
+ * Filter whether to show the card more-options menu, independently of the
+ * status tag above. Defaults to the resolved status-tag flag so the historical
+ * coupling (the menu appeared whenever the status tag did) is preserved for
+ * existing consumers; bookmark lists can override this to keep the menu while
+ * hiding the status tag (or vice-versa) without touching the other.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param bool   $show    Whether to show the more-options menu.
+ * @param string $context Card context: '', 'member-posts', or 'bookmarks'.
+ */
+$bb_rl_blog_show_menu = (bool) apply_filters( 'bb_rl_blog_card_show_menu', $bb_rl_blog_show_status_tag, $bb_rl_blog_card_context );
 ?>
 <article class="bb-rl-blog-card" id="post-<?php the_ID(); ?>">
 	<div class="bb-rl-blog-card__image">
@@ -67,7 +98,7 @@ $bb_rl_blog_show_status_tag = apply_filters( 'bb_rl_blog_card_show_status', fals
 				<span class="bb-rl-blog-card__status bb-rl-blog-card__status--<?php echo esc_attr( $bb_rl_blog_status ); ?>"><?php echo esc_html( $bb_rl_blog_status_label ); ?></span>
 			<?php endif; ?>
 		</h2>
-		<?php if ( $bb_rl_blog_show_status_tag ) : ?>
+		<?php if ( $bb_rl_blog_show_menu ) : ?>
 			<div class="bb-rl-blog-card__menu">
 				<button type="button" class="bb-rl-blog-card__menu-toggle" aria-haspopup="true" aria-expanded="false" aria-label="<?php esc_attr_e( 'More options', 'buddyboss' ); ?>">
 					<i class="bb-icons-rl bb-icons-rl-dots-three" aria-hidden="true"></i>

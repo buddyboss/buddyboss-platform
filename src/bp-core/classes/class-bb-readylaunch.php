@@ -1260,7 +1260,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 					wp_style_add_data( 'bb-readylaunch-blog', 'suffix', $min );
 				}
 
-				wp_enqueue_script( 'bb-readylaunch-blog', buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/js/bb-readylaunch-blog.js', array(), bp_get_version(), true );
+				wp_enqueue_script( 'bb-readylaunch-blog', buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/js/bb-readylaunch-blog.js', array( 'jquery' ), bp_get_version(), true );
 			}
 
 			if ( bp_is_members_directory() ) {
