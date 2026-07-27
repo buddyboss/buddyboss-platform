@@ -5,7 +5,7 @@
  * Loaded via the feature registry php_loader only when the `blogging`
  * feature is active.
  *
- * @since   BuddyBoss [BBVERSION]
+ * @since   BuddyBoss 3.2.0
  * @package BuddyBoss\Blogging
  */
 
@@ -24,7 +24,7 @@ add_filter( 'the_content', 'bb_blog_append_post_footer_sections', 20 );
  * recursion, because the singleton is only assigned after the constructor
  * (which applies that filter) returns.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.2.0
  *
  * @return bool
  */
@@ -37,7 +37,7 @@ function bb_blog_rl_is_enabled() {
 /**
  * Route blog URLs into ReadyLaunch when the Blog template page is enabled.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.2.0
  *
  * @param bool $retval Whether ReadyLaunch is enabled for the current page.
  *
@@ -55,7 +55,7 @@ add_filter( 'bb_is_readylaunch_enabled_for_page', 'bb_blog_readylaunch_enabled_f
 /**
  * Open the blog archive grid and render the archive header.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.2.0
  *
  * @return void
  */
@@ -72,7 +72,7 @@ add_action( 'bb_rl_layout_before_loop', 'bb_blog_rl_archive_open' );
 /**
  * Close the blog archive grid and render pagination.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.2.0
  *
  * @return void
  */
@@ -99,7 +99,7 @@ add_action( 'bb_rl_layout_after_loop', 'bb_blog_rl_archive_close' );
  * Slug is `blog` (singular) — `blogs` is reserved by the BuddyPress
  * multisite Sites component.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.2.0
  *
  * @return void
  */
@@ -110,7 +110,7 @@ function bb_blog_setup_profile_nav() {
 	 * Off by default — consumers opt in: the Member Blogging add-on when
 	 * member blogging is enabled, Platform Pro when bookmarking is enabled.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.2.0
 	 *
 	 * @param bool $enabled Whether to register the Blogs profile nav.
 	 */
@@ -134,7 +134,7 @@ add_action( 'bp_setup_nav', 'bb_blog_setup_profile_nav', 100 );
 /**
  * Screen handler for the member "Blogs" tab.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.2.0
  *
  * @return void
  */
@@ -144,7 +144,7 @@ function bb_blog_screen_member_posts() {
 	/**
 	 * Filter the template loaded for the member Blogs screen.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.2.0
 	 *
 	 * @param string $template Template name.
 	 */
@@ -154,7 +154,7 @@ function bb_blog_screen_member_posts() {
 /**
  * Output the member "Blogs" tab content.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.2.0
  *
  * @return void
  */
@@ -169,7 +169,7 @@ function bb_blog_member_posts_content() {
  * template pack. Themes may skin the same `.bb-member-blog*` selectors on top.
  * ReadyLaunch ships its own blog stylesheet, so this bails in RL mode.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.2.0
  *
  * @return void
  */

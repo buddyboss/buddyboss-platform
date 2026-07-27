@@ -29,7 +29,7 @@ bp_nouveau_member_hook( 'before', 'settings_template' );
 		 * the REST endpoint validates the `type` param against the unfiltered
 		 * list, so removing a type here only hides its accordion.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.2.0
 		 *
 		 * @param array $types               Plural-label types map.
 		 * @param array $types_with_singular Singular-label types map.

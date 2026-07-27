@@ -8,7 +8,7 @@
  *
  * @package BuddyBoss\Core
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.2.0
  */
 
 // Exit if accessed directly.
@@ -20,7 +20,7 @@ defined( 'ABSPATH' ) || exit;
  * Bounds memory and query time when purging a popular item, a heavy user, or a
  * whole site: rows are deleted in chunks of this size rather than all at once.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.2.0
  */
 if ( ! defined( 'BB_BOOKMARK_DELETE_CHUNK' ) ) {
 	define( 'BB_BOOKMARK_DELETE_CHUNK', 100 );
@@ -29,7 +29,7 @@ if ( ! defined( 'BB_BOOKMARK_DELETE_CHUNK' ) ) {
 /**
  * Get all registered bookmark types, or one of them.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.2.0
  *
  * @param string $type Optional. A single type slug.
  *
@@ -40,7 +40,7 @@ function bb_bookmark_register_types( $type = '' ) {
 	/**
 	 * Filters the registered bookmark types.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.2.0
 	 *
 	 * @param array $types Types, keyed by slug.
 	 */
@@ -60,7 +60,7 @@ function bb_bookmark_register_types( $type = '' ) {
  * arguments returns the same row ID and never creates a duplicate. The table's
  * UNIQUE key enforces that even under concurrency.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.2.0
  *
  * @param array $args {
  *     An array of arguments.
@@ -136,7 +136,7 @@ function bb_bookmark_add( $args ) {
 	/**
 	 * Fires after a bookmark is added.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.2.0
 	 *
 	 * @param string $type        Bookmark type.
 	 * @param int    $item_id     Item ID.
@@ -151,7 +151,7 @@ function bb_bookmark_add( $args ) {
 /**
  * Delete a bookmark by row ID.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.2.0
  *
  * @param int $bookmark_id Bookmark row ID.
  *
@@ -180,7 +180,7 @@ function bb_bookmark_delete( $bookmark_id ) {
 	/**
 	 * Fires after a bookmark is removed.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.2.0
 	 *
 	 * @param string $type    Bookmark type.
 	 * @param int    $item_id Item ID.
@@ -194,7 +194,7 @@ function bb_bookmark_delete( $bookmark_id ) {
 /**
  * Query bookmarks.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.2.0
  *
  * @param array $args         Query args. See BB_Bookmarks::get().
  * @param bool  $bypass_cache Bypass the object cache when true.
@@ -212,7 +212,7 @@ function bb_bookmark_query( $args = array(), $bypass_cache = false ) {
 /**
  * Get a user's bookmarks.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.2.0
  *
  * @param array $args         Query args. `user_id` defaults to the current user.
  * @param bool  $bypass_cache Bypass the object cache when true.
@@ -232,7 +232,7 @@ function bb_bookmark_get_user_items( $args = array(), $bypass_cache = false ) {
 /**
  * Get a user's bookmark row for one item.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.2.0
  *
  * @param string $type    Bookmark type.
  * @param int    $item_id Item ID.
@@ -268,7 +268,7 @@ function bb_bookmark_get_by_item( $type, $item_id, $user_id = 0, $blog_id = 0 ) 
 /**
  * Delete every bookmark for an item, across all users.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.2.0
  *
  * @param string $type    Bookmark type.
  * @param int    $item_id Item ID.
@@ -331,7 +331,7 @@ function bb_bookmark_delete_by_item( $type, $item_id ) {
 /**
  * Whether a user has bookmarked an item.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.2.0
  *
  * @param string $type    Bookmark type.
  * @param int    $item_id Item ID.
@@ -379,7 +379,7 @@ function bb_bookmark_is_bookmarked( $type, $item_id, $user_id = 0 ) {
  * (and therefore the browser) must be able to tell a failed write from a
  * successful one.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.2.0
  *
  * @param string $type    Bookmark type.
  * @param int    $item_id Item ID.
@@ -439,7 +439,7 @@ function bb_bookmark_toggle( $type, $item_id, $user_id = 0 ) {
  * read-modify-write counter drifts under concurrency and has no path back to
  * the truth; a derived count cannot drift.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.2.0
  *
  * @param string $type    Bookmark type.
  * @param int    $item_id Item ID.
@@ -472,7 +472,7 @@ function bb_bookmark_get_count( $type, $item_id ) {
  * Call this before a loop that will ask `bb_bookmark_is_bookmarked()` per item —
  * otherwise a 20-card grid costs 20 queries.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.2.0
  *
  * @param string $type     Bookmark type.
  * @param array  $item_ids Item IDs about to be rendered.
@@ -521,7 +521,7 @@ function bb_bookmark_prime_cache( $type, $item_ids, $user_id = 0 ) {
  * IS the WordPress post type. A component type (e.g. `activity`) never matches
  * here and registers its own cleanup.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.2.0
  *
  * @param int $post_id Post being deleted.
  *
@@ -541,7 +541,7 @@ add_action( 'before_delete_post', 'bb_bookmark_delete_post_items' );
 /**
  * Purge a user's bookmarks when the user is deleted.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.2.0
  *
  * @param int $user_id User being deleted.
  *
@@ -595,7 +595,7 @@ add_action( 'wpmu_delete_user', 'bb_bookmark_delete_user_items' );
 /**
  * Purge a site's bookmarks when the site is deleted (multisite).
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.2.0
  *
  * @param int $blog_id Site being deleted.
  *

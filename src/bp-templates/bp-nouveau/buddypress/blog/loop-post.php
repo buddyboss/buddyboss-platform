@@ -7,7 +7,7 @@
  * `member-posts` cards carry the status tag and the more-options menu,
  * `bookmarks` cards do not.
  *
- * @since   BuddyBoss [BBVERSION]
+ * @since   BuddyBoss 3.2.0
  * @package BuddyBoss\Blogging
  */
 

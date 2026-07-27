@@ -35,7 +35,7 @@ function bp_settings_screen_notification() {
 			 * the `bp_template_content` action should return the generic
 			 * `members/single/plugins` template.
 			 *
-			 * @since BuddyBoss [BBVERSION]
+			 * @since BuddyBoss 3.2.0
 			 *
 			 * @param string|false $custom_template Template path, or false to 404.
 			 * @param string       $action_variable The requested sub-tab slug.

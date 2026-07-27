@@ -2,7 +2,7 @@
 /**
  * Blogs feature runtime functions.
  *
- * @since   BuddyBoss [BBVERSION]
+ * @since   BuddyBoss 3.2.0
  * @package BuddyBoss\Blogging
  */
 
@@ -11,7 +11,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Whether the current request is a blog-related front-end context.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.2.0
  *
  * @return bool
  */
@@ -22,7 +22,7 @@ function bb_blog_is_blog_context() {
 /**
  * Get the enabled social share platforms.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.2.0
  *
  * @return string[] Enabled platform keys.
  */
@@ -50,7 +50,7 @@ function bb_blog_get_enabled_social_links() {
 	/**
 	 * Filter the enabled blog social share platforms.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.2.0
 	 *
 	 * @param string[] $enabled Enabled platform keys.
 	 */
@@ -60,7 +60,7 @@ function bb_blog_get_enabled_social_links() {
 /**
  * Whether related posts are enabled.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.2.0
  *
  * @return bool
  */
@@ -71,7 +71,7 @@ function bb_blog_is_related_posts_enabled() {
 /**
  * Whether the author bio box is enabled.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.2.0
  *
  * @return bool
  */
@@ -82,7 +82,7 @@ function bb_blog_is_author_bio_enabled() {
 /**
  * Build share links for a post, limited to enabled platforms.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.2.0
  *
  * @param int $post_id Post ID.
  *
@@ -125,7 +125,7 @@ function bb_blog_get_share_links( $post_id ) {
 	/**
 	 * Filter the blog share links for a post.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.2.0
 	 *
 	 * @param array $links   Share links keyed by platform.
 	 * @param int   $post_id Post ID.
@@ -136,7 +136,7 @@ function bb_blog_get_share_links( $post_id ) {
 /**
  * Get related posts (same categories, excluding the current post).
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.2.0
  *
  * @param int $post_id Post ID.
  * @param int $limit   Number of posts.
@@ -165,7 +165,7 @@ function bb_blog_get_related_posts( $post_id, $limit = 3 ) {
 	/**
 	 * Filter the related posts query args.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.2.0
 	 *
 	 * @param array $args    WP_Query args.
 	 * @param int   $post_id Post ID.
@@ -176,7 +176,7 @@ function bb_blog_get_related_posts( $post_id, $limit = 3 ) {
 /**
  * Render the post footer sections (share links, related posts, author bio).
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.2.0
  *
  * @return string Rendered HTML (may be empty).
  */
@@ -210,7 +210,7 @@ function bb_blog_render_post_footer_sections() {
 	 * Filter whether to suppress the blog share row because buddyboss-theme
 	 * renders its own share box (Redux option `blog_share_box`).
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.2.0
 	 *
 	 * @param bool $suppress Whether to suppress the share row.
 	 * @param int  $post_id  Post ID.
@@ -233,7 +233,7 @@ function bb_blog_render_post_footer_sections() {
 			 * Fires inside the share row, after the share links, for extensions
 			 * that add controls alongside sharing (e.g. Pro's bookmark button).
 			 *
-			 * @since BuddyBoss [BBVERSION]
+			 * @since BuddyBoss 3.2.0
 			 *
 			 * @param int $post_id Post ID.
 			 */
@@ -258,7 +258,7 @@ function bb_blog_render_post_footer_sections() {
 	 * Filter whether to suppress the blog author bio box because
 	 * buddyboss-theme renders its own author box (Redux option `blog_author_box`).
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.2.0
 	 *
 	 * @param bool $suppress Whether to suppress the author bio box.
 	 * @param int  $post_id  Post ID.
@@ -308,7 +308,7 @@ function bb_blog_render_post_footer_sections() {
 	 * Filter whether to suppress the blog related posts section because
 	 * buddyboss-theme renders its own related posts (Redux option `blog_related_switch`).
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.2.0
 	 *
 	 * @param bool $suppress Whether to suppress the related posts section.
 	 * @param int  $post_id  Post ID.
@@ -349,7 +349,7 @@ function bb_blog_render_post_footer_sections() {
 	/**
 	 * Filter the rendered blog post footer sections HTML.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.2.0
 	 *
 	 * @param string $html    Rendered HTML.
 	 * @param int    $post_id Post ID.
@@ -360,7 +360,7 @@ function bb_blog_render_post_footer_sections() {
 /**
  * Append footer sections to single post content in any theme.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.2.0
  *
  * @param string $content Post content.
  *
@@ -392,7 +392,7 @@ function bb_blog_append_post_footer_sections( $content ) {
  * This collects that data once so both renderers stay in sync and the count
  * queries run identically regardless of template pack.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.2.0
  *
  * @return array {
  *     Toolbar data.
@@ -501,7 +501,7 @@ function bb_blog_get_member_toolbar_data() {
  * the My Blogs and Bookmarked screens; the default profile sub-nav is hidden
  * on these screens via `blog.scss`.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.2.0
  *
  * @return void
  */
@@ -561,7 +561,7 @@ add_action( 'bb_blog_bookmarks_before', 'bb_blog_rl_member_blog_toolbar', 5 );
  * the My Blogs and Bookmarked screens; bails in ReadyLaunch mode so the RL
  * toolbar renders instead.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.2.0
  *
  * @return void
  */
@@ -636,7 +636,7 @@ add_action( 'bb_blog_bookmarks_before', 'bb_blog_member_blog_toolbar', 5 );
  * loops don't set it), so the RL card keeps the add-on's suppression. Priority
  * 20 lands after the add-on's filter at 10.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.2.0
  *
  * @param bool $show    Whether to show the View Post menu item.
  * @param int  $post_id Post ID.

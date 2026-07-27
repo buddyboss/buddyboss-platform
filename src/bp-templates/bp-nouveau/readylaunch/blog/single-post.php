@@ -6,7 +6,7 @@
  * bb-blogging-functions.php. Related posts are suppressed there and rendered
  * here instead, as blog cards after the comments — matching the design order.
  *
- * @since   BuddyBoss [BBVERSION]
+ * @since   BuddyBoss 3.2.0
  * @package BuddyBoss\Blogging
  */
 
@@ -61,7 +61,7 @@ add_filter( 'bb_blog_suppress_related_for_theme', '__return_true' );
 		 * action controls. (Pro's bookmark and subscribe buttons render lower,
 		 * in the info row on `bb_rl_blog_single_meta_actions`.)
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.2.0
 		 *
 		 * @param int $post_id Post ID.
 		 */
@@ -98,7 +98,7 @@ add_filter( 'bb_blog_suppress_related_for_theme', '__return_true' );
 			 * tags, for action controls such as Pro's bookmark and subscribe
 			 * buttons.
 			 *
-			 * @since BuddyBoss [BBVERSION]
+			 * @since BuddyBoss 3.2.0
 			 *
 			 * @param int $post_id Post ID.
 			 */

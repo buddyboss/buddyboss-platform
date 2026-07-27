@@ -11,7 +11,7 @@
  * This template can be overridden by copying it to
  * yourtheme/buddypress/members/single/blog.php.
  *
- * @since   BuddyBoss [BBVERSION]
+ * @since   BuddyBoss 3.2.0
  * @package BuddyBoss\Blogging
  */
 
@@ -37,7 +37,7 @@ $bb_blog_query_args = array(
 /**
  * Filter the member Blogs tab query args.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.2.0
  *
  * @param array $bb_blog_query_args WP_Query args.
  */
@@ -49,7 +49,7 @@ $bb_blog_member_query = new WP_Query( apply_filters( 'bb_blog_member_posts_query
 	 * Fires at the start of the member profile Blogs tab content, before the
 	 * blog post grid — renders the toolbar (sub-tabs, sort, Create button).
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.2.0
 	 */
 	do_action( 'bb_blog_member_posts_before' );
 ?>

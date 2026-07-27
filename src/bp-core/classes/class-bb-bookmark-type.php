@@ -15,7 +15,7 @@
  *
  * @package BuddyBoss\Core
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.2.0
  */
 
 // Exit if accessed directly.
@@ -24,14 +24,14 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Bookmark type base class.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.2.0
  */
 abstract class BB_Bookmark_Type {
 
 	/**
 	 * Instances, keyed by concrete class name.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.2.0
 	 *
 	 * @var array
 	 */
@@ -40,7 +40,7 @@ abstract class BB_Bookmark_Type {
 	/**
 	 * Types registered by this instance.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.2.0
 	 *
 	 * @var array
 	 */
@@ -49,7 +49,7 @@ abstract class BB_Bookmark_Type {
 	/**
 	 * Constructor.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.2.0
 	 */
 	public function __construct() {
 		add_filter( 'bb_bookmark_register_types', array( $this, 'get_registered_types' ), 99, 1 );
@@ -58,7 +58,7 @@ abstract class BB_Bookmark_Type {
 	/**
 	 * Get the instance of the concrete subclass.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.2.0
 	 *
 	 * @return static
 	 */
@@ -76,7 +76,7 @@ abstract class BB_Bookmark_Type {
 	/**
 	 * Register a bookmark type.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.2.0
 	 *
 	 * @param string $type Type slug. See the class docblock for the convention.
 	 * @param array  $args {
@@ -96,7 +96,7 @@ abstract class BB_Bookmark_Type {
 		$type = sanitize_key( $type );
 
 		if ( empty( $type ) ) {
-			_doing_it_wrong( __METHOD__, esc_html__( 'A bookmark type slug is required.', 'buddyboss' ), '[BBVERSION]' );
+			_doing_it_wrong( __METHOD__, esc_html__( 'A bookmark type slug is required.', 'buddyboss' ), '3.2.0' );
 
 			return;
 		}
@@ -106,7 +106,7 @@ abstract class BB_Bookmark_Type {
 		// not error -- it would silently truncate on write and then never match
 		// on read, leaving an invisible, unremovable bookmark.
 		if ( strlen( $type ) > 20 ) {
-			_doing_it_wrong( __METHOD__, esc_html__( 'A bookmark type slug must be 20 characters or fewer.', 'buddyboss' ), '[BBVERSION]' );
+			_doing_it_wrong( __METHOD__, esc_html__( 'A bookmark type slug must be 20 characters or fewer.', 'buddyboss' ), '3.2.0' );
 
 			return;
 		}
@@ -123,7 +123,7 @@ abstract class BB_Bookmark_Type {
 		);
 
 		if ( empty( $r['items_callback'] ) || ! is_callable( $r['items_callback'] ) ) {
-			_doing_it_wrong( __METHOD__, esc_html__( 'A callable items_callback is required to register a bookmark type.', 'buddyboss' ), '[BBVERSION]' );
+			_doing_it_wrong( __METHOD__, esc_html__( 'A callable items_callback is required to register a bookmark type.', 'buddyboss' ), '3.2.0' );
 
 			return;
 		}
@@ -140,7 +140,7 @@ abstract class BB_Bookmark_Type {
 	/**
 	 * Merge this instance's types into the global registry.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.2.0
 	 *
 	 * @param array $types Types collected so far.
 	 *
@@ -161,7 +161,7 @@ abstract class BB_Bookmark_Type {
 	/**
 	 * Register this consumer's type(s). Called once, on first instance().
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.2.0
 	 *
 	 * @return void
 	 */

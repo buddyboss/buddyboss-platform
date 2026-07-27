@@ -11,7 +11,7 @@
  * `bp-templates/bp-nouveau/buddypress/blog/loop-post.php`. This lets a
  * bookmark list keep the menu while hiding the status tag (or vice-versa).
  *
- * @since   BuddyBoss [BBVERSION]
+ * @since   BuddyBoss 3.2.0
  * @package BuddyBoss\Blogging
  */
 
@@ -55,7 +55,7 @@ $bb_rl_blog_card_context = in_array( $bb_rl_blog_card_context, array( 'member-po
  * profile Blogs tab). When off, non-publish statuses show inline after
  * the title instead.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.2.0
  *
  * @param bool   $show    Whether to show the on-image status tag.
  * @param string $context Card context: '', 'member-posts', or 'bookmarks'.
@@ -69,7 +69,7 @@ $bb_rl_blog_show_status_tag = (bool) apply_filters( 'bb_rl_blog_card_show_status
  * existing consumers; bookmark lists can override this to keep the menu while
  * hiding the status tag (or vice-versa) without touching the other.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.2.0
  *
  * @param bool   $show    Whether to show the more-options menu.
  * @param string $context Card context: '', 'member-posts', or 'bookmarks'.
@@ -112,7 +112,7 @@ $bb_rl_blog_show_menu = (bool) apply_filters( 'bb_rl_blog_card_show_menu', $bb_r
 					 * card already carries its own "View Post" button — so the menu
 					 * shows only the management actions.
 					 *
-					 * @since BuddyBoss [BBVERSION]
+					 * @since BuddyBoss 3.2.0
 					 *
 					 * @param bool $show    Whether to show the View Post menu item.
 					 * @param int  $post_id Post ID.
@@ -129,7 +129,7 @@ $bb_rl_blog_show_menu = (bool) apply_filters( 'bb_rl_blog_card_show_menu', $bb_r
 					 * cards) — used to add extra items, e.g. the Member Blogging
 					 * add-on's Edit Post link.
 					 *
-					 * @since BuddyBoss [BBVERSION]
+					 * @since BuddyBoss 3.2.0
 					 *
 					 * @param int $post_id Post ID.
 					 */

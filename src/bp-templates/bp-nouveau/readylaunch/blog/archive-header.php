@@ -5,7 +5,7 @@
  * Title with post count on the left; view switcher (grid/list) and the
  * Category / Activity filters on the right.
  *
- * @since   BuddyBoss [BBVERSION]
+ * @since   BuddyBoss 3.2.0
  * @package BuddyBoss\Blogging
  */
 
@@ -98,7 +98,7 @@ $bb_rl_blog_current_url = is_category() ? get_category_link( $bb_rl_blog_current
 			/**
 			 * Fires inside the ReadyLaunch blog archive header, after the filters.
 			 *
-			 * @since BuddyBoss [BBVERSION]
+			 * @since BuddyBoss 3.2.0
 			 */
 			do_action( 'bb_blog_archive_header_actions' );
 			?>

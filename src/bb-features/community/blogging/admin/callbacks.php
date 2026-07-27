@@ -2,7 +2,7 @@
 /**
  * Blogs feature settings sanitize callbacks.
  *
- * @since   BuddyBoss [BBVERSION]
+ * @since   BuddyBoss 3.2.0
  * @package BuddyBoss\Blogging
  */
 
@@ -11,7 +11,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Sanitize the blog social links toggle list.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.2.0
  *
  * @param array $value Raw toggle list value keyed by platform.
  *
@@ -32,7 +32,7 @@ function bb_blog_sanitize_social_links( $value ) {
 	/**
 	 * Filter the sanitized blog social links.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.2.0
 	 *
 	 * @param array $clean Sanitized platform map.
 	 * @param array $value Raw submitted value.
@@ -47,7 +47,7 @@ function bb_blog_sanitize_social_links( $value ) {
  * through the BuddyBoss Theme or ReadyLaunch blog templates, so the fields
  * are disabled when neither is available.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.2.0
  *
  * @return bool
  */
@@ -66,7 +66,7 @@ function bb_blog_page_settings_is_available() {
 	/**
 	 * Filter whether the Blog Page Settings are available.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.2.0
 	 *
 	 * @param bool $available Whether a supported renderer (BuddyBoss Theme or
 	 *                        ReadyLaunch) is available.
@@ -77,7 +77,7 @@ function bb_blog_page_settings_is_available() {
 /**
  * The blog social share platform keys and their default enabled state.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.2.0
  *
  * @return int[] Platform key => default 0|1.
  */
@@ -97,7 +97,7 @@ function bb_blog_social_link_platforms() {
  * Covers the 1:1 boolean options only. The social links list maps to the
  * theme's single `blog_share_box` switch and is handled separately.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.2.0
  *
  * @return string[] Platform option name => theme Redux option key.
  */
@@ -114,7 +114,7 @@ function bb_blog_theme_sync_map() {
  * Prevents the platform->theme writer from re-triggering the theme->platform
  * listener (and vice versa) within the same request.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.2.0
  *
  * @param bool|null $set Optional. New guard state.
  *
@@ -137,7 +137,7 @@ function bb_blog_theme_sync_in_progress( $set = null ) {
  * theme's single `blog_share_box` switch (on when at least one platform is
  * enabled, off when none are).
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.2.0
  *
  * @param string $option Option name.
  * @param mixed  $value  New option value.
@@ -193,7 +193,7 @@ function bb_blog_sync_platform_option_to_theme( $option, $value ) {
 /**
  * `updated_option` bridge into the platform->theme sync.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.2.0
  *
  * @param string $option    Option name.
  * @param mixed  $old_value Previous value.
@@ -210,7 +210,7 @@ function bb_blog_sync_platform_option_updated( $option, $old_value, $value ) {
  *
  * First-time writes fire `added_option` instead of `updated_option`.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.2.0
  *
  * @param string $option Option name.
  * @param mixed  $value  Option value.
@@ -229,7 +229,7 @@ function bb_blog_sync_platform_option_added( $option, $value ) {
  * Turning the theme share box on when every network is off restores the
  * Facebook + LinkedIn defaults; turning it off disables every network.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.2.0
  *
  * @param mixed $old_value Previous buddyboss_theme_options value.
  * @param mixed $value     New buddyboss_theme_options value.

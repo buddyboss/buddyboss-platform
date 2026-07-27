@@ -24,7 +24,7 @@ switch ( bp_current_action() ) :
 			 * sub-action without a registered handler, so this only fires for
 			 * recognised sub-tabs. Handlers echo their content.
 			 *
-			 * @since BuddyBoss [BBVERSION]
+			 * @since BuddyBoss 3.2.0
 			 *
 			 * @param string $action_variable The sub-tab slug.
 			 */

@@ -10017,7 +10017,7 @@ function bb_pro_post_feature_image_version() {
  * locked; the blogging settings screen compares against this version to show an
  * "update Pro" notice.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.2.0
  *
  * @return string
  */

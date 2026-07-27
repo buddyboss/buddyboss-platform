@@ -9,7 +9,7 @@
  * NOTE: The feature id is `blogging`, NOT `blogs` — the `blogs` namespace is
  * owned by the BuddyPress multisite Sites component (bp-blogs).
  *
- * @since   BuddyBoss [BBVERSION]
+ * @since   BuddyBoss 3.2.0
  * @package BuddyBoss\Blogging
  */
 
@@ -47,7 +47,7 @@ bb_register_feature(
  * a hardcoded default of 1, so mixed defaults must exist as real options.
  * Only missing options are written; existing values are never overwritten.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.2.0
  *
  * @param string $feature_id The activated feature ID.
  *

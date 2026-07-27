@@ -8,7 +8,7 @@
  *
  * @package BuddyBoss\Core
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.2.0
  */
 
 // Exit if accessed directly.
@@ -17,14 +17,14 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Bookmarks store.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.2.0
  */
 class BB_Bookmarks {
 
 	/**
 	 * Object cache group.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.2.0
 	 *
 	 * @var string
 	 */
@@ -37,7 +37,7 @@ class BB_Bookmarks {
 	 * multisite, and the table carries a `blog_id` column, matching the App
 	 * plugin's own bookmarks table.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.2.0
 	 *
 	 * @return string
 	 */
@@ -48,7 +48,7 @@ class BB_Bookmarks {
 	/**
 	 * Supported table columns.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.2.0
 	 *
 	 * @return string[]
 	 */
@@ -59,7 +59,7 @@ class BB_Bookmarks {
 	/**
 	 * Validate a column name against the schema.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.2.0
 	 *
 	 * @param string $column Column name.
 	 *
@@ -81,7 +81,7 @@ class BB_Bookmarks {
 	 * means a duplicate insert fails rather than creating a second row —
 	 * callers should look the row up first (see `bb_bookmark_add()`).
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.2.0
 	 *
 	 * @param object $bookmark_obj Bookmark object.
 	 *
@@ -99,7 +99,7 @@ class BB_Bookmarks {
 		/**
 		 * Fires before a bookmark is saved.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.2.0
 		 *
 		 * @param object $bookmark_obj Bookmark object, passed by reference.
 		 */
@@ -137,7 +137,7 @@ class BB_Bookmarks {
 		/**
 		 * Fires after a bookmark is saved.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.2.0
 		 *
 		 * @param object $bookmark_obj Bookmark object, passed by reference.
 		 */
@@ -149,7 +149,7 @@ class BB_Bookmarks {
 	/**
 	 * Delete a bookmark row.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.2.0
 	 *
 	 * @param object $bookmark Bookmark object with at least an `id`.
 	 *
@@ -176,7 +176,7 @@ class BB_Bookmarks {
 		/**
 		 * Fires after a bookmark row is deleted.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.2.0
 		 *
 		 * @param object $bookmark Bookmark object.
 		 */
@@ -188,7 +188,7 @@ class BB_Bookmarks {
 	/**
 	 * Update the status of every bookmark for an item.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.2.0
 	 *
 	 * @param string $type    Bookmark type.
 	 * @param int    $item_id Item ID.
@@ -242,7 +242,7 @@ class BB_Bookmarks {
 	/**
 	 * Query bookmarks.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.2.0
 	 *
 	 * @param array $args {
 	 *     Optional. Query arguments.
@@ -418,7 +418,7 @@ class BB_Bookmarks {
 	/**
 	 * Fetch a single bookmark, hydrated by its type's items callback.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.2.0
 	 *
 	 * @param int $id Bookmark row ID.
 	 *
@@ -485,7 +485,7 @@ class BB_Bookmarks {
 	 * as calling delete() in a loop, at a fraction of the query cost. Used by
 	 * the bulk cleanup routines (item/user/site deletion).
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.2.0
 	 *
 	 * @param object[] $bookmarks Bookmark rows, each with at least an `id`.
 	 *
@@ -537,7 +537,7 @@ class BB_Bookmarks {
 			/**
 			 * Fires after a bookmark row is deleted.
 			 *
-			 * @since BuddyBoss [BBVERSION]
+			 * @since BuddyBoss 3.2.0
 			 *
 			 * @param object $bookmark Bookmark object.
 			 */
@@ -555,7 +555,7 @@ class BB_Bookmarks {
 	 * per-row get_single_bookmark() hydration that follows hits warm caches
 	 * instead of running one query per row.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.2.0
 	 *
 	 * @param int[] $ids Bookmark row IDs about to be hydrated.
 	 *
@@ -637,7 +637,7 @@ class BB_Bookmarks {
 		 * component types (e.g. activity, groups) can hook this to prime their
 		 * own stores for the page of items about to be hydrated.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.2.0
 		 *
 		 * @param array $items_by_type Item IDs grouped by bookmark type slug.
 		 * @param array $user_ids      User IDs referenced by the page of rows.
@@ -648,7 +648,7 @@ class BB_Bookmarks {
 	/**
 	 * Invalidate cached bookmark queries.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.2.0
 	 *
 	 * @param int $bookmark_id Optional. A single row to drop from cache.
 	 *

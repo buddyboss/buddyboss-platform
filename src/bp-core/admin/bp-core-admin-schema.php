@@ -1421,7 +1421,7 @@ function bb_core_install_subscription() {
  * concurrent writes cannot create duplicate rows and a merge from the App store
  * can safely be re-run.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.2.0
  *
  * @uses get_charset_collate()
  * @uses bp_core_get_table_prefix()

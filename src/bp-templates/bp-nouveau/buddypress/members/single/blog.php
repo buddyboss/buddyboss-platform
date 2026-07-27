@@ -11,7 +11,7 @@
  * This template can be overridden by copying it to
  * yourtheme/buddypress/members/single/blog.php.
  *
- * @since   BuddyBoss [BBVERSION]
+ * @since   BuddyBoss 3.2.0
  * @version 1.0.0
  */
 

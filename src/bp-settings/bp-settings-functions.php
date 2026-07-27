@@ -172,7 +172,7 @@ function bp_settings_get_registered_notification_keys() {
  * function so an older Platform (without the seam) does not surface a tab that
  * would 404.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.2.0
  *
  * @return bool
  */

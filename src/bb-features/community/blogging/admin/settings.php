@@ -5,7 +5,7 @@
  * Registers the "Blog Settings" side panel with the Page Settings
  * section for the `blogging` feature.
  *
- * @since   BuddyBoss [BBVERSION]
+ * @since   BuddyBoss 3.2.0
  * @package BuddyBoss\Blogging
  */
 
@@ -27,7 +27,7 @@ require_once __DIR__ . '/callbacks.php';
  * Returns false when Pro is not active: the fields then render as the normal
  * upsell, which is the correct state (there is nothing to "update").
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.2.0
  *
  * @return bool True when Pro is active but older than the required version.
  */
@@ -45,7 +45,7 @@ function bb_blog_is_pro_outdated_for_settings() {
  * blogging sub-pages. Each caller passes a unique field name — the feature
  * registry enforces globally-unique field names — and its own display order.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.2.0
  *
  * @param string $name  Unique field name.
  * @param int    $order Display order within its section.
@@ -71,7 +71,7 @@ function bb_blog_get_version_compat_notice_field( $name, $order ) {
 /**
  * Register Blogs feature side panels, sections and fields.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.2.0
  *
  * @return void
  */
@@ -363,7 +363,7 @@ function bb_blogging_register_admin_settings() {
 	 * Platform Pro and the Member Blogging add-on hook here to attach
 	 * additional side panels, sections and fields to the Blogs feature.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.2.0
 	 */
 	do_action( 'bb_blogging_after_register_settings_fields' );
 }

@@ -21,7 +21,7 @@ if ( bp_action_variables() && 'subscriptions' === bp_action_variable( 0 ) ) {
 	 * sub-action without a registered handler, so this only fires for
 	 * recognised sub-tabs. Handlers echo their content.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.2.0
 	 *
 	 * @param string $action_variable The sub-tab slug.
 	 */
