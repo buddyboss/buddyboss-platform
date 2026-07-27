@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 3.1.2\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2026-07-27 03:20:41+00:00\n"
+"POT-Creation-Date: 2026-07-27 04:22:26+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -902,41 +902,37 @@ msgstr ""
 msgid "The Blog Page Settings are only available when the BuddyBoss Theme or ReadyLaunch is selected."
 msgstr ""
 
-#: bb-features/community/blogging/admin/settings.php:130
-msgid "Social Links"
-msgstr ""
-
-#: bb-features/community/blogging/admin/settings.php:134
-#: bb-features/community/blogging/bb-blogging-functions.php:92
+#: bb-features/community/blogging/admin/settings.php:142
+#: bb-features/community/blogging/bb-blogging-functions.php:97
 #: bp-core/admin/settings/activity/settings-sharing.php:426
 #: bp-core/admin/settings/registration/settings-registration.php:322
 #: bp-xprofile/bp-xprofile-functions.php:1612
 msgid "Facebook"
 msgstr ""
 
-#: bb-features/community/blogging/admin/settings.php:138
-#: bb-features/community/blogging/bb-blogging-functions.php:97
+#: bb-features/community/blogging/admin/settings.php:143
+#: bb-features/community/blogging/bb-blogging-functions.php:102
 #: bp-core/admin/settings/activity/settings-sharing.php:436
 #: bp-core/admin/settings/registration/settings-registration.php:332
 msgid "Linkedin"
 msgstr ""
 
-#: bb-features/community/blogging/admin/settings.php:142
-#: bb-features/community/blogging/bb-blogging-functions.php:102
+#: bb-features/community/blogging/admin/settings.php:144
+#: bb-features/community/blogging/bb-blogging-functions.php:107
 #: bp-core/admin/settings/activity/settings-sharing.php:431
 #: bp-core/admin/settings/registration/settings-registration.php:327
 #: bp-xprofile/bp-xprofile-functions.php:1732
 msgid "X"
 msgstr ""
 
-#: bb-features/community/blogging/admin/settings.php:146
-#: bb-features/community/blogging/bb-blogging-functions.php:107
+#: bb-features/community/blogging/admin/settings.php:145
+#: bb-features/community/blogging/bb-blogging-functions.php:112
 #: bp-core/admin/settings/activity/settings-sharing.php:441
 msgid "Whatsapp"
 msgstr ""
 
-#: bb-features/community/blogging/admin/settings.php:150
-#: bb-features/community/blogging/bb-blogging-functions.php:112
+#: bb-features/community/blogging/admin/settings.php:146
+#: bb-features/community/blogging/bb-blogging-functions.php:117
 #: bp-core/bp-core-functions.php:3349
 #: bp-core/bp-core-functions.php:3445
 #: bp-core/bp-core-functions.php:7456
@@ -962,66 +958,70 @@ msgstr ""
 msgid "Email"
 msgstr ""
 
-#: bb-features/community/blogging/admin/settings.php:175
-#: bb-features/community/blogging/bb-blogging-functions.php:319
+#: bb-features/community/blogging/admin/settings.php:163
+msgid "Social Links"
+msgstr ""
+
+#: bb-features/community/blogging/admin/settings.php:181
+#: bb-features/community/blogging/bb-blogging-functions.php:324
 msgid "Related Posts"
 msgstr ""
 
-#: bb-features/community/blogging/admin/settings.php:177
+#: bb-features/community/blogging/admin/settings.php:183
 msgid "Enable related posts at the bottom of blog posts"
 msgstr ""
 
-#: bb-features/community/blogging/admin/settings.php:191
+#: bb-features/community/blogging/admin/settings.php:197
 msgid "Author Bio"
 msgstr ""
 
-#: bb-features/community/blogging/admin/settings.php:193
+#: bb-features/community/blogging/admin/settings.php:199
 msgid "Enable the Author Bio box at the bottom of blog posts"
 msgstr ""
 
-#: bb-features/community/blogging/admin/settings.php:211
-#: bb-features/community/blogging/admin/settings.php:225
+#: bb-features/community/blogging/admin/settings.php:217
+#: bb-features/community/blogging/admin/settings.php:231
 msgid "Member Blogs"
 msgstr ""
 
-#: bb-features/community/blogging/admin/settings.php:242
+#: bb-features/community/blogging/admin/settings.php:248
 msgid "The Member Blogging add-on is installed but not activated. Activate it to let your community members create blog posts from the frontend."
 msgstr ""
 
-#: bb-features/community/blogging/admin/settings.php:243
+#: bb-features/community/blogging/admin/settings.php:249
 msgid "Activate Plugin"
 msgstr ""
 
-#: bb-features/community/blogging/admin/settings.php:254
+#: bb-features/community/blogging/admin/settings.php:260
 msgid "Allow your community members to contribute by creating blogs for your site via the frontend blog creator form. Available with the Member Blogging add-on on the Plus plan."
 msgstr ""
 
-#: bb-features/community/blogging/admin/settings.php:255
+#: bb-features/community/blogging/admin/settings.php:261
 msgid "Upgrade to Plus"
 msgstr ""
 
-#: bb-features/community/blogging/admin/settings.php:269
+#: bb-features/community/blogging/admin/settings.php:275
 msgid "Member Blogging"
 msgstr ""
 
-#: bb-features/community/blogging/bb-blogging-functions.php:220
+#: bb-features/community/blogging/bb-blogging-functions.php:225
 msgid "Share"
 msgstr ""
 
 #. translators: 1: sub-tab label, 2: item count.
 #. translators: 1: user display name, 2: username (user_nicename).
-#: bb-features/community/blogging/bb-blogging-functions.php:469
+#: bb-features/community/blogging/bb-blogging-functions.php:474
 #: bp-core/admin/classes/class-bb-admin-groups-ajax.php:1881
 msgid "%1$s (%2$s)"
 msgstr ""
 
-#: bb-features/community/blogging/bb-blogging-functions.php:533
-#: bb-features/community/blogging/bb-blogging-functions.php:598
+#: bb-features/community/blogging/bb-blogging-functions.php:538
+#: bb-features/community/blogging/bb-blogging-functions.php:603
 msgid "Sort posts"
 msgstr ""
 
-#: bb-features/community/blogging/bb-blogging-functions.php:534
-#: bb-features/community/blogging/bb-blogging-functions.php:576
+#: bb-features/community/blogging/bb-blogging-functions.php:539
+#: bb-features/community/blogging/bb-blogging-functions.php:581
 #: bp-core/deprecated/buddypress/1.6.php:159
 #: bp-core/deprecated/buddypress/1.6.php:187
 #: bp-friends/classes/class-bp-core-friends-widget.php:149
@@ -1037,8 +1037,8 @@ msgstr ""
 msgid "Newest"
 msgstr ""
 
-#: bb-features/community/blogging/bb-blogging-functions.php:535
-#: bb-features/community/blogging/bb-blogging-functions.php:577
+#: bb-features/community/blogging/bb-blogging-functions.php:540
+#: bb-features/community/blogging/bb-blogging-functions.php:582
 #: bp-groups/bp-groups-template.php:5613
 #: bp-templates/bp-nouveau/includes/members/functions.php:121
 #: bp-templates/bp-nouveau/readylaunch/blog/archive-header.php:92
@@ -2600,8 +2600,8 @@ msgstr ""
 #: bp-core/classes/class-bp-email-tokens.php:2303
 #: bp-core/classes/class-bp-email-tokens.php:2617
 #: bp-templates/bp-nouveau/buddypress/blog/loop-post.php:70
-#: bp-templates/bp-nouveau/readylaunch/blog/loop-post.php:91
-#: bp-templates/bp-nouveau/readylaunch/blog/loop-post.php:141
+#: bp-templates/bp-nouveau/readylaunch/blog/loop-post.php:122
+#: bp-templates/bp-nouveau/readylaunch/blog/loop-post.php:172
 msgid "View Post"
 msgstr ""
 
@@ -7636,7 +7636,7 @@ msgstr ""
 #: bp-core/admin/settings/emails/meta-fields.php:200
 #: bp-core/admin/settings/forums/meta-fields-replies.php:242
 #: bp-templates/bp-nouveau/buddypress/blog/loop-post.php:31
-#: bp-templates/bp-nouveau/readylaunch/blog/loop-post.php:28
+#: bp-templates/bp-nouveau/readylaunch/blog/loop-post.php:34
 msgid "Published"
 msgstr ""
 
@@ -8029,7 +8029,7 @@ msgstr[1] ""
 #: bp-core/admin/classes/class-bb-admin-topics-ajax.php:284
 #: bp-core/admin/classes/class-bb-email-templates-admin-ajax.php:182
 #: bp-templates/bp-nouveau/buddypress/blog/loop-post.php:34
-#: bp-templates/bp-nouveau/readylaunch/blog/loop-post.php:31
+#: bp-templates/bp-nouveau/readylaunch/blog/loop-post.php:37
 msgid "Scheduled"
 msgstr ""
 
@@ -8047,7 +8047,7 @@ msgstr ""
 #: bp-core/admin/settings/emails/meta-fields.php:192
 #: bp-core/admin/settings/forums/meta-fields-replies.php:250
 #: bp-templates/bp-nouveau/buddypress/blog/loop-post.php:33
-#: bp-templates/bp-nouveau/readylaunch/blog/loop-post.php:30
+#: bp-templates/bp-nouveau/readylaunch/blog/loop-post.php:36
 msgid "Draft"
 msgstr ""
 
@@ -12259,32 +12259,32 @@ msgstr ""
 msgid "Clear Search"
 msgstr ""
 
-#: bp-core/bb-core-bookmarks.php:81
+#: bp-core/bb-core-bookmarks.php:93
 msgid "A bookmark type is required."
 msgstr ""
 
-#: bp-core/bb-core-bookmarks.php:85
+#: bp-core/bb-core-bookmarks.php:97
 msgid "An item ID is required to create a bookmark."
 msgstr ""
 
-#: bp-core/bb-core-bookmarks.php:89
-#: bp-core/bb-core-bookmarks.php:361
+#: bp-core/bb-core-bookmarks.php:101
+#: bp-core/bb-core-bookmarks.php:396
 msgid "You must be logged in to bookmark."
 msgstr ""
 
-#: bp-core/bb-core-bookmarks.php:121
+#: bp-core/bb-core-bookmarks.php:133
 msgid "The bookmark could not be saved."
 msgstr ""
 
-#: bp-core/bb-core-bookmarks.php:365
+#: bp-core/bb-core-bookmarks.php:400
 msgid "This item cannot be bookmarked."
 msgstr ""
 
-#: bp-core/bb-core-bookmarks.php:369
+#: bp-core/bb-core-bookmarks.php:404
 msgid "An item ID is required to bookmark."
 msgstr ""
 
-#: bp-core/bb-core-bookmarks.php:379
+#: bp-core/bb-core-bookmarks.php:414
 msgid "The bookmark could not be removed."
 msgstr ""
 
@@ -14664,15 +14664,15 @@ msgstr ""
 msgid "The required `editor_script` could not be registered."
 msgstr ""
 
-#: bp-core/classes/class-bb-bookmark-type.php:93
+#: bp-core/classes/class-bb-bookmark-type.php:99
 msgid "A bookmark type slug is required."
 msgstr ""
 
-#: bp-core/classes/class-bb-bookmark-type.php:103
+#: bp-core/classes/class-bb-bookmark-type.php:109
 msgid "A bookmark type slug must be 20 characters or fewer."
 msgstr ""
 
-#: bp-core/classes/class-bb-bookmark-type.php:120
+#: bp-core/classes/class-bb-bookmark-type.php:126
 msgid "A callable items_callback is required to register a bookmark type."
 msgstr ""
 
@@ -21985,7 +21985,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/groups/single/members-loop.php:195
 #: bp-templates/bp-nouveau/buddypress/members/members-loop.php:225
 #: bp-templates/bp-nouveau/buddypress/members/members-loop.php:236
-#: bp-templates/bp-nouveau/readylaunch/blog/loop-post.php:72
+#: bp-templates/bp-nouveau/readylaunch/blog/loop-post.php:103
 #: bp-templates/bp-nouveau/readylaunch/common/js-templates/bb-topic-lists.php:52
 #: bp-templates/bp-nouveau/readylaunch/common/js-templates/messages/parts/bp-messages-thread.php:73
 #: bp-templates/bp-nouveau/readylaunch/groups/single/members-loop.php:256
@@ -29976,7 +29976,7 @@ msgstr ""
 #: bp-moderation/bp-moderation-functions.php:1650
 #: bp-moderation/bp-moderation-functions.php:1693
 #: bp-templates/bp-nouveau/buddypress/blog/loop-post.php:38
-#: bp-templates/bp-nouveau/readylaunch/blog/loop-post.php:20
+#: bp-templates/bp-nouveau/readylaunch/blog/loop-post.php:26
 #: bp-templates/bp-nouveau/readylaunch/blog/single-post.php:22
 msgid "Unknown Member"
 msgstr ""
@@ -31526,7 +31526,7 @@ msgid "Select your file"
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/blog/loop-post.php:32
-#: bp-templates/bp-nouveau/readylaunch/blog/loop-post.php:29
+#: bp-templates/bp-nouveau/readylaunch/blog/loop-post.php:35
 msgid "In Review"
 msgstr ""
 
@@ -33448,7 +33448,7 @@ msgstr ""
 #. translators: %s is the author name.
 #: bp-templates/bp-nouveau/buddypress/search/loop/post-ajax.php:43
 #: bp-templates/bp-nouveau/buddypress/search/loop/post.php:72
-#: bp-templates/bp-nouveau/readylaunch/blog/loop-post.php:133
+#: bp-templates/bp-nouveau/readylaunch/blog/loop-post.php:164
 #: bp-templates/bp-nouveau/readylaunch/memberpress/courses/archive-mpcs-courses.php:90
 #: bp-templates/bp-nouveau/readylaunch/search/loop/post-ajax.php:50
 #: bp-templates/bp-nouveau/readylaunch/search/loop/post.php:76
@@ -35702,7 +35702,7 @@ msgstr ""
 msgid "List view"
 msgstr ""
 
-#: bp-templates/bp-nouveau/readylaunch/blog/loop-post.php:56
+#: bp-templates/bp-nouveau/readylaunch/blog/loop-post.php:87
 msgid "Blog post placeholder image"
 msgstr ""
 
