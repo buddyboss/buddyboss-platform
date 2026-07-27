@@ -1446,7 +1446,9 @@ function bb_core_install_bookmarks() {
 		KEY type (type),
 		KEY item_id (item_id),
 		KEY status (status),
-		KEY date_recorded (date_recorded)
+		KEY date_recorded (date_recorded),
+		KEY user_status_date (user_id, status, date_recorded),
+		KEY type_item_status (type, item_id, status)
 	) {$charset_collate};";
 
 	dbDelta( $sql );
