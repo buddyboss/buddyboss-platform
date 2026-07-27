@@ -1918,26 +1918,26 @@ function bb_notification_is_read_only( $notification ) {
 		$triggering_user_id = ! empty( $notification->secondary_item_id ) ? (int) $notification->secondary_item_id : 0;
 	}
 
-	$retval = ! empty( $notification ) &&
-	(
-		(
-			! empty( $triggering_user_id ) &&
-			bp_is_user_inactive( $triggering_user_id )
-		) ||
-		(
-			bp_is_active( 'moderation' ) &&
+	$retval = ! empty( $notification )
+		&& (
 			(
-				(
-					! empty( $triggering_user_id ) &&
-					bb_moderation_moderated_user_ids( $triggering_user_id )
-				) ||
-				(
-					! empty( $notification->user_id ) &&
-					bb_moderation_moderated_user_ids( (int) $notification->user_id )
+				! empty( $triggering_user_id )
+				&& bp_is_user_inactive( $triggering_user_id )
+			) ||
+			(
+				bp_is_active( 'moderation' )
+				&& (
+					(
+						! empty( $triggering_user_id )
+						&& bb_moderation_moderated_user_ids( $triggering_user_id )
+					) ||
+					(
+						! empty( $notification->user_id )
+						&& bb_moderation_moderated_user_ids( (int) $notification->user_id )
+					)
 				)
 			)
-		)
-	);
+		);
 
 	$retval = (bool) apply_filters( 'bb_notification_is_read_only', $retval, $notification );
 
