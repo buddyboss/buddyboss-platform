@@ -14,6 +14,61 @@ defined( 'ABSPATH' ) || exit;
 require_once __DIR__ . '/callbacks.php';
 
 /**
+ * Whether the active BuddyBoss Platform Pro is too old to power the blog
+ * Bookmarking / Subscriptions features registered on this screen.
+ *
+ * Both toggles are provided by Pro's blog module, which ships in the version
+ * returned by bb_pro_blog_version(). When an older Pro is active it never
+ * unlocks the fields, so they would sit as silent "UPGRADE PRO" placeholders —
+ * indistinguishable from Pro not being installed at all. This gate lets the
+ * screen surface a version notice (and disable the toggles) so the admin knows
+ * Pro simply needs updating.
+ *
+ * Returns false when Pro is not active: the fields then render as the normal
+ * upsell, which is the correct state (there is nothing to "update").
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return bool True when Pro is active but older than the required version.
+ */
+function bb_blog_is_pro_outdated_for_settings() {
+	return function_exists( 'bb_platform_pro' )
+		&& function_exists( 'bb_pro_blog_version' )
+		&& version_compare( bb_platform_pro()->version, bb_pro_blog_version(), '<' );
+}
+
+/**
+ * Build the "update Pro" version-compat notice field for the Blogs settings.
+ *
+ * Shared between the Post Settings panel (where the Bookmarking / Subscriptions
+ * toggles live) and the Member Blogs panel so the same message appears on both
+ * blogging sub-pages. Each caller passes a unique field name — the feature
+ * registry enforces globally-unique field names — and its own display order.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $name  Unique field name.
+ * @param int    $order Display order within its section.
+ *
+ * @return array Field registration arguments.
+ */
+function bb_blog_get_version_compat_notice_field( $name, $order ) {
+	return array(
+		'name'              => $name,
+		'label'             => '',
+		'type'              => 'notice',
+		'notice_type'       => 'warning',
+		'description'       => sprintf(
+			/* translators: %s: required BuddyBoss Platform Pro version, e.g. 3.1.0. */
+			__( 'Blog Bookmarking and Subscriptions require BuddyBoss Platform Pro %s or later. Please update BuddyBoss Platform Pro to use these features.', 'buddyboss' ),
+			function_exists( 'bb_pro_blog_version' ) ? bb_pro_blog_version() : '3.1.0'
+		),
+		'sanitize_callback' => '__return_empty_string',
+		'order'             => $order,
+	);
+}
+
+/**
  * Register Blogs feature side panels, sections and fields.
  *
  * @since BuddyBoss [BBVERSION]
@@ -55,6 +110,21 @@ function bb_blogging_register_admin_settings() {
 		)
 	);
 
+	// When Pro is active but too old to power Bookmarking / Subscriptions, show a
+	// version notice above the two toggles and disable them. The blog module that
+	// unlocks these fields ships in bb_pro_blog_version(); an older Pro leaves
+	// them locked, so the notice explains that Pro needs updating.
+	$bb_blog_pro_outdated = bb_blog_is_pro_outdated_for_settings();
+
+	if ( $bb_blog_pro_outdated ) {
+		bb_register_feature_field(
+			'blogging',
+			'blog_settings',
+			'post_settings',
+			bb_blog_get_version_compat_notice_field( 'bb_blog_version_compat_notice', 5 )
+		);
+	}
+
 	// Field: Bookmarking (Pro).
 	bb_register_feature_field(
 		'blogging',
@@ -67,6 +137,7 @@ function bb_blogging_register_admin_settings() {
 			'description' => __( 'Allow users to bookmark blog posts', 'buddyboss' ),
 			'default'     => 0,
 			'pro_only'    => true,
+			'disabled'    => $bb_blog_pro_outdated,
 			'order'       => 10,
 		)
 	);
@@ -83,6 +154,7 @@ function bb_blogging_register_admin_settings() {
 			'description' => __( 'Allow users to subscribe to blog post categories', 'buddyboss' ),
 			'default'     => 0,
 			'pro_only'    => true,
+			'disabled'    => $bb_blog_pro_outdated,
 			'order'       => 20,
 		)
 	);
@@ -296,3 +368,48 @@ function bb_blogging_register_admin_settings() {
 	do_action( 'bb_blogging_after_register_settings_fields' );
 }
 add_action( 'bb_register_features', 'bb_blogging_register_admin_settings', 20 );
+
+/**
+ * Mirror the "update Pro" version-compat notice onto the Member Blogs panel.
+ *
+ * The Bookmarking / Subscriptions version notice is shown on both blogging
+ * sub-pages. The Member Blogs panel is owned by whichever plugin is active — the
+ * Member Blogging add-on registers it (on `bb_after_register_features` priority
+ * 15) or Platform registers the upsell placeholder during `bb_register_features`
+ * — so this runs late (priority 100) and adds the notice to whatever panel and
+ * first section already exist, rather than assuming ownership or a section id.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_blogging_register_member_blogs_version_notice() {
+	if ( ! bb_blog_is_pro_outdated_for_settings() || ! function_exists( 'bb_feature_registry' ) ) {
+		return;
+	}
+
+	$registry = bb_feature_registry();
+
+	// Only inject when the Member Blogs panel actually exists.
+	$panels = $registry->bb_get_side_panels( 'blogging' );
+	if ( ! isset( $panels['member_blogs'] ) ) {
+		return;
+	}
+
+	// Attach the notice to the top of the panel's first section so it does not
+	// depend on the section ids the Member Blogging add-on happens to use.
+	$sections = $registry->bb_get_sections( 'blogging', 'member_blogs' );
+	if ( empty( $sections ) ) {
+		return;
+	}
+
+	$first_section_id = (string) array_key_first( $sections );
+
+	bb_register_feature_field(
+		'blogging',
+		'member_blogs',
+		$first_section_id,
+		bb_blog_get_version_compat_notice_field( 'bb_blog_version_compat_notice_member_blogs', 1 )
+	);
+}
+add_action( 'bb_after_register_features', 'bb_blogging_register_member_blogs_version_notice', 100 );
