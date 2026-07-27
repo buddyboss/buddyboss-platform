@@ -15,6 +15,18 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
+ * How many bookmark rows the bulk delete routines process per pass.
+ *
+ * Bounds memory and query time when purging a popular item, a heavy user, or a
+ * whole site: rows are deleted in chunks of this size rather than all at once.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+if ( ! defined( 'BB_BOOKMARK_DELETE_CHUNK' ) ) {
+	define( 'BB_BOOKMARK_DELETE_CHUNK', 100 );
+}
+
+/**
  * Get all registered bookmark types, or one of them.
  *
  * @since BuddyBoss [BBVERSION]
@@ -264,31 +276,54 @@ function bb_bookmark_get_by_item( $type, $item_id, $user_id = 0, $blog_id = 0 ) 
  * @return int Number of rows deleted.
  */
 function bb_bookmark_delete_by_item( $type, $item_id ) {
+	global $wpdb;
+
 	$item_id = (int) $item_id;
 
 	if ( empty( $type ) || empty( $item_id ) ) {
 		return 0;
 	}
 
-	$result = BB_Bookmarks::get(
-		array(
-			'type'    => $type,
-			'item_id' => $item_id,
-			'user_id' => 0,
-			'status'  => null,
-			'fields'  => 'id',
-			'count'   => false,
-			'cache'   => false,
-		)
-	);
-
+	$table   = BB_Bookmarks::get_bookmark_tbl();
 	$deleted = 0;
 
-	foreach ( (array) $result['bookmarks'] as $bookmark_id ) {
-		if ( bb_bookmark_delete( $bookmark_id ) ) {
-			++$deleted;
+	// Process in bounded chunks: a popular item can have thousands of rows, and
+	// loading them all (or issuing one SELECT+DELETE+cache purge per row) risks
+	// a timeout. Each pass grabs up to BB_BOOKMARK_DELETE_CHUNK rows, fires the
+	// per-row `bb_bookmark_removed` hook (that bb_bookmark_delete() fires, and
+	// which consumers rely on), then deletes the whole chunk in one query.
+	do {
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- table from a trusted helper; values are prepared.
+		$bookmarks = $wpdb->get_results(
+			$wpdb->prepare(
+				"SELECT id, type, item_id, user_id FROM {$table} WHERE type = %s AND item_id = %d LIMIT %d",
+				$type,
+				$item_id,
+				BB_BOOKMARK_DELETE_CHUNK
+			)
+		);
+
+		if ( empty( $bookmarks ) ) {
+			break;
 		}
-	}
+
+		$fetched = count( $bookmarks );
+
+		$batch_deleted = BB_Bookmarks::delete_many( $bookmarks );
+
+		if ( $batch_deleted < 1 ) {
+			// The batch delete failed -- stop rather than loop forever on rows
+			// that will not go away.
+			break;
+		}
+
+		$deleted += $batch_deleted;
+
+		foreach ( $bookmarks as $bookmark ) {
+			/** This action is documented in bb_bookmark_delete(). */
+			do_action( 'bb_bookmark_removed', $bookmark->type, (int) $bookmark->item_id, (int) $bookmark->user_id );
+		}
+	} while ( BB_BOOKMARK_DELETE_CHUNK === $fetched );
 
 	return $deleted;
 }
@@ -523,17 +558,36 @@ function bb_bookmark_delete_user_items( $user_id ) {
 
 	$table = BB_Bookmarks::get_bookmark_tbl();
 
-	// Look up the affected row IDs and delete them one at a time via
-	// bb_bookmark_delete() so `bb_bookmark_removed` fires per row — a bulk
-	// `$wpdb->delete()` here would silently skip that action (see PROD-9206).
-	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- table name from a trusted helper.
-	$bookmark_ids = $wpdb->get_col( $wpdb->prepare( "SELECT id FROM {$table} WHERE user_id = %d", $user_id ) );
+	// Process in bounded chunks: a heavy user can have thousands of bookmarks.
+	// Each pass grabs up to BB_BOOKMARK_DELETE_CHUNK rows, deletes them in one
+	// batched query (which purges caches once), then fires the per-row
+	// `bb_bookmark_removed` hook — a bulk `$wpdb->delete()` here would silently
+	// skip that action (see PROD-9206).
+	do {
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- table name from a trusted helper; values are prepared.
+		$bookmarks = $wpdb->get_results(
+			$wpdb->prepare(
+				"SELECT id, type, item_id, user_id FROM {$table} WHERE user_id = %d LIMIT %d",
+				$user_id,
+				BB_BOOKMARK_DELETE_CHUNK
+			)
+		);
 
-	foreach ( $bookmark_ids as $bookmark_id ) {
-		bb_bookmark_delete( (int) $bookmark_id );
-	}
+		if ( empty( $bookmarks ) ) {
+			break;
+		}
 
-	BB_Bookmarks::purge_cache();
+		$fetched = count( $bookmarks );
+
+		if ( BB_Bookmarks::delete_many( $bookmarks ) < 1 ) {
+			break;
+		}
+
+		foreach ( $bookmarks as $bookmark ) {
+			/** This action is documented in bb_bookmark_delete(). */
+			do_action( 'bb_bookmark_removed', $bookmark->type, (int) $bookmark->item_id, (int) $bookmark->user_id );
+		}
+	} while ( BB_BOOKMARK_DELETE_CHUNK === $fetched );
 }
 add_action( 'deleted_user', 'bb_bookmark_delete_user_items' );
 add_action( 'wpmu_delete_user', 'bb_bookmark_delete_user_items' );
@@ -558,16 +612,35 @@ function bb_bookmark_delete_blog_items( $blog_id ) {
 
 	$table = BB_Bookmarks::get_bookmark_tbl();
 
-	// Look up the affected row IDs and delete them one at a time via
-	// bb_bookmark_delete() so `bb_bookmark_removed` fires per row — a bulk
-	// `$wpdb->delete()` here would silently skip that action (see PROD-9206).
-	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- table name from a trusted helper.
-	$bookmark_ids = $wpdb->get_col( $wpdb->prepare( "SELECT id FROM {$table} WHERE blog_id = %d", $blog_id ) );
+	// Process in bounded chunks, scoped strictly to this blog_id. Each pass
+	// grabs up to BB_BOOKMARK_DELETE_CHUNK rows for the target site, deletes
+	// them in one batched query (which purges caches once), then fires the
+	// per-row `bb_bookmark_removed` hook — a bulk `$wpdb->delete()` here would
+	// silently skip that action (see PROD-9206).
+	do {
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- table name from a trusted helper; values are prepared.
+		$bookmarks = $wpdb->get_results(
+			$wpdb->prepare(
+				"SELECT id, type, item_id, user_id FROM {$table} WHERE blog_id = %d LIMIT %d",
+				$blog_id,
+				BB_BOOKMARK_DELETE_CHUNK
+			)
+		);
 
-	foreach ( $bookmark_ids as $bookmark_id ) {
-		bb_bookmark_delete( (int) $bookmark_id );
-	}
+		if ( empty( $bookmarks ) ) {
+			break;
+		}
 
-	BB_Bookmarks::purge_cache();
+		$fetched = count( $bookmarks );
+
+		if ( BB_Bookmarks::delete_many( $bookmarks ) < 1 ) {
+			break;
+		}
+
+		foreach ( $bookmarks as $bookmark ) {
+			/** This action is documented in bb_bookmark_delete(). */
+			do_action( 'bb_bookmark_removed', $bookmark->type, (int) $bookmark->item_id, (int) $bookmark->user_id );
+		}
+	} while ( BB_BOOKMARK_DELETE_CHUNK === $fetched );
 }
 add_action( 'delete_blog', 'bb_bookmark_delete_blog_items' );

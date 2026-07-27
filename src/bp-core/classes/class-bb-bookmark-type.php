@@ -89,6 +89,12 @@ abstract class BB_Bookmark_Type {
 	 * @return void
 	 */
 	public function register_type( $type = '', $args = array() ) {
+		// Normalise the slug the same way the query side does
+		// (BB_Bookmarks::get() runs sanitize_key() on the type filter). Storing
+		// an unsanitised slug here -- e.g. an uppercase one -- would register a
+		// type that the query side could never match.
+		$type = sanitize_key( $type );
+
 		if ( empty( $type ) ) {
 			_doing_it_wrong( __METHOD__, esc_html__( 'A bookmark type slug is required.', 'buddyboss' ), '[BBVERSION]' );
 

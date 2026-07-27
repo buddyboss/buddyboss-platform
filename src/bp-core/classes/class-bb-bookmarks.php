@@ -370,6 +370,15 @@ class BB_Bookmarks {
 			if ( 'all' === $r['fields'] ) {
 				$ids = array_map( 'intval', (array) $ids );
 
+				// Warm the bookmark-row, post and user caches for the whole
+				// page in a handful of bulk queries BEFORE hydrating. Without
+				// this the per-row get_single_bookmark() below issues one
+				// `SELECT bm.*` per row, and each type's items_callback
+				// (get_post()/get_permalink()/bp_core_get_user_displayname())
+				// runs its own per-row query too -- the N+1 the non-'all'
+				// path already avoids by selecting its column directly.
+				self::prime_caches( $ids );
+
 				$bookmarks = array();
 				foreach ( $ids as $id ) {
 					$bookmark = self::get_single_bookmark( $id );
@@ -454,11 +463,186 @@ class BB_Bookmarks {
 			$items = call_user_func( $type_data['items_callback'], array( $obj ) );
 
 			if ( ! empty( $items ) ) {
-				$obj = current( $items );
+				// Merge the callback's data ON TOP of the core bookmark row so
+				// the core identity/status fields (id, status, user_id, blog_id,
+				// item_id, date_recorded) are always present for downstream
+				// row-shape consumers, even when a callback omits them. A
+				// callback that already returns those fields keeps overriding
+				// them, preserving the previous behaviour.
+				$obj = (object) array_merge( (array) $obj, (array) current( $items ) );
 			}
 		}
 
 		return $obj;
+	}
+
+	/**
+	 * Delete many bookmark rows in one batched query.
+	 *
+	 * Deletes every supplied row with a single `DELETE ... WHERE id IN (...)`,
+	 * purges each row's per-row cache, resets the group incrementor once, and
+	 * fires `bb_bookmarks_after_delete` per row -- the same observable outcome
+	 * as calling delete() in a loop, at a fraction of the query cost. Used by
+	 * the bulk cleanup routines (item/user/site deletion).
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param object[] $bookmarks Bookmark rows, each with at least an `id`.
+	 *
+	 * @return int Number of rows deleted.
+	 */
+	public static function delete_many( $bookmarks ) {
+		global $wpdb;
+
+		if ( empty( $bookmarks ) ) {
+			return 0;
+		}
+
+		$ids = array();
+		foreach ( (array) $bookmarks as $bookmark ) {
+			if ( ! empty( $bookmark->id ) ) {
+				$ids[] = (int) $bookmark->id;
+			}
+		}
+
+		$ids = array_values( array_unique( $ids ) );
+
+		if ( empty( $ids ) ) {
+			return 0;
+		}
+
+		$table        = self::get_bookmark_tbl();
+		$placeholders = implode( ',', array_fill( 0, count( $ids ), '%d' ) );
+
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare -- table from a trusted helper; ids are prepared via generated placeholders.
+		$deleted = $wpdb->query( $wpdb->prepare( "DELETE FROM {$table} WHERE id IN ({$placeholders})", $ids ) );
+
+		if ( false === $deleted ) {
+			return 0;
+		}
+
+		// Drop each stale per-row cache entry, then reset the group incrementor
+		// once for the whole chunk instead of once per row.
+		foreach ( $ids as $id ) {
+			wp_cache_delete( $id, self::CACHE_GROUP );
+		}
+
+		self::purge_cache();
+
+		foreach ( (array) $bookmarks as $bookmark ) {
+			if ( empty( $bookmark->id ) ) {
+				continue;
+			}
+
+			/**
+			 * Fires after a bookmark row is deleted.
+			 *
+			 * @since BuddyBoss [BBVERSION]
+			 *
+			 * @param object $bookmark Bookmark object.
+			 */
+			do_action( 'bb_bookmarks_after_delete', $bookmark );
+		}
+
+		return (int) $deleted;
+	}
+
+	/**
+	 * Warm the caches read while hydrating a page of bookmarks.
+	 *
+	 * Bulk-loads the bookmark rows (one query for all uncached ids) plus the
+	 * WordPress post and user caches the type items_callbacks read, so the
+	 * per-row get_single_bookmark() hydration that follows hits warm caches
+	 * instead of running one query per row.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param int[] $ids Bookmark row IDs about to be hydrated.
+	 *
+	 * @return void
+	 */
+	protected static function prime_caches( $ids ) {
+		global $wpdb;
+
+		$ids = array_values( array_unique( array_filter( array_map( 'intval', (array) $ids ) ) ) );
+
+		if ( empty( $ids ) ) {
+			return;
+		}
+
+		// Bulk-load the bookmark rows that are not already cached.
+		$uncached = array();
+		foreach ( $ids as $id ) {
+			if ( false === wp_cache_get( $id, self::CACHE_GROUP ) ) {
+				$uncached[] = $id;
+			}
+		}
+
+		if ( ! empty( $uncached ) ) {
+			$table        = self::get_bookmark_tbl();
+			$placeholders = implode( ',', array_fill( 0, count( $uncached ), '%d' ) );
+
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare -- table from a trusted helper; ids are prepared via generated placeholders.
+			$rows = $wpdb->get_results( $wpdb->prepare( "SELECT bm.* FROM {$table} bm WHERE bm.id IN ({$placeholders})", $uncached ) );
+
+			$rows_by_id = array();
+			foreach ( (array) $rows as $row ) {
+				$rows_by_id[ (int) $row->id ] = $row;
+			}
+
+			// Cache every requested id -- including any that no longer exist, so
+			// a missing row becomes a cache hit (null), matching how
+			// get_single_bookmark() caches its own misses.
+			foreach ( $uncached as $id ) {
+				wp_cache_set( $id, isset( $rows_by_id[ $id ] ) ? $rows_by_id[ $id ] : null, self::CACHE_GROUP );
+			}
+		}
+
+		// Collect the item IDs (grouped by type) and user IDs from the now-warm
+		// rows, then prime the caches the items_callbacks depend on.
+		$items_by_type = array();
+		$item_ids      = array();
+		$user_ids      = array();
+
+		foreach ( $ids as $id ) {
+			$row = wp_cache_get( $id, self::CACHE_GROUP );
+
+			if ( empty( $row ) ) {
+				continue;
+			}
+
+			$items_by_type[ $row->type ][] = (int) $row->item_id;
+			$item_ids[]                    = (int) $row->item_id;
+			$user_ids[]                    = (int) $row->user_id;
+		}
+
+		$item_ids = array_values( array_unique( array_filter( $item_ids ) ) );
+		$user_ids = array_values( array_unique( array_filter( $user_ids ) ) );
+
+		// _prime_post_caches() is public since WP 6.1; guard for WP 6.0 compat.
+		// Harmless for component (non-post) types: a single lookup that finds
+		// nothing, never a per-row query.
+		if ( ! empty( $item_ids ) && function_exists( '_prime_post_caches' ) ) {
+			_prime_post_caches( $item_ids, false, true );
+		}
+
+		if ( ! empty( $user_ids ) && function_exists( 'cache_users' ) ) {
+			cache_users( $user_ids );
+		}
+
+		/**
+		 * Fires so a bookmark type can warm its own item caches in bulk.
+		 *
+		 * Post-backed types are already covered by the post-cache priming above;
+		 * component types (e.g. activity, groups) can hook this to prime their
+		 * own stores for the page of items about to be hydrated.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param array $items_by_type Item IDs grouped by bookmark type slug.
+		 * @param array $user_ids      User IDs referenced by the page of rows.
+		 */
+		do_action( 'bb_bookmarks_prime_caches', $items_by_type, $user_ids );
 	}
 
 	/**
