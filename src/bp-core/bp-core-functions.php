@@ -10009,6 +10009,23 @@ function bb_pro_post_feature_image_version() {
 }
 
 /**
+ * Function to return the minimum Pro version required for the blog Bookmarking
+ * and Subscriptions features.
+ *
+ * These two features are provided by BuddyBoss Platform Pro's blog module, which
+ * ships in Pro 3.1.0. When an older Pro is active the Post Settings toggles stay
+ * locked; the blogging settings screen compares against this version to show an
+ * "update Pro" notice.
+ *
+ * @since BuddyBoss 3.2.0
+ *
+ * @return string
+ */
+function bb_pro_blog_version() {
+	return '3.1.0';
+}
+
+/**
  * Get the Feature Loader instance.
  *
  * @since BuddyBoss 3.0.0
