@@ -118,7 +118,10 @@ class BP_Core_Cron {
 	 */
 	protected function schedule_single( $cron ) {
 		// Schedule if not scheduled already.
-		if ( ! wp_next_scheduled( $cron['hook'] ) && apply_filters( 'bp_core_cron_schedule_' . $cron['hook'], true ) ) {
+		if (
+			! wp_next_scheduled( $cron['hook'] )
+			&& apply_filters( 'bp_core_cron_schedule_' . $cron['hook'], true )
+		) {
 			wp_schedule_event( time(), $cron['recurrence'], $cron['hook'] );
 		}
 	}
