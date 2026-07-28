@@ -169,6 +169,7 @@ function xprofile_update_field_group_position( $field_group_id = 0, $position = 
  */
 function bp_xprofile_get_field_types() {
 	$fields = array(
+		'biography'      => 'BB_XProfile_Field_Type_Biography',
 		'checkbox'       => 'BP_XProfile_Field_Type_Checkbox',
 		'datebox'        => 'BP_XProfile_Field_Type_Datebox',
 		'multiselectbox' => 'BP_XProfile_Field_Type_Multiselectbox',
@@ -2089,8 +2090,410 @@ function bp_xprofile_sync_bp_profile( $user_id ) {
 			xprofile_set_field_visibility_level( $nickname_field_id, $user_id, $visibility );
 		}
 	}
+
+	$bio_field_id = bb_xprofile_bio_field_id();
+
+	if ( $bio_field_id && isset( $user->description ) ) {
+
+		// Guard against the reverse sync writing straight back to user meta.
+		bb_xprofile_bio_syncing( true );
+
+		xprofile_set_field_data( $bio_field_id, $user->ID, $user->description );
+
+		bb_xprofile_bio_syncing( false );
+
+		// Check if bio field visibility level is not set.
+		if ( empty( $visibility_levels ) || empty( $visibility_levels[ $bio_field_id ] ) ) {
+			$visibility = xprofile_get_field_visibility_level( $bio_field_id, $user_id );
+			xprofile_set_field_visibility_level( $bio_field_id, $user_id, $visibility );
+		}
+	}
 }
 add_action( 'profile_update', 'bp_xprofile_sync_bp_profile', 999, 1 );
+
+/**
+ * Get the ID of the Bio profile field, if one has been created.
+ *
+ * The Bio field is a singleton: only one field of type `biography` may exist,
+ * because every field of that type reads from and writes to the same WordPress
+ * user meta key (`description`, shown as "Biographical Info" in wp-admin).
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return int Field ID, or 0 when no Bio field exists.
+ */
+function bb_xprofile_bio_field_id() {
+	global $wpdb;
+
+	$field_id = wp_cache_get( 'bb_xprofile_bio_field_id', 'bp_xprofile' );
+
+	if ( false === $field_id ) {
+		$bp = buddypress();
+
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery -- Result is cached below.
+		$field_id = (int) $wpdb->get_var(
+			$wpdb->prepare(
+				"SELECT id FROM {$bp->profile->table_name_fields} WHERE parent_id = 0 AND type = %s ORDER BY id ASC LIMIT 1", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+				'biography'
+			)
+		);
+
+		wp_cache_set( 'bb_xprofile_bio_field_id', $field_id, 'bp_xprofile' );
+	}
+
+	/**
+	 * Filters the ID of the Bio profile field.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param int $field_id ID of the Bio field, or 0 when none exists.
+	 */
+	return (int) apply_filters( 'bb_xprofile_bio_field_id', (int) $field_id );
+}
+
+/**
+ * Read or set the Bio sync guard.
+ *
+ * The Bio field syncs in both directions, so each direction has to be able to
+ * tell whether it was triggered by the other one. Without this guard, writing
+ * user meta from the xProfile side could re-enter the WordPress side (and vice
+ * versa) and overwrite a value mid-flight.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param bool|null $syncing Pass a boolean to set the guard, or null to read it.
+ *
+ * @return bool True while a sync is in progress.
+ */
+function bb_xprofile_bio_syncing( $syncing = null ) {
+	static $is_syncing = false;
+
+	if ( null !== $syncing ) {
+		$is_syncing = (bool) $syncing;
+	}
+
+	return $is_syncing;
+}
+
+/**
+ * Sync the Bio profile field to the WordPress "Biographical Info" user field.
+ *
+ * Hooked to `xprofile_data_after_save` rather than `xprofile_updated_profile`
+ * so that every write path is covered: the front-end profile edit form, the
+ * wp-admin Extended Profile metabox, the REST API, and direct calls to
+ * `xprofile_set_field_data()`.
+ *
+ * No length validation is applied. WordPress renders Biographical Info as a
+ * plain textarea with no maximum length, so a bio saved from wp-admin must
+ * never be rejected when the member later saves their profile.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param BP_XProfile_ProfileData $data Profile data object that was just saved.
+ *
+ * @return void
+ */
+function bb_xprofile_sync_wp_bio( $data ) {
+
+	if ( bb_xprofile_bio_syncing() ) {
+		return;
+	}
+
+	if ( ! $data instanceof BP_XProfile_ProfileData || empty( $data->user_id ) ) {
+		return;
+	}
+
+	$bio_field_id = bb_xprofile_bio_field_id();
+
+	if ( ! $bio_field_id || (int) $data->field_id !== $bio_field_id ) {
+		return;
+	}
+
+	/*
+	 * WordPress runs `wp_filter_kses` on `pre_user_description` when a bio is
+	 * saved through wp-admin, but `update_user_meta()` does not fire that
+	 * filter. Apply the same treatment here so the Bio field cannot be used to
+	 * store markup that wp-admin would have stripped.
+	 *
+	 * This is deliberately unconditional, with no `unfiltered_html` exemption:
+	 * core registers the `pre_user_description` filter in default-filters.php
+	 * and `kses_remove_filters()` never removes it, so even administrators and
+	 * multisite super admins get their bio filtered. Exempting them here would
+	 * make the Bio field a way to store markup that wp-admin itself strips.
+	 */
+	$value = wp_filter_kses( $data->value );
+
+	bb_xprofile_bio_syncing( true );
+
+	update_user_meta( (int) $data->user_id, 'description', $value );
+
+	bb_xprofile_bio_syncing( false );
+}
+add_action( 'xprofile_data_after_save', 'bb_xprofile_sync_wp_bio', 10, 1 );
+
+/**
+ * Clear the WordPress "Biographical Info" field when the Bio field is emptied.
+ *
+ * `xprofile_set_field_data()` deletes the row instead of saving it when a field
+ * is submitted empty, so an emptied Bio never reaches `xprofile_data_after_save`.
+ * Without this, clearing a bio on the profile would leave the old text in user
+ * meta — and still showing in the blog author box.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param BP_XProfile_ProfileData $data Profile data object that was just deleted.
+ *
+ * @return void
+ */
+function bb_xprofile_clear_wp_bio( $data ) {
+
+	if ( bb_xprofile_bio_syncing() ) {
+		return;
+	}
+
+	if ( ! $data instanceof BP_XProfile_ProfileData || empty( $data->user_id ) ) {
+		return;
+	}
+
+	$bio_field_id = bb_xprofile_bio_field_id();
+
+	if ( ! $bio_field_id || (int) $data->field_id !== $bio_field_id ) {
+		return;
+	}
+
+	bb_xprofile_bio_syncing( true );
+
+	update_user_meta( (int) $data->user_id, 'description', '' );
+
+	bb_xprofile_bio_syncing( false );
+}
+add_action( 'xprofile_data_after_delete', 'bb_xprofile_clear_wp_bio', 10, 1 );
+
+/**
+ * Resolve the user whose profile the current xProfile loop is rendering.
+ *
+ * The `bp_get_the_profile_field_*_value` filters only receive the field, not the
+ * user, so the fallback below has to work the user out from the loop globals.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return int User ID, or 0 when it cannot be determined.
+ */
+function bb_xprofile_bio_loop_user_id() {
+	global $profile_template;
+
+	if ( isset( $profile_template->user_id ) && ! empty( $profile_template->user_id ) ) {
+		return (int) $profile_template->user_id;
+	}
+
+	if ( function_exists( 'bp_displayed_user_id' ) && bp_displayed_user_id() ) {
+		return (int) bp_displayed_user_id();
+	}
+
+	return 0;
+}
+
+/**
+ * Fall back to the WordPress bio when the Bio field has no stored value.
+ *
+ * The xProfile row for the Bio field is only written once the member (or an
+ * admin) saves a profile after the field exists. Every user who already had a
+ * "Biographical Info" value — which is all of them, on any established site —
+ * would otherwise see an empty Bio field until something happened to re-save
+ * their profile. The same applies to any bio written straight to user meta by an
+ * importer, WP-CLI, or another plugin, none of which fire `profile_update`.
+ *
+ * Reading through to user meta keeps WordPress's value authoritative until the
+ * member edits their bio on the community side, at which point the normal
+ * two-way sync takes over.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param mixed $value    Stored field value.
+ * @param int   $field_id ID of the field being read.
+ * @param int   $user_id  ID of the user being read.
+ *
+ * @return mixed Field value, or the WordPress bio when the field is empty.
+ */
+function bb_xprofile_bio_value_fallback( $value, $field_id, $user_id = 0 ) {
+
+	// Only fill in when nothing is stored; never override a real value.
+	if ( ! empty( $value ) || empty( $user_id ) ) {
+		return $value;
+	}
+
+	$bio_field_id = bb_xprofile_bio_field_id();
+
+	if ( ! $bio_field_id || (int) $field_id !== $bio_field_id ) {
+		return $value;
+	}
+
+	$description = get_user_meta( (int) $user_id, 'description', true );
+
+	if ( '' === (string) $description ) {
+		return $value;
+	}
+
+	return $description;
+}
+add_filter( 'xprofile_get_field_data', 'bb_xprofile_bio_value_fallback', 10, 3 );
+
+/**
+ * Apply the Bio fallback inside the xProfile template loop.
+ *
+ * Runs at priority 0 so the value it supplies still passes through the whole
+ * sanitize/escape/format chain that BuddyBoss hooks from priority 1 onwards.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param mixed  $value    Stored field value.
+ * @param string $type     Field type.
+ * @param int    $field_id ID of the field being rendered.
+ *
+ * @return mixed Field value, or the WordPress bio when the field is empty.
+ */
+function bb_xprofile_bio_template_value_fallback( $value, $type, $field_id = 0 ) {
+
+	if ( 'biography' !== $type || ! empty( $value ) ) {
+		return $value;
+	}
+
+	return bb_xprofile_bio_value_fallback( $value, $field_id, bb_xprofile_bio_loop_user_id() );
+}
+add_filter( 'bp_get_the_profile_field_edit_value', 'bb_xprofile_bio_template_value_fallback', 0, 3 );
+add_filter( 'bp_get_the_profile_field_value', 'bb_xprofile_bio_template_value_fallback', 0, 3 );
+
+/**
+ * Keep the Bio field in the profile loop when only WordPress holds the value.
+ *
+ * Profile view screens run the loop with `hide_empty_fields` on, and that check
+ * happens against the raw data rows inside `BP_XProfile_Group::get()` — before
+ * any value filter can act. A member whose bio lives only in user meta would
+ * therefore have the Bio field dropped from the loop entirely, and the
+ * read-through fallback would never get the chance to fill it in.
+ *
+ * Re-adding the field here (rather than writing a data row) keeps WordPress's
+ * "Biographical Info" the single source of truth until the member edits their
+ * bio on the community side.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $fields   Fields in the current group.
+ * @param int   $group_id ID of the current field group.
+ *
+ * @return array Fields, with the Bio field restored when applicable.
+ */
+function bb_xprofile_bio_restore_in_profile_loop( $fields, $group_id ) {
+
+	$bio_field_id = bb_xprofile_bio_field_id();
+
+	if ( ! $bio_field_id || empty( $fields ) ) {
+		return $fields;
+	}
+
+	// Bail when the field is already in the loop, and confirm data was fetched
+	// at all — loops built with fetch_field_data off must not gain a value.
+	$data_fetched = false;
+	foreach ( $fields as $field ) {
+		if ( (int) $field->id === $bio_field_id ) {
+			return $fields;
+		}
+		if ( isset( $field->data ) ) {
+			$data_fetched = true;
+		}
+	}
+
+	if ( ! $data_fetched ) {
+		return $fields;
+	}
+
+	$user_id = bb_xprofile_bio_loop_user_id();
+
+	if ( empty( $user_id ) ) {
+		return $fields;
+	}
+
+	$description = get_user_meta( $user_id, 'description', true );
+
+	if ( '' === (string) $description ) {
+		return $fields;
+	}
+
+	$bio_field = xprofile_get_field( $bio_field_id, null, false );
+
+	if ( empty( $bio_field ) || (int) $bio_field->group_id !== (int) $group_id ) {
+		return $fields;
+	}
+
+	// Clone so the cached field object does not gain this user's data.
+	$bio_field = clone $bio_field;
+
+	$bio_field->data        = new stdClass();
+	$bio_field->data->id    = 0;
+	$bio_field->data->value = $description;
+
+	$fields[] = $bio_field;
+
+	// Restore the admin-defined field order.
+	usort(
+		$fields,
+		function ( $a, $b ) {
+			return (int) $a->field_order - (int) $b->field_order;
+		}
+	);
+
+	return $fields;
+}
+add_filter( 'xprofile_group_fields', 'bb_xprofile_bio_restore_in_profile_loop', 10, 2 );
+
+/**
+ * Supply the WordPress bio to profile data objects that have no stored row.
+ *
+ * The REST API (and any other consumer that builds a `BP_XProfile_ProfileData`
+ * object directly) reads `$data->value` rather than going through
+ * `xprofile_get_field_data()`, so it needs the fallback applied at the source.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param BP_XProfile_ProfileData $data Profile data object that was just populated.
+ *
+ * @return void
+ */
+function bb_xprofile_bio_populate_fallback( $data ) {
+
+	if ( ! $data instanceof BP_XProfile_ProfileData || ! empty( $data->value ) || empty( $data->user_id ) ) {
+		return;
+	}
+
+	$bio_field_id = bb_xprofile_bio_field_id();
+
+	if ( ! $bio_field_id || (int) $data->field_id !== $bio_field_id ) {
+		return;
+	}
+
+	$description = get_user_meta( (int) $data->user_id, 'description', true );
+
+	if ( '' === (string) $description ) {
+		return;
+	}
+
+	$data->value = $description;
+}
+add_action( 'bp_xprofile_data_after_populate', 'bb_xprofile_bio_populate_fallback', 10, 1 );
+
+/**
+ * Clear the cached Bio field ID when profile fields change.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_xprofile_clear_bio_field_id_cache() {
+	wp_cache_delete( 'bb_xprofile_bio_field_id', 'bp_xprofile' );
+}
+add_action( 'xprofile_fields_saved_field', 'bb_xprofile_clear_bio_field_id_cache' );
+add_action( 'xprofile_fields_deleted_field', 'bb_xprofile_clear_bio_field_id_cache' );
+add_action( 'xprofile_field_after_save', 'bb_xprofile_clear_bio_field_id_cache' );
 
 /**
  * Sync the standard built in xprofile data to WordPress data.

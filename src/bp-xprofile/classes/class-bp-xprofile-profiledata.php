@@ -107,6 +107,19 @@ class BP_XProfile_ProfileData {
 			$this->field_id = (int) $field_id;
 			$this->user_id  = (int) $user_id;
 		}
+
+		/**
+		 * Fires after a profile data object has been populated.
+		 *
+		 * Gives field types whose value is mirrored from elsewhere (such as the
+		 * Bio field, which reads through to the WordPress "Biographical Info"
+		 * user field) a chance to supply a value when no row exists yet.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param BP_XProfile_ProfileData $this Current instance of the profile data.
+		 */
+		do_action_ref_array( 'bp_xprofile_data_after_populate', array( $this ) );
 	}
 
 	/**
