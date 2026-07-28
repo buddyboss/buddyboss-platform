@@ -237,7 +237,7 @@ function bb_get_placeholder_plugin_status( $item, $active_plugins = null ) {
  * standalone (its parent's classes/hooks would be missing), so the card is
  * suppressed rather than offering a broken Activate.
  *
- * @since BuddyBoss 3.0.0
+ * @since BuddyBoss [BBVERSION]
  *
  * @param array $requires       Required plugin basenames from the catalog item.
  * @param array $active_plugins Active plugin basenames for the current site.
