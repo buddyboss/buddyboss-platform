@@ -185,11 +185,19 @@ function bb_get_placeholder_plugin_status( $item, $active_plugins = null ) {
 		return 'not_in_plan';
 	}
 
+	// Free add-ons carry no paid entitlement, so a free product is always
+	// "in plan". Skip the addon-plan lookup below — it only knows about
+	// sellable mothership products, so a bundled free add-on (e.g. the
+	// BuddyBoss Membership course add-ons) would otherwise resolve to
+	// 'not_in_plan' and the grid would wrongly show an "UPGRADE PRO" badge
+	// instead of the correct Install/Activate call to action.
+	$is_free = isset( $item['upgrade_tier'] ) && 'free' === $item['upgrade_tier'];
+
 	// Step 1: Check if this product is in the user's addon plan.
 	// This must come first — if not in plan, always show upgrade badge
-	// regardless of install status.
-	$in_plan = false;
-	if ( class_exists( '\\BuddyBoss\\Core\\Admin\\Mothership\\BB_Addons_Manager' ) ) {
+	// regardless of install status. Free products are exempt (always in plan).
+	$in_plan = $is_free;
+	if ( ! $in_plan && class_exists( '\\BuddyBoss\\Core\\Admin\\Mothership\\BB_Addons_Manager' ) ) {
 		$plugin_slug = dirname( $plugin_file );
 		$product     = \BuddyBoss\Core\Admin\Mothership\BB_Addons_Manager::checkProductBySlug( $plugin_slug );
 		$in_plan     = ! empty( $product );
@@ -218,6 +226,46 @@ function bb_get_placeholder_plugin_status( $item, $active_plugins = null ) {
 	}
 
 	return is_plugin_active( $plugin_file ) ? 'active' : 'installed_inactive';
+}
+
+/**
+ * Whether every plugin a placeholder item requires is currently active.
+ *
+ * A placeholder add-on can declare parent plugins it depends on via a
+ * `requires` array of plugin basenames (e.g. "foo/foo.php") in the catalog.
+ * When any required plugin is inactive the add-on cannot be activated
+ * standalone (its parent's classes/hooks would be missing), so the card is
+ * suppressed rather than offering a broken Activate.
+ *
+ * @since BuddyBoss 3.0.0
+ *
+ * @param array $requires       Required plugin basenames from the catalog item.
+ * @param array $active_plugins Active plugin basenames for the current site.
+ * @return bool True when all required plugins are active (or none are declared).
+ */
+function bb_placeholder_requirements_met( $requires, $active_plugins ) {
+	if ( empty( $requires ) || ! is_array( $requires ) ) {
+		return true;
+	}
+
+	$network_active = is_multisite() ? (array) get_site_option( 'active_sitewide_plugins', array() ) : array();
+
+	foreach ( $requires as $required ) {
+		$required = trim( (string) $required );
+		if ( '' === $required ) {
+			continue;
+		}
+		if ( in_array( $required, $active_plugins, true ) ) {
+			continue;
+		}
+		if ( isset( $network_active[ $required ] ) ) {
+			continue;
+		}
+
+		return false;
+	}
+
+	return true;
 }
 
 /**
@@ -276,8 +324,28 @@ function bb_admin_inject_placeholder_features( $features ) {
 			continue;
 		}
 
+		// Respect declared parent dependencies: when the item lists required
+		// plugins that are not active, hide the placeholder entirely rather than
+		// offering an Activate that would create an orphaned add-on. Covers both
+		// the not-installed and installed-inactive cases.
+		if ( isset( $item['requires'] ) && ! bb_placeholder_requirements_met( $item['requires'], $active_plugins ) ) {
+			continue;
+		}
+
 		$plugin_file = isset( $item['plugin_file'] ) ? $item['plugin_file'] : '';
-		$plugin_slug = ! empty( $plugin_file ) ? dirname( $plugin_file ) : '';
+
+		// The activate/install actions (mosh_addon_*) key off the Mothership
+		// product slug, which is not always the plugin's folder name — e.g. the
+		// product "buddyboss-membership" ships in the "buddybossmembership"
+		// folder. Prefer an explicit catalog `slug` when provided; otherwise fall
+		// back to the folder name (correct for add-ons whose slug matches it).
+		if ( ! empty( $item['slug'] ) ) {
+			$plugin_slug = sanitize_key( $item['slug'] );
+		} elseif ( ! empty( $plugin_file ) ) {
+			$plugin_slug = dirname( $plugin_file );
+		} else {
+			$plugin_slug = '';
+		}
 
 		$plugin_status = bb_get_placeholder_plugin_status( $item, $active_plugins );
 
