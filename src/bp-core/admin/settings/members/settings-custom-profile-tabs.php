@@ -95,8 +95,16 @@ function bb_admin_pro_addon_check_state() {
 		wp_send_json_success( array( 'state' => 'active' ) );
 	}
 
-	// The feature needs an active license, so license state takes precedence over
-	// the installed / not-installed state.
+	$all = function_exists( 'get_plugins' ) ? get_plugins() : array();
+
+	if ( isset( $all[ BB_PROFILE_TABS_PRO_PLUGIN ] ) ) {
+		wp_send_json_success( array( 'state' => 'installed' ) );
+	}
+
+	// Only reached when Pro is not installed: it is pulled from the BuddyBoss
+	// add-on server, which needs an active license, so surface the license CTA
+	// instead of "Install Now". Activating an already-installed Pro is local and
+	// needs no license, so that path is handled above.
 	if ( bb_admin_pro_addon_mothership_available() && ! bb_admin_pro_addon_is_license_active() ) {
 		wp_send_json_success(
 			array(
@@ -104,12 +112,6 @@ function bb_admin_pro_addon_check_state() {
 				'license_url' => bb_admin_pro_addon_license_url(),
 			)
 		);
-	}
-
-	$all = function_exists( 'get_plugins' ) ? get_plugins() : array();
-
-	if ( isset( $all[ BB_PROFILE_TABS_PRO_PLUGIN ] ) ) {
-		wp_send_json_success( array( 'state' => 'installed' ) );
 	}
 
 	wp_send_json_success( array( 'state' => 'not-installed' ) );
