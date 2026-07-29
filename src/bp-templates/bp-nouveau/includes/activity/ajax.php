@@ -86,12 +86,6 @@ add_action(
 				),
 			),
 			array(
-				'activity_update_pinned_post' => array(
-					'function' => 'bb_nouveau_ajax_activity_update_pinned_post',
-					'nopriv'   => true,
-				),
-			),
-			array(
 				'activity_update_close_comments' => array(
 					'function' => 'bb_nouveau_ajax_activity_update_close_comments',
 					'nopriv'   => false,
@@ -1433,71 +1427,6 @@ function bp_nouveau_ajax_activity_update_privacy() {
 	}
 }
 
-/**
- * Update activity pinned post.
- *
- * @since BuddyBoss 2.4.60
- *
- * @return void
- */
-function bb_nouveau_ajax_activity_update_pinned_post() {
-	$response = array(
-		'feedback' => esc_html__( 'There was a problem marking this operation. Please try again.', 'buddyboss' ),
-	);
-
-	if ( ! bp_is_post_request() ) {
-		wp_send_json_error( $response );
-	}
-
-	if ( ! is_user_logged_in() ) {
-		wp_send_json_error( $response );
-	}
-
-	// Nonce check!
-	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'bp_nouveau_activity' ) ) {
-		wp_send_json_error( $response );
-	}
-
-	if ( empty( $_POST['pin_action'] ) ) {
-		wp_send_json_error( $response );
-	}
-
-	if ( empty( $_POST['id'] ) ) {
-		wp_send_json_error( $response );
-	}
-
-	if ( ! in_array( $_POST['pin_action'], array( 'pin', 'unpin' ), true ) ) {
-		wp_send_json_error( $response );
-	}
-
-	$args = array(
-		'action'      => $_POST['pin_action'],
-		'activity_id' => (int) $_POST['id'],
-		'retval'      => 'string',
-	);
-
-	$retval = bb_activity_pin_unpin_post( $args );
-
-	if ( ! empty( $retval ) ) {
-		if ( 'unpinned' === $retval ) {
-			$response['feedback'] = esc_html__( 'Your pinned post has been removed', 'buddyboss' );
-		} elseif ( 'pinned' === $retval ) {
-			$response['feedback'] = esc_html__( 'Your post has been pinned', 'buddyboss' );
-		} elseif ( 'not_allowed' === $retval || 'not_member' === $retval ) {
-			$response['feedback'] = esc_html__( 'You are not allowed to pin or unpin this post', 'buddyboss' );
-		} elseif ( 'pin_updated' === $retval ) {
-			$response['feedback'] = esc_html__( 'Your pinned post has been updated', 'buddyboss' );
-		}
-
-		$response = apply_filters( 'bb_ajax_activity_update_pinned_post', $response, $_POST );
-	}
-
-	if ( ! empty( $retval ) && in_array( $retval, array( 'unpinned', 'pinned', 'pin_updated' ), true ) ) {
-		wp_send_json_success( $response );
-	} else {
-		wp_send_json_error( $response );
-	}
-}
 
 /**
  * Update close activity comments.
