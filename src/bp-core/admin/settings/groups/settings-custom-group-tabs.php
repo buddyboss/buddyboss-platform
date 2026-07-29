@@ -77,7 +77,7 @@ function bb_groups_register_custom_group_tabs_panel_fields() {
  * @return void
  */
 function bb_group_tabs_addon_check_state() {
-	if ( ! bp_current_user_can( 'manage_options' ) ) {
+	if ( ! current_user_can( 'manage_options' ) ) {
 		wp_send_json_error( array( 'message' => __( 'Permission denied.', 'buddyboss' ) ), 403 );
 	}
 	check_ajax_referer( 'bb_admin_settings', '_ajax_nonce' );
@@ -116,7 +116,7 @@ add_action( 'wp_ajax_bb_group_tabs_addon_check_state', 'bb_group_tabs_addon_chec
  * @return void
  */
 function bb_group_tabs_addon_activate() {
-	if ( ! bp_current_user_can( 'activate_plugins' ) ) {
+	if ( ! current_user_can( 'activate_plugins' ) ) {
 		wp_send_json_error( array( 'message' => __( 'Permission denied.', 'buddyboss' ) ), 403 );
 	}
 	check_ajax_referer( 'bb_admin_settings', '_ajax_nonce' );
@@ -150,7 +150,7 @@ add_action( 'wp_ajax_bb_group_tabs_addon_activate', 'bb_group_tabs_addon_activat
  * @return void
  */
 function bb_group_tabs_addon_install() {
-	if ( ! bp_current_user_can( 'install_plugins' ) ) {
+	if ( ! current_user_can( 'install_plugins' ) ) {
 		wp_send_json_error( array( 'message' => __( 'Permission denied.', 'buddyboss' ) ), 403 );
 	}
 	check_ajax_referer( 'bb_admin_settings', '_ajax_nonce' );
