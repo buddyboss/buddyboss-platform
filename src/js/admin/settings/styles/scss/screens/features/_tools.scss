@@ -206,8 +206,12 @@
 	}
 }
 
+// Sections whose only field is the activation CTA drop their own card chrome and
+// heading, so the CTA reads as the whole panel. Custom Group Tabs reuses the CTA
+// component, so it is listed here alongside the Tools sections.
 #section-migration_tools_section,
-#section-sample_data_section {
+#section-sample_data_section,
+#section-custom_group_tabs {
 
 	&:has(.bb-admin-settings-form__field .bb-tools-activation-cta) {
 		background-color: transparent;
