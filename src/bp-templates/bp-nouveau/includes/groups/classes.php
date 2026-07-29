@@ -128,11 +128,26 @@ class BP_Nouveau_Group_Invite_Query extends BP_User_Query {
 
 	/**
 	 * @since BuddyPress 3.0.0
+	 * @since BuddyBoss [BBVERSION] Resolve a lone `NOT EXISTS` clause to an excluded user ID list.
 	 */
 	public function build_meta_query( BP_User_Query $bp_user_query ) {
-		if ( isset( $this->query_vars['scope'] ) && 'members' === $this->query_vars['scope'] && isset( $this->query_vars['meta_query'] ) ) {
+		global $wpdb;
 
-			$invites_meta_query = new WP_Meta_Query( $this->query_vars['meta_query'] );
+		if ( isset( $this->query_vars['scope'] ) && 'members' === $this->query_vars['scope'] && isset( $this->query_vars['meta_query'] ) ) {
+			$meta_query = $this->query_vars['meta_query'];
+
+			// A `NOT EXISTS` anti-join scans the whole user table, so query the excluded ids instead.
+			if ( 1 === count( $meta_query ) && isset( $meta_query[0]['key'], $meta_query[0]['compare'] ) && 'NOT EXISTS' === strtoupper( $meta_query[0]['compare'] ) ) {
+				$excluded_ids = $wpdb->get_col( $wpdb->prepare( "SELECT user_id FROM {$wpdb->usermeta} WHERE meta_key = %s", $meta_query[0]['key'] ) );
+
+				if ( ! empty( $excluded_ids ) ) {
+					$bp_user_query->uid_clauses['where'] .= " AND u.{$bp_user_query->uid_name} NOT IN (" . implode( ',', wp_parse_id_list( $excluded_ids ) ) . ')';
+				}
+
+				return;
+			}
+
+			$invites_meta_query = new WP_Meta_Query( $meta_query );
 			$meta_sql           = $invites_meta_query->get_sql( 'user', 'u', 'ID' );
 
 			if ( empty( $meta_sql['join'] ) || empty( $meta_sql['where'] ) ) {
