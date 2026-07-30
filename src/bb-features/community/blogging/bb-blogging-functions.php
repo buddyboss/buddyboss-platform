@@ -296,7 +296,18 @@ function bb_blog_render_post_footer_sections() {
 			<div class="bb-blog-author-bio__right">
 				<div class="bb-blog-author-bio__content">
 					<?php if ( ! empty( $author_bio ) ) : ?>
-						<p class="bb-blog-author-bio__description"><?php echo esc_html( $author_bio ); ?></p>
+						<p class="bb-blog-author-bio__description">
+						<?php
+						/*
+						 * WordPress stores the bio kses-filtered and renders it as HTML with
+						 * line breaks intact, so esc_html() here printed tags literally and
+						 * collapsed every newline. Re-apply the same kses pass WordPress uses on
+						 * save, then nl2br() for the breaks -- nl2br rather than wpautop because
+						 * this is already inside a <p>.
+						 */
+						echo nl2br( wp_filter_kses( $author_bio ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- kses-filtered above.
+						?>
+					</p>
 					<?php endif; ?>
 				</div>
 			</div>

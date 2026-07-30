@@ -2364,6 +2364,57 @@ add_filter( 'bp_get_the_profile_field_edit_value', 'bb_xprofile_bio_template_val
 add_filter( 'bp_get_the_profile_field_value', 'bb_xprofile_bio_template_value_fallback', 0, 3 );
 
 /**
+ * Render the Bio field's HTML instead of escaping it.
+ *
+ * `bp_xprofile_escape_field_data()` runs `esc_html()` on any field whose type does
+ * not support richtext, and the Bio field deliberately does not — it mirrors the
+ * plain textarea WordPress uses for Biographical Info. WordPress, however, stores
+ * that value kses-filtered and renders it as HTML (the blog author box does), so
+ * escaping here would print tags literally on the profile.
+ *
+ * Re-reads the value and applies `wp_filter_kses()`, the same pass WordPress runs
+ * on `pre_user_description`, so the profile shows exactly the markup wp-admin
+ * would have kept — and no more.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param mixed  $value    Escaped field value.
+ * @param string $type     Field type.
+ * @param int    $field_id ID of the field being rendered.
+ *
+ * @return mixed Field value with the allowed HTML intact.
+ */
+function bb_xprofile_bio_render_allowed_html( $value, $type, $field_id = 0 ) {
+
+	if ( 'biography' !== $type ) {
+		return $value;
+	}
+
+	$user_id = bb_xprofile_bio_loop_user_id();
+
+	if ( empty( $user_id ) ) {
+		return $value;
+	}
+
+	$raw = xprofile_get_field_data( $field_id, $user_id );
+
+	if ( ! is_string( $raw ) || '' === $raw ) {
+		return $value;
+	}
+
+	$value = nl2br( wp_filter_kses( $raw ) );
+
+	return str_replace( array( "\r\n", "\r", "\n" ), '', $value );
+}
+/*
+ * Priority 11 -- after wpautop() at 10, deliberately. wpautop() contains
+ * preg_replace( '|<br />\s*<br />|', "\n\n", ... ), so it turns a double <br> back
+ * into a paragraph break and splits the bio into separate <p> blocks. Running last
+ * keeps the flat <br> markup the blog author box produces.
+ */
+add_filter( 'bp_get_the_profile_field_value', 'bb_xprofile_bio_render_allowed_html', 11, 3 );
+
+/**
  * Keep the Bio field in the profile loop when only WordPress holds the value.
  *
  * Profile view screens run the loop with `hide_empty_fields` on, and that check
