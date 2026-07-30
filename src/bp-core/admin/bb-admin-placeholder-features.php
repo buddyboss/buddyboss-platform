@@ -234,8 +234,8 @@ function bb_get_placeholder_plugin_status( $item, $active_plugins = null ) {
  * A placeholder add-on can declare parent plugins it depends on via a
  * `requires` array of plugin basenames (e.g. "foo/foo.php") in the catalog.
  * When any required plugin is inactive the add-on cannot be activated
- * standalone (its parent's classes/hooks would be missing), so the card is
- * suppressed rather than offering a broken Activate.
+ * standalone (its parent's classes/hooks would be missing), so the card's
+ * action button is rendered disabled rather than offering a broken Activate.
  *
  * @since BuddyBoss [BBVERSION]
  *
@@ -324,13 +324,12 @@ function bb_admin_inject_placeholder_features( $features ) {
 			continue;
 		}
 
-		// Respect declared parent dependencies: when the item lists required
-		// plugins that are not active, hide the placeholder entirely rather than
-		// offering an Activate that would create an orphaned add-on. Covers both
-		// the not-installed and installed-inactive cases.
-		if ( isset( $item['requires'] ) && ! bb_placeholder_requirements_met( $item['requires'], $active_plugins ) ) {
-			continue;
-		}
+		// Declared parent dependencies: when the item lists required plugins
+		// that are not active, still inject the card but flag it so the grid
+		// renders its action button disabled — the same treatment as the
+		// Add-ons page. Core's activate_plugin() dependency check remains the
+		// hard gate behind the UI.
+		$requires_unmet = isset( $item['requires'] ) && ! bb_placeholder_requirements_met( $item['requires'], $active_plugins );
 
 		$plugin_file = isset( $item['plugin_file'] ) ? $item['plugin_file'] : '';
 
@@ -363,6 +362,9 @@ function bb_admin_inject_placeholder_features( $features ) {
 			'is_placeholder'    => true,
 			'plugin_status'     => $plugin_status,
 			'plugin_slug'       => $plugin_slug,
+			// Parent dependency not active — the grid disables the card's
+			// Install/Activate button (no extra UI, matching the Add-ons page).
+			'requires_unmet'    => $requires_unmet,
 			'upgrade_tier'        => isset( $item['upgrade_tier'] ) ? sanitize_key( $item['upgrade_tier'] ) : 'plus',
 			'upgrade_url'         => isset( $item['upgrade_url'] ) ? esc_url_raw( $item['upgrade_url'] ) : '',
 			'upgrade_image_url'   => isset( $item['upgrade_image_url'] ) ? esc_url_raw( $item['upgrade_image_url'] ) : '',
