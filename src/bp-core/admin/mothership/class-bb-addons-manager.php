@@ -15,6 +15,28 @@ use BuddyBossPlatform\GroundLevel\Mothership\AbstractPluginConnection;
  */
 class BB_Addons_Manager extends AddonsManager {
 
+	/**
+	 * How long a successful add-ons lookup stays cached, in seconds.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @var int
+	 */
+	protected const CACHE_DURATION_ADD_ONS = 12 * HOUR_IN_SECONDS;
+
+	/**
+	 * How long a failed add-ons lookup stays cached, in seconds.
+	 *
+	 * Deliberately short. Long enough to stop a loop of per-item lookups from firing
+	 * one failing HTTP request each, short enough that a transient network problem
+	 * does not keep reading as "this product is not in your plan".
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @var int
+	 */
+	protected const CACHE_DURATION_ADD_ONS_ERROR = 2 * MINUTE_IN_SECONDS;
+
 	public static function loadHooks(): void {
 		parent::loadHooks();
 
@@ -68,6 +90,11 @@ class BB_Addons_Manager extends AddonsManager {
 	 * Check if a product exists and is enabled by slug.
 	 * Implements transient caching to reduce API calls.
 	 *
+	 * A null return is not proof that the product is absent from the customer's plan —
+	 * it is also what a failed API call produces. Callers that turn "no product" into
+	 * an upsell must consult `productsApiErrored()` first, or a network blip reads as
+	 * "not in your plan" to a fully licensed customer.
+	 *
 	 * @param string $slug Product slug to check.
 	 * @return object|null Product object if found and enabled, null otherwise.
 	 */
@@ -84,7 +111,20 @@ class BB_Addons_Manager extends AddonsManager {
 
 		if ( empty( $apiResponse ) ) {
 			$apiResponse = self::getAddons( \true );
-			set_transient( $cache_key, $apiResponse, 12 * HOUR_IN_SECONDS );
+
+			/*
+			 * An error Response carries no `products`, so caching one for the full 12
+			 * hours made every downstream check read as an empty plan for half a day
+			 * after a single failed request. Cache it briefly instead of not at all:
+			 * callers such as bb_get_placeholder_plugin_status() call this once per
+			 * catalog item, so skipping the cache entirely would fire one failing HTTP
+			 * request per card on every admin page load while the API is down.
+			 */
+			$ttl = self::isErrorResponse( $apiResponse )
+				? self::CACHE_DURATION_ADD_ONS_ERROR
+				: self::CACHE_DURATION_ADD_ONS;
+
+			set_transient( $cache_key, $apiResponse, $ttl );
 		}
 
 		$result = null;
@@ -101,6 +141,51 @@ class BB_Addons_Manager extends AddonsManager {
 		}
 
 		return $result;
+	}
+
+	/**
+	 * Whether a response from the add-ons API represents a failure.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param mixed $response Response returned by `getAddons()`.
+	 * @return bool True when the API did not answer successfully.
+	 */
+	protected static function isErrorResponse( $response ): bool {
+		if ( ! $response instanceof Response ) {
+			// No Response object at all means the request never completed.
+			return true;
+		}
+
+		return $response->isError();
+	}
+
+	/**
+	 * Whether the last add-ons API lookup failed.
+	 *
+	 * Lets callers tell "this product is not in your plan" apart from "we could not
+	 * reach the add-ons API", which look identical through `checkProductBySlug()`.
+	 * Reads the same cached response that lookup uses, so calling this alongside it
+	 * costs no extra HTTP request.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @return bool True when the add-ons list could not be retrieved.
+	 */
+	public static function productsApiErrored(): bool {
+		if ( ! self::getContainer()->get( AbstractPluginConnection::class )->getLicenseActivationStatus() ) {
+			// Without an active license there is no API call to fail.
+			return false;
+		}
+
+		$plugin_id = self::getContainer()->get( AbstractPluginConnection::class )->pluginId;
+		$cached    = get_transient( $plugin_id . '_add_ons' );
+
+		if ( ! empty( $cached ) ) {
+			return self::isErrorResponse( $cached );
+		}
+
+		return self::isErrorResponse( self::getAddons( \true ) );
 	}
 
 	/**

@@ -2210,18 +2210,25 @@ function bb_xprofile_sync_wp_bio( $data ) {
 	}
 
 	/*
-	 * WordPress runs `wp_filter_kses` on `pre_user_description` when a bio is
-	 * saved through wp-admin, but `update_user_meta()` does not fire that
-	 * filter. Apply the same treatment here so the Bio field cannot be used to
-	 * store markup that wp-admin would have stripped.
+	 * WordPress kses-filters `pre_user_description` when a bio is saved through
+	 * wp-admin, but `update_user_meta()` does not fire that filter. Apply the same
+	 * treatment here so the Bio field cannot be used to store markup that wp-admin
+	 * would have stripped.
 	 *
 	 * This is deliberately unconditional, with no `unfiltered_html` exemption:
 	 * core registers the `pre_user_description` filter in default-filters.php
 	 * and `kses_remove_filters()` never removes it, so even administrators and
 	 * multisite super admins get their bio filtered. Exempting them here would
 	 * make the Bio field a way to store markup that wp-admin itself strips.
+	 *
+	 * `$data->value` is the slashed value headed for the xProfile table and
+	 * `update_metadata()` unslashes what it is handed, so the slashes have to survive
+	 * this call — hence the explicit unslash/slash around the kses pass. `wp_kses()`
+	 * with the `user_description` context rather than `wp_filter_kses()`, which would
+	 * fall back to the basic tag set and strip the `a[rel]`/`a[target]` that xProfile
+	 * itself keeps, leaving the two stores holding different markup.
 	 */
-	$value = wp_filter_kses( $data->value );
+	$value = wp_slash( wp_kses( wp_unslash( $data->value ), 'user_description' ) );
 
 	bb_xprofile_bio_syncing( true );
 
@@ -2294,6 +2301,37 @@ function bb_xprofile_bio_loop_user_id() {
 }
 
 /**
+ * Filter a bio value with the same allowed HTML WordPress uses for user descriptions.
+ *
+ * Deliberately `wp_kses()` and not `wp_filter_kses()`. The latter is
+ * `addslashes( wp_kses( stripslashes( $data ), current_filter() ) )` — a write-path
+ * helper whose slashing exists because `pre_*` filters receive already-slashed
+ * `$_POST` data and `$wpdb` expects it back the same way. On a read path the input is
+ * already unslashed, so its `stripslashes()` does nothing and its `addslashes()` is
+ * pure corruption: every apostrophe renders as `\'` and every double quote as `\"`.
+ *
+ * It also passes `current_filter()` as the kses *context*, and an unrecognized context
+ * falls back to the basic `$allowedtags` global — which drops the `a[rel]` and
+ * `a[target]` that `xprofile_filter_kses()` explicitly permits. Naming the
+ * `user_description` context keeps the Bio field aligned with both WordPress's
+ * Biographical Info and xProfile's own filtering.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param mixed $value Bio value to filter.
+ *
+ * @return mixed Filtered value; non-strings are returned untouched.
+ */
+function bb_xprofile_bio_kses( $value ) {
+
+	if ( ! is_string( $value ) || '' === $value ) {
+		return $value;
+	}
+
+	return wp_kses( $value, 'user_description' );
+}
+
+/**
  * Fall back to the WordPress bio when the Bio field has no stored value.
  *
  * The xProfile row for the Bio field is only written once the member (or an
@@ -2334,7 +2372,14 @@ function bb_xprofile_bio_value_fallback( $value, $field_id, $user_id = 0 ) {
 		return $value;
 	}
 
-	return $description;
+	/*
+	 * Core's `xprofile_filter_kses` runs on this same filter at priority 1, so it has
+	 * already seen the empty stored value by the time this substitutes user meta at 10.
+	 * Filter here or the fallback hands back whatever is in `description` verbatim —
+	 * and an importer, WP-CLI, or another plugin writing that meta directly never
+	 * passes through `pre_user_description`.
+	 */
+	return bb_xprofile_bio_kses( $description );
 }
 add_filter( 'xprofile_get_field_data', 'bb_xprofile_bio_value_fallback', 10, 3 );
 
@@ -2372,9 +2417,9 @@ add_filter( 'bp_get_the_profile_field_value', 'bb_xprofile_bio_template_value_fa
  * that value kses-filtered and renders it as HTML (the blog author box does), so
  * escaping here would print tags literally on the profile.
  *
- * Re-reads the value and applies `wp_filter_kses()`, the same pass WordPress runs
- * on `pre_user_description`, so the profile shows exactly the markup wp-admin
- * would have kept — and no more.
+ * Re-reads the value and applies the same allowed HTML WordPress uses for
+ * `user_description`, so the profile shows exactly the markup wp-admin would have
+ * kept — and no more.
  *
  * @since BuddyBoss [BBVERSION]
  *
@@ -2402,7 +2447,7 @@ function bb_xprofile_bio_render_allowed_html( $value, $type, $field_id = 0 ) {
 		return $value;
 	}
 
-	$value = nl2br( wp_filter_kses( $raw ) );
+	$value = nl2br( bb_xprofile_bio_kses( $raw ) );
 
 	return str_replace( array( "\r\n", "\r", "\n" ), '', $value );
 }
@@ -2481,7 +2526,7 @@ function bb_xprofile_bio_restore_in_profile_loop( $fields, $group_id ) {
 
 	$bio_field->data        = new stdClass();
 	$bio_field->data->id    = 0;
-	$bio_field->data->value = $description;
+	$bio_field->data->value = bb_xprofile_bio_kses( $description );
 
 	$fields[] = $bio_field;
 
@@ -2528,7 +2573,12 @@ function bb_xprofile_bio_populate_fallback( $data ) {
 		return;
 	}
 
-	$data->value = $description;
+	/*
+	 * Nothing filters `bp_xprofile_data_after_populate`, and REST reads `$data->value`
+	 * straight off the object, so this is the only place the fallback value can be
+	 * filtered before a client sees it.
+	 */
+	$data->value = bb_xprofile_bio_kses( $description );
 }
 add_action( 'bp_xprofile_data_after_populate', 'bb_xprofile_bio_populate_fallback', 10, 1 );
 

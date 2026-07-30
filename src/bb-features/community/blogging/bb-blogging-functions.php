@@ -301,11 +301,18 @@ function bb_blog_render_post_footer_sections() {
 						/*
 						 * WordPress stores the bio kses-filtered and renders it as HTML with
 						 * line breaks intact, so esc_html() here printed tags literally and
-						 * collapsed every newline. Re-apply the same kses pass WordPress uses on
-						 * save, then nl2br() for the breaks -- nl2br rather than wpautop because
-						 * this is already inside a <p>.
+						 * collapsed every newline. Re-apply the same allowed HTML WordPress uses
+						 * for user descriptions, then nl2br() for the breaks -- nl2br rather than
+						 * wpautop because this is already inside a <p>.
+						 *
+						 * wp_kses() and not wp_filter_kses(): the latter re-adds slashes on the way
+						 * out (it is a write-path helper), which printed a literal backslash
+						 * before every apostrophe and double quote in the bio. Called directly
+						 * rather than through bb_xprofile_bio_kses() because this box reads
+						 * WordPress user meta and must not depend on the xProfile component being
+						 * active.
 						 */
-						echo nl2br( wp_filter_kses( $author_bio ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- kses-filtered above.
+						echo nl2br( wp_kses( $author_bio, 'user_description' ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- kses-filtered above.
 						?>
 					</p>
 					<?php endif; ?>

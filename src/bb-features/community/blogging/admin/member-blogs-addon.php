@@ -228,7 +228,21 @@ function bb_member_blogging_get_addon_state() {
 
 	$product = \BuddyBoss\Core\Admin\Mothership\BB_Addons_Manager::checkProductBySlug( bb_member_blogging_plugin_slug() );
 
-	$state = empty( $product ) ? 'not_in_plan' : 'not_installed';
+	if ( ! empty( $product ) ) {
+		$state = 'not_installed';
+
+		return $state;
+	}
+
+	/*
+	 * An empty product is ambiguous: it means either "not in this customer's plan" or
+	 * "the add-ons API did not answer". Telling a licensed customer to upgrade because
+	 * of a network blip is the worse failure, so only claim not_in_plan when the API
+	 * actually reported back.
+	 */
+	$state = \BuddyBoss\Core\Admin\Mothership\BB_Addons_Manager::productsApiErrored()
+		? 'api_unavailable'
+		: 'not_in_plan';
 
 	return $state;
 }
@@ -252,7 +266,7 @@ function bb_member_blogging_addon_state() {
 	 *
 	 * @param string $state One of: 'active', 'installed_locked',
 	 *                      'installed_inactive', 'not_installed',
-	 *                      'needs_license', 'not_in_plan'.
+	 *                      'needs_license', 'not_in_plan', 'api_unavailable'.
 	 */
 	return apply_filters( 'bb_member_blogging_addon_state', bb_member_blogging_get_addon_state() );
 }
@@ -344,6 +358,18 @@ function bb_member_blogging_get_upsell_field_data() {
 				'empty_state_description' => __( 'Member Blogging is available with the Member Blogging add-on on the Plus plan. Activate your BuddyBoss license to install it.', 'buddyboss' ),
 				'button_label'            => __( 'Activate License', 'buddyboss' ),
 				'button_url'              => bb_member_blogging_get_license_url(),
+			);
+			break;
+
+		case 'api_unavailable':
+			// The license is active but the add-ons API did not answer, so plan
+			// membership is genuinely unknown. Say so instead of guessing — an
+			// "Upgrade to Plus" button shown to a customer who already has Plus
+			// reads as a billing error on our side.
+			$data = array(
+				'empty_state_description' => __( 'We could not reach BuddyBoss to check which add-ons are in your plan. Check your connection and reload this page to try again.', 'buddyboss' ),
+				'button_label'            => __( 'Manage Add-ons', 'buddyboss' ),
+				'button_url'              => bp_get_admin_url( 'admin.php?page=buddyboss-addons' ),
 			);
 			break;
 

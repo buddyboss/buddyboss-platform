@@ -59,7 +59,17 @@ export function AddonActivateButton( { action, slug, label, className, nonceKey,
 		const adminData = window.bbAdminData || {};
 		const nonce = adminData[ nonceKey || 'addonNonce' ];
 
+		// Surface the failure rather than returning quietly. A missing nonce or
+		// ajaxUrl is a wiring bug (a field naming a nonceKey that nothing
+		// localizes, most likely), and a button that does nothing at all on
+		// click is indistinguishable from a hung request.
 		if ( ! slug || ! action || ! nonce || ! adminData.ajaxUrl ) {
+			setError(
+				__(
+					'This action is not available right now. Please reload the page and try again.',
+					'buddyboss'
+				)
+			);
 			return;
 		}
 
