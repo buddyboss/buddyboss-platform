@@ -2118,7 +2118,7 @@ add_action( 'profile_update', 'bp_xprofile_sync_bp_profile', 999, 1 );
  * because every field of that type reads from and writes to the same WordPress
  * user meta key (`description`, shown as "Biographical Info" in wp-admin).
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.3.0
  *
  * @return int Field ID, or 0 when no Bio field exists.
  */
@@ -2144,7 +2144,7 @@ function bb_xprofile_bio_field_id() {
 	/**
 	 * Filters the ID of the Bio profile field.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.3.0
 	 *
 	 * @param int $field_id ID of the Bio field, or 0 when none exists.
 	 */
@@ -2167,7 +2167,7 @@ function bb_xprofile_bio_field_id() {
  * able to write back over the value being saved. Not reachable through core alone,
  * but the counter costs nothing and removes the failure mode.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.3.0
  *
  * @param bool|null $syncing Pass true to enter a sync, false to leave one, or null
  *                           to read the guard.
@@ -2202,7 +2202,7 @@ function bb_xprofile_bio_syncing( $syncing = null ) {
  * plain textarea with no maximum length, so a bio saved from wp-admin must
  * never be rejected when the member later saves their profile.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.3.0
  *
  * @param BP_XProfile_ProfileData $data Profile data object that was just saved.
  *
@@ -2269,7 +2269,7 @@ add_action( 'xprofile_data_after_save', 'bb_xprofile_sync_wp_bio', 10, 1 );
  * user meta is left untouched, and the read-through fallback puts the old bio
  * straight back on the next page load — a clear that silently does nothing.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.3.0
  *
  * @param BP_XProfile_ProfileData $data Profile data object about to be deleted.
  *
@@ -2339,7 +2339,7 @@ add_action( 'xprofile_data_before_delete', 'bb_xprofile_clear_wp_bio', 10, 1 );
  * Callers in that position must set up `$profile_template->user_id`. This is the
  * same constraint BuddyPress's own loop-dependent value filters carry.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.3.0
  *
  * @return int User ID, or 0 when it cannot be determined.
  */
@@ -2373,7 +2373,7 @@ function bb_xprofile_bio_loop_user_id() {
  * `user_description` context keeps the Bio field aligned with both WordPress's
  * Biographical Info and xProfile's own filtering.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.3.0
  *
  * @param mixed $value Bio value to filter.
  *
@@ -2402,7 +2402,7 @@ function bb_xprofile_bio_kses( $value ) {
  * member edits their bio on the community side, at which point the normal
  * two-way sync takes over.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.3.0
  *
  * @param mixed $value    Stored field value.
  * @param int   $field_id ID of the field being read.
@@ -2446,7 +2446,7 @@ add_filter( 'xprofile_get_field_data', 'bb_xprofile_bio_value_fallback', 10, 3 )
  * Runs at priority 0 so the value it supplies still passes through the whole
  * sanitize/escape/format chain that BuddyBoss hooks from priority 1 onwards.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.3.0
  *
  * @param mixed  $value    Stored field value.
  * @param string $type     Field type.
@@ -2478,7 +2478,7 @@ add_filter( 'bp_get_the_profile_field_value', 'bb_xprofile_bio_template_value_fa
  * `user_description`, so the profile shows exactly the markup wp-admin would have
  * kept — and no more.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.3.0
  *
  * @param mixed  $value    Escaped field value.
  * @param string $type     Field type.
@@ -2555,7 +2555,7 @@ add_filter( 'bp_get_the_profile_field_value', 'bb_xprofile_bio_render_allowed_ht
  * deliberate wp-admin exclusion in `bb_xprofile_exclude_bio_field_from_user_admin()`.
  * So every reason the field might legitimately be absent is checked here first.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.3.0
  *
  * @param array $groups Field groups returned for this loop.
  * @param array $args   Resolved arguments the loop was built with.
@@ -2698,7 +2698,7 @@ add_filter( 'bp_xprofile_get_groups', 'bb_xprofile_bio_restore_in_profile_groups
  * object directly) reads `$data->value` rather than going through
  * `xprofile_get_field_data()`, so it needs the fallback applied at the source.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.3.0
  *
  * @param BP_XProfile_ProfileData $data Profile data object that was just populated.
  *
@@ -2734,7 +2734,7 @@ add_action( 'bp_xprofile_data_after_populate', 'bb_xprofile_bio_populate_fallbac
 /**
  * Clear the cached Bio field ID when profile fields change.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.3.0
  *
  * @return void
  */

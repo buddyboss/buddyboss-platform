@@ -18,7 +18,7 @@ class BB_Addons_Manager extends AddonsManager {
 	/**
 	 * How long a successful add-ons lookup stays cached, in seconds.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.3.0
 	 *
 	 * @var int
 	 */
@@ -31,7 +31,7 @@ class BB_Addons_Manager extends AddonsManager {
 	 * one failing HTTP request each, short enough that a transient network problem
 	 * does not keep reading as "this product is not in your plan".
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.3.0
 	 *
 	 * @var int
 	 */
@@ -146,7 +146,7 @@ class BB_Addons_Manager extends AddonsManager {
 	/**
 	 * Whether a response from the add-ons API represents a failure.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.3.0
 	 *
 	 * @param mixed $response Response returned by `getAddons()`.
 	 * @return bool True when the API did not answer successfully.
@@ -168,7 +168,7 @@ class BB_Addons_Manager extends AddonsManager {
 	 * Reads the same cached response that lookup uses, so calling this alongside it
 	 * costs no extra HTTP request.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.3.0
 	 *
 	 * @return bool True when the add-ons list could not be retrieved.
 	 */

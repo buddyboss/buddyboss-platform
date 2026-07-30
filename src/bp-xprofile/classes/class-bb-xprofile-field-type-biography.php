@@ -3,7 +3,7 @@
  * BuddyBoss XProfile Biography Field Class.
  *
  * @package BuddyBoss\XProfile\Classes
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.3.0
  */
 
 // Exit if accessed directly.
@@ -21,14 +21,14 @@ defined( 'ABSPATH' ) || exit;
  * textarea with no maximum length, so a bio saved from wp-admin must never be
  * rejected when the member later saves their profile.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.3.0
  */
 class BB_XProfile_Field_Type_Biography extends BP_XProfile_Field_Type_Textarea {
 
 	/**
 	 * Constructor for the biography field type.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.3.0
 	 */
 	public function __construct() {
 		parent::__construct();
@@ -42,7 +42,7 @@ class BB_XProfile_Field_Type_Biography extends BP_XProfile_Field_Type_Textarea {
 		/**
 		 * Fires inside __construct() method for BB_XProfile_Field_Type_Biography class.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.3.0
 		 *
 		 * @param BB_XProfile_Field_Type_Biography $this Current instance of the
 		 *                                               field type biography.
@@ -58,7 +58,7 @@ class BB_XProfile_Field_Type_Biography extends BP_XProfile_Field_Type_Textarea {
 	 * wp-admin, so the narrow default reads as a mismatch against the field
 	 * members see there.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.3.0
 	 *
 	 * @param array $raw_properties Optional key/value array of permitted attributes.
 	 */
@@ -69,7 +69,7 @@ class BB_XProfile_Field_Type_Biography extends BP_XProfile_Field_Type_Textarea {
 	/**
 	 * Output HTML for this field type on the wp-admin Profile Fields screen.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.3.0
 	 *
 	 * @param array $raw_properties Optional key/value array of permitted attributes.
 	 */
@@ -84,7 +84,7 @@ class BB_XProfile_Field_Type_Biography extends BP_XProfile_Field_Type_Textarea {
 	 * markup, so an explicit `cols` from a caller or a template override still
 	 * wins.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.3.0
 	 *
 	 * @param array $raw_properties Attributes passed in by the caller.
 	 *

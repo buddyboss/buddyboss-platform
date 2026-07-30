@@ -34,7 +34,7 @@
  * `bb_admin_get_feature_settings` AJAX call, i.e. exactly when the panel is
  * actually being viewed.
  *
- * @since   BuddyBoss [BBVERSION]
+ * @since   BuddyBoss 3.3.0
  * @package BuddyBoss\Blogging
  */
 
@@ -43,7 +43,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Plugin file (relative to the plugins directory) of the Member Blogging add-on.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.3.0
  *
  * @return string Plugin basename.
  */
@@ -56,7 +56,7 @@ function bb_member_blogging_plugin_file() {
  *
  * Also the product slug used by the BuddyBoss add-on server.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.3.0
  *
  * @return string Plugin folder slug.
  */
@@ -67,7 +67,7 @@ function bb_member_blogging_plugin_slug() {
 /**
  * Whether the BuddyBoss Mothership license layer is available.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.3.0
  *
  * @return bool True when both Mothership helper classes are loaded.
  */
@@ -79,7 +79,7 @@ function bb_member_blogging_mothership_available() {
 /**
  * Whether the BuddyBoss license is currently activated.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.3.0
  *
  * @return bool True when the Mothership connector reports an active license.
  */
@@ -96,7 +96,7 @@ function bb_member_blogging_is_license_active() {
 /**
  * Admin URL of the BuddyBoss license activation page.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.3.0
  *
  * @return string Admin URL for the license activation screen.
  */
@@ -123,7 +123,7 @@ function bb_member_blogging_get_license_url() {
  *   the real policy — including the grace-period threshold — is reused rather
  *   than duplicated here.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.3.0
  *
  * @return bool True when the add-on's features are DRM-locked.
  */
@@ -184,7 +184,7 @@ function bb_member_blogging_addon_is_drm_locked() {
  * except inside the install/activate handlers below, which read the state
  * before they mutate anything.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.3.0
  *
  * @return string One of: 'active', 'installed_locked', 'installed_inactive',
  *                'not_installed', 'needs_license', 'not_in_plan',
@@ -261,7 +261,7 @@ function bb_member_blogging_get_addon_state() {
  * value, and so staging/QA can exercise every empty-state branch without a
  * matching license.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.3.0
  *
  * @return string Resolved add-on state.
  */
@@ -269,7 +269,7 @@ function bb_member_blogging_addon_state() {
 	/**
 	 * Filters the resolved Member Blogging add-on state.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.3.0
 	 *
 	 * @param string $state One of: 'active', 'installed_locked',
 	 *                      'installed_inactive', 'not_installed',
@@ -290,7 +290,7 @@ function bb_member_blogging_addon_state() {
  * own handlers below verify the `bb_admin_settings` nonce (`ajaxNonce`), while
  * Mothership handlers verify `mosh_addons` (`addonNonce`).
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.3.0
  *
  * @return array Field data overrides.
  */
@@ -407,7 +407,7 @@ function bb_member_blogging_get_upsell_field_data() {
 	 * send unlicensed installs to the pricing page instead of the license
 	 * screen.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.3.0
 	 *
 	 * @param array  $data  Field data overrides.
 	 * @param string $state Resolved add-on state.
@@ -421,7 +421,7 @@ function bb_member_blogging_get_upsell_field_data() {
  * Runs inside `bb_admin_get_feature_settings` only, so the license/plan lookup
  * never touches ordinary admin page loads.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.3.0
  *
  * @param array  $field_data Formatted field data.
  * @param array  $field      Original registered field.
@@ -477,7 +477,7 @@ add_filter( 'bb_admin_settings_format_field_data', 'bb_member_blogging_format_up
  * on a plugin that already exists on disk is a pure WordPress operation and
  * must keep working when the license is not activated.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.3.0
  *
  * @return void
  */
@@ -525,7 +525,7 @@ add_action( 'wp_ajax_bb_member_blogging_activate_plugin', 'bb_member_blogging_aj
  * wordpress.org lookup would only ever fail, and failing with a license message
  * is far more actionable.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.3.0
  *
  * @return void
  */

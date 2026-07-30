@@ -1816,7 +1816,7 @@ function bb_xprofile_repair_xprofile_visibility( $repair_list ) {
  * one wins. Excluding it here leaves WordPress's native field as the single
  * editing surface in wp-admin; the Bio field still renders everywhere else.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.3.0
  *
  * Hooked to the `bp_after_..._parse_args` variant that `bp_parse_args()` builds
  * from the `bp_xprofile_user_admin_profile_loop_args` filter key, so the defaults

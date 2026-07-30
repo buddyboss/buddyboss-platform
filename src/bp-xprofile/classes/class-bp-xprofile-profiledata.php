@@ -115,7 +115,7 @@ class BP_XProfile_ProfileData {
 		 * Bio field, which reads through to the WordPress "Biographical Info"
 		 * user field) a chance to supply a value when no row exists yet.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.3.0
 		 *
 		 * @param BP_XProfile_ProfileData $this Current instance of the profile data.
 		 */
