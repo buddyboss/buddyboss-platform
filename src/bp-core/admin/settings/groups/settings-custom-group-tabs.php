@@ -90,6 +90,17 @@ function bb_group_tabs_addon_check_state() {
 		wp_send_json_success( array( 'state' => 'active' ) );
 	}
 
+	$installed = function_exists( 'get_plugins' ) ? get_plugins() : array();
+
+	// Activating a plugin already on disk needs only activate_plugins, so the
+	// installed state is resolved before the license gate below.
+	if ( isset( $installed[ BB_GROUP_TABS_PRO_PLUGIN ] ) ) {
+		wp_send_json_success( array( 'state' => 'installed' ) );
+	}
+
+	// Not installed: if the Mothership license layer is present but the license is
+	// inactive, Pro cannot be pulled from the BuddyBoss add-on server — surface a
+	// license-activation CTA instead of a dead "Install Now" button.
 	if ( bb_group_tabs_addon_mothership_available() && ! bb_group_tabs_addon_is_license_active() ) {
 		wp_send_json_success(
 			array(
@@ -99,10 +110,7 @@ function bb_group_tabs_addon_check_state() {
 		);
 	}
 
-	$installed = function_exists( 'get_plugins' ) ? get_plugins() : array();
-	$state     = isset( $installed[ BB_GROUP_TABS_PRO_PLUGIN ] ) ? 'installed' : 'not-installed';
-
-	wp_send_json_success( array( 'state' => $state ) );
+	wp_send_json_success( array( 'state' => 'not-installed' ) );
 }
 add_action( 'wp_ajax_bb_group_tabs_addon_check_state', 'bb_group_tabs_addon_check_state' );
 
