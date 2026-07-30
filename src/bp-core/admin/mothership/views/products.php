@@ -9,13 +9,21 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
+// The dependency gates below rely on is_plugin_active(); this view renders on
+// the admin Add-ons page where plugin.php is loaded, but guard for symmetry.
+if ( ! function_exists( 'is_plugin_active' ) ) {
+	require_once ABSPATH . 'wp-admin/includes/plugin.php';
+}
+
 // Collected while rendering; feeds the in-place dependency updater printed
 // after the grid (child product slug => required plugin dirnames, plugin
-// dirname => rendered product slug, and the active state of required plugins
-// that have no card on this page).
-$bb_dependency_children = array();
-$bb_product_dirs        = array();
-$bb_external_parents    = array();
+// dirname => rendered product slug, the active state of required plugins that
+// have no card on this page, and parents with active dependents that have no
+// card here — their Deactivate must stay gated regardless of carded children).
+$bb_dependency_children  = array();
+$bb_product_dirs         = array();
+$bb_external_parents     = array();
+$bb_external_dependents  = array();
 ?>
 
 <div id="mosh-admin-addons" class="wrap">
@@ -136,6 +144,8 @@ $bb_external_parents    = array();
 
 	<?php
 	if ( ! empty( $bb_dependency_children ) && class_exists( 'WP_Plugin_Dependencies' ) ) {
+		WP_Plugin_Dependencies::initialize();
+
 		// Active state of required plugins that have no card on this page —
 		// their state cannot change from here, so the render-time value holds.
 		foreach ( $bb_dependency_children as $bb_child_deps ) {
@@ -143,6 +153,18 @@ $bb_external_parents    = array();
 				if ( ! isset( $bb_product_dirs[ $bb_dep_slug ] ) && ! isset( $bb_external_parents[ $bb_dep_slug ] ) ) {
 					$bb_dep_file = WP_Plugin_Dependencies::get_dependency_filepath( $bb_dep_slug );
 					$bb_external_parents[ $bb_dep_slug ] = ( false !== $bb_dep_file && is_plugin_active( $bb_dep_file ) );
+				}
+			}
+		}
+
+		// Parents with an ACTIVE dependent that has no card here: the in-place
+		// updater can only observe carded children, so such parents' Deactivate
+		// must stay disabled no matter what happens to carded siblings.
+		foreach ( $bb_product_dirs as $bb_parent_dir => $bb_parent_product_slug ) {
+			foreach ( WP_Plugin_Dependencies::get_dependents( $bb_parent_dir ) as $bb_dependent_file ) {
+				if ( is_plugin_active( $bb_dependent_file ) && ! isset( $bb_product_dirs[ dirname( $bb_dependent_file ) ] ) ) {
+					$bb_external_dependents[ $bb_parent_dir ] = true;
+					break;
 				}
 			}
 		}
@@ -162,7 +184,7 @@ $bb_external_parents    = array();
 					return;
 				}
 
-				var deps = <?php echo wp_json_encode( array( 'children' => $bb_dependency_children, 'dirs' => $bb_product_dirs, 'external' => $bb_external_parents ) ); ?>;
+				var deps = <?php echo wp_json_encode( array( 'children' => $bb_dependency_children, 'dirs' => $bb_product_dirs, 'external' => $bb_external_parents, 'externalDependents' => (object) $bb_external_dependents ), JSON_HEX_TAG | JSON_HEX_AMP ); ?>;
 
 				function isParentActive( dirSlug ) {
 					var productSlug = deps.dirs[ dirSlug ];
@@ -211,7 +233,9 @@ $bb_external_parents    = array();
 						if ( ! btn || ! card || ! card.classList.contains( 'mosh-product-status-active' ) ) {
 							return;
 						}
-						btn.disabled = Object.keys( deps.children ).some( function ( childSlug ) {
+						// Non-carded active dependents can't be observed in the DOM —
+						// keep Deactivate gated whenever any exist for this parent.
+						btn.disabled = !! deps.externalDependents[ parentDir ] || Object.keys( deps.children ).some( function ( childSlug ) {
 							return -1 !== deps.children[ childSlug ].indexOf( parentDir ) && isChildActive( childSlug );
 						} );
 					} );
