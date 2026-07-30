@@ -2522,6 +2522,7 @@ function bb_xprofile_bio_render_allowed_html( $value, $type, $field_id = 0 ) {
 
 	return str_replace( array( "\r\n", "\r", "\n" ), '', $value );
 }
+
 /*
  * Priority 11 -- after wpautop() at 10, deliberately. wpautop() contains
  * preg_replace( '|<br />\s*<br />|', "\n\n", ... ), so it turns a double <br> back
