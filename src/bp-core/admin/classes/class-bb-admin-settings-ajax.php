@@ -958,6 +958,12 @@ class BB_Admin_Settings_Ajax {
 				'icon_label'                => ! empty( $field['icon_label'] ) ? sanitize_text_field( $field['icon_label'] ) : null,
 				'button_url'                => ! empty( $field['button_url'] ) ? esc_url_raw( $field['button_url'] ) : null,
 				'button_target'             => $field['button_target'] ?? null,
+				// Resolved below from the field-upgrades catalog when the field opts in
+				// with 'upgrade_from_catalog'. Exposed separately from `button_url` so a
+				// `bb_admin_settings_format_field_data` callback that swaps the button per
+				// runtime state can pick the marketing URL for its upsell states while
+				// keeping its own URLs (license screen, add-ons screen) for the others.
+				'upgrade_catalog_url'       => null,
 				// Empty state fields (centered card with icon + title + description + button).
 				'empty_state_title'         => $field['empty_state_title'] ?? null,
 				'empty_state_description'   => $field['empty_state_description'] ?? null,
@@ -1146,6 +1152,38 @@ class BB_Admin_Settings_Ajax {
 					// No catalog entry — point the play button at the pricing page so
 					// every pro_only field has a consistent upsell destination.
 					$field_data['pro_notice']['link_url'] = 'https://www.buddyboss.com/pricing/';
+				}
+			}
+
+			/*
+			 * Empty-state upsells opt in to the same field-upgrades catalog the
+			 * pro_notice badges above use, so the campaign-tagged marketing URL lives
+			 * in one place (the catalog on S3) rather than hardcoded per panel.
+			 *
+			 * Opt-in rather than automatic: most `empty_state` fields point at
+			 * WordPress screens (`update-core.php`, the add-ons page) that must not be
+			 * replaced by a pricing link.
+			 *
+			 * Resolved at panel/section level — an empty state is the panel's only
+			 * field, so there is no per-field catalog entry to look up.
+			 *
+			 * `upgrade_catalog_url` is exposed alongside `button_url` so a
+			 * `bb_admin_settings_format_field_data` callback that swaps the button per
+			 * runtime state (Member Blogs does) can use the marketing URL for its
+			 * upsell states while keeping its own URLs for the others.
+			 */
+			if (
+				! empty( $field['upgrade_from_catalog'] ) &&
+				function_exists( 'bb_get_field_upgrade_for' )
+			) {
+				$upsell_entry = bb_get_field_upgrade_for( $feature_id, $panel_id, $section_id );
+
+				if ( ! empty( $upsell_entry['upgrade_url'] ) ) {
+					$field_data['upgrade_catalog_url'] = esc_url_raw( $upsell_entry['upgrade_url'] );
+
+					// The registered `button_url` is the fallback for when the catalog has
+					// no entry, so the catalog wins whenever it does.
+					$field_data['button_url'] = $field_data['upgrade_catalog_url'];
 				}
 			}
 
