@@ -2472,75 +2472,122 @@ add_filter( 'bp_get_the_profile_field_value', 'bb_xprofile_bio_render_allowed_ht
  * "Biographical Info" the single source of truth until the member edits their
  * bio on the community side.
  *
+ * Hooked to `bp_xprofile_get_groups` rather than `xprofile_group_fields`, because
+ * only the former is passed the loop's resolved arguments. A field's absence from
+ * a group is ambiguous on its own: it can mean "no data row was ever written", but
+ * it equally means "excluded by `exclude_fields`" or "hidden from this viewer by
+ * visibility settings". `BP_XProfile_Group::get()` enforces visibility as a SQL
+ * `NOT IN` before the fields array exists, and the comment on that code explicitly
+ * warns against overriding it via `exclude_fields`. Restoring on presence alone
+ * would do exactly that — leaking a bio the member had restricted, and undoing the
+ * deliberate wp-admin exclusion in `bb_xprofile_exclude_bio_field_from_user_admin()`.
+ * So every reason the field might legitimately be absent is checked here first.
+ *
  * @since BuddyBoss [BBVERSION]
  *
- * @param array $fields   Fields in the current group.
- * @param int   $group_id ID of the current field group.
+ * @param array $groups Field groups returned for this loop.
+ * @param array $args   Resolved arguments the loop was built with.
  *
- * @return array Fields, with the Bio field restored when applicable.
+ * @return array Groups, with the Bio field restored when applicable.
  */
-function bb_xprofile_bio_restore_in_profile_loop( $fields, $group_id ) {
+function bb_xprofile_bio_restore_in_profile_groups( $groups, $args = array() ) {
+
+	if ( empty( $groups ) || ! is_array( $args ) ) {
+		return $groups;
+	}
 
 	$bio_field_id = bb_xprofile_bio_field_id();
 
-	if ( ! $bio_field_id || empty( $fields ) ) {
-		return $fields;
+	if ( ! $bio_field_id ) {
+		return $groups;
 	}
 
-	// Bail when the field is already in the loop, and confirm data was fetched
-	// at all — loops built with fetch_field_data off must not gain a value.
-	$data_fetched = false;
-	foreach ( $fields as $field ) {
-		if ( (int) $field->id === $bio_field_id ) {
-			return $fields;
-		}
-		if ( isset( $field->data ) ) {
-			$data_fetched = true;
-		}
+	// Nothing to attach a field or a value to.
+	if ( empty( $args['fetch_fields'] ) || empty( $args['fetch_field_data'] ) ) {
+		return $groups;
 	}
 
-	if ( ! $data_fetched ) {
-		return $fields;
+	// The caller explicitly excluded this field. wp-admin's Extended Profile
+	// metabox does exactly that, to avoid a second editable input for a value
+	// WordPress already renders its own field for.
+	if ( ! empty( $args['exclude_fields'] ) && in_array( $bio_field_id, wp_parse_id_list( $args['exclude_fields'] ), true ) ) {
+		return $groups;
 	}
 
-	$user_id = bb_xprofile_bio_loop_user_id();
+	// The caller asked for a specific field allowlist that does not include this one.
+	if ( ! empty( $args['include_fields'] ) && ! in_array( $bio_field_id, wp_parse_id_list( $args['include_fields'] ), true ) ) {
+		return $groups;
+	}
+
+	$user_id = ! empty( $args['user_id'] ) ? (int) $args['user_id'] : 0;
 
 	if ( empty( $user_id ) ) {
-		return $fields;
+		return $groups;
+	}
+
+	/*
+	 * Visibility. Restoring a field the viewer is not allowed to see would expose a
+	 * bio the member restricted — and because the xProfile row is absent for every
+	 * pre-existing member until they re-save their profile, that is the default
+	 * state, not an edge case.
+	 */
+	$hidden_fields = bp_xprofile_get_hidden_fields_for_user( $user_id );
+
+	if ( ! empty( $hidden_fields ) && in_array( $bio_field_id, wp_parse_id_list( $hidden_fields ), true ) ) {
+		return $groups;
 	}
 
 	$description = get_user_meta( $user_id, 'description', true );
 
 	if ( '' === (string) $description ) {
-		return $fields;
+		return $groups;
 	}
 
 	$bio_field = xprofile_get_field( $bio_field_id, null, false );
 
-	if ( empty( $bio_field ) || (int) $bio_field->group_id !== (int) $group_id ) {
-		return $fields;
+	if ( empty( $bio_field ) ) {
+		return $groups;
 	}
 
-	// Clone so the cached field object does not gain this user's data.
-	$bio_field = clone $bio_field;
-
-	$bio_field->data        = new stdClass();
-	$bio_field->data->id    = 0;
-	$bio_field->data->value = bb_xprofile_bio_kses( $description );
-
-	$fields[] = $bio_field;
-
-	// Restore the admin-defined field order.
-	usort(
-		$fields,
-		function ( $a, $b ) {
-			return (int) $a->field_order - (int) $b->field_order;
+	foreach ( $groups as $group ) {
+		if ( ! isset( $group->id ) || (int) $group->id !== (int) $bio_field->group_id ) {
+			continue;
 		}
-	);
 
-	return $fields;
+		if ( ! isset( $group->fields ) || ! is_array( $group->fields ) ) {
+			$group->fields = array();
+		}
+
+		// Already present — the member has a stored value, so leave it alone.
+		foreach ( $group->fields as $field ) {
+			if ( isset( $field->id ) && (int) $field->id === $bio_field_id ) {
+				return $groups;
+			}
+		}
+
+		// Clone so the cached field object does not gain this user's data.
+		$restored = clone $bio_field;
+
+		$restored->data        = new stdClass();
+		$restored->data->id    = 0;
+		$restored->data->value = bb_xprofile_bio_kses( $description );
+
+		$group->fields[] = $restored;
+
+		// Restore the admin-defined field order.
+		usort(
+			$group->fields,
+			function ( $a, $b ) {
+				return (int) $a->field_order - (int) $b->field_order;
+			}
+		);
+
+		break;
+	}
+
+	return $groups;
 }
-add_filter( 'xprofile_group_fields', 'bb_xprofile_bio_restore_in_profile_loop', 10, 2 );
+add_filter( 'bp_xprofile_get_groups', 'bb_xprofile_bio_restore_in_profile_groups', 10, 2 );
 
 /**
  * Supply the WordPress bio to profile data objects that have no stored row.
