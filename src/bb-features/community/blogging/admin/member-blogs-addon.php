@@ -300,6 +300,10 @@ function bb_member_blogging_get_upsell_field_data() {
 		'empty_state_description' => '',
 		'button_label'            => null,
 		'button_url'              => null,
+		// Marks a state whose button is a marketing upsell rather than a link to a
+		// screen in this install. Only those states take the campaign-tagged URL from
+		// the field-upgrades catalog; the license and add-ons screens must keep theirs.
+		'button_url_from_catalog' => false,
 		'button_target'           => null,
 		'addon_action'            => null,
 		'addon_slug'              => null,
@@ -385,7 +389,10 @@ function bb_member_blogging_get_upsell_field_data() {
 			$data = array(
 				'empty_state_description' => __( 'Allow your community members to contribute by creating blogs for your site via the frontend blog creator form. Available with the Member Blogging add-on on the Plus plan.', 'buddyboss' ),
 				'button_label'            => __( 'Upgrade to Plus', 'buddyboss' ),
+				// Fallback for when the catalog has no entry for this panel — see
+				// `button_url_from_catalog` in the defaults above.
 				'button_url'              => 'https://www.buddyboss.com/pricing/',
+				'button_url_from_catalog' => true,
 				'button_target'           => '_blank',
 			);
 			break;
@@ -439,7 +446,20 @@ function bb_member_blogging_format_upsell_field_data( $field_data, $field, $feat
 	$field_data['empty_state_title']       = sanitize_text_field( $overrides['empty_state_title'] );
 	$field_data['empty_state_description'] = sanitize_text_field( $overrides['empty_state_description'] );
 	$field_data['button_label']            = ! empty( $overrides['button_label'] ) ? sanitize_text_field( $overrides['button_label'] ) : null;
-	$field_data['button_url']              = ! empty( $overrides['button_url'] ) ? esc_url_raw( $overrides['button_url'] ) : null;
+
+	/*
+	 * This filter runs after the formatter, so assigning `button_url` here would
+	 * discard the catalog URL the formatter resolved. Take it back for the states
+	 * whose button is a marketing upsell, and only those — `needs_license` and the
+	 * add-ons-screen states must keep pointing inside this install.
+	 */
+	$button_url = ! empty( $overrides['button_url'] ) ? esc_url_raw( $overrides['button_url'] ) : null;
+
+	if ( ! empty( $overrides['button_url_from_catalog'] ) && ! empty( $field_data['upgrade_catalog_url'] ) ) {
+		$button_url = esc_url_raw( $field_data['upgrade_catalog_url'] );
+	}
+
+	$field_data['button_url']       = $button_url;
 	$field_data['button_target']           = ! empty( $overrides['button_target'] ) ? sanitize_text_field( $overrides['button_target'] ) : null;
 	$field_data['addon_action']            = ! empty( $overrides['addon_action'] ) ? sanitize_key( $overrides['addon_action'] ) : null;
 	$field_data['addon_slug']              = ! empty( $overrides['addon_slug'] ) ? sanitize_key( $overrides['addon_slug'] ) : null;

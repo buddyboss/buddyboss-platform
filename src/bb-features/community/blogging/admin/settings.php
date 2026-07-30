@@ -334,7 +334,12 @@ function bb_blogging_register_admin_settings() {
 				'empty_state_title'       => __( 'Member Blogging', 'buddyboss' ),
 				'empty_state_description' => __( 'Allow your community members to contribute by creating blogs for your site via the frontend blog creator form. Available with the Member Blogging add-on on the Plus plan.', 'buddyboss' ),
 				'button_label'            => __( 'Upgrade to Plus', 'buddyboss' ),
+				// Fallback only. With `upgrade_from_catalog` on, the AJAX formatter
+				// replaces this with the campaign-tagged URL from the field-upgrades
+				// catalog when it holds an entry for this panel, so marketing can retarget
+				// the link from S3 without a plugin release.
 				'button_url'              => 'https://www.buddyboss.com/pricing/',
+				'upgrade_from_catalog'    => true,
 				'button_target'           => '_blank',
 				'sanitize_callback'       => '__return_empty_string',
 				'order'                   => 10,
