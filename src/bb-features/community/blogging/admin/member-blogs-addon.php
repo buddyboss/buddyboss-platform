@@ -173,6 +173,12 @@ function bb_member_blogging_addon_is_drm_locked() {
  * - `not_in_plan`        Not on disk and either the license is active but the
  *                        product is absent from the plan, or the Mothership
  *                        layer is missing entirely (no supported install path).
+ * - `api_unavailable`    Not on disk, license active, but the add-ons API did not
+ *                        answer, so plan membership is genuinely unknown. Kept
+ *                        distinct from `not_in_plan` because an empty product list
+ *                        means the same thing in both cases, and telling a licensed
+ *                        customer to upgrade over a network blip is the worse of
+ *                        the two ways to be wrong.
  *
  * Memoized per request: none of the inputs can change within a single request
  * except inside the install/activate handlers below, which read the state
@@ -181,7 +187,8 @@ function bb_member_blogging_addon_is_drm_locked() {
  * @since BuddyBoss [BBVERSION]
  *
  * @return string One of: 'active', 'installed_locked', 'installed_inactive',
- *                'not_installed', 'needs_license', 'not_in_plan'.
+ *                'not_installed', 'needs_license', 'not_in_plan',
+ *                'api_unavailable'.
  */
 function bb_member_blogging_get_addon_state() {
 	static $state = null;

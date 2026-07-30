@@ -2159,20 +2159,35 @@ function bb_xprofile_bio_field_id() {
  * user meta from the xProfile side could re-enter the WordPress side (and vice
  * versa) and overwrite a value mid-flight.
  *
+ * Tracked as a depth counter rather than a boolean. `bp_xprofile_sync_bp_profile()`
+ * raises the guard without first checking it, so with a plain boolean a nested
+ * sync — a third-party callback on an xProfile save hook calling `wp_update_user()`,
+ * for instance — would lower it on the way out while the outer sync was still
+ * inside its critical section, leaving the rest of that outer pass unguarded and
+ * able to write back over the value being saved. Not reachable through core alone,
+ * but the counter costs nothing and removes the failure mode.
+ *
  * @since BuddyBoss [BBVERSION]
  *
- * @param bool|null $syncing Pass a boolean to set the guard, or null to read it.
+ * @param bool|null $syncing Pass true to enter a sync, false to leave one, or null
+ *                           to read the guard.
  *
- * @return bool True while a sync is in progress.
+ * @return bool True while any sync is in progress.
  */
 function bb_xprofile_bio_syncing( $syncing = null ) {
-	static $is_syncing = false;
+	static $depth = 0;
 
 	if ( null !== $syncing ) {
-		$is_syncing = (bool) $syncing;
+		if ( $syncing ) {
+			++$depth;
+		} else {
+			// Never below zero: an unbalanced false must not make the guard
+			// impossible to raise again for the rest of the request.
+			$depth = max( 0, $depth - 1 );
+		}
 	}
 
-	return $is_syncing;
+	return $depth > 0;
 }
 
 /**
@@ -2281,6 +2296,19 @@ add_action( 'xprofile_data_after_delete', 'bb_xprofile_clear_wp_bio', 10, 1 );
  *
  * The `bp_get_the_profile_field_*_value` filters only receive the field, not the
  * user, so the fallback below has to work the user out from the loop globals.
+ *
+ * Order matters. `$profile_template->user_id` is authoritative whenever a loop is
+ * running. `bp_displayed_user_id()` is the fallback for callers that apply the value
+ * filters without a loop — chiefly `BP_REST_XProfile_Fields_Endpoint`, which wraps
+ * its `apply_filters( 'bp_get_the_profile_field_value', ... )` in a
+ * `bp_displayed_user_id` filter set to the requested user for exactly this reason.
+ * Do not drop that fallback: without it the Bio field renders escaped over REST.
+ *
+ * The remaining gap is bespoke code that renders a field value with no loop and a
+ * displayed user pointing at somebody else; there is no signal available here to
+ * detect that, since the value filters are passed the field but never the user.
+ * Callers in that position must set up `$profile_template->user_id`. This is the
+ * same constraint BuddyPress's own loop-dependent value filters carry.
  *
  * @since BuddyBoss [BBVERSION]
  *
@@ -2432,6 +2460,20 @@ add_filter( 'bp_get_the_profile_field_value', 'bb_xprofile_bio_template_value_fa
 function bb_xprofile_bio_render_allowed_html( $value, $type, $field_id = 0 ) {
 
 	if ( 'biography' !== $type ) {
+		return $value;
+	}
+
+	/*
+	 * Both callers of this filter — `bp_get_the_profile_field_value()` and the REST
+	 * fields endpoint — set the `$field` global to the field being rendered before
+	 * applying it. If that global is missing or points at a different field, the
+	 * request did not come through either of them and there is no way to tell whose
+	 * bio is being rendered, so hand the value back untouched rather than re-reading
+	 * somebody's bio on a guess.
+	 */
+	global $field;
+
+	if ( empty( $field->id ) || (int) $field->id !== (int) $field_id ) {
 		return $value;
 	}
 
