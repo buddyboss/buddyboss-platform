@@ -2261,9 +2261,17 @@ add_action( 'xprofile_data_after_save', 'bb_xprofile_sync_wp_bio', 10, 1 );
  * Without this, clearing a bio on the profile would leave the old text in user
  * meta — and still showing in the blog author box.
  *
+ * Hooked to `xprofile_data_before_delete` rather than `..._after_delete`, because
+ * `BP_XProfile_ProfileData::delete()` returns early when the DELETE affects no rows
+ * and never reaches the after hook. That zero-row case is not an edge case here: a
+ * pre-existing member has a WordPress bio and no xProfile row at all, so the first
+ * time they clear the field there is nothing to delete, the after hook never fires,
+ * user meta is left untouched, and the read-through fallback puts the old bio
+ * straight back on the next page load — a clear that silently does nothing.
+ *
  * @since BuddyBoss [BBVERSION]
  *
- * @param BP_XProfile_ProfileData $data Profile data object that was just deleted.
+ * @param BP_XProfile_ProfileData $data Profile data object about to be deleted.
  *
  * @return void
  */
@@ -2283,13 +2291,34 @@ function bb_xprofile_clear_wp_bio( $data ) {
 		return;
 	}
 
+	/*
+	 * Leave user meta alone when the whole user's xProfile data is being wiped.
+	 * `xprofile_remove_data()` loops every field through `xprofile_delete_field_data()`
+	 * and runs on `delete_user`, `wpmu_delete_user` and `bp_make_spam_user`. Clearing
+	 * the WordPress bio there would be wrong in the first two (the user's meta is
+	 * about to go anyway, so there is nothing to gain) and destructive in the third:
+	 * marking a member as spam is reversible via `bp_make_ham_user`, but the bio text
+	 * would not come back.
+	 *
+	 * A plugin calling `xprofile_remove_data()` outside those actions still clears the
+	 * mirrored value, which is the right outcome for a caller deliberately wiping all
+	 * xProfile data.
+	 */
+	if (
+		doing_action( 'delete_user' ) ||
+		doing_action( 'wpmu_delete_user' ) ||
+		doing_action( 'bp_make_spam_user' )
+	) {
+		return;
+	}
+
 	bb_xprofile_bio_syncing( true );
 
 	update_user_meta( (int) $data->user_id, 'description', '' );
 
 	bb_xprofile_bio_syncing( false );
 }
-add_action( 'xprofile_data_after_delete', 'bb_xprofile_clear_wp_bio', 10, 1 );
+add_action( 'xprofile_data_before_delete', 'bb_xprofile_clear_wp_bio', 10, 1 );
 
 /**
  * Resolve the user whose profile the current xProfile loop is rendering.
@@ -2577,6 +2606,36 @@ function bb_xprofile_bio_restore_in_profile_groups( $groups, $args = array() ) {
 
 	if ( ! empty( $hidden_fields ) && in_array( $bio_field_id, wp_parse_id_list( $hidden_fields ), true ) ) {
 		return $groups;
+	}
+
+	/*
+	 * Member-type restriction. This is a third, independent gate in
+	 * `BP_XProfile_Group::get()`: it builds its own `AND id IN (...)` from the field's
+	 * `member_type` meta and the displayed user's type, so it shows up in neither
+	 * `exclude_fields` nor `include_fields` and the checks above cannot see it.
+	 * Mirrors the same conditions core applies, so a Bio field restricted to profile
+	 * types the member does not have stays out of their loop.
+	 */
+	if ( bp_get_member_types() ) {
+		$member_type_arg = isset( $args['member_type'] ) ? $args['member_type'] : false;
+
+		if ( $user_id || false !== $member_type_arg ) {
+			$member_types = $member_type_arg;
+
+			if ( $user_id ) {
+				$member_types = bp_get_member_type( $user_id, false );
+
+				if ( empty( $member_types ) ) {
+					$member_types = array( 'null' );
+				}
+			}
+
+			$allowed_fields = BP_XProfile_Field::get_fields_for_member_type( $member_types );
+
+			if ( ! in_array( $bio_field_id, wp_parse_id_list( array_keys( (array) $allowed_fields ) ), true ) ) {
+				return $groups;
+			}
+		}
 	}
 
 	$description = get_user_meta( $user_id, 'description', true );
