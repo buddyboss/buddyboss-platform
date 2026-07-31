@@ -81,8 +81,8 @@
 		"node": ">=14.15.0"
 	},
 	"license": "GPL-2.0-or-later",
-	"version": "3.2.0",
-	"BBVersion": "3.2.0",
+	"version": "3.3.0",
+	"BBVersion": "3.3.0",
 	"dependencies": {
 		"embla-carousel-auto-height": "^8.6.0",
 		"embla-carousel-react": "^8.6.0"
