@@ -22,11 +22,11 @@ export function getCuratedOverrides() {
 		// 'buddyboss-theme-and-platform'), and the icon is the generic doc icon
 		// — the same one the uncurated cards fall back to.
 		'buddyboss-courses': {
-			icon:        'bb-icons-rl-book',
+			icon:        'bb-icons-rl-graduation-cap',
 			order:       1,
 		},
 		'buddyboss-membership': {
-			icon:        'bb-icons-rl-book',
+			icon:        'bb-icons-rl-identification-card',
 			order:       2,
 		},
 		'buddyboss-theme-and-platform': {
