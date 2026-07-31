@@ -10,13 +10,18 @@
  * Action contracts (see plan §7) are exact — Tasks 13-18 dispatch with these
  * exact action shapes:
  *
- * - `{ type: 'open', rootCategory?, resetToLanding? }` → isOpen=true. When
- *                                    `rootCategory` is provided it is set
+ * - `{ type: 'open', rootCategory?, resetToLanding?, category? }` → isOpen=true.
+ *                                    When `rootCategory` is provided it is set
  *                                    (omitted → unchanged); when
  *                                    `resetToLanding` is true, view='landing',
  *                                    slugs=null and expanded={} are reset in the
- *                                    same atomic transition. Bare `{ type:'open' }`
- *                                    is backwards-compatible (isOpen=true only).
+ *                                    same atomic transition. When `category` is a
+ *                                    non-empty slug it wins over `resetToLanding`:
+ *                                    view='category' with that slug active, so the
+ *                                    modal opens directly inside the category
+ *                                    (skipping the Landing grid). Bare
+ *                                    `{ type:'open' }` is backwards-compatible
+ *                                    (isOpen=true only).
  * - `{ type: 'close' }`              → isOpen=false; other state unchanged
  *                                    (rootCategory is preserved across close).
  * - `{ type: 'goToLanding' }`        → view='landing', slugs=null, expanded={}.
@@ -109,6 +114,14 @@ export function kbReducer( state, action ) {
 				next.activeArticleSlug = null;
 				next.expandedSubcategories = new Set();
 			}
+			// Direct-to-category open (e.g. the MemberPress header cap): wins
+			// over resetToLanding so consumers can spread defaults safely.
+			if ( action.category ) {
+				next.view = 'category';
+				next.activeCategorySlug = action.category;
+				next.activeArticleSlug = null;
+				next.expandedSubcategories = new Set();
+			}
 			return next;
 		}
 		case 'close':
@@ -175,6 +188,7 @@ export function KbProvider( { children } ) {
 		type: 'open',
 		rootCategory: options.rootCategory,
 		resetToLanding: options.resetToLanding,
+		category: options.category,
 	} ), [] );
 	const close = useCallback( () => dispatch( { type: 'close' } ), [] );
 

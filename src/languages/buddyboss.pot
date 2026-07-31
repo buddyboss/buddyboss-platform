@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 3.2.0\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2026-07-30 05:38:04+00:00\n"
+"POT-Creation-Date: 2026-07-31 10:25:06+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -10192,28 +10192,28 @@ msgstr ""
 msgid "An error occurred while resetting license settings."
 msgstr ""
 
-#: bp-core/admin/mothership/views/products.php:25
+#: bp-core/admin/mothership/views/products.php:41
 msgid "Refresh Add-ons"
 msgstr ""
 
-#: bp-core/admin/mothership/views/products.php:29
+#: bp-core/admin/mothership/views/products.php:45
 msgid "Search add-ons"
 msgstr ""
 
-#: bp-core/admin/mothership/views/products.php:42
+#: bp-core/admin/mothership/views/products.php:58
 msgid "New version available."
 msgstr ""
 
-#: bp-core/admin/mothership/views/products.php:43
+#: bp-core/admin/mothership/views/products.php:59
 msgid "Update now"
 msgstr ""
 
 #. Translators: %s: add-on status label.
-#: bp-core/admin/mothership/views/products.php:89
+#: bp-core/admin/mothership/views/products.php:119
 msgid "Status: %s"
 msgstr ""
 
-#: bp-core/admin/mothership/views/products.php:112
+#: bp-core/admin/mothership/views/products.php:142
 msgid "There were no Add-ons found for your License Key."
 msgstr ""
 

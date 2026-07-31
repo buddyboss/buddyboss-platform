@@ -22,6 +22,23 @@ test( 'open with rootCategory + resetToLanding is atomic', () => {
 	expect( next.expandedSubcategories.size ).toBe( 0 );
 } );
 
+test( 'open with category jumps straight into the category view', () => {
+	const start = { ...base(), view: 'landing' };
+	const next = kbReducer( start, { type: 'open', resetToLanding: true, category: 'buddyboss-theme-and-platform' } );
+	expect( next.isOpen ).toBe( true );
+	expect( next.view ).toBe( 'category' );
+	expect( next.activeCategorySlug ).toBe( 'buddyboss-theme-and-platform' );
+	expect( next.activeArticleSlug ).toBe( null );
+	expect( next.expandedSubcategories.size ).toBe( 0 );
+} );
+
+test( 'open without category leaves existing behavior untouched', () => {
+	const start = { ...base(), view: 'category', activeCategorySlug: 'x' };
+	const next = kbReducer( start, { type: 'open', resetToLanding: true } );
+	expect( next.view ).toBe( 'landing' );
+	expect( next.activeCategorySlug ).toBe( null );
+} );
+
 test( 'close does not clear rootCategory', () => {
 	const start = { ...base(), isOpen: true, rootCategory: 'membership' };
 	const next = kbReducer( start, { type: 'close' } );
