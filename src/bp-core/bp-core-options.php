@@ -2695,9 +2695,28 @@ function bb_is_reaction_activity_comments_enabled( $default = true ) {
 function bb_get_reaction_mode( $default = 'likes' ) {
 
 	$mode = bp_get_option( 'bb_reaction_mode', $default );
-	if ( ! class_exists( 'BB_Reactions' ) && 'emotions' === $mode ) {
-		$mode = 'likes';
-		bp_update_option( 'bb_reaction_mode', $mode );
+
+	if ( 'emotions' === $mode ) {
+		// "Emotions" requires the Pro emotion layer, provided by either BuddyBoss
+		// Platform Pro (legacy) or the BuddyBoss Addons plugin. Detect provider
+		// availability in a load-order-independent way: the BB_Reactions class is
+		// loaded late (bb_after_register_features), so a bare class_exists() check
+		// run during earlier hooks (e.g. bb_register_features) would spuriously
+		// report the layer missing.
+		//
+		// IMPORTANT: only fall back for DISPLAY — never persist the downgrade.
+		// Writing 'likes' back from this getter silently corrupted a valid saved
+		// 'emotions' setting on every request where the provider had not booted
+		// yet (and, on addon-only sites, permanently), which made the Reactions
+		// mode appear un-saveable.
+		$emotion_layer_available =
+			class_exists( 'BB_Reactions' )
+			|| ( function_exists( 'bb_addons_is_license_valid' ) && bb_addons_is_license_valid() )
+			|| ( function_exists( 'bbp_pro_is_license_valid' ) && bbp_pro_is_license_valid() );
+
+		if ( ! $emotion_layer_available ) {
+			$mode = 'likes';
+		}
 	}
 
 	return apply_filters( 'bb_get_reaction_mode', $mode );
