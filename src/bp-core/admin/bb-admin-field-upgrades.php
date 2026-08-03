@@ -565,3 +565,50 @@ function bb_register_field_upgrades_license_hooks() {
 	}
 }
 add_action( 'admin_init', 'bb_register_field_upgrades_license_hooks' );
+
+/**
+ * Feature IDs whose upsell should point at the BuddyBoss Addons plan.
+ *
+ * These features moved out of BuddyBoss Platform Pro into the standalone
+ * BuddyBoss Addons plugin, so — when they appear as a locked upsell (the
+ * add-on plugin is not installed/licensed) — their modal CTA should read
+ * "UPGRADE START" (tier 'start') rather than "UPGRADE PRO".
+ *
+ * This is a LOCAL default used only until the remote field-upgrades catalog
+ * carries the correct `upgrade_tier` for these features; a catalog-supplied
+ * tier always wins (see bb_admin_apply_addon_upsell_tier()).
+ *
+ * @since BuddyBoss 3.0.0
+ *
+ * @return string[] Filterable list of feature IDs.
+ */
+function bb_admin_addon_upsell_feature_ids() {
+	return apply_filters(
+		'bb_admin_addon_upsell_feature_ids',
+		array( 'reaction', 'reactions', 'polls', 'sso' )
+	);
+}
+
+/**
+ * Default an add-on feature's upsell modal to the 'start' tier.
+ *
+ * Only rewrites the tier when it is still the generic 'pro' fallback (or
+ * empty), so an explicit catalog-supplied tier is never overridden.
+ *
+ * @since BuddyBoss 3.0.0
+ *
+ * @param array  $modal      Modal payload from bb_field_upgrade_to_modal_payload().
+ * @param string $feature_id The feature the modal belongs to.
+ * @return array Possibly-adjusted modal payload.
+ */
+function bb_admin_apply_addon_upsell_tier( $modal, $feature_id ) {
+	if (
+		is_array( $modal )
+		&& in_array( $feature_id, bb_admin_addon_upsell_feature_ids(), true )
+		&& ( empty( $modal['tier'] ) || 'pro' === $modal['tier'] )
+	) {
+		$modal['tier'] = 'start';
+	}
+
+	return $modal;
+}

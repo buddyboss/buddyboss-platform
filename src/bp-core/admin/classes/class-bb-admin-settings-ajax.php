@@ -558,6 +558,9 @@ class BB_Admin_Settings_Ajax {
 
 						if ( $catalog_entry ) {
 							$section_modal = bb_field_upgrade_to_modal_payload( $catalog_entry, $section['title'] );
+							if ( function_exists( 'bb_admin_apply_addon_upsell_tier' ) ) {
+								$section_modal = bb_admin_apply_addon_upsell_tier( $section_modal, $feature_id );
+							}
 						}
 					}
 
@@ -1141,7 +1144,11 @@ class BB_Admin_Settings_Ajax {
 			) {
 				$entry = bb_get_field_upgrade_for( $feature_id, $panel_id, $section_id, $field['name'] );
 				if ( $entry ) {
-					$field_data['pro_notice']['modal'] = bb_field_upgrade_to_modal_payload( $entry, $field['label'] ?? '' );
+					$field_modal = bb_field_upgrade_to_modal_payload( $entry, $field['label'] ?? '' );
+					if ( function_exists( 'bb_admin_apply_addon_upsell_tier' ) ) {
+						$field_modal = bb_admin_apply_addon_upsell_tier( $field_modal, $feature_id );
+					}
+					$field_data['pro_notice']['modal'] = $field_modal;
 				} else {
 					// No catalog entry — point the play button at the pricing page so
 					// every pro_only field has a consistent upsell destination.
