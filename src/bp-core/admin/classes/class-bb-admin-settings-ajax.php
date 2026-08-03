@@ -1338,9 +1338,18 @@ class BB_Admin_Settings_Ajax {
 		foreach ( $all_fields as $field_key => $field ) {
 			$name = $field['name'];
 
-			// Skip pro_only fields when Pro is not active — defense-in-depth
+			// Skip pro_only fields only when NO provider is available — defense-in-depth
 			// against crafted AJAX requests. The UI already disables these fields.
-			if ( ! empty( $field['pro_only'] ) && ! function_exists( 'bb_platform_pro' ) ) {
+			// Either provider makes the field legitimately saveable: BuddyBoss
+			// Platform Pro (legacy) OR the BuddyBoss Addons plugin, which now owns
+			// features such as reactions/polls/SSO. Without the addon check, an
+			// addon-only site could never persist a pro_only field (e.g. the
+			// reactions mode), because bb_platform_pro() does not exist there.
+			if (
+				! empty( $field['pro_only'] )
+				&& ! function_exists( 'bb_platform_pro' )
+				&& ! ( function_exists( 'bb_addons_is_license_valid' ) && bb_addons_is_license_valid() )
+			) {
 				continue;
 			}
 
