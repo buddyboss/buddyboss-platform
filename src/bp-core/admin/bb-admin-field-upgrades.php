@@ -590,23 +590,54 @@ function bb_admin_addon_upsell_feature_ids() {
 }
 
 /**
+ * Field names whose upsell should point at the BuddyBoss Addons plan.
+ *
+ * Some add-on features surface as a `pro_only` FIELD inside a feature that is
+ * NOT itself an add-on feature — e.g. the "Enable Social Login" field
+ * (`bb-social-login`) lives under the core `registration` feature. Matching on
+ * the feature id alone (see bb_admin_addon_upsell_feature_ids()) would miss
+ * these fields, and re-tiering the whole host feature would be wrong, so they
+ * are allow-listed here by field name instead.
+ *
+ * LOCAL default until the remote field-upgrades catalog carries the correct
+ * `upgrade_tier` for these fields; a catalog-supplied tier always wins.
+ *
+ * @since BuddyBoss 3.0.0
+ *
+ * @return string[] Filterable list of field names.
+ */
+function bb_admin_addon_upsell_field_names() {
+	return apply_filters(
+		'bb_admin_addon_upsell_field_names',
+		array( 'bb-social-login', '_bb-sso-providers', '_bb_enable_activity_post_polls', '_bb_enable_activity_pinned_posts' )
+	);
+}
+
+/**
  * Default an add-on feature's upsell modal to the 'start' tier.
  *
  * Only rewrites the tier when it is still the generic 'pro' fallback (or
- * empty), so an explicit catalog-supplied tier is never overridden.
+ * empty), so an explicit catalog-supplied tier is never overridden. Matches
+ * either by host feature id (add-on features) or by field name (add-on fields
+ * embedded in a core feature, e.g. social login under registration).
  *
  * @since BuddyBoss 3.0.0
  *
  * @param array  $modal      Modal payload from bb_field_upgrade_to_modal_payload().
  * @param string $feature_id The feature the modal belongs to.
+ * @param string $field_name Optional. The field the modal belongs to.
  * @return array Possibly-adjusted modal payload.
  */
-function bb_admin_apply_addon_upsell_tier( $modal, $feature_id ) {
-	if (
-		is_array( $modal )
-		&& in_array( $feature_id, bb_admin_addon_upsell_feature_ids(), true )
-		&& ( empty( $modal['tier'] ) || 'pro' === $modal['tier'] )
-	) {
+function bb_admin_apply_addon_upsell_tier( $modal, $feature_id, $field_name = '' ) {
+	if ( ! is_array( $modal ) ) {
+		return $modal;
+	}
+
+	$is_addon_upsell =
+		in_array( $feature_id, bb_admin_addon_upsell_feature_ids(), true )
+		|| ( '' !== $field_name && in_array( $field_name, bb_admin_addon_upsell_field_names(), true ) );
+
+	if ( $is_addon_upsell && ( empty( $modal['tier'] ) || 'pro' === $modal['tier'] ) ) {
 		$modal['tier'] = 'start';
 	}
 

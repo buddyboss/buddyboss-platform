@@ -2500,6 +2500,28 @@ function bb_feed_excluded_post_types() {
  */
 function bb_is_active_activity_pinned_posts( $default = false ) {
 
+	$enabled = (bool) bp_get_option( '_bb_enable_activity_pinned_posts', $default );
+
+	if ( $enabled ) {
+		// Pinned Posts moved out of the free Platform into the BuddyBoss Addons
+		// plugin. The stored `_bb_enable_activity_pinned_posts` option can remain
+		// enabled from before that move, so the feature is only truly ACTIVE when
+		// the add-on is present AND licensed — otherwise the pin controls, the
+		// REST support and the add-on's own pin logic must all treat it as off.
+		//
+		// Two independent signals so the gate is load-order safe:
+		//  - the add-on's licensed-provider check (present only when the add-on
+		//    plugin is active; true only with a valid license), or
+		//  - the add-on's pin mutation function actually being loaded.
+		$provider_available =
+			( function_exists( 'bb_addons_is_license_valid' ) && bb_addons_is_license_valid() )
+			|| function_exists( 'bb_activity_pin_unpin_post' );
+
+		if ( ! $provider_available ) {
+			$enabled = false;
+		}
+	}
+
 	/**
 	 * Filters whether activity pinned posts are enabled.
 	 *
@@ -2507,7 +2529,7 @@ function bb_is_active_activity_pinned_posts( $default = false ) {
 	 *
 	 * @param bool $value Whether activity pinned posts are enabled.
 	 */
-	return (bool) apply_filters( 'bb_is_active_activity_pinned_posts', (bool) bp_get_option( '_bb_enable_activity_pinned_posts', $default ) );
+	return (bool) apply_filters( 'bb_is_active_activity_pinned_posts', $enabled );
 }
 
 /**

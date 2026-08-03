@@ -1146,13 +1146,44 @@ class BB_Admin_Settings_Ajax {
 				if ( $entry ) {
 					$field_modal = bb_field_upgrade_to_modal_payload( $entry, $field['label'] ?? '' );
 					if ( function_exists( 'bb_admin_apply_addon_upsell_tier' ) ) {
-						$field_modal = bb_admin_apply_addon_upsell_tier( $field_modal, $feature_id );
+						$field_modal = bb_admin_apply_addon_upsell_tier( $field_modal, $feature_id, $field['name'] );
 					}
 					$field_data['pro_notice']['modal'] = $field_modal;
 				} else {
 					// No catalog entry — point the play button at the pricing page so
 					// every pro_only field has a consistent upsell destination.
-					$field_data['pro_notice']['link_url'] = 'https://www.buddyboss.com/pricing/';
+					if (
+						function_exists( 'bb_admin_addon_upsell_field_names' )
+						&& in_array( $field['name'], bb_admin_addon_upsell_field_names(), true )
+					) {
+						// Add-on field (e.g. Pinned Post) with no remote catalog copy yet:
+						// synthesize an in-page "UPGRADE START" modal from the field's own
+						// upgrade_* metadata (falling back to its label/description) so its
+						// CTA matches the other add-on upsells instead of opening the
+						// pricing page in a new tab.
+						$synth_image = ! empty( $field['upgrade_image_url'] ) ? esc_url_raw( $field['upgrade_image_url'] ) : '';
+						$field_data['pro_notice']['modal'] = array(
+							'tier'        => 'start',
+							'label'       => $field['label'] ?? '',
+							'title'       => ! empty( $field['upgrade_title'] ) ? $field['upgrade_title'] : ( $field['label'] ?? '' ),
+							'description' => ! empty( $field['upgrade_description'] ) ? $field['upgrade_description'] : ( $field['description'] ?? '' ),
+							'image_url'   => $synth_image,
+							'media'       => '' !== $synth_image
+								? array(
+									'type'   => 'image',
+									'url'    => $synth_image,
+									'poster' => '',
+								)
+								: array(
+									'type'   => '',
+									'url'    => '',
+									'poster' => '',
+								),
+							'url'         => 'https://www.buddyboss.com/pricing/',
+						);
+					} else {
+						$field_data['pro_notice']['link_url'] = 'https://www.buddyboss.com/pricing/';
+					}
 				}
 			}
 
