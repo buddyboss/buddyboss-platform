@@ -172,12 +172,13 @@ function bb_appearance_sanitize_media( $value ) {
  * @since BuddyBoss 3.0.0
  *
  * @param mixed $value Submitted value.
- * @return array{registration: bool, courses: bool} Sanitized map.
+ * @return array{registration: bool, courses: bool, blog: bool} Sanitized map.
  */
 function bb_appearance_sanitize_enabled_pages( $value ) {
 	$map = array(
 		'registration' => false,
 		'courses'      => false,
+		'blog'         => false,
 	);
 
 	if ( ! is_array( $value ) ) {

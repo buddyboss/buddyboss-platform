@@ -326,7 +326,27 @@ class BB_Admin_Settings_Ajax {
 		$registry      = bb_feature_registry();
 		$icon_registry = bb_icon_registry();
 		$activate      = 'active' === $status;
-		$result        = $activate
+
+		// Defense-in-depth: refuse to activate a DRM-locked add-on feature via
+		// a crafted request — the card's toggle is already disabled in the UI
+		// (see bb_admin_mark_drm_locked_features()). Deactivation stays
+		// allowed so admins can still turn a locked feature off.
+		if ( $activate ) {
+			$registered = $registry->bb_get_feature( $feature_id );
+
+			if (
+				$registered &&
+				! empty( $registered['drm_product_slug'] ) &&
+				class_exists( '\\BuddyBoss\\Core\\Admin\\DRM\\BB_DRM_Registry' ) &&
+				\BuddyBoss\Core\Admin\DRM\BB_DRM_Registry::should_lock_addon_features( $registered['drm_product_slug'] )
+			) {
+				wp_send_json_error(
+					array( 'message' => __( 'This feature requires an active license.', 'buddyboss' ) )
+				);
+			}
+		}
+
+		$result = $activate
 			? $registry->bb_activate_feature( $feature_id )
 			: $registry->bb_deactivate_feature( $feature_id );
 
@@ -518,10 +538,11 @@ class BB_Admin_Settings_Ajax {
 				}
 
 				// Include pro_notice if set (e.g. UPGRADE PRO badge in section header).
-				// Section-level badges intentionally do NOT trigger the field-upgrades
-				// modal — only field-level pro badges open UpgradeModal in-page.
-				// Section badges keep their original behavior: open `link_url` in a new
-				// tab when set, otherwise render as a static label.
+				// The badge opens the UpgradeModal in-page when a modal payload is
+				// available — resolved from the field-upgrades catalog first
+				// (feature/panel/section lookup), then from a payload supplied at
+				// registration time. With no modal payload the badge keeps its
+				// original behavior: open `link_url` in a new tab.
 				if ( ! empty( $section['pro_notice'] ) && is_array( $section['pro_notice'] ) ) {
 					$formatted_section['pro_notice'] = array(
 						'show'       => ! empty( $section['pro_notice']['show'] ),
@@ -529,6 +550,42 @@ class BB_Admin_Settings_Ajax {
 						'badge_icon' => sanitize_text_field( $section['pro_notice']['badge_icon'] ?? 'bb-icons-rl-crown-simple' ),
 						'link_url'   => esc_url_raw( $section['pro_notice']['link_url'] ?? '' ),
 					);
+
+					$section_modal = null;
+
+					if ( function_exists( 'bb_get_field_upgrade_for' ) ) {
+						$catalog_entry = bb_get_field_upgrade_for( $feature_id, $side_panel_id, $section_id );
+
+						if ( $catalog_entry ) {
+							$section_modal = bb_field_upgrade_to_modal_payload( $catalog_entry, $section['title'] );
+						}
+					}
+
+					if ( empty( $section_modal ) && ! empty( $section['pro_notice']['modal'] ) && is_array( $section['pro_notice']['modal'] ) ) {
+						$registered_modal = $section['pro_notice']['modal'];
+
+						$registered_media = function_exists( 'bb_admin_build_upgrade_media' )
+							? bb_admin_build_upgrade_media( $registered_modal['video_url'] ?? '', $registered_modal['image_url'] ?? '' )
+							: array(
+								'type'   => ! empty( $registered_modal['image_url'] ) ? 'image' : '',
+								'url'    => esc_url_raw( $registered_modal['image_url'] ?? '' ),
+								'poster' => '',
+							);
+
+						$section_modal = array(
+							'tier'        => sanitize_key( $registered_modal['tier'] ?? 'pro' ),
+							'label'       => sanitize_text_field( $registered_modal['label'] ?? $section['title'] ),
+							'title'       => sanitize_text_field( $registered_modal['title'] ?? '' ),
+							'description' => wp_kses_post( $registered_modal['description'] ?? '' ),
+							'image_url'   => esc_url_raw( $registered_modal['image_url'] ?? '' ),
+							'media'       => $registered_media,
+							'url'         => esc_url_raw( $registered_modal['url'] ?? 'https://www.buddyboss.com/pricing/' ),
+						);
+					}
+
+					if ( ! empty( $section_modal ) ) {
+						$formatted_section['pro_notice']['modal'] = $section_modal;
+					}
 				}
 
 				// Section-level help URL (renders a (?) icon in the section header).
@@ -901,9 +958,21 @@ class BB_Admin_Settings_Ajax {
 				'icon_label'                => ! empty( $field['icon_label'] ) ? sanitize_text_field( $field['icon_label'] ) : null,
 				'button_url'                => ! empty( $field['button_url'] ) ? esc_url_raw( $field['button_url'] ) : null,
 				'button_target'             => $field['button_target'] ?? null,
+				// Resolved below from the field-upgrades catalog when the field opts in
+				// with 'upgrade_from_catalog'. Exposed separately from `button_url` so a
+				// `bb_admin_settings_format_field_data` callback that swaps the button per
+				// runtime state can pick the marketing URL for its upsell states while
+				// keeping its own URLs (license screen, add-ons screen) for the others.
+				'upgrade_catalog_url'       => null,
 				// Empty state fields (centered card with icon + title + description + button).
 				'empty_state_title'         => $field['empty_state_title'] ?? null,
 				'empty_state_description'   => $field['empty_state_description'] ?? null,
+				// Optional add-on install/activate action for empty-state buttons. When
+				// set, the button triggers the Mothership AJAX flow (mosh_addon_install /
+				// mosh_addon_activate) in place of a plugins.php redirect. 'addon_slug' is
+				// the plugin folder slug (e.g. "buddyboss-member-blogging").
+				'addon_action'              => ! empty( $field['addon_action'] ) ? sanitize_key( $field['addon_action'] ) : null,
+				'addon_slug'                => ! empty( $field['addon_slug'] ) ? sanitize_key( $field['addon_slug'] ) : null,
 				'related_fields'            => ! empty( $field['related_fields'] ) && is_array( $field['related_fields'] ) ? array_map( 'sanitize_key', $field['related_fields'] ) : null,
 				// Per-option descriptions for select fields (description swaps on value change).
 				// map_deep handles nested structures safely; each leaf string is kses-filtered.
@@ -1083,6 +1152,38 @@ class BB_Admin_Settings_Ajax {
 					// No catalog entry — point the play button at the pricing page so
 					// every pro_only field has a consistent upsell destination.
 					$field_data['pro_notice']['link_url'] = 'https://www.buddyboss.com/pricing/';
+				}
+			}
+
+			/*
+			 * Empty-state upsells opt in to the same field-upgrades catalog the
+			 * pro_notice badges above use, so the campaign-tagged marketing URL lives
+			 * in one place (the catalog on S3) rather than hardcoded per panel.
+			 *
+			 * Opt-in rather than automatic: most `empty_state` fields point at
+			 * WordPress screens (`update-core.php`, the add-ons page) that must not be
+			 * replaced by a pricing link.
+			 *
+			 * Resolved at panel/section level — an empty state is the panel's only
+			 * field, so there is no per-field catalog entry to look up.
+			 *
+			 * `upgrade_catalog_url` is exposed alongside `button_url` so a
+			 * `bb_admin_settings_format_field_data` callback that swaps the button per
+			 * runtime state (Member Blogs does) can use the marketing URL for its
+			 * upsell states while keeping its own URLs for the others.
+			 */
+			if (
+				! empty( $field['upgrade_from_catalog'] ) &&
+				function_exists( 'bb_get_field_upgrade_for' )
+			) {
+				$upsell_entry = bb_get_field_upgrade_for( $feature_id, $panel_id, $section_id );
+
+				if ( ! empty( $upsell_entry['upgrade_url'] ) ) {
+					$field_data['upgrade_catalog_url'] = esc_url_raw( $upsell_entry['upgrade_url'] );
+
+					// The registered `button_url` is the fallback for when the catalog has
+					// no entry, so the catalog wins whenever it does.
+					$field_data['button_url'] = $field_data['upgrade_catalog_url'];
 				}
 			}
 

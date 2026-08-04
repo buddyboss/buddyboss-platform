@@ -35,6 +35,7 @@ import { ProfileTypeRedirectsField } from './fields/ProfileTypeRedirectsField';
 import { AccessControlField } from './access-control/AccessControlField';
 import { NotificationTypesField } from './notifications';
 import { CheckboxListField } from './fields/CheckboxListField';
+import { AddonActivateButton } from './fields/AddonActivateButton';
 import { ImageRadioField } from './fields/ImageRadioField';
 import { DimensionsField } from './fields/DimensionsField';
 import { ConfirmToggleModal } from './modals/ConfirmToggleModal';
@@ -939,7 +940,20 @@ export function SettingsForm({ fields, values, onChange, onProBadgeClick, disabl
 								dangerouslySetInnerHTML={{ __html: sanitizedHtml[ field.name + '__desc' ] || '' }}
 							/>
 						) }
-						{ field.button_label && field.button_url && (
+						{ field.button_label && field.addon_action && field.addon_slug ? (
+							// Install or activate the add-on in place via AJAX.
+							// `addon_nonce_key` picks which bbAdminData nonce the
+							// handler expects (Mothership vs Platform-owned) —
+							// see AddonActivateButton for the two families.
+							<AddonActivateButton
+								action={ field.addon_action }
+								slug={ field.addon_slug }
+								label={ field.button_label }
+								nonceKey={ field.addon_nonce_key }
+								busyLabel={ field.addon_busy_label }
+								className="bb-admin-empty-state__button"
+							/>
+						) : field.button_label && field.button_url ? (
 							<a
 								href={ safeUrl( field.button_url ) }
 								className="bb-admin-empty-state__button"
@@ -948,7 +962,7 @@ export function SettingsForm({ fields, values, onChange, onProBadgeClick, disabl
 							>
 								{ field.button_label }
 							</a>
-						) }
+						) : null }
 					</div>
 				);
 
