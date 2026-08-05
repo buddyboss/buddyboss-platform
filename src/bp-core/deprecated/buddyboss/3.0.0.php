@@ -4614,6 +4614,22 @@ if ( ! function_exists( 'bb_activity_pin_unpin_post_deprecation_shim' ) ) {
 			_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'the BuddyBoss Addons plugin' );
 			return false;
 		}
+
+		/**
+		 * Marker: the no-op fallback above is in place, i.e. no real provider loaded.
+		 *
+		 * Callers cannot use `function_exists( 'bb_activity_pin_unpin_post' )` to
+		 * detect availability once the shim has installed, because the shim always
+		 * defines that name. They test for this marker instead — it exists only on
+		 * the fallback path.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @return bool Always true.
+		 */
+		function bb_activity_pin_unpin_post_is_stub() {
+			return true;
+		}
 	}
 	add_action( 'bp_init', 'bb_activity_pin_unpin_post_deprecation_shim', 1 );
 }

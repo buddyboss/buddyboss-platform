@@ -1076,7 +1076,24 @@ class BB_Admin_Settings_Ajax {
 				empty( $field_data['pro_notice'] ) &&
 				function_exists( 'bb_admin_settings_get_pro_notice' )
 			) {
-				$pro_notice               = bb_admin_settings_get_pro_notice( array( 'type' => $feature_id ) );
+				// Add-on fields are gated on their PROVIDER, not on the host feature.
+				// bb_admin_settings_get_pro_notice() resolves by feature `type`, but
+				// the fields for the moved features live under Platform's own
+				// features — `activity` (Polls, Pinned Post) and `registration`
+				// (Social Login) — so a type-based lookup can never see them and
+				// would fall through to the "is Platform Pro installed?" branch.
+				// Since Pro no longer ships these features, that check unlocks a
+				// toggle nothing implements. Resolve by field name instead.
+				$pro_notice = bb_admin_settings_get_pro_notice( array( 'type' => $feature_id ) );
+
+				if (
+					function_exists( 'bb_admin_addon_upsell_field_names' ) &&
+					function_exists( 'bb_admin_addon_field_has_provider' ) &&
+					in_array( $field['name'], bb_admin_addon_upsell_field_names(), true )
+				) {
+					$pro_notice['show'] = ! bb_admin_addon_field_has_provider( $field['name'] );
+				}
+
 				$field_data['pro_notice'] = ! empty( $pro_notice['show'] ) ? $pro_notice : null;
 			}
 
@@ -1380,6 +1397,21 @@ class BB_Admin_Settings_Ajax {
 				! empty( $field['pro_only'] )
 				&& ! function_exists( 'bb_platform_pro' )
 				&& ! ( function_exists( 'bb_addons_should_lock_features' ) && ! bb_addons_should_lock_features() )
+			) {
+				continue;
+			}
+
+			// Fields for the features that moved into the BuddyBoss Addons plugin
+			// are gated on their PROVIDER, not on Platform Pro being installed —
+			// Pro 3.2.0+ no longer ships them, so the check above would let an
+			// unbacked toggle persist a value that nothing reads. Mirrors the
+			// pro_notice resolution in bb_get_feature_data().
+			if (
+				! empty( $field['pro_only'] )
+				&& function_exists( 'bb_admin_addon_upsell_field_names' )
+				&& function_exists( 'bb_admin_addon_field_has_provider' )
+				&& in_array( $field['name'], bb_admin_addon_upsell_field_names(), true )
+				&& ! bb_admin_addon_field_has_provider( $field['name'] )
 			) {
 				continue;
 			}

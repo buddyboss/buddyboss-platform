@@ -6549,7 +6549,6 @@ function bb_activity_is_enabled_cpt_global_comment( $post_type ) {
 	return apply_filters( 'bb_activity_is_enabled_cpt_global_comment', $supports_comments, $post_type );
 }
 
-
 /**
  * Fetch the pin type based on the screen its activity/group.
  *

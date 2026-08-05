@@ -578,7 +578,7 @@ add_action( 'admin_init', 'bb_register_field_upgrades_license_hooks' );
  * carries the correct `upgrade_tier` for these features; a catalog-supplied
  * tier always wins (see bb_admin_apply_addon_upsell_tier()).
  *
- * @since BuddyBoss 3.0.0
+ * @since BuddyBoss [BBVERSION]
  *
  * @return string[] Filterable list of feature IDs.
  */
@@ -602,7 +602,7 @@ function bb_admin_addon_upsell_feature_ids() {
  * LOCAL default until the remote field-upgrades catalog carries the correct
  * `upgrade_tier` for these fields; a catalog-supplied tier always wins.
  *
- * @since BuddyBoss 3.0.0
+ * @since BuddyBoss [BBVERSION]
  *
  * @return string[] Filterable list of field names.
  */
@@ -614,6 +614,63 @@ function bb_admin_addon_upsell_field_names() {
 }
 
 /**
+ * Whether a moved-feature field actually has a working provider on this site.
+ *
+ * These fields are registered by Platform as `pro_only` placeholders, but the
+ * code behind them now lives in the BuddyBoss Addons plugin. Availability must
+ * therefore be decided by asking "is the feature present?", never by
+ * `function_exists( 'bb_platform_pro' )` — Platform Pro 3.2.0+ no longer ships
+ * Polls, Reactions or Social Login, so its mere presence would unlock a toggle
+ * that saves happily and then does nothing.
+ *
+ * This is also why the fields cannot be resolved through
+ * `bb_admin_settings_get_pro_notice()`'s `type` argument: they live under
+ * Platform's own `activity` and `registration` features, not under a `polls` or
+ * `sso` feature, so a type-based lookup never sees them.
+ *
+ * Probes are deliberately CLASS-based wherever a class exists. Function names are
+ * not safe probes here: both Platform and Platform Pro ship `_deprecated_function()`
+ * shims under the moved features' old function names (`bb_load_polls()`,
+ * `bb_enable_sso()`, `bb_activity_pin_unpin_post()`, …) so that un-updated external
+ * callers degrade instead of fatalling. Those shims make `function_exists()` return
+ * true on a site with no provider at all. A deprecation shim never declares a class,
+ * so `class_exists()` cannot be fooled the same way.
+ *
+ * Every probe is guarded so Platform never hard-depends on an optional plugin.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $field_name Registered field name.
+ * @return bool True when a real provider for that field's feature is loaded.
+ */
+function bb_admin_addon_field_has_provider( $field_name ) {
+	switch ( $field_name ) {
+		case 'bb-social-login':
+		case '_bb-sso-providers':
+			// The add-on's SSO module and legacy Pro both instantiate BB_SSO at load.
+			return class_exists( 'BB_SSO' );
+
+		case '_bb_enable_activity_post_polls':
+			// Both providers call BB_Polls::instance() at load.
+			return class_exists( 'BB_Polls' );
+
+		case '_bb_enable_activity_pinned_posts':
+			// Pinned Posts has no class, so test the mutation function AND rule out
+			// Platform's own no-op shim, which advertises itself via the marker
+			// below. Correct at both call times: the add-on defines the real
+			// function at bp_include:20, while the shim installs later at bp_init:1.
+			return function_exists( 'bb_activity_pin_unpin_post' )
+				&& ! function_exists( 'bb_activity_pin_unpin_post_is_stub' );
+
+		default:
+			// Unknown field — a third party extended the allow-list via
+			// `bb_admin_addon_upsell_field_names`. Assume a provider exists rather
+			// than locking a field we know nothing about.
+			return true;
+	}
+}
+
+/**
  * Default an add-on feature's upsell modal to the 'start' tier.
  *
  * Only rewrites the tier when it is still the generic 'pro' fallback (or
@@ -621,7 +678,7 @@ function bb_admin_addon_upsell_field_names() {
  * either by host feature id (add-on features) or by field name (add-on fields
  * embedded in a core feature, e.g. social login under registration).
  *
- * @since BuddyBoss 3.0.0
+ * @since BuddyBoss [BBVERSION]
  *
  * @param array  $modal      Modal payload from bb_field_upgrade_to_modal_payload().
  * @param string $feature_id The feature the modal belongs to.
