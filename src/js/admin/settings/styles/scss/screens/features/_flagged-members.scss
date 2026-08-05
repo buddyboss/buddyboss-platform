@@ -352,11 +352,14 @@
 	background: $bb-background-base-color;
 	border-radius: $bb-border-radius-2xl;
 	width: 90%;
-	max-width: 700px;
 	max-height: 85vh;
 	display: flex;
 	flex-direction: column;
 	box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+
+	&.bb-admin-settings-modal {
+		max-width: 800px;
+	}
 
 	&__body {
 		flex: 1;
@@ -541,9 +544,6 @@
 		font-weight: 400;
 		color: $bb-text-tertiary-color;
 		line-height: 16px;
-		white-space: nowrap;
-		overflow: hidden;
-		text-overflow: ellipsis;
 	}
 
 	&__list-item-date {
