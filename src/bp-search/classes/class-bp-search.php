@@ -842,6 +842,10 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 				$args['per_page'] = absint( $args['per_page'] );
 			}
 
+			if ( isset( $args['ajax_per_page'] ) ) {
+				$args['ajax_per_page'] = absint( $args['ajax_per_page'] );
+			}
+
 			if ( isset( $args['current_page'] ) ) {
 				$args['current_page'] = absint( $args['current_page'] );
 			}
