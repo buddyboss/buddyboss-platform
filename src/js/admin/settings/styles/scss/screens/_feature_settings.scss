@@ -2105,6 +2105,17 @@
 
     margin: 0 8px 0 16px;
 
+    // START tier — features moved to the BuddyBoss Addons plan. White fill with a
+    // gradient border (matches the placeholder card's UPGRADE START badge), instead
+    // of the solid-orange border + pink→lavender fill of the default PRO badge.
+    // padding-box/border-box keeps the pill radius while the border is a gradient.
+    &--start {
+        border: 1px solid transparent;
+        background:
+            linear-gradient(#fff, #fff) padding-box,
+            linear-gradient(114.36deg, #E0623D 4.86%, #3E34FF 91.52%) border-box;
+    }
+
     span {
         font-size: 11px;
         font-weight: 500;

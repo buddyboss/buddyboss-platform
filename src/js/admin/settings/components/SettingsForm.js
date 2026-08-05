@@ -1444,7 +1444,7 @@ export function SettingsForm({ fields, values, onChange, onProBadgeClick, disabl
 							<span className="bb-admin-settings-form__field-label-text">{field.label}</span>
 							{ 'reaction_mode' !== field.type && field.pro_notice?.show && (
 								<>
-									<span className="bb-pro-badge">
+									<span className={`bb-pro-badge${ field.pro_notice.tier ? ' bb-pro-badge--' + field.pro_notice.tier : '' }`}>
 										<i className={field.pro_notice.badge_icon || ''} />
 										<span>{field.pro_notice.badge_text || 'PRO'}</span>
 									</span>

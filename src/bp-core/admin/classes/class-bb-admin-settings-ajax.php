@@ -1204,6 +1204,26 @@ class BB_Admin_Settings_Ajax {
 				}
 			}
 
+			// Moved-feature fields (Reactions, Polls, Social Login, Pinned Posts —
+			// now shipped by the BuddyBoss Addons plugin) upsell the START plan, not
+			// PRO. Relabel the field badge to "START" and tag pro_notice with the tier
+			// so the React badge renders the START styling (white fill + gradient
+			// border). Mirrors the modal tier set by bb_admin_apply_addon_upsell_tier()
+			// above, and uses the same addon-upsell allow-lists as the single source
+			// of truth for "which fields belong to the moved features".
+			if (
+				! empty( $field_data['pro_notice']['show'] ) &&
+				function_exists( 'bb_admin_addon_upsell_feature_ids' ) &&
+				function_exists( 'bb_admin_addon_upsell_field_names' ) &&
+				(
+					in_array( $feature_id, bb_admin_addon_upsell_feature_ids(), true ) ||
+					in_array( $field['name'], bb_admin_addon_upsell_field_names(), true )
+				)
+			) {
+				$field_data['pro_notice']['tier']       = 'start';
+				$field_data['pro_notice']['badge_text'] = __( 'START', 'buddyboss' );
+			}
+
 			// Inject upload_config and resolved upload_url for image_radio/image_upload fields with upload support.
 			// Only whitelisted keys are sent to the frontend — url_getter stays server-side.
 			$upload_types = array( 'image_radio', 'image_upload' );
