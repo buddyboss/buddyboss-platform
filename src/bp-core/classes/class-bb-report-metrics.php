@@ -115,8 +115,12 @@ if ( ! class_exists( 'BB_Report_Metrics' ) ) {
 				'post_type_fallback' => 'shop_order',
 				'meta_key'           => '_order_total',
 				'status'             => array( 'wc-completed', 'wc-processing' ),
-				'currency_func'      => 'get_woocommerce_currency',
-				'currency_key'       => 'woocommerce_currency',
+				// Tutor 3.x sells natively and keeps its own currency in the
+				// tutor_option array. WooCommerce is only the fallback for older
+				// installs that monetised through WC.
+				'currency_key'       => 'tutor_option',
+				'currency_index'     => 'currency_code',
+				'currency_key_alt'   => 'woocommerce_currency',
 				'custom_where'       => 'tutor_order',
 			),
 			'pmpro'               => array(
@@ -132,7 +136,10 @@ if ( ! class_exists( 'BB_Report_Metrics' ) ) {
 				'file'          => 'affiliate-wp/affiliate-wp.php',
 				'table'         => 'affiliate_wp_referrals',
 				'amount_col'    => 'amount',
-				'status'        => array( 'unpaid' ),
+				// Referrals that were actually earned. Counting only 'unpaid'
+				// excluded every commission already paid out, so the figure
+				// shrank each time a payout ran.
+				'status'        => array( 'paid', 'unpaid' ),
 				'currency_func' => 'affwp_get_currency',
 				'currency_key'  => 'affwp_settings',
 			),
@@ -145,6 +152,10 @@ if ( ! class_exists( 'BB_Report_Metrics' ) ) {
 				'status'             => array( 'publish' ),
 				'currency_func'      => 'tribe_get_option',
 				'currency_option'    => 'tribe_currency_code',
+				// Tribe__Main::OPTIONNAME, read directly when tribe_get_option()
+				// is not loaded.
+				'currency_key'       => 'tribe_events_calendar_options',
+				'currency_index'     => 'tribe_currency_code',
 			),
 		);
 
