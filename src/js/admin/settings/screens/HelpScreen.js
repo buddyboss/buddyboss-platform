@@ -873,7 +873,7 @@ export function HelpScreen( { onNavigate } ) {
 						<div className="bb-admin-help-promo__media">
 							<img
 								src={ upgradePlus }
-								alt={ __( 'Upgrade to plus preview', 'buddyboss' ) }
+								alt={ __( 'Upgrade to scale preview', 'buddyboss' ) }
 								className="bb-admin-help-promo__image"
 							/>
 						</div>
@@ -919,7 +919,7 @@ export function HelpScreen( { onNavigate } ) {
 						<div className="bb-admin-help-promo__media">
 							<img
 								src={ upgradePro }
-								alt={ __( 'Upgrade to pro preview', 'buddyboss' ) }
+								alt={ __( 'Upgrade to launch preview', 'buddyboss' ) }
 								className="bb-admin-help-promo__image"
 							/>
 						</div>

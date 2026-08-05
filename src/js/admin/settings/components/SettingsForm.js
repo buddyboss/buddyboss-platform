@@ -941,11 +941,16 @@ export function SettingsForm({ fields, values, onChange, onProBadgeClick, disabl
 							/>
 						) }
 						{ field.button_label && field.addon_action && field.addon_slug ? (
-							// Installed add-on: activate in place via Mothership AJAX.
+							// Install or activate the add-on in place via AJAX.
+							// `addon_nonce_key` picks which bbAdminData nonce the
+							// handler expects (Mothership vs Platform-owned) —
+							// see AddonActivateButton for the two families.
 							<AddonActivateButton
 								action={ field.addon_action }
 								slug={ field.addon_slug }
 								label={ field.button_label }
+								nonceKey={ field.addon_nonce_key }
+								busyLabel={ field.addon_busy_label }
 								className="bb-admin-empty-state__button"
 							/>
 						) : field.button_label && field.button_url ? (

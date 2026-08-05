@@ -2,9 +2,9 @@
 # This file is distributed under the GPLv2 or later (license.txt).
 msgid ""
 msgstr ""
-"Project-Id-Version: BuddyBoss Platform 3.2.0\n"
+"Project-Id-Version: BuddyBoss Platform 3.3.0\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2026-08-05 15:11:29+00:00\n"
+"POT-Creation-Date: 2026-08-05 15:22:00+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -139,7 +139,7 @@ msgstr ""
 
 #: bb-features/community/appearance/admin/pages-panel.php:319
 #: bb-features/community/appearance/admin/pages-panel.php:438
-#: bp-core/admin/classes/class-bb-admin-settings-ajax.php:2473
+#: bp-core/admin/classes/class-bb-admin-settings-ajax.php:2511
 msgid "— Select a page —"
 msgstr ""
 
@@ -199,8 +199,8 @@ msgstr ""
 
 #. translators: %d: WordPress page ID, used as a fallback when a page has no title.
 #: bb-features/community/appearance/admin/pages-panel.php:812
-#: bp-core/admin/classes/class-bb-admin-settings-ajax.php:2486
-#: bp-core/admin/classes/class-bb-admin-settings-ajax.php:2547
+#: bp-core/admin/classes/class-bb-admin-settings-ajax.php:2524
+#: bp-core/admin/classes/class-bb-admin-settings-ajax.php:2585
 msgid "(no title) #%d"
 msgstr ""
 
@@ -865,28 +865,140 @@ msgstr ""
 msgid "Configure ReadyLaunch layout, community pages, and site SEO settings to control your site's appearance and visibility."
 msgstr ""
 
+#: bb-features/community/blogging/admin/member-blogs-addon.php:147
+#: bb-features/community/blogging/admin/member-blogs-addon.php:299
+#: bb-features/community/blogging/admin/settings.php:334
+msgid "Member Blogging"
+msgstr ""
+
+#: bb-features/community/blogging/admin/member-blogs-addon.php:323
+msgid "The Member Blogging add-on is active but this version does not provide these settings. Update the add-on to continue."
+msgstr ""
+
+#: bb-features/community/blogging/admin/member-blogs-addon.php:324
+#: bb-features/community/blogging/admin/member-blogs-addon.php:382
+msgid "Manage Add-ons"
+msgstr ""
+
+#: bb-features/community/blogging/admin/member-blogs-addon.php:334
+msgid "The Member Blogging add-on is installed, but your BuddyBoss license is not active. Activate your license to use Member Blogging."
+msgstr ""
+
+#: bb-features/community/blogging/admin/member-blogs-addon.php:335
+#: bb-features/community/blogging/admin/member-blogs-addon.php:370
+#: bp-core/admin/mothership/class-bb-license-manager.php:907
+msgid "Activate License"
+msgstr ""
+
+#: bb-features/community/blogging/admin/member-blogs-addon.php:342
+msgid "The Member Blogging add-on is installed but not activated. Activate it to let your community members create blog posts from the frontend."
+msgstr ""
+
+#: bb-features/community/blogging/admin/member-blogs-addon.php:343
+msgid "Activate Plugin"
+msgstr ""
+
+#: bb-features/community/blogging/admin/member-blogs-addon.php:347
+msgid "Activating…"
+msgstr ""
+
+#: bb-features/community/blogging/admin/member-blogs-addon.php:353
+msgid "Member Blogging is included in your plan. Install the add-on to let your community members create blog posts from the frontend."
+msgstr ""
+
+#: bb-features/community/blogging/admin/member-blogs-addon.php:354
+msgid "Install & Activate"
+msgstr ""
+
+#: bb-features/community/blogging/admin/member-blogs-addon.php:358
+msgid "Installing…"
+msgstr ""
+
+#: bb-features/community/blogging/admin/member-blogs-addon.php:369
+msgid "Member Blogging is available with the Member Blogging add-on on the Plus plan. Activate your BuddyBoss license to install it."
+msgstr ""
+
+#: bb-features/community/blogging/admin/member-blogs-addon.php:381
+msgid "We could not reach BuddyBoss to check which add-ons are in your plan. Check your connection and reload this page to try again."
+msgstr ""
+
+#: bb-features/community/blogging/admin/member-blogs-addon.php:390
+#: bb-features/community/blogging/admin/settings.php:335
+msgid "Allow your community members to contribute by creating blogs for your site via the frontend blog creator form. Available with the Member Blogging add-on on the Plus plan."
+msgstr ""
+
+#: bb-features/community/blogging/admin/member-blogs-addon.php:391
+#: bb-features/community/blogging/admin/settings.php:336
+msgid "Upgrade to Scale"
+msgstr ""
+
+#: bb-features/community/blogging/admin/member-blogs-addon.php:486
+#: bb-features/community/blogging/admin/member-blogs-addon.php:534
+#: bp-core/admin/bp-core-admin-functions.php:2454
+#: bp-core/admin/settings/media/callbacks.php:291
+#: bp-core/admin/settings/media/callbacks.php:415
+#: bp-core/admin/settings/media/callbacks.php:508
+#: bp-core/admin/settings/media/callbacks.php:593
+#: bp-core/admin/settings/tools/callbacks.php:78
+#: bp-core/admin/settings/tools/callbacks.php:123
+#: bp-core/admin/settings/tools/callbacks.php:167
+msgid "Permission denied."
+msgstr ""
+
+#: bb-features/community/blogging/admin/member-blogs-addon.php:497
+msgid "The Member Blogging add-on is not installed."
+msgstr ""
+
+#: bb-features/community/blogging/admin/member-blogs-addon.php:509
+#: bp-core/admin/settings/tools/callbacks.php:140
+msgid "Plugin activation failed. Please try again."
+msgstr ""
+
+#: bb-features/community/blogging/admin/member-blogs-addon.php:544
+msgid "The Member Blogging add-on cannot be installed automatically on this site. Please install it manually."
+msgstr ""
+
+#: bb-features/community/blogging/admin/member-blogs-addon.php:550
+#: bp-core/admin/settings/tools/callbacks.php:185
+msgid "Please activate your BuddyBoss license to install this add-on."
+msgstr ""
+
+#: bb-features/community/blogging/admin/member-blogs-addon.php:561
+msgid "The Member Blogging add-on is not available under your current license."
+msgstr ""
+
+#: bb-features/community/blogging/admin/member-blogs-addon.php:579
+#: bp-core/admin/settings/tools/callbacks.php:241
+msgid "Plugin installation failed. Please try again."
+msgstr ""
+
+#: bb-features/community/blogging/admin/member-blogs-addon.php:601
+#: bp-core/admin/settings/tools/callbacks.php:255
+msgid "Plugin installed but activation failed. Please try again."
+msgstr ""
+
 #. translators: %s: required BuddyBoss Platform Pro version, e.g. 3.1.0.
-#: bb-features/community/blogging/admin/settings.php:63
+#: bb-features/community/blogging/admin/settings.php:68
 msgid "Blog Bookmarking and Subscriptions require BuddyBoss Platform Pro %s or later. Please update BuddyBoss Platform Pro to use these features."
 msgstr ""
 
-#: bb-features/community/blogging/admin/settings.php:85
+#: bb-features/community/blogging/admin/settings.php:90
 msgid "Blog Settings"
 msgstr ""
 
-#: bb-features/community/blogging/admin/settings.php:107
+#: bb-features/community/blogging/admin/settings.php:112
 msgid "Post Settings"
 msgstr ""
 
-#: bb-features/community/blogging/admin/settings.php:135
+#: bb-features/community/blogging/admin/settings.php:140
 msgid "Bookmarking"
 msgstr ""
 
-#: bb-features/community/blogging/admin/settings.php:137
+#: bb-features/community/blogging/admin/settings.php:142
 msgid "Allow users to bookmark blog posts"
 msgstr ""
 
-#: bb-features/community/blogging/admin/settings.php:152
+#: bb-features/community/blogging/admin/settings.php:157
 #: bp-core/admin/settings/forums/settings-forum-features.php:77
 #: bp-core/admin/settings/forums/settings-forum-permalinks.php:180
 #: bp-core/admin/settings/groups/settings-group-settings.php:69
@@ -895,48 +1007,48 @@ msgstr ""
 msgid "Subscriptions"
 msgstr ""
 
-#: bb-features/community/blogging/admin/settings.php:154
+#: bb-features/community/blogging/admin/settings.php:159
 msgid "Allow users to subscribe to blog post categories"
 msgstr ""
 
-#: bb-features/community/blogging/admin/settings.php:168
+#: bb-features/community/blogging/admin/settings.php:173
 msgid "Page Settings"
 msgstr ""
 
-#: bb-features/community/blogging/admin/settings.php:188
+#: bb-features/community/blogging/admin/settings.php:193
 msgid "The Blog Page Settings are only available when the BuddyBoss Theme or ReadyLaunch is selected."
 msgstr ""
 
-#: bb-features/community/blogging/admin/settings.php:214
+#: bb-features/community/blogging/admin/settings.php:219
 #: bb-features/community/blogging/bb-blogging-functions.php:97
 #: bp-core/admin/settings/activity/settings-sharing.php:426
 #: bp-core/admin/settings/registration/settings-registration.php:322
-#: bp-xprofile/bp-xprofile-functions.php:1612
+#: bp-xprofile/bp-xprofile-functions.php:1613
 msgid "Facebook"
 msgstr ""
 
-#: bb-features/community/blogging/admin/settings.php:215
+#: bb-features/community/blogging/admin/settings.php:220
 #: bb-features/community/blogging/bb-blogging-functions.php:102
 #: bp-core/admin/settings/activity/settings-sharing.php:436
 #: bp-core/admin/settings/registration/settings-registration.php:332
 msgid "Linkedin"
 msgstr ""
 
-#: bb-features/community/blogging/admin/settings.php:216
+#: bb-features/community/blogging/admin/settings.php:221
 #: bb-features/community/blogging/bb-blogging-functions.php:107
 #: bp-core/admin/settings/activity/settings-sharing.php:431
 #: bp-core/admin/settings/registration/settings-registration.php:327
-#: bp-xprofile/bp-xprofile-functions.php:1732
+#: bp-xprofile/bp-xprofile-functions.php:1733
 msgid "X"
 msgstr ""
 
-#: bb-features/community/blogging/admin/settings.php:217
+#: bb-features/community/blogging/admin/settings.php:222
 #: bb-features/community/blogging/bb-blogging-functions.php:112
 #: bp-core/admin/settings/activity/settings-sharing.php:441
 msgid "Whatsapp"
 msgstr ""
 
-#: bb-features/community/blogging/admin/settings.php:218
+#: bb-features/community/blogging/admin/settings.php:223
 #: bb-features/community/blogging/bb-blogging-functions.php:117
 #: bp-core/bp-core-functions.php:3349
 #: bp-core/bp-core-functions.php:3445
@@ -963,50 +1075,30 @@ msgstr ""
 msgid "Email"
 msgstr ""
 
-#: bb-features/community/blogging/admin/settings.php:235
+#: bb-features/community/blogging/admin/settings.php:240
 msgid "Social Links"
 msgstr ""
 
-#: bb-features/community/blogging/admin/settings.php:253
-#: bb-features/community/blogging/bb-blogging-functions.php:324
+#: bb-features/community/blogging/admin/settings.php:258
+#: bb-features/community/blogging/bb-blogging-functions.php:342
 msgid "Related Posts"
 msgstr ""
 
-#: bb-features/community/blogging/admin/settings.php:255
+#: bb-features/community/blogging/admin/settings.php:260
 msgid "Enable related posts at the bottom of blog posts"
 msgstr ""
 
-#: bb-features/community/blogging/admin/settings.php:269
+#: bb-features/community/blogging/admin/settings.php:274
 msgid "Author Bio"
 msgstr ""
 
-#: bb-features/community/blogging/admin/settings.php:271
+#: bb-features/community/blogging/admin/settings.php:276
 msgid "Enable the Author Bio box at the bottom of blog posts"
 msgstr ""
 
-#: bb-features/community/blogging/admin/settings.php:289
-#: bb-features/community/blogging/admin/settings.php:303
+#: bb-features/community/blogging/admin/settings.php:294
+#: bb-features/community/blogging/admin/settings.php:308
 msgid "Member Blogs"
-msgstr ""
-
-#: bb-features/community/blogging/admin/settings.php:320
-msgid "The Member Blogging add-on is installed but not activated. Activate it to let your community members create blog posts from the frontend."
-msgstr ""
-
-#: bb-features/community/blogging/admin/settings.php:321
-msgid "Activate Plugin"
-msgstr ""
-
-#: bb-features/community/blogging/admin/settings.php:332
-msgid "Allow your community members to contribute by creating blogs for your site via the frontend blog creator form. Available with the Member Blogging add-on on the Scale plan."
-msgstr ""
-
-#: bb-features/community/blogging/admin/settings.php:333
-msgid "Upgrade to Scale"
-msgstr ""
-
-#: bb-features/community/blogging/admin/settings.php:347
-msgid "Member Blogging"
 msgstr ""
 
 #: bb-features/community/blogging/bb-blogging-functions.php:225
@@ -1015,18 +1107,18 @@ msgstr ""
 
 #. translators: 1: sub-tab label, 2: item count.
 #. translators: 1: user display name, 2: username (user_nicename).
-#: bb-features/community/blogging/bb-blogging-functions.php:474
+#: bb-features/community/blogging/bb-blogging-functions.php:492
 #: bp-core/admin/classes/class-bb-admin-groups-ajax.php:1881
 msgid "%1$s (%2$s)"
 msgstr ""
 
-#: bb-features/community/blogging/bb-blogging-functions.php:538
-#: bb-features/community/blogging/bb-blogging-functions.php:603
+#: bb-features/community/blogging/bb-blogging-functions.php:556
+#: bb-features/community/blogging/bb-blogging-functions.php:621
 msgid "Sort posts"
 msgstr ""
 
-#: bb-features/community/blogging/bb-blogging-functions.php:539
-#: bb-features/community/blogging/bb-blogging-functions.php:581
+#: bb-features/community/blogging/bb-blogging-functions.php:557
+#: bb-features/community/blogging/bb-blogging-functions.php:599
 #: bp-core/deprecated/buddypress/1.6.php:159
 #: bp-core/deprecated/buddypress/1.6.php:187
 #: bp-friends/classes/class-bp-core-friends-widget.php:149
@@ -1042,8 +1134,8 @@ msgstr ""
 msgid "Newest"
 msgstr ""
 
-#: bb-features/community/blogging/bb-blogging-functions.php:540
-#: bb-features/community/blogging/bb-blogging-functions.php:582
+#: bb-features/community/blogging/bb-blogging-functions.php:558
+#: bb-features/community/blogging/bb-blogging-functions.php:600
 #: bp-groups/bp-groups-template.php:5613
 #: bp-templates/bp-nouveau/includes/members/functions.php:121
 #: bp-templates/bp-nouveau/readylaunch/blog/archive-header.php:92
@@ -6204,7 +6296,7 @@ msgid "This email address or domain has been blacklisted. If you think you are s
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-actions.php:903
-#: bp-core/admin/classes/class-bb-admin-settings-ajax.php:1584
+#: bp-core/admin/classes/class-bb-admin-settings-ajax.php:1622
 msgid "Settings saved successfully."
 msgstr ""
 
@@ -6436,17 +6528,6 @@ msgstr ""
 
 #: bp-core/admin/bp-core-admin-functions.php:2241
 msgid "Install"
-msgstr ""
-
-#: bp-core/admin/bp-core-admin-functions.php:2454
-#: bp-core/admin/settings/media/callbacks.php:291
-#: bp-core/admin/settings/media/callbacks.php:415
-#: bp-core/admin/settings/media/callbacks.php:508
-#: bp-core/admin/settings/media/callbacks.php:593
-#: bp-core/admin/settings/tools/callbacks.php:78
-#: bp-core/admin/settings/tools/callbacks.php:123
-#: bp-core/admin/settings/tools/callbacks.php:167
-msgid "Permission denied."
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-functions.php:2461
@@ -6737,7 +6818,7 @@ msgstr ""
 #: bp-media/bp-media-filters.php:1782
 #: bp-members/bp-members-filters.php:897
 #: bp-video/bp-video-filters.php:1050
-#: bp-xprofile/bp-xprofile-functions.php:2787
+#: bp-xprofile/bp-xprofile-functions.php:3440
 msgid "Complete!"
 msgstr ""
 
@@ -7655,8 +7736,8 @@ msgstr ""
 #: bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php:269
 #: bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php:339
 #: bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php:390
-#: bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php:529
-#: bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php:584
+#: bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php:531
+#: bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php:586
 msgid "Profile component is not active."
 msgstr ""
 
@@ -7797,66 +7878,75 @@ msgstr ""
 msgid "You can only have one instance of the \"Social Network\" profile field."
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php:482
+#: bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php:481
+msgid "You can only have one instance of the \"Bio\" profile field."
+msgstr ""
+
+#: bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php:484
 msgid "There was an error saving the field. Please try again."
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php:512
+#: bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php:514
 msgid "Field saved successfully."
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php:536
+#: bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php:538
 msgid "Field ID is required."
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php:541
+#: bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php:543
 msgid "Invalid field."
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php:545
+#: bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php:547
 msgid "This field cannot be deleted."
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php:554
+#: bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php:556
 msgid "There was an error deleting the field. Please try again."
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php:567
+#: bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php:569
 msgid "Field deleted successfully."
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php:658
+#: bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php:660
 msgid "Order updated successfully."
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php:937
+#: bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php:939
 msgid "Single Line Input"
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php:938
+#: bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php:940
 msgid "Paragraph Input"
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php:939
+#: bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php:941
+#: bp-xprofile/classes/class-bb-xprofile-field-type-biography.php:37
+msgid "Bio"
+msgstr ""
+
+#: bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php:942
 msgid "Dropdown"
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php:940
+#: bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php:943
 #: bp-xprofile/classes/class-bp-xprofile-field-type-multiselectbox.php:28
 msgid "Multi Select"
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php:941
+#: bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php:944
 #: bp-xprofile/classes/class-bp-xprofile-field-type-checkbox.php:28
 msgid "Checkboxes"
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php:942
+#: bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php:945
 #: bp-xprofile/classes/class-bp-xprofile-field-type-radiobutton.php:28
 msgid "Radio Buttons"
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php:943
+#: bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php:946
 #: bp-core/admin/settings/emails/meta-fields.php:323
 #: bp-core/admin/settings/forums/meta-fields-replies.php:301
 #: bp-core/admin/settings/forums/meta-fields-topics.php:333
@@ -7866,21 +7956,21 @@ msgstr ""
 msgid "Date"
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php:944
+#: bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php:947
 #: bp-members/bp-members-functions.php:5090
 #: bp-xprofile/classes/class-bp-xprofile-field-type-number.php:28
 msgid "Number"
 msgstr ""
 
 #. translators: accessibility text
-#: bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php:945
+#: bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php:948
 #: bp-xprofile/classes/class-bp-xprofile-field-type-telephone.php:28
 #: bp-xprofile/classes/class-bp-xprofile-field-type-telephone.php:132
 msgid "Phone"
 msgstr ""
 
 #. translators: accessibility text
-#: bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php:946
+#: bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php:949
 #: bp-core/deprecated/buddypress/1.5.php:177
 #: bp-templates/bp-nouveau/includes/members/functions.php:472
 #: bp-xprofile/classes/class-bp-xprofile-field-type-url.php:28
@@ -7888,7 +7978,7 @@ msgstr ""
 msgid "Website"
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php:947
+#: bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php:950
 #: bp-core/profile-search/bps-xprofile.php:428
 #: bp-core/profile-search/bps-xprofile.php:431
 #: bp-core/profile-search/bps-xprofile.php:432
@@ -7896,14 +7986,14 @@ msgstr ""
 msgid "Gender"
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php:948
+#: bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php:951
 #: bp-core/admin/settings/members/settings-profile-headers.php:120
 #: bp-members/bp-members-admin.php:67
 #: bp-xprofile/classes/class-bp-xprofile-field-type-social-networks.php:28
 msgid "Social Networks"
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php:949
+#: bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php:952
 #: bp-core/admin/settings/members/settings-member-directory.php:115
 #: bp-core/admin/settings/members/settings-profile-headers.php:96
 #: bp-members/bp-members-admin.php:32
@@ -7918,55 +8008,59 @@ msgstr ""
 msgid "Profile Type"
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php:979
+#: bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php:982
 msgid "Displays a single-line text field where users can enter short text."
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php:980
+#: bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php:983
 msgid "Displays a multi-line text field where users can enter longer text."
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php:981
-msgid "Displays a dropdown list where users can select one option from multiple predefined choices."
-msgstr ""
-
-#: bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php:982
-msgid "Displays a list where users can select multiple options."
-msgstr ""
-
-#: bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php:983
-msgid "Displays multiple options where users can select one or more choices."
-msgstr ""
-
 #: bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php:984
-msgid "Displays multiple options where users can select one choice."
+msgid "Displays a multi-line text field for the member's bio, shared with the \"Biographical Info\" field on their WordPress profile."
 msgstr ""
 
 #: bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php:985
-msgid "Displays a date picker for selecting a specific date."
+msgid "Displays a dropdown list where users can select one option from multiple predefined choices."
 msgstr ""
 
 #: bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php:986
-msgid "Displays a field for entering a numeric value."
+msgid "Displays a list where users can select multiple options."
 msgstr ""
 
 #: bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php:987
-msgid "Displays a field for entering a phone number."
+msgid "Displays multiple options where users can select one or more choices."
 msgstr ""
 
 #: bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php:988
-msgid "Displays a field for entering a website address (URL)."
+msgid "Displays multiple options where users can select one choice."
 msgstr ""
 
 #: bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php:989
-msgid "Allows users to select their gender from the options: Male, Female, or Other."
+msgid "Displays a date picker for selecting a specific date."
 msgstr ""
 
 #: bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php:990
-msgid "Select one or more social networks to display as icons in the user's profile."
+msgid "Displays a field for entering a numeric value."
 msgstr ""
 
 #: bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php:991
+msgid "Displays a field for entering a phone number."
+msgstr ""
+
+#: bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php:992
+msgid "Displays a field for entering a website address (URL)."
+msgstr ""
+
+#: bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php:993
+msgid "Allows users to select their gender from the options: Male, Female, or Other."
+msgstr ""
+
+#: bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php:994
+msgid "Select one or more social networks to display as icons in the user's profile."
+msgstr ""
+
+#: bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php:995
 msgid "Allows users to select their profile type."
 msgstr ""
 
@@ -8225,7 +8319,7 @@ msgstr ""
 
 #: bp-core/admin/classes/class-bb-admin-settings-ajax.php:315
 #: bp-core/admin/classes/class-bb-admin-settings-ajax.php:418
-#: bp-core/admin/classes/class-bb-admin-settings-ajax.php:1348
+#: bp-core/admin/classes/class-bb-admin-settings-ajax.php:1386
 msgid "Feature ID is required."
 msgstr ""
 
@@ -8235,7 +8329,7 @@ msgstr ""
 
 #: bp-core/admin/classes/class-bb-admin-settings-ajax.php:323
 #: bp-core/admin/classes/class-bb-admin-settings-ajax.php:422
-#: bp-core/admin/classes/class-bb-admin-settings-ajax.php:1352
+#: bp-core/admin/classes/class-bb-admin-settings-ajax.php:1390
 msgid "Feature registry not available."
 msgstr ""
 
@@ -8260,24 +8354,24 @@ msgstr ""
 msgid "Feature not found."
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-admin-settings-ajax.php:1224
+#: bp-core/admin/classes/class-bb-admin-settings-ajax.php:1230
 msgid "START"
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-admin-settings-ajax.php:1344
+#: bp-core/admin/classes/class-bb-admin-settings-ajax.php:1382
 msgid "Invalid settings format."
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-admin-settings-ajax.php:1361
-#: bp-core/admin/classes/class-bb-admin-settings-ajax.php:1364
+#: bp-core/admin/classes/class-bb-admin-settings-ajax.php:1399
+#: bp-core/admin/classes/class-bb-admin-settings-ajax.php:1402
 msgid "Invalid settings data."
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-admin-settings-ajax.php:1401
+#: bp-core/admin/classes/class-bb-admin-settings-ajax.php:1439
 msgid "No fields registered for this feature."
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-admin-settings-ajax.php:2359
+#: bp-core/admin/classes/class-bb-admin-settings-ajax.php:2397
 #: bp-core/admin/settings/groups/settings-group-images.php:219
 #: bp-core/admin/settings/members/settings-profile-image.php:233
 #: bp-core/admin/settings/registration/settings-login-redirects.php:55
@@ -8287,21 +8381,21 @@ msgstr ""
 msgid "Default"
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-admin-settings-ajax.php:2363
+#: bp-core/admin/classes/class-bb-admin-settings-ajax.php:2401
 #: bp-core/admin/settings/registration/settings-registration.php:96
 msgid "Custom URL"
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-admin-settings-ajax.php:2468
-#: bp-core/admin/classes/class-bb-admin-settings-ajax.php:2632
+#: bp-core/admin/classes/class-bb-admin-settings-ajax.php:2506
+#: bp-core/admin/classes/class-bb-admin-settings-ajax.php:2670
 msgid "Insufficient permissions on the target site."
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-admin-settings-ajax.php:2591
+#: bp-core/admin/classes/class-bb-admin-settings-ajax.php:2629
 msgid "Missing page slug."
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-admin-settings-ajax.php:2609
+#: bp-core/admin/classes/class-bb-admin-settings-ajax.php:2647
 msgid "Unknown directory slug."
 msgstr ""
 
@@ -9060,15 +9154,15 @@ msgstr ""
 msgid "Notification Icon"
 msgstr ""
 
-#: bp-core/admin/mothership/class-bb-addons-manager.php:37
+#: bp-core/admin/mothership/class-bb-addons-manager.php:59
 msgid "Please activate your license to access add-ons."
 msgstr ""
 
-#: bp-core/admin/mothership/class-bb-addons-manager.php:41
+#: bp-core/admin/mothership/class-bb-addons-manager.php:63
 msgid "Please enter your license key to access add-ons."
 msgstr ""
 
-#: bp-core/admin/mothership/class-bb-addons-manager.php:55
+#: bp-core/admin/mothership/class-bb-addons-manager.php:77
 msgid "There was an issue connecting with the API."
 msgstr ""
 
@@ -9171,10 +9265,6 @@ msgstr ""
 
 #: bp-core/admin/mothership/class-bb-license-manager.php:897
 msgid "here"
-msgstr ""
-
-#: bp-core/admin/mothership/class-bb-license-manager.php:907
-msgid "Activate License"
 msgstr ""
 
 #: bp-core/admin/mothership/class-bb-license-manager.php:932
@@ -12120,28 +12210,12 @@ msgstr ""
 msgid "Meta Data"
 msgstr ""
 
-#: bp-core/admin/settings/tools/callbacks.php:140
-msgid "Plugin activation failed. Please try again."
-msgstr ""
-
-#: bp-core/admin/settings/tools/callbacks.php:185
-msgid "Please activate your BuddyBoss license to install this add-on."
-msgstr ""
-
 #: bp-core/admin/settings/tools/callbacks.php:196
 msgid "The BuddyBoss Tools add-on is not available under your current license."
 msgstr ""
 
 #: bp-core/admin/settings/tools/callbacks.php:221
 msgid "Could not look up plugin information. Please try again."
-msgstr ""
-
-#: bp-core/admin/settings/tools/callbacks.php:241
-msgid "Plugin installation failed. Please try again."
-msgstr ""
-
-#: bp-core/admin/settings/tools/callbacks.php:255
-msgid "Plugin installed but activation failed. Please try again."
 msgstr ""
 
 #: bp-core/admin/templates/about-buddyboss-app.php:20
@@ -12179,7 +12253,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/readylaunch/media/theatre.php:24
 #: bp-templates/bp-nouveau/readylaunch/notifications/on-screen.php:36
 #: bp-templates/bp-nouveau/readylaunch/video/theatre.php:24
-#: bp-xprofile/bp-xprofile-functions.php:1812
+#: bp-xprofile/bp-xprofile-functions.php:1813
 #: bp-xprofile/bp-xprofile-repeaters.php:1172
 #: bp-xprofile/classes/class-bp-xprofile-user-admin.php:479
 msgid "Close"
@@ -12623,7 +12697,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/readylaunch/header/profile-dropdown.php:123
 #: bp-templates/bp-nouveau/readylaunch/members/single/parts/edit-subnav.php:41
 #: bp-templates/bp-nouveau/readylaunch/members/single/profile/change-avatar.php:23
-#: bp-xprofile/bp-xprofile-functions.php:2242
+#: bp-xprofile/bp-xprofile-functions.php:2895
 #: bp-xprofile/classes/class-bp-xprofile-component.php:288
 #: bp-xprofile/classes/class-bp-xprofile-component.php:403
 #: bp-xprofile/classes/class-bp-xprofile-profile-completion-widget.php:141
@@ -14713,7 +14787,7 @@ msgstr ""
 #: bp-members/classes/class-bp-core-whos-online-widget.php:177
 #: bp-members/classes/class-bp-core-whos-online-widget.php:406
 #: bp-members/classes/class-bp-core-whos-online-widget.php:458
-#: bp-xprofile/bp-xprofile-functions.php:1795
+#: bp-xprofile/bp-xprofile-functions.php:1796
 msgid "See all"
 msgstr ""
 
@@ -17729,7 +17803,7 @@ msgstr ""
 #: bp-groups/classes/class-bp-groups-component.php:443
 #: bp-groups/classes/class-bp-groups-component.php:956
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:948
-#: bp-xprofile/bp-xprofile-functions.php:2263
+#: bp-xprofile/bp-xprofile-functions.php:2916
 #: bp-xprofile/classes/class-bp-xprofile-component.php:301
 #: bp-xprofile/classes/class-bp-xprofile-component.php:413
 #: bp-xprofile/classes/class-bp-xprofile-profile-completion-widget.php:144
@@ -36899,81 +36973,81 @@ msgstr ""
 msgid "Migrate visibility settings of profile fields to the new structure"
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-functions.php:1619
+#: bp-xprofile/bp-xprofile-functions.php:1620
 msgid "Flickr"
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-functions.php:1626
+#: bp-xprofile/bp-xprofile-functions.php:1627
 msgid "Instagram"
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-functions.php:1633
+#: bp-xprofile/bp-xprofile-functions.php:1634
 msgid "LinkedIn"
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-functions.php:1640
+#: bp-xprofile/bp-xprofile-functions.php:1641
 msgid "Medium"
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-functions.php:1647
+#: bp-xprofile/bp-xprofile-functions.php:1648
 msgid "Meetup"
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-functions.php:1654
+#: bp-xprofile/bp-xprofile-functions.php:1655
 msgid "Pinterest"
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-functions.php:1661
+#: bp-xprofile/bp-xprofile-functions.php:1662
 msgid "Quora"
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-functions.php:1668
+#: bp-xprofile/bp-xprofile-functions.php:1669
 msgid "Reddit"
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-functions.php:1675
+#: bp-xprofile/bp-xprofile-functions.php:1676
 msgid "Snapchat"
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-functions.php:1682
+#: bp-xprofile/bp-xprofile-functions.php:1683
 msgid "Telegram"
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-functions.php:1689
+#: bp-xprofile/bp-xprofile-functions.php:1690
 msgid "Tumblr"
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-functions.php:1696
+#: bp-xprofile/bp-xprofile-functions.php:1697
 msgid "Twitch"
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-functions.php:1703
+#: bp-xprofile/bp-xprofile-functions.php:1704
 msgid "Twitter"
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-functions.php:1710
+#: bp-xprofile/bp-xprofile-functions.php:1711
 msgid "VK"
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-functions.php:1717
+#: bp-xprofile/bp-xprofile-functions.php:1718
 msgid "WhatsApp"
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-functions.php:1724
+#: bp-xprofile/bp-xprofile-functions.php:1725
 msgid "YouTube"
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-functions.php:1740
+#: bp-xprofile/bp-xprofile-functions.php:1741
 msgid "TikTok"
 msgstr ""
 
 #. translators: Status of current action.
-#: bp-xprofile/bp-xprofile-functions.php:2782
+#: bp-xprofile/bp-xprofile-functions.php:3435
 msgid "Migrate visibility settings of profile fields to the new structure&hellip; %s"
 msgstr ""
 
 #. translators: total users
-#: bp-xprofile/bp-xprofile-functions.php:2916
+#: bp-xprofile/bp-xprofile-functions.php:3569
 msgid "%s user visibility data migrated successfully"
 msgid_plural "%s users visibility data migrated successfully"
 msgstr[0] ""
@@ -37020,6 +37094,16 @@ msgstr ""
 
 #: bp-xprofile/bp-xprofile-template.php:1618
 msgid "(optional)"
+msgstr ""
+
+#: bp-xprofile/classes/class-bb-xprofile-field-type-biography.php:36
+#: bp-xprofile/classes/class-bp-xprofile-field-type-datebox.php:27
+#: bp-xprofile/classes/class-bp-xprofile-field-type-number.php:27
+#: bp-xprofile/classes/class-bp-xprofile-field-type-telephone.php:27
+#: bp-xprofile/classes/class-bp-xprofile-field-type-textarea.php:27
+#: bp-xprofile/classes/class-bp-xprofile-field-type-textbox.php:27
+#: bp-xprofile/classes/class-bp-xprofile-field-type-url.php:27
+msgid "Single Fields"
 msgstr ""
 
 #: bp-xprofile/classes/class-bp-rest-xprofile-data-endpoint.php:52
@@ -37491,15 +37575,6 @@ msgstr ""
 #: bp-xprofile/classes/class-bp-xprofile-field-type-selectbox.php:27
 #: bp-xprofile/classes/class-bp-xprofile-field-type-social-networks.php:27
 msgid "Multi Fields"
-msgstr ""
-
-#: bp-xprofile/classes/class-bp-xprofile-field-type-datebox.php:27
-#: bp-xprofile/classes/class-bp-xprofile-field-type-number.php:27
-#: bp-xprofile/classes/class-bp-xprofile-field-type-telephone.php:27
-#: bp-xprofile/classes/class-bp-xprofile-field-type-textarea.php:27
-#: bp-xprofile/classes/class-bp-xprofile-field-type-textbox.php:27
-#: bp-xprofile/classes/class-bp-xprofile-field-type-url.php:27
-msgid "Single Fields"
 msgstr ""
 
 #: bp-xprofile/classes/class-bp-xprofile-field-type-datebox.php:123
