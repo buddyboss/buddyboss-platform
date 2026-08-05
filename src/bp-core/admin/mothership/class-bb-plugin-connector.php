@@ -221,8 +221,16 @@ class BB_Plugin_Connector extends AbstractPluginConnection {
 
 		$like = $wpdb->esc_like( 'bb-' ) . '%' . $wpdb->esc_like( '_license_key' );
 
+		/*
+		 * Theme SKUs are also `bb-` prefixed (bb-web, bb-web-plus, …) and are
+		 * owned by the theme's own connector. Excluding them stops Platform
+		 * adopting a theme key, which would never validate against the Platform
+		 * product.
+		 */
+		$exclude = $wpdb->esc_like( 'bb-web' ) . '%';
+
 		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Prefix-anchored, parameterized, runs at most once per site.
-		$license_key = $wpdb->get_var( $wpdb->prepare( "SELECT option_value FROM {$wpdb->options} WHERE option_name LIKE %s AND option_value != '' ORDER BY option_id DESC LIMIT 1", $like ) );
+		$license_key = $wpdb->get_var( $wpdb->prepare( "SELECT option_value FROM {$wpdb->options} WHERE option_name LIKE %s AND option_name NOT LIKE %s AND option_value != '' ORDER BY option_id DESC LIMIT 1", $like, $exclude ) );
 
 		$license_key = is_string( $license_key ) ? trim( $license_key ) : '';
 
