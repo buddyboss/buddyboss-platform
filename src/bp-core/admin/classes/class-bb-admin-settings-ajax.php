@@ -537,7 +537,7 @@ class BB_Admin_Settings_Ajax {
 					);
 				}
 
-				// Include pro_notice if set (e.g. UPGRADE PRO badge in section header).
+				// Include pro_notice if set (e.g. UPGRADE LAUNCH badge in section header).
 				// The badge opens the UpgradeModal in-page when a modal payload is
 				// available — resolved from the field-upgrades catalog first
 				// (feature/panel/section lookup), then from a payload supplied at
@@ -546,7 +546,7 @@ class BB_Admin_Settings_Ajax {
 				if ( ! empty( $section['pro_notice'] ) && is_array( $section['pro_notice'] ) ) {
 					$formatted_section['pro_notice'] = array(
 						'show'       => ! empty( $section['pro_notice']['show'] ),
-						'badge_text' => sanitize_text_field( $section['pro_notice']['badge_text'] ?? __( 'UPGRADE PRO', 'buddyboss' ) ),
+						'badge_text' => sanitize_text_field( $section['pro_notice']['badge_text'] ?? __( 'UPGRADE LAUNCH', 'buddyboss' ) ),
 						'badge_icon' => sanitize_text_field( $section['pro_notice']['badge_icon'] ?? 'bb-icons-rl-crown-simple' ),
 						'link_url'   => esc_url_raw( $section['pro_notice']['link_url'] ?? '' ),
 					);

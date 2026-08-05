@@ -19,7 +19,7 @@ require_once __DIR__ . '/callbacks.php';
  *
  * Both toggles are provided by Pro's blog module, which ships in the version
  * returned by bb_pro_blog_version(). When an older Pro is active it never
- * unlocks the fields, so they would sit as silent "UPGRADE PRO" placeholders —
+ * unlocks the fields, so they would sit as silent "UPGRADE LAUNCH" placeholders —
  * indistinguishable from Pro not being installed at all. This gate lets the
  * screen surface a version notice (and disable the toggles) so the admin knows
  * Pro simply needs updating.
@@ -96,7 +96,7 @@ function bb_blogging_register_admin_settings() {
 	//
 	// The two fields (Bookmarking, Subscriptions) are registered pro_only —
 	// their behaviour is provided by BuddyBoss Platform Pro's blog module.
-	// Without Pro they render as locked "UPGRADE PRO" placeholders; Pro flips
+	// Without Pro they render as locked "UPGRADE LAUNCH" placeholders; Pro flips
 	// them live via the `bb_admin_settings_format_field_data` filter when the
 	// license is valid (see BB_Blog's settings enrichment).
 	bb_register_feature_section(
@@ -280,7 +280,7 @@ function bb_blogging_register_admin_settings() {
 	// "Member Blogs" panel (or its own enable/locked gate) on the later
 	// `bb_after_register_features` hook, so this placeholder is skipped. This
 	// keeps the "Member Blogs" tab visible for discovery/upsell even on sites
-	// that have not installed the Plus add-on.
+	// that have not installed the Scale add-on.
 	if ( ! defined( 'BB_MEMBER_BLOG_VERSION' ) ) {
 		bb_register_side_panel(
 			'blogging',
@@ -307,7 +307,7 @@ function bb_blogging_register_admin_settings() {
 
 		// The add-on's constant is undefined here, so the plugin is either not
 		// installed or installed-but-inactive. When it is present on disk, tell
-		// the admin to activate it; otherwise show the Plus upgrade CTA.
+		// the admin to activate it; otherwise show the Scale upgrade CTA.
 		$bb_member_blog_plugin_file = 'buddyboss-member-blogging/buddyboss-member-blogging.php';
 
 		// Add-on action for the empty-state button. When the plugin is installed
@@ -329,8 +329,8 @@ function bb_blogging_register_admin_settings() {
 			$bb_member_blog_addon_action  = 'mosh_addon_activate';
 			$bb_member_blog_addon_slug    = dirname( $bb_member_blog_plugin_file );
 		} else {
-			$bb_member_blog_upsell_description = __( 'Allow your community members to contribute by creating blogs for your site via the frontend blog creator form. Available with the Member Blogging add-on on the Plus plan.', 'buddyboss' );
-			$bb_member_blog_upsell_button      = __( 'Upgrade to Plus', 'buddyboss' );
+			$bb_member_blog_upsell_description = __( 'Allow your community members to contribute by creating blogs for your site via the frontend blog creator form. Available with the Member Blogging add-on on the Scale plan.', 'buddyboss' );
+			$bb_member_blog_upsell_button      = __( 'Upgrade to Scale', 'buddyboss' );
 			$bb_member_blog_upsell_url         = 'https://www.buddyboss.com/pricing/';
 			$bb_member_blog_upsell_target      = '_blank';
 		}

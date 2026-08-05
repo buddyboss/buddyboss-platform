@@ -572,7 +572,7 @@ add_action( 'admin_init', 'bb_register_field_upgrades_license_hooks' );
  * These features moved out of BuddyBoss Platform Pro into the standalone
  * BuddyBoss Addons plugin, so — when they appear as a locked upsell (the
  * add-on plugin is not installed/licensed) — their modal CTA should read
- * "UPGRADE START" (tier 'start') rather than "UPGRADE PRO".
+ * "UPGRADE START" (tier 'start') rather than "UPGRADE LAUNCH".
  *
  * This is a LOCAL default used only until the remote field-upgrades catalog
  * carries the correct `upgrade_tier` for these features; a catalog-supplied

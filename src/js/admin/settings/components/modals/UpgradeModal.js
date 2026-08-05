@@ -136,13 +136,13 @@ export function UpgradeModal( { feature, onClose } ) {
 
 	var tierLabel;
 	if ( 'plus' === feature.upgrade_tier ) {
-		tierLabel = __( 'UPGRADE PLUS', 'buddyboss' );
+		tierLabel = __( 'UPGRADE SCALE', 'buddyboss' );
 	} else if ( 'start' === feature.upgrade_tier ) {
 		// Features that moved into the BuddyBoss Addons plugin upsell to the
 		// add-on plan rather than Pro.
 		tierLabel = __( 'UPGRADE START', 'buddyboss' );
 	} else {
-		tierLabel = __( 'UPGRADE PRO', 'buddyboss' );
+		tierLabel = __( 'UPGRADE LAUNCH', 'buddyboss' );
 	}
 
 	// PHP wraps upgrade_description with wp_kses_post so marketing can use

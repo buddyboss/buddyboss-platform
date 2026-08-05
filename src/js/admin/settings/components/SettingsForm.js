@@ -1446,7 +1446,7 @@ export function SettingsForm({ fields, values, onChange, onProBadgeClick, disabl
 								<>
 									<span className={`bb-pro-badge${ field.pro_notice.tier ? ' bb-pro-badge--' + field.pro_notice.tier : '' }`}>
 										<i className={field.pro_notice.badge_icon || ''} />
-										<span>{field.pro_notice.badge_text || 'PRO'}</span>
+										<span>{field.pro_notice.badge_text || 'LAUNCH'}</span>
 									</span>
 									{/* When a modal payload is present (delivered by the
 									    field-upgrades catalog), the play icon opens

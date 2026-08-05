@@ -348,7 +348,7 @@
 
     @media screen and (max-width: 560px) {
         overflow: auto;
-        
+
         &__container {
             min-width: 560px;
         }
@@ -2162,7 +2162,7 @@
     }
 }
 
-// Section-level PRO badge (e.g. UPGRADE PRO in section header).
+// Section-level PRO badge (e.g. UPGRADE LAUNCH in section header).
 // Rendered as <button>, <a>, or <span> depending on whether the catalog
 // provides a modal payload, a fallback link_url, or neither — the visual
 // must stay identical across all three element types, so a button reset

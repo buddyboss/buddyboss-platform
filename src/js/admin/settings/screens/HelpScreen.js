@@ -133,7 +133,7 @@ function bbBuildKbCounts( taxonomy ) {
 export function HelpScreen( { onNavigate } ) {
 	// License/tier state drives which upsell promo shows (set server-side in
 	// bb-admin-settings-page.php). No active license -> show the Pro promo;
-	// active license without the Plus tier -> show the Plus promo; full Plus
+	// active license without the Scale tier -> show the Scale promo; full Scale
 	// plan -> show neither (the user already has everything promoted).
 	var hasActiveLicense = !! ( window.bbAdminData && window.bbAdminData.hasActiveLicense );
 	var hasPlusTier = !! ( window.bbAdminData && window.bbAdminData.hasPlusTier );
@@ -880,13 +880,13 @@ export function HelpScreen( { onNavigate } ) {
 						<div className="bb-admin-help-promo__body">
 							<div className="bb-admin-help-promo__text">
 								<p className="bb-admin-help-promo__eyebrow">
-									{ __( 'BuddyBoss Plus', 'buddyboss' ) }
+									{ __( 'BuddyBoss Scale', 'buddyboss' ) }
 								</p>
 								<h2
 									id="bb-admin-help-plus-promo-title"
 									className="bb-admin-help-promo__title"
 								>
-									{ __( 'Unlock Advanced Plus Features Without Paying More Than the Pro Plan', 'buddyboss' ) }
+									{ __( 'Unlock Advanced Scale Features Without Paying More Than the Launch Plan', 'buddyboss' ) }
 								</h2>
 								<ul className="bb-admin-help-promo__list">
 									<li><i className="bb-icons-rl-check"></i> { __( 'Gamification (Save $199/y)', 'buddyboss' ) }</li>
@@ -902,7 +902,7 @@ export function HelpScreen( { onNavigate } ) {
 							<a target="_blank" rel="noopener noreferrer" href="https://buddyboss.com/pricing/?utm_source=product&utm_medium=platform-plugin&utm_campaign=Help-upgrade-pro-to-plus&utm_content=help" className="bb-admin-help-promo__action bb-admin-help-promo__action-plus is-primary">
 								<i className="bb-icons-rl-crown-simple"></i>
 								<span className="bb-admin-help-promo__action-label">
-									{ __( 'Upgrade Plus', 'buddyboss' ) }
+									{ __( 'Upgrade Scale', 'buddyboss' ) }
 								</span>
 							</a>
 						</div>
@@ -926,13 +926,13 @@ export function HelpScreen( { onNavigate } ) {
 						<div className="bb-admin-help-promo__body">
 							<div className="bb-admin-help-promo__text">
 								<p className="bb-admin-help-promo__eyebrow">
-									{ __( 'BuddyBoss Pro', 'buddyboss' ) }
+									{ __( 'BuddyBoss Launch', 'buddyboss' ) }
 								</p>
 								<h2
 									id="bb-admin-help-pro-promo-title"
 									className="bb-admin-help-promo__title"
 								>
-									{ __( 'Take Your Community Beyond Basics with BuddyBoss Pro Features', 'buddyboss' ) }
+									{ __( 'Take Your Community Beyond Basics with BuddyBoss Launch Features', 'buddyboss' ) }
 								</h2>
 								<ul className="bb-admin-help-promo__list">
 									<li><i className="bb-icons-rl-check"></i> { __( 'Premium BuddyBoss Theme', 'buddyboss' ) }</li>
@@ -948,7 +948,7 @@ export function HelpScreen( { onNavigate } ) {
 							<a target="_blank" rel="noopener noreferrer" href="https://buddyboss.com/pricing/?utm_source=product&utm_medium=platform-plugin&utm_campaign=Help-upgrade-free-to-pro&utm_content=help" className="bb-admin-help-promo__action bb-admin-help-promo__action-pro is-primary">
 								<i className="bb-icons-rl-crown-simple"></i>
 								<span className="bb-admin-help-promo__action-label">
-									{ __( 'Upgrade Pro', 'buddyboss' ) }
+									{ __( 'Upgrade Launch', 'buddyboss' ) }
 								</span>
 							</a>
 						</div>
