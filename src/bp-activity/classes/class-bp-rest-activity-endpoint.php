@@ -2345,6 +2345,12 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			$data['comment_depth'] = $activity->depth;
 		}
 
+		// Commenter's mention name and profile URL to build the auto-mention when replying.
+		if ( 'activity_comment' === $activity->type ) {
+			$data['mention_name'] = bp_activity_get_user_mentionname( $activity->user_id );
+			$data['user_link']    = bp_core_get_user_domain( $activity->user_id );
+		}
+
 		// Get comments (count).
 		if ( ! empty( $activity->children ) ) {
 			$data['comment_count'] = isset( $activity->all_child_count ) ? $activity->all_child_count : bp_activity_recurse_comment_count( $activity );
@@ -2891,6 +2897,19 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'User\'s display name for the activity.', 'buddyboss' ),
 					'type'        => 'string',
+				),
+				'mention_name'                   => array(
+					'context'     => array( 'embed', 'view', 'edit' ),
+					'description' => __( 'User\'s mention name for the activity comment.', 'buddyboss' ),
+					'type'        => 'string',
+					'readonly'    => true,
+				),
+				'user_link'                      => array(
+					'context'     => array( 'embed', 'view', 'edit' ),
+					'description' => __( 'Profile URL of the activity comment author.', 'buddyboss' ),
+					'format'      => 'uri',
+					'type'        => 'string',
+					'readonly'    => true,
 				),
 				'link'                           => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
