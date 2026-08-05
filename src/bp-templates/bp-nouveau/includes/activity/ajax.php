@@ -1427,7 +1427,6 @@ function bp_nouveau_ajax_activity_update_privacy() {
 	}
 }
 
-
 /**
  * Update close activity comments.
  *

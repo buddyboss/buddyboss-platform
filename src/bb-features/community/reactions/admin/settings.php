@@ -187,7 +187,7 @@ function bb_admin_settings_register_reactions_settings() {
 					// feature's new home). Each is function_exists-guarded so
 					// Platform never hard-depends on an optional plugin.
 					( function_exists( 'bbp_pro_is_license_valid' ) && bbp_pro_is_license_valid() ) ||
-					( function_exists( 'bb_addons_is_license_valid' ) && bb_addons_is_license_valid() )
+					( function_exists( 'bb_addons_should_lock_features' ) && ! bb_addons_should_lock_features() )
 				)
 			),
 		),

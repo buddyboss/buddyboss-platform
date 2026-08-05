@@ -554,7 +554,9 @@ export function SettingsScreen({ onNavigate }) {
 												<i className="bb-icons-rl bb-icons-rl-crown-simple"></i>
 												{'plus' === feature.upgrade_tier
 													? __('UPGRADE PLUS', 'buddyboss')
-													: __('UPGRADE PRO', 'buddyboss')}
+													: 'start' === feature.upgrade_tier
+														? __('UPGRADE START', 'buddyboss')
+														: __('UPGRADE PRO', 'buddyboss')}
 											</button>
 										)}
 										{/* Card Body */}

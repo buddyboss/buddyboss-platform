@@ -1379,7 +1379,7 @@ class BB_Admin_Settings_Ajax {
 			if (
 				! empty( $field['pro_only'] )
 				&& ! function_exists( 'bb_platform_pro' )
-				&& ! ( function_exists( 'bb_addons_is_license_valid' ) && bb_addons_is_license_valid() )
+				&& ! ( function_exists( 'bb_addons_should_lock_features' ) && ! bb_addons_should_lock_features() )
 			) {
 				continue;
 			}

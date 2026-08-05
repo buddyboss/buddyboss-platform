@@ -2510,11 +2510,21 @@ function bb_is_active_activity_pinned_posts( $default = false ) {
 		// REST support and the add-on's own pin logic must all treat it as off.
 		//
 		// Two independent signals so the gate is load-order safe:
-		//  - the add-on's licensed-provider check (present only when the add-on
-		//    plugin is active; true only with a valid license), or
+		//  - the add-on's licensed-provider check (grace-period aware — the same
+		//    signal the add-on's own module loaders use), or
 		//  - the add-on's pin mutation function actually being loaded.
+		//
+		// LIMITATION: the licence check proves the add-on plugin is active and
+		// entitled, NOT that the Pinned Posts MODULE finished loading (it has its
+		// own guards — activity component active, dormancy marker, module present).
+		// If the module is dormant on a licensed site, this reports the feature
+		// active while `bb_activity_pin_unpin_post()` does not exist, so the REST
+		// route answers a structured 501 (never a fatal) and no pin UI renders.
+		// The licence term is only needed for the early `bb_register_features`
+		// call, before the module loads at bp_include:20; at render/REST time the
+		// function_exists() term is authoritative.
 		$provider_available =
-			( function_exists( 'bb_addons_is_license_valid' ) && bb_addons_is_license_valid() )
+			( function_exists( 'bb_addons_should_lock_features' ) && ! bb_addons_should_lock_features() )
 			|| function_exists( 'bb_activity_pin_unpin_post' );
 
 		if ( ! $provider_available ) {
@@ -2733,7 +2743,7 @@ function bb_get_reaction_mode( $default = 'likes' ) {
 		// mode appear un-saveable.
 		$emotion_layer_available =
 			class_exists( 'BB_Reactions' )
-			|| ( function_exists( 'bb_addons_is_license_valid' ) && bb_addons_is_license_valid() )
+			|| ( function_exists( 'bb_addons_should_lock_features' ) && ! bb_addons_should_lock_features() )
 			|| ( function_exists( 'bbp_pro_is_license_valid' ) && bbp_pro_is_license_valid() );
 
 		if ( ! $emotion_layer_available ) {

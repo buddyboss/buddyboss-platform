@@ -10249,6 +10249,22 @@ function bb_admin_settings_get_pro_notice( $args = array() ) {
 	) {
 		$is_pro_locked = true;
 	} elseif (
+		// Reactions, Polls and Social Login moved to the BuddyBoss Addons plugin.
+		// Pro being installed and licensed is no longer proof the feature exists,
+		// so these types must lock unless a PROVIDER is actually present: the
+		// add-on's licensed module (its class/function only loads when licensed),
+		// or a legacy Pro build that still ships the feature (dormancy marker).
+		// Checked before the Pro-licence branch below so a licensed Pro without
+		// the add-on does not silently unlock features it no longer contains.
+		in_array( $type, array( 'reaction', 'reactions', 'polls', 'sso' ), true ) &&
+		! (
+			( ( 'reaction' === $type || 'reactions' === $type ) && ( class_exists( 'BB_Reactions' ) || function_exists( 'bp_register_reaction' ) ) ) ||
+			( 'polls' === $type && ( function_exists( 'bb_load_polls' ) || function_exists( 'bb_register_poll' ) ) ) ||
+			( 'sso' === $type && ( function_exists( 'bb_enable_sso' ) || function_exists( 'bb_register_sso' ) ) )
+		)
+	) {
+		$is_pro_locked = true;
+	} elseif (
 		! function_exists( 'bb_platform_pro' ) ||
 		(
 			function_exists( 'bb_pro_should_lock_features' )

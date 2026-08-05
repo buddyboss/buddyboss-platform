@@ -1988,9 +1988,6 @@ function bb_nouveau_get_activity_entry_bubble_buttons( $args ) {
 		}
 	}
 
-	global $activities_template;
-
-
 	// Download link for the medias and documents.
 	$media_id = bp_is_active( 'media' ) ? BP_Media::get_activity_media_id( $activity_id ) : 0;
 	if ( ! empty( $media_id ) ) {
@@ -2129,6 +2126,7 @@ function bb_nouveau_get_activity_entry_bubble_buttons( $args ) {
 	 * Filter to add your buttons, use the position argument to choose where to insert it.
 	 *
 	 * @since BuddyBoss 1.7.2
+	 * @since BuddyBoss [BBVERSION] Added the `$context` parameter.
 	 *
 	 * @param array $buttons     The list of buttons.
 	 * @param int   $activity_id The current activity ID.
