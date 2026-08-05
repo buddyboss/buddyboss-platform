@@ -123,24 +123,117 @@ class BB_Plugin_Connector extends AbstractPluginConnection {
 	}
 
 	/**
+	 * Option holding the licence key under a name that never changes.
+	 *
+	 * The per-SKU option (`{plugin_id}_license_key`) is addressed by a mutable
+	 * id, so changing or clearing that id strands the key. This mirror is the
+	 * durable copy; the per-SKU option is kept in step for backwards
+	 * compatibility with anything reading it directly.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @var string
+	 */
+	const STABLE_LICENSE_KEY_OPTION = 'buddyboss_license_key';
+
+	/**
+	 * Marks that the one-off recovery scan has already run.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @var string
+	 */
+	const RECOVERY_FLAG_OPTION = 'buddyboss_license_key_recovered';
+
+	/**
 	 * Gets the license key option.
+	 *
+	 * Reads the per-SKU option first, then the stable mirror, then attempts a
+	 * one-off recovery for sites stranded before the mirror existed.
 	 *
 	 * @return string The license key.
 	 */
 	public function getLicenseKey(): string {
 		$pluginId    = $this->getCurrentPluginId();
-		$license_key = get_option( $pluginId . '_license_key', '' );
-		return (string) $license_key;
+		$license_key = (string) get_option( $pluginId . '_license_key', '' );
+
+		if ( '' !== $license_key ) {
+			return $license_key;
+		}
+
+		$license_key = (string) get_option( self::STABLE_LICENSE_KEY_OPTION, '' );
+
+		if ( '' !== $license_key ) {
+			return $license_key;
+		}
+
+		return $this->recoverStrandedLicenseKey();
 	}
 
 	/**
 	 * Updates the license key option.
+	 *
+	 * Writes both the per-SKU option and the stable mirror so a later id change
+	 * cannot strand the key. An empty value clears both, so resets stay clean.
 	 *
 	 * @param string $licenseKey The license key to update.
 	 */
 	public function updateLicenseKey( string $licenseKey ): void {
 		$pluginId = $this->getCurrentPluginId();
 		update_option( $pluginId . '_license_key', $licenseKey );
+
+		if ( '' === $licenseKey ) {
+			delete_option( self::STABLE_LICENSE_KEY_OPTION );
+			delete_option( self::RECOVERY_FLAG_OPTION );
+
+			return;
+		}
+
+		update_option( self::STABLE_LICENSE_KEY_OPTION, $licenseKey );
+	}
+
+	/**
+	 * Recover a licence key stranded under a superseded plugin id.
+	 *
+	 * `setDynamicPluginId()` leaves the previous `{old_id}_license_key` row in
+	 * place, and `clearDynamicPluginId()` — called from the licence-migration
+	 * error paths — reverts reads to PLATFORM_EDITION, which holds no key. Both
+	 * leave a licensed site reporting as unlicensed and being DRM-nagged.
+	 *
+	 * Runs at most once: the result is copied into the stable mirror, and a flag
+	 * prevents rescanning. The scan is anchored to the `bb-` prefix because
+	 * sites routinely store other vendors' keys under the same `_license_key`
+	 * suffix, and those must never be read.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @return string Recovered licence key, or an empty string.
+	 */
+	private function recoverStrandedLicenseKey(): string {
+		if ( get_option( self::RECOVERY_FLAG_OPTION, false ) ) {
+			return '';
+		}
+
+		global $wpdb;
+
+		// Record the attempt before scanning so a failure cannot loop.
+		update_option( self::RECOVERY_FLAG_OPTION, 1 );
+
+		$like = $wpdb->esc_like( 'bb-' ) . '%' . $wpdb->esc_like( '_license_key' );
+
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Prefix-anchored, parameterized, runs at most once per site.
+		$license_key = $wpdb->get_var( $wpdb->prepare( "SELECT option_value FROM {$wpdb->options} WHERE option_name LIKE %s AND option_value != '' ORDER BY option_id DESC LIMIT 1", $like ) );
+
+		$license_key = is_string( $license_key ) ? trim( $license_key ) : '';
+
+		if ( '' === $license_key ) {
+			return '';
+		}
+
+		// Promote it so every later read resolves without another scan.
+		update_option( self::STABLE_LICENSE_KEY_OPTION, $license_key );
+
+		return $license_key;
 	}
 
 	/**
