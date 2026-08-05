@@ -217,6 +217,12 @@
 		p {
 			margin: 0;
 		}
+
+		img {
+			max-width: 300px;
+			height: auto;
+			border-radius: 8px;
+		}
 	}
 
 	&__td--activity_topic {
