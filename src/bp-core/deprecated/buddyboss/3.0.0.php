@@ -4593,7 +4593,7 @@ if ( ! function_exists( 'bbp_new_converter' ) ) {
  * supplied the real implementation. Registering it any earlier would trip the
  * add-on's dormancy check and stop Pinned Posts loading.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.4.0
  */
 if ( ! function_exists( 'bb_activity_pin_unpin_post_deprecation_shim' ) ) {
 	function bb_activity_pin_unpin_post_deprecation_shim() {
@@ -4605,13 +4605,13 @@ if ( ! function_exists( 'bb_activity_pin_unpin_post_deprecation_shim' ) ) {
 		 * Fallback for the removed Pinned Posts mutation function.
 		 *
 		 * @since      BuddyBoss 2.4.60
-		 * @deprecated BuddyBoss [BBVERSION] Moved to the BuddyBoss Addons plugin.
+		 * @deprecated BuddyBoss 3.4.0 Moved to the BuddyBoss Addons plugin.
 		 *
 		 * @param array $args Pin/unpin arguments (ignored).
 		 * @return bool Always false — the feature is unavailable without the add-on.
 		 */
 		function bb_activity_pin_unpin_post( $args = array() ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
-			_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'the BuddyBoss Addons plugin' );
+			_deprecated_function( __FUNCTION__, 'BuddyBoss 3.4.0', 'the BuddyBoss Addons plugin' );
 			return false;
 		}
 
@@ -4623,7 +4623,7 @@ if ( ! function_exists( 'bb_activity_pin_unpin_post_deprecation_shim' ) ) {
 		 * defines that name. They test for this marker instead — it exists only on
 		 * the fallback path.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.4.0
 		 *
 		 * @return bool Always true.
 		 */

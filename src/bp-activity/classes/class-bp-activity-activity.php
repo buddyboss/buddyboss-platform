@@ -632,7 +632,7 @@ class BP_Activity_Activity {
 		 * filtering. The Pinned Posts add-on supplies this from the feed's
 		 * `pin_type`; with no provider the default 0 leaves ordering unchanged.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.4.0
 		 *
 		 * @param int   $pinned_id Pinned activity id. Default 0.
 		 * @param array $r         Parsed query arguments.

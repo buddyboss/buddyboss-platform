@@ -578,7 +578,7 @@ add_action( 'admin_init', 'bb_register_field_upgrades_license_hooks' );
  * carries the correct `upgrade_tier` for these features; a catalog-supplied
  * tier always wins (see bb_admin_apply_addon_upsell_tier()).
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.4.0
  *
  * @return string[] Filterable list of feature IDs.
  */
@@ -602,7 +602,7 @@ function bb_admin_addon_upsell_feature_ids() {
  * LOCAL default until the remote field-upgrades catalog carries the correct
  * `upgrade_tier` for these fields; a catalog-supplied tier always wins.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.4.0
  *
  * @return string[] Filterable list of field names.
  */
@@ -638,7 +638,7 @@ function bb_admin_addon_upsell_field_names() {
  *
  * Every probe is guarded so Platform never hard-depends on an optional plugin.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.4.0
  *
  * @param string $field_name Registered field name.
  * @return bool True when a real provider for that field's feature is loaded.
@@ -678,7 +678,7 @@ function bb_admin_addon_field_has_provider( $field_name ) {
  * either by host feature id (add-on features) or by field name (add-on fields
  * embedded in a core feature, e.g. social login under registration).
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.4.0
  *
  * @param array  $modal      Modal payload from bb_field_upgrade_to_modal_payload().
  * @param string $feature_id The feature the modal belongs to.

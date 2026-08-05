@@ -2126,7 +2126,7 @@ function bb_nouveau_get_activity_entry_bubble_buttons( $args ) {
 	 * Filter to add your buttons, use the position argument to choose where to insert it.
 	 *
 	 * @since BuddyBoss 1.7.2
-	 * @since BuddyBoss [BBVERSION] Added the `$context` parameter.
+	 * @since BuddyBoss 3.4.0 Added the `$context` parameter.
 	 *
 	 * @param array $buttons     The list of buttons.
 	 * @param int   $activity_id The current activity ID.
