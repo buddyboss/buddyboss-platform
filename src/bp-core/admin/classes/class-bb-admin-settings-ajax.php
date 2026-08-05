@@ -537,7 +537,7 @@ class BB_Admin_Settings_Ajax {
 					);
 				}
 
-				// Include pro_notice if set (e.g. UPGRADE PRO badge in section header).
+				// Include pro_notice if set (e.g. UPGRADE LAUNCH badge in section header).
 				// The badge opens the UpgradeModal in-page when a modal payload is
 				// available — resolved from the field-upgrades catalog first
 				// (feature/panel/section lookup), then from a payload supplied at
@@ -546,7 +546,7 @@ class BB_Admin_Settings_Ajax {
 				if ( ! empty( $section['pro_notice'] ) && is_array( $section['pro_notice'] ) ) {
 					$formatted_section['pro_notice'] = array(
 						'show'       => ! empty( $section['pro_notice']['show'] ),
-						'badge_text' => sanitize_text_field( $section['pro_notice']['badge_text'] ?? __( 'UPGRADE PRO', 'buddyboss' ) ),
+						'badge_text' => sanitize_text_field( $section['pro_notice']['badge_text'] ?? __( 'UPGRADE LAUNCH', 'buddyboss' ) ),
 						'badge_icon' => sanitize_text_field( $section['pro_notice']['badge_icon'] ?? 'bb-icons-rl-crown-simple' ),
 						'link_url'   => esc_url_raw( $section['pro_notice']['link_url'] ?? '' ),
 					);
@@ -558,6 +558,9 @@ class BB_Admin_Settings_Ajax {
 
 						if ( $catalog_entry ) {
 							$section_modal = bb_field_upgrade_to_modal_payload( $catalog_entry, $section['title'] );
+							if ( function_exists( 'bb_admin_apply_addon_upsell_tier' ) ) {
+								$section_modal = bb_admin_apply_addon_upsell_tier( $section_modal, $feature_id );
+							}
 						}
 					}
 
@@ -1079,7 +1082,24 @@ class BB_Admin_Settings_Ajax {
 				empty( $field_data['pro_notice'] ) &&
 				function_exists( 'bb_admin_settings_get_pro_notice' )
 			) {
-				$pro_notice               = bb_admin_settings_get_pro_notice( array( 'type' => $feature_id ) );
+				// Add-on fields are gated on their PROVIDER, not on the host feature.
+				// bb_admin_settings_get_pro_notice() resolves by feature `type`, but
+				// the fields for the moved features live under Platform's own
+				// features — `activity` (Polls, Pinned Post) and `registration`
+				// (Social Login) — so a type-based lookup can never see them and
+				// would fall through to the "is Platform Pro installed?" branch.
+				// Since Pro no longer ships these features, that check unlocks a
+				// toggle nothing implements. Resolve by field name instead.
+				$pro_notice = bb_admin_settings_get_pro_notice( array( 'type' => $feature_id ) );
+
+				if (
+					function_exists( 'bb_admin_addon_upsell_field_names' ) &&
+					function_exists( 'bb_admin_addon_field_has_provider' ) &&
+					in_array( $field['name'], bb_admin_addon_upsell_field_names(), true )
+				) {
+					$pro_notice['show'] = ! bb_admin_addon_field_has_provider( $field['name'] );
+				}
+
 				$field_data['pro_notice'] = ! empty( $pro_notice['show'] ) ? $pro_notice : null;
 			}
 
@@ -1147,12 +1167,67 @@ class BB_Admin_Settings_Ajax {
 			) {
 				$entry = bb_get_field_upgrade_for( $feature_id, $panel_id, $section_id, $field['name'] );
 				if ( $entry ) {
-					$field_data['pro_notice']['modal'] = bb_field_upgrade_to_modal_payload( $entry, $field['label'] ?? '' );
+					$field_modal = bb_field_upgrade_to_modal_payload( $entry, $field['label'] ?? '' );
+					if ( function_exists( 'bb_admin_apply_addon_upsell_tier' ) ) {
+						$field_modal = bb_admin_apply_addon_upsell_tier( $field_modal, $feature_id, $field['name'] );
+					}
+					$field_data['pro_notice']['modal'] = $field_modal;
 				} else {
 					// No catalog entry — point the play button at the pricing page so
 					// every pro_only field has a consistent upsell destination.
-					$field_data['pro_notice']['link_url'] = 'https://www.buddyboss.com/pricing/';
+					if (
+						function_exists( 'bb_admin_addon_upsell_field_names' )
+						&& in_array( $field['name'], bb_admin_addon_upsell_field_names(), true )
+					) {
+						// Add-on field (e.g. Pinned Post) with no remote catalog copy yet:
+						// synthesize an in-page "UPGRADE START" modal from the field's own
+						// upgrade_* metadata (falling back to its label/description) so its
+						// CTA matches the other add-on upsells instead of opening the
+						// pricing page in a new tab.
+						$synth_image = ! empty( $field['upgrade_image_url'] ) ? esc_url_raw( $field['upgrade_image_url'] ) : '';
+						$field_data['pro_notice']['modal'] = array(
+							'tier'        => 'start',
+							'label'       => $field['label'] ?? '',
+							'title'       => ! empty( $field['upgrade_title'] ) ? $field['upgrade_title'] : ( $field['label'] ?? '' ),
+							'description' => ! empty( $field['upgrade_description'] ) ? $field['upgrade_description'] : ( $field['description'] ?? '' ),
+							'image_url'   => $synth_image,
+							'media'       => '' !== $synth_image
+								? array(
+									'type'   => 'image',
+									'url'    => $synth_image,
+									'poster' => '',
+								)
+								: array(
+									'type'   => '',
+									'url'    => '',
+									'poster' => '',
+								),
+							'url'         => 'https://www.buddyboss.com/pricing/',
+						);
+					} else {
+						$field_data['pro_notice']['link_url'] = 'https://www.buddyboss.com/pricing/';
+					}
 				}
+			}
+
+			// Moved-feature fields (Reactions, Polls, Social Login, Pinned Posts —
+			// now shipped by the BuddyBoss Addons plugin) upsell the START plan, not
+			// PRO. Relabel the field badge to "START" and tag pro_notice with the tier
+			// so the React badge renders the START styling (white fill + gradient
+			// border). Mirrors the modal tier set by bb_admin_apply_addon_upsell_tier()
+			// above, and uses the same addon-upsell allow-lists as the single source
+			// of truth for "which fields belong to the moved features".
+			if (
+				! empty( $field_data['pro_notice']['show'] ) &&
+				function_exists( 'bb_admin_addon_upsell_feature_ids' ) &&
+				function_exists( 'bb_admin_addon_upsell_field_names' ) &&
+				(
+					in_array( $feature_id, bb_admin_addon_upsell_feature_ids(), true ) ||
+					in_array( $field['name'], bb_admin_addon_upsell_field_names(), true )
+				)
+			) {
+				$field_data['pro_notice']['tier']       = 'start';
+				$field_data['pro_notice']['badge_text'] = __( 'START', 'buddyboss' );
 			}
 
 			/*
@@ -1369,9 +1444,33 @@ class BB_Admin_Settings_Ajax {
 		foreach ( $all_fields as $field_key => $field ) {
 			$name = $field['name'];
 
-			// Skip pro_only fields when Pro is not active — defense-in-depth
+			// Skip pro_only fields only when NO provider is available — defense-in-depth
 			// against crafted AJAX requests. The UI already disables these fields.
-			if ( ! empty( $field['pro_only'] ) && ! function_exists( 'bb_platform_pro' ) ) {
+			// Either provider makes the field legitimately saveable: BuddyBoss
+			// Platform Pro (legacy) OR the BuddyBoss Addons plugin, which now owns
+			// features such as reactions/polls/SSO. Without the addon check, an
+			// addon-only site could never persist a pro_only field (e.g. the
+			// reactions mode), because bb_platform_pro() does not exist there.
+			if (
+				! empty( $field['pro_only'] )
+				&& ! function_exists( 'bb_platform_pro' )
+				&& ! ( function_exists( 'bb_addons_should_lock_features' ) && ! bb_addons_should_lock_features() )
+			) {
+				continue;
+			}
+
+			// Fields for the features that moved into the BuddyBoss Addons plugin
+			// are gated on their PROVIDER, not on Platform Pro being installed —
+			// Pro 3.2.0+ no longer ships them, so the check above would let an
+			// unbacked toggle persist a value that nothing reads. Mirrors the
+			// pro_notice resolution in bb_get_feature_data().
+			if (
+				! empty( $field['pro_only'] )
+				&& function_exists( 'bb_admin_addon_upsell_field_names' )
+				&& function_exists( 'bb_admin_addon_field_has_provider' )
+				&& in_array( $field['name'], bb_admin_addon_upsell_field_names(), true )
+				&& ! bb_admin_addon_field_has_provider( $field['name'] )
+			) {
 				continue;
 			}
 
