@@ -1767,7 +1767,7 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 		if ( is_user_logged_in() || bbp_allow_anonymous() ) {
 			$retval = $this->get_item_permissions_check( $request );
 			$reply  = bbp_get_reply( $request->get_param( 'id' ) );
-			if ( bbp_get_user_id( 0, true, true ) !== $reply->post_author && ! current_user_can( 'edit_reply', $request['id'] ) ) {
+			if ( true === $retval && bbp_get_user_id( 0, true, true ) !== $reply->post_author && ! current_user_can( 'edit_reply', $request['id'] ) ) {
 				$retval = new WP_Error(
 					'bp_rest_authorization_required',
 					__( 'Sorry, you are not allowed to update this reply.', 'buddyboss' ),
