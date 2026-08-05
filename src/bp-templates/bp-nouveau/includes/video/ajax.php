@@ -1615,7 +1615,9 @@ function bp_nouveau_ajax_video_get_video_description() {
 			$args = array(
 				'user_id'  => false,
 				'include'  => $video_id,
-				'album_id' => 'existing-video',
+				// Do not filter by album_id here. The 'existing-video' value
+				// restricts the query to videos with album_id = 0, which
+				// excludes videos that belong to an album.
 			);
 			ob_start();
 			if ( bp_has_video( $args ) ) {
