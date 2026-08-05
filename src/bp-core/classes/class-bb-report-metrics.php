@@ -45,6 +45,18 @@ if ( ! class_exists( 'BB_Report_Metrics' ) ) {
 		private static $metrics_cache = null;
 
 		/**
+		 * Reported when a plugin's currency cannot be resolved.
+		 *
+		 * Deliberately not 'USD'. Attributing unknown revenue to USD inflated the
+		 * USD bucket with every store whose currency could not be read.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @var string
+		 */
+		const UNKNOWN_CURRENCY = 'unknown';
+
+		/**
 		 * Supported plugins configuration.
 		 *
 		 * @since BuddyBoss 2.9.30
@@ -60,15 +72,23 @@ if ( ! class_exists( 'BB_Report_Metrics' ) ) {
 				'post_type_fallback' => 'sfwd-transactions',
 				'meta_key'           => 'order_total',
 				'status'             => array( 'publish' ),
-				'currency_key'       => 'learndash_settings_payments',
+				// `learndash_settings_payments` does not exist; the currency lives
+				// in the payments defaults, with the PayPal settings as a fallback
+				// for sites still on the older gateway configuration.
+				'currency_key'       => 'learndash_settings_payments_defaults',
+				'currency_index'     => 'currency',
+				'currency_key_alt'   => 'learndash_settings_paypal',
+				'currency_index_alt' => 'paypal_currency',
 			),
 			'memberpress'         => array(
-				'name'       => 'MemberPress',
-				'file'       => 'memberpress/memberpress.php',
-				'table'      => 'mepr_transactions',
-				'amount_col' => 'amount',
-				'status'     => array( 'complete' ),
-				'currency'   => 'USD',
+				'name'           => 'MemberPress',
+				'file'           => 'memberpress/memberpress.php',
+				'table'          => 'mepr_transactions',
+				'amount_col'     => 'amount',
+				'status'         => array( 'complete' ),
+				// Was hardcoded to USD, which mislabelled every non-US store.
+				'currency_key'   => 'mepr_options',
+				'currency_index' => 'currency_code',
 			),
 			'woocommerce'         => array(
 				'name'               => 'WooCommerce',
@@ -78,6 +98,7 @@ if ( ! class_exists( 'BB_Report_Metrics' ) ) {
 				'status_func'        => 'wc_get_order_statuses',
 				'status'             => array( 'wc-completed', 'wc-processing' ),
 				'currency_func'      => 'get_woocommerce_currency',
+				'currency_key'       => 'woocommerce_currency',
 			),
 			'lifterlms'           => array(
 				'name'               => 'LifterLMS',
@@ -95,6 +116,7 @@ if ( ! class_exists( 'BB_Report_Metrics' ) ) {
 				'meta_key'           => '_order_total',
 				'status'             => array( 'wc-completed', 'wc-processing' ),
 				'currency_func'      => 'get_woocommerce_currency',
+				'currency_key'       => 'woocommerce_currency',
 				'custom_where'       => 'tutor_order',
 			),
 			'pmpro'               => array(
@@ -112,6 +134,7 @@ if ( ! class_exists( 'BB_Report_Metrics' ) ) {
 				'amount_col'    => 'amount',
 				'status'        => array( 'unpaid' ),
 				'currency_func' => 'affwp_get_currency',
+				'currency_key'  => 'affwp_settings',
 			),
 			'the_events_calendar' => array(
 				'name'               => 'The Events Calendar',
@@ -241,10 +264,16 @@ if ( ! class_exists( 'BB_Report_Metrics' ) ) {
 			$method_name = 'get_' . $plugin_slug . '_native_metrics';
 			if ( method_exists( __CLASS__, $method_name ) ) {
 				$data = self::$method_name();
-			} elseif ( isset( $config['post_type'] ) ) {
-				$data = self::get_post_type_metrics( $config );
 			} elseif ( isset( $config['table'] ) ) {
 				$data = self::get_table_metrics( $config );
+			} elseif ( self::has_post_type_config( $config ) ) {
+				/*
+				 * Previously gated on `isset( $config['post_type'] )`, a key no
+				 * config defines — they all use post_type_fallback/_func/_getter/
+				 * _const. That made this branch unreachable and left The Events
+				 * Calendar, the only plugin relying on it, permanently at zero.
+				 */
+				$data = self::get_post_type_metrics( $config );
 			} else {
 				return false;
 			}
@@ -252,9 +281,53 @@ if ( ! class_exists( 'BB_Report_Metrics' ) ) {
 			if ( $data ) {
 				$metrics['num_orders']    = (int) ( isset( $data->order_count ) ? $data->order_count : $data['order_count'] );
 				$metrics['total_revenue'] = (float) ( isset( $data->total_revenue ) ? $data->total_revenue : $data['total_revenue'] );
+
+				// Per-currency breakdown, when the source could provide one.
+				$by_currency = isset( $data['by_currency'] ) ? $data['by_currency'] : array();
+				if ( ! empty( $by_currency ) ) {
+					$metrics['by_currency'] = $by_currency;
+
+					// More than one currency means a single total is meaningless.
+					$metrics['mixed_currency'] = count( $by_currency ) > 1;
+
+					// Attribute the headline figure to the largest bucket rather
+					// than to the store's base currency.
+					$largest = '';
+					$highest = null;
+					foreach ( $by_currency as $code => $bucket ) {
+						$amount = isset( $bucket['revenue'] ) ? (float) $bucket['revenue'] : 0;
+						if ( null === $highest || $amount > $highest ) {
+							$highest = $amount;
+							$largest = $code;
+						}
+					}
+
+					if ( '' !== $largest ) {
+						$metrics['currency'] = $largest;
+					}
+				}
 			}
 
 			return $metrics;
+		}
+
+		/**
+		 * Whether a config can resolve a post type.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param array $config Plugin configuration.
+		 *
+		 * @return bool
+		 */
+		private static function has_post_type_config( $config ) {
+			foreach ( array( 'post_type', 'post_type_func', 'post_type_getter', 'post_type_const', 'post_type_fallback' ) as $key ) {
+				if ( ! empty( $config[ $key ] ) ) {
+					return true;
+				}
+			}
+
+			return false;
 		}
 
 		/**
@@ -310,26 +383,102 @@ if ( ! class_exists( 'BB_Report_Metrics' ) ) {
 		 * @return string Currency code.
 		 */
 		private static function get_plugin_currency( $config ) {
-			if ( isset( $config['currency'] ) ) {
-				return $config['currency'];
+			// Explicit override, when a plugin genuinely has a fixed currency.
+			if ( ! empty( $config['currency'] ) ) {
+				return self::normalize_currency( $config['currency'] );
 			}
 
+			// The plugin's own accessor is the most reliable source, but only
+			// when the plugin is loaded — on a deactivated plugin it does not
+			// exist and we fall through to the stored option below.
 			if ( isset( $config['currency_func'] ) && function_exists( $config['currency_func'] ) ) {
-				if ( isset( $config['currency_option'] ) ) {
-					return call_user_func( $config['currency_func'], $config['currency_option'], 'USD' );
+				$currency = isset( $config['currency_option'] )
+					? call_user_func( $config['currency_func'], $config['currency_option'], '' )
+					: call_user_func( $config['currency_func'] );
+
+				$currency = self::normalize_currency( $currency );
+				if ( '' !== $currency ) {
+					return $currency;
 				}
-				return call_user_func( $config['currency_func'] );
 			}
 
-			if ( isset( $config['currency_key'] ) ) {
-				$settings = get_option( $config['currency_key'], array() );
-				if ( is_array( $settings ) && isset( $settings['currency'] ) ) {
-					return $settings['currency'];
-				}
-				return get_option( $config['currency_key'], 'USD' );
+			// Stored option, either a plain string or a settings array.
+			$currency = self::get_currency_from_option(
+				isset( $config['currency_key'] ) ? $config['currency_key'] : '',
+				isset( $config['currency_index'] ) ? $config['currency_index'] : 'currency'
+			);
+
+			if ( '' !== $currency ) {
+				return $currency;
 			}
 
-			return 'USD';
+			// Secondary option, for plugins that moved their settings between versions.
+			$currency = self::get_currency_from_option(
+				isset( $config['currency_key_alt'] ) ? $config['currency_key_alt'] : '',
+				isset( $config['currency_index_alt'] ) ? $config['currency_index_alt'] : 'currency'
+			);
+
+			if ( '' !== $currency ) {
+				return $currency;
+			}
+
+			// Nothing resolved. Reported explicitly rather than as a fabricated
+			// USD, so aggregation can exclude it instead of skewing the USD total.
+			return self::UNKNOWN_CURRENCY;
+		}
+
+		/**
+		 * Read a currency code out of a stored option.
+		 *
+		 * Handles both shapes in use: a plain string option such as
+		 * `woocommerce_currency`, and a settings array such as `mepr_options`
+		 * where the code sits under a named index.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param string $option_name Option to read.
+		 * @param string $index       Index to look for when the option is an array.
+		 *
+		 * @return string Currency code, or an empty string when unresolved.
+		 */
+		private static function get_currency_from_option( $option_name, $index = 'currency' ) {
+			if ( empty( $option_name ) ) {
+				return '';
+			}
+
+			$value = get_option( $option_name, '' );
+
+			if ( is_array( $value ) ) {
+				$value = isset( $value[ $index ] ) ? $value[ $index ] : '';
+			} elseif ( is_object( $value ) ) {
+				// MemberPress stores mepr_options as an object on some versions.
+				$value = isset( $value->{$index} ) ? $value->{$index} : '';
+			}
+
+			return self::normalize_currency( $value );
+		}
+
+		/**
+		 * Normalise a currency value to an ISO-4217-shaped code.
+		 *
+		 * Guards against the non-string values the previous implementation could
+		 * return — arrays from settings options, and null when a configured
+		 * `currency_func` did not exist.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param mixed $currency Raw currency value.
+		 *
+		 * @return string Three-letter code, or an empty string when unusable.
+		 */
+		private static function normalize_currency( $currency ) {
+			if ( ! is_string( $currency ) ) {
+				return '';
+			}
+
+			$currency = strtoupper( trim( $currency ) );
+
+			return preg_match( '/^[A-Z]{3}$/', $currency ) ? $currency : '';
 		}
 
 		/**
@@ -352,7 +501,7 @@ if ( ! class_exists( 'BB_Report_Metrics' ) ) {
 
 				// Build the base query.
 				$query_parts = array(
-					'SELECT COUNT(*) as order_count, SUM(CAST(meta_value AS DECIMAL(10,2))) as total_revenue',
+					'SELECT COUNT(*) as order_count, SUM(CAST(meta_value AS DECIMAL(18,2))) as total_revenue',
 					'FROM ' . self::$wpdb->posts . ' p',
 					'LEFT JOIN ' . self::$wpdb->postmeta . ' pm ON p.ID = pm.post_id',
 					'WHERE p.post_type = %s',
@@ -418,7 +567,7 @@ if ( ! class_exists( 'BB_Report_Metrics' ) ) {
 				// Build safe query with proper placeholders.
 				$amount_col = esc_sql( $config['amount_col'] );
 				$query = self::$wpdb->prepare(
-					"SELECT COUNT(*) as order_count, SUM(CAST($amount_col AS DECIMAL(10,2))) as total_revenue
+					"SELECT COUNT(*) as order_count, SUM(CAST($amount_col AS DECIMAL(18,2))) as total_revenue
 					FROM %i
 					WHERE status IN (" . $status_placeholders . ")
 					AND $amount_col IS NOT NULL
@@ -462,7 +611,7 @@ if ( ! class_exists( 'BB_Report_Metrics' ) ) {
 		}
 
 		/**
-		 * Get WooCommerce metrics using native methods.
+		 * Get WooCommerce metrics, per currency and net of refunds.
 		 *
 		 * @since BuddyBoss 2.9.30
 		 *
@@ -474,125 +623,226 @@ if ( ! class_exists( 'BB_Report_Metrics' ) ) {
 			}
 
 			try {
-				// Check if WooCommerce is using HPOS (High Performance Order Storage).
+				// Resolve the statuses that count as revenue.
+				$order_statuses = array( 'wc-completed', 'wc-processing' );
+				$config         = self::$supported_plugins['woocommerce'];
+				if ( isset( $config['status_func'] ) && function_exists( $config['status_func'] ) ) {
+					$all_statuses   = call_user_func( $config['status_func'] );
+					$order_statuses = array_values( array_intersect( $order_statuses, array_keys( $all_statuses ) ) );
+				}
+
+				if ( empty( $order_statuses ) ) {
+					return false;
+				}
+
 				$using_hpos = false;
-				if ( class_exists( 'Automattic\WooCommerce\Utilities\OrderUtil' ) && 
-				     method_exists( 'Automattic\WooCommerce\Utilities\OrderUtil', 'custom_orders_table_usage_is_enabled' ) ) {
+				if (
+					class_exists( 'Automattic\\WooCommerce\\Utilities\\OrderUtil' ) &&
+					method_exists( 'Automattic\\WooCommerce\\Utilities\\OrderUtil', 'custom_orders_table_usage_is_enabled' )
+				) {
 					$using_hpos = \Automattic\WooCommerce\Utilities\OrderUtil::custom_orders_table_usage_is_enabled();
 				}
 
-				// Get order statuses.
-				$order_statuses = array( 'wc-completed', 'wc-processing' );
-				$config = self::$supported_plugins['woocommerce'];
-				if ( isset( $config['status_func'] ) && function_exists( $config['status_func'] ) ) {
-					$all_statuses = call_user_func( $config['status_func'] );
-					// Filter to completed and processing only.
-					$order_statuses = array_intersect( array( 'wc-completed', 'wc-processing' ), array_keys( $all_statuses ) );
-				}
-
 				if ( $using_hpos ) {
-					// Use HPOS tables directly for better performance.
-					$order_table      = self::$wpdb->prefix . 'wc_orders';
-					$order_meta_table = self::$wpdb->prefix . 'wc_order_meta';
-					
-					// Check if HPOS tables exist.
-					$table_exists = self::$wpdb->get_var( self::$wpdb->prepare( 'SHOW TABLES LIKE %s', $order_table ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery
-					if ( ! $table_exists ) {
-						// Fallback to legacy method if tables don't exist.
-						return self::get_woocommerce_legacy_metrics( $order_statuses );
+					$order_table  = self::$wpdb->prefix . 'wc_orders';
+					$table_exists = self::$wpdb->get_var( self::$wpdb->prepare( 'SHOW TABLES LIKE %s', $order_table ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.NotPrepared
+					if ( $table_exists === $order_table ) {
+						return self::get_woocommerce_hpos_metrics( $order_statuses, $order_table );
 					}
-
-					// HPOS stores statuses WITH the 'wc-' prefix, so we use them as-is.
-					$status_placeholders = implode( ',', array_fill( 0, count( $order_statuses ), '%s' ) );
-
-					// Build the query with proper placeholders.
-					$query = 'SELECT COUNT(DISTINCT o.id) as order_count,
-							 SUM(o.total_amount) as total_revenue
-							 FROM ' . esc_sql( $order_table ) . ' o
-							 WHERE o.type = %s
-							 AND o.status IN (' . $status_placeholders . ')
-							 AND o.total_amount > 0';
-
-					// Prepare the query arguments.
-					$query_args = array_merge( array( 'shop_order' ), $order_statuses );
-
-					$results = self::$wpdb->get_row( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared
-						self::$wpdb->prepare( $query, $query_args )
-					);
-
-					if ( $results ) {
-						return array(
-							'order_count'   => (int) $results->order_count,
-							'total_revenue' => (float) $results->total_revenue,
-						);
-					}
-				} else {
-					// Use legacy post-based storage.
-					return self::get_woocommerce_legacy_metrics( $order_statuses );
 				}
 
-				return false;
-			} catch ( Exception $e ) {
-				// Silently return false on error.
+				return self::get_woocommerce_legacy_metrics( $order_statuses );
+			} catch ( \Exception $e ) {
 				return false;
 			}
 		}
 
 		/**
-		 * Get WooCommerce metrics using legacy post storage.
+		 * WooCommerce metrics from the HPOS order tables.
+		 *
+		 * Groups by the order's own currency rather than reporting everything in
+		 * the store's base currency, and subtracts refunds instead of discarding
+		 * refunded orders.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param array  $order_statuses Statuses that count as revenue.
+		 * @param string $order_table    Fully qualified HPOS orders table.
+		 *
+		 * @return array|false
+		 */
+		private static function get_woocommerce_hpos_metrics( $order_statuses, $order_table ) {
+			$status_placeholders = implode( ',', array_fill( 0, count( $order_statuses ), '%s' ) );
+
+			// Gross revenue per currency.
+			$gross_sql = "SELECT o.currency AS currency, COUNT( DISTINCT o.id ) AS order_count, SUM( o.total_amount ) AS revenue
+				FROM {$order_table} o
+				WHERE o.type = %s
+				AND o.status IN ( {$status_placeholders} )
+				AND o.total_amount > 0
+				GROUP BY o.currency";
+
+			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Table name from wpdb; values parameterized.
+			$gross = self::$wpdb->get_results( self::$wpdb->prepare( $gross_sql, array_merge( array( 'shop_order' ), $order_statuses ) ) );
+
+			// Refunds against those same orders. Stored negative by WooCommerce,
+			// so ABS() keeps this correct whichever sign convention applies.
+			$refund_sql = "SELECT r.currency AS currency, SUM( ABS( r.total_amount ) ) AS refunded
+				FROM {$order_table} r
+				INNER JOIN {$order_table} o ON o.id = r.parent_order_id
+				WHERE r.type = %s
+				AND o.type = %s
+				AND o.status IN ( {$status_placeholders} )
+				GROUP BY r.currency";
+
+			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Table name from wpdb; values parameterized.
+			$refunds = self::$wpdb->get_results( self::$wpdb->prepare( $refund_sql, array_merge( array( 'shop_order_refund', 'shop_order' ), $order_statuses ) ) );
+
+			return self::combine_currency_rows( $gross, $refunds );
+		}
+
+		/**
+		 * WooCommerce metrics from legacy post storage.
 		 *
 		 * @since BuddyBoss 2.9.30
 		 *
-		 * @param array $order_statuses Order statuses to query.
+		 * @param array $order_statuses Statuses that count as revenue.
+		 *
 		 * @return array|false
 		 */
 		private static function get_woocommerce_legacy_metrics( $order_statuses ) {
-			$placeholders = array_fill( 0, count( $order_statuses ), '%s' );
-
-			// Query both shop_order and shop_order_placehold post types.
 			$post_types = array( 'shop_order' );
 
-			// Check if placeholder post type exists (used during HPOS migration).
+			// Present during an HPOS migration.
 			if ( post_type_exists( 'shop_order_placehold' ) ) {
 				$post_types[] = 'shop_order_placehold';
 			}
 
-			$type_placeholders = implode( ',', array_fill( 0, count( $post_types ), '%s' ) );
+			$type_placeholders   = implode( ',', array_fill( 0, count( $post_types ), '%s' ) );
+			$status_placeholders = implode( ',', array_fill( 0, count( $order_statuses ), '%s' ) );
 
-			// Build query with proper placeholders.
-			$query = '
-				SELECT COUNT(DISTINCT p.ID) as order_count,
-				       SUM(CAST(pm.meta_value AS DECIMAL(10,2))) as total_revenue
+			/*
+			 * Gross revenue grouped by each order's own currency.
+			 *
+			 * The previous query excluded any order that had a refund child
+			 * (`p2.ID IS NULL`), so a single partial refund erased that order's
+			 * entire revenue. Refunds are now subtracted below instead.
+			 */
+			$gross_sql = 'SELECT COALESCE( NULLIF( cur.meta_value, \'\' ), %s ) AS currency,
+					COUNT( DISTINCT p.ID ) AS order_count,
+					SUM( CAST( tot.meta_value AS DECIMAL(18,2) ) ) AS revenue
 				FROM ' . self::$wpdb->posts . ' p
-				INNER JOIN ' . self::$wpdb->postmeta . ' pm ON p.ID = pm.post_id
-				LEFT JOIN ' . self::$wpdb->posts . ' p2 ON p.ID = p2.post_parent AND p2.post_type = %s
-				WHERE p.post_type IN (' . $type_placeholders . ')
-				AND p.post_status IN (' . implode( ',', $placeholders ) . ')
-				AND pm.meta_key = %s
-				AND pm.meta_value > 0
-				AND p2.ID IS NULL
-			';
+				INNER JOIN ' . self::$wpdb->postmeta . ' tot ON p.ID = tot.post_id AND tot.meta_key = %s
+				LEFT JOIN ' . self::$wpdb->postmeta . " cur ON p.ID = cur.post_id AND cur.meta_key = %s
+				WHERE p.post_type IN ( {$type_placeholders} )
+				AND p.post_status IN ( {$status_placeholders} )
+				AND tot.meta_value > 0
+				GROUP BY currency";
 
-			// Prepare query arguments.
-			$query_args = array_merge(
-				array( 'shop_order_refund' ),
+			$gross_args = array_merge(
+				array( self::UNKNOWN_CURRENCY, '_order_total', '_order_currency' ),
 				$post_types,
-				$order_statuses,
-				array( '_order_total' )
+				$order_statuses
 			);
 
-			$results = self::$wpdb->get_row( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared
-				self::$wpdb->prepare( $query, $query_args )
+			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Table names from wpdb; values parameterized.
+			$gross = self::$wpdb->get_results( self::$wpdb->prepare( $gross_sql, $gross_args ) );
+
+			// Refunds attached to those orders.
+			$refund_sql = 'SELECT COALESCE( NULLIF( cur.meta_value, \'\' ), %s ) AS currency,
+					SUM( ABS( CAST( tot.meta_value AS DECIMAL(18,2) ) ) ) AS refunded
+				FROM ' . self::$wpdb->posts . ' r
+				INNER JOIN ' . self::$wpdb->posts . ' p ON p.ID = r.post_parent
+				INNER JOIN ' . self::$wpdb->postmeta . ' tot ON r.ID = tot.post_id AND tot.meta_key = %s
+				LEFT JOIN ' . self::$wpdb->postmeta . " cur ON p.ID = cur.post_id AND cur.meta_key = %s
+				WHERE r.post_type = %s
+				AND p.post_type IN ( {$type_placeholders} )
+				AND p.post_status IN ( {$status_placeholders} )
+				GROUP BY currency";
+
+			$refund_args = array_merge(
+				array( self::UNKNOWN_CURRENCY, '_order_total', '_order_currency', 'shop_order_refund' ),
+				$post_types,
+				$order_statuses
 			);
 
-			if ( $results ) {
-				return array(
-					'order_count'   => (int) $results->order_count,
-					'total_revenue' => (float) $results->total_revenue,
-				);
+			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Table names from wpdb; values parameterized.
+			$refunds = self::$wpdb->get_results( self::$wpdb->prepare( $refund_sql, $refund_args ) );
+
+			return self::combine_currency_rows( $gross, $refunds );
+		}
+
+		/**
+		 * Net gross rows against refund rows into a per-currency breakdown.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param array $gross_rows  Rows of currency, order_count, revenue.
+		 * @param array $refund_rows Rows of currency, refunded.
+		 *
+		 * @return array|false Order count, total revenue and a by_currency map.
+		 */
+		private static function combine_currency_rows( $gross_rows, $refund_rows ) {
+			if ( empty( $gross_rows ) ) {
+				return false;
 			}
 
-			return false;
+			$refund_by_currency = array();
+			foreach ( (array) $refund_rows as $row ) {
+				$code                        = self::currency_or_unknown( $row->currency );
+				$refund_by_currency[ $code ] = ( isset( $refund_by_currency[ $code ] ) ? $refund_by_currency[ $code ] : 0 ) + (float) $row->refunded;
+			}
+
+			$by_currency   = array();
+			$total_orders  = 0;
+			$total_revenue = 0;
+
+			foreach ( (array) $gross_rows as $row ) {
+				$code    = self::currency_or_unknown( $row->currency );
+				$orders  = (int) $row->order_count;
+				$revenue = (float) $row->revenue - ( isset( $refund_by_currency[ $code ] ) ? $refund_by_currency[ $code ] : 0 );
+
+				// A refund larger than recorded revenue would otherwise report negative.
+				$revenue = max( 0, $revenue );
+
+				if ( isset( $by_currency[ $code ] ) ) {
+					$by_currency[ $code ]['orders']  += $orders;
+					$by_currency[ $code ]['revenue'] += $revenue;
+				} else {
+					$by_currency[ $code ] = array(
+						'orders'  => $orders,
+						'revenue' => $revenue,
+					);
+				}
+
+				$total_orders  += $orders;
+				$total_revenue += $revenue;
+			}
+
+			if ( 0 === $total_orders && 0.0 === (float) $total_revenue ) {
+				return false;
+			}
+
+			return array(
+				'order_count'   => $total_orders,
+				'total_revenue' => $total_revenue,
+				'by_currency'   => $by_currency,
+			);
+		}
+
+		/**
+		 * Normalise a currency code coming back from a query row.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param mixed $currency Raw value.
+		 *
+		 * @return string Currency code or the unknown marker.
+		 */
+		private static function currency_or_unknown( $currency ) {
+			$code = self::normalize_currency( $currency );
+
+			return '' === $code ? self::UNKNOWN_CURRENCY : $code;
 		}
 
 		/**
@@ -617,7 +867,7 @@ if ( ! class_exists( 'BB_Report_Metrics' ) ) {
 				// LearnDash uses custom post type for transactions.
 				$query = '
 					SELECT COUNT(*) as order_count,
-					       SUM(CAST(pm.meta_value AS DECIMAL(10,2))) as total_revenue
+					       SUM(CAST(pm.meta_value AS DECIMAL(18,2))) as total_revenue
 					FROM ' . self::$wpdb->posts . ' p
 					INNER JOIN ' . self::$wpdb->postmeta . ' pm ON p.ID = pm.post_id
 					WHERE p.post_type = %s
@@ -660,7 +910,7 @@ if ( ! class_exists( 'BB_Report_Metrics' ) ) {
 				$table = self::$wpdb->prefix . 'mepr_transactions';
 
 				// Check if table exists.
-				$table_check = self::$wpdb->get_var( self::$wpdb->prepare( 'SHOW TABLES LIKE %s', $table ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+				$table_check = self::$wpdb->get_var( self::$wpdb->prepare( 'SHOW TABLES LIKE %s', $table ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.NotPrepared.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 				if ( $table_check !== $table ) {
 					return false;
 				}
@@ -714,7 +964,7 @@ if ( ! class_exists( 'BB_Report_Metrics' ) ) {
 				// LifterLMS stores order data in postmeta.
 				$query = '
 					SELECT COUNT(DISTINCT p.ID) as order_count,
-					       SUM(CAST(pm.meta_value AS DECIMAL(10,2))) as total_revenue
+					       SUM(CAST(pm.meta_value AS DECIMAL(18,2))) as total_revenue
 					FROM ' . self::$wpdb->posts . ' p
 					INNER JOIN ' . self::$wpdb->postmeta . ' pm ON p.ID = pm.post_id
 					WHERE p.post_type = %s
@@ -744,6 +994,43 @@ if ( ! class_exists( 'BB_Report_Metrics' ) ) {
 		}
 
 		/**
+		 * Get Tutor LMS metrics from its own order table.
+		 *
+		 * Tutor 3.x introduced native monetisation with a `tutor_orders` table.
+		 * `net_payment` is the refund-adjusted figure, so it is summed in
+		 * preference to `total_price`.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @return array|false Metrics, or false when the table is absent or empty.
+		 */
+		private static function get_tutor_lms_order_table_metrics() {
+			$table  = self::$wpdb->prefix . 'tutor_orders';
+			$exists = self::$wpdb->get_var( self::$wpdb->prepare( 'SHOW TABLES LIKE %s', $table ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.NotPrepared
+
+			if ( $exists !== $table ) {
+				return false;
+			}
+
+			$sql = "SELECT COUNT(*) AS order_count, SUM( CAST( net_payment AS DECIMAL(18,2) ) ) AS total_revenue
+				FROM {$table}
+				WHERE payment_status = %s
+				AND net_payment > 0";
+
+			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Table name from wpdb prefix; value parameterized.
+			$results = self::$wpdb->get_row( self::$wpdb->prepare( $sql, 'paid' ) );
+
+			if ( ! $results || ( 0 === (int) $results->order_count && 0.0 === (float) $results->total_revenue ) ) {
+				return false;
+			}
+
+			return array(
+				'order_count'   => (int) $results->order_count,
+				'total_revenue' => (float) $results->total_revenue,
+			);
+		}
+
+		/**
 		 * Get Tutor LMS metrics using native methods.
 		 *
 		 * @since BuddyBoss 2.9.30
@@ -751,7 +1038,22 @@ if ( ! class_exists( 'BB_Report_Metrics' ) ) {
 		 * @return array|false
 		 */
 		private static function get_tutor_lms_native_metrics() {
-			if ( ! function_exists( 'tutor' ) || ! function_exists( 'WC' ) ) {
+			if ( ! function_exists( 'tutor' ) ) {
+				return false;
+			}
+
+			/*
+			 * Tutor 3.x sells through its own order table and no longer requires
+			 * WooCommerce. Previously this bailed whenever WC() was absent, so
+			 * every Tutor-native store reported zero revenue.
+			 */
+			$native = self::get_tutor_lms_order_table_metrics();
+			if ( false !== $native ) {
+				return $native;
+			}
+
+			// Older Tutor installs record sales as WooCommerce orders.
+			if ( ! function_exists( 'WC' ) ) {
 				return false;
 			}
 
@@ -768,7 +1070,7 @@ if ( ! class_exists( 'BB_Report_Metrics' ) ) {
 					self::$wpdb->prepare(
 						'
 					SELECT COUNT(DISTINCT p.ID) as order_count,
-					       SUM(CAST(pm_total.meta_value AS DECIMAL(10,2))) as total_revenue
+					       SUM(CAST(pm_total.meta_value AS DECIMAL(18,2))) as total_revenue
 					FROM ' . self::$wpdb->posts . ' p
 					INNER JOIN ' . self::$wpdb->postmeta . ' pm_tutor ON p.ID = pm_tutor.post_id
 					INNER JOIN ' . self::$wpdb->postmeta . " pm_total ON p.ID = pm_total.post_id
@@ -813,7 +1115,7 @@ if ( ! class_exists( 'BB_Report_Metrics' ) ) {
 				$table = self::$wpdb->prefix . 'pmpro_membership_orders';
 
 				// Check if table exists.
-				$table_check = self::$wpdb->get_var( self::$wpdb->prepare( 'SHOW TABLES LIKE %s', $table ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+				$table_check = self::$wpdb->get_var( self::$wpdb->prepare( 'SHOW TABLES LIKE %s', $table ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.NotPrepared.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 				if ( $table_check !== $table ) {
 					return false;
 				}
@@ -914,7 +1216,7 @@ if ( ! class_exists( 'BB_Report_Metrics' ) ) {
 					self::$wpdb->prepare(
 						'
 					SELECT COUNT(*) as order_count,
-					       SUM(CAST(pm.meta_value AS DECIMAL(10,2))) as total_revenue
+					       SUM(CAST(pm.meta_value AS DECIMAL(18,2))) as total_revenue
 					FROM ' . self::$wpdb->posts . ' p
 					INNER JOIN ' . self::$wpdb->postmeta . ' pm ON p.ID = pm.post_id
 					WHERE p.post_type = %s
