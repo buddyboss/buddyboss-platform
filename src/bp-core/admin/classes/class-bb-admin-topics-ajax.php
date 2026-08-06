@@ -805,6 +805,15 @@ class BB_Admin_Topics_Ajax {
 					$update_args['post_status']   = $visibility;
 					$update_args['post_password'] = '';
 				}
+
+				// Match legacy classic-editor precedence (WP core edit_post()):
+				// Private visibility forces post_status=private and discards the
+				// Status selection in the same save — a private topic cannot be
+				// closed/spammed/pended from the edit form. Status transitions on
+				// private topics go through the bulk/row actions instead.
+				if ( in_array( $visibility, array( 'private', 'hidden' ), true ) ) {
+					$topic_status = '';
+				}
 			}
 		}
 
