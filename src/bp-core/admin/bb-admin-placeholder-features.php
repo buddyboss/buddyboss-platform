@@ -538,6 +538,19 @@ function bb_admin_mark_drm_locked_features( $features ) {
 			$feature['upgrade_title']       = '';
 			$feature['upgrade_description'] = '';
 		}
+
+		// Features that moved into the BuddyBoss Addons plan upsell to "Start", not
+		// Pro. The inner fields are already re-tiered via
+		// bb_admin_apply_addon_upsell_tier(); apply the same local default to the
+		// feature CARD here so both surfaces agree until the remote catalog carries
+		// the correct tier (a catalog-supplied value above always wins).
+		if (
+			function_exists( 'bb_admin_addon_upsell_feature_ids' )
+			&& in_array( $feature_id, bb_admin_addon_upsell_feature_ids(), true )
+			&& ( empty( $feature['upgrade_tier'] ) || 'pro' === $feature['upgrade_tier'] )
+		) {
+			$feature['upgrade_tier'] = 'start';
+		}
 	}
 
 	unset( $feature );
