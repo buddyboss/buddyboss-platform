@@ -567,6 +567,14 @@ function bb_admin_settings_page() {
 		 */
 		?>
 		<hr class="wp-header-end">
+		<?php
+		// Free-install "Register your email" banner — rendered outside the
+		// React mount so React never manages (or clobbers) it. Renders
+		// nothing on properly licensed sites (see bb_admin_register_banner_mode()).
+		if ( function_exists( 'bb_admin_render_register_banner' ) ) {
+			bb_admin_render_register_banner();
+		}
+		?>
 		<div id="bb-admin-settings"></div>
 		<?php
 		/*
