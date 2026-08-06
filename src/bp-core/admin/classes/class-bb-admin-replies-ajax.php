@@ -561,8 +561,13 @@ class BB_Admin_Replies_Ajax {
 		}
 
 		// Resolve post_status from reply_status and visibility.
-		// Draft/Pending take priority — visibility only applies to Published replies.
-		if ( in_array( $reply_status, array( 'pending', 'draft' ), true ) ) {
+		// Match legacy classic-editor precedence (WP core edit_post()): Private
+		// visibility wins over the Status selection; Draft/Pending apply to
+		// non-private replies only.
+		if ( in_array( $visibility, array( 'private', 'hidden' ), true ) ) {
+			$resolved_status   = $visibility;
+			$resolved_password = '';
+		} elseif ( in_array( $reply_status, array( 'pending', 'draft' ), true ) ) {
 			$resolved_status   = $reply_status;
 			$resolved_password = '';
 		} elseif ( 'password' === $visibility ) {
@@ -768,8 +773,13 @@ class BB_Admin_Replies_Ajax {
 			$update_args['post_date_gmt']   = current_time( 'mysql', true );
 			$update_args['edit_date']       = true;
 
-			// Draft/Pending from reply_status take priority over visibility.
-			if ( ! empty( $reply_status ) && in_array( $reply_status, array( 'pending', 'draft' ), true ) ) {
+			// Match legacy classic-editor precedence (WP core edit_post()):
+			// Private visibility forces post_status=private and discards the
+			// Status selection; Draft/Pending apply to non-private replies only.
+			if ( in_array( $visibility, array( 'private', 'hidden' ), true ) ) {
+				$update_args['post_status']   = $visibility;
+				$update_args['post_password'] = '';
+			} elseif ( ! empty( $reply_status ) && in_array( $reply_status, array( 'pending', 'draft' ), true ) ) {
 				$update_args['post_status']   = $reply_status;
 				$update_args['post_password'] = '';
 			} elseif ( 'password' === $visibility ) {
@@ -788,8 +798,13 @@ class BB_Admin_Replies_Ajax {
 		// Only set post_status if scheduling hasn't already set it to 'future'.
 		if ( ! isset( $update_args['post_status'] ) ) {
 
-			// Draft/Pending from reply_status take priority over visibility.
-			if ( ! empty( $reply_status ) && in_array( $reply_status, array( 'pending', 'draft' ), true ) ) {
+			// Match legacy classic-editor precedence (WP core edit_post()):
+			// Private visibility forces post_status=private and discards the
+			// Status selection; Draft/Pending apply to non-private replies only.
+			if ( in_array( $visibility, array( 'private', 'hidden' ), true ) ) {
+				$update_args['post_status']   = $visibility;
+				$update_args['post_password'] = '';
+			} elseif ( ! empty( $reply_status ) && in_array( $reply_status, array( 'pending', 'draft' ), true ) ) {
 				$update_args['post_status']   = $reply_status;
 				$update_args['post_password'] = '';
 			} elseif ( ! empty( $visibility ) ) {

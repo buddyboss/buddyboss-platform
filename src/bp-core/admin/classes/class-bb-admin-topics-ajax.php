@@ -600,6 +600,13 @@ class BB_Admin_Topics_Ajax {
 		$resolved_status   = 'password' === $visibility ? 'publish' : $visibility;
 		$resolved_password = 'password' === $visibility ? $post_password : '';
 
+		// Match legacy classic-editor precedence (WP core edit_post()): Private
+		// visibility forces post_status=private and discards the Status
+		// selection — a private topic cannot be created closed/spammed/pended.
+		if ( in_array( $visibility, array( 'private', 'hidden' ), true ) ) {
+			$topic_status = '';
+		}
+
 		$topic_data = array(
 			'post_title'    => $title,
 			'post_content'  => $description,
