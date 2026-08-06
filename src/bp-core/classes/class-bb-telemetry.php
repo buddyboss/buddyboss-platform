@@ -368,7 +368,6 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 					'bb_presence_interval_mu',
 					'bb_presence_time_span_mu',
 					'bb_profile_slug_format',
-					'_bp_community_visibility',
 					'bb_reaction_mode',
 					'_bb_enable_activity_schedule_posts',
 					'_bb_enable_activity_comment_threading',
@@ -386,7 +385,6 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 					'bp-member-type-enable-disable',
 					'bp-member-type-display-on-profile',
 					'bp-disable-avatar-uploads',
-					'bp-disable-group-cover-image-uploads',
 					'bp-disable-group-type-creation',
 					'bp-disable-account-deletion',
 					'bp-enable-private-network',
@@ -397,8 +395,14 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 					'_bp_enable_activity_autoload',
 					'_bp_enable_activity_follow',
 					'_bp_enable_activity_link_preview',
-					'_bp_enable_activity_emoji',
-					'_bp_enable_activity_gif',
+					'bp_media_profiles_emoji_support',
+					'bp_media_groups_emoji_support',
+					'bp_media_messages_emoji_support',
+					'bp_media_forums_emoji_support',
+					'bp_media_profiles_gif_support',
+					'bp_media_groups_gif_support',
+					'bp_media_messages_gif_support',
+					'bp_media_forums_gif_support',
 					'bp_search_members',
 					'bp_search_number_of_results',
 					'bp_media_profile_media_support',
@@ -427,7 +431,6 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 					'bp_video_forums_video_support',
 					'bp_video_allowed_size',
 					'bp_video_allowed_per_batch',
-					'bp_video_extension_video_support',
 					'bp_media_symlink_direct_access',
 					'bp_video_extensions_support',
 					'_bp_on_screen_notifications_enable',
@@ -442,7 +445,6 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 					'bp_media_group_document_support',
 					'bp_media_messages_document_support',
 					'bp_media_forums_document_support',
-					'bp_media_extension_document_support',
 					'bp_document_allowed_size',
 					'bp_media_allowed_size',
 					'_bb_enable_activity_post_polls',
@@ -513,7 +515,27 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 				}
 			}
 
-			unset( $bp_prefix, $query, $results, $bb_platform_db_options );
+			/*
+			 * Declare which option names were actually queried.
+			 *
+			 * The receiver only ever wrote keys present in a payload, so a value
+			 * that disappeared from wp_options stayed on the record forever —
+			 * every stored boolean was really "last known", not "current". It
+			 * cannot simply delete anything missing, because a site on an older
+			 * build never sends the newer keys and would have them wiped.
+			 *
+			 * This list resolves that: a name in it that is absent from the
+			 * payload was looked for and genuinely not found, so the receiver may
+			 * clear it. Anything not declared is left untouched. Add-ons append
+			 * their own names through the filter below.
+			 */
+			$declared_keys = isset( $bb_telemetry_data['bb_reported_option_keys'] )
+				? (array) $bb_telemetry_data['bb_reported_option_keys']
+				: array();
+
+			$bb_telemetry_data['bb_reported_option_keys'] = array_values( array_unique( array_merge( $declared_keys, $sanitized ) ) );
+
+			unset( $bp_prefix, $query, $results, $bb_platform_db_options, $declared_keys );
 
 			// Tools usage → cumulative per-action counts for Repair / Sample Data / Migration.
 			$bb_telemetry_data['tools_usage'] = bb_get_tool_usage();
