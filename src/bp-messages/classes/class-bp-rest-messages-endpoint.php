@@ -1367,9 +1367,7 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 		$wpdb->query( $query ); // db call ok; no-cache ok.
 
 		// Delete messages meta.
-		$query_meta = $wpdb->prepare( "DELETE FROM {$bp->messages->table_name_meta} WHERE message_id IN(%s)", implode( ',', $message_ids ) ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
-		$wpdb->query( $query_meta ); // db call ok; no-cache ok.
+		bb_messages_delete_meta_for_ids( $message_ids );
 
 		// Delete thread.
 		$query_recipients = $wpdb->prepare( "DELETE FROM {$bp->messages->table_name_recipients} WHERE thread_id = %d", $thread_id ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared

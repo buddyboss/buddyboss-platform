@@ -757,4 +757,158 @@ class BP_Tests_BP_Messages_Thread extends BP_UnitTestCase {
 
 		$this->set_current_user( $current_user );
 	}
+
+	/**
+	 * Regression test (PROD-10156): the thread hard-delete previously bound the whole
+	 * imploded message-id list to a single %s placeholder, so MySQL's numeric coercion
+	 * deleted meta for only the FIRST message id. Asserts every message's meta is gone.
+	 *
+	 * @group delete_thread
+	 * @group meta
+	 */
+	public function test_delete_thread_removes_meta_for_every_message() {
+		global $wpdb;
+
+		$bp = buddypress();
+
+		$u1 = self::factory()->user->create();
+		$u2 = self::factory()->user->create();
+
+		// Empty edge: the shared meta-delete helper must be a no-op (no query) for an
+		// empty id list.
+		$num_queries = $wpdb->num_queries;
+		bb_messages_delete_meta_for_ids( array() );
+		$this->assertEquals( $num_queries, $wpdb->num_queries, 'An empty id list must issue no query.' );
+
+		$m1 = self::factory()->message->create_and_get( array(
+			'sender_id'  => $u1,
+			'recipients' => array( $u2 ),
+			'subject'    => 'Foo',
+		) );
+		$t1 = $m1->thread_id;
+
+		$m2 = self::factory()->message->create_and_get( array(
+			'thread_id'  => $t1,
+			'sender_id'  => $u1,
+			'recipients' => array( $u2 ),
+			'content'    => 'Bar',
+		) );
+
+		$m3 = self::factory()->message->create_and_get( array(
+			'thread_id'  => $t1,
+			'sender_id'  => $u1,
+			'recipients' => array( $u2 ),
+			'content'    => 'Baz',
+		) );
+
+		bp_messages_add_meta( $m1->id, 'test_key', 'a' );
+		bp_messages_add_meta( $m2->id, 'test_key', 'b' );
+		bp_messages_add_meta( $m3->id, 'test_key', 'c' );
+
+		// All three messages were sent by $u1, so a single delete() call for $u1 marks every
+		// message 'bp_messages_deleted' and flips BP_Messages_Thread::delete() into its
+		// hard-delete path.
+		messages_delete_thread( $t1, $u1 );
+
+		// Idempotency edge: re-running delete on an already hard-deleted thread must
+		// remain harmless.
+		$this->assertTrue( messages_delete_thread( $t1, $u2 ) );
+
+		$remaining = $wpdb->get_var( $wpdb->prepare(
+			"SELECT COUNT(*) FROM {$bp->messages->table_name_meta} WHERE message_id IN (%d,%d,%d)",
+			$m1->id,
+			$m2->id,
+			$m3->id
+		) );
+
+		$this->assertEquals( 0, $remaining, 'Meta for every message in the thread must be removed, not just the first.' );
+	}
+
+	/**
+	 * Regression test (PROD-10156): the recipient-restore UPDATE in
+	 * BP_Messages_Thread::update_last_message_status() previously bound the whole imploded
+	 * deleted-recipient user-id list to a single %s placeholder, so MySQL's numeric coercion
+	 * restored only the FIRST id in that list.
+	 *
+	 * The is_deleted=1 precondition is seeded directly via $wpdb->update(): no current code
+	 * path sets bp_messages_recipients.is_deleted back to 1 (delete() now hard-deletes), so
+	 * seeding is the only way to exercise the restore through its documented precondition.
+	 *
+	 * The follow-up message is sent by $u2 (a deleted recipient), not $u1:
+	 * BP_Messages_Message::send() blanket-restores everyone EXCEPT the sender, so only the
+	 * sender's own row depends on update_last_message_status() — and the recipient snapshot
+	 * orders as array( $u3, $u2 ), putting $u2 in the non-first position the bug drops.
+	 *
+	 * @group restore
+	 * @group is_deleted
+	 */
+	public function test_new_message_restores_thread_for_every_deleted_recipient() {
+		global $wpdb;
+
+		$bp = buddypress();
+
+		$u1 = self::factory()->user->create(); // Original thread sender.
+		$u2 = self::factory()->user->create();
+		$u3 = self::factory()->user->create();
+
+		$message = self::factory()->message->create_and_get( array(
+			'sender_id'  => $u1,
+			'recipients' => array( $u2, $u3 ),
+			'subject'    => 'Foo',
+		) );
+		$t1 = $message->thread_id;
+
+		// Seed the "previously deleted by both recipients" precondition directly (see WHY above).
+		$wpdb->update(
+			$bp->messages->table_name_recipients,
+			array( 'is_deleted' => 1 ),
+			array(
+				'thread_id' => $t1,
+				'user_id'   => $u2,
+			)
+		);
+		$wpdb->update(
+			$bp->messages->table_name_recipients,
+			array( 'is_deleted' => 1 ),
+			array(
+				'thread_id' => $t1,
+				'user_id'   => $u3,
+			)
+		);
+
+		// Empty edge: restoring with no previously-deleted recipient issues no UPDATE.
+		$last_message = BP_Messages_Thread::get_last_message( $t1 );
+		$num_queries  = $wpdb->num_queries;
+		BP_Messages_Thread::update_last_message_status( array(
+			'thread_id'          => $t1,
+			'deleted_recipients' => array(),
+			'last_message'       => $last_message,
+		) );
+		$this->assertEquals( $num_queries, $wpdb->num_queries, 'An empty deleted-recipient list must issue no UPDATE.' );
+
+		// New message arrives, sent by $u2 (one of the two deleted recipients) -> should
+		// restore BOTH $u3 (via send()'s blanket restore) and $u2's own row (via the
+		// update_last_message_status() fix only).
+		self::factory()->message->create_and_get( array(
+			'thread_id'  => $t1,
+			'sender_id'  => $u2,
+			'recipients' => array( $u1, $u3 ),
+			'content'    => 'Bar',
+		) );
+
+		$recipients = BP_Messages_Thread::get_recipients_for_thread( $t1 );
+
+		$this->assertEquals( 0, (int) $recipients[ $u3 ]->is_deleted, '$u3 must be restored.' );
+		$this->assertEquals( 0, (int) $recipients[ $u2 ]->is_deleted, '$u2 (the second, non-first id in the deleted-recipient list) must ALSO be restored, not just the first.' );
+
+		// Idempotency edge: re-running the restore for an already-restored recipient
+		// must remain harmless.
+		BP_Messages_Thread::update_last_message_status( array(
+			'thread_id'          => $t1,
+			'deleted_recipients' => array( (object) array( 'user_id' => $u2 ) ),
+			'last_message'       => BP_Messages_Thread::get_last_message( $t1 ),
+		) );
+		$recipients_after = BP_Messages_Thread::get_recipients_for_thread( $t1 );
+		$this->assertEquals( 0, (int) $recipients_after[ $u2 ]->is_deleted, 'Re-running the restore for an already-restored recipient must remain harmless.' );
+	}
 }
