@@ -161,9 +161,11 @@ bp_get_template_part( 'sidebar/left-sidebar' );
 						?>
 				<div class="bb-readylaunch-mobile-menu_items">
 					<ul>
-						<?php if ( bp_is_active( 'messages' ) ) { ?>
+						<?php if ( bp_is_active( 'messages' ) ) {
+							$messages_menu_link = trailingslashit( bp_loggedin_user_domain() . bp_get_messages_slug() );
+						?>
 							<li>
-								<a href="javascript:void(0);" ref="notification_bell" class="notification-link">
+								<a href="<?php echo $messages_menu_link ?>" ref="notification_bell">
 									<i class="bb-icons-rl-chat-teardrop-text"></i>
 									<span class="notification-label"><?php esc_html_e( 'Messages', 'buddyboss' ); ?></span>
 									<?php
@@ -175,9 +177,11 @@ bp_get_template_part( 'sidebar/left-sidebar' );
 								</a>
 							</li>
 						<?php } ?>
-						<?php if ( bp_is_active( 'notifications' ) ) { ?>
+						<?php if ( bp_is_active( 'notifications' ) ) {
+							$notification_menu_link = trailingslashit( bp_loggedin_user_domain() . bp_get_notifications_slug() );
+						?>
 							<li>
-								<a href="javascript:void(0);" ref="notification_bell" class="notification-link">
+								<a href="<?php echo $notification_menu_link ?>" ref="notification_bell">
 									<i class="bb-icons-rl-bell-simple"></i>
 									<span class="notification-label"><?php esc_html_e( 'Notifications', 'buddyboss' ); ?></span>
 									<?php
