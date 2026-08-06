@@ -69,17 +69,24 @@ function bb_kb_enqueue_standalone( $args = array() ) {
 	if ( ! wp_script_is( 'bb-admin-common', 'registered' ) && ! wp_script_is( 'bb-admin-common', 'enqueued' ) ) {
 		$common_asset_php = buddypress()->plugin_dir . 'bp-core/admin/bb-settings/common/build/index.asset.php';
 		$common_deps      = array( 'react', 'wp-element', 'wp-hooks', 'wp-html-entities', 'wp-i18n' );
+		// Version from the common bundle's own manifest — the kb-standalone
+		// bundle hash would not change when only the common bundle does,
+		// leaving browsers on a stale cached common build.
+		$common_version = $asset['version'];
 		if ( file_exists( $common_asset_php ) ) {
 			$common_asset = include $common_asset_php;
 			if ( isset( $common_asset['dependencies'] ) ) {
 				$common_deps = $common_asset['dependencies'];
+			}
+			if ( isset( $common_asset['version'] ) ) {
+				$common_version = $common_asset['version'];
 			}
 		}
 		wp_register_script(
 			'bb-admin-common',
 			buddypress()->plugin_url . 'bp-core/admin/bb-settings/common/build/index.js',
 			$common_deps,
-			$asset['version'],
+			$common_version,
 			true
 		);
 	}
