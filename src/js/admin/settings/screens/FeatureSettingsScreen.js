@@ -1034,7 +1034,7 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 													} )()}
 												</div>
 												<div className="bb-admin-feature-settings__section-header-right">
-													{/* Section-level PRO badge (e.g. UPGRADE PRO / UPGRADE PLUS).
+													{/* Section-level PRO badge (e.g. UPGRADE LAUNCH / UPGRADE SCALE).
 													    With a modal payload (field-upgrades catalog entry
 													    or registration-provided) the badge opens
 													    UpgradeModal in-page; without one it keeps the
@@ -1049,7 +1049,7 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 																	className="bb-admin-feature-settings__section-pro-badge"
 																>
 																	<i className={section.pro_notice.badge_icon || 'bb-icons-rl-crown-simple'} />
-																	<span>{section.pro_notice.badge_text || 'UPGRADE PRO'}</span>
+																	<span>{section.pro_notice.badge_text || 'UPGRADE LAUNCH'}</span>
 																</button>
 															) : (
 																<a
@@ -1059,7 +1059,7 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 																	className="bb-admin-feature-settings__section-pro-badge"
 																>
 																	<i className={section.pro_notice.badge_icon || 'bb-icons-rl-crown-simple'} />
-																	<span>{section.pro_notice.badge_text || 'UPGRADE PRO'}</span>
+																	<span>{section.pro_notice.badge_text || 'UPGRADE LAUNCH'}</span>
 																</a>
 															) }
 														</span>

@@ -375,7 +375,7 @@ function bb_member_blogging_get_upsell_field_data() {
 		case 'api_unavailable':
 			// The license is active but the add-ons API did not answer, so plan
 			// membership is genuinely unknown. Say so instead of guessing — an
-			// "Upgrade to Plus" button shown to a customer who already has Plus
+			// "Upgrade to Scale" button shown to a customer who already has Scale
 			// reads as a billing error on our side.
 			$data = array(
 				'empty_state_description' => __( 'We could not reach BuddyBoss to check which add-ons are in your plan. Check your connection and reload this page to try again.', 'buddyboss' ),
@@ -388,7 +388,7 @@ function bb_member_blogging_get_upsell_field_data() {
 		default:
 			$data = array(
 				'empty_state_description' => __( 'Allow your community members to contribute by creating blogs for your site via the frontend blog creator form. Available with the Member Blogging add-on on the Plus plan.', 'buddyboss' ),
-				'button_label'            => __( 'Upgrade to Plus', 'buddyboss' ),
+				'button_label'            => __( 'Upgrade to Scale', 'buddyboss' ),
 				// Fallback for when the catalog has no entry for this panel — see
 				// `button_url_from_catalog` in the defaults above.
 				'button_url'              => 'https://www.buddyboss.com/pricing/',
