@@ -169,14 +169,39 @@ function bb_schedule_placeholder_features_daily_refresh() {
 add_action( 'admin_init', 'bb_schedule_placeholder_features_daily_refresh' );
 
 /**
+ * Resolve the Mothership product slug for a placeholder catalog item.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $item Catalog item with optional 'slug' and 'plugin_file'.
+ * @return string Product slug, or '' when the item carries neither key.
+ */
+function bb_get_placeholder_product_slug( $item ) {
+	// The activate/install actions (mosh_addon_*) and the addon-plan lookup
+	// both key off the Mothership product slug, which is not always the
+	// plugin's folder name — e.g. the product "buddyboss-membership" ships in
+	// the "buddybossmembership" folder. Prefer an explicit catalog `slug`;
+	// fall back to the folder name (correct when the slug matches it).
+	if ( ! empty( $item['slug'] ) ) {
+		return sanitize_key( $item['slug'] );
+	}
+	if ( ! empty( $item['plugin_file'] ) ) {
+		return dirname( $item['plugin_file'] );
+	}
+
+	return '';
+}
+
+/**
  * Determine the plugin status for a placeholder feature.
  *
  * Checks whether the plugin is in the user's addon plan, installed, and/or active.
  *
  * @since BuddyBoss 3.0.0
  *
- * @param array $item Catalog item with 'id' and optional 'plugin_file'.
- * @return string One of: 'not_in_plan', 'not_installed', 'installed_inactive'.
+ * @param array $item           Catalog item with 'id' and optional 'plugin_file'/'slug'.
+ * @param array $active_plugins Optional active plugin basenames for the current site.
+ * @return string One of: 'not_in_plan', 'not_installed', 'installed_inactive', 'active'.
  */
 function bb_get_placeholder_plugin_status( $item, $active_plugins = null ) {
 	$plugin_file = isset( $item['plugin_file'] ) ? $item['plugin_file'] : '';
@@ -198,7 +223,9 @@ function bb_get_placeholder_plugin_status( $item, $active_plugins = null ) {
 	// regardless of install status. Free products are exempt (always in plan).
 	$in_plan = $is_free;
 	if ( ! $in_plan && class_exists( '\\BuddyBoss\\Core\\Admin\\Mothership\\BB_Addons_Manager' ) ) {
-		$plugin_slug = dirname( $plugin_file );
+		// Same slug resolution as the injected card's plugin_slug — the plan
+		// lookup keys off the Mothership product slug, not the folder name.
+		$plugin_slug = bb_get_placeholder_product_slug( $item );
 		$product     = \BuddyBoss\Core\Admin\Mothership\BB_Addons_Manager::checkProductBySlug( $plugin_slug );
 		$in_plan     = ! empty( $product );
 	}
@@ -331,40 +358,30 @@ function bb_admin_inject_placeholder_features( $features ) {
 		// hard gate behind the UI.
 		$requires_unmet = isset( $item['requires'] ) && ! bb_placeholder_requirements_met( $item['requires'], $active_plugins );
 
-		$plugin_file = isset( $item['plugin_file'] ) ? $item['plugin_file'] : '';
-
-		// The activate/install actions (mosh_addon_*) key off the Mothership
-		// product slug, which is not always the plugin's folder name — e.g. the
-		// product "buddyboss-membership" ships in the "buddybossmembership"
-		// folder. Prefer an explicit catalog `slug` when provided; otherwise fall
-		// back to the folder name (correct for add-ons whose slug matches it).
-		if ( ! empty( $item['slug'] ) ) {
-			$plugin_slug = sanitize_key( $item['slug'] );
-		} elseif ( ! empty( $plugin_file ) ) {
-			$plugin_slug = dirname( $plugin_file );
-		} else {
-			$plugin_slug = '';
-		}
+		// Mothership product slug (catalog `slug`, falling back to the plugin
+		// folder) — shared with the in-plan lookup via
+		// bb_get_placeholder_product_slug() so both resolve identically.
+		$plugin_slug = bb_get_placeholder_product_slug( $item );
 
 		$plugin_status = bb_get_placeholder_plugin_status( $item, $active_plugins );
 
 		$features[] = array(
-			'id'                => sanitize_key( $item['id'] ),
-			'label'             => isset( $item['label'] ) ? sanitize_text_field( $item['label'] ) : '',
-			'description'       => isset( $item['description'] ) ? sanitize_text_field( $item['description'] ) : '',
-			'category'          => isset( $item['category'] ) ? sanitize_key( $item['category'] ) : 'add-ons',
-			'license_tier'      => isset( $item['upgrade_tier'] ) ? sanitize_key( $item['upgrade_tier'] ) : 'plus',
-			'status'            => 'inactive',
-			'available'         => false,
-			'required'          => false,
-			'settings_route'    => '',
-			'icon'              => isset( $item['icon'] ) ? $item['icon'] : null,
-			'is_placeholder'    => true,
-			'plugin_status'     => $plugin_status,
-			'plugin_slug'       => $plugin_slug,
+			'id'                  => sanitize_key( $item['id'] ),
+			'label'               => isset( $item['label'] ) ? sanitize_text_field( $item['label'] ) : '',
+			'description'         => isset( $item['description'] ) ? sanitize_text_field( $item['description'] ) : '',
+			'category'            => isset( $item['category'] ) ? sanitize_key( $item['category'] ) : 'add-ons',
+			'license_tier'        => isset( $item['upgrade_tier'] ) ? sanitize_key( $item['upgrade_tier'] ) : 'plus',
+			'status'              => 'inactive',
+			'available'           => false,
+			'required'            => false,
+			'settings_route'      => '',
+			'icon'                => isset( $item['icon'] ) ? $item['icon'] : null,
+			'is_placeholder'      => true,
+			'plugin_status'       => $plugin_status,
+			'plugin_slug'         => $plugin_slug,
 			// Parent dependency not active — the grid disables the card's
 			// Install/Activate button (no extra UI, matching the Add-ons page).
-			'requires_unmet'    => $requires_unmet,
+			'requires_unmet'      => $requires_unmet,
 			'upgrade_tier'        => isset( $item['upgrade_tier'] ) ? sanitize_key( $item['upgrade_tier'] ) : 'plus',
 			'upgrade_url'         => isset( $item['upgrade_url'] ) ? esc_url_raw( $item['upgrade_url'] ) : '',
 			'upgrade_image_url'   => isset( $item['upgrade_image_url'] ) ? esc_url_raw( $item['upgrade_image_url'] ) : '',

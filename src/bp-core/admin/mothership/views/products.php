@@ -24,15 +24,18 @@ $bb_dependency_children  = array();
 $bb_product_dirs         = array();
 $bb_external_parents     = array();
 $bb_external_dependents  = array();
+
+// Disabled-button styling for the dependency gates below. Attached to the
+// vendor stylesheet handle enqueued by AddonsManager::enqueueAssets() just
+// before this view renders — late-enqueued admin styles print in the footer,
+// and the inline data rides along with the handle.
+wp_add_inline_style(
+	'mosh-addons-css',
+	'#mosh-admin-addons .mosh-product-action button[disabled] { opacity: 0.5; cursor: not-allowed; }'
+);
 ?>
 
 <div id="mosh-admin-addons" class="wrap">
-	<style>
-		#mosh-admin-addons .mosh-product-action button[disabled] {
-			opacity: 0.5;
-			cursor: not-allowed;
-		}
-	</style>
 	<h3>
 		<form method="post" action="">
 			<input type="submit"
