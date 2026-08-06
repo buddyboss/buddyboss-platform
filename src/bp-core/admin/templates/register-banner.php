@@ -5,8 +5,10 @@
  * Included by bb_admin_render_register_banner() with $mode in scope:
  * - 'pitch'  — full banner (illustration, headline, CTA, modal) with the
  *              activate-license notice present but hidden; JS reveals it and
- *              hides the pitch elements after a successful registration.
- * - 'notice' — the activate-license notice strip only.
+ *              hides the CTA after a successful registration.
+ * - 'notice' — the same banner with the notice visible and the register
+ *              CTA/modal omitted (the site already holds a key or owns the
+ *              products — the only pending action is license activation).
  *
  * @package BuddyBoss\Core\Administration
  * @since BuddyBoss [BBVERSION]
@@ -21,11 +23,9 @@ $bb_reg_license_url = admin_url( 'admin.php?page=' . \BuddyBoss\Core\Admin\Mothe
 <div class="bb-reg-banner-holder">
 	<div class="bb-reg-banner" role="region" aria-label="<?php esc_attr_e( 'Register your email and get Memberships and Courses', 'buddyboss' ); ?>">
 
-		<?php if ( $bb_reg_is_pitch ) : ?>
-			<div class="bb-reg-banner-image">
-				<img src="<?php echo esc_url( buddypress()->plugin_url . 'bp-core/images/admin/register-banner.jpg' ); ?>" alt="<?php esc_attr_e( 'BuddyBoss Register Banner', 'buddyboss' ); ?>" />
-			</div>
-		<?php endif; ?>
+		<div class="bb-reg-banner-image">
+			<img src="<?php echo esc_url( buddypress()->plugin_url . 'bp-core/images/admin/register-banner.jpg' ); ?>" alt="<?php esc_attr_e( 'BuddyBoss Register Banner', 'buddyboss' ); ?>" />
+		</div>
 
 		<div class="bb-reg-content">
 			<div class="bb-reg-notice" role="note" data-bb-reg-notice<?php echo $bb_reg_is_pitch ? ' hidden' : ''; ?>>
@@ -43,20 +43,20 @@ $bb_reg_license_url = admin_url( 'admin.php?page=' . \BuddyBoss\Core\Admin\Mothe
 				</a>
 			</div>
 
-			<?php if ( $bb_reg_is_pitch ) : ?>
-				<div class="bb-reg-heads">
-					<h2 class="bb-reg-title"><?php esc_html_e( 'Register your email and get Memberships & Courses', 'buddyboss' ); ?></h2>
-					<p class="bb-reg-desc"><?php esc_html_e( 'Build courses and then connect them to memberships to start monetizing your community and grow your passive income.', 'buddyboss' ); ?></p>
-				</div>
+			<div class="bb-reg-heads">
+				<h2 class="bb-reg-title"><?php esc_html_e( 'Register your email and get Memberships & Courses', 'buddyboss' ); ?></h2>
+				<p class="bb-reg-desc"><?php esc_html_e( 'Build courses and then connect them to memberships to start monetizing your community and grow your passive income.', 'buddyboss' ); ?></p>
+			</div>
 
+			<?php if ( $bb_reg_is_pitch ) : ?>
 				<div class="bb-reg-cta">
 					<button type="button" class="bb-reg-btn" data-bb-reg-open>
 						<?php esc_html_e( 'Register with Email', 'buddyboss' ); ?>
 					</button>
 				</div>
-
-				<p class="bb-reg-onus"><?php esc_html_e( 'Its On Us..!', 'buddyboss' ); ?></p>
 			<?php endif; ?>
+
+			<p class="bb-reg-onus"><?php esc_html_e( 'Its On Us..!', 'buddyboss' ); ?></p>
 		</div>
 	</div>
 
