@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 3.4.0\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2026-08-06 04:53:01+00:00\n"
+"POT-Creation-Date: 2026-08-06 13:31:39+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -1700,6 +1700,7 @@ msgstr ""
 #: bb-features/community/blogging/admin/member-blogs-addon.php:335
 #: bb-features/community/blogging/admin/member-blogs-addon.php:370
 #: bp-core/admin/mothership/class-bb-license-manager.php:907
+#: bp-core/admin/templates/register-banner.php:39
 msgid "Activate License"
 msgstr ""
 
@@ -6123,6 +6124,38 @@ msgstr ""
 msgid "Install LearnDash Add-on"
 msgstr ""
 
+#: bp-core/admin/bb-admin-register-banner.php:184
+msgid "Please fill in all fields."
+msgstr ""
+
+#: bp-core/admin/bb-admin-register-banner.php:185
+#: bp-core/classes/class-bb-readylaunch.php:1281
+#: bp-members/bp-members-functions.php:1711
+msgid "Please enter a valid email address."
+msgstr ""
+
+#: bp-core/admin/bb-admin-register-banner.php:186
+#: bp-moderation/bp-moderation-filters.php:218
+#: bp-moderation/bp-moderation-filters.php:298
+#: bp-moderation/bp-moderation-filters.php:356
+#: bp-moderation/bp-moderation-filters.php:422
+#: bp-moderation/bp-moderation-filters.php:475
+msgid "Something went wrong. Please try again."
+msgstr ""
+
+#: bp-core/admin/bb-admin-register-banner.php:233
+msgid "You are not allowed to do this."
+msgstr ""
+
+#: bp-core/admin/bb-admin-register-banner.php:237
+#: bp-core/admin/bp-core-admin-functions.php:2461
+#: bp-core/admin/settings/media/callbacks.php:299
+#: bp-core/admin/settings/media/callbacks.php:423
+#: bp-core/admin/settings/media/callbacks.php:516
+#: bp-core/admin/settings/media/callbacks.php:601
+msgid "Security check failed."
+msgstr ""
+
 #: bp-core/admin/bb-admin-settings-account.php:33
 #: bp-core/bp-core-functions.php:2540
 #: bp-members/classes/class-bp-members-notification.php:64
@@ -6708,6 +6741,8 @@ msgstr ""
 
 #: bp-core/admin/bb-admin-settings-moderation.php:171
 #: bp-core/admin/templates/moderation-deactivate-confirmation-popup.php:45
+#: bp-core/admin/templates/register-banner.php:97
+#: bp-core/admin/templates/register-banner.php:111
 #: bp-forums/replies/template.php:1867
 #: bp-members/classes/class-bp-members-admin.php:2540
 #: bp-moderation/screens/block-member-form.php:75
@@ -6823,7 +6858,7 @@ msgstr ""
 msgid "BuddyBoss Admin Settings assets not found. Please run: npm run build:admin:settings"
 msgstr ""
 
-#: bp-core/admin/bb-admin-settings-page.php:591
+#: bp-core/admin/bb-admin-settings-page.php:599
 msgid "JavaScript is required for BuddyBoss Settings. Please enable JavaScript in your browser."
 msgstr ""
 
@@ -7142,6 +7177,7 @@ msgid "Activate"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-functions.php:301
+#: bp-core/admin/templates/register-banner.php:98
 #: bp-core/bp-core-functions.php:800
 #: bp-core/classes/class-bp-core-login-widget.php:127
 #: bp-forums/common/widgets.php:126
@@ -7343,14 +7379,6 @@ msgstr ""
 msgid "Install"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:2461
-#: bp-core/admin/settings/media/callbacks.php:299
-#: bp-core/admin/settings/media/callbacks.php:423
-#: bp-core/admin/settings/media/callbacks.php:516
-#: bp-core/admin/settings/media/callbacks.php:601
-msgid "Security check failed."
-msgstr ""
-
 #: bp-core/admin/bp-core-admin-help.php:36
 msgid "Articles"
 msgstr ""
@@ -7376,6 +7404,7 @@ msgstr ""
 #: bp-core/admin/settings/members/settings-profile-name.php:92
 #: bp-core/admin/settings/members/settings-profile-name.php:163
 #: bp-core/admin/settings/members/settings-profile-name.php:235
+#: bp-core/admin/templates/register-banner.php:84
 msgid "First Name"
 msgstr ""
 
@@ -7384,6 +7413,7 @@ msgstr ""
 #: bp-core/admin/settings/members/settings-profile-name.php:115
 #: bp-core/admin/settings/members/settings-profile-name.php:185
 #: bp-core/admin/settings/members/settings-profile-name.php:257
+#: bp-core/admin/templates/register-banner.php:88
 msgid "Last Name"
 msgstr ""
 
@@ -10085,6 +10115,7 @@ msgid "Get Your BuddyBoss Platform License Key"
 msgstr ""
 
 #: bp-core/admin/mothership/class-bb-license-manager.php:956
+#: bp-core/admin/templates/register-banner.php:92
 #: bp-core/profile-search/bps-xprofile.php:685
 #: bp-core/profile-search/bps-xprofile.php:686
 #: bp-members/bp-members-filters.php:152
@@ -13042,6 +13073,10 @@ msgstr ""
 #: bp-core/admin/templates/about-buddyboss-app.php:21
 #: bp-core/admin/templates/moderation-activate-alert-popup.php:21
 #: bp-core/admin/templates/moderation-deactivate-confirmation-popup.php:30
+#: bp-core/admin/templates/register-banner.php:77
+#: bp-core/admin/templates/register-banner.php:122
+#: bp-core/admin/templates/register-banner.php:141
+#: bp-core/admin/templates/register-banner.php:151
 #: bp-core/admin/templates/update-buddyboss.php:82
 #: bp-core/classes/class-bp-admin-tab.php:185
 #: bp-forums/core/actions.php:596
@@ -13090,6 +13125,75 @@ msgstr ""
 
 #: bp-core/admin/templates/moderation-deactivate-confirmation-popup.php:50
 msgid "Yes I understand, Deactivate"
+msgstr ""
+
+#: bp-core/admin/templates/register-banner.php:24
+msgid "Register your email and get Memberships and Courses"
+msgstr ""
+
+#: bp-core/admin/templates/register-banner.php:27
+msgid "BuddyBoss Register Banner"
+msgstr ""
+
+#: bp-core/admin/templates/register-banner.php:37
+msgid "Complete setup by activating your license"
+msgstr ""
+
+#: bp-core/admin/templates/register-banner.php:47
+msgid "Register your email and get Memberships & Courses"
+msgstr ""
+
+#: bp-core/admin/templates/register-banner.php:48
+msgid "Build courses and then connect them to memberships to start monetizing your community and grow your passive income."
+msgstr ""
+
+#: bp-core/admin/templates/register-banner.php:54
+msgid "Register with Email"
+msgstr ""
+
+#: bp-core/admin/templates/register-banner.php:59
+msgid "Its On Us..!"
+msgstr ""
+
+#: bp-core/admin/templates/register-banner.php:76
+msgid "Get BuddyBoss Platform License Key"
+msgstr ""
+
+#: bp-core/admin/templates/register-banner.php:85
+msgid "Enter your first name"
+msgstr ""
+
+#: bp-core/admin/templates/register-banner.php:89
+msgid "Enter your last name"
+msgstr ""
+
+#: bp-core/admin/templates/register-banner.php:93
+msgid "Enter your email address"
+msgstr ""
+
+#: bp-core/admin/templates/register-banner.php:107
+msgid "Getting Your License"
+msgstr ""
+
+#: bp-core/admin/templates/register-banner.php:119
+msgid "Your license key has been sent successfully"
+msgstr ""
+
+#: bp-core/admin/templates/register-banner.php:120
+msgid "Please check your inbox and verify your email to access your license key. If you don't see the email in your inbox, kindly check your spam or junk folder."
+msgstr ""
+
+#: bp-core/admin/templates/register-banner.php:130
+msgid "Your license has already been registered"
+msgstr ""
+
+#. translators: %s is a link to the user's BuddyBoss account area.
+#: bp-core/admin/templates/register-banner.php:135
+msgid "Please visit your %s area to view or retrieve your license key."
+msgstr ""
+
+#: bp-core/admin/templates/register-banner.php:136
+msgid "account"
 msgstr ""
 
 #: bp-core/admin/templates/update-buddyboss.php:87
@@ -15958,11 +16062,6 @@ msgstr ""
 
 #: bp-core/classes/class-bb-readylaunch.php:1280
 msgid "Name is required."
-msgstr ""
-
-#: bp-core/classes/class-bb-readylaunch.php:1281
-#: bp-members/bp-members-functions.php:1711
-msgid "Please enter a valid email address."
 msgstr ""
 
 #: bp-core/classes/class-bb-readylaunch.php:1282
@@ -30778,14 +30877,6 @@ msgstr ""
 #. translators: Item type reported.
 #: bp-moderation/bp-moderation-filters.php:212
 msgid "This %s has been reported."
-msgstr ""
-
-#: bp-moderation/bp-moderation-filters.php:218
-#: bp-moderation/bp-moderation-filters.php:298
-#: bp-moderation/bp-moderation-filters.php:356
-#: bp-moderation/bp-moderation-filters.php:422
-#: bp-moderation/bp-moderation-filters.php:475
-msgid "Something went wrong. Please try again."
 msgstr ""
 
 #: bp-moderation/bp-moderation-filters.php:250
