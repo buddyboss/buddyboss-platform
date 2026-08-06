@@ -354,15 +354,13 @@ class BP_Messages_Thread {
 		global $wpdb;
 		$bp = buddypress();
 
-		// WHY (D-04): the previous single-%s IN() clause quoted the whole imploded user-id list
-		// as one value, so MySQL coerced it to its leading numeric prefix — only the FIRST
-		// previously-deleted recipient was ever restored when a new message arrived, leaving
-		// every other recipient's thread copy missing. Loop the shared chunked-ID primitive so
-		// every deleted recipient is restored, not just the first.
+		// A single-%s IN() clause would quote the whole imploded user-id list as one value
+		// (MySQL coerces it to its leading number), restoring only the first deleted
+		// recipient — loop the shared chunked-ID primitive so every recipient is restored.
 		foreach ( bb_messages_chunk_ids_for_in_clause( wp_list_pluck( $deleted_recipients, 'user_id' ) ) as $ids_sql ) {
 			// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 			$query = $wpdb->prepare( "UPDATE {$bp->messages->table_name_recipients} SET is_deleted = 0 WHERE thread_id = %d AND user_id IN ({$ids_sql})", $thread_id );
-			$wpdb->query( $query );
+			$wpdb->query( $query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Prepared above.
 		}
 	}
 

@@ -908,15 +908,11 @@ function bp_messages_add_meta( $message_id, $meta_key, $meta_value, $unique = fa
  * Sanitize and chunk an arbitrary id list into safe, pre-escaped comma-joined chunks for
  * direct interpolation into a raw IN (...) clause.
  *
- * WHY: a previous pattern at several call sites built this clause as
- * `$wpdb->prepare( "... IN(%s)", implode( ',', $ids ) )`, which quotes the whole imploded id
- * list as a SINGLE %s value — MySQL then coerces that one quoted string to its leading numeric
- * prefix, so only the first id in the list is actually matched. This is the one shared
- * primitive behind bb_messages_delete_meta_for_ids() (the three meta-DELETE call sites) and the
- * recipient-restore fix in BP_Messages_Thread::update_last_message_status() — both previously
- * had their own instance of that broken pattern.
+ * Never bind an imploded id list to a single %s placeholder: prepare() quotes it as one
+ * value and MySQL coerces it to its leading numeric prefix, so only the first id in the
+ * list is matched. This helper is the shared primitive that avoids that pattern.
  *
- * @since BuddyBoss [version]
+ * @since BuddyBoss [BBVERSION]
  *
  * @param array $ids        Raw id list (ints or numeric strings).
  * @param int   $chunk_size Max ids per chunk. Default 500.
@@ -941,12 +937,10 @@ function bb_messages_chunk_ids_for_in_clause( $ids, $chunk_size = 500 ) {
 /**
  * Bulk-delete bp_messages_meta rows for a set of message ids, in safe chunks.
  *
- * Replaces the previous single-placeholder `IN(%s)` pattern at the three meta-delete call
- * sites (thread hard-delete, the nouveau AJAX delete-thread handler, and the REST delete
- * endpoint), which quoted the whole imploded id list as one value and so silently deleted meta
- * for only the first message id in the list (PLAT-01).
+ * Shared by the thread hard-delete, the nouveau AJAX delete-thread handler, and the REST
+ * delete endpoint.
  *
- * @since BuddyBoss [version]
+ * @since BuddyBoss [BBVERSION]
  *
  * @global wpdb $wpdb WordPress database abstraction object.
  *
@@ -978,21 +972,16 @@ function bb_messages_delete_meta_for_ids( $message_ids ) {
 /**
  * Remove a bounded chunk of orphaned bp_messages_meta rows on the daily maintenance cron.
  *
- * Mirrors bb_notifications_remove_orphaned_meta_on_cron() (bp-notifications-functions.php:2283),
- * hooked to the same unconditional 'bb_bg_log_clear' event so no new cron registration is
- * needed — that event is scheduled unconditionally on every site (Kartik L8/L10), unlike its
- * sibling 'bb_bg_log_clear_hourly', which only fires once the log table exceeds 1 GB and would
- * be an unreliable hook to attach to. The sweep is stateless and idempotent: no completion flag
- * is stored, and once the table is caught up the query removes zero rows on each run, which is
- * a cheap indexed no-op.
+ * Mirrors bb_notifications_remove_orphaned_meta_on_cron(), hooked to the same
+ * 'bb_bg_log_clear' event because that event is scheduled unconditionally on every site —
+ * unlike its sibling 'bb_bg_log_clear_hourly', which only fires once the log table exceeds
+ * 1 GB and would be an unreliable hook to attach to. The sweep is stateless and idempotent:
+ * no completion flag, and once the table is caught up each run is a cheap indexed no-op.
  *
- * Unlike the notifications sibling, this sweep is also wrapped in a disable filter (default
- * true). WHY: messages is a higher-blast-radius core component, and the tools-side purge
- * feature (a separate plugin, PROD-10156) depends on this sweep running correctly before it is
- * enabled in production — a one-line kill switch is warranted here even though the notifications
- * sweep, shipped earlier under PROD-10075, did not need one.
+ * Unlike the notifications sibling, this sweep has a disable filter (default true):
+ * messages is a higher-blast-radius component, so a one-line kill switch is warranted.
  *
- * @since BuddyBoss [version]
+ * @since BuddyBoss [BBVERSION]
  *
  * @global wpdb $wpdb WordPress database abstraction object.
  *
@@ -1006,7 +995,7 @@ function bb_messages_remove_orphaned_meta_on_cron() {
 	/**
 	 * Filters whether the daily orphaned bp_messages_meta sweep runs.
 	 *
-	 * @since BuddyBoss [version]
+	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @param bool $enabled Whether the sweep is enabled. Default true.
 	 */
@@ -1027,7 +1016,7 @@ function bb_messages_remove_orphaned_meta_on_cron() {
 	/**
 	 * Filters the number of orphaned message meta rows removed per cron pass.
 	 *
-	 * @since BuddyBoss [version]
+	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @param int $limit Number of rows to delete per pass. Default 5000.
 	 */
@@ -1036,13 +1025,11 @@ function bb_messages_remove_orphaned_meta_on_cron() {
 		$limit = 5000;
 	}
 
-	// Delete meta rows whose parent message no longer exists, in one query. The parent table
-	// is bp_messages_messages (message_id is the sole FK-less reference column) — NOT
-	// bp_messages_recipients, which has no direct relationship to meta rows. The inner SELECT
-	// (orphans, capped by LIMIT) is wrapped in a derived table so it can drive the IN() delete:
-	// MariaDB/MySQL otherwise reject both a LIMIT inside an IN() subquery and a subquery that
-	// references the delete-target table. The derived table materialises the IDs first,
-	// sidestepping both limitations (Kartik L9).
+	// Delete meta rows whose parent message no longer exists, in one query. The inner
+	// SELECT (orphans, capped by LIMIT) is wrapped in a derived table so it can drive the
+	// IN() delete: MariaDB/MySQL otherwise reject both a LIMIT inside an IN() subquery and a
+	// subquery that references the delete-target table. The derived table materialises the
+	// IDs first, sidestepping both limitations.
 	// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 	$wpdb->query(
 		$wpdb->prepare(
