@@ -20,6 +20,16 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
+/*
+ * Platform owns this banner. Older BuddyBoss Membership builds ship their own
+ * copy (BbmsRegisterBannerCtrl in brand/, pending removal); its display gate
+ * runs through this filter, so forcing it false suppresses the legacy banner
+ * entirely — no assets enqueued, no markup injected — and Platform's banner
+ * can never appear twice alongside it. Becomes a harmless no-op once the
+ * Membership-side module is deleted.
+ */
+add_filter( 'bbms_bbplfm_show_register_banner', '__return_false', 999 );
+
 /**
  * Whether any of the Membership product plugins are installed.
  *
@@ -80,14 +90,6 @@ function bb_admin_register_banner_products_installed() {
  */
 function bb_admin_register_banner_mode() {
 	$mode = 'none';
-
-	// Backward-compat guard: an older BuddyBoss Membership build renders its
-	// own copy of this banner (BbmsRegisterBannerCtrl in brand/). When that
-	// controller is present, Platform stands down so the banner can never
-	// appear twice on sites that updated Platform before Membership.
-	if ( class_exists( 'BbmsRegisterBannerCtrl' ) ) {
-		return $mode;
-	}
 
 	if ( ! is_admin() || ! current_user_can( 'manage_options' ) ) {
 		return $mode;

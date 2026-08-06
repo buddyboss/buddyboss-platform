@@ -14,6 +14,14 @@
   margin: 0 auto;
 }
 
+/* Legacy Membership-side copy of this banner (brand module, pending removal).
+   Already suppressed server-side via the bbms_bbplfm_show_register_banner
+   filter; this is a belt-and-braces fallback if its markup ever gets injected
+   anyway. !important because the legacy stylesheet may load after this one. */
+.bbms-reg-banner-holder {
+  display: none !important;
+}
+
 .bb-reg-banner {
   --bb-reg-accent: #ef5d33;
   --bb-reg-accent-press: #d94e28;
