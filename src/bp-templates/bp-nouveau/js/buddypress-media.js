@@ -5879,8 +5879,9 @@ window.bp = window.bp || {};
 				data.group_id = self.group_id;
 			}
 
-			// remove all feedback erros from the DOM.
-			$( '#bp-media-single-album .bp-feedback' ).remove();
+			// Remove all feedback errors from the DOM, keeping the info notice
+			// (the "no photos or videos" empty-state message) intact.
+			$( '#bp-media-single-album .bp-feedback' ).not( '.info' ).remove();
 			$( '#boss-media-create-album-popup .bp-feedback' ).remove();
 
 			$.ajax(
