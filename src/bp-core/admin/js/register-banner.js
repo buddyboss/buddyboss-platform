@@ -174,20 +174,18 @@
 	}
 
 	// The admin has registered (or already had a registration): persist the
-	// flag server-side so the notice mode renders on future loads, and flip
-	// the banner from pitch to notice in the current page (reveal the
-	// activate-license strip, hide the register CTA — the banner itself stays)
-	// — the same DOM the server renders for 'notice' mode. Fire-and-forget —
-	// the modal result UI does not depend on this write. The banner disappears
-	// entirely only on real license activation.
+	// flag server-side so the notice mode renders on future loads, and reveal
+	// the activate-license strip in the current page — the same DOM the server
+	// renders for 'notice' mode. The banner and its register CTA stay
+	// (matching the legacy Membership banner — the admin may re-register with
+	// another email if the key never arrives). Fire-and-forget — the modal
+	// result UI does not depend on this write. The banner disappears entirely
+	// only on real license activation.
 	function markRegistered() {
 		var notice = document.querySelector( '[data-bb-reg-notice]' );
 		if ( notice ) {
 			notice.hidden = false;
 		}
-		document.querySelectorAll( '.bb-reg-cta' ).forEach( function ( el ) {
-			el.hidden = true;
-		} );
 		if ( ! cfg.markAction || ! cfg.markNonce ) {
 			return;
 		}

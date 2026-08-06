@@ -2,13 +2,13 @@
 /**
  * "Register your email and get Memberships & Courses" banner markup.
  *
- * Included by bb_admin_render_register_banner() with $mode in scope:
- * - 'pitch'  — full banner (illustration, headline, CTA, modal) with the
- *              activate-license notice present but hidden; JS reveals it and
- *              hides the CTA after a successful registration.
- * - 'notice' — the same banner with the notice visible and the register
- *              CTA/modal omitted (the site already holds a key or owns the
- *              products — the only pending action is license activation).
+ * Included by bb_admin_render_register_banner() with $mode in scope. The full
+ * banner (illustration, headline, CTA, modal) renders in both modes — matching
+ * the legacy Membership banner — and only the activate-license notice differs:
+ * - 'pitch'  — notice present but hidden; JS reveals it after a successful
+ *              registration.
+ * - 'notice' — notice visible (a key exists, the products are installed, or
+ *              the admin already registered — activation is the pending step).
  *
  * @package BuddyBoss\Core\Administration
  * @since BuddyBoss [BBVERSION]
@@ -48,27 +48,24 @@ $bb_reg_license_url = admin_url( 'admin.php?page=' . \BuddyBoss\Core\Admin\Mothe
 				<p class="bb-reg-desc"><?php esc_html_e( 'Build courses and then connect them to memberships to start monetizing your community and grow your passive income.', 'buddyboss' ); ?></p>
 			</div>
 
-			<?php if ( $bb_reg_is_pitch ) : ?>
-				<div class="bb-reg-cta">
-					<button type="button" class="bb-reg-btn" data-bb-reg-open>
-						<?php esc_html_e( 'Register with Email', 'buddyboss' ); ?>
-					</button>
-				</div>
-			<?php endif; ?>
+			<div class="bb-reg-cta">
+				<button type="button" class="bb-reg-btn" data-bb-reg-open>
+					<?php esc_html_e( 'Register with Email', 'buddyboss' ); ?>
+				</button>
+			</div>
 
 			<p class="bb-reg-onus"><?php esc_html_e( 'Its On Us..!', 'buddyboss' ); ?></p>
 		</div>
 	</div>
 
-	<?php if ( $bb_reg_is_pitch ) : ?>
-		<?php
-		/*
-		 * Free-license registration modal. Its submit posts First/Last/Email to
-		 * Platform's own `bb_get_free_license` AJAX action (the working
-		 * Mothership issuance flow). Four states — form, loading, success /
-		 * already-registered, error — are toggled by register-banner.js.
-		 */
-		?>
+	<?php
+	/*
+	 * Free-license registration modal. Its submit posts First/Last/Email to
+	 * Platform's own `bb_get_free_license` AJAX action (the working
+	 * Mothership issuance flow). Four states — form, loading, success /
+	 * already-registered, error — are toggled by register-banner.js.
+	 */
+	?>
 		<div class="bb-reg-modal" data-bb-reg-modal hidden>
 			<div class="bb-reg-modal__overlay" data-bb-reg-close></div>
 			<div class="bb-reg-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="bb-reg-modal-title">
@@ -153,5 +150,4 @@ $bb_reg_license_url = admin_url( 'admin.php?page=' . \BuddyBoss\Core\Admin\Mothe
 				</div>
 			</div>
 		</div>
-	<?php endif; ?>
 </div>

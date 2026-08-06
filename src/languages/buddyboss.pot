@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 3.4.0\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2026-08-06 13:31:39+00:00\n"
+"POT-Creation-Date: 2026-08-06 13:40:51+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -6124,17 +6124,17 @@ msgstr ""
 msgid "Install LearnDash Add-on"
 msgstr ""
 
-#: bp-core/admin/bb-admin-register-banner.php:184
+#: bp-core/admin/bb-admin-register-banner.php:196
 msgid "Please fill in all fields."
 msgstr ""
 
-#: bp-core/admin/bb-admin-register-banner.php:185
+#: bp-core/admin/bb-admin-register-banner.php:197
 #: bp-core/classes/class-bb-readylaunch.php:1281
 #: bp-members/bp-members-functions.php:1711
 msgid "Please enter a valid email address."
 msgstr ""
 
-#: bp-core/admin/bb-admin-register-banner.php:186
+#: bp-core/admin/bb-admin-register-banner.php:198
 #: bp-moderation/bp-moderation-filters.php:218
 #: bp-moderation/bp-moderation-filters.php:298
 #: bp-moderation/bp-moderation-filters.php:356
@@ -6143,11 +6143,11 @@ msgstr ""
 msgid "Something went wrong. Please try again."
 msgstr ""
 
-#: bp-core/admin/bb-admin-register-banner.php:233
+#: bp-core/admin/bb-admin-register-banner.php:245
 msgid "You are not allowed to do this."
 msgstr ""
 
-#: bp-core/admin/bb-admin-register-banner.php:237
+#: bp-core/admin/bb-admin-register-banner.php:249
 #: bp-core/admin/bp-core-admin-functions.php:2461
 #: bp-core/admin/settings/media/callbacks.php:299
 #: bp-core/admin/settings/media/callbacks.php:423

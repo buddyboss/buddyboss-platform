@@ -168,11 +168,8 @@ function bb_admin_register_banner_enqueue() {
 
 	wp_enqueue_style( 'bb-register-banner' );
 
-	// The modal (and its JS) only exists in pitch mode; the notice strip is static.
-	if ( 'pitch' !== $mode ) {
-		return;
-	}
-
+	// The register CTA + modal render in both pitch and notice modes
+	// (matching the legacy Membership banner), so the JS loads for both.
 	wp_enqueue_script(
 		'bb-register-banner',
 		buddypress()->plugin_url . "bp-core/admin/js/register-banner{$min}.js",
