@@ -364,10 +364,10 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 			$bb_platform_db_options = apply_filters(
 				'bb_telemetry_platform_options',
 				array(
+					'bb-active-features',
 					'bb_presence_interval_mu',
 					'bb_presence_time_span_mu',
 					'bb_profile_slug_format',
-					'_bp_community_visibility',
 					'bb_reaction_mode',
 					'_bb_enable_activity_schedule_posts',
 					'_bb_enable_activity_comment_threading',
@@ -385,7 +385,6 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 					'bp-member-type-enable-disable',
 					'bp-member-type-display-on-profile',
 					'bp-disable-avatar-uploads',
-					'bp-disable-group-cover-image-uploads',
 					'bp-disable-group-type-creation',
 					'bp-disable-account-deletion',
 					'bp-enable-private-network',
@@ -396,8 +395,14 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 					'_bp_enable_activity_autoload',
 					'_bp_enable_activity_follow',
 					'_bp_enable_activity_link_preview',
-					'_bp_enable_activity_emoji',
-					'_bp_enable_activity_gif',
+					'bp_media_profiles_emoji_support',
+					'bp_media_groups_emoji_support',
+					'bp_media_messages_emoji_support',
+					'bp_media_forums_emoji_support',
+					'bp_media_profiles_gif_support',
+					'bp_media_groups_gif_support',
+					'bp_media_messages_gif_support',
+					'bp_media_forums_gif_support',
 					'bp_search_members',
 					'bp_search_number_of_results',
 					'bp_media_profile_media_support',
@@ -426,7 +431,6 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 					'bp_video_forums_video_support',
 					'bp_video_allowed_size',
 					'bp_video_allowed_per_batch',
-					'bp_video_extension_video_support',
 					'bp_media_symlink_direct_access',
 					'bp_video_extensions_support',
 					'_bp_on_screen_notifications_enable',
@@ -441,7 +445,6 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 					'bp_media_group_document_support',
 					'bp_media_messages_document_support',
 					'bp_media_forums_document_support',
-					'bp_media_extension_document_support',
 					'bp_document_allowed_size',
 					'bp_media_allowed_size',
 					'_bb_enable_activity_post_polls',
@@ -467,6 +470,8 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 			// Added those options that are not available in the option table.
 			$bb_telemetry_data['bb_platform_version'] = BP_PLATFORM_VERSION;
 			$bb_telemetry_data['active_integrations'] = $this->bb_active_integrations();
+			$bb_telemetry_data['bb_license']          = $this->bb_get_license_data();
+			$bb_telemetry_data['bb_drm']              = $this->bb_get_drm_data();
 
 			if (
 				function_exists( 'bb_topics_manager_instance' ) &&
@@ -510,7 +515,27 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 				}
 			}
 
-			unset( $bp_prefix, $query, $results, $bb_platform_db_options );
+			/*
+			 * Declare which option names were actually queried.
+			 *
+			 * The receiver only ever wrote keys present in a payload, so a value
+			 * that disappeared from wp_options stayed on the record forever —
+			 * every stored boolean was really "last known", not "current". It
+			 * cannot simply delete anything missing, because a site on an older
+			 * build never sends the newer keys and would have them wiped.
+			 *
+			 * This list resolves that: a name in it that is absent from the
+			 * payload was looked for and genuinely not found, so the receiver may
+			 * clear it. Anything not declared is left untouched. Add-ons append
+			 * their own names through the filter below.
+			 */
+			$declared_keys = isset( $bb_telemetry_data['bb_reported_option_keys'] )
+				? (array) $bb_telemetry_data['bb_reported_option_keys']
+				: array();
+
+			$bb_telemetry_data['bb_reported_option_keys'] = array_values( array_unique( array_merge( $declared_keys, $sanitized ) ) );
+
+			unset( $bp_prefix, $query, $results, $bb_platform_db_options, $declared_keys );
 
 			// Tools usage → cumulative per-action counts for Repair / Sample Data / Migration.
 			$bb_telemetry_data['tools_usage'] = bb_get_tool_usage();
@@ -525,6 +550,262 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 			 * @return array Telemetry platform data.
 			 */
 			return apply_filters( 'bb_telemetry_platform_data', $bb_telemetry_data );
+		}
+
+		/**
+		 * Collect licence and plan data for the Platform and Theme.
+		 *
+		 * The Mothership plugin id doubles as the plan identifier — values like
+		 * `bb-platform-pro-5-sites` or `bb-web-plus` encode both product and seat
+		 * count — and it is a plain option, so it is always available without a
+		 * network call. Richer plan detail (product name, activation counts) comes
+		 * from the locally cached licence-details transient when present.
+		 *
+		 * The raw licence key is only included in `complete` mode. In `anonymous`
+		 * mode the plan and status are still reported, but nothing that ties the
+		 * payload back to a customer record — which is what that mode promises.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @return array Licence data for the Platform and, when present, the Theme.
+		 */
+		public function bb_get_license_data() {
+			$include_key = ( 'complete' === self::$bb_telemetry_option );
+
+			$platform_id = get_option( 'buddyboss_dynamic_plugin_id', defined( 'PLATFORM_EDITION' ) ? PLATFORM_EDITION : '' );
+			$theme_id    = get_option( 'buddyboss_theme_dynamic_id', defined( 'THEME_EDITION' ) ? THEME_EDITION : '' );
+
+			/*
+			 * Read the key the same way the licence screen does. Credentials also
+			 * honours the BUDDYBOSS_LICENSE_KEY constant and environment variable,
+			 * which a plain option read would miss, so a site configured that way
+			 * would otherwise report as unlicensed.
+			 */
+			$platform_key = '';
+			if ( class_exists( '\BuddyBossPlatform\GroundLevel\Mothership\Credentials' ) ) {
+				try {
+					$platform_key = (string) \BuddyBossPlatform\GroundLevel\Mothership\Credentials::getLicenseKey();
+				} catch ( \Throwable $e ) {
+					$platform_key = '';
+				}
+			}
+
+			if ( '' === $platform_key && ! empty( $platform_id ) ) {
+				$platform_key = (string) get_option( $platform_id . '_license_key', '' );
+			}
+
+			$data = array(
+				'platform' => $this->bb_get_product_license_data( $platform_id, $platform_key, $include_key ),
+			);
+
+			if ( ! empty( $theme_id ) ) {
+				$theme_key     = (string) get_option( $theme_id . '_license_key', '' );
+				$data['theme'] = $this->bb_get_product_license_data( $theme_id, $theme_key, $include_key );
+			}
+
+			/**
+			 * Filters the licence data reported by telemetry.
+			 *
+			 * @since BuddyBoss [BBVERSION]
+			 *
+			 * @param array $data        Licence data.
+			 * @param bool  $include_key Whether the raw licence key is included.
+			 */
+			return apply_filters( 'bb_telemetry_license_data', $data, $include_key );
+		}
+
+		/**
+		 * Build the licence payload for a single Mothership product id.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param string $plugin_id   Mothership plugin id, which is also the plan.
+		 * @param string $license_key Licence key already resolved for this plan.
+		 * @param bool   $include_key Whether to include the raw licence key.
+		 *
+		 * @return array Licence data, or an empty array when there is no plan id.
+		 */
+		protected function bb_get_product_license_data( $plugin_id, $license_key, $include_key ) {
+			if ( empty( $plugin_id ) ) {
+				return array();
+			}
+
+			$license_key = (string) $license_key;
+
+			$data = array(
+				'plan'      => $plugin_id,
+				'has_key'   => ( '' !== $license_key ),
+				'is_active' => (bool) get_option( $plugin_id . '_license_activation_status', false ),
+			);
+
+			if ( $include_key && '' !== $license_key ) {
+				$data['license_key'] = $license_key;
+			}
+
+			// Cached plan detail, populated when the licence screen was last loaded.
+			$details = get_transient( $plugin_id . '_license_details' );
+			if ( is_array( $details ) ) {
+				$data['product']             = isset( $details['product'] ) ? $details['product'] : '';
+				$data['status']              = isset( $details['status'] ) ? $details['status'] : '';
+				$data['activations_allowed'] = isset( $details['total_prod_allowed'] ) ? (int) $details['total_prod_allowed'] : 0;
+				$data['activations_used']    = isset( $details['total_prod_used'] ) ? (int) $details['total_prod_used'] : 0;
+			}
+
+			return $data;
+		}
+
+		/**
+		 * Collect the DRM escalation stage for telemetry.
+		 *
+		 * A site without a valid licence moves through a fixed ladder, counted from
+		 * the DRM event's creation date. Both the no-key and invalid-key scenarios
+		 * use the same boundaries:
+		 *
+		 *   0-6 days   grace   — nothing shown
+		 *   7-13 days  low     — in-plugin notification
+		 *   14-21 days medium  — notification + admin notice + Site Health
+		 *   22-30 days high    — the above + admin email
+		 *   31+ days   locked  — features disabled
+		 *
+		 * Reporting the stage is what makes the ladder measurable: how many sites
+		 * sit at each rung, and how many reach lockout rather than licensing.
+		 *
+		 * Derived from local state only — two indexed lookups on the DRM event
+		 * table plus two option reads. Deliberately avoids
+		 * `BB_DRM_Registry::get_addons_by_drm_status()`, which calls
+		 * `is_addon_licensed()` and can reach the Mothership API.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @return array DRM scenario, stage and elapsed days.
+		 */
+		public function bb_get_drm_data() {
+			$data = array(
+				'scenario' => 'none',
+				'stage'    => '',
+				'days'     => 0,
+				'addons'   => array(),
+			);
+
+			if (
+				! class_exists( '\BuddyBoss\Core\Admin\DRM\BB_DRM_Event' ) ||
+				! class_exists( '\BuddyBoss\Core\Admin\DRM\BB_DRM_Helper' )
+			) {
+				return $data;
+			}
+
+			// Per-plugin DRM state for every paid add-on registered on this site.
+			$data['addons'] = $this->bb_get_drm_addons_data();
+
+			// Platform's own scenario, if any.
+			if ( get_option( 'bb_drm_no_license', false ) ) {
+				$data['scenario'] = \BuddyBoss\Core\Admin\DRM\BB_DRM_Helper::NO_LICENSE_EVENT;
+			} elseif ( get_option( 'bb_drm_invalid_license', false ) ) {
+				$data['scenario'] = \BuddyBoss\Core\Admin\DRM\BB_DRM_Helper::INVALID_LICENSE_EVENT;
+			} else {
+				return $data;
+			}
+
+			$data = array_merge( $data, $this->bb_get_drm_stage( $data['scenario'] ) );
+
+			/**
+			 * Filters the DRM data reported by telemetry.
+			 *
+			 * @since BuddyBoss [BBVERSION]
+			 *
+			 * @param array $data DRM scenario, stage and elapsed days.
+			 */
+			return apply_filters( 'bb_telemetry_drm_data', $data );
+		}
+
+		/**
+		 * Resolve the DRM escalation stage for a single DRM event.
+		 *
+		 * Mirrors the boundaries in `BB_DRM_NoKey::run()`, `BB_DRM_Invalid::run()`
+		 * and `BB_DRM_Addon::run()`, which are identical.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param string $event_name DRM event name, e.g. `no-license` or `addon-{slug}`.
+		 *
+		 * @return array Stage, elapsed days and the event start date.
+		 */
+		protected function bb_get_drm_stage( $event_name ) {
+			$stage = array(
+				'stage' => '',
+				'days'  => 0,
+			);
+
+			try {
+				$event = \BuddyBoss\Core\Admin\DRM\BB_DRM_Event::latest( $event_name );
+			} catch ( \Throwable $e ) {
+				return $stage;
+			}
+
+			if ( ! $event || empty( $event->created_at ) ) {
+				return $stage;
+			}
+
+			$days             = (int) \BuddyBoss\Core\Admin\DRM\BB_DRM_Helper::days_elapsed( $event->created_at );
+			$stage['days']    = $days;
+			$stage['started'] = $event->created_at;
+
+			if ( $days >= 31 ) {
+				$stage['stage'] = \BuddyBoss\Core\Admin\DRM\BB_DRM_Helper::DRM_LOCKED;
+			} elseif ( $days >= 22 ) {
+				$stage['stage'] = \BuddyBoss\Core\Admin\DRM\BB_DRM_Helper::DRM_HIGH;
+			} elseif ( $days >= 14 ) {
+				$stage['stage'] = \BuddyBoss\Core\Admin\DRM\BB_DRM_Helper::DRM_MEDIUM;
+			} elseif ( $days >= 7 ) {
+				$stage['stage'] = \BuddyBoss\Core\Admin\DRM\BB_DRM_Helper::DRM_LOW;
+			} else {
+				$stage['stage'] = 'grace';
+			}
+
+			return $stage;
+		}
+
+		/**
+		 * Collect per-plugin DRM state for every registered paid add-on.
+		 *
+		 * Add-ons register with the DRM registry from their own bootstrap, so the
+		 * registry is effectively the list of paid BuddyBoss plugins active on this
+		 * site. Every one is reported, including add-ons with no DRM event — a
+		 * healthy add-on reports an empty stage, which is what makes "how many
+		 * sites run this add-on licensed vs lapsed" answerable.
+		 *
+		 * Add-on DRM events are named `addon-{sanitized product slug}` and use the
+		 * same escalation ladder as the Platform.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @return array Map of product slug => name, version, stage, days, started.
+		 */
+		protected function bb_get_drm_addons_data() {
+			if ( ! class_exists( '\BuddyBoss\Core\Admin\DRM\BB_DRM_Registry' ) ) {
+				return array();
+			}
+
+			$registered = \BuddyBoss\Core\Admin\DRM\BB_DRM_Registry::get_registered_addons();
+
+			if ( empty( $registered ) || ! is_array( $registered ) ) {
+				return array();
+			}
+
+			$addons = array();
+			foreach ( $registered as $product_slug => $addon ) {
+				$entry = array(
+					'name'    => isset( $addon['plugin_name'] ) ? $addon['plugin_name'] : $product_slug,
+					'version' => isset( $addon['args']['version'] ) ? $addon['args']['version'] : '',
+				);
+
+				$addons[ $product_slug ] = array_merge(
+					$entry,
+					$this->bb_get_drm_stage( 'addon-' . sanitize_key( $product_slug ) )
+				);
+			}
+
+			return $addons;
 		}
 
 		/**

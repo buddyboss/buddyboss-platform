@@ -123,24 +123,65 @@ class BB_Plugin_Connector extends AbstractPluginConnection {
 	}
 
 	/**
+	 * Option holding the licence key under a name that never changes.
+	 *
+	 * The per-SKU option (`{plugin_id}_license_key`) is addressed by a mutable
+	 * id, so changing or clearing that id strands the key. This mirror is the
+	 * durable copy; the per-SKU option is kept in step for backwards
+	 * compatibility with anything reading it directly.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @var string
+	 */
+	const STABLE_LICENSE_KEY_OPTION = 'buddyboss_license_key';
+
+	/**
 	 * Gets the license key option.
+	 *
+	 * Reads the per-SKU option first, then the stable mirror. Both hold the
+	 * currently activated key. Superseded `{old_sku}_license_key` rows are
+	 * deliberately never read — reporting a stale key is worse than reporting
+	 * none, because it looks correct.
 	 *
 	 * @return string The license key.
 	 */
 	public function getLicenseKey(): string {
 		$pluginId    = $this->getCurrentPluginId();
-		$license_key = get_option( $pluginId . '_license_key', '' );
-		return (string) $license_key;
+		$license_key = (string) get_option( $pluginId . '_license_key', '' );
+
+		if ( '' !== $license_key ) {
+			return $license_key;
+		}
+
+		$license_key = (string) get_option( self::STABLE_LICENSE_KEY_OPTION, '' );
+
+		if ( '' !== $license_key ) {
+			return $license_key;
+		}
+
+		return '';
 	}
 
 	/**
 	 * Updates the license key option.
+	 *
+	 * Writes both the per-SKU option and the stable mirror so a later id change
+	 * cannot strand the key. An empty value clears both, so resets stay clean.
 	 *
 	 * @param string $licenseKey The license key to update.
 	 */
 	public function updateLicenseKey( string $licenseKey ): void {
 		$pluginId = $this->getCurrentPluginId();
 		update_option( $pluginId . '_license_key', $licenseKey );
+
+		if ( '' === $licenseKey ) {
+			delete_option( self::STABLE_LICENSE_KEY_OPTION );
+
+			return;
+		}
+
+		update_option( self::STABLE_LICENSE_KEY_OPTION, $licenseKey );
 	}
 
 	/**

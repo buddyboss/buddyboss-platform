@@ -10888,3 +10888,89 @@ function bb_get_tool_usage() {
 	}
 	return $out;
 }
+
+/**
+ * Check whether this site has any paid BuddyBoss product.
+ *
+ * Deliberately broader than `function_exists( 'bb_platform_pro' )`: a Plus
+ * customer, or a site running a licensed add-on without the Pro plugin, is
+ * still a paid site. Used to decide whether telemetry is forced to "complete"
+ * and whether the Telemetry settings panel is shown.
+ *
+ * Detection is DRM-based, with one deliberate exception for the theme. Plugin
+ * activation state is not inspected: an add-on only reaches
+ * `BB_DRM_Registry::register_addon()` when it is active, so the registry
+ * already carries that meaning.
+ *
+ * 1. The BuddyBoss Theme is active, or is the parent of the active child theme.
+ *    The exception, because DRM cannot see it: the theme never calls
+ *    `register_addon()`, and its licence key lives under its own connector
+ *    (`buddyboss_theme_dynamic_id`) which `BB_DRM_Helper::has_key()` does not
+ *    read. Without this check a theme-only Plus customer is invisible.
+ * 2. A paid add-on registered with the DRM registry. Every paid BuddyBoss
+ *    product registers at `plugins_loaded` priority 9, so the registry is
+ *    populated before this runs — in every context, including WP-Cron.
+ * 3. A Mothership licence key is stored for the Platform SKU.
+ * 4. The pre-Mothership licence option is still present, for sites that never
+ *    completed the licence migration.
+ *
+ * Intentionally does NOT call `BB_DRM_Addon::is_addon_licensed()`, which can
+ * reach the Mothership API, or `BB_DRM_Helper::is_valid()`, which returns true
+ * on development environments by design. This function runs on every request.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return bool True if a paid BuddyBoss product was detected.
+ */
+function bb_has_paid_product() {
+	static $memo = null;
+
+	if ( null === $memo ) {
+		// The BuddyBoss Theme, including when it is the parent of a child theme.
+		$detected = ( 'buddyboss-theme' === get_template() );
+
+		// A paid add-on registered itself for DRM.
+		if ( ! $detected && class_exists( '\BuddyBoss\Core\Admin\DRM\BB_DRM_Registry' ) ) {
+			$registered_addons = \BuddyBoss\Core\Admin\DRM\BB_DRM_Registry::get_registered_addons();
+			$detected          = ! empty( $registered_addons );
+		}
+
+		// A Mothership licence key for the Platform SKU.
+		if ( ! $detected && class_exists( '\BuddyBoss\Core\Admin\DRM\BB_DRM_Helper' ) ) {
+			try {
+				$detected = \BuddyBoss\Core\Admin\DRM\BB_DRM_Helper::has_key();
+			} catch ( \Throwable $e ) {
+				// Mothership container unavailable — treat as no key.
+				$detected = false;
+			}
+		}
+
+		// Licence data from before the Mothership migration.
+		if ( ! $detected ) {
+			$detected = ! empty( get_option( 'bboss_updater_saved_licenses', array() ) );
+		}
+
+		/*
+		 * Only memoize once add-ons have had the chance to register. A call
+		 * made before `plugins_loaded` would otherwise freeze a false negative
+		 * for the remainder of the request.
+		 */
+		if ( did_action( 'plugins_loaded' ) ) {
+			$memo = $detected;
+		}
+	} else {
+		$detected = $memo;
+	}
+
+	/**
+	 * Filters whether the site has a paid BuddyBoss product.
+	 *
+	 * Applied on every call rather than memoized alongside the detection
+	 * result, so a callback added after the first call is still honoured.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param bool $detected Whether a paid product was detected.
+	 */
+	return (bool) apply_filters( 'bb_has_paid_product', $detected );
+}
