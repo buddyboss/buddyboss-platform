@@ -11,7 +11,7 @@
  *              the admin already registered — activation is the pending step).
  *
  * @package BuddyBoss\Core\Administration
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.4.1
  */
 
 // Exit if accessed directly.

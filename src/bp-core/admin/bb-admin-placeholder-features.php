@@ -171,7 +171,7 @@ add_action( 'admin_init', 'bb_schedule_placeholder_features_daily_refresh' );
 /**
  * Resolve the Mothership product slug for a placeholder catalog item.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.4.1
  *
  * @param array $item Catalog item with optional 'slug' and 'plugin_file'.
  * @return string Product slug, or '' when the item carries neither key.
@@ -264,7 +264,7 @@ function bb_get_placeholder_plugin_status( $item, $active_plugins = null ) {
  * standalone (its parent's classes/hooks would be missing), so the card's
  * action button is rendered disabled rather than offering a broken Activate.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.4.1
  *
  * @param array $requires       Required plugin basenames from the catalog item.
  * @param array $active_plugins Active plugin basenames for the current site.

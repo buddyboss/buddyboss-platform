@@ -14,7 +14,7 @@
  * - 'none'   — nothing rendered, no assets enqueued.
  *
  * @package BuddyBoss\Core\Administration
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.4.1
  */
 
 // Exit if accessed directly.
@@ -37,7 +37,7 @@ add_filter( 'bbms_bbplfm_show_register_banner', '__return_false', 999 );
  * owns the product, so it should be nudged to activate its license rather
  * than re-pitched a product it already has.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.4.1
  *
  * @return bool True when at least one product plugin exists on disk.
  */
@@ -49,7 +49,7 @@ function bb_admin_register_banner_products_installed() {
 	 * When any of these exist on disk the banner shows the activate-license
 	 * notice instead of the register pitch.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.4.1
 	 *
 	 * @param array $plugins Plugin basenames relative to WP_PLUGIN_DIR.
 	 */
@@ -84,7 +84,7 @@ function bb_admin_register_banner_products_installed() {
  * a successful registration, and without the flag the just-registered admin
  * would be pitched again on the next page load.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.4.1
  *
  * @return string One of 'pitch', 'notice', 'none'.
  */
@@ -128,7 +128,7 @@ function bb_admin_register_banner_mode() {
 	 * Only reached on the BuddyBoss Settings page for an admin; return 'none'
 	 * to suppress the banner, or force 'pitch'/'notice' for testing.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.4.1
 	 *
 	 * @param string $mode One of 'pitch', 'notice', 'none'.
 	 */
@@ -138,7 +138,7 @@ function bb_admin_register_banner_mode() {
 /**
  * Enqueue the register banner assets when the banner will render.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.4.1
  *
  * @return void
  */
@@ -206,7 +206,7 @@ add_action( 'admin_enqueue_scripts', 'bb_admin_register_banner_enqueue' );
  * and before the React mount (#bb-admin-settings) so React never manages —
  * and can never clobber — this node.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.4.1
  *
  * @return void
  */
@@ -233,7 +233,7 @@ function bb_admin_render_register_banner() {
  * only demotes the banner from 'pitch' to 'notice'; the banner disappears
  * entirely only on real license activation.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.4.1
  *
  * @return void
  */

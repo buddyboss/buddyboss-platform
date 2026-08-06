@@ -203,7 +203,7 @@ class BB_REST_Help_Content_Endpoint extends WP_REST_Controller {
 		 * nonce requirement, and same-origin auth are unchanged. The endpoint
 		 * never becomes public. Default matches every Settings 2.0 endpoint.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.4.1
 		 *
 		 * @param string $capability Default 'manage_options'.
 		 */

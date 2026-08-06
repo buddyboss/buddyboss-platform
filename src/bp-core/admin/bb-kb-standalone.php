@@ -8,7 +8,7 @@
  * NOT stored here — it travels through open().
  *
  * @package BuddyBoss\Core\Administration
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.4.1
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -16,7 +16,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Resolve the standalone KB bundle asset descriptor.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.4.1
  *
  * @return array { url, path, version, deps }
  */
@@ -44,7 +44,7 @@ function bb_kb_standalone_asset() {
  * Enqueue the standalone KB bundle + its stylesheet, localize site-level
  * config, and set script translations. Admin-only, idempotent.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.4.1
  *
  * @param array $args Optional { logo_url }.
  * @return void
