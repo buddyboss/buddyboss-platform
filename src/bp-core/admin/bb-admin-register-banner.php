@@ -149,12 +149,24 @@ function bb_admin_register_banner_enqueue() {
 		return;
 	}
 
-	wp_enqueue_style(
+	$min = bp_core_get_minified_asset_suffix();
+
+	wp_register_style(
 		'bb-register-banner',
-		buddypress()->plugin_url . 'bp-core/admin/css/register-banner.css',
+		buddypress()->plugin_url . "bp-core/admin/css/register-banner{$min}.css",
 		array(),
 		bp_get_version()
 	);
+
+	// 'replace' swaps "{$suffix}.css" → "-rtl{$suffix}.css" on RTL sites,
+	// matching the Grunt rtlcss/cssmin output naming (register-banner-rtl.css
+	// / register-banner-rtl.min.css) — same pattern as bb-admin-settings.
+	wp_style_add_data( 'bb-register-banner', 'rtl', 'replace' );
+	if ( $min ) {
+		wp_style_add_data( 'bb-register-banner', 'suffix', $min );
+	}
+
+	wp_enqueue_style( 'bb-register-banner' );
 
 	// The modal (and its JS) only exists in pitch mode; the notice strip is static.
 	if ( 'pitch' !== $mode ) {
@@ -163,7 +175,7 @@ function bb_admin_register_banner_enqueue() {
 
 	wp_enqueue_script(
 		'bb-register-banner',
-		buddypress()->plugin_url . 'bp-core/admin/js/register-banner.js',
+		buddypress()->plugin_url . "bp-core/admin/js/register-banner{$min}.js",
 		array(),
 		bp_get_version(),
 		true
