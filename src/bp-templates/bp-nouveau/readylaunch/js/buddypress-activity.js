@@ -3646,7 +3646,7 @@ window.bp = window.bp || {};
 							}
 
 							var $commentList = isFooterForm ? form.closest( '#bb-rl-activity-modal' ).find( '.bb-rl-modal-activity-body .bb-rl-activity-comments, .bb-rl-modal-activity-body .bb-rl-activity-comments .activity-actions' ).children( 'ul' ) : activity_comments.children( 'ul' );
-							$commentList.append( $( the_comment ).hide().fadeIn( 200 ) );
+							$commentList.prepend( $( the_comment ).hide().fadeIn( 200 ) );
 
 							$( form ).find( '.ac-input' ).first().html( '' );
 							activity_comments.parent().addClass( 'has-comments comments-loaded' );
