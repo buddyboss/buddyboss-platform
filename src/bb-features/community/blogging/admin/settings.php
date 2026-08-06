@@ -24,7 +24,7 @@ require_once __DIR__ . '/member-blogs-addon.php';
  *
  * Both toggles are provided by Pro's blog module, which ships in the version
  * returned by bb_pro_blog_version(). When an older Pro is active it never
- * unlocks the fields, so they would sit as silent "UPGRADE PRO" placeholders —
+ * unlocks the fields, so they would sit as silent "UPGRADE LAUNCH" placeholders —
  * indistinguishable from Pro not being installed at all. This gate lets the
  * screen surface a version notice (and disable the toggles) so the admin knows
  * Pro simply needs updating.
@@ -101,7 +101,7 @@ function bb_blogging_register_admin_settings() {
 	//
 	// The two fields (Bookmarking, Subscriptions) are registered pro_only —
 	// their behaviour is provided by BuddyBoss Platform Pro's blog module.
-	// Without Pro they render as locked "UPGRADE PRO" placeholders; Pro flips
+	// Without Pro they render as locked "UPGRADE LAUNCH" placeholders; Pro flips
 	// them live via the `bb_admin_settings_format_field_data` filter when the
 	// license is valid (see BB_Blog's settings enrichment).
 	bb_register_feature_section(
@@ -285,7 +285,7 @@ function bb_blogging_register_admin_settings() {
 	// "Member Blogs" panel (or its own enable/locked gate) on the later
 	// `bb_after_register_features` hook, so this placeholder is skipped. This
 	// keeps the "Member Blogs" tab visible for discovery/upsell even on sites
-	// that have not installed the Plus add-on.
+	// that have not installed the Scale add-on.
 	if ( ! defined( 'BB_MEMBER_BLOG_VERSION' ) ) {
 		bb_register_side_panel(
 			'blogging',
@@ -333,7 +333,7 @@ function bb_blogging_register_admin_settings() {
 				'icon'                    => 'bb-icons-rl bb-icons-rl-newspaper',
 				'empty_state_title'       => __( 'Member Blogging', 'buddyboss' ),
 				'empty_state_description' => __( 'Allow your community members to contribute by creating blogs for your site via the frontend blog creator form. Available with the Member Blogging add-on on the Plus plan.', 'buddyboss' ),
-				'button_label'            => __( 'Upgrade to Plus', 'buddyboss' ),
+				'button_label'            => __( 'Upgrade to Scale', 'buddyboss' ),
 				// Fallback only. With `upgrade_from_catalog` on, the AJAX formatter
 				// replaces this with the campaign-tagged URL from the field-upgrades
 				// catalog when it holds an entry for this panel, so marketing can retarget
