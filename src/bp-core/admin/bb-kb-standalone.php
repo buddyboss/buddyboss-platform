@@ -87,16 +87,23 @@ function bb_kb_enqueue_standalone( $args = array() ) {
 	wp_enqueue_script( 'bb-kb-standalone', $asset['url'], $asset['deps'], $asset['version'], true );
 
 	// KB styles (common build) + RTL. The Membership/Courses admin does not load
-	// Settings 2.0 CSS, so the modal needs its stylesheet explicitly.
-	wp_enqueue_style(
+	// Settings 2.0 CSS, so the modal needs its stylesheet explicitly. Bake the
+	// .min suffix into the URL like bb-admin-settings-page.php does — WordPress
+	// only uses the 'suffix' data to compute the -rtl variant, so 'replace'
+	// swaps "{$suffix}.css" → "-rtl{$suffix}.css", matching the build output
+	// (common-rtl.css / common-rtl.min.css).
+	$min = bp_core_get_minified_asset_suffix();
+	wp_register_style(
 		'bb-kb-standalone',
-		buddypress()->plugin_url . 'bp-core/admin/bb-settings/common/build/styles/common.css',
+		buddypress()->plugin_url . "bp-core/admin/bb-settings/common/build/styles/common{$min}.css",
 		array(),
 		$asset['version']
 	);
-	if ( is_rtl() ) {
-		wp_style_add_data( 'bb-kb-standalone', 'rtl', 'replace' );
+	wp_style_add_data( 'bb-kb-standalone', 'rtl', 'replace' );
+	if ( $min ) {
+		wp_style_add_data( 'bb-kb-standalone', 'suffix', $min );
 	}
+	wp_enqueue_style( 'bb-kb-standalone' );
 
 	// Icon font used by the modal close button (bb-icons-rl-x).
 	if ( wp_style_is( 'bb-icons-rl-css', 'registered' ) ) {
