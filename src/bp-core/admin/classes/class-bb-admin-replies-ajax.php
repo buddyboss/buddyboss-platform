@@ -1226,7 +1226,7 @@ class BB_Admin_Replies_Ajax {
 			'paged'                  => $page,
 			'orderby'                => 'title',
 			'order'                  => 'ASC',
-			'post_status'            => array( 'publish', 'closed', 'private', 'hidden' ),
+			'post_status'            => array( 'publish' ), // Match legacy bbp_get_dropdown() — publish topics only.
 			'no_found_rows'          => true,
 			'update_post_meta_cache' => false,
 			'update_post_term_cache' => false,
@@ -1307,7 +1307,9 @@ class BB_Admin_Replies_Ajax {
 						'results'  => array(
 							array(
 								'value' => (string) $reply->ID,
-								'label' => $label,
+								// Date prefix matches the legacy picker label format
+								// (bbp_reply_attributes_meta_box_discussion_reply_title).
+								'label' => get_the_date( 'm/d/y', $reply ) . ' - ' . $label,
 							),
 						),
 						'has_more' => false,
@@ -1328,7 +1330,7 @@ class BB_Admin_Replies_Ajax {
 			'paged'                  => $page,
 			'orderby'                => 'date',
 			'order'                  => 'DESC',
-			'post_status'            => array( 'publish', 'private', 'hidden' ),
+			'post_status'            => array( 'publish' ), // Match legacy bbp_get_dropdown() — publish replies only.
 			'no_found_rows'          => true,
 			'update_post_term_cache' => false,
 		);
@@ -1356,9 +1358,11 @@ class BB_Admin_Replies_Ajax {
 				? mb_substr( $content_raw, 0, 80 ) . '...'
 				: $content_raw;
 
+			// Date prefix matches the legacy picker label format
+			// (bbp_reply_attributes_meta_box_discussion_reply_title).
 			$results[] = array(
 				'value' => (string) $reply->ID,
-				'label' => $label,
+				'label' => get_the_date( 'm/d/y', $reply ) . ' - ' . $label,
 			);
 		}
 
