@@ -122,20 +122,30 @@
 	}
 
 	.bb-kb-landing__grid {
-		display: grid;
-		grid-template-columns: repeat(3, 1fr);
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: center;
 		gap: 24px;
-		// Reset <ul> defaults — explicit role="list" preserves a11y semantics.
 		list-style: none;
 		padding: 0;
 		margin: 0;
 
+		.bb-kb-landing__grid-item {
+			flex: 0 0 calc((100% - 48px) / 3);
+		}
+
 		@media (max-width: 1024px) {
-			grid-template-columns: repeat(2, 1fr);
+
+			.bb-kb-landing__grid-item {
+				flex-basis: calc((100% - 24px) / 2);
+			}
 		}
 
 		@media (max-width: 768px) {
-			grid-template-columns: 1fr;
+
+			.bb-kb-landing__grid-item {
+				flex-basis: 100%;
+			}
 		}
 	}
 
