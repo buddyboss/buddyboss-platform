@@ -605,13 +605,13 @@ function bp_nouveau_activity_notification_filters() {
 function bp_nouveau_activity_customizer_controls( $controls = array() ) {
 	return array_merge( $controls, array(
 //		'act_dir_layout' => array(
-//			'label'      => __( 'Use column navigation for the Activity directory.', 'buddyboss' ),
+//			'label'      => __( 'Use column navigation for the Activity directory.', 'buddyboss-platform' ),
 //			'section'    => 'bp_nouveau_dir_layout',
 //			'settings'   => 'bp_nouveau_appearance[activity_dir_layout]',
 //			'type'       => 'checkbox',
 //		),
 //		'act_dir_tabs' => array(
-//			'label'      => __( 'Use tab styling for Activity directory navigation.', 'buddyboss' ),
+//			'label'      => __( 'Use tab styling for Activity directory navigation.', 'buddyboss-platform' ),
 //			'section'    => 'bp_nouveau_dir_layout',
 //			'settings'   => 'bp_nouveau_appearance[activity_dir_tabs]',
 //			'type'       => 'checkbox',

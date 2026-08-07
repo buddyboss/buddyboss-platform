@@ -33,7 +33,17 @@ if ( ! defined( 'BP_PLATFORM_API' ) ) {
 	define( 'BP_PLATFORM_API', plugin_dir_url( __FILE__ ) );
 }
 
-// Load translation files.
+/*
+ * Load translation files.
+ *
+ * Deliberately hooked to plugins_loaded (not init): component setup runs during
+ * plugins_loaded and translates strings (component names, nav labels) before init
+ * fires. Loading the text domain here keeps those strings translated and prevents
+ * WP 6.7+ "translation loading triggered too early" just-in-time notices. This is
+ * a custom dual-domain loader (merges legacy "buddyboss" .mo files into the
+ * "buddyboss-platform" domain) — the load_plugin_textdomain() call inside it is
+ * only a bundled-path fallback for installs without language-pack translations.
+ */
 add_action( 'plugins_loaded', 'bp_core_load_buddypress_textdomain', 0 );
 
 global $bp_incompatible_plugins;

@@ -3621,7 +3621,7 @@ function bb_deprecated_tools_admin_tabs_hooks_notice() {
 
 	foreach ( $retired as $hook => $replacement ) {
 		if ( has_filter( $hook ) || has_action( $hook ) ) {
-			_deprecated_hook( $hook, 'BuddyBoss 3.1.0', $replacement );
+			_deprecated_hook( $hook, 'BuddyBoss 3.1.0', $replacement ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $hook and $replacement are hardcoded internal keys/values of the local $retired array, not user input.
 		}
 	}
 }

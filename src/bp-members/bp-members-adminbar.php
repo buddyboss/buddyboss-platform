@@ -171,7 +171,7 @@ function bp_members_admin_bar_user_admin_menu() {
 		// $wp_admin_bar->add_menu( array(
 		// 'parent' => $bp->user_admin_menu_id,
 		// 'id'     => $bp->user_admin_menu_id . '-user-capabilities',
-		// 'title'  => __( 'User Capabilities', 'buddyboss' ),
+		// 'title'  => __( 'User Capabilities', 'buddyboss-platform' ),
 		// 'href'   => add_query_arg( [
 		// 'redirect_to' => urlencode( bp_displayed_user_domain() . 'settings/capabilities/' ),
 		// ], $link )

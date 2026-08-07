@@ -380,7 +380,7 @@ function bp_search_items() {
 		'messages' => __( 'Messages', 'buddyboss-platform' ),
 		/*
 		 should we search notifications as well?
-		'notifications'	=> __( 'Notifications', 'buddyboss' ), */
+		'notifications'	=> __( 'Notifications', 'buddyboss-platform' ), */
 	);
 
 	// only the active ones please!

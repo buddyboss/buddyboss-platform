@@ -78,6 +78,15 @@ defined( 'ABSPATH' ) || exit;
 	endif; // Check for have_comments().
 	?>
 
+	<?php
+	/*
+	 * This small submit-toggle helper is left inline intentionally. It is tightly coupled
+	 * to the comment form rendered by comment_form() immediately above, runs mid-body
+	 * (after <head> has been printed), and this MemberPress course CPT template has no
+	 * dedicated script handle enqueued at this render point to attach it to via
+	 * wp_add_inline_script(). Converting it would risk the helper not printing.
+	 */
+	?>
 	<script>
 		// Disable 'submit comment' until we have something in the field
 		if ( jQuery( '#submit' ).length ){

@@ -692,6 +692,19 @@ if ( ! class_exists( 'BBP_Admin' ) ) :
 						<?php esc_html_e( 'If your browser doesn\'t start loading the next page automatically, click this link:', 'buddyboss-platform' ); ?>
 						<a class="button" href="update-core.php?page=bbpress-update&amp;action=bbpress-update&amp;n=<?php echo esc_attr( $n + 5 ); ?>"><?php esc_html_e( 'Next Forums', 'buddyboss-platform' ); ?></a>
 					</p>
+					<?php
+					/*
+					 * Inline bootstrap script left as-is (not converted to
+					 * wp_add_inline_script). This legacy multisite network-update
+					 * screen (update-core.php?page=bbpress-update) chain-advances
+					 * through blogs in batches of five via a client-side redirect,
+					 * and the script must run inline as part of this procedurally
+					 * echoed page to guarantee the batch loop keeps progressing. It
+					 * depends on the per-request $n counter (already escaped with
+					 * esc_js()) and has no enqueued script handle in scope on this
+					 * core update screen.
+					 */
+					?>
 					<script type='text/javascript'>
 						<!--
 						function nextpage() {

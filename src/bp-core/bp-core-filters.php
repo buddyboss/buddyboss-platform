@@ -1363,6 +1363,12 @@ function bp_core_render_email_template( $template ) {
 	/*
 	 * Link colours are applied directly in the email template before sending, so we
 	 * need to add an extra style here to set the colour for the Customizer or preview.
+	 *
+	 * Left as an inline <style> deliberately: this is injected into a self-contained
+	 * email HTML document rendered by the Email Customizer/preview (see the echo
+	 * above), which is NOT the WordPress front end and has no enqueued stylesheet
+	 * handle to attach to. Emails require inline CSS, so wp_add_inline_style() is not
+	 * applicable here. The colour value is escaped with esc_attr().
 	 */
 	$settings = bp_email_get_appearance_settings();
 	printf(

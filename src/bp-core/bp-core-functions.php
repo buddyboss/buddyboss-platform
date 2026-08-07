@@ -2787,7 +2787,7 @@ function bp_core_get_components( $type = 'all' ) {
 		// @todo: used for bp-performance will enable in feature.
 		/*
 		'performance'       => array(
-			'title'       => __( 'API Caching', 'buddyboss' ),
+			'title'       => __( 'API Caching', 'buddyboss-platform' ),
 			'settings'    => bp_get_admin_url(
 				add_query_arg(
 					array(
@@ -2797,7 +2797,7 @@ function bp_core_get_components( $type = 'all' ) {
 					'admin.php'
 				)
 			),
-			'description' => __( 'Allow REST API data to be cached to improve performance.', 'buddyboss' ),
+			'description' => __( 'Allow REST API data to be cached to improve performance.', 'buddyboss-platform' ),
 			'default'     => false,
 		),
 		*/
