@@ -3195,6 +3195,21 @@ function bp_get_member_type_key( $post_id ) {
 		return '';
 	}
 
+	/**
+	 * Filters the profile type post ID used to resolve the canonical profile type key.
+	 *
+	 * Multilingual plugins (e.g. WPML) create one post per language for the same
+	 * profile type. The key stored against the original post is the single source
+	 * of truth because it matches the `bp_member_type` taxonomy term assigned to
+	 * users. This filter allows compatibility layers to map a translated post ID
+	 * back to its original post ID before the key is read.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param int $post_id Profile type post ID.
+	 */
+	$post_id = (int) apply_filters( 'bb_member_type_key_post_id', $post_id );
+
 	$key = get_post_meta( $post_id, '_bp_member_type_key', true );
 
 	// Fallback to legacy way of generating profile type key from singular label
@@ -3210,7 +3225,16 @@ function bp_get_member_type_key( $post_id ) {
 		update_post_meta( $post_id, '_bp_member_type_key', sanitize_key( $key ) );
 	}
 
-	return apply_filters( 'bp_get_member_type_key', $key );
+	/**
+	 * Filters the profile type key.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 * @since BuddyBoss [BBVERSION] Added the `$post_id` parameter.
+	 *
+	 * @param string $key     Profile type key.
+	 * @param int    $post_id Profile type post ID the key was resolved from.
+	 */
+	return apply_filters( 'bp_get_member_type_key', $key, $post_id );
 }
 
 /**
@@ -3512,12 +3536,21 @@ function bp_get_removed_member_types() {
 		'nopaging'   => true,
 	);
 
-	$bp_member_type_query = wp_cache_get( 'bp_get_removed_member_types', 'bp_member_member_type' );
+	$cache_context = bb_member_type_query_cache_context();
+	$cached        = wp_cache_get( 'bp_get_removed_member_types', 'bp_member_member_type' );
 
-	if ( false === $bp_member_type_query ) {
-		$bp_member_type_query = new WP_Query( $bp_member_type_args );
-		wp_cache_set( 'bp_get_removed_member_types', $bp_member_type_query, 'bp_member_member_type' );
+	if ( ! is_array( $cached ) ) {
+		$cached = array();
 	}
+
+	if ( isset( $cached[ $cache_context ] ) ) {
+		$bp_member_type_query = $cached[ $cache_context ];
+	} else {
+		$bp_member_type_query     = new WP_Query( $bp_member_type_args );
+		$cached[ $cache_context ] = $bp_member_type_query;
+		wp_cache_set( 'bp_get_removed_member_types', $cached, 'bp_member_member_type' );
+	}
+
 	if ( $bp_member_type_query->have_posts() ) :
 		while ( $bp_member_type_query->have_posts() ) :
 			$bp_member_type_query->the_post();
@@ -4667,20 +4700,41 @@ function bp_get_hidden_member_types() {
 	);
 
 	$cache_key            = 'bp_get_hidden_member_types_cache';
-	$hidden_profile_types = wp_cache_get( $cache_key, 'bp_member_type' );
+	$hidden_profile_types = wp_cache_get( $cache_key, 'bp_member_member_type' );
 	if ( false === $hidden_profile_types ) {
 		$hidden_profile_types = new WP_Query( $args );
-		wp_cache_set( $cache_key, $hidden_profile_types, 'bp_member_type' );
+		wp_cache_set( $cache_key, $hidden_profile_types, 'bp_member_member_type' );
+	}
+
+	$hidden_member_types = false;
+
+	if ( isset( $hidden_profile_types->posts ) ) {
+		$hidden_member_types = array();
+
+		// Use the canonical profile type key instead of the post slug. The key
+		// matches the `bp_member_type` taxonomy term assigned to users, whereas
+		// the post slug diverges for custom keys and for translated posts
+		// created by multilingual plugins such as WPML.
+		foreach ( $hidden_profile_types->posts as $hidden_profile_type ) {
+			$type_key = bp_get_member_type_key( $hidden_profile_type->ID );
+
+			if ( ! empty( $type_key ) ) {
+				$hidden_member_types[] = $type_key;
+			}
+		}
+
+		$hidden_member_types = array_values( array_unique( $hidden_member_types ) );
 	}
 
 	/**
 	 * Filters hidden profile types.
 	 *
 	 * @since BuddyBoss 1.7.9
+	 * @since BuddyBoss [BBVERSION] Returns canonical profile type keys instead of post slugs.
 	 *
-	 * @param array $post_name Hidden profile type names.
+	 * @param array|false $hidden_member_types Hidden profile type keys.
 	 */
-	return apply_filters( 'bp_get_hidden_member_types', isset( $hidden_profile_types->posts ) ? wp_list_pluck( $hidden_profile_types->posts, 'post_name' ) : false );
+	return apply_filters( 'bp_get_hidden_member_types', $hidden_member_types );
 }
 
 /**
@@ -5579,4 +5633,33 @@ function bb_remove_orphaned_profile_slug( $user_id ) {
 	while ( $wpdb->rows_affected > 0 ) {
 		bb_remove_orphaned_profile_slug( $user_id );
 	}
+}
+
+/**
+ * Get the cache context for profile type visibility queries.
+ *
+ * Queries such as {@see bp_get_removed_member_types()} and
+ * {@see bp_get_hidden_member_types()} read per-language visibility settings:
+ * multilingual plugins filter them to the current language's posts, and each
+ * translation can toggle its own "hide" settings. Their results therefore
+ * cannot be cached under a single shared entry. This context string scopes the
+ * cached result; multilingual compatibility layers (e.g. WPML) filter it to
+ * the current language code.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return string Cache context. Default 'default'.
+ */
+function bb_member_type_query_cache_context() {
+
+	/**
+	 * Filters the cache context for profile type visibility queries.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $context Cache context. Default 'default'.
+	 */
+	$context = apply_filters( 'bb_member_type_query_cache_context', 'default' );
+
+	return sanitize_key( $context );
 }

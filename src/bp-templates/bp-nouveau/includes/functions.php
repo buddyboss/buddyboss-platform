@@ -145,8 +145,8 @@ function bp_nouveau_ajax_querystring( $query_string, $object ) {
 	}
 
 	if ( isset( $_POST['member_type_id'] ) && '' !== $_POST['member_type_id'] && 'all' !== $_POST['member_type_id'] && 'undefined' !== $_POST['member_type_id'] ) {
-		$member_type_id  = $_POST['member_type_id'];
-		$member_type_key = get_post_meta( $member_type_id, '_bp_member_type_key', true );
+		$member_type_id  = absint( wp_unslash( $_POST['member_type_id'] ) );
+		$member_type_key = bp_get_member_type_key( $member_type_id );
 		$qs[]            = 'member_type=' . $member_type_key;
 	}
 

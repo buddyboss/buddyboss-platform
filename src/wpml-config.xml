@@ -1,0 +1,34 @@
+<wpml-config>
+	<!--
+		BuddyBoss Platform — WPML language configuration.
+
+		Profile Types: the `bp-member-type` post is only a container for labels
+		and settings. The actual member assignment lives in the `bp_member_type`
+		taxonomy attached to users, and every language shares the same terms.
+		The taxonomy must therefore never be translated, and the internal key /
+		behaviour settings must stay identical across translations, while the
+		label fields remain translatable.
+	-->
+	<taxonomies>
+		<taxonomy translate="0">bp_member_type</taxonomy>
+	</taxonomies>
+	<custom-fields>
+		<custom-field action="copy-once">_bp_member_type_enable_filter</custom-field>
+		<custom-field action="copy-once">_bp_member_type_enable_remove</custom-field>
+		<custom-field action="copy-once">_bp_member_type_enable_search_remove</custom-field>
+		<custom-field action="copy-once">_bp_member_type_enable_profile_field</custom-field>
+		<custom-field action="copy-once">_bp_member_type_enable_invite</custom-field>
+		<custom-field action="copy-once">_bp_member_type_label_color</custom-field>
+		<custom-field action="copy">_bp_member_type_wp_roles</custom-field>
+		<custom-field action="copy">_bp_member_type_enabled_group_type_create</custom-field>
+		<custom-field action="copy">_bp_member_type_enabled_group_type_auto_join</custom-field>
+		<custom-field action="copy">_bp_member_type_allowed_member_type_invite</custom-field>
+		<custom-field action="copy">_bp_member_type_login_redirection</custom-field>
+		<custom-field action="copy">_bp_member_type_custom_login_redirection</custom-field>
+		<custom-field action="copy">_bp_member_type_logout_redirection</custom-field>
+		<custom-field action="copy">_bp_member_type_custom_logout_redirection</custom-field>
+		<custom-field action="copy">_bp_member_type_allow_messaging_without_connection</custom-field>
+		<custom-field action="translate">_bp_member_type_label_name</custom-field>
+		<custom-field action="translate">_bp_member_type_label_singular_name</custom-field>
+	</custom-fields>
+</wpml-config>
