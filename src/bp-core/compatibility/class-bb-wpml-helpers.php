@@ -92,6 +92,10 @@ if ( ! class_exists( 'BB_WPML_Helpers' ) ) {
 			// Resolve translated profile type posts to their original post so the
 			// canonical profile type key (taxonomy term slug) is shared across languages.
 			add_filter( 'bb_member_type_key_post_id', array( $this, 'bb_wpml_original_member_type_post_id' ) );
+
+			// Scope profile type visibility query caches per language, because each
+			// translation carries its own visibility settings (hide from directory/search).
+			add_filter( 'bb_member_type_query_cache_context', array( $this, 'bb_wpml_member_type_query_cache_context' ) );
 		}
 
 		/**
@@ -724,6 +728,26 @@ if ( ! class_exists( 'BB_WPML_Helpers' ) ) {
 			$resolved[ $post_id ] = $post_id;
 
 			return $post_id;
+		}
+
+		/**
+		 * Scope profile type visibility query caches by the current WPML language.
+		 *
+		 * Visibility settings (hide from Members Directory / hide from search) are
+		 * stored per translation, and WPML filters the underlying WP_Query to the
+		 * current language, so cached results must not leak across languages.
+		 * Runs on the `bb_member_type_query_cache_context` filter.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param string $context Default cache context.
+		 *
+		 * @return string Current language code, or the given context when unknown.
+		 */
+		public function bb_wpml_member_type_query_cache_context( $context ) {
+			$current_language = apply_filters( 'wpml_current_language', null );
+
+			return ! empty( $current_language ) ? $current_language : $context;
 		}
 	}
 

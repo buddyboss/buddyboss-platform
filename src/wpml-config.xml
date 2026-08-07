@@ -13,14 +13,13 @@
 		<taxonomy translate="0">bp_member_type</taxonomy>
 	</taxonomies>
 	<custom-fields>
-		<custom-field action="copy">_bp_member_type_key</custom-field>
-		<custom-field action="copy">_bp_member_type_enable_filter</custom-field>
-		<custom-field action="copy">_bp_member_type_enable_remove</custom-field>
-		<custom-field action="copy">_bp_member_type_enable_search_remove</custom-field>
-		<custom-field action="copy">_bp_member_type_enable_profile_field</custom-field>
-		<custom-field action="copy">_bp_member_type_enable_invite</custom-field>
+		<custom-field action="copy-once">_bp_member_type_enable_filter</custom-field>
+		<custom-field action="copy-once">_bp_member_type_enable_remove</custom-field>
+		<custom-field action="copy-once">_bp_member_type_enable_search_remove</custom-field>
+		<custom-field action="copy-once">_bp_member_type_enable_profile_field</custom-field>
+		<custom-field action="copy-once">_bp_member_type_enable_invite</custom-field>
+		<custom-field action="copy-once">_bp_member_type_label_color</custom-field>
 		<custom-field action="copy">_bp_member_type_wp_roles</custom-field>
-		<custom-field action="copy">_bp_member_type_label_color</custom-field>
 		<custom-field action="copy">_bp_member_type_enabled_group_type_create</custom-field>
 		<custom-field action="copy">_bp_member_type_enabled_group_type_auto_join</custom-field>
 		<custom-field action="copy">_bp_member_type_allowed_member_type_invite</custom-field>

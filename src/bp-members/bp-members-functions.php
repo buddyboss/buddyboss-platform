@@ -3536,12 +3536,21 @@ function bp_get_removed_member_types() {
 		'nopaging'   => true,
 	);
 
-	$bp_member_type_query = wp_cache_get( 'bp_get_removed_member_types', 'bp_member_member_type' );
+	$cache_context = bb_member_type_query_cache_context();
+	$cached        = wp_cache_get( 'bp_get_removed_member_types', 'bp_member_member_type' );
 
-	if ( false === $bp_member_type_query ) {
-		$bp_member_type_query = new WP_Query( $bp_member_type_args );
-		wp_cache_set( 'bp_get_removed_member_types', $bp_member_type_query, 'bp_member_member_type' );
+	if ( ! is_array( $cached ) ) {
+		$cached = array();
 	}
+
+	if ( isset( $cached[ $cache_context ] ) ) {
+		$bp_member_type_query = $cached[ $cache_context ];
+	} else {
+		$bp_member_type_query     = new WP_Query( $bp_member_type_args );
+		$cached[ $cache_context ] = $bp_member_type_query;
+		wp_cache_set( 'bp_get_removed_member_types', $cached, 'bp_member_member_type' );
+	}
+
 	if ( $bp_member_type_query->have_posts() ) :
 		while ( $bp_member_type_query->have_posts() ) :
 			$bp_member_type_query->the_post();
@@ -5624,4 +5633,33 @@ function bb_remove_orphaned_profile_slug( $user_id ) {
 	while ( $wpdb->rows_affected > 0 ) {
 		bb_remove_orphaned_profile_slug( $user_id );
 	}
+}
+
+/**
+ * Get the cache context for profile type visibility queries.
+ *
+ * Queries such as {@see bp_get_removed_member_types()} and
+ * {@see bp_get_hidden_member_types()} read per-language visibility settings:
+ * multilingual plugins filter them to the current language's posts, and each
+ * translation can toggle its own "hide" settings. Their results therefore
+ * cannot be cached under a single shared entry. This context string scopes the
+ * cached result; multilingual compatibility layers (e.g. WPML) filter it to
+ * the current language code.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return string Cache context. Default 'default'.
+ */
+function bb_member_type_query_cache_context() {
+
+	/**
+	 * Filters the cache context for profile type visibility queries.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $context Cache context. Default 'default'.
+	 */
+	$context = apply_filters( 'bb_member_type_query_cache_context', 'default' );
+
+	return sanitize_key( $context );
 }
