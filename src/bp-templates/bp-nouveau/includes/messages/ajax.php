@@ -823,7 +823,10 @@ function bp_nouveau_ajax_get_user_message_threads() {
 
 					$prefix                   = apply_filters( 'bp_core_get_table_prefix', $wpdb->base_prefix );
 					$groups_table             = $prefix . 'bp_groups';
-					$group_name               = $wpdb->get_var( "SELECT `name` FROM `{$groups_table}` WHERE `id` = '{$group_id}';" ); // db call ok; no-cache ok.
+					// $group_id comes from message meta that is not int-cast on read; bind
+					// it as an integer placeholder rather than interpolating raw. Table name
+					// is derived from $wpdb->base_prefix and is safe to interpolate.
+					$group_name               = $wpdb->get_var( $wpdb->prepare( "SELECT `name` FROM `{$groups_table}` WHERE `id` = %d", (int) $group_id ) ); // db call ok; no-cache ok.
 					$group_link               = 'javascript:void(0);';
 					$group_avatar             = ! bp_disable_group_avatar_uploads() ? bb_attachments_get_default_profile_group_avatar_image( array( 'object' => 'group' ) ) : bb_get_buddyboss_group_avatar();
 					$legacy_group_avatar_name = '-groupavatar-full';
@@ -1970,7 +1973,10 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 
 			$prefix                   = apply_filters( 'bp_core_get_table_prefix', $wpdb->base_prefix );
 			$groups_table             = $prefix . 'bp_groups';
-			$group_name               = $wpdb->get_var( "SELECT `name` FROM `{$groups_table}` WHERE `id` = '{$group_id}';" ); // db call ok; no-cache ok;
+			// $group_id comes from message meta that is not int-cast on read; bind
+			// it as an integer placeholder rather than interpolating raw. Table name
+			// is derived from $wpdb->base_prefix and is safe to interpolate.
+			$group_name               = $wpdb->get_var( $wpdb->prepare( "SELECT `name` FROM `{$groups_table}` WHERE `id` = %d", (int) $group_id ) ); // db call ok; no-cache ok;
 			$group_link               = 'javascript:void(0);';
 			$group_avatar             = bb_attachments_get_default_profile_group_avatar_image( array( 'object' => 'group' ) );
 			$legacy_group_avatar_name = '-groupavatar-full';
@@ -2035,7 +2041,10 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 
 				$prefix                   = apply_filters( 'bp_core_get_table_prefix', $wpdb->base_prefix );
 				$groups_table             = $prefix . 'bp_groups';
-				$group_name               = $wpdb->get_var( "SELECT `name` FROM `{$groups_table}` WHERE `id` = '{$group_id}';" ); // db call ok; no-cache ok;
+				// $group_id comes from message meta that is not int-cast on read; bind
+				// it as an integer placeholder rather than interpolating raw. Table name
+				// is derived from $wpdb->base_prefix and is safe to interpolate.
+				$group_name               = $wpdb->get_var( $wpdb->prepare( "SELECT `name` FROM `{$groups_table}` WHERE `id` = %d", (int) $group_id ) ); // db call ok; no-cache ok;
 				$group_link               = 'javascript:void(0);';
 				$group_avatar             = bb_attachments_get_default_profile_group_avatar_image( array( 'object' => 'group' ) );
 				$legacy_group_avatar_name = '-groupavatar-full';
@@ -2310,7 +2319,10 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 
 				$prefix                   = apply_filters( 'bp_core_get_table_prefix', $wpdb->base_prefix );
 				$groups_table             = $prefix . 'bp_groups';
-				$group_name               = $wpdb->get_var( "SELECT `name` FROM `{$groups_table}` WHERE `id` = '{$group_id}';" ); // db call ok; no-cache ok;
+				// $group_id comes from message meta that is not int-cast on read; bind
+				// it as an integer placeholder rather than interpolating raw. Table name
+				// is derived from $wpdb->base_prefix and is safe to interpolate.
+				$group_name               = $wpdb->get_var( $wpdb->prepare( "SELECT `name` FROM `{$groups_table}` WHERE `id` = %d", (int) $group_id ) ); // db call ok; no-cache ok;
 				$group_link               = 'javascript:void(0);';
 				$group_avatar             = bb_attachments_get_default_profile_group_avatar_image( array( 'object' => 'group' ) );
 				$legacy_group_avatar_name = '-groupavatar-full';

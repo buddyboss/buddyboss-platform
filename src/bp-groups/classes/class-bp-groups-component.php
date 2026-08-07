@@ -673,13 +673,13 @@ class BP_Groups_Component extends BP_Component {
 			);
 
 			// $sub_nav[] = array_merge( array(
-			// 'name'              => __( 'All Members', 'buddyboss' ),
+			// 'name'              => __( 'All Members', 'buddyboss-platform' ),
 			// 'slug'              => 'all-members',
 			// 'position'          => 0,
 			// ), $default_params );
 			//
 			// $sub_nav[] = array_merge( array(
-			// 'name'              => __( 'Group Leaders', 'buddyboss' ),
+			// 'name'              => __( 'Group Leaders', 'buddyboss-platform' ),
 			// 'slug'              => 'leaders',
 			// 'position'          => 10,
 			// ), $default_params );

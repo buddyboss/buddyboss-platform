@@ -3285,6 +3285,7 @@ function bb_core_update_repair_duplicate_following_notification() {
 	$sql .= ' AND n1.component_name = %s AND n1.component_action = %s';
 	$sql .= ' ORDER BY n1.id DESC';
 
+	// phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter -- $sql only interpolates the internal $bp->notifications->table_name (not user input); the two bound values are hardcoded strings passed to $wpdb->prepare() as %s placeholders.
 	$notification_ids = wp_parse_id_list( $wpdb->get_col( $wpdb->prepare( $sql, 'activity', 'bb_following_new' ) ) );
 
 	// Delete the duplicate notifications in chunks (bounded lock time on large sites).
