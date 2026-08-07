@@ -88,6 +88,10 @@ if ( ! class_exists( 'BB_WPML_Helpers' ) ) {
 
 			// Handle WPML language switch action from wpml(eg classic editor meta box).
 			add_action( 'wp_ajax_wpml_switch_post_language', array( $this, 'bb_handle_wpml_switch_post_language' ), 9 );
+
+			// Resolve translated profile type posts to their original post so the
+			// canonical profile type key (taxonomy term slug) is shared across languages.
+			add_filter( 'bb_member_type_key_post_id', array( $this, 'bb_wpml_original_member_type_post_id' ) );
 		}
 
 		/**
@@ -585,7 +589,6 @@ if ( ! class_exists( 'BB_WPML_Helpers' ) ) {
 			delete_transient( 'bb_wpml_posted_icl_post_language_' . $post_id );
 		}
 
-
 		/**
 		 * Ajax handler for switching the language of a post in WPML
 		 *
@@ -663,6 +666,64 @@ if ( ! class_exists( 'BB_WPML_Helpers' ) ) {
 				delete_transient( 'bb_wpml_original_old_db_language_' . $post_id );
 				delete_transient( 'bb_wpml_posted_icl_post_language_' . $post_id );
 			}
+		}
+
+		/**
+		 * Resolve a translated profile type post ID to its original (source language) post ID.
+		 *
+		 * WPML stores each translation of a `bp-member-type` post as a separate post.
+		 * The `bp_member_type` taxonomy terms assigned to users are always created
+		 * from the original post's key, so any key lookup made against a translated
+		 * post must be redirected to the original post. Runs on the
+		 * `bb_member_type_key_post_id` filter.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param int $post_id Profile type post ID (possibly a translation).
+		 *
+		 * @return int Original profile type post ID, or the given ID when no
+		 *             translation group exists or the original cannot be resolved.
+		 */
+		public function bb_wpml_original_member_type_post_id( $post_id ) {
+			static $resolved = array();
+
+			$post_id = (int) $post_id;
+
+			if ( empty( $post_id ) || ! function_exists( 'bp_get_member_type_post_type' ) ) {
+				return $post_id;
+			}
+
+			if ( isset( $resolved[ $post_id ] ) ) {
+				return $resolved[ $post_id ];
+			}
+
+			$element_type = 'post_' . bp_get_member_type_post_type();
+
+			// Translation group ID for this post. Null when WPML does not manage it.
+			$trid = apply_filters( 'wpml_element_trid', null, $post_id, $element_type );
+
+			if ( empty( $trid ) ) {
+				$resolved[ $post_id ] = $post_id;
+
+				return $post_id;
+			}
+
+			$translations = apply_filters( 'wpml_get_element_translations', null, $trid, $element_type );
+
+			if ( ! empty( $translations ) && is_array( $translations ) ) {
+				foreach ( $translations as $translation ) {
+					if ( ! empty( $translation->original ) && ! empty( $translation->element_id ) ) {
+						$resolved[ $post_id ] = (int) $translation->element_id;
+
+						return $resolved[ $post_id ];
+					}
+				}
+			}
+
+			// No original found (e.g. the source post was deleted) — fall back gracefully.
+			$resolved[ $post_id ] = $post_id;
+
+			return $post_id;
 		}
 	}
 
