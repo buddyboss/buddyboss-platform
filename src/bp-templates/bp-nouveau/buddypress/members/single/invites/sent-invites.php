@@ -91,8 +91,11 @@ if ( isset( $restricted ) && '' !== $restricted ) {
 	</aside>
 	<?php
 }
+
+// Strip the notice query string from the address bar via an inline script attached to
+// the enqueued bp-nouveau handle instead of printing a raw <script> tag.
+wp_add_inline_script( 'bp-nouveau', 'window.history.replaceState(null, null, window.location.pathname);' );
 ?>
-<script>window.history.replaceState(null, null, window.location.pathname);</script>
 <h2 class="screen-heading general-settings-screen">
 	<?php esc_html_e( 'Sent Invites', 'buddyboss-platform' ); ?>
 </h2>

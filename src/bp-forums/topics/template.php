@@ -1523,9 +1523,11 @@ function bbp_get_topic_author_display_name( $topic_id = 0 ) {
 		$author_name = __( 'Anonymous', 'buddyboss-platform' );
 	}
 
-	// Encode possible UTF8 display names
-	if ( seems_utf8( $author_name ) === false ) {
-		$author_name = utf8_encode( $author_name );
+	// Encode possible UTF8 display names.
+	// wp_is_valid_utf8() was added in WP 6.9.0; fall back to seems_utf8() on older versions.
+	$bbp_is_valid_utf8 = function_exists( 'wp_is_valid_utf8' ) ? wp_is_valid_utf8( $author_name ) : seems_utf8( $author_name );
+	if ( false === $bbp_is_valid_utf8 && function_exists( 'mb_convert_encoding' ) ) {
+		$author_name = mb_convert_encoding( $author_name, 'UTF-8', 'ISO-8859-1' );
 	}
 
 	return apply_filters( 'bbp_get_topic_author_display_name', $author_name, $topic_id );
@@ -3571,7 +3573,7 @@ function bbp_topic_notices() {
  *
  */
 function bbp_topic_type_select( $args = '' ) {
-	echo bbp_get_form_topic_type_dropdown( $args );
+	echo bbp_get_form_topic_type_dropdown( $args ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- markup built and per-value escaped (esc_attr/esc_html) in bbp_get_form_topic_type_dropdown().
 }
 
 /**

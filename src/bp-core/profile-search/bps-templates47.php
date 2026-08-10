@@ -382,61 +382,81 @@ function bp_ps_print_filter( $f ) {
  * @since BuddyBoss 1.0.0
  */
 function bp_ps_autocomplete_script( $f ) {
-	wp_enqueue_script( $f->script_handle );
+	/*
+	 * $f->script_handle is part of the legacy BP-Profile-Search template API and
+	 * is never assigned by core field data — without a fallback the inline script
+	 * below would attach to an empty handle and be silently dropped. Fall back to
+	 * 'bp-ps-template' (registered in bp_ps_escaped_form_data47(), which every
+	 * template flow calls before rendering fields).
+	 */
+	$bb_ps_script_handle = ! empty( $f->script_handle ) ? $f->script_handle : 'bp-ps-template';
+	wp_enqueue_script( $bb_ps_script_handle );
 	$autocomplete_options = apply_filters( 'bp_ps_autocomplete_options', "{types: ['geocode']}", $f );
 	$geolocation_options  = apply_filters( 'bp_ps_geolocation_options', '{timeout: 5000}', $f );
 	?>
 	<input type="hidden" id="Lat_<?php echo esc_attr( $f->unique_id ); ?>" name="<?php echo esc_attr( $f->code . '[lat]' ); ?>" value="<?php echo esc_attr( $f->value['lat'] ); ?>">
 	<input type="hidden" id="Lng_<?php echo esc_attr( $f->unique_id ); ?>" name="<?php echo esc_attr( $f->code . '[lng]' ); ?>" value="<?php echo esc_attr( $f->value['lng'] ); ?>">
-
-	<script>
-		function bp_ps_<?php echo esc_js( $f->unique_id ); ?>() {
-			var input = document.getElementById('<?php echo esc_js( $f->unique_id ); ?>');
-			var options = <?php echo $autocomplete_options; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- raw JS object literal (default "{types: ['geocode']}") emitted inside <script>; esc_js would corrupt the literal. ?>;
-			var autocomplete = new google.maps.places.Autocomplete(input, options);
-			google.maps.event.addListener(autocomplete, 'place_changed', function () {
-				var place = autocomplete.getPlace();
-				document.getElementById('Lat_<?php echo esc_js( $f->unique_id ); ?>').value = place.geometry.location.lat();
-				document.getElementById('Lng_<?php echo esc_js( $f->unique_id ); ?>').value = place.geometry.location.lng();
-			});
-		}
-
-		jQuery(document).ready(bp_ps_<?php echo esc_js( $f->unique_id ); ?>);
-
-		function bp_ps_locate_<?php echo esc_js( $f->unique_id ); ?>() {
-			if (navigator.geolocation) {
-				var options = <?php echo $geolocation_options; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- raw JS object literal (default "{timeout: 5000}") emitted inside <script>; esc_js would corrupt the literal. ?>;
-				navigator.geolocation.getCurrentPosition(function (position) {
-					document.getElementById('Lat_<?php echo esc_js( $f->unique_id ); ?>').value = position.coords.latitude;
-					document.getElementById('Lng_<?php echo esc_js( $f->unique_id ); ?>').value = position.coords.longitude;
-					bp_ps_address_<?php echo esc_js( $f->unique_id ); ?>(position);
-				}, function (error) {
-					alert('ERROR ' + error.code + ': ' + error.message);
-				}, options);
-			} else {
-				alert('ERROR: Geolocation is not supported by this browser');
-			}
-		}
-
-		jQuery('#Btn_<?php echo esc_js( $f->unique_id ); ?>').click(bp_ps_locate_<?php echo esc_js( $f->unique_id ); ?>);
-
-		function bp_ps_address_<?php echo esc_js( $f->unique_id ); ?>(position) {
-			var geocoder = new google.maps.Geocoder;
-			var latlng = {lat: position.coords.latitude, lng: position.coords.longitude};
-			geocoder.geocode({'location': latlng}, function (results, status) {
-				if (status === 'OK') {
-					if (results[0]) {
-						document.getElementById('<?php echo esc_js( $f->unique_id ); ?>').value = results[0].formatted_address;
-					} else {
-						alert('ERROR: Geocoder found no results');
-					}
-				} else {
-					alert('ERROR: Geocoder status: ' + status);
-				}
-			});
-		}
-	</script>
 	<?php
+	/*
+	 * Attach the Google Maps autocomplete/geolocation init to the enqueued field
+	 * script handle ($f->script_handle, enqueued above) instead of echoing a raw
+	 * <script>. The $autocomplete_options / $geolocation_options values are, by the
+	 * documented filter contract (bp_ps_autocomplete_options / bp_ps_geolocation_options),
+	 * raw JS object literals (defaults "{types: ['geocode']}" / "{timeout: 5000}") that
+	 * may be customized to arbitrary JS expressions, so they are injected verbatim here
+	 * exactly as they were emitted inline before — wp_json_encode() would break that
+	 * contract. $unique_id is passed through esc_js() to match prior escaping.
+	 */
+	$unique_id = esc_js( $f->unique_id );
+	$inline_js = <<<JS
+function bp_ps_{$unique_id}() {
+	var input = document.getElementById('{$unique_id}');
+	var options = {$autocomplete_options};
+	var autocomplete = new google.maps.places.Autocomplete(input, options);
+	google.maps.event.addListener(autocomplete, 'place_changed', function () {
+		var place = autocomplete.getPlace();
+		document.getElementById('Lat_{$unique_id}').value = place.geometry.location.lat();
+		document.getElementById('Lng_{$unique_id}').value = place.geometry.location.lng();
+	});
+}
+
+jQuery(document).ready(bp_ps_{$unique_id});
+
+function bp_ps_locate_{$unique_id}() {
+	if (navigator.geolocation) {
+		var options = {$geolocation_options};
+		navigator.geolocation.getCurrentPosition(function (position) {
+			document.getElementById('Lat_{$unique_id}').value = position.coords.latitude;
+			document.getElementById('Lng_{$unique_id}').value = position.coords.longitude;
+			bp_ps_address_{$unique_id}(position);
+		}, function (error) {
+			alert('ERROR ' + error.code + ': ' + error.message);
+		}, options);
+	} else {
+		alert('ERROR: Geolocation is not supported by this browser');
+	}
+}
+
+jQuery('#Btn_{$unique_id}').click(bp_ps_locate_{$unique_id});
+
+function bp_ps_address_{$unique_id}(position) {
+	var geocoder = new google.maps.Geocoder;
+	var latlng = {lat: position.coords.latitude, lng: position.coords.longitude};
+	geocoder.geocode({'location': latlng}, function (results, status) {
+		if (status === 'OK') {
+			if (results[0]) {
+				document.getElementById('{$unique_id}').value = results[0].formatted_address;
+			} else {
+				alert('ERROR: Geocoder found no results');
+			}
+		} else {
+			alert('ERROR: Geocoder status: ' + status);
+		}
+	});
+}
+JS;
+
+	wp_add_inline_script( $bb_ps_script_handle, $inline_js );
 }
 
 /**

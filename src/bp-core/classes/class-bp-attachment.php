@@ -287,8 +287,11 @@ abstract class BP_Attachment {
 	 * @return string
 	 */
 	public function sanitize_utf8_filename( $retval ) {
+		// wp_is_valid_utf8() was added in WP 6.9.0; fall back to seems_utf8() on older versions.
+		$is_valid_utf8 = function_exists( 'wp_is_valid_utf8' ) ? wp_is_valid_utf8( $retval ) : seems_utf8( $retval );
+
 		// PHP 5.4+ or with PECL intl 2.0+
-		if ( function_exists( 'transliterator_transliterate' ) && seems_utf8( $retval ) ) {
+		if ( function_exists( 'transliterator_transliterate' ) && $is_valid_utf8 ) {
 			$retval = transliterator_transliterate( 'Any-Latin; Latin-ASCII; [\u0080-\u7fff] remove', $retval );
 
 			// Older.
@@ -299,7 +302,9 @@ abstract class BP_Attachment {
 			$new_retval = wp_check_invalid_utf8( $retval, true );
 
 			// Still here? use iconv().
-			if ( empty( $new_retval ) && function_exists( 'iconv' ) && seems_utf8( $retval ) ) {
+			// wp_is_valid_utf8() was added in WP 6.9.0; fall back to seems_utf8() on older versions.
+			$is_valid_utf8 = function_exists( 'wp_is_valid_utf8' ) ? wp_is_valid_utf8( $retval ) : seems_utf8( $retval );
+			if ( empty( $new_retval ) && function_exists( 'iconv' ) && $is_valid_utf8 ) {
 				$retval = iconv( 'UTF-8', 'ASCII//TRANSLIT//IGNORE', $retval );
 			} else {
 				$retval = $new_retval;

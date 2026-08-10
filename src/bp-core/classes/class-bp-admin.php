@@ -359,7 +359,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 					$this->settings_page,
 					'bp_core_admin_backpat_menu',
 					'none',
-					3
+					58.9
 				);
 			}
 		}
@@ -396,7 +396,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 				$this->settings_page,
 				'bp_core_admin_backpat_menu',
 				'none',
-				3
+				58.9
 			);
 
 			$hooks[] = add_submenu_page(
@@ -411,8 +411,8 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			// Add the Separator.
 			// $hooks[] = add_submenu_page(
 			// $this->settings_page,
-			// __( '', 'buddyboss' ),
-			// __( '', 'buddyboss' ),
+			// __( '', 'buddyboss-platform' ),
+			// __( '', 'buddyboss-platform' ),
 			// $this->capability,
 			// 'bp-plugin-separator-notice',
 			// ''

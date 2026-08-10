@@ -2300,7 +2300,21 @@ function bb_add_default_cover_image_inline_css() {
 		}
 	}
 
-	wp_add_inline_style( 'bp-nouveau', $css_rules );
+	/*
+	 * Deliberately NOT attached to the bp-nouveau stylesheet: themes such as
+	 * BuddyBoss Theme dequeue/replace that handle (timing varies by theme), and
+	 * inline CSS attached to a handle that never prints is silently dropped —
+	 * while this function includes theme-specific rules (.bs-group-cover) that
+	 * must still print there. A dedicated src-less handle prints under every
+	 * theme, matching the raw <style> output this replaced. The ReadyLaunch
+	 * asset sweep (bb_dequeue_styles()) strips src-less handles it cannot
+	 * whitelist by path, so this handle is listed in its $allow_suffix — it
+	 * runs on hybrid pages (e.g. forum-enabled member profiles) that still
+	 * render this cover markup.
+	 */
+	wp_register_style( 'bb-default-cover-image', false, array(), bp_get_version() );
+	wp_enqueue_style( 'bb-default-cover-image' );
+	wp_add_inline_style( 'bb-default-cover-image', $css_rules );
 }
 add_action( 'bp_enqueue_scripts', 'bb_add_default_cover_image_inline_css', 12 );
 

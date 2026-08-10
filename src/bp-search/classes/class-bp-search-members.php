@@ -1589,12 +1589,9 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 
 					// Cache WordPress translations to avoid repeated function calls.
 					if ( ! isset( $translation_cache[ $cache_key ] ) ) {
-						$translation_cache[ $cache_key ] = array(
-							// Get singular form translation (e.g., "one year" for "year").
-							'singular' => _n( '%s ' . $unit['singular'], '%s ' . $unit['plural'], 1, 'buddyboss-platform' ), // phpcs:ignore WordPress.WP.I18n.NonSingularStringLiteralSingle,WordPress.WP.I18n.NonSingularStringLiteralPlural -- Intentional runtime lookup of WordPress core's existing time-unit translations; cannot be a static literal.
-							// Get plural form translation (e.g., "two years" for "years").
-							'plural'   => _n( '%s ' . $unit['singular'], '%s ' . $unit['plural'], 2, 'buddyboss-platform' ), // phpcs:ignore WordPress.WP.I18n.NonSingularStringLiteralSingle,WordPress.WP.I18n.NonSingularStringLiteralPlural -- Intentional runtime lookup of WordPress core's existing time-unit translations; cannot be a static literal.
-						);
+						// Resolve the singular/plural translations using literal gettext strings
+						// so the string parser can extract them (WordPress.org i18n rule).
+						$translation_cache[ $cache_key ] = $this->bb_get_time_unit_translation( $unit['singular'] );
 
 						// Clean up cache if it exceeds the size limit.
 						if ( count( $translation_cache ) > self::$max_cache_size ) {
@@ -1614,9 +1611,11 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 						$cache_key = $unit . '_' . $actual_amount;
 
 						if ( ! isset( $translation_cache[ $cache_key ] ) ) {
+							// Translate the fixed string time unit using a literal gettext string.
+							$unit_translation                = $this->bb_get_time_string_translation( $unit );
 							$translation_cache[ $cache_key ] = array(
-								'singular' => __( $unit, 'buddyboss-platform' ), // phpcs:ignore WordPress.WP.I18n.NonSingularStringLiteralText -- Intentional runtime lookup of WordPress core's existing time-unit translations; cannot be a static literal.
-								'plural'   => __( $unit, 'buddyboss-platform' ), // phpcs:ignore WordPress.WP.I18n.NonSingularStringLiteralText -- Intentional runtime lookup of WordPress core's existing time-unit translations; cannot be a static literal.
+								'singular' => $unit_translation,
+								'plural'   => $unit_translation,
 							);
 
 							// Clean up cache if it exceeds the size limit.
@@ -1634,6 +1633,141 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 			}
 
 			return $search_term;
+		}
+
+		/**
+		 * Get the translated singular and plural forms for a known time unit.
+		 *
+		 * The gettext strings and text domain are passed as literals so the string
+		 * translation parser can extract them (WordPress.org i18n rule: no variables
+		 * in translation function arguments). The unit is one of the fixed, enumerable
+		 * values defined in bb_translate_time_units().
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param string $singular The English singular time unit (e.g. "year").
+		 *
+		 * @return array {
+		 *     Translated singular and plural forms.
+		 *
+		 *     @type string $singular Translated singular form (e.g. "%s year").
+		 *     @type string $plural   Translated plural form (e.g. "%s years").
+		 * }
+		 */
+		private function bb_get_time_unit_translation( $singular ) {
+			switch ( $singular ) {
+				case 'year':
+					return array(
+						/* translators: %s: number of years. */
+						'singular' => _n( '%s year', '%s years', 1, 'buddyboss-platform' ),
+						/* translators: %s: number of years. */
+						'plural'   => _n( '%s year', '%s years', 2, 'buddyboss-platform' ),
+					);
+				case 'month':
+					return array(
+						/* translators: %s: number of months. */
+						'singular' => _n( '%s month', '%s months', 1, 'buddyboss-platform' ),
+						/* translators: %s: number of months. */
+						'plural'   => _n( '%s month', '%s months', 2, 'buddyboss-platform' ),
+					);
+				case 'week':
+					return array(
+						/* translators: %s: number of weeks. */
+						'singular' => _n( '%s week', '%s weeks', 1, 'buddyboss-platform' ),
+						/* translators: %s: number of weeks. */
+						'plural'   => _n( '%s week', '%s weeks', 2, 'buddyboss-platform' ),
+					);
+				case 'day':
+					return array(
+						/* translators: %s: number of days. */
+						'singular' => _n( '%s day', '%s days', 1, 'buddyboss-platform' ),
+						/* translators: %s: number of days. */
+						'plural'   => _n( '%s day', '%s days', 2, 'buddyboss-platform' ),
+					);
+				case 'hour':
+					return array(
+						/* translators: %s: number of hours. */
+						'singular' => _n( '%s hour', '%s hours', 1, 'buddyboss-platform' ),
+						/* translators: %s: number of hours. */
+						'plural'   => _n( '%s hour', '%s hours', 2, 'buddyboss-platform' ),
+					);
+				case 'minute':
+					return array(
+						/* translators: %s: number of minutes. */
+						'singular' => _n( '%s minute', '%s minutes', 1, 'buddyboss-platform' ),
+						/* translators: %s: number of minutes. */
+						'plural'   => _n( '%s minute', '%s minutes', 2, 'buddyboss-platform' ),
+					);
+			}
+
+			// Unknown unit: fall back to the raw value so behaviour is unchanged.
+			return array(
+				'singular' => '%s ' . $singular,
+				'plural'   => '%s ' . $singular,
+			);
+		}
+
+		/**
+		 * Translate a fixed string time unit (e.g. "a year", "sometime").
+		 *
+		 * The gettext strings and text domain are passed as literals so the string
+		 * translation parser can extract them. The value is one of the fixed string
+		 * time units defined in bb_translate_time_units().
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param string $unit The English string time unit (e.g. "a year").
+		 *
+		 * @return string The translated string time unit.
+		 */
+		private function bb_get_time_string_translation( $unit ) {
+			switch ( $unit ) {
+				case 'a year':
+					return __( 'a year', 'buddyboss-platform' );
+				case 'sometime':
+					return __( 'sometime', 'buddyboss-platform' );
+				case 'a week':
+					return __( 'a week', 'buddyboss-platform' );
+				case 'a day':
+					return __( 'a day', 'buddyboss-platform' );
+				case 'an hour':
+					return __( 'an hour', 'buddyboss-platform' );
+				case 'a minute':
+					return __( 'a minute', 'buddyboss-platform' );
+			}
+
+			// Unknown unit: return as-is, matching __() with no available translation.
+			return $unit;
+		}
+
+		/**
+		 * Translate a fixed direction word into its "%s <direction>" form.
+		 *
+		 * The gettext strings and text domain are passed as literals so the string
+		 * translation parser can extract them. The direction is one of the fixed set
+		 * used across the elapsed-time parsing helpers ("ago", "since", "from now").
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param string $direction The English direction word (e.g. "ago").
+		 *
+		 * @return string The translated "%s <direction>" form (e.g. "%s ago").
+		 */
+		private function bb_get_direction_translation( $direction ) {
+			switch ( $direction ) {
+				case 'ago':
+					/* translators: %s: amount of time (e.g. "2 days"). */
+					return __( '%s ago', 'buddyboss-platform' );
+				case 'since':
+					/* translators: %s: amount of time (e.g. "2 days"). */
+					return __( '%s since', 'buddyboss-platform' );
+				case 'from now':
+					/* translators: %s: amount of time (e.g. "2 days"). */
+					return __( '%s from now', 'buddyboss-platform' );
+			}
+
+			// Unknown direction: return as-is so behaviour matches the original.
+			return '%s ' . $direction;
 		}
 
 		/**
@@ -1660,7 +1794,7 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 				// Cache WordPress translations for direction words.
 				if ( ! isset( $translation_cache[ $cache_key ] ) ) {
 					// Get the translation for this direction word (e.g., "ago" for "ago").
-					$translation_cache[ $cache_key ] = __( '%s ' . $direction, 'buddyboss-platform' ); // phpcs:ignore WordPress.WP.I18n.NonSingularStringLiteralText -- Intentional runtime lookup of WordPress core's existing time-direction translations; cannot be a static literal.
+					$translation_cache[ $cache_key ] = $this->bb_get_direction_translation( $direction );
 
 					// Clean up cache if it exceeds the size limit.
 					if ( count( $translation_cache ) > self::$max_cache_size ) {
@@ -1830,8 +1964,8 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 			// Process each direction word to remove it from the translation.
 			foreach ( $directions as $direction ) {
 				// Get the WordPress translation for this direction word.
-				// Example: __('%s ago', 'buddyboss') → "since".
-				$direction_translation = __( '%s ' . $direction, 'buddyboss-platform' ); // phpcs:ignore WordPress.WP.I18n.NonSingularStringLiteralText -- Intentional runtime lookup of WordPress core's existing time-direction translations; cannot be a static literal.
+				// Example: __('%s ago', 'buddyboss-platform') → "since".
+				$direction_translation = $this->bb_get_direction_translation( $direction );
 
 				// Remove the %s placeholder to get just the direction word.
 				// Example: "since %s" → "since".

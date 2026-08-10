@@ -16,14 +16,53 @@ defined( 'ABSPATH' ) || exit;
 
 wp_enqueue_script( 'bp-select2' );
 wp_enqueue_style( 'bp-select2' );
-wp_enqueue_script( 'jquery-magnific-popup' );
-wp_enqueue_style( 'jquery-magnific-popup' );
 $min = bp_core_get_minified_asset_suffix();
 wp_enqueue_style( 'bb-rl-login-fonts', buddypress()->plugin_url . "bp-templates/bp-nouveau/readylaunch/assets/fonts/fonts{$min}.css", array(), bp_get_version() );
 wp_enqueue_style( 'bb-rl-login-style-icons', buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/icons/css/bb-icons-rl.min.css', array(), bp_get_version() );
 wp_style_add_data( 'bb-rl-login-style-icons', 'rtl', 'replace' );
 wp_enqueue_style( 'bb-rl-login-style', buddypress()->plugin_url . "bp-templates/bp-nouveau/readylaunch/css/login{$min}.css", array(), bp_get_version() );
 wp_style_add_data( 'bb-rl-login-style', 'rtl', 'replace' );
+
+/*
+ * Registration page behaviour, attached via the script API instead of a raw
+ * <script> tag. A nowdoc keeps the JS free of PHP interpolation ($this, $input
+ * etc. are jQuery variables, not PHP). The code is carried by a dedicated
+ * src-less footer handle that depends on the real Magnific Popup handle
+ * (bp-nouveau-magnific-popup, registered on bp_enqueue_scripts before this
+ * page's wp_head() runs the enqueue hooks), so the library always loads first
+ * and the inline code prints with wp_footer() below.
+ */
+$bb_rl_register_js = <<<'JS'
+jQuery( document ).ready( function( $ ) {
+	$( '.register-page select[multiple]' ).select2();
+	$( '.bb-password-wrap .bb-toggle-password' ).on( 'click', function( e ) {
+		e.preventDefault();
+		var $this = $( this );
+		var $input = $this.closest( '.bb-password-wrap' ).find( 'input' );
+		var $icon = $this.find( 'i' );
+		if ( $input.attr( 'type' ) === 'password' ) {
+			$input.attr( 'type', 'text' );
+			$icon.addClass( 'bb-icon-eye-slash' ).removeClass( 'bb-icon-eye' );
+		} else {
+			$input.attr( 'type', 'password' );
+			$icon.addClass( 'bb-icon-eye' ).removeClass( 'bb-icon-eye-slash' );
+		}
+	} );
+	if ( $( '.popup-modal-register' ).length ) {
+		$( '.popup-modal-register' ).magnificPopup(
+			{
+				type            : 'inline',
+				preloader       : false,
+				fixedBgPos      : true,
+				fixedContentPos : true
+			}
+		);
+	}
+} );
+JS;
+wp_register_script( 'bb-readylaunch-register', false, array( 'jquery', 'bp-select2', 'bp-nouveau-magnific-popup' ), bp_get_version(), true );
+wp_enqueue_script( 'bb-readylaunch-register' );
+wp_add_inline_script( 'bb-readylaunch-register', $bb_rl_register_js );
 ?>
 
 <html <?php language_attributes(); ?>>
@@ -58,36 +97,6 @@ wp_style_add_data( 'bb-rl-login-style', 'rtl', 'replace' );
 		endif;
 		?>
 	</div>
-	<script>
-		jQuery( document ).ready( function( $ ) {
-			$( '.register-page select[multiple]' ).select2();
-
-			$( '.bb-password-wrap .bb-toggle-password' ).on( 'click', function( e ) {
-				e.preventDefault();
-				var $this = $( this );
-				var $input = $this.closest( '.bb-password-wrap' ).find( 'input' );
-				var $icon = $this.find( 'i' );
-				if ( $input.attr( 'type' ) === 'password' ) {
-					$input.attr( 'type', 'text' );
-					$icon.addClass( 'bb-icon-eye-slash' ).removeClass( 'bb-icon-eye' );
-				} else {
-					$input.attr( 'type', 'password' );
-					$icon.addClass( 'bb-icon-eye' ).removeClass( 'bb-icon-eye-slash' );
-				}
-			} );
-
-			if ( $( '.popup-modal-register' ).length ) {
-				$( '.popup-modal-register' ).magnificPopup(
-					{
-						type            : 'inline',
-						preloader       : false,
-						fixedBgPos      : true,
-						fixedContentPos : true
-					}
-				);
-			}
-		} );
-	</script>
 	<?php wp_footer(); ?>
 </body>
 </html>

@@ -416,8 +416,15 @@ add_action( 'bp_enqueue_scripts', 'bp_core_cover_image_scripts' );
 function bp_core_add_jquery_cropper() {
 	wp_enqueue_style( 'jcrop' );
 	wp_enqueue_script( 'jcrop', array( 'jquery' ) );
-	add_action( 'wp_head', 'bp_core_add_cropper_inline_js' );
-	add_action( 'wp_head', 'bp_core_add_cropper_inline_css' );
+
+	/*
+	 * Attach the cropper's inline JS/CSS to the enqueued `jcrop` handles instead
+	 * of printing raw <script>/<style> tags in wp_head. This function runs on
+	 * `wp_print_scripts`, which fires before the head items are printed, so
+	 * wp_add_inline_script()/wp_add_inline_style() still attach to `jcrop` in time.
+	 */
+	bp_core_add_cropper_inline_js();
+	bp_core_add_cropper_inline_css();
 }
 
 /**
@@ -485,43 +492,50 @@ function bp_core_add_cropper_inline_js() {
 		$crop_bottom = $image[1] - $crop_top;
 	}
 
-	?>
-
-	<script>
-		jQuery(window).load( function(){
-			jQuery('#avatar-to-crop').Jcrop({
+	$inline_js = sprintf(
+		'jQuery(window).load( function(){
+			jQuery(\'#avatar-to-crop\').Jcrop({
 				onChange: showPreview,
 				onSelect: updateCoords,
-				aspectRatio: <?php echo (int) $aspect_ratio; ?>,
-				setSelect: [ <?php echo (int) $crop_left; ?>, <?php echo (int) $crop_top; ?>, <?php echo (int) $crop_right; ?>, <?php echo (int) $crop_bottom; ?> ]
+				aspectRatio: %1$d,
+				setSelect: [ %2$d, %3$d, %4$d, %5$d ]
 			});
 		});
 
 		function updateCoords(c) {
-			jQuery('#x').val(c.x);
-			jQuery('#y').val(c.y);
-			jQuery('#w').val(c.w);
-			jQuery('#h').val(c.h);
+			jQuery(\'#x\').val(c.x);
+			jQuery(\'#y\').val(c.y);
+			jQuery(\'#w\').val(c.w);
+			jQuery(\'#h\').val(c.h);
 		}
 
 		function showPreview(coords) {
 			if ( parseInt(coords.w) > 0 ) {
-				var fw = <?php echo (int) $full_width; ?>;
-				var fh = <?php echo (int) $full_height; ?>;
+				var fw = %6$d;
+				var fh = %7$d;
 				var rx = fw / coords.w;
 				var ry = fh / coords.h;
 
-				jQuery( '#avatar-crop-preview' ).css({
-					width: Math.round(rx * <?php echo (int) $image[0]; ?>) + 'px',
-					height: Math.round(ry * <?php echo (int) $image[1]; ?>) + 'px',
-					marginLeft: '-' + Math.round(rx * coords.x) + 'px',
-					marginTop: '-' + Math.round(ry * coords.y) + 'px'
+				jQuery( \'#avatar-crop-preview\' ).css({
+					width: Math.round(rx * %8$d) + \'px\',
+					height: Math.round(ry * %9$d) + \'px\',
+					marginLeft: \'-\' + Math.round(rx * coords.x) + \'px\',
+					marginTop: \'-\' + Math.round(ry * coords.y) + \'px\'
 				});
 			}
-		}
-	</script>
+		}',
+		(int) $aspect_ratio,
+		(int) $crop_left,
+		(int) $crop_top,
+		(int) $crop_right,
+		(int) $crop_bottom,
+		(int) $full_width,
+		(int) $full_height,
+		(int) $image[0],
+		(int) $image[1]
+	);
 
-	<?php
+	wp_add_inline_script( 'jcrop', $inline_js );
 }
 
 /**
@@ -530,20 +544,20 @@ function bp_core_add_cropper_inline_js() {
  * @since BuddyPress 1.1.0
  */
 function bp_core_add_cropper_inline_css() {
-	?>
-
-	<style>
-		.jcrop-holder { float: left; margin: 0 20px 20px 0; text-align: left; }
-		#avatar-crop-pane { width: <?php echo esc_html( bp_core_avatar_full_width() ); ?>px; height: <?php echo esc_html( bp_core_avatar_full_height() ); ?>px; overflow: hidden; }
+	$inline_css = sprintf(
+		'.jcrop-holder { float: left; margin: 0 20px 20px 0; text-align: left; }
+		#avatar-crop-pane { width: %1$spx; height: %2$spx; overflow: hidden; }
 		#avatar-crop-submit { margin: 20px 0; }
 		.jcrop-holder img,
 		#avatar-crop-pane img,
 		#avatar-upload-form img,
 		#create-group-form img,
-		#group-settings-form img { border: none !important; max-width: none !important; }
-	</style>
+		#group-settings-form img { border: none !important; max-width: none !important; }',
+		esc_html( bp_core_avatar_full_width() ),
+		esc_html( bp_core_avatar_full_height() )
+	);
 
-	<?php
+	wp_add_inline_style( 'jcrop', $inline_css );
 }
 
 /**
@@ -552,6 +566,15 @@ function bp_core_add_cropper_inline_css() {
  * @since BuddyPress 1.1.0
  */
 function bp_core_add_ajax_url_js() {
+	/*
+	 * Left as an inline <script> deliberately: this defines the global `ajaxurl`
+	 * JS variable on every front-end page (via wp_head) for themes/plugins that
+	 * rely on it, mirroring how WordPress core exposes `ajaxurl` in wp-admin.
+	 * There is no single script handle enqueued on every front-end page to
+	 * attach it to; binding it to a BP-specific handle (e.g. bp-nouveau) would
+	 * drop `ajaxurl` on non-BuddyPress pages and break theme AJAX. The value is
+	 * escaped with esc_url(). See also the localized `ajaxurl` in bp_core_get_js_strings().
+	 */
 	?>
 
 	<script>var ajaxurl = '<?php echo esc_url( bp_core_ajax_url() ); ?>';</script>
@@ -707,6 +730,10 @@ function bp_add_cover_image_inline_css( $return = false ) {
 		if ( ! empty( $inline_css ) ) {
 
 			// Used to get the css when Ajax setting the cover photo.
+			// This <style> string is NOT printed server-side: it is returned in an
+			// AJAX response and injected into the DOM by JS when the cover photo is
+			// changed without a page reload. The normal (non-AJAX) request path below
+			// uses wp_add_inline_style() on the enqueued theme handle.
 			if ( true === $return ) {
 				return array(
 					'css_rules' => '<style>' . "\n" . $inline_css . "\n" . '</style>',
@@ -853,7 +880,8 @@ function bp_core_add_jquery_mask() {
 
 	wp_enqueue_script( 'jquery-mask' );
 
-	add_action( 'wp_footer', 'bp_core_add_jquery_mask_inline_js' );
+	// Attach the telephone-mask inline JS to the enqueued jquery-mask handle.
+	bp_core_add_jquery_mask_inline_js();
 }
 add_action( 'bp_enqueue_scripts', 'bp_core_add_jquery_mask' );
 
@@ -863,23 +891,19 @@ add_action( 'bp_enqueue_scripts', 'bp_core_add_jquery_mask' );
  * @since BuddyBoss 1.0.0
  */
 function bp_core_add_jquery_mask_inline_js() {
-	?>
+	$inline_js = 'jQuery(document).ready(function(){
+		jQuery(".field_type_telephone").each(function(){
+			var $this = jQuery(this),
+				field_id = $this.find(\'.input_mask_details\').data(\'field_id\'),
+				pmask = $this.find(\'.input_mask_details\').data(\'val\');
 
-	<script>
-		jQuery(document).ready(function(){
-			jQuery(".field_type_telephone").each(function(){
-				var $this = jQuery(this),
-					field_id = $this.find('.input_mask_details').data('field_id'),
-					pmask = $this.find('.input_mask_details').data('val');
-
-				if ( field_id && pmask ) {
-					jQuery( '#' + field_id ).mask( pmask ).bind('keypress', function(e){if(e.which == 13){jQuery(this).blur();} } );
-				}
-			});
+			if ( field_id && pmask ) {
+				jQuery( \'#\' + field_id ).mask( pmask ).bind(\'keypress\', function(e){if(e.which == 13){jQuery(this).blur();} } );
+			}
 		});
-	</script>
+	});';
 
-	<?php
+	wp_add_inline_script( 'jquery-mask', $inline_js );
 }
 
 /**

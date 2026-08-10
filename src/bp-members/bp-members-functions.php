@@ -1371,7 +1371,11 @@ function bp_core_delete_account( $user_id = 0 ) {
 		}
 
 		// Bail if current user cannot delete this user.
-		if ( ! current_user_can_for_blog( bp_get_root_blog_id(), 'delete_user', $user_id ) ) {
+		// current_user_can_for_site() was added in WP 6.7.0; fall back to current_user_can_for_blog() on older versions.
+		$bb_can_delete_user = function_exists( 'current_user_can_for_site' )
+			? current_user_can_for_site( bp_get_root_blog_id(), 'delete_user', $user_id )
+			: current_user_can_for_blog( bp_get_root_blog_id(), 'delete_user', $user_id );
+		if ( ! $bb_can_delete_user ) {
 			return false;
 		}
 	}

@@ -285,14 +285,23 @@ $F = bp_profile_search_escaped_form_data( $form_id );
 							<input type="hidden" id="<?php echo esc_attr( $id ); ?>_lat" name="<?php echo esc_attr( $name . '[lat]' ); ?>" value="<?php echo esc_attr( $value['lat'] ); ?>"/>
 							<input type="hidden" id="<?php echo esc_attr( $id ); ?>_lng" name="<?php echo esc_attr( $name . '[lng]' ); ?>" value="<?php echo esc_attr( $value['lng'] ); ?>"/>
 
-							<script>
-								jQuery(function ($) {
-									bp_ps_autocomplete('<?php echo esc_js( $id ); ?>', '<?php echo esc_js( $id ); ?>_lat', '<?php echo esc_js( $id ); ?>_lng');
-									$('#<?php echo esc_js( $id ); ?>_icon').click(function () {
-										bp_ps_locate('<?php echo esc_js( $id ); ?>', '<?php echo esc_js( $id ); ?>_lat', '<?php echo esc_js( $id ); ?>_lng')
-									});
-								});
-							</script>
+							<?php
+							/*
+							 * Attach the location autocomplete/geolocate init to the enqueued
+							 * 'bp-ps-template-form' handle (registered and enqueued in
+							 * bp_profile_search_escaped_form_data()) instead of a raw <script>.
+							 * bp_ps_autocomplete()/bp_ps_locate() are defined in bp-ps-template.js
+							 * shipped by that handle; the field id is passed via wp_json_encode().
+							 */
+							$autocomplete_js = sprintf(
+								'jQuery(function ($) { bp_ps_autocomplete(%1$s, %2$s, %3$s); $(%4$s).click(function () { bp_ps_locate(%1$s, %2$s, %3$s); }); });',
+								wp_json_encode( $id ),
+								wp_json_encode( $id . '_lat' ),
+								wp_json_encode( $id . '_lng' ),
+								wp_json_encode( '#' . $id . '_icon' )
+							);
+							wp_add_inline_script( 'bp-ps-template-form', $autocomplete_js );
+							?>
 							<?php
 							break;
 

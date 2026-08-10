@@ -1204,8 +1204,10 @@ function bbp_get_reply_author_display_name( $reply_id = 0, $viewer_user_id = 0 )
 	}
 
 	// Encode possible UTF8 display names.
-	if ( seems_utf8( $author_name ) === false ) {
-		$author_name = utf8_encode( $author_name );
+	// wp_is_valid_utf8() was added in WP 6.9.0; fall back to seems_utf8() on older versions.
+	$bbp_is_valid_utf8 = function_exists( 'wp_is_valid_utf8' ) ? wp_is_valid_utf8( $author_name ) : seems_utf8( $author_name );
+	if ( false === $bbp_is_valid_utf8 && function_exists( 'mb_convert_encoding' ) ) {
+		$author_name = mb_convert_encoding( $author_name, 'UTF-8', 'ISO-8859-1' );
 	}
 
 	return apply_filters( 'bbp_get_reply_author_display_name', $author_name, $reply_id );

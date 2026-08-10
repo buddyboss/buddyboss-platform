@@ -1244,7 +1244,14 @@ function bp_admin_wp_nav_menu_meta_box() {
 
 	add_meta_box( 'add-buddypress-nav-menu', 'BuddyBoss', 'bp_admin_do_wp_nav_menu_meta_box', 'nav-menus', 'side', 'default' );
 
-	add_action( 'admin_print_footer_scripts', 'bp_admin_wp_nav_menu_restrict_items' );
+	/*
+	 * Priority 9: core prints the enqueued footer scripts from the same hook at
+	 * priority 10 (_wp_footer_scripts, registered during admin bootstrap). The
+	 * restrict-items callback registers/enqueues its script handle, so it must
+	 * run BEFORE the print pass or the handle is enqueued after output and the
+	 * script is silently dropped.
+	 */
+	add_action( 'admin_print_footer_scripts', 'bp_admin_wp_nav_menu_restrict_items', 9 );
 }
 
 /**
@@ -1512,19 +1519,23 @@ function bp_email_plaintext_metabox( $post ) {
  * @since BuddyPress 1.9.0
  */
 function bp_admin_wp_nav_menu_restrict_items() {
-	?>
-	<script>
-		jQuery( '#menu-to-edit' ).on( 'click', 'a.item-edit', function () {
-			var settings = jQuery( this ).closest( '.menu-item-bar' ).next( '.menu-item-settings' );
-			var css_class = settings.find( '.edit-menu-item-classes' );
+	$restrict_js = <<<'JS'
+jQuery( '#menu-to-edit' ).on( 'click', 'a.item-edit', function () {
+	var settings = jQuery( this ).closest( '.menu-item-bar' ).next( '.menu-item-settings' );
+	var css_class = settings.find( '.edit-menu-item-classes' );
 
-			if ( css_class.val().indexOf( 'bp-menu' ) === 0 ) {
-				css_class.attr( 'readonly', 'readonly' );
-				settings.find( '.field-url' ).css( 'display', 'none' );
-			}
-		} );
-	</script>
-	<?php
+	if ( css_class.val().indexOf( 'bp-menu' ) === 0 ) {
+		css_class.attr( 'readonly', 'readonly' );
+		settings.find( '.field-url' ).css( 'display', 'none' );
+	}
+} );
+JS;
+
+	// Attach the behaviour via a dependency-only (src-less) handle so it goes
+	// through the WordPress script API instead of a raw inline <script> tag.
+	wp_register_script( 'bp-admin-nav-menu-restrict', false, array( 'jquery' ), bp_get_version(), true );
+	wp_enqueue_script( 'bp-admin-nav-menu-restrict' );
+	wp_add_inline_script( 'bp-admin-nav-menu-restrict', $restrict_js );
 }
 
 /**
@@ -1716,15 +1727,19 @@ function bp_core_admin_user_manage_spammers() {
  * @since BuddyPress 2.0.0
  */
 function bp_core_admin_user_spammed_js() {
-	?>
-	<script>
-		jQuery( document ).ready( function ( $ ) {
-			$( '.row-actions .ham' ).each( function () {
-				$( this ).closest( 'tr' ).addClass( 'site-spammed' );
-			} );
-		} );
-	</script>
-	<?php
+	$spammed_js = <<<'JS'
+jQuery( document ).ready( function ( $ ) {
+	$( '.row-actions .ham' ).each( function () {
+		$( this ).closest( 'tr' ).addClass( 'site-spammed' );
+	} );
+} );
+JS;
+
+	// Attach the behaviour via a dependency-only (src-less) handle so it goes
+	// through the WordPress script API instead of a raw inline <script> tag.
+	wp_register_script( 'bp-admin-user-spammed', false, array( 'jquery' ), bp_get_version(), true );
+	wp_enqueue_script( 'bp-admin-user-spammed' );
+	wp_add_inline_script( 'bp-admin-user-spammed', $spammed_js );
 }
 
 /**
@@ -1856,6 +1871,12 @@ function bp_member_type_invalid_role_extended_profile_error_callback() {
 	foreach ( $errors as $error ) {
 		$message .= '<p>' . $error['message'] . '</p>';
 	}
+	// The trailing <style> below is emitted at admin_notices time — after the
+	// admin header (and all enqueued styles) have already been printed — and is
+	// conditional on a one-shot transient, so there is no enqueued style handle
+	// in scope to attach wp_add_inline_style() to. It is also already stripped
+	// by the wp_kses_post() call below (post context disallows <style>), so it
+	// stays inline as-is rather than forcing a broken enqueue conversion.
 	$message .= '</div><!-- #error --><style>div.updated{display: none;}</style>';
 	// Write them out to the screen.
 	echo wp_kses_post( $message );
@@ -1962,19 +1983,25 @@ function bb_discussion_page_show_notice_in_avatar_section() {
 		$avatar_notice_html .= '<p>' . $avatar_notice . '</p>';
 		$avatar_notice_html .= '</div>';
 		$avatar_notice_html .= '</div>';
-		?>
 
-		<script type="text/javascript">
-			( function ( $ ) {
-				jQuery( document ).ready( function() {
-					var discussion_avatar_tbl = $( 'body.options-discussion-php #wpbody-content .wrap form table:eq(1)' );
-					if ( discussion_avatar_tbl.find( 'tr:eq(1)' ).hasClass( 'avatar-settings' ) ) {
-						discussion_avatar_tbl.prev().after( '<?php echo wp_kses_post( $avatar_notice_html ); ?>' );
-					}
-				} );
-			} )( jQuery );
-		</script>
-		<?php
+		// Pass the (sanitized) notice markup to JS via wp_json_encode() and attach
+		// the DOM-injection behaviour through a dependency-only (src-less) handle,
+		// replacing the previous raw inline <script> tag.
+		$inline_js = sprintf(
+			'( function ( $ ) {
+	jQuery( document ).ready( function() {
+		var discussion_avatar_tbl = $( \'body.options-discussion-php #wpbody-content .wrap form table:eq(1)\' );
+		if ( discussion_avatar_tbl.find( \'tr:eq(1)\' ).hasClass( \'avatar-settings\' ) ) {
+			discussion_avatar_tbl.prev().after( %s );
+		}
+	} );
+} )( jQuery );',
+			wp_json_encode( wp_kses_post( $avatar_notice_html ) )
+		);
+
+		wp_register_script( 'bb-discussion-avatar-notice', false, array( 'jquery' ), bp_get_version(), true );
+		wp_enqueue_script( 'bb-discussion-avatar-notice' );
+		wp_add_inline_script( 'bb-discussion-avatar-notice', $inline_js );
 	}
 }
 
@@ -2340,18 +2367,23 @@ function bb_disable_multiple_select_situation() {
 	global $typenow;
 
 	if ( function_exists( 'bp_get_email_post_type' ) && bp_get_email_post_type() === $typenow ) {
-		?>
 
-		<script type="text/javascript">
-			jQuery( document ).ready( function ( $ ) {
-				jQuery( document ).on( 'change', '#taxonomy-<?php echo esc_js( bp_get_email_post_type() ); ?>-type input[type="checkbox"]', function () {
-					var group = 'input[type="checkbox"][name="' + jQuery( this ).attr( 'name' ) + '"]';
-					jQuery( group ).not( this ).prop( 'checked', false );
-				} );
-			} );
-		</script>
+		// Pass the email post type to JS via wp_json_encode() and attach the
+		// behaviour through a dependency-only (src-less) handle instead of a raw
+		// inline <script> tag.
+		$inline_js = sprintf(
+			'jQuery( document ).ready( function ( $ ) {
+	jQuery( document ).on( \'change\', \'#taxonomy-\' + %s + \'-type input[type="checkbox"]\', function () {
+		var group = \'input[type="checkbox"][name="\' + jQuery( this ).attr( \'name\' ) + \'"]\';
+		jQuery( group ).not( this ).prop( \'checked\', false );
+	} );
+} );',
+			wp_json_encode( bp_get_email_post_type() )
+		);
 
-		<?php
+		wp_register_script( 'bb-email-single-select', false, array( 'jquery' ), bp_get_version(), true );
+		wp_enqueue_script( 'bb-email-single-select' );
+		wp_add_inline_script( 'bb-email-single-select', $inline_js );
 	}
 }
 

@@ -203,17 +203,24 @@ function bb_block_render_readylaunch_header_block( $attributes = array() ) {
 	if ( function_exists( 'bp_get_option' ) ) {
 		$color_light = bp_get_option( 'bb_rl_color_light', '#4946fe' );
 		$color_dark  = bp_get_option( 'bb_rl_color_dark', '#9747FF' );
-		?>
-		<style>
-			.bb-rl-header-block {
-				--bb-rl-primary-color: <?php echo esc_attr( $color_light ); ?>;
-			}
 
-			.bb-rl-dark-mode .bb-rl-header-block {
-				--bb-rl-primary-color: <?php echo esc_attr( $color_dark ); ?>;
-			}
-		</style>
-		<?php
+		/*
+		 * Attach the dynamic primary-colour CSS variables to a dedicated src-less
+		 * handle registered here in the render callback. It must NOT piggyback on
+		 * bb-icons-rl-css: on ReadyLaunch pages that stylesheet is enqueued during
+		 * wp_enqueue_scripts and has already printed in <head> by the time this
+		 * block renders mid-body, so wp_add_inline_style() against it would be a
+		 * silent no-op. A late-enqueued src-less handle always prints its inline
+		 * CSS via print_late_styles() in the footer.
+		 */
+		$inline_css = sprintf(
+			'.bb-rl-header-block { --bb-rl-primary-color: %1$s; } .bb-rl-dark-mode .bb-rl-header-block { --bb-rl-primary-color: %2$s; }',
+			esc_attr( $color_light ),
+			esc_attr( $color_dark )
+		);
+		wp_register_style( 'bb-readylaunch-header-block-colors', false, array(), bp_get_version() );
+		wp_enqueue_style( 'bb-readylaunch-header-block-colors' );
+		wp_add_inline_style( 'bb-readylaunch-header-block-colors', $inline_css );
 	}
 	?>
 	<header id="masthead" class="bb-rl-header bb-rl-header-block <?php echo esc_attr( $dark_mode_class . ' ' . $align_class ); ?>">

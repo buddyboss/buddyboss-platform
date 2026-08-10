@@ -76,73 +76,85 @@ function bp_moderation_highlight_admin_menu() {
 	if ( ! isset( $_GET['page'] ) || 'bb-settings' !== $_GET['page'] ) {
 		return;
 	}
-	?>
-	<script>
-	( function() {
-		var bbModLastUrl = '';
 
-		function bbModHighlightMenu() {
-			var params = new URLSearchParams( window.location.search );
-			var panel = params.get( 'panel' );
-			var isModeration = 'moderation' === params.get( 'tab' ) && ( 'flagged_members' === panel || 'reported_content' === panel );
-			var menu = document.getElementById( 'adminmenu' );
-			if ( ! menu ) return;
-			var items = menu.querySelectorAll( '.toplevel_page_buddyboss-platform ul li' );
-			for ( var i = 0; i < items.length; i++ ) {
-				var a = items[ i ].querySelector( 'a' );
-				if ( ! a ) continue;
-				var href = a.getAttribute( 'href' ) || '';
-				var isModerationItem = href.indexOf( 'bp-moderation' ) !== -1;
-				var isSettingsItem = href.indexOf( 'bp-settings' ) !== -1;
-				if ( isModeration && isModerationItem ) {
-					items[ i ].classList.add( 'current' );
-					a.classList.add( 'current' );
-				} else if ( isModeration && items[ i ].classList.contains( 'current' ) ) {
-					items[ i ].classList.remove( 'current' );
-					a.classList.remove( 'current' );
-				} else if ( ! isModeration && isModerationItem && items[ i ].classList.contains( 'current' ) ) {
-					// Restore: remove Moderation highlight when leaving flagged/reported panels.
-					items[ i ].classList.remove( 'current' );
-					a.classList.remove( 'current' );
-				} else if ( ! isModeration && isSettingsItem && ! items[ i ].classList.contains( 'current' ) ) {
-					// Restore: re-add Settings highlight when leaving flagged/reported panels.
-					items[ i ].classList.add( 'current' );
-					a.classList.add( 'current' );
-				}
+	$highlight_js = <<<'JS'
+( function() {
+	var bbModLastUrl = '';
+
+	function bbModHighlightMenu() {
+		var params = new URLSearchParams( window.location.search );
+		var panel = params.get( 'panel' );
+		var isModeration = 'moderation' === params.get( 'tab' ) && ( 'flagged_members' === panel || 'reported_content' === panel );
+		var menu = document.getElementById( 'adminmenu' );
+		if ( ! menu ) return;
+		var items = menu.querySelectorAll( '.toplevel_page_buddyboss-platform ul li' );
+		for ( var i = 0; i < items.length; i++ ) {
+			var a = items[ i ].querySelector( 'a' );
+			if ( ! a ) continue;
+			var href = a.getAttribute( 'href' ) || '';
+			var isModerationItem = href.indexOf( 'bp-moderation' ) !== -1;
+			var isSettingsItem = href.indexOf( 'bp-settings' ) !== -1;
+			if ( isModeration && isModerationItem ) {
+				items[ i ].classList.add( 'current' );
+				a.classList.add( 'current' );
+			} else if ( isModeration && items[ i ].classList.contains( 'current' ) ) {
+				items[ i ].classList.remove( 'current' );
+				a.classList.remove( 'current' );
+			} else if ( ! isModeration && isModerationItem && items[ i ].classList.contains( 'current' ) ) {
+				// Restore: remove Moderation highlight when leaving flagged/reported panels.
+				items[ i ].classList.remove( 'current' );
+				a.classList.remove( 'current' );
+			} else if ( ! isModeration && isSettingsItem && ! items[ i ].classList.contains( 'current' ) ) {
+				// Restore: re-add Settings highlight when leaving flagged/reported panels.
+				items[ i ].classList.add( 'current' );
+				a.classList.add( 'current' );
 			}
 		}
+	}
 
-		// Run on initial load.
-		if ( 'loading' === document.readyState ) {
-			document.addEventListener( 'DOMContentLoaded', function() {
-				bbModLastUrl = window.location.href;
-				bbModHighlightMenu();
-			} );
-		} else {
+	// Run on initial load.
+	if ( 'loading' === document.readyState ) {
+		document.addEventListener( 'DOMContentLoaded', function() {
+			bbModLastUrl = window.location.href;
+			bbModHighlightMenu();
+		} );
+	} else {
+		bbModLastUrl = window.location.href;
+		bbModHighlightMenu();
+	}
+
+	// Listen for popstate (browser back/forward).
+	window.addEventListener( 'popstate', function() {
+		if ( window.location.href !== bbModLastUrl ) {
 			bbModLastUrl = window.location.href;
 			bbModHighlightMenu();
 		}
+	} );
 
-		// Listen for popstate (browser back/forward).
-		window.addEventListener( 'popstate', function() {
-			if ( window.location.href !== bbModLastUrl ) {
-				bbModLastUrl = window.location.href;
-				bbModHighlightMenu();
-			}
-		} );
+	// Patch history.replaceState to detect SPA navigation.
+	var origReplaceState = history.replaceState;
+	history.replaceState = function() {
+		origReplaceState.apply( this, arguments );
+		if ( window.location.href !== bbModLastUrl ) {
+			bbModLastUrl = window.location.href;
+			bbModHighlightMenu();
+		}
+	};
+} )();
+JS;
 
-		// Patch history.replaceState to detect SPA navigation.
-		var origReplaceState = history.replaceState;
-		history.replaceState = function() {
-			origReplaceState.apply( this, arguments );
-			if ( window.location.href !== bbModLastUrl ) {
-				bbModLastUrl = window.location.href;
-				bbModHighlightMenu();
-			}
-		};
-	} )();
-	</script>
-	<?php
+	// Emit through the WordPress script API instead of a raw inline <script>.
+	// This runs at admin_head, before footer scripts print, so attach to the
+	// Settings 2.0 app handle when it is enqueued on this screen; otherwise fall
+	// back to a dedicated dependency-only (src-less) handle.
+	$handle = wp_script_is( 'bb-admin-settings', 'enqueued' ) ? 'bb-admin-settings' : 'bp-moderation-menu-highlight';
+
+	if ( 'bp-moderation-menu-highlight' === $handle ) {
+		wp_register_script( $handle, false, array(), bp_get_version(), true );
+		wp_enqueue_script( $handle );
+	}
+
+	wp_add_inline_script( $handle, $highlight_js );
 }
 
 add_action( 'admin_head', 'bp_moderation_highlight_admin_menu' );

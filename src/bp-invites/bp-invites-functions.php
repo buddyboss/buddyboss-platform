@@ -205,12 +205,16 @@ function bp_invites_member_invite_register_screen_message() {
 
 		<?php do_action( 'accept_email_invite_before' ); ?>
 
-		<script>
-			jQuery(document).ready( function() {
-				jQuery("input#signup_email").val("<?php echo esc_js( str_replace( ' ', '+', $email ) ); ?>");
-			});
-		</script>
-
+		<?php
+		// Register a dedicated (source-less) handle to carry the invite register-screen
+		// behaviour as inline scripts instead of printing raw <script> tags.
+		wp_register_script( 'bp-invites-register-screen', false, array( 'jquery' ), bp_get_version(), true );
+		wp_enqueue_script( 'bp-invites-register-screen' );
+		wp_add_inline_script(
+			'bp-invites-register-screen',
+			'jQuery(document).ready( function() { jQuery("input#signup_email").val( ' . wp_json_encode( str_replace( ' ', '+', $email ) ) . ' ); } );'
+		);
+		?>
 
 		<?php
 		$bp_get_invitee_email = bp_invites_member_invite_get_invitations_by_invited_email( $email );
@@ -256,21 +260,22 @@ function bp_invites_member_invite_register_screen_message() {
 			$get_invite_profile_type  = get_post_meta( $post_id, '_bp_invitee_member_type', true );
 			if ( isset( $get_invite_profile_type ) && '' !== $get_invite_profile_type ) {
 				$member_type_post_id = bp_member_type_post_by_type( $get_invite_profile_type );
-				?>
-				<script>
-					jQuery( document ).ready( function () {
-						// On form submission remove disabled attribute from the select.
-						jQuery( "#signup-form" ).on( "submit", function() {
-							jQuery( ".field_type_membertypes fieldset select" ).attr( "disabled", false );
-						} );
 
-						if ( jQuery( ".field_type_membertypes" ).length ) {
-							jQuery( ".field_type_membertypes fieldset select" ).attr( 'disabled', 'disabled' );
-							jQuery( ".field_type_membertypes fieldset select" ).val( "<?php echo esc_js( $member_type_post_id ); ?>" );
-						}
-					} );
-				</script>
-				<?php
+				// Attach the member-type select behaviour as an inline script on the
+				// dedicated invite register-screen handle instead of a raw <script> tag.
+				wp_register_script( 'bp-invites-register-screen', false, array( 'jquery' ), bp_get_version(), true );
+				wp_enqueue_script( 'bp-invites-register-screen' );
+				$member_type_js = 'jQuery( document ).ready( function () {' .
+					// On form submission remove disabled attribute from the select.
+					'jQuery( "#signup-form" ).on( "submit", function() {' .
+						'jQuery( ".field_type_membertypes fieldset select" ).attr( "disabled", false );' .
+					'} );' .
+					'if ( jQuery( ".field_type_membertypes" ).length ) {' .
+						'jQuery( ".field_type_membertypes fieldset select" ).attr( "disabled", "disabled" );' .
+						'jQuery( ".field_type_membertypes fieldset select" ).val( ' . wp_json_encode( (string) $member_type_post_id ) . ' );' .
+					'}' .
+				'} );';
+				wp_add_inline_script( 'bp-invites-register-screen', $member_type_js );
 
 				// Set member type param for signup fields display.
 				add_filter(

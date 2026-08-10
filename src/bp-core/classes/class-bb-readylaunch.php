@@ -251,7 +251,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			add_action( 'login_enqueue_scripts', array( $this, 'bb_rl_login_enqueue_scripts' ), 999 );
 			add_action( 'login_head', array( $this, 'bb_rl_login_header' ), 999 );
 			add_filter( 'login_headerurl', array( $this, 'bb_rl_login_header_url' ) );
-			add_action( 'login_footer', array( $this, 'bb_rl_login_footer' ), 999 );
+			add_action( 'login_footer', array( $this, 'bb_rl_login_footer' ), 5 );
 			add_filter( 'login_message', array( $this, 'bb_rl_signin_login_message' ) );
 			add_action( 'login_form', array( $this, 'bb_rl_login_custom_form' ) );
 
@@ -286,7 +286,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			add_action( 'bp_init', array( $this, 'bb_rl_init' ), 9 );
 
 			// Add Dynamic colours.
-			add_action( 'wp_head', array( $this, 'bb_rl_dynamic_colors' ) );
+			add_action( 'wp_enqueue_scripts', array( $this, 'bb_rl_dynamic_colors' ), 20 );
 
 			add_action( 'wp_ajax_bb_fetch_header_messages', array( $this, 'bb_fetch_header_messages' ) );
 			add_action( 'wp_ajax_bb_fetch_header_notifications', array( $this, 'bb_fetch_header_notifications' ) );
@@ -1342,6 +1342,8 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			$allow_suffix = array(
 				'bb-readylaunch',
 				'query-monitor',
+				// Src-less platform alias handles (no $src to whitelist by path).
+				'bb-default-cover-image',
 			);
 
 			// Dequeue and deregister scripts.
@@ -2719,25 +2721,32 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		/**
 		 * Modify the login footer.
 		 *
+		 * Registers the login footer behaviour as an inline script on a dedicated
+		 * handle (printed by wp_print_footer_scripts on login_footer, priority 20)
+		 * instead of printing a raw <script> tag. This callback runs on login_footer
+		 * at priority 5 so the handle is enqueued before the footer scripts print.
+		 *
 		 * @since BuddyBoss 2.9.00
 		 */
 		public function bb_rl_login_footer() {
-			?>
-			<script>
-				jQuery( document ).ready( function ( $ ) {
-					var $forgetMeNot = $( '.login p.forgetmenot' );
-					var $lostMeNot = $( '.login p.lostmenot' );
-					$( $lostMeNot ).before( $forgetMeNot );
+			wp_register_script( 'bb-rl-login', false, array( 'jquery' ), bp_get_version(), true );
+			wp_enqueue_script( 'bb-rl-login' );
 
-					var $updatedClose = $( '.bb-rl-updated-close' );
-					if ( $updatedClose.length > 0 ) {
-						$updatedClose.on( 'click', function() {
-							$( this ).closest( '.message' ).hide();
-						} );
-					}
-				} );
-			</script>
-			<?php
+			// Nowdoc so the $-prefixed jQuery variables are NOT interpolated by PHP.
+			$login_footer_js = <<<'JS'
+jQuery( document ).ready( function ( $ ) {
+	var $forgetMeNot = $( '.login p.forgetmenot' );
+	var $lostMeNot = $( '.login p.lostmenot' );
+	$( $lostMeNot ).before( $forgetMeNot );
+	var $updatedClose = $( '.bb-rl-updated-close' );
+	if ( $updatedClose.length > 0 ) {
+		$updatedClose.on( 'click', function() {
+			$( this ).closest( '.message' ).hide();
+		} );
+	}
+} );
+JS;
+			wp_add_inline_script( 'bb-rl-login', $login_footer_js );
 		}
 
 		/**
@@ -2958,42 +2967,46 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 
 			// Generate color shades for dark mode (500 is base).
 			$dark_shades = $this->bb_rl_generate_color_shades( $color_dark );
-			?>
-			<style>
-				:root {
-					/* Light mode color shades. */
-					--bb-rl-background-brand-secondary-color: <?php echo esc_attr( $light_shades[100] ); ?>;
-					--bb-rl-background-brand-secondary-hover-color: <?php echo esc_attr( $light_shades[200] ); ?>;
-					--bb-rl-background-brand-disabled-color: <?php echo esc_attr( $light_shades[400] ); ?>;
-					--bb-rl-icon-brand-disabled-color: <?php echo esc_attr( $light_shades[400] ); ?>;
-					--bb-rl-background-brand-primary-hover-color: <?php echo esc_attr( $light_shades[600] ); ?>;
-					--bb-rl-text-brand-secondary-color: <?php echo esc_attr( $light_shades[800] ); ?>;
-					--bb-rl-icon-brand-primary-color: <?php echo esc_attr( $light_shades[800] ); ?>;
-					--bb-rl-border-brand-primary-color: <?php echo esc_attr( $light_shades[800] ); ?>;
 
-					/* Keep backward compatibility. */
-					--bb-rl-primary-color: <?php echo esc_attr( $color_light ); ?>;
-				}
+			// Build the dynamic colour CSS. Values are escaped with esc_attr(), preserving
+			// the exact sanitization used when this was printed as an inline <style> block.
+			$dynamic_css = ':root {' .
+				/* Light mode color shades. */
+				'--bb-rl-background-brand-secondary-color: ' . esc_attr( $light_shades[100] ) . ';' .
+				'--bb-rl-background-brand-secondary-hover-color: ' . esc_attr( $light_shades[200] ) . ';' .
+				'--bb-rl-background-brand-disabled-color: ' . esc_attr( $light_shades[400] ) . ';' .
+				'--bb-rl-icon-brand-disabled-color: ' . esc_attr( $light_shades[400] ) . ';' .
+				'--bb-rl-background-brand-primary-hover-color: ' . esc_attr( $light_shades[600] ) . ';' .
+				'--bb-rl-text-brand-secondary-color: ' . esc_attr( $light_shades[800] ) . ';' .
+				'--bb-rl-icon-brand-primary-color: ' . esc_attr( $light_shades[800] ) . ';' .
+				'--bb-rl-border-brand-primary-color: ' . esc_attr( $light_shades[800] ) . ';' .
+				/* Keep backward compatibility. */
+				'--bb-rl-primary-color: ' . esc_attr( $color_light ) . ';' .
+			'}' .
+			'.bb-rl-dark-mode {' .
+				/* Dark mode color shades. */
+				'--bb-rl-background-brand-secondary-color: ' . esc_attr( $dark_shades[100] ) . ';' .
+				'--bb-rl-text-brand-secondary-color: ' . esc_attr( $dark_shades[200] ) . ';' .
+				'--bb-rl-border-brand-primary-color: ' . esc_attr( $dark_shades[200] ) . ';' .
+				'--bb-rl-icon-brand-primary-color: ' . esc_attr( $dark_shades[200] ) . ';' .
+				'--bb-rl-primary-300: ' . esc_attr( $dark_shades[300] ) . ';' .
+				'--bb-rl-background-brand-disabled-color: ' . esc_attr( $dark_shades[400] ) . ';' .
+				'--bb-rl-icon-brand-disabled-color: ' . esc_attr( $dark_shades[400] ) . ';' .
+				'--bb-rl-background-brand-primary-hover-color: ' . esc_attr( $dark_shades[600] ) . ';' .
+				'--bb-rl-primary-700: ' . esc_attr( $dark_shades[700] ) . ';' .
+				'--bb-rl-background-brand-secondary-color: ' . esc_attr( $dark_shades[800] ) . ';' .
+				'--bb-rl-background-brand-secondary-hover-color: ' . esc_attr( $dark_shades[900] ) . ';' .
+				/* Keep backward compatibility. */
+				'--bb-rl-primary-color: ' . esc_attr( $color_dark ) . ';' .
+			'}';
 
-				.bb-rl-dark-mode {
-					/* Dark mode color shades. */
-					--bb-rl-background-brand-secondary-color: <?php echo esc_attr( $dark_shades[100] ); ?>;
-					--bb-rl-text-brand-secondary-color: <?php echo esc_attr( $dark_shades[200] ); ?>;
-					--bb-rl-border-brand-primary-color: <?php echo esc_attr( $dark_shades[200] ); ?>;
-					--bb-rl-icon-brand-primary-color: <?php echo esc_attr( $dark_shades[200] ); ?>;
-					--bb-rl-primary-300: <?php echo esc_attr( $dark_shades[300] ); ?>;
-					--bb-rl-background-brand-disabled-color: <?php echo esc_attr( $dark_shades[400] ); ?>;
-					--bb-rl-icon-brand-disabled-color: <?php echo esc_attr( $dark_shades[400] ); ?>;
-					--bb-rl-background-brand-primary-hover-color: <?php echo esc_attr( $dark_shades[600] ); ?>;
-					--bb-rl-primary-700: <?php echo esc_attr( $dark_shades[700] ); ?>;
-					--bb-rl-background-brand-secondary-color: <?php echo esc_attr( $dark_shades[800] ); ?>;
-					--bb-rl-background-brand-secondary-hover-color: <?php echo esc_attr( $dark_shades[900] ); ?>;
-
-					/* Keep backward compatibility. */
-					--bb-rl-primary-color: <?php echo esc_attr( $color_dark ); ?>;
-				}
-			</style>
-			<?php
+			// Attach the dynamic colours as an inline style on a dedicated registered handle
+			// instead of printing a raw <style> tag on wp_head.
+			if ( ! wp_style_is( 'bb-readylaunch-dynamic-colors', 'registered' ) ) {
+				wp_register_style( 'bb-readylaunch-dynamic-colors', false, array(), bp_get_version() );
+			}
+			wp_enqueue_style( 'bb-readylaunch-dynamic-colors' );
+			wp_add_inline_style( 'bb-readylaunch-dynamic-colors', $dynamic_css );
 		}
 
 		/**

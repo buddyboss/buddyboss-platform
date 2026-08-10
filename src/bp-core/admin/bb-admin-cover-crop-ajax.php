@@ -191,29 +191,57 @@ function bb_admin_cover_image_upload_temp_ajax() {
 		);
 	}
 
-	// Move the upload into our staged dir under a `tmp-<rand>` name so it
-	// doesn't collide with an already-saved cover, and so phase-2 can find
-	// and clean it up unambiguously by prefix. We bypass `wp_handle_upload`'s
-	// upload_dir filter chain by calling `move_uploaded_file` directly — it's
-	// already validated above.
-	$ext = pathinfo( $file_name, PATHINFO_EXTENSION );
-	if ( ! empty( $filetype['ext'] ) ) {
-		$ext = $filetype['ext'];
-	}
-	$tmp_basename = 'tmp-' . wp_generate_password( 12, false ) . '.' . strtolower( $ext );
-	$tmp_path     = $paths['dir'] . '/' . $tmp_basename;
+	// Stage the upload under a `tmp-<rand>` name in the default cover dir so it
+	// doesn't collide with an already-saved cover, and so phase-2 can find and
+	// clean it up unambiguously by prefix.
+	//
+	// We hand the raw $_FILES entry to WordPress' own uploader
+	// (`wp_handle_upload`) rather than moving the PHP upload tmp file by hand.
+	// `wp_handle_upload` performs the same `is_uploaded_file()`/POST-origin
+	// guarantee `move_uploaded_file` gives, PLUS the byte-level MIME + extension
+	// vetting WordPress expects of every ingested upload (this is the
+	// "use WordPress' file uploader" requirement). We scope its destination to
+	// our staged cover dir via a temporary `upload_dir` filter, and force the
+	// `tmp-<rand>` filename via `unique_filename_callback`, so the on-disk
+	// layout and phase-2 cleanup contract stay identical to before.
+	require_once ABSPATH . 'wp-admin/includes/file.php';
 
-	// Drop @ on move_uploaded_file — the false return is checked and a
-	// genuine error (open_basedir, perms, disk-full) should bubble through
-	// WP's error log. `@` would mask that diagnostic.
-	if ( ! move_uploaded_file( $tmp_name, $tmp_path ) ) { // phpcs:ignore Generic.PHP.ForbiddenFunctions.Found -- move_uploaded_file() is the secure way to handle an HTTP upload (verifies POST origin); wp_handle_upload is not applicable to this cropped-tmp flow.
-		wp_send_json_error( array( 'message' => __( 'Could not save the uploaded file.', 'buddyboss-platform' ) ), 500 );
+	$override_dir = $paths['dir'];
+	$override_url = $paths['url'];
+
+	$bb_cover_upload_dir_cb = static function ( $dirs ) use ( $override_dir, $override_url ) {
+		$dirs['path']   = $override_dir;
+		$dirs['url']    = $override_url;
+		$dirs['subdir'] = '';
+		return $dirs;
+	};
+
+	$bb_cover_unique_name_cb = static function ( $dir, $name, $ext ) {
+		// $ext arrives with a leading dot (e.g. ".jpeg"); lower-case it to
+		// match the legacy `tmp-<rand>.<ext>` shape phase-2 keys cleanup off.
+		return 'tmp-' . wp_generate_password( 12, false ) . strtolower( $ext );
+	};
+
+	add_filter( 'upload_dir', $bb_cover_upload_dir_cb );
+	$movefile = wp_handle_upload(
+		$file,
+		array(
+			'test_form'                => false,
+			'mimes'                    => $mimes,
+			'unique_filename_callback' => $bb_cover_unique_name_cb,
+		)
+	);
+	remove_filter( 'upload_dir', $bb_cover_upload_dir_cb );
+
+	if ( ! is_array( $movefile ) || ! empty( $movefile['error'] ) || empty( $movefile['file'] ) ) {
+		$message = ( is_array( $movefile ) && ! empty( $movefile['error'] ) )
+			? $movefile['error']
+			: __( 'Could not save the uploaded file.', 'buddyboss-platform' );
+		wp_send_json_error( array( 'message' => $message ), 500 );
 	}
 
-	// Set sensible permissions matching what `BP_Attachment::upload` produces.
-	// Drop @: a chmod failure on a writable upload dir is genuinely worth
-	// logging — if it surfaces, the site has a permission problem worth fixing.
-	chmod( $tmp_path, 0644 ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_chmod -- explicit permission set on the freshly-created uploaded cover-crop tmp file.
+	$tmp_path     = $movefile['file'];
+	$tmp_basename = wp_basename( $tmp_path );
 
 	// Keep @ on getimagesize — it intentionally emits a warning on bad input
 	// and the boolean false return is the documented "not an image" signal.

@@ -293,14 +293,19 @@ class BP_XProfile_Field_Type_Telephone extends BP_XProfile_Field_Type {
 		$selected_format_details = isset( $all_formats[ $selected_format ] ) ? $all_formats[ $selected_format ] : array();
 
 		if ( isset( $selected_format_details['mask'] ) && ! empty( $selected_format_details['mask'] ) ) {
-			?>
-			<script type='text/javascript'>
-				jQuery(document).ready(function($){
-					jQuery('#field_<?php echo esc_attr( $current_field->id ); ?>').mask('<?php echo esc_js( $selected_format_details['mask'] ); ?>').bind('keypress', function(e){if(e.which == 13){jQuery(this).blur();} } );
-				});
-			</script>
-			<?php
-			echo ob_get_clean(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Output is a <script> block built from values escaped inline above; wp_kses_post would strip the script.
+			// Attach the input-mask init to the enqueued 'jquery-mask' handle instead of
+			// echoing a raw <script>. 'jquery-mask' is registered on both bp_enqueue_scripts
+			// and bp_admin_enqueue_scripts (see bp_core_register_common_scripts()), so the
+			// handle is available in this admin render path. Config is passed via
+			// wp_json_encode() to safely emit the selector and mask as JS string literals.
+			$inline_js = sprintf(
+				'jQuery(document).ready(function($){jQuery(%1$s).mask(%2$s).bind("keypress", function(e){if(e.which == 13){jQuery(this).blur();}});});',
+				wp_json_encode( '#field_' . $current_field->id ),
+				wp_json_encode( $selected_format_details['mask'] )
+			);
+
+			wp_enqueue_script( 'jquery-mask' );
+			wp_add_inline_script( 'jquery-mask', $inline_js );
 		}
 	}
 

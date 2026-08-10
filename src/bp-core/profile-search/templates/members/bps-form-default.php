@@ -21,13 +21,6 @@ if ( ! isset( $options['collapsible'] ) ) {
 
 if ( is_admin() ) {
 	?>
-	<p><strong><?php esc_html_e( 'jQuery UI Theme', 'buddyboss-platform' ); ?></strong></p>
-	<select name="options[theme]">
-	<?php foreach ( bp_ps_jquery_ui_themes() as $theme => $name ) { ?>
-		<option value="<?php echo esc_attr( $theme ); ?>" <?php selected( $options['theme'], $theme ); ?>><?php echo esc_html( $name ); ?></option>
-	<?php } ?>
-	</select>
-
 	<p><strong><?php esc_html_e( 'Collapsible Form', 'buddyboss-platform' ); ?></strong></p>
 	<select name="options[collapsible]">
 		<option value='Yes' <?php selected( $options['collapsible'], 'Yes' ); ?>><?php esc_html_e( 'Yes', 'buddyboss-platform' ); ?></option>
@@ -44,23 +37,39 @@ $F = bp_ps_escaped_form_data( $version = '4.9' );
 if ( ! empty( $options['theme'] ) ) {
 	$accordion = 'bp_ps_accordion_' . $F->unique_id;
 	wp_enqueue_script( 'jquery-ui-accordion' );
-	// phpcs:ignore PluginCheck.CodeAnalysis.EnqueuedResourceOffloading.OffloadedContent -- Legacy profile-search accordion theme; admin-selected jQuery-UI theme name. Bundling all jQuery-UI themes locally is a pending asset decision.
-	wp_enqueue_style( 'jquery-ui-theme', 'https://code.jquery.com/ui/1.12.1/themes/' . esc_attr( $options['theme'] ) . '/jquery-ui.min.css' );
-	?>
-<script>
-	jQuery(function($) {
-		$('#<?php echo esc_js( $accordion ); ?>').accordion({
-			icons: {"header": "ui-icon-plus", "activeHeader": "<?php echo ( $options['collapsible'] == 'Yes' ) ? 'ui-icon-minus' : 'ui-icon-blank'; ?>"},
-			active: false,
-			collapsible: <?php echo ( $options['collapsible'] == 'Yes' ) ? 'true' : 'false'; ?>,
-		});
-	});
-</script>
 
-<style>
-	.bp-ps-form label {display: inline;}
-	.bp-ps-form input {display: inline;}
-</style>
+	/*
+	 * Only the jQuery UI "base" theme ships bundled with the plugin (per the
+	 * WordPress.org guideline 8 — no remotely loaded assets). Any legacy stored
+	 * $options['theme'] value is ignored; the local base theme is always used.
+	 */
+	$min = bp_core_get_minified_asset_suffix();
+	wp_enqueue_style( 'jquery-ui-theme', buddypress()->plugin_url . "bp-core/css/vendor/jquery-ui/jquery-ui{$min}.css", array(), bp_get_version() );
+
+	/*
+	 * Accordion init and form styles moved off raw <script>/<style> onto their
+	 * enqueued handles: 'jquery-ui-accordion' (enqueued above) and 'jquery-ui-theme'.
+	 * The accordion config is emitted via wp_json_encode() so the collapsible flag and
+	 * icon names stay byte-for-byte equivalent to the previous inline object literal.
+	 */
+	$accordion_config = array(
+		'icons'       => array(
+			'header'       => 'ui-icon-plus',
+			'activeHeader' => ( 'Yes' === $options['collapsible'] ) ? 'ui-icon-minus' : 'ui-icon-blank',
+		),
+		'active'      => false,
+		'collapsible' => ( 'Yes' === $options['collapsible'] ),
+	);
+	wp_add_inline_script(
+		'jquery-ui-accordion',
+		sprintf(
+			'jQuery(function($){ $(%1$s).accordion(%2$s); });',
+			wp_json_encode( '#' . $accordion ),
+			wp_json_encode( $accordion_config )
+		)
+	);
+	wp_add_inline_style( 'jquery-ui-theme', '.bp-ps-form label {display: inline;} .bp-ps-form input {display: inline;}' );
+	?>
 
 <div id="<?php echo esc_attr( $accordion ); ?>">
 	<span class="bp-ps-form-title"> <?php echo esc_html( $F->title ); ?></span>
@@ -146,14 +155,23 @@ foreach ( $F->fields as $f ) {
 			<input type="hidden" id="<?php echo esc_attr( $id ); ?>_lat" name="<?php echo esc_attr( $name . '[lat]' ); ?>" value="<?php echo esc_attr( $value['lat'] ); ?>">
 			<input type="hidden" id="<?php echo esc_attr( $id ); ?>_lng" name="<?php echo esc_attr( $name . '[lng]' ); ?>" value="<?php echo esc_attr( $value['lng'] ); ?>">
 
-			<script>
-				jQuery(function($) {
-					bp_ps_autocomplete('<?php echo esc_js( $id ); ?>', '<?php echo esc_js( $id ); ?>_lat', '<?php echo esc_js( $id ); ?>_lng');
-					$('#<?php echo esc_js( $id ); ?>_icon').click(function () {
-						bp_ps_locate('<?php echo esc_js( $id ); ?>', '<?php echo esc_js( $id ); ?>_lat', '<?php echo esc_js( $id ); ?>_lng')
-					});
-				});
-			</script>
+			<?php
+			/*
+			 * Attach the location autocomplete/geolocate init to the enqueued
+			 * 'bp-ps-template' handle (enqueued for the distance field in
+			 * bp_ps_escaped_form_data47()) instead of a raw <script>.
+			 * bp_ps_autocomplete()/bp_ps_locate() are defined in bp-ps-template.js
+			 * shipped by that handle; the field id is passed via wp_json_encode().
+			 */
+			$autocomplete_js = sprintf(
+				'jQuery(function ($) { bp_ps_autocomplete(%1$s, %2$s, %3$s); $(%4$s).click(function () { bp_ps_locate(%1$s, %2$s, %3$s); }); });',
+				wp_json_encode( $id ),
+				wp_json_encode( $id . '_lat' ),
+				wp_json_encode( $id . '_lng' ),
+				wp_json_encode( '#' . $id . '_icon' )
+			);
+			wp_add_inline_script( 'bp-ps-template', $autocomplete_js );
+			?>
 			<?php
 			break;
 
