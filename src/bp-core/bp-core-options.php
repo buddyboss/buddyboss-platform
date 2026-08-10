@@ -2751,10 +2751,25 @@ function bb_get_reaction_mode( $default = 'likes' ) {
 		// 'emotions' setting on every request where the provider had not booted
 		// yet (and, on addon-only sites, permanently), which made the Reactions
 		// mode appear un-saveable.
+		//
+		// The Pro term must prove Pro still SHIPS the layer, not merely that it is
+		// licensed. Current Pro builds carry no reaction code at all — only a
+		// deprecated bb_pro_get_reactions() shim — so a bare licence check reported
+		// the layer available on every Pro site with the add-on inactive. That left
+		// the mode stuck on 'emotions' with no provider behind it, which locked the
+		// admin toggle (the Emotions option renders selected but disabled) and made
+		// the REST settings advertise a mode the App cannot render.
+		// bp_register_reaction() is the marker for a Pro build that still owns the
+		// emotion layer — the same signal the add-on's loader uses to stay dormant.
+		// Do NOT probe bb_pro_get_reactions(): current Pro defines it as a stub.
 		$emotion_layer_available =
 			class_exists( 'BB_Reactions' )
 			|| ( function_exists( 'bb_addons_should_lock_features' ) && ! bb_addons_should_lock_features() )
-			|| ( function_exists( 'bbp_pro_is_license_valid' ) && bbp_pro_is_license_valid() );
+			|| (
+				function_exists( 'bp_register_reaction' )
+				&& function_exists( 'bbp_pro_is_license_valid' )
+				&& bbp_pro_is_license_valid()
+			);
 
 		if ( ! $emotion_layer_available ) {
 			$mode = 'likes';
