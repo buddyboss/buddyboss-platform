@@ -598,9 +598,18 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 				'platform' => $this->bb_get_product_license_data( $platform_id, $platform_key, $include_key ),
 			);
 
-			if ( ! empty( $theme_id ) ) {
-				$theme_key     = (string) get_option( $theme_id . '_license_key', '' );
-				$data['theme'] = $this->bb_get_product_license_data( $theme_id, $theme_key, $include_key );
+			if ( $this->bb_theme_uses_platform_license( $platform_id, $platform_key ) ) {
+				/*
+				 * The plan already includes the theme, so there is no separate
+				 * theme licence to report — the platform one covers it. Reported
+				 * without repeating the key, which is already sent above.
+				 */
+				$data['theme']           = $this->bb_get_product_license_data( $platform_id, $platform_key, false );
+				$data['theme']['source'] = 'platform';
+			} elseif ( ! empty( $theme_id ) ) {
+				$theme_key               = (string) get_option( $theme_id . '_license_key', '' );
+				$data['theme']           = $this->bb_get_product_license_data( $theme_id, $theme_key, $include_key );
+				$data['theme']['source'] = 'theme';
 			}
 
 			/**
@@ -612,6 +621,56 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 			 * @param bool  $include_key Whether the raw licence key is included.
 			 */
 			return apply_filters( 'bb_telemetry_license_data', $data, $include_key );
+		}
+
+		/**
+		 * Build the licence payload for a single Mothership product id.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param string $plugin_id   Mothership plugin id, which is also the plan.
+		 * @param string $license_key Licence key already resolved for this plan.
+		 * @param bool   $include_key Whether to include the raw licence key.
+		 *
+		 * @return array Licence data, or an empty array when there is no plan id.
+		 */
+		/**
+		 * Whether the theme is covered by the platform licence.
+		 *
+		 * True when the platform licence is present and activated, the BuddyBoss
+		 * Theme is the one in use, and the plan's add-ons list includes the theme
+		 * product. In that case the theme has no licence of its own to report and
+		 * the platform entitlement is what applies.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param string $plugin_id    Platform plan identifier.
+		 * @param string $license_key  Platform licence key.
+		 *
+		 * @return bool
+		 */
+		protected function bb_theme_uses_platform_license( $plugin_id, $license_key ) {
+			// The platform licence has to exist and be activated.
+			if ( empty( $plugin_id ) || '' === (string) $license_key || empty( get_option( $plugin_id . '_license_activation_status', false ) ) ) {
+				return false;
+			}
+
+			// get_template() returns the parent, so child themes count too.
+			if ( 'buddyboss-theme' !== get_template() ) {
+				return false;
+			}
+
+			$manager = '\BuddyBoss\Core\Admin\Mothership\BB_Addons_Manager';
+
+			if ( ! class_exists( $manager ) || ! method_exists( $manager, 'checkProductBySlug' ) ) {
+				return false;
+			}
+
+			try {
+				return null !== call_user_func( array( $manager, 'checkProductBySlug' ), 'buddyboss-theme' );
+			} catch ( \Throwable $e ) {
+				return false;
+			}
 		}
 
 		/**
