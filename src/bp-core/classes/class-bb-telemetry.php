@@ -671,16 +671,15 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 			 *
 			 * This list resolves that: a name in it that is absent from the
 			 * payload was looked for and genuinely not found, so the receiver may
-			 * clear it. Anything not declared is left untouched. Add-ons append
-			 * their own names through the filter below.
+			 * clear it. Anything not declared is left untouched.
+			 *
+			 * This method runs first and starts the list; the Pro, Theme and App
+			 * collectors run after it in bb_collect_site_data() and append their
+			 * own names to the same key.
 			 */
-			$declared_keys = isset( $bb_telemetry_data['bb_reported_option_keys'] )
-				? (array) $bb_telemetry_data['bb_reported_option_keys']
-				: array();
+			$bb_telemetry_data['bb_reported_option_keys'] = array_values( array_unique( $sanitized ) );
 
-			$bb_telemetry_data['bb_reported_option_keys'] = array_values( array_unique( array_merge( $declared_keys, $sanitized ) ) );
-
-			unset( $bp_prefix, $query, $results, $bb_platform_db_options, $declared_keys );
+			unset( $bp_prefix, $query, $results, $bb_platform_db_options );
 
 			// Tools usage → cumulative per-action counts for Repair / Sample Data / Migration.
 			$bb_telemetry_data['tools_usage'] = bb_get_tool_usage();
@@ -768,17 +767,6 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 			return apply_filters( 'bb_telemetry_license_data', $data, $include_key );
 		}
 
-		/**
-		 * Build the licence payload for a single Mothership product id.
-		 *
-		 * @since BuddyBoss [BBVERSION]
-		 *
-		 * @param string $plugin_id   Mothership plugin id, which is also the plan.
-		 * @param string $license_key Licence key already resolved for this plan.
-		 * @param bool   $include_key Whether to include the raw licence key.
-		 *
-		 * @return array Licence data, or an empty array when there is no plan id.
-		 */
 		/**
 		 * Whether the theme is covered by the platform licence.
 		 *
@@ -935,16 +923,32 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 		 * @return array Stage, elapsed days and the event start date.
 		 */
 		protected function bb_get_drm_stage( $event_name ) {
+			try {
+				$event = \BuddyBoss\Core\Admin\DRM\BB_DRM_Event::latest( $event_name );
+			} catch ( \Throwable $e ) {
+				$event = null;
+			}
+
+			return $this->bb_get_drm_stage_from_event( $event );
+		}
+
+		/**
+		 * Resolve the DRM escalation stage from an already-fetched DRM event.
+		 *
+		 * Split from bb_get_drm_stage() so the add-on collector can resolve many
+		 * stages from one batched query instead of one query per add-on.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param object|null $event Latest DRM event, or null when there is none.
+		 *
+		 * @return array Stage, elapsed days and the event start date.
+		 */
+		protected function bb_get_drm_stage_from_event( $event ) {
 			$stage = array(
 				'stage' => '',
 				'days'  => 0,
 			);
-
-			try {
-				$event = \BuddyBoss\Core\Admin\DRM\BB_DRM_Event::latest( $event_name );
-			} catch ( \Throwable $e ) {
-				return $stage;
-			}
 
 			if ( ! $event || empty( $event->created_at ) ) {
 				return $stage;
@@ -996,6 +1000,14 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 				return array();
 			}
 
+			$event_names = array();
+			foreach ( $registered as $product_slug => $addon ) {
+				$event_names[ $product_slug ] = 'addon-' . sanitize_key( $product_slug );
+			}
+
+			// One grouped query for every add-on's latest event, not one each.
+			$latest_events = $this->bb_get_latest_drm_events( array_values( $event_names ) );
+
 			$addons = array();
 			foreach ( $registered as $product_slug => $addon ) {
 				$entry = array(
@@ -1003,13 +1015,60 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 					'version' => isset( $addon['args']['version'] ) ? $addon['args']['version'] : '',
 				);
 
+				$event_name = $event_names[ $product_slug ];
+
 				$addons[ $product_slug ] = array_merge(
 					$entry,
-					$this->bb_get_drm_stage( 'addon-' . sanitize_key( $product_slug ) )
+					$this->bb_get_drm_stage_from_event( isset( $latest_events[ $event_name ] ) ? $latest_events[ $event_name ] : null )
 				);
 			}
 
 			return $addons;
+		}
+
+		/**
+		 * Fetch the latest DRM event for each given event name in one query.
+		 *
+		 * Replaces one BB_DRM_Event::latest() round trip per registered add-on
+		 * with a single grouped lookup.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param array $event_names DRM event names.
+		 *
+		 * @return array Map of event name => latest event row.
+		 */
+		protected function bb_get_latest_drm_events( $event_names ) {
+			if ( empty( $event_names ) ) {
+				return array();
+			}
+
+			try {
+				$table        = \BuddyBoss\Core\Admin\DRM\BB_DRM_Event::get_table_name();
+				$placeholders = implode( ', ', array_fill( 0, count( $event_names ), '%s' ) );
+
+				$events_sql = "SELECT t.* FROM {$table} t
+					INNER JOIN (
+						SELECT event, MAX( id ) AS id
+						FROM {$table}
+						WHERE event IN ( {$placeholders} )
+						GROUP BY event
+					) latest ON latest.id = t.id";
+
+				// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Table name from the DRM class; values parameterized.
+				$rows = self::$wpdb->get_results( self::$wpdb->prepare( $events_sql, $event_names ) );
+			} catch ( \Throwable $e ) {
+				return array();
+			}
+
+			$events = array();
+			foreach ( (array) $rows as $row ) {
+				if ( isset( $row->event ) ) {
+					$events[ $row->event ] = $row;
+				}
+			}
+
+			return $events;
 		}
 
 		/**

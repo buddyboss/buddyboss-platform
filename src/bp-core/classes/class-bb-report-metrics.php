@@ -293,15 +293,6 @@ if ( ! class_exists( 'BB_Report_Metrics' ) ) {
 		}
 
 		/**
-		 * Get metrics for a specific plugin.
-		 *
-		 * @since BuddyBoss 2.9.30
-		 *
-		 * @param string $plugin_slug Plugin slug.
-		 * @param array  $config      Plugin configuration.
-		 * @return array|false Plugin metrics or false on failure.
-		 */
-		/**
 		 * Reporting windows, as GMT lower bounds.
 		 *
 		 * Every source read here records time in GMT — `post_date_gmt` and
@@ -406,8 +397,8 @@ if ( ! class_exists( 'BB_Report_Metrics' ) ) {
 				return $cache[ $key ];
 			}
 
-			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQL.NotPrepared -- Table name from wpdb prefix; value parameterized.
-			$query = self::$wpdb->prepare( "SHOW COLUMNS FROM {$table} LIKE %s", $column );
+			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQL.NotPrepared -- Identifier escaped and backtick-quoted; value parameterized.
+			$query = self::$wpdb->prepare( 'SHOW COLUMNS FROM `' . esc_sql( $table ) . '` LIKE %s', $column );
 
 			// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Prepared above; memoized below.
 			$cache[ $key ] = (bool) self::$wpdb->get_var( $query );
@@ -887,7 +878,7 @@ if ( ! class_exists( 'BB_Report_Metrics' ) ) {
 
 				if ( $using_hpos ) {
 					$order_table  = self::$wpdb->prefix . 'wc_orders';
-					$table_exists = self::$wpdb->get_var( self::$wpdb->prepare( 'SHOW TABLES LIKE %s', $order_table ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.NotPrepared
+					$table_exists = self::$wpdb->get_var( self::$wpdb->prepare( 'SHOW TABLES LIKE %s', $order_table ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 					if ( $table_exists === $order_table ) {
 						return self::get_woocommerce_hpos_metrics( $order_statuses, $order_table, $since );
 					}
@@ -1267,116 +1258,197 @@ if ( ! class_exists( 'BB_Report_Metrics' ) ) {
 			}
 
 			try {
-				$config    = self::$supported_plugins['learndash'];
-				$post_type = self::get_dynamic_post_type( $config );
-				$statuses  = $config['status'];
-				$meta_keys = self::get_learndash_price_meta_keys();
+				/*
+				 * One unbounded walk serves every reporting window: rows are
+				 * bucketed against the window bounds during a single pass, and
+				 * the result is memoized for the request. Without this the
+				 * collector was invoked once per window and re-walked the
+				 * store each time. The caller mints its window bounds seconds
+				 * after the memo mints its own, so bounds are matched with an
+				 * hour of tolerance — irrelevant against 30/90-day windows.
+				 */
+				static $memo = null;
 
-				$status_placeholders = implode( ', ', array_fill( 0, count( $statuses ), '%s' ) );
-				$meta_placeholders   = implode( ', ', array_fill( 0, count( $meta_keys ), '%s' ) );
+				if ( null === $memo ) {
+					$memo = array(
+						'windows' => self::get_revenue_windows(),
+					);
 
-				// Bounding the walk in SQL keeps the short windows cheap.
-				$window = '' === $since ? '' : ' AND p.post_date_gmt >= %s';
+					$memo['results'] = self::learndash_scan_transactions( $memo['windows'] );
+				}
+
+				if ( '' === $since ) {
+					return $memo['results']['all_time'];
+				}
+
+				$bound = strtotime( $since );
+				foreach ( $memo['windows'] as $window => $cutoff ) {
+					if ( '' !== $cutoff && abs( strtotime( $cutoff ) - $bound ) <= HOUR_IN_SECONDS ) {
+						return $memo['results'][ $window ];
+					}
+				}
+
+				// A bound matching no standard window: walk just that window.
+				$single = self::learndash_scan_transactions( array( 'requested' => $since ) );
+
+				return $single['requested'];
+			} catch ( Exception $e ) {
+				// Silently return false on error.
+				return false;
+			}
+		}
+
+		/**
+		 * Walk the LearnDash transaction store once and total every window.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param array $windows Window name => GMT lower bound, '' for all time.
+		 *
+		 * @return array Window name => metrics array, or false for an empty window.
+		 */
+		private static function learndash_scan_transactions( $windows ) {
+			$config    = self::$supported_plugins['learndash'];
+			$post_type = self::get_dynamic_post_type( $config );
+			$statuses  = $config['status'];
+			$meta_keys = self::get_learndash_price_meta_keys();
+
+			$status_placeholders = implode( ', ', array_fill( 0, count( $statuses ), '%s' ) );
+			$meta_placeholders   = implode( ', ', array_fill( 0, count( $meta_keys ), '%s' ) );
+
+			// The SQL bound is the loosest requested window, so a purely
+			// windowed request never walks outside its own window.
+			$floor = null;
+			foreach ( $windows as $cutoff ) {
+				if ( '' === $cutoff ) {
+					$floor = '';
+					break;
+				}
+				if ( null === $floor || $cutoff < $floor ) {
+					$floor = $cutoff;
+				}
+			}
+			$floor = (string) $floor;
+
+			$window_sql = '' === $floor ? '' : ' AND p.post_date_gmt >= %s';
+
+			/*
+			 * Child transactions only. The parent order carries `is_parent`;
+			 * legacy transactions predate parents and have no such row, so
+			 * this is a LEFT JOIN rather than a post_parent test.
+			 */
+			$id_sql = 'SELECT p.ID, p.post_date_gmt
+				FROM ' . self::$wpdb->posts . ' p
+				LEFT JOIN ' . self::$wpdb->postmeta . " par ON par.post_id = p.ID AND par.meta_key = 'is_parent'
+				WHERE p.post_type = %s
+				AND p.post_status IN ( {$status_placeholders} )
+				AND ( par.meta_id IS NULL OR par.meta_value = '' OR par.meta_value = '0' ){$window_sql}
+				AND p.ID > %d
+				ORDER BY p.ID ASC
+				LIMIT %d";
+
+			$buckets = array_fill_keys( array_keys( $windows ), array() );
+			$last_id = 0;
+
+			/*
+			 * Pages through every matching transaction — there is no cap on
+			 * the number counted. Paging is keyed on `p.ID > $last_id` with an
+			 * ascending sort, so each pass strictly advances and no row is
+			 * seen twice or skipped.
+			 */
+			while ( true ) {
+				// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQL.NotPrepared -- Table names from wpdb; values parameterized.
+				$id_query = self::$wpdb->prepare( $id_sql, array_merge( array( $post_type ), $statuses, '' === $floor ? array() : array( $floor ), array( $last_id, self::LEARNDASH_CHUNK_SIZE ) ) );
+
+				// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Prepared above.
+				$id_rows = self::$wpdb->get_results( $id_query );
+
+				if ( empty( $id_rows ) ) {
+					break;
+				}
+
+				$ids   = array();
+				$dates = array();
+				foreach ( $id_rows as $id_row ) {
+					$id           = (int) $id_row->ID;
+					$ids[]        = $id;
+					$dates[ $id ] = $id_row->post_date_gmt;
+				}
+
+				$highest = max( $ids );
 
 				/*
-				 * Child transactions only. The parent order carries `is_parent`;
-				 * legacy transactions predate parents and have no such row, so
-				 * this is a LEFT JOIN rather than a post_parent test.
+				 * IDs are strictly ascending, so this can only fail if the
+				 * driver returned something unexpected. Breaking then avoids
+				 * an endless loop; it cannot truncate a healthy walk.
 				 */
-				$id_sql = 'SELECT p.ID
-					FROM ' . self::$wpdb->posts . ' p
-					LEFT JOIN ' . self::$wpdb->postmeta . " par ON par.post_id = p.ID AND par.meta_key = 'is_parent'
-					WHERE p.post_type = %s
-					AND p.post_status IN ( {$status_placeholders} )
-					AND ( par.meta_id IS NULL OR par.meta_value = '' OR par.meta_value = '0' ){$window}
-					AND p.ID > %d
-					ORDER BY p.ID ASC
-					LIMIT %d";
+				if ( $highest <= $last_id ) {
+					break;
+				}
 
-				$by_currency = array();
-				$last_id     = 0;
+				$last_id = $highest;
 
-				/*
-				 * Pages through every matching transaction — there is no cap on
-				 * the number counted. Paging is keyed on `p.ID > $last_id` with an
-				 * ascending sort, so each pass strictly advances and no row is
-				 * seen twice or skipped.
-				 */
-				while ( true ) {
-					// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQL.NotPrepared -- Table names from wpdb; values parameterized.
-					$id_query = self::$wpdb->prepare( $id_sql, array_merge( array( $post_type ), $statuses, '' === $since ? array() : array( $since ), array( $last_id, self::LEARNDASH_CHUNK_SIZE ) ) );
+				$id_placeholders = implode( ', ', array_fill( 0, count( $ids ), '%d' ) );
 
-					// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Prepared above.
-					$ids = self::$wpdb->get_col( $id_query );
+				$meta_sql = 'SELECT post_id, meta_key, meta_value
+					FROM ' . self::$wpdb->postmeta . "
+					WHERE post_id IN ( {$id_placeholders} )
+					AND meta_key IN ( {$meta_placeholders} )";
 
-					if ( empty( $ids ) ) {
-						break;
+				// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQL.NotPrepared -- Table name from wpdb; values parameterized.
+				$meta_query = self::$wpdb->prepare( $meta_sql, array_merge( $ids, $meta_keys ) );
+
+				// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Prepared above.
+				$rows = self::$wpdb->get_results( $meta_query );
+
+				$grouped = array();
+				foreach ( (array) $rows as $row ) {
+					$grouped[ (int) $row->post_id ][ $row->meta_key ] = $row->meta_value;
+				}
+
+				foreach ( $ids as $id ) {
+					if ( empty( $grouped[ $id ] ) ) {
+						continue;
 					}
 
-					$ids     = array_map( 'intval', $ids );
-					$highest = max( $ids );
+					$resolved = self::resolve_learndash_amount( $grouped[ $id ] );
 
-					/*
-					 * IDs are strictly ascending, so this can only fail if the
-					 * driver returned something unexpected. Breaking then avoids
-					 * an endless loop; it cannot truncate a healthy walk.
-					 */
-					if ( $highest <= $last_id ) {
-						break;
+					if ( $resolved['amount'] <= 0 ) {
+						continue;
 					}
 
-					$last_id = $highest;
+					$code = self::currency_or_unknown( $resolved['currency'] );
 
-					$id_placeholders = implode( ', ', array_fill( 0, count( $ids ), '%d' ) );
-
-					$meta_sql = 'SELECT post_id, meta_key, meta_value
-						FROM ' . self::$wpdb->postmeta . "
-						WHERE post_id IN ( {$id_placeholders} )
-						AND meta_key IN ( {$meta_placeholders} )";
-
-					// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQL.NotPrepared -- Table name from wpdb; values parameterized.
-					$meta_query = self::$wpdb->prepare( $meta_sql, array_merge( $ids, $meta_keys ) );
-
-					// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Prepared above.
-					$rows = self::$wpdb->get_results( $meta_query );
-
-					$grouped = array();
-					foreach ( (array) $rows as $row ) {
-						$grouped[ (int) $row->post_id ][ $row->meta_key ] = $row->meta_value;
-					}
-
-					foreach ( $ids as $id ) {
-						if ( empty( $grouped[ $id ] ) ) {
+					// MySQL datetimes share one format, so the string compare
+					// buckets each transaction into every window it falls in.
+					foreach ( $windows as $window => $cutoff ) {
+						if ( '' !== $cutoff && $dates[ $id ] < $cutoff ) {
 							continue;
 						}
 
-						$resolved = self::resolve_learndash_amount( $grouped[ $id ] );
-
-						if ( $resolved['amount'] <= 0 ) {
-							continue;
-						}
-
-						$code = self::currency_or_unknown( $resolved['currency'] );
-
-						if ( isset( $by_currency[ $code ] ) ) {
-							++$by_currency[ $code ]['orders'];
-							$by_currency[ $code ]['revenue'] += $resolved['amount'];
+						if ( isset( $buckets[ $window ][ $code ] ) ) {
+							++$buckets[ $window ][ $code ]['orders'];
+							$buckets[ $window ][ $code ]['revenue'] += $resolved['amount'];
 						} else {
-							$by_currency[ $code ] = array(
+							$buckets[ $window ][ $code ] = array(
 								'orders'  => 1,
 								'revenue' => $resolved['amount'],
 							);
 						}
 					}
-
-					// A short page means the store is exhausted.
-					if ( count( $ids ) < self::LEARNDASH_CHUNK_SIZE ) {
-						break;
-					}
 				}
 
+				// A short page means the store is exhausted.
+				if ( count( $ids ) < self::LEARNDASH_CHUNK_SIZE ) {
+					break;
+				}
+			}
+
+			$results = array();
+			foreach ( $buckets as $window => $by_currency ) {
 				if ( empty( $by_currency ) ) {
-					return false;
+					$results[ $window ] = false;
+					continue;
 				}
 
 				$total_orders  = 0;
@@ -1386,15 +1458,14 @@ if ( ! class_exists( 'BB_Report_Metrics' ) ) {
 					$total_revenue += $bucket['revenue'];
 				}
 
-				return array(
+				$results[ $window ] = array(
 					'order_count'   => $total_orders,
 					'total_revenue' => $total_revenue,
 					'by_currency'   => $by_currency,
 				);
-			} catch ( Exception $e ) {
-				// Silently return false on error.
-				return false;
 			}
+
+			return $results;
 		}
 
 		/**
@@ -1416,7 +1487,7 @@ if ( ! class_exists( 'BB_Report_Metrics' ) ) {
 				$table    = self::$wpdb->prefix . 'mepr_transactions';
 
 				// Check if table exists.
-				$table_check = self::$wpdb->get_var( self::$wpdb->prepare( 'SHOW TABLES LIKE %s', $table ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.NotPrepared.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+				$table_check = self::$wpdb->get_var( self::$wpdb->prepare( 'SHOW TABLES LIKE %s', $table ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 				if ( $table_check !== $table ) {
 					return false;
 				}
@@ -1528,7 +1599,7 @@ if ( ! class_exists( 'BB_Report_Metrics' ) ) {
 		 */
 		private static function get_tutor_lms_order_table_metrics( $since = '' ) {
 			$table  = self::$wpdb->prefix . 'tutor_orders';
-			$exists = self::$wpdb->get_var( self::$wpdb->prepare( 'SHOW TABLES LIKE %s', $table ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.NotPrepared
+			$exists = self::$wpdb->get_var( self::$wpdb->prepare( 'SHOW TABLES LIKE %s', $table ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 
 			if ( $exists !== $table ) {
 				return false;
@@ -1666,7 +1737,7 @@ if ( ! class_exists( 'BB_Report_Metrics' ) ) {
 				$table               = self::$wpdb->prefix . 'pmpro_membership_orders';
 
 				// Check if table exists.
-				$table_check = self::$wpdb->get_var( self::$wpdb->prepare( 'SHOW TABLES LIKE %s', $table ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.NotPrepared.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+				$table_check = self::$wpdb->get_var( self::$wpdb->prepare( 'SHOW TABLES LIKE %s', $table ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 				if ( $table_check !== $table ) {
 					return false;
 				}
