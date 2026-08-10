@@ -130,7 +130,7 @@ function bp_core_register_common_scripts() {
 			'footer'       => false,
 		),
 		'bp-select2'                    => array(
-			'file'         => "{$url}vendor/select2.min.js",
+			'file'         => "{$url}vendor/select2{$min}.js",
 			'dependencies' => array(),
 			'footer'       => false,
 		),
