@@ -105,6 +105,7 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 		public function setup_actions() {
 			add_action( 'bb_telemetry_report_cron_event', array( $this, 'bb_send_telemetry_report_to_analytics' ) );
 			add_action( 'bb_telemetry_report_single_cron_event', array( $this, 'bb_send_telemetry_report_to_analytics' ) );
+			add_action( 'bb_telemetry_report_retry_event', array( $this, 'bb_send_telemetry_report_to_analytics' ) );
 			add_action( 'admin_notices', array( $this, 'bb_telemetry_admin_notice' ) );
 			add_action( 'wp_ajax_dismiss_bb_telemetry_notice', array( $this, 'bb_telemetry_notice_dismissed' ) );
 		}
@@ -145,17 +146,21 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 
 			$raw_response = wp_safe_remote_post( base64_decode( $api_url ), $args ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_decode
 			if ( is_wp_error( $raw_response ) ) {
+				$this->bb_record_delivery_failure( $raw_response->get_error_message() );
 				unset( $data, $api_url, $args );
 
 				return $raw_response;
 			}
 
-			if ( 200 !== wp_remote_retrieve_response_code( $raw_response ) ) {
+			$response_code = wp_remote_retrieve_response_code( $raw_response );
+			if ( 200 !== $response_code ) {
+				$this->bb_record_delivery_failure( 'HTTP ' . $response_code . ' ' . wp_remote_retrieve_response_message( $raw_response ) );
 				unset( $data, $api_url, $args );
 
 				return new WP_Error( 'server_error', wp_remote_retrieve_response_message( $raw_response ) );
 			}
 
+			$this->bb_record_delivery_success();
 			unset( $data, $api_url, $args, $raw_response );
 
 			return true;
@@ -221,6 +226,15 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 			if ( function_exists( 'bbapp_telemetry_data' ) ) {
 				$bb_telemetry_data = bbapp_telemetry_data( $bb_telemetry_data );
 			}
+
+			/*
+			 * Delivery health, recorded by the send path. Built before this send
+			 * runs, so `last_success` is the PREVIOUS successful delivery — on
+			 * arrival it tells the receiver exactly how long the site was dark,
+			 * which is what separates "cron or egress was broken" from "opted
+			 * out" for any site that eventually reports again.
+			 */
+			$bb_telemetry_data['bb_telemetry_delivery'] = $this->bb_get_delivery_status();
 
 			$result = array(
 				'uuid' => $this->bb_uuid(),
@@ -307,35 +321,166 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 		 * Check if the domain is allowlisted for telemetry data.
 		 *
 		 * @since BuddyBoss 2.7.40
+		 * @since BuddyBoss [BBVERSION] Reads the host from `site_url()` instead of
+		 *              `$_SERVER['SERVER_NAME']` (which is empty under WP-Cron, where
+		 *              telemetry actually sends from), checks a filterable domain
+		 *              allowlist (`bb_telemetry_whitelist_domains`) anchored to
+		 *              hostname boundaries, and delegates dev/staging detection to
+		 *              `BB_DRM_Helper::is_dev_environment()`, whose matching is
+		 *              anchored to whole hostname labels — a naive substring check
+		 *              excluded real sites such as `nhs.devon.gov.uk` (matched `.dev`).
 		 *
 		 * @return bool True if the domain is not allowlisted, false otherwise.
 		 */
 		public function bb_whitelist_domain_for_telemetry() {
-			$server_name = ! empty( $_SERVER['SERVER_NAME'] ) ? sanitize_text_field( wp_unslash( $_SERVER['SERVER_NAME'] ) ) : '';
+			$host = wp_parse_url( site_url(), PHP_URL_HOST );
+			$host = is_string( $host ) ? strtolower( $host ) : '';
 
-			$whitelist_domain = array(
-				'.test',
-				'.dev',
-				'staging.',
-				'localhost',
-				'.local',
-				'.rapydapps.cloud',
-				'ddev.site',
-			);
-
-			// Check for the test domain.
-			if ( defined( 'WP_TESTS_DOMAIN' ) && WP_TESTS_DOMAIN === $server_name ) {
+			// No host identity at all — do not report rather than fail open.
+			if ( '' === $host ) {
 				return false;
 			}
 
-			// Check if the server name matches any whitelisted domain.
+			// Check for the test domain.
+			if ( defined( 'WP_TESTS_DOMAIN' ) && WP_TESTS_DOMAIN === $host ) {
+				return false;
+			}
+
+			/**
+			 * Filters the domains excluded from telemetry reporting.
+			 *
+			 * Each entry is matched against the site host as an exact hostname
+			 * or as a suffix on a label boundary — `ddev.site` also excludes
+			 * `platform.ddev.site`, but never `notddev.site`. A leading dot is
+			 * optional; bare TLD entries such as `test` exclude that TLD.
+			 *
+			 * @since BuddyBoss [BBVERSION]
+			 *
+			 * @param array $whitelist_domain Hostnames or domain suffixes to exclude.
+			 */
+			$whitelist_domain = apply_filters(
+				'bb_telemetry_whitelist_domains',
+				array(
+					'localhost',
+					'test',
+					'dev',
+					'local',
+					'ddev.site',
+					'rapydapps.cloud',
+				)
+			);
+
 			foreach ( $whitelist_domain as $domain ) {
-				if ( false !== strpos( $server_name, $domain ) ) {
+				$domain = strtolower( ltrim( trim( (string) $domain ), '.' ) );
+				if ( '' === $domain ) {
+					continue;
+				}
+
+				if ( $host === $domain || substr( $host, -strlen( '.' . $domain ) ) === '.' . $domain ) {
 					return false; // Exclude allowlisted domains.
 				}
 			}
 
+			// DRM's detector is the single definition of "not a real site":
+			// environment type, reserved TLDs, staging keywords as whole labels,
+			// host/staging provider domains, local IPs and non-standard ports.
+			if ( class_exists( '\BuddyBoss\Core\Admin\DRM\BB_DRM_Helper' ) ) {
+				return ! \BuddyBoss\Core\Admin\DRM\BB_DRM_Helper::is_dev_environment();
+			}
+
+			// Fallback when DRM is unavailable: the one legacy rule the list
+			// above does not express — a `staging.` host prefix.
+			if ( 0 === strpos( $host, 'staging.' ) ) {
+				return false;
+			}
+
 			return true; // Allow telemetry data to be sent for non-allowlisted domains.
+		}
+
+		/**
+		 * Get the delivery-health record for telemetry sends.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @return array {
+		 *     @type string $last_attempt         GMT datetime of the last send attempt, empty if never.
+		 *     @type string $last_success         GMT datetime of the last successful delivery, empty if never.
+		 *     @type int    $consecutive_failures Failed attempts since the last success.
+		 *     @type string $last_error           Truncated message from the most recent failure.
+		 * }
+		 */
+		public function bb_get_delivery_status() {
+			$status = bp_get_option( 'bb_telemetry_delivery', array() );
+
+			return wp_parse_args(
+				is_array( $status ) ? $status : array(),
+				array(
+					'last_attempt'         => '',
+					'last_success'         => '',
+					'consecutive_failures' => 0,
+					'last_error'           => '',
+				)
+			);
+		}
+
+		/**
+		 * Record a successful telemetry delivery.
+		 *
+		 * Clears the failure streak and any pending retry so a stale retry
+		 * cannot fire after recovery.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 */
+		protected function bb_record_delivery_success() {
+			$retry_timestamp = wp_next_scheduled( 'bb_telemetry_report_retry_event' );
+			if ( $retry_timestamp ) {
+				wp_unschedule_event( $retry_timestamp, 'bb_telemetry_report_retry_event' );
+			}
+
+			$now = gmdate( 'Y-m-d H:i:s' );
+			bp_update_option(
+				'bb_telemetry_delivery',
+				array(
+					'last_attempt'         => $now,
+					'last_success'         => $now,
+					'consecutive_failures' => 0,
+					'last_error'           => '',
+				)
+			);
+		}
+
+		/**
+		 * Record a failed telemetry delivery and schedule a bounded retry.
+		 *
+		 * The first three consecutive failures schedule a retry 1, 4 and 12
+		 * hours out. Beyond that no intra-cycle retries are scheduled — a site
+		 * whose egress is permanently blocked just keeps its weekly attempt —
+		 * and any recovery resets the ladder.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param string $error_message Why the delivery failed.
+		 */
+		protected function bb_record_delivery_failure( $error_message ) {
+			$status                         = $this->bb_get_delivery_status();
+			$status['last_attempt']         = gmdate( 'Y-m-d H:i:s' );
+			$status['consecutive_failures'] = (int) $status['consecutive_failures'] + 1;
+			$status['last_error']           = substr( (string) $error_message, 0, 200 );
+
+			bp_update_option( 'bb_telemetry_delivery', $status );
+
+			$retry_delays = array(
+				1 => HOUR_IN_SECONDS,
+				2 => 4 * HOUR_IN_SECONDS,
+				3 => 12 * HOUR_IN_SECONDS,
+			);
+
+			if (
+				isset( $retry_delays[ $status['consecutive_failures'] ] ) &&
+				! wp_next_scheduled( 'bb_telemetry_report_retry_event' )
+			) {
+				wp_schedule_single_event( time() + $retry_delays[ $status['consecutive_failures'] ], 'bb_telemetry_report_retry_event' );
+			}
 		}
 
 		/**
