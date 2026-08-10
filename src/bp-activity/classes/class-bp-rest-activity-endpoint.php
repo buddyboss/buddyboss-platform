@@ -1709,6 +1709,24 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 
 		$pin_type = ( 'groups' === $activity->component && ! empty( $activity->item_id ) ) ? 'group' : 'activity';
 
+		// The pin/unpin mutation is provided by the Pinned Posts add-on module.
+		// `function_exists()` alone is not enough: Platform installs a no-op
+		// deprecation shim of the same name at `bp_init:1` (so un-updated external
+		// callers degrade instead of fatalling), and REST runs later. The shim
+		// advertises itself via `bb_activity_pin_unpin_post_is_stub()`.
+		if (
+			! function_exists( 'bb_activity_pin_unpin_post' )
+			|| function_exists( 'bb_activity_pin_unpin_post_is_stub' )
+		) {
+			return new WP_Error(
+				'bp_rest_activity_pinned_posts_unavailable',
+				__( 'Pinned posts are not available on this site.', 'buddyboss' ),
+				array(
+					'status' => 501,
+				)
+			);
+		}
+
 		$result = bb_activity_pin_unpin_post( $args );
 
 		if ( ! empty( $result ) ) {
