@@ -4949,6 +4949,8 @@ function bp_core_get_group_avatar( $legacy_user_avatar_name, $legacy_group_avata
  *
  * @return array Parsed URL data.
  * @since BuddyBoss 1.3.2
+ * @since BuddyBoss [BBVERSION] Shortened-URL redirect fallback now uses the WP HTTP API
+ *                              (wp_safe_remote_get) instead of file_get_contents().
  */
 function bp_core_parse_url( $url ) {
 
@@ -4974,18 +4976,29 @@ function bp_core_parse_url( $url ) {
 		}
 
 		if ( $original_url === $url ) {
-			$context = array(
-				'http' => array(
-					'method'        => 'GET',
-					'max_redirects' => 1,
-				),
+			/*
+			 * Best-effort fallback: request without following redirects and read
+			 * the Location header directly. Uses the WP HTTP API (works where
+			 * allow_url_fopen is disabled) instead of the previous
+			 * @file_get_contents() + positional $http_response_header parsing.
+			 */
+			$redirect_response = wp_safe_remote_get(
+				$url,
+				array(
+					'redirection' => 0,
+					'headers'     => array(
+						'user-agent' => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:71.0) Gecko/20100101 Firefox/71.0',
+					),
+				)
 			);
 
-			@file_get_contents( $url, null, stream_context_create( $context ) );
-			if ( isset( $http_response_header ) && isset( $http_response_header[6] ) ) {
-				$new_url = str_replace( 'Location: ', '', $http_response_header[6] );
-				if ( filter_var( $new_url, FILTER_VALIDATE_URL ) ) {
-					$url = $new_url;
+			if ( ! is_wp_error( $redirect_response ) ) {
+				$location = wp_remote_retrieve_header( $redirect_response, 'location' );
+				if ( is_array( $location ) ) {
+					$location = reset( $location );
+				}
+				if ( ! empty( $location ) && filter_var( $location, FILTER_VALIDATE_URL ) ) {
+					$url = $location;
 				}
 			}
 		}

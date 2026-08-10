@@ -262,7 +262,11 @@ module.exports = function (grunt) {
 				all: [BUILD_DIR],
 				bp_rest: [SOURCE_DIR + 'buddyboss-platform-api/'],
 				bb_icons: [SOURCE_DIR + 'bp-templates/bp-nouveau/icons/bb-icons/'],
-				composer: [ BUILD_DIR + 'composer.json', BUILD_DIR + 'composer.lock', BUILD_DIR + 'scoper.inc.php', BUILD_DIR + 'apidoc.json' ],
+				// composer.json (and package.json, copied in copy:files) intentionally stay in
+				// the build: the wp.org Plugin Directory asks for the config files needed to
+				// rebuild/obtain libraries to ship with the plugin. Lock/build-tool files
+				// (composer.lock, scoper.inc.php, apidoc.json) are still stripped.
+				composer: [ BUILD_DIR + 'composer.lock', BUILD_DIR + 'scoper.inc.php', BUILD_DIR + 'apidoc.json' ],
 			},
 			copy: {
 				files: {
@@ -272,13 +276,27 @@ module.exports = function (grunt) {
 						dest: BUILD_DIR,
 						dot: true,
 						expand: true,
-						src: ['**', '!**/.{svn,git}/**', '!**/readylaunch/css/sass/**'].concat( BP_EXCLUDED_MISC )
+						src: [
+							'**',
+							'!**/.{svn,git}/**',
+							'!**/readylaunch/css/sass/**',
+							// Dev/test artifacts must not ship in the release zip
+							// (wp.org Plugin Directory "unneeded folders" rule).
+							'!vendor/myclabs/php-enum/src/PHPUnit/**',
+							'!vendor/**/tests/**',
+							'!vendor/**/test/**',
+							'!vendor/**/docs/**',
+							'!vendor/**/.github/**',
+							'!vendor/**/phpunit.xml*',
+							'!cli/features/**',
+							'!cli/bin/**'
+						].concat( BP_EXCLUDED_MISC )
 					},
 					{
 						dest: BUILD_DIR,
 						dot: true,
 						expand: true,
-						src: ['composer.json', '!CLAUDE.md']
+						src: ['composer.json', 'package.json', '!CLAUDE.md']
 					}
 					]
 				},

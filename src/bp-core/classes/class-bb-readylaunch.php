@@ -2134,7 +2134,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 						'footer'       => true,
 					),
 					'bp-nouveau-magnific-popup' => array(
-						'file'         => buddypress()->plugin_url . 'bp-core/js/vendor/magnific-popup.js',
+						'file'         => buddypress()->plugin_url . 'bp-core/js/vendor/magnific-popup%s.js',
 						'dependencies' => array( 'jquery' ),
 						'footer'       => false,
 					),
