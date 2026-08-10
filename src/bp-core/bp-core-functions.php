@@ -10114,6 +10114,38 @@ function bb_get_settings_url() {
 }
 
 /**
+ * Whether a feature extracted to the BuddyBoss Addons plugin is provided by a REAL provider.
+ *
+ * A moved feature (polls, reactions, social login, pinned posts) is "provided" when either a
+ * legacy Platform/Pro build still ships it, or the licensed BuddyBoss Addons module for it is
+ * loaded. It is NOT provided when only a deprecation shim is present — Platform/Pro keep the old
+ * function names alive so un-updated callers degrade instead of fatalling, but the shims do no
+ * real work (e.g. `bb_load_polls()` returns null). Detection keys on symbols the shims never
+ * define: the moved classes (BB_Polls / BB_SSO / BB_Reactions), and for pinned posts the non-stub
+ * function (the stub advertises itself via `bb_activity_pin_unpin_post_is_stub()`).
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $feature One of: 'polls', 'reactions', 'sso', 'pinned_posts'.
+ * @return bool True when a real provider is present.
+ */
+function bb_is_feature_provided( $feature ) {
+	switch ( $feature ) {
+		case 'polls':
+			return class_exists( 'BB_Polls' ) || function_exists( 'bb_register_poll' );
+		case 'reactions':
+			return class_exists( 'BB_Reactions' ) || function_exists( 'bp_register_reaction' );
+		case 'sso':
+			return class_exists( 'BB_SSO' ) || function_exists( 'bb_register_sso' );
+		case 'pinned_posts':
+			return function_exists( 'bb_activity_pin_unpin_post' )
+				&& ! function_exists( 'bb_activity_pin_unpin_post_is_stub' );
+		default:
+			return false;
+	}
+}
+
+/**
  * Get structured PRO notice data for the React admin settings UI.
  *
  * Returns an array with badge and video link data that the React UI renders
@@ -10258,9 +10290,9 @@ function bb_admin_settings_get_pro_notice( $args = array() ) {
 		// the add-on does not silently unlock features it no longer contains.
 		in_array( $type, array( 'reaction', 'reactions', 'polls', 'sso' ), true ) &&
 		! (
-			( ( 'reaction' === $type || 'reactions' === $type ) && ( class_exists( 'BB_Reactions' ) || function_exists( 'bp_register_reaction' ) ) ) ||
-			( 'polls' === $type && ( function_exists( 'bb_load_polls' ) || function_exists( 'bb_register_poll' ) ) ) ||
-			( 'sso' === $type && ( function_exists( 'bb_enable_sso' ) || function_exists( 'bb_register_sso' ) ) )
+			( ( 'reaction' === $type || 'reactions' === $type ) && bb_is_feature_provided( 'reactions' ) ) ||
+			( 'polls' === $type && bb_is_feature_provided( 'polls' ) ) ||
+			( 'sso' === $type && bb_is_feature_provided( 'sso' ) )
 		)
 	) {
 		$is_pro_locked = true;
