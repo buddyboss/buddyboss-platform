@@ -183,4 +183,46 @@ class BB_Tests_Core_Functions_BbIsFeatureProvided extends BP_UnitTestCase {
 	 * tests (shim vs. real provider), plus code review of the reviewed production
 	 * delegation itself.
 	 */
+
+	/**
+	 * Task 6 regression test for PROD-10225 (finding S-1).
+	 *
+	 * `bb_get_reaction_button_settings()`'s guard required
+	 * `function_exists( 'bbp_pro_is_license_valid' ) && bbp_pro_is_license_valid()` —
+	 * a Pro-only function the BuddyBoss Addons plugin does not provide. On an
+	 * add-on-only site (BB_Reactions loaded, emotions enabled, no Platform Pro
+	 * installed at all) the guard wrongly early-returned the default Like button
+	 * and discarded the admin's configured emotion icon/text. This test pins that
+	 * an add-on-only site (no bbp_pro_is_license_valid at all) still gets its
+	 * configured settings applied.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
+	 */
+	public function test_reaction_button_settings_applied_on_addon_only_site() {
+		$this->assertFalse( function_exists( 'bbp_pro_is_license_valid' ), 'precondition: add-on-only site has no Pro-only function' );
+
+		if ( ! class_exists( 'BB_Reactions' ) ) {
+			eval( 'class BB_Reactions {}' ); // Stand-in for the add-on's loaded reactions class.
+		}
+
+		bp_update_option( 'bb_reaction_mode', 'emotions' );
+		bp_update_option(
+			'bb_reactions_button',
+			array(
+				'icon' => 'heart',
+				'text' => 'Love it',
+			)
+		);
+
+		$settings = bb_get_reaction_button_settings();
+
+		bp_delete_option( 'bb_reaction_mode' );
+		bp_delete_option( 'bb_reactions_button' );
+
+		$this->assertSame( 'heart', $settings['icon'], 'add-on-only site must get the admin-configured icon, not the "thumbs-up" default' );
+		$this->assertSame( 'Love it', $settings['text'], 'add-on-only site must get the admin-configured text, not the "Like" default' );
+	}
 }
