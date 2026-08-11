@@ -217,6 +217,10 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			add_action( 'admin_menu', array( $this, 'adjust_buddyboss_menus' ), 100 );
 
 			add_action( 'admin_footer', array( $this, 'bb_display_update_plugin_information' ) );
+
+			// Fix the "View details"/"View version details" links on the Plugins page, which
+			// otherwise point to a WordPress.org plugin_information lookup that always fails.
+			add_filter( 'site_transient_update_plugins', array( $this, 'bb_fix_plugin_details_link' ), 20 );
 		}
 
 		/**
@@ -966,6 +970,39 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			foreach ( $scripts as $id => $script ) {
 				wp_register_script( $id, $script['file'], $script['dependencies'], $version, $script['footer'] );
 			}
+		}
+
+		/**
+		 * BuddyBoss Platform is distributed from BuddyBoss's own servers, not the
+		 * WordPress.org plugin directory. WordPress core builds the "View details"
+		 * (plugin row) and "View version details" (update notice) links from the
+		 * 'slug' it finds on this transient, then requests that slug from
+		 * WordPress.org's plugins_api() — which always returns "Plugin not found."
+		 * for a plugin that isn't listed there. Removing 'slug' lets the row link
+		 * fall back to the plugin's own site link, and pointing 'url' at our
+		 * release notes page gives the update notice a working destination.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param mixed $value Value of the 'update_plugins' site transient.
+		 *
+		 * @return mixed
+		 */
+		public function bb_fix_plugin_details_link( $value ) {
+			if ( empty( $value ) || ! is_object( $value ) ) {
+				return $value;
+			}
+
+			$plugin_file = plugin_basename( buddypress()->basename );
+
+			foreach ( array( 'response', 'no_update' ) as $key ) {
+				if ( isset( $value->{$key}[ $plugin_file ] ) ) {
+					unset( $value->{$key}[ $plugin_file ]->slug );
+					$value->{$key}[ $plugin_file ]->url = 'https://buddyboss.com/resources/release-notes/';
+				}
+			}
+
+			return $value;
 		}
 
 		/**
