@@ -4568,6 +4568,24 @@ function bb_is_non_entitled_addons_edition( $plugin_id ) {
  * @return bool True when entitled.
  */
 function bb_is_entitled_to_addons() {
+
+	/**
+	 * Short-circuit the BuddyBoss Addons entitlement decision.
+	 *
+	 * Return a non-null boolean to override the result before any Mothership
+	 * call. This is the seam the test suite and integrators use to force the
+	 * decision without a live license/catalog lookup (the checks below all
+	 * short-circuit to false when the Mothership layer is absent).
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param bool|null $override Non-null boolean to force the decision, or null to compute it.
+	 */
+	$override = apply_filters( 'bb_pre_is_entitled_to_addons', null );
+	if ( null !== $override ) {
+		return (bool) $override;
+	}
+
 	$has_mothership = class_exists( '\BuddyBoss\Core\Admin\Mothership\BB_Plugin_Connector' )
 		&& class_exists( '\BuddyBoss\Core\Admin\Mothership\BB_Addons_Manager' );
 
@@ -4596,10 +4614,11 @@ function bb_is_entitled_to_addons() {
 	$entitled = ! empty( $product );
 
 	/**
-	 * Filters the BuddyBoss Addons entitlement decision.
+	 * Filters the computed BuddyBoss Addons entitlement decision.
 	 *
-	 * Test/extensibility seam: the Mothership license layer cannot be mocked in
-	 * unit tests, so tests stub entitlement through this filter.
+	 * Runs only when the decision was computed (not short-circuited by
+	 * `bb_pre_is_entitled_to_addons`); use this to adjust the final value with
+	 * the matched product in hand.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
@@ -4671,8 +4690,12 @@ function bb_install_addons_bundle_on_upgrade() {
 		$installed = $upgrader->install( $product->_embedded->{'version-latest'}->url );
 
 		if ( true !== $installed ) {
-			// Filesystem not writable / download failed. Fail silently — the
-			// admin can install manually from the Add-ons page.
+			// Filesystem not writable / download failed. Fail silently for the
+			// user — the admin can install manually from the Add-ons page.
+			if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+				// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log -- Gated on WP_DEBUG; surfaces auto-install failures for support.
+				error_log( 'BuddyBoss Addons auto-install: install failed' . ( is_wp_error( $installed ) ? ': ' . $installed->get_error_message() : '.' ) );
+			}
 			return;
 		}
 	}
@@ -4683,5 +4706,13 @@ function bb_install_addons_bundle_on_upgrade() {
 	// root blog only.
 	$network_wide = function_exists( 'bp_is_network_activated' ) && bp_is_network_activated();
 
-	activate_plugin( $plugin_file, '', $network_wide );
+	$activated = activate_plugin( $plugin_file, '', $network_wide );
+
+	// Activation can fail even after a clean install (e.g. the add-on fatals on
+	// include, or its dependency check rejects the running Platform version).
+	// Leave it inactive rather than fatal the request, but log for support.
+	if ( is_wp_error( $activated ) && defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+		// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log -- Gated on WP_DEBUG; surfaces post-install activation failures for support.
+		error_log( 'BuddyBoss Addons auto-install: installed but activation failed: ' . $activated->get_error_message() );
+	}
 }
