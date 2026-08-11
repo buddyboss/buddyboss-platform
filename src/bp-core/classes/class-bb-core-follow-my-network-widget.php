@@ -46,8 +46,8 @@ class BB_Core_Follow_My_Network_Widget extends WP_Widget {
 			add_action( 'bp_enqueue_scripts', array( __CLASS__, 'enqueue_scripts' ) );
 		}
 
-		add_action( 'wp_ajax_widget_follow_my_network', array( $this, 'bb_ajax_widget_follow_my_network' ) );
-		add_action( 'wp_ajax_nopriv_widget_follow_my_network', array( $this, 'bb_ajax_widget_follow_my_network' ) );
+		add_action( 'wp_ajax_bb_widget_follow_my_network', array( $this, 'bb_ajax_widget_follow_my_network' ) );
+		add_action( 'wp_ajax_nopriv_bb_widget_follow_my_network', array( $this, 'bb_ajax_widget_follow_my_network' ) );
 	}
 
 	/**

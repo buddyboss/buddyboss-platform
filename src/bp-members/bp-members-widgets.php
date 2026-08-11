@@ -144,6 +144,6 @@ function bp_core_ajax_widget_members() {
 	echo wp_json_encode( $result );
 	exit;
 }
-add_action( 'wp_ajax_widget_members', 'bp_core_ajax_widget_members' );
-add_action( 'wp_ajax_nopriv_widget_members', 'bp_core_ajax_widget_members' );
+add_action( 'wp_ajax_bb_widget_members', 'bp_core_ajax_widget_members' );
+add_action( 'wp_ajax_nopriv_bb_widget_members', 'bp_core_ajax_widget_members' );
 

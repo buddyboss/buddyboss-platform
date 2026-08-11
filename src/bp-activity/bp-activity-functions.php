@@ -5593,7 +5593,7 @@ function bp_activity_get_edit_data( $activity_id = 0 ) {
 		return false;
 	}
 
-	$edit_data = wp_cache_get( $activity->id, 'activity_edit_data' );
+	$edit_data = wp_cache_get( $activity->id, 'bb_activity_edit_data' );
 	if ( false === $edit_data ) {
 		// Get activity metas.
 		$activity_metas = bb_activity_get_metadata( $activity_id );
@@ -5654,7 +5654,7 @@ function bp_activity_get_edit_data( $activity_id = 0 ) {
 		);
 
 		// Set meta data to cache.
-		wp_cache_set( $activity->id, $edit_data, 'activity_edit_data' );
+		wp_cache_set( $activity->id, $edit_data, 'bb_activity_edit_data' );
 	}
 
 	/**
@@ -6454,7 +6454,7 @@ function bb_activity_comment_get_edit_data( $activity_comment_id = 0 ) {
 		return false;
 	}
 
-	$edit_data = wp_cache_get( 'comment_' . $activity_comment_id, 'activity_edit_data' );
+	$edit_data = wp_cache_get( 'comment_' . $activity_comment_id, 'bb_activity_edit_data' );
 	if ( false === $edit_data ) {
 		// Get activity metas.
 		$activity_comment_metas    = bb_activity_get_metadata( $activity_comment_id );
@@ -6494,7 +6494,7 @@ function bb_activity_comment_get_edit_data( $activity_comment_id = 0 ) {
 			'nickname'         => $activity_comment_nickname,
 		);
 
-		wp_cache_set( 'comment_' . $activity_comment_id, $edit_data, 'activity_edit_data' );
+		wp_cache_set( 'comment_' . $activity_comment_id, $edit_data, 'bb_activity_edit_data' );
 	}
 
 	/**

@@ -301,7 +301,7 @@ add_action( 'bbp_get_request', 'bbp_search_results_redirect', 10 );
 // Maybe convert the users password.
 add_action( 'bbp_login_form_login', 'bbp_user_maybe_convert_pass' );
 
-add_action( 'wp_ajax_post_topic_reply_draft', 'bb_post_topic_reply_draft' );
+add_action( 'wp_ajax_bb_post_topic_reply_draft', 'bb_post_topic_reply_draft' );
 
 add_action( 'wp_footer', 'bb_forum_add_content_popup' );
 

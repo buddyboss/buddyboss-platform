@@ -55,7 +55,7 @@ jQuery( document ).ready(
 						data: function ( params ) {
 							return jQuery.extend( {}, params, {
 								_wpnonce: bbpCommonJsData.nonce,
-								action: 'search_tags',
+								action: 'bb_search_tags',
 							} );
 						},
 						cache: true,
@@ -282,7 +282,7 @@ jQuery( document ).ready(
 								data: function ( params ) {
 									return jQuery.extend( {}, params, {
 										_wpnonce: bbpCommonJsData.nonce,
-										action: 'search_tags',
+										action: 'bb_search_tags',
 									} );
 								},
 								cache: true,

@@ -4,8 +4,11 @@
  *
  * @package BuddyBoss
  * @since 0.1.0
+ * @since BuddyBoss [BBVERSION] Renamed from `Rest_BBP_Walker_Reply` to `BB_Rest_BBP_Walker_Reply`
+ *                              for WP.org plugin-unique prefix compliance. A `class_alias()` keeps
+ *                              the old name working for third-party code.
  */
-class Rest_BBP_Walker_Reply extends Walker {
+class BB_Rest_BBP_Walker_Reply extends Walker {
 
 	/**
 	 * Tree type.
@@ -141,4 +144,7 @@ class Rest_BBP_Walker_Reply extends Walker {
 	public function end_el( &$output = '', $object = false, $depth = 0, $args = array() ) {
 	}
 }
+
+// Back-compat alias for third-party code — the class was renamed for WP.org prefix compliance.
+class_alias( 'BB_Rest_BBP_Walker_Reply', 'Rest_BBP_Walker_Reply' );
 

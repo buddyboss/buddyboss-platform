@@ -873,7 +873,7 @@ window.bp = window.bp || {};
 							data: function ( params ) {
 								return jQuery.extend( {}, params, {
 									_wpnonce: bbrlForumsCommonJsData.nonce,
-									action: 'search_tags',
+									action: 'bb_search_tags',
 								} );
 							},
 							cache: true,

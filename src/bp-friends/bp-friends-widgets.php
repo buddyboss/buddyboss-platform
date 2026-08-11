@@ -117,5 +117,5 @@ function bp_core_ajax_widget_friends() {
 		<?php
 	endif;
 }
-add_action( 'wp_ajax_widget_friends', 'bp_core_ajax_widget_friends' );
-add_action( 'wp_ajax_nopriv_widget_friends', 'bp_core_ajax_widget_friends' );
+add_action( 'wp_ajax_bb_widget_friends', 'bp_core_ajax_widget_friends' );
+add_action( 'wp_ajax_nopriv_bb_widget_friends', 'bp_core_ajax_widget_friends' );

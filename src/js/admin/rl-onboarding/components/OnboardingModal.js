@@ -144,7 +144,7 @@ export const OnboardingModal = ({ isOpen, onClose, onContinue, onSkip }) => {
                     'Content-Type': 'application/x-www-form-urlencoded',
                 },
                 body: new URLSearchParams({
-                    action: 'rl_onboarding_save_step_progress',
+                    action: window.bbRlOnboarding?.actions?.saveProgress || 'bb_rl_onboarding_save_step_progress',
                     nonce: window.bbRlOnboarding?.nonce || '',
                     step: stepIndex,
                     data: JSON.stringify({

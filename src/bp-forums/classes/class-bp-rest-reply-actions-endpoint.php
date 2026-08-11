@@ -30,9 +30,9 @@ class BP_REST_Reply_Actions_Endpoint extends BP_REST_Reply_Endpoint {
 	protected $topic_endpoint;
 
 	/**
-	 * Rest_BBP_Walker_Reply Instance.
+	 * BB_Rest_BBP_Walker_Reply Instance.
 	 *
-	 * @var Rest_BBP_Walker_Reply
+	 * @var BB_Rest_BBP_Walker_Reply
 	 */
 	protected $bbb_walker_reply;
 
@@ -46,7 +46,7 @@ class BP_REST_Reply_Actions_Endpoint extends BP_REST_Reply_Endpoint {
 		$this->rest_base        = 'reply';
 		$this->forum_endpoint   = new BP_REST_Forums_Endpoint();
 		$this->topic_endpoint   = new BP_REST_Topics_Endpoint();
-		$this->bbb_walker_reply = new Rest_BBP_Walker_Reply();
+		$this->bbb_walker_reply = new BB_Rest_BBP_Walker_Reply();
 	}
 
 	/**

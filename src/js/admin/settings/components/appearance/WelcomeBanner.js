@@ -33,7 +33,7 @@
  * click, and subsequent clicks re-mount the already parsed bundle via
  * `window.bbRlOnboarding.mount()`. Keeps the Settings 2.0 React tree
  * alive, so form edits aren't lost. Falls back to a full-page redirect
- * with `bb_wizard_activation=rl_onboarding` when the bootstrap payload
+ * with `bb_wizard_activation=bb_rl_onboarding` when the bootstrap payload
  * isn't available.
  *
  * The Theme variant's "Use ReadyLaunch" button is **not** the wizard —
@@ -55,7 +55,7 @@ import { ajaxFetch } from '../../utils/ajax';
 import { BB_EVENTS } from '../../utils/constants';
 
 const WIZARD_PARAM   = 'bb_wizard_activation';
-const WIZARD_VALUE   = 'rl_onboarding';
+const WIZARD_VALUE   = 'bb_rl_onboarding';
 const CSS_LINK_ID    = 'bb-rl-onboarding-css';
 const JS_SCRIPT_ID   = 'bb-rl-onboarding-js';
 const BUY_THEME_URL  = 'https://buddyboss.com/pricing/';

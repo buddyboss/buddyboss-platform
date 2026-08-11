@@ -32,7 +32,7 @@ export const SplashScreen = ({ stepData, onNext, onSkip }) => {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                 body: new URLSearchParams({
-                    action: 'rl_onboarding_save_step_progress',
+                    action: window.bbRlOnboarding?.actions?.saveProgress || 'bb_rl_onboarding_save_step_progress',
                     nonce: nonce,
                     step: 0,
                     data: JSON.stringify({ step_key: 'step_0', form_data: { bb_theme: bb_theme } })

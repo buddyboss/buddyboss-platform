@@ -384,4 +384,4 @@ function bp_signup_check_email_username() {
 	wp_send_json( $return, true );
 }
 
-add_action( 'wp_ajax_nopriv_check_email', 'bp_signup_check_email_username' );
+add_action( 'wp_ajax_nopriv_bb_check_email', 'bp_signup_check_email_username' );

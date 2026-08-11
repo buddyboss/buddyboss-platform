@@ -370,7 +370,7 @@ class BP_Activity_Component extends BP_Component {
 				'bp_activity_comments',
 				'activity_meta',
 				'bp_activity_follow',
-				'activity_edit_data',
+				'bb_activity_edit_data',
 				'bb_activity_topics',
 			)
 		);

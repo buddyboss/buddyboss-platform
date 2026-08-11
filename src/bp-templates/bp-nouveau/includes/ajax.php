@@ -319,7 +319,7 @@ function bp_nouveau_object_template_results_groups_personal_scope( $querystring,
 	return http_build_query( $querystring );
 }
 
-add_action( 'wp_ajax_save_cover_position', 'bp_nouveau_ajax_save_cover_position' );
+add_action( 'wp_ajax_bb_save_cover_position', 'bp_nouveau_ajax_save_cover_position' );
 
 /**
  * Save Cover image position for group and member.

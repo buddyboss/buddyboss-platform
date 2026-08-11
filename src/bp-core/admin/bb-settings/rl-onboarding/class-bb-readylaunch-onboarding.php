@@ -445,10 +445,15 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 	 * Initialise the ReadyLaunch onboarding wizard.
 	 *
 	 * @since BuddyBoss 2.10.0
+	 * @since BuddyBoss [BBVERSION] Wizard ID renamed from `rl_onboarding` to `bb_rl_onboarding`
+	 *                              for WP.org plugin-unique prefix compliance (dynamic `wp_ajax_*`
+	 *                              actions, nonce name and progress option keys derive from it).
+	 *                              In-flight wizard progress stored under the old ID resets; the
+	 *                              completion flag (`bb_rl_onboarding_completed`) is unaffected.
 	 * @return void
 	 */
 	protected function init() {
-		$this->wizard_id      = 'rl_onboarding';
+		$this->wizard_id      = 'bb_rl_onboarding';
 		$this->wizard_name    = __( 'ReadyLaunch Onboarding', 'buddyboss-platform' );
 		$this->wizard_version = '1.0.0';
 		$this->assets_dir     = __DIR__ . '/assets/';

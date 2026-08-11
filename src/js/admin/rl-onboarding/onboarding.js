@@ -40,7 +40,7 @@ const OnboardingApp = () => {
     const handleModalClose = () => {
         setShowModal(false);
         // Notify the Settings 2.0 Welcome Banner so it can strip the
-        // `bb_wizard_activation=rl_onboarding` URL param it pushState'd
+        // `bb_wizard_activation=bb_rl_onboarding` URL param it pushState'd
         // when opening the wizard.
         document.dispatchEvent( new CustomEvent( 'bb_rl_onboarding_closed' ) );
     };
@@ -152,7 +152,7 @@ const OnboardingApp = () => {
  * dismissed it once.
  *
  * Used both by the DOM-ready auto-mount path (fresh-install redirect
- * with `bb_wizard_activation=rl_onboarding`) and by the Settings 2.0
+ * with `bb_wizard_activation=bb_rl_onboarding`) and by the Settings 2.0
  * Appearance Welcome Banner for lazy mount-on-click without a reload.
  *
  * @since BuddyBoss [BBVERSION]
