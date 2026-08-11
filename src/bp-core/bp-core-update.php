@@ -562,6 +562,14 @@ function bp_version_updater() {
 			bb_update_to_3_0_3();
 		}
 
+		// DB version 23604 — install the BuddyBoss Addons bundle for entitled
+		// customers, once, on the upgrade into this release (PROD-10242). Runs on
+		// every update path — Plugins screen, auto-update, or a direct FTP/copy-paste
+		// — because this keys on the stored _bp_db_version vs the code db_version.
+		if ( $raw_db_version < 23604 ) {
+			bb_install_addons_bundle_on_upgrade();
+		}
+
 		if ( $raw_db_version !== $current_db ) {
 			// @todo - Write only data manipulate migration here. ( This is not for DB structure change ).
 
@@ -4519,4 +4527,155 @@ function bb_update_to_3_0_3() {
 	// associations, so a bulk delete invalidates it once at the end
 	// rather than per-field.
 	wp_cache_delete( 'field_member_types', 'bp_xprofile' );
+}
+
+/**
+ * Whether a plan SKU is a non-entitled (Free/Lite) edition.
+ *
+ * Mirrors the buddyboss-addons plugin's own denylist so Platform and the add-on
+ * agree on who is entitled. Case-insensitive prefix match; empty is non-entitled.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $plugin_id Plan SKU from BB_Plugin_Connector::getCurrentPluginId().
+ * @return bool True when Free/Lite (not entitled).
+ */
+function bb_is_non_entitled_addons_edition( $plugin_id ) {
+	$plugin_id = strtolower( (string) $plugin_id );
+
+	if ( '' === $plugin_id ) {
+		return true;
+	}
+
+	foreach ( array( 'bb-platform-free', 'bb-platform-lite' ) as $prefix ) {
+		if ( 0 === strpos( $plugin_id, $prefix ) ) {
+			return true;
+		}
+	}
+
+	return false;
+}
+
+/**
+ * Whether the current site is entitled to the BuddyBoss Addons bundle.
+ *
+ * Entitlement = Mothership present AND active license AND paid-tier SKU AND the
+ * catalog carries the buddyboss-addons product AND the products API did not
+ * error. Never returns true on an errored catalog read.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return bool True when entitled.
+ */
+function bb_is_entitled_to_addons() {
+	$has_mothership = class_exists( '\BuddyBoss\Core\Admin\Mothership\BB_Plugin_Connector' )
+		&& class_exists( '\BuddyBoss\Core\Admin\Mothership\BB_Addons_Manager' );
+
+	if ( ! $has_mothership ) {
+		return false;
+	}
+
+	$connector = new \BuddyBoss\Core\Admin\Mothership\BB_Plugin_Connector();
+
+	if ( ! $connector->getLicenseActivationStatus() ) {
+		return false;
+	}
+
+	if ( bb_is_non_entitled_addons_edition( $connector->getCurrentPluginId() ) ) {
+		return false;
+	}
+
+	// Fetch the product first (warms the products transient), then read the
+	// error flag from that same warm cache. An errored read returns false.
+	$product = \BuddyBoss\Core\Admin\Mothership\BB_Addons_Manager::checkProductBySlug( 'buddyboss-addons' );
+
+	if ( \BuddyBoss\Core\Admin\Mothership\BB_Addons_Manager::productsApiErrored() ) {
+		return false;
+	}
+
+	$entitled = ! empty( $product );
+
+	/**
+	 * Filters the BuddyBoss Addons entitlement decision.
+	 *
+	 * Test/extensibility seam: the Mothership license layer cannot be mocked in
+	 * unit tests, so tests stub entitlement through this filter.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param bool        $entitled Whether the site is entitled.
+	 * @param object|null $product  The matched product object, or null.
+	 */
+	return (bool) apply_filters( 'bb_is_entitled_to_addons', $entitled, $product );
+}
+
+/**
+ * Whether the buddyboss-addons plugin is active.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return bool True when active.
+ */
+function bb_is_addons_plugin_active() {
+	if ( ! function_exists( 'is_plugin_active' ) ) {
+		require_once ABSPATH . 'wp-admin/includes/plugin.php';
+	}
+
+	return is_plugin_active( 'buddyboss-addons/buddyboss-addons.php' );
+}
+
+/**
+ * One-time upgrade migration: install & activate the BuddyBoss Addons bundle
+ * for entitled customers.
+ *
+ * Invoked once from bp_version_updater() (PROD-10242). System-migration style,
+ * like the sibling bb_update_to_* functions: no capability gate (bp_version_updater
+ * is not capability-gated and bumps the stored version on the first admin request,
+ * so a cap gate would let a low-privilege user burn the one-shot). Non-interactive
+ * (Automatic_Upgrader_Skin) — never prompts, never fatals, never loops. Performs
+ * install + activate ONLY; writes no feature settings.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_install_addons_bundle_on_upgrade() {
+	require_once ABSPATH . 'wp-admin/includes/plugin.php';
+
+	// Already active → nothing to do (checked first: no disk/network work, and
+	// keeps the unit test's no-write path hermetic).
+	if ( bb_is_addons_plugin_active() ) {
+		return;
+	}
+
+	if ( ! bb_is_entitled_to_addons() ) {
+		return;
+	}
+
+	$plugin_file = 'buddyboss-addons/buddyboss-addons.php';
+
+	// Install only when the files are absent; never re-install over an existing copy.
+	if ( ! file_exists( trailingslashit( WP_PLUGIN_DIR ) . $plugin_file ) ) {
+		require_once ABSPATH . 'wp-admin/includes/file.php';
+		require_once ABSPATH . 'wp-admin/includes/misc.php';
+		require_once ABSPATH . 'wp-admin/includes/class-wp-upgrader.php';
+
+		$product = \BuddyBoss\Core\Admin\Mothership\BB_Addons_Manager::checkProductBySlug( 'buddyboss-addons' );
+
+		if ( empty( $product ) || empty( $product->_embedded->{'version-latest'}->url ) ) {
+			return;
+		}
+
+		$skin      = new Automatic_Upgrader_Skin();
+		$upgrader  = new Plugin_Upgrader( $skin );
+		$installed = $upgrader->install( $product->_embedded->{'version-latest'}->url );
+
+		if ( true !== $installed ) {
+			// Filesystem not writable / download failed. Fail silently — the
+			// admin can install manually from the Add-ons page.
+			return;
+		}
+	}
+
+	activate_plugin( $plugin_file );
 }
