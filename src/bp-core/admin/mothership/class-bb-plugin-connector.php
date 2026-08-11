@@ -60,6 +60,17 @@ class BB_Plugin_Connector extends AbstractPluginConnection {
 
 	/**
 	 * Clear the dynamic plugin ID.
+	 *
+	 * Deliberately does NOT clear the STABLE_LICENSE_KEY_OPTION mirror. Every
+	 * caller except the explicit licence reset reaches this from a transient
+	 * failure path — a rejected activation attempt or a failed legacy
+	 * migration — where the previously activated key is still the customer's
+	 * real licence and must survive, or the failure strands the site as
+	 * unlicensed and DRM-nags a paying customer (the exact defect the mirror
+	 * exists to fix). A failed activation never persists its candidate key,
+	 * so the mirror only ever holds the last successfully activated one. The
+	 * reset path is the one place that clears user intent, and it pairs this
+	 * call with updateLicenseKey( '' ).
 	 */
 	public function clearDynamicPluginId(): void {
 		// Clear caches with old plugin ID before clearing.
