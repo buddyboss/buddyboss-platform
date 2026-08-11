@@ -606,7 +606,7 @@ class BB_DRM_Helper {
 				$admin_notice_view = 'low_notification';
 				$heading           = __( 'License Activation Needed', 'buddyboss-platform' );
 				$color             = 'FFA500'; // Orange.
-				$simple_message    = __( 'We couldn\'t verify an active license for your BuddyBoss features. Please activate your license to continue using them.', 'buddyboss-platform' );
+				$simple_message    = __( 'We couldn\'t verify an active license for your BuddyBoss paid add-on features. Please activate your license to continue using them.', 'buddyboss-platform' );
 				$help_message      = __( 'Activate Your License', 'buddyboss-platform' );
 				$label             = __( 'Notice', 'buddyboss-platform' );
 				$activation_link   = bp_get_admin_url( 'admin.php?page=buddyboss-license' );
@@ -628,7 +628,7 @@ class BB_DRM_Helper {
 				$admin_notice_view = 'medium_warning';
 				$heading           = __( 'License Required', 'buddyboss-platform' );
 				$color             = 'FFA500'; // Yellow/Orange.
-				$simple_message    = __( 'An active license is required to use BuddyBoss features. Without activation, these features will stop working.', 'buddyboss-platform' );
+				$simple_message    = __( 'An active license is required to use BuddyBoss Pro/Plus add-on features. Without activation, these add-on features will stop working.', 'buddyboss-platform' );
 				$help_message      = __( 'Activate Your License', 'buddyboss-platform' );
 				$label             = __( 'Warning', 'buddyboss-platform' );
 				$activation_link   = bp_get_admin_url( 'admin.php?page=buddyboss-license' );
@@ -650,7 +650,7 @@ class BB_DRM_Helper {
 				$admin_notice_view = 'high_warning';
 				$heading           = __( 'License Activation Required', 'buddyboss-platform' );
 				$color             = 'FF8C00'; // Dark Orange.
-				$simple_message    = __( 'Your BuddyBoss features will be disabled soon. Activate your license now to avoid interruption.', 'buddyboss-platform' );
+				$simple_message    = __( 'Your BuddyBoss Pro/Plus add-on features will be disabled soon. Activate your license now to avoid interruption.', 'buddyboss-platform' );
 				$help_message      = __( 'Activate Your License', 'buddyboss-platform' );
 				$label             = __( 'Critical', 'buddyboss-platform' );
 				$activation_link   = bp_get_admin_url( 'admin.php?page=buddyboss-license' );
@@ -670,9 +670,9 @@ class BB_DRM_Helper {
 			case self::DRM_LOCKED:
 				// 30+ days: Features Disabled (Red) + Plugin Notification + Site Health + Email (per BuddyBoss DRM Messaging.md)
 				$admin_notice_view = 'locked_warning';
-				$heading           = __( 'BuddyBoss Features Disabled', 'buddyboss-platform' );
+				$heading           = __( 'BuddyBoss Pro/Plus Add-on Features Disabled', 'buddyboss-platform' );
 				$color             = 'dc3232'; // Red.
-				$simple_message    = __( ' The following features have been disabled because no active license was found. Activate your license to restore them.', 'buddyboss-platform' );
+				$simple_message    = __( ' The following paid add-on features have been disabled because no active license was found. Activate your license to restore them.', 'buddyboss-platform' );
 				$help_message      = __( 'Activate Your License', 'buddyboss-platform' );
 				$label             = __( 'Critical', 'buddyboss-platform' );
 				$activation_link   = bp_get_admin_url( 'admin.php?page=buddyboss-license' );
