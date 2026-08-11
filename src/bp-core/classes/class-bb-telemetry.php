@@ -254,6 +254,13 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 		 * @return array List of plugins with 'name', 'slug', 'version', and 'active' keys.
 		 */
 		public function bb_get_plugins_data() {
+			// WP-Cron loads no admin includes, so without this the weekly send
+			// reported an empty plugin list with every `active` flag false on
+			// sites where nothing else happened to have loaded plugin.php.
+			if ( ! function_exists( 'get_plugins' ) || ! function_exists( 'is_plugin_active' ) ) {
+				require_once ABSPATH . 'wp-admin/includes/plugin.php';
+			}
+
 			$plugin_list = function_exists( 'get_plugins' ) ? get_plugins() : array();
 			wp_cache_delete( 'plugins', 'plugins' );
 
@@ -793,17 +800,42 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 				return false;
 			}
 
-			$manager = '\BuddyBoss\Core\Admin\Mothership\BB_Addons_Manager';
-
-			if ( ! class_exists( $manager ) || ! method_exists( $manager, 'checkProductBySlug' ) ) {
+			// The vendor Response class must be loadable before unserializing the
+			// cached API response below.
+			if ( ! class_exists( '\BuddyBoss\Core\Admin\Mothership\BB_Addons_Manager' ) ) {
 				return false;
 			}
 
+			/*
+			 * Cache-only, deliberately. BB_Addons_Manager::checkProductBySlug()
+			 * fetches from the Mothership API on a cold cache, and this runs on
+			 * the telemetry send path — cron and the synchronous wizard sends —
+			 * where no network call may happen. A cold or errored cache reports
+			 * the theme's own licence state instead, which self-corrects on the
+			 * next send after an admin visit warms the add-ons cache.
+			 */
 			try {
-				return null !== call_user_func( array( $manager, 'checkProductBySlug' ), 'buddyboss-theme' );
+				$cached = get_transient( $plugin_id . '_add_ons' );
+
+				if ( empty( $cached ) || empty( $cached->products ) || ! is_iterable( $cached->products ) ) {
+					return false;
+				}
+
+				foreach ( $cached->products as $product ) {
+					if (
+						! empty( $product->slug ) &&
+						false !== strpos( $product->slug, 'buddyboss-theme' ) &&
+						! empty( $product->status ) &&
+						'enabled' === $product->status
+					) {
+						return true;
+					}
+				}
 			} catch ( \Throwable $e ) {
 				return false;
 			}
+
+			return false;
 		}
 
 		/**

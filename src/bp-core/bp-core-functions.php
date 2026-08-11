@@ -10945,17 +10945,24 @@ function bb_has_paid_product() {
 			}
 		}
 
-		// Licence data from before the Mothership migration.
+		// Licence data from before the Mothership migration. Multisite stored
+		// this network-wide, so mirror the migration loader's site-option
+		// fallback or licensed pre-Mothership networks read as unpaid.
 		if ( ! $detected ) {
 			$detected = ! empty( get_option( 'bboss_updater_saved_licenses', array() ) );
 		}
+		if ( ! $detected && is_multisite() ) {
+			$detected = ! empty( get_site_option( 'bboss_updater_saved_licenses', array() ) );
+		}
 
 		/*
-		 * Only memoize once add-ons have had the chance to register. A call
-		 * made before `plugins_loaded` would otherwise freeze a false negative
-		 * for the remainder of the request.
+		 * Only memoize once add-ons have had the chance to register (they do so
+		 * at `plugins_loaded` priority 9). did_action() alone is not enough: it
+		 * already returns 1 while `plugins_loaded` callbacks are still running,
+		 * so an early-priority callback could freeze a false negative for the
+		 * remainder of the request — hence the doing_action() exclusion.
 		 */
-		if ( did_action( 'plugins_loaded' ) ) {
+		if ( did_action( 'plugins_loaded' ) && ! doing_action( 'plugins_loaded' ) ) {
 			$memo = $detected;
 		}
 	} else {

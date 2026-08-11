@@ -289,6 +289,17 @@ if ( ! class_exists( 'BB_Report_Metrics' ) ) {
 		 * @return bool
 		 */
 		private static function is_plugin_active( $plugin_file ) {
+			/*
+			 * WP-Cron loads no admin includes, so is_plugin_active() does not
+			 * exist on the weekly send path — and every collector is gated on
+			 * this check, so without the require the whole metrics block came
+			 * back empty from cron on sites where nothing else happened to have
+			 * loaded plugin.php.
+			 */
+			if ( ! function_exists( 'is_plugin_active' ) ) {
+				require_once ABSPATH . 'wp-admin/includes/plugin.php';
+			}
+
 			return function_exists( 'is_plugin_active' ) && is_plugin_active( $plugin_file );
 		}
 
@@ -939,6 +950,7 @@ if ( ! class_exists( 'BB_Report_Metrics' ) ) {
 				FROM {$order_table} r
 				INNER JOIN {$order_table} o ON o.id = r.parent_order_id
 				WHERE r.type = %s
+				AND r.status NOT IN ( 'trash', 'auto-draft' )
 				AND o.type = %s
 				AND o.status IN ( {$status_placeholders} ){$refund_window}
 				GROUP BY r.currency";
@@ -1022,6 +1034,7 @@ if ( ! class_exists( 'BB_Report_Metrics' ) ) {
 				INNER JOIN ' . self::$wpdb->postmeta . ' tot ON r.ID = tot.post_id AND tot.meta_key = %s
 				LEFT JOIN ' . self::$wpdb->postmeta . " cur ON p.ID = cur.post_id AND cur.meta_key = %s
 				WHERE r.post_type = %s
+				AND r.post_status NOT IN ( 'trash', 'auto-draft' )
 				AND p.post_type IN ( {$type_placeholders} )
 				AND p.post_status IN ( {$status_placeholders} ){$window}
 				GROUP BY currency";
@@ -1333,16 +1346,24 @@ if ( ! class_exists( 'BB_Report_Metrics' ) ) {
 			$window_sql = '' === $floor ? '' : ' AND p.post_date_gmt >= %s';
 
 			/*
-			 * Child transactions only. The parent order carries `is_parent`;
-			 * legacy transactions predate parents and have no such row, so
-			 * this is a LEFT JOIN rather than a post_parent test.
+			 * Child transactions only. The parent order carries a truthy
+			 * `is_parent` meta; legacy transactions predate parents and have no
+			 * such row. NOT EXISTS rather than a LEFT JOIN on purpose: a join
+			 * emits one row per matching meta row, so duplicated `is_parent`
+			 * meta (imports, migrations) double-counted a transaction, and a
+			 * parent carrying both a truthy and an empty row slipped past the
+			 * per-row OR filter.
 			 */
 			$id_sql = 'SELECT p.ID, p.post_date_gmt
-				FROM ' . self::$wpdb->posts . ' p
-				LEFT JOIN ' . self::$wpdb->postmeta . " par ON par.post_id = p.ID AND par.meta_key = 'is_parent'
+				FROM ' . self::$wpdb->posts . " p
 				WHERE p.post_type = %s
 				AND p.post_status IN ( {$status_placeholders} )
-				AND ( par.meta_id IS NULL OR par.meta_value = '' OR par.meta_value = '0' ){$window_sql}
+				AND NOT EXISTS (
+					SELECT 1 FROM " . self::$wpdb->postmeta . " par
+					WHERE par.post_id = p.ID
+					AND par.meta_key = 'is_parent'
+					AND par.meta_value NOT IN ( '', '0' )
+				){$window_sql}
 				AND p.ID > %d
 				ORDER BY p.ID ASC
 				LIMIT %d";
