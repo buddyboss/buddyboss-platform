@@ -4677,5 +4677,11 @@ function bb_install_addons_bundle_on_upgrade() {
 		}
 	}
 
-	activate_plugin( $plugin_file );
+	// Match Platform's activation scope. On a network-activated Platform,
+	// network-activate the add-on so every subsite community gets it; otherwise
+	// this runs inside switch_to_blog( root ), so a plain activate lands on the
+	// root blog only.
+	$network_wide = function_exists( 'bp_is_network_activated' ) && bp_is_network_activated();
+
+	activate_plugin( $plugin_file, '', $network_wide );
 }
