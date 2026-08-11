@@ -545,21 +545,13 @@ class BP_Nouveau extends BP_Theme_Compat {
 			'footer'       => false,
 		);
 
-		if ( bp_is_active( 'media' ) ) {
-
-			$scripts['bp-nouveau-codemirror'] = array(
-				'file'         => buddypress()->plugin_url . 'bp-core/js/vendor/codemirror%s.js',
-				'dependencies' => array(),
-				'footer'       => true,
-			);
-
-			$scripts['bp-nouveau-codemirror-css'] = array(
-				'file'         => buddypress()->plugin_url . 'bp-core/js/vendor/css%s.js',
-				'dependencies' => array(),
-				'footer'       => true,
-			);
-
-		}
+		/*
+		 * CodeMirror (document text-file previews) now uses WordPress core's
+		 * bundled copy — the 'wp-codemirror' handle (script + style registered by
+		 * core, including the css/javascript/htmlmixed/xml modes the previews
+		 * use). The previously vendored copy was removed per the WP.org Plugin
+		 * Directory rule against shipping libraries WordPress already includes.
+		 */
 
 		foreach ( $scripts as $handle => $script ) {
 			if ( ! isset( $script['file'] ) ) {

@@ -17,7 +17,9 @@ defined( 'ABSPATH' ) || exit;
 wp_enqueue_script( 'bp-select2' );
 wp_enqueue_style( 'bp-select2' );
 $min = bp_core_get_minified_asset_suffix();
-wp_enqueue_style( 'bb-rl-login-fonts', buddypress()->plugin_url . "bp-templates/bp-nouveau/readylaunch/assets/fonts/fonts{$min}.css", array(), bp_get_version() );
+// Inter is loaded from the Google Fonts CDN (explicitly permitted by the WP.org
+// Plugin Directory guidelines for GPL-compatible font families; Inter is SIL OFL).
+wp_enqueue_style( 'bb-readylaunch-login-fonts', 'https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap', array(), null );
 wp_enqueue_style( 'bb-rl-login-style-icons', buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/icons/css/bb-icons-rl.min.css', array(), bp_get_version() );
 wp_style_add_data( 'bb-rl-login-style-icons', 'rtl', 'replace' );
 wp_enqueue_style( 'bb-rl-login-style', buddypress()->plugin_url . "bp-templates/bp-nouveau/readylaunch/css/login{$min}.css", array(), bp_get_version() );

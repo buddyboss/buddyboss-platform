@@ -289,7 +289,13 @@ module.exports = function (grunt) {
 							'!vendor/**/.github/**',
 							'!vendor/**/phpunit.xml*',
 							'!cli/features/**',
-							'!cli/bin/**'
+							'!cli/bin/**',
+							// Generated apiDoc REST documentation — dev artifact with no
+							// references from shipped PHP; not needed in the release zip
+							// (also removes the bundled Bootstrap glyphicons font copies).
+							// Makes the 'endpoints/**' entry in BUILD_TEST_EXTRA_STRIP_GLOBS
+							// a no-op, since the folder never reaches BUILD_DIR at all.
+							'!endpoints/**'
 						].concat( BP_EXCLUDED_MISC )
 					},
 					{
@@ -1100,27 +1106,24 @@ module.exports = function (grunt) {
 			} ) :
 			[];
 
-		// Images + woff2 fonts are offloaded to S3 (CSS refs already rewritten by
-		// rewrite_css_image_refs_to_s3, HTML refs rewritten at runtime).
-		var s3OffloadExclusions = S3_OFFLOAD_STRIP_GLOBS.map( function ( g ) {
-			return '!' + BUILD_DIR + g;
-		} );
-
-		// Re-include (no leading '!') the webpack bundle images that the blanket
-		// image strip above would otherwise drop. Appended LAST so they override
-		// the strip — these images ship in the zip and load locally because their
-		// JS-built URLs can't be rewritten to S3. @since BuddyBoss [BBVERSION]
-		var s3OffloadKeepIncludes = S3_OFFLOAD_KEEP_GLOBS.map( function ( g ) {
-			return BUILD_DIR + g;
-		} );
+		/*
+		 * Images + woff2 fonts ship IN the zip and are served locally (WP.org
+		 * Plugin Directory guideline 8 — no remotely loaded assets). The former
+		 * S3-offload strip (S3_OFFLOAD_STRIP_GLOBS/S3_OFFLOAD_KEEP_GLOBS +
+		 * rewrite_css_image_refs_to_s3) is no longer applied to the build; the
+		 * globs are retained above for a possible opt-in stripped-build task.
+		 * The unminified manifest is excluded from the zip: at runtime its
+		 * presence is BB_S3_Image_Offload's "assets were stripped" marker, and
+		 * a zip with local assets must not carry it.
+		 */
+		var manifestExclusion = [ '!' + BUILD_DIR + 'unminified-manifest.json' ];
 
 		var allExclusions = pairExclusions
 			.concat( fontExclusions )
 			.concat( translationExclusions )
 			.concat( devSourceExclusions )
 			.concat( buildTestExtraExclusions )
-			.concat( s3OffloadExclusions )
-			.concat( s3OffloadKeepIncludes );
+			.concat( manifestExclusion );
 
 		grunt.config.set( 'compress.main.files', [ {
 			src:  [ BUILD_DIR + '**' ].concat( allExclusions ),
@@ -1132,9 +1135,8 @@ module.exports = function (grunt) {
 			FONT_STRIP_GLOBS.length + ' font-strip globs + ' +
 			TRANSLATION_STRIP_GLOBS.length + ' translation globs + ' +
 			DEV_SOURCE_STRIP_GLOBS.length + ' dev-source globs + ' +
-			buildTestExtraExclusions.length + ' build_test-extra globs (endpoints) + ' +
-			s3OffloadExclusions.length + ' S3-offload globs (images + woff2) from zip; ' +
-			're-included ' + s3OffloadKeepIncludes.length + ' webpack build-image keep-globs.'
+			buildTestExtraExclusions.length + ' build_test-extra globs (endpoints) from zip; ' +
+			'images + woff2 ship locally (S3 offload strip disabled), unminified manifest excluded.'
 		);
 	} );
 
@@ -1142,7 +1144,7 @@ module.exports = function (grunt) {
 	// `exec:generate_debug_manifest` runs AFTER the production push but BEFORE compress, so the manifest ships in the
 	// customer zip while production keeps the unminified files but not the per-version manifest pointer.
 	// `configure_compress_exclusions` rewrites compress.main.files from the manifest so the zip stays in lockstep.
-	grunt.registerTask('build', ['string-replace:dist', 'exec:composer', 'clean:all', 'exec:init_build_dir_git', 'exec:empty_build_dir', 'copy:files', 'clean:composer', 'exec:commit_build_to_mothership_release', 'exec:generate_debug_manifest', 'strip_orphan_font_refs', 'rewrite_css_image_refs_to_s3', 'configure_compress_exclusions', 'compress', 'clean:all']);
+	grunt.registerTask('build', ['string-replace:dist', 'exec:composer', 'clean:all', 'exec:init_build_dir_git', 'exec:empty_build_dir', 'copy:files', 'clean:composer', 'exec:commit_build_to_mothership_release', 'exec:generate_debug_manifest', 'strip_orphan_font_refs', 'configure_compress_exclusions', 'compress', 'clean:all']);
 
 	// Build-test task: identical to `build` except it never touches the
 	// production branch — no git init, no fetch, no checkout, no commit,

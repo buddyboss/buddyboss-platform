@@ -371,24 +371,24 @@ class BB_S3_Image_Offload {
 	 * @return bool
 	 */
 	public function is_enabled() {
-		$debug = defined( 'WP_DEBUG' ) && WP_DEBUG && defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG;
-
-		// Under WP_DEBUG && SCRIPT_DEBUG, serve images locally — but ONLY on a dev
-		// checkout, where the image files actually exist on disk. On a shipped /
-		// stripped build the images were removed from the zip and offloaded to S3,
-		// so S3 must remain the source even with debugging on, otherwise the local
-		// URLs 404.
-		$enabled = ! ( $debug && ! $this->is_stripped_build() );
+		/*
+		 * Asset offloading is ON only when this install is an asset-stripped build
+		 * (legacy zips whose images/woff2 were removed and offloaded — there S3 is
+		 * the only source and must stay on). Current builds ship every asset in
+		 * the zip and serve them locally (WP.org Plugin Directory guideline 8 —
+		 * no remotely loaded assets), so the rewriter stays off.
+		 */
+		$enabled = $this->is_stripped_build();
 
 		/**
 		 * Filters whether Platform images are served from the external S3 bucket.
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
-		 * @param bool $enabled Default true. False only on a dev checkout while
-		 *                       WP_DEBUG && SCRIPT_DEBUG are active (images exist
-		 *                       locally); a shipped/stripped build keeps S3 on
-		 *                       regardless of debug, as it is the only image source.
+		 * @param bool $enabled Default false — assets ship in the plugin and are
+		 *                      served locally. True only on a legacy asset-stripped
+		 *                      build (detected via its unminified manifest marker),
+		 *                      where S3 is the only image source.
 		 */
 		return (bool) apply_filters( 'bb_s3_image_offload_enabled', $enabled );
 	}

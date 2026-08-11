@@ -9540,6 +9540,77 @@ function bb_get_default_png_avatar( $params ) {
 }
 
 /**
+ * Get the local path of the TTF font used to render generated default avatars.
+ *
+ * GD needs a font file on disk, but the plugin does not bundle one: the font
+ * (Inter Medium, SIL OFL — the same family the ReadyLaunch UI loads from the
+ * Google Fonts CDN) is downloaded from Google Fonts on first use and cached
+ * in the uploads directory. Returns an empty string when the font is not
+ * cached and cannot be downloaded (the caller then skips text rendering and
+ * the static default avatar is used instead).
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return string Full path to the cached TTF file, or empty string on failure.
+ */
+function bb_get_default_png_avatar_font_path() {
+	$upload_dir = wp_get_upload_dir();
+	$font_dir   = trailingslashit( $upload_dir['basedir'] ) . 'bb_fonts';
+	$font_path  = $font_dir . '/Inter-Medium.ttf';
+
+	if ( file_exists( $font_path ) ) {
+		return $font_path;
+	}
+
+	// Back off after a failed download instead of retrying on every avatar render.
+	if ( get_transient( 'bb_avatar_font_download_failed' ) ) {
+		return '';
+	}
+
+	/*
+	 * Resolve the current TTF file URL from the Google Fonts CSS API. Requesting
+	 * the stylesheet without a modern browser user agent makes the API respond
+	 * with TTF sources (modern UAs get woff2, which GD cannot read).
+	 */
+	$css_response = wp_safe_remote_get(
+		'https://fonts.googleapis.com/css2?family=Inter:wght@500',
+		array( 'user-agent' => '' )
+	);
+
+	$ttf_url = '';
+	if ( ! is_wp_error( $css_response ) && 200 === wp_remote_retrieve_response_code( $css_response ) ) {
+		if ( preg_match( '#url\((https://fonts\.gstatic\.com/[^)]+\.ttf)\)#', wp_remote_retrieve_body( $css_response ), $matches ) ) {
+			$ttf_url = $matches[1];
+		}
+	}
+
+	$font_saved = false;
+	if ( ! empty( $ttf_url ) ) {
+		$ttf_response = wp_safe_remote_get( $ttf_url, array( 'timeout' => 15 ) );
+		$ttf_body     = ! is_wp_error( $ttf_response ) ? wp_remote_retrieve_body( $ttf_response ) : '';
+
+		// TTF files start with the 0x00010000 sfnt version tag; 'true' also occurs for legacy TrueType.
+		if ( ! empty( $ttf_body ) && 200 === wp_remote_retrieve_response_code( $ttf_response ) && in_array( substr( $ttf_body, 0, 4 ), array( "\x00\x01\x00\x00", 'true' ), true ) ) {
+			if ( wp_mkdir_p( $font_dir ) ) {
+				global $wp_filesystem;
+				if ( ! $wp_filesystem instanceof WP_Filesystem_Base ) {
+					require_once ABSPATH . 'wp-admin/includes/file.php';
+					WP_Filesystem();
+				}
+				$font_saved = $wp_filesystem instanceof WP_Filesystem_Base && $wp_filesystem->put_contents( $font_path, $ttf_body, FS_CHMOD_FILE );
+			}
+		}
+	}
+
+	if ( ! $font_saved ) {
+		set_transient( 'bb_avatar_font_download_failed', true, HOUR_IN_SECONDS );
+		return '';
+	}
+
+	return $font_path;
+}
+
+/**
  * Function to prepare array to generate the default PNG avatar.
  *
  * @since BuddyBoss 2.5.50
@@ -9626,10 +9697,15 @@ function bb_generate_default_avatar( $args ) {
 	 * Set font family full path to render text on image.
 	 *
 	 * @since BuddyBoss 2.16.0
+	 * @since BuddyBoss [BBVERSION] Default changed from the Apple-proprietary
+	 *                              SFUIText-Medium.ttf (not redistributable; removed for
+	 *                              WP.org GPL compliance) to Inter Medium (SIL OFL),
+	 *                              downloaded from Google Fonts on first use and cached
+	 *                              in the uploads directory — no font ships in the plugin.
 	 *
 	 * @param string $font_family Full path of font family. It should be a TTF file.
 	 */
-	$font_family = apply_filters( 'bb_default_png_avatar_font_family', trailingslashit( buddypress()->plugin_dir ) . 'bp-core/fonts/SFUIText-Medium.ttf' );
+	$font_family = apply_filters( 'bb_default_png_avatar_font_family', bb_get_default_png_avatar_font_path() );
 
 	if ( empty( $font_family ) ) {
 		return $prepare_response;

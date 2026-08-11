@@ -1,7 +1,7 @@
 === BuddyBoss Platform ===
 Contributors: buddyboss
-Requires at least: 4.9.1
-Tested up to: 6.8.1
+Requires at least: 6.0
+Tested up to: 6.8
 Requires PHP: 7.4.0
 Stable tag: 3.1.2
 License: GPLv2 or later
@@ -54,6 +54,66 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Activate at the network level for full integration with all sites in your network. (This is the most common multisite installation type.)
 * Enable multiblog mode to allow your BuddyBoss Platform content to be displayed on any site in your WordPress Multisite network, using the same central data.
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
+
+== External services ==
+
+BuddyBoss Platform connects to a number of external/third-party services. Each service, the data it receives, and when that happens is described below, along with the provider's Terms of Use and Privacy Policy. Several of these services are operated by BuddyBoss and are covered by the BuddyBoss Terms (https://www.buddyboss.com/terms/) and Privacy Policy (https://www.buddyboss.com/privacy/).
+
+= Google Fonts =
+
+The ReadyLaunch interface loads the "Inter" font family (SIL Open Font License) from the Google Fonts content-delivery network. When a page using ReadyLaunch styling is rendered, the visitor's browser requests the font stylesheet from `https://fonts.googleapis.com/` and the font files from `https://fonts.gstatic.com/`; as with any HTTP request, the visitor's IP address and user agent are sent to Google as part of the request. In addition, when generated "initials" default avatars are enabled, the web server downloads the Inter Medium TTF file once from the same Google Fonts service and caches it in the uploads directory for image rendering; that request originates from your server and sends no visitor data. No other data is transmitted. This service is operated by Google.
+Terms of Service: https://policies.google.com/terms
+Privacy Policy: https://policies.google.com/privacy
+
+= BuddyBoss licensing service =
+
+Used to activate, deactivate, and periodically validate your BuddyBoss license so that premium plugins and updates work. When you activate or deactivate a license in the admin (or during automatic re-validation), your license key and your site's activation domain are sent to the licensing endpoint at `https://licenses.caseproof.com/api/v1/`. This licensing platform is operated on BuddyBoss's behalf by Caseproof, LLC.
+Terms of Use: https://www.buddyboss.com/terms/
+Privacy Policy: https://www.buddyboss.com/privacy/
+Processor (licensing): Caseproof, LLC — Terms: https://caseproof.com/terms-of-service/ (TODO: confirm) — Privacy: https://caseproof.com/privacy-policy/ (TODO: confirm)
+
+= BuddyBoss free license verification =
+
+Used to generate a free BuddyBoss license key from within the admin. When you request a free key, the first name, last name, and email address you enter are sent to `https://b6zdd3mwkj.execute-api.us-east-2.amazonaws.com/v1/verify/`. This service is operated by BuddyBoss.
+Terms of Use: https://www.buddyboss.com/terms/
+Privacy Policy: https://www.buddyboss.com/privacy/
+
+= BuddyBoss Support Access =
+
+Used by the Help & Support Center to let the BuddyBoss support team securely and temporarily access your site to troubleshoot issues. When you enable Support Access (or attach a ticket, extend, or revoke access), your site URL, the attached support ticket number(s), and a temporary access token are sent to `https://oq8tjkh4kk.execute-api.us-east-2.amazonaws.com/v1`. Access is time-limited and expires automatically. This service is operated by BuddyBoss.
+Terms of Use: https://www.buddyboss.com/terms/
+Privacy Policy: https://www.buddyboss.com/privacy/
+
+= BuddyBoss usage telemetry =
+
+Optional, anonymous usage tracking used to help improve the product. It is disabled/anonymous by default and only runs if you opt in. When active, non-personal environment data is periodically sent to `https://www.buddyboss.com/usage-tracking/` — including an anonymous site identifier, site URL, WordPress/PHP/MySQL versions, the list of installed plugins and themes with versions, and which BuddyBoss components and integrations are active. Your admin email address is included only if you explicitly allow it. This service is operated by BuddyBoss.
+Terms of Use: https://www.buddyboss.com/terms/
+Privacy Policy: https://www.buddyboss.com/privacy/
+
+= BuddyBoss admin help & integrations catalog =
+
+Used to power the in-admin Help Center article search and the Integrations browser. When you search for help articles or browse/search integrations, your search query is sent to BuddyBoss (`https://buddyboss.com/wp-json/wp/v2/ht-kb/` for knowledge-base articles, and a BuddyBoss.com integrations endpoint fetched server-side via a proxy). No personal data is required to perform a search. This service is operated by BuddyBoss.
+Terms of Use: https://www.buddyboss.com/terms/
+Privacy Policy: https://www.buddyboss.com/privacy/
+
+= BuddyBoss marketing/upsell catalog =
+
+Used to display feature previews and upgrade information in the admin dashboard. The admin periodically fetches JSON catalog files and promotional images from `https://bb-features-marketing.s3.amazonaws.com/` (for example `bb-features.json` and `bb-field-upgrades.json`). This is a server-side request from your site to retrieve marketing content; no personal data is sent. This service is operated by BuddyBoss.
+Terms of Use: https://www.buddyboss.com/terms/
+Privacy Policy: https://www.buddyboss.com/privacy/
+
+= Google reCAPTCHA =
+
+Used, when you enable the reCAPTCHA integration, to protect registration, login, and lost-password forms from spam and abuse. When reCAPTCHA is enabled, the reCAPTCHA script is loaded from `https://www.google.com/recaptcha/api.js` in the visitor's browser, and on form submission the challenge token (together with your reCAPTCHA secret key and the visitor's IP address) is verified against `https://www.google.com/recaptcha/api/siteverify`. This is provided by Google.
+More about reCAPTCHA: https://www.google.com/recaptcha/about/
+Terms of Use: https://policies.google.com/terms
+Privacy Policy: https://policies.google.com/privacy
+
+= Gravatar =
+
+Used to display user avatars based on email address. When resolving an avatar, an MD5 hash of the user's email address is used to request the image from `https://www.gravatar.com/avatar/`, and the plugin may make a request to that host to check whether a Gravatar exists. Gravatar is operated by Automattic Inc.
+Terms of Use: https://wordpress.com/tos/
+Privacy Policy: https://automattic.com/privacy/
 
 == Changelog ==
 

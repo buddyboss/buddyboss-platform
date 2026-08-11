@@ -19,8 +19,8 @@ function bp_nouveau_document_enqueue_scripts() {
 	if ( bp_is_user_document() || bp_is_single_folder() || bp_is_document_directory() || bp_is_activity_component() || bp_is_group_activity() || bp_is_group_document() || bp_is_group_folders() || bp_is_messages_component() || bp_is_forums_document_support_enabled() ) {
 		if ( bp_is_profile_document_support_enabled() || bp_is_group_document_support_enabled() || bp_is_messages_document_support_enabled() ) {
 			wp_enqueue_script( 'bp-media-dropzone' );
-			wp_enqueue_script( 'bp-nouveau-codemirror' );
-			wp_enqueue_script( 'bp-nouveau-codemirror-css' );
+			// WordPress core's bundled CodeMirror (script incl. css/js/html modes).
+			wp_enqueue_script( 'wp-codemirror' );
 			wp_enqueue_script( 'bp-nouveau-media' );
 			wp_enqueue_script( 'bp-exif' );
 		}

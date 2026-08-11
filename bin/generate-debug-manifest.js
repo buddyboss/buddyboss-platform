@@ -40,21 +40,20 @@ function main() {
 		fail( 'build dir does not exist or is not a directory: ' + buildDir );
 	}
 
-	var pairs  = pairFinder.findPairFiles( buildDir );
-	var assets = pairFinder.findOffloadedAssets( buildDir );
+	var pairs = pairFinder.findPairFiles( buildDir );
 
 	// The manifest lists every file stripped from the shipped zip so the Grunt
 	// `configure_compress_exclusions` step knows what to exclude:
 	//   - unminified JS/CSS pairs (key = unminified rel path)
-	//   - offloaded images + woff2 fonts (key = asset rel path)
+	//
+	// Offloaded images/woff2 are NO LONGER listed: all static assets ship in
+	// the zip and are served locally (WP.org Plugin Directory guideline 8 — no
+	// remotely loaded assets). See pairFinder.findOffloadedAssets for the
+	// retained (currently unused) discovery logic.
 	var files = Object.create( null );
 	for ( var i = 0; i < pairs.length; i++ ) {
 		var p = pairs[ i ];
 		files[ p.relUnmin ] = pairFinder.computeSha256( p.absUnmin );
-	}
-	for ( var j = 0; j < assets.length; j++ ) {
-		var a = assets[ j ];
-		files[ a.rel ] = pairFinder.computeSha256( a.abs );
 	}
 
 	var manifest = {
@@ -71,7 +70,6 @@ function main() {
 		'[generate-debug-manifest] wrote ' + manifestPath + '\n' +
 		'  plugin_version: ' + pluginVersion + '\n' +
 		'  pair count:     ' + pairs.length + '\n' +
-		'  asset count:    ' + assets.length + '\n' +
 		'  total files:    ' + Object.keys( files ).length + '\n'
 	);
 }
