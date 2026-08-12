@@ -46,6 +46,12 @@ function bp_nouveau_video_enqueue_scripts() {
 	if ( bp_is_user_video() || bp_is_single_video_album() || bp_is_single_album() || bp_is_video_directory() || bp_is_activity_component() || bp_is_group_activity() || bp_is_group_video() || bp_is_group_video_albums() || bp_is_group_messages() || bp_is_messages_component() || bp_is_forums_video_support_enabled() ) {
 
 		if ( bp_is_profile_video_support_enabled() || bp_is_group_video_support_enabled() || bp_is_group_albums_support_enabled() || bp_is_messages_video_support_enabled() || bp_is_group_messages() ) {
+			if (
+				extension_loaded( 'imagick' ) &&
+				count( \Imagick::queryFormats( 'HEIC' ) ) > 0
+			) {
+				wp_enqueue_script( 'bb-heic2any' );
+			}
 
 			wp_enqueue_script( 'bp-media-dropzone' );
 			wp_enqueue_style( 'bp-media-videojs-css' );
