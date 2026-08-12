@@ -4530,38 +4530,13 @@ function bb_update_to_3_0_3() {
 }
 
 /**
- * Whether a plan SKU is a non-entitled (Free/Lite) edition.
- *
- * Mirrors the buddyboss-addons plugin's own denylist so Platform and the add-on
- * agree on who is entitled. Case-insensitive prefix match; empty is non-entitled.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @param string $plugin_id Plan SKU from BB_Plugin_Connector::getCurrentPluginId().
- * @return bool True when Free/Lite (not entitled).
- */
-function bb_is_non_entitled_addons_edition( $plugin_id ) {
-	$plugin_id = strtolower( (string) $plugin_id );
-
-	if ( '' === $plugin_id ) {
-		return true;
-	}
-
-	foreach ( array( 'bb-platform-free', 'bb-platform-lite' ) as $prefix ) {
-		if ( 0 === strpos( $plugin_id, $prefix ) ) {
-			return true;
-		}
-	}
-
-	return false;
-}
-
-/**
  * Whether the current site is entitled to the BuddyBoss Addons bundle.
  *
- * Entitlement = Mothership present AND active license AND paid-tier SKU AND the
- * catalog carries the buddyboss-addons product AND the products API did not
- * error. Never returns true on an errored catalog read.
+ * Entitlement = Mothership present AND active license AND the catalog carries
+ * the buddyboss-addons product AND the products API did not error. The plan's
+ * catalog is the single source of truth — plans not entitled to the bundle
+ * simply do not carry the product. Never returns true on an errored catalog
+ * read.
  *
  * @since BuddyBoss [BBVERSION]
  *
@@ -4596,10 +4571,6 @@ function bb_is_entitled_to_addons() {
 	$connector = new \BuddyBoss\Core\Admin\Mothership\BB_Plugin_Connector();
 
 	if ( ! $connector->getLicenseActivationStatus() ) {
-		return false;
-	}
-
-	if ( bb_is_non_entitled_addons_edition( $connector->getCurrentPluginId() ) ) {
 		return false;
 	}
 
@@ -4692,9 +4663,9 @@ function bb_install_addons_bundle_on_upgrade() {
 		if ( true !== $installed ) {
 			// Filesystem not writable / download failed. Fail silently for the
 			// user — the admin can install manually from the Add-ons page.
-			if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
-				// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log -- Gated on WP_DEBUG; surfaces auto-install failures for support.
-				error_log( 'BuddyBoss Addons auto-install: install failed' . ( is_wp_error( $installed ) ? ': ' . $installed->get_error_message() : '.' ) );
+			if ( function_exists( 'bb_error_log' ) ) {
+				// Gated on BB_DEBUG_LOG inside bb_error_log(); surfaces auto-install failures for support.
+				bb_error_log( 'BuddyBoss Addons auto-install: install failed' . ( is_wp_error( $installed ) ? ': ' . $installed->get_error_message() : '.' ) );
 			}
 			return;
 		}
@@ -4711,8 +4682,8 @@ function bb_install_addons_bundle_on_upgrade() {
 	// Activation can fail even after a clean install (e.g. the add-on fatals on
 	// include, or its dependency check rejects the running Platform version).
 	// Leave it inactive rather than fatal the request, but log for support.
-	if ( is_wp_error( $activated ) && defined( 'WP_DEBUG' ) && WP_DEBUG ) {
-		// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log -- Gated on WP_DEBUG; surfaces post-install activation failures for support.
-		error_log( 'BuddyBoss Addons auto-install: installed but activation failed: ' . $activated->get_error_message() );
+	if ( is_wp_error( $activated ) && function_exists( 'bb_error_log' ) ) {
+		// Gated on BB_DEBUG_LOG inside bb_error_log(); surfaces post-install activation failures for support.
+		bb_error_log( 'BuddyBoss Addons auto-install: installed but activation failed: ' . $activated->get_error_message() );
 	}
 }

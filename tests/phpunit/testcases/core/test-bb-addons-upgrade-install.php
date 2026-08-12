@@ -4,9 +4,8 @@
  * (functions in bp-core-update.php).
  *
  * Covers the pure-logic / early-return paths that do not require a live
- * Mothership call: the Free/Lite SKU denylist, the entitlement short-circuit
- * seam, the already-active no-op (which must write no feature settings), and
- * the not-entitled skip.
+ * Mothership call: the entitlement short-circuit seam, the already-active
+ * no-op (which must write no feature settings), and the not-entitled skip.
  *
  * @group core
  * @group bb_addons_upgrade_install
@@ -27,21 +26,6 @@ class BB_Addons_Upgrade_Install_Test extends WP_UnitTestCase {
 		'boss_custom_login',
 		'_bb_enable_activity_post_polls',
 	);
-
-	/**
-	 * Free/Lite editions (and empty) are NOT entitled; every paid tier is.
-	 */
-	public function test_is_non_entitled_addons_edition_denylist() {
-		$not_entitled = array( '', 'bb-platform-free', 'bb-platform-lite', 'bb-platform-lite-monthly', 'BB-Platform-Lite' );
-		foreach ( $not_entitled as $sku ) {
-			$this->assertTrue( bb_is_non_entitled_addons_edition( $sku ), "expected NOT entitled: '{$sku}'" );
-		}
-
-		$entitled = array( 'bb-platform-pro-1-site', 'bb-platform-start', 'bb-platform-launch', 'bb-platform-scale', 'bb-web-standard' );
-		foreach ( $entitled as $sku ) {
-			$this->assertFalse( bb_is_non_entitled_addons_edition( $sku ), "expected entitled: '{$sku}'" );
-		}
-	}
 
 	/**
 	 * The short-circuit seam overrides the entitlement decision before any
