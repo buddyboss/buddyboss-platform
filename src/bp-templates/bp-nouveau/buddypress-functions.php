@@ -685,6 +685,9 @@ class BP_Nouveau extends BP_Theme_Compat {
 			'rest_nonce'                 => wp_create_nonce( 'wp_rest' ),
 			'member_label'               => __( 'member', 'buddyboss' ),
 			'members_label'              => __( 'members', 'buddyboss' ),
+			// Logged-in user id, used by the hover pop-up cards to suppress a member's own card
+			// everywhere (activity.params.user_id is the *displayed* user on member pages).
+			'loggedin_user_id'           => bp_loggedin_user_id(),
 		);
 
 		if ( bp_is_active( 'friends' ) ) {

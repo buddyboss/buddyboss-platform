@@ -1,4 +1,4 @@
-/* global wp, bp, BP_Nouveau, JSON, BB_Nouveau_Presence, BP_SEARCH, AbortController */
+/* global wp, bp, BP_Nouveau, JSON, BB_Nouveau_Presence, BP_SEARCH */
 /* jshint devel: true */
 /* jshint browser: true */
 /* @version 3.0.0 */
@@ -1249,12 +1249,20 @@ window.bp = window.bp || {};
 		},
 
 		bindPopoverEvents: function() {
-			$( document ).on( 'click', '#profile-card [data-bp-btn-action]', this, this.buttonAction );
-			$( document ).on( 'blur', '#profile-card [data-bp-btn-action]', this, this.buttonRevert );
-			$( document ).on( 'mouseover', '#profile-card [data-bp-btn-action]', this, this.buttonHover );
-			$( document ).on( 'mouseout', '#profile-card [data-bp-btn-action]', this, this.buttonHoverout );
-			$( document ).on( 'mouseover', '#profile-card .awaiting_response_friend', this, this.awaitingButtonHover );
-			$( document ).on( 'mouseout', '#profile-card .awaiting_response_friend', this, this.awaitingButtonHoverout );
+			// Rebind idempotently: this runs after every card render, so remove any previously
+			// bound delegated handlers first to avoid accumulating duplicates for the page lifetime.
+			$( document ).off( 'click', '#profile-card [data-bp-btn-action]', this.buttonAction )
+				.on( 'click', '#profile-card [data-bp-btn-action]', this, this.buttonAction );
+			$( document ).off( 'blur', '#profile-card [data-bp-btn-action]', this.buttonRevert )
+				.on( 'blur', '#profile-card [data-bp-btn-action]', this, this.buttonRevert );
+			$( document ).off( 'mouseover', '#profile-card [data-bp-btn-action]', this.buttonHover )
+				.on( 'mouseover', '#profile-card [data-bp-btn-action]', this, this.buttonHover );
+			$( document ).off( 'mouseout', '#profile-card [data-bp-btn-action]', this.buttonHoverout )
+				.on( 'mouseout', '#profile-card [data-bp-btn-action]', this, this.buttonHoverout );
+			$( document ).off( 'mouseover', '#profile-card .awaiting_response_friend', this.awaitingButtonHover )
+				.on( 'mouseover', '#profile-card .awaiting_response_friend', this, this.awaitingButtonHover );
+			$( document ).off( 'mouseout', '#profile-card .awaiting_response_friend', this.awaitingButtonHoverout )
+				.on( 'mouseout', '#profile-card .awaiting_response_friend', this, this.awaitingButtonHoverout );
 		},
 
 		/**
@@ -5406,16 +5414,15 @@ window.bp = window.bp || {};
 			}
 
 			var memberId = $avatar.attr( 'data-bb-hp-profile' );
-			if ( ! memberId ) {
+			if ( ! memberId || 0 === parseInt( memberId, 10 ) ) {
 				return;
 			}
 
-			var currentUserId = 0;
-			if ( ! _.isUndefined( BP_Nouveau.activity.params.user_id ) ) {
-				currentUserId = BP_Nouveau.activity.params.user_id;
-			}
+			// Read the logged-in user id from the top-level localize so self-hover suppression
+			// keeps working even when the Activity module's JS payload is absent (component off).
+			var currentUserId = ! _.isUndefined( BP_Nouveau.loggedin_user_id ) ? BP_Nouveau.loggedin_user_id : 0;
 
-			// Skip showing profile card for current user
+			// Skip showing the profile card for the logged-in user's own avatar/name.
 			if ( parseInt( currentUserId ) === parseInt( memberId ) ) {
 				return;
 			}
@@ -5462,21 +5469,19 @@ window.bp = window.bp || {};
 				return;
 			}
 
-			// Set up a new AbortController for current request.
-			var controller = new AbortController();
-			currentRequest = controller;
-
 			if ( popupCardLoaded ) {
 				return;
 			}
 
-			$.ajax( {
+			// Store the jqXHR itself so abortOngoingRequest() truly cancels the network request.
+			// jQuery ignores the fetch-style AbortSignal, so keeping the jqXHR lets .abort() cancel
+			// the in-flight request server-side instead of only skipping its response handler.
+			currentRequest = $.ajax( {
 				url       : url,
 				method    : 'GET',
 				headers   : {
 					'X-WP-Nonce': BP_Nouveau.rest_nonce
 				},
-				signal    : controller.signal, // Attach the signal to the request.
 				beforeSend: function () {
 					bp.Nouveau.resetProfileCard();
 
@@ -5486,10 +5491,6 @@ window.bp = window.bp || {};
 					}
 				},
 				success   : function ( data ) {
-					// Check if this request was aborted.
-					if ( controller.signal.aborted ) {
-						return;
-					}
 					// Cache profile data.
 					bp.Nouveau.cacheProfileCard[memberId] = data;
 
@@ -5510,6 +5511,10 @@ window.bp = window.bp || {};
 					bp.Nouveau.currentRequestMemberId = null;
 				},
 				error     : function ( xhr, status, error ) {
+					// Ignore user-initiated aborts (a newer hover superseded this request).
+					if ( 'abort' === status ) {
+						return;
+					}
 					console.error( 'Error fetching member info:', error );
 					$profileCard.html( '<span>Failed to load data.</span>' );
 					bp.Nouveau.currentRequestMemberId = null;
@@ -5603,7 +5608,10 @@ window.bp = window.bp || {};
 			var $groupCard             = $( '#group-card' );
 			var groupMembers           = data.group_members || [];
 			var $groupMembersContainer = $groupCard.find( '.bs-group-members' );
-			var membersLabel           = ( ( Number( data.members_count ) - 3 ) === 1 ) ? BP_Nouveau.member_label : BP_Nouveau.members_label;
+			// Remaining = total members minus the avatars actually rendered (not the 9 cap), so
+			// the ellipsis reflects the real count even when fewer than 9 avatars are returned.
+			var remainingCount         = Number( data.members_count ) - groupMembers.length;
+			var membersLabel           = ( remainingCount === 1 ) ? BP_Nouveau.member_label : BP_Nouveau.members_label;
 
 			$groupCard.addClass( 'show' ).attr( 'data-bp-item-id', data.id );
 			$groupCard.find( '.bb-card-avatar img' ).attr( 'src', data.avatar_urls.thumb );
@@ -5629,9 +5637,9 @@ window.bp = window.bp || {};
 				$groupMembersContainer.append( memberHtml );
 			} );
 
-			if ( data.members_count > 3 ) {
+			if ( remainingCount > 0 ) {
 				var moreIconHtml =
-					'<span class="bs-group-member" data-bp-tooltip-pos="up-left" data-bp-tooltip="+ ' + ( Number( data.members_count ) - 3 ) + ' ' + membersLabel + '">' +
+					'<span class="bs-group-member" data-bp-tooltip-pos="up-left" data-bp-tooltip="+ ' + remainingCount + ' ' + membersLabel + '">' +
 						'<a href="' + data.group_members_url + '">' +
 							'<span class="bb-icon-f bb-icon-ellipsis-h"></span>' +
 						'</a>' +
@@ -5678,8 +5686,16 @@ window.bp = window.bp || {};
 				return;
 			}
 
+			// Honor the acceptance criteria: the group card shows on the group AVATAR, not on the
+			// group NAME. Avatars are (or wrap) an <img>; group-name links are plain text, so a
+			// hovered group element that is neither an image nor contains one is a name link and
+			// must not open the card.
+			if ( ! $avatar.is( 'img' ) && ! $avatar.find( 'img' ).length ) {
+				return;
+			}
+
 			var groupId = $avatar.attr( 'data-bb-hp-group' );
-			if ( ! groupId ) {
+			if ( ! groupId || 0 === parseInt( groupId, 10 ) ) {
 				return;
 			}
 
@@ -5724,21 +5740,19 @@ window.bp = window.bp || {};
 				return;
 			}
 
-			// Set up a new AbortController for current request.
-			var controller = new AbortController();
-			currentRequest = controller;
-
 			if ( popupCardLoaded ) {
 				return;
 			}
 
-			$.ajax( {
+			// Store the jqXHR itself so abortOngoingRequest() truly cancels the network request.
+			// jQuery ignores the fetch-style AbortSignal, so keeping the jqXHR lets .abort() cancel
+			// the in-flight request server-side instead of only skipping its response handler.
+			currentRequest = $.ajax( {
 				url       : url,
 				method    : 'GET',
 				headers   : {
 					'X-WP-Nonce': BP_Nouveau.rest_nonce
 				},
-				signal    : controller.signal, // Attach the signal to the request.
 				beforeSend: function () {
 					bp.Nouveau.resetGroupCard();
 
@@ -5746,11 +5760,6 @@ window.bp = window.bp || {};
 					$groupCard.find( '.skeleton-card-footer' ).addClass( 'bb-card-footer--plain' );
 				},
 				success   : function ( data ) {
-					// Check if this request was aborted.
-					if ( controller.signal.aborted ) {
-						return;
-					}
-
 					// Cache group data.
 					bp.Nouveau.cacheGroupCard[groupId] = data;
 
@@ -5771,6 +5780,10 @@ window.bp = window.bp || {};
 					bp.Nouveau.currentRequestGroupId = null;
 				},
 				error     : function ( xhr, status, error ) {
+					// Ignore user-initiated aborts (a newer hover superseded this request).
+					if ( 'abort' === status ) {
+						return;
+					}
 					console.error( 'Error fetching group info:', error );
 					$groupCard.html( '<span>Failed to load data.</span>' );
 					bp.Nouveau.currentRequestGroupId = null;

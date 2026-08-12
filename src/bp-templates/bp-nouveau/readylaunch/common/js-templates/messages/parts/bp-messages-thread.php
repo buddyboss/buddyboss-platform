@@ -164,15 +164,15 @@
 				if ( data.avatars.length == 2 ) { #>
 					<div class="thread-multiple-avatar">
 				<# } #>
-					<img class="avatar" src="{{{data.avatars[0].url}}}" alt="{{data.avatars[0].name}}"/>
+					<img class="avatar" src="{{{data.avatars[0].url}}}" alt="{{data.avatars[0].name}}" data-bb-hp-profile="{{data.avatars[0].id}}"/>
 					<# if ( data.avatars[1] ) { #>
-						<img class="avatar" src="{{{data.avatars[1].url}}}" alt="{{data.avatars[1].name}}"/>
+						<img class="avatar" src="{{{data.avatars[1].url}}}" alt="{{data.avatars[1].name}}" data-bb-hp-profile="{{data.avatars[1].id}}"/>
 					<# }
 				if ( data.avatars.length == 2 ) { #>
 					</div>
 				<# } #>
 			<# } else if ( data.group_avatar && data.group_avatar.length > 1 && data.is_group_thread ) { #>
-				<img class="avatar" src="{{{data.group_avatar}}}" alt="{{data.group_name}}" />
+				<img class="avatar" src="{{{data.group_avatar}}}" alt="{{data.group_name}}" data-bb-hp-group="{{data.group_id}}" />
 			<# } else { #>
 				<# if ( other_recipients.length > 1 ) { #>
 					<span class="recipients-count">{{other_recipients.length}}</span>
@@ -180,7 +180,7 @@
 				<# } else { #>
 					<# var recipient = _.first(other_recipients)? _.first(other_recipients) : current_user; #>
 					<# if ( typeof( recipient ) != "undefined" && recipient !== null && recipient.avatar.length > 1 && recipient.user_name.length > 1 ) { #>
-						<img class="avatar" src="{{{recipient.avatar}}}" alt="{{recipient.user_name}}" />
+						<img class="avatar" src="{{{recipient.avatar}}}" alt="{{recipient.user_name}}" data-bb-hp-profile="{{recipient.id}}" />
 							<# if ( typeof( recipient.user_presence ) != "undefined" && recipient.user_presence !== null && recipient.user_presence.length > 1 ) { #>
 								{{{recipient.user_presence}}}
 							<# } #>
@@ -207,7 +207,7 @@
 					<span class="user-name">{{data.group_name}}</span>
 				<# } else { #>
 					<# for ( i in first_four ) { #>
-						<span class="user-name">{{other_recipients[i].user_name}}<# if ( i != first_four.length - 1  || ( i == first_four.length -1 && data.toOthers ) ) { #><?php esc_html_e( ',', 'buddyboss' ); ?><# } #></span>
+						<span class="user-name" data-bb-hp-profile="{{other_recipients[i].id}}">{{other_recipients[i].user_name}}<# if ( i != first_four.length - 1  || ( i == first_four.length -1 && data.toOthers ) ) { #><?php esc_html_e( ',', 'buddyboss' ); ?><# } #></span>
 					<# } #>
 
 					<# if ( data.toOthers ) { #>

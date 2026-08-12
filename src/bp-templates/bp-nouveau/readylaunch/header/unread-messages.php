@@ -204,6 +204,7 @@ if ( bp_has_message_threads( bp_ajax_querystring( 'messages' ) . '&user_id=' . g
 								)
 							)
 						),
+						'user_id'            => (int) $recipient->user_id,
 						'user_link'          => bp_core_get_userlink( $recipient->user_id, false, true ),
 						'user_name'          => bp_core_get_user_displayname( $recipient->user_id ),
 						'is_you'             => $is_you,
@@ -299,7 +300,7 @@ if ( bp_has_message_threads( bp_ajax_querystring( 'messages' ) . '&user_id=' . g
 			} elseif ( $is_group_thread ) {
 				?>
 				<div class="notification-avatar">
-					<a href="<?php bp_message_thread_view_link( bp_get_message_thread_id() ); ?>">
+					<a href="<?php bp_message_thread_view_link( bp_get_message_thread_id() ); ?>" data-bb-hp-group="<?php echo esc_attr( $group_id ); ?>">
 						<img src="<?php echo esc_url( $group_avatar ); ?>"> </a>
 				</div>
 				<?php
@@ -309,7 +310,7 @@ if ( bp_has_message_threads( bp_ajax_querystring( 'messages' ) . '&user_id=' . g
 					<?php
 					if ( count( $other_recipients ) > 1 ) {
 						?>
-						<a href="<?php echo esc_url( bp_core_get_user_domain( $messages_template->thread->last_sender_id ) ); ?>">
+						<a href="<?php echo esc_url( bp_core_get_user_domain( $messages_template->thread->last_sender_id ) ); ?>" data-bb-hp-profile="<?php echo esc_attr( $messages_template->thread->last_sender_id ); ?>">
 							<?php bp_message_thread_avatar(); ?>
 						</a>
 						<?php
@@ -326,7 +327,7 @@ if ( bp_has_message_threads( bp_ajax_querystring( 'messages' ) . '&user_id=' . g
 							$can_message = false;
 						}
 						?>
-						<a href="<?php echo esc_url( $recipient['user_link'] ); ?>">
+						<a href="<?php echo esc_url( $recipient['user_link'] ); ?>" <?php echo ! empty( $recipient['user_id'] ) ? 'data-bb-hp-profile="' . esc_attr( $recipient['user_id'] ) . '"' : ''; ?>>
 							<img class="avatar" src="<?php echo esc_url( $recipient['avatar'] ); ?>" alt="<?php echo esc_attr( $recipient['user_name'] ); ?>" />
 							<?php
 							if ( isset( $recipient['is_deleted'] ) && 0 === $recipient['is_deleted'] ) {
