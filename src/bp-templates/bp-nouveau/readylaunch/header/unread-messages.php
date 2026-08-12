@@ -310,7 +310,7 @@ if ( bp_has_message_threads( bp_ajax_querystring( 'messages' ) . '&user_id=' . g
 					<?php
 					if ( count( $other_recipients ) > 1 ) {
 						?>
-						<a href="<?php echo esc_url( bp_core_get_user_domain( $messages_template->thread->last_sender_id ) ); ?>" data-bb-hp-profile="<?php echo esc_attr( $messages_template->thread->last_sender_id ); ?>">
+						<a href="<?php echo esc_url( bp_core_get_user_domain( $messages_template->thread->last_sender_id ) ); ?>" <?php echo ! empty( $messages_template->thread->last_sender_id ) ? 'data-bb-hp-profile="' . esc_attr( $messages_template->thread->last_sender_id ) . '"' : ''; ?>>
 							<?php bp_message_thread_avatar(); ?>
 						</a>
 						<?php
@@ -327,7 +327,7 @@ if ( bp_has_message_threads( bp_ajax_querystring( 'messages' ) . '&user_id=' . g
 							$can_message = false;
 						}
 						?>
-						<a href="<?php echo esc_url( $recipient['user_link'] ); ?>" <?php echo ! empty( $recipient['user_id'] ) ? 'data-bb-hp-profile="' . esc_attr( $recipient['user_id'] ) . '"' : ''; ?>>
+						<a href="<?php echo esc_url( $recipient['user_link'] ); ?>" <?php echo ( ! empty( $recipient['user_id'] ) && empty( $recipient['is_deleted'] ) && empty( $recipient['is_user_suspended'] ) && empty( $recipient['is_user_blocked'] ) ) ? 'data-bb-hp-profile="' . esc_attr( $recipient['user_id'] ) . '"' : ''; ?>>
 							<img class="avatar" src="<?php echo esc_url( $recipient['avatar'] ); ?>" alt="<?php echo esc_attr( $recipient['user_name'] ); ?>" />
 							<?php
 							if ( isset( $recipient['is_deleted'] ) && 0 === $recipient['is_deleted'] ) {

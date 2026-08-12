@@ -5515,6 +5515,15 @@ window.bp = window.bp || {};
 					if ( 'abort' === status ) {
 						return;
 					}
+
+					// Guests get 401/403 for private/hidden content and 404 for vanished records -
+					// dismiss the card instead of rendering an error balloon on hover.
+					if ( xhr && ( 401 === xhr.status || 403 === xhr.status || 404 === xhr.status ) ) {
+						bp.Nouveau.hidePopupCard();
+						bp.Nouveau.currentRequestMemberId = null;
+						return;
+					}
+
 					console.error( 'Error fetching member info:', error );
 					$profileCard.html( '<span>Failed to load data.</span>' );
 					bp.Nouveau.currentRequestMemberId = null;
@@ -5691,6 +5700,8 @@ window.bp = window.bp || {};
 			// hovered group element that is neither an image nor contains one is a name link and
 			// must not open the card.
 			if ( ! $avatar.is( 'img' ) && ! $avatar.find( 'img' ).length ) {
+				// Dismiss any open card and reset popupCardLoaded so the next hover is not suppressed.
+				bp.Nouveau.hidePopupCard();
 				return;
 			}
 
@@ -5784,6 +5795,15 @@ window.bp = window.bp || {};
 					if ( 'abort' === status ) {
 						return;
 					}
+
+					// Guests get 401/403 for private/hidden content and 404 for vanished records -
+					// dismiss the card instead of rendering an error balloon on hover.
+					if ( xhr && ( 401 === xhr.status || 403 === xhr.status || 404 === xhr.status ) ) {
+						bp.Nouveau.hidePopupCard();
+						bp.Nouveau.currentRequestGroupId = null;
+						return;
+					}
+
 					console.error( 'Error fetching group info:', error );
 					$groupCard.html( '<span>Failed to load data.</span>' );
 					bp.Nouveau.currentRequestGroupId = null;
