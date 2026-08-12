@@ -4538,7 +4538,7 @@ function bb_update_to_3_0_3() {
  * simply do not carry the product. Never returns true on an errored catalog
  * read.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.4.2
  *
  * @return bool True when entitled.
  */
@@ -4552,7 +4552,7 @@ function bb_is_entitled_to_addons() {
 	 * decision without a live license/catalog lookup (the checks below all
 	 * short-circuit to false when the Mothership layer is absent).
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.4.2
 	 *
 	 * @param bool|null $override Non-null boolean to force the decision, or null to compute it.
 	 */
@@ -4591,7 +4591,7 @@ function bb_is_entitled_to_addons() {
 	 * `bb_pre_is_entitled_to_addons`); use this to adjust the final value with
 	 * the matched product in hand.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.4.2
 	 *
 	 * @param bool        $entitled Whether the site is entitled.
 	 * @param object|null $product  The matched product object, or null.
@@ -4602,7 +4602,7 @@ function bb_is_entitled_to_addons() {
 /**
  * Whether the buddyboss-addons plugin is active.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.4.2
  *
  * @return bool True when active.
  */
@@ -4625,7 +4625,7 @@ function bb_is_addons_plugin_active() {
  * (Automatic_Upgrader_Skin) — never prompts, never fatals, never loops. Performs
  * install + activate ONLY; writes no feature settings.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.4.2
  *
  * @return void
  */

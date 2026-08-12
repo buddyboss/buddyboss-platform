@@ -104,7 +104,7 @@ function bb_recaptcha_login() {
  * they are protected rather than broken. bb_recaptcha_display() self-gates on the
  * connection status, IP exclusion and bypass URL.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.4.2
  *
  * @param string $content Markup injected in the middle of wp_login_form().
  *

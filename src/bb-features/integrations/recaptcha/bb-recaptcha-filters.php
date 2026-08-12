@@ -89,7 +89,7 @@ function bb_recaptcha_validate_login( $user ) {
 	 * WordPress `log`/`pwd` field names). This must be a server-side decision;
 	 * never key it on a client-submitted field, or the check can be bypassed.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.4.2
 	 *
 	 * @param bool             $verify Whether to run reCAPTCHA verification. Default true.
 	 * @param WP_User|WP_Error $user   The user object from the authenticate filter.
