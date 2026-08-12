@@ -79,6 +79,25 @@ function bb_recaptcha_validate_login( $user ) {
 		}
 	}
 
+	/**
+	 * Filters whether reCAPTCHA verification should run for this login submission.
+	 *
+	 * By this point the request is a standard WordPress login (the `log` field is
+	 * present), reCAPTCHA is connected, and it is enabled for login. Return false
+	 * to skip verification for a specific custom login form that BuddyBoss does not
+	 * render the widget on (e.g. a third-party front-end login that reuses the
+	 * WordPress `log`/`pwd` field names). This must be a server-side decision;
+	 * never key it on a client-submitted field, or the check can be bypassed.
+	 *
+	 * @since BuddyBoss 3.4.2
+	 *
+	 * @param bool             $verify Whether to run reCAPTCHA verification. Default true.
+	 * @param WP_User|WP_Error $user   The user object from the authenticate filter.
+	 */
+	if ( ! apply_filters( 'bb_recaptcha_verify_login', true, $user ) ) {
+		return $user;
+	}
+
 	// Validate the recaptcha.
 	$captcha = bb_recaptcha_verification_front( 'bb_login' );
 	if ( is_wp_error( $captcha ) ) {
