@@ -46,10 +46,9 @@ function main() {
 	// `configure_compress_exclusions` step knows what to exclude:
 	//   - unminified JS/CSS pairs (key = unminified rel path)
 	//
-	// Offloaded images/woff2 are NO LONGER listed: all static assets ship in
-	// the zip and are served locally (WP.org Plugin Directory guideline 8 — no
-	// remotely loaded assets). See pairFinder.findOffloadedAssets for the
-	// retained (currently unused) discovery logic.
+	// Images/woff2 are NOT listed: all static assets ship in the zip and are
+	// served locally (WP.org Plugin Directory guideline 8 — no remotely
+	// loaded assets).
 	var files = Object.create( null );
 	for ( var i = 0; i < pairs.length; i++ ) {
 		var p = pairs[ i ];
