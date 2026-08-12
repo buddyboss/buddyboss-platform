@@ -556,6 +556,44 @@ function bp_members_filter_folder_personal_scope( $retval = array(), $filter = a
 add_filter( 'bp_document_set_folder_personal_scope_args', 'bp_members_filter_folder_personal_scope', 10, 2 );
 
 /**
+ * Build a mention suggestion result object from a user.
+ *
+ * Converts a BP_User (or compatible user object) into the stdClass shape
+ * expected by the bp-mentions script: mentionname as ID, avatar URL,
+ * display name (respecting profile sync settings), and numeric user ID.
+ *
+ * @since BuddyBoss 1.8.6
+ *
+ * @param WP_User|BP_User|object $user User object. Must expose an `ID` property,
+ *                                     and optionally a `display_name` property.
+ *
+ * @return stdClass {
+ *     Mention suggestion result.
+ *
+ *     @type string $ID      The user's @-mention name.
+ *     @type string $image   URL of the user's avatar.
+ *     @type string $name    The user's display name.
+ *     @type int    $user_id The user's numeric ID.
+ * }
+ */
+function bb_core_build_mention_result( $user ) {
+	$result        = new stdClass();
+	$result->ID    = bp_activity_get_user_mentionname( $user->ID );
+	$result->image = bp_core_fetch_avatar(
+		array(
+			'html'    => false,
+			'item_id' => $user->ID,
+		)
+	);
+	if ( ! empty( $user->display_name ) && ! bp_disable_profile_sync() ) {
+		$result->name = $user->display_name;
+	} else {
+		$result->name = bp_core_get_user_displayname( $user->ID );
+	}
+	$result->user_id = $user->ID;
+	return $result;
+}
+/**
  * Used by the Activity component's @mentions to print a JSON list of the latest 10 users.
  *
  * This is intended to speed up @mentions lookups for a majority of use cases.
@@ -565,89 +603,50 @@ add_filter( 'bp_document_set_folder_personal_scope_args', 'bp_members_filter_fol
  * @see   bp_activity_mentions_script()
  */
 function bb_core_prime_mentions_results() {
-
 	// Stop here if user is not logged in.
 	if ( ! is_user_logged_in() ) {
 		return;
 	}
-
 	// Bail out if the site has a ton of users.
 	if ( bp_is_large_install() ) {
 		return;
 	}
-
 	// Bail if single group page.
 	if ( bp_is_group() ) {
 		return;
 	}
 
-	$members_query = array(
-		'count_total'     => '', // Prevents total count.
-		'populate_extras' => false,
-		'per_page'        => 10,
-		'page'            => 1,
-		'type'            => 'active',
-		'exclude'         => array( get_current_user_id() ),
+	$members_query = new BP_User_Query(
+		array(
+			'count_total'     => '', // Prevents total count.
+			'populate_extras' => false,
+			'per_page'        => 10,
+			'page'            => 1,
+			'type'            => 'active',
+			'exclude'         => array( get_current_user_id() ),
+		)
 	);
 
-	$members_query = new BP_User_Query( $members_query );
-	$members       = array();
-
+	$members = array();
 	foreach ( $members_query->results as $user ) {
-		$result        = new stdClass();
-		$result->ID    = bp_activity_get_user_mentionname( $user->ID );
-		$result->image = bp_core_fetch_avatar(
-			array(
-				'html'    => false,
-				'item_id' => $user->ID,
-			)
-		);
-
-		if ( ! empty( $user->display_name ) && ! bp_disable_profile_sync() ) {
-			$result->name = $user->display_name;
-		} else {
-			$result->name = bp_core_get_user_displayname( $user->ID );
-		}
-		$result->user_id = $user->ID;
-
-		$members[] = $result;
+		$members[] = bb_core_build_mention_result( $user );
 	}
 
 	$friends = array();
-
 	if ( bp_is_active( 'friends' ) ) {
-
 		if ( friends_get_total_friend_count( get_current_user_id() ) > 30 ) {
 			return;
 		}
-
-		$friends_query = array(
-			'count_total'     => '',                    // Prevents total count.
-			'populate_extras' => false,
-			'type'            => 'alphabetical',
-			'user_id'         => get_current_user_id(),
+		$friends_query = new BP_User_Query(
+			array(
+				'count_total'     => '', // Prevents total count.
+				'populate_extras' => false,
+				'type'            => 'alphabetical',
+				'user_id'         => get_current_user_id(),
+			)
 		);
-
-		$friends_query = new BP_User_Query( $friends_query );
-
 		foreach ( $friends_query->results as $user ) {
-			$result        = new stdClass();
-			$result->ID    = bp_activity_get_user_mentionname( $user->ID );
-			$result->image = bp_core_fetch_avatar(
-				array(
-					'html'    => false,
-					'item_id' => $user->ID,
-				)
-			);
-
-			if ( ! empty( $user->display_name ) && ! bp_disable_profile_sync() ) {
-				$result->name = bp_core_get_user_displayname( $user->ID );
-			} else {
-				$result->name = bp_core_get_user_displayname( $user->ID );
-			}
-			$result->user_id = $user->ID;
-
-			$friends[] = $result;
+			$members[] = bb_core_build_mention_result( $user );
 		}
 	}
 
