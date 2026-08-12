@@ -911,74 +911,6 @@ module.exports = function (grunt) {
 	// @since BuddyBoss [BBVERSION]
 	var isBuildTestBuild = false;
 
-	// Image assets are served from an external S3 bucket (see BB_S3_Image_Offload
-	// in bp-core). The bucket mirrors the SHIPPED (flattened) plugin tree at its
-	// root — e.g. `bp-core/images/foo.png`, no `src/` directory (that exists only
-	// in the dev checkout). The shipped zip drops all images to stay small. Two
-	// things have to happen before they can be stripped:
-	//   1. The runtime PHP rewriter handles image URLs emitted into the HTML.
-	//   2. `rewrite_css_image_refs_to_s3` (below) rewrites the relative
-	//      `url(...)` image refs baked into compiled CSS — those are served as
-	//      static files and the PHP rewriter can never reach them.
-	// Both must be in place or CSS background images / inline images would 404.
-	//
-	// Keep this base URL in lockstep with BB_S3_Image_Offload::DEFAULT_BASE_URL +
-	// DEFAULT_KEY_PREFIX so build-time and runtime rewrites resolve to the same
-	// object keys.
-	//
-	// @since BuddyBoss [BBVERSION]
-	var S3_IMAGE_BASE_URL = 'https://buddyboss-platform-assets.s3.us-east-1.amazonaws.com/';
-
-	// Asset file types offloaded to S3 and therefore stripped from the customer
-	// zip: images + woff2 fonts. Matches BB_S3_Image_Offload::EXTENSIONS and the
-	// CSS rewriter's DEFAULT_EXTENSIONS. Root-relative globs evaluated against
-	// BUILD_DIR. Files remain in src/ and on the production branch; only the
-	// customer zip drops them.
-	//
-	// NOTE: woff2 lives HERE (offload list), NOT in FONT_STRIP_GLOBS. The latter
-	// drives `strip_orphan_font_refs`, which DELETES the matching url() refs from
-	// CSS — we instead want `rewrite_css_image_refs_to_s3` to REWRITE the woff2
-	// refs to S3. The legacy fallback fonts (woff/eot/ttf) stay in FONT_STRIP_GLOBS.
-	//
-	// @since BuddyBoss [BBVERSION]
-	var S3_OFFLOAD_STRIP_GLOBS = [
-		'**/*.png',
-		'**/*.jpg',
-		'**/*.jpeg',
-		'**/*.gif',
-		'**/*.svg',
-		'**/*.webp',
-		'**/*.ico',
-		'**/*.bmp',
-		'**/*.woff2'
-	];
-
-	// Image dirs that must be KEPT in the zip despite matching the strip globs
-	// above. Webpack-emitted bundle images (admin React apps live under
-	// `.../build/images/`) are referenced inside the JS bundle via webpack's
-	// runtime public path — a URL neither the PHP HTML rewriter nor the CSS
-	// `url()` rewriter can reach — so they cannot be served from S3 and would
-	// 404 if stripped. Re-included AFTER the strip globs in the compress file
-	// list so these patterns win (minimatch: last match decides). Kept in
-	// lockstep with the pair-finder's OFFLOAD_KEPT_PATH_RE.
-	//
-	// @since BuddyBoss [BBVERSION]
-	var S3_OFFLOAD_KEEP_GLOBS = [
-		'**/build/images/**',
-
-		// Images read as LOCAL files by server-side PHP/GD (never emitted as a URL,
-		// so neither the HTML nor CSS rewriter can point them at S3). They must ship
-		// in the zip or the consuming feature silently fails on stripped builds:
-		//   - bp-core/images/blank.png: base canvas loaded via wp_get_image_editor()
-		//     in bb_generate_default_avatar() to render "Display Name" letter avatars.
-		//     Stripped -> WP_Error -> generation falls back to the default avatar.
-		//   - bp-core/images/suspended-mystery-man.jpg: read via file_get_contents()
-		//     in bb_core_upload_dummy_attachment().
-		// Kept in lockstep with the pair-finder's OFFLOAD_KEPT_PATH_RE.
-		'bp-core/images/blank.png',
-		'bp-core/images/suspended-mystery-man.jpg'
-	];
-
 	// Mark the current run as a build_test build. Inserted into `build_test`
 	// before `configure_compress_exclusions` so only the test zip drops the
 	// BUILD_TEST_EXTRA_STRIP_GLOBS paths.
@@ -1024,33 +956,6 @@ module.exports = function (grunt) {
 			function ( err, result, code ) {
 				if ( err || code !== 0 ) {
 					grunt.fail.warn( 'strip-orphan-font-refs failed (exit ' + code + ')' );
-				}
-				done();
-			}
-		);
-	} );
-
-	// Rewrite relative `url(...)` image refs in BUILD_DIR CSS to absolute S3
-	// URLs, so the compiled CSS keeps working once the local image files are
-	// excluded from the customer zip. Runs AFTER copy:files (CSS + images are
-	// staged in BUILD_DIR, so the existence check resolves) and BEFORE
-	// configure_compress_exclusions/compress (which drop the images). The
-	// production branch keeps the original relative CSS — only the staged
-	// BUILD_DIR copy is mutated.
-	//
-	// @since BuddyBoss [BBVERSION]
-	grunt.registerTask( 'rewrite_css_image_refs_to_s3', 'Rewrite BUILD_DIR CSS image url() refs to the external S3 bucket.', function () {
-		var done = this.async();
-
-		grunt.util.spawn(
-			{
-				cmd:  'node',
-				args: [ 'bin/rewrite-css-image-refs-to-s3.js', BUILD_DIR, S3_IMAGE_BASE_URL ],
-				opts: { stdio: 'inherit' }
-			},
-			function ( err, result, code ) {
-				if ( err || code !== 0 ) {
-					grunt.fail.warn( 'rewrite-css-image-refs-to-s3 failed (exit ' + code + ')' );
 				}
 				done();
 			}
@@ -1108,11 +1013,8 @@ module.exports = function (grunt) {
 
 		/*
 		 * Images + woff2 fonts ship IN the zip and are served locally (WP.org
-		 * Plugin Directory guideline 8 — no remotely loaded assets). The former
-		 * S3-offload strip (S3_OFFLOAD_STRIP_GLOBS/S3_OFFLOAD_KEEP_GLOBS +
-		 * rewrite_css_image_refs_to_s3) is no longer applied to the build; the
-		 * globs are retained above for a possible opt-in stripped-build task.
-		 * The unminified manifest is excluded from the zip: at runtime its
+		 * Plugin Directory guideline 8 — no remotely loaded assets). The
+		 * unminified manifest is excluded from the zip: at runtime its
 		 * presence is BB_S3_Image_Offload's "assets were stripped" marker, and
 		 * a zip with local assets must not carry it.
 		 */
@@ -1162,7 +1064,7 @@ module.exports = function (grunt) {
 	//   7. clean:composer                  — drop dev composer state from the staged dir
 	//   8. compress                        — zip → buddyboss-platform-plugin.zip
 	//   9. clean:all                       — final tidy
-	grunt.registerTask('build_test', ['string-replace:dist', 'exec:composer', 'clean:all', 'exec:init_build_dir_clean', 'exec:empty_build_dir', 'copy:files', 'clean:composer', 'exec:generate_debug_manifest', 'strip_orphan_font_refs', 'rewrite_css_image_refs_to_s3', 'enable_build_test_strip', 'configure_compress_exclusions', 'compress', 'clean:all']);
+	grunt.registerTask('build_test', ['string-replace:dist', 'exec:composer', 'clean:all', 'exec:init_build_dir_clean', 'exec:empty_build_dir', 'copy:files', 'clean:composer', 'exec:generate_debug_manifest', 'strip_orphan_font_refs', 'enable_build_test_strip', 'configure_compress_exclusions', 'compress', 'clean:all']);
 
 	grunt.registerTask('release', ['src', 'build']);
 
