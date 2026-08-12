@@ -49,7 +49,6 @@ function bp_members_signup_sanitization() {
 	// Filters on sign-up fields.
 	$fields = array(
 		'bp_get_signup_username_value',
-		'bp_get_signup_email_value',
 		'bp_get_signup_with_blog_value',
 		'bp_get_signup_blog_url_value',
 		'bp_get_signup_blog_title_value',
