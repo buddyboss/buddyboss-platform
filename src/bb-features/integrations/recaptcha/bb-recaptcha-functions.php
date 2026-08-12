@@ -613,10 +613,9 @@ function bb_recaptcha_verification_front( $action = '' ) {
 		return true;
 	}
 
-	if ( ! isset( $_POST['g-recaptcha-response'] ) ) {
-		return true;
-	}
-
+	// Do not fail-open when the token is absent. A missing g-recaptcha-response
+	// must be treated as an unsolved challenge and rejected below, otherwise the
+	// verification can be bypassed by simply omitting the field from the request.
 	$token_response = bb_filter_input_string( INPUT_POST, 'g-recaptcha-response' );
 
 	$retval = array();
