@@ -1200,8 +1200,14 @@ function bbp_get_reply_author_display_name( $reply_id = 0, $viewer_user_id = 0 )
 	}
 
 	// Encode possible UTF8 display names.
-	if ( seems_utf8( $author_name ) === false ) {
-		$author_name = utf8_encode( $author_name );
+	if ( function_exists( 'wp_is_valid_utf8' ) ) {
+		if ( ! wp_is_valid_utf8( $author_name ) ) {
+			$author_name = mb_convert_encoding( $author_name, 'UTF-8', 'ISO-8859-1' );
+		}
+	} elseif ( seems_utf8( $author_name ) === false ) {
+		$author_name = function_exists( 'mb_convert_encoding' )
+			? mb_convert_encoding( $author_name, 'UTF-8', 'ISO-8859-1' )
+			: utf8_encode( $author_name ); // phpcs:ignore PHPCompatibility.FunctionUse.RemovedFunctions.utf8_encodeDeprecated
 	}
 
 	return apply_filters( 'bbp_get_reply_author_display_name', $author_name, $reply_id );
