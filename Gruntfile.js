@@ -298,6 +298,21 @@ module.exports = function (grunt) {
 							'!vendor/**/docs/**',
 							'!vendor/**/.github/**',
 							'!vendor/**/phpunit.xml*',
+							// Vendor package docs: README/CHANGELOG/markdown and per-package
+							// composer.json are dev metadata never read at runtime (Composer's
+							// autoloader is compiled into vendor/composer/*.php and does not
+							// consult per-package composer.json). LICENSE files MUST ship —
+							// MIT/GPL/Apache require the license text to accompany
+							// redistributed code — so they are re-included last (grunt
+							// minimatch: last matching pattern wins), which also protects
+							// any future LICENSE.md from the '*.md' glob. The plugin-root
+							// composer.json ships separately below.
+							'!vendor/**/README*',
+							'!vendor/**/readme*',
+							'!vendor/**/CHANGELOG*',
+							'!vendor/**/*.md',
+							'!vendor/**/composer.json',
+							'vendor/**/LICENSE*',
 							'!cli/features/**',
 							'!cli/bin/**',
 							// Generated apiDoc REST documentation — dev artifact with no
@@ -796,11 +811,10 @@ module.exports = function (grunt) {
 	//      cascade prefers woff2 first; ttf was a 2014-era fallback for
 	//      pre-woff2 browsers. Coverage is now > 97 % globally.
 	//
-	// Excludes specific files only — never `**/*.ttf`, because
-	// SFUIText-Medium.ttf is consumed server-side by PHP/GD for PNG avatar
-	// rendering and must remain in the zip even though no browser loads it.
-	// Future cleanup of that font requires a permissive-licensed replacement,
-	// not a strip.
+	// Excludes specific files only — never `**/*.ttf`, so that any
+	// server-side PHP/GD font stays shipped. (The PNG-avatar font is now
+	// downloaded from Google Fonts at runtime — see
+	// bb_get_default_png_avatar_font_path() — so no avatar TTF ships.)
 	//
 	// @since BuddyBoss [BBVERSION]
 	var FONT_STRIP_GLOBS = [

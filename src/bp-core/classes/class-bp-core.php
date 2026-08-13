@@ -224,6 +224,50 @@ class BP_Core extends BP_Component {
 	public function bb_scrub_unavailable_active_components() {
 		$bp = buddypress();
 
+		/*
+		 * Self-heal first: components previously scrubbed as unavailable
+		 * (remembered in `bb_scrubbed_unavailable_components`) whose code is
+		 * available again — the Platform build regained the directory, or a
+		 * provider plugin (e.g. BuddyBoss Addons) now claims them — are
+		 * restored to the stored option automatically. Without this, a site
+		 * scrubbed while the provider couldn't claim (provider inactive,
+		 * pre-fix builds that lost the priority race) stays broken until an
+		 * admin happens to re-activate the provider plugin.
+		 *
+		 * Restores write the OPTION only, not the runtime active list: the
+		 * component include loop already ran at `bp_loaded` priority 0, so
+		 * runtime-activating now could expose bp_is_active() = true without
+		 * the component's code loaded for the rest of this request. The
+		 * restored component comes fully alive on the next request.
+		 */
+		$scrub_memory = (array) bp_get_option( 'bb_scrubbed_unavailable_components', array() );
+		if ( ! empty( $scrub_memory ) ) {
+			$stored_components = (array) bp_get_option( 'bp-active-components', array() );
+			$restored          = false;
+
+			foreach ( $scrub_memory as $scrubbed_component => $stored_value ) {
+				$directory_available = file_exists( $bp->plugin_dir . 'bp-' . $scrubbed_component . '/bp-' . $scrubbed_component . '-loader.php' );
+
+				/** This filter is documented in bp-core/bp-core-functions.php */
+				$directory_available = (bool) apply_filters( 'bb_component_directory_available', $directory_available, $scrubbed_component );
+
+				if ( ! $directory_available ) {
+					continue;
+				}
+
+				if ( ! isset( $stored_components[ $scrubbed_component ] ) ) {
+					$stored_components[ $scrubbed_component ] = $stored_value;
+				}
+				unset( $scrub_memory[ $scrubbed_component ] );
+				$restored = true;
+			}
+
+			if ( $restored ) {
+				bp_update_option( 'bp-active-components', $stored_components );
+				bp_update_option( 'bb_scrubbed_unavailable_components', $scrub_memory );
+			}
+		}
+
 		$unavailable_components = array();
 		foreach ( array_keys( (array) $bp->active_components ) as $component ) {
 			if ( ! in_array( $component, $bp->optional_components, true ) ) {
