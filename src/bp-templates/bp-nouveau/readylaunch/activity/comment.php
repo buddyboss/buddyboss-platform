@@ -56,7 +56,7 @@ $activity_comment_id = bp_get_activity_comment_id();
 							if ( bb_is_reaction_activity_comments_enabled() && function_exists( 'bb_get_activity_post_user_reactions_html' ) ) {
 								echo wp_kses_post( bb_get_activity_post_user_reactions_html( $activity_comment_id, 'activity_comment' ) );
 							}
-							if ( bp_activity_can_comment_reply() ) {
+							if ( bb_activity_can_view_comment_replies() ) {
 								$activity_id   = bp_get_activity_id();
 								$replies_count = BP_Activity_Activity::bb_get_all_activity_comment_children_count(
 									array(

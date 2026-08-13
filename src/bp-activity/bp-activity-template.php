@@ -2905,7 +2905,7 @@ function bp_get_activity_css_class() {
 		$class .= ' mini';
 	}
 
-	if ( bp_activity_get_comment_count() && bp_activity_can_comment() ) {
+	if ( bp_activity_get_comment_count() && bb_activity_can_view_comments() ) {
 		$class .= ' has-comments';
 	}
 
@@ -3327,6 +3327,98 @@ function bp_activity_can_comment_reply( $comment = false ) {
 	 * @param object $comment     Current comment object being checked on.
 	 */
 	return (bool) apply_filters( 'bp_activity_can_comment_reply', $can_comment, $comment );
+}
+
+/**
+ * Determine if the current user can view comments on an activity item.
+ *
+ * Group membership is not required to view comments on a group activity
+ * the user can read; posting still requires membership.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @global object $activities_template {@link BP_Activity_Template}
+ *
+ * @param object|null $activity Optional. Activity object. Defaults to the current activity in the loop.
+ *
+ * @return bool True if the current user can view comments on the activity item.
+ */
+function bb_activity_can_view_comments( $activity = null ) {
+	global $activities_template;
+
+	if ( ! is_object( $activity ) && ! empty( $activities_template->activity ) ) {
+		$activity = $activities_template->activity;
+	}
+
+	$can_view = bp_activity_can_comment();
+
+	// Group activities: lift only the membership veto when the user can read the activity.
+	if (
+		! $can_view &&
+		is_object( $activity ) &&
+		! empty( $activity->component ) &&
+		bp_is_active( 'groups' ) &&
+		buddypress()->groups->id === $activity->component &&
+		bp_activity_user_can_read( $activity, bp_loggedin_user_id() )
+	) {
+		remove_filter( 'bp_activity_can_comment', 'bp_groups_filter_activity_can_comment', 99 );
+		$can_view = bp_activity_can_comment();
+		add_filter( 'bp_activity_can_comment', 'bp_groups_filter_activity_can_comment', 99, 1 );
+	}
+
+	/**
+	 * Filters whether the current user can view comments on an activity item.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param bool        $can_view Whether the current user can view comments.
+	 * @param object|null $activity Activity object.
+	 */
+	return (bool) apply_filters( 'bb_activity_can_view_comments', $can_view, $activity );
+}
+
+/**
+ * Determine if the current user can view replies to an activity comment.
+ *
+ * Reply-viewing counterpart of bb_activity_can_view_comments().
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param object|null $comment Optional. Activity comment. Defaults to the current comment in the loop.
+ *
+ * @return bool True if the current user can view replies to the comment.
+ */
+function bb_activity_can_view_comment_replies( $comment = null ) {
+
+	if ( empty( $comment ) ) {
+		$comment = bp_activity_current_comment();
+	}
+
+	$can_view = bp_activity_can_comment_reply( $comment );
+
+	// Group activities: viewing follows readability of the root activity.
+	if ( ! $can_view && ! empty( $comment->item_id ) && bp_is_active( 'groups' ) ) {
+		$root_activity = new BP_Activity_Activity( (int) $comment->item_id );
+
+		if (
+			buddypress()->groups->id === $root_activity->component &&
+			bp_activity_user_can_read( $root_activity, bp_loggedin_user_id() )
+		) {
+			remove_filter( 'bp_activity_can_comment_reply', 'bp_groups_filter_activity_can_comment_reply', 99 );
+			$can_view = bp_activity_can_comment_reply( $comment );
+			add_filter( 'bp_activity_can_comment_reply', 'bp_groups_filter_activity_can_comment_reply', 99, 2 );
+		}
+	}
+
+	/**
+	 * Filters whether the current user can view replies to an activity comment.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param bool        $can_view Whether the current user can view replies to the comment.
+	 * @param object|null $comment  Activity comment object.
+	 */
+	return (bool) apply_filters( 'bb_activity_can_view_comment_replies', $can_view, $comment );
 }
 
 /**

@@ -2169,6 +2169,9 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			'can_favorite'      => ( 'activity_comment' === $activity->type ) ? bb_activity_comment_can_favorite() : bp_activity_can_favorite(),
 			'favorite_count'    => $this->get_activity_favorite_count( $activity ),
 			'can_comment'       => ( 'activity_comment' === $activity->type ) ? bp_activity_can_comment_reply( $activity ) : bp_activity_can_comment(),
+			'can_view_comments' => function_exists( 'bb_activity_can_view_comments' )
+				? ( ( 'activity_comment' === $activity->type ) ? bb_activity_can_view_comment_replies( $activity ) : bb_activity_can_view_comments( $activity ) )
+				: ( ( 'activity_comment' === $activity->type ) ? bp_activity_can_comment_reply( $activity ) : bp_activity_can_comment() ),
 			'can_edit'          => $can_edit,
 			'is_edited'         => $activity_metas['_is_edited'][0] ?? '',
 			'can_delete'        => bp_activity_user_can_delete( $activity ),
@@ -2279,9 +2282,10 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 					! empty( $secondary_activity->privacy ) &&
 					in_array( $secondary_activity->privacy, array( 'media', 'document', 'video' ), true )
 				) {
-					$data['can_comment']  = false;
-					$data['can_edit']     = false;
-					$data['can_favorite'] = false;
+					$data['can_comment']       = false;
+					$data['can_view_comments'] = false;
+					$data['can_edit']          = false;
+					$data['can_favorite']      = false;
 				}
 			}
 		}
@@ -3047,6 +3051,12 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 				'can_comment'       => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'Whether or not user have the comment access for the activity object.', 'buddyboss' ),
+					'type'        => 'boolean',
+					'readonly'    => true,
+				),
+				'can_view_comments' => array(
+					'context'     => array( 'embed', 'view', 'edit' ),
+					'description' => __( 'Whether or not the user can view comments on the activity object.', 'buddyboss' ),
 					'type'        => 'boolean',
 					'readonly'    => true,
 				),
