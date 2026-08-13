@@ -1692,13 +1692,15 @@ class BB_Admin_Groups_Ajax {
 		 * @param int             $user_id The user ID for the current member row.
 		 * @param BP_Groups_Group $group   The group object.
 		 */
+		ob_start();
 		do_action_deprecated(
 			'bp_groups_admin_manage_member_row',
 			array( (int) $member->user_id, $group ),
 			'BuddyBoss 3.0.0',
 			'bb_admin_get_group_members_response'
 		);
-
+		ob_end_clean();
+		
 		return array(
 			'user_id'       => (int) $member->user_id,
 			'name'          => bp_core_get_user_displayname( $member->user_id ),
