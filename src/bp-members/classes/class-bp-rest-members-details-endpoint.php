@@ -113,7 +113,7 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 				array(
 					'methods'             => WP_REST_Server::READABLE,
 					'callback'            => array( $this, 'get_member_information' ),
-					'permission_callback' => '__return_true',
+					'permission_callback' => array( $this, 'get_member_information_permissions_check' ),
 				),
 				'schema' => array( $this, 'get_public_item_schema' ),
 			)
@@ -1542,6 +1542,50 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 
 		return $response;
 	}
+
+	/**
+	 * Check if a given request has access to member information.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param WP_REST_Request $request Full details about the request.
+	 *
+	 * @return bool|WP_Error
+	 */
+	public function get_member_information_permissions_check( $request ) {
+		$retval = true;
+
+		if ( function_exists( 'bp_rest_enable_private_network' ) && true === bp_rest_enable_private_network() && ! is_user_logged_in() ) {
+			$retval = new WP_Error(
+				'bp_rest_authorization_required',
+				__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss-platform' ),
+				array(
+					'status' => rest_authorization_required_code(),
+				)
+			);
+		}
+
+		if ( true === $retval && ! bp_is_active( 'members' ) ) {
+			$retval = new WP_Error(
+				'bp_rest_component_required',
+				__( 'Sorry, Members component was not enabled.', 'buddyboss-platform' ),
+				array(
+					'status' => '404',
+				)
+			);
+		}
+
+		/**
+		 * Filter the member information permissions check.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param bool|WP_Error   $retval  Returned value.
+		 * @param WP_REST_Request $request The request sent to the API.
+		 */
+		return apply_filters( 'bb_rest_member_information_permissions_check', $retval, $request );
+	}
+
 	/**
 	 * Function to get rest sub nav timeline filter.
 	 *

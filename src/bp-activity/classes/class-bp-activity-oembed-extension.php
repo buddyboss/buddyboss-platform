@@ -78,6 +78,7 @@ class BP_Activity_oEmbed_Extension extends BP_Core_oEmbed_Extension {
 	 * Validates the URL to determine if the activity item is valid.
 	 *
 	 * @since BuddyPress 2.6.0
+	 * @since BuddyBoss [BBVERSION] Added privacy validation so non-public activities are no longer resolvable via oEmbed.
 	 *
 	 * @param  string $url The URL to check.
 	 * @return int|bool Activity ID on success; boolean false on failure.
@@ -112,8 +113,29 @@ class BP_Activity_oEmbed_Extension extends BP_Core_oEmbed_Extension {
 			// Check if activity item still exists.
 			$activity = new BP_Activity_Activity( $activity_id );
 
-			// Okay, we're good to go!
 			if ( ! empty( $activity->component ) && 0 === (int) $activity->is_spam ) {
+
+				// Bail if the current user cannot read this activity (group access, moderation).
+				if ( ! bp_activity_user_can_read( $activity ) ) {
+					return false;
+				}
+
+				// Bail if the activity privacy level (onlyme, friends, loggedin) forbids viewing.
+				if (
+					function_exists( 'bb_validate_activity_privacy' ) &&
+					is_wp_error(
+						bb_validate_activity_privacy(
+							array(
+								'activity_id'     => $activity_id,
+								'validate_action' => 'view_activity',
+							)
+						)
+					)
+				) {
+					return false;
+				}
+
+				// Okay, we're good to go!
 				return $activity_id;
 			}
 		}

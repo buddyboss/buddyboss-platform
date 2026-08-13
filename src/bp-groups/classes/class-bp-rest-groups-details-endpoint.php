@@ -85,7 +85,7 @@ class BP_REST_Groups_Details_Endpoint extends WP_REST_Controller {
 				array(
 					'methods'             => WP_REST_Server::READABLE,
 					'callback'            => array( $this, 'get_group_information' ),
-					'permission_callback' => '__return_true',
+					'permission_callback' => array( $this, 'get_group_information_permissions_check' ),
 				),
 				'schema' => array( $this, 'get_public_item_schema' ),
 			)
@@ -814,6 +814,70 @@ class BP_REST_Groups_Details_Endpoint extends WP_REST_Controller {
 		do_action( 'bb_rest_groups_get_group_information', $group, $response, $request );
 
 		return $response;
+	}
+
+	/**
+	 * Check if a given request has access to group information.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param WP_REST_Request $request Full details about the request.
+	 *
+	 * @return bool|WP_Error
+	 */
+	public function get_group_information_permissions_check( $request ) {
+		$retval = true;
+
+		if ( function_exists( 'bp_rest_enable_private_network' ) && true === bp_rest_enable_private_network() && ! is_user_logged_in() ) {
+			$retval = new WP_Error(
+				'bp_rest_authorization_required',
+				__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss-platform' ),
+				array(
+					'status' => rest_authorization_required_code(),
+				)
+			);
+		}
+
+		if ( true === $retval && ! bp_is_active( 'groups' ) ) {
+			$retval = new WP_Error(
+				'bp_rest_component_required',
+				__( 'Sorry, Groups component was not enabled.', 'buddyboss-platform' ),
+				array(
+					'status' => '404',
+				)
+			);
+		}
+
+		$group = $this->groups_endpoint->get_group_object( $request );
+		if ( true === $retval && empty( $group->id ) ) {
+			$retval = new WP_Error(
+				'bp_rest_group_invalid_id',
+				__( 'Invalid group ID.', 'buddyboss-platform' ),
+				array(
+					'status' => 404,
+				)
+			);
+		}
+
+		if ( true === $retval && ! $this->groups_endpoint->can_see( $group ) ) {
+			$retval = new WP_Error(
+				'bp_rest_authorization_required',
+				__( 'Sorry, you are not allowed to view this group.', 'buddyboss-platform' ),
+				array(
+					'status' => rest_authorization_required_code(),
+				)
+			);
+		}
+
+		/**
+		 * Filter the group information permissions check.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param bool|WP_Error   $retval  Returned value.
+		 * @param WP_REST_Request $request The request sent to the API.
+		 */
+		return apply_filters( 'bb_rest_group_information_permissions_check', $retval, $request );
 	}
 
 	/**
