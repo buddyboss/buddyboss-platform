@@ -1132,7 +1132,7 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 				'default' => true,
 			),
 			'blog'         => array(
-				'label'   => __( 'Blog', 'buddyboss' ),
+				'label'   => __( 'Blog', 'buddyboss-platform' ),
 				'icon'    => 'bb-icons-rl-book-open',
 				'default' => true,
 			),

@@ -1728,7 +1728,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 		) {
 			return new WP_Error(
 				'bp_rest_activity_pinned_posts_unavailable',
-				__( 'Pinned posts are not available on this site.', 'buddyboss' ),
+				__( 'Pinned posts are not available on this site.', 'buddyboss-platform' ),
 				array(
 					'status' => 501,
 				)
@@ -2926,13 +2926,13 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 				),
 				'mention_name'      => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'User\'s mention name for the activity comment.', 'buddyboss' ),
+					'description' => __( 'User\'s mention name for the activity comment.', 'buddyboss-platform' ),
 					'type'        => 'string',
 					'readonly'    => true,
 				),
 				'user_link'         => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Profile URL of the activity comment author.', 'buddyboss' ),
+					'description' => __( 'Profile URL of the activity comment author.', 'buddyboss-platform' ),
 					'format'      => 'uri',
 					'type'        => 'string',
 					'readonly'    => true,

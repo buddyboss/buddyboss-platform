@@ -478,7 +478,7 @@ class BB_Admin_Profile_Fields_Ajax {
 			} elseif ( 'socialnetworks' === $type ) {
 				wp_send_json_error( array( 'message' => __( 'You can only have one instance of the "Social Network" profile field.', 'buddyboss-platform' ) ) );
 			} elseif ( 'biography' === $type ) {
-				wp_send_json_error( array( 'message' => __( 'You can only have one instance of the "Bio" profile field.', 'buddyboss' ) ) );
+				wp_send_json_error( array( 'message' => __( 'You can only have one instance of the "Bio" profile field.', 'buddyboss-platform' ) ) );
 			}
 
 			wp_send_json_error( array( 'message' => __( 'There was an error saving the field. Please try again.', 'buddyboss-platform' ) ) );
@@ -938,7 +938,7 @@ class BB_Admin_Profile_Fields_Ajax {
 		$labels = array(
 			'textbox'        => __( 'Single Line Input', 'buddyboss-platform' ),
 			'textarea'       => __( 'Paragraph Input', 'buddyboss-platform' ),
-			'biography'      => __( 'Bio', 'buddyboss' ),
+			'biography'      => __( 'Bio', 'buddyboss-platform' ),
 			'selectbox'      => __( 'Dropdown', 'buddyboss-platform' ),
 			'multiselectbox' => __( 'Multi Select', 'buddyboss-platform' ),
 			'checkbox'       => __( 'Checkboxes', 'buddyboss-platform' ),
@@ -981,7 +981,7 @@ class BB_Admin_Profile_Fields_Ajax {
 		$descriptions = array(
 			'textbox'        => __( 'Displays a single-line text field where users can enter short text.', 'buddyboss-platform' ),
 			'textarea'       => __( 'Displays a multi-line text field where users can enter longer text.', 'buddyboss-platform' ),
-			'biography'      => __( 'Displays a multi-line text field for the member\'s bio, shared with the "Biographical Info" field on their WordPress profile.', 'buddyboss' ),
+			'biography'      => __( 'Displays a multi-line text field for the member\'s bio, shared with the "Biographical Info" field on their WordPress profile.', 'buddyboss-platform' ),
 			'selectbox'      => __( 'Displays a dropdown list where users can select one option from multiple predefined choices.', 'buddyboss-platform' ),
 			'multiselectbox' => __( 'Displays a list where users can select multiple options.', 'buddyboss-platform' ),
 			'checkbox'       => __( 'Displays multiple options where users can select one or more choices.', 'buddyboss-platform' ),

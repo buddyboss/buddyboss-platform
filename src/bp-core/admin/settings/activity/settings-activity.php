@@ -166,8 +166,8 @@ function bb_activity_register_settings_panel_fields( $edit_time_options = array(
 			'pro_only'            => true,
 			// Upgrade modal content (used when there is no remote field-upgrades
 			// catalog entry yet). See bb_admin_addon_upsell_field_names().
-			'upgrade_title'       => __( 'Pinned Posts Stays on Top', 'buddyboss' ),
-			'upgrade_description' => __( 'Group owners and moderators can pin posts — one admin switch. “Pin to feed” sits right in the post menu.', 'buddyboss' ),
+			'upgrade_title'       => __( 'Pinned Posts Stays on Top', 'buddyboss-platform' ),
+			'upgrade_description' => __( 'Group owners and moderators can pin posts — one admin switch. “Pin to feed” sits right in the post menu.', 'buddyboss-platform' ),
 			'upgrade_image_url'   => buddypress()->plugin_url . 'bp-core/images/admin/pinned-posts-upgrade.png',
 		)
 	);

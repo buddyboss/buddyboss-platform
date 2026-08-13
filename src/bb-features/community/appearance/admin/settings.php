@@ -469,7 +469,7 @@ function bb_admin_settings_register_appearance_settings() {
 	// their own backing feature, so Blog must be too).
 	if ( function_exists( 'bp_is_active' ) && bp_is_active( 'blogging' ) ) {
 		$template_page_options[] = array(
-			'label' => __( 'Blog', 'buddyboss' ),
+			'label' => __( 'Blog', 'buddyboss-platform' ),
 			'value' => 'blog',
 		);
 	}

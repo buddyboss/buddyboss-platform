@@ -23,7 +23,7 @@ $bb_rl_blog_author_url  = function_exists( 'bp_core_get_user_domain' ) ? bp_core
 $bb_rl_blog_author_name = function_exists( 'bp_core_get_user_displayname' ) ? bp_core_get_user_displayname( $bb_rl_blog_author_id ) : get_the_author();
 
 if ( '' === trim( (string) $bb_rl_blog_author_name ) ) {
-	$bb_rl_blog_author_name = __( 'Unknown Member', 'buddyboss' );
+	$bb_rl_blog_author_name = __( 'Unknown Member', 'buddyboss-platform' );
 }
 $bb_rl_blog_status        = get_post_status();
 $bb_rl_blog_status_obj    = get_post_status_object( $bb_rl_blog_status );
@@ -31,10 +31,10 @@ $bb_rl_blog_comment_count = (int) get_comments_number();
 
 // Display labels per the design (WP's own label for anything unmapped).
 $bb_rl_blog_status_labels = array(
-	'publish' => __( 'Published', 'buddyboss' ),
-	'pending' => __( 'In Review', 'buddyboss' ),
-	'draft'   => __( 'Draft', 'buddyboss' ),
-	'future'  => __( 'Scheduled', 'buddyboss' ),
+	'publish' => __( 'Published', 'buddyboss-platform' ),
+	'pending' => __( 'In Review', 'buddyboss-platform' ),
+	'draft'   => __( 'Draft', 'buddyboss-platform' ),
+	'future'  => __( 'Scheduled', 'buddyboss-platform' ),
 );
 $bb_rl_blog_status_label  = isset( $bb_rl_blog_status_labels[ $bb_rl_blog_status ] )
 	? $bb_rl_blog_status_labels[ $bb_rl_blog_status ]
@@ -84,7 +84,7 @@ $bb_rl_blog_show_menu = (bool) apply_filters( 'bb_rl_blog_card_show_menu', $bb_r
 				the_post_thumbnail( 'medium_large', array( 'class' => 'img-responsive' ) );
 			else :
 				?>
-				<img src="<?php echo esc_url( buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/images/group_cover_image.jpeg' ); ?>" alt="<?php esc_attr_e( 'Blog post placeholder image', 'buddyboss' ); ?>">
+				<img src="<?php echo esc_url( buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/images/group_cover_image.jpeg' ); ?>" alt="<?php esc_attr_e( 'Blog post placeholder image', 'buddyboss-platform' ); ?>">
 			<?php endif; ?>
 		</a>
 		<?php if ( $bb_rl_blog_show_status_tag ) : ?>
@@ -100,7 +100,7 @@ $bb_rl_blog_show_menu = (bool) apply_filters( 'bb_rl_blog_card_show_menu', $bb_r
 		</h2>
 		<?php if ( $bb_rl_blog_show_menu ) : ?>
 			<div class="bb-rl-blog-card__menu">
-				<button type="button" class="bb-rl-blog-card__menu-toggle" aria-haspopup="true" aria-expanded="false" aria-label="<?php esc_attr_e( 'More options', 'buddyboss' ); ?>">
+				<button type="button" class="bb-rl-blog-card__menu-toggle" aria-haspopup="true" aria-expanded="false" aria-label="<?php esc_attr_e( 'More options', 'buddyboss-platform' ); ?>">
 					<i class="bb-icons-rl bb-icons-rl-dots-three" aria-hidden="true"></i>
 				</button>
 				<ul class="bb-rl-blog-card__menu-list">
@@ -119,7 +119,7 @@ $bb_rl_blog_show_menu = (bool) apply_filters( 'bb_rl_blog_card_show_menu', $bb_r
 					 */
 					if ( apply_filters( 'bb_blog_card_show_view_post_menu_item', true, get_the_ID() ) ) :
 						?>
-						<li><a href="<?php the_permalink(); ?>"><i class="bb-icons-rl bb-icons-rl-eye" aria-hidden="true"></i><?php esc_html_e( 'View Post', 'buddyboss' ); ?></a></li>
+						<li><a href="<?php the_permalink(); ?>"><i class="bb-icons-rl bb-icons-rl-eye" aria-hidden="true"></i><?php esc_html_e( 'View Post', 'buddyboss-platform' ); ?></a></li>
 						<?php
 					endif;
 					?>
@@ -161,7 +161,7 @@ $bb_rl_blog_show_menu = (bool) apply_filters( 'bb_rl_blog_card_show_menu', $bb_r
 				<?php
 				printf(
 					/* translators: %s: linked author display name. */
-					esc_html__( 'By %s', 'buddyboss' ),
+					esc_html__( 'By %s', 'buddyboss-platform' ),
 					'<a href="' . esc_url( $bb_rl_blog_author_url ) . '">' . esc_html( $bb_rl_blog_author_name ) . '</a>'
 				);
 				?>
@@ -169,7 +169,7 @@ $bb_rl_blog_show_menu = (bool) apply_filters( 'bb_rl_blog_card_show_menu', $bb_r
 		</div>
 		<div class="bb-rl-blog-card__excerpt"><?php the_excerpt(); ?></div>
 		<a class="bb-rl-blog-card__view" href="<?php the_permalink(); ?>">
-			<?php esc_html_e( 'View Post', 'buddyboss' ); ?>
+			<?php esc_html_e( 'View Post', 'buddyboss-platform' ); ?>
 			<i class="bb-icons-rl bb-icons-rl-caret-right" aria-hidden="true"></i>
 		</a>
 		<a class="bb-rl-blog-card__comments" href="<?php echo esc_url( get_comments_link() ); ?>">

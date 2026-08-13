@@ -341,7 +341,7 @@ class BB_Admin_Settings_Ajax {
 				\BuddyBoss\Core\Admin\DRM\BB_DRM_Registry::should_lock_addon_features( $registered['drm_product_slug'] )
 			) {
 				wp_send_json_error(
-					array( 'message' => __( 'This feature requires an active license.', 'buddyboss' ) )
+					array( 'message' => __( 'This feature requires an active license.', 'buddyboss-platform' ) )
 				);
 			}
 		}
@@ -1227,7 +1227,7 @@ class BB_Admin_Settings_Ajax {
 				)
 			) {
 				$field_data['pro_notice']['tier']       = 'start';
-				$field_data['pro_notice']['badge_text'] = __( 'START', 'buddyboss' );
+				$field_data['pro_notice']['badge_text'] = __( 'START', 'buddyboss-platform' );
 			}
 
 			/*

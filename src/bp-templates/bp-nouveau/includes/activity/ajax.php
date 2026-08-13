@@ -1119,7 +1119,7 @@ function bp_nouveau_ajax_post_update() {
 	if ( empty( $activity_id ) ) {
 		wp_send_json_error(
 			array(
-				'message' => __( 'There was a problem posting your update. Please try again.', 'buddyboss' ),
+				'message' => __( 'There was a problem posting your update. Please try again.', 'buddyboss-platform' ),
 			)
 		);
 	}
