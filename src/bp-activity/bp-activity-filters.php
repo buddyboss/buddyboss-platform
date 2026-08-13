@@ -2310,6 +2310,12 @@ function bp_activity_new_at_mention_permalink( $link, $item_id, $secondary_item_
 function bp_activity_document_add( $document ) {
 	global $bp_document_upload_count, $bp_new_activity_comment, $bp_activity_post_update_id, $bp_activity_post_update, $bb_activity_comment_edit, $bb_activity_comment_edit_id;
 
+	// The document component code may be absent entirely (it ships from the
+	// BuddyBoss Addons plugin) - bail before any bb_document_* call fatals.
+	if ( ! bp_is_active( 'document' ) || ! function_exists( 'bb_document_get_published_status' ) ) {
+		return;
+	}
+
 	// Check the current action is edit activity comment.
 	if (
 		$bb_activity_comment_edit &&
@@ -3072,6 +3078,12 @@ add_filter( 'bb_add_feature_image_blog_post_as_activity_content', 'bb_add_featur
  */
 function bp_activity_video_add( $video ) {
 	global $bp_video_upload_count, $bp_new_activity_comment, $bp_activity_post_update_id, $bp_activity_post_update, $bb_activity_comment_edit, $bb_activity_comment_edit_id;
+
+	// The video component code may be absent entirely (it ships from the
+	// BuddyBoss Addons plugin) - bail before any bb_video_* call fatals.
+	if ( ! bp_is_active( 'video' ) || ! function_exists( 'bb_video_get_published_status' ) ) {
+		return;
+	}
 
 	// Check the current action is edit activity comment.
 	if (

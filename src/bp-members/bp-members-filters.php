@@ -356,6 +356,12 @@ add_filter( 'bp_video_set_personal_scope_args', 'bp_members_filter_video_persona
  */
 function bp_members_filter_document_personal_scope( $retval = array(), $filter = array() ) {
 
+	// The document component code may be absent entirely (it ships from the
+	// BuddyBoss Addons plugin) - bail before any bp_document_* call fatals.
+	if ( ! bp_is_active( 'document' ) || ! function_exists( 'bp_document_get_folder_children' ) ) {
+		return $retval;
+	}
+
 	// Determine the user_id.
 	if ( ! empty( $filter['user_id'] ) ) {
 		$user_id = $filter['user_id'];
@@ -462,6 +468,12 @@ add_filter( 'bp_document_set_document_personal_scope_args', 'bp_members_filter_d
  * @return array
  */
 function bp_members_filter_folder_personal_scope( $retval = array(), $filter = array() ) {
+
+	// The document component code may be absent entirely (it ships from the
+	// BuddyBoss Addons plugin) - bail before any bp_document_* call fatals.
+	if ( ! bp_is_active( 'document' ) || ! function_exists( 'bp_document_get_folder_children' ) ) {
+		return $retval;
+	}
 
 	if ( ! bp_is_profile_document_support_enabled() ) {
 		return $retval;

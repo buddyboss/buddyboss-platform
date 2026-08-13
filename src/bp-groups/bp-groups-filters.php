@@ -750,6 +750,12 @@ function bp_groups_filter_video_scope( $retval = array(), $filter = array() ) {
  */
 function bp_groups_filter_document_scope( $retval = array(), $filter = array() ) {
 
+	// The document component code may be absent entirely (it ships from the
+	// BuddyBoss Addons plugin) - bail before any bp_document_* call fatals.
+	if ( ! bp_is_active( 'document' ) || ! function_exists( 'bp_document_get_folder_children' ) ) {
+		return $retval;
+	}
+
 	// Determine the user_id.
 	if ( ! empty( $filter['user_id'] ) ) {
 		$user_id = $filter['user_id'];
@@ -865,6 +871,12 @@ function bp_groups_filter_document_scope( $retval = array(), $filter = array() )
 }
 
 function bp_groups_filter_folder_scope( $retval = array(), $filter = array() ) {
+
+	// The document component code may be absent entirely (it ships from the
+	// BuddyBoss Addons plugin) - bail before any bp_document_* call fatals.
+	if ( ! bp_is_active( 'document' ) || ! function_exists( 'bp_document_get_folder_children' ) ) {
+		return $retval;
+	}
 
 	if ( ! bp_is_group_document_support_enabled() ) {
 		return $retval;
