@@ -868,7 +868,20 @@ module.exports = function (grunt) {
 		'bp-templates/bp-nouveau/readylaunch/assets/fonts/Inter-Medium.ttf',
 		'bp-templates/bp-nouveau/readylaunch/assets/fonts/Inter-MediumItalic.ttf',
 		'bp-templates/bp-nouveau/readylaunch/assets/fonts/Inter-Regular.ttf',
-		'bp-templates/bp-nouveau/readylaunch/assets/fonts/Inter-SemiBold.ttf'
+		'bp-templates/bp-nouveau/readylaunch/assets/fonts/Inter-SemiBold.ttf',
+
+		// 5. SVG-font copies of the legacy bb-icon set. The SVG font format
+		//    is the LAST entry in the @font-face src cascade and was only
+		//    ever picked by ~2012-era browsers (iOS Safari 4, IE8); every
+		//    browser that meets the platform minimums selects woff2 first
+		//    and never requests these. Listed explicitly so standalone UI
+		//    SVG images elsewhere in the tree are untouched.
+		'bp-templates/bp-nouveau/icons/fonts/box-filled.svg',
+		'bp-templates/bp-nouveau/icons/fonts/box-lined.svg',
+		'bp-templates/bp-nouveau/icons/fonts/filled.svg',
+		'bp-templates/bp-nouveau/icons/fonts/lined.svg',
+		'bp-templates/bp-nouveau/icons/fonts/round-filled.svg',
+		'bp-templates/bp-nouveau/icons/fonts/round-lined.svg'
 	];
 
 	// Compiled translation bundles and source `.po` files. WordPress fetches
