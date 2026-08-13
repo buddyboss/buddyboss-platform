@@ -262,9 +262,13 @@ class BB_Admin_Member_Types_Ajax {
 				'singular_label'                     => get_post_meta( $post_id, '_bp_member_type_label_singular_name', true ),
 				'plural_label'                       => get_post_meta( $post_id, '_bp_member_type_label_name', true ),
 				'members_count'                      => isset( $member_counts[ $type_key ] ) ? (int) $member_counts[ $type_key ] : 0,
-				'enable_filter'                      => absint( get_post_meta( $post_id, '_bp_member_type_enable_filter', true ) ),
-				'enable_remove'                      => absint( get_post_meta( $post_id, '_bp_member_type_enable_remove', true ) ),
-				'enable_search_remove'               => absint( get_post_meta( $post_id, '_bp_member_type_enable_search_remove', true ) ),
+				// Read through the visibility resolver, not raw meta, so a translation
+				// that has not stored its own value shows the value it inherits. Raw
+				// meta would show an unchecked box while the directory applied the
+				// inherited "checked", and the next save would persist that mismatch.
+				'enable_filter'                      => absint( bb_get_member_type_visibility_setting( $post_id, '_bp_member_type_enable_filter' ) ),
+				'enable_remove'                      => absint( bb_get_member_type_visibility_setting( $post_id, '_bp_member_type_enable_remove' ) ),
+				'enable_search_remove'               => absint( bb_get_member_type_visibility_setting( $post_id, '_bp_member_type_enable_search_remove' ) ),
 				'enable_profile_field'               => absint( get_post_meta( $post_id, '_bp_member_type_enable_profile_field', true ) ),
 				'group_type_create'                  => array_map( 'sanitize_text_field', $group_type_create ),
 				'group_type_auto_join'               => array_map( 'sanitize_text_field', $group_type_auto_join ),

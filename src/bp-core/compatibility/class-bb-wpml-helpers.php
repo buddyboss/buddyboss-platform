@@ -89,12 +89,17 @@ if ( ! class_exists( 'BB_WPML_Helpers' ) ) {
 			// Handle WPML language switch action from wpml(eg classic editor meta box).
 			add_action( 'wp_ajax_wpml_switch_post_language', array( $this, 'bb_handle_wpml_switch_post_language' ), 9 );
 
-			// Resolve translated profile type posts to their original post so the
-			// canonical profile type key (taxonomy term slug) is shared across languages.
-			add_filter( 'bb_member_type_key_post_id', array( $this, 'bb_wpml_original_member_type_post_id' ) );
-
-			// Scope profile type visibility query caches per language, because each
-			// translation carries its own visibility settings (hide from directory/search).
+			/*
+			 * Profile types under WPML.
+			 *
+			 * Identity is shared: every language points at the same
+			 * `bp_member_type` taxonomy term, which only the source post's key
+			 * matches. Visibility settings are not shared: each translation owns
+			 * its own "hide from Members Directory" / "hide from search" /
+			 * "show in the Type filter" values.
+			 */
+			add_filter( 'bb_member_type_source_post_id', array( $this, 'bb_wpml_source_member_type_post_id' ) );
+			add_filter( 'bb_member_type_localized_post_id', array( $this, 'bb_wpml_localized_member_type_post_id' ) );
 			add_filter( 'bb_member_type_query_cache_context', array( $this, 'bb_wpml_member_type_query_cache_context' ) );
 		}
 
@@ -679,7 +684,7 @@ if ( ! class_exists( 'BB_WPML_Helpers' ) ) {
 		 * The `bp_member_type` taxonomy terms assigned to users are always created
 		 * from the original post's key, so any key lookup made against a translated
 		 * post must be redirected to the original post. Runs on the
-		 * `bb_member_type_key_post_id` filter.
+		 * `bb_member_type_source_post_id` filter.
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
@@ -688,7 +693,7 @@ if ( ! class_exists( 'BB_WPML_Helpers' ) ) {
 		 * @return int Original profile type post ID, or the given ID when no
 		 *             translation group exists or the original cannot be resolved.
 		 */
-		public function bb_wpml_original_member_type_post_id( $post_id ) {
+		public function bb_wpml_source_member_type_post_id( $post_id ) {
 			static $resolved = array();
 
 			$post_id = (int) $post_id;
@@ -731,7 +736,49 @@ if ( ! class_exists( 'BB_WPML_Helpers' ) ) {
 		}
 
 		/**
-		 * Scope profile type visibility query caches by the current WPML language.
+		 * Resolve a profile type post ID to the translation for the current language.
+		 *
+		 * Each translation of a profile type carries its own visibility settings,
+		 * so the Members Directory has to read them from the post belonging to the
+		 * language being viewed. Runs on the `bb_member_type_localized_post_id`
+		 * filter.
+		 *
+		 * `$return_original_if_missing` is intentionally `false`: when the current
+		 * language has no translation, the given post ID is returned so the caller
+		 * can apply its own source-language fallback.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param int $post_id Profile type post ID (usually the source post).
+		 *
+		 * @return int Profile type post ID for the current language, or the given
+		 *             ID when the current language has no translation.
+		 */
+		public function bb_wpml_localized_member_type_post_id( $post_id ) {
+			static $resolved = array();
+
+			$post_id = (int) $post_id;
+
+			if ( empty( $post_id ) || ! function_exists( 'bp_get_member_type_post_type' ) ) {
+				return $post_id;
+			}
+
+			$language = apply_filters( 'wpml_current_language', null );
+			$cache_id = ( ! empty( $language ) ? $language : 'default' ) . ':' . $post_id;
+
+			if ( isset( $resolved[ $cache_id ] ) ) {
+				return $resolved[ $cache_id ];
+			}
+
+			$localized_id = apply_filters( 'wpml_object_id', $post_id, bp_get_member_type_post_type(), false );
+
+			$resolved[ $cache_id ] = ! empty( $localized_id ) ? (int) $localized_id : $post_id;
+
+			return $resolved[ $cache_id ];
+		}
+
+		/**
+		 * Scope profile type visibility results by the current WPML language.
 		 *
 		 * Visibility settings (hide from Members Directory / hide from search) are
 		 * stored per translation, and WPML filters the underlying WP_Query to the

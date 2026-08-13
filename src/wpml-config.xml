@@ -2,23 +2,52 @@
 	<!--
 		BuddyBoss Platform — WPML language configuration.
 
-		Profile Types: the `bp-member-type` post is only a container for labels
-		and settings. The actual member assignment lives in the `bp_member_type`
-		taxonomy attached to users, and every language shares the same terms.
-		The taxonomy must therefore never be translated, and the internal key /
-		behaviour settings must stay identical across translations, while the
-		label fields remain translatable.
+		Profile Types hold two different kinds of data:
+
+		1. Identity. The `bp-member-type` post's key (`_bp_member_type_key`)
+		   matches the `bp_member_type` taxonomy term assigned to users, and a
+		   user has exactly one such term regardless of the language they are
+		   viewed in. The taxonomy must therefore never be translated, and the
+		   key must never be duplicated onto a translation.
+
+		2. Per-language settings. The visibility settings ("hide from Members
+		   Directory", "hide from search", "show in the Type filter") are
+		   authored per language on the Profile Types screen, so WPML must not
+		   copy or re-sync them — a value set in one language must never
+		   overwrite another. BuddyBoss handles inheritance itself: a
+		   translation falls back to the source language only until it stores a
+		   value of its own. See bb_get_member_type_visibility_setting().
+
+		The `bp-member-type` post type is deliberately not declared here. Nothing
+		in BuddyBoss requires it to be translatable — the per-language settings
+		above degrade to the source language when it is not — so the choice is
+		left to the site owner rather than locked by this file.
 	-->
 	<taxonomies>
 		<taxonomy translate="0">bp_member_type</taxonomy>
 	</taxonomies>
 	<custom-fields>
-		<custom-field action="copy-once">_bp_member_type_enable_filter</custom-field>
-		<custom-field action="copy-once">_bp_member_type_enable_remove</custom-field>
-		<custom-field action="copy-once">_bp_member_type_enable_search_remove</custom-field>
-		<custom-field action="copy-once">_bp_member_type_enable_profile_field</custom-field>
-		<custom-field action="copy-once">_bp_member_type_enable_invite</custom-field>
-		<custom-field action="copy-once">_bp_member_type_label_color</custom-field>
+		<!--
+			Identity. Never copied to a translation: BuddyBoss always resolves the
+			key from the source post, and duplicating it would make the key => post
+			lookups in bp_member_type_post_by_type() ambiguous.
+		-->
+		<custom-field action="ignore">_bp_member_type_key</custom-field>
+
+		<!--
+			Per-language visibility settings — never copied between languages.
+			`copy-once` cannot be used: WPML re-copies whenever the translation's
+			value is empty, and an unchecked box is stored as 0, which is empty in
+			PHP. That silently reverts every "unchecked" back to the source value.
+		-->
+		<custom-field action="ignore">_bp_member_type_enable_filter</custom-field>
+		<custom-field action="ignore">_bp_member_type_enable_remove</custom-field>
+		<custom-field action="ignore">_bp_member_type_enable_search_remove</custom-field>
+
+		<!-- Site-wide behaviour — shared by every language. -->
+		<custom-field action="copy">_bp_member_type_enable_profile_field</custom-field>
+		<custom-field action="copy">_bp_member_type_enable_invite</custom-field>
+		<custom-field action="copy">_bp_member_type_label_color</custom-field>
 		<custom-field action="copy">_bp_member_type_wp_roles</custom-field>
 		<custom-field action="copy">_bp_member_type_enabled_group_type_create</custom-field>
 		<custom-field action="copy">_bp_member_type_enabled_group_type_auto_join</custom-field>
@@ -28,6 +57,8 @@
 		<custom-field action="copy">_bp_member_type_logout_redirection</custom-field>
 		<custom-field action="copy">_bp_member_type_custom_logout_redirection</custom-field>
 		<custom-field action="copy">_bp_member_type_allow_messaging_without_connection</custom-field>
+
+		<!-- Labels — translated. -->
 		<custom-field action="translate">_bp_member_type_label_name</custom-field>
 		<custom-field action="translate">_bp_member_type_label_singular_name</custom-field>
 	</custom-fields>
