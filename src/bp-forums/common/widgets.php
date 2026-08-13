@@ -968,14 +968,14 @@ class BBP_Topics_Widget extends WP_Widget {
 
 				$author_url = bbp_get_topic_author_url( $topic_id );
 				$author_id  = bbp_get_topic_author_id( $topic_id );
-				$hp_attr    = ! empty( $author_id ) ? ' data-bb-hp-profile="' . esc_attr( $author_id ) . '"' : '';
+				$hp_attr    = bb_get_hover_card_profile_attr( $author_id );
 				?>
 
 				<li class="<?php echo $author_related_class; ?>">
 
 					<?php if ( ! empty( $author_link ) ) : ?>
 
-						<a href="<?php echo esc_url( $author_url ); ?>" class="bbp-author-link" rel="nofollow"<?php echo $hp_attr; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- built from esc_attr(). ?>>
+						<a href="<?php echo esc_url( $author_url ); ?>" class="bbp-author-link" rel="nofollow"<?php echo $hp_attr; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped in the helper. ?>>
 							<span class="bbp-author-avatar">
 								<?php echo bbp_get_topic_author_avatar( $topic_id ); ?>
 							</span>
@@ -1394,14 +1394,14 @@ class BBP_Replies_Widget extends WP_Widget {
 
 				$reply_author_url = bbp_get_reply_author_url( $reply_id );
 				$reply_author_id  = bbp_get_reply_author_id( $reply_id );
-				$hp_attr          = ! empty( $reply_author_id ) ? ' data-bb-hp-profile="' . esc_attr( $reply_author_id ) . '"' : '';
+				$hp_attr          = bb_get_hover_card_profile_attr( $reply_author_id );
 
 				?>
 
 				<li class="<?php echo $author_related_class; ?>">
 					<?php if ( ! empty( $author_link ) ) : ?>
 
-					<a href="<?php echo esc_url( $reply_author_url ); ?>" class="bbp-author-link" rel="nofollow"<?php echo $hp_attr; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- built from esc_attr(). ?>>
+					<a href="<?php echo esc_url( $reply_author_url ); ?>" class="bbp-author-link" rel="nofollow"<?php echo $hp_attr; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped in the helper. ?>>
 						<span class="bbp-author-avatar">
 							<?php echo bbp_get_reply_author_avatar( $reply_id ); ?>
 						</span>
