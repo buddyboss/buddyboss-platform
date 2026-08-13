@@ -4815,7 +4815,8 @@ function bp_core_parse_url( $url ) {
 			array(
 				'stream'      => true,
 				'headers'     => array(
-					// PROD-9877: Use a modern browser UA so URL redirect resolvers (e.g. Google's maps.app.goo.gl short-link service) return proper 3xx redirects instead of empty JS-only interstitials.
+					// Use a modern browser UA so URL redirect resolvers (e.g. Google's maps.app.goo.gl
+					// short-link service) return proper 3xx redirects instead of empty JS-only interstitials.
 					'user-agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
 				),
 			),
@@ -4881,7 +4882,8 @@ function bp_core_parse_url( $url ) {
 		$parsed_url_data['error']       = '';
 		$parsed_url_data['wp_embed']    = true;
 	} else {
-		// PROD-9877: Use a modern browser UA so URL redirect resolvers (e.g. Google's maps.app.goo.gl short-link service) return proper 3xx redirects instead of empty JS-only interstitials.
+		// Use a modern browser UA so URL redirect resolvers (e.g. Google's maps.app.goo.gl
+		// short-link service) return proper 3xx redirects instead of empty JS-only interstitials.
 		$args = array( 'user-agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36' );
 
 		if ( bb_is_same_site_url( $url ) ) {
