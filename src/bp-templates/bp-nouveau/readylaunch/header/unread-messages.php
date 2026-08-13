@@ -315,10 +315,10 @@ if ( bp_has_message_threads( bp_ajax_querystring( 'messages' ) . '&user_id=' . g
 				<div class="notification-avatar">
 					<?php
 					if ( count( $other_recipients ) > 1 ) {
-						$last_sender = wp_list_filter( $recipients, array( 'user_id' => (int) $messages_template->thread->last_sender_id ) );
-						$last_sender = ! empty( $last_sender ) ? reset( $last_sender ) : array();
+						$last_sender_data = wp_list_filter( $recipients, array( 'user_id' => (int) $messages_template->thread->last_sender_id ) );
+						$last_sender_data = ! empty( $last_sender_data ) ? reset( $last_sender_data ) : array();
 						?>
-						<a href="<?php echo esc_url( bp_core_get_user_domain( $messages_template->thread->last_sender_id ) ); ?>" <?php echo ( ! empty( $last_sender['user_id'] ) && empty( $last_sender['is_deleted'] ) && empty( $last_sender['is_user_suspended'] ) && empty( $last_sender['is_user_blocked'] ) ) ? 'data-bb-hp-profile="' . esc_attr( $last_sender['user_id'] ) . '"' : ''; ?>>
+						<a href="<?php echo esc_url( bp_core_get_user_domain( $messages_template->thread->last_sender_id ) ); ?>" <?php echo ( ! empty( $last_sender_data['user_id'] ) && empty( $last_sender_data['is_deleted'] ) && empty( $last_sender_data['is_user_suspended'] ) && empty( $last_sender_data['is_user_blocked'] ) ) ? 'data-bb-hp-profile="' . esc_attr( $last_sender_data['user_id'] ) . '"' : ''; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped via esc_attr() in the ternary. ?>>
 							<?php bp_message_thread_avatar(); ?>
 						</a>
 						<?php
@@ -335,7 +335,7 @@ if ( bp_has_message_threads( bp_ajax_querystring( 'messages' ) . '&user_id=' . g
 							$can_message = false;
 						}
 						?>
-						<a href="<?php echo esc_url( $recipient['user_link'] ); ?>" <?php echo ( ! empty( $recipient['user_id'] ) && empty( $recipient['is_deleted'] ) && empty( $recipient['is_user_suspended'] ) && empty( $recipient['is_user_blocked'] ) ) ? 'data-bb-hp-profile="' . esc_attr( $recipient['user_id'] ) . '"' : ''; ?>>
+						<a href="<?php echo esc_url( $recipient['user_link'] ); ?>" <?php echo ( ! empty( $recipient['user_id'] ) && empty( $recipient['is_deleted'] ) && empty( $recipient['is_user_suspended'] ) && empty( $recipient['is_user_blocked'] ) ) ? 'data-bb-hp-profile="' . esc_attr( $recipient['user_id'] ) . '"' : ''; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped via esc_attr() in the ternary. ?>>
 							<img class="avatar" src="<?php echo esc_url( $recipient['avatar'] ); ?>" alt="<?php echo esc_attr( $recipient['user_name'] ); ?>" />
 							<?php
 							if ( isset( $recipient['is_deleted'] ) && 0 === $recipient['is_deleted'] ) {
