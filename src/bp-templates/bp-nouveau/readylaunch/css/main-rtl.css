@@ -25821,7 +25821,8 @@ body.woocommerce-account:not(.llms-pointer) header.entry-header {
   display: block;
 }
 
-.bb-rl-group-card .bs-group-member [class*=" bb-icon-"] {
+.bb-rl-group-card .bs-group-member [class*=" bb-icon-"],
+.bb-rl-group-card .bs-group-member [class*="bb-icons-rl-"] {
   height: 24px;
   width: 24px;
   font-size: 16px;

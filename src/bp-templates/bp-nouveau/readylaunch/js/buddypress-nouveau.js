@@ -5169,7 +5169,7 @@ window.bp = window.bp || {};
 				var moreIconHtml =
 					'<span class="bs-group-member" data-bp-tooltip-pos="up-left" data-bp-tooltip="+ ' + remainingCount + ' ' + membersLabel + '">' +
 						'<a href="' + data.group_members_url + '">' +
-							'<span class="bb-icon-f bb-icon-ellipsis-h"></span>' +
+							'<span class="bb-icons-rl-dots-three"></span>' +
 						'</a>' +
 					'</span>';
 				$groupMembersContainer.append( moreIconHtml );
