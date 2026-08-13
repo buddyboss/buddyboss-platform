@@ -280,6 +280,10 @@ if ( bp_has_message_threads( bp_ajax_querystring( 'messages' ) . '&user_id=' . g
 							echo '<div class="thread-multiple-avatar">';
 						}
 						foreach ( $avatars as $avatar ) {
+							// Note: is_user_blocked_by is deliberately NOT part of this gate (nor the
+							// last-sender / single-recipient gates below) - matching every hover-card
+							// gate on this branch, members who blocked the viewer still render a card
+							// today; revisit together with the members /info moderation-guard decision.
 							$hp_attr = '';
 							if ( isset( $avatar['type'] ) && 'group' === $avatar['type'] && ! empty( $avatar['id'] ) ) {
 								$hp_attr = ' data-bb-hp-group="' . esc_attr( $avatar['id'] ) . '"';
@@ -306,7 +310,7 @@ if ( bp_has_message_threads( bp_ajax_querystring( 'messages' ) . '&user_id=' . g
 			} elseif ( $is_group_thread ) {
 				?>
 				<div class="notification-avatar">
-					<a href="<?php bp_message_thread_view_link( bp_get_message_thread_id() ); ?>" data-bb-hp-group="<?php echo esc_attr( $group_id ); ?>">
+					<a href="<?php bp_message_thread_view_link( bp_get_message_thread_id() ); ?>" <?php echo ( ! empty( $group_id ) && empty( $is_deleted_group ) ) ? 'data-bb-hp-group="' . esc_attr( $group_id ) . '"' : ''; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped via esc_attr() in the ternary. ?>>
 						<img src="<?php echo esc_url( $group_avatar ); ?>"> </a>
 				</div>
 				<?php
