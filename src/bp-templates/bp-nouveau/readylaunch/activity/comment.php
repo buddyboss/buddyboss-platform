@@ -24,7 +24,7 @@ $activity_comment_id = bp_get_activity_comment_id();
 			<div class="bb-rl-acomment_inner">
 				<div class="bb-rl-acomment-avatar bb-rl-item-avatar">
 					<?php $user_id = bp_get_activity_comment_user_id(); ?>
-					<a href="<?php echo esc_url( bp_get_activity_comment_user_link() ); ?>" <?php echo ! empty( $user_id ) ? 'data-bb-hp-profile="' . esc_attr( $user_id ) . '"' : ''; ?>>
+					<a href="<?php echo esc_url( bp_get_activity_comment_user_link() ); ?>"<?php echo bb_get_hover_card_profile_attr( $user_id ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped in the helper. ?>>
 						<?php
 						bp_activity_avatar(
 							array(
