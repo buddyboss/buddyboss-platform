@@ -17,45 +17,57 @@ import { applyFilters } from '@wordpress/hooks';
  */
 export function getCuratedOverrides() {
 	const defaults = {
+		// These two entries exist only to pin card order. Name and description
+		// are omitted so the live KB copy drives the card (as with
+		// 'buddyboss-theme-and-platform'), and the icon is the generic doc icon
+		// — the same one the uncurated cards fall back to.
+		'buddyboss-courses': {
+			icon:        'bb-icons-rl-graduation-cap',
+			order:       1,
+		},
+		'buddyboss-membership': {
+			icon:        'bb-icons-rl-identification-card',
+			order:       2,
+		},
 		'buddyboss-theme-and-platform': {
 			icon:        'bb-icons-rl-browser',
-			order:       1,
+			order:       3,
 		},
 		'buddyboss-platform': {
 			icon:        'bb-icons-rl-app-window',
 			title:       __( 'BuddyBoss Platform', 'buddyboss-platform' ),
 			description: __( 'Learn how to enable and configure the BuddyBoss Platform – including profiles, groups, activity, forums and more.', 'buddyboss-platform' ),
-			order:       1,
+			order:       3,
 		},
 		'buddyboss-theme': {
 			icon:        'bb-icons-rl-palette',
 			title:       __( 'BuddyBoss Theme', 'buddyboss-platform' ),
 			description: __( 'Learn how to setup and customize our premium BuddyBoss Theme to make everything look beautiful.', 'buddyboss-platform' ),
-			order:       2,
+			order:       4,
 		},
 		'buddyboss-app': {
 			icon:        'bb-icons-rl-device-mobile',
 			title:       __( 'BuddyBoss App', 'buddyboss-platform' ),
 			description: __( 'Learn how to set up the BuddyBoss App from scratch, including initial setup, branding, generating builds and publishing.', 'buddyboss-platform' ),
-			order:       3,
+			order:       5,
 		},
 		'integrations': {
 			icon:        'bb-icons-rl-plug',
 			title:       __( 'Integrations', 'buddyboss-platform' ),
 			description: __( 'LearnDash, Zoom, WooCommerce, Events, Jobs and more. Learn how BuddyBoss integrates with your favorite plugins and services.', 'buddyboss-platform' ),
-			order:       4,
+			order:       6,
 		},
 		'advanced-setup': {
 			icon:        'bb-icons-rl-gear',
 			title:       __( 'Advanced Setup', 'buddyboss-platform' ),
 			description: __( 'Articles for experienced developers and site administrators to optimize and extend their BuddyBoss sites.', 'buddyboss-platform' ),
-			order:       5,
+			order:       7,
 		},
 		'troubleshooting': {
 			icon:        'bb-icons-rl-warning-circle',
 			title:       __( 'Troubleshooting', 'buddyboss-platform' ),
 			description: __( 'Running into issues? Learn how to resolve the most common issues with BuddyBoss.', 'buddyboss-platform' ),
-			order:       6,
+			order:       8,
 		},
 	};
 

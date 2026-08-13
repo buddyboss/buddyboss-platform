@@ -56,7 +56,7 @@ function bb_appearance_site_seo_section_help_article() {
 /**
  * Base args for the Site SEO section, shared across registration paths.
  *
- * State-specific extensions (e.g. UPGRADE PRO badge when Sharing is not
+ * State-specific extensions (e.g. UPGRADE LAUNCH badge when Sharing is not
  * installed) are layered on top via the `bb_appearance_site_seo_section_args`
  * filter — see `bb_appearance_site_seo_get_section_args()` and
  * `bb_appearance_site_seo_add_pro_badge_when_no_sharing()` below.
@@ -105,7 +105,7 @@ function bb_appearance_site_seo_get_section_args() {
 }
 
 /**
- * Filter callback: add UPGRADE PRO badge when the BuddyBoss Sharing plugin
+ * Filter callback: add UPGRADE LAUNCH badge when the BuddyBoss Sharing plugin
  * is not installed at all (state 4).
  *
  * @since BuddyBoss 3.0.0
@@ -124,7 +124,7 @@ function bb_appearance_site_seo_add_pro_badge_when_no_sharing( $args ) {
 
 	$args['pro_notice'] = array(
 		'show'       => true,
-		'badge_text' => __( 'UPGRADE PRO', 'buddyboss-platform' ),
+		'badge_text' => __( 'UPGRADE LAUNCH', 'buddyboss-platform' ),
 		'badge_icon' => 'bb-icons-rl-crown-simple',
 		'link_url'   => 'https://www.buddyboss.com/pricing/',
 	);
@@ -261,7 +261,7 @@ function bb_admin_settings_register_appearance_settings() {
 	// Single section registration — args go through the
 	// `bb_appearance_site_seo_section_args` filter, which is the canonical
 	// extension point for mutating section attributes from this or any
-	// other plugin. State-appropriate badges (e.g. UPGRADE PRO when Sharing
+	// other plugin. State-appropriate badges (e.g. UPGRADE LAUNCH when Sharing
 	// is absent) are added via filter callbacks, not by re-registering.
 	bb_register_feature_section(
 		'appearance',
@@ -275,12 +275,12 @@ function bb_admin_settings_register_appearance_settings() {
 	//    fields via its lazy AJAX hook. Platform registers nothing here.
 	// 2. NEW Sharing + license locked — same as state 1 at boot. Sharing's
 	//    lazy hook calls `bb_appearance_register_site_seo_pro_placeholder_fields()`
-	//    at AJAX time, which adds the UPGRADE PRO badge via merge mode and
+	//    at AJAX time, which adds the UPGRADE LAUNCH badge via merge mode and
 	//    registers placeholder fields.
 	// 3. OLD Sharing — `BuddyBoss_Sharing` exists but predates Settings 2.0.
-	//    Show an Update-Required empty state card. No UPGRADE PRO badge.
+	//    Show an Update-Required empty state card. No UPGRADE LAUNCH badge.
 	// 4. Sharing NOT installed — the `bb_appearance_site_seo_section_args`
-	//    filter has already added the UPGRADE PRO badge to the section.
+	//    filter has already added the UPGRADE LAUNCH badge to the section.
 	//    Register the placeholder fields.
 	//
 	// Detection: require both the class AND the Settings 2.0 registration
@@ -315,7 +315,7 @@ function bb_admin_settings_register_appearance_settings() {
 		);
 	} else {
 		// State 4 — Sharing NOT installed: section already carries the
-		// UPGRADE PRO badge from the filter callback above. Register
+		// UPGRADE LAUNCH badge from the filter callback above. Register
 		// placeholder fields.
 		bb_appearance_register_site_seo_pro_placeholder_fields();
 	}
@@ -435,6 +435,7 @@ function bb_admin_settings_register_appearance_settings() {
 		array(
 			'registration' => true,
 			'courses'      => false,
+			'blog'         => false,
 		)
 	);
 
@@ -461,6 +462,16 @@ function bb_admin_settings_register_appearance_settings() {
 				'value' => 'courses',
 			);
 		}
+	}
+
+	// Gated like the sibling options above: only offer the Blog template page
+	// when the Blogs feature is active (registration/courses are each gated on
+	// their own backing feature, so Blog must be too).
+	if ( function_exists( 'bp_is_active' ) && bp_is_active( 'blogging' ) ) {
+		$template_page_options[] = array(
+			'label' => __( 'Blog', 'buddyboss' ),
+			'value' => 'blog',
+		);
 	}
 
 	if ( ! empty( $template_page_options ) ) {
@@ -997,13 +1008,13 @@ function bb_appearance_register_site_seo_pro_placeholder_fields() {
 	// the badge visible in that combination.
 	$pro_notice_field = array(
 		'show'       => true,
-		'badge_text' => __( 'PRO', 'buddyboss-platform' ),
+		'badge_text' => __( 'LAUNCH', 'buddyboss-platform' ),
 		'badge_icon' => 'bb-icons-rl-crown-simple',
 		'link_url'   => 'https://www.buddyboss.com/platform/',
 		'link_icon'  => 'bb-icons-rl-play',
 	);
 
-	// Idempotently ensure the section carries the UPGRADE PRO badge.
+	// Idempotently ensure the section carries the UPGRADE LAUNCH badge.
 	//
 	// State 4 (no Sharing): the boot-time filter
 	// `bb_appearance_site_seo_add_pro_badge_when_no_sharing()` already added
@@ -1024,7 +1035,7 @@ function bb_appearance_register_site_seo_pro_placeholder_fields() {
 			'merge'      => true,
 			'pro_notice' => array(
 				'show'       => true,
-				'badge_text' => __( 'UPGRADE PRO', 'buddyboss-platform' ),
+				'badge_text' => __( 'UPGRADE LAUNCH', 'buddyboss-platform' ),
 				'badge_icon' => 'bb-icons-rl-crown-simple',
 				'link_url'   => 'https://www.buddyboss.com/pricing/',
 			),

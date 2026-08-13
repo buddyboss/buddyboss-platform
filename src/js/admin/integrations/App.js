@@ -303,7 +303,7 @@ function AppInner() {
 							className={ 'bb-integrations__tab' + ( 'pro' === tier ? ' is-active' : '' ) }
 							onClick={ () => handleTierChange( 'pro' ) }
 						>
-							{ __( 'Pro', 'buddyboss-platform' ) }
+							{ __( 'Launch', 'buddyboss-platform' ) }
 						</button>
 					</div>
 

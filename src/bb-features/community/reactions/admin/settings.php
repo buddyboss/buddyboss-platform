@@ -181,8 +181,14 @@ function bb_admin_settings_register_reactions_settings() {
 			'notice'   => esc_html__( 'Members express their thoughts or feelings by selecting an emotion from a list of options. Maximum of only 6 emotions can be used.', 'buddyboss-platform' ),
 			'disabled' => (
 				! class_exists( 'BB_Reactions' ) ||
-				! function_exists( 'bbp_pro_is_license_valid' ) ||
-				! bbp_pro_is_license_valid()
+				! (
+					// Emotion layer is licensed by EITHER provider: BuddyBoss
+					// Platform Pro (legacy) or the BuddyBoss Addons plugin (the
+					// feature's new home). Each is function_exists-guarded so
+					// Platform never hard-depends on an optional plugin.
+					( function_exists( 'bbp_pro_is_license_valid' ) && bbp_pro_is_license_valid() ) ||
+					( function_exists( 'bb_addons_should_lock_features' ) && ! bb_addons_should_lock_features() )
+				)
 			),
 		),
 	);

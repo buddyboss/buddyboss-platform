@@ -25,7 +25,7 @@ $args                = array(
 $group_members   = groups_get_group_members( $args );
 $group_id        = 0;
 $is_media_active = bp_is_active( 'media' );
-$extensions      = ( $is_media_active && bp_is_active( 'document' ) ) ? bp_document_get_allowed_extension() : false;
+$extensions      = function_exists( 'bp_document_get_allowed_extension' ) ? bp_document_get_allowed_extension() : '';
 if ( bp_is_active( 'groups' ) && bp_is_group_single() ) {
 	$group_id = bp_get_current_group_id();
 }

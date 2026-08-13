@@ -28,7 +28,7 @@ defined( 'ABSPATH' ) || exit;
 		</div>
 
 		<?php
-		$video_extensions = bp_is_active( 'video' ) ? bp_video_get_allowed_extension() : array();
+		$video_extensions = ( bp_is_active( 'video' ) && function_exists( 'bp_video_get_allowed_extension' ) ) ? bp_video_get_allowed_extension() : array();
 		if ( ! empty( $video_extensions ) ) :
 			?>
             <div class="post-elements-buttons-item post-video post-media-video-support">
@@ -39,7 +39,7 @@ defined( 'ABSPATH' ) || exit;
 		<?php endif; ?>
 
 		<?php
-		$extensions = bp_is_active( 'document' ) ? bp_document_get_allowed_extension() : array();
+		$extensions = ( bp_is_active( 'document' ) && function_exists( 'bp_document_get_allowed_extension' ) ) ? bp_document_get_allowed_extension() : array();
 		if ( ! empty( $extensions ) ) :
 			?>
 			<div class="post-elements-buttons-item post-media post-media-document-support">

@@ -10245,6 +10245,23 @@ function bb_pro_post_feature_image_version() {
 }
 
 /**
+ * Function to return the minimum Pro version required for the blog Bookmarking
+ * and Subscriptions features.
+ *
+ * These two features are provided by BuddyBoss Platform Pro's blog module, which
+ * ships in Pro 3.1.0. When an older Pro is active the Post Settings toggles stay
+ * locked; the blogging settings screen compares against this version to show an
+ * "update Pro" notice.
+ *
+ * @since BuddyBoss 3.2.0
+ *
+ * @return string
+ */
+function bb_pro_blog_version() {
+	return '3.1.0';
+}
+
+/**
  * Get the Feature Loader instance.
  *
  * @since BuddyBoss 3.0.0
@@ -10354,7 +10371,7 @@ function bb_get_settings_url() {
  *
  *   - 'section' — badge sits in the section header (e.g. "Group Headers",
  *                 "Member Access Controls", "Group Topics"). Default text
- *                 "UPGRADE PRO". link_url defaults to the BuddyBoss pricing
+ *                 "UPGRADE LAUNCH". link_url defaults to the BuddyBoss pricing
  *                 page since the section-level CTA is a straightforward upsell.
  *
  * Both contexts share the same "is Pro locked?" computation — Pro missing,
@@ -10388,7 +10405,7 @@ function bb_get_settings_url() {
  *     PRO notice data for React rendering.
  *
  *     @type bool   $show       Whether the notice should be shown.
- *     @type string $badge_text Badge label text ("PRO" for field, "UPGRADE PRO" for section).
+ *     @type string $badge_text Badge label text ("PRO" for field, "UPGRADE LAUNCH" for section).
  *     @type string $badge_icon BuddyBoss icon CSS class for the badge.
  *     @type string $link_url   URL for the play/video button (per-feature for field, pricing for section).
  *     @type string $link_icon  BuddyBoss icon CSS class for the play button.
@@ -10420,8 +10437,8 @@ function bb_admin_settings_get_pro_notice( $args = array() ) {
 	$data = array(
 		'show'       => false,
 		'badge_text' => $is_section
-			? __( 'UPGRADE PRO', 'buddyboss-platform' )
-			: __( 'PRO', 'buddyboss-platform' ),
+			? __( 'UPGRADE LAUNCH', 'buddyboss-platform' )
+			: __( 'LAUNCH', 'buddyboss-platform' ),
 		'badge_icon' => 'bb-icons-rl-crown-simple',
 		'link_url'   => $is_section ? 'https://www.buddyboss.com/pricing/' : '',
 		'link_icon'  => 'bb-icons-rl-play',
@@ -10464,6 +10481,22 @@ function bb_admin_settings_get_pro_notice( $args = array() ) {
 				function_exists( 'bb_pro_post_feature_image_version' ) &&
 				version_compare( bb_platform_pro()->version, bb_pro_post_feature_image_version(), '<' )
 			)
+		)
+	) {
+		$is_pro_locked = true;
+	} elseif (
+		// Reactions, Polls and Social Login moved to the BuddyBoss Addons plugin.
+		// Pro being installed and licensed is no longer proof the feature exists,
+		// so these types must lock unless a PROVIDER is actually present: the
+		// add-on's licensed module (its class/function only loads when licensed),
+		// or a legacy Pro build that still ships the feature (dormancy marker).
+		// Checked before the Pro-licence branch below so a licensed Pro without
+		// the add-on does not silently unlock features it no longer contains.
+		in_array( $type, array( 'reaction', 'reactions', 'polls', 'sso' ), true ) &&
+		! (
+			( ( 'reaction' === $type || 'reactions' === $type ) && ( class_exists( 'BB_Reactions' ) || function_exists( 'bp_register_reaction' ) ) ) ||
+			( 'polls' === $type && ( function_exists( 'bb_load_polls' ) || function_exists( 'bb_register_poll' ) ) ) ||
+			( 'sso' === $type && ( function_exists( 'bb_enable_sso' ) || function_exists( 'bb_register_sso' ) ) )
 		)
 	) {
 		$is_pro_locked = true;

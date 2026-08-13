@@ -1095,21 +1095,21 @@ class BB_DRM_Registry {
 
 		if ( ! empty( $grouped['locked'] ) ) {
 			$tests['direct']['buddyboss_addons_locked'] = array(
-				'label' => __( 'BuddyBoss Pro/Plus License - Features Disabled', 'buddyboss-platform' ),
+				'label' => __( 'BuddyBoss Launch/Scale License - Features Disabled', 'buddyboss-platform' ),
 				'test'  => array( $this, 'site_health_locked_test' ),
 			);
 		}
 
 		if ( ! empty( $grouped['high'] ) ) {
 			$tests['direct']['buddyboss_addons_high'] = array(
-				'label' => __( 'BuddyBoss Pro/Plus License - Urgent Action Required', 'buddyboss-platform' ),
+				'label' => __( 'BuddyBoss Launch/Scale License - Urgent Action Required', 'buddyboss-platform' ),
 				'test'  => array( $this, 'site_health_high_test' ),
 			);
 		}
 
 		if ( ! empty( $grouped['medium'] ) ) {
 			$tests['direct']['buddyboss_addons_medium'] = array(
-				'label' => __( 'BuddyBoss Pro/Plus License - Action Required', 'buddyboss-platform' ),
+				'label' => __( 'BuddyBoss Launch/Scale License - Action Required', 'buddyboss-platform' ),
 				'test'  => array( $this, 'site_health_medium_test' ),
 			);
 		}
@@ -1261,7 +1261,7 @@ class BB_DRM_Registry {
 	 */
 	private function get_site_health_pass() {
 		return array(
-			'label'       => __( 'BuddyBoss Pro/Plus license is active', 'buddyboss-platform' ),
+			'label'       => __( 'BuddyBoss Launch/Scale license is active', 'buddyboss-platform' ),
 			'status'      => 'good',
 			'badge'       => array(
 				'label' => __( 'BuddyBoss', 'buddyboss-platform' ),
@@ -1269,7 +1269,7 @@ class BB_DRM_Registry {
 			),
 			'description' => sprintf(
 				'<p>%s</p>',
-				__( 'All BuddyBoss Pro/Plus addon licenses are valid and active.', 'buddyboss-platform' )
+				__( 'All BuddyBoss Launch/Scale addon licenses are valid and active.', 'buddyboss-platform' )
 			),
 			'test'        => 'buddyboss_addons_license',
 		);

@@ -23,7 +23,7 @@ function bb_groups_register_headers_panel_fields() {
 	//
 	// All fields in this section are pro_only. Mirror the Member Access
 	// Controls / Profile Headers pattern and surface a section-level
-	// "UPGRADE PRO" badge in the section header so the gated state is
+	// "UPGRADE LAUNCH" badge in the section header so the gated state is
 	// visible at the section level, not only per-row.
 	// -------------------------------------------------------------------------
 	bb_register_feature_section(

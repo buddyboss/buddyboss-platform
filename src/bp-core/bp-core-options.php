@@ -2477,6 +2477,48 @@ function bb_feed_excluded_post_types() {
  */
 function bb_is_active_activity_pinned_posts( $default = false ) {
 
+	$enabled = (bool) bp_get_option( '_bb_enable_activity_pinned_posts', $default );
+
+	if ( $enabled ) {
+		/*
+		 * Pinned Posts moved out of the free Platform into the BuddyBoss Addons
+		 * plugin. The stored `_bb_enable_activity_pinned_posts` option can remain
+		 * enabled from before that move, so the feature is only truly ACTIVE when
+		 * the add-on is present AND licensed — otherwise the pin controls, the
+		 * REST support and the add-on's own pin logic must all treat it as off.
+		 *
+		 * Two independent signals so the gate is load-order safe:
+		 *   - the add-on's licensed-provider check (grace-period aware — the same
+		 *     signal the add-on's own module loaders use), or
+		 *   - the add-on's pin mutation function actually being loaded, EXCLUDING
+		 *     Platform's own no-op shim. Platform defines a deprecation shim under
+		 *     that same name from `bp_init:1` (so un-updated external callers
+		 *     degrade instead of fatalling), which means a bare `function_exists()`
+		 *     would report a provider on a site that has none. The shim advertises
+		 *     itself via `bb_activity_pin_unpin_post_is_stub()`, so testing for its
+		 *     absence keeps this term honest.
+		 *
+		 * LIMITATION: the licence check proves the add-on plugin is active and
+		 * entitled, NOT that the Pinned Posts MODULE finished loading (it has its
+		 * own guards — activity component active, dormancy marker, module present).
+		 * If the module is dormant on a licensed site, this reports the feature
+		 * active while no real pin implementation exists; the REST route then
+		 * answers a structured 501 (never a fatal) and no pin UI renders.
+		 * The licence term is only needed for the early `bb_register_features`
+		 * call, before the module loads at bp_include:20.
+		 */
+		$provider_available =
+			( function_exists( 'bb_addons_should_lock_features' ) && ! bb_addons_should_lock_features() )
+			|| (
+				function_exists( 'bb_activity_pin_unpin_post' )
+				&& ! function_exists( 'bb_activity_pin_unpin_post_is_stub' )
+			);
+
+		if ( ! $provider_available ) {
+			$enabled = false;
+		}
+	}
+
 	/**
 	 * Filters whether activity pinned posts are enabled.
 	 *
@@ -2484,7 +2526,7 @@ function bb_is_active_activity_pinned_posts( $default = false ) {
 	 *
 	 * @param bool $value Whether activity pinned posts are enabled.
 	 */
-	return (bool) apply_filters( 'bb_is_active_activity_pinned_posts', (bool) bp_get_option( '_bb_enable_activity_pinned_posts', $default ) );
+	return (bool) apply_filters( 'bb_is_active_activity_pinned_posts', $enabled );
 }
 
 /**
@@ -2672,9 +2714,28 @@ function bb_is_reaction_activity_comments_enabled( $default = true ) {
 function bb_get_reaction_mode( $default = 'likes' ) {
 
 	$mode = bp_get_option( 'bb_reaction_mode', $default );
-	if ( ! class_exists( 'BB_Reactions' ) && 'emotions' === $mode ) {
-		$mode = 'likes';
-		bp_update_option( 'bb_reaction_mode', $mode );
+
+	if ( 'emotions' === $mode ) {
+		// "Emotions" requires the Pro emotion layer, provided by either BuddyBoss
+		// Platform Pro (legacy) or the BuddyBoss Addons plugin. Detect provider
+		// availability in a load-order-independent way: the BB_Reactions class is
+		// loaded late (bb_after_register_features), so a bare class_exists() check
+		// run during earlier hooks (e.g. bb_register_features) would spuriously
+		// report the layer missing.
+		//
+		// IMPORTANT: only fall back for DISPLAY — never persist the downgrade.
+		// Writing 'likes' back from this getter silently corrupted a valid saved
+		// 'emotions' setting on every request where the provider had not booted
+		// yet (and, on addon-only sites, permanently), which made the Reactions
+		// mode appear un-saveable.
+		$emotion_layer_available =
+			class_exists( 'BB_Reactions' )
+			|| ( function_exists( 'bb_addons_should_lock_features' ) && ! bb_addons_should_lock_features() )
+			|| ( function_exists( 'bbp_pro_is_license_valid' ) && bbp_pro_is_license_valid() );
+
+		if ( ! $emotion_layer_available ) {
+			$mode = 'likes';
+		}
 	}
 
 	return apply_filters( 'bb_get_reaction_mode', $mode );

@@ -11,6 +11,7 @@ defined( 'ABSPATH' ) || exit;
 
 add_action( 'wp_ajax_bb_recaptcha_verification_admin_settings', 'bb_recaptcha_verification_admin_settings' );
 add_action( 'login_form', 'bb_recaptcha_login', 99 );
+add_filter( 'login_form_middle', 'bb_recaptcha_wp_login_form', 99 );
 add_action( 'lostpassword_form', 'bb_recaptcha_lost_password' );
 add_action( 'lostpassword_post', 'bb_recaptcha_validate_lost_password', 10, 1 );
 add_action( 'bp_before_registration_submit_buttons', 'bb_recaptcha_registration' );
@@ -102,6 +103,50 @@ function bb_recaptcha_login() {
 
 		add_action( 'login_footer', 'bb_recaptcha_add_scripts_login_footer' );
 	}
+}
+
+/**
+ * Injects the reCAPTCHA widget into front-end login forms rendered by
+ * wp_login_form().
+ *
+ * The core `login_form` action only fires on wp-login.php, so themes/plugins that
+ * embed a login form via wp_login_form() would otherwise carry no reCAPTCHA field
+ * and be rejected by the (fail-closed) login validator. Hooking the
+ * `login_form_middle` filter injects the same widget/token into those forms so
+ * they are protected rather than broken. bb_recaptcha_display() self-gates on the
+ * connection status, IP exclusion and bypass URL.
+ *
+ * @since BuddyBoss 3.4.2
+ *
+ * @param string $content Markup injected in the middle of wp_login_form().
+ *
+ * @return string Content with the reCAPTCHA widget appended when enabled.
+ */
+function bb_recaptcha_wp_login_form( $content ) {
+	if (
+		! bb_recaptcha_is_enabled( 'bb_login' ) ||
+		'connected' !== bb_recaptcha_connection_status()
+	) {
+		return $content;
+	}
+
+	ob_start();
+	bb_recaptcha_display( 'bb_login' );
+	$widget = ob_get_clean();
+
+	// bb_recaptcha_display() prints nothing when the widget is not actually
+	// rendered (e.g. the current IP is excluded). In that case there is no
+	// script to enqueue, so leave the form untouched.
+	if ( '' === trim( $widget ) ) {
+		return $content;
+	}
+
+	$content .= $widget;
+
+	// Enqueue the reCAPTCHA scripts in the site footer (registered by display()).
+	add_action( 'wp_footer', 'bb_recaptcha_add_scripts_login_footer' );
+
+	return $content;
 }
 
 /**

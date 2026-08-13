@@ -3,7 +3,7 @@ Contributors: buddyboss
 Requires at least: 6.0
 Tested up to: 6.8
 Requires PHP: 7.4.0
-Stable tag: 3.1.2
+Stable tag: 3.4.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -116,6 +116,23 @@ Terms of Use: https://wordpress.com/tos/
 Privacy Policy: https://automattic.com/privacy/
 
 == Changelog ==
+
+= 3.4.2 =
+* Bug: Activity - Added two new objects to the Activity REST API
+* Bug: Core - Fixed the issue where the addon plugin was not installing and activating automatically according to the active plan
+* Bug: Login - Fixed a server-side verification bypass that allowed CAPTCHA validation to be skipped when the response field was missing
+
+= 3.4.1 =
+* Enhancement: Core - Updated add-on listing in settings and improvements
+
+= 3.4.0 =
+* Enhancement: Improved plan and feature management, laying the groundwork for plan options
+
+= 3.3.0 =
+* Enhancement: Profiles - Added a new "Bio" profile field mapped to the WordPress biographical info field
+
+= 3.2.0 =
+* New Feature! - Added the Blogs feature with post bookmarking and blog category subscriptions, plus support for the Member Blogging add-on
 
 = 3.1.2 =
 * Enhancement: Notification - Added notification cleanup support to remove orphaned notification metadata

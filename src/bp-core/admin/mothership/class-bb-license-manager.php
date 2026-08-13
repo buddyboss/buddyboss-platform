@@ -1200,7 +1200,7 @@ class BB_License_Manager extends LicenseManager {
 		$root_api_url = self::get_api_base_url( $plugin_id );
 
 		$api_url     = $root_api_url . 'licenses/' . $license_key;
-		$domain      = wp_parse_url( home_url(), PHP_URL_HOST );
+		$domain      = Credentials::getActivationDomain();
 		$credentials = base64_encode( $domain . ':' . $license_key );
 		$args        = array(
 			'headers' => array(

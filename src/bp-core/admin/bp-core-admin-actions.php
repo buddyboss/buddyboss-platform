@@ -890,6 +890,12 @@ function bb_render_admin_header() {
 	if (
 		(
 			! empty( $screen->base ) &&
+			// The BuddyBoss App plugin registers its own "BuddyBoss App" menu whose
+			// submenu screen bases are `buddyboss-app_page_bbapp-*` — which contain
+			// the "buddyboss" substring matched below. It ships its own admin UI and
+			// header, so exclude it here; Platform's own pages use `buddyboss_page_*`
+			// (underscore), which this guard leaves untouched.
+			false === strpos( $screen->base, 'buddyboss-app' ) &&
 			(
 				false !== strpos( $screen->base, 'buddyboss' ) ||
 				false !== strpos( $screen->base, 'bp_' ) ||

@@ -553,8 +553,10 @@ export function SettingsScreen({ onNavigate }) {
 											>
 												<i className="bb-icons-rl bb-icons-rl-crown-simple"></i>
 												{'plus' === feature.upgrade_tier
-													? __('UPGRADE PLUS', 'buddyboss-platform')
-													: __('UPGRADE PRO', 'buddyboss-platform')}
+													? __('UPGRADE SCALE', 'buddyboss-platform')
+													: 'start' === feature.upgrade_tier
+														? __('UPGRADE START', 'buddyboss')
+														: __('UPGRADE LAUNCH', 'buddyboss-platform')}
 											</button>
 										)}
 										{/* Card Body */}
@@ -617,18 +619,23 @@ export function SettingsScreen({ onNavigate }) {
 										<div className="bb-admin-settings__feature-bottom">
 											<div className="bb-admin-settings__feature-left">
 												{ feature.is_placeholder && 'not_installed' === feature.plugin_status && feature.plugin_slug ? (
+													/* requires_unmet: parent plugin inactive — render the button
+													   disabled (no extra UI, matching the Add-ons page); core's
+													   dependency check would refuse the activation anyway. */
 													<Button
 														variant="secondary"
-														className="bb-admin-settings__feature-settings-btn"
-														onClick={() => handleAddonAction(feature, 'mosh_addon_install')}
+														className={`bb-admin-settings__feature-settings-btn${feature.requires_unmet ? ' bb-admin-settings__feature-settings-btn--disabled' : ''}`}
+														disabled={!!feature.requires_unmet}
+														onClick={feature.requires_unmet ? undefined : () => handleAddonAction(feature, 'mosh_addon_install')}
 													>
 														{__('Install & Activate', 'buddyboss-platform')}
 													</Button>
 												) : feature.is_placeholder && 'installed_inactive' === feature.plugin_status && feature.plugin_slug ? (
 													<Button
 														variant="secondary"
-														className="bb-admin-settings__feature-settings-btn"
-														onClick={() => handleAddonAction(feature, 'mosh_addon_activate')}
+														className={`bb-admin-settings__feature-settings-btn${feature.requires_unmet ? ' bb-admin-settings__feature-settings-btn--disabled' : ''}`}
+														disabled={!!feature.requires_unmet}
+														onClick={feature.requires_unmet ? undefined : () => handleAddonAction(feature, 'mosh_addon_activate')}
 													>
 														{__('Activate', 'buddyboss-platform')}
 													</Button>

@@ -52,7 +52,7 @@ function IntegrationCardComponent( { item, categoryMap, plugins, onSelect } ) {
 					{ isPaid && (
 						<span className="bb-integrations__card-badge">
 							<i className="bb-icons-rl bb-icons-rl-crown-simple" aria-hidden="true" />
-							<span>{ __( 'PRO', 'buddyboss-platform' ) }</span>
+							<span>{ __( 'LAUNCH', 'buddyboss-platform' ) }</span>
 						</span>
 					) }
 				</div>
