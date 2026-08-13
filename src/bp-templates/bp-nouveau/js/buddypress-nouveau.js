@@ -10,6 +10,7 @@ window.bp = window.bp || {};
 	var hoverCardPopup = false;
 	var hideCardTimeout = null;
 	var popupCardLoaded = false;
+
 	var currentProfileRequest = null;
 	var currentGroupRequest = null;
 	var hoverProfileAvatar = false;
@@ -5477,8 +5478,14 @@ window.bp = window.bp || {};
 				return;
 			}
 
+			// The card DOM was rebuilt above, so any previously rendered card is already gone.
+			// A stale popupCardLoaded flag must not block loading a different item: sweeping
+			// cached avatars keeps clearing the hide timer, the flag stays true, and every
+			// uncached hover then dead-ended here until the timer finally fired or the page
+			// was reloaded (the intermittent "no card until reload" bug). Same-target
+			// re-hovers are already handled by the cache and in-flight dedupe branches above.
 			if ( popupCardLoaded ) {
-				return;
+				popupCardLoaded = false;
 			}
 
 			// Store the jqXHR itself so abortOngoingProfileRequest() truly cancels the network request.
@@ -5761,8 +5768,14 @@ window.bp = window.bp || {};
 				return;
 			}
 
+			// The card DOM was rebuilt above, so any previously rendered card is already gone.
+			// A stale popupCardLoaded flag must not block loading a different item: sweeping
+			// cached avatars keeps clearing the hide timer, the flag stays true, and every
+			// uncached hover then dead-ended here until the timer finally fired or the page
+			// was reloaded (the intermittent "no card until reload" bug). Same-target
+			// re-hovers are already handled by the cache and in-flight dedupe branches above.
 			if ( popupCardLoaded ) {
-				return;
+				popupCardLoaded = false;
 			}
 
 			// Store the jqXHR itself so abortOngoingGroupRequest() truly cancels the network request.
