@@ -370,7 +370,7 @@ module.exports = function (grunt) {
 					],
 					options: {
 						process : function( content ) {
-							return content.replace( /\, 'buddypress'/g, ', \'buddyboss\'' ); // update text-domain.
+							return content.replace( /\, 'buddypress'/g, ', \'buddyboss-platform\'' ); // update text-domain.
 						}
 					}
 				},
@@ -411,7 +411,7 @@ module.exports = function (grunt) {
 					],
 					options: {
 						process : function( content ) {
-							return content.replace( /\, 'buddypress'/g, ', \'buddyboss\'' ); // update text-domain.
+							return content.replace( /\, 'buddypress'/g, ', \'buddyboss-platform\'' ); // update text-domain.
 						}
 					}
 				},
@@ -431,7 +431,7 @@ module.exports = function (grunt) {
 					src: ['class-bb-rest-reactions-endpoint.php'],
 					options: {
 						process : function( content ) {
-							return content.replace( /\, 'buddypress'/g, ', \'buddyboss\'' ); // update text-domain.
+							return content.replace( /\, 'buddypress'/g, ', \'buddyboss-platform\'' ); // update text-domain.
 						}
 					}
 				},
@@ -442,7 +442,7 @@ module.exports = function (grunt) {
 					src: '**',
 					options: {
 						process : function( content ) {
-							return content.replace( /\, 'buddypress'/g, ', \'buddyboss\'' ); // update text-domain.
+							return content.replace( /\, 'buddypress'/g, ', \'buddyboss-platform\'' ); // update text-domain.
 						}
 					}
 				},
@@ -453,7 +453,7 @@ module.exports = function (grunt) {
 					src: '**',
 					options: {
 						process : function( content ) {
-							return content.replace( /\, 'buddypress'/g, ', \'buddyboss\'' ); // update text-domain.
+							return content.replace( /\, 'buddypress'/g, ', \'buddyboss-platform\'' ); // update text-domain.
 						}
 					}
 				},
