@@ -640,12 +640,12 @@ module.exports = function (grunt) {
 				},
 
 				rest_api: {
-					command: 'git clone ' + bbGithubCloneUrl( 'buddyboss-platform-api' ),
+					command: 'git clone -b PROD-9826 ' + bbGithubCloneUrl( 'buddyboss-platform-api' ),
 					cwd: SOURCE_DIR,
 					stdout: false
 				},
 				rest_performance: {
-					command: 'git clone ' + bbGithubCloneUrl( 'buddyboss-platform-api' ),
+					command: 'git clone -b PROD-9826  ' + bbGithubCloneUrl( 'buddyboss-platform-api' ),
 					cwd: SOURCE_DIR,
 					stdout: false
 				},
