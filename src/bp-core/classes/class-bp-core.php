@@ -151,52 +151,29 @@ class BP_Core extends BP_Component {
 		}
 
 		/*
-		 * Drop active components whose directories are not present in this build
-		 * (e.g. premium-only components stripped from the free package), so that
-		 * bp_is_active() reflects what is actually loadable. The stored option is
-		 * scrubbed too, so code reading `bp-active-components` directly (performance
-		 * must-use integrations, feature registry migration fallback) stays in sync.
+		 * Defer the unavailable-component scrub to `bp_loaded` priority 1.
+		 *
+		 * This code runs from bp_setup_core() at `bp_loaded` priority 0 —
+		 * BEFORE provider plugins can claim their components via the
+		 * `bb_component_directory_available` filter: BuddyBoss Addons
+		 * registers its video/document claims in bb_addons_init() at
+		 * `bp_loaded` priority 1. Scrubbing inline here would always win
+		 * that race and deactivate provider-supplied components on every
+		 * bootstrap (restore-on-activation would put them back, only for the
+		 * next request to scrub them again).
+		 *
+		 * Hooking at the SAME priority 1 is safe: a provider's `bp_loaded`
+		 * callback is registered at plugin-file load — before `bp_loaded`
+		 * starts firing — so within priority 1 it runs first (WP dispatches
+		 * same-priority callbacks in registration order), and its claims are
+		 * in place when the scrub executes. Providers registering later than
+		 * `bp_loaded` priority 1 cannot claim a component.
+		 *
+		 * The component include loop below is unaffected by the deferral:
+		 * it is guarded by file_exists(), so a still-active component whose
+		 * directory is absent simply does not load this request.
 		 */
-		$unavailable_components = array();
-		foreach ( array_keys( (array) $bp->active_components ) as $component ) {
-			if ( ! in_array( $component, $bp->optional_components, true ) ) {
-				continue;
-			}
-
-			$directory_available = file_exists( $bp->plugin_dir . 'bp-' . $component . '/bp-' . $component . '-loader.php' );
-
-			/** This filter is documented in bp-core/bp-core-functions.php */
-			$directory_available = (bool) apply_filters( 'bb_component_directory_available', $directory_available, $component );
-
-			if ( ! $directory_available ) {
-				$unavailable_components[] = $component;
-				unset( $bp->active_components[ $component ] );
-			}
-		}
-
-		if ( ! empty( $unavailable_components ) ) {
-			$bp->deactivated_components = array_unique( array_merge( (array) $bp->deactivated_components, $unavailable_components ) );
-
-			// Scrub only the unavailable keys from the stored option, leaving
-			// runtime-filtered values out of the database write.
-			$stored_components   = (array) bp_get_option( 'bp-active-components', array() );
-			$scrubbed_components = array_diff_key( $stored_components, array_flip( $unavailable_components ) );
-			if ( $scrubbed_components !== $stored_components ) {
-				bp_update_option( 'bp-active-components', $scrubbed_components );
-
-				// Remember WHY these were removed (code unavailable, not an admin
-				// choice) so a provider plugin (e.g. BuddyBoss Addons supplying
-				// video/document) can restore them on its (re)activation instead
-				// of the components staying permanently disabled.
-				$scrub_memory = (array) bp_get_option( 'bb_scrubbed_unavailable_components', array() );
-				foreach ( $unavailable_components as $unavailable_component ) {
-					if ( isset( $stored_components[ $unavailable_component ] ) ) {
-						$scrub_memory[ $unavailable_component ] = $stored_components[ $unavailable_component ];
-					}
-				}
-				bp_update_option( 'bb_scrubbed_unavailable_components', $scrub_memory );
-			}
-		}
+		add_action( 'bp_loaded', array( $this, 'bb_scrub_unavailable_active_components' ), 1 );
 
 		// Loop through optional components.
 		foreach ( $bp->optional_components as $component ) {
@@ -221,6 +198,74 @@ class BP_Core extends BP_Component {
 		 * @since BuddyPress 2.0.0
 		 */
 		do_action( 'bp_core_components_included' );
+	}
+
+	/**
+	 * Drop active components whose code is not present in this build.
+	 *
+	 * Components whose `bp-{component}/` directory is absent (e.g. video and
+	 * document, which moved to the BuddyBoss Addons plugin) are removed from
+	 * the runtime active list AND the stored `bp-active-components` option,
+	 * so that bp_is_active() and code reading the option directly
+	 * (performance must-use integrations, feature registry migration
+	 * fallback) reflect what is actually loadable. A provider plugin keeps a
+	 * component alive by returning true from the
+	 * `bb_component_directory_available` filter.
+	 *
+	 * Runs on `bp_loaded` priority 1 (queued from load_components()) so
+	 * provider claims registered at the same priority — but earlier, at
+	 * plugin-file load — are honored. See the deferral note in
+	 * load_components().
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @return void
+	 */
+	public function bb_scrub_unavailable_active_components() {
+		$bp = buddypress();
+
+		$unavailable_components = array();
+		foreach ( array_keys( (array) $bp->active_components ) as $component ) {
+			if ( ! in_array( $component, $bp->optional_components, true ) ) {
+				continue;
+			}
+
+			$directory_available = file_exists( $bp->plugin_dir . 'bp-' . $component . '/bp-' . $component . '-loader.php' );
+
+			/** This filter is documented in bp-core/bp-core-functions.php */
+			$directory_available = (bool) apply_filters( 'bb_component_directory_available', $directory_available, $component );
+
+			if ( ! $directory_available ) {
+				$unavailable_components[] = $component;
+				unset( $bp->active_components[ $component ] );
+			}
+		}
+
+		if ( empty( $unavailable_components ) ) {
+			return;
+		}
+
+		$bp->deactivated_components = array_unique( array_merge( (array) $bp->deactivated_components, $unavailable_components ) );
+
+		// Scrub only the unavailable keys from the stored option, leaving
+		// runtime-filtered values out of the database write.
+		$stored_components   = (array) bp_get_option( 'bp-active-components', array() );
+		$scrubbed_components = array_diff_key( $stored_components, array_flip( $unavailable_components ) );
+		if ( $scrubbed_components !== $stored_components ) {
+			bp_update_option( 'bp-active-components', $scrubbed_components );
+
+			// Remember WHY these were removed (code unavailable, not an admin
+			// choice) so a provider plugin (e.g. BuddyBoss Addons supplying
+			// video/document) can restore them on its (re)activation instead
+			// of the components staying permanently disabled.
+			$scrub_memory = (array) bp_get_option( 'bb_scrubbed_unavailable_components', array() );
+			foreach ( $unavailable_components as $unavailable_component ) {
+				if ( isset( $stored_components[ $unavailable_component ] ) ) {
+					$scrub_memory[ $unavailable_component ] = $stored_components[ $unavailable_component ];
+				}
+			}
+			bp_update_option( 'bb_scrubbed_unavailable_components', $scrub_memory );
+		}
 	}
 
 	/**
