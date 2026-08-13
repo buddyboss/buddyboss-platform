@@ -11,7 +11,8 @@ window.bp = window.bp || {};
 	var hoverCardPopup = false;
 	var hideCardTimeout = null;
 	var popupCardLoaded = false;
-	var currentRequest = null;
+	var currentProfileRequest = null;
+	var currentGroupRequest = null;
 	var hoverProfileAvatar = false;
 	var hoverGroupAvatar = false;
 	var hoverProfileCardPopup = false;
@@ -4783,10 +4784,17 @@ window.bp = window.bp || {};
 		/**
 		 * Function to cancel ongoing AJAX request.
 		 */
-		abortOngoingRequest: function () {
-			if ( currentRequest ) {
-				currentRequest.abort();
-				currentRequest = null;
+		abortOngoingProfileRequest: function () {
+			if ( currentProfileRequest ) {
+				currentProfileRequest.abort();
+				currentProfileRequest = null;
+			}
+		},
+
+		abortOngoingGroupRequest: function () {
+			if ( currentGroupRequest ) {
+				currentGroupRequest.abort();
+				currentGroupRequest = null;
 			}
 		},
 
@@ -4956,7 +4964,7 @@ window.bp = window.bp || {};
 
 			// Cancel any ongoing request if it's for a different memberId.
 			if ( bp.Nouveau.currentRequestMemberId && bp.Nouveau.currentRequestMemberId !== memberId ) {
-				bp.Nouveau.abortOngoingRequest();
+				bp.Nouveau.abortOngoingProfileRequest();
 			}
 
 			// Always update position.
@@ -4995,10 +5003,10 @@ window.bp = window.bp || {};
 				return;
 			}
 
-			// Store the jqXHR itself so abortOngoingRequest() truly cancels the network request.
+			// Store the jqXHR itself so abortOngoingProfileRequest() truly cancels the network request.
 			// jQuery ignores the fetch-style AbortSignal, so keeping the jqXHR lets .abort() cancel
 			// the in-flight request server-side instead of only skipping its response handler.
-			currentRequest = $.ajax( {
+			currentProfileRequest = $.ajax( {
 				url       : url,
 				method    : 'GET',
 				headers   : {
@@ -5035,6 +5043,8 @@ window.bp = window.bp || {};
 				error     : function ( xhr, status, error ) {
 					// Ignore user-initiated aborts (a newer hover superseded this request).
 					if ( 'abort' === status ) {
+						// Clear the dedupe id so this item can be fetched again later.
+						bp.Nouveau.currentRequestMemberId = null;
 						return;
 					}
 
@@ -5237,7 +5247,7 @@ window.bp = window.bp || {};
 
 			// Cancel any ongoing request if it's for a different groupId.
 			if ( bp.Nouveau.currentRequestGroupId && bp.Nouveau.currentRequestGroupId !== groupId ) {
-				bp.Nouveau.abortOngoingRequest();
+				bp.Nouveau.abortOngoingGroupRequest();
 			}
 
 			// Always update position
@@ -5276,10 +5286,10 @@ window.bp = window.bp || {};
 				return;
 			}
 
-			// Store the jqXHR itself so abortOngoingRequest() truly cancels the network request.
+			// Store the jqXHR itself so abortOngoingGroupRequest() truly cancels the network request.
 			// jQuery ignores the fetch-style AbortSignal, so keeping the jqXHR lets .abort() cancel
 			// the in-flight request server-side instead of only skipping its response handler.
-			currentRequest = $.ajax( {
+			currentGroupRequest = $.ajax( {
 				url       : url,
 				method    : 'GET',
 				headers   : {
@@ -5314,6 +5324,8 @@ window.bp = window.bp || {};
 				error     : function ( xhr, status, error ) {
 					// Ignore user-initiated aborts (a newer hover superseded this request).
 					if ( 'abort' === status ) {
+						// Clear the dedupe id so this item can be fetched again later.
+						bp.Nouveau.currentRequestGroupId = null;
 						return;
 					}
 

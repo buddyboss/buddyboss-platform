@@ -143,13 +143,13 @@ class BB_Group_Members_Widget extends WP_Widget {
 					?>
 					<li class="bb-rl-group-member-item">
 						<div class="item-avatar">
-							<a href="<?php echo esc_url( bp_core_get_user_domain( $member_id ) ); ?>" data-bb-hp-profile="<?php echo esc_attr( $member_id ); ?>">
+							<a href="<?php echo esc_url( bp_core_get_user_domain( $member_id ) ); ?>"<?php echo bb_get_hover_card_profile_attr( $member_id ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped in the helper. ?>>
 								<?php echo wp_kses_post( bp_get_group_member_avatar() ); ?>
 								<?php bb_user_presence_html( $member_id ); ?>
 							</a>
 						</div>
 						<div class="item-content">
-							<a href="<?php echo esc_url( bp_core_get_user_domain( $member_id ) ); ?>" data-bb-hp-profile="<?php echo esc_attr( $member_id ); ?>">
+							<a href="<?php echo esc_url( bp_core_get_user_domain( $member_id ) ); ?>"<?php echo bb_get_hover_card_profile_attr( $member_id ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped in the helper. ?>>
 								<span class="member-name"><?php echo esc_html( bp_get_group_member_name() ); ?></span>
 							</a>
 							<span class="member-active"><?php echo esc_html( bp_get_last_activity( $member_id ) ); ?></span>
@@ -200,13 +200,13 @@ class BB_Group_Members_Widget extends WP_Widget {
 				?>
 				<li class="bb-rl-group-member-item">
 					<div class="item-avatar">
-						<a href="<?php echo esc_url( bp_core_get_user_domain( $member_id ) ); ?>" data-bb-hp-profile="<?php echo esc_attr( $member_id ); ?>">
+						<a href="<?php echo esc_url( bp_core_get_user_domain( $member_id ) ); ?>"<?php echo bb_get_hover_card_profile_attr( $member_id ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped in the helper. ?>>
 							<?php echo wp_kses_post( bp_get_group_member_avatar() ); ?>
 							<?php bb_user_presence_html( $member_id ); ?>
 						</a>
 					</div>
 					<div class="item-content">
-						<a href="<?php echo esc_url( bp_core_get_user_domain( $member_id ) ); ?>" data-bb-hp-profile="<?php echo esc_attr( $member_id ); ?>">
+						<a href="<?php echo esc_url( bp_core_get_user_domain( $member_id ) ); ?>"<?php echo bb_get_hover_card_profile_attr( $member_id ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped in the helper. ?>>
 							<span class="member-name"><?php echo wp_kses_post( bp_get_group_member_name() ); ?></span>
 						</a>
 						<span class="member-active"><?php echo wp_kses_post( bp_get_last_activity( $member_id ) ); ?></span>

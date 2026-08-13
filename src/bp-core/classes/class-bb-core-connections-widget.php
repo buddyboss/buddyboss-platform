@@ -74,7 +74,7 @@ class BB_Core_Connections_Widget extends WP_Widget {
 			foreach ( $friends as $friend_id ) {
 				?>
 				<li>
-					<a href="<?php echo esc_url( bp_core_get_user_domain( $friend_id ) ); ?>" class="item-avatar bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php echo esc_attr( bp_core_get_user_displayname( $friend_id ) ); ?>" data-bb-hp-profile="<?php echo esc_attr( $friend_id ); ?>">
+					<a href="<?php echo esc_url( bp_core_get_user_domain( $friend_id ) ); ?>" class="item-avatar bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php echo esc_attr( bp_core_get_user_displayname( $friend_id ) ); ?>"<?php echo bb_get_hover_card_profile_attr( $friend_id ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped in the helper. ?>>
 						<?php
 						echo wp_kses_post(
 							bp_core_fetch_avatar(
