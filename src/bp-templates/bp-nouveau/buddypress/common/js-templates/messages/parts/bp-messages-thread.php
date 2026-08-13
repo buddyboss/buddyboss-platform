@@ -166,9 +166,9 @@
 				if ( data.avatars.length == 2 ) { #>
 					<div class="thread-multiple-avatar">
 				<# } #>
-					<img class="avatar" src="{{{data.avatars[0].url}}}" alt="{{data.avatars[0].name}}"<# if ( ! data.avatars[0].is_deleted && ! data.avatars[0].is_user_suspended && ! data.avatars[0].is_user_blocked ) { #> data-bb-hp-profile="{{data.avatars[0].id}}"<# } #>/>
+					<img class="avatar" src="{{{data.avatars[0].url}}}" alt="{{data.avatars[0].name}}"<# if ( ! data.avatars[0].is_deleted && ! data.avatars[0].is_user_suspended && ! data.avatars[0].is_user_blocked && ! data.avatars[0].is_user_blocked_by ) { #> data-bb-hp-profile="{{data.avatars[0].id}}"<# } #>/>
 					<# if ( data.avatars[1] ) { #>
-						<img class="avatar" src="{{{data.avatars[1].url}}}" alt="{{data.avatars[1].name}}"<# if ( ! data.avatars[1].is_deleted && ! data.avatars[1].is_user_suspended && ! data.avatars[1].is_user_blocked ) { #> data-bb-hp-profile="{{data.avatars[1].id}}"<# } #>/>
+						<img class="avatar" src="{{{data.avatars[1].url}}}" alt="{{data.avatars[1].name}}"<# if ( ! data.avatars[1].is_deleted && ! data.avatars[1].is_user_suspended && ! data.avatars[1].is_user_blocked && ! data.avatars[1].is_user_blocked_by ) { #> data-bb-hp-profile="{{data.avatars[1].id}}"<# } #>/>
 					<# }
 				if ( data.avatars.length == 2 ) { #>
 					</div>
@@ -182,7 +182,7 @@
 				<# } else { #>
 					<# var recipient = _.first(other_recipients)? _.first(other_recipients) : current_user; #>
 					<# if ( typeof( recipient ) != "undefined" && recipient !== null && recipient.avatar.length > 1 && recipient.user_name.length > 1 ) { #>
-						<img class="avatar" src="{{{recipient.avatar}}}" alt="{{recipient.user_name}}"<# if ( ! recipient.is_deleted && ! recipient.is_user_suspended && ! recipient.is_user_blocked ) { #> data-bb-hp-profile="{{recipient.id}}"<# } #> />
+						<img class="avatar" src="{{{recipient.avatar}}}" alt="{{recipient.user_name}}"<# if ( ! recipient.is_deleted && ! recipient.is_user_suspended && ! recipient.is_user_blocked && ! recipient.is_user_blocked_by ) { #> data-bb-hp-profile="{{recipient.id}}"<# } #> />
 							<# if ( typeof( recipient.user_presence ) != "undefined" && recipient.user_presence !== null && recipient.user_presence.length > 1 ) { #>
 								{{{recipient.user_presence}}}
 							<# } #>
@@ -209,7 +209,7 @@
 					<span class="user-name">{{data.group_name}}</span>
 				<# } else { #>
 					<# for ( i in first_four ) { #>
-						<span class="user-name"<# if ( ! other_recipients[i].is_deleted && ! other_recipients[i].is_user_suspended && ! other_recipients[i].is_user_blocked ) { #> data-bb-hp-profile="{{other_recipients[i].id}}"<# } #>>{{other_recipients[i].user_name}}<# if ( i != first_four.length - 1  || ( i == first_four.length -1 && data.toOthers ) ) { #><?php esc_html_e( ',', 'buddyboss' ); ?><# } #></span>
+						<span class="user-name"<# if ( ! other_recipients[i].is_deleted && ! other_recipients[i].is_user_suspended && ! other_recipients[i].is_user_blocked && ! other_recipients[i].is_user_blocked_by ) { #> data-bb-hp-profile="{{other_recipients[i].id}}"<# } #>>{{other_recipients[i].user_name}}<# if ( i != first_four.length - 1  || ( i == first_four.length -1 && data.toOthers ) ) { #><?php esc_html_e( ',', 'buddyboss' ); ?><# } #></span>
 					<# } #>
 
 					<# if ( data.toOthers ) { #>

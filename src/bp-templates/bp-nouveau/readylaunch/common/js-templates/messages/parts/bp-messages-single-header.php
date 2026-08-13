@@ -50,9 +50,9 @@
 			if ( data.avatars.length == 2 ) { #>
 			<div class="thread-multiple-avatar">
 				<# } #>
-				<a <# if ( data.is_group_thread || ( ! data.is_group_thread && ! ( data.avatars[0].is_user_suspended || data.avatars[0].is_user_blocked ) ) ) { #> href="{{{data.avatars[0].link}}}" data-bb-hp-profile="{{{data.avatars[0].id}}}"<# } #>><img class="avatar" src="{{{data.avatars[0].url}}}" alt="{{data.avatars[0].name}}"/></a>
+				<a <# if ( data.is_group_thread || ( ! data.is_group_thread && ! ( data.avatars[0].is_user_suspended || data.avatars[0].is_user_blocked || data.avatars[0].is_user_blocked_by ) ) ) { #> href="{{{data.avatars[0].link}}}" data-bb-hp-profile="{{{data.avatars[0].id}}}"<# } #>><img class="avatar" src="{{{data.avatars[0].url}}}" alt="{{data.avatars[0].name}}"/></a>
 				<# if ( data.avatars[1] ) { #>
-				<a <# if ( data.is_group_thread || ( ! data.is_group_thread && ! ( data.avatars[1].is_user_suspended || data.avatars[1].is_user_blocked ) ) ) { #> href="{{{data.avatars[1].link}}}" data-bb-hp-profile="{{{data.avatars[1].id}}}"<# } #>><img class="avatar" src="{{{data.avatars[1].url}}}" alt="{{data.avatars[1].name}}"/></a>
+				<a <# if ( data.is_group_thread || ( ! data.is_group_thread && ! ( data.avatars[1].is_user_suspended || data.avatars[1].is_user_blocked || data.avatars[1].is_user_blocked_by ) ) ) { #> href="{{{data.avatars[1].link}}}" data-bb-hp-profile="{{{data.avatars[1].id}}}"<# } #>><img class="avatar" src="{{{data.avatars[1].url}}}" alt="{{data.avatars[1].name}}"/></a>
 				<# }
 				if ( data.avatars.length == 2 ) { #>
 			</div>

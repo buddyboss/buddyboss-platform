@@ -5584,7 +5584,8 @@ function bb_remove_orphaned_profile_slug( $user_id ) {
 /**
  * Build the hover-card profile attribute for a member avatar/name link.
  *
- * Returns an empty string for empty ids and for suspended or blocked members,
+ * Returns an empty string for empty ids, suspended members, blocked members,
+ * and members who have blocked the viewer,
  * so member-facing surfaces never offer a hover card the viewer should not see.
  * The returned fragment is fully escaped.
  *
@@ -5606,6 +5607,10 @@ function bb_get_hover_card_profile_attr( $user_id ) {
 	}
 
 	if ( function_exists( 'bp_moderation_is_user_blocked' ) && bp_moderation_is_user_blocked( $user_id ) ) {
+		return '';
+	}
+
+	if ( function_exists( 'bb_moderation_is_user_blocked_by' ) && bb_moderation_is_user_blocked_by( $user_id ) ) {
 		return '';
 	}
 
