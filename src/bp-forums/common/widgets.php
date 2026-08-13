@@ -967,13 +967,15 @@ class BBP_Topics_Widget extends WP_Widget {
 				endif;
 
 				$author_url = bbp_get_topic_author_url( $topic_id );
+				$author_id  = bbp_get_topic_author_id( $topic_id );
+				$hp_attr    = ! empty( $author_id ) ? ' data-bb-hp-profile="' . esc_attr( $author_id ) . '"' : '';
 				?>
 
 				<li class="<?php echo $author_related_class; ?>">
 
 					<?php if ( ! empty( $author_link ) ) : ?>
 
-						<a href="<?php echo esc_url( $author_url ); ?>" class="bbp-author-link" rel="nofollow">
+						<a href="<?php echo esc_url( $author_url ); ?>" class="bbp-author-link" rel="nofollow"<?php echo $hp_attr; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- built from esc_attr(). ?>>
 							<span class="bbp-author-avatar">
 								<?php echo bbp_get_topic_author_avatar( $topic_id ); ?>
 							</span>
@@ -986,7 +988,7 @@ class BBP_Topics_Widget extends WP_Widget {
 
 						<?php
 						if ( ! empty( $author_link ) ) :
-							printf( __( 'by %1$s', 'buddyboss' ), '<span class="topic-author"><a href="' . esc_url( $author_url ) . '">' . bbp_get_topic_author_display_name( $topic_id ) . '</a></span>' );
+							printf( __( 'by %1$s', 'buddyboss' ), '<span class="topic-author"><a href="' . esc_url( $author_url ) . '"' . $hp_attr . '>' . bbp_get_topic_author_display_name( $topic_id ) . '</a></span>' );
 						endif;
 						?>
 
@@ -1391,13 +1393,15 @@ class BBP_Replies_Widget extends WP_Widget {
 				endif;
 
 				$reply_author_url = bbp_get_reply_author_url( $reply_id );
+				$reply_author_id  = bbp_get_reply_author_id( $reply_id );
+				$hp_attr          = ! empty( $reply_author_id ) ? ' data-bb-hp-profile="' . esc_attr( $reply_author_id ) . '"' : '';
 
 				?>
 
 				<li class="<?php echo $author_related_class; ?>">
 					<?php if ( ! empty( $author_link ) ) : ?>
 
-					<a href="<?php echo esc_url( $reply_author_url ); ?>" class="bbp-author-link" rel="nofollow">
+					<a href="<?php echo esc_url( $reply_author_url ); ?>" class="bbp-author-link" rel="nofollow"<?php echo $hp_attr; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- built from esc_attr(). ?>>
 						<span class="bbp-author-avatar">
 							<?php echo bbp_get_reply_author_avatar( $reply_id ); ?>
 						</span>
@@ -1409,7 +1413,7 @@ class BBP_Replies_Widget extends WP_Widget {
 
 						<?php
 						if ( ! empty( $author_link ) ) :
-							printf( __( '%1$s on ', 'buddyboss' ), '<span class="reply-author"><a href="' . esc_url( $reply_author_url ) . '">' . bbp_get_reply_author_display_name( $reply_id ) . '</a></span>' );
+							printf( __( '%1$s on ', 'buddyboss' ), '<span class="reply-author"><a href="' . esc_url( $reply_author_url ) . '"' . $hp_attr . '>' . bbp_get_reply_author_display_name( $reply_id ) . '</a></span>' );
 						endif;
 
 						echo $reply_link;
