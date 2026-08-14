@@ -325,6 +325,31 @@ function bp_nouveau_ajax_delete_activity() {
 		wp_send_json_error( $response );
 	}
 
+	// Capture the album context of this activity's media before deletion, so a
+	// single-album view can refresh its empty-state after the activity (and its
+	// cascade-deleted media) is removed (e.g. deleting the last photo from the
+	// media theater opened on the album view).
+	$bb_media_album_id = 0;
+	$bb_media_group_id = 0;
+	if (
+		empty( $_POST['is_comment'] ) &&
+		bp_is_active( 'media' ) &&
+		class_exists( 'BP_Media' ) &&
+		function_exists( 'bb_nouveau_media_get_album_empty_state' )
+	) {
+		$bb_activity_media = BP_Media::get(
+			array(
+				'activity_id' => $activity->id,
+				'per_page'    => 1,
+			)
+		);
+		if ( ! empty( $bb_activity_media['medias'] ) ) {
+			$bb_first_media    = current( $bb_activity_media['medias'] );
+			$bb_media_album_id = (int) $bb_first_media->album_id;
+			$bb_media_group_id = (int) $bb_first_media->group_id;
+		}
+	}
+
 	/** This action is documented in bp-activity/bp-activity-actions.php */
 	do_action( 'bp_activity_before_action_delete_activity', $activity->id, $activity->user_id );
 
@@ -378,6 +403,20 @@ function bp_nouveau_ajax_delete_activity() {
 		$response['activity']           = $activity_html;
 		$response['parent_activity_id'] = $parent_activity_id;
 	}
+
+	// Refresh the single-album empty-state when this activity's media emptied the
+	// album. The theater delete on the album view removes the whole activity via
+	// this handler, so the album grid needs the album-scoped empty-state (the
+	// personal/group media delete handler cannot see this path).
+	if ( ! empty( $bb_media_album_id ) && function_exists( 'bb_media_get_album_counts' ) ) {
+		$bb_album_counts               = bb_media_get_album_counts( $bb_media_album_id, $bb_media_group_id );
+		$response['album_id']          = $bb_media_album_id;
+		$response['album_total_count'] = (int) $bb_album_counts['album_total_count'];
+		$response['album_media_count'] = (int) $bb_album_counts['album_media_count'];
+		$response['album_video_count'] = (int) $bb_album_counts['album_video_count'];
+		$response['album_empty_html']  = ( 0 === (int) $bb_album_counts['album_total_count'] ) ? bb_nouveau_media_get_album_empty_state() : '';
+	}
+
 	wp_send_json_success( $response );
 }
 
