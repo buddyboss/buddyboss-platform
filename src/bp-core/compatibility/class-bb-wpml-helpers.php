@@ -698,7 +698,7 @@ if ( ! class_exists( 'BB_WPML_Helpers' ) ) {
 
 			$post_id = (int) $post_id;
 
-			if ( empty( $post_id ) || ! function_exists( 'bp_get_member_type_post_type' ) ) {
+			if ( empty( $post_id ) ) {
 				return $post_id;
 			}
 
@@ -706,33 +706,77 @@ if ( ! class_exists( 'BB_WPML_Helpers' ) ) {
 				return $resolved[ $post_id ];
 			}
 
+			// Resolved to itself unless a source is found below.
+			$resolved[ $post_id ] = $post_id;
+
+			foreach ( $this->bb_wpml_member_type_translations( $post_id ) as $translation ) {
+				if ( ! empty( $translation->original ) && ! empty( $translation->element_id ) ) {
+					$resolved[ $post_id ] = (int) $translation->element_id;
+
+					break;
+				}
+			}
+
+			// No source found (e.g. the source post was deleted) — falls back to itself.
+			return $resolved[ $post_id ];
+		}
+
+		/**
+		 * Get the WPML translation group for a profile type post.
+		 *
+		 * Reads `wp_icl_translations` through WPML's own API. Deliberately not
+		 * `wpml_object_id`: that helper is gated on `is_post_type_translated()`
+		 * and on the post type being present in `$wp_post_types` at call time,
+		 * and it returns the *input* ID when either check fails — which is
+		 * indistinguishable from "this is the right post for this language".
+		 * The translation group is available regardless of both.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param int $post_id Profile type post ID, in any language.
+		 *
+		 * @return array Translation objects keyed by language code. Empty when
+		 *               WPML does not manage the post.
+		 */
+		private function bb_wpml_member_type_translations( $post_id ) {
+			static $groups = array();
+
+			$post_id = (int) $post_id;
+
+			if ( empty( $post_id ) || ! function_exists( 'bp_get_member_type_post_type' ) ) {
+				return array();
+			}
+
+			if ( isset( $groups[ $post_id ] ) ) {
+				return $groups[ $post_id ];
+			}
+
+			$groups[ $post_id ] = array();
+
 			$element_type = 'post_' . bp_get_member_type_post_type();
 
 			// Translation group ID for this post. Null when WPML does not manage it.
 			$trid = apply_filters( 'wpml_element_trid', null, $post_id, $element_type );
 
 			if ( empty( $trid ) ) {
-				$resolved[ $post_id ] = $post_id;
-
-				return $post_id;
+				return $groups[ $post_id ];
 			}
 
 			$translations = apply_filters( 'wpml_get_element_translations', null, $trid, $element_type );
 
 			if ( ! empty( $translations ) && is_array( $translations ) ) {
-				foreach ( $translations as $translation ) {
-					if ( ! empty( $translation->original ) && ! empty( $translation->element_id ) ) {
-						$resolved[ $post_id ] = (int) $translation->element_id;
+				$groups[ $post_id ] = $translations;
 
-						return $resolved[ $post_id ];
+				// Every post in the group shares the same translations, so seed
+				// them all and keep this to one lookup per group per request.
+				foreach ( $translations as $translation ) {
+					if ( ! empty( $translation->element_id ) ) {
+						$groups[ (int) $translation->element_id ] = $translations;
 					}
 				}
 			}
 
-			// No original found (e.g. the source post was deleted) — fall back gracefully.
-			$resolved[ $post_id ] = $post_id;
-
-			return $post_id;
+			return $groups[ $post_id ];
 		}
 
 		/**
@@ -743,9 +787,8 @@ if ( ! class_exists( 'BB_WPML_Helpers' ) ) {
 		 * language being viewed. Runs on the `bb_member_type_localized_post_id`
 		 * filter.
 		 *
-		 * `$return_original_if_missing` is intentionally `false`: when the current
-		 * language has no translation, the given post ID is returned so the caller
-		 * can apply its own source-language fallback.
+		 * The given post ID is returned when the current language has no
+		 * translation, so the caller can apply its own source-language fallback.
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
@@ -759,20 +802,30 @@ if ( ! class_exists( 'BB_WPML_Helpers' ) ) {
 
 			$post_id = (int) $post_id;
 
-			if ( empty( $post_id ) || ! function_exists( 'bp_get_member_type_post_type' ) ) {
+			if ( empty( $post_id ) ) {
 				return $post_id;
 			}
 
 			$language = apply_filters( 'wpml_current_language', null );
-			$cache_id = ( ! empty( $language ) ? $language : 'default' ) . ':' . $post_id;
+
+			if ( empty( $language ) ) {
+				return $post_id;
+			}
+
+			$cache_id = $language . ':' . $post_id;
 
 			if ( isset( $resolved[ $cache_id ] ) ) {
 				return $resolved[ $cache_id ];
 			}
 
-			$localized_id = apply_filters( 'wpml_object_id', $post_id, bp_get_member_type_post_type(), false );
+			// Resolved to itself unless this language has a translation.
+			$resolved[ $cache_id ] = $post_id;
 
-			$resolved[ $cache_id ] = ! empty( $localized_id ) ? (int) $localized_id : $post_id;
+			$translations = $this->bb_wpml_member_type_translations( $post_id );
+
+			if ( ! empty( $translations[ $language ]->element_id ) ) {
+				$resolved[ $cache_id ] = (int) $translations[ $language ]->element_id;
+			}
 
 			return $resolved[ $cache_id ];
 		}
