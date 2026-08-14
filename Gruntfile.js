@@ -1095,11 +1095,56 @@ module.exports = function (grunt) {
 		);
 	} );
 
+	// Recompress the finished zip with Zopfli DEFLATE (bin/zopfli-recompress-zip.js).
+	// Same zip format, better encoder: every entry is re-deflated with Zopfli's
+	// exhaustive search, shaving ~4% off the plain level-9 archive (~400+ KB on
+	// the current plugin) with byte-identical file contents. Runs AFTER `compress`
+	// on the final buddyboss-platform-plugin.zip, in place. Slow (~1-2 min) but
+	// only runs at release-build time. Keeps the wp.org submission under the
+	// directory's 10 MB upload cap without touching any shipped content.
+	//
+	// @since BuddyBoss [BBVERSION]
+	grunt.registerTask( 'zopfli_recompress', 'Recompress buddyboss-platform-plugin.zip entries with Zopfli DEFLATE.', function () {
+		var done = this.async();
+		var zip  = 'buddyboss-platform-plugin.zip';
+		var tmp  = zip + '.zopfli-tmp';
+
+		if ( ! grunt.file.exists( zip ) ) {
+			grunt.fail.warn( '[zopfli] ' + zip + ' not found — run compress first.' );
+			return done();
+		}
+
+		grunt.util.spawn(
+			{
+				cmd:  'node',
+				args: [ 'bin/zopfli-recompress-zip.js', zip, tmp ],
+				opts: { stdio: 'inherit' }
+			},
+			function ( err, result, code ) {
+				if ( err || code !== 0 ) {
+					grunt.file.delete( tmp, { force: true } );
+					grunt.fail.warn( 'zopfli-recompress-zip failed (exit ' + code + ') — original zip left untouched.' );
+					return done();
+				}
+				var before = require( 'fs' ).statSync( zip ).size;
+				var after  = require( 'fs' ).statSync( tmp ).size;
+				if ( after >= before ) {
+					grunt.file.delete( tmp, { force: true } );
+					grunt.log.writeln( '[zopfli] no improvement (' + after + ' >= ' + before + ') — keeping original.' );
+					return done();
+				}
+				require( 'fs' ).renameSync( tmp, zip );
+				grunt.log.writeln( '[zopfli] ' + before + ' -> ' + after + ' bytes (saved ' + ( before - after ) + ').' );
+				done();
+			}
+		);
+	} );
+
 	// Build task: Creates production build in BUILD_DIR, initializes git, performs build operations, then commits to production.
 	// `exec:generate_debug_manifest` runs AFTER the production push but BEFORE compress, so the manifest ships in the
 	// customer zip while production keeps the unminified files but not the per-version manifest pointer.
 	// `configure_compress_exclusions` rewrites compress.main.files from the manifest so the zip stays in lockstep.
-	grunt.registerTask('build', ['string-replace:dist', 'exec:composer', 'clean:all', 'exec:init_build_dir_git', 'exec:empty_build_dir', 'copy:files', 'clean:composer', 'exec:commit_build_to_mothership_release', 'exec:generate_debug_manifest', 'strip_orphan_font_refs', 'configure_compress_exclusions', 'compress', 'clean:all']);
+	grunt.registerTask('build', ['string-replace:dist', 'exec:composer', 'clean:all', 'exec:init_build_dir_git', 'exec:empty_build_dir', 'copy:files', 'clean:composer', 'exec:commit_build_to_mothership_release', 'exec:generate_debug_manifest', 'strip_orphan_font_refs', 'configure_compress_exclusions', 'compress', 'zopfli_recompress', 'clean:all']);
 
 	// Build-test task: identical to `build` except it never touches the
 	// production branch — no git init, no fetch, no checkout, no commit,
@@ -1117,7 +1162,7 @@ module.exports = function (grunt) {
 	//   7. clean:composer                  — drop dev composer state from the staged dir
 	//   8. compress                        — zip → buddyboss-platform-plugin.zip
 	//   9. clean:all                       — final tidy
-	grunt.registerTask('build_test', ['string-replace:dist', 'exec:composer', 'clean:all', 'exec:init_build_dir_clean', 'exec:empty_build_dir', 'copy:files', 'clean:composer', 'exec:generate_debug_manifest', 'strip_orphan_font_refs', 'enable_build_test_strip', 'configure_compress_exclusions', 'compress', 'clean:all']);
+	grunt.registerTask('build_test', ['string-replace:dist', 'exec:composer', 'clean:all', 'exec:init_build_dir_clean', 'exec:empty_build_dir', 'copy:files', 'clean:composer', 'exec:generate_debug_manifest', 'strip_orphan_font_refs', 'enable_build_test_strip', 'configure_compress_exclusions', 'compress', 'zopfli_recompress', 'clean:all']);
 
 	grunt.registerTask('release', ['src', 'build']);
 
