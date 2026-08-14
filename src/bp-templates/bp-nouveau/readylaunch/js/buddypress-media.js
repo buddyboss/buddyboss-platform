@@ -268,6 +268,13 @@ window.bp = window.bp || {};
 			}
 		},
 
+		/**
+		 * Remove deleted item tiles from the single media album grid.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param {Array} ids Deleted media/video ids.
+		 */
 		removeAlbumTiles: function ( ids ) {
 			if ( ! ids || ! ids.length ) {
 				return;
@@ -283,6 +290,18 @@ window.bp = window.bp || {};
 			);
 		},
 
+		/**
+		 * Handle a delete on the unified media album view (/media/albums/{id}).
+		 *
+		 * Renders the album empty-state when the mixed album has no items left,
+		 * otherwise removes the deleted tiles and refreshes the header counts.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param {Object} data       Server response data with album counts.
+		 * @param {Array}  deletedIds Deleted media/video ids.
+		 * @return {boolean} True when the media album view was handled.
+		 */
 		handleAlbumDelete: function ( data, deletedIds ) {
 			if ( ! $( '#buddypress #bp-media-single-album' ).length || 'undefined' === typeof data.album_id || 0 >= parseInt( data.album_id, 10 ) ) {
 				return false;
