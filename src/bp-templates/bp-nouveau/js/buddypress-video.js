@@ -3200,7 +3200,25 @@ window.bp = window.bp || {};
 					}
 					if ( ! albumHandled ) {
 						// The media pack is not enqueued on the standalone video album route.
-						bp.Nouveau.Video.handleVideoAlbumDelete( respData, deletedIds );
+						albumHandled = bp.Nouveau.Video.handleVideoAlbumDelete( respData, deletedIds );
+					}
+					if ( ! albumHandled ) {
+						// Directory and other non-album grids render one tile per
+						// cascade-deleted item - remove every sibling tile too, not
+						// just the one open in the theater. Media and video ids are
+						// separate sequences, so target each grid with its own list.
+						$.each(
+							respData.deleted_media_ids || [],
+							function ( index, value ) {
+								$( document ).find( '[data-bp-list="media"] .bb-open-media-theatre[data-id="' + value + '"]' ).closest( 'li' ).remove();
+							}
+						);
+						$.each(
+							respData.deleted_video_ids || [],
+							function ( index, value ) {
+								$( document ).find( '[data-bp-list="video"] .bb-open-video-theatre[data-id="' + value + '"]' ).closest( 'li' ).remove();
+							}
+						);
 					}
 				}
 
@@ -3218,11 +3236,18 @@ window.bp = window.bp || {};
 
 				$( document ).find( '[data-bp-list="activity"] .bb-open-video-theatre[data-id="' + self.current_video.id + '"]' ).closest( '.bb-activity-video-elem' ).remove();
 
-				for ( i = 0; i < self.videos.length; i++ ) {
+				// Every entry of the deleted activity leaves the slide list, not just
+				// the first match - the server removed them all.
+				for ( i = self.videos.length - 1; i >= 0; i-- ) {
 					if ( self.videos[ i ].activity_id == data.id ) {
 						self.videos.splice( i, 1 );
-						break;
 					}
+				}
+
+				// Removing several slides can leave the pointer past the end; clamp so
+				// the navigation branches below keep their invariants.
+				if ( self.current_index > self.videos.length ) {
+					self.current_index = self.videos.length;
 				}
 
 				if ( self.current_index == 0 && self.current_index != ( self.videos.length ) ) {

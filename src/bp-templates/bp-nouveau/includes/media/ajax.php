@@ -644,7 +644,7 @@ function bp_nouveau_ajax_media_delete() {
 	// "no media" message when the whole scope is empty, so an album emptied while
 	// the user/group still has media elsewhere would otherwise show no message.
 	$album_empty_html = '';
-	if ( ! empty( $album_id ) && 0 === (int) $album_counts['album_total_count'] ) {
+	if ( ! empty( $album_id ) && 0 === (int) $album_counts['album_total_count'] && function_exists( 'bb_nouveau_media_get_album_empty_state' ) ) {
 		$album_empty_html = bb_nouveau_media_get_album_empty_state();
 	}
 

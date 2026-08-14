@@ -8018,9 +8018,30 @@ window.bp = window.bp || {};
 				// not just the item open in the theater - clear all of its tiles and
 				// refresh the single-album empty-state from the server's counts.
 				var respData = ( data.response && data.response.data ) ? data.response.data : false;
-				if ( respData && 'undefined' !== typeof bp.Nouveau.Media && 'function' === typeof bp.Nouveau.Media.handleAlbumDelete ) {
-					var deletedIds = [].concat( respData.deleted_media_ids || [], respData.deleted_video_ids || [] );
-					bp.Nouveau.Media.handleAlbumDelete( respData, deletedIds );
+				if ( respData ) {
+					var deletedIds   = [].concat( respData.deleted_media_ids || [], respData.deleted_video_ids || [] );
+					var albumHandled = false;
+					if ( 'undefined' !== typeof bp.Nouveau.Media && 'function' === typeof bp.Nouveau.Media.handleAlbumDelete ) {
+						albumHandled = bp.Nouveau.Media.handleAlbumDelete( respData, deletedIds );
+					}
+					if ( ! albumHandled ) {
+						// Directory and other non-album grids render one tile per
+						// cascade-deleted item - remove every sibling tile too, not
+						// just the one open in the theater. Media and video ids are
+						// separate sequences, so target each grid with its own list.
+						$.each(
+							respData.deleted_media_ids || [],
+							function ( index, value ) {
+								$( document ).find( '[data-bp-list="media"] .bb-open-media-theatre[data-id="' + value + '"]' ).closest( 'li' ).remove();
+							}
+						);
+						$.each(
+							respData.deleted_video_ids || [],
+							function ( index, value ) {
+								$( document ).find( '[data-bp-list="video"] .bb-open-video-theatre[data-id="' + value + '"]' ).closest( 'li' ).remove();
+							}
+						);
+					}
 				}
 
 				if ( 0 === $deleted_item_parent_list.find( 'li:not(.load-more)' ).length ) {
@@ -8036,11 +8057,18 @@ window.bp = window.bp || {};
 				}
 				$( document ).find( '[data-bp-list="activity"] .bb-open-media-theatre[data-id="' + self.current_media.id + '"]' ).closest( '.bb-activity-media-elem' ).remove();
 
-				for ( i = 0; i < self.medias.length; i++ ) {
+				// Every entry of the deleted activity leaves the slide list, not just
+				// the first match - the server removed them all.
+				for ( i = self.medias.length - 1; i >= 0; i-- ) {
 					if ( self.medias[ i ].activity_id == data.id ) {
 						self.medias.splice( i, 1 );
-						break;
 					}
+				}
+
+				// Removing several slides can leave the pointer past the end; clamp so
+				// the navigation branches below keep their invariants.
+				if ( self.current_index > self.medias.length ) {
+					self.current_index = self.medias.length;
 				}
 
 				if ( self.current_index == 0 && self.current_index != ( self.medias.length ) ) {
