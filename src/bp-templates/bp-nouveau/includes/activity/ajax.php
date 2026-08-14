@@ -325,28 +325,52 @@ function bp_nouveau_ajax_delete_activity() {
 		wp_send_json_error( $response );
 	}
 
-	// Capture the album context of this activity's media before deletion, so a
-	// single-album view can refresh its empty-state after the activity (and its
-	// cascade-deleted media) is removed (e.g. deleting the last photo from the
-	// media theater opened on the album view).
-	$bb_media_album_id = 0;
-	$bb_media_group_id = 0;
-	if (
-		empty( $_POST['is_comment'] ) &&
-		bp_is_active( 'media' ) &&
-		class_exists( 'BP_Media' ) &&
-		function_exists( 'bb_nouveau_media_get_album_empty_state' )
-	) {
-		$bb_activity_media = BP_Media::get(
-			array(
-				'activity_id' => $activity->id,
-				'per_page'    => 1,
-			)
-		);
-		if ( ! empty( $bb_activity_media['medias'] ) ) {
-			$bb_first_media    = current( $bb_activity_media['medias'] );
-			$bb_media_album_id = (int) $bb_first_media->album_id;
-			$bb_media_group_id = (int) $bb_first_media->group_id;
+	// Capture the album context of this activity's media/videos before deletion,
+	// so a single-album view can refresh its empty-state after the activity (and
+	// its cascade-deleted items) is removed (e.g. deleting the last photo or
+	// video from the theater opened on the album view). The attached ids are
+	// read from activity meta first (usually primed) so the media/video tables
+	// are only queried for the ~1% of deletes that actually carry attachments.
+	$activity_album_id     = 0;
+	$activity_album_group  = 0;
+	$deleted_media_ids     = array();
+	$deleted_video_ids     = array();
+	if ( empty( $_POST['is_comment'] ) && function_exists( 'bb_nouveau_media_get_album_empty_state' ) ) {
+		$attached_media_meta = bp_is_active( 'media' ) ? bp_activity_get_meta( $activity->id, 'bp_media_ids', true ) : '';
+		$attached_video_meta = bp_is_active( 'video' ) ? bp_activity_get_meta( $activity->id, 'bp_video_ids', true ) : '';
+
+		if ( '' !== (string) $attached_media_meta && class_exists( 'BP_Media' ) ) {
+			$deleted_media_ids = array_map( 'intval', array_filter( explode( ',', $attached_media_meta ) ) );
+			$activity_media    = BP_Media::get(
+				array(
+					'activity_id' => $activity->id,
+					'per_page'    => 1,
+				)
+			);
+			if ( ! empty( $activity_media['medias'] ) ) {
+				$first_media          = current( $activity_media['medias'] );
+				$activity_album_id    = (int) $first_media->album_id;
+				$activity_album_group = (int) $first_media->group_id;
+			}
+		}
+
+		// Photos and videos live in separate tables; a video-only activity finds
+		// no BP_Media rows, so fall back to the video table for the album context.
+		if ( '' !== (string) $attached_video_meta && class_exists( 'BP_Video' ) ) {
+			$deleted_video_ids = array_map( 'intval', array_filter( explode( ',', $attached_video_meta ) ) );
+			if ( empty( $activity_album_id ) ) {
+				$activity_video = BP_Video::get(
+					array(
+						'activity_id' => $activity->id,
+						'per_page'    => 1,
+					)
+				);
+				if ( ! empty( $activity_video['videos'] ) ) {
+					$first_video          = current( $activity_video['videos'] );
+					$activity_album_id    = (int) $first_video->album_id;
+					$activity_album_group = (int) $first_video->group_id;
+				}
+			}
 		}
 	}
 
@@ -404,17 +428,21 @@ function bp_nouveau_ajax_delete_activity() {
 		$response['parent_activity_id'] = $parent_activity_id;
 	}
 
-	// Refresh the single-album empty-state when this activity's media emptied the
-	// album. The theater delete on the album view removes the whole activity via
-	// this handler, so the album grid needs the album-scoped empty-state (the
-	// personal/group media delete handler cannot see this path).
-	if ( ! empty( $bb_media_album_id ) && function_exists( 'bb_media_get_album_counts' ) ) {
-		$bb_album_counts               = bb_media_get_album_counts( $bb_media_album_id, $bb_media_group_id );
-		$response['album_id']          = $bb_media_album_id;
-		$response['album_total_count'] = (int) $bb_album_counts['album_total_count'];
-		$response['album_media_count'] = (int) $bb_album_counts['album_media_count'];
-		$response['album_video_count'] = (int) $bb_album_counts['album_video_count'];
-		$response['album_empty_html']  = ( 0 === (int) $bb_album_counts['album_total_count'] ) ? bb_nouveau_media_get_album_empty_state() : '';
+	// Refresh the single-album empty-state when this activity's media/videos
+	// emptied the album. The theater delete on the album view removes the whole
+	// activity via this handler, so the album grid needs the album-scoped
+	// empty-state (the media/video delete handlers cannot see this path). The
+	// deleted ids let the client clear every tile of a multi-item activity -
+	// the server cascade-deletes them all, not just the one open in the theater.
+	if ( ! empty( $activity_album_id ) && function_exists( 'bb_media_get_album_counts' ) ) {
+		$album_counts                    = bb_media_get_album_counts( $activity_album_id, $activity_album_group );
+		$response['album_id']            = $activity_album_id;
+		$response['album_total_count']   = (int) $album_counts['album_total_count'];
+		$response['album_media_count']   = (int) $album_counts['album_media_count'];
+		$response['album_video_count']   = (int) $album_counts['album_video_count'];
+		$response['album_empty_html']    = ( 0 === (int) $album_counts['album_total_count'] ) ? bb_nouveau_media_get_album_empty_state() : '';
+		$response['deleted_media_ids']   = $deleted_media_ids;
+		$response['deleted_video_ids']   = $deleted_video_ids;
 	}
 
 	wp_send_json_success( $response );

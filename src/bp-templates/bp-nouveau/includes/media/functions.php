@@ -339,5 +339,12 @@ function bb_nouveau_media_get_album_empty_state() {
 		bp_nouveau_user_feedback( 'media-loop-none' );
 	}
 
-	return ob_get_clean();
+	/**
+	 * Filters the single-album empty-state markup.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $html The rendered empty-state HTML.
+	 */
+	return apply_filters( 'bb_nouveau_media_album_empty_state', ob_get_clean() );
 }
