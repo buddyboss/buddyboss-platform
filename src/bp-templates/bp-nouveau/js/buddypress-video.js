@@ -1698,7 +1698,7 @@ window.bp = window.bp || {};
 					url: BP_Nouveau.ajaxurl,
 					data: data,
 					success: function ( response ) {
-						var dir_label;
+						var dir_label, albumHandled = false;
 						if ( fromWhere && fromWhere.length && 'activity' === fromWhere ) {
 							if ( response.success ) {
 								$.each(
@@ -1796,7 +1796,10 @@ window.bp = window.bp || {};
 										}
 									}
 
-									if ( 0 !== response.data.video_html_content.length && ! BP_Nouveau.video.current_album ) {
+									if ( 'undefined' !== typeof bp.Nouveau.Media && 'function' === typeof bp.Nouveau.Media.handleAlbumDelete && bp.Nouveau.Media.handleAlbumDelete( response.data, video ) ) {
+										// Single-album view handled: empty-state or tile removal + counts.
+										albumHandled = true;
+									} else if ( 0 !== response.data.video_html_content.length && ! BP_Nouveau.video.current_album ) {
 										if ( 0 === parseInt( response.data.video_personal_count ) ) {
 											$( '.bb-videos-actions' ).hide();
 											$( '#video-stream' ).html( response.data.video_html_content );
@@ -1829,7 +1832,7 @@ window.bp = window.bp || {};
 								}
 
 								// Update album counts if deleting from an album.
-								if ( response.data.album_total_count !== undefined ) {
+								if ( ! albumHandled && response.data.album_total_count !== undefined ) {
 									self.updateAlbumCounts( response.data );
 								}
 							}
@@ -1879,7 +1882,10 @@ window.bp = window.bp || {};
 								}
 
 								// inject video.
-								if ( 0 !== response.data.video_html_content.length ) {
+								if ( 'undefined' !== typeof bp.Nouveau.Media && 'function' === typeof bp.Nouveau.Media.handleAlbumDelete && bp.Nouveau.Media.handleAlbumDelete( response.data, video ) ) {
+									// Single-album view handled: empty-state or tile removal + counts.
+									albumHandled = true;
+								} else if ( 0 !== response.data.video_html_content.length ) {
 									if ( 0 === parseInt( response.data.video_personal_count ) ) {
 										$( '.bb-videos-actions' ).hide();
 										$( '#video-stream' ).html( response.data.video_html_content );
@@ -1902,7 +1908,7 @@ window.bp = window.bp || {};
 								}
 
 								// Update album counts if deleting from an album.
-								if ( response.data.album_total_count !== undefined ) {
+								if ( ! albumHandled && response.data.album_total_count !== undefined ) {
 									self.updateAlbumCounts( response.data );
 								}
 							} else {
@@ -3113,6 +3119,15 @@ window.bp = window.bp || {};
 				var $deleted_item_parent_list = $deleted_item.parents( 'ul' );
 
 				$deleted_item.closest( 'li' ).remove();
+
+				// The server cascade-deletes every media/video attached to the activity,
+				// not just the item open in the theater - clear all of its tiles and
+				// refresh the single-album empty-state from the server's counts.
+				var respData = ( data.response && data.response.data ) ? data.response.data : false;
+				if ( respData && 'undefined' !== typeof bp.Nouveau.Media && 'function' === typeof bp.Nouveau.Media.handleAlbumDelete ) {
+					var deletedIds = [].concat( respData.deleted_media_ids || [], respData.deleted_video_ids || [] );
+					bp.Nouveau.Media.handleAlbumDelete( respData, deletedIds );
+				}
 
 				if ( 0 === $deleted_item_parent_list.find( 'li:not(.load-more)' ).length ) {
 
