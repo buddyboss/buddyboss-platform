@@ -320,7 +320,11 @@ module.exports = function (grunt) {
 							// (also removes the bundled Bootstrap glyphicons font copies).
 							// Makes the 'endpoints/**' entry in BUILD_TEST_EXTRA_STRIP_GLOBS
 							// a no-op, since the folder never reaches BUILD_DIR at all.
-							'!endpoints/**'
+							'!endpoints/**',
+							// src/composer.json is dev metadata (the compiled
+							// autoloader in vendor/composer/*.php never reads
+							// it at runtime) — keep it out of the customer zip.
+							'!composer.json'
 						].concat( BP_EXCLUDED_MISC )
 					}
 					]
@@ -845,12 +849,24 @@ module.exports = function (grunt) {
 		//    this glob stays as a guard should a font export re-add them.
 		'**/*.woff',
 
-		// 3. Icon-font TTF/SVG variants were REMOVED from the source tree
-		//    entirely (2026-08-14): only woff2 + woff copies remain in
+		// 3. Icon-font TTF/SVG/WOFF variants were REMOVED from the source
+		//    tree entirely (2026-08-14): only woff2 copies remain in
 		//    icons/fonts/ and readylaunch/icons/fonts/, and the icon CSS
-		//    @font-face cascades reference only those two formats. The
-		//    generic *.eot glob above stays as a guard should a font tool
-		//    re-export legacy formats.
+		//    @font-face cascades reference only woff2. The generic *.eot
+		//    glob above stays as a guard should a font tool re-export
+		//    legacy formats.
+
+		// 4. Unused ReadyLaunch icon-font weights. Only Regular (default),
+		//    Fill, and Bold are ever applied by a template, JS file, or PHP
+		//    class name — Thin, Light, and Duotone have zero references
+		//    across Platform, Pro, and the BuddyBoss theme (audited
+		//    2026-08-13). Their @font-face declarations remain in
+		//    bb-icons-rl.min.css but are never requested. Files stay in
+		//    src/ so a future design can re-adopt them by deleting these
+		//    lines. (Re-applied 2026-08-14 — lost in a Gruntfile overwrite.)
+		'bp-templates/bp-nouveau/readylaunch/icons/fonts/bb-icons-Thin.woff2',
+		'bp-templates/bp-nouveau/readylaunch/icons/fonts/bb-icons-Light.woff2',
+		'bp-templates/bp-nouveau/readylaunch/icons/fonts/bb-icons-Duotone.woff2',
 
 		// 3. Duplicate Glyphicons. endpoints/fonts/ is the actually-used set
 		//    (bootstrap.min.css references via ../fonts/). endpoints/assets/
@@ -921,7 +937,12 @@ module.exports = function (grunt) {
 	var BUILD_TEST_EXTRA_STRIP_GLOBS = [
 		'endpoints/**',
 		'cli/bin/install-package-tests.sh',
-		'cli/bin/test.sh'
+		'cli/bin/test.sh',
+		// The .pot translation template is for translators/tooling, never read
+		// at runtime (~1.28 MB raw). Kept in the production zip, dropped from
+		// the test zip. (Re-applied 2026-08-14 — this entry was lost when the
+		// Gruntfile was overwritten during the image-revert cycle.)
+		'languages/*.pot'
 	];
 
 	// Toggled true only by the `enable_build_test_strip` task, which is wired
