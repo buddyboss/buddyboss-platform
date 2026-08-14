@@ -856,17 +856,16 @@ module.exports = function (grunt) {
 		//    glob above stays as a guard should a font tool re-export
 		//    legacy formats.
 
-		// 4. Unused ReadyLaunch icon-font weights. Only Regular (default),
-		//    Fill, and Bold are ever applied by a template, JS file, or PHP
-		//    class name — Thin, Light, and Duotone have zero references
-		//    across Platform, Pro, and the BuddyBoss theme (audited
-		//    2026-08-13). Their @font-face declarations remain in
-		//    bb-icons-rl.min.css but are never requested. Files stay in
-		//    src/ so a future design can re-adopt them by deleting these
-		//    lines. (Re-applied 2026-08-14 — lost in a Gruntfile overwrite.)
-		'bp-templates/bp-nouveau/readylaunch/icons/fonts/bb-icons-Thin.woff2',
-		'bp-templates/bp-nouveau/readylaunch/icons/fonts/bb-icons-Light.woff2',
-		'bp-templates/bp-nouveau/readylaunch/icons/fonts/bb-icons-Duotone.woff2',
+		// 4. ALL ReadyLaunch icon-font weights MUST ship. Weight faces are
+		//    selected by computed font-weight, not by class name: main.css
+		//    applies font-weight 200/300/600 directly to icon elements
+		//    (activity reaction states, profile completion widget,
+		//    send-message hover, topic selector ::after), which loads the
+		//    Thin/Light/Duotone files even though no template uses the
+		//    .bb-icons-rl-thin/-light/-duotone modifier classes. A 2026-08-14
+		//    attempt to strip those three weights broke those icons — do not
+		//    re-add strip entries here without auditing font-weight rules in
+		//    the ReadyLaunch CSS, not just class-name usage.
 
 		// 3. Duplicate Glyphicons. endpoints/fonts/ is the actually-used set
 		//    (bootstrap.min.css references via ../fonts/). endpoints/assets/
@@ -937,12 +936,11 @@ module.exports = function (grunt) {
 	var BUILD_TEST_EXTRA_STRIP_GLOBS = [
 		'endpoints/**',
 		'cli/bin/install-package-tests.sh',
-		'cli/bin/test.sh',
-		// The .pot translation template is for translators/tooling, never read
-		// at runtime (~1.28 MB raw). Kept in the production zip, dropped from
-		// the test zip. (Re-applied 2026-08-14 — this entry was lost when the
-		// Gruntfile was overwritten during the image-revert cycle.)
-		'languages/*.pot'
+		'cli/bin/test.sh'
+		// NOTE: languages/*.pot deliberately SHIPS in every zip — customers
+		// translate the plugin locally (Loco Translate / Poedit) from this
+		// template, so stripping it breaks their translation workflow.
+		// Decision by the user 2026-08-14; do not re-add a .pot strip here.
 	];
 
 	// Toggled true only by the `enable_build_test_strip` task, which is wired
