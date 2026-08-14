@@ -458,11 +458,31 @@ module.exports = function (grunt) {
 					expand: true,
 					src: [
 						'css/**',
-						'fonts/**',
+						// Only woff2 ships (and lives in the source tree) — the
+						// bb-icons repo also exports eot/ttf/svg/woff copies,
+						// which were purged 2026-08-14. Do NOT widen this glob.
+						'fonts/*.woff2',
 						'!example.html',
 						'font-map.json',
 						'!svg/**',
 					],
+					options: {
+						// Trim the @font-face cascade in the imported CSS to
+						// woff2 (the only format we copy), so refreshed icon CSS
+						// never references eot/ttf/svg/woff files that are not there.
+						noProcess: [ '**/*.woff2', '**/*.json' ],
+						process: function ( content, srcpath ) {
+							if ( ! /\.css$/.test( srcpath ) ) {
+								return content;
+							}
+							return content
+								.replace( /src:\s*url\((['"])?[^)]*\.eot[^)]*\)\s*;/g, '' )
+								.replace( /url\((['"])?[^)]*\.eot[^)]*\)\s*format\((['"])?embedded-opentype(['"])?\)\s*,\s*/g, '' )
+								.replace( /,\s*url\((['"])?[^)]*\.ttf[^)]*\)\s*format\((['"])?truetype(['"])?\)/g, '' )
+								.replace( /,\s*url\((['"])?[^)]*\.svg[^)]*\)\s*format\((['"])?svg(['"])?\)/g, '' )
+								.replace( /,\s*url\([^)]*\)\s*format\((['"])woff\1\)/g, '' );
+						}
+					},
 				},
 			},
 			uglify: {
@@ -820,26 +840,17 @@ module.exports = function (grunt) {
 		//    supported across Chrome/Firefox/Safari/Edge since 2015-2016;
 		//    coverage is > 98 % of WP traffic globally. The few clients
 		//    that still need WOFF (iOS Safari ≤ 11, IE) get the system
-		//    font cascade as a graceful degradation. None of the platform
-		//    WOFFs live under vendor/ or any third-party tree — safe to
-		//    blanket-strip.
+		//    font cascade as a graceful degradation. As of 2026-08-14 no
+		//    .woff files remain in the source tree at all (woff2-only);
+		//    this glob stays as a guard should a font export re-add them.
 		'**/*.woff',
 
-		// 3. Icon-font TTFs whose woff2 + woff siblings already cover the
-		//    browser cascade. Listed explicitly so unrelated TTFs (server-
-		//    side fonts under bp-core/fonts/) stay shipped.
-		'bp-templates/bp-nouveau/icons/fonts/box-filled.ttf',
-		'bp-templates/bp-nouveau/icons/fonts/box-lined.ttf',
-		'bp-templates/bp-nouveau/icons/fonts/filled.ttf',
-		'bp-templates/bp-nouveau/icons/fonts/lined.ttf',
-		'bp-templates/bp-nouveau/icons/fonts/round-filled.ttf',
-		'bp-templates/bp-nouveau/icons/fonts/round-lined.ttf',
-		'bp-templates/bp-nouveau/readylaunch/icons/fonts/bb-icons.ttf',
-		'bp-templates/bp-nouveau/readylaunch/icons/fonts/bb-icons-Bold.ttf',
-		'bp-templates/bp-nouveau/readylaunch/icons/fonts/bb-icons-Duotone.ttf',
-		'bp-templates/bp-nouveau/readylaunch/icons/fonts/bb-icons-Fill.ttf',
-		'bp-templates/bp-nouveau/readylaunch/icons/fonts/bb-icons-Light.ttf',
-		'bp-templates/bp-nouveau/readylaunch/icons/fonts/bb-icons-Thin.ttf',
+		// 3. Icon-font TTF/SVG variants were REMOVED from the source tree
+		//    entirely (2026-08-14): only woff2 + woff copies remain in
+		//    icons/fonts/ and readylaunch/icons/fonts/, and the icon CSS
+		//    @font-face cascades reference only those two formats. The
+		//    generic *.eot glob above stays as a guard should a font tool
+		//    re-export legacy formats.
 
 		// 3. Duplicate Glyphicons. endpoints/fonts/ is the actually-used set
 		//    (bootstrap.min.css references via ../fonts/). endpoints/assets/
@@ -848,34 +859,12 @@ module.exports = function (grunt) {
 		'endpoints/assets/glyphicons-halflings-regular.svg',
 		'endpoints/assets/glyphicons-halflings-regular.ttf',
 		'endpoints/assets/glyphicons-halflings-regular.woff',
-		'endpoints/assets/glyphicons-halflings-regular.woff2',
+		'endpoints/assets/glyphicons-halflings-regular.woff2'
 
-		// 4. Inter UI font TTFs. Each Inter weight ships ttf + woff + woff2
-		//    after the WOFF2 conversion; the woff2 file is ~20% of the TTF
-		//    size with identical rendering, so the TTF copy is no longer
-		//    needed in the customer zip. WOFF stays as the cascade fallback
-		//    for browsers without WOFF2 support (< 1 % of WP traffic).
-		'bp-templates/bp-nouveau/readylaunch/assets/fonts/Inter-Bold.ttf',
-		'bp-templates/bp-nouveau/readylaunch/assets/fonts/Inter-Italic.ttf',
-		'bp-templates/bp-nouveau/readylaunch/assets/fonts/Inter-Light.ttf',
-		'bp-templates/bp-nouveau/readylaunch/assets/fonts/Inter-LightItalic.ttf',
-		'bp-templates/bp-nouveau/readylaunch/assets/fonts/Inter-Medium.ttf',
-		'bp-templates/bp-nouveau/readylaunch/assets/fonts/Inter-MediumItalic.ttf',
-		'bp-templates/bp-nouveau/readylaunch/assets/fonts/Inter-Regular.ttf',
-		'bp-templates/bp-nouveau/readylaunch/assets/fonts/Inter-SemiBold.ttf',
-
-		// 5. SVG-font copies of the legacy bb-icon set. The SVG font format
-		//    is the LAST entry in the @font-face src cascade and was only
-		//    ever picked by ~2012-era browsers (iOS Safari 4, IE8); every
-		//    browser that meets the platform minimums selects woff2 first
-		//    and never requests these. Listed explicitly so standalone UI
-		//    SVG images elsewhere in the tree are untouched.
-		'bp-templates/bp-nouveau/icons/fonts/box-filled.svg',
-		'bp-templates/bp-nouveau/icons/fonts/box-lined.svg',
-		'bp-templates/bp-nouveau/icons/fonts/filled.svg',
-		'bp-templates/bp-nouveau/icons/fonts/lined.svg',
-		'bp-templates/bp-nouveau/icons/fonts/round-filled.svg',
-		'bp-templates/bp-nouveau/icons/fonts/round-lined.svg'
+		// (Removed 2026-08-14: stale entries for readylaunch/assets/fonts/Inter-*.ttf
+		// — that directory no longer exists — and the legacy icon-font .svg/.ttf
+		// lists, whose files were deleted from the source tree along with all
+		// eot/svg/ttf icon-font variants. Only woff2 + woff remain on disk.)
 	];
 
 	// Compiled translation bundles and source `.po` files. WordPress fetches
