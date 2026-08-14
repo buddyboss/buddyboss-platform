@@ -170,6 +170,68 @@ window.bp = window.bp || {};
 		},
 
 		/**
+		 * Remove deleted video tiles from the standalone video album grid.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param {Array} ids Deleted video ids.
+		 */
+		removeVideoAlbumTiles: function ( ids ) {
+			if ( ! ids || ! ids.length ) {
+				return;
+			}
+			$.each(
+				ids,
+				function ( index, value ) {
+					var $videoItem = $( '#video-stream ul.video-list li[data-id="' + value + '"]' );
+					if ( $videoItem.length ) {
+						$videoItem.remove();
+					}
+				}
+			);
+		},
+
+		/**
+		 * Handle a delete on the standalone video album view (/video/albums/{id}).
+		 *
+		 * The unified media album view is handled by bp.Nouveau.Media.handleAlbumDelete;
+		 * the media pack is not enqueued on the video album route, so this view needs
+		 * its own handler. The video album screen only lists videos, so it is treated
+		 * as empty when no videos remain, even if the mixed album still holds photos.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param {Object} data       Server response data with album counts.
+		 * @param {Array}  deletedIds Deleted video ids.
+		 * @return {boolean} True when the video album view was handled.
+		 */
+		handleVideoAlbumDelete: function ( data, deletedIds ) {
+			if ( ! $( '#buddypress #bp-video-single-album' ).length || 'undefined' === typeof data.album_id || 0 >= parseInt( data.album_id, 10 ) ) {
+				return false;
+			}
+
+			var albumVideoCount = parseInt( data.album_video_count, 10 );
+			var $stream         = $( '#video-stream' );
+
+			// Stale/out-of-order response guard: the list was already replaced.
+			if ( 0 < albumVideoCount && ! $stream.find( 'ul.video-list' ).length ) {
+				return true;
+			}
+
+			if ( 0 === albumVideoCount ) {
+				$( '.bb-videos-actions' ).hide();
+				if ( data.album_empty_html && data.album_empty_html.length ) {
+					$stream.html( data.album_empty_html );
+				} else {
+					bp.Nouveau.Video.removeVideoAlbumTiles( deletedIds );
+				}
+			} else {
+				bp.Nouveau.Video.removeVideoAlbumTiles( deletedIds );
+			}
+			return true;
+		},
+
+		/**
 		 * Check if ffmpeg thumbnail generation is still in progress.
 		 * Returns true only if ffmpeg_generated has a value that is not 'no', 'yes', or empty.
 		 *
@@ -1755,6 +1817,9 @@ window.bp = window.bp || {};
 									if ( 'undefined' !== typeof bp.Nouveau.Media && 'function' === typeof bp.Nouveau.Media.handleAlbumDelete && bp.Nouveau.Media.handleAlbumDelete( response.data, video ) ) {
 										// Single-album view handled: empty-state or tile removal + counts.
 										albumHandled = true;
+									} else if ( self.handleVideoAlbumDelete( response.data, video ) ) {
+										// Standalone video album view handled: empty-state or tile removal.
+										albumHandled = true;
 									} else if ( 0 !== response.data.video_html_content.length && ! bbRlVideo.current_album ) {
 										if ( 0 === parseInt( response.data.video_personal_count ) ) {
 											$( '.bb-videos-actions' ).hide();
@@ -1838,6 +1903,9 @@ window.bp = window.bp || {};
 								// inject video.
 								if ( 'undefined' !== typeof bp.Nouveau.Media && 'function' === typeof bp.Nouveau.Media.handleAlbumDelete && bp.Nouveau.Media.handleAlbumDelete( response.data, video ) ) {
 									// Single-album view handled: empty-state or tile removal + counts.
+									albumHandled = true;
+								} else if ( self.handleVideoAlbumDelete( response.data, video ) ) {
+									// Standalone video album view handled: empty-state or tile removal.
 									albumHandled = true;
 								} else if ( 0 !== response.data.video_html_content.length && ! bbRlVideo.current_album ) {
 									if ( 0 === parseInt( response.data.video_personal_count ) ) {
@@ -2914,9 +2982,16 @@ window.bp = window.bp || {};
 				// not just the item open in the theater - clear all of its tiles and
 				// refresh the single-album empty-state from the server's counts.
 				var respData = ( data.response && data.response.data ) ? data.response.data : false;
-				if ( respData && 'undefined' !== typeof bp.Nouveau.Media && 'function' === typeof bp.Nouveau.Media.handleAlbumDelete ) {
-					var deletedIds = [].concat( respData.deleted_media_ids || [], respData.deleted_video_ids || [] );
-					bp.Nouveau.Media.handleAlbumDelete( respData, deletedIds );
+				if ( respData ) {
+					var deletedIds   = [].concat( respData.deleted_media_ids || [], respData.deleted_video_ids || [] );
+					var albumHandled = false;
+					if ( 'undefined' !== typeof bp.Nouveau.Media && 'function' === typeof bp.Nouveau.Media.handleAlbumDelete ) {
+						albumHandled = bp.Nouveau.Media.handleAlbumDelete( respData, deletedIds );
+					}
+					if ( ! albumHandled ) {
+						// The media pack is not enqueued on the standalone video album route.
+						bp.Nouveau.Video.handleVideoAlbumDelete( respData, deletedIds );
+					}
 				}
 
 				if ( 0 === $deleted_item_parent_list.find( 'li:not(.load-more)' ).length ) {

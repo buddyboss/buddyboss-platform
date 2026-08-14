@@ -339,9 +339,19 @@ function bp_nouveau_ajax_delete_activity() {
 		$attached_media_meta = bp_is_active( 'media' ) ? bp_activity_get_meta( $activity->id, 'bp_media_ids', true ) : '';
 		$attached_video_meta = bp_is_active( 'video' ) ? bp_activity_get_meta( $activity->id, 'bp_video_ids', true ) : '';
 
-		if ( '' !== (string) $attached_media_meta && class_exists( 'BP_Media' ) ) {
-			$deleted_media_ids = array_map( 'intval', array_filter( explode( ',', $attached_media_meta ) ) );
-			$activity_media    = BP_Media::get(
+		// Batch uploads attach each item to its own child activity, which carries
+		// only the bp_media_activity/bp_video_activity marker - never the plural
+		// ids meta - so the marker must also open the capture path.
+		$is_media_activity = '' !== (string) $attached_media_meta
+			|| ( bp_is_active( 'media' ) && '1' === (string) bp_activity_get_meta( $activity->id, 'bp_media_activity', true ) );
+		$is_video_activity = '' !== (string) $attached_video_meta
+			|| ( bp_is_active( 'video' ) && '1' === (string) bp_activity_get_meta( $activity->id, 'bp_video_activity', true ) );
+
+		if ( $is_media_activity && class_exists( 'BP_Media' ) ) {
+			if ( '' !== (string) $attached_media_meta ) {
+				$deleted_media_ids = array_map( 'intval', array_filter( explode( ',', $attached_media_meta ) ) );
+			}
+			$activity_media = BP_Media::get(
 				array(
 					'activity_id' => $activity->id,
 					'per_page'    => 1,
@@ -351,14 +361,21 @@ function bp_nouveau_ajax_delete_activity() {
 				$first_media          = current( $activity_media['medias'] );
 				$activity_album_id    = (int) $first_media->album_id;
 				$activity_album_group = (int) $first_media->group_id;
+
+				// A marker-only child activity owns exactly one media row.
+				if ( empty( $deleted_media_ids ) ) {
+					$deleted_media_ids = array( (int) $first_media->id );
+				}
 			}
 		}
 
 		// Photos and videos live in separate tables; a video-only activity finds
 		// no BP_Media rows, so fall back to the video table for the album context.
-		if ( '' !== (string) $attached_video_meta && class_exists( 'BP_Video' ) ) {
-			$deleted_video_ids = array_map( 'intval', array_filter( explode( ',', $attached_video_meta ) ) );
-			if ( empty( $activity_album_id ) ) {
+		if ( $is_video_activity && class_exists( 'BP_Video' ) ) {
+			if ( '' !== (string) $attached_video_meta ) {
+				$deleted_video_ids = array_map( 'intval', array_filter( explode( ',', $attached_video_meta ) ) );
+			}
+			if ( empty( $activity_album_id ) || empty( $deleted_video_ids ) ) {
 				$activity_video = BP_Video::get(
 					array(
 						'activity_id' => $activity->id,
@@ -366,9 +383,16 @@ function bp_nouveau_ajax_delete_activity() {
 					)
 				);
 				if ( ! empty( $activity_video['videos'] ) ) {
-					$first_video          = current( $activity_video['videos'] );
-					$activity_album_id    = (int) $first_video->album_id;
-					$activity_album_group = (int) $first_video->group_id;
+					$first_video = current( $activity_video['videos'] );
+					if ( empty( $activity_album_id ) ) {
+						$activity_album_id    = (int) $first_video->album_id;
+						$activity_album_group = (int) $first_video->group_id;
+					}
+
+					// A marker-only child activity owns exactly one video row.
+					if ( empty( $deleted_video_ids ) ) {
+						$deleted_video_ids = array( (int) $first_video->id );
+					}
 				}
 			}
 		}
@@ -435,14 +459,25 @@ function bp_nouveau_ajax_delete_activity() {
 	// deleted ids let the client clear every tile of a multi-item activity -
 	// the server cascade-deletes them all, not just the one open in the theater.
 	if ( ! empty( $activity_album_id ) && function_exists( 'bb_media_get_album_counts' ) ) {
-		$album_counts                    = bb_media_get_album_counts( $activity_album_id, $activity_album_group );
-		$response['album_id']            = $activity_album_id;
-		$response['album_total_count']   = (int) $album_counts['album_total_count'];
-		$response['album_media_count']   = (int) $album_counts['album_media_count'];
-		$response['album_video_count']   = (int) $album_counts['album_video_count'];
-		$response['album_empty_html']    = ( 0 === (int) $album_counts['album_total_count'] ) ? bb_nouveau_media_get_album_empty_state() : '';
-		$response['deleted_media_ids']   = $deleted_media_ids;
-		$response['deleted_video_ids']   = $deleted_video_ids;
+		$album_counts                  = bb_media_get_album_counts( $activity_album_id, $activity_album_group );
+		$response['album_id']          = $activity_album_id;
+		$response['album_total_count'] = (int) $album_counts['album_total_count'];
+		$response['album_media_count'] = (int) $album_counts['album_media_count'];
+		$response['album_video_count'] = (int) $album_counts['album_video_count'];
+		$response['deleted_media_ids'] = $deleted_media_ids;
+		$response['deleted_video_ids'] = $deleted_video_ids;
+
+		// The standalone video album screen only lists videos, so it is "empty"
+		// when no videos remain even if the mixed album still holds photos; the
+		// unified media album screen is empty only when everything is gone.
+		$response['album_empty_html'] = '';
+		if ( bp_is_single_video_album() ) {
+			if ( 0 === (int) $album_counts['album_video_count'] && function_exists( 'bb_nouveau_video_get_album_empty_state' ) ) {
+				$response['album_empty_html'] = bb_nouveau_video_get_album_empty_state();
+			}
+		} elseif ( 0 === (int) $album_counts['album_total_count'] ) {
+			$response['album_empty_html'] = bb_nouveau_media_get_album_empty_state();
+		}
 	}
 
 	wp_send_json_success( $response );
