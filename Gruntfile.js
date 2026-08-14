@@ -315,6 +315,20 @@ module.exports = function (grunt) {
 							'vendor/**/LICENSE*',
 							'!cli/features/**',
 							'!cli/bin/**',
+							// WP-CLI command docs: the markdown files (and the
+							// commands-manifest.json that indexes them) feed the
+							// developer docs site generator — nothing reads them at
+							// runtime, so the customer zip drops them.
+							'!cli/**/*.md',
+							'!cli/commands-manifest.json',
+							// CSS sourcemaps: dev artifacts that never belong in a
+							// customer zip. All three shipped maps are orphaned anyway
+							// (their parent CSS carries no sourceMappingURL comment):
+							// bp-nouveau/css/buddypress.css.map, bp-core/admin/css/
+							// hello.css.map, bp-core/admin/css/customizer-controls.css.map.
+							// The only referenced map (endpoints/assets/bootstrap.min.css.map)
+							// lives under endpoints/, which is excluded wholesale below.
+							'!**/*.map',
 							// Generated apiDoc REST documentation — dev artifact with no
 							// references from shipped PHP; not needed in the release zip
 							// (also removes the bundled Bootstrap glyphicons font copies).
