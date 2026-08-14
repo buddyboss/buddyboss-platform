@@ -268,6 +268,51 @@ window.bp = window.bp || {};
 			}
 		},
 
+		removeAlbumTiles: function ( ids ) {
+			if ( ! ids || ! ids.length ) {
+				return;
+			}
+			$.each(
+				ids,
+				function ( index, value ) {
+					var $albumItem = $( '#media-stream ul.media-list li[data-id="' + value + '"]' );
+					if ( $albumItem.length ) {
+						$albumItem.remove();
+					}
+				}
+			);
+		},
+
+		handleAlbumDelete: function ( data, deletedIds ) {
+			if ( ! $( '#buddypress #bp-media-single-album' ).length || 'undefined' === typeof data.album_id || 0 >= parseInt( data.album_id, 10 ) ) {
+				return false;
+			}
+
+			var albumTotal = parseInt( data.album_total_count, 10 );
+			var $stream    = $( '#media-stream' );
+
+			// A stale out-of-order response (rapid double delete) must not overwrite
+			// an already-rendered empty state with older, non-zero counts.
+			if ( 0 < albumTotal && ! $stream.find( 'ul.media-list' ).length ) {
+				return true;
+			}
+
+			if ( 0 === albumTotal ) {
+				$( '.bb-photos-actions, .bb-videos-actions' ).hide();
+				if ( data.album_empty_html && data.album_empty_html.length ) {
+					$stream.html( data.album_empty_html );
+				} else {
+					// Album is empty but no markup returned - clear the deleted tiles.
+					this.removeAlbumTiles( deletedIds );
+				}
+			} else {
+				this.removeAlbumTiles( deletedIds );
+			}
+
+			this.updateAlbumCounts( data );
+			return true;
+		},
+
 		/**
 		 * [addListeners description]
 		 */
@@ -995,38 +1040,8 @@ window.bp = window.bp || {};
 										}
 									}
 
-									if ( $( '#buddypress #bp-media-single-album' ).length && 'undefined' !== typeof response.data.album_id && 0 < parseInt( response.data.album_id ) ) {
-										// Single album view: keep the grid album-scoped so the empty-state
-										// message shows when the album is emptied, and unrelated scope media
-										// never replaces the album grid.
-										if ( 0 === parseInt( response.data.album_total_count ) ) {
-											$( '.bb-photos-actions' ).hide();
-											if ( response.data.album_empty_html && response.data.album_empty_html.length ) {
-												$( '#media-stream' ).html( response.data.album_empty_html );
-											} else {
-												// Fallback: album is empty but no markup returned — clear the deleted tiles.
-												$.each(
-													media,
-													function ( index, value ) {
-														var $albumItem = $( '#media-stream ul.media-list li[data-id="' + value + '"]' );
-														if ( $albumItem.length ) {
-															$albumItem.remove();
-														}
-													}
-												);
-											}
-										} else {
-											$.each(
-												media,
-												function ( index, value ) {
-													var $albumItem = $( '#media-stream ul.media-list li[data-id="' + value + '"]' );
-													if ( $albumItem.length ) {
-														$albumItem.remove();
-													}
-												}
-											);
-										}
-										self.updateAlbumCounts( response.data );
+									if ( self.handleAlbumDelete( response.data, media ) ) {
+										// Single-album view handled: empty-state or tile removal + counts.
 									} else if ( 0 !== response.data.media_html_content.length ) {
 										if ( 0 === parseInt( response.data.media_personal_count ) ) {
 											$( '.bb-photos-actions' ).hide();
@@ -1052,11 +1067,6 @@ window.bp = window.bp || {};
 											}
 										);
 									}
-
-									// Update album counts if deleting from an album.
-									if ( response.data.album_total_count !== undefined ) {
-										self.updateAlbumCounts( response.data );
-										}
 								}
 							}
 						} else {
@@ -1116,38 +1126,8 @@ window.bp = window.bp || {};
 								}
 
 								// inject media.
-								if ( $( '#buddypress #bp-media-single-album' ).length && 'undefined' !== typeof response.data.album_id && 0 < parseInt( response.data.album_id ) ) {
-									// Single album view: keep the grid album-scoped so the empty-state
-									// message shows when the album is emptied, and unrelated scope media
-									// never replaces the album grid.
-									if ( 0 === parseInt( response.data.album_total_count ) ) {
-										$( '.bb-photos-actions' ).hide();
-										if ( response.data.album_empty_html && response.data.album_empty_html.length ) {
-											$( '#media-stream' ).html( response.data.album_empty_html );
-										} else {
-											// Fallback: album is empty but no markup returned — clear the deleted tiles.
-											$.each(
-												media,
-												function ( index, value ) {
-													var $albumItem = $( '#media-stream ul.media-list li[data-id="' + value + '"]' );
-													if ( $albumItem.length ) {
-														$albumItem.remove();
-													}
-												}
-											);
-										}
-									} else {
-										$.each(
-											media,
-											function ( index, value ) {
-												var $albumItem = $( '#media-stream ul.media-list li[data-id="' + value + '"]' );
-												if ( $albumItem.length ) {
-													$albumItem.remove();
-												}
-											}
-										);
-									}
-									self.updateAlbumCounts( response.data );
+								if ( self.handleAlbumDelete( response.data, media ) ) {
+									// Single-album view handled: empty-state or tile removal + counts.
 								} else if ( 0 !== response.data.media_html_content.length ) {
 									if ( 0 === parseInt( response.data.media_personal_count ) ) {
 										$( '.bb-photos-actions' ).hide();
@@ -7962,30 +7942,21 @@ window.bp = window.bp || {};
 
 				$deleted_item.closest( 'li' ).remove();
 
+				// The server cascade-deletes every media/video attached to the activity,
+				// not just the item open in the theater - clear all of its tiles and
+				// refresh the single-album empty-state from the server's counts.
+				var respData = ( data.response && data.response.data ) ? data.response.data : false;
+				if ( respData && 'undefined' !== typeof bp.Nouveau.Media && 'function' === typeof bp.Nouveau.Media.handleAlbumDelete ) {
+					var deletedIds = [].concat( respData.deleted_media_ids || [], respData.deleted_video_ids || [] );
+					bp.Nouveau.Media.handleAlbumDelete( respData, deletedIds );
+				}
+
 				if ( 0 === $deleted_item_parent_list.find( 'li:not(.load-more)' ).length ) {
 
 					// No item.
 					var $photosActions = $( '.bb-photos-actions' );
 					if ( $photosActions.length > 0 ) {
 						$photosActions.hide();
-					}
-
-					// On the single-album view, render the album empty-state returned by
-					// the delete-activity response so the "no photos/videos" message shows
-					// (this delete path does not go through the media delete handler).
-					if (
-						typeof data !== 'undefined' && data.response && data.response.data &&
-						$( '#buddypress #bp-media-single-album' ).length &&
-						'undefined' !== typeof data.response.data.album_id &&
-						0 < parseInt( data.response.data.album_id ) &&
-						0 === parseInt( data.response.data.album_total_count )
-					) {
-						if ( data.response.data.album_empty_html && data.response.data.album_empty_html.length ) {
-							$( '#media-stream' ).html( data.response.data.album_empty_html );
-						}
-						if ( 'undefined' !== typeof bp.Nouveau.Media && 'function' === typeof bp.Nouveau.Media.updateAlbumCounts ) {
-							bp.Nouveau.Media.updateAlbumCounts( data.response.data );
-						}
 					}
 
 					if ( 1 === $deleted_item_parent_list.find( 'li.load-more' ).length ) {
