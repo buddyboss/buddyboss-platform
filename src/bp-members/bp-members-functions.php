@@ -3487,17 +3487,38 @@ function bb_get_member_types_by_visibility_setting( $meta_key, $cache_key ) {
  */
 function bb_get_member_types_for_directory_filter( $exclude_removed = true ) {
 	$member_types = array();
+	$seen_sources = array();
 
 	foreach ( (array) bp_get_active_member_types() as $member_type_id ) {
-		if ( empty( bb_get_member_type_visibility_setting( $member_type_id, '_bp_member_type_enable_filter' ) ) ) {
+		$source_id = bb_get_member_type_source_post_id( $member_type_id );
+
+		// One entry per profile type, however many translations the query returns.
+		if ( isset( $seen_sources[ $source_id ] ) ) {
+			continue;
+		}
+		$seen_sources[ $source_id ] = true;
+
+		/*
+		 * Both settings are evaluated through the source post, which the
+		 * resolver maps to the current language's translation (falling back
+		 * to the source language). Evaluating the returned post directly
+		 * would apply one translation's settings to every language.
+		 */
+		if ( empty( bb_get_member_type_visibility_setting( $source_id, '_bp_member_type_enable_filter' ) ) ) {
 			continue;
 		}
 
-		if ( $exclude_removed && ! empty( bb_get_member_type_visibility_setting( $member_type_id, '_bp_member_type_enable_remove' ) ) ) {
+		if ( $exclude_removed && ! empty( bb_get_member_type_visibility_setting( $source_id, '_bp_member_type_enable_remove' ) ) ) {
 			continue;
 		}
 
-		$member_types[] = (int) $member_type_id;
+		/*
+		 * Emit the current language's post so the template renders the current
+		 * language's label. The option value round-trips through
+		 * bp_get_member_type_key(), which resolves any translation back to the
+		 * canonical key, so whichever post is emitted filters the same members.
+		 */
+		$member_types[] = (int) bb_get_member_type_localized_post_id( $source_id );
 	}
 
 	/**
