@@ -211,7 +211,9 @@ class BB_Admin_Member_Types_Ajax {
 				continue;
 			}
 
-			$type_key    = get_post_meta( $post_id, '_bp_member_type_key', true );
+			// Canonical key — resolves WPML-translated posts to their original
+			// so the taxonomy term count lookup below matches assigned members.
+			$type_key    = bp_get_member_type_key( $post_id );
 			$label_color = get_post_meta( $post_id, '_bp_member_type_label_color', true );
 
 			// Normalize label_color to array.
@@ -260,9 +262,13 @@ class BB_Admin_Member_Types_Ajax {
 				'singular_label'                     => get_post_meta( $post_id, '_bp_member_type_label_singular_name', true ),
 				'plural_label'                       => get_post_meta( $post_id, '_bp_member_type_label_name', true ),
 				'members_count'                      => isset( $member_counts[ $type_key ] ) ? (int) $member_counts[ $type_key ] : 0,
-				'enable_filter'                      => absint( get_post_meta( $post_id, '_bp_member_type_enable_filter', true ) ),
-				'enable_remove'                      => absint( get_post_meta( $post_id, '_bp_member_type_enable_remove', true ) ),
-				'enable_search_remove'               => absint( get_post_meta( $post_id, '_bp_member_type_enable_search_remove', true ) ),
+				// Read through the visibility resolver, not raw meta, so a translation
+				// that has not stored its own value shows the value it inherits. Raw
+				// meta would show an unchecked box while the directory applied the
+				// inherited "checked", and the next save would persist that mismatch.
+				'enable_filter'                      => absint( bb_get_member_type_visibility_setting( $post_id, '_bp_member_type_enable_filter' ) ),
+				'enable_remove'                      => absint( bb_get_member_type_visibility_setting( $post_id, '_bp_member_type_enable_remove' ) ),
+				'enable_search_remove'               => absint( bb_get_member_type_visibility_setting( $post_id, '_bp_member_type_enable_search_remove' ) ),
 				'enable_profile_field'               => absint( get_post_meta( $post_id, '_bp_member_type_enable_profile_field', true ) ),
 				'group_type_create'                  => array_map( 'sanitize_text_field', $group_type_create ),
 				'group_type_auto_join'               => array_map( 'sanitize_text_field', $group_type_auto_join ),
@@ -354,7 +360,7 @@ class BB_Admin_Member_Types_Ajax {
 			$out[] = array(
 				'id'           => (int) $p->ID,
 				'post_title'   => $p->post_title,
-				'key'          => (string) get_post_meta( $p->ID, '_bp_member_type_key', true ),
+				'key'          => (string) bp_get_member_type_key( $p->ID ),
 				'plural_label' => (string) get_post_meta( $p->ID, '_bp_member_type_label_name', true ),
 			);
 		}
@@ -763,7 +769,7 @@ class BB_Admin_Member_Types_Ajax {
 		// Update messaging-without-connection option only when submitted.
 		// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce verified above.
 		if ( isset( $_POST['allow_messaging_without_connection'] ) ) {
-			$type_key_for_option             = get_post_meta( $post_id, '_bp_member_type_key', true );
+			$type_key_for_option             = bp_get_member_type_key( $post_id );
 			$profile_types_allowed_messaging = get_option( 'bp_member_types_allowed_messaging_without_connection', array() );
 			if ( ! is_array( $profile_types_allowed_messaging ) ) {
 				$profile_types_allowed_messaging = array();
@@ -943,7 +949,7 @@ class BB_Admin_Member_Types_Ajax {
 		wp_cache_delete( 'bb-member-type-label-css', 'bp_member_member_type' );
 		wp_cache_delete( 'bb_admin_member_type_counts', 'bp_member_type' ); // Clear taxonomy counts cache.
 
-		$type_key = get_post_meta( $post_id, '_bp_member_type_key', true );
+		$type_key = bp_get_member_type_key( $post_id );
 		if ( ! empty( $type_key ) ) {
 			wp_cache_delete( 'bb-member-type-label-color-' . $type_key, 'bp_member_member_type' );
 		}

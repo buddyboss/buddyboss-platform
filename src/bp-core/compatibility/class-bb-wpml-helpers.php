@@ -88,6 +88,19 @@ if ( ! class_exists( 'BB_WPML_Helpers' ) ) {
 
 			// Handle WPML language switch action from wpml(eg classic editor meta box).
 			add_action( 'wp_ajax_wpml_switch_post_language', array( $this, 'bb_handle_wpml_switch_post_language' ), 9 );
+
+			/*
+			 * Profile types under WPML.
+			 *
+			 * Identity is shared: every language points at the same
+			 * `bp_member_type` taxonomy term, which only the source post's key
+			 * matches. Visibility settings are not shared: each translation owns
+			 * its own "hide from Members Directory" / "hide from search" /
+			 * "show in the Type filter" values.
+			 */
+			add_filter( 'bb_member_type_source_post_id', array( $this, 'bb_wpml_source_member_type_post_id' ) );
+			add_filter( 'bb_member_type_localized_post_id', array( $this, 'bb_wpml_localized_member_type_post_id' ) );
+			add_filter( 'bb_member_type_query_cache_context', array( $this, 'bb_wpml_member_type_query_cache_context' ) );
 		}
 
 		/**
@@ -585,7 +598,6 @@ if ( ! class_exists( 'BB_WPML_Helpers' ) ) {
 			delete_transient( 'bb_wpml_posted_icl_post_language_' . $post_id );
 		}
 
-
 		/**
 		 * Ajax handler for switching the language of a post in WPML
 		 *
@@ -663,6 +675,179 @@ if ( ! class_exists( 'BB_WPML_Helpers' ) ) {
 				delete_transient( 'bb_wpml_original_old_db_language_' . $post_id );
 				delete_transient( 'bb_wpml_posted_icl_post_language_' . $post_id );
 			}
+		}
+
+		/**
+		 * Resolve a translated profile type post ID to its original (source language) post ID.
+		 *
+		 * WPML stores each translation of a `bp-member-type` post as a separate post.
+		 * The `bp_member_type` taxonomy terms assigned to users are always created
+		 * from the original post's key, so any key lookup made against a translated
+		 * post must be redirected to the original post. Runs on the
+		 * `bb_member_type_source_post_id` filter.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param int $post_id Profile type post ID (possibly a translation).
+		 *
+		 * @return int Original profile type post ID, or the given ID when no
+		 *             translation group exists or the original cannot be resolved.
+		 */
+		public function bb_wpml_source_member_type_post_id( $post_id ) {
+			static $resolved = array();
+
+			$post_id = (int) $post_id;
+
+			if ( empty( $post_id ) ) {
+				return $post_id;
+			}
+
+			if ( isset( $resolved[ $post_id ] ) ) {
+				return $resolved[ $post_id ];
+			}
+
+			// Resolved to itself unless a source is found below.
+			$resolved[ $post_id ] = $post_id;
+
+			foreach ( $this->bb_wpml_member_type_translations( $post_id ) as $translation ) {
+				if ( ! empty( $translation->original ) && ! empty( $translation->element_id ) ) {
+					$resolved[ $post_id ] = (int) $translation->element_id;
+
+					break;
+				}
+			}
+
+			// No source found (e.g. the source post was deleted) — falls back to itself.
+			return $resolved[ $post_id ];
+		}
+
+		/**
+		 * Get the WPML translation group for a profile type post.
+		 *
+		 * Reads `wp_icl_translations` through WPML's own API. Deliberately not
+		 * `wpml_object_id`: that helper is gated on `is_post_type_translated()`
+		 * and on the post type being present in `$wp_post_types` at call time,
+		 * and it returns the *input* ID when either check fails — which is
+		 * indistinguishable from "this is the right post for this language".
+		 * The translation group is available regardless of both.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param int $post_id Profile type post ID, in any language.
+		 *
+		 * @return array Translation objects keyed by language code. Empty when
+		 *               WPML does not manage the post.
+		 */
+		private function bb_wpml_member_type_translations( $post_id ) {
+			static $groups = array();
+
+			$post_id = (int) $post_id;
+
+			if ( empty( $post_id ) || ! function_exists( 'bp_get_member_type_post_type' ) ) {
+				return array();
+			}
+
+			if ( isset( $groups[ $post_id ] ) ) {
+				return $groups[ $post_id ];
+			}
+
+			$groups[ $post_id ] = array();
+
+			$element_type = 'post_' . bp_get_member_type_post_type();
+
+			// Translation group ID for this post. Null when WPML does not manage it.
+			$trid = apply_filters( 'wpml_element_trid', null, $post_id, $element_type );
+
+			if ( empty( $trid ) ) {
+				return $groups[ $post_id ];
+			}
+
+			$translations = apply_filters( 'wpml_get_element_translations', null, $trid, $element_type );
+
+			if ( ! empty( $translations ) && is_array( $translations ) ) {
+				$groups[ $post_id ] = $translations;
+
+				// Every post in the group shares the same translations, so seed
+				// them all and keep this to one lookup per group per request.
+				foreach ( $translations as $translation ) {
+					if ( ! empty( $translation->element_id ) ) {
+						$groups[ (int) $translation->element_id ] = $translations;
+					}
+				}
+			}
+
+			return $groups[ $post_id ];
+		}
+
+		/**
+		 * Resolve a profile type post ID to the translation for the current language.
+		 *
+		 * Each translation of a profile type carries its own visibility settings,
+		 * so the Members Directory has to read them from the post belonging to the
+		 * language being viewed. Runs on the `bb_member_type_localized_post_id`
+		 * filter.
+		 *
+		 * The given post ID is returned when the current language has no
+		 * translation, so the caller can apply its own source-language fallback.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param int $post_id Profile type post ID (usually the source post).
+		 *
+		 * @return int Profile type post ID for the current language, or the given
+		 *             ID when the current language has no translation.
+		 */
+		public function bb_wpml_localized_member_type_post_id( $post_id ) {
+			static $resolved = array();
+
+			$post_id = (int) $post_id;
+
+			if ( empty( $post_id ) ) {
+				return $post_id;
+			}
+
+			$language = apply_filters( 'wpml_current_language', null );
+
+			if ( empty( $language ) ) {
+				return $post_id;
+			}
+
+			$cache_id = $language . ':' . $post_id;
+
+			if ( isset( $resolved[ $cache_id ] ) ) {
+				return $resolved[ $cache_id ];
+			}
+
+			// Resolved to itself unless this language has a translation.
+			$resolved[ $cache_id ] = $post_id;
+
+			$translations = $this->bb_wpml_member_type_translations( $post_id );
+
+			if ( ! empty( $translations[ $language ]->element_id ) ) {
+				$resolved[ $cache_id ] = (int) $translations[ $language ]->element_id;
+			}
+
+			return $resolved[ $cache_id ];
+		}
+
+		/**
+		 * Scope profile type visibility results by the current WPML language.
+		 *
+		 * Visibility settings (hide from Members Directory / hide from search) are
+		 * stored per translation, and WPML filters the underlying WP_Query to the
+		 * current language, so cached results must not leak across languages.
+		 * Runs on the `bb_member_type_query_cache_context` filter.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param string $context Default cache context.
+		 *
+		 * @return string Current language code, or the given context when unknown.
+		 */
+		public function bb_wpml_member_type_query_cache_context( $context ) {
+			$current_language = apply_filters( 'wpml_current_language', null );
+
+			return ! empty( $current_language ) ? $current_language : $context;
 		}
 	}
 

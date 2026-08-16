@@ -3195,6 +3195,11 @@ function bp_get_member_type_key( $post_id ) {
 		return '';
 	}
 
+	// The key is an identity, not a translation. It must always resolve against
+	// the source post so that it keeps matching the `bp_member_type` taxonomy
+	// term assigned to users, whichever language the request runs in.
+	$post_id = bb_get_member_type_source_post_id( $post_id );
+
 	$key = get_post_meta( $post_id, '_bp_member_type_key', true );
 
 	// Fallback to legacy way of generating profile type key from singular label
@@ -3210,7 +3215,322 @@ function bp_get_member_type_key( $post_id ) {
 		update_post_meta( $post_id, '_bp_member_type_key', sanitize_key( $key ) );
 	}
 
-	return apply_filters( 'bp_get_member_type_key', $key );
+	/**
+	 * Filters the profile type key.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 * @since BuddyBoss [BBVERSION] Added the `$post_id` parameter.
+	 *
+	 * @param string $key     Profile type key.
+	 * @param int    $post_id Profile type post ID the key was resolved from.
+	 */
+	return apply_filters( 'bp_get_member_type_key', $key, $post_id );
+}
+
+/**
+ * Resolve a profile type post ID to the post that owns the type's identity.
+ *
+ * A profile type has one identity — the `_bp_member_type_key` matching the
+ * `bp_member_type` term assigned to users. Multilingual plugins store each
+ * language as a separate post, but only the source post carries that identity,
+ * so anything answering "which users are of this type?" resolves through here.
+ *
+ * Without a multilingual plugin a post is its own source, so this is a no-op.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int $post_id Profile type post ID, in any language.
+ *
+ * @return int Source profile type post ID.
+ */
+function bb_get_member_type_source_post_id( $post_id ) {
+	$post_id = (int) $post_id;
+
+	if ( empty( $post_id ) ) {
+		return 0;
+	}
+
+	/**
+	 * Filters the source profile type post ID for a given profile type post.
+	 *
+	 * Multilingual compatibility layers map a translated post ID back to the
+	 * post it was translated from. Implementations must return the given
+	 * `$post_id` unchanged when no mapping exists.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param int $post_id Profile type post ID, in any language.
+	 */
+	$source_id = (int) apply_filters( 'bb_member_type_source_post_id', $post_id );
+
+	return $source_id > 0 ? $source_id : $post_id;
+}
+
+/**
+ * Resolve a profile type post ID to the post holding the current language's settings.
+ *
+ * The counterpart of {@see bb_get_member_type_source_post_id()}. Identity is
+ * shared across languages; visibility settings are not. Each translation has its
+ * own "hide from Members Directory", "hide from search" and "show in the Type
+ * filter" controls, and the directory must honour the values belonging to the
+ * language being viewed.
+ *
+ * Without a multilingual plugin a post is its own localised post, so this is a
+ * no-op.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int $post_id Profile type post ID, in any language.
+ *
+ * @return int Profile type post ID for the current language. Falls back to the
+ *             given post ID when the current language has no translation.
+ */
+function bb_get_member_type_localized_post_id( $post_id ) {
+	$post_id = (int) $post_id;
+
+	if ( empty( $post_id ) ) {
+		return 0;
+	}
+
+	/**
+	 * Filters the profile type post ID that holds the current language's settings.
+	 *
+	 * Implementations must return the given `$post_id` unchanged when the
+	 * current language has no translation of the profile type, so that callers
+	 * fall back to the source language.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param int $post_id Profile type post ID, in any language.
+	 */
+	$localized_id = (int) apply_filters( 'bb_member_type_localized_post_id', $post_id );
+
+	return $localized_id > 0 ? $localized_id : $post_id;
+}
+
+/**
+ * Get a per-language profile type visibility setting.
+ *
+ * Single read path for the settings controlling where a profile type's members
+ * are shown. The value comes from the profile type post belonging to the current
+ * language; when that post has never stored the setting — a translation created
+ * outside the Profile Types screen, or a language with no translation at all —
+ * the source language's value is inherited.
+ *
+ * `metadata_exists()` rather than `empty()` decides whether a post owns a value,
+ * so an explicitly unchecked box (stored as `0`) is honoured instead of falling
+ * back to the source language.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int    $post_id  Profile type post ID. Pass the source post to read the
+ *                         value applying in the current language, or a specific
+ *                         translation to read that translation's own value.
+ * @param string $meta_key Profile type meta key, e.g. `_bp_member_type_enable_remove`.
+ * @param mixed  $default  Value returned when neither the resolved post nor the
+ *                         source post stores the setting. Default ''.
+ *
+ * @return mixed Setting value.
+ */
+function bb_get_member_type_visibility_setting( $post_id, $meta_key, $default = '' ) {
+	$post_id = (int) $post_id;
+
+	if ( empty( $post_id ) || empty( $meta_key ) ) {
+		return $default;
+	}
+
+	$source_id = bb_get_member_type_source_post_id( $post_id );
+
+	/*
+	 * A caller holding the source post is asking "what applies right now?", so
+	 * the current language's post answers. A caller holding a specific
+	 * translation — the Profile Types screen editing one language — is asking
+	 * about that translation, and has to get back the value it will also write.
+	 */
+	$localized_id = $post_id === $source_id ? bb_get_member_type_localized_post_id( $source_id ) : $post_id;
+
+	if ( metadata_exists( 'post', $localized_id, $meta_key ) ) {
+		$value = get_post_meta( $localized_id, $meta_key, true );
+	} elseif ( metadata_exists( 'post', $source_id, $meta_key ) ) {
+		// Inherit the source language until the translation stores its own value.
+		$value = get_post_meta( $source_id, $meta_key, true );
+	} else {
+		$value = $default;
+	}
+
+	/**
+	 * Filters a per-language profile type visibility setting.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param mixed  $value        Setting value.
+	 * @param string $meta_key     Profile type meta key.
+	 * @param int    $localized_id Profile type post ID the value was read from.
+	 * @param int    $source_id    Source profile type post ID.
+	 */
+	return apply_filters( 'bb_get_member_type_visibility_setting', $value, $meta_key, $localized_id, $source_id );
+}
+
+/**
+ * Get every profile type's source post ID, across all languages.
+ *
+ * Visibility is decided per profile type, not per translation, so the candidate
+ * list has to be language agnostic: a profile type hidden in the source language
+ * must still be considered while browsing a language it has no translation for.
+ *
+ * `suppress_filters` opts out of the language JOIN/WHERE that multilingual
+ * plugins add on `posts_join` / `posts_where`. WP_Query only skips the `posts_*`
+ * filters; `pre_get_posts`, the `bp_get_active_member_types` filter and the
+ * per-request cache all still apply.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return int[] Source profile type post IDs, de-duplicated.
+ */
+function bb_get_member_type_source_post_ids() {
+	$post_ids = (array) bp_get_active_member_types( array( 'suppress_filters' => true ) );
+
+	return array_values( array_unique( array_map( 'bb_get_member_type_source_post_id', $post_ids ) ) );
+}
+
+/**
+ * Get the profile types hidden by a given visibility setting in the current language.
+ *
+ * Shared implementation behind {@see bp_get_removed_member_types()} and
+ * {@see bp_get_hidden_member_types()}. Every profile type is evaluated against
+ * the current language's setting and reported by its canonical key, so the
+ * resulting exclusion matches the taxonomy term actually assigned to users.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $meta_key  Profile type meta key holding the visibility setting.
+ * @param string $cache_key Object cache key, in the `bp_member_member_type` group.
+ *
+ * @return array[] List of arrays with `ID` (the profile type post for the current
+ *                 language) and `name` (the canonical profile type key).
+ */
+function bb_get_member_types_by_visibility_setting( $meta_key, $cache_key ) {
+	$member_types = array();
+
+	if ( empty( $meta_key ) || empty( $cache_key ) ) {
+		return $member_types;
+	}
+
+	$context = bb_member_type_query_cache_context();
+	$cached  = wp_cache_get( $cache_key, 'bp_member_member_type' );
+
+	/*
+	 * Both cache keys previously held a WP_Query. The inner is_array() check
+	 * discards an entry left in a persistent object cache by an older version
+	 * instead of returning it to callers that expect a list of arrays.
+	 */
+	if ( is_array( $cached ) && isset( $cached[ $context ] ) && is_array( $cached[ $context ] ) ) {
+		return $cached[ $context ];
+	}
+
+	$source_ids    = bb_get_member_type_source_post_ids();
+	$localized_ids = array();
+
+	foreach ( $source_ids as $source_id ) {
+		$localized_ids[ $source_id ] = bb_get_member_type_localized_post_id( $source_id );
+	}
+
+	if ( ! empty( $source_ids ) ) {
+		/*
+		 * One meta round-trip for the whole set instead of one per profile type.
+		 * Both sides are primed: the value is read from the current language's
+		 * post and falls back to the source post when that has none.
+		 */
+		update_postmeta_cache( array_values( array_unique( array_merge( $source_ids, $localized_ids ) ) ) );
+	}
+
+	foreach ( $source_ids as $source_id ) {
+		if ( empty( bb_get_member_type_visibility_setting( $source_id, $meta_key ) ) ) {
+			continue;
+		}
+
+		$type_key = bp_get_member_type_key( $source_id );
+
+		if ( empty( $type_key ) ) {
+			continue;
+		}
+
+		$member_types[] = array(
+			'ID'   => $localized_ids[ $source_id ],
+			'name' => $type_key,
+		);
+	}
+
+	if ( ! is_array( $cached ) ) {
+		$cached = array();
+	}
+
+	$cached[ $context ] = $member_types;
+	wp_cache_set( $cache_key, $cached, 'bp_member_member_type' );
+
+	return $member_types;
+}
+
+/**
+ * Get the profile types to offer in the Members Directory "Type" filter.
+ *
+ * Both "show in the Type filter" and "hide from Members Directory" are resolved
+ * for the current language, so a translated profile type is offered according to
+ * its own settings.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param bool $exclude_removed Whether to drop profile types hidden from the
+ *                              Members Directory. Default true.
+ *
+ * @return int[] Profile type post IDs, in the current language where available.
+ */
+function bb_get_member_types_for_directory_filter( $exclude_removed = true ) {
+	$member_types = array();
+	$seen_sources = array();
+
+	foreach ( (array) bp_get_active_member_types() as $member_type_id ) {
+		$source_id = bb_get_member_type_source_post_id( $member_type_id );
+
+		// One entry per profile type, however many translations the query returns.
+		if ( isset( $seen_sources[ $source_id ] ) ) {
+			continue;
+		}
+		$seen_sources[ $source_id ] = true;
+
+		/*
+		 * Both settings are evaluated through the source post, which the
+		 * resolver maps to the current language's translation (falling back
+		 * to the source language). Evaluating the returned post directly
+		 * would apply one translation's settings to every language.
+		 */
+		if ( empty( bb_get_member_type_visibility_setting( $source_id, '_bp_member_type_enable_filter' ) ) ) {
+			continue;
+		}
+
+		if ( $exclude_removed && ! empty( bb_get_member_type_visibility_setting( $source_id, '_bp_member_type_enable_remove' ) ) ) {
+			continue;
+		}
+
+		/*
+		 * Emit the current language's post so the template renders the current
+		 * language's label. The option value round-trips through
+		 * bp_get_member_type_key(), which resolves any translation back to the
+		 * canonical key, so whichever post is emitted filters the same members.
+		 */
+		$member_types[] = (int) bb_get_member_type_localized_post_id( $source_id );
+	}
+
+	/**
+	 * Filters the profile types offered in the Members Directory "Type" filter.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param int[] $member_types    Profile type post IDs.
+	 * @param bool  $exclude_removed Whether profile types hidden from the
+	 *                               Members Directory were dropped.
+	 */
+	return apply_filters( 'bb_get_member_types_for_directory_filter', $member_types, $exclude_removed );
 }
 
 /**
@@ -3484,7 +3804,18 @@ function bp_get_active_member_types( $args = array() ) {
 	}
 	wp_reset_postdata();
 
-	$bp_active_member_types = apply_filters( 'bp_get_active_member_types', $bp_active_member_types );
+	/**
+	 * Filters the active profile types.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 * @since BuddyBoss [BBVERSION] Added the `$args` parameter, so callbacks can
+	 *                              tell apart the language-agnostic enumeration
+	 *                              used by profile type visibility.
+	 *
+	 * @param int[] $bp_active_member_types Profile type post IDs.
+	 * @param array $args                   Parsed WP_Query arguments.
+	 */
+	$bp_active_member_types = apply_filters( 'bp_get_active_member_types', $bp_active_member_types, $args );
 	$cache[ $cache_key ]    = $bp_active_member_types;
 
 	return $bp_active_member_types;
@@ -3493,46 +3824,17 @@ function bp_get_active_member_types( $args = array() ) {
 /**
  * Removed profile type.
  *
- * @since BuddyBoss 1.0.0
+ * Profile types whose members are hidden from the Members Directory in the
+ * language currently being viewed.
  *
- * @return array
+ * @since BuddyBoss 1.0.0
+ * @since BuddyBoss [BBVERSION] Evaluated per language and reported by canonical
+ *                              profile type key.
+ *
+ * @return array[] List of arrays with `ID` and `name` (canonical profile type key).
  */
 function bp_get_removed_member_types() {
-	$bp_member_type_ids  = array();
-	$post_type           = bp_get_member_type_post_type();
-	$bp_member_type_args = array(
-		'post_type'  => $post_type,
-		'meta_query' => array(
-			array(
-				'key'     => '_bp_member_type_enable_remove',
-				'value'   => 1,
-				'compare' => '=',
-			),
-		),
-		'nopaging'   => true,
-	);
-
-	$bp_member_type_query = wp_cache_get( 'bp_get_removed_member_types', 'bp_member_member_type' );
-
-	if ( false === $bp_member_type_query ) {
-		$bp_member_type_query = new WP_Query( $bp_member_type_args );
-		wp_cache_set( 'bp_get_removed_member_types', $bp_member_type_query, 'bp_member_member_type' );
-	}
-	if ( $bp_member_type_query->have_posts() ) :
-		while ( $bp_member_type_query->have_posts() ) :
-			$bp_member_type_query->the_post();
-
-			$post_id              = get_the_ID();
-			$name                 = bp_get_member_type_key( $post_id );
-			$bp_member_type_ids[] = array(
-				'ID'   => $post_id,
-				'name' => $name,
-			);
-		endwhile;
-	endif;
-	wp_reset_query();
-	wp_reset_postdata();
-	return $bp_member_type_ids;
+	return bb_get_member_types_by_visibility_setting( '_bp_member_type_enable_remove', 'bp_get_removed_member_types' );
 }
 
 /**
@@ -3575,7 +3877,27 @@ function bp_get_users_of_removed_member_types() {
  * @since BuddyBoss 1.0.0
  */
 function bp_register_active_member_types() {
-	$member_type_ids = bp_get_active_member_types();
+	$member_type_ids = (array) bp_get_active_member_types();
+
+	/*
+	 * Profile types with no post in the current language still have to be
+	 * registered. Their members carry the taxonomy term whatever language the
+	 * site is viewed in, and an unregistered type is silently dropped from
+	 * member_type queries — including the exclusion that hides its members from
+	 * the Members Directory. See BP_User_Query::get_sql_clause_for_member_types().
+	 *
+	 * Skipped entirely without a multilingual plugin, where every post is its own
+	 * source and the loop can never find anything to add.
+	 */
+	if ( has_filter( 'bb_member_type_source_post_id' ) ) {
+		$covered = array_map( 'bb_get_member_type_source_post_id', $member_type_ids );
+
+		foreach ( bb_get_member_type_source_post_ids() as $source_id ) {
+			if ( ! in_array( $source_id, $covered, true ) ) {
+				$member_type_ids[] = $source_id;
+			}
+		}
+	}
 
 	if ( ! empty( $member_type_ids ) ) {
 
@@ -3627,7 +3949,7 @@ function bp_member_type_directory() {
 
 	foreach ( $member_types as $member_type_id ) {
 
-		if ( ! get_post_meta( $member_type_id, '_bp_member_type_enable_filter', true ) ) {
+		if ( empty( bb_get_member_type_visibility_setting( $member_type_id, '_bp_member_type_enable_filter' ) ) ) {
 			continue;
 		}
 
@@ -4648,39 +4970,33 @@ function bb_get_member_roles( $user_id = 0 ) {
 /**
  * Function to get the hidden profile type.
  *
- * @since BuddyBoss 1.7.9
+ * Profile types whose members are hidden from search in the language currently
+ * being viewed.
  *
- * @return array|false
+ * @since BuddyBoss 1.7.9
+ * @since BuddyBoss [BBVERSION] Evaluated per language and returned as canonical
+ *                              profile type keys. Always returns an array.
+ *
+ * @return string[] Canonical profile type keys.
  */
 function bp_get_hidden_member_types() {
-	$args = array(
-		'posts_per_page' => - 1,
-		'post_type'      => bp_get_member_type_post_type(),
-		'meta_query'     => array(
-			array(
-				'key'     => '_bp_member_type_enable_search_remove',
-				'value'   => 1,
-				'compare' => '=',
-			),
-		),
-		'nopaging'       => true,
+	$hidden_member_types = wp_list_pluck(
+		bb_get_member_types_by_visibility_setting( '_bp_member_type_enable_search_remove', 'bp_get_hidden_member_types_cache' ),
+		'name'
 	);
 
-	$cache_key            = 'bp_get_hidden_member_types_cache';
-	$hidden_profile_types = wp_cache_get( $cache_key, 'bp_member_type' );
-	if ( false === $hidden_profile_types ) {
-		$hidden_profile_types = new WP_Query( $args );
-		wp_cache_set( $cache_key, $hidden_profile_types, 'bp_member_type' );
-	}
+	$hidden_member_types = array_values( array_unique( $hidden_member_types ) );
 
 	/**
 	 * Filters hidden profile types.
 	 *
 	 * @since BuddyBoss 1.7.9
+	 * @since BuddyBoss [BBVERSION] Returns canonical profile type keys instead of
+	 *                              post slugs, evaluated for the current language.
 	 *
-	 * @param array $post_name Hidden profile type names.
+	 * @param string[] $hidden_member_types Hidden profile type keys.
 	 */
-	return apply_filters( 'bp_get_hidden_member_types', isset( $hidden_profile_types->posts ) ? wp_list_pluck( $hidden_profile_types->posts, 'post_name' ) : false );
+	return apply_filters( 'bp_get_hidden_member_types', $hidden_member_types );
 }
 
 /**
@@ -5579,4 +5895,33 @@ function bb_remove_orphaned_profile_slug( $user_id ) {
 	while ( $wpdb->rows_affected > 0 ) {
 		bb_remove_orphaned_profile_slug( $user_id );
 	}
+}
+
+/**
+ * Get the cache context for profile type visibility queries.
+ *
+ * Queries such as {@see bp_get_removed_member_types()} and
+ * {@see bp_get_hidden_member_types()} read per-language visibility settings:
+ * multilingual plugins filter them to the current language's posts, and each
+ * translation can toggle its own "hide" settings. Their results therefore
+ * cannot be cached under a single shared entry. This context string scopes the
+ * cached result; multilingual compatibility layers (e.g. WPML) filter it to
+ * the current language code.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return string Cache context. Default 'default'.
+ */
+function bb_member_type_query_cache_context() {
+
+	/**
+	 * Filters the cache context for profile type visibility queries.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $context Cache context. Default 'default'.
+	 */
+	$context = apply_filters( 'bb_member_type_query_cache_context', 'default' );
+
+	return sanitize_key( $context );
 }

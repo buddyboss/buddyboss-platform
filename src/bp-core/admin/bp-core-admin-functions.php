@@ -1797,6 +1797,19 @@ function bp_delete_member_type( $post_id ) {
 		return;
 	}
 
+	/*
+	* Only the source post owns the `bp_member_type` term. Multilingual plugins
+	* store every language as a separate post resolving to the same key, so
+	* deleting a translation must not delete the term — that would strip the
+	* profile type from every user, in every language.
+	*/
+	if (
+		function_exists( 'bb_get_member_type_source_post_id' ) &&
+		(int) $post_id !== bb_get_member_type_source_post_id( $post_id )
+	) {
+		return;
+	}
+
 	$member_type_name = bp_get_member_type_key( $post_id );
 	$type_term        = get_term_by( 'name', $member_type_name, 'bp_member_type' ); // Get profile type term data from database by name field.
 

@@ -18,24 +18,14 @@ defined( 'ABSPATH' ) || exit;
 $is_member_type_enabled = bp_member_type_enable_disable();
 
 if ( $is_member_type_enabled ) {
-	$args = array(
-		'meta_query' => array(
-			array(
-				'key'   => '_bp_member_type_enable_filter',
-				'value' => 1,
-			),
-		),
-	);
-
-	if ( bp_is_members_directory() ) {
-		$args['meta_query'][] = array(
-			'key'   => '_bp_member_type_enable_remove',
-			'value' => 0,
-		);
-	}
-
-	// Get active member types.
-	$member_types = bp_get_active_member_types( $args );
+	/*
+	 * Get active member types.
+	 *
+	 * The "show in the Type filter" and "hide from Members Directory" settings
+	 * are resolved per language rather than matched with a meta_query, so a
+	 * translated profile type is offered according to its own settings.
+	 */
+	$member_types = bb_get_member_types_for_directory_filter( bp_is_members_directory() );
 
 	if ( ! empty( $member_types ) ) {
 		?>
