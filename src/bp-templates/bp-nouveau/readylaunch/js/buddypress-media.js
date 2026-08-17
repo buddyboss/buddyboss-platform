@@ -8019,17 +8019,32 @@ window.bp = window.bp || {};
 					self.current_index = self.medias.length;
 				}
 
+				// next()/previous()/closeTheatre() derive the theatre wrapper from
+				// event.currentTarget, and this handler runs on a document-level
+				// custom event where currentTarget is `document` - hand the nav
+				// calls an event anchored to the media theatre wrapper instead.
+				var theatreEvent           = $.Event( 'click' );
+				theatreEvent.currentTarget = $( '.bb-rl-media-model-wrapper.bb-rl-media-theatre' ).get( 0 );
+
 				if ( 0 === self.current_index && self.current_index !== ( self.medias.length ) ) {
 					self.current_index = -1;
-					self.next( event );
+					self.next( theatreEvent );
 				} else if ( 0 === self.current_index && self.current_index === ( self.medias.length ) ) {
 					$( document ).find( '[data-bp-list="activity"] li.activity-item[data-bp-activity-id="' + self.current_media.activity_id + '"]' ).remove();
-					self.closeTheatre( event );
+
+					// Close via the real close button so the target chain resolves
+					// exactly like a user close (verified live in T1-RL).
+					var $closeMediaTheatre = $( '.bb-rl-close-media-theatre:visible' );
+					if ( $closeMediaTheatre.length ) {
+						$closeMediaTheatre.trigger( 'click' );
+					} else {
+						self.closeTheatre( theatreEvent );
+					}
 				} else if ( self.current_index === ( self.medias.length ) ) {
-					self.previous( event );
+					self.previous( theatreEvent );
 				} else {
 					self.current_index = -1;
-					self.next( event );
+					self.next( theatreEvent );
 				}
 			}
 			if ( self.is_open_document && typeof data !== 'undefined' && data.action === 'delete_activity' && self.current_document.activity_id === data.id ) {
