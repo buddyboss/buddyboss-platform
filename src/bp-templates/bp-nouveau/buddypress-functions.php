@@ -756,6 +756,11 @@ class BP_Nouveau extends BP_Theme_Compat {
 		$params['objects'] = $supported_objects;
 		$params['nonces']  = $object_nonces;
 
+		// Nonce for the cover-image reposition AJAX action (bb_save_cover_position).
+		//
+		// @since BuddyBoss [BBVERSION]
+		$params['coverPositionNonce'] = wp_create_nonce( 'bb_save_cover_position' );
+
 		// Used to transport the settings inside the Ajax requests
 		if ( is_customize_preview() ) {
 			$params['customizer_settings'] = bp_nouveau_get_temporary_setting( 'any' );

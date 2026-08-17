@@ -3202,6 +3202,7 @@ window.bp = window.bp || {};
 					bbRLAjaxUrl,
 					{
 						'action': 'bb_save_cover_position',
+						'nonce': BP_Nouveau.coverPositionNonce,
 						'position': coverImage.attr( 'data-top' ),
 					}
 				).done(

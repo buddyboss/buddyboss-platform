@@ -3973,6 +3973,7 @@ window.bp = window.bp || {};
 					BP_Nouveau.ajaxurl,
 					{
 						'action': 'bb_save_cover_position',
+						'nonce': BP_Nouveau.coverPositionNonce,
 						'position': coverImage.attr( 'data-top' ),
 					}
 				).done(

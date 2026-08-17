@@ -332,7 +332,15 @@ function bp_nouveau_ajax_save_cover_position() {
 		wp_send_json_error();
 	}
 
-	if ( ! isset( $_POST['position'] ) ) {
+	// Verify the request nonce (localized as BP_Nouveau.coverPositionNonce).
+	if (
+		empty( $_POST['nonce'] ) ||
+		! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'bb_save_cover_position' )
+	) {
+		wp_send_json_error();
+	}
+
+	if ( ! is_user_logged_in() || ! isset( $_POST['position'] ) ) {
 		wp_send_json_error();
 	}
 
@@ -340,8 +348,18 @@ function bp_nouveau_ajax_save_cover_position() {
 	$updated  = false;
 
 	if ( bp_is_active( 'groups' ) && bp_is_group() && bp_attachments_get_group_has_cover_image( bp_get_current_group_id() ) ) {
+		// Only members allowed to manage the group's cover may reposition it.
+		if ( ! bp_attachments_current_user_can( 'edit_cover_image', array( 'object' => 'group', 'item_id' => bp_get_current_group_id() ) ) ) {
+			wp_send_json_error();
+		}
+
 		$updated = groups_update_groupmeta( bp_get_current_group_id(), 'bp_cover_position', $position );
 	} else if ( bp_is_user() && bp_attachments_get_user_has_cover_image( bp_displayed_user_id() ) ) {
+		// Only the profile owner (or a user allowed to edit their cover) may reposition it.
+		if ( ! bp_attachments_current_user_can( 'edit_cover_image', array( 'object' => 'user', 'item_id' => bp_displayed_user_id() ) ) ) {
+			wp_send_json_error();
+		}
+
 		$updated = bp_update_user_meta( bp_displayed_user_id(), 'bp_cover_position', $position );
 	}
 
