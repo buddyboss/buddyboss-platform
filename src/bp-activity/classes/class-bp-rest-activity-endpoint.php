@@ -1187,8 +1187,8 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			bp_activity_at_name_send_emails( $activity );
 
 			if ( bp_is_active( 'groups' ) && 'groups' === $activity->component ) {
+				$group_id = ! empty( $activity->item_id ) ? $activity->item_id : 0;
 				if ( function_exists( 'bb_subscription_send_subscribe_group_notifications' ) ) {
-					$group_id = ! empty( $activity->item_id ) ? $activity->item_id : 0;
 					bb_subscription_send_subscribe_group_notifications(
 						$activity->content,
 						$activity->user_id,
@@ -2086,9 +2086,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 
 			// removed combined gif data with content.
 			if ( function_exists( 'bp_media_activity_embed_gif' ) ) {
-				if ( function_exists( 'bp_media_activity_embed_gif' ) ) {
-					add_filter( 'bp_get_activity_content_body', 'bp_media_activity_embed_gif', 20, 2 );
-				}
+				add_filter( 'bp_get_activity_content_body', 'bp_media_activity_embed_gif', 20, 2 );
 			}
 
 			// Restore the `activities_template` global.
