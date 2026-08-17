@@ -272,10 +272,10 @@ module.exports = function (grunt) {
 				all: [BUILD_DIR],
 				bp_rest: [SOURCE_DIR + 'buddyboss-platform-api/'],
 				bb_icons: [SOURCE_DIR + 'bp-templates/bp-nouveau/icons/bb-icons/'],
-				// Root composer.json/package.json are no longer copied into the build
-				// (dev metadata, not needed at runtime). Lock/build-tool files
-				// (composer.lock, scoper.inc.php, apidoc.json) are still stripped here
-				// in case they reach BUILD_DIR by other means.
+				// Root composer.json/package.json SHIP in the build (second
+				// copy:files block): the wp.org Plugin Directory asks for the
+				// config files needed to rebuild/obtain bundled libraries and
+				// compiled assets. Lock/build-tool files below are still stripped.
 				composer: [ BUILD_DIR + 'composer.lock', BUILD_DIR + 'scoper.inc.php', BUILD_DIR + 'apidoc.json' ],
 			},
 			copy: {
@@ -306,7 +306,7 @@ module.exports = function (grunt) {
 							// redistributed code — so they are re-included last (grunt
 							// minimatch: last matching pattern wins), which also protects
 							// any future LICENSE.md from the '*.md' glob. The plugin-root
-							// composer.json and package.json do not ship in the build.
+							// composer.json and package.json ship via the second block below.
 							'!vendor/**/README*',
 							'!vendor/**/readme*',
 							'!vendor/**/CHANGELOG*',
@@ -338,8 +338,18 @@ module.exports = function (grunt) {
 							// src/composer.json is dev metadata (the compiled
 							// autoloader in vendor/composer/*.php never reads
 							// it at runtime) — keep it out of the customer zip.
+							// The plugin-ROOT composer.json/package.json DO ship
+							// (second file block below): the wp.org review asks
+							// for the config files needed to rebuild/obtain the
+							// bundled libraries and compiled assets.
 							'!composer.json'
 						].concat( BP_EXCLUDED_MISC )
+					},
+					{
+						dest: BUILD_DIR,
+						dot: true,
+						expand: true,
+						src: [ 'composer.json', 'package.json' ]
 					}
 					]
 				},
