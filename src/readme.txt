@@ -67,10 +67,9 @@ Privacy Policy: https://policies.google.com/privacy
 
 = BuddyBoss licensing service =
 
-Used to activate, deactivate, and periodically validate your BuddyBoss license so that premium plugins and updates work. When you activate or deactivate a license in the admin (or during automatic re-validation), your license key and your site's activation domain are sent to the licensing endpoint at `https://licenses.caseproof.com/api/v1/`. This licensing platform is operated on BuddyBoss's behalf by Caseproof, LLC.
+Used to activate, deactivate, and periodically validate your BuddyBoss license so that paid BuddyBoss add-on plugins and their updates work. When you activate or deactivate a license in the admin (or during automatic re-validation), your license key and your site's activation domain are sent to the licensing endpoint at `https://licenses.caseproof.com/api/v1/`. When a BuddyBoss add-on your plan includes is installed or updated (from the Add-ons page, or automatically after a Platform update to keep previously bundled functionality working for existing customers), the add-on package is downloaded from this same service. The licensing platform is operated on BuddyBoss's behalf by Caseproof, LLC as a data processor, under the BuddyBoss terms below.
 Terms of Use: https://www.buddyboss.com/terms/
 Privacy Policy: https://www.buddyboss.com/privacy/
-Processor (licensing): Caseproof, LLC — Terms: https://caseproof.com/terms-of-service/ (TODO: confirm) — Privacy: https://caseproof.com/privacy-policy/ (TODO: confirm)
 
 = BuddyBoss free license verification =
 
@@ -86,7 +85,7 @@ Privacy Policy: https://www.buddyboss.com/privacy/
 
 = BuddyBoss usage telemetry =
 
-Optional, anonymous usage tracking used to help improve the product. It is disabled/anonymous by default and only runs if you opt in. When active, non-personal environment data is periodically sent to `https://www.buddyboss.com/usage-tracking/` — including an anonymous site identifier, site URL, WordPress/PHP/MySQL versions, the list of installed plugins and themes with versions, and which BuddyBoss components and integrations are active. Your admin email address is included only if you explicitly allow it. This service is operated by BuddyBoss.
+Optional usage tracking used to help improve the product. It is disabled by default and no data is sent until a site administrator enables it in the admin settings. When enabled, non-personal environment data is periodically sent to `https://analytics.buddyboss.com/wp-json/wp/v1/bb-telemetry` — including an anonymous site identifier, site URL, WordPress/PHP/MySQL versions, the list of installed plugins and themes with versions, and which BuddyBoss components and integrations are active. Your admin email address is included only if you explicitly allow it. This service is operated by BuddyBoss. More information: https://www.buddyboss.com/usage-tracking/
 Terms of Use: https://www.buddyboss.com/terms/
 Privacy Policy: https://www.buddyboss.com/privacy/
 
@@ -108,6 +107,12 @@ Used, when you enable the reCAPTCHA integration, to protect registration, login,
 More about reCAPTCHA: https://www.google.com/recaptcha/about/
 Terms of Use: https://policies.google.com/terms
 Privacy Policy: https://policies.google.com/privacy
+
+= GIPHY =
+
+Used, when you enable the GIF support option and provide your own GIPHY API key, to let members search for and post animated GIFs in activity posts, comments, forums, and messages. When a member opens the GIF picker or searches, the visitor's browser sends the search terms together with your site's GIPHY API key to `https://api.giphy.com/v1/`; as with any browser request, the visitor's IP address and user agent are sent to GIPHY as part of the request. No GIPHY requests are made unless the integration is enabled with an API key. This service is operated by GIPHY, Inc.
+Terms of Service: https://support.giphy.com/hc/en-us/articles/360020027752-GIPHY-Terms-of-Service
+Privacy Policy: https://support.giphy.com/hc/en-us/articles/360032872931-GIPHY-Privacy-Policy
 
 = Gravatar =
 

@@ -310,6 +310,7 @@ function bp_nouveau_ajax_media_save() {
 	}
 
 	$medias = filter_input( INPUT_POST, 'medias', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY );
+	$medias = bb_nouveau_sanitize_input_deep( $medias );
 	if ( empty( $medias ) ) {
 		$response['feedback'] = sprintf(
 			'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
@@ -474,6 +475,7 @@ function bp_nouveau_ajax_media_delete() {
 	}
 
 	$media       = filter_input( INPUT_POST, 'media', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY );
+	$media       = ! empty( $media ) ? array_map( 'absint', (array) $media ) : $media;
 	$activity_id = filter_input( INPUT_POST, 'activity_id', FILTER_SANITIZE_NUMBER_INT );
 	$from_where  = bb_filter_input_string( INPUT_POST, 'from_where' );
 
@@ -909,6 +911,7 @@ function bp_nouveau_ajax_media_album_save() {
 	}
 
 	$medias = filter_input( INPUT_POST, 'medias', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY );
+	$medias = bb_nouveau_sanitize_input_deep( $medias );
 
 	if ( ! empty( $medias ) ) {
 		// set album id for media.

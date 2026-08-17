@@ -1742,3 +1742,32 @@ function bb_nouveau_inactive_media_localize_fallback( $params = array() ) {
 	return $params;
 }
 add_filter( 'bp_core_get_js_strings', 'bb_nouveau_inactive_media_localize_fallback', 99, 1 );
+
+/**
+ * Deeply sanitize user-supplied input while preserving structure and non-string types.
+ *
+ * Strings that look like URLs are sanitized with `esc_url_raw()`, all other
+ * strings with `sanitize_text_field()`. Non-string scalars (ints, bools) are
+ * returned unchanged so decoded JSON structures keep their types.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param mixed $data Raw input value (scalar, array or object of values).
+ * @return mixed Sanitized value.
+ */
+function bb_nouveau_sanitize_input_deep( $data ) {
+	return map_deep(
+		$data,
+		function ( $value ) {
+			if ( ! is_string( $value ) ) {
+				return $value;
+			}
+
+			if ( preg_match( '#^https?://#i', $value ) ) {
+				return esc_url_raw( $value );
+			}
+
+			return sanitize_text_field( $value );
+		}
+	);
+}

@@ -274,7 +274,7 @@ function bbp_new_reply_handler( $action = '' ) {
 	/** Reply Title */
 
 	if ( ! empty( $_POST['bbp_reply_title'] ) ) {
-		$reply_title = esc_attr( wp_strip_all_tags( $_POST['bbp_reply_title'] ) );
+		$reply_title = sanitize_text_field( wp_strip_all_tags( $_POST['bbp_reply_title'] ) );
 	}
 
 	// Filter and sanitize.
@@ -289,7 +289,7 @@ function bbp_new_reply_handler( $action = '' ) {
 	// Filter and sanitize.
 	$reply_content = apply_filters( 'bbp_new_reply_pre_content', $reply_content );
 
-	$link_preview_post_data = ! empty( $_POST['link_preview_data'] ) ? get_object_vars( json_decode( stripslashes( $_POST['link_preview_data'] ) ) ) : [];
+	$link_preview_post_data = ! empty( $_POST['link_preview_data'] ) ? map_deep( (array) json_decode( stripslashes( $_POST['link_preview_data'] ), true ), 'sanitize_text_field' ) : [];
 
 	// No reply content.
 	if ( empty( trim( html_entity_decode( wp_strip_all_tags( $reply_content ), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ) ) )
@@ -389,7 +389,7 @@ function bbp_new_reply_handler( $action = '' ) {
 
 	// Either replace terms.
 	if ( bbp_allow_topic_tags() && current_user_can( 'assign_topic_tags' ) && ! empty( $_POST['bbp_topic_tags'] ) ) {
-		$terms = esc_attr( wp_strip_all_tags( $_POST['bbp_topic_tags'] ) );
+		$terms = sanitize_text_field( wp_strip_all_tags( $_POST['bbp_topic_tags'] ) );
 
 		// ...or remove them.
 	} elseif ( isset( $_POST['bbp_topic_tags'] ) ) {
@@ -700,7 +700,7 @@ function bbp_edit_reply_handler( $action = '' ) {
 	/** Reply Title */
 
 	if ( ! empty( $_POST['bbp_reply_title'] ) ) {
-		$reply_title = esc_attr( wp_strip_all_tags( $_POST['bbp_reply_title'] ) );
+		$reply_title = sanitize_text_field( wp_strip_all_tags( $_POST['bbp_reply_title'] ) );
 	}
 
 	// Filter and sanitize.
@@ -715,7 +715,7 @@ function bbp_edit_reply_handler( $action = '' ) {
 	// Filter and sanitize.
 	$reply_content = apply_filters( 'bbp_edit_reply_pre_content', $reply_content, $reply_id );
 
-	$link_preview_post_data = ! empty( $_POST['link_preview_data'] ) ? get_object_vars( json_decode( stripslashes( $_POST['link_preview_data'] ) ) ) : [];
+	$link_preview_post_data = ! empty( $_POST['link_preview_data'] ) ? map_deep( (array) json_decode( stripslashes( $_POST['link_preview_data'] ), true ), 'sanitize_text_field' ) : [];
 
 	// No reply content.
 	if (
@@ -766,7 +766,7 @@ function bbp_edit_reply_handler( $action = '' ) {
 
 	// Either replace terms.
 	if ( bbp_allow_topic_tags() && current_user_can( 'assign_topic_tags' ) && ! empty( $_POST['bbp_topic_tags'] ) ) {
-		$terms = esc_attr( wp_strip_all_tags( $_POST['bbp_topic_tags'] ) );
+		$terms = sanitize_text_field( wp_strip_all_tags( $_POST['bbp_topic_tags'] ) );
 
 		// ...or remove them.
 	} elseif ( isset( $_POST['bbp_topic_tags'] ) ) {
@@ -840,7 +840,7 @@ function bbp_edit_reply_handler( $action = '' ) {
 
 	// Revision Reason.
 	if ( ! empty( $_POST['bbp_reply_edit_reason'] ) ) {
-		$reply_edit_reason = esc_attr( wp_strip_all_tags( $_POST['bbp_reply_edit_reason'] ) );
+		$reply_edit_reason = sanitize_text_field( wp_strip_all_tags( $_POST['bbp_reply_edit_reason'] ) );
 	}
 
 	// Update revision log.
@@ -1487,7 +1487,7 @@ function bbp_move_reply_handler( $action = '' ) {
 
 					// Use the new title that was passed.
 					if ( ! empty( $_POST['bbp_reply_move_destination_title'] ) ) {
-						$destination_topic_title = esc_attr( wp_strip_all_tags( $_POST['bbp_reply_move_destination_title'] ) );
+						$destination_topic_title = sanitize_text_field( wp_strip_all_tags( $_POST['bbp_reply_move_destination_title'] ) );
 
 						// Use the source topic title.
 					} else {

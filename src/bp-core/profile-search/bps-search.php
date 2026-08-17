@@ -105,12 +105,14 @@ function bp_ps_get_request( $type, $form = 0 ) {
 	$request = isset( $_REQUEST[ BP_PS_FORM ] ) ? $_REQUEST : array();
 	if ( empty( $request ) && isset( $_COOKIE[ $cookie ] ) ) {
 		parse_str( stripslashes( $_COOKIE[ $cookie ] ), $request );
+		$request = map_deep( $request, 'sanitize_text_field' );
 	}
 
 	$cookie  = apply_filters( 'bp_ps_cookie_name', 'bp_ps_filters' );
 	$filters = bp_ps_hidden_filters();
 	if ( empty( $filters ) && isset( $_COOKIE[ $cookie ] ) ) {
 		parse_str( stripslashes( $_COOKIE[ $cookie ] ), $filters );
+		$filters = map_deep( $filters, 'sanitize_text_field' );
 	}
 
 	switch ( $type ) {
@@ -241,9 +243,12 @@ function bp_ps_hidden_filters() {
  * @since BuddyBoss 1.0.0
  */
 function bp_ps_current_page() {
-	 $current = defined( 'DOING_AJAX' ) ?
-		wp_parse_url( $_SERVER['HTTP_REFERER'], PHP_URL_PATH ) :
-		wp_parse_url( $_SERVER['REQUEST_URI'], PHP_URL_PATH );
+	$http_referer = isset( $_SERVER['HTTP_REFERER'] ) ? sanitize_text_field( wp_unslash( $_SERVER['HTTP_REFERER'] ) ) : '';
+	$request_uri  = isset( $_SERVER['REQUEST_URI'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '';
+
+	$current = defined( 'DOING_AJAX' ) ?
+		wp_parse_url( $http_referer, PHP_URL_PATH ) :
+		wp_parse_url( $request_uri, PHP_URL_PATH );
 
 	return $current;
 }

@@ -438,6 +438,7 @@ function bp_nouveau_ajax_video_save() {
 	}
 
 	$videos = filter_input( INPUT_POST, 'videos', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY );
+	$videos = bb_nouveau_sanitize_input_deep( $videos );
 
 	if ( empty( $videos ) ) {
 		$response['feedback'] = sprintf(
@@ -598,6 +599,7 @@ function bp_nouveau_ajax_video_delete() {
 	}
 
 	$video       = filter_input( INPUT_POST, 'video', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY );
+	$video       = ! empty( $video ) ? array_map( 'absint', (array) $video ) : $video;
 	$activity_id = filter_input( INPUT_POST, 'activity_id', FILTER_SANITIZE_NUMBER_INT );
 	$from_where  = bb_filter_input_string( INPUT_POST, 'from_where' );
 
@@ -808,6 +810,7 @@ function bp_nouveau_ajax_video_move_to_album() {
 	}
 
 	$videos = filter_input( INPUT_POST, 'videos', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY );
+	$videos = ! empty( $videos ) ? array_map( 'absint', (array) $videos ) : $videos;
 
 	if ( empty( $videos ) ) {
 		$response['feedback'] = sprintf(
@@ -1004,6 +1007,7 @@ function bp_nouveau_ajax_video_album_save() {
 	}
 
 	$videos = filter_input( INPUT_POST, 'videos', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY );
+	$videos = bb_nouveau_sanitize_input_deep( $videos );
 
 	if ( ! empty( $videos ) ) {
 		// set album id for video.
@@ -1949,6 +1953,7 @@ function bp_nouveau_ajax_video_thumbnail_save() {
 	}
 
 	$thumbnail                 = filter_input( INPUT_POST, 'video_thumbnail', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY );
+	$thumbnail                 = bb_nouveau_sanitize_input_deep( $thumbnail );
 	$video_attachment_id       = filter_input( INPUT_POST, 'video_attachment_id', FILTER_SANITIZE_NUMBER_INT );
 	$video_id                  = filter_input( INPUT_POST, 'video_id', FILTER_SANITIZE_NUMBER_INT );
 	$pre_selected_id           = filter_input( INPUT_POST, 'video_default_id', FILTER_SANITIZE_NUMBER_INT );

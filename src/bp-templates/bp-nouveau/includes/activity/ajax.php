@@ -146,7 +146,7 @@ function bp_nouveau_ajax_mark_activity_favorite() {
 	}
 
 	// Nonce check!
-	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'bp_nouveau_activity' ) ) {
+	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'bp_nouveau_activity' ) ) {
 		wp_send_json_error( $error_message );
 	}
 
@@ -216,7 +216,7 @@ function bp_nouveau_ajax_unmark_activity_favorite() {
 	}
 
 	// Nonce check!
-	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'bp_nouveau_activity' ) ) {
+	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'bp_nouveau_activity' ) ) {
 		wp_send_json_error( $error_message );
 	}
 
@@ -277,7 +277,7 @@ function bp_nouveau_ajax_clear_new_mentions() {
 	}
 
 	// Nonce check!
-	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'bp_nouveau_activity' ) ) {
+	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'bp_nouveau_activity' ) ) {
 		wp_send_json_error();
 	}
 
@@ -306,7 +306,7 @@ function bp_nouveau_ajax_delete_activity() {
 	}
 
 	// Nonce check!
-	if ( empty( $_POST['_wpnonce'] ) || ! wp_verify_nonce( $_POST['_wpnonce'], 'bp_activity_delete_link' ) ) {
+	if ( empty( $_POST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['_wpnonce'] ) ), 'bp_activity_delete_link' ) ) {
 		wp_send_json_error( $response );
 	}
 
@@ -403,7 +403,7 @@ function bp_nouveau_ajax_get_single_activity_content() {
 	}
 
 	// Nonce check!
-	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'bp_nouveau_activity' ) ) {
+	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'bp_nouveau_activity' ) ) {
 		wp_send_json_error( $response );
 	}
 
@@ -491,7 +491,7 @@ function bp_nouveau_ajax_new_activity_comment() {
 	}
 
 	// Nonce check!
-	if ( empty( $_POST['_wpnonce_new_activity_comment'] ) || ! wp_verify_nonce( $_POST['_wpnonce_new_activity_comment'], 'new_activity_comment' ) ) {
+	if ( empty( $_POST['_wpnonce_new_activity_comment'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['_wpnonce_new_activity_comment'] ) ), 'new_activity_comment' ) ) {
 		wp_send_json_error( $response );
 	}
 
@@ -631,7 +631,7 @@ function bp_nouveau_ajax_new_activity_comment() {
 function bp_nouveau_ajax_get_activity_objects() {
 	$response = array();
 
-	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'bp_nouveau_activity' ) ) {
+	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'bp_nouveau_activity' ) ) {
 		wp_send_json_error( $response );
 	}
 
@@ -704,7 +704,7 @@ function bp_nouveau_ajax_get_activity_objects() {
 function bp_nouveau_ajax_post_update() {
 	$bp = buddypress();
 
-	if ( ! is_user_logged_in() || empty( $_POST['_wpnonce_post_update'] ) || ! wp_verify_nonce( $_POST['_wpnonce_post_update'], 'post_update' ) ) {
+	if ( ! is_user_logged_in() || empty( $_POST['_wpnonce_post_update'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['_wpnonce_post_update'] ) ), 'post_update' ) ) {
 		wp_send_json_error();
 	}
 
@@ -1176,7 +1176,7 @@ function bp_nouveau_ajax_post_update() {
  * @since BuddyBoss 2.0.4
  */
 function bb_nouveau_ajax_post_draft_activity() {
-	if ( ! is_user_logged_in() || empty( $_POST['_wpnonce_post_draft'] ) || ! wp_verify_nonce( $_POST['_wpnonce_post_draft'], 'post_draft_activity' ) ) {
+	if ( ! is_user_logged_in() || empty( $_POST['_wpnonce_post_draft'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['_wpnonce_post_draft'] ) ), 'post_draft_activity' ) ) {
 		wp_send_json_error();
 	}
 
@@ -1184,6 +1184,18 @@ function bb_nouveau_ajax_post_draft_activity() {
 
 	if ( ! empty( $_REQUEST['draft_activity'] ) && ! is_array( $_REQUEST['draft_activity'] ) ) {
 		$draft_activity = json_decode( stripslashes( $draft_activity ), true );
+	}
+
+	if ( is_array( $draft_activity ) ) {
+		// Sanitize the decoded draft while preserving allowed rich-text markup in the draft content.
+		$draft_content  = isset( $draft_activity['data']['content'] ) && is_string( $draft_activity['data']['content'] ) ? wp_kses_post( $draft_activity['data']['content'] ) : null;
+		$draft_activity = bb_nouveau_sanitize_input_deep( $draft_activity );
+
+		if ( null !== $draft_content ) {
+			$draft_activity['data']['content'] = $draft_content;
+		}
+	} elseif ( is_string( $draft_activity ) ) {
+		$draft_activity = sanitize_text_field( $draft_activity );
 	}
 
 	if ( is_array( $draft_activity ) && isset( $draft_activity['data_key'], $draft_activity['object'] ) ) {
@@ -1353,7 +1365,7 @@ function bp_nouveau_ajax_spam_activity() {
 	}
 
 	// Nonce check!
-	if ( empty( $_POST['_wpnonce'] ) || ! wp_verify_nonce( $_POST['_wpnonce'], 'bp_activity_akismet_spam_' . $activity->id ) ) {
+	if ( empty( $_POST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['_wpnonce'] ) ), 'bp_activity_akismet_spam_' . $activity->id ) ) {
 		wp_send_json_error( $response );
 	}
 
@@ -1394,7 +1406,7 @@ function bp_nouveau_ajax_activity_update_privacy() {
 	}
 
 	// Nonce check!
-	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'bp_nouveau_activity' ) ) {
+	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'bp_nouveau_activity' ) ) {
 		wp_send_json_error();
 	}
 
@@ -1465,7 +1477,7 @@ function bb_nouveau_ajax_activity_update_close_comments() {
 		! bp_is_post_request() ||
 		! is_user_logged_in() ||
 		empty( $_POST['nonce'] ) ||
-		! wp_verify_nonce( $_POST['nonce'], 'bp_nouveau_activity' )
+		! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'bp_nouveau_activity' )
 	) {
 		wp_send_json_error( $response );
 	}
@@ -1532,7 +1544,7 @@ function bb_nouveau_ajax_activity_load_more_comments() {
 	}
 
 	// Nonce check!
-	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'bp_nouveau_activity' ) ) {
+	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'bp_nouveau_activity' ) ) {
 		wp_send_json_error(
 			array(
 				'message' => __( 'Invalid request.', 'buddyboss-platform' ),
@@ -1656,7 +1668,7 @@ function bb_nouveau_ajax_activity_sync_from_modal() {
 	}
 
 	// Nonce verification.
-	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'bp_nouveau_activity' ) ) {
+	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'bp_nouveau_activity' ) ) {
 		wp_send_json_error(
 			array(
 				'message' => __( 'Invalid request.', 'buddyboss-platform' ),
@@ -1723,7 +1735,7 @@ function bb_nouveau_ajax_toggle_activity_notification_status() {
 	}
 
 	// Nonce check!
-	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'bp_nouveau_activity' ) ) {
+	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'bp_nouveau_activity' ) ) {
 		wp_send_json_error( $response );
 	}
 

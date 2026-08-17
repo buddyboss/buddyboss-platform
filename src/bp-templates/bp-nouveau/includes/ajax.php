@@ -33,7 +33,7 @@ function bp_nouveau_ajax_object_template_loader() {
 	}
 
 	// Nonce check!
-	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'bp_nouveau_' . $object ) ) {
+	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'bp_nouveau_' . $object ) ) {
 		wp_send_json_error();
 	}
 

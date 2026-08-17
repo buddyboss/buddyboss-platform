@@ -96,7 +96,7 @@ defined( 'ABSPATH' ) || exit;
 		<div id="bb-reset-license-message" style="margin-top: 10px;"></div>
 	</div>
 
-	<script>
+	<?php ob_start(); ?>
 	jQuery(document).ready(function($) {
 		$('#bb-reset-license-btn').on('click', function(e) {
 			e.preventDefault();
@@ -151,6 +151,12 @@ defined( 'ABSPATH' ) || exit;
 			});
 		});
 	});
-	</script>
+	<?php
+	// This view renders mid-page; attach the JS to a src-less footer handle
+	// instead of printing a raw inline <script> block.
+	wp_register_script( 'bb-mothership-license-admin', false, array( 'jquery' ), bp_get_version(), true );
+	wp_enqueue_script( 'bb-mothership-license-admin' );
+	wp_add_inline_script( 'bb-mothership-license-admin', ob_get_clean() );
+	?>
 
 </div>

@@ -1170,7 +1170,8 @@ function buddyboss_directory_save_layout() {
 		$existing_layout[ $object ] = $option_value;
 		update_user_meta( get_current_user_id(), $option_name, $existing_layout );
 	} else {
-		$existing_layout = ! empty( $_COOKIE[ $option_name ] ) ? json_decode( rawurldecode( $_COOKIE[ $option_name ] ), true ) : array();
+		$existing_layout = ! empty( $_COOKIE[ $option_name ] ) ? json_decode( rawurldecode( wp_unslash( $_COOKIE[ $option_name ] ) ), true ) : array();
+		$existing_layout = is_array( $existing_layout ) ? map_deep( $existing_layout, 'sanitize_text_field' ) : array();
 		// Store layout option in the cookie.
 		$existing_layout[ $object ] = $option_value;
 		setcookie( $option_name, rawurlencode( wp_json_encode( $existing_layout ) ), time() + 31556926, '/', COOKIE_DOMAIN, false, false );

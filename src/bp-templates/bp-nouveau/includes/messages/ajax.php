@@ -152,11 +152,12 @@ function bp_nouveau_ajax_messages_send_message() {
 	);
 
 	// Verify nonce.
-	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'messages_send_message' ) ) {
+	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'messages_send_message' ) ) {
 		wp_send_json_error( $response );
 	}
 
 	$content = filter_input( INPUT_POST, 'message_content', FILTER_DEFAULT );
+	$content = ! empty( $content ) ? wp_kses_post( $content ) : $content;
 
 	/**
 	 * Filter to validate message content.
@@ -449,8 +450,9 @@ function bp_nouveau_ajax_messages_send_message() {
  */
 function bp_nouveau_ajax_messages_send_reply() {
 
-	$hash    = ! empty( $_POST['hash'] ) ? wp_unslash( $_POST['hash'] ) : '';
+	$hash    = ! empty( $_POST['hash'] ) ? sanitize_text_field( wp_unslash( $_POST['hash'] ) ) : '';
 	$content = filter_input( INPUT_POST, 'content', FILTER_DEFAULT );
+	$content = ! empty( $content ) ? wp_kses_post( $content ) : $content;
 
 	$response = array(
 		'feedback' => __( 'There was a problem sending your reply. Please try again.', 'buddyboss-platform' ),
@@ -459,7 +461,7 @@ function bp_nouveau_ajax_messages_send_reply() {
 	);
 
 	// Verify nonce.
-	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'messages_send_message' ) ) {
+	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'messages_send_message' ) ) {
 		wp_send_json_error( $response );
 	}
 
@@ -649,7 +651,7 @@ function bp_nouveau_ajax_messages_send_reply() {
 function bp_nouveau_ajax_get_user_message_threads() {
 	global $messages_template, $wpdb;
 
-	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'bp_nouveau_messages' ) ) {
+	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'bp_nouveau_messages' ) ) {
 		wp_send_json_error(
 			array(
 				'feedback' => __( 'Unauthorized request.', 'buddyboss-platform' ),
@@ -1161,7 +1163,7 @@ function bp_nouveau_ajax_get_user_message_threads() {
  * @since BuddyPress 3.0.0
  */
 function bp_nouveau_ajax_messages_thread_read() {
-	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'bp_nouveau_messages' ) ) {
+	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'bp_nouveau_messages' ) ) {
 		wp_send_json_error();
 	}
 
@@ -1197,7 +1199,7 @@ function bp_nouveau_ajax_messages_thread_read() {
 function bp_nouveau_ajax_get_thread_messages() {
 	global $thread_template, $media_template, $document_template, $wpdb, $bp;
 
-	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'bp_nouveau_messages' ) ) {
+	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'bp_nouveau_messages' ) ) {
 		wp_send_json_error(
 			array(
 				'feedback' => __( 'Unauthorized request.', 'buddyboss-platform' ),
@@ -1244,7 +1246,7 @@ function bp_nouveau_ajax_delete_thread_messages() {
 		'type'     => 'error',
 	);
 
-	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'bp_nouveau_messages' ) ) {
+	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'bp_nouveau_messages' ) ) {
 		wp_send_json_error( $response );
 	}
 
@@ -1296,7 +1298,7 @@ function bp_nouveau_ajax_delete_thread() {
 		'type'     => 'error',
 	);
 
-	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'bp_nouveau_messages' ) ) {
+	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'bp_nouveau_messages' ) ) {
 		wp_send_json_error( $response );
 	}
 
@@ -1437,7 +1439,7 @@ function bp_nouveau_ajax_star_thread_messages() {
 
 	// Use global nonce for bulk actions involving more than one id.
 	if ( 1 !== count( $ids ) ) {
-		if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'bp_nouveau_messages' ) ) {
+		if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'bp_nouveau_messages' ) ) {
 			wp_send_json_error( $response );
 		}
 
@@ -1476,7 +1478,7 @@ function bp_nouveau_ajax_star_thread_messages() {
 	} else {
 		$id = reset( $ids );
 
-		if ( empty( $_POST['star_nonce'] ) || ! wp_verify_nonce( $_POST['star_nonce'], 'bp-messages-star-' . $id ) ) {
+		if ( empty( $_POST['star_nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['star_nonce'] ) ), 'bp-messages-star-' . $id ) ) {
 			wp_send_json_error( $response );
 		}
 
@@ -1537,7 +1539,7 @@ function bp_nouveau_ajax_readunread_thread_messages() {
 		);
 	}
 
-	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'bp_nouveau_messages' ) ) {
+	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'bp_nouveau_messages' ) ) {
 		wp_send_json_error( $response );
 	}
 
@@ -1601,7 +1603,7 @@ function bp_nouveau_ajax_dismiss_sitewide_notice() {
 		wp_send_json_error( $response );
 	}
 
-	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'bp_nouveau_messages' ) ) {
+	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'bp_nouveau_messages' ) ) {
 		wp_send_json_error( $response );
 	}
 
@@ -1661,7 +1663,7 @@ function bp_nouveau_ajax_dsearch_recipients() {
 		wp_send_json_error( $response );
 	}
 
-	if ( empty( $_GET['nonce'] ) || ! wp_verify_nonce( $_GET['nonce'], 'messages_load_recipient' ) ) {
+	if ( empty( $_GET['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_GET['nonce'] ) ), 'messages_load_recipient' ) ) {
 		wp_send_json_error( $response );
 	}
 
@@ -2903,7 +2905,7 @@ function bp_nouveau_ajax_hide_thread() {
 		'type'     => 'error',
 	);
 
-	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'bp_nouveau_messages' ) ) {
+	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'bp_nouveau_messages' ) ) {
 		wp_send_json_error( $response );
 	}
 
@@ -3423,7 +3425,7 @@ function bp_nouveau_ajax_unhide_thread() {
 		'type'     => 'error',
 	);
 
-	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'bp_nouveau_messages' ) ) {
+	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'bp_nouveau_messages' ) ) {
 		wp_send_json_error( $response );
 	}
 

@@ -174,7 +174,7 @@ wp_add_inline_style(
 	}
 	?>
 	<?php if ( ! empty( $bb_dependency_children ) ) : ?>
-		<script>
+		<?php ob_start(); ?>
 			// The bundled addons.js updates only the acted-on card in place, so a
 			// child add-on's dependency-disabled button doesn't follow its parent
 			// being (de)activated. Watch for success messages and, when the acted
@@ -272,6 +272,11 @@ wp_add_inline_style(
 				} );
 				observer.observe( container, { childList: true, subtree: true } );
 			} )();
-		</script>
+		<?php
+		// Ride along with the vendor addons.js handle enqueued by
+		// AddonsManager::enqueueAssets() (footer script), instead of printing
+		// a raw inline <script> block mid-page.
+		wp_add_inline_script( 'mosh-addons-js', ob_get_clean() );
+		?>
 	<?php endif; ?>
 </div>

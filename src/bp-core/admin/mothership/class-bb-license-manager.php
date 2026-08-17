@@ -926,7 +926,13 @@ class BB_License_Manager extends LicenseManager {
 
 		<?php
 		echo $this->render_free_license_modal(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Method returns safe HTML
-		echo $this->render_free_license_java_script(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Method returns safe JavaScript
+
+		// The form renders mid-page; attach the JS to a src-less footer handle
+		// instead of printing a raw inline <script> block.
+		wp_register_script( 'bb-mothership-free-license', false, array( 'jquery' ), bp_get_version(), true );
+		wp_enqueue_script( 'bb-mothership-free-license' );
+		wp_add_inline_script( 'bb-mothership-free-license', $this->render_free_license_java_script() );
+
 		return ob_get_clean();
 	}
 
@@ -997,7 +1003,6 @@ class BB_License_Manager extends LicenseManager {
 	private function render_free_license_java_script(): string {
 		ob_start();
 		?>
-		<script>
 		jQuery(document).ready(function($) {
 			// Open modal.
 			$('#get-free-license-link').on('click', function(e) {
@@ -1108,7 +1113,6 @@ class BB_License_Manager extends LicenseManager {
 			});
 
 		});
-		</script>
 		<?php
 		return ob_get_clean();
 	}

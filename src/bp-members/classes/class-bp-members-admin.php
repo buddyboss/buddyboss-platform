@@ -890,14 +890,16 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 			}
 
 			// Build redirection URL.
-			$redirect_to = remove_query_arg( array( 'action', 'error', 'updated', 'spam', 'ham', 'delete_avatar' ), $_SERVER['REQUEST_URI'] );
-			$doaction    = ! empty( $_REQUEST['action'] ) ? $_REQUEST['action'] : false;
+			$request_uri = isset( $_SERVER['REQUEST_URI'] ) ? esc_url_raw( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '';
+			$redirect_to = remove_query_arg( array( 'action', 'error', 'updated', 'spam', 'ham', 'delete_avatar' ), $request_uri );
+			$doaction    = ! empty( $_REQUEST['action'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['action'] ) ) : false;
 
 			if ( ! empty( $_REQUEST['user_status'] ) ) {
-				$spam = (bool) ( 'spam' === $_REQUEST['user_status'] );
+				$user_status = sanitize_text_field( wp_unslash( $_REQUEST['user_status'] ) );
+				$spam        = (bool) ( 'spam' === $user_status );
 
 				if ( $spam !== bp_is_user_spammer( $user_id ) ) {
-					$doaction = $_REQUEST['user_status'];
+					$doaction = $user_status;
 				}
 			}
 
@@ -1030,9 +1032,9 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 				check_admin_referer( 'edit-bp-profile_' . $user_id );
 
 				if ( bp_core_process_spammer_status( $user_id, $doaction ) ) {
-					$redirect_to = add_query_arg( 'updated', $doaction, $redirect_to );
+					$redirect_to = add_query_arg( 'updated', rawurlencode( $doaction ), $redirect_to );
 				} else {
-					$redirect_to = add_query_arg( 'error', $doaction, $redirect_to );
+					$redirect_to = add_query_arg( 'error', rawurlencode( $doaction ), $redirect_to );
 				}
 
 				bp_core_redirect( $redirect_to );
@@ -1080,7 +1082,8 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 			}
 
 			// Construct URL for form.
-			$request_url     = remove_query_arg( array( 'action', 'error', 'updated', 'spam', 'ham' ), $_SERVER['REQUEST_URI'] );
+			$request_uri     = isset( $_SERVER['REQUEST_URI'] ) ? esc_url_raw( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '';
+			$request_url     = remove_query_arg( array( 'action', 'error', 'updated', 'spam', 'ham' ), $request_uri );
 			$form_action_url = add_query_arg( 'action', 'update', $request_url );
 			$wp_http_referer = false;
 			if ( ! empty( $_REQUEST['wp_http_referer'] ) ) {
@@ -1791,7 +1794,8 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 			global $bp_members_signup_list_table;
 
 			// Build redirection URL.
-			$redirect_to = remove_query_arg( array( 'action', 'error', 'updated', 'activated', 'notactivated', 'deleted', 'notdeleted', 'resent', 'notresent', 'do_delete', 'do_resend', 'do_activate', '_wpnonce', 'signup_ids' ), $_SERVER['REQUEST_URI'] );
+			$request_uri = isset( $_SERVER['REQUEST_URI'] ) ? esc_url_raw( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '';
+			$redirect_to = remove_query_arg( array( 'action', 'error', 'updated', 'activated', 'notactivated', 'deleted', 'notdeleted', 'resent', 'notresent', 'do_delete', 'do_resend', 'do_activate', '_wpnonce', 'signup_ids' ), $request_uri );
 			$doaction    = bp_admin_list_table_current_bulk_action();
 
 			/**
@@ -1882,7 +1886,7 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 					$resent = BP_Signup::resend( $signups );
 
 					if ( empty( $resent ) ) {
-						$redirect_to = add_query_arg( 'error', $doaction, $redirect_to );
+						$redirect_to = add_query_arg( 'error', rawurlencode( $doaction ), $redirect_to );
 					} else {
 						$query_arg = array( 'updated' => 'resent' );
 
@@ -1909,7 +1913,7 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 					$activated = BP_Signup::activate( $signups );
 
 					if ( empty( $activated ) ) {
-						$redirect_to = add_query_arg( 'error', $doaction, $redirect_to );
+						$redirect_to = add_query_arg( 'error', rawurlencode( $doaction ), $redirect_to );
 					} else {
 						$query_arg = array( 'updated' => 'activated' );
 
@@ -1936,7 +1940,7 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 					$deleted = BP_Signup::delete( $signups );
 
 					if ( empty( $deleted ) ) {
-						$redirect_to = add_query_arg( 'error', $doaction, $redirect_to );
+						$redirect_to = add_query_arg( 'error', rawurlencode( $doaction ), $redirect_to );
 					} else {
 						$query_arg = array( 'updated' => 'deleted' );
 
@@ -2233,7 +2237,7 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 		public function signups_admin_index() {
 			global $plugin_page, $bp_members_signup_list_table;
 
-			$usersearch = ! empty( $_REQUEST['s'] ) ? stripslashes( $_REQUEST['s'] ) : '';
+			$usersearch = ! empty( $_REQUEST['s'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['s'] ) ) : '';
 
 			// Prepare the group items for display.
 			$bp_members_signup_list_table->prepare_items();
@@ -2272,7 +2276,7 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 					'_wpnonce',
 					'signup_ids',
 				),
-				$_SERVER['REQUEST_URI']
+				isset( $_SERVER['REQUEST_URI'] ) ? esc_url_raw( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : ''
 			);
 
 			?>

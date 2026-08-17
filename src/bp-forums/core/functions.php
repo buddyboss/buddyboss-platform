@@ -766,7 +766,7 @@ function bbp_delete_rewrite_rules() {
  * @return bool
  */
 function bbp_is_post_request() {
-	return (bool) ( 'POST' === strtoupper( $_SERVER['REQUEST_METHOD'] ) );
+	return (bool) ( 'POST' === strtoupper( sanitize_text_field( wp_unslash( $_SERVER['REQUEST_METHOD'] ?? '' ) ) ) );
 }
 
 /**
@@ -776,7 +776,7 @@ function bbp_is_post_request() {
  * @return bool
  */
 function bbp_is_get_request() {
-	return (bool) ( 'GET' === strtoupper( $_SERVER['REQUEST_METHOD'] ) );
+	return (bool) ( 'GET' === strtoupper( sanitize_text_field( wp_unslash( $_SERVER['REQUEST_METHOD'] ?? '' ) ) ) );
 }
 
 /**

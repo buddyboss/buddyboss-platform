@@ -634,6 +634,7 @@ function bp_nouveau_ajax_document_document_save() {
 	}
 
 	$documents = filter_input( INPUT_POST, 'documents', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY );
+	$documents = bb_nouveau_sanitize_input_deep( $documents );
 	if ( empty( $documents ) ) {
 		$response['feedback'] = sprintf(
 			'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',

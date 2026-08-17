@@ -116,13 +116,13 @@ function bp_nouveau_ajax_joinleave_group() {
 	}
 
 	// Use default nonce
-	$nonce = $_POST['nonce'];
+	$nonce = sanitize_text_field( wp_unslash( $_POST['nonce'] ) );
 	$check = 'bp_nouveau_groups';
 
 	// Use a specific one for actions needed it
 	if ( ! empty( $_POST['_wpnonce'] ) && ! empty( $_POST['action'] ) ) {
-		$nonce = $_POST['_wpnonce'];
-		$check = $_POST['action'];
+		$nonce = sanitize_text_field( wp_unslash( $_POST['_wpnonce'] ) );
+		$check = sanitize_text_field( wp_unslash( $_POST['action'] ) );
 	}
 
 	// Nonce check!
@@ -334,13 +334,13 @@ function bp_nouveau_ajax_get_users_to_invite() {
 	}
 
 	// Use default nonce
-	$nonce = $_POST['nonce'];
+	$nonce = sanitize_text_field( wp_unslash( $_POST['nonce'] ) );
 	$check = 'bp_nouveau_groups';
 
 	// Use a specific one for actions needed it
 	if ( ! empty( $_POST['_wpnonce'] ) && ! empty( $_POST['action'] ) ) {
-		$nonce = $_POST['_wpnonce'];
-		$check = $_POST['action'];
+		$nonce = sanitize_text_field( wp_unslash( $_POST['_wpnonce'] ) );
+		$check = sanitize_text_field( wp_unslash( $_POST['action'] ) );
 	}
 
 	// Nonce check!
@@ -711,7 +711,7 @@ function bp_nouveau_ajax_send_group_invites() {
 	);
 
 	// Verify nonce.
-	if ( empty( $_POST['_wpnonce'] ) || ! wp_verify_nonce( $_POST['_wpnonce'], 'groups_send_invites' ) ) {
+	if ( empty( $_POST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['_wpnonce'] ) ), 'groups_send_invites' ) ) {
 		wp_send_json_error( $response );
 	}
 
@@ -808,7 +808,7 @@ function bp_nouveau_ajax_remove_group_invite() {
 	);
 
 	// Verify nonce.
-	if ( empty( $_POST['_wpnonce'] ) || ! wp_verify_nonce( $_POST['_wpnonce'], 'groups_invite_uninvite_user' ) ) {
+	if ( empty( $_POST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['_wpnonce'] ) ), 'groups_invite_uninvite_user' ) ) {
 		wp_send_json_error( $response );
 	}
 
@@ -888,7 +888,7 @@ function bp_nouveau_ajax_groups_get_group_members_listing() {
 		wp_send_json_error( $response );
 	}
 
-	if ( empty( wp_unslash( $_POST['nonce'] ) ) || ! wp_verify_nonce( wp_unslash( $_POST['nonce'] ), 'retrieve_group_members' ) ) {
+	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'retrieve_group_members' ) ) {
 		wp_send_json_error( $response );
 	}
 
@@ -1104,31 +1104,32 @@ function bp_nouveau_ajax_groups_send_message() {
 		unset( $_POST['gif_data'] );
 	}
 	if ( isset( $gif_data ) && '' !== $gif_data ) {
-		$_POST['gif_data'] = json_decode( wp_kses_stripslashes( $gif_data ), true );
+		$_POST['gif_data'] = bb_nouveau_sanitize_input_deep( json_decode( wp_kses_stripslashes( $gif_data ), true ) );
 	}
 
 	if ( isset( $_POST['media'] ) ) {
 		unset( $_POST['media'] );
 	}
 	if ( isset( $media ) && '' !== $media ) {
-		$_POST['media'] = json_decode( wp_kses_stripslashes( $media ), true );
+		$_POST['media'] = bb_nouveau_sanitize_input_deep( json_decode( wp_kses_stripslashes( $media ), true ) );
 	}
 
 	if ( isset( $_POST['document'] ) ) {
 		unset( $_POST['document'] );
 	}
 	if ( isset( $document ) && '' !== $document ) {
-		$_POST['document'] = json_decode( wp_kses_stripslashes( $document ), true );
+		$_POST['document'] = bb_nouveau_sanitize_input_deep( json_decode( wp_kses_stripslashes( $document ), true ) );
 	}
 
 	if ( isset( $_POST['video'] ) ) {
 		unset( $_POST['video'] );
 	}
 	if ( isset( $video ) && '' !== $video ) {
-		$_POST['video'] = json_decode( wp_kses_stripslashes( $video ), true );
+		$_POST['video'] = bb_nouveau_sanitize_input_deep( json_decode( wp_kses_stripslashes( $video ), true ) );
 	}
 
 	$content = filter_input( INPUT_POST, 'content', FILTER_DEFAULT );
+	$content = ! empty( $content ) ? wp_kses_post( $content ) : $content;
 
 	/**
 	 * Filter to validate message content.
@@ -1195,6 +1196,7 @@ function bp_nouveau_ajax_groups_send_message() {
 	} else {
 
 		$members = filter_input( INPUT_POST, 'users_list', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY );
+		$members = ! empty( $members ) ? array_map( 'absint', (array) $members ) : array();
 
 		// Check Membership Access.
 		$not_access_list = array();

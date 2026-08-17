@@ -331,8 +331,9 @@ abstract class BB_Base_DRM {
 		}
 
 		$enqueued = true;
+
+		ob_start();
 		?>
-		<script type="text/javascript">
 		jQuery(document).ready(function($) {
 			$('.bb-drm-notice').on('click', '.bb-drm-dismiss, .notice-dismiss', function(e) {
 				e.preventDefault();
@@ -367,8 +368,11 @@ abstract class BB_Base_DRM {
 				});
 			});
 		});
-		</script>
-		<style type="text/css">
+		<?php
+		$dismiss_script = ob_get_clean();
+
+		ob_start();
+		?>
 		.bb-drm-notice .notice-dismiss {
 			position: absolute;
 			top: 0;
@@ -397,8 +401,18 @@ abstract class BB_Base_DRM {
 			outline: 1px solid #4f94d4;
 			box-shadow: 0 0 0 1px #4f94d4;
 		}
-		</style>
 		<?php
+		$dismiss_style = ob_get_clean();
+
+		// Renders on `admin_notices`, so attach to src-less handles printed in
+		// the admin footer (late-enqueued styles print via print_late_styles()).
+		wp_register_script( 'bb-drm-notice-dismiss', false, array( 'jquery' ), bp_get_version(), true );
+		wp_enqueue_script( 'bb-drm-notice-dismiss' );
+		wp_add_inline_script( 'bb-drm-notice-dismiss', $dismiss_script );
+
+		wp_register_style( 'bb-drm-notice-dismiss', false, array(), bp_get_version() );
+		wp_enqueue_style( 'bb-drm-notice-dismiss' );
+		wp_add_inline_style( 'bb-drm-notice-dismiss', $dismiss_style );
 	}
 
 	/**
