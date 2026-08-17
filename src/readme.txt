@@ -61,8 +61,6 @@ The complete, human-readable source code for this plugin — including the un-mi
 
 https://github.com/buddyboss/buddyboss-platform
 
-Build instructions: `npm install && npm run build:admin && npm run build:blocks` (see `package.json`; `composer.json` describes the bundled PHP libraries). The bundled third-party JavaScript libraries are unmodified releases of their public upstreams, including: Select2 (https://github.com/select2/select2), Magnific Popup (https://github.com/dimsemenov/Magnific-Popup), Cropper (https://github.com/fengyuanchen/cropper), Dropzone (https://github.com/dropzone/dropzone), Video.js (https://github.com/videojs/video.js), flv.js (https://github.com/Bilibili/flv.js), MediumEditor (https://github.com/yabwe/medium-editor), jQuery Datetimepicker (https://github.com/xdan/datetimepicker), and EmojiOne Area (https://github.com/mervick/emojionearea).
-
 == External services ==
 
 BuddyBoss Platform connects to a number of external/third-party services. Each service, the data it receives, and when that happens is described below, along with the provider's Terms of Use and Privacy Policy. Several of these services are operated by BuddyBoss and are covered by the BuddyBoss Terms (https://www.buddyboss.com/terms/) and Privacy Policy (https://www.buddyboss.com/privacy/).
