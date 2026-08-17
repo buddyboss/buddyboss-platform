@@ -478,7 +478,10 @@ function bp_nouveau_ajax_delete_activity() {
 		// screens, so skip their queries/render when the delete came from anywhere
 		// else (feed, directories) - under admin-ajax these route checks resolve
 		// from the referer, i.e. the page the delete request originated on.
-		$in_video_album = bp_is_single_video_album();
+		// bp_is_single_video_album() is also true on the media album screen
+		// (bp_is_video_component() returns true for the media component), so the
+		// video-album branch must additionally rule out the media album route.
+		$in_video_album = bp_is_single_video_album() && ! bp_is_single_album();
 		if ( $in_video_album || bp_is_single_album() ) {
 			$album_counts                  = bb_media_get_album_counts( $activity_album_id, $activity_album_group );
 			$response['album_id']          = $activity_album_id;

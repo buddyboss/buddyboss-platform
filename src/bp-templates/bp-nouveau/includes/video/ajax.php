@@ -768,7 +768,10 @@ function bp_nouveau_ajax_video_delete() {
 	// photos; the unified media album screen is empty only when everything is gone.
 	$album_empty_html = '';
 	if ( ! empty( $album_id ) ) {
-		if ( bp_is_single_video_album() ) {
+		// bp_is_single_video_album() is also true on the media album screen
+		// (bp_is_video_component() returns true for the media component), so the
+		// video-album branch must additionally rule out the media album route.
+		if ( bp_is_single_video_album() && ! bp_is_single_album() ) {
 			if ( 0 === (int) $album_counts['album_video_count'] && function_exists( 'bb_nouveau_video_get_album_empty_state' ) ) {
 				$album_empty_html = bb_nouveau_video_get_album_empty_state();
 			}
