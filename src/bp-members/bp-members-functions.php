@@ -2497,7 +2497,7 @@ function bp_members_login_resend_activation_email() {
 	}
 
 	// Verify nonce.
-	if ( ! wp_verify_nonce( $_GET['_wpnonce'], 'bp-resend-activation' ) ) {
+	if ( ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_GET['_wpnonce'] ) ), 'bp-resend-activation' ) ) {
 		die( 'Security check' );
 	}
 
@@ -3928,7 +3928,7 @@ function bp_member_switching_clear_olduser_cookie( $clear_all = true ) {
  */
 function bp_member_switching_get_olduser_cookie() {
 	if ( isset( $_COOKIE[ BP_MEMBER_SWITCHING_OLDUSER_COOKIE ] ) ) {
-		return wp_unslash( $_COOKIE[ BP_MEMBER_SWITCHING_OLDUSER_COOKIE ] );
+		return sanitize_text_field( wp_unslash( $_COOKIE[ BP_MEMBER_SWITCHING_OLDUSER_COOKIE ] ) );
 	} else {
 		return false;
 	}
@@ -3955,7 +3955,7 @@ function bp_member_switching_get_auth_cookie() {
 		$cookie = array();
 	}
 
-	return $cookie;
+	return map_deep( $cookie, 'sanitize_text_field' );
 }
 
 

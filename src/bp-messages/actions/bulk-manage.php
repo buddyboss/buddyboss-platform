@@ -23,8 +23,8 @@ function bp_messages_action_bulk_manage() {
 		return false;
 	}
 
-	$action   = ! empty( $_POST['messages_bulk_action'] ) ? $_POST['messages_bulk_action'] : '';
-	$nonce    = ! empty( $_POST['messages_bulk_nonce'] ) ? $_POST['messages_bulk_nonce'] : '';
+	$action   = ! empty( $_POST['messages_bulk_action'] ) ? sanitize_text_field( wp_unslash( $_POST['messages_bulk_action'] ) ) : '';
+	$nonce    = ! empty( $_POST['messages_bulk_nonce'] ) ? sanitize_text_field( wp_unslash( $_POST['messages_bulk_nonce'] ) ) : '';
 	$messages = ! empty( $_POST['message_ids'] ) ? $_POST['message_ids'] : '';
 
 	$messages = wp_parse_id_list( $messages );

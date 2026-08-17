@@ -1508,7 +1508,9 @@ function bp_media_sideload_attachment( $file ) {
 	$file_array['name'] = basename( $matches[0] );
 
 	// Download file to temp location.
-	$file = preg_replace( '/^:*?\/\//', $protocol = strtolower( substr( $_SERVER['SERVER_PROTOCOL'], 0, strpos( $_SERVER['SERVER_PROTOCOL'], '/' ) ) ) . '://', $file );
+	$server_protocol = isset( $_SERVER['SERVER_PROTOCOL'] ) ? sanitize_text_field( wp_unslash( $_SERVER['SERVER_PROTOCOL'] ) ) : 'HTTP/1.1';
+	$protocol        = strtolower( substr( $server_protocol, 0, strpos( $server_protocol, '/' ) ) );
+	$file            = preg_replace( '/^:*?\/\//', $protocol . '://', $file );
 
 	if ( ! function_exists( 'download_url' ) ) {
 		require_once ABSPATH . 'wp-admin/includes/image.php';

@@ -24,9 +24,9 @@ function bp_notifications_action_delete() {
 	}
 
 	// Get the action.
-	$action = ! empty( $_GET['action'] ) ? $_GET['action'] : '';
-	$nonce  = ! empty( $_GET['_wpnonce'] ) ? $_GET['_wpnonce'] : '';
-	$id     = ! empty( $_GET['notification_id'] ) ? $_GET['notification_id'] : '';
+	$action = ! empty( $_GET['action'] ) ? sanitize_text_field( wp_unslash( $_GET['action'] ) ) : '';
+	$nonce  = ! empty( $_GET['_wpnonce'] ) ? sanitize_text_field( wp_unslash( $_GET['_wpnonce'] ) ) : '';
+	$id     = ! empty( $_GET['notification_id'] ) ? absint( $_GET['notification_id'] ) : 0;
 
 	// Bail if no action or no ID.
 	if ( ( 'delete' !== $action ) || empty( $id ) || empty( $nonce ) ) {

@@ -937,10 +937,10 @@ function bp_get_messages_username_value() {
 		 *
 		 * @param string $value Default user name.
 		 */
-		return apply_filters( 'bp_get_messages_username_value', $_COOKIE['bp_messages_send_to'] );
+		return apply_filters( 'bp_get_messages_username_value', sanitize_text_field( wp_unslash( $_COOKIE['bp_messages_send_to'] ) ) );
 	} elseif ( isset( $_GET['r'] ) && ! isset( $_COOKIE['bp_messages_send_to'] ) ) {
 		/** This filter is documented in bp-messages-template.php */
-		return apply_filters( 'bp_get_messages_username_value', $_GET['r'] );
+		return apply_filters( 'bp_get_messages_username_value', sanitize_text_field( wp_unslash( $_GET['r'] ) ) );
 	}
 }
 

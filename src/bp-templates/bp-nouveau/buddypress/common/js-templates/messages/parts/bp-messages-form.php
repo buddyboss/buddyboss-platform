@@ -39,15 +39,16 @@ $os = bb_core_get_os();
 		>
 			<?php
 			if ( ! empty( $_GET['r'] ) ) :
+				$recipient_slug = sanitize_text_field( wp_unslash( $_GET['r'] ) );
 
 				if ( bp_is_username_compatibility_mode() ) {
-					$user_id = bp_core_get_userid( urldecode( $_GET['r'] ) );
+					$user_id = bp_core_get_userid( urldecode( $recipient_slug ) );
 				} else {
-					$user_id = bp_core_get_userid_from_nicename( $_GET['r'] );
+					$user_id = bp_core_get_userid_from_nicename( $recipient_slug );
 				}
 				$name = bp_core_get_user_displayname( $user_id );
 				?>
-				<option value="@<?php echo esc_attr( $_GET['r'] ); ?>" selected data-action="<?php echo esc_attr( $user_id ); ?>"><?php echo esc_html( $name ); ?></option>
+				<option value="@<?php echo esc_attr( $recipient_slug ); ?>" selected data-action="<?php echo esc_attr( $user_id ); ?>"><?php echo esc_html( $name ); ?></option>
 			<?php endif; ?>
 
 		</select>

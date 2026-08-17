@@ -49,12 +49,14 @@ function bp_profile_search_escaped_form_data( $form = false ) {
 	$F->title     = get_the_title( $form );
 	$F->location  = $location;
 	$F->unique_id = bp_ps_unique_id( 'form_' . $form );
-	$F->page      = wp_parse_url( $_SERVER['REQUEST_URI'], PHP_URL_PATH );
+	$request_uri  = isset( $_SERVER['REQUEST_URI'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '';
+	$F->page      = wp_parse_url( $request_uri, PHP_URL_PATH );
 
-	$F->action = wp_parse_url( $_SERVER['REQUEST_URI'], PHP_URL_PATH );
+	$F->action = wp_parse_url( $request_uri, PHP_URL_PATH );
 
 	if ( defined( 'DOING_AJAX' ) ) {
-		$F->action = wp_parse_url( $_SERVER['HTTP_REFERER'], PHP_URL_PATH );
+		$http_referer = isset( $_SERVER['HTTP_REFERER'] ) ? sanitize_text_field( wp_unslash( $_SERVER['HTTP_REFERER'] ) ) : '';
+		$F->action    = wp_parse_url( $http_referer, PHP_URL_PATH );
 	}
 
 	$F->method = 'POST';

@@ -295,7 +295,8 @@ if ( ! function_exists( 'wp_notify_postauthor' ) ) :
 		<?php
 		$notify_message = ob_get_clean();
 
-		$wp_email = 'wordpress@' . preg_replace( '#^www\.#', '', strtolower( $_SERVER['SERVER_NAME'] ) );
+		$server_name = isset( $_SERVER['SERVER_NAME'] ) ? sanitize_text_field( wp_unslash( $_SERVER['SERVER_NAME'] ) ) : '';
+		$wp_email    = 'wordpress@' . preg_replace( '#^www\.#', '', strtolower( $server_name ) );
 
 		if ( '' == $comment->comment_author ) {
 			$from = "From: \"$blogname\" <$wp_email>";

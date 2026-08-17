@@ -92,7 +92,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				$this->load_login_registration_integration();
 			} elseif (
 				isset( $_SERVER['SCRIPT_NAME'] ) &&
-				false !== stripos( wp_login_url(), $_SERVER['SCRIPT_NAME'] ) &&
+				false !== stripos( wp_login_url(), sanitize_text_field( wp_unslash( $_SERVER['SCRIPT_NAME'] ) ) ) &&
 				! $this->bb_rl_is_page_enabled_for_integration( 'registration' )
 			) {
 				// On wp-login.php with registration disabled, restore the default

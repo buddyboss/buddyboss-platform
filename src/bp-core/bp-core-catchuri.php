@@ -66,13 +66,15 @@ function bp_core_set_uri_globals() {
 		unset( $bp->pages->{$bp->blogs->id} );
 	}
 
+	$request_uri = isset( $_SERVER['REQUEST_URI'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '';
+
 	// Ajax or not?
-	if ( defined( 'DOING_AJAX' ) && DOING_AJAX || strpos( $_SERVER['REQUEST_URI'], 'wp-load.php' ) ) {
+	if ( defined( 'DOING_AJAX' ) && DOING_AJAX || strpos( $request_uri, 'wp-load.php' ) ) {
 		$path = bp_get_referer_path();
 	} elseif ( ! empty( $_REQUEST['_wp_http_referer'] ) && ! empty( $_REQUEST['action'] ) && in_array( $_REQUEST['action'], array( 'bbp-edit-topic', 'bbp-new-topic' ), true ) ) {
-		$path = esc_url( $_REQUEST['_wp_http_referer'] );
+		$path = esc_url( sanitize_text_field( wp_unslash( $_REQUEST['_wp_http_referer'] ) ) );
 	} else {
-		$path = esc_url( $_SERVER['REQUEST_URI'] );
+		$path = esc_url( $request_uri );
 	}
 
 	/**
@@ -698,8 +700,8 @@ function bp_core_no_access( $args = '' ) {
 
 	// Build the redirect URL.
 	$redirect_url  = is_ssl() ? 'https://' : 'http://';
-	$redirect_url .= $_SERVER['HTTP_HOST'] ?? '';
-	$redirect_url .= $_SERVER['REQUEST_URI'] ?? '';
+	$redirect_url .= isset( $_SERVER['HTTP_HOST'] ) ? sanitize_text_field( wp_unslash( $_SERVER['HTTP_HOST'] ) ) : '';
+	$redirect_url .= isset( $_SERVER['REQUEST_URI'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '';
 
 	$defaults = array(
 		'mode'     => 2,                    // 1 = $root, 2 = wp-login.php.
@@ -1052,7 +1054,8 @@ function bp_get_requested_url() {
 
 	if ( empty( $bp->canonical_stack['requested_url'] ) ) {
 		$bp->canonical_stack['requested_url']  = is_ssl() ? 'https://' : 'http://';
-		$bp->canonical_stack['requested_url'] .= $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+		$bp->canonical_stack['requested_url'] .= isset( $_SERVER['HTTP_HOST'] ) ? sanitize_text_field( wp_unslash( $_SERVER['HTTP_HOST'] ) ) : '';
+		$bp->canonical_stack['requested_url'] .= isset( $_SERVER['REQUEST_URI'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '';
 	}
 
 	/**
@@ -1257,7 +1260,7 @@ function bp_private_network_template_redirect() {
 			$request_url = home_url( add_query_arg( array(), $wp->request ) );
 
 			// Actual URL like https://example.com?abc=1.
-			$actual_url         = home_url( add_query_arg( array( $_GET ), $wp->request ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			$actual_url         = home_url( add_query_arg( array( rawurlencode_deep( map_deep( wp_unslash( $_GET ), 'sanitize_text_field' ) ) ), $wp->request ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			$explode_actual_url = explode( '?', $actual_url );
 
 			// Actual URL with slash like https://example.com/?abc=1.

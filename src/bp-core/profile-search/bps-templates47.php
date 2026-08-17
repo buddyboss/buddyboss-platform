@@ -31,7 +31,8 @@ function bp_ps_escaped_form_data47( $version ) {
 	$F->title     = get_the_title( $form );
 	$F->location  = $location;
 	$F->unique_id = bp_ps_unique_id( 'form_' . $form );
-	$F->page      = wp_parse_url( $_SERVER['REQUEST_URI'], PHP_URL_PATH );
+	$request_uri  = isset( $_SERVER['REQUEST_URI'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '';
+	$F->page      = wp_parse_url( $request_uri, PHP_URL_PATH );
 
 	$template_options = $meta['template_options'][ $meta['template'] ];
 	if ( isset( $template_options['header'] ) ) {
@@ -44,10 +45,11 @@ function bp_ps_escaped_form_data47( $version ) {
 		$F->toggle_text = $template_options['button'];
 	}
 
-	$F->action = wp_parse_url( $_SERVER['REQUEST_URI'], PHP_URL_PATH );
+	$F->action = wp_parse_url( $request_uri, PHP_URL_PATH );
 
 	if ( defined( 'DOING_AJAX' ) ) {
-		$F->action = wp_parse_url( $_SERVER['HTTP_REFERER'], PHP_URL_PATH );
+		$http_referer = isset( $_SERVER['HTTP_REFERER'] ) ? sanitize_text_field( wp_unslash( $_SERVER['HTTP_REFERER'] ) ) : '';
+		$F->action    = wp_parse_url( $http_referer, PHP_URL_PATH );
 	}
 
 	$F->method = $meta['method'];
@@ -187,7 +189,7 @@ function bp_ps_escaped_filters_data47() {
 	list ( $request, $full ) = bp_ps_template_args();
 
 	$F         = new stdClass();
-	$action    = wp_parse_url( $_SERVER['REQUEST_URI'], PHP_URL_PATH );
+	$action    = wp_parse_url( isset( $_SERVER['REQUEST_URI'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '', PHP_URL_PATH );
 	$action    = add_query_arg( BP_PS_FORM, 'clear', $action );
 	$F->action = $full ? esc_url( $action ) : '';
 	$F->fields = array();

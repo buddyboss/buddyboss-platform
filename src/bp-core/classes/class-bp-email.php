@@ -164,7 +164,7 @@ class BP_Email {
 
 		// SERVER_NAME isn't always set (e.g CLI).
 		if ( ! empty( $_SERVER['SERVER_NAME'] ) ) {
-			$domain = strtolower( $_SERVER['SERVER_NAME'] );
+			$domain = strtolower( sanitize_text_field( wp_unslash( $_SERVER['SERVER_NAME'] ) ) );
 			if ( substr( $domain, 0, 4 ) === 'www.' ) {
 				$domain = substr( $domain, 4 );
 			}

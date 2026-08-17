@@ -1442,7 +1442,7 @@ function bbp_redirect_to_field( $redirect_to = '' ) {
 	// Make sure we are directing somewhere
 	if ( empty( $redirect_to ) ) {
 		if ( isset( $_SERVER['REQUEST_URI'] ) ) {
-			$redirect_to = bbp_get_url_scheme() . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+			$redirect_to = bbp_get_url_scheme() . sanitize_text_field( wp_unslash( $_SERVER['HTTP_HOST'] ?? '' ) ) . sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) );
 		} else {
 			$redirect_to = wp_get_referer();
 		}
@@ -1499,17 +1499,17 @@ function bbp_get_sanitize_val( $request = '', $input_type = 'text' ) {
 
 	// Treat different kinds of fields in different ways
 	switch ( $input_type ) {
-		case 'text':
 		case 'textarea':
-			$retval = esc_attr( stripslashes( $pre_ret_val ) );
+			$retval = esc_attr( sanitize_textarea_field( wp_unslash( $pre_ret_val ) ) );
 			break;
 
+		case 'text':
 		case 'password':
 		case 'select':
 		case 'radio':
 		case 'checkbox':
 		default:
-			$retval = esc_attr( $pre_ret_val );
+			$retval = esc_attr( sanitize_text_field( wp_unslash( $pre_ret_val ) ) );
 			break;
 	}
 
