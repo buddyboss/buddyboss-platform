@@ -8076,8 +8076,13 @@ window.bp = window.bp || {};
 				}
 				$( document ).find( '[data-bp-list="activity"] .bb-open-media-theatre[data-id="' + self.current_media.id + '"]' ).closest( '.bb-activity-media-elem' ).remove();
 
-				// Every entry of the deleted activity leaves the slide list, not just
-				// the first match - the server removed them all.
+				// Remove every slide belonging to the deleted activity - the server
+				// cascade-deletes all of its rows. On current uploads each photo has
+				// its own hidden child activity, so only one slide matches; but data
+				// from older versions (before the per-photo sub-activity system) has
+				// several rows sharing one activity_id, and stopping at the first
+				// match (the old `break`) left sibling slides pointing at deleted
+				// photos - the theater arrows could then open a blank slide.
 				for ( i = self.medias.length - 1; i >= 0; i-- ) {
 					if ( self.medias[ i ].activity_id == data.id ) {
 						self.medias.splice( i, 1 );

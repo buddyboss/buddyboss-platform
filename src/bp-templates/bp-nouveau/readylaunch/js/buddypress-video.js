@@ -3027,8 +3027,13 @@ window.bp = window.bp || {};
 
 				$document.find( '[data-bp-list="activity"] .bb-open-video-theatre[data-id="' + self.current_video.id + '"]' ).closest( '.bb-activity-video-elem' ).remove();
 
-				// Every entry of the deleted activity leaves the slide list, not just
-				// the first match - the server removed them all.
+				// Remove every slide belonging to the deleted activity - the server
+				// cascade-deletes all of its rows. On current uploads each video has
+				// its own hidden child activity, so only one slide matches; but data
+				// from older versions (before the per-video sub-activity system) has
+				// several rows sharing one activity_id, and stopping at the first
+				// match (the old `break`) left sibling slides pointing at deleted
+				// videos - the theater arrows could then open a blank slide.
 				for ( i = self.videos.length - 1; i >= 0; i-- ) {
 					if ( self.videos[ i ].activity_id === data.id ) {
 						self.videos.splice( i, 1 );
