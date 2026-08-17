@@ -954,6 +954,16 @@ window.bp = window.bp || {};
 									$( 'body #buddypress .bb-rl-activity-list li#bb-rl-activity-' + activityId ).remove();
 									$( 'body .bb-rl-activity-media-elem.bb-rl-media-activity.' + id ).remove();
 									$( 'body .bb-rl-activity-comments li#bb-rl-acomment-' + activityId ).remove();
+
+									// The "view more comments" modal holds its own copy of the
+									// activity, and its wrapper duplicates id="buddypress", so
+									// the ID selector above only ever reaches the page copy.
+									// When the whole activity is gone, close the modal through
+									// its real close button so the close handler runs.
+									var $activityModal = $( '#bb-rl-activity-modal:visible' );
+									if ( $activityModal.length && $activityModal.find( 'li[data-bp-activity-id="' + activityId + '"]' ).length ) {
+										$activityModal.find( '.bb-rl-modal-activity-header .bb-rl-close-action-popup' ).trigger( 'click' );
+									}
 								} else {
 									$( 'body #buddypress .bb-rl-activity-list li#bb-rl-activity-' + activityId ).replaceWith( response.data.activity_content );
 								}
