@@ -132,6 +132,20 @@ class BP_Tests_Activity_REST_Fields extends BP_UnitTestCase {
 			array( 'user_avatar' ),
 			array( 'can_toggle_notification' ),
 			array( 'is_receive_notification' ),
+			array( 'bb_activity_post_feature_image' ),
+		);
+	}
+
+	/**
+	 * Response fields that shipped for years without a schema entry.
+	 *
+	 * @return array
+	 */
+	public static function undeclared_field_provider() {
+		return array(
+			array( 'bb_activity_post_feature_image' ),
+			array( 'comment_closed_notice' ),
+			array( 'comment_depth' ),
 		);
 	}
 
@@ -213,8 +227,12 @@ class BP_Tests_Activity_REST_Fields extends BP_UnitTestCase {
 		wp_cache_flush();
 
 		add_filter( 'query', $counter );
-		$this->get_first_item( $params );
-		remove_filter( 'query', $counter );
+
+		try {
+			$this->get_first_item( $params );
+		} finally {
+			remove_filter( 'query', $counter );
+		}
 
 		return $count;
 	}
@@ -374,8 +392,12 @@ class BP_Tests_Activity_REST_Fields extends BP_UnitTestCase {
 		};
 
 		add_filter( 'bp_get_activity_content_body', $counter );
-		$this->get_first_item( array( '_fields' => 'id,user_id' ) );
-		remove_filter( 'bp_get_activity_content_body', $counter );
+
+		try {
+			$this->get_first_item( array( '_fields' => 'id,user_id' ) );
+		} finally {
+			remove_filter( 'bp_get_activity_content_body', $counter );
+		}
 
 		$this->assertSame( 0, $renders );
 	}
@@ -392,10 +414,69 @@ class BP_Tests_Activity_REST_Fields extends BP_UnitTestCase {
 		};
 
 		add_filter( 'bp_get_activity_content_body', $counter );
-		$this->get_first_item( array( '_fields' => 'id,content' ) );
-		remove_filter( 'bp_get_activity_content_body', $counter );
+
+		try {
+			$this->get_first_item( array( '_fields' => 'id,content' ) );
+		} finally {
+			remove_filter( 'bp_get_activity_content_body', $counter );
+		}
 
 		$this->assertGreaterThan( 0, $renders );
+	}
+
+	/**
+	 * `link_embed_url` is stored in the activity metadata whenever the activity
+	 * has one, so selecting it alone must not drag in the embed resolution --
+	 * nor the content render that resolution reads.
+	 */
+	public function test_link_embed_url_alone_skips_the_embed_resolution() {
+		bp_activity_update_meta( $this->activity_id, '_link_embed', 'https://example.org/embedded' );
+		wp_cache_delete( $this->activity_id, 'activity_meta' );
+
+		$renders = 0;
+		$counter = function ( $content ) use ( &$renders ) {
+			$renders++;
+
+			return $content;
+		};
+
+		add_filter( 'bp_get_activity_content_body', $counter );
+
+		try {
+			$item = $this->get_first_item(
+				array(
+					'include' => $this->activity_id,
+					'_fields' => 'id,link_embed_url',
+				)
+			);
+		} finally {
+			remove_filter( 'bp_get_activity_content_body', $counter );
+		}
+
+		$this->assertSame( 'https://example.org/embedded', $item['link_embed_url'] );
+		$this->assertSame( 0, $renders );
+	}
+
+	/**
+	 * `can_close_comment` is derived from whether comments are closed. That
+	 * value has to be resolved independently of the `is_comment_closed`
+	 * selection, or one guard would be reading what another produced.
+	 */
+	public function test_close_comment_permission_is_independent_of_is_comment_closed() {
+		$full   = $this->get_first_item( array( 'include' => $this->activity_id ) );
+		$narrow = $this->get_first_item(
+			array(
+				'include' => $this->activity_id,
+				'_fields' => 'id,can_close_comment',
+			)
+		);
+
+		if ( ! isset( $full['can_close_comment'] ) ) {
+			$this->markTestSkipped( 'Closing activity comments is not available on this install.' );
+		}
+
+		$this->assertArrayNotHasKey( 'is_comment_closed', $narrow );
+		$this->assertSame( $full['can_close_comment'], $narrow['can_close_comment'] );
 	}
 
 	/**
@@ -410,8 +491,12 @@ class BP_Tests_Activity_REST_Fields extends BP_UnitTestCase {
 		};
 
 		add_filter( 'bp_activity_get_edit_data', $counter );
-		$this->get_first_item( array( '_fields' => 'id,user_id' ) );
-		remove_filter( 'bp_activity_get_edit_data', $counter );
+
+		try {
+			$this->get_first_item( array( '_fields' => 'id,user_id' ) );
+		} finally {
+			remove_filter( 'bp_activity_get_edit_data', $counter );
+		}
 
 		$this->assertSame( 0, $builds );
 	}
@@ -493,6 +578,132 @@ class BP_Tests_Activity_REST_Fields extends BP_UnitTestCase {
 			$full - $narrow,
 			sprintf( 'No selection cost %d queries, a narrow selection cost %d, over %d rows.', $full, $narrow, $rows )
 		);
+	}
+
+	/**
+	 * A field the controller returns has to be in the schema, otherwise
+	 * `get_fields_for_response()` cannot see it and it can never be guarded.
+	 *
+	 * @dataProvider undeclared_field_provider
+	 *
+	 * @param string $field Field name.
+	 */
+	public function test_previously_undeclared_field_is_in_the_schema( $field ) {
+		$schema = $this->endpoint->get_item_schema();
+
+		$this->assertArrayHasKey( $field, $schema['properties'] );
+		$this->assertNotEmpty( $schema['properties'][ $field ]['readonly'] );
+	}
+
+	/**
+	 * ...and being in the schema must not make it writable.
+	 *
+	 * @dataProvider undeclared_field_provider
+	 *
+	 * @param string $field Field name.
+	 */
+	public function test_previously_undeclared_field_is_not_a_request_argument( $field ) {
+		foreach ( array( WP_REST_Server::CREATABLE, WP_REST_Server::EDITABLE ) as $method ) {
+			$this->assertArrayNotHasKey(
+				$field,
+				$this->endpoint->get_endpoint_args_for_item_schema( $method ),
+				sprintf( 'Field "%s" became a writable argument.', $field )
+			);
+		}
+	}
+
+	/**
+	 * `comment_fields` is the selection that reaches nested comments, since
+	 * the parent's `_fields` cannot: WordPress hands a list back whole.
+	 */
+	public function test_comment_fields_narrows_the_nested_comments() {
+		$this->create_comment();
+
+		$item = $this->get_first_item(
+			array(
+				'display_comments' => 'threaded',
+				'include'          => $this->activity_id,
+				'comment_fields'   => 'id,content',
+			)
+		);
+
+		$this->assertNotEmpty( $item['comments'] );
+
+		$comment = $item['comments'][0];
+
+		$this->assertArrayHasKey( 'id', $comment );
+		$this->assertArrayHasKey( 'content', $comment );
+		$this->assertArrayNotHasKey( 'activity_data', $comment );
+		$this->assertArrayNotHasKey( 'reacted_counts', $comment );
+	}
+
+	/**
+	 * ...and it applies to the comments only, never to their parent.
+	 */
+	public function test_comment_fields_leaves_the_parent_activity_whole() {
+		$this->create_comment();
+
+		$item = $this->get_first_item(
+			array(
+				'display_comments' => 'threaded',
+				'include'          => $this->activity_id,
+				'comment_fields'   => 'id',
+			)
+		);
+
+		$this->assertArrayHasKey( 'content', $item );
+		$this->assertArrayHasKey( 'activity_data', $item );
+	}
+
+	/**
+	 * The activity comment controller honours it too.
+	 */
+	public function test_activity_comment_endpoint_honours_comment_fields() {
+		$this->create_comment();
+
+		$request = new WP_REST_Request( 'GET', $this->endpoint_url . '/' . $this->activity_id . '/comment' );
+		$request->set_param( 'context', 'view' );
+		$request->set_param( 'comment_fields', 'id,content' );
+
+		$data = $this->dispatch( $request )->get_data();
+
+		$this->assertNotEmpty( $data['comments'] );
+
+		$comment = $data['comments'][0];
+
+		$this->assertArrayHasKey( 'content', $comment );
+		$this->assertArrayNotHasKey( 'activity_data', $comment );
+	}
+
+	/**
+	 * An unselected comment field must not be built for the comments either.
+	 */
+	public function test_comment_fields_skips_the_work_behind_unselected_comment_fields() {
+		$this->create_comment();
+
+		$builds  = 0;
+		$counter = function ( $data ) use ( &$builds ) {
+			$builds++;
+
+			return $data;
+		};
+
+		add_filter( 'bp_activity_get_edit_data', $counter );
+
+		try {
+			$this->get_first_item(
+				array(
+					'display_comments' => 'threaded',
+					'include'          => $this->activity_id,
+					'comment_fields'   => 'id,content',
+					'_fields'          => 'id,comments',
+				)
+			);
+		} finally {
+			remove_filter( 'bp_activity_get_edit_data', $counter );
+		}
+
+		$this->assertSame( 0, $builds );
 	}
 
 	/**

@@ -237,6 +237,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 	 * @apiParam {String} [component] Limit result set to items with a specific active component.
 	 * @apiParam {String} [type] Limit result set to items with a specific activity type.
 	 * @apiParam {String=stream,threaded,false} [display_comments=false] No comments by default, stream for within stream display, threaded for below each activity item.
+	 * @apiParam {String} [comment_fields] Comma separated list of fields to build for each returned comment.
 	 * @apiParam {Array=public,loggedin,onlyme,friends,media} [privacy] Privacy of the activity.
 	 * @apiParam {String=activity,group} [pin_type] Show pin activity of feed type.
 	 * @apiParam {Number} [topic_id] Limit result set to items with a specific topic ID.
@@ -461,6 +462,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 	 * @apiPermission  LoggedInUser
 	 * @apiParam {Number} id A unique numeric ID for the activity.
 	 * @apiParam {String=stream,threaded,false} [display_comments=false] No comments by default, stream for within stream display, threaded for below each activity item.
+	 * @apiParam {String} [comment_fields] Comma separated list of fields to build for each returned comment.
 	 */
 	public function get_item( $request ) {
 		$activity = $this->get_activity_object( $request );
@@ -1399,7 +1401,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 
 		// Get the activity before it's deleted.
 		$activity = $this->get_activity_object( $request );
-		$previous = $this->prepare_item_for_response( $activity, $this->bb_rest_request_without_fields( $request ) );
+		$previous = $this->prepare_item_for_response( $activity, bb_rest_request_for_nested_item( $request ) );
 
 		if ( 'activity_comment' === $activity->type ) {
 			$retval = bp_activity_delete_comment( $activity->item_id, $activity->id );
@@ -1752,7 +1754,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 
 		// Prepare the response now the user favorites has been updated.
 		$res_activity = $this->prepare_response_for_collection(
-			$this->prepare_item_for_response( $activity, $this->bb_rest_request_without_fields( $request ) )
+			$this->prepare_item_for_response( $activity, bb_rest_request_for_nested_item( $request ) )
 		);
 
 		$retval = array(
@@ -1919,7 +1921,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 
 		// Prepare the response now the user favorites has been updated.
 		$res_activity = $this->prepare_response_for_collection(
-			$this->prepare_item_for_response( $activity, $this->bb_rest_request_without_fields( $request ) )
+			$this->prepare_item_for_response( $activity, bb_rest_request_for_nested_item( $request ) )
 		);
 
 		$retval = array(
@@ -2154,12 +2156,25 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 		 */
 		$fields = $this->get_fields_for_response( $request );
 
+		$include_content        = rest_is_field_included( 'content', $fields );
+		$include_preview_data   = rest_is_field_included( 'preview_data', $fields );
+		$include_link_embed_url = rest_is_field_included( 'link_embed_url', $fields );
+
+		// Embed URL stored against the activity, if any. Its metadata is already in hand.
+		$link_embed = $activity_metas['_link_embed'][0] ?? '';
+
 		/*
-		 * The embed resolution further down inspects the rendered content, so
-		 * it has to be produced whenever either of them belongs in the response.
+		 * `link_embed_url` comes straight from that metadata whenever the
+		 * activity carries it. Only without it does the value fall out of the
+		 * embed resolution, which is otherwise work done for `preview_data`
+		 * alone. The resolution reads the rendered content, so that has to be
+		 * produced for it as well as for `content` itself.
 		 */
-		$include_content    = rest_is_field_included( 'content', $fields );
-		$include_embed_data = rest_is_field_included( 'preview_data', $fields ) || rest_is_field_included( 'link_embed_url', $fields );
+		$include_embed_data = $include_preview_data || ( $include_link_embed_url && empty( $link_embed ) );
+
+		$include_is_comment_closed     = rest_is_field_included( 'is_comment_closed', $fields );
+		$include_can_close_comment     = rest_is_field_included( 'can_close_comment', $fields );
+		$include_comment_closed_notice = rest_is_field_included( 'comment_closed_notice', $fields );
 
 		$data = array();
 
@@ -2221,7 +2236,10 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 		}
 
 		if ( $include_embed_data ) {
-			$data['preview_data']   = '';
+			$data['preview_data'] = '';
+		}
+
+		if ( $include_link_embed_url ) {
 			$data['link_embed_url'] = '';
 		}
 
@@ -2251,15 +2269,31 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			) : 0;
 		}
 
-		$data['is_comment_closed'] = function_exists( 'bb_is_close_activity_comments_enabled' ) && bb_is_close_activity_comments_enabled() ? bb_is_activity_comments_closed( $activity->id ) : false;
-		$data['activity_status']   = $activity->status;
+		/*
+		 * Resolved once into a local, because the close-comment permission and
+		 * the notice below are both derived from it: a guarded field must never
+		 * depend on a value another guard produced.
+		 */
+		$is_comment_closed = (
+			( $include_is_comment_closed || $include_can_close_comment || $include_comment_closed_notice ) &&
+			function_exists( 'bb_is_close_activity_comments_enabled' ) &&
+			bb_is_close_activity_comments_enabled()
+		) ? bb_is_activity_comments_closed( $activity->id ) : false;
 
-		$data['bb_activity_post_feature_image'] = array();
-		if ( ! empty( $activity->id ) ) {
-			if ( function_exists( 'bb_pro_activity_post_feature_image_instance' ) ) {
-				$feature_image_data = bb_pro_activity_post_feature_image_instance()->bb_get_feature_image_data( $activity->id );
-				if ( ! empty( $feature_image_data ) ) {
-					$data['bb_activity_post_feature_image'] = $feature_image_data;
+		if ( $include_is_comment_closed ) {
+			$data['is_comment_closed'] = $is_comment_closed;
+		}
+
+		$data['activity_status'] = $activity->status;
+
+		if ( rest_is_field_included( 'bb_activity_post_feature_image', $fields ) ) {
+			$data['bb_activity_post_feature_image'] = array();
+			if ( ! empty( $activity->id ) ) {
+				if ( function_exists( 'bb_pro_activity_post_feature_image_instance' ) ) {
+					$feature_image_data = bb_pro_activity_post_feature_image_instance()->bb_get_feature_image_data( $activity->id );
+					if ( ! empty( $feature_image_data ) ) {
+						$data['bb_activity_post_feature_image'] = $feature_image_data;
+					}
 				}
 			}
 		}
@@ -2269,14 +2303,12 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			$data['feature_media'] = wp_get_attachment_image_url( get_post_thumbnail_id( $blog_id ), 'full' );
 		}
 
+		// Add iframe embedded data in separate object.
+		if ( $include_link_embed_url && ! empty( $link_embed ) ) {
+			$data['link_embed_url'] = $link_embed;
+		}
+
 		if ( $include_embed_data ) {
-			// Add iframe embedded data in separate object.
-			$link_embed = $activity_metas['_link_embed'][0] ?? '';
-
-			if ( ! empty( $link_embed ) ) {
-				$data['link_embed_url'] = $link_embed;
-			}
-
 			if ( ! empty( $link_embed ) && method_exists( $bp->embed, 'autoembed' ) ) {
 				$data['preview_data'] = $bp->embed->autoembed( '', $activity );
 
@@ -2312,12 +2344,14 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 				}
 			}
 
-			// Add link preview data in separate object.
-			$link_preview = bp_activity_link_preview( '', $activity );
-			if ( ! empty( $link_preview ) ) {
-				$data['preview_data'] = $link_preview;
-			} elseif ( empty( $link_preview ) && in_array( $activity->type, array( 'bbp_reply_create', 'bbp_topic_create' ), true ) ) {
-				$data['preview_data'] = $this->bp_rest_activity_remove_lazyload( $data['preview_data'], $activity, empty( $data['preview_data'] ) );
+			// Add link preview data in separate object. It produces `preview_data` alone.
+			if ( $include_preview_data ) {
+				$link_preview = bp_activity_link_preview( '', $activity );
+				if ( ! empty( $link_preview ) ) {
+					$data['preview_data'] = $link_preview;
+				} elseif ( empty( $link_preview ) && in_array( $activity->type, array( 'bbp_reply_create', 'bbp_topic_create' ), true ) ) {
+					$data['preview_data'] = $this->bp_rest_activity_remove_lazyload( $data['preview_data'], $activity, empty( $data['preview_data'] ) );
+				}
 			}
 		}
 
@@ -2402,15 +2436,13 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			$data['can_pin'] = true;
 		}
 
-		$include_can_close_comment = rest_is_field_included( 'can_close_comment', $fields );
-
 		if ( $include_can_close_comment ) {
 			$data['can_close_comment'] = false;
 		}
 
 		if ( function_exists( 'bb_is_close_activity_comments_enabled' ) && bb_is_close_activity_comments_enabled() ) {
 
-			if ( $data['is_comment_closed'] ) {
+			if ( $is_comment_closed && $include_comment_closed_notice ) {
 				$data['comment_closed_notice'] = bb_get_close_activity_comments_notice( $activity->id );
 			}
 
@@ -2418,7 +2450,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			if ( $include_can_close_comment ) {
 				$check_args = array(
 					'activity_id' => $activity->id,
-					'action'      => $data['is_comment_closed'] ? 'unclose_comments' : 'close_comments',
+					'action'      => $is_comment_closed ? 'unclose_comments' : 'close_comments',
 				);
 
 				$retval = bb_activity_comments_close_action_allowed( $check_args );
@@ -2432,7 +2464,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 		$schema = $this->get_item_schema();
 
 		// Comment depth.
-		if ( 'activity_comment' === $activity->type && ! empty( $activity->depth ) ) {
+		if ( 'activity_comment' === $activity->type && ! empty( $activity->depth ) && rest_is_field_included( 'comment_depth', $fields ) ) {
 			$data['comment_depth'] = $activity->depth;
 		}
 
@@ -2540,30 +2572,6 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 	}
 
 	/**
-	 * Clone a request with its `_fields` selection removed.
-	 *
-	 * A prepared activity is sometimes nested inside a response that is not an
-	 * activity: the `previous` key of a delete, the `activity` key of a pin,
-	 * close-comments or mute action, the `comments` list of its parent, or the
-	 * payload of the activity comment controller. In each of those cases the
-	 * caller's `_fields` names the keys of the outer response, so it must not
-	 * narrow the nested activity — WordPress returns such nested items whole.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @param WP_REST_Request $request Full details about the request.
-	 *
-	 * @return WP_REST_Request Cloned request without the `_fields` parameter.
-	 */
-	public function bb_rest_request_without_fields( $request ) {
-		$request = clone $request;
-
-		unset( $request['_fields'] );
-
-		return $request;
-	}
-
-	/**
 	 * Prepare activity comments.
 	 *
 	 * @param array           $comments Comments.
@@ -2579,7 +2587,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			return $data;
 		}
 
-		$comment_request = $this->bb_rest_request_without_fields( $request );
+		$comment_request = bb_rest_request_for_nested_item( $request, 'comment_fields' );
 
 		foreach ( $comments as $comment ) {
 			$data[] = $this->prepare_response_for_collection(
@@ -3005,7 +3013,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			/**
 			 * Filters the activity schema.
 			 *
-			 * @param string $schema The endpoint schema.
+			 * @param array $schema The endpoint schema.
 			 */
 			return apply_filters( 'bp_rest_activity_schema', $this->add_additional_fields_schema( $this->schema ) );
 		}
@@ -3287,6 +3295,32 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			),
 		);
 
+		/*
+		 * Response fields the controller has always returned but never
+		 * declared. They are appended rather than written into the array
+		 * above so that the surrounding alignment is left alone.
+		 */
+		$schema['properties']['bb_activity_post_feature_image'] = array(
+			'context'     => array( 'embed', 'view', 'edit' ),
+			'description' => __( 'Feature image data of the activity post.', 'buddyboss' ),
+			'type'        => 'object',
+			'readonly'    => true,
+		);
+
+		$schema['properties']['comment_closed_notice'] = array(
+			'context'     => array( 'embed', 'view', 'edit' ),
+			'description' => __( 'Notice explaining who turned commenting off for the activity.', 'buddyboss' ),
+			'type'        => 'string',
+			'readonly'    => true,
+		);
+
+		$schema['properties']['comment_depth'] = array(
+			'context'     => array( 'embed', 'view', 'edit' ),
+			'description' => __( 'Nesting level of an activity comment below its parent activity.', 'buddyboss' ),
+			'type'        => 'integer',
+			'readonly'    => true,
+		);
+
 		// Avatars.
 		if ( true === buddypress()->avatar->show_avatars ) {
 			$avatar_properties = array();
@@ -3460,6 +3494,14 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			'type'              => 'string',
 			'enum'              => array_keys( bp_activity_get_types() ),
 			'sanitize_callback' => 'sanitize_key',
+			'validate_callback' => 'rest_validate_request_arg',
+		);
+
+		$params['comment_fields'] = array(
+			'description'       => __( 'Limit the comments of each activity to a comma separated list of fields. The activity\'s own `_fields` cannot reach them, because comments are returned as a list.', 'buddyboss' ),
+			'default'           => '',
+			'type'              => 'string',
+			'sanitize_callback' => 'sanitize_text_field',
 			'validate_callback' => 'rest_validate_request_arg',
 		);
 
@@ -3872,7 +3914,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 
 		// Prepare the response now the user favorites has been updated.
 		$res_activity = $this->prepare_response_for_collection(
-			$this->prepare_item_for_response( $activity, $this->bb_rest_request_without_fields( $request ) )
+			$this->prepare_item_for_response( $activity, bb_rest_request_for_nested_item( $request ) )
 		);
 
 		$retval = array(

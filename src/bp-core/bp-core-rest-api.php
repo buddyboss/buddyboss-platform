@@ -456,6 +456,42 @@ function bb_rest_raw_content( $content ) {
 }
 
 /**
+ * Get a copy of a request for an item nested inside another response.
+ *
+ * A controller sometimes prepares an item that is not the response itself: the
+ * `previous` key of a delete, the `activity` key of a pin action, or the
+ * comments listed under their parent. The caller's `_fields` addresses the
+ * outer response, and WordPress hands such nested items back whole, so the
+ * selection must never be allowed to narrow them.
+ *
+ * Where a controller offers a selection of its own for the nested items, pass
+ * that parameter's name as `$fields_param` and it takes the place of `_fields`
+ * while the nested item is built. With the parameter absent the item is built
+ * in full, exactly as it was before the controllers honoured `_fields`.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param WP_REST_Request $request      Full details about the request.
+ * @param string          $fields_param Optional. Name of the request parameter
+ *                                      holding the field selection for the
+ *                                      nested items. Default ''.
+ *
+ * @return WP_REST_Request Copy of the request, with `_fields` replaced or removed.
+ */
+function bb_rest_request_for_nested_item( $request, $fields_param = '' ) {
+	$nested_request = clone $request;
+	$nested_fields  = ( '' !== $fields_param ) ? $request->get_param( $fields_param ) : '';
+
+	unset( $nested_request['_fields'] );
+
+	if ( ! empty( $nested_fields ) ) {
+		$nested_request->set_param( '_fields', $nested_fields );
+	}
+
+	return $nested_request;
+}
+
+/**
  * Set the global variable for the REST request.
  *
  * @param mixed $response The response data.
