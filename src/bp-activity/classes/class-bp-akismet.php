@@ -291,7 +291,7 @@ class BP_Akismet {
 		 * This helps Akismet ensure that the update was a valid form submission.
 		 */
 		if ( ! empty( $_POST['_bp_as_nonce'] ) ) {
-			$activity_data['akismet_comment_nonce'] = wp_verify_nonce( $_POST['_bp_as_nonce'], "_bp_as_nonce_{$userdata->ID}" ) ? 'passed' : 'failed';
+			$activity_data['akismet_comment_nonce'] = wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['_bp_as_nonce'] ) ), "_bp_as_nonce_{$userdata->ID}" ) ? 'passed' : 'failed';
 		}
 
 		/**
@@ -299,7 +299,7 @@ class BP_Akismet {
 		 * This helps Akismet ensure that the update was a valid form submission.
 		 */
 		elseif ( ! empty( $activity->secondary_item_id ) && ! empty( $_POST[ '_bp_as_nonce_' . $activity->secondary_item_id ] ) ) {
-			$activity_data['akismet_comment_nonce'] = wp_verify_nonce( $_POST[ "_bp_as_nonce_{$activity->secondary_item_id}" ], "_bp_as_nonce_{$userdata->ID}_{$activity->secondary_item_id}" ) ? 'passed' : 'failed';
+			$activity_data['akismet_comment_nonce'] = wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST[ "_bp_as_nonce_{$activity->secondary_item_id}" ] ) ), "_bp_as_nonce_{$userdata->ID}_{$activity->secondary_item_id}" ) ? 'passed' : 'failed';
 		}
 
 		/**
@@ -474,7 +474,7 @@ class BP_Akismet {
 		$activity_data['blog']         = bp_get_option( 'home' );
 		$activity_data['blog_charset'] = bp_get_option( 'blog_charset' );
 		$activity_data['blog_lang']    = get_locale();
-		$activity_data['referrer']     = $_SERVER['HTTP_REFERER'];
+		$activity_data['referrer']     = isset( $_SERVER['HTTP_REFERER'] ) ? sanitize_text_field( wp_unslash( $_SERVER['HTTP_REFERER'] ) ) : '';
 		$activity_data['user_agent']   = bp_core_current_user_ua();
 		$activity_data['user_ip']      = bp_core_current_user_ip();
 
@@ -485,7 +485,7 @@ class BP_Akismet {
 		// Loop through _POST args and rekey strings.
 		foreach ( $_POST as $key => $value ) {
 			if ( is_string( $value ) && 'cookie' != $key ) {
-				$activity_data[ 'POST_' . $key ] = $value;
+				$activity_data[ 'POST_' . $key ] = sanitize_text_field( wp_unslash( $value ) );
 			}
 		}
 
@@ -497,7 +497,7 @@ class BP_Akismet {
 
 			// Key should not be ignored.
 			if ( ! in_array( $key, $ignore ) && is_string( $value ) ) {
-				$activity_data[ $key ] = $value;
+				$activity_data[ $key ] = sanitize_text_field( wp_unslash( $value ) );
 
 				// Key should be ignored.
 			} else {

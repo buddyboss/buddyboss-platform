@@ -2863,7 +2863,7 @@ function bb_redirection_allowed_third_party_domains( $hosts ) {
 	if ( count( $allow_custom_url_domains ) > 0 ) {
 		foreach ( $allow_custom_url_domains as $url ) {
 			$parsed_url   = wp_parse_url( $url );
-			$current_host = $_SERVER['HTTP_HOST'];
+			$current_host = isset( $_SERVER['HTTP_HOST'] ) ? sanitize_text_field( wp_unslash( $_SERVER['HTTP_HOST'] ) ) : '';
 
 			if (
 				isset( $parsed_url['host'] ) &&

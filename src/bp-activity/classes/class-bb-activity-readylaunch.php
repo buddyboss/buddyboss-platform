@@ -247,7 +247,7 @@ class BB_Activity_Readylaunch {
 		}
 
 		// Nonce check!
-		if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'bp_nouveau_activity' ) ) { // phpcs:ignore
+		if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'bp_nouveau_activity' ) ) {
 			wp_send_json_error(
 				array(
 					'message' => __( 'Invalid request.', 'buddyboss-platform' ),

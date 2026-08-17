@@ -369,7 +369,7 @@ function bp_activity_save_link_data( $activity ) {
 		}
 	}
 
-	$preview_data['link_image_index_save'] = isset( $_POST['link_image_index_save'] ) ? filter_var( $_POST['link_image_index_save'] ) : '';
+	$preview_data['link_image_index_save'] = isset( $_POST['link_image_index_save'] ) ? sanitize_text_field( wp_unslash( $_POST['link_image_index_save'] ) ) : '';
 
 	if ( ! empty( $link_title ) ) {
 		$link_title            = wp_kses_post( $link_title );

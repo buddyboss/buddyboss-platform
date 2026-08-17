@@ -79,7 +79,7 @@ function bp_activity_action_permalink_router() {
 	// If set, add the original query string back onto the redirect URL.
 	if ( ! empty( $_SERVER['QUERY_STRING'] ) ) {
 		$query_frags = array();
-		wp_parse_str( $_SERVER['QUERY_STRING'], $query_frags );
+		wp_parse_str( sanitize_text_field( wp_unslash( $_SERVER['QUERY_STRING'] ) ), $query_frags );
 		$redirect = add_query_arg( urlencode_deep( $query_frags ), $redirect );
 	}
 
