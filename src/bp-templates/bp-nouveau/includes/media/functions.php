@@ -320,10 +320,15 @@ function bp_nouveau_media_activity_edit_button( $buttons, $activity_id ) {
 /**
  * Get the album-scoped "no media" empty-state markup for the active theme.
  *
- * Mirrors what media/media-loop.php renders when an album has no media left:
+ * Follows what media/media-loop.php renders when an album has no media left:
  * ReadyLaunch uses the media/no-media template part, legacy uses the loop-none
- * user feedback. Shared by the media delete and activity delete AJAX handlers so
- * the single-album view can show the empty-state when the album becomes empty.
+ * user feedback. One deliberate difference: the loop template's un-parenthesized
+ * condition can pick the "photos or videos" wording even when the video
+ * component is inactive (its group branch escapes the bp_is_active check via
+ * operator precedence); this helper requires the video component for both
+ * branches, so it never advertises videos that cannot exist. Shared by the
+ * media delete and activity delete AJAX handlers so the single-album view can
+ * show the empty-state when the album becomes empty.
  *
  * @since BuddyBoss [BBVERSION]
  *
