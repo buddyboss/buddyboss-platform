@@ -1,8 +1,8 @@
 === BuddyBoss Platform ===
 Contributors: buddyboss
 Requires at least: 6.0
-Tested up to: 6.8
-Requires PHP: 7.4.0
+Tested up to: 6.9
+Requires PHP: 7.4
 Stable tag: 3.4.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -20,7 +20,7 @@ BuddyBoss Platform helps site builders & developers add community features to th
 
 To run BuddyBoss Platform, we recommend your host supports:
 
-* PHP version 7.2 or greater.
+* PHP version 7.4 or greater.
 * MySQL version 5.6 or greater, or, MariaDB version 10.0 or greater.
 * HTTPS support.
 
@@ -54,6 +54,14 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Activate at the network level for full integration with all sites in your network. (This is the most common multisite installation type.)
 * Enable multiblog mode to allow your BuddyBoss Platform content to be displayed on any site in your WordPress Multisite network, using the same central data.
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
+
+== Source code ==
+
+The complete, human-readable source code for this plugin — including the un-minified JavaScript/SCSS sources and the build tooling (webpack/@wordpress/scripts, Grunt, npm and Composer manifests) used to produce the compiled admin apps under `bp-core/admin/bb-settings/*/build/` and the minified assets shipped in this plugin — is publicly available at:
+
+https://github.com/buddyboss/buddyboss-platform
+
+Build instructions: `npm install && npm run build:admin && npm run build:blocks` (see `package.json`; `composer.json` describes the bundled PHP libraries). The bundled third-party JavaScript libraries are unmodified releases of their public upstreams, including: Select2 (https://github.com/select2/select2), Magnific Popup (https://github.com/dimsemenov/Magnific-Popup), Cropper (https://github.com/fengyuanchen/cropper), Dropzone (https://github.com/dropzone/dropzone), Video.js (https://github.com/videojs/video.js), flv.js (https://github.com/Bilibili/flv.js), MediumEditor (https://github.com/yabwe/medium-editor), jQuery Datetimepicker (https://github.com/xdan/datetimepicker), and EmojiOne Area (https://github.com/mervick/emojionearea).
 
 == External services ==
 
@@ -113,6 +121,12 @@ Privacy Policy: https://policies.google.com/privacy
 Used, when you enable the GIF support option and provide your own GIPHY API key, to let members search for and post animated GIFs in activity posts, comments, forums, and messages. When a member opens the GIF picker or searches, the visitor's browser sends the search terms together with your site's GIPHY API key to `https://api.giphy.com/v1/`; as with any browser request, the visitor's IP address and user agent are sent to GIPHY as part of the request. No GIPHY requests are made unless the integration is enabled with an API key. This service is operated by GIPHY, Inc.
 Terms of Service: https://support.giphy.com/hc/en-us/articles/360020027752-GIPHY-Terms-of-Service
 Privacy Policy: https://support.giphy.com/hc/en-us/articles/360032872931-GIPHY-Privacy-Policy
+
+= DocsBot AI help assistant =
+
+Used to provide the "Chat with Buddy" AI help assistant on the Help tab of the BuddyBoss admin settings screen. When a site administrator visits that tab, the DocsBot chat widget script is loaded from `https://widget.docsbot.ai/chat.js` in the administrator's browser, and any questions the administrator types are sent to DocsBot to generate answers from the BuddyBoss documentation. As with any browser request, the administrator's IP address and user agent are sent to DocsBot as part of the request. The widget never loads outside that admin tab and no site or visitor data is sent. This service is operated by DocsBot AI.
+Terms of Service: https://docsbot.ai/legal/terms-of-service
+Privacy Policy: https://docsbot.ai/privacy
 
 = Gravatar =
 
