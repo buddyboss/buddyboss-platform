@@ -1399,7 +1399,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 
 		// Get the activity before it's deleted.
 		$activity = $this->get_activity_object( $request );
-		$previous = $this->prepare_item_for_response( $activity, $request );
+		$previous = $this->prepare_item_for_response( $activity, $this->bb_rest_request_without_fields( $request ) );
 
 		if ( 'activity_comment' === $activity->type ) {
 			$retval = bp_activity_delete_comment( $activity->item_id, $activity->id );
@@ -1752,7 +1752,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 
 		// Prepare the response now the user favorites has been updated.
 		$res_activity = $this->prepare_response_for_collection(
-			$this->prepare_item_for_response( $activity, $request )
+			$this->prepare_item_for_response( $activity, $this->bb_rest_request_without_fields( $request ) )
 		);
 
 		$retval = array(
@@ -1919,7 +1919,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 
 		// Prepare the response now the user favorites has been updated.
 		$res_activity = $this->prepare_response_for_collection(
-			$this->prepare_item_for_response( $activity, $request )
+			$this->prepare_item_for_response( $activity, $this->bb_rest_request_without_fields( $request ) )
 		);
 
 		$retval = array(
@@ -2146,52 +2146,113 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			$date_recorded = bp_rest_prepare_date_response( $activity->date_recorded );
 		}
 
-		$data = array(
-			'user_id'           => $activity->user_id,
-			'name'              => bp_core_get_user_displayname( $activity->user_id ),
-			'component'         => $activity->component,
-			'post_title'        => ! empty( $activity->post_title ) ? html_entity_decode( esc_html( $activity->post_title ), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ) : '',
-			'content'           => array(
-				'raw'      => bb_rest_raw_content( $activity->content ),
-				'rendered' => $this->render_item( $activity ),
-			),
-			'date'              => $date_recorded,
-			'id'                => $activity->id,
-			'link'              => bp_activity_get_permalink( $activity->id ),
-			'primary_item_id'   => $activity->item_id,
-			'secondary_item_id' => $activity->secondary_item_id,
-			'status'            => $activity->is_spam ? 'spam' : $activity->status,
-			'title'             => $this->bb_rest_activity_action( $activity->action, $activity ),
-			'type'              => $activity->type,
-			'favorited'         => in_array( $activity->id, $this->get_user_favorites( $activity ), true ),
+		/*
+		 * The fields the request asked for. When the request carries no
+		 * `_fields`, this is every property of the item schema, so each of the
+		 * branches below runs exactly as it did before the controller became
+		 * field-aware.
+		 */
+		$fields = $this->get_fields_for_response( $request );
 
-			// extend response.
-			'can_favorite'      => ( 'activity_comment' === $activity->type ) ? bb_activity_comment_can_favorite() : bp_activity_can_favorite(),
-			'favorite_count'    => $this->get_activity_favorite_count( $activity ),
-			'can_comment'       => ( 'activity_comment' === $activity->type ) ? bp_activity_can_comment_reply( $activity ) : bp_activity_can_comment(),
-			'can_edit'          => $can_edit,
-			'is_edited'         => $activity_metas['_is_edited'][0] ?? '',
-			'can_delete'        => bp_activity_user_can_delete( $activity ),
-			'content_stripped'  => html_entity_decode( wp_strip_all_tags( $activity->content ), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ),
-			'privacy'           => ( isset( $activity->privacy ) ? $activity->privacy : false ),
-			'activity_data'     => $this->bp_rest_activitiy_edit_data( $activity ),
-			'feature_media'     => '',
-			'preview_data'      => '',
-			'link_embed_url'    => '',
-			'is_pinned'         => false,
-			'can_pin'           => false,
-			'reacted_names'     => function_exists( 'bb_activity_reaction_names_and_count' ) ? bb_activity_reaction_names_and_count( $activity->id, 'activity_comment' === $activity->type ? $activity->type : 'activity', 1 ) : '',
-			'reacted_counts'    => function_exists( 'bb_get_activity_most_reactions' ) ? bb_get_activity_most_reactions( $activity->id, 'activity_comment' === $activity->type ? $activity->type : 'activity', 7 ) : array(),
-			'reacted_id'        => ( function_exists( 'bb_load_reaction' ) && bb_load_reaction() ) ? bb_load_reaction()->bb_user_reacted_reaction_id(
+		/*
+		 * The embed resolution further down inspects the rendered content, so
+		 * it has to be produced whenever either of them belongs in the response.
+		 */
+		$include_content    = rest_is_field_included( 'content', $fields );
+		$include_embed_data = rest_is_field_included( 'preview_data', $fields ) || rest_is_field_included( 'link_embed_url', $fields );
+
+		$data = array();
+
+		$data['user_id'] = $activity->user_id;
+
+		if ( rest_is_field_included( 'name', $fields ) ) {
+			$data['name'] = bp_core_get_user_displayname( $activity->user_id );
+		}
+
+		$data['component']  = $activity->component;
+		$data['post_title'] = ! empty( $activity->post_title ) ? html_entity_decode( esc_html( $activity->post_title ), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ) : '';
+
+		$rendered_content = ( $include_content || $include_embed_data ) ? $this->render_item( $activity ) : '';
+
+		if ( $include_content ) {
+			$data['content'] = array(
+				'raw'      => bb_rest_raw_content( $activity->content ),
+				'rendered' => $rendered_content,
+			);
+		}
+
+		$data['date'] = $date_recorded;
+		$data['id']   = $activity->id;
+
+		if ( rest_is_field_included( 'link', $fields ) ) {
+			$data['link'] = bp_activity_get_permalink( $activity->id );
+		}
+
+		$data['primary_item_id']   = $activity->item_id;
+		$data['secondary_item_id'] = $activity->secondary_item_id;
+		$data['status']            = $activity->is_spam ? 'spam' : $activity->status;
+		$data['title']             = $this->bb_rest_activity_action( $activity->action, $activity );
+		$data['type']              = $activity->type;
+
+		if ( rest_is_field_included( 'favorited', $fields ) ) {
+			$data['favorited'] = in_array( $activity->id, $this->get_user_favorites( $activity ), true );
+		}
+
+		// extend response.
+		$data['can_favorite'] = ( 'activity_comment' === $activity->type ) ? bb_activity_comment_can_favorite() : bp_activity_can_favorite();
+
+		if ( rest_is_field_included( 'favorite_count', $fields ) ) {
+			$data['favorite_count'] = $this->get_activity_favorite_count( $activity );
+		}
+
+		$data['can_comment']      = ( 'activity_comment' === $activity->type ) ? bp_activity_can_comment_reply( $activity ) : bp_activity_can_comment();
+		$data['can_edit']         = $can_edit;
+		$data['is_edited']        = $activity_metas['_is_edited'][0] ?? '';
+		$data['can_delete']       = bp_activity_user_can_delete( $activity );
+		$data['content_stripped'] = html_entity_decode( wp_strip_all_tags( $activity->content ), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 );
+		$data['privacy']          = ( isset( $activity->privacy ) ? $activity->privacy : false );
+
+		if ( rest_is_field_included( 'activity_data', $fields ) ) {
+			$data['activity_data'] = $this->bp_rest_activitiy_edit_data( $activity );
+		}
+
+		if ( rest_is_field_included( 'feature_media', $fields ) ) {
+			$data['feature_media'] = '';
+		}
+
+		if ( $include_embed_data ) {
+			$data['preview_data']   = '';
+			$data['link_embed_url'] = '';
+		}
+
+		if ( rest_is_field_included( 'is_pinned', $fields ) ) {
+			$data['is_pinned'] = false;
+		}
+
+		if ( rest_is_field_included( 'can_pin', $fields ) ) {
+			$data['can_pin'] = false;
+		}
+
+		if ( rest_is_field_included( 'reacted_names', $fields ) ) {
+			$data['reacted_names'] = function_exists( 'bb_activity_reaction_names_and_count' ) ? bb_activity_reaction_names_and_count( $activity->id, 'activity_comment' === $activity->type ? $activity->type : 'activity', 1 ) : '';
+		}
+
+		if ( rest_is_field_included( 'reacted_counts', $fields ) ) {
+			$data['reacted_counts'] = function_exists( 'bb_get_activity_most_reactions' ) ? bb_get_activity_most_reactions( $activity->id, 'activity_comment' === $activity->type ? $activity->type : 'activity', 7 ) : array();
+		}
+
+		if ( rest_is_field_included( 'reacted_id', $fields ) ) {
+			$data['reacted_id'] = ( function_exists( 'bb_load_reaction' ) && bb_load_reaction() ) ? bb_load_reaction()->bb_user_reacted_reaction_id(
 				array(
 					'item_id'   => $activity->id,
 					'item_type' => 'activity_comment' === $activity->type ? $activity->type : 'activity',
 					'user_id'   => bp_loggedin_user_id(),
 				)
-			) : 0,
-			'is_comment_closed' => function_exists( 'bb_is_close_activity_comments_enabled' ) && bb_is_close_activity_comments_enabled() ? bb_is_activity_comments_closed( $activity->id ) : false,
-			'activity_status'   => $activity->status,
-		);
+			) : 0;
+		}
+
+		$data['is_comment_closed'] = function_exists( 'bb_is_close_activity_comments_enabled' ) && bb_is_close_activity_comments_enabled() ? bb_is_activity_comments_closed( $activity->id ) : false;
+		$data['activity_status']   = $activity->status;
 
 		$data['bb_activity_post_feature_image'] = array();
 		if ( ! empty( $activity->id ) ) {
@@ -2204,58 +2265,60 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 		}
 
 		// Add feature image as separate object which added last in the content.
-		if ( ! empty( $blog_id ) && ! empty( get_post_thumbnail_id( $blog_id ) ) ) {
+		if ( rest_is_field_included( 'feature_media', $fields ) && ! empty( $blog_id ) && ! empty( get_post_thumbnail_id( $blog_id ) ) ) {
 			$data['feature_media'] = wp_get_attachment_image_url( get_post_thumbnail_id( $blog_id ), 'full' );
 		}
 
-		// Add iframe embedded data in separate object.
-		$link_embed = $activity_metas['_link_embed'][0] ?? '';
+		if ( $include_embed_data ) {
+			// Add iframe embedded data in separate object.
+			$link_embed = $activity_metas['_link_embed'][0] ?? '';
 
-		if ( ! empty( $link_embed ) ) {
-			$data['link_embed_url'] = $link_embed;
-		}
-
-		if ( ! empty( $link_embed ) && method_exists( $bp->embed, 'autoembed' ) ) {
-			$data['preview_data'] = $bp->embed->autoembed( '', $activity );
-
-			// Removed lazyload from link preview.
-			$data['preview_data'] = $this->bp_rest_activity_remove_lazyload( $data['preview_data'], $activity, true );
-		} elseif ( method_exists( $bp->embed, 'autoembed' ) && ! empty( $data['content_stripped'] ) ) {
-			$skip_embed = false;
-			if ( ! empty( $data['content']['rendered'] ) ) {
-
-				// Check if already embed in rendered content.
-				preg_match( '/<iframe[^>]*><\/iframe>/', $data['content']['rendered'], $matchcontent );
-				if ( ! empty( $matchcontent[0] ) ) {
-					$skip_embed = true;
-				}
+			if ( ! empty( $link_embed ) ) {
+				$data['link_embed_url'] = $link_embed;
 			}
-			if ( ! $skip_embed ) {
-				$check_embedded_content = $bp->embed->autoembed( $data['content_stripped'], $activity );
-				if ( ! empty( $check_embedded_content ) ) {
-					preg_match( '/<iframe[^>]*><\/iframe>/', $check_embedded_content, $match );
-					if ( ! empty( $match[0] ) ) {
-						$data['preview_data'] = $match[0];
-						// Use a regular expression to find the src URL.
-						preg_match( '/src="([^"]+)"/', $match[0], $matches );
-						if ( ! empty( $matches[1] ) ) {
 
-							// Set link_embed_url with the iframe src URL as a fallback.
-							$data['link_embed_url'] = $matches[1];
-						}
-					}
-				}
+			if ( ! empty( $link_embed ) && method_exists( $bp->embed, 'autoembed' ) ) {
+				$data['preview_data'] = $bp->embed->autoembed( '', $activity );
+
 				// Removed lazyload from link preview.
 				$data['preview_data'] = $this->bp_rest_activity_remove_lazyload( $data['preview_data'], $activity, true );
-			}
-		}
+			} elseif ( method_exists( $bp->embed, 'autoembed' ) && ! empty( $data['content_stripped'] ) ) {
+				$skip_embed = false;
+				if ( ! empty( $rendered_content ) ) {
 
-		// Add link preview data in separate object.
-		$link_preview = bp_activity_link_preview( '', $activity );
-		if ( ! empty( $link_preview ) ) {
-			$data['preview_data'] = $link_preview;
-		} elseif ( empty( $link_preview ) && in_array( $activity->type, array( 'bbp_reply_create', 'bbp_topic_create' ), true ) ) {
-			$data['preview_data'] = $this->bp_rest_activity_remove_lazyload( $data['preview_data'], $activity, empty( $data['preview_data'] ) );
+					// Check if already embed in rendered content.
+					preg_match( '/<iframe[^>]*><\/iframe>/', $rendered_content, $matchcontent );
+					if ( ! empty( $matchcontent[0] ) ) {
+						$skip_embed = true;
+					}
+				}
+				if ( ! $skip_embed ) {
+					$check_embedded_content = $bp->embed->autoembed( $data['content_stripped'], $activity );
+					if ( ! empty( $check_embedded_content ) ) {
+						preg_match( '/<iframe[^>]*><\/iframe>/', $check_embedded_content, $match );
+						if ( ! empty( $match[0] ) ) {
+							$data['preview_data'] = $match[0];
+							// Use a regular expression to find the src URL.
+							preg_match( '/src="([^"]+)"/', $match[0], $matches );
+							if ( ! empty( $matches[1] ) ) {
+
+								// Set link_embed_url with the iframe src URL as a fallback.
+								$data['link_embed_url'] = $matches[1];
+							}
+						}
+					}
+					// Removed lazyload from link preview.
+					$data['preview_data'] = $this->bp_rest_activity_remove_lazyload( $data['preview_data'], $activity, true );
+				}
+			}
+
+			// Add link preview data in separate object.
+			$link_preview = bp_activity_link_preview( '', $activity );
+			if ( ! empty( $link_preview ) ) {
+				$data['preview_data'] = $link_preview;
+			} elseif ( empty( $link_preview ) && in_array( $activity->type, array( 'bbp_reply_create', 'bbp_topic_create' ), true ) ) {
+				$data['preview_data'] = $this->bp_rest_activity_remove_lazyload( $data['preview_data'], $activity, empty( $data['preview_data'] ) );
+			}
 		}
 
 		// remove comment options from media/document/video activity.
@@ -2286,21 +2349,24 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			}
 		}
 
-		$pinned_id = 0;
+		if ( rest_is_field_included( 'is_pinned', $fields ) ) {
+			$pinned_id = 0;
 
-		if ( 'groups' === $activity->component ) {
-			$pinned_id = groups_get_groupmeta( $activity->item_id, 'bb_pinned_post' );
-		} else {
-			$pinned_id = bp_get_option( 'bb_pinned_post', 0 );
-		}
+			if ( 'groups' === $activity->component ) {
+				$pinned_id = groups_get_groupmeta( $activity->item_id, 'bb_pinned_post' );
+			} else {
+				$pinned_id = bp_get_option( 'bb_pinned_post', 0 );
+			}
 
-		// Pinned post.
-		if ( ! empty( $pinned_id ) && (int) $pinned_id === (int) $activity->id ) {
-			$data['is_pinned'] = true;
+			// Pinned post.
+			if ( ! empty( $pinned_id ) && (int) $pinned_id === (int) $activity->id ) {
+				$data['is_pinned'] = true;
+			}
 		}
 
 		// Show pin actions.
 		if (
+			rest_is_field_included( 'can_pin', $fields ) &&
 			'activity_comment' !== $activity->type &&
 			! in_array( $activity->privacy, array( 'media', 'document', 'video' ), true ) &&
 			(
@@ -2336,7 +2402,12 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			$data['can_pin'] = true;
 		}
 
-		$data['can_close_comment'] = false;
+		$include_can_close_comment = rest_is_field_included( 'can_close_comment', $fields );
+
+		if ( $include_can_close_comment ) {
+			$data['can_close_comment'] = false;
+		}
+
 		if ( function_exists( 'bb_is_close_activity_comments_enabled' ) && bb_is_close_activity_comments_enabled() ) {
 
 			if ( $data['is_comment_closed'] ) {
@@ -2344,14 +2415,16 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			}
 
 			// Closed comments actions allowed or not.
-			$check_args = array(
-				'activity_id' => $activity->id,
-				'action'      => $data['is_comment_closed'] ? 'unclose_comments' : 'close_comments',
-			);
+			if ( $include_can_close_comment ) {
+				$check_args = array(
+					'activity_id' => $activity->id,
+					'action'      => $data['is_comment_closed'] ? 'unclose_comments' : 'close_comments',
+				);
 
-			$retval = bb_activity_comments_close_action_allowed( $check_args );
-			if ( 'allowed' === $retval ) {
-				$data['can_close_comment'] = true;
+				$retval = bb_activity_comments_close_action_allowed( $check_args );
+				if ( 'allowed' === $retval ) {
+					$data['can_close_comment'] = true;
+				}
 			}
 		}
 
@@ -2364,30 +2437,47 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 		}
 
 		// Commenter's mention name and profile URL to build the auto-mention when replying.
-		$data['mention_name'] = function_exists( 'bp_activity_get_user_mentionname' ) && ! empty( $activity->user_id ) ? bp_activity_get_user_mentionname( $activity->user_id ) : '';
-		$data['user_link']    = function_exists( 'bp_core_get_user_domain' ) && ! empty( $activity->user_id ) ? bp_core_get_user_domain( $activity->user_id ) : '';
-
-		// Get comments (count).
-		if ( ! empty( $activity->children ) ) {
-			$data['comment_count'] = isset( $activity->all_child_count ) ? $activity->all_child_count : bp_activity_recurse_comment_count( $activity );
-			if ( ! empty( $schema['properties']['comments'] ) && 'threaded' === $request['display_comments'] && empty( $request->get_param( 'apply_limit' ) ) ) {
-				// First check the comment is disabled from the activity settings for post type.
-				// For more information, please check this PROD-2475.
-				if ( 'blogs' === $activity->component && $data['can_comment'] ) {
-					$data['comments'] = $this->prepare_activity_comments( $activity->children, $request );
-					// This is for activity comment to attach the comment in the feed.
-				} elseif ( 'blogs' !== $activity->component ) {
-					$data['comments'] = $this->prepare_activity_comments( $activity->children, $request );
-				}
-			}
-		} elseif ( isset( $activity->all_child_count ) ) {
-				$data['comment_count'] = $activity->all_child_count;
-		} else {
-			$activity->children    = BP_Activity_Activity::get_activity_comments( $activity->id, $activity->mptt_left, $activity->mptt_right, $request['status'], $top_level_parent_id, true );
-			$data['comment_count'] = ! empty( $activity->children ) ? bp_activity_recurse_comment_count( $activity ) : 0;
+		if ( rest_is_field_included( 'mention_name', $fields ) ) {
+			$data['mention_name'] = function_exists( 'bp_activity_get_user_mentionname' ) && ! empty( $activity->user_id ) ? bp_activity_get_user_mentionname( $activity->user_id ) : '';
 		}
 
-		if ( ! empty( $schema['properties']['user_avatar'] ) ) {
+		if ( rest_is_field_included( 'user_link', $fields ) ) {
+			$data['user_link'] = function_exists( 'bp_core_get_user_domain' ) && ! empty( $activity->user_id ) ? bp_core_get_user_domain( $activity->user_id ) : '';
+		}
+
+		$include_comments = rest_is_field_included( 'comments', $fields );
+
+		$include_notification = ! empty( $schema['properties']['is_receive_notification'] ) && (
+			rest_is_field_included( 'is_receive_notification', $fields ) ||
+			rest_is_field_included( 'can_toggle_notification', $fields )
+		);
+
+		/*
+		 * Get comments (count). The notification block further down reads the
+		 * comment children this populates, so it runs for those fields too.
+		 */
+		if ( rest_is_field_included( 'comment_count', $fields ) || $include_comments || $include_notification ) {
+			if ( ! empty( $activity->children ) ) {
+				$data['comment_count'] = isset( $activity->all_child_count ) ? $activity->all_child_count : bp_activity_recurse_comment_count( $activity );
+				if ( $include_comments && ! empty( $schema['properties']['comments'] ) && 'threaded' === $request['display_comments'] && empty( $request->get_param( 'apply_limit' ) ) ) {
+					// First check the comment is disabled from the activity settings for post type.
+					// For more information, please check this PROD-2475.
+					if ( 'blogs' === $activity->component && $data['can_comment'] ) {
+						$data['comments'] = $this->prepare_activity_comments( $activity->children, $request );
+						// This is for activity comment to attach the comment in the feed.
+					} elseif ( 'blogs' !== $activity->component ) {
+						$data['comments'] = $this->prepare_activity_comments( $activity->children, $request );
+					}
+				}
+			} elseif ( isset( $activity->all_child_count ) ) {
+					$data['comment_count'] = $activity->all_child_count;
+			} else {
+				$activity->children    = BP_Activity_Activity::get_activity_comments( $activity->id, $activity->mptt_left, $activity->mptt_right, $request['status'], $top_level_parent_id, true );
+				$data['comment_count'] = ! empty( $activity->children ) ? bp_activity_recurse_comment_count( $activity ) : 0;
+			}
+		}
+
+		if ( ! empty( $schema['properties']['user_avatar'] ) && rest_is_field_included( 'user_avatar', $fields ) ) {
 			$data['user_avatar'] = array(
 				'full'  => bp_core_fetch_avatar(
 					array(
@@ -2406,7 +2496,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 		}
 
 		// Turn On/Off notification.
-		if ( ! empty( $schema['properties']['is_receive_notification'] ) ) {
+		if ( $include_notification ) {
 			$data['can_toggle_notification'] = false;
 			$notification_type               = bb_activity_enabled_notification( 'bb_activity_comment', bp_loggedin_user_id() );
 			$user_ids                        = ! empty( $activity->children )
@@ -2450,6 +2540,30 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 	}
 
 	/**
+	 * Clone a request with its `_fields` selection removed.
+	 *
+	 * A prepared activity is sometimes nested inside a response that is not an
+	 * activity: the `previous` key of a delete, the `activity` key of a pin,
+	 * close-comments or mute action, the `comments` list of its parent, or the
+	 * payload of the activity comment controller. In each of those cases the
+	 * caller's `_fields` names the keys of the outer response, so it must not
+	 * narrow the nested activity — WordPress returns such nested items whole.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param WP_REST_Request $request Full details about the request.
+	 *
+	 * @return WP_REST_Request Cloned request without the `_fields` parameter.
+	 */
+	public function bb_rest_request_without_fields( $request ) {
+		$request = clone $request;
+
+		unset( $request['_fields'] );
+
+		return $request;
+	}
+
+	/**
 	 * Prepare activity comments.
 	 *
 	 * @param array           $comments Comments.
@@ -2465,9 +2579,11 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			return $data;
 		}
 
+		$comment_request = $this->bb_rest_request_without_fields( $request );
+
 		foreach ( $comments as $comment ) {
 			$data[] = $this->prepare_response_for_collection(
-				$this->prepare_item_for_response( $comment, $request )
+				$this->prepare_item_for_response( $comment, $comment_request )
 			);
 		}
 
@@ -2879,10 +2995,21 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 	/**
 	 * Get the plugin schema, conforming to JSON Schema.
 	 *
-	 * @return array
 	 * @since 0.1.0
+	 * @since BuddyBoss [BBVERSION] The schema is built once per request and reused.
+	 *
+	 * @return array
 	 */
 	public function get_item_schema() {
+		if ( ! empty( $this->schema ) ) {
+			/**
+			 * Filters the activity schema.
+			 *
+			 * @param string $schema The endpoint schema.
+			 */
+			return apply_filters( 'bp_rest_activity_schema', $this->add_additional_fields_schema( $this->schema ) );
+		}
+
 		$schema = array(
 			'$schema'    => 'http://json-schema.org/draft-04/schema#',
 			'title'      => 'bp_activity',
@@ -3205,12 +3332,10 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			);
 		}
 
-		/**
-		 * Filters the activity schema.
-		 *
-		 * @param string $schema The endpoint schema.
-		 */
-		return apply_filters( 'bp_rest_activity_schema', $this->add_additional_fields_schema( $schema ) );
+		$this->schema = $schema;
+
+		/** This filter is documented in bp-activity/classes/class-bp-rest-activity-endpoint.php */
+		return apply_filters( 'bp_rest_activity_schema', $this->add_additional_fields_schema( $this->schema ) );
 	}
 
 	/**
@@ -3747,7 +3872,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 
 		// Prepare the response now the user favorites has been updated.
 		$res_activity = $this->prepare_response_for_collection(
-			$this->prepare_item_for_response( $activity, $request )
+			$this->prepare_item_for_response( $activity, $this->bb_rest_request_without_fields( $request ) )
 		);
 
 		$retval = array(

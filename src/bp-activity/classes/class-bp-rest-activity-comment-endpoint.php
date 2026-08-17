@@ -1027,6 +1027,18 @@ class BP_REST_Activity_Comment_Endpoint extends WP_REST_Controller {
 			$comment_load_limit = bb_get_activity_comment_loading();
 		}
 
+		/*
+		 * Activity comments are built by the activity controller, but this one
+		 * answers with a payload of its own: `get_items()`, `create_item()` and
+		 * `delete_item()` nest the comments inside an envelope, so the caller's
+		 * `_fields` addresses that envelope and must not narrow the comments.
+		 * Stripping it here covers every caller. `get_item()` and
+		 * `update_item()` do return a bare comment and could honour a
+		 * selection, but they prepare a single row, so they forgo that saving
+		 * rather than leave a future caller free to forget the strip.
+		 */
+		$comment_request = $this->activity_endpoint->bb_rest_request_without_fields( $request );
+
 		$comment_loaded_count = 0;
 		foreach ( $comments as $comment ) {
 
@@ -1040,7 +1052,7 @@ class BP_REST_Activity_Comment_Endpoint extends WP_REST_Controller {
 			}
 
 			$data[] = $this->activity_endpoint->prepare_response_for_collection(
-				$this->activity_endpoint->prepare_item_for_response( $comment, $request )
+				$this->activity_endpoint->prepare_item_for_response( $comment, $comment_request )
 			);
 
 			$comment_loaded_count++;
