@@ -152,7 +152,7 @@ function bbp_new_forum_handler( $action = '' ) {
 	/** Forum Title */
 
 	if ( ! empty( $_POST['bbp_forum_title'] ) ) {
-		$forum_title = esc_attr( wp_strip_all_tags( $_POST['bbp_forum_title'] ) );
+		$forum_title = sanitize_text_field( wp_strip_all_tags( $_POST['bbp_forum_title'] ) );
 	}
 
 	// Filter and sanitize.
@@ -466,7 +466,7 @@ function bbp_edit_forum_handler( $action = '' ) {
 	/** Forum Title */
 
 	if ( ! empty( $_POST['bbp_forum_title'] ) ) {
-		$forum_title = esc_attr( wp_strip_all_tags( $_POST['bbp_forum_title'] ) );
+		$forum_title = sanitize_text_field( wp_strip_all_tags( $_POST['bbp_forum_title'] ) );
 	}
 
 	// Filter and sanitize
@@ -532,7 +532,7 @@ function bbp_edit_forum_handler( $action = '' ) {
 	 * @todo omitted for 2.1
 	// Revision Reason
 	if ( !empty( $_POST['bbp_forum_edit_reason'] ) )
-		$forum_edit_reason = esc_attr( strip_tags( $_POST['bbp_forum_edit_reason'] ) );
+		$forum_edit_reason = sanitize_text_field( strip_tags( $_POST['bbp_forum_edit_reason'] ) );
 
 	// Update revision log
 	if ( !empty( $_POST['bbp_log_forum_edit'] ) && ( "1" === $_POST['bbp_log_forum_edit'] ) && ( $revision_id = wp_save_post_revision( $forum_id ) ) ) {

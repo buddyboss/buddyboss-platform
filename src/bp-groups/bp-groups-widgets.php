@@ -92,7 +92,7 @@ function groups_ajax_widget_groups_list() {
 		<?php endwhile; ?>
 
 		<?php wp_nonce_field( 'groups_widget_groups_list', '_wpnonce-groups' ); ?>
-		<input type="hidden" name="groups_widget_max" id="groups_widget_max" value="<?php echo esc_attr( $_POST['max_groups'] ); ?>" />
+		<input type="hidden" name="groups_widget_max" id="groups_widget_max" value="<?php echo esc_attr( isset( $_POST['max_groups'] ) ? absint( $_POST['max_groups'] ) : 0 ); ?>" />
 
 	<?php else : ?>
 

@@ -126,7 +126,7 @@ function bbp_current_author_ip() {
  * @return string
  */
 function bbp_current_author_ua() {
-	$retval = ! empty( $_SERVER['HTTP_USER_AGENT'] ) ? substr( $_SERVER['HTTP_USER_AGENT'], 0, 254 ) : '';
+	$retval = ! empty( $_SERVER['HTTP_USER_AGENT'] ) ? substr( sanitize_text_field( wp_unslash( $_SERVER['HTTP_USER_AGENT'] ) ), 0, 254 ) : '';
 
 	return apply_filters( 'bbp_current_author_ua', $retval );
 }

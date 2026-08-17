@@ -59,7 +59,8 @@ function groups_action_create_group() {
 
 	// Fetch the currently completed steps variable.
 	if ( isset( $_COOKIE['bp_completed_create_steps'] ) && ! isset( $reset_steps ) ) {
-		$bp->groups->completed_create_steps = json_decode( base64_decode( stripslashes( $_COOKIE['bp_completed_create_steps'] ) ) );
+		$completed_create_steps             = json_decode( base64_decode( wp_unslash( $_COOKIE['bp_completed_create_steps'] ) ) ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_decode
+		$bp->groups->completed_create_steps = is_array( $completed_create_steps ) ? map_deep( $completed_create_steps, 'sanitize_text_field' ) : array();
 	}
 
 	// Set the ID of the new group, if it has already been created in a previous step.
@@ -92,7 +93,7 @@ function groups_action_create_group() {
 					'group_id'     => $new_group_id,
 					'name'         => $_POST['group-name'],
 					'description'  => $_POST['group-desc'],
-					'slug'         => groups_check_slug( sanitize_title( esc_attr( $_POST['group-name'] ) ) ),
+					'slug'         => groups_check_slug( sanitize_title( wp_unslash( $_POST['group-name'] ) ) ),
 					'date_created' => bp_core_current_time(),
 					'status'       => 'public',
 				)

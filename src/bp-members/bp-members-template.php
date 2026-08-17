@@ -1232,15 +1232,15 @@ function bp_member_hidden_fields() {
 	$query_arg = bp_core_get_component_search_query_arg( 'members' );
 
 	if ( isset( $_REQUEST[ $query_arg ] ) ) {
-		echo '<input type="hidden" id="search_terms" value="' . esc_attr( $_REQUEST[ $query_arg ] ) . '" name="search_terms" />';
+		echo '<input type="hidden" id="search_terms" value="' . esc_attr( sanitize_text_field( wp_unslash( $_REQUEST[ $query_arg ] ) ) ) . '" name="search_terms" />';
 	}
 
 	if ( isset( $_REQUEST['letter'] ) ) {
-		echo '<input type="hidden" id="selected_letter" value="' . esc_attr( $_REQUEST['letter'] ) . '" name="selected_letter" />';
+		echo '<input type="hidden" id="selected_letter" value="' . esc_attr( sanitize_text_field( wp_unslash( $_REQUEST['letter'] ) ) ) . '" name="selected_letter" />';
 	}
 
 	if ( isset( $_REQUEST['members_search'] ) ) {
-		echo '<input type="hidden" id="search_terms" value="' . esc_attr( $_REQUEST['members_search'] ) . '" name="search_terms" />';
+		echo '<input type="hidden" id="search_terms" value="' . esc_attr( sanitize_text_field( wp_unslash( $_REQUEST['members_search'] ) ) ) . '" name="search_terms" />';
 	}
 }
 

@@ -239,7 +239,7 @@ function bp_media_update_activity_media_meta( $content, $user_id, $activity_id )
 	global $bp_activity_post_update, $bp_activity_post_update_id, $bp_activity_edit, $bb_activity_comment_edit;
 
 	$medias           = filter_input( INPUT_POST, 'media', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY );
-	$medias           = ! empty( $medias ) ? $medias : array();
+	$medias           = ! empty( $medias ) ? map_deep( $medias, 'sanitize_text_field' ) : array();
 	$actions          = bb_filter_input_string( INPUT_POST, 'action' );
 	$moderated_medias = bp_activity_get_meta( $activity_id, 'bp_media_ids', true );
 
@@ -497,7 +497,8 @@ function bp_media_forums_new_post_media_save( $post_id ) {
 		$main_activity_id = get_post_meta( $post_id, '_bbp_activity_id', true );
 
 		// save media.
-		$medias = json_decode( stripslashes( $_POST['bbp_media'] ), true );
+		$medias = json_decode( wp_unslash( $_POST['bbp_media'] ), true );
+		$medias = ! empty( $medias ) && is_array( $medias ) ? map_deep( $medias, 'sanitize_text_field' ) : array();
 
 		if ( ! empty( $medias ) ) {
 			$media_order = array_column( $medias, 'menu_order' );

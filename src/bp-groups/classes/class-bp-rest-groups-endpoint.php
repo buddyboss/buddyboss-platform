@@ -1027,7 +1027,7 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 			}
 
 			// Make sure it is unique and sanitize it.
-			$prepared_group->slug = groups_check_slug( sanitize_title( esc_attr( $prepared_group->slug ) ) );
+			$prepared_group->slug = groups_check_slug( sanitize_title( $prepared_group->slug ) );
 		}
 
 		// Group description.

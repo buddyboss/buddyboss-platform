@@ -154,8 +154,8 @@ if ( ! class_exists( 'BBP_Akismet' ) ) :
 				'comment_post_ID'      => $post_data['post_parent'],
 				'comment_type'         => $post_data['post_type'],
 				'permalink'            => $post_permalink,
-				'referrer'             => $_SERVER['HTTP_REFERER'],
-				'user_agent'           => isset( $_SERVER['HTTP_USER_AGENT'] ) ?? '',
+				'referrer'             => isset( $_SERVER['HTTP_REFERER'] ) ? sanitize_text_field( wp_unslash( $_SERVER['HTTP_REFERER'] ) ) : '',
+				'user_agent'           => isset( $_SERVER['HTTP_USER_AGENT'] ) ? sanitize_text_field( wp_unslash( $_SERVER['HTTP_USER_AGENT'] ) ) : '',
 				'user_ID'              => $post_data['post_author'],
 				'user_ip'              => bbp_current_author_ip(),
 				'user_role'            => $this->get_user_roles( $post_data['post_author'] ),
@@ -368,8 +368,8 @@ if ( ! class_exists( 'BBP_Akismet' ) ) :
 			$post_data['blog']         = get_option( 'home' );
 			$post_data['blog_charset'] = get_option( 'blog_charset' );
 			$post_data['blog_lang']    = get_locale();
-			$post_data['referrer']     = $_SERVER['HTTP_REFERER'];
-			$post_data['user_agent']   = $_SERVER['HTTP_USER_AGENT'];
+			$post_data['referrer']     = isset( $_SERVER['HTTP_REFERER'] ) ? sanitize_text_field( wp_unslash( $_SERVER['HTTP_REFERER'] ) ) : '';
+			$post_data['user_agent']   = isset( $_SERVER['HTTP_USER_AGENT'] ) ? sanitize_text_field( wp_unslash( $_SERVER['HTTP_USER_AGENT'] ) ) : '';
 
 			// Akismet Test Mode
 			if ( akismet_test_mode() ) {
@@ -391,7 +391,7 @@ if ( ! class_exists( 'BBP_Akismet' ) ) :
 
 				// Key should not be ignored
 				if ( ! in_array( $key, $ignore ) && is_string( $value ) ) {
-					$post_data[ $key ] = $value;
+					$post_data[ $key ] = sanitize_text_field( wp_unslash( $value ) );
 
 					// Key should be ignored
 				} else {
