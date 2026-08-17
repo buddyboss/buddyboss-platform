@@ -408,7 +408,7 @@ if ( ! class_exists( 'BP_XProfile_User_Admin' ) ) :
 					?>
 					<input type="hidden" name="user_id" id="user_id" value="<?php echo esc_attr( $r['user_id'] ); ?>" />
 					<input type="hidden" name="group[]" id="group" value="<?php echo esc_attr( $r['profile_group_id'] ); ?>" />
-					<input type="hidden" name="current_url" id="current_url" value="<?php echo isset( $_SERVER['REQUEST_URI'] ) ? esc_attr( $_SERVER['REQUEST_URI'] ) : ''; ?>" />
+					<input type="hidden" name="current_url" id="current_url" value="<?php echo isset( $_SERVER['REQUEST_URI'] ) ? esc_attr( sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ) ) : ''; ?>" />
 					<?php
 				}
 				?>

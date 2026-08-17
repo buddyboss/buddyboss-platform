@@ -933,7 +933,7 @@ function bp_get_the_profile_field_visibility_level() {
 	// precedence over default visibility, so that submitted values
 	// are not lost on failure.
 	if ( bp_is_register_page() && ! empty( $_POST[ 'field_' . $field->id . '_visibility' ] ) ) {
-		$retval = esc_attr( $_POST[ 'field_' . $field->id . '_visibility' ] );
+		$retval = sanitize_text_field( wp_unslash( $_POST[ 'field_' . $field->id . '_visibility' ] ) );
 	} else {
 		$retval = ! empty( $field->visibility_level ) ? $field->visibility_level : 'public';
 	}
@@ -971,7 +971,7 @@ function bp_get_the_profile_field_visibility_level_label() {
 	// precedence over default visibility, so that submitted values
 	// are not lost on failure.
 	if ( bp_is_register_page() && ! empty( $_POST[ 'field_' . $field->id . '_visibility' ] ) ) {
-		$level = esc_html( $_POST[ 'field_' . $field->id . '_visibility' ] );
+		$level = sanitize_text_field( wp_unslash( $_POST[ 'field_' . $field->id . '_visibility' ] ) );
 	} else {
 		$level = ! empty( $field->visibility_level ) ? $field->visibility_level : 'public';
 	}
