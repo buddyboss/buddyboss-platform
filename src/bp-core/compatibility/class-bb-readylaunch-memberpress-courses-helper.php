@@ -777,23 +777,14 @@ class BB_Readylaunch_Memberpress_Courses_Helper {
 				<div class="comment-meta comment-metadata">
 					<?php
 					printf(
-					/* translators: %s: Author related metas. */
-						__( '%s', 'buddyboss-platform' ), // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped, WordPress.WP.I18n.NoEmptyStrings
-						sprintf(
-							'<cite class="fn comment-author"><a href="%s" rel="external nofollow ugc" class="url">%s</a></cite>',
-							empty( $user_link ) ? '' : esc_url( $user_link ),
-							get_comment_author_link( $comment )
-						)
+						'<cite class="fn comment-author"><a href="%s" rel="external nofollow ugc" class="url">%s</a></cite>',
+						empty( $user_link ) ? '' : esc_url( $user_link ),
+						wp_kses_post( get_comment_author_link( $comment ) )
 					);
 					?>
 					<a class="comment-date" href="<?php echo esc_url( get_comment_link( $comment, $args ) ); ?>">
 						<?php
-						printf(
-						/* translators: %s: Author comment date. */
-							__( '%1$s', 'buddyboss-platform' ),  // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped, WordPress.WP.I18n.NoEmptyStrings
-							get_comment_date( '', $comment ), // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped, WordPress.WP.I18n.NoEmptyStrings
-							get_comment_time() // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped, WordPress.WP.I18n.NoEmptyStrings
-						);
+						echo esc_html( get_comment_date( '', $comment ) );
 						?>
 					</a>
 				</div>

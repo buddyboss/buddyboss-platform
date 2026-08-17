@@ -79,17 +79,12 @@ defined( 'ABSPATH' ) || exit;
 	?>
 
 	<?php
-	/*
-	 * This small submit-toggle helper is left inline intentionally. It is tightly coupled
-	 * to the comment form rendered by comment_form() immediately above, runs mid-body
-	 * (after <head> has been printed), and this MemberPress course CPT template has no
-	 * dedicated script handle enqueued at this render point to attach it to via
-	 * wp_add_inline_script(). Converting it would risk the helper not printing.
-	 */
-	?>
-	<script>
-		// Disable 'submit comment' until we have something in the field
-		if ( jQuery( '#submit' ).length ){
+	// Submit-toggle helper for the comment form above, printed via WordPress'
+	// inline-script API (this CPT template renders mid-body with no dedicated
+	// script handle available for wp_add_inline_script()).
+	wp_print_inline_script_tag(
+		"// Disable 'submit comment' until we have something in the field.
+		if ( jQuery( '#submit' ).length ) {
 			jQuery( '#submit' ).prop( 'disabled', true );
 
 			jQuery( '#comment' ).keyup( function() {
@@ -98,8 +93,9 @@ defined( 'ABSPATH' ) || exit;
 				} else {
 					jQuery( '#submit' ).prop( 'disabled', true );
 				}
-			});
-		}
-	</script>
+			} );
+		}"
+	);
+	?>
 
 </div><!-- #comments -->

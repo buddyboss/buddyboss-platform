@@ -694,25 +694,20 @@ if ( ! class_exists( 'BBP_Admin' ) ) :
 					</p>
 					<?php
 					/*
-					 * Inline bootstrap script left as-is (not converted to
-					 * wp_add_inline_script). This legacy multisite network-update
-					 * screen (update-core.php?page=bbpress-update) chain-advances
-					 * through blogs in batches of five via a client-side redirect,
-					 * and the script must run inline as part of this procedurally
-					 * echoed page to guarantee the batch loop keeps progressing. It
-					 * depends on the per-request $n counter (already escaped with
-					 * esc_js()) and has no enqueued script handle in scope on this
-					 * core update screen.
+					 * Batch-advance bootstrap for this legacy multisite network-update
+					 * screen (update-core.php?page=bbpress-update): it chain-advances
+					 * through blogs in batches of five via a client-side redirect, so
+					 * the script must run as part of this procedurally echoed page.
+					 * Printed through WordPress' wp_print_inline_script_tag() API;
+					 * the per-request $n counter is escaped with esc_js().
 					 */
-					?>
-					<script type='text/javascript'>
-						<!--
-						function nextpage() {
-							location.href = 'update-core.php?page=bbpress-update&action=bbpress-update&n=<?php echo esc_js( $n + 5 ); ?>';
+					wp_print_inline_script_tag(
+						"function nextpage() {
+							location.href = 'update-core.php?page=bbpress-update&action=bbpress-update&n=" . esc_js( $n + 5 ) . "';
 						}
-						setTimeout( 'nextpage()', 250 );
-						//-->
-					</script>
+						setTimeout( 'nextpage()', 250 );"
+					);
+					?>
 						<?php
 
 					endif;

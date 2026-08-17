@@ -575,11 +575,7 @@ function bp_core_add_ajax_url_js() {
 	 * drop `ajaxurl` on non-BuddyPress pages and break theme AJAX. The value is
 	 * escaped with esc_url(). See also the localized `ajaxurl` in bp_core_get_js_strings().
 	 */
-	?>
-
-	<script>var ajaxurl = '<?php echo esc_url( bp_core_ajax_url() ); ?>';</script>
-
-	<?php
+	wp_print_inline_script_tag( "var ajaxurl = '" . esc_url( bp_core_ajax_url() ) . "';" );
 }
 add_action( 'wp_head', 'bp_core_add_ajax_url_js' );
 

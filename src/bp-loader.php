@@ -211,9 +211,11 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 			}
 		}
 
+		$bb_request_uri = isset( $_SERVER['REQUEST_URI'] ) ? sanitize_url( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '';
+
 		if ( is_network_admin()
-			 || strpos( $_SERVER['REQUEST_URI'], $plugins_path ) !== false
-			 || strpos( $_SERVER['REQUEST_URI'], $ajax_path ) !== false
+			 || strpos( $bb_request_uri, $plugins_path ) !== false
+			 || strpos( $bb_request_uri, $ajax_path ) !== false
 		) {
 
 			/**
