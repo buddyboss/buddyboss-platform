@@ -1413,6 +1413,16 @@ window.bp = window.bp || {};
 									$( 'body #buddypress .activity-list li#activity-' + activityId ).remove();
 									$( 'body .bb-activity-media-elem.media-activity.' + id ).remove();
 									$( 'body .activity-comments li#acomment-' + activityId ).remove();
+
+									// The "view more comments" modal holds its own copy of the
+									// activity, and its wrapper duplicates id="buddypress", so
+									// the ID selector above only ever reaches the page copy.
+									// When the whole activity is gone, close the modal through
+									// its real close button so the close handler runs.
+									var $activityModal = $( '#activity-modal:visible' );
+									if ( $activityModal.length && $activityModal.find( 'li[data-bp-activity-id="' + activityId + '"]' ).length ) {
+										$activityModal.find( '.bb-modal-activity-header .bb-close-action-popup' ).trigger( 'click' );
+									}
 								} else {
 									$( 'body #buddypress .activity-list li#activity-' + activityId ).replaceWith( response.data.activity_content );
 								}
