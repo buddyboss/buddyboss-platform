@@ -181,7 +181,16 @@ window.bp = window.bp || {};
 			$bpElem.find( activityParentSelectors ).on( 'click', '.activity-privacy>li:not(.bb-edit-privacy)', bp.Nouveau, this.activityPrivacyChange.bind( this ) );
 			$bpElem.find( activityParentSelectors ).on( 'click', 'span.privacy', bp.Nouveau, this.togglePrivacyDropdown.bind( this ) );
 
-			$( '#bb-rl-media-model-container .bb-rl-activity-list' ).on( 'click', '.activity-item', bp.Nouveau, this.activityActions.bind( this ) );
+			// The activityParentSelectors binding above already covers the theater's
+			// activity list when it renders inside #buddypress - binding it again
+			// here attached the handler twice, so every theater action (e.g. the
+			// three-dots Delete) fired two AJAX requests and the second one errored.
+			// Keep this binding only for layouts where the theater renders outside
+			// #buddypress and the find() above could not reach it.
+			var $theaterActivityList = $( '#bb-rl-media-model-container .bb-rl-activity-list' );
+			if ( $theaterActivityList.length && ! $theaterActivityList.closest( '#buddypress' ).length ) {
+				$theaterActivityList.on( 'click', '.activity-item', bp.Nouveau, this.activityActions.bind( this ) );
+			}
 			$( '.bb-rl-activity-model-wrapper' ).on( 'click', '.bb-rl-ac-form-placeholder', bp.Nouveau, this.activityRootComment.bind( this ) );
 			$document.keydown( this.commentFormAction );
 			$document.click( this.togglePopupDropdown );

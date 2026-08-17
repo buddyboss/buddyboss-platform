@@ -269,6 +269,70 @@ window.bp = window.bp || {};
 		},
 
 		/**
+		 * Remove deleted item tiles from the single media album grid.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param {Array} ids Deleted media/video ids.
+		 */
+		removeAlbumTiles: function ( ids ) {
+			if ( ! ids || ! ids.length ) {
+				return;
+			}
+			$.each(
+				ids,
+				function ( index, value ) {
+					var $albumItem = $( '#media-stream ul.media-list li[data-id="' + value + '"]' );
+					if ( $albumItem.length ) {
+						$albumItem.remove();
+					}
+				}
+			);
+		},
+
+		/**
+		 * Handle a delete on the unified media album view (/media/albums/{id}).
+		 *
+		 * Renders the album empty-state when the mixed album has no items left,
+		 * otherwise removes the deleted tiles and refreshes the header counts.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param {Object} data       Server response data with album counts.
+		 * @param {Array}  deletedIds Deleted media/video ids.
+		 * @return {boolean} True when the media album view was handled.
+		 */
+		handleAlbumDelete: function ( data, deletedIds ) {
+			if ( ! $( '#buddypress #bp-media-single-album' ).length || 'undefined' === typeof data.album_id || 0 >= parseInt( data.album_id, 10 ) ) {
+				return false;
+			}
+
+			var albumTotal = parseInt( data.album_total_count, 10 );
+			var $stream    = $( '#media-stream' );
+
+			// A stale out-of-order response (rapid double delete) must not overwrite
+			// an already-rendered empty state with older, non-zero counts.
+			if ( 0 < albumTotal && ! $stream.find( 'ul.media-list' ).length ) {
+				return true;
+			}
+
+			if ( 0 === albumTotal ) {
+				$( '.bb-photos-actions, .bb-videos-actions' ).hide();
+				if ( data.album_empty_html && data.album_empty_html.length ) {
+					$stream.html( data.album_empty_html );
+				} else {
+					// Album is empty but no markup returned - clear the deleted tiles.
+					this.removeAlbumTiles( deletedIds );
+				}
+			} else {
+				this.removeAlbumTiles( deletedIds );
+			}
+
+			this.updateAlbumCounts( data );
+			return true;
+		},
+
+		/**
 		 * [addListeners description]
 		 */
 		addListeners: function () {
@@ -995,7 +1059,9 @@ window.bp = window.bp || {};
 										}
 									}
 
-									if ( 0 !== response.data.media_html_content.length ) {
+									if ( self.handleAlbumDelete( response.data, media ) ) {
+										// Single-album view handled: empty-state or tile removal + counts.
+									} else if ( 0 !== response.data.media_html_content.length ) {
 										if ( 0 === parseInt( response.data.media_personal_count ) ) {
 											$( '.bb-photos-actions' ).hide();
 											$( '#media-stream' ).html( response.data.media_html_content );
@@ -1020,11 +1086,6 @@ window.bp = window.bp || {};
 											}
 										);
 									}
-
-									// Update album counts if deleting from an album.
-									if ( response.data.album_total_count !== undefined ) {
-										self.updateAlbumCounts( response.data );
-										}
 								}
 							}
 						} else {
@@ -1084,7 +1145,9 @@ window.bp = window.bp || {};
 								}
 
 								// inject media.
-								if ( 0 !== response.data.media_html_content.length ) {
+								if ( self.handleAlbumDelete( response.data, media ) ) {
+									// Single-album view handled: empty-state or tile removal + counts.
+								} else if ( 0 !== response.data.media_html_content.length ) {
 									if ( 0 === parseInt( response.data.media_personal_count ) ) {
 										$( '.bb-photos-actions' ).hide();
 										$( '#media-stream' ).html( response.data.media_html_content );
@@ -7898,6 +7961,36 @@ window.bp = window.bp || {};
 
 				$deleted_item.closest( 'li' ).remove();
 
+				// The server cascade-deletes every media/video attached to the activity,
+				// not just the item open in the theater - clear all of its tiles and
+				// refresh the single-album empty-state from the server's counts.
+				var respData = ( data.response && data.response.data ) ? data.response.data : false;
+				if ( respData ) {
+					var deletedIds   = [].concat( respData.deleted_media_ids || [], respData.deleted_video_ids || [] );
+					var albumHandled = false;
+					if ( 'undefined' !== typeof bp.Nouveau.Media && 'function' === typeof bp.Nouveau.Media.handleAlbumDelete ) {
+						albumHandled = bp.Nouveau.Media.handleAlbumDelete( respData, deletedIds );
+					}
+					if ( ! albumHandled ) {
+						// Directory and other non-album grids render one tile per
+						// cascade-deleted item - remove every sibling tile too, not
+						// just the one open in the theater. Media and video ids are
+						// separate sequences, so target each grid with its own list.
+						$.each(
+							respData.deleted_media_ids || [],
+							function ( index, value ) {
+								$( document ).find( '[data-bp-list="media"] .bb-rl-open-media-theatre[data-id="' + value + '"]' ).closest( 'li' ).remove();
+							}
+						);
+						$.each(
+							respData.deleted_video_ids || [],
+							function ( index, value ) {
+								$( document ).find( '[data-bp-list="video"] .bb-open-video-theatre[data-id="' + value + '"]' ).closest( 'li' ).remove();
+							}
+						);
+					}
+				}
+
 				if ( 0 === $deleted_item_parent_list.find( 'li:not(.load-more)' ).length ) {
 
 					// No item.
@@ -7912,25 +8005,51 @@ window.bp = window.bp || {};
 				}
 				$( document ).find( '[data-bp-list="activity"] .bb-rl-open-media-theatre[data-id="' + self.current_media.id + '"]' ).closest( '.bb-rl-activity-media-elem' ).remove();
 
-				var mediasLength = self.medias.length;
-				for ( i = 0; i < mediasLength; i++ ) {
+				// Remove every slide belonging to the deleted activity - the server
+				// cascade-deletes all of its rows. On current uploads each photo has
+				// its own hidden child activity, so only one slide matches; but data
+				// from older versions (before the per-photo sub-activity system) has
+				// several rows sharing one activity_id, and stopping at the first
+				// match (the old `break`) left sibling slides pointing at deleted
+				// photos - the theater arrows could then open a blank slide.
+				for ( i = self.medias.length - 1; i >= 0; i-- ) {
 					if ( self.medias[ i ].activity_id === data.id ) {
 						self.medias.splice( i, 1 );
-						break;
 					}
 				}
 
+				// Removing several slides can leave the pointer past the end; clamp so
+				// the navigation branches below keep their invariants.
+				if ( self.current_index > self.medias.length ) {
+					self.current_index = self.medias.length;
+				}
+
+				// next()/previous()/closeTheatre() derive the theatre wrapper from
+				// event.currentTarget, and this handler runs on a document-level
+				// custom event where currentTarget is `document` - hand the nav
+				// calls an event anchored to the media theatre wrapper instead.
+				var theatreEvent           = $.Event( 'click' );
+				theatreEvent.currentTarget = $( '.bb-rl-media-model-wrapper.bb-rl-media-theatre' ).get( 0 );
+
 				if ( 0 === self.current_index && self.current_index !== ( self.medias.length ) ) {
 					self.current_index = -1;
-					self.next( event );
+					self.next( theatreEvent );
 				} else if ( 0 === self.current_index && self.current_index === ( self.medias.length ) ) {
 					$( document ).find( '[data-bp-list="activity"] li.activity-item[data-bp-activity-id="' + self.current_media.activity_id + '"]' ).remove();
-					self.closeTheatre( event );
+
+					// Close via the real close button so the target chain resolves
+					// exactly like a user close (verified live in T1-RL).
+					var $closeMediaTheatre = $( '.bb-rl-close-media-theatre:visible' );
+					if ( $closeMediaTheatre.length ) {
+						$closeMediaTheatre.trigger( 'click' );
+					} else {
+						self.closeTheatre( theatreEvent );
+					}
 				} else if ( self.current_index === ( self.medias.length ) ) {
-					self.previous( event );
+					self.previous( theatreEvent );
 				} else {
 					self.current_index = -1;
-					self.next( event );
+					self.next( theatreEvent );
 				}
 			}
 			if ( self.is_open_document && typeof data !== 'undefined' && data.action === 'delete_activity' && self.current_document.activity_id === data.id ) {

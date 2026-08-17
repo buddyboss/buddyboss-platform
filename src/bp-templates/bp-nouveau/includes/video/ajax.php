@@ -762,8 +762,28 @@ function bp_nouveau_ajax_video_delete() {
 		$album_counts = bb_media_get_album_counts( $album_id, $group_id );
 	}
 
+	// When deleting from a single album that is now empty, build the album-scoped
+	// empty-state markup. The standalone video album screen only lists videos,
+	// so it is "empty" when no videos remain even if the mixed album still holds
+	// photos; the unified media album screen is empty only when everything is gone.
+	$album_empty_html = '';
+	if ( ! empty( $album_id ) ) {
+		// bp_is_single_video_album() is also true on the media album screen
+		// (bp_is_video_component() returns true for the media component), so the
+		// video-album branch must additionally rule out the media album route.
+		if ( bp_is_single_video_album() && ! bp_is_single_album() ) {
+			if ( 0 === (int) $album_counts['album_video_count'] && function_exists( 'bb_nouveau_video_get_album_empty_state' ) ) {
+				$album_empty_html = bb_nouveau_video_get_album_empty_state();
+			}
+		} elseif ( 0 === (int) $album_counts['album_total_count'] && function_exists( 'bb_nouveau_media_get_album_empty_state' ) ) {
+			$album_empty_html = bb_nouveau_media_get_album_empty_state();
+		}
+	}
+
 	wp_send_json_success(
 		array(
+			'album_id'                 => (int) $album_id,
+			'album_empty_html'         => $album_empty_html,
 			'video'                    => $video,
 			'video_personal_count'     => $video_personal_count,
 			'video_group_count'        => $video_group_count,

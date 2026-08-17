@@ -349,3 +349,32 @@ function bp_video_allowed_video_type() {
 
 	return $extension_lists;
 }
+
+/**
+ * Render the single video-album empty-state markup for the active theme mode.
+ *
+ * Used when the last video in an album is deleted while viewing the
+ * standalone video album screen, so the AJAX response can carry the same
+ * markup the template would render on a fresh page load.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return string The video-album empty-state HTML for the active theme.
+ */
+function bb_nouveau_video_get_album_empty_state() {
+	ob_start();
+	if ( function_exists( 'bb_is_readylaunch_enabled' ) && bb_is_readylaunch_enabled() ) {
+		bp_get_template_part( 'video/no-video' );
+	} else {
+		bp_nouveau_user_feedback( 'video-loop-none' );
+	}
+
+	/**
+	 * Filters the single video-album empty-state markup.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $html The rendered empty-state HTML.
+	 */
+	return apply_filters( 'bb_nouveau_video_album_empty_state', ob_get_clean() );
+}
