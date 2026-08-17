@@ -1424,6 +1424,13 @@ window.bp = window.bp || {};
 									if ( $activityModal.length && 0 === $activityModal.find( '.bb-modal-activity-body .activity-list li' ).length ) {
 										var $modalCloseButton = $activityModal.find( '.bb-modal-activity-header .bb-close-action-popup' );
 										if ( $modalCloseButton.length ) {
+											// A pin toggled from inside the modal is moot once the
+											// post is deleted - left set, the close-button's sync
+											// handler reloads the whole feed (same reset as the
+											// direct-delete path in buddypress-activity.js).
+											if ( 'undefined' !== typeof bp.Nouveau.Activity ) {
+												bp.Nouveau.Activity.activityPinHasUpdates = false;
+											}
 											$modalCloseButton.trigger( 'click' );
 										} else {
 											$activityModal.closest( '.bb-activity-model-wrapper' ).hide();
