@@ -955,14 +955,20 @@ window.bp = window.bp || {};
 									$( 'body .bb-rl-activity-media-elem.bb-rl-media-activity.' + id ).remove();
 									$( 'body .bb-rl-activity-comments li#bb-rl-acomment-' + activityId ).remove();
 
-									// The "view more comments" modal holds its own copy of the
-									// activity, and its wrapper duplicates id="buddypress", so
-									// the ID selector above only ever reaches the page copy.
-									// When the whole activity is gone, close the modal through
-									// its real close button so the close handler runs.
+									// The selectors above also clear the "view more comments"
+									// modal's copy of the activity, which leaves the modal open
+									// as an empty shell. When the modal's list has been emptied,
+									// close it through its real close button so the close
+									// handler runs; hide the wrapper directly if a theme
+									// override renamed the button.
 									var $activityModal = $( '#bb-rl-activity-modal:visible' );
-									if ( $activityModal.length && $activityModal.find( 'li[data-bp-activity-id="' + activityId + '"]' ).length ) {
-										$activityModal.find( '.bb-rl-modal-activity-header .bb-rl-close-action-popup' ).trigger( 'click' );
+									if ( $activityModal.length && 0 === $activityModal.find( '.bb-rl-modal-activity-body .bb-rl-activity-list li' ).length ) {
+										var $modalCloseButton = $activityModal.find( '.bb-rl-modal-activity-header .bb-rl-close-action-popup' );
+										if ( $modalCloseButton.length ) {
+											$modalCloseButton.trigger( 'click' );
+										} else {
+											$activityModal.closest( '.bb-rl-activity-model-wrapper' ).hide();
+										}
 									}
 								} else {
 									$( 'body #buddypress .bb-rl-activity-list li#bb-rl-activity-' + activityId ).replaceWith( response.data.activity_content );
