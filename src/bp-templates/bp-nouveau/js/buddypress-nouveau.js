@@ -3972,7 +3972,8 @@ window.bp = window.bp || {};
 				$.post(
 					BP_Nouveau.ajaxurl,
 					{
-						'action': 'save_cover_position',
+						'action': 'bb_save_cover_position',
+						'nonce': BP_Nouveau.coverPositionNonce,
 						'position': coverImage.attr( 'data-top' ),
 					}
 				).done(

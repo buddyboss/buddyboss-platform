@@ -185,12 +185,12 @@ function bbp_create_initial_content( $args = array() ) {
 		array(
 			'forum_parent'  => 0,
 			'forum_status'  => 'publish',
-			'forum_title'   => __( 'General', 'buddyboss' ),
-			'forum_content' => __( 'General chit-chat', 'buddyboss' ),
-			'topic_title'   => __( 'Hello World!', 'buddyboss' ),
-			'topic_content' => __( 'I am the first discussion in your new forums.', 'buddyboss' ),
-			'reply_title'   => __( 'Re: Hello World!', 'buddyboss' ),
-			'reply_content' => __( 'Oh, and this is what a reply looks like.', 'buddyboss' ),
+			'forum_title'   => __( 'General', 'buddyboss-platform' ),
+			'forum_content' => __( 'General chit-chat', 'buddyboss-platform' ),
+			'topic_title'   => __( 'Hello World!', 'buddyboss-platform' ),
+			'topic_content' => __( 'I am the first discussion in your new forums.', 'buddyboss-platform' ),
+			'reply_title'   => __( 'Re: Hello World!', 'buddyboss-platform' ),
+			'reply_content' => __( 'Oh, and this is what a reply looks like.', 'buddyboss-platform' ),
 		),
 		'create_initial_content'
 	);

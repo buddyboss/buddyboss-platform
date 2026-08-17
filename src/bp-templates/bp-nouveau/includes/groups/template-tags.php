@@ -362,7 +362,7 @@ function bp_nouveau_group_manage_screen() {
 
 		if ( ! empty( $core_screen['nonce'] ) ) {
 			if ( ! $is_group_create ) {
-				$output = sprintf( '<p><input type="submit" value="%s" id="save" name="save" /></p>', esc_attr__( 'Save Changes', 'buddyboss' ) );
+				$output = sprintf( '<p><input type="submit" value="%s" id="save" name="save" /></p>', esc_attr__( 'Save Changes', 'buddyboss-platform' ) );
 
 				// Specific case for the delete group screen
 				if ( 'delete-group' === $screen_id ) {
@@ -370,7 +370,7 @@ function bp_nouveau_group_manage_screen() {
 						'<div class="submit">
 							<input type="submit" disabled="disabled" value="%s" id="delete-group-button" name="delete-group-button" />
 						</div>',
-						esc_attr__( 'Delete Group', 'buddyboss' )
+						esc_attr__( 'Delete Group', 'buddyboss-platform' )
 					);
 				}
 			}
@@ -391,7 +391,7 @@ function bp_nouveau_group_manage_screen() {
 			if ( ! bp_is_first_group_creation_step() ) {
 				$creation_step_buttons .= sprintf(
 					'<input type="button" value="%1$s" id="group-creation-previous" name="previous" onclick="%2$s" />',
-					esc_attr__( 'Previous Step', 'buddyboss' ),
+					esc_attr__( 'Previous Step', 'buddyboss-platform' ),
 					"location.href='" . esc_js( esc_url_raw( bp_get_group_creation_previous_link() ) ) . "'"
 				);
 			}
@@ -399,21 +399,21 @@ function bp_nouveau_group_manage_screen() {
 			if ( ! bp_is_last_group_creation_step() && ! bp_is_first_group_creation_step() ) {
 				$creation_step_buttons .= sprintf(
 					'<input type="submit" value="%s" id="group-creation-next" name="save" />',
-					esc_attr__( 'Next Step', 'buddyboss' )
+					esc_attr__( 'Next Step', 'buddyboss-platform' )
 				);
 			}
 
 			if ( bp_is_first_group_creation_step() ) {
 				$creation_step_buttons .= sprintf(
 					'<input type="submit" value="%s" id="group-creation-create" name="save" />',
-					esc_attr__( 'Create Group and Continue', 'buddyboss' )
+					esc_attr__( 'Create Group and Continue', 'buddyboss-platform' )
 				);
 			}
 
 			if ( bp_is_last_group_creation_step() ) {
 				$creation_step_buttons .= sprintf(
 					'<input type="submit" value="%s" id="group-creation-finish" name="save" />',
-					esc_attr__( 'Finish', 'buddyboss' )
+					esc_attr__( 'Finish', 'buddyboss-platform' )
 				);
 			}
 
@@ -435,7 +435,7 @@ function bp_nouveau_group_manage_screen() {
 	if ( 'group-invites' === bp_get_groups_current_create_step() ) {
 		printf(
 			'<form action="%s" method="post" enctype="multipart/form-data">',
-			bp_get_group_creation_form_action()
+			esc_url( bp_get_group_creation_form_action() )
 		);
 	}
 
@@ -454,7 +454,7 @@ function bp_nouveau_group_manage_screen() {
 	);
 
 	// The submit actions
-	echo $output;
+	echo $output; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- pre-escaped button markup (esc_attr/esc_js per value); contains <input> which wp_kses_post would strip.
 
 	if ( ! $is_group_create ) {
 		/**
@@ -556,7 +556,7 @@ function bb_nouveau_group_header_bubble_buttons( $args = array() ) {
 	bp_get_template_part( 'common/more-options-view' );
 	$template_part_content = ob_get_clean();
 
-	$output = sprintf( '<a href="#" class="bb_more_options_action" aria-label="%1$s"><i class="bb-icon-f bb-icon-ellipsis-h"></i></a><div class="bb_more_options_list bb_more_dropdown"> %2$s %3$s</div><div class="bb_more_dropdown_overlay"></div>', esc_attr__( 'More Options', 'buddyboss' ), $template_part_content, $output );
+	$output = sprintf( '<a href="#" class="bb_more_options_action" aria-label="%1$s"><i class="bb-icon-f bb-icon-ellipsis-h"></i></a><div class="bb_more_options_list bb_more_dropdown"> %2$s %3$s</div><div class="bb_more_dropdown_overlay"></div>', esc_attr__( 'More Options', 'buddyboss-platform' ), $template_part_content, $output );
 
 	bp_nouveau_wrapper( array_merge( $args, array( 'output' => $output ) ) );
 }
@@ -772,7 +772,7 @@ function bp_nouveau_get_groups_buttons( $args = array() ) {
 			'component'         => 'groups',
 			'must_be_logged_in' => true,
 			'parent_element'    => $parent_element,
-			'link_text'         => esc_html__( 'Accept', 'buddyboss' ),
+			'link_text'         => esc_html__( 'Accept', 'buddyboss-platform' ),
 			'button_element'    => $button_element,
 			'parent_attr'       => array(
 				'id'    => '',
@@ -799,7 +799,7 @@ function bp_nouveau_get_groups_buttons( $args = array() ) {
 			'component'         => 'groups',
 			'must_be_logged_in' => true,
 			'parent_element'    => $parent_element,
-			'link_text'         => esc_html__( 'Reject', 'buddyboss' ),
+			'link_text'         => esc_html__( 'Reject', 'buddyboss-platform' ),
 			'parent_attr'       => array(
 				'id'    => '',
 				'class' => $parent_class . ' ' . 'reject',
@@ -827,7 +827,7 @@ function bp_nouveau_get_groups_buttons( $args = array() ) {
 			'component'         => 'groups',
 			'must_be_logged_in' => true,
 			'parent_element'    => $parent_element,
-			'link_text'         => esc_html__( 'Accept', 'buddyboss' ),
+			'link_text'         => esc_html__( 'Accept', 'buddyboss-platform' ),
 			'button_element'    => $button_element,
 			'parent_attr'       => array(
 				'id'    => '',
@@ -854,7 +854,7 @@ function bp_nouveau_get_groups_buttons( $args = array() ) {
 			'must_be_logged_in' => true,
 			'parent_element'    => $parent_element,
 			'button_element'    => $button_element,
-			'link_text'         => esc_html__( 'Reject', 'buddyboss' ),
+			'link_text'         => esc_html__( 'Reject', 'buddyboss-platform' ),
 			'parent_attr'       => array(
 				'id'    => '',
 				'class' => $parent_class,
@@ -888,7 +888,7 @@ function bp_nouveau_get_groups_buttons( $args = array() ) {
 				'must_be_logged_in' => true,
 				'parent_element'    => $parent_element,
 				'button_element'    => $button_element,
-				'link_text'         => esc_html__( 'Remove Ban', 'buddyboss' ),
+				'link_text'         => esc_html__( 'Remove Ban', 'buddyboss-platform' ),
 				'parent_attr'       => array(
 					'id'    => '',
 					'class' => $parent_class,
@@ -907,7 +907,7 @@ function bp_nouveau_get_groups_buttons( $args = array() ) {
 				'must_be_logged_in' => true,
 				'parent_element'    => $parent_element,
 				'button_element'    => $button_element,
-				'link_text'         => esc_html__( 'Kick &amp; Ban', 'buddyboss' ),
+				'link_text'         => esc_html__( 'Kick &amp; Ban', 'buddyboss-platform' ),
 				'parent_attr'       => array(
 					'id'    => '',
 					'class' => $parent_class,
@@ -936,7 +936,8 @@ function bp_nouveau_get_groups_buttons( $args = array() ) {
 					'rel'   => '',
 					'title' => '',
 				),
-				'link_text'         => sprintf( __( 'Promote to %s', 'buddyboss' ), get_group_role_label( $group->id, 'moderator_singular_label_name' ) ),
+				/* translators: %s: moderator singular role label. */
+				'link_text'         => sprintf( __( 'Promote to %s', 'buddyboss-platform' ), get_group_role_label( $group->id, 'moderator_singular_label_name' ) ),
 			),
 			'promote_admin' => array(
 				'id'                => 'promote_admin',
@@ -945,7 +946,8 @@ function bp_nouveau_get_groups_buttons( $args = array() ) {
 				'must_be_logged_in' => true,
 				'parent_element'    => $parent_element,
 				'button_element'    => $button_element,
-				'link_text'         => sprintf( __( 'Promote to co-%s', 'buddyboss' ), strtolower( get_group_role_label( $group->id, 'organizer_singular_label_name' ) ) ),
+				/* translators: %s: organizer singular role label. */
+				'link_text'         => sprintf( __( 'Promote to co-%s', 'buddyboss-platform' ), strtolower( get_group_role_label( $group->id, 'organizer_singular_label_name' ) ) ),
 				'parent_attr'       => array(
 					'id'    => '',
 					'class' => $parent_class,
@@ -965,7 +967,7 @@ function bp_nouveau_get_groups_buttons( $args = array() ) {
 				'must_be_logged_in' => true,
 				'parent_element'    => $parent_element,
 				'button_element'    => $button_element,
-				'link_text'         => esc_html__( 'Remove from group', 'buddyboss' ),
+				'link_text'         => esc_html__( 'Remove from group', 'buddyboss-platform' ),
 				'parent_attr'       => array(
 					'id'    => '',
 					'class' => $parent_class,
@@ -992,36 +994,6 @@ function bp_nouveau_get_groups_buttons( $args = array() ) {
 			$buttons['promote_mod']['button_attr']['href']   = bp_get_group_member_promote_mod_link();
 			$buttons['promote_admin']['button_attr']['href'] = bp_get_group_member_promote_admin_link();
 			$buttons['remove_member']['button_attr']['href'] = bp_get_group_member_remove_link( $user_id );
-		}
-
-		// Membership button on groups loop or single group's header.
-	} elseif ( 'subscription' === $type ) {
-		if (
-			bb_is_enabled_subscription( 'group' )
-		) {
-			$buttons['group_subscription'] = bb_get_group_subscription_button(
-				array(
-					'id'                => 'group_subscription',
-					'position'          => 50,
-					'component'         => 'groups',
-					'parent_element'    => $parent_element,
-					'parent_attr'       => array(
-						'id'    => '',
-						'class' => $parent_class,
-					),
-					'must_be_logged_in' => true,
-					'button_element'    => $button_element,
-					'show_link_text'    => false,
-					'button_attr'       => array(
-						'data-bp-content-id' => $group->id,
-					),
-				),
-				false
-			);
-
-			if ( 'button' === $button_element ) {
-				unset( $buttons['group_subscription']['button_attr']['href'] );
-			}
 		}
 
 		// Membership button on groups loop or single group's header.
@@ -1473,13 +1445,13 @@ function bp_nouveau_group_template_part() {
 			$template = 'photos';
 		} elseif ( bp_is_group_albums() ) {
 			$template = 'albums';
-		} elseif ( bp_is_group_folders() ) {
+		} elseif ( bp_is_active( 'document' ) && bp_is_group_folders() ) {
 			$template = 'documents';
-		} elseif ( bp_is_group_document() ) {
+		} elseif ( bp_is_active( 'document' ) && bp_is_group_document() ) {
 			$template = 'documents';
 		} elseif ( true === bp_disable_group_messages() && bp_is_group_messages() ) {
 			$template = 'messages';
-		} elseif ( bp_is_group_video() ) {
+		} elseif ( bp_is_active( 'video' ) && bp_is_group_video() ) {
 			$template = 'videos';
 		} elseif ( bp_is_group_video_albums() ) {
 			$template = 'albums';
@@ -1541,7 +1513,7 @@ function bp_nouveau_groups_get_customizer_option_link() {
 		array(
 			'object'    => 'group',
 			'autofocus' => 'bp_nouveau_group_front_page',
-			'text'      => __( 'Groups default front page', 'buddyboss' ),
+			'text'      => __( 'Groups default front page', 'buddyboss-platform' ),
 		)
 	);
 }
@@ -1559,7 +1531,7 @@ function bp_nouveau_groups_get_customizer_widgets_link() {
 		array(
 			'object'    => 'group',
 			'autofocus' => 'sidebar-widgets-sidebar-buddypress-groups',
-			'text'      => __( 'widgets (content blocks)', 'buddyboss' ),
+			'text'      => __( 'widgets (content blocks)', 'buddyboss-platform' ),
 		)
 	);
 }
@@ -1604,7 +1576,7 @@ function bp_nouveau_add_notify_group_members_checkbox() {
                     <input type="checkbox" name="group-notify-members" id="group-notify-members" class="bs-styled-checkbox" value="1" checked />
                     <label for="group-notify-members" class="bp-label-text">%s</label>
                 </p>',
-				esc_html__( 'Notify group members of these changes', 'buddyboss' )
+				esc_html__( 'Notify group members of these changes', 'buddyboss-platform' )
 			);
 		}
 	} else {
@@ -1613,7 +1585,7 @@ function bp_nouveau_add_notify_group_members_checkbox() {
                 <input type="checkbox" name="group-notify-members" id="group-notify-members" class="bs-styled-checkbox" value="1" />
                 <label for="group-notify-members" class="bp-label-text">%s</label>
             </p>',
-			esc_html__( 'Notify group members of these changes via email', 'buddyboss' )
+			esc_html__( 'Notify group members of these changes via email', 'buddyboss-platform' )
 		);
 	}
 

@@ -8,6 +8,9 @@
  * @version 1.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 bp_nouveau_blogs_create_hook( 'before', 'content_template' );
 bp_nouveau_template_notices();
 bp_nouveau_blogs_create_hook( 'before', 'content' );

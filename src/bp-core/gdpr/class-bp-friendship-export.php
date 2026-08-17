@@ -25,7 +25,7 @@ final class BP_Friendship_Export extends BP_Export {
 		if ( null === $instance ) {
 
 			$instance = new BP_Friendship_Export();
-			$instance->setup( 'bp_friendship', __( 'Friendship', 'buddyboss' ) );
+			$instance->setup( 'bp_friendship', __( 'Friendship', 'buddyboss-platform' ) );
 		}
 
 		return $instance;
@@ -55,7 +55,7 @@ final class BP_Friendship_Export extends BP_Export {
 		foreach ( $data_items['items'] as $item ) {
 
 			$group_id    = 'bp_friends';
-			$group_label = __( 'Connections', 'buddyboss' );
+			$group_label = __( 'Connections', 'buddyboss-platform' );
 			$item_id     = "{$this->exporter_name}-{$group_id}-{$item->id}";
 
 			if ( $item->initiator_user_id == $user->ID ) {
@@ -68,31 +68,31 @@ final class BP_Friendship_Export extends BP_Export {
 
 			if ( $item->is_confirmed == '0' && $is_initiator ) {
 				$group_id   .= '_pending_sent';
-				$group_label = __( 'Pending Sent Connection Requests', 'buddyboss' );
+				$group_label = __( 'Pending Sent Connection Requests', 'buddyboss-platform' );
 			}
 
 			if ( $item->is_confirmed == '0' && ! $is_initiator ) {
 				$group_id   .= '_pending_received';
-				$group_label = __( 'Pending Received Connection Requests', 'buddyboss' );
+				$group_label = __( 'Pending Received Connection Requests', 'buddyboss-platform' );
 			}
 
 			$friend_user = get_userdata( $friend_user_id );
 
 			$data = array(
 				array(
-					'name'  => __( 'Connection Name', 'buddyboss' ),
+					'name'  => __( 'Connection Name', 'buddyboss-platform' ),
 					'value' => $friend_user->display_name,
 				),
 				array(
-					'name'  => __( 'Sent Created (GMT)', 'buddyboss' ),
+					'name'  => __( 'Sent Created (GMT)', 'buddyboss-platform' ),
 					'value' => $item->date_created,
 				),
 			);
 
 			if ( $item->is_confirmed == '1' ) {
-				$is_initiator_value = ( ( $is_initiator ) ? __( 'Yes', 'buddyboss' ) : __( 'No', 'buddyboss' ) );
+				$is_initiator_value = ( ( $is_initiator ) ? __( 'Yes', 'buddyboss-platform' ) : __( 'No', 'buddyboss-platform' ) );
 				$data[]             = array(
-					'name'  => __( 'Request Initiator', 'buddyboss' ),
+					'name'  => __( 'Request Initiator', 'buddyboss-platform' ),
 					'value' => $is_initiator_value,
 				);
 			}
@@ -164,16 +164,17 @@ final class BP_Friendship_Export extends BP_Export {
 		$query_select_count = 'COUNT(item.id)';
 		$query_where        = 'item.initiator_user_id=%d OR item.friend_user_id=%d';
 
-		$offset = ( $page - 1 ) * $this->items_per_batch;
-		$limit  = "LIMIT {$this->items_per_batch} OFFSET {$offset}";
+		$items_per_batch = absint( $this->items_per_batch );
+		$offset          = ( absint( $page ) - 1 ) * $items_per_batch;
+		$limit           = "LIMIT {$items_per_batch} OFFSET {$offset}";
 
 		$query       = "SELECT {$query_select} FROM {$table} WHERE {$query_where} {$limit}";
-		$query       = $wpdb->prepare( $query, $user->ID, $user->ID );
+		$query       = $wpdb->prepare( $query, $user->ID, $user->ID ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Table from $bp->friends->table_name; user IDs %d-prepared; LIMIT/OFFSET are absint()'d.
 		$query_count = "SELECT {$query_select_count} FROM {$table} WHERE {$query_where}";
-		$query_count = $wpdb->prepare( $query_count, $user->ID, $user->ID );
+		$query_count = $wpdb->prepare( $query_count, $user->ID, $user->ID ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Table from $bp->friends->table_name; user IDs %d-prepared.
 
-		$count = (int) $wpdb->get_var( $query_count );
-		$items = $wpdb->get_results( $query );
+		$count = (int) $wpdb->get_var( $query_count ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- $query_count is %d-prepared above.
+		$items = $wpdb->get_results( $query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- $query is %d-prepared above; LIMIT/OFFSET absint()'d.
 
 		return array(
 			'total'  => $count,

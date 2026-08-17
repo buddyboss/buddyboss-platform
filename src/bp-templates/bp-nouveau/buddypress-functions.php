@@ -203,7 +203,7 @@ class BP_Nouveau extends BP_Theme_Compat {
 		add_action( 'login_enqueue_scripts', array( $this, 'register_scripts' ), 2 );
 		add_action( 'login_enqueue_scripts', array( $this, 'enqueue_styles' ) );
 		add_action( 'login_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
-		add_action( 'login_head', array( $this, 'platform_login_scripts' ) );
+		add_action( 'login_enqueue_scripts', array( $this, 'platform_login_scripts' ) );
 
 		// Body no-js class.
 		add_filter( 'body_class', array( $this, 'add_nojs_body_class' ), 20, 1 );
@@ -253,7 +253,9 @@ class BP_Nouveau extends BP_Theme_Compat {
 		}
 
 		// Protocol
-		$url = ( is_ssl() ? 'https' : 'http' ) . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+		$http_host   = isset( $_SERVER['HTTP_HOST'] ) ? sanitize_text_field( wp_unslash( $_SERVER['HTTP_HOST'] ) ) : '';
+		$request_uri = isset( $_SERVER['REQUEST_URI'] ) ? esc_url_raw( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '';
+		$url         = ( is_ssl() ? 'https' : 'http' ) . '://' . $http_host . $request_uri;
 
 		// Get current URL
 		$current_url = trailingslashit( $url );
@@ -316,37 +318,38 @@ class BP_Nouveau extends BP_Theme_Compat {
 	}
 
 	public function platform_login_scripts() {
-		?>
-		<script>
-			jQuery( document ).ready( function () {
-				if ( jQuery('.popup-modal-register').length ) {
-					jQuery('.popup-modal-register').magnificPopup({
-						type: 'inline',
-						preloader: false,
-						fixedContentPos: true,
-						modal: true
-					});
-					jQuery('.popup-modal-dismiss').click(function (e) {
-						e.preventDefault();
-						$.magnificPopup.close();
-					});
-				}
-				if ( jQuery('.popup-modal-login').length ) {
-					jQuery('.popup-modal-login').magnificPopup({
-						type: 'inline',
-						preloader: false,
-						fixedBgPos: true,
-						fixedContentPos: true
-					});
-					jQuery('.popup-modal-dismiss').click(function (e) {
-						e.preventDefault();
-						$.magnificPopup.close();
-					});
-				}
-			});
-		</script>
-		<?php
+		// Attach the login popup behaviour as an inline script on a dedicated
+		// registered handle instead of printing a raw <script> tag on the login page.
+		wp_register_script( 'bp-platform-login', false, array(), bp_get_version() );
+		wp_enqueue_script( 'bp-platform-login' );
 
+		$login_js = 'jQuery( document ).ready( function () {' .
+			"if ( jQuery('.popup-modal-register').length ) {" .
+				"jQuery('.popup-modal-register').magnificPopup({" .
+					"type: 'inline'," .
+					'preloader: false,' .
+					'fixedContentPos: true,' .
+					'modal: true' .
+				'});' .
+				"jQuery('.popup-modal-dismiss').click(function (e) {" .
+					'e.preventDefault();' .
+					'$.magnificPopup.close();' .
+				'});' .
+			'}' .
+			"if ( jQuery('.popup-modal-login').length ) {" .
+				"jQuery('.popup-modal-login').magnificPopup({" .
+					"type: 'inline'," .
+					'preloader: false,' .
+					'fixedBgPos: true,' .
+					'fixedContentPos: true' .
+				'});' .
+				"jQuery('.popup-modal-dismiss').click(function (e) {" .
+					'e.preventDefault();' .
+					'$.magnificPopup.close();' .
+				'});' .
+			'}' .
+		'});';
+		wp_add_inline_script( 'bp-platform-login', $login_js );
 	}
 
 	/**
@@ -444,6 +447,21 @@ class BP_Nouveau extends BP_Theme_Compat {
 				if ( false === strpos( $style['file'], '://' ) ) {
 					$asset = bp_locate_template_asset( $file );
 
+					// Under SCRIPT_DEBUG ( $min === '' ) we ask for the unminified
+					// file first. Shipped zips contain only the minified assets, so
+					// on a normal install the unminified file is absent and
+					// bp_locate_template_asset() returns nothing. Fall back to the
+					// minified twin so the style still enqueues instead of being
+					// dropped, matching the min logic used elsewhere.
+					if ( ( empty( $asset['uri'] ) || false === strpos( $asset['uri'], '://' ) ) && '' === $min ) {
+						if ( 'bp-nouveau-icons-map' === $handle ) {
+							$file = sprintf( $style['file'], '.min' );
+						} else {
+							$file = sprintf( $style['file'], $rtl, '.min' );
+						}
+						$asset = bp_locate_template_asset( $file );
+					}
+
 					if ( empty( $asset['uri'] ) || false === strpos( $asset['uri'], '://' ) ) {
 						continue;
 					}
@@ -524,26 +542,18 @@ class BP_Nouveau extends BP_Theme_Compat {
 		}
 
 		$scripts['bp-nouveau-magnific-popup'] = array(
-			'file'         => buddypress()->plugin_url . 'bp-core/js/vendor/magnific-popup.js',
+			'file'         => buddypress()->plugin_url . 'bp-core/js/vendor/magnific-popup%s.js',
 			'dependencies' => array( 'jquery' ),
 			'footer'       => false,
 		);
 
-		if ( bp_is_active( 'media' ) ) {
-
-			$scripts['bp-nouveau-codemirror'] = array(
-				'file'         => buddypress()->plugin_url . 'bp-core/js/vendor/codemirror%s.js',
-				'dependencies' => array(),
-				'footer'       => true,
-			);
-
-			$scripts['bp-nouveau-codemirror-css'] = array(
-				'file'         => buddypress()->plugin_url . 'bp-core/js/vendor/css%s.js',
-				'dependencies' => array(),
-				'footer'       => true,
-			);
-
-		}
+		/*
+		 * CodeMirror (document text-file previews) now uses WordPress core's
+		 * bundled copy — the 'wp-codemirror' handle (script + style registered by
+		 * core, including the css/javascript/htmlmixed/xml modes the previews
+		 * use). The previously vendored copy was removed per the WP.org Plugin
+		 * Directory rule against shipping libraries WordPress already includes.
+		 */
 
 		foreach ( $scripts as $handle => $script ) {
 			if ( ! isset( $script['file'] ) ) {
@@ -555,6 +565,17 @@ class BP_Nouveau extends BP_Theme_Compat {
 			// Locate the asset if needed.
 			if ( false === strpos( $script['file'], '://' ) ) {
 				$asset = bp_locate_template_asset( $file );
+
+				// Under SCRIPT_DEBUG ( $min === '' ) we ask for the unminified
+				// file first. Shipped zips contain only the minified assets, so
+				// on a normal install the unminified file is absent and
+				// bp_locate_template_asset() returns nothing. Fall back to the
+				// minified twin so the script still registers instead of being
+				// dropped, matching the min logic used elsewhere.
+				if ( ( empty( $asset['uri'] ) || false === strpos( $asset['uri'], '://' ) ) && '' === $min ) {
+					$file  = sprintf( $script['file'], '.min' );
+					$asset = bp_locate_template_asset( $file );
+				}
 
 				if ( empty( $asset['uri'] ) || false === strpos( $asset['uri'], '://' ) ) {
 					continue;
@@ -654,43 +675,43 @@ class BP_Nouveau extends BP_Theme_Compat {
 
 		$params = array(
 			'ajaxurl'                    => bp_core_ajax_url(),
-			'only_admin_notice'          => __( 'As you are the only organizer of this group, you cannot leave it. You can either delete the group or promote another member to be an organizer first and then leave the group.', 'buddyboss' ),
-			'is_friend_confirm'          => __( 'Are you sure you want to remove your connection with this member?', 'buddyboss' ),
-			'confirm'                    => __( 'Are you sure?', 'buddyboss' ),
-			'confirm_delete_set'         => __( 'Are you sure you want to delete this set? This cannot be undone.', 'buddyboss' ),
-			'show_x_comments'            => __( 'View more comments', 'buddyboss' ),
-			'unsaved_changes'            => __( 'Your profile has unsaved changes. If you leave the page, the changes will be lost.', 'buddyboss' ),
+			'only_admin_notice'          => __( 'As you are the only organizer of this group, you cannot leave it. You can either delete the group or promote another member to be an organizer first and then leave the group.', 'buddyboss-platform' ),
+			'is_friend_confirm'          => __( 'Are you sure you want to remove your connection with this member?', 'buddyboss-platform' ),
+			'confirm'                    => __( 'Are you sure?', 'buddyboss-platform' ),
+			'confirm_delete_set'         => __( 'Are you sure you want to delete this set? This cannot be undone.', 'buddyboss-platform' ),
+			'show_x_comments'            => __( 'View more comments', 'buddyboss-platform' ),
+			'unsaved_changes'            => __( 'Your profile has unsaved changes. If you leave the page, the changes will be lost.', 'buddyboss-platform' ),
 			'object_nav_parent'          => '#buddypress',
-			'anchorPlaceholderText'      => __( 'Paste or type a link', 'buddyboss' ),
-			'empty_field'                => __( 'New Field', 'buddyboss' ),
-			'close'                      => __( 'Close', 'buddyboss' ),
-			'parent_group_leave_confirm' => esc_html__( 'By leaving this main group you will automatically be removed and unsubscribed to any subgroups relating to this group.', 'buddyboss' ),
+			'anchorPlaceholderText'      => __( 'Paste or type a link', 'buddyboss-platform' ),
+			'empty_field'                => __( 'New Field', 'buddyboss-platform' ),
+			'close'                      => __( 'Close', 'buddyboss-platform' ),
+			'parent_group_leave_confirm' => esc_html__( 'By leaving this main group you will automatically be removed and unsubscribed to any subgroups relating to this group.', 'buddyboss-platform' ),
 			'group_leave_confirm'        => sprintf(
 				'<p>%s<span class="bb-group-name"></span>?</p>',
-				esc_html__( 'Are you sure you want to leave ', 'buddyboss' )
+				esc_html__( 'Are you sure you want to leave ', 'buddyboss-platform' )
 			),
 			'wpTime'                     => current_time( 'Y-m-d H:i:s' ),
 			'wpTimezone'                 => bp_get_option( 'timezone_string' ),
 			'dir_labels'                 => array(
 				'members'   => array(
-					'singular' => esc_html__( 'Member', 'buddyboss' ),
-					'plural'   => esc_html__( 'Members', 'buddyboss' ),
+					'singular' => esc_html__( 'Member', 'buddyboss-platform' ),
+					'plural'   => esc_html__( 'Members', 'buddyboss-platform' ),
 				),
 				'followers' => array(
-					'singular' => esc_html__( 'Follower', 'buddyboss' ),
-					'plural'   => esc_html__( 'Followers', 'buddyboss' ),
+					'singular' => esc_html__( 'Follower', 'buddyboss-platform' ),
+					'plural'   => esc_html__( 'Followers', 'buddyboss-platform' ),
 				),
 			),
 			'rest_url'                   => untrailingslashit( home_url( 'wp-json/buddyboss/v1' ) ),
 			'rest_nonce'                 => wp_create_nonce( 'wp_rest' ),
-			'member_label'               => __( 'member', 'buddyboss' ),
-			'members_label'              => __( 'members', 'buddyboss' ),
+			'member_label'               => __( 'member', 'buddyboss-platform' ),
+			'members_label'              => __( 'members', 'buddyboss-platform' ),
 		);
 
 		if ( bp_is_active( 'friends' ) ) {
 			$params['dir_labels']['connections'] = array(
-				'singular' => esc_html__( 'Connection', 'buddyboss' ),
-				'plural'   => esc_html__( 'Connections', 'buddyboss' ),
+				'singular' => esc_html__( 'Connection', 'buddyboss-platform' ),
+				'plural'   => esc_html__( 'Connections', 'buddyboss-platform' ),
 			);
 		}
 
@@ -737,6 +758,11 @@ class BP_Nouveau extends BP_Theme_Compat {
 		$params['objects'] = $supported_objects;
 		$params['nonces']  = $object_nonces;
 
+		// Nonce for the cover-image reposition AJAX action (bb_save_cover_position).
+		//
+		// @since BuddyBoss [BBVERSION]
+		$params['coverPositionNonce'] = wp_create_nonce( 'bb_save_cover_position' );
+
 		// Used to transport the settings inside the Ajax requests
 		if ( is_customize_preview() ) {
 			$params['customizer_settings'] = bp_nouveau_get_temporary_setting( 'any' );
@@ -749,10 +775,10 @@ class BP_Nouveau extends BP_Theme_Compat {
 		$params['bb_enable_content_counts'] = bb_enable_content_counts();
 
 		// Add localize variable for more menu items.
-		$params['more_menu_items'] = esc_html__( 'Menu Items', 'buddyboss' );
+		$params['more_menu_items'] = esc_html__( 'Menu Items', 'buddyboss-platform' );
 
 		// Add localize variable for more menu text.
-		$params['more_menu_text'] = esc_html__( 'More', 'buddyboss' );
+		$params['more_menu_text'] = esc_html__( 'More', 'buddyboss-platform' );
 
 		/**
 		 * Filters core JavaScript strings for internationalization before AJAX usage.
@@ -955,7 +981,7 @@ class BP_Nouveau extends BP_Theme_Compat {
 			return $path;
 		}
 
-		$uri = parse_url( $path );
+		$uri = wp_parse_url( $path );
 
 		if ( false === strpos( $uri['path'], 'customize.php' ) ) {
 			return $path;

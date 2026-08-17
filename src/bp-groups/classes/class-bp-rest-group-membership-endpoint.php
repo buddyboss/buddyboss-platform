@@ -67,7 +67,7 @@ class BP_REST_Group_Membership_Endpoint extends WP_REST_Controller {
 			array(
 				'args'        => array(
 					'group_id' => array(
-						'description' => __( 'A unique numeric ID for the Group.', 'buddyboss' ),
+						'description' => __( 'A unique numeric ID for the Group.', 'buddyboss-platform' ),
 						'type'        => 'integer',
 					),
 				),
@@ -94,11 +94,11 @@ class BP_REST_Group_Membership_Endpoint extends WP_REST_Controller {
 			array(
 				'args'        => array(
 					'group_id' => array(
-						'description' => __( 'A unique numeric ID for the Group.', 'buddyboss' ),
+						'description' => __( 'A unique numeric ID for the Group.', 'buddyboss-platform' ),
 						'type'        => 'integer',
 					),
 					'user_id'  => array(
-						'description' => __( 'A unique numeric ID for the Group Member.', 'buddyboss' ),
+						'description' => __( 'A unique numeric ID for the Group Member.', 'buddyboss-platform' ),
 						'type'        => 'integer',
 					),
 				),
@@ -300,7 +300,7 @@ class BP_REST_Group_Membership_Endpoint extends WP_REST_Controller {
 			if ( ! groups_join_group( $group->id, $user->ID ) ) {
 				return new WP_Error(
 					'bp_rest_group_member_failed_to_join',
-					__( 'Could not join the group.', 'buddyboss' ),
+					__( 'Could not join the group.', 'buddyboss-platform' ),
 					array(
 						'status' => 500,
 					)
@@ -325,7 +325,7 @@ class BP_REST_Group_Membership_Endpoint extends WP_REST_Controller {
 			if ( ! $saved ) {
 				return new WP_Error(
 					'bp_rest_group_member_failed_to_join',
-					__( 'Could not add member to the group.', 'buddyboss' ),
+					__( 'Could not add member to the group.', 'buddyboss-platform' ),
 					array(
 						'status' => 500,
 					)
@@ -377,7 +377,7 @@ class BP_REST_Group_Membership_Endpoint extends WP_REST_Controller {
 	public function create_item_permissions_check( $request ) {
 		$retval = new WP_Error(
 			'bp_rest_authorization_required',
-			__( 'Sorry, you need to be logged in to join a group.', 'buddyboss' ),
+			__( 'Sorry, you need to be logged in to join a group.', 'buddyboss-platform' ),
 			array(
 				'status' => rest_authorization_required_code(),
 			)
@@ -391,7 +391,7 @@ class BP_REST_Group_Membership_Endpoint extends WP_REST_Controller {
 			if ( ! $user instanceof WP_User ) {
 				$retval = new WP_Error(
 					'bp_rest_group_member_invalid_id',
-					__( 'Invalid group member ID.', 'buddyboss' ),
+					__( 'Invalid group member ID.', 'buddyboss-platform' ),
 					array(
 						'status' => 404,
 					)
@@ -399,7 +399,7 @@ class BP_REST_Group_Membership_Endpoint extends WP_REST_Controller {
 			} elseif ( ! $group instanceof BP_Groups_Group ) {
 				$retval = new WP_Error(
 					'bp_rest_group_invalid_id',
-					__( 'Invalid group ID.', 'buddyboss' ),
+					__( 'Invalid group ID.', 'buddyboss-platform' ),
 					array(
 						'status' => 404,
 					)
@@ -443,7 +443,7 @@ class BP_REST_Group_Membership_Endpoint extends WP_REST_Controller {
 				) {
 					$retval = new WP_Error(
 						'bp_rest_group_member_failed_to_join',
-						__( 'Could not join the group.', 'buddyboss' ),
+						__( 'Could not join the group.', 'buddyboss-platform' ),
 						array(
 							'status' => 500,
 						)
@@ -503,7 +503,7 @@ class BP_REST_Group_Membership_Endpoint extends WP_REST_Controller {
 			if ( ! $group_member->promote( $role ) ) {
 				return new WP_Error(
 					'bp_rest_group_member_failed_to_promote',
-					__( 'Could not promote member.', 'buddyboss' ),
+					__( 'Could not promote member.', 'buddyboss-platform' ),
 					array(
 						'status' => 500,
 					)
@@ -513,7 +513,7 @@ class BP_REST_Group_Membership_Endpoint extends WP_REST_Controller {
 			if ( ! $group_member->promote( $role ) ) {
 				return new WP_Error(
 					'bp_rest_group_member_failed_to_demote',
-					__( 'Could not demote member.', 'buddyboss' ),
+					__( 'Could not demote member.', 'buddyboss-platform' ),
 					array(
 						'status' => 500,
 					)
@@ -522,9 +522,9 @@ class BP_REST_Group_Membership_Endpoint extends WP_REST_Controller {
 		} elseif ( in_array( $action, array( 'demote', 'ban', 'unban' ), true ) ) {
 			if ( ! $group_member->$action() ) {
 				$messages = array(
-					'demote' => __( 'Could not demote member from the group.', 'buddyboss' ),
-					'ban'    => __( 'Could not ban member from the group.', 'buddyboss' ),
-					'unban'  => __( 'Could not unban member from the group.', 'buddyboss' ),
+					'demote' => __( 'Could not demote member from the group.', 'buddyboss-platform' ),
+					'ban'    => __( 'Could not ban member from the group.', 'buddyboss-platform' ),
+					'unban'  => __( 'Could not unban member from the group.', 'buddyboss-platform' ),
 				);
 
 				return new WP_Error(
@@ -588,7 +588,7 @@ class BP_REST_Group_Membership_Endpoint extends WP_REST_Controller {
 	public function update_item_permissions_check( $request ) {
 		$error = new WP_Error(
 			'bp_rest_authorization_required',
-			__( 'Sorry, you are not allowed to perform this action.', 'buddyboss' ),
+			__( 'Sorry, you are not allowed to perform this action.', 'buddyboss-platform' ),
 			array(
 				'status' => rest_authorization_required_code(),
 			)
@@ -599,7 +599,7 @@ class BP_REST_Group_Membership_Endpoint extends WP_REST_Controller {
 		if ( ! is_user_logged_in() ) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
-				__( 'Sorry, you need to be logged in to make an update.', 'buddyboss' ),
+				__( 'Sorry, you need to be logged in to make an update.', 'buddyboss-platform' ),
 				array(
 					'status' => rest_authorization_required_code(),
 				)
@@ -611,7 +611,7 @@ class BP_REST_Group_Membership_Endpoint extends WP_REST_Controller {
 			if ( ! $user instanceof WP_User ) {
 				$retval = new WP_Error(
 					'bp_rest_group_member_invalid_id',
-					__( 'Invalid group member ID.', 'buddyboss' ),
+					__( 'Invalid group member ID.', 'buddyboss-platform' ),
 					array(
 						'status' => 404,
 					)
@@ -622,7 +622,7 @@ class BP_REST_Group_Membership_Endpoint extends WP_REST_Controller {
 				if ( ! $group instanceof BP_Groups_Group ) {
 					$retval = new WP_Error(
 						'bp_rest_group_invalid_id',
-						__( 'Invalid group ID.', 'buddyboss' ),
+						__( 'Invalid group ID.', 'buddyboss-platform' ),
 						array(
 							'status' => 404,
 						)
@@ -644,10 +644,10 @@ class BP_REST_Group_Membership_Endpoint extends WP_REST_Controller {
 						}
 					} else {
 						$messages = array(
-							'ban'     => __( 'Sorry, you are not allowed to ban this group member.', 'buddyboss' ),
-							'unban'   => __( 'Sorry, you are not allowed to unban this group member.', 'buddyboss' ),
-							'promote' => __( 'Sorry, you are not allowed to promote this group member.', 'buddyboss' ),
-							'demote'  => __( 'Sorry, you are not allowed to demote this group member.', 'buddyboss' ),
+							'ban'     => __( 'Sorry, you are not allowed to ban this group member.', 'buddyboss-platform' ),
+							'unban'   => __( 'Sorry, you are not allowed to unban this group member.', 'buddyboss-platform' ),
+							'promote' => __( 'Sorry, you are not allowed to promote this group member.', 'buddyboss-platform' ),
+							'demote'  => __( 'Sorry, you are not allowed to demote this group member.', 'buddyboss-platform' ),
 						);
 
 						$retval = new WP_Error(
@@ -662,10 +662,10 @@ class BP_REST_Group_Membership_Endpoint extends WP_REST_Controller {
 
 				if ( ! is_wp_error( $retval ) && groups_is_user_invited( $user->ID, $group->id ) ) {
 					$messages = array(
-						'ban'     => __( 'Could not ban member from the group.', 'buddyboss' ),
-						'unban'   => __( 'Could not unban member from the group.', 'buddyboss' ),
-						'promote' => __( 'Could not promote member from the group.', 'buddyboss' ),
-						'demote'  => __( 'Could not demote member from the group.', 'buddyboss' ),
+						'ban'     => __( 'Could not ban member from the group.', 'buddyboss-platform' ),
+						'unban'   => __( 'Could not unban member from the group.', 'buddyboss-platform' ),
+						'promote' => __( 'Could not promote member from the group.', 'buddyboss-platform' ),
+						'demote'  => __( 'Could not demote member from the group.', 'buddyboss-platform' ),
 					);
 
 					$retval = new WP_Error(
@@ -726,7 +726,7 @@ class BP_REST_Group_Membership_Endpoint extends WP_REST_Controller {
 		if ( ! $member->remove() ) {
 			return new WP_Error(
 				'bp_rest_group_member_failed_to_remove',
-				__( 'Could not remove member from this group.', 'buddyboss' ),
+				__( 'Could not remove member from this group.', 'buddyboss-platform' ),
 				array(
 					'status' => 500,
 				)
@@ -801,7 +801,7 @@ class BP_REST_Group_Membership_Endpoint extends WP_REST_Controller {
 	public function delete_item_permissions_check( $request ) {
 		$error  = new WP_Error(
 			'bp_rest_authorization_required',
-			__( 'Sorry, you are not allowed to perform this action.', 'buddyboss' ),
+			__( 'Sorry, you are not allowed to perform this action.', 'buddyboss-platform' ),
 			array(
 				'status' => rest_authorization_required_code(),
 			)
@@ -811,7 +811,7 @@ class BP_REST_Group_Membership_Endpoint extends WP_REST_Controller {
 		if ( ! is_user_logged_in() ) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
-				__( 'Sorry, you need to be logged in to view a group membership.', 'buddyboss' ),
+				__( 'Sorry, you need to be logged in to view a group membership.', 'buddyboss-platform' ),
 				array(
 					'status' => rest_authorization_required_code(),
 				)
@@ -823,7 +823,7 @@ class BP_REST_Group_Membership_Endpoint extends WP_REST_Controller {
 			if ( ! $user instanceof WP_User ) {
 				return new WP_Error(
 					'bp_rest_group_member_invalid_id',
-					__( 'Invalid group member ID.', 'buddyboss' ),
+					__( 'Invalid group member ID.', 'buddyboss-platform' ),
 					array(
 						'status' => 404,
 					)
@@ -834,7 +834,7 @@ class BP_REST_Group_Membership_Endpoint extends WP_REST_Controller {
 				if ( ! $group instanceof BP_Groups_Group ) {
 					$retval = new WP_Error(
 						'bp_rest_group_invalid_id',
-						__( 'Invalid group ID.', 'buddyboss' ),
+						__( 'Invalid group ID.', 'buddyboss-platform' ),
 						array(
 							'status' => 404,
 						)
@@ -1021,7 +1021,7 @@ class BP_REST_Group_Membership_Endpoint extends WP_REST_Controller {
 			$group_roles = array_diff( array_keys( bp_groups_get_group_roles() ), array( 'banned' ) );
 
 			$args['role'] = array(
-				'description'       => __( 'Group role to assign the user to.', 'buddyboss' ),
+				'description'       => __( 'Group role to assign the user to.', 'buddyboss-platform' ),
 				'default'           => 'member',
 				'type'              => 'string',
 				'enum'              => $group_roles,
@@ -1035,7 +1035,7 @@ class BP_REST_Group_Membership_Endpoint extends WP_REST_Controller {
 				$args['user_id'] = array_merge(
 					$schema['properties']['id'],
 					array(
-						'description' => __( 'A unique numeric ID for the Member to add to the Group.', 'buddyboss' ),
+						'description' => __( 'A unique numeric ID for the Member to add to the Group.', 'buddyboss-platform' ),
 						'default'     => bp_loggedin_user_id(),
 						'required'    => true,
 						'readonly'    => false,
@@ -1046,7 +1046,7 @@ class BP_REST_Group_Membership_Endpoint extends WP_REST_Controller {
 			if ( WP_REST_Server::EDITABLE === $method ) {
 				$key            = 'update_item';
 				$args['action'] = array(
-					'description'       => __( 'Action used to update a group member.', 'buddyboss' ),
+					'description'       => __( 'Action used to update a group member.', 'buddyboss-platform' ),
 					'default'           => 'promote',
 					'type'              => 'string',
 					'enum'              => array( 'promote', 'demote', 'ban', 'unban' ),
@@ -1085,52 +1085,52 @@ class BP_REST_Group_Membership_Endpoint extends WP_REST_Controller {
 
 		$schema['properties']['is_mod'] = array(
 			'context'     => array( 'view', 'edit' ),
-			'description' => __( 'Whether the member is a group moderator.', 'buddyboss' ),
+			'description' => __( 'Whether the member is a group moderator.', 'buddyboss-platform' ),
 			'type'        => 'boolean',
 		);
 
 		$schema['properties']['is_banned'] = array(
 			'context'     => array( 'view', 'edit' ),
-			'description' => __( 'Whether the member has been banned from the group.', 'buddyboss' ),
+			'description' => __( 'Whether the member has been banned from the group.', 'buddyboss-platform' ),
 			'type'        => 'boolean',
 		);
 
 		$schema['properties']['is_admin'] = array(
 			'context'     => array( 'view', 'edit' ),
-			'description' => __( 'Whether the member is a group administrator.', 'buddyboss' ),
+			'description' => __( 'Whether the member is a group administrator.', 'buddyboss-platform' ),
 			'type'        => 'boolean',
 		);
 
 		$schema['properties']['is_confirmed'] = array(
 			'context'     => array( 'view', 'edit' ),
-			'description' => __( 'Whether the membership of this user has been confirmed.', 'buddyboss' ),
+			'description' => __( 'Whether the membership of this user has been confirmed.', 'buddyboss-platform' ),
 			'type'        => 'boolean',
 		);
 
 		$schema['properties']['date_modified'] = array(
 			'context'     => array( 'view', 'edit' ),
-			'description' => __( "The date of the last time the membership of this user was modified, in the site's timezone.", 'buddyboss' ),
+			'description' => __( "The date of the last time the membership of this user was modified, in the site's timezone.", 'buddyboss-platform' ),
 			'type'        => 'string',
 			'format'      => 'date-time',
 		);
 
 		$schema['properties']['role'] = array(
 			'context'     => array( 'view', 'edit' ),
-			'description' => __( 'Current member\'s role label in the group.', 'buddyboss' ),
+			'description' => __( 'Current member\'s role label in the group.', 'buddyboss-platform' ),
 			'type'        => 'string',
 			'readonly'    => true,
 		);
 
 		$schema['properties']['plural_role'] = array(
 			'context'     => array( 'view', 'edit' ),
-			'description' => __( 'Current member\'s role label in the plural form in the group.', 'buddyboss' ),
+			'description' => __( 'Current member\'s role label in the plural form in the group.', 'buddyboss-platform' ),
 			'type'        => 'string',
 			'readonly'    => true,
 		);
 
 		$schema['properties']['send_group_message'] = array(
 			'context'     => array( 'view', 'edit' ),
-			'description' => __( 'Current member can send group message or not.', 'buddyboss' ),
+			'description' => __( 'Current member can send group message or not.', 'buddyboss-platform' ),
 			'type'        => 'string',
 			'readonly'    => true,
 		);
@@ -1159,7 +1159,7 @@ class BP_REST_Group_Membership_Endpoint extends WP_REST_Controller {
 		}
 
 		$params['status'] = array(
-			'description'       => __( 'Sort the order of results by the status of the group members.', 'buddyboss' ),
+			'description'       => __( 'Sort the order of results by the status of the group members.', 'buddyboss-platform' ),
 			'default'           => 'last_joined',
 			'type'              => 'string',
 			'enum'              => $statuses,
@@ -1168,7 +1168,7 @@ class BP_REST_Group_Membership_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['roles'] = array(
-			'description'       => __( 'Ensure result set includes specific group roles.', 'buddyboss' ),
+			'description'       => __( 'Ensure result set includes specific group roles.', 'buddyboss-platform' ),
 			'default'           => array(),
 			'type'              => 'array',
 			'items'             => array(
@@ -1180,7 +1180,7 @@ class BP_REST_Group_Membership_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['exclude'] = array(
-			'description'       => __( 'Ensure result set excludes specific member IDs.', 'buddyboss' ),
+			'description'       => __( 'Ensure result set excludes specific member IDs.', 'buddyboss-platform' ),
 			'default'           => array(),
 			'type'              => 'array',
 			'items'             => array( 'type' => 'integer' ),
@@ -1189,7 +1189,7 @@ class BP_REST_Group_Membership_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['exclude_admins'] = array(
-			'description'       => __( 'Whether results should exclude group admins and mods.', 'buddyboss' ),
+			'description'       => __( 'Whether results should exclude group admins and mods.', 'buddyboss-platform' ),
 			'default'           => true,
 			'type'              => 'boolean',
 			'sanitize_callback' => 'rest_sanitize_boolean',
@@ -1197,7 +1197,7 @@ class BP_REST_Group_Membership_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['exclude_banned'] = array(
-			'description'       => __( 'Whether results should exclude banned group members.', 'buddyboss' ),
+			'description'       => __( 'Whether results should exclude banned group members.', 'buddyboss-platform' ),
 			'default'           => true,
 			'type'              => 'boolean',
 			'sanitize_callback' => 'rest_sanitize_boolean',
@@ -1205,7 +1205,7 @@ class BP_REST_Group_Membership_Endpoint extends WP_REST_Controller {
 		);
 
 		$params['scope'] = array(
-			'description'       => __( 'Limit result set to items with a specific scope.', 'buddyboss' ),
+			'description'       => __( 'Limit result set to items with a specific scope.', 'buddyboss-platform' ),
 			'type'              => 'string',
 			'context'           => array( 'view' ),
 			'enum'              => array( 'invite', 'invite-friends', 'invited', 'message' ),
@@ -1278,7 +1278,7 @@ class BP_REST_Group_Membership_Endpoint extends WP_REST_Controller {
 						if ( empty( $args['include'] ) ) {
 							return new WP_Error(
 								'bp_rest_group_invites_no_member_found_in_parent',
-								__( 'No members found in parent group.', 'buddyboss' ),
+								__( 'No members found in parent group.', 'buddyboss-platform' ),
 								array(
 									'status' => 202,
 								)
@@ -1328,7 +1328,7 @@ class BP_REST_Group_Membership_Endpoint extends WP_REST_Controller {
 		if ( ! bp_groups_user_can_send_invites( $args['group_id'] ) ) {
 			return new WP_Error(
 				'bp_rest_group_invites_cannot_get_items',
-				__( 'You are not authorized to send invites to other users.', 'buddyboss' ),
+				__( 'You are not authorized to send invites to other users.', 'buddyboss-platform' ),
 				array(
 					'status' => rest_authorization_required_code(),
 				)
@@ -1356,7 +1356,7 @@ class BP_REST_Group_Membership_Endpoint extends WP_REST_Controller {
 					// This message displays if you search in pending invites screen and if no results found in search.
 					return new WP_Error(
 						'bp_rest_group_invites_cannot_get_items',
-						__( 'All members already received invitations.', 'buddyboss' ),
+						__( 'All members already received invitations.', 'buddyboss-platform' ),
 						array(
 							'status' => 202,
 						)
@@ -1365,7 +1365,7 @@ class BP_REST_Group_Membership_Endpoint extends WP_REST_Controller {
 					// This message displays when pending invites screen doesn't have any users invitation.
 					return new WP_Error(
 						'bp_rest_group_invites_cannot_get_items',
-						__( 'No pending group invitations found.', 'buddyboss' ),
+						__( 'No pending group invitations found.', 'buddyboss-platform' ),
 						array(
 							'status' => 202,
 						)

@@ -10,10 +10,13 @@
  * @version 1.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 $is_send_ajax_request = bb_is_send_ajax_request();
 ?>
 <h2 class="bp-screen-title<?php echo ( ! bp_is_group_home() ) ? ' bp-screen-reader-text' : ''; ?>">
-	<?php esc_html_e( 'Group Feed', 'buddyboss' ); ?>
+	<?php esc_html_e( 'Group Feed', 'buddyboss-platform' ); ?>
 </h2>
 
 <?php bp_nouveau_groups_activity_post_form(); ?>
@@ -23,7 +26,7 @@ $is_send_ajax_request = bb_is_send_ajax_request();
 	<div class="bb-subnav-filters-container bb-subnav-filters-search">
 		<button class="subnav-filters-opener" aria-expanded="false" aria-controls="subnav-filters">
 			<i class="bb-icon-f bb-icon-search"></i>
-			<span class="screen-reader-text"><?php esc_html_e( 'Open search filters', 'buddyboss' ); ?></span>
+			<span class="screen-reader-text"><?php esc_html_e( 'Open search filters', 'buddyboss-platform' ); ?></span>
 		</button>
 		<div class="subnav-filters filters clearfix subnav-filters-modal">
 			<ul>
@@ -54,7 +57,7 @@ $is_send_ajax_request = bb_is_send_ajax_request();
 	?>
 	<i class="bb-icon-f bb-icon-loader animate-spin"></i>
 	<div class='<?php echo esc_attr( $hide_class ); ?> bb-subnav-filters-container-main'>
-		<span class="bb-subnav-filters-label"><?php echo esc_html_e( 'Show by', 'buddyboss' ); ?></span>
+		<span class="bb-subnav-filters-label"><?php echo esc_html_e( 'Show by', 'buddyboss-platform' ); ?></span>
 		<div class="bb-subnav-filters-container bb-subnav-filters-filtering">
 			<button class="subnav-filters-opener" aria-expanded="false" aria-controls="bb-subnav-filter-by">
 				<span class="selected"><?php echo esc_html( $default_by_context_label ); ?></span>

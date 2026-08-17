@@ -11,6 +11,9 @@
  * @version 3.1.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 ?>
 
 <div class="bp-cover-image"></div>
@@ -21,17 +24,17 @@
 
 <script id="tmpl-bp-cover-image-delete" type="text/html">
 	<# if ( 'user' === data.object ) { #>
-		<p><?php esc_html_e( "If you'd like to delete your current cover photo, use the delete Cover Photo button.", 'buddyboss' ); ?></p>
+		<p><?php esc_html_e( "If you'd like to delete your current cover photo, use the delete Cover Photo button.", 'buddyboss-platform' ); ?></p>
 		<button type="button" class="button edit" id="bp-delete-cover-image">
 			<?php
-			esc_html_e( 'Delete My Cover Photo', 'buddyboss' );
+			esc_html_e( 'Delete My Cover Photo', 'buddyboss-platform' );
 			?>
 		</button>
 	<# } else if ( 'group' === data.object ) { #>
-		<p><?php esc_html_e( "If you'd like to remove the existing group cover photo but not upload a new one, please use the delete group cover photo button.", 'buddyboss' ); ?></p>
+		<p><?php esc_html_e( "If you'd like to remove the existing group cover photo but not upload a new one, please use the delete group cover photo button.", 'buddyboss-platform' ); ?></p>
 		<button type="button" class="button edit" id="bp-delete-cover-image">
 			<?php
-			esc_html_e( 'Delete Group Cover Photo', 'buddyboss' );
+			esc_html_e( 'Delete Group Cover Photo', 'buddyboss-platform' );
 			?>
 		</button>
 	<# } else { #>

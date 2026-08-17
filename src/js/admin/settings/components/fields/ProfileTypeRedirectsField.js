@@ -27,8 +27,8 @@ var PER_PAGE = 5;
 // matches the legacy admin pixel-for-pixel. Module-scoped so the reference is
 // stable across renders.
 var REDIRECT_STATIC_OPTIONS = [
-	{ value: '', label: __( 'Default', 'buddyboss' ) },
-	{ value: '0', label: __( 'Custom URL', 'buddyboss' ) },
+	{ value: '', label: __( 'Default', 'buddyboss-platform' ) },
+	{ value: '0', label: __( 'Custom URL', 'buddyboss-platform' ) },
 ];
 
 /**
@@ -128,7 +128,7 @@ export function ProfileTypeRedirectsField() {
 
 			// Show "Saving changes..." toast once per debounce batch (not per keystroke).
 			window.dispatchEvent( new CustomEvent( BB_EVENTS.TOAST, {
-				detail: { status: 'saving', message: __( 'Saving changes...', 'buddyboss' ) },
+				detail: { status: 'saving', message: __( 'Saving changes...', 'buddyboss-platform' ) },
 			} ) );
 
 			// Build save data from current + new value.
@@ -146,17 +146,17 @@ export function ProfileTypeRedirectsField() {
 				.then( function ( response ) {
 					if ( response.success ) {
 						window.dispatchEvent( new CustomEvent( BB_EVENTS.TOAST, {
-							detail: { status: 'success', message: __( 'Settings saved.', 'buddyboss' ) },
+							detail: { status: 'success', message: __( 'Settings saved.', 'buddyboss-platform' ) },
 						} ) );
 					} else {
 						window.dispatchEvent( new CustomEvent( BB_EVENTS.TOAST, {
-							detail: { status: 'error', message: ( response.data && response.data.message ) || __( 'Failed to save.', 'buddyboss' ) },
+							detail: { status: 'error', message: ( response.data && response.data.message ) || __( 'Failed to save.', 'buddyboss-platform' ) },
 						} ) );
 					}
 				} )
 				.catch( function () {
 					window.dispatchEvent( new CustomEvent( BB_EVENTS.TOAST, {
-						detail: { status: 'error', message: __( 'Failed to save.', 'buddyboss' ) },
+						detail: { status: 'error', message: __( 'Failed to save.', 'buddyboss-platform' ) },
 					} ) );
 				} )
 				.finally( function () {
@@ -196,10 +196,10 @@ export function ProfileTypeRedirectsField() {
 		};
 		return (
 			<p className="bb-profile-type-redirects__empty">
-				{ __( 'No profile types found. Create profile types under', 'buddyboss' ) }
+				{ __( 'No profile types found. Create profile types under', 'buddyboss-platform' ) }
 				{ ' ' }
 				<a href={ profileTypesHref } onClick={ handleProfileTypesClick }>
-					{ __( 'Members Profile > Profile Types', 'buddyboss' ) }
+					{ __( 'Members Profile > Profile Types', 'buddyboss-platform' ) }
 				</a>
 				{ '.' }
 			</p>
@@ -227,7 +227,7 @@ export function ProfileTypeRedirectsField() {
 						<div className="bb-profile-type-redirects__fields">
 							<div className="bb-profile-type-redirects__field">
 								<label className="bb-profile-type-redirects__field-label">
-									{ __( 'After Login', 'buddyboss' ) }
+									{ __( 'After Login', 'buddyboss-platform' ) }
 								</label>
 								<AsyncSelectField
 									key={ 'login-' + mt.id }
@@ -236,7 +236,7 @@ export function ProfileTypeRedirectsField() {
 										handleFieldChange( mt.id, 'login_redirection', val );
 									} }
 									asyncAction="bb_admin_search_published_pages"
-									placeholder={ __( 'Default', 'buddyboss' ) }
+									placeholder={ __( 'Default', 'buddyboss-platform' ) }
 									staticOptions={ REDIRECT_STATIC_OPTIONS }
 								/>
 								{ '0' === mt.login_redirection && (
@@ -245,13 +245,13 @@ export function ProfileTypeRedirectsField() {
 										// compact while screen readers still
 										// announce "Custom URL" — the per-row
 										// "After Login" <label> has no htmlFor.
-										label={ __( 'Custom URL', 'buddyboss' ) }
+										label={ __( 'Custom URL', 'buddyboss-platform' ) }
 										hideLabelFromVision
 										value={ mt.custom_login_redirection || '' }
 										onChange={ function ( val ) {
 											handleFieldChange( mt.id, 'custom_login_redirection', val );
 										} }
-										placeholder={ __( 'Paste URL', 'buddyboss' ) }
+										placeholder={ __( 'Paste URL', 'buddyboss-platform' ) }
 										type="url"
 										__nextHasNoMarginBottom
 									/>
@@ -260,7 +260,7 @@ export function ProfileTypeRedirectsField() {
 
 							<div className="bb-profile-type-redirects__field">
 								<label className="bb-profile-type-redirects__field-label">
-									{ __( 'After Logout', 'buddyboss' ) }
+									{ __( 'After Logout', 'buddyboss-platform' ) }
 								</label>
 								<AsyncSelectField
 									key={ 'logout-' + mt.id }
@@ -269,7 +269,7 @@ export function ProfileTypeRedirectsField() {
 										handleFieldChange( mt.id, 'logout_redirection', val );
 									} }
 									asyncAction="bb_admin_search_published_pages"
-									placeholder={ __( 'Default', 'buddyboss' ) }
+									placeholder={ __( 'Default', 'buddyboss-platform' ) }
 									staticOptions={ REDIRECT_STATIC_OPTIONS }
 								/>
 								{ '0' === mt.logout_redirection && (
@@ -278,13 +278,13 @@ export function ProfileTypeRedirectsField() {
 										// compact while screen readers still
 										// announce "Custom URL" — the per-row
 										// "After Logout" <label> has no htmlFor.
-										label={ __( 'Custom URL', 'buddyboss' ) }
+										label={ __( 'Custom URL', 'buddyboss-platform' ) }
 										hideLabelFromVision
 										value={ mt.custom_logout_redirection || '' }
 										onChange={ function ( val ) {
 											handleFieldChange( mt.id, 'custom_logout_redirection', val );
 										} }
-										placeholder={ __( 'Paste URL', 'buddyboss' ) }
+										placeholder={ __( 'Paste URL', 'buddyboss-platform' ) }
 										type="url"
 										__nextHasNoMarginBottom
 									/>

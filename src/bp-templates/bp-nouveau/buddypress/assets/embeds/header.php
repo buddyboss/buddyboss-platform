@@ -3,6 +3,9 @@
  * @version 3.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 $displayed_user_link = bp_get_displayed_user_link();
 ?>
 <div id="bp-embed-header">

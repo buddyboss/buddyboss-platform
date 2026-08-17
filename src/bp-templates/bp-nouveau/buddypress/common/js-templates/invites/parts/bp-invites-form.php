@@ -8,14 +8,17 @@
  * @version 1.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 ?>
 <script type="text/html" id="tmpl-bp-invites-form">
 
-	<label for="send-invites-control"><?php esc_html_e( 'Optional: Customize the message of your invite.', 'buddyboss' ); ?></label>
-	<textarea id="send-invites-control" class="bp-faux-placeholder-label" placeholder="<?php _e( 'Type message','buddyboss' ); ?>"></textarea>
+	<label for="send-invites-control"><?php esc_html_e( 'Optional: Customize the message of your invite.', 'buddyboss-platform' ); ?></label>
+	<textarea id="send-invites-control" class="bp-faux-placeholder-label" placeholder="<?php esc_html_e( 'Type message','buddyboss-platform' ); ?>"></textarea>
 
 	<div class="action">
-		<button type="button" id="bp-invites-reset" class="button bp-secondary-action"><?php esc_html_e( 'Cancel', 'buddyboss' ); ?></button>
-		<button type="button" id="bp-invites-send" class="button bp-primary-action"><?php esc_html_e( 'Send', 'buddyboss' ); ?></button>
+		<button type="button" id="bp-invites-reset" class="button bp-secondary-action"><?php esc_html_e( 'Cancel', 'buddyboss-platform' ); ?></button>
+		<button type="button" id="bp-invites-send" class="button bp-primary-action"><?php esc_html_e( 'Send', 'buddyboss-platform' ); ?></button>
 	</div>
 </script>

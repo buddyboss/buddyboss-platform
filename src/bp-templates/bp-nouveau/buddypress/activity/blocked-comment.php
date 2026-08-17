@@ -11,6 +11,9 @@
  * @version 1.5.6
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 global $activities_template;
 
 $activity_comment_id      = bp_get_activity_comment_id();
@@ -67,7 +70,7 @@ if ( bp_is_active( 'moderation' ) ) {
 						$activity_comment_content = bp_get_activity_comment_content();
 						$hide_media               = false;
 						if ( $check_hidden_content ) {
-							$activity_comment_content = esc_html__( 'This content has been hidden from site admin.', 'buddyboss' );
+							$activity_comment_content = esc_html__( 'This content has been hidden from site admin.', 'buddyboss-platform' );
 							$hide_media               = true;
 						} elseif ( $is_user_suspended ) {
 							$activity_suspend_comment_content = bb_moderation_is_suspended_message( $activity_comment_content, BP_Moderation_Activity_Comment::$moderation_type, $activity_comment_user_id );
@@ -94,15 +97,25 @@ if ( bp_is_active( 'moderation' ) ) {
 						if ( true === $hide_media && bp_is_active( 'media' ) ) {
 							remove_action( 'bp_activity_after_comment_content', 'bp_media_activity_comment_entry' );
 							remove_action( 'bp_activity_after_comment_content', 'bp_media_comment_embed_gif', 20, 1 );
-							remove_action( 'bp_activity_after_comment_content', 'bp_video_activity_comment_entry' );
-							remove_action( 'bp_activity_after_comment_content', 'bp_document_activity_comment_entry' );
+							if ( bp_is_active( 'video' ) ) {
+								remove_action( 'bp_activity_after_comment_content', 'bp_video_activity_comment_entry' );
+							}
+							if ( bp_is_active( 'document' ) ) {
+								remove_action( 'bp_activity_after_comment_content', 'bp_document_activity_comment_entry' );
+							}
 						}
 						do_action( 'bp_activity_after_comment_content', $activity_comment_id );
 						if ( true === $hide_media && bp_is_active( 'media' ) ) {
 							add_action( 'bp_activity_after_comment_content', 'bp_media_activity_comment_entry' );
-							add_action( 'bp_activity_after_comment_content', 'bp_media_comment_embed_gif', 20, 1 );
-							add_action( 'bp_activity_after_comment_content', 'bp_video_activity_comment_entry' );
-							add_action( 'bp_activity_after_comment_content', 'bp_document_activity_comment_entry' );
+							if ( function_exists( 'bp_media_comment_embed_gif' ) ) {
+								add_action( 'bp_activity_after_comment_content', 'bp_media_comment_embed_gif', 20, 1 );
+							}
+							if ( bp_is_active( 'video' ) ) {
+								add_action( 'bp_activity_after_comment_content', 'bp_video_activity_comment_entry' );
+							}
+							if ( bp_is_active( 'document' ) ) {
+								add_action( 'bp_activity_after_comment_content', 'bp_document_activity_comment_entry' );
+							}
 						}
 						?>
 

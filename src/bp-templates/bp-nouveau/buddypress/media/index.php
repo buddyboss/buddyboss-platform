@@ -8,6 +8,9 @@
  * @version 1.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 $is_send_ajax_request = bb_is_send_ajax_request();
 
 bp_nouveau_before_media_directory_content();
@@ -42,7 +45,7 @@ bp_nouveau_template_notices();
 							'<span class="bb-count">%d</span> Photo',
 							'<span class="bb-count">%d</span> Photos',
 							$count,
-							'buddyboss'
+							'buddyboss-platform'
 						), array( 'span' => array( 'class' => true ) )
 					),
 					(int) $count
@@ -63,7 +66,7 @@ bp_nouveau_template_notices();
 			?>
 			<a class="bb-add-photos button small" id="bp-add-media" href="#">
 				<i class="bb-icon-l bb-icon-upload"></i>
-				<?php esc_html_e( 'Add Photos', 'buddyboss' ); ?>
+				<?php esc_html_e( 'Add Photos', 'buddyboss-platform' ); ?>
 			</a>
 
 			<?php
@@ -72,7 +75,7 @@ bp_nouveau_template_notices();
 				?>
 				<a href="#" id="bb-create-album" class="bb-create-album button small">
 					<i class="bb-icon-l bb-icon-image-video"></i>
-					<?php esc_html_e( 'Create Album', 'buddyboss' ); ?>
+					<?php esc_html_e( 'Create Album', 'buddyboss-platform' ); ?>
 				</a>
 				<?php
 			}
@@ -88,7 +91,7 @@ bp_nouveau_template_notices();
 
 	<?php
 	bp_get_template_part( 'media/theatre' );
-	if ( bp_is_profile_video_support_enabled() ) {
+	if ( bp_is_active( 'video' ) && bp_is_profile_video_support_enabled() ) {
 		bp_get_template_part( 'video/theatre' );
 		bp_get_template_part( 'video/add-video-thumbnail' );
 	}

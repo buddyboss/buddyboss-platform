@@ -135,7 +135,7 @@ function bp_core_ajax_widget_members() {
 		$result['show_more'] = false;
 		ob_start();
 		?>
-		<?php esc_html_e( 'There were no members found, please try another filter.', 'buddyboss' ); ?>
+		<?php esc_html_e( 'There were no members found, please try another filter.', 'buddyboss-platform' ); ?>
 		<?php echo '</li>'; ?>
 		<?php
 		$content .= ob_get_clean();
@@ -144,6 +144,6 @@ function bp_core_ajax_widget_members() {
 	echo wp_json_encode( $result );
 	exit;
 }
-add_action( 'wp_ajax_widget_members', 'bp_core_ajax_widget_members' );
-add_action( 'wp_ajax_nopriv_widget_members', 'bp_core_ajax_widget_members' );
+add_action( 'wp_ajax_bb_widget_members', 'bp_core_ajax_widget_members' );
+add_action( 'wp_ajax_nopriv_bb_widget_members', 'bp_core_ajax_widget_members' );
 

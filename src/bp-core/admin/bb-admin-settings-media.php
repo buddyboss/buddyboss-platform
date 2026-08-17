@@ -5,9 +5,11 @@
  * Registers the Media feature in the Feature Registry and loads
  * all Media settings (side panels, sections, fields).
  *
- * Media is a "super-feature" that wraps three legacy components:
- * bp-media (photos), bp-video (videos), and bp-document (documents).
- * When Media is disabled, all three components are disabled.
+ * The Media feature maps to the bp-media (photos) component only. The
+ * bp-video (videos) and bp-document (documents) components are managed
+ * independently — they are not activated or deactivated by the Media
+ * toggle, and their settings panels are only registered when the
+ * corresponding component is active and present in the build.
  *
  * @package BuddyBoss\Core\Administration
  * @since BuddyBoss 3.0.0
@@ -33,8 +35,8 @@ function bb_admin_settings_register_media_feature() {
 	bb_register_feature(
 		'media',
 		array(
-			'label'              => __( 'Media Uploading', 'buddyboss' ),
-			'description'        => __( 'Allow members to upload photos, videos, documents, emojis, and GIFs, and organize them into albums or folders.', 'buddyboss' ),
+			'label'              => __( 'Media Uploading', 'buddyboss-platform' ),
+			'description'        => __( 'Allow members to upload photos, videos, documents, emojis, and GIFs, and organize them into albums or folders.', 'buddyboss-platform' ),
 			'icon'               => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-image',
@@ -45,7 +47,7 @@ function bb_admin_settings_register_media_feature() {
 			'is_active_callback' => function () {
 				return bp_is_active( 'media' );
 			},
-			'components'         => array( 'media', 'video', 'document' ),
+			'components'         => array( 'media' ),
 			'settings_route'     => '/settings/media',
 			'order'              => 110,
 		)
@@ -60,12 +62,18 @@ function bb_admin_settings_register_media_feature() {
 	// Load settings sub-files only when media is active.
 	require_once __DIR__ . '/settings/media/callbacks.php';
 	require_once __DIR__ . '/settings/media/settings-photos.php';
-	require_once __DIR__ . '/settings/media/settings-videos.php';
-	require_once __DIR__ . '/settings/media/settings-documents.php';
 	require_once __DIR__ . '/settings/media/settings-emoji.php';
-	require_once __DIR__ . '/settings/media/settings-gifs.php';
 	require_once __DIR__ . '/settings/media/settings-security.php';
 	require_once __DIR__ . '/settings/media/settings-access-controls.php';
+
+	// Videos and Documents are independent components (paid-only); only load
+	// their settings panels when the component is active in this build.
+	if ( bp_is_active( 'video' ) ) {
+		require_once __DIR__ . '/settings/media/settings-videos.php';
+	}
+	if ( bp_is_active( 'document' ) ) {
+		require_once __DIR__ . '/settings/media/settings-documents.php';
+	}
 
 	// =========================================================================
 	// SIDE PANELS
@@ -76,7 +84,7 @@ function bb_admin_settings_register_media_feature() {
 		'media',
 		'photos',
 		array(
-			'title'      => __( 'Photos', 'buddyboss' ),
+			'title'      => __( 'Photos', 'buddyboss-platform' ),
 			'icon'       => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-image',
@@ -95,58 +103,62 @@ function bb_admin_settings_register_media_feature() {
 		)
 	);
 
-	// Side Panel 2: Videos.
-	bb_register_side_panel(
-		'media',
-		'videos',
-		array(
-			'title'    => __( 'Videos', 'buddyboss' ),
-			'icon'     => array(
-				'type'  => 'font',
-				'class' => 'bb-icons-rl bb-icons-rl-video-camera',
-			),
-			'help_url' => bp_get_admin_url(
-				add_query_arg(
-					array(
-						'page'    => 'bp-help',
-						'article' => 124807,
-					),
-					'admin.php'
-				)
-			),
-			'order'    => 20,
-		)
-	);
+	// Side Panel 2: Videos (only when the video component is active).
+	if ( bp_is_active( 'video' ) ) {
+		bb_register_side_panel(
+			'media',
+			'videos',
+			array(
+				'title'    => __( 'Videos', 'buddyboss-platform' ),
+				'icon'     => array(
+					'type'  => 'font',
+					'class' => 'bb-icons-rl bb-icons-rl-video-camera',
+				),
+				'help_url' => bp_get_admin_url(
+					add_query_arg(
+						array(
+							'page'    => 'bp-help',
+							'article' => 124807,
+						),
+						'admin.php'
+					)
+				),
+				'order'    => 20,
+			)
+		);
+	}
 
-	// Side Panel 3: Documents.
-	bb_register_side_panel(
-		'media',
-		'documents',
-		array(
-			'title'    => __( 'Documents', 'buddyboss' ),
-			'icon'     => array(
-				'type'  => 'font',
-				'class' => 'bb-icons-rl bb-icons-rl-file-text',
-			),
-			'help_url' => bp_get_admin_url(
-				add_query_arg(
-					array(
-						'page'    => 'bp-help',
-						'article' => 87466,
-					),
-					'admin.php'
-				)
-			),
-			'order'    => 30,
-		)
-	);
+	// Side Panel 3: Documents (only when the document component is active).
+	if ( bp_is_active( 'document' ) ) {
+		bb_register_side_panel(
+			'media',
+			'documents',
+			array(
+				'title'    => __( 'Documents', 'buddyboss-platform' ),
+				'icon'     => array(
+					'type'  => 'font',
+					'class' => 'bb-icons-rl bb-icons-rl-file-text',
+				),
+				'help_url' => bp_get_admin_url(
+					add_query_arg(
+						array(
+							'page'    => 'bp-help',
+							'article' => 87466,
+						),
+						'admin.php'
+					)
+				),
+				'order'    => 30,
+			)
+		);
+	}
 
 	// Side Panel 4: Emoji.
 	bb_register_side_panel(
 		'media',
 		'emoji',
 		array(
-			'title'    => __( 'Emoji', 'buddyboss' ),
+			'title'    => __( 'Emoji', 'buddyboss-platform' ),
 			'icon'     => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-smiley',
@@ -164,35 +176,12 @@ function bb_admin_settings_register_media_feature() {
 		)
 	);
 
-	// Side Panel 5: Animated GIFs.
-	bb_register_side_panel(
-		'media',
-		'animated_gifs',
-		array(
-			'title'    => __( 'Animated GIFs', 'buddyboss' ),
-			'icon'     => array(
-				'type'  => 'font',
-				'class' => 'bb-icons-rl bb-icons-rl-gif',
-			),
-			'help_url' => bp_get_admin_url(
-				add_query_arg(
-					array(
-						'page'    => 'bp-help',
-						'article' => 62829,
-					),
-					'admin.php'
-				)
-			),
-			'order'    => 50,
-		)
-	);
-
 	// Side Panel 6: Security & Performance.
 	bb_register_side_panel(
 		'media',
 		'security_performance',
 		array(
-			'title' => __( 'Security & Performance', 'buddyboss' ),
+			'title' => __( 'Security & Performance', 'buddyboss-platform' ),
 			'icon'  => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-shield-check',
@@ -206,7 +195,7 @@ function bb_admin_settings_register_media_feature() {
 		'media',
 		'access_controls',
 		array(
-			'title' => __( 'Access Controls', 'buddyboss' ),
+			'title' => __( 'Access Controls', 'buddyboss-platform' ),
 			'icon'  => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-lock',
@@ -235,7 +224,7 @@ function bb_admin_settings_register_media_feature() {
 			'media',
 			'offload_media_link',
 			array(
-				'title'        => __( 'Offload Media', 'buddyboss' ),
+				'title'        => __( 'Offload Media', 'buddyboss-platform' ),
 				'icon'         => array(
 					'type'  => 'font',
 					'class' => 'bb-icons-rl bb-icons-rl-cloud',
@@ -254,17 +243,18 @@ function bb_admin_settings_register_media_feature() {
 	// Panel 1: Photos.
 	bb_media_register_photos_panel_fields();
 
-	// Panel 2: Videos.
-	bb_media_register_videos_panel_fields();
+	// Panel 2: Videos (only when the video component is active).
+	if ( bp_is_active( 'video' ) && function_exists( 'bb_media_register_videos_panel_fields' ) ) {
+		bb_media_register_videos_panel_fields();
+	}
 
-	// Panel 3: Documents.
-	bb_media_register_documents_panel_fields();
+	// Panel 3: Documents (only when the document component is active).
+	if ( bp_is_active( 'document' ) && function_exists( 'bb_media_register_documents_panel_fields' ) ) {
+		bb_media_register_documents_panel_fields();
+	}
 
 	// Panel 4: Emoji.
 	bb_media_register_emoji_panel_fields();
-
-	// Panel 5: Animated GIFs.
-	bb_media_register_gifs_panel_fields();
 
 	// Panel 6: Security & Performance.
 	bb_media_register_security_panel_fields();

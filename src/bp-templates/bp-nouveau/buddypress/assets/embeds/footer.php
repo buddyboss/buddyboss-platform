@@ -2,6 +2,10 @@
 /**
  * @version 3.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 ?>
 <div class="wp-embed-footer">
 	<?php the_embed_site_title(); ?>

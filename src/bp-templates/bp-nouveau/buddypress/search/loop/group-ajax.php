@@ -8,6 +8,10 @@
  * @since   BuddyBoss 1.0.0
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 ?>
 <div class="bp-search-ajax-item bboss_ajax_search_group">
 	<a href="<?php echo esc_url( add_query_arg( array( 'no_frame' => '1' ), bp_get_group_permalink() ) ); ?>">
@@ -18,7 +22,7 @@
 			<div class="item-title"><?php bp_group_link(); ?></div>
 			<div class="item-meta group-details">
 				<?php
-				echo bp_create_excerpt(
+				echo wp_kses_post( bp_create_excerpt(
 					bp_get_group_description(),
 					255,
 					array(
@@ -26,7 +30,7 @@
 						'strip_tags' => true,
 						'ending'     => '&hellip;',
 					)
-				);
+				) );
 				?>
 			</div><!-- //.group_description -->
 			<span class="item-meta">
@@ -35,7 +39,7 @@
 			<span class="middot">&middot;</span>
 			<p class="item-meta last-active">
 				<?php
-				esc_html_e( 'Last active ', 'buddyboss' );
+				esc_html_e( 'Last active ', 'buddyboss-platform' );
 				bp_group_last_active();
 				?>
 			</p>

@@ -4,11 +4,12 @@
  * Plugin URI:  https://buddyboss.com/
  * Description: The BuddyBoss Platform adds community features to WordPress. Member Profiles, Activity Feeds, Direct Messaging, Notifications, and more!
  * Author:      BuddyBoss
- * Author URI:  https://buddyboss.com/
+ * Author URI:  https://buddyboss.com/website-platform/
  * Version:     3.4.2
- * Text Domain: buddyboss
+ * Text Domain: buddyboss-platform
  * Domain Path: /src/languages
- * License:     GPLv2 or later (license.txt)
+ * License:     GPLv2 or later
+ * License URI: https://www.gnu.org/licenses/gpl-2.0.html
  */
 
 // Exit if accessed directly.

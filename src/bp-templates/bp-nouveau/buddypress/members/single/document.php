@@ -8,6 +8,9 @@
  * @version 1.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 $is_send_ajax_request = bb_is_send_ajax_request();
 ?>
 
@@ -15,9 +18,13 @@ $is_send_ajax_request = bb_is_send_ajax_request();
 	<?php
 	bp_get_template_part( 'members/single/parts/item-subnav' );
 	bp_get_template_part( 'document/theatre' );
-	bp_get_template_part( 'video/theatre' );
+	if ( bp_is_active( 'video' ) ) {
+		bp_get_template_part( 'video/theatre' );
+	}
 	bp_get_template_part( 'media/theatre' );
-	bp_get_template_part( 'video/add-video-thumbnail' );
+	if ( bp_is_active( 'video' ) ) {
+		bp_get_template_part( 'video/add-video-thumbnail' );
+	}
 
 	switch ( bp_current_action() ) :
 
@@ -26,7 +33,7 @@ $is_send_ajax_request = bb_is_send_ajax_request();
 			?>
 			<div class="bp-document-listing">
 				<div class="bp-media-header-wrap">
-					<h2 class="bb-title"><?php esc_html_e( 'Documents', 'buddyboss' ); ?></h2>
+					<h2 class="bb-title"><?php esc_html_e( 'Documents', 'buddyboss-platform' ); ?></h2>
 					<?php
 					bp_get_template_part( 'document/add-folder' );
 					bp_get_template_part( 'document/add-document' );
@@ -35,13 +42,13 @@ $is_send_ajax_request = bb_is_send_ajax_request();
 						<form action="" method="get" class="bp-dir-search-form search-form-has-reset" id="group-document-search-form" autocomplete="off">
 							<button type="submit" id="group-document-search-submit" class="nouveau-search-submit search-form_submit" name="group_document_search_submit">
 								<span class="dashicons dashicons-search" aria-hidden="true"></span>
-								<span id="button-text" class="bp-screen-reader-text"><?php esc_html_e( 'Search', 'buddyboss' ); ?></span>
+								<span id="button-text" class="bp-screen-reader-text"><?php esc_html_e( 'Search', 'buddyboss-platform' ); ?></span>
 							</button>
-							<label for="group-document-search" class="bp-screen-reader-text"><?php esc_html_e( 'Search Documents…', 'buddyboss' ); ?></label>
-							<input id="group-document-search" name="document_search" type="search" placeholder="<?php esc_attr_e( 'Search Documents…', 'buddyboss' ); ?>">
+							<label for="group-document-search" class="bp-screen-reader-text"><?php esc_html_e( 'Search Documents…', 'buddyboss-platform' ); ?></label>
+							<input id="group-document-search" name="document_search" type="search" placeholder="<?php esc_attr_e( 'Search Documents…', 'buddyboss-platform' ); ?>">
 							<button type="reset" class="search-form_reset">
 								<span class="bb-icon-rf bb-icon-times" aria-hidden="true"></span>
-								<span class="bp-screen-reader-text"><?php esc_html_e( 'Reset', 'buddyboss' ); ?></span>
+								<span class="bp-screen-reader-text"><?php esc_html_e( 'Reset', 'buddyboss-platform' ); ?></span>
 							</button>
 						</form>
 					</div>

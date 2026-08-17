@@ -280,17 +280,22 @@ class Cache {
 		 */
 		$limit = apply_filters( 'bb_cache_purge_limit', 1000 );
 
-		$groups_in = is_array( $group_names ) ? "'" . implode( "','", $group_names ) . "'" : "'" . $group_names . "'";
+		// Self-protecting against any future request-derived caller: bind group
+		// names via a generated placeholder list rather than interpolating raw.
+		// No behavior change for the server-derived group names the current
+		// caller passes.
+		$group_names  = (array) $group_names;
+		$placeholders = implode( ', ', array_fill( 0, count( $group_names ), '%s' ) );
 
-		//phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-		$count = $wpdb->get_var( "SELECT COUNT(id) FROM {$this->cache_table} WHERE cache_group IN ($groups_in)" );
+		//phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.ReplacementsButNoPlaceholders
+		$count = $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(id) FROM {$this->cache_table} WHERE cache_group IN ({$placeholders})", $group_names ) );
 
 		if ( $count ) {
 			$round_count = ceil( $count / $limit );
 
 			for ( $i = 0; $i < $round_count; $i++ ) {
-				//phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-				$wpdb->query( "DELETE FROM {$this->cache_table} WHERE cache_group IN ($groups_in) LIMIT {$limit}" );
+				//phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.ReplacementsButNoPlaceholders
+				$wpdb->query( $wpdb->prepare( "DELETE FROM {$this->cache_table} WHERE cache_group IN ({$placeholders}) LIMIT %d", array_merge( $group_names, array( (int) $limit ) ) ) );
 			}
 		}
 	}
@@ -361,15 +366,20 @@ class Cache {
 			return;
 		}
 
-		$uid_in = implode( ',', $user_ids );
+		// Self-protecting against any future request-derived caller: force user
+		// ids to integers (safe to interpolate) and bind group names via a
+		// generated placeholder list. No behavior change for the integer/server
+		// inputs the current caller passes.
+		$uid_in = implode( ',', array_map( 'absint', (array) $user_ids ) );
 
 		if ( ! empty( $group_names ) ) {
-			$gname_in = "'" . implode( "', '", $group_names ) . "'";
-			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-			$wpdb->query( "DELETE FROM {$this->cache_table} WHERE  user_id IN ({$uid_in}) AND cache_group IN ({$gname_in})" );
+			$group_names  = (array) $group_names;
+			$placeholders = implode( ', ', array_fill( 0, count( $group_names ), '%s' ) );
+			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.ReplacementsButNoPlaceholders, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+			$wpdb->query( $wpdb->prepare( "DELETE FROM {$this->cache_table} WHERE user_id IN ({$uid_in}) AND cache_group IN ({$placeholders})", $group_names ) );
 		} else {
 			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-			$wpdb->query( "DELETE FROM {$this->cache_table} WHERE  user_id IN ({$uid_in})" );
+			$wpdb->query( "DELETE FROM {$this->cache_table} WHERE user_id IN ({$uid_in})" );
 		}
 	}
 

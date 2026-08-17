@@ -73,7 +73,7 @@ function KBSidebarNode( { node, depth } ) {
 					{ node.count > 0
 						? sprintf(
 								/* translators: 1: subcategory name, 2: article count. */
-								__( '%1$s (%2$d)', 'buddyboss' ),
+								__( '%1$s (%2$d)', 'buddyboss-platform' ),
 								node.name,
 								node.count
 						  )
@@ -143,7 +143,7 @@ function KBSidebarNode( { node, depth } ) {
  */
 export default function KBSidebar( { subcategories, truncatedRemaining, categorySlug, docCategoriesBaseUrl } ) {
 	return (
-		<aside className="bb-kb-sidebar" aria-label={ __( 'Documentation navigation', 'buddyboss' ) }>
+		<aside className="bb-kb-sidebar" aria-label={ __( 'Documentation navigation', 'buddyboss-platform' ) }>
 			<ul className="bb-kb-sidebar__list bb-kb-sidebar__list--depth-0">
 				{ subcategories.map( ( sub ) => (
 					<KBSidebarNode key={ sub.slug } node={ sub } depth={ 0 } />
@@ -158,7 +158,7 @@ export default function KBSidebar( { subcategories, truncatedRemaining, category
 				>
 					{ sprintf(
 						/* translators: %d is the count of articles not shown. */
-						__( '+%d more on docs →', 'buddyboss' ),
+						__( '+%d more on docs →', 'buddyboss-platform' ),
 						truncatedRemaining
 					) }
 				</a>

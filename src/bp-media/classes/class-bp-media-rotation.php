@@ -94,7 +94,7 @@ if ( ! class_exists( 'BP_Media_Rotation' ) ) {
 				'name'          => esc_attr( $name ),
 			);
 
-			echo htmlspecialchars( json_encode( $result ), ENT_NOQUOTES );
+			echo htmlspecialchars( json_encode( $result ), ENT_NOQUOTES ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- JSON output already escaped via htmlspecialchars(); array values individually escaped (esc_url/esc_attr/int cast).
 			exit( 0 );
 		}
 

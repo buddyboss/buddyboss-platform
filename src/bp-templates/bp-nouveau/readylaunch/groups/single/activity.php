@@ -17,7 +17,7 @@ defined( 'ABSPATH' ) || exit;
 $is_send_ajax_request = bb_is_send_ajax_request();
 ?>
 <h2 class="bp-screen-title<?php echo ( ! bp_is_group_home() ) ? ' bp-screen-reader-text' : ''; ?>">
-	<?php esc_html_e( 'Group Feed', 'buddyboss' ); ?>
+	<?php esc_html_e( 'Group Feed', 'buddyboss-platform' ); ?>
 </h2>
 
 <?php bp_nouveau_groups_activity_post_form(); ?>

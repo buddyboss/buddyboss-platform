@@ -22,7 +22,7 @@ bp_nouveau_template_notices();
 <div class="groups-directory-wrapper">
 	<div class="bb-rl-secondary-header flex items-center">
 		<div class="bb-rl-entry-heading">
-			<h2><?php esc_html_e( 'Groups', 'buddyboss' ); ?><span class="bb-rl-heading-count"><?php echo ! $is_send_ajax_request ? esc_html( bp_get_total_group_count() ) : ''; ?></span></h2>
+			<h2><?php esc_html_e( 'Groups', 'buddyboss-platform' ); ?><span class="bb-rl-heading-count"><?php echo ! $is_send_ajax_request ? esc_html( bp_get_total_group_count() ) : ''; ?></span></h2>
 		</div>
 		<div class="bb-rl-sub-ctrls flex items-center">
 			<?php
@@ -38,7 +38,7 @@ bp_nouveau_template_notices();
 			if ( is_user_logged_in() && bp_user_can_create_groups() ) {
 				?>
 				<div class="bb-rl-action-button">
-					<a href="<?php echo esc_url( trailingslashit( bp_get_groups_directory_permalink() . 'create' ) ); ?>" class="bb-rl-button bb-rl-button--brandFill bb-rl-button--small flex items-center"><i class="bb-icons-rl-plus"></i><?php esc_html_e( 'Create New', 'buddyboss' ); ?></a>
+					<a href="<?php echo esc_url( trailingslashit( bp_get_groups_directory_permalink() . 'create' ) ); ?>" class="bb-rl-button bb-rl-button--brandFill bb-rl-button--small flex items-center"><i class="bb-icons-rl-plus"></i><?php esc_html_e( 'Create New', 'buddyboss-platform' ); ?></a>
 				</div>
 				<?php
 			}

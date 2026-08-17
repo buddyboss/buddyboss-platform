@@ -7,12 +7,16 @@
  * @since   BuddyPress 3.0.0
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 ?>
 
 <?php if ( bp_is_group_create() ) : ?>
 
 	<h2 class="bp-screen-title creation-step-name">
-		<?php esc_html_e( 'Upload Cover Photo', 'buddyboss' ); ?>
+		<?php esc_html_e( 'Upload Cover Photo', 'buddyboss-platform' ); ?>
 	</h2>
 
 	<?php
@@ -34,12 +38,12 @@
 <?php else : ?>
 
 	<h2 class="bp-screen-title">
-		<?php esc_html_e( 'Change Cover Photo', 'buddyboss' ); ?>
+		<?php esc_html_e( 'Change Cover Photo', 'buddyboss-platform' ); ?>
 	</h2>
 
 <?php endif; ?>
 
-<p><?php esc_html_e( 'The Cover Photo will be used to customize the header of your group.', 'buddyboss' ); ?></p>
+<p><?php esc_html_e( 'The Cover Photo will be used to customize the header of your group.', 'buddyboss-platform' ); ?></p>
 
 <?php
 bp_attachments_get_template_part( 'cover-images/index' );

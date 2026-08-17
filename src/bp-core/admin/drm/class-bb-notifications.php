@@ -64,7 +64,7 @@ class BB_Notifications {
 			? $icon_raw
 			: sprintf(
 				'<img alt="%1$s" src="%2$s" style="width: 100%%; height: auto;">',
-				esc_attr__( 'Notification Icon', 'buddyboss' ),
+				esc_attr__( 'Notification Icon', 'buddyboss-platform' ),
 				$icon_raw
 			);
 

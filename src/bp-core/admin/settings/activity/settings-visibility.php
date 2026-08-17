@@ -39,7 +39,7 @@ function bb_activity_register_visibility_panel_fields() {
 		'posts_visibility',
 		'posts_visibility',
 		array(
-			'title'       => __( 'Posts Visibility in Activity Feed', 'buddyboss' ),
+			'title'       => __( 'Posts Visibility in Activity Feed', 'buddyboss-platform' ),
 			'description' => '',
 			'order'       => 10,
 			'help_url'    => '638238',
@@ -65,7 +65,7 @@ function bb_activity_register_visibility_panel_fields() {
 		'posts_visibility',
 		array(
 			'name'                 => 'bp_platform_activity_types',
-			'label'                => __( 'BuddyBoss Platform', 'buddyboss' ),
+			'label'                => __( 'BuddyBoss Platform', 'buddyboss-platform' ),
 			'type'                 => 'toggle_list',
 			'description'          => '',
 			'options'              => $platform_type_options,
@@ -113,10 +113,10 @@ function bb_activity_register_visibility_post_type_fields( $feature_id ) {
 			'posts_visibility',
 			array(
 				'name'              => $wp_post_option_name,
-				'label'             => __( 'WordPress', 'buddyboss' ),
+				'label'             => __( 'WordPress', 'buddyboss-platform' ),
 				'type'              => 'toggle',
-				'description'       => __( 'Show WordPress Posts', 'buddyboss' ),
-				'help_text'         => __( 'When checked, new blog posts published by members will appear in the activity feed.', 'buddyboss' ),
+				'description'       => __( 'Show WordPress Posts', 'buddyboss-platform' ),
+				'help_text'         => __( 'When checked, new blog posts published by members will appear in the activity feed.', 'buddyboss-platform' ),
 				'default'           => function_exists( 'bp_is_post_type_feed_enable' ) ? bp_is_post_type_feed_enable( 'post', false ) : false,
 				'sanitize_callback' => 'absint',
 				'order'             => $field_order,
@@ -133,8 +133,8 @@ function bb_activity_register_visibility_post_type_fields( $feature_id ) {
 				'name'              => $wp_comment_option_name,
 				'label'             => '',
 				'type'              => 'checkbox',
-				'description'       => __( 'Enable WordPress Post comments in the activity feed', 'buddyboss' ),
-				'help_text'         => __( 'Allow members to view and create comments to blog posts in the activity feed.', 'buddyboss' ),
+				'description'       => __( 'Enable WordPress Post comments in the activity feed', 'buddyboss-platform' ),
+				'help_text'         => __( 'Allow members to view and create comments to blog posts in the activity feed.', 'buddyboss-platform' ),
 				'default'           => function_exists( 'bb_is_post_type_feed_comment_enable' ) ? bb_is_post_type_feed_comment_enable( 'post', false ) : false,
 				'sanitize_callback' => 'absint',
 				'order'             => $field_order + 1,
@@ -183,7 +183,7 @@ function bb_activity_register_visibility_post_type_fields( $feature_id ) {
 				'posts_visibility',
 				array(
 					'name'              => $post_option_name,
-					'label'             => 0 === $cpt_index ? __( 'Custom Post Types', 'buddyboss' ) : '',
+					'label'             => 0 === $cpt_index ? __( 'Custom Post Types', 'buddyboss-platform' ) : '',
 					'type'              => 'toggle',
 					'description'       => $post_type_label,
 					'default'           => function_exists( 'bp_is_post_type_feed_enable' ) ? bp_is_post_type_feed_enable( $post_type, false ) : false,
@@ -206,7 +206,7 @@ function bb_activity_register_visibility_post_type_fields( $feature_id ) {
 						'notice_type' => 'info',
 						'description' => sprintf(
 							/* translators: %s: Post type name (e.g. "Quizzes"). */
-							__( 'Comments are not supported for %s.', 'buddyboss' ),
+							__( 'Comments are not supported for %s.', 'buddyboss-platform' ),
 							$post_type_label
 						),
 						'order'       => $field_order + 1,
@@ -227,7 +227,7 @@ function bb_activity_register_visibility_post_type_fields( $feature_id ) {
 						'name'              => $comment_option_name,
 						'label'             => '',
 						'type'              => 'checkbox',
-						'description'       => __( 'Enable comments', 'buddyboss' ),
+						'description'       => __( 'Enable comments', 'buddyboss-platform' ),
 						'default'           => function_exists( 'bb_is_post_type_feed_comment_enable' ) ? bb_is_post_type_feed_comment_enable( $post_type, false ) : false,
 						'sanitize_callback' => 'absint',
 						'order'             => $field_order + 1,
@@ -258,7 +258,7 @@ function bb_activity_register_visibility_post_type_fields( $feature_id ) {
 				'label'       => '',
 				'type'        => 'notice',
 				'notice_type' => 'plain',
-				'description' => __( 'Select the custom post types to display in the activity feed when members publish them. For each type, you can also choose whether to include comments in the activity posts (if comments are supported).', 'buddyboss' ),
+				'description' => __( 'Select the custom post types to display in the activity feed when members publish them. For each type, you can also choose whether to include comments in the activity posts (if comments are supported).', 'buddyboss-platform' ),
 				'order'       => $field_order,
 				'group'       => $group_id,
 			)

@@ -27,8 +27,8 @@ defined( 'ABSPATH' ) || exit;
 bb_register_feature(
 	'appearance',
 	array(
-		'label'              => __( 'Appearance', 'buddyboss' ),
-		'description'        => __( 'Configure ReadyLaunch layout, community pages, and site SEO settings to control your site\'s appearance and visibility.', 'buddyboss' ),
+		'label'              => __( 'Appearance', 'buddyboss-platform' ),
+		'description'        => __( 'Configure ReadyLaunch layout, community pages, and site SEO settings to control your site\'s appearance and visibility.', 'buddyboss-platform' ),
 		'icon'               => array(
 			'type'  => 'font',
 			'class' => 'bb-icons-rl bb-icons-rl-palette',

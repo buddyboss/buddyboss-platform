@@ -94,27 +94,27 @@ function bb_blog_get_share_links( $post_id ) {
 
 	$all = array(
 		'facebook' => array(
-			'label' => __( 'Facebook', 'buddyboss' ),
+			'label' => __( 'Facebook', 'buddyboss-platform' ),
 			'url'   => esc_url( 'https://www.facebook.com/sharer/sharer.php?u=' . $permalink ),
 			'icon'  => 'bb-icons-rl-facebook-logo',
 		),
 		'linkedin' => array(
-			'label' => __( 'Linkedin', 'buddyboss' ),
+			'label' => __( 'Linkedin', 'buddyboss-platform' ),
 			'url'   => esc_url( 'https://www.linkedin.com/sharing/share-offsite/?url=' . $permalink ),
 			'icon'  => 'bb-icons-rl-linkedin-logo',
 		),
 		'x'        => array(
-			'label' => __( 'X', 'buddyboss' ),
+			'label' => __( 'X', 'buddyboss-platform' ),
 			'url'   => esc_url( 'https://twitter.com/intent/tweet?url=' . $permalink . '&text=' . $title ),
 			'icon'  => 'bb-icons-rl-x-logo',
 		),
 		'whatsapp' => array(
-			'label' => __( 'Whatsapp', 'buddyboss' ),
+			'label' => __( 'Whatsapp', 'buddyboss-platform' ),
 			'url'   => esc_url( 'https://api.whatsapp.com/send?text=' . $title . '%20' . $permalink ),
 			'icon'  => 'bb-icons-rl-whatsapp-logo',
 		),
 		'email'    => array(
-			'label' => __( 'Email', 'buddyboss' ),
+			'label' => __( 'Email', 'buddyboss-platform' ),
 			'url'   => esc_url( 'mailto:?subject=' . $title . '&body=' . $permalink ),
 			'icon'  => 'bb-icons-rl-envelope-simple',
 		),
@@ -222,7 +222,7 @@ function bb_blog_render_post_footer_sections() {
 	if ( ! $bb_blog_suppress_share && ! empty( $share_links ) ) {
 		?>
 		<div class="bb-blog-share">
-			<span class="bb-blog-share__label"><?php esc_html_e( 'Share', 'buddyboss' ); ?></span>
+			<span class="bb-blog-share__label"><?php esc_html_e( 'Share', 'buddyboss-platform' ); ?></span>
 			<?php foreach ( $share_links as $platform => $link ) : ?>
 				<a class="bb-blog-share__link bb-blog-share__link--<?php echo esc_attr( $platform ); ?>" href="<?php echo esc_url( $link['url'] ); ?>" target="_blank" rel="noopener nofollow" aria-label="<?php echo esc_attr( $link['label'] ); ?>">
 					<i class="bb-icons-rl <?php echo esc_attr( $link['icon'] ); ?>"></i>
@@ -339,7 +339,7 @@ function bb_blog_render_post_footer_sections() {
 		if ( $related->have_posts() ) {
 			?>
 			<div class="bb-blog-related">
-				<h3 class="bb-blog-related__title"><?php esc_html_e( 'Related Posts', 'buddyboss' ); ?></h3>
+				<h3 class="bb-blog-related__title"><?php esc_html_e( 'Related Posts', 'buddyboss-platform' ); ?></h3>
 				<div class="bb-blog-related__grid">
 					<?php
 					while ( $related->have_posts() ) {
@@ -489,7 +489,7 @@ function bb_blog_get_member_toolbar_data() {
 		$bb_blog_label = wp_strip_all_tags( $bb_blog_nav_item->name );
 		if ( null !== $bb_blog_count ) {
 			/* translators: 1: sub-tab label, 2: item count. */
-			$bb_blog_label = sprintf( __( '%1$s (%2$s)', 'buddyboss' ), $bb_blog_label, number_format_i18n( $bb_blog_count ) );
+			$bb_blog_label = sprintf( __( '%1$s (%2$s)', 'buddyboss-platform' ), $bb_blog_label, number_format_i18n( $bb_blog_count ) );
 		}
 
 		$bb_blog_tabs[] = array(
@@ -553,9 +553,9 @@ function bb_blog_rl_member_blog_toolbar() {
 		<div class="bb-rl-member-blog__toolbar-actions">
 			<label class="bb-rl-blog-filter bb-rl-blog-filter--sort">
 				<i class="bb-icons-rl bb-icons-rl-funnel-simple" aria-hidden="true"></i>
-				<select class="bb-rl-blog-filter__select" data-bb-rl-blog-filter="sort" aria-label="<?php esc_attr_e( 'Sort posts', 'buddyboss' ); ?>">
-					<option value="<?php echo esc_url( $bb_blog_toolbar['sort_base'] ); ?>" <?php selected( 'newest' === $bb_blog_toolbar['sort'] ); ?>><?php esc_html_e( 'Newest', 'buddyboss' ); ?></option>
-					<option value="<?php echo esc_url( add_query_arg( 'bb-sort', 'oldest', $bb_blog_toolbar['sort_base'] ) ); ?>" <?php selected( 'oldest' === $bb_blog_toolbar['sort'] ); ?>><?php esc_html_e( 'Oldest', 'buddyboss' ); ?></option>
+				<select class="bb-rl-blog-filter__select" data-bb-rl-blog-filter="sort" aria-label="<?php esc_attr_e( 'Sort posts', 'buddyboss-platform' ); ?>">
+					<option value="<?php echo esc_url( $bb_blog_toolbar['sort_base'] ); ?>" <?php selected( 'newest' === $bb_blog_toolbar['sort'] ); ?>><?php esc_html_e( 'Newest', 'buddyboss-platform' ); ?></option>
+					<option value="<?php echo esc_url( add_query_arg( 'bb-sort', 'oldest', $bb_blog_toolbar['sort_base'] ) ); ?>" <?php selected( 'oldest' === $bb_blog_toolbar['sort'] ); ?>><?php esc_html_e( 'Oldest', 'buddyboss-platform' ); ?></option>
 				</select>
 			</label>
 			<?php if ( '' !== $bb_blog_toolbar['create_button'] ) : ?>
@@ -596,8 +596,8 @@ function bb_blog_member_blog_toolbar() {
 	$bb_blog_toolbar = bb_blog_get_member_toolbar_data();
 
 	$bb_blog_sort_options = array(
-		'newest' => __( 'Newest', 'buddyboss' ),
-		'oldest' => __( 'Oldest', 'buddyboss' ),
+		'newest' => __( 'Newest', 'buddyboss-platform' ),
+		'oldest' => __( 'Oldest', 'buddyboss-platform' ),
 	);
 	?>
 	<div class="bb-member-blog__toolbar">
@@ -618,7 +618,7 @@ function bb_blog_member_blog_toolbar() {
 		<?php endif; ?>
 		<div class="bb-member-blog__toolbar-actions">
 			<div class="bb-member-blog__sort bb_more_options">
-				<a href="#" class="bb_more_options_action" aria-label="<?php esc_attr_e( 'Sort posts', 'buddyboss' ); ?>">
+				<a href="#" class="bb_more_options_action" aria-label="<?php esc_attr_e( 'Sort posts', 'buddyboss-platform' ); ?>">
 					<i class="bb-icon-l bb-icon-filter-alt" aria-hidden="true"></i>
 					<span><?php echo esc_html( $bb_blog_sort_options[ $bb_blog_toolbar['sort'] ] ); ?></span>
 					<i class="bb-icon-l bb-icon-angle-down" aria-hidden="true"></i>

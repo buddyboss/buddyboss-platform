@@ -886,7 +886,7 @@ function bb_xprofile_validate_character_limit_value( $retval, $field_id, $value 
 	if ( $value_length > $field_length ) {
 		return sprintf(
 			/* translators: 1. Field Name, 2. character length. */
-			__( '%1$s must be shorter than %2$d characters.', 'buddyboss' ),
+			__( '%1$s must be shorter than %2$d characters.', 'buddyboss-platform' ),
 			$field_name,
 			$field_length
 		);
@@ -924,12 +924,14 @@ function bp_xprofile_validate_nickname_value( $retval, $field_id, $value, $user_
 
 	// Empty nickname.
 	if ( '' === trim( $value ) ) {
-		return sprintf( __( '%s is required and not allowed to be empty.', 'buddyboss' ), $field_name );
+		/* translators: %s: field name. */
+		return sprintf( __( '%s is required and not allowed to be empty.', 'buddyboss-platform' ), $field_name );
 	}
 
 	// only alpha numeric, underscore, dash.
 	if ( ! preg_match( '/^([A-Za-z0-9-_\.]+)$/', $value ) ) {
-		return sprintf( __( 'Invalid %s. Only "a-z", "0-9", "-", "_" and "." are allowed.', 'buddyboss' ), $field_name );
+		/* translators: %s: field name. */
+		return sprintf( __( 'Invalid %s. Only "a-z", "0-9", "-", "_" and "." are allowed.', 'buddyboss-platform' ), $field_name );
 	}
 
 	// Check user unique identifier exist.
@@ -943,7 +945,7 @@ function bp_xprofile_validate_nickname_value( $retval, $field_id, $value, $user_
 
 	if ( $check_exists > 0 ) {
 		// translators: Nickname field.
-		return sprintf( __( 'Invalid %s.', 'buddyboss' ), $field_name );
+		return sprintf( __( 'Invalid %s.', 'buddyboss-platform' ), $field_name );
 	}
 
 	// must be shorter then 32 characters
@@ -965,12 +967,14 @@ function bp_xprofile_validate_nickname_value( $retval, $field_id, $value, $user_
 
 	$value_length = function_exists( 'mb_strlen' ) ? mb_strlen( $value ) : strlen( $value );
 	if ( $value_length > $nickname_length ) {
-		return sprintf( __( '%1$s must be shorter than %2$d characters.', 'buddyboss' ), $field_name, $nickname_length );
+		/* translators: 1: field name, 2: maximum character length. */
+		return sprintf( __( '%1$s must be shorter than %2$d characters.', 'buddyboss-platform' ), $field_name, $nickname_length );
 	}
 
 	// Minimum of 3 characters.
 	if ( $value_length < 3 ) {
-		return sprintf( __( '%s must be at least 3 characters', 'buddyboss' ), $field_name );
+		/* translators: %s: field name. */
+		return sprintf( __( '%s must be at least 3 characters', 'buddyboss-platform' ), $field_name );
 	}
 
 	// Register page validation for username.
@@ -979,17 +983,18 @@ function bp_xprofile_validate_nickname_value( $retval, $field_id, $value, $user_
 		$user = get_user_by( 'login', $value );
 
 		if ( false !== $user ) {
-			return sprintf( __( '%s has already been taken.', 'buddyboss' ), $field_name );
+			/* translators: %s: field name. */
+			return sprintf( __( '%s has already been taken.', 'buddyboss-platform' ), $field_name );
 		}
 	}
 
 	$where = array(
-		'meta_key = "nickname"',
-		'meta_value = "' . $value . '"',
+		"meta_key = 'nickname'",
+		$wpdb->prepare( 'meta_value = %s', $value ),
 	);
 
 	if ( $user_id ) {
-		$where[] = 'user_id != ' . $user_id;
+		$where[] = $wpdb->prepare( 'user_id != %d', $user_id );
 	}
 
 	$sql = sprintf(
@@ -998,8 +1003,9 @@ function bp_xprofile_validate_nickname_value( $retval, $field_id, $value, $user_
 		implode( ' AND ', $where )
 	);
 
-	if ( $wpdb->get_var( $sql ) > 0 ) {
-		return sprintf( __( '%s has already been taken.', 'buddyboss' ), $field_name );
+	if ( $wpdb->get_var( $sql ) > 0 ) { // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- Table name from $wpdb->usermeta; $where conditions are %s/%d-prepared above.
+		/* translators: %s: field name. */
+		return sprintf( __( '%s has already been taken.', 'buddyboss-platform' ), $field_name );
 	}
 
 	return $retval;
@@ -1049,7 +1055,8 @@ function bp_xprofile_validate_phone_value( $retval, $field_id, $value, $user_id 
 
 	if ( empty( $str ) ) {
 		/* SET ERROR: The field must be a valid U.S. phone number (e.g. 888-888-8888) */
-		return sprintf( __( '%s is required and not allowed to be empty.', 'buddyboss' ), $field_name );
+		/* translators: %s: field name. */
+		return sprintf( __( '%s is required and not allowed to be empty.', 'buddyboss-platform' ), $field_name );
 	}
 
 	if ( $us_number ) {
@@ -1058,7 +1065,8 @@ function bp_xprofile_validate_phone_value( $retval, $field_id, $value, $user_id 
 
 	if ( ! $international ) {
 		/* SET ERROR: The field must be a valid U.S. phone number (e.g. 888-888-8888) */
-		return sprintf( __( 'Enter valid %s', 'buddyboss' ), $field_name );
+		/* translators: %s: field name. */
+		return sprintf( __( 'Enter valid %s', 'buddyboss-platform' ), $field_name );
 	}
 
 	$valid_number = preg_match( '/^(\+\s*)?(?=([.,\s()-]*\d){8})([\d(][\d.,\s()-]*)([[:alpha:]#][^\d]*\d.*)?$/', $str, $matches ) && preg_match( '/\d{2}/', $str );
@@ -1068,7 +1076,8 @@ function bp_xprofile_validate_phone_value( $retval, $field_id, $value, $user_id 
 	}
 
 	/* SET ERROR: The field must be a valid phone number (e.g. 888-888-8888) */
-	return sprintf( __( 'Enter valid %s', 'buddyboss' ), $field_name );
+	/* translators: %s: field name. */
+	return sprintf( __( 'Enter valid %s', 'buddyboss-platform' ), $field_name );
 }
 
 /**
@@ -1166,7 +1175,8 @@ function bp_xprofile_validate_social_networks_value( $retval, $field_id, $value,
 			$val = trim( $val );
 			if ( empty( $val ) ) {
 				$key = bp_social_network_search_key( $key, $providers );
-				$validation[ $key ] = sprintf( __( '%s is required and not allowed to be empty.', 'buddyboss' ), $providers[ $key ]->name );
+				/* translators: %s: social network provider name. */
+				$validation[ $key ] = sprintf( __( '%s is required and not allowed to be empty.', 'buddyboss-platform' ), $providers[ $key ]->name );
 			}
 		}
 	}
@@ -1176,7 +1186,8 @@ function bp_xprofile_validate_social_networks_value( $retval, $field_id, $value,
 		// Skip validation for empty fields unless required.
 		if ( ! empty( $v ) && ! wp_http_validate_url( $v ) ) {
 			$key = bp_social_network_search_key( $k, $providers );
-			$validation[ $k ] = sprintf( __( 'Please enter valid %s profile url.', 'buddyboss' ), $providers[ $key ]->name );
+			/* translators: %s: social network provider name. */
+			$validation[ $k ] = sprintf( __( 'Please enter valid %s profile url.', 'buddyboss-platform' ), $providers[ $key ]->name );
 		}
 	}
 
@@ -1204,7 +1215,7 @@ function bp_xprofile_validate_website_url_value( $retval, $field_id, $value ) {
 	if ( 1 === $field->is_required && '' === trim( $value ) ) {
 		return sprintf(
 			/* translators: Field name. */
-			__( '%s is required and not allowed to be empty.', 'buddyboss' ),
+			__( '%s is required and not allowed to be empty.', 'buddyboss-platform' ),
 			$field->name
 		);
 	}
@@ -1212,7 +1223,7 @@ function bp_xprofile_validate_website_url_value( $retval, $field_id, $value ) {
 	if ( ! empty( $value ) && ! wp_http_validate_url( $value ) ) {
 		return sprintf(
 			/* translators: Field name. */
-			__( 'Invalid %s. Please enter a valid URL.', 'buddyboss' ),
+			__( 'Invalid %s. Please enter a valid URL.', 'buddyboss-platform' ),
 			$field->name
 		);
 	}
@@ -1289,7 +1300,7 @@ function bp_xprofile_exclude_display_name_profile_fields( $args ) {
 function bb_xprofile_repeater_field_repair( $repair_list ) {
 	$repair_list[] = array(
 		'bp-xprofile-repeater-field-repair',
-		esc_html__( 'Repair BuddyBoss profile repeater field sets', 'buddyboss' ),
+		esc_html__( 'Repair BuddyBoss profile repeater field sets', 'buddyboss-platform' ),
 		'bb_xprofile_repeater_field_repair_callback',
 	);
 	return $repair_list;
@@ -1313,7 +1324,7 @@ function bb_xprofile_repeater_field_repair_callback() {
 	$clone_fields_query = "SELECT c.object_id, c.meta_value as clone_number, a.* FROM {$bp->profile->table_name_fields} a LEFT JOIN {$bp->profile->table_name_meta} b ON (a.id = b.object_id)
     LEFT JOIN {$bp->profile->table_name_meta} c ON (a.id = c.object_id)
     WHERE a.parent_id = '0' AND b.meta_key = '_is_repeater_clone' AND b.meta_value = '1' AND c.meta_key = '_clone_number' ORDER BY c.object_id, c.meta_value ASC LIMIT 50 OFFSET $offset";
-	$added_fields       = $wpdb->get_results( $clone_fields_query );
+	$added_fields       = $wpdb->get_results( $clone_fields_query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Table names from $bp->profile; $offset is an (int)-cast integer.
 
 	if ( $offset == 0 ) {
 		$duplicate_fields = array();
@@ -1328,7 +1339,7 @@ function bb_xprofile_repeater_field_repair_callback() {
 			$clone_id   = (int) $field->id;
 			$main_field = bb_xprofile_top_most_template_field_id( (int) $clone_id );
 
-			$metas = $wpdb->get_results( "SELECT * FROM {$bp->profile->table_name_meta} WHERE object_id = {$main_field} AND object_type = 'field'", ARRAY_A );
+			$metas = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$bp->profile->table_name_meta} WHERE object_id = %d AND object_type = 'field'", $main_field ), ARRAY_A );
 			if ( ! empty( $metas ) && ! is_wp_error( $metas ) ) {
 				$field_member_types = array();
 				foreach ( $metas as $meta ) {
@@ -1367,7 +1378,8 @@ function bb_xprofile_repeater_field_repair_callback() {
 		bp_update_option( 'bp_repair_duplicate_fields', $duplicate_fields );
 		bp_update_option( 'bp_repair_updated_fields', $updated_fields );
 
-		$records_updated = sprintf( __( '%s field updated successfully.', 'buddyboss' ), bp_core_number_format( $offset ) );
+		/* translators: %s: number of fields updated. */
+		$records_updated = sprintf( __( '%s field updated successfully.', 'buddyboss-platform' ), bp_core_number_format( $offset ) );
 
 		return array(
 			'status'  => 'running',
@@ -1387,7 +1399,7 @@ function bb_xprofile_repeater_field_repair_callback() {
 
 		return array(
 			'status'  => 1,
-			'message' => __( 'Repairing BuddyBoss profile repeater field sets &hellip; Complete!', 'buddyboss' ),
+			'message' => __( 'Repairing BuddyBoss profile repeater field sets &hellip; Complete!', 'buddyboss-platform' ),
 		);
 	}
 }
@@ -1404,7 +1416,7 @@ function bb_xprofile_repeater_field_repair_callback() {
 function bb_xprofile_repair_user_nicknames( $repair_list ) {
 	$repair_list[] = array(
 		'bb-xprofile-repair-user-nicknames',
-		__( 'Repair user nicknames', 'buddyboss' ),
+		__( 'Repair user nicknames', 'buddyboss-platform' ),
 		'bb_xprofile_repair_user_nicknames_callback',
 	);
 	return $repair_list;
@@ -1427,7 +1439,7 @@ function bb_xprofile_repair_user_nicknames_callback() {
 					LEFT JOIN `{$wpdb->base_prefix}bp_xprofile_data` as xprofile ON users.ID = xprofile.user_id AND xprofile.field_id = %d
 					WHERE users.user_nicename != COALESCE(meta.meta_value, users.user_nicename) OR users.user_nicename != COALESCE(xprofile.value, users.user_nicename)";
 
-	$records = $wpdb->get_results( $wpdb->prepare( $users_query, bp_xprofile_nickname_field_id() ) );
+	$records = $wpdb->get_results( $wpdb->prepare( $users_query, bp_xprofile_nickname_field_id() ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- $users_query is a hardcoded query with table names from $wpdb and a %d placeholder, prepared here.
 
 	if ( ! empty( $records ) ) {
 		foreach ( $records as $record ) {
@@ -1466,10 +1478,10 @@ function bb_xprofile_repair_user_nicknames_callback() {
 		'status'  => 1,
 		'records' => sprintf(
 			/* translators: updated records count. */
-			__( '%s user nicknames updated successfully.', 'buddyboss' ),
+			__( '%s user nicknames updated successfully.', 'buddyboss-platform' ),
 			bp_core_number_format( $records_updated )
 		),
-		'message' => __( 'Repairing user nicknames &hellip; Complete!', 'buddyboss' ),
+		'message' => __( 'Repairing user nicknames &hellip; Complete!', 'buddyboss-platform' ),
 	);
 }
 
@@ -1800,7 +1812,7 @@ function bb_xprofile_remove_default_png_avatar_on_update_xprofile_visibility( BB
 function bb_xprofile_repair_xprofile_visibility( $repair_list ) {
 	$repair_list[] = array(
 		'bb-xprofile-visibility-field-migrate',
-		esc_html__( 'Migrate visibility settings of profile fields to the new structure', 'buddyboss' ),
+		esc_html__( 'Migrate visibility settings of profile fields to the new structure', 'buddyboss-platform' ),
 		'bb_migrate_xprofile_visibility',
 	);
 

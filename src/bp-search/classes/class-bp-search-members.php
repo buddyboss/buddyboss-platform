@@ -302,6 +302,10 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 							// placeholders; field id lists are int-cast.
 							$data_clause_xprofile_table = "( SELECT field_id, user_id FROM {$bp->profile->table_name_data} WHERE ( ExtractValue(value, '//text()') LIKE %s AND field_id IN ( ";
 							$data_clause_xprofile_table .= implode( ',', array_map( 'intval', $selected_xprofile_fields['char_search'] ) );
+							// Bind the REGEXP operand as a placeholder (filled by the
+							// $wpdb->prepare() below) instead of interpolating the raw
+							// search term into the SQL string literal, which sanitize_text_field
+							// does not make SQL-safe (single quotes survive).
 							$data_clause_xprofile_table .= ') ) OR ( value REGEXP %s AND field_id IN ( ';
 							$data_clause_xprofile_table .= implode( ',', array_map( 'intval', $selected_xprofile_fields['word_search'] ) );
 							$data_clause_xprofile_table .= ') ) ';
@@ -314,15 +318,21 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 								if ( ! empty( $date_field_ids ) && ! empty( $date_values ) ) {
 									$date_sql = $this->bb_generate_date_search_sql( $date_values, $date_field_ids );
 									if ( ! empty( $date_sql ) ) {
-										$data_clause_xprofile_table .= ' OR ( ' . $date_sql . ' ) ';
+										// $date_sql is ALREADY prepared by bb_generate_date_search_sql()
+										// and can contain literal '%' (e.g. DATE_FORMAT '%m-%d'). Escape
+										// them to '%%' so the outer $wpdb->prepare() below treats them as
+										// literals and does not mistake them for placeholders (which would
+										// shift our %s args and make prepare() return '').
+										$data_clause_xprofile_table .= ' OR ( ' . str_replace( '%', '%%', $date_sql ) . ' ) ';
 									}
 								}
 							}
 
 							$data_clause_xprofile_table .= ' )';
 
+							// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- $data_clause_xprofile_table is a query TEMPLATE with placeholders built above from internal table names; the user values are bound here by prepare().
 							$sql_xprofile        = $wpdb->prepare( $data_clause_xprofile_table, '%' . $wpdb->esc_like( $search_term ) . '%', '[[:<:]]' . preg_quote( $search_term ) . '[[:>:]]' ); // phpcs:ignore WordPress.PHP.PregQuoteDelimiter.Missing -- $search_term feeds a MySQL REGEXP string literal, not a PHP preg_* pattern, so there is no PCRE delimiter to escape.
-							$sql_xprofile_result = $wpdb->get_results( $sql_xprofile );
+							$sql_xprofile_result = $wpdb->get_results( $sql_xprofile ); // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.PreparedSQL.NotPrepared -- $sql_xprofile is $wpdb->prepare()'d above.
 
 							// check visiblity for field id with current user.
 							if ( ! empty( $sql_xprofile_result ) ) {
@@ -415,7 +425,7 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 			}
 
 			if ( ! empty( $query_placeholder ) ) {
-				$sql = $wpdb->prepare( $sql, $query_placeholder );
+				$sql = $wpdb->prepare( $sql, $query_placeholder ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- $sql assembled from internal $COLUMNS/$FROM/$WHERE clauses; search term bound via $query_placeholder here.
 			}
 
 			return apply_filters(
@@ -471,18 +481,23 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 		 */
 		function print_search_options( $items_to_search ) {
 			echo "<div class='wp-user-fields' style='margin: 10px 0 0 30px'>";
-			echo "<p class='xprofile-group-name' style='margin: 5px 0'><strong>" . __( 'Account', 'buddyboss' ) . '</strong></p>';
+			echo "<p class='xprofile-group-name' style='margin: 5px 0'><strong>" . esc_html__( 'Account', 'buddyboss-platform' ) . '</strong></p>';
 
 			$fields = array(
-				'user_login'   => __( 'Username/Login', 'buddyboss' ),
-				'display_name' => __( 'Display Name', 'buddyboss' ),
-				'user_email'   => __( 'Email', 'buddyboss' ),
-				'user_meta'    => __( 'User Meta', 'buddyboss' ),
+				'user_login'   => __( 'Username/Login', 'buddyboss-platform' ),
+				'display_name' => __( 'Display Name', 'buddyboss-platform' ),
+				'user_email'   => __( 'Email', 'buddyboss-platform' ),
+				'user_meta'    => __( 'User Meta', 'buddyboss-platform' ),
 			);
 			foreach ( $fields as $field => $label ) {
 				$item    = 'member_field_' . $field;
 				$checked = ! empty( $items_to_search ) && in_array( $item, $items_to_search ) ? ' checked' : '';
-				echo "<label><input type='checkbox' value='{$item}' name='bp_search_plugin_options[items-to-search][]' {$checked}>{$label}</label><br>";
+				printf(
+					'<label><input type="checkbox" value="%1$s" name="bp_search_plugin_options[items-to-search][]"%2$s>%3$s</label><br>',
+					esc_attr( $item ),
+					$checked ? ' checked' : '',
+					esc_html( $label )
+				);
 			}
 
 			echo '</div><!-- .wp-user-fields -->';
@@ -500,14 +515,19 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 			if ( ! empty( $groups ) ) {
 				echo "<div class='xprofile-fields' style='margin: 0 0 10px 30px'>";
 				foreach ( $groups as $group ) {
-					echo "<p class='xprofile-group-name' style='margin: 5px 0'><strong>" . $group->name . '</strong></p>';
+					echo "<p class='xprofile-group-name' style='margin: 5px 0'><strong>" . esc_html( $group->name ) . '</strong></p>';
 
 					if ( ! empty( $group->fields ) ) {
 						foreach ( $group->fields as $field ) {
 							// lets save these as xprofile_field_{field_id}
 							$item    = 'xprofile_field_' . $field->id;
 							$checked = ! empty( $items_to_search ) && in_array( $item, $items_to_search ) ? ' checked' : '';
-							echo "<label><input type='checkbox' value='{$item}' name='bp_search_plugin_options[items-to-search][]' {$checked}>{$field->name}</label><br>";
+							printf(
+								'<label><input type="checkbox" value="%1$s" name="bp_search_plugin_options[items-to-search][]"%2$s>%3$s</label><br>',
+								esc_attr( $item ),
+								$checked ? ' checked' : '',
+								esc_html( $field->name )
+							);
 						}
 					}
 				}
@@ -1570,12 +1590,9 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 
 					// Cache WordPress translations to avoid repeated function calls.
 					if ( ! isset( $translation_cache[ $cache_key ] ) ) {
-						$translation_cache[ $cache_key ] = array(
-							// Get singular form translation (e.g., "one year" for "year").
-							'singular' => _n( '%s ' . $unit['singular'], '%s ' . $unit['plural'], 1, 'buddyboss' ),
-							// Get plural form translation (e.g., "two years" for "years").
-							'plural'   => _n( '%s ' . $unit['singular'], '%s ' . $unit['plural'], 2, 'buddyboss' ),
-						);
+						// Resolve the singular/plural translations using literal gettext strings
+						// so the string parser can extract them (WordPress.org i18n rule).
+						$translation_cache[ $cache_key ] = $this->bb_get_time_unit_translation( $unit['singular'] );
 
 						// Clean up cache if it exceeds the size limit.
 						if ( count( $translation_cache ) > self::$max_cache_size ) {
@@ -1595,9 +1612,11 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 						$cache_key = $unit . '_' . $actual_amount;
 
 						if ( ! isset( $translation_cache[ $cache_key ] ) ) {
+							// Translate the fixed string time unit using a literal gettext string.
+							$unit_translation                = $this->bb_get_time_string_translation( $unit );
 							$translation_cache[ $cache_key ] = array(
-								'singular' => __( $unit, 'buddyboss' ),
-								'plural'   => __( $unit, 'buddyboss' ),
+								'singular' => $unit_translation,
+								'plural'   => $unit_translation,
 							);
 
 							// Clean up cache if it exceeds the size limit.
@@ -1615,6 +1634,141 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 			}
 
 			return $search_term;
+		}
+
+		/**
+		 * Get the translated singular and plural forms for a known time unit.
+		 *
+		 * The gettext strings and text domain are passed as literals so the string
+		 * translation parser can extract them (WordPress.org i18n rule: no variables
+		 * in translation function arguments). The unit is one of the fixed, enumerable
+		 * values defined in bb_translate_time_units().
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param string $singular The English singular time unit (e.g. "year").
+		 *
+		 * @return array {
+		 *     Translated singular and plural forms.
+		 *
+		 *     @type string $singular Translated singular form (e.g. "%s year").
+		 *     @type string $plural   Translated plural form (e.g. "%s years").
+		 * }
+		 */
+		private function bb_get_time_unit_translation( $singular ) {
+			switch ( $singular ) {
+				case 'year':
+					return array(
+						/* translators: %s: number of years. */
+						'singular' => _n( '%s year', '%s years', 1, 'buddyboss-platform' ),
+						/* translators: %s: number of years. */
+						'plural'   => _n( '%s year', '%s years', 2, 'buddyboss-platform' ),
+					);
+				case 'month':
+					return array(
+						/* translators: %s: number of months. */
+						'singular' => _n( '%s month', '%s months', 1, 'buddyboss-platform' ),
+						/* translators: %s: number of months. */
+						'plural'   => _n( '%s month', '%s months', 2, 'buddyboss-platform' ),
+					);
+				case 'week':
+					return array(
+						/* translators: %s: number of weeks. */
+						'singular' => _n( '%s week', '%s weeks', 1, 'buddyboss-platform' ),
+						/* translators: %s: number of weeks. */
+						'plural'   => _n( '%s week', '%s weeks', 2, 'buddyboss-platform' ),
+					);
+				case 'day':
+					return array(
+						/* translators: %s: number of days. */
+						'singular' => _n( '%s day', '%s days', 1, 'buddyboss-platform' ),
+						/* translators: %s: number of days. */
+						'plural'   => _n( '%s day', '%s days', 2, 'buddyboss-platform' ),
+					);
+				case 'hour':
+					return array(
+						/* translators: %s: number of hours. */
+						'singular' => _n( '%s hour', '%s hours', 1, 'buddyboss-platform' ),
+						/* translators: %s: number of hours. */
+						'plural'   => _n( '%s hour', '%s hours', 2, 'buddyboss-platform' ),
+					);
+				case 'minute':
+					return array(
+						/* translators: %s: number of minutes. */
+						'singular' => _n( '%s minute', '%s minutes', 1, 'buddyboss-platform' ),
+						/* translators: %s: number of minutes. */
+						'plural'   => _n( '%s minute', '%s minutes', 2, 'buddyboss-platform' ),
+					);
+			}
+
+			// Unknown unit: fall back to the raw value so behaviour is unchanged.
+			return array(
+				'singular' => '%s ' . $singular,
+				'plural'   => '%s ' . $singular,
+			);
+		}
+
+		/**
+		 * Translate a fixed string time unit (e.g. "a year", "sometime").
+		 *
+		 * The gettext strings and text domain are passed as literals so the string
+		 * translation parser can extract them. The value is one of the fixed string
+		 * time units defined in bb_translate_time_units().
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param string $unit The English string time unit (e.g. "a year").
+		 *
+		 * @return string The translated string time unit.
+		 */
+		private function bb_get_time_string_translation( $unit ) {
+			switch ( $unit ) {
+				case 'a year':
+					return __( 'a year', 'buddyboss-platform' );
+				case 'sometime':
+					return __( 'sometime', 'buddyboss-platform' );
+				case 'a week':
+					return __( 'a week', 'buddyboss-platform' );
+				case 'a day':
+					return __( 'a day', 'buddyboss-platform' );
+				case 'an hour':
+					return __( 'an hour', 'buddyboss-platform' );
+				case 'a minute':
+					return __( 'a minute', 'buddyboss-platform' );
+			}
+
+			// Unknown unit: return as-is, matching __() with no available translation.
+			return $unit;
+		}
+
+		/**
+		 * Translate a fixed direction word into its "%s <direction>" form.
+		 *
+		 * The gettext strings and text domain are passed as literals so the string
+		 * translation parser can extract them. The direction is one of the fixed set
+		 * used across the elapsed-time parsing helpers ("ago", "since", "from now").
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param string $direction The English direction word (e.g. "ago").
+		 *
+		 * @return string The translated "%s <direction>" form (e.g. "%s ago").
+		 */
+		private function bb_get_direction_translation( $direction ) {
+			switch ( $direction ) {
+				case 'ago':
+					/* translators: %s: amount of time (e.g. "2 days"). */
+					return __( '%s ago', 'buddyboss-platform' );
+				case 'since':
+					/* translators: %s: amount of time (e.g. "2 days"). */
+					return __( '%s since', 'buddyboss-platform' );
+				case 'from now':
+					/* translators: %s: amount of time (e.g. "2 days"). */
+					return __( '%s from now', 'buddyboss-platform' );
+			}
+
+			// Unknown direction: return as-is so behaviour matches the original.
+			return '%s ' . $direction;
 		}
 
 		/**
@@ -1641,7 +1795,7 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 				// Cache WordPress translations for direction words.
 				if ( ! isset( $translation_cache[ $cache_key ] ) ) {
 					// Get the translation for this direction word (e.g., "ago" for "ago").
-					$translation_cache[ $cache_key ] = __( '%s ' . $direction, 'buddyboss' );
+					$translation_cache[ $cache_key ] = $this->bb_get_direction_translation( $direction );
 
 					// Clean up cache if it exceeds the size limit.
 					if ( count( $translation_cache ) > self::$max_cache_size ) {
@@ -1811,8 +1965,8 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 			// Process each direction word to remove it from the translation.
 			foreach ( $directions as $direction ) {
 				// Get the WordPress translation for this direction word.
-				// Example: __('%s ago', 'buddyboss') → "since".
-				$direction_translation = __( '%s ' . $direction, 'buddyboss' );
+				// Example: __('%s ago', 'buddyboss-platform') → "since".
+				$direction_translation = $this->bb_get_direction_translation( $direction );
 
 				// Remove the %s placeholder to get just the direction word.
 				// Example: "since %s" → "since".

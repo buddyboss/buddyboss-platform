@@ -631,7 +631,7 @@ class BP_Media_Extractor {
 				continue;
 			}
 
-			$path = untrailingslashit( parse_url( $audio['attributes'][ $src_param ], PHP_URL_PATH ) );
+			$path = untrailingslashit( wp_parse_url( $audio['attributes'][ $src_param ], PHP_URL_PATH ) );
 
 			foreach ( $audio_types as $extension ) {
 				$extension = '.' . $extension;
@@ -654,7 +654,7 @@ class BP_Media_Extractor {
 			$extension = '.' . $extension;
 
 			foreach ( $links['links'] as $link ) {
-				$path = untrailingslashit( parse_url( $link['url'], PHP_URL_PATH ) );
+				$path = untrailingslashit( wp_parse_url( $link['url'], PHP_URL_PATH ) );
 
 				// Check this URL's file extension matches that of an accepted audio format.
 				if ( ! $path || substr( $path, -4 ) !== $extension ) {
@@ -728,7 +728,7 @@ class BP_Media_Extractor {
 				continue;
 			}
 
-			$path = untrailingslashit( parse_url( $video['attributes'][ $src_param ], PHP_URL_PATH ) );
+			$path = untrailingslashit( wp_parse_url( $video['attributes'][ $src_param ], PHP_URL_PATH ) );
 
 			foreach ( $video_types as $extension ) {
 				$extension = '.' . $extension;
@@ -933,7 +933,7 @@ class BP_Media_Extractor {
 	 * @return string
 	 */
 	protected function strip_markup( $richtext ) {
-		$plaintext = strip_shortcodes( html_entity_decode( strip_tags( $richtext ), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ) );
+		$plaintext = strip_shortcodes( html_entity_decode( wp_strip_all_tags( $richtext ), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ) );
 
 		/**
 		 * Filters the generated plain text version of the content passed to the extractor.

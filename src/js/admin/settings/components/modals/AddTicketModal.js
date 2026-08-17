@@ -56,7 +56,7 @@ export function AddTicketModal( { isOpen, value, onClose, onSave } ) {
 
 	return (
 		<Modal
-			title={ __( 'Add Ticket Number', 'buddyboss' ) }
+			title={ __( 'Add Ticket Number', 'buddyboss-platform' ) }
 			onRequestClose={ onClose }
 			className="bb-admin-add-ticket-modal bb-admin-settings-modal"
 			shouldCloseOnClickOutside={ false }
@@ -64,13 +64,13 @@ export function AddTicketModal( { isOpen, value, onClose, onSave } ) {
 			<div className="bb-admin-settings-modal__body">
 				<TextControl
 					className="bb-admin-add-ticket-modal__input"
-					label={ __( 'Ticket number', 'buddyboss' ) }
+					label={ __( 'Ticket number', 'buddyboss-platform' ) }
 					hideLabelFromVision
 					type="number"
 					inputMode="numeric"
 					min="1"
-					placeholder={ __( 'e.g. 12345', 'buddyboss' ) }
-					help={ __( 'Enter the numeric support ticket ID.', 'buddyboss' ) }
+					placeholder={ __( 'e.g. 12345', 'buddyboss-platform' ) }
+					help={ __( 'Enter the numeric support ticket ID.', 'buddyboss-platform' ) }
 					value={ ticket }
 					onChange={ function ( val ) { setTicket( val ); } }
 					__nextHasNoMarginBottom
@@ -79,10 +79,10 @@ export function AddTicketModal( { isOpen, value, onClose, onSave } ) {
 
 			<div className="bb-admin-settings-modal__footer">
 				<Button variant="secondary" onClick={ onClose }>
-					{ __( 'Cancel', 'buddyboss' ) }
+					{ __( 'Cancel', 'buddyboss-platform' ) }
 				</Button>
 				<Button variant="primary" onClick={ handleSave } disabled={ ! isValidTicket }>
-					{ __( 'Save', 'buddyboss' ) }
+					{ __( 'Save', 'buddyboss-platform' ) }
 				</Button>
 			</div>
 		</Modal>

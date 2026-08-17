@@ -6,6 +6,9 @@
  * @since BuddyBoss 1.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 /**
  * Load an individual album screen.
  *
@@ -24,7 +27,7 @@ function media_screen_single_album() {
 
 	if ( empty( $album_id ) || ! BP_Media_Album::album_exists( $album_id ) ) {
 		if ( is_user_logged_in() ) {
-			bp_core_add_message( __( 'The album you tried to access is no longer available', 'buddyboss' ), 'error' );
+			bp_core_add_message( __( 'The album you tried to access is no longer available', 'buddyboss-platform' ), 'error' );
 		}
 
 		bp_core_redirect( trailingslashit( bp_displayed_user_domain() . bp_get_media_slug() . '/albums' ) );
@@ -32,7 +35,7 @@ function media_screen_single_album() {
 
 	// No access.
 	if ( ( ! albums_check_album_access( $album_id ) && ! bp_is_my_profile() ) && ! bp_current_user_can( 'bp_moderate' ) ) {
-		bp_core_add_message( __( 'You do not have access to that album.', 'buddyboss' ), 'error' );
+		bp_core_add_message( __( 'You do not have access to that album.', 'buddyboss-platform' ), 'error' );
 		bp_core_redirect( trailingslashit( bp_displayed_user_domain() . bp_get_media_slug() . '/albums' ) );
 	}
 

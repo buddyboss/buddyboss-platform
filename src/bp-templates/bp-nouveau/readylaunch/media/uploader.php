@@ -22,10 +22,10 @@ $bp_is_single_album = bp_is_single_album();
 				<div class="modal-container has-folderlocationUI">
 
 					<header class="bb-model-header">
-						<a href="#" class="bp-media-upload-tab  bp-upload-tab selected" data-content="bp-dropzone-content" id="bp-media-uploader-modal-title"><?php esc_html_e( 'Upload', 'buddyboss' ); ?></a>
+						<a href="#" class="bp-media-upload-tab  bp-upload-tab selected" data-content="bp-dropzone-content" id="bp-media-uploader-modal-title"><?php esc_html_e( 'Upload', 'buddyboss-platform' ); ?></a>
 
 						<?php if ( $bp_is_single_album ) : ?>
-							<a href="#" class="bp-media-upload-tab  bp-upload-tab" data-content="bp-existing-media-content" id="bp-media-select-from-existing"><?php esc_html_e( 'Select Photos', 'buddyboss' ); ?></a>
+							<a href="#" class="bp-media-upload-tab  bp-upload-tab" data-content="bp-existing-media-content" id="bp-media-select-from-existing"><?php esc_html_e( 'Select Photos', 'buddyboss-platform' ); ?></a>
 						<?php endif; ?>
 
 						<span id="bp-media-uploader-modal-status-text" style="display: none;"></span>
@@ -48,7 +48,7 @@ $bp_is_single_album = bp_is_single_album();
 							) :
 								?>
 								<div class="media-uploader-post-content">
-									<textarea name="bp-media-post-content" id="bp-media-post-content" placeholder="<?php esc_html_e( 'Write a description', 'buddyboss' ); ?>"></textarea>
+									<textarea name="bp-media-post-content" id="bp-media-post-content" placeholder="<?php esc_html_e( 'Write a description', 'buddyboss-platform' ); ?>"></textarea>
 								</div>
 							<?php endif; ?>
 
@@ -60,8 +60,8 @@ $bp_is_single_album = bp_is_single_album();
 											<div class="dz-image">
 												<img data-dz-thumbnail />
 											</div>
-											<div class="dz-error-title"><?php esc_html_e( 'Upload Failed', 'buddyboss' ); ?></div>
-											<div class="dz-error-title"><?php esc_html_e( 'Upload Failed', 'buddyboss' ); ?></div>
+											<div class="dz-error-title"><?php esc_html_e( 'Upload Failed', 'buddyboss-platform' ); ?></div>
+											<div class="dz-error-title"><?php esc_html_e( 'Upload Failed', 'buddyboss-platform' ); ?></div>
 											<div class="dz-details">
 												<div class="dz-filename"><span data-dz-name></span></div>
 												<div class="dz-size" data-dz-size></div>
@@ -81,7 +81,7 @@ $bp_is_single_album = bp_is_single_album();
 									?>
 									<a id="bp-media-photo-next" class="bb-field-uploader-next bb-field-uploader-actions" href="#">
 										<i class="bb-icons-rl-plus"></i>
-										<?php esc_html_e( 'Select Album', 'buddyboss' ); ?>
+										<?php esc_html_e( 'Select Album', 'buddyboss-platform' ); ?>
 									</a>
 									<?php
 								}
@@ -105,7 +105,7 @@ $bp_is_single_album = bp_is_single_album();
 									if ( bp_media_has_more_items() ) :
 										?>
 										<li class="load-more">
-											<a class="button outline" href="<?php bp_media_load_more_link(); ?>"><?php esc_html_e( 'Load More', 'buddyboss' ); ?></a>
+											<a class="button outline" href="<?php bp_media_load_more_link(); ?>"><?php esc_html_e( 'Load More', 'buddyboss-platform' ); ?></a>
 										</li>
 									<?php endif; ?>
 								</ul>
@@ -127,7 +127,7 @@ $bp_is_single_album = bp_is_single_album();
 					<footer class="bb-model-footer media-uploader-footer">
 						<a href="#" class="bb-rl-media-open-create-popup-folder" style="display: none;">
 							<i class="bb-icons-rl-plus"></i>
-							<?php esc_html_e( 'Create Album', 'buddyboss' ); ?>
+							<?php esc_html_e( 'Create Album', 'buddyboss-platform' ); ?>
 						</a>
 						<?php if ( ! bp_is_group() ) : ?>
 							<div class="bb-dropdown-wrap bb-rl-filter">
@@ -142,8 +142,8 @@ $bp_is_single_album = bp_is_single_album();
 								</select>
 							</div>
 						<?php endif; ?>
-						<a class="button push-right" id="bp-media-submit" style="display: none;" href="#"><?php esc_html_e( 'Done', 'buddyboss' ); ?></a>
-						<a id="bp-media-prev" class="bb-uploader-steps-prev bb-field-uploader-actions" href="#"><?php esc_html_e( 'Back', 'buddyboss' ); ?></a>
+						<a class="button push-right" id="bp-media-submit" style="display: none;" href="#"><?php esc_html_e( 'Done', 'buddyboss-platform' ); ?></a>
+						<a id="bp-media-prev" class="bb-uploader-steps-prev bb-field-uploader-actions" href="#"><?php esc_html_e( 'Back', 'buddyboss-platform' ); ?></a>
 					</footer>
 
 				</div>

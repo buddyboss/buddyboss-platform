@@ -112,18 +112,18 @@ function bb_reactions_get_settings_fields() {
 
 	$fields['bp_reaction_settings_section'] = array(
 		'bb_all_reactions'     => array(
-			'title' => esc_html__( 'Enable Reactions', 'buddyboss' ),
+			'title' => esc_html__( 'Enable Reactions', 'buddyboss-platform' ),
 		),
 
 		'bb_reaction_mode'     => array(
-			'title'             => esc_html__( 'Reactions Mode', 'buddyboss' ),
+			'title'             => esc_html__( 'Reactions Mode', 'buddyboss-platform' ),
 			'sanitize_callback' => 'bb_reactions_sanitize_mode',
 		),
 
 		'bb_reaction_emotions' => array(),
 
 		'bb_reactions_button'  => array(
-			'title' => esc_html__( 'Reactions Button', 'buddyboss' ),
+			'title' => esc_html__( 'Reactions Button', 'buddyboss-platform' ),
 		),
 	);
 

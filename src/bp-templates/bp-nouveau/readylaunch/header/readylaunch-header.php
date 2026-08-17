@@ -48,7 +48,7 @@ bp_get_template_part( 'sidebar/left-sidebar' );
 <div id="page" class="site bb-readylaunch">
 	<header id="masthead" class="bb-rl-header">
 		<div class="bb-rl-container bb-rl-header-container flex justify-between items-center">
-			<a href="#" class="bb-rl-left-panel-mobile" aria-label="<?php esc_attr_e( 'Open left panel', 'buddyboss' ); ?>"><i class="bb-icons-rl-list"></i></a>
+			<a href="#" class="bb-rl-left-panel-mobile" aria-label="<?php esc_attr_e( 'Open left panel', 'buddyboss-platform' ); ?>"><i class="bb-icons-rl-list"></i></a>
 			<?php
 			bp_get_template_part( 'header/site-logo' );
 
@@ -121,10 +121,10 @@ bp_get_template_part( 'sidebar/left-sidebar' );
 						</div>
 					<?php } else { ?>
 						<div class="bb-rl-header-buttons">
-							<a href="<?php echo esc_url( wp_login_url() ); ?>" class="bb-rl-button bb-rl-button--tertiaryLink bb-rl-button--small signin-button"><?php esc_html_e( 'Sign in', 'buddyboss' ); ?></a>
+							<a href="<?php echo esc_url( wp_login_url() ); ?>" class="bb-rl-button bb-rl-button--tertiaryLink bb-rl-button--small signin-button"><?php esc_html_e( 'Sign in', 'buddyboss-platform' ); ?></a>
 
 							<?php if ( get_option( 'users_can_register' ) ) : ?>
-								<a href="<?php echo esc_url( wp_registration_url() ); ?>" class="bb-rl-button bb-rl-button--secondaryFill bb-rl-button--small signup"><?php esc_html_e( 'Sign up', 'buddyboss' ); ?></a>
+								<a href="<?php echo esc_url( wp_registration_url() ); ?>" class="bb-rl-button bb-rl-button--secondaryFill bb-rl-button--small signup"><?php esc_html_e( 'Sign up', 'buddyboss-platform' ); ?></a>
 							<?php endif; ?>
 						</div>
 					<?php } ?>
@@ -136,15 +136,15 @@ bp_get_template_part( 'sidebar/left-sidebar' );
 				if ( bp_is_active( 'search' ) ) {
 					?>
 						<form action="<?php echo esc_url( home_url( '/' ) ); ?>" method="get" class="bp-dir-search-form search-form" id="mobile-search-form">
-							<label for="mobile-search" class="bp-screen-reader-text"><?php esc_html_e( 'Search', 'buddyboss' ); ?></label>
+							<label for="mobile-search" class="bp-screen-reader-text"><?php esc_html_e( 'Search', 'buddyboss-platform' ); ?></label>
 							<div class="bb-rl-network-search-bar">
-								<input id="mobile-search" name="s" type="search" value="" placeholder="<?php esc_attr_e( 'Search community...', 'buddyboss' ); ?>">
+								<input id="mobile-search" name="s" type="search" value="" placeholder="<?php esc_attr_e( 'Search community...', 'buddyboss-platform' ); ?>">
 								<input type="hidden" name="bp_search" value="1">
 								<button type="submit" id="mobile-search-submit" class="nouveau-search-submit">
 									<span class="bb-icons-rl-magnifying-glass" aria-hidden="true"></span>
-									<span id="mobile-button-text" class="bp-screen-reader-text"><?php esc_html_e( 'Search', 'buddyboss' ); ?></span>
+									<span id="mobile-button-text" class="bp-screen-reader-text"><?php esc_html_e( 'Search', 'buddyboss-platform' ); ?></span>
 								</button>
-								<a href="javascript:;" class="bb-rl-network-search-clear bp-hide"><?php esc_html_e( 'Clear Search', 'buddyboss' ); ?></a>
+								<a href="javascript:;" class="bb-rl-network-search-clear bp-hide"><?php esc_html_e( 'Clear Search', 'buddyboss-platform' ); ?></a>
 							</div>
 						</form>
 					<?php } ?>
@@ -165,7 +165,7 @@ bp_get_template_part( 'sidebar/left-sidebar' );
 							<li>
 								<a href="javascript:void(0);" ref="notification_bell" class="notification-link">
 									<i class="bb-icons-rl-chat-teardrop-text"></i>
-									<span class="notification-label"><?php esc_html_e( 'Messages', 'buddyboss' ); ?></span>
+									<span class="notification-label"><?php esc_html_e( 'Messages', 'buddyboss-platform' ); ?></span>
 									<?php
 										$unread_message_count = messages_get_unread_count();
 									if ( $unread_message_count > 0 ) :
@@ -179,7 +179,7 @@ bp_get_template_part( 'sidebar/left-sidebar' );
 							<li>
 								<a href="javascript:void(0);" ref="notification_bell" class="notification-link">
 									<i class="bb-icons-rl-bell-simple"></i>
-									<span class="notification-label"><?php esc_html_e( 'Notifications', 'buddyboss' ); ?></span>
+									<span class="notification-label"><?php esc_html_e( 'Notifications', 'buddyboss-platform' ); ?></span>
 									<?php
 										$notifications             = bp_notifications_get_unread_notification_count( bp_loggedin_user_id() );
 										$unread_notification_count = ! empty( $notifications ) ? $notifications : 0;

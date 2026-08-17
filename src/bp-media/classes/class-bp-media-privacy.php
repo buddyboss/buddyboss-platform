@@ -49,14 +49,14 @@ class BP_Media_Privacy {
 	function get_visibility_options( $is_group = false ) {
 
 		$options = array(
-			'public'   => __( 'Public', 'buddyboss' ),
-			'onlyme'   => __( 'Only Me', 'buddyboss' ),
-			'loggedin' => __( 'All Members', 'buddyboss' ),
-			'friends'  => __( 'My Connections', 'buddyboss' ),
+			'public'   => __( 'Public', 'buddyboss-platform' ),
+			'onlyme'   => __( 'Only Me', 'buddyboss-platform' ),
+			'loggedin' => __( 'All Members', 'buddyboss-platform' ),
+			'friends'  => __( 'My Connections', 'buddyboss-platform' ),
 		);
 
 		if ( $is_group && bp_is_active( 'groups' ) ) {
-			$options['grouponly'] = __( 'Group Members', 'buddyboss' );
+			$options['grouponly'] = __( 'Group Members', 'buddyboss-platform' );
 		}
 
 		return $options;
@@ -74,7 +74,7 @@ class BP_Media_Privacy {
 		$result = bp_media_get_specific( array( 'media_ids' => $media_id ) );
 
 		if ( empty( $result['medias'] ) || empty( $result['medias'][0] ) ) {
-			return new WP_Error( 'no_media', __( 'There is no media.', 'buddyboss' ), array( 'status' => 500 ) );
+			return new WP_Error( 'no_media', __( 'There is no media.', 'buddyboss-platform' ), array( 'status' => 500 ) );
 		}
 
 		return $result['medias'][0]->privacy;
@@ -92,7 +92,7 @@ class BP_Media_Privacy {
 		$result = bp_media_get_specific( array( 'media_ids' => $media_id ) );
 
 		if ( empty( $result['medias'] ) || empty( $result['medias'][0] ) ) {
-			return new WP_Error( 'no_media', __( 'There is no media.', 'buddyboss' ), array( 'status' => 500 ) );
+			return new WP_Error( 'no_media', __( 'There is no media.', 'buddyboss-platform' ), array( 'status' => 500 ) );
 		}
 
 		$media      = $result['medias'][0];

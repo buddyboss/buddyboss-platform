@@ -77,7 +77,7 @@ class BP_Compatibility_Integration extends BP_Integration {
 				'settings' => '<a href="' . esc_url( bp_get_admin_url( add_query_arg( array(
 						'page' => 'bp-integrations',
 						'tab'  => 'bp-compatibility'
-					), 'admin.php' ) ) ) . '">' . esc_html__( 'Settings', 'buddyboss' ) . '</a>',
+					), 'admin.php' ) ) ) . '">' . esc_html__( 'Settings', 'buddyboss-platform' ) . '</a>',
 			) );
 		}
 

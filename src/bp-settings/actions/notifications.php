@@ -6,6 +6,9 @@
  * @since BuddyPress 3.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 /**
  * Handles the changing and saving of user notification settings.
  *
@@ -38,9 +41,9 @@ function bp_settings_action_notifications() {
 
 	// Switch feedback for super admins.
 	if ( bp_is_my_profile() ) {
-		bp_core_add_message( __( 'Your notification settings have been saved.', 'buddyboss' ), 'success' );
+		bp_core_add_message( __( 'Your notification settings have been saved.', 'buddyboss-platform' ), 'success' );
 	} else {
-		bp_core_add_message( __( "This user's notification settings have been saved.", 'buddyboss' ), 'success' );
+		bp_core_add_message( __( "This user's notification settings have been saved.", 'buddyboss-platform' ), 'success' );
 	}
 
 	/**

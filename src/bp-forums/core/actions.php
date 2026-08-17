@@ -301,10 +301,9 @@ add_action( 'bbp_get_request', 'bbp_search_results_redirect', 10 );
 // Maybe convert the users password.
 add_action( 'bbp_login_form_login', 'bbp_user_maybe_convert_pass' );
 
-add_action( 'wp_ajax_post_topic_reply_draft', 'bb_post_topic_reply_draft' );
+add_action( 'wp_ajax_bb_post_topic_reply_draft', 'bb_post_topic_reply_draft' );
 
 add_action( 'wp_footer', 'bb_forum_add_content_popup' );
-add_action( 'wp_footer', 'bb_forums_gifpicker_add_popup_template' );
 
 add_action( 'bbp_new_topic', 'bb_forums_save_link_preview_data' );
 add_action( 'bbp_new_reply', 'bb_forums_save_link_preview_data' );
@@ -359,41 +358,41 @@ function forums_notification_settings() {
 		<thead>
 		<tr>
 			<th class="icon"></th>
-			<th class="title"><?php esc_html_e( 'Forums', 'buddyboss' ); ?></th>
-			<th class="yes"><?php esc_html_e( 'Yes', 'buddyboss' ); ?></th>
-			<th class="no"><?php esc_html_e( 'No', 'buddyboss' ); ?></th>
+			<th class="title"><?php esc_html_e( 'Forums', 'buddyboss-platform' ); ?></th>
+			<th class="yes"><?php esc_html_e( 'Yes', 'buddyboss-platform' ); ?></th>
+			<th class="no"><?php esc_html_e( 'No', 'buddyboss-platform' ); ?></th>
 		</tr>
 		</thead>
 		<tbody>
 		<tr id="forums-notification-settings-new-message">
 			<td></td>
-			<td><?php esc_html_e( 'A member replies to a discussion you are subscribed to', 'buddyboss' ); ?></td>
+			<td><?php esc_html_e( 'A member replies to a discussion you are subscribed to', 'buddyboss-platform' ); ?></td>
 			<td class="yes">
 				<div class="bp-radio-wrap">
 					<input type="radio" name="notifications[notification_forums_following_reply]" id="notification-forums-reply-new-messages-yes" class="bs-styled-radio" value="yes" <?php checked( $notification_forums_following_reply, 'yes', true ); ?> />
-					<label for="notification-forums-reply-new-messages-yes"><span class="bp-screen-reader-text"><?php esc_html_e( 'Yes, send email', 'buddyboss' ); ?></span></label>
+					<label for="notification-forums-reply-new-messages-yes"><span class="bp-screen-reader-text"><?php esc_html_e( 'Yes, send email', 'buddyboss-platform' ); ?></span></label>
 				</div>
 			</td>
 			<td class="no">
 				<div class="bp-radio-wrap">
 					<input type="radio" name="notifications[notification_forums_following_reply]" id="notification-forums-reply-new-messages-no" class="bs-styled-radio" value="no" <?php checked( $notification_forums_following_reply, 'no', true ); ?> />
-					<label for="notification-forums-reply-new-messages-no"><span class="bp-screen-reader-text"><?php esc_html_e( 'No, do not send email', 'buddyboss' ); ?></span></label>
+					<label for="notification-forums-reply-new-messages-no"><span class="bp-screen-reader-text"><?php esc_html_e( 'No, do not send email', 'buddyboss-platform' ); ?></span></label>
 				</div>
 			</td>
 		</tr>
 		<tr id="forums-notification-settings-new-message">
 			<td></td>
-			<td><?php esc_html_e( 'A member creates a discussion in a forum you are subscribed to', 'buddyboss' ); ?></td>
+			<td><?php esc_html_e( 'A member creates a discussion in a forum you are subscribed to', 'buddyboss-platform' ); ?></td>
 			<td class="yes">
 				<div class="bp-radio-wrap">
 					<input type="radio" name="notifications[notification_forums_following_topic]" id="notification-forums-topic-new-messages-yes" class="bs-styled-radio" value="yes" <?php checked( $notification_forums_following_topic, 'yes', true ); ?> />
-					<label for="notification-forums-topic-new-messages-yes"><span class="bp-screen-reader-text"><?php esc_html_e( 'Yes, send email', 'buddyboss' ); ?></span></label>
+					<label for="notification-forums-topic-new-messages-yes"><span class="bp-screen-reader-text"><?php esc_html_e( 'Yes, send email', 'buddyboss-platform' ); ?></span></label>
 				</div>
 			</td>
 			<td class="no">
 				<div class="bp-radio-wrap">
 					<input type="radio" name="notifications[notification_forums_following_topic]" id="notification-forums-topic-new-messages-no" class="bs-styled-radio" value="no" <?php checked( $notification_forums_following_topic, 'no', true ); ?> />
-					<label for="notification-forums-topic-new-messages-no"><span class="bp-screen-reader-text"><?php esc_html_e( 'No, do not send email', 'buddyboss' ); ?></span></label>
+					<label for="notification-forums-topic-new-messages-no"><span class="bp-screen-reader-text"><?php esc_html_e( 'No, do not send email', 'buddyboss-platform' ); ?></span></label>
 				</div>
 			</td>
 		</tr>
@@ -414,12 +413,51 @@ function forums_notification_settings() {
 add_action( 'bp_notification_settings', 'forums_notification_settings', 11 );
 
 /**
+ * Sanitize decoded topic/reply draft form data before it is stored.
+ *
+ * Media, document, video, and link preview values are JSON strings whose
+ * decoded values are sanitized and re-encoded. All other string values may
+ * carry editor HTML and are run through wp_kses_post().
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $data Decoded draft form data.
+ *
+ * @return array Sanitized draft form data.
+ */
+function bb_forums_sanitize_draft_form_data( $data ) {
+	if ( ! is_array( $data ) ) {
+		return array();
+	}
+
+	$json_keys = array( 'bbp_media', 'bbp_document', 'bbp_video', 'link_preview_data' );
+
+	foreach ( $data as $key => $value ) {
+		if ( in_array( $key, $json_keys, true ) && is_string( $value ) && '' !== $value ) {
+			$decoded_value = json_decode( stripslashes( $value ), true );
+
+			if ( is_array( $decoded_value ) ) {
+				$data[ $key ] = wp_json_encode( map_deep( $decoded_value, 'sanitize_text_field' ), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE );
+			} else {
+				$data[ $key ] = '';
+			}
+		} elseif ( is_array( $value ) ) {
+			$data[ $key ] = bb_forums_sanitize_draft_form_data( $value );
+		} elseif ( is_string( $value ) ) {
+			$data[ $key ] = wp_kses_post( $value );
+		}
+	}
+
+	return $data;
+}
+
+/**
  * Save topic/reply draft data.
  *
  * @since BuddyBoss 2.0.4
  */
 function bb_post_topic_reply_draft() {
-	if ( ! is_user_logged_in() || empty( $_POST['_wpnonce_post_topic_reply_draft'] ) || ! wp_verify_nonce( $_POST['_wpnonce_post_topic_reply_draft'], 'post_topic_reply_draft_data' ) ) {
+	if ( ! is_user_logged_in() || empty( $_POST['_wpnonce_post_topic_reply_draft'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['_wpnonce_post_topic_reply_draft'] ) ), 'post_topic_reply_draft_data' ) ) {
 		wp_send_json_error();
 	}
 
@@ -432,8 +470,16 @@ function bb_post_topic_reply_draft() {
 		$draft_topic_reply = json_decode( stripslashes( $draft_topic_reply ), true );
 	}
 
+	// Sanitize the decoded draft structure before it is stored or echoed back.
+	if ( is_array( $draft_topic_reply ) ) {
+		$draft_topic_reply = bb_forums_sanitize_draft_form_data( $draft_topic_reply );
+	}
+
 	if ( ! empty( $_REQUEST['all_data'] ) && ! is_array( $_REQUEST['all_data'] ) ) {
 		$all_data = json_decode( stripslashes( $_REQUEST['all_data'] ), true );
+
+		// Sanitize the decoded draft structure before it is stored.
+		$all_data = is_array( $all_data ) ? bb_forums_sanitize_draft_form_data( $all_data ) : array();
 	}
 
 	if ( is_array( $draft_topic_reply ) && isset( $draft_topic_reply['data_key'], $draft_topic_reply['object'] ) ) {
@@ -445,7 +491,7 @@ function bb_post_topic_reply_draft() {
 
 			// Delete medias.
 			if ( isset( $removed_data['bbp_media'] ) && ! empty( $removed_data['bbp_media'] ) ) {
-				$remove_media_data = json_decode( stripslashes( $removed_data['bbp_media'] ), true );
+				$remove_media_data = map_deep( (array) json_decode( stripslashes( $removed_data['bbp_media'] ), true ), 'sanitize_text_field' );
 
 				if ( ! empty( $remove_media_data ) ) {
 					foreach ( $remove_media_data as $media_attachment ) {
@@ -458,7 +504,7 @@ function bb_post_topic_reply_draft() {
 
 			// Delete documents.
 			if ( isset( $removed_data['bbp_document'] ) && ! empty( $removed_data['bbp_document'] ) ) {
-				$remove_document_data = json_decode( stripslashes( $removed_data['bbp_document'] ), true );
+				$remove_document_data = map_deep( (array) json_decode( stripslashes( $removed_data['bbp_document'] ), true ), 'sanitize_text_field' );
 
 				if ( ! empty( $remove_document_data ) ) {
 					foreach ( $remove_document_data as $document_attachment ) {
@@ -471,7 +517,7 @@ function bb_post_topic_reply_draft() {
 
 			// Delete videos.
 			if ( isset( $removed_data['bbp_video'] ) && ! empty( $removed_data['bbp_video'] ) ) {
-				$remove_video_data = json_decode( stripslashes( $removed_data['bbp_video'] ), true );
+				$remove_video_data = map_deep( (array) json_decode( stripslashes( $removed_data['bbp_video'] ), true ), 'sanitize_text_field' );
 
 				if ( ! empty( $remove_video_data ) ) {
 					foreach ( $remove_video_data as $video_attachment ) {
@@ -493,7 +539,7 @@ function bb_post_topic_reply_draft() {
 
 			// Set media draft meta key to avoid delete from cron job 'bp_media_delete_orphaned_attachments'.
 			if ( isset( $draft_topic_reply['data']['bbp_media'] ) && ! empty( $draft_topic_reply['data']['bbp_media'] ) ) {
-				$new_media_data = json_decode( stripslashes( $draft_topic_reply['data']['bbp_media'] ), true );
+				$new_media_data = map_deep( (array) json_decode( stripslashes( $draft_topic_reply['data']['bbp_media'] ), true ), 'sanitize_text_field' );
 
 				if ( ! empty( $new_media_data ) ) {
 					foreach ( $new_media_data as $media_key => $new_media_attachment ) {
@@ -509,7 +555,7 @@ function bb_post_topic_reply_draft() {
 
 			// Set document draft meta key to avoid delete from cron job 'bp_media_delete_orphaned_attachments'.
 			if ( isset( $draft_topic_reply['data']['bbp_document'] ) && ! empty( $draft_topic_reply['data']['bbp_document'] ) ) {
-				$new_document_data = json_decode( stripslashes( $draft_topic_reply['data']['bbp_document'] ), true );
+				$new_document_data = map_deep( (array) json_decode( stripslashes( $draft_topic_reply['data']['bbp_document'] ), true ), 'sanitize_text_field' );
 
 				if ( ! empty( $new_document_data ) ) {
 					foreach ( $new_document_data as $document_key => $new_document_attachment ) {
@@ -525,7 +571,7 @@ function bb_post_topic_reply_draft() {
 
 			// Set video draft meta key to avoid delete from cron job 'bp_media_delete_orphaned_attachments'.
 			if ( isset( $draft_topic_reply['data']['bbp_video'] ) && ! empty( $draft_topic_reply['data']['bbp_video'] ) ) {
-				$new_video_data = json_decode( stripslashes( $draft_topic_reply['data']['bbp_video'] ), true );
+				$new_video_data = map_deep( (array) json_decode( stripslashes( $draft_topic_reply['data']['bbp_video'] ), true ), 'sanitize_text_field' );
 
 				if ( ! empty( $new_video_data ) ) {
 					foreach ( $new_video_data as $video_key => $new_video_attachment ) {
@@ -592,8 +638,8 @@ function bb_forum_add_content_popup() {
 					<div class="modal-wrapper">
 						<div class="modal-container">
 							<header class="bb-model-header">
-								<h4><span class="target_name"><?php echo esc_html__( 'Forum Description', 'buddyboss' ); ?></span></h4>
-								<a class="bb-close-action-popup bb-model-close-button" href="#" aria-label="<?php esc_attr_e( 'Close', 'buddyboss' ); ?>">
+								<h4><span class="target_name"><?php echo esc_html__( 'Forum Description', 'buddyboss-platform' ); ?></span></h4>
+								<a class="bb-close-action-popup bb-model-close-button" href="#" aria-label="<?php esc_attr_e( 'Close', 'buddyboss-platform' ); ?>">
 									<span class="bb-icon-l bb-icon-times"></span>
 								</a>
 							</header>
@@ -609,27 +655,6 @@ function bb_forum_add_content_popup() {
 	}
 
 	unset( $template_forum_ids );
-}
-
-/**
- * Add template for gifpicker popup on forums pages.
- *
- * This renders the standalone GIF picker popup outside of modals.
- *
- * @since BuddyBoss 2.20.0
- */
-function bb_forums_gifpicker_add_popup_template() {
-	// Only load on forum pages when media component is active and GIF support is enabled.
-	if (
-		! bp_is_active( 'media' ) ||
-		! function_exists( 'is_bbpress' ) ||
-		! is_bbpress() ||
-		! bp_is_forums_gif_support_enabled()
-	) {
-		return;
-	}
-
-	bp_get_template_part( 'activity/gifpicker-popup' );
 }
 
 /**
@@ -661,7 +686,7 @@ function bb_forums_save_link_preview_data( $post_id ) {
 	}
 
 	if ( ! empty( $_POST['link_preview_data'] ) ) {
-		$link_preview_data = get_object_vars( json_decode( stripslashes( $_POST['link_preview_data'] ) ) );
+		$link_preview_data = map_deep( (array) json_decode( stripslashes( $_POST['link_preview_data'] ), true ), 'sanitize_text_field' );
 	} else {
 
 		// Allow Link preview related keys.
@@ -731,7 +756,7 @@ function bb_forums_save_link_preview_data( $post_id ) {
 		}
 	}
 
-	$preview_data['link_image_index_save'] = isset( $link_preview_data['link_image_index_save'] ) ? filter_var( $link_preview_data['link_image_index_save'] ) : '';
+	$preview_data['link_image_index_save'] = isset( $link_preview_data['link_image_index_save'] ) ? sanitize_text_field( $link_preview_data['link_image_index_save'] ) : '';
 
 	if ( ! empty( $link_title ) ) {
 		$link_title            = wp_kses_post( $link_title );

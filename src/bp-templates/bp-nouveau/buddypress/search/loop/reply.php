@@ -9,6 +9,9 @@
  * @version 1.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 $reply_id = get_the_ID();
 $topic_id = bbp_get_reply_topic_id( $reply_id );
 ?>
@@ -50,7 +53,7 @@ $topic_id = bbp_get_reply_topic_id( $reply_id );
 				}
 				?>
 
-				<a href="<?php bbp_reply_url( $reply_id ); ?>"><?php esc_html_e( 'replied to a discussion', 'buddyboss' ); ?></a>
+				<a href="<?php bbp_reply_url( $reply_id ); ?>"><?php esc_html_e( 'replied to a discussion', 'buddyboss-platform' ); ?></a>
 			</div>
 			<div class="entry-content entry-summary">
 				<?php echo wp_kses_post( wp_trim_words( bbp_get_reply_content( $reply_id ), 30, '...' ) ); ?>

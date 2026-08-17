@@ -24,7 +24,7 @@ final class BP_Message_Export extends BP_Export {
 
 		if ( null === $instance ) {
 			$instance = new BP_Message_Export();
-			$instance->setup( 'bp_message', __( 'Private Messages', 'buddyboss' ) );
+			$instance->setup( 'bp_message', __( 'Private Messages', 'buddyboss-platform' ) );
 		}
 
 		return $instance;
@@ -54,7 +54,7 @@ final class BP_Message_Export extends BP_Export {
 		foreach ( $data_items['items'] as $item ) {
 
 			$group_id    = 'bp_messages';
-			$group_label = __( 'Message Threads & Replies', 'buddyboss' );
+			$group_label = __( 'Message Threads & Replies', 'buddyboss-platform' );
 			$item_id     = "{$this->exporter_name}-{$group_id}-{$item->id}";
 
 			$permalink = bp_get_message_thread_view_link( $item->thread_id, $user->ID );
@@ -79,23 +79,23 @@ final class BP_Message_Export extends BP_Export {
 
 			$data = array(
 				array(
-					'name'  => __( 'Message Subject', 'buddyboss' ),
+					'name'  => __( 'Message Subject', 'buddyboss-platform' ),
 					'value' => $item->subject,
 				),
 				array(
-					'name'  => __( 'Message Content', 'buddyboss' ),
+					'name'  => __( 'Message Content', 'buddyboss-platform' ),
 					'value' => $item->message,
 				),
 				array(
-					'name'  => __( 'Created Date (GMT)', 'buddyboss' ),
+					'name'  => __( 'Created Date (GMT)', 'buddyboss-platform' ),
 					'value' => $item->date_sent,
 				),
 				array(
-					'name'  => __( 'Message Recipients', 'buddyboss' ),
+					'name'  => __( 'Message Recipients', 'buddyboss-platform' ),
 					'value' => $recipients,
 				),
 				array(
-					'name'  => __( 'Thread URL', 'buddyboss' ),
+					'name'  => __( 'Thread URL', 'buddyboss-platform' ),
 					'value' => $permalink,
 				),
 			);
@@ -272,15 +272,20 @@ final class BP_Message_Export extends BP_Export {
 		$query_select_count = 'COUNT(item.id)';
 		$query_where        = 'item.sender_id=%d';
 
-		$offset = ( $page - 1 ) * $this->items_per_batch;
-		$limit  = "LIMIT {$this->items_per_batch} OFFSET {$offset}";
+		$items_per_batch = (int) $this->items_per_batch;
+		$offset          = ( (int) $page - 1 ) * $items_per_batch;
+		$limit           = "LIMIT {$items_per_batch} OFFSET {$offset}";
 
 		$query       = "SELECT {$query_select} FROM {$table} WHERE {$query_where} {$limit}";
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $query is a built SQL string; sender_id %d-bound here; LIMIT/OFFSET are (int)-cast; table name internal.
 		$query       = $wpdb->prepare( $query, $user->ID );
 		$query_count = "SELECT {$query_select_count} FROM {$table} WHERE {$query_where}";
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $query_count is a built SQL string; sender_id %d-bound here; table name internal.
 		$query_count = $wpdb->prepare( $query_count, $user->ID );
 
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $query_count is the $wpdb->prepare() result above (sender_id %d-bound); table name internal.
 		$count = (int) $wpdb->get_var( $query_count );
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- $query is the $wpdb->prepare() result above (sender_id %d-bound); LIMIT/OFFSET are (int)-cast; table name internal.
 		$items = $wpdb->get_results( $query );
 
 		$items = $this->messages_recipients( $items );

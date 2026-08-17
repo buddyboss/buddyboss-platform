@@ -82,29 +82,29 @@ export const FinishScreen = ({ stepData }) => {
                     <div className="bb-rl-finish-actions">
                         <div className="bb-rl-finish-action">
                             <div className="bb-rl-finish-action-content">
-                                <h2>{__('View Community', 'buddyboss')}</h2>
-                                <p>{__('See a live preview of your community\'s front-end.', 'buddyboss')}</p>
+                                <h2>{__('View Community', 'buddyboss-platform')}</h2>
+                                <p>{__('See a live preview of your community\'s front-end.', 'buddyboss-platform')}</p>
                             </div>
                             <a href={safeSiteUrl()} className="bb-rl-finish-action-button">
-                                {__('View Site', 'buddyboss')}
+                                {__('View Site', 'buddyboss-platform')}
                             </a>
                         </div>
                         <div className="bb-rl-finish-action">
                             <div className="bb-rl-finish-action-content">
-                                <h2>{__('ReadyLaunch Settings', 'buddyboss')}</h2>
-                                <p>{__('Tailor styles, pages, and widgets to match your brand.', 'buddyboss')}</p>
+                                <h2>{__('ReadyLaunch Settings', 'buddyboss-platform')}</h2>
+                                <p>{__('Tailor styles, pages, and widgets to match your brand.', 'buddyboss-platform')}</p>
                             </div>
                             <a href={safeAdminUrl( 'admin.php?page=bb-settings&tab=appearance&panel=general' )} className="bb-rl-finish-action-button">
-                                {__('Open Settings', 'buddyboss')}
+                                {__('Open Settings', 'buddyboss-platform')}
                             </a>
                         </div>
                         <div className="bb-rl-finish-action">
                             <div className="bb-rl-finish-action-content">
-                                <h2>{__('Platform Settings', 'buddyboss')}</h2>
-                                <p>{__('Fine-tune features, permissions, and community rules.', 'buddyboss')}</p>
+                                <h2>{__('Platform Settings', 'buddyboss-platform')}</h2>
+                                <p>{__('Fine-tune features, permissions, and community rules.', 'buddyboss-platform')}</p>
                             </div>
                             <a href={safeAdminUrl( 'admin.php?page=bb-settings' )} className="bb-rl-finish-action-button">
-                                {__('Open Settings', 'buddyboss')}
+                                {__('Open Settings', 'buddyboss-platform')}
                             </a>
                         </div>
                     </div>

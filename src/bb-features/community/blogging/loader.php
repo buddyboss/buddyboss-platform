@@ -86,8 +86,8 @@ function bb_blog_rl_archive_close() {
 	the_posts_pagination(
 		array(
 			'mid_size'  => 2,
-			'prev_text' => esc_html__( 'Previous', 'buddyboss' ),
-			'next_text' => esc_html__( 'Next', 'buddyboss' ),
+			'prev_text' => esc_html__( 'Previous', 'buddyboss-platform' ),
+			'next_text' => esc_html__( 'Next', 'buddyboss-platform' ),
 		)
 	);
 }
@@ -120,7 +120,7 @@ function bb_blog_setup_profile_nav() {
 
 	bp_core_new_nav_item(
 		array(
-			'name'                    => __( 'Blogs', 'buddyboss' ),
+			'name'                    => __( 'Blogs', 'buddyboss-platform' ),
 			'slug'                    => 'blog',
 			'position'                => 90,
 			'screen_function'         => 'bb_blog_screen_member_posts',

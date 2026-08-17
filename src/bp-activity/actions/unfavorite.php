@@ -6,6 +6,9 @@
  * @since BuddyPress 3.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 /**
  * Remove activity from likes.
  *
@@ -40,11 +43,11 @@ function bp_activity_action_remove_favorite() {
 
 	if ( 'activity_comment' === $activity->type ) {
 		$type     = 'activity_comment';
-		$message  = __( 'Post comment unsaved.', 'buddyboss' );
+		$message  = __( 'Post comment unsaved.', 'buddyboss-platform' );
 		$redirect = wp_get_referer() . '#acomment-display-' . $activity_id;
 	} else {
 		$type     = 'activity';
-		$message  = __( 'Post unsaved.', 'buddyboss' );
+		$message  = __( 'Post unsaved.', 'buddyboss-platform' );
 		$redirect = wp_get_referer() . '#activity-' . $activity_id;
 	}
 

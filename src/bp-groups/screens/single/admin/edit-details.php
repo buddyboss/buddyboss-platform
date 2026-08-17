@@ -6,6 +6,9 @@
  * @since BuddyPress 3.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 /**
  * Handle the display of a group's admin/edit-details page.
  *
@@ -32,7 +35,7 @@ function groups_screen_group_admin_edit_details() {
 
 			// Name and description are required and may not be empty.
 			if ( empty( $_POST['group-name'] ) ) {
-				bp_core_add_message( __( 'Groups must have a name and a description. Please try again.', 'buddyboss' ), 'error' );
+				bp_core_add_message( __( 'Groups must have a name and a description. Please try again.', 'buddyboss-platform' ), 'error' );
 			} elseif ( ! groups_edit_base_group_details(
 				array(
 					'group_id'       => $_POST['group-id'],
@@ -43,9 +46,9 @@ function groups_screen_group_admin_edit_details() {
 					'parent_id'      => isset( $_POST['parent-id'] ) ? (int) $_POST['parent-id'] : 0
 				)
 			) ) {
-				bp_core_add_message( __( 'There was an error updating group details. Please try again.', 'buddyboss' ), 'error' );
+				bp_core_add_message( __( 'There was an error updating group details. Please try again.', 'buddyboss-platform' ), 'error' );
 			} else {
-				bp_core_add_message( __( 'Group details were successfully updated.', 'buddyboss' ) );
+				bp_core_add_message( __( 'Group details were successfully updated.', 'buddyboss-platform' ) );
 			}
 
 			/**

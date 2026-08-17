@@ -205,13 +205,13 @@ class BB_Admin_Profile_Search_Ajax {
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
 
 		if ( empty( $field_code ) ) {
-			wp_send_json_error( array( 'message' => __( 'Please select a field.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Please select a field.', 'buddyboss-platform' ) ) );
 		}
 
 		// Validate field code exists in available fields.
 		list( , $fields ) = bp_ps_get_fields();
 		if ( ! isset( $fields[ $field_code ] ) ) {
-			wp_send_json_error( array( 'message' => __( 'Invalid field selected.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Invalid field selected.', 'buddyboss-platform' ) ) );
 		}
 
 		// Validate search mode.
@@ -229,7 +229,7 @@ class BB_Admin_Profile_Search_Ajax {
 		if ( null !== $field_index && isset( $codes[ $field_index ] ) ) {
 			// Updating existing field — allow same code at same index, reject duplicate at other index.
 			if ( 'heading' !== $field_code && in_array( $field_code, $codes, true ) && $codes[ $field_index ] !== $field_code ) {
-				wp_send_json_error( array( 'message' => __( 'This field has already been added.', 'buddyboss' ) ) );
+				wp_send_json_error( array( 'message' => __( 'This field has already been added.', 'buddyboss-platform' ) ) );
 			}
 
 			$codes[ $field_index ]  = $field_code;
@@ -239,7 +239,7 @@ class BB_Admin_Profile_Search_Ajax {
 		} else {
 			// Adding new field — reject duplicates (except heading, which can appear multiple times).
 			if ( 'heading' !== $field_code && in_array( $field_code, $codes, true ) ) {
-				wp_send_json_error( array( 'message' => __( 'This field has already been added.', 'buddyboss' ) ) );
+				wp_send_json_error( array( 'message' => __( 'This field has already been added.', 'buddyboss-platform' ) ) );
 			}
 
 			$codes[]  = $field_code;
@@ -266,7 +266,7 @@ class BB_Admin_Profile_Search_Ajax {
 		 */
 		do_action( 'bb_profile_search_field_saved', $form_id, $field_code, $meta );
 
-		wp_send_json_success( array( 'message' => __( 'Field saved.', 'buddyboss' ) ) );
+		wp_send_json_success( array( 'message' => __( 'Field saved.', 'buddyboss-platform' ) ) );
 	}
 
 	/**
@@ -279,7 +279,7 @@ class BB_Admin_Profile_Search_Ajax {
 
 		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified by $this->bb_verify_request() above.
 		if ( ! isset( $_POST['field_index'] ) ) {
-			wp_send_json_error( array( 'message' => __( 'Invalid field index.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Invalid field index.', 'buddyboss-platform' ) ) );
 		}
 		$field_index = absint( wp_unslash( $_POST['field_index'] ) );
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
@@ -290,7 +290,7 @@ class BB_Admin_Profile_Search_Ajax {
 		$codes = isset( $meta['field_code'] ) ? $meta['field_code'] : array();
 
 		if ( ! isset( $codes[ $field_index ] ) ) {
-			wp_send_json_error( array( 'message' => __( 'Field not found.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Field not found.', 'buddyboss-platform' ) ) );
 		}
 
 		// Remove the field at the given index from all arrays.
@@ -318,7 +318,7 @@ class BB_Admin_Profile_Search_Ajax {
 		 */
 		do_action( 'bb_profile_search_field_deleted', $form_id, $field_index, $meta );
 
-		wp_send_json_success( array( 'message' => __( 'Field removed.', 'buddyboss' ) ) );
+		wp_send_json_success( array( 'message' => __( 'Field removed.', 'buddyboss-platform' ) ) );
 	}
 
 	/**
@@ -335,7 +335,7 @@ class BB_Admin_Profile_Search_Ajax {
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
 
 		if ( empty( $field_order ) ) {
-			wp_send_json_error( array( 'message' => __( 'Invalid field order.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Invalid field order.', 'buddyboss-platform' ) ) );
 		}
 
 		$form_id = $this->bb_get_form_id();
@@ -385,7 +385,7 @@ class BB_Admin_Profile_Search_Ajax {
 		// allowed to drop off — they were never visible in the UI and storing
 		// them indefinitely just bloats the meta.
 		if ( count( $new_codes ) !== $live_count ) {
-			wp_send_json_error( array( 'message' => __( 'Invalid field order — field count mismatch.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Invalid field order — field count mismatch.', 'buddyboss-platform' ) ) );
 		}
 
 		$meta['field_code']  = $new_codes;
@@ -395,7 +395,7 @@ class BB_Admin_Profile_Search_Ajax {
 
 		update_post_meta( $form_id, 'bp_ps_options', $meta );
 
-		wp_send_json_success( array( 'message' => __( 'Order updated.', 'buddyboss' ) ) );
+		wp_send_json_success( array( 'message' => __( 'Order updated.', 'buddyboss-platform' ) ) );
 	}
 
 	/**

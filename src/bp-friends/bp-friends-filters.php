@@ -214,6 +214,12 @@ add_filter( 'bp_video_set_friends_scope_args', 'bp_friends_filter_video_scope', 
  */
 function bp_friends_filter_document_scope( $retval = array(), $filter = array() ) {
 
+	// The document component code may be absent entirely (it ships from the
+	// BuddyBoss Addons plugin) - bail before any bp_document_* call fatals.
+	if ( ! bp_is_active( 'document' ) || ! function_exists( 'bp_document_get_folder_children' ) ) {
+		return $retval;
+	}
+
 	// Determine the user_id.
 	if ( ! empty( $filter['user_id'] ) ) {
 		$user_id = $filter['user_id'];
@@ -300,6 +306,12 @@ add_filter( 'bp_document_set_document_friends_scope_args', 'bp_friends_filter_do
  * @return array
  */
 function bp_friends_filter_folder_scope( $retval = array(), $filter = array() ) {
+
+	// The document component code may be absent entirely (it ships from the
+	// BuddyBoss Addons plugin) - bail before any bp_document_* call fatals.
+	if ( ! bp_is_active( 'document' ) || ! function_exists( 'bp_document_get_folder_children' ) ) {
+		return $retval;
+	}
 
 	// Determine the user_id.
 	if ( ! empty( $filter['user_id'] ) ) {
@@ -401,42 +413,42 @@ function friends_screen_notification_settings() {
 		<thead>
 		<tr>
 			<th class="icon"></th>
-			<th class="title"><?php esc_html_e( 'Connections', 'buddyboss' ); ?></th>
-			<th class="yes"><?php esc_html_e( 'Yes', 'buddyboss' ); ?></th>
-			<th class="no"><?php esc_html_e( 'No', 'buddyboss' ); ?></th>
+			<th class="title"><?php esc_html_e( 'Connections', 'buddyboss-platform' ); ?></th>
+			<th class="yes"><?php esc_html_e( 'Yes', 'buddyboss-platform' ); ?></th>
+			<th class="no"><?php esc_html_e( 'No', 'buddyboss-platform' ); ?></th>
 		</tr>
 		</thead>
 
 		<tbody>
 		<tr id="friends-notification-settings-request">
 			<td></td>
-			<td><?php esc_html_e( 'A member invites you to connect', 'buddyboss' ); ?></td>
+			<td><?php esc_html_e( 'A member invites you to connect', 'buddyboss-platform' ); ?></td>
 			<td class="yes">
 				<div class="bp-radio-wrap">
 					<input type="radio" name="notifications[notification_friends_friendship_request]" id="notification-friends-friendship-request-yes" class="bs-styled-radio" value="yes" <?php checked( $send_requests, 'yes', true ); ?> />
-					<label for="notification-friends-friendship-request-yes"><span class="bp-screen-reader-text"><?php esc_html_e( 'Yes, send email', 'buddyboss' ); ?></span></label>
+					<label for="notification-friends-friendship-request-yes"><span class="bp-screen-reader-text"><?php esc_html_e( 'Yes, send email', 'buddyboss-platform' ); ?></span></label>
 				</div>
 			</td>
 			<td class="no">
 				<div class="bp-radio-wrap">
 					<input type="radio" name="notifications[notification_friends_friendship_request]" id="notification-friends-friendship-request-no" class="bs-styled-radio" value="no" <?php checked( $send_requests, 'no', true ); ?> />
-					<label for="notification-friends-friendship-request-no"><span class="bp-screen-reader-text"><?php esc_html_e( 'No, do not send email', 'buddyboss' ); ?></span></label>
+					<label for="notification-friends-friendship-request-no"><span class="bp-screen-reader-text"><?php esc_html_e( 'No, do not send email', 'buddyboss-platform' ); ?></span></label>
 				</div>
 			</td>
 		</tr>
 		<tr id="friends-notification-settings-accepted">
 			<td></td>
-			<td><?php esc_html_e( 'A member accepts your connection request', 'buddyboss' ); ?></td>
+			<td><?php esc_html_e( 'A member accepts your connection request', 'buddyboss-platform' ); ?></td>
 			<td class="yes">
 				<div class="bp-radio-wrap">
 					<input type="radio" name="notifications[notification_friends_friendship_accepted]" id="notification-friends-friendship-accepted-yes" class="bs-styled-radio" value="yes" <?php checked( $accept_requests, 'yes', true ); ?> />
-					<label for="notification-friends-friendship-accepted-yes"><span class="bp-screen-reader-text"><?php esc_html_e( 'Yes, send email', 'buddyboss' ); ?></span></label>
+					<label for="notification-friends-friendship-accepted-yes"><span class="bp-screen-reader-text"><?php esc_html_e( 'Yes, send email', 'buddyboss-platform' ); ?></span></label>
 				</div>
 			</td>
 			<td class="no">
 				<div class="bp-radio-wrap">
 					<input type="radio" name="notifications[notification_friends_friendship_accepted]" id="notification-friends-friendship-accepted-no" class="bs-styled-radio" value="no" <?php checked( $accept_requests, 'no', true ); ?> />
-					<label for="notification-friends-friendship-accepted-no"><span class="bp-screen-reader-text"><?php esc_html_e( 'No, do not send email', 'buddyboss' ); ?></span></label>
+					<label for="notification-friends-friendship-accepted-no"><span class="bp-screen-reader-text"><?php esc_html_e( 'No, do not send email', 'buddyboss-platform' ); ?></span></label>
 				</div>
 			</td>
 		</tr>

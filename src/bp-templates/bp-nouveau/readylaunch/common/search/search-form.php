@@ -26,12 +26,12 @@ $search_term = ( is_search() && isset( $_GET['s'] ) ) ? sanitize_text_field( wp_
 
 		<button type="submit" id="<?php bp_nouveau_search_selector_id( 'search-submit' ); ?>" class="nouveau-search-submit search-form_submit" name="<?php bp_nouveau_search_selector_name( 'search_submit' ); ?>">
 			<span class="bb-icons-rl-magnifying-glass" aria-hidden="true"></span>
-			<span id="button-text" class="bp-screen-reader-text"><?php esc_html_e( 'Search', 'buddyboss' ); ?></span>
+			<span id="button-text" class="bp-screen-reader-text"><?php esc_html_e( 'Search', 'buddyboss-platform' ); ?></span>
 		</button>
 
 		<button type="reset" class="search-form_reset">
 			<span class="bb-icons-rl-x" aria-hidden="true"></span>
-			<span class="bp-screen-reader-text"><?php esc_html_e( 'Reset', 'buddyboss' ); ?></span>
+			<span class="bp-screen-reader-text"><?php esc_html_e( 'Reset', 'buddyboss-platform' ); ?></span>
 		</button>
 
 	</form>

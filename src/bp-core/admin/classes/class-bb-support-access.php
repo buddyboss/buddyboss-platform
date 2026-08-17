@@ -898,7 +898,7 @@ class BB_Support_Access {
 		if ( get_user_by( 'email', self::USER_EMAIL ) || get_user_by( 'login', self::USER_LOGIN ) ) {
 			return new WP_Error(
 				'bb_support_user_conflict',
-				__( 'A user already exists with the BuddyBoss support email or login. Please rename or remove that account before enabling Support Access.', 'buddyboss' )
+				__( 'A user already exists with the BuddyBoss support email or login. Please rename or remove that account before enabling Support Access.', 'buddyboss-platform' )
 			);
 		}
 
@@ -909,9 +909,9 @@ class BB_Support_Access {
 				'user_login'   => self::USER_LOGIN,
 				'user_email'   => self::USER_EMAIL,
 				'user_pass'    => wp_generate_password( 64, true, true ),
-				'display_name' => __( 'BuddyBoss Support', 'buddyboss' ),
-				'first_name'   => __( 'BuddyBoss', 'buddyboss' ),
-				'last_name'    => __( 'Support', 'buddyboss' ),
+				'display_name' => __( 'BuddyBoss Support', 'buddyboss-platform' ),
+				'first_name'   => __( 'BuddyBoss', 'buddyboss-platform' ),
+				'last_name'    => __( 'Support', 'buddyboss-platform' ),
 				'role'         => 'administrator',
 			)
 		);
@@ -1201,7 +1201,7 @@ class BB_Support_Access {
 	public function extend( $days, $login_url = '' ) {
 		$days = absint( $days );
 		if ( ! in_array( $days, $this->allowed_days(), true ) ) {
-			return new WP_Error( 'bb_support_access_invalid_days', __( 'Invalid duration.', 'buddyboss' ) );
+			return new WP_Error( 'bb_support_access_invalid_days', __( 'Invalid duration.', 'buddyboss-platform' ) );
 		}
 
 		$data = $this->get_data();
@@ -1279,7 +1279,7 @@ class BB_Support_Access {
 		$sent   = 0;
 		$failed = 0;
 
-		$expiry_utc = $expires ? gmdate( 'Y-m-d H:i:s', (int) $expires ) . ' UTC' : __( 'n/a', 'buddyboss' );
+		$expiry_utc = $expires ? gmdate( 'Y-m-d H:i:s', (int) $expires ) . ' UTC' : __( 'n/a', 'buddyboss-platform' );
 
 		foreach ( (array) $tickets as $ticket ) {
 			$ticket = (int) $ticket;
@@ -1415,7 +1415,7 @@ class BB_Support_Access {
 			$login_url = $this->get_login_url( $data );
 		}
 
-		$expiry_utc = $data['expires'] ? gmdate( 'Y-m-d H:i:s', $data['expires'] ) . ' UTC' : __( 'n/a', 'buddyboss' );
+		$expiry_utc = $data['expires'] ? gmdate( 'Y-m-d H:i:s', $data['expires'] ) . ' UTC' : __( 'n/a', 'buddyboss-platform' );
 
 		$note = sprintf(
 			'<p><strong>BuddyBoss Support Access</strong> enabled for %1$s.</p><p>Expires: <strong>%2$s</strong></p>',
@@ -1573,7 +1573,7 @@ class BB_Support_Access {
 		if ( $conversation_id <= 0 ) {
 			return new WP_Error(
 				'invalid_conversation_id',
-				__( 'A valid ticket (conversation) ID is required.', 'buddyboss' )
+				__( 'A valid ticket (conversation) ID is required.', 'buddyboss-platform' )
 			);
 		}
 
@@ -1583,7 +1583,7 @@ class BB_Support_Access {
 		if ( ! $bypass_rate_limit && ! $this->notify_rate_ok( $conversation_id ) ) {
 			return new WP_Error(
 				'rate_limited',
-				__( 'A note for this ticket was just sent. Please wait a moment before trying again.', 'buddyboss' )
+				__( 'A note for this ticket was just sent. Please wait a moment before trying again.', 'buddyboss-platform' )
 			);
 		}
 
@@ -1601,7 +1601,7 @@ class BB_Support_Access {
 		// the cap signals tampering — refuse rather than transmit it.
 		if ( ! is_string( $body ) || strlen( $body ) > self::SUPPORT_SYSTEM_MAX_PAYLOAD ) {
 			$this->notify_rate_release( $conversation_id );
-			return new WP_Error( 'payload_error', __( 'Could not build the note request.', 'buddyboss' ) );
+			return new WP_Error( 'payload_error', __( 'Could not build the note request.', 'buddyboss-platform' ) );
 		}
 
 		/**
@@ -1647,7 +1647,7 @@ class BB_Support_Access {
 			$this->notify_rate_release( $conversation_id );
 			return new WP_Error(
 				'support_system_request_failed',
-				__( 'Could not reach the support system. Please try adding the ticket again.', 'buddyboss' )
+				__( 'Could not reach the support system. Please try adding the ticket again.', 'buddyboss-platform' )
 			);
 		}
 
@@ -1669,7 +1669,7 @@ class BB_Support_Access {
 				'conversation_not_found',
 				sprintf(
 					/* translators: %d: support system conversation/ticket ID. */
-					__( 'Ticket %d was not found in the support system.', 'buddyboss' ),
+					__( 'Ticket %d was not found in the support system.', 'buddyboss-platform' ),
 					$conversation_id
 				)
 			);
@@ -1681,7 +1681,7 @@ class BB_Support_Access {
 
 		return new WP_Error(
 			'support_system_api_error',
-			'' !== $message ? $message : __( 'The support system rejected the note. Please try again.', 'buddyboss' ),
+			'' !== $message ? $message : __( 'The support system rejected the note. Please try again.', 'buddyboss-platform' ),
 			array( 'status' => $code )
 		);
 	}
@@ -1997,7 +1997,7 @@ class BB_Support_Access {
 		$response           = $this->build_response( $result['login_url'] );
 		$response['notice'] = array(
 			'status'  => 'success',
-			'message' => __( 'Support access duration updated.', 'buddyboss' ),
+			'message' => __( 'Support access duration updated.', 'buddyboss-platform' ),
 		);
 
 		// On a pure extension (existing grant), re-notify every attached ticket
@@ -2014,12 +2014,12 @@ class BB_Support_Access {
 			if ( $notify['sent'] > 0 && 0 === $notify['failed'] ) {
 				$response['notice'] = array(
 					'status'  => 'success',
-					'message' => __( 'Duration updated and support notified of the new expiry.', 'buddyboss' ),
+					'message' => __( 'Duration updated and support notified of the new expiry.', 'buddyboss-platform' ),
 				);
 			} elseif ( $notify['failed'] > 0 ) {
 				$response['notice'] = array(
 					'status'  => 'error',
-					'message' => __( 'Duration updated, but the support system could not be notified for some tickets.', 'buddyboss' ),
+					'message' => __( 'Duration updated, but the support system could not be notified for some tickets.', 'buddyboss-platform' ),
 				);
 			}
 		}
@@ -2043,7 +2043,7 @@ class BB_Support_Access {
 		// while enabled, but a direct AJAX call could otherwise dispatch a note
 		// for an expired-but-not-yet-cron-cleaned grant.
 		if ( ! $this->is_active() ) {
-			wp_send_json_error( array( 'message' => __( 'Support access is not currently active.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Support access is not currently active.', 'buddyboss-platform' ) ) );
 		}
 
 		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified by verify_request().
@@ -2055,14 +2055,14 @@ class BB_Support_Access {
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
 
 		if ( '' === $ticket ) {
-			wp_send_json_error( array( 'message' => __( 'Ticket number is required.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Ticket number is required.', 'buddyboss-platform' ) ) );
 		}
 
 		// The ticket number is a support system conversation ID — must be numeric.
 		// Validate up front so a bad value gives an instant, clear error rather
 		// than a confusing network round-trip.
 		if ( ! ctype_digit( $ticket ) || (int) $ticket <= 0 ) {
-			wp_send_json_error( array( 'message' => __( 'Ticket number must be a valid numeric ID.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Ticket number must be a valid numeric ID.', 'buddyboss-platform' ) ) );
 		}
 
 		// Only accept a login URL that points at THIS site and carries our query
@@ -2085,7 +2085,7 @@ class BB_Support_Access {
 		$response           = $this->build_response();
 		$response['notice'] = array(
 			'status'  => 'success',
-			'message' => __( 'Ticket added and note posted to support.', 'buddyboss' ),
+			'message' => __( 'Ticket added and note posted to support.', 'buddyboss-platform' ),
 		);
 
 		wp_send_json_success( $response );

@@ -275,7 +275,7 @@ if ( ! class_exists( 'BB_Subscriptions' ) ) {
 			// Subscription need user ID.
 			if ( empty( $this->user_id ) ) {
 				if ( isset( $this->error_type ) && 'wp_error' === $this->error_type ) {
-					return new WP_Error( 'bb_subscriptions_empty_user_id', __( 'The user ID is required to create a subscription.', 'buddyboss' ) );
+					return new WP_Error( 'bb_subscriptions_empty_user_id', __( 'The user ID is required to create a subscription.', 'buddyboss-platform' ) );
 				} else {
 					return false;
 				}
@@ -283,7 +283,7 @@ if ( ! class_exists( 'BB_Subscriptions' ) ) {
 				// Subscription need Type.
 			} elseif ( empty( $this->type ) ) {
 				if ( isset( $this->error_type ) && 'wp_error' === $this->error_type ) {
-					return new WP_Error( 'bb_subscriptions_empty_type', __( 'The type is required to create a subscription.', 'buddyboss' ) );
+					return new WP_Error( 'bb_subscriptions_empty_type', __( 'The type is required to create a subscription.', 'buddyboss-platform' ) );
 				} else {
 					return false;
 				}
@@ -291,7 +291,7 @@ if ( ! class_exists( 'BB_Subscriptions' ) ) {
 				// Subscription need Item ID.
 			} elseif ( empty( $this->item_id ) ) {
 				if ( isset( $this->error_type ) && 'wp_error' === $this->error_type ) {
-					return new WP_Error( 'bb_subscriptions_empty_item_id', __( 'The item ID is required to create a subscription.', 'buddyboss' ) );
+					return new WP_Error( 'bb_subscriptions_empty_item_id', __( 'The item ID is required to create a subscription.', 'buddyboss-platform' ) );
 				} else {
 					return false;
 				}
@@ -363,7 +363,7 @@ if ( ! class_exists( 'BB_Subscriptions' ) ) {
 			// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 			if ( false === $wpdb->query( $sql ) ) {
 				if ( isset( $this->error_type ) && 'wp_error' === $this->error_type ) {
-					return new WP_Error( 'bb_subscriptions_cannot_create', __( 'There is an error while adding the subscription.', 'buddyboss' ) );
+					return new WP_Error( 'bb_subscriptions_cannot_create', __( 'There is an error while adding the subscription.', 'buddyboss-platform' ) );
 				} else {
 					return false;
 				}

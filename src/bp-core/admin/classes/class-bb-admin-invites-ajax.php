@@ -89,7 +89,7 @@ class BB_Admin_Invites_Ajax {
 		$this->bb_verify_request();
 
 		if ( ! bp_is_active( 'invites' ) ) {
-			wp_send_json_error( array( 'message' => __( 'Email Invites component is not active.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Email Invites component is not active.', 'buddyboss-platform' ) ) );
 		}
 
 		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified by $this->bb_verify_request() above.
@@ -193,10 +193,10 @@ class BB_Admin_Invites_Ajax {
 				'recipient_email' => $invitee_email ? $invitee_email : '',
 				'status'          => $is_registered ? 'registered' : 'pending',
 				'status_label'    => $is_registered
-					? __( 'Registered', 'buddyboss' )
+					? __( 'Registered', 'buddyboss-platform' )
 					: ( $is_custom_registration
-						? __( 'Invited', 'buddyboss' )
-						: __( 'Pending', 'buddyboss' )
+						? __( 'Invited', 'buddyboss-platform' )
+						: __( 'Pending', 'buddyboss-platform' )
 					),
 				'date_invited'    => get_the_date( 'd M Y H:i', $post ),
 				'can_revoke'      => ! $is_registered && ! $is_custom_registration,
@@ -214,15 +214,15 @@ class BB_Admin_Invites_Ajax {
 		// Include columns, bulk actions, and views on first load (include_meta = 1).
 		if ( 1 === $include_meta ) {
 			$response['columns'] = array(
-				'sender'          => __( 'Sender', 'buddyboss' ),
-				'recipient_name'  => __( 'Recipient', 'buddyboss' ),
-				'recipient_email' => __( 'Recipient Email', 'buddyboss' ),
-				'status'          => __( 'Status', 'buddyboss' ),
-				'date_invited'    => __( 'Date Invited', 'buddyboss' ),
+				'sender'          => __( 'Sender', 'buddyboss-platform' ),
+				'recipient_name'  => __( 'Recipient', 'buddyboss-platform' ),
+				'recipient_email' => __( 'Recipient Email', 'buddyboss-platform' ),
+				'status'          => __( 'Status', 'buddyboss-platform' ),
+				'date_invited'    => __( 'Date Invited', 'buddyboss-platform' ),
 			);
 
 			$response['bulk_actions'] = array(
-				'revoke' => __( 'Revoke Invite', 'buddyboss' ),
+				'revoke' => __( 'Revoke Invite', 'buddyboss-platform' ),
 			);
 
 			// View counts for filter dropdown.
@@ -253,7 +253,7 @@ class BB_Admin_Invites_Ajax {
 		$this->bb_verify_request();
 
 		if ( ! bp_is_active( 'invites' ) ) {
-			wp_send_json_error( array( 'message' => __( 'Email Invites component is not active.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Email Invites component is not active.', 'buddyboss-platform' ) ) );
 		}
 
 		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified by $this->bb_verify_request() above.
@@ -264,16 +264,16 @@ class BB_Admin_Invites_Ajax {
 		// Validate action against allowlist.
 		$allowed_actions = array( 'revoke' );
 		if ( empty( $action ) || ! in_array( $action, $allowed_actions, true ) ) {
-			wp_send_json_error( array( 'message' => __( 'Invalid action.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Invalid action.', 'buddyboss-platform' ) ) );
 		}
 
 		if ( empty( $ids ) ) {
-			wp_send_json_error( array( 'message' => __( 'No invites selected.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'No invites selected.', 'buddyboss-platform' ) ) );
 		}
 
 		$id_array = array_map( 'absint', array_filter( explode( ',', $ids ) ) );
 		if ( empty( $id_array ) ) {
-			wp_send_json_error( array( 'message' => __( 'No invites selected.', 'buddyboss' ) ) );
+			wp_send_json_error( array( 'message' => __( 'No invites selected.', 'buddyboss-platform' ) ) );
 		}
 
 		// Cap to prevent abuse.
@@ -306,7 +306,7 @@ class BB_Admin_Invites_Ajax {
 			}
 
 			if ( 0 === $revoked ) {
-				wp_send_json_error( array( 'message' => __( 'No invites were revoked.', 'buddyboss' ) ) );
+				wp_send_json_error( array( 'message' => __( 'No invites were revoked.', 'buddyboss-platform' ) ) );
 			}
 
 			wp_send_json_success(
@@ -317,7 +317,7 @@ class BB_Admin_Invites_Ajax {
 							'%d invite has been revoked.',
 							'%d invites have been revoked.',
 							$revoked,
-							'buddyboss'
+							'buddyboss-platform'
 						),
 						$revoked
 					),
@@ -327,7 +327,7 @@ class BB_Admin_Invites_Ajax {
 			);
 		}
 
-		wp_send_json_error( array( 'message' => __( 'Unknown action.', 'buddyboss' ) ) );
+		wp_send_json_error( array( 'message' => __( 'Unknown action.', 'buddyboss-platform' ) ) );
 	}
 
 	/**
@@ -356,15 +356,15 @@ class BB_Admin_Invites_Ajax {
 
 		return array(
 			'all'       => array(
-				'label' => __( 'All', 'buddyboss' ),
+				'label' => __( 'All', 'buddyboss-platform' ),
 				'count' => $all_count,
 			),
 			'mine'      => array(
-				'label' => __( 'Mine', 'buddyboss' ),
+				'label' => __( 'Mine', 'buddyboss-platform' ),
 				'count' => $mine_count,
 			),
 			'published' => array(
-				'label' => __( 'Published', 'buddyboss' ),
+				'label' => __( 'Published', 'buddyboss-platform' ),
 				'count' => $all_count,
 			),
 		);

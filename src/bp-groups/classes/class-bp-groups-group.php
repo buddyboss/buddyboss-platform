@@ -362,7 +362,7 @@ class BP_Groups_Group {
 			);
 		}
 
-		if ( false === $wpdb->query( $sql ) ) {
+		if ( false === $wpdb->query( $sql ) ) { // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- $sql built with $wpdb->prepare() above (INSERT/UPDATE branches).
 			return false;
 		}
 
@@ -1138,7 +1138,8 @@ class BP_Groups_Group {
 
 		// Backward compatibility with old method of passing arguments.
 		if ( ! is_array( $args ) || count( $function_args ) > 1 ) {
-			_deprecated_argument( __METHOD__, '1.7', sprintf( __( 'Arguments passed to %1$s should be in an associative array. See the inline documentation at %2$s for more details.', 'buddyboss' ), __METHOD__, __FILE__ ) );
+			/* translators: 1: method name, 2: file path. */
+			_deprecated_argument( __METHOD__, '1.7', sprintf( esc_html__( 'Arguments passed to %1$s should be in an associative array. See the inline documentation at %2$s for more details.', 'buddyboss-platform' ), __METHOD__, __FILE__ ) );
 
 			$old_args_keys = array(
 				0 => 'type',
@@ -1458,7 +1459,7 @@ class BP_Groups_Group {
 
 		$cached = bp_core_get_incremented_cache( $paged_groups_sql, 'bp_groups' );
 		if ( false === $cached ) {
-			$paged_group_ids = $wpdb->get_col( $paged_groups_sql );
+			$paged_group_ids = $wpdb->get_col( $paged_groups_sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $paged_groups_sql assembled from $sql parts ($wpdb->prepare()'d WHERE/pagination, $bp table names) inside get().
 			bp_core_set_incremented_cache( $paged_groups_sql, 'bp_groups', $paged_group_ids );
 		} else {
 			$paged_group_ids = $cached;
@@ -1528,7 +1529,7 @@ class BP_Groups_Group {
 
 		$cached = bp_core_get_incremented_cache( $total_groups_sql, 'bp_groups' );
 		if ( false === $cached ) {
-			$total_groups = (int) $wpdb->get_var( $total_groups_sql );
+			$total_groups = (int) $wpdb->get_var( $total_groups_sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $total_groups_sql built from the same internally-prepared $sql['from']/$where fragments used by the paged query.
 			bp_core_set_incremented_cache( $total_groups_sql, 'bp_groups', $total_groups );
 		} else {
 			$total_groups = (int) $cached;
@@ -1837,7 +1838,7 @@ class BP_Groups_Group {
 		$record = wp_cache_get( $cache_key, 'bp_groups' );
 
 		if ( false === $record ) {
-			$record = $wpdb->get_var( "SELECT COUNT(id) FROM {$bp->groups->table_name} {$hidden_sql}" );
+			$record = $wpdb->get_var( "SELECT COUNT(id) FROM {$bp->groups->table_name} {$hidden_sql}" ); // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter -- table name from $bp->groups; $hidden_sql is a hardcoded literal gated by capability check.
 			wp_cache_set( $cache_key, $record, 'bp_groups' );
 		}
 
@@ -1890,8 +1891,8 @@ class BP_Groups_Group {
 			 */
 			$join_sql = apply_filters( 'bb_group_member_count_join_sql', $join_sql, 'user_id' );
 
-			$sql    = $wpdb->prepare( "{$select_sql} {$join_sql} {$where_sql}", $group_id );
-			$record = $wpdb->get_var( $sql );
+			$sql    = $wpdb->prepare( "{$select_sql} {$join_sql} {$where_sql}", $group_id ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- $select_sql/$where_sql built from $bp table names and a hardcoded WHERE with %d placeholder.
+			$record = $wpdb->get_var( $sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $sql is the $wpdb->prepare()'d statement assigned on the previous line.
 			wp_cache_set( $cache_key, $record, 'bp_groups' );
 		}
 

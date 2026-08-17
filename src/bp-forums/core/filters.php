@@ -469,7 +469,8 @@ function bb_remove_group_forum_topic_subscriptions_add_group_meta( $group_id, $m
 	if (
 		! empty( $group_id ) &&
 		'forum_id' === $meta_key &&
-		bp_is_active( 'forums' )
+		bp_is_active( 'forums' ) &&
+		function_exists( 'bb_delete_group_forum_topic_subscriptions' )
 	) {
 		bb_delete_group_forum_topic_subscriptions( $group_id );
 	}
@@ -492,7 +493,8 @@ function bb_remove_group_forum_topic_subscriptions_update_group_meta( $meta_id, 
 	if (
 		! empty( $group_id ) &&
 		'forum_id' === $meta_key &&
-		bp_is_active( 'forums' )
+		bp_is_active( 'forums' ) &&
+		function_exists( 'bb_delete_group_forum_topic_subscriptions' )
 	) {
 		bb_delete_group_forum_topic_subscriptions( $group_id );
 	}
@@ -554,7 +556,7 @@ function bb_forums_link_preview( $content, $post_id ) {
 	}
 
 	$description = $preview_data['description'];
-	$read_more   = ' &hellip; <a class="activity-link-preview-more" href="' . esc_url( $preview_data['url'] ) . '" target="_blank" rel="nofollow">' . __( 'Continue reading', 'buddyboss' ) . '</a>';
+	$read_more   = ' &hellip; <a class="activity-link-preview-more" href="' . esc_url( $preview_data['url'] ) . '" target="_blank" rel="nofollow">' . __( 'Continue reading', 'buddyboss-platform' ) . '</a>';
 	$description = wp_trim_words( $description, 40, $read_more );
 
 	$content = make_clickable( $content );

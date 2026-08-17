@@ -26,7 +26,7 @@ function bb_groups_register_directory_panel_fields() {
 		'group_directory',
 		'group_directory',
 		array(
-			'title'       => __( 'Group Directory', 'buddyboss' ),
+			'title'       => __( 'Group Directory', 'buddyboss-platform' ),
 			'description' => '',
 			'order'       => 10,
 			'help_url'    => '636140',
@@ -40,22 +40,22 @@ function bb_groups_register_directory_panel_fields() {
 		'group_directory',
 		array(
 			'name'              => 'bp-group-layout-format',
-			'label'             => __( 'Enabled View(s)', 'buddyboss' ),
+			'label'             => __( 'Enabled View(s)', 'buddyboss-platform' ),
 			'type'              => 'select',
-			'description'       => __( 'Display group directories in Grid View, List View, or allow toggling between both views.', 'buddyboss' ),
+			'description'       => __( 'Display group directories in Grid View, List View, or allow toggling between both views.', 'buddyboss-platform' ),
 			'default'           => bp_get_option( 'bp-group-layout-format', 'grid' ),
 			'sanitize_callback' => 'bb_groups_sanitize_layout_format',
 			'options'           => array(
 				array(
-					'label' => __( 'Grid and List', 'buddyboss' ),
+					'label' => __( 'Grid and List', 'buddyboss-platform' ),
 					'value' => 'list_grid',
 				),
 				array(
-					'label' => __( 'Grid', 'buddyboss' ),
+					'label' => __( 'Grid', 'buddyboss-platform' ),
 					'value' => 'grid',
 				),
 				array(
-					'label' => __( 'List', 'buddyboss' ),
+					'label' => __( 'List', 'buddyboss-platform' ),
 					'value' => 'list',
 				),
 			),
@@ -70,18 +70,18 @@ function bb_groups_register_directory_panel_fields() {
 		'group_directory',
 		array(
 			'name'              => 'bp-group-layout-default-format',
-			'label'             => __( 'Default View', 'buddyboss' ),
+			'label'             => __( 'Default View', 'buddyboss-platform' ),
 			'type'              => 'radio',
 			'description'       => '',
 			'default'           => bp_group_layout_default_format( 'grid' ),
 			'sanitize_callback' => 'bb_groups_sanitize_default_format',
 			'options'           => array(
 				array(
-					'label' => __( 'Grid', 'buddyboss' ),
+					'label' => __( 'Grid', 'buddyboss-platform' ),
 					'value' => 'grid',
 				),
 				array(
-					'label' => __( 'List', 'buddyboss' ),
+					'label' => __( 'List', 'buddyboss-platform' ),
 					'value' => 'list',
 				),
 			),
@@ -101,19 +101,19 @@ function bb_groups_register_directory_panel_fields() {
 		'group_directory',
 		array(
 			'name'              => 'bb-group-directory-layout-grid-style',
-			'label'             => __( 'Grid Style', 'buddyboss' ),
+			'label'             => __( 'Grid Style', 'buddyboss-platform' ),
 			'type'              => 'image_radio',
-			'description'       => __( 'Select the grid layout style. Group avatars and cover images appear only if enabled.', 'buddyboss' ),
+			'description'       => __( 'Select the grid layout style. Group avatars and cover images appear only if enabled.', 'buddyboss-platform' ),
 			'default'           => function_exists( 'bb_get_group_directory_grid_style' ) ? bb_get_group_directory_grid_style() : 'left',
 			'sanitize_callback' => 'bb_groups_sanitize_grid_style',
 			'options'           => array(
 				array(
-					'label' => is_rtl() ? __( 'Right', 'buddyboss' ) : __( 'Left', 'buddyboss' ),
+					'label' => is_rtl() ? __( 'Right', 'buddyboss-platform' ) : __( 'Left', 'buddyboss-platform' ),
 					'value' => 'left',
 					'image' => 'header-left-group',
 				),
 				array(
-					'label' => __( 'Centered', 'buddyboss' ),
+					'label' => __( 'Centered', 'buddyboss-platform' ),
 					'value' => 'centered',
 					'image' => 'header-centered-group',
 				),
@@ -134,42 +134,42 @@ function bb_groups_register_directory_panel_fields() {
 		'group_directory',
 		array(
 			'name'              => 'bb-group-directory-layout-elements',
-			'label'             => __( 'Elements', 'buddyboss' ),
+			'label'             => __( 'Elements', 'buddyboss-platform' ),
 			'type'              => 'toggle_list',
-			'description'       => __( 'Select which elements show in your group directories. Cover images will only display in grid view and group descriptions will only display in list view.', 'buddyboss' ),
+			'description'       => __( 'Select which elements show in your group directories. Cover images will only display in grid view and group descriptions will only display in list view.', 'buddyboss-platform' ),
 			'default'           => array(),
 			'sanitize_callback' => 'bb_groups_sanitize_toggle_list',
 			'options'           => array(
 				array(
-					'label' => __( 'Cover Images', 'buddyboss' ),
+					'label' => __( 'Cover Images', 'buddyboss-platform' ),
 					'value' => 'cover-images',
 				),
 				array(
-					'label' => __( 'Avatars', 'buddyboss' ),
+					'label' => __( 'Avatars', 'buddyboss-platform' ),
 					'value' => 'avatars',
 				),
 				array(
-					'label' => __( 'Group Privacy', 'buddyboss' ),
+					'label' => __( 'Group Privacy', 'buddyboss-platform' ),
 					'value' => 'group-privacy',
 				),
 				array(
-					'label' => __( 'Group Type', 'buddyboss' ),
+					'label' => __( 'Group Type', 'buddyboss-platform' ),
 					'value' => 'group-type',
 				),
 				array(
-					'label' => __( 'Last Activity', 'buddyboss' ),
+					'label' => __( 'Last Activity', 'buddyboss-platform' ),
 					'value' => 'last-activity',
 				),
 				array(
-					'label' => __( 'Members', 'buddyboss' ),
+					'label' => __( 'Members', 'buddyboss-platform' ),
 					'value' => 'members',
 				),
 				array(
-					'label' => __( 'Group Descriptions', 'buddyboss' ),
+					'label' => __( 'Group Descriptions', 'buddyboss-platform' ),
 					'value' => 'group-descriptions',
 				),
 				array(
-					'label' => __( 'Join Buttons', 'buddyboss' ),
+					'label' => __( 'Join Buttons', 'buddyboss-platform' ),
 					'value' => 'join-buttons',
 				),
 			),

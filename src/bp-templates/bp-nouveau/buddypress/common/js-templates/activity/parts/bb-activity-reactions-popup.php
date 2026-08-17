@@ -8,6 +8,9 @@
  * @package BuddyBoss\Core
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 ?>
 <script type="text/html" id="tmpl-activity-reacted-popup-heading">
 	<h4>

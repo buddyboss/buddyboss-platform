@@ -181,8 +181,8 @@ abstract class BP_Core_Notification_Abstract {
 				);
 
 				if ( 'other' === $preference['notification_group'] ) {
-					$notifications[ $preference['notification_group'] ]['label']       = esc_html__( 'Other', 'buddyboss' );
-					$notifications[ $preference['notification_group'] ]['admin_label'] = esc_html__( 'Other Notifications', 'buddyboss' );
+					$notifications[ $preference['notification_group'] ]['label']       = esc_html__( 'Other', 'buddyboss-platform' );
+					$notifications[ $preference['notification_group'] ]['admin_label'] = esc_html__( 'Other Notifications', 'buddyboss-platform' );
 					$notifications[ $preference['notification_group'] ]['priority']    = $this->priority;
 				}
 			}
@@ -702,7 +702,7 @@ abstract class BP_Core_Notification_Abstract {
 		if ( empty( $item_id ) ) {
 			$response = new WP_Error(
 				'bb_subscription_required_item_id',
-				__( 'The item ID is required.', 'buddyboss' ),
+				__( 'The item ID is required.', 'buddyboss-platform' ),
 				array(
 					'status' => 400,
 				)
@@ -710,7 +710,7 @@ abstract class BP_Core_Notification_Abstract {
 		} elseif ( empty( $type ) ) {
 			$response = new WP_Error(
 				'bb_subscription_required_item_type',
-				__( 'The item type is required.', 'buddyboss' ),
+				__( 'The item type is required.', 'buddyboss-platform' ),
 				array(
 					'status' => 400,
 				)
@@ -744,7 +744,7 @@ abstract class BP_Core_Notification_Abstract {
 				} elseif ( ! $validate_item ) {
 					$response = new WP_Error(
 						'bb_subscription_invalid_item_request',
-						__( 'The request for subscription item is not valid.', 'buddyboss' ),
+						__( 'The request for subscription item is not valid.', 'buddyboss-platform' ),
 						array(
 							'status' => 400,
 						)
@@ -753,7 +753,7 @@ abstract class BP_Core_Notification_Abstract {
 			} else {
 				$response = new WP_Error(
 					'bb_subscription_invalid_item_type',
-					__( 'The item type is not valid.', 'buddyboss' ),
+					__( 'The item type is not valid.', 'buddyboss-platform' ),
 					array(
 						'status' => 400,
 					)

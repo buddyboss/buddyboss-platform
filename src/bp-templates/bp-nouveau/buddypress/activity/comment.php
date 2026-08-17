@@ -11,6 +11,9 @@
  * @version 1.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 bp_nouveau_activity_hook( 'before', 'comment_entry' );
 
 $activity_comment_id = bp_get_activity_comment_id();
@@ -54,7 +57,7 @@ $activity_comment_id = bp_get_activity_comment_id();
 					<div class="comment-reactions">
 						<?php
 						if ( bb_is_reaction_activity_comments_enabled() && function_exists( 'bb_get_activity_post_user_reactions_html' ) ) {
-							echo bb_get_activity_post_user_reactions_html( $activity_comment_id, 'activity_comment' );
+							echo wp_kses_post( bb_get_activity_post_user_reactions_html( $activity_comment_id, 'activity_comment' ) );
 						}
 						?>
 					</div>

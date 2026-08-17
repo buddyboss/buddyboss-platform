@@ -6,6 +6,9 @@
  * @since BuddyPress 3.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 /**
  * Handle bulk management (mark as read/unread, delete) of message threads.
  *
@@ -20,8 +23,8 @@ function bp_messages_action_bulk_manage() {
 		return false;
 	}
 
-	$action   = ! empty( $_POST['messages_bulk_action'] ) ? $_POST['messages_bulk_action'] : '';
-	$nonce    = ! empty( $_POST['messages_bulk_nonce'] ) ? $_POST['messages_bulk_nonce'] : '';
+	$action   = ! empty( $_POST['messages_bulk_action'] ) ? sanitize_text_field( wp_unslash( $_POST['messages_bulk_action'] ) ) : '';
+	$nonce    = ! empty( $_POST['messages_bulk_nonce'] ) ? sanitize_text_field( wp_unslash( $_POST['messages_bulk_nonce'] ) ) : '';
 	$messages = ! empty( $_POST['message_ids'] ) ? $_POST['message_ids'] : '';
 
 	$messages = wp_parse_id_list( $messages );
@@ -39,7 +42,7 @@ function bp_messages_action_bulk_manage() {
 	// Make sure the user has access to all notifications before managing them.
 	foreach ( $messages as $message ) {
 		if ( ! messages_check_thread_access( $message ) && ! bp_current_user_can( 'bp_moderate' ) ) {
-			bp_core_add_message( __( 'There was a problem managing your messages.', 'buddyboss' ), 'error' );
+			bp_core_add_message( __( 'There was a problem managing your messages.', 'buddyboss-platform' ), 'error' );
 			bp_core_redirect( bp_displayed_user_domain() . bp_get_messages_slug() . '/' . bp_current_action() . '/' );
 		}
 	}
@@ -50,21 +53,21 @@ function bp_messages_action_bulk_manage() {
 			foreach ( $messages as $message ) {
 				messages_delete_thread( $message );
 			}
-			bp_core_add_message( __( 'Messages deleted.', 'buddyboss' ) );
+			bp_core_add_message( __( 'Messages deleted.', 'buddyboss-platform' ) );
 			break;
 
 		case 'read':
 			foreach ( $messages as $message ) {
 				messages_mark_thread_read( $message );
 			}
-			bp_core_add_message( __( 'Messages marked as read', 'buddyboss' ) );
+			bp_core_add_message( __( 'Messages marked as read', 'buddyboss-platform' ) );
 			break;
 
 		case 'unread':
 			foreach ( $messages as $message ) {
 				messages_mark_thread_unread( $message );
 			}
-			bp_core_add_message( __( 'Messages marked as unread.', 'buddyboss' ) );
+			bp_core_add_message( __( 'Messages marked as unread.', 'buddyboss-platform' ) );
 			break;
 	}
 

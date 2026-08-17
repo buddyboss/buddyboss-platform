@@ -160,9 +160,9 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 						<span class="count"><?php echo esc_html( $total_missing_count ); ?> </span>
 						<?php
 						if ( $total_missing_count > 1 ) {
-							esc_html_e( 'Emails Missing', 'buddyboss' );
+							esc_html_e( 'Emails Missing', 'buddyboss-platform' );
 						} else {
-							esc_html_e( 'Email Missing', 'buddyboss' );
+							esc_html_e( 'Email Missing', 'buddyboss-platform' );
 						}
 						?>
 					</a>
@@ -174,15 +174,15 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 										<?php echo esc_html( $total_missing_count ); ?> </span>
 									<?php
 									if ( $total_missing_count > 1 ) {
-										esc_html_e( 'Emails Missing', 'buddyboss' );
+										esc_html_e( 'Emails Missing', 'buddyboss-platform' );
 									} else {
-										esc_html_e( 'Email Missing', 'buddyboss' );
+										esc_html_e( 'Email Missing', 'buddyboss-platform' );
 									}
 									?>
 							</div>
 							<div class="bp-hello-close">
-								<button type="button" class="close-modal button bp-tooltip" data-bp-tooltip-pos="down" data-bp-tooltip="<?php esc_attr_e( 'Close pop-up', 'buddyboss' ); ?>">
-									<?php esc_html_e( 'Close', 'buddyboss' ); ?>
+								<button type="button" class="close-modal button bp-tooltip" data-bp-tooltip-pos="down" data-bp-tooltip="<?php esc_attr_e( 'Close pop-up', 'buddyboss-platform' ); ?>">
+									<?php esc_html_e( 'Close', 'buddyboss-platform' ); ?>
 								</button>
 							</div>
 						</div>
@@ -218,7 +218,7 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 								);
 								?>
 								" class="button">
-									<?php esc_html_e( 'Reset All Emails', 'buddyboss' ); ?>
+									<?php esc_html_e( 'Reset All Emails', 'buddyboss-platform' ); ?>
 								</a>
 								<a href="
 								<?php
@@ -238,7 +238,7 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 								);
 								?>
 								" class="button button-primary">
-									<?php esc_html_e( 'Install Missing Emails', 'buddyboss' ); ?>
+									<?php esc_html_e( 'Install Missing Emails', 'buddyboss-platform' ); ?>
 								</a>
 							</div>
 						</div>
@@ -256,16 +256,16 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 				'ajax_url'                     => admin_url( 'admin-ajax.php' ),
 				'tools'                        => array(
 					'repair_forums' => array(
-						'validate_site_id_message' => esc_html__( 'Select site to repair the forums', 'buddyboss' ),
+						'validate_site_id_message' => esc_html__( 'Select site to repair the forums', 'buddyboss-platform' ),
 					),
 				),
 				'moderation'                   => array(
-					'suspend_confirm_message'   => esc_js( __( 'Please confirm you want to suspend this member. Members who are suspended will be logged out and not allowed to login again. Their content will be hidden from all members in your network. Please allow a few minutes for this process to complete.', 'buddyboss' ) ),
-					'unsuspend_confirm_message' => esc_js( __( 'Please confirm you want to unsuspend this member. Members who are unsuspended will be allowed to login again, and their content will no longer be hidden from other members in your network. Please allow a few minutes for this process to complete.', 'buddyboss' ) ),
+					'suspend_confirm_message'   => esc_js( __( 'Please confirm you want to suspend this member. Members who are suspended will be logged out and not allowed to login again. Their content will be hidden from all members in your network. Please allow a few minutes for this process to complete.', 'buddyboss-platform' ) ),
+					'unsuspend_confirm_message' => esc_js( __( 'Please confirm you want to unsuspend this member. Members who are unsuspended will be allowed to login again, and their content will no longer be hidden from other members in your network. Please allow a few minutes for this process to complete.', 'buddyboss-platform' ) ),
 				),
 				'cover_size_alert'             => array(
-					'profile' => esc_html__( 'Changing the Cover Image Size will reposition all of your members cover images. Are you sure you wish to save these changes?', 'buddyboss' ),
-					'group'   => esc_html__( 'Changing the Cover Image Size will reposition all of your groups cover images. Are you sure you wish to save these changes?', 'buddyboss' ),
+					'profile' => esc_html__( 'Changing the Cover Image Size will reposition all of your members cover images. Are you sure you wish to save these changes?', 'buddyboss-platform' ),
+					'group'   => esc_html__( 'Changing the Cover Image Size will reposition all of your groups cover images. Are you sure you wish to save these changes?', 'buddyboss-platform' ),
 				),
 				'avatar_settings'              => array(
 					'wordpress_show_avatar'    => bp_get_option( 'show_avatars' ),
@@ -281,18 +281,18 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 					),
 				),
 				'profile_group_cover'          => array(
-					'select_file'       => esc_js( esc_html__( 'No file was uploaded.', 'buddyboss' ) ),
-					'file_upload_error' => esc_js( esc_html__( 'There was a problem uploading the cover photo.', 'buddyboss' ) ),
+					'select_file'       => esc_js( esc_html__( 'No file was uploaded.', 'buddyboss-platform' ) ),
+					'file_upload_error' => esc_js( esc_html__( 'There was a problem uploading the cover photo.', 'buddyboss-platform' ) ),
 					'feedback_messages' => array(
 						0 => sprintf(
 						/* translators: 1. Cover image width. 2. Cover image height. */
-							esc_html__( 'Cover photo was uploaded successfully. For best results, upload an image that is %1$spx by %2$spx or larger.', 'buddyboss' ),
+							esc_html__( 'Cover photo was uploaded successfully. For best results, upload an image that is %1$spx by %2$spx or larger.', 'buddyboss-platform' ),
 							(int) $cover_dimensions['width'],
 							(int) $cover_dimensions['height']
 						),
-						1 => esc_html__( 'Cover photo was uploaded successfully.', 'buddyboss' ),
-						2 => esc_html__( 'There was a problem deleting cover photo. Please try again.', 'buddyboss' ),
-						3 => esc_html__( 'Cover photo was deleted successfully.', 'buddyboss' ),
+						1 => esc_html__( 'Cover photo was uploaded successfully.', 'buddyboss-platform' ),
+						2 => esc_html__( 'There was a problem deleting cover photo. Please try again.', 'buddyboss-platform' ),
+						3 => esc_html__( 'Cover photo was deleted successfully.', 'buddyboss-platform' ),
 					),
 					'upload'            => array(
 						'nonce'           => wp_create_nonce( 'bp-uploader' ),
@@ -317,14 +317,14 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 				),
 				'bb_registration_restrictions' => array(
 					'feedback_messages' => array(
-						'empty'     => esc_html__( 'The rule content cannot be empty.', 'buddyboss' ),
-						'duplicate' => esc_html__( 'The rule content cannot be duplicate.', 'buddyboss' ),
+						'empty'     => esc_html__( 'The rule content cannot be empty.', 'buddyboss-platform' ),
+						'duplicate' => esc_html__( 'The rule content cannot be duplicate.', 'buddyboss-platform' ),
 					),
 				),
 				'group'                        => array(),
 				'forum_validation'             => array(
-					'escaped_html_tags' => esc_js( __( 'Your content contains escaped HTML tags. Please fix them before submitting.', 'buddyboss' ) ),
-					'malformed_ul_li'   => esc_js( __( 'Content has malformed <ul> or <li> tags. Please fix them before submitting.', 'buddyboss' ) ),
+					'escaped_html_tags' => esc_js( __( 'Your content contains escaped HTML tags. Please fix them before submitting.', 'buddyboss-platform' ) ),
+					'malformed_ul_li'   => esc_js( __( 'Content has malformed <ul> or <li> tags. Please fix them before submitting.', 'buddyboss-platform' ) ),
 				),
 				'components'                   => array_map( 'intval', bp_get_option( 'bp-active-components' ) ),
 			);
@@ -517,7 +517,7 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 				'<p class="submit">
 				<input type="submit" name="submit" class="button-primary" value="%s" />
 			</p>',
-				esc_attr__( 'Save Settings', 'buddyboss' )
+				esc_attr__( 'Save Settings', 'buddyboss-platform' )
 			);
 		}
 
@@ -639,12 +639,12 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 		public function render_input_field_html( $args ) {
 			printf(
 				'<input name="%s" type="%s" id="%s" value="%s" placeholder="%s" class="regular-text" /> %s',
-				$args['input_name'],
-				$args['input_type'],
-				$args['input_id'],
-				$args['input_value'],
-				$args['input_placeholder'],
-				$args['input_description'] ? $this->render_input_description( $args['input_description'] ) : ''
+				esc_attr( $args['input_name'] ),
+				esc_attr( $args['input_type'] ),
+				esc_attr( $args['input_id'] ),
+				esc_attr( $args['input_value'] ),
+				esc_attr( $args['input_placeholder'] ),
+				$args['input_description'] ? wp_kses_post( $this->render_input_description( $args['input_description'] ) ) : ''
 			);
 		}
 
@@ -663,12 +663,12 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 				<label for="%1$s">%5$s</label>
 				%6$s
 			',
-				$args['input_id'],
-				$args['input_name'],
+				esc_attr( $args['input_id'] ),
+				esc_attr( $args['input_name'] ),
 				checked( (bool) $input_value, true, false ),
-				$args['input_run_js'] ? "data-run-js-condition=\"{$args['input_run_js']}\"" : '',
-				$args['input_text'],
-				$args['input_description'] ? $this->render_input_description( $args['input_description'] ) : ''
+				$args['input_run_js'] ? 'data-run-js-condition="' . esc_attr( $args['input_run_js'] ) . '"' : '',
+				esc_html( $args['input_text'] ),
+				$args['input_description'] ? wp_kses_post( $this->render_input_description( $args['input_description'] ) ) : ''
 			);
 		}
 
@@ -683,20 +683,20 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 
 			printf(
 				'<select name="%s" id="%s" autocomplete="off" %s>',
-				$args['input_name'],
-				$args['input_id'],
-				isset( $args['input_run_js'] ) && $args['input_run_js'] ? "data-run-js-condition=\"{$args['input_run_js']}\"" : ''
+				esc_attr( $args['input_name'] ),
+				esc_attr( $args['input_id'] ),
+				isset( $args['input_run_js'] ) && $args['input_run_js'] ? 'data-run-js-condition="' . esc_attr( $args['input_run_js'] ) . '"' : ''
 			);
 
 			foreach ( $args['input_options'] ?: array() as $key => $value ) {
 				$selected = $input_value == $key ? 'selected' : '';
-				printf( '<option value="%s" %s>%s</option>', $key, $selected, $value );
+				printf( '<option value="%s" %s>%s</option>', esc_attr( $key ), esc_attr( $selected ), esc_html( $value ) );
 			}
 
 			echo '</select>';
 
 			if ( $args['input_description'] ) {
-				echo $this->render_input_description( $args['input_description'] );
+				echo wp_kses_post( $this->render_input_description( $args['input_description'] ) );
 			}
 		}
 
@@ -737,11 +737,11 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 			}
 
 			foreach ( (array) $wp_settings_sections[ $page ] as $section ) {
-				echo "<div id='{$section['id']}' class='bp-admin-card section-{$section['id']}'>";
+				echo "<div id='" . esc_attr( $section['id'] ) . "' class='bp-admin-card section-" . esc_attr( $section['id'] ) . "'>";
 				$has_tutorial_btn = ( isset( $section['tutorial_callback'] ) && ! empty( $section['tutorial_callback'] ) ) ? 'has_tutorial_btn' : '';
 				$has_icon         = ( isset( $section['icon'] ) && ! empty( $section['icon'] ) ) ? '<i class="' . esc_attr( $section['icon'] ) . '"></i>' : '';
 				if ( $section['title'] ) {
-					echo '<h2 class=' . esc_attr( $has_tutorial_btn ) . '>' . $has_icon .
+					echo '<h2 class=' . esc_attr( $has_tutorial_btn ) . '>' . wp_kses_post( $has_icon ) .
 						wp_kses_post( $section['title'] );
 
 						if ( isset( $section['tutorial_callback'] ) && ! empty( $section['tutorial_callback'] ) ) {
@@ -806,12 +806,12 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 					$class = ' class="' . esc_attr( $field['args']['class'] ) . '"';
 				}
 
-				echo "<tr{$class}>";
+				echo "<tr{$class}>"; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $class is esc_attr-escaped class attribute markup above.
 
 				if ( ! empty( $field['args']['label_for'] ) ) {
-					echo '<th scope="row"><label for="' . esc_attr( $field['args']['label_for'] ) . '">' . $field['title'] . '</label></th>';
+					echo '<th scope="row"><label for="' . esc_attr( $field['args']['label_for'] ) . '">' . wp_kses_post( $field['title'] ) . '</label></th>';
 				} else {
-					echo '<th scope="row">' . $field['title'] . '</th>';
+					echo '<th scope="row">' . wp_kses_post( $field['title'] ) . '</th>';
 				}
 
 				echo '<td>';

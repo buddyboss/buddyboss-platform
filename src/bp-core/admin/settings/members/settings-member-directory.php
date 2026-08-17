@@ -26,7 +26,7 @@ function bb_members_register_member_directory_panel_fields() {
 		'member_directory',
 		'member_directory',
 		array(
-			'title'       => __( 'Member Directory', 'buddyboss' ),
+			'title'       => __( 'Member Directory', 'buddyboss-platform' ),
 			'description' => '',
 			'order'       => 10,
 		)
@@ -39,22 +39,22 @@ function bb_members_register_member_directory_panel_fields() {
 		'member_directory',
 		array(
 			'name'              => 'bp-profile-layout-format',
-			'label'             => __( 'Enabled View(s)', 'buddyboss' ),
+			'label'             => __( 'Enabled View(s)', 'buddyboss-platform' ),
 			'type'              => 'select',
-			'description'       => __( 'Display member directories in grid view, list view, or allow toggling between both views.', 'buddyboss' ),
+			'description'       => __( 'Display member directories in grid view, list view, or allow toggling between both views.', 'buddyboss-platform' ),
 			'default'           => bp_get_option( 'bp-profile-layout-format', 'list_grid' ),
 			'sanitize_callback' => 'bb_members_sanitize_layout_format',
 			'options'           => array(
 				array(
-					'label' => __( 'Grid and List', 'buddyboss' ),
+					'label' => __( 'Grid and List', 'buddyboss-platform' ),
 					'value' => 'list_grid',
 				),
 				array(
-					'label' => __( 'Grid', 'buddyboss' ),
+					'label' => __( 'Grid', 'buddyboss-platform' ),
 					'value' => 'grid',
 				),
 				array(
-					'label' => __( 'List', 'buddyboss' ),
+					'label' => __( 'List', 'buddyboss-platform' ),
 					'value' => 'list',
 				),
 			),
@@ -69,18 +69,18 @@ function bb_members_register_member_directory_panel_fields() {
 		'member_directory',
 		array(
 			'name'              => 'bp-profile-layout-default-format',
-			'label'             => __( 'Default View', 'buddyboss' ),
+			'label'             => __( 'Default View', 'buddyboss-platform' ),
 			'type'              => 'radio',
 			'description'       => '',
 			'default'           => bp_profile_layout_default_format( 'grid' ),
 			'sanitize_callback' => 'bb_members_sanitize_default_format',
 			'options'           => array(
 				array(
-					'label' => __( 'Grid', 'buddyboss' ),
+					'label' => __( 'Grid', 'buddyboss-platform' ),
 					'value' => 'grid',
 				),
 				array(
-					'label' => __( 'List', 'buddyboss' ),
+					'label' => __( 'List', 'buddyboss-platform' ),
 					'value' => 'list',
 				),
 			),
@@ -101,30 +101,30 @@ function bb_members_register_member_directory_panel_fields() {
 		'member_directory',
 		array(
 			'name'              => 'bb-member-directory-elements',
-			'label'             => __( 'Elements', 'buddyboss' ),
+			'label'             => __( 'Elements', 'buddyboss-platform' ),
 			'type'              => 'toggle_list',
-			'description'       => __( 'Select which elements to show in your member directories.', 'buddyboss' ),
+			'description'       => __( 'Select which elements to show in your member directories.', 'buddyboss-platform' ),
 			'default'           => array(),
 			'sanitize_callback' => 'bb_members_sanitize_toggle_list',
 			'options'           => array(
 				array(
-					'label' => __( 'Online Status', 'buddyboss' ),
+					'label' => __( 'Online Status', 'buddyboss-platform' ),
 					'value' => 'online-status',
 				),
 				array(
-					'label' => __( 'Profile Type', 'buddyboss' ),
+					'label' => __( 'Profile Type', 'buddyboss-platform' ),
 					'value' => 'profile-type',
 				),
 				array(
-					'label' => __( 'Followers', 'buddyboss' ),
+					'label' => __( 'Followers', 'buddyboss-platform' ),
 					'value' => 'followers',
 				),
 				array(
-					'label' => __( 'Last Active', 'buddyboss' ),
+					'label' => __( 'Last Active', 'buddyboss-platform' ),
 					'value' => 'last-active',
 				),
 				array(
-					'label' => __( 'Joined Date', 'buddyboss' ),
+					'label' => __( 'Joined Date', 'buddyboss-platform' ),
 					'value' => 'joined-date',
 				),
 			),
@@ -142,22 +142,22 @@ function bb_members_register_member_directory_panel_fields() {
 		'member_directory',
 		array(
 			'name'              => 'bb-member-profile-actions',
-			'label'             => __( 'Profile Actions', 'buddyboss' ),
+			'label'             => __( 'Profile Actions', 'buddyboss-platform' ),
 			'type'              => 'toggle_list',
-			'description'       => __( 'Select which profile actions to enable in your member directories.', 'buddyboss' ),
+			'description'       => __( 'Select which profile actions to enable in your member directories.', 'buddyboss-platform' ),
 			'default'           => array(),
 			'sanitize_callback' => 'bb_members_sanitize_toggle_list',
 			'options'           => array(
 				array(
-					'label' => __( 'Follow', 'buddyboss' ),
+					'label' => __( 'Follow', 'buddyboss-platform' ),
 					'value' => 'follow',
 				),
 				array(
-					'label' => __( 'Connect', 'buddyboss' ),
+					'label' => __( 'Connect', 'buddyboss-platform' ),
 					'value' => 'connect',
 				),
 				array(
-					'label' => __( 'Send Message', 'buddyboss' ),
+					'label' => __( 'Send Message', 'buddyboss-platform' ),
 					'value' => 'message',
 				),
 			),
@@ -175,26 +175,26 @@ function bb_members_register_member_directory_panel_fields() {
 		'member_directory',
 		array(
 			'name'              => 'bb-member-profile-primary-action',
-			'label'             => __( 'Primary Action', 'buddyboss' ),
+			'label'             => __( 'Primary Action', 'buddyboss-platform' ),
 			'type'              => 'select',
-			'description'       => __( 'Select which profile action to show as a primary button. The remaining enabled profile actions will be shown as secondary buttons underneath.', 'buddyboss' ),
+			'description'       => __( 'Select which profile action to show as a primary button. The remaining enabled profile actions will be shown as secondary buttons underneath.', 'buddyboss-platform' ),
 			'default'           => function_exists( 'bb_get_member_directory_primary_action' ) ? bb_get_member_directory_primary_action() : '',
 			'sanitize_callback' => 'sanitize_key',
 			'options'           => array(
 				array(
-					'label' => __( 'None', 'buddyboss' ),
+					'label' => __( 'None', 'buddyboss-platform' ),
 					'value' => '',
 				),
 				array(
-					'label' => __( 'Follow', 'buddyboss' ),
+					'label' => __( 'Follow', 'buddyboss-platform' ),
 					'value' => 'follow',
 				),
 				array(
-					'label' => __( 'Connect', 'buddyboss' ),
+					'label' => __( 'Connect', 'buddyboss-platform' ),
 					'value' => 'connect',
 				),
 				array(
-					'label' => __( 'Send Message', 'buddyboss' ),
+					'label' => __( 'Send Message', 'buddyboss-platform' ),
 					'value' => 'message',
 				),
 			),

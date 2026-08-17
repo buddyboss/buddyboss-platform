@@ -421,7 +421,7 @@ class BP_Friends_Friendship {
 
 			// Combine the SQL components.
 			$sql            = "{$sql['select']} {$sql['join']} {$where_sql} ORDER BY f.date_created DESC";
-			$friendship_ids = $wpdb->get_col( $sql );
+			$friendship_ids = $wpdb->get_col( $sql ); // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.PreparedSQL.NotPrepared -- $sql assembled from internal select/join fragments and a $wpdb->prepare()'d WHERE clause (user_id as %d).
 
 			// Cache the result.
 			wp_cache_set( $cache_key, $friendship_ids, 'bp_friends_friendships_for_user' );
@@ -626,8 +626,8 @@ class BP_Friends_Friendship {
 			$total_sql = $wpdb->prepare( "SELECT COUNT(DISTINCT user_id) FROM {$wpdb->usermeta} WHERE user_id IN ({$fids}) AND meta_key = 'nickname' AND meta_value LIKE %s", $search_terms_like );
 		}
 
-		$filtered_friend_ids = $wpdb->get_col( $sql );
-		$total_friend_ids    = $wpdb->get_var( $total_sql );
+		$filtered_friend_ids = $wpdb->get_col( $sql ); // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.PreparedSQL.NotPrepared -- $sql is $wpdb->prepare()'d; $fids is wp_parse_id_list() integers and $pag_sql is separately prepared.
+		$total_friend_ids    = $wpdb->get_var( $total_sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- $total_sql is $wpdb->prepare()'d; $fids is wp_parse_id_list() integers.
 
 		if ( empty( $filtered_friend_ids ) ) {
 			return false;
@@ -704,7 +704,7 @@ class BP_Friends_Friendship {
 
 		$friend_ids_sql = implode( ',', array_unique( $fetch ) );
 		$sql            = $wpdb->prepare( "SELECT initiator_user_id, friend_user_id, is_confirmed FROM {$bp->friends->table_name} WHERE (initiator_user_id = %d AND friend_user_id IN ({$friend_ids_sql}) ) OR (initiator_user_id IN ({$friend_ids_sql}) AND friend_user_id = %d )", $user_id, $user_id );
-		$friendships    = $wpdb->get_results( $sql );
+		$friendships    = $wpdb->get_results( $sql ); // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.PreparedSQL.NotPrepared -- $sql is $wpdb->prepare()'d; $friend_ids_sql is an array_unique() list of wp_parse_id_list() integers.
 
 		// Use $handled to keep track of all of the $possible_friend_ids we've matched.
 		$handled = array();
@@ -858,7 +858,7 @@ class BP_Friends_Friendship {
 			$sql = $wpdb->prepare( "SELECT DISTINCT user_id as id FROM {$usermeta_table} WHERE meta_value LIKE %s ORDER BY d.value DESC {$pag_sql}", $search_terms_like );
 		}
 
-		$filtered_fids = $wpdb->get_col( $sql );
+		$filtered_fids = $wpdb->get_col( $sql ); // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.PreparedSQL.NotPrepared -- $sql is $wpdb->prepare()'d; only internal table names and a separately-prepared $pag_sql are interpolated.
 
 		if ( empty( $filtered_fids ) ) {
 			return false;
@@ -896,7 +896,7 @@ class BP_Friends_Friendship {
 			$sql = $wpdb->prepare( "SELECT COUNT(DISTINCT user_id) FROM {$usermeta_table} WHERE meta_value LIKE %s", $search_terms_like );
 		}
 
-		$user_count = $wpdb->get_col( $sql );
+		$user_count = $wpdb->get_col( $sql ); // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.PreparedSQL.NotPrepared -- $sql is $wpdb->prepare()'d; only internal table names are interpolated.
 
 		if ( empty( $user_count ) ) {
 			return false;

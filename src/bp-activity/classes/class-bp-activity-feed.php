@@ -159,7 +159,7 @@ class BP_Activity_Feed {
 
 		// Check if id is valid.
 		if ( empty( $this->id ) ) {
-			_doing_it_wrong( 'BP_Activity_Feed', __( "RSS feed 'id' must be defined", 'buddyboss' ), 'BP 1.8' );
+			_doing_it_wrong( 'BP_Activity_Feed', esc_html__( "RSS feed 'id' must be defined", 'buddyboss-platform' ), 'BP 1.8' );
 			return false;
 		}
 
@@ -191,11 +191,11 @@ class BP_Activity_Feed {
 	 */
 	protected function setup_properties() {
 		$this->id               = sanitize_title( $this->id );
-		$this->title            = strip_tags( $this->title );
+		$this->title            = wp_strip_all_tags( $this->title );
 		$this->link             = esc_url_raw( $this->link );
-		$this->description      = strip_tags( $this->description );
+		$this->description      = wp_strip_all_tags( $this->description );
 		$this->ttl              = (int) $this->ttl;
-		$this->update_period    = strip_tags( $this->update_period );
+		$this->update_period    = wp_strip_all_tags( $this->update_period );
 		$this->update_frequency = (int) $this->update_frequency;
 
 		$this->activity_args = bp_parse_args(
@@ -309,7 +309,7 @@ class BP_Activity_Feed {
 			case 'personal':
 				if ( 'activity_comment' == bp_get_activity_action_name() ) :
 					?>
-				<strong><?php _e( 'In reply to', 'buddyboss' ); ?></strong> -
+				<strong><?php esc_html_e( 'In reply to', 'buddyboss-platform' ); ?></strong> -
 					<?php bp_activity_parent_content(); ?>
 					<?php
 				endif;
@@ -403,7 +403,7 @@ class BP_Activity_Feed {
 	 */
 	protected function output() {
 		$this->http_headers();
-		echo '<?xml version="1.0" encoding="' . get_option( 'blog_charset' ) . '"?' . '>';
+		echo '<?xml version="1.0" encoding="' . esc_attr( get_option( 'blog_charset' ) ) . '"?' . '>';
 		?>
 
 <rss version="2.0"
@@ -423,16 +423,16 @@ class BP_Activity_Feed {
 >
 
 <channel>
-	<title><?php echo $this->title; ?></title>
-	<link><?php echo $this->link; ?></link>
+	<title><?php echo esc_html( $this->title ); ?></title>
+	<link><?php echo esc_url( $this->link ); ?></link>
 	<atom:link href="<?php self_link(); ?>" rel="self" type="application/rss+xml" />
-	<description><?php echo $this->description; ?></description>
-	<lastBuildDate><?php echo mysql2date( 'D, d M Y H:i:s O', bp_activity_get_last_updated(), false ); ?></lastBuildDate>
+	<description><?php echo esc_html( $this->description ); ?></description>
+	<lastBuildDate><?php echo esc_html( mysql2date( 'D, d M Y H:i:s O', bp_activity_get_last_updated(), false ) ); ?></lastBuildDate>
 	<generator>https://buddypress.org/?v=<?php bp_version(); ?></generator>
 	<language><?php bloginfo_rss( 'language' ); ?></language>
-	<ttl><?php echo $this->ttl; ?></ttl>
-	<sy:updatePeriod><?php echo $this->update_period; ?></sy:updatePeriod>
-	<sy:updateFrequency><?php echo $this->update_frequency; ?></sy:updateFrequency>
+	<ttl><?php echo esc_html( $this->ttl ); ?></ttl>
+	<sy:updatePeriod><?php echo esc_html( $this->update_period ); ?></sy:updatePeriod>
+	<sy:updateFrequency><?php echo esc_html( $this->update_frequency ); ?></sy:updateFrequency>
 		<?php
 
 		/**
@@ -450,9 +450,9 @@ class BP_Activity_Feed {
 				?>
 			<item>
 				<guid isPermaLink="false"><?php bp_activity_feed_item_guid(); ?></guid>
-				<title><?php echo stripslashes( bp_get_activity_feed_item_title() ); ?></title>
+				<title><?php echo esc_html( stripslashes( bp_get_activity_feed_item_title() ) ); ?></title>
 				<link><?php bp_activity_thread_permalink(); ?></link>
-				<pubDate><?php echo mysql2date( 'D, d M Y H:i:s O', bp_get_activity_feed_item_date(), false ); ?></pubDate>
+				<pubDate><?php echo esc_html( mysql2date( 'D, d M Y H:i:s O', bp_get_activity_feed_item_date(), false ) ); ?></pubDate>
 
 				<?php if ( bp_get_activity_feed_item_description() ) : ?>
 					<content:encoded><![CDATA[<?php $this->feed_content(); ?>]]></content:encoded>

@@ -116,11 +116,11 @@ function bb_admin_cover_crop_resolve_dir( $object ) {
  */
 function bb_admin_cover_crop_validate_request() {
 	if ( ! is_admin() ) {
-		wp_send_json_error( array( 'message' => __( 'Unauthorized.', 'buddyboss' ) ), 403 );
+		wp_send_json_error( array( 'message' => __( 'Unauthorized.', 'buddyboss-platform' ) ), 403 );
 	}
 
 	if ( ! current_user_can( 'manage_options' ) ) {
-		wp_send_json_error( array( 'message' => __( 'Unauthorized.', 'buddyboss' ) ), 403 );
+		wp_send_json_error( array( 'message' => __( 'Unauthorized.', 'buddyboss-platform' ) ), 403 );
 	}
 
 	check_ajax_referer( 'bb_admin_cover_cropstore', 'nonce' );
@@ -128,7 +128,7 @@ function bb_admin_cover_crop_validate_request() {
 	// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce verified above.
 	$object = isset( $_POST['object'] ) ? sanitize_key( wp_unslash( $_POST['object'] ) ) : '';
 	if ( ! in_array( $object, BB_ADMIN_COVER_CROP_ALLOWED_OBJECTS, true ) ) {
-		wp_send_json_error( array( 'message' => __( 'Invalid object.', 'buddyboss' ) ), 400 );
+		wp_send_json_error( array( 'message' => __( 'Invalid object.', 'buddyboss-platform' ) ), 400 );
 	}
 
 	return array(
@@ -156,12 +156,12 @@ function bb_admin_cover_image_upload_temp_ajax() {
 
 	// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce verified inside bb_admin_cover_crop_validate_request().
 	if ( empty( $_FILES['file'] ) || ! is_array( $_FILES['file'] ) ) {
-		wp_send_json_error( array( 'message' => __( 'No file uploaded.', 'buddyboss' ) ), 400 );
+		wp_send_json_error( array( 'message' => __( 'No file uploaded.', 'buddyboss-platform' ) ), 400 );
 	}
 
 	$paths = bb_admin_cover_crop_resolve_dir( $object );
 	if ( null === $paths ) {
-		wp_send_json_error( array( 'message' => __( 'Could not resolve upload directory.', 'buddyboss' ) ), 500 );
+		wp_send_json_error( array( 'message' => __( 'Could not resolve upload directory.', 'buddyboss-platform' ) ), 500 );
 	}
 
 	// Build allowed mime types (image/jpeg + image/png only — matches the
@@ -180,40 +180,68 @@ function bb_admin_cover_image_upload_temp_ajax() {
 	$file_name = isset( $file['name'] ) ? sanitize_file_name( wp_unslash( $file['name'] ) ) : '';
 	$tmp_name  = isset( $file['tmp_name'] ) ? sanitize_text_field( wp_unslash( $file['tmp_name'] ) ) : '';
 	if ( '' === $tmp_name || '' === $file_name ) {
-		wp_send_json_error( array( 'message' => __( 'Upload error.', 'buddyboss' ) ), 400 );
+		wp_send_json_error( array( 'message' => __( 'Upload error.', 'buddyboss-platform' ) ), 400 );
 	}
 
 	$filetype = wp_check_filetype_and_ext( $tmp_name, $file_name, $mimes );
 	if ( empty( $filetype['type'] ) || ! in_array( $filetype['type'], array( 'image/jpeg', 'image/png' ), true ) ) {
 		wp_send_json_error(
-			array( 'message' => __( 'Invalid file type. Only JPEG and PNG images are allowed.', 'buddyboss' ) ),
+			array( 'message' => __( 'Invalid file type. Only JPEG and PNG images are allowed.', 'buddyboss-platform' ) ),
 			400
 		);
 	}
 
-	// Move the upload into our staged dir under a `tmp-<rand>` name so it
-	// doesn't collide with an already-saved cover, and so phase-2 can find
-	// and clean it up unambiguously by prefix. We bypass `wp_handle_upload`'s
-	// upload_dir filter chain by calling `move_uploaded_file` directly — it's
-	// already validated above.
-	$ext = pathinfo( $file_name, PATHINFO_EXTENSION );
-	if ( ! empty( $filetype['ext'] ) ) {
-		$ext = $filetype['ext'];
-	}
-	$tmp_basename = 'tmp-' . wp_generate_password( 12, false ) . '.' . strtolower( $ext );
-	$tmp_path     = $paths['dir'] . '/' . $tmp_basename;
+	// Stage the upload under a `tmp-<rand>` name in the default cover dir so it
+	// doesn't collide with an already-saved cover, and so phase-2 can find and
+	// clean it up unambiguously by prefix.
+	//
+	// We hand the raw $_FILES entry to WordPress' own uploader
+	// (`wp_handle_upload`) rather than moving the PHP upload tmp file by hand.
+	// `wp_handle_upload` performs the same `is_uploaded_file()`/POST-origin
+	// guarantee `move_uploaded_file` gives, PLUS the byte-level MIME + extension
+	// vetting WordPress expects of every ingested upload (this is the
+	// "use WordPress' file uploader" requirement). We scope its destination to
+	// our staged cover dir via a temporary `upload_dir` filter, and force the
+	// `tmp-<rand>` filename via `unique_filename_callback`, so the on-disk
+	// layout and phase-2 cleanup contract stay identical to before.
+	require_once ABSPATH . 'wp-admin/includes/file.php';
 
-	// Drop @ on move_uploaded_file — the false return is checked and a
-	// genuine error (open_basedir, perms, disk-full) should bubble through
-	// WP's error log. `@` would mask that diagnostic.
-	if ( ! move_uploaded_file( $tmp_name, $tmp_path ) ) {
-		wp_send_json_error( array( 'message' => __( 'Could not save the uploaded file.', 'buddyboss' ) ), 500 );
+	$override_dir = $paths['dir'];
+	$override_url = $paths['url'];
+
+	$bb_cover_upload_dir_cb = static function ( $dirs ) use ( $override_dir, $override_url ) {
+		$dirs['path']   = $override_dir;
+		$dirs['url']    = $override_url;
+		$dirs['subdir'] = '';
+		return $dirs;
+	};
+
+	$bb_cover_unique_name_cb = static function ( $dir, $name, $ext ) {
+		// $ext arrives with a leading dot (e.g. ".jpeg"); lower-case it to
+		// match the legacy `tmp-<rand>.<ext>` shape phase-2 keys cleanup off.
+		return 'tmp-' . wp_generate_password( 12, false ) . strtolower( $ext );
+	};
+
+	add_filter( 'upload_dir', $bb_cover_upload_dir_cb );
+	$movefile = wp_handle_upload(
+		$file,
+		array(
+			'test_form'                => false,
+			'mimes'                    => $mimes,
+			'unique_filename_callback' => $bb_cover_unique_name_cb,
+		)
+	);
+	remove_filter( 'upload_dir', $bb_cover_upload_dir_cb );
+
+	if ( ! is_array( $movefile ) || ! empty( $movefile['error'] ) || empty( $movefile['file'] ) ) {
+		$message = ( is_array( $movefile ) && ! empty( $movefile['error'] ) )
+			? $movefile['error']
+			: __( 'Could not save the uploaded file.', 'buddyboss-platform' );
+		wp_send_json_error( array( 'message' => $message ), 500 );
 	}
 
-	// Set sensible permissions matching what `BP_Attachment::upload` produces.
-	// Drop @: a chmod failure on a writable upload dir is genuinely worth
-	// logging — if it surfaces, the site has a permission problem worth fixing.
-	chmod( $tmp_path, 0644 );
+	$tmp_path     = $movefile['file'];
+	$tmp_basename = wp_basename( $tmp_path );
 
 	// Keep @ on getimagesize — it intentionally emits a warning on bad input
 	// and the boolean false return is the documented "not an image" signal.
@@ -223,7 +251,7 @@ function bb_admin_cover_image_upload_temp_ajax() {
 		// issue that should surface in the error log, not silently leak
 		// tmp-* files into the cover dir.
 		wp_delete_file( $tmp_path );
-		wp_send_json_error( array( 'message' => __( 'Uploaded file is not a valid image.', 'buddyboss' ) ), 400 );
+		wp_send_json_error( array( 'message' => __( 'Uploaded file is not a valid image.', 'buddyboss-platform' ) ), 400 );
 	}
 
 	// Return `original_name` so phase 2 can pass it to the
@@ -266,7 +294,7 @@ function bb_admin_cover_image_set_ajax() {
 
 	$paths = bb_admin_cover_crop_resolve_dir( $object );
 	if ( null === $paths ) {
-		wp_send_json_error( array( 'message' => __( 'Could not resolve upload directory.', 'buddyboss' ) ), 500 );
+		wp_send_json_error( array( 'message' => __( 'Could not resolve upload directory.', 'buddyboss-platform' ) ), 500 );
 	}
 
 	// phpcs:disable WordPress.Security.NonceVerification.Missing,WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Nonce verified inside bb_admin_cover_crop_validate_request(); crop_x/y/w/h are coerced via (int), other strings via sanitize_file_name(). PHPCS doesn't recognise (int) cast as "sanitization" for its purposes.
@@ -282,10 +310,10 @@ function bb_admin_cover_image_set_ajax() {
 	// positive, and the basename must look like our `tmp-XX...` naming so a
 	// caller can't aim the editor at an arbitrary file in the cover-image dir.
 	if ( $crop_w <= 0 || $crop_h <= 0 || $crop_x < 0 || $crop_y < 0 ) {
-		wp_send_json_error( array( 'message' => __( 'Invalid crop coordinates.', 'buddyboss' ) ), 400 );
+		wp_send_json_error( array( 'message' => __( 'Invalid crop coordinates.', 'buddyboss-platform' ) ), 400 );
 	}
 	if ( '' === $basename || 0 !== strpos( $basename, 'tmp-' ) ) {
-		wp_send_json_error( array( 'message' => __( 'Invalid temp file reference.', 'buddyboss' ) ), 400 );
+		wp_send_json_error( array( 'message' => __( 'Invalid temp file reference.', 'buddyboss-platform' ) ), 400 );
 	}
 
 	$tmp_path = $paths['dir'] . '/' . $basename;
@@ -297,11 +325,11 @@ function bb_admin_cover_image_set_ajax() {
 	$real_tmp = realpath( $tmp_path );
 	$real_dir = realpath( $paths['dir'] );
 	if ( false === $real_tmp || false === $real_dir || 0 !== strpos( $real_tmp, trailingslashit( $real_dir ) ) ) {
-		wp_send_json_error( array( 'message' => __( 'Temp file not found.', 'buddyboss' ) ), 400 );
+		wp_send_json_error( array( 'message' => __( 'Temp file not found.', 'buddyboss-platform' ) ), 400 );
 	}
 
 	if ( ! file_exists( $real_tmp ) ) {
-		wp_send_json_error( array( 'message' => __( 'Temp file not found.', 'buddyboss' ) ), 400 );
+		wp_send_json_error( array( 'message' => __( 'Temp file not found.', 'buddyboss-platform' ) ), 400 );
 	}
 
 	// Upper-bound check: reject crop coords that fall outside the source
@@ -312,12 +340,12 @@ function bb_admin_cover_image_set_ajax() {
 	// dimensions through the round-trip.
 	$src_dims = @getimagesize( $real_tmp ); // phpcs:ignore Generic.PHP.DiscourageGoto -- @ here matches WP convention for getimagesize's documented false-on-failure signal.
 	if ( false === $src_dims ) {
-		wp_send_json_error( array( 'message' => __( 'Could not read source image dimensions.', 'buddyboss' ) ), 500 );
+		wp_send_json_error( array( 'message' => __( 'Could not read source image dimensions.', 'buddyboss-platform' ) ), 500 );
 	}
 	$src_w = (int) $src_dims[0];
 	$src_h = (int) $src_dims[1];
 	if ( $crop_x + $crop_w > $src_w || $crop_y + $crop_h > $src_h ) {
-		wp_send_json_error( array( 'message' => __( 'Crop region falls outside the source image.', 'buddyboss' ) ), 400 );
+		wp_send_json_error( array( 'message' => __( 'Crop region falls outside the source image.', 'buddyboss-platform' ) ), 400 );
 	}
 
 	// Apply the user's crop. We work on a NEW file under the same dir so the
@@ -330,7 +358,7 @@ function bb_admin_cover_image_set_ajax() {
 			array(
 				'message' => sprintf(
 					/* translators: %s: image editor error message. */
-					__( 'Could not open the uploaded image: %s', 'buddyboss' ),
+					__( 'Could not open the uploaded image: %s', 'buddyboss-platform' ),
 					$editor->get_error_message()
 				),
 			),
@@ -344,7 +372,7 @@ function bb_admin_cover_image_set_ajax() {
 			array(
 				'message' => sprintf(
 					/* translators: %s: image editor error message. */
-					__( 'Could not crop the image: %s', 'buddyboss' ),
+					__( 'Could not crop the image: %s', 'buddyboss-platform' ),
 					$cropped->get_error_message()
 				),
 			),
@@ -364,7 +392,7 @@ function bb_admin_cover_image_set_ajax() {
 			array(
 				'message' => sprintf(
 					/* translators: %s: image editor error message. */
-					__( 'Could not save the cropped image: %s', 'buddyboss' ),
+					__( 'Could not save the cropped image: %s', 'buddyboss-platform' ),
 					$saved->get_error_message()
 				),
 			),
@@ -404,9 +432,9 @@ function bb_admin_cover_image_set_ajax() {
 			wp_delete_file( $cropped_path );
 		}
 
-		$message = __( 'Could not generate the cover image.', 'buddyboss' );
+		$message = __( 'Could not generate the cover image.', 'buddyboss-platform' );
 		if ( ! bb_is_gd_or_imagick_library_enabled() ) {
-			$message = __( 'Image editor is missing. Please enable GD or Imagick.', 'buddyboss' );
+			$message = __( 'Image editor is missing. Please enable GD or Imagick.', 'buddyboss-platform' );
 		}
 
 		wp_send_json_error( array( 'message' => $message ), 500 );

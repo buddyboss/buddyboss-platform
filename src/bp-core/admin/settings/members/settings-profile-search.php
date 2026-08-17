@@ -26,7 +26,7 @@ function bb_members_register_profile_search_panel_fields() {
 		'profile_search',
 		'profile_search',
 		array(
-			'title'       => __( 'Profile Search', 'buddyboss' ),
+			'title'       => __( 'Profile Search', 'buddyboss-platform' ),
 			'description' => '',
 			'order'       => 10,
 		)
@@ -41,10 +41,10 @@ function bb_members_register_profile_search_panel_fields() {
 		'profile_search',
 		array(
 			'name'              => 'bp-enable-profile-search',
-			'label'             => __( 'Profile Search', 'buddyboss' ),
+			'label'             => __( 'Profile Search', 'buddyboss-platform' ),
 			'type'              => 'toggle',
-			'description'       => __( 'Enable profile search', 'buddyboss' ),
-			'help_text'         => __( 'When enabled, advanced profile search will be available in the members directory.', 'buddyboss' ),
+			'description'       => __( 'Enable profile search', 'buddyboss-platform' ),
+			'help_text'         => __( 'When enabled, advanced profile search will be available in the members directory.', 'buddyboss-platform' ),
 			'default'           => ! bp_disable_advanced_profile_search(),
 			'sanitize_callback' => 'absint',
 			'order'             => 10,

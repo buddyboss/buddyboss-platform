@@ -92,7 +92,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				$this->load_login_registration_integration();
 			} elseif (
 				isset( $_SERVER['SCRIPT_NAME'] ) &&
-				false !== stripos( wp_login_url(), $_SERVER['SCRIPT_NAME'] ) &&
+				false !== stripos( wp_login_url(), sanitize_text_field( wp_unslash( $_SERVER['SCRIPT_NAME'] ) ) ) &&
 				! $this->bb_rl_is_page_enabled_for_integration( 'registration' )
 			) {
 				// On wp-login.php with registration disabled, restore the default
@@ -251,7 +251,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			add_action( 'login_enqueue_scripts', array( $this, 'bb_rl_login_enqueue_scripts' ), 999 );
 			add_action( 'login_head', array( $this, 'bb_rl_login_header' ), 999 );
 			add_filter( 'login_headerurl', array( $this, 'bb_rl_login_header_url' ) );
-			add_action( 'login_footer', array( $this, 'bb_rl_login_footer' ), 999 );
+			add_action( 'login_footer', array( $this, 'bb_rl_login_footer' ), 5 );
 			add_filter( 'login_message', array( $this, 'bb_rl_signin_login_message' ) );
 			add_action( 'login_form', array( $this, 'bb_rl_login_custom_form' ) );
 
@@ -286,7 +286,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			add_action( 'bp_init', array( $this, 'bb_rl_init' ), 9 );
 
 			// Add Dynamic colours.
-			add_action( 'wp_head', array( $this, 'bb_rl_dynamic_colors' ) );
+			add_action( 'wp_enqueue_scripts', array( $this, 'bb_rl_dynamic_colors' ), 20 );
 
 			add_action( 'wp_ajax_bb_fetch_header_messages', array( $this, 'bb_fetch_header_messages' ) );
 			add_action( 'wp_ajax_bb_fetch_header_notifications', array( $this, 'bb_fetch_header_notifications' ) );
@@ -478,9 +478,9 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		public function bb_rl_notifications_mark_unread_link( $link = '' ) {
 			return $this->bb_rl_notifications_link(
 				$link,
-				__( 'Mark as unread', 'buddyboss' ),
+				__( 'Mark as unread', 'buddyboss-platform' ),
 				'bb-icons-rl-eye-slash',
-				__( 'Mark as unread', 'buddyboss' )
+				__( 'Mark as unread', 'buddyboss-platform' )
 			);
 		}
 
@@ -496,9 +496,9 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		public function bb_rl_notifications_mark_read_link( $link = '' ) {
 			return $this->bb_rl_notifications_link(
 				$link,
-				__( 'Mark as read', 'buddyboss' ),
+				__( 'Mark as read', 'buddyboss-platform' ),
 				'bb-icons-rl-check',
-				__( 'Mark as read', 'buddyboss' )
+				__( 'Mark as read', 'buddyboss-platform' )
 			);
 		}
 
@@ -514,9 +514,9 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		public function bb_rl_notifications_delete_link( $link = '' ) {
 			return $this->bb_rl_notifications_link(
 				$link,
-				__( 'Delete notification', 'buddyboss' ),
+				__( 'Delete notification', 'buddyboss-platform' ),
 				'bb-icons-rl-trash',
-				__( 'Delete notification', 'buddyboss' )
+				__( 'Delete notification', 'buddyboss-platform' )
 			);
 		}
 
@@ -654,21 +654,21 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 					if ( 'activity_feed' === $key && bp_is_active( 'activity' ) ) {
 						$is_active     = true;
 						$item['url']   = bp_get_activity_directory_permalink();
-						$item['label'] = __( 'News Feed', 'buddyboss' );
+						$item['label'] = __( 'News Feed', 'buddyboss-platform' );
 					} elseif ( 'members' === $key ) {
 						$is_active     = true;
 						$item['url']   = bp_get_members_directory_permalink();
-						$item['label'] = __( 'Members', 'buddyboss' );
+						$item['label'] = __( 'Members', 'buddyboss-platform' );
 					} elseif ( 'groups' === $key && bp_is_active( 'groups' ) ) {
 						$is_active     = true;
 						$item['url']   = bp_get_groups_directory_permalink();
-						$item['label'] = __( 'Groups', 'buddyboss' );
+						$item['label'] = __( 'Groups', 'buddyboss-platform' );
 					} elseif ( 'forums' === $key && bp_is_active( 'forums' ) ) {
 						$is_active     = true;
 						$item['url']   = bbp_get_forums_url();
-						$item['label'] = __( 'Forums', 'buddyboss' );
+						$item['label'] = __( 'Forums', 'buddyboss-platform' );
 					} elseif ( 'courses' === $key ) {
-						$item['label'] = __( 'Courses', 'buddyboss' );
+						$item['label'] = __( 'Courses', 'buddyboss-platform' );
 						$item['url']   = '';
 
 						/**
@@ -718,11 +718,11 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 					} elseif ( 'messages' === $key && bp_is_active( 'messages' ) && is_user_logged_in() ) {
 						$is_active     = true;
 						$item['url']   = trailingslashit( bp_loggedin_user_domain() . bp_get_messages_slug() );
-						$item['label'] = __( 'Messages', 'buddyboss' );
+						$item['label'] = __( 'Messages', 'buddyboss-platform' );
 					} elseif ( 'notifications' === $key && bp_is_active( 'notifications' ) && is_user_logged_in() ) {
 						$is_active     = true;
 						$item['url']   = bp_get_notifications_permalink();
-						$item['label'] = __( 'Notifications', 'buddyboss' );
+						$item['label'] = __( 'Notifications', 'buddyboss-platform' );
 					}
 					if ( $is_active ) {
 						if ( ! empty( $item['icon'] ) ) {
@@ -997,13 +997,13 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			$nav_menu_locations = get_theme_mod( 'nav_menu_locations', array() );
 			if ( empty( $nav_menu_locations ) ) {
 				register_nav_menus(
-					array( 'bb-readylaunch' => __( 'ReadyLaunch', 'buddyboss' ) )
+					array( 'bb-readylaunch' => __( 'ReadyLaunch', 'buddyboss-platform' ) )
 				);
 			}
 
 			// Define the menus to create.
 			$menus = array(
-				'readylaunch' => __( 'ReadyLaunch', 'buddyboss' ),
+				'readylaunch' => __( 'ReadyLaunch', 'buddyboss-platform' ),
 			);
 
 			foreach ( $menus as $menu_slug => $menu_name ) {
@@ -1188,7 +1188,8 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			wp_enqueue_script( 'bb-cropper-js' );
 			wp_enqueue_style( 'bb-cropper-css' );
 
-			wp_enqueue_style( 'bb-readylaunch-font', buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/assets/fonts/fonts.css', array(), bp_get_version() );
+			// Inter is loaded from the Google Fonts CDN (WP.org-permitted; Inter is SIL OFL).
+			wp_enqueue_style( 'bb-readylaunch-font', 'https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap', array(), null );
 			wp_enqueue_style( 'bb-readylaunch-style-main', buddypress()->plugin_url . "bp-templates/bp-nouveau/readylaunch/css/main{$min}.css", array(), bp_get_version() );
 			wp_style_add_data( 'bb-readylaunch-style-main', 'rtl', 'replace' );
 			if ( $min ) {
@@ -1277,10 +1278,10 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 					'bb-rl-members',
 					'bbReadyLaunchMembersVars',
 					array(
-						'invite_invalid_name_message' => esc_html__( 'Name is required.', 'buddyboss' ),
-						'invite_valid_email'          => esc_html__( 'Please enter a valid email address.', 'buddyboss' ),
-						'invite_sending_invite'       => esc_html__( 'Sending invitation', 'buddyboss' ),
-						'invite_error_notice'         => esc_html__( 'There was an error submitting the form. Please try again.', 'buddyboss' ),
+						'invite_invalid_name_message' => esc_html__( 'Name is required.', 'buddyboss-platform' ),
+						'invite_valid_email'          => esc_html__( 'Please enter a valid email address.', 'buddyboss-platform' ),
+						'invite_sending_invite'       => esc_html__( 'Sending invitation', 'buddyboss-platform' ),
+						'invite_error_notice'         => esc_html__( 'There was an error submitting the form. Please try again.', 'buddyboss-platform' ),
 					)
 				);
 			}
@@ -1298,9 +1299,9 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				array(
 					'ajax_url'           => admin_url( 'admin-ajax.php' ),
 					'nonce'              => wp_create_nonce( 'bb-readylaunch' ),
-					'more_nav'           => esc_html__( 'More', 'buddyboss' ),
-					'filter_all'         => esc_html__( 'All', 'buddyboss' ),
-					'notification_error' => esc_html__( 'Failed to load data. Please try again.', 'buddyboss' ),
+					'more_nav'           => esc_html__( 'More', 'buddyboss-platform' ),
+					'filter_all'         => esc_html__( 'All', 'buddyboss-platform' ),
+					'notification_error' => esc_html__( 'Failed to load data. Please try again.', 'buddyboss-platform' ),
 				)
 			);
 
@@ -1357,6 +1358,8 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			$allow_suffix = array(
 				'bb-readylaunch',
 				'query-monitor',
+				// Src-less platform alias handles (no $src to whitelist by path).
+				'bb-default-cover-image',
 			);
 
 			// Dequeue and deregister scripts.
@@ -1619,9 +1622,9 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				)
 			);
 
-			$title          = ! empty( $args['heading'] ) ? $args['heading'] : __( 'Courses', 'buddyboss' );
+			$title          = ! empty( $args['heading'] ) ? $args['heading'] : __( 'Courses', 'buddyboss-platform' );
 			$items          = ! empty( $args['items'] ) ? $args['items'] : array();
-			$error_text     = ! empty( $args['error_text'] ) ? $args['error_text'] : __( 'There are no courses to display.', 'buddyboss' );
+			$error_text     = ! empty( $args['error_text'] ) ? $args['error_text'] : __( 'There are no courses to display.', 'buddyboss-platform' );
 			$has_more_items = ! empty( $args['has_more_items'] ) ? $args['has_more_items'] : false;
 			?>
 			<div class="bb-rl-list">
@@ -1683,7 +1686,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 							?>
 									<a href="<?php echo ! empty( $args['show_more_link'] ) ? esc_url( $args['show_more_link'] ) : ''; ?>" class="bb-rl-show-more">
 										<i class="bb-icons-rl-caret-down"></i>
-								<?php echo esc_html__( 'Show More', 'buddyboss' ); ?>
+								<?php echo esc_html__( 'Show More', 'buddyboss-platform' ); ?>
 									</a>
 								<?php
 						}
@@ -2102,7 +2105,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 */
 		public function bb_nouveau_get_filter_label_hook( $label, $component ) {
 			if ( 'members' === $component['object'] || 'groups' === $component['object'] ) {
-				$label = __( 'Sort by', 'buddyboss' );
+				$label = __( 'Sort by', 'buddyboss-platform' );
 			}
 
 			return $label;
@@ -2147,7 +2150,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 						'footer'       => true,
 					),
 					'bp-nouveau-magnific-popup' => array(
-						'file'         => buddypress()->plugin_url . 'bp-core/js/vendor/magnific-popup.js',
+						'file'         => buddypress()->plugin_url . 'bp-core/js/vendor/magnific-popup%s.js',
 						'dependencies' => array( 'jquery' ),
 						'footer'       => false,
 					),
@@ -2185,12 +2188,12 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			// Add custom class to span tags (disabled or active links).
 			$output = str_replace( 'page-numbers', 'bb-rl-page-numbers', $output );
 
-			$prev_label = esc_html__( 'Prev', 'buddyboss' );
-			$next_label = esc_html__( 'Next', 'buddyboss' );
+			$prev_label = esc_html__( 'Prev', 'buddyboss-platform' );
+			$next_label = esc_html__( 'Next', 'buddyboss-platform' );
 
 			// Use prev_text and next_text passed in the paginate_links arguments.
-			$prev_text = $args['prev_text'] ?? __( '&larr; Prev', 'buddyboss' );
-			$next_text = $args['next_text'] ?? __( 'Next &rarr;', 'buddyboss' );
+			$prev_text = $args['prev_text'] ?? __( '&larr; Prev', 'buddyboss-platform' );
+			$next_text = $args['next_text'] ?? __( 'Next &rarr;', 'buddyboss-platform' );
 
 			// Ensure Previous and Next links are always visible (even if disabled).
 			if ( strpos( $output, 'prev bb-rl-page-numbers' ) === false ) {
@@ -2237,7 +2240,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 */
 		public function bb_rl_invite_form_callback() {
 			$response = array(
-				'message' => esc_html__( 'Unable to send invite.', 'buddyboss' ),
+				'message' => esc_html__( 'Unable to send invite.', 'buddyboss-platform' ),
 				'type'    => 'error',
 			);
 
@@ -2248,7 +2251,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				! empty( $nonce ) &&
 				! wp_verify_nonce( $nonce, 'bb_rl_invite_form_action' )
 			) {
-				$response['message'] = esc_html__( 'Nonce verification failed.', 'buddyboss' );
+				$response['message'] = esc_html__( 'Nonce verification failed.', 'buddyboss-platform' );
 				wp_send_json_error( $response );
 			}
 
@@ -2256,7 +2259,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 
 			// Check if the user is logged in.
 			if ( ! $loggedin_user_id ) {
-				$response['message'] = esc_html__( 'You should be logged in to send an invite.', 'buddyboss' );
+				$response['message'] = esc_html__( 'You should be logged in to send an invite.', 'buddyboss-platform' );
 				wp_send_json_error( $response );
 			}
 
@@ -2266,16 +2269,16 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 
 			$email = strtolower( sanitize_email( wp_unslash( $_POST['bb-rl-invite-email'] ) ) );
 			if ( email_exists( $email ) ) {
-				$response['message'] = esc_html__( 'Email address already exists.', 'buddyboss' );
+				$response['message'] = esc_html__( 'Email address already exists.', 'buddyboss-platform' );
 				wp_send_json_error( $response );
 			} elseif ( bb_is_email_address_already_invited( $email, $loggedin_user_id ) ) {
-				$response['message'] = esc_html__( 'The email has already been invited', 'buddyboss' );
+				$response['message'] = esc_html__( 'The email has already been invited', 'buddyboss-platform' );
 				wp_send_json_error( $response );
 			} elseif ( ! bb_is_allowed_register_email_address( $email ) ) {
-				$response['message'] = esc_html__( 'Email address restricted.', 'buddyboss' );
+				$response['message'] = esc_html__( 'Email address restricted.', 'buddyboss-platform' );
 				wp_send_json_error( $response );
 			} elseif ( ! bp_allow_user_to_send_invites() ) {
-				$response['message'] = esc_html__( 'Sorry, you don\'t have permission to view invites profile type.', 'buddyboss' );
+				$response['message'] = esc_html__( 'Sorry, you don\'t have permission to view invites profile type.', 'buddyboss-platform' );
 				wp_send_json_error( $response );
 			}
 
@@ -2366,7 +2369,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 
 			wp_send_json_success(
 				array(
-					'message' => esc_html__( 'Invitation sent successfully', 'buddyboss' ),
+					'message' => esc_html__( 'Invitation sent successfully', 'buddyboss-platform' ),
 					'type'    => 'success',
 				)
 			);
@@ -2400,10 +2403,11 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 * @return string Filtered source URL.
 		 */
 		public function bb_rl_script_loader_src( $src, $handle ) {
-			global $bp;
-			$min = bp_core_get_minified_asset_suffix();
 			if ( ! empty( $src ) && 'bb-topics-manager' === $handle ) {
-				$src = trailingslashit( $bp->plugin_url ) . "bp-templates/bp-nouveau/readylaunch/js/bb-topics-manager{$min}.js";
+				// Resolve unminified vs minified per file: bb_asset_url() serves the
+				// unminified source only when SCRIPT_DEBUG is on and that file
+				// exists on disk, otherwise the shipped `.min` file.
+				$src = bb_asset_url( 'bp-templates/bp-nouveau/readylaunch/js/bb-topics-manager', 'js' );
 			}
 
 			return $src;
@@ -2420,7 +2424,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 * @return array $args Filtered arguments.
 		 */
 		public function bb_rl_override_send_message_button_text( $args ) {
-			$args['data-balloon'] = esc_html__( 'Message', 'buddyboss' );
+			$args['data-balloon'] = esc_html__( 'Message', 'buddyboss-platform' );
 
 			return $args;
 		}
@@ -2619,7 +2623,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 						'class' => 'button edit-profile',
 						'href'  => bp_loggedin_user_domain() . 'profile/edit/',
 					),
-					'link_text'         => esc_html__( 'Edit Profile', 'buddyboss' ),
+					'link_text'         => esc_html__( 'Edit Profile', 'buddyboss-platform' ),
 					'link_url'          => bp_loggedin_user_domain() . 'profile/edit/',
 					'link_class'        => 'bb-rl-edit-profile',
 					'prefix_link_text'  => '<i class="bb-icons-rl-pencil-simple-line"></i>',
@@ -2636,12 +2640,12 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			}
 
 			if ( ! empty( $buttons['reject_friendship'] ) && bp_is_current_action( 'requests' ) ) {
-				$buttons['reject_friendship']['link_text']        = esc_html__( 'Reject', 'buddyboss' );
+				$buttons['reject_friendship']['link_text']        = esc_html__( 'Reject', 'buddyboss-platform' );
 				$buttons['reject_friendship']['prefix_link_text'] = '<i class="bb-icons-rl-x"></i>';
 			}
 
 			if ( ! empty( $buttons['accept_friendship'] ) && bp_is_current_action( 'requests' ) ) {
-				$buttons['accept_friendship']['link_text']        = esc_html__( 'Accept', 'buddyboss' );
+				$buttons['accept_friendship']['link_text']        = esc_html__( 'Accept', 'buddyboss-platform' );
 				$buttons['accept_friendship']['prefix_link_text'] = '<i class="bb-icons-rl-check"></i>';
 			}
 
@@ -2658,26 +2662,26 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 * @return array $strings The modified JS strings.
 		 */
 		public function bb_rl_modify_js_strings( $strings ) {
-			$translated_string = __( '\'s post', 'buddyboss' );
+			$translated_string = __( '\'s post', 'buddyboss-platform' );
 
 			if ( bp_is_active( 'media' ) || bp_is_active( 'video' ) || bp_is_active( 'document' ) ) {
 				$strings['media']['i18n_strings']['theater_title'] = $translated_string;
-				$strings['media']['create_album_title']            = esc_html__( 'Create new album', 'buddyboss' );
-				$strings['media']['create_folder']                 = esc_html__( 'Create new folder', 'buddyboss' );
-				$strings['media']['bb_rl_invalid_media_type']      = __( 'Different types of media cannot be uploaded to a post', 'buddyboss' );
+				$strings['media']['create_album_title']            = esc_html__( 'Create new album', 'buddyboss-platform' );
+				$strings['media']['create_folder']                 = esc_html__( 'Create new folder', 'buddyboss-platform' );
+				$strings['media']['bb_rl_invalid_media_type']      = __( 'Different types of media cannot be uploaded to a post', 'buddyboss-platform' );
 			}
 
 			if ( bp_is_active( 'messages' ) ) {
-				$strings['messages']['i18n']['to_placeholder'] = __( 'Start typing a name', 'buddyboss' );
+				$strings['messages']['i18n']['to_placeholder'] = __( 'Start typing a name', 'buddyboss-platform' );
 			}
 
 			if ( bp_is_active( 'moderation' ) ) {
-				$strings['moderation']['block_member'] = __( 'Block member', 'buddyboss' );
+				$strings['moderation']['block_member'] = __( 'Block member', 'buddyboss-platform' );
 			}
 
 			if ( bp_is_active( 'groups' ) ) {
-				$strings['groups']['i18n']['sending_request']      = esc_html__( 'Sending request', 'buddyboss' );
-				$strings['groups']['i18n']['cancel_request_group'] = esc_html__( 'Canceling request', 'buddyboss' );
+				$strings['groups']['i18n']['sending_request']      = esc_html__( 'Sending request', 'buddyboss-platform' );
+				$strings['groups']['i18n']['cancel_request_group'] = esc_html__( 'Canceling request', 'buddyboss-platform' );
 				$strings['groups']['member_invites_none']          = bp_nouveau_get_user_feedback( 'member-invites-none' );
 			}
 
@@ -2695,8 +2699,10 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 * @since BuddyBoss 2.9.00
 		 */
 		public function bb_rl_login_enqueue_scripts() {
-			wp_enqueue_style( 'bb-rl-login-fonts', buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/assets/fonts/fonts.css', array(), bp_get_version() );
-			wp_enqueue_style( 'bb-rl-login-style', buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/css/login.css', array(), bp_get_version() );
+			$min = bp_core_get_minified_asset_suffix();
+			// Inter is loaded from the Google Fonts CDN (WP.org-permitted; Inter is SIL OFL).
+			wp_enqueue_style( 'bb-readylaunch-login-fonts', 'https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap', array(), null );
+			wp_enqueue_style( 'bb-rl-login-style', buddypress()->plugin_url . "bp-templates/bp-nouveau/readylaunch/css/login{$min}.css", array(), bp_get_version() );
 			wp_style_add_data( 'bb-rl-login-style', 'rtl', 'replace' );
 			wp_enqueue_style( 'bb-rl-login-style-icons', buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/icons/css/bb-icons-rl.min.css', array(), bp_get_version() );
 			wp_style_add_data( 'bb-rl-login-style-icons', 'rtl', 'replace' );
@@ -2732,25 +2738,32 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		/**
 		 * Modify the login footer.
 		 *
+		 * Registers the login footer behaviour as an inline script on a dedicated
+		 * handle (printed by wp_print_footer_scripts on login_footer, priority 20)
+		 * instead of printing a raw <script> tag. This callback runs on login_footer
+		 * at priority 5 so the handle is enqueued before the footer scripts print.
+		 *
 		 * @since BuddyBoss 2.9.00
 		 */
 		public function bb_rl_login_footer() {
-			?>
-			<script>
-				jQuery( document ).ready( function ( $ ) {
-					var $forgetMeNot = $( '.login p.forgetmenot' );
-					var $lostMeNot = $( '.login p.lostmenot' );
-					$( $lostMeNot ).before( $forgetMeNot );
+			wp_register_script( 'bb-rl-login', false, array( 'jquery' ), bp_get_version(), true );
+			wp_enqueue_script( 'bb-rl-login' );
 
-					var $updatedClose = $( '.bb-rl-updated-close' );
-					if ( $updatedClose.length > 0 ) {
-						$updatedClose.on( 'click', function() {
-							$( this ).closest( '.message' ).hide();
-						} );
-					}
-				} );
-			</script>
-			<?php
+			// Nowdoc so the $-prefixed jQuery variables are NOT interpolated by PHP.
+			$login_footer_js = <<<'JS'
+jQuery( document ).ready( function ( $ ) {
+	var $forgetMeNot = $( '.login p.forgetmenot' );
+	var $lostMeNot = $( '.login p.lostmenot' );
+	$( $lostMeNot ).before( $forgetMeNot );
+	var $updatedClose = $( '.bb-rl-updated-close' );
+	if ( $updatedClose.length > 0 ) {
+		$updatedClose.on( 'click', function() {
+			$( this ).closest( '.message' ).hide();
+		} );
+	}
+} );
+JS;
+			wp_add_inline_script( 'bb-rl-login', $login_footer_js );
 		}
 
 		/**
@@ -2774,7 +2787,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				if ( empty( $message ) ) {
 					return sprintf(
 						'<div class="login-heading"><h2>%s</h2></div>',
-						__( 'Sign in to your account', 'buddyboss' )
+						__( 'Sign in to your account', 'buddyboss-platform' )
 					);
 				} else {
 					return $message;
@@ -2791,7 +2804,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 */
 		public function bb_rl_login_custom_form() {
 			?>
-			<p class="lostmenot"><a href="<?php echo esc_url( wp_lostpassword_url() ); ?>"><?php esc_html_e( 'Forgot Password?', 'buddyboss' ); ?></a></p>
+			<p class="lostmenot"><a href="<?php echo esc_url( wp_lostpassword_url() ); ?>"><?php esc_html_e( 'Forgot Password?', 'buddyboss-platform' ); ?></a></p>
 			<?php
 		}
 
@@ -2971,42 +2984,46 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 
 			// Generate color shades for dark mode (500 is base).
 			$dark_shades = $this->bb_rl_generate_color_shades( $color_dark );
-			?>
-			<style>
-				:root {
-					/* Light mode color shades. */
-					--bb-rl-background-brand-secondary-color: <?php echo esc_attr( $light_shades[100] ); ?>;
-					--bb-rl-background-brand-secondary-hover-color: <?php echo esc_attr( $light_shades[200] ); ?>;
-					--bb-rl-background-brand-disabled-color: <?php echo esc_attr( $light_shades[400] ); ?>;
-					--bb-rl-icon-brand-disabled-color: <?php echo esc_attr( $light_shades[400] ); ?>;
-					--bb-rl-background-brand-primary-hover-color: <?php echo esc_attr( $light_shades[600] ); ?>;
-					--bb-rl-text-brand-secondary-color: <?php echo esc_attr( $light_shades[800] ); ?>;
-					--bb-rl-icon-brand-primary-color: <?php echo esc_attr( $light_shades[800] ); ?>;
-					--bb-rl-border-brand-primary-color: <?php echo esc_attr( $light_shades[800] ); ?>;
 
-					/* Keep backward compatibility. */
-					--bb-rl-primary-color: <?php echo esc_attr( $color_light ); ?>;
-				}
+			// Build the dynamic colour CSS. Values are escaped with esc_attr(), preserving
+			// the exact sanitization used when this was printed as an inline <style> block.
+			$dynamic_css = ':root {' .
+				/* Light mode color shades. */
+				'--bb-rl-background-brand-secondary-color: ' . esc_attr( $light_shades[100] ) . ';' .
+				'--bb-rl-background-brand-secondary-hover-color: ' . esc_attr( $light_shades[200] ) . ';' .
+				'--bb-rl-background-brand-disabled-color: ' . esc_attr( $light_shades[400] ) . ';' .
+				'--bb-rl-icon-brand-disabled-color: ' . esc_attr( $light_shades[400] ) . ';' .
+				'--bb-rl-background-brand-primary-hover-color: ' . esc_attr( $light_shades[600] ) . ';' .
+				'--bb-rl-text-brand-secondary-color: ' . esc_attr( $light_shades[800] ) . ';' .
+				'--bb-rl-icon-brand-primary-color: ' . esc_attr( $light_shades[800] ) . ';' .
+				'--bb-rl-border-brand-primary-color: ' . esc_attr( $light_shades[800] ) . ';' .
+				/* Keep backward compatibility. */
+				'--bb-rl-primary-color: ' . esc_attr( $color_light ) . ';' .
+			'}' .
+			'.bb-rl-dark-mode {' .
+				/* Dark mode color shades. */
+				'--bb-rl-background-brand-secondary-color: ' . esc_attr( $dark_shades[100] ) . ';' .
+				'--bb-rl-text-brand-secondary-color: ' . esc_attr( $dark_shades[200] ) . ';' .
+				'--bb-rl-border-brand-primary-color: ' . esc_attr( $dark_shades[200] ) . ';' .
+				'--bb-rl-icon-brand-primary-color: ' . esc_attr( $dark_shades[200] ) . ';' .
+				'--bb-rl-primary-300: ' . esc_attr( $dark_shades[300] ) . ';' .
+				'--bb-rl-background-brand-disabled-color: ' . esc_attr( $dark_shades[400] ) . ';' .
+				'--bb-rl-icon-brand-disabled-color: ' . esc_attr( $dark_shades[400] ) . ';' .
+				'--bb-rl-background-brand-primary-hover-color: ' . esc_attr( $dark_shades[600] ) . ';' .
+				'--bb-rl-primary-700: ' . esc_attr( $dark_shades[700] ) . ';' .
+				'--bb-rl-background-brand-secondary-color: ' . esc_attr( $dark_shades[800] ) . ';' .
+				'--bb-rl-background-brand-secondary-hover-color: ' . esc_attr( $dark_shades[900] ) . ';' .
+				/* Keep backward compatibility. */
+				'--bb-rl-primary-color: ' . esc_attr( $color_dark ) . ';' .
+			'}';
 
-				.bb-rl-dark-mode {
-					/* Dark mode color shades. */
-					--bb-rl-background-brand-secondary-color: <?php echo esc_attr( $dark_shades[100] ); ?>;
-					--bb-rl-text-brand-secondary-color: <?php echo esc_attr( $dark_shades[200] ); ?>;
-					--bb-rl-border-brand-primary-color: <?php echo esc_attr( $dark_shades[200] ); ?>;
-					--bb-rl-icon-brand-primary-color: <?php echo esc_attr( $dark_shades[200] ); ?>;
-					--bb-rl-primary-300: <?php echo esc_attr( $dark_shades[300] ); ?>;
-					--bb-rl-background-brand-disabled-color: <?php echo esc_attr( $dark_shades[400] ); ?>;
-					--bb-rl-icon-brand-disabled-color: <?php echo esc_attr( $dark_shades[400] ); ?>;
-					--bb-rl-background-brand-primary-hover-color: <?php echo esc_attr( $dark_shades[600] ); ?>;
-					--bb-rl-primary-700: <?php echo esc_attr( $dark_shades[700] ); ?>;
-					--bb-rl-background-brand-secondary-color: <?php echo esc_attr( $dark_shades[800] ); ?>;
-					--bb-rl-background-brand-secondary-hover-color: <?php echo esc_attr( $dark_shades[900] ); ?>;
-
-					/* Keep backward compatibility. */
-					--bb-rl-primary-color: <?php echo esc_attr( $color_dark ); ?>;
-				}
-			</style>
-			<?php
+			// Attach the dynamic colours as an inline style on a dedicated registered handle
+			// instead of printing a raw <style> tag on wp_head.
+			if ( ! wp_style_is( 'bb-readylaunch-dynamic-colors', 'registered' ) ) {
+				wp_register_style( 'bb-readylaunch-dynamic-colors', false, array(), bp_get_version() );
+			}
+			wp_enqueue_style( 'bb-readylaunch-dynamic-colors' );
+			wp_add_inline_style( 'bb-readylaunch-dynamic-colors', $dynamic_css );
 		}
 
 		/**
@@ -3070,7 +3087,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				true
 			);
 
-			wp_set_script_translations( 'buddyboss-readylaunch-header-editor-script', 'buddyboss', buddypress()->plugin_dir . 'languages/' );
+			wp_set_script_translations( 'buddyboss-readylaunch-header-editor-script', 'buddyboss-platform', buddypress()->plugin_dir . 'languages/' );
 
 			// Register the view script.
 			wp_register_script(
@@ -3087,13 +3104,13 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				array(
 					'ajax_url'           => admin_url( 'admin-ajax.php' ),
 					'nonce'              => wp_create_nonce( 'bb-readylaunch' ),
-					'more_nav'           => esc_html__( 'More', 'buddyboss' ),
-					'filter_all'         => esc_html__( 'All', 'buddyboss' ),
-					'notification_error' => esc_html__( 'Failed to load data. Please try again.', 'buddyboss' ),
+					'more_nav'           => esc_html__( 'More', 'buddyboss-platform' ),
+					'filter_all'         => esc_html__( 'All', 'buddyboss-platform' ),
+					'notification_error' => esc_html__( 'Failed to load data. Please try again.', 'buddyboss-platform' ),
 				)
 			);
 
-			wp_set_script_translations( 'bb-readylaunch-header-view', 'buddyboss', buddypress()->plugin_dir . 'languages/' );
+			wp_set_script_translations( 'bb-readylaunch-header-view', 'buddyboss-platform', buddypress()->plugin_dir . 'languages/' );
 
 			wp_register_style(
 				'bb-icons-rl-css',
@@ -3114,9 +3131,10 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			}
 
 			// Enqueue LearnDash ReadyLaunch styles.
+			$min = bp_core_get_minified_asset_suffix();
 			wp_enqueue_style(
 				'bb-readylaunch-lms',
-				buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/css/lms.css',
+				buddypress()->plugin_url . "bp-templates/bp-nouveau/readylaunch/css/lms{$min}.css",
 				array(),
 				bp_get_version()
 			);
@@ -3134,9 +3152,10 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			}
 
 			// Enqueue MemberPress Courses ReadyLaunch styles.
+			$min = bp_core_get_minified_asset_suffix();
 			wp_enqueue_style(
 				'bb-readylaunch-meprlms',
-				buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/css/meprlms.css',
+				buddypress()->plugin_url . "bp-templates/bp-nouveau/readylaunch/css/meprlms{$min}.css",
 				array(),
 				bp_get_version()
 			);
@@ -3145,7 +3164,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			// Enqueue our MemberPress Courses helper JavaScript.
 			wp_enqueue_script(
 				'bb-readylaunch-meprlms-js',
-				buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/js/bb-readylaunch-meprlms.js',
+				buddypress()->plugin_url . "bp-templates/bp-nouveau/readylaunch/js/bb-readylaunch-meprlms{$min}.js",
 				array( 'jquery' ),
 				bp_get_version(),
 				true
@@ -3526,9 +3545,9 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				'bb-readylaunch-forums-js',
 				'bbrlForumsEditorJsStrs',
 				array(
-					'description' => __( 'Write a description', 'buddyboss' ),
-					'type_reply'  => __( 'Type your reply here', 'buddyboss' ),
-					'type_topic'  => __( 'Type your discussion content here', 'buddyboss' ),
+					'description' => __( 'Write a description', 'buddyboss-platform' ),
+					'type_reply'  => __( 'Type your reply here', 'buddyboss-platform' ),
+					'type_topic'  => __( 'Type your discussion content here', 'buddyboss-platform' ),
 				)
 			);
 
@@ -3538,11 +3557,11 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			}
 
 			$common_array = array(
-				'loading_text' => __( 'Loading', 'buddyboss' ),
+				'loading_text' => __( 'Loading', 'buddyboss-platform' ),
 				'ajax_url'     => bp_core_ajax_url(),
 				'nonce'        => wp_create_nonce( 'search_tag' ),
 				'load'         => $no_load_topic,
-				'tag_text'     => __( 'Add Tags:', 'buddyboss' ),
+				'tag_text'     => __( 'Add Tags:', 'buddyboss-platform' ),
 			);
 
 			wp_localize_script( 'bb-readylaunch-forums-js', 'bbrlForumsCommonJsData', $common_array );
@@ -3555,15 +3574,15 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 					'bbpReplyAjaxJS',
 					array(
 						'bbp_ajaxurl'          => bbp_get_ajax_url(),
-						'generic_ajax_error'   => esc_html__( 'Something went wrong. Refresh your browser and try again.', 'buddyboss' ),
+						'generic_ajax_error'   => esc_html__( 'Something went wrong. Refresh your browser and try again.', 'buddyboss-platform' ),
 						'is_user_logged_in'    => is_user_logged_in(),
 						'reply_nonce'          => wp_create_nonce( 'reply-ajax_' . get_the_ID() ),
 						'topic_id'             => bbp_get_topic_id(),
 						'reply_form_html'      => $reply_form_html,
 						'threaded_reply'       => bbp_allow_threaded_replies(),
 						'threaded_reply_depth' => bbp_thread_replies_depth(),
-						'reply_to_text'        => esc_html__( 'Reply to', 'buddyboss' ),
-						'type_reply_here_text' => esc_html__( 'Type your reply here', 'buddyboss' ),
+						'reply_to_text'        => esc_html__( 'Reply to', 'buddyboss-platform' ),
+						'type_reply_here_text' => esc_html__( 'Type your reply here', 'buddyboss-platform' ),
 					)
 				);
 			}
@@ -3614,8 +3633,8 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 					'button_element'    => 'a',
 					'link_text'         => sprintf(
 						'<span class="bp-screen-reader-text">%1$s</span> <span class="comment-count">%2$s</span>',
-						esc_html__( 'Quick Reply', 'buddyboss' ),
-						esc_html__( 'Quick Reply', 'buddyboss' )
+						esc_html__( 'Quick Reply', 'buddyboss-platform' ),
+						esc_html__( 'Quick Reply', 'buddyboss-platform' )
 					),
 					'button_attr'       => array(
 						'class'            => 'bb-icon-l button bb-icon-comment bp-secondary-action',
@@ -3754,11 +3773,11 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			if ( bbp_show_lead_topic() ) {
 				$topic_reply_count = (int) bbp_get_topic_reply_count( $topic_id );
 				echo esc_html( $topic_reply_count );
-				$topic_reply_text = 1 !== $topic_reply_count ? esc_html__( 'Replies', 'buddyboss' ) : esc_html__( 'Reply', 'buddyboss' );
+				$topic_reply_text = 1 !== $topic_reply_count ? esc_html__( 'Replies', 'buddyboss-platform' ) : esc_html__( 'Reply', 'buddyboss-platform' );
 			} else {
 				$topic_post_count = (int) bbp_get_topic_post_count( $topic_id );
 				echo esc_html( $topic_post_count );
-				$topic_reply_text = 1 !== $topic_post_count ? esc_html__( 'Posts', 'buddyboss' ) : esc_html__( 'Post', 'buddyboss' );
+				$topic_reply_text = 1 !== $topic_post_count ? esc_html__( 'Posts', 'buddyboss-platform' ) : esc_html__( 'Post', 'buddyboss-platform' );
 			}
 			echo ' ' . wp_kses_post( $topic_reply_text );
 			$topic_total_reply_count_html = ob_get_clean();
@@ -3819,7 +3838,9 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			}
 
 			if ( function_exists( 'bp_media_forums_embed_gif' ) && ! has_filter( 'bbp_get_reply_content', 'bp_media_forums_embed_gif' ) ) {
-				add_filter( 'bbp_get_reply_content', 'bp_media_forums_embed_gif', 999, 2 );
+				if ( function_exists( 'bp_media_forums_embed_gif' ) ) {
+					add_filter( 'bbp_get_reply_content', 'bp_media_forums_embed_gif', 999, 2 );
+				}
 			}
 
 			bbp_reply_content_autoembed();
@@ -4008,7 +4029,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				// Add "ago" if it's not already there.
 				$active_time = sprintf(
 					/* translators: %s: forum freshness link */
-					apply_filters( 'bbp_core_time_since_ago_text', __( '%s ago', 'buddyboss' ) ),
+					apply_filters( 'bbp_core_time_since_ago_text', __( '%s ago', 'buddyboss-platform' ) ),
 					$first_part
 				);
 			}
@@ -4038,7 +4059,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			if ( $time_since ) {
 				return sprintf(
 					/* translators: %s: forum freshness link */
-					__( '<span>Active</span> %s', 'buddyboss' ),
+					__( '<span>Active</span> %s', 'buddyboss-platform' ),
 					$anchor
 				);
 			}
@@ -4060,7 +4081,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				return $r;
 			}
 
-			$r['super_text'] = __( 'Super Sticky', 'buddyboss' );
+			$r['super_text'] = __( 'Super Sticky', 'buddyboss-platform' );
 
 			return $r;
 		}
@@ -4078,7 +4099,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 */
 		public function bb_rl_get_nav_link_text( $link_text, $nav_item, $bp_nouveau ) {
 			if ( 'subscriptions' === $nav_item->slug ) {
-				$link_text = esc_html__( 'Group Subscriptions', 'buddyboss' );
+				$link_text = esc_html__( 'Group Subscriptions', 'buddyboss-platform' );
 			}
 
 			return $link_text;
@@ -4102,7 +4123,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			$current_action_variables = function_exists( 'bp_action_variables' ) ? bp_action_variables() : array();
 			$current_action_variables = ! empty( $current_action_variables ) ? $current_action_variables[0] : '';
 			if ( 'groups' === $current_component && 'members' === $current_action_variables ) {
-				$default_text = __( 'Search member', 'buddyboss' );
+				$default_text = __( 'Search member', 'buddyboss-platform' );
 			}
 
 			return $default_text;
@@ -4133,7 +4154,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		public function bb_rl_overwrite_login_email_field_label( $translated_text, $text, $domain ) {
 			if ( 'Username or Email Address' === $text && 'default' === $domain ) {
 				remove_filter( 'gettext', array( $this, 'bb_rl_overwrite_login_email_field_label' ) );
-				return __( 'Email', 'buddyboss' );
+				return __( 'Email', 'buddyboss-platform' );
 			}
 
 			return $translated_text;
@@ -4151,7 +4172,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		public function bb_rl_wp_login_errors( $errors ) {
 			if ( isset( $_GET['loggedout'] ) && $_GET['loggedout'] ) {
 				$errors->remove( 'loggedout' );
-				$notice  = esc_html__( 'You are logged out', 'buddyboss' );
+				$notice  = esc_html__( 'You are logged out', 'buddyboss-platform' );
 				$notice .= ' <span class="bb-rl-updated-close"><i class="bb-icons-rl-x"></i></span>';
 				$errors->add( 'loggedout', $notice, 'message' );
 			}
@@ -4188,11 +4209,11 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 * @return array Modified visibility levels.
 		 */
 		public function bb_rl_modify_visibility_levels( $visibility_levels ) {
-			$visibility_levels['loggedin'] = __( 'All members', 'buddyboss' );
+			$visibility_levels['loggedin'] = __( 'All members', 'buddyboss-platform' );
 			if ( bp_is_active( 'friends' ) ) {
-				$visibility_levels['friends'] = __( 'My connections', 'buddyboss' );
+				$visibility_levels['friends'] = __( 'My connections', 'buddyboss-platform' );
 			}
-			$visibility_levels['onlyme'] = __( 'Only me', 'buddyboss' );
+			$visibility_levels['onlyme'] = __( 'Only me', 'buddyboss-platform' );
 
 			return $visibility_levels;
 		}
@@ -4213,21 +4234,21 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			}
 
 			if ( false !== strpos( $button['link_href'], '/remove-friend/' ) ) {
-				$remove_connection_text = __( 'Remove connection', 'buddyboss' );
+				$remove_connection_text = __( 'Remove connection', 'buddyboss-platform' );
 				$button['data-balloon'] = $remove_connection_text;
 				if ( empty( $button['is_tooltips'] ) ) {
 					$button['link_class']               .= ' bb-rl-primary-hover-action';
 					$button['button_attr']['data-hover'] = $remove_connection_text;
 				}
 			} elseif ( false !== strpos( $button['link_href'], '/requests/cancel' ) ) {
-				$cancel_request_text    = __( 'Cancel request', 'buddyboss' );
+				$cancel_request_text    = __( 'Cancel request', 'buddyboss-platform' );
 				$button['data-balloon'] = $cancel_request_text;
 				if ( empty( $button['is_tooltips'] ) ) {
 					$button['link_class']               .= ' bb-rl-primary-hover-action';
 					$button['button_attr']['data-hover'] = $cancel_request_text;
 				}
 			} elseif ( false !== strpos( $button['link_href'], '/requests/' ) ) {
-				$accept_request_text    = __( 'Review request', 'buddyboss' );
+				$accept_request_text    = __( 'Review request', 'buddyboss-platform' );
 				$button['data-balloon'] = $accept_request_text;
 				if ( empty( $button['is_tooltips'] ) ) {
 					$button['link_class']               .= ' bb-rl-primary-hover-action';
@@ -4257,8 +4278,8 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 */
 		public function bb_rl_modify_notifications_filters( $output ) {
 			$output = str_replace(
-				esc_html__( '- View All -', 'buddyboss' ),
-				esc_html__( 'View All', 'buddyboss' ),
+				esc_html__( '- View All -', 'buddyboss-platform' ),
+				esc_html__( 'View All', 'buddyboss-platform' ),
 				$output
 			);
 
@@ -4280,7 +4301,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			$register_date        = date_i18n( 'd M Y', strtotime( $register_date ) );
 			$user_registered_date = sprintf(
 				/* translators: 1: User joined date. */
-				esc_html__( 'Joined %s', 'buddyboss' ),
+				esc_html__( 'Joined %s', 'buddyboss-platform' ),
 				esc_html( $register_date )
 			);
 
@@ -4301,7 +4322,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				return $button;
 			}
 
-			$button['link_text'] = str_replace( __( 'Report Member', 'buddyboss' ), __( 'Report', 'buddyboss' ), $button['link_text'] );
+			$button['link_text'] = str_replace( __( 'Report Member', 'buddyboss-platform' ), __( 'Report', 'buddyboss-platform' ), $button['link_text'] );
 
 			return $button;
 		}
@@ -4354,7 +4375,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 */
 		public function bb_rl_modify_bp_nouveau_get_submit_button( $actions ) {
 			if ( isset( $actions['member-group-invites']['attributes']['value'] ) ) {
-				$actions['member-group-invites']['attributes']['value'] = esc_html__( 'Save Changes', 'buddyboss' );
+				$actions['member-group-invites']['attributes']['value'] = esc_html__( 'Save Changes', 'buddyboss-platform' );
 			}
 
 			return $actions;
@@ -4370,11 +4391,11 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 * @return array Modified visibility levels.
 		 */
 		public function bb_rl_modify_xprofile_visibility_levels( $visibility_levels ) {
-			$visibility_levels['loggedin']['label'] = __( 'All members', 'buddyboss' );
+			$visibility_levels['loggedin']['label'] = __( 'All members', 'buddyboss-platform' );
 			if ( bp_is_active( 'friends' ) ) {
-				$visibility_levels['friends']['label'] = __( 'My connections', 'buddyboss' );
+				$visibility_levels['friends']['label'] = __( 'My connections', 'buddyboss-platform' );
 			}
-			$visibility_levels['adminsonly']['label'] = __( 'Only me', 'buddyboss' );
+			$visibility_levels['adminsonly']['label'] = __( 'Only me', 'buddyboss-platform' );
 
 			return $visibility_levels;
 		}
@@ -4386,7 +4407,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 */
 		public function bb_rl_document_rename_and_privacy_update() {
 			$response = array(
-				'feedback' => esc_html__( 'There was a problem performing this action. Please try again.', 'buddyboss' ),
+				'feedback' => esc_html__( 'There was a problem performing this action. Please try again.', 'buddyboss-platform' ),
 			);
 
 			// Bail if not a POST action.
@@ -4400,7 +4421,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			}
 
 			if ( ! is_user_logged_in() ) {
-				$response['feedback'] = esc_html__( 'Please login to perform this action.', 'buddyboss' );
+				$response['feedback'] = esc_html__( 'Please login to perform this action.', 'buddyboss-platform' );
 				wp_send_json_error( $response );
 			}
 
@@ -4431,7 +4452,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			if ( 'document' === $type ) {
 				// Check permission.
 				if ( ! bp_document_user_can_edit( $document_id ) ) {
-					$response['feedback'] = esc_html__( 'You don\'t have permission to edit this document.', 'buddyboss' );
+					$response['feedback'] = esc_html__( 'You don\'t have permission to edit this document.', 'buddyboss-platform' );
 					wp_send_json_error( $response );
 				}
 
@@ -4442,7 +4463,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 						$result['name']    = $name;
 						$result['renamed'] = true;
 					} else {
-						$response['feedback'] = is_string( $renamed ) && '' !== $renamed ? $renamed : esc_html__( 'Failed to rename document.', 'buddyboss' );
+						$response['feedback'] = is_string( $renamed ) && '' !== $renamed ? $renamed : esc_html__( 'Failed to rename document.', 'buddyboss-platform' );
 						wp_send_json_error( $response );
 					}
 				}
@@ -4451,7 +4472,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				if ( $update_privacy && ! empty( $privacy ) ) {
 					$document_visibilities = bp_document_get_visibility_levels();
 					if ( ! array_key_exists( $privacy, $document_visibilities ) ) {
-						$response['feedback'] = esc_html__( 'Invalid privacy status.', 'buddyboss' );
+						$response['feedback'] = esc_html__( 'Invalid privacy status.', 'buddyboss-platform' );
 						wp_send_json_error( $response );
 					}
 
@@ -4498,7 +4519,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				// Handle folder type.
 				// Check permission.
 				if ( ! bp_folder_user_can_edit( $document_id ) ) {
-					$response['feedback'] = esc_html__( 'You don\'t have permission to edit this folder.', 'buddyboss' );
+					$response['feedback'] = esc_html__( 'You don\'t have permission to edit this folder.', 'buddyboss-platform' );
 					wp_send_json_error( $response );
 				}
 
@@ -4509,7 +4530,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 						$result['name']    = $name;
 						$result['renamed'] = true;
 					} else {
-						$response['feedback'] = esc_html__( 'Failed to rename folder.', 'buddyboss' );
+						$response['feedback'] = esc_html__( 'Failed to rename folder.', 'buddyboss-platform' );
 						wp_send_json_error( $response );
 					}
 				}
@@ -4518,7 +4539,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				if ( $update_privacy && ! empty( $privacy ) ) {
 					$document_visibilities = bp_document_get_visibility_levels();
 					if ( ! array_key_exists( $privacy, $document_visibilities ) ) {
-						$response['feedback'] = esc_html__( 'Invalid privacy status.', 'buddyboss' );
+						$response['feedback'] = esc_html__( 'Invalid privacy status.', 'buddyboss-platform' );
 						wp_send_json_error( $response );
 					}
 

@@ -7,6 +7,10 @@
  * @since   BuddyPress 3.0.0
  * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 ?>
 <div class="bp-manage-group-container">
 	<?php bp_get_template_part( 'groups/single/parts/admin-subnav' ); ?>

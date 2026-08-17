@@ -417,7 +417,7 @@ class Group extends BuddypressCommand {
 		}
 
 		if ( 'ids' === $formatter->format ) {
-			echo implode( ' ', $groups['groups'] ); // WPCS: XSS ok.
+			echo esc_html( implode( ' ', $groups['groups'] ) );
 		} elseif ( 'count' === $formatter->format ) {
 			$formatter->display_items( $groups['total'] );
 		} else {

@@ -20,8 +20,8 @@ defined( 'ABSPATH' ) || exit;
 bb_register_feature(
 	'reactions',
 	array(
-		'label'              => __( 'Like & Reactions', 'buddyboss' ),
-		'description'        => __( 'Allow community members to interact by liking or selecting from a variety of emotions.', 'buddyboss' ),
+		'label'              => __( 'Like & Reactions', 'buddyboss-platform' ),
+		'description'        => __( 'Allow community members to interact by liking or selecting from a variety of emotions.', 'buddyboss-platform' ),
 		'icon'               => array(
 			'type'  => 'font',
 			'class' => 'bb-icons-rl bb-icons-rl-thumbs-up',

@@ -209,12 +209,12 @@ class BB_DRM_Addon extends BB_Base_DRM {
 				'icon'    => $icon_url,
 				'buttons' => array(
 					'main'      => array(
-						'text'   => __( 'Activate Your License', 'buddyboss' ),
+						'text'   => __( 'Activate Your License', 'buddyboss-platform' ),
 						'url'    => $drm_info['activation_link'],
 						'target' => '_self',
 					),
 					'secondary' => array(
-						'text'   => __( 'Contact Support', 'buddyboss' ),
+						'text'   => __( 'Contact Support', 'buddyboss-platform' ),
 						'url'    => $drm_info['support_link'],
 						'target' => '_blank',
 					),

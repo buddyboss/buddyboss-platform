@@ -19,7 +19,7 @@ $bb_rl_blog_author_name = function_exists( 'bp_core_get_user_displayname' ) ? bp
 $bb_rl_blog_tags        = get_the_tags();
 
 if ( '' === trim( (string) $bb_rl_blog_author_name ) ) {
-	$bb_rl_blog_author_name = __( 'Unknown Member', 'buddyboss' );
+	$bb_rl_blog_author_name = __( 'Unknown Member', 'buddyboss-platform' );
 }
 
 // Related posts render after the comments below — keep them out of the
@@ -29,7 +29,7 @@ add_filter( 'bb_blog_suppress_related_for_theme', '__return_true' );
 <div class="bb-rl-secondary-header bb-rl-blog-single-header">
 	<a class="bb-rl-blog-single-header__back" href="<?php echo esc_url( get_post_type_archive_link( 'post' ) ); ?>">
 		<i class="bb-icons-rl bb-icons-rl-arrow-left" aria-hidden="true"></i>
-		<span class="screen-reader-text"><?php esc_html_e( 'Back to blog', 'buddyboss' ); ?></span>
+		<span class="screen-reader-text"><?php esc_html_e( 'Back to blog', 'buddyboss-platform' ); ?></span>
 	</a>
 	<span class="bb-rl-blog-single-header__crumb"><?php the_title(); ?></span>
 </div>
@@ -72,7 +72,7 @@ add_filter( 'bb_blog_suppress_related_for_theme', '__return_true' );
 		<div class="bb-rl-blog-single__info_row">
 			<?php if ( ! empty( $bb_rl_blog_categories ) && ! is_wp_error( $bb_rl_blog_categories ) ) : ?>
 				<div class="bb-rl-blog-single__categories">
-					<span class="bb-rl-blog-single__label"><i class="bb-icons-rl bb-icons-rl-folder" aria-hidden="true"></i> <?php esc_html_e( 'Categories:', 'buddyboss' ); ?></span>
+					<span class="bb-rl-blog-single__label"><i class="bb-icons-rl bb-icons-rl-folder" aria-hidden="true"></i> <?php esc_html_e( 'Categories:', 'buddyboss-platform' ); ?></span>
 					<div class="bb-rl-blog-single__category_list">
 						<?php foreach ( $bb_rl_blog_categories as $bb_rl_blog_category ) : ?>
 							<a class="bb-rl-blog-single__category" href="<?php echo esc_url( get_category_link( $bb_rl_blog_category ) ); ?>"><?php echo esc_html( $bb_rl_blog_category->name ); ?></a>
@@ -82,7 +82,7 @@ add_filter( 'bb_blog_suppress_related_for_theme', '__return_true' );
 			<?php endif; ?>
 			<?php if ( ! empty( $bb_rl_blog_tags ) && ! is_wp_error( $bb_rl_blog_tags ) ) : ?>
 				<div class="bb-rl-blog-single__tags">
-					<span class="bb-rl-blog-single__label"><i class="bb-icons-rl bb-icons-rl-tag" aria-hidden="true"></i> <?php esc_html_e( 'Tags:', 'buddyboss' ); ?></span>
+					<span class="bb-rl-blog-single__label"><i class="bb-icons-rl bb-icons-rl-tag" aria-hidden="true"></i> <?php esc_html_e( 'Tags:', 'buddyboss-platform' ); ?></span>
 					<div class="bb-rl-blog-single__tags_list">
 						<?php foreach ( $bb_rl_blog_tags as $bb_rl_blog_tag ) : ?>
 							<a class="bb-rl-blog-single__tag" href="<?php echo esc_url( get_tag_link( $bb_rl_blog_tag ) ); ?>"><?php echo esc_html( $bb_rl_blog_tag->name ); ?></a>
@@ -123,12 +123,12 @@ add_filter( 'bb_blog_suppress_related_for_theme', '__return_true' );
 		?>
 		<section class="bb-rl-blog-related-cards">
 			<div class="bb-rl-blog-related-cards__header">
-				<h2 class="bb-rl-blog-related-cards__title"><?php esc_html_e( 'Related Blogs', 'buddyboss' ); ?></h2>
+				<h2 class="bb-rl-blog-related-cards__title"><?php esc_html_e( 'Related Blogs', 'buddyboss-platform' ); ?></h2>
 				<div class="bb-rl-blog-related-cards__nav">
-					<button type="button" class="bb-rl-blog-related-cards__nav-button" data-bb-rl-related-nav="prev" aria-label="<?php esc_attr_e( 'Previous related blogs', 'buddyboss' ); ?>" disabled>
+					<button type="button" class="bb-rl-blog-related-cards__nav-button" data-bb-rl-related-nav="prev" aria-label="<?php esc_attr_e( 'Previous related blogs', 'buddyboss-platform' ); ?>" disabled>
 						<i class="bb-icons-rl bb-icons-rl-caret-left" aria-hidden="true"></i>
 					</button>
-					<button type="button" class="bb-rl-blog-related-cards__nav-button" data-bb-rl-related-nav="next" aria-label="<?php esc_attr_e( 'Next related blogs', 'buddyboss' ); ?>" disabled>
+					<button type="button" class="bb-rl-blog-related-cards__nav-button" data-bb-rl-related-nav="next" aria-label="<?php esc_attr_e( 'Next related blogs', 'buddyboss-platform' ); ?>" disabled>
 						<i class="bb-icons-rl bb-icons-rl-caret-right" aria-hidden="true"></i>
 					</button>
 				</div>

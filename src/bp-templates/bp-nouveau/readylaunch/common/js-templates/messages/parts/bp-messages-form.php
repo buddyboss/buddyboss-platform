@@ -6,6 +6,9 @@
  * @version 1.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 $os = bb_core_get_os();
 
 ?>
@@ -14,31 +17,32 @@ $os = bb_core_get_os();
 	<?php bp_nouveau_messages_hook( 'before', 'compose_content' ); ?>
 
 	<div class="bp-messages-form-header">
-		<label class="bp-new-message-heading" for="send-to-input"><?php esc_html_e( 'New Message', 'buddyboss' ); ?></label>
+		<label class="bp-new-message-heading" for="send-to-input"><?php esc_html_e( 'New Message', 'buddyboss-platform' ); ?></label>
 		<a href="#" class="bp-close-compose-form"><span class="bb-icons-rl-x"></span></a>
 	</div>
 
 	<div class="bp-messages-feedback"></div>
 
 	<div class="bp-messages-recipient">
-		<span><?php esc_html_e( 'To:', 'buddyboss' ); ?></span>
+		<span><?php esc_html_e( 'To:', 'buddyboss-platform' ); ?></span>
 
 		<select
 			name="send_to[]"
 			class="send-to-input"
 			id="send-to-input"
-			placeholder="<?php esc_html_e( 'Type the names of one or more people', 'buddyboss' ); ?>"
+			placeholder="<?php esc_html_e( 'Type the names of one or more people', 'buddyboss-platform' ); ?>"
 			autocomplete="off"
 			multiple="multiple"
 			style="width: 100%"
 		>
 			<?php
 			if ( ! empty( $_GET['r'] ) ) :
+				$recipient_slug = sanitize_text_field( wp_unslash( $_GET['r'] ) );
 
 				if ( bp_is_username_compatibility_mode() ) {
-					$user_id = bp_core_get_userid( urldecode( $_GET['r'] ) );
+					$user_id = bp_core_get_userid( urldecode( $recipient_slug ) );
 				} else {
-					$user_id = bp_core_get_userid_from_nicename( $_GET['r'] );
+					$user_id = bp_core_get_userid_from_nicename( $recipient_slug );
 				}
 				$name = bp_core_get_user_displayname( $user_id );
 				$avatar_url = bp_core_fetch_avatar(
@@ -52,7 +56,7 @@ $os = bb_core_get_os();
 					)
 				);
 				?>
-				<option value="@<?php echo esc_attr( $_GET['r'] ); ?>" selected data-action="<?php echo $user_id; ?>" data-image="<?php echo esc_url( $avatar_url ); ?>"><?php echo esc_html( $name ); ?></option>
+				<option value="@<?php echo esc_attr( $recipient_slug ); ?>" selected data-action="<?php echo esc_attr( $user_id ); ?>" data-image="<?php echo esc_url( $avatar_url ); ?>"><?php echo esc_html( $name ); ?></option>
 			<?php endif; ?>
 
 		</select>
@@ -63,11 +67,11 @@ $os = bb_core_get_os();
 	<?php
 	if ( 'mac' === $os ) {
 		?>
-		<p class="bp-message-content_foot_note"><span class="space_note"><strong><?php esc_html_e( 'Return', 'buddyboss' ); ?></strong><?php esc_html_e( ' to Send', 'buddyboss' ); ?></span><strong><?php esc_html_e( 'Shift+Return', 'buddyboss' ); ?> </strong> <?php esc_html_e( 'to add a new line', 'buddyboss' ); ?></p>
+		<p class="bp-message-content_foot_note"><span class="space_note"><strong><?php esc_html_e( 'Return', 'buddyboss-platform' ); ?></strong><?php esc_html_e( ' to Send', 'buddyboss-platform' ); ?></span><strong><?php esc_html_e( 'Shift+Return', 'buddyboss-platform' ); ?> </strong> <?php esc_html_e( 'to add a new line', 'buddyboss-platform' ); ?></p>
 		<?php
 	} elseif ( 'window' === $os ) {
 		?>
-		<p class="bp-message-content_foot_note"><span class="space_note"><strong><?php esc_html_e( 'Enter', 'buddyboss' ); ?></strong><?php esc_html_e( ' to Send', 'buddyboss' ); ?></span><strong><?php esc_html_e( 'Shift+Enter', 'buddyboss' ); ?> </strong> <?php esc_html_e( 'to add a new line', 'buddyboss' ); ?></p>
+		<p class="bp-message-content_foot_note"><span class="space_note"><strong><?php esc_html_e( 'Enter', 'buddyboss-platform' ); ?></strong><?php esc_html_e( ' to Send', 'buddyboss-platform' ); ?></span><strong><?php esc_html_e( 'Shift+Enter', 'buddyboss-platform' ); ?> </strong> <?php esc_html_e( 'to add a new line', 'buddyboss-platform' ); ?></p>
 		<?php
 	}
 	?>
@@ -75,5 +79,5 @@ $os = bb_core_get_os();
 	<?php bp_nouveau_messages_hook( 'after', 'compose_content' ); ?>
 </script>
 <script type="text/html" id="tmpl-bp-messages-form-submit">
-	<input type="button" id="bp-messages-send" class="button bp-primary-action" value="<?php esc_attr_e( 'Send', 'buddyboss' ); ?>"/>
+	<input type="button" id="bp-messages-send" class="button bp-primary-action" value="<?php esc_attr_e( 'Send', 'buddyboss-platform' ); ?>"/>
 </script>

@@ -35,7 +35,7 @@ function bb_groups_register_access_control_fields() {
 		'access_controls',
 		'member_access_controls',
 		array(
-			'title'      => __( 'Member Access Controls', 'buddyboss' ),
+			'title'      => __( 'Member Access Controls', 'buddyboss-platform' ),
 			'order'      => 10,
 			'help_url'   => '638206',
 			'pro_notice' => bb_admin_settings_get_pro_notice(
@@ -54,9 +54,9 @@ function bb_groups_register_access_control_fields() {
 		'member_access_controls',
 		array(
 			'name'              => 'bb-access-control-create-groups',
-			'label'             => __( 'Create Groups', 'buddyboss' ),
+			'label'             => __( 'Create Groups', 'buddyboss-platform' ),
 			'type'              => 'access_control',
-			'description'       => __( 'Select which members can create groups based on:', 'buddyboss' ),
+			'description'       => __( 'Select which members can create groups based on:', 'buddyboss-platform' ),
 			'default'           => '',
 			'pro_only'          => true,
 			'order'             => 10,
@@ -71,9 +71,9 @@ function bb_groups_register_access_control_fields() {
 		'member_access_controls',
 		array(
 			'name'              => 'bb-access-control-join-groups',
-			'label'             => __( 'Join Groups', 'buddyboss' ),
+			'label'             => __( 'Join Groups', 'buddyboss-platform' ),
 			'type'              => 'access_control',
-			'description'       => __( 'Select which members can join public groups or request to join private groups based on:', 'buddyboss' ),
+			'description'       => __( 'Select which members can join public groups or request to join private groups based on:', 'buddyboss-platform' ),
 			'default'           => '',
 			'pro_only'          => true,
 			'order'             => 20,
@@ -90,7 +90,7 @@ function bb_groups_register_access_control_fields() {
 			'name'        => 'bb-groups-access-control-notice',
 			'label'       => '',
 			'type'        => 'notice',
-			'description' => __( 'These settings do not apply to administrators.', 'buddyboss' ),
+			'description' => __( 'These settings do not apply to administrators.', 'buddyboss-platform' ),
 			'notice_type' => 'info',
 			'order'       => 100,
 		)

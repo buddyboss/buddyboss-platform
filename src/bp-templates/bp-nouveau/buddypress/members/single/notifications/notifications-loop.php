@@ -8,6 +8,9 @@
  * @version 1.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 if ( bp_has_notifications( bp_ajax_querystring( 'notifications' ) ) ) :
 
 	bp_nouveau_pagination( 'top' ); ?>
@@ -18,15 +21,15 @@ if ( bp_has_notifications( bp_ajax_querystring( 'notifications' ) ) ) :
 				<tr>
 					<th class="icon"></th>
 					<th class="bulk-select-all">
-						<input id="select-all-notifications" class="bs-styled-checkbox" type="checkbox" aria-label="<?php esc_attr_e( 'Select all', 'buddyboss' ); ?>" />
-						<label class="bp-screen-reader-text" for="select-all-notifications"><?php esc_html_e( 'Select all', 'buddyboss' ); ?></label>
+						<input id="select-all-notifications" class="bs-styled-checkbox" type="checkbox" aria-label="<?php esc_attr_e( 'Select all', 'buddyboss-platform' ); ?>" />
+						<label class="bp-screen-reader-text" for="select-all-notifications"><?php esc_html_e( 'Select all', 'buddyboss-platform' ); ?></label>
 					</th>
-					<th class="title"><?php esc_html_e( 'Notification', 'buddyboss' ); ?></th>
+					<th class="title"><?php esc_html_e( 'Notification', 'buddyboss-platform' ); ?></th>
 					<th class="date">
-						<?php esc_html_e( 'Date Received', 'buddyboss' ); ?>
+						<?php esc_html_e( 'Date Received', 'buddyboss-platform' ); ?>
 						<?php bp_nouveau_notifications_sort_order_links(); ?>
 					</th>
-					<th class="actions"><?php esc_html_e( 'Actions', 'buddyboss' ); ?></th>
+					<th class="actions"><?php esc_html_e( 'Actions', 'buddyboss-platform' ); ?></th>
 				</tr>
 			</thead>
 
@@ -42,7 +45,7 @@ if ( bp_has_notifications( bp_ajax_querystring( 'notifications' ) ) ) :
 						<td></td>
 						<td class="bulk-select-check">
 							<input id="<?php echo esc_attr( $bp_notification_id ); ?>" type="checkbox" name="notifications[]" value="<?php echo esc_attr( $bp_notification_id ); ?>" class="notification-check bs-styled-checkbox" data-readonly="<?php echo esc_attr( $readonly ); ?>"/>
-							<label for="<?php echo esc_attr( $bp_notification_id ); ?>"><span class="bp-screen-reader-text"><?php esc_html_e( 'Select this notification', 'buddyboss' ); ?></span></label>
+							<label for="<?php echo esc_attr( $bp_notification_id ); ?>"><span class="bp-screen-reader-text"><?php esc_html_e( 'Select this notification', 'buddyboss-platform' ); ?></span></label>
 						</td>
 						<td class="notification-description"><?php bp_the_notification_description(); ?></td>
 						<td class="notification-since"><?php bp_the_notification_time_since(); ?></td>

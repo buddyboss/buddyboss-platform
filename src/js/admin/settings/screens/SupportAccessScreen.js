@@ -226,18 +226,18 @@ export function SupportAccessScreen( { onNavigate } ) {
 					setToast( {
 						status: 'success',
 						message: value
-							? __( 'Support access enabled', 'buddyboss' )
-							: __( 'Support access disabled', 'buddyboss' ),
+							? __( 'Support access enabled', 'buddyboss-platform' )
+							: __( 'Support access disabled', 'buddyboss-platform' ),
 					} );
 				} else {
 					setToast( {
 						status: 'error',
-						message: ( res && res.data && res.data.message ) || __( 'Something went wrong.', 'buddyboss' ),
+						message: ( res && res.data && res.data.message ) || __( 'Something went wrong.', 'buddyboss-platform' ),
 					} );
 				}
 			} )
 			.catch( function ( err ) {
-				setToast( { status: 'error', message: err.message || __( 'Something went wrong.', 'buddyboss' ) } );
+				setToast( { status: 'error', message: err.message || __( 'Something went wrong.', 'buddyboss-platform' ) } );
 			} )
 			.finally( function () {
 				setIsSaving( false );
@@ -245,10 +245,10 @@ export function SupportAccessScreen( { onNavigate } ) {
 	};
 
 	var tiles = [
-		{ key: 'days',    value: pad2( countdown.days ),    label: __( 'Days', 'buddyboss' ) },
-		{ key: 'hours',   value: pad2( countdown.hours ),   label: __( 'Hours', 'buddyboss' ) },
-		{ key: 'minutes', value: pad2( countdown.minutes ), label: __( 'Minutes', 'buddyboss' ) },
-		{ key: 'seconds', value: pad2( countdown.seconds ), label: __( 'Seconds', 'buddyboss' ) },
+		{ key: 'days',    value: pad2( countdown.days ),    label: __( 'Days', 'buddyboss-platform' ) },
+		{ key: 'hours',   value: pad2( countdown.hours ),   label: __( 'Hours', 'buddyboss-platform' ) },
+		{ key: 'minutes', value: pad2( countdown.minutes ), label: __( 'Minutes', 'buddyboss-platform' ) },
+		{ key: 'seconds', value: pad2( countdown.seconds ), label: __( 'Seconds', 'buddyboss-platform' ) },
 	];
 
 	return (
@@ -264,7 +264,7 @@ export function SupportAccessScreen( { onNavigate } ) {
 						aria-hidden="true"
 					></i>
 					<span className="bb-admin-support-access__back-label">
-						{ __( 'Back', 'buddyboss' ) }
+						{ __( 'Back', 'buddyboss-platform' ) }
 					</span>
 				</button>
 
@@ -279,10 +279,10 @@ export function SupportAccessScreen( { onNavigate } ) {
 				<section className={ 'bb-admin-support-access__enable-card ' + (!enabled ? 'bb-admin-support-access__enable-card--disabled' : '')}>
 					<div className="bb-admin-support-access__enable-text">
 						<h2 className="bb-admin-support-access__enable-title">
-							{ __( 'Enable Support Access', 'buddyboss' ) }
+							{ __( 'Enable Support Access', 'buddyboss-platform' ) }
 						</h2>
 						<p className="bb-admin-support-access__enable-desc">
-							{ __( 'Allow our support team to securely access your site using temporary credentials to troubleshoot issues. All access is logged and automatically expires based on your settings.', 'buddyboss' ) }
+							{ __( 'Allow our support team to securely access your site using temporary credentials to troubleshoot issues. All access is logged and automatically expires based on your settings.', 'buddyboss-platform' ) }
 						</p>
 					</div>
 					<div className="bb-admin-support-access__enable-toggle">
@@ -302,7 +302,7 @@ export function SupportAccessScreen( { onNavigate } ) {
 						<div className="bb-admin-support-access__row">
 							<div className="bb-admin-support-access__countdown">
 								<p className="bb-admin-support-access__countdown-label">
-									{ __( 'Support access expires in:', 'buddyboss' ) }
+									{ __( 'Support access expires in:', 'buddyboss-platform' ) }
 								</p>
 								<div className="bb-admin-support-access__countdown-tiles" role="timer" aria-live="off">
 									{ tiles.map( function ( tile ) {
@@ -322,7 +322,7 @@ export function SupportAccessScreen( { onNavigate } ) {
 						{ tickets.length > 0 && (
 							<div className="bb-admin-support-access__tickets">
 								<p className="bb-admin-support-access__tickets-label">
-									{ __( 'Attached tickets:', 'buddyboss' ) }
+									{ __( 'Attached tickets:', 'buddyboss-platform' ) }
 								</p>
 								<ul className="bb-admin-support-access__tickets-list">
 									{ tickets.map( function ( ticket ) {
@@ -330,7 +330,7 @@ export function SupportAccessScreen( { onNavigate } ) {
 											<li key={ ticket } className="bb-admin-support-access__tickets-item">
 												{ sprintf(
 													/* translators: %s: ticket number. */
-													__( 'Ticket #%s', 'buddyboss' ),
+													__( 'Ticket #%s', 'buddyboss-platform' ),
 													ticket
 												) }
 											</li>
@@ -350,10 +350,10 @@ export function SupportAccessScreen( { onNavigate } ) {
 								{ tickets.length > 0
 									? sprintf(
 										/* translators: %d: number of attached tickets. */
-										__( 'Add Another Ticket (%d)', 'buddyboss' ),
+										__( 'Add Another Ticket (%d)', 'buddyboss-platform' ),
 										tickets.length
 									)
-									: __( 'Add Ticket Number', 'buddyboss' ) }
+									: __( 'Add Ticket Number', 'buddyboss-platform' ) }
 							</Button>
 							<Button
 								variant="secondary"
@@ -361,7 +361,7 @@ export function SupportAccessScreen( { onNavigate } ) {
 								disabled={ isSaving }
 								onClick={ function () { setIsModalOpen( true ); } }
 							>
-								{ __( 'Modify Duration', 'buddyboss' ) }
+								{ __( 'Modify Duration', 'buddyboss-platform' ) }
 							</Button>
 						</div>
 					</section>
@@ -378,10 +378,10 @@ export function SupportAccessScreen( { onNavigate } ) {
 								id="bb-admin-support-access-disabled-title"
 								className="bb-admin-support-access__disabled-title"
 							>
-								{ __( 'Access is disabled', 'buddyboss' ) }
+								{ __( 'Access is disabled', 'buddyboss-platform' ) }
 							</h2>
 							<p className="bb-admin-support-access__disabled-desc">
-								{ __( 'Enable support access to set a time limit and track all support activity.', 'buddyboss' ) }
+								{ __( 'Enable support access to set a time limit and track all support activity.', 'buddyboss-platform' ) }
 							</p>
 						</div>
 					</section>
@@ -408,17 +408,17 @@ export function SupportAccessScreen( { onNavigate } ) {
 								var notice = res.data && res.data.notice;
 								setToast( {
 									status: ( notice && notice.status ) || 'success',
-									message: ( notice && notice.message ) || __( 'Access duration updated.', 'buddyboss' ),
+									message: ( notice && notice.message ) || __( 'Access duration updated.', 'buddyboss-platform' ),
 								} );
 							} else {
 								setToast( {
 									status: 'error',
-									message: ( res && res.data && res.data.message ) || __( 'Something went wrong.', 'buddyboss' ),
+									message: ( res && res.data && res.data.message ) || __( 'Something went wrong.', 'buddyboss-platform' ),
 								} );
 							}
 						} )
 						.catch( function ( err ) {
-							setToast( { status: 'error', message: err.message || __( 'Something went wrong.', 'buddyboss' ) } );
+							setToast( { status: 'error', message: err.message || __( 'Something went wrong.', 'buddyboss-platform' ) } );
 						} )
 						.finally( function () {
 							setIsSaving( false );
@@ -441,7 +441,7 @@ export function SupportAccessScreen( { onNavigate } ) {
 					setIsSaving( true );
 					// Surface a spinner toast while the request is in flight; the
 					// .then/.catch below replace it with the real outcome.
-					setToast( { status: 'saving', message: __( 'Saving ticket...', 'buddyboss' ) } );
+					setToast( { status: 'saving', message: __( 'Saving ticket...', 'buddyboss-platform' ) } );
 					// Pass the login URL the browser is holding (shown once after
 					// enable) so the server can embed it in the support system note.
 					// It is never persisted server-side; if the page was reloaded
@@ -453,17 +453,17 @@ export function SupportAccessScreen( { onNavigate } ) {
 								var notice = res.data && res.data.notice;
 								setToast( {
 									status: ( notice && notice.status ) || 'success',
-									message: ( notice && notice.message ) || __( 'Ticket added to Support Access.', 'buddyboss' ),
+									message: ( notice && notice.message ) || __( 'Ticket added to Support Access.', 'buddyboss-platform' ),
 								} );
 							} else {
 								setToast( {
 									status: 'error',
-									message: ( res && res.data && res.data.message ) || __( 'Something went wrong.', 'buddyboss' ),
+									message: ( res && res.data && res.data.message ) || __( 'Something went wrong.', 'buddyboss-platform' ),
 								} );
 							}
 						} )
 						.catch( function ( err ) {
-							setToast( { status: 'error', message: err.message || __( 'Something went wrong.', 'buddyboss' ) } );
+							setToast( { status: 'error', message: err.message || __( 'Something went wrong.', 'buddyboss-platform' ) } );
 						} )
 						.finally( function () {
 							setIsSaving( false );

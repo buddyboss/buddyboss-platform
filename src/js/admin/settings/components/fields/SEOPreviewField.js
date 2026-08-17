@@ -46,8 +46,8 @@ export function SEOPreviewField( { field, values } ) {
 	var siteUrl  = config.site_url  || '';
 	var siteIcon = config.site_icon || '';
 
-	var displayTitle = title || __( 'Your SEO title will appear here', 'buddyboss' );
-	var displayDesc  = description || __( 'Your SEO description will appear here in search results.', 'buddyboss' );
+	var displayTitle = title || __( 'Your SEO title will appear here', 'buddyboss-platform' );
+	var displayDesc  = description || __( 'Your SEO description will appear here in search results.', 'buddyboss-platform' );
 	var placeholderLetter = siteName ? siteName.charAt( 0 ).toUpperCase() : 'B';
 
 	return (

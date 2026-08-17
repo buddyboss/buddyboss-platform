@@ -8,6 +8,9 @@
  * @version 1.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 bp_nouveau_xprofile_hook( 'before', 'edit_content' );
 
 if ( bp_has_profile( 'profile_group_id=' . bp_get_current_profile_group_id() ) ) {
@@ -20,8 +23,8 @@ if ( bp_has_profile( 'profile_group_id=' . bp_get_current_profile_group_id() ) )
 			<?php
 			printf(
 			/* translators: %s = profile field group name */
-				__( 'Edit "%s" Information', 'buddyboss' ),
-				bp_get_the_profile_group_name()
+				esc_html__( 'Edit "%s" Information', 'buddyboss-platform' ),
+				bp_get_the_profile_group_name() // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- group name is pre-escaped via the wp_filter_kses filter chain; esc_html would double-encode entities such as "R&D".
 			)
 			?>
 		</h2>

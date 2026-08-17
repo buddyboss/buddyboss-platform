@@ -1,5 +1,8 @@
 <?php
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 use Behat\Gherkin\Node\PyStringNode,
 	Behat\Gherkin\Node\TableNode,
 	WP_CLI\Process;
@@ -10,7 +13,7 @@ $steps->Given(
 		$world->install_wp();
 		$dest_dir = $world->variables['RUN_DIR'] . '/wp-content/plugins/buddypress/';
 		if ( ! is_dir( $dest_dir ) ) {
-			mkdir( $dest_dir );
+			mkdir( $dest_dir ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_mkdir -- WP-CLI/Behat command context (stdout output, developer-supplied CLI args); not a web request runtime path.
 		}
 
 		$bp_src_dir = getenv( 'BP_SRC_DIR' );

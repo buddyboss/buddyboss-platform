@@ -120,8 +120,8 @@ class BB_Feature_Autoloader {
 				__METHOD__,
 				sprintf(
 					/* translators: %s: pattern */
-					__( 'Invalid regex pattern for feature class mapping: %s', 'buddyboss' ),
-					$pattern
+					esc_html__( 'Invalid regex pattern for feature class mapping: %s', 'buddyboss-platform' ),
+					esc_html( $pattern )
 				),
 				'3.0.0'
 			);

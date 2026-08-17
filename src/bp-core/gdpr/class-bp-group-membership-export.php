@@ -24,7 +24,7 @@ final class BP_Group_Membership_Export extends BP_Export {
 
 		if ( null === $instance ) {
 			$instance = new BP_Group_Membership_Export();
-			$instance->setup( 'bp_group_memberships', __( 'Group Memberships', 'buddyboss' ) );
+			$instance->setup( 'bp_group_memberships', __( 'Group Memberships', 'buddyboss-platform' ) );
 		}
 
 		return $instance;
@@ -56,7 +56,7 @@ final class BP_Group_Membership_Export extends BP_Export {
 			$group = groups_get_group( $item->group_id );
 
 			$group_id    = 'bp_group_membership';
-			$group_label = __( 'Group Membership', 'buddyboss' );
+			$group_label = __( 'Group Membership', 'buddyboss-platform' );
 			$item_id     = "{$this->exporter_name}-{$group_id}-{$item->id}";
 
 			$group_permalink = bp_get_group_permalink( $group );
@@ -64,16 +64,16 @@ final class BP_Group_Membership_Export extends BP_Export {
 			$membership_type = false;
 
 			if ( $item->user_id === $user->ID && '0' === $item->is_confirmed && '0' === $item->inviter_id ) {
-				$group_label     = __( 'Group Pending Requests', 'buddyboss' );
+				$group_label     = __( 'Group Pending Requests', 'buddyboss-platform' );
 				$membership_type = 'pending_request';
 			} elseif ( $item->user_id === $user->ID && '0' === $item->is_confirmed && '0' === $item->inviter_id ) {
-				$group_label     = __( 'Group Pending Received Invitation Requests', 'buddyboss' );
+				$group_label     = __( 'Group Pending Received Invitation Requests', 'buddyboss-platform' );
 				$membership_type = 'pending_received_invitation';
 			} elseif ( $item->inviter_id === $user->ID && '0' === $item->is_confirmed ) {
-				$group_label     = __( 'Group Pending Sent Invitation Requests', 'buddyboss' );
+				$group_label     = __( 'Group Pending Sent Invitation Requests', 'buddyboss-platform' );
 				$membership_type = 'pending_sent_invitation';
 			} elseif ( $item->user_id === $user->ID && '1' === $item->is_confirmed ) {
-				$group_label     = __( 'Group Membership', 'buddyboss' );
+				$group_label     = __( 'Group Membership', 'buddyboss-platform' );
 				$membership_type = 'membership';
 			}
 
@@ -81,15 +81,15 @@ final class BP_Group_Membership_Export extends BP_Export {
 
 			$data = array(
 				array(
-					'name'  => __( 'Group Name', 'buddyboss' ),
+					'name'  => __( 'Group Name', 'buddyboss-platform' ),
 					'value' => bp_get_group_name( $group ),
 				),
 				array(
-					'name'  => __( 'Sent Date (GMT)', 'buddyboss' ),
+					'name'  => __( 'Sent Date (GMT)', 'buddyboss-platform' ),
 					'value' => $item->date_modified,
 				),
 				array(
-					'name'  => __( 'Group URL', 'buddyboss' ),
+					'name'  => __( 'Group URL', 'buddyboss-platform' ),
 					'value' => $group_permalink,
 				),
 			);
@@ -97,7 +97,7 @@ final class BP_Group_Membership_Export extends BP_Export {
 			if ( 'pending_received_invitation' === $membership_type ) {
 				$get_user = get_userdata( $item->inviter_id );
 				$data[]   = array(
-					'name'  => __( 'Sent by', 'buddyboss' ),
+					'name'  => __( 'Sent by', 'buddyboss-platform' ),
 					'value' => $get_user->display_name,
 				);
 			}
@@ -105,14 +105,14 @@ final class BP_Group_Membership_Export extends BP_Export {
 			if ( 'pending_sent_invitation' === $membership_type ) {
 				$get_user = get_userdata( $item->user_id );
 				$data[]   = array(
-					'name'  => __( 'Sent to', 'buddyboss' ),
+					'name'  => __( 'Sent to', 'buddyboss-platform' ),
 					'value' => $get_user->display_name,
 				);
 			}
 
 			if ( ! empty( $item->comments ) ) {
 				$data[] = array(
-					'name'  => __( 'Group Comments', 'buddyboss' ),
+					'name'  => __( 'Group Comments', 'buddyboss-platform' ),
 					'value' => $item->comments,
 				);
 			}
@@ -162,15 +162,20 @@ final class BP_Group_Membership_Export extends BP_Export {
 		$query_select_count = 'COUNT(item.id)';
 		$query_where        = 'item.user_id=%d OR item.inviter_id=%d';
 
-		$offset = ( $page - 1 ) * $this->items_per_batch;
-		$limit  = "LIMIT {$this->items_per_batch} OFFSET {$offset}";
+		$items_per_batch = (int) $this->items_per_batch;
+		$offset          = ( (int) $page - 1 ) * $items_per_batch;
+		$limit           = "LIMIT {$items_per_batch} OFFSET {$offset}";
 
-		$query       = "SELECT {$query_select} FROM {$table} WHERE {$query_where} {$limit}";
+		$query = "SELECT {$query_select} FROM {$table} WHERE {$query_where} {$limit}";
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- $table is internal table name; $query_select/$query_where are hardcoded with %d placeholders; $limit uses int-cast values; $user->ID is %d-bound.
 		$query       = $wpdb->prepare( $query, $user->ID, $user->ID );
 		$query_count = "SELECT {$query_select_count} FROM {$table} WHERE {$query_where}";
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- $table is internal table name; $query_select_count/$query_where are hardcoded with %d placeholders; $user->ID is %d-bound.
 		$query_count = $wpdb->prepare( $query_count, $user->ID, $user->ID );
 
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $query_count is a $wpdb->prepare()'d statement built above.
 		$count = (int) $wpdb->get_var( $query_count );
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $query is a $wpdb->prepare()'d statement built above.
 		$items = $wpdb->get_results( $query );
 
 		return array(

@@ -215,7 +215,7 @@ module.exports = function (grunt) {
 			checktextdomain: {
 				options: {
 					correct_domain: false,
-					text_domain: ['buddyboss'],
+					text_domain: ['buddyboss-platform'],
 					keywords: [
 					'__:1,2d',
 					'_e:1,2d',
@@ -246,7 +246,7 @@ module.exports = function (grunt) {
 						domainPath: '/languages',
 						exclude: ['node_modules/*'], // List of files or directories to ignore.
 						mainFile: 'bp-loader.php',
-						potFilename: 'buddyboss.pot',
+						potFilename: 'buddyboss-platform.pot',
 						potHeaders: { // Headers to add to the generated POT file.
 							poedit: true, // Includes common Poedit headers.
 							'Last-Translator': 'BuddyBoss <support@buddyboss.com>',
@@ -272,7 +272,12 @@ module.exports = function (grunt) {
 				all: [BUILD_DIR],
 				bp_rest: [SOURCE_DIR + 'buddyboss-platform-api/'],
 				bb_icons: [SOURCE_DIR + 'bp-templates/bp-nouveau/icons/bb-icons/'],
-				composer: [ BUILD_DIR + 'composer.json', BUILD_DIR + 'composer.lock', BUILD_DIR + 'scoper.inc.php', BUILD_DIR + 'apidoc.json' ],
+				// Root composer.json SHIPS in the build (second copy:files
+				// block): the wp.org review explicitly asked for it. The npm
+				// package.json is NOT shipped — the readme's Source code
+				// section points to the public GitHub repo for the JS build
+				// tooling. Lock/build-tool files below are still stripped.
+				composer: [ BUILD_DIR + 'composer.lock', BUILD_DIR + 'scoper.inc.php', BUILD_DIR + 'apidoc.json' ],
 			},
 			copy: {
 				files: {
@@ -282,13 +287,71 @@ module.exports = function (grunt) {
 						dest: BUILD_DIR,
 						dot: true,
 						expand: true,
-						src: ['**', '!**/.{svn,git}/**', '!**/readylaunch/css/sass/**'].concat( BP_EXCLUDED_MISC )
+						src: [
+							'**',
+							'!**/.{svn,git}/**',
+							'!**/readylaunch/css/sass/**',
+							// Dev/test artifacts must not ship in the release zip
+							// (wp.org Plugin Directory "unneeded folders" rule).
+							'!vendor/myclabs/php-enum/src/PHPUnit/**',
+							'!vendor/**/tests/**',
+							'!vendor/**/test/**',
+							'!vendor/**/docs/**',
+							'!vendor/**/.github/**',
+							'!vendor/**/phpunit.xml*',
+							// Vendor package docs: README/CHANGELOG/markdown and per-package
+							// composer.json are dev metadata never read at runtime (Composer's
+							// autoloader is compiled into vendor/composer/*.php and does not
+							// consult per-package composer.json). LICENSE files MUST ship —
+							// MIT/GPL/Apache require the license text to accompany
+							// redistributed code — so they are re-included last (grunt
+							// minimatch: last matching pattern wins), which also protects
+							// any future LICENSE.md from the '*.md' glob. The plugin-root
+							// composer.json ships via the second block below.
+							'!vendor/**/README*',
+							'!vendor/**/readme*',
+							'!vendor/**/CHANGELOG*',
+							'!vendor/**/*.md',
+							'!vendor/**/composer.json',
+							'vendor/**/LICENSE*',
+							'!cli/features/**',
+							'!cli/bin/**',
+							// WP-CLI command docs: the markdown files (and the
+							// commands-manifest.json that indexes them) feed the
+							// developer docs site generator — nothing reads them at
+							// runtime, so the customer zip drops them.
+							'!cli/**/*.md',
+							'!cli/commands-manifest.json',
+							// CSS sourcemaps: dev artifacts that never belong in a
+							// customer zip. All three shipped maps are orphaned anyway
+							// (their parent CSS carries no sourceMappingURL comment):
+							// bp-nouveau/css/buddypress.css.map, bp-core/admin/css/
+							// hello.css.map, bp-core/admin/css/customizer-controls.css.map.
+							// The only referenced map (endpoints/assets/bootstrap.min.css.map)
+							// lives under endpoints/, which is excluded wholesale below.
+							'!**/*.map',
+							// Generated apiDoc REST documentation — dev artifact with no
+							// references from shipped PHP; not needed in the release zip
+							// (also removes the bundled Bootstrap glyphicons font copies).
+							// Makes the 'endpoints/**' entry in BUILD_TEST_EXTRA_STRIP_GLOBS
+							// a no-op, since the folder never reaches BUILD_DIR at all.
+							'!endpoints/**',
+							// src/composer.json is dev metadata (the compiled
+							// autoloader in vendor/composer/*.php never reads
+							// it at runtime) — keep it out of the customer zip.
+							// The plugin-ROOT composer.json DOES ship (second
+							// file block below): the wp.org review explicitly
+							// asked for it. package.json stays out; the readme
+							// Source code section links the GitHub repo for
+							// the JS build tooling.
+							'!composer.json'
+						].concat( BP_EXCLUDED_MISC )
 					},
 					{
 						dest: BUILD_DIR,
 						dot: true,
 						expand: true,
-						src: ['composer.json', '!CLAUDE.md']
+						src: [ 'composer.json' ]
 					}
 					]
 				},
@@ -305,8 +368,12 @@ module.exports = function (grunt) {
 					'**/bp-groups/**',
 					'**/bp-invites/**',
 					'**/bp-media/**',
-					'**/bp-document/**',
-					'**/bp-video/**',
+					// bp-document / bp-video are NOT imported: the components
+					// were extracted from Platform to the buddyboss-addons
+					// plugin (Phase F of the extraction). Re-importing their
+					// REST controllers here would silently recreate the
+					// directories we deleted (same rationale as the LearnDash
+					// exclusion below, PROD-9792).
 					'**/bp-members/**',
 					'**/bp-messages/**',
 					'**/bp-moderation/**',
@@ -327,7 +394,7 @@ module.exports = function (grunt) {
 					],
 					options: {
 						process : function( content ) {
-							return content.replace( /\, 'buddypress'/g, ', \'buddyboss\'' ); // update text-domain.
+							return content.replace( /\, 'buddypress'/g, ', \'buddyboss-platform\'' ); // update text-domain.
 						}
 					}
 				},
@@ -368,7 +435,7 @@ module.exports = function (grunt) {
 					],
 					options: {
 						process : function( content ) {
-							return content.replace( /\, 'buddypress'/g, ', \'buddyboss\'' ); // update text-domain.
+							return content.replace( /\, 'buddypress'/g, ', \'buddyboss-platform\'' ); // update text-domain.
 						}
 					}
 				},
@@ -388,7 +455,7 @@ module.exports = function (grunt) {
 					src: ['class-bb-rest-reactions-endpoint.php'],
 					options: {
 						process : function( content ) {
-							return content.replace( /\, 'buddypress'/g, ', \'buddyboss\'' ); // update text-domain.
+							return content.replace( /\, 'buddypress'/g, ', \'buddyboss-platform\'' ); // update text-domain.
 						}
 					}
 				},
@@ -399,7 +466,7 @@ module.exports = function (grunt) {
 					src: '**',
 					options: {
 						process : function( content ) {
-							return content.replace( /\, 'buddypress'/g, ', \'buddyboss\'' ); // update text-domain.
+							return content.replace( /\, 'buddypress'/g, ', \'buddyboss-platform\'' ); // update text-domain.
 						}
 					}
 				},
@@ -410,7 +477,7 @@ module.exports = function (grunt) {
 					src: '**',
 					options: {
 						process : function( content ) {
-							return content.replace( /\, 'buddypress'/g, ', \'buddyboss\'' ); // update text-domain.
+							return content.replace( /\, 'buddypress'/g, ', \'buddyboss-platform\'' ); // update text-domain.
 						}
 					}
 				},
@@ -421,11 +488,31 @@ module.exports = function (grunt) {
 					expand: true,
 					src: [
 						'css/**',
-						'fonts/**',
+						// Only woff2 ships (and lives in the source tree) — the
+						// bb-icons repo also exports eot/ttf/svg/woff copies,
+						// which were purged 2026-08-14. Do NOT widen this glob.
+						'fonts/*.woff2',
 						'!example.html',
 						'font-map.json',
 						'!svg/**',
 					],
+					options: {
+						// Trim the @font-face cascade in the imported CSS to
+						// woff2 (the only format we copy), so refreshed icon CSS
+						// never references eot/ttf/svg/woff files that are not there.
+						noProcess: [ '**/*.woff2', '**/*.json' ],
+						process: function ( content, srcpath ) {
+							if ( ! /\.css$/.test( srcpath ) ) {
+								return content;
+							}
+							return content
+								.replace( /src:\s*url\((['"])?[^)]*\.eot[^)]*\)\s*;/g, '' )
+								.replace( /url\((['"])?[^)]*\.eot[^)]*\)\s*format\((['"])?embedded-opentype(['"])?\)\s*,\s*/g, '' )
+								.replace( /,\s*url\((['"])?[^)]*\.ttf[^)]*\)\s*format\((['"])?truetype(['"])?\)/g, '' )
+								.replace( /,\s*url\((['"])?[^)]*\.svg[^)]*\)\s*format\((['"])?svg(['"])?\)/g, '' )
+								.replace( /,\s*url\([^)]*\)\s*format\((['"])woff\1\)/g, '' );
+						}
+					},
 				},
 			},
 			uglify: {
@@ -578,14 +665,31 @@ module.exports = function (grunt) {
 					cwd: '.',
 					stdout: true
 				},
+				// Generate the unminified-asset manifest consumed at runtime
+				// by BB_Debug_Asset_Fetcher. Runs AFTER the production push
+				// so it can stamp the manifest with the pushed commit SHA;
+				// the manifest is written into BUILD_DIR only, so it ships
+				// inside the customer zip but stays out of the production
+				// branch commit (production carries the unminified files,
+				// the zip's manifest pins back to that exact commit).
+				//
+				// Safe to run when BUILD_DIR is not a git repo (the
+				// build_test flow) — the script falls back to a sentinel
+				// SHA and the runtime fetcher refuses to act on it, so
+				// test zips gracefully degrade to .min loading.
+				generate_debug_manifest: {
+					command: 'node bin/generate-debug-manifest.js ' + BUILD_DIR + ' <%= pkg.BBVersion %>',
+					cwd: '.',
+					stdout: true
+				},
 
 				rest_api: {
-					command: 'git clone ' + bbGithubCloneUrl( 'buddyboss-platform-api' ),
+					command: 'git clone -b PROD-9826 ' + bbGithubCloneUrl( 'buddyboss-platform-api' ),
 					cwd: SOURCE_DIR,
 					stdout: false
 				},
 				rest_performance: {
-					command: 'git clone ' + bbGithubCloneUrl( 'buddyboss-platform-api' ),
+					command: 'git clone -b PROD-9826  ' + bbGithubCloneUrl( 'buddyboss-platform-api' ),
 					cwd: SOURCE_DIR,
 					stdout: false
 				},
@@ -606,7 +710,7 @@ module.exports = function (grunt) {
 				// is handled separately; the POT only carries PHP strings). WP_CLI_PHP_ARGS
 				// raises the memory limit as a safety net for other large JS.
 				makepot_wp: {
-					command: 'WP_CLI_PHP_ARGS="-d memory_limit=512M" wp i18n make-pot src/ src/languages/buddyboss.pot --domain=buddyboss --ignore-domain --exclude="node_modules/*, vendor/*, src/vendor/*, js/*, bp-core/admin/bb-settings/*/build/*"',
+					command: 'WP_CLI_PHP_ARGS="-d memory_limit=512M" wp i18n make-pot src/ src/languages/buddyboss-platform.pot --domain=buddyboss-platform --exclude="node_modules/*, vendor/*, src/vendor/*, js/*, bp-core/admin/bb-settings/*/build/*"',
 					cwd: '.',
 					stdout: true
 				},
@@ -644,7 +748,16 @@ module.exports = function (grunt) {
 			compress: {
 				main: {
 					options: {
-						archive: 'buddyboss-platform-plugin.zip'
+						archive: 'buddyboss-platform-plugin.zip',
+						// Maximum DEFLATE level (default is 6). The zip format is
+						// fixed (WordPress installs .zip only), so level 9 is the
+						// only compression lever here — squeezes the text-heavy
+						// payload (PHP, minified JS/CSS, .pot) a few % smaller for
+						// a bit more CPU at build time. configure_compress_exclusions
+						// only rewrites `.files`, so this option persists.
+						//
+						// @since BuddyBoss [BBVERSION]
+						level: 9
 					},
 					files: [{
 						src: BUILD_DIR + '**',
@@ -731,8 +844,319 @@ module.exports = function (grunt) {
 	grunt.registerTask('bp_rest', ['clean:bp_rest', 'exec:rest_api', 'copy:bp_rest_components', 'copy:bp_rest_core', 'copy:bp_rest_reactions', 'clean:bp_rest', 'apidoc' ]);
 	grunt.registerTask('bp_performance', ['clean:bp_rest', 'exec:rest_performance', 'copy:bp_rest_performance', 'copy:bp_rest_mu', 'clean:bp_rest']);
 
-	// Build task: Creates production build in BUILD_DIR, initializes git, performs build operations, then commits to production
-	grunt.registerTask('build', ['string-replace:dist', 'exec:composer', 'clean:all', 'exec:init_build_dir_git', 'exec:empty_build_dir', 'copy:files', 'clean:composer', 'exec:commit_build_to_mothership_release', 'compress', 'clean:all']);
+	// Static list of font-format dead weight to strip from the customer zip.
+	// Files remain in src/ and on the production branch — only the shipped
+	// archive drops them.  Two classes of file:
+	//
+	//   1. EOT format — only needed for IE 6-8 and shipped only as a legacy
+	//      fallback inside @font-face cascades. Modern WordPress minimums
+	//      put this years past relevance.
+	//   2. TTF copies of icon fonts that ALSO ship woff2 + woff. The browser
+	//      cascade prefers woff2 first; ttf was a 2014-era fallback for
+	//      pre-woff2 browsers. Coverage is now > 97 % globally.
+	//
+	// Excludes specific files only — never `**/*.ttf`, so that any
+	// server-side PHP/GD font stays shipped. (The PNG-avatar font is now
+	// downloaded from Google Fonts at runtime — see
+	// bb_get_default_png_avatar_font_path() — so no avatar TTF ships.)
+	//
+	// @since BuddyBoss [BBVERSION]
+	var FONT_STRIP_GLOBS = [
+		// 1. Every EOT in the build, anywhere. EOT was an IE 6-8 fallback
+		//    format. Modern WordPress minimums put this past relevance.
+		'**/*.eot',
+
+		// 2. Every WOFF in the build, anywhere. WOFF2 has been universally
+		//    supported across Chrome/Firefox/Safari/Edge since 2015-2016;
+		//    coverage is > 98 % of WP traffic globally. The few clients
+		//    that still need WOFF (iOS Safari ≤ 11, IE) get the system
+		//    font cascade as a graceful degradation. As of 2026-08-14 no
+		//    .woff files remain in the source tree at all (woff2-only);
+		//    this glob stays as a guard should a font export re-add them.
+		'**/*.woff',
+
+		// 3. Icon-font TTF/SVG/WOFF variants were REMOVED from the source
+		//    tree entirely (2026-08-14): only woff2 copies remain in
+		//    icons/fonts/ and readylaunch/icons/fonts/, and the icon CSS
+		//    @font-face cascades reference only woff2. The generic *.eot
+		//    glob above stays as a guard should a font tool re-export
+		//    legacy formats.
+
+		// 4. ALL ReadyLaunch icon-font weights MUST ship. Weight faces are
+		//    selected by computed font-weight, not by class name: main.css
+		//    applies font-weight 200/300/600 directly to icon elements
+		//    (activity reaction states, profile completion widget,
+		//    send-message hover, topic selector ::after), which loads the
+		//    Thin/Light/Duotone files even though no template uses the
+		//    .bb-icons-rl-thin/-light/-duotone modifier classes. A 2026-08-14
+		//    attempt to strip those three weights broke those icons — do not
+		//    re-add strip entries here without auditing font-weight rules in
+		//    the ReadyLaunch CSS, not just class-name usage.
+
+		// 3. Duplicate Glyphicons. endpoints/fonts/ is the actually-used set
+		//    (bootstrap.min.css references via ../fonts/). endpoints/assets/
+		//    is a byte-identical copy that nothing references.
+		'endpoints/assets/glyphicons-halflings-regular.eot',
+		'endpoints/assets/glyphicons-halflings-regular.svg',
+		'endpoints/assets/glyphicons-halflings-regular.ttf',
+		'endpoints/assets/glyphicons-halflings-regular.woff',
+		'endpoints/assets/glyphicons-halflings-regular.woff2'
+
+		// (Removed 2026-08-14: stale entries for readylaunch/assets/fonts/Inter-*.ttf
+		// — that directory no longer exists — and the legacy icon-font .svg/.ttf
+		// lists, whose files were deleted from the source tree along with all
+		// eot/svg/ttf icon-font variants. Only woff2 + woff remain on disk.)
+	];
+
+	// Compiled translation bundles and source `.po` files. WordPress fetches
+	// these on demand from translate.wordpress.org for plugins hosted on the
+	// .org repo, so shipping per-locale `.po`/`.mo` inside the zip is dead
+	// weight for the typical online install. The `.pot` template stays so
+	// translators (and third-party tooling) can derive new locales locally.
+	//
+	// Files remain in src/ and on the production branch — only the customer
+	// zip drops them. A site running entirely offline (no outbound HTTPS to
+	// translate.wordpress.org) will fall back to English on first load until
+	// an admin installs locales manually or wp-cron re-fetches.
+	//
+	// @since BuddyBoss [BBVERSION]
+	var TRANSLATION_STRIP_GLOBS = [
+		'languages/*.po',
+		'languages/*.mo'
+	];
+
+	// Dev-only build artefacts that never serve a runtime purpose for the
+	// shipped plugin: SCSS sources (consumed by `grunt sass` at build time
+	// to emit the compiled CSS that DOES ship) and CSS source maps (consumed
+	// only by browser DevTools when a developer happens to be inspecting
+	// the running plugin's compiled styles, which never happens on a
+	// customer install).
+	//
+	// Source SCSS lives in src/ and ships to the production branch so devs
+	// can edit and recompile from a checkout. The .map files reference
+	// source paths that the customer zip never had anyway, so dropping the
+	// .map causes zero functional change.
+	//
+	// No vendor SCSS / .map in the platform build dir — vendor PHP under
+	// vendor/ doesn't ship SCSS. Safe to blanket-glob both extensions.
+	//
+	// @since BuddyBoss [BBVERSION]
+	var DEV_SOURCE_STRIP_GLOBS = [
+		'**/*.scss',
+		'**/*.map'
+	];
+
+	// Extra paths dropped from the `build_test` zip only, gated by the
+	// `isBuildTestBuild` flag (the build_test marker). `endpoints/` is the
+	// apidoc output, and the CLI test-runner shell scripts are dev-only tooling
+	// — useful in the repo and the production branch, but dead weight in the free
+	// test zip. Files remain in src/ and on the production branch; only the
+	// build_test customer zip drops them.
+	//
+	// NOTE: bp-video/bp-document strip globs used to live here too (PROD-9826
+	// "paid component strip"); they were removed when the components were
+	// physically extracted to the buddyboss-addons plugin — no build ships them
+	// because src/ no longer contains them.
+	//
+	// @since BuddyBoss [BBVERSION]
+	var BUILD_TEST_EXTRA_STRIP_GLOBS = [
+		'endpoints/**',
+		'cli/bin/install-package-tests.sh',
+		'cli/bin/test.sh'
+		// NOTE: languages/*.pot deliberately SHIPS in every zip — customers
+		// translate the plugin locally (Loco Translate / Poedit) from this
+		// template, so stripping it breaks their translation workflow.
+		// Decision by the user 2026-08-14; do not re-add a .pot strip here.
+	];
+
+	// Toggled true only by the `enable_build_test_strip` task, which is wired
+	// into the `build_test` chain. When false (the default, and the production
+	// `build` path) BUILD_TEST_EXTRA_STRIP_GLOBS is ignored.
+	//
+	// @since BuddyBoss [BBVERSION]
+	var isBuildTestBuild = false;
+
+	// Mark the current run as a build_test build. Inserted into `build_test`
+	// before `configure_compress_exclusions` so only the test zip drops the
+	// BUILD_TEST_EXTRA_STRIP_GLOBS paths.
+	//
+	// @since BuddyBoss [BBVERSION]
+	grunt.registerTask( 'enable_build_test_strip', 'Flag build_test-only paths for exclusion from this test zip.', function () {
+		isBuildTestBuild = true;
+		grunt.log.writeln( '[build_test] test-zip strip enabled — build_test-only paths will be excluded from the zip.' );
+	} );
+
+	// Rewrite CSS inside BUILD_DIR to drop `url(...)` refs that would 404
+	// against fonts about to be excluded from the customer zip. Production
+	// branch keeps the original CSS (this runs AFTER the production push);
+	// only the staged BUILD_DIR copies are mutated, which then feed the
+	// compress step.
+	//
+	// Skipped silently when no font files match the strip globs in BUILD_DIR
+	// (e.g. someone runs `compress` standalone without prior copy:files).
+	//
+	// @since BuddyBoss [BBVERSION]
+	grunt.registerTask( 'strip_orphan_font_refs', 'Rewrite BUILD_DIR CSS to drop refs to about-to-be-stripped fonts.', function () {
+		var done = this.async();
+
+		// Expand FONT_STRIP_GLOBS against BUILD_DIR into concrete file paths.
+		// Each entry's path passed to the script is RELATIVE to BUILD_DIR so
+		// the script can resolve CSS-side url() references in the same frame.
+		var expanded = grunt.file.expand(
+			{ cwd: BUILD_DIR, dot: false },
+			FONT_STRIP_GLOBS
+		);
+
+		if ( expanded.length === 0 ) {
+			grunt.log.writeln( '[strip_orphan_font_refs] no matching fonts in BUILD_DIR — skipping.' );
+			return done();
+		}
+
+		grunt.util.spawn(
+			{
+				cmd:  'node',
+				args: [ 'bin/strip-orphan-font-refs.js', BUILD_DIR, expanded.join( ',' ) ],
+				opts: { stdio: 'inherit' }
+			},
+			function ( err, result, code ) {
+				if ( err || code !== 0 ) {
+					grunt.fail.warn( 'strip-orphan-font-refs failed (exit ' + code + ')' );
+				}
+				done();
+			}
+		);
+	} );
+
+	// Read the just-written debug manifest and rebuild `compress.main.files` so
+	// every paired unminified asset is excluded from the shipped zip. Customer
+	// zips ship `.min.{js,css}` only; the unminified counterparts live on the
+	// production branch and are fetched at runtime when WP_DEBUG && SCRIPT_DEBUG.
+	//
+	// Also folds in the static font-format dead weight (FONT_STRIP_GLOBS above)
+	// so the EOT + duplicate-icon-TTF + glyphicons-duplicate trim happens in
+	// the same compress pass. All stripped files remain in src/ and on the
+	// production branch; only the customer zip drops them.
+	//
+	// Idempotent and safe to skip — when the manifest is absent (someone ran
+	// `grunt compress` standalone) the existing static config is left alone
+	// and the zip contains everything in BUILD_DIR.
+	//
+	// @since BuddyBoss [BBVERSION]
+	grunt.registerTask( 'configure_compress_exclusions', 'Rebuild compress:main file list using debug-manifest pair set + static font strip list.', function () {
+		var manifestPath = BUILD_DIR + 'unminified-manifest.json';
+		var pairExclusions = [];
+
+		if ( grunt.file.exists( manifestPath ) ) {
+			var manifest = grunt.file.readJSON( manifestPath );
+			var paths    = Object.keys( manifest.files || {} );
+			pairExclusions = paths.map( function ( rel ) {
+				return '!' + BUILD_DIR + rel;
+			} );
+		} else {
+			grunt.log.warn( '[compress] ' + manifestPath + ' missing — paired unminified files will ship in the zip.' );
+		}
+
+		// Font + translation + dev-source strip globs are evaluated against
+		// the BUILD_DIR root, same as the pair exclusions. Use forward
+		// slashes regardless of host OS so minimatch works on Windows too.
+		var fontExclusions = FONT_STRIP_GLOBS.map( function ( g ) {
+			return '!' + BUILD_DIR + g;
+		} );
+		var translationExclusions = TRANSLATION_STRIP_GLOBS.map( function ( g ) {
+			return '!' + BUILD_DIR + g;
+		} );
+		var devSourceExclusions = DEV_SOURCE_STRIP_GLOBS.map( function ( g ) {
+			return '!' + BUILD_DIR + g;
+		} );
+		// build_test-only extras (e.g. the apidoc `endpoints/` output) —
+		// dropped from the test zip, kept in production.
+		var buildTestExtraExclusions = isBuildTestBuild ?
+			BUILD_TEST_EXTRA_STRIP_GLOBS.map( function ( g ) {
+				return '!' + BUILD_DIR + g;
+			} ) :
+			[];
+
+		/*
+		 * Images + woff2 fonts ship IN the zip and are served locally (WP.org
+		 * Plugin Directory guideline 8 — no remotely loaded assets). The
+		 * unminified manifest is excluded from the zip: at runtime its
+		 * presence is BB_S3_Image_Offload's "assets were stripped" marker, and
+		 * a zip with local assets must not carry it.
+		 */
+		var manifestExclusion = [ '!' + BUILD_DIR + 'unminified-manifest.json' ];
+
+		var allExclusions = pairExclusions
+			.concat( fontExclusions )
+			.concat( translationExclusions )
+			.concat( devSourceExclusions )
+			.concat( buildTestExtraExclusions )
+			.concat( manifestExclusion );
+
+		grunt.config.set( 'compress.main.files', [ {
+			src:  [ BUILD_DIR + '**' ].concat( allExclusions ),
+			dest: '.'
+		} ] );
+
+		grunt.log.writeln(
+			'[compress] excluded ' + pairExclusions.length + ' paired-unminified files + ' +
+			FONT_STRIP_GLOBS.length + ' font-strip globs + ' +
+			TRANSLATION_STRIP_GLOBS.length + ' translation globs + ' +
+			DEV_SOURCE_STRIP_GLOBS.length + ' dev-source globs + ' +
+			buildTestExtraExclusions.length + ' build_test-extra globs (endpoints) from zip; ' +
+			'images + woff2 ship locally (S3 offload strip disabled), unminified manifest excluded.'
+		);
+	} );
+
+	// Recompress the finished zip with Zopfli DEFLATE (bin/zopfli-recompress-zip.js).
+	// Same zip format, better encoder: every entry is re-deflated with Zopfli's
+	// exhaustive search, shaving ~4% off the plain level-9 archive (~400+ KB on
+	// the current plugin) with byte-identical file contents. Runs AFTER `compress`
+	// on the final buddyboss-platform-plugin.zip, in place. Slow (~1-2 min) but
+	// only runs at release-build time. Keeps the wp.org submission under the
+	// directory's 10 MB upload cap without touching any shipped content.
+	//
+	// @since BuddyBoss [BBVERSION]
+	grunt.registerTask( 'zopfli_recompress', 'Recompress buddyboss-platform-plugin.zip entries with Zopfli DEFLATE.', function () {
+		var done = this.async();
+		var zip  = 'buddyboss-platform-plugin.zip';
+		var tmp  = zip + '.zopfli-tmp';
+
+		if ( ! grunt.file.exists( zip ) ) {
+			grunt.fail.warn( '[zopfli] ' + zip + ' not found — run compress first.' );
+			return done();
+		}
+
+		grunt.util.spawn(
+			{
+				cmd:  'node',
+				args: [ 'bin/zopfli-recompress-zip.js', zip, tmp ],
+				opts: { stdio: 'inherit' }
+			},
+			function ( err, result, code ) {
+				if ( err || code !== 0 ) {
+					grunt.file.delete( tmp, { force: true } );
+					grunt.fail.warn( 'zopfli-recompress-zip failed (exit ' + code + ') — original zip left untouched.' );
+					return done();
+				}
+				var before = require( 'fs' ).statSync( zip ).size;
+				var after  = require( 'fs' ).statSync( tmp ).size;
+				if ( after >= before ) {
+					grunt.file.delete( tmp, { force: true } );
+					grunt.log.writeln( '[zopfli] no improvement (' + after + ' >= ' + before + ') — keeping original.' );
+					return done();
+				}
+				require( 'fs' ).renameSync( tmp, zip );
+				grunt.log.writeln( '[zopfli] ' + before + ' -> ' + after + ' bytes (saved ' + ( before - after ) + ').' );
+				done();
+			}
+		);
+	} );
+
+	// Build task: Creates production build in BUILD_DIR, initializes git, performs build operations, then commits to production.
+	// `exec:generate_debug_manifest` runs AFTER the production push but BEFORE compress, so the manifest ships in the
+	// customer zip while production keeps the unminified files but not the per-version manifest pointer.
+	// `configure_compress_exclusions` rewrites compress.main.files from the manifest so the zip stays in lockstep.
+	grunt.registerTask('build', ['string-replace:dist', 'exec:composer', 'clean:all', 'exec:init_build_dir_git', 'exec:empty_build_dir', 'copy:files', 'clean:composer', 'exec:commit_build_to_mothership_release', 'exec:generate_debug_manifest', 'strip_orphan_font_refs', 'configure_compress_exclusions', 'compress', 'zopfli_recompress', 'clean:all']);
 
 	// Build-test task: identical to `build` except it never touches the
 	// production branch — no git init, no fetch, no checkout, no commit,
@@ -750,7 +1174,7 @@ module.exports = function (grunt) {
 	//   7. clean:composer                  — drop dev composer state from the staged dir
 	//   8. compress                        — zip → buddyboss-platform-plugin.zip
 	//   9. clean:all                       — final tidy
-	grunt.registerTask('build_test', ['string-replace:dist', 'exec:composer', 'clean:all', 'exec:init_build_dir_clean', 'exec:empty_build_dir', 'copy:files', 'clean:composer', 'compress', 'clean:all']);
+	grunt.registerTask('build_test', ['string-replace:dist', 'exec:composer', 'clean:all', 'exec:init_build_dir_clean', 'exec:empty_build_dir', 'copy:files', 'clean:composer', 'exec:generate_debug_manifest', 'strip_orphan_font_refs', 'enable_build_test_strip', 'configure_compress_exclusions', 'compress', 'zopfli_recompress', 'clean:all']);
 
 	grunt.registerTask('release', ['src', 'build']);
 

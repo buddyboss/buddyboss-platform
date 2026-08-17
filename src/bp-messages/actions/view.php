@@ -6,6 +6,9 @@
  * @since BuddyPress 3.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 /**
  * Process a request to view a single message thread.
  */
@@ -39,9 +42,9 @@ function messages_action_conversation() {
 
 		// Send the reply.
 		if ( ! empty( $new_reply ) ) {
-			bp_core_add_message( __( 'Your reply was sent successfully', 'buddyboss' ) );
+			bp_core_add_message( __( 'Your reply was sent successfully', 'buddyboss-platform' ) );
 		} else {
-			bp_core_add_message( __( 'There was a problem sending your reply. Please try again.', 'buddyboss' ), 'error' );
+			bp_core_add_message( __( 'There was a problem sending your reply. Please try again.', 'buddyboss-platform' ), 'error' );
 		}
 
 		bp_core_redirect( bp_displayed_user_domain() . bp_get_messages_slug() . '/view/' . $thread_id . '/' );

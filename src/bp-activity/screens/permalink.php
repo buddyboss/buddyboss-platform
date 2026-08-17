@@ -6,6 +6,9 @@
  * @since BuddyPress 3.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 /**
  * Catch and route requests for single activity item permalinks.
  *
@@ -76,7 +79,7 @@ function bp_activity_action_permalink_router() {
 	// If set, add the original query string back onto the redirect URL.
 	if ( ! empty( $_SERVER['QUERY_STRING'] ) ) {
 		$query_frags = array();
-		wp_parse_str( $_SERVER['QUERY_STRING'], $query_frags );
+		wp_parse_str( sanitize_text_field( wp_unslash( $_SERVER['QUERY_STRING'] ) ), $query_frags );
 		$redirect = add_query_arg( urlencode_deep( $query_frags ), $redirect );
 	}
 
@@ -163,7 +166,7 @@ function bp_activity_screen_single_activity_permalink() {
 
 			// Redirect away.
 		} else {
-			bp_core_add_message( __( 'You do not have access to this activity.', 'buddyboss' ), 'error' );
+			bp_core_add_message( __( 'You do not have access to this activity.', 'buddyboss-platform' ), 'error' );
 			bp_core_redirect( bp_loggedin_user_domain() );
 		}
 	}

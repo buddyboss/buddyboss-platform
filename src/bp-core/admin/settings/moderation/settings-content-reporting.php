@@ -39,7 +39,7 @@ function bb_moderation_register_content_reporting_fields() {
 		'content_reporting',
 		'content_reporting',
 		array(
-			'title'    => __( 'Content Reporting', 'buddyboss' ),
+			'title'    => __( 'Content Reporting', 'buddyboss-platform' ),
 			'order'    => 10,
 			'help_url' => '636193',
 		)
@@ -52,9 +52,9 @@ function bb_moderation_register_content_reporting_fields() {
 		'content_reporting',
 		array(
 			'name'              => 'bpm_reporting_email_notification',
-			'label'             => __( 'Email Notification', 'buddyboss' ),
+			'label'             => __( 'Email Notification', 'buddyboss-platform' ),
 			'type'              => 'toggle',
-			'description'       => __( 'Notify administrators when content has been automatically hidden', 'buddyboss' ),
+			'description'       => __( 'Notify administrators when content has been automatically hidden', 'buddyboss-platform' ),
 			'default'           => bp_is_moderation_reporting_email_notification_enable( false ),
 			'sanitize_callback' => 'absint',
 			'order'             => 999,
@@ -105,7 +105,7 @@ function bb_moderation_lazy_register_content_type_fields( $feature_id ) {
 				'label'             => $type_label,
 				'type'              => 'toggle',
 				/* translators: %s: content type label (lowercase). */
-				'description'       => sprintf( __( 'Allow %s to be reported', 'buddyboss' ), strtolower( $type_label ) ),
+				'description'       => sprintf( __( 'Allow %s to be reported', 'buddyboss-platform' ), strtolower( $type_label ) ),
 				'default'           => bp_is_moderation_content_reporting_enable( false, $slug ),
 				'sanitize_callback' => 'absint',
 				'order'             => $field_order,
@@ -124,7 +124,7 @@ function bb_moderation_lazy_register_content_type_fields( $feature_id ) {
 				/* translators: %s: number input for threshold. */
 				'description'          => sprintf(
 					/* translators: 1: content type label (lowercase), 2: threshold number input placeholder. */
-					__( 'Auto hide %1$s after %2$s reports', 'buddyboss' ),
+					__( 'Auto hide %1$s after %2$s reports', 'buddyboss-platform' ),
 					strtolower( $type_label ),
 					'%s'
 				),

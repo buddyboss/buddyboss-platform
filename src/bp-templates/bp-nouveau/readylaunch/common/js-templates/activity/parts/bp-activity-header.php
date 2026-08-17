@@ -17,12 +17,12 @@ defined( 'ABSPATH' ) || exit;
 		<span class="activity-header-data">
 			<# if ( data.edit_activity === true ) {  #>
 				<# if ( data.activity_action_type === 'scheduled' ) {  #>
-					<?php esc_html_e( 'Edit Scheduled Post', 'buddyboss' ); ?>
+					<?php esc_html_e( 'Edit Scheduled Post', 'buddyboss-platform' ); ?>
 				<# } else { #>
-					<?php esc_html_e( 'Edit post', 'buddyboss' ); ?>
+					<?php esc_html_e( 'Edit post', 'buddyboss-platform' ); ?>
 				<# } #>
 			<# } else { #>
-				<?php esc_html_e( 'Create a post', 'buddyboss' ); ?>
+				<?php esc_html_e( 'Create a post', 'buddyboss-platform' ); ?>
 			<# } #>
 		<span>
 	</h3>

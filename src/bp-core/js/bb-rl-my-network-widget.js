@@ -27,7 +27,7 @@ function my_network_click_handler() {
 			jQuery.post(
 				ajaxurl,
 				{
-					action       : 'widget_follow_my_network',
+					action       : 'bb_widget_follow_my_network',
 					'cookie'     : encodeURIComponent( document.cookie ),
 					'_wpnonce'   : jQuery( currentWidget ).find( 'input#_wpnonce-follow-my-network' ).val(),
 					'max-members': jQuery( currentWidget ).find( 'input#bb_rl_my_network_widget_max' ).val(),

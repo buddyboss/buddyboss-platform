@@ -8,6 +8,9 @@
  * @version 1.5.7
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 $bp_loggedin_user_id = bp_loggedin_user_id();
 $is_media_active     = bp_is_active( 'media' );
 $args                = array(
@@ -19,7 +22,7 @@ $args                = array(
 
 $group_members = groups_get_group_members( $args );
 $total_count   = 0;
-$all_text      = esc_html__( 'All Group Members', 'buddyboss' );
+$all_text      = esc_html__( 'All Group Members', 'buddyboss-platform' );
 
 if ( ! empty( $group_members ) && ! empty( $group_members['members'] ) ) {
 	foreach ( $group_members['members'] as $member ) {
@@ -40,7 +43,8 @@ if ( ! empty( $group_members ) && ! empty( $group_members['members'] ) ) {
 }
 
 if ( $total_count > 0 ) {
-	$all_text = sprintf( _n( '%s Member', '%s Members', $total_count, 'buddyboss' ), $total_count );
+	/* translators: %s: number of group members. */
+	$all_text = sprintf( _n( '%s Member', '%s Members', $total_count, 'buddyboss-platform' ), $total_count );
 }
 
 if ( 0 === $total_count ) {
@@ -49,7 +53,7 @@ if ( 0 === $total_count ) {
 		<div class="bp-messages-feedback bp-messages-feedback-hide">
 			<div class="bp-feedback info">
 				<span class="bp-icon" aria-hidden="true"></span>
-				<p><?php esc_html_e( 'You don\'t have access to send a private message to any member of this group.', 'buddyboss' ); ?></p>
+				<p><?php esc_html_e( 'You don\'t have access to send a private message to any member of this group.', 'buddyboss-platform' ); ?></p>
 			</div>
 		</div>
 	</div>
@@ -67,11 +71,11 @@ if ( 0 === $total_count ) {
 			<div class="bb-groups-messages-left-inner">
 				<div class="bb-panel-head">
 					<div class="bb-panel-subhead">
-						<h4 class="total-members-text"><?php esc_html_e( 'Group Members', 'buddyboss' ); ?></h4>
-						<div class="bp-group-message-wrap" data-bp-tooltip-pos="left" data-bp-tooltip="<?php esc_attr_e( 'You are not allowed to Create New Thread with all group members.', 'buddyboss' ); ?>">
+						<h4 class="total-members-text"><?php esc_html_e( 'Group Members', 'buddyboss-platform' ); ?></h4>
+						<div class="bp-group-message-wrap" data-bp-tooltip-pos="left" data-bp-tooltip="<?php esc_attr_e( 'You are not allowed to Create New Thread with all group members.', 'buddyboss-platform' ); ?>">
 							<input id="bp-group-message-switch-checkbox" class="bp-group-message-switch-checkbox bb-input-switch bs-styled-checkbox" type="checkbox">
 							<label for="bp-group-message-switch-checkbox" class="bp-group-message-label">
-								<span class="select-members-text"><?php esc_html_e( 'Select All', 'buddyboss' ); ?></span>
+								<span class="select-members-text"><?php esc_html_e( 'Select All', 'buddyboss-platform' ); ?></span>
 							</label>
 						</div>
 					</div>
@@ -85,15 +89,15 @@ if ( 0 === $total_count ) {
 				<div class="group-messages-search subnav-search clearfix" role="search">
 					<div class="bp-search">
 						<form action="" method="get" id="group_messages_search_form" class="bp-messages-search-form search-form-has-reset" data-bp-search="group-messages">
-							<label for="group_messages_search" class="bp-screen-reader-text"><?php bp_nouveau_search_default_text( __( 'Search Members', 'buddyboss' ), false ); ?></label>
-							<input type="search" id="group_messages_search" placeholder="<?php esc_attr_e( 'Search Members', 'buddyboss' ); ?>"/>
+							<label for="group_messages_search" class="bp-screen-reader-text"><?php bp_nouveau_search_default_text( __( 'Search Members', 'buddyboss-platform' ), false ); ?></label>
+							<input type="search" id="group_messages_search" placeholder="<?php esc_attr_e( 'Search Members', 'buddyboss-platform' ); ?>"/>
 							<button type="submit" id="group_messages_search_submit" class="nouveau-search-submit search-form_submit">
 								<span class="bb-icon-l bb-icon-search" aria-hidden="true"></span>
-								<span id="button-text" class="bp-screen-reader-text"><?php esc_html_e( 'Search Members', 'buddyboss' ); ?></span>
+								<span id="button-text" class="bp-screen-reader-text"><?php esc_html_e( 'Search Members', 'buddyboss-platform' ); ?></span>
 							</button>
 							<button type="reset" class="search-form_reset">
 								<span class="bb-icon-rf bb-icon-times" aria-hidden="true"></span>
-								<span class="bp-screen-reader-text"><?php esc_html_e( 'Reset', 'buddyboss' ); ?></span>
+								<span class="bp-screen-reader-text"><?php esc_html_e( 'Reset', 'buddyboss-platform' ); ?></span>
 							</button>
 						</form>
 					</div>
@@ -113,7 +117,7 @@ if ( 0 === $total_count ) {
 				</div>
 
 				<div class="bb-panel-footer">
-					<a class="bb-close-select-members button" href="#"><?php esc_html_e( 'Done', 'buddyboss' ); ?></a>
+					<a class="bb-close-select-members button" href="#"><?php esc_html_e( 'Done', 'buddyboss-platform' ); ?></a>
 				</div>
 			</div>
 		</div>
@@ -126,9 +130,9 @@ if ( 0 === $total_count ) {
 			<input type="hidden" class="count-all-members-text" value="<?php echo esc_attr( $all_text ); ?>">
 			<div class="bb-groups-messages-right-top">
 				<div class="bb-title-wrap">
-					<h2 class="bb-title"><?php esc_html_e( 'New Private Message', 'buddyboss' ); ?></h2>
-					<a class="group-messages-compose" href="javascript:void(0);"><?php esc_html_e( 'New Private Message', 'buddyboss' ); ?></a>
-					<div class="add-more-members"><a class="bb-add-members" href="#"><span class="bb-icon-rl bb-icon-plus-circle"></span><?php esc_html_e( 'Select Members', 'buddyboss' ); ?></a></div>
+					<h2 class="bb-title"><?php esc_html_e( 'New Private Message', 'buddyboss-platform' ); ?></h2>
+					<a class="group-messages-compose" href="javascript:void(0);"><?php esc_html_e( 'New Private Message', 'buddyboss-platform' ); ?></a>
+					<div class="add-more-members"><a class="bb-add-members" href="#"><span class="bb-icon-rl bb-icon-plus-circle"></span><?php esc_html_e( 'Select Members', 'buddyboss-platform' ); ?></a></div>
 				</div>
 				<div class="bp-select-members-wrap">
 					<div class="bp-messages-feedback bp-messages-feedback-hide">
@@ -138,8 +142,8 @@ if ( 0 === $total_count ) {
 						</div>
 					</div>
 					<?php if ( 0 !== $group_members['count'] ) { ?>
-						<span class="group-messages-helper-text"><?php esc_html_e( 'Send to', 'buddyboss' ); ?></span>
-						<select name="group_messages_send_to[]" class="send-to-input select2-hidden-accessible" id="group-messages-send-to-input" placeholder="<?php esc_html_e( 'Type the names of one or more people', 'buddyboss' ); ?>" autocomplete="off" multiple="" style="width: 100%" data-select2-id="group-messages-send-to-input" tabindex="-1" aria-hidden="true"></select>
+						<span class="group-messages-helper-text"><?php esc_html_e( 'Send to', 'buddyboss-platform' ); ?></span>
+						<select name="group_messages_send_to[]" class="send-to-input select2-hidden-accessible" id="group-messages-send-to-input" placeholder="<?php esc_html_e( 'Type the names of one or more people', 'buddyboss-platform' ); ?>" autocomplete="off" multiple="" style="width: 100%" data-select2-id="group-messages-send-to-input" tabindex="-1" aria-hidden="true"></select>
 					<?php } ?>
 				</div>
 			</div>
@@ -157,7 +161,7 @@ if ( 0 === $total_count ) {
 										<div class="dz-image">
 											<img data-dz-thumbnail/>
 										</div>
-										<div class="dz-error-title"><?php esc_html_e( 'Upload Failed', 'buddyboss' ); ?></div>
+										<div class="dz-error-title"><?php esc_html_e( 'Upload Failed', 'buddyboss-platform' ); ?></div>
 										<div class="dz-details">
 											<div class="dz-filename"><span data-dz-name></span></div>
 											<div class="dz-size" data-dz-size></div>
@@ -191,7 +195,7 @@ if ( 0 === $total_count ) {
 										<div class="dz-details">
 											<div class="dz-filename"><span data-dz-name></span></div>
 										</div>
-										<div class="dz-error-title"><?php esc_html_e( 'Upload Failed', 'buddyboss' ); ?></div>
+										<div class="dz-error-title"><?php esc_html_e( 'Upload Failed', 'buddyboss-platform' ); ?></div>
 										<div class="dz-progress-ring-wrap">
 											<i class="bb-icon-f bb-icon-video"></i>
 											<svg class="dz-progress-ring" width="54" height="54">
@@ -218,7 +222,7 @@ if ( 0 === $total_count ) {
 												</g>
 											</svg>
 										</div>
-										<div class="dz-progress-count"><?php esc_html_e( '0% Uploaded', 'buddyboss' ); ?></div>
+										<div class="dz-progress-count"><?php esc_html_e( '0% Uploaded', 'buddyboss-platform' ); ?></div>
 										<div class="dz-video-thumbnail"></div>
 									</div>
 								</div>
@@ -229,7 +233,7 @@ if ( 0 === $total_count ) {
 								<input name="bp_group_messages_document" id="bp_group_messages_document" type="hidden" value=""/>
 								<div class="forum-post-document-template" style="display:none;">
 									<div class="dz-preview dz-file-preview">
-										<div class="dz-error-title"><?php esc_html_e( 'Upload Failed', 'buddyboss' ); ?></div>
+										<div class="dz-error-title"><?php esc_html_e( 'Upload Failed', 'buddyboss-platform' ); ?></div>
 										<div class="dz-details">
 											<div class="dz-icon"><span class="bb-icon-l bb-icon-file"></span></div>
 											<div class="dz-filename"><span data-dz-name></span></div>
@@ -276,8 +280,8 @@ if ( 0 === $total_count ) {
 						?>
 						">
 							<?php if ( $is_media_active ) : ?>
-								<div class="post-elements-buttons-item show-toolbar" data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php esc_attr_e( 'Show formatting', 'buddyboss' ); ?>" data-bp-tooltip-show="<?php esc_html_e( 'Show formatting', 'buddyboss' ); ?>" data-bp-tooltip-hide="<?php esc_html_e( 'Hide formatting', 'buddyboss' ); ?>">
-									<a href="#" id="show-toolbar-button" class="toolbar-button bp-tooltip" aria-label="<?php esc_attr_e( 'Show formatting', 'buddyboss' ); ?>">
+								<div class="post-elements-buttons-item show-toolbar" data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php esc_attr_e( 'Show formatting', 'buddyboss-platform' ); ?>" data-bp-tooltip-show="<?php esc_html_e( 'Show formatting', 'buddyboss-platform' ); ?>" data-bp-tooltip-hide="<?php esc_html_e( 'Hide formatting', 'buddyboss-platform' ); ?>">
+									<a href="#" id="show-toolbar-button" class="toolbar-button bp-tooltip" aria-label="<?php esc_attr_e( 'Show formatting', 'buddyboss-platform' ); ?>">
 										<span class="bb-icon-l bb-icon-font"></span>
 									</a>
 								</div>
@@ -286,7 +290,7 @@ if ( 0 === $total_count ) {
 
 							if ( $is_media_active && bb_user_has_access_upload_media( $group_id, $bp_loggedin_user_id, 0, 0, 'message' ) ) : ?>
 								<div class="post-elements-buttons-item post-media media-support group-message-media-support">
-									<a href="#" id="bp-group-messages-media-button" class="toolbar-button bp-tooltip" data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php esc_attr_e( 'Attach photo', 'buddyboss' ); ?>" aria-label="<?php esc_attr_e( 'Attach photo', 'buddyboss' ); ?>">
+									<a href="#" id="bp-group-messages-media-button" class="toolbar-button bp-tooltip" data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php esc_attr_e( 'Attach photo', 'buddyboss-platform' ); ?>" aria-label="<?php esc_attr_e( 'Attach photo', 'buddyboss-platform' ); ?>">
 										<span class="bb-icon-l bb-icon-camera"></span>
 									</a>
 								</div>
@@ -297,7 +301,7 @@ if ( 0 === $total_count ) {
 							if ( $is_media_active && ! empty( $video_extensions ) && bb_user_has_access_upload_video( $group_id, $bp_loggedin_user_id, 0, 0, 'message' ) ) :
 								?>
 								<div class="post-elements-buttons-item post-video video-support">
-									<a href="#" id="bp-group-messages-video-button" class="toolbar-button bp-tooltip" data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php esc_attr_e( 'Attach video', 'buddyboss' ); ?>" aria-label="<?php esc_attr_e( 'Attach video', 'buddyboss' ); ?>">
+									<a href="#" id="bp-group-messages-video-button" class="toolbar-button bp-tooltip" data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php esc_attr_e( 'Attach video', 'buddyboss-platform' ); ?>" aria-label="<?php esc_attr_e( 'Attach video', 'buddyboss-platform' ); ?>">
 										<i class="bb-icon-l bb-icon-video"></i>
 									</a>
 								</div>
@@ -306,7 +310,7 @@ if ( 0 === $total_count ) {
 
 							if ( $is_media_active && bb_user_has_access_upload_document( $group_id, $bp_loggedin_user_id, 0, 0, 'message' ) ) : ?>
 								<div class="post-elements-buttons-item post-media document-support group-message-document-support">
-									<a href="#" id="bp-group-messages-document-button" class="toolbar-button bp-tooltip" data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php esc_attr_e( 'Attach document', 'buddyboss' ); ?>" aria-label="<?php esc_attr_e( 'Attach document', 'buddyboss' ); ?>">
+									<a href="#" id="bp-group-messages-document-button" class="toolbar-button bp-tooltip" data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php esc_attr_e( 'Attach document', 'buddyboss-platform' ); ?>" aria-label="<?php esc_attr_e( 'Attach document', 'buddyboss-platform' ); ?>">
 										<span class="bb-icon-l bb-icon-attach"></span>
 									</a>
 								</div>
@@ -316,14 +320,14 @@ if ( 0 === $total_count ) {
 							if ( $is_media_active && bb_user_has_access_upload_gif( $group_id, $bp_loggedin_user_id, 0, 0, 'message' ) ) : ?>
 								<div class="post-elements-buttons-item post-gif">
 									<div class="gif-media-search">
-										<a href="#" id="bp-group-messages-gif-button" class="toolbar-button bp-tooltip" data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php esc_attr_e( 'Choose a GIF', 'buddyboss' ); ?>" aria-label="<?php esc_attr_e( 'Choose a GIF', 'buddyboss' ); ?>">
+										<a href="#" id="bp-group-messages-gif-button" class="toolbar-button bp-tooltip" data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php esc_attr_e( 'Choose a GIF', 'buddyboss-platform' ); ?>" aria-label="<?php esc_attr_e( 'Choose a GIF', 'buddyboss-platform' ); ?>">
 											<span class="bb-icon-l bb-icon-gif"></span>
 										</a>
 										<div class="gif-media-search-dropdown">
 											<div class="bp-group-messages-attached-gif-container">
 												<div class="gif-search-content">
 													<div class="gif-search-query">
-														<input type="search" placeholder="<?php esc_html_e( 'Search GIPHY...', 'buddyboss' ); ?>" class="search-query-input"/>
+														<input type="search" placeholder="<?php esc_html_e( 'Search GIPHY...', 'buddyboss-platform' ); ?>" class="search-query-input"/>
 														<span class="search-icon"></span>
 													</div>
 													<div class="gif-search-results" id="gif-search-results">
@@ -331,12 +335,12 @@ if ( 0 === $total_count ) {
 														</ul>
 														<div class="gif-alert gif-no-results">
 															<i class="bb-icon-l bb-icon-image-slash"></i>
-															<p><?php esc_html_e( 'No results found', 'buddyboss' ); ?></p>
+															<p><?php esc_html_e( 'No results found', 'buddyboss-platform' ); ?></p>
 														</div>
 
 														<div class="gif-alert gif-no-connection">
 															<i class="bb-icon-l bb-icon-cloud-slash"></i>
-															<p><?php esc_html_e( 'Could not connect to GIPHY', 'buddyboss' ); ?></p>
+															<p><?php esc_html_e( 'Could not connect to GIPHY', 'buddyboss-platform' ); ?></p>
 														</div>
 													</div>
 												</div>
@@ -348,13 +352,13 @@ if ( 0 === $total_count ) {
 							endif;
 
 							if ( $is_media_active && bb_user_has_access_upload_emoji( $group_id, $bp_loggedin_user_id, 0, 0, 'message' ) ) : ?>
-								<div class="post-elements-buttons-item post-emoji bp-tooltip" data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php esc_attr_e( 'Emoji', 'buddyboss' ); ?>"></div>
+								<div class="post-elements-buttons-item post-emoji bp-tooltip" data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php esc_attr_e( 'Emoji', 'buddyboss-platform' ); ?>"></div>
 							<?php endif; ?>
 
 							<div id="group-messages-new-submit" class="submit">
 								<select name="group-messages-type" class="group-messages-type">
-									<option value="private"><?php esc_html_e( 'Send Individually', 'buddyboss' ); ?></option>
-									<option value="open"><?php esc_html_e( 'Create New Thread', 'buddyboss' ); ?></option>
+									<option value="private"><?php esc_html_e( 'Send Individually', 'buddyboss-platform' ); ?></option>
+									<option value="open"><?php esc_html_e( 'Create New Thread', 'buddyboss-platform' ); ?></option>
 								</select>
 								<?php
 								$disabled = '';
@@ -362,7 +366,7 @@ if ( 0 === $total_count ) {
 									$disabled = 'disabled';
 								}
 								?>
-								<button <?php echo esc_attr( $disabled ); ?> type="submit" name="send_group_message_button" id="send_group_message_button" class="small"><?php esc_html_e( 'Send Message', 'buddyboss' ); ?></button>
+								<button <?php echo esc_attr( $disabled ); ?> type="submit" name="send_group_message_button" id="send_group_message_button" class="small"><?php esc_html_e( 'Send Message', 'buddyboss-platform' ); ?></button>
 							</div>
 						</div>
 					</div>

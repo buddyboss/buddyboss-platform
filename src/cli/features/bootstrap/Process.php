@@ -67,13 +67,13 @@ class Process {
 	public function run() {
 		$start_time = microtime( true );
 
-		$proc = proc_open( $this->command, self::$descriptors, $pipes, $this->cwd, $this->env );
+		$proc = proc_open( $this->command, self::$descriptors, $pipes, $this->cwd, $this->env ); // phpcs:ignore Generic.PHP.ForbiddenFunctions.Found -- WP-CLI/Behat command context (stdout output, developer-supplied CLI args); not a web request runtime path.
 
 		$stdout = stream_get_contents( $pipes[1] );
-		fclose( $pipes[1] );
+		fclose( $pipes[1] ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose -- WP-CLI/Behat command context (stdout output, developer-supplied CLI args); not a web request runtime path.
 
 		$stderr = stream_get_contents( $pipes[2] );
-		fclose( $pipes[2] );
+		fclose( $pipes[2] ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose -- WP-CLI/Behat command context (stdout output, developer-supplied CLI args); not a web request runtime path.
 
 		$return_code = proc_close( $proc );
 
@@ -110,7 +110,7 @@ class Process {
 
 		// $r->STDERR is incorrect, but kept incorrect for backwards-compat
 		if ( $r->return_code || ! empty( $r->STDERR ) ) {
-			throw new \RuntimeException( $r );
+			throw new \RuntimeException( $r ); // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- WP-CLI/Behat command context (stdout output, developer-supplied CLI args); not a web request runtime path.
 		}
 
 		return $r;

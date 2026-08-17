@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
  * @since BuddyPress 3.0.0
  */
 function bp_nouveau_notifications_filters() {
-	echo bp_nouveau_get_notifications_filters();
+	echo bp_nouveau_get_notifications_filters(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- returns form-control markup (<select>/<option>/<input>) pre-escaped per value at construction; wp_kses_post strips the controls.
 }
 
 	/**
@@ -50,7 +50,7 @@ function bp_nouveau_notifications_filters() {
 			$output = sprintf( '<option value="%1$s" %2$s>%3$s</option>',
 				0,
 				selected( $selected, 0, false ),
-				esc_html__( '- View All -', 'buddyboss' )
+				esc_html__( '- View All -', 'buddyboss-platform' )
 			) . "\n" . $output;
 		}
 
@@ -82,8 +82,8 @@ function bp_nouveau_notifications_sort_order_links() {
 	?>
 
 	<span class="notifications-order-actions">
-		<a href="<?php echo esc_url( $desc ); ?>" class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Newest First', 'buddyboss' ); ?>" aria-label="<?php esc_attr_e( 'Newest First', 'buddyboss' ); ?>" data-bp-notifications-order="DESC"><span class="bb-icon-angle-down bb-icon-l" aria-hidden="true"></span></a>
-		<a href="<?php echo esc_url( $asc ); ?>" class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Oldest First', 'buddyboss' ); ?>" aria-label="<?php esc_attr_e( 'Oldest First', 'buddyboss' ); ?>" data-bp-notifications-order="ASC"><span class="bb-icon-angle-up bb-icon-l" aria-hidden="true"></span></a>
+		<a href="<?php echo esc_url( $desc ); ?>" class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Newest First', 'buddyboss-platform' ); ?>" aria-label="<?php esc_attr_e( 'Newest First', 'buddyboss-platform' ); ?>" data-bp-notifications-order="DESC"><span class="bb-icon-angle-down bb-icon-l" aria-hidden="true"></span></a>
+		<a href="<?php echo esc_url( $asc ); ?>" class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Oldest First', 'buddyboss-platform' ); ?>" aria-label="<?php esc_attr_e( 'Oldest First', 'buddyboss-platform' ); ?>" data-bp-notifications-order="ASC"><span class="bb-icon-angle-up bb-icon-l" aria-hidden="true"></span></a>
 	</span>
 
 	<?php
@@ -100,24 +100,24 @@ function bp_nouveau_notifications_bulk_management_dropdown() {
 	<div class="select-wrap">
 
 		<label class="bp-screen-reader-text" for="notification-select"><?php
-			esc_html_e( 'Select Bulk Action', 'buddyboss' );
+			esc_html_e( 'Select Bulk Action', 'buddyboss-platform' );
 		?></label>
 
 		<select name="notification_bulk_action" id="notification-select">
-			<option value="" selected="selected"><?php esc_html_e( 'Bulk Actions', 'buddyboss' ); ?></option>
+			<option value="" selected="selected"><?php esc_html_e( 'Bulk Actions', 'buddyboss-platform' ); ?></option>
 
 			<?php if ( bp_is_current_action( 'unread' ) ) : ?>
-				<option value="read"><?php esc_html_e( 'Mark read', 'buddyboss' ); ?></option>
+				<option value="read"><?php esc_html_e( 'Mark read', 'buddyboss-platform' ); ?></option>
 			<?php elseif ( bp_is_current_action( 'read' ) ) : ?>
-				<option value="unread"><?php esc_html_e( 'Mark unread', 'buddyboss' ); ?></option>
+				<option value="unread"><?php esc_html_e( 'Mark unread', 'buddyboss-platform' ); ?></option>
 			<?php endif; ?>
-			<option value="delete"><?php esc_html_e( 'Delete', 'buddyboss' ); ?></option>
+			<option value="delete"><?php esc_html_e( 'Delete', 'buddyboss-platform' ); ?></option>
 		</select>
 
 		<span class="select-arrow"></span>
 
 	</div><!-- // .select-wrap -->
 
-	<input type="submit" id="notification-bulk-manage" class="button action" value="<?php esc_attr_e( 'Apply', 'buddyboss' ); ?>">
+	<input type="submit" id="notification-bulk-manage" class="button action" value="<?php esc_attr_e( 'Apply', 'buddyboss-platform' ); ?>">
 	<?php
 }

@@ -9,6 +9,9 @@
  * @version 1.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 $reply_id = get_the_ID();
 ?>
 <div class="bp-search-ajax-item bp-search-ajax-item_reply">
@@ -33,7 +36,7 @@ $reply_id = get_the_ID();
 		<div class="item">
 			<div class="entry-title item-title">
 				<a href="<?php bbp_reply_url( get_the_ID() ); ?>"><?php bbp_reply_author_display_name( get_the_ID() ); ?></a>
-				<?php esc_html_e( 'replied to a discussion', 'buddyboss' ); ?>
+				<?php esc_html_e( 'replied to a discussion', 'buddyboss-platform' ); ?>
 			</div>
 			<div class="item-desc">
 				<?php echo wp_kses_post( wp_trim_words( bbp_get_reply_content( $reply_id ), 30, '...' ) ); ?>

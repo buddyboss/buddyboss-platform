@@ -6,6 +6,9 @@
  * @since BuddyPress 3.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 /**
  * Catch and process group creation form submissions.
  *
@@ -25,7 +28,7 @@ function groups_action_create_group() {
 	}
 
 	if ( ! bp_user_can_create_groups() ) {
-		bp_core_add_message( __( 'Sorry, you are not allowed to create groups.', 'buddyboss' ), 'error' );
+		bp_core_add_message( __( 'Sorry, you are not allowed to create groups.', 'buddyboss-platform' ), 'error' );
 		bp_core_redirect( bp_get_groups_directory_permalink() );
 	}
 
@@ -50,13 +53,14 @@ function groups_action_create_group() {
 
 	// If this is a creation step that is not recognized, just redirect them back to the first screen.
 	if ( bp_get_groups_current_create_step() && empty( $bp->groups->group_creation_steps[ bp_get_groups_current_create_step() ] ) ) {
-		bp_core_add_message( __( 'There was an error saving group details. Please try again.', 'buddyboss' ), 'error' );
+		bp_core_add_message( __( 'There was an error saving group details. Please try again.', 'buddyboss-platform' ), 'error' );
 		bp_core_redirect( trailingslashit( bp_get_groups_directory_permalink() . 'create' ) );
 	}
 
 	// Fetch the currently completed steps variable.
 	if ( isset( $_COOKIE['bp_completed_create_steps'] ) && ! isset( $reset_steps ) ) {
-		$bp->groups->completed_create_steps = json_decode( base64_decode( stripslashes( $_COOKIE['bp_completed_create_steps'] ) ) );
+		$completed_create_steps             = json_decode( base64_decode( wp_unslash( $_COOKIE['bp_completed_create_steps'] ) ) ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_decode
+		$bp->groups->completed_create_steps = is_array( $completed_create_steps ) ? map_deep( $completed_create_steps, 'sanitize_text_field' ) : array();
 	}
 
 	// Set the ID of the new group, if it has already been created in a previous step.
@@ -65,7 +69,7 @@ function groups_action_create_group() {
 
 		// Only allow the group creator to continue to edit the new group.
 		if ( ! bp_is_group_creator( $bp->groups->current_group, bp_loggedin_user_id() ) ) {
-			bp_core_add_message( __( 'Only the group organizer may continue editing this group.', 'buddyboss' ), 'error' );
+			bp_core_add_message( __( 'Only the group organizer may continue editing this group.', 'buddyboss-platform' ), 'error' );
 			bp_core_redirect( trailingslashit( bp_get_groups_directory_permalink() . 'create' ) );
 		}
 	}
@@ -78,7 +82,7 @@ function groups_action_create_group() {
 
 		if ( 'group-details' == bp_get_groups_current_create_step() ) {
 			if ( empty( $_POST['group-name'] ) || ! strlen( trim( $_POST['group-name'] ) ) ) {
-				bp_core_add_message( __( 'Please fill in all of the required fields', 'buddyboss' ), 'error' );
+				bp_core_add_message( __( 'Please fill in all of the required fields', 'buddyboss-platform' ), 'error' );
 				bp_core_redirect( trailingslashit( bp_get_groups_directory_permalink() . 'create/step/' . bp_get_groups_current_create_step() ) );
 			}
 
@@ -89,12 +93,12 @@ function groups_action_create_group() {
 					'group_id'     => $new_group_id,
 					'name'         => $_POST['group-name'],
 					'description'  => $_POST['group-desc'],
-					'slug'         => groups_check_slug( sanitize_title( esc_attr( $_POST['group-name'] ) ) ),
+					'slug'         => groups_check_slug( sanitize_title( wp_unslash( $_POST['group-name'] ) ) ),
 					'date_created' => bp_core_current_time(),
 					'status'       => 'public',
 				)
 			) ) {
-				bp_core_add_message( __( 'There was an error saving group details. Please try again.', 'buddyboss' ), 'error' );
+				bp_core_add_message( __( 'There was an error saving group details. Please try again.', 'buddyboss-platform' ), 'error' );
 				bp_core_redirect( trailingslashit( bp_get_groups_directory_permalink() . 'create/step/' . bp_get_groups_current_create_step() ) );
 			}
 		}
@@ -123,7 +127,7 @@ function groups_action_create_group() {
 					'parent_id'    => $parent_id,
 				)
 			) ) {
-				bp_core_add_message( __( 'There was an error saving group details. Please try again.', 'buddyboss' ), 'error' );
+				bp_core_add_message( __( 'There was an error saving group details. Please try again.', 'buddyboss-platform' ), 'error' );
 				bp_core_redirect( trailingslashit( bp_get_groups_directory_permalink() . 'create/step/' . bp_get_groups_current_create_step() ) );
 			}
 
@@ -328,11 +332,11 @@ function groups_action_create_group() {
 			return false;
 		}
 
-		$message = __( 'Invite successfully withdrawn', 'buddyboss' );
+		$message = __( 'Invite successfully withdrawn', 'buddyboss-platform' );
 		$error   = false;
 
 		if ( ! groups_uninvite_user( (int) $_REQUEST['user_id'], $bp->groups->new_group_id ) ) {
-			$message = __( 'There was an error withdrawing the invite', 'buddyboss' );
+			$message = __( 'There was an error withdrawing the invite', 'buddyboss-platform' );
 			$error   = 'error';
 		}
 
@@ -373,7 +377,7 @@ function groups_action_create_group() {
 			);
 
 			if ( ! bp_core_avatar_handle_crop( $args ) ) {
-				bp_core_add_message( __( 'There was an error with the group profile photo, please try again.', 'buddyboss' ), 'error' );
+				bp_core_add_message( __( 'There was an error with the group profile photo, please try again.', 'buddyboss-platform' ), 'error' );
 			} else {
 				/**
 				 * Fires after a group avatar is uploaded.
@@ -386,7 +390,7 @@ function groups_action_create_group() {
 				 */
 				do_action( 'groups_avatar_uploaded', bp_get_current_group_id(), 'crop', $args );
 
-				bp_core_add_message( __( 'The group profile photo was uploaded successfully.', 'buddyboss' ) );
+				bp_core_add_message( __( 'The group profile photo was uploaded successfully.', 'buddyboss-platform' ) );
 			}
 		}
 	}

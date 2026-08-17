@@ -30,7 +30,7 @@ export function ReactionMigration({ field, onStartConversion }) {
 	}
 
 	const totalReactions = migrationData.total_reactions || 0;
-	const fromMode = 'like_to_emotions_action' === migrationData.action ? __( 'Likes', 'buddyboss' ) : __( 'Reactions', 'buddyboss' );
+	const fromMode = 'like_to_emotions_action' === migrationData.action ? __( 'Likes', 'buddyboss-platform' ) : __( 'Reactions', 'buddyboss-platform' );
 
 	const handleDismiss = (e) => {
 		e.preventDefault();
@@ -70,16 +70,16 @@ export function ReactionMigration({ field, onStartConversion }) {
 				</div>
 				<div className="bb-admin-notice__content">
 					<p>
-						{__('You have ', 'buddyboss')}
+						{__('You have ', 'buddyboss-platform')}
 						<strong>{formatNumber(totalReactions)}</strong>
 						{' '}
 						{fromMode}
 						{' '}
-						{__('previously submitted on your site which can be converted to', 'buddyboss')}
+						{__('previously submitted on your site which can be converted to', 'buddyboss-platform')}
 						{' '}
 						{ 'like_to_emotions_action' === migrationData.action
-							? __('an Emotion', 'buddyboss')
-							: __('Likes', 'buddyboss')}
+							? __('an Emotion', 'buddyboss-platform')
+							: __('Likes', 'buddyboss-platform')}
 						.
 					</p>
 				</div>
@@ -89,14 +89,14 @@ export function ReactionMigration({ field, onStartConversion }) {
 						className="bb-admin-notice__button"
 						onClick={handleStartConversion}
 					>
-						{__('Start Conversion', 'buddyboss')}
+						{__('Start Conversion', 'buddyboss-platform')}
 					</button>
 				</div>
 				<button
 					type="button"
 					className="bb-admin-notice__close"
 					onClick={handleDismiss}
-					aria-label={__('Dismiss', 'buddyboss')}
+					aria-label={__('Dismiss', 'buddyboss-platform')}
 				>
 					<span className="bb-icons-rl bb-icons-rl-x" />
 				</button>

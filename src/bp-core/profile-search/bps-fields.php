@@ -88,15 +88,15 @@ class bp_ps_Fields {
 
 	public static function get_filters( $f ) {
 		$labels = array(
-			'contains'   => __( 'contains', 'buddyboss' ),
-			''           => __( 'is', 'buddyboss' ),
-			'like'       => __( 'is like', 'buddyboss' ),
-			'range'      => __( 'range', 'buddyboss' ),
-			'date_range' => __( 'date range', 'buddyboss' ),
-			'distance'   => __( 'distance', 'buddyboss' ),
-			'one_of'     => __( 'is one of', 'buddyboss' ),
-			'match_any'  => __( 'match any', 'buddyboss' ),
-			'match_all'  => __( 'match all', 'buddyboss' ),
+			'contains'   => __( 'contains', 'buddyboss-platform' ),
+			''           => __( 'is', 'buddyboss-platform' ),
+			'like'       => __( 'is like', 'buddyboss-platform' ),
+			'range'      => __( 'range', 'buddyboss-platform' ),
+			'date_range' => __( 'date range', 'buddyboss-platform' ),
+			'distance'   => __( 'distance', 'buddyboss-platform' ),
+			'one_of'     => __( 'is one of', 'buddyboss-platform' ),
+			'match_any'  => __( 'match any', 'buddyboss-platform' ),
+			'match_all'  => __( 'match all', 'buddyboss-platform' ),
 		);
 
 		$filters = array();

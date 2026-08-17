@@ -7,9 +7,13 @@
  * @since   BuddyBoss 1.2.3
  * @version 1.2.3
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 ?>
 
-<nav class="<?php bp_nouveau_single_item_subnav_classes(); ?>" id="subnav" role="navigation" aria-label="<?php esc_attr_e( 'Group administration menu', 'buddyboss' ); ?>">
+<nav class="<?php bp_nouveau_single_item_subnav_classes(); ?>" id="subnav" role="navigation" aria-label="<?php esc_attr_e( 'Group administration menu', 'buddyboss-platform' ); ?>">
 	<?php if ( bp_nouveau_has_nav( array( 'object' => 'group_invite' ) ) ) : ?>
 		<ul class="subnav">
 			<?php

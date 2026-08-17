@@ -18,19 +18,19 @@ defined( 'ABSPATH' ) || exit;
 	<div id="bb-rl-media-model-container" class="bb-rl-media-model-container">
 		<div class="bb-rl-media-model-header">
 			<h2></h2>
-			<a data-balloon-pos="left" data-balloon="<?php esc_attr_e( 'Toggle Sidebar', 'buddyboss' ); ?>" class="bb-rl-toggle-theatre-sidebar" href="#">
+			<a data-balloon-pos="left" data-balloon="<?php esc_attr_e( 'Toggle Sidebar', 'buddyboss-platform' ); ?>" class="bb-rl-toggle-theatre-sidebar" href="#">
 				<i class="bb-icons-rl-sidebar-simple"></i>
 			</a>
-			<a data-balloon-pos="left" data-balloon="<?php esc_attr_e( 'Close', 'buddyboss' ); ?>" class="bb-rl-close-media-theatre bb-rl-close-model" href="#">
+			<a data-balloon-pos="left" data-balloon="<?php esc_attr_e( 'Close', 'buddyboss-platform' ); ?>" class="bb-rl-close-media-theatre bb-rl-close-model" href="#">
 				<i class="bb-icons-rl-x"></i>
 			</a>
 		</div>
 		<div class="bb-rl-media-model-inner">
 			<div class="bb-rl-media-section">
-				<a class="bb-rl-theater-command bb-rl-prev-media" href="#previous" aria-label="<?php esc_attr_e( 'Previous', 'buddyboss' ); ?>">
+				<a class="bb-rl-theater-command bb-rl-prev-media" href="#previous" aria-label="<?php esc_attr_e( 'Previous', 'buddyboss-platform' ); ?>">
 					<i class="bb-icons-rl-caret-left"></i>
 				</a>
-				<a class="bb-rl-theater-command bb-rl-next-media" href="#next" aria-label="<?php esc_attr_e( 'Next', 'buddyboss' ); ?>">
+				<a class="bb-rl-theater-command bb-rl-next-media" href="#next" aria-label="<?php esc_attr_e( 'Next', 'buddyboss-platform' ); ?>">
 					<i class="bb-icons-rl-caret-right"></i>
 				</a>
 				<figure class="">

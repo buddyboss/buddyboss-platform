@@ -372,12 +372,14 @@ if ( ! class_exists( 'BB_Report_Metrics' ) ) {
 					)';
 				}
 
+				// phpcs:disable WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- Table names from self::$wpdb->posts/postmeta; status/post_type/meta_key are %s-prepared via placeholders below.
 				$query = self::$wpdb->prepare(
 					implode( ' ', $query_parts ),
 					array_merge( array( $post_type ), $config['status'], array( $config['meta_key'] ) )
 				);
+				// phpcs:enable WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter
 
-				$result = self::$wpdb->get_row( $query );
+				$result = self::$wpdb->get_row( $query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- $query is fully %s-prepared above.
 
 				// Validate result.
 				if ( $result && ( $result->order_count > 0 || $result->total_revenue > 0 ) ) {
@@ -408,7 +410,7 @@ if ( ! class_exists( 'BB_Report_Metrics' ) ) {
 
 				// Check if table exists.
 				$table_name   = self::$wpdb->prefix . $config['table'];
-				$table_exists = self::$wpdb->get_var( self::$wpdb->prepare( 'SHOW TABLES LIKE %s', $table_name ) );
+				$table_exists = self::$wpdb->get_var( self::$wpdb->prepare( 'SHOW TABLES LIKE %s', $table_name ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- $table_name is %s-prepared.
 				if ( ! $table_exists ) {
 					return false;
 				}
@@ -417,6 +419,7 @@ if ( ! class_exists( 'BB_Report_Metrics' ) ) {
 
 				// Build safe query with proper placeholders.
 				$amount_col = esc_sql( $config['amount_col'] );
+				// phpcs:disable WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $amount_col is esc_sql()'d column name; table via %i; status via %s placeholders.
 				$query = self::$wpdb->prepare(
 					"SELECT COUNT(*) as order_count, SUM(CAST($amount_col AS DECIMAL(10,2))) as total_revenue
 					FROM %i
@@ -425,6 +428,7 @@ if ( ! class_exists( 'BB_Report_Metrics' ) ) {
 					AND $amount_col > 0",
 					array_merge( array( $table_name ), $config['status'] )
 				);
+				// phpcs:enable WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter
 
 				$result = self::$wpdb->get_row( $query ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared
 
@@ -496,7 +500,7 @@ if ( ! class_exists( 'BB_Report_Metrics' ) ) {
 					$order_meta_table = self::$wpdb->prefix . 'wc_order_meta';
 					
 					// Check if HPOS tables exist.
-					$table_exists = self::$wpdb->get_var( self::$wpdb->prepare( 'SHOW TABLES LIKE %s', $order_table ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+					$table_exists = self::$wpdb->get_var( self::$wpdb->prepare( 'SHOW TABLES LIKE %s', $order_table ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.NotPrepared -- $order_table is %s-prepared.
 					if ( ! $table_exists ) {
 						// Fallback to legacy method if tables don't exist.
 						return self::get_woocommerce_legacy_metrics( $order_statuses );
@@ -517,7 +521,7 @@ if ( ! class_exists( 'BB_Report_Metrics' ) ) {
 					$query_args = array_merge( array( 'shop_order' ), $order_statuses );
 
 					$results = self::$wpdb->get_row( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared
-						self::$wpdb->prepare( $query, $query_args )
+						self::$wpdb->prepare( $query, $query_args ) // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- $order_table esc_sql()'d; type/status %s-prepared.
 					);
 
 					if ( $results ) {
@@ -582,7 +586,7 @@ if ( ! class_exists( 'BB_Report_Metrics' ) ) {
 			);
 
 			$results = self::$wpdb->get_row( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared
-				self::$wpdb->prepare( $query, $query_args )
+				self::$wpdb->prepare( $query, $query_args ) // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Table names from self::$wpdb->posts/postmeta; post_type/status/meta_key %s-prepared.
 			);
 
 			if ( $results ) {
@@ -627,7 +631,7 @@ if ( ! class_exists( 'BB_Report_Metrics' ) ) {
 				';
 
 				$results = self::$wpdb->get_row( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared
-					self::$wpdb->prepare( $query, $post_type, $statuses[0], $meta_key )
+					self::$wpdb->prepare( $query, $post_type, $statuses[0], $meta_key ) // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Table names from self::$wpdb->posts/postmeta; post_type/status/meta_key %s-prepared.
 				);
 
 				if ( $results ) {
@@ -660,14 +664,14 @@ if ( ! class_exists( 'BB_Report_Metrics' ) ) {
 				$table = self::$wpdb->prefix . 'mepr_transactions';
 
 				// Check if table exists.
-				$table_check = self::$wpdb->get_var( self::$wpdb->prepare( 'SHOW TABLES LIKE %s', $table ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+				$table_check = self::$wpdb->get_var( self::$wpdb->prepare( 'SHOW TABLES LIKE %s', $table ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared -- $table is %s-prepared.
 				if ( $table_check !== $table ) {
 					return false;
 				}
 
 				// Use direct query for efficiency.
 				$results = self::$wpdb->get_row( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-					self::$wpdb->prepare(
+					self::$wpdb->prepare( // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Table via %i; status via %s placeholder.
 						'SELECT COUNT(*) as order_count, SUM(amount) as total_revenue
 						FROM %i
 						WHERE status = %s
@@ -726,7 +730,7 @@ if ( ! class_exists( 'BB_Report_Metrics' ) ) {
 				$query_args = array_merge( array( $post_type ), $statuses, array( $meta_key ) );
 
 				$results = self::$wpdb->get_row( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared
-					self::$wpdb->prepare( $query, $query_args )
+					self::$wpdb->prepare( $query, $query_args ) // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Table names from self::$wpdb->posts/postmeta; post_type/status/meta_key %s-prepared.
 				);
 
 				if ( $results ) {
@@ -764,9 +768,9 @@ if ( ! class_exists( 'BB_Report_Metrics' ) ) {
 				$status_placeholders = implode( ',', array_fill( 0, count( $statuses ), '%s' ) );
 
 				// Tutor uses WooCommerce orders with special meta.
-				$results = self::$wpdb->get_row( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-					self::$wpdb->prepare(
-						'
+				// phpcs:disable WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- Table names from self::$wpdb->posts/postmeta; post_type/status/meta_key are %s-prepared via placeholders; status_placeholders is an %s list.
+				$query = self::$wpdb->prepare(
+					'
 					SELECT COUNT(DISTINCT p.ID) as order_count,
 					       SUM(CAST(pm_total.meta_value AS DECIMAL(10,2))) as total_revenue
 					FROM ' . self::$wpdb->posts . ' p
@@ -779,9 +783,11 @@ if ( ! class_exists( 'BB_Report_Metrics' ) ) {
 					AND pm_total.meta_key = %s
 					AND pm_total.meta_value > 0
 				",
-						array_merge( array( $post_type ), $statuses, array( $meta_key ) )
-					)
+					array_merge( array( $post_type ), $statuses, array( $meta_key ) )
 				);
+				// phpcs:enable WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter
+
+				$results = self::$wpdb->get_row( $query ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- $query is fully prepared above.
 
 				if ( $results ) {
 					return array(
@@ -813,14 +819,14 @@ if ( ! class_exists( 'BB_Report_Metrics' ) ) {
 				$table = self::$wpdb->prefix . 'pmpro_membership_orders';
 
 				// Check if table exists.
-				$table_check = self::$wpdb->get_var( self::$wpdb->prepare( 'SHOW TABLES LIKE %s', $table ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+				$table_check = self::$wpdb->get_var( self::$wpdb->prepare( 'SHOW TABLES LIKE %s', $table ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared -- $table is %s-prepared.
 				if ( $table_check !== $table ) {
 					return false;
 				}
 
 				// Use direct query.
 				$results = self::$wpdb->get_row( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-					self::$wpdb->prepare(
+					self::$wpdb->prepare( // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Table via %i; status via %s placeholder.
 						"SELECT COUNT(*) as order_count, SUM(total) as total_revenue
 						FROM %i
 						WHERE status = %s
@@ -866,7 +872,7 @@ if ( ! class_exists( 'BB_Report_Metrics' ) ) {
 				$table = $affiliatewp->referrals->table_name;
 
 				$results = self::$wpdb->get_row( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-					self::$wpdb->prepare(
+					self::$wpdb->prepare( // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Table via %i; status via %s placeholder.
 						"SELECT COUNT(*) as order_count, SUM(amount) as total_revenue
 						FROM %i
 						WHERE status = %s
@@ -910,9 +916,9 @@ if ( ! class_exists( 'BB_Report_Metrics' ) ) {
 				$statuses  = $config['status'];
 
 				// The Events Calendar uses custom post type for orders.
-				$results = self::$wpdb->get_row( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-					self::$wpdb->prepare(
-						'
+				// phpcs:disable WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- Table names from self::$wpdb->posts/postmeta; post_type/status/meta_key are %s-prepared via placeholders.
+				$query = self::$wpdb->prepare(
+					'
 					SELECT COUNT(*) as order_count,
 					       SUM(CAST(pm.meta_value AS DECIMAL(10,2))) as total_revenue
 					FROM ' . self::$wpdb->posts . ' p
@@ -922,11 +928,12 @@ if ( ! class_exists( 'BB_Report_Metrics' ) ) {
 					AND pm.meta_key = %s
 					AND pm.meta_value > 0
 				',
-						$post_type,
-						$statuses[0],
-						$meta_key
-					)
+					$post_type,
+					$statuses[0],
+					$meta_key
 				);
+
+				$results = self::$wpdb->get_row( $query ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- $query is fully prepared above.
 
 				if ( $results ) {
 					return array(

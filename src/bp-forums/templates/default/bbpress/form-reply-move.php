@@ -6,6 +6,9 @@
  * @package BuddyBoss\Theme
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 ?>
 
 <div id="bbpress-forums">
@@ -20,29 +23,29 @@
 
 				<fieldset class="bbp-form">
 
-					<legend><?php printf( __( 'Move reply "%s"', 'buddyboss' ), bbp_get_reply_title() ); ?></legend>
+					<legend><?php /* translators: %s: reply title. */ printf( esc_html__( 'Move reply "%s"', 'buddyboss-platform' ), esc_html( bbp_get_reply_title() ) ); ?></legend>
 
 					<div>
 
 						<div class="bp-feedback info">
 							<span class="bp-icon" aria-hidden="true"></span>
-							<p><?php _e( 'You can either make this reply a new discussion with a new title, or merge it into an existing discussion.', 'buddyboss' ); ?></p>
+							<p><?php esc_html_e( 'You can either make this reply a new discussion with a new title, or merge it into an existing discussion.', 'buddyboss-platform' ); ?></p>
 						</div>
 
 						<div class="bp-feedback info">
 							<span class="bp-icon" aria-hidden="true"></span>
-							<p><?php _e( 'If you choose an existing discussion, replies will be ordered by the time and date they were created.', 'buddyboss' ); ?></p>
+							<p><?php esc_html_e( 'If you choose an existing discussion, replies will be ordered by the time and date they were created.', 'buddyboss-platform' ); ?></p>
 						</div>
 
 						<fieldset class="bbp-form">
-							<legend><?php _e( 'Move Method', 'buddyboss' ); ?></legend>
+							<legend><?php esc_html_e( 'Move Method', 'buddyboss-platform' ); ?></legend>
 
 							<div>
 								<div class="bp-radio-wrap">
 									<input name="bbp_reply_move_option" id="bbp_reply_move_option_reply" class="bs-styled-radio" type="radio" checked="checked" value="topic" tabindex="<?php bbp_tab_index(); ?>" />
-									<label for="bbp_reply_move_option_reply"><?php printf( __( 'New discussion in <strong>%s</strong> titled:', 'buddyboss' ), bbp_get_forum_title( bbp_get_reply_forum_id( bbp_get_reply_id() ) ) ); ?></label>
+									<label for="bbp_reply_move_option_reply"><?php /* translators: %s: forum title. */ echo wp_kses_post( sprintf( __( 'New discussion in <strong>%s</strong> titled:', 'buddyboss-platform' ), esc_html( bbp_get_forum_title( bbp_get_reply_forum_id( bbp_get_reply_id() ) ) ) ) ); ?></label>
 								</div>
-								<input type="text" id="bbp_reply_move_destination_title" value="<?php printf( __( 'Moved: %s', 'buddyboss' ), bbp_get_reply_title() ); ?>" tabindex="<?php bbp_tab_index(); ?>" size="35" name="bbp_reply_move_destination_title" />
+								<input type="text" id="bbp_reply_move_destination_title" value="<?php /* translators: %s: reply title. */ printf( esc_html__( 'Moved: %s', 'buddyboss-platform' ), esc_html( bbp_get_reply_title() ) ); ?>" tabindex="<?php bbp_tab_index(); ?>" size="35" name="bbp_reply_move_destination_title" />
 							</div>
 
 							<?php
@@ -58,7 +61,7 @@
 								<div>
 									<div class="bp-radio-wrap">
 										<input name="bbp_reply_move_option" id="bbp_reply_move_option_existing" class="bs-styled-radio" type="radio" value="existing" tabindex="<?php bbp_tab_index(); ?>" />
-										<label for="bbp_reply_move_option_existing"><?php _e( 'Use an existing discussion in this forum:', 'buddyboss' ); ?></label>
+										<label for="bbp_reply_move_option_existing"><?php esc_html_e( 'Use an existing discussion in this forum:', 'buddyboss-platform' ); ?></label>
 									</div>
 
 									<?php
@@ -80,11 +83,11 @@
 
 						<div class="bp-feedback error">
 							<span class="bp-icon" aria-hidden="true"></span>
-							<p><?php _e( '<strong>WARNING:</strong> This process cannot be undone.', 'buddyboss' ); ?></p>
+							<p><?php echo wp_kses_post( __( '<strong>WARNING:</strong> This process cannot be undone.', 'buddyboss-platform' ) ); ?></p>
 						</div>
 
 						<div class="bbp-submit-wrapper">
-							<button type="submit" tabindex="<?php bbp_tab_index(); ?>" id="bbp_move_reply_submit" name="bbp_move_reply_submit" class="button submit"><?php _e( 'Submit', 'buddyboss' ); ?></button>
+							<button type="submit" tabindex="<?php bbp_tab_index(); ?>" id="bbp_move_reply_submit" name="bbp_move_reply_submit" class="button submit"><?php esc_html_e( 'Submit', 'buddyboss-platform' ); ?></button>
 						</div>
 					</div>
 
@@ -97,7 +100,7 @@
 	<?php else : ?>
 
 		<div id="no-reply-<?php bbp_reply_id(); ?>" class="bbp-no-reply">
-			<div class="entry-content"><?php is_user_logged_in() ? _e( 'You do not have the permissions to edit this reply!', 'buddyboss' ) : _e( 'You cannot edit this reply.', 'buddyboss' ); ?></div>
+			<div class="entry-content"><?php is_user_logged_in() ? esc_html_e( 'You do not have the permissions to edit this reply!', 'buddyboss-platform' ) : esc_html_e( 'You cannot edit this reply.', 'buddyboss-platform' ); ?></div>
 		</div>
 
 	<?php endif; ?>

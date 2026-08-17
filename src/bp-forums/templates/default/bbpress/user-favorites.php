@@ -6,12 +6,15 @@
  * @package BuddyBoss\Theme
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
 ?>
 
 	<?php do_action( 'bbp_template_before_user_favorites' ); ?>
 
 	<div id="bbp-user-favorites" class="bbp-user-favorites">
-		<h2 class="screen-heading favorite-topics-screen"><?php _e( 'My Favorite Discussions', 'buddyboss' ); ?></h2>
+		<h2 class="screen-heading favorite-topics-screen"><?php esc_html_e( 'My Favorite Discussions', 'buddyboss-platform' ); ?></h2>
 		<div class="bbp-user-section">
 
 			<?php if ( bbp_get_user_favorites() ) : ?>
@@ -26,7 +29,7 @@
 
 				<aside class="bp-feedback bp-messages info">
 					<span class="bp-icon" aria-hidden="true"></span>
-					<p><?php bbp_is_user_home() ? _e( 'You currently have no favorite discussions.', 'buddyboss' ) : _e( 'This user has no liked discussions.', 'buddyboss' ); ?></p>
+					<p><?php bbp_is_user_home() ? esc_html_e( 'You currently have no favorite discussions.', 'buddyboss-platform' ) : esc_html_e( 'This user has no liked discussions.', 'buddyboss-platform' ); ?></p>
 				</aside>
 
 			<?php endif; ?>
