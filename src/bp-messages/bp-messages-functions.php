@@ -992,6 +992,13 @@ function bb_messages_remove_orphaned_meta_on_cron() {
 		return;
 	}
 
+	// The messages tables are network-shared (base-prefixed), but 'bb_bg_log_clear' is
+	// scheduled per site — without this guard every subsite would run the identical
+	// sweep against the same tables. One pass from the root blog covers the network.
+	if ( is_multisite() && ! bp_is_root_blog() ) {
+		return;
+	}
+
 	/**
 	 * Filters whether the daily orphaned bp_messages_meta sweep runs.
 	 *

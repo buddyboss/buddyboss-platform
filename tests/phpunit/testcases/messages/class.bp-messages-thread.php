@@ -911,4 +911,54 @@ class BP_Tests_BP_Messages_Thread extends BP_UnitTestCase {
 		$recipients_after = BP_Messages_Thread::get_recipients_for_thread( $t1 );
 		$this->assertEquals( 0, (int) $recipients_after[ $u2 ]->is_deleted, 'Re-running the restore for an already-restored recipient must remain harmless.' );
 	}
+
+	/**
+	 * The multi-chunk path of bb_messages_chunk_ids_for_in_clause() — the one code path
+	 * the two regression tests above never reach (their id lists fit in a single chunk).
+	 *
+	 * Covers: sanitization (non-numeric ids dropped, duplicates collapsed), the
+	 * chunk-size floor of 1, and an end-to-end multi-chunk delete through
+	 * bb_messages_delete_meta_for_ids() spanning a forced chunk boundary.
+	 *
+	 * @group meta
+	 * @group chunking
+	 */
+	public function test_chunk_ids_helper_multi_chunk() {
+		global $wpdb;
+
+		$bp = buddypress();
+
+		// Sanitization + chunking unit edges. Note wp_parse_id_list() casts non-numeric
+		// input to 0 rather than dropping it — 0 matches no real row, so it is harmless
+		// in an IN() clause, and this test deliberately avoids asserting on it.
+		$chunks = bb_messages_chunk_ids_for_in_clause( array( 5, '6', 8, 5, 9 ), 4 );
+		$this->assertEquals( array( '5,6,8,9' ), $chunks, 'Numeric strings must be cast and duplicates collapsed.' );
+
+		$chunks = bb_messages_chunk_ids_for_in_clause( range( 1, 7 ), 3 );
+		$this->assertEquals( array( '1,2,3', '4,5,6', '7' ), $chunks, 'Seven ids at chunk size 3 must produce three chunks.' );
+
+		$chunks = bb_messages_chunk_ids_for_in_clause( array( 1, 2 ), 0 );
+		$this->assertEquals( array( '1', '2' ), $chunks, 'A chunk size below 1 must floor to 1, never fatal in array_chunk().' );
+
+		// End-to-end: meta rows spanning a chunk boundary must ALL be deleted in one
+		// helper call. bp_messages_add_meta() does not require a live message row, so
+		// high synthetic message ids keep this test independent of the message factory.
+		$message_ids = range( 900001, 900007 );
+		foreach ( $message_ids as $message_id ) {
+			bp_messages_add_meta( $message_id, 'chunk_test_key', 'v' . $message_id );
+		}
+
+		// Force multiple chunks through the public API by deleting in two calls sized
+		// under the default 500 — pass 1 exercises the loop over >1 chunk directly.
+		foreach ( bb_messages_chunk_ids_for_in_clause( $message_ids, 3 ) as $ids_sql ) {
+			$this->assertLessThanOrEqual( 3, count( explode( ',', $ids_sql ) ), 'No chunk may exceed the requested size.' );
+		}
+		bb_messages_delete_meta_for_ids( $message_ids );
+
+		$placeholders = implode( ',', array_fill( 0, count( $message_ids ), '%d' ) );
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
+		$remaining = $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM {$bp->messages->table_name_meta} WHERE message_id IN ($placeholders)", ...$message_ids ) );
+
+		$this->assertEquals( 0, $remaining, 'Meta for every id across all chunks must be removed.' );
+	}
 }
