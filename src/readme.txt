@@ -3,7 +3,7 @@ Contributors: buddyboss
 Requires at least: 4.9.1
 Tested up to: 6.8.1
 Requires PHP: 7.4.0
-Stable tag: 3.4.0
+Stable tag: 3.4.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,14 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 3.4.2 =
+* Bug: Activity - Added two new objects to the Activity REST API
+* Bug: Core - Fixed the issue where the addon plugin was not installing and activating automatically according to the active plan
+* Bug: Login - Fixed a server-side verification bypass that allowed CAPTCHA validation to be skipped when the response field was missing
+
+= 3.4.1 =
+* Enhancement: Core - Updated add-on listing in settings and improvements
 
 = 3.4.0 =
 * Enhancement: Improved plan and feature management, laying the groundwork for plan options
