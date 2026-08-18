@@ -143,7 +143,12 @@ class BB_Addons_Manager extends AddonsManager {
 
 		$cached_error = get_transient( $error_key );
 		if ( $cached_error instanceof Response ) {
-			return $cached_error;
+			// Same stale fallback as the live-failure path below, so readers that
+			// land inside an open backoff window (or while another request is in
+			// flight) also keep the last good catalog instead of the raw error.
+			$stale = self::bb_stale_products_response();
+
+			return null !== $stale ? $stale : $cached_error;
 		}
 
 		// A rate-limit block recorded by any licensing API call also gates this path.
@@ -253,7 +258,10 @@ class BB_Addons_Manager extends AddonsManager {
 
 		try {
 			$response = call_user_func( $client, $args );
-		} catch ( \Exception $e ) {
+		} catch ( \Throwable $e ) {
+			// \Throwable, not \Exception: the strictly-typed vendor client can raise
+			// TypeError (e.g. a malformed error payload hitting implode()), which
+			// must feed the backoff instead of fataling the transient filter.
 			// An empty message would make Response::isError() read as success and
 			// poison the success caches with an empty catalog — always supply one.
 			$message  = $e->getMessage();
