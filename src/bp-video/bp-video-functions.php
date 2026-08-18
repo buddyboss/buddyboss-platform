@@ -1031,7 +1031,6 @@ function bp_video_add_generate_thumb_background_process( $video_id ) {
 			$video->privacy,
 			array(
 				'forums',
-				'comment',
 				'message',
 			),
 			true
@@ -4619,9 +4618,22 @@ function bb_video_get_attachment_symlink( $video, $attachment_id, $size, $genera
 				}
 			} elseif ( ! $file ) {
 
-				bp_video_regenerate_attachment_thumbnails( $attachment_id );
+				$unavailable_sizes = get_post_meta( $attachment_id, '_bb_video_thumb_unavailable_sizes', true );
+				if ( ! is_array( $unavailable_sizes ) ) {
+					$unavailable_sizes = array();
+				}
 
-				$file = image_get_intermediate_size( $attachment_id, $size );
+				if ( ! in_array( $size, $unavailable_sizes, true ) ) {
+					bp_video_regenerate_attachment_thumbnails( $attachment_id );
+
+					$file = image_get_intermediate_size( $attachment_id, $size );
+
+					// The source video is too small to ever produce this size; stop retrying it on every request.
+					if ( ! $file ) {
+						$unavailable_sizes[] = $size;
+						update_post_meta( $attachment_id, '_bb_video_thumb_unavailable_sizes', $unavailable_sizes );
+					}
+				}
 
 				if ( $file && ! empty( $file['path'] ) ) {
 
