@@ -757,4 +757,208 @@ class BP_Tests_BP_Messages_Thread extends BP_UnitTestCase {
 
 		$this->set_current_user( $current_user );
 	}
+
+	/**
+	 * Regression test (PROD-10156): the thread hard-delete previously bound the whole
+	 * imploded message-id list to a single %s placeholder, so MySQL's numeric coercion
+	 * deleted meta for only the FIRST message id. Asserts every message's meta is gone.
+	 *
+	 * @group delete_thread
+	 * @group meta
+	 */
+	public function test_delete_thread_removes_meta_for_every_message() {
+		global $wpdb;
+
+		$bp = buddypress();
+
+		$u1 = self::factory()->user->create();
+		$u2 = self::factory()->user->create();
+
+		// Empty edge: the shared meta-delete helper must be a no-op (no query) for an
+		// empty id list.
+		$num_queries = $wpdb->num_queries;
+		bb_messages_delete_meta_for_ids( array() );
+		$this->assertEquals( $num_queries, $wpdb->num_queries, 'An empty id list must issue no query.' );
+
+		$m1 = self::factory()->message->create_and_get( array(
+			'sender_id'  => $u1,
+			'recipients' => array( $u2 ),
+			'subject'    => 'Foo',
+		) );
+		$t1 = $m1->thread_id;
+
+		$m2 = self::factory()->message->create_and_get( array(
+			'thread_id'  => $t1,
+			'sender_id'  => $u1,
+			'recipients' => array( $u2 ),
+			'content'    => 'Bar',
+		) );
+
+		$m3 = self::factory()->message->create_and_get( array(
+			'thread_id'  => $t1,
+			'sender_id'  => $u1,
+			'recipients' => array( $u2 ),
+			'content'    => 'Baz',
+		) );
+
+		bp_messages_add_meta( $m1->id, 'test_key', 'a' );
+		bp_messages_add_meta( $m2->id, 'test_key', 'b' );
+		bp_messages_add_meta( $m3->id, 'test_key', 'c' );
+
+		// All three messages were sent by $u1, so a single delete() call for $u1 marks every
+		// message 'bp_messages_deleted' and flips BP_Messages_Thread::delete() into its
+		// hard-delete path.
+		messages_delete_thread( $t1, $u1 );
+
+		// Idempotency edge: re-running delete on an already hard-deleted thread must
+		// remain harmless.
+		$this->assertTrue( messages_delete_thread( $t1, $u2 ) );
+
+		$remaining = $wpdb->get_var( $wpdb->prepare(
+			"SELECT COUNT(*) FROM {$bp->messages->table_name_meta} WHERE message_id IN (%d,%d,%d)",
+			$m1->id,
+			$m2->id,
+			$m3->id
+		) );
+
+		$this->assertEquals( 0, $remaining, 'Meta for every message in the thread must be removed, not just the first.' );
+	}
+
+	/**
+	 * Regression test (PROD-10156): the recipient-restore UPDATE in
+	 * BP_Messages_Thread::update_last_message_status() previously bound the whole imploded
+	 * deleted-recipient user-id list to a single %s placeholder, so MySQL's numeric coercion
+	 * restored only the FIRST id in that list.
+	 *
+	 * The is_deleted=1 precondition is seeded directly via $wpdb->update(): no current code
+	 * path sets bp_messages_recipients.is_deleted back to 1 (delete() now hard-deletes), so
+	 * seeding is the only way to exercise the restore through its documented precondition.
+	 *
+	 * The follow-up message is sent by $u2 (a deleted recipient), not $u1:
+	 * BP_Messages_Message::send() blanket-restores everyone EXCEPT the sender, so only the
+	 * sender's own row depends on update_last_message_status() — and the recipient snapshot
+	 * orders as array( $u3, $u2 ), putting $u2 in the non-first position the bug drops.
+	 *
+	 * @group restore
+	 * @group is_deleted
+	 */
+	public function test_new_message_restores_thread_for_every_deleted_recipient() {
+		global $wpdb;
+
+		$bp = buddypress();
+
+		$u1 = self::factory()->user->create(); // Original thread sender.
+		$u2 = self::factory()->user->create();
+		$u3 = self::factory()->user->create();
+
+		$message = self::factory()->message->create_and_get( array(
+			'sender_id'  => $u1,
+			'recipients' => array( $u2, $u3 ),
+			'subject'    => 'Foo',
+		) );
+		$t1 = $message->thread_id;
+
+		// Seed the "previously deleted by both recipients" precondition directly (see WHY above).
+		$wpdb->update(
+			$bp->messages->table_name_recipients,
+			array( 'is_deleted' => 1 ),
+			array(
+				'thread_id' => $t1,
+				'user_id'   => $u2,
+			)
+		);
+		$wpdb->update(
+			$bp->messages->table_name_recipients,
+			array( 'is_deleted' => 1 ),
+			array(
+				'thread_id' => $t1,
+				'user_id'   => $u3,
+			)
+		);
+
+		// Empty edge: restoring with no previously-deleted recipient issues no UPDATE.
+		$last_message = BP_Messages_Thread::get_last_message( $t1 );
+		$num_queries  = $wpdb->num_queries;
+		BP_Messages_Thread::update_last_message_status( array(
+			'thread_id'          => $t1,
+			'deleted_recipients' => array(),
+			'last_message'       => $last_message,
+		) );
+		$this->assertEquals( $num_queries, $wpdb->num_queries, 'An empty deleted-recipient list must issue no UPDATE.' );
+
+		// New message arrives, sent by $u2 (one of the two deleted recipients) -> should
+		// restore BOTH $u3 (via send()'s blanket restore) and $u2's own row (via the
+		// update_last_message_status() fix only).
+		self::factory()->message->create_and_get( array(
+			'thread_id'  => $t1,
+			'sender_id'  => $u2,
+			'recipients' => array( $u1, $u3 ),
+			'content'    => 'Bar',
+		) );
+
+		$recipients = BP_Messages_Thread::get_recipients_for_thread( $t1 );
+
+		$this->assertEquals( 0, (int) $recipients[ $u3 ]->is_deleted, '$u3 must be restored.' );
+		$this->assertEquals( 0, (int) $recipients[ $u2 ]->is_deleted, '$u2 (the second, non-first id in the deleted-recipient list) must ALSO be restored, not just the first.' );
+
+		// Idempotency edge: re-running the restore for an already-restored recipient
+		// must remain harmless.
+		BP_Messages_Thread::update_last_message_status( array(
+			'thread_id'          => $t1,
+			'deleted_recipients' => array( (object) array( 'user_id' => $u2 ) ),
+			'last_message'       => BP_Messages_Thread::get_last_message( $t1 ),
+		) );
+		$recipients_after = BP_Messages_Thread::get_recipients_for_thread( $t1 );
+		$this->assertEquals( 0, (int) $recipients_after[ $u2 ]->is_deleted, 'Re-running the restore for an already-restored recipient must remain harmless.' );
+	}
+
+	/**
+	 * The multi-chunk path of bb_messages_chunk_ids_for_in_clause() — the one code path
+	 * the two regression tests above never reach (their id lists fit in a single chunk).
+	 *
+	 * Covers: sanitization (non-numeric ids dropped, duplicates collapsed), the
+	 * chunk-size floor of 1, and an end-to-end multi-chunk delete through
+	 * bb_messages_delete_meta_for_ids() spanning a forced chunk boundary.
+	 *
+	 * @group meta
+	 * @group chunking
+	 */
+	public function test_chunk_ids_helper_multi_chunk() {
+		global $wpdb;
+
+		$bp = buddypress();
+
+		// Sanitization + chunking unit edges. Note wp_parse_id_list() casts non-numeric
+		// input to 0 rather than dropping it — 0 matches no real row, so it is harmless
+		// in an IN() clause, and this test deliberately avoids asserting on it.
+		$chunks = bb_messages_chunk_ids_for_in_clause( array( 5, '6', 8, 5, 9 ), 4 );
+		$this->assertEquals( array( '5,6,8,9' ), $chunks, 'Numeric strings must be cast and duplicates collapsed.' );
+
+		$chunks = bb_messages_chunk_ids_for_in_clause( range( 1, 7 ), 3 );
+		$this->assertEquals( array( '1,2,3', '4,5,6', '7' ), $chunks, 'Seven ids at chunk size 3 must produce three chunks.' );
+
+		$chunks = bb_messages_chunk_ids_for_in_clause( array( 1, 2 ), 0 );
+		$this->assertEquals( array( '1', '2' ), $chunks, 'A chunk size below 1 must floor to 1, never fatal in array_chunk().' );
+
+		// End-to-end: meta rows spanning a chunk boundary must ALL be deleted in one
+		// helper call. bp_messages_add_meta() does not require a live message row, so
+		// high synthetic message ids keep this test independent of the message factory.
+		$message_ids = range( 900001, 900007 );
+		foreach ( $message_ids as $message_id ) {
+			bp_messages_add_meta( $message_id, 'chunk_test_key', 'v' . $message_id );
+		}
+
+		// Force multiple chunks through the public API by deleting in two calls sized
+		// under the default 500 — pass 1 exercises the loop over >1 chunk directly.
+		foreach ( bb_messages_chunk_ids_for_in_clause( $message_ids, 3 ) as $ids_sql ) {
+			$this->assertLessThanOrEqual( 3, count( explode( ',', $ids_sql ) ), 'No chunk may exceed the requested size.' );
+		}
+		bb_messages_delete_meta_for_ids( $message_ids );
+
+		$placeholders = implode( ',', array_fill( 0, count( $message_ids ), '%d' ) );
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
+		$remaining = $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM {$bp->messages->table_name_meta} WHERE message_id IN ($placeholders)", ...$message_ids ) );
+
+		$this->assertEquals( 0, $remaining, 'Meta for every id across all chunks must be removed.' );
+	}
 }
