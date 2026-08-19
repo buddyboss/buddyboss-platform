@@ -988,7 +988,7 @@ class BBP_Topics_Widget extends WP_Widget {
 
 						<?php
 						if ( ! empty( $author_link ) ) :
-							printf( __( 'by %1$s', 'buddyboss' ), '<span class="topic-author"><a href="' . esc_url( $author_url ) . '"' . $hp_attr . '>' . bbp_get_topic_author_display_name( $topic_id ) . '</a></span>' );
+							printf( __( 'by %1$s', 'buddyboss' ), '<span class="topic-author"><a href="' . esc_url( $author_url ) . '"' . $hp_attr . '>' . bbp_get_topic_author_display_name( $topic_id ) . '</a></span>' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $hp_attr is built from esc_attr().
 						endif;
 						?>
 
@@ -1413,7 +1413,7 @@ class BBP_Replies_Widget extends WP_Widget {
 
 						<?php
 						if ( ! empty( $author_link ) ) :
-							printf( __( '%1$s on ', 'buddyboss' ), '<span class="reply-author"><a href="' . esc_url( $reply_author_url ) . '"' . $hp_attr . '>' . bbp_get_reply_author_display_name( $reply_id ) . '</a></span>' );
+							printf( __( '%1$s on ', 'buddyboss' ), '<span class="reply-author"><a href="' . esc_url( $reply_author_url ) . '"' . $hp_attr . '>' . bbp_get_reply_author_display_name( $reply_id ) . '</a></span>' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $hp_attr is built from esc_attr().
 						endif;
 
 						echo $reply_link;

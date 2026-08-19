@@ -570,14 +570,6 @@ function bp_version_updater() {
 			bb_install_addons_bundle_on_upgrade();
 		}
 
-		// DB version 23611 — purge the App API cache for members/groups so the
-		// hover-card /info endpoints stop serving payloads cached before this
-		// release (PROD-10266): old entries carry the 3-avatar member strip and
-		// never invalidate on membership changes.
-		if ( $raw_db_version < 23611 ) {
-			bb_update_to_3_4_3();
-		}
-
 		if ( $raw_db_version !== $current_db ) {
 			// @todo - Write only data manipulate migration here. ( This is not for DB structure change ).
 
@@ -4693,25 +4685,5 @@ function bb_install_addons_bundle_on_upgrade() {
 	if ( is_wp_error( $activated ) && function_exists( 'bb_error_log' ) ) {
 		// Gated on BB_DEBUG_LOG inside bb_error_log(); surfaces post-install activation failures for support.
 		bb_error_log( 'BuddyBoss Addons auto-install: installed but activation failed: ' . $activated->get_error_message() );
-	}
-}
-
-/**
- * 3.4.3 update routine.
- *
- * Purge the App API (Performance) cache for the members and groups components
- * so the hover-card /info endpoints stop serving payloads cached before this
- * release. The cached responses carry the old 3-avatar member strip (the cap
- * is now 9 and includes organizers/moderators), and these routes have no
- * membership-change invalidation, so stale entries persist until purged.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @return void
- */
-function bb_update_to_3_4_3() {
-	if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
-		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bp-groups' );
-		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bp-members' );
 	}
 }

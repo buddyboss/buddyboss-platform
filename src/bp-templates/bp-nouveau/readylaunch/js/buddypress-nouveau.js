@@ -5058,7 +5058,11 @@ window.bp = window.bp || {};
 					// Guests get 401/403 for private/hidden content and 404 for vanished records -
 					// dismiss the card instead of rendering an error balloon on hover.
 					if ( xhr && ( 401 === xhr.status || 403 === xhr.status || 404 === xhr.status ) ) {
-						bp.Nouveau.hidePopupCard();
+						// Only dismiss while still in the profile hover context - a late 4xx
+						// from a grazed avatar must not tear down the other card type.
+						if ( hoverProfileAvatar || hoverProfileCardPopup ) {
+							bp.Nouveau.hidePopupCard();
+						}
 						bp.Nouveau.currentRequestMemberId = null;
 						return;
 					}
@@ -5345,7 +5349,11 @@ window.bp = window.bp || {};
 					// Guests get 401/403 for private/hidden content and 404 for vanished records -
 					// dismiss the card instead of rendering an error balloon on hover.
 					if ( xhr && ( 401 === xhr.status || 403 === xhr.status || 404 === xhr.status ) ) {
-						bp.Nouveau.hidePopupCard();
+						// Only dismiss while still in the group hover context - a late 4xx
+						// from a grazed avatar must not tear down the other card type.
+						if ( hoverGroupAvatar || hoverGroupCardPopup ) {
+							bp.Nouveau.hidePopupCard();
+						}
 						bp.Nouveau.currentRequestGroupId = null;
 						return;
 					}

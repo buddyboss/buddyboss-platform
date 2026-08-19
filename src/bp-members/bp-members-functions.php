@@ -5602,15 +5602,12 @@ function bb_get_hover_card_profile_attr( $user_id ) {
 		return '';
 	}
 
-	if ( function_exists( 'bp_moderation_is_user_suspended' ) && bp_moderation_is_user_suspended( $user_id ) ) {
-		return '';
-	}
-
-	if ( function_exists( 'bp_moderation_is_user_blocked' ) && bp_moderation_is_user_blocked( $user_id ) ) {
-		return '';
-	}
-
-	if ( function_exists( 'bb_moderation_is_user_blocked_by' ) && bb_moderation_is_user_blocked_by( $user_id ) ) {
+	// One statically-cached merged list (suspended + viewer-hidden + blocked-by)
+	// instead of three per-member checks — widgets emit this attribute per row
+	// (including on the logged-out heartbeat), and the per-member variants each
+	// cost a query on a cold cache. The merged list runs three small queries once
+	// per request and answers every subsequent member with an array lookup.
+	if ( function_exists( 'bb_moderation_moderated_user_ids' ) && bb_moderation_moderated_user_ids( $user_id ) ) {
 		return '';
 	}
 
