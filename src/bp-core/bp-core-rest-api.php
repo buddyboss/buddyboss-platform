@@ -492,6 +492,38 @@ function bb_rest_request_for_nested_item( $request, $fields_param = '' ) {
 }
 
 /**
+ * Carry a nested item's field selection onto the request that builds it.
+ *
+ * Some controllers prepare their nested items with a request they synthesise
+ * themselves -- the media, video and document attachments listed under an
+ * activity, for one. The caller's `_fields` addresses the outer item and
+ * WordPress hands a list back whole, so it can never reach them.
+ *
+ * A controller that offers a selection of its own for those items passes that
+ * parameter's name here, and it becomes the `_fields` of the request that
+ * builds them. With the parameter absent the request is left untouched and the
+ * items are built in full, exactly as they were before.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param WP_REST_Request $nested_request Request the nested items are built with.
+ * @param WP_REST_Request $request        Full details about the caller's request.
+ * @param string          $fields_param   Name of the request parameter holding
+ *                                        the selection for the nested items.
+ *
+ * @return WP_REST_Request The nested request, for chaining.
+ */
+function bb_rest_set_nested_item_fields( $nested_request, $request, $fields_param ) {
+	$nested_fields = ( $request instanceof WP_REST_Request ) ? $request->get_param( $fields_param ) : '';
+
+	if ( ! empty( $nested_fields ) ) {
+		$nested_request->set_param( '_fields', $nested_fields );
+	}
+
+	return $nested_request;
+}
+
+/**
  * Set the global variable for the REST request.
  *
  * @param mixed $response The response data.

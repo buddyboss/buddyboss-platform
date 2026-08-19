@@ -997,7 +997,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 		$previous = array();
 		foreach ( $medias['medias'] as $media ) {
 			$previous[] = $this->prepare_response_for_collection(
-				$this->prepare_item_for_response( $media, $request )
+				$this->prepare_item_for_response( $media, bb_rest_request_for_nested_item( $request ) )
 			);
 		}
 
@@ -1120,7 +1120,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 		$previous = '';
 		foreach ( $medias['medias'] as $media ) {
 			$previous = $this->prepare_response_for_collection(
-				$this->prepare_item_for_response( $media, $request )
+				$this->prepare_item_for_response( $media, bb_rest_request_for_nested_item( $request ) )
 			);
 		}
 
@@ -1450,36 +1450,105 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function prepare_item_for_response( $media, $request ) {
-		$data = array(
-			'id'                    => $media->id,
-			'blog_id'               => $media->blog_id,
-			'attachment_id'         => $media->attachment_id,
-			'user_id'               => $media->user_id,
-			'title'                 => $media->title,
-			'description'           => wp_specialchars_decode( $media->description, ENT_QUOTES ),
-			'album_id'              => $media->album_id,
-			'group_id'              => $media->group_id,
-			'activity_id'           => $media->activity_id,
-			'message_id'            => $media->message_id,
-			'hide_activity_actions' => false,
-			'privacy'               => $media->privacy,
-			'menu_order'            => $media->menu_order,
-			'date_created'          => $media->date_created,
-			'attachment_data'       => $media->attachment_data,
-			'group_name'            => ( isset( $media->group_name ) ? $media->group_name : '' ),
-			'visibility'            => ( isset( $media->visibility ) ? $media->visibility : '' ),
-			'user_nicename'         => get_the_author_meta( 'user_nicename', $media->user_id ),
-			'user_login'            => get_the_author_meta( 'user_login', $media->user_id ),
-			'display_name'          => bp_core_get_user_displayname( $media->user_id ),
-			'url'                   => bp_media_get_preview_image_url( $media->id, $media->attachment_id, 'bb-media-photos-popup-image' ),
-			'download_url'          => bp_media_download_link( $media->attachment_id, $media->id ),
-			'user_permissions'      => $this->get_media_current_user_permissions( $media ),
-			'type'                  => $media->type,
-		);
+		/*
+		 * The fields the request asked for. When the request carries no
+		 * `_fields`, this is every property of the item schema, so each of the
+		 * branches below runs exactly as it did before the controller became
+		 * field-aware.
+		 */
+		$fields = $this->get_fields_for_response( $request );
+
+		// Both are resolved twice: once here, and again for a video below.
+		$include_url                   = rest_is_field_included( 'url', $fields );
+		$include_download_url          = rest_is_field_included( 'download_url', $fields );
+		$include_hide_activity_actions = rest_is_field_included( 'hide_activity_actions', $fields );
+
+		$data = array();
+
+		$data['id'] = $media->id;
+
+		if ( rest_is_field_included( 'blog_id', $fields ) ) {
+			$data['blog_id'] = $media->blog_id;
+		}
+		if ( rest_is_field_included( 'attachment_id', $fields ) ) {
+			$data['attachment_id'] = $media->attachment_id;
+		}
+		if ( rest_is_field_included( 'user_id', $fields ) ) {
+			$data['user_id'] = $media->user_id;
+		}
+		if ( rest_is_field_included( 'title', $fields ) ) {
+			$data['title'] = $media->title;
+		}
+		if ( rest_is_field_included( 'description', $fields ) ) {
+			$data['description'] = wp_specialchars_decode( $media->description, ENT_QUOTES );
+		}
+		if ( rest_is_field_included( 'album_id', $fields ) ) {
+			$data['album_id'] = $media->album_id;
+		}
+		if ( rest_is_field_included( 'group_id', $fields ) ) {
+			$data['group_id'] = $media->group_id;
+		}
+		if ( rest_is_field_included( 'activity_id', $fields ) ) {
+			$data['activity_id'] = $media->activity_id;
+		}
+		if ( rest_is_field_included( 'message_id', $fields ) ) {
+			$data['message_id'] = $media->message_id;
+		}
+
+		if ( $include_hide_activity_actions ) {
+			$data['hide_activity_actions'] = false;
+		}
+
+		if ( rest_is_field_included( 'privacy', $fields ) ) {
+			$data['privacy'] = $media->privacy;
+		}
+		if ( rest_is_field_included( 'menu_order', $fields ) ) {
+			$data['menu_order'] = $media->menu_order;
+		}
+		if ( rest_is_field_included( 'date_created', $fields ) ) {
+			$data['date_created'] = $media->date_created;
+		}
+		if ( rest_is_field_included( 'attachment_data', $fields ) ) {
+			$data['attachment_data'] = $media->attachment_data;
+		}
+		if ( rest_is_field_included( 'group_name', $fields ) ) {
+			$data['group_name'] = ( isset( $media->group_name ) ? $media->group_name : '' );
+		}
+		if ( rest_is_field_included( 'visibility', $fields ) ) {
+			$data['visibility'] = ( isset( $media->visibility ) ? $media->visibility : '' );
+		}
+
+		if ( rest_is_field_included( 'user_nicename', $fields ) ) {
+			$data['user_nicename'] = get_the_author_meta( 'user_nicename', $media->user_id );
+		}
+
+		if ( rest_is_field_included( 'user_login', $fields ) ) {
+			$data['user_login'] = get_the_author_meta( 'user_login', $media->user_id );
+		}
+
+		if ( rest_is_field_included( 'display_name', $fields ) ) {
+			$data['display_name'] = bp_core_get_user_displayname( $media->user_id );
+		}
+
+		if ( $include_url ) {
+			$data['url'] = bp_media_get_preview_image_url( $media->id, $media->attachment_id, 'bb-media-photos-popup-image' );
+		}
+
+		if ( $include_download_url ) {
+			$data['download_url'] = bp_media_download_link( $media->attachment_id, $media->id );
+		}
+
+		if ( rest_is_field_included( 'user_permissions', $fields ) ) {
+			$data['user_permissions'] = $this->get_media_current_user_permissions( $media );
+		}
+
+		if ( rest_is_field_included( 'type', $fields ) ) {
+			$data['type'] = $media->type;
+		}
 
 		// Below condition will check if media has comments then like/comment button will not visible for that particular media.
-		if ( ! empty( $data['activity_id'] ) && bp_is_active( 'activity' ) ) {
-			$activity = new BP_Activity_Activity( $data['activity_id'] );
+		if ( $include_hide_activity_actions && ! empty( $media->activity_id ) && bp_is_active( 'activity' ) ) {
+			$activity = new BP_Activity_Activity( $media->activity_id );
 			if ( isset( $activity->secondary_item_id ) ) {
 				$get_activity = new BP_Activity_Activity( $activity->secondary_item_id );
 				if (
@@ -1495,12 +1564,16 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 		}
 
 		if ( 'video' === $media->type ) {
-			add_filter( 'bb_check_ios_device', array( $this, 'bb_rest_disable_symlink' ), 1 );
-			$data['url'] = bb_video_get_symlink( $media->id );
-			remove_filter( 'bb_check_ios_device', array( $this, 'bb_rest_disable_symlink' ), 1 );
+			if ( $include_url ) {
+				add_filter( 'bb_check_ios_device', array( $this, 'bb_rest_disable_symlink' ), 1 );
+				$data['url'] = bb_video_get_symlink( $media->id );
+				remove_filter( 'bb_check_ios_device', array( $this, 'bb_rest_disable_symlink' ), 1 );
+			}
 
 			// Update the download link for the video.
-			$data['download_url'] = bp_video_download_link( $media->attachment_id, $media->id );
+			if ( $include_download_url ) {
+				$data['download_url'] = bp_video_download_link( $media->attachment_id, $media->id );
+			}
 		}
 
 		$data = $this->add_additional_fields_to_object( $data, $request );
@@ -1585,6 +1658,15 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function get_item_schema() {
+		if ( ! empty( $this->schema ) ) {
+			/**
+			 * Filters the media schema.
+			 *
+			 * @param array $schema The endpoint schema.
+			 */
+			return apply_filters( 'bp_rest_media_schema', $this->add_additional_fields_schema( $this->schema ) );
+		}
+
 		$schema = array(
 			'$schema'    => 'http://json-schema.org/draft-04/schema#',
 			'title'      => 'bp_media',
@@ -1765,12 +1847,10 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 			),
 		);
 
-		/**
-		 * Filters the media schema.
-		 *
-		 * @param array $schema The endpoint schema.
-		 */
-		return apply_filters( 'bp_rest_media_schema', $this->add_additional_fields_schema( $schema ) );
+		$this->schema = $schema;
+
+		/** This filter is documented in bp-media/classes/class-bp-rest-media-endpoint.php */
+		return apply_filters( 'bp_rest_media_schema', $this->add_additional_fields_schema( $this->schema ) );
 	}
 
 	/**
@@ -2332,10 +2412,11 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 	 *
 	 * @param BP_Activity_Activity $activity  Activity Array.
 	 * @param string               $attribute The REST Field key used into the REST response.
+	 * @param WP_REST_Request      $request    Full details about the request.
 	 *
 	 * @return string            The value of the REST Field to include into the REST response.
 	 */
-	protected function bp_media_ids_get_rest_field_callback( $activity, $attribute ) {
+	protected function bp_media_ids_get_rest_field_callback( $activity, $attribute, $request = null ) {
 		$activity_id = $activity['id'];
 
 		if ( empty( $activity_id ) ) {
@@ -2404,6 +2485,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 		$retval = array();
 		$object = new WP_REST_Request();
 		$object->set_param( 'context', 'view' );
+		bb_rest_set_nested_item_fields( $object, $request, 'attachment_fields' );
 
 		foreach ( $medias['medias'] as $media ) {
 			$retval[] = $this->prepare_response_for_collection(
@@ -2933,12 +3015,13 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 	/**
 	 * The function to use to get medias of the topic REST Field.
 	 *
-	 * @param array  $post      WP_Post object as array.
-	 * @param string $attribute The REST Field key used into the REST response.
+	 * @param array           $post      WP_Post object as array.
+	 * @param string          $attribute The REST Field key used into the REST response.
+	 * @param WP_REST_Request $request    Full details about the request.
 	 *
 	 * @return string            The value of the REST Field to include into the REST response.
 	 */
-	protected function bbp_media_get_rest_field_callback( $post, $attribute ) {
+	protected function bbp_media_get_rest_field_callback( $post, $attribute, $request = null ) {
 
 		$p_id = $post['id'];
 
@@ -3005,6 +3088,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 
 		$retval = array();
 		$object = new WP_REST_Request();
+		bb_rest_set_nested_item_fields( $object, $request, 'attachment_fields' );
 
 		foreach ( $medias['medias'] as $media ) {
 			$retval[] = $this->prepare_response_for_collection(
@@ -3315,12 +3399,13 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 	/**
 	 * The function to use to get medias of the messages REST Field.
 	 *
-	 * @param array  $data      The message value for the REST response.
-	 * @param string $attribute The REST Field key used into the REST response.
+	 * @param array           $data      The message value for the REST response.
+	 * @param string          $attribute The REST Field key used into the REST response.
+	 * @param WP_REST_Request $request    Full details about the request.
 	 *
 	 * @return array|void The value of the REST Field to include into the REST response.
 	 */
-	protected function bp_media_ids_get_rest_field_callback_messages( $data, $attribute ) {
+	protected function bp_media_ids_get_rest_field_callback_messages( $data, $attribute, $request = null ) {
 		$message_id = $data['id'];
 
 		if ( empty( $message_id ) ) {
@@ -3379,6 +3464,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 			$retval = array();
 			$object = new WP_REST_Request();
 			$object->set_param( 'context', 'view' );
+			bb_rest_set_nested_item_fields( $object, $request, 'attachment_fields' );
 
 			foreach ( $medias['medias'] as $media ) {
 				$retval[] = $this->prepare_response_for_collection(

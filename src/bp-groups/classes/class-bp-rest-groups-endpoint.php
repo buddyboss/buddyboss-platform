@@ -634,7 +634,7 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 
 		// Get the group before it's deleted.
 		$group    = $this->get_group_object( $request );
-		$previous = $this->prepare_item_for_response( $group, $request );
+		$previous = $this->prepare_item_for_response( $group, bb_rest_request_for_nested_item( $request ) );
 
 		// Delete group forum.
 		if ( isset( $request['delete_group_forum'] ) && true === $request['delete_group_forum'] ) {
@@ -738,53 +738,177 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function prepare_item_for_response( $item, $request ) {
-		$data = array(
-			'id'                 => $item->id,
-			'creator_id'         => bp_get_group_creator_id( $item ),
-			'parent_id'          => $item->parent_id,
-			'date_created'       => bp_rest_prepare_date_response( $item->date_created ),
-			'description'        => array(
+		/*
+		 * The fields the request asked for. When the request carries no
+		 * `_fields`, this is every property of the item schema, so each of the
+		 * branches below runs exactly as it did before the controller became
+		 * field-aware.
+		 */
+		$fields = $this->get_fields_for_response( $request );
+
+		$include_types            = rest_is_field_included( 'types', $fields );
+		$include_group_type       = rest_is_field_included( 'group_type', $fields );
+		$include_group_type_label = rest_is_field_included( 'group_type_label', $fields );
+		$include_role             = rest_is_field_included( 'role', $fields );
+		$include_plural_role      = rest_is_field_included( 'plural_role', $fields );
+		$include_admins           = rest_is_field_included( 'admins', $fields );
+		$include_mods             = rest_is_field_included( 'mods', $fields );
+
+		/*
+		 * Held in locals: the group type block refines them and the plural
+		 * role falls back to the singular, so no guarded field may depend on
+		 * a value another guard produced.
+		 */
+		$types            = ( $include_types || $include_group_type ) ? bp_groups_get_group_type( $item->id, false ) : array();
+		$group_type_label = ( $include_group_type_label || $include_group_type ) ? $this->get_group_type_label( $item ) : '';
+		$role             = '';
+
+		$data = array();
+
+		$data['id'] = $item->id;
+
+		if ( rest_is_field_included( 'creator_id', $fields ) ) {
+			$data['creator_id'] = bp_get_group_creator_id( $item );
+		}
+
+		if ( rest_is_field_included( 'parent_id', $fields ) ) {
+			$data['parent_id'] = $item->parent_id;
+		}
+
+		if ( rest_is_field_included( 'date_created', $fields ) ) {
+			$data['date_created'] = bp_rest_prepare_date_response( $item->date_created );
+		}
+
+		if ( rest_is_field_included( 'description', $fields ) ) {
+			$data['description'] = array(
 				'raw'      => $item->description,
 				'rendered' => bp_get_group_description( $item ),
-			),
-			'enable_forum'       => $this->bp_rest_group_is_forum_enabled( $item ),
-			'link'               => bp_get_group_permalink( $item ),
-			'name'               => bp_get_group_name( $item ),
-			'name_raw'           => $item->name,
-			'slug'               => bp_get_group_slug( $item ),
-			'status'             => bp_get_group_status( $item ),
-			'types'              => bp_groups_get_group_type( $item->id, false ),
-			'group_type_label'   => $this->get_group_type_label( $item ),
-			'subgroups_id'       => $this->bp_rest_get_sub_groups( $item->id ),
-			'admins'             => array(),
-			'mods'               => array(),
-			'total_member_count' => null,
-			'last_activity'      => null,
-			'is_member'          => groups_is_user_member( get_current_user_id(), $item->id ) ? true : false,
-			'invite_id'          => groups_is_user_invited( get_current_user_id(), $item->id ),
-			'request_id'         => groups_is_user_pending( get_current_user_id(), $item->id ),
-			'is_admin'           => ( ! empty( groups_is_user_admin( get_current_user_id(), $item->id ) ) ? true : false ),
-			'is_mod'             => ( ! empty( groups_is_user_mod( get_current_user_id(), $item->id ) ) ? true : false ),
-			'members_count'      => groups_get_total_member_count( $item->id ),
-			'role'               => '',
-			'plural_role'        => '',
-			'can_join'           => $this->bp_rest_user_can_join( $item ),
-			'can_post'           => $this->bp_rest_user_can_post( $item ),
-			'create_media'       => ( bp_is_active( 'media' ) && groups_can_user_manage_media( bp_loggedin_user_id(), $item->id ) ),
-			'create_album'       => ( bp_is_active( 'media' ) && groups_can_user_manage_albums( bp_loggedin_user_id(), $item->id ) ),
-			'create_video'       => ( bp_is_active( 'video' ) && groups_can_user_manage_video( bp_loggedin_user_id(), $item->id ) ),
-			'create_document'    => ( bp_is_active( 'document' ) && groups_can_user_manage_document( bp_loggedin_user_id(), $item->id ) ),
-			'can_schedule'       => function_exists( 'bb_is_enabled_activity_schedule_posts' ) &&
-									bb_is_enabled_activity_schedule_posts() &&
-									function_exists( 'bb_can_user_schedule_activity' ) &&
-									bb_can_user_schedule_activity(
-										array(
-											'object'   => 'group',
-											'group_id' => $item->id,
-											'user_id'  => bp_loggedin_user_id(),
-										)
-									),
-			'can_create_poll'    => function_exists( 'bb_is_enabled_activity_post_polls' ) &&
+			);
+		}
+
+		if ( rest_is_field_included( 'enable_forum', $fields ) ) {
+			$data['enable_forum'] = $this->bp_rest_group_is_forum_enabled( $item );
+		}
+
+		if ( rest_is_field_included( 'link', $fields ) ) {
+			$data['link'] = bp_get_group_permalink( $item );
+		}
+
+		if ( rest_is_field_included( 'name', $fields ) ) {
+			$data['name'] = bp_get_group_name( $item );
+		}
+
+		if ( rest_is_field_included( 'name_raw', $fields ) ) {
+			$data['name_raw'] = $item->name;
+		}
+
+		if ( rest_is_field_included( 'slug', $fields ) ) {
+			$data['slug'] = bp_get_group_slug( $item );
+		}
+
+		if ( rest_is_field_included( 'status', $fields ) ) {
+			$data['status'] = bp_get_group_status( $item );
+		}
+
+		if ( $include_types ) {
+			$data['types'] = $types;
+		}
+
+		if ( $include_group_type_label ) {
+			$data['group_type_label'] = $group_type_label;
+		}
+
+		if ( rest_is_field_included( 'subgroups_id', $fields ) ) {
+			$data['subgroups_id'] = $this->bp_rest_get_sub_groups( $item->id );
+		}
+
+		if ( rest_is_field_included( 'admins', $fields ) ) {
+			$data['admins'] = array();
+		}
+
+		if ( rest_is_field_included( 'mods', $fields ) ) {
+			$data['mods'] = array();
+		}
+
+		if ( rest_is_field_included( 'total_member_count', $fields ) ) {
+			$data['total_member_count'] = null;
+		}
+
+		if ( rest_is_field_included( 'last_activity', $fields ) ) {
+			$data['last_activity'] = null;
+		}
+
+		if ( rest_is_field_included( 'is_member', $fields ) ) {
+			$data['is_member'] = groups_is_user_member( get_current_user_id(), $item->id ) ? true : false;
+		}
+
+		if ( rest_is_field_included( 'invite_id', $fields ) ) {
+			$data['invite_id'] = groups_is_user_invited( get_current_user_id(), $item->id );
+		}
+
+		if ( rest_is_field_included( 'request_id', $fields ) ) {
+			$data['request_id'] = groups_is_user_pending( get_current_user_id(), $item->id );
+		}
+
+		if ( rest_is_field_included( 'is_admin', $fields ) ) {
+			$data['is_admin'] = ( ! empty( groups_is_user_admin( get_current_user_id(), $item->id ) ) ? true : false );
+		}
+
+		if ( rest_is_field_included( 'is_mod', $fields ) ) {
+			$data['is_mod'] = ( ! empty( groups_is_user_mod( get_current_user_id(), $item->id ) ) ? true : false );
+		}
+
+		if ( rest_is_field_included( 'members_count', $fields ) ) {
+			$data['members_count'] = groups_get_total_member_count( $item->id );
+		}
+
+		if ( $include_role ) {
+			$data['role'] = '';
+		}
+
+		if ( $include_plural_role ) {
+			$data['plural_role'] = '';
+		}
+
+		if ( rest_is_field_included( 'can_join', $fields ) ) {
+			$data['can_join'] = $this->bp_rest_user_can_join( $item );
+		}
+
+		if ( rest_is_field_included( 'can_post', $fields ) ) {
+			$data['can_post'] = $this->bp_rest_user_can_post( $item );
+		}
+
+		if ( rest_is_field_included( 'create_media', $fields ) ) {
+			$data['create_media'] = ( bp_is_active( 'media' ) && groups_can_user_manage_media( bp_loggedin_user_id(), $item->id ) );
+		}
+
+		if ( rest_is_field_included( 'create_album', $fields ) ) {
+			$data['create_album'] = ( bp_is_active( 'media' ) && groups_can_user_manage_albums( bp_loggedin_user_id(), $item->id ) );
+		}
+
+		if ( rest_is_field_included( 'create_video', $fields ) ) {
+			$data['create_video'] = ( bp_is_active( 'video' ) && groups_can_user_manage_video( bp_loggedin_user_id(), $item->id ) );
+		}
+
+		if ( rest_is_field_included( 'create_document', $fields ) ) {
+			$data['create_document'] = ( bp_is_active( 'document' ) && groups_can_user_manage_document( bp_loggedin_user_id(), $item->id ) );
+		}
+
+		if ( rest_is_field_included( 'can_schedule', $fields ) ) {
+			$data['can_schedule'] = function_exists( 'bb_is_enabled_activity_schedule_posts' ) &&
+				bb_is_enabled_activity_schedule_posts() &&
+				function_exists( 'bb_can_user_schedule_activity' ) &&
+				bb_can_user_schedule_activity(
+					array(
+						'object'   => 'group',
+						'group_id' => $item->id,
+						'user_id'  => bp_loggedin_user_id(),
+					)
+				);
+		}
+
+		if ( rest_is_field_included( 'can_create_poll', $fields ) ) {
+			$data['can_create_poll'] = function_exists( 'bb_is_enabled_activity_post_polls' ) &&
 									bb_is_enabled_activity_post_polls( false ) &&
 									function_exists( 'bb_can_user_create_poll_activity' ) &&
 									bb_can_user_create_poll_activity(
@@ -793,40 +917,48 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 											'group_id' => $item->id,
 											'user_id'  => bp_loggedin_user_id(),
 										)
-									),
-		);
+									);
+		}
 
-		// BuddyBoss Platform support.
-		if ( function_exists( 'bp_get_user_group_role_title' ) && bp_loggedin_user_id() ) {
-			$data['role'] = bp_get_user_group_role_title( bp_loggedin_user_id(), $item->id );
+		if ( $include_role || $include_plural_role ) {
+			// BuddyBoss Platform support.
+			if ( function_exists( 'bp_get_user_group_role_title' ) && bp_loggedin_user_id() ) {
+				$role = bp_get_user_group_role_title( bp_loggedin_user_id(), $item->id );
 
-			// BuddyPress support.
-		} elseif ( function_exists( 'bp_groups_get_group_roles' ) && bp_loggedin_user_id() ) {
-			$group_role = bp_groups_get_group_roles();
+				// BuddyPress support.
+			} elseif ( function_exists( 'bp_groups_get_group_roles' ) && bp_loggedin_user_id() ) {
+				$group_role = bp_groups_get_group_roles();
 
-			if ( groups_is_user_admin( bp_loggedin_user_id(), $item->id ) ) {
-				$data['role'] = $group_role['admin']->name;
-			} elseif ( groups_is_user_mod( bp_loggedin_user_id(), $item->id ) ) {
-				$data['role'] = $group_role['mod']->name;
-			} elseif ( groups_is_user_member( bp_loggedin_user_id(), $item->id ) ) {
-				$data['role'] = $group_role['member']->name;
+				if ( groups_is_user_admin( bp_loggedin_user_id(), $item->id ) ) {
+					$role = $group_role['admin']->name;
+				} elseif ( groups_is_user_mod( bp_loggedin_user_id(), $item->id ) ) {
+					$role = $group_role['mod']->name;
+				} elseif ( groups_is_user_member( bp_loggedin_user_id(), $item->id ) ) {
+					$role = $group_role['member']->name;
+				}
+			}
+
+			if ( $include_role ) {
+				$data['role'] = $role;
 			}
 		}
 
-		if ( function_exists( 'bp_get_group_member_section_title' ) && bp_loggedin_user_id() ) {
-			$data['plural_role'] = $this->bp_get_group_member_section_title( $item->id, bp_loggedin_user_id() );
-			if ( empty( $data['plural_role'] ) ) {
-				$data['plural_role'] = $data['role'];
+		if ( $include_plural_role ) {
+			if ( function_exists( 'bp_get_group_member_section_title' ) && bp_loggedin_user_id() ) {
+				$data['plural_role'] = $this->bp_get_group_member_section_title( $item->id, bp_loggedin_user_id() );
+				if ( empty( $data['plural_role'] ) ) {
+					$data['plural_role'] = $role;
+				}
+			} else {
+				$data['plural_role'] = $role;
 			}
-		} else {
-			$data['plural_role'] = $data['role'];
 		}
 
 		// Get item schema.
 		$schema = $this->get_item_schema();
 
 		// Avatars.
-		if ( ! empty( $schema['properties']['avatar_urls'] ) ) {
+		if ( ! empty( $schema['properties']['avatar_urls'] ) && rest_is_field_included( 'avatar_urls', $fields ) ) {
 			$data['avatar_urls'] = array(
 				'thumb'      => bp_core_fetch_avatar(
 					array(
@@ -850,34 +982,43 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 
 		// Cover Image.
 		if ( ! empty( $schema['properties']['cover_url'] ) && function_exists( 'bp_get_group_cover_url' ) ) {
-			$data['cover_url']        = bp_get_group_cover_url( $item );
-			$data['cover_is_default'] = ! bp_attachments_get_group_has_cover_image( $item->id );
+			if ( rest_is_field_included( 'cover_url', $fields ) ) {
+				$data['cover_url'] = bp_get_group_cover_url( $item );
+			}
+
+			if ( rest_is_field_included( 'cover_is_default', $fields ) ) {
+				$data['cover_is_default'] = ! bp_attachments_get_group_has_cover_image( $item->id );
+			}
 		}
 
-		if ( $this->bp_rest_group_is_forum_enabled( $item ) && function_exists( 'bbpress' ) ) {
+		if ( rest_is_field_included( 'forum', $fields ) && $this->bp_rest_group_is_forum_enabled( $item ) && function_exists( 'bbpress' ) ) {
 			$data['forum'] = groups_get_groupmeta( $item->id, 'forum_id' );
 			if ( is_array( $data['forum'] ) && ! empty( $data['forum'][0] ) ) {
 				$data['forum'] = $data['forum'][0];
 			} else {
 				$data['forum'] = 0;
 			}
-		} else {
+		} elseif ( rest_is_field_included( 'forum', $fields ) ) {
 			$data['forum'] = 0;
 		}
 
 		$context = ! empty( $request['context'] ) ? $request['context'] : 'view';
 
 		// Get group type(s).
-		if ( false === $data['types'] ) {
-			$data['types'] = array();
+		if ( false === $types ) {
+			$types = array();
 		}
 
-		if ( ! empty( $data['types'] ) ) {
+		if ( $include_types ) {
+			$data['types'] = $types;
+		}
+
+		if ( $include_group_type && ! empty( $types ) ) {
 			$group_type_data                     = array();
-			$group_type_data['group_type_label'] = isset( $data['group_type_label'] ) && ! empty( $data['group_type_label'] ) ? $data['group_type_label'] : '';
+			$group_type_data['group_type_label'] = ! empty( $group_type_label ) ? $group_type_label : '';
 			$group_type_data['types']            = bp_groups_get_group_type( $item->id, false );
 			// Group type's label background and text color.
-			$group_type       = isset( $data['types'][0] ) ? $data['types'][0] : '';
+			$group_type       = isset( $types[0] ) ? $types[0] : '';
 			$label_color_data = function_exists( 'bb_get_group_type_label_colors' ) ? bb_get_group_type_label_colors( $group_type ) : '';
 			if ( ! empty( $label_color_data ) ) {
 				$group_type_data['label_colors'] = $label_color_data;
@@ -915,20 +1056,28 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 
 		// If this is the 'edit' context, fill in more details--similar to "populate_extras".
 		if ( 'edit' === $context || 'view' === $context ) {
-			$data['last_activity'] = bp_rest_prepare_date_response( groups_get_groupmeta( $item->id, 'last_activity' ) );
+			if ( rest_is_field_included( 'last_activity', $fields ) ) {
+				$data['last_activity'] = bp_rest_prepare_date_response( groups_get_groupmeta( $item->id, 'last_activity' ) );
+			}
 
 			// Add admins and moderators to their respective arrays.
 			$args = array( 'admin' );
 			if ( 'edit' === $context ) {
-				$args[]                     = 'mod';
-				$data['total_member_count'] = groups_get_total_member_count( $item->id );
+				$args[] = 'mod';
+
+				if ( rest_is_field_included( 'total_member_count', $fields ) ) {
+					$data['total_member_count'] = groups_get_total_member_count( $item->id );
+				}
 			}
-			$admin_mods = groups_get_group_members(
-				array(
-					'group_id'   => $item->id,
-					'group_role' => $args,
+
+			$admin_mods = ( $include_admins || $include_mods )
+				? groups_get_group_members(
+					array(
+						'group_id'   => $item->id,
+						'group_role' => $args,
+					)
 				)
-			);
+				: array( 'members' => array() );
 
 			foreach ( (array) $admin_mods['members'] as $user ) {
 				$user->avatar = bp_core_fetch_avatar(
@@ -952,22 +1101,30 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 					unset( $user->{$private_key} );
 				}
 
-				if ( ! empty( $user->is_admin ) ) {
+				if ( $include_admins && ! empty( $user->is_admin ) ) {
 					$data['admins'][] = $user;
-				} elseif ( ! empty( $user->is_mod ) ) {
+				} elseif ( $include_mods && ! empty( $user->is_mod ) ) {
 					$data['mods'][] = $user;
 				}
 			}
 		}
 
 		// Member subscribed the group or not?
-		if ( function_exists( 'bb_is_enabled_subscription' ) && bb_is_enabled_subscription( 'group' ) ) {
+		$include_subscription = rest_is_field_included( 'is_subscribed', $fields ) || rest_is_field_included( 'subscribed_id', $fields );
+
+		if ( $include_subscription && function_exists( 'bb_is_enabled_subscription' ) && bb_is_enabled_subscription( 'group' ) ) {
 			$subscribed = 0;
 			if ( is_user_logged_in() && function_exists( 'bb_is_member_subscribed_group' ) ) {
 				$subscribed = bb_is_member_subscribed_group( $item->id, bp_loggedin_user_id() );
 			}
-			$data['is_subscribed'] = ! empty( $subscribed );
-			$data['subscribed_id'] = empty( $subscribed ) ? 0 : $subscribed;
+
+			if ( rest_is_field_included( 'is_subscribed', $fields ) ) {
+				$data['is_subscribed'] = ! empty( $subscribed );
+			}
+
+			if ( rest_is_field_included( 'subscribed_id', $fields ) ) {
+				$data['subscribed_id'] = empty( $subscribed ) ? 0 : $subscribed;
+			}
 		}
 
 		$data     = $this->add_additional_fields_to_object( $data, $request );
@@ -1319,6 +1476,15 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function get_item_schema() {
+		if ( ! empty( $this->schema ) ) {
+			/**
+			 * Filters the group schema.
+			 *
+			 * @param array $schema The endpoint schema.
+			 */
+			return apply_filters( 'bp_rest_group_schema', $this->add_additional_fields_schema( $this->schema ) );
+		}
+
 		$schema = array(
 			'$schema'    => 'http://json-schema.org/draft-04/schema#',
 			'title'      => 'bp_groups',
@@ -1624,6 +1790,18 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 			),
 		);
 
+		/*
+		 * A response field the controller has always returned but never
+		 * declared. Appended rather than written into the array above so
+		 * that the surrounding alignment is left alone.
+		 */
+		$schema['properties']['can_create_poll'] = array(
+			'context'     => array( 'embed', 'view', 'edit' ),
+			'description' => __( 'Whether the current user can create a poll in the group.', 'buddyboss' ),
+			'readonly'    => true,
+			'type'        => 'boolean',
+		);
+
 		// Avatars.
 		if ( ! bp_disable_group_avatar_uploads() ) {
 			$avatar_properties = array();
@@ -1699,7 +1877,9 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 		 *
 		 * @param array $schema The endpoint schema.
 		 */
-		return apply_filters( 'bp_rest_group_schema', $this->add_additional_fields_schema( $schema ) );
+		$this->schema = $schema;
+
+		return apply_filters( 'bp_rest_group_schema', $this->add_additional_fields_schema( $this->schema ) );
 	}
 
 	/**
