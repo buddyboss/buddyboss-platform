@@ -81,7 +81,8 @@ if ( '' === trim( (string) $bb_blog_author_name ) ) {
 		</div>
 		<div class="bb-member-blog__footer">
 			<div class="bb-member-blog__author">
-				<a class="bb-member-blog__avatar" href="<?php echo esc_url( $bb_blog_author_url ); ?>">
+				<?php $bb_blog_hp_attr = bb_get_hover_card_profile_attr( $bb_blog_author_id ); ?>
+				<a class="bb-member-blog__avatar" href="<?php echo esc_url( $bb_blog_author_url ); ?>"<?php echo $bb_blog_hp_attr; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped via esc_attr() in bb_get_hover_card_profile_attr(). ?>>
 					<?php
 					if ( function_exists( 'bp_core_fetch_avatar' ) ) {
 						echo bp_core_fetch_avatar( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- avatar HTML built by BuddyPress.
@@ -97,7 +98,7 @@ if ( '' === trim( (string) $bb_blog_author_name ) ) {
 					?>
 				</a>
 				<div class="bb-member-blog__author-info">
-					<a class="bb-member-blog__author-name" href="<?php echo esc_url( $bb_blog_author_url ); ?>"><?php echo esc_html( $bb_blog_author_name ); ?></a>
+					<a class="bb-member-blog__author-name" href="<?php echo esc_url( $bb_blog_author_url ); ?>"<?php echo $bb_blog_hp_attr; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped via esc_attr() in bb_get_hover_card_profile_attr(). ?>><?php echo esc_html( $bb_blog_author_name ); ?></a>
 					<div class="bb-member-blog__meta">
 						<span class="bb-member-blog__date"><?php echo esc_html( get_the_date() ); ?></span>
 						<?php if ( ! empty( $bb_blog_categories ) && ! is_wp_error( $bb_blog_categories ) ) : ?>
