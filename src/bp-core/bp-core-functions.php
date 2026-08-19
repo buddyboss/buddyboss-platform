@@ -5640,7 +5640,7 @@ function bb_core_symlink_generator( $type, $item, $size, $file, $output_file_src
 						}
 					}
 					$output_file_src = '../../' . $file['path'];
-					if ( file_exists( $output_file_src ) ) {
+					if ( file_exists( $output_file_src ) && ! file_exists( $filename ) ) {
 						symlink( $output_file_src, $filename );
 					}
 				}
