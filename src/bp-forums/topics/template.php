@@ -1698,7 +1698,11 @@ function bbp_get_topic_author_link( $args = '' ) {
 
 		// Only wrap in link if profile exists
 		if ( empty( $anonymous ) && bbp_user_has_profile( bbp_get_topic_author_id( $topic_id ) ) ) {
-			$author_link = sprintf( '<a href="%1$s"%2$s%3$s%5$s>%4$s</a>', esc_url( $author_url ), $link_title, ' class="bbp-author-link"', $author_link, ' data-bb-hp-profile="' . bbp_get_topic_author_id( $topic_id ) . '"' );
+			// Through the shared helper rather than a hard-coded attribute so a
+			// suspended, blocked or blocking author gets no hover trigger here,
+			// matching the Recent Discussions widget and every other swept surface.
+			$bb_hp_attr  = bb_get_hover_card_profile_attr( bbp_get_topic_author_id( $topic_id ) );
+			$author_link = sprintf( '<a href="%1$s"%2$s%3$s%5$s>%4$s</a>', esc_url( $author_url ), $link_title, ' class="bbp-author-link"', $author_link, $bb_hp_attr );
 		}
 
 		// Role is not linked

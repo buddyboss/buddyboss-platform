@@ -1192,7 +1192,10 @@ window.bp = window.bp || {};
 			$document.on('click', '.bb-rl-groups-manage-members-list .bb-rl-group-member-action-button:not(.disabled)', this.groupManageActionClick.bind( this ) );
 
 			// Profile/Group Popup Card.
-			$( document ).on( 'mouseenter', '[data-bb-hp-profile]', function () {
+			$( document ).on( 'mouseenter', '[data-bb-hp-profile]', function ( event ) {
+				if ( 0 === $( event.currentTarget ).data( 'bb-hp-profile' ) ) {
+					return;
+				}
 				hoverAvatar = true;
 				hoverProfileAvatar = true;
 
@@ -1211,7 +1214,10 @@ window.bp = window.bp || {};
 				// Always attempt to load the profile card
 				bp.Nouveau.profilePopupCard.call( this );
 			} );
-			$( document ).on( 'mouseenter', '[data-bb-hp-group]', function () {
+			$( document ).on( 'mouseenter', '[data-bb-hp-group]', function ( event ) {
+				if ( 0 === $( event.currentTarget ).data( 'bb-hp-group' ) ) {
+					return;
+				}
 				hoverAvatar = true;
 				hoverGroupAvatar = true;
 
