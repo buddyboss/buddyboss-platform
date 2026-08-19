@@ -481,17 +481,10 @@ class BB_Admin_Profile_Fields_Ajax {
 		$saved_id = xprofile_insert_field( $args );
 
 		if ( empty( $saved_id ) ) {
-			/*
-			 * The Bio field is shared with the member's WordPress "Biographical Info",
-			 * so a set that repeats its fields cannot hold one. Mirrors the server-side
-			 * rule: only entry is refused, so this reason is given only when the field
-			 * is actually entering the set. Editing one that is already there fails for
-			 * a different reason, and must not be told it "cannot be added".
-			 */
-			$is_entering_field_set = empty( $field_id ) || ( ! empty( $existing_field ) && (int) $existing_field->group_id !== (int) $group_id );
-
-			if ( 'biography' === $type && $is_entering_field_set && bb_xprofile_is_repeater_group( $group_id ) ) {
-				wp_send_json_error( array( 'message' => __( 'The "Bio" profile field cannot be added to a repeater field set, because it shares its value with the member\'s WordPress profile.', 'buddyboss' ) ) );
+			// The Bio field is shared with the member's WordPress "Biographical Info",
+			// so a set that repeats its fields cannot hold one — adding or saving.
+			if ( 'biography' === $type && bb_xprofile_is_repeater_group( $group_id ) ) {
+				wp_send_json_error( array( 'message' => __( 'The "Bio" profile field cannot be used in a repeater field set, because it shares its value with the member\'s WordPress profile. Move it to a field set that does not repeat.', 'buddyboss' ) ) );
 			}
 
 			// Singleton validation error messages.
