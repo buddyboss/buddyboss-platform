@@ -1234,8 +1234,6 @@ function bb_core_wordfence_rest_author_scan_compatibility( $query_vars ) {
 		return $query_vars;
 	}
 
-	$namespace = function_exists( 'bp_rest_namespace' ) ? bp_rest_namespace() : 'buddyboss';
-
 	/**
 	 * Filters the REST namespaces exempted from Wordfence's author-scan block.
 	 *
@@ -1244,7 +1242,7 @@ function bb_core_wordfence_rest_author_scan_compatibility( $query_vars ) {
 	 * @param array $namespaces REST namespaces whose requests keep working
 	 *                          with an `author` parameter.
 	 */
-	$namespaces = apply_filters( 'bb_rest_author_scan_compat_namespaces', array( $namespace, 'buddyboss-app' ) );
+	$namespaces = apply_filters( 'bb_rest_author_scan_compat_namespaces', array( bp_rest_namespace(), 'buddyboss-app' ) );
 
 	$rest_route = ltrim( $query_vars['rest_route'], '/' );
 
