@@ -285,6 +285,17 @@ class BB_Admin_Profile_Fields_Ajax {
 			wp_send_json_error( array( 'message' => __( 'Invalid field set.', 'buddyboss' ) ) );
 		}
 
+		// The Bio field is shared with the member's WordPress "Biographical Info",
+		// so a set holding one cannot start repeating its fields. Only the switch-on
+		// is refused, so a set that already repeats can still be renamed or edited.
+		if (
+			'on' === $group_is_repeater &&
+			'on' !== bp_xprofile_get_meta( $group_id, 'group', 'is_repeater_enabled', true ) &&
+			bb_xprofile_group_has_bio_field( $group_id )
+		) {
+			wp_send_json_error( array( 'message' => __( 'This field set contains a "Bio" profile field, which shares its value with the member\'s WordPress profile, so the repeater set cannot be enabled. Remove the Bio field first.', 'buddyboss' ) ) );
+		}
+
 		$result = xprofile_insert_field_group(
 			array(
 				'field_group_id' => $group_id,
@@ -470,6 +481,19 @@ class BB_Admin_Profile_Fields_Ajax {
 		$saved_id = xprofile_insert_field( $args );
 
 		if ( empty( $saved_id ) ) {
+			/*
+			 * The Bio field is shared with the member's WordPress "Biographical Info",
+			 * so a set that repeats its fields cannot hold one. Mirrors the server-side
+			 * rule: only entry is refused, so this reason is given only when the field
+			 * is actually entering the set. Editing one that is already there fails for
+			 * a different reason, and must not be told it "cannot be added".
+			 */
+			$is_entering_field_set = empty( $field_id ) || ( ! empty( $existing_field ) && (int) $existing_field->group_id !== (int) $group_id );
+
+			if ( 'biography' === $type && $is_entering_field_set && bb_xprofile_is_repeater_group( $group_id ) ) {
+				wp_send_json_error( array( 'message' => __( 'The "Bio" profile field cannot be added to a repeater field set, because it shares its value with the member\'s WordPress profile.', 'buddyboss' ) ) );
+			}
+
 			// Singleton validation error messages.
 			if ( 'membertypes' === $type ) {
 				wp_send_json_error( array( 'message' => __( 'You can only have one instance of the "Profile Type" profile field.', 'buddyboss' ) ) );

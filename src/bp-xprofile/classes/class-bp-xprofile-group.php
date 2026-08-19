@@ -173,6 +173,22 @@ class BP_XProfile_Group {
 
 		// Save metadata
 		$repeater_enabled = isset( $_POST['group_is_repeater'] ) && 'on' == $_POST['group_is_repeater'] ? 'on' : 'off';
+
+		/*
+		 * A set holding a Bio field cannot start repeating: the Bio field is shared
+		 * with the member's WordPress "Biographical Info", so every repeat would be
+		 * another copy of that one value. Only the switch-on is refused — a set that
+		 * is already repeating keeps its current state, because silently switching it
+		 * off here would expose every clone field on member profiles.
+		 */
+		if (
+			'on' === $repeater_enabled &&
+			'on' !== self::get_group_meta( $this->id, 'is_repeater_enabled' ) &&
+			bb_xprofile_group_has_bio_field( $this->id )
+		) {
+			$repeater_enabled = 'off';
+		}
+
 		self::update_group_meta( $this->id, 'is_repeater_enabled', $repeater_enabled );
 
 		/**

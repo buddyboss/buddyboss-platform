@@ -1306,3 +1306,59 @@ function bb_admin_profile_repeaters_update_field_data( $user_id, $posted_field_i
 	}
 }
 add_action( 'xprofile_updated_profile', 'bb_admin_profile_repeaters_update_field_data', 11, 5 );
+
+/**
+ * Check whether a profile field set repeats its fields.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int $field_group_id Xprofile group ID.
+ *
+ * @return bool True when the repeater set is enabled for the group.
+ */
+function bb_xprofile_is_repeater_group( $field_group_id ) {
+	$field_group_id = (int) $field_group_id;
+
+	if ( empty( $field_group_id ) ) {
+		return false;
+	}
+
+	return 'on' === BP_XProfile_Group::get_group_meta( $field_group_id, 'is_repeater_enabled' );
+}
+
+/**
+ * Check whether a profile field set contains a Bio field.
+ *
+ * Used to keep the repeater and the Bio field apart: the Bio field is shared
+ * with the member's WordPress "Biographical Info", so a set that repeats its
+ * fields cannot hold one.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int $field_group_id Xprofile group ID.
+ *
+ * @return bool True when the group holds at least one `biography` field.
+ */
+function bb_xprofile_group_has_bio_field( $field_group_id ) {
+	global $wpdb;
+
+	$field_group_id = (int) $field_group_id;
+
+	if ( empty( $field_group_id ) ) {
+		return false;
+	}
+
+	$bp = buddypress();
+
+	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Admin-only validation, runs once per save.
+	$exists = $wpdb->get_var(
+		$wpdb->prepare(
+			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table name is plugin-controlled.
+			"SELECT id FROM {$bp->profile->table_name_fields} WHERE group_id = %d AND parent_id = 0 AND type = %s LIMIT 1",
+			$field_group_id,
+			'biography'
+		)
+	);
+
+	return ! empty( $exists );
+}
