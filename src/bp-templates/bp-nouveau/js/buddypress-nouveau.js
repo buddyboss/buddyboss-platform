@@ -5289,6 +5289,21 @@ window.bp = window.bp || {};
 		},
 
 		/**
+		 * Abort whichever hover-card request is in flight.
+		 *
+		 * @deprecated BuddyBoss [BBVERSION] Split into abortOngoingProfileRequest()
+		 *             and abortOngoingGroupRequest() so a group hover no longer
+		 *             cancels an in-flight profile fetch. Kept as an alias because
+		 *             bp.Nouveau is a public namespace third parties call into.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 */
+		abortOngoingRequest: function () {
+			bp.Nouveau.abortOngoingProfileRequest();
+			bp.Nouveau.abortOngoingGroupRequest();
+		},
+
+		/**
 		 * Helper function to clear cache for a specific member.
 		 */
 		clearCacheProfileCard: function ( memberId ) {
@@ -5658,23 +5673,37 @@ window.bp = window.bp || {};
 			$groupCard.find( '.bb-card-footer .card-button-group' ).attr( 'href', data.link );
 
 			groupMembers.forEach( function ( member ) {
-				var memberHtml =
-					'<span class="bs-group-member" data-bp-tooltip-pos="up-left" data-bp-tooltip="' + member.name + '">' +
-						'<a href="' + member.link + '">' +
-							'<img src="' + member.avatar_urls.thumb + '" alt="' + member.name + '" class="round">' +
-						'</a>' +
-					'</span>';
-				$groupMembersContainer.append( memberHtml );
+				// Built through jQuery rather than string concatenation: member.name is a
+				// raw display name from the REST payload, so interpolating it into an
+				// attribute string lets a crafted name break out of the quotes. attr()
+				// and the group heading's text() above are the escaping seam here.
+				$groupMembersContainer.append(
+					$( '<span class="bs-group-member"></span>' )
+						.attr( 'data-bp-tooltip-pos', 'up-left' )
+						.attr( 'data-bp-tooltip', member.name )
+						.append(
+							$( '<a></a>' )
+								.attr( 'href', member.link )
+								.append(
+									$( '<img class="round" />' )
+										.attr( 'src', member.avatar_urls.thumb )
+										.attr( 'alt', member.name )
+								)
+						)
+				);
 			} );
 
 			if ( remainingCount > 0 ) {
-				var moreIconHtml =
-					'<span class="bs-group-member" data-bp-tooltip-pos="up-left" data-bp-tooltip="+ ' + remainingCount + ' ' + membersLabel + '">' +
-						'<a href="' + data.group_members_url + '">' +
-							'<span class="bb-icon-f bb-icon-ellipsis-h"></span>' +
-						'</a>' +
-					'</span>';
-				$groupMembersContainer.append( moreIconHtml );
+				$groupMembersContainer.append(
+					$( '<span class="bs-group-member"></span>' )
+						.attr( 'data-bp-tooltip-pos', 'up-left' )
+						.attr( 'data-bp-tooltip', '+ ' + remainingCount + ' ' + membersLabel )
+						.append(
+							$( '<a></a>' )
+								.attr( 'href', data.group_members_url )
+								.append( $( '<span class="bb-icon-f bb-icon-ellipsis-h"></span>' ) )
+						)
+				);
 			}
 
 			if ( ! data.can_join ) {
