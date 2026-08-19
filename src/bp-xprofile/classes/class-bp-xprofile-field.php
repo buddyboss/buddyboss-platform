@@ -421,6 +421,8 @@ class BP_XProfile_Field {
 	 * Save a profile field.
 	 *
 	 * @since BuddyPress 1.1.0
+	 * @since BuddyBoss [BBVERSION] Returns false when a Bio field would enter a
+	 *                              repeater field set.
 	 *
 	 * @global wpdb $wpdb WordPress database abstraction object.
 	 *
@@ -455,6 +457,21 @@ class BP_XProfile_Field {
 		do_action_ref_array( 'xprofile_field_before_save', array( $this ) );
 
 		$is_new_field = is_null( $this->id );
+
+		/*
+		 * The Bio field is shared with the member's WordPress "Biographical Info",
+		 * so a set that repeats its fields cannot hold one: each repeat would be
+		 * another copy of the same single WordPress value.
+		 *
+		 * Every save is refused, not only the one that puts it there — a field
+		 * written straight to the database is in the same invalid state as one
+		 * added through the admin, and saving it again should say so rather than
+		 * quietly accept it. Deleting it, or switching the repeater off, is the
+		 * way out.
+		 */
+		if ( 'biography' === $this->type && bb_xprofile_is_repeater_group( $this->group_id ) ) {
+			return false;
+		}
 
 		if ( 'membertypes' === $this->type || 'gender' === $this->type || 'socialnetworks' === $this->type || 'biography' === $this->type ) {
 			$field = $wpdb->get_row( $wpdb->prepare( "SELECT id FROM {$bp->profile->table_name_fields} a WHERE parent_id = 0 AND type = %s", $this->type ) );
