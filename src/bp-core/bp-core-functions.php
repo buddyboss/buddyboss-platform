@@ -5253,12 +5253,15 @@ function bp_xprofile_get_selected_options_user_progress( $settings ) {
 	 * checks only; the outbound gravatar probe stays confined to the
 	 * recalculation itself.
 	 *
-	 * Deliberate trade: a member with no uploaded avatar (stored 0) who newly
-	 * adds a gravatar is not detected here — bb_validate_gravatar() and the
-	 * recalculation count gravatars with different predicates, so treating a
-	 * warm gravatar transient as staleness can disagree with what the
-	 * recalculation writes and loop a full recalculation on every render.
-	 * Such members recalculate on the next profile/avatar event instead.
+	 * Gravatar boundaries: staleness honors the recalculation's own counting
+	 * gate (profile gravatars enabled, non-blank default) before trusting a
+	 * cached gravatar, and a newly-countable gravatar (stored 0) is detected
+	 * only from a warm probe cache whose headers match the recalculation's
+	 * own predicate (200 + Link) — never by probing outbound here, and never
+	 * on markers the recalculation would disagree with, which would loop a
+	 * full recalculation on every render. A member whose gravatar was never
+	 * probed through the avatar render path recalculates on their next
+	 * profile/avatar event instead.
 	 */
 	$bb_pc_stale = false;
 
@@ -5266,16 +5269,49 @@ function bp_xprofile_get_selected_options_user_progress( $settings ) {
 		$bb_pc_stored_avatar = (bool) $get_user_data['photo_type']['profile_photo']['is_uploaded'];
 		$bb_pc_live_avatar   = bp_get_user_has_avatar( get_current_user_id() );
 
+		// Whether the recalculation is allowed to count a gravatar at all.
+		$bb_pc_gravatar_countable = bp_enable_profile_gravatar() && 'blank' !== get_option( 'avatar_default', 'mystery' );
+
 		if ( $bb_pc_live_avatar && ! $bb_pc_stored_avatar ) {
 			// An avatar exists but the cached meter says otherwise.
 			$bb_pc_stale = true;
-		} elseif ( ! $bb_pc_live_avatar && $bb_pc_stored_avatar && function_exists( 'bb_validate_gravatar' ) ) {
-			// No uploaded avatar, but the cached flag is set — it may be a
-			// gravatar, so disambiguate the way the previous check did for
-			// exactly this subset.
-			$current_user_data = get_userdata( get_current_user_id() );
-			if ( $current_user_data && ! bb_validate_gravatar( $current_user_data->user_email ) ) {
+		} elseif ( ! $bb_pc_live_avatar && $bb_pc_stored_avatar ) {
+			if ( ! $bb_pc_gravatar_countable ) {
+				// Gravatars cannot be counted (same gate the recalculation
+				// uses), so a stored 1 with no uploaded avatar is stale —
+				// e.g. the admin disabled gravatars after this member's
+				// gravatar was counted.
 				$bb_pc_stale = true;
+			} elseif ( function_exists( 'bb_validate_gravatar' ) ) {
+				// No uploaded avatar, but the cached flag is set — it may be
+				// a gravatar, so disambiguate the way the previous check did
+				// for exactly this subset.
+				$current_user_data = get_userdata( get_current_user_id() );
+				if ( $current_user_data && ! bb_validate_gravatar( $current_user_data->user_email ) ) {
+					$bb_pc_stale = true;
+				}
+			}
+		} elseif ( ! $bb_pc_live_avatar && ! $bb_pc_stored_avatar && $bb_pc_gravatar_countable ) {
+			// Stored 0 with no uploaded avatar — a gravatar may have become
+			// countable since (member added one, or the admin re-enabled
+			// gravatars). Consult only the cached probe headers, and fire
+			// only when they carry the same "HTTP/1.1 200 OK" + Link markers
+			// the recalculation's own probe requires — that guarantees the
+			// recalculation agrees and cannot loop back here.
+			$current_user_data = get_userdata( get_current_user_id() );
+			if ( $current_user_data ) {
+				// Same cache key bp_core_fetch_avatar() writes and bb_validate_gravatar() reads.
+				$bb_pc_grav_key     = base64_encode( 'https://www.gravatar.com/avatar/' . md5( strtolower( $current_user_data->user_email ) ) . '?d=404' );
+				$bb_pc_grav_headers = get_transient( $bb_pc_grav_key );
+
+				if ( is_array( $bb_pc_grav_headers ) && isset( $bb_pc_grav_headers[0] ) && 'HTTP/1.1 200 OK' === $bb_pc_grav_headers[0] ) {
+					foreach ( $bb_pc_grav_headers as $bb_pc_grav_header ) {
+						if ( is_string( $bb_pc_grav_header ) && 0 === stripos( $bb_pc_grav_header, 'link:' ) ) {
+							$bb_pc_stale = true;
+							break;
+						}
+					}
+				}
 			}
 		}
 	}
