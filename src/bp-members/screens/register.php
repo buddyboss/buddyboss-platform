@@ -186,7 +186,7 @@ function bp_core_screen_signup() {
 					 * for any path that bypasses this validation.
 					 */
 					// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Registration is a public form processed without a nonce by design; matches the surrounding field handling.
-					$bb_submitted_member_type = isset( $_POST[ 'field_' . $field_id ] ) ? absint( wp_unslash( $_POST[ 'field_' . $field_id ] ) ) : 0;
+					$bb_submitted_member_type = ( isset( $_POST[ 'field_' . $field_id ] ) && ! is_array( $_POST[ 'field_' . $field_id ] ) ) ? absint( wp_unslash( $_POST[ 'field_' . $field_id ] ) ) : 0;
 					if (
 						function_exists( 'bp_get_xprofile_member_type_field_id' )
 						&& (int) bp_get_xprofile_member_type_field_id() === (int) $field_id

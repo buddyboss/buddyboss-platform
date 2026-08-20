@@ -224,7 +224,9 @@ class BP_XProfile_Field_Type_Member_Types extends BP_XProfile_Field_Type {
 	 * arbitrary post ID. The previous check accepted any existing post, which
 	 * let a crafted signup/profile payload store an unrelated post ID in this
 	 * field. Whether that member type may be self-selected at registration is
-	 * enforced separately at activation
+	 * enforced separately at registration input (see the member-type check in
+	 * bp_core_screen_signup(), src/bp-members/screens/register.php) and, as a
+	 * backstop, at activation
 	 * (see bp_assign_default_member_type_to_activate_user()), so this check
 	 * stays context-free and does not break profile edits that keep a member's
 	 * currently-assigned type.
