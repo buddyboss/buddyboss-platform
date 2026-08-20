@@ -5222,6 +5222,13 @@ function bp_core_xprofile_update_profile_completion_user_progress( $user_id = ''
 /**
  * Function will return the user progress based on the settings you provided.
  *
+ * @since BuddyBoss [BBVERSION] The photo staleness check compares the cached
+ *                              is_uploaded flags against the live avatar and
+ *                              cover state instead of against the gravatar
+ *                              probe alone, so a stale value in either
+ *                              direction triggers one recalculation and a
+ *                              consistent value serves the cached meter.
+ *
  * @param array $settings set of fieldset selected to show in progress & profile or cover photo selected to show in
  *                        progress.
  *
@@ -5232,14 +5239,54 @@ function bp_xprofile_get_selected_options_user_progress( $settings ) {
 	$profile_groups     = $settings['profile_groups'];
 	$profile_photo_type = $settings['profile_photo_type'];
 	// Get user profile data if exists.
-	$get_user_data     = bp_get_user_meta( get_current_user_id(), 'bp_profile_completion_widgets', true );
-	$current_user_data = get_userdata( get_current_user_id() );
-	if ( function_exists( 'bb_validate_gravatar' ) ) {
-		$check_new_gravatar = bb_validate_gravatar( $current_user_data->user_email );
-		$existing_gravatar  = isset( $get_user_data['photo_type'] ) && isset( $get_user_data['photo_type']['profile_photo'] ) && isset( $get_user_data['photo_type']['profile_photo']['is_uploaded'] ) ? $get_user_data['photo_type']['profile_photo']['is_uploaded'] : '';
-		if ( (bool) $check_new_gravatar !== (bool) $existing_gravatar ) {
-			bp_core_xprofile_update_profile_completion_user_progress();
+	$get_user_data = bp_get_user_meta( get_current_user_id(), 'bp_profile_completion_widgets', true );
+
+	/*
+	 * Recalculate only when the cached photo status no longer matches reality.
+	 *
+	 * The previous check compared bb_validate_gravatar() — false unless
+	 * something populated its transient — against the stored is_uploaded flag
+	 * (avatar OR gravatar), so every member with an uploaded avatar mismatched
+	 * permanently and paid a full recalculation on every widget render, while
+	 * a stale 0 (avatar detection unavailable while an offload/CDN plugin was
+	 * inactive) never recalculated at all. Compare like for like using cheap
+	 * checks only; the outbound gravatar probe stays confined to the
+	 * recalculation itself.
+	 *
+	 * Deliberate trade: a member with no uploaded avatar (stored 0) who newly
+	 * adds a gravatar is not detected here — bb_validate_gravatar() and the
+	 * recalculation count gravatars with different predicates, so treating a
+	 * warm gravatar transient as staleness can disagree with what the
+	 * recalculation writes and loop a full recalculation on every render.
+	 * Such members recalculate on the next profile/avatar event instead.
+	 */
+	$bb_pc_stale = false;
+
+	if ( isset( $get_user_data['photo_type']['profile_photo']['is_uploaded'] ) ) {
+		$bb_pc_stored_avatar = (bool) $get_user_data['photo_type']['profile_photo']['is_uploaded'];
+		$bb_pc_live_avatar   = bp_get_user_has_avatar( get_current_user_id() );
+
+		if ( $bb_pc_live_avatar && ! $bb_pc_stored_avatar ) {
+			// An avatar exists but the cached meter says otherwise.
+			$bb_pc_stale = true;
+		} elseif ( ! $bb_pc_live_avatar && $bb_pc_stored_avatar && function_exists( 'bb_validate_gravatar' ) ) {
+			// No uploaded avatar, but the cached flag is set — it may be a
+			// gravatar, so disambiguate the way the previous check did for
+			// exactly this subset.
+			$current_user_data = get_userdata( get_current_user_id() );
+			if ( $current_user_data && ! bb_validate_gravatar( $current_user_data->user_email ) ) {
+				$bb_pc_stale = true;
+			}
 		}
+	}
+
+	if ( ! $bb_pc_stale && isset( $get_user_data['photo_type']['cover_photo']['is_uploaded'] ) ) {
+		$bb_pc_stored_cover = (bool) $get_user_data['photo_type']['cover_photo']['is_uploaded'];
+		$bb_pc_stale        = ( (bool) bp_attachments_get_user_has_cover_image( get_current_user_id() ) !== $bb_pc_stored_cover );
+	}
+
+	if ( $bb_pc_stale ) {
+		bp_core_xprofile_update_profile_completion_user_progress();
 	}
 
 	// Get logged in user Progress.
