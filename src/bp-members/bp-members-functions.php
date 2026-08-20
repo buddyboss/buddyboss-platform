@@ -4099,6 +4099,24 @@ function bp_assign_default_member_type_to_activate_user( $user_id, $key, $user )
 			$get_selected_member_type_on_register = '';
 		}
 
+		/*
+		 * Harden the self-submitted Profile Type before it is trusted below.
+		 *
+		 * The registration form fully controls this value, so a visitor can post
+		 * the ID of a Profile Type that is not offered on the registration form
+		 * (its "_bp_member_type_enable_profile_field" is off) and have it — and
+		 * its mapped WP role — assigned at activation. Ignore it, falling back
+		 * to the admin-configured default type, whenever it is not actually
+		 * offered at registration. Admin-driven paths (send-invite type,
+		 * default registration type) are unaffected.
+		 */
+		if (
+			'' !== $get_selected_member_type_on_register
+			&& ! bb_is_member_type_allowed_on_registration( $get_selected_member_type_on_register )
+		) {
+			$get_selected_member_type_on_register = '';
+		}
+
 		// return to user if default member type is not set.
 		$existing_selected = bp_member_type_default_on_registration();
 
@@ -5579,4 +5597,40 @@ function bb_remove_orphaned_profile_slug( $user_id ) {
 	while ( $wpdb->rows_affected > 0 ) {
 		bb_remove_orphaned_profile_slug( $user_id );
 	}
+}
+
+/**
+ * Check whether a profile type may be self-selected on the registration form.
+ *
+ * Mirrors the gate the registration Profile Type dropdown itself uses
+ * (see BP_XProfile_Field_Type_Member_Types::edit_field_options_html()): the
+ * type must be an active member-type post whose "_bp_member_type_enable_profile_field"
+ * meta is unset or '1'. Used to reject a Profile Type that was submitted at
+ * signup but is not actually offered on the registration form, closing the
+ * mass-assignment path where a hidden, role-mapped Profile Type could be
+ * self-assigned during registration.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int $member_type_id Member type post ID submitted at registration.
+ *
+ * @return bool True when the type is offered on the registration form.
+ */
+function bb_is_member_type_allowed_on_registration( $member_type_id ) {
+	$member_type_id = absint( $member_type_id );
+
+	if ( empty( $member_type_id ) ) {
+		return false;
+	}
+
+	// Must be one of the active member-type posts (same source the dropdown iterates).
+	$active_member_types = array_map( 'absint', (array) bp_get_active_member_types() );
+	if ( ! in_array( $member_type_id, $active_member_types, true ) ) {
+		return false;
+	}
+
+	// Must be enabled for the registration profile field (same gate as the dropdown).
+	$enabled = get_post_meta( $member_type_id, '_bp_member_type_enable_profile_field', true );
+
+	return ( '' === $enabled || '1' === $enabled );
 }
