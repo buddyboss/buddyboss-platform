@@ -652,6 +652,32 @@ class BP_Nouveau extends BP_Theme_Compat {
 	 */
 	public function localize_scripts() {
 
+		// The activity editor's WYSIWYG toolbar tooltips (bold, ordered list, quote, etc.). Translatable via
+		// standard gettext/Loco Translate (domain 'buddyboss') and, additionally, registered with WPML String
+		// Translation so sites managing strings through WPML (rather than per-locale .mo files) can translate
+		// them the same way BuddyPress Multilingual registers other dynamic BuddyBoss strings.
+		$activity_editor_button_labels = array(
+			'bold'          => __( 'Bold', 'buddyboss' ),
+			'italic'        => __( 'Italic', 'buddyboss' ),
+			'unorderedlist' => __( 'Unordered list', 'buddyboss' ),
+			'orderedlist'   => __( 'Ordered list', 'buddyboss' ),
+			'quote'         => __( 'Quote', 'buddyboss' ),
+			'anchor'        => __( 'Link', 'buddyboss' ),
+			'pre'           => __( 'Code', 'buddyboss' ),
+			'h3'            => __( 'Heading 3', 'buddyboss' ),
+			'h4'            => __( 'Heading 4', 'buddyboss' ),
+		);
+
+		if ( has_action( 'wpml_register_single_string' ) ) {
+			foreach ( $activity_editor_button_labels as $button_name => $button_label ) {
+				$string_name = 'activity editor button - ' . $button_name;
+
+				do_action( 'wpml_register_single_string', 'buddyboss', $string_name, $button_label );
+
+				$activity_editor_button_labels[ $button_name ] = apply_filters( 'wpml_translate_single_string', $button_label, 'buddyboss', $string_name );
+			}
+		}
+
 		$params = array(
 			'ajaxurl'                    => bp_core_ajax_url(),
 			'only_admin_notice'          => __( 'As you are the only organizer of this group, you cannot leave it. You can either delete the group or promote another member to be an organizer first and then leave the group.', 'buddyboss' ),
@@ -662,6 +688,7 @@ class BP_Nouveau extends BP_Theme_Compat {
 			'unsaved_changes'            => __( 'Your profile has unsaved changes. If you leave the page, the changes will be lost.', 'buddyboss' ),
 			'object_nav_parent'          => '#buddypress',
 			'anchorPlaceholderText'      => __( 'Paste or type a link', 'buddyboss' ),
+			'activityEditorButtonLabels' => $activity_editor_button_labels,
 			'empty_field'                => __( 'New Field', 'buddyboss' ),
 			'close'                      => __( 'Close', 'buddyboss' ),
 			'parent_group_leave_confirm' => esc_html__( 'By leaving this main group you will automatically be removed and unsubscribed to any subgroups relating to this group.', 'buddyboss' ),

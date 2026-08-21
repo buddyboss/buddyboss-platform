@@ -23,6 +23,19 @@ window.bp = window.bp || {};
 		bbRlIsActivityPolls    = bpNouveau.activity_polls,
 		bbRlPlaceholderText    = bpNouveau.anchorPlaceholderText;
 
+	// Build the WYSIWYG toolbar buttons list, applying translated tooltip labels when available
+	// so the format toolbar (bold, ordered list, quote, etc.) isn't stuck in MediumEditor's English defaults.
+	function bbGetActivityEditorToolbarButtons() {
+		var buttonNames  = [ 'bold', 'italic', 'unorderedlist', 'orderedlist', 'quote', 'anchor', 'pre', 'h3', 'h4' ],
+			buttonLabels = bpNouveau.activityEditorButtonLabels || {};
+
+		return buttonNames.map(
+			function ( buttonName ) {
+				return buttonLabels[ buttonName ] ? { name: buttonName, aria: buttonLabels[ buttonName ] } : buttonName;
+			}
+		);
+	}
+
 	_.extend( bp, _.pick( wp, 'Backbone', 'ajax', 'template' ) );
 
 	bp.Models      = bp.Models || {};
@@ -274,7 +287,7 @@ window.bp = window.bp || {};
 						hideOnClick: true
 					},
 					toolbar: {
-						buttons: [ 'bold', 'italic', 'unorderedlist', 'orderedlist', 'quote', 'anchor', 'pre', 'h3', 'h4' ],
+						buttons: bbGetActivityEditorToolbarButtons(),
 						relativeContainer: edit_activity_editor_content,
 						static: true,
 						updateOnEmptySelection: true
@@ -2968,7 +2981,7 @@ window.bp = window.bp || {};
 											hideOnClick: true
 										},
 										toolbar: {
-											buttons: [ 'bold', 'italic', 'unorderedlist', 'orderedlist', 'quote', 'anchor', 'pre', 'h3', 'h4' ],
+											buttons: bbGetActivityEditorToolbarButtons(),
 											relativeContainer: whatsnewcontent,
 											static: true,
 											updateOnEmptySelection: true
