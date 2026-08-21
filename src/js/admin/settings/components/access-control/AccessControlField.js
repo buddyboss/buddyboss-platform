@@ -205,8 +205,14 @@ export function AccessControlField( { field, value, onChange } ) {
 		if ( typeConfig && typeConfig.sub_types && typeConfig.sub_types.items && typeConfig.sub_types.items.length > 0 ) {
 			setOptions( [] );
 			setRecipientOptions( [] );
+
+			// Persist the type switch so the previous rule stops enforcing.
+			onChange( buildValue( newType, '', [], {} ) );
 			return;
 		}
+
+		// Persist the type switch so the previous rule stops enforcing.
+		onChange( buildValue( newType, '', [], {} ) );
 
 		// Direct type — fetch options via AJAX.
 		setLoading( true );
@@ -253,8 +259,16 @@ export function AccessControlField( { field, value, onChange } ) {
 		if ( ! newSubType || ! typeConfig || ! typeConfig.sub_types ) {
 			setOptions( [] );
 			setRecipientOptions( [] );
+
+			// Persist the cleared sub-type so the previous rule stops enforcing.
+			onChange( buildValue( selectedType, '', [], {} ) );
 			return;
 		}
+
+		// Persist the sub-type switch immediately — without this, changing the
+		// provider alone never saves and the previous provider's rule keeps
+		// enforcing silently until an option is toggled.
+		onChange( buildValue( selectedType, newSubType, [], {} ) );
 
 		setLoading( true );
 		setFetchError( '' );
