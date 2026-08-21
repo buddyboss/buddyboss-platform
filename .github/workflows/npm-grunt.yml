@@ -38,7 +38,7 @@ jobs:
     - name: Install dependencies
       run: |
         sudo apt-get update
-        sudo apt-get install -y build-essential python3 gcc g++ make
+        sudo apt-get install -y build-essential python3 gcc g++ make php-cli php-mbstring
 
     - name: Setup Python 3
       run: |
@@ -80,10 +80,35 @@ jobs:
     - name: Install remaining dependencies
       run: npm install --legacy-peer-deps --no-audit --force
 
+    # The @testing-library packages are declared in package.json but are absent
+    # from package-lock.json, which is still lockfileVersion 1 and predates
+    # them. The install above therefore does not reliably leave them behind --
+    # on Node 14 / npm 6 it does not -- and `grunt checkDependencies` aborts the
+    # whole build over three packages no Grunt task even uses. Installing them
+    # last, straight from the ranges package.json declares and without writing
+    # to it, makes the check pass on what is actually there.
+    # Remove this once package-lock.json is regenerated.
+    - name: Install Jest testing libraries
+      run: |
+        PACKAGES=$(node -e "const d = require('./package.json').devDependencies; console.log( Object.keys( d ).filter( k => k.startsWith('@testing-library/') ).map( k => k + '@' + d[ k ] ).join(' ') )")
+        echo "Installing: $PACKAGES"
+        npm install --no-save --legacy-peer-deps --no-audit --force $PACKAGES
+
+    # `grunt makepot` shells out to WP-CLI (`wp i18n make-pot`) since the POT
+    # generation moved off grunt-wp-i18n. The runner does not ship WP-CLI, so
+    # without this the task exits 127 and takes the build down with it.
+    - name: Install WP-CLI
+      run: |
+        curl -sSL -o wp-cli.phar https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
+        chmod +x wp-cli.phar
+        sudo mv wp-cli.phar /usr/local/bin/wp
+        wp --info
+
     - name: Display versions
       run: |
         npm -v
         node -v
+        wp --version
 
     - name: Run Grunt
       run: grunt --verbose
