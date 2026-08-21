@@ -186,12 +186,18 @@ function bp_core_screen_signup() {
 					 * for any path that bypasses this validation.
 					 */
 					// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Registration is a public form processed without a nonce by design; matches the surrounding field handling.
-					$bb_submitted_member_type = ( isset( $_POST[ 'field_' . $field_id ] ) && ! is_array( $_POST[ 'field_' . $field_id ] ) ) ? absint( wp_unslash( $_POST[ 'field_' . $field_id ] ) ) : 0;
+					$bb_submitted_member_type = isset( $_POST[ 'field_' . $field_id ] ) ? wp_unslash( $_POST[ 'field_' . $field_id ] ) : '';
 					if (
 						(int) bp_get_xprofile_member_type_field_id() === (int) $field_id
 						&& ! empty( $bb_submitted_member_type )
 						&& ! bp_current_user_can( 'bp_moderate' )
-						&& ! bb_is_member_type_allowed_on_registration( $bb_submitted_member_type )
+						&& (
+							// An array is never a valid single-select submission; reject it
+							// (rather than skip validation) and short-circuit absint() so it
+							// is not called on an array.
+							is_array( $bb_submitted_member_type )
+							|| ! bb_is_member_type_allowed_on_registration( absint( $bb_submitted_member_type ) )
+						)
 					) {
 						$bp->signup->errors[ 'field_' . $field_id ] = sprintf(
 							'<div class="bp-messages bp-feedback error">
