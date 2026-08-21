@@ -175,6 +175,38 @@ function bp_core_screen_signup() {
 							);
 						}
 					}
+
+					/*
+					 * Reject a Profile Type that is not actually offered on the registration
+					 * form. The hidden signup_profile_field_ids and field_<id> values are
+					 * attacker-controllable, so a Profile Type not shown in the registration
+					 * dropdown could otherwise be submitted and, via its WP role mapping,
+					 * assigned at activation. The activation-time gate in
+					 * bp_assign_default_member_type_to_activate_user() remains as a backstop
+					 * for any path that bypasses this validation.
+					 */
+					// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Registration is a public form processed without a nonce by design; matches the surrounding field handling.
+					$bb_submitted_member_type = isset( $_POST[ 'field_' . $field_id ] ) ? wp_unslash( $_POST[ 'field_' . $field_id ] ) : '';
+					if (
+						(int) bp_get_xprofile_member_type_field_id() === (int) $field_id
+						&& ! empty( $bb_submitted_member_type )
+						&& ! bp_current_user_can( 'bp_moderate' )
+						&& (
+							// An array is never a valid single-select submission; reject it
+							// (rather than skip validation) and short-circuit absint() so it
+							// is not called on an array.
+							is_array( $bb_submitted_member_type )
+							|| ! bb_is_member_type_allowed_on_registration( absint( $bb_submitted_member_type ) )
+						)
+					) {
+						$bp->signup->errors[ 'field_' . $field_id ] = sprintf(
+							'<div class="bp-messages bp-feedback error">
+								<span class="bp-icon" aria-hidden="true"></span>
+								<p>%s</p>
+							</div>',
+							__( 'Please select a valid profile type.', 'buddyboss' )
+						);
+					}
 				}
 
 				// This situation doesn't naturally occur so bounce to website root.

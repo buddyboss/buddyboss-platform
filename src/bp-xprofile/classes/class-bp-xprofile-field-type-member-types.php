@@ -220,12 +220,26 @@ class BP_XProfile_Field_Type_Member_Types extends BP_XProfile_Field_Type {
 	/**
 	 * Check if valid.
 	 *
+	 * A submitted value must reference an actual member-type post, not any
+	 * arbitrary post ID. The previous check accepted any existing post, which
+	 * let a crafted signup/profile payload store an unrelated post ID in this
+	 * field. Whether that member type may be self-selected at registration is
+	 * enforced separately at registration input (see the member-type check in
+	 * bp_core_screen_signup(), src/bp-members/screens/register.php) and, as a
+	 * backstop, at activation
+	 * (see bp_assign_default_member_type_to_activate_user()), so this check
+	 * stays context-free and does not break profile edits that keep a member's
+	 * currently-assigned type.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 * @since BuddyBoss [BBVERSION] Restrict to member-type posts only.
+	 *
 	 * @param int $values post id.
 	 *
 	 * @return bool
 	 */
 	public function is_valid( $values ) {
-		return empty( $values ) || get_post( $values );
+		return empty( $values ) || ( bp_get_member_type_post_type() === get_post_type( $values ) );
 	}
 
 	/**
