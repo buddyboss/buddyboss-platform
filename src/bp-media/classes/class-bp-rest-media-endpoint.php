@@ -170,6 +170,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 	 * @apiParam {Array} [exclude] Ensure result set excludes specific IDs.
 	 * @apiParam {Array} [include] Ensure result set includes specific IDs.
 	 * @apiParam {Boolean} [count_total=true] Show total count or not.
+	 * @apiParam {String|Object} [embed_fields] Comma separated list of fields to build for each item embedded with `_embed`, either for every relation or one relation at a time.
 	 */
 	public function get_items( $request ) {
 		$args = array(
@@ -343,6 +344,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 	 * @apiVersion     1.0.0
 	 * @apiPermission  LoggedInUser if the site is in Private Network.
 	 * @apiParam {Number} id A unique numeric ID for the media photo.
+	 * @apiParam {String|Object} [embed_fields] Comma separated list of fields to build for each item embedded with `_embed`, either for every relation or one relation at a time.
 	 */
 	public function get_item( $request ) {
 
@@ -1861,6 +1863,8 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 	 */
 	public function get_collection_params() {
 		$params = parent::get_collection_params();
+
+		$params['embed_fields'] = bb_rest_embed_fields_param();
 
 		$params['order'] = array(
 			'description'       => __( 'Order sort attribute ascending or descending.', 'buddyboss' ),

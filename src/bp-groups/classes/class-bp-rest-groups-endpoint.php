@@ -130,6 +130,7 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 	 * @apiParam {Boolean} [show_hidden] Whether results should include hidden Groups.
 	 * @apiParam {String=all,personal} [scope=all] Limit result set to items with a specific scope.
 	 * @apiParam {Boolean} [can_post] Fetch current users groups which can post activity in it.
+	 * @apiParam {String|Object} [embed_fields] Comma separated list of fields to build for each item embedded with `_embed`, either for every relation or one relation at a time.
 	 */
 	public function get_items( $request ) {
 		$args = array(
@@ -297,6 +298,7 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 	 * @apiVersion     1.0.0
 	 * @apiPermission  LoggedInUser if the site is in Private Network.
 	 * @apiParam {Number} id A unique numeric ID for the Group.
+	 * @apiParam {String|Object} [embed_fields] Comma separated list of fields to build for each item embedded with `_embed`, either for every relation or one relation at a time.
 	 */
 	public function get_item( $request ) {
 		$group = $this->get_group_object( $request );
@@ -1891,6 +1893,8 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 	public function get_collection_params() {
 		$params                       = parent::get_collection_params();
 		$params['context']['default'] = 'view';
+
+		$params['embed_fields'] = bb_rest_embed_fields_param();
 
 		$params['type'] = array(
 			'description'       => __( 'Shorthand for certain orderby/order combinations.', 'buddyboss' ),

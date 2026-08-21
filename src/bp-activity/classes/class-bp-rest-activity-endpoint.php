@@ -239,6 +239,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 	 * @apiParam {String=stream,threaded,false} [display_comments=false] No comments by default, stream for within stream display, threaded for below each activity item.
 	 * @apiParam {String} [comment_fields] Comma separated list of fields to build for each returned comment.
 	 * @apiParam {String} [attachment_fields] Comma separated list of fields to build for each returned media, video or document.
+	 * @apiParam {String|Object} [embed_fields] Comma separated list of fields to build for each item embedded with `_embed`, either for every relation or one relation at a time.
 	 * @apiParam {Array=public,loggedin,onlyme,friends,media} [privacy] Privacy of the activity.
 	 * @apiParam {String=activity,group} [pin_type] Show pin activity of feed type.
 	 * @apiParam {Number} [topic_id] Limit result set to items with a specific topic ID.
@@ -465,6 +466,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 	 * @apiParam {String=stream,threaded,false} [display_comments=false] No comments by default, stream for within stream display, threaded for below each activity item.
 	 * @apiParam {String} [comment_fields] Comma separated list of fields to build for each returned comment.
 	 * @apiParam {String} [attachment_fields] Comma separated list of fields to build for each returned media, video or document.
+	 * @apiParam {String|Object} [embed_fields] Comma separated list of fields to build for each item embedded with `_embed`, either for every relation or one relation at a time.
 	 */
 	public function get_item( $request ) {
 		$activity = $this->get_activity_object( $request );
@@ -3514,6 +3516,8 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			'sanitize_callback' => 'sanitize_text_field',
 			'validate_callback' => 'rest_validate_request_arg',
 		);
+
+		$params['embed_fields'] = bb_rest_embed_fields_param();
 
 		$params['display_comments'] = array(
 			'description'       => __( 'No comments by default, stream for within stream display, threaded for below each activity item.', 'buddyboss' ),

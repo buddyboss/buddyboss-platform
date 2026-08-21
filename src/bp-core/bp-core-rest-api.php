@@ -524,6 +524,349 @@ function bb_rest_set_nested_item_fields( $nested_request, $request, $fields_para
 }
 
 /**
+ * Argument definition for the `embed_fields` request parameter.
+ *
+ * Controllers whose items carry embeddable links add this to their collection
+ * parameters, so that the selection shows up in `OPTIONS` beside the rest. The
+ * parameter is read off the request wherever it arrives, so it also works on
+ * the routes that declare no arguments of their own.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return array The argument definition.
+ */
+function bb_rest_embed_fields_param() {
+	return array(
+		'description'       => __( 'Limit the items returned under `_embedded` to a comma separated list of fields. Send one list for every relation -- `embed_fields=id,name` -- or one list per relation -- `embed_fields[user]=id,name` -- where `*` is the selection the relations without one of their own fall back to. The item\'s own `_fields` cannot reach them, because WordPress builds an embedded item from its link alone.', 'buddyboss' ),
+		'default'           => '',
+		'type'              => array( 'string', 'object' ),
+		'sanitize_callback' => 'bb_rest_parse_embed_fields',
+	);
+}
+
+/**
+ * Parse the field selection a request sent for the items it has embedded.
+ *
+ * The selection takes one of two shapes. A bare list -- `embed_fields=id,name`,
+ * or the `embed_fields[]=id&embed_fields[]=name` a client spells it with just
+ * as readily -- is the selection every embeddable relation falls back to, and
+ * is held here under `*`. A list per relation -- `embed_fields[user]=id,name`
+ * -- names the relations it narrows, leaves the rest whole, and may carry a
+ * `*` of its own for the relations it does not name.
+ *
+ * Parsing a selection that has already been parsed returns it unchanged, so a
+ * controller is free to sanitise the parameter with this and the value still
+ * reads the same further down.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array|string $embed_fields Raw value of the `embed_fields` parameter.
+ *
+ * @return array Comma separated field lists, keyed by link relation.
+ */
+function bb_rest_parse_embed_fields( $embed_fields ) {
+	if ( empty( $embed_fields ) ) {
+		return array();
+	}
+
+	// Anything that names no relation is the selection for all of them.
+	if ( ! is_array( $embed_fields ) || wp_is_numeric_array( $embed_fields ) ) {
+		$embed_fields = array( '*' => $embed_fields );
+	}
+
+	$selections = array();
+
+	foreach ( $embed_fields as $rel => $fields ) {
+		// A list arrives as a string or, one field per key, as an array.
+		if ( ! is_scalar( $fields ) && ! is_array( $fields ) ) {
+			continue;
+		}
+
+		$fields = array_filter( array_map( 'sanitize_text_field', wp_parse_list( $fields ) ), 'strlen' );
+
+		if ( empty( $fields ) ) {
+			continue;
+		}
+
+		$selections[ $rel ] = implode( ',', $fields );
+	}
+
+	return $selections;
+}
+
+/**
+ * Hold the selections the items embedded in the current response are built with.
+ *
+ * `WP_REST_Server::embed_links()` builds an embedded item from its link alone:
+ * `WP_REST_Request::from_url()` is handed the `href` and nothing else, and the
+ * request that asked for the embed is never consulted. The selection therefore
+ * has to be waiting for it, keyed by that same `href`.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array|null $selections Optional. Selections to hold, keyed by `href`.
+ *                               Null reads what is held. Default null.
+ *
+ * @return array Comma separated field lists, keyed by `href`.
+ */
+function bb_rest_held_embed_fields( $selections = null ) {
+	static $held = array();
+
+	if ( is_array( $selections ) ) {
+		$held = $selections;
+	}
+
+	return $held;
+}
+
+/**
+ * Remember a request built for an embedded item, or recognise one.
+ *
+ * The mark cannot travel on the request: a parameter or a header is the
+ * client's to send, and a request that arrived wearing one would have its links
+ * stripped and would slip past the reset every request of its own performs.
+ * The requests are held here by identity instead, in the one structure PHP has
+ * for the purpose.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param WP_REST_Request|null $request  Optional. Request to recognise, or to
+ *                                       remember when `$remember` is set.
+ *                                       Anything else forgets every request
+ *                                       held. Default null.
+ * @param bool                 $remember Optional. Whether to remember the
+ *                                       request rather than recognise it.
+ *                                       Default false.
+ *
+ * @return bool Whether the request is one built for an embedded item.
+ */
+function bb_rest_embedded_request( $request = null, $remember = false ) {
+	static $embedded = null;
+
+	if ( ! $request instanceof WP_REST_Request || ! $embedded instanceof SplObjectStorage ) {
+		$embedded = new SplObjectStorage();
+	}
+
+	if ( ! $request instanceof WP_REST_Request ) {
+		return false;
+	}
+
+	if ( $remember ) {
+		$embedded->attach( $request );
+
+		return true;
+	}
+
+	return $embedded->contains( $request );
+}
+
+/**
+ * Map the embeddable links of a response to the selection their relation asked for.
+ *
+ * A collection carries the links of each item inside its data, a single item
+ * carries them on the response, and the two spell an attribute differently:
+ * the links of an item have `embeddable` beside `href`, the links of a
+ * response keep it under `attributes`.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param WP_REST_Response $response   Response the links belong to.
+ * @param array            $selections Comma separated field lists, keyed by link relation.
+ *
+ * @return array Comma separated field lists, keyed by `href`.
+ */
+function bb_rest_map_embed_fields_to_links( $response, $selections ) {
+	$data      = $response->get_data();
+	$link_sets = array( $response->get_links() );
+
+	if ( is_array( $data ) ) {
+		if ( wp_is_numeric_array( $data ) ) {
+			foreach ( $data as $item ) {
+				if ( is_array( $item ) && ! empty( $item['_links'] ) && is_array( $item['_links'] ) ) {
+					$link_sets[] = $item['_links'];
+				}
+			}
+		} elseif ( ! empty( $data['_links'] ) && is_array( $data['_links'] ) ) {
+			$link_sets[] = $data['_links'];
+		}
+	}
+
+	$map      = array();
+	$disputed = array();
+
+	foreach ( $link_sets as $links ) {
+		foreach ( (array) $links as $rel => $rel_links ) {
+			if ( isset( $selections[ $rel ] ) ) {
+				$fields = $selections[ $rel ];
+			} elseif ( isset( $selections['*'] ) ) {
+				$fields = $selections['*'];
+			} else {
+				continue;
+			}
+
+			foreach ( (array) $rel_links as $link ) {
+				$attributes = isset( $link['attributes'] ) ? $link['attributes'] : $link;
+
+				if ( empty( $link['href'] ) || empty( $attributes['embeddable'] ) ) {
+					continue;
+				}
+
+				/*
+				 * WordPress builds and caches an embedded item once per
+				 * `href`, so two relations pointing at the same URL cannot be
+				 * answered with two selections. Rather than let whichever was
+				 * read last decide, neither does: the item is built whole,
+				 * which is the only answer that shortchanges no one.
+				 */
+				if ( isset( $map[ $link['href'] ] ) && $map[ $link['href'] ] !== $fields ) {
+					$disputed[ $link['href'] ] = true;
+				}
+
+				$map[ $link['href'] ] = $fields;
+			}
+		}
+	}
+
+	return array_diff_key( $map, $disputed );
+}
+
+/**
+ * Hold the field selection the items of a response are to be embedded with.
+ *
+ * The response is not touched. All this leaves behind is the selection each
+ * embeddable link is owed, which `bb_rest_narrow_embedded_request()` picks up
+ * once the server starts building the embeds.
+ *
+ * The same callback answers the embedded items themselves, since WordPress
+ * runs them through this filter too. An item narrowed to a selection that does
+ * not name `_links` is answered without them, the way `_fields` answers the
+ * items of a collection.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param WP_REST_Response $response Result to send to the client.
+ * @param WP_REST_Server   $server   Server instance.
+ * @param WP_REST_Request  $request  Request used to generate the response.
+ *
+ * @return WP_REST_Response The response, untouched but for the links of a narrowed item.
+ */
+function bb_rest_prepare_embedded_fields( $response, $server, $request ) {
+	if ( ! $response instanceof WP_REST_Response || ! $request instanceof WP_REST_Request ) {
+		return $response;
+	}
+
+	// One of the embedded items, on its way back to the item that asked for it.
+	if ( bb_rest_embedded_request( $request ) ) {
+		$fields = $request->get_param( '_fields' );
+
+		if ( ! empty( $fields ) && ! rest_is_field_included( '_links', wp_parse_list( $fields ) ) ) {
+			foreach ( array_keys( $response->get_links() ) as $rel ) {
+				$response->remove_link( $rel );
+			}
+		}
+
+		return $response;
+	}
+
+	// A request of its own: nothing an earlier one held is still owed to it.
+	bb_rest_forget_embed_fields();
+
+	if ( 0 !== strpos( ltrim( $request->get_route(), '/' ), bp_rest_namespace() . '/' ) ) {
+		return $response;
+	}
+
+	$selections = bb_rest_parse_embed_fields( $request->get_param( 'embed_fields' ) );
+
+	if ( empty( $selections ) ) {
+		return $response;
+	}
+
+	bb_rest_held_embed_fields( bb_rest_map_embed_fields_to_links( $response, $selections ) );
+
+	return $response;
+}
+add_filter( 'rest_post_dispatch', 'bb_rest_prepare_embedded_fields', 11, 3 );
+
+/**
+ * Carry the selection an embedded item is owed onto the request that builds it.
+ *
+ * This is the only place the selection can reach: WordPress generates the
+ * request from the link's `href`, so the `href` is all there is to recognise
+ * it by. The request is remembered as well, so that its response is answered
+ * as an embedded item rather than as a request of its own.
+ *
+ * The selection is set as a query parameter, since dispatch replaces the URL
+ * parameters of a request wholesale once it matches a route.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param WP_REST_Request|false $request Generated request object, or false if
+ *                                       the URL could not be parsed.
+ * @param string                $url     URL the request was generated from.
+ *
+ * @return WP_REST_Request|false The request, narrowed to what its relation asked for.
+ */
+function bb_rest_narrow_embedded_request( $request, $url ) {
+	$held = bb_rest_held_embed_fields();
+
+	if ( empty( $held ) || ! $request instanceof WP_REST_Request ) {
+		return $request;
+	}
+
+	/*
+	 * Every request built while a selection is held is one of the embedded
+	 * items, including the ones whose relation asked for nothing: the response
+	 * has to be recognised either way, or it would be taken for a request of
+	 * its own and would clear what the rest of the embeds are still owed.
+	 */
+	bb_rest_embedded_request( $request, true );
+
+	if ( isset( $held[ $url ] ) ) {
+		$query = $request->get_query_params();
+
+		$query['_fields'] = $held[ $url ];
+
+		$request->set_query_params( $query );
+	}
+
+	return $request;
+}
+add_filter( 'rest_request_from_url', 'bb_rest_narrow_embedded_request', 10, 2 );
+
+/**
+ * Forget what a response owed the items embedded in it.
+ *
+ * The next request of its own clears this anyway, but not every process serves
+ * exactly one: `/batch/v1` dispatches several, and WP-CLI and cron dispatch
+ * whatever they please. Letting go of the selection the moment the response it
+ * belongs to has been assembled keeps it from reaching any of them.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $result Response data to send to the client.
+ *
+ * @return array The response data, untouched.
+ */
+function bb_rest_forget_embedded_fields( $result ) {
+	bb_rest_forget_embed_fields();
+
+	return $result;
+}
+add_filter( 'rest_pre_echo_response', 'bb_rest_forget_embedded_fields' );
+
+/**
+ * Let go of every selection and every embedded request being held.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_rest_forget_embed_fields() {
+	bb_rest_held_embed_fields( array() );
+	bb_rest_embedded_request();
+}
+
+/**
  * Set the global variable for the REST request.
  *
  * @param mixed $response The response data.
