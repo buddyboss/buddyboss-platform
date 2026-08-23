@@ -194,8 +194,20 @@ function bb_media_sanitize_extensions( $value, $option_name = '' ) {
 			}
 		}
 
-		// Merge toggle states into existing stored data.
-		$existing = bp_get_option( $option_name, array() );
+		// Merge toggle states into existing stored data, falling back to the
+		// hard-coded defaults when the option has never been saved yet so a
+		// toggle flip doesn't wipe out the default extensions to an empty
+		// array before any of them have been persisted.
+		//
+		// @since BuddyBoss [BBVERSION]
+		$default_extensions = array();
+		if ( 'bp_video_extensions_support' === $option_name && function_exists( 'bp_video_allowed_video_type' ) ) {
+			$default_extensions = bp_video_allowed_video_type();
+		} elseif ( 'bp_document_extensions_support' === $option_name && function_exists( 'bp_media_allowed_document_type' ) ) {
+			$default_extensions = bp_media_allowed_document_type();
+		}
+
+		$existing = bp_get_option( $option_name, $default_extensions );
 
 		foreach ( $value as $key => $is_active ) {
 			$sanitized_key = sanitize_key( $key );
@@ -765,8 +777,9 @@ function bb_media_create_test_upload() {
  * @return array Toggle list options.
  */
 function bb_media_get_extension_options( $option_name, $include_default = false ) {
-	$extensions = bp_get_option( $option_name, array() );
-	$options    = array();
+	$default_extensions = function_exists( 'bp_media_allowed_document_type' ) ? bp_media_allowed_document_type() : array();
+	$extensions         = bp_get_option( $option_name, $default_extensions );
+	$options            = array();
 
 	foreach ( $extensions as $key => $ext ) {
 		if ( ! is_array( $ext ) || empty( $ext['extension'] ) ) {
@@ -800,8 +813,9 @@ function bb_media_get_extension_options( $option_name, $include_default = false 
  * @return array Full extension data keyed by extension ID.
  */
 function bb_media_get_extension_data( $option_name ) {
-	$extensions = bp_get_option( $option_name, array() );
-	$data       = array();
+	$default_extensions = function_exists( 'bp_media_allowed_document_type' ) ? bp_media_allowed_document_type() : array();
+	$extensions         = bp_get_option( $option_name, $default_extensions );
+	$data               = array();
 
 	foreach ( $extensions as $key => $ext ) {
 		if ( ! is_array( $ext ) || empty( $ext['extension'] ) ) {
