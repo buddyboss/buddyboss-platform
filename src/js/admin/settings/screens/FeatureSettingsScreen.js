@@ -205,6 +205,11 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 	const debouncedSaveRef = useRef();
 	// Monotonic sequence for in-flight saves — see the out-of-order guard in the debounced save.
 	const saveSeqRef = useRef(0);
+	// The feature currently displayed on screen. A save response whose closure
+	// captured a different featureId (the admin navigated away before it
+	// resolved, without saving on the new feature — so the seq guard alone
+	// would pass) must not apply screen state or toast over the new feature.
+	const displayedFeatureIdRef = useRef(featureId);
 
 	// Ref for latest settings so refetch (reactions) can update cache without replacing state.
 	const settingsRef = useRef(settings);
@@ -560,6 +565,8 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 	// Setup debounced save (auto-save on change)
 	// Uses AJAX endpoint for feature settings.
 	useEffect(() => {
+		displayedFeatureIdRef.current = featureId;
+
 		// Single-flight save channel, LOCAL to this featureId's effect run: at
 		// most one request in flight per channel; newer payloads queue in
 		// channelPending (cumulative, newest-wins) and dispatch when the
@@ -642,11 +649,15 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 							Object.assign( window.bbAdminData, response.data.bbAdminDataUpdates );
 						}
 
-						// Superseded response: a newer save has been dispatched
-						// since — skip the SCREEN state application and the toast
-						// (the newer save shows its own on arrival). The feature
-						// cache and global flags above are already reconciled.
-						if ( saveSeq !== saveSeqRef.current ) {
+						// Skip the SCREEN state application and the toast when this
+						// response is superseded (a newer save dispatched since —
+						// its own response handles the screen) OR belongs to a
+						// feature the admin has navigated away from (merging its
+						// fields/toast into the newly-displayed feature would be
+						// wrong; the reactions path would even replace the new
+						// feature's panels). The feature cache and global flags
+						// above are already reconciled either way.
+						if ( saveSeq !== saveSeqRef.current || featureId !== displayedFeatureIdRef.current ) {
 							return;
 						}
 
