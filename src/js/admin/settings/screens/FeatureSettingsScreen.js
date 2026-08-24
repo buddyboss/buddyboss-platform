@@ -604,9 +604,48 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 			})
 				.then((response) => {
 					if (response.success) {
+						// Use actual saved values from server response (may differ from
+						// submitted values due to server-side validation/revert).
+						var actualSaved = ( response.data && response.data.saved ) ? response.data.saved : fieldsToSave;
+
+						// Always reconcile THIS feature's cache with the server echo —
+						// even when this response has been superseded by another
+						// feature's save. The per-feature single-flight channel
+						// guarantees same-feature responses arrive in dispatch order,
+						// so this echo is the newest for the featureId captured in
+						// this closure; skipping it would leave the feature's cache
+						// holding pre-edit values on the next cache-first render.
+						if ( 'reactions' !== featureId ) {
+							const cachedData = getCachedFeatureData(featureId);
+							if (cachedData) {
+								setCachedFeatureData(featureId, {
+									...cachedData,
+									settings: { ...cachedData.settings, ...actualSaved },
+								});
+							}
+						}
+
+						// Merge any cross-feature flags pushed by the server back into
+						// window.bbAdminData so section-level conditionals reading from
+						// the `bbAdminData` source re-evaluate against fresh values
+						// without a page reload (e.g. Login Redirects → Profile Type
+						// Redirects section reacts to the `bp-member-type-enable-disable`
+						// toggle that lives in the Members feature). These are global
+						// server truths, so they apply regardless of supersession.
+						if (
+							response.data
+							&& response.data.bbAdminDataUpdates
+							&& 'object' === typeof response.data.bbAdminDataUpdates
+							&& 'undefined' !== typeof window
+							&& window.bbAdminData
+						) {
+							Object.assign( window.bbAdminData, response.data.bbAdminDataUpdates );
+						}
+
 						// Superseded response: a newer save has been dispatched
-						// since — skip state application AND the toast (the
-						// newer save shows its own on arrival).
+						// since — skip the SCREEN state application and the toast
+						// (the newer save shows its own on arrival). The feature
+						// cache and global flags above are already reconciled.
 						if ( saveSeq !== saveSeqRef.current ) {
 							return;
 						}
@@ -617,22 +656,6 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 						});
 
 						setChangedFields({});
-
-						// Merge any cross-feature flags pushed by the server back into
-						// window.bbAdminData so section-level conditionals reading from
-						// the `bbAdminData` source re-evaluate against fresh values
-						// without a page reload (e.g. Login Redirects → Profile Type
-						// Redirects section reacts to the `bp-member-type-enable-disable`
-						// toggle that lives in the Members feature).
-						if (
-							response.data
-							&& response.data.bbAdminDataUpdates
-							&& 'object' === typeof response.data.bbAdminDataUpdates
-							&& 'undefined' !== typeof window
-							&& window.bbAdminData
-						) {
-							Object.assign( window.bbAdminData, response.data.bbAdminDataUpdates );
-						}
 
 						// Reactions: refetch when reaction_items saved, or inject migration data (handled in reaction module).
 						if ( 'reactions' === featureId ) {
@@ -646,18 +669,8 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 								setOriginalSettings,
 							} );
 						} else {
-							// Use actual saved values from server response (may differ from
-							// submitted values due to server-side validation/revert).
-							var actualSaved = ( response.data && response.data.saved ) ? response.data.saved : fieldsToSave;
 							setSettings((prev) => ({ ...prev, ...actualSaved }));
 							setOriginalSettings((prev) => ({ ...prev, ...actualSaved }));
-							const cachedData = getCachedFeatureData(featureId);
-							if (cachedData) {
-								setCachedFeatureData(featureId, {
-									...cachedData,
-									settings: { ...cachedData.settings, ...actualSaved },
-								});
-							}
 
 							// If the server indicates panel visibility changed, refetch
 							// feature data to update the side navigation (e.g. Discussion Tags toggle).
