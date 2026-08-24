@@ -1933,19 +1933,30 @@ class BP_Activity_Activity {
 			}
 
 			$ref = array();
-			// Loop descendants and build an assoc array.
+
+			// First, register every comment by its own ID, before trying to attach
+			// any of them to a parent. A comment can only be nested under its parent
+			// if that parent is already known, and a single loop that both registers
+			// and attaches at the same time only works if the list happens to have
+			// every parent before its children (e.g. because it was fetched oldest
+			// first). Registering everyone first removes that requirement, so the
+			// order comments come back in no longer matters.
 			foreach ( (array) $descendants as $d ) {
-				$d->children = array();
+				$d->children   = array();
+				$ref[ $d->id ] = $d;
+			}
 
-				// If we have a reference on the parent.
-				if ( isset( $ref[ $d->secondary_item_id ] ) ) {
+			// Now attach each comment under its parent. Every possible parent is
+			// already in $ref from the loop above, so this works no matter what
+			// order the comments were originally fetched in. A comment only stays
+			// at the root level if its parent isn't part of this result set at all
+			// (e.g. the parent was removed as spam), or in the rare case its
+			// "parent" is itself.
+			foreach ( $ref as $d ) {
+				if ( isset( $ref[ $d->secondary_item_id ] ) && $d->secondary_item_id !== $d->id ) {
 					$ref[ $d->secondary_item_id ]->children[ $d->id ] = $d;
-					$ref[ $d->id ]                                    =& $ref[ $d->secondary_item_id ]->children[ $d->id ];
-
-					// If we don't have a reference on the parent, put in the root level.
 				} else {
 					$comments[ $d->id ] = $d;
-					$ref[ $d->id ]      =& $comments[ $d->id ];
 				}
 			}
 
