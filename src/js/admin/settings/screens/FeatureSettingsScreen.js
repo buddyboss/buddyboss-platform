@@ -210,6 +210,15 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 	// resolved, without saving on the new feature — so the seq guard alone
 	// would pass) must not apply screen state or toast over the new feature.
 	const displayedFeatureIdRef = useRef(featureId);
+	// Per-feature single-flight channels, keyed by featureId. Kept in a ref
+	// (not effect-closure locals) so that re-entering a feature while its
+	// previous save is still in flight REUSES the same channel — the new edit
+	// queues behind the in-flight request instead of dispatching concurrently,
+	// which keeps same-feature requests strictly serialized (and therefore
+	// same-feature responses and DB writes strictly ordered) across
+	// navigation. Channels are still per-feature, so one feature's slow save
+	// never blocks or misroutes another feature's queue.
+	const saveChannelsRef = useRef({});
 
 	// Ref for latest settings so refetch (reactions) can update cache without replacing state.
 	const settingsRef = useRef(settings);
@@ -567,19 +576,17 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 	useEffect(() => {
 		displayedFeatureIdRef.current = featureId;
 
-		// Single-flight save channel, LOCAL to this featureId's effect run: at
-		// most one request in flight per channel; newer payloads queue in
-		// channelPending (cumulative, newest-wins) and dispatch when the
+		// This feature's single-flight save channel (see saveChannelsRef): at
+		// most one request in flight per feature; newer payloads queue in
+		// channel.pending (cumulative, newest-wins) and dispatch when the
 		// in-flight request settles, so neither responses nor server-side
-		// option writes for a feature can be applied out of order. Channel
-		// state deliberately lives in closure locals, NOT refs: the component
-		// stays mounted across feature navigation, and shared refs would let a
-		// previous feature's settle dispatch the new feature's queued payload
-		// under the OLD feature_id captured in its closure. With locals, each
-		// feature's channel drains its own queue with its own feature_id, and
-		// a newly-entered feature starts unblocked.
-		var channelInFlight = false;
-		var channelPending = null;
+		// option writes for a feature can be applied out of order — including
+		// when the admin navigates away and back while a save is in flight
+		// (the channel is reused, so the next edit queues behind it). A
+		// channel's queue is only ever drained by closures of its OWN feature,
+		// so payloads are never dispatched under another feature's feature_id.
+		var channel = saveChannelsRef.current[ featureId ] =
+			saveChannelsRef.current[ featureId ] || { inFlight: false, pending: null };
 
 		// Dispatches one save request. The sequence guard on the response
 		// remains as defense-in-depth against out-of-order application (an
@@ -593,13 +600,13 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 
 			var saveSeq = saveSeqRef.current + 1;
 			saveSeqRef.current = saveSeq;
-			channelInFlight = true;
+			channel.inFlight = true;
 
 			var settle = function () {
-				channelInFlight = false;
-				var pending = channelPending;
+				channel.inFlight = false;
+				var pending = channel.pending;
 				if (pending) {
-					channelPending = null;
+					channel.pending = null;
 					dispatchSave(pending);
 				}
 			};
@@ -710,8 +717,8 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 			// Single-flight: while a save is in flight, queue the latest
 			// cumulative payload instead of dispatching a second request.
 			// Newer fields overwrite queued ones; the queue drains in settle().
-			if (channelInFlight) {
-				channelPending = { ...(channelPending || {}), ...fieldsToSave };
+			if (channel.inFlight) {
+				channel.pending = { ...(channel.pending || {}), ...fieldsToSave };
 				return;
 			}
 			dispatchSave(fieldsToSave);
