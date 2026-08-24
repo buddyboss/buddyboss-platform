@@ -205,12 +205,6 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 	const debouncedSaveRef = useRef();
 	// Monotonic sequence for in-flight saves — see the out-of-order guard in the debounced save.
 	const saveSeqRef = useRef(0);
-	// Single-flight save channel: at most one save request in flight at a time.
-	// Newer payloads queue in pendingSaveRef and dispatch when the in-flight
-	// request settles, so neither responses nor server-side option writes can
-	// be applied out of order.
-	const saveInFlightRef = useRef(false);
-	const pendingSaveRef = useRef(null);
 
 	// Ref for latest settings so refetch (reactions) can update cache without replacing state.
 	const settingsRef = useRef(settings);
@@ -566,11 +560,23 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 	// Setup debounced save (auto-save on change)
 	// Uses AJAX endpoint for feature settings.
 	useEffect(() => {
-		// Dispatches one save request. Runs only via the single-flight channel
-		// below, so at most one request is in flight; when it settles, any
-		// payload queued meanwhile is dispatched next. The sequence guard on the
-		// response remains as defense-in-depth against out-of-order application
-		// (an earlier response arriving last would otherwise overwrite the newer
+		// Single-flight save channel, LOCAL to this featureId's effect run: at
+		// most one request in flight per channel; newer payloads queue in
+		// channelPending (cumulative, newest-wins) and dispatch when the
+		// in-flight request settles, so neither responses nor server-side
+		// option writes for a feature can be applied out of order. Channel
+		// state deliberately lives in closure locals, NOT refs: the component
+		// stays mounted across feature navigation, and shared refs would let a
+		// previous feature's settle dispatch the new feature's queued payload
+		// under the OLD feature_id captured in its closure. With locals, each
+		// feature's channel drains its own queue with its own feature_id, and
+		// a newly-entered feature starts unblocked.
+		var channelInFlight = false;
+		var channelPending = null;
+
+		// Dispatches one save request. The sequence guard on the response
+		// remains as defense-in-depth against out-of-order application (an
+		// earlier response arriving last would otherwise overwrite the newer
 		// state in settings and the feature cache — e.g. a type-only access
 		// control payload clobbering the type+sub-type payload saved after it).
 		var dispatchSave = function (fieldsToSave) {
@@ -580,13 +586,13 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 
 			var saveSeq = saveSeqRef.current + 1;
 			saveSeqRef.current = saveSeq;
-			saveInFlightRef.current = true;
+			channelInFlight = true;
 
 			var settle = function () {
-				saveInFlightRef.current = false;
-				var pending = pendingSaveRef.current;
+				channelInFlight = false;
+				var pending = channelPending;
 				if (pending) {
-					pendingSaveRef.current = null;
+					channelPending = null;
 					dispatchSave(pending);
 				}
 			};
@@ -677,14 +683,18 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 			// Single-flight: while a save is in flight, queue the latest
 			// cumulative payload instead of dispatching a second request.
 			// Newer fields overwrite queued ones; the queue drains in settle().
-			if (saveInFlightRef.current) {
-				pendingSaveRef.current = { ...(pendingSaveRef.current || {}), ...fieldsToSave };
+			if (channelInFlight) {
+				channelPending = { ...(channelPending || {}), ...fieldsToSave };
 				return;
 			}
 			dispatchSave(fieldsToSave);
 		}, 1000);
 
 		return () => {
+			// No channel flush needed on feature change: channel state is
+			// closure-local, so the old feature's settle() still drains its own
+			// queue with its own feature_id even after navigation — queued
+			// changes are never dropped or misrouted.
 			if (debouncedSaveRef.current && debouncedSaveRef.current.cancel) {
 				debouncedSaveRef.current.cancel();
 			}
