@@ -16,7 +16,7 @@
  * @since   BuddyBoss [BBVERSION]
  */
 
-import { useState, useRef, RawHTML } from '@wordpress/element';
+import { useState, useRef, useEffect, RawHTML } from '@wordpress/element';
 import { CheckboxControl, SelectControl, ToggleControl, Spinner } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import { decodeEntities } from '@wordpress/html-entities';
@@ -122,6 +122,62 @@ export function AccessControlField( { field, value, onChange } ) {
 		}
 		return null;
 	};
+
+	// Self-heal a stale options list on mount. `data.options` comes from the
+	// server enrichment captured when the panel payload was fetched (and is
+	// served cache-first on SPA re-entry). Rapid selection changes fire
+	// multiple debounced saves whose responses can update that cache out of
+	// order, leaving enrichment computed for a different type than the saved
+	// value (e.g. type shows "Profile Type" but the options list still holds
+	// membership plans). When the enrichment's current type disagrees with
+	// the saved value's type, refetch the options for the saved selection.
+	useEffect( function() {
+		if ( ! selectedType || ( data.current_type || '' ) === selectedType ) {
+			return undefined;
+		}
+
+		var typeConfig = getSelectedTypeConfig();
+		var action     = 'get_access_control_level_options';
+		var fetchValue = selectedType;
+
+		if ( typeConfig && typeConfig.sub_types ) {
+			if ( ! selectedSubType || ! typeConfig.sub_types.action ) {
+				setOptions( [] );
+				setRecipientOptions( [] );
+				return undefined;
+			}
+			action     = typeConfig.sub_types.action;
+			fetchValue = selectedSubType;
+		}
+
+		var controller   = new AbortController();
+		abortRef.current = controller;
+		setLoading( true );
+
+		ajaxFetch( action, {
+			value: fetchValue,
+			key: field.name,
+			format: 'json',
+		}, { signal: controller.signal } ).then( function( response ) {
+			var newOptions = response?.data?.options || [];
+			newOptions = wp.hooks.applyFilters( 'bb.accessControl.options', newOptions, field, selectedType, selectedSubType );
+			setOptions( newOptions );
+			setRecipientOptions( response?.data?.recipient_options || response?.data?.options || [] );
+			setLoading( false );
+		} ).catch( function( error ) {
+			if ( error && 'AbortError' === error.name ) {
+				return;
+			}
+			setLoading( false );
+			setFetchError( __( 'Failed to load options. Please try again.', 'buddyboss' ) );
+		} );
+
+		return function() {
+			controller.abort();
+		};
+		// Mount-only heal: the stale-enrichment condition can only exist at mount.
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [] );
 
 	/**
 	 * Build the saved value object including sub-type key and per-option sub-keys.
