@@ -81,11 +81,28 @@ export function AccessControlField( { field, value, onChange } ) {
 	var isThreaded = !! field.threaded;
 
 	// State.
-	var [ selectedType, setSelectedType ]         = useState( value?.[ 'access-control-type' ] || data.current_type || '' );
+	var [ selectedType, setSelectedType ]         = useState( function() {
+		if ( value && value[ 'access-control-type' ] ) {
+			return value[ 'access-control-type' ];
+		}
+		// A present-but-empty value ('' or an object without a type) means the
+		// rule was explicitly cleared — don't resurrect the enrichment's type,
+		// which can be stale on cached SPA re-entry. Fall back to the
+		// enrichment only when no saved value exists at all.
+		if ( null !== value && undefined !== value ) {
+			return '';
+		}
+		return data.current_type || '';
+	} );
 	var [ selectedSubType, setSelectedSubType ]   = useState( function() {
 		// Determine initial sub-type from saved value using the sub-type key from PHP.
 		if ( data.current_sub_type_key && value?.[ data.current_sub_type_key ] ) {
 			return value[ data.current_sub_type_key ];
+		}
+		// Mirror the type initializer: a cleared value must not resurrect the
+		// (possibly stale cached) enrichment sub-type.
+		if ( null !== value && undefined !== value ) {
+			return '';
 		}
 		return data.current_sub_type || '';
 	} );
