@@ -205,6 +205,12 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 	const debouncedSaveRef = useRef();
 	// Monotonic sequence for in-flight saves — see the out-of-order guard in the debounced save.
 	const saveSeqRef = useRef(0);
+	// Single-flight save channel: at most one save request in flight at a time.
+	// Newer payloads queue in pendingSaveRef and dispatch when the in-flight
+	// request settles, so neither responses nor server-side option writes can
+	// be applied out of order.
+	const saveInFlightRef = useRef(false);
+	const pendingSaveRef = useRef(null);
 
 	// Ref for latest settings so refetch (reactions) can update cache without replacing state.
 	const settingsRef = useRef(settings);
@@ -560,21 +566,30 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 	// Setup debounced save (auto-save on change)
 	// Uses AJAX endpoint for feature settings.
 	useEffect(() => {
-		debouncedSaveRef.current = debounce((fieldsToSave) => {
+		// Dispatches one save request. Runs only via the single-flight channel
+		// below, so at most one request is in flight; when it settles, any
+		// payload queued meanwhile is dispatched next. The sequence guard on the
+		// response remains as defense-in-depth against out-of-order application
+		// (an earlier response arriving last would otherwise overwrite the newer
+		// state in settings and the feature cache — e.g. a type-only access
+		// control payload clobbering the type+sub-type payload saved after it).
+		var dispatchSave = function (fieldsToSave) {
 			if (Object.keys(fieldsToSave).length === 0) {
 				return;
 			}
 
-			// Guard against out-of-order responses: rapid consecutive changes can
-			// put two saves in flight (each dispatch carries the cumulative latest
-			// values), and an earlier request's response arriving LAST would
-			// overwrite the newer state in settings and the feature cache (e.g. a
-			// type-only payload clobbering the type+sub-type payload saved after
-			// it). Only the response matching the newest dispatched sequence may
-			// apply its echo; stale responses are ignored — the newest dispatch
-			// already carried these fields' latest values.
 			var saveSeq = saveSeqRef.current + 1;
 			saveSeqRef.current = saveSeq;
+			saveInFlightRef.current = true;
+
+			var settle = function () {
+				saveInFlightRef.current = false;
+				var pending = pendingSaveRef.current;
+				if (pending) {
+					pendingSaveRef.current = null;
+					dispatchSave(pending);
+				}
+			};
 
 			// Use AJAX endpoint for feature settings
 			ajaxFetch('bb_admin_save_feature_settings', {
@@ -654,7 +669,19 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 						status: 'error',
 						message: __('Something went wrong. Please try again.', 'buddyboss'),
 					});
-				});
+				})
+				.finally(settle);
+		};
+
+		debouncedSaveRef.current = debounce((fieldsToSave) => {
+			// Single-flight: while a save is in flight, queue the latest
+			// cumulative payload instead of dispatching a second request.
+			// Newer fields overwrite queued ones; the queue drains in settle().
+			if (saveInFlightRef.current) {
+				pendingSaveRef.current = { ...(pendingSaveRef.current || {}), ...fieldsToSave };
+				return;
+			}
+			dispatchSave(fieldsToSave);
 		}, 1000);
 
 		return () => {

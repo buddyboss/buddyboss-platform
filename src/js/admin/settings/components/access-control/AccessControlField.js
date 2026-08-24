@@ -132,7 +132,16 @@ export function AccessControlField( { field, value, onChange } ) {
 	// membership plans). When the enrichment's current type disagrees with
 	// the saved value's type, refetch the options for the saved selection.
 	useEffect( function() {
-		if ( ! selectedType || ( data.current_type || '' ) === selectedType ) {
+		// The enrichment options are computed from type + sub-type, so a
+		// provider-only switch (same type, different sub-type) also leaves
+		// stale options in the cached payload — compare both.
+		if (
+			! selectedType ||
+			(
+				( data.current_type || '' ) === selectedType &&
+				( data.current_sub_type || '' ) === ( selectedSubType || '' )
+			)
+		) {
 			return undefined;
 		}
 
@@ -160,7 +169,13 @@ export function AccessControlField( { field, value, onChange } ) {
 			format: 'json',
 		}, { signal: controller.signal } ).then( function( response ) {
 			var newOptions = response?.data?.options || [];
-			newOptions = wp.hooks.applyFilters( 'bb.accessControl.options', newOptions, field, selectedType, selectedSubType );
+			// Match the handlers' filter signatures: 3 args for direct types
+			// (handleTypeChange), 4 for grouped types (handleSubTypeChange).
+			if ( selectedSubType ) {
+				newOptions = wp.hooks.applyFilters( 'bb.accessControl.options', newOptions, field, selectedType, selectedSubType );
+			} else {
+				newOptions = wp.hooks.applyFilters( 'bb.accessControl.options', newOptions, field, selectedType );
+			}
 			setOptions( newOptions );
 			setRecipientOptions( response?.data?.recipient_options || response?.data?.options || [] );
 			setLoading( false );
@@ -239,6 +254,11 @@ export function AccessControlField( { field, value, onChange } ) {
 
 		// Reset to placeholder — save to clear the setting.
 		if ( ! newType ) {
+			// Kill any in-flight options fetch (mount heal or a prior change)
+			// so a late response can't repaint the old type's options.
+			if ( abortRef.current ) {
+				abortRef.current.abort();
+			}
 			setOptions( [] );
 			setRecipientOptions( [] );
 			onChange( {
@@ -259,6 +279,11 @@ export function AccessControlField( { field, value, onChange } ) {
 
 		// If this type has sub-types, don't fetch options yet — wait for sub-type selection.
 		if ( typeConfig && typeConfig.sub_types && typeConfig.sub_types.items && typeConfig.sub_types.items.length > 0 ) {
+			// Kill any in-flight options fetch so a late response can't
+			// repaint the previous type's options under the grouped type.
+			if ( abortRef.current ) {
+				abortRef.current.abort();
+			}
 			setOptions( [] );
 			setRecipientOptions( [] );
 
@@ -313,6 +338,11 @@ export function AccessControlField( { field, value, onChange } ) {
 		var typeConfig = getSelectedTypeConfig();
 
 		if ( ! newSubType || ! typeConfig || ! typeConfig.sub_types ) {
+			// Kill any in-flight options fetch so a late response can't
+			// repaint the previous provider's options under the placeholder.
+			if ( abortRef.current ) {
+				abortRef.current.abort();
+			}
 			setOptions( [] );
 			setRecipientOptions( [] );
 
