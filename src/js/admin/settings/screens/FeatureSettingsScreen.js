@@ -203,6 +203,8 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 	const [changedFields, setChangedFields] = useState({});
 	const [initialLoad, setInitialLoad] = useState(true);
 	const debouncedSaveRef = useRef();
+	// Monotonic sequence for in-flight saves — see the out-of-order guard in the debounced save.
+	const saveSeqRef = useRef(0);
 
 	// Ref for latest settings so refetch (reactions) can update cache without replacing state.
 	const settingsRef = useRef(settings);
@@ -563,6 +565,17 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 				return;
 			}
 
+			// Guard against out-of-order responses: rapid consecutive changes can
+			// put two saves in flight (each dispatch carries the cumulative latest
+			// values), and an earlier request's response arriving LAST would
+			// overwrite the newer state in settings and the feature cache (e.g. a
+			// type-only payload clobbering the type+sub-type payload saved after
+			// it). Only the response matching the newest dispatched sequence may
+			// apply its echo; stale responses are ignored — the newest dispatch
+			// already carried these fields' latest values.
+			var saveSeq = saveSeqRef.current + 1;
+			saveSeqRef.current = saveSeq;
+
 			// Use AJAX endpoint for feature settings
 			ajaxFetch('bb_admin_save_feature_settings', {
 				feature_id: featureId,
@@ -574,6 +587,11 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 							status: 'success',
 							message: __('Settings saved.', 'buddyboss'),
 						});
+
+						if ( saveSeq !== saveSeqRef.current ) {
+							return;
+						}
+
 						setChangedFields({});
 
 						// Merge any cross-feature flags pushed by the server back into
