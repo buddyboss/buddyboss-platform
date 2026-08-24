@@ -1947,13 +1947,18 @@ class BP_Activity_Activity {
 					$comments[ $d->id ] = $d;
 					$ref[ $d->id ]      =& $comments[ $d->id ];
 				}
+			}
 
-				if (
-					true === $exclude_childrens ||
-					(
-						bb_is_rest() && ! isset( $_GET['apply_limit'] )
-					)
-				) {
+			// Work out the child counts in their own pass. This was previously done
+			// inside the loop above; moving it out here doesn't change what it does,
+			// it just keeps that loop focused on building the parent/child tree.
+			if (
+				true === $exclude_childrens ||
+				(
+					bb_is_rest() && ! isset( $_GET['apply_limit'] )
+				)
+			) {
+				foreach ( (array) $descendants as $d ) {
 					$comments_count = self::bb_get_all_activity_comment_children_count(
 						array(
 							'spam'     => $spam,
