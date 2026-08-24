@@ -4810,15 +4810,31 @@ function bp_core_parse_url( $url ) {
 	$original_url   = $url;
 
 	if ( in_array( $parse_url_data, apply_filters( 'bp_core_parse_url_shorten_url_provider', array( 'bit.ly', 'snip.ly', 'rb.gy', 'tinyurl.com', 'tiny.one', 'rotf.lol', 'b.link', '4ubr.short.gy', '' ) ), true ) ) {
-		$response = wp_safe_remote_get(
-			$url,
+		/**
+		 * Filters the HTTP request arguments used to resolve a shortened URL.
+		 *
+		 * Some sites run a firewall/WAF that blocks requests presenting a browser-style
+		 * User-Agent while still allow-listing recognized link-preview bots (e.g.
+		 * facebookexternalhit, Twitterbot, Slackbot). Use this filter to override the
+		 * User-Agent (or any other request arg) on a per-site basis.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param array  $args Arguments passed to wp_safe_remote_get().
+		 * @param string $url  The URL being resolved.
+		 */
+		$short_url_args = apply_filters(
+			'bp_core_parse_url_http_args',
 			array(
-				'stream'      => true,
-				'headers'     => array(
+				'stream'  => true,
+				'headers' => array(
 					'user-agent' => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:71.0) Gecko/20100101 Firefox/71.0',
 				),
 			),
+			$url
 		);
+
+		$response = wp_safe_remote_get( $url, $short_url_args );
 
 		if ( ! is_wp_error( $response ) && ! empty( $response['http_response']->get_response_object()->url ) && $response['http_response']->get_response_object()->url !== $url ) {
 			$new_url = $response['http_response']->get_response_object()->url;
@@ -4898,12 +4914,19 @@ function bp_core_parse_url( $url ) {
 			$args['sslverify'] = false;
 		}
 
-		// safely get URL and response body.
-		$response = wp_safe_remote_get( $url, $args );
-		$body     = wp_remote_retrieve_body( $response );
+		/** This filter is documented in bp-core/bp-core-functions.php. */
+		$args = apply_filters( 'bp_core_parse_url_http_args', $args, $url );
 
-		// if response is not empty.
-		if ( ! is_wp_error( $body ) && ! empty( $body ) ) {
+		// safely get URL and response body.
+		$response      = wp_safe_remote_get( $url, $args );
+		$response_code = wp_remote_retrieve_response_code( $response );
+		$body          = wp_remote_retrieve_body( $response );
+
+		// Only parse the body when the request actually succeeded. A non-2xx response
+		// (e.g. a firewall/WAF block page returned with a 403) must not be scraped for
+		// title/description/image, otherwise the error page's own content (e.g. a
+		// "403 Forbidden" title) gets parsed and cached as if it were a real preview.
+		if ( ! is_wp_error( $response ) && $response_code >= 200 && $response_code < 300 && ! empty( $body ) ) {
 
 			// Load HTML to DOM Object.
 			$dom = new DOMDocument();
