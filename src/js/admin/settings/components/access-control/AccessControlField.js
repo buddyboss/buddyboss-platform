@@ -85,11 +85,14 @@ export function AccessControlField( { field, value, onChange } ) {
 		if ( value && value[ 'access-control-type' ] ) {
 			return value[ 'access-control-type' ];
 		}
-		// A present-but-empty value ('' or an object without a type) means the
-		// rule was explicitly cleared — don't resurrect the enrichment's type,
-		// which can be stale on cached SPA re-entry. Fall back to the
-		// enrichment only when no saved value exists at all.
-		if ( null !== value && undefined !== value ) {
+		// An object value without a type means the rule was explicitly cleared
+		// through this UI (buildValue always emits an object, and the save echo
+		// caches it as such) — render the placeholder rather than resurrecting
+		// the enrichment's type, which can be stale on cached SPA re-entry.
+		// A non-object value ('' — the never-saved default) falls back to the
+		// enrichment, which is computed from the same stored option and is
+		// therefore consistent on fresh data.
+		if ( value && 'object' === typeof value ) {
 			return '';
 		}
 		return data.current_type || '';
@@ -99,9 +102,9 @@ export function AccessControlField( { field, value, onChange } ) {
 		if ( data.current_sub_type_key && value?.[ data.current_sub_type_key ] ) {
 			return value[ data.current_sub_type_key ];
 		}
-		// Mirror the type initializer: a cleared value must not resurrect the
-		// (possibly stale cached) enrichment sub-type.
-		if ( null !== value && undefined !== value ) {
+		// Mirror the type initializer: an explicitly cleared (object) value
+		// must not resurrect the (possibly stale cached) enrichment sub-type.
+		if ( value && 'object' === typeof value ) {
 			return '';
 		}
 		return data.current_sub_type || '';
