@@ -604,14 +604,17 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 			})
 				.then((response) => {
 					if (response.success) {
+						// Superseded response: a newer save has been dispatched
+						// since — skip state application AND the toast (the
+						// newer save shows its own on arrival).
+						if ( saveSeq !== saveSeqRef.current ) {
+							return;
+						}
+
 						setToast({
 							status: 'success',
 							message: __('Settings saved.', 'buddyboss'),
 						});
-
-						if ( saveSeq !== saveSeqRef.current ) {
-							return;
-						}
 
 						setChangedFields({});
 
@@ -694,7 +697,12 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 			// No channel flush needed on feature change: channel state is
 			// closure-local, so the old feature's settle() still drains its own
 			// queue with its own feature_id even after navigation — queued
-			// changes are never dropped or misrouted.
+			// changes are never dropped or misrouted. Un-fired debounce timers
+			// also survive: our custom debounce (utils/api.js) exposes no
+			// .cancel(), so the guard below is intentionally a no-op today and
+			// the trailing timer fires post-switch with this closure's correct
+			// feature_id. If a cancellable debounce (e.g. lodash) is ever
+			// swapped in, flush the timer here instead of cancelling it.
 			if (debouncedSaveRef.current && debouncedSaveRef.current.cancel) {
 				debouncedSaveRef.current.cancel();
 			}
