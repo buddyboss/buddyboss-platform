@@ -203,8 +203,6 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 	const [changedFields, setChangedFields] = useState({});
 	const [initialLoad, setInitialLoad] = useState(true);
 	const debouncedSaveRef = useRef();
-	// Monotonic sequence for in-flight saves — see the out-of-order guard in the debounced save.
-	const saveSeqRef = useRef(0);
 	// The feature currently displayed on screen. A save response whose closure
 	// captured a different featureId (the admin navigated away before it
 	// resolved, without saving on the new feature — so the seq guard alone
@@ -598,8 +596,15 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 				return;
 			}
 
-			var saveSeq = saveSeqRef.current + 1;
-			saveSeqRef.current = saveSeq;
+			// Per-feature monotonic sequence (defense-in-depth): the channel
+			// already serializes this feature's requests, so a response is
+			// normally always its feature's newest — this guard only bites if
+			// that invariant is ever broken. Scoped to the channel, NOT global:
+			// a global counter would mark feature A's correctly-ordered
+			// response "superseded" whenever another feature dispatched a save
+			// meanwhile, silently skipping A's toast and settings echo.
+			var saveSeq = ( channel.seq || 0 ) + 1;
+			channel.seq = saveSeq;
 			channel.inFlight = true;
 
 			var settle = function () {
@@ -664,7 +669,7 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 						// wrong; the reactions path would even replace the new
 						// feature's panels). The feature cache and global flags
 						// above are already reconciled either way.
-						if ( saveSeq !== saveSeqRef.current || featureId !== displayedFeatureIdRef.current ) {
+						if ( saveSeq !== channel.seq || featureId !== displayedFeatureIdRef.current ) {
 							return;
 						}
 
