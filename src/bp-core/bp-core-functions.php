@@ -4797,6 +4797,170 @@ function bp_core_get_group_avatar( $legacy_user_avatar_name, $legacy_group_avata
 }
 
 /**
+ * Get the User-Agent string used when fetching a URL for link preview data.
+ *
+ * Defaults to a recognized link-preview bot signature ("facebookexternalhit/1.1")
+ * instead of a browser-style User-Agent. Some external sites run a firewall/WAF
+ * that blocks requests presenting a browser User-Agent without a matching full
+ * browser request signature (treating them as spoofed/bot traffic), while still
+ * allow-listing recognized content-preview bots such as facebookexternalhit,
+ * Twitterbot, or Slackbot — the same way Facebook/Twitter/Slack previews work.
+ *
+ * Sites that relied on the previous browser-style User-Agent (e.g. because they
+ * serve different Open Graph markup to bots) can restore the old value via the
+ * `bp_core_parse_url_user_agent` filter below, so this default change does not
+ * break backward compatibility for existing setups.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return string User-Agent string.
+ */
+function bp_core_get_link_preview_user_agent() {
+
+	/**
+	 * Filters the User-Agent used to fetch a URL for link preview data.
+	 *
+	 * Return the previous browser-style User-Agent string
+	 * ('Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:71.0) Gecko/20100101 Firefox/71.0')
+	 * from this filter to restore the pre-[BBVERSION] behavior for a site that needs it.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $user_agent User-Agent string. Default 'facebookexternalhit/1.1'.
+	 */
+	return apply_filters( 'bp_core_parse_url_user_agent', 'facebookexternalhit/1.1' );
+}
+
+/**
+ * Get the fallback User-Agent used to retry a link preview fetch.
+ *
+ * `bp_core_parse_url()` fetches the target URL first with the bot User-Agent from
+ * {@see bp_core_get_link_preview_user_agent()}. If that request does not succeed
+ * (non-2xx response, or no title/description/image could be extracted), it retries
+ * automatically with this browser-style User-Agent before giving up. This keeps
+ * pre-[BBVERSION] behavior working out of the box -- with no custom code required --
+ * for any site that only serves preview markup to browser-style requests (or that
+ * itself blocks known bot signatures).
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return string User-Agent string.
+ */
+function bp_core_get_link_preview_fallback_user_agent() {
+
+	/**
+	 * Filters the fallback (browser-style) User-Agent used to retry a link preview fetch.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $user_agent Fallback User-Agent string.
+	 */
+	return apply_filters( 'bp_core_parse_url_fallback_user_agent', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:71.0) Gecko/20100101 Firefox/71.0' );
+}
+
+/**
+ * Extract Open Graph / meta title, description and images from an HTML string.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $body Raw HTML body.
+ *
+ * @return array {
+ *     @type string $title       Page title, if found.
+ *     @type string $description Page description, if found.
+ *     @type array  $images      List of candidate image URLs.
+ * }
+ */
+function bp_core_extract_link_preview_data_from_html( $body ) {
+	$data = array(
+		'title'       => '',
+		'description' => '',
+		'images'      => array(),
+	);
+
+	if ( empty( $body ) ) {
+		return $data;
+	}
+
+	// Load HTML to DOM Object.
+	$dom = new DOMDocument();
+	@$dom->loadHTML( mb_convert_encoding( $body, 'HTML-ENTITIES', 'UTF-8' ) );
+
+	$meta_tags   = array();
+	$images      = array();
+	$description = '';
+	$title       = '';
+
+	$xpath       = new DOMXPath( $dom );
+	$query       = '//*/meta[starts-with(@property, \'og:\')]';
+	$metas_query = $xpath->query( $query );
+	foreach ( $metas_query as $meta ) {
+		$property    = $meta->getAttribute( 'property' );
+		$content     = $meta->getAttribute( 'content' );
+		$meta_tags[] = array( $property, $content );
+	}
+
+	if ( is_array( $meta_tags ) && ! empty( $meta_tags ) ) {
+		foreach ( $meta_tags as $tag ) {
+			if ( is_array( $tag ) && ! empty( $tag ) ) {
+				if ( $tag[0] == 'og:title' ) {
+					$title = $tag[1];
+				}
+				if ( $tag[0] == 'og:description' || 'description' === strtolower( $tag[0] ) ) {
+					$description = html_entity_decode( $tag[1], ENT_QUOTES, 'utf-8' );
+				}
+				if ( $tag[0] == 'og:image' ) {
+					$images[] = $tag[1];
+				}
+			}
+		}
+	}
+
+	// Parse DOM to get Title.
+	if ( empty( $title ) ) {
+		$nodes = $dom->getElementsByTagName( 'title' );
+		$title = $nodes && $nodes->length > 0 ? $nodes->item( 0 )->nodeValue : '';
+	}
+
+	// Parse DOM to get Meta Description.
+	if ( empty( $description ) ) {
+		$metas = $dom->getElementsByTagName( 'meta' );
+		for ( $i = 0; $i < $metas->length; $i ++ ) {
+			$meta = $metas->item( $i );
+			if ( 'description' === $meta->getAttribute( 'name' ) ) {
+				$description = $meta->getAttribute( 'content' );
+				break;
+			}
+		}
+	}
+
+	// Parse DOM to get Images.
+	$image_elements = $dom->getElementsByTagName( 'img' );
+	for ( $i = 0; $i < $image_elements->length; $i ++ ) {
+		$image = $image_elements->item( $i );
+		$src   = $image->getAttribute( 'src' );
+
+		if ( filter_var( $src, FILTER_VALIDATE_URL ) ) {
+			$images[] = $src;
+		}
+	}
+
+	if ( ! empty( $description ) && '' === trim( $title ) ) {
+		$title = $description;
+	}
+
+	if ( ! empty( $title ) && '' === trim( $description ) ) {
+		$description = $title;
+	}
+
+	$data['title']       = $title;
+	$data['description'] = $description;
+	$data['images']      = $images;
+
+	return $data;
+}
+
+/**
  * Parse url and get data about URL.
  *
  * @param string $url URL to parse data.
@@ -4828,7 +4992,7 @@ function bp_core_parse_url( $url ) {
 			array(
 				'stream'  => true,
 				'headers' => array(
-					'user-agent' => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:71.0) Gecko/20100101 Firefox/71.0',
+					'user-agent' => bp_core_get_link_preview_user_agent(),
 				),
 			),
 			$url
@@ -4896,124 +5060,78 @@ function bp_core_parse_url( $url ) {
 		$parsed_url_data['error']       = '';
 		$parsed_url_data['wp_embed']    = true;
 	} else {
-		$args = array( 'user-agent' => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:71.0) Gecko/20100101 Firefox/71.0' );
+		// Try the bot User-Agent first, then automatically fall back to the browser-style
+		// User-Agent if that attempt didn't succeed. This keeps the fetch working out of
+		// the box for both kinds of sites -- ones that block browser signatures (fixed by
+		// the bot UA) and ones that only serve full markup to a real browser (fixed by the
+		// automatic fallback) -- with no custom code required.
+		$user_agents = array_unique(
+			array_filter(
+				array(
+					bp_core_get_link_preview_user_agent(),
+					bp_core_get_link_preview_fallback_user_agent(),
+				)
+			)
+		);
 
-		if ( bb_is_same_site_url( $url ) ) {
-			if ( ! bp_enable_private_network() ) {
-				// Add the custom header with the JWT token.
-				$args['headers'] = array(
-					'bb-preview-token' => bb_create_jwt(
-						array(
-							'url' => $url,
-							'iat' => time(),
-							'exp' => time() + 120, // Token validity 2 minutes.
-						)
-					),
-				);
-			}
-			$args['sslverify'] = false;
-		}
+		foreach ( $user_agents as $user_agent ) {
+			$args = array( 'user-agent' => $user_agent );
 
-		/** This filter is documented in bp-core/bp-core-functions.php. */
-		$args = apply_filters( 'bp_core_parse_url_http_args', $args, $url );
-
-		// safely get URL and response body.
-		$response      = wp_safe_remote_get( $url, $args );
-		$response_code = wp_remote_retrieve_response_code( $response );
-		$body          = wp_remote_retrieve_body( $response );
-
-		// Only parse the body when the request actually succeeded. A non-2xx response
-		// (e.g. a firewall/WAF block page returned with a 403) must not be scraped for
-		// title/description/image, otherwise the error page's own content (e.g. a
-		// "403 Forbidden" title) gets parsed and cached as if it were a real preview.
-		if ( ! is_wp_error( $response ) && $response_code >= 200 && $response_code < 300 && ! empty( $body ) ) {
-
-			// Load HTML to DOM Object.
-			$dom = new DOMDocument();
-			@$dom->loadHTML( mb_convert_encoding( $body, 'HTML-ENTITIES', 'UTF-8' ) );
-
-			$meta_tags   = array();
-			$images      = array();
-			$description = '';
-			$title       = '';
-
-			$xpath       = new DOMXPath( $dom );
-			$query       = '//*/meta[starts-with(@property, \'og:\')]';
-			$metas_query = $xpath->query( $query );
-			foreach ( $metas_query as $meta ) {
-				$property    = $meta->getAttribute( 'property' );
-				$content     = $meta->getAttribute( 'content' );
-				$meta_tags[] = array( $property, $content );
-			}
-
-			if ( is_array( $meta_tags ) && ! empty( $meta_tags ) ) {
-				foreach ( $meta_tags as $tag ) {
-					if ( is_array( $tag ) && ! empty( $tag ) ) {
-						if ( $tag[0] == 'og:title' ) {
-							$title = $tag[1];
-						}
-						if ( $tag[0] == 'og:description' || 'description' === strtolower( $tag[0] ) ) {
-							$description = html_entity_decode( $tag[1], ENT_QUOTES, 'utf-8' );
-						}
-						if ( $tag[0] == 'og:image' ) {
-							$images[] = $tag[1];
-						}
-					}
+			if ( bb_is_same_site_url( $url ) ) {
+				if ( ! bp_enable_private_network() ) {
+					// Add the custom header with the JWT token.
+					$args['headers'] = array(
+						'bb-preview-token' => bb_create_jwt(
+							array(
+								'url' => $url,
+								'iat' => time(),
+								'exp' => time() + 120, // Token validity 2 minutes.
+							)
+						),
+					);
 				}
+				$args['sslverify'] = false;
 			}
 
-			// Parse DOM to get Title.
-			if ( empty( $title ) ) {
-				$nodes = $dom->getElementsByTagName( 'title' );
-				$title = $nodes && $nodes->length > 0 ? $nodes->item( 0 )->nodeValue : '';
+			/** This filter is documented in bp-core/bp-core-functions.php. */
+			$args = apply_filters( 'bp_core_parse_url_http_args', $args, $url );
+
+			// safely get URL and response body.
+			$response      = wp_safe_remote_get( $url, $args );
+			$response_code = wp_remote_retrieve_response_code( $response );
+			$body          = wp_remote_retrieve_body( $response );
+
+			// Only parse the body when the request actually succeeded. A non-2xx response
+			// (e.g. a firewall/WAF block page returned with a 403) must not be scraped for
+			// title/description/image, otherwise the error page's own content (e.g. a
+			// "403 Forbidden" title) gets parsed and cached as if it were a real preview.
+			if ( is_wp_error( $response ) || $response_code < 200 || $response_code >= 300 || empty( $body ) ) {
+				continue;
 			}
 
-			// Parse DOM to get Meta Description.
-			if ( empty( $description ) ) {
-				$metas = $dom->getElementsByTagName( 'meta' );
-				for ( $i = 0; $i < $metas->length; $i ++ ) {
-					$meta = $metas->item( $i );
-					if ( 'description' === $meta->getAttribute( 'name' ) ) {
-						$description = $meta->getAttribute( 'content' );
-						break;
-					}
-				}
+			$extracted = bp_core_extract_link_preview_data_from_html( $body );
+
+			if ( empty( $extracted['title'] ) && empty( $extracted['description'] ) && empty( $extracted['images'] ) ) {
+				// Nothing usable came back with this User-Agent; try the next one.
+				continue;
 			}
 
-			// Parse DOM to get Images.
-			$image_elements = $dom->getElementsByTagName( 'img' );
-			for ( $i = 0; $i < $image_elements->length; $i ++ ) {
-				$image = $image_elements->item( $i );
-				$src   = $image->getAttribute( 'src' );
-
-				if ( filter_var( $src, FILTER_VALIDATE_URL ) ) {
-					$images[] = $src;
-				}
+			if ( ! empty( $extracted['title'] ) ) {
+				$parsed_url_data['title'] = $extracted['title'];
 			}
 
-			if ( ! empty( $description ) && '' === trim( $title ) ) {
-				$title = $description;
+			if ( ! empty( $extracted['description'] ) ) {
+				$parsed_url_data['description'] = $extracted['description'];
 			}
 
-			if ( ! empty( $title ) && '' === trim( $description ) ) {
-				$description = $title;
+			if ( ! empty( $extracted['images'] ) ) {
+				$parsed_url_data['images'] = $extracted['images'];
 			}
 
-			if ( ! empty( $title ) ) {
-				$parsed_url_data['title'] = $title;
-			}
+			$parsed_url_data['error'] = '';
 
-			if ( ! empty( $description ) ) {
-				$parsed_url_data['description'] = $description;
-			}
-
-			if ( ! empty( $images ) ) {
-				$parsed_url_data['images'] = $images;
-			}
-
-			if ( ! empty( $title ) || ! empty( $description ) || ! empty( $images ) ) {
-				$parsed_url_data['error'] = '';
-			}
+			// A usable preview was found -- no need to try the remaining User-Agents.
+			break;
 		}
 	}
 
