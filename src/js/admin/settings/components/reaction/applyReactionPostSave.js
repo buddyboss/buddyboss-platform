@@ -36,12 +36,20 @@ function injectMigrationDataIntoPanels(panels, migrationData, migrationStatus) {
  * Apply reactions-specific post-save behavior.
  * Call only when featureId === 'reactions'; caller (FeatureSettingsScreen) performs that check.
  *
- * @param {Object} response Save API response (response.data may have migration_data, migration_status)
- * @param {Object} fieldsToSave The payload that was saved (e.g. { reaction_items, reaction_checks, bb_reaction_mode })
- * @param {string} featureId Feature ID (used for refetch and cache keys)
- * @param {Object} context Helpers: ajaxFetch, getCachedFeatureData, setCachedFeatureData, setFeature, setSidePanels, setSettings, setOriginalSettings
+ * Cache reconciliation always runs — like every other feature's cache write,
+ * it must happen even when the response was superseded or the admin navigated
+ * away, or the reactions cache would serve pre-edit values on the next
+ * cache-first render. Screen state (feature/panels/settings) is applied only
+ * when shouldApplyScreen() passes; it is re-evaluated after the async refetch
+ * resolves so a navigation during the refetch round-trip is also respected.
+ *
+ * @param {Object}   response          Save API response (response.data may have migration_data, migration_status)
+ * @param {Object}   fieldsToSave      The payload that was saved (e.g. { reaction_items, reaction_checks, bb_reaction_mode })
+ * @param {string}   featureId         Feature ID (used for refetch and cache keys)
+ * @param {Object}   context           Helpers: ajaxFetch, getCachedFeatureData, setCachedFeatureData, setFeature, setSidePanels, setSettings, setOriginalSettings
+ * @param {Function} shouldApplyScreen Returns true when screen state may be applied (response not superseded, feature still displayed). Defaults to always-true.
  */
-export function applyReactionPostSave(response, fieldsToSave, featureId, context) {
+export function applyReactionPostSave(response, fieldsToSave, featureId, context, shouldApplyScreen = () => true) {
 	if ( process.env.NODE_ENV !== 'production' ) {
 		const requiredContextKeys = [ 'ajaxFetch', 'getCachedFeatureData', 'setCachedFeatureData', 'setFeature', 'setSidePanels', 'setSettings', 'setOriginalSettings' ];
 		requiredContextKeys.forEach( ( key ) => {
@@ -85,7 +93,11 @@ export function applyReactionPostSave(response, fieldsToSave, featureId, context
 					),
 				};
 			}
+			// Cache: always. Screen: only when still relevant at refetch time.
 			context.setCachedFeatureData(featureId, updatedData);
+			if (!shouldApplyScreen()) {
+				return;
+			}
 			context.setFeature(updatedData);
 			context.setSidePanels(updatedData.side_panels || []);
 			const freshSettings = updatedData.settings || {};
@@ -98,20 +110,24 @@ export function applyReactionPostSave(response, fieldsToSave, featureId, context
 	if (hasMigrationResponse) {
 		// Mode-only change - inject migration data (or clear if empty), no refetch.
 		const inject = (panels) => injectMigrationDataIntoPanels(panels, saveMigrationData || {}, saveMigrationStatus);
+
+		// Cache: always, and derived from the CACHED panels — not the screen's
+		// current feature state, which may belong to another feature when this
+		// response arrives after navigation.
+		const cachedData = context.getCachedFeatureData(featureId);
+		if (cachedData) {
+			context.setCachedFeatureData(featureId, {
+				...cachedData,
+				side_panels: inject(cachedData.side_panels || []),
+				settings: { ...cachedData.settings, ...fieldsToSave },
+			});
+		}
+
+		if (!shouldApplyScreen()) {
+			return;
+		}
 		context.setSidePanels((prev) => inject(prev));
-		context.setFeature((prev) => {
-			if (!prev) return prev;
-			const updatedPanels = inject(prev.side_panels || []);
-			const cachedData = context.getCachedFeatureData(featureId);
-			if (cachedData) {
-				context.setCachedFeatureData(featureId, {
-					...cachedData,
-					side_panels: updatedPanels,
-					settings: { ...cachedData.settings, ...fieldsToSave },
-				});
-			}
-			return { ...prev, side_panels: updatedPanels };
-		});
+		context.setFeature((prev) => (prev ? { ...prev, side_panels: inject(prev.side_panels || []) } : prev));
 		// Keep local state in sync with saved values. Refetch for reactions no longer
 		// replaces settings (it only updates panels), so this merge is still correct.
 		context.setSettings((prev) => ({ ...prev, ...fieldsToSave }));
@@ -121,7 +137,6 @@ export function applyReactionPostSave(response, fieldsToSave, featureId, context
 
 	// Fallback: no reaction_items save and no migration_data (e.g. user saved bb_reaction_mode with same value).
 	// Keep originalSettings and cache in sync with what was sent so UI and cache stay consistent.
-	context.setOriginalSettings((prev) => ({ ...prev, ...fieldsToSave }));
 	const cachedData = context.getCachedFeatureData(featureId);
 	if (cachedData) {
 		context.setCachedFeatureData(featureId, {
@@ -129,4 +144,8 @@ export function applyReactionPostSave(response, fieldsToSave, featureId, context
 			settings: { ...cachedData.settings, ...fieldsToSave },
 		});
 	}
+	if (!shouldApplyScreen()) {
+		return;
+	}
+	context.setOriginalSettings((prev) => ({ ...prev, ...fieldsToSave }));
 }

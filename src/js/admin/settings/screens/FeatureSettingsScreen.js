@@ -634,7 +634,23 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 						// so this echo is the newest for the featureId captured in
 						// this closure; skipping it would leave the feature's cache
 						// holding pre-edit values on the next cache-first render.
-						if ( 'reactions' !== featureId ) {
+						// Reactions has its own cache/screen split: the helper runs
+						// its cache work unconditionally and gates its screen work
+						// on the same condition as the guard below (re-checked after
+						// its async refetch resolves).
+						if ( 'reactions' === featureId ) {
+							applyReactionPostSave( response, fieldsToSave, featureId, {
+								ajaxFetch,
+								getCachedFeatureData,
+								setCachedFeatureData,
+								setFeature,
+								setSidePanels,
+								setSettings,
+								setOriginalSettings,
+							}, function () {
+								return saveSeq === channel.seq && featureId === displayedFeatureIdRef.current;
+							} );
+						} else {
 							const cachedData = getCachedFeatureData(featureId);
 							if (cachedData) {
 								setCachedFeatureData(featureId, {
@@ -680,18 +696,9 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 
 						setChangedFields({});
 
-						// Reactions: refetch when reaction_items saved, or inject migration data (handled in reaction module).
-						if ( 'reactions' === featureId ) {
-							applyReactionPostSave( response, fieldsToSave, featureId, {
-								ajaxFetch,
-								getCachedFeatureData,
-								setCachedFeatureData,
-								setFeature,
-								setSidePanels,
-								setSettings,
-								setOriginalSettings,
-							} );
-						} else {
+						// Reactions screen state was already handled above via the
+						// helper's shouldApplyScreen() (same condition as this guard).
+						if ( 'reactions' !== featureId ) {
 							setSettings((prev) => ({ ...prev, ...actualSaved }));
 							setOriginalSettings((prev) => ({ ...prev, ...actualSaved }));
 
