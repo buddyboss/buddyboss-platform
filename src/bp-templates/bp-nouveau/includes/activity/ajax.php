@@ -86,12 +86,6 @@ add_action(
 				),
 			),
 			array(
-				'activity_update_pinned_post' => array(
-					'function' => 'bb_nouveau_ajax_activity_update_pinned_post',
-					'nopriv'   => true,
-				),
-			),
-			array(
 				'activity_update_close_comments' => array(
 					'function' => 'bb_nouveau_ajax_activity_update_close_comments',
 					'nopriv'   => false,
@@ -785,7 +779,19 @@ function bp_nouveau_ajax_post_update() {
 		}
 	}
 
-	$post_title = ! empty( $_POST['post_title'] ) ? sanitize_text_field( wp_unslash( $_POST['post_title'] ) ) : '';
+	if ( isset( $_POST['post_title'] ) ) {
+		$post_title = sanitize_text_field( wp_unslash( $_POST['post_title'] ) );
+	} elseif ( isset( $_POST['whats-new-title'] ) ) {
+		// Backward compatibility: older/cached scripts (and some third-party forms) submit the raw "whats-new-title" field instead of "post_title".
+		$post_title = sanitize_text_field( wp_unslash( $_POST['whats-new-title'] ) );
+	} else {
+		$post_title = '';
+	}
+
+	// On edit, an explicit "cleared" flag forces an empty title so it is not reinserted from the stored value.
+	if ( ! empty( $_POST['id'] ) && ! empty( $_POST['post_title_cleared'] ) ) {
+		$post_title = '';
+	}
 	$validation = bb_validate_activity_post_title( $post_title );
 	if ( ! $validation['valid'] ) {
 		wp_send_json_error(
@@ -1016,6 +1022,10 @@ function bp_nouveau_ajax_post_update() {
 			$draft_activity_meta_key .= '_' . bp_get_displayed_user()->id;
 		}
 
+		// A cleared title is already an empty string here (see the post_title_cleared handling above), and
+		// bp_activity_post_update()/bp_activity_add() persist it verbatim with no stored-title fallback, so the
+		// non-group path needs no explicit post_title_cleared flag. If a stored-title fallback is ever added there
+		// (as groups_record_activity() has), propagate 'post_title_cleared' into $post_array like the group path below.
 		$post_array = array(
 			'id'         => $activity_id,
 			'post_title' => $post_title,
@@ -1060,6 +1070,10 @@ function bp_nouveau_ajax_post_update() {
 				'content'    => $_POST['content'],
 				'group_id'   => $item_id,
 			);
+
+			if ( ! empty( $_POST['post_title_cleared'] ) ) {
+				$post_array['post_title_cleared'] = true;
+			}
 
 			if ( $is_scheduled ) {
 				$post_array['recorded_time'] = $schedule_date_time;
@@ -1410,72 +1424,6 @@ function bp_nouveau_ajax_activity_update_privacy() {
 		wp_send_json_success( $response );
 	} else {
 		wp_send_json_error();
-	}
-}
-
-/**
- * Update activity pinned post.
- *
- * @since BuddyBoss 2.4.60
- *
- * @return void
- */
-function bb_nouveau_ajax_activity_update_pinned_post() {
-	$response = array(
-		'feedback' => esc_html__( 'There was a problem marking this operation. Please try again.', 'buddyboss' ),
-	);
-
-	if ( ! bp_is_post_request() ) {
-		wp_send_json_error( $response );
-	}
-
-	if ( ! is_user_logged_in() ) {
-		wp_send_json_error( $response );
-	}
-
-	// Nonce check!
-	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'bp_nouveau_activity' ) ) {
-		wp_send_json_error( $response );
-	}
-
-	if ( empty( $_POST['pin_action'] ) ) {
-		wp_send_json_error( $response );
-	}
-
-	if ( empty( $_POST['id'] ) ) {
-		wp_send_json_error( $response );
-	}
-
-	if ( ! in_array( $_POST['pin_action'], array( 'pin', 'unpin' ), true ) ) {
-		wp_send_json_error( $response );
-	}
-
-	$args = array(
-		'action'      => $_POST['pin_action'],
-		'activity_id' => (int) $_POST['id'],
-		'retval'      => 'string',
-	);
-
-	$retval = bb_activity_pin_unpin_post( $args );
-
-	if ( ! empty( $retval ) ) {
-		if ( 'unpinned' === $retval ) {
-			$response['feedback'] = esc_html__( 'Your pinned post has been removed', 'buddyboss' );
-		} elseif ( 'pinned' === $retval ) {
-			$response['feedback'] = esc_html__( 'Your post has been pinned', 'buddyboss' );
-		} elseif ( 'not_allowed' === $retval || 'not_member' === $retval ) {
-			$response['feedback'] = esc_html__( 'You are not allowed to pin or unpin this post', 'buddyboss' );
-		} elseif ( 'pin_updated' === $retval ) {
-			$response['feedback'] = esc_html__( 'Your pinned post has been updated', 'buddyboss' );
-		}
-
-		$response = apply_filters( 'bb_ajax_activity_update_pinned_post', $response, $_POST );
-	}
-
-	if ( ! empty( $retval ) && in_array( $retval, array( 'unpinned', 'pinned', 'pin_updated' ), true ) ) {
-		wp_send_json_success( $response );
-	} else {
-		wp_send_json_error( $response );
 	}
 }
 

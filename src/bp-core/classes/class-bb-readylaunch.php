@@ -129,6 +129,12 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				require_once buddypress()->compatibility_dir . '/class-bb-readylaunch-memberpress-courses-helper.php';
 				BB_Readylaunch_Memberpress_Courses_Helper::instance();
 			}
+
+			if ( $enabled_for_page && class_exists( 'WC4BP_Manager' ) ) {
+				// WC4BP (WooCommerce BuddyPress Integration) integration.
+				require_once buddypress()->compatibility_dir . '/class-bb-readylaunch-wc4bp-helper.php';
+				BB_Readylaunch_WC4BP_Helper::instance();
+			}
 		}
 
 		/**
@@ -831,6 +837,10 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				bp_get_template_part( 'learndash/ld30/assignment' );
 			} elseif ( $is_ld_exam ) {
 				bp_get_template_part( 'learndash/ld30/challenge-exam' );
+			} elseif ( is_singular( 'post' ) && $this->bb_rl_is_page_enabled_for_integration( 'blog' ) ) {
+				bp_get_template_part( 'blog/single-post' );
+			} elseif ( ( is_home() || is_author() || is_category() || is_tag() || is_date() ) && $this->bb_rl_is_page_enabled_for_integration( 'blog' ) ) {
+				bp_get_template_part( 'blog/loop-post' );
 			} else {
 				the_content();
 			}
@@ -1242,6 +1252,17 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				wp_style_add_data( 'bb-icons-rl-css', 'suffix', $min );
 			}
 
+			// Register only if it's a Blog page, or the member profile Blogs tab.
+			if ( ( $this->bb_rl_is_page_enabled_for_integration( 'blog' ) && ( is_home() || is_singular( 'post' ) || is_author() || is_category() || is_tag() || is_date() ) ) || ( function_exists( 'bp_is_current_component' ) && bp_is_current_component( 'blog' ) ) ) {
+				wp_enqueue_style( 'bb-readylaunch-blog', buddypress()->plugin_url . "bp-templates/bp-nouveau/readylaunch/css/blog{$min}.css", array(), bp_get_version() );
+				wp_style_add_data( 'bb-readylaunch-blog', 'rtl', 'replace' );
+				if ( $min ) {
+					wp_style_add_data( 'bb-readylaunch-blog', 'suffix', $min );
+				}
+
+				wp_enqueue_script( 'bb-readylaunch-blog', buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/js/bb-readylaunch-blog.js', array( 'jquery' ), bp_get_version(), true );
+			}
+
 			if ( bp_is_members_directory() ) {
 				wp_register_script(
 					'bb-rl-members',
@@ -1275,10 +1296,11 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				'bb-readylaunch-front',
 				'bbReadyLaunchFront',
 				array(
-					'ajax_url'   => admin_url( 'admin-ajax.php' ),
-					'nonce'      => wp_create_nonce( 'bb-readylaunch' ),
-					'more_nav'   => esc_html__( 'More', 'buddyboss' ),
-					'filter_all' => esc_html__( 'All', 'buddyboss' ),
+					'ajax_url'           => admin_url( 'admin-ajax.php' ),
+					'nonce'              => wp_create_nonce( 'bb-readylaunch' ),
+					'more_nav'           => esc_html__( 'More', 'buddyboss' ),
+					'filter_all'         => esc_html__( 'All', 'buddyboss' ),
+					'notification_error' => esc_html__( 'Failed to load data. Please try again.', 'buddyboss' ),
 				)
 			);
 
@@ -3063,10 +3085,11 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				'bb-readylaunch-header-view',
 				'bbReadyLaunchFront',
 				array(
-					'ajax_url'   => admin_url( 'admin-ajax.php' ),
-					'nonce'      => wp_create_nonce( 'bb-readylaunch' ),
-					'more_nav'   => esc_html__( 'More', 'buddyboss' ),
-					'filter_all' => esc_html__( 'All', 'buddyboss' ),
+					'ajax_url'           => admin_url( 'admin-ajax.php' ),
+					'nonce'              => wp_create_nonce( 'bb-readylaunch' ),
+					'more_nav'           => esc_html__( 'More', 'buddyboss' ),
+					'filter_all'         => esc_html__( 'All', 'buddyboss' ),
+					'notification_error' => esc_html__( 'Failed to load data. Please try again.', 'buddyboss' ),
 				)
 			);
 

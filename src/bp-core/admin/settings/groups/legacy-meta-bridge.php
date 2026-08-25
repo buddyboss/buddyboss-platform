@@ -345,6 +345,14 @@ function bb_legacy_groups_bridge_box( $registry, $component, $box, &$order ) {
 			'tab'               => $tab,
 			'context'           => 'after',
 			'sanitize_callback' => $sanitize_cb,
+			// Stamp every bridged field with its source metabox so the React
+			// modal renders the box's contents under one bordered section with
+			// the metabox title as a heading — parity with the CPT (forum/topic)
+			// bridge. Falls back to the box id when the title is missing.
+			'field_group'       => isset( $box['id'] ) ? (string) $box['id'] : '',
+			'field_group_label' => isset( $box['title'] ) && '' !== (string) $box['title']
+				? (string) $box['title']
+				: ( isset( $box['id'] ) ? (string) $box['id'] : '' ),
 			'get_value'         => bb_legacy_make_get_value( $box, $input['name'], $input['type'] ),
 			'save_value'        => function ( $group, $value ) use ( $input ) {
 				// Defense in depth: verify safety again at save time in case

@@ -699,7 +699,8 @@ input.bb-admin-meta-field__search-input {
 	cursor: pointer;
 	font-size: 13px;
 
-	&:hover {
+	&:hover,
+	&.is-active {
 		background-color: $bb-background-secondary-color;
 	}
 }

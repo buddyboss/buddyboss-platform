@@ -393,6 +393,11 @@
 					@include bb-rl-label-heading-md;
 				}
 
+				[class*="bb-icons-"] {
+					font-weight: 400;
+					font-size: 18px;
+				}
+
 				.revoked-access {
 
 					@include bb-rl-button;

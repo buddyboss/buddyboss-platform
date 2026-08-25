@@ -35,20 +35,20 @@ bp_nouveau_member_hook( 'before', 'activity_content' );
 			?>
 			<div class="bb-rl-activity-placeholder">
 				<div class="bb-rl-activity-placeholder_head">
-					<div class="bb-rl-activity-placeholder_avatar bb-rl-bg-animation bb-rl-loading-bg"></div>
+					<div class="bb-rl-activity-placeholder_avatar bb-rl-loading-bg"></div>
 						<div class="bb-rl-activity-placeholder_details">
-						<div class="bb-rl-activity-placeholder_title bb-rl-bg-animation bb-rl-loading-bg"></div>
-						<div class="bb-rl-activity-placeholder_description bb-rl-bg-animation bb-rl-loading-bg"></div>
+						<div class="bb-rl-activity-placeholder_title bb-rl-loading-bg"></div>
+						<div class="bb-rl-activity-placeholder_description bb-rl-loading-bg"></div>
 					</div>
 				</div>
 				<div class="bb-rl-activity-placeholder_content">
-					<div class="bb-rl-activity-placeholder_title bb-rl-bg-animation bb-rl-loading-bg"></div>
-					<div class="bb-rl-activity-placeholder_title bb-rl-bg-animation bb-rl-loading-bg"></div>
+					<div class="bb-rl-activity-placeholder_title bb-rl-loading-bg"></div>
+					<div class="bb-rl-activity-placeholder_title bb-rl-loading-bg"></div>
 				</div>
 				<div class="bb-rl-activity-placeholder_actions">
-					<div class="bb-rl-activity-placeholder_description bb-rl-bg-animation bb-rl-loading-bg"></div>
-					<div class="bb-rl-activity-placeholder_description bb-rl-bg-animation bb-rl-loading-bg"></div>
-					<div class="bb-rl-activity-placeholder_description bb-rl-bg-animation bb-rl-loading-bg"></div>
+					<div class="bb-rl-activity-placeholder_description bb-rl-loading-bg"></div>
+					<div class="bb-rl-activity-placeholder_description bb-rl-loading-bg"></div>
+					<div class="bb-rl-activity-placeholder_description bb-rl-loading-bg"></div>
 				</div>
 			</div>
 			<?php

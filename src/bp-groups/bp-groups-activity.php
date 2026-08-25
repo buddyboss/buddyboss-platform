@@ -314,66 +314,84 @@ function bp_groups_filter_activity_scope( $retval = array(), $filter = array() )
 			: bp_loggedin_user_id();
 	}
 
-	// Fetch public groups.
-	$public_groups = groups_get_groups(
-		array(
-			'fields'   => 'ids',
-			'status'   => 'public',
-			'per_page' => - 1,
-			'user_id'  => $user_id,
-		)
-	);
-	if ( ! empty( $public_groups['groups'] ) ) {
-		$public_groups = $public_groups['groups'];
-	} else {
-		$public_groups = array();
-	}
-
-	// Determine groups of user.
-	$groups = groups_get_groups(
-		array(
-			'fields'      => 'ids',
-			'per_page'    => - 1,
-			'user_id'     => bp_loggedin_user_id(),
-			'show_hidden' => true,
-		)
-	);
-
-	if ( empty( $groups['groups'] ) ) {
-		$groups = array( 'groups' => array() );
-	}
-
-	$groups = $groups['groups'];
-
-	$private_group = array_diff( $groups, $public_groups );
-
 	// Should we show all items regardless of sitewide visibility?
 	$show_hidden = array();
-	if ( ! empty( $user_id ) && ( $user_id !== bp_loggedin_user_id() ) && is_user_logged_in() ) {
+
+	/*
+	 * Site administrators/moderators are not restricted to the groups they
+	 * belong to. This keeps the visibility of a single activity item
+	 * consistent with what a moderator already sees in the group's own
+	 * activity list, and matches bp_activity_user_can_read(), which already
+	 * grants bp_moderate users read access to any group activity item.
+	 */
+	$is_site_moderator = bp_current_user_can( 'bp_moderate' );
+
+	// Group membership only constrains non-moderators, so skip the lookups
+	// (two unbounded groups_get_groups() queries) entirely for site moderators.
+	$public_groups = array();
+	$private_group = array();
+
+	if ( ! $is_site_moderator ) {
+
+		// Fetch public groups.
+		$public_groups = groups_get_groups(
+			array(
+				'fields'   => 'ids',
+				'status'   => 'public',
+				'per_page' => - 1,
+				'user_id'  => $user_id,
+			)
+		);
+		if ( ! empty( $public_groups['groups'] ) ) {
+			$public_groups = $public_groups['groups'];
+		} else {
+			$public_groups = array();
+		}
 
 		// Determine groups of user.
-		$logged_in_user_groups = groups_get_user_groups( bp_loggedin_user_id() );
-		if ( ! empty( $logged_in_user_groups['groups'] ) ) {
-			$private_group = array_intersect( $private_group, $logged_in_user_groups['groups'] );
-		} else {
+		$groups = groups_get_groups(
+			array(
+				'fields'      => 'ids',
+				'per_page'    => - 1,
+				'user_id'     => bp_loggedin_user_id(),
+				'show_hidden' => true,
+			)
+		);
+
+		if ( empty( $groups['groups'] ) ) {
+			$groups = array( 'groups' => array() );
+		}
+
+		$groups = $groups['groups'];
+
+		$private_group = array_diff( $groups, $public_groups );
+
+		if ( ! empty( $user_id ) && ( $user_id !== bp_loggedin_user_id() ) && is_user_logged_in() ) {
+
+			// Determine groups of user.
+			$logged_in_user_groups = groups_get_user_groups( bp_loggedin_user_id() );
+			if ( ! empty( $logged_in_user_groups['groups'] ) ) {
+				$private_group = array_intersect( $private_group, $logged_in_user_groups['groups'] );
+			} else {
+				$show_hidden = array(
+					'column' => 'hide_sitewide',
+					'value'  => 0,
+				);
+			}
+		} elseif ( ! is_user_logged_in() ) {
 			$show_hidden = array(
 				'column' => 'hide_sitewide',
 				'value'  => 0,
 			);
 		}
-	} elseif ( ! is_user_logged_in() ) {
-		$show_hidden = array(
-			'column' => 'hide_sitewide',
-			'value'  => 0,
-		);
-	}
 
-	if ( empty( $public_groups ) ) {
-		$public_groups = array( 0 );
-	}
+		if ( empty( $public_groups ) ) {
+			$public_groups = array( 0 );
+		}
 
-	if ( empty( $private_group ) ) {
-		$private_group = array( 0 );
+		if ( empty( $private_group ) ) {
+			$private_group = array( 0 );
+		}
 	}
 
 	$data = array(
@@ -383,6 +401,19 @@ function bp_groups_filter_activity_scope( $retval = array(), $filter = array() )
 			'value'  => buddypress()->groups->id,
 		),
 		array(
+			'column'  => 'privacy',
+			'compare' => '=',
+			'value'   => 'public',
+		),
+	);
+
+	/*
+	 * Only restrict by group membership (item_id) for non-moderators. Site
+	 * administrators can access every group's activity, matching their access
+	 * to the group itself.
+	 */
+	if ( ! $is_site_moderator ) {
+		$data[] = array(
 			'relation' => 'OR',
 			array(
 				'column'  => 'item_id',
@@ -394,13 +425,8 @@ function bp_groups_filter_activity_scope( $retval = array(), $filter = array() )
 				'compare' => 'IN',
 				'value'   => (array) $private_group,
 			),
-		),
-		array(
-			'column'  => 'privacy',
-			'compare' => '=',
-			'value'   => 'public',
-		),
-	);
+		);
+	}
 
 	if ( bp_is_user() ) {
 		$data[] = array(
@@ -482,10 +508,19 @@ function groups_record_activity( $args = '' ) {
 				}
 			}
 
+			// Resolve the post title: keep the submitted value, honor an explicit clear, otherwise retain the stored title.
+			if ( ! empty( $args['post_title'] ) ) {
+				$edited_post_title = $args['post_title'];
+			} elseif ( ! empty( $args['post_title_cleared'] ) ) {
+				$edited_post_title = '';
+			} else {
+				$edited_post_title = $activity->post_title;
+			}
+
 			$args = array(
 				'id'                => $activity->id,
 				'action'            => ! empty( $args['action'] ) ? $args['action'] : $activity->action,
-				'post_title'        => ! empty( $args['post_title'] ) ? $args['post_title'] : $activity->post_title,
+				'post_title'        => $edited_post_title,
 				'title_required'    => ! empty( $args['title_required'] ) ? $args['title_required'] : $activity->title_required,
 				'content'           => ! empty( $args['content'] ) ? $args['content'] : '',
 				'component'         => $activity->component,

@@ -562,6 +562,14 @@ function bp_version_updater() {
 			bb_update_to_3_0_3();
 		}
 
+		// DB version 23604 — install the BuddyBoss Addons bundle for entitled
+		// customers, once, on the upgrade into this release (PROD-10242). Runs on
+		// every update path — Plugins screen, auto-update, or a direct FTP/copy-paste
+		// — because this keys on the stored _bp_db_version vs the code db_version.
+		if ( $raw_db_version < 23604 ) {
+			bb_install_addons_bundle_on_upgrade();
+		}
+
 		if ( $raw_db_version !== $current_db ) {
 			// @todo - Write only data manipulate migration here. ( This is not for DB structure change ).
 
@@ -3205,18 +3213,29 @@ function bb_core_update_repair_duplicate_following_notification() {
 	global $wpdb;
 	$bp = buddypress();
 
-	$sql  = "DELETE FROM {$bp->notifications->table_name}";
-	$sql .= ' WHERE id IN (';
-	$sql .= " SELECT * FROM ( SELECT DISTINCT n1.id FROM {$bp->notifications->table_name} n1";
+	// Identify the duplicate "following" notifications once (keep the newest per
+	// user + secondary item, mark the older ones for deletion), then remove them in
+	// chunks so a site with many duplicates cannot time out this one-time upgrade.
+	$sql  = "SELECT DISTINCT n1.id FROM {$bp->notifications->table_name} n1";
 	$sql .= " JOIN {$bp->notifications->table_name} n2 ON n1.user_id = n2.user_id";
 	$sql .= ' WHERE n1.secondary_item_id = n2.secondary_item_id';
 	$sql .= ' AND n1.date_notified < n2.date_notified';
 	$sql .= ' AND n1.component_name = %s AND n1.component_action = %s';
-	$sql .= ' ORDER BY n1.id DESC) AS ids';
-	$sql .= ' )';
+	$sql .= ' ORDER BY n1.id DESC';
 
-	// Remove duplicate notification ids.
-	$wpdb->query( $wpdb->prepare( $sql, 'activity', 'bb_following_new' ) );
+	$notification_ids = wp_parse_id_list( $wpdb->get_col( $wpdb->prepare( $sql, 'activity', 'bb_following_new' ) ) );
+
+	// Delete the duplicate notifications in chunks (bounded lock time on large sites).
+	foreach ( array_chunk( $notification_ids, 500 ) as $chunk ) {
+		$ids_sql = implode( ',', $chunk );
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		$wpdb->query( "DELETE FROM {$bp->notifications->table_name} WHERE id IN ({$ids_sql})" );
+	}
+
+	// Clean up the now-orphaned metadata after the notifications are gone.
+	if ( ! empty( $notification_ids ) && function_exists( 'bb_notifications_delete_meta_for_ids' ) ) {
+		bb_notifications_delete_meta_for_ids( $notification_ids );
+	}
 
 	// Purge all the cache for API.
 	if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
@@ -4508,4 +4527,163 @@ function bb_update_to_3_0_3() {
 	// associations, so a bulk delete invalidates it once at the end
 	// rather than per-field.
 	wp_cache_delete( 'field_member_types', 'bp_xprofile' );
+}
+
+/**
+ * Whether the current site is entitled to the BuddyBoss Addons bundle.
+ *
+ * Entitlement = Mothership present AND active license AND the catalog carries
+ * the buddyboss-addons product AND the products API did not error. The plan's
+ * catalog is the single source of truth — plans not entitled to the bundle
+ * simply do not carry the product. Never returns true on an errored catalog
+ * read.
+ *
+ * @since BuddyBoss 3.4.2
+ *
+ * @return bool True when entitled.
+ */
+function bb_is_entitled_to_addons() {
+
+	/**
+	 * Short-circuit the BuddyBoss Addons entitlement decision.
+	 *
+	 * Return a non-null boolean to override the result before any Mothership
+	 * call. This is the seam the test suite and integrators use to force the
+	 * decision without a live license/catalog lookup (the checks below all
+	 * short-circuit to false when the Mothership layer is absent).
+	 *
+	 * @since BuddyBoss 3.4.2
+	 *
+	 * @param bool|null $override Non-null boolean to force the decision, or null to compute it.
+	 */
+	$override = apply_filters( 'bb_pre_is_entitled_to_addons', null );
+	if ( null !== $override ) {
+		return (bool) $override;
+	}
+
+	$has_mothership = class_exists( '\BuddyBoss\Core\Admin\Mothership\BB_Plugin_Connector' )
+		&& class_exists( '\BuddyBoss\Core\Admin\Mothership\BB_Addons_Manager' );
+
+	if ( ! $has_mothership ) {
+		return false;
+	}
+
+	$connector = new \BuddyBoss\Core\Admin\Mothership\BB_Plugin_Connector();
+
+	if ( ! $connector->getLicenseActivationStatus() ) {
+		return false;
+	}
+
+	// Fetch the product first (warms the products transient), then read the
+	// error flag from that same warm cache. An errored read returns false.
+	$product = \BuddyBoss\Core\Admin\Mothership\BB_Addons_Manager::checkProductBySlug( 'buddyboss-addons' );
+
+	if ( \BuddyBoss\Core\Admin\Mothership\BB_Addons_Manager::productsApiErrored() ) {
+		return false;
+	}
+
+	$entitled = ! empty( $product );
+
+	/**
+	 * Filters the computed BuddyBoss Addons entitlement decision.
+	 *
+	 * Runs only when the decision was computed (not short-circuited by
+	 * `bb_pre_is_entitled_to_addons`); use this to adjust the final value with
+	 * the matched product in hand.
+	 *
+	 * @since BuddyBoss 3.4.2
+	 *
+	 * @param bool        $entitled Whether the site is entitled.
+	 * @param object|null $product  The matched product object, or null.
+	 */
+	return (bool) apply_filters( 'bb_is_entitled_to_addons', $entitled, $product );
+}
+
+/**
+ * Whether the buddyboss-addons plugin is active.
+ *
+ * @since BuddyBoss 3.4.2
+ *
+ * @return bool True when active.
+ */
+function bb_is_addons_plugin_active() {
+	if ( ! function_exists( 'is_plugin_active' ) ) {
+		require_once ABSPATH . 'wp-admin/includes/plugin.php';
+	}
+
+	return is_plugin_active( 'buddyboss-addons/buddyboss-addons.php' );
+}
+
+/**
+ * One-time upgrade migration: install & activate the BuddyBoss Addons bundle
+ * for entitled customers.
+ *
+ * Invoked once from bp_version_updater() (PROD-10242). System-migration style,
+ * like the sibling bb_update_to_* functions: no capability gate (bp_version_updater
+ * is not capability-gated and bumps the stored version on the first admin request,
+ * so a cap gate would let a low-privilege user burn the one-shot). Non-interactive
+ * (Automatic_Upgrader_Skin) — never prompts, never fatals, never loops. Performs
+ * install + activate ONLY; writes no feature settings.
+ *
+ * @since BuddyBoss 3.4.2
+ *
+ * @return void
+ */
+function bb_install_addons_bundle_on_upgrade() {
+	require_once ABSPATH . 'wp-admin/includes/plugin.php';
+
+	// Already active → nothing to do (checked first: no disk/network work, and
+	// keeps the unit test's no-write path hermetic).
+	if ( bb_is_addons_plugin_active() ) {
+		return;
+	}
+
+	if ( ! bb_is_entitled_to_addons() ) {
+		return;
+	}
+
+	$plugin_file = 'buddyboss-addons/buddyboss-addons.php';
+
+	// Install only when the files are absent; never re-install over an existing copy.
+	if ( ! file_exists( trailingslashit( WP_PLUGIN_DIR ) . $plugin_file ) ) {
+		require_once ABSPATH . 'wp-admin/includes/file.php';
+		require_once ABSPATH . 'wp-admin/includes/misc.php';
+		require_once ABSPATH . 'wp-admin/includes/class-wp-upgrader.php';
+
+		$product = \BuddyBoss\Core\Admin\Mothership\BB_Addons_Manager::checkProductBySlug( 'buddyboss-addons' );
+
+		if ( empty( $product ) || empty( $product->_embedded->{'version-latest'}->url ) ) {
+			return;
+		}
+
+		$skin      = new Automatic_Upgrader_Skin();
+		$upgrader  = new Plugin_Upgrader( $skin );
+		$installed = $upgrader->install( $product->_embedded->{'version-latest'}->url );
+
+		if ( true !== $installed ) {
+			// Filesystem not writable / download failed. Fail silently for the
+			// user — the admin can install manually from the Add-ons page.
+			if ( function_exists( 'bb_error_log' ) ) {
+				// Gated on BB_DEBUG_LOG inside bb_error_log(); surfaces auto-install failures for support.
+				bb_error_log( 'BuddyBoss Addons auto-install: install failed' . ( is_wp_error( $installed ) ? ': ' . $installed->get_error_message() : '.' ) );
+			}
+			return;
+		}
+	}
+
+	// Match Platform's activation scope. On a network-activated Platform,
+	// network-activate the add-on so every subsite community gets it; otherwise
+	// this runs inside switch_to_blog( root ), so a plain activate lands on the
+	// root blog only.
+	$network_wide = function_exists( 'bp_is_network_activated' ) && bp_is_network_activated();
+
+	$activated = activate_plugin( $plugin_file, '', $network_wide );
+
+	// Activation can fail even after a clean install (e.g. the add-on fatals on
+	// include, or its dependency check rejects the running Platform version).
+	// Leave it inactive rather than fatal the request, but log for support.
+	if ( is_wp_error( $activated ) && function_exists( 'bb_error_log' ) ) {
+		// Gated on BB_DEBUG_LOG inside bb_error_log(); surfaces post-install activation failures for support.
+		bb_error_log( 'BuddyBoss Addons auto-install: installed but activation failed: ' . $activated->get_error_message() );
+	}
 }

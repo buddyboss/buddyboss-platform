@@ -16,10 +16,10 @@
 	<div class="bb-rl-messages-nav-panel loading">
 		<div class="bb-rl-message-header-loading bp-hide">
 			<div class="bb-rl-message-header-loading_top">
-				<div class="bb-rl-message-header-loading_title bb-bg-animation bb-loading-bg"></div>
-				<div class="bb-rl-message-header-loading_option bb-bg-animation bb-loading-bg"></div>
+				<div class="bb-rl-message-header-loading_title bb-rl-loading-bg"></div>
+				<div class="bb-rl-message-header-loading_option bb-rl-loading-bg"></div>
 			</div>
-			<div class="bb-rl-message-header-loading_description bb-bg-animation bb-loading-bg bb-loading-input"></div>
+			<div class="bb-rl-message-header-loading_description bb-rl-loading-bg bb-loading-input"></div>
 		</div>
 		<div id="bb-rl-messages-thread-list-nav"></div>
 		<div class="subnav-filters filters user-subnav bb-rl-messages-filters" id="subsubnav"></div><!--This is required for filters-->

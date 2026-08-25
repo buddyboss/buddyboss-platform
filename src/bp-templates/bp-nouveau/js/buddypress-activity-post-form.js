@@ -1242,10 +1242,8 @@ window.bp = window.bp || {};
 
 			self.postForm.model.set( 'content', content, {silent: true} );
 
-			var activityPostTitle = self.postForm.$el.find( '#whats-new-title' ).val();
-			if ( activityPostTitle ) {
-				self.postForm.model.set( 'post_title', activityPostTitle, {silent: true} );
-			}
+			var activityPostTitle = self.postForm.$el.find( '#whats-new-title' ).val() || '';
+			self.postForm.model.set( 'post_title', activityPostTitle, {silent: true} );
 
 			// Silently add meta.
 			self.postForm.model.set( meta, {silent: true} );
@@ -6157,7 +6155,9 @@ window.bp = window.bp || {};
 
 			postUpdate: function ( event ) {
 				var self = this,
-					meta = {}, edit = false;
+					meta = { post_title: '' },
+					edit = false,
+					$form = ( event && event.target && $( event.target ).is( 'form' ) ) ? $( event.target ) : self.$el;
 
 				if ( event ) {
 					if ( 'keydown' === event.type && ( 13 !== event.keyCode || ! event.ctrlKey ) ) {
@@ -6170,13 +6170,17 @@ window.bp = window.bp || {};
 				// unset all errors before submit.
 				self.model.unset( 'errors' );
 
-				// Set the content and meta.
+				// Set the content and meta from the submitted form.
 				_.each(
-					self.$el.serializeArray(),
+					$form.serializeArray(),
 					function ( pair ) {
 						pair.name = pair.name.replace( '[]', '' );
 						if ( pair.name.startsWith( 'bb-poll-question-option[' ) ) {
 							pair.name = pair.name.replace( /\[\d+\]/, '' );
+						}
+						if ( 'whats-new-title' === pair.name || 'bb-rl-whats-new-title' === pair.name ) {
+							meta.post_title = ( pair.value || '' ).trim();
+							return;
 						}
 						if ( -1 === _.indexOf( [ 'aw-whats-new-submit', 'whats-new-post-in', 'bb-schedule-activity-date-field', 'bb-schedule-activity-meridian', 'bb-schedule-activity-time-field', 'bb-poll-question-field', 'bb-poll-duration', 'bb-poll-question-option', 'bb-poll-allow-multiple-answer', 'bb-poll-allow-new-option', 'whats-new-title' ], pair.name ) ) {
 							if ( _.isUndefined( meta[ pair.name ] ) ) {
@@ -6193,7 +6197,7 @@ window.bp = window.bp || {};
 				);
 
 				// Post content.
-				var $whatsNew = self.$el.find( '#whats-new' );
+				var $whatsNew = $form.find( '#whats-new' );
 
 				var atwho_query = $whatsNew.find( 'span.atwho-query' );
 				for ( var i = 0; i < atwho_query.length; i++ ) {
@@ -6223,21 +6227,8 @@ window.bp = window.bp || {};
 
 				self.model.set( 'content', content, { silent: true } );
 
-				var activityPostTitle = self.$el.find( '#whats-new-title' );
-				if ( self.$el.find( '#bb-rl-whats-new-title' ).length ) {
-					activityPostTitle = self.$el.find( '#bb-rl-whats-new-title' );
-				}
-				if ( activityPostTitle.length && activityPostTitle.val() !== '' ) {
-					activityPostTitle = activityPostTitle.val();
-					var maxPostTitleLength = BP_Nouveau.activity.params.activity_post_title_maxlength;
-					// Maximum 80 characters allowed.
-					if ( activityPostTitle.length > maxPostTitleLength ) {
-						activityPostTitle = activityPostTitle.slice( 0, maxPostTitleLength );
-					}
-					self.model.set( 'post_title', activityPostTitle, { silent: true } );
-				}
-
-				// Silently add meta.
+				// Silently add meta. The post title is captured into meta during serializeArray above,
+				// and re-read authoritatively from the submitted form just before the request is sent.
 				self.model.set( meta, { silent: true } );
 
 				var medias = self.model.get( 'media' );
@@ -6389,6 +6380,20 @@ window.bp = window.bp || {};
 						data  : data
 					}
 				);
+
+				// Force post_title from visible input right before send - ensures cleared title is always sent.
+				var $titleEl = $form.find( 'input.whats-new-title, input#whats-new-title, input.bb-rl-whats-new-title, input#bb-rl-whats-new-title' ).first();
+				if ( ! $titleEl.length ) {
+					$titleEl = $( 'input.whats-new-title, input#whats-new-title, input.bb-rl-whats-new-title, input#bb-rl-whats-new-title' ).filter( ':visible' ).first();
+				}
+				data.post_title = $titleEl.length ? ( $titleEl.val() || '' ).trim() : ( meta.post_title || '' );
+				if ( data.post_title.length > 0 && BP_Nouveau.activity.params.activity_post_title_maxlength ) {
+					data.post_title = data.post_title.slice( 0, BP_Nouveau.activity.params.activity_post_title_maxlength );
+				}
+				// Explicit flag when user cleared title during edit - ensures empty is saved even if empty params are stripped.
+				if ( edit && data.post_title.length === 0 ) {
+					data.post_title_cleared = 1;
+				}
 
 				bp.ajax.post( 'post_update', data ).done(
 					function ( response ) {

@@ -494,9 +494,35 @@ function bb_get_activity_reaction_ajax_callback() {
 	$reaction_id = ! empty( $_POST['reaction_id'] ) ? absint( wp_unslash( $_POST['reaction_id'] ) ) : 0;
 	$before      = ! empty( $_POST['before'] ) ? absint( wp_unslash( $_POST['before'] ) ) : 0;
 
-	// Verify the activity exists and is visible to the current user.
-	$activity_result = bp_activity_get_specific( array( 'activity_ids' => array( $item_id ) ) );
-	if ( empty( $activity_result['activities'] ) ) {
+	// Verify the activity (or activity comment) exists and is published, non-spam.
+	// A single primary-key lookup is used instead of bp_activity_get_specific(): the
+	// latter excludes 'activity_comment' rows unless display_comments is set, and
+	// enabling it would trigger an unnecessary comment-tree fetch just to confirm a
+	// single row exists. BP_Activity_Activity::populate() is cache-first and type
+	// agnostic, so it scales for items with many comments and reactions alike.
+	$activity = new BP_Activity_Activity( $item_id );
+	if (
+		empty( $activity->id ) ||
+		! empty( $activity->is_spam ) ||
+		bb_get_activity_published_status() !== $activity->status
+	) {
+		wp_send_json_error(
+			array(
+				'message' => __( 'Activity not found.', 'buddyboss' ),
+				'type'    => 'error',
+			)
+		);
+	}
+
+	// Enforce per-user visibility so reactor data is not exposed for items the
+	// current user cannot see. For activity comments, visibility is governed by the
+	// root activity ($activity->item_id holds the topmost activity ID), so the group
+	// or privacy check must run against that root rather than the comment row.
+	$readable_activity = $activity;
+	if ( 'activity_comment' === $activity->type && ! empty( $activity->item_id ) ) {
+		$readable_activity = new BP_Activity_Activity( $activity->item_id );
+	}
+	if ( empty( $readable_activity->id ) || ! bp_activity_user_can_read( $readable_activity ) ) {
 		wp_send_json_error(
 			array(
 				'message' => __( 'Activity not found.', 'buddyboss' ),

@@ -310,6 +310,22 @@
 			margin: 0;
 		}
 	}
+
+	/* Pagination footer — matches Figma `pagination` component: item count
+	   sits to the LEFT of the page-buttons cluster, both right-aligned at
+	   the bottom of the list. 16px gap between count + cluster. */
+	&__footer {
+		display: flex;
+		align-items: center;
+		justify-content: flex-end;
+		gap: 16px;
+		padding: 16px 0;
+	}
+
+	&__item-count {
+		font-size: 13px;
+		color: $bb-text-color;
+	}
 }
 
 /* ----------------------------------------------------------------

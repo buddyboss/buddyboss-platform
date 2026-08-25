@@ -346,6 +346,24 @@
 			min-width: 560px;
 		}
 	}
+
+	/* Pagination footer — matches Figma `pagination` component: item count
+	   sits to the LEFT of the page-buttons cluster, both right-aligned at
+	   the bottom of the list. 16px gap between item-count and the cluster
+	   (Figma's `spacing/200`). The shared `<ListPagination />` emits
+	   `__item-count` and `.bb-admin-pagination__pagination` as siblings. */
+	&__footer {
+		display: flex;
+		align-items: center;
+		justify-content: flex-end;
+		gap: 16px;
+		padding: 16px 0;
+	}
+
+	&__item-count {
+		font-size: 13px;
+		color: $bb-text-color;
+	}
 }
 
 /* ----------------------------------------------------------------

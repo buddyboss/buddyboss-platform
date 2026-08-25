@@ -420,11 +420,6 @@
 
 	.is_loading {
 
-		.bb-loading-bg {
-			background-color: var(--bb-rl-background-secondary-color);
-			animation: fade-in-out infinite 2s ease;
-		}
-
 		.subscription-items_loading {
 			display: flex;
 			align-items: center;
@@ -526,6 +521,38 @@
 			margin-bottom: 0;
 			color: var(--bb-rl-text-tertiary-color);
 		}
+	}
+}
+
+/* Loading UI */
+
+.subscription-items-loader.is_loading {
+
+	.subscription-items_loading {
+		display: flex;
+		align-items: center;
+		padding: var(--bb-rl-space-100);
+	}
+
+	.subscription-items-image_loading {
+		height: 40px;
+		width: 40px;
+		margin-right: var(--bb-rl-space-100);
+		border-radius: var(--bb-rl-radius-md);
+	}
+
+	.subscription-items-text_loading {
+		height: 14px;
+		flex: 1;
+		max-width: 160px;
+		border-radius: 100px;
+	}
+}
+
+.subscription-pagination {
+
+	.page-numbers {
+		margin: 0 var(--bb-rl-space-50);
 	}
 }
 

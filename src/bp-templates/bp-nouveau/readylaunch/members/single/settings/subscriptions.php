@@ -22,6 +22,20 @@ bp_nouveau_member_hook( 'before', 'settings_template' );
 		<?php
 		$types               = bb_get_subscriptions_types();
 		$types_with_singular = bb_get_subscriptions_types( true );
+
+		/**
+		 * Filters the subscription types displayed in the member Subscriptions
+		 * settings tab. Display-only — does NOT affect subscribe/unsubscribe;
+		 * the REST endpoint validates the `type` param against the unfiltered
+		 * list, so removing a type here only hides its accordion.
+		 *
+		 * @since BuddyBoss 3.2.0
+		 *
+		 * @param array $types               Plural-label types map.
+		 * @param array $types_with_singular Singular-label types map.
+		 */
+		$types               = apply_filters( 'bb_subscriptions_settings_visible_types', $types, $types_with_singular );
+		$types_with_singular = array_intersect_key( $types_with_singular, $types );
 		if ( ! empty( $types ) ) {
 			foreach ( $types as $sub_type => $label ) {
 				?>
@@ -38,19 +52,19 @@ bp_nouveau_member_hook( 'before', 'settings_template' );
 					<div id="bb-accordion-section-<?php echo esc_attr( $sub_type ); ?>" role="region" aria-labelledby="bb-accordion-<?php echo esc_attr( $sub_type ); ?>" class="bb-accordion_panel">
 						<div class="subscription-items is_loading">
 							<div class="subscription-items_loading">
-								<div class="subscription-items-image_loading bb-loading-bg"></div>
+								<div class="subscription-items-image_loading bb-rl-loading-bg"></div>
 
-								<div class="subscription-items-text_loading bb-loading-bg"></div>
+								<div class="subscription-items-text_loading bb-rl-loading-bg"></div>
 							</div>
 							<div class="subscription-items_loading">
-								<div class="subscription-items-image_loading bb-loading-bg"></div>
+								<div class="subscription-items-image_loading bb-rl-loading-bg"></div>
 
-								<div class="subscription-items-text_loading bb-loading-bg"></div>
+								<div class="subscription-items-text_loading bb-rl-loading-bg"></div>
 							</div>
 							<div class="subscription-items_loading">
-								<div class="subscription-items-image_loading bb-loading-bg"></div>
+								<div class="subscription-items-image_loading bb-rl-loading-bg"></div>
 
-								<div class="subscription-items-text_loading bb-loading-bg"></div>
+								<div class="subscription-items-text_loading bb-rl-loading-bg"></div>
 							</div>
 						</div>
 					</div>
