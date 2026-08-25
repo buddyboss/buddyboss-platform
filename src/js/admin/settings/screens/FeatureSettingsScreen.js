@@ -662,7 +662,7 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 								return saveSeq === channel.seq && featureId === displayedFeatureIdRef.current;
 							}, function () {
 								return saveSeq === channel.seq;
-							} );
+							}, saveSeq );
 						} else {
 							const cachedData = getCachedFeatureData(featureId);
 							if (cachedData) {

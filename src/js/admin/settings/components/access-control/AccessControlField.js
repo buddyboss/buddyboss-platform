@@ -523,7 +523,7 @@ export function AccessControlField( { field, value, onChange } ) {
 
 	// Get current type config for rendering sub-type dropdown.
 	var currentTypeConfig = getSelectedTypeConfig();
-	var hasSubTypes       = currentTypeConfig && currentTypeConfig.sub_types && currentTypeConfig.sub_types.items && currentTypeConfig.sub_types.items.length > 0;
+	var hasSubTypes       = isGroupedTypeConfig( currentTypeConfig );
 	var showNoOptions     = ! loading && selectedType && options.length === 0;
 
 	// For grouped types, only show "no options" if a sub-type is selected.

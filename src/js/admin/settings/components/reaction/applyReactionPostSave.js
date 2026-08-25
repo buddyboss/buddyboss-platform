@@ -10,6 +10,15 @@
  */
 
 /**
+ * Per-feature ledger of the highest save sequence whose items-refetch has
+ * written the cache. Two reaction_items saves in quick succession launch two
+ * concurrent refetches (they run outside the single-flight channel); this
+ * ledger prevents the older refetch, resolving last, from regressing the
+ * newer one's write.
+ */
+const itemsRefetchSeqLedger = Object.create(null);
+
+/**
  * Injects migration_data and migration_status into reaction_migration / reaction_notice fields.
  *
  * @param {Array} panels Side panels array
@@ -50,9 +59,10 @@ function injectMigrationDataIntoPanels(panels, migrationData, migrationStatus) {
  * @param {string}   featureId         Feature ID (used for refetch and cache keys)
  * @param {Object}   context           Helpers: ajaxFetch, getCachedFeatureData, setCachedFeatureData, setFeature, setSidePanels, setSettings, setOriginalSettings
  * @param {Function} shouldApplyScreen Returns true when screen state may be applied (response not superseded, feature still displayed). Defaults to always-true.
- * @param {Function} isLatestSave      Returns true when this save is still the feature's newest dispatch. Gates the ASYNC refetch's cache write: the refetch runs outside the single-flight channel, so an earlier save's slower refetch could otherwise overwrite a newer refetch's cache. Defaults to always-true.
+ * @param {Function} isLatestSave      Returns true when this save is still the feature's newest dispatch. Gates how the ASYNC refetch writes the cache: the refetch runs outside the single-flight channel, so an earlier save's slower refetch must not overwrite a newer save's cache state. Defaults to always-true.
+ * @param {number}   saveSeq           This save's channel sequence number, used with the items-refetch ledger to order concurrent refetch writes. Defaults to 0 (ordering not enforced).
  */
-export function applyReactionPostSave(response, fieldsToSave, featureId, context, shouldApplyScreen = () => true, isLatestSave = () => true) {
+export function applyReactionPostSave(response, fieldsToSave, featureId, context, shouldApplyScreen = () => true, isLatestSave = () => true, saveSeq = 0) {
 	if ( process.env.NODE_ENV !== 'production' ) {
 		const requiredContextKeys = [ 'ajaxFetch', 'getCachedFeatureData', 'setCachedFeatureData', 'setFeature', 'setSidePanels', 'setSettings', 'setOriginalSettings' ];
 		requiredContextKeys.forEach( ( key ) => {
@@ -96,12 +106,30 @@ export function applyReactionPostSave(response, fieldsToSave, featureId, context
 					),
 				};
 			}
-			// This refetch runs outside the single-flight channel, so two
-			// reaction_items saves produce two concurrent refetches. Only the
-			// newest save's refetch may write the cache — an earlier save's
-			// slower refetch carries older server state and must be discarded
-			// (the newest save's own refetch is authoritative).
+			// This refetch runs outside the single-flight channel, so writes
+			// must be ordered manually. The ledger stops an older items-save's
+			// refetch, resolving last, from regressing a newer items-refetch.
+			if (saveSeq && saveSeq < (itemsRefetchSeqLedger[featureId] || 0)) {
+				return;
+			}
+			if (saveSeq) {
+				itemsRefetchSeqLedger[featureId] = saveSeq;
+			}
+
+			// Superseded by a NEWER save (e.g. a mode change, whose branch does
+			// no refetch of its own): a full-replace here would clobber that
+			// save's cache effects with pre-save server state — but silently
+			// discarding the refetch would strand the temporary react_key_
+			// item IDs in the cache forever. Land ONLY reaction_items (the
+			// data this refetch exists to deliver) on top of the current cache.
 			if (!isLatestSave()) {
+				const current = context.getCachedFeatureData(featureId);
+				if (current && updatedData.settings && undefined !== updatedData.settings.reaction_items) {
+					context.setCachedFeatureData(featureId, {
+						...current,
+						settings: { ...current.settings, reaction_items: updatedData.settings.reaction_items },
+					});
+				}
 				return;
 			}
 			context.setCachedFeatureData(featureId, updatedData);
