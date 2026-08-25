@@ -219,6 +219,12 @@ export function AccessControlField( { field, value, onChange } ) {
 		var controller   = new AbortController();
 		abortRef.current = controller;
 		setLoading( true );
+		// The displayed options belong to the enrichment's (different) type; if
+		// this refetch fails they must not stay rendered and toggleable under
+		// the saved selection — a toggle would persist another type's option
+		// keys into this rule. Clear them so the error state shows alone.
+		setOptions( [] );
+		setRecipientOptions( [] );
 
 		ajaxFetch( action, {
 			value: fetchValue,
@@ -249,6 +255,19 @@ export function AccessControlField( { field, value, onChange } ) {
 		};
 		// Mount-only heal: the stale-enrichment condition can only exist at mount.
 		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [] );
+
+	// Abort whatever options fetch is in flight when the field unmounts. The
+	// heal effect's cleanup only covers its own controller; fetches started by
+	// the change handlers live solely in abortRef and would otherwise run to
+	// completion against an unmounted instance (harmless no-op setState in
+	// React 18, but a wasted request worth cancelling).
+	useEffect( function() {
+		return function() {
+			if ( abortRef.current ) {
+				abortRef.current.abort();
+			}
+		};
 	}, [] );
 
 	/**
@@ -362,6 +381,12 @@ export function AccessControlField( { field, value, onChange } ) {
 		// Direct type — fetch options via AJAX.
 		setLoading( true );
 		setFetchError( '' );
+		// Clear the previous type's lists before fetching: if this fetch fails,
+		// the toggle list must not keep rendering the old type's options under
+		// the new selection — toggling one would save another type's option
+		// keys into this rule.
+		setOptions( [] );
+		setRecipientOptions( [] );
 
 		// Cancel any in-flight request before starting a new one.
 		if ( abortRef.current ) {
@@ -425,6 +450,12 @@ export function AccessControlField( { field, value, onChange } ) {
 
 		setLoading( true );
 		setFetchError( '' );
+		// Clear the previous provider's lists before fetching: if this fetch
+		// fails, the toggle list must not keep rendering the old provider's
+		// options under the new selection — toggling one would save another
+		// provider's option keys into this rule.
+		setOptions( [] );
+		setRecipientOptions( [] );
 
 		// Cancel any in-flight request before starting a new one.
 		if ( abortRef.current ) {

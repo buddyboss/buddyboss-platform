@@ -36,26 +36,30 @@ function injectMigrationDataIntoPanels(panels, migrationData, migrationStatus) {
  * Apply reactions-specific post-save behavior.
  * Call only when featureId === 'reactions'; caller (FeatureSettingsScreen) performs that check.
  *
- * Cache reconciliation always runs — like every other feature's cache write,
- * it must happen even when the response was superseded or the admin navigated
- * away, or the reactions cache would serve pre-edit values on the next
- * cache-first render. Screen state (feature/panels/settings) is applied only
- * when shouldApplyScreen() passes; it is re-evaluated after the async refetch
- * resolves so a navigation during the refetch round-trip is also respected.
+ * Cache reconciliation runs regardless of supersession or navigation — like
+ * every other feature's cache write, it must happen even when the response was
+ * superseded or the admin navigated away, or the reactions cache would serve
+ * pre-edit values on the next cache-first render. The one exception is the
+ * items branch when claimItemsRefetchWrite() returns false: a NEWER save's
+ * refetch already wrote fresher data, so this older refetch is discarded whole
+ * (writing it would be the bug). Screen state (feature/panels/settings) is
+ * applied only when shouldApplyScreen() passes; it is re-evaluated after the
+ * async refetch resolves so a navigation during the refetch round-trip is also
+ * respected.
  *
  * @since BuddyBoss [BBVERSION] Added the `shouldApplyScreen`, `isLatestSave` and `claimItemsRefetchWrite` parameters.
  *
  * @param {Object}   response          Save API response (response.data may have migration_data, migration_status)
  * @param {Object}   fieldsToSave      The payload that was saved (e.g. { reaction_items, reaction_checks, bb_reaction_mode })
  * @param {string}   featureId         Feature ID (used for refetch and cache keys)
- * @param {Object}   context           Helpers: ajaxFetch, getCachedFeatureData, setCachedFeatureData, setFeature, setSidePanels, setSettings, setOriginalSettings
+ * @param {Object}   context           Helpers: ajaxFetch, getCachedFeatureData, setCachedFeatureData, invalidateFeatureCache, setFeature, setSidePanels, setSettings, setOriginalSettings
  * @param {Function} shouldApplyScreen Returns true when screen state may be applied (response not superseded, feature still displayed). Defaults to always-true.
  * @param {Function} isLatestSave      Returns true when this save is still the feature's newest dispatch. Gates how the ASYNC refetch writes the cache: the refetch runs outside the single-flight channel, so an earlier save's slower refetch must not overwrite a newer save's cache state. Defaults to always-true.
  * @param {Function} claimItemsRefetchWrite Atomically claims the right to write this items-refetch's result: returns false when a NEWER save's refetch already wrote. The caller backs this with channel-scoped state so its lifetime matches the sequence counter it orders (a module-scoped ledger would outlive the channel across remounts and wrongly reject fresh sessions). Defaults to always-true.
  */
 export function applyReactionPostSave(response, fieldsToSave, featureId, context, shouldApplyScreen = () => true, isLatestSave = () => true, claimItemsRefetchWrite = () => true) {
 	if ( process.env.NODE_ENV !== 'production' ) {
-		const requiredContextKeys = [ 'ajaxFetch', 'getCachedFeatureData', 'setCachedFeatureData', 'setFeature', 'setSidePanels', 'setSettings', 'setOriginalSettings' ];
+		const requiredContextKeys = [ 'ajaxFetch', 'getCachedFeatureData', 'setCachedFeatureData', 'invalidateFeatureCache', 'setFeature', 'setSidePanels', 'setSettings', 'setOriginalSettings' ];
 		requiredContextKeys.forEach( ( key ) => {
 			if ( typeof context[ key ] !== 'function' ) {
 				// eslint-disable-next-line no-console
@@ -131,9 +135,14 @@ export function applyReactionPostSave(response, fieldsToSave, featureId, context
 			context.setSettings(freshSettings);
 			context.setOriginalSettings(freshSettings);
 		}).catch(() => {
-			// Swallow refetch failures: the save itself succeeded and the next
-			// panel load will fetch fresh data; an unhandled rejection here
-			// would be pure console noise.
+			// The save itself succeeded but this refetch (the ONLY cache write
+			// of the items branch) failed — the cache still holds the pre-save
+			// reaction items, and the next panel load is cache-first, so it
+			// would serve them indefinitely. Drop the feature's cache entry so
+			// the next entry fetches fresh from the server instead.
+			if (typeof context.invalidateFeatureCache === 'function') {
+				context.invalidateFeatureCache(featureId);
+			}
 		});
 		return;
 	}

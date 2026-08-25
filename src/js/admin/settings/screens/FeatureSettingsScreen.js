@@ -56,6 +56,23 @@ const ReportedContentScreen = lazy(() => import('./ReportedContentScreen'));
 const EmailTemplatesListScreen = lazy(() => import('./EmailTemplatesListScreen'));
 const InvitesListScreen = lazy(() => import('./InvitesListScreen'));
 
+// Per-feature single-flight save channels, keyed by featureId. MODULE-scoped —
+// deliberately not component state or a ref — because a channel's job is to
+// order writes whose lifetimes exceed any single mount: in-flight
+// bb_admin_save_feature_settings requests, un-cancellable debounce timers, and
+// the module-level feature cache all survive a full screen unmount (settings
+// grid round-trip). A per-mount ref would hand a remount a fresh channel while
+// the old mount's request is still in flight, letting two same-feature saves
+// run concurrently (arbitrary server commit order) and letting the old
+// response's cache reconciliation land after the new save's. With module
+// scope, re-entering a feature reuses the surviving channel: the new edit
+// queues behind the in-flight request, `channel.seq` stays monotonic for the
+// feature across mounts, and `channel.itemsRefetchSeq` (reactions) shares that
+// exact lifetime. Channels are per-feature, so one feature's slow save never
+// blocks or misroutes another feature's queue. Screen-state application stays
+// per-mount via each closure's `displayedFeatureIdRef`.
+const saveChannels = {};
+
 /**
  * Map of feature + panel combinations that render custom screens instead of settings forms.
  */
@@ -218,16 +235,18 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 	// featureId regardless of this reset.
 	useEffect(() => {
 		setChangedFields({});
+		// Also clear any lingering toast from the previous feature. Without
+		// this, an edit's 'saving' toast survives an in-route feature switch
+		// forever: the navigated-away save's response skips its success toast
+		// (displayed-feature guard below), 'saving' never auto-dismisses, and
+		// it renders no dismiss button — a permanent spinner over the new
+		// feature. Toasts that FIRE after the switch (e.g. the old save's
+		// error) still display; only already-shown stale state is cleared.
+		setToast(null);
 	}, [featureId]);
-	// Per-feature single-flight channels, keyed by featureId. Kept in a ref
-	// (not effect-closure locals) so that re-entering a feature while its
-	// previous save is still in flight REUSES the same channel — the new edit
-	// queues behind the in-flight request instead of dispatching concurrently,
-	// which keeps same-feature requests strictly serialized (and therefore
-	// same-feature responses and DB writes strictly ordered) across
-	// navigation. Channels are still per-feature, so one feature's slow save
-	// never blocks or misroutes another feature's queue.
-	const saveChannelsRef = useRef({});
+	// Single-flight save channels live in the module-scoped `saveChannels`
+	// map (see its comment above the component) so they survive full screen
+	// unmounts and keep same-feature saves serialized across grid round-trips.
 
 	// Ref for latest settings so refetch (reactions) can update cache without replacing state.
 	const settingsRef = useRef(settings);
@@ -431,16 +450,36 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 				refetchAbort.abort();
 			}
 			refetchAbort = new AbortController();
+			// Snapshot the save channel's sequence at dispatch. This GET runs
+			// outside the single-flight save channel, so a save dispatched
+			// while it is in flight can commit AFTER the data this GET returns
+			// was read — full-replacing settings from that payload would
+			// silently revert the later save on screen and in the cache (the
+			// save's changedFields are already cleared, so nothing would ever
+			// re-save it).
+			var refetchChannel = saveChannels[ featureId ];
+			var seqAtDispatch  = refetchChannel ? ( refetchChannel.seq || 0 ) : 0;
 			ajaxFetch('bb_admin_get_feature_settings', { feature_id: featureId }, { signal: refetchAbort.signal })
 				.then((response) => {
 					if (response.success && response.data) {
-						if (featureId === 'reactions') {
-							// Refresh panels only; preserve current settings so mode doesn't flip back.
+						// A save dispatched (or still in flight) since this GET
+						// started may hold newer values than this payload —
+						// apply the structural refresh (panels) but preserve
+						// the screen's current settings, which already carry
+						// the newest edits/echoes in channel order.
+						var channelNow = saveChannels[ featureId ];
+						var saveInterleaved = !! ( channelNow && (
+							( channelNow.seq || 0 ) !== seqAtDispatch || channelNow.inFlight
+						) );
+						if (featureId === 'reactions' || saveInterleaved) {
+							// Refresh panels only; preserve current settings so
+							// values don't flip back (reactions: mode; generic:
+							// any field saved during the GET round-trip).
 							const currentSettings = settingsRef.current;
 							setCachedFeatureData(featureId, { ...response.data, settings: currentSettings });
 							setFeature(response.data);
 							setSidePanels(response.data.side_panels || []);
-							// Do not setSettings/setOriginalSettings – refetch is for migration state only.
+							// Do not setSettings/setOriginalSettings – stale for interleaved saves.
 						} else {
 							const refreshedSettings = response.data.settings || {};
 							setCachedFeatureData(featureId, response.data);
@@ -585,17 +624,22 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 	useEffect(() => {
 		displayedFeatureIdRef.current = featureId;
 
-		// This feature's single-flight save channel (see saveChannelsRef): at
-		// most one request in flight per feature; newer payloads queue in
-		// channel.pending (cumulative, newest-wins) and dispatch when the
-		// in-flight request settles, so neither responses nor server-side
-		// option writes for a feature can be applied out of order — including
-		// when the admin navigates away and back while a save is in flight
-		// (the channel is reused, so the next edit queues behind it). A
-		// channel's queue is only ever drained by closures of its OWN feature,
-		// so payloads are never dispatched under another feature's feature_id.
-		var channel = saveChannelsRef.current[ featureId ] =
-			saveChannelsRef.current[ featureId ] || { inFlight: false, pending: null };
+		// This feature's single-flight save channel (see the module-scoped
+		// saveChannels map): at most one request in flight per feature; newer
+		// payloads queue in channel.pending (cumulative, newest-wins) and
+		// dispatch when the in-flight request settles, so neither responses
+		// nor server-side option writes for a feature can be applied out of
+		// order — including when the admin navigates away and back while a
+		// save is in flight, EVEN across a full unmount/remount (grid
+		// round-trip), because the channel outlives the mount. A channel's
+		// queue is only ever drained by closures of its OWN feature, so
+		// payloads are never dispatched under another feature's feature_id.
+		// (A payload queued by a new mount and drained by a dead mount's
+		// settle() still saves and reconciles the module cache correctly; only
+		// that response's screen echo/toast is lost — acceptable in that
+		// sub-second window.)
+		var channel = saveChannels[ featureId ] =
+			saveChannels[ featureId ] || { inFlight: false, pending: null };
 
 		// Dispatches one save request. The sequence guard on the response
 		// remains as defense-in-depth against out-of-order application (an
@@ -654,6 +698,7 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 								ajaxFetch,
 								getCachedFeatureData,
 								setCachedFeatureData,
+								invalidateFeatureCache,
 								setFeature,
 								setSidePanels,
 								setSettings,
@@ -664,10 +709,11 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 								return saveSeq === channel.seq;
 							}, function () {
 								// Order concurrent items-refetch writes with
-								// channel-scoped state so it resets with the
-								// channel: a module-scoped ledger would outlive
-								// a remount's fresh seq counter and wrongly
-								// reject every refetch of the new session.
+								// channel-scoped state: the channel (and so
+								// this ledger AND channel.seq) is module-scoped
+								// and shares the lifetime of the module cache
+								// the refetch writes to, so the ordering holds
+								// across full screen remounts too.
 								if ( saveSeq < ( channel.itemsRefetchSeq || 0 ) ) {
 									return false;
 								}
@@ -769,13 +815,13 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 
 		return () => {
 			// No channel flush needed on feature change: channels are
-			// per-feature entries in saveChannelsRef, so the old feature's
-			// settle() drains its own queue with its own feature_id even after
-			// navigation — queued changes are never dropped or misrouted.
-			// (The per-feature serialization spans in-route feature switches;
-			// a full screen unmount — e.g. via the settings grid — drops the
-			// ref, but an in-flight request still settles and drains through
-			// its closure, so no payload is lost.) Un-fired debounce timers
+			// per-feature entries in the module-scoped saveChannels map, so
+			// the old feature's settle() drains its own queue with its own
+			// feature_id even after navigation — queued changes are never
+			// dropped or misrouted. (The per-feature serialization spans
+			// in-route feature switches AND full screen unmounts: the channel
+			// outlives the mount, so a remount's edits queue behind the old
+			// mount's in-flight request.) Un-fired debounce timers
 			// also survive: our custom debounce (utils/api.js) exposes no
 			// .cancel(), so the guard below is intentionally a no-op today and
 			// the trailing timer fires post-switch with this closure's correct
