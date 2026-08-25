@@ -1091,7 +1091,7 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 		$previous = '';
 		foreach ( $videos['videos'] as $video ) {
 			$previous = $this->prepare_response_for_collection(
-				$this->media_endpoint->prepare_item_for_response( $video, $request )
+				$this->media_endpoint->prepare_item_for_response( $video, bb_rest_request_for_nested_item( $request ) )
 			);
 		}
 
@@ -1286,6 +1286,15 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function get_item_schema() {
+		if ( ! empty( $this->schema ) ) {
+			/**
+			 * Filters the video schema.
+			 *
+			 * @param array $schema The endpoint schema.
+			 */
+			return apply_filters( 'bp_rest_video_schema', $this->add_additional_fields_schema( $this->schema ) );
+		}
+
 		$schema = array(
 			'$schema'    => 'http://json-schema.org/draft-04/schema#',
 			'title'      => 'bp_video',
@@ -1466,12 +1475,10 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 			),
 		);
 
-		/**
-		 * Filters the video schema.
-		 *
-		 * @param array $schema The endpoint schema.
-		 */
-		return apply_filters( 'bp_rest_video_schema', $this->add_additional_fields_schema( $schema ) );
+		$this->schema = $schema;
+
+		/** This filter is documented in bp-video/classes/class-bp-rest-video-endpoint.php */
+		return apply_filters( 'bp_rest_video_schema', $this->add_additional_fields_schema( $this->schema ) );
 	}
 
 	/**
@@ -1898,10 +1905,11 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 	 *
 	 * @param BP_Activity_Activity $activity  Activity Array.
 	 * @param string               $attribute The REST Field key used into the REST response.
+	 * @param WP_REST_Request      $request    Full details about the request.
 	 *
 	 * @return string            The value of the REST Field to include into the REST response.
 	 */
-	protected function bp_video_ids_get_rest_field_callback( $activity, $attribute ) {
+	protected function bp_video_ids_get_rest_field_callback( $activity, $attribute, $request = null ) {
 		$activity_id = $activity['id'];
 
 		if ( empty( $activity_id ) ) {
@@ -1942,6 +1950,7 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 
 		$retval = array();
 		$object = new WP_REST_Request();
+		bb_rest_set_nested_item_fields( $object, $request, 'attachment_fields' );
 		foreach ( $videos['videos'] as $video ) {
 			$retval[] = $this->prepare_response_for_collection(
 				$this->media_endpoint->prepare_item_for_response( $video, $object )
@@ -2185,12 +2194,13 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 	/**
 	 * The function to use to get videos of the topic REST Field.
 	 *
-	 * @param array  $post      WP_Post object as array.
-	 * @param string $attribute The REST Field key used into the REST response.
+	 * @param array           $post      WP_Post object as array.
+	 * @param string          $attribute The REST Field key used into the REST response.
+	 * @param WP_REST_Request $request    Full details about the request.
 	 *
 	 * @return string            The value of the REST Field to include into the REST response.
 	 */
-	protected function bbp_video_get_rest_field_callback( $post, $attribute ) {
+	protected function bbp_video_get_rest_field_callback( $post, $attribute, $request = null ) {
 
 		$p_id = $post['id'];
 
@@ -2227,6 +2237,7 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 
 		$retval = array();
 		$object = new WP_REST_Request();
+		bb_rest_set_nested_item_fields( $object, $request, 'attachment_fields' );
 
 		foreach ( $videos['videos'] as $video ) {
 			$retval[] = $this->prepare_response_for_collection(
@@ -2383,12 +2394,13 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 	/**
 	 * The function to use to get videos of the messages REST Field.
 	 *
-	 * @param array  $data      The message value for the REST response.
-	 * @param string $attribute The REST Field key used into the REST response.
+	 * @param array           $data      The message value for the REST response.
+	 * @param string          $attribute The REST Field key used into the REST response.
+	 * @param WP_REST_Request $request    Full details about the request.
 	 *
 	 * @return array|void The value of the REST Field to include into the REST response.
 	 */
-	protected function bp_video_ids_get_rest_field_callback_messages( $data, $attribute ) {
+	protected function bp_video_ids_get_rest_field_callback_messages( $data, $attribute, $request = null ) {
 		$message_id = $data['id'];
 
 		if ( empty( $message_id ) ) {
@@ -2448,6 +2460,7 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 			$retval = array();
 			$object = new WP_REST_Request();
 			$object->set_param( 'context', 'view' );
+			bb_rest_set_nested_item_fields( $object, $request, 'attachment_fields' );
 
 			foreach ( $videos['videos'] as $video ) {
 				$retval[] = $this->prepare_response_for_collection(

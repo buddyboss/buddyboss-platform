@@ -275,6 +275,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 	 * @apiParam {Array} [include] Ensure result set includes specific IDs.
 	 * @apiParam {String=both,document,folder} [type=both] Ensure result set includes specific document type.
 	 * @apiParam {Boolean} [count_total=true] Show total count or not.
+	 * @apiParam {String|Object} [embed_fields] Comma separated list of fields to build for each item embedded with `_embed`, either for every relation or one relation at a time.
 	 */
 	public function get_items( $request ) {
 		$args = array(
@@ -452,6 +453,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 	 * @apiVersion     1.0.0
 	 * @apiPermission  LoggedInUser if the site is in Private Network.
 	 * @apiParam {Number} id A unique numeric ID for the document.
+	 * @apiParam {String|Object} [embed_fields] Comma separated list of fields to build for each item embedded with `_embed`, either for every relation or one relation at a time.
 	 */
 	public function get_item( $request ) {
 
@@ -1065,7 +1067,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 		$previous = '';
 		foreach ( $documents['documents'] as $document ) {
 			$previous = $this->prepare_response_for_collection(
-				$this->prepare_item_for_response( $document, $request )
+				$this->prepare_item_for_response( $document, bb_rest_request_for_nested_item( $request ) )
 			);
 		}
 
@@ -1349,44 +1351,162 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 	 * @return array
 	 */
 	public function document_get_prepare_response( $document, $request ) {
-		$data = array(
-			'id'                    => $document->id,
-			'blog_id'               => $document->blog_id,
-			'attachment_id'         => ( isset( $document->attachment_id ) ? $document->attachment_id : 0 ),
-			'user_id'               => $document->user_id,
-			'title'                 => $document->title,
-			'description'           => ( ! empty( $document->description ) ? wp_specialchars_decode( $document->description, ENT_QUOTES ) : '' ),
-			'type'                  => ( empty( $document->attachment_id ) ? 'folder' : 'document' ),
-			'folder_id'             => $document->parent,
-			'group_id'              => $document->group_id,
-			'activity_id'           => ( isset( $document->activity_id ) ? $document->activity_id : 0 ),
-			'message_id'            => ( isset( $document->message_id ) ? $document->message_id : 0 ),
-			'hide_activity_actions' => false,
-			'privacy'               => $document->privacy,
-			'menu_order'            => ( isset( $document->menu_order ) ? $document->menu_order : 0 ),
-			'date_created'          => $document->date_created,
-			'date_modified'         => $document->date_modified,
-			'group_name'            => $document->group_name,
-			'group_status'          => ( bp_is_active( 'groups' ) && ! empty( $document->group_id ) ? bp_get_group_status( groups_get_group( $document->group_id ) ) : '' ),
-			'visibility'            => $document->visibility,
-			'count'                 => 0,
-			'download_url'          => '',
-			'extension'             => '',
-			'extension_description' => '',
-			'svg_icon'              => '',
-			'filename'              => '',
-			'size'                  => '',
-			'msg_preview'           => '',
-			'attachment_data'       => ( isset( $document->attachment_data ) ? $document->attachment_data : array() ),
-			'user_nicename'         => get_the_author_meta( 'user_nicename', $document->user_id ),
-			'user_login'            => get_the_author_meta( 'user_login', $document->user_id ),
-			'display_name'          => bp_core_get_user_displayname( $document->user_id ),
-			'user_permissions'      => $this->get_document_current_user_permissions( $document, $request ),
-		);
+		/*
+		 * The fields the request asked for. When the request carries no
+		 * `_fields`, this is every property of the item schema, so each of the
+		 * branches below runs exactly as it did before the controller became
+		 * field-aware.
+		 */
+		$fields = $this->get_fields_for_response( $request );
+
+		$include_hide_activity_actions = rest_is_field_included( 'hide_activity_actions', $fields );
+		$include_count                 = rest_is_field_included( 'count', $fields );
+		$include_download_url          = rest_is_field_included( 'download_url', $fields );
+		$include_extension             = rest_is_field_included( 'extension', $fields );
+		$include_extension_description = rest_is_field_included( 'extension_description', $fields );
+		$include_svg_icon              = rest_is_field_included( 'svg_icon', $fields );
+		$include_msg_preview           = rest_is_field_included( 'msg_preview', $fields );
+
+		/*
+		 * The extension names the icon, its own description and the preview
+		 * markup; the download URL is quoted inside that markup. Both are
+		 * resolved into locals so that no guarded field depends on a value
+		 * another guard produced.
+		 */
+		$needs_extension    = $include_extension || $include_svg_icon || $include_extension_description || $include_msg_preview;
+		$needs_download_url = $include_download_url || $include_msg_preview;
+
+		$data = array();
+
+		$data['id'] = $document->id;
+
+		if ( rest_is_field_included( 'blog_id', $fields ) ) {
+			$data['blog_id'] = $document->blog_id;
+		}
+
+		if ( rest_is_field_included( 'attachment_id', $fields ) ) {
+			$data['attachment_id'] = ( isset( $document->attachment_id ) ? $document->attachment_id : 0 );
+		}
+
+		if ( rest_is_field_included( 'user_id', $fields ) ) {
+			$data['user_id'] = $document->user_id;
+		}
+
+		if ( rest_is_field_included( 'title', $fields ) ) {
+			$data['title'] = $document->title;
+		}
+
+		if ( rest_is_field_included( 'description', $fields ) ) {
+			$data['description'] = ( ! empty( $document->description ) ? wp_specialchars_decode( $document->description, ENT_QUOTES ) : '' );
+		}
+
+		if ( rest_is_field_included( 'type', $fields ) ) {
+			$data['type'] = ( empty( $document->attachment_id ) ? 'folder' : 'document' );
+		}
+
+		if ( rest_is_field_included( 'folder_id', $fields ) ) {
+			$data['folder_id'] = $document->parent;
+		}
+
+		if ( rest_is_field_included( 'group_id', $fields ) ) {
+			$data['group_id'] = $document->group_id;
+		}
+
+		if ( rest_is_field_included( 'activity_id', $fields ) ) {
+			$data['activity_id'] = ( isset( $document->activity_id ) ? $document->activity_id : 0 );
+		}
+
+		if ( rest_is_field_included( 'message_id', $fields ) ) {
+			$data['message_id'] = ( isset( $document->message_id ) ? $document->message_id : 0 );
+		}
+
+		if ( $include_hide_activity_actions ) {
+			$data['hide_activity_actions'] = false;
+		}
+
+		if ( rest_is_field_included( 'privacy', $fields ) ) {
+			$data['privacy'] = $document->privacy;
+		}
+
+		if ( rest_is_field_included( 'menu_order', $fields ) ) {
+			$data['menu_order'] = ( isset( $document->menu_order ) ? $document->menu_order : 0 );
+		}
+
+		if ( rest_is_field_included( 'date_created', $fields ) ) {
+			$data['date_created'] = $document->date_created;
+		}
+
+		if ( rest_is_field_included( 'date_modified', $fields ) ) {
+			$data['date_modified'] = $document->date_modified;
+		}
+
+		if ( rest_is_field_included( 'group_name', $fields ) ) {
+			$data['group_name'] = $document->group_name;
+		}
+
+		if ( rest_is_field_included( 'group_status', $fields ) ) {
+			$data['group_status'] = ( bp_is_active( 'groups' ) && ! empty( $document->group_id ) ? bp_get_group_status( groups_get_group( $document->group_id ) ) : '' );
+		}
+
+		if ( rest_is_field_included( 'visibility', $fields ) ) {
+			$data['visibility'] = $document->visibility;
+		}
+
+		if ( $include_count ) {
+			$data['count'] = 0;
+		}
+
+		if ( $include_download_url ) {
+			$data['download_url'] = '';
+		}
+
+		if ( $include_extension ) {
+			$data['extension'] = '';
+		}
+
+		if ( $include_extension_description ) {
+			$data['extension_description'] = '';
+		}
+
+		if ( $include_svg_icon ) {
+			$data['svg_icon'] = '';
+		}
+
+		if ( rest_is_field_included( 'filename', $fields ) ) {
+			$data['filename'] = '';
+		}
+
+		if ( rest_is_field_included( 'size', $fields ) ) {
+			$data['size'] = '';
+		}
+
+		if ( $include_msg_preview ) {
+			$data['msg_preview'] = '';
+		}
+
+		if ( rest_is_field_included( 'attachment_data', $fields ) ) {
+			$data['attachment_data'] = ( isset( $document->attachment_data ) ? $document->attachment_data : array() );
+		}
+
+		if ( rest_is_field_included( 'user_nicename', $fields ) ) {
+			$data['user_nicename'] = get_the_author_meta( 'user_nicename', $document->user_id );
+		}
+
+		if ( rest_is_field_included( 'user_login', $fields ) ) {
+			$data['user_login'] = get_the_author_meta( 'user_login', $document->user_id );
+		}
+
+		if ( rest_is_field_included( 'display_name', $fields ) ) {
+			$data['display_name'] = bp_core_get_user_displayname( $document->user_id );
+		}
+
+		if ( rest_is_field_included( 'user_permissions', $fields ) ) {
+			$data['user_permissions'] = $this->get_document_current_user_permissions( $document, $request );
+		}
 
 		// Below condition will check if document has comments then like/comment button will not visible for that particular media.
-		if ( ! empty( $data['activity_id'] ) && bp_is_active( 'activity' ) ) {
-			$activity = new BP_Activity_Activity( $data['activity_id'] );
+		if ( $include_hide_activity_actions && ! empty( $document->activity_id ) && bp_is_active( 'activity' ) ) {
+			$activity = new BP_Activity_Activity( $document->activity_id );
 			if ( isset( $activity->secondary_item_id ) ) {
 				$get_activity = new BP_Activity_Activity( $activity->secondary_item_id );
 				if (
@@ -1402,86 +1522,115 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 		}
 
 		if ( ! empty( $document->attachment_id ) ) {
-			$data['download_url'] = bp_document_download_link( $document->attachment_id, $document->id );
-			$data['extension']    = bp_document_extension( $document->attachment_id );
-			$data['svg_icon']     = bp_document_svg_icon( $data['extension'], $document->attachment_id, 'svg' );
-			$data['filename']     = basename( get_attached_file( $document->attachment_id ) );
-			$data['size']         = bp_document_size_format( filesize( get_attached_file( $document->attachment_id ) ) );
+			$download_url = $needs_download_url ? bp_document_download_link( $document->attachment_id, $document->id ) : '';
+			$extension    = $needs_extension ? bp_document_extension( $document->attachment_id ) : '';
 
-			$extension_lists = bp_document_extensions_list();
-			if ( ! empty( $extension_lists ) && ! empty( $data['extension'] ) ) {
-				$extension_lists = array_column( $extension_lists, 'description', 'extension' );
-				$extension_name  = '.' . $data['extension'];
-				if ( ! empty( $extension_lists ) && ! empty( $data['extension'] ) && array_key_exists( $extension_name, $extension_lists ) ) {
-					$data['extension_description'] = esc_html( $extension_lists[ $extension_name ] );
-				}
+			if ( $include_download_url ) {
+				$data['download_url'] = $download_url;
 			}
 
-			$output = '';
-			ob_start();
-
-			if ( in_array( $data['extension'], bp_get_document_preview_music_extensions(), true ) ) {
-				$audio_url = bp_document_get_preview_audio_url( $document->id, $document->attachment_id, $data['extension'] );
-
-				echo '<div class="document-audio-wrap">' .
-					'<audio controls controlsList="nodownload">' .
-						'<source src="' . esc_url_raw( $audio_url ) . '" type="audio/mpeg">' .
-						esc_html__( 'Your browser does not support the audio element.', 'buddyboss' ) .
-					'</audio>' .
-				'</div>';
-
+			if ( $include_extension ) {
+				$data['extension'] = $extension;
 			}
 
-			if ( function_exists( 'bp_document_get_preview_url' ) ) {
-				$attachment_url = bp_document_get_preview_url( $document->id, $document->attachment_id );
-			} else {
-				$attachment_url = bp_document_get_preview_image_url( $document->id, $data['extension'], $document->attachment_id );
+			if ( $include_svg_icon ) {
+				$data['svg_icon'] = bp_document_svg_icon( $extension, $document->attachment_id, 'svg' );
 			}
 
-			if ( $attachment_url ) {
-				echo '<div class="document-preview-wrap">' .
-					'<img src="' . esc_url_raw( $attachment_url ) . '" alt="" />' .
-				'</div>';
+			if ( rest_is_field_included( 'filename', $fields ) ) {
+				$data['filename'] = basename( get_attached_file( $document->attachment_id ) );
 			}
-			$sizes = is_file( get_attached_file( $document->attachment_id ) ) ? get_attached_file( $document->attachment_id ) : 0;
-			if ( $sizes && filesize( $sizes ) / 1e+6 < 2 ) {
-				if ( in_array( $data['extension'], bp_get_document_preview_code_extensions(), true ) ) {
-					$data_temp = bp_document_get_preview_text_from_attachment( $document->attachment_id );
-					$file_data = $data_temp['text'];
-					$more_text = $data_temp['more_text'];
 
-					echo '<div class="document-text-wrap">' .
-						'<div class="document-text" data-extension="' . esc_attr( $data['extension'] ) . '">' .
-							'<textarea class="document-text-file-data-hidden" style="display: none;">' . wp_kses_post( $file_data ) . '</textarea>' .
-						'</div>' .
-						'<div class="document-expand">' .
-							'<a href="#" class="document-expand-anchor"><i class="bb-icon-l bb-icon-plus document-icon-plus"></i> ' . esc_html__( 'Click to expand', 'buddyboss' ) . '</a>' .
-						'</div>' .
-					'</div>';
+			if ( rest_is_field_included( 'size', $fields ) ) {
+				$data['size'] = bp_document_size_format( filesize( get_attached_file( $document->attachment_id ) ) );
+			}
 
-					if ( true === $more_text ) {
-						printf(
-						/* translators: %s: download string */
-							'<div class="more_text_view">%s</div>',
-							sprintf(
-							/* translators: %s: download url */
-								wp_kses_post( 'This file was truncated for preview. Please <a href="%s">download</a> to view the full file.', 'buddyboss' ),
-								esc_url( $data['download_url'] )
-							)
-						);
+			if ( $include_extension_description ) {
+				$extension_lists = bp_document_extensions_list();
+				if ( ! empty( $extension_lists ) && ! empty( $extension ) ) {
+					$extension_lists = array_column( $extension_lists, 'description', 'extension' );
+					$extension_name  = '.' . $extension;
+					if ( ! empty( $extension_lists ) && ! empty( $extension ) && array_key_exists( $extension_name, $extension_lists ) ) {
+						$data['extension_description'] = esc_html( $extension_lists[ $extension_name ] );
 					}
 				}
 			}
 
-			$output .= ob_get_clean();
+			if ( $include_msg_preview ) {
+				$output = '';
+				ob_start();
 
-			$data['msg_preview'] = $output;
+				if ( in_array( $extension, bp_get_document_preview_music_extensions(), true ) ) {
+					$audio_url = bp_document_get_preview_audio_url( $document->id, $document->attachment_id, $extension );
+
+					echo '<div class="document-audio-wrap">' .
+						'<audio controls controlsList="nodownload">' .
+							'<source src="' . esc_url_raw( $audio_url ) . '" type="audio/mpeg">' .
+							esc_html__( 'Your browser does not support the audio element.', 'buddyboss' ) .
+						'</audio>' .
+					'</div>';
+
+				}
+
+				if ( function_exists( 'bp_document_get_preview_url' ) ) {
+					$attachment_url = bp_document_get_preview_url( $document->id, $document->attachment_id );
+				} else {
+					$attachment_url = bp_document_get_preview_image_url( $document->id, $extension, $document->attachment_id );
+				}
+
+				if ( $attachment_url ) {
+					echo '<div class="document-preview-wrap">' .
+						'<img src="' . esc_url_raw( $attachment_url ) . '" alt="" />' .
+					'</div>';
+				}
+				$sizes = is_file( get_attached_file( $document->attachment_id ) ) ? get_attached_file( $document->attachment_id ) : 0;
+				if ( $sizes && filesize( $sizes ) / 1e+6 < 2 ) {
+					if ( in_array( $extension, bp_get_document_preview_code_extensions(), true ) ) {
+						$data_temp = bp_document_get_preview_text_from_attachment( $document->attachment_id );
+						$file_data = $data_temp['text'];
+						$more_text = $data_temp['more_text'];
+
+						echo '<div class="document-text-wrap">' .
+							'<div class="document-text" data-extension="' . esc_attr( $extension ) . '">' .
+								'<textarea class="document-text-file-data-hidden" style="display: none;">' . wp_kses_post( $file_data ) . '</textarea>' .
+							'</div>' .
+							'<div class="document-expand">' .
+								'<a href="#" class="document-expand-anchor"><i class="bb-icon-l bb-icon-plus document-icon-plus"></i> ' . esc_html__( 'Click to expand', 'buddyboss' ) . '</a>' .
+							'</div>' .
+						'</div>';
+
+						if ( true === $more_text ) {
+							printf(
+							/* translators: %s: download string */
+								'<div class="more_text_view">%s</div>',
+								sprintf(
+								/* translators: %s: download url */
+									wp_kses_post( 'This file was truncated for preview. Please <a href="%s">download</a> to view the full file.', 'buddyboss' ),
+									esc_url( $download_url )
+								)
+							);
+						}
+					}
+				}
+
+				$output .= ob_get_clean();
+
+				$data['msg_preview'] = $output;
+			}
 		} else {
-			$child_doc            = count( bp_document_get_folder_document_ids( $document->id ) );
-			$child_folder         = count( $this->bp_document_get_folder_children_ids( $document->id ) );
-			$data['count']        = (int) $child_doc + (int) $child_folder;
-			$data['svg_icon']     = bp_document_svg_icon( 'folder', '', 'svg' );
-			$data['download_url'] = bp_document_folder_download_link( $document->id );
+			if ( $include_count ) {
+				$child_doc     = count( bp_document_get_folder_document_ids( $document->id ) );
+				$child_folder  = count( $this->bp_document_get_folder_children_ids( $document->id ) );
+				$data['count'] = (int) $child_doc + (int) $child_folder;
+			}
+
+			if ( $include_svg_icon ) {
+				$data['svg_icon'] = bp_document_svg_icon( 'folder', '', 'svg' );
+			}
+
+			if ( $include_download_url ) {
+				$data['download_url'] = bp_document_folder_download_link( $document->id );
+			}
 		}
 
 		return $data;
@@ -1494,6 +1643,15 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function get_item_schema() {
+		if ( ! empty( $this->schema ) ) {
+			/**
+			 * Filters the document schema.
+			 *
+			 * @param array $schema The endpoint schema.
+			 */
+			return apply_filters( 'bp_rest_document_schema', $this->add_additional_fields_schema( $this->schema ) );
+		}
+
 		$schema = array(
 			'$schema'    => 'http://json-schema.org/draft-04/schema#',
 			'title'      => 'bp_document',
@@ -1717,12 +1875,22 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 			),
 		);
 
-		/**
-		 * Filters the document schema.
-		 *
-		 * @param array $schema The endpoint schema.
+		/*
+		 * A response field the controller has always returned but never
+		 * declared. Appended rather than written into the array above so
+		 * that the surrounding alignment is left alone.
 		 */
-		return apply_filters( 'bp_rest_document_schema', $this->add_additional_fields_schema( $schema ) );
+		$schema['properties']['user_permissions'] = array(
+			'context'     => array( 'embed', 'view', 'edit' ),
+			'description' => __( 'Current user\'s permission with the document.', 'buddyboss' ),
+			'readonly'    => true,
+			'type'        => 'object',
+		);
+
+		$this->schema = $schema;
+
+		/** This filter is documented in bp-document/classes/class-bp-rest-document-endpoint.php */
+		return apply_filters( 'bp_rest_document_schema', $this->add_additional_fields_schema( $this->schema ) );
 	}
 
 	/**
@@ -1733,6 +1901,8 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 	 */
 	public function get_collection_params() {
 		$params = parent::get_collection_params();
+
+		$params['embed_fields'] = bb_rest_embed_fields_param();
 
 		$params['order'] = array(
 			'description'       => __( 'Order sort attribute ascending or descending.', 'buddyboss' ),
@@ -2350,10 +2520,11 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 	 *
 	 * @param BP_Activity_Activity $activity  Activity Array.
 	 * @param string               $attribute The REST Field key used into the REST response.
+	 * @param WP_REST_Request      $request    Full details about the request.
 	 *
 	 * @return string            The value of the REST Field to include into the REST response.
 	 */
-	protected function bp_documents_get_rest_field_callback( $activity, $attribute ) {
+	protected function bp_documents_get_rest_field_callback( $activity, $attribute, $request = null ) {
 		$activity_id = $activity['id'];
 
 		if ( empty( $activity_id ) ) {
@@ -2423,6 +2594,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 		$object = new WP_REST_Request();
 		$object->set_param( 'support', 'activity' );
 		$object->set_param( 'context', 'view' );
+		bb_rest_set_nested_item_fields( $object, $request, 'attachment_fields' );
 
 		foreach ( $documents['documents'] as $document ) {
 			$retval[] = $this->prepare_response_for_collection(
@@ -2665,12 +2837,13 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 	/**
 	 * The function to use to get documents of the messages REST Field.
 	 *
-	 * @param array  $data      The message value for the REST response.
-	 * @param string $attribute The REST Field key used into the REST response.
+	 * @param array           $data      The message value for the REST response.
+	 * @param string          $attribute The REST Field key used into the REST response.
+	 * @param WP_REST_Request $request    Full details about the request.
 	 *
 	 * @return array|void The value of the REST Field to include into the REST response.
 	 */
-	protected function bp_documents_get_rest_field_callback_messages( $data, $attribute ) {
+	protected function bp_documents_get_rest_field_callback_messages( $data, $attribute, $request = null ) {
 		$message_id = $data['id'];
 
 		if ( empty( $message_id ) ) {
@@ -2730,6 +2903,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 			$retval = array();
 			$object = new WP_REST_Request();
 			$object->set_param( 'support', 'message' );
+			bb_rest_set_nested_item_fields( $object, $request, 'attachment_fields' );
 
 			foreach ( $documents['documents'] as $document ) {
 				$retval[] = $this->prepare_response_for_collection(
@@ -2832,12 +3006,13 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 	/**
 	 * The function to use to get documents of the topic/reply REST Field.
 	 *
-	 * @param array  $post      WP_Post object as array.
-	 * @param string $attribute The REST Field key used into the REST response.
+	 * @param array           $post      WP_Post object as array.
+	 * @param string          $attribute The REST Field key used into the REST response.
+	 * @param WP_REST_Request $request    Full details about the request.
 	 *
 	 * @return string            The value of the REST Field to include into the REST response.
 	 */
-	protected function bbp_document_get_rest_field_callback( $post, $attribute ) {
+	protected function bbp_document_get_rest_field_callback( $post, $attribute, $request = null ) {
 
 		$p_id = $post['id'];
 
@@ -2905,6 +3080,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 		$retval = array();
 		$object = new WP_REST_Request();
 		$object->set_param( 'support', 'forums' );
+		bb_rest_set_nested_item_fields( $object, $request, 'attachment_fields' );
 
 		foreach ( $documents['documents'] as $document ) {
 			$retval[] = $this->prepare_response_for_collection(

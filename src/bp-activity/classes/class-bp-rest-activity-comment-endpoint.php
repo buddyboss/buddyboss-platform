@@ -126,6 +126,7 @@ class BP_REST_Activity_Comment_Endpoint extends WP_REST_Controller {
 	 * @apiPermission  LoggedInUser if the site is in Private Network.
 	 * @apiParam {Number} id A unique numeric ID for the activity.
 	 * @apiParam {String=threaded,stream,false} [display_comments=threaded] Comments by default, stream for within stream display, threaded for below each activity item.
+	 * @apiParam {String} [comment_fields] Comma separated list of fields to build for each returned comment.
 	 */
 	public function get_items( $request ) {
 
@@ -356,6 +357,7 @@ class BP_REST_Activity_Comment_Endpoint extends WP_REST_Controller {
 	 * @apiParam {Number} [parent_id] ID of the parent activity/comment item.
 	 * @apiParam {String} content The content of the comment.
 	 * @apiParam {String=threaded,stream,false} [display_comments=threaded] Comments by default, stream for within stream display, threaded for below each activity item.
+	 * @apiParam {String} [comment_fields] Comma separated list of fields to build for each returned comment.
 	 */
 	public function create_item( $request ) {
 
@@ -963,6 +965,14 @@ class BP_REST_Activity_Comment_Endpoint extends WP_REST_Controller {
 			'required'    => true,
 		);
 
+		$params['comment_fields'] = array(
+			'description'       => __( 'Limit each returned comment to a comma separated list of fields. The request\'s own `_fields` cannot reach them, because comments are returned as a list.', 'buddyboss' ),
+			'default'           => '',
+			'type'              => 'string',
+			'sanitize_callback' => 'sanitize_text_field',
+			'validate_callback' => 'rest_validate_request_arg',
+		);
+
 		$params['display_comments'] = array(
 			'description'       => __( 'Comments by default, stream for within stream display, threaded for below each activity item.', 'buddyboss' ),
 			'default'           => 'threaded',
@@ -1027,6 +1037,16 @@ class BP_REST_Activity_Comment_Endpoint extends WP_REST_Controller {
 			$comment_load_limit = bb_get_activity_comment_loading();
 		}
 
+		/*
+		 * Activity comments are built by the activity controller, but this one
+		 * answers with a payload of its own, so the caller's `_fields`
+		 * addresses that payload and cannot reach the comments -- `get_items()`,
+		 * `create_item()` and `delete_item()` return them inside an envelope,
+		 * and WordPress hands a list back whole. `comment_fields` is the
+		 * selection that does reach them; without it they are built in full.
+		 */
+		$comment_request = bb_rest_request_for_nested_item( $request, 'comment_fields' );
+
 		$comment_loaded_count = 0;
 		foreach ( $comments as $comment ) {
 
@@ -1040,7 +1060,7 @@ class BP_REST_Activity_Comment_Endpoint extends WP_REST_Controller {
 			}
 
 			$data[] = $this->activity_endpoint->prepare_response_for_collection(
-				$this->activity_endpoint->prepare_item_for_response( $comment, $request )
+				$this->activity_endpoint->prepare_item_for_response( $comment, $comment_request )
 			);
 
 			$comment_loaded_count++;
