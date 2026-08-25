@@ -270,6 +270,17 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 		settingsRef.current = settings;
 	}, [settings]);
 
+	// Ref mirroring changedFields so the [featureId]-scoped refetch listener can
+	// read the LATEST pending edits at resolution time (its handler closure
+	// would otherwise capture a stale changedFields). An edit still sitting in
+	// the 1s debounce has not advanced channel.seq, so the refetch's
+	// saveInterleaved guard can't see it; the ref lets the full-replace branch
+	// overlay it and avoid momentarily reverting the edit on screen.
+	const changedFieldsRef = useRef(changedFields);
+	useEffect(() => {
+		changedFieldsRef.current = changedFields;
+	}, [changedFields]);
+
 	// Listen for section status updates from input_button fields (e.g. GIPHY connect/disconnect).
 	useEffect( function() {
 		function handleStatusUpdate( event ) {
@@ -502,10 +513,28 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 							// Do not setSettings/setOriginalSettings – stale for interleaved saves.
 						} else {
 							const refreshedSettings = response.data.settings || {};
+							// Overlay any edit still pending in the debounce (not
+							// yet dispatched, so saveInterleaved above can't see
+							// it) on top of the server payload for the SCREEN only,
+							// so the refresh delivers fresh server-derived fields
+							// without momentarily reverting the in-progress edit
+							// (it re-saves when the debounce fires). A `true`
+							// sentinel means "use the current live value" (same
+							// convention as the auto-save effect). The CACHE and
+							// originalSettings stay the server truth, so an unsaved
+							// draft is never persisted to the cache and the pending
+							// field still reads as changed; the field's own save
+							// reconciles everything when the debounce fires.
+							const pending = changedFieldsRef.current || {};
+							const live = settingsRef.current || {};
+							const screenSettings = { ...refreshedSettings };
+							Object.keys(pending).forEach((k) => {
+								screenSettings[k] = ( true === pending[k] ) ? live[k] : pending[k];
+							});
 							setCachedFeatureData(featureId, response.data);
 							setFeature(response.data);
 							setSidePanels(response.data.side_panels || []);
-							setSettings(refreshedSettings);
+							setSettings(screenSettings);
 							setOriginalSettings(JSON.parse(JSON.stringify(refreshedSettings)));
 						}
 					}

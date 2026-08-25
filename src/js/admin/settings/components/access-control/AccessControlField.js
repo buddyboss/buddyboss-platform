@@ -45,13 +45,17 @@ function initPerOptionSettings( selectedOpts, serverPerOption, savedValue ) {
 		var subKey  = 'access-control-' + optKey + '-options';
 		var subData = null;
 
-		// Try server-provided per_option_settings first.
-		if ( serverPerOption && serverPerOption[ optKey ] ) {
-			subData = serverPerOption[ optKey ];
-		}
-		// Fallback to saved value sub-keys.
-		else if ( savedValue && savedValue[ subKey ] ) {
+		// Prefer the actually-saved value over the server enrichment. The
+		// enrichment (per_option_settings) is computed server-side and travels
+		// in the feature cache, so after a rapid change it can be stale for
+		// this option, whereas the saved value is exactly what the user last
+		// persisted. Same "trust saved value over enrichment" rule this
+		// component applies to type/sub-type/options; falling back to the
+		// enrichment only when the saved value has no sub-key for this option.
+		if ( savedValue && undefined !== savedValue[ subKey ] ) {
 			subData = savedValue[ subKey ];
+		} else if ( serverPerOption && serverPerOption[ optKey ] ) {
+			subData = serverPerOption[ optKey ];
 		}
 
 		if ( subData && Array.isArray( subData ) && subData.indexOf( 'all' ) !== -1 ) {
