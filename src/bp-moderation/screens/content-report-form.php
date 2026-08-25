@@ -37,8 +37,9 @@
 						if ( ! empty( $reports_terms ) ) {
 							$count = 1;
 							foreach ( $reports_terms as $reports_term ) {
-								$checked   = ( 1 === $count ) ? 'checked' : '';
-								$when_show = get_term_meta( $reports_term->term_id, 'bb_category_show_when_reporting', true );
+								$reports_term = bp_moderation_maybe_translate_report_term( $reports_term );
+								$checked      = ( 1 === $count ) ? 'checked' : '';
+								$when_show    = get_term_meta( $reports_term->term_id, 'bb_category_show_when_reporting', true );
 								?>
 								<div class="form-item form-item-category <?php echo ! empty( $when_show ) ? esc_attr( $when_show ) : esc_attr( 'content' ); ?>">
 									<label for="report-category-<?php echo esc_attr( $reports_term->term_id ); ?>">
