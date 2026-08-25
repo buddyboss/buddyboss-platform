@@ -74,7 +74,20 @@ const InvitesListScreen = lazy(() => import('./InvitesListScreen'));
 // — both republished by each mount's save effect — so a response resolving in
 // a dead mount's closure still reaches the same-feature mount that is alive
 // at resolution time (see the comment where they are assigned).
-const saveChannels = {};
+// Null prototype: featureId comes from the URL tab param, so a crafted id like
+// "constructor" must find no inherited value at saveChannels[featureId] (on a
+// plain object it would, and channel state would be written onto Object).
+const saveChannels = Object.create( null );
+
+// The feature currently displayed by the ONE live FeatureSettingsScreen
+// (Router renders at most one). Module-scoped so DEAD-mount response closures
+// can consult it: each mount's per-instance displayedFeatureIdRef freezes at
+// its last value after unmount, which is fine for screen setters (no-ops on an
+// unmounted component) but wrong for gating the refresh_panels WINDOW EVENT —
+// that event reaches whatever live listener exists, so a dead feature-A
+// response would trigger a spurious refetch of the feature-B screen the admin
+// is now viewing. Set by the save effect, nulled in its cleanup.
+let liveFeatureId = null;
 
 /**
  * Map of feature + panel combinations that render custom screens instead of settings forms.
@@ -626,6 +639,7 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 	// Uses AJAX endpoint for feature settings.
 	useEffect(() => {
 		displayedFeatureIdRef.current = featureId;
+		liveFeatureId = featureId;
 
 		// This feature's single-flight save channel (see the module-scoped
 		// saveChannels map): at most one request in flight per feature; newer
@@ -654,6 +668,13 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 		// exists, harmlessly no-op'ing into the dead one otherwise), and
 		// settle() drains the queue via `channel.drain` (the newest mount's
 		// dispatchSave, so the drained request's whole chain is live).
+		// DELIBERATE RETENTION: apply/drain are NOT nulled on unmount. In-flight
+		// response handlers (and the reactions items-refetch, which resolves
+		// even later) dereference channel.apply unconditionally — nulling it
+		// would throw BEFORE the unconditional cache reconciliation and error
+		// signaling. A dead mount's setters are silent no-ops in React 18, the
+		// retained object is a handful of refs replaced on the next
+		// same-feature mount, and the map is bounded by the feature count.
 		channel.apply = {
 			displayedFeatureIdRef: displayedFeatureIdRef,
 			setToast: setToast,
@@ -729,7 +750,7 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 					feature_id: featureId,
 					settings: JSON.stringify(fieldsToSave),
 				});
-			} catch (err) {
+			} catch {
 				settle();
 				channel.apply.setToast( buildErrorToast() );
 				return;
@@ -805,7 +826,14 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 							// event (which targets the displayed screen) is gated.
 							if ( response.data && response.data.refresh_panels ) {
 								invalidateFeatureCache();
-								if ( featureId === apply.displayedFeatureIdRef.current ) {
+								// Gate on the module-level liveFeatureId, NOT this
+								// closure's apply ref: the event reaches whatever
+								// live listener exists, so a dead mount's frozen
+								// ref would fire a spurious refetch of a DIFFERENT
+								// feature's screen. The cache invalidation above
+								// already ran, so a skipped event costs nothing —
+								// the next mount fetches fresh panels regardless.
+								if ( featureId === liveFeatureId ) {
 									window.dispatchEvent( new Event( 'bb-admin-refetch-feature' ) );
 								}
 							}
@@ -882,6 +910,14 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 		}, 1000);
 
 		return () => {
+			// Release the live-feature slot. On an in-route feature switch this
+			// cleanup runs before the successor effect re-assigns it; on a full
+			// unmount it stays null until another screen mounts. The guard
+			// keeps a defensive ordering assumption explicit (cleanup always
+			// precedes the successor's set in React's passive-effects flush).
+			if ( liveFeatureId === featureId ) {
+				liveFeatureId = null;
+			}
 			// No channel flush needed on feature change: channels are
 			// per-feature entries in the module-scoped saveChannels map, so
 			// the old feature's settle() drains its own queue with its own
