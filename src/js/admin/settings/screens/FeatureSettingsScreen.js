@@ -456,9 +456,13 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 	};
 
 	// Generic event listener for refetching feature data.
-	// Refetch is used after dismiss/complete to refresh migration state (panels). For reactions,
-	// we only need updated panels (migration_data); we must not replace settings or we overwrite
-	// the user's mode (e.g. Likes) with stale server data.
+	// Refetch is used after dismiss/complete to refresh migration state (panels).
+	// Two cases take the panels-only branch (refresh panels, preserve current
+	// settings via settingsRef): (1) reactions — replacing settings would
+	// overwrite the user's mode (e.g. Likes) with stale server data; (2) any
+	// feature where a save interleaved with this GET (saveInterleaved below) —
+	// the GET's payload predates that save, so a full settings replace would
+	// revert it on screen. Otherwise the branch does a full settings replace.
 	useEffect(() => {
 		var refetchAbort = null;
 		const handleRefetchFeature = () => {
@@ -808,6 +812,12 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 								}
 								channel.itemsRefetchSeq = saveSeq;
 								return true;
+							}, function () {
+								// Displayed-only gate for the superseded items-refetch
+								// branch (no seq check): the reactions feature is the
+								// one currently on screen. liveFeatureId is the single
+								// source of truth across mounts (see round-19 comment).
+								return 'reactions' === liveFeatureId;
 							} );
 						} else {
 							const cachedData = getCachedFeatureData(featureId);

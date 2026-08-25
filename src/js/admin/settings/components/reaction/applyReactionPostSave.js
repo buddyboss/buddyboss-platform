@@ -47,7 +47,7 @@ function injectMigrationDataIntoPanels(panels, migrationData, migrationStatus) {
  * async refetch resolves so a navigation during the refetch round-trip is also
  * respected.
  *
- * @since BuddyBoss [BBVERSION] Added the `shouldApplyScreen`, `isLatestSave` and `claimItemsRefetchWrite` parameters.
+ * @since BuddyBoss [BBVERSION] Added the `shouldApplyScreen`, `isLatestSave`, `claimItemsRefetchWrite` and `isFeatureDisplayed` parameters.
  *
  * @param {Object}   response          Save API response (response.data may have migration_data, migration_status)
  * @param {Object}   fieldsToSave      The payload that was saved (e.g. { reaction_items, reaction_checks, bb_reaction_mode })
@@ -56,8 +56,9 @@ function injectMigrationDataIntoPanels(panels, migrationData, migrationStatus) {
  * @param {Function} shouldApplyScreen Returns true when screen state may be applied (response not superseded, feature still displayed). Defaults to always-true.
  * @param {Function} isLatestSave      Returns true when this save is still the feature's newest dispatch. Gates how the ASYNC refetch writes the cache: the refetch runs outside the single-flight channel, so an earlier save's slower refetch must not overwrite a newer save's cache state. Defaults to always-true.
  * @param {Function} claimItemsRefetchWrite Atomically claims the right to write this items-refetch's result: returns false when a NEWER save's refetch already wrote. The caller backs this with state on the save channel so it shares the exact lifetime of the `channel.seq` counter it orders — the channel map is module-scoped, so both survive full screen remounts together and the ordering holds across grid round-trips. Keeping claim state and counter on the SAME object is load-bearing; splitting their lifetimes fails one of two ways: (a) claim state outliving the counter (e.g. module ledger + per-mount seq) leaves a stale high-water mark that wrongly rejects every refetch of a fresh session, so new item IDs never reach the cache; (b) the counter outliving the claim state (per-mount ledger + module seq) lets an OLDER save's slower refetch resolve after a newer one across a remount and full-replace the newer write with pre-save data. Defaults to always-true.
+ * @param {Function} isFeatureDisplayed Returns true when this feature is the one currently mounted on screen. Used ONLY by the superseded items-refetch branch to land real DB IDs on the live screen: shouldApplyScreen() can't be reused there because it also requires the save to be the latest (false by definition when superseded), yet the ID reconciliation must still reach the screen the admin is looking at. Defaults to always-false so callers that omit it keep the pre-fix cache-only behavior.
  */
-export function applyReactionPostSave(response, fieldsToSave, featureId, context, shouldApplyScreen = () => true, isLatestSave = () => true, claimItemsRefetchWrite = () => true) {
+export function applyReactionPostSave(response, fieldsToSave, featureId, context, shouldApplyScreen = () => true, isLatestSave = () => true, claimItemsRefetchWrite = () => true, isFeatureDisplayed = () => false) {
 	if ( process.env.NODE_ENV !== 'production' ) {
 		const requiredContextKeys = [ 'ajaxFetch', 'getCachedFeatureData', 'setCachedFeatureData', 'invalidateFeatureCache', 'setFeature', 'setSidePanels', 'setSettings', 'setOriginalSettings' ];
 		requiredContextKeys.forEach( ( key ) => {
@@ -118,11 +119,25 @@ export function applyReactionPostSave(response, fieldsToSave, featureId, context
 			// data this refetch exists to deliver) on top of the current cache.
 			if (!isLatestSave()) {
 				const current = context.getCachedFeatureData(featureId);
-				if (current && updatedData.settings && undefined !== updatedData.settings.reaction_items) {
+				const hasFreshItems = current && updatedData.settings && undefined !== updatedData.settings.reaction_items;
+				if (hasFreshItems) {
 					context.setCachedFeatureData(featureId, {
 						...current,
 						settings: { ...current.settings, reaction_items: updatedData.settings.reaction_items },
 					});
+				}
+				// Also land the real DB IDs on the LIVE screen when this feature
+				// is still displayed. The cache patch alone leaves the mounted
+				// screen holding the temporary react_key_ IDs, so a subsequent
+				// edit/delete of that item would round-trip a fake ID to the
+				// server (duplicate row or silent no-op). shouldApplyScreen()
+				// can't gate this — it requires saveSeq === channel.seq, which is
+				// false here by definition (superseded) — so use the displayed-
+				// only gate. Narrow merge (reaction_items only): a newer save
+				// owns the rest of the screen state (e.g. the mode it changed).
+				if (hasFreshItems && isFeatureDisplayed()) {
+					context.setSettings((prev) => ({ ...prev, reaction_items: updatedData.settings.reaction_items }));
+					context.setOriginalSettings((prev) => ({ ...prev, reaction_items: updatedData.settings.reaction_items }));
 				}
 				return;
 			}
@@ -141,6 +156,16 @@ export function applyReactionPostSave(response, fieldsToSave, featureId, context
 			// reaction items, and the next panel load is cache-first, so it
 			// would serve them indefinitely. Drop the feature's cache entry so
 			// the next entry fetches fresh from the server instead.
+			//
+			// DELIBERATELY UNGUARDED by isLatestSave/claim: invalidation is a
+			// fail-safe (force-fresh), not an ordered data write, so
+			// over-invalidating is always safe — the worst case is one wasted
+			// refetch that returns the same correct data a newer refetch wrote.
+			// The alternative (guard on !isLatestSave) is NOT safe: if this
+			// older items-save was superseded by a mode change (which does not
+			// refetch), skipping invalidation would leave the temp react_key_
+			// IDs from THIS failed refetch stranded in the cache. So invalidate
+			// unconditionally.
 			if (typeof context.invalidateFeatureCache === 'function') {
 				context.invalidateFeatureCache(featureId);
 			}
