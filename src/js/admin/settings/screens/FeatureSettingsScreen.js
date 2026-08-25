@@ -208,6 +208,17 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 	// resolved, without saving on the new feature — so the seq guard alone
 	// would pass) must not apply screen state or toast over the new feature.
 	const displayedFeatureIdRef = useRef(featureId);
+
+	// Reset per-feature unsaved-changes tracking on feature switch — otherwise
+	// a navigated-away feature's tracked fields ride along in the next
+	// feature's save payload. The server drops field names not registered for
+	// the submitted feature_id, but a field name shared across features would
+	// be silently cross-written. Pending edits are not lost: the old feature's
+	// already-scheduled debounce timer fires with its captured payload and
+	// featureId regardless of this reset.
+	useEffect(() => {
+		setChangedFields({});
+	}, [featureId]);
 	// Per-feature single-flight channels, keyed by featureId. Kept in a ref
 	// (not effect-closure locals) so that re-entering a feature while its
 	// previous save is still in flight REUSES the same channel — the new edit
@@ -649,6 +660,8 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 								setOriginalSettings,
 							}, function () {
 								return saveSeq === channel.seq && featureId === displayedFeatureIdRef.current;
+							}, function () {
+								return saveSeq === channel.seq;
 							} );
 						} else {
 							const cachedData = getCachedFeatureData(featureId);
@@ -657,6 +670,19 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 									...cachedData,
 									settings: { ...cachedData.settings, ...actualSaved },
 								});
+							}
+
+							// Panel-visibility changes must invalidate the cache even
+							// when this response is superseded or navigated-away —
+							// the settings echo above is cached unconditionally, and
+							// pairing it with stale panel structure would corrupt the
+							// cached payload until a hard reload. Only the refetch
+							// event (which targets the displayed screen) is gated.
+							if ( response.data && response.data.refresh_panels ) {
+								invalidateFeatureCache();
+								if ( featureId === displayedFeatureIdRef.current ) {
+									window.dispatchEvent( new Event( 'bb-admin-refetch-feature' ) );
+								}
 							}
 						}
 
@@ -697,17 +723,11 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 						setChangedFields({});
 
 						// Reactions screen state was already handled above via the
-						// helper's shouldApplyScreen() (same condition as this guard).
+						// helper's shouldApplyScreen() (same condition as this guard);
+						// refresh_panels was handled above the guard.
 						if ( 'reactions' !== featureId ) {
 							setSettings((prev) => ({ ...prev, ...actualSaved }));
 							setOriginalSettings((prev) => ({ ...prev, ...actualSaved }));
-
-							// If the server indicates panel visibility changed, refetch
-							// feature data to update the side navigation (e.g. Discussion Tags toggle).
-							if ( response.data && response.data.refresh_panels ) {
-								invalidateFeatureCache();
-								window.dispatchEvent( new Event( 'bb-admin-refetch-feature' ) );
-							}
 						}
 					} else {
 						setToast({
@@ -737,10 +757,14 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 		}, 1000);
 
 		return () => {
-			// No channel flush needed on feature change: channel state is
-			// closure-local, so the old feature's settle() still drains its own
-			// queue with its own feature_id even after navigation — queued
-			// changes are never dropped or misrouted. Un-fired debounce timers
+			// No channel flush needed on feature change: channels are
+			// per-feature entries in saveChannelsRef, so the old feature's
+			// settle() drains its own queue with its own feature_id even after
+			// navigation — queued changes are never dropped or misrouted.
+			// (The per-feature serialization spans in-route feature switches;
+			// a full screen unmount — e.g. via the settings grid — drops the
+			// ref, but an in-flight request still settles and drains through
+			// its closure, so no payload is lost.) Un-fired debounce timers
 			// also survive: our custom debounce (utils/api.js) exposes no
 			// .cancel(), so the guard below is intentionally a no-op today and
 			// the trailing timer fires post-switch with this closure's correct

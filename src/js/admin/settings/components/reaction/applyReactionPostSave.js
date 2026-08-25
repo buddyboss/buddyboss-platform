@@ -43,13 +43,16 @@ function injectMigrationDataIntoPanels(panels, migrationData, migrationStatus) {
  * when shouldApplyScreen() passes; it is re-evaluated after the async refetch
  * resolves so a navigation during the refetch round-trip is also respected.
  *
+ * @since BuddyBoss [BBVERSION] Added the `shouldApplyScreen` and `isLatestSave` parameters.
+ *
  * @param {Object}   response          Save API response (response.data may have migration_data, migration_status)
  * @param {Object}   fieldsToSave      The payload that was saved (e.g. { reaction_items, reaction_checks, bb_reaction_mode })
  * @param {string}   featureId         Feature ID (used for refetch and cache keys)
  * @param {Object}   context           Helpers: ajaxFetch, getCachedFeatureData, setCachedFeatureData, setFeature, setSidePanels, setSettings, setOriginalSettings
  * @param {Function} shouldApplyScreen Returns true when screen state may be applied (response not superseded, feature still displayed). Defaults to always-true.
+ * @param {Function} isLatestSave      Returns true when this save is still the feature's newest dispatch. Gates the ASYNC refetch's cache write: the refetch runs outside the single-flight channel, so an earlier save's slower refetch could otherwise overwrite a newer refetch's cache. Defaults to always-true.
  */
-export function applyReactionPostSave(response, fieldsToSave, featureId, context, shouldApplyScreen = () => true) {
+export function applyReactionPostSave(response, fieldsToSave, featureId, context, shouldApplyScreen = () => true, isLatestSave = () => true) {
 	if ( process.env.NODE_ENV !== 'production' ) {
 		const requiredContextKeys = [ 'ajaxFetch', 'getCachedFeatureData', 'setCachedFeatureData', 'setFeature', 'setSidePanels', 'setSettings', 'setOriginalSettings' ];
 		requiredContextKeys.forEach( ( key ) => {
@@ -93,7 +96,14 @@ export function applyReactionPostSave(response, fieldsToSave, featureId, context
 					),
 				};
 			}
-			// Cache: always. Screen: only when still relevant at refetch time.
+			// This refetch runs outside the single-flight channel, so two
+			// reaction_items saves produce two concurrent refetches. Only the
+			// newest save's refetch may write the cache — an earlier save's
+			// slower refetch carries older server state and must be discarded
+			// (the newest save's own refetch is authoritative).
+			if (!isLatestSave()) {
+				return;
+			}
 			context.setCachedFeatureData(featureId, updatedData);
 			if (!shouldApplyScreen()) {
 				return;
@@ -103,6 +113,10 @@ export function applyReactionPostSave(response, fieldsToSave, featureId, context
 			const freshSettings = updatedData.settings || {};
 			context.setSettings(freshSettings);
 			context.setOriginalSettings(freshSettings);
+		}).catch(() => {
+			// Swallow refetch failures: the save itself succeeded and the next
+			// panel load will fetch fresh data; an unhandled rejection here
+			// would be pure console noise.
 		});
 		return;
 	}
