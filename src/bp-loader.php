@@ -355,6 +355,9 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 		// load the member switch class so all the hook prior to bp_init can be hook in.
 		require dirname( __FILE__ ) . '/bp-members/classes/class-bp-core-members-switching.php';
 
+		// TEMPORARY: selective-fields performance tooling. Delete this line and `src/bb-perf-lab/` to remove it.
+		require dirname( __FILE__ ) . '/bb-perf-lab/bb-perf-lab.php';
+
 		/*
 		 * Hook BuddyPress early onto the 'plugins_loaded' action.
 		 *

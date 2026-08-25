@@ -1,0 +1,83 @@
+/**
+ * Performance Lab -- admin screen styling.
+ *
+ * TEMPORARY diagnostic tooling. See `bb-perf-lab.php` for removal instructions.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+
+.bb-perf-lab .bb-perf-panel {
+	margin-top: 1.5em;
+}
+
+.bb-perf-lab .bb-perf-status {
+	margin-left: 8px;
+	color: #646970;
+}
+
+.bb-perf-lab .bb-perf-bar {
+	background: #dcdcde;
+	border-radius: 3px;
+	height: 18px;
+	margin: 12px 0 6px;
+	max-width: 640px;
+	overflow: hidden;
+}
+
+.bb-perf-lab .bb-perf-bar span {
+	background: #2271b1;
+	display: block;
+	height: 100%;
+	transition: width 0.2s ease;
+	width: 0;
+}
+
+.bb-perf-lab .bb-perf-result {
+	margin-top: 12px;
+	max-width: 860px;
+}
+
+.bb-perf-lab .bb-perf-result th[scope="row"] {
+	width: 200px;
+}
+
+.bb-perf-lab .bb-perf-good {
+	color: #007017;
+	font-weight: 600;
+}
+
+.bb-perf-lab .bb-perf-bad {
+	color: #b32d2e;
+	font-weight: 600;
+}
+
+.bb-perf-lab .bb-perf-verdict {
+	background: #fff;
+	border-left: 4px solid #2271b1;
+	margin-top: 16px;
+	max-width: 860px;
+	padding: 4px 16px;
+}
+
+.bb-perf-lab .bb-perf-notes {
+	list-style: disc;
+	margin-left: 20px;
+}
+
+.bb-perf-lab .bb-perf-log code {
+	font-size: 11px;
+	word-break: break-all;
+}
+
+.bb-perf-lab .bb-perf-log tr.is-selective td:first-child {
+	border-left: 3px solid #007017;
+}
+
+.bb-perf-lab .bb-perf-slow pre {
+	background: #f6f7f7;
+	font-size: 11px;
+	max-height: 320px;
+	overflow: auto;
+	padding: 8px;
+	white-space: pre-wrap;
+}

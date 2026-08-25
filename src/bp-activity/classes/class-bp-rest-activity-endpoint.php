@@ -1237,7 +1237,8 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 		);
 
 		if ( is_user_logged_in() ) {
-			$activity                = $this->get_activity_object( $request );
+			// Neither this check nor the ones it defers to reads the comments.
+			$activity                = $this->get_activity_object( $request, false );
 			$user_id                 = ! empty( $request->get_param( 'user_id' ) ) ? (int) $request->get_param( 'user_id' ) : bp_loggedin_user_id();
 			$item_id                 = ! empty( $request->get_param( 'primary_item_id' ) ) ? (int) $request->get_param( 'primary_item_id' ) : 0;
 			$component               = ! empty( $request->get_param( 'component' ) ) ? $request->get_param( 'component' ) : 'activity';
@@ -1468,7 +1469,8 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 		);
 
 		if ( is_user_logged_in() ) {
-			$activity = $this->get_activity_object( $request );
+			// `bp_activity_user_can_delete()` reads the author and component, not the comments.
+			$activity = $this->get_activity_object( $request, false );
 
 			if ( empty( $activity->id ) ) {
 				$retval = new WP_Error(
@@ -2128,29 +2130,48 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 		$activity_metas = bb_activity_get_metadata( $activity->id );
 
 		if ( 'activity_comment' === $activity->type ) {
-			$can_edit = (
-				function_exists( 'bb_is_activity_comment_edit_enabled' )
-				&& bb_is_activity_comment_edit_enabled()
-				&& function_exists( 'bb_activity_comment_user_can_edit' )
-				&& bb_activity_comment_user_can_edit( $activity )
-			);
-
 			$edited_date   = $activity_metas['_is_edited'][0] ?? '';
 			$edited_date   = ! empty( $edited_date ) ? $edited_date : $activity->date_recorded;
 			$date_recorded = bp_rest_prepare_date_response( $edited_date );
 		} else {
-			$can_edit = (
-				function_exists( 'bp_is_activity_edit_enabled' )
-				&& bp_is_activity_edit_enabled()
-				&& function_exists( 'bp_activity_user_can_edit' )
-				&& bp_activity_user_can_edit( $activity )
-			) && (
-				isset( $activity->privacy ) &&
-				! in_array( $activity->privacy, array( 'document', 'media', 'video' ), true )
-			);
-
 			$date_recorded = bp_rest_prepare_date_response( $activity->date_recorded );
 		}
+
+		/*
+		 * Whether this user may edit the activity, worked out on demand.
+		 *
+		 * The answer costs a settings read and a capability check per item, and
+		 * several fields want it, so it is resolved once and only if one of them
+		 * is actually being built.
+		 */
+		$can_edit = null;
+
+		$resolve_can_edit = function () use ( $activity, &$can_edit ) {
+			if ( null !== $can_edit ) {
+				return $can_edit;
+			}
+
+			if ( 'activity_comment' === $activity->type ) {
+				$can_edit = (
+					function_exists( 'bb_is_activity_comment_edit_enabled' )
+					&& bb_is_activity_comment_edit_enabled()
+					&& function_exists( 'bb_activity_comment_user_can_edit' )
+					&& bb_activity_comment_user_can_edit( $activity )
+				);
+			} else {
+				$can_edit = (
+					function_exists( 'bp_is_activity_edit_enabled' )
+					&& bp_is_activity_edit_enabled()
+					&& function_exists( 'bp_activity_user_can_edit' )
+					&& bp_activity_user_can_edit( $activity )
+				) && (
+					isset( $activity->privacy ) &&
+					! in_array( $activity->privacy, array( 'document', 'media', 'video' ), true )
+				);
+			}
+
+			return $can_edit;
+		};
 
 		/*
 		 * The fields the request asked for. When the request carries no
@@ -2210,26 +2231,53 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 		$data['primary_item_id']   = $activity->item_id;
 		$data['secondary_item_id'] = $activity->secondary_item_id;
 		$data['status']            = $activity->is_spam ? 'spam' : $activity->status;
-		$data['title']             = $this->bb_rest_activity_action( $activity->action, $activity );
-		$data['type']              = $activity->type;
+		if ( rest_is_field_included( 'title', $fields ) ) {
+			$data['title'] = $this->bb_rest_activity_action( $activity->action, $activity );
+		}
+
+		$data['type'] = $activity->type;
 
 		if ( rest_is_field_included( 'favorited', $fields ) ) {
 			$data['favorited'] = in_array( $activity->id, $this->get_user_favorites( $activity ), true );
 		}
 
 		// extend response.
-		$data['can_favorite'] = ( 'activity_comment' === $activity->type ) ? bb_activity_comment_can_favorite() : bp_activity_can_favorite();
+		if ( rest_is_field_included( 'can_favorite', $fields ) ) {
+			$data['can_favorite'] = ( 'activity_comment' === $activity->type ) ? bb_activity_comment_can_favorite() : bp_activity_can_favorite();
+		}
 
 		if ( rest_is_field_included( 'favorite_count', $fields ) ) {
 			$data['favorite_count'] = $this->get_activity_favorite_count( $activity );
 		}
 
-		$data['can_comment']      = ( 'activity_comment' === $activity->type ) ? bp_activity_can_comment_reply( $activity ) : bp_activity_can_comment();
-		$data['can_edit']         = $can_edit;
-		$data['is_edited']        = $activity_metas['_is_edited'][0] ?? '';
-		$data['can_delete']       = bp_activity_user_can_delete( $activity );
-		$data['content_stripped'] = html_entity_decode( wp_strip_all_tags( $activity->content ), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 );
-		$data['privacy']          = ( isset( $activity->privacy ) ? $activity->privacy : false );
+		/*
+		 * Each of these costs a capability check or a pass over the content, so
+		 * none of them runs for a request that did not ask for it. The plain
+		 * scalars above are left ungated on purpose: they cost nothing to copy,
+		 * and fields registered with `bp_rest_register_field()` read them off
+		 * the prepared item.
+		 */
+		if ( rest_is_field_included( 'can_comment', $fields ) ) {
+			$data['can_comment'] = ( 'activity_comment' === $activity->type ) ? bp_activity_can_comment_reply( $activity ) : bp_activity_can_comment();
+		}
+
+		if ( rest_is_field_included( 'can_edit', $fields ) ) {
+			$data['can_edit'] = $resolve_can_edit();
+		}
+
+		if ( rest_is_field_included( 'is_edited', $fields ) ) {
+			$data['is_edited'] = $activity_metas['_is_edited'][0] ?? '';
+		}
+
+		if ( rest_is_field_included( 'can_delete', $fields ) ) {
+			$data['can_delete'] = bp_activity_user_can_delete( $activity );
+		}
+
+		if ( rest_is_field_included( 'content_stripped', $fields ) ) {
+			$data['content_stripped'] = html_entity_decode( wp_strip_all_tags( $activity->content ), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 );
+		}
+
+		$data['privacy'] = ( isset( $activity->privacy ) ? $activity->privacy : false );
 
 		if ( rest_is_field_included( 'activity_data', $fields ) ) {
 			$data['activity_data'] = $this->bp_rest_activitiy_edit_data( $activity );
@@ -2380,9 +2428,17 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 					! empty( $secondary_activity->privacy ) &&
 					in_array( $secondary_activity->privacy, array( 'media', 'document', 'video' ), true )
 				) {
-					$data['can_comment']  = false;
-					$data['can_edit']     = false;
-					$data['can_favorite'] = false;
+					if ( array_key_exists( 'can_comment', $data ) ) {
+						$data['can_comment'] = false;
+					}
+
+					if ( array_key_exists( 'can_edit', $data ) ) {
+						$data['can_edit'] = false;
+					}
+
+					if ( array_key_exists( 'can_favorite', $data ) ) {
+						$data['can_favorite'] = false;
+					}
 				}
 			}
 		}
@@ -2834,7 +2890,8 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			}
 		}
 
-		$activity = $this->get_activity_object( $request );
+		// A read check never looks at the comments, so it does not pay for them.
+		$activity = $this->get_activity_object( $request, false );
 
 		return ( ! empty( $activity ) ? bp_activity_user_can_read( $activity, bp_loggedin_user_id() ) : false );
 	}
@@ -2877,18 +2934,31 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 	/**
 	 * Get activity object.
 	 *
-	 * @param WP_REST_Request $request Full details about the request.
+	 * Permission checks ask for the activity so they can read its author,
+	 * privacy and component. None of them look at its comments, and fetching
+	 * the comment tree is by some distance the most expensive part of the
+	 * fetch. WordPress asks each of these callbacks once per item to fill in
+	 * the `targetHints` on that item's `self` link, so on a page of twenty the
+	 * saving is twenty comment trees that were built and thrown away.
+	 *
+	 * @param WP_REST_Request|int $request      Full details about the request,
+	 *                                          or an activity ID.
+	 * @param bool                $with_comments Optional. Whether the comment
+	 *                                          tree is needed. Default true,
+	 *                                          which is what every caller got
+	 *                                          before this argument existed.
 	 *
 	 * @return BP_Activity_Activity|string An activity object.
 	 * @since 0.1.0
+	 * @since BuddyBoss [BBVERSION] Added the `$with_comments` argument.
 	 */
-	public function get_activity_object( $request ) {
+	public function get_activity_object( $request, $with_comments = true ) {
 		$activity_id = is_numeric( $request ) ? $request : (int) $request['id'];
 
 		$activity = bp_activity_get_specific(
 			array(
 				'activity_ids'     => array( $activity_id ),
-				'display_comments' => true,
+				'display_comments' => (bool) $with_comments,
 				'status'           => ! empty( $request['activity_status'] ) ? $request['activity_status'] : false,
 			)
 		);

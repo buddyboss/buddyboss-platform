@@ -133,6 +133,13 @@ class BP_Tests_Activity_REST_Fields extends BP_UnitTestCase {
 			array( 'can_toggle_notification' ),
 			array( 'is_receive_notification' ),
 			array( 'bb_activity_post_feature_image' ),
+			array( 'can_edit' ),
+			array( 'can_delete' ),
+			array( 'can_comment' ),
+			array( 'can_favorite' ),
+			array( 'content_stripped' ),
+			array( 'title' ),
+			array( 'is_edited' ),
 		);
 	}
 
@@ -767,6 +774,110 @@ class BP_Tests_Activity_REST_Fields extends BP_UnitTestCase {
 		if ( isset( $properties['properties']['can_report'] ) ) {
 			$this->assertArrayHasKey( 'can_report', $comment );
 		}
+	}
+
+	/**
+	 * Capability checks that used to run for every activity whatever the
+	 * request asked for.
+	 *
+	 * Each costs a settings read and a permission check per item, so on a page
+	 * of twenty they were twenty checks nobody had asked for.
+	 *
+	 * @return array
+	 */
+	public static function permission_field_provider() {
+		return array(
+			'can_delete'  => array( 'can_delete', 'bp_activity_user_can_delete' ),
+			'can_comment' => array( 'can_comment', 'bp_activity_can_comment' ),
+			'can_edit'    => array( 'can_edit', 'bp_activity_user_can_edit' ),
+		);
+	}
+
+	/**
+	 * A permission the request did not ask about must not be worked out.
+	 *
+	 * @dataProvider permission_field_provider
+	 *
+	 * @param string $field Field name.
+	 * @param string $hook  Filter the permission check fires.
+	 */
+	public function test_permission_is_not_resolved_when_its_field_is_not_selected( $field, $hook ) {
+		$this->assertSame( 0, $this->count_hook( $hook, array( '_fields' => 'id' ) ) );
+	}
+
+	/**
+	 * ...and one it did ask about still is.
+	 *
+	 * @dataProvider permission_field_provider
+	 *
+	 * @param string $field Field name.
+	 * @param string $hook  Filter the permission check fires.
+	 */
+	public function test_permission_is_resolved_when_its_field_is_selected( $field, $hook ) {
+		$this->assertGreaterThan( 0, $this->count_hook( $hook, array( '_fields' => 'id,' . $field ) ) );
+	}
+
+	/**
+	 * `can_favorite` is a special case: `prepare_links()` asks the same question
+	 * to decide whether to offer the favourite link, and that is link building
+	 * rather than field building. So the field's own check has to show up as an
+	 * increase over what the links already cost, not as a count from zero.
+	 */
+	public function test_favourite_permission_is_only_resolved_once_more_when_selected() {
+		$without = $this->count_hook( 'bp_activity_can_favorite', array( '_fields' => 'id' ) );
+		$with    = $this->count_hook( 'bp_activity_can_favorite', array( '_fields' => 'id,can_favorite' ) );
+
+		$this->assertGreaterThan( $without, $with );
+	}
+
+	/**
+	 * Count how many times a hook fires while a collection request is served.
+	 *
+	 * WordPress asks every route's permission callback for each `self` link, to
+	 * fill in the `targetHints` it attaches. That happens outside the
+	 * controller and would swamp what is being measured here, so the hint is
+	 * declared up front for the duration of the count, which is what makes
+	 * WordPress skip the probe.
+	 *
+	 * @param string $hook   Hook name.
+	 * @param array  $params Request parameters.
+	 *
+	 * @return int
+	 */
+	protected function count_hook( $hook, $params ) {
+		$calls = 0;
+
+		$counter = function ( $value ) use ( &$calls ) {
+			$calls++;
+
+			return $value;
+		};
+
+		$declare_hints = function ( $links ) {
+			$links['self']['targetHints'] = array( 'allow' => array( 'GET' ) );
+
+			return $links;
+		};
+
+		add_filter( $hook, $counter );
+		add_filter( 'bp_rest_activity_prepare_links', $declare_hints, 999 );
+
+		/*
+		 * The edit check is only reached when editing is switched on, and a
+		 * fresh install has it off. Without this the `can_edit` case would
+		 * short-circuit and prove nothing either way.
+		 */
+		add_filter( 'bp_is_activity_edit_enabled', '__return_true' );
+
+		try {
+			$this->get_first_item( $params );
+		} finally {
+			remove_filter( $hook, $counter );
+			remove_filter( 'bp_rest_activity_prepare_links', $declare_hints, 999 );
+			remove_filter( 'bp_is_activity_edit_enabled', '__return_true' );
+		}
+
+		return $calls;
 	}
 
 	/**
