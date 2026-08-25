@@ -214,7 +214,7 @@ class BB_Perf_Lab_Monitor {
 			'time'    => microtime( true ),
 			'queries' => (int) $wpdb->num_queries,
 			'saved'   => ( isset( $wpdb->queries ) && is_array( $wpdb->queries ) ) ? count( $wpdb->queries ) : 0,
-			'mem'     => memory_get_peak_usage( true ),
+			'mem'     => bb_perf_lab_memory_start(),
 		);
 
 		return $result;
@@ -240,7 +240,7 @@ class BB_Perf_Lab_Monitor {
 
 		$wall  = ( microtime( true ) - $this->start['time'] ) * 1000;
 		$count = (int) $wpdb->num_queries - $this->start['queries'];
-		$mem   = memory_get_peak_usage( true ) - $this->start['mem'];
+		$mem   = bb_perf_lab_memory_used( $this->start['mem'] );
 
 		list( $db_ms, $slow ) = $this->query_timings( $this->start['saved'] );
 

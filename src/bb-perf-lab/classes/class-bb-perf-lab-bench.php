@@ -204,7 +204,7 @@ class BB_Perf_Lab_Bench {
 
 		$saved_from = ( isset( $wpdb->queries ) && is_array( $wpdb->queries ) ) ? count( $wpdb->queries ) : 0;
 		$queries_at = (int) $wpdb->num_queries;
-		$mem_at     = memory_get_peak_usage( true );
+		$mem_at     = bb_perf_lab_memory_start();
 		$started    = microtime( true );
 
 		$response = rest_do_request( $request );
@@ -227,7 +227,7 @@ class BB_Perf_Lab_Bench {
 		$data    = $server->response_to_data( $response, empty( $embed ) ? false : $embed );
 		$payload = strlen( (string) wp_json_encode( $data ) );
 		$wall    = ( microtime( true ) - $started ) * 1000;
-		$mem     = memory_get_peak_usage( true ) - $mem_at;
+		$mem     = bb_perf_lab_memory_used( $mem_at );
 		$count   = (int) $wpdb->num_queries - $queries_at;
 
 		$db_ms = 0.0;

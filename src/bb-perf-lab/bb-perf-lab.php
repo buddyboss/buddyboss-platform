@@ -97,6 +97,54 @@ function bb_perf_lab_setting( $key = '', $fallback = null ) {
 }
 
 /**
+ * Begin a memory measurement, and return the baseline to compare against.
+ *
+ * `memory_get_peak_usage()` is a high-water mark for the whole process and only
+ * ever climbs, so subtracting a "before" from an "after" reports zero for every
+ * measurement after the first -- which is exactly what the benchmark's memory
+ * column was doing. PHP 8.2 can reset the mark, which gives a true peak per
+ * measurement. Below that, the best available answer is the change in currently
+ * allocated memory, which understates the peak but at least varies with the
+ * work.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return int Baseline to pass to `bb_perf_lab_memory_used()`.
+ */
+function bb_perf_lab_memory_start() {
+	/*
+	 * `real_usage` is deliberately off: it reports whole chunks the allocator
+	 * took from the system, which move in megabytes and stay flat across
+	 * anything smaller. What is wanted here is what the request itself
+	 * allocated, so PHP's own accounting is the right one to read.
+	 */
+	if ( function_exists( 'memory_reset_peak_usage' ) ) {
+		memory_reset_peak_usage();
+	}
+
+	return memory_get_usage();
+}
+
+/**
+ * Finish a memory measurement.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int $baseline Value returned by `bb_perf_lab_memory_start()`.
+ *
+ * @return int Bytes used by the measured work.
+ */
+function bb_perf_lab_memory_used( $baseline ) {
+	if ( function_exists( 'memory_reset_peak_usage' ) ) {
+		// The mark was reset while the baseline was already allocated, so the
+		// peak it has climbed to since is that baseline plus this work.
+		return max( 0, memory_get_peak_usage() - (int) $baseline );
+	}
+
+	return max( 0, memory_get_usage() - (int) $baseline );
+}
+
+/**
  * Boot the Performance Lab.
  *
  * The monitor has to be in place before the REST server dispatches, and it wants
