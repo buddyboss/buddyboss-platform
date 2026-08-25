@@ -165,9 +165,22 @@ class BB_XProfile_Visibility {
 		static $cache = array();
 		static $table_exists = '';
 
-		// Check if the result for this user is already cached.
+		// Check if the result for this user is already cached for this request.
 		if ( isset( $cache[ $user_id ] ) ) {
 			return $cache[ $user_id ];
+		}
+
+		// Check the persistent object cache before hitting the database — this is
+		// what is looked up once per recipient by display-name resolution, so on a
+		// large member/thread it can otherwise mean thousands of uncached queries
+		// per page load.
+		$cache_key = 'bb_xprofile_visibility_user_data_exists_' . $user_id;
+		$cached    = wp_cache_get( $cache_key, 'bp_xprofile' );
+		if ( false !== $cached ) {
+			$cache[ $user_id ] = (bool) $cached;
+
+			/** This filter is documented above. */
+			return apply_filters_ref_array( 'xprofile_visibility_user_data_exists', array( $cache[ $user_id ], $user_id ) );
 		}
 
 		// Resolve visibility table name with a safe fallback when xprofile globals
@@ -196,6 +209,8 @@ class BB_XProfile_Visibility {
 			$retval            = false;
 		}
 
+		wp_cache_set( $cache_key, $cache[ $user_id ] ? 1 : 0, 'bp_xprofile' );
+
 		/**
 		 * Filters whether any data already exists for the user.
 		 *
@@ -205,6 +220,17 @@ class BB_XProfile_Visibility {
 		 * @param int  $user_id User id.
 		 */
 		return apply_filters_ref_array( 'xprofile_visibility_user_data_exists', array( ! empty( $retval ), $user_id ) );
+	}
+
+	/**
+	 * Delete the cached "does this user have any visibility data" result.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param int $user_id User id.
+	 */
+	public static function delete_user_data_exists_cache( $user_id ) {
+		wp_cache_delete( 'bb_xprofile_visibility_user_data_exists_' . $user_id, 'bp_xprofile' );
 	}
 
 	/**
@@ -349,6 +375,8 @@ class BB_XProfile_Visibility {
 			 */
 			do_action_ref_array( 'xprofile_visibility_after_save', array( $this ) );
 
+			self::delete_user_data_exists_cache( $this->user_id );
+
 			return true;
 		}
 
@@ -399,6 +427,8 @@ class BB_XProfile_Visibility {
 		 */
 		do_action_ref_array( 'xprofile_visibility_after_delete', array( $this ) );
 
+		self::delete_user_data_exists_cache( $this->user_id );
+
 		return true;
 	}
 
@@ -415,6 +445,16 @@ class BB_XProfile_Visibility {
 		global $wpdb;
 
 		$bp = buddypress();
+
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		$affected_user_ids = $wpdb->get_col(
+			$wpdb->prepare(
+			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+				"SELECT DISTINCT user_id FROM {$bp->profile->table_name_visibility} WHERE field_id = %d",
+				$field_id
+			)
+		);
+
 		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$deleted = $wpdb->query(
 			$wpdb->prepare(
@@ -425,6 +465,10 @@ class BB_XProfile_Visibility {
 
 		if ( empty( $deleted ) || is_wp_error( $deleted ) ) {
 			return false;
+		}
+
+		foreach ( $affected_user_ids as $affected_user_id ) {
+			self::delete_user_data_exists_cache( $affected_user_id );
 		}
 
 		return true;
@@ -482,6 +526,8 @@ class BB_XProfile_Visibility {
 		if ( empty( $deleted ) || is_wp_error( $deleted ) ) {
 			return false;
 		}
+
+		self::delete_user_data_exists_cache( $user_id );
 
 		return true;
 	}
