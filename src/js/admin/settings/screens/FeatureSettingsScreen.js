@@ -662,7 +662,18 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 								return saveSeq === channel.seq && featureId === displayedFeatureIdRef.current;
 							}, function () {
 								return saveSeq === channel.seq;
-							}, saveSeq );
+							}, function () {
+								// Order concurrent items-refetch writes with
+								// channel-scoped state so it resets with the
+								// channel: a module-scoped ledger would outlive
+								// a remount's fresh seq counter and wrongly
+								// reject every refetch of the new session.
+								if ( saveSeq < ( channel.itemsRefetchSeq || 0 ) ) {
+									return false;
+								}
+								channel.itemsRefetchSeq = saveSeq;
+								return true;
+							} );
 						} else {
 							const cachedData = getCachedFeatureData(featureId);
 							if (cachedData) {

@@ -10,15 +10,6 @@
  */
 
 /**
- * Per-feature ledger of the highest save sequence whose items-refetch has
- * written the cache. Two reaction_items saves in quick succession launch two
- * concurrent refetches (they run outside the single-flight channel); this
- * ledger prevents the older refetch, resolving last, from regressing the
- * newer one's write.
- */
-const itemsRefetchSeqLedger = Object.create(null);
-
-/**
  * Injects migration_data and migration_status into reaction_migration / reaction_notice fields.
  *
  * @param {Array} panels Side panels array
@@ -52,7 +43,7 @@ function injectMigrationDataIntoPanels(panels, migrationData, migrationStatus) {
  * when shouldApplyScreen() passes; it is re-evaluated after the async refetch
  * resolves so a navigation during the refetch round-trip is also respected.
  *
- * @since BuddyBoss [BBVERSION] Added the `shouldApplyScreen` and `isLatestSave` parameters.
+ * @since BuddyBoss [BBVERSION] Added the `shouldApplyScreen`, `isLatestSave` and `claimItemsRefetchWrite` parameters.
  *
  * @param {Object}   response          Save API response (response.data may have migration_data, migration_status)
  * @param {Object}   fieldsToSave      The payload that was saved (e.g. { reaction_items, reaction_checks, bb_reaction_mode })
@@ -60,9 +51,9 @@ function injectMigrationDataIntoPanels(panels, migrationData, migrationStatus) {
  * @param {Object}   context           Helpers: ajaxFetch, getCachedFeatureData, setCachedFeatureData, setFeature, setSidePanels, setSettings, setOriginalSettings
  * @param {Function} shouldApplyScreen Returns true when screen state may be applied (response not superseded, feature still displayed). Defaults to always-true.
  * @param {Function} isLatestSave      Returns true when this save is still the feature's newest dispatch. Gates how the ASYNC refetch writes the cache: the refetch runs outside the single-flight channel, so an earlier save's slower refetch must not overwrite a newer save's cache state. Defaults to always-true.
- * @param {number}   saveSeq           This save's channel sequence number, used with the items-refetch ledger to order concurrent refetch writes. Defaults to 0 (ordering not enforced).
+ * @param {Function} claimItemsRefetchWrite Atomically claims the right to write this items-refetch's result: returns false when a NEWER save's refetch already wrote. The caller backs this with channel-scoped state so its lifetime matches the sequence counter it orders (a module-scoped ledger would outlive the channel across remounts and wrongly reject fresh sessions). Defaults to always-true.
  */
-export function applyReactionPostSave(response, fieldsToSave, featureId, context, shouldApplyScreen = () => true, isLatestSave = () => true, saveSeq = 0) {
+export function applyReactionPostSave(response, fieldsToSave, featureId, context, shouldApplyScreen = () => true, isLatestSave = () => true, claimItemsRefetchWrite = () => true) {
 	if ( process.env.NODE_ENV !== 'production' ) {
 		const requiredContextKeys = [ 'ajaxFetch', 'getCachedFeatureData', 'setCachedFeatureData', 'setFeature', 'setSidePanels', 'setSettings', 'setOriginalSettings' ];
 		requiredContextKeys.forEach( ( key ) => {
@@ -107,13 +98,11 @@ export function applyReactionPostSave(response, fieldsToSave, featureId, context
 				};
 			}
 			// This refetch runs outside the single-flight channel, so writes
-			// must be ordered manually. The ledger stops an older items-save's
-			// refetch, resolving last, from regressing a newer items-refetch.
-			if (saveSeq && saveSeq < (itemsRefetchSeqLedger[featureId] || 0)) {
+			// must be ordered manually. The claim (backed by channel-scoped
+			// state, so it resets with the channel on a full remount) rejects
+			// an older items-save's refetch resolving after a newer one wrote.
+			if (!claimItemsRefetchWrite()) {
 				return;
-			}
-			if (saveSeq) {
-				itemsRefetchSeqLedger[featureId] = saveSeq;
 			}
 
 			// Superseded by a NEWER save (e.g. a mode change, whose branch does
