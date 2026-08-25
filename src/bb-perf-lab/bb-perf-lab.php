@@ -61,6 +61,7 @@ require_once BB_PERF_LAB_DIR . '/classes/class-bb-perf-lab-monitor.php';
 require_once BB_PERF_LAB_DIR . '/classes/class-bb-perf-lab-seeder.php';
 require_once BB_PERF_LAB_DIR . '/classes/class-bb-perf-lab-bench.php';
 require_once BB_PERF_LAB_DIR . '/classes/class-bb-perf-lab-admin.php';
+require_once BB_PERF_LAB_DIR . '/classes/class-bb-perf-lab-rest.php';
 
 /**
  * Read the Performance Lab settings.
@@ -161,5 +162,11 @@ function bb_perf_lab_init() {
 	if ( is_admin() ) {
 		BB_Perf_Lab_Admin::instance();
 	}
+
+	/*
+	 * Application Passwords authenticate REST but not `admin-ajax`, so the
+	 * benchmark is reachable here and nowhere else when driven from a script.
+	 */
+	add_action( 'rest_api_init', array( 'BB_Perf_Lab_REST', 'register_routes' ) );
 }
 add_action( 'plugins_loaded', 'bb_perf_lab_init', 1 );
