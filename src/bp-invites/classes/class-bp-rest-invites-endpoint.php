@@ -302,6 +302,14 @@ class BP_REST_Invites_Endpoint extends WP_REST_Controller {
 
 				$email          = sanitize_email( wp_unslash( $value['email'] ) );
 				$name           = sanitize_text_field( wp_unslash( $value['name'] ) );
+				// sanitize_text_field() does not alter the quote/brace/colon
+				// characters that make up a PHP serialized string, so a crafted
+				// value could still be stored as-is. This meta is later run
+				// through unserialize()-based helpers elsewhere in the plugin,
+				// so refuse to persist anything that looks like serialized data.
+				if ( is_serialized( $name ) ) {
+					$name = '';
+				}
 				$member_type    = $value['member_type'];
 				$query_string[] = $email;
 				$inviter_name   = bp_core_get_user_displayname( bp_loggedin_user_id() );
