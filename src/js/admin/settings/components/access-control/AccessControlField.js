@@ -86,6 +86,8 @@ export function AccessControlField( { field, value, onChange } ) {
 	 * Pro emits `sub_types` as an empty PHP array (JSON `[]`, truthy in JS)
 	 * for non-grouped cases, so a bare truthiness check misclassifies.
 	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
 	 * @param {Object} cfg Type config from the types array.
 	 * @return {boolean} True when the type has selectable sub-types.
 	 */

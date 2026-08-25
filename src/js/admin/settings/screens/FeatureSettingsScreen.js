@@ -69,8 +69,11 @@ const InvitesListScreen = lazy(() => import('./InvitesListScreen'));
 // queues behind the in-flight request, `channel.seq` stays monotonic for the
 // feature across mounts, and `channel.itemsRefetchSeq` (reactions) shares that
 // exact lifetime. Channels are per-feature, so one feature's slow save never
-// blocks or misroutes another feature's queue. Screen-state application stays
-// per-mount via each closure's `displayedFeatureIdRef`.
+// blocks or misroutes another feature's queue. Screen-state application is
+// routed through `channel.apply` and queue draining through `channel.drain`
+// — both republished by each mount's save effect — so a response resolving in
+// a dead mount's closure still reaches the same-feature mount that is alive
+// at resolution time (see the comment where they are assigned).
 const saveChannels = {};
 
 /**
@@ -634,12 +637,32 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 		// round-trip), because the channel outlives the mount. A channel's
 		// queue is only ever drained by closures of its OWN feature, so
 		// payloads are never dispatched under another feature's feature_id.
-		// (A payload queued by a new mount and drained by a dead mount's
-		// settle() still saves and reconciles the module cache correctly; only
-		// that response's screen echo/toast is lost — acceptable in that
-		// sub-second window.)
 		var channel = saveChannels[ featureId ] =
 			saveChannels[ featureId ] || { inFlight: false, pending: null };
+
+		// Because the channel outlives the mount, a response (or queue drain)
+		// can resolve inside a DEAD mount's closure while a NEW mount of the
+		// same feature is on screen — e.g. edit → grid → re-enter → edit while
+		// the first save is still in flight. The request itself is always
+		// correct, but the dead closure's setState calls are no-ops, which
+		// would leave the new mount with a stuck 'Saving changes…' toast (no
+		// auto-dismiss, and the feature-switch toast reset can't fire when the
+		// featureId never changes), an uncleared changedFields, and no server
+		// echo. So each mount publishes its live screen appliers and its
+		// dispatcher on the channel: response handlers read `channel.apply` at
+		// RESOLUTION time (reaching the current same-feature mount if one
+		// exists, harmlessly no-op'ing into the dead one otherwise), and
+		// settle() drains the queue via `channel.drain` (the newest mount's
+		// dispatchSave, so the drained request's whole chain is live).
+		channel.apply = {
+			displayedFeatureIdRef: displayedFeatureIdRef,
+			setToast: setToast,
+			setChangedFields: setChangedFields,
+			setSettings: setSettings,
+			setOriginalSettings: setOriginalSettings,
+			setFeature: setFeature,
+			setSidePanels: setSidePanels,
+		};
 
 		// Dispatches one save request. The sequence guard on the response
 		// remains as defense-in-depth against out-of-order application (an
@@ -667,16 +690,55 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 				var pending = channel.pending;
 				if (pending) {
 					channel.pending = null;
-					dispatchSave(pending);
+					// Drain through the NEWEST mount's dispatcher so a payload
+					// queued by a live mount isn't dispatched (and its response
+					// applied) through a dead mount's closure.
+					( channel.drain || dispatchSave )(pending);
 				}
 			};
 
-			// Use AJAX endpoint for feature settings
-			ajaxFetch('bb_admin_save_feature_settings', {
-				feature_id: featureId,
-				settings: JSON.stringify(fieldsToSave),
-			})
+			// Builds the error-toast payload. Intentionally NOT gated on
+			// supersession/navigation: the failed payload's changedFields were
+			// already reset on feature switch, so this toast is the ONLY
+			// remaining signal that the save failed — suppressing it would
+			// silently lose the failure. Instead, when the failed feature is
+			// no longer the one on screen, its name is included so the sticky
+			// error isn't misread as belonging to the feature the admin is now
+			// looking at.
+			var buildErrorToast = function ( baseMessage ) {
+				var message = baseMessage || __('Something went wrong. Please try again.', 'buddyboss');
+				if ( featureId !== channel.apply.displayedFeatureIdRef.current ) {
+					var cached = getCachedFeatureData( featureId );
+					message = sprintf(
+						/* translators: 1: feature name, 2: underlying error message. */
+						__('Failed to save "%1$s" settings — %2$s', 'buddyboss'),
+						( cached && cached.label ) || featureId,
+						message
+					);
+				}
+				return { status: 'error', message: message };
+			};
+
+			// Use AJAX endpoint for feature settings. Guarded so a synchronous
+			// throw can't leave channel.inFlight stuck true forever — the
+			// channel is module-scoped now, so nothing else would ever reset
+			// it and every later edit would queue behind a wedged channel.
+			var request;
+			try {
+				request = ajaxFetch('bb_admin_save_feature_settings', {
+					feature_id: featureId,
+					settings: JSON.stringify(fieldsToSave),
+				});
+			} catch (err) {
+				settle();
+				channel.apply.setToast( buildErrorToast() );
+				return;
+			}
+			request
 				.then((response) => {
+					// Screen application must reach the mount that is alive at
+					// RESOLUTION time — see the channel.apply comment above.
+					var apply = channel.apply;
 					if (response.success) {
 						// Use actual saved values from server response (may differ from
 						// submitted values due to server-side validation/revert).
@@ -694,17 +756,23 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 						// on the same condition as the guard below (re-checked after
 						// its async refetch resolves).
 						if ( 'reactions' === featureId ) {
+							// Screen setters are live-reading wrappers over
+							// channel.apply (not bare closure references): the
+							// helper's items-refetch resolves even later than
+							// this response, so its screen writes must also
+							// reach whichever same-feature mount is alive at
+							// that point.
 							applyReactionPostSave( response, fieldsToSave, featureId, {
 								ajaxFetch,
 								getCachedFeatureData,
 								setCachedFeatureData,
 								invalidateFeatureCache,
-								setFeature,
-								setSidePanels,
-								setSettings,
-								setOriginalSettings,
+								setFeature: function ( v ) { channel.apply.setFeature( v ); },
+								setSidePanels: function ( v ) { channel.apply.setSidePanels( v ); },
+								setSettings: function ( v ) { channel.apply.setSettings( v ); },
+								setOriginalSettings: function ( v ) { channel.apply.setOriginalSettings( v ); },
 							}, function () {
-								return saveSeq === channel.seq && featureId === displayedFeatureIdRef.current;
+								return saveSeq === channel.seq && featureId === channel.apply.displayedFeatureIdRef.current;
 							}, function () {
 								return saveSeq === channel.seq;
 							}, function () {
@@ -737,7 +805,7 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 							// event (which targets the displayed screen) is gated.
 							if ( response.data && response.data.refresh_panels ) {
 								invalidateFeatureCache();
-								if ( featureId === displayedFeatureIdRef.current ) {
+								if ( featureId === apply.displayedFeatureIdRef.current ) {
 									window.dispatchEvent( new Event( 'bb-admin-refetch-feature' ) );
 								}
 							}
@@ -768,39 +836,39 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 						// wrong; the reactions path would even replace the new
 						// feature's panels). The feature cache and global flags
 						// above are already reconciled either way.
-						if ( saveSeq !== channel.seq || featureId !== displayedFeatureIdRef.current ) {
+						if ( saveSeq !== channel.seq || featureId !== apply.displayedFeatureIdRef.current ) {
 							return;
 						}
 
-						setToast({
+						apply.setToast({
 							status: 'success',
 							message: __('Settings saved.', 'buddyboss'),
 						});
 
-						setChangedFields({});
+						apply.setChangedFields({});
 
 						// Reactions screen state was already handled above via the
 						// helper's shouldApplyScreen() (same condition as this guard);
 						// refresh_panels was handled above the guard.
 						if ( 'reactions' !== featureId ) {
-							setSettings((prev) => ({ ...prev, ...actualSaved }));
-							setOriginalSettings((prev) => ({ ...prev, ...actualSaved }));
+							apply.setSettings((prev) => ({ ...prev, ...actualSaved }));
+							apply.setOriginalSettings((prev) => ({ ...prev, ...actualSaved }));
 						}
 					} else {
-						setToast({
-							status: 'error',
-							message: ( response.data && response.data.message ) || __('Something went wrong. Please try again.', 'buddyboss'),
-						});
+						// See buildErrorToast for why this is not gated on the
+						// supersession/navigation guard above.
+						apply.setToast( buildErrorToast( response.data && response.data.message ) );
 					}
 				})
 				.catch(() => {
-					setToast({
-						status: 'error',
-						message: __('Something went wrong. Please try again.', 'buddyboss'),
-					});
+					channel.apply.setToast( buildErrorToast() );
 				})
 				.finally(settle);
 		};
+
+		// Newest mount's dispatcher — settle() drains the queue through this
+		// so a dead mount's settle hands the queued payload to a live chain.
+		channel.drain = dispatchSave;
 
 		debouncedSaveRef.current = debounce((fieldsToSave) => {
 			// Single-flight: while a save is in flight, queue the latest

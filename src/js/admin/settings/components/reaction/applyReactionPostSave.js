@@ -55,7 +55,7 @@ function injectMigrationDataIntoPanels(panels, migrationData, migrationStatus) {
  * @param {Object}   context           Helpers: ajaxFetch, getCachedFeatureData, setCachedFeatureData, invalidateFeatureCache, setFeature, setSidePanels, setSettings, setOriginalSettings
  * @param {Function} shouldApplyScreen Returns true when screen state may be applied (response not superseded, feature still displayed). Defaults to always-true.
  * @param {Function} isLatestSave      Returns true when this save is still the feature's newest dispatch. Gates how the ASYNC refetch writes the cache: the refetch runs outside the single-flight channel, so an earlier save's slower refetch must not overwrite a newer save's cache state. Defaults to always-true.
- * @param {Function} claimItemsRefetchWrite Atomically claims the right to write this items-refetch's result: returns false when a NEWER save's refetch already wrote. The caller backs this with channel-scoped state so its lifetime matches the sequence counter it orders (a module-scoped ledger would outlive the channel across remounts and wrongly reject fresh sessions). Defaults to always-true.
+ * @param {Function} claimItemsRefetchWrite Atomically claims the right to write this items-refetch's result: returns false when a NEWER save's refetch already wrote. The caller backs this with state on the save channel so it shares the exact lifetime of the `channel.seq` counter it orders — the channel map is module-scoped, so both survive full screen remounts together and the ordering holds across grid round-trips. Keeping claim state and counter on the same object is load-bearing: scoping either one differently (per-mount OR per-module alone) reintroduces the round-14/15 races. Defaults to always-true.
  */
 export function applyReactionPostSave(response, fieldsToSave, featureId, context, shouldApplyScreen = () => true, isLatestSave = () => true, claimItemsRefetchWrite = () => true) {
 	if ( process.env.NODE_ENV !== 'production' ) {
@@ -102,9 +102,10 @@ export function applyReactionPostSave(response, fieldsToSave, featureId, context
 				};
 			}
 			// This refetch runs outside the single-flight channel, so writes
-			// must be ordered manually. The claim (backed by channel-scoped
-			// state, so it resets with the channel on a full remount) rejects
-			// an older items-save's refetch resolving after a newer one wrote.
+			// must be ordered manually. The claim (backed by state on the
+			// module-scoped save channel, so it stays monotonic with
+			// channel.seq across full remounts) rejects an older items-save's
+			// refetch resolving after a newer one wrote.
 			if (!claimItemsRefetchWrite()) {
 				return;
 			}
