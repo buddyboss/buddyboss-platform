@@ -505,16 +505,15 @@ function bp_notifications_get_unread_notification_count( $user_id = 0 ) {
 		$user_id = ( bp_displayed_user_id() ) ? bp_displayed_user_id() : bp_loggedin_user_id();
 	}
 
-	$count = wp_cache_get( $user_id, 'bp_notifications_unread_count' );
-	if ( false === $count ) {
-		$count = BP_Notifications_Notification::get_total_count(
-			array(
-				'user_id' => $user_id,
-				'is_new'  => true,
-			)
-		);
-		wp_cache_set( $user_id, $count, 'bp_notifications_unread_count' );
-	}
+	// get_total_count() already caches this (keyed on the full args, not
+	// just user_id - see PROD-10344), so it isn't duplicated here to avoid
+	// a second, differently-keyed cache layer for the same value.
+	$count = BP_Notifications_Notification::get_total_count(
+		array(
+			'user_id' => $user_id,
+			'is_new'  => true,
+		)
+	);
 
 	/**
 	 * Filters the count of unread notification items for a user.
