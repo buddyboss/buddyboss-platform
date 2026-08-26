@@ -92,24 +92,17 @@ function bp_ps_set_request() {
 		}
 	}
 
-	// Post/Redirect/Get: when the profile search form was submitted via POST,
-	// redirect to the same directory URL without a query string after the
-	// request has been stored in the `bp_ps_request` cookie above. The search
-	// is re-read from that cookie on the redirected request (see
-	// bp_ps_get_request() and bp_ps_filter_members()), so no query string is
-	// needed and no search data is exposed in the URL.
+	// Post/Redirect/Get (PROD-9673): the form posts to the directory, so its
+	// result is a POST page; on a `no-store` logged-in page the browser Back
+	// button then shows "Confirm Form Resubmission / ERR_CACHE_MISS". Redirect
+	// to the same URL without a query string so Back lands on a GET page; the
+	// search is re-read from the bp_ps_request cookie set above (see
+	// bp_ps_get_request()/bp_ps_filter_members()), so nothing is exposed in the URL.
 	//
-	// Without this, the results page is the response to a POST; because
-	// BuddyPress sends logged-in pages `no-store`, pressing the browser Back
-	// button from a member profile shows "Confirm Form Resubmission /
-	// ERR_CACHE_MISS". Redirecting to a GET URL makes Back work. See PROD-9673.
-	//
-	// Guards. Only on a real POST of the search form ($_POST[ BP_PS_FORM ] set):
-	// the redirected GET has no BP_PS_FORM, so it never redirects again (no loop).
-	// Only when persistent search is enabled: with it disabled, the block above
-	// deliberately clears the cookie on a formless request (which the redirected
-	// GET is), so a redirect would drop the search, so leave that mode unchanged.
-	// Never during AJAX or REST requests.
+	// Two non-obvious guards: fire only on a real form POST — the redirected GET
+	// has no BP_PS_FORM, so it never loops — and only when persistent search is
+	// on, since otherwise the block above clears the cookie on the formless
+	// redirected GET, dropping the search. Skip AJAX/REST.
 	if (
 		$persistent
 		// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Read-only presence check of the search-form marker; profile search performs no state change and the whole flow is intentionally nonce-less (matching the $_REQUEST reads above).
