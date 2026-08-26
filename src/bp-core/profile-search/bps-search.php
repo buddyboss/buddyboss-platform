@@ -91,6 +91,39 @@ function bp_ps_set_request() {
 			setcookie( $cookie, '', 0, COOKIEPATH );
 		}
 	}
+
+	// Post/Redirect/Get: when the profile search form was submitted via POST,
+	// redirect to the same directory URL without a query string after the
+	// request has been stored in the `bp_ps_request` cookie above. The search
+	// is re-read from that cookie on the redirected request (see
+	// bp_ps_get_request() and bp_ps_filter_members()), so no query string is
+	// needed and no search data is exposed in the URL.
+	//
+	// Without this, the results page is the response to a POST; because
+	// BuddyPress sends logged-in pages `no-store`, pressing the browser Back
+	// button from a member profile shows "Confirm Form Resubmission /
+	// ERR_CACHE_MISS". Redirecting to a GET URL makes Back work. See PROD-9673.
+	//
+	// Guards. Only on a real POST of the search form ($_POST[ BP_PS_FORM ] set):
+	// the redirected GET has no BP_PS_FORM, so it never redirects again (no loop).
+	// Only when persistent search is enabled: with it disabled, the block above
+	// deliberately clears the cookie on a formless request (which the redirected
+	// GET is), so a redirect would drop the search, so leave that mode unchanged.
+	// Never during AJAX or REST requests.
+	if (
+		$persistent
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Read-only presence check of the search-form marker; profile search performs no state change and the whole flow is intentionally nonce-less (matching the $_REQUEST reads above).
+		&& isset( $_POST[ BP_PS_FORM ] )
+		&& ! wp_doing_ajax()
+		&& ! ( function_exists( 'bb_is_rest' ) && bb_is_rest() )
+		&& isset( $_SERVER['REQUEST_URI'] )
+	) {
+		$redirect_path = wp_parse_url( sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ), PHP_URL_PATH );
+		if ( ! empty( $redirect_path ) ) {
+			wp_safe_redirect( $redirect_path );
+			exit;
+		}
+	}
 }
 
 /**
