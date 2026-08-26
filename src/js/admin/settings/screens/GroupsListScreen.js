@@ -869,7 +869,15 @@ export function GroupsListScreen( { onNavigate } ) {
 			{ /* Delete Group Modal */ }
 			{ deleteModalOpen && (
 				<Modal
-					title={ __( 'Delete Group?', 'buddyboss' ) }
+					title={
+						1 === deleteTargetIds.length && deleteTargetName
+							? sprintf(
+									/* translators: %s: group name. */
+									__( 'Delete "%s" group?', 'buddyboss' ),
+									decodeEntities( deleteTargetName )
+							  )
+							: __( 'Delete Groups?', 'buddyboss' )
+					}
 					onRequestClose={ function () {
 						setDeleteModalOpen( false );
 					} }
@@ -892,15 +900,7 @@ export function GroupsListScreen( { onNavigate } ) {
 							{ __( 'Deleting groups will remove them from the community and the WordPress backend listings. They will no longer appear in the group directory, and all associated data and posts will be permanently deleted.', 'buddyboss' ) }
 						</p>
 						<CheckboxControl
-							label={
-								1 === deleteTargetIds.length && deleteTargetName
-									? sprintf(
-											/* translators: %s: group name. */
-											__( 'I understand this will permanently delete "%s".', 'buddyboss' ),
-											decodeEntities( deleteTargetName )
-									  )
-									: __( 'I understand this will permanently delete the selected groups.', 'buddyboss' )
-							}
+							label={ __( 'I understand this will permanently delete the group.', 'buddyboss' ) }
 							checked={ deleteConfirmChecked }
 							onChange={ setDeleteConfirmChecked }
 							__nextHasNoMarginBottom
