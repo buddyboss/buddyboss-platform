@@ -148,8 +148,24 @@ export function applyReactionPostSave(response, fieldsToSave, featureId, context
 			context.setFeature(updatedData);
 			context.setSidePanels(updatedData.side_panels || []);
 			const freshSettings = updatedData.settings || {};
-			context.setSettings(freshSettings);
-			context.setOriginalSettings(freshSettings);
+			// Merge ONLY reaction_items (the real DB IDs this refetch exists to
+			// deliver) onto the live settings — never a full replace. A full
+			// replace reverts a field the admin edited while this refetch was in
+			// flight: an edit still sitting in the 1s debounce has not advanced
+			// channel.seq, so shouldApplyScreen()/isLatestSave() are both still
+			// true, and setSettings(freshSettings) would overwrite that pending
+			// value with pre-edit server state until its own debounced save
+			// fires ~1s later. Same class as commit 074cf69 (which fixed the
+			// generic refetch handler but not this reactions-specific path), and
+			// consistent with the superseded branch above and the migration
+			// branch below, which both merge rather than replace. A plain
+			// {...prev, ...freshSettings} would NOT work here — freshSettings is
+			// the full server payload, so it would still clobber the pending
+			// field; only the targeted reaction_items key must move.
+			if ( undefined !== freshSettings.reaction_items ) {
+				context.setSettings((prev) => ({ ...prev, reaction_items: freshSettings.reaction_items }));
+				context.setOriginalSettings((prev) => ({ ...prev, reaction_items: freshSettings.reaction_items }));
+			}
 		}).catch(() => {
 			// The save itself succeeded but this refetch (the ONLY cache write
 			// of the items branch) failed — the cache still holds the pre-save
