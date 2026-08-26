@@ -1125,6 +1125,7 @@ function bb_send_notifications_to_subscribers( $args ) {
 			'item_id'  => $item_id,
 			'blog_id'  => $blog_id,
 			'status'   => true,
+			'fields'   => 'id',
 			'per_page' => 1,
 			'page'     => 1,
 		)
