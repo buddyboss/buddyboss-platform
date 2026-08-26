@@ -1469,6 +1469,8 @@
 
 		.bb-rl-topic-selector-list {
 			z-index: 9;
+			left: 50%;
+			transform: translateX(-50%);
 		}
 
 		.bb-rl-topic-selector-button {
