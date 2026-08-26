@@ -92,7 +92,7 @@ function bp_ps_set_request() {
 		}
 	}
 
-	// Post/Redirect/Get (PROD-9673): the form posts to the directory, so its
+	// Post/Redirect/Get: the form posts to the directory, so its
 	// result is a POST page; on a `no-store` logged-in page the browser Back
 	// button then shows "Confirm Form Resubmission / ERR_CACHE_MISS". Redirect
 	// to the same URL without a query string so Back lands on a GET page; the
@@ -113,7 +113,10 @@ function bp_ps_set_request() {
 	) {
 		$redirect_path = wp_parse_url( sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ), PHP_URL_PATH );
 		if ( ! empty( $redirect_path ) ) {
-			wp_safe_redirect( $redirect_path );
+			// 303 See Other is the spec-correct status for a POST -> GET redirect
+			// (guarantees the follow-up request is a GET, rather than relying on
+			// the de-facto browser downgrade of a 302 POST).
+			wp_safe_redirect( $redirect_path, 303 );
 			exit;
 		}
 	}
