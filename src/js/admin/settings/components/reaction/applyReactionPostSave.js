@@ -48,6 +48,7 @@ function injectMigrationDataIntoPanels(panels, migrationData, migrationStatus) {
  * respected.
  *
  * @since BuddyBoss [BBVERSION] Added the `shouldApplyScreen`, `isLatestSave`, `claimItemsRefetchWrite` and `isFeatureDisplayed` parameters.
+ * @since BuddyBoss [BBVERSION] Added the `overlayPendingEdits` parameter.
  *
  * @param {Object}   response          Save API response (response.data may have migration_data, migration_status)
  * @param {Object}   fieldsToSave      The payload that was saved (e.g. { reaction_items, reaction_checks, bb_reaction_mode })
@@ -57,8 +58,9 @@ function injectMigrationDataIntoPanels(panels, migrationData, migrationStatus) {
  * @param {Function} isLatestSave      Returns true when this save is still the feature's newest dispatch. Gates how the ASYNC refetch writes the cache: the refetch runs outside the single-flight channel, so an earlier save's slower refetch must not overwrite a newer save's cache state. Defaults to always-true.
  * @param {Function} claimItemsRefetchWrite Atomically claims the right to write this items-refetch's result: returns false when a NEWER save's refetch already wrote. The caller backs this with state on the save channel so it shares the exact lifetime of the `channel.seq` counter it orders — the channel map is module-scoped, so both survive full screen remounts together and the ordering holds across grid round-trips. Keeping claim state and counter on the SAME object is load-bearing; splitting their lifetimes fails one of two ways: (a) claim state outliving the counter (e.g. module ledger + per-mount seq) leaves a stale high-water mark that wrongly rejects every refetch of a fresh session, so new item IDs never reach the cache; (b) the counter outliving the claim state (per-mount ledger + module seq) lets an OLDER save's slower refetch resolve after a newer one across a remount and full-replace the newer write with pre-save data. Defaults to always-true.
  * @param {Function} isFeatureDisplayed Returns true when this feature is the one currently mounted on screen. Used ONLY by the superseded items-refetch branch to land real DB IDs on the live screen: shouldApplyScreen() can't be reused there because it also requires the save to be the latest (false by definition when superseded), yet the ID reconciliation must still reach the screen the admin is looking at. Defaults to always-false so callers that omit it keep the pre-fix cache-only behavior.
+ * @param {Function} overlayPendingEdits Re-applies edits the admin has made but not yet persisted on top of a fresh server settings payload, for SCREEN state only. The items-refetch's full replace of `settings` needs it because `shouldApplyScreen()`/`isLatestSave()` key off `channel.seq`, which only advances at save-DISPATCH time: an edit still sitting in the 1s debounce is invisible to both, so both would report "still latest" and the replace would revert that edit on screen. It stays reverted, too — reactions never re-applies a later save's echo to `settings` — until a reload. The cache and `originalSettings` deliberately keep the untouched server payload, so no unsaved draft is cached and the pending field still reads as changed. Defaults to identity so callers that omit it keep the pre-fix full-replace behavior.
  */
-export function applyReactionPostSave(response, fieldsToSave, featureId, context, shouldApplyScreen = () => true, isLatestSave = () => true, claimItemsRefetchWrite = () => true, isFeatureDisplayed = () => false) {
+export function applyReactionPostSave(response, fieldsToSave, featureId, context, shouldApplyScreen = () => true, isLatestSave = () => true, claimItemsRefetchWrite = () => true, isFeatureDisplayed = () => false, overlayPendingEdits = ( fresh ) => fresh) {
 	if ( process.env.NODE_ENV !== 'production' ) {
 		const requiredContextKeys = [ 'ajaxFetch', 'getCachedFeatureData', 'setCachedFeatureData', 'invalidateFeatureCache', 'setFeature', 'setSidePanels', 'setSettings', 'setOriginalSettings' ];
 		requiredContextKeys.forEach( ( key ) => {
@@ -148,7 +150,19 @@ export function applyReactionPostSave(response, fieldsToSave, featureId, context
 			context.setFeature(updatedData);
 			context.setSidePanels(updatedData.side_panels || []);
 			const freshSettings = updatedData.settings || {};
-			context.setSettings(freshSettings);
+			// SCREEN state only: overlay any edit the admin has made that is
+			// still un-persisted. "Still latest" here means no newer save has
+			// DISPATCHED — channel.seq does not move while an edit waits out
+			// the 1s debounce, so an unrelated field edited during this
+			// refetch's round-trip passes both gates and a bare
+			// setSettings(freshSettings) would silently revert it on screen.
+			// Unlike other features, reactions never re-applies a save echo to
+			// `settings`, so that revert would survive the edit's own save and
+			// last until a reload, leaving the screen disagreeing with the DB.
+			// The cache write above and originalSettings below stay the
+			// untouched server payload, so the pending field still reads as
+			// changed and its debounced save reconciles everything.
+			context.setSettings(overlayPendingEdits(freshSettings));
 			context.setOriginalSettings(freshSettings);
 		}).catch(() => {
 			// The save itself succeeded but this refetch (the ONLY cache write

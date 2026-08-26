@@ -281,6 +281,61 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 		changedFieldsRef.current = changedFields;
 	}, [changedFields]);
 
+	// Fields whose newest edit is still sitting in the 1s debounce (or in the
+	// single-flight queue) and has therefore NOT advanced channel.seq yet.
+	// `changedFieldsRef` alone cannot answer "is an edit pending?": a successful
+	// save clears changedFields wholesale (setChangedFields({}) below) — including
+	// edits made AFTER that save dispatched, which are still un-persisted and only
+	// reach the server when their own captured debounce payload fires ~1s later.
+	// A refetch resolving inside that window would read an empty changedFields and
+	// full-replace the screen with server state, reverting the edit visually (and,
+	// for reactions, indefinitely: that feature's branches never re-apply a later
+	// save's echo to `settings`). Keys are added when the auto-save effect hands a
+	// payload to the debounce and removed once dispatchSave() advances the
+	// sequence, from which point the channel's own ordering guards cover them.
+	const debouncePendingRef = useRef({});
+	useEffect(() => {
+		// Same rationale as the changedFields reset on feature switch: pending
+		// edits are not lost (the old feature's debounce timer still fires with
+		// its captured payload), but they must not overlay the NEW feature's
+		// settings, where the same field name could mean something else.
+		debouncePendingRef.current = {};
+	}, [featureId]);
+
+	/**
+	 * Overlay still-pending local edits on top of a fresh server settings payload.
+	 *
+	 * Shared by every refetch path that would otherwise full-replace `settings`,
+	 * so they all behave the same. The overlay is for the SCREEN only: callers
+	 * keep the untouched server payload as the cache value and as
+	 * `originalSettings`, so an unsaved draft is never persisted to the cache and
+	 * the pending field still reads as changed. The field's own debounced save
+	 * reconciles everything when it fires.
+	 *
+	 * Reads refs only, so a stale closure of this function is still correct.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param {Object} freshSettings Settings object as returned by the server.
+	 * @returns {Object} Copy of freshSettings with pending local edits re-applied.
+	 */
+	const overlayPendingEdits = useCallback( function ( freshSettings ) {
+		var live           = settingsRef.current || {};
+		var screenSettings = { ...( freshSettings || {} ) };
+		// Debounced-but-undispatched edits first, then changedFields: the latter
+		// is the more recent marker, so it wins where both name a field.
+		Object.keys( debouncePendingRef.current || {} ).forEach( function ( k ) {
+			screenSettings[ k ] = live[ k ];
+		} );
+		var pending = changedFieldsRef.current || {};
+		Object.keys( pending ).forEach( function ( k ) {
+			// A `true` sentinel means "use the current live value" (same
+			// convention as the auto-save effect).
+			screenSettings[ k ] = ( true === pending[ k ] ) ? live[ k ] : pending[ k ];
+		} );
+		return screenSettings;
+	}, [] );
+
 	// Listen for section status updates from input_button fields (e.g. GIPHY connect/disconnect).
 	useEffect( function() {
 		function handleStatusUpdate( event ) {
@@ -513,24 +568,15 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 							// Do not setSettings/setOriginalSettings – stale for interleaved saves.
 						} else {
 							const refreshedSettings = response.data.settings || {};
-							// Overlay any edit still pending in the debounce (not
-							// yet dispatched, so saveInterleaved above can't see
-							// it) on top of the server payload for the SCREEN only,
-							// so the refresh delivers fresh server-derived fields
-							// without momentarily reverting the in-progress edit
-							// (it re-saves when the debounce fires). A `true`
-							// sentinel means "use the current live value" (same
-							// convention as the auto-save effect). The CACHE and
-							// originalSettings stay the server truth, so an unsaved
-							// draft is never persisted to the cache and the pending
-							// field still reads as changed; the field's own save
-							// reconciles everything when the debounce fires.
-							const pending = changedFieldsRef.current || {};
-							const live = settingsRef.current || {};
-							const screenSettings = { ...refreshedSettings };
-							Object.keys(pending).forEach((k) => {
-								screenSettings[k] = ( true === pending[k] ) ? live[k] : pending[k];
-							});
+							// Overlay any edit still pending locally (not yet
+							// dispatched, so saveInterleaved above can't see it) on
+							// top of the server payload for the SCREEN only, so the
+							// refresh delivers fresh server-derived fields without
+							// momentarily reverting the in-progress edit (it
+							// re-saves when the debounce fires). The CACHE and
+							// originalSettings stay the server truth — see
+							// overlayPendingEdits().
+							const screenSettings = overlayPendingEdits(refreshedSettings);
 							setCachedFeatureData(featureId, response.data);
 							setFeature(response.data);
 							setSidePanels(response.data.side_panels || []);
@@ -739,6 +785,16 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 			channel.seq = saveSeq;
 			channel.inFlight = true;
 
+			// These fields are now owned by the channel: the sequence has
+			// advanced, so shouldApplyScreen()/isLatestSave()/saveInterleaved can
+			// all see this edit and it no longer needs the debounce-pending
+			// overlay. (Drains route through the NEWEST mount's dispatchSave, so
+			// this always clears the ref of a live mount — a dead mount's leftover
+			// keys are unreachable garbage, never a stale overlay on screen.)
+			Object.keys(fieldsToSave).forEach(function (k) {
+				delete debouncePendingRef.current[k];
+			});
+
 			var settle = function () {
 				channel.inFlight = false;
 				var pending = channel.pending;
@@ -847,7 +903,7 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 								// one currently on screen. liveFeatureId is the single
 								// source of truth across mounts (see round-19 comment).
 								return 'reactions' === liveFeatureId;
-							} );
+							}, overlayPendingEdits );
 						} else {
 							const cachedData = getCachedFeatureData(featureId);
 							if (cachedData) {
@@ -987,6 +1043,9 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 					changedFields[k] === true ? currentSettings[k] : changedFields[k],
 				])
 			);
+			// Track these as pending until dispatchSave() advances the channel
+			// sequence, so a refetch resolving in between can preserve them.
+			Object.assign( debouncePendingRef.current, payload );
 			debouncedSaveRef.current(payload);
 		}
 	}, [changedFields, initialLoad]);
