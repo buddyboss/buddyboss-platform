@@ -1114,12 +1114,19 @@ function bb_send_notifications_to_subscribers( $args ) {
 
 	$notification_type = $type_data['notification_type'];
 	$send_callback     = $type_data['send_callback'];
-	$subscriptions     = bb_get_subscription_users(
+
+	// Probe with a single row first. For very large subscriber lists (e.g. a
+	// 70k-member group) fetching every subscriber inside the originating web
+	// request exhausts PHP memory (PROD-10238), so only the total count is
+	// needed here to pick the delivery strategy.
+	$subscriptions = bb_get_subscription_users(
 		array(
-			'type'    => $type,
-			'item_id' => $item_id,
-			'blog_id' => $blog_id,
-			'status'  => true,
+			'type'     => $type,
+			'item_id'  => $item_id,
+			'blog_id'  => $blog_id,
+			'status'   => true,
+			'per_page' => 1,
+			'page'     => 1,
 		)
 	);
 
@@ -1151,6 +1158,76 @@ function bb_send_notifications_to_subscribers( $args ) {
 		$parse_args['usernames'] = $usernames;
 	}
 
+	$total_subscribers = isset( $subscriptions['total'] ) ? (int) $subscriptions['total'] : count( $subscriptions['subscriptions'] );
+
+	/**
+	 * Filters the subscriber count above which the fan-out itself moves to the background.
+	 *
+	 * Above this threshold the subscriber list is never fetched inside the
+	 * originating request; a single background job paginates through the list
+	 * instead. Keeps request memory flat for very large groups/forums (PROD-10238).
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param int   $min_count Subscriber count threshold. Default 1000.
+	 * @param array $r         Parsed arguments of the notification request.
+	 */
+	$fanout_min_count = (int) apply_filters( 'bb_subscription_background_fanout_min_count', 1000, $r );
+
+	global $bb_background_updater;
+
+	if ( $total_subscribers > $fanout_min_count ) {
+
+		/**
+		 * Filters the number of subscribers fetched per page by the background fan-out worker.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param int   $per_page Subscribers fetched per background page. Default 1000.
+		 * @param array $r        Parsed arguments of the notification request.
+		 */
+		$fanout_per_page = max( 1, (int) apply_filters( 'bb_subscription_background_fanout_per_page', 1000, $r ) );
+
+		$fanout_args             = $parse_args;
+		$fanout_args['last_id']  = 0;
+		$fanout_args['per_page'] = $fanout_per_page;
+
+		// The send callbacks rebuild the activity from data.activity_id; drop the
+		// serialized object copy so the queue rows stay small.
+		if ( isset( $fanout_args['data']['email_tokens']['tokens']['activity'] ) && is_object( $fanout_args['data']['email_tokens']['tokens']['activity'] ) ) {
+			unset( $fanout_args['data']['email_tokens']['tokens']['activity'] );
+		}
+
+		$bb_background_updater->data(
+			array(
+				'type'     => 'notification',
+				'group'    => 'send_notifications_to_subscribers',
+				'data_id'  => $item_id,
+				'priority' => 5,
+				'callback' => 'bb_send_notifications_to_subscribers_batch',
+				'args'     => array( $fanout_args ),
+			)
+		);
+		$bb_background_updater->save();
+		$bb_background_updater->dispatch();
+
+		return;
+	}
+
+	// Small list: bounded by the threshold above, so fetching it in-request is safe.
+	$subscriptions = bb_get_subscription_users(
+		array(
+			'type'    => $type,
+			'item_id' => $item_id,
+			'blog_id' => $blog_id,
+			'status'  => true,
+		)
+	);
+
+	if ( empty( $subscriptions['subscriptions'] ) ) {
+		return;
+	}
+
 	$background_process = false;
 	if (
 		isset( $subscriptions['total'] ) &&
@@ -1160,7 +1237,13 @@ function bb_send_notifications_to_subscribers( $args ) {
 	}
 
 	if ( true === $background_process ) {
-		global $bb_background_updater;
+		// The queued send jobs rebuild the activity from data.activity_id; drop the
+		// serialized object copy so each queue row stays small. The direct-call path
+		// below keeps the object (no serialization involved).
+		if ( isset( $parse_args['data']['email_tokens']['tokens']['activity'] ) && is_object( $parse_args['data']['email_tokens']['tokens']['activity'] ) ) {
+			unset( $parse_args['data']['email_tokens']['tokens']['activity'] );
+		}
+
 		$chunk_user_ids = array_chunk( $subscriptions['subscriptions'], $min_count );
 		if ( ! empty( $chunk_user_ids ) ) {
 			foreach ( $chunk_user_ids as $user_ids ) {
@@ -1454,4 +1537,235 @@ function bb_create_group_member_subscriptions( $group_id = 0, $member_ids = arra
 	}
 
 	groups_update_groupmeta( $group_id, 'bb_subscription_migrated_v2', 'yes' );
+}
+
+/**
+ * Background worker: fan out subscription notifications for one page of subscribers.
+ *
+ * Queued by bb_send_notifications_to_subscribers() when an item has more
+ * subscribers than the background fan-out threshold. Fetches one keyset page of
+ * subscriber IDs (sc.id > last_id), queues the regular per-chunk send jobs for
+ * that page, then re-queues itself for the next page until the list is
+ * exhausted. Keeps the originating web request O(1) regardless of subscriber
+ * count (PROD-10238).
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $args {
+ *     An array of arguments.
+ *     @type string $type              Required. The subscription type.
+ *     @type int    $item_id           Required. The ID of the item.
+ *     @type int    $blog_id           Optional. The blog ID the subscriptions belong to.
+ *                                     Default current site ID.
+ *     @type array  $data              Optional. Additional data for the notification.
+ *     @type string $notification_type Optional. The registered notification type.
+ *     @type string $notification_from Optional. The notification source.
+ *     @type array  $usernames         Optional. Mentioned usernames handled separately by the send callback.
+ *     @type int    $last_id           Optional. Highest subscription row ID already processed
+ *                                     (keyset cursor). Default 0.
+ *     @type int    $per_page          Optional. Subscribers fetched per page. Default 1000.
+ * }
+ *
+ * @return false Always false so the processed queue row is removed
+ *               (a truthy return re-runs the row — see BB_Background_Updater::task()).
+ */
+function bb_send_notifications_to_subscribers_batch( $args ) {
+	$r = bp_parse_args(
+		$args,
+		array(
+			'type'              => '',
+			'item_id'           => 0,
+			'blog_id'           => get_current_blog_id(),
+			'data'              => array(),
+			'notification_type' => '',
+			'notification_from' => '',
+			'last_id'           => 0,
+			'per_page'          => 1000,
+		)
+	);
+
+	$type    = $r['type'];
+	$item_id = $r['item_id'];
+
+	if ( empty( $type ) || empty( $item_id ) ) {
+		return false;
+	}
+
+	// Re-resolve the send callback at run time instead of serializing the
+	// notification class instance into the queue row; bail gracefully when the
+	// type has been unregistered since the job was queued.
+	$type_data = bb_register_subscriptions_types( $type );
+	if (
+		empty( $type_data ) ||
+		empty( $type_data['send_callback'] ) ||
+		! is_callable( $type_data['send_callback'] )
+	) {
+		return false;
+	}
+
+	$switched = false;
+	if ( is_multisite() && get_current_blog_id() !== (int) $r['blog_id'] ) {
+		switch_to_blog( $r['blog_id'] );
+		$switched = true;
+	}
+
+	// A non-positive per_page would drop the LIMIT clause entirely and fetch the
+	// whole list in one background request — clamp it.
+	$per_page = max( 1, (int) $r['per_page'] );
+	$last_id  = (int) $r['last_id'];
+
+	// Keyset pagination (sc.id > last processed id) instead of page/offset:
+	// offsets shift when rows are deleted mid-fan-out (unsubscribes), silently
+	// skipping subscribers. The ID page is the authority for advancing the
+	// cursor; user IDs are resolved from it in a second bounded query, so a row
+	// deleted between the two queries just drops out without derailing the
+	// chain. Force-cache (second arg true) bypasses the per-args static cache,
+	// which cannot see the keyset filter and would replay the first page
+	// forever. cache => false additionally skips the incremented-cache read so
+	// each page is fetched fresh.
+	$bb_fanout_keyset_where = function ( $where_conditions ) use ( $last_id ) {
+		$where_conditions['bb_fanout_keyset'] = 'sc.id > ' . $last_id;
+
+		return $where_conditions;
+	};
+	add_filter( 'bb_subscriptions_get_where_conditions', $bb_fanout_keyset_where );
+
+	$id_page = bb_get_subscription_users(
+		array(
+			'type'     => $type,
+			'item_id'  => $item_id,
+			'blog_id'  => $r['blog_id'],
+			'status'   => true,
+			'fields'   => 'id',
+			'per_page' => $per_page,
+			'page'     => 1,
+			'order_by' => 'id',
+			'order'    => 'ASC',
+			'count'    => false,
+			'cache'    => false,
+		),
+		true
+	);
+
+	remove_filter( 'bb_subscriptions_get_where_conditions', $bb_fanout_keyset_where );
+
+	$subscription_ids = ! empty( $id_page['subscriptions'] ) ? $id_page['subscriptions'] : array();
+
+	if ( empty( $subscription_ids ) ) {
+		if ( $switched ) {
+			restore_current_blog();
+		}
+
+		return false;
+	}
+
+	// Deterministic id ASC ordering (the default date_recorded DESC has heavy
+	// ties) so a re-run composes byte-identical chunk rows — that is what lets
+	// the queue's twin-row cleanup and the idempotency guard below dedupe them.
+	$user_page = bb_get_subscription_users(
+		array(
+			'type'     => $type,
+			'item_id'  => $item_id,
+			'blog_id'  => $r['blog_id'],
+			'status'   => true,
+			'include'  => $subscription_ids,
+			'order_by' => 'id',
+			'order'    => 'ASC',
+			'count'    => false,
+			'cache'    => false,
+		),
+		true
+	);
+
+	$user_ids = ! empty( $user_page['subscriptions'] ) ? $user_page['subscriptions'] : array();
+
+	global $bb_background_updater, $wpdb;
+
+	$min_count  = (int) apply_filters( 'bb_subscription_queue_min_count', 20 );
+	$parse_args = array(
+		'type'              => $type,
+		'item_id'           => $item_id,
+		'blog_id'           => $r['blog_id'],
+		'data'              => $r['data'],
+		'notification_type' => $r['notification_type'],
+		'notification_from' => $r['notification_from'],
+	);
+
+	if ( ! empty( $r['usernames'] ) ) {
+		$parse_args['usernames'] = $r['usernames'];
+	}
+
+	$chunk_user_ids = array_chunk( $user_ids, $min_count );
+	foreach ( $chunk_user_ids as $chunk ) {
+		$parse_args['user_ids'] = $chunk;
+
+		$bb_background_updater->data(
+			array(
+				'type'     => 'notification',
+				'group'    => 'send_notifications_to_subscribers',
+				'data_id'  => $item_id,
+				'priority' => 5,
+				'callback' => $type_data['send_callback'],
+				'args'     => array( $parse_args ),
+			)
+		);
+
+		$bb_background_updater->save();
+	}
+
+	// A full ID page means more subscribers may remain: queue the next page,
+	// keyed by the last subscription row ID of this page (termination is based
+	// on the ID page, not the user resolution, so a row deleted between the two
+	// queries can never abandon the chain). Row ordering (priority, id) runs
+	// this page's send jobs before the next page's fan-out row, which naturally
+	// paces the queue.
+	if ( count( $subscription_ids ) === $per_page ) {
+		$next_args             = $r;
+		$next_args['last_id']  = (int) end( $subscription_ids );
+		$next_args['per_page'] = $per_page;
+
+		// Idempotency guard: the queue runner re-runs a not-yet-deleted row on
+		// lock expiry or mid-task fatal; without this check that re-run would
+		// fork a second self-requeueing chain and double-notify the remainder
+		// of the list. Matching the exact serialized payload mirrors the core
+		// duplicate-row cleanup in
+		// bb_background_remove_duplicate_async_request_batch_process().
+		$next_row_data = array(
+			'callback' => 'bb_send_notifications_to_subscribers_batch',
+			'args'     => array( $next_args ),
+		);
+
+		$table_name    = $bb_background_updater::$table_name;
+		$existing_next = $wpdb->get_var( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+			$wpdb->prepare(
+				"SELECT id FROM {$table_name} WHERE `group` = %s AND `data_id` = %s AND `data` = %s LIMIT 1", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+				'send_notifications_to_subscribers',
+				$item_id,
+				maybe_serialize( $next_row_data )
+			)
+		);
+
+		if ( empty( $existing_next ) ) {
+			$bb_background_updater->data(
+				array(
+					'type'     => 'notification',
+					'group'    => 'send_notifications_to_subscribers',
+					'data_id'  => $item_id,
+					'priority' => 5,
+					'callback' => 'bb_send_notifications_to_subscribers_batch',
+					'args'     => array( $next_args ),
+				)
+			);
+
+			$bb_background_updater->save();
+		}
+	}
+
+	$bb_background_updater->dispatch();
+
+	if ( $switched ) {
+		restore_current_blog();
+	}
+
+	return false;
 }

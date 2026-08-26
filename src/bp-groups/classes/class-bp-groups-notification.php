@@ -1139,6 +1139,13 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 				return false;
 			}
 
+			// Queued jobs carry only data.activity_id (the serialized activity object
+			// is stripped to keep queue rows small — PROD-10238); the email renderer
+			// (BP_Email_Tokens::token__group_activity_content) requires the object, so
+			// always provide the resolved one. Idempotent for legacy rows that still
+			// carry the object.
+			$r['data']['email_tokens']['tokens']['activity'] = $activity;
+
 			$type_key                = 'bb_groups_subscribed_activity';
 			$email_notification_type = 'groups-new-activity';
 			$author_id               = ! empty( $activity->user_id ) ? $activity->user_id : 0;

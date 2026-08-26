@@ -801,6 +801,38 @@ if ( ! class_exists( 'BB_Subscriptions' ) ) {
 			if ( 'id' === $r['fields'] ) {
 				// We only want the IDs.
 				$paged_subscriptions = array_map( 'intval', $paged_subscription_ids );
+			} elseif ( 'all' !== $r['fields'] ) {
+				// Single-column fetch (e.g. 'user_id'): read the column directly instead
+				// of hydrating full subscription objects. Hydration warms the per-row
+				// object cache and instantiates one object per row, so an unbounded
+				// result set (large-group notification fan-out) issues one cache write
+				// per subscriber and exhausts request memory under a persistent object
+				// cache (PROD-10238). Skips the per-row cache warm-up; readers fall back
+				// to the database on cache miss.
+				$paged_subscriptions = array();
+
+				// validate_column() already coerced unknown values to 'all' (handled by
+				// the branch below), so this re-check can never fail in practice; it only
+				// keeps the column interpolation locally auditable.
+				if ( ! empty( $paged_subscription_ids ) && in_array( $r['fields'], self::get_tbl_columns(), true ) ) {
+					$subscription_ids_sql = implode( ',', array_map( 'intval', $paged_subscription_ids ) );
+					$column_results       = $wpdb->get_results( "SELECT sc.id, sc.{$r['fields']} FROM {$subscription_tbl} sc WHERE sc.id IN ({$subscription_ids_sql})" ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+
+					$column_map = array();
+					foreach ( $column_results as $column_result ) {
+						$column_map[ (int) $column_result->id ] = $column_result->{$r['fields']};
+					}
+
+					// Integer columns are cast so the return matches the previous
+					// object-hydration path, which returned (int)-cast properties.
+					$is_int_column = in_array( $r['fields'], array( 'id', 'blog_id', 'user_id', 'item_id', 'secondary_item_id', 'status' ), true );
+
+					foreach ( $paged_subscription_ids as $paged_subscription_id ) {
+						if ( isset( $column_map[ (int) $paged_subscription_id ] ) ) {
+							$paged_subscriptions[] = $is_int_column ? (int) $column_map[ (int) $paged_subscription_id ] : $column_map[ (int) $paged_subscription_id ];
+						}
+					}
+				}
 			} else {
 				$uncached_subscription_ids = bp_get_non_cached_ids( $paged_subscription_ids, 'bb_subscriptions' );
 				if ( $uncached_subscription_ids ) {
@@ -814,10 +846,6 @@ if ( ! class_exists( 'BB_Subscriptions' ) ) {
 				$paged_subscriptions = array();
 				foreach ( $paged_subscription_ids as $paged_subscription_id ) {
 					$paged_subscriptions[] = new BB_Subscriptions( $paged_subscription_id, ( 'all' === $r['fields'] ) );
-				}
-
-				if ( 'all' !== $r['fields'] ) {
-					$paged_subscriptions = array_column( $paged_subscriptions, $r['fields'] );
 				}
 			}
 

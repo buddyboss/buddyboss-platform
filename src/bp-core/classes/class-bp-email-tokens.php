@@ -2453,6 +2453,13 @@ class BP_Email_Tokens {
 		$settings = bp_email_get_appearance_settings();
 		$activity = isset( $tokens['activity'] ) ? $tokens['activity'] : '';
 
+		// Queued notification payloads may omit the activity object (PROD-10238);
+		// send callbacks re-inject it, but a third-party callback might not — bail
+		// instead of fataling on property access below.
+		if ( ! is_object( $activity ) || empty( $activity->user_id ) ) {
+			return '';
+		}
+
 		ob_start();
 		?>
 		<table cellspacing="0" cellpadding="0" border="0" width="100%">
