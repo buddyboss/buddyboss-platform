@@ -751,6 +751,7 @@ export function GroupsListScreen( { onNavigate } ) {
 												target="_blank"
 												rel="noopener noreferrer"
 												className="bb-groups-list__group-name"
+												title={ decodeEntities( group.name ) }
 												>
 													{ decodeEntities( group.name ) }
 												</a>
