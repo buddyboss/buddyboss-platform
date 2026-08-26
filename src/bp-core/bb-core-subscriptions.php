@@ -1117,7 +1117,7 @@ function bb_send_notifications_to_subscribers( $args ) {
 
 	// Probe with a single row first. For very large subscriber lists (e.g. a
 	// 70k-member group) fetching every subscriber inside the originating web
-	// request exhausts PHP memory (PROD-10238), so only the total count is
+	// request exhausts PHP memory, so only the total count is
 	// needed here to pick the delivery strategy.
 	$subscriptions = bb_get_subscription_users(
 		array(
@@ -1165,7 +1165,7 @@ function bb_send_notifications_to_subscribers( $args ) {
 	 *
 	 * Above this threshold the subscriber list is never fetched inside the
 	 * originating request; a single background job paginates through the list
-	 * instead. Keeps request memory flat for very large groups/forums (PROD-10238).
+	 * instead. Keeps request memory flat for very large groups/forums.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
@@ -1547,7 +1547,7 @@ function bb_create_group_member_subscriptions( $group_id = 0, $member_ids = arra
  * subscriber IDs (sc.id > last_id), queues the regular per-chunk send jobs for
  * that page, then re-queues itself for the next page until the list is
  * exhausted. Keeps the originating web request O(1) regardless of subscriber
- * count (PROD-10238).
+ * count.
  *
  * @since BuddyBoss [BBVERSION]
  *

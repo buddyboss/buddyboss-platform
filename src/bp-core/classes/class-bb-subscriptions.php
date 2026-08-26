@@ -807,7 +807,7 @@ if ( ! class_exists( 'BB_Subscriptions' ) ) {
 				// object cache and instantiates one object per row, so an unbounded
 				// result set (large-group notification fan-out) issues one cache write
 				// per subscriber and exhausts request memory under a persistent object
-				// cache (PROD-10238). Skips the per-row cache warm-up; readers fall back
+				// cache. Skips the per-row cache warm-up; readers fall back
 				// to the database on cache miss.
 				$paged_subscriptions = array();
 

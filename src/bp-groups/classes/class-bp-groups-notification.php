@@ -1140,7 +1140,7 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 			}
 
 			// Queued jobs carry only data.activity_id (the serialized activity object
-			// is stripped to keep queue rows small — PROD-10238); the email renderer
+			// is stripped to keep queue rows small); the email renderer
 			// (BP_Email_Tokens::token__group_activity_content) requires the object, so
 			// always provide the resolved one. Idempotent for legacy rows that still
 			// carry the object.
