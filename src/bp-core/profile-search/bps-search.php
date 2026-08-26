@@ -47,6 +47,10 @@ function bp_ps_set_request() {
 		}
 	}
 
+	// Search query string for the non-persistent redirect below (see PRG note).
+	// Empty for a "clear" submission and for persistent mode (which uses the cookie).
+	$redirect_query = '';
+
 	if ( isset( $_REQUEST[ BP_PS_FORM ] ) ) {
 
 		$cookie = apply_filters( 'bp_ps_cookie_name', 'bp_ps_request' );
@@ -86,37 +90,45 @@ function bp_ps_set_request() {
 
 			$filtered_request['bp_ps_directory'] = bp_ps_current_page();
 
-			setcookie( $cookie, http_build_query( $filtered_request ), 0, COOKIEPATH );
+			$redirect_query = http_build_query( $filtered_request );
+			setcookie( $cookie, $redirect_query, 0, COOKIEPATH );
 		} else {
 			setcookie( $cookie, '', 0, COOKIEPATH );
 		}
 	}
 
-	// Post/Redirect/Get: the form posts to the directory, so its
-	// result is a POST page; on a `no-store` logged-in page the browser Back
-	// button then shows "Confirm Form Resubmission / ERR_CACHE_MISS". Redirect
-	// to the same URL without a query string so Back lands on a GET page; the
-	// search is re-read from the bp_ps_request cookie set above (see
-	// bp_ps_get_request()/bp_ps_filter_members()), so nothing is exposed in the URL.
-	//
-	// Two non-obvious guards: fire only on a real form POST — the redirected GET
-	// has no BP_PS_FORM, so it never loops — and only when persistent search is
-	// on, since otherwise the block above clears the cookie on the formless
-	// redirected GET, dropping the search. Skip AJAX/REST.
+	// Post/Redirect/Get: the form posts to the directory, so its result is a
+	// POST page; on a `no-store` logged-in page the browser Back button then
+	// shows "Confirm Form Resubmission / ERR_CACHE_MISS". Redirect the POST to a
+	// GET so Back lands on a cacheable page. How the search survives the redirect
+	// depends on the persistent-search mode. Persistent ON (default): redirect to
+	// the same URL WITHOUT a query string; the search is re-read from the
+	// bp_ps_request cookie set above (see bp_ps_get_request()/bp_ps_filter_members()),
+	// so nothing is exposed in the URL. Persistent OFF: that mode deliberately
+	// clears the cookie on any formless request (the redirected GET), so the
+	// cookie cannot carry the search; redirect WITH the search as query params
+	// instead. Params in the URL are acceptable in this non-default mode, and
+	// BP_PS_FORM in the query keeps the cookie from being cleared and is read
+	// back by bp_ps_get_request().
+	// Guards: fire only on a real form POST (the redirected GET has no $_POST, so
+	// it never loops); skip AJAX/REST.
 	if (
-		$persistent
 		// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Read-only presence check of the search-form marker; profile search performs no state change and the whole flow is intentionally nonce-less (matching the $_REQUEST reads above).
-		&& isset( $_POST[ BP_PS_FORM ] )
+		isset( $_POST[ BP_PS_FORM ] )
 		&& ! wp_doing_ajax()
 		&& ! ( function_exists( 'bb_is_rest' ) && bb_is_rest() )
 		&& isset( $_SERVER['REQUEST_URI'] )
 	) {
 		$redirect_path = wp_parse_url( sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ), PHP_URL_PATH );
 		if ( ! empty( $redirect_path ) ) {
+			$redirect_url = $redirect_path;
+			if ( ! $persistent && ! empty( $redirect_query ) ) {
+				$redirect_url .= '?' . $redirect_query;
+			}
 			// 303 See Other is the spec-correct status for a POST -> GET redirect
 			// (guarantees the follow-up request is a GET, rather than relying on
 			// the de-facto browser downgrade of a 302 POST).
-			wp_safe_redirect( $redirect_path, 303 );
+			wp_safe_redirect( $redirect_url, 303 );
 			exit;
 		}
 	}
