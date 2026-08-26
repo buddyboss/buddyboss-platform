@@ -172,6 +172,12 @@ export function GroupsListScreen( { onNavigate } ) {
 	var deleteTargetIds = deleteTargetIdsState[ 0 ];
 	var setDeleteTargetIds = deleteTargetIdsState[ 1 ];
 
+	// Only set for a single-group delete, so the confirmation can name the
+	// group being deleted; left blank for bulk deletes (see handleBulkApply).
+	var deleteTargetNameState = useState( '' );
+	var deleteTargetName = deleteTargetNameState[ 0 ];
+	var setDeleteTargetName = deleteTargetNameState[ 1 ];
+
 	var deleteConfirmState = useState( false );
 	var deleteConfirmChecked = deleteConfirmState[ 0 ];
 	var setDeleteConfirmChecked = deleteConfirmState[ 1 ];
@@ -396,6 +402,7 @@ export function GroupsListScreen( { onNavigate } ) {
 
 		if ( 'delete' === action ) {
 			setDeleteTargetIds( selectedIds.slice() );
+			setDeleteTargetName( '' );
 			setDeleteConfirmChecked( false );
 			setDeleteModalOpen( true );
 			return;
@@ -424,6 +431,7 @@ export function GroupsListScreen( { onNavigate } ) {
 	 */
 	var handleDeleteGroup = function ( group ) {
 		setDeleteTargetIds( [ group.id ] );
+		setDeleteTargetName( group.name );
 		setDeleteConfirmChecked( false );
 		setDeleteModalOpen( true );
 	};
@@ -884,7 +892,15 @@ export function GroupsListScreen( { onNavigate } ) {
 							{ __( 'Deleting groups will remove them from the community and the WordPress backend listings. They will no longer appear in the group directory, and all associated data and posts will be permanently deleted.', 'buddyboss' ) }
 						</p>
 						<CheckboxControl
-							label={ __( 'I understand this will permanently delete the group.', 'buddyboss' ) }
+							label={
+								1 === deleteTargetIds.length && deleteTargetName
+									? sprintf(
+											/* translators: %s: group name. */
+											__( 'I understand this will permanently delete "%s".', 'buddyboss' ),
+											decodeEntities( deleteTargetName )
+									  )
+									: __( 'I understand this will permanently delete the selected groups.', 'buddyboss' )
+							}
 							checked={ deleteConfirmChecked }
 							onChange={ setDeleteConfirmChecked }
 							__nextHasNoMarginBottom
