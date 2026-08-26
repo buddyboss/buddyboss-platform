@@ -1592,6 +1592,15 @@ function bb_send_notifications_to_subscribers_batch( $args ) {
 		return false;
 	}
 
+	// Switch to the target site BEFORE resolving the type: on multisite with
+	// per-site component activation, the dispatching site's registered
+	// subscription types can differ from the target site's.
+	$switched = false;
+	if ( is_multisite() && get_current_blog_id() !== (int) $r['blog_id'] ) {
+		switch_to_blog( $r['blog_id'] );
+		$switched = true;
+	}
+
 	// Re-resolve the send callback at run time instead of serializing the
 	// notification class instance into the queue row; bail gracefully when the
 	// type has been unregistered since the job was queued.
@@ -1601,13 +1610,11 @@ function bb_send_notifications_to_subscribers_batch( $args ) {
 		empty( $type_data['send_callback'] ) ||
 		! is_callable( $type_data['send_callback'] )
 	) {
-		return false;
-	}
+		if ( $switched ) {
+			restore_current_blog();
+		}
 
-	$switched = false;
-	if ( is_multisite() && get_current_blog_id() !== (int) $r['blog_id'] ) {
-		switch_to_blog( $r['blog_id'] );
-		$switched = true;
+		return false;
 	}
 
 	// A non-positive per_page would drop the LIMIT clause entirely and fetch the
