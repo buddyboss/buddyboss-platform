@@ -711,9 +711,7 @@ function bp_nouveau_ajax_video_delete() {
 	$group_video_html_content = '';
 	if ( bp_is_group_video() ) {
 
-		// Update the count of photos in groups in navigation menu.
-		wp_cache_flush();
-
+		// Group video count caches are invalidated on delete via `bp_video_before_delete`.
 		$video_group_count = bp_video_get_total_group_video_count();
 
 		add_filter( 'bp_ajax_querystring', 'bp_video_object_template_results_video_groups_scope', 20 );
@@ -744,12 +742,6 @@ function bp_nouveau_ajax_video_delete() {
 		}
 
 		$group_video_html_content = ob_get_clean();
-	}
-
-	if ( bp_is_group_albums() ) {
-
-		// Update the count of photos in groups in navigation menu when you are in single albums page.
-		wp_cache_flush();
 	}
 
 	// Get album counts after deletion if we were in an album.
@@ -857,9 +849,6 @@ function bp_nouveau_ajax_video_move_to_album() {
 
 		$video_ids[] = $video_id;
 	}
-
-	// Flush the cache.
-	wp_cache_flush();
 
 	$video_html = '';
 	if ( ! empty( $video_ids ) ) {
@@ -1766,9 +1755,6 @@ function bp_nouveau_ajax_video_move() {
 	}
 
 	$video = bp_video_move_video_to_album( $video_id, $album_id, $group_id );
-
-	// Flush the cache.
-	wp_cache_flush();
 
 	$response = bp_video_get_activity_video( $activity_id );
 
