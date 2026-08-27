@@ -1638,6 +1638,23 @@ function bb_send_notifications_to_subscribers_batch( $args ) {
 		return false;
 	}
 
+	// The source activity can be deleted mid-chain. The per-chunk send
+	// callbacks would each no-op on it, but without this check the worker
+	// would keep paginating the full subscriber list queueing dead jobs.
+	if ( ! empty( $r['data']['activity_id'] ) && bp_is_active( 'activity' ) && class_exists( 'BP_Activity_Activity' ) ) {
+		$fanout_activity = new BP_Activity_Activity( (int) $r['data']['activity_id'] );
+
+		if ( empty( $fanout_activity->id ) ) {
+			delete_option( $fanout_cursor_key );
+
+			if ( $switched ) {
+				restore_current_blog();
+			}
+
+			return false;
+		}
+	}
+
 	// Keyset pagination (sc.id > last processed id) instead of page/offset:
 	// offsets shift when rows are deleted mid-fan-out (unsubscribes), silently
 	// skipping subscribers. The ID page is the authority for advancing the
