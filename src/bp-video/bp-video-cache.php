@@ -139,6 +139,9 @@ add_action( 'bp_video_add', 'bp_video_clear_video_group_object_cache', 10 );
  * Clear a group's cached video count when delete.
  *
  * @since BuddyBoss 1.7.0
+ * @since BuddyBoss [BBVERSION] Fixed iteration over the deleted video rows
+ *              so the group video count cache is actually cleared for every
+ *              affected group.
  *
  * @param array $videos DB results of video items.
  */
@@ -224,6 +227,9 @@ add_action( 'bp_video_album_add', 'bp_video_clear_album_group_object_cache', 10 
  * Clear a group's cached album count when delete.
  *
  * @since BuddyBoss 1.7.0
+ * @since BuddyBoss [BBVERSION] Fixed iteration over the deleted album rows
+ *              so the group album count cache is actually cleared for every
+ *              affected group.
  *
  * @param array $albums DB results of album items.
  */

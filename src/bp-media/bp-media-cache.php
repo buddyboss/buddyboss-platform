@@ -80,6 +80,7 @@ function bp_media_reset_cache_incrementor() {
 add_action( 'bp_media_delete', 'bp_media_reset_cache_incrementor' );
 add_action( 'bp_media_add', 'bp_media_reset_cache_incrementor' );
 add_action( 'bp_video_add', 'bp_media_reset_cache_incrementor' );
+add_action( 'bp_media_after_save', 'bp_media_reset_cache_incrementor' );
 
 /**
  * Clear a user's cached media count.
@@ -275,6 +276,9 @@ add_action( 'bp_album_add', 'bp_media_clear_album_group_object_cache', 10 );
  * Clear a group's cached album count when delete.
  *
  * @since BuddyBoss 1.2.0
+ * @since BuddyBoss [BBVERSION] Fixed iteration over the deleted album rows
+ *              so the group album count cache is actually cleared for every
+ *              affected group.
  *
  * @param array $albums DB results of album items.
  */
