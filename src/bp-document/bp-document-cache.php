@@ -149,8 +149,8 @@ add_action( 'bp_document_add', 'bp_document_clear_document_group_object_cache', 
  * @param array $documents DB results of document items.
  */
 function bp_document_clear_document_group_object_cache_on_delete( $documents ) {
-	if ( ! empty( $documents[0] ) ) {
-		foreach ( (array) $documents[0] as $deleted_document ) {
+	if ( ! empty( $documents ) ) {
+		foreach ( (array) $documents as $deleted_document ) {
 			$group_id = ! empty( $deleted_document->group_id ) ? $deleted_document->group_id : false;
 
 			if ( $group_id ) {
@@ -232,8 +232,8 @@ add_action( 'bp_folder_add', 'bp_document_clear_folder_group_object_cache', 10 )
  * @param array $folders DB results of folder items.
  */
 function bp_document_clear_folder_group_object_cache_on_delete( $folders ) {
-	if ( ! empty( $folders[0] ) ) {
-		foreach ( (array) $folders[0] as $deleted_folder ) {
+	if ( ! empty( $folders ) ) {
+		foreach ( (array) $folders as $deleted_folder ) {
 			$group_id = ! empty( $deleted_folder->group_id ) ? $deleted_folder->group_id : false;
 
 			if ( $group_id ) {

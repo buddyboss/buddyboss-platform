@@ -1480,16 +1480,26 @@ add_filter( 'authenticate', 'bp_core_boot_spammer', 30 );
  * Delete last_activity data for the user when the user is deleted.
  *
  * @since BuddyPress 1.0.0
+ * @since BuddyBoss [BBVERSION] Replaced the global `wp_cache_flush()` with
+ *              targeted cache deletions scoped to the affected user, so the
+ *              rest of the object cache stays warm when a user is deleted
+ *              or marked as a spammer.
  *
  * @param int $user_id The user ID for the user to delete usermeta for.
  */
 function bp_core_remove_data( $user_id ) {
 
-	// Remove last_activity data.
+	// Remove last_activity data. Clears its own 'bp_last_activity' cache entry.
 	BP_Core_User::delete_last_activity( $user_id );
 
-	// Flush the cache to remove the user from all cached objects.
-	wp_cache_flush();
+	// Remove the user's cached objects without flushing the entire object cache.
+	bp_core_clear_user_object_cache( $user_id );
+	// Clear the user's profile type and `bb_user` query caches. Also hooked to
+	// `delete_user`/`wpmu_delete_user` directly; called here so the
+	// `bp_make_spam_user` flow is covered as well.
+	bp_members_clear_member_type_cache( $user_id );
+	// Clear member count caches and transients.
+	bp_core_clear_member_count_caches();
 }
 add_action( 'wpmu_delete_user', 'bp_core_remove_data' );
 add_action( 'delete_user', 'bp_core_remove_data' );
