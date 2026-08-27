@@ -735,8 +735,15 @@ if ( ! class_exists( 'BB_Subscriptions' ) ) {
 			}
 
 			/* Order/orderby ********************************************/
-			$order           = bp_esc_sql_order( $r['order'] );
-			$order_by        = $r['order_by'];
+			$order    = bp_esc_sql_order( $r['order'] );
+			$order_by = $r['order_by'];
+
+			// Whitelist: the value is interpolated into the ORDER BY clause
+			// below. 'rand()' and 'in' are special-cased there; anything else
+			// must be a real table column.
+			if ( ! in_array( $order_by, array_merge( self::get_tbl_columns(), array( 'rand()', 'in' ) ), true ) ) {
+				$order_by = 'date_recorded';
+			}
 			$sql['order_by'] = "ORDER BY {$order_by} {$order}";
 
 			// Random order is a special case.
