@@ -1601,22 +1601,6 @@ function bb_send_notifications_to_subscribers_batch( $args ) {
 		$switched = true;
 	}
 
-	// Re-resolve the send callback at run time instead of serializing the
-	// notification class instance into the queue row; bail gracefully when the
-	// type has been unregistered since the job was queued.
-	$type_data = bb_register_subscriptions_types( $type );
-	if (
-		empty( $type_data ) ||
-		empty( $type_data['send_callback'] ) ||
-		! is_callable( $type_data['send_callback'] )
-	) {
-		if ( $switched ) {
-			restore_current_blog();
-		}
-
-		return false;
-	}
-
 	// A non-positive per_page would drop the LIMIT clause entirely and fetch the
 	// whole list in one background request — clamp it.
 	$per_page = max( 1, (int) $r['per_page'] );
@@ -1632,6 +1616,26 @@ function bb_send_notifications_to_subscribers_batch( $args ) {
 	$fanout_done_to    = (int) get_option( $fanout_cursor_key, 0 );
 	if ( $last_id < $fanout_done_to ) {
 		$last_id = $fanout_done_to;
+	}
+
+	// Re-resolve the send callback at run time instead of serializing the
+	// notification class instance into the queue row; bail gracefully when the
+	// type has been unregistered since the job was queued.
+	$type_data = bb_register_subscriptions_types( $type );
+	if (
+		empty( $type_data ) ||
+		empty( $type_data['send_callback'] ) ||
+		! is_callable( $type_data['send_callback'] )
+	) {
+		// The chain dies here (returning false deletes the queue row), so the
+		// cursor would otherwise leak as a stale option.
+		delete_option( $fanout_cursor_key );
+
+		if ( $switched ) {
+			restore_current_blog();
+		}
+
+		return false;
 	}
 
 	// Keyset pagination (sc.id > last processed id) instead of page/offset:
