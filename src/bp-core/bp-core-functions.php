@@ -10918,7 +10918,7 @@ function bb_get_tool_usage() {
  * reach the Mothership API, or `BB_DRM_Helper::is_valid()`, which returns true
  * on development environments by design. This function runs on every request.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.4.3
  *
  * @return bool True if a paid BuddyBoss product was detected.
  */
@@ -10975,7 +10975,7 @@ function bb_has_paid_product() {
 	 * Applied on every call rather than memoized alongside the detection
 	 * result, so a callback added after the first call is still honoured.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.4.3
 	 *
 	 * @param bool $detected Whether a paid product was detected.
 	 */

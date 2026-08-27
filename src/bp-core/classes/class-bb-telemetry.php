@@ -328,7 +328,7 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 		 * Check if the domain is allowlisted for telemetry data.
 		 *
 		 * @since BuddyBoss 2.7.40
-		 * @since BuddyBoss [BBVERSION] Reads the host from `site_url()` instead of
+		 * @since BuddyBoss 3.4.3 Reads the host from `site_url()` instead of
 		 *              `$_SERVER['SERVER_NAME']` (which is empty under WP-Cron, where
 		 *              telemetry actually sends from), checks a filterable domain
 		 *              allowlist (`bb_telemetry_whitelist_domains`) anchored to
@@ -361,7 +361,7 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 			 * `platform.ddev.site`, but never `notddev.site`. A leading dot is
 			 * optional; bare TLD entries such as `test` exclude that TLD.
 			 *
-			 * @since BuddyBoss [BBVERSION]
+			 * @since BuddyBoss 3.4.3
 			 *
 			 * @param array $whitelist_domain Hostnames or domain suffixes to exclude.
 			 */
@@ -407,7 +407,7 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 		/**
 		 * Get the delivery-health record for telemetry sends.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.4.3
 		 *
 		 * @return array {
 		 *     @type string $last_attempt         GMT datetime of the last send attempt, empty if never.
@@ -436,7 +436,7 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 		 * Clears the failure streak and any pending retry so a stale retry
 		 * cannot fire after recovery.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.4.3
 		 */
 		protected function bb_record_delivery_success() {
 			$retry_timestamp = wp_next_scheduled( 'bb_telemetry_report_retry_event' );
@@ -464,7 +464,7 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 		 * whose egress is permanently blocked just keeps its weekly attempt —
 		 * and any recovery resets the ladder.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.4.3
 		 *
 		 * @param string $error_message Why the delivery failed.
 		 */
@@ -716,7 +716,7 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 		 * mode the plan and status are still reported, but nothing that ties the
 		 * payload back to a customer record — which is what that mode promises.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.4.3
 		 *
 		 * @return array Licence data for the Platform and, when present, the Theme.
 		 */
@@ -766,7 +766,7 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 			/**
 			 * Filters the licence data reported by telemetry.
 			 *
-			 * @since BuddyBoss [BBVERSION]
+			 * @since BuddyBoss 3.4.3
 			 *
 			 * @param array $data        Licence data.
 			 * @param bool  $include_key Whether the raw licence key is included.
@@ -782,7 +782,7 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 		 * product. In that case the theme has no licence of its own to report and
 		 * the platform entitlement is what applies.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.4.3
 		 *
 		 * @param string $plugin_id    Platform plan identifier.
 		 * @param string $license_key  Platform licence key.
@@ -841,7 +841,7 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 		/**
 		 * Build the licence payload for a single Mothership product id.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.4.3
 		 *
 		 * @param string $plugin_id   Mothership plugin id, which is also the plan.
 		 * @param string $license_key Licence key already resolved for this plan.
@@ -899,7 +899,7 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 		 * `BB_DRM_Registry::get_addons_by_drm_status()`, which calls
 		 * `is_addon_licensed()` and can reach the Mothership API.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.4.3
 		 *
 		 * @return array DRM scenario, stage and elapsed days.
 		 */
@@ -935,7 +935,7 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 			/**
 			 * Filters the DRM data reported by telemetry.
 			 *
-			 * @since BuddyBoss [BBVERSION]
+			 * @since BuddyBoss 3.4.3
 			 *
 			 * @param array $data DRM scenario, stage and elapsed days.
 			 */
@@ -948,7 +948,7 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 		 * Mirrors the boundaries in `BB_DRM_NoKey::run()`, `BB_DRM_Invalid::run()`
 		 * and `BB_DRM_Addon::run()`, which are identical.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.4.3
 		 *
 		 * @param string $event_name DRM event name, e.g. `no-license` or `addon-{slug}`.
 		 *
@@ -970,7 +970,7 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 		 * Split from bb_get_drm_stage() so the add-on collector can resolve many
 		 * stages from one batched query instead of one query per add-on.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.4.3
 		 *
 		 * @param object|null $event Latest DRM event, or null when there is none.
 		 *
@@ -1017,7 +1017,7 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 		 * Add-on DRM events are named `addon-{sanitized product slug}` and use the
 		 * same escalation ladder as the Platform.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.4.3
 		 *
 		 * @return array Map of product slug => name, version, stage, days, started.
 		 */
@@ -1064,7 +1064,7 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 		 * Replaces one BB_DRM_Event::latest() round trip per registered add-on
 		 * with a single grouped lookup.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.4.3
 		 *
 		 * @param array $event_names DRM event names.
 		 *

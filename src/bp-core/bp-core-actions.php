@@ -1240,7 +1240,7 @@ add_action( 'bp_init', 'bb_telemetry_load' );
  * for now so an older Platform paired with a newer Pro does not lose forced
  * reporting. It can be dropped once this version is the supported floor.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.4.3
  *
  * @param string $mode Telemetry mode: 'complete', 'anonymous', or 'disable'.
  *

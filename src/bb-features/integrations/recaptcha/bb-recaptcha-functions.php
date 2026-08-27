@@ -402,7 +402,7 @@ function bb_recaptcha_conflict_mode() {
  * that legitimately carries no widget and a request whose widget was removed
  * produce a byte-identical body, so only the endpoint can tell them apart.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.4.3
  *
  * @return bool True when the widget was rendered for this endpoint.
  */
@@ -422,7 +422,7 @@ function bb_recaptcha_is_protected_login_request() {
 	 * puts a widget on it. Return true only from server-side state such as a
 	 * stored page ID; never from a submitted field.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.4.3
 	 *
 	 * @param bool $protected Whether this endpoint renders the widget. Default false.
 	 */
@@ -439,7 +439,7 @@ function bb_recaptcha_is_protected_login_request() {
  * WP_DEBUG is on, and throttled to one entry per endpoint per day, so it can
  * never add noise to a production log.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.4.3
  *
  * @return void
  */

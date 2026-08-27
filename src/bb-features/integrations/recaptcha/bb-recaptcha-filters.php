@@ -108,7 +108,7 @@ function bb_recaptcha_validate_login( $user ) {
 	 * client-submitted field, or the check can be bypassed.
 	 *
 	 * @since BuddyBoss 3.4.2
-	 * @since BuddyBoss [BBVERSION] Default changed from true to whether the
+	 * @since BuddyBoss 3.4.3 Default changed from true to whether the
 	 *                              endpoint renders the reCAPTCHA widget.
 	 *
 	 * @param bool             $verify Whether to run reCAPTCHA verification.

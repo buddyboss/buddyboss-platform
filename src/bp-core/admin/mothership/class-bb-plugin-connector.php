@@ -141,7 +141,7 @@ class BB_Plugin_Connector extends AbstractPluginConnection {
 	 * durable copy; the per-SKU option is kept in step for backwards
 	 * compatibility with anything reading it directly.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.4.3
 	 *
 	 * @var string
 	 */

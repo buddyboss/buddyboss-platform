@@ -50,7 +50,7 @@ if ( ! class_exists( 'BB_Report_Metrics' ) ) {
 		 * Deliberately not 'USD'. Attributing unknown revenue to USD inflated the
 		 * USD bucket with every store whose currency could not be read.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.4.3
 		 *
 		 * @var string
 		 */
@@ -63,7 +63,7 @@ if ( ! class_exists( 'BB_Report_Metrics' ) ) {
 		 * store is exhausted, so every order is counted however many there are;
 		 * the constant only bounds how many rows are held in memory at once.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.4.3
 		 *
 		 * @var int
 		 */
@@ -314,7 +314,7 @@ if ( ! class_exists( 'BB_Report_Metrics' ) ) {
 		 *
 		 * An empty bound means no lower bound, i.e. all time.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.4.3
 		 *
 		 * @return array Window name => GMT datetime, or '' for all time.
 		 */
@@ -331,7 +331,7 @@ if ( ! class_exists( 'BB_Report_Metrics' ) ) {
 		/**
 		 * Collect one plugin's revenue for a single window.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.4.3
 		 *
 		 * @param string $plugin_slug Plugin slug.
 		 * @param array  $config      Plugin configuration.
@@ -371,7 +371,7 @@ if ( ! class_exists( 'BB_Report_Metrics' ) ) {
 		 * reports zeros, which is the difference between "not measured" and
 		 * "measured, no revenue".
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.4.3
 		 *
 		 * @param string $plugin_slug Plugin slug.
 		 * @param array  $config      Plugin configuration.
@@ -392,7 +392,7 @@ if ( ! class_exists( 'BB_Report_Metrics' ) ) {
 		 * release can rename a column; probing means such a rename costs the
 		 * window rather than producing a SQL error and a false zero.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.4.3
 		 *
 		 * @param string $table  Fully qualified table name.
 		 * @param string $column Column to look for.
@@ -420,7 +420,7 @@ if ( ! class_exists( 'BB_Report_Metrics' ) ) {
 		/**
 		 * Reduce raw collector data to the reported revenue shape.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.4.3
 		 *
 		 * @param array|object $data Raw collector data.
 		 *
@@ -526,7 +526,7 @@ if ( ! class_exists( 'BB_Report_Metrics' ) ) {
 		/**
 		 * Whether a config can resolve a post type.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.4.3
 		 *
 		 * @param array $config Plugin configuration.
 		 *
@@ -646,7 +646,7 @@ if ( ! class_exists( 'BB_Report_Metrics' ) ) {
 		 * `woocommerce_currency`, and a settings array such as `mepr_options`
 		 * where the code sits under a named index.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.4.3
 		 *
 		 * @param string $option_name Option to read.
 		 * @param string $index       Index to look for when the option is an array.
@@ -677,7 +677,7 @@ if ( ! class_exists( 'BB_Report_Metrics' ) ) {
 		 * return — arrays from settings options, and null when a configured
 		 * `currency_func` did not exist.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.4.3
 		 *
 		 * @param mixed $currency Raw currency value.
 		 *
@@ -908,7 +908,7 @@ if ( ! class_exists( 'BB_Report_Metrics' ) ) {
 		 * the store's base currency, and subtracts refunds instead of discarding
 		 * refunded orders.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.4.3
 		 *
 		 * @param array  $order_statuses Statuses that count as revenue.
 		 * @param string $order_table    Fully qualified HPOS orders table.
@@ -1058,7 +1058,7 @@ if ( ! class_exists( 'BB_Report_Metrics' ) ) {
 		/**
 		 * Net gross rows against refund rows into a per-currency breakdown.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.4.3
 		 *
 		 * @param array $gross_rows  Rows of currency, order_count, revenue.
 		 * @param array $refund_rows Rows of currency, refunded.
@@ -1116,7 +1116,7 @@ if ( ! class_exists( 'BB_Report_Metrics' ) ) {
 		/**
 		 * Normalise a currency code coming back from a query row.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.4.3
 		 *
 		 * @param mixed $currency Raw value.
 		 *
@@ -1135,7 +1135,7 @@ if ( ! class_exists( 'BB_Report_Metrics' ) ) {
 		 * `Transaction::get_formatted_price()`. Fetching only these keeps the
 		 * per-transaction meta read narrow.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.4.3
 		 *
 		 * @return array Meta key names.
 		 */
@@ -1170,7 +1170,7 @@ if ( ! class_exists( 'BB_Report_Metrics' ) ) {
 		 * under its own keys, so this walks the same order and returns the first
 		 * shape that resolves.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.4.3
 		 *
 		 * @param array $meta Meta key => raw meta value for one transaction.
 		 *
@@ -1314,7 +1314,7 @@ if ( ! class_exists( 'BB_Report_Metrics' ) ) {
 		/**
 		 * Walk the LearnDash transaction store once and total every window.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.4.3
 		 *
 		 * @param array $windows Window name => GMT lower bound, '' for all time.
 		 *
@@ -1612,7 +1612,7 @@ if ( ! class_exists( 'BB_Report_Metrics' ) ) {
 		 * `net_payment` is the refund-adjusted figure, so it is summed in
 		 * preference to `total_price`.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.4.3
 		 *
 		 * @param string $since GMT lower bound on the source's own timestamp, '' for all time.
 		 *
@@ -1869,7 +1869,7 @@ if ( ! class_exists( 'BB_Report_Metrics' ) ) {
 		/**
 		 * Sum one post-type order store, grouped by each order's own currency.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.4.3
 		 *
 		 * @param string $post_type    Order post type.
 		 * @param array  $statuses     Post statuses that count as paid.

@@ -141,7 +141,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 * Register the ReadyLaunch telemetry data.
 		 *
 		 * @since BuddyBoss 2.9.00
-		 * @since BuddyBoss [BBVERSION] Added the onboarding wizard's completion flag
+		 * @since BuddyBoss 3.4.3 Added the onboarding wizard's completion flag
 		 *              and progress option. These previously reached telemetry only
 		 *              through transient filters registered mid-AJAX by the wizard
 		 *              itself, so the weekly cron send never carried them and the
