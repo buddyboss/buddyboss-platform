@@ -105,6 +105,7 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 		public function setup_actions() {
 			add_action( 'bb_telemetry_report_cron_event', array( $this, 'bb_send_telemetry_report_to_analytics' ) );
 			add_action( 'bb_telemetry_report_single_cron_event', array( $this, 'bb_send_telemetry_report_to_analytics' ) );
+			add_action( 'bb_telemetry_report_retry_event', array( $this, 'bb_send_telemetry_report_to_analytics' ) );
 			add_action( 'admin_notices', array( $this, 'bb_telemetry_admin_notice' ) );
 			add_action( 'wp_ajax_dismiss_bb_telemetry_notice', array( $this, 'bb_telemetry_notice_dismissed' ) );
 		}
@@ -145,17 +146,21 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 
 			$raw_response = wp_safe_remote_post( base64_decode( $api_url ), $args ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_decode
 			if ( is_wp_error( $raw_response ) ) {
+				$this->bb_record_delivery_failure( $raw_response->get_error_message() );
 				unset( $data, $api_url, $args );
 
 				return $raw_response;
 			}
 
-			if ( 200 !== wp_remote_retrieve_response_code( $raw_response ) ) {
+			$response_code = wp_remote_retrieve_response_code( $raw_response );
+			if ( 200 !== $response_code ) {
+				$this->bb_record_delivery_failure( 'HTTP ' . $response_code . ' ' . wp_remote_retrieve_response_message( $raw_response ) );
 				unset( $data, $api_url, $args );
 
 				return new WP_Error( 'server_error', wp_remote_retrieve_response_message( $raw_response ) );
 			}
 
+			$this->bb_record_delivery_success();
 			unset( $data, $api_url, $args, $raw_response );
 
 			return true;
@@ -222,6 +227,15 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 				$bb_telemetry_data = bbapp_telemetry_data( $bb_telemetry_data );
 			}
 
+			/*
+			 * Delivery health, recorded by the send path. Built before this send
+			 * runs, so `last_success` is the PREVIOUS successful delivery — on
+			 * arrival it tells the receiver exactly how long the site was dark,
+			 * which is what separates "cron or egress was broken" from "opted
+			 * out" for any site that eventually reports again.
+			 */
+			$bb_telemetry_data['bb_telemetry_delivery'] = $this->bb_get_delivery_status();
+
 			$result = array(
 				'uuid' => $this->bb_uuid(),
 				'data' => $bb_telemetry_data,
@@ -240,6 +254,13 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 		 * @return array List of plugins with 'name', 'slug', 'version', and 'active' keys.
 		 */
 		public function bb_get_plugins_data() {
+			// WP-Cron loads no admin includes, so without this the weekly send
+			// reported an empty plugin list with every `active` flag false on
+			// sites where nothing else happened to have loaded plugin.php.
+			if ( ! function_exists( 'get_plugins' ) || ! function_exists( 'is_plugin_active' ) ) {
+				require_once ABSPATH . 'wp-admin/includes/plugin.php';
+			}
+
 			$plugin_list = function_exists( 'get_plugins' ) ? get_plugins() : array();
 			wp_cache_delete( 'plugins', 'plugins' );
 
@@ -307,35 +328,166 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 		 * Check if the domain is allowlisted for telemetry data.
 		 *
 		 * @since BuddyBoss 2.7.40
+		 * @since BuddyBoss [BBVERSION] Reads the host from `site_url()` instead of
+		 *              `$_SERVER['SERVER_NAME']` (which is empty under WP-Cron, where
+		 *              telemetry actually sends from), checks a filterable domain
+		 *              allowlist (`bb_telemetry_whitelist_domains`) anchored to
+		 *              hostname boundaries, and delegates dev/staging detection to
+		 *              `BB_DRM_Helper::is_dev_environment()`, whose matching is
+		 *              anchored to whole hostname labels — a naive substring check
+		 *              excluded real sites such as `nhs.devon.gov.uk` (matched `.dev`).
 		 *
 		 * @return bool True if the domain is not allowlisted, false otherwise.
 		 */
 		public function bb_whitelist_domain_for_telemetry() {
-			$server_name = ! empty( $_SERVER['SERVER_NAME'] ) ? sanitize_text_field( wp_unslash( $_SERVER['SERVER_NAME'] ) ) : '';
+			$host = wp_parse_url( site_url(), PHP_URL_HOST );
+			$host = is_string( $host ) ? strtolower( $host ) : '';
 
-			$whitelist_domain = array(
-				'.test',
-				'.dev',
-				'staging.',
-				'localhost',
-				'.local',
-				'.rapydapps.cloud',
-				'ddev.site',
-			);
-
-			// Check for the test domain.
-			if ( defined( 'WP_TESTS_DOMAIN' ) && WP_TESTS_DOMAIN === $server_name ) {
+			// No host identity at all — do not report rather than fail open.
+			if ( '' === $host ) {
 				return false;
 			}
 
-			// Check if the server name matches any whitelisted domain.
+			// Check for the test domain.
+			if ( defined( 'WP_TESTS_DOMAIN' ) && WP_TESTS_DOMAIN === $host ) {
+				return false;
+			}
+
+			/**
+			 * Filters the domains excluded from telemetry reporting.
+			 *
+			 * Each entry is matched against the site host as an exact hostname
+			 * or as a suffix on a label boundary — `ddev.site` also excludes
+			 * `platform.ddev.site`, but never `notddev.site`. A leading dot is
+			 * optional; bare TLD entries such as `test` exclude that TLD.
+			 *
+			 * @since BuddyBoss [BBVERSION]
+			 *
+			 * @param array $whitelist_domain Hostnames or domain suffixes to exclude.
+			 */
+			$whitelist_domain = apply_filters(
+				'bb_telemetry_whitelist_domains',
+				array(
+					'localhost',
+					'test',
+					'dev',
+					'local',
+					'ddev.site',
+					'rapydapps.cloud',
+				)
+			);
+
 			foreach ( $whitelist_domain as $domain ) {
-				if ( false !== strpos( $server_name, $domain ) ) {
+				$domain = strtolower( ltrim( trim( (string) $domain ), '.' ) );
+				if ( '' === $domain ) {
+					continue;
+				}
+
+				if ( $host === $domain || substr( $host, -strlen( '.' . $domain ) ) === '.' . $domain ) {
 					return false; // Exclude allowlisted domains.
 				}
 			}
 
+			// DRM's detector is the single definition of "not a real site":
+			// environment type, reserved TLDs, staging keywords as whole labels,
+			// host/staging provider domains, local IPs and non-standard ports.
+			if ( class_exists( '\BuddyBoss\Core\Admin\DRM\BB_DRM_Helper' ) ) {
+				return ! \BuddyBoss\Core\Admin\DRM\BB_DRM_Helper::is_dev_environment();
+			}
+
+			// Fallback when DRM is unavailable: the one legacy rule the list
+			// above does not express — a `staging.` host prefix.
+			if ( 0 === strpos( $host, 'staging.' ) ) {
+				return false;
+			}
+
 			return true; // Allow telemetry data to be sent for non-allowlisted domains.
+		}
+
+		/**
+		 * Get the delivery-health record for telemetry sends.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @return array {
+		 *     @type string $last_attempt         GMT datetime of the last send attempt, empty if never.
+		 *     @type string $last_success         GMT datetime of the last successful delivery, empty if never.
+		 *     @type int    $consecutive_failures Failed attempts since the last success.
+		 *     @type string $last_error           Truncated message from the most recent failure.
+		 * }
+		 */
+		public function bb_get_delivery_status() {
+			$status = bp_get_option( 'bb_telemetry_delivery', array() );
+
+			return wp_parse_args(
+				is_array( $status ) ? $status : array(),
+				array(
+					'last_attempt'         => '',
+					'last_success'         => '',
+					'consecutive_failures' => 0,
+					'last_error'           => '',
+				)
+			);
+		}
+
+		/**
+		 * Record a successful telemetry delivery.
+		 *
+		 * Clears the failure streak and any pending retry so a stale retry
+		 * cannot fire after recovery.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 */
+		protected function bb_record_delivery_success() {
+			$retry_timestamp = wp_next_scheduled( 'bb_telemetry_report_retry_event' );
+			if ( $retry_timestamp ) {
+				wp_unschedule_event( $retry_timestamp, 'bb_telemetry_report_retry_event' );
+			}
+
+			$now = gmdate( 'Y-m-d H:i:s' );
+			bp_update_option(
+				'bb_telemetry_delivery',
+				array(
+					'last_attempt'         => $now,
+					'last_success'         => $now,
+					'consecutive_failures' => 0,
+					'last_error'           => '',
+				)
+			);
+		}
+
+		/**
+		 * Record a failed telemetry delivery and schedule a bounded retry.
+		 *
+		 * The first three consecutive failures schedule a retry 1, 4 and 12
+		 * hours out. Beyond that no intra-cycle retries are scheduled — a site
+		 * whose egress is permanently blocked just keeps its weekly attempt —
+		 * and any recovery resets the ladder.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param string $error_message Why the delivery failed.
+		 */
+		protected function bb_record_delivery_failure( $error_message ) {
+			$status                         = $this->bb_get_delivery_status();
+			$status['last_attempt']         = gmdate( 'Y-m-d H:i:s' );
+			$status['consecutive_failures'] = (int) $status['consecutive_failures'] + 1;
+			$status['last_error']           = substr( (string) $error_message, 0, 200 );
+
+			bp_update_option( 'bb_telemetry_delivery', $status );
+
+			$retry_delays = array(
+				1 => HOUR_IN_SECONDS,
+				2 => 4 * HOUR_IN_SECONDS,
+				3 => 12 * HOUR_IN_SECONDS,
+			);
+
+			if (
+				isset( $retry_delays[ $status['consecutive_failures'] ] ) &&
+				! wp_next_scheduled( 'bb_telemetry_report_retry_event' )
+			) {
+				wp_schedule_single_event( time() + $retry_delays[ $status['consecutive_failures'] ], 'bb_telemetry_report_retry_event' );
+			}
 		}
 
 		/**
@@ -364,10 +516,10 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 			$bb_platform_db_options = apply_filters(
 				'bb_telemetry_platform_options',
 				array(
+					'bb-active-features',
 					'bb_presence_interval_mu',
 					'bb_presence_time_span_mu',
 					'bb_profile_slug_format',
-					'_bp_community_visibility',
 					'bb_reaction_mode',
 					'_bb_enable_activity_schedule_posts',
 					'_bb_enable_activity_comment_threading',
@@ -385,7 +537,6 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 					'bp-member-type-enable-disable',
 					'bp-member-type-display-on-profile',
 					'bp-disable-avatar-uploads',
-					'bp-disable-group-cover-image-uploads',
 					'bp-disable-group-type-creation',
 					'bp-disable-account-deletion',
 					'bp-enable-private-network',
@@ -396,8 +547,14 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 					'_bp_enable_activity_autoload',
 					'_bp_enable_activity_follow',
 					'_bp_enable_activity_link_preview',
-					'_bp_enable_activity_emoji',
-					'_bp_enable_activity_gif',
+					'bp_media_profiles_emoji_support',
+					'bp_media_groups_emoji_support',
+					'bp_media_messages_emoji_support',
+					'bp_media_forums_emoji_support',
+					'bp_media_profiles_gif_support',
+					'bp_media_groups_gif_support',
+					'bp_media_messages_gif_support',
+					'bp_media_forums_gif_support',
 					'bp_search_members',
 					'bp_search_number_of_results',
 					'bp_media_profile_media_support',
@@ -426,7 +583,6 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 					'bp_video_forums_video_support',
 					'bp_video_allowed_size',
 					'bp_video_allowed_per_batch',
-					'bp_video_extension_video_support',
 					'bp_media_symlink_direct_access',
 					'bp_video_extensions_support',
 					'_bp_on_screen_notifications_enable',
@@ -441,7 +597,6 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 					'bp_media_group_document_support',
 					'bp_media_messages_document_support',
 					'bp_media_forums_document_support',
-					'bp_media_extension_document_support',
 					'bp_document_allowed_size',
 					'bp_media_allowed_size',
 					'_bb_enable_activity_post_polls',
@@ -467,6 +622,8 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 			// Added those options that are not available in the option table.
 			$bb_telemetry_data['bb_platform_version'] = BP_PLATFORM_VERSION;
 			$bb_telemetry_data['active_integrations'] = $this->bb_active_integrations();
+			$bb_telemetry_data['bb_license']          = $this->bb_get_license_data();
+			$bb_telemetry_data['bb_drm']              = $this->bb_get_drm_data();
 
 			if (
 				function_exists( 'bb_topics_manager_instance' ) &&
@@ -510,6 +667,25 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 				}
 			}
 
+			/*
+			 * Declare which option names were actually queried.
+			 *
+			 * The receiver only ever wrote keys present in a payload, so a value
+			 * that disappeared from wp_options stayed on the record forever —
+			 * every stored boolean was really "last known", not "current". It
+			 * cannot simply delete anything missing, because a site on an older
+			 * build never sends the newer keys and would have them wiped.
+			 *
+			 * This list resolves that: a name in it that is absent from the
+			 * payload was looked for and genuinely not found, so the receiver may
+			 * clear it. Anything not declared is left untouched.
+			 *
+			 * This method runs first and starts the list; the Pro, Theme and App
+			 * collectors run after it in bb_collect_site_data() and append their
+			 * own names to the same key.
+			 */
+			$bb_telemetry_data['bb_reported_option_keys'] = array_values( array_unique( $sanitized ) );
+
 			unset( $bp_prefix, $query, $results, $bb_platform_db_options );
 
 			// Tools usage → cumulative per-action counts for Repair / Sample Data / Migration.
@@ -525,6 +701,406 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 			 * @return array Telemetry platform data.
 			 */
 			return apply_filters( 'bb_telemetry_platform_data', $bb_telemetry_data );
+		}
+
+		/**
+		 * Collect licence and plan data for the Platform and Theme.
+		 *
+		 * The Mothership plugin id doubles as the plan identifier — values like
+		 * `bb-platform-pro-5-sites` or `bb-web-plus` encode both product and seat
+		 * count — and it is a plain option, so it is always available without a
+		 * network call. Richer plan detail (product name, activation counts) comes
+		 * from the locally cached licence-details transient when present.
+		 *
+		 * The raw licence key is only included in `complete` mode. In `anonymous`
+		 * mode the plan and status are still reported, but nothing that ties the
+		 * payload back to a customer record — which is what that mode promises.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @return array Licence data for the Platform and, when present, the Theme.
+		 */
+		public function bb_get_license_data() {
+			$include_key = ( 'complete' === self::$bb_telemetry_option );
+
+			$platform_id = get_option( 'buddyboss_dynamic_plugin_id', defined( 'PLATFORM_EDITION' ) ? PLATFORM_EDITION : '' );
+			$theme_id    = get_option( 'buddyboss_theme_dynamic_id', defined( 'THEME_EDITION' ) ? THEME_EDITION : '' );
+
+			/*
+			 * Read the key the same way the licence screen does. Credentials also
+			 * honours the BUDDYBOSS_LICENSE_KEY constant and environment variable,
+			 * which a plain option read would miss, so a site configured that way
+			 * would otherwise report as unlicensed.
+			 */
+			$platform_key = '';
+			if ( class_exists( '\BuddyBossPlatform\GroundLevel\Mothership\Credentials' ) ) {
+				try {
+					$platform_key = (string) \BuddyBossPlatform\GroundLevel\Mothership\Credentials::getLicenseKey();
+				} catch ( \Throwable $e ) {
+					$platform_key = '';
+				}
+			}
+
+			if ( '' === $platform_key && ! empty( $platform_id ) ) {
+				$platform_key = (string) get_option( $platform_id . '_license_key', '' );
+			}
+
+			$data = array(
+				'platform' => $this->bb_get_product_license_data( $platform_id, $platform_key, $include_key ),
+			);
+
+			if ( $this->bb_theme_uses_platform_license( $platform_id, $platform_key ) ) {
+				/*
+				 * The plan already includes the theme, so there is no separate
+				 * theme licence to report — the platform one covers it. Reported
+				 * without repeating the key, which is already sent above.
+				 */
+				$data['theme']           = $this->bb_get_product_license_data( $platform_id, $platform_key, false );
+				$data['theme']['source'] = 'platform';
+			} elseif ( ! empty( $theme_id ) ) {
+				$theme_key               = (string) get_option( $theme_id . '_license_key', '' );
+				$data['theme']           = $this->bb_get_product_license_data( $theme_id, $theme_key, $include_key );
+				$data['theme']['source'] = 'theme';
+			}
+
+			/**
+			 * Filters the licence data reported by telemetry.
+			 *
+			 * @since BuddyBoss [BBVERSION]
+			 *
+			 * @param array $data        Licence data.
+			 * @param bool  $include_key Whether the raw licence key is included.
+			 */
+			return apply_filters( 'bb_telemetry_license_data', $data, $include_key );
+		}
+
+		/**
+		 * Whether the theme is covered by the platform licence.
+		 *
+		 * True when the platform licence is present and activated, the BuddyBoss
+		 * Theme is the one in use, and the plan's add-ons list includes the theme
+		 * product. In that case the theme has no licence of its own to report and
+		 * the platform entitlement is what applies.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param string $plugin_id    Platform plan identifier.
+		 * @param string $license_key  Platform licence key.
+		 *
+		 * @return bool
+		 */
+		protected function bb_theme_uses_platform_license( $plugin_id, $license_key ) {
+			// The platform licence has to exist and be activated.
+			if ( empty( $plugin_id ) || '' === (string) $license_key || empty( get_option( $plugin_id . '_license_activation_status', false ) ) ) {
+				return false;
+			}
+
+			// get_template() returns the parent, so child themes count too.
+			if ( 'buddyboss-theme' !== get_template() ) {
+				return false;
+			}
+
+			// The vendor Response class must be loadable before unserializing the
+			// cached API response below.
+			if ( ! class_exists( '\BuddyBoss\Core\Admin\Mothership\BB_Addons_Manager' ) ) {
+				return false;
+			}
+
+			/*
+			 * Cache-only, deliberately. BB_Addons_Manager::checkProductBySlug()
+			 * fetches from the Mothership API on a cold cache, and this runs on
+			 * the telemetry send path — cron and the synchronous wizard sends —
+			 * where no network call may happen. A cold or errored cache reports
+			 * the theme's own licence state instead, which self-corrects on the
+			 * next send after an admin visit warms the add-ons cache.
+			 */
+			try {
+				$cached = get_transient( $plugin_id . '_add_ons' );
+
+				if ( empty( $cached ) || empty( $cached->products ) || ! is_iterable( $cached->products ) ) {
+					return false;
+				}
+
+				foreach ( $cached->products as $product ) {
+					if (
+						! empty( $product->slug ) &&
+						false !== strpos( $product->slug, 'buddyboss-theme' ) &&
+						! empty( $product->status ) &&
+						'enabled' === $product->status
+					) {
+						return true;
+					}
+				}
+			} catch ( \Throwable $e ) {
+				return false;
+			}
+
+			return false;
+		}
+
+		/**
+		 * Build the licence payload for a single Mothership product id.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param string $plugin_id   Mothership plugin id, which is also the plan.
+		 * @param string $license_key Licence key already resolved for this plan.
+		 * @param bool   $include_key Whether to include the raw licence key.
+		 *
+		 * @return array Licence data, or an empty array when there is no plan id.
+		 */
+		protected function bb_get_product_license_data( $plugin_id, $license_key, $include_key ) {
+			if ( empty( $plugin_id ) ) {
+				return array();
+			}
+
+			$license_key = (string) $license_key;
+
+			$data = array(
+				'plan'      => $plugin_id,
+				'has_key'   => ( '' !== $license_key ),
+				'is_active' => (bool) get_option( $plugin_id . '_license_activation_status', false ),
+			);
+
+			if ( $include_key && '' !== $license_key ) {
+				$data['license_key'] = $license_key;
+			}
+
+			// Cached plan detail, populated when the licence screen was last loaded.
+			$details = get_transient( $plugin_id . '_license_details' );
+			if ( is_array( $details ) ) {
+				$data['product']             = isset( $details['product'] ) ? $details['product'] : '';
+				$data['status']              = isset( $details['status'] ) ? $details['status'] : '';
+				$data['activations_allowed'] = isset( $details['total_prod_allowed'] ) ? (int) $details['total_prod_allowed'] : 0;
+				$data['activations_used']    = isset( $details['total_prod_used'] ) ? (int) $details['total_prod_used'] : 0;
+			}
+
+			return $data;
+		}
+
+		/**
+		 * Collect the DRM escalation stage for telemetry.
+		 *
+		 * A site without a valid licence moves through a fixed ladder, counted from
+		 * the DRM event's creation date. Both the no-key and invalid-key scenarios
+		 * use the same boundaries:
+		 *
+		 *   0-6 days   grace   — nothing shown
+		 *   7-13 days  low     — in-plugin notification
+		 *   14-21 days medium  — notification + admin notice + Site Health
+		 *   22-30 days high    — the above + admin email
+		 *   31+ days   locked  — features disabled
+		 *
+		 * Reporting the stage is what makes the ladder measurable: how many sites
+		 * sit at each rung, and how many reach lockout rather than licensing.
+		 *
+		 * Derived from local state only — two indexed lookups on the DRM event
+		 * table plus two option reads. Deliberately avoids
+		 * `BB_DRM_Registry::get_addons_by_drm_status()`, which calls
+		 * `is_addon_licensed()` and can reach the Mothership API.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @return array DRM scenario, stage and elapsed days.
+		 */
+		public function bb_get_drm_data() {
+			$data = array(
+				'scenario' => 'none',
+				'stage'    => '',
+				'days'     => 0,
+				'addons'   => array(),
+			);
+
+			if (
+				! class_exists( '\BuddyBoss\Core\Admin\DRM\BB_DRM_Event' ) ||
+				! class_exists( '\BuddyBoss\Core\Admin\DRM\BB_DRM_Helper' )
+			) {
+				return $data;
+			}
+
+			// Per-plugin DRM state for every paid add-on registered on this site.
+			$data['addons'] = $this->bb_get_drm_addons_data();
+
+			// Platform's own scenario, if any.
+			if ( get_option( 'bb_drm_no_license', false ) ) {
+				$data['scenario'] = \BuddyBoss\Core\Admin\DRM\BB_DRM_Helper::NO_LICENSE_EVENT;
+			} elseif ( get_option( 'bb_drm_invalid_license', false ) ) {
+				$data['scenario'] = \BuddyBoss\Core\Admin\DRM\BB_DRM_Helper::INVALID_LICENSE_EVENT;
+			} else {
+				return $data;
+			}
+
+			$data = array_merge( $data, $this->bb_get_drm_stage( $data['scenario'] ) );
+
+			/**
+			 * Filters the DRM data reported by telemetry.
+			 *
+			 * @since BuddyBoss [BBVERSION]
+			 *
+			 * @param array $data DRM scenario, stage and elapsed days.
+			 */
+			return apply_filters( 'bb_telemetry_drm_data', $data );
+		}
+
+		/**
+		 * Resolve the DRM escalation stage for a single DRM event.
+		 *
+		 * Mirrors the boundaries in `BB_DRM_NoKey::run()`, `BB_DRM_Invalid::run()`
+		 * and `BB_DRM_Addon::run()`, which are identical.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param string $event_name DRM event name, e.g. `no-license` or `addon-{slug}`.
+		 *
+		 * @return array Stage, elapsed days and the event start date.
+		 */
+		protected function bb_get_drm_stage( $event_name ) {
+			try {
+				$event = \BuddyBoss\Core\Admin\DRM\BB_DRM_Event::latest( $event_name );
+			} catch ( \Throwable $e ) {
+				$event = null;
+			}
+
+			return $this->bb_get_drm_stage_from_event( $event );
+		}
+
+		/**
+		 * Resolve the DRM escalation stage from an already-fetched DRM event.
+		 *
+		 * Split from bb_get_drm_stage() so the add-on collector can resolve many
+		 * stages from one batched query instead of one query per add-on.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param object|null $event Latest DRM event, or null when there is none.
+		 *
+		 * @return array Stage, elapsed days and the event start date.
+		 */
+		protected function bb_get_drm_stage_from_event( $event ) {
+			$stage = array(
+				'stage' => '',
+				'days'  => 0,
+			);
+
+			if ( ! $event || empty( $event->created_at ) ) {
+				return $stage;
+			}
+
+			$days             = (int) \BuddyBoss\Core\Admin\DRM\BB_DRM_Helper::days_elapsed( $event->created_at );
+			$stage['days']    = $days;
+			$stage['started'] = $event->created_at;
+
+			if ( $days >= 31 ) {
+				$stage['stage'] = \BuddyBoss\Core\Admin\DRM\BB_DRM_Helper::DRM_LOCKED;
+			} elseif ( $days >= 22 ) {
+				$stage['stage'] = \BuddyBoss\Core\Admin\DRM\BB_DRM_Helper::DRM_HIGH;
+			} elseif ( $days >= 14 ) {
+				$stage['stage'] = \BuddyBoss\Core\Admin\DRM\BB_DRM_Helper::DRM_MEDIUM;
+			} elseif ( $days >= 7 ) {
+				$stage['stage'] = \BuddyBoss\Core\Admin\DRM\BB_DRM_Helper::DRM_LOW;
+			} else {
+				$stage['stage'] = 'grace';
+			}
+
+			return $stage;
+		}
+
+		/**
+		 * Collect per-plugin DRM state for every registered paid add-on.
+		 *
+		 * Add-ons register with the DRM registry from their own bootstrap, so the
+		 * registry is effectively the list of paid BuddyBoss plugins active on this
+		 * site. Every one is reported, including add-ons with no DRM event — a
+		 * healthy add-on reports an empty stage, which is what makes "how many
+		 * sites run this add-on licensed vs lapsed" answerable.
+		 *
+		 * Add-on DRM events are named `addon-{sanitized product slug}` and use the
+		 * same escalation ladder as the Platform.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @return array Map of product slug => name, version, stage, days, started.
+		 */
+		protected function bb_get_drm_addons_data() {
+			if ( ! class_exists( '\BuddyBoss\Core\Admin\DRM\BB_DRM_Registry' ) ) {
+				return array();
+			}
+
+			$registered = \BuddyBoss\Core\Admin\DRM\BB_DRM_Registry::get_registered_addons();
+
+			if ( empty( $registered ) || ! is_array( $registered ) ) {
+				return array();
+			}
+
+			$event_names = array();
+			foreach ( $registered as $product_slug => $addon ) {
+				$event_names[ $product_slug ] = 'addon-' . sanitize_key( $product_slug );
+			}
+
+			// One grouped query for every add-on's latest event, not one each.
+			$latest_events = $this->bb_get_latest_drm_events( array_values( $event_names ) );
+
+			$addons = array();
+			foreach ( $registered as $product_slug => $addon ) {
+				$entry = array(
+					'name'    => isset( $addon['plugin_name'] ) ? $addon['plugin_name'] : $product_slug,
+					'version' => isset( $addon['args']['version'] ) ? $addon['args']['version'] : '',
+				);
+
+				$event_name = $event_names[ $product_slug ];
+
+				$addons[ $product_slug ] = array_merge(
+					$entry,
+					$this->bb_get_drm_stage_from_event( isset( $latest_events[ $event_name ] ) ? $latest_events[ $event_name ] : null )
+				);
+			}
+
+			return $addons;
+		}
+
+		/**
+		 * Fetch the latest DRM event for each given event name in one query.
+		 *
+		 * Replaces one BB_DRM_Event::latest() round trip per registered add-on
+		 * with a single grouped lookup.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param array $event_names DRM event names.
+		 *
+		 * @return array Map of event name => latest event row.
+		 */
+		protected function bb_get_latest_drm_events( $event_names ) {
+			if ( empty( $event_names ) ) {
+				return array();
+			}
+
+			try {
+				$table        = \BuddyBoss\Core\Admin\DRM\BB_DRM_Event::get_table_name();
+				$placeholders = implode( ', ', array_fill( 0, count( $event_names ), '%s' ) );
+
+				$events_sql = "SELECT t.* FROM {$table} t
+					INNER JOIN (
+						SELECT event, MAX( id ) AS id
+						FROM {$table}
+						WHERE event IN ( {$placeholders} )
+						GROUP BY event
+					) latest ON latest.id = t.id";
+
+				// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Table name from the DRM class; values parameterized.
+				$rows = self::$wpdb->get_results( self::$wpdb->prepare( $events_sql, $event_names ) );
+			} catch ( \Throwable $e ) {
+				return array();
+			}
+
+			$events = array();
+			foreach ( (array) $rows as $row ) {
+				if ( isset( $row->event ) ) {
+					$events[ $row->event ] = $row;
+				}
+			}
+
+			return $events;
 		}
 
 		/**

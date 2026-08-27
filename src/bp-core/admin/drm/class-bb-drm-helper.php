@@ -211,6 +211,9 @@ class BB_DRM_Helper {
 	 * - WordPress staging constants (WP_STAGING, etc.)
 	 *
 	 * @since BuddyBoss 2.16.0
+	 * @since BuddyBoss [BBVERSION] Development-tool domain matching is anchored to
+	 *              a label boundary, so a real host that merely ends in the same
+	 *              letters (`notddev.site`) is no longer treated as a dev URL.
 	 *
 	 * @return bool True if development URL detected.
 	 */
@@ -311,8 +314,11 @@ class BB_DRM_Helper {
 			'localtunnel.me',   // localtunnel.
 		);
 
-		// Check for known development tool domains.
-		$dev_tools_pattern = '/(' . implode( '|', array_map( 'preg_quote', $reserved_local_domains ) ) . ')$/i';
+		// Check for known development tool domains. Anchored to a label
+		// boundary: `abc.ddev.site` and bare `ddev.site` match, but a real
+		// host that merely ends in the same letters (`notddev.site`,
+		// `myngrok.io`) does not.
+		$dev_tools_pattern = '/(^|\.)(' . implode( '|', array_map( 'preg_quote', $reserved_local_domains ) ) . ')$/i';
 		if ( preg_match( $dev_tools_pattern, $domain ) ) {
 			return true;
 		}
