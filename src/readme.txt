@@ -57,6 +57,10 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 
 == Changelog ==
 
+= 3.4.3 =
+* Bug: Access Controls - Fixed Access Control settings not saving when only the restriction type or membership provider was changed
+* Bug: Login - Fixed reCAPTCHA login verification blocking sign-ins on third-party login forms such as MemberPress; verification now applies only to the WordPress and BuddyBoss login forms it is rendered on
+
 = 3.4.2 =
 * Bug: Activity - Added two new objects to the Activity REST API
 * Bug: Core - Fixed the issue where the addon plugin was not installing and activating automatically according to the active plan
