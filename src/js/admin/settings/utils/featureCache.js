@@ -8,8 +8,11 @@
  * @since BuddyBoss [BBVERSION]
  */
 
-// In-memory cache storage
-const cache = {};
+// In-memory cache storage. Null prototype so a feature id that collides with
+// an Object.prototype key (e.g. a URL-supplied "constructor") reads undefined
+// instead of an inherited function; all access is bracket-style and
+// Object.keys() is a static, so no consumer needs the prototype.
+const cache = Object.create(null);
 
 /**
  * Get cached feature data.
