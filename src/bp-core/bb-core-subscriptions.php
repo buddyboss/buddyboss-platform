@@ -1622,6 +1622,18 @@ function bb_send_notifications_to_subscribers_batch( $args ) {
 	$per_page = max( 1, (int) $r['per_page'] );
 	$last_id  = (int) $r['last_id'];
 
+	// Durable page cursor for this fan-out chain. The queue's twin-row cleanup
+	// only dedupes duplicates that still COEXIST in the queue; if this row is
+	// re-run (mid-task fatal + healthcheck, or lock expiry) after its chunk
+	// jobs already drained, nothing is left to dedupe against and the page
+	// would be re-sent. The cursor survives queue-row deletion, so a re-run
+	// RESUMES past pages whose chunk jobs were already queued.
+	$fanout_cursor_key = 'bb_sub_fanout_cursor_' . md5( maybe_serialize( array( $type, $item_id, (int) $r['blog_id'], $r['notification_from'], $r['data'] ) ) );
+	$fanout_done_to    = (int) get_option( $fanout_cursor_key, 0 );
+	if ( $last_id < $fanout_done_to ) {
+		$last_id = $fanout_done_to;
+	}
+
 	// Keyset pagination (sc.id > last processed id) instead of page/offset:
 	// offsets shift when rows are deleted mid-fan-out (unsubscribes), silently
 	// skipping subscribers. The ID page is the authority for advancing the
@@ -1660,6 +1672,9 @@ function bb_send_notifications_to_subscribers_batch( $args ) {
 	$subscription_ids = ! empty( $id_page['subscriptions'] ) ? $id_page['subscriptions'] : array();
 
 	if ( empty( $subscription_ids ) ) {
+		// Chain complete — the cursor is no longer needed.
+		delete_option( $fanout_cursor_key );
+
 		if ( $switched ) {
 			restore_current_blog();
 		}
@@ -1721,6 +1736,12 @@ function bb_send_notifications_to_subscribers_batch( $args ) {
 		$bb_background_updater->save();
 	}
 
+	// Advance the durable cursor now that this page's chunk jobs are queued —
+	// a re-run of this row from here on resumes at the next page instead of
+	// re-sending this one.
+	$page_end_id = (int) end( $subscription_ids );
+	update_option( $fanout_cursor_key, $page_end_id, false );
+
 	// A full ID page means more subscribers may remain: queue the next page,
 	// keyed by the last subscription row ID of this page (termination is based
 	// on the ID page, not the user resolution, so a row deleted between the two
@@ -1729,7 +1750,7 @@ function bb_send_notifications_to_subscribers_batch( $args ) {
 	// paces the queue.
 	if ( count( $subscription_ids ) === $per_page ) {
 		$next_args             = $r;
-		$next_args['last_id']  = (int) end( $subscription_ids );
+		$next_args['last_id']  = $page_end_id;
 		$next_args['per_page'] = $per_page;
 
 		// Idempotency guard: the queue runner re-runs a not-yet-deleted row on
@@ -1767,6 +1788,9 @@ function bb_send_notifications_to_subscribers_batch( $args ) {
 
 			$bb_background_updater->save();
 		}
+	} else {
+		// Partial page = end of the list; no re-queue, so clean the cursor here.
+		delete_option( $fanout_cursor_key );
 	}
 
 	$bb_background_updater->dispatch();
