@@ -101,8 +101,14 @@ function bb_admin_settings_register_advanced_feature() {
 		)
 	);
 
-	// Side Panel 3: Telemetry (free users only).
-	if ( ! function_exists( 'bb_platform_pro' ) ) {
+	/*
+	 * Side Panel 3: Telemetry (unlicensed sites only).
+	 *
+	 * Paid sites are forced to "complete" reporting by
+	 * bb_force_telemetry_for_licensed_sites(), so showing the control there
+	 * would offer a choice that has no effect.
+	 */
+	if ( ! bb_has_paid_product() ) {
 		bb_register_side_panel(
 			'advanced',
 			'telemetry',
@@ -125,8 +131,8 @@ function bb_admin_settings_register_advanced_feature() {
 	bb_advanced_register_general_fields();
 	bb_advanced_register_privacy_fields();
 
-	// Telemetry fields only for free users.
-	if ( ! function_exists( 'bb_platform_pro' ) ) {
+	// Telemetry fields only where the panel above was registered.
+	if ( ! bb_has_paid_product() ) {
 		bb_advanced_register_telemetry_fields();
 	}
 

@@ -3,7 +3,7 @@ Contributors: buddyboss
 Requires at least: 4.9.1
 Tested up to: 6.8.1
 Requires PHP: 7.4.0
-Stable tag: 3.4.2
+Stable tag: 3.4.3
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,10 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 3.4.3 =
+* Bug: Access Controls - Fixed Access Control settings not saving when only the restriction type or membership provider was changed
+* Bug: Login - Fixed reCAPTCHA login verification blocking sign-ins on third-party login forms such as MemberPress; verification now applies only to the WordPress and BuddyBoss login forms it is rendered on
 
 = 3.4.2 =
 * Bug: Activity - Added two new objects to the Activity REST API
