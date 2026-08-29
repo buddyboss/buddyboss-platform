@@ -1822,3 +1822,51 @@ function bb_send_notifications_to_subscribers_batch( $args ) {
 
 	return false;
 }
+
+/**
+ * Atomically claim a subscription notification chunk before sending it.
+ *
+ * The shared background queue can execute the same chunk row twice when
+ * workers are dispatched concurrently (cron storm, stale-lock takeover) —
+ * every user in the chunk then receives the email/notification twice. The
+ * claim is an atomic object-cache add keyed by the chunk payload: the first
+ * worker wins and any concurrent duplicate run bails. On persistent object
+ * caches (Redis/Memcached) wp_cache_add() is atomic across PHP workers;
+ * without one the claim is per-process, which simply matches the
+ * pre-existing behavior.
+ *
+ * The claim expires after one minute on purpose: duplicate concurrent runs
+ * land within seconds of each other, while a legitimate retry of a chunk
+ * whose worker crashed arrives via the cron healthcheck minutes later and
+ * must not be blocked.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $args Parsed send-callback arguments: type, item_id,
+ *                    notification_from, data (identifies the activity/topic/reply),
+ *                    and user_ids for this chunk.
+ *
+ * @return bool True if this run owns the chunk, false if a concurrent duplicate run already claimed it.
+ */
+function bb_subscriptions_claim_notification_chunk( $args ) {
+	$user_ids = ! empty( $args['user_ids'] ) ? (array) $args['user_ids'] : array();
+
+	if ( empty( $user_ids ) ) {
+		// Nothing to claim.
+		return true;
+	}
+
+	$claim_key = 'bb_sub_chunk_claim_' . md5(
+		maybe_serialize(
+			array(
+				isset( $args['type'] ) ? $args['type'] : '',
+				isset( $args['item_id'] ) ? $args['item_id'] : 0,
+				isset( $args['notification_from'] ) ? $args['notification_from'] : '',
+				isset( $args['data'] ) ? $args['data'] : array(),
+				$user_ids,
+			)
+		)
+	);
+
+	return wp_cache_add( $claim_key, microtime( true ), 'bb_subscriptions', MINUTE_IN_SECONDS );
+}

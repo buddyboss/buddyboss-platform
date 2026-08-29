@@ -856,6 +856,7 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 	 * Send callback function for forum type notification.
 	 *
 	 * @since BuddyBoss 2.2.6
+	 * @since BuddyBoss [BBVERSION] Returns false on completion so the background queue row is removed instead of re-queued.
 	 *
 	 * @param array $args Array of arguments.
 	 *
@@ -875,6 +876,12 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 		);
 
 		if ( empty( $r['user_ids'] ) || empty( $r['type'] ) || ! bb_is_enabled_subscription( $r['type'] ) ) {
+			return;
+		}
+
+		// A queue row re-run by a concurrently dispatched worker must not send
+		// this chunk a second time.
+		if ( ! bb_subscriptions_claim_notification_chunk( $r ) ) {
 			return;
 		}
 
@@ -976,13 +983,17 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 			}
 		}
 
-		return true;
+		// The chunk is fully processed; false removes the queue row. A truthy
+		// return re-queues the row via BB_Background_Updater::task() for a
+		// second, argument-less no-op pass.
+		return false;
 	}
 
 	/**
 	 * Send callback function for topic type notification.
 	 *
 	 * @since BuddyBoss 2.2.6
+	 * @since BuddyBoss [BBVERSION] Returns false on completion so the background queue row is removed instead of re-queued.
 	 *
 	 * @param array $args Array of arguments.
 	 *
@@ -1002,6 +1013,12 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 		);
 
 		if ( empty( $r['user_ids'] ) || empty( $r['type'] ) || ! bb_is_enabled_subscription( $r['type'] ) ) {
+			return;
+		}
+
+		// A queue row re-run by a concurrently dispatched worker must not send
+		// this chunk a second time.
+		if ( ! bb_subscriptions_claim_notification_chunk( $r ) ) {
 			return;
 		}
 
@@ -1112,7 +1129,10 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 			}
 		}
 
-		return true;
+		// The chunk is fully processed; false removes the queue row. A truthy
+		// return re-queues the row via BB_Background_Updater::task() for a
+		// second, argument-less no-op pass.
+		return false;
 	}
 
 }
