@@ -1655,6 +1655,26 @@ function bb_send_notifications_to_subscribers_batch( $args ) {
 		}
 	}
 
+	// Same for forum discussion/reply chains: stop paginating when the source
+	// post was deleted mid-chain. Reply payloads carry both reply_id and
+	// topic_id — the reply is the item being sent, so it decides.
+	$fanout_forum_post_id = 0;
+	if ( ! empty( $r['data']['reply_id'] ) ) {
+		$fanout_forum_post_id = (int) $r['data']['reply_id'];
+	} elseif ( ! empty( $r['data']['topic_id'] ) ) {
+		$fanout_forum_post_id = (int) $r['data']['topic_id'];
+	}
+
+	if ( ! empty( $fanout_forum_post_id ) && empty( get_post( $fanout_forum_post_id ) ) ) {
+		delete_option( $fanout_cursor_key );
+
+		if ( $switched ) {
+			restore_current_blog();
+		}
+
+		return false;
+	}
+
 	// Keyset pagination (sc.id > last processed id) instead of page/offset:
 	// offsets shift when rows are deleted mid-fan-out (unsubscribes), silently
 	// skipping subscribers. The ID page is the authority for advancing the
@@ -1835,14 +1855,17 @@ function bb_send_notifications_to_subscribers_batch( $args ) {
  * without one the claim is per-process, which simply matches the
  * pre-existing behavior.
  *
- * The claim expires after one minute on purpose: duplicate concurrent runs
- * land within seconds of each other, while a legitimate retry of a chunk
- * whose worker crashed arrives via the cron healthcheck minutes later and
- * must not be blocked.
+ * The 30-second expiry balances two failure modes. Duplicate concurrent runs
+ * of the same row land within seconds of each other (QA measured 5ms–6s
+ * spreads), so the claim comfortably blocks them. A worker that fatals after
+ * claiming but before sending leaves the row queued; if another live worker
+ * retries it inside the TTL the chunk is dropped instead of duplicated — the
+ * short expiry keeps that drop window small, and retries via the cron
+ * healthcheck (minutes later) are never blocked.
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param array $args Parsed send-callback arguments: type, item_id,
+ * @param array $args Parsed send-callback arguments: type, item_id, blog_id,
  *                    notification_from, data (identifies the activity/topic/reply),
  *                    and user_ids for this chunk.
  *
@@ -1861,6 +1884,7 @@ function bb_subscriptions_claim_notification_chunk( $args ) {
 			array(
 				isset( $args['type'] ) ? $args['type'] : '',
 				isset( $args['item_id'] ) ? $args['item_id'] : 0,
+				isset( $args['blog_id'] ) ? (int) $args['blog_id'] : get_current_blog_id(),
 				isset( $args['notification_from'] ) ? $args['notification_from'] : '',
 				isset( $args['data'] ) ? $args['data'] : array(),
 				$user_ids,
@@ -1868,5 +1892,5 @@ function bb_subscriptions_claim_notification_chunk( $args ) {
 		)
 	);
 
-	return wp_cache_add( $claim_key, microtime( true ), 'bb_subscriptions', MINUTE_IN_SECONDS );
+	return wp_cache_add( $claim_key, microtime( true ), 'bb_subscriptions', 30 );
 }
