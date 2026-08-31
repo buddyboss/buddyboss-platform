@@ -1115,22 +1115,37 @@ function bb_send_notifications_to_subscribers( $args ) {
 	$notification_type = $type_data['notification_type'];
 	$send_callback     = $type_data['send_callback'];
 
-	// Probe with a single row first. For very large subscriber lists (e.g. a
-	// 70k-member group) fetching every subscriber inside the originating web
-	// request exhausts PHP memory, so only the total count is
-	// needed here to pick the delivery strategy.
+	/**
+	 * Filters the subscriber count above which the fan-out itself moves to the background.
+	 *
+	 * Above this threshold the subscriber list is never fetched inside the
+	 * originating request; a single background job paginates through the list
+	 * instead. Keeps request memory flat for very large groups/forums.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param int   $min_count Subscriber count threshold. Default 1000.
+	 * @param array $r         Parsed arguments of the notification request.
+	 */
+	$fanout_min_count = (int) apply_filters( 'bb_subscription_background_fanout_min_count', 1000, $r );
+
+	// One bounded fetch decides the delivery strategy. For very large subscriber
+	// lists (e.g. a 70k-member group) fetching every subscriber inside the
+	// originating web request exhausts PHP memory, so the page is capped at the
+	// threshold: when the total fits under it this page IS the complete list and
+	// is used as-is below; when it does not, the page is discarded and the
+	// background worker paginates instead.
 	$subscriptions = bb_get_subscription_users(
 		array(
 			'type'     => $type,
 			'item_id'  => $item_id,
 			'blog_id'  => $blog_id,
 			'status'   => true,
-			'fields'   => 'id',
-			'per_page' => 1,
+			'per_page' => max( 1, $fanout_min_count ),
 			'page'     => 1,
-			// Explicit: the total is the only thing this probe is for. A
-			// filtered count=>false would drop it; the fallback below then
-			// assumes a large list rather than misreading this 1-row probe.
+			// Explicit: the total is what picks the strategy. A filtered
+			// count=>false would drop it; the fallback below then assumes a
+			// large list rather than misreading a capped page as the total.
 			'count'    => true,
 		)
 	);
@@ -1164,23 +1179,9 @@ function bb_send_notifications_to_subscribers( $args ) {
 	}
 
 	// Unknown total (count arg overridden by a third-party parse_args filter):
-	// assume large. The probe holds one row, so counting it would route a huge
-	// list down the in-request direct-send path; the background path is always safe.
+	// assume large. The page is capped at the threshold, so counting it cannot
+	// tell a huge list from a full page; the background path is always safe.
 	$total_subscribers = isset( $subscriptions['total'] ) ? (int) $subscriptions['total'] : PHP_INT_MAX;
-
-	/**
-	 * Filters the subscriber count above which the fan-out itself moves to the background.
-	 *
-	 * Above this threshold the subscriber list is never fetched inside the
-	 * originating request; a single background job paginates through the list
-	 * instead. Keeps request memory flat for very large groups/forums.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @param int   $min_count Subscriber count threshold. Default 1000.
-	 * @param array $r         Parsed arguments of the notification request.
-	 */
-	$fanout_min_count = (int) apply_filters( 'bb_subscription_background_fanout_min_count', 1000, $r );
 
 	global $bb_background_updater;
 
@@ -1222,20 +1223,8 @@ function bb_send_notifications_to_subscribers( $args ) {
 		return;
 	}
 
-	// Small list: bounded by the threshold above, so fetching it in-request is safe.
-	$subscriptions = bb_get_subscription_users(
-		array(
-			'type'    => $type,
-			'item_id' => $item_id,
-			'blog_id' => $blog_id,
-			'status'  => true,
-		)
-	);
-
-	if ( empty( $subscriptions['subscriptions'] ) ) {
-		return;
-	}
-
+	// Small list: the total fits under the threshold, so the page fetched above
+	// already holds every subscriber.
 	$background_process = false;
 	if (
 		isset( $subscriptions['total'] ) &&
