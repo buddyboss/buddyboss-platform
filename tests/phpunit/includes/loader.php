@@ -5,6 +5,13 @@ require_once( dirname( __FILE__ ) . '/define-constants.php' );
 $multisite = (int) ( defined( 'WP_TESTS_MULTISITE') && WP_TESTS_MULTISITE );
 system( WP_PHP_BINARY . ' ' . escapeshellarg( dirname( __FILE__ ) . '/install.php' ) . ' ' . escapeshellarg( WP_TESTS_CONFIG_PATH ) . ' ' . escapeshellarg( WP_TESTS_DIR ) . ' ' . $multisite );
 
+// The production entry point (bp-loader.php in the plugin root) loads the
+// Composer autoloader before src/bp-loader.php; mirror it here or vendor-based
+// subsystems (Mothership) fatal during includes().
+if ( file_exists( dirname( __FILE__ ) . '/../../../vendor/autoload.php' ) ) {
+	require_once dirname( __FILE__ ) . '/../../../vendor/autoload.php';
+}
+
 // Bootstrap BP
 require dirname( __FILE__ ) . '/../../../src/bp-loader.php';
 
