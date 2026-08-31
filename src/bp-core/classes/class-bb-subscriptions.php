@@ -763,7 +763,18 @@ if ( ! class_exists( 'BB_Subscriptions' ) ) {
 			}
 
 			if ( ! empty( $r['per_page'] ) && ! empty( $r['page'] ) && -1 !== $r['per_page'] ) {
-				$sql['pagination'] = $wpdb->prepare( 'LIMIT %d, %d', intval( ( $r['page'] - 1 ) * $r['per_page'] ), intval( $r['per_page'] ) );
+				$per_page = intval( $r['per_page'] );
+				$page     = max( 1, intval( $r['page'] ) );
+
+				// Clamp the page so ( page - 1 ) * per_page cannot overflow to a
+				// float: that casts to a negative integer and produces an invalid
+				// LIMIT (a SQL error that returns nothing). REST callers can pass any
+				// page number, so an out-of-range page must simply yield an empty page.
+				if ( $per_page > 0 ) {
+					$page = min( $page, intdiv( PHP_INT_MAX, $per_page ) );
+				}
+
+				$sql['pagination'] = $wpdb->prepare( 'LIMIT %d, %d', ( $page - 1 ) * $per_page, $per_page );
 			}
 
 			/**

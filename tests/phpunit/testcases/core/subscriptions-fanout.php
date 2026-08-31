@@ -360,6 +360,49 @@ class BB_Tests_Subscriptions_Fanout extends BP_UnitTestCase {
 	}
 
 	/**
+	 * An out-of-range page (REST callers can send any page) yields an empty page, not a SQL error.
+	 */
+	public function test_get_huge_page_does_not_overflow_limit() {
+		global $wpdb;
+
+		$item_id = $this->next_item_id();
+		$this->create_subscribers( 2, $item_id );
+
+		// ( page - 1 ) * 100 overflows to a float here; unclamped, intval() of
+		// it is negative and the LIMIT is rejected by MySQL.
+		$wpdb->last_error = '';
+		$result           = BB_Subscriptions::get(
+			array(
+				'type'     => self::$type,
+				'item_id'  => $item_id,
+				'fields'   => 'id',
+				'page'     => 92233720368547760,
+				'per_page' => 100,
+				'count'    => true,
+				'cache'    => false,
+			)
+		);
+
+		$this->assertSame( '', $wpdb->last_error, 'A huge page must not produce a SQL error.' );
+		$this->assertSame( array(), $result['subscriptions'] );
+		$this->assertSame( 2, (int) $result['total'], 'The total is unaffected by the page.' );
+
+		// Sanity: normal paging still works.
+		$page_two = BB_Subscriptions::get(
+			array(
+				'type'     => self::$type,
+				'item_id'  => $item_id,
+				'fields'   => 'id',
+				'page'     => 2,
+				'per_page' => 1,
+				'count'    => false,
+				'cache'    => false,
+			)
+		);
+		$this->assertCount( 1, $page_two['subscriptions'] );
+	}
+
+	/**
 	 * An item with no subscribers returns an empty list.
 	 */
 	public function test_get_zero_rows_returns_empty_array() {
