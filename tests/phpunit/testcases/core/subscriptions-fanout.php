@@ -737,6 +737,61 @@ class BB_Tests_Subscriptions_Fanout extends BP_UnitTestCase {
 	}
 
 	/**
+	 * A trashed (or spammed/pending) forum topic ends the chain like a deleted one; a published topic does not.
+	 */
+	public function test_worker_trashed_topic_terminates_chain_but_published_topic_proceeds() {
+		if ( ! function_exists( 'bbp_get_topic_post_type' ) ) {
+			$this->markTestSkipped( 'Forums component not loaded.' );
+		}
+
+		add_filter( 'bb_subscription_queue_min_count', array( $this, 'filter_two' ) );
+
+		$item_id = $this->next_item_id();
+		$this->create_subscribers( 2, $item_id );
+
+		$base_args = array(
+			'type'              => self::$type,
+			'item_id'           => $item_id,
+			'blog_id'           => get_current_blog_id(),
+			'notification_type' => 'bb_test_fanout_note',
+			'notification_from' => 'bb_test_fanout_note',
+			'last_id'           => 0,
+			'per_page'          => 3,
+			'fanout_id'         => 'test-trashed-topic',
+		);
+
+		// Trashed topic: chain must stop before queueing anything and remove its cursor.
+		$trashed_topic = self::factory()->post->create(
+			array(
+				'post_type'   => bbp_get_topic_post_type(),
+				'post_status' => bbp_get_trash_status_id(),
+			)
+		);
+		$args          = $base_args;
+		$args['data']  = array( 'topic_id' => $trashed_topic );
+		$cursor_key    = 'bb_sub_fanout_cursor_' . md5( maybe_serialize( array( $args['type'], $args['item_id'], (int) $args['blog_id'], $args['notification_from'], $args['data'], $args['fanout_id'] ) ) );
+		update_option( $cursor_key, 3, false );
+
+		bb_send_notifications_to_subscribers_batch( $args );
+
+		$this->assertSame( array(), $this->get_queue_rows(), 'A trashed topic must end the chain without queueing.' );
+		$this->assertFalse( get_option( $cursor_key ), 'The trashed-topic path must delete the chain cursor.' );
+
+		// Published topic: chain proceeds and queues the page.
+		$live_topic   = self::factory()->post->create(
+			array(
+				'post_type'   => bbp_get_topic_post_type(),
+				'post_status' => bbp_get_public_status_id(),
+			)
+		);
+		$args['data'] = array( 'topic_id' => $live_topic );
+
+		bb_send_notifications_to_subscribers_batch( $args );
+
+		$this->assertCount( 1, $this->get_queue_rows(), 'A published topic must be fanned out (one chunk row for two subscribers).' );
+	}
+
+	/**
 	 * The chunk claim refuses a duplicate run and is independent per chunk.
 	 */
 	public function test_claim_refuses_duplicate_run_and_allows_other_chunks() {

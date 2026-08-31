@@ -887,7 +887,7 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 		// A queue row re-run by a concurrently dispatched worker must not send
 		// this chunk a second time.
 		if ( ! bb_subscriptions_claim_notification_chunk( $r, $chunk_key ) ) {
-			return;
+			return false;
 		}
 
 		$type_key = 'notification_forums_following_topic';
@@ -1036,7 +1036,7 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 		// A queue row re-run by a concurrently dispatched worker must not send
 		// this chunk a second time.
 		if ( ! bb_subscriptions_claim_notification_chunk( $r, $chunk_key ) ) {
-			return;
+			return false;
 		}
 
 		$type_key = 'notification_forums_following_reply';

@@ -1670,8 +1670,10 @@ function bb_send_notifications_to_subscribers_batch( $args ) {
 	}
 
 	// Same for forum discussion/reply chains: stop paginating when the source
-	// post was deleted mid-chain. Reply payloads carry both reply_id and
-	// topic_id — the reply is the item being sent, so it decides.
+	// post is gone mid-chain. Reply payloads carry both reply_id and
+	// topic_id — the reply is the item being sent, so it decides. "Gone"
+	// matches the notification renderer's definition: hard-deleted, or moved
+	// to spam/trash/pending by a moderator after the post fired.
 	$fanout_forum_post_id = 0;
 	if ( ! empty( $r['data']['reply_id'] ) ) {
 		$fanout_forum_post_id = (int) $r['data']['reply_id'];
@@ -1679,7 +1681,18 @@ function bb_send_notifications_to_subscribers_batch( $args ) {
 		$fanout_forum_post_id = (int) $r['data']['topic_id'];
 	}
 
-	if ( ! empty( $fanout_forum_post_id ) && empty( get_post( $fanout_forum_post_id ) ) ) {
+	$fanout_forum_post_gone = false;
+	if ( ! empty( $fanout_forum_post_id ) ) {
+		$fanout_forum_post = get_post( $fanout_forum_post_id );
+
+		if ( empty( $fanout_forum_post ) ) {
+			$fanout_forum_post_gone = true;
+		} elseif ( function_exists( 'bbp_get_spam_status_id' ) && function_exists( 'bbp_get_trash_status_id' ) && function_exists( 'bbp_get_pending_status_id' ) ) {
+			$fanout_forum_post_gone = in_array( $fanout_forum_post->post_status, array( bbp_get_spam_status_id(), bbp_get_trash_status_id(), bbp_get_pending_status_id() ), true );
+		}
+	}
+
+	if ( $fanout_forum_post_gone ) {
 		delete_option( $fanout_cursor_key );
 
 		if ( $switched ) {
