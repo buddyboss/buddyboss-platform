@@ -1089,10 +1089,11 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 	 * Send callback function for group type notification.
 	 *
 	 * @since BuddyBoss 2.2.8
+	 * @since BuddyBoss [BBVERSION] Claims the chunk before sending (concurrent re-run guard), writes the rebuilt activity back into the email tokens, and returns false on completion so the background queue row is removed instead of re-queued.
 	 *
 	 * @param array $args Array of arguments.
 	 *
-	 * @return bool|void
+	 * @return false
 	 */
 	public function bb_send_subscribed_group_notifications( $args ) {
 
@@ -1117,6 +1118,17 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 			return false;
 		}
 
+		// Derive the claim key from the pristine payload once: the author is
+		// removed from user_ids below, and the claim, its refreshes and its
+		// completion marker must all hash the same shape.
+		$chunk_key = bb_subscriptions_get_notification_chunk_key( $r );
+
+		// A queue row re-run by a concurrently dispatched worker must not send
+		// this chunk a second time.
+		if ( ! bb_subscriptions_claim_notification_chunk( $r, $chunk_key ) ) {
+			return false;
+		}
+
 		$data_id                 = 0;
 		$author_id               = 0;
 		$type_key                = '';
@@ -1138,6 +1150,13 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 			if ( empty( $activity ) || 'groups' !== $activity->component ) {
 				return false;
 			}
+
+			// Queued jobs carry only data.activity_id (the serialized activity object
+			// is stripped to keep queue rows small); the email renderer
+			// (BP_Email_Tokens::token__group_activity_content) requires the object, so
+			// always provide the resolved one. Idempotent for legacy rows that still
+			// carry the object.
+			$r['data']['email_tokens']['tokens']['activity'] = $activity;
 
 			$type_key                = 'bb_groups_subscribed_activity';
 			$email_notification_type = 'groups-new-activity';
@@ -1169,6 +1188,8 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 		}
 
 		foreach ( $r['user_ids'] as $user_id ) {
+			// Keep the chunk claim alive while this (possibly slow) chunk is still sending.
+			bb_subscriptions_touch_notification_chunk_claim( $r, $chunk_key );
 			$user_id           = (int) $user_id;
 			$send_mail         = true;
 			$send_notification = true;
@@ -1241,7 +1262,15 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 			}
 		}
 
-		return true;
+		// Every recipient is handled: mark the chunk done so a late duplicate
+		// queue row is refused, then release the claim.
+		bb_subscriptions_complete_notification_chunk( $r, $chunk_key );
+
+		// The chunk is fully processed; false removes the queue row. A truthy
+		// return re-queues the row via BB_Background_Updater::task() for a
+		// second pass without its original args (the runner passes itself
+		// instead), which no-ops at the guards above.
+		return false;
 	}
 
 	/**

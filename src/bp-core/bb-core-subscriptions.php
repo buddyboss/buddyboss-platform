@@ -796,8 +796,12 @@ function bb_get_subscriptions( $args = array(), $force_cache = false ) {
 
 	$cache_key = 'bb_get_subscriptions_' . md5( maybe_serialize( $r ) );
 	if ( ! isset( $cache[ $cache_key ] ) || true === $force_cache ) {
-		$subscriptions       = BB_Subscriptions::get( $r );
-		$cache[ $cache_key ] = $subscriptions;
+		$subscriptions = BB_Subscriptions::get( $r );
+
+		// A forced read is a one-off (fan-out pages); memoizing it only retains memory.
+		if ( true !== $force_cache ) {
+			$cache[ $cache_key ] = $subscriptions;
+		}
 	} else {
 		$subscriptions = $cache[ $cache_key ];
 	}
@@ -849,8 +853,12 @@ function bb_get_subscription_users( $args = array(), $force_cache = false ) {
 
 	$cache_key = 'bb_get_subscription_users_' . md5( maybe_serialize( $r ) );
 	if ( ! isset( $cache[ $cache_key ] ) || true === $force_cache ) {
-		$subscriptions       = BB_Subscriptions::get( $r );
-		$cache[ $cache_key ] = $subscriptions;
+		$subscriptions = BB_Subscriptions::get( $r );
+
+		// A forced read is a one-off (fan-out pages); memoizing it only retains memory.
+		if ( true !== $force_cache ) {
+			$cache[ $cache_key ] = $subscriptions;
+		}
 	} else {
 		$subscriptions = $cache[ $cache_key ];
 	}
@@ -1114,12 +1122,50 @@ function bb_send_notifications_to_subscribers( $args ) {
 
 	$notification_type = $type_data['notification_type'];
 	$send_callback     = $type_data['send_callback'];
-	$subscriptions     = bb_get_subscription_users(
+
+	/**
+	 * Filters the subscriber count above which the fan-out itself moves to the background.
+	 *
+	 * Above this threshold the full subscriber list is never fetched inside the
+	 * originating request; a single background job paginates through the list
+	 * instead. Keeps request memory bounded by the threshold for very large
+	 * groups/forums. The value is also the size of the one page the request
+	 * reads to decide, so raising it far above the default re-introduces
+	 * in-request memory and queue-insert cost proportional to the value.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param int   $min_count Subscriber count threshold. Default 1000.
+	 * @param array $r         Parsed arguments of the notification request.
+	 */
+	$fanout_min_count = (int) apply_filters( 'bb_subscription_background_fanout_min_count', 1000, $r );
+
+	// A filter opting out with PHP_INT_MAX would overflow the + 1 below to a
+	// float, which casts to PHP_INT_MIN and produces a negative LIMIT — a SQL
+	// error that silently sends nothing. Clamp so the page size stays an int.
+	$fanout_min_count = min( $fanout_min_count, PHP_INT_MAX - 1 );
+
+	// One bounded fetch decides the delivery strategy. For very large subscriber
+	// lists (e.g. a 70k-member group) fetching every subscriber inside the
+	// originating web request exhausts PHP memory, so read one page of
+	// threshold + 1 rows, ordered by id: that is an index range with no sort and
+	// no COUNT (both of which cost O(n) database time on a large group). A page
+	// that overflows the threshold means "large list" — it is discarded and the
+	// background worker paginates instead; otherwise the page IS the complete
+	// list and is used as-is below.
+	$fanout_page_size = max( 1, $fanout_min_count ) + 1;
+
+	$subscriptions = bb_get_subscription_users(
 		array(
-			'type'    => $type,
-			'item_id' => $item_id,
-			'blog_id' => $blog_id,
-			'status'  => true,
+			'type'     => $type,
+			'item_id'  => $item_id,
+			'blog_id'  => $blog_id,
+			'status'   => true,
+			'per_page' => $fanout_page_size,
+			'page'     => 1,
+			'order_by' => 'id',
+			'order'    => 'ASC',
+			'count'    => false,
 		)
 	);
 
@@ -1151,16 +1197,64 @@ function bb_send_notifications_to_subscribers( $args ) {
 		$parse_args['usernames'] = $usernames;
 	}
 
-	$background_process = false;
-	if (
-		isset( $subscriptions['total'] ) &&
-		1 < $subscriptions['total']
-	) {
-		$background_process = true;
+	// The page holds threshold + 1 rows at most, so its size alone decides:
+	// overflow = large list, otherwise it is the whole list. Caveat: this
+	// trusts per_page surviving the bb_get_subscription_users and
+	// bb_subscriptions_subscription_get parse-args filters — a third-party
+	// clamp below the probe size would read a truncated page as complete.
+	$total_subscribers = count( $subscriptions['subscriptions'] );
+
+	global $bb_background_updater;
+
+	if ( $total_subscribers > $fanout_min_count ) {
+
+		/**
+		 * Filters the number of subscribers fetched per page by the background fan-out worker.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param int   $per_page Subscribers fetched per background page. Default 1000.
+		 * @param array $r        Parsed arguments of the notification request.
+		 */
+		$fanout_per_page = max( 1, (int) apply_filters( 'bb_subscription_background_fanout_per_page', 1000, $r ) );
+
+		// fanout_id is a per-dispatch identity for the durable page cursor: a
+		// cursor left behind by an abnormally removed chain must never make a
+		// later dispatch of the same payload skip subscribers.
+		$fanout_args              = $parse_args;
+		$fanout_args['last_id']   = 0;
+		$fanout_args['per_page']  = $fanout_per_page;
+		$fanout_args['fanout_id'] = wp_generate_uuid4();
+
+		// Drop the serialized activity object so the queue rows stay small; the
+		// send callbacks and the email renderer rebuild it from its id.
+		$fanout_args['data'] = bb_subscriptions_compact_notification_data( $fanout_args['data'] );
+
+		$bb_background_updater->data(
+			array(
+				'type'     => 'notification',
+				'group'    => 'send_notifications_to_subscribers',
+				'data_id'  => $item_id,
+				'priority' => 5,
+				'callback' => 'bb_send_notifications_to_subscribers_batch',
+				'args'     => array( $fanout_args ),
+			)
+		);
+		$bb_background_updater->save();
+		$bb_background_updater->dispatch();
+
+		return;
 	}
 
+	// Small list: the page fetched above already holds every subscriber.
+	$background_process = ( 1 < $total_subscribers );
+
 	if ( true === $background_process ) {
-		global $bb_background_updater;
+		// Drop the serialized activity object so each queue row stays small; the
+		// send callbacks and the email renderer rebuild it from its id. The
+		// direct-call path below keeps the object (no serialization involved).
+		$parse_args['data'] = bb_subscriptions_compact_notification_data( $parse_args['data'] );
+
 		$chunk_user_ids = array_chunk( $subscriptions['subscriptions'], $min_count );
 		if ( ! empty( $chunk_user_ids ) ) {
 			foreach ( $chunk_user_ids as $user_ids ) {
@@ -1454,4 +1548,607 @@ function bb_create_group_member_subscriptions( $group_id = 0, $member_ids = arra
 	}
 
 	groups_update_groupmeta( $group_id, 'bb_subscription_migrated_v2', 'yes' );
+}
+
+/**
+ * Background worker: fan out subscription notifications for one page of subscribers.
+ *
+ * Queued by bb_send_notifications_to_subscribers() when an item has more
+ * subscribers than the background fan-out threshold. Fetches one keyset page of
+ * subscriber IDs (sc.id > last_id), queues the regular per-chunk send jobs for
+ * that page, then re-queues itself for the next page until the list is
+ * exhausted. Keeps the originating web request's memory and query cost bounded
+ * by the fan-out threshold regardless of subscriber count.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $args {
+ *     An array of arguments.
+ *     @type string $type              Required. The subscription type.
+ *     @type int    $item_id           Required. The ID of the item.
+ *     @type int    $blog_id           Optional. The blog ID the subscriptions belong to.
+ *                                     Default current site ID.
+ *     @type array  $data              Optional. Additional data for the notification.
+ *     @type string $notification_type Optional. The registered notification type.
+ *     @type string $notification_from Optional. The notification source.
+ *     @type array  $usernames         Optional. Mentioned usernames handled separately by the send callback.
+ *     @type int    $last_id           Optional. Highest subscription row ID already processed
+ *                                     (keyset cursor). Default 0.
+ *     @type int    $per_page          Optional. Subscribers fetched per page. Default 1000.
+ *     @type string $fanout_id         Optional. Per-dispatch id that namespaces the durable
+ *                                     page cursor. Set by the dispatcher; carried to every page.
+ * }
+ *
+ * @return false Always false so the processed queue row is removed
+ *               (a truthy return re-runs the row — see BB_Background_Updater::task()).
+ */
+function bb_send_notifications_to_subscribers_batch( $args ) {
+	$r = bp_parse_args(
+		$args,
+		array(
+			'type'              => '',
+			'item_id'           => 0,
+			'blog_id'           => get_current_blog_id(),
+			'data'              => array(),
+			'notification_type' => '',
+			'notification_from' => '',
+			'last_id'           => 0,
+			'per_page'          => 1000,
+			'fanout_id'         => '',
+		)
+	);
+
+	$type    = $r['type'];
+	$item_id = $r['item_id'];
+
+	if ( empty( $type ) || empty( $item_id ) ) {
+		return false;
+	}
+
+	// Switch to the target site first: the cursor option, the deleted-post check
+	// and the send callbacks' lookups must all run against the site the row
+	// belongs to. The type registry itself is an in-memory filter and does not
+	// change with the switch.
+	$switched = false;
+	if ( is_multisite() && get_current_blog_id() !== (int) $r['blog_id'] ) {
+		switch_to_blog( $r['blog_id'] );
+		$switched = true;
+	}
+
+	// A per_page of 0/-1 would drop the LIMIT clause (whole list in one
+	// background request) and any other negative value is invalid SQL — clamp it.
+	$per_page = max( 1, (int) $r['per_page'] );
+	$last_id  = (int) $r['last_id'];
+
+	// Durable page cursor for this fan-out chain. The queue's twin-row cleanup
+	// only dedupes duplicates that still COEXIST in the queue; if this row is
+	// re-run (mid-task fatal + healthcheck, or lock expiry) after its chunk
+	// jobs already drained, nothing is left to dedupe against and the page
+	// would be re-sent. The cursor survives queue-row deletion, so a re-run
+	// RESUMES past pages whose chunk jobs were already queued.
+	$fanout_cursor_key = 'bb_sub_fanout_cursor_' . md5( maybe_serialize( array( $type, $item_id, (int) $r['blog_id'], $r['notification_from'], $r['data'], $r['fanout_id'] ) ) );
+	$fanout_done_to    = (int) get_option( $fanout_cursor_key, 0 );
+	if ( $last_id < $fanout_done_to ) {
+		$last_id = $fanout_done_to;
+	}
+
+	// Re-resolve the send callback at run time instead of serializing the
+	// notification class instance into the queue row; bail gracefully when the
+	// type has been unregistered since the job was queued.
+	$type_data = bb_register_subscriptions_types( $type );
+	if (
+		empty( $type_data ) ||
+		empty( $type_data['send_callback'] ) ||
+		! is_callable( $type_data['send_callback'] )
+	) {
+		// The chain dies here (returning false deletes the queue row), so the
+		// cursor would otherwise leak as a stale option.
+		delete_option( $fanout_cursor_key );
+
+		if ( $switched ) {
+			restore_current_blog();
+		}
+
+		return false;
+	}
+
+	// The source activity can be deleted mid-chain. The per-chunk send
+	// callbacks would each no-op on it, but without this check the worker
+	// would keep paginating the full subscriber list queueing dead jobs.
+	if ( ! empty( $r['data']['activity_id'] ) && bp_is_active( 'activity' ) && class_exists( 'BP_Activity_Activity' ) ) {
+		$fanout_activity = new BP_Activity_Activity( (int) $r['data']['activity_id'] );
+
+		if ( empty( $fanout_activity->id ) ) {
+			delete_option( $fanout_cursor_key );
+
+			if ( $switched ) {
+				restore_current_blog();
+			}
+
+			return false;
+		}
+	}
+
+	// Same for forum discussion/reply chains: stop paginating when the source
+	// post is gone mid-chain. Reply payloads carry both reply_id and
+	// topic_id — the reply is the item being sent, so it decides. "Gone"
+	// matches the notification renderer's definition: hard-deleted, or moved
+	// to spam/trash/pending by a moderator after the post fired.
+	$fanout_forum_post_id = 0;
+	if ( ! empty( $r['data']['reply_id'] ) ) {
+		$fanout_forum_post_id = (int) $r['data']['reply_id'];
+	} elseif ( ! empty( $r['data']['topic_id'] ) ) {
+		$fanout_forum_post_id = (int) $r['data']['topic_id'];
+	}
+
+	$fanout_forum_post_gone = false;
+	if ( ! empty( $fanout_forum_post_id ) ) {
+		$fanout_forum_post = get_post( $fanout_forum_post_id );
+
+		if ( empty( $fanout_forum_post ) ) {
+			$fanout_forum_post_gone = true;
+		} elseif ( function_exists( 'bbp_get_spam_status_id' ) && function_exists( 'bbp_get_trash_status_id' ) && function_exists( 'bbp_get_pending_status_id' ) ) {
+			$fanout_forum_post_gone = in_array( $fanout_forum_post->post_status, array( bbp_get_spam_status_id(), bbp_get_trash_status_id(), bbp_get_pending_status_id() ), true );
+		}
+	}
+
+	if ( $fanout_forum_post_gone ) {
+		delete_option( $fanout_cursor_key );
+
+		if ( $switched ) {
+			restore_current_blog();
+		}
+
+		return false;
+	}
+
+	// Keyset pagination (sc.id > last processed id) instead of page/offset:
+	// offsets shift when rows are deleted mid-fan-out (unsubscribes), silently
+	// skipping subscribers. The ID page is the authority for advancing the
+	// cursor; user IDs are resolved from it in a second bounded query, so a row
+	// deleted between the two queries just drops out without derailing the
+	// chain. Force-cache (second arg true) bypasses the per-args static cache,
+	// which cannot see the keyset filter and would replay the first page
+	// forever. cache => false additionally skips the incremented-cache read so
+	// each page is fetched fresh.
+	$bb_fanout_keyset_where = function ( $where_conditions ) use ( $last_id ) {
+		$where_conditions['bb_fanout_keyset'] = 'sc.id > ' . $last_id;
+
+		return $where_conditions;
+	};
+	add_filter( 'bb_subscriptions_get_where_conditions', $bb_fanout_keyset_where );
+
+	$id_page = bb_get_subscription_users(
+		array(
+			'type'     => $type,
+			'item_id'  => $item_id,
+			'blog_id'  => $r['blog_id'],
+			'status'   => true,
+			'fields'   => 'id',
+			'per_page' => $per_page,
+			'page'     => 1,
+			'order_by' => 'id',
+			'order'    => 'ASC',
+			'count'    => false,
+			'cache'    => false,
+		),
+		true
+	);
+
+	remove_filter( 'bb_subscriptions_get_where_conditions', $bb_fanout_keyset_where );
+
+	$subscription_ids = ! empty( $id_page['subscriptions'] ) ? $id_page['subscriptions'] : array();
+
+	if ( empty( $subscription_ids ) ) {
+		// Chain complete — the cursor is no longer needed.
+		delete_option( $fanout_cursor_key );
+
+		if ( $switched ) {
+			restore_current_blog();
+		}
+
+		return false;
+	}
+
+	// Deterministic id ASC ordering (the default date_recorded DESC has heavy
+	// ties) so a re-run composes byte-identical chunk rows — that is what lets
+	// the queue's twin-row cleanup and the idempotency guard below dedupe them.
+	$user_page = bb_get_subscription_users(
+		array(
+			'type'     => $type,
+			'item_id'  => $item_id,
+			'blog_id'  => $r['blog_id'],
+			'status'   => true,
+			'include'  => $subscription_ids,
+			'order_by' => 'id',
+			'order'    => 'ASC',
+			'count'    => false,
+			'cache'    => false,
+		),
+		true
+	);
+
+	$user_ids = ! empty( $user_page['subscriptions'] ) ? $user_page['subscriptions'] : array();
+
+	global $bb_background_updater, $wpdb;
+
+	$min_count  = (int) apply_filters( 'bb_subscription_queue_min_count', 20 );
+	$parse_args = array(
+		'type'              => $type,
+		'item_id'           => $item_id,
+		'blog_id'           => $r['blog_id'],
+		'data'              => $r['data'],
+		'notification_type' => $r['notification_type'],
+		'notification_from' => $r['notification_from'],
+	);
+
+	if ( ! empty( $r['usernames'] ) ) {
+		$parse_args['usernames'] = $r['usernames'];
+	}
+
+	$chunk_user_ids = array_chunk( $user_ids, $min_count );
+	foreach ( $chunk_user_ids as $chunk ) {
+		$parse_args['user_ids'] = $chunk;
+
+		$bb_background_updater->data(
+			array(
+				'type'     => 'notification',
+				'group'    => 'send_notifications_to_subscribers',
+				'data_id'  => $item_id,
+				'priority' => 5,
+				'callback' => $type_data['send_callback'],
+				'args'     => array( $parse_args ),
+			)
+		);
+
+		$bb_background_updater->save();
+	}
+
+	// Advance the durable cursor now that this page's chunk jobs are queued —
+	// a re-run of this row from here on resumes at the next page instead of
+	// re-sending this one.
+	$page_end_id = (int) end( $subscription_ids );
+	update_option( $fanout_cursor_key, $page_end_id, false );
+
+	// A full ID page means more subscribers may remain: queue the next page,
+	// keyed by the last subscription row ID of this page (termination is based
+	// on the ID page, not the user resolution, so a row deleted between the two
+	// queries can never abandon the chain). Row ordering (priority, id) runs
+	// this page's send jobs before the next page's fan-out row, which naturally
+	// paces the queue.
+	if ( count( $subscription_ids ) === $per_page ) {
+		$next_args             = $r;
+		$next_args['last_id']  = $page_end_id;
+		$next_args['per_page'] = $per_page;
+
+		// Idempotency guard: the queue runner re-runs a not-yet-deleted row on
+		// lock expiry or mid-task fatal; without this check that re-run would
+		// fork a second self-requeueing chain and double-notify the remainder
+		// of the list. Matching the exact serialized payload mirrors the core
+		// duplicate-row cleanup in
+		// bb_background_remove_duplicate_async_request_batch_process().
+		$next_row_data = array(
+			'callback' => 'bb_send_notifications_to_subscribers_batch',
+			'args'     => array( $next_args ),
+		);
+
+		$table_name    = $bb_background_updater::$table_name;
+		$existing_next = $wpdb->get_var( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+			$wpdb->prepare(
+				"SELECT id FROM {$table_name} WHERE `group` = %s AND `data_id` = %s AND `data` = %s LIMIT 1", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+				'send_notifications_to_subscribers',
+				$item_id,
+				maybe_serialize( $next_row_data )
+			)
+		);
+
+		// The pending-row SELECT above is check-then-act: two concurrent runs of
+		// this same page row can both find nothing and both insert, forking a
+		// duplicate walk of the remaining list. This atomic add makes exactly
+		// one run the inserter. A crash between the add and save() leaves the
+		// page row undeleted; its re-run resumes from the durable cursor, whose
+		// advanced last_id yields a different claim key — the chain self-heals
+		// through the cursor, not through TTL expiry. Like the chunk claim, this
+		// is atomic across workers only with a persistent object cache; without
+		// one it is per-process and the SELECT above is the only guard, which
+		// matches the pre-existing behavior.
+		$next_page_claim = 'bb_sub_fanout_next_' . md5( maybe_serialize( $next_row_data ) );
+
+		// A failed write (backend error, suspended cache addition) also returns
+		// false from wp_cache_add(); only a real race loser can read the winner's
+		// value, so fail open otherwise — a duplicate row is cleaned by the queue's
+		// twin-row dedupe, whereas ending the chain here would lose every
+		// remaining page.
+		$next_page_claimed = false;
+		if ( empty( $existing_next ) ) {
+			$next_page_claimed = wp_cache_add( $next_page_claim, microtime( true ), 'bb_subscriptions', 30 )
+				|| false === wp_cache_get( $next_page_claim, 'bb_subscriptions' );
+		}
+
+		if ( $next_page_claimed ) {
+			$bb_background_updater->data(
+				array(
+					'type'     => 'notification',
+					'group'    => 'send_notifications_to_subscribers',
+					'data_id'  => $item_id,
+					'priority' => 5,
+					'callback' => 'bb_send_notifications_to_subscribers_batch',
+					'args'     => array( $next_args ),
+				)
+			);
+
+			$bb_background_updater->save();
+
+			// A silently failed insert here ends the chain and the rest of the
+			// list is never notified — leave a trace for diagnosis.
+			if ( ! empty( $wpdb->last_error ) && function_exists( 'bb_error_log' ) ) {
+				bb_error_log( 'Subscription fan-out: failed to queue the next page (item ' . $item_id . '): ' . $wpdb->last_error );
+			}
+		}
+	} else {
+		// Partial page = end of the list; no re-queue, so clean the cursor here.
+		delete_option( $fanout_cursor_key );
+	}
+
+	$bb_background_updater->dispatch();
+
+	if ( $switched ) {
+		restore_current_blog();
+	}
+
+	return false;
+}
+
+/**
+ * Compact a subscription notification payload for the background queue.
+ *
+ * Drops the serialized activity object from the email tokens (the send
+ * callbacks rebuild it from data.activity_id) and leaves an `activity.id`
+ * token behind so the email renderer can rebuild it too when a send callback
+ * — an older add-on build, a third-party subscription type — does not
+ * re-inject the object. Payloads without the object are returned unchanged.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $data The notification `data` payload.
+ *
+ * @return array The payload without the activity object.
+ */
+function bb_subscriptions_compact_notification_data( $data ) {
+	if (
+		! is_array( $data ) ||
+		empty( $data['email_tokens']['tokens']['activity'] ) ||
+		! is_object( $data['email_tokens']['tokens']['activity'] )
+	) {
+		return $data;
+	}
+
+	$activity_id = ! empty( $data['activity_id'] ) ? (int) $data['activity_id'] : 0;
+	if ( empty( $activity_id ) && ! empty( $data['email_tokens']['tokens']['activity']->id ) ) {
+		$activity_id = (int) $data['email_tokens']['tokens']['activity']->id;
+	}
+
+	unset( $data['email_tokens']['tokens']['activity'] );
+
+	if ( ! empty( $activity_id ) ) {
+		$data['email_tokens']['tokens']['activity.id'] = $activity_id;
+
+		// The send callbacks rebuild from data.activity_id; a third-party caller
+		// that only supplied the object must not lose its notification.
+		if ( empty( $data['activity_id'] ) ) {
+			$data['activity_id'] = $activity_id;
+		}
+	}
+
+	return $data;
+}
+
+/**
+ * Build the cache-key hash that identifies one notification chunk.
+ *
+ * The hash covers the type, item, blog, source, payload and the chunk's user
+ * ids. The serialized activity object is excluded from the payload before
+ * hashing: legacy queue rows still carry it, new rows carry only
+ * data.activity_id, and the group send callback re-injects it after claiming —
+ * the key has to be identical across all of those shapes so a claim, its
+ * refreshes and its completion marker all agree.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $args Parsed send-callback arguments.
+ *
+ * @return string The hash, or an empty string when the chunk has no user ids.
+ */
+function bb_subscriptions_get_notification_chunk_key( $args ) {
+	$user_ids = ! empty( $args['user_ids'] ) ? (array) $args['user_ids'] : array();
+
+	if ( empty( $user_ids ) ) {
+		return '';
+	}
+
+	$data = isset( $args['data'] ) ? $args['data'] : array();
+	if ( is_array( $data ) && isset( $data['email_tokens']['tokens']['activity'] ) ) {
+		unset( $data['email_tokens']['tokens']['activity'] );
+	}
+
+	return md5(
+		maybe_serialize(
+			array(
+				isset( $args['type'] ) ? $args['type'] : '',
+				isset( $args['item_id'] ) ? $args['item_id'] : 0,
+				isset( $args['blog_id'] ) ? (int) $args['blog_id'] : get_current_blog_id(),
+				isset( $args['notification_from'] ) ? $args['notification_from'] : '',
+				$data,
+				$user_ids,
+			)
+		)
+	);
+}
+
+/**
+ * Get the lifetime of a notification chunk claim.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $args Parsed send-callback arguments.
+ *
+ * @return int Lifetime in seconds, at least 1.
+ */
+function bb_subscriptions_get_notification_chunk_claim_ttl( $args ) {
+	/**
+	 * Filters the notification chunk-claim lifetime.
+	 *
+	 * The claim is refreshed after every recipient, so it only has to outlive
+	 * a single send plus the spread between two concurrently dispatched
+	 * workers. Raise it on sites whose mail transport can take longer than the
+	 * default for one recipient.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param int   $claim_ttl Claim lifetime in seconds. Default 30.
+	 * @param array $args      Parsed send-callback arguments.
+	 */
+	$claim_ttl = (int) apply_filters( 'bb_subscription_notification_chunk_claim_ttl', 30, $args );
+
+	return max( 1, $claim_ttl );
+}
+
+/**
+ * Atomically claim a subscription notification chunk before sending it.
+ *
+ * The shared background queue can execute the same chunk row twice when
+ * workers are dispatched concurrently (cron storm, stale-lock takeover) —
+ * every user in the chunk then receives the email/notification twice. The
+ * claim is an atomic object-cache add keyed by the chunk payload: the first
+ * worker wins and any concurrent duplicate run bails. On persistent object
+ * caches (Redis/Memcached) wp_cache_add() is atomic across PHP workers;
+ * without one the claim is per-process, which simply matches the
+ * pre-existing behavior.
+ *
+ * Three cooperating markers, all in the `bb_subscriptions` cache group:
+ * - the claim (short TTL, see bb_subscriptions_get_notification_chunk_claim_ttl())
+ *   blocks a concurrent duplicate run; the send callbacks refresh it after
+ *   every recipient via bb_subscriptions_touch_notification_chunk_claim() so a
+ *   slow chunk stays owned for as long as it is actually sending;
+ * - the completion marker (filterable, one day) set by
+ *   bb_subscriptions_complete_notification_chunk() blocks a duplicate row that
+ *   runs long after the original finished (a late twin row);
+ * - a worker that fatals mid-chunk leaves neither refreshed for long, so a
+ *   retry proceeds once the short TTL lapses — provided the queue row still
+ *   exists. On a row two workers collided on, the claim loser's false return
+ *   already deleted it, so a subsequent winner fatal loses the chunk's
+ *   remainder (at-most-once for collided rows: the accepted inverse of the
+ *   duplicate sends this guard removes).
+ *
+ * wp_cache_add() also returns false when the write itself failed (backend
+ * error, wp_suspend_cache_addition()). A real race loser can read the
+ * winner's value; an infrastructure failure cannot — that case fails open
+ * (pre-existing behavior, duplicates possible) rather than silently dropping
+ * the chunk.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array  $args      Parsed send-callback arguments: type, item_id, blog_id,
+ *                          notification_from, data (identifies the activity/topic/reply),
+ *                          and user_ids for this chunk.
+ * @param string $chunk_key Optional. Key precomputed from the pristine payload via
+ *                          bb_subscriptions_get_notification_chunk_key(). Callbacks that
+ *                          mutate $args afterwards (author removal) MUST pass it so claim,
+ *                          refreshes and completion all hash the same shape. Default ''.
+ *
+ * @return bool True if this run owns the chunk, false if a concurrent duplicate run already claimed it
+ *              or the chunk was already completed.
+ */
+function bb_subscriptions_claim_notification_chunk( $args, $chunk_key = '' ) {
+	if ( '' === $chunk_key ) {
+		$chunk_key = bb_subscriptions_get_notification_chunk_key( $args );
+	}
+
+	if ( '' === $chunk_key ) {
+		// Nothing to claim.
+		return true;
+	}
+
+	// A completed chunk is never sent again, however late the duplicate row runs.
+	if ( false !== wp_cache_get( 'bb_sub_chunk_done_' . $chunk_key, 'bb_subscriptions' ) ) {
+		return false;
+	}
+
+	$claim_key = 'bb_sub_chunk_claim_' . $chunk_key;
+
+	if ( wp_cache_add( $claim_key, microtime( true ), 'bb_subscriptions', bb_subscriptions_get_notification_chunk_claim_ttl( $args ) ) ) {
+		return true;
+	}
+
+	return false === wp_cache_get( $claim_key, 'bb_subscriptions' );
+}
+
+/**
+ * Refresh the claim on a notification chunk that is still being sent.
+ *
+ * Called by the send callbacks after each recipient so the claim outlives a
+ * slow chunk (e.g. synchronous SMTP) and a stale-lock takeover cannot re-send
+ * it while it is still in flight.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array  $args      Parsed send-callback arguments (see bb_subscriptions_claim_notification_chunk()).
+ * @param string $chunk_key Optional. Precomputed pristine-payload key; pass the same key
+ *                          that was used to claim the chunk. Default ''.
+ *
+ * @return void
+ */
+function bb_subscriptions_touch_notification_chunk_claim( $args, $chunk_key = '' ) {
+	if ( '' === $chunk_key ) {
+		$chunk_key = bb_subscriptions_get_notification_chunk_key( $args );
+	}
+
+	if ( '' === $chunk_key ) {
+		return;
+	}
+
+	wp_cache_set( 'bb_sub_chunk_claim_' . $chunk_key, microtime( true ), 'bb_subscriptions', bb_subscriptions_get_notification_chunk_claim_ttl( $args ) );
+}
+
+/**
+ * Mark a notification chunk as fully sent.
+ *
+ * Called by the send callbacks once every recipient has been processed; a
+ * duplicate queue row for the same chunk that runs afterwards is refused by
+ * bb_subscriptions_claim_notification_chunk().
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array  $args      Parsed send-callback arguments (see bb_subscriptions_claim_notification_chunk()).
+ * @param string $chunk_key Optional. Precomputed pristine-payload key; pass the same key
+ *                          that was used to claim the chunk. Default ''.
+ *
+ * @return void
+ */
+function bb_subscriptions_complete_notification_chunk( $args, $chunk_key = '' ) {
+	if ( '' === $chunk_key ) {
+		$chunk_key = bb_subscriptions_get_notification_chunk_key( $args );
+	}
+
+	if ( '' === $chunk_key ) {
+		return;
+	}
+
+	/**
+	 * Filters the completion-marker lifetime of a notification chunk.
+	 *
+	 * A byte-identical duplicate queue row that runs within this window is
+	 * refused. The default comfortably outlives even a multi-hour large-group
+	 * drain; an identical chunk can never legitimately recur (a new post gets
+	 * a new activity/topic id and therefore a new key).
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param int   $done_ttl Marker lifetime in seconds. Default DAY_IN_SECONDS.
+	 * @param array $args     Parsed send-callback arguments.
+	 */
+	$done_ttl = (int) apply_filters( 'bb_subscription_notification_chunk_done_ttl', DAY_IN_SECONDS, $args );
+
+	wp_cache_set( 'bb_sub_chunk_done_' . $chunk_key, time(), 'bb_subscriptions', max( 1, $done_ttl ) );
+	wp_cache_delete( 'bb_sub_chunk_claim_' . $chunk_key, 'bb_subscriptions' );
 }
