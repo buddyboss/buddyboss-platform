@@ -985,7 +985,8 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 
 		// The chunk is fully processed; false removes the queue row. A truthy
 		// return re-queues the row via BB_Background_Updater::task() for a
-		// second, argument-less no-op pass.
+		// second pass without its original args (the runner passes itself
+		// instead), which no-ops at the guards above.
 		return false;
 	}
 
@@ -1131,7 +1132,8 @@ class BP_Forums_Notification extends BP_Core_Notification_Abstract {
 
 		// The chunk is fully processed; false removes the queue row. A truthy
 		// return re-queues the row via BB_Background_Updater::task() for a
-		// second, argument-less no-op pass.
+		// second pass without its original args (the runner passes itself
+		// instead), which no-ops at the guards above.
 		return false;
 	}
 
