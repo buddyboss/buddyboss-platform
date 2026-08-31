@@ -1815,7 +1815,15 @@ function bb_send_notifications_to_subscribers_batch( $args ) {
 			)
 		);
 
-		if ( empty( $existing_next ) ) {
+		// The pending-row SELECT above is check-then-act: two concurrent runs of
+		// this same page row can both find nothing and both insert, forking a
+		// duplicate walk of the remaining list. This atomic add makes exactly
+		// one run the inserter. A crash between the add and save() leaves the
+		// page row undeleted, and its healthcheck re-run lands after the TTL,
+		// so the chain still self-heals.
+		$next_page_claim = 'bb_sub_fanout_next_' . md5( maybe_serialize( $next_row_data ) );
+
+		if ( empty( $existing_next ) && wp_cache_add( $next_page_claim, microtime( true ), 'bb_subscriptions', 30 ) ) {
 			$bb_background_updater->data(
 				array(
 					'type'     => 'notification',
@@ -1892,5 +1900,19 @@ function bb_subscriptions_claim_notification_chunk( $args ) {
 		)
 	);
 
-	return wp_cache_add( $claim_key, microtime( true ), 'bb_subscriptions', 30 );
+	/**
+	 * Filters the notification chunk-claim lifetime.
+	 *
+	 * Raise it on sites whose mail transport can take longer than the default
+	 * to deliver a chunk (slow SMTP, third-party throttling) — an in-flight
+	 * send outliving the claim would let a retry re-send the chunk.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param int   $claim_ttl Claim lifetime in seconds. Default 30.
+	 * @param array $args      Parsed send-callback arguments.
+	 */
+	$claim_ttl = (int) apply_filters( 'bb_subscription_notification_chunk_claim_ttl', 30, $args );
+
+	return wp_cache_add( $claim_key, microtime( true ), 'bb_subscriptions', max( 1, $claim_ttl ) );
 }
