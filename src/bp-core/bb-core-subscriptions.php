@@ -1128,9 +1128,9 @@ function bb_send_notifications_to_subscribers( $args ) {
 			'fields'   => 'id',
 			'per_page' => 1,
 			'page'     => 1,
-			// Explicit: a filtered count=>false would drop 'total' and the
-			// count() fallback below would read this 1-row probe as a
-			// 1-subscriber list, routing huge lists down the direct path.
+			// Explicit: the total is the only thing this probe is for. A
+			// filtered count=>false would drop it; the fallback below then
+			// assumes a large list rather than misreading this 1-row probe.
 			'count'    => true,
 		)
 	);
@@ -1163,7 +1163,10 @@ function bb_send_notifications_to_subscribers( $args ) {
 		$parse_args['usernames'] = $usernames;
 	}
 
-	$total_subscribers = isset( $subscriptions['total'] ) ? (int) $subscriptions['total'] : count( $subscriptions['subscriptions'] );
+	// Unknown total (count arg overridden by a third-party parse_args filter):
+	// assume large. The probe holds one row, so counting it would route a huge
+	// list down the in-request direct-send path; the background path is always safe.
+	$total_subscribers = isset( $subscriptions['total'] ) ? (int) $subscriptions['total'] : PHP_INT_MAX;
 
 	/**
 	 * Filters the subscriber count above which the fan-out itself moves to the background.
