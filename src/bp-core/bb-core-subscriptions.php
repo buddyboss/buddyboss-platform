@@ -1140,6 +1140,11 @@ function bb_send_notifications_to_subscribers( $args ) {
 	 */
 	$fanout_min_count = (int) apply_filters( 'bb_subscription_background_fanout_min_count', 1000, $r );
 
+	// A filter opting out with PHP_INT_MAX would overflow the + 1 below to a
+	// float, which casts to PHP_INT_MIN and produces a negative LIMIT — a SQL
+	// error that silently sends nothing. Clamp so the page size stays an int.
+	$fanout_min_count = min( $fanout_min_count, PHP_INT_MAX - 1 );
+
 	// One bounded fetch decides the delivery strategy. For very large subscriber
 	// lists (e.g. a 70k-member group) fetching every subscriber inside the
 	// originating web request exhausts PHP memory, so read one page of
