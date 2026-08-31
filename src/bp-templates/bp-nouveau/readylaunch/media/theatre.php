@@ -17,12 +17,12 @@ defined( 'ABSPATH' ) || exit;
 <div class="bb-rl-media-model-wrapper bb-rl-internal-model media bb-rl-media-theatre" style="display: none;" id="buddypress">
 	<div id="bb-rl-media-model-container" class="bb-rl-media-model-container">
 		<div class="bb-rl-media-model-header">
-			<h2></h2>
-			<a data-balloon-pos="left" data-balloon="<?php esc_attr_e( 'Toggle Sidebar', 'buddyboss' ); ?>" class="bb-rl-toggle-theatre-sidebar" href="#">
-				<i class="bb-icons-rl-sidebar-simple"></i>
+			<h2><?php esc_html_e( 'Media', 'buddyboss' ); ?></h2>
+			<a data-balloon-pos="left" data-balloon="<?php esc_attr_e( 'Toggle Sidebar', 'buddyboss' ); ?>" class="bb-rl-toggle-theatre-sidebar" href="#" aria-label="<?php esc_attr_e( 'Toggle Sidebar', 'buddyboss' ); ?>">
+				<i class="bb-icons-rl-sidebar-simple" aria-hidden="true"></i>
 			</a>
-			<a data-balloon-pos="left" data-balloon="<?php esc_attr_e( 'Close', 'buddyboss' ); ?>" class="bb-rl-close-media-theatre bb-rl-close-model" href="#">
-				<i class="bb-icons-rl-x"></i>
+			<a data-balloon-pos="left" data-balloon="<?php esc_attr_e( 'Close', 'buddyboss' ); ?>" class="bb-rl-close-media-theatre bb-rl-close-model" href="#" aria-label="<?php esc_attr_e( 'Close', 'buddyboss' ); ?>">
+				<i class="bb-icons-rl-x" aria-hidden="true"></i>
 			</a>
 		</div>
 		<div class="bb-rl-media-model-inner">
@@ -34,7 +34,7 @@ defined( 'ABSPATH' ) || exit;
 					<i class="bb-icons-rl-caret-right"></i>
 				</a>
 				<figure class="">
-					<img src="" alt="" />
+					<img src="" alt="<?php esc_attr_e( 'Media image', 'buddyboss' ); ?>" />
 				</figure>
 				<div class="bb-rl-dropdown-wrap bb-rl-media-only-privacy">
 					<div class="bb-media-privacy-wrap" style="display: none;">

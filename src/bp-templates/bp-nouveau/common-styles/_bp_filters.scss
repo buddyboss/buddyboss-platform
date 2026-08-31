@@ -247,7 +247,7 @@
 
 	a {
 		border-bottom: 0;
-		color: #ccc;
+		color: #999;
 		padding: 0 6px;
 		line-height: 36px;
 
@@ -263,12 +263,19 @@
 		outline: none;
 	}
 
+	a:focus-visible {
+		outline: 2px solid $blue;
+		outline-offset: 2px;
+	}
+
 	a i {
 		vertical-align: middle;
 	}
 
 	a.active {
 		color: #222;
+		font-weight: 600;
+		border-bottom: 2px solid #222;
 	}
 }
 
