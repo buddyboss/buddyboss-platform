@@ -1128,6 +1128,10 @@ function bb_send_notifications_to_subscribers( $args ) {
 			'fields'   => 'id',
 			'per_page' => 1,
 			'page'     => 1,
+			// Explicit: a filtered count=>false would drop 'total' and the
+			// count() fallback below would read this 1-row probe as a
+			// 1-subscriber list, routing huge lists down the direct path.
+			'count'    => true,
 		)
 	);
 
@@ -1819,8 +1823,9 @@ function bb_send_notifications_to_subscribers_batch( $args ) {
 		// this same page row can both find nothing and both insert, forking a
 		// duplicate walk of the remaining list. This atomic add makes exactly
 		// one run the inserter. A crash between the add and save() leaves the
-		// page row undeleted, and its healthcheck re-run lands after the TTL,
-		// so the chain still self-heals.
+		// page row undeleted; its re-run resumes from the durable cursor, whose
+		// advanced last_id yields a different claim key — the chain self-heals
+		// through the cursor, not through TTL expiry.
 		$next_page_claim = 'bb_sub_fanout_next_' . md5( maybe_serialize( $next_row_data ) );
 
 		if ( empty( $existing_next ) && wp_cache_add( $next_page_claim, microtime( true ), 'bb_subscriptions', 30 ) ) {
