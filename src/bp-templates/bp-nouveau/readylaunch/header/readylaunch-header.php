@@ -45,6 +45,7 @@ if ( 'choice' === $bb_rl_theme_mode ) {
 wp_body_open();
 bp_get_template_part( 'sidebar/left-sidebar' );
 ?>
+<a href="#primary" class="skip-link bp-screen-reader-text"><?php esc_html_e( 'Skip to main content', 'buddyboss' ); ?></a>
 <div id="page" class="site bb-readylaunch">
 	<header id="masthead" class="bb-rl-header">
 		<div class="bb-rl-container bb-rl-header-container flex justify-between items-center">

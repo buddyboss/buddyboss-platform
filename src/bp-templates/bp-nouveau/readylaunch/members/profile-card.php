@@ -38,7 +38,7 @@ defined( 'ABSPATH' ) || exit;
 			<div class="bb-rl-card-body">
 				<div class="bb-rl-card-avatar">
 					<span class="card-profile-status"></span>
-					<img src="" alt="">
+					<img src="" alt="<?php esc_attr_e( 'Member avatar', 'buddyboss' ); ?>" />
 				</div>
 				<div class="bb-rl-card-entity">
 					<div class="bb-card-profile-type"></div>

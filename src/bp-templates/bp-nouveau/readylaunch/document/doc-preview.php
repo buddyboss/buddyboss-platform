@@ -25,7 +25,7 @@ if (
 ) {
 	?>
 	<div class="bb-rl-document-preview-wrap">
-		<img src="<?php echo esc_url( $attachment_url ); ?>" alt="" />
+		<img src="<?php echo esc_url( $attachment_url ); ?>" alt="<?php esc_attr_e( 'Document preview', 'buddyboss' ); ?>" />
 	</div><!-- .bb-rl-document-preview-wrap -->
 	<?php
 }
