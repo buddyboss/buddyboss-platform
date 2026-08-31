@@ -1828,7 +1828,10 @@ function bb_send_notifications_to_subscribers_batch( $args ) {
 		// one run the inserter. A crash between the add and save() leaves the
 		// page row undeleted; its re-run resumes from the durable cursor, whose
 		// advanced last_id yields a different claim key — the chain self-heals
-		// through the cursor, not through TTL expiry.
+		// through the cursor, not through TTL expiry. Like the chunk claim, this
+		// is atomic across workers only with a persistent object cache; without
+		// one it is per-process and the SELECT above is the only guard, which
+		// matches the pre-existing behavior.
 		$next_page_claim = 'bb_sub_fanout_next_' . md5( maybe_serialize( $next_row_data ) );
 
 		if ( empty( $existing_next ) && wp_cache_add( $next_page_claim, microtime( true ), 'bb_subscriptions', 30 ) ) {

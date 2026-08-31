@@ -823,10 +823,27 @@ if ( ! class_exists( 'BB_Subscriptions' ) ) {
 				// keeps the column interpolation locally auditable.
 				if ( ! empty( $paged_subscription_ids ) && in_array( $r['fields'], self::get_tbl_columns(), true ) ) {
 					$subscription_ids_sql = implode( ',', array_map( 'intval', $paged_subscription_ids ) );
-					$column_results       = $wpdb->get_results( "SELECT sc.id, sc.{$r['fields']} FROM {$subscription_tbl} sc WHERE sc.id IN ({$subscription_ids_sql})" ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+
+					// The hydration path runs every row through the bb_subscriptions_pre_validate
+					// filter inside populate(). Preserve that contract here without hydrating:
+					// only when something is hooked, read the full row (still no per-row cache
+					// write, no object) and drop rows the filter rejects. Unhooked (the default),
+					// read just the requested column.
+					$has_pre_validate = has_filter( 'bb_subscriptions_pre_validate' );
+					$select_columns   = $has_pre_validate ? 'sc.*' : "sc.id, sc.{$r['fields']}";
+					$column_results   = $wpdb->get_results( "SELECT {$select_columns} FROM {$subscription_tbl} sc WHERE sc.id IN ({$subscription_ids_sql})" ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 
 					$column_map = array();
 					foreach ( $column_results as $column_result ) {
+						if ( $has_pre_validate ) {
+							/** This filter is documented in bp-core/classes/class-bb-subscriptions.php */
+							$validate = apply_filters( 'bb_subscriptions_pre_validate', true, $column_result );
+
+							if ( empty( $validate ) ) {
+								continue;
+							}
+						}
+
 						$column_map[ (int) $column_result->id ] = $column_result->{$r['fields']};
 					}
 
