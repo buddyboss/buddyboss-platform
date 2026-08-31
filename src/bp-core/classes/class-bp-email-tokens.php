@@ -1361,6 +1361,7 @@ class BP_Email_Tokens {
 	 * Generate the output for token poster.url
 	 *
 	 * @since BuddyBoss 1.0.0
+	 * @since BuddyBoss [BBVERSION] Rebuilds the activity from the `activity.id` token when the object is absent.
 	 *
 	 * @param \BP_Email $bp_email
 	 * @param array     $formatted_tokens
@@ -1370,6 +1371,16 @@ class BP_Email_Tokens {
 	 */
 	public function token__poster_url( $bp_email, $formatted_tokens, $tokens ) {
 		$activity = isset( $tokens['activity'] ) ? $tokens['activity'] : false;
+
+		// Queued notification payloads carry `activity.id` instead of the
+		// serialized activity object — rebuild it so the poster link renders
+		// even when the send callback did not re-inject the object.
+		if ( ! is_object( $activity ) && ! empty( $tokens['activity.id'] ) && bp_is_active( 'activity' ) ) {
+			$activity = new BP_Activity_Activity( (int) $tokens['activity.id'] );
+			if ( empty( $activity->id ) ) {
+				$activity = false;
+			}
+		}
 
 		if ( empty( $activity ) ) {
 			$user_id = isset( $tokens['commenter.id'] ) ? $tokens['commenter.id'] : false;
@@ -2453,9 +2464,14 @@ class BP_Email_Tokens {
 		$settings = bp_email_get_appearance_settings();
 		$activity = isset( $tokens['activity'] ) ? $tokens['activity'] : '';
 
-		// Queued notification payloads may omit the activity object;
-		// send callbacks re-inject it, but a third-party callback might not — bail
-		// instead of fataling on property access below.
+		// Queued notification payloads carry `activity.id` instead of the activity
+		// object; the send callbacks re-inject the object, but an older add-on
+		// build or a third-party callback might not — rebuild it here, and bail
+		// instead of fataling on property access below when that is impossible.
+		if ( ! is_object( $activity ) && ! empty( $tokens['activity.id'] ) && bp_is_active( 'activity' ) ) {
+			$activity = new BP_Activity_Activity( (int) $tokens['activity.id'] );
+		}
+
 		if ( ! is_object( $activity ) || empty( $activity->user_id ) ) {
 			return '';
 		}

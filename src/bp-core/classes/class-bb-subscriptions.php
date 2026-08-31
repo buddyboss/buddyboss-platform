@@ -612,10 +612,10 @@ if ( ! class_exists( 'BB_Subscriptions' ) ) {
 		 *                                            Default: null.
 		 *     @type bool         $status             Optional. Get all active subscription if true otherwise return inactive.
 		 *                                            Default: true.
-		 *     @type string       $order_by           Optional. Property to sort by. 'date_recorded', 'item_id',
-		 *                                            'secondary_item_id', 'user_id', 'id', 'type'
-		 *                                            'total_subscription_count', 'random', 'include'.
-		 *                                            Default: 'date_recorded'.
+		 *     @type string       $order_by           Optional. Column to sort by: 'id', 'blog_id', 'user_id', 'type',
+		 *                                            'item_id', 'secondary_item_id', 'status', 'date_recorded'; or
+		 *                                            'rand()' for random order, or 'in' to keep the order of $include.
+		 *                                            Anything else falls back to 'date_recorded'. Default: 'date_recorded'.
 		 *     @type string       $order              Optional. Sort order. 'ASC' or 'DESC'. Default: 'DESC'.
 		 *     @type int          $per_page           Optional. Number of items to return per page of results.
 		 *                                            Default: null (no limit).
@@ -740,11 +740,19 @@ if ( ! class_exists( 'BB_Subscriptions' ) ) {
 
 			// Whitelist: the value is interpolated into the ORDER BY clause
 			// below. 'rand()' and 'in' are special-cased there; anything else
-			// must be a real table column.
-			if ( ! in_array( $order_by, array_merge( self::get_tbl_columns(), array( 'rand()', 'in' ) ), true ) ) {
+			// must be a real table column. 'in' only makes sense together with
+			// $include (otherwise it would emit a literal "ORDER BY in").
+			if (
+				! in_array( $order_by, array_merge( self::get_tbl_columns(), array( 'rand()', 'in' ) ), true ) ||
+				( 'in' === $order_by && empty( $r['include'] ) )
+			) {
 				$order_by = 'date_recorded';
 			}
-			$sql['order_by'] = "ORDER BY {$order_by} {$order}";
+
+			// Qualify the column: a third-party bb_subscriptions_get_join_sql join
+			// carrying its own `id` column would otherwise make ORDER BY ambiguous
+			// and turn the fan-out worker's page query into an empty result.
+			$sql['order_by'] = "ORDER BY sc.{$order_by} {$order}";
 
 			// Random order is a special case.
 			if ( 'rand()' === $order_by ) {
@@ -800,7 +808,12 @@ if ( ! class_exists( 'BB_Subscriptions' ) ) {
 			$cached = bp_core_get_incremented_cache( $paged_subscriptions_sql, 'bb_subscriptions' );
 			if ( false === $cached || false === $r['cache'] ) {
 				$paged_subscription_ids = $wpdb->get_col( $paged_subscriptions_sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-				bp_core_set_incremented_cache( $paged_subscriptions_sql, 'bb_subscriptions', $paged_subscription_ids );
+
+				// cache => false means "fresh, one-off read" (keyset pages of the
+				// background fan-out): don't leave a never-read key per page behind.
+				if ( false !== $r['cache'] ) {
+					bp_core_set_incremented_cache( $paged_subscriptions_sql, 'bb_subscriptions', $paged_subscription_ids );
+				}
 			} else {
 				$paged_subscription_ids = $cached;
 			}
@@ -852,7 +865,9 @@ if ( ! class_exists( 'BB_Subscriptions' ) ) {
 					$is_int_column = in_array( $r['fields'], array( 'id', 'blog_id', 'user_id', 'item_id', 'secondary_item_id', 'status' ), true );
 
 					foreach ( $paged_subscription_ids as $paged_subscription_id ) {
-						if ( isset( $column_map[ (int) $paged_subscription_id ] ) ) {
+						// array_key_exists, not isset: a NULL column value (date_recorded is
+						// nullable) is still a row and was returned as null by the hydration path.
+						if ( array_key_exists( (int) $paged_subscription_id, $column_map ) ) {
 							$paged_subscriptions[] = $is_int_column ? (int) $column_map[ (int) $paged_subscription_id ] : $column_map[ (int) $paged_subscription_id ];
 						}
 					}
@@ -895,7 +910,10 @@ if ( ! class_exists( 'BB_Subscriptions' ) ) {
 				$cached = bp_core_get_incremented_cache( $total_subscriptions_sql, 'bb_subscriptions' );
 				if ( false === $cached || false === $r['cache'] ) {
 					$total_subscriptions = (int) $wpdb->get_var( $total_subscriptions_sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-					bp_core_set_incremented_cache( $total_subscriptions_sql, 'bb_subscriptions', array( $total_subscriptions ) );
+
+					if ( false !== $r['cache'] ) {
+						bp_core_set_incremented_cache( $total_subscriptions_sql, 'bb_subscriptions', array( $total_subscriptions ) );
+					}
 				} else {
 					$total_subscriptions = (int) ( ! empty( $cached ) ? current( $cached ) : 0 );
 				}
