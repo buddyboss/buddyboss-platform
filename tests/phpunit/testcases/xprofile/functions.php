@@ -1074,4 +1074,105 @@ Bar!';
 	// 	$this->assertRegExp( $regex, $output );
 	// 	unset( $GLOBALS['field'] );
 	// }
+	/**
+	 * @group bb_xprofile_can_change_field_visibility
+	 */
+	public function test_bb_xprofile_can_change_field_visibility_enforced_field() {
+		$u = self::factory()->user->create();
+		$f = $this->create_visibility_field( 'disabled', 'public' );
+		$this->set_current_user( $u );
+		buddypress()->displayed_user->id = $u;
+
+		$this->assertFalse( bb_xprofile_can_change_field_visibility( $f ) );
+	}
+
+	/**
+	 * @group bb_xprofile_can_change_field_visibility
+	 */
+	public function test_bb_xprofile_can_change_field_visibility_allowed_field() {
+		$u = self::factory()->user->create();
+		$f = $this->create_visibility_field( 'allowed', 'public' );
+		$this->set_current_user( $u );
+		buddypress()->displayed_user->id = $u;
+
+		$this->assertTrue( bb_xprofile_can_change_field_visibility( $f ) );
+	}
+
+	/**
+	 * @group bb_xprofile_can_change_field_visibility
+	 */
+	public function test_bb_xprofile_can_change_field_visibility_nickname_locked_by_display_name_format() {
+		$u = self::factory()->user->create();
+		$f = $this->create_visibility_field( 'allowed', 'public' );
+		bp_update_option( 'bp-xprofile-nickname-field-id', $f );
+		$this->set_current_user( $u );
+		buddypress()->displayed_user->id = $u;
+
+		$this->assertFalse( bb_xprofile_can_change_field_visibility( $f ) );
+
+		bp_delete_option( 'bp-xprofile-nickname-field-id' );
+	}
+
+	/**
+	 * @group bb_xprofile_can_change_field_visibility
+	 */
+	public function test_bb_xprofile_can_change_field_visibility_does_not_leak_globals() {
+		$u = self::factory()->user->create();
+		$f = $this->create_visibility_field( 'allowed', 'public' );
+		$this->set_current_user( $u );
+		buddypress()->displayed_user->id = $u;
+		unset( $GLOBALS['profile_template'], $GLOBALS['field'] );
+
+		bb_xprofile_can_change_field_visibility( $f );
+
+		$this->assertFalse( isset( $GLOBALS['profile_template'] ) );
+		$this->assertFalse( isset( $GLOBALS['field'] ) );
+	}
+
+	/**
+	 * @group bb_xprofile_save_fields
+	 */
+	public function test_bb_xprofile_save_fields_skips_visibility_write_for_enforced_field() {
+		$u = self::factory()->user->create();
+		$f = $this->create_visibility_field( 'disabled', 'loggedin' );
+		$this->set_current_user( $u );
+		buddypress()->displayed_user->id = $u;
+
+		$_POST[ 'field_' . $f ]                 = 'hello';
+		$_POST[ 'field_' . $f . '_visibility' ] = 'friends';
+		bb_xprofile_save_fields( array( $f ), array( $f => false ) );
+		unset( $_POST[ 'field_' . $f ], $_POST[ 'field_' . $f . '_visibility' ] );
+
+		$this->assertSame( 'hello', xprofile_get_field_data( $f, $u ) );
+		$levels = bp_get_user_meta( $u, 'bp_xprofile_visibility_levels', true );
+		$this->assertTrue( empty( $levels[ $f ] ) );
+	}
+
+	/**
+	 * @group bb_xprofile_save_fields
+	 */
+	public function test_bb_xprofile_save_fields_writes_visibility_for_allowed_field() {
+		$u = self::factory()->user->create();
+		$f = $this->create_visibility_field( 'allowed', 'public' );
+		$this->set_current_user( $u );
+		buddypress()->displayed_user->id = $u;
+
+		$_POST[ 'field_' . $f ]                 = 'hello';
+		$_POST[ 'field_' . $f . '_visibility' ] = 'friends';
+		bb_xprofile_save_fields( array( $f ), array( $f => false ) );
+		unset( $_POST[ 'field_' . $f ], $_POST[ 'field_' . $f . '_visibility' ] );
+
+		$this->assertSame( 'friends', xprofile_get_field_visibility_level( $f, $u ) );
+	}
+
+	/** Create an xprofile field with the given visibility settings. */
+	protected function create_visibility_field( $allow_custom_visibility, $default_visibility ) {
+		$g = self::factory()->xprofile_group->create();
+		$f = self::factory()->xprofile_field->create( array( 'field_group_id' => $g ) );
+
+		bp_xprofile_update_field_meta( $f, 'default_visibility', $default_visibility );
+		bp_xprofile_update_field_meta( $f, 'allow_custom_visibility', $allow_custom_visibility );
+
+		return $f;
+	}
 }
