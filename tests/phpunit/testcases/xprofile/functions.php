@@ -1166,6 +1166,64 @@ Bar!';
 	}
 
 	/** Create an xprofile field with the given visibility settings. */
+	/**
+	 * @group bb_xprofile_can_change_field_visibility
+	 */
+	public function test_signup_activation_ignores_submitted_visibility_for_enforced_field() {
+		$f = $this->create_visibility_field( 'disabled', 'adminsonly' );
+
+		$signup_id = BP_Signup::add(
+			array(
+				'user_login'     => 'lockedsignupuser',
+				'user_email'     => 'lockedsignup@example.test',
+				'activation_key' => 'lockedsignupkey',
+				'meta'           => array(
+					'password'              => 'password',
+					'profile_field_ids'     => (string) $f,
+					"field_{$f}"            => 'Locked value',
+					"field_{$f}_visibility" => 'public',
+				),
+			)
+		);
+		$this->assertNotEmpty( $signup_id );
+
+		$user_id = bp_core_activate_signup( 'lockedsignupkey' );
+		$this->assertNotWPError( $user_id );
+
+		// The crafted registration-form level must be ignored: the enforced
+		// field keeps its admin default.
+		$this->assertSame( 'adminsonly', xprofile_get_field_visibility_level( $f, $user_id ) );
+	}
+
+	/**
+	 * @group bb_xprofile_can_change_field_visibility
+	 */
+	public function test_signup_activation_honors_submitted_visibility_for_allowed_field() {
+		$f = $this->create_visibility_field( 'allowed', 'adminsonly' );
+
+		$signup_id = BP_Signup::add(
+			array(
+				'user_login'     => 'allowedsignupuser',
+				'user_email'     => 'allowedsignup@example.test',
+				'activation_key' => 'allowedsignupkey',
+				'meta'           => array(
+					'password'              => 'password',
+					'profile_field_ids'     => (string) $f,
+					"field_{$f}"            => 'Allowed value',
+					"field_{$f}_visibility" => 'loggedin',
+				),
+			)
+		);
+		$this->assertNotEmpty( $signup_id );
+
+		$user_id = bp_core_activate_signup( 'allowedsignupkey' );
+		$this->assertNotWPError( $user_id );
+
+		// Control: activation still honors the submitted level for fields the
+		// member may change — proves the path processes the signup meta at all.
+		$this->assertSame( 'loggedin', xprofile_get_field_visibility_level( $f, $user_id ) );
+	}
+
 	protected function create_visibility_field( $allow_custom_visibility, $default_visibility ) {
 		$g = self::factory()->xprofile_group->create();
 		$f = self::factory()->xprofile_field->create( array( 'field_group_id' => $g ) );
