@@ -216,3 +216,38 @@ function bb_media_get_video_extension_data() {
 	return bb_media_get_extension_data( 'bp_video_extensions_support' );
 }
 
+/**
+ * Refresh the video extensions field with real defaults once they're loadable.
+ *
+ * Mirrors `bb_media_lazy_refresh_document_extension_defaults()` in
+ * settings-documents.php — see that function's docblock for the full
+ * explanation of the `bp_loaded` priority-5 load-order problem this works
+ * around for `bp_video_allowed_video_type()`.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $feature_id The feature being loaded.
+ */
+function bb_media_lazy_refresh_video_extension_defaults( $feature_id ) {
+	if ( 'media' !== $feature_id || ! function_exists( 'bp_video_allowed_video_type' ) ) {
+		return;
+	}
+
+	$existing = bb_feature_registry()->bb_get_fields( 'media', 'videos', 'videos_settings' );
+	if ( empty( $existing['bp_video_extensions_support'] ) ) {
+		return;
+	}
+
+	$field = $existing['bp_video_extensions_support'];
+	if ( ! empty( $field['extension_data'] ) ) {
+		// Already populated (e.g. the option has been saved) — nothing to refresh.
+		return;
+	}
+
+	$field['options']        = bb_media_get_video_extension_options();
+	$field['extension_data'] = bb_media_get_video_extension_data();
+
+	bb_register_feature_field( 'media', 'videos', 'videos_settings', $field );
+}
+add_action( 'bb_admin_settings_before_get_feature', 'bb_media_lazy_refresh_video_extension_defaults' );
+
