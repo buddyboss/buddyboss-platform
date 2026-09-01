@@ -1190,9 +1190,13 @@ Bar!';
 		$user_id = bp_core_activate_signup( 'lockedsignupkey' );
 		$this->assertNotWPError( $user_id );
 
-		// The crafted registration-form level must be ignored: the enforced
-		// field keeps its admin default.
-		$this->assertSame( 'adminsonly', xprofile_get_field_visibility_level( $f, $user_id ) );
+		// Assert the RAW stored meta, not the accessor: for enforced fields the
+		// accessor always returns the admin default regardless of storage, so it
+		// cannot distinguish a blocked write from a stored crafted level. The
+		// guard stores the default, so the crafted 'public' must not be present.
+		$levels = bp_get_user_meta( $user_id, 'bp_xprofile_visibility_levels', true );
+		$this->assertSame( 'adminsonly', isset( $levels[ $f ] ) ? $levels[ $f ] : 'adminsonly', 'Stored level must be the admin default, never the crafted value.' );
+		$this->assertNotSame( 'public', isset( $levels[ $f ] ) ? $levels[ $f ] : '', 'The crafted registration level must not reach storage.' );
 	}
 
 	/**

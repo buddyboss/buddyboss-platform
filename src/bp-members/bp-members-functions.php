@@ -2133,15 +2133,16 @@ function bp_core_activate_signup( $key ) {
 				 *
 				 * Use the field's default visibility if not present, and 'public' if a
 				 * default visibility is not defined. Fields locked by "Enforce field
-				 * visibility" always take the default: a crafted registration POST could
+				 * visibility" or the display-name format always take the default: a crafted registration POST could
 				 * otherwise persist a member-chosen level. Activation runs logged out,
 				 * where the visibility capability is granted, so the field meta is
 				 * checked directly.
 				 */
 				$key     = "field_{$field_id}_visibility";
-				$vfield  = xprofile_get_field( $field_id );
+				$vfield  = xprofile_get_field( $field_id, null, false );
 				$default = isset( $vfield->default_visibility ) ? $vfield->default_visibility : 'public';
-				$locked  = $vfield instanceof BP_XProfile_Field && 'disabled' === $vfield->__get( 'allow_custom_visibility' );
+				$locked  = ( $vfield instanceof BP_XProfile_Field && 'disabled' === $vfield->__get( 'allow_custom_visibility' ) )
+					|| bp_core_hide_display_name_field( $field_id );
 
 				if ( ! $locked && isset( $user['meta'][ $key ] ) ) {
 					$visibility_level = $user['meta'][ $key ];
