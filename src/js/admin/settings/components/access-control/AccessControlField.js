@@ -16,7 +16,7 @@
  * @since   BuddyBoss [BBVERSION]
  */
 
-import { useState, useRef, RawHTML } from '@wordpress/element';
+import { useState, useRef, useEffect, RawHTML } from '@wordpress/element';
 import { CheckboxControl, SelectControl, ToggleControl, Spinner } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import { decodeEntities } from '@wordpress/html-entities';
@@ -45,13 +45,17 @@ function initPerOptionSettings( selectedOpts, serverPerOption, savedValue ) {
 		var subKey  = 'access-control-' + optKey + '-options';
 		var subData = null;
 
-		// Try server-provided per_option_settings first.
-		if ( serverPerOption && serverPerOption[ optKey ] ) {
-			subData = serverPerOption[ optKey ];
-		}
-		// Fallback to saved value sub-keys.
-		else if ( savedValue && savedValue[ subKey ] ) {
+		// Prefer the actually-saved value over the server enrichment. The
+		// enrichment (per_option_settings) is computed server-side and travels
+		// in the feature cache, so after a rapid change it can be stale for
+		// this option, whereas the saved value is exactly what the user last
+		// persisted. Same "trust saved value over enrichment" rule this
+		// component applies to type/sub-type/options; falling back to the
+		// enrichment only when the saved value has no sub-key for this option.
+		if ( savedValue && undefined !== savedValue[ subKey ] ) {
 			subData = savedValue[ subKey ];
+		} else if ( serverPerOption && serverPerOption[ optKey ] ) {
+			subData = serverPerOption[ optKey ];
 		}
 
 		if ( subData && Array.isArray( subData ) && subData.indexOf( 'all' ) !== -1 ) {
@@ -80,21 +84,80 @@ export function AccessControlField( { field, value, onChange } ) {
 	var types      = wp.hooks.applyFilters( 'bb.accessControl.types', data.types || [], field );
 	var isThreaded = !! field.threaded;
 
+	/**
+	 * Whether a type config is a grouped type (has selectable sub-types).
+	 * Single source of truth for the mount heal AND both change handlers —
+	 * Pro emits `sub_types` as an empty PHP array (JSON `[]`, truthy in JS)
+	 * for non-grouped cases, so a bare truthiness check misclassifies.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param {Object} cfg Type config from the types array.
+	 * @return {boolean} True when the type has selectable sub-types.
+	 */
+	var isGroupedTypeConfig = function( cfg ) {
+		return !! ( cfg && cfg.sub_types && cfg.sub_types.items && cfg.sub_types.items.length > 0 );
+	};
+
+	// An object value without a type means the rule was explicitly cleared
+	// through this UI (buildValue always emits an object, and the save echo
+	// caches it as such). A non-object value ('' — the never-saved default)
+	// falls back to the enrichment, which is computed from the same stored
+	// option and is therefore consistent on fresh data.
+	var isClearedValue = !! ( value && 'object' === typeof value && ! value[ 'access-control-type' ] );
+
 	// State.
-	var [ selectedType, setSelectedType ]         = useState( value?.[ 'access-control-type' ] || data.current_type || '' );
+	var [ selectedType, setSelectedType ]         = useState( function() {
+		if ( value && value[ 'access-control-type' ] ) {
+			return value[ 'access-control-type' ];
+		}
+		// Explicitly cleared — render the placeholder rather than resurrecting
+		// the enrichment's type, which can be stale on cached SPA re-entry.
+		if ( value && 'object' === typeof value ) {
+			return '';
+		}
+		return data.current_type || '';
+	} );
 	var [ selectedSubType, setSelectedSubType ]   = useState( function() {
-		// Determine initial sub-type from saved value using the sub-type key from PHP.
+		// Resolve the sub-type key for the SAVED type from the types config —
+		// the same trusted source buildValue() uses. The enrichment's
+		// current_sub_type_key exists only when a sub-type was already stored
+		// at panel-fetch time, so after the first-ever provider save (or a
+		// grouped-type switch) a stale cached enrichment carries no key — or
+		// another grouped type's key — and the value lookup would miss the
+		// saved provider, then the next save would silently erase it.
+		var savedType = value && value[ 'access-control-type' ];
+		if ( savedType ) {
+			for ( var i = 0; i < types.length; i++ ) {
+				if ( types[ i ].value === savedType ) {
+					var cfgKey = types[ i ].sub_types && types[ i ].sub_types.key;
+					if ( cfgKey && value[ cfgKey ] ) {
+						return value[ cfgKey ];
+					}
+					break;
+				}
+			}
+		}
+		// Fallback: enrichment-provided key (fresh-data path).
 		if ( data.current_sub_type_key && value?.[ data.current_sub_type_key ] ) {
 			return value[ data.current_sub_type_key ];
 		}
+		// Mirror the type initializer: an explicitly cleared (object) value
+		// must not resurrect the (possibly stale cached) enrichment sub-type.
+		if ( value && 'object' === typeof value ) {
+			return '';
+		}
 		return data.current_sub_type || '';
 	} );
-	var [ options, setOptions ]                   = useState( data.options || [] );
+	// A cleared rule must not render the stale enrichment's options list —
+	// the toggle list renders purely on options.length, so stale options
+	// under a placeholder type would invite toggling a dead rule into storage.
+	var [ options, setOptions ]                   = useState( isClearedValue ? [] : ( data.options || [] ) );
 	// Recipient list for threaded "Specific" checkboxes: the FULL role set
 	// (includes administrators + the sender's own role), unlike `options` which
 	// is the admin-excluded sender list. Falls back to `options` when the server
 	// provides no separate recipient list (legacy parity — see renderThreadedCheckboxes).
-	var [ recipientOptions, setRecipientOptions ] = useState( data.recipient_options || data.options || [] );
+	var [ recipientOptions, setRecipientOptions ] = useState( isClearedValue ? [] : ( data.recipient_options || data.options || [] ) );
 	var [ selectedOptions, setSelectedOptions ]   = useState( value?.[ 'access-control-options' ] || [] );
 	var [ loading, setLoading ]                   = useState( false );
 	var [ fetchError, setFetchError ]             = useState( '' );
@@ -122,6 +185,96 @@ export function AccessControlField( { field, value, onChange } ) {
 		}
 		return null;
 	};
+
+	// Self-heal a stale options list on mount. `data.options` comes from the
+	// server enrichment captured when the panel payload was fetched (and is
+	// served cache-first on SPA re-entry). Rapid selection changes fire
+	// multiple debounced saves whose responses can update that cache out of
+	// order, leaving enrichment computed for a different type than the saved
+	// value (e.g. type shows "Profile Type" but the options list still holds
+	// membership plans). When the enrichment's current type disagrees with
+	// the saved value's type, refetch the options for the saved selection.
+	useEffect( function() {
+		// The enrichment options are computed from type + sub-type, so a
+		// provider-only switch (same type, different sub-type) also leaves
+		// stale options in the cached payload — compare both.
+		if (
+			! selectedType ||
+			(
+				( data.current_type || '' ) === selectedType &&
+				( data.current_sub_type || '' ) === ( selectedSubType || '' )
+			)
+		) {
+			return undefined;
+		}
+
+		var typeConfig = getSelectedTypeConfig();
+		var action     = 'get_access_control_level_options';
+		var fetchValue = selectedType;
+
+		if ( isGroupedTypeConfig( typeConfig ) ) {
+			if ( ! selectedSubType || ! typeConfig.sub_types.action ) {
+				setOptions( [] );
+				setRecipientOptions( [] );
+				return undefined;
+			}
+			action     = typeConfig.sub_types.action;
+			fetchValue = selectedSubType;
+		}
+
+		var controller   = new AbortController();
+		abortRef.current = controller;
+		setLoading( true );
+		// The displayed options belong to the enrichment's (different) type; if
+		// this refetch fails they must not stay rendered and toggleable under
+		// the saved selection — a toggle would persist another type's option
+		// keys into this rule. Clear them so the error state shows alone.
+		setOptions( [] );
+		setRecipientOptions( [] );
+
+		ajaxFetch( action, {
+			value: fetchValue,
+			key: field.name,
+			format: 'json',
+		}, { signal: controller.signal } ).then( function( response ) {
+			var newOptions = response?.data?.options || [];
+			// Match the handlers' filter signatures: 3 args for direct types
+			// (handleTypeChange), 4 for grouped types (handleSubTypeChange).
+			if ( selectedSubType ) {
+				newOptions = wp.hooks.applyFilters( 'bb.accessControl.options', newOptions, field, selectedType, selectedSubType );
+			} else {
+				newOptions = wp.hooks.applyFilters( 'bb.accessControl.options', newOptions, field, selectedType );
+			}
+			setOptions( newOptions );
+			setRecipientOptions( response?.data?.recipient_options || response?.data?.options || [] );
+			setLoading( false );
+		} ).catch( function( error ) {
+			if ( error && 'AbortError' === error.name ) {
+				return;
+			}
+			setLoading( false );
+			setFetchError( __( 'Failed to load options. Please try again.', 'buddyboss' ) );
+		} );
+
+		return function() {
+			controller.abort();
+		};
+		// Mount-only heal: the stale-enrichment condition can only exist at mount.
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [] );
+
+	// Abort whatever options fetch is in flight when the field unmounts. The
+	// heal effect's cleanup only covers its own controller; fetches started by
+	// the change handlers live solely in abortRef and would otherwise run to
+	// completion against an unmounted instance (harmless no-op setState in
+	// React 18, but a wasted request worth cancelling).
+	useEffect( function() {
+		return function() {
+			if ( abortRef.current ) {
+				abortRef.current.abort();
+			}
+		};
+	}, [] );
 
 	/**
 	 * Build the saved value object including sub-type key and per-option sub-keys.
@@ -183,6 +336,15 @@ export function AccessControlField( { field, value, onChange } ) {
 
 		// Reset to placeholder — save to clear the setting.
 		if ( ! newType ) {
+			// Kill any in-flight options fetch (mount heal or a prior change)
+			// so a late response can't repaint the old type's options. The
+			// aborted fetch's catch early-returns on AbortError, so clear the
+			// loading/error state here or the spinner would stick forever.
+			if ( abortRef.current ) {
+				abortRef.current.abort();
+			}
+			setLoading( false );
+			setFetchError( '' );
 			setOptions( [] );
 			setRecipientOptions( [] );
 			onChange( {
@@ -202,7 +364,15 @@ export function AccessControlField( { field, value, onChange } ) {
 		}
 
 		// If this type has sub-types, don't fetch options yet — wait for sub-type selection.
-		if ( typeConfig && typeConfig.sub_types && typeConfig.sub_types.items && typeConfig.sub_types.items.length > 0 ) {
+		if ( isGroupedTypeConfig( typeConfig ) ) {
+			// Kill any in-flight options fetch so a late response can't
+			// repaint the previous type's options under the grouped type,
+			// and clear loading/error state the aborted catch won't touch.
+			if ( abortRef.current ) {
+				abortRef.current.abort();
+			}
+			setLoading( false );
+			setFetchError( '' );
 			setOptions( [] );
 			setRecipientOptions( [] );
 
@@ -217,6 +387,12 @@ export function AccessControlField( { field, value, onChange } ) {
 		// Direct type — fetch options via AJAX.
 		setLoading( true );
 		setFetchError( '' );
+		// Clear the previous type's lists before fetching: if this fetch fails,
+		// the toggle list must not keep rendering the old type's options under
+		// the new selection — toggling one would save another type's option
+		// keys into this rule.
+		setOptions( [] );
+		setRecipientOptions( [] );
 
 		// Cancel any in-flight request before starting a new one.
 		if ( abortRef.current ) {
@@ -256,7 +432,15 @@ export function AccessControlField( { field, value, onChange } ) {
 
 		var typeConfig = getSelectedTypeConfig();
 
-		if ( ! newSubType || ! typeConfig || ! typeConfig.sub_types ) {
+		if ( ! newSubType || ! isGroupedTypeConfig( typeConfig ) ) {
+			// Kill any in-flight options fetch so a late response can't
+			// repaint the previous provider's options under the placeholder,
+			// and clear loading/error state the aborted catch won't touch.
+			if ( abortRef.current ) {
+				abortRef.current.abort();
+			}
+			setLoading( false );
+			setFetchError( '' );
 			setOptions( [] );
 			setRecipientOptions( [] );
 
@@ -272,6 +456,12 @@ export function AccessControlField( { field, value, onChange } ) {
 
 		setLoading( true );
 		setFetchError( '' );
+		// Clear the previous provider's lists before fetching: if this fetch
+		// fails, the toggle list must not keep rendering the old provider's
+		// options under the new selection — toggling one would save another
+		// provider's option keys into this rule.
+		setOptions( [] );
+		setRecipientOptions( [] );
 
 		// Cancel any in-flight request before starting a new one.
 		if ( abortRef.current ) {
@@ -370,7 +560,7 @@ export function AccessControlField( { field, value, onChange } ) {
 
 	// Get current type config for rendering sub-type dropdown.
 	var currentTypeConfig = getSelectedTypeConfig();
-	var hasSubTypes       = currentTypeConfig && currentTypeConfig.sub_types && currentTypeConfig.sub_types.items && currentTypeConfig.sub_types.items.length > 0;
+	var hasSubTypes       = isGroupedTypeConfig( currentTypeConfig );
 	var showNoOptions     = ! loading && selectedType && options.length === 0;
 
 	// For grouped types, only show "no options" if a sub-type is selected.

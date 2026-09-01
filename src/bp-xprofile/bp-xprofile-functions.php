@@ -3353,8 +3353,11 @@ function bb_xprofile_save_fields( $posted_field_ids = array(), $is_required = ar
 				'visibility' => xprofile_get_field_visibility_level( $field_id, bp_displayed_user_id() ),
 			);
 
-			// Update the field data and visibility level.
-			xprofile_set_field_visibility_level( $field_id, bp_displayed_user_id(), $visibility_level );
+			// Update the field data and visibility level. Locked fields (enforced visibility or
+			// display-name format) never render a control, so their stored level is left untouched.
+			if ( bb_xprofile_can_change_field_visibility( $field_id ) ) {
+				xprofile_set_field_visibility_level( $field_id, bp_displayed_user_id(), $visibility_level );
+			}
 			$field_updated = xprofile_set_field_data( $field_id, bp_displayed_user_id(), $value, ( $is_required[ $field_id ] ?? false ) );
 
 			// We need to pass post value here.
@@ -3613,4 +3616,58 @@ if ( ! function_exists( 'bb_xprofile_safe_unserialize' ) ) {
 		// phpcs:ignore PHPCompatibility.FunctionUse.NewFunctionParameters.unserialize_optionsFound,WordPress.PHP.DiscouragedPHPFunctions.serialize_unserialize -- The options arg is available on PHP 7+ (platform requires 7.4+); object injection is mitigated by allowed_classes => false, so no objects are ever instantiated from the input.
 		return unserialize( $value, array( 'allowed_classes' => false ) );
 	}
+}
+
+/**
+ * Check whether the current user may change the visibility level of a profile field.
+ *
+ * Wraps the `bp_xprofile_change_field_visibility` capability, which is resolved from the
+ * profile-loop globals (the field being rendered plus the display-name-format lock
+ * filters). Save handlers run outside that loop, so the globals are set for the duration
+ * of the check and restored afterwards. Use it wherever a visibility level is written on
+ * behalf of a member so that "Enforce field visibility" and the display-name-format locks
+ * are honoured on save and not only when the control is rendered.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int $field_id ID of the profile field.
+ *
+ * @return bool True when the current user may change the field's visibility level.
+ */
+function bb_xprofile_can_change_field_visibility( $field_id ) {
+	$field_id = (int) $field_id;
+	if ( empty( $field_id ) ) {
+		return false;
+	}
+
+	$field_object = xprofile_get_field( $field_id, null, false );
+	if ( ! $field_object instanceof BP_XProfile_Field || empty( $field_object->id ) ) {
+		return false;
+	}
+
+	$had_template    = array_key_exists( 'profile_template', $GLOBALS );
+	$had_field       = array_key_exists( 'field', $GLOBALS );
+	$template_backup = $had_template ? $GLOBALS['profile_template'] : null;
+	$field_backup    = $had_field ? $GLOBALS['field'] : null;
+
+	// The capability map and the display-name-format filters read the field from the loop globals.
+	$GLOBALS['profile_template']              = new stdClass();
+	$GLOBALS['profile_template']->in_the_loop = true;
+	$GLOBALS['field']                         = $field_object;
+
+	$can_change = bp_current_user_can( 'bp_xprofile_change_field_visibility' );
+
+	if ( $had_template ) {
+		$GLOBALS['profile_template'] = $template_backup;
+	} else {
+		unset( $GLOBALS['profile_template'] );
+	}
+
+	if ( $had_field ) {
+		$GLOBALS['field'] = $field_backup;
+	} else {
+		unset( $GLOBALS['field'] );
+	}
+
+	return (bool) $can_change;
 }

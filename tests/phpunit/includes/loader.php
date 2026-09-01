@@ -5,6 +5,11 @@ require_once( dirname( __FILE__ ) . '/define-constants.php' );
 $multisite = (int) ( defined( 'WP_TESTS_MULTISITE') && WP_TESTS_MULTISITE );
 system( WP_PHP_BINARY . ' ' . escapeshellarg( dirname( __FILE__ ) . '/install.php' ) . ' ' . escapeshellarg( WP_TESTS_CONFIG_PATH ) . ' ' . escapeshellarg( WP_TESTS_DIR ) . ' ' . $multisite );
 
+// src/bp-loader.php skips the Composer autoloader (mothership/GroundLevel classes); load it as the root bp-loader.php does.
+if ( file_exists( dirname( __FILE__ ) . '/../../../vendor/autoload.php' ) ) {
+	require_once dirname( __FILE__ ) . '/../../../vendor/autoload.php';
+}
+
 // Bootstrap BP
 require dirname( __FILE__ ) . '/../../../src/bp-loader.php';
 

@@ -16,6 +16,10 @@ require_once $tests_dir_path . '/includes/functions.php';
 require_once $tests_dir_path . '/includes/mock-mailer.php';
 
 function _load_buddypress() {
+	// src/bp-loader.php skips the Composer autoloader (mothership/GroundLevel classes); load it as the root bp-loader.php does.
+	if ( file_exists( dirname( dirname( dirname( dirname( __FILE__ ) ) ) ) . '/vendor/autoload.php' ) ) {
+		require_once dirname( dirname( dirname( dirname( __FILE__ ) ) ) ) . '/vendor/autoload.php';
+	}
 	require dirname( dirname( dirname( dirname( __FILE__ ) ) ) ) . '/src/bp-loader.php';
 	do_action( 'activate_src/bp-loader.php' );
 }
