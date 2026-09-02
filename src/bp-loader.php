@@ -486,9 +486,10 @@ if ( ! function_exists( 'bp_core_load_buddypress_textdomain' ) ) {
 	 *                              load, so late locale resolution (WPML/Polylang) and mid-request
 	 *                              switch_to_locale() calls translate correctly.
 	 *
-	 * @return bool True when a catalog was (re)loaded from a custom location;
-	 *              false when nothing needed doing, no catalog was found, or
-	 *              the load_plugin_textdomain() fallback handled it.
+	 * @return bool True when a catalog was (re)loaded from a custom location,
+	 *              or the load_plugin_textdomain() fallback's own result when
+	 *              no custom-location catalog was found; false when nothing
+	 *              needed doing.
 	 * @see   load_textdomain() for a description of return values.
 	 */
 	function bp_core_load_buddypress_textdomain() {
@@ -572,8 +573,16 @@ if ( ! function_exists( 'bp_core_load_buddypress_textdomain' ) ) {
 			// the native fallback for any locale change these hooks miss.
 			unload_textdomain( $domain, true );
 
-			if ( '' !== $found_mofile && load_textdomain( $domain, $found_mofile ) ) {
-				return true;
+			// A catalog exists somewhere: attempt each location in precedence
+			// order rather than only the probed one — an unreadable or corrupt
+			// file at a higher-precedence location must not mask a valid
+			// catalog at a later one (preserves the legacy try-each semantics).
+			if ( '' !== $found_mofile ) {
+				foreach ( $locations as $location ) {
+					if ( load_textdomain( $domain, $location . $mofile_custom ) ) {
+						return true;
+					}
+				}
 			}
 
 			$plugin_folder       = plugin_basename( $plugin_dir_path );
