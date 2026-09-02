@@ -489,7 +489,8 @@ if ( ! function_exists( 'bp_core_load_buddypress_textdomain' ) ) {
 	 * @return bool True when a catalog was (re)loaded from a custom location,
 	 *              or the load_plugin_textdomain() fallback's own result when
 	 *              no custom-location catalog was found; false when nothing
-	 *              needed doing.
+	 *              needed doing (locale unchanged and domain loaded, or the
+	 *              change_locale fast path found core's reload sufficient).
 	 * @see   load_textdomain() for a description of return values.
 	 */
 	function bp_core_load_buddypress_textdomain() {
@@ -498,8 +499,8 @@ if ( ! function_exists( 'bp_core_load_buddypress_textdomain' ) ) {
 		$domain = 'buddyboss';
 		// determine_locale(): unlike get_locale(), it resolves the user's admin
 		// language in wp-admin — matching core's own plugin-catalog resolution
-		// and this function's load_plugin_textdomain() fallback. (WP < 5.0
-		// fallback kept while the readme floor still predates it.)
+		// and this function's load_plugin_textdomain() fallback (WP < 5.0
+		// fallback kept while the readme floor still predates it).
 		$locale = function_exists( 'determine_locale' ) ? determine_locale() : get_locale();
 
 		// Re-attempt when the locale changed since the last attempt OR the
@@ -571,6 +572,9 @@ if ( ! function_exists( 'bp_core_load_buddypress_textdomain' ) ) {
 			// Reloadable: a plain unload would set the l10n_unloaded flag and
 			// permanently disable core's JIT loading for this domain, removing
 			// the native fallback for any locale change these hooks miss.
+			// ($reloadable is WP 6.1+; older cores ignore the extra arg and
+			// behave like the pre-fix plain unload — no regression there, and
+			// any successful load below clears the flag on every WP version).
 			unload_textdomain( $domain, true );
 
 			// A catalog exists somewhere: attempt each location in precedence
