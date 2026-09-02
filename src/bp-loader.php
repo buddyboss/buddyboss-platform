@@ -49,8 +49,12 @@ add_action( 'init', 'bp_core_load_buddypress_textdomain', 0 );
 // own switch events, which change the locale without firing change_locale;
 // the loader self-no-ops when the locale is unchanged.
 add_action( 'change_locale', 'bp_core_load_buddypress_textdomain', 0 );
-add_action( 'wpml_language_has_switched', 'bp_core_load_buddypress_textdomain', 0 );
-add_action( 'pll_language_defined', 'bp_core_load_buddypress_textdomain', 0 );
+// Priority 20: after WPML String Translation swaps its $l10n entries (10),
+// so the reload is not immediately overwritten and re-done.
+add_action( 'wpml_language_has_switched', 'bp_core_load_buddypress_textdomain', 20 );
+// Priority 10: after Polylang's own-language-tools manager removes its
+// load_textdomain_mofile blocker on this same action (priority 2).
+add_action( 'pll_language_defined', 'bp_core_load_buddypress_textdomain', 10 );
 
 global $bp_incompatible_plugins;
 global $buddyboss_platform_plugin_file;
@@ -482,7 +486,9 @@ if ( ! function_exists( 'bp_core_load_buddypress_textdomain' ) ) {
 	 *                              load, so late locale resolution (WPML/Polylang) and mid-request
 	 *                              switch_to_locale() calls translate correctly.
 	 *
-	 * @return bool True on success, false on failure.
+	 * @return bool True when a catalog was (re)loaded from a custom location;
+	 *              false when nothing needed doing, no catalog was found, or
+	 *              the load_plugin_textdomain() fallback handled it.
 	 * @see   load_textdomain() for a description of return values.
 	 */
 	function bp_core_load_buddypress_textdomain() {
@@ -491,15 +497,18 @@ if ( ! function_exists( 'bp_core_load_buddypress_textdomain' ) ) {
 		$domain = 'buddyboss';
 		// determine_locale(): unlike get_locale(), it resolves the user's admin
 		// language in wp-admin — matching core's own plugin-catalog resolution
-		// and this function's load_plugin_textdomain() fallback.
-		$locale = determine_locale();
+		// and this function's load_plugin_textdomain() fallback. (WP < 5.0
+		// fallback kept while the readme floor still predates it.)
+		$locale = function_exists( 'determine_locale' ) ? determine_locale() : get_locale();
 
-		// Attempt (re)loading only when the locale differs from the last
-		// attempt: an is_textdomain_loaded() guard alone pins the first
-		// (possibly wrong-locale) catalog for the whole request, while
-		// re-checking is_textdomain_loaded() here would re-probe every
-		// location on every hook for locales that have no catalog (en_US).
-		if ( $locale !== $loaded_locale ) {
+		// Re-attempt when the locale changed since the last attempt OR the
+		// domain is not loaded: the locale check alone would strand the domain
+		// after a third-party unload_textdomain() (WPML's published BuddyBoss
+		// workaround does exactly that before re-calling this function) and
+		// after Polylang's load blocker. Cost of the loaded check: locales
+		// with no catalog anywhere (en_US) re-run the stat-cached
+		// is_readable() probes on each registered hook — accepted.
+		if ( $locale !== $loaded_locale || ! is_textdomain_loaded( $domain ) ) {
 			$loaded_locale   = $locale;
 			$mofile_custom   = sprintf( '%s-%s.mo', $domain, $locale );
 			$plugin_dir_path = defined( 'BP_PLUGIN_DIR' ) ? BP_PLUGIN_DIR : plugin_dir_path( __FILE__ );
