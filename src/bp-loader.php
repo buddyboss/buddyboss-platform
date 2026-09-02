@@ -573,8 +573,10 @@ if ( ! function_exists( 'bp_core_load_buddypress_textdomain' ) ) {
 			// permanently disable core's JIT loading for this domain, removing
 			// the native fallback for any locale change these hooks miss.
 			// ($reloadable is WP 6.1+; older cores ignore the extra arg and
-			// behave like the pre-fix plain unload — no regression there, and
-			// any successful load below clears the flag on every WP version).
+			// behave like the pre-fix plain unload — no regression there. A
+			// flag already set by a third party's plain unload stays set on
+			// WP 6.5+; acceptable, because the hooks registered above cover
+			// every locale change, so the lost JIT backstop is never needed).
 			unload_textdomain( $domain, true );
 
 			// A catalog exists somewhere: attempt each location in precedence
