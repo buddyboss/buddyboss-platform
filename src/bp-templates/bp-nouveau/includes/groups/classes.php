@@ -149,6 +149,7 @@ class BP_Nouveau_Group_Invite_Query extends BP_User_Query {
 				1 === count( $meta_query ) &&
 				isset( $meta_query[0]['key'], $meta_query[0]['compare'] ) &&
 				is_string( $meta_query[0]['key'] ) &&
+				is_string( $meta_query[0]['compare'] ) &&
 				'NOT EXISTS' === strtoupper( $meta_query[0]['compare'] ) &&
 				( ! isset( $meta_query[0]['compare_key'] ) || '=' === $meta_query[0]['compare_key'] )
 			) {
@@ -158,6 +159,8 @@ class BP_Nouveau_Group_Invite_Query extends BP_User_Query {
 				 *
 				 * When more users than this have the restriction meta, the query falls back to the
 				 * `WP_Meta_Query` anti-join instead of building an oversized `NOT IN` list.
+				 * Returning `0` means "always use the `WP_Meta_Query` fallback when any user has
+				 * the meta", not "unlimited".
 				 *
 				 * @since BuddyBoss [BBVERSION]
 				 *

@@ -18,6 +18,9 @@ require_once $tests_dir_path . '/includes/mock-mailer.php';
 function _load_buddypress() {
 	// The Composer autoloader is normally loaded by the root bp-loader.php,
 	// which the test suite bypasses by loading src/bp-loader.php directly.
+	if ( ! file_exists( dirname( dirname( dirname( dirname( __FILE__ ) ) ) ) . '/vendor/autoload.php' ) ) {
+		die( "The Composer autoloader could not be found. Run `composer install` in the plugin directory before running the test suite.\n" );
+	}
 	require_once dirname( dirname( dirname( dirname( __FILE__ ) ) ) ) . '/vendor/autoload.php';
 	require dirname( dirname( dirname( dirname( __FILE__ ) ) ) ) . '/src/bp-loader.php';
 	do_action( 'activate_src/bp-loader.php' );

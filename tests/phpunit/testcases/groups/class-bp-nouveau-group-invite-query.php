@@ -160,6 +160,43 @@ class BP_Tests_BP_Nouveau_Group_Invite_Query extends BP_UnitTestCase {
 
 		$this->assertNotEmpty( $fast );
 		$this->assertSame( $legacy, $fast, 'Fast path and WP_Meta_Query path must return identical user IDs.' );
+		$this->assertSame( (int) $legacy_query->total_users, (int) $fast_query->total_users, 'Both paths must report the same total user count.' );
+	}
+
+	/**
+	 * A meta_query with a relation and multiple clauses must fall back to
+	 * WP_Meta_Query and still honour the NOT EXISTS exclusion.
+	 */
+	public function test_relation_multi_clause_falls_back() {
+		$creator = self::factory()->user->create();
+		$users   = self::factory()->user->create_many( 3 );
+		$group   = self::factory()->group->create( array( 'creator_id' => $creator ) );
+
+		update_user_meta( $users[0], self::$restrict_key, 1 );
+
+		$query = $this->run_invite_query( array(
+			'group_id'   => $group,
+			'scope'      => 'members',
+			'type'       => 'alphabetical',
+			'per_page'   => 100,
+			'meta_query' => array(
+				'relation' => 'AND',
+				array(
+					'key'     => self::$restrict_key,
+					'compare' => 'NOT EXISTS',
+				),
+				array(
+					'key'     => '_bp_some_other_meta_key',
+					'compare' => 'NOT EXISTS',
+				),
+			),
+		) );
+		$found = $this->get_user_ids( $query );
+
+		$this->assertQueryPath( $query, false );
+		$this->assertNotContains( $users[0], $found, 'Opted-in user must be excluded on the multi-clause fallback path.' );
+		$this->assertContains( $users[1], $found );
+		$this->assertContains( $users[2], $found );
 	}
 
 	/**
