@@ -36,6 +36,22 @@ if ( ! defined( 'BP_PLATFORM_API' ) ) {
 // Load translation files.
 add_action( 'plugins_loaded', 'bp_core_load_buddypress_textdomain', 0 );
 
+// The plugins_loaded-priority-0 load above runs before multilingual plugins
+// (WPML, Polylang) have resolved the request language, so it can cache the
+// catalog for the wrong locale. Re-run once the locale is final, and whenever
+// it changes mid-request (switch_to_locale() — e.g. per-recipient emails);
+// the loader itself is a no-op when the loaded locale is already correct.
+add_action( 'init', 'bp_core_load_buddypress_textdomain', 0 );
+// Core unloads every textdomain inside change_locale() itself — before this
+// action fires — and its registry cannot re-load from this plugin's custom
+// locations. Run early so other change_locale callbacks that render buddyboss
+// strings already see the correct catalog. Also cover WPML's and Polylang's
+// own switch events, which change the locale without firing change_locale;
+// the loader self-no-ops when the locale is unchanged.
+add_action( 'change_locale', 'bp_core_load_buddypress_textdomain', 0 );
+add_action( 'wpml_language_has_switched', 'bp_core_load_buddypress_textdomain', 0 );
+add_action( 'pll_language_defined', 'bp_core_load_buddypress_textdomain', 0 );
+
 global $bp_incompatible_plugins;
 global $buddyboss_platform_plugin_file;
 global $is_bp_active;
@@ -462,14 +478,30 @@ if ( ! function_exists( 'bp_core_load_buddypress_textdomain' ) ) {
 	 *
 	 * @since BuddyPress 1.0.2
 	 * @since BuddyBoss 2.7.90 Moved function from bp-core-functions.php and made logic updates.
+	 * @since BuddyBoss [BBVERSION] Reloads the catalog when the locale has changed since the last
+	 *                              load, so late locale resolution (WPML/Polylang) and mid-request
+	 *                              switch_to_locale() calls translate correctly.
 	 *
 	 * @return bool True on success, false on failure.
 	 * @see   load_textdomain() for a description of return values.
 	 */
 	function bp_core_load_buddypress_textdomain() {
+		static $loaded_locale = null;
+
 		$domain = 'buddyboss';
-		if ( ! is_textdomain_loaded( $domain ) ) {
-			$mofile_custom   = sprintf( '%s-%s.mo', $domain, get_locale() );
+		// determine_locale(): unlike get_locale(), it resolves the user's admin
+		// language in wp-admin — matching core's own plugin-catalog resolution
+		// and this function's load_plugin_textdomain() fallback.
+		$locale = determine_locale();
+
+		// Attempt (re)loading only when the locale differs from the last
+		// attempt: an is_textdomain_loaded() guard alone pins the first
+		// (possibly wrong-locale) catalog for the whole request, while
+		// re-checking is_textdomain_loaded() here would re-probe every
+		// location on every hook for locales that have no catalog (en_US).
+		if ( $locale !== $loaded_locale ) {
+			$loaded_locale   = $locale;
+			$mofile_custom   = sprintf( '%s-%s.mo', $domain, $locale );
 			$plugin_dir_path = defined( 'BP_PLUGIN_DIR' ) ? BP_PLUGIN_DIR : plugin_dir_path( __FILE__ );
 			$plugin_dir      = $plugin_dir_path;
 			if ( defined( 'BP_SOURCE_SUBDIRECTORY' ) && ! empty( constant( 'BP_SOURCE_SUBDIRECTORY' ) ) ) {
@@ -493,13 +525,41 @@ if ( ! function_exists( 'bp_core_load_buddypress_textdomain' ) ) {
 				)
 			);
 
-			unload_textdomain( $domain );
-
-			// Try to load the translations from locations.
+			// Which location, if any, actually has a catalog for this locale
+			// (either format — load_textdomain() prefers the .l10n.php sibling).
+			$phpfile_custom = substr( $mofile_custom, 0, -3 ) . '.l10n.php';
+			$found_mofile   = '';
 			foreach ( $locations as $location ) {
-				if ( load_textdomain( $domain, $location . $mofile_custom ) ) {
-					return true;
+				if ( is_readable( $location . $mofile_custom ) || is_readable( $location . $phpfile_custom ) ) {
+					$found_mofile = $location . $mofile_custom;
+					break;
 				}
+			}
+
+			// During change_locale (and only there — on other hooks a loaded
+			// catalog may still be the stale previous-locale one), core's own
+			// locale switcher has already unloaded the domain and JIT-reloaded
+			// it from WP_LANG_DIR/plugins for the NEW locale. If it did and
+			// this chain finds nothing better than that same plugins-dir file,
+			// the loaded catalog is already the best available: skip the
+			// redundant unload + full MO re-parse (pre-WP 6.5 has no file
+			// cache — this matters when a cron run switches locale per
+			// recipient for hundreds of emails).
+			if (
+				doing_action( 'change_locale' )
+				&& is_textdomain_loaded( $domain )
+				&& ( '' === $found_mofile || 0 === strpos( $found_mofile, trailingslashit( WP_LANG_DIR . '/plugins' ) ) )
+			) {
+				return false;
+			}
+
+			// Reloadable: a plain unload would set the l10n_unloaded flag and
+			// permanently disable core's JIT loading for this domain, removing
+			// the native fallback for any locale change these hooks miss.
+			unload_textdomain( $domain, true );
+
+			if ( '' !== $found_mofile && load_textdomain( $domain, $found_mofile ) ) {
+				return true;
 			}
 
 			$plugin_folder       = plugin_basename( $plugin_dir_path );
