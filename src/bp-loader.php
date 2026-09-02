@@ -553,7 +553,12 @@ if ( ! function_exists( 'bp_core_load_buddypress_textdomain' ) ) {
 			// the loaded catalog is already the best available: skip the
 			// redundant unload + full MO re-parse (pre-WP 6.5 has no file
 			// cache — this matters when a cron run switches locale per
-			// recipient for hundreds of emails).
+			// recipient for hundreds of emails). Known gap, accepted: when
+			// the catalog lives in a higher-precedence location (the
+			// WP_LANG_DIR/buddyboss/ dir, WP_LANG_DIR root, or the bundled
+			// languages/ dir) this guard cannot skip and each switch
+			// re-parses on pre-6.5; WP 6.5+ caches translation files so the
+			// cost is small there.
 			if (
 				doing_action( 'change_locale' )
 				&& is_textdomain_loaded( $domain )
