@@ -130,7 +130,8 @@ class BP_Nouveau_Group_Invite_Query extends BP_User_Query {
 	 * Build the meta query for the potential group invites user query.
 	 *
 	 * @since BuddyPress 3.0.0
-	 * @since BuddyBoss [BBVERSION] Resolve a lone `NOT EXISTS` clause to an excluded user ID list.
+	 * @since BuddyBoss [BBVERSION] Resolve a lone `NOT EXISTS` clause to an excluded user ID list
+	 *                              and join the `WP_Meta_Query` fallback on the query's uid column.
 	 *
 	 * @param BP_User_Query $bp_user_query The user query being built.
 	 */
@@ -162,11 +163,13 @@ class BP_Nouveau_Group_Invite_Query extends BP_User_Query {
 				 *
 				 * @param int $limit Maximum number of excluded user IDs. Default 5000.
 				 */
-				$limit = max( 0, (int) apply_filters( 'bb_nouveau_group_invites_excluded_ids_limit', 5000 ) );
+				$limit = min( max( 0, (int) apply_filters( 'bb_nouveau_group_invites_excluded_ids_limit', 5000 ) ), PHP_INT_MAX - 1 );
 
 				$excluded_ids = $wpdb->get_col( $wpdb->prepare( "SELECT DISTINCT user_id FROM {$wpdb->usermeta} WHERE meta_key = %s LIMIT %d", $meta_query[0]['key'], $limit + 1 ) );
 
-				if ( count( $excluded_ids ) <= $limit ) {
+				// On a lookup failure fall through to `WP_Meta_Query` — a privacy
+				// exclusion must fail closed, never silently disappear.
+				if ( empty( $wpdb->last_error ) && count( $excluded_ids ) <= $limit ) {
 					if ( ! empty( $excluded_ids ) ) {
 						$bp_user_query->uid_clauses['where'] .= " AND u.{$bp_user_query->uid_name} NOT IN (" . implode( ',', wp_parse_id_list( $excluded_ids ) ) . ')';
 					}
@@ -176,7 +179,7 @@ class BP_Nouveau_Group_Invite_Query extends BP_User_Query {
 			}
 
 			$invites_meta_query = new WP_Meta_Query( $meta_query );
-			$meta_sql           = $invites_meta_query->get_sql( 'user', 'u', 'ID' );
+			$meta_sql           = $invites_meta_query->get_sql( 'user', 'u', $bp_user_query->uid_name );
 
 			if ( empty( $meta_sql['join'] ) || empty( $meta_sql['where'] ) ) {
 				return;
