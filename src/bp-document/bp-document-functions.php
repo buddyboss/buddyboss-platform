@@ -642,6 +642,7 @@ function bp_document_add_handler( $documents = array(), $privacy = 'public', $co
 							'attachment_id' => $bp_document->attachment_id,
 							'user_id'       => $bp_document->user_id,
 							'title'         => sanitize_text_field( wp_unslash( $bp_document->title ) ),
+							'description'   => sanitize_textarea_field( wp_unslash( ! empty( $content ) ? $content : $bp_document->description ) ),
 							'folder_id'     => ! empty( $document['folder_id'] ) ? $document['folder_id'] : $folder_id,
 							'group_id'      => ! empty( $document['group_id'] ) ? $document['group_id'] : $group_id,
 							'activity_id'   => $bp_document->activity_id,
@@ -678,6 +679,7 @@ function bp_document_add_handler( $documents = array(), $privacy = 'public', $co
 					array(
 						'attachment_id' => $document['id'],
 						'title'         => sanitize_text_field( wp_unslash( $document['name'] ) ),
+						'description'   => sanitize_textarea_field( wp_unslash( $content ) ),
 						'folder_id'     => ! empty( $document['folder_id'] ) ? $document['folder_id'] : $folder_id,
 						'group_id'      => ! empty( $document['group_id'] ) ? $document['group_id'] : $group_id,
 						'privacy'       => ! empty( $document['privacy'] ) && in_array( $document['privacy'], array_merge( array_keys( bp_document_get_visibility_levels() ), array( 'message' ) ) ) ? $document['privacy'] : $privacy,
