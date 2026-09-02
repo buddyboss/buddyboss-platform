@@ -9,7 +9,8 @@ system( WP_PHP_BINARY . ' ' . escapeshellarg( dirname( __FILE__ ) . '/install.ph
 // The Composer autoloader is normally loaded by the root bp-loader.php,
 // which the test suite bypasses by loading src/bp-loader.php directly.
 if ( ! file_exists( dirname( __FILE__ ) . '/../../../vendor/autoload.php' ) ) {
-	die( "The Composer autoloader could not be found. Run `composer install` in the plugin directory before running the test suite.\n" );
+	fwrite( STDERR, "The Composer autoloader could not be found. Run `composer install` in the plugin directory before running the test suite.\n" );
+	exit( 1 );
 }
 require_once dirname( __FILE__ ) . '/../../../vendor/autoload.php';
 require dirname( __FILE__ ) . '/../../../src/bp-loader.php';
