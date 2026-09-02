@@ -550,7 +550,10 @@ if ( ! function_exists( 'bp_core_load_buddypress_textdomain' ) ) {
 			// During change_locale (and only there — on other hooks a loaded
 			// catalog may still be the stale previous-locale one), core's own
 			// locale switcher has already unloaded the domain and JIT-reloaded
-			// it from WP_LANG_DIR/plugins for the NEW locale. If it did and
+			// it from WP_LANG_DIR/plugins for the NEW locale — guaranteed
+			// because WP_Locale_Switcher::load_translations() unloads and
+			// JIT-reloads every loaded domain (not only 'default') before the
+			// change_locale action fires (since WP 4.7). If it did and
 			// this chain finds nothing better than that same plugins-dir file,
 			// the loaded catalog is already the best available: skip the
 			// redundant unload + full MO re-parse (pre-WP 6.5 has no file
