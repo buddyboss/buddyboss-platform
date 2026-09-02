@@ -16,6 +16,9 @@ require_once $tests_dir_path . '/includes/functions.php';
 require_once $tests_dir_path . '/includes/mock-mailer.php';
 
 function _load_buddypress() {
+	// The Composer autoloader is normally loaded by the root bp-loader.php,
+	// which the test suite bypasses by loading src/bp-loader.php directly.
+	require_once dirname( dirname( dirname( dirname( __FILE__ ) ) ) ) . '/vendor/autoload.php';
 	require dirname( dirname( dirname( dirname( __FILE__ ) ) ) ) . '/src/bp-loader.php';
 	do_action( 'activate_src/bp-loader.php' );
 }

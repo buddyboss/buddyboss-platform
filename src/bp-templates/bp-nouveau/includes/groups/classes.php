@@ -127,8 +127,12 @@ class BP_Nouveau_Group_Invite_Query extends BP_User_Query {
 	}
 
 	/**
+	 * Build the meta query for the potential group invites user query.
+	 *
 	 * @since BuddyPress 3.0.0
 	 * @since BuddyBoss [BBVERSION] Resolve a lone `NOT EXISTS` clause to an excluded user ID list.
+	 *
+	 * @param BP_User_Query $bp_user_query The user query being built.
 	 */
 	public function build_meta_query( BP_User_Query $bp_user_query ) {
 		global $wpdb;
@@ -137,14 +141,38 @@ class BP_Nouveau_Group_Invite_Query extends BP_User_Query {
 			$meta_query = $this->query_vars['meta_query'];
 
 			// A `NOT EXISTS` anti-join scans the whole user table, so query the excluded ids instead.
-			if ( 1 === count( $meta_query ) && isset( $meta_query[0]['key'], $meta_query[0]['compare'] ) && 'NOT EXISTS' === strtoupper( $meta_query[0]['compare'] ) ) {
-				$excluded_ids = $wpdb->get_col( $wpdb->prepare( "SELECT user_id FROM {$wpdb->usermeta} WHERE meta_key = %s", $meta_query[0]['key'] ) );
+			// Any other shape (relation, keyed/nested clauses, compare_key, array keys) keeps the
+			// WP_Meta_Query path below, whose semantics the fast path cannot replicate.
+			if (
+				is_array( $meta_query ) &&
+				1 === count( $meta_query ) &&
+				isset( $meta_query[0]['key'], $meta_query[0]['compare'] ) &&
+				is_string( $meta_query[0]['key'] ) &&
+				'NOT EXISTS' === strtoupper( $meta_query[0]['compare'] ) &&
+				( ! isset( $meta_query[0]['compare_key'] ) || '=' === $meta_query[0]['compare_key'] )
+			) {
 
-				if ( ! empty( $excluded_ids ) ) {
-					$bp_user_query->uid_clauses['where'] .= " AND u.{$bp_user_query->uid_name} NOT IN (" . implode( ',', wp_parse_id_list( $excluded_ids ) ) . ')';
+				/**
+				 * Filters the maximum number of excluded user IDs resolved inline for group invites.
+				 *
+				 * When more users than this have the restriction meta, the query falls back to the
+				 * `WP_Meta_Query` anti-join instead of building an oversized `NOT IN` list.
+				 *
+				 * @since BuddyBoss [BBVERSION]
+				 *
+				 * @param int $limit Maximum number of excluded user IDs. Default 5000.
+				 */
+				$limit = max( 0, (int) apply_filters( 'bb_nouveau_group_invites_excluded_ids_limit', 5000 ) );
+
+				$excluded_ids = $wpdb->get_col( $wpdb->prepare( "SELECT DISTINCT user_id FROM {$wpdb->usermeta} WHERE meta_key = %s LIMIT %d", $meta_query[0]['key'], $limit + 1 ) );
+
+				if ( count( $excluded_ids ) <= $limit ) {
+					if ( ! empty( $excluded_ids ) ) {
+						$bp_user_query->uid_clauses['where'] .= " AND u.{$bp_user_query->uid_name} NOT IN (" . implode( ',', wp_parse_id_list( $excluded_ids ) ) . ')';
+					}
+
+					return;
 				}
-
-				return;
 			}
 
 			$invites_meta_query = new WP_Meta_Query( $meta_query );

@@ -5,7 +5,10 @@ require_once( dirname( __FILE__ ) . '/define-constants.php' );
 $multisite = (int) ( defined( 'WP_TESTS_MULTISITE') && WP_TESTS_MULTISITE );
 system( WP_PHP_BINARY . ' ' . escapeshellarg( dirname( __FILE__ ) . '/install.php' ) . ' ' . escapeshellarg( WP_TESTS_CONFIG_PATH ) . ' ' . escapeshellarg( WP_TESTS_DIR ) . ' ' . $multisite );
 
-// Bootstrap BP
+// Bootstrap BP.
+// The Composer autoloader is normally loaded by the root bp-loader.php,
+// which the test suite bypasses by loading src/bp-loader.php directly.
+require_once dirname( __FILE__ ) . '/../../../vendor/autoload.php';
 require dirname( __FILE__ ) . '/../../../src/bp-loader.php';
 
 // Bail from redirects as they throw 'headers already sent' warnings.
