@@ -200,7 +200,7 @@ class BP_XProfile_Group {
 	 * stale order. Call this from every mutator that changes which groups exist or in what
 	 * order.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.4.4
 	 *
 	 * @return void
 	 */

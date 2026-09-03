@@ -41,7 +41,7 @@ class BB_Addons_Manager extends AddonsManager {
 	/**
 	 * Transient key suffix for the products API error backoff cache.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.4.4
 	 *
 	 * @var string
 	 */
@@ -54,7 +54,7 @@ class BB_Addons_Manager extends AddonsManager {
 	 * applies in AddonsManager::getAddons(). Without it, every read of the
 	 * `update_plugins` / `update_themes` site transients retries the failed request.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.4.4
 	 *
 	 * @var int
 	 */
@@ -67,7 +67,7 @@ class BB_Addons_Manager extends AddonsManager {
 	 * one-hour windows until the reset passes; implausible resets (more than a day
 	 * out) are discarded as corrupt by `bb_rate_limit_seconds_remaining()`.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.4.4
 	 *
 	 * @var int
 	 */
@@ -76,7 +76,7 @@ class BB_Addons_Manager extends AddonsManager {
 	/**
 	 * The unwrapped products API client captured before the backoff wrapper is installed.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.4.4
 	 *
 	 * @var callable|null
 	 */
@@ -86,7 +86,7 @@ class BB_Addons_Manager extends AddonsManager {
 	 * Register add-on hooks and install the products API backoff wrapper.
 	 *
 	 * @since BuddyBoss 3.3.0
-	 * @since BuddyBoss [BBVERSION] Routes the shared `AddonsManager::$productsApiClient`
+	 * @since BuddyBoss 3.4.4 Routes the shared `AddonsManager::$productsApiClient`
 	 *                              through the error backoff wrapper.
 	 */
 	public static function loadHooks(): void {
@@ -133,7 +133,7 @@ class BB_Addons_Manager extends AddonsManager {
 	 *   serve that stale catalog instead of the error (the 8.x/9.x behavior), so
 	 *   update checks keep working through short API blips.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.4.4
 	 *
 	 * @param array $args Query args for the products list request.
 	 * @return Response The live or cached products API response.
@@ -218,7 +218,7 @@ class BB_Addons_Manager extends AddonsManager {
 	 * update-check freshness marker (30 minutes), so a stale-but-valid catalog is
 	 * often available when a refresh attempt fails.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.4.4
 	 *
 	 * @return Response|null The cached successful response, or null when absent.
 	 */
@@ -238,7 +238,7 @@ class BB_Addons_Manager extends AddonsManager {
 	 * `X-RateLimit-Reset` data from products responses too, which
 	 * `bb_rate_limit_seconds_remaining()` then uses to size the backoff window.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.4.4
 	 *
 	 * @param array $args Query args for the products list request.
 	 * @return mixed The products API response.
@@ -286,7 +286,7 @@ class BB_Addons_Manager extends AddonsManager {
 	 * (`remaining` of zero with a future reset) counts as blocking; rate-limit
 	 * headers on healthy responses do not pause update checks.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.4.4
 	 *
 	 * @return int Seconds remaining in the block, or 0 when not rate limited.
 	 */
@@ -325,7 +325,7 @@ class BB_Addons_Manager extends AddonsManager {
 	/**
 	 * Clamp a backoff duration between the five-minute floor and the one-hour cap.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.4.4
 	 *
 	 * @param int $seconds Server-suggested wait, or 0 when unknown.
 	 * @return int Backoff duration in seconds.

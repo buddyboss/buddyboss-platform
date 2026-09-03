@@ -3656,7 +3656,7 @@ if ( ! function_exists( 'bb_xprofile_safe_unserialize' ) ) {
  * Use it wherever a visibility level is written on behalf of a member, so the locks are
  * honoured on save and not only when the control is rendered.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.4.4
  *
  * @param int $field_id ID of the profile field.
  *

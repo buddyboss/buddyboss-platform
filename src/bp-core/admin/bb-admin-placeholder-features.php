@@ -253,7 +253,7 @@ function bb_get_placeholder_plugin_status( $item, $active_plugins = null ) {
 	 * final value is `in_plan AND filter`, so a callback can revoke in-plan
 	 * status but can never grant it to a product the license does not carry.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.4.4
 	 *
 	 * @param bool   $in_plan Whether the product resolved as included in the plan.
 	 * @param array  $item    The placeholder catalog item (id, plugin_file, …).
