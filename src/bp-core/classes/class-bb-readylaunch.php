@@ -141,12 +141,26 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 * Register the ReadyLaunch telemetry data.
 		 *
 		 * @since BuddyBoss 2.9.00
+		 * @since BuddyBoss 3.4.3 Added the onboarding wizard's completion flag
+		 *              and progress option. These previously reached telemetry only
+		 *              through transient filters registered mid-AJAX by the wizard
+		 *              itself, so the weekly cron send never carried them and the
+		 *              signal was lost on any site where that one immediate send
+		 *              failed or telemetry was disabled at the time. They are added
+		 *              unconditionally: an abandoned wizard on a site that never
+		 *              enabled ReadyLaunch is the funnel signal, so they must not
+		 *              sit behind the enabled check.
+		 *
 		 * @param array $option_array The array of telemetry options.
 		 *
 		 * @return array The modified array of telemetry options.
 		 */
 		public function bb_rl_telemetry_platform_options( $option_array ) {
-			$op_options = array( 'bb_rl_enabled' );
+			$op_options = array(
+				'bb_rl_enabled',
+				'bb_rl_onboarding_completed',
+				'bb_rl_progress_rl_onboarding',
+			);
 			if ( bb_is_readylaunch_enabled() ) {
 				$op_options[] = 'bb_rl_theme_mode';
 				$op_options[] = 'bb_rl_enabled_pages';
