@@ -491,7 +491,12 @@ class BP_Tests_BP_Nouveau_Group_Invite_Query extends BP_UnitTestCase {
 
 		update_user_meta( $users[0], self::$restrict_key, 1 );
 
-		wp_cache_delete( 'bb_restrict_invites_user_ids', 'bb_nouveau_group_invites' );
+		// Resolve the real cache key after the meta write, which retires the
+		// previous incrementor, so the assertion below targets the key this
+		// request would actually write to.
+		$list_key = 'bb_restrict_invites_ids_' . bp_core_get_incrementor( 'bb_nouveau_group_invites' );
+
+		wp_cache_delete( $list_key, 'bb_nouveau_group_invites' );
 
 		$break_lookup = function ( $sql ) {
 			if ( false !== strpos( $sql, 'SELECT DISTINCT user_id FROM' ) ) {
@@ -521,10 +526,11 @@ class BP_Tests_BP_Nouveau_Group_Invite_Query extends BP_UnitTestCase {
 		$this->assertContains( $users[1], $found );
 		$this->assertContains( $users[2], $found );
 		$this->assertFalse(
-			wp_cache_get( 'bb_restrict_invites_user_ids', 'bb_nouveau_group_invites' ),
+			wp_cache_get( $list_key, 'bb_nouveau_group_invites' ),
 			'A failed lookup must not be cached.'
 		);
 	}
+
 	/**
 	 * Count exclusion lookups issued while running a callback.
 	 *
@@ -752,10 +758,21 @@ class BP_Tests_BP_Nouveau_Group_Invite_Query extends BP_UnitTestCase {
 	}
 
 	/**
-	 * A write under a filtered meta key still busts the cache.
+	 * A write under a filtered meta key still busts the cache, and both query
+	 * paths stay in agreement.
 	 *
 	 * Writers run the key through the `bp_get_user_meta_key` filter, so the
 	 * invalidator must match the filtered form as well as the raw one.
+	 *
+	 * Note the known, pre-existing limitation this pins: the reader does *not*
+	 * apply that filter — `bp_nouveau_get_group_potential_invites()` hardcodes
+	 * the raw key in the meta_query — so on a site that filters it, rows are
+	 * stored under one key and queried under another and the exclusion does not
+	 * apply. That is true of the `WP_Meta_Query` path too, and predates this
+	 * optimisation, so the assertion here is that the two paths agree rather
+	 * than that the exclusion works. Fixing the asymmetry belongs in its own
+	 * ticket: it changes member-visible behaviour and would also have to widen
+	 * the fast path's key gate.
 	 */
 	public function test_invalidation_matches_a_filtered_meta_key() {
 		$creator = self::factory()->user->create();
@@ -787,5 +804,37 @@ class BP_Tests_BP_Nouveau_Group_Invite_Query extends BP_UnitTestCase {
 			bp_core_get_incrementor( 'bb_nouveau_group_invites' ),
 			'A write under the filtered key must retire the cached list.'
 		);
+
+		// Both paths read the raw key, so they must agree on the result set
+		// whatever the filter does to the stored key.
+		$base_args = array(
+			'group_id' => $group,
+			'scope'    => 'members',
+			'type'     => 'alphabetical',
+			'per_page' => 100,
+		);
+
+		add_filter( 'bp_get_user_meta_key', $prefix_key );
+
+		$fast   = $this->run_invite_query( array_merge( $base_args, array( 'meta_query' => $this->not_exists_meta_query() ) ) );
+		$legacy = $this->run_invite_query( array_merge( $base_args, array(
+			'meta_query' => array(
+				'restrict_clause' => array(
+					'key'     => self::$restrict_key,
+					'compare' => 'NOT EXISTS',
+				),
+			),
+		) ) );
+
+		remove_filter( 'bp_get_user_meta_key', $prefix_key );
+
+		$this->assertQueryPath( $fast, true );
+		$this->assertQueryPath( $legacy, false );
+		$this->assertSame(
+			$this->get_user_ids( $legacy ),
+			$this->get_user_ids( $fast ),
+			'Fast path and WP_Meta_Query path must agree under a filtered meta key.'
+		);
+		$this->assertContains( $users[1], $this->get_user_ids( $fast ) );
 	}
 }
