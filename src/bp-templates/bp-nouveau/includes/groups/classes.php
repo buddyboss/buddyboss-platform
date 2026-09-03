@@ -141,14 +141,18 @@ class BP_Nouveau_Group_Invite_Query extends BP_User_Query {
 		if ( isset( $this->query_vars['scope'] ) && 'members' === $this->query_vars['scope'] && isset( $this->query_vars['meta_query'] ) ) {
 			$meta_query = $this->query_vars['meta_query'];
 
-			// A `NOT EXISTS` anti-join scans the whole user table, so query the excluded ids instead.
-			// Any other shape (relation, keyed/nested clauses, compare_key, array keys) keeps the
-			// WP_Meta_Query path below, whose semantics the fast path cannot replicate.
+			// A `NOT EXISTS` anti-join scans the whole user table, so query the excluded ids
+			// instead. The fast path is deliberately restricted to the one meta key the invite
+			// screen uses: the AJAX handler merges `$_POST` wholesale, so any invite-capable
+			// member could otherwise point this lookup at an arbitrary key and force an uncached
+			// scan of the whole usermeta table. Every other shape (relation, keyed/nested
+			// clauses, compare_key, array keys, any other key) keeps the WP_Meta_Query path
+			// below, whose semantics the fast path cannot replicate.
 			if (
 				is_array( $meta_query ) &&
 				1 === count( $meta_query ) &&
 				isset( $meta_query[0]['key'], $meta_query[0]['compare'] ) &&
-				is_string( $meta_query[0]['key'] ) &&
+				'_bp_nouveau_restrict_invites_to_friends' === $meta_query[0]['key'] &&
 				is_string( $meta_query[0]['compare'] ) &&
 				'NOT EXISTS' === strtoupper( $meta_query[0]['compare'] ) &&
 				( ! isset( $meta_query[0]['compare_key'] ) || '=' === $meta_query[0]['compare_key'] )
@@ -160,45 +164,49 @@ class BP_Nouveau_Group_Invite_Query extends BP_User_Query {
 				 * This is only a memory backstop for pathological data. It is deliberately not a
 				 * performance boundary: the inline `NOT IN` gets *faster* as the excluded set
 				 * grows, because fewer rows survive to the sort, while the `WP_Meta_Query`
-				 * anti-join it falls back to is roughly 3x slower. Set it lower only to force the
-				 * legacy path. Returning `0` forces the fallback whenever any user holds the meta.
+				 * anti-join it falls back to is roughly 3x slower. The default keeps the emitted
+				 * SQL under a conservative 1MB `max_allowed_packet`. Set it lower only to force
+				 * the legacy path; `0` forces it whenever any user holds the meta.
 				 *
 				 * @since BuddyBoss [BBVERSION]
 				 *
-				 * @param int $limit Maximum number of excluded user IDs. Default 200000.
+				 * @param int $limit Maximum number of excluded user IDs. Default 100000.
 				 */
-				$limit = min( max( 0, (int) apply_filters( 'bb_nouveau_group_invites_excluded_ids_limit', 200000 ) ), PHP_INT_MAX - 1 );
+				$limit = min( max( 0, (int) apply_filters( 'bb_nouveau_group_invites_excluded_ids_limit', 100000 ) ), PHP_INT_MAX - 1 );
 
-				// The list only changes when a member toggles the setting, so cache the known
-				// key network-wide. bb_groups_clear_restrict_invites_cache() busts the cache on
-				// every write path that goes through the meta API (web, REST, WP-CLI, user
-				// deletion). The TTL bounds writers that bypass it entirely (direct SQL, imports,
-				// DB restores), which fire no hook.
-				$cacheable     = '_bp_nouveau_restrict_invites_to_friends' === $meta_query[0]['key'];
+				// Capture the cache version BEFORE reading or querying. Invalidation resets the
+				// incrementor, so a rebuild that raced a member toggling the setting writes under
+				// a key nobody will read again, instead of overwriting the fresh state with its
+				// pre-toggle snapshot. All three keys below carry it, so one reset clears them.
+				$incrementor   = bp_core_get_incrementor( 'bb_nouveau_group_invites' );
+				$list_key      = 'bb_restrict_invites_ids_' . $incrementor;
+				$ceiling_key   = 'bb_restrict_invites_over_' . $limit . '_' . $incrementor;
+				$lock_key      = 'bb_restrict_invites_lock_' . $incrementor;
 				$lookup_failed = false;
 
-				// Past the ceiling the lookup result is unusable and discarded, so remember that
+				// Past the ceiling the lookup result is truncated and discarded, so remember that
 				// verdict briefly: re-running a throwaway lookup on every request costs more than
-				// the anti-join it falls back to.
-				$over_ceiling = $cacheable && (bool) wp_cache_get( 'bb_restrict_invites_over_ceiling', 'bb_nouveau_group_invites' );
-				$excluded_ids = ( $cacheable && ! $over_ceiling ) ? wp_cache_get( 'bb_restrict_invites_user_ids', 'bb_nouveau_group_invites' ) : false;
+				// the anti-join it falls back to. Keyed by `$limit` so a caller that filters the
+				// ceiling down cannot force the fallback on callers using a different ceiling.
+				$over_ceiling = (bool) wp_cache_get( $ceiling_key, 'bb_nouveau_group_invites' );
+				$excluded_ids = $over_ceiling ? false : wp_cache_get( $list_key, 'bb_nouveau_group_invites' );
 
 				// A miss returns false; anything not an array is unusable, so re-query rather
 				// than counting it. A cached empty array is a valid hit and is kept.
 				if ( ! $over_ceiling && ! is_array( $excluded_ids ) ) {
 
-					// Best-effort stampede guard: the cache goes cold on every toggle, and this
-					// query runs for each concurrent viewer of the invite list. The winner
-					// rebuilds; a loser re-reads once in case the winner has already finished,
-					// then proceeds rather than blocking the request.
-					$rebuilding = $cacheable && ! wp_cache_add( 'bb_restrict_invites_lock', 1, 'bb_nouveau_group_invites', 30 );
+					// Reduces — but does not bound — a rebuild stampede: the cache goes cold on
+					// every toggle and this runs for each concurrent viewer. The winner rebuilds
+					// while a loser re-reads once, which is often enough to catch a just-finished
+					// rebuild; a loser that still misses queries rather than blocking the request.
+					$lock_held_elsewhere = ! wp_cache_add( $lock_key, 1, 'bb_nouveau_group_invites', 30 );
 
-					if ( $rebuilding ) {
-						$excluded_ids = wp_cache_get( 'bb_restrict_invites_user_ids', 'bb_nouveau_group_invites' );
+					if ( $lock_held_elsewhere ) {
+						$excluded_ids = wp_cache_get( $list_key, 'bb_nouveau_group_invites' );
 					}
 
 					if ( ! is_array( $excluded_ids ) ) {
-						// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery -- Indexed meta_key lookup, cached immediately below for the known restrict key.
+						// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery -- Indexed meta_key lookup, cached immediately below.
 						$excluded_ids  = wp_parse_id_list( $wpdb->get_col( $wpdb->prepare( "SELECT DISTINCT user_id FROM {$wpdb->usermeta} WHERE meta_key = %s LIMIT %d", $meta_query[0]['key'], $limit + 1 ) ) );
 						$lookup_failed = ! empty( $wpdb->last_error );
 
@@ -207,27 +215,28 @@ class BP_Nouveau_Group_Invite_Query extends BP_User_Query {
 						if ( ! $lookup_failed && count( $excluded_ids ) > $limit ) {
 							$over_ceiling = true;
 
-							if ( $cacheable ) {
-								wp_cache_set( 'bb_restrict_invites_over_ceiling', 1, 'bb_nouveau_group_invites', 5 * MINUTE_IN_SECONDS );
-							}
-						} elseif ( $cacheable && ! $lookup_failed ) {
+							// Without a persistent object cache this verdict does not survive the
+							// request, so such a site re-pays the throwaway lookup each time.
+							wp_cache_set( $ceiling_key, 1, 'bb_nouveau_group_invites', 5 * MINUTE_IN_SECONDS );
+						} elseif ( ! $lookup_failed ) {
 							// Cache the parsed ids: the payload is smaller than the raw string
 							// column and callers get integers back.
-							wp_cache_set( 'bb_restrict_invites_user_ids', $excluded_ids, 'bb_nouveau_group_invites', HOUR_IN_SECONDS );
+							wp_cache_set( $list_key, $excluded_ids, 'bb_nouveau_group_invites', HOUR_IN_SECONDS );
 						}
 					}
 
-					if ( $cacheable && ! $rebuilding ) {
-						wp_cache_delete( 'bb_restrict_invites_lock', 'bb_nouveau_group_invites' );
+					if ( ! $lock_held_elsewhere ) {
+						wp_cache_delete( $lock_key, 'bb_nouveau_group_invites' );
 					}
 				}
 
-				// On a lookup failure fall through to `WP_Meta_Query` — a privacy
-				// exclusion must fail closed, never silently disappear.
-				if ( ! $lookup_failed && ! $over_ceiling ) {
+				// On a lookup failure fall through to `WP_Meta_Query` — a privacy exclusion must
+				// fail closed, never silently disappear. The count is re-checked here so a cached
+				// list built under a higher ceiling still honours a lowered one.
+				if ( ! $lookup_failed && ! $over_ceiling && is_array( $excluded_ids ) && count( $excluded_ids ) <= $limit ) {
 					if ( ! empty( $excluded_ids ) ) {
 						// Re-parsed rather than trusted: the value may have come from the object
-						// cache, and this string is interpolated straight into SQL.
+						// cache, and it is interpolated straight into SQL.
 						$bp_user_query->uid_clauses['where'] .= " AND u.{$bp_user_query->uid_name} NOT IN (" . implode( ',', wp_parse_id_list( $excluded_ids ) ) . ')';
 					}
 
@@ -238,17 +247,17 @@ class BP_Nouveau_Group_Invite_Query extends BP_User_Query {
 				// so log each distinct reason once per request rather than once per query.
 				static $logged_fallbacks = array();
 
-				$fallback_reason = $lookup_failed ? 'lookup query failed: ' . $wpdb->last_error : 'more than ' . $limit . ' users hold the meta, exceeding the inline ceiling';
+				$fallback_kind = $lookup_failed ? 'error' : 'ceiling';
 
-				if ( empty( $logged_fallbacks[ $lookup_failed ? 'error' : 'ceiling' ] ) && defined( 'WP_DEBUG' ) && WP_DEBUG ) {
-					$logged_fallbacks[ $lookup_failed ? 'error' : 'ceiling' ] = true;
+				if ( empty( $logged_fallbacks[ $fallback_kind ] ) && defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+					$logged_fallbacks[ $fallback_kind ] = true;
 
 					// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log -- Diagnostic logging gated behind WP_DEBUG.
 					error_log(
 						sprintf(
 							'[BuddyBoss] Group invites excluded-ID fast path skipped for meta key "%s" (%s); using the WP_Meta_Query anti-join fallback.',
 							$meta_query[0]['key'],
-							$fallback_reason
+							$lookup_failed ? 'lookup query failed: ' . $wpdb->last_error : 'more than ' . $limit . ' users hold the meta, exceeding the inline ceiling'
 						)
 					);
 				}

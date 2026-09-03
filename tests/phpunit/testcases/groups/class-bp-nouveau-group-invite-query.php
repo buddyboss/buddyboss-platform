@@ -525,4 +525,267 @@ class BP_Tests_BP_Nouveau_Group_Invite_Query extends BP_UnitTestCase {
 			'A failed lookup must not be cached.'
 		);
 	}
+	/**
+	 * Count exclusion lookups issued while running a callback.
+	 *
+	 * @param callable $callback Code to run.
+	 * @return int Number of exclusion lookups issued.
+	 */
+	protected function count_exclusion_lookups( $callback ) {
+		$count = 0;
+
+		$counter = function ( $sql ) use ( &$count ) {
+			if ( false !== strpos( $sql, 'SELECT DISTINCT user_id FROM' ) ) {
+				$count++;
+			}
+
+			return $sql;
+		};
+
+		add_filter( 'query', $counter );
+		$callback();
+		remove_filter( 'query', $counter );
+
+		return $count;
+	}
+
+	/**
+	 * The excluded-ID list is cached and reused on the next query.
+	 *
+	 * Without this the caching layer is unverified: an implementation that
+	 * never wrote or read the cache would still pass every other test.
+	 */
+	public function test_excluded_ids_are_cached_and_reused() {
+		$creator = self::factory()->user->create();
+		$users   = self::factory()->user->create_many( 3 );
+		$group   = self::factory()->group->create( array( 'creator_id' => $creator ) );
+
+		update_user_meta( $users[0], self::$restrict_key, 1 );
+
+		$args = array(
+			'group_id'   => $group,
+			'scope'      => 'members',
+			'type'       => 'alphabetical',
+			'per_page'   => 100,
+			'meta_query' => $this->not_exists_meta_query(),
+		);
+
+		$first  = null;
+		$cold   = $this->count_exclusion_lookups( function () use ( $args, &$first ) {
+			$first = $this->run_invite_query( $args );
+		} );
+
+		$second = null;
+		$warm   = $this->count_exclusion_lookups( function () use ( $args, &$second ) {
+			$second = $this->run_invite_query( $args );
+		} );
+
+		$this->assertSame( 1, $cold, 'A cold cache must issue exactly one exclusion lookup.' );
+		$this->assertSame( 0, $warm, 'A warm cache must issue no exclusion lookup.' );
+		$this->assertSame( $this->get_user_ids( $first ), $this->get_user_ids( $second ), 'Cached and uncached runs must agree.' );
+		$this->assertNotContains( $users[0], $this->get_user_ids( $second ) );
+	}
+
+	/**
+	 * A meta_query naming any other key must not reach the inline lookup.
+	 *
+	 * The AJAX handler merges $_POST wholesale, so an invite-capable member can
+	 * supply their own meta_query. Only the invite screen's own key may take the
+	 * fast path; anything else falls through to WP_Meta_Query as before.
+	 */
+	public function test_foreign_meta_key_never_reaches_the_inline_lookup() {
+		$creator = self::factory()->user->create();
+		$users   = self::factory()->user->create_many( 2 );
+		$group   = self::factory()->group->create( array( 'creator_id' => $creator ) );
+
+		update_user_meta( $users[0], 'bb_some_other_key', 1 );
+
+		$query   = null;
+		$lookups = $this->count_exclusion_lookups( function () use ( $group, &$query ) {
+			$query = $this->run_invite_query( array(
+				'group_id'   => $group,
+				'scope'      => 'members',
+				'type'       => 'alphabetical',
+				'per_page'   => 100,
+				'meta_query' => array(
+					array(
+						'key'     => 'bb_some_other_key',
+						'compare' => 'NOT EXISTS',
+					),
+				),
+			) );
+		} );
+
+		$this->assertSame( 0, $lookups, 'A foreign meta key must not trigger the inline lookup.' );
+		$this->assertQueryPath( $query, false, 'A foreign meta key must use the WP_Meta_Query path.' );
+		$this->assertNotContains( $users[0], $this->get_user_ids( $query ), 'The legacy path must still apply the exclusion.' );
+	}
+
+	/**
+	 * An over-ceiling result is never cached, and the verdict is reused.
+	 */
+	public function test_over_ceiling_result_is_not_cached_and_verdict_is_reused() {
+		$creator = self::factory()->user->create();
+		$users   = self::factory()->user->create_many( 3 );
+		$group   = self::factory()->group->create( array( 'creator_id' => $creator ) );
+
+		update_user_meta( $users[0], self::$restrict_key, 1 );
+		update_user_meta( $users[1], self::$restrict_key, 1 );
+
+		$tiny_ceiling = function () {
+			return 1;
+		};
+		add_filter( 'bb_nouveau_group_invites_excluded_ids_limit', $tiny_ceiling );
+
+		$args = array(
+			'group_id'   => $group,
+			'scope'      => 'members',
+			'type'       => 'alphabetical',
+			'per_page'   => 100,
+			'meta_query' => $this->not_exists_meta_query(),
+		);
+
+		$first = null;
+		$cold  = $this->count_exclusion_lookups( function () use ( $args, &$first ) {
+			$first = $this->run_invite_query( $args );
+		} );
+
+		$second = null;
+		$warm   = $this->count_exclusion_lookups( function () use ( $args, &$second ) {
+			$second = $this->run_invite_query( $args );
+		} );
+
+		remove_filter( 'bb_nouveau_group_invites_excluded_ids_limit', $tiny_ceiling );
+
+		$this->assertSame( 1, $cold, 'The first over-ceiling query issues the lookup.' );
+		$this->assertSame( 0, $warm, 'The over-ceiling verdict must be reused, not re-probed.' );
+		$this->assertFalse(
+			wp_cache_get( 'bb_restrict_invites_ids_' . bp_core_get_incrementor( 'bb_nouveau_group_invites' ), 'bb_nouveau_group_invites' ),
+			'A truncated over-ceiling list must never be cached.'
+		);
+		$this->assertQueryPath( $first, false );
+		$this->assertQueryPath( $second, false );
+
+		foreach ( array( $first, $second ) as $query ) {
+			$found = $this->get_user_ids( $query );
+			$this->assertNotContains( $users[0], $found, 'Opted-in users must stay excluded over the ceiling.' );
+			$this->assertNotContains( $users[1], $found, 'Opted-in users must stay excluded over the ceiling.' );
+		}
+	}
+
+	/**
+	 * A rebuild that raced a setting change must not overwrite fresh state.
+	 *
+	 * The cache keys carry an incrementor captured before the lookup, so a write
+	 * that lands after an invalidation targets a retired key.
+	 */
+	public function test_stale_rebuild_write_is_never_served() {
+		$creator = self::factory()->user->create();
+		$users   = self::factory()->user->create_many( 3 );
+		$group   = self::factory()->group->create( array( 'creator_id' => $creator ) );
+
+		$args = array(
+			'group_id'   => $group,
+			'scope'      => 'members',
+			'type'       => 'alphabetical',
+			'per_page'   => 100,
+			'meta_query' => $this->not_exists_meta_query(),
+		);
+
+		// A rebuild starts here and captures this incrementor.
+		$stale_key = 'bb_restrict_invites_ids_' . bp_core_get_incrementor( 'bb_nouveau_group_invites' );
+
+		// A member opts in mid-rebuild, which retires that incrementor.
+		update_user_meta( $users[0], self::$restrict_key, 1 );
+
+		// The in-flight rebuild now writes its pre-toggle snapshot.
+		wp_cache_set( $stale_key, array(), 'bb_nouveau_group_invites', HOUR_IN_SECONDS );
+
+		$found = $this->get_user_ids( $this->run_invite_query( $args ) );
+
+		$this->assertNotContains( $users[0], $found, 'A stale rebuild write must not resurrect an opted-in user.' );
+		$this->assertContains( $users[1], $found );
+		$this->assertContains( $users[2], $found );
+	}
+	/**
+	 * The rebuild lock is released by its owner and never by a loser.
+	 */
+	public function test_rebuild_lock_is_released_by_owner_and_not_by_a_loser() {
+		$creator = self::factory()->user->create();
+		$users   = self::factory()->user->create_many( 2 );
+		$group   = self::factory()->group->create( array( 'creator_id' => $creator ) );
+
+		update_user_meta( $users[0], self::$restrict_key, 1 );
+
+		$args = array(
+			'group_id'   => $group,
+			'scope'      => 'members',
+			'type'       => 'alphabetical',
+			'per_page'   => 100,
+			'meta_query' => $this->not_exists_meta_query(),
+		);
+
+		$lock_key = 'bb_restrict_invites_lock_' . bp_core_get_incrementor( 'bb_nouveau_group_invites' );
+
+		// Owner path: acquires the lock, rebuilds, releases.
+		$this->run_invite_query( $args );
+
+		$this->assertFalse(
+			wp_cache_get( $lock_key, 'bb_nouveau_group_invites' ),
+			'The rebuild owner must release the lock.'
+		);
+
+		// Loser path: another request holds the lock and the list is cold.
+		wp_cache_delete( 'bb_restrict_invites_ids_' . bp_core_get_incrementor( 'bb_nouveau_group_invites' ), 'bb_nouveau_group_invites' );
+		wp_cache_set( $lock_key, 1, 'bb_nouveau_group_invites', 30 );
+
+		$found = $this->get_user_ids( $this->run_invite_query( $args ) );
+
+		$this->assertNotContains( $users[0], $found, 'A loser must still apply the exclusion.' );
+		$this->assertContains( $users[1], $found );
+		$this->assertNotFalse(
+			wp_cache_get( $lock_key, 'bb_nouveau_group_invites' ),
+			'A loser must not release a lock it does not own.'
+		);
+
+		wp_cache_delete( $lock_key, 'bb_nouveau_group_invites' );
+	}
+
+	/**
+	 * A write under a filtered meta key still busts the cache.
+	 *
+	 * Writers run the key through the `bp_get_user_meta_key` filter, so the
+	 * invalidator must match the filtered form as well as the raw one.
+	 */
+	public function test_invalidation_matches_a_filtered_meta_key() {
+		$creator = self::factory()->user->create();
+		$users   = self::factory()->user->create_many( 2 );
+		$group   = self::factory()->group->create( array( 'creator_id' => $creator ) );
+
+		// Warm the cache so there is something to invalidate.
+		$this->run_invite_query( array(
+			'group_id'   => $group,
+			'scope'      => 'members',
+			'type'       => 'alphabetical',
+			'per_page'   => 100,
+			'meta_query' => $this->not_exists_meta_query(),
+		) );
+
+		$before = bp_core_get_incrementor( 'bb_nouveau_group_invites' );
+
+		$prefix_key = function ( $key ) {
+			return 'bbtest_' . $key;
+		};
+		add_filter( 'bp_get_user_meta_key', $prefix_key );
+
+		bp_update_user_meta( $users[0], self::$restrict_key, 1 );
+
+		remove_filter( 'bp_get_user_meta_key', $prefix_key );
+
+		$this->assertNotSame(
+			$before,
+			bp_core_get_incrementor( 'bb_nouveau_group_invites' ),
+			'A write under the filtered key must retire the cached list.'
+		);
+	}
 }

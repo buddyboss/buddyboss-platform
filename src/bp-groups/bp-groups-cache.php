@@ -509,17 +509,17 @@ function bb_groups_clear_restrict_invites_cache( $meta_ids = 0, $user_id = 0, $m
 	}
 
 	// Writers go through bp_update_user_meta()/bp_delete_user_meta(), which run the key
-	// through the `bp_get_user_meta_key` filter, so match the filtered key as well. It is
-	// memoised because this callback runs on every user meta write on the site.
-	static $filtered_key = null;
-
-	if ( null === $filtered_key ) {
-		$filtered_key = bp_get_user_meta_key( '_bp_nouveau_restrict_invites_to_friends' );
-	}
-
-	if ( '_bp_nouveau_restrict_invites_to_friends' === $meta_key || $filtered_key === $meta_key ) {
-		wp_cache_delete( 'bb_restrict_invites_user_ids', 'bb_nouveau_group_invites' );
-		wp_cache_delete( 'bb_restrict_invites_over_ceiling', 'bb_nouveau_group_invites' );
+	// through the `bp_get_user_meta_key` filter, so match the filtered key as well. The
+	// filtered value is resolved per call rather than memoised: it is a public filter that
+	// may be registered late or vary per blog, and a frozen value would silently stop
+	// matching and leave a stale exclusion cached.
+	if (
+		'_bp_nouveau_restrict_invites_to_friends' === $meta_key ||
+		bp_get_user_meta_key( '_bp_nouveau_restrict_invites_to_friends' ) === $meta_key
+	) {
+		// Resetting the incrementor retires the id list, the over-ceiling verdicts (one per
+		// filtered ceiling) and any in-flight rebuild's write target in a single operation.
+		bp_core_reset_incrementor( 'bb_nouveau_group_invites' );
 	}
 }
 add_action( 'added_user_meta', 'bb_groups_clear_restrict_invites_cache', 10, 3 );
