@@ -3355,6 +3355,13 @@ function bb_xprofile_save_fields( $posted_field_ids = array(), $is_required = ar
 
 			// Update the field data and visibility level. Locked fields (enforced visibility or
 			// display-name format) never render a control, so their stored level is left untouched.
+			//
+			// No migration is shipped for levels that may have been smuggled onto a locked
+			// field before this gate existed: an enforced field is masked to the admin default
+			// on read (xprofile_get_field_visibility_level(), so the stored value is inert), and
+			// display-name-locked fields are name components excluded from the profile
+			// visibility filtering, so a stray stored level has no member-facing effect either.
+			// Gating every writer stops new smuggled values; existing ones need no cleanup. See PROD-10323.
 			if ( bb_xprofile_can_change_field_visibility( $field_id ) ) {
 				xprofile_set_field_visibility_level( $field_id, bp_displayed_user_id(), $visibility_level );
 			}
