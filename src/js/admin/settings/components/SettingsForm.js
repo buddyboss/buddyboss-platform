@@ -941,11 +941,16 @@ export function SettingsForm({ fields, values, onChange, onProBadgeClick, disabl
 							/>
 						) }
 						{ field.button_label && field.addon_action && field.addon_slug ? (
-							// Installed add-on: activate in place via Mothership AJAX.
+							// Install or activate the add-on in place via AJAX.
+							// `addon_nonce_key` picks which bbAdminData nonce the
+							// handler expects (Mothership vs Platform-owned) —
+							// see AddonActivateButton for the two families.
 							<AddonActivateButton
 								action={ field.addon_action }
 								slug={ field.addon_slug }
 								label={ field.button_label }
+								nonceKey={ field.addon_nonce_key }
+								busyLabel={ field.addon_busy_label }
 								className="bb-admin-empty-state__button"
 							/>
 						) : field.button_label && field.button_url ? (
@@ -1444,9 +1449,9 @@ export function SettingsForm({ fields, values, onChange, onProBadgeClick, disabl
 							<span className="bb-admin-settings-form__field-label-text">{field.label}</span>
 							{ 'reaction_mode' !== field.type && field.pro_notice?.show && (
 								<>
-									<span className="bb-pro-badge">
+									<span className={`bb-pro-badge${ field.pro_notice.tier ? ' bb-pro-badge--' + field.pro_notice.tier : '' }`}>
 										<i className={field.pro_notice.badge_icon || ''} />
-										<span>{field.pro_notice.badge_text || 'PRO'}</span>
+										<span>{field.pro_notice.badge_text || 'LAUNCH'}</span>
 									</span>
 									{/* When a modal payload is present (delivered by the
 									    field-upgrades catalog), the play icon opens

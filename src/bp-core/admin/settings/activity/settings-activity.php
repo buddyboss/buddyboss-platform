@@ -150,19 +150,25 @@ function bb_activity_register_settings_panel_fields( $edit_time_options = array(
 		)
 	);
 
-	// FIELD: Pinned Post.
+	// FIELD: Pinned Post (Pro only — moved into the BuddyBoss Addons plugin).
 	bb_register_feature_field(
 		'activity',
 		'activity_settings',
 		'activity_settings',
 		array(
-			'name'              => '_bb_enable_activity_pinned_posts',
-			'label'             => __( 'Pinned Post', 'buddyboss' ),
-			'type'              => 'toggle',
-			'description'       => __( 'Allow group owners and moderators to pin posts', 'buddyboss' ),
-			'default'           => bb_is_active_activity_pinned_posts(),
-			'sanitize_callback' => 'absint',
-			'order'             => 70,
+			'name'                => '_bb_enable_activity_pinned_posts',
+			'label'               => __( 'Pinned Post', 'buddyboss' ),
+			'type'                => 'toggle',
+			'description'         => __( 'Allow group owners and moderators to pin posts', 'buddyboss' ),
+			'default'             => bb_is_active_activity_pinned_posts(),
+			'sanitize_callback'   => 'absint',
+			'order'               => 70,
+			'pro_only'            => true,
+			// Upgrade modal content (used when there is no remote field-upgrades
+			// catalog entry yet). See bb_admin_addon_upsell_field_names().
+			'upgrade_title'       => __( 'Pinned Posts Stays on Top', 'buddyboss' ),
+			'upgrade_description' => __( 'Group owners and moderators can pin posts — one admin switch. “Pin to feed” sits right in the post menu.', 'buddyboss' ),
+			'upgrade_image_url'   => buddypress()->plugin_url . 'bp-core/images/admin/pinned-posts-upgrade.png',
 		)
 	);
 

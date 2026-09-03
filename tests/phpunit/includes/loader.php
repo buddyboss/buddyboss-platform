@@ -5,14 +5,18 @@ require_once( dirname( __FILE__ ) . '/define-constants.php' );
 $multisite = (int) ( defined( 'WP_TESTS_MULTISITE') && WP_TESTS_MULTISITE );
 system( WP_PHP_BINARY . ' ' . escapeshellarg( dirname( __FILE__ ) . '/install.php' ) . ' ' . escapeshellarg( WP_TESTS_CONFIG_PATH ) . ' ' . escapeshellarg( WP_TESTS_DIR ) . ' ' . $multisite );
 
-// Bootstrap BP.
-// The Composer autoloader is normally loaded by the root bp-loader.php,
-// which the test suite bypasses by loading src/bp-loader.php directly.
-if ( ! file_exists( dirname( __FILE__ ) . '/../../../vendor/autoload.php' ) ) {
-	fwrite( STDERR, "The Composer autoloader could not be found. Run `composer install` in the plugin directory before running the test suite.\n" );
-	exit( 1 );
+// src/bp-loader.php loads src/vendor/autoload.php itself whenever BP_SOURCE_SUBDIRECTORY is
+// undefined, which is the case here. Prefer that scoped tree so the suite exercises the build
+// the plugin actually ships; both trees register the same BuddyBossPlatform\* namespaces and
+// Composer appends, so requiring the root dev tree first would shadow the scoped one.
+if (
+	! file_exists( dirname( __FILE__ ) . '/../../../src/vendor/autoload.php' )
+	&& file_exists( dirname( __FILE__ ) . '/../../../vendor/autoload.php' )
+) {
+	require_once dirname( __FILE__ ) . '/../../../vendor/autoload.php';
 }
-require_once dirname( __FILE__ ) . '/../../../vendor/autoload.php';
+
+// Bootstrap BP
 require dirname( __FILE__ ) . '/../../../src/bp-loader.php';
 
 // Bail from redirects as they throw 'headers already sent' warnings.

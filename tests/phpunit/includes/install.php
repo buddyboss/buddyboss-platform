@@ -16,13 +16,16 @@ require_once $tests_dir_path . '/includes/functions.php';
 require_once $tests_dir_path . '/includes/mock-mailer.php';
 
 function _load_buddypress() {
-	// The Composer autoloader is normally loaded by the root bp-loader.php,
-	// which the test suite bypasses by loading src/bp-loader.php directly.
-	if ( ! file_exists( dirname( dirname( dirname( dirname( __FILE__ ) ) ) ) . '/vendor/autoload.php' ) ) {
-		fwrite( STDERR, "The Composer autoloader could not be found. Run `composer install` in the plugin directory before running the test suite.\n" );
-		exit( 1 );
+	// Prefer the scoped src/vendor tree that src/bp-loader.php loads itself; the root dev
+	// tree registers the same BuddyBossPlatform\* namespaces and would shadow it. See the
+	// matching guard in loader.php.
+	$bb_plugin_dir = dirname( dirname( dirname( dirname( __FILE__ ) ) ) );
+	if (
+		! file_exists( $bb_plugin_dir . '/src/vendor/autoload.php' )
+		&& file_exists( $bb_plugin_dir . '/vendor/autoload.php' )
+	) {
+		require_once $bb_plugin_dir . '/vendor/autoload.php';
 	}
-	require_once dirname( dirname( dirname( dirname( __FILE__ ) ) ) ) . '/vendor/autoload.php';
 	require dirname( dirname( dirname( dirname( __FILE__ ) ) ) ) . '/src/bp-loader.php';
 	do_action( 'activate_src/bp-loader.php' );
 }
