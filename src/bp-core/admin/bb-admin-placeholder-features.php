@@ -228,6 +228,14 @@ function bb_get_placeholder_plugin_status( $item, $active_plugins = null ) {
 		$plugin_slug = bb_get_placeholder_product_slug( $item );
 		$product     = \BuddyBoss\Core\Admin\Mothership\BB_Addons_Manager::checkProductBySlug( $plugin_slug );
 		$in_plan     = ! empty( $product );
+
+		// A failed add-ons API lookup (outage, rate limit backoff) is not
+		// evidence the product is missing from the plan. Fall back to the
+		// install state so a licensed customer's installed add-ons don't
+		// flip to an "UPGRADE" badge while the API is unreachable.
+		if ( ! $in_plan && \BuddyBoss\Core\Admin\Mothership\BB_Addons_Manager::productsApiErrored() ) {
+			$in_plan = file_exists( WP_PLUGIN_DIR . '/' . $plugin_file );
+		}
 	}
 
 	/**
