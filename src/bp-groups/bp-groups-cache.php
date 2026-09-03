@@ -491,9 +491,11 @@ add_action( 'added_group_meta', 'bp_groups_reset_cache_incrementor' );
 /**
  * Clear the cached restrict-invites excluded user ID list.
  *
- * Runs on every user meta write path (web, REST, WP-CLI) so the cache used by
- * BP_Nouveau_Group_Invite_Query::build_meta_query() can never serve a stale
- * exclusion after a member toggles the setting.
+ * Runs on every user meta write path that goes through the meta API — the settings
+ * screen, the REST account-settings endpoint, WP-CLI, and user deletion (both
+ * wp_delete_user() and wpmu_delete_user() loop delete_metadata_by_mid(), which fires
+ * deleted_user_meta). Writers that bypass the meta API entirely (direct $wpdb writes,
+ * SQL imports, DB restores) fire no hook; the cache TTL bounds those.
  *
  * @since BuddyBoss [BBVERSION]
  *
@@ -502,13 +504,22 @@ add_action( 'added_group_meta', 'bp_groups_reset_cache_incrementor' );
  * @param string    $meta_key Meta key being written.
  */
 function bb_groups_clear_restrict_invites_cache( $meta_ids = 0, $user_id = 0, $meta_key = '' ) {
+	if ( '' === $meta_key ) {
+		return;
+	}
+
 	// Writers go through bp_update_user_meta()/bp_delete_user_meta(), which run the key
-	// through the `bp_get_user_meta_key` filter, so match the filtered key as well.
-	if (
-		'_bp_nouveau_restrict_invites_to_friends' === $meta_key ||
-		bp_get_user_meta_key( '_bp_nouveau_restrict_invites_to_friends' ) === $meta_key
-	) {
+	// through the `bp_get_user_meta_key` filter, so match the filtered key as well. It is
+	// memoised because this callback runs on every user meta write on the site.
+	static $filtered_key = null;
+
+	if ( null === $filtered_key ) {
+		$filtered_key = bp_get_user_meta_key( '_bp_nouveau_restrict_invites_to_friends' );
+	}
+
+	if ( '_bp_nouveau_restrict_invites_to_friends' === $meta_key || $filtered_key === $meta_key ) {
 		wp_cache_delete( 'bb_restrict_invites_user_ids', 'bb_nouveau_group_invites' );
+		wp_cache_delete( 'bb_restrict_invites_over_ceiling', 'bb_nouveau_group_invites' );
 	}
 }
 add_action( 'added_user_meta', 'bb_groups_clear_restrict_invites_cache', 10, 3 );

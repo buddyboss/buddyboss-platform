@@ -157,81 +157,98 @@ class BP_Nouveau_Group_Invite_Query extends BP_User_Query {
 				/**
 				 * Filters the hard ceiling on excluded user IDs resolved inline for group invites.
 				 *
-				 * This is a memory and `max_allowed_packet` guard, not a performance cap: IDs up
-				 * to this ceiling are emitted as chunked `NOT IN` clauses. Only beyond it does the
-				 * query fall back to the `WP_Meta_Query` anti-join, because building the list
-				 * would risk exhausting memory or the packet limit. Returning `0` means "always
-				 * use the `WP_Meta_Query` fallback when any user has the meta", not "unlimited".
+				 * This is only a memory backstop for pathological data. It is deliberately not a
+				 * performance boundary: the inline `NOT IN` gets *faster* as the excluded set
+				 * grows, because fewer rows survive to the sort, while the `WP_Meta_Query`
+				 * anti-join it falls back to is roughly 3x slower. Set it lower only to force the
+				 * legacy path. Returning `0` forces the fallback whenever any user holds the meta.
 				 *
 				 * @since BuddyBoss [BBVERSION]
 				 *
-				 * @param int $limit Maximum number of excluded user IDs. Default 50000.
+				 * @param int $limit Maximum number of excluded user IDs. Default 200000.
 				 */
-				$limit = min( max( 0, (int) apply_filters( 'bb_nouveau_group_invites_excluded_ids_limit', 50000 ) ), PHP_INT_MAX - 1 );
-
-				/**
-				 * Filters how many excluded user IDs go into each `NOT IN` clause.
-				 *
-				 * The excluded IDs are split across several `AND u.ID NOT IN ( ... )` clauses
-				 * rather than one oversized list, which keeps each SQL fragment bounded. The
-				 * clauses are ANDed, so the resulting exclusion is identical to a single list.
-				 *
-				 * @since BuddyBoss [BBVERSION]
-				 *
-				 * @param int $chunk_size Excluded IDs per `NOT IN` clause. Default 5000.
-				 */
-				$chunk_size = max( 1, (int) apply_filters( 'bb_nouveau_group_invites_excluded_ids_chunk_size', 5000 ) );
+				$limit = min( max( 0, (int) apply_filters( 'bb_nouveau_group_invites_excluded_ids_limit', 200000 ) ), PHP_INT_MAX - 1 );
 
 				// The list only changes when a member toggles the setting, so cache the known
-				// key network-wide. bb_groups_clear_restrict_invites_cache() busts the cache
-				// on every user meta write path (web, REST, WP-CLI). The TTL is a backstop for
-				// writers that bypass the meta API entirely (direct SQL, imports, DB restores),
-				// which fire no hook and would otherwise pin a stale exclusion indefinitely.
+				// key network-wide. bb_groups_clear_restrict_invites_cache() busts the cache on
+				// every write path that goes through the meta API (web, REST, WP-CLI, user
+				// deletion). The TTL bounds writers that bypass it entirely (direct SQL, imports,
+				// DB restores), which fire no hook.
 				$cacheable     = '_bp_nouveau_restrict_invites_to_friends' === $meta_query[0]['key'];
-				$excluded_ids  = $cacheable ? wp_cache_get( 'bb_restrict_invites_user_ids', 'bb_nouveau_group_invites' ) : false;
 				$lookup_failed = false;
+
+				// Past the ceiling the lookup result is unusable and discarded, so remember that
+				// verdict briefly: re-running a throwaway lookup on every request costs more than
+				// the anti-join it falls back to.
+				$over_ceiling = $cacheable && (bool) wp_cache_get( 'bb_restrict_invites_over_ceiling', 'bb_nouveau_group_invites' );
+				$excluded_ids = ( $cacheable && ! $over_ceiling ) ? wp_cache_get( 'bb_restrict_invites_user_ids', 'bb_nouveau_group_invites' ) : false;
 
 				// A miss returns false; anything not an array is unusable, so re-query rather
 				// than counting it. A cached empty array is a valid hit and is kept.
-				if ( ! is_array( $excluded_ids ) ) {
-					// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Indexed meta_key lookup, cached above for the known restrict key.
-					$excluded_ids  = $wpdb->get_col( $wpdb->prepare( "SELECT DISTINCT user_id FROM {$wpdb->usermeta} WHERE meta_key = %s LIMIT %d", $meta_query[0]['key'], $limit + 1 ) );
-					$lookup_failed = ! empty( $wpdb->last_error );
+				if ( ! $over_ceiling && ! is_array( $excluded_ids ) ) {
 
-					if ( $cacheable && ! $lookup_failed && count( $excluded_ids ) <= $limit ) {
-						wp_cache_set( 'bb_restrict_invites_user_ids', $excluded_ids, 'bb_nouveau_group_invites', HOUR_IN_SECONDS );
+					// Best-effort stampede guard: the cache goes cold on every toggle, and this
+					// query runs for each concurrent viewer of the invite list. The winner
+					// rebuilds; a loser re-reads once in case the winner has already finished,
+					// then proceeds rather than blocking the request.
+					$rebuilding = $cacheable && ! wp_cache_add( 'bb_restrict_invites_lock', 1, 'bb_nouveau_group_invites', 30 );
+
+					if ( $rebuilding ) {
+						$excluded_ids = wp_cache_get( 'bb_restrict_invites_user_ids', 'bb_nouveau_group_invites' );
+					}
+
+					if ( ! is_array( $excluded_ids ) ) {
+						// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery -- Indexed meta_key lookup, cached immediately below for the known restrict key.
+						$excluded_ids  = wp_parse_id_list( $wpdb->get_col( $wpdb->prepare( "SELECT DISTINCT user_id FROM {$wpdb->usermeta} WHERE meta_key = %s LIMIT %d", $meta_query[0]['key'], $limit + 1 ) ) );
+						$lookup_failed = ! empty( $wpdb->last_error );
+
+						// `LIMIT $limit + 1` means an over-ceiling result is truncated and must
+						// never be cached or emitted as an exclusion.
+						if ( ! $lookup_failed && count( $excluded_ids ) > $limit ) {
+							$over_ceiling = true;
+
+							if ( $cacheable ) {
+								wp_cache_set( 'bb_restrict_invites_over_ceiling', 1, 'bb_nouveau_group_invites', 5 * MINUTE_IN_SECONDS );
+							}
+						} elseif ( $cacheable && ! $lookup_failed ) {
+							// Cache the parsed ids: the payload is smaller than the raw string
+							// column and callers get integers back.
+							wp_cache_set( 'bb_restrict_invites_user_ids', $excluded_ids, 'bb_nouveau_group_invites', HOUR_IN_SECONDS );
+						}
+					}
+
+					if ( $cacheable && ! $rebuilding ) {
+						wp_cache_delete( 'bb_restrict_invites_lock', 'bb_nouveau_group_invites' );
 					}
 				}
 
 				// On a lookup failure fall through to `WP_Meta_Query` — a privacy
 				// exclusion must fail closed, never silently disappear.
-				if ( ! $lookup_failed && count( $excluded_ids ) <= $limit ) {
+				if ( ! $lookup_failed && ! $over_ceiling ) {
 					if ( ! empty( $excluded_ids ) ) {
-
-						// Split the ids across several ANDed `NOT IN` clauses so no single SQL
-						// fragment grows unbounded. ANDing them excludes the same set a single
-						// list would.
-						foreach ( array_chunk( wp_parse_id_list( $excluded_ids ), $chunk_size ) as $excluded_chunk ) {
-							$bp_user_query->uid_clauses['where'] .= " AND u.{$bp_user_query->uid_name} NOT IN (" . implode( ',', $excluded_chunk ) . ')';
-						}
+						// Re-parsed rather than trusted: the value may have come from the object
+						// cache, and this string is interpolated straight into SQL.
+						$bp_user_query->uid_clauses['where'] .= " AND u.{$bp_user_query->uid_name} NOT IN (" . implode( ',', wp_parse_id_list( $excluded_ids ) ) . ')';
 					}
 
 					return;
 				}
 
-				// The invite modal re-queries on every page and every search keystroke, so log
-				// the fallback once per request instead of once per query.
-				static $logged_fallback = false;
+				// The invite list re-queries on submitted searches and on every page of results,
+				// so log each distinct reason once per request rather than once per query.
+				static $logged_fallbacks = array();
 
-				if ( ! $logged_fallback && defined( 'WP_DEBUG' ) && WP_DEBUG ) {
-					$logged_fallback = true;
+				$fallback_reason = $lookup_failed ? 'lookup query failed: ' . $wpdb->last_error : 'more than ' . $limit . ' users hold the meta, exceeding the inline ceiling';
+
+				if ( empty( $logged_fallbacks[ $lookup_failed ? 'error' : 'ceiling' ] ) && defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+					$logged_fallbacks[ $lookup_failed ? 'error' : 'ceiling' ] = true;
 
 					// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log -- Diagnostic logging gated behind WP_DEBUG.
 					error_log(
 						sprintf(
 							'[BuddyBoss] Group invites excluded-ID fast path skipped for meta key "%s" (%s); using the WP_Meta_Query anti-join fallback.',
 							$meta_query[0]['key'],
-							$lookup_failed ? 'lookup query failed: ' . $wpdb->last_error : 'more than ' . $limit . ' users hold the meta, exceeding the inline ceiling'
+							$fallback_reason
 						)
 					);
 				}

@@ -64,17 +64,48 @@ class BP_Tests_BP_Nouveau_Group_Invite_Query extends BP_UnitTestCase {
 	 *
 	 * @param BP_Nouveau_Group_Invite_Query $query     The completed query.
 	 * @param bool                          $fast_path Whether the fast path is expected.
+	 * @param string                        $message   Optional failure message.
 	 */
-	protected function assertQueryPath( $query, $fast_path ) {
+	protected function assertQueryPath( $query, $fast_path, $message = '' ) {
 		global $wpdb;
 
 		$joined = (bool) preg_match( '/JOIN\s+' . preg_quote( $wpdb->usermeta, '/' ) . '\b/i', $query->uid_clauses['select'] );
 
 		if ( $fast_path ) {
-			$this->assertFalse( $joined, 'Fast path must not join usermeta.' );
+			$this->assertFalse( $joined, $message ? $message : 'Fast path must not join usermeta.' );
 		} else {
-			$this->assertTrue( $joined, 'WP_Meta_Query path must join usermeta.' );
+			$this->assertTrue( $joined, $message ? $message : 'WP_Meta_Query path must join usermeta.' );
 		}
+	}
+
+	/**
+	 * Return the NOT IN clauses present in $query but not in $baseline.
+	 *
+	 * BP_User_Query emits its own NOT IN clauses (group members, moderation),
+	 * so comparing against a baseline built from identical args isolates the
+	 * clauses build_meta_query() appended.
+	 *
+	 * @param BP_Nouveau_Group_Invite_Query $baseline Query with no exclusion applied.
+	 * @param BP_Nouveau_Group_Invite_Query $query    Query under test.
+	 * @return array Array of int arrays, one per appended clause.
+	 */
+	protected function added_not_in_clauses( $baseline, $query ) {
+		$extract = function ( $where ) {
+			preg_match_all( '/NOT IN \(([0-9,]+)\)/', $where, $matches );
+
+			return $matches[1];
+		};
+
+		$before = $extract( $baseline->uid_clauses['where'] );
+		$after  = $extract( $query->uid_clauses['where'] );
+
+		$added = array();
+
+		foreach ( array_diff_assoc( $after, $before ) as $list ) {
+			$added[] = array_map( 'intval', explode( ',', $list ) );
+		}
+
+		return $added;
 	}
 
 	/**
@@ -391,18 +422,18 @@ class BP_Tests_BP_Nouveau_Group_Invite_Query extends BP_UnitTestCase {
 	}
 
 	/**
-	 * Excluded IDs beyond the chunk size are split across several ANDed
-	 * NOT IN clauses, and the exclusion is identical to a single list.
+	 * The exclusion is emitted as one NOT IN clause holding exactly the
+	 * opted-in IDs.
+	 *
+	 * Asserts clause *contents*, not just that a clause exists: an
+	 * implementation that emitted the wrong IDs, or the right IDs spread over
+	 * redundant clauses, would still return the correct users on a small
+	 * fixture and pass a count-only assertion.
 	 */
-	public function test_excluded_ids_are_chunked_across_not_in_clauses() {
+	public function test_excluded_ids_emitted_as_a_single_exact_not_in_clause() {
 		$creator = self::factory()->user->create();
 		$users   = self::factory()->user->create_many( 5 );
 		$group   = self::factory()->group->create( array( 'creator_id' => $creator ) );
-
-		// Three opted-in users with a chunk size of one forces three clauses.
-		update_user_meta( $users[0], self::$restrict_key, 1 );
-		update_user_meta( $users[1], self::$restrict_key, 1 );
-		update_user_meta( $users[2], self::$restrict_key, 1 );
 
 		$args = array(
 			'group_id'   => $group,
@@ -412,57 +443,66 @@ class BP_Tests_BP_Nouveau_Group_Invite_Query extends BP_UnitTestCase {
 			'meta_query' => $this->not_exists_meta_query(),
 		);
 
-		// Baseline: one clause holding all three ids.
-		$single = $this->run_invite_query( $args );
+		// Baseline before anyone opts in: BP_User_Query emits its own NOT IN
+		// clauses (group members, moderation), so only the delta is ours.
+		$baseline = $this->run_invite_query( $args );
 
-		$one_per_chunk = function () {
-			return 1;
-		};
-		add_filter( 'bb_nouveau_group_invites_excluded_ids_chunk_size', $one_per_chunk );
+		update_user_meta( $users[0], self::$restrict_key, 1 );
+		update_user_meta( $users[1], self::$restrict_key, 1 );
+		update_user_meta( $users[2], self::$restrict_key, 1 );
 
 		$query = $this->run_invite_query( $args );
 		$found = $this->get_user_ids( $query );
 
-		remove_filter( 'bb_nouveau_group_invites_excluded_ids_chunk_size', $one_per_chunk );
-
-		// Still the fast path — chunking must not fall back to the anti-join.
 		$this->assertQueryPath( $query, true );
 
-		// Three ids at one per chunk means two clauses more than the single-clause baseline.
-		$this->assertSame(
-			substr_count( $single->uid_clauses['where'], 'NOT IN (' ) + 2,
-			substr_count( $query->uid_clauses['where'], 'NOT IN (' ),
-			'Each chunk must produce its own NOT IN clause.'
-		);
-		$this->assertSame(
-			$this->get_user_ids( $single ),
-			$found,
-			'Chunked and single-clause exclusions must return identical users.'
-		);
-		$this->assertNotContains( $users[0], $found, 'Opted-in user must be excluded when chunked.' );
-		$this->assertNotContains( $users[1], $found, 'Opted-in user must be excluded when chunked.' );
-		$this->assertNotContains( $users[2], $found, 'Opted-in user must be excluded when chunked.' );
+		$added = $this->added_not_in_clauses( $baseline, $query );
+
+		$this->assertCount( 1, $added, 'The exclusion must be a single NOT IN clause.' );
+
+		$expected = array( (int) $users[0], (int) $users[1], (int) $users[2] );
+		$actual   = $added[0];
+		sort( $expected );
+		sort( $actual );
+
+		$this->assertSame( $expected, $actual, 'The NOT IN clause must hold exactly the opted-in IDs.' );
+
+		$this->assertNotContains( $users[0], $found );
+		$this->assertNotContains( $users[1], $found );
+		$this->assertNotContains( $users[2], $found );
 		$this->assertContains( $users[3], $found );
 		$this->assertContains( $users[4], $found );
 	}
 
 	/**
-	 * A set that previously exceeded the 5000 cap is now emitted inline in
-	 * chunks rather than reverting to the WP_Meta_Query anti-join.
+	 * A failed exclusion lookup must fail closed.
+	 *
+	 * If the lookup errors the excluded list is empty, so emitting it would
+	 * silently drop the restriction and make opted-in members invitable. The
+	 * query must fall through to WP_Meta_Query instead, and must not cache the
+	 * failed result.
 	 */
-	public function test_large_set_no_longer_falls_back() {
+	public function test_lookup_failure_fails_closed() {
+		global $wpdb;
+
 		$creator = self::factory()->user->create();
-		$users   = self::factory()->user->create_many( 4 );
+		$users   = self::factory()->user->create_many( 3 );
 		$group   = self::factory()->group->create( array( 'creator_id' => $creator ) );
 
 		update_user_meta( $users[0], self::$restrict_key, 1 );
-		update_user_meta( $users[1], self::$restrict_key, 1 );
 
-		// Two opted-in users exceed a chunk size of one but sit under the ceiling.
-		$small_chunk = function () {
-			return 1;
+		wp_cache_delete( 'bb_restrict_invites_user_ids', 'bb_nouveau_group_invites' );
+
+		$break_lookup = function ( $sql ) {
+			if ( false !== strpos( $sql, 'SELECT DISTINCT user_id FROM' ) ) {
+				return 'SELECT bb_no_such_column FROM bb_no_such_table';
+			}
+
+			return $sql;
 		};
-		add_filter( 'bb_nouveau_group_invites_excluded_ids_chunk_size', $small_chunk );
+
+		$suppress = $wpdb->suppress_errors( true );
+		add_filter( 'query', $break_lookup );
 
 		$query = $this->run_invite_query( array(
 			'group_id'   => $group,
@@ -473,12 +513,16 @@ class BP_Tests_BP_Nouveau_Group_Invite_Query extends BP_UnitTestCase {
 		) );
 		$found = $this->get_user_ids( $query );
 
-		remove_filter( 'bb_nouveau_group_invites_excluded_ids_chunk_size', $small_chunk );
+		remove_filter( 'query', $break_lookup );
+		$wpdb->suppress_errors( $suppress );
 
-		$this->assertQueryPath( $query, true );
-		$this->assertNotContains( $users[0], $found );
-		$this->assertNotContains( $users[1], $found );
+		$this->assertQueryPath( $query, false, 'A failed lookup must fall back to WP_Meta_Query.' );
+		$this->assertNotContains( $users[0], $found, 'Opted-in user must still be excluded when the lookup fails.' );
+		$this->assertContains( $users[1], $found );
 		$this->assertContains( $users[2], $found );
-		$this->assertContains( $users[3], $found );
+		$this->assertFalse(
+			wp_cache_get( 'bb_restrict_invites_user_ids', 'bb_nouveau_group_invites' ),
+			'A failed lookup must not be cached.'
+		);
 	}
 }
