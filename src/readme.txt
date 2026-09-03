@@ -57,6 +57,10 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 
 == Changelog ==
 
+= 3.4.4 =
+* Enhancement: Members - Added Member Directory settings to the REST API, allowing apps to access configured directory elements, profile actions, and primary actions
+* Bug: Core - Fixed an issue where the Profile Visibility API ignored enforced visibility settings, allowing users to select and save visibility options restricted by administrators
+
 = 3.4.3 =
 * Bug: Access Controls - Fixed Access Control settings not saving when only the restriction type or membership provider was changed
 * Bug: Login - Fixed reCAPTCHA login verification blocking sign-ins on third-party login forms such as MemberPress; verification now applies only to the WordPress and BuddyBoss login forms it is rendered on
