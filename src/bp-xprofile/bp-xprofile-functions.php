@@ -3675,7 +3675,7 @@ function bb_xprofile_can_change_field_visibility( $field_id ) {
 	// field under the nickname format. Both are site rules that stop the control being
 	// rendered, so a writer must honour the union or a crafted POST reaches a field that no
 	// screen offers.
-	if ( true === bp_core_hide_display_name_field( $field_id ) ) {
+	if ( function_exists( 'bp_core_hide_display_name_field' ) && true === bp_core_hide_display_name_field( $field_id ) ) {
 		return false;
 	}
 

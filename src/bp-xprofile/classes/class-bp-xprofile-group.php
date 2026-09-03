@@ -193,11 +193,12 @@ class BP_XProfile_Group {
 	/**
 	 * Reset the per-request memo of ordered group IDs.
 	 *
-	 * self::$bp_xprofile_group_ids caches the ordered ID list returned by self::get() for
-	 * the lifetime of the request. The object cache is purged by the mutators, but this
-	 * static is not, so a request that creates, reorders or deletes a group and then reads
-	 * groups back (wp-admin reorder, WP-CLI, tests) would keep the stale order. Call this
-	 * from every mutator that changes which groups exist or in what order.
+	 * The static self::$bp_xprofile_group_ids caches the ordered ID list returned by
+	 * self::get() for the lifetime of the request. The object cache is purged by the
+	 * mutators, but this static is not, so a request that creates, reorders or deletes a
+	 * group and then reads groups back (wp-admin reorder, WP-CLI, tests) would keep the
+	 * stale order. Call this from every mutator that changes which groups exist or in what
+	 * order.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
