@@ -86,6 +86,10 @@ function bp_xprofile_action_settings() {
 			}
 		}
 
+		// The visibility gate below reads allow_custom_visibility field meta per field.
+		// Prime the whole posted set in one query rather than one lookup per field.
+		bp_xprofile_update_meta_cache( array( 'field' => wp_parse_id_list( $posted_field_ids ) ) );
+
 		// Save the visibility settings.
 		foreach ( $posted_field_ids as $field_id ) {
 
