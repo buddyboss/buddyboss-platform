@@ -302,15 +302,12 @@ Bar!';
 		bp_xprofile_update_meta( $g, 'group', 'foo', 'bar' );
 		bp_xprofile_update_meta( $g, 'group', 'foo2', 'bar' );
 
-		$expected = array(
-			'foo' => array(
-				'bar',
-			),
-			'foo2' => array(
-				'bar',
-			),
-		);
-		$this->assertSame( $expected, bp_xprofile_get_meta( $g, 'group' ) );
+		$meta = bp_xprofile_get_meta( $g, 'group' );
+
+		// Group creation stores its own meta (is_repeater_enabled), so assert on the keys
+		// this test sets rather than on the whole meta bag.
+		$this->assertSame( array( 'bar' ), $meta['foo'] );
+		$this->assertSame( array( 'bar' ), $meta['foo2'] );
 	}
 
 	/**
@@ -343,8 +340,11 @@ Bar!';
 	public function test_bp_xprofile_get_meta_no_meta_key_no_results() {
 		$g = self::factory()->xprofile_group->create();
 
-		$expected = array();
-		$this->assertSame( $expected, bp_xprofile_get_meta( $g, 'group' ) );
+		// A freshly created group is not meta-free (group creation stores
+		// is_repeater_enabled), so assert that no user meta key was invented for it.
+		$meta = bp_xprofile_get_meta( $g, 'group' );
+		$this->assertArrayNotHasKey( 'foo', $meta );
+		$this->assertArrayNotHasKey( 'foo2', $meta );
 	}
 
 	/**
@@ -588,6 +588,13 @@ Bar!';
 	public function test_xprofile_sync_bp_profile_new_user() {
 		$post_vars = $_POST;
 
+		// add_user()/edit_user() are wp-admin operations performed by a logged-in
+		// administrator. Without a current user, bp_xprofile_validate_nickname_value()
+		// takes its registration-page branch (! is_user_logged_in()), which has no notion
+		// of "the user being edited" and rejects the member's own unchanged nickname.
+		$old_user = get_current_user_id();
+		$this->set_current_user( self::factory()->user->create( array( 'role' => 'administrator' ) ) );
+
 		$_POST = array(
 			'user_login' => 'foobar',
 			'pass1'      => 'password',
@@ -599,6 +606,7 @@ Bar!';
 		);
 
 		$id = add_user();
+		$this->assertNotWPError( $id, 'The fixture user could not be created.' );
 
 		$_POST = array(
 			'display_name' => 'Bar Foo',
@@ -607,9 +615,11 @@ Bar!';
 		);
 
 		$id = edit_user( $id );
+		$this->assertNotWPError( $id, 'Re-saving a user with an unchanged nickname must not be rejected.' );
 
 		// clean up post vars
 		$_POST = $post_vars;
+		$this->set_current_user( $old_user );
 
 		$this->assertEquals( 'foobar', xprofile_get_field_data( bp_xprofile_nickname_field_id(), $id ) );
 	}
@@ -949,16 +959,21 @@ Bar!';
 		$profile_template = new stdClass;
 		// Avoid the 'alt' class being added
 		$profile_template->current_field = 2;
+		// bp_get_field_css_class() reads field_order off the looped field, so the stub must
+		// carry it as a real BP_XProfile_Field would; without it the tag emits an undefined
+		// property notice and the expected class list is incomplete.
 		$profile_template->field = new stdClass;
 		$profile_template->field->id = 145;
 		$profile_template->field->name = 'Pie';
 		$profile_template->field->type = 'textbox';
+		$profile_template->field->field_order = 3;
 
 		$expected_classes = array(
 			'optional-field',
 			'field_' . $profile_template->field->id,
 			'field_' . sanitize_title( $profile_template->field->name ),
 			'field_type_' . sanitize_title( $profile_template->field->type ),
+			'field_order_' . $profile_template->field->field_order,
 			'visibility-public'
 			);
 
@@ -986,12 +1001,14 @@ Bar!';
 		$profile_template->field->id = 145;
 		$profile_template->field->name = 'Pie';
 		$profile_template->field->type = 'textbox';
+		$profile_template->field->field_order = 3;
 
 		$expected_classes = array(
 			'optional-field',
 			'field_' . $profile_template->field->id,
 			'field_' . sanitize_title( $profile_template->field->name ),
 			'field_type_' . sanitize_title( $profile_template->field->type ),
+			'field_order_' . $profile_template->field->field_order,
 			'visibility-public',
 			'rhubarb',
 			'apple'
@@ -1021,12 +1038,14 @@ Bar!';
 		$profile_template->field->id = 145;
 		$profile_template->field->name = 'Pie';
 		$profile_template->field->type = 'textbox';
+		$profile_template->field->field_order = 3;
 
 		$expected_classes = array(
 			'optional-field',
 			'field_' . $profile_template->field->id,
 			'field_' . sanitize_title( $profile_template->field->name ),
 			'field_type_' . sanitize_title( $profile_template->field->type ),
+			'field_order_' . $profile_template->field->field_order,
 			'visibility-public',
 			'blueberry',
 			'gooseberry'
@@ -1195,8 +1214,9 @@ Bar!';
 		// cannot distinguish a blocked write from a stored crafted level. The
 		// guard stores the default, so the crafted 'public' must not be present.
 		$levels = bp_get_user_meta( $user_id, 'bp_xprofile_visibility_levels', true );
-		$this->assertSame( 'adminsonly', isset( $levels[ $f ] ) ? $levels[ $f ] : 'adminsonly', 'Stored level must be the admin default, never the crafted value.' );
-		$this->assertNotSame( 'public', isset( $levels[ $f ] ) ? $levels[ $f ] : '', 'The crafted registration level must not reach storage.' );
+		$this->assertIsArray( $levels, 'Activation must store the visibility levels it resolved.' );
+		$this->assertArrayHasKey( $f, $levels, 'Activation writes the resolved level for every field; a missing key would hide a skipped write.' );
+		$this->assertSame( 'adminsonly', $levels[ $f ], 'Stored level must be the admin default, never the crafted value.' );
 	}
 
 	/**

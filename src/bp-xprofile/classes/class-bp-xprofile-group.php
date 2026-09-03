@@ -184,7 +184,27 @@ class BP_XProfile_Group {
 		 */
 		do_action_ref_array( 'xprofile_group_after_save', array( &$this ) );
 
+		// A new or renamed group changes the memoized ID list for this request.
+		self::reset_group_ids_cache();
+
 		return $this->id;
+	}
+
+	/**
+	 * Reset the per-request memo of ordered group IDs.
+	 *
+	 * self::$bp_xprofile_group_ids caches the ordered ID list returned by self::get() for
+	 * the lifetime of the request. The object cache is purged by the mutators, but this
+	 * static is not, so a request that creates, reorders or deletes a group and then reads
+	 * groups back (wp-admin reorder, WP-CLI, tests) would keep the stale order. Call this
+	 * from every mutator that changes which groups exist or in what order.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @return void
+	 */
+	public static function reset_group_ids_cache() {
+		self::$bp_xprofile_group_ids = array();
 	}
 
 	/**
@@ -254,6 +274,9 @@ class BP_XProfile_Group {
 		 * @param BP_XProfile_Group $this Current instance of the group being deleted. Passed by reference.
 		 */
 		do_action_ref_array( 'xprofile_group_after_delete', array( &$this ) );
+
+		// A deleted group must drop out of the memoized ID list for this request.
+		self::reset_group_ids_cache();
 
 		return true;
 	}
@@ -736,6 +759,7 @@ class BP_XProfile_Group {
 
 		// Purge profile field group cache.
 		wp_cache_delete( 'all', 'bp_xprofile_groups' );
+		self::reset_group_ids_cache();
 
 		$bp = buddypress();
 
