@@ -3338,6 +3338,11 @@ function bb_xprofile_save_fields( $posted_field_ids = array(), $is_required = ar
 	$old_values = $new_values = array();
 
 	if ( ! empty( $posted_field_ids ) ) {
+		// bb_xprofile_can_change_field_visibility() resolves the capability from
+		// allow_custom_visibility field meta. Prime the whole set in one query so the gate
+		// does not issue a meta lookup per posted field on a cold cache.
+		bp_xprofile_update_meta_cache( array( 'field' => wp_parse_id_list( $posted_field_ids ) ) );
+
 		foreach ( (array) $posted_field_ids as $field_id ) {
 
 			// Certain types of fields (checkboxes, multiselects) may come through empty. Save them as an empty array so that they don't get overwritten by the default on the next edit.
@@ -3353,8 +3358,22 @@ function bb_xprofile_save_fields( $posted_field_ids = array(), $is_required = ar
 				'visibility' => xprofile_get_field_visibility_level( $field_id, bp_displayed_user_id() ),
 			);
 
-			// Update the field data and visibility level.
-			xprofile_set_field_visibility_level( $field_id, bp_displayed_user_id(), $visibility_level );
+			// Update the field data and visibility level. Locked fields (enforced visibility or
+			// display-name format) never render a control, so their stored level is left untouched.
+			//
+			// Levels smuggled onto a locked field before this gate existed are handled per
+			// lock type. An enforced field keeps allow_custom_visibility='disabled', so
+			// xprofile_get_field_visibility_level() substitutes the admin default and the
+			// stored value is inert - no cleanup needed. A display-name-locked field keeps
+			// 'allowed', so the same getter returns the stored value and
+			// bp_xprofile_get_hidden_fields_for_user() acts on it - verified on the first-name
+			// field, which a stale 'adminsonly' drops from the guest profile loop entirely
+			// (the nickname field happens to be excluded downstream; first name is not).
+			// Gating every writer stops new values; the one-time cleanup for existing ones is
+			// tracked separately. See PROD-10323 section 13f.
+			if ( bb_xprofile_can_change_field_visibility( $field_id ) ) {
+				xprofile_set_field_visibility_level( $field_id, bp_displayed_user_id(), $visibility_level );
+			}
 			$field_updated = xprofile_set_field_data( $field_id, bp_displayed_user_id(), $value, ( $is_required[ $field_id ] ?? false ) );
 
 			// We need to pass post value here.
@@ -3613,4 +3632,81 @@ if ( ! function_exists( 'bb_xprofile_safe_unserialize' ) ) {
 		// phpcs:ignore PHPCompatibility.FunctionUse.NewFunctionParameters.unserialize_optionsFound,WordPress.PHP.DiscouragedPHPFunctions.serialize_unserialize -- The options arg is available on PHP 7+ (platform requires 7.4+); object injection is mitigated by allowed_classes => false, so no objects are ever instantiated from the input.
 		return unserialize( $value, array( 'allowed_classes' => false ) );
 	}
+}
+
+/**
+ * Check whether a profile field's visibility level may be changed on a member's behalf.
+ *
+ * Resolves the two site-level locks that hide a field's visibility control:
+ *
+ * - The admin "Enforce field visibility" setting and the display-name-format rules carried
+ *   by the `bp_xprofile_change_field_visibility` capability, which is read from the
+ *   profile-loop globals. Save handlers run outside that loop, so the globals are set for
+ *   the duration of the check and restored afterwards.
+ * - `bp_core_hide_display_name_field()`, which hides a name component from every form
+ *   depending on the display-name format. The capability does not cover the same fields as
+ *   this one, so both are consulted - see the inline note below.
+ *
+ * Despite the name, the answer is a property of the *field*, not of the acting user: the
+ * only user-dependent branch in `bp_xprofile_map_meta_caps()` compares `$profile_user_id`
+ * with `bp_displayed_user_id()`, and with no cap args passed those are the same value, so
+ * it never fires. Do not rely on this returning true for administrators or moderators -
+ * a locked field is locked for everyone, which is what the renderers already do.
+ *
+ * Use it wherever a visibility level is written on behalf of a member, so the locks are
+ * honoured on save and not only when the control is rendered.
+ *
+ * @since BuddyBoss 3.4.4
+ *
+ * @param int $field_id ID of the profile field.
+ *
+ * @return bool True when the field's visibility level may be written.
+ */
+function bb_xprofile_can_change_field_visibility( $field_id ) {
+	$field_id = (int) $field_id;
+	if ( empty( $field_id ) ) {
+		return false;
+	}
+
+	$field_object = xprofile_get_field( $field_id, null, false );
+	if ( ! $field_object instanceof BP_XProfile_Field || empty( $field_object->id ) ) {
+		return false;
+	}
+
+	// The capability and bp_core_hide_display_name_field() lock overlapping but different
+	// sets: the capability locks the nickname field always and the first-name field under
+	// the first-name / first-last-name formats, while bp_core_hide_display_name_field()
+	// locks the last-name field under the first-name / nickname formats and the first-name
+	// field under the nickname format. Both are site rules that stop the control being
+	// rendered, so a writer must honour the union or a crafted POST reaches a field that no
+	// screen offers.
+	if ( function_exists( 'bp_core_hide_display_name_field' ) && true === bp_core_hide_display_name_field( $field_id ) ) {
+		return false;
+	}
+
+	$had_template    = array_key_exists( 'profile_template', $GLOBALS );
+	$had_field       = array_key_exists( 'field', $GLOBALS );
+	$template_backup = $had_template ? $GLOBALS['profile_template'] : null;
+	$field_backup    = $had_field ? $GLOBALS['field'] : null;
+
+	// The capability map and the display-name-format filters read the field from the loop globals.
+	$GLOBALS['profile_template']              = new stdClass();
+	$GLOBALS['profile_template']->in_the_loop = true;
+	$GLOBALS['field']                         = $field_object;
+
+	$can_change = bp_current_user_can( 'bp_xprofile_change_field_visibility' );
+
+	if ( $had_template ) {
+		$GLOBALS['profile_template'] = $template_backup;
+	} else {
+		unset( $GLOBALS['profile_template'] );
+	}
+
+	if ( $had_field ) {
+		$GLOBALS['field'] = $field_backup;
+	} else {
+		unset( $GLOBALS['field'] );
+	}
+
+	return (bool) $can_change;
 }
