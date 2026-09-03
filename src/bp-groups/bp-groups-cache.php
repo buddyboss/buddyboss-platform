@@ -513,14 +513,24 @@ function bb_groups_clear_restrict_invites_cache( $meta_ids = 0, $user_id = 0, $m
 	// filtered value is resolved per call rather than memoised: it is a public filter that
 	// may be registered late or vary per blog, and a frozen value would silently stop
 	// matching and leave a stale exclusion cached.
+	//
+	// This hook fires for every user meta write on the site, so the raw key is compared
+	// first and the filter is only consulted when one is actually registered. Without the
+	// has_filter() guard the default install pays an apply_filters() on every write to
+	// resolve a key that cannot have changed.
 	if (
-		'_bp_nouveau_restrict_invites_to_friends' === $meta_key ||
-		bp_get_user_meta_key( '_bp_nouveau_restrict_invites_to_friends' ) === $meta_key
+		'_bp_nouveau_restrict_invites_to_friends' !== $meta_key &&
+		(
+			! has_filter( 'bp_get_user_meta_key' ) ||
+			bp_get_user_meta_key( '_bp_nouveau_restrict_invites_to_friends' ) !== $meta_key
+		)
 	) {
-		// Resetting the incrementor retires the id list, the over-ceiling verdicts (one per
-		// filtered ceiling) and any in-flight rebuild's write target in a single operation.
-		bp_core_reset_incrementor( 'bb_nouveau_group_invites' );
+		return;
 	}
+
+	// Resetting the incrementor retires the id list, the over-ceiling verdicts (one per
+	// filtered ceiling) and any in-flight rebuild's write target in a single operation.
+	bp_core_reset_incrementor( 'bb_nouveau_group_invites' );
 }
 add_action( 'added_user_meta', 'bb_groups_clear_restrict_invites_cache', 10, 3 );
 add_action( 'updated_user_meta', 'bb_groups_clear_restrict_invites_cache', 10, 3 );

@@ -837,4 +837,102 @@ class BP_Tests_BP_Nouveau_Group_Invite_Query extends BP_UnitTestCase {
 		);
 		$this->assertContains( $users[1], $this->get_user_ids( $fast ) );
 	}
+
+	/**
+	 * A negative ceiling means "always use the WP_Meta_Query path".
+	 *
+	 * A zero ceiling only forces the fallback while somebody actually holds the meta:
+	 * with nobody opted in the fast path returns early with no clause at all, so
+	 * WP_Meta_Query never runs and third parties filtering `get_meta_sql` for this
+	 * clause lose it with no way to opt back in.
+	 */
+	public function test_negative_ceiling_always_uses_the_meta_query_path() {
+		$creator = self::factory()->user->create();
+		$users   = self::factory()->user->create_many( 2 );
+		$group   = self::factory()->group->create( array( 'creator_id' => $creator ) );
+
+		// Deliberately nobody opted in - this is the case a zero ceiling cannot cover.
+		$args = array(
+			'group_id'   => $group,
+			'scope'      => 'members',
+			'type'       => 'alphabetical',
+			'per_page'   => 100,
+			'meta_query' => $this->not_exists_meta_query(),
+		);
+
+		add_filter( 'bb_nouveau_group_invites_excluded_ids_limit', '__return_zero' );
+		$zero = $this->run_invite_query( $args );
+		remove_filter( 'bb_nouveau_group_invites_excluded_ids_limit', '__return_zero' );
+
+		$this->assertQueryPath( $zero, true, 'A zero ceiling cannot force the fallback when nobody holds the meta.' );
+
+		$negative = function () {
+			return -1;
+		};
+		add_filter( 'bb_nouveau_group_invites_excluded_ids_limit', $negative );
+		$forced = $this->run_invite_query( $args );
+		remove_filter( 'bb_nouveau_group_invites_excluded_ids_limit', $negative );
+
+		$this->assertQueryPath( $forced, false, 'A negative ceiling must always take the WP_Meta_Query path.' );
+
+		$found = $this->get_user_ids( $forced );
+		$this->assertContains( $users[0], $found, 'The forced fallback must still return the same members.' );
+		$this->assertContains( $users[1], $found );
+	}
+
+	/**
+	 * A list larger than the cacheable size is still applied inline, just not stored.
+	 *
+	 * The cacheable size is separate from the inline ceiling because the two are sized
+	 * against different limits (max_allowed_packet vs the object cache's item size), and
+	 * by default it imposes no second ceiling.
+	 */
+	public function test_list_over_the_cacheable_size_is_used_but_not_stored() {
+		$creator = self::factory()->user->create();
+		$users   = self::factory()->user->create_many( 3 );
+		$group   = self::factory()->group->create( array( 'creator_id' => $creator ) );
+
+		update_user_meta( $users[0], self::$restrict_key, 1 );
+		update_user_meta( $users[1], self::$restrict_key, 1 );
+
+		$args = array(
+			'group_id'   => $group,
+			'scope'      => 'members',
+			'type'       => 'alphabetical',
+			'per_page'   => 100,
+			'meta_query' => $this->not_exists_meta_query(),
+		);
+
+		// Two users hold the meta; allow only one to be cached.
+		$one = function () {
+			return 1;
+		};
+		add_filter( 'bb_nouveau_group_invites_cacheable_ids_limit', $one );
+		$query = $this->run_invite_query( $args );
+		remove_filter( 'bb_nouveau_group_invites_cacheable_ids_limit', $one );
+
+		$found = $this->get_user_ids( $query );
+
+		// The exclusion still applies inline.
+		$this->assertQueryPath( $query, true, 'An uncacheable list must still use the inline path.' );
+		$this->assertNotContains( $users[0], $found );
+		$this->assertNotContains( $users[1], $found );
+		$this->assertContains( $users[2], $found );
+
+		// ...but nothing was stored.
+		$incrementor = bp_core_get_incrementor( 'bb_nouveau_group_invites' );
+		$this->assertFalse(
+			wp_cache_get( 'bb_restrict_invites_ids_' . $incrementor, 'bb_nouveau_group_invites' ),
+			'A list over the cacheable size must not be stored.'
+		);
+
+		// The default imposes no second ceiling: the same list caches normally.
+		bp_core_reset_incrementor( 'bb_nouveau_group_invites' );
+		$this->run_invite_query( $args );
+		$incrementor = bp_core_get_incrementor( 'bb_nouveau_group_invites' );
+		$this->assertIsArray(
+			wp_cache_get( 'bb_restrict_invites_ids_' . $incrementor, 'bb_nouveau_group_invites' ),
+			'By default the list must still be cached.'
+		);
+	}
 }

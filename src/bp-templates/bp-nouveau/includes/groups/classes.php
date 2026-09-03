@@ -165,14 +165,49 @@ class BP_Nouveau_Group_Invite_Query extends BP_User_Query {
 				 * performance boundary: the inline `NOT IN` gets *faster* as the excluded set
 				 * grows, because fewer rows survive to the sort, while the `WP_Meta_Query`
 				 * anti-join it falls back to is roughly 3x slower. The default keeps the emitted
-				 * SQL under a conservative 1MB `max_allowed_packet`. Set it lower only to force
-				 * the legacy path; `0` forces it whenever any user holds the meta.
+				 * SQL under a conservative 1MB `max_allowed_packet`.
+				 *
+				 * Return `0` to force the legacy path whenever any user holds the meta, or a
+				 * negative value to force it unconditionally. The distinction matters: with
+				 * nobody opted in there is nothing to exclude, so a `0` ceiling still returns
+				 * on the fast path without ever building a `WP_Meta_Query` - and third-party
+				 * code filtering `get_meta_sql` for this clause would never see it. A negative
+				 * ceiling is the only way to guarantee the clause is always built.
 				 *
 				 * @since BuddyBoss [BBVERSION]
 				 *
 				 * @param int $limit Maximum number of excluded user IDs. Default 100000.
+				 *                   `0` disables the fast path once anyone holds the meta;
+				 *                   any negative value disables it unconditionally.
 				 */
-				$limit = min( max( 0, (int) apply_filters( 'bb_nouveau_group_invites_excluded_ids_limit', 100000 ) ), PHP_INT_MAX - 1 );
+				$raw_limit = (int) apply_filters( 'bb_nouveau_group_invites_excluded_ids_limit', 100000 );
+
+				// A negative ceiling opts out of the fast path entirely. Handled as an
+				// immediate over-ceiling verdict so no lookup runs and no cache is touched.
+				$fast_path_disabled = $raw_limit < 0;
+				$limit              = min( max( 0, $raw_limit ), PHP_INT_MAX - 1 );
+
+				/**
+				 * Filters the largest excluded-ID list that is written to the object cache.
+				 *
+				 * Deliberately separate from the ceiling above, because the two are sized
+				 * against different limits. The ceiling bounds the emitted SQL against
+				 * `max_allowed_packet` — 100k ids is ~0.7MB. The cached payload is a
+				 * serialised PHP array, and the same 100k ids are ~1.6MB, which exceeds
+				 * memcached's 1MB default item size: such a set is dropped silently, so every
+				 * request re-pays the lookup while believing it cached the result. Redis has
+				 * no comparable per-item limit, so no second ceiling is imposed by default —
+				 * lower this on a memcached backend with a small item size.
+				 *
+				 * A list larger than this is still used inline for the request; it is only
+				 * not stored.
+				 *
+				 * @since BuddyBoss [BBVERSION]
+				 *
+				 * @param int $cacheable Maximum number of ids to store. Defaults to $limit.
+				 * @param int $limit     The resolved inline ceiling.
+				 */
+				$cacheable = max( 0, (int) apply_filters( 'bb_nouveau_group_invites_cacheable_ids_limit', $limit, $limit ) );
 
 				// Capture the cache version BEFORE reading or querying. Invalidation resets the
 				// incrementor, so a rebuild that raced a member toggling the setting writes under
@@ -188,7 +223,7 @@ class BP_Nouveau_Group_Invite_Query extends BP_User_Query {
 				// verdict briefly: re-running a throwaway lookup on every request costs more than
 				// the anti-join it falls back to. Keyed by `$limit` so a caller that filters the
 				// ceiling down cannot force the fallback on callers using a different ceiling.
-				$over_ceiling = (bool) wp_cache_get( $ceiling_key, 'bb_nouveau_group_invites' );
+				$over_ceiling = $fast_path_disabled ? true : (bool) wp_cache_get( $ceiling_key, 'bb_nouveau_group_invites' );
 				$excluded_ids = $over_ceiling ? false : wp_cache_get( $list_key, 'bb_nouveau_group_invites' );
 
 				// A miss returns false; anything not an array is unusable, so re-query rather
@@ -218,9 +253,11 @@ class BP_Nouveau_Group_Invite_Query extends BP_User_Query {
 							// Without a persistent object cache this verdict does not survive the
 							// request, so such a site re-pays the throwaway lookup each time.
 							wp_cache_set( $ceiling_key, 1, 'bb_nouveau_group_invites', 5 * MINUTE_IN_SECONDS );
-						} elseif ( ! $lookup_failed ) {
+						} elseif ( ! $lookup_failed && count( $excluded_ids ) <= $cacheable ) {
 							// Cache the parsed ids: the payload is smaller than the raw string
-							// column and callers get integers back.
+							// column and callers get integers back. Skipped above the cacheable
+							// size so a backend that would silently drop the set is not asked to
+							// take it on every request - see the filter docblock.
 							wp_cache_set( $list_key, $excluded_ids, 'bb_nouveau_group_invites', HOUR_IN_SECONDS );
 						}
 					}
@@ -247,7 +284,16 @@ class BP_Nouveau_Group_Invite_Query extends BP_User_Query {
 				// so log each distinct reason once per request rather than once per query.
 				static $logged_fallbacks = array();
 
-				$fallback_kind = $lookup_failed ? 'error' : 'ceiling';
+				if ( $lookup_failed ) {
+					$fallback_kind   = 'error';
+					$fallback_reason = 'lookup query failed: ' . $wpdb->last_error;
+				} elseif ( $fast_path_disabled ) {
+					$fallback_kind   = 'disabled';
+					$fallback_reason = 'the bb_nouveau_group_invites_excluded_ids_limit filter returned a negative ceiling';
+				} else {
+					$fallback_kind   = 'ceiling';
+					$fallback_reason = 'more than ' . $limit . ' users hold the meta, exceeding the inline ceiling';
+				}
 
 				if ( empty( $logged_fallbacks[ $fallback_kind ] ) && defined( 'WP_DEBUG' ) && WP_DEBUG ) {
 					$logged_fallbacks[ $fallback_kind ] = true;
@@ -257,7 +303,7 @@ class BP_Nouveau_Group_Invite_Query extends BP_User_Query {
 						sprintf(
 							'[BuddyBoss] Group invites excluded-ID fast path skipped for meta key "%s" (%s); using the WP_Meta_Query anti-join fallback.',
 							$meta_query[0]['key'],
-							$lookup_failed ? 'lookup query failed: ' . $wpdb->last_error : 'more than ' . $limit . ' users hold the meta, exceeding the inline ceiling'
+							$fallback_reason
 						)
 					);
 				}
