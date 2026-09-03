@@ -415,14 +415,28 @@ class BP_Signup {
 					 * Save the visibility level.
 					 *
 					 * Use the field's default visibility if not present, and 'public' if a
-					 * default visibility is not defined.
+					 * default visibility is not defined. Fields the member may not change -
+					 * "Enforce field visibility" or a display-name-format lock (nickname
+					 * always, first name under the first-name / first-last-name formats) -
+					 * always take the default: a crafted registration POST could otherwise
+					 * persist a member-chosen level. bb_xprofile_can_change_field_visibility()
+					 * resolves the same capability the profile settings screen and the REST
+					 * endpoints use, so it is the single source of truth for the lock here too.
+					 *
+					 * Note this block runs at REGISTRATION, not activation: bp_core_signup_user()
+					 * calls add_backcompat() to create the phantom user on a single-site install.
+					 * The activation-time copy lives in bp_core_activate_signup(). The helper
+					 * resolves correctly in both, including the logged-out request.
 					 */
-					$key = "field_{$field_id}_visibility";
-					if ( isset( $usermeta[ $key ] ) ) {
-						$visibility_level = $usermeta[ $key ];
+					$visibility_meta_key = "field_{$field_id}_visibility";
+					$vfield              = xprofile_get_field( $field_id, null, false );
+					$default             = isset( $vfield->default_visibility ) ? $vfield->default_visibility : 'public';
+					$can_change          = bb_xprofile_can_change_field_visibility( $field_id );
+
+					if ( $can_change && isset( $usermeta[ $visibility_meta_key ] ) ) {
+						$visibility_level = $usermeta[ $visibility_meta_key ];
 					} else {
-						$vfield           = xprofile_get_field( $field_id );
-						$visibility_level = isset( $vfield->default_visibility ) ? $vfield->default_visibility : 'public';
+						$visibility_level = $default;
 					}
 					xprofile_set_field_visibility_level( $field_id, $user_id, $visibility_level );
 				}
