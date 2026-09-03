@@ -185,6 +185,105 @@ class BP_Tests_BP_Signup extends BP_UnitTestCase {
 	}
 
 	/**
+	 * BP_Signup::add_backcompat() carries its own copy of the visibility block and runs at
+	 * REGISTRATION time on a default single-site install (bp_core_signup_user() calls it
+	 * unless BP_SIGNUPS_SKIP_USER_CREATION is set). The activation tests above go through
+	 * bp_core_activate_signup(), so this copy needs its own coverage.
+	 *
+	 * @group signup_visibility
+	 */
+	public function test_add_backcompat_enforced_field_ignores_crafted_visibility() {
+		if ( is_multisite() ) {
+			$this->markTestSkipped( 'add_backcompat() is only reached on single-site installs.' );
+		}
+
+		$field_id = self::factory()->xprofile_field->create( array( 'field_group_id' => 1 ) );
+		bp_xprofile_update_field_meta( $field_id, 'default_visibility', 'loggedin' );
+		bp_xprofile_update_field_meta( $field_id, 'allow_custom_visibility', 'disabled' );
+
+		$user_id = $this->signup_backcompat_with_visibility( $field_id, 'public' );
+
+		$levels = bp_get_user_meta( $user_id, 'bp_xprofile_visibility_levels', true );
+		$this->assertSame( 'loggedin', isset( $levels[ $field_id ] ) ? $levels[ $field_id ] : null );
+		$this->assertNotSame( 'public', isset( $levels[ $field_id ] ) ? $levels[ $field_id ] : null );
+	}
+
+	/**
+	 * The nickname field is locked by the display-name rules even though overrides are
+	 * "allowed", so add_backcompat() must ignore a crafted level for it too.
+	 *
+	 * @group signup_visibility
+	 */
+	public function test_add_backcompat_nickname_field_ignores_crafted_visibility() {
+		if ( is_multisite() ) {
+			$this->markTestSkipped( 'add_backcompat() is only reached on single-site installs.' );
+		}
+
+		$field_id = self::factory()->xprofile_field->create( array( 'field_group_id' => 1 ) );
+		bp_xprofile_update_field_meta( $field_id, 'default_visibility', 'loggedin' );
+		bp_xprofile_update_field_meta( $field_id, 'allow_custom_visibility', 'allowed' );
+
+		$nick_backup = bp_get_option( 'bp-xprofile-nickname-field-id' );
+		bp_update_option( 'bp-xprofile-nickname-field-id', $field_id );
+
+		$user_id = $this->signup_backcompat_with_visibility( $field_id, 'public' );
+
+		// allow_custom_visibility is 'allowed', so the getter returns the stored value -
+		// it must be the admin default, not the crafted 'public'.
+		$this->assertSame( 'loggedin', xprofile_get_field_visibility_level( $field_id, $user_id ) );
+
+		bp_update_option( 'bp-xprofile-nickname-field-id', $nick_backup );
+	}
+
+	/**
+	 * Regression guard: add_backcompat() must not over-lock a field the member may change.
+	 *
+	 * @group signup_visibility
+	 */
+	public function test_add_backcompat_allowed_field_honors_member_visibility() {
+		if ( is_multisite() ) {
+			$this->markTestSkipped( 'add_backcompat() is only reached on single-site installs.' );
+		}
+
+		$field_id = self::factory()->xprofile_field->create( array( 'field_group_id' => 1 ) );
+		bp_xprofile_update_field_meta( $field_id, 'default_visibility', 'loggedin' );
+		bp_xprofile_update_field_meta( $field_id, 'allow_custom_visibility', 'allowed' );
+
+		$user_id = $this->signup_backcompat_with_visibility( $field_id, 'adminsonly' );
+
+		$this->assertSame( 'adminsonly', xprofile_get_field_visibility_level( $field_id, $user_id ) );
+	}
+
+	/**
+	 * Register through BP_Signup::add_backcompat() with a chosen visibility for one field
+	 * and return the created user ID.
+	 *
+	 * @param int    $field_id   Profile field ID.
+	 * @param string $visibility Visibility level supplied in the registration payload.
+	 *
+	 * @return int Created user ID.
+	 */
+	protected function signup_backcompat_with_visibility( $field_id, $visibility ) {
+		static $i = 0;
+		++$i;
+
+		$user_id = BP_Signup::add_backcompat(
+			'bcvis_user_' . $i,
+			'password',
+			'bcvis_user_' . $i . '@example.com',
+			array(
+				'field_' . $field_id                => 'Foo Bar',
+				'field_' . $field_id . '_visibility' => $visibility,
+				'profile_field_ids'                 => (string) $field_id,
+			)
+		);
+
+		$this->assertNotWPError( $user_id, 'The fixture signup could not be created.' );
+
+		return $user_id;
+	}
+
+	/**
 	 * Create a signup that supplies a chosen visibility for one field, activate it,
 	 * and return the activated user ID.
 	 *

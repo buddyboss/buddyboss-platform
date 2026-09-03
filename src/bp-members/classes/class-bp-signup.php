@@ -421,8 +421,12 @@ class BP_Signup {
 					 * always take the default: a crafted registration POST could otherwise
 					 * persist a member-chosen level. bb_xprofile_can_change_field_visibility()
 					 * resolves the same capability the profile settings screen and the REST
-					 * endpoints use and evaluates correctly for the logged-out activation
-					 * request, so it is the single source of truth for the lock here too.
+					 * endpoints use, so it is the single source of truth for the lock here too.
+					 *
+					 * Note this block runs at REGISTRATION, not activation: bp_core_signup_user()
+					 * calls add_backcompat() to create the phantom user on a single-site install.
+					 * The activation-time copy lives in bp_core_activate_signup(). The helper
+					 * resolves correctly in both, including the logged-out request.
 					 */
 					$visibility_meta_key = "field_{$field_id}_visibility";
 					$vfield              = xprofile_get_field( $field_id, null, false );

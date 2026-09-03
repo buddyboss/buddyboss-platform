@@ -3338,6 +3338,11 @@ function bb_xprofile_save_fields( $posted_field_ids = array(), $is_required = ar
 	$old_values = $new_values = array();
 
 	if ( ! empty( $posted_field_ids ) ) {
+		// bb_xprofile_can_change_field_visibility() resolves the capability from
+		// allow_custom_visibility field meta. Prime the whole set in one query so the gate
+		// does not issue a meta lookup per posted field on a cold cache.
+		bp_xprofile_update_meta_cache( array( 'field' => wp_parse_id_list( $posted_field_ids ) ) );
+
 		foreach ( (array) $posted_field_ids as $field_id ) {
 
 			// Certain types of fields (checkboxes, multiselects) may come through empty. Save them as an empty array so that they don't get overwritten by the default on the next edit.

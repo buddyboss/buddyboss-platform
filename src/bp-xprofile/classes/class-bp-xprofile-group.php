@@ -760,11 +760,17 @@ class BP_XProfile_Group {
 
 		// Purge profile field group cache.
 		wp_cache_delete( 'all', 'bp_xprofile_groups' );
-		self::reset_group_ids_cache();
 
 		$bp = buddypress();
 
-		return $wpdb->query( $wpdb->prepare( "UPDATE {$bp->profile->table_name_groups} SET group_order = %d WHERE id = %d", $position, $field_group_id ) );
+		$updated = $wpdb->query( $wpdb->prepare( "UPDATE {$bp->profile->table_name_groups} SET group_order = %d WHERE id = %d", $position, $field_group_id ) );
+
+		// Reset AFTER the write. Purging before it leaves a window in which anything that
+		// reads groups re-primes the memo from the pre-update order; save() and delete()
+		// already reset post-write for the same reason.
+		self::reset_group_ids_cache();
+
+		return $updated;
 	}
 
 	/**
