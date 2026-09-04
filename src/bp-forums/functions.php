@@ -1353,3 +1353,116 @@ function bb_moderator_can_delete_topic_reply( $obj, $args = array() ) {
 
 	return $allow_delete;
 }
+
+/**
+ * Sanitize one topic/reply draft entry before it is stored in usermeta.
+ *
+ * Strips inline data-URL images and applies the forum publish path's kses
+ * allowlist to the drafted content fields, then stamps the save time used
+ * by draft expiry and size-budget eviction. Extension data members are
+ * left untouched.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $draft_entry Draft entry with a `data` member.
+ * @return array Sanitized draft entry.
+ */
+function bb_forums_sanitize_draft_entry( $draft_entry ) {
+	if ( ! is_array( $draft_entry ) ) {
+		return $draft_entry;
+	}
+
+	if ( ! empty( $draft_entry['data'] ) && is_array( $draft_entry['data'] ) ) {
+
+		/**
+		 * Filters which forum draft data members carry member-authored HTML content.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param string[] $content_keys Draft data keys holding HTML content.
+		 */
+		$content_keys = apply_filters( 'bb_draft_topic_reply_content_keys', array( 'bbp_topic_content', 'bbp_reply_content' ) );
+
+		foreach ( $content_keys as $content_key ) {
+			if ( isset( $draft_entry['data'][ $content_key ] ) && is_string( $draft_entry['data'][ $content_key ] ) ) {
+				// Same allowed tags as the topic/reply publish path (bbp_filter_kses), unslashed variant.
+				$draft_entry['data'][ $content_key ] = bbp_kses_data( bb_draft_strip_data_urls( $draft_entry['data'][ $content_key ] ) );
+			}
+		}
+	}
+
+	$draft_entry['_draft_saved_at'] = time();
+
+	return $draft_entry;
+}
+
+/**
+ * Trim the aggregated forum draft row to a byte budget, oldest drafts first.
+ *
+ * The forum draft row holds ALL of a user's topic/reply drafts, so the row
+ * itself must respect the per-user draft budget. Inner drafts other than
+ * the protected (just-saved) one are removed oldest-first — releasing their
+ * attachment stamps — until the serialized row fits.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array  $draft_row   Aggregated draft row (inner key => draft entry).
+ * @param string $protect_key Inner key that must not be evicted.
+ * @param int    $user_id     Owning user ID.
+ * @param int    $max_bytes   Byte budget for the serialized row.
+ * @return array {
+ *     @type array    $row     Trimmed draft row.
+ *     @type string[] $evicted Evicted inner keys.
+ * }
+ */
+function bb_forums_trim_draft_row( $draft_row, $protect_key, $user_id, $max_bytes ) {
+	$result = array(
+		'row'     => $draft_row,
+		'evicted' => array(),
+	);
+
+	if ( empty( $draft_row ) || ! is_array( $draft_row ) ) {
+		return $result;
+	}
+
+	$candidates = array();
+
+	foreach ( $draft_row as $inner_key => $inner_draft ) {
+		if ( (string) $inner_key === (string) $protect_key ) {
+			continue;
+		}
+
+		$candidates[] = array(
+			'inner_key' => (string) $inner_key,
+			'saved_at'  => isset( $inner_draft['_draft_saved_at'] ) ? (int) $inner_draft['_draft_saved_at'] : 0,
+		);
+	}
+
+	usort(
+		$candidates,
+		function ( $a, $b ) {
+			if ( $a['saved_at'] === $b['saved_at'] ) {
+				return 0;
+			}
+
+			return ( $a['saved_at'] < $b['saved_at'] ) ? -1 : 1;
+		}
+	);
+
+	foreach ( $candidates as $candidate ) {
+		if ( strlen( maybe_serialize( $result['row'] ) ) <= $max_bytes ) {
+			break;
+		}
+
+		bb_draft_unstamp_attachments( $result['row'][ $candidate['inner_key'] ], $user_id );
+		unset( $result['row'][ $candidate['inner_key'] ] );
+
+		$evicted_key         = 'bb_user_topic_reply_draft:' . $candidate['inner_key'];
+		$result['evicted'][] = $evicted_key;
+
+		/** This action is documented in bp-core/bb-core-drafts.php */
+		do_action( 'bb_draft_evicted', (int) $user_id, $evicted_key, 'aggregate_cap' );
+	}
+
+	return $result;
+}

@@ -423,6 +423,11 @@ function bb_post_topic_reply_draft() {
 		wp_send_json_error();
 	}
 
+	// Drafting requires the same participation rights as publishing a topic or reply.
+	if ( ! bbp_current_user_can_publish_topics() && ! bbp_current_user_can_publish_replies() ) {
+		wp_send_json_error();
+	}
+
 	$draft_topic_reply = $_REQUEST['draft_topic_reply'] ?? '';
 	$usermeta_key      = 'bb_user_topic_reply_draft';
 	$user_id           = bp_loggedin_user_id();
@@ -438,6 +443,12 @@ function bb_post_topic_reply_draft() {
 
 	if ( is_array( $draft_topic_reply ) && isset( $draft_topic_reply['data_key'], $draft_topic_reply['object'] ) ) {
 
+		// Accept only the draft key shapes the forum composer actually builds,
+		// resolved against real forum/topic/reply IDs (PROD-9621 hardening).
+		if ( ! bb_draft_validate_topic_reply_data_key( (string) $draft_topic_reply['data_key'] ) ) {
+			wp_send_json_error();
+		}
+
 		$existing_draft = bp_get_user_meta( $user_id, $usermeta_key, true );
 
 		if ( isset( $existing_draft[ $draft_topic_reply['data_key'] ] ) ) {
@@ -449,8 +460,8 @@ function bb_post_topic_reply_draft() {
 
 				if ( ! empty( $remove_media_data ) ) {
 					foreach ( $remove_media_data as $media_attachment ) {
-						if ( ! empty( $media_attachment['id'] ) && 0 < (int) $media_attachment['id'] ) {
-							wp_delete_attachment( $media_attachment['id'], true );
+						if ( ! empty( $media_attachment['id'] ) && bb_draft_user_can_manage_attachment( $media_attachment['id'], $user_id ) ) {
+							wp_delete_attachment( (int) $media_attachment['id'], true );
 						}
 					}
 				}
@@ -462,8 +473,8 @@ function bb_post_topic_reply_draft() {
 
 				if ( ! empty( $remove_document_data ) ) {
 					foreach ( $remove_document_data as $document_attachment ) {
-						if ( ! empty( $document_attachment['id'] ) && 0 < (int) $document_attachment['id'] ) {
-							wp_delete_attachment( $document_attachment['id'], true );
+						if ( ! empty( $document_attachment['id'] ) && bb_draft_user_can_manage_attachment( $document_attachment['id'], $user_id ) ) {
+							wp_delete_attachment( (int) $document_attachment['id'], true );
 						}
 					}
 				}
@@ -475,8 +486,8 @@ function bb_post_topic_reply_draft() {
 
 				if ( ! empty( $remove_video_data ) ) {
 					foreach ( $remove_video_data as $video_attachment ) {
-						if ( ! empty( $video_attachment['id'] ) && 0 < (int) $video_attachment['id'] ) {
-							wp_delete_attachment( $video_attachment['id'], true );
+						if ( ! empty( $video_attachment['id'] ) && bb_draft_user_can_manage_attachment( $video_attachment['id'], $user_id ) ) {
+							wp_delete_attachment( (int) $video_attachment['id'], true );
 						}
 					}
 				}
@@ -497,11 +508,17 @@ function bb_post_topic_reply_draft() {
 
 				if ( ! empty( $new_media_data ) ) {
 					foreach ( $new_media_data as $media_key => $new_media_attachment ) {
+						// Attachment IDs arrive as client JSON - only the owner may stamp them.
+						if ( empty( $new_media_attachment['id'] ) || ! bb_draft_user_can_manage_attachment( $new_media_attachment['id'], $user_id ) ) {
+							unset( $new_media_data[ $media_key ] );
+							continue;
+						}
 						if ( ! isset( $new_media_attachment['bb_media_draft'] ) ) {
 							$new_media_data[ $media_key ]['bb_media_draft'] = 1;
 							update_post_meta( $new_media_attachment['id'], 'bb_media_draft', 1 );
 						}
 					}
+					$new_media_data = array_values( $new_media_data );
 				}
 
 				$draft_topic_reply['data']['bbp_media'] = wp_json_encode( $new_media_data );
@@ -513,11 +530,17 @@ function bb_post_topic_reply_draft() {
 
 				if ( ! empty( $new_document_data ) ) {
 					foreach ( $new_document_data as $document_key => $new_document_attachment ) {
+						// Attachment IDs arrive as client JSON - only the owner may stamp them.
+						if ( empty( $new_document_attachment['id'] ) || ! bb_draft_user_can_manage_attachment( $new_document_attachment['id'], $user_id ) ) {
+							unset( $new_document_data[ $document_key ] );
+							continue;
+						}
 						if ( ! isset( $new_document_attachment['bb_media_draft'] ) ) {
 							$new_document_data[ $document_key ]['bb_media_draft'] = 1;
 							update_post_meta( $new_document_attachment['id'], 'bb_media_draft', 1 );
 						}
 					}
+					$new_document_data = array_values( $new_document_data );
 				}
 
 				$draft_topic_reply['data']['bbp_document'] = wp_json_encode( $new_document_data );
@@ -529,14 +552,33 @@ function bb_post_topic_reply_draft() {
 
 				if ( ! empty( $new_video_data ) ) {
 					foreach ( $new_video_data as $video_key => $new_video_attachment ) {
+						// Attachment IDs arrive as client JSON - only the owner may stamp them.
+						if ( empty( $new_video_attachment['id'] ) || ! bb_draft_user_can_manage_attachment( $new_video_attachment['id'], $user_id ) ) {
+							unset( $new_video_data[ $video_key ] );
+							continue;
+						}
 						if ( ! isset( $new_video_attachment['bb_media_draft'] ) ) {
 							$new_video_data[ $video_key ]['bb_media_draft'] = 1;
 							update_post_meta( $new_video_attachment['id'], 'bb_media_draft', 1 );
 						}
 					}
+					$new_video_data = array_values( $new_video_data );
 				}
 
 				$draft_topic_reply['data']['bbp_video'] = wp_json_encode( $new_video_data );
+			}
+
+			$draft_topic_reply = bb_forums_sanitize_draft_entry( $draft_topic_reply );
+
+			if ( strlen( maybe_serialize( $draft_topic_reply ) ) > bb_draft_max_size() ) {
+				/** This action is documented in bp-templates/bp-nouveau/includes/activity/ajax.php */
+				do_action( 'bb_draft_cap_rejected', $user_id, $draft_topic_reply['data_key'], strlen( maybe_serialize( $draft_topic_reply ) ), 'per_draft' );
+
+				wp_send_json_error(
+					array(
+						'message' => esc_html__( 'Your draft is too large to save. Please remove some content and try again.', 'buddyboss' ),
+					)
+				);
 			}
 
 			$existing_draft[ $draft_topic_reply['data_key'] ] = $draft_topic_reply;
@@ -550,20 +592,59 @@ function bb_post_topic_reply_draft() {
 						continue;
 					}
 
-					// Update the all data.
-					if ( isset( $existing_draft[ $data_key ] ) ) {
-						$existing_draft[ $data_key ]['data'] = $d_data;
+					// Update the all data. The same guardrails apply to this write
+					// path as to the primary draft - it may not smuggle content the
+					// primary path would strip, cap, or reject (PROD-9621).
+					if ( isset( $existing_draft[ $data_key ] ) && is_array( $d_data ) ) {
+						$merged_entry         = $existing_draft[ $data_key ];
+						$merged_entry['data'] = $d_data;
+						$merged_entry         = bb_forums_sanitize_draft_entry( $merged_entry );
+
+						if ( strlen( maybe_serialize( $merged_entry ) ) > bb_draft_max_size() ) {
+							// Keep the previously stored entry rather than failing the
+							// whole request - the unload sync carries sibling drafts too.
+							continue;
+						}
+
+						$existing_draft[ $data_key ] = $merged_entry;
 					}
 				}
 			}
 		}
 
-		bp_update_user_meta( $user_id, $usermeta_key, $existing_draft );
+		if ( empty( $existing_draft ) ) {
+			bp_delete_user_meta( $user_id, $usermeta_key );
+		} else {
+			// The aggregated row itself must respect the per-user draft budget -
+			// trim oldest inner drafts first, protecting the one just saved.
+			$trimmed_row        = bb_forums_trim_draft_row( $existing_draft, $draft_topic_reply['data_key'], $user_id, bb_draft_user_total_max_size() );
+			$existing_draft     = $trimmed_row['row'];
+			$evicted_draft_keys = $trimmed_row['evicted'];
+
+			$forum_row_size = strlen( maybe_serialize( $existing_draft ) );
+			$draft_budget   = bb_draft_enforce_user_budget( $user_id, $usermeta_key, $forum_row_size );
+
+			if ( empty( $draft_budget['allowed'] ) ) {
+				/** This action is documented in bp-templates/bp-nouveau/includes/activity/ajax.php */
+				do_action( 'bb_draft_cap_rejected', $user_id, $usermeta_key, $forum_row_size, 'meta_budget' );
+
+				wp_send_json_error(
+					array(
+						'message' => esc_html__( 'Your draft could not be saved because you have too many saved drafts. Please discard some drafts and try again.', 'buddyboss' ),
+					)
+				);
+			}
+
+			$evicted_draft_keys = array_merge( $evicted_draft_keys, $draft_budget['evicted'] );
+
+			bp_update_user_meta( $user_id, $usermeta_key, $existing_draft );
+		}
 	}
 
 	wp_send_json_success(
 		array(
-			'draft_activity' => $draft_topic_reply,
+			'draft_activity'     => $draft_topic_reply,
+			'evicted_draft_keys' => isset( $evicted_draft_keys ) ? $evicted_draft_keys : array(),
 		)
 	);
 }
