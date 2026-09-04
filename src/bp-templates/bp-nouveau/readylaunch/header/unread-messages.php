@@ -184,40 +184,51 @@ if ( bp_has_message_threads( bp_ajax_querystring( 'messages' ) . '&user_id=' . g
 			$un_access_users    = false;
 		}
 
-		$recipients       = array();
-		$other_recipients = array();
-		$current_user     = false;
+		$recipients             = array();
+		$other_recipients       = array();
+		$current_user           = false;
+		$other_recipient_total  = 0;
 		if ( is_array( $messages_template->thread->recipients ) && ! $is_group_thread ) {
 			foreach ( $messages_template->thread->recipients as $recipient ) {
 				if ( empty( $recipient->is_deleted ) ) {
-					$is_you         = bp_loggedin_user_id() === $recipient->user_id;
-					$recipient_data = array(
-						'avatar'             => esc_url(
-							bp_core_fetch_avatar(
-								array(
-									'item_id' => $recipient->user_id,
-									'object'  => 'user',
-									'type'    => 'thumb',
-									'width'   => BP_AVATAR_THUMB_WIDTH,
-									'height'  => BP_AVATAR_THUMB_HEIGHT,
-									'html'    => false,
-								)
-							)
-						),
-						'user_link'          => bp_core_get_userlink( $recipient->user_id, false, true ),
-						'user_name'          => bp_core_get_user_displayname( $recipient->user_id ),
-						'is_you'             => $is_you,
-						'is_user_suspended'  => function_exists( 'bp_moderation_is_user_suspended' ) ? bp_moderation_is_user_suspended( $recipient->user_id ) : false,
-						'is_user_blocked'    => function_exists( 'bp_moderation_is_user_blocked' ) ? bp_moderation_is_user_blocked( $recipient->user_id ) : false,
-						'is_user_blocked_by' => function_exists( 'bb_moderation_is_user_blocked_by' ) ? bb_moderation_is_user_blocked_by( $recipient->user_id ) : false,
-						'is_deleted'         => empty( get_userdata( $recipient->user_id ) ) ? 1 : 0,
-					);
-					$recipients[]   = $recipient_data;
+					$is_you = bp_loggedin_user_id() === $recipient->user_id;
 
 					if ( ! $is_you ) {
-						$other_recipients[] = $recipient_data;
-					} else {
-						$current_user = $recipient_data;
+						$other_recipient_total++;
+					}
+
+					// Only resolve avatar/display-name/moderation data for the logged-in
+					// user and the first few "other" recipients that actually get
+					// rendered — large threads (e.g. an announcement to the whole
+					// membership) would otherwise resolve every recipient's profile.
+					if ( $is_you || $other_recipient_total <= 3 ) {
+						$recipient_data = array(
+							'avatar'             => esc_url(
+								bp_core_fetch_avatar(
+									array(
+										'item_id' => $recipient->user_id,
+										'object'  => 'user',
+										'type'    => 'thumb',
+										'width'   => BP_AVATAR_THUMB_WIDTH,
+										'height'  => BP_AVATAR_THUMB_HEIGHT,
+										'html'    => false,
+									)
+								)
+							),
+							'user_link'          => bp_core_get_userlink( $recipient->user_id, false, true ),
+							'user_name'          => bp_core_get_user_displayname( $recipient->user_id ),
+							'is_you'             => $is_you,
+							'is_user_suspended'  => function_exists( 'bp_moderation_is_user_suspended' ) ? bp_moderation_is_user_suspended( $recipient->user_id ) : false,
+							'is_user_blocked'    => function_exists( 'bp_moderation_is_user_blocked' ) ? bp_moderation_is_user_blocked( $recipient->user_id ) : false,
+							'is_user_blocked_by' => function_exists( 'bb_moderation_is_user_blocked_by' ) ? bb_moderation_is_user_blocked_by( $recipient->user_id ) : false,
+							'is_deleted'         => empty( get_userdata( $recipient->user_id ) ) ? 1 : 0,
+						);
+
+						if ( $is_you ) {
+							$current_user = $recipient_data;
+						} else {
+							$other_recipients[] = $recipient_data;
+						}
 					}
 
 					if (
@@ -238,7 +249,7 @@ if ( bp_has_message_threads( bp_ajax_querystring( 'messages' ) . '&user_id=' . g
 			$can_message = false;
 		}
 
-		$include_you = count( $other_recipients ) >= 2;
+		$include_you = $other_recipient_total >= 2;
 		$first_three = array_slice( $other_recipients, 0, 3 );
 		if ( count( $first_three ) === 0 ) {
 			$include_you = true;
@@ -307,7 +318,7 @@ if ( bp_has_message_threads( bp_ajax_querystring( 'messages' ) . '&user_id=' . g
 				?>
 				<div class="notification-avatar">
 					<?php
-					if ( count( $other_recipients ) > 1 ) {
+					if ( $other_recipient_total > 1 ) {
 						?>
 						<a href="<?php echo esc_url( bp_core_get_user_domain( $messages_template->thread->last_sender_id ) ); ?>">
 							<?php bp_message_thread_avatar(); ?>
@@ -505,7 +516,7 @@ if ( bp_has_message_threads( bp_ajax_querystring( 'messages' ) . '&user_id=' . g
 							}
 						}
 						// For conversations with a single recipient - Don't include the name of the last person to message before the message content.
-						if ( ! $is_group_thread && ! empty( $recipients ) && count( $other_recipients ) === 1 ) {
+						if ( ! $is_group_thread && ! empty( $recipients ) && 1 === $other_recipient_total ) {
 							$last_sender = '';
 						}
 						if ( $last_sender ) {
