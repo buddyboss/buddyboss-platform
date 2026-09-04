@@ -99,14 +99,22 @@ class BP_REST_XProfile_Update_Endpoint extends WP_REST_Controller {
 		// Setting context.
 		$request->set_param( 'context', 'edit' );
 
-		$user_id = bp_loggedin_user_id();
+		// BuddyPress memoizes the logged-in user at init, before REST header auth
+		// (application passwords, tokens) resolves - bp_loggedin_user_id() is then 0 while
+		// WordPress already knows the user. Matches get_profile_fields() in the
+		// account-settings endpoint. This matters for the visibility validator, whose
+		// no-op branches compare the submitted level against the CURRENT level: with a
+		// zeroed user that level resolves to '' and a member resubmitting their own level
+		// would be rejected instead of passed through.
+		$user_id = bp_loggedin_user_id() ? bp_loggedin_user_id() : get_current_user_id();
 
 		$fields    = $request->get_param( 'fields' );
 		$field_ids = array();
 
-		$errors     = array();
-		$old_values = array();
-		$new_values = array();
+		$errors             = array();
+		$visibility_errors  = array();
+		$old_values         = array();
+		$new_values         = array();
 
 		if ( ! empty( $fields ) ) {
 			foreach ( $fields as $k => $field_post ) {
@@ -123,6 +131,13 @@ class BP_REST_XProfile_Update_Endpoint extends WP_REST_Controller {
 				$field_ids[] = $field_id;
 
 				$field = xprofile_get_field( $field_id );
+
+				// An unknown/deleted field id would otherwise be read as $field->type below.
+				// Skip it rather than emitting "Attempt to read property on bool"; the
+				// sibling account-settings endpoint skips unknown ids the same way.
+				if ( ! $field instanceof BP_XProfile_Field || empty( $field->id ) ) {
+					continue;
+				}
 
 				$old_values[ $field_id ] = array(
 					'value'      => xprofile_get_field_data( $field_id, $user_id ),
@@ -174,7 +189,20 @@ class BP_REST_XProfile_Update_Endpoint extends WP_REST_Controller {
 				}
 
 				if ( ! empty( $visibility_level ) ) {
-					xprofile_set_field_visibility_level( $field_id, $user_id, $visibility_level );
+					$visibility_check = BP_REST_XProfile_Fields_Endpoint::bb_rest_validate_field_visibility_level( $field, $user_id, $visibility_level );
+
+					if ( is_wp_error( $visibility_check ) ) {
+						// Kept apart from value errors on purpose: value errors gate the
+						// xprofile_updated_profile activity below, a visibility rejection must
+						// not cancel the "updated their profile" activity. Merged into the
+						// response error map after the hook fires.
+						$visibility_errors[ $field_id ] = array(
+							'field_id' => $field_id,
+							'message'  => $visibility_check->get_error_message(),
+						);
+					} elseif ( true === $visibility_check ) {
+						xprofile_set_field_visibility_level( $field_id, $user_id, $visibility_level );
+					}
 				}
 
 				$new_values[ $field_id ] = array(
@@ -196,11 +224,35 @@ class BP_REST_XProfile_Update_Endpoint extends WP_REST_Controller {
 			 * @param array $new_values Array of newly saved values after update.
 			 */
 			do_action( 'xprofile_updated_profile', $user_id, $field_ids, $errors, $old_values, $new_values );
+
+			// Now that the activity hook has seen value errors only, fold the visibility
+			// rejections into the response error map. Use an explicit key so a
+			// socialnetworks value error (a provider-keyed message array) is not given a
+			// stray numeric entry.
+			foreach ( $visibility_errors as $field_id => $visibility_error ) {
+				if ( empty( $errors[ $field_id ] ) ) {
+					$errors[ $field_id ] = $visibility_error;
+				} elseif ( isset( $errors[ $field_id ]['message'] ) && is_array( $errors[ $field_id ]['message'] ) ) {
+					$errors[ $field_id ]['message']['visibility_level'] = $visibility_error['message'];
+				} elseif ( isset( $errors[ $field_id ]['message'] ) && is_string( $errors[ $field_id ]['message'] ) ) {
+					// Keep the string shape clients already parse. Only the provider-keyed
+					// array branch above needs an explicit key; promoting a string message
+					// to an array here would change the response type for every client.
+					$errors[ $field_id ]['message'] .= ' ' . $visibility_error['message'];
+				} else {
+					// validate_update() only produces string or array messages today; if that
+					// ever changes, record the visibility reason rather than dropping it.
+					$errors[ $field_id ]['field_id'] = $field_id;
+					$errors[ $field_id ]['message']  = $visibility_error['message'];
+				}
+			}
 		}
 
 		$args = array(
 			'profile_group_id'       => $request['profile_group_id'],
-			'user_id'                => bp_loggedin_user_id(),
+			// Same resolved user the writes above targeted - not a second, bare
+			// bp_loggedin_user_id() call that could disagree with it.
+			'user_id'                => $user_id,
 			'member_type'            => $request['member_type'],
 			'hide_empty_groups'      => $request['hide_empty_groups'],
 			'hide_empty_fields'      => $request['hide_empty_fields'],
