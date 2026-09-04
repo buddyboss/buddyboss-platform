@@ -510,12 +510,15 @@ if ( ! function_exists( 'bp_core_load_buddypress_textdomain' ) ) {
 		// Only from `init` onwards, though. In wp-admin (and on `_locale=user`
 		// JSON requests) determine_locale() calls get_user_locale() ->
 		// wp_get_current_user(), which fires the `determine_current_user` filter
-		// and memoises its result for the whole request. At plugins_loaded:0 that
-		// happens before JWT/OAuth/SSO plugins have registered their auth filters
-		// — BuddyBoss App registers its own at init:0 — so those would never be
-		// consulted and the user would resolve as logged-out. Nothing is lost by
-		// waiting: the plugins_loaded pass is no longer authoritative here, and
-		// the init:0 re-run below supplies the admin-user locale.
+		// and memoises its result for the whole request. Resolving the user from
+		// plugins_loaded:0 — the earliest point a plugin can act — risks doing so
+		// before an authentication plugin that happens to load after this one has
+		// registered its `determine_current_user` filter; that filter would then
+		// never be consulted and the requester would resolve as logged out.
+		// Nothing is lost by waiting: the plugins_loaded pass is no longer
+		// authoritative here, and the init:0 re-run below supplies the admin-user
+		// locale. (This removes the loader as one such early resolver; it does not
+		// make the request free of them — see the note on bp-forums in the ticket.)
 		//
 		// did_action() is already truthy inside init:0 (core increments the count
 		// before running callbacks), so this covers both "during" and "after".
