@@ -282,7 +282,23 @@ class BP_Nouveau_Group_Invite_Query extends BP_User_Query {
 
 				// The invite list re-queries on submitted searches and on every page of results,
 				// so log each distinct reason once per request rather than once per query.
+				//
+				// Keyed by request rather than left to accumulate: a function static is scoped to
+				// the process, not the request, so under a worker SAPI (Swoole, RoadRunner,
+				// FrankenPHP worker mode) it would survive between requests and silence this
+				// diagnostic for every later request that worker handled. Standard PHP-FPM and
+				// mod_php reset it anyway; this makes the cadence the same everywhere.
 				static $logged_fallbacks = array();
+				static $logged_request   = null;
+
+				// Cast rather than sanitised: the value is only compared with itself to detect a
+				// request boundary, and a float cast is what makes that safe.
+				$request_token = isset( $_SERVER['REQUEST_TIME_FLOAT'] ) ? (float) $_SERVER['REQUEST_TIME_FLOAT'] : 0.0;
+
+				if ( $logged_request !== $request_token ) {
+					$logged_fallbacks = array();
+					$logged_request   = $request_token;
+				}
 
 				if ( $lookup_failed ) {
 					$fallback_kind   = 'error';
