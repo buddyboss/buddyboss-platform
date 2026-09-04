@@ -1238,6 +1238,13 @@ window.bp = window.bp || {};
 						return;
 					}
 
+					// The member may have started typing while the fetch was in
+					// flight - never clobber newer local content with the older
+					// server copy the fetch was only needed to seed.
+					if ( ( bp.draft_activity.data && '' !== bp.draft_activity.data ) || bp.draft_content_changed ) {
+						return;
+					}
+
 					bp.old_draft_data      = response.draft_activity.data;
 					bp.draft_activity      = response.draft_activity;
 					bp.draft_activity.data = self.restoreVideoJsPreview( bp.draft_activity.data, bp.old_draft_data );
@@ -1698,6 +1705,10 @@ window.bp = window.bp || {};
 				formData.append( 'action', 'post_draft_activity' );
 				formData.append( 'draft_activity', JSON.stringify( draft_payload ) );
 
+				// Known limitation: browsers cap sendBeacon payloads (~64KB). An
+				// at-cap UPDATE draft can exceed that and this unload sync is then
+				// silently skipped; the periodic XHR saves remain the durable path.
+				// Slim DELETE payloads always fit.
 				navigator.sendBeacon( BP_Nouveau.ajaxurl, formData );
 			}
 

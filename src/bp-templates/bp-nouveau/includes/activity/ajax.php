@@ -1185,9 +1185,14 @@ function bb_nouveau_ajax_post_draft_activity() {
 		$draft_user_id = bp_loggedin_user_id();
 
 		// The client's data_key decides which usermeta row is written; accept it
-		// only when it matches the server-derived shape for its object and the
-		// user passes that object's posting rules (PROD-9621 hardening).
-		if ( ! bb_draft_validate_activity_data_key( (string) $draft_activity['data_key'], (string) $draft_activity['object'], $draft_activity['data']['item_id'] ?? 0, $draft_user_id ) ) {
+		// only when it matches the server-derived shape for its object and, for
+		// SAVES, the user passes that object's posting rules. Deletes validate
+		// shape only ('manage'): the slim discard payload carries no data member
+		// to resolve a group ID from, and a member who lost posting rights must
+		// still be able to discard their own stored draft (PROD-9621 hardening).
+		$draft_context = ( isset( $draft_activity['post_action'] ) && 'update' === $draft_activity['post_action'] ) ? 'save' : 'manage';
+
+		if ( ! bb_draft_validate_activity_data_key( (string) $draft_activity['data_key'], (string) $draft_activity['object'], $draft_activity['data']['item_id'] ?? 0, $draft_user_id, $draft_context ) ) {
 			wp_send_json_error(
 				array(
 					'message' => esc_html__( 'This draft could not be saved.', 'buddyboss' ),
@@ -1196,6 +1201,15 @@ function bb_nouveau_ajax_post_draft_activity() {
 		}
 
 		if ( isset( $draft_activity['post_action'] ) && 'update' === $draft_activity['post_action'] ) {
+
+			// Bound the client attachment lists before any per-ID lookups run - an
+			// unbounded crafted array would trigger thousands of uncached queries
+			// before the size caps below could reject the draft.
+			foreach ( array( 'media', 'document', 'video' ) as $bounded_type ) {
+				if ( isset( $draft_activity['data'][ $bounded_type ] ) && is_array( $draft_activity['data'][ $bounded_type ] ) && 50 < count( $draft_activity['data'][ $bounded_type ] ) ) {
+					$draft_activity['data'][ $bounded_type ] = array_slice( $draft_activity['data'][ $bounded_type ], 0, 50 );
+				}
+			}
 
 			// Set media draft meta key to avoid delete from cron job 'bp_media_delete_orphaned_attachments'.
 			if ( isset( $draft_activity['data']['media'] ) && ! empty( $draft_activity['data']['media'] ) ) {
@@ -1402,7 +1416,7 @@ function bb_nouveau_ajax_get_draft_activity() {
 	$object   = isset( $_POST['object'] ) ? sanitize_key( wp_unslash( $_POST['object'] ) ) : '';
 	$item_id  = isset( $_POST['item_id'] ) ? absint( $_POST['item_id'] ) : 0;
 
-	if ( ! bb_draft_validate_activity_data_key( $data_key, $object, $item_id, $user_id ) ) {
+	if ( ! bb_draft_validate_activity_data_key( $data_key, $object, $item_id, $user_id, 'manage' ) ) {
 		wp_send_json_error();
 	}
 

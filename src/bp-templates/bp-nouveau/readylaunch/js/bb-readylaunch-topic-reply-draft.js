@@ -1400,10 +1400,41 @@ window.bp = window.bp || {};
 		};
 	};
 
-	var forms = $( 'form[name="new-post"]' );
-	forms.each( function () {
-		var topicReplyDraft = new bp.Nouveau.TopicReplyDraft( $( this ) );
-		topicReplyDraft.start();
-	} );
+	var bbInitTopicReplyDrafts = function () {
+		var forms = $( 'form[name="new-post"]' );
+		forms.each( function () {
+			var topicReplyDraft = new bp.Nouveau.TopicReplyDraft( $( this ) );
+			topicReplyDraft.start();
+		} );
+	};
+
+	// The aggregated draft row is no longer echoed into forum page HTML
+	// (PROD-9621) - when server drafts exist, fetch them once and seed the
+	// localized map the instances read, then initialize the forms.
+	if (
+		'undefined' !== typeof BP_Nouveau.forums &&
+		true === BP_Nouveau.forums.has_draft &&
+		$.isEmptyObject( BP_Nouveau.forums.draft )
+	) {
+		$.post(
+			BP_Nouveau.ajaxurl,
+			{
+				action: 'bb_get_topic_reply_drafts',
+				_wpnonce_post_topic_reply_draft: BP_Nouveau.forums.nonces.post_topic_reply_draft
+			}
+		).done(
+			function ( response ) {
+				if ( response && response.success && response.data && response.data.drafts ) {
+					BP_Nouveau.forums.draft = response.data.drafts;
+				}
+			}
+		).always(
+			function () {
+				bbInitTopicReplyDrafts();
+			}
+		);
+	} else {
+		bbInitTopicReplyDrafts();
+	}
 
 })( bp, jQuery );

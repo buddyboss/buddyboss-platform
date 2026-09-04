@@ -424,11 +424,6 @@ function bb_post_topic_reply_draft() {
 		wp_send_json_error();
 	}
 
-	// Drafting requires the same participation rights as publishing a topic or reply.
-	if ( ! bbp_current_user_can_publish_topics() && ! bbp_current_user_can_publish_replies() ) {
-		wp_send_json_error();
-	}
-
 	$draft_topic_reply = $_REQUEST['draft_topic_reply'] ?? '';
 	$usermeta_key      = 'bb_user_topic_reply_draft';
 	$user_id           = bp_loggedin_user_id();
@@ -450,7 +445,34 @@ function bb_post_topic_reply_draft() {
 			wp_send_json_error();
 		}
 
-		$existing_draft = bp_get_user_meta( $user_id, $usermeta_key, true );
+		$is_draft_update = ( isset( $draft_topic_reply['post_action'] ) && 'update' === $draft_topic_reply['post_action'] );
+
+		// SAVING requires the same participation rights as publishing a topic or
+		// reply; discarding one's own stored draft never does.
+		if ( $is_draft_update && ! bbp_current_user_can_publish_topics() && ! bbp_current_user_can_publish_replies() ) {
+			wp_send_json_error();
+		}
+
+		// Sanitize and cap the incoming entry BEFORE any side effect (attachment
+		// deletion or stamping) so a rejected request leaves storage untouched.
+		if ( $is_draft_update ) {
+			$draft_topic_reply = bb_forums_sanitize_draft_entry( $draft_topic_reply );
+
+			if ( strlen( maybe_serialize( $draft_topic_reply ) ) > bb_draft_max_size() ) {
+				/** This action is documented in bp-templates/bp-nouveau/includes/activity/ajax.php */
+				do_action( 'bb_draft_cap_rejected', $user_id, $draft_topic_reply['data_key'], strlen( maybe_serialize( $draft_topic_reply ) ), 'per_draft' );
+
+				wp_send_json_error(
+					array(
+						'message' => esc_html__( 'Your draft is too large to save. Please remove some content and try again.', 'buddyboss' ),
+					)
+				);
+			}
+		}
+
+		$existing_draft  = bp_get_user_meta( $user_id, $usermeta_key, true );
+		$stored_row_size = strlen( maybe_serialize( $existing_draft ) );
+		$replaced_attachment_ids = array();
 
 		if ( isset( $existing_draft[ $draft_topic_reply['data_key'] ] ) ) {
 			$removed_data = $existing_draft[ $draft_topic_reply['data_key'] ];
@@ -462,7 +484,9 @@ function bb_post_topic_reply_draft() {
 				if ( ! empty( $remove_media_data ) ) {
 					foreach ( $remove_media_data as $media_attachment ) {
 						if ( ! empty( $media_attachment['id'] ) && bb_draft_user_can_manage_attachment( $media_attachment['id'], $user_id ) ) {
-							wp_delete_attachment( (int) $media_attachment['id'], true );
+							// Deleted only after the request is accepted - a rejected
+							// save must leave the stored draft's attachments intact.
+							$replaced_attachment_ids[] = (int) $media_attachment['id'];
 						}
 					}
 				}
@@ -475,7 +499,9 @@ function bb_post_topic_reply_draft() {
 				if ( ! empty( $remove_document_data ) ) {
 					foreach ( $remove_document_data as $document_attachment ) {
 						if ( ! empty( $document_attachment['id'] ) && bb_draft_user_can_manage_attachment( $document_attachment['id'], $user_id ) ) {
-							wp_delete_attachment( (int) $document_attachment['id'], true );
+							// Deleted only after the request is accepted - a rejected
+							// save must leave the stored draft's attachments intact.
+							$replaced_attachment_ids[] = (int) $document_attachment['id'];
 						}
 					}
 				}
@@ -488,7 +514,9 @@ function bb_post_topic_reply_draft() {
 				if ( ! empty( $remove_video_data ) ) {
 					foreach ( $remove_video_data as $video_attachment ) {
 						if ( ! empty( $video_attachment['id'] ) && bb_draft_user_can_manage_attachment( $video_attachment['id'], $user_id ) ) {
-							wp_delete_attachment( (int) $video_attachment['id'], true );
+							// Deleted only after the request is accepted - a rejected
+							// save must leave the stored draft's attachments intact.
+							$replaced_attachment_ids[] = (int) $video_attachment['id'];
 						}
 					}
 				}
@@ -506,6 +534,11 @@ function bb_post_topic_reply_draft() {
 			// Set media draft meta key to avoid delete from cron job 'bp_media_delete_orphaned_attachments'.
 			if ( isset( $draft_topic_reply['data']['bbp_media'] ) && ! empty( $draft_topic_reply['data']['bbp_media'] ) ) {
 				$new_media_data = json_decode( stripslashes( $draft_topic_reply['data']['bbp_media'] ), true );
+
+				if ( is_array( $new_media_data ) && 50 < count( $new_media_data ) ) {
+					// Bound client attachment lists before per-ID lookups run.
+					$new_media_data = array_slice( $new_media_data, 0, 50 );
+				}
 
 				if ( ! empty( $new_media_data ) ) {
 					foreach ( $new_media_data as $media_key => $new_media_attachment ) {
@@ -529,6 +562,11 @@ function bb_post_topic_reply_draft() {
 			if ( isset( $draft_topic_reply['data']['bbp_document'] ) && ! empty( $draft_topic_reply['data']['bbp_document'] ) ) {
 				$new_document_data = json_decode( stripslashes( $draft_topic_reply['data']['bbp_document'] ), true );
 
+				if ( is_array( $new_document_data ) && 50 < count( $new_document_data ) ) {
+					// Bound client attachment lists before per-ID lookups run.
+					$new_document_data = array_slice( $new_document_data, 0, 50 );
+				}
+
 				if ( ! empty( $new_document_data ) ) {
 					foreach ( $new_document_data as $document_key => $new_document_attachment ) {
 						// Attachment IDs arrive as client JSON - only the owner may stamp them.
@@ -551,6 +589,11 @@ function bb_post_topic_reply_draft() {
 			if ( isset( $draft_topic_reply['data']['bbp_video'] ) && ! empty( $draft_topic_reply['data']['bbp_video'] ) ) {
 				$new_video_data = json_decode( stripslashes( $draft_topic_reply['data']['bbp_video'] ), true );
 
+				if ( is_array( $new_video_data ) && 50 < count( $new_video_data ) ) {
+					// Bound client attachment lists before per-ID lookups run.
+					$new_video_data = array_slice( $new_video_data, 0, 50 );
+				}
+
 				if ( ! empty( $new_video_data ) ) {
 					foreach ( $new_video_data as $video_key => $new_video_attachment ) {
 						// Attachment IDs arrive as client JSON - only the owner may stamp them.
@@ -569,19 +612,6 @@ function bb_post_topic_reply_draft() {
 				$draft_topic_reply['data']['bbp_video'] = wp_json_encode( $new_video_data );
 			}
 
-			$draft_topic_reply = bb_forums_sanitize_draft_entry( $draft_topic_reply );
-
-			if ( strlen( maybe_serialize( $draft_topic_reply ) ) > bb_draft_max_size() ) {
-				/** This action is documented in bp-templates/bp-nouveau/includes/activity/ajax.php */
-				do_action( 'bb_draft_cap_rejected', $user_id, $draft_topic_reply['data_key'], strlen( maybe_serialize( $draft_topic_reply ) ), 'per_draft' );
-
-				wp_send_json_error(
-					array(
-						'message' => esc_html__( 'Your draft is too large to save. Please remove some content and try again.', 'buddyboss' ),
-					)
-				);
-			}
-
 			$existing_draft[ $draft_topic_reply['data_key'] ] = $draft_topic_reply;
 
 			if ( ! empty( $all_data ) ) {
@@ -597,6 +627,13 @@ function bb_post_topic_reply_draft() {
 					// path as to the primary draft - it may not smuggle content the
 					// primary path would strip, cap, or reject (PROD-9621).
 					if ( isset( $existing_draft[ $data_key ] ) && is_array( $d_data ) ) {
+						// An unchanged entry keeps its stored save timestamp - the
+						// unload sync fires on every forum page exit, and restamping
+						// would keep every draft eternally "fresh" for expiry.
+						if ( isset( $existing_draft[ $data_key ]['data'] ) && maybe_serialize( $existing_draft[ $data_key ]['data'] ) === maybe_serialize( $d_data ) ) {
+							continue;
+						}
+
 						$merged_entry         = $existing_draft[ $data_key ];
 						$merged_entry['data'] = $d_data;
 						$merged_entry         = bb_forums_sanitize_draft_entry( $merged_entry );
@@ -623,22 +660,33 @@ function bb_post_topic_reply_draft() {
 			$evicted_draft_keys = $trimmed_row['evicted'];
 
 			$forum_row_size = strlen( maybe_serialize( $existing_draft ) );
-			$draft_budget   = bb_draft_enforce_user_budget( $user_id, $usermeta_key, $forum_row_size );
 
-			if ( empty( $draft_budget['allowed'] ) ) {
-				/** This action is documented in bp-templates/bp-nouveau/includes/activity/ajax.php */
-				do_action( 'bb_draft_cap_rejected', $user_id, $usermeta_key, $forum_row_size, 'meta_budget' );
+			// A write that does not grow the row is always allowed: refusing a
+			// discard because the USER is over budget would deadlock the very
+			// remedy the budget error tells them to perform.
+			if ( $forum_row_size > $stored_row_size ) {
+				$draft_budget = bb_draft_enforce_user_budget( $user_id, $usermeta_key, $forum_row_size );
 
-				wp_send_json_error(
-					array(
-						'message' => esc_html__( 'Your draft could not be saved because you have too many saved drafts. Please discard some drafts and try again.', 'buddyboss' ),
-					)
-				);
+				if ( empty( $draft_budget['allowed'] ) ) {
+					/** This action is documented in bp-templates/bp-nouveau/includes/activity/ajax.php */
+					do_action( 'bb_draft_cap_rejected', $user_id, $usermeta_key, $forum_row_size, 'meta_budget' );
+
+					wp_send_json_error(
+						array(
+							'message' => esc_html__( 'Your draft could not be saved because you have too many saved drafts. Please discard some drafts and try again.', 'buddyboss' ),
+						)
+					);
+				}
+
+				$evicted_draft_keys = array_merge( $evicted_draft_keys, $draft_budget['evicted'] );
 			}
 
-			$evicted_draft_keys = array_merge( $evicted_draft_keys, $draft_budget['evicted'] );
-
 			bp_update_user_meta( $user_id, $usermeta_key, $existing_draft );
+		}
+
+		// The request is accepted - the replaced entry's attachments may go now.
+		foreach ( $replaced_attachment_ids as $replaced_attachment_id ) {
+			wp_delete_attachment( $replaced_attachment_id, true );
 		}
 	}
 

@@ -38,6 +38,19 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		$this->assertSame( $normal_img, bb_draft_strip_data_urls( $normal_img ) );
 	}
 
+	public function test_strip_data_urls_spares_normal_images_when_a_data_url_is_present() {
+		// The fixture MUST contain a data: URL so the removal regexes actually
+		// run - a data-free fixture early-returns and proves nothing.
+		$mixed = 'A <img src="data:image/png;base64,QUJD"> B <img src="https://example.com/pic.png" alt="keep"> C <img class="emojioneemoji" src="https://cdn/emoji.png" data-emoji-char="x"> D data: mentioned in text.';
+
+		$stripped = bb_draft_strip_data_urls( $mixed );
+
+		$this->assertStringNotContainsString( 'base64', $stripped );
+		$this->assertStringContainsString( 'https://example.com/pic.png', $stripped, 'A normal linked image must survive the strip.' );
+		$this->assertStringContainsString( 'emojioneemoji', $stripped, 'Emoji images must survive the strip.' );
+		$this->assertStringContainsString( 'data: mentioned in text.', $stripped );
+	}
+
 	public function test_attachment_ownership_gate() {
 		$owner    = self::factory()->user->create();
 		$stranger = self::factory()->user->create();
@@ -253,5 +266,136 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 
 		$this->assertFalse( bb_draft_dispose( $user_id, 'draft_custom_thing' ) );
 		$this->assertTrue( metadata_exists( 'user', $user_id, 'draft_custom_thing' ) );
+	}
+
+	public function test_manage_context_validates_shape_only() {
+		$user_id = self::factory()->user->create();
+
+		// A slim delete carries no data member: group ID unavailable, and the
+		// member may have left the group - shape-only validation must accept.
+		$this->assertTrue( bb_draft_validate_activity_data_key( 'draft_group_12345', 'group', 0, $user_id, 'manage' ) );
+		$this->assertTrue( bb_draft_validate_activity_data_key( 'draft_user', 'user', 0, $user_id, 'manage' ) );
+		$this->assertTrue( bb_draft_validate_activity_data_key( 'draft_user_999999', 'user', 0, $user_id, 'manage' ) );
+
+		// Forged shapes stay rejected even in manage context.
+		$this->assertFalse( bb_draft_validate_activity_data_key( 'session_tokens', 'user', 0, $user_id, 'manage' ) );
+		$this->assertFalse( bb_draft_validate_activity_data_key( 'draft_group_x', 'group', 0, $user_id, 'manage' ) );
+
+		// Negative control: the SAVE context still enforces membership.
+		$this->assertFalse( bb_draft_validate_activity_data_key( 'draft_group_12345', 'group', 12345, $user_id, 'save' ) );
+	}
+
+	public function test_heal_context_bypasses_the_meta_budget_refusal() {
+		$user_id = self::factory()->user->create();
+
+		bp_update_user_meta( $user_id, 'unrelated_heavy_meta', str_repeat( 'x', 5000 ) );
+		bp_update_user_meta(
+			$user_id,
+			'draft_group_1',
+			array(
+				'data_key'        => 'draft_group_1',
+				'data'            => array( 'content' => str_repeat( 'a', 2000 ) ),
+				'_draft_saved_at' => 100,
+			)
+		);
+		bp_update_user_meta(
+			$user_id,
+			'draft_group_2',
+			array(
+				'data_key'        => 'draft_group_2',
+				'data'            => array( 'content' => str_repeat( 'b', 2000 ) ),
+				'_draft_saved_at' => 200,
+			)
+		);
+
+		add_filter(
+			'bb_draft_user_meta_budget',
+			function () {
+				return 4000; // The user's total meta (7000+) exceeds this.
+			}
+		);
+		add_filter(
+			'bb_draft_user_total_max_size',
+			function () {
+				return 2500; // Combined drafts (4000+) exceed this.
+			}
+		);
+
+		// The save context refuses this user outright (negative control)...
+		$save = bb_draft_enforce_user_budget( $user_id, 'draft_user', 100, 'save' );
+		$this->assertFalse( $save['allowed'] );
+		$this->assertSame( array(), $save['evicted'] );
+
+		// ...which is exactly why the HEAL context must not: it exists for
+		// users over the refusal threshold. Oldest draft evicted, budget met.
+		$heal = bb_draft_enforce_user_budget( $user_id, '', 0, 'heal' );
+		$this->assertTrue( $heal['allowed'] );
+		$this->assertSame( array( 'draft_group_1' ), $heal['evicted'] );
+		$this->assertFalse( metadata_exists( 'user', $user_id, 'draft_group_1' ) );
+		$this->assertTrue( metadata_exists( 'user', $user_id, 'draft_group_2' ) );
+	}
+
+	public function test_forum_row_heals_at_inner_granularity_not_wholesale() {
+		$user_id = self::factory()->user->create();
+
+		bp_update_user_meta(
+			$user_id,
+			'bb_user_topic_reply_draft',
+			array(
+				'draft_topic'    => array(
+					'data'            => array( 'bbp_topic_content' => str_repeat( 'a', 3000 ) ),
+					'_draft_saved_at' => 100,
+				),
+				'draft_reply_5'  => array(
+					'data'            => array( 'bbp_reply_content' => str_repeat( 'b', 300 ) ),
+					'_draft_saved_at' => 200,
+				),
+			)
+		);
+
+		add_filter(
+			'bb_draft_max_size',
+			function () {
+				return 1000; // draft_topic (3000+) exceeds; draft_reply_5 does not.
+			}
+		);
+
+		bb_draft_heal_forum_row( $user_id );
+
+		$row = bp_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
+		$this->assertIsArray( $row, 'The row must survive healing - never disposed wholesale.' );
+		$this->assertArrayNotHasKey( 'draft_topic', $row, 'The oversized inner draft is disposed.' );
+		$this->assertArrayHasKey( 'draft_reply_5', $row, 'The legal sibling inner draft survives.' );
+	}
+
+	public function test_batch_scan_survives_a_window_of_third_party_rows() {
+		global $wpdb;
+
+		$user_id = self::factory()->user->create();
+
+		// Five third-party lookalikes inserted FIRST (lower umeta_id)...
+		for ( $i = 1; $i <= 5; $i++ ) {
+			add_user_meta( $user_id, 'draft_user_notes' . $i, 'third-party ' . $i );
+		}
+		// ...then one real BuddyBoss draft row after them.
+		add_user_meta(
+			$user_id,
+			'draft_user',
+			array(
+				'data_key' => 'draft_user',
+				'data'     => array( 'content' => 'real draft' ),
+			)
+		);
+
+		// A window consisting entirely of filtered third-party rows must not
+		// end the scan: the raw cursor advances and has_more stays true.
+		$first = bb_draft_get_rows_batch( 0, 5, false );
+		$this->assertSame( array(), $first['rows'] );
+		$this->assertTrue( $first['has_more'] );
+		$this->assertGreaterThan( 0, $first['last_id'] );
+
+		$second = bb_draft_get_rows_batch( $first['last_id'], 5, false );
+		$found  = wp_list_pluck( $second['rows'], 'meta_key' );
+		$this->assertContains( 'draft_user', $found, 'The real draft past the filtered window must still be reached.' );
 	}
 }

@@ -132,8 +132,10 @@ function bb_draft_strip_data_urls( $content ) {
 		$content = $stripped;
 	}
 
-	// Then drop the now-empty inline images entirely.
-	$stripped = preg_replace( '/<img\b[^>]*\bsrc\s*=\s*(["\']?)\s*\1[^>]*>/i', '', $content );
+	// Then drop images whose src is now actually empty (src="" / src='' / bare).
+	// The value must be provably empty - an optional-quote backreference would
+	// backtrack into matching ANY img tag.
+	$stripped = preg_replace( '/<img\b[^>]*\bsrc\s*=\s*(?:""|\'\'|(?=[\s>]))[^>]*>/i', '', $content );
 
 	if ( is_string( $stripped ) ) {
 		$content = $stripped;
@@ -303,8 +305,8 @@ function bb_draft_unstamp_attachments( $draft, $user_id ) {
 /**
  * Dispose of one stored draft: release its attachment stamps and remove it.
  *
- * The single shared removal path used by budget eviction and (in later
- * releases) the cleanup cron and upgrade routine, so every deletion route
+ * The single shared removal path used by budget eviction, the cleanup
+ * cron, and the upgrade healing routine, so every deletion route
  * treats attachments and row shape identically. For the aggregated forum
  * row, pass `$inner_key` to remove one inner draft; an emptied aggregate
  * row is deleted rather than stored as an empty array.
@@ -376,12 +378,14 @@ function bb_draft_dispose( $user_id, $meta_key, $inner_key = '' ) {
  * @param int    $user_id     User ID.
  * @param string $current_key Meta key about to be written (protected from eviction).
  * @param int    $new_size    Serialized size of the value about to be written.
+ * @param string $context     Optional. 'save' (default) refuses over the total-meta budget;
+ *                            'heal' bypasses that refusal and always evicts down to the draft cap.
  * @return array {
  *     @type bool     $allowed Whether the save may proceed.
  *     @type string[] $evicted Draft keys evicted to make room ("meta_key" or "meta_key:inner_key").
  * }
  */
-function bb_draft_enforce_user_budget( $user_id, $current_key, $new_size ) {
+function bb_draft_enforce_user_budget( $user_id, $current_key, $new_size, $context = 'save' ) {
 	$user_id  = (int) $user_id;
 	$new_size = (int) $new_size;
 	$result   = array(
@@ -392,8 +396,11 @@ function bb_draft_enforce_user_budget( $user_id, $current_key, $new_size ) {
 	$sizes        = bb_draft_get_user_meta_sizes( $user_id );
 	$current_size = isset( $sizes['drafts'][ $current_key ] ) ? $sizes['drafts'][ $current_key ] : 0;
 
-	// Refuse outright when total user meta would exceed the platform budget.
-	if ( ( $sizes['total'] - $current_size + $new_size ) > bb_draft_user_meta_budget() ) {
+	// Refuse outright when total user meta would exceed the platform budget -
+	// but only for live saves. The healing context exists precisely for users
+	// already OVER that budget; refusing them would make the one-shot a no-op
+	// for the users it targets, so healing always proceeds to eviction.
+	if ( 'heal' !== $context && ( $sizes['total'] - $current_size + $new_size ) > bb_draft_user_meta_budget() ) {
 		$result['allowed'] = false;
 
 		return $result;
@@ -495,10 +502,22 @@ function bb_draft_enforce_user_budget( $user_id, $current_key, $new_size ) {
  * @param string $draft_object Draft object ('user' or 'group').
  * @param int    $item_id      Group ID for group drafts.
  * @param int    $user_id      Acting user ID.
+ * @param string $context      Optional. 'save' (default) enforces the object's posting
+ *                             rules; 'manage' (delete/fetch of the member's own meta)
+ *                             validates the key shape only.
  * @return bool True when the key is valid for this user.
  */
-function bb_draft_validate_activity_data_key( $data_key, $draft_object, $item_id, $user_id ) {
+function bb_draft_validate_activity_data_key( $data_key, $draft_object, $item_id, $user_id, $context = 'save' ) {
 	$user_id = (int) $user_id;
+
+	// Deleting or fetching addresses the member's OWN stored meta - no posting
+	// capability applies, and the group ID is derived from the key itself so a
+	// slim delete payload (which carries no data member) still validates. A
+	// member who lost posting rights must still be able to discard or restore
+	// their existing draft.
+	if ( 'manage' === $context ) {
+		return ( 'draft_user' === $data_key && 'user' === $draft_object ) || (bool) preg_match( '/^draft_(user|group)_\d+$/', $data_key );
+	}
 
 	if ( 'group' === $draft_object ) {
 		$item_id = (int) $item_id;
@@ -629,7 +648,11 @@ function bb_draft_safe_unserialize( $value ) {
  * @param int  $last_umeta_id Resume after this row ID.
  * @param int  $limit         Maximum rows to fetch.
  * @param bool $with_values   Whether to select meta_value too.
- * @return array[] Rows with umeta_id, user_id, meta_key, bytes (+ meta_value).
+ * @return array {
+ *     @type array[] $rows     Validated draft rows (umeta_id, user_id, meta_key, bytes[, meta_value]).
+ *     @type int     $last_id  Raw scan cursor - resume after this row ID.
+ *     @type bool    $has_more Whether the raw window was full (more rows may exist).
+ * }
  */
 function bb_draft_get_rows_batch( $last_umeta_id = 0, $limit = 200, $with_values = true ) {
 	global $wpdb;
@@ -656,16 +679,29 @@ function bb_draft_get_rows_batch( $last_umeta_id = 0, $limit = 200, $with_values
 	);
 
 	if ( empty( $rows ) ) {
-		return array();
+		return array(
+			'rows'     => array(),
+			'last_id'  => (int) $last_umeta_id,
+			'has_more' => false,
+		);
 	}
 
-	return array_values(
-		array_filter(
-			$rows,
-			function ( $row ) {
-				return bb_draft_is_draft_meta_key( $row['meta_key'] );
-			}
-		)
+	$raw_count = count( $rows );
+	$max_id    = (int) $rows[ $raw_count - 1 ]['umeta_id'];
+
+	return array(
+		// The cursor advances over the RAW window: a window consisting entirely
+		// of filtered-out third-party keys must not end the scan early.
+		'rows'     => array_values(
+			array_filter(
+				$rows,
+				function ( $row ) {
+					return bb_draft_is_draft_meta_key( $row['meta_key'] );
+				}
+			)
+		),
+		'last_id'  => $max_id,
+		'has_more' => ( $raw_count === (int) $limit ),
 	);
 }
 
@@ -692,21 +728,25 @@ function bb_draft_get_rows_batch( $last_umeta_id = 0, $limit = 200, $with_values
 function bb_drafts_delete_expired( $time_budget = 10 ) {
 	$time_budget = (int) $time_budget;
 	$started_at  = time();
-	$epoch       = (int) get_option( 'bb_draft_cleanup_epoch', time() );
 	$cutoff      = time() - bb_draft_retention_seconds();
 	$deleted     = 0;
 	$last_id     = 0;
 	$complete    = true;
 
+	// Record the epoch lazily when the upgrade routine never did (fresh
+	// installs, removed option) so timestamp-less legacy rows still age out
+	// eventually instead of never.
+	$epoch = (int) get_option( 'bb_draft_cleanup_epoch' );
+	if ( ! $epoch ) {
+		$epoch = time();
+		add_option( 'bb_draft_cleanup_epoch', $epoch, '', false );
+	}
+
 	do {
-		$rows = bb_draft_get_rows_batch( $last_id, 200, true );
+		$batch   = bb_draft_get_rows_batch( $last_id, 200, true );
+		$last_id = $batch['last_id'];
 
-		if ( empty( $rows ) ) {
-			break;
-		}
-
-		foreach ( $rows as $row ) {
-			$last_id = (int) $row['umeta_id'];
+		foreach ( $batch['rows'] as $row ) {
 			$user_id = (int) $row['user_id'];
 			$value   = bb_draft_safe_unserialize( $row['meta_value'] );
 
@@ -732,7 +772,7 @@ function bb_drafts_delete_expired( $time_budget = 10 ) {
 				break 2;
 			}
 		}
-	} while ( true );
+	} while ( $batch['has_more'] );
 
 	if ( ! $complete && ! wp_next_scheduled( 'bb_draft_cleanup' ) ) {
 		wp_schedule_single_event( time() + MINUTE_IN_SECONDS, 'bb_draft_cleanup' );
@@ -745,22 +785,96 @@ function bb_drafts_delete_expired( $time_budget = 10 ) {
 }
 
 /**
+ * Heal one aggregated forum draft row without destroying legal drafts.
+ *
+ * The per-draft cap applies to INNER topic/reply drafts, not the aggregate
+ * row - a member with several modest drafts may legally hold a row larger
+ * than one draft's cap. Inner drafts over the per-draft cap are disposed
+ * individually; the row is then trimmed oldest-first to the per-user draft
+ * budget. Only a corrupt (non-array) row is disposed wholesale.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int $user_id Owning user ID.
+ * @return int Number of inner drafts disposed.
+ */
+function bb_draft_heal_forum_row( $user_id ) {
+	$user_id  = (int) $user_id;
+	$disposed = 0;
+	$row      = bp_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
+
+	if ( empty( $row ) ) {
+		return 0;
+	}
+
+	if ( ! is_array( $row ) ) {
+		return bb_draft_dispose( $user_id, 'bb_user_topic_reply_draft' ) ? 1 : 0;
+	}
+
+	$max_size = bb_draft_max_size();
+
+	// Inner drafts individually over the per-draft cap.
+	foreach ( $row as $inner_key => $inner_draft ) {
+		if ( strlen( maybe_serialize( $inner_draft ) ) > $max_size && bb_draft_dispose( $user_id, 'bb_user_topic_reply_draft', (string) $inner_key ) ) {
+			++$disposed;
+		}
+	}
+
+	// Oldest-first down to the per-user draft budget.
+	$row = bp_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
+
+	$total_cap = bb_draft_user_total_max_size();
+
+	while ( is_array( $row ) && ! empty( $row ) ) {
+		$row_bytes = strlen( maybe_serialize( $row ) );
+
+		if ( $row_bytes <= $total_cap ) {
+			break;
+		}
+
+		$oldest_key = '';
+		$oldest_ts  = PHP_INT_MAX;
+
+		foreach ( $row as $inner_key => $inner_draft ) {
+			$saved_at = isset( $inner_draft['_draft_saved_at'] ) ? (int) $inner_draft['_draft_saved_at'] : 0;
+			if ( $saved_at < $oldest_ts ) {
+				$oldest_ts  = $saved_at;
+				$oldest_key = (string) $inner_key;
+			}
+		}
+
+		if ( '' === $oldest_key || ! bb_draft_dispose( $user_id, 'bb_user_topic_reply_draft', $oldest_key ) ) {
+			break;
+		}
+
+		++$disposed;
+		$row = bp_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
+	}
+
+	return $disposed;
+}
+
+/**
  * One-shot healing pass for sites already carrying oversized draft rows.
  *
- * Two passes, both disposing through the shared helper so attachment
- * stamps are released and caches invalidated per user:
+ * A single keyset scan over the draft rows does both jobs:
  *
  * 1. Rows individually larger than the per-draft cap are removed - the
- *    Memcached-poisoning rows this ticket is about.
- * 2. Users whose COMBINED draft bytes exceed the per-user budget (ten
- *    90KB legacy drafts) are healed by oldest-first eviction, which the
- *    per-row pass cannot reach.
+ *    Memcached-poisoning rows this ticket is about. The aggregated forum
+ *    row is healed at inner-draft granularity instead of being disposed
+ *    wholesale ({@see bb_draft_heal_forum_row()}).
+ * 2. Per-user draft byte totals are accumulated in PHP during the scan,
+ *    and users whose combined drafts exceed the per-user budget (ten 90KB
+ *    legacy drafts) are healed by oldest-first eviction in the 'heal'
+ *    budget context - which deliberately bypasses the live save path's
+ *    total-meta refusal, because the users this pass exists for are
+ *    exactly the ones over that refusal threshold.
  *
- * Self-reschedules on the `bb_draft_oneshot` single event until both
- * passes find nothing, then records the durable `bb_draft_oneshot_done`
- * option (an option, not a transient - transients live in the very
- * object cache this heals) so support can tell affected customers when
- * their mu-plugin workarounds are safe to remove.
+ * Self-reschedules on the `bb_draft_oneshot` single event until a full
+ * scan completes inside one run, then records the durable
+ * `bb_draft_oneshot_done` option (an option, not a transient - transients
+ * live in the very object cache this heals) so support can tell affected
+ * customers when their mu-plugin workarounds are safe to remove.
  *
  * @since BuddyBoss [BBVERSION]
  *
@@ -768,73 +882,62 @@ function bb_drafts_delete_expired( $time_budget = 10 ) {
  * @return array { @type int $healed @type bool $complete }
  */
 function bb_drafts_oneshot_batch( $time_budget = 10 ) {
-	global $wpdb;
-
 	$time_budget = (int) $time_budget;
 	$started_at  = time();
 	$healed      = 0;
 	$complete    = true;
 	$max_size    = bb_draft_max_size();
+	$last_id     = 0;
+	$user_totals = array();
 
-	// Pass 1: rows individually over the per-draft cap.
-	$last_id = 0;
+	// Single scan: dispose per-row offenders, accumulate per-user totals.
 	do {
-		$rows = bb_draft_get_rows_batch( $last_id, 200, false );
+		$batch   = bb_draft_get_rows_batch( $last_id, 200, false );
+		$last_id = $batch['last_id'];
 
-		if ( empty( $rows ) ) {
-			break;
-		}
+		foreach ( $batch['rows'] as $row ) {
+			$row_user  = (int) $row['user_id'];
+			$row_bytes = (int) $row['bytes'];
 
-		foreach ( $rows as $row ) {
-			$last_id = (int) $row['umeta_id'];
-
-			if ( (int) $row['bytes'] > $max_size && bb_draft_dispose( (int) $row['user_id'], $row['meta_key'] ) ) {
-				++$healed;
+			if ( 'bb_user_topic_reply_draft' === $row['meta_key'] ) {
+				if ( $row_bytes > $max_size ) {
+					$healed += bb_draft_heal_forum_row( $row_user );
+					// Healed in place; the surviving row is within the budget.
+					continue;
+				}
+			} elseif ( $row_bytes > $max_size ) {
+				if ( bb_draft_dispose( $row_user, $row['meta_key'] ) ) {
+					++$healed;
+				}
+				continue;
 			}
+
+			$user_totals[ $row_user ] = isset( $user_totals[ $row_user ] ) ? $user_totals[ $row_user ] + $row_bytes : $row_bytes;
 
 			if ( 0 < $time_budget && ( time() - $started_at ) >= $time_budget ) {
 				$complete = false;
 				break 2;
 			}
 		}
-	} while ( true );
+	} while ( $batch['has_more'] );
 
-	// Pass 2: users whose combined draft bytes exceed the per-user budget.
+	// Aggregate healing from the totals gathered above - no SQL aggregate, no
+	// re-scan per continuation slice, and third-party keys never counted.
 	if ( $complete ) {
-		$like_user  = $wpdb->esc_like( 'draft_user_' ) . '%';
-		$like_group = $wpdb->esc_like( 'draft_group_' ) . '%';
+		$total_cap = bb_draft_user_total_max_size();
 
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- maintenance aggregate.
-		$heavy_users = $wpdb->get_col(
-			$wpdb->prepare(
-				"SELECT user_id
-				FROM {$wpdb->usermeta}
-				WHERE ( meta_key = 'draft_user' OR meta_key = 'bb_user_topic_reply_draft' OR meta_key LIKE %s OR meta_key LIKE %s )
-				GROUP BY user_id
-				HAVING SUM(LENGTH(meta_value)) > %d
-				LIMIT 100",
-				$like_user,
-				$like_group,
-				bb_draft_user_total_max_size()
-			)
-		);
+		foreach ( $user_totals as $heavy_user_id => $total_bytes ) {
+			if ( $total_bytes <= $total_cap ) {
+				continue;
+			}
 
-		foreach ( (array) $heavy_users as $heavy_user_id ) {
-			// Evicts oldest drafts until the user's total fits the budget. The
-			// aggregate SQL may over-match on third-party keys; the eviction
-			// itself only ever touches validated BuddyBoss draft keys.
-			$budget_result = bb_draft_enforce_user_budget( (int) $heavy_user_id, '', 0 );
+			$budget_result = bb_draft_enforce_user_budget( (int) $heavy_user_id, '', 0, 'heal' );
 			$healed       += count( $budget_result['evicted'] );
 
 			if ( 0 < $time_budget && ( time() - $started_at ) >= $time_budget ) {
 				$complete = false;
 				break;
 			}
-		}
-
-		// More heavy users than one batch: run again.
-		if ( $complete && count( (array) $heavy_users ) === 100 ) {
-			$complete = false;
 		}
 	}
 
@@ -857,17 +960,29 @@ add_action( 'bb_draft_oneshot', 'bb_drafts_oneshot_batch' );
 
 add_action( 'bb_draft_cleanup_hook', 'bb_drafts_delete_expired' );
 
-add_action(
-	'bp_init',
-	function () {
-		// Scheduled directly (the polls add-on precedent): bp_core_schedule_cron()
-		// queues its wp_schedule_event() on the same bp_init priority that is
-		// already running, which can silently skip scheduling.
-		if ( ! wp_next_scheduled( 'bb_draft_cleanup_hook' ) ) {
-			wp_schedule_event( time() + HOUR_IN_SECONDS, 'bb_schedule_24hours', 'bb_draft_cleanup_hook' );
-		}
+/**
+ * Schedule the daily draft cleanup event.
+ *
+ * Scheduled directly (the polls add-on precedent): bp_core_schedule_cron()
+ * queues its wp_schedule_event() on the same bp_init priority that is
+ * already running, which can silently skip scheduling. On multisite only
+ * the root blog schedules - usermeta is network-global, so per-subsite
+ * events would duplicate the same sweep.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_drafts_schedule_cleanup() {
+	if ( is_multisite() && ! bp_is_root_blog() ) {
+		return;
 	}
-);
+
+	if ( ! wp_next_scheduled( 'bb_draft_cleanup_hook' ) ) {
+		wp_schedule_event( time() + HOUR_IN_SECONDS, 'bb_schedule_24hours', 'bb_draft_cleanup_hook' );
+	}
+}
+add_action( 'bp_init', 'bb_drafts_schedule_cleanup' );
 
 if ( defined( 'WP_CLI' ) && WP_CLI ) {
 	/**
@@ -890,25 +1005,39 @@ if ( defined( 'WP_CLI' ) && WP_CLI ) {
 		function ( $args, $assoc_args ) {
 			if ( isset( $assoc_args['status'] ) ) {
 				$oneshot_done = (int) get_option( 'bb_draft_oneshot_done', 0 );
-				$rows         = bb_draft_get_rows_batch( 0, 1000, false );
+				$total_rows   = 0;
 				$oversized    = 0;
-				foreach ( $rows as $row ) {
-					if ( (int) $row['bytes'] > bb_draft_max_size() ) {
-						$oversized++;
+				$last_id      = 0;
+
+				do {
+					$batch   = bb_draft_get_rows_batch( $last_id, 500, false );
+					$last_id = $batch['last_id'];
+
+					foreach ( $batch['rows'] as $row ) {
+						$total_rows++;
+						if ( (int) $row['bytes'] > bb_draft_max_size() ) {
+							$oversized++;
+						}
 					}
-				}
+				} while ( $batch['has_more'] );
+
 				WP_CLI::log( 'One-shot complete: ' . ( $oneshot_done ? 'yes' : 'no' ) );
-				WP_CLI::log( 'Draft rows (first 1000): ' . count( $rows ) );
+				WP_CLI::log( 'Draft rows: ' . $total_rows );
 				WP_CLI::log( 'Oversized rows among them: ' . $oversized );
 
 				return;
 			}
 
-			$oneshot = bb_drafts_oneshot_batch( 0 );
-			WP_CLI::log( 'Healing pass: ' . $oneshot['healed'] . ' drafts removed/evicted.' );
+			// Drain fully regardless of size - the docblock promises completion.
+			do {
+				$oneshot = bb_drafts_oneshot_batch( 0 );
+				WP_CLI::log( 'Healing pass: ' . $oneshot['healed'] . ' drafts removed/evicted.' );
+			} while ( empty( $oneshot['complete'] ) );
 
-			$expired = bb_drafts_delete_expired( 0 );
-			WP_CLI::log( 'Expiry pass: ' . $expired['deleted'] . ' expired drafts removed.' );
+			do {
+				$expired = bb_drafts_delete_expired( 0 );
+				WP_CLI::log( 'Expiry pass: ' . $expired['deleted'] . ' expired drafts removed.' );
+			} while ( empty( $expired['complete'] ) );
 
 			WP_CLI::success( 'Draft cleanup complete.' );
 		}
