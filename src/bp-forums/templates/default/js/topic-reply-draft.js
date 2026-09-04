@@ -1432,8 +1432,11 @@ window.bp = window.bp || {};
 		};
 	};
 
+	// Module-level on purpose: instance methods reference `forms` (multi-form
+	// subscription IDs) from this closure.
+	var forms = $( 'form[name="new-post"]' );
+
 	var bbInitTopicReplyDrafts = function () {
-		var forms = $( 'form[name="new-post"]' );
 		forms.each( function () {
 			var topicReplyDraft = new bp.Nouveau.TopicReplyDraft( $( this ) );
 			topicReplyDraft.start();
