@@ -386,7 +386,7 @@ class BB_Activity_Readylaunch {
 			?>
 
 			<?php
-			if ( bp_activity_can_comment() ) {
+			if ( bb_activity_can_view_comments() ) {
 				$activity_state_comment_class['activity_state_comment_class'] = 'activity-state-comments';
 				if ( $comment_count > 0 ) {
 					$activity_state_comment_class['has-comments'] = 'has-comments';
