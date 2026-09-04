@@ -1702,7 +1702,7 @@ class BP_Activity_Activity {
 		) {
 			$args['last_comment_id']        = intval( $_GET['last_comment_id'] );
 			$args['last_comment_timestamp'] = sanitize_text_field( $_GET['last_comment_timestamp'] );
-			$args['comment_order_by']       = apply_filters( 'bb_activity_recurse_comments_order_by', 'ASC' );
+			$args['comment_order_by']       = apply_filters( 'bb_activity_recurse_comments_order_by', 'DESC' );
 		}
 
 		if ( bp_is_single_activity() || ( bb_is_rest() && empty( $_GET['apply_limit'] ) ) ) {
@@ -1821,7 +1821,10 @@ class BP_Activity_Activity {
 				} else {
 					$sql['where'] = "WHERE a.type = 'activity_comment' {$spam_sql} AND a.item_id = $top_level_parent_id and a.mptt_left > $left AND a.mptt_left < $right";
 				}
-				$sql['misc'] = 'ORDER BY a.date_recorded ASC';
+				// Keep in sync with the DESC/ASC cursor comparison below, which assumes this ORDER BY.
+				$comment_order_by = ! empty( $args['comment_order_by'] ) ? $args['comment_order_by'] : apply_filters( 'bb_activity_recurse_comments_order_by', 'DESC' );
+				$comment_order_by = ( 'ASC' === strtoupper( $comment_order_by ) ) ? 'ASC' : 'DESC';
+				$sql['misc']      = "ORDER BY a.date_recorded {$comment_order_by}";
 
 				/**
 				 * Filters the MySQL From query for legacy activity comment.

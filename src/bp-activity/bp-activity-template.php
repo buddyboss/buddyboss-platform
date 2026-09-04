@@ -2031,7 +2031,7 @@ function bp_activity_recurse_comments( $comment, $args = array() ) {
 			'is_ajax_load_more'      => false,
 			'last_comment_timestamp' => '',
 			'last_comment_id'        => 0,
-			'comment_order_by'       => apply_filters( 'bb_activity_recurse_comments_order_by', 'ASC' ),
+			'comment_order_by'       => apply_filters( 'bb_activity_recurse_comments_order_by', 'DESC' ),
 		),
 		'bb_activity_recurse_comments'
 	);
