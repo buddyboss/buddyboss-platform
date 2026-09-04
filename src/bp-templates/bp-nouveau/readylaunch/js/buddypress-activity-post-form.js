@@ -967,21 +967,92 @@ window.bp = window.bp || {};
 		},
 
 		syncDraftActivity: function () {
-			if ( ( ! bp.draft_activity.data || '' === bp.draft_activity.data ) && ! _.isUndefined( bbRlActivity.params.draft_activity.data_key ) ) {
+			var self = this;
+			if ( ! bp.draft_activity.data || '' === bp.draft_activity.data ) {
 
 				const draftKey = bp.draft_activity.data_key;
 				if ( 'deleted' === $.cookie( bp.draft_activity.data_key ) ) {
+					// A discard whose server delete may not have landed yet - never
+					// resurrect the draft from any source on this load.
 					bp.draft_activity.data             = false;
 					bbRlActivity.params.draft_activity = '';
 					localStorage.removeItem( draftKey );
 					$.removeCookie( draftKey );
-				} else {
+				} else if ( ! _.isUndefined( bbRlActivity.params.draft_activity.data_key ) ) {
 					bp.old_draft_data = bbRlActivity.params.draft_activity.data;
 					bp.draft_activity = bbRlActivity.params.draft_activity;
 					localStorage.setItem( draftKey, JSON.stringify( bp.draft_activity ) );
+				} else if ( true === bbRlActivity.params.has_draft ) {
+					// The draft is no longer echoed into page HTML - fetch the
+					// server copy once when localStorage held nothing.
+					self.fetchServerDraftActivity();
 				}
 
 			}
+		},
+
+		fetchServerDraftActivity: function () {
+			var self = this;
+
+			if ( ! bp.draft_activity.data_key || bp.draft_fetch_in_progress ) {
+				return;
+			}
+
+			bp.draft_fetch_in_progress = true;
+
+			bp.ajax.post(
+				'bb_get_draft_activity',
+				{
+					_wpnonce_post_draft: bbRlActivity.params.post_draft_nonce,
+					data_key: bp.draft_activity.data_key,
+					object: bp.draft_activity.object,
+					item_id: bbRlActivity.params.item_id
+				}
+			).done(
+				function ( response ) {
+					bp.draft_fetch_in_progress = false;
+
+					if ( ! response.draft_activity || ! response.draft_activity.data ) {
+						return;
+					}
+
+					bp.draft_activity = response.draft_activity;
+					bp.old_draft_data = response.draft_activity.data;
+					localStorage.setItem( bp.draft_activity.data_key, JSON.stringify( bp.draft_activity ) );
+
+					// When the composer opened before the fetch resolved, restore
+					// into the open form now (fires bb_activity_draft_loaded).
+					if ( $( 'body' ).hasClass( 'activity-modal-open' ) && ! _.isUndefined( self.postForm ) && ! self.postForm.$el.hasClass( 'bb-rl-activity-edit' ) ) {
+						self.displayDraftActivity();
+					}
+				}
+			).fail(
+				function () {
+					bp.draft_fetch_in_progress = false;
+				}
+			);
+		},
+
+		showDraftFeedback: function ( message ) {
+			var $form = $( '#bb-rl-whats-new-form' );
+
+			if ( ! $form.length ) {
+				return;
+			}
+
+			var $notice = $form.find( '.bb-draft-save-feedback' );
+
+			if ( ! message ) {
+				$notice.remove();
+				return;
+			}
+
+			if ( ! $notice.length ) {
+				$notice = $( '<div class="bb-draft-save-feedback" role="alert"></div>' );
+				$form.prepend( $notice );
+			}
+
+			$notice.text( message );
 		},
 
 		collectDraftActivity: function () {
@@ -1289,6 +1360,13 @@ window.bp = window.bp || {};
 				return;
 			}
 
+			// A delete never needs the draft data - the server disposes from its
+			// stored copy, and the slim payload fits the sendBeacon quota.
+			var draft_payload = bp.draft_activity;
+			if ( 'delete' === bp.draft_activity.post_action ) {
+				draft_payload = _.omit( bp.draft_activity, 'data' );
+			}
+
 			if ( ! is_reload_window ) {
 				if ( bp.draft_ajax_request ) {
 					bp.draft_ajax_request.abort();
@@ -1296,7 +1374,7 @@ window.bp = window.bp || {};
 
 				var draft_data = {
 					_wpnonce_post_draft: bbRlActivity.params.post_draft_nonce,
-					draft_activity: bp.draft_activity
+					draft_activity: draft_payload
 				};
 
 				// Some firewalls restrict iframe tag in form post like wordfence.
@@ -1312,16 +1390,24 @@ window.bp = window.bp || {};
 
 				// Send data to server.
 				bp.draft_ajax_request = bp.ajax.post( 'post_draft_activity', draft_data ).done(
-					function () {}
+					function () {
+						bp.Nouveau.Activity.postForm.showDraftFeedback( '' );
+					}
 				).fail(
-					function () {}
+					function ( response ) {
+						// Surface guardrail rejections (draft too large, too many
+						// drafts) instead of silently dropping the save.
+						if ( response && response.message ) {
+							bp.Nouveau.Activity.postForm.showDraftFeedback( response.message );
+						}
+					}
 				);
 
 			} else {
 				const formData = new FormData();
 				formData.append( '_wpnonce_post_draft', bbRlActivity.params.post_draft_nonce );
 				formData.append( 'action', 'post_draft_activity' );
-				formData.append( 'draft_activity', JSON.stringify( bp.draft_activity ) );
+				formData.append( 'draft_activity', JSON.stringify( draft_payload ) );
 
 				navigator.sendBeacon( bbRlAjaxUrl, formData );
 			}
@@ -1337,7 +1423,9 @@ window.bp = window.bp || {};
 			$.cookie( bp.draft_activity.data_key, 'deleted' );
 			bp.draft_activity.post_action = 'delete';
 			if ( is_send_server ) {
-				bp.Nouveau.Activity.postForm.postDraftActivity( true, true );
+				// In-page discard goes over XHR; the beacon transport is reserved
+				// for actual page unloads (and refuses oversized payloads).
+				bp.Nouveau.Activity.postForm.postDraftActivity( true, false );
 			}
 			bp.draft_activity.data = false;
 			localStorage.removeItem( bp.draft_activity.data_key );

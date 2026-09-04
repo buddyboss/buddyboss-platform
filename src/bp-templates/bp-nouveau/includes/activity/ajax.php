@@ -86,6 +86,12 @@ add_action(
 				),
 			),
 			array(
+				'bb_get_draft_activity' => array(
+					'function' => 'bb_nouveau_ajax_get_draft_activity',
+					'nopriv'   => false,
+				),
+			),
+			array(
 				'activity_update_close_comments' => array(
 					'function' => 'bb_nouveau_ajax_activity_update_close_comments',
 					'nopriv'   => false,
@@ -1372,6 +1378,39 @@ function bb_nouveau_ajax_post_draft_activity() {
 		array(
 			'draft_activity'     => $draft_activity,
 			'evicted_draft_keys' => $evicted_draft_keys,
+		)
+	);
+}
+
+/**
+ * Fetch the logged-in member's stored activity draft for one draft key.
+ *
+ * Used by the composer's lazy restore: the draft is no longer echoed into
+ * page HTML, so when localStorage is empty and `has_draft` is localized as
+ * true the JS requests the server copy through this endpoint. The key is
+ * validated with the same server-derived rules as the save path.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_nouveau_ajax_get_draft_activity() {
+	if ( ! is_user_logged_in() || empty( $_POST['_wpnonce_post_draft'] ) || ! wp_verify_nonce( $_POST['_wpnonce_post_draft'], 'post_draft_activity' ) ) {
+		wp_send_json_error();
+	}
+
+	$user_id  = bp_loggedin_user_id();
+	$data_key = isset( $_POST['data_key'] ) ? sanitize_text_field( wp_unslash( $_POST['data_key'] ) ) : '';
+	$object   = isset( $_POST['object'] ) ? sanitize_key( wp_unslash( $_POST['object'] ) ) : '';
+	$item_id  = isset( $_POST['item_id'] ) ? absint( $_POST['item_id'] ) : 0;
+
+	if ( ! bb_draft_validate_activity_data_key( $data_key, $object, $item_id, $user_id ) ) {
+		wp_send_json_error();
+	}
+
+	$draft_activity = bp_get_user_meta( $user_id, $data_key, true );
+
+	wp_send_json_success(
+		array(
+			'draft_activity' => ( ! empty( $draft_activity ) && is_array( $draft_activity ) ) ? $draft_activity : false,
 		)
 	);
 }

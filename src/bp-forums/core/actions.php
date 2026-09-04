@@ -302,6 +302,7 @@ add_action( 'bbp_get_request', 'bbp_search_results_redirect', 10 );
 add_action( 'bbp_login_form_login', 'bbp_user_maybe_convert_pass' );
 
 add_action( 'wp_ajax_post_topic_reply_draft', 'bb_post_topic_reply_draft' );
+add_action( 'wp_ajax_bb_get_topic_reply_drafts', 'bb_get_topic_reply_drafts' );
 
 add_action( 'wp_footer', 'bb_forum_add_content_popup' );
 add_action( 'wp_footer', 'bb_forums_gifpicker_add_popup_template' );
@@ -645,6 +646,38 @@ function bb_post_topic_reply_draft() {
 		array(
 			'draft_activity'     => $draft_topic_reply,
 			'evicted_draft_keys' => isset( $evicted_draft_keys ) ? $evicted_draft_keys : array(),
+		)
+	);
+}
+
+/**
+ * Fetch the logged-in member's stored topic/reply drafts.
+ *
+ * Used by the forum composer's lazy restore: the aggregated draft row is no
+ * longer echoed into forum page HTML, so the JS requests it once through
+ * this endpoint before initializing the topic/reply forms.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_get_topic_reply_drafts() {
+	if ( ! is_user_logged_in() || empty( $_POST['_wpnonce_post_topic_reply_draft'] ) || ! wp_verify_nonce( $_POST['_wpnonce_post_topic_reply_draft'], 'post_topic_reply_draft_data' ) ) {
+		wp_send_json_error();
+	}
+
+	$draft_data = bp_get_user_meta( bp_loggedin_user_id(), 'bb_user_topic_reply_draft', true );
+	$drafts     = array();
+
+	if ( ! empty( $draft_data ) && is_array( $draft_data ) ) {
+		foreach ( $draft_data as $data ) {
+			if ( isset( $data['data_key'] ) ) {
+				$drafts[ $data['data_key'] ] = $data;
+			}
+		}
+	}
+
+	wp_send_json_success(
+		array(
+			'drafts' => $drafts,
 		)
 	);
 }

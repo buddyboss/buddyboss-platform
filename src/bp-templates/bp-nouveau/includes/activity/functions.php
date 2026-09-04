@@ -290,9 +290,12 @@ function bp_nouveau_activity_localize_scripts( $params = array() ) {
 		$draft_activity_meta_key = 'draft_group_' . bp_get_current_group_id();
 	}
 
-	// Get draft activity.
-	$draft_activity                    = bp_get_user_meta( bp_loggedin_user_id(), $draft_activity_meta_key, true );
-	$activity_params['draft_activity'] = $draft_activity;
+	// Localize only whether a server draft exists - the draft itself is fetched
+	// lazily when localStorage is empty. The full draft used to be echoed into
+	// nearly every page's HTML (PROD-9621); the key keeps its historical ''
+	// no-draft value for third-party readers.
+	$activity_params['draft_activity'] = '';
+	$activity_params['has_draft']      = metadata_exists( 'user', bp_loggedin_user_id(), $draft_activity_meta_key );
 
 	$activity_params['access_control_settings'] = array(
 		'can_create_activity'          => bb_user_can_create_activity(),

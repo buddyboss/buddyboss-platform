@@ -1027,8 +1027,7 @@ function bb_nouveau_forum_localize_scripts( $params = array() ) {
 		return $params;
 	}
 
-	$user_id    = bp_loggedin_user_id();
-	$draft_data = get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
+	$user_id = bp_loggedin_user_id();
 
 	$params['forums'] = array(
 		'params'  => array(
@@ -1043,15 +1042,12 @@ function bb_nouveau_forum_localize_scripts( $params = array() ) {
 		),
 	);
 
-	$params['forums']['draft'] = array();
-	if ( ! empty( $draft_data ) ) {
-		foreach ( $draft_data as $data ) {
-
-			if ( isset( $data['data_key'] ) ) {
-				$params['forums']['draft'][ $data['data_key'] ] = $data;
-			}
-		}
-	}
+	// Localize only whether server drafts exist - the aggregated draft row is
+	// no longer echoed into every forum page's HTML (PROD-9621); the JS fetches
+	// it once through bb_get_topic_reply_drafts before initializing the forms.
+	// The `draft` key keeps its historical empty-map shape for third parties.
+	$params['forums']['draft']     = array();
+	$params['forums']['has_draft'] = metadata_exists( 'user', $user_id, 'bb_user_topic_reply_draft' );
 
 	return $params;
 }
