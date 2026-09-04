@@ -3209,6 +3209,22 @@ window.bp = window.bp || {};
 								response.data.saved      = false;
 								response.data.js_preview = $( file.previewElement ).find( '.dz-video-thumbnail img' ).attr( 'src' );
 								self.dropzone_video.push( response.data );
+
+								// The thumbnail capture (bp.Nouveau.getVideoThumb) runs async and can still be
+								// in progress here. Backfill js_preview on this same object (already pushed
+								// above, by reference) once the capture finishes, instead of reading the
+								// <img> immediately and losing the preview.
+								if ( ! response.data.js_preview ) {
+									var thumbnailCheck = setInterval(
+										function () {
+											if ( $( file.previewElement ).closest( '.dz-preview' ).hasClass( 'dz-has-no-thumbnail' ) || $( file.previewElement ).closest( '.dz-preview' ).hasClass( 'dz-has-thumbnail' ) ) {
+												response.data.js_preview = $( file.previewElement ).find( '.dz-video-thumbnail img' ).attr( 'src' );
+												clearInterval( thumbnailCheck );
+											}
+										}
+									);
+								}
+
 								return file.previewElement.classList.add( 'dz-success' );
 							} else {
 								var node, _i, _len, _ref, _results;
