@@ -67,6 +67,7 @@ class BP_Tests_Core_Textdomain extends BP_UnitTestCase {
 		remove_all_filters( 'pre_load_textdomain' );
 		remove_all_filters( 'load_textdomain_mofile' );
 		remove_all_filters( 'plugin_locale' );
+		remove_all_filters( 'load_translation_file' );
 		remove_all_filters( 'locale' );
 
 		unload_textdomain( 'buddyboss', true );
@@ -585,5 +586,336 @@ class BP_Tests_Core_Textdomain extends BP_UnitTestCase {
 		);
 
 		restore_previous_locale();
+	}
+
+	/* PROD-10405 regression tests *****************************************/
+
+	/**
+	 * All locale hooks must stay registered at their documented priorities.
+	 *
+	 * The priorities are load-bearing (see the comments in bp-loader.php):
+	 * 20 on wpml_language_has_switched runs after WPML String Translation's own
+	 * listeners; 10 on the Polylang actions runs after PLL_OLT_Manager has removed
+	 * its load_textdomain_mofile blocker at priority 2.
+	 */
+	public function test_locale_hooks_are_registered_at_their_documented_priorities() {
+		$expected = array(
+			'plugins_loaded'             => 0,
+			'init'                       => 0,
+			'change_locale'              => 0,
+			'wpml_language_has_switched' => 20,
+			'pll_language_defined'       => 10,
+			'pll_no_language_defined'    => 10,
+		);
+
+		foreach ( $expected as $hook => $priority ) {
+			$this->assertSame(
+				$priority,
+				has_action( $hook, 'bp_core_load_buddypress_textdomain' ),
+				sprintf( '%s must run the loader at priority %d.', $hook, $priority )
+			);
+		}
+	}
+
+	/**
+	 * A locale change that does NOT arrive through change_locale must still reload.
+	 *
+	 * This pins the `doing_action( 'change_locale' )` conjunct of the fast path.
+	 * The fixtures live in WP_LANG_DIR/plugins, so the probe matches a directory
+	 * core's registry can serve and $core_has_best is true — exactly the state in
+	 * which dropping that conjunct would silently skip the reload and strand the
+	 * previous locale for the whole request.
+	 */
+	public function test_a_locale_change_outside_change_locale_still_reloads() {
+		$plugins_dir = trailingslashit( WP_LANG_DIR . '/plugins' );
+
+		if ( ! wp_mkdir_p( $plugins_dir ) || ! is_writable( $plugins_dir ) ) {
+			$this->markTestSkipped( 'WP_LANG_DIR/plugins is not writable in this environment.' );
+		}
+
+		$first                  = 'zz_OCL1';
+		$second                 = 'zz_OCL2';
+		$this->lang_dir_files[] = $this->make_catalog( $plugins_dir, $first, array( 'BB_OCL_MSG' => 'BB_OCL_FIRST' ) );
+		$this->lang_dir_files[] = $this->make_catalog( $plugins_dir, $second, array( 'BB_OCL_MSG' => 'BB_OCL_SECOND' ) );
+
+		// The registry memoises per-directory listings and scanned this directory
+		// before the fixtures existed.
+		$GLOBALS['wp_textdomain_registry'] = new WP_Textdomain_Registry();
+
+		// No buddyboss_locale_locations filter: the real precedence list applies.
+		$this->force_locale( $first );
+		bp_core_load_buddypress_textdomain();
+		$this->assertSame(
+			'BB_OCL_FIRST',
+			__( 'BB_OCL_MSG', 'buddyboss' ), // phpcs:ignore WordPress.WP.I18n -- Fixture msgid.
+			'Positive control: the first locale never loaded.'
+		);
+
+		$this->force_locale( $second );
+		bp_core_load_buddypress_textdomain();
+
+		$this->assertSame(
+			'BB_OCL_SECOND',
+			__( 'BB_OCL_MSG', 'buddyboss' ), // phpcs:ignore WordPress.WP.I18n -- Fixture msgid.
+			'A locale change outside change_locale did not reload the catalog.'
+		);
+	}
+
+	/**
+	 * The memo must short-circuit a repeat call for an unchanged locale.
+	 */
+	public function test_the_locale_memo_short_circuits_a_repeat_call() {
+		$locale = 'zz_MEMO';
+		$dir    = $this->make_dir( 'memo' );
+		$this->make_catalog( $dir, $locale, array( 'BB_MEMO_MSG' => 'BB_MEMO_OK' ) );
+
+		$this->force_locale( $locale );
+		$this->set_locations( array( $dir ) );
+
+		bp_core_load_buddypress_textdomain();
+		$this->assertSame(
+			'BB_MEMO_OK',
+			__( 'BB_MEMO_MSG', 'buddyboss' ), // phpcs:ignore WordPress.WP.I18n -- Fixture msgid.
+			'Positive control: the first pass never loaded the catalog.'
+		);
+
+		$counter      = new stdClass();
+		$counter->hit = 0;
+		$listener     = function ( $loaded_domain ) use ( $counter ) {
+			if ( 'buddyboss' === $loaded_domain ) {
+				++$counter->hit;
+			}
+		};
+
+		add_action( 'load_textdomain', $listener, 10, 1 );
+		bp_core_load_buddypress_textdomain();
+		remove_action( 'load_textdomain', $listener, 10 );
+
+		$this->assertSame( 0, $counter->hit, 'The memo did not short-circuit a repeat call for the same locale.' );
+	}
+
+	/**
+	 * A catalog served purely by a filter must load even though the probed path
+	 * holds no file.
+	 *
+	 * This is the shape Loco Translate uses (it rewrites the attempted path to its
+	 * wp-content/languages/loco equivalent) and WPML String Translation uses (it
+	 * layers MOs from wp-content/languages/wpml). Neither directory is one of the
+	 * probed locations, so gating the load walk on the is_readable() probe — an
+	 * obvious-looking optimisation — would silently drop every such translation.
+	 */
+	public function test_a_filter_served_catalog_loads_when_the_probed_path_is_empty() {
+		if ( ! class_exists( 'WP_Translation_Controller' ) ) {
+			$this->markTestSkipped( 'Requires the WP 6.5+ load_translation_file filter.' );
+		}
+
+		$locale = 'zz_OVSRV';
+		$real   = $this->make_dir( 'ovsrv-real' );
+		$probed = $this->make_dir( 'ovsrv-probed' ); // Deliberately left empty.
+		$file   = $this->make_catalog( $real, $locale, array( 'BB_OVSRV_MSG' => 'BB_OVSRV_OK' ) );
+
+		$this->force_locale( $locale );
+		$this->set_locations( array( $probed ) );
+
+		// Positive control: nothing is readable where the loader will look.
+		$this->assertFalse(
+			is_readable( $probed . 'buddyboss-' . $locale . '.mo' ),
+			'Positive control: the probed location unexpectedly holds a catalog.'
+		);
+
+		add_filter(
+			'load_translation_file',
+			function ( $path, $loaded_domain ) use ( $file ) {
+				return 'buddyboss' === $loaded_domain ? $file : $path;
+			},
+			10,
+			2
+		);
+
+		bp_core_load_buddypress_textdomain();
+
+		$this->assertSame(
+			'BB_OVSRV_OK',
+			__( 'BB_OVSRV_MSG', 'buddyboss' ), // phpcs:ignore WordPress.WP.I18n -- Fixture msgid.
+			'A filter-served catalog was dropped: the load walk must offer every location to load_textdomain().'
+		);
+	}
+
+	/**
+	 * A `plugin_locale` filter must not repoint the global translation controller.
+	 *
+	 * load_textdomain() calls WP_Translation_Controller::set_locale() with its third
+	 * argument before it inspects any file, and that controller is a process-wide
+	 * singleton shared by every text domain. Passing a per-domain locale there would
+	 * make every other catalog — including core's own `default` — unreachable.
+	 */
+	public function test_plugin_locale_does_not_repoint_the_global_translation_controller() {
+		if ( ! class_exists( 'WP_Translation_Controller' ) ) {
+			$this->markTestSkipped( 'Requires the WP 6.5+ translation controller.' );
+		}
+
+		$locale = 'zz_CTRL';
+		$dir    = $this->make_dir( 'ctrl' );
+		$this->make_catalog( $dir, 'zz_CTRLALT', array( 'BB_CTRL_MSG' => 'BB_CTRL_OK' ) );
+
+		$this->force_locale( $locale );
+		$this->set_locations( array( $dir ) );
+
+		add_filter(
+			'plugin_locale',
+			function ( $plugin_locale, $filtered_domain ) {
+				return 'buddyboss' === $filtered_domain ? 'zz_CTRLALT' : $plugin_locale;
+			},
+			10,
+			2
+		);
+
+		bp_core_load_buddypress_textdomain();
+
+		$this->assertSame(
+			$locale,
+			WP_Translation_Controller::get_instance()->get_locale(),
+			'The plugin_locale-filtered value leaked into the process-wide translation controller.'
+		);
+
+		// The filter still selects the catalog FILE, so the translation resolves.
+		$this->assertSame(
+			'BB_CTRL_OK',
+			__( 'BB_CTRL_MSG', 'buddyboss' ), // phpcs:ignore WordPress.WP.I18n -- Fixture msgid.
+			'plugin_locale must still choose which catalog file is loaded.'
+		);
+	}
+
+	/**
+	 * The reload must promote a higher-precedence catalog over one already loaded
+	 * for the same locale.
+	 *
+	 * unload_textdomain( $domain, true ) deliberately leaves WP_Translation_Controller
+	 * populated, and the controller appends files and resolves first-match-wins — so
+	 * without an explicit controller-level unload the walk cannot re-order anything.
+	 */
+	public function test_reload_promotes_a_higher_precedence_catalog() {
+		$locale = 'zz_PROMO';
+		$high   = $this->make_dir( 'promo-high' );
+		$low    = $this->make_dir( 'promo-low' );
+
+		$this->make_catalog( $high, $locale, array( 'BB_PROMO_MSG' => 'BB_PROMO_HIGH' ) );
+		$low_file = $this->make_catalog( $low, $locale, array( 'BB_PROMO_MSG' => 'BB_PROMO_LOW' ) );
+
+		$this->force_locale( $locale );
+
+		// Something else — core's JIT, or a translation plugin — already loaded the
+		// LOWER-precedence catalog for this locale.
+		load_textdomain( 'buddyboss', $low_file, $locale );
+		$this->assertSame(
+			'BB_PROMO_LOW',
+			__( 'BB_PROMO_MSG', 'buddyboss' ), // phpcs:ignore WordPress.WP.I18n -- Fixture msgid.
+			'Positive control: the lower-precedence catalog never loaded.'
+		);
+
+		$this->set_locations( array( $high, $low ) );
+		bp_core_load_buddypress_textdomain();
+
+		$this->assertSame(
+			'BB_PROMO_HIGH',
+			__( 'BB_PROMO_MSG', 'buddyboss' ), // phpcs:ignore WordPress.WP.I18n -- Fixture msgid.
+			'The reload did not promote the higher-precedence catalog over the one already loaded.'
+		);
+	}
+
+	/**
+	 * A custom languages path registered by a third party must survive our reloads.
+	 *
+	 * WP_Textdomain_Registry holds exactly one custom path per domain, so
+	 * re-asserting ours on every pass would overwrite a Loco Translate custom bundle
+	 * or an mu-plugin's load_plugin_textdomain() registration, and core's JIT would
+	 * stop finding their catalog for the rest of the request.
+	 */
+	public function test_reload_does_not_clobber_a_third_party_custom_path() {
+		if ( ! isset( $GLOBALS['wp_textdomain_registry'] ) || ! method_exists( $GLOBALS['wp_textdomain_registry'], 'set_custom_path' ) ) {
+			$this->markTestSkipped( 'Requires WP_Textdomain_Registry.' );
+		}
+
+		// First pass: the loader registers the bundled languages/ directory.
+		$this->force_locale( 'zz_CPATH1' );
+		bp_core_load_buddypress_textdomain();
+
+		$third_party = WP_CONTENT_DIR . '/zz-third-party-languages';
+		$GLOBALS['wp_textdomain_registry']->set_custom_path( 'buddyboss', $third_party );
+
+		// A later pass — init:0, change_locale, a WPML/Polylang switch.
+		$this->force_locale( 'zz_CPATH2' );
+		bp_core_load_buddypress_textdomain();
+
+		$property = new ReflectionProperty( 'WP_Textdomain_Registry', 'custom_paths' );
+		$property->setAccessible( true );
+		$paths = $property->getValue( $GLOBALS['wp_textdomain_registry'] );
+
+		$this->assertSame(
+			$third_party,
+			isset( $paths['buddyboss'] ) ? $paths['buddyboss'] : '',
+			'A reload overwrote the custom languages path registered by a third party.'
+		);
+	}
+
+	/**
+	 * A Loco Translate customisation must beat a catalog in a higher-precedence
+	 * location, while strings it does not carry still fall through to that catalog.
+	 *
+	 * Loco only ever saves a plugin catalog to LOCO_LANG_DIR/plugins/, which the
+	 * loader reaches by handing load_textdomain() a WP_LANG_DIR/plugins or bundled
+	 * languages/ path for Loco to rewrite. A catalog in WP_LANG_DIR/buddyboss/ ends
+	 * the location walk before either of those, so without the explicit Loco pass
+	 * every Loco edit would be silently ignored on such a site.
+	 *
+	 * Loco itself is not needed here: the loader keys off the LOCO_LANG_DIR
+	 * constant, so defining it and writing a real catalog underneath exercises the
+	 * branch that matters. Loco's own path rewriting is Loco's concern.
+	 */
+	public function test_loco_customisation_beats_a_higher_precedence_catalog() {
+		if ( ! defined( 'LOCO_LANG_DIR' ) ) {
+			define( 'LOCO_LANG_DIR', trailingslashit( get_temp_dir() ) . 'bb-loco-lang-fixture' );
+		}
+
+		$loco_dir = trailingslashit( LOCO_LANG_DIR ) . 'plugins/';
+
+		if ( ! wp_mkdir_p( $loco_dir ) || ! is_writable( $loco_dir ) ) {
+			$this->markTestSkipped( 'Loco languages directory is not writable in this environment.' );
+		}
+
+		$locale = 'zz_LOCO';
+		$base   = $this->make_dir( 'loco-base' );
+
+		// The base catalog sits in a location that would end the walk first.
+		$this->make_catalog( $base, $locale, array( 'BB_LOCO_MSG' => 'BB_FROM_BASE', 'BB_LOCO_ONLY_BASE' => 'BB_BASE_ONLY' ) );
+
+		// Loco's own save target, which is not one of the probed locations.
+		$loco_file             = $this->make_catalog( $loco_dir, $locale, array( 'BB_LOCO_MSG' => 'BB_FROM_LOCO' ) );
+		$this->lang_dir_files[] = $loco_file;
+
+		$this->force_locale( $locale );
+		$this->set_locations( array( $base ) );
+
+		// Positive control: the base catalog really is the one the walk would find.
+		$this->assertTrue(
+			is_readable( $base . 'buddyboss-' . $locale . '.mo' ),
+			'Positive control: the base catalog was not written.'
+		);
+
+		bp_core_load_buddypress_textdomain();
+
+		$this->assertSame(
+			'BB_FROM_LOCO',
+			__( 'BB_LOCO_MSG', 'buddyboss' ), // phpcs:ignore WordPress.WP.I18n -- Fixture msgid.
+			'A Loco Translate customisation was ignored in favour of a higher-precedence catalog.'
+		);
+
+		// A Loco custom PO is often a partial sync, so the base catalog must remain
+		// layered underneath rather than replacing it.
+		$this->assertSame(
+			'BB_BASE_ONLY',
+			__( 'BB_LOCO_ONLY_BASE', 'buddyboss' ), // phpcs:ignore WordPress.WP.I18n -- Fixture msgid.
+			'Loading the Loco catalog dropped strings that only the base catalog carries.'
+		);
 	}
 }
