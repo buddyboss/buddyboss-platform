@@ -486,12 +486,17 @@ if ( ! function_exists( 'bp_core_load_buddypress_textdomain' ) ) {
 	 *                              load, so late locale resolution (WPML/Polylang) and mid-request
 	 *                              switch_to_locale() calls translate correctly.
 	 *
-	 * @return bool True when a catalog was (re)loaded from a custom location,
-	 *              or the load_plugin_textdomain() fallback's own result when
-	 *              no custom-location catalog was found; false when nothing
-	 *              needed doing (locale unchanged and domain loaded, or the
-	 *              change_locale fast path found core's reload sufficient).
-	 * @see   load_textdomain() for a description of return values.
+	 * @return bool True when a catalog was actually (re)loaded from one of the
+	 *              locations above. False when nothing needed doing — the locale
+	 *              was unchanged and the domain already loaded, or the
+	 *              change_locale fast path found core's own reload sufficient.
+	 *
+	 *              Otherwise the return value is load_plugin_textdomain()'s, which
+	 *              since WP 6.5 no longer loads anything: it registers the path for
+	 *              core's just-in-time loader and returns true unconditionally. So
+	 *              a true from that branch means "the JIT path is registered", NOT
+	 *              "translations are loaded" — do not treat it as proof of a
+	 *              loaded catalog.
 	 */
 	function bp_core_load_buddypress_textdomain() {
 		static $loaded_locale = null;
@@ -501,7 +506,33 @@ if ( ! function_exists( 'bp_core_load_buddypress_textdomain' ) ) {
 		// language in wp-admin — matching core's own plugin-catalog resolution
 		// and this function's load_plugin_textdomain() fallback (WP < 5.0
 		// fallback kept while the readme floor still predates it).
-		$locale = function_exists( 'determine_locale' ) ? determine_locale() : get_locale();
+		//
+		// Only from `init` onwards, though. In wp-admin (and on `_locale=user`
+		// JSON requests) determine_locale() calls get_user_locale() ->
+		// wp_get_current_user(), which fires the `determine_current_user` filter
+		// and memoises its result for the whole request. At plugins_loaded:0 that
+		// happens before JWT/OAuth/SSO plugins have registered their auth filters
+		// — BuddyBoss App registers its own at init:0 — so those would never be
+		// consulted and the user would resolve as logged-out. Nothing is lost by
+		// waiting: the plugins_loaded pass is no longer authoritative here, and
+		// the init:0 re-run below supplies the admin-user locale.
+		//
+		// did_action() is already truthy inside init:0 (core increments the count
+		// before running callbacks), so this covers both "during" and "after".
+		// Hooks that fire before init (pll_language_defined, on setup_theme) fall
+		// back to get_locale(), which the multilingual plugin has already filtered
+		// to the request language; init:0 then re-runs and corrects any admin-user
+		// difference.
+		$locale = function_exists( 'determine_locale' ) && did_action( 'init' ) ? determine_locale() : get_locale();
+
+		// Apply the same filter core applies when resolving a plugin's catalog,
+		// and that Pro's loader already applies. Without it the custom-location
+		// lookup, the change_locale fast path and the load_plugin_textdomain()
+		// fallback below can each resolve a different locale for this domain.
+		// It also matters for WPML String Translation, which uses `plugin_locale`
+		// as its registry of translatable plugin domains — a `buddyboss` catalog
+		// served from a custom location would otherwise never register there.
+		$locale = apply_filters( 'plugin_locale', $locale, $domain );
 
 		// Re-attempt when the locale changed since the last attempt OR the
 		// domain is not loaded: the locale check alone would strand the domain
@@ -547,27 +578,55 @@ if ( ! function_exists( 'bp_core_load_buddypress_textdomain' ) ) {
 				}
 			}
 
+			// Teach core's just-in-time loader about the bundled languages/ dir.
+			// Registering a path costs nothing (no file I/O) but it is what makes
+			// the fast path below reachable for the default install layout:
+			// _load_textdomain_just_in_time() returns early unless
+			// $wp_textdomain_registry->has( $domain ), and the registry only ever
+			// learns this directory from load_plugin_textdomain() — which the loop
+			// below skips whenever it satisfies the load itself. WP 6.1+ only (the
+			// registry does not exist earlier), so the fast path may only trust
+			// this directory when the registration actually happened.
+			$core_serves_plugin_dir = false;
+			if (
+				isset( $GLOBALS['wp_textdomain_registry'] )
+				&& is_object( $GLOBALS['wp_textdomain_registry'] )
+				&& method_exists( $GLOBALS['wp_textdomain_registry'], 'set_custom_path' )
+			) {
+				$GLOBALS['wp_textdomain_registry']->set_custom_path( $domain, $plugin_dir . '/languages' );
+				$core_serves_plugin_dir = true;
+			}
+
 			// During change_locale (and only there — on other hooks a loaded
-			// catalog may still be the stale previous-locale one), core's own
-			// locale switcher has already unloaded the domain and JIT-reloaded
-			// it from WP_LANG_DIR/plugins for the NEW locale — guaranteed
-			// because WP_Locale_Switcher::load_translations() unloads and
-			// JIT-reloads every loaded domain (not only 'default') before the
-			// change_locale action fires (since WP 4.7). If it did and
-			// this chain finds nothing better than that same plugins-dir file,
-			// the loaded catalog is already the best available: skip the
-			// redundant unload + full MO re-parse (pre-WP 6.5 has no file
-			// cache — this matters when a cron run switches locale per
-			// recipient for hundreds of emails). Known gap, accepted: when
-			// the catalog lives in a higher-precedence location (the
-			// WP_LANG_DIR/buddyboss/ dir, WP_LANG_DIR root, or the bundled
-			// languages/ dir) this guard cannot skip and each switch
-			// re-parses on pre-6.5; WP 6.5+ caches translation files so the
-			// cost is small there.
+			// catalog may still be the stale previous-locale one), core's locale
+			// switcher has already unloaded the domain and JIT-reloaded it for the
+			// NEW locale from the directories its registry knows: WP_LANG_DIR/
+			// plugins, plus the bundled languages/ dir once registered above.
+			//
+			// We do not rely on that reload having succeeded. is_textdomain_loaded()
+			// is a genuine post-condition check — it excludes NOOP_Translations, and
+			// load_textdomain() only registers a real translations object after the
+			// file for the new locale actually loaded. So when core's JIT is
+			// unavailable (WP < 6.1, or a third party left the l10n_unloaded flag
+			// set) this test is simply false and we do the full reload.
+			//
+			// When it did succeed and our probe found nothing in a
+			// higher-precedence location than the one core used, the loaded catalog
+			// is already the best available: skip the redundant unload + full MO
+			// re-parse. That matters on pre-WP 6.5, which has no translation-file
+			// cache — a cron switching locale per recipient across hundreds of
+			// emails would otherwise re-parse the catalog on every switch.
+			// Remaining gap: a catalog in WP_LANG_DIR/buddyboss/ or WP_LANG_DIR
+			// root (both higher precedence, neither known to core) still forces the
+			// full reload on each switch.
+			$core_has_best = '' === $found_mofile
+				|| 0 === strpos( $found_mofile, trailingslashit( WP_LANG_DIR . '/plugins' ) )
+				|| ( $core_serves_plugin_dir && 0 === strpos( $found_mofile, trailingslashit( $plugin_dir . '/languages' ) ) );
+
 			if (
 				doing_action( 'change_locale' )
 				&& is_textdomain_loaded( $domain )
-				&& ( '' === $found_mofile || 0 === strpos( $found_mofile, trailingslashit( WP_LANG_DIR . '/plugins' ) ) )
+				&& $core_has_best
 			) {
 				return false;
 			}
@@ -582,15 +641,48 @@ if ( ! function_exists( 'bp_core_load_buddypress_textdomain' ) ) {
 			// every locale change, so the lost JIT backstop is never needed).
 			unload_textdomain( $domain, true );
 
-			// A catalog exists somewhere: attempt each location in precedence
-			// order rather than only the probed one — an unreadable or corrupt
-			// file at a higher-precedence location must not mask a valid
-			// catalog at a later one (preserves the legacy try-each semantics).
-			if ( '' !== $found_mofile ) {
-				foreach ( $locations as $location ) {
-					if ( load_textdomain( $domain, $location . $mofile_custom ) ) {
-						return true;
-					}
+			// Attempt each location in precedence order — unconditionally, even
+			// when the probe above found nothing readable on disk.
+			// load_textdomain() is an extension point, not just a file read: it
+			// fires `override_load_textdomain`, `load_textdomain_mofile` and
+			// `load_translation_file`, which third parties use to serve a catalog
+			// for a path that does not exist. WPML String Translation does exactly
+			// this to layer its custom MOs from wp-content/languages/wpml/, which
+			// is not one of the probed locations — gating the loop on the probe
+			// would silently drop every such translation. The probe's only job is
+			// the change_locale fast path above.
+			//
+			// Trying each location (rather than just the one the probe matched)
+			// also keeps the legacy semantics: an unreadable or corrupt file at a
+			// higher-precedence location must not mask a valid catalog at a later
+			// one.
+			// $locale is passed explicitly (WP 6.1+; older cores ignore the extra
+			// arg and never derived a locale here anyway). Two reasons:
+			// 1. Without it core calls determine_locale() itself, which in wp-admin
+			//    resolves the current user — defeating the deferral above.
+			// 2. Correctness: $mofile_custom is built from $locale above, so the
+			//    catalog must be registered under that same locale. Letting core
+			//    re-derive it can register a site-locale file as the admin user's
+			//    catalog when the two differ.
+			//
+			// A truthy return is NOT proof that this location's catalog loaded:
+			// `override_load_textdomain` / `pre_load_textdomain` listeners (Loco
+			// Translate, WPML String Translation) answer true for paths that do
+			// not exist, and the WP 6.5+ translation controller reports success
+			// for a file already registered earlier in the request. Stopping on
+			// the first truthy return therefore skipped the location that really
+			// held the catalog — on repeat locale switches that silently dropped
+			// the translations entirely. So: when the probe found a real catalog,
+			// only that location's load is authoritative; every earlier location
+			// is still offered to load_textdomain() so override listeners keep
+			// their chance to layer on top. When nothing exists on disk anywhere,
+			// the first truthy return wins — that is the override-served case.
+			foreach ( $locations as $location ) {
+				$mofile = $location . $mofile_custom;
+				$loaded = load_textdomain( $domain, $mofile, $locale );
+
+				if ( $loaded && ( '' === $found_mofile || $mofile === $found_mofile ) ) {
+					return true;
 				}
 			}
 
