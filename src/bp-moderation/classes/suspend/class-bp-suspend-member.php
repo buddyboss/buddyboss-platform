@@ -436,6 +436,10 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 		}
 		bb_suspend_update_meta( $suspend_id, $meta_key, $meta_value );
 
+		if ( ! isset( $args['blocked_user'] ) ) {
+			$args['blocked_user'] = $member_id;
+		}
+
 		if ( $this->background_disabled || ! $force_bg_process ) {
 			$this->hide_related_content( $member_id, $hide_sitewide, $args );
 		} else {
@@ -525,6 +529,10 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 			$meta_value[] = $current_process;
 		}
 		bb_suspend_update_meta( $suspend_id, $meta_key, $meta_value );
+
+		if ( ! isset( $args['blocked_user'] ) ) {
+			$args['blocked_user'] = $member_id;
+		}
 
 		if ( $this->background_disabled || ! $force_bg_process ) {
 			$this->unhide_related_content( $member_id, $hide_sitewide, $force_all, $args );
@@ -766,17 +774,6 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 				$current_total_friend_count = count( $current_friend_ids );
 				bp_update_user_meta( $member_id, 'total_friend_count', (int) $current_total_friend_count );
 			}
-		}
-
-		// Return the loop when the user is blocked/unblocked but not suspended/unsuspended.
-		if (
-			! empty( $args['blocked_user'] ) &&
-			empty( $args['action_suspend'] ) &&
-			empty( $args['user_suspended'] ) &&
-			! empty( $args['parent_id'] ) &&
-			self::$type . '_' . $member_id === $args['parent_id']
-		) {
-			return $related_contents;
 		}
 
 		$meta_key = (
