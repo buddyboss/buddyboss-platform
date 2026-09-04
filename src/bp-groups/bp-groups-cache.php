@@ -487,3 +487,51 @@ add_action( 'bp_groups_delete_group', 'bp_groups_reset_cache_incrementor' );
 add_action( 'updated_group_meta', 'bp_groups_reset_cache_incrementor' );
 add_action( 'deleted_group_meta', 'bp_groups_reset_cache_incrementor' );
 add_action( 'added_group_meta', 'bp_groups_reset_cache_incrementor' );
+
+/**
+ * Clear the cached restrict-invites excluded user ID list.
+ *
+ * Runs on every user meta write path that goes through the meta API — the settings
+ * screen, the REST account-settings endpoint, WP-CLI, and user deletion (both
+ * wp_delete_user() and wpmu_delete_user() loop delete_metadata_by_mid(), which fires
+ * deleted_user_meta). Writers that bypass the meta API entirely (direct $wpdb writes,
+ * SQL imports, DB restores) fire no hook; the cache TTL bounds those.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int|array $meta_ids Meta ID, or an array of meta IDs when deleting. Unused.
+ * @param int       $user_id  ID of the user the meta belongs to. Unused.
+ * @param string    $meta_key Meta key being written.
+ */
+function bb_groups_clear_restrict_invites_cache( $meta_ids = 0, $user_id = 0, $meta_key = '' ) {
+	if ( '' === $meta_key ) {
+		return;
+	}
+
+	// Writers go through bp_update_user_meta()/bp_delete_user_meta(), which run the key
+	// through the `bp_get_user_meta_key` filter, so match the filtered key as well. The
+	// filtered value is resolved per call rather than memoised: it is a public filter that
+	// may be registered late or vary per blog, and a frozen value would silently stop
+	// matching and leave a stale exclusion cached.
+	//
+	// This hook fires for every user meta write on the site, so the raw key is compared
+	// first and the filter is only consulted when one is actually registered. Without the
+	// has_filter() guard the default install pays an apply_filters() on every write to
+	// resolve a key that cannot have changed.
+	if (
+		'_bp_nouveau_restrict_invites_to_friends' !== $meta_key &&
+		(
+			! has_filter( 'bp_get_user_meta_key' ) ||
+			bp_get_user_meta_key( '_bp_nouveau_restrict_invites_to_friends' ) !== $meta_key
+		)
+	) {
+		return;
+	}
+
+	// Resetting the incrementor retires the id list, the over-ceiling verdicts (one per
+	// filtered ceiling) and any in-flight rebuild's write target in a single operation.
+	bp_core_reset_incrementor( 'bb_nouveau_group_invites' );
+}
+add_action( 'added_user_meta', 'bb_groups_clear_restrict_invites_cache', 10, 3 );
+add_action( 'updated_user_meta', 'bb_groups_clear_restrict_invites_cache', 10, 3 );
+add_action( 'deleted_user_meta', 'bb_groups_clear_restrict_invites_cache', 10, 3 );
