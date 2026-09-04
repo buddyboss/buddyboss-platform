@@ -570,6 +570,12 @@ function bp_version_updater() {
 			bb_install_addons_bundle_on_upgrade();
 		}
 
+		// PROD-9621: heal oversized/aggregate-oversized draft usermeta rows and
+		// start the draft retention machinery.
+		if ( $raw_db_version < 23621 ) {
+			bb_drafts_cleanup_on_upgrade();
+		}
+
 		if ( $raw_db_version !== $current_db ) {
 			// @todo - Write only data manipulate migration here. ( This is not for DB structure change ).
 
@@ -4685,5 +4691,41 @@ function bb_install_addons_bundle_on_upgrade() {
 	if ( is_wp_error( $activated ) && function_exists( 'bb_error_log' ) ) {
 		// Gated on BB_DEBUG_LOG inside bb_error_log(); surfaces post-install activation failures for support.
 		bb_error_log( 'BuddyBoss Addons auto-install: installed but activation failed: ' . $activated->get_error_message() );
+	}
+}
+
+/**
+ * Start the PROD-9621 draft cleanup on upgrade.
+ *
+ * Records the epoch that timestamp-less legacy drafts age from, then runs
+ * the first healing slice synchronously (bounded by its time budget) so
+ * already-affected sites - where oversized draft rows poison the per-user
+ * meta cache entry - begin recovering on the upgrade request itself, even
+ * on hosts where loopback requests and cron are unreliable. Remaining work
+ * self-reschedules via the bb_draft_oneshot single event, and the
+ * `wp bb drafts cleanup` WP-CLI command can drain it manually.
+ *
+ * Idempotent: the epoch is only recorded once, disposal of an absent row
+ * is a no-op, and the transient guard prevents duplicate synchronous runs
+ * when the updater fires more than once during one upgrade window.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_drafts_cleanup_on_upgrade() {
+	if ( ! get_option( 'bb_draft_cleanup_epoch' ) ) {
+		update_option( 'bb_draft_cleanup_epoch', time(), false );
+	}
+
+	if ( get_transient( 'bb_drafts_cleanup_on_upgrade' ) ) {
+		return;
+	}
+	set_transient( 'bb_drafts_cleanup_on_upgrade', 'yes', HOUR_IN_SECONDS );
+
+	$result = bb_drafts_oneshot_batch( 10 );
+
+	if ( empty( $result['complete'] ) && ! wp_next_scheduled( 'bb_draft_oneshot' ) ) {
+		wp_schedule_single_event( time() + MINUTE_IN_SECONDS, 'bb_draft_oneshot' );
 	}
 }

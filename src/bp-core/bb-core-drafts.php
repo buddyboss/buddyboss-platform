@@ -575,3 +575,342 @@ function bb_draft_validate_topic_reply_data_key( $data_key ) {
 
 	return false;
 }
+
+/**
+ * Draft retention window in seconds.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return int Retention window in seconds.
+ */
+function bb_draft_retention_seconds() {
+
+	/**
+	 * Filters how many days an untouched draft is kept before expiry.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param int $days Retention window in days. Default 30.
+	 */
+	$days = (int) apply_filters( 'bb_draft_retention_days', 30 );
+
+	return $days * DAY_IN_SECONDS;
+}
+
+/**
+ * Unserialize a stored draft value without instantiating objects.
+ *
+ * Draft rows originate from client JSON; a crafted serialized object must
+ * decode as an inert incomplete class, never a live instance.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param mixed $value Possibly serialized value.
+ * @return mixed Unserialized value, or the input when not serialized.
+ */
+function bb_draft_safe_unserialize( $value ) {
+	if ( ! is_string( $value ) || ! is_serialized( $value ) ) {
+		return $value;
+	}
+
+	return unserialize( trim( $value ), array( 'allowed_classes' => false ) ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.serialize_unserialize,PHPCompatibility.FunctionUse.NewFunctionParameters.unserialize_optionsFound -- objects disallowed; the platform minimum is PHP 7.4 where the options parameter exists.
+}
+
+/**
+ * Fetch one keyset-paginated batch of BuddyBoss draft usermeta rows.
+ *
+ * The SQL LIKE patterns only narrow the scan; every returned key must still
+ * pass {@see bb_draft_is_draft_meta_key()} before it is acted on, because
+ * LIKE cannot express "numeric suffix" and third-party plugins may store
+ * their own draft_* keys.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int  $last_umeta_id Resume after this row ID.
+ * @param int  $limit         Maximum rows to fetch.
+ * @param bool $with_values   Whether to select meta_value too.
+ * @return array[] Rows with umeta_id, user_id, meta_key, bytes (+ meta_value).
+ */
+function bb_draft_get_rows_batch( $last_umeta_id = 0, $limit = 200, $with_values = true ) {
+	global $wpdb;
+
+	$value_column = $with_values ? ', meta_value' : '';
+	$like_user    = $wpdb->esc_like( 'draft_user_' ) . '%';
+	$like_group   = $wpdb->esc_like( 'draft_group_' ) . '%';
+
+	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- maintenance scan; $value_column is a fixed literal.
+	$rows = $wpdb->get_results(
+		$wpdb->prepare(
+			"SELECT umeta_id, user_id, meta_key, LENGTH(meta_value) AS bytes{$value_column}
+			FROM {$wpdb->usermeta}
+			WHERE ( meta_key = 'draft_user' OR meta_key = 'bb_user_topic_reply_draft' OR meta_key LIKE %s OR meta_key LIKE %s )
+			AND umeta_id > %d
+			ORDER BY umeta_id ASC
+			LIMIT %d",
+			$like_user,
+			$like_group,
+			(int) $last_umeta_id,
+			(int) $limit
+		),
+		ARRAY_A
+	);
+
+	if ( empty( $rows ) ) {
+		return array();
+	}
+
+	return array_values(
+		array_filter(
+			$rows,
+			function ( $row ) {
+				return bb_draft_is_draft_meta_key( $row['meta_key'] );
+			}
+		)
+	);
+}
+
+/**
+ * Delete drafts whose last save is older than the retention window.
+ *
+ * Runs as the daily `bb_draft_cleanup` cron and drains INLINE in the cron
+ * request: the shared background-process classes dispatch loopback POSTs
+ * only (their cron healthcheck included), which never execute on
+ * loopback-hostile hosts - the class that reported this bug. When the time
+ * budget runs out a single continuation event is self-scheduled.
+ *
+ * Legacy rows saved before stamping existed age from the
+ * `bb_draft_cleanup_epoch` option recorded at upgrade, so pre-existing
+ * drafts still expire. Deletion goes row-at-a-time through
+ * {@see bb_draft_dispose()} (meta API - replication-safe, cache-coherent,
+ * attachment stamps released).
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int $time_budget Seconds to spend this run; 0 for unlimited.
+ * @return array { @type int $deleted @type bool $complete }
+ */
+function bb_drafts_delete_expired( $time_budget = 10 ) {
+	$time_budget = (int) $time_budget;
+	$started_at  = time();
+	$epoch       = (int) get_option( 'bb_draft_cleanup_epoch', time() );
+	$cutoff      = time() - bb_draft_retention_seconds();
+	$deleted     = 0;
+	$last_id     = 0;
+	$complete    = true;
+
+	do {
+		$rows = bb_draft_get_rows_batch( $last_id, 200, true );
+
+		if ( empty( $rows ) ) {
+			break;
+		}
+
+		foreach ( $rows as $row ) {
+			$last_id = (int) $row['umeta_id'];
+			$user_id = (int) $row['user_id'];
+			$value   = bb_draft_safe_unserialize( $row['meta_value'] );
+
+			if ( 'bb_user_topic_reply_draft' === $row['meta_key'] ) {
+				if ( ! is_array( $value ) ) {
+					continue;
+				}
+				foreach ( $value as $inner_key => $inner_draft ) {
+					$saved_at = isset( $inner_draft['_draft_saved_at'] ) ? (int) $inner_draft['_draft_saved_at'] : $epoch;
+					if ( $saved_at < $cutoff && bb_draft_dispose( $user_id, $row['meta_key'], (string) $inner_key ) ) {
+						++$deleted;
+					}
+				}
+			} else {
+				$saved_at = ( is_array( $value ) && isset( $value['_draft_saved_at'] ) ) ? (int) $value['_draft_saved_at'] : $epoch;
+				if ( $saved_at < $cutoff && bb_draft_dispose( $user_id, $row['meta_key'] ) ) {
+					++$deleted;
+				}
+			}
+
+			if ( 0 < $time_budget && ( time() - $started_at ) >= $time_budget ) {
+				$complete = false;
+				break 2;
+			}
+		}
+	} while ( true );
+
+	if ( ! $complete && ! wp_next_scheduled( 'bb_draft_cleanup' ) ) {
+		wp_schedule_single_event( time() + MINUTE_IN_SECONDS, 'bb_draft_cleanup' );
+	}
+
+	return array(
+		'deleted'  => $deleted,
+		'complete' => $complete,
+	);
+}
+
+/**
+ * One-shot healing pass for sites already carrying oversized draft rows.
+ *
+ * Two passes, both disposing through the shared helper so attachment
+ * stamps are released and caches invalidated per user:
+ *
+ * 1. Rows individually larger than the per-draft cap are removed - the
+ *    Memcached-poisoning rows this ticket is about.
+ * 2. Users whose COMBINED draft bytes exceed the per-user budget (ten
+ *    90KB legacy drafts) are healed by oldest-first eviction, which the
+ *    per-row pass cannot reach.
+ *
+ * Self-reschedules on the `bb_draft_oneshot` single event until both
+ * passes find nothing, then records the durable `bb_draft_oneshot_done`
+ * option (an option, not a transient - transients live in the very
+ * object cache this heals) so support can tell affected customers when
+ * their mu-plugin workarounds are safe to remove.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int $time_budget Seconds to spend this run; 0 for unlimited.
+ * @return array { @type int $healed @type bool $complete }
+ */
+function bb_drafts_oneshot_batch( $time_budget = 10 ) {
+	global $wpdb;
+
+	$time_budget = (int) $time_budget;
+	$started_at  = time();
+	$healed      = 0;
+	$complete    = true;
+	$max_size    = bb_draft_max_size();
+
+	// Pass 1: rows individually over the per-draft cap.
+	$last_id = 0;
+	do {
+		$rows = bb_draft_get_rows_batch( $last_id, 200, false );
+
+		if ( empty( $rows ) ) {
+			break;
+		}
+
+		foreach ( $rows as $row ) {
+			$last_id = (int) $row['umeta_id'];
+
+			if ( (int) $row['bytes'] > $max_size && bb_draft_dispose( (int) $row['user_id'], $row['meta_key'] ) ) {
+				++$healed;
+			}
+
+			if ( 0 < $time_budget && ( time() - $started_at ) >= $time_budget ) {
+				$complete = false;
+				break 2;
+			}
+		}
+	} while ( true );
+
+	// Pass 2: users whose combined draft bytes exceed the per-user budget.
+	if ( $complete ) {
+		$like_user  = $wpdb->esc_like( 'draft_user_' ) . '%';
+		$like_group = $wpdb->esc_like( 'draft_group_' ) . '%';
+
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- maintenance aggregate.
+		$heavy_users = $wpdb->get_col(
+			$wpdb->prepare(
+				"SELECT user_id
+				FROM {$wpdb->usermeta}
+				WHERE ( meta_key = 'draft_user' OR meta_key = 'bb_user_topic_reply_draft' OR meta_key LIKE %s OR meta_key LIKE %s )
+				GROUP BY user_id
+				HAVING SUM(LENGTH(meta_value)) > %d
+				LIMIT 100",
+				$like_user,
+				$like_group,
+				bb_draft_user_total_max_size()
+			)
+		);
+
+		foreach ( (array) $heavy_users as $heavy_user_id ) {
+			// Evicts oldest drafts until the user's total fits the budget. The
+			// aggregate SQL may over-match on third-party keys; the eviction
+			// itself only ever touches validated BuddyBoss draft keys.
+			$budget_result = bb_draft_enforce_user_budget( (int) $heavy_user_id, '', 0 );
+			$healed       += count( $budget_result['evicted'] );
+
+			if ( 0 < $time_budget && ( time() - $started_at ) >= $time_budget ) {
+				$complete = false;
+				break;
+			}
+		}
+
+		// More heavy users than one batch: run again.
+		if ( $complete && count( (array) $heavy_users ) === 100 ) {
+			$complete = false;
+		}
+	}
+
+	if ( $complete ) {
+		update_option( 'bb_draft_oneshot_done', 1, false );
+	} elseif ( ! wp_next_scheduled( 'bb_draft_oneshot' ) ) {
+		wp_schedule_single_event( time() + MINUTE_IN_SECONDS, 'bb_draft_oneshot' );
+	}
+
+	return array(
+		'healed'   => $healed,
+		'complete' => $complete,
+	);
+}
+
+// The cleanup runs inline in cron requests (see bb_drafts_delete_expired
+// for why the background-process classes are not used here).
+add_action( 'bb_draft_cleanup', 'bb_drafts_delete_expired' );
+add_action( 'bb_draft_oneshot', 'bb_drafts_oneshot_batch' );
+
+add_action( 'bb_draft_cleanup_hook', 'bb_drafts_delete_expired' );
+
+add_action(
+	'bp_init',
+	function () {
+		// Scheduled directly (the polls add-on precedent): bp_core_schedule_cron()
+		// queues its wp_schedule_event() on the same bp_init priority that is
+		// already running, which can silently skip scheduling.
+		if ( ! wp_next_scheduled( 'bb_draft_cleanup_hook' ) ) {
+			wp_schedule_event( time() + HOUR_IN_SECONDS, 'bb_schedule_24hours', 'bb_draft_cleanup_hook' );
+		}
+	}
+);
+
+if ( defined( 'WP_CLI' ) && WP_CLI ) {
+	/**
+	 * Run or inspect the PROD-9621 draft cleanup from the command line.
+	 *
+	 * Doubles as the support/VIP verification tool: `--status` reports
+	 * whether the upgrade one-shot finished (the signal that mu-plugin
+	 * workarounds can be removed), and a plain run drains both the healing
+	 * and expiry passes to completion without depending on cron.
+	 *
+	 * ## OPTIONS
+	 *
+	 * [--status]
+	 * : Report completion state and row counts without changing anything.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	WP_CLI::add_command(
+		'bb drafts cleanup',
+		function ( $args, $assoc_args ) {
+			if ( isset( $assoc_args['status'] ) ) {
+				$oneshot_done = (int) get_option( 'bb_draft_oneshot_done', 0 );
+				$rows         = bb_draft_get_rows_batch( 0, 1000, false );
+				$oversized    = 0;
+				foreach ( $rows as $row ) {
+					if ( (int) $row['bytes'] > bb_draft_max_size() ) {
+						$oversized++;
+					}
+				}
+				WP_CLI::log( 'One-shot complete: ' . ( $oneshot_done ? 'yes' : 'no' ) );
+				WP_CLI::log( 'Draft rows (first 1000): ' . count( $rows ) );
+				WP_CLI::log( 'Oversized rows among them: ' . $oversized );
+
+				return;
+			}
+
+			$oneshot = bb_drafts_oneshot_batch( 0 );
+			WP_CLI::log( 'Healing pass: ' . $oneshot['healed'] . ' drafts removed/evicted.' );
+
+			$expired = bb_drafts_delete_expired( 0 );
+			WP_CLI::log( 'Expiry pass: ' . $expired['deleted'] . ' expired drafts removed.' );
+
+			WP_CLI::success( 'Draft cleanup complete.' );
+		}
+	);
+}
