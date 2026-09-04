@@ -22,7 +22,7 @@
 				</header>
 
 				<div class="bb-report-type-wrp">
-					<?php printf( '%s <span class="bp-reported-type"></span>.', esc_html__( 'You have already reported this', 'buddyboss' ) ); ?>
+					<?php printf(esc_html__( 'You have already reported this %s', 'buddyboss' ),'<span class="bp-reported-type"></span>'); ?>
 				</div>
 			</div>
 		</div>
