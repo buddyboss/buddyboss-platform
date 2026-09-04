@@ -297,6 +297,12 @@ function bp_nouveau_activity_localize_scripts( $params = array() ) {
 	$activity_params['draft_activity'] = '';
 	$activity_params['has_draft']      = metadata_exists( 'user', bp_loggedin_user_id(), $draft_activity_meta_key );
 
+	// Interim guard until pasted images are routed through the media uploader:
+	// a pasted bitmap becomes a multi-megabyte inline base64 image, which the
+	// draft and publish pipelines strip - blocking at paste is honest feedback
+	// instead of silently losing the member's image (PROD-9621).
+	$activity_params['paste_image_blocked_message'] = __( 'Pasted images are not supported yet. Please use the photo button to attach images.', 'buddyboss' );
+
 	$activity_params['access_control_settings'] = array(
 		'can_create_activity'          => bb_user_can_create_activity(),
 		'can_create_activity_media'    => bb_user_can_create_media(),

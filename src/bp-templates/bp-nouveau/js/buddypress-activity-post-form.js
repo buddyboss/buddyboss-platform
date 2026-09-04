@@ -63,6 +63,7 @@ window.bp = window.bp || {};
 			// Get current draft activity.
 			this.getCurrentDraftActivity();
 			this.syncDraftActivity();
+			this.setupPasteImageGuard();
 			this.reloadWindow();
 		},
 
@@ -1254,6 +1255,29 @@ window.bp = window.bp || {};
 					bp.draft_fetch_in_progress = false;
 				}
 			);
+		},
+
+		setupPasteImageGuard: function() {
+			var self = this;
+
+			// Interim PROD-9621 guard: a pasted bitmap becomes an inline base64
+			// image of 1MB+, which the draft and publish pipelines strip anyway.
+			// Refuse it at the moment of intent instead of silently losing it.
+			$( document ).on( 'paste.bbDraftImageGuard', '#whats-new-form [contenteditable="true"]', function ( event ) {
+				var clipboard = event.originalEvent ? event.originalEvent.clipboardData : null;
+
+				if ( ! clipboard || ! clipboard.items ) {
+					return;
+				}
+
+				for ( var i = 0; i < clipboard.items.length; i++ ) {
+					if ( 'file' === clipboard.items[ i ].kind && 0 === clipboard.items[ i ].type.indexOf( 'image/' ) ) {
+						event.preventDefault();
+						self.showDraftFeedback( BP_Nouveau.activity.params.paste_image_blocked_message );
+						return;
+					}
+				}
+			} );
 		},
 
 		showDraftFeedback: function( message ) {
