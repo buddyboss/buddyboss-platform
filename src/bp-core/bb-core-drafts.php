@@ -244,7 +244,9 @@ function bb_draft_user_total_max_size() {
  *
  * The ~1MB cache-item limit covers the user's ENTIRE meta, not only
  * drafts. Draft saves are refused when the user's total meta would exceed
- * this budget, whatever the draft share of it is.
+ * this budget, whatever the draft share of it is. The default leaves ~200KB
+ * of headroom below the platform limit, which also covers what the measured
+ * total does not count ({@see bb_draft_get_user_meta_sizes()}).
  *
  * @since BuddyBoss [BBVERSION]
  *
@@ -341,8 +343,17 @@ function bb_draft_user_can_manage_attachment( $attachment_id, $user_id ) {
 /**
  * Get the stored byte sizes of a user's meta, split into drafts and total.
  *
- * Reads the raw (still serialized) values from the primed meta cache, so
- * the measured bytes equal the database/cache size and no extra query runs.
+ * Reads from the primed meta cache, so no extra query runs. get_user_meta()
+ * hands back values already unserialized, so each one is re-serialized here
+ * to recover its stored width — the per-draft numbers therefore match the
+ * database exactly.
+ *
+ * `total` is a close LOWER BOUND on the real cache item rather than its
+ * size: it sums value bytes only, so the meta_key strings and the outer
+ * array's own serialization overhead are not counted. On a member carrying
+ * hundreds of meta rows that is a few KB. The gap is deliberate headroom —
+ * {@see bb_draft_user_meta_budget()} defaults to 800 KB against a ~1 MB
+ * platform item limit, which is what absorbs it.
  *
  * @since BuddyBoss [BBVERSION]
  *
