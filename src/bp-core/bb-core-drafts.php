@@ -1404,9 +1404,16 @@ function bb_drafts_delete_expired( $time_budget = 10 ) {
  *
  * The per-draft cap applies to INNER topic/reply drafts, not the aggregate
  * row - a member with several modest drafts may legally hold a row larger
- * than one draft's cap. Inner drafts over the per-draft cap are disposed
+ * than one draft's cap. Inner drafts over the per-draft cap are dropped
  * individually; the row is then trimmed oldest-first to the per-user draft
  * budget. Only a corrupt (non-array) row is disposed wholesale.
+ *
+ * Decides everything in memory and writes ONCE. Routing each inner drop
+ * through {@see bb_draft_dispose()} meant a full-row read plus a full-row
+ * write per drop, and the trim loop re-serialized the whole row on every
+ * iteration - O(n·B) on rows that are megabytes wide by definition. On a
+ * 5MB row with 40 inner drafts that was ~200MB of serialization and 40
+ * multi-MB UPDATEs inside an upgrade request (PROD-9621 H2).
  *
  * @since BuddyBoss [BBVERSION]
  *
@@ -1427,43 +1434,98 @@ function bb_draft_heal_forum_row( $user_id ) {
 	}
 
 	$max_size = bb_draft_max_size();
+	$removed  = array();
 
-	// Inner drafts individually over the per-draft cap.
+	// Pass 1 - inner drafts individually over the per-draft cap. Sizes are
+	// measured once, here, and reused by the trim below.
+	$sizes = array();
+
 	foreach ( $row as $inner_key => $inner_draft ) {
-		if ( strlen( maybe_serialize( $inner_draft ) ) > $max_size && bb_draft_dispose( $user_id, 'bb_user_topic_reply_draft', (string) $inner_key ) ) {
+		$inner_bytes = strlen( maybe_serialize( $inner_draft ) );
+
+		if ( $inner_bytes > $max_size ) {
+			$removed[ (string) $inner_key ] = $inner_draft;
+			unset( $row[ $inner_key ] );
+			++$disposed;
+			continue;
+		}
+
+		$sizes[ (string) $inner_key ] = $inner_bytes;
+	}
+
+	// Pass 2 - oldest-first down to the per-user draft budget. The row width is
+	// tracked by subtracting each removed entry instead of re-serializing the
+	// row, which is what made this quadratic.
+	$total_cap = bb_draft_user_total_max_size();
+	$row_bytes = strlen( maybe_serialize( $row ) );
+
+	if ( $row_bytes > $total_cap && ! empty( $row ) ) {
+		$ordered = array();
+
+		foreach ( $row as $inner_key => $inner_draft ) {
+			$ordered[] = array(
+				'inner_key' => (string) $inner_key,
+				'saved_at'  => isset( $inner_draft['_draft_saved_at'] ) ? (int) $inner_draft['_draft_saved_at'] : 0,
+			);
+		}
+
+		usort(
+			$ordered,
+			function ( $a, $b ) {
+				if ( $a['saved_at'] === $b['saved_at'] ) {
+					return 0;
+				}
+
+				return ( $a['saved_at'] < $b['saved_at'] ) ? -1 : 1;
+			}
+		);
+
+		foreach ( $ordered as $candidate ) {
+			if ( $row_bytes <= $total_cap ) {
+				break;
+			}
+
+			$inner_key = $candidate['inner_key'];
+
+			if ( ! isset( $row[ $inner_key ] ) ) {
+				continue;
+			}
+
+			$removed[ $inner_key ] = $row[ $inner_key ];
+			$row_bytes            -= isset( $sizes[ $inner_key ] ) ? $sizes[ $inner_key ] : strlen( maybe_serialize( $row[ $inner_key ] ) );
+
+			unset( $row[ $inner_key ] );
 			++$disposed;
 		}
 	}
 
-	// Oldest-first down to the per-user draft budget.
-	$row = bp_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
+	if ( empty( $removed ) ) {
+		return 0;
+	}
 
-	$total_cap = bb_draft_user_total_max_size();
+	// One write for the whole heal, then release the stamps of everything
+	// dropped that the surviving row no longer references.
+	if ( empty( $row ) ) {
+		bp_delete_user_meta( $user_id, 'bb_user_topic_reply_draft' );
+	} else {
+		bp_update_user_meta( $user_id, 'bb_user_topic_reply_draft', $row );
+	}
 
-	while ( is_array( $row ) && ! empty( $row ) ) {
-		$row_bytes = strlen( maybe_serialize( $row ) );
+	bb_draft_flush_user_meta_sizes( $user_id );
 
-		if ( $row_bytes <= $total_cap ) {
-			break;
-		}
+	$surviving = array();
 
-		$oldest_key = '';
-		$oldest_ts  = PHP_INT_MAX;
+	foreach ( $row as $surviving_entry ) {
+		$surviving = array_merge( $surviving, bb_draft_collect_attachment_ids( $surviving_entry ) );
+	}
 
-		foreach ( $row as $inner_key => $inner_draft ) {
-			$saved_at = isset( $inner_draft['_draft_saved_at'] ) ? (int) $inner_draft['_draft_saved_at'] : 0;
-			if ( $saved_at < $oldest_ts ) {
-				$oldest_ts  = $saved_at;
-				$oldest_key = (string) $inner_key;
+	foreach ( $removed as $removed_entry ) {
+		foreach ( array_diff( bb_draft_collect_attachment_ids( $removed_entry ), $surviving ) as $attachment_id ) {
+			if ( bb_draft_user_can_manage_attachment( $attachment_id, $user_id ) ) {
+				delete_post_meta( $attachment_id, 'bb_media_draft' );
+				delete_post_meta( $attachment_id, 'bb_activity_post_feature_image_draft' );
 			}
 		}
-
-		if ( '' === $oldest_key || ! bb_draft_dispose( $user_id, 'bb_user_topic_reply_draft', $oldest_key ) ) {
-			break;
-		}
-
-		++$disposed;
-		$row = bp_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
 	}
 
 	return $disposed;

@@ -1307,6 +1307,94 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		delete_option( 'bb_drafts_cleanup_on_upgrade' );
 	}
 
+	/**
+	 * Healing one forum row must be a single write, not one per inner draft.
+	 *
+	 * Routing every inner drop through bb_draft_dispose() meant a full-row read
+	 * plus a full-row write each time, and the trim loop re-serialized the
+	 * whole row on every iteration - O(n.B) on rows that are megabytes wide by
+	 * definition, inside a synchronous upgrade request (PROD-9621 H2).
+	 */
+	public function test_forum_row_heal_writes_once_regardless_of_how_many_it_drops() {
+		$user_id = self::factory()->user->create();
+		$row     = array();
+
+		// Six inner drafts, each individually over the per-draft cap.
+		for ( $i = 0; $i < 6; $i++ ) {
+			$row[ 'draft_reply_' . $i ] = array(
+				'data_key'        => 'draft_reply_' . $i,
+				'data'            => array( 'bbp_reply_content' => str_repeat( 'x', bb_draft_max_size() + 100 ) ),
+				'_draft_saved_at' => 100 + $i,
+			);
+		}
+
+		bp_update_user_meta( $user_id, 'bb_user_topic_reply_draft', $row );
+
+		$writes = 0;
+		$count  = function () use ( &$writes ) {
+			++$writes;
+		};
+		add_action( 'updated_user_meta', $count );
+		add_action( 'added_user_meta', $count );
+		add_action( 'deleted_user_meta', $count );
+
+		$disposed = bb_draft_heal_forum_row( $user_id );
+
+		remove_action( 'updated_user_meta', $count );
+		remove_action( 'added_user_meta', $count );
+		remove_action( 'deleted_user_meta', $count );
+
+		$this->assertSame( 6, $disposed, 'Every oversized inner draft must be dropped.' );
+		$this->assertSame( 1, $writes, 'The whole heal must be one write; one per dropped draft is what made this quadratic.' );
+		$this->assertSame( '', (string) bp_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true ), 'An emptied row is deleted, not stored as array().' );
+	}
+
+	/**
+	 * Healing releases the stamps of what it dropped, keeping what survives.
+	 */
+	public function test_forum_row_heal_releases_only_the_dropped_attachments() {
+		$user_id = self::factory()->user->create();
+		$dropped = self::factory()->attachment->create( array( 'post_author' => $user_id ) );
+		$kept    = self::factory()->attachment->create( array( 'post_author' => $user_id ) );
+
+		update_post_meta( $dropped, 'bb_media_draft', 1 );
+		update_post_meta( $kept, 'bb_media_draft', 1 );
+
+		bp_update_user_meta(
+			$user_id,
+			'bb_user_topic_reply_draft',
+			array(
+				// Oversized - will be dropped.
+				'draft_reply_big'   => array(
+					'data_key'        => 'draft_reply_big',
+					'data'            => array(
+						'bbp_reply_content' => str_repeat( 'x', bb_draft_max_size() + 100 ),
+						'bbp_media'         => wp_json_encode( array( array( 'id' => $dropped ) ) ),
+					),
+					'_draft_saved_at' => 100,
+				),
+				// Legal - must survive with its stamp intact.
+				'draft_reply_small' => array(
+					'data_key'        => 'draft_reply_small',
+					'data'            => array(
+						'bbp_reply_content' => 'small',
+						'bbp_media'         => wp_json_encode( array( array( 'id' => $kept ) ) ),
+					),
+					'_draft_saved_at' => time(),
+				),
+			)
+		);
+
+		bb_draft_heal_forum_row( $user_id );
+
+		$row = bp_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
+
+		$this->assertArrayHasKey( 'draft_reply_small', $row, 'A legal inner draft must survive the heal.' );
+		$this->assertArrayNotHasKey( 'draft_reply_big', $row );
+		$this->assertSame( '', (string) get_post_meta( $dropped, 'bb_media_draft', true ), 'The dropped draft releases its attachment.' );
+		$this->assertSame( '1', (string) get_post_meta( $kept, 'bb_media_draft', true ), 'The surviving draft keeps its attachment protected.' );
+	}
+
 	public function filter_prefix_user_meta_key( $key ) {
 		return 'bbtest_' . $key;
 	}
