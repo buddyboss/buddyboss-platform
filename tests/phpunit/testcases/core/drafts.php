@@ -422,6 +422,9 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 	}
 
 	public function test_cleanup_collects_legacy_empty_forum_row_and_spares_fresh_drafts() {
+		// Isolate: this test runs a pass over the whole usermeta table.
+		$this->isolate_draft_maintenance();
+
 		$user_id = self::factory()->user->create();
 
 		add_user_meta( $user_id, 'bb_user_topic_reply_draft', array() );
@@ -443,6 +446,9 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 	}
 
 	public function test_cleanup_resumes_from_persisted_cursor_and_clears_it_on_completion() {
+		// Isolate: this test runs a pass over the whole usermeta table.
+		$this->isolate_draft_maintenance();
+
 		global $wpdb;
 
 		$u1 = self::factory()->user->create();
@@ -472,6 +478,9 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 	}
 
 	public function test_oneshot_heals_aggregate_oversized_user_and_disposes_corrupt_rows() {
+		// Isolate: this test runs a pass over the whole usermeta table.
+		$this->isolate_draft_maintenance();
+
 		$heavy   = self::factory()->user->create();
 		$light   = self::factory()->user->create();
 		$corrupt = self::factory()->user->create();
@@ -549,6 +558,9 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 	}
 
 	public function test_cleanup_deletes_nothing_when_retention_is_disabled() {
+		// Isolate: this test runs a pass over the whole usermeta table.
+		$this->isolate_draft_maintenance();
+
 		$user_id = self::factory()->user->create();
 
 		// Ancient by any measure - this row expires under the default window.
@@ -814,6 +826,9 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 	 * (PROD-9621 N2).
 	 */
 	public function test_expiry_sweep_acts_on_the_stored_key_not_a_raw_lookalike() {
+		// Isolate: this test runs a pass over the whole usermeta table.
+		$this->isolate_draft_maintenance();
+
 		$user_id = self::factory()->user->create();
 
 		// A stray unfiltered row a migration could have left behind.
@@ -1049,6 +1064,9 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 	 * (PROD-9621 N5).
 	 */
 	public function test_upgrade_guard_is_a_durable_option_and_blocks_a_repeat_run() {
+		// Isolate: this test runs a pass over the whole usermeta table.
+		$this->isolate_draft_maintenance();
+
 		if ( ! function_exists( 'bb_drafts_cleanup_on_upgrade' ) ) {
 			require_once buddypress()->plugin_dir . 'bp-core/bp-core-update.php';
 		}
@@ -1090,6 +1108,9 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 	 * below that stale position (PROD-9621 N10).
 	 */
 	public function test_expiry_sweep_is_serialized_by_a_lock() {
+		// Isolate: this test runs a pass over the whole usermeta table.
+		$this->isolate_draft_maintenance();
+
 		$user_id = self::factory()->user->create();
 
 		bp_update_user_meta(
@@ -1126,6 +1147,9 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 	 * Disabling expiry must still release the lock.
 	 */
 	public function test_expiry_sweep_releases_the_lock_when_expiry_is_disabled() {
+		// Isolate: this test runs a pass over the whole usermeta table.
+		$this->isolate_draft_maintenance();
+
 		delete_transient( 'bb_draft_cleanup_lock' );
 		add_filter( 'bb_draft_retention_days', '__return_zero' );
 
@@ -1270,6 +1294,9 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 	 * in the same routine, with no retry (PROD-9621 H1).
 	 */
 	public function test_upgrade_queues_the_continuation_before_running_the_slice() {
+		// Isolate: this test runs a pass over the whole usermeta table.
+		$this->isolate_draft_maintenance();
+
 		if ( ! function_exists( 'bb_drafts_cleanup_on_upgrade' ) ) {
 			require_once buddypress()->plugin_dir . 'bp-core/bp-core-update.php';
 		}
@@ -1483,6 +1510,9 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 	 * loop that walked its keys and passed each one through (PROD-9621 M5).
 	 */
 	public function test_empty_inner_key_in_a_stored_row_never_wipes_the_row() {
+		// Isolate: this test runs a pass over the whole usermeta table.
+		$this->isolate_draft_maintenance();
+
 		$user_id = self::factory()->user->create();
 
 		bp_update_user_meta(
@@ -1586,6 +1616,44 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 			strlen( maybe_serialize( $healed ) ),
 			'Restoring one evicted draft must exceed the cap - otherwise the trim went too far.'
 		);
+	}
+
+	/**
+	 * Clear every draft row and maintenance option before a GLOBAL pass.
+	 *
+	 * bb_drafts_delete_expired(), bb_drafts_oneshot_batch() and
+	 * bb_drafts_cleanup_on_upgrade() all walk the WHOLE usermeta table. A test
+	 * that invokes one therefore acts on fixtures belonging to other tests,
+	 * and what it finds depends on ordering, on ids, and - because the sweep is
+	 * time-budgeted - on wall clock. That made this file flaky roughly one run
+	 * in six, taking pre-existing dispose tests down with it.
+	 *
+	 * Call this first in any test that runs a global pass, so the pass only
+	 * ever sees that test's own rows.
+	 */
+	protected function isolate_draft_maintenance() {
+		global $wpdb;
+
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- test isolation; the meta cache is flushed straight after.
+		$rows = $wpdb->get_results( "SELECT user_id, meta_key FROM {$wpdb->usermeta} WHERE meta_key LIKE '%draft%' OR meta_key = 'bb_user_topic_reply_draft'" );
+
+		foreach ( (array) $rows as $row ) {
+			delete_user_meta( (int) $row->user_id, $row->meta_key );
+			clean_user_cache( (int) $row->user_id );
+			wp_cache_delete( (int) $row->user_id, 'user_meta' );
+			bb_draft_flush_user_meta_sizes( (int) $row->user_id );
+		}
+
+		delete_option( 'bb_draft_cleanup_cursor' );
+		delete_option( 'bb_draft_oneshot_state' );
+		delete_option( 'bb_draft_oneshot_done' );
+		delete_option( 'bb_drafts_cleanup_on_upgrade' );
+		delete_transient( 'bb_draft_cleanup_lock' );
+
+		$scheduled = wp_next_scheduled( 'bb_draft_oneshot' );
+		if ( $scheduled ) {
+			wp_unschedule_event( $scheduled, 'bb_draft_oneshot' );
+		}
 	}
 
 	public function filter_prefix_user_meta_key( $key ) {
