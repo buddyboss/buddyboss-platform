@@ -1243,7 +1243,32 @@ window.bp = window.bp || {};
 			);
 
 			// Add valid line breaks.
-			var content = $.trim( self.postForm.$el.find( '#bb-rl-whats-new' )[ 0 ].innerHTML.replace( /<div>/gi, '\n' ).replace( /<\/div>/gi, '' ) );
+			// Convert emoji images to their unicode character before storing, the
+			// same way the publish path does. The stored draft otherwise keeps the
+			// raw <img class="emojioneemoji">, and bp_activity_filter_kses() strips
+			// data-emoji-char on save - so after a restore the publish path finds no
+			// character to substitute and jQuery drops the image, losing the emoji
+			// from the published post (PROD-9621).
+			//
+			// Done on a CLONE: this runs from a 20s autosave while the member is
+			// still typing, and rewriting the live editor would move their caret.
+			var $draftContent = self.postForm.$el.find( '#bb-rl-whats-new' ).clone();
+
+			$draftContent.find( 'img.emoji' ).each(
+				function ( index, Obj ) {
+					$( Obj ).addClass( 'emojioneemoji' ).attr( 'data-emoji-char', $( Obj ).attr( 'alt' ) ).removeClass( 'emoji' );
+				}
+			);
+
+			$draftContent.find( 'img.emojioneemoji' ).replaceWith(
+				function () {
+					// alt survives kses, so it is the reliable fallback for an image
+					// restored from a previously stored draft.
+					return this.dataset.emojiChar || $( this ).attr( 'alt' ) || '';
+				}
+			);
+
+			var content = $.trim( $draftContent[ 0 ].innerHTML.replace( /<div>/gi, '\n' ).replace( /<\/div>/gi, '' ) );
 			content     = content.replace( /&nbsp;/g, ' ' );
 
 			self.postForm.model.set( 'content', content, {silent: true} );
@@ -5709,7 +5734,11 @@ window.bp = window.bp || {};
 				// Transform emoji image into emoji unicode.
 				$whatsNew.find( 'img.emojioneemoji, img.bb-rl-emojioneemoji' ).replaceWith(
 					function () {
-						return this.dataset.emojiChar;
+						// alt is in bp_get_allowedtags() and data-emoji-char is not,
+						// so a draft stored before the draft-side conversion landed
+						// comes back with only alt. Fall back to it or the emoji is
+						// dropped from the published post (PROD-9621).
+						return this.dataset.emojiChar || $( this ).attr( 'alt' ) || '';
 					}
 				);
 
