@@ -1260,6 +1260,53 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		$this->assertSame( array(), $fired, 'Trim must not fire bb_draft_evicted - nothing has been stored yet.' );
 	}
 
+	/**
+	 * The upgrade slice must queue its continuation before it runs.
+	 *
+	 * _bp_db_version is bumped by bp_version_bump() inside bp_is_update(),
+	 * before the updater body executes, so bp_setup_updater() never re-enters
+	 * it. A fatal or timeout inside the synchronous healing slice would
+	 * therefore skip both the continuation and every migration that follows it
+	 * in the same routine, with no retry (PROD-9621 H1).
+	 */
+	public function test_upgrade_queues_the_continuation_before_running_the_slice() {
+		if ( ! function_exists( 'bb_drafts_cleanup_on_upgrade' ) ) {
+			require_once buddypress()->plugin_dir . 'bp-core/bp-core-update.php';
+		}
+
+		delete_option( 'bb_drafts_cleanup_on_upgrade' );
+		delete_option( 'bb_draft_oneshot_done' );
+		delete_option( 'bb_draft_oneshot_state' );
+		$existing = wp_next_scheduled( 'bb_draft_oneshot' );
+		if ( $existing ) {
+			wp_unschedule_event( $existing, 'bb_draft_oneshot' );
+		}
+
+		// Observe the schedule state from INSIDE the slice - that is the window
+		// a fatal would land in.
+		$scheduled_during_slice = null;
+		$spy                    = function ( $max_size ) use ( &$scheduled_during_slice ) {
+			if ( null === $scheduled_during_slice ) {
+				$scheduled_during_slice = (bool) wp_next_scheduled( 'bb_draft_oneshot' );
+			}
+
+			return $max_size;
+		};
+		add_filter( 'bb_draft_max_size', $spy );
+
+		bb_drafts_cleanup_on_upgrade();
+
+		remove_filter( 'bb_draft_max_size', $spy );
+
+		$this->assertTrue( $scheduled_during_slice, 'The continuation must already be queued while the slice is running, or a fatal there loses the remaining work.' );
+
+		// It completed here, so the now-redundant continuation is withdrawn.
+		$this->assertTrue( (bool) get_option( 'bb_draft_oneshot_done' ) );
+		$this->assertFalse( wp_next_scheduled( 'bb_draft_oneshot' ), 'A completed slice must not leave a pointless cron event behind.' );
+
+		delete_option( 'bb_drafts_cleanup_on_upgrade' );
+	}
+
 	public function filter_prefix_user_meta_key( $key ) {
 		return 'bbtest_' . $key;
 	}

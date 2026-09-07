@@ -4697,12 +4697,14 @@ function bb_install_addons_bundle_on_upgrade() {
 /**
  * Start the PROD-9621 draft cleanup on upgrade.
  *
- * Records the epoch that timestamp-less legacy drafts age from, then runs
- * the first healing slice synchronously (bounded by its time budget) so
- * already-affected sites - where oversized draft rows poison the per-user
- * meta cache entry - begin recovering on the upgrade request itself, even
- * on hosts where loopback requests and cron are unreliable. Remaining work
- * self-reschedules via the bb_draft_oneshot single event, and the
+ * Records the epoch that timestamp-less legacy drafts age from, queues the
+ * `bb_draft_oneshot` continuation, and only THEN runs the first healing
+ * slice synchronously (bounded by its time budget) so already-affected
+ * sites - where oversized draft rows poison the per-user meta cache entry -
+ * begin recovering on the upgrade request itself, even on hosts where
+ * loopback requests and cron are unreliable. The continuation is queued
+ * first because this routine runs inside a non-resumable window: see the
+ * inline note. It is unscheduled again when the slice completes, and the
  * `wp bb drafts cleanup` WP-CLI command can drain it manually.
  *
  * Idempotent: the epoch is only recorded once, disposal of an absent row
@@ -4732,9 +4734,26 @@ function bb_drafts_cleanup_on_upgrade() {
 
 	update_option( 'bb_drafts_cleanup_on_upgrade', time(), false );
 
+	// Scheduled BEFORE the first slice runs, not after it. _bp_db_version is
+	// bumped by bp_version_bump() inside bp_is_update() - before this updater
+	// body executes - so bp_setup_updater() never re-enters it. A fatal or a
+	// max_execution_time timeout inside the slice below would therefore skip
+	// both the continuation AND the remaining migrations in this routine, with
+	// no retry. Scheduling first means the healing still finishes on cron even
+	// if this request dies (PROD-9621 H1).
+	if ( ! wp_next_scheduled( 'bb_draft_oneshot' ) ) {
+		wp_schedule_single_event( time() + MINUTE_IN_SECONDS, 'bb_draft_oneshot' );
+	}
+
 	$result = bb_drafts_oneshot_batch( 10 );
 
-	if ( empty( $result['complete'] ) && ! wp_next_scheduled( 'bb_draft_oneshot' ) ) {
-		wp_schedule_single_event( time() + MINUTE_IN_SECONDS, 'bb_draft_oneshot' );
+	// Finished inside this request after all, so the queued continuation has
+	// nothing left to do.
+	if ( ! empty( $result['complete'] ) ) {
+		$scheduled = wp_next_scheduled( 'bb_draft_oneshot' );
+
+		if ( $scheduled ) {
+			wp_unschedule_event( $scheduled, 'bb_draft_oneshot' );
+		}
 	}
 }
