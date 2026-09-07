@@ -61,6 +61,7 @@ window.bp = window.bp || {};
 			this.draft_ajax_request         = null;
 			this.is_topic_reply_form_submit = false;
 			this.draft_content_changed      = false;
+			this.setupPasteImageGuard();
 			this.all_draft_data             = {};
 			this.bbp_lead_topic_tags        = '';
 			this.bp_nouveau_forums_data     = ( 'undefined' !== typeof BP_Nouveau.forums.draft ) ? BP_Nouveau.forums.draft : {};
@@ -805,6 +806,7 @@ window.bp = window.bp || {};
 								self.showDraftFeedback( response.data.message );
 							} else {
 								self.showDraftFeedback( '' );
+								self.handleEvictedDrafts( response );
 							}
 						}
 					}
@@ -830,6 +832,120 @@ window.bp = window.bp || {};
 
 			// Set false after sending the request to the server.
 			this.draft_content_changed = false;
+		};
+
+		// The draft row is fetched over AJAX before start() runs (PROD-9621), so
+		// the member can type into an already-rendered form while that request is
+		// in flight. Restoring on top of that would destroy text which was never
+		// saved anywhere - the change listeners are not bound yet either.
+		this.hasMemberTypedContent = function () {
+			var $form = this.currentForm ? this.currentForm : $( 'form[name="new-post"]' ).first(),
+				typed = false;
+
+			if ( ! $form.length ) {
+				return false;
+			}
+
+			$form.find( '[contenteditable="true"]' ).each(
+				function () {
+					if ( '' !== $.trim( $( this ).text() ) ) {
+						typed = true;
+					}
+				}
+			);
+
+			$form.find( 'input[name="bbp_topic_title"]' ).each(
+				function () {
+					if ( '' !== $.trim( $( this ).val() || '' ) ) {
+						typed = true;
+					}
+				}
+			);
+
+			return typed;
+		};
+
+		this.handleEvictedDrafts = function ( response ) {
+			var keys = ( response && response.data && response.data.evicted_draft_keys ) ? response.data.evicted_draft_keys : [];
+
+			if ( ! keys || ! keys.length ) {
+				return;
+			}
+
+			// The server evicted older drafts to keep this member under the
+			// draft budget. Their local copies must go too: left in
+			// localStorage they are re-uploaded on the next visit and evict
+			// this draft in turn, so the member only ever sees drafts vanish
+			// at random. Inner forum drafts arrive as "meta_key:inner_key".
+			_.each(
+				keys,
+				function ( key ) {
+					localStorage.removeItem( String( key ).split( ':' ).pop() );
+				}
+			);
+
+			this.showDraftFeedback( BP_Nouveau.forums.draft_evicted_message );
+		};
+
+		this.showDraftRetentionNotice = function () {
+			var $form   = this.currentForm ? this.currentForm : $( 'form[name="new-post"]' ).first(),
+				message = ( 'undefined' !== typeof BP_Nouveau.forums ) ? BP_Nouveau.forums.draft_retention_message : '',
+				$note;
+
+			// Expiry disabled (empty message) - say nothing.
+			if ( ! $form.length || ! message ) {
+				return;
+			}
+
+			$note = $form.find( '.bb-draft-retention-note' );
+
+			if ( ! $note.length ) {
+				$note = $( '<div class="bb-draft-retention-note"></div>' );
+				$form.prepend( $note );
+			}
+
+			$note.text( message );
+		};
+
+		// Interim PROD-9621 guard, mirroring the activity composer: a pasted
+		// bitmap becomes an inline base64 image of 1MB+, which the draft and
+		// publish pipelines strip anyway. Refuse it at the moment of intent
+		// instead of silently losing it.
+		this.setupPasteImageGuard = function () {
+			var self  = this,
+				$form = this.currentForm ? this.currentForm : $( 'form[name="new-post"]' ).first();
+
+			if ( ! $form.length ) {
+				return;
+			}
+
+			$form.on( 'paste.bbDraftImageGuard', '[contenteditable="true"]', function ( event ) {
+				var clipboard    = event.originalEvent ? event.originalEvent.clipboardData : null,
+					hasImageFile = false,
+					hasText      = false,
+					i;
+
+				if ( ! clipboard || ! clipboard.items ) {
+					return;
+				}
+
+				for ( i = 0; i < clipboard.items.length; i++ ) {
+					if ( 'file' === clipboard.items[ i ].kind && 0 === clipboard.items[ i ].type.indexOf( 'image/' ) ) {
+						hasImageFile = true;
+					} else if ( 'string' === clipboard.items[ i ].kind && ( 'text/plain' === clipboard.items[ i ].type || 'text/html' === clipboard.items[ i ].type ) ) {
+						hasText = true;
+					}
+				}
+
+				// Office-suite copies put a bitmap rendition NEXT TO the text -
+				// the member is pasting text, so let it through (embedded data:
+				// URLs are stripped server-side). Only a pure image paste is
+				// refused.
+				if ( hasImageFile && ! hasText ) {
+					event.preventDefault();
+					self.showDraftFeedback( BP_Nouveau.forums.paste_image_blocked_message );
+				}
+			} );
 		};
 
 		this.showDraftFeedback = function ( message ) {
@@ -868,6 +984,12 @@ window.bp = window.bp || {};
 		};
 
 		this.appendTopicDraftData = function() {
+			// Never clobber content the member typed while the draft fetch was
+			// in flight (PROD-9621).
+			if ( this.hasMemberTypedContent() ) {
+				return;
+			}
+
 			this.getTopicReplyDraftData();
 
 			var $form         = this.currentForm ? this.currentForm : $('form#new-post'),
@@ -909,6 +1031,7 @@ window.bp = window.bp || {};
 
 			// Add class to display draft.
 			$form.addClass( 'has-draft' );
+			this.showDraftRetentionNotice();
 
 			// Title.
 			if (
@@ -996,6 +1119,12 @@ window.bp = window.bp || {};
 		};
 
 		this.appendReplyDraftData = function() {
+			// Never clobber content the member typed while the draft fetch was
+			// in flight (PROD-9621).
+			if ( this.hasMemberTypedContent() ) {
+				return;
+			}
+
 			this.getTopicReplyDraftData();
 
 			var $form         = this.currentForm ? this.currentForm : $( 'form#new-post' ),
@@ -1040,6 +1169,7 @@ window.bp = window.bp || {};
 
 			// Add class to display draft.
 			$form.addClass( 'has-draft' );
+			this.showDraftRetentionNotice();
 
 			// Content.
 			if (

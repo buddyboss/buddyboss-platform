@@ -295,13 +295,31 @@ function bp_nouveau_activity_localize_scripts( $params = array() ) {
 	// nearly every page's HTML (PROD-9621); the key keeps its historical ''
 	// no-draft value for third-party readers.
 	$activity_params['draft_activity'] = '';
-	$activity_params['has_draft']      = metadata_exists( 'user', bp_loggedin_user_id(), $draft_activity_meta_key );
+	// The key is resolved through bp_get_user_meta_key() because every draft
+	// writer stores through bp_update_user_meta() - probing the raw literal
+	// would report "no draft" on installs that filter user meta keys.
+	$activity_params['has_draft'] = metadata_exists( 'user', bp_loggedin_user_id(), bp_get_user_meta_key( $draft_activity_meta_key ) );
 
 	// Interim guard until pasted images are routed through the media uploader:
 	// a pasted bitmap becomes a multi-megabyte inline base64 image, which the
 	// draft and publish pipelines strip - blocking at paste is honest feedback
 	// instead of silently losing the member's image (PROD-9621).
 	$activity_params['paste_image_blocked_message'] = __( 'Pasted images are not supported yet. Please use the photo button to attach images.', 'buddyboss' );
+
+	// Members must be told the draft has a lifetime, or the expiry cron reads
+	// as unexplained data loss when a draft is gone after a few weeks away.
+	// Empty when expiry is disabled, so the JS renders nothing (PROD-9621).
+	$draft_retention_days = bb_draft_retention_days();
+
+	$activity_params['draft_retention_message'] = $draft_retention_days ? sprintf(
+		/* translators: %s: Number of days a draft is kept. */
+		_n( 'Drafts are kept for %s day.', 'Drafts are kept for %s days.', $draft_retention_days, 'buddyboss' ),
+		number_format_i18n( $draft_retention_days )
+	) : '';
+
+	// Budget eviction removes an OLDER draft to make room for this save. The
+	// member must be told, or drafts appear to vanish at random (PROD-9621).
+	$activity_params['draft_evicted_message'] = __( 'You had too many saved drafts, so your oldest draft was removed to save this one.', 'buddyboss' );
 
 	$activity_params['access_control_settings'] = array(
 		'can_create_activity'          => bb_user_can_create_activity(),

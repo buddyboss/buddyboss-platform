@@ -2205,3 +2205,27 @@ input.search-query-input {
 .bb-title-tooltip-wrapper {
 	z-index: 100000;
 }
+
+// Draft guardrail messaging (PROD-9621).
+// .bb-draft-save-feedback is the only signal a member gets when the server
+// refuses a draft save (size cap, draft budget) or blocks a pasted bitmap;
+// .bb-draft-retention-note discloses the draft retention window so expiry
+// never reads as unexplained data loss.
+.bb-draft-save-feedback,
+.bb-draft-retention-note {
+	border-radius: $block-radius-inner;
+	font-size: 13px;
+	line-height: 1.4;
+	margin: 0 0 $marg-sml;
+	padding: 8px 12px;
+}
+
+.bb-draft-save-feedback {
+	background-color: rgba($warn, 0.08);
+	color: $warn;
+}
+
+.bb-draft-retention-note {
+	background-color: $off-white;
+	color: $meta-text;
+}

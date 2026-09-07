@@ -916,13 +916,10 @@ window.bp = window.bp || {};
 			);
 		},
 
-		displayDraftActivity: function () {
-			var activity_data = bp.draft_activity.data,
-				$this         = this;
 
-			bp.draft_activity.allow_delete_media = true;
+		triggerDraftLoadedEvent: function ( activity_data, $whatsNewForm ) {
+			bp.draft_loaded_event_deferred = false;
 
-			var $whatsNewForm = $( '#bb-rl-whats-new-form' );
 			// Trigger custom event for draft activity loaded.
 			$( 'body' ).trigger( 'bb_activity_event',
 				{
@@ -933,6 +930,41 @@ window.bp = window.bp || {};
 					$whatsNewForm  : $whatsNewForm
 				}
 			);
+		},
+
+		settleDeferredDraftLoadedEvent: function () {
+			// No server draft arrived: mark the fetch settled and replay the
+			// event displayDraftActivity() deferred, so listeners still receive
+			// exactly one fire - the empty one they got before the lazy path.
+			bp.draft_fetch_settled = true;
+
+			if ( ! bp.draft_loaded_event_deferred ) {
+				return;
+			}
+
+			this.triggerDraftLoadedEvent( false, $( '#bb-rl-whats-new-form' ) );
+		},
+
+		displayDraftActivity: function () {
+			var activity_data = bp.draft_activity.data,
+				$this         = this;
+
+			bp.draft_activity.allow_delete_media = true;
+
+			var $whatsNewForm = $( '#bb-rl-whats-new-form' );
+
+			// The draft is fetched lazily, so this method can run once before the
+			// server copy arrives and again after. Firing the public event on
+			// that empty priming pass would hand listeners a falsy activity_data
+			// and then fire again with the real draft - they were built for a
+			// single fire. Defer it instead; fetchServerDraftActivity() replays
+			// the empty event if no draft ever materialises (PROD-9621).
+			if ( ! activity_data && true === bbRlActivity.params.has_draft && ! bp.draft_fetch_settled ) {
+				bp.draft_loaded_event_deferred = true;
+				return;
+			}
+
+			this.triggerDraftLoadedEvent( activity_data, $whatsNewForm );
 
 			// Checked the draft is available or doesn't edit activity.
 			if ( ! activity_data || $whatsNewForm.hasClass( 'bb-rl-activity-edit' ) ) {
@@ -956,6 +988,7 @@ window.bp = window.bp || {};
 
 						// Add loader.
 						$this.postForm.$el.addClass( 'loading' ).addClass( 'has-draft' );
+						$this.showDraftRetentionNotice( true );
 
 						var bpActivityEvent = new Event( 'bp_activity_edit' );
 
@@ -1014,6 +1047,7 @@ window.bp = window.bp || {};
 					bp.draft_fetch_in_progress = false;
 
 					if ( ! response.draft_activity || ! response.draft_activity.data ) {
+						self.settleDeferredDraftLoadedEvent();
 						return;
 					}
 
@@ -1021,6 +1055,7 @@ window.bp = window.bp || {};
 					// flight - never clobber newer local content with the older
 					// server copy the fetch was only needed to seed.
 					if ( ( bp.draft_activity.data && '' !== bp.draft_activity.data ) || bp.draft_content_changed ) {
+						self.settleDeferredDraftLoadedEvent();
 						return;
 					}
 
@@ -1039,6 +1074,7 @@ window.bp = window.bp || {};
 			).fail(
 				function () {
 					bp.draft_fetch_in_progress = false;
+					self.settleDeferredDraftLoadedEvent();
 				}
 			);
 		},
@@ -1076,6 +1112,53 @@ window.bp = window.bp || {};
 					self.showDraftFeedback( bbRlActivity.params.paste_image_blocked_message );
 				}
 			} );
+		},
+
+		handleEvictedDrafts: function ( response ) {
+			var keys = ( response && response.evicted_draft_keys ) ? response.evicted_draft_keys : [];
+
+			if ( ! keys || ! keys.length ) {
+				return;
+			}
+
+			// The server evicted older drafts to keep this member under the
+			// draft budget. Their local copies must go too: left in
+			// localStorage they are re-uploaded on the next visit and evict
+			// this draft in turn, so the member only ever sees drafts vanish
+			// at random. Inner forum drafts arrive as "meta_key:inner_key".
+			_.each(
+				keys,
+				function ( key ) {
+					localStorage.removeItem( String( key ).split( ':' ).pop() );
+				}
+			);
+
+			this.showDraftFeedback( bbRlActivity.params.draft_evicted_message );
+		},
+
+		showDraftRetentionNotice: function ( show ) {
+			var $form   = $( '#bb-rl-whats-new-form' ),
+				message = bbRlActivity.params.draft_retention_message,
+				$note;
+
+			if ( ! $form.length ) {
+				return;
+			}
+
+			$note = $form.find( '.bb-draft-retention-note' );
+
+			// Expiry disabled (empty message) or no draft on screen - say nothing.
+			if ( ! show || ! message ) {
+				$note.remove();
+				return;
+			}
+
+			if ( ! $note.length ) {
+				$note = $( '<div class="bb-draft-retention-note"></div>' );
+				$form.prepend( $note );
+			}
+
+			$note.text( message );
 		},
 
 		showDraftFeedback: function ( message ) {
@@ -1435,8 +1518,9 @@ window.bp = window.bp || {};
 
 				// Send data to server.
 				bp.draft_ajax_request = bp.ajax.post( 'post_draft_activity', draft_data ).done(
-					function () {
+					function ( response ) {
 						bp.Nouveau.Activity.postForm.showDraftFeedback( '' );
+						bp.Nouveau.Activity.postForm.handleEvictedDrafts( response );
 					}
 				).fail(
 					function ( response ) {
@@ -1479,6 +1563,7 @@ window.bp = window.bp || {};
 			bp.draft_activity.data = false;
 			localStorage.removeItem( bp.draft_activity.data_key );
 			self.postForm.$el.removeClass( 'has-draft' );
+			self.showDraftRetentionNotice( false );
 			bp.draft_activity.post_action        = 'update';
 			bp.draft_activity.display_post       = '';
 

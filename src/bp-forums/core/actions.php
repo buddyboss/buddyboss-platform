@@ -472,7 +472,6 @@ function bb_post_topic_reply_draft() {
 
 		$existing_draft  = bp_get_user_meta( $user_id, $usermeta_key, true );
 		$stored_row_size = strlen( maybe_serialize( $existing_draft ) );
-		$replaced_attachment_ids = array();
 
 		// Draft-protection stamps are collected during validation but written
 		// only after every size cap has accepted the save - a rejected save
@@ -480,53 +479,14 @@ function bb_post_topic_reply_draft() {
 		// draft references (PROD-9621).
 		$stamp_attachment_ids = array();
 
+		// The replaced/discarded entry's attachment stamps are released only
+		// after every cap has accepted the write - a rejected save leaves the
+		// stored draft, so unstamping here would expose the attachments of a
+		// draft that still exists to the orphan crons (PROD-9621).
+		$unstamp_draft_entry = array();
+
 		if ( isset( $existing_draft[ $draft_topic_reply['data_key'] ] ) ) {
-			$removed_data = $existing_draft[ $draft_topic_reply['data_key'] ];
-
-			// Delete medias.
-			if ( isset( $removed_data['bbp_media'] ) && ! empty( $removed_data['bbp_media'] ) ) {
-				$remove_media_data = json_decode( stripslashes( $removed_data['bbp_media'] ), true );
-
-				if ( ! empty( $remove_media_data ) ) {
-					foreach ( $remove_media_data as $media_attachment ) {
-						if ( ! empty( $media_attachment['id'] ) && bb_draft_user_can_manage_attachment( $media_attachment['id'], $user_id ) ) {
-							// Deleted only after the request is accepted - a rejected
-							// save must leave the stored draft's attachments intact.
-							$replaced_attachment_ids[] = (int) $media_attachment['id'];
-						}
-					}
-				}
-			}
-
-			// Delete documents.
-			if ( isset( $removed_data['bbp_document'] ) && ! empty( $removed_data['bbp_document'] ) ) {
-				$remove_document_data = json_decode( stripslashes( $removed_data['bbp_document'] ), true );
-
-				if ( ! empty( $remove_document_data ) ) {
-					foreach ( $remove_document_data as $document_attachment ) {
-						if ( ! empty( $document_attachment['id'] ) && bb_draft_user_can_manage_attachment( $document_attachment['id'], $user_id ) ) {
-							// Deleted only after the request is accepted - a rejected
-							// save must leave the stored draft's attachments intact.
-							$replaced_attachment_ids[] = (int) $document_attachment['id'];
-						}
-					}
-				}
-			}
-
-			// Delete videos.
-			if ( isset( $removed_data['bbp_video'] ) && ! empty( $removed_data['bbp_video'] ) ) {
-				$remove_video_data = json_decode( stripslashes( $removed_data['bbp_video'] ), true );
-
-				if ( ! empty( $remove_video_data ) ) {
-					foreach ( $remove_video_data as $video_attachment ) {
-						if ( ! empty( $video_attachment['id'] ) && bb_draft_user_can_manage_attachment( $video_attachment['id'], $user_id ) ) {
-							// Deleted only after the request is accepted - a rejected
-							// save must leave the stored draft's attachments intact.
-							$replaced_attachment_ids[] = (int) $video_attachment['id'];
-						}
-					}
-				}
-			}
+			$unstamp_draft_entry = $existing_draft[ $draft_topic_reply['data_key'] ];
 
 			unset( $existing_draft[ $draft_topic_reply['data_key'] ] );
 		}
@@ -661,7 +621,17 @@ function bb_post_topic_reply_draft() {
 		} else {
 			// The aggregated row itself must respect the per-user draft budget -
 			// trim oldest inner drafts first, protecting the one just saved.
-			$trimmed_row        = bb_forums_trim_draft_row( $existing_draft, $draft_topic_reply['data_key'], $user_id, bb_draft_user_total_max_size() );
+			// The ceiling is the budget MINUS the member's other draft rows:
+			// letting the forum row fill the whole budget on its own would make
+			// every activity draft an eviction candidate on the next save. A
+			// single per-draft cap is kept as the floor so a member carrying
+			// heavy activity drafts can still save a forum draft at all.
+			$draft_sizes       = bb_draft_get_user_meta_sizes( $user_id );
+			$forum_row_bytes   = isset( $draft_sizes['drafts'][ $usermeta_key ] ) ? (int) $draft_sizes['drafts'][ $usermeta_key ] : 0;
+			$other_draft_bytes = array_sum( $draft_sizes['drafts'] ) - $forum_row_bytes;
+			$forum_row_cap     = max( bb_draft_max_size(), bb_draft_user_total_max_size() - $other_draft_bytes );
+
+			$trimmed_row        = bb_forums_trim_draft_row( $existing_draft, $draft_topic_reply['data_key'], $user_id, $forum_row_cap );
 			$existing_draft     = $trimmed_row['row'];
 			$evicted_draft_keys = $trimmed_row['evicted'];
 
@@ -690,14 +660,17 @@ function bb_post_topic_reply_draft() {
 			bp_update_user_meta( $user_id, $usermeta_key, $existing_draft );
 		}
 
-		// The request is accepted - apply the deferred protection stamps and
-		// delete the replaced entry's attachments now.
-		foreach ( array_unique( $stamp_attachment_ids ) as $stamp_attachment_id ) {
-			update_post_meta( $stamp_attachment_id, 'bb_media_draft', 1 );
+		// The request is accepted - release the replaced entry's stamps first,
+		// then apply the deferred ones, so an attachment the member kept in the
+		// draft ends up stamped rather than unstamped. The entry is passed whole
+		// because its attachment lists live under the 'data' key; only
+		// attachments the member owns are touched.
+		if ( ! empty( $unstamp_draft_entry ) ) {
+			bb_draft_unstamp_attachments( $unstamp_draft_entry, $user_id );
 		}
 
-		foreach ( $replaced_attachment_ids as $replaced_attachment_id ) {
-			wp_delete_attachment( $replaced_attachment_id, true );
+		foreach ( array_unique( $stamp_attachment_ids ) as $stamp_attachment_id ) {
+			update_post_meta( $stamp_attachment_id, 'bb_media_draft', 1 );
 		}
 	}
 
@@ -719,7 +692,7 @@ function bb_post_topic_reply_draft() {
  * @since BuddyBoss [BBVERSION]
  */
 function bb_get_topic_reply_drafts() {
-	if ( ! is_user_logged_in() || empty( $_POST['_wpnonce_post_topic_reply_draft'] ) || ! wp_verify_nonce( $_POST['_wpnonce_post_topic_reply_draft'], 'post_topic_reply_draft_data' ) ) {
+	if ( ! is_user_logged_in() || empty( $_POST['_wpnonce_post_topic_reply_draft'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['_wpnonce_post_topic_reply_draft'] ) ), 'post_topic_reply_draft_data' ) ) {
 		wp_send_json_error();
 	}
 

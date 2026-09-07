@@ -519,4 +519,145 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 
 		$this->assertTrue( metadata_exists( 'user', $light, 'draft_user' ), 'An under-budget user is untouched (negative control).' );
 	}
+
+	/**
+	 * Retention below one day means "never expire", not "expire everything".
+	 *
+	 * Filtering the window to 0 is the obvious way to switch expiry off; if
+	 * that were taken literally the cutoff would land at the current time and
+	 * the next cleanup run would delete every draft on the site.
+	 */
+	public function test_retention_days_treats_zero_as_disabled() {
+		$this->assertSame( 30, bb_draft_retention_days(), 'Default retention window.' );
+
+		add_filter( 'bb_draft_retention_days', array( $this, 'filter_retention_zero' ) );
+		$this->assertSame( 0, bb_draft_retention_days() );
+		$this->assertSame( 0, bb_draft_retention_seconds() );
+		remove_filter( 'bb_draft_retention_days', array( $this, 'filter_retention_zero' ) );
+
+		add_filter( 'bb_draft_retention_days', array( $this, 'filter_retention_negative' ) );
+		$this->assertSame( 0, bb_draft_retention_days(), 'A negative window is disabled, never a negative cutoff.' );
+		remove_filter( 'bb_draft_retention_days', array( $this, 'filter_retention_negative' ) );
+	}
+
+	public function filter_retention_zero() {
+		return 0;
+	}
+
+	public function filter_retention_negative() {
+		return -5;
+	}
+
+	public function test_cleanup_deletes_nothing_when_retention_is_disabled() {
+		$user_id = self::factory()->user->create();
+
+		// Ancient by any measure - this row expires under the default window.
+		add_user_meta(
+			$user_id,
+			'draft_user',
+			array(
+				'data_key'        => 'draft_user',
+				'data'            => array( 'content' => 'ancient' ),
+				'_draft_saved_at' => 100,
+			)
+		);
+
+		add_filter( 'bb_draft_retention_days', array( $this, 'filter_retention_zero' ) );
+		$disabled = bb_drafts_delete_expired( 0 );
+		remove_filter( 'bb_draft_retention_days', array( $this, 'filter_retention_zero' ) );
+
+		$this->assertSame( 0, $disabled['deleted'] );
+		$this->assertTrue( metadata_exists( 'user', $user_id, 'draft_user' ), 'Expiry switched off must delete nothing.' );
+
+		// Negative control: the SAME fixture must be collected once expiry is on,
+		// otherwise the assertion above would pass for the wrong reason.
+		$enabled = bb_drafts_delete_expired( 0 );
+
+		$this->assertSame( 1, $enabled['deleted'] );
+		$this->assertFalse( metadata_exists( 'user', $user_id, 'draft_user' ) );
+	}
+
+	/**
+	 * The forum handler's discard path must release its attachment stamps.
+	 *
+	 * The block that was meant to do this read one nesting level too shallow
+	 * ($entry['bbp_media'] rather than $entry['data']['bbp_media']), so it was
+	 * dead code and every discarded forum draft pinned its attachments out of
+	 * orphan cleanup forever.
+	 */
+	public function test_unstamp_releases_forum_entry_attachments_at_the_data_nesting_level() {
+		$user_id       = self::factory()->user->create();
+		$attachment_id = self::factory()->attachment->create( array( 'post_author' => $user_id ) );
+
+		update_post_meta( $attachment_id, 'bb_media_draft', 1 );
+
+		$entry = array(
+			'data_key'        => 'draft_reply',
+			'data'            => array(
+				'bbp_media' => wp_json_encode( array( array( 'id' => $attachment_id ) ) ),
+			),
+			'_draft_saved_at' => time(),
+		);
+
+		bb_draft_unstamp_attachments( $entry, $user_id );
+
+		$this->assertSame( '', (string) get_post_meta( $attachment_id, 'bb_media_draft', true ), 'The stamp must be released so the orphan cron can reclaim the file.' );
+
+		// Negative control: a shallow entry (the shape the dead code expected)
+		// carries no attachment list, so nothing is collected from it.
+		$other_attachment = self::factory()->attachment->create( array( 'post_author' => $user_id ) );
+		update_post_meta( $other_attachment, 'bb_media_draft', 1 );
+
+		bb_draft_unstamp_attachments( array( 'bbp_media' => wp_json_encode( array( array( 'id' => $other_attachment ) ) ) ), $user_id );
+
+		$this->assertSame( '1', (string) get_post_meta( $other_attachment, 'bb_media_draft', true ), 'Attachment lists are only read from the entry data key.' );
+	}
+
+	/**
+	 * The composer's has_draft probe must resolve the key the writers used.
+	 *
+	 * Writers store through bp_update_user_meta(), which passes the key through
+	 * bp_get_user_meta_key(). A probe on the raw literal reports "no draft" on
+	 * any install that filters that key, so the lazy fetch never fires and the
+	 * member is never offered their stored draft.
+	 */
+	public function test_has_draft_probe_resolves_the_filtered_meta_key() {
+		if ( ! bp_is_active( 'forums' ) ) {
+			$this->markTestSkipped( 'Forums component inactive.' );
+		}
+
+		$user_id  = self::factory()->user->create();
+		$old_user = get_current_user_id();
+		$this->set_current_user( $user_id );
+
+		add_filter( 'bp_get_user_meta_key', array( $this, 'filter_prefix_user_meta_key' ) );
+
+		// Stored exactly the way every draft writer stores it.
+		bp_update_user_meta(
+			$user_id,
+			'bb_user_topic_reply_draft',
+			array(
+				'draft_reply' => array(
+					'data_key'        => 'draft_reply',
+					'data'            => array( 'bbp_reply_content' => 'stored' ),
+					'_draft_saved_at' => time(),
+				),
+			)
+		);
+
+		// Exercise the REAL localize function, not a restatement of the probe.
+		$params = bb_nouveau_forum_localize_scripts( array() );
+
+		remove_filter( 'bp_get_user_meta_key', array( $this, 'filter_prefix_user_meta_key' ) );
+		$this->set_current_user( $old_user );
+
+		$this->assertTrue(
+			$params['forums']['has_draft'],
+			'has_draft must report the draft the writers actually stored; a raw-literal probe reports false here and the member is never offered their draft.'
+		);
+	}
+
+	public function filter_prefix_user_meta_key( $key ) {
+		return 'bbtest_' . $key;
+	}
 }

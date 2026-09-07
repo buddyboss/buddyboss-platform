@@ -3692,6 +3692,25 @@ input.search-query-input {
   z-index: 100000;
 }
 
+.bb-draft-save-feedback,
+.bb-draft-retention-note {
+  border-radius: 6px;
+  font-size: 13px;
+  line-height: 1.4;
+  margin: 0 0 10px;
+  padding: 8px 12px;
+}
+
+.bb-draft-save-feedback {
+  background-color: rgba(183, 23, 23, 0.08);
+  color: #b71717;
+}
+
+.bb-draft-retention-note {
+  background-color: #fafafa;
+  color: #737373;
+}
+
 /**
 *-----------------------------------------------------
 * @section 3.1.2 - Activity Entries

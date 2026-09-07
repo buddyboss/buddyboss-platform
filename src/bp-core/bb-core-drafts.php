@@ -503,10 +503,14 @@ function bb_draft_enforce_user_budget( $user_id, $current_key, $new_size, $conte
  *
  * The composer builds `draft_user` (own feed), `draft_user_{N}` (composing
  * on member N's profile), or `draft_group_{N}` (group feed). The client
- * string is only accepted when it matches the shape for its object and the
- * user passes that object's posting rules — mirroring the publish path,
- * which gates profile posts with {@see bb_user_can_create_activity()} and
- * group posts with group membership.
+ * string is only accepted when it matches the shape for its object and
+ * passes that object's gate, mirroring the publish path exactly:
+ *
+ * - `group` — a real per-user check (membership, group admin/mod, or the
+ *   `bp_moderate` capability).
+ * - `user`  — the SITE-WIDE {@see bb_user_can_create_activity()} switch,
+ *   which is a filter defaulting to true and is not a per-user capability.
+ *   This mirrors the publish path; do not read it as a per-member gate.
  *
  * @since BuddyBoss [BBVERSION]
  *
@@ -538,7 +542,9 @@ function bb_draft_validate_activity_data_key( $data_key, $draft_object, $item_id
 			return false;
 		}
 
-		if ( bp_current_user_can( 'bp_moderate' ) ) {
+		// Resolved against $user_id, not the current user: every identity in
+		// this function must be the acting member the caller passed in.
+		if ( bp_user_can( $user_id, 'bp_moderate' ) ) {
 			return true;
 		}
 
@@ -608,16 +614,23 @@ function bb_draft_validate_topic_reply_data_key( $data_key ) {
 }
 
 /**
- * Draft retention window in seconds.
+ * Draft retention window in days.
+ *
+ * A value below 1 means "never expire": age-based cleanup is switched off
+ * entirely. Without that floor, filtering the window to 0 - the obvious way
+ * to disable expiry - would put the cutoff at the current time and make the
+ * next cleanup run delete every draft on the site.
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @return int Retention window in seconds.
+ * @return int Retention window in days; 0 when expiry is disabled.
  */
-function bb_draft_retention_seconds() {
+function bb_draft_retention_days() {
 
 	/**
 	 * Filters how many days an untouched draft is kept before expiry.
+	 *
+	 * Return 0 (or a negative value) to disable age-based draft expiry.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
@@ -625,7 +638,18 @@ function bb_draft_retention_seconds() {
 	 */
 	$days = (int) apply_filters( 'bb_draft_retention_days', 30 );
 
-	return $days * DAY_IN_SECONDS;
+	return ( 1 > $days ) ? 0 : $days;
+}
+
+/**
+ * Draft retention window in seconds.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return int Retention window in seconds; 0 when expiry is disabled.
+ */
+function bb_draft_retention_seconds() {
+	return bb_draft_retention_days() * DAY_IN_SECONDS;
 }
 
 /**
@@ -744,12 +768,25 @@ function bb_draft_get_rows_batch( $last_umeta_id = 0, $limit = 200, $with_values
  * @return array { @type int $deleted @type bool $complete }
  */
 function bb_drafts_delete_expired( $time_budget = 10 ) {
-	$time_budget = (int) $time_budget;
-	$started_at  = time();
-	$cutoff      = time() - bb_draft_retention_seconds();
-	$deleted     = 0;
-	$complete    = true;
-	$cursor      = (int) get_option( 'bb_draft_cleanup_cursor', 0 );
+	$time_budget       = (int) $time_budget;
+	$started_at        = time();
+	$retention_seconds = bb_draft_retention_seconds();
+	$deleted           = 0;
+	$complete          = true;
+	$cursor            = (int) get_option( 'bb_draft_cleanup_cursor', 0 );
+
+	// Expiry switched off - delete nothing. Guarded here rather than relying on
+	// the cutoff arithmetic, where a zero window would expire every draft.
+	if ( 1 > $retention_seconds ) {
+		delete_option( 'bb_draft_cleanup_cursor' );
+
+		return array(
+			'deleted'  => 0,
+			'complete' => true,
+		);
+	}
+
+	$cutoff = time() - $retention_seconds;
 
 	// Record the epoch lazily when the upgrade routine never did (fresh
 	// installs, removed option) so timestamp-less legacy rows still age out
@@ -803,6 +840,14 @@ function bb_drafts_delete_expired( $time_budget = 10 ) {
 
 		// The whole window (draft rows AND filtered third-party keys) is done.
 		$cursor = (int) $batch['last_id'];
+
+		// Window-level budget check: a window whose rows are ALL filtered-out
+		// third-party draft_* keys never reaches the per-row check above, so
+		// consecutive such windows would otherwise run past the budget.
+		if ( 0 < $time_budget && $batch['has_more'] && ( time() - $started_at ) >= $time_budget ) {
+			$complete = false;
+			break;
+		}
 	} while ( $batch['has_more'] );
 
 	if ( $complete ) {
@@ -973,9 +1018,27 @@ function bb_drafts_oneshot_batch( $time_budget = 10 ) {
 
 			// The whole window (draft rows AND filtered third-party keys) is done.
 			$cursor = (int) $batch['last_id'];
+
+			// Window-level budget check - see bb_drafts_delete_expired(): a
+			// window of only filtered-out keys never reaches the per-row check.
+			if ( 0 < $time_budget && $batch['has_more'] && ( time() - $started_at ) >= $time_budget ) {
+				$complete = false;
+				break;
+			}
 		} while ( $batch['has_more'] );
 
 		if ( ! $complete ) {
+			$state['cursor'] = $cursor;
+			update_option( 'bb_draft_oneshot_state', $state, false );
+		} elseif ( 0 < $time_budget && ( time() - $started_at ) >= $time_budget ) {
+			// Stage 1 finished, but this slice's budget is already spent. The
+			// stage-2 aggregate below is a GROUP BY/HAVING over the draft-key
+			// range - bounded in ROWS but not in TIME - and the upgrade routine
+			// runs the first slice synchronously on an admin request, so
+			// starting it here can blow max_execution_time mid-upgrade. Defer
+			// it to the next slice; re-scanning the exhausted tail is a cheap
+			// no-op that leaves the state shape unchanged.
+			$complete        = false;
 			$state['cursor'] = $cursor;
 			update_option( 'bb_draft_oneshot_state', $state, false );
 		} else {

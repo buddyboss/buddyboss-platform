@@ -2180,6 +2180,31 @@ body.bb-rl-activity-modal-open .bb-rl-activity-update-form.modal-popup {
   }
 }
 
+/* Draft guardrail messaging (PROD-9621).
+ * .bb-draft-save-feedback is the only signal a member gets when the server
+ * refuses a draft save (size cap, draft budget) or blocks a pasted bitmap;
+ * .bb-draft-retention-note discloses the draft retention window so expiry
+ * never reads as unexplained data loss.
+ */
+.bb-draft-save-feedback,
+.bb-draft-retention-note {
+  border-radius: var(--bb-rl-radius-md);
+  font-size: var(--bb-rl-font-size-sm);
+  line-height: var(--bb-rl-base-line);
+  margin: 0 0 var(--bb-rl-space-200);
+  padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
+}
+
+.bb-draft-save-feedback {
+  background-color: var(--bb-rl-background-danger-secondary-color);
+  color: var(--bb-rl-text-danger-primary-color);
+}
+
+.bb-draft-retention-note {
+  background-color: var(--bb-rl-background-secondary-color);
+  color: var(--bb-rl-text-secondary-color);
+}
+
 .bb-rl-activity-placeholder {
   background: var(--bb-rl-background-color);
   border: 1px solid var(--bb-rl-border-secondary-color);

@@ -1047,7 +1047,25 @@ function bb_nouveau_forum_localize_scripts( $params = array() ) {
 	// it once through bb_get_topic_reply_drafts before initializing the forms.
 	// The `draft` key keeps its historical empty-map shape for third parties.
 	$params['forums']['draft']     = array();
-	$params['forums']['has_draft'] = metadata_exists( 'user', $user_id, 'bb_user_topic_reply_draft' );
+	// Resolved through bp_get_user_meta_key() to match the writers, which all
+	// store through bp_update_user_meta().
+	$params['forums']['has_draft'] = metadata_exists( 'user', $user_id, bp_get_user_meta_key( 'bb_user_topic_reply_draft' ) );
+
+	// Same retention disclosure as the activity composer - a draft that
+	// vanishes after the retention window must never be a surprise.
+	$draft_retention_days = bb_draft_retention_days();
+
+	$params['forums']['draft_retention_message'] = $draft_retention_days ? sprintf(
+		/* translators: %s: Number of days a draft is kept. */
+		_n( 'Drafts are kept for %s day.', 'Drafts are kept for %s days.', $draft_retention_days, 'buddyboss' ),
+		number_format_i18n( $draft_retention_days )
+	) : '';
+
+	// Forum-composer copies of the activity composer's draft messages. They are
+	// localized separately because the activity params are not present on
+	// forum-only pages (PROD-9621).
+	$params['forums']['paste_image_blocked_message'] = __( 'Pasted images are not supported yet. Please use the photo button to attach images.', 'buddyboss' );
+	$params['forums']['draft_evicted_message']       = __( 'You had too many saved drafts, so your oldest draft was removed to save this one.', 'buddyboss' );
 
 	return $params;
 }
