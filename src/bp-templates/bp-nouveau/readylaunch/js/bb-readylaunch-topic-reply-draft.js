@@ -41,8 +41,52 @@ window.bp = window.bp || {};
 			}
 
 			this.setupGlobals();
+			this.snapshotInitialContent();
 			this.addListeners();
 			this.setupPasteImageGuard();
+		};
+
+		/**
+		 * Record what the form already contained before the member touched it.
+		 *
+		 * hasMemberTypedContent() has to distinguish "the member typed while the
+		 * draft fetch was in flight" from "this form arrived pre-filled". A
+		 * reply-to-reply, a quote, or a mention prefix is content the member did
+		 * NOT type, and treating it as typed suppresses a legitimate restore
+		 * (PROD-9621).
+		 *
+		 * @return {void}
+		 */
+		this.snapshotInitialContent = function () {
+			this.initial_content_snapshot = this.currentContentSnapshot();
+		};
+
+		/**
+		 * Current editable content of this form, as one comparable string.
+		 *
+		 * @return {string}
+		 */
+		this.currentContentSnapshot = function () {
+			var $form = this.draftNoticeForm(),
+				parts = [];
+
+			if ( ! $form.length ) {
+				return '';
+			}
+
+			$form.find( '[contenteditable="true"]' ).each(
+				function () {
+					parts.push( $.trim( $( this ).text() ) );
+				}
+			);
+
+			$form.find( 'input[name="bbp_topic_title"]' ).each(
+				function () {
+					parts.push( $.trim( $( this ).val() || '' ) );
+				}
+			);
+
+			return parts.join( '\u0000' );
 		};
 
 		/**
@@ -814,30 +858,41 @@ window.bp = window.bp || {};
 		// in flight. Restoring on top of that would destroy text which was never
 		// saved anywhere - the change listeners are not bound yet either.
 		this.hasMemberTypedContent = function () {
-			var $form = this.currentForm ? this.currentForm : $( 'form[name="new-post"]' ).first(),
-				typed = false;
+			var $form = this.draftNoticeForm();
 
 			if ( ! $form.length ) {
 				return false;
 			}
 
-			$form.find( '[contenteditable="true"]' ).each(
-				function () {
-					if ( '' !== $.trim( $( this ).text() ) ) {
-						typed = true;
-					}
-				}
-			);
+			var current = this.currentContentSnapshot();
 
-			$form.find( 'input[name="bbp_topic_title"]' ).each(
-				function () {
-					if ( '' !== $.trim( $( this ).val() || '' ) ) {
-						typed = true;
-					}
-				}
-			);
+			// Only a CHANGE from what the form arrived with counts as typing. A
+			// pre-filled editor (reply-to-reply, quote, mention prefix) is not
+			// the member's unsaved work and must not block their draft.
+			if ( 'undefined' === typeof this.initial_content_snapshot ) {
+				return '' !== current.replace( /\u0000/g, '' );
+			}
 
-			return typed;
+			return current !== this.initial_content_snapshot;
+		};
+
+		/**
+		 * Tell the member their stored draft was left alone, and why.
+		 *
+		 * The restore is all-or-nothing: one typed character before the fetch
+		 * resolves and appendTopicDraftData()/appendReplyDraftData() bail, so
+		 * has-draft is never applied and no affordance offers the draft for the
+		 * rest of the page load. Silence there reads as a lost draft
+		 * (PROD-9621).
+		 *
+		 * @return {void}
+		 */
+		this.announceSuppressedDraftRestore = function () {
+			var message = ( 'undefined' !== typeof BP_Nouveau.forums ) ? BP_Nouveau.forums.draft_not_restored_message : '';
+
+			if ( message ) {
+				this.showDraftFeedback( message );
+			}
 		};
 
 		this.handleEvictedDrafts = function ( response ) {
@@ -986,6 +1041,8 @@ window.bp = window.bp || {};
 			// Never clobber content the member typed while the draft fetch was
 			// in flight (PROD-9621).
 			if ( this.hasMemberTypedContent() ) {
+				this.announceSuppressedDraftRestore();
+
 				return;
 			}
 
@@ -1121,6 +1178,8 @@ window.bp = window.bp || {};
 			// Never clobber content the member typed while the draft fetch was
 			// in flight (PROD-9621).
 			if ( this.hasMemberTypedContent() ) {
+				this.announceSuppressedDraftRestore();
+
 				return;
 			}
 
