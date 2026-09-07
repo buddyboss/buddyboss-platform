@@ -1208,6 +1208,58 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		$this->assertCount( 5, $seen, 'A byte-trimmed scan must still reach every row across windows.' );
 	}
 
+	/**
+	 * Trimming the forum row must have no storage side effects of its own.
+	 *
+	 * bb_forums_trim_draft_row() used to unstamp each evicted entry's
+	 * attachments and fire bb_draft_evicted immediately, while writing no
+	 * usermeta. A budget refusal three lines later abandons the write - so the
+	 * "evicted" drafts were still stored, their attachments were unprotected
+	 * (the same reaping mechanism as B1), and the public hook had fired for
+	 * evictions that never happened (PROD-9621 H4).
+	 */
+	public function test_forum_row_trim_has_no_side_effects_of_its_own() {
+		$user_id       = self::factory()->user->create();
+		$attachment_id = self::factory()->attachment->create( array( 'post_author' => $user_id ) );
+
+		update_post_meta( $attachment_id, 'bb_media_draft', 1 );
+
+		$fired = array();
+		$spy   = function ( $uid, $key, $reason ) use ( &$fired ) {
+			$fired[] = $key;
+		};
+		add_action( 'bb_draft_evicted', $spy, 10, 3 );
+
+		$row = array(
+			'draft_reply_old' => array(
+				'data_key'        => 'draft_reply_old',
+				'data'            => array(
+					'bbp_reply_content' => str_repeat( 'o', 900 ),
+					'bbp_media'         => wp_json_encode( array( array( 'id' => $attachment_id ) ) ),
+				),
+				'_draft_saved_at' => 100,
+			),
+			'draft_reply_new' => array(
+				'data_key'        => 'draft_reply_new',
+				'data'            => array( 'bbp_reply_content' => str_repeat( 'n', 900 ) ),
+				'_draft_saved_at' => time(),
+			),
+		);
+
+		// A budget small enough to force the old entry out.
+		$trimmed = bb_forums_trim_draft_row( $row, 'draft_reply_new', $user_id, 1200 );
+
+		remove_action( 'bb_draft_evicted', $spy, 10 );
+
+		$this->assertSame( array( 'bb_user_topic_reply_draft:draft_reply_old' ), $trimmed['evicted'], 'The old entry must be reported as evicted.' );
+		$this->assertArrayNotHasKey( 'draft_reply_old', $trimmed['row'], 'and removed from the in-memory row.' );
+		$this->assertArrayHasKey( 'draft_reply_old', $trimmed['entries'], 'The removed entry must be handed back for deferred unstamping.' );
+
+		// The two side effects must NOT have happened yet.
+		$this->assertSame( '1', (string) get_post_meta( $attachment_id, 'bb_media_draft', true ), 'Trim must not unstamp - the write it belongs to can still be refused.' );
+		$this->assertSame( array(), $fired, 'Trim must not fire bb_draft_evicted - nothing has been stored yet.' );
+	}
+
 	public function filter_prefix_user_meta_key( $key ) {
 		return 'bbtest_' . $key;
 	}

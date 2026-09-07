@@ -686,6 +686,9 @@ function bb_post_topic_reply_draft() {
 			$trimmed_row        = bb_forums_trim_draft_row( $existing_draft, $draft_topic_reply['data_key'], $user_id, $forum_row_cap );
 			$existing_draft     = $trimmed_row['row'];
 			$evicted_draft_keys = $trimmed_row['evicted'];
+			// Held back until the row is written - the budget check below can
+			// still refuse and abandon it (PROD-9621 H4).
+			$trimmed_entries    = $trimmed_row['entries'];
 
 			$forum_row_size = strlen( maybe_serialize( $existing_draft ) );
 
@@ -711,6 +714,29 @@ function bb_post_topic_reply_draft() {
 
 			bp_update_user_meta( $user_id, $usermeta_key, $existing_draft );
 			bb_draft_flush_user_meta_sizes( $user_id );
+
+			// The trimmed row is now stored, so the evictions really happened:
+			// release their attachment stamps and announce them. Attachments the
+			// surviving row still holds are excluded (PROD-9621 H4).
+			if ( ! empty( $trimmed_entries ) ) {
+				$surviving_attachment_ids = array();
+
+				foreach ( $existing_draft as $surviving_entry ) {
+					$surviving_attachment_ids = array_merge( $surviving_attachment_ids, bb_draft_collect_attachment_ids( $surviving_entry ) );
+				}
+
+				foreach ( $trimmed_entries as $trimmed_inner_key => $trimmed_entry ) {
+					foreach ( array_diff( bb_draft_collect_attachment_ids( $trimmed_entry ), $surviving_attachment_ids ) as $evicted_attachment_id ) {
+						if ( bb_draft_user_can_manage_attachment( $evicted_attachment_id, $user_id ) ) {
+							delete_post_meta( $evicted_attachment_id, 'bb_media_draft' );
+							delete_post_meta( $evicted_attachment_id, 'bb_activity_post_feature_image_draft' );
+						}
+					}
+
+					/** This action is documented in bp-core/bb-core-drafts.php */
+					do_action( 'bb_draft_evicted', (int) $user_id, 'bb_user_topic_reply_draft:' . $trimmed_inner_key, 'aggregate_cap' );
+				}
+			}
 		}
 
 		// The request is accepted. Release the stamps only for attachments the

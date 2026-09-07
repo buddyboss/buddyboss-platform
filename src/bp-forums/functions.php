@@ -1420,8 +1420,15 @@ function bb_forums_sanitize_draft_entry( $draft_entry ) {
  *
  * The forum draft row holds ALL of a user's topic/reply drafts, so the row
  * itself must respect the per-user draft budget. Inner drafts other than
- * the protected (just-saved) one are removed oldest-first — releasing their
- * attachment stamps — until the serialized row fits.
+ * the protected (just-saved) one are removed oldest-first until the
+ * serialized row fits.
+ *
+ * PURE with respect to storage: this only rewrites the in-memory row and
+ * reports what it removed. Releasing attachment stamps and firing
+ * `bb_draft_evicted` belong to the caller, AFTER the row is actually
+ * written — a budget refusal downstream abandons the write, and an eviction
+ * that never happened must not unprotect attachments or notify listeners
+ * (PROD-9621 H4).
  *
  * @since BuddyBoss [BBVERSION]
  *
@@ -1431,13 +1438,16 @@ function bb_forums_sanitize_draft_entry( $draft_entry ) {
  * @param int    $max_bytes   Byte budget for the serialized row.
  * @return array {
  *     @type array    $row     Trimmed draft row.
- *     @type string[] $evicted Evicted inner keys.
+ *     @type string[] $evicted Evicted inner keys ("meta_key:inner_key").
+ *     @type array    $entries Removed entries, inner key => entry, for the
+ *                             caller's deferred unstamping.
  * }
  */
 function bb_forums_trim_draft_row( $draft_row, $protect_key, $user_id, $max_bytes ) {
 	$result = array(
 		'row'     => $draft_row,
 		'evicted' => array(),
+		'entries' => array(),
 	);
 
 	if ( empty( $draft_row ) || ! is_array( $draft_row ) ) {
@@ -1473,14 +1483,17 @@ function bb_forums_trim_draft_row( $draft_row, $protect_key, $user_id, $max_byte
 			break;
 		}
 
-		bb_draft_unstamp_attachments( $result['row'][ $candidate['inner_key'] ], $user_id );
+		// Only the in-memory row is changed here. Releasing the attachment
+		// stamps and firing the public bb_draft_evicted action are deferred to
+		// the caller, because a later budget refusal abandons this write
+		// entirely - and an eviction that never reached storage must not leave
+		// its attachments unprotected or announce itself to listeners
+		// (PROD-9621 H4).
+		$result['entries'][ $candidate['inner_key'] ] = $result['row'][ $candidate['inner_key'] ];
+
 		unset( $result['row'][ $candidate['inner_key'] ] );
 
-		$evicted_key         = 'bb_user_topic_reply_draft:' . $candidate['inner_key'];
-		$result['evicted'][] = $evicted_key;
-
-		/** This action is documented in bp-core/bb-core-drafts.php */
-		do_action( 'bb_draft_evicted', (int) $user_id, $evicted_key, 'aggregate_cap' );
+		$result['evicted'][] = 'bb_user_topic_reply_draft:' . $candidate['inner_key'];
 	}
 
 	return $result;
