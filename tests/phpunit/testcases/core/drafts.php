@@ -1039,6 +1039,47 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		$this->assertFalse( $without_access, 'A forum the member cannot view must refuse the draft.' );
 	}
 
+	/**
+	 * The upgrade guard must survive an unreliable object cache.
+	 *
+	 * It used to be a transient - in the one routine whose sibling option was
+	 * deliberately NOT a transient, because transients live in the very object
+	 * cache this pass repairs. A lost guard re-runs a 10-second synchronous
+	 * healing slice on every admin request in the upgrade window
+	 * (PROD-9621 N5).
+	 */
+	public function test_upgrade_guard_is_a_durable_option_and_blocks_a_repeat_run() {
+		if ( ! function_exists( 'bb_drafts_cleanup_on_upgrade' ) ) {
+			require_once buddypress()->plugin_dir . 'bp-core/bp-core-update.php';
+		}
+
+		delete_option( 'bb_drafts_cleanup_on_upgrade' );
+		delete_option( 'bb_draft_oneshot_done' );
+		delete_option( 'bb_draft_oneshot_state' );
+		delete_option( 'bb_draft_cleanup_epoch' );
+
+		// A slice that already ran inside this window must not be repeated.
+		update_option( 'bb_drafts_cleanup_on_upgrade', time(), false );
+
+		bb_drafts_cleanup_on_upgrade();
+
+		$this->assertFalse( (bool) get_option( 'bb_draft_oneshot_done' ), 'The guard must block a second synchronous slice in the same window.' );
+		$this->assertNotEmpty( get_option( 'bb_draft_cleanup_epoch' ), 'The epoch is still recorded even when the slice is skipped.' );
+
+		// The guard is an option, not a transient: it is readable as one, and a
+		// stale one lets the slice run again.
+		$this->assertIsNumeric( get_option( 'bb_drafts_cleanup_on_upgrade' ) );
+
+		update_option( 'bb_drafts_cleanup_on_upgrade', time() - ( 2 * HOUR_IN_SECONDS ), false );
+
+		bb_drafts_cleanup_on_upgrade();
+
+		$this->assertTrue( (bool) get_option( 'bb_draft_oneshot_done' ), 'Once the window has passed the slice must run.' );
+
+		delete_option( 'bb_drafts_cleanup_on_upgrade' );
+		delete_option( 'bb_draft_oneshot_done' );
+	}
+
 	public function filter_prefix_user_meta_key( $key ) {
 		return 'bbtest_' . $key;
 	}

@@ -4706,8 +4706,9 @@ function bb_install_addons_bundle_on_upgrade() {
  * `wp bb drafts cleanup` WP-CLI command can drain it manually.
  *
  * Idempotent: the epoch is only recorded once, disposal of an absent row
- * is a no-op, and the transient guard prevents duplicate synchronous runs
- * when the updater fires more than once during one upgrade window.
+ * is a no-op, and the `bb_drafts_cleanup_on_upgrade` option timestamps the
+ * last synchronous slice so the updater firing more than once inside an
+ * upgrade window cannot repeat it.
  *
  * @since BuddyBoss [BBVERSION]
  *
@@ -4718,10 +4719,18 @@ function bb_drafts_cleanup_on_upgrade() {
 		update_option( 'bb_draft_cleanup_epoch', time(), false );
 	}
 
-	if ( get_transient( 'bb_drafts_cleanup_on_upgrade' ) ) {
+	// Guarded with an autoload-false OPTION rather than a transient, for the
+	// same reason bb_draft_oneshot_done is one: transients live in the very
+	// object cache this routine repairs, so on the installs it exists for the
+	// guard can evaporate and this 10-second synchronous slice would re-run on
+	// every admin request in the upgrade window (PROD-9621).
+	$last_started = (int) get_option( 'bb_drafts_cleanup_on_upgrade', 0 );
+
+	if ( $last_started && ( time() - $last_started ) < HOUR_IN_SECONDS ) {
 		return;
 	}
-	set_transient( 'bb_drafts_cleanup_on_upgrade', 'yes', HOUR_IN_SECONDS );
+
+	update_option( 'bb_drafts_cleanup_on_upgrade', time(), false );
 
 	$result = bb_drafts_oneshot_batch( 10 );
 
