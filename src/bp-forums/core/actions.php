@@ -694,6 +694,36 @@ function bb_post_topic_reply_draft() {
 					// path as to the primary draft - it may not smuggle content the
 					// primary path would strip, cap, or reject (PROD-9621).
 					if ( isset( $existing_draft[ $data_key ] ) && is_array( $d_data ) ) {
+
+						// Re-authorize per sibling key. The unload beacon replays
+						// whatever the tab still holds, so an entry stored while the
+						// member could still see its forum may arrive long after that
+						// access was revoked (removed from the group, forum made
+						// private). Without this the primary path's view/publish gate
+						// would apply only to the key being edited, and a sibling
+						// draft in a now-unreadable forum would keep taking writes.
+						$sibling_context = bb_draft_topic_reply_key_context( (string) $data_key );
+
+						if ( false === $sibling_context ) {
+							continue;
+						}
+
+						if (
+							! empty( $sibling_context['forum_id'] ) &&
+							! bbp_user_can_view_forum(
+								array(
+									'user_id'  => $user_id,
+									'forum_id' => (int) $sibling_context['forum_id'],
+								)
+							)
+						) {
+							continue;
+						}
+
+						if ( ! bb_draft_user_can_save_topic_reply_draft( $sibling_context, $user_id ) ) {
+							continue;
+						}
+
 						// An unchanged entry keeps its stored save timestamp - the
 						// unload sync fires on every forum page exit, and restamping
 						// would keep every draft eternally "fresh" for expiry.

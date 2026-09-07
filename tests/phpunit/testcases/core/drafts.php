@@ -5,6 +5,13 @@
  */
 class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 
+	/**
+	 * Forum ID that filter_block_unreadable_forum() denies.
+	 *
+	 * @var int
+	 */
+	protected $unreadable_forum_id = 0;
+
 	public function test_draft_meta_key_matching_accepts_only_buddyboss_shapes() {
 		$this->assertTrue( bb_draft_is_draft_meta_key( 'draft_user' ) );
 		$this->assertTrue( bb_draft_is_draft_meta_key( 'draft_user_5' ) );
@@ -1732,5 +1739,191 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 
 		$after3 = bb_draft_get_user_meta_sizes( $u3 );
 		$this->assertArrayNotHasKey( 'bb_user_topic_reply_draft', $after3['drafts'], 'Legacy-empty row dispose must invalidate the memo.' );
+	}
+
+	/**
+	 * H1 regression: the all_data merge must re-authorize every sibling key.
+	 *
+	 * The unload beacon replays whatever the tab still holds, so a sibling entry
+	 * stored while the member could still see its forum can arrive long after
+	 * that access was revoked. Before the fix the loop checked isset(), sanitized
+	 * and capped, but never re-ran the view/publish gate the primary path
+	 * enforces - so the stale sibling kept taking writes.
+	 *
+	 * bbp_user_can_view_forum() is forced through its own filter rather than
+	 * built out of bbPress capability state: the assertion is that the merge loop
+	 * HONOURS the gate, and forcing the gate's answer keeps the test independent
+	 * of how visibility happens to be configured.
+	 */
+	public function test_all_data_merge_reauthorizes_each_sibling_key() {
+		$user_id = self::factory()->user->create();
+		$this->set_current_user( $user_id );
+
+		$readable_forum   = self::factory()->post->create( array( 'post_type' => bbp_get_forum_post_type() ) );
+		$unreadable_forum = self::factory()->post->create( array( 'post_type' => bbp_get_forum_post_type() ) );
+
+		$readable_key   = 'draft_discussion_' . $readable_forum;
+		$unreadable_key = 'draft_discussion_' . $unreadable_forum;
+
+		bp_update_user_meta(
+			$user_id,
+			'bb_user_topic_reply_draft',
+			array(
+				$readable_key   => array(
+					'data_key'        => $readable_key,
+					'data'            => array( 'bbp_topic_content' => 'readable original' ),
+					'_draft_saved_at' => time() - 60,
+				),
+				$unreadable_key => array(
+					'data_key'        => $unreadable_key,
+					'data'            => array( 'bbp_topic_content' => 'SIBLING ORIGINAL' ),
+					'_draft_saved_at' => time() - 60,
+				),
+			)
+		);
+
+		$this->unreadable_forum_id = $unreadable_forum;
+		add_filter( 'bbp_user_can_view_forum', array( $this, 'filter_block_unreadable_forum' ), 10, 2 );
+
+		$_POST    = array();
+		$_REQUEST = array();
+
+		$_REQUEST['draft_topic_reply'] = wp_json_encode(
+			array(
+				'data_key'    => $readable_key,
+				'object'      => 'topic',
+				'post_action' => 'update',
+				'data'        => array( 'bbp_topic_content' => 'readable updated' ),
+			)
+		);
+		$_REQUEST['all_data'] = wp_json_encode(
+			array(
+				$unreadable_key => array( 'bbp_topic_content' => 'SIBLING SMUGGLED UPDATE' ),
+			)
+		);
+
+		$nonce_key = '_wpnonce_post_topic_reply_draft';
+
+		// phpcs:disable WordPress.Security.NonceVerification -- this test drives the handler that performs the verification.
+		$_POST[ $nonce_key ] = wp_create_nonce( 'post_topic_reply_draft_data' );
+		$_REQUEST            = array_merge( $_REQUEST, $_POST );
+		// phpcs:enable WordPress.Security.NonceVerification
+
+		// wp_send_json_*() exits. It only routes through the filterable wp_die()
+		// when wp_doing_ajax() is true - otherwise it calls a bare die() that
+		// would kill the whole test run - so force that first, then convert the
+		// exit into an exception we can swallow.
+		add_filter( 'wp_doing_ajax', '__return_true' );
+		add_filter( 'wp_die_ajax_handler', array( $this, 'filter_draft_die_handler' ), 99 );
+
+		ob_start();
+
+		try {
+			bb_post_topic_reply_draft();
+		} catch ( Exception $e ) {
+			// Expected: the handler finished and tried to exit.
+			unset( $e );
+		}
+
+		ob_end_clean();
+
+		remove_filter( 'wp_die_ajax_handler', array( $this, 'filter_draft_die_handler' ), 99 );
+		remove_filter( 'wp_doing_ajax', '__return_true' );
+		remove_filter( 'bbp_user_can_view_forum', array( $this, 'filter_block_unreadable_forum' ), 10 );
+
+		$stored = bp_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
+
+		$this->assertIsArray( $stored, 'The aggregate row must still exist.' );
+		$this->assertSame(
+			'SIBLING ORIGINAL',
+			$stored[ $unreadable_key ]['data']['bbp_topic_content'],
+			'A sibling draft in a forum the member can no longer view must NOT take the smuggled write.'
+		);
+
+		// Negative control: the authorized key in the SAME request must still
+		// save, or this test would also pass for a handler that rejects
+		// everything.
+		$this->assertSame(
+			'readable updated',
+			$stored[ $readable_key ]['data']['bbp_topic_content'],
+			'The primary, authorized key must still be written.'
+		);
+	}
+
+	/**
+	 * Deny view access to one specific forum.
+	 *
+	 * @param bool      $retval   Incoming value.
+	 * @param int|array $forum_id Forum ID (bbPress passes the ID, not args).
+	 * @return bool
+	 */
+	public function filter_block_unreadable_forum( $retval, $forum_id = 0 ) {
+		// bbp_user_can_view_forum() passes the forum ID itself as the second
+		// filter argument, not the parsed args array - verified against the
+		// live filter before relying on it.
+		if ( is_array( $forum_id ) ) {
+			$forum_id = isset( $forum_id['forum_id'] ) ? $forum_id['forum_id'] : 0;
+		}
+
+		if ( ! empty( $this->unreadable_forum_id ) && (int) $forum_id === (int) $this->unreadable_forum_id ) {
+			return false;
+		}
+
+		return $retval;
+	}
+
+	/**
+	 * Route wp_die() to a thrower so wp_send_json_*() does not end the run.
+	 *
+	 * @return callable
+	 */
+	public function filter_draft_die_handler() {
+		return array( $this, 'throw_on_draft_die' );
+	}
+
+	/**
+	 * Turn the handler's exit into a catchable exception.
+	 *
+	 * @throws Exception Always.
+	 * @return void
+	 */
+	public function throw_on_draft_die() {
+		throw new Exception( 'draft-handler-exit' );
+	}
+
+	/**
+	 * H2 premise guard: kses must strip data-emoji-char but keep alt.
+	 *
+	 * The draft path now converts emoji images to their unicode character before
+	 * storing, and falls back to the image's alt when a draft stored by an older
+	 * build carries no data-emoji-char. That fallback is only sound while kses
+	 * keeps alt and drops data-emoji-char - the exact asymmetry that caused the
+	 * original bug. If a future WP or allowedtags change alters either half, the
+	 * fallback silently stops working, so the premise is asserted here.
+	 *
+	 * This does NOT test the JavaScript: this repository has no configured Jest
+	 * harness (package.json references a jest.config.js that does not exist), so
+	 * the conversion itself is covered by browser QA, not by a unit test.
+	 */
+	public function test_kses_strips_emoji_char_attribute_but_keeps_alt() {
+		$filtered = bp_activity_filter_kses(
+			'hi <img class="emojioneemoji" src="https://example.com/e.png" data-emoji-char="X" alt="X"> there'
+		);
+
+		$this->assertStringNotContainsString(
+			'data-emoji-char',
+			$filtered,
+			'If kses ever starts keeping data-emoji-char, the draft conversion is no longer needed - revisit the fix.'
+		);
+		$this->assertStringContainsString(
+			'alt="X"',
+			$filtered,
+			'The alt fallback the draft conversion relies on must survive kses.'
+		);
+		$this->assertStringContainsString(
+			'emojioneemoji',
+			$filtered,
+			'The class survives, which is why the publish path cannot re-populate the attribute on its own.'
+		);
 	}
 }
