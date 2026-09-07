@@ -555,6 +555,20 @@ window.bp = window.bp || {};
 		 * @param {Event} event - The click event
 		 */
 		handleCloseModal: function ( event ) {
+			var $target          = $( event.target );
+			var topicsModalScope = [
+				this.config.modalSelector,
+				this.config.migrateTopicContainerModal,
+				'.bb-hello-activity-topic',
+				'.bb-hello-activity-topic-migrate'
+			].join( ', ' );
+
+			// If the click did not originate inside a Topics modal, do nothing
+			// and let the event continue to its rightful handler.
+			if ( 0 === $target.closest( topicsModalScope ).length ) {
+				return;
+			}
+
 			// Prevent default action and stop event propagation.
 			event.preventDefault();
 			event.stopPropagation();
