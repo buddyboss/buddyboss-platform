@@ -1094,6 +1094,7 @@ function bb_draft_get_rows_batch( $last_umeta_id = 0, $limit = 200, $with_values
 
 	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- maintenance scan; $value_column is a fixed literal and $key_sql['where'] carries only placeholders.
 	$rows = $wpdb->get_results(
+		// phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber -- the sniff cannot count placeholders it never saw interpolated; the WHERE fragment carries 4, plus the 2 appended here = the 6 values passed.
 		$wpdb->prepare(
 			"SELECT umeta_id, user_id, meta_key, LENGTH(meta_value) AS bytes{$value_column}
 			FROM {$wpdb->usermeta}
@@ -1129,7 +1130,8 @@ function bb_draft_get_rows_batch( $last_umeta_id = 0, $limit = 200, $with_values
 				array_map(
 					function ( $row ) {
 						$row['stored_meta_key'] = $row['meta_key'];
-						$row['meta_key']        = bb_draft_logical_meta_key( $row['meta_key'] );
+						// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key -- an array key on a row already fetched, not a query argument.
+						$row['meta_key'] = bb_draft_logical_meta_key( $row['meta_key'] );
 
 						return $row;
 					},
@@ -1488,6 +1490,7 @@ function bb_drafts_oneshot_batch( $time_budget = 10 ) {
 
 				// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- one-time healing aggregate; $key_sql['where'] carries only placeholders.
 				$heavy_users = $wpdb->get_col(
+					// phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber -- as above; 4 placeholders in the fragment plus the 1 appended here = the 5 values passed.
 					$wpdb->prepare(
 						"SELECT user_id
 						FROM {$wpdb->usermeta}
