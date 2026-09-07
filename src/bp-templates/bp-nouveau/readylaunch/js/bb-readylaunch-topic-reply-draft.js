@@ -778,6 +778,10 @@ window.bp = window.bp || {};
 							} else {
 								self.showDraftFeedback( '' );
 								self.handleEvictedDrafts( response );
+
+								// A stored draft exists again (or the discard has
+								// landed), so the reload guard has served its purpose.
+								bp.Nouveau.TopicReplyDraft.markDiscarded( draft_payload.data_key, false );
 							}
 						}
 					}
@@ -1575,6 +1579,9 @@ window.bp = window.bp || {};
 			forum_reply.css( 'pointer-events', 'none' );
 
 			this.topic_reply_draft.post_action = 'delete';
+			// Marked before the request goes out: a reload racing the discard
+			// must not be offered this draft again (PROD-9621).
+			bp.Nouveau.TopicReplyDraft.markDiscarded( this.topic_reply_draft.data_key, true );
 			// In-page discard goes over XHR, not sendBeacon - the beacon
 			// transport is reserved for unload, and its quota failure mode
 			// must never decide whether a deliberate discard reaches the
@@ -1605,6 +1612,51 @@ window.bp = window.bp || {};
 		};
 	};
 
+	// A discard clears localStorage immediately while its XHR is still in
+	// flight. A reload landing in that window re-renders has_draft as true and
+	// the lazy fetch hands the just-discarded draft straight back. The activity
+	// composer guards this with a cookie; the forum pack has no cookie
+	// dependency, so the marker lives in sessionStorage - same tab, survives the
+	// reload, gone when the tab closes (PROD-9621).
+	var BB_DRAFT_DISCARDED_KEY = 'bb_forum_drafts_discarded';
+
+	var bbDraftDiscardedKeys = function () {
+		try {
+			var raw = window.sessionStorage.getItem( BB_DRAFT_DISCARDED_KEY );
+
+			return raw ? ( JSON.parse( raw ) || [] ) : [];
+		} catch ( e ) {
+			// Private browsing, disabled storage, or malformed JSON - the guard
+			// is an optimisation, never a correctness requirement.
+			return [];
+		}
+	};
+
+	var bbDraftMarkDiscarded = function ( dataKey, discarded ) {
+		if ( ! dataKey ) {
+			return;
+		}
+
+		try {
+			var keys  = bbDraftDiscardedKeys(),
+				index = keys.indexOf( dataKey );
+
+			if ( discarded && -1 === index ) {
+				keys.push( dataKey );
+			} else if ( ! discarded && -1 !== index ) {
+				keys.splice( index, 1 );
+			} else {
+				return;
+			}
+
+			window.sessionStorage.setItem( BB_DRAFT_DISCARDED_KEY, JSON.stringify( keys ) );
+		} catch ( e ) {
+			// See bbDraftDiscardedKeys().
+		}
+	};
+
+	bp.Nouveau.TopicReplyDraft.markDiscarded = bbDraftMarkDiscarded;
+
 	// Module-level on purpose: instance methods reference `forms` (multi-form
 	// subscription IDs) from this closure.
 	var forms = $( 'form[name="new-post"]' );
@@ -1634,7 +1686,19 @@ window.bp = window.bp || {};
 		).done(
 			function ( response ) {
 				if ( response && response.success && response.data && response.data.drafts ) {
-					BP_Nouveau.forums.draft = response.data.drafts;
+					var drafts    = response.data.drafts,
+						discarded = bbDraftDiscardedKeys();
+
+					// Never re-offer a draft this tab has already discarded - the
+					// delete may simply not have been processed yet (PROD-9621).
+					_.each(
+						discarded,
+						function ( key ) {
+							delete drafts[ key ];
+						}
+					);
+
+					BP_Nouveau.forums.draft = drafts;
 				}
 			}
 		).always(
