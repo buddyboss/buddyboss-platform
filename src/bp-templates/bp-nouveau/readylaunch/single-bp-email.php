@@ -44,7 +44,7 @@ defined( 'ABSPATH' ) || exit;
 $settings = bp_email_get_appearance_settings();
 
 ?><!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
+<html <?php echo esc_attr( get_bloginfo( 'language' ) ); ?> xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
 <head>
 	<meta charset="<?php echo esc_attr( get_bloginfo( 'charset' ) ); ?>">
 	<meta name="viewport" content="width=device-width, initial-scale=1">

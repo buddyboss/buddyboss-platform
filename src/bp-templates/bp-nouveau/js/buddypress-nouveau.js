@@ -109,16 +109,20 @@ window.bp = window.bp || {};
 			this.cacheProfileCard = {};
 			this.cacheGroupCard = {};
 
-			// wrapNavigation dropdown events
-			$( document ).on(
-				'click',
-				'.more-action-button',
-				function ( e ) {
-					e.preventDefault();
-					$( this ).toggleClass( 'active open' ).next().toggleClass( 'active open' );
-					$( 'body' ).toggleClass( 'nav_more_option_open' );
+// wrapNavigation dropdown events
+		$( document ).on(
+			'click keydown',
+			'.more-action-button',
+			function ( e ) {
+				if ( e.type === 'keydown' && e.key !== 'Enter' && e.key !== ' ' ) {
+					return;
 				}
-			);
+				e.preventDefault();
+				$( this ).toggleClass( 'active open' ).next().toggleClass( 'active open' );
+				$( this ).attr( 'aria-expanded', $( this ).hasClass( 'active' ) );
+				$( 'body' ).toggleClass( 'nav_more_option_open' );
+			}
+		);
 
 			$( document ).click(
 				function ( e ) {
@@ -166,50 +170,53 @@ window.bp = window.bp || {};
 				$( currentEl ).removeClass( 'pull-animation' ).addClass( 'close-item' ).delay( 500 ).remove();
 			}
 
-			// Add Toast Message
-			var unique_id = 'unique-' + Math.floor( Math.random() * 1000000 );
-			var currentEl = '.' + unique_id;
-			var urlClass = '';
-			var bp_msg_type = '';
-			var bp_icon_type = '';
-			/* jshint ignore:start */
-			var autohide_interval = autohide_interval && typeof autohide_interval == 'number' ? ( autohide_interval * 1000 ) : 5000;
-			/* jshint ignore:end */
+// Add Toast Message
+		var unique_id = 'unique-' + Math.floor( Math.random() * 1000000 );
+		var currentEl = '.' + unique_id;
+		var urlClass = '';
+		var bp_msg_type = '';
+		var bp_icon_type = '';
+		/* jshint ignore:start */
+		var autohide_interval = autohide_interval && typeof autohide_interval == 'number' ? ( autohide_interval * 1000 ) : 5000;
+		/* jshint ignore:end */
 
-			if ( type ) {
-				bp_msg_type = type;
-				if ( bp_msg_type === 'success' ) {
-					bp_icon_type = 'check';
-				} else if ( bp_msg_type === 'warning' ) {
-					bp_icon_type = 'exclamation-triangle';
-				} else if ( bp_msg_type === 'delete' ) {
-					bp_icon_type = 'trash';
-					bp_msg_type = 'error';
-				} else {
-					bp_icon_type = 'info';
-				}
+		if ( type ) {
+			bp_msg_type = type;
+			if ( bp_msg_type === 'success' ) {
+				bp_icon_type = 'check';
+			} else if ( bp_msg_type === 'warning' ) {
+				bp_icon_type = 'exclamation-triangle';
+			} else if ( bp_msg_type === 'delete' ) {
+				bp_icon_type = 'trash';
+				bp_msg_type = 'error';
+			} else {
+				bp_icon_type = 'info';
 			}
+		}
 
-			if ( url !== null ) {
-				urlClass = 'has-url';
-			}
+		if ( url !== null ) {
+			urlClass = 'has-url';
+		}
 
-			var messageContent = '';
-			messageContent += '<div class="toast-messages-icon"><i class="bb-icon bb-icon-' + bp_icon_type + '"></i></div>';
-			messageContent += '<div class="toast-messages-content">';
-			if ( title ) {
-				messageContent += '<span class="toast-messages-title">' + title + '</span>';
-			}
+		var messageContent = '';
+		messageContent += '<div class="toast-messages-icon"><i class="bb-icon bb-icon-' + bp_icon_type + '" aria-hidden="true"></i></div>';
+		messageContent += '<div class="toast-messages-content">';
+		if ( title ) {
+			messageContent += '<span class="toast-messages-title">' + title + '</span>';
+		}
 
-			if ( message ) {
-				messageContent += '<span class="toast-messages-content">' + message + '</span>';
-			}
+		if ( message ) {
+			messageContent += '<span class="toast-messages-content">' + message + '</span>';
+		}
 
-			messageContent += '</div>';
-			messageContent += '<div class="actions"><a class="action-close primary" data-bp-tooltip-pos="left" data-bp-tooltip="' + BP_Nouveau.close + '"><i class="bb-icon bb-icon-times" aria-hidden="true"></i></a></div>';
-			messageContent += url ? '<a class="toast-messages-url" href="' + url + '"></a>' : '';
+		messageContent += '</div>';
+		messageContent += '<div class="actions"><a class="action-close primary" data-bp-tooltip-pos="left" data-bp-tooltip="' + BP_Nouveau.close + '" aria-label="' + BP_Nouveau.close + '"><i class="bb-icon bb-icon-times" aria-hidden="true"></i></a></div>';
+		messageContent += url ? '<a class="toast-messages-url" href="' + url + '"></a>' : '';
 
-			$( getTarget() ).append( '<li class="item-list read-item pull-animation bp-message-' + bp_msg_type + ' ' + unique_id + ' ' + urlClass + '"> ' + messageContent + ' </li>' );
+		var $target = $( getTarget() );
+		$target.attr( 'role', 'status' );
+		$target.attr( 'aria-live', 'polite' );
+		$target.append( '<li class="item-list read-item pull-animation bp-message-' + bp_msg_type + ' ' + unique_id + ' ' + urlClass + '"> ' + messageContent + ' </li>' );
 
 			if ( autoHide ) {
 				setInterval( function () {
@@ -1137,38 +1144,44 @@ window.bp = window.bp || {};
 			// Following widget more button click.
 			$( document ).on( 'click', '.more-following .count-more, .more-followers .count-more', this.bbWidgetMoreFollowingFollowers );
 
-			// Accordion open/close event
-			$( '.bb-accordion .bb-accordion_trigger' ).on( 'click', this.toggleAccordion );
+// Accordion open/close event
+		$( '.bb-accordion .bb-accordion_trigger' ).on( 'click keydown', function ( e ) {
+			if ( e.type === 'keydown' && e.key !== 'Enter' && e.key !== ' ' ) {
+				return;
+			}
+			e.preventDefault();
+			bp.Nouveau.toggleAccordion.call( this );
+		} );
 
 			// Prevent duplicated emoji from windows system emoji picker.
 			$( document ).keydown( this.mediumFormAction.bind( this ) );
 
-			// Profile/Group Popup Card.
-			$( document ).on( 'mouseenter', '[data-bb-hp-profile]', function ( event ) {
+// Profile/Group Popup Card.
+		$( document ).on( 'mouseenter focus', '[data-bb-hp-profile]', function ( event ) {
 
-				if ( 0 === $( event.currentTarget ).data( 'bb-hp-profile' ) ) {
-					return;
-				}
+			if ( 0 === $( event.currentTarget ).data( 'bb-hp-profile' ) ) {
+				return;
+			}
 
-				hoverAvatar = true;
-				hoverProfileAvatar = true;
+			hoverAvatar = true;
+			hoverProfileAvatar = true;
 
-				// Clear pending hide timeouts
-				if ( hideCardTimeout ) {
-					clearTimeout( hideCardTimeout );
-				}
+			// Clear pending hide timeouts
+			if ( hideCardTimeout ) {
+				clearTimeout( hideCardTimeout );
+			}
 
-				// Close open group card
-				if( $( '#group-card' ).hasClass( 'show' ) ) {
-					bp.Nouveau.hidePopupCard();
-					// Reset the loaded flag when switching between different card types
-					popupCardLoaded = false;
-				}
+			// Close open group card
+			if( $( '#group-card' ).hasClass( 'show' ) ) {
+				bp.Nouveau.hidePopupCard();
+				// Reset the loaded flag when switching between different card types
+				popupCardLoaded = false;
+			}
 
-				// Always attempt to load the profile card
-				bp.Nouveau.profilePopupCard.call( this );
-			} );
-			$( document ).on( 'mouseenter', '[data-bb-hp-group]', function ( event ) {
+			// Always attempt to load the profile card
+			bp.Nouveau.profilePopupCard.call( this );
+		} );
+		$( document ).on( 'mouseenter focus', '[data-bb-hp-group]', function ( event ) {
 				if ( 0 === $( event.currentTarget ).data( 'bb-hp-group' ) ) {
 					return;
 				}
@@ -1354,20 +1367,24 @@ window.bp = window.bp || {};
 				return;
 			}
 
-			// Show all notificaitons.
-			wrap.removeClass( 'close-all-items' );
+// Show all notificaitons.
+		wrap.removeClass( 'close-all-items' );
 
-			// Set class 'bb-more-item' in item when more than three notifications.
-			appendItems.eq( 2 ).nextAll().addClass( 'bb-more-item' );
+		// Set class 'bb-more-item' in item when more than three notifications.
+		appendItems.eq( 2 ).nextAll().addClass( 'bb-more-item' );
 
-			if ( appendItems.length > 3 ) {
-				list.addClass( 'bb-more-than-3' );
-			} else {
-				list.removeClass( 'bb-more-than-3' );
-			}
+		if ( appendItems.length > 3 ) {
+			list.addClass( 'bb-more-than-3' );
+		} else {
+			list.removeClass( 'bb-more-than-3' );
+		}
 
-			wrap.show();
-			list.empty().html( appendItems );
+		wrap.show();
+		wrap.attr( 'role', 'region' );
+		wrap.attr( 'aria-label', BP_Nouveau.notifications_text || 'Notifications' );
+		list.attr( 'aria-live', 'polite' );
+		list.attr( 'aria-atomic', 'false' );
+		list.empty().html( appendItems );
 
 			// Clear all button visibility status.
 			bp.Nouveau.visibilityOnScreenClearButton();

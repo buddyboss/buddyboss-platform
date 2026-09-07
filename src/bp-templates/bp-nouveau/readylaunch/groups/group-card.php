@@ -36,7 +36,7 @@ defined( 'ABSPATH' ) || exit;
 		<div class="bb-rl-card-content">
 			<div class="bb-rl-card-body">
 				<div class="bb-rl-card-avatar">
-					<img src="" alt="">
+					<img src="" alt="<?php esc_attr_e( 'Group avatar', 'buddyboss' ); ?>" />
 				</div>
 				<div class="bb-rl-card-entity">
 					<h4 class="bb-rl-card-heading"></h4>

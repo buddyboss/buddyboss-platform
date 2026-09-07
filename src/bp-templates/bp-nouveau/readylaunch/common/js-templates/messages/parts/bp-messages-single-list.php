@@ -14,9 +14,9 @@
 			<# if ( ! data.is_user_suspended && ! data.is_user_blocked ) { #>
 				<div class="bp-avatar-wrap">
 					<# if ( data.is_deleted ) { #>
-						<img class="avatar" src="{{{data.sender_avatar}}}" alt="" />
+						<img class="avatar" src="{{{data.sender_avatar}}}" alt="{{{data.sender_name}}}" />
 					<# } else if ( data.is_user_suspended || data.is_user_blocked  ) { #>
-						<img class="avatar" src="{{{data.sender_avatar}}}" alt="" />
+						<img class="avatar" src="{{{data.sender_avatar}}}" alt="{{{data.sender_name}}}" />
 						<# if ( data.is_user_blocked ) { #>
 							<i class="user-status-icon bb-icon-f bb-icon-cancel"></i>
 						<# } else if ( data.is_user_blocked_by ) { #>
@@ -24,7 +24,7 @@
 						<# } #>
 					<# } else { #>
 						<a href="{{data.sender_link}}" class="bp-user-avatar" aria-label="{{{data.sender_name}}}">
-							<img class="avatar" src="{{{data.sender_avatar}}}" alt="" />
+							<img class="avatar" src="{{{data.sender_avatar}}}" alt="{{{data.sender_name}}}" />
 							<# if ( data.is_user_blocked_by ) { #>
 								<i class="user-status-icon bb-icon-f bb-icon-lock"></i>
 							<# } #>

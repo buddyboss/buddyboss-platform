@@ -29,7 +29,7 @@ defined( 'ABSPATH' ) || exit;
 					<div id="activity-url-scrapper-img-holder">
 						<div class="activity-link-preview-image">
 							<div class="activity-link-preview-image-cover">
-								<img src="{{{data.link_images[data.link_image_index]}}}"/>
+								<img src="{{{data.link_images[data.link_image_index]}}}" alt="<?php esc_attr_e( 'Link preview image', 'buddyboss' ); ?>" />
 							</div>
 							<div class="activity-link-preview-icons">
 								<# if ( data.link_images.length > 1 ) { #>

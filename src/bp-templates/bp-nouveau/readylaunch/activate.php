@@ -38,7 +38,7 @@ if ( 'choice' === $bb_rl_theme_mode ) {
 ?>
 
 <body <?php body_class( 'bb-readylaunch-template ' . $theme_mode_class ); ?>>
-
+<a href="#activate-page" class="skip-link bp-screen-reader-text"><?php esc_html_e( 'Skip to main content', 'buddyboss' ); ?></a>
 <?php
 bp_get_template_part( 'common/header-register' );
 ?>
@@ -52,8 +52,10 @@ bp_get_template_part( 'common/header-register' );
 	if ( bp_account_was_activated() ) {
 
 		if ( isset( $_GET['e'] ) ) { ?>
+			<h1><?php esc_html_e( 'Account Activated', 'buddyboss' ); ?></h1>
 			<p><?php esc_html_e( 'Your account was activated successfully! Your account details have been sent to you in a separate email.', 'buddyboss' ); ?></p>
 		<?php } else { ?>
+			<h1><?php esc_html_e( 'Account Activated', 'buddyboss' ); ?></h1>
 			<p><?php esc_html_e( 'Your account was activated successfully! You can now log in with the username and password you provided when you signed up.', 'buddyboss' ); ?></p>
 			<?php
 		}
@@ -65,6 +67,7 @@ bp_get_template_part( 'common/header-register' );
 		);
 	} else {
 		?>
+		<h1><?php esc_html_e( 'Activate Account', 'buddyboss' ); ?></h1>
 		<p><?php esc_html_e( 'Please provide a valid activation key.', 'buddyboss' ); ?></p>
 		<form action="" method="post" class="standard-form" id="activation-form">
 			<label for="key"><?php esc_html_e( 'Activation Key:', 'buddyboss' ); ?></label>

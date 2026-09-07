@@ -247,3 +247,31 @@
 	}
 
 }
+
+// Respect user preference for reduced motion
+@media (prefers-reduced-motion: reduce) {
+
+	#buddypress-wrap * {
+		transition: none;
+	}
+
+	.buddypress-wrap {
+
+		a.loading,
+		input.loading {
+			animation: none;
+		}
+	}
+
+	.animate-spin {
+		animation: none;
+	}
+
+	.bb-loading-bg {
+		animation: none;
+	}
+
+	* {
+		scroll-behavior: auto;
+	}
+}

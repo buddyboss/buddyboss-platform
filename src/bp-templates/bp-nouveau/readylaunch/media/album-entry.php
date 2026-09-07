@@ -30,7 +30,7 @@ $icons = array(
 	<div class="bb-album-cover-wrap">
 		<a class="bs-cover-wrap" href="<?php bp_album_link(); ?>">
 			<?php if ( ! empty( $media_album_template->album->media['medias'] ) ) : ?>
-				<img src="<?php echo esc_url( $media_album_template->album->media['medias'][0]->attachment_data->media_album_cover ); ?>" />
+				<img src="<?php echo esc_url( $media_album_template->album->media['medias'][0]->attachment_data->media_album_cover ); ?>" alt="<?php echo esc_attr( bp_get_album_title() ); ?>" />
 			<?php endif; ?>
 
 			<div class="bb-album-content-wrap">

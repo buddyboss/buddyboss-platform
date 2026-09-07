@@ -17,7 +17,7 @@
 		<# } #>
 
 		<# if ( data.avatar_url ) { #>
-		<img src="{{data.avatar_url}}" class="avatar {{data.object_type}}-{{data.id}}-avatar photo" alt="" />
+		<img src="{{data.avatar_url}}" class="avatar {{data.object_type}}-{{data.id}}-avatar photo" alt="{{data.name}}" />
 		<# } #>
 
 		<span class="bp-item-name">{{data.name}}</span>

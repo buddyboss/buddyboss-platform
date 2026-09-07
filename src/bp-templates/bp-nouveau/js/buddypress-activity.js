@@ -483,12 +483,16 @@ window.bp = window.bp || {};
 			/**
 			 * Finally trigger a pending event containing the activity heartbeat data
 			 */
-			$( '#buddypress [data-bp-list="activity"]' ).trigger( 'bp_heartbeat_pending', this.heartbeat_data );
+$( '#buddypress [data-bp-list="activity"]' ).trigger( 'bp_heartbeat_pending', this.heartbeat_data );
 
-			if ( typeof bp.Nouveau !== 'undefined' ) {
-				bp.Nouveau.reportPopUp();
-			}
-		},
+		if ( typeof bp.Nouveau !== 'undefined' ) {
+			bp.Nouveau.reportPopUp();
+		}
+
+		// Add live region attributes for screen readers
+		$( '#buddypress [data-bp-list="activity"]' ).attr( 'aria-live', 'polite' );
+		$( '#buddypress [data-bp-list="activity"]' ).attr( 'aria-relevant', 'additions' );
+	},
 
 		/**
 		 * [injectQuery description]

@@ -20,7 +20,7 @@ global $video_album_template;
 	<div class="bb-album-cover-wrap">
 		<a class="bs-cover-wrap" href="<?php bp_video_album_link(); ?>">
 			<?php if ( ! empty( $video_album_template->album->video['videos'] ) ) : ?>
-				<img src="<?php echo esc_url( $video_album_template->album->video['videos'][0]->attachment_data->video_album_cover_thumb ); ?>" />
+				<img src="<?php echo esc_url( $video_album_template->album->video['videos'][0]->attachment_data->video_album_cover_thumb ); ?>" alt="<?php echo esc_attr( bp_get_video_album_title() ); ?>" />
 			<?php endif; ?>
 
 			<div class="bb-album-content-wrap">
