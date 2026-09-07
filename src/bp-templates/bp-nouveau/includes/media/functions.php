@@ -71,6 +71,13 @@ function bp_nouveau_media_enqueue_scripts() {
 		}
 
 		if ( bp_is_profile_media_support_enabled() || bp_is_group_document_support_enabled() || bp_is_group_media_support_enabled() || bp_is_group_albums_support_enabled() || bp_is_messages_media_support_enabled() || $gif || $emoji || bp_is_group_messages() ) {
+			if (
+				extension_loaded( 'imagick' ) &&
+				count( \Imagick::queryFormats( 'HEIC' ) ) > 0
+			) {
+				wp_enqueue_script( 'bb-heic2any' );
+			}
+
 			wp_enqueue_script( 'bp-media-dropzone' );
 			wp_enqueue_script( 'bp-nouveau-codemirror' );
 			wp_enqueue_script( 'bp-nouveau-codemirror-css' );
