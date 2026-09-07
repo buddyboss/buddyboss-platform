@@ -1043,6 +1043,33 @@ function bb_draft_safe_unserialize( $value ) {
 }
 
 /**
+ * Byte budget for one maintenance window's `meta_value` payload.
+ *
+ * The draft rows this machinery exists to clean up are the oversized ones -
+ * the reporting customer's are ~1.5MB each. A window bounded only by ROW
+ * COUNT therefore has no bound on memory: 200 such rows is ~300MB of
+ * `meta_value` before mysqli's buffered copy and before unserializing.
+ * A fatal there is worse than a slow sweep, because the cursor is persisted
+ * only on a clean budget break - so the next run restarts at the same window
+ * and dies again, and the sweep never progresses.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return int Byte budget for one window's values. Default 10 MB.
+ */
+function bb_draft_batch_max_bytes() {
+
+	/**
+	 * Filters the byte budget for one draft maintenance window.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param int $max_bytes Byte budget. Default 10 MB.
+	 */
+	return (int) apply_filters( 'bb_draft_batch_max_bytes', 10 * MB_IN_BYTES );
+}
+
+/**
  * Fetch one cursor-advanced batch of BuddyBoss draft usermeta rows.
  *
  * The cursor makes the sweep RESUMABLE, not cheap: MySQL satisfies the
@@ -1062,20 +1089,32 @@ function bb_draft_safe_unserialize( $value ) {
  *
  * @since BuddyBoss [BBVERSION]
  *
+ * Values are fetched in a SECOND query, for the trimmed window only, so the
+ * windowing query never carries `meta_value` and the payload pulled into PHP
+ * is bounded in BYTES as well as rows ({@see bb_draft_batch_max_bytes()}).
+ * At least one row is always kept, so a row wider than the whole budget still
+ * makes progress rather than stalling the cursor.
+ *
  * @param int  $last_umeta_id Resume after this row ID.
  * @param int  $limit         Maximum rows to fetch.
- * @param bool $with_values   Whether to select meta_value too.
+ * @param bool $with_values   Whether to fetch meta_value for the window.
+ * @param int  $max_bytes     Optional. Byte budget for the window's values;
+ *                            0 uses {@see bb_draft_batch_max_bytes()}.
  * @return array {
  *     @type array[] $rows     Validated draft rows (umeta_id, user_id, meta_key, bytes[, meta_value]).
  *     @type int     $last_id  Raw scan cursor - resume after this row ID.
  *     @type bool    $has_more Whether the raw window was full (more rows may exist).
  * }
  */
-function bb_draft_get_rows_batch( $last_umeta_id = 0, $limit = 200, $with_values = true ) {
+function bb_draft_get_rows_batch( $last_umeta_id = 0, $limit = 200, $with_values = true, $max_bytes = 0 ) {
 	global $wpdb;
 
-	$value_column = $with_values ? ', meta_value' : '';
-	$key_sql      = bb_draft_meta_key_sql();
+	$key_sql   = bb_draft_meta_key_sql();
+	$max_bytes = (int) $max_bytes;
+
+	if ( $with_values && $max_bytes <= 0 ) {
+		$max_bytes = bb_draft_batch_max_bytes();
+	}
 
 	// A `bp_get_user_meta_key` filter this code cannot invert means a stored
 	// key can no longer be matched to the draft it belongs to. Deleting on a
@@ -1092,11 +1131,14 @@ function bb_draft_get_rows_batch( $last_umeta_id = 0, $limit = 200, $with_values
 	$query_values[] = (int) $last_umeta_id;
 	$query_values[] = (int) $limit;
 
-	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- maintenance scan; $value_column is a fixed literal and $key_sql['where'] carries only placeholders.
+	// Metadata first, ALWAYS - never `meta_value` in the windowing query. The
+	// widths come from LENGTH() so the window can be byte-bounded before any
+	// payload is pulled into PHP (PROD-9621 B2).
+	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- maintenance scan; $key_sql['where'] carries only placeholders.
 	$rows = $wpdb->get_results(
 		// phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber -- the sniff cannot count placeholders it never saw interpolated; the WHERE fragment carries 4, plus the 2 appended here = the 6 values passed.
 		$wpdb->prepare(
-			"SELECT umeta_id, user_id, meta_key, LENGTH(meta_value) AS bytes{$value_column}
+			"SELECT umeta_id, user_id, meta_key, LENGTH(meta_value) AS bytes
 			FROM {$wpdb->usermeta}
 			WHERE {$key_sql['where']}
 			AND umeta_id > %d
@@ -1115,8 +1157,61 @@ function bb_draft_get_rows_batch( $last_umeta_id = 0, $limit = 200, $with_values
 		);
 	}
 
-	$raw_count = count( $rows );
-	$max_id    = (int) $rows[ $raw_count - 1 ]['umeta_id'];
+	$raw_count   = count( $rows );
+	$window_full = ( $raw_count === (int) $limit );
+
+	// Trim the window to the byte budget. At least one row is always kept, so a
+	// single row wider than the whole budget still makes progress instead of
+	// stalling the cursor forever.
+	if ( $with_values && $max_bytes > 0 ) {
+		$kept  = array();
+		$bytes = 0;
+
+		foreach ( $rows as $row ) {
+			$row_bytes = (int) $row['bytes'];
+
+			if ( ! empty( $kept ) && ( $bytes + $row_bytes ) > $max_bytes ) {
+				// Trimmed, so more rows certainly remain in this key range.
+				$window_full = true;
+				break;
+			}
+
+			$bytes += $row_bytes;
+			$kept[] = $row;
+		}
+
+		$rows      = $kept;
+		$raw_count = count( $rows );
+	}
+
+	$max_id = (int) $rows[ $raw_count - 1 ]['umeta_id'];
+
+	// Only now pull the payloads, for the trimmed window only.
+	if ( $with_values ) {
+		$ids          = wp_list_pluck( $rows, 'umeta_id' );
+		$placeholders = implode( ',', array_fill( 0, count( $ids ), '%d' ) );
+
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- maintenance fetch; $placeholders is generated %d placeholders only.
+		$values = $wpdb->get_results(
+			// phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber -- $placeholders is one %d per id and the ids are the only arguments.
+			$wpdb->prepare(
+				"SELECT umeta_id, meta_value FROM {$wpdb->usermeta} WHERE umeta_id IN ({$placeholders})",
+				array_map( 'intval', $ids )
+			),
+			ARRAY_A
+		);
+
+		$by_id = array();
+		foreach ( (array) $values as $value_row ) {
+			$by_id[ (int) $value_row['umeta_id'] ] = $value_row['meta_value'];
+		}
+
+		foreach ( $rows as $index => $row ) {
+			// A row deleted between the two queries simply reads as empty and is
+			// then skipped by the callers' own shape checks.
+			$rows[ $index ]['meta_value'] = isset( $by_id[ (int) $row['umeta_id'] ] ) ? $by_id[ (int) $row['umeta_id'] ] : '';
+		}
+	}
 
 	return array(
 		// The cursor advances over the RAW window: a window consisting entirely
@@ -1143,7 +1238,7 @@ function bb_draft_get_rows_batch( $last_umeta_id = 0, $limit = 200, $with_values
 			)
 		),
 		'last_id'  => $max_id,
-		'has_more' => ( $raw_count === (int) $limit ),
+		'has_more' => $window_full,
 	);
 }
 
@@ -1268,6 +1363,12 @@ function bb_drafts_delete_expired( $time_budget = 10 ) {
 
 		// The whole window (draft rows AND filtered third-party keys) is done.
 		$cursor = (int) $batch['last_id'];
+
+		// Persisted after EVERY window, not only on a clean budget break: an
+		// interruption that never returns here (a fatal, a killed worker) would
+		// otherwise leave the cursor where the previous run left it, and the
+		// next run would redo the same window indefinitely (PROD-9621 B2).
+		update_option( 'bb_draft_cleanup_cursor', $cursor, false );
 
 		// Window-level budget check: a window whose rows are ALL filtered-out
 		// third-party draft_* keys never reaches the per-row check above, so

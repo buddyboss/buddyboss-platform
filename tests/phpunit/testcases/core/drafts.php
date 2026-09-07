@@ -1137,6 +1137,77 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		$this->assertFalse( get_transient( 'bb_draft_cleanup_lock' ), 'The early return must not leak the lock, or every later sweep is blocked for 5 minutes.' );
 	}
 
+	/**
+	 * The maintenance window must be bounded in BYTES, not only in rows.
+	 *
+	 * The rows this machinery cleans up are the oversized ones, so a
+	 * row-count-only window has no bound on memory - 200 x 1.5MB rows is
+	 * ~300MB of meta_value before unserializing. A fatal there also skips the
+	 * cursor persist, so the sweep restarts at the same window forever
+	 * (PROD-9621 B2).
+	 */
+	public function test_row_batch_is_bounded_by_bytes_and_still_progresses() {
+		$users = array();
+
+		// Five rows of ~20KB each.
+		for ( $i = 0; $i < 5; $i++ ) {
+			$user_id = self::factory()->user->create();
+			$users[] = $user_id;
+			bp_update_user_meta(
+				$user_id,
+				'draft_user',
+				array(
+					'data_key'        => 'draft_user',
+					'data'            => array( 'content' => str_repeat( 'x', 20000 ) ),
+					'_draft_saved_at' => time(),
+				)
+			);
+		}
+
+		// A budget that fits roughly two rows must return fewer than all five
+		// and report that more remain.
+		$batch = bb_draft_get_rows_batch( 0, 200, true, 45000 );
+
+		$this->assertLessThan( 5, count( $batch['rows'] ), 'The window must be trimmed to the byte budget.' );
+		$this->assertNotEmpty( $batch['rows'] );
+		$this->assertTrue( $batch['has_more'], 'A trimmed window must report that more rows remain.' );
+
+		// Values are still delivered for the rows that were kept.
+		foreach ( $batch['rows'] as $row ) {
+			$this->assertArrayHasKey( 'meta_value', $row );
+			$this->assertNotSame( '', $row['meta_value'], 'The second query must attach the payload for kept rows.' );
+		}
+
+		// A single row wider than the entire budget must still be returned, or
+		// the cursor can never advance past it.
+		$batch_tiny = bb_draft_get_rows_batch( 0, 200, true, 1 );
+		$this->assertCount( 1, $batch_tiny['rows'], 'One row is always kept so the scan makes progress.' );
+		$this->assertTrue( $batch_tiny['has_more'] );
+
+		// Metadata-only mode is unaffected by the byte budget.
+		$batch_ids = bb_draft_get_rows_batch( 0, 200, false );
+		$this->assertCount( 5, $batch_ids['rows'] );
+		$this->assertArrayNotHasKey( 'meta_value', $batch_ids['rows'][0] );
+
+		// Walking the cursor with a tiny budget must eventually cover every row.
+		$seen   = array();
+		$cursor = 0;
+		for ( $guard = 0; $guard < 20; $guard++ ) {
+			$b = bb_draft_get_rows_batch( $cursor, 200, true, 1 );
+			if ( empty( $b['rows'] ) ) {
+				break;
+			}
+			foreach ( $b['rows'] as $r ) {
+				$seen[ (int) $r['umeta_id'] ] = true;
+			}
+			$cursor = (int) $b['last_id'];
+			if ( empty( $b['has_more'] ) ) {
+				break;
+			}
+		}
+		$this->assertCount( 5, $seen, 'A byte-trimmed scan must still reach every row across windows.' );
+	}
+
 	public function filter_prefix_user_meta_key( $key ) {
 		return 'bbtest_' . $key;
 	}
