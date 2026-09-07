@@ -1364,6 +1364,7 @@ function bb_nouveau_ajax_post_draft_activity() {
 			}
 
 			bp_update_user_meta( $draft_user_id, $draft_activity['data_key'], $draft_activity );
+			bb_draft_flush_user_meta_sizes( $draft_user_id );
 		} else {
 			// Dispose strictly from the STORED draft - the client payload's
 			// attachment lists are never used for deletion, so a crafted request
@@ -1397,15 +1398,13 @@ function bb_nouveau_ajax_post_draft_activity() {
 				}
 			}
 
-			// Release the draft stamps from any attachments NOT hard-deleted above
-			// so the orphan-cleanup crons can collect them again - a discarded
-			// draft must never leave its uploads orphan-protected forever. Already
-			// deleted attachments are skipped by the ownership check (PROD-9621).
-			if ( is_array( $stored_draft ) ) {
-				bb_draft_unstamp_attachments( $stored_draft, $draft_user_id );
-			}
-
-			bp_delete_user_meta( $draft_user_id, $draft_activity['data_key'] );
+			// Removal goes through the shared disposal path, which releases the
+			// draft stamps from any attachments NOT hard-deleted above (already
+			// deleted ones are skipped by its ownership check), deletes the row,
+			// and invalidates the memoized meta sizes. Hand-rolling those three
+			// steps here is what let this path drift from the maintenance ones
+			// (PROD-9621).
+			bb_draft_dispose( $draft_user_id, $draft_activity['data_key'] );
 
 			$draft_activity['data'] = false;
 		}

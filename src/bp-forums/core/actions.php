@@ -642,6 +642,7 @@ function bb_post_topic_reply_draft() {
 
 		if ( empty( $existing_draft ) ) {
 			bp_delete_user_meta( $user_id, $usermeta_key );
+			bb_draft_flush_user_meta_sizes( $user_id );
 		} else {
 			// The aggregated row itself must respect the per-user draft budget -
 			// trim oldest inner drafts first, protecting the one just saved.
@@ -682,6 +683,7 @@ function bb_post_topic_reply_draft() {
 			}
 
 			bp_update_user_meta( $user_id, $usermeta_key, $existing_draft );
+			bb_draft_flush_user_meta_sizes( $user_id );
 		}
 
 		// The request is accepted. Release the stamps only for attachments the

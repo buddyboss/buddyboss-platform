@@ -887,6 +887,50 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		$this->assertNotEmpty( get_user_meta( $user_id, 'draft_user', true ), 'Nothing may be removed while keys cannot be attributed.' );
 	}
 
+	/**
+	 * The activity composer's discard now delegates to bb_draft_dispose().
+	 *
+	 * The discard path used to hand-roll unstamp + delete and skipped the size
+	 * memo flush, so it could drift from the maintenance routes it is supposed
+	 * to match. This asserts the delegate does all three things for an activity
+	 * draft shape - media, feature image, row, memo (PROD-9621 N3).
+	 */
+	public function test_dispose_handles_the_full_activity_draft_shape() {
+		$user_id = self::factory()->user->create();
+
+		$media_id   = self::factory()->attachment->create( array( 'post_author' => $user_id ) );
+		$feature_id = self::factory()->attachment->create( array( 'post_author' => $user_id ) );
+
+		update_post_meta( $media_id, 'bb_media_draft', 1 );
+		update_post_meta( $feature_id, 'bb_activity_post_feature_image_draft', 1 );
+
+		bp_update_user_meta(
+			$user_id,
+			'draft_user',
+			array(
+				'data_key'        => 'draft_user',
+				'data'            => array(
+					'content'                        => str_repeat( 'a', 400 ),
+					'media'                          => array( array( 'id' => $media_id ) ),
+					'bb_activity_post_feature_image' => array( 'id' => $feature_id ),
+				),
+				'_draft_saved_at' => time(),
+			)
+		);
+
+		$before = bb_draft_get_user_meta_sizes( $user_id );
+		$this->assertArrayHasKey( 'draft_user', $before['drafts'], 'Fixture must be measurable, or the test proves nothing.' );
+
+		$this->assertTrue( bb_draft_dispose( $user_id, 'draft_user' ) );
+
+		$this->assertSame( '', (string) bp_get_user_meta( $user_id, 'draft_user', true ), 'The row must be gone.' );
+		$this->assertSame( '', (string) get_post_meta( $media_id, 'bb_media_draft', true ), 'Media stamp must be released.' );
+		$this->assertSame( '', (string) get_post_meta( $feature_id, 'bb_activity_post_feature_image_draft', true ), 'Feature image stamp must be released.' );
+
+		$after = bb_draft_get_user_meta_sizes( $user_id );
+		$this->assertArrayNotHasKey( 'draft_user', $after['drafts'], 'The memoized sizes must be invalidated.' );
+	}
+
 	public function filter_prefix_user_meta_key( $key ) {
 		return 'bbtest_' . $key;
 	}

@@ -551,11 +551,14 @@ function bb_draft_release_replaced_attachments( $previous_entry, $current_entry,
 /**
  * Dispose of one stored draft: release its attachment stamps and remove it.
  *
- * The single shared removal path used by budget eviction, the cleanup
- * cron, and the upgrade healing routine, so every deletion route
- * treats attachments and row shape identically. For the aggregated forum
- * row, pass `$inner_key` to remove one inner draft; an emptied aggregate
- * row is deleted rather than stored as an empty array.
+ * The shared removal path: budget eviction, the cleanup cron, the upgrade
+ * healing routine and the activity composer's discard all route through it,
+ * so those deletion routes treat attachments, row shape and the memoized
+ * sizes identically. The forum draft handler is the one exception — it
+ * rewrites the aggregated row in place around a merge of sibling drafts and
+ * so writes directly, flushing the sizes itself. For the aggregated forum
+ * row, pass `$inner_key` to remove one inner draft; an emptied aggregate row
+ * is deleted rather than stored as an empty array.
  *
  * @since BuddyBoss [BBVERSION]
  *
