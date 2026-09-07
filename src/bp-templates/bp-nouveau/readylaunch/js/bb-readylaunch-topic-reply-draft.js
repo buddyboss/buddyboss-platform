@@ -1730,11 +1730,38 @@ window.bp = window.bp || {};
 	// The aggregated draft row is no longer echoed into forum page HTML
 	// (PROD-9621) - when server drafts exist, fetch them once and seed the
 	// localized map the instances read, then initialize the forms.
+	// `BP_Nouveau.forums.draft` is now always localized empty, so testing it
+	// alone made the fetch fire on EVERY forum page view for any draft holder -
+	// the opposite of the "0 requests warm / 1 cold" contract, and unlike the
+	// activity pack which checks its local copy first. Consult localStorage the
+	// same way: a warm tab already holds the draft it would fetch
+	// (PROD-9621 M3).
+	var bbDraftIsWarmLocally = function () {
+		var i, key;
+
+		try {
+			for ( i = 0; i < forms.length; i++ ) {
+				key = $( forms[ i ] ).find( 'input[name="bbp_topic_id"]' ).length ?
+					'draft_reply_' + $( forms[ i ] ).find( 'input[name="bbp_topic_id"]' ).val() :
+					'';
+
+				if ( key && null !== window.localStorage.getItem( key ) ) {
+					return true;
+				}
+			}
+		} catch ( e ) {
+			// Storage unavailable - fall through and fetch.
+		}
+
+		return false;
+	};
+
 	if (
 		0 < forms.length &&
 		'undefined' !== typeof BP_Nouveau.forums &&
 		true === BP_Nouveau.forums.has_draft &&
-		$.isEmptyObject( BP_Nouveau.forums.draft )
+		$.isEmptyObject( BP_Nouveau.forums.draft ) &&
+		! bbDraftIsWarmLocally()
 	) {
 		$.post(
 			BP_Nouveau.ajaxurl,
