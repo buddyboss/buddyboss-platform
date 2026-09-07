@@ -1810,6 +1810,24 @@ window.bp = window.bp || {};
 			var draft_payload = bp.draft_activity;
 			if ( 'delete' === bp.draft_activity.post_action ) {
 				draft_payload = _.omit( bp.draft_activity, 'data' );
+			} else if ( bp.draft_activity.data && bp.draft_activity.data.video && bp.draft_activity.data.video.length ) {
+				// js_preview is a canvas.toDataURL() frame grab - tens to hundreds
+				// of KB of base64 per video, and purely a local rendering aid. It
+				// has no business in the stored draft: it is regenerated from the
+				// video on restore, and at this size it can single-handedly push a
+				// video draft past the per-draft cap so the save is REFUSED. Both
+				// forum packs already strip it before sending; the activity packs
+				// only nulled it in the localStorage copy, and only above 4MB
+				// (PROD-9621).
+				draft_payload      = _.clone( bp.draft_activity );
+				draft_payload.data = _.clone( bp.draft_activity.data );
+
+				draft_payload.data.video = _.map(
+					bp.draft_activity.data.video,
+					function ( item ) {
+						return _.omit( item, 'js_preview' );
+					}
+				);
 			}
 
 			if ( ! is_reload_window ) {
