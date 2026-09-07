@@ -1700,7 +1700,7 @@ class BB_Admin_Groups_Ajax {
 			'bb_admin_get_group_members_response'
 		);
 		ob_end_clean();
-		
+
 		return array(
 			'user_id'       => (int) $member->user_id,
 			'name'          => bp_core_get_user_displayname( $member->user_id ),
