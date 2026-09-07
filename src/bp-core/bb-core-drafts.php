@@ -298,10 +298,33 @@ function bb_draft_strip_data_urls( $content ) {
 	// cleaned. Not an injection path - kses escapes the surviving tag to inert
 	// text and leaves no live `data:` src - purely a size-coverage gap.
 	//
-	// Payload runs to the attribute delimiter. Also a negated character class,
-	// so it stays linear: measured at 9ms on a 4MB payload with no PCRE
-	// failure, same as the rule above.
-	$stripped = preg_replace( '/data:[a-z0-9.+-]+\/[a-z0-9.+-]+[a-z0-9;=.+-]*,[^"\'>]*/i', '', $content );
+	// ANCHORED TO ATTRIBUTE CONTEXT. Unlike the base64 payload above, this
+	// rule's payload class has to allow ordinary prose characters, so matching
+	// it anywhere in the content deleted everything from a member's plain-text
+	// mention of `data:image/svg+xml,` to the next quote or `>` - in prose with
+	// neither, to the end of the draft. Requiring `="` (or `='`, or a bare
+	// unquoted attribute) in front confines it to the shape a pasted image
+	// actually arrives in, and lets the payload run to its real delimiter
+	// instead of stopping early at a `>` inside an SVG (PROD-9621).
+	//
+	// One pass per delimiter rather than one pattern with a backreference: a
+	// backreferenced quote would backtrack, and every payload class here has to
+	// stay a plain negated class to keep the whole thing linear - measured at
+	// 9ms on a 4MB payload with no PCRE failure, same as the rule above.
+	//
+	// The trade is coverage of data: URIs that are not attribute values at all
+	// (`url(data:…)` inside a style attribute, for instance). Those are left to
+	// the per-draft size cap, which refuses the save - the outcome this rule was
+	// only ever a cleanup for. Eating the member's text is the worse failure.
+	$stripped = preg_replace(
+		array(
+			'/(=\s*")data:[a-z0-9.+-]+\/[a-z0-9.+-]+[a-z0-9;=.+-]*,[^"]*/i',
+			'/(=\s*\')data:[a-z0-9.+-]+\/[a-z0-9.+-]+[a-z0-9;=.+-]*,[^\']*/i',
+			'/(=\s*)data:[a-z0-9.+-]+\/[a-z0-9.+-]+[a-z0-9;=.+-]*,[^\s"\'>]*/i',
+		),
+		'$1',
+		$content
+	);
 
 	if ( is_string( $stripped ) ) {
 		$content = $stripped;

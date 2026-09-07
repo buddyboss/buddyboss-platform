@@ -2282,4 +2282,58 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		$this->assertNotEmpty( $survivor_row, 'The newer draft must survive - evicting it is the wrong-order bug.' );
 		$this->assertSame( 'STRAY-RAW-ROW', $stray, 'An unfiltered lookalike is not ours on this install and must be left alone.' );
 	}
+
+	/**
+	 * The non-base64 strip must not eat a member's prose.
+	 *
+	 * That rule's payload class has to allow ordinary text, so before it was
+	 * anchored to attribute context a plain-text mention of a data: URI deleted
+	 * everything up to the next quote or `>` - and in prose containing neither,
+	 * to the end of the draft. A member writing a forum post ABOUT data URIs
+	 * silently lost the rest of it on autosave, and the loss became permanent
+	 * once they restored that draft and published (PROD-9621).
+	 *
+	 * The base64 rule above it is deliberately NOT anchored: its payload class
+	 * is `[A-Za-z0-9+/=]`, which cannot run past a space, and it is the load
+	 * bearing protection against the pasted megabyte screenshot that opened
+	 * this ticket - narrowing it to attribute values would stop it seeing a
+	 * `url(data:…)` inside a style attribute.
+	 */
+	public function test_strip_data_urls_does_not_eat_surrounding_prose() {
+		$untouched = array(
+			'prose'         => 'You can inline an image with data:image/svg+xml, and the browser renders it. Here is the rest of the post.',
+			'apostrophe'    => 'Try data:text/plain, and you will see it works. It\'s the simplest example.',
+			'inline code'   => "Paste this:\n`data:application/json,{\"a\":1}`\nEverything below should survive.",
+			'markup around' => '<a href="/x">link</a> then data:image/gif,R0lGOD in prose, then <b>bold</b> and more.',
+		);
+
+		foreach ( $untouched as $label => $input ) {
+			$this->assertSame(
+				$input,
+				bb_draft_strip_data_urls( $input ),
+				sprintf( 'A data: URI outside an attribute is prose, not a payload - "%s" must come back byte-identical.', $label )
+			);
+		}
+
+		// And every real attribute shape must still be stripped, including the
+		// two the old single pattern happened to cover and the unquoted one it
+		// stopped short on.
+		$stripped = array(
+			'double quoted' => 'a <img src="data:image/svg+xml,<svg onload=alert(1)/>"> b',
+			'single quoted' => "a <img src='data:image/svg+xml;utf8,%3Csvg%3E'> b",
+			'unquoted'      => 'a <img src=data:image/gif,R0lGOD> b',
+		);
+
+		foreach ( $stripped as $label => $input ) {
+			$out = bb_draft_strip_data_urls( $input );
+
+			$this->assertStringNotContainsString( 'data:', $out, sprintf( 'The %s attribute payload must be stripped.', $label ) );
+			$this->assertStringNotContainsString( 'R0lGOD', $out, sprintf( 'The %s attribute payload must be stripped.', $label ) );
+		}
+
+		// A quoted payload containing `>` (every inline SVG) must run to the
+		// closing quote, not stop at the first angle bracket and leave a tail.
+		$svg = '<img src="data:image/svg+xml,<svg><rect/></svg>" alt="x">';
+		$this->assertStringNotContainsString( 'rect', bb_draft_strip_data_urls( $svg ), 'The payload must run to the attribute delimiter, not to the first `>`.' );
+	}
 }
