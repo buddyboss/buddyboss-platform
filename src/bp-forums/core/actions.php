@@ -428,9 +428,17 @@ add_action( 'bp_notification_settings', 'forums_notification_settings', 11 );
  * member cannot view the forum it names, or they may not publish that object
  * type.
  *
+ * Concurrency: the aggregate row is shared by every forum draft the member
+ * holds, so this handler writes back only the inner keys the request itself
+ * decided about and takes the rest from a fresh read. Two requests editing
+ * the SAME inner key are still last-writer-wins, which is the intended
+ * semantic; requests editing DIFFERENT keys no longer overwrite each other.
+ *
  * @since BuddyBoss 2.0.4
  * @since BuddyBoss [BBVERSION] Added the size caps, the key validation and
  *                              the `evicted_draft_keys` response field.
+ * @since BuddyBoss [BBVERSION] Writes merge onto a fresh read of the row
+ *                              instead of writing the whole row back.
  */
 function bb_post_topic_reply_draft() {
 	if ( ! is_user_logged_in() || empty( $_POST['_wpnonce_post_topic_reply_draft'] ) || ! wp_verify_nonce( $_POST['_wpnonce_post_topic_reply_draft'], 'post_topic_reply_draft_data' ) ) {
@@ -527,8 +535,11 @@ function bb_post_topic_reply_draft() {
 			}
 		}
 
-		$existing_draft  = bp_get_user_meta( $user_id, $usermeta_key, true );
-		$stored_row_size = strlen( maybe_serialize( $existing_draft ) );
+		$existing_draft = bp_get_user_meta( $user_id, $usermeta_key, true );
+
+		// The inner keys this request is entitled to write. Everything else in
+		// the row is another tab's to own - see the merge before the write.
+		$decided_draft_keys = array( (string) $draft_topic_reply['data_key'] => true );
 
 		// Draft-protection stamps are collected during validation but written
 		// only after every size cap has accepted the save - a rejected save
@@ -741,11 +752,55 @@ function bb_post_topic_reply_draft() {
 							continue;
 						}
 
-						$existing_draft[ $data_key ] = $merged_entry;
+						$existing_draft[ $data_key ]     = $merged_entry;
+						$decided_draft_keys[ $data_key ] = true;
 					}
 				}
 			}
 		}
+
+		// Merge onto a FRESH read of the row instead of writing back the copy
+		// taken at the top of this request. Between those two points the handler
+		// runs kses over the payload, up to 150 attachment ownership lookups and
+		// the trim/budget pass, and a second tab autosaving or discarding a
+		// DIFFERENT inner draft commits inside that window. Writing the whole
+		// stale array back resurrected drafts the member had just discarded -
+		// with their attachment stamps already released, so the orphan cron then
+		// reaped the media the restored draft still referenced - and silently
+		// reverted the other tab's autosave. Only the keys this request actually
+		// decided about are ours to write; every other key belongs to whoever
+		// wrote it last (PROD-9621 M2).
+		wp_cache_delete( $user_id, 'user_meta' );
+		$fresh_draft_row = bp_get_user_meta( $user_id, $usermeta_key, true );
+		$stored_row_size = strlen( maybe_serialize( $fresh_draft_row ) );
+
+		if ( ! is_array( $fresh_draft_row ) ) {
+			$fresh_draft_row = array();
+		}
+
+		$merged_draft_row = array();
+
+		// Keys this request never touched come from storage, so a sibling another
+		// tab discarded stays discarded and one it updated keeps that update.
+		foreach ( $fresh_draft_row as $fresh_key => $fresh_entry ) {
+			if ( ! isset( $decided_draft_keys[ $fresh_key ] ) ) {
+				$merged_draft_row[ $fresh_key ] = $fresh_entry;
+			}
+		}
+
+		// Keys this request decided about come from this request - including the
+		// primary key's deletion, which is expressed by its absence here.
+		foreach ( array_keys( $decided_draft_keys ) as $decided_key ) {
+			if ( isset( $existing_draft[ $decided_key ] ) ) {
+				$merged_draft_row[ $decided_key ] = $existing_draft[ $decided_key ];
+			}
+		}
+
+		$existing_draft = $merged_draft_row;
+
+		// The memo was primed from the pre-merge row; the trim and the budget
+		// below both read it.
+		bb_draft_flush_user_meta_sizes( $user_id );
 
 		if ( empty( $existing_draft ) ) {
 			bp_delete_user_meta( $user_id, $usermeta_key );

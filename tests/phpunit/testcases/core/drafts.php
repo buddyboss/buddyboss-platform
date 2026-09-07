@@ -12,6 +12,45 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 	 */
 	protected $unreadable_forum_id = 0;
 
+	/**
+	 * State for the concurrent-tab injection used by the M2 race tests.
+	 *
+	 * @var int
+	 */
+	protected $race_user_id = 0;
+
+	/**
+	 * @var int
+	 */
+	protected $race_calls = 0;
+
+	/**
+	 * @var string
+	 */
+	protected $race_mode = '';
+
+	/**
+	 * @var string
+	 */
+	protected $race_key = '';
+
+	/**
+	 * @var bool
+	 */
+	protected $race_done = false;
+
+	/**
+	 * Which bb_draft_max_size() call the competing write actually landed on.
+	 *
+	 * @var int
+	 */
+	protected $race_fired_at = 0;
+
+	/**
+	 * @var bool
+	 */
+	protected $race_reentrant = false;
+
 	public function test_draft_meta_key_matching_accepts_only_buddyboss_shapes() {
 		$this->assertTrue( bb_draft_is_draft_meta_key( 'draft_user' ) );
 		$this->assertTrue( bb_draft_is_draft_meta_key( 'draft_user_5' ) );
@@ -1973,6 +2012,201 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 			'emojioneemoji',
 			$filtered,
 			'The class survives, which is why the publish path cannot re-populate the attribute on its own.'
+		);
+	}
+
+	/**
+	 * Perform a second tab's write from INSIDE the handler's write window.
+	 *
+	 * The bb_draft_max_size() cap is consulted again after the aggregate row has been
+	 * read into a PHP variable, which makes it the honest injection point: the
+	 * competing request commits while this one is still holding its copy, which
+	 * is exactly what a second browser tab does.
+	 *
+	 * @param int $size Incoming cap.
+	 * @return int
+	 */
+	public function inject_competing_draft_write( $size ) {
+		if ( $this->race_reentrant ) {
+			return $size;
+		}
+
+		++$this->race_calls;
+
+		// Fire once, and only after the handler has taken its copy of the row.
+		if ( $this->race_done || $this->race_calls < 3 ) {
+			return $size;
+		}
+
+		$this->race_done      = true;
+		$this->race_fired_at  = $this->race_calls;
+		$this->race_reentrant = true;
+
+		// The competing request is a separate PHP process with its own read.
+		wp_cache_delete( $this->race_user_id, 'user_meta' );
+		$row = bp_get_user_meta( $this->race_user_id, 'bb_user_topic_reply_draft', true );
+
+		if ( 'discard' === $this->race_mode ) {
+			unset( $row[ $this->race_key ] );
+		} else {
+			$row[ $this->race_key ]['data']['bbp_topic_content'] = 'OTHER TAB UPDATE';
+			$row[ $this->race_key ]['_draft_saved_at']           = time();
+		}
+
+		bp_update_user_meta( $this->race_user_id, 'bb_user_topic_reply_draft', $row );
+		bb_draft_flush_user_meta_sizes( $this->race_user_id );
+
+		$this->race_reentrant = false;
+
+		return $size;
+	}
+
+	/**
+	 * Seed two inner forum drafts and arm the competing-tab injection.
+	 *
+	 * @param string $mode 'discard' or 'update'.
+	 * @return array Draft keys [ other tab's, this request's ].
+	 */
+	protected function seed_two_tab_forum_drafts( $mode ) {
+		$user_id = self::factory()->user->create();
+		$this->set_current_user( $user_id );
+
+		$this->race_user_id  = $user_id;
+		$this->race_mode     = $mode;
+		$this->race_calls    = 0;
+		$this->race_done     = false;
+		$this->race_fired_at = 0;
+
+		$other_forum   = self::factory()->post->create( array( 'post_type' => bbp_get_forum_post_type() ) );
+		$current_forum = self::factory()->post->create( array( 'post_type' => bbp_get_forum_post_type() ) );
+
+		$other_key   = 'draft_discussion_' . $other_forum;
+		$current_key = 'draft_discussion_' . $current_forum;
+
+		bp_update_user_meta(
+			$user_id,
+			'bb_user_topic_reply_draft',
+			array(
+				$other_key   => array(
+					'data_key'        => $other_key,
+					'object'          => 'topic',
+					'data'            => array( 'bbp_topic_content' => 'OTHER TAB ORIGINAL' ),
+					'_draft_saved_at' => time() - 120,
+				),
+				$current_key => array(
+					'data_key'        => $current_key,
+					'object'          => 'topic',
+					'data'            => array( 'bbp_topic_content' => 'THIS TAB ORIGINAL' ),
+					'_draft_saved_at' => time() - 120,
+				),
+			)
+		);
+
+		$this->race_key = $other_key;
+
+		return array( $other_key, $current_key );
+	}
+
+	/**
+	 * Drive the save handler for one inner key with the injection armed.
+	 *
+	 * @param string $data_key Inner draft key to save.
+	 * @param string $content  Content to store.
+	 */
+	protected function drive_draft_save_with_race( $data_key, $content ) {
+		$_POST    = array();
+		$_REQUEST = array();
+
+		$_REQUEST['draft_topic_reply'] = wp_json_encode(
+			array(
+				'data_key'    => $data_key,
+				'object'      => 'topic',
+				'post_action' => 'update',
+				'data'        => array( 'bbp_topic_content' => $content ),
+			)
+		);
+
+		// phpcs:disable WordPress.Security.NonceVerification -- this test drives the handler that performs the verification.
+		$_POST['_wpnonce_post_topic_reply_draft'] = wp_create_nonce( 'post_topic_reply_draft_data' );
+		$_REQUEST                                 = array_merge( $_REQUEST, $_POST );
+		// phpcs:enable WordPress.Security.NonceVerification
+
+		add_filter( 'wp_doing_ajax', '__return_true' );
+		add_filter( 'wp_die_ajax_handler', array( $this, 'filter_draft_die_handler' ), 99 );
+		add_filter( 'bb_draft_max_size', array( $this, 'inject_competing_draft_write' ), 10, 1 );
+
+		ob_start();
+
+		try {
+			bb_post_topic_reply_draft();
+		} catch ( Exception $e ) {
+			// Expected: the handler finished and tried to exit.
+			unset( $e );
+		}
+
+		ob_end_clean();
+
+		remove_filter( 'bb_draft_max_size', array( $this, 'inject_competing_draft_write' ), 10 );
+		remove_filter( 'wp_die_ajax_handler', array( $this, 'filter_draft_die_handler' ), 99 );
+		remove_filter( 'wp_doing_ajax', '__return_true' );
+
+		wp_cache_delete( $this->race_user_id, 'user_meta' );
+
+		return bp_get_user_meta( $this->race_user_id, 'bb_user_topic_reply_draft', true );
+	}
+
+	/**
+	 * A discard in another tab must survive this tab's autosave.
+	 *
+	 * The handler used to write back the whole row it read at the start of the
+	 * request. A second tab discarding a DIFFERENT inner draft inside that
+	 * window had its deletion undone - and because the discard had already
+	 * released that entry's attachment stamps, the orphan cron then reaped the
+	 * media the resurrected draft still referenced (PROD-9621 M2).
+	 */
+	public function test_concurrent_discard_is_not_resurrected_by_a_sibling_autosave() {
+		list( $other_key, $current_key ) = $this->seed_two_tab_forum_drafts( 'discard' );
+
+		$stored = $this->drive_draft_save_with_race( $current_key, 'THIS TAB AUTOSAVE' );
+
+		$this->assertSame( 3, $this->race_fired_at, 'The competing write must land inside the handler, after it read the row, or this test proves nothing.' );
+		$this->assertArrayNotHasKey(
+			$other_key,
+			(array) $stored,
+			'A draft discarded by another tab must stay discarded - writing the stale row back resurrects it.'
+		);
+
+		// Negative control: this request's own key must still be written, or the
+		// test would also pass for a handler that stores nothing at all.
+		$this->assertSame(
+			'THIS TAB AUTOSAVE',
+			$stored[ $current_key ]['data']['bbp_topic_content'],
+			'The key this request owns must still be saved.'
+		);
+	}
+
+	/**
+	 * Another tab's autosave must survive this tab's autosave.
+	 *
+	 * Same stale whole-row write-back as above, in its lost-update form: the
+	 * other tab's newer content was silently reverted to what this request had
+	 * read minutes earlier (PROD-9621 M2).
+	 */
+	public function test_concurrent_sibling_autosave_is_not_clobbered() {
+		list( $other_key, $current_key ) = $this->seed_two_tab_forum_drafts( 'update' );
+
+		$stored = $this->drive_draft_save_with_race( $current_key, 'THIS TAB AUTOSAVE' );
+
+		$this->assertSame( 3, $this->race_fired_at, 'The competing write must land inside the handler, after it read the row, or this test proves nothing.' );
+		$this->assertSame(
+			'OTHER TAB UPDATE',
+			$stored[ $other_key ]['data']['bbp_topic_content'],
+			'A sibling draft another tab just autosaved must not be reverted by this request.'
+		);
+		$this->assertSame(
+			'THIS TAB AUTOSAVE',
+			$stored[ $current_key ]['data']['bbp_topic_content'],
+			'The key this request owns must still be saved.'
 		);
 	}
 }
