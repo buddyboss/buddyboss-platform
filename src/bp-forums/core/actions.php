@@ -463,15 +463,34 @@ function bb_post_topic_reply_draft() {
 		// per-attachment lookups below; the authoritative cap runs on the
 		// normalised entry just before it is stored.
 		if ( $is_draft_update ) {
-			$draft_topic_reply = bb_forums_sanitize_draft_entry( $draft_topic_reply );
+			// Strip data URLs, then judge the RAW width before kses runs inside
+			// bb_forums_sanitize_draft_entry(). bbp_kses_data() on a multi-MB
+			// payload is the expensive step, and it used to run before any cap
+			// could refuse the request (PROD-9621 M4).
+			$draft_topic_reply = bb_forums_strip_draft_data_urls( $draft_topic_reply );
+			$raw_entry_size    = strlen( maybe_serialize( $draft_topic_reply ) );
 
-			if ( strlen( maybe_serialize( $draft_topic_reply ) ) > bb_draft_max_size() ) {
+			if ( $raw_entry_size > bb_draft_max_size() ) {
 				/** This action is documented in bp-templates/bp-nouveau/includes/activity/ajax.php */
-				do_action( 'bb_draft_cap_rejected', $user_id, $draft_topic_reply['data_key'], strlen( maybe_serialize( $draft_topic_reply ) ), 'per_draft' );
+				do_action( 'bb_draft_cap_rejected', $user_id, $draft_topic_reply['data_key'], $raw_entry_size, 'per_draft' );
 
 				wp_send_json_error(
 					array(
-						'message' => esc_html__( 'Your draft is too large to save. Please remove some content and try again.', 'buddyboss' ),
+						'message' => __( 'Your draft is too large to save. Please remove some content and try again.', 'buddyboss' ),
+					)
+				);
+			}
+
+			$draft_topic_reply   = bb_forums_sanitize_draft_entry( $draft_topic_reply );
+			$sanitized_entry_size = strlen( maybe_serialize( $draft_topic_reply ) );
+
+			if ( $sanitized_entry_size > bb_draft_max_size() ) {
+				/** This action is documented in bp-templates/bp-nouveau/includes/activity/ajax.php */
+				do_action( 'bb_draft_cap_rejected', $user_id, $draft_topic_reply['data_key'], $sanitized_entry_size, 'per_draft' );
+
+				wp_send_json_error(
+					array(
+						'message' => __( 'Your draft is too large to save. Please remove some content and try again.', 'buddyboss' ),
 					)
 				);
 			}
@@ -624,7 +643,7 @@ function bb_post_topic_reply_draft() {
 
 				wp_send_json_error(
 					array(
-						'message' => esc_html__( 'Your draft is too large to save. Please remove some content and try again.', 'buddyboss' ),
+						'message' => __( 'Your draft is too large to save. Please remove some content and try again.', 'buddyboss' ),
 					)
 				);
 			}
@@ -704,7 +723,7 @@ function bb_post_topic_reply_draft() {
 
 					wp_send_json_error(
 						array(
-							'message' => esc_html__( 'Your draft could not be saved because you have too many saved drafts. Please discard some drafts and try again.', 'buddyboss' ),
+							'message' => __( 'Your draft could not be saved because you have too many saved drafts. Please discard some drafts and try again.', 'buddyboss' ),
 						)
 					);
 				}

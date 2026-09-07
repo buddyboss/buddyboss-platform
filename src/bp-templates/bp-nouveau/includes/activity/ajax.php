@@ -1195,7 +1195,7 @@ function bb_nouveau_ajax_post_draft_activity() {
 		if ( ! bb_draft_validate_activity_data_key( (string) $draft_activity['data_key'], (string) $draft_activity['object'], $draft_activity['data']['item_id'] ?? 0, $draft_user_id, $draft_context ) ) {
 			wp_send_json_error(
 				array(
-					'message' => esc_html__( 'This draft could not be saved.', 'buddyboss' ),
+					'message' => __( 'This draft could not be saved.', 'buddyboss' ),
 				)
 			);
 		}
@@ -1308,10 +1308,35 @@ function bb_nouveau_ajax_post_draft_activity() {
 			 */
 			$draft_content_keys = apply_filters( 'bb_draft_activity_content_keys', array( 'content' ) );
 
+			// Reject on RAW width before sanitizing. bp_activity_filter_kses() is
+			// the expensive step (measured ~1.5s on 4MB of plain HTML) and it ran
+			// on the full client payload before any cap could refuse it - a CPU
+			// amplifier on an endpoint every open composer hits every 20s. Data
+			// URLs are stripped first, so the pasted-bitmap case stays cheap and
+			// is still judged on its post-strip width (PROD-9621 M4).
+			foreach ( $draft_content_keys as $draft_content_key ) {
+				if ( isset( $draft_activity['data'][ $draft_content_key ] ) && is_string( $draft_activity['data'][ $draft_content_key ] ) ) {
+					$draft_activity['data'][ $draft_content_key ] = bb_draft_strip_data_urls( $draft_activity['data'][ $draft_content_key ] );
+				}
+			}
+
+			$raw_draft_size = strlen( maybe_serialize( $draft_activity ) );
+
+			if ( $raw_draft_size > bb_draft_max_size() ) {
+				/** This action is documented in bp-templates/bp-nouveau/includes/activity/ajax.php */
+				do_action( 'bb_draft_cap_rejected', $draft_user_id, $draft_activity['data_key'], $raw_draft_size, 'per_draft' );
+
+				wp_send_json_error(
+					array(
+						'message' => __( 'Your draft is too large to save. Please remove some content and try again.', 'buddyboss' ),
+					)
+				);
+			}
+
 			foreach ( $draft_content_keys as $draft_content_key ) {
 				if ( isset( $draft_activity['data'][ $draft_content_key ] ) && is_string( $draft_activity['data'][ $draft_content_key ] ) ) {
 					// Same allowed tags as the publish path (bp_activity_content_before_save).
-					$draft_activity['data'][ $draft_content_key ] = bp_activity_filter_kses( bb_draft_strip_data_urls( $draft_activity['data'][ $draft_content_key ] ) );
+					$draft_activity['data'][ $draft_content_key ] = bp_activity_filter_kses( $draft_activity['data'][ $draft_content_key ] );
 				}
 			}
 
@@ -1335,7 +1360,7 @@ function bb_nouveau_ajax_post_draft_activity() {
 
 				wp_send_json_error(
 					array(
-						'message' => esc_html__( 'Your draft is too large to save. Please remove some content and try again.', 'buddyboss' ),
+						'message' => __( 'Your draft is too large to save. Please remove some content and try again.', 'buddyboss' ),
 					)
 				);
 			}
@@ -1348,7 +1373,7 @@ function bb_nouveau_ajax_post_draft_activity() {
 
 				wp_send_json_error(
 					array(
-						'message' => esc_html__( 'Your draft could not be saved because you have too many saved drafts. Please discard some drafts and try again.', 'buddyboss' ),
+						'message' => __( 'Your draft could not be saved because you have too many saved drafts. Please discard some drafts and try again.', 'buddyboss' ),
 					)
 				);
 			}

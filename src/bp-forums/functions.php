@@ -1374,6 +1374,35 @@ function bb_moderator_can_delete_topic_reply( $obj, $args = array() ) {
 }
 
 /**
+ * Strip inline data-URL images from a draft entry's content fields.
+ *
+ * Split out of {@see bb_forums_sanitize_draft_entry()} so the cheap step can
+ * run before the per-draft cap and the expensive kses pass runs only on a
+ * payload the cap has already accepted (PROD-9621 M4).
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $draft_entry Draft entry with a `data` member.
+ * @return array Entry with data URLs removed from its content fields.
+ */
+function bb_forums_strip_draft_data_urls( $draft_entry ) {
+	if ( ! is_array( $draft_entry ) || empty( $draft_entry['data'] ) || ! is_array( $draft_entry['data'] ) ) {
+		return $draft_entry;
+	}
+
+	/** This filter is documented in bp-forums/functions.php */
+	$content_keys = apply_filters( 'bb_draft_topic_reply_content_keys', array( 'bbp_topic_content', 'bbp_reply_content' ) );
+
+	foreach ( $content_keys as $content_key ) {
+		if ( isset( $draft_entry['data'][ $content_key ] ) && is_string( $draft_entry['data'][ $content_key ] ) ) {
+			$draft_entry['data'][ $content_key ] = bb_draft_strip_data_urls( $draft_entry['data'][ $content_key ] );
+		}
+	}
+
+	return $draft_entry;
+}
+
+/**
  * Sanitize one topic/reply draft entry before it is stored in usermeta.
  *
  * Strips inline data-URL images and applies the forum publish path's kses
@@ -1405,6 +1434,9 @@ function bb_forums_sanitize_draft_entry( $draft_entry ) {
 		foreach ( $content_keys as $content_key ) {
 			if ( isset( $draft_entry['data'][ $content_key ] ) && is_string( $draft_entry['data'][ $content_key ] ) ) {
 				// Same allowed tags as the topic/reply publish path (bbp_filter_kses), unslashed variant.
+				// Data URLs are stripped by bb_forums_strip_draft_data_urls()
+				// before the cap; kept idempotent here so any other caller of
+				// this function still gets the full treatment.
 				$draft_entry['data'][ $content_key ] = bbp_kses_data( bb_draft_strip_data_urls( $draft_entry['data'][ $content_key ] ) );
 			}
 		}

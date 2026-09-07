@@ -1395,6 +1395,85 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		$this->assertSame( '1', (string) get_post_meta( $kept, 'bb_media_draft', true ), 'The surviving draft keeps its attachment protected.' );
 	}
 
+	/**
+	 * The per-draft cap must refuse before the expensive sanitizer runs.
+	 *
+	 * kses on the full client payload ran before any cap could reject it - a
+	 * CPU amplifier on an endpoint every open composer hits every 20 seconds.
+	 * Data URLs are still stripped first, so a pasted bitmap stays cheap and is
+	 * judged on its post-strip width (PROD-9621 M4).
+	 */
+	public function test_forum_draft_strip_runs_before_kses_and_leaves_content_intact() {
+		$entry = array(
+			'data_key' => 'draft_reply',
+			'data'     => array(
+				'bbp_reply_content' => 'keep <b>this</b> <img src="data:image/png;base64,' . str_repeat( 'A', 200000 ) . '"> and this',
+			),
+		);
+
+		$stripped = bb_forums_strip_draft_data_urls( $entry );
+
+		$this->assertStringNotContainsString( 'base64', $stripped['data']['bbp_reply_content'], 'The payload must be gone before the cap is measured.' );
+		$this->assertStringContainsString( 'keep', $stripped['data']['bbp_reply_content'] );
+		$this->assertStringContainsString( 'and this', $stripped['data']['bbp_reply_content'] );
+		$this->assertLessThan( 200, strlen( $stripped['data']['bbp_reply_content'] ), 'A pasted bitmap must collapse to nearly nothing, so it is never near the cap.' );
+
+		// Strip alone must not sanitize - that is the whole point of the split.
+		$this->assertStringContainsString( '<b>this</b>', $stripped['data']['bbp_reply_content'] );
+
+		// Non-content members and non-arrays pass through untouched.
+		$this->assertSame( array( 'data_key' => 'x' ), bb_forums_strip_draft_data_urls( array( 'data_key' => 'x' ) ) );
+		$this->assertSame( 'not an array', bb_forums_strip_draft_data_urls( 'not an array' ) );
+	}
+
+	/**
+	 * The two public draft hooks must actually fire, with their documented args.
+	 *
+	 * They shipped as public contracts with zero assertions anywhere
+	 * (PROD-9621 M7).
+	 */
+	public function test_public_draft_hooks_fire_with_their_documented_arguments() {
+		$user_id = self::factory()->user->create();
+
+		// Fill the user's draft budget so the next save must evict.
+		$per_draft = bb_draft_max_size();
+		$total     = bb_draft_user_total_max_size();
+		$fillers   = (int) ceil( $total / $per_draft ) + 1;
+
+		for ( $i = 1; $i <= $fillers; $i++ ) {
+			bp_update_user_meta(
+				$user_id,
+				'draft_group_' . $i,
+				array(
+					'data_key'        => 'draft_group_' . $i,
+					'data'            => array( 'content' => str_repeat( 'x', $per_draft - 200 ) ),
+					'_draft_saved_at' => 100 + $i,
+				)
+			);
+		}
+
+		$evicted = array();
+		$spy     = function ( $uid, $key, $reason ) use ( &$evicted ) {
+			$evicted[] = array( $uid, $key, $reason );
+		};
+		add_action( 'bb_draft_evicted', $spy, 10, 3 );
+
+		bb_draft_flush_user_meta_sizes( $user_id );
+		$result = bb_draft_enforce_user_budget( $user_id, 'draft_user', $per_draft - 200 );
+
+		remove_action( 'bb_draft_evicted', $spy, 10 );
+
+		$this->assertNotEmpty( $result['evicted'], 'The aggregate cap must have evicted something.' );
+		$this->assertNotEmpty( $evicted, 'bb_draft_evicted must fire for every eviction - it is a public contract.' );
+		$this->assertSame( count( $result['evicted'] ), count( $evicted ), 'One fire per evicted key.' );
+		$this->assertSame( $user_id, $evicted[0][0], 'Arg 1 is the user id.' );
+		$this->assertSame( $result['evicted'][0], $evicted[0][1], 'Arg 2 is the evicted key.' );
+		$this->assertSame( 'aggregate_cap', $evicted[0][2], 'Arg 3 is the documented reason.' );
+
+		// Oldest first, per the docblock.
+		$this->assertStringContainsString( 'draft_group_1', $evicted[0][1], 'Eviction must be oldest-first.' );
+	}
+
 	public function filter_prefix_user_meta_key( $key ) {
 		return 'bbtest_' . $key;
 	}
