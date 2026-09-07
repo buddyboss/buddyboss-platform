@@ -351,6 +351,42 @@ function bb_draft_unstamp_attachments( $draft, $user_id ) {
 }
 
 /**
+ * Release the draft stamps a replaced draft entry no longer needs.
+ *
+ * Replacing a stored draft must NOT unstamp the whole previous entry: a
+ * restored draft re-sends its stored attachment list verbatim, so the
+ * attachments the member is still drafting with appear in both entries and
+ * would lose their orphan protection for good — the orphan-cleanup crons
+ * then reap a file the stored draft still references. Only the set
+ * difference (held before, not held now) may be released.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $previous_entry Draft entry being replaced.
+ * @param array $current_entry  Draft entry replacing it.
+ * @param int   $user_id        Owning user ID.
+ * @return int[] Attachment IDs whose stamps were released.
+ */
+function bb_draft_release_replaced_attachments( $previous_entry, $current_entry, $user_id ) {
+	$retained = bb_draft_collect_attachment_ids( $current_entry );
+	$released = array_values( array_diff( bb_draft_collect_attachment_ids( $previous_entry ), $retained ) );
+	$affected = array();
+
+	foreach ( $released as $attachment_id ) {
+		if ( ! bb_draft_user_can_manage_attachment( $attachment_id, $user_id ) ) {
+			continue;
+		}
+
+		delete_post_meta( $attachment_id, 'bb_media_draft' );
+		delete_post_meta( $attachment_id, 'bb_activity_post_feature_image_draft' );
+
+		$affected[] = (int) $attachment_id;
+	}
+
+	return $affected;
+}
+
+/**
  * Dispose of one stored draft: release its attachment stamps and remove it.
  *
  * The single shared removal path used by budget eviction, the cleanup

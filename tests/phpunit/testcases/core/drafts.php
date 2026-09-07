@@ -657,6 +657,94 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		);
 	}
 
+	/**
+	 * Replacing a draft must not strip protection from attachments it keeps.
+	 *
+	 * A restored draft re-sends its stored attachment list verbatim, so the
+	 * kept attachments appear in BOTH the replaced and the replacing entry.
+	 * Unstamping the whole replaced entry leaves them unprotected with
+	 * bp_media_saved = 0, and bp_media_delete_orphaned_attachments() then
+	 * hard-deletes a file the stored draft still references (PROD-9621 N1).
+	 */
+	public function test_replacing_a_draft_keeps_stamps_on_attachments_it_still_holds() {
+		$user_id = self::factory()->user->create();
+
+		$kept    = self::factory()->attachment->create( array( 'post_author' => $user_id ) );
+		$dropped = self::factory()->attachment->create( array( 'post_author' => $user_id ) );
+
+		update_post_meta( $kept, 'bb_media_draft', 1 );
+		update_post_meta( $dropped, 'bb_media_draft', 1 );
+
+		$previous = array(
+			'data_key' => 'draft_reply',
+			'data'     => array(
+				'bbp_media' => wp_json_encode(
+					array(
+						array( 'id' => $kept, 'bb_media_draft' => 1 ),
+						array( 'id' => $dropped, 'bb_media_draft' => 1 ),
+					)
+				),
+			),
+		);
+
+		// The replacing entry keeps $kept and carries the stored flag back, which
+		// is exactly the shape a flag-gated stamp would refuse to re-apply.
+		$current = array(
+			'data_key' => 'draft_reply',
+			'data'     => array(
+				'bbp_media' => wp_json_encode( array( array( 'id' => $kept, 'bb_media_draft' => 1 ) ) ),
+			),
+		);
+
+		$released = bb_draft_release_replaced_attachments( $previous, $current, $user_id );
+
+		$this->assertSame( array( $dropped ), $released, 'Only the attachment the new entry dropped may be released.' );
+		$this->assertSame( '1', (string) get_post_meta( $kept, 'bb_media_draft', true ), 'A kept attachment must stay protected, or the orphan cron deletes a file the draft still references.' );
+		$this->assertSame( '', (string) get_post_meta( $dropped, 'bb_media_draft', true ), 'A dropped attachment must be released so the orphan cron can reclaim it.' );
+	}
+
+	/**
+	 * A discard carries no data member, so every attachment is released.
+	 */
+	public function test_discarding_a_draft_releases_every_attachment_it_held() {
+		$user_id       = self::factory()->user->create();
+		$attachment_id = self::factory()->attachment->create( array( 'post_author' => $user_id ) );
+
+		update_post_meta( $attachment_id, 'bb_media_draft', 1 );
+
+		$previous = array(
+			'data_key' => 'draft_reply',
+			'data'     => array( 'bbp_media' => wp_json_encode( array( array( 'id' => $attachment_id ) ) ) ),
+		);
+
+		// The slim delete payload the client sends: data omitted entirely.
+		$released = bb_draft_release_replaced_attachments( $previous, array( 'data_key' => 'draft_reply' ), $user_id );
+
+		$this->assertSame( array( $attachment_id ), $released );
+		$this->assertSame( '', (string) get_post_meta( $attachment_id, 'bb_media_draft', true ) );
+	}
+
+	/**
+	 * Attachments the acting member does not own are never touched.
+	 */
+	public function test_release_never_touches_a_foreign_attachment() {
+		$user_id   = self::factory()->user->create();
+		$other_id  = self::factory()->user->create();
+		$foreign   = self::factory()->attachment->create( array( 'post_author' => $other_id ) );
+
+		update_post_meta( $foreign, 'bb_media_draft', 1 );
+
+		$previous = array(
+			'data_key' => 'draft_reply',
+			'data'     => array( 'bbp_media' => wp_json_encode( array( array( 'id' => $foreign ) ) ) ),
+		);
+
+		$released = bb_draft_release_replaced_attachments( $previous, array(), $user_id );
+
+		$this->assertSame( array(), $released );
+		$this->assertSame( '1', (string) get_post_meta( $foreign, 'bb_media_draft', true ) );
+	}
+
 	public function filter_prefix_user_meta_key( $key ) {
 		return 'bbtest_' . $key;
 	}

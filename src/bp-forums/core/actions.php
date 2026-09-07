@@ -513,10 +513,18 @@ function bb_post_topic_reply_draft() {
 							unset( $new_media_data[ $media_key ] );
 							continue;
 						}
+						// Stamp EVERY owned attachment the entry keeps, not only the
+						// ones whose payload lacks the flag. A restored draft sends
+						// the stored JSON back with `bb_media_draft` already set, so
+						// a flag-gated stamp queues nothing while the replaced-entry
+						// unstamp below still fires - the attachment then loses its
+						// protection for good and the orphan cron reaps a file the
+						// draft still references (PROD-9621).
 						if ( ! isset( $new_media_attachment['bb_media_draft'] ) ) {
 							$new_media_data[ $media_key ]['bb_media_draft'] = 1;
-							$stamp_attachment_ids[] = (int) $new_media_attachment['id'];
 						}
+
+						$stamp_attachment_ids[] = (int) $new_media_attachment['id'];
 					}
 					$new_media_data = array_values( $new_media_data );
 				}
@@ -540,10 +548,18 @@ function bb_post_topic_reply_draft() {
 							unset( $new_document_data[ $document_key ] );
 							continue;
 						}
+						// Stamp EVERY owned attachment the entry keeps, not only the
+						// ones whose payload lacks the flag. A restored draft sends
+						// the stored JSON back with `bb_media_draft` already set, so
+						// a flag-gated stamp queues nothing while the replaced-entry
+						// unstamp below still fires - the attachment then loses its
+						// protection for good and the orphan cron reaps a file the
+						// draft still references (PROD-9621).
 						if ( ! isset( $new_document_attachment['bb_media_draft'] ) ) {
 							$new_document_data[ $document_key ]['bb_media_draft'] = 1;
-							$stamp_attachment_ids[] = (int) $new_document_attachment['id'];
 						}
+
+						$stamp_attachment_ids[] = (int) $new_document_attachment['id'];
 					}
 					$new_document_data = array_values( $new_document_data );
 				}
@@ -567,10 +583,18 @@ function bb_post_topic_reply_draft() {
 							unset( $new_video_data[ $video_key ] );
 							continue;
 						}
+						// Stamp EVERY owned attachment the entry keeps, not only the
+						// ones whose payload lacks the flag. A restored draft sends
+						// the stored JSON back with `bb_media_draft` already set, so
+						// a flag-gated stamp queues nothing while the replaced-entry
+						// unstamp below still fires - the attachment then loses its
+						// protection for good and the orphan cron reaps a file the
+						// draft still references (PROD-9621).
 						if ( ! isset( $new_video_attachment['bb_media_draft'] ) ) {
 							$new_video_data[ $video_key ]['bb_media_draft'] = 1;
-							$stamp_attachment_ids[] = (int) $new_video_attachment['id'];
 						}
+
+						$stamp_attachment_ids[] = (int) $new_video_attachment['id'];
 					}
 					$new_video_data = array_values( $new_video_data );
 				}
@@ -660,15 +684,19 @@ function bb_post_topic_reply_draft() {
 			bp_update_user_meta( $user_id, $usermeta_key, $existing_draft );
 		}
 
-		// The request is accepted - release the replaced entry's stamps first,
-		// then apply the deferred ones, so an attachment the member kept in the
-		// draft ends up stamped rather than unstamped. The entry is passed whole
-		// because its attachment lists live under the 'data' key; only
-		// attachments the member owns are touched.
+		// The request is accepted. Release the stamps only for attachments the
+		// replaced entry held and the new one does NOT keep - unstamping the
+		// whole replaced entry would strip protection from files the member is
+		// still drafting with, because a restored draft re-sends its stored
+		// attachment list verbatim. The stamps for everything the new entry
+		// keeps are re-applied below, so the set difference is what may be
+		// released (PROD-9621).
 		if ( ! empty( $unstamp_draft_entry ) ) {
-			bb_draft_unstamp_attachments( $unstamp_draft_entry, $user_id );
+			bb_draft_release_replaced_attachments( $unstamp_draft_entry, $draft_topic_reply, $user_id );
 		}
 
+		// Re-applied unconditionally: update_post_meta() is idempotent, and this
+		// is what keeps a kept attachment protected across every autosave.
 		foreach ( array_unique( $stamp_attachment_ids ) as $stamp_attachment_id ) {
 			update_post_meta( $stamp_attachment_id, 'bb_media_draft', 1 );
 		}
