@@ -2212,7 +2212,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 	/**
 	 * A cap DECISION must act in the same key space the measurement reports.
 	 *
-	 * bb_draft_get_user_meta_sizes() reports LOGICAL keys and
+	 * The bb_draft_get_user_meta_sizes() memo reports LOGICAL keys and
 	 * bb_draft_enforce_user_budget() feeds those straight to
 	 * bb_draft_dispose(), which re-applies bp_get_user_meta_key(). The two
 	 * halves therefore have to agree: if the measurement reverted to raw
@@ -2282,5 +2282,4 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		$this->assertNotEmpty( $survivor_row, 'The newer draft must survive - evicting it is the wrong-order bug.' );
 		$this->assertSame( 'STRAY-RAW-ROW', $stray, 'An unfiltered lookalike is not ours on this install and must be left alone.' );
 	}
-
 }
