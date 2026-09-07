@@ -1673,13 +1673,18 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		// And it must stay linear on a multi-megabyte payload rather than
 		// hitting a PCRE backtrack limit, which is why both rules are negated
 		// character classes.
-		$big     = 'x <img src="data:image/svg+xml,' . str_repeat( 'A', 2 * MB_IN_BYTES ) . '"> y';
-		$started = microtime( true );
-		$out     = bb_draft_strip_data_urls( $big );
+		// No wall-clock assertion here. An earlier version asserted the 2MB case
+		// completed inside two seconds, and that failed twice out of forty runs
+		// under concurrent load - a flaky test of the machine, not of the code.
+		// What actually needs asserting is that PCRE did not bail: a backtrack
+		// limit makes preg_replace() return null, which this function converts
+		// into "keep the original", so the payload would silently survive.
+		$big = 'x <img src="data:image/svg+xml,' . str_repeat( 'A', 2 * MB_IN_BYTES ) . '"> y';
+		$out = bb_draft_strip_data_urls( $big );
 
 		$this->assertIsString( $out, 'A PCRE failure would return null and silently keep the payload.' );
-		$this->assertLessThan( 200, strlen( $out ) );
-		$this->assertLessThan( 2.0, microtime( true ) - $started, 'The strip must not degrade to backtracking on large input.' );
+		$this->assertLessThan( 200, strlen( $out ), 'The payload must be gone, which only happens if the match did not bail.' );
+		$this->assertSame( PREG_NO_ERROR, preg_last_error(), 'A backtrack limit here would mean the pattern is not linear.' );
 	}
 
 	protected function isolate_draft_maintenance() {
