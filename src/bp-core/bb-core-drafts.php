@@ -573,9 +573,16 @@ function bb_draft_release_replaced_attachments( $previous_entry, $current_entry,
  *
  * @since BuddyBoss [BBVERSION]
  *
+ * `$inner_key` is the WHOLE-ROW sentinel when empty, so a caller iterating a
+ * stored row must never hand it an empty key: a legacy row carrying an
+ * empty-string inner key would otherwise delete the member's entire row
+ * instead of that one entry. The loops that walk stored rows guard for it
+ * (PROD-9621 M5).
+ *
  * @param int    $user_id   Owning user ID.
  * @param string $meta_key  Draft usermeta key.
- * @param string $inner_key Optional. Inner draft key inside the forum aggregate row.
+ * @param string $inner_key Optional. Inner draft key inside the forum aggregate
+ *                          row; empty means "remove the whole row".
  * @return bool Whether a stored draft was removed.
  */
 function bb_draft_dispose( $user_id, $meta_key, $inner_key = '' ) {
@@ -705,6 +712,11 @@ function bb_draft_enforce_user_budget( $user_id, $current_key, $new_size, $conte
 
 		if ( 'bb_user_topic_reply_draft' === $meta_key ) {
 			foreach ( $stored as $inner_key => $inner_draft ) {
+				// See bb_draft_dispose(): an empty inner key means "whole row".
+				if ( '' === (string) $inner_key ) {
+					continue;
+				}
+
 				$candidates[] = array(
 					'meta_key'  => $meta_key,
 					'inner_key' => (string) $inner_key,
@@ -1337,6 +1349,14 @@ function bb_drafts_delete_expired( $time_budget = 10 ) {
 					}
 				} else {
 					foreach ( $value as $inner_key => $inner_draft ) {
+						// An empty inner key is the whole-row sentinel for
+						// bb_draft_dispose(), so a legacy row carrying one must
+						// not be routed through it - that would delete the
+						// member's other drafts too (PROD-9621 M5).
+						if ( '' === (string) $inner_key ) {
+							continue;
+						}
+
 						$saved_at = isset( $inner_draft['_draft_saved_at'] ) ? (int) $inner_draft['_draft_saved_at'] : $epoch;
 						if ( $saved_at < $cutoff && bb_draft_dispose( $user_id, $row['meta_key'], (string) $inner_key ) ) {
 							++$deleted;

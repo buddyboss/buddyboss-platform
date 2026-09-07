@@ -1474,6 +1474,53 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		$this->assertStringContainsString( 'draft_group_1', $evicted[0][1], 'Eviction must be oldest-first.' );
 	}
 
+	/**
+	 * A legacy empty inner key must not take the member's whole row with it.
+	 *
+	 * bb_draft_dispose() treats an empty $inner_key as the whole-row sentinel.
+	 * A stored row carrying an empty-string key - which release could produce,
+	 * since it validated nothing - would therefore be deleted entirely by any
+	 * loop that walked its keys and passed each one through (PROD-9621 M5).
+	 */
+	public function test_empty_inner_key_in_a_stored_row_never_wipes_the_row() {
+		$user_id = self::factory()->user->create();
+
+		bp_update_user_meta(
+			$user_id,
+			'bb_user_topic_reply_draft',
+			array(
+				// A legacy/garbage entry with an empty key, long expired.
+				''                => array(
+					'data_key'        => '',
+					'data'            => array( 'bbp_reply_content' => 'legacy junk' ),
+					'_draft_saved_at' => 100,
+				),
+				// A real expired draft that SHOULD be collected.
+				'draft_reply_old' => array(
+					'data_key'        => 'draft_reply_old',
+					'data'            => array( 'bbp_reply_content' => 'old' ),
+					'_draft_saved_at' => 100,
+				),
+				// A fresh draft that must survive.
+				'draft_reply_new' => array(
+					'data_key'        => 'draft_reply_new',
+					'data'            => array( 'bbp_reply_content' => 'new' ),
+					'_draft_saved_at' => time(),
+				),
+			)
+		);
+
+		delete_option( 'bb_draft_cleanup_cursor' );
+		delete_transient( 'bb_draft_cleanup_lock' );
+		bb_drafts_delete_expired( 0 );
+
+		$row = bp_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
+
+		$this->assertIsArray( $row, 'The row must survive - an empty inner key must not trigger the whole-row delete.' );
+		$this->assertArrayHasKey( 'draft_reply_new', $row, 'The fresh draft must still be there.' );
+		$this->assertArrayNotHasKey( 'draft_reply_old', $row, 'The genuinely expired draft is still collected.' );
+	}
+
 	public function filter_prefix_user_meta_key( $key ) {
 		return 'bbtest_' . $key;
 	}
