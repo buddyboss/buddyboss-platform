@@ -441,15 +441,19 @@ function bb_post_topic_reply_draft() {
 
 		// Accept only the draft key shapes the forum composer actually builds,
 		// resolved against real forum/topic/reply IDs (PROD-9621 hardening).
-		if ( ! bb_draft_validate_topic_reply_data_key( (string) $draft_topic_reply['data_key'] ) ) {
+		$draft_key_context = bb_draft_topic_reply_key_context( (string) $draft_topic_reply['data_key'] );
+
+		if ( false === $draft_key_context ) {
 			wp_send_json_error();
 		}
 
 		$is_draft_update = ( isset( $draft_topic_reply['post_action'] ) && 'update' === $draft_topic_reply['post_action'] );
 
-		// SAVING requires the same participation rights as publishing a topic or
-		// reply; discarding one's own stored draft never does.
-		if ( $is_draft_update && ! bbp_current_user_can_publish_topics() && ! bbp_current_user_can_publish_replies() ) {
+		// SAVING requires the publish right for the OBJECT the key addresses,
+		// and view access to the forum the key resolves to - matching what the
+		// publish path enforces, and what the activity composer already does
+		// per group. Discarding one's own stored draft never does (PROD-9621).
+		if ( $is_draft_update && ! bb_draft_user_can_save_topic_reply_draft( $draft_key_context, $user_id ) ) {
 			wp_send_json_error();
 		}
 

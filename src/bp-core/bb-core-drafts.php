@@ -826,27 +826,61 @@ function bb_draft_validate_activity_data_key( $data_key, $draft_object, $item_id
 }
 
 /**
- * Validate a forum draft inner data key against the shapes the forum JS builds.
+ * Resolve a forum draft inner data key into the object and IDs it addresses.
  *
  * Accepted shapes: `draft_topic`, `draft_discussion_{forum_id}`,
  * `draft_reply`, `draft_reply_{topic_id}` and
  * `draft_reply_{topic_id}_{reply_to}` — the bare shapes occur when no
  * forum/topic ID is resolvable on the page.
  *
+ * The key already encodes whether the member is drafting a topic or a reply,
+ * and which forum it belongs to. Returning that instead of a bare boolean is
+ * what lets the save handler apply the SAME per-object, per-forum rules the
+ * publish path applies, rather than one loose site-wide check (PROD-9621).
+ *
  * @since BuddyBoss [BBVERSION]
  *
  * @param string $data_key Client-supplied inner draft key.
- * @return bool True when the key matches a real forum/topic/reply.
+ * @return array|false {
+ *     False when the key matches no shape or names a post that does not exist.
+ *
+ *     @type string $object   'topic' or 'reply'.
+ *     @type int    $forum_id Forum the draft belongs to; 0 when not resolvable.
+ *     @type int    $topic_id Topic being replied to; 0 for topic drafts.
+ *     @type int    $reply_id Reply being replied to; 0 when absent.
+ * }
  */
-function bb_draft_validate_topic_reply_data_key( $data_key ) {
-	if ( 'draft_topic' === $data_key || 'draft_reply' === $data_key ) {
-		return true;
+function bb_draft_topic_reply_key_context( $data_key ) {
+	$context = array(
+		'object'   => '',
+		'forum_id' => 0,
+		'topic_id' => 0,
+		'reply_id' => 0,
+	);
+
+	if ( 'draft_topic' === $data_key ) {
+		$context['object'] = 'topic';
+
+		return $context;
+	}
+
+	if ( 'draft_reply' === $data_key ) {
+		$context['object'] = 'reply';
+
+		return $context;
 	}
 
 	if ( preg_match( '/^draft_discussion_(\d+)$/', $data_key, $matches ) ) {
 		$forum = get_post( (int) $matches[1] );
 
-		return ( ! empty( $forum ) && bbp_get_forum_post_type() === $forum->post_type );
+		if ( empty( $forum ) || bbp_get_forum_post_type() !== $forum->post_type ) {
+			return false;
+		}
+
+		$context['object']   = 'topic';
+		$context['forum_id'] = (int) $matches[1];
+
+		return $context;
 	}
 
 	if ( preg_match( '/^draft_reply_(\d+)(?:_(\d+))?$/', $data_key, $matches ) ) {
@@ -859,13 +893,84 @@ function bb_draft_validate_topic_reply_data_key( $data_key ) {
 		if ( isset( $matches[2] ) ) {
 			$reply = get_post( (int) $matches[2] );
 
-			return ( ! empty( $reply ) && bbp_get_reply_post_type() === $reply->post_type );
+			if ( empty( $reply ) || bbp_get_reply_post_type() !== $reply->post_type ) {
+				return false;
+			}
+
+			$context['reply_id'] = (int) $matches[2];
 		}
 
-		return true;
+		$context['object']   = 'reply';
+		$context['topic_id'] = (int) $matches[1];
+		// Derived, never client-supplied: the forum a reply draft belongs to is
+		// whichever forum owns the topic named in the key.
+		$context['forum_id'] = (int) bbp_get_topic_forum_id( (int) $matches[1] );
+
+		return $context;
 	}
 
 	return false;
+}
+
+/**
+ * Validate a forum draft inner data key against the shapes the forum JS builds.
+ *
+ * Thin wrapper over {@see bb_draft_topic_reply_key_context()}, kept because
+ * the key shape alone is all the fetch and discard paths need.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $data_key Client-supplied inner draft key.
+ * @return bool True when the key matches a real forum/topic/reply.
+ */
+function bb_draft_validate_topic_reply_data_key( $data_key ) {
+	return false !== bb_draft_topic_reply_key_context( $data_key );
+}
+
+/**
+ * Whether a member may SAVE a forum draft for one resolved draft key.
+ *
+ * Mirrors the publish path per object rather than accepting anyone who can
+ * publish either kind of post anywhere: a reply-only community (announcement
+ * forums) must not be able to store topic drafts, and a member who cannot
+ * even see a forum must not be able to store drafts against it. The forum
+ * gate is skipped when the key carries no resolvable forum, which is the
+ * documented bare-shape case.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $key_context Resolved context from {@see bb_draft_topic_reply_key_context()}.
+ * @param int   $user_id     Acting user ID.
+ * @return bool True when the member may save this draft.
+ */
+function bb_draft_user_can_save_topic_reply_draft( $key_context, $user_id ) {
+	if ( empty( $key_context['object'] ) ) {
+		return false;
+	}
+
+	$can_save = ( 'topic' === $key_context['object'] )
+		? bbp_current_user_can_publish_topics()
+		: bbp_current_user_can_publish_replies();
+
+	if ( $can_save && ! empty( $key_context['forum_id'] ) ) {
+		$can_save = bbp_user_can_view_forum(
+			array(
+				'user_id'  => (int) $user_id,
+				'forum_id' => (int) $key_context['forum_id'],
+			)
+		);
+	}
+
+	/**
+	 * Filters whether a member may save a forum topic/reply draft.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param bool  $can_save    Whether the save is allowed.
+	 * @param array $key_context Resolved draft key context.
+	 * @param int   $user_id     Acting user ID.
+	 */
+	return (bool) apply_filters( 'bb_draft_user_can_save_topic_reply_draft', $can_save, $key_context, $user_id );
 }
 
 /**

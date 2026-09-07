@@ -931,6 +931,114 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		$this->assertArrayNotHasKey( 'draft_user', $after['drafts'], 'The memoized sizes must be invalidated.' );
 	}
 
+	/**
+	 * The draft key must resolve to the object and forum it addresses.
+	 */
+	public function test_topic_reply_key_context_resolves_object_and_forum() {
+		if ( ! bp_is_active( 'forums' ) ) {
+			$this->markTestSkipped( 'Forums component inactive.' );
+		}
+
+		$forum_id = $this->factory->post->create( array( 'post_type' => bbp_get_forum_post_type() ) );
+		$topic_id = $this->factory->post->create(
+			array(
+				'post_type'   => bbp_get_topic_post_type(),
+				'post_parent' => $forum_id,
+			)
+		);
+		update_post_meta( $topic_id, '_bbp_forum_id', $forum_id );
+
+		$bare_topic = bb_draft_topic_reply_key_context( 'draft_topic' );
+		$this->assertSame( 'topic', $bare_topic['object'] );
+		$this->assertSame( 0, $bare_topic['forum_id'], 'A bare shape carries no forum, so no forum gate applies.' );
+
+		$discussion = bb_draft_topic_reply_key_context( 'draft_discussion_' . $forum_id );
+		$this->assertSame( 'topic', $discussion['object'] );
+		$this->assertSame( $forum_id, $discussion['forum_id'] );
+
+		$reply = bb_draft_topic_reply_key_context( 'draft_reply_' . $topic_id );
+		$this->assertSame( 'reply', $reply['object'] );
+		$this->assertSame( $topic_id, $reply['topic_id'] );
+		$this->assertSame( $forum_id, $reply['forum_id'], 'A reply draft belongs to whichever forum owns its topic.' );
+
+		// Shapes that address nothing real stay rejected.
+		$this->assertFalse( bb_draft_topic_reply_key_context( 'draft_discussion_999999' ) );
+		$this->assertFalse( bb_draft_topic_reply_key_context( 'draft_nonsense' ) );
+		$this->assertFalse( bb_draft_topic_reply_key_context( 'draft_discussion_' . $topic_id ), 'A topic ID in a forum slot is not a forum.' );
+
+		// The bool wrapper keeps its contract.
+		$this->assertTrue( bb_draft_validate_topic_reply_data_key( 'draft_reply_' . $topic_id ) );
+		$this->assertFalse( bb_draft_validate_topic_reply_data_key( 'draft_nonsense' ) );
+	}
+
+	/**
+	 * Saving a topic draft must need the TOPIC publish right, not either one.
+	 *
+	 * The gate used to accept anyone who could publish topics OR replies
+	 * anywhere, so a reply-only community could store topic drafts
+	 * (PROD-9621 N4).
+	 */
+	public function test_topic_draft_save_requires_the_topic_publish_right() {
+		if ( ! bp_is_active( 'forums' ) ) {
+			$this->markTestSkipped( 'Forums component inactive.' );
+		}
+
+		$user_id  = self::factory()->user->create();
+		$old_user = get_current_user_id();
+		$this->set_current_user( $user_id );
+
+		$topic_context = bb_draft_topic_reply_key_context( 'draft_topic' );
+		$reply_context = bb_draft_topic_reply_key_context( 'draft_reply' );
+
+		// Reply-only member: replies allowed, topics refused.
+		add_filter( 'bbp_current_user_can_publish_topics', '__return_false' );
+		add_filter( 'bbp_current_user_can_publish_replies', '__return_true' );
+
+		$topic_allowed = bb_draft_user_can_save_topic_reply_draft( $topic_context, $user_id );
+		$reply_allowed = bb_draft_user_can_save_topic_reply_draft( $reply_context, $user_id );
+
+		remove_filter( 'bbp_current_user_can_publish_topics', '__return_false' );
+		remove_filter( 'bbp_current_user_can_publish_replies', '__return_true' );
+		$this->set_current_user( $old_user );
+
+		$this->assertFalse( $topic_allowed, 'A member who cannot publish topics must not be able to store a topic draft.' );
+		$this->assertTrue( $reply_allowed, 'The same member must still be able to store a reply draft.' );
+	}
+
+	/**
+	 * Saving must need view access to the forum the key resolves to.
+	 *
+	 * The activity composer already checks group membership for
+	 * draft_group_{N}; the forum surface accepted any existing forum
+	 * (PROD-9621 N4).
+	 */
+	public function test_forum_draft_save_requires_view_access_to_that_forum() {
+		if ( ! bp_is_active( 'forums' ) ) {
+			$this->markTestSkipped( 'Forums component inactive.' );
+		}
+
+		$user_id  = self::factory()->user->create();
+		$old_user = get_current_user_id();
+		$this->set_current_user( $user_id );
+
+		$forum_id = $this->factory->post->create( array( 'post_type' => bbp_get_forum_post_type() ) );
+		$context  = bb_draft_topic_reply_key_context( 'draft_discussion_' . $forum_id );
+
+		add_filter( 'bbp_current_user_can_publish_topics', '__return_true' );
+
+		$with_access = bb_draft_user_can_save_topic_reply_draft( $context, $user_id );
+
+		add_filter( 'bbp_user_can_view_forum', '__return_false' );
+		$without_access = bb_draft_user_can_save_topic_reply_draft( $context, $user_id );
+		remove_filter( 'bbp_user_can_view_forum', '__return_false' );
+
+		remove_filter( 'bbp_current_user_can_publish_topics', '__return_true' );
+		$this->set_current_user( $old_user );
+
+		$this->assertTrue( $with_access, 'A viewable forum must accept the draft.' );
+		$this->assertFalse( $without_access, 'A forum the member cannot view must refuse the draft.' );
+	}
+
 	public function filter_prefix_user_meta_key( $key ) {
 		return 'bbtest_' . $key;
 	}
