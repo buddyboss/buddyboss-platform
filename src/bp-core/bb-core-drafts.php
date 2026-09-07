@@ -189,21 +189,50 @@ function bb_draft_user_can_manage_attachment( $attachment_id, $user_id ) {
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param int $user_id User ID.
+ * The result is memoized per request because a single save asks for it more
+ * than once; {@see bb_draft_flush_user_meta_sizes()} clears it after a write.
+ *
+ * @param int  $user_id User ID.
+ * @param bool $flush   Optional. True to drop the memoized entry and return
+ *                      empty sizes without re-measuring. Default false.
  * @return array {
  *     @type int   $total  Total bytes of all of the user's meta values.
  *     @type array $drafts Draft meta key => stored bytes.
  * }
  */
-function bb_draft_get_user_meta_sizes( $user_id ) {
+function bb_draft_get_user_meta_sizes( $user_id, $flush = false ) {
+	$user_id = (int) $user_id;
+
+	// Memoized per request: a single draft save asks for these sizes more than
+	// once (row trim, then budget enforcement), and each rebuild walks EVERY
+	// meta row for the user running strlen()/maybe_serialize(). On a community
+	// where members carry hundreds of rows that is real CPU on the autosave
+	// path. Invalidated by bb_draft_flush_user_meta_sizes() after any write.
+	static $memo = array();
+
+	if ( $flush ) {
+		unset( $memo[ $user_id ] );
+
+		return array(
+			'total'  => 0,
+			'drafts' => array(),
+		);
+	}
+
+	if ( isset( $memo[ $user_id ] ) ) {
+		return $memo[ $user_id ];
+	}
+
 	$sizes = array(
 		'total'  => 0,
 		'drafts' => array(),
 	);
 
-	$all_meta = get_user_meta( (int) $user_id );
+	$all_meta = get_user_meta( $user_id );
 
 	if ( empty( $all_meta ) || ! is_array( $all_meta ) ) {
+		$memo[ $user_id ] = $sizes;
+
 		return $sizes;
 	}
 
@@ -222,8 +251,27 @@ function bb_draft_get_user_meta_sizes( $user_id ) {
 		}
 	}
 
+	$memo[ $user_id ] = $sizes;
+
 	return $sizes;
 }
+
+/**
+ * Drop the memoized meta sizes for a user after a draft write.
+ *
+ * Kept explicit rather than clearing inside the writers: the sizes are only
+ * ever re-read within the same request by the save pipeline, so a stale
+ * memo would make a second cap decision on pre-write numbers.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int $user_id User ID.
+ * @return void
+ */
+function bb_draft_flush_user_meta_sizes( $user_id ) {
+	bb_draft_get_user_meta_sizes( (int) $user_id, true );
+}
+
 
 /**
  * Collect the attachment IDs referenced by one draft's data array.
@@ -369,6 +417,7 @@ function bb_draft_dispose( $user_id, $meta_key, $inner_key = '' ) {
 	}
 
 	bp_delete_user_meta( $user_id, $meta_key );
+	bb_draft_flush_user_meta_sizes( $user_id );
 
 	return true;
 }
@@ -542,9 +591,11 @@ function bb_draft_validate_activity_data_key( $data_key, $draft_object, $item_id
 			return false;
 		}
 
-		// Resolved against $user_id, not the current user: every identity in
-		// this function must be the acting member the caller passed in.
-		if ( bp_user_can( $user_id, 'bp_moderate' ) ) {
+		// bp_current_user_can() rather than bp_user_can(): both call sites pass
+		// bp_loggedin_user_id(), and the two helpers fire DIFFERENT public
+		// filters - switching would silently drop sites that grant bp_moderate
+		// through the long-standing `bp_current_user_can` filter.
+		if ( bp_current_user_can( 'bp_moderate' ) ) {
 			return true;
 		}
 
@@ -672,7 +723,15 @@ function bb_draft_safe_unserialize( $value ) {
 }
 
 /**
- * Fetch one keyset-paginated batch of BuddyBoss draft usermeta rows.
+ * Fetch one cursor-advanced batch of BuddyBoss draft usermeta rows.
+ *
+ * The cursor makes the sweep RESUMABLE, not cheap: MySQL satisfies the
+ * meta_key predicate from the meta_key index and applies `umeta_id > cursor`
+ * as a post-filter with a filesort (verified with EXPLAIN: type=range,
+ * key=meta_key, Extra="Using index condition; Using where; Using filesort"),
+ * so each batch re-scans and re-sorts the whole draft-key range rather than
+ * seeking. Sizing the cron must assume that cost; a (meta_key, umeta_id)
+ * composite index is what would make this a true keyset seek.
  *
  * The SQL LIKE patterns only narrow the scan; every returned key must still
  * pass {@see bb_draft_is_draft_meta_key()} before it is acted on, because
@@ -944,7 +1003,7 @@ function bb_draft_heal_forum_row( $user_id ) {
  * slice would restart the scan from row zero and never finish on exactly
  * the large-community sites this pass exists for):
  *
- * 1. A keyset scan over the draft rows disposes rows individually larger
+ * 1. A cursor-advanced scan over the draft rows disposes rows individually larger
  *    than the per-draft cap - the Memcached-poisoning rows this ticket is
  *    about. The aggregated forum row is healed at inner-draft granularity
  *    instead of being disposed wholesale ({@see bb_draft_heal_forum_row()}).

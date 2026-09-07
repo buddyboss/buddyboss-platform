@@ -42,6 +42,7 @@ window.bp = window.bp || {};
 
 			this.setupGlobals();
 			this.addListeners();
+			this.setupPasteImageGuard();
 		};
 
 		/**
@@ -60,7 +61,6 @@ window.bp = window.bp || {};
 			this.draft_ajax_request         = null;
 			this.is_topic_reply_form_submit = false;
 			this.draft_content_changed      = false;
-			this.setupPasteImageGuard();
 			this.all_draft_data             = {};
 			this.bbp_lead_topic_tags        = '';
 			this.bp_nouveau_forums_data     = ( 'undefined' !== typeof BP_Nouveau.forums.draft ) ? BP_Nouveau.forums.draft : {};

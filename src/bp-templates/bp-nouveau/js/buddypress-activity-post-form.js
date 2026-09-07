@@ -1215,6 +1215,11 @@ window.bp = window.bp || {};
 					BP_Nouveau.activity.params.draft_activity = '';
 					localStorage.removeItem( bp.draft_activity.data_key );
 					$.removeCookie( bp.draft_activity.data_key );
+
+					// No lazy fetch is issued on this branch, so nothing would ever
+					// settle a deferred draft-loaded event and the public event would
+					// never fire at all. Mark it settled here (PROD-9621).
+					bp.draft_fetch_settled = true;
 				} else if ( ! _.isUndefined( BP_Nouveau.activity.params.draft_activity.data_key ) ) {
 					bp.old_draft_data = BP_Nouveau.activity.params.draft_activity.data;
 					bp.draft_activity = BP_Nouveau.activity.params.draft_activity;
@@ -1236,7 +1241,15 @@ window.bp = window.bp || {};
 		fetchServerDraftActivity: function() {
 			var self = this;
 
-			if ( ! bp.draft_activity.data_key || bp.draft_fetch_in_progress ) {
+			// An in-flight fetch will settle on its own; a missing data_key means no
+			// request is ever made, so settle here or the deferred event is stranded.
+			if ( ! bp.draft_activity.data_key ) {
+				self.settleDeferredDraftLoadedEvent();
+
+				return;
+			}
+
+			if ( bp.draft_fetch_in_progress ) {
 				return;
 			}
 
