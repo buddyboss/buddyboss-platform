@@ -684,13 +684,29 @@ function bb_draft_dispose( $user_id, $meta_key, $inner_key = '' ) {
  * Enforce the per-user draft and meta budgets before storing a draft.
  *
  * When the combined size of the user's drafts would exceed
- * {@see bb_draft_user_total_max_size()}, the oldest drafts (activity rows
- * and inner forum drafts alike, by their `_draft_saved_at` stamp; unstamped
- * legacy drafts count as oldest) are evicted through
- * {@see bb_draft_dispose()} until the new draft fits. When the user's
- * TOTAL meta would exceed {@see bb_draft_user_meta_budget()}, the save is
- * refused instead — the draft system must never be what pushes a user's
- * meta cache entry past the platform item limit.
+ * {@see bb_draft_user_total_max_size()}, the oldest drafts are evicted
+ * through {@see bb_draft_dispose()} until the new draft fits, by their
+ * `_draft_saved_at` stamp; unstamped legacy drafts count as oldest. When the
+ * user's TOTAL meta would exceed {@see bb_draft_user_meta_budget()}, the
+ * save is refused instead — the draft system must never be what pushes a
+ * user's meta cache entry past the platform item limit.
+ *
+ * IMPORTANT — what `$current_key` excludes. The whole row named by
+ * `$current_key` is protected from eviction, which is correct for an
+ * activity draft (one row, one draft) but means that when `$current_key` is
+ * `bb_user_topic_reply_draft` this function **cannot** evict the inner
+ * topic/reply drafts sharing that row — and that row is the only place
+ * inner forum drafts live. So for the aggregate call path it cannot free
+ * space inside the very row it is being asked to make room in; it can only
+ * evict the member's OTHER draft rows.
+ *
+ * That is why {@see bb_forums_trim_draft_row()} runs first in the forum
+ * handler: it trims the aggregate row down, and this function then handles
+ * the cross-row budget. A caller passing the aggregate key without trimming
+ * first will not get inner-draft eviction from here. Teaching this function
+ * to evict inner entries of the current row needs a protected-inner-key
+ * parameter, since it has no way to know which inner draft is being saved
+ * (PROD-9621 M4).
  *
  * @since BuddyBoss [BBVERSION]
  *
