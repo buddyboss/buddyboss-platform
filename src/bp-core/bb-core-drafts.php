@@ -1164,12 +1164,16 @@ function bb_draft_get_rows_batch( $last_umeta_id = 0, $limit = 200, $with_values
  * between budget-interrupted slices: without it every continuation slice
  * would restart from row zero, and on a site whose draft rows cannot be
  * scanned inside one budget the rows past the time horizon would never be
- * reached at all.
+ * reached at all. Because that cursor is shared by the recurring event and
+ * the continuation event, the sweep holds the `bb_draft_cleanup_lock`
+ * transient for its duration; a run that finds the lock held returns
+ * `locked` and leaves the work to the holder.
+ *
+ * @return array { @type int $deleted @type bool $complete @type bool $locked }
  *
  * @since BuddyBoss [BBVERSION]
  *
  * @param int $time_budget Seconds to spend this run; 0 for unlimited.
- * @return array { @type int $deleted @type bool $complete }
  */
 function bb_drafts_delete_expired( $time_budget = 10 ) {
 	$time_budget       = (int) $time_budget;
@@ -1177,12 +1181,30 @@ function bb_drafts_delete_expired( $time_budget = 10 ) {
 	$retention_seconds = bb_draft_retention_seconds();
 	$deleted           = 0;
 	$complete          = true;
-	$cursor            = (int) get_option( 'bb_draft_cleanup_cursor', 0 );
+
+	// The daily recurring event and the self-scheduled continuation both run
+	// this function against ONE persisted cursor. Overlapping runs can leave
+	// the slower run's cursor behind after the faster one finished and deleted
+	// it, and the next slice then skips every row below it. Serialize them.
+	// A lock lost to an unreliable object cache only costs duplicate work -
+	// disposal is idempotent - so failing open is the safe direction here.
+	if ( get_transient( 'bb_draft_cleanup_lock' ) ) {
+		return array(
+			'deleted'  => 0,
+			'complete' => false,
+			'locked'   => true,
+		);
+	}
+
+	set_transient( 'bb_draft_cleanup_lock', 1, 5 * MINUTE_IN_SECONDS );
+
+	$cursor = (int) get_option( 'bb_draft_cleanup_cursor', 0 );
 
 	// Expiry switched off - delete nothing. Guarded here rather than relying on
 	// the cutoff arithmetic, where a zero window would expire every draft.
 	if ( 1 > $retention_seconds ) {
 		delete_option( 'bb_draft_cleanup_cursor' );
+		delete_transient( 'bb_draft_cleanup_lock' );
 
 		return array(
 			'deleted'  => 0,
@@ -1263,6 +1285,10 @@ function bb_drafts_delete_expired( $time_budget = 10 ) {
 			wp_schedule_single_event( time() + MINUTE_IN_SECONDS, 'bb_draft_cleanup' );
 		}
 	}
+
+	// Released only after the cursor is settled, so a run starting the instant
+	// this one returns cannot read a half-updated cursor.
+	delete_transient( 'bb_draft_cleanup_lock' );
 
 	return array(
 		'deleted'  => $deleted,
@@ -1590,6 +1616,12 @@ if ( defined( 'WP_CLI' ) && WP_CLI ) {
 
 			do {
 				$expired = bb_drafts_delete_expired( 0 );
+
+				if ( ! empty( $expired['locked'] ) ) {
+					WP_CLI::warning( 'Expiry pass skipped: another sweep holds the lock. Re-run once it finishes.' );
+					break;
+				}
+
 				WP_CLI::log( 'Expiry pass: ' . $expired['deleted'] . ' expired drafts removed.' );
 			} while ( empty( $expired['complete'] ) );
 

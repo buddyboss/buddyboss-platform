@@ -1080,6 +1080,63 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		delete_option( 'bb_draft_oneshot_done' );
 	}
 
+	/**
+	 * Two overlapping sweeps must not share the cursor.
+	 *
+	 * The recurring event and the self-scheduled continuation both run
+	 * bb_drafts_delete_expired() against one bb_draft_cleanup_cursor option.
+	 * Without a lock the slower run can write its cursor back after the faster
+	 * one finished and deleted it, and the next slice then skips every row
+	 * below that stale position (PROD-9621 N10).
+	 */
+	public function test_expiry_sweep_is_serialized_by_a_lock() {
+		$user_id = self::factory()->user->create();
+
+		bp_update_user_meta(
+			$user_id,
+			'draft_user',
+			array(
+				'data_key'        => 'draft_user',
+				'data'            => array( 'content' => 'expired' ),
+				'_draft_saved_at' => 100,
+			)
+		);
+
+		delete_option( 'bb_draft_cleanup_cursor' );
+		set_transient( 'bb_draft_cleanup_lock', 1, 5 * MINUTE_IN_SECONDS );
+
+		$blocked = bb_drafts_delete_expired( 0 );
+
+		$this->assertTrue( ! empty( $blocked['locked'] ), 'A sweep finding the lock held must report it.' );
+		$this->assertSame( 0, $blocked['deleted'] );
+		$this->assertFalse( $blocked['complete'], 'The work is not done, so the run must not claim completion.' );
+		$this->assertNotEmpty( bp_get_user_meta( $user_id, 'draft_user', true ), 'A locked-out run must not touch anything.' );
+
+		delete_transient( 'bb_draft_cleanup_lock' );
+
+		$ran = bb_drafts_delete_expired( 0 );
+
+		$this->assertTrue( empty( $ran['locked'] ) );
+		$this->assertTrue( $ran['complete'] );
+		$this->assertSame( '', (string) bp_get_user_meta( $user_id, 'draft_user', true ), 'Once the lock is free the expired draft is collected.' );
+		$this->assertFalse( get_transient( 'bb_draft_cleanup_lock' ), 'The lock must be released when the sweep returns.' );
+	}
+
+	/**
+	 * Disabling expiry must still release the lock.
+	 */
+	public function test_expiry_sweep_releases_the_lock_when_expiry_is_disabled() {
+		delete_transient( 'bb_draft_cleanup_lock' );
+		add_filter( 'bb_draft_retention_days', '__return_zero' );
+
+		$result = bb_drafts_delete_expired( 0 );
+
+		remove_filter( 'bb_draft_retention_days', '__return_zero' );
+
+		$this->assertTrue( $result['complete'] );
+		$this->assertFalse( get_transient( 'bb_draft_cleanup_lock' ), 'The early return must not leak the lock, or every later sweep is blocked for 5 minutes.' );
+	}
+
 	public function filter_prefix_user_meta_key( $key ) {
 		return 'bbtest_' . $key;
 	}
