@@ -660,4 +660,74 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 	public function filter_prefix_user_meta_key( $key ) {
 		return 'bbtest_' . $key;
 	}
+
+	/**
+	 * Every bb_draft_dispose() write path must invalidate the memoized sizes.
+	 *
+	 * The sizes are memoized per request, so a dispose that skips the flush
+	 * leaves any later reader in the same request measuring pre-write bytes -
+	 * and cap decisions are made from those bytes. Three write paths exist
+	 * (legacy/corrupt row, inner forum draft, whole row); the outlier is the
+	 * bug, so all three are asserted.
+	 */
+	public function test_dispose_invalidates_memoized_sizes_on_every_write_path() {
+		// Path 3 - whole activity row.
+		$u1 = self::factory()->user->create();
+		bp_update_user_meta(
+			$u1,
+			'draft_user',
+			array(
+				'data_key'        => 'draft_user',
+				'data'            => array( 'content' => str_repeat( 'a', 500 ) ),
+				'_draft_saved_at' => time(),
+			)
+		);
+
+		$before = bb_draft_get_user_meta_sizes( $u1 );
+		$this->assertArrayHasKey( 'draft_user', $before['drafts'], 'Fixture must be measurable, or the test proves nothing.' );
+
+		bb_draft_dispose( $u1, 'draft_user' );
+
+		$after = bb_draft_get_user_meta_sizes( $u1 );
+		$this->assertArrayNotHasKey( 'draft_user', $after['drafts'], 'Whole-row dispose must invalidate the memo.' );
+
+		// Path 2 - one inner forum draft out of two, row survives.
+		$u2 = self::factory()->user->create();
+		bp_update_user_meta(
+			$u2,
+			'bb_user_topic_reply_draft',
+			array(
+				'draft_topic' => array(
+					'data_key'        => 'draft_topic',
+					'data'            => array( 'bbp_topic_content' => str_repeat( 'b', 400 ) ),
+					'_draft_saved_at' => time(),
+				),
+				'draft_reply' => array(
+					'data_key'        => 'draft_reply',
+					'data'            => array( 'bbp_reply_content' => str_repeat( 'c', 400 ) ),
+					'_draft_saved_at' => time(),
+				),
+			)
+		);
+
+		$before2 = bb_draft_get_user_meta_sizes( $u2 );
+		$bytes2  = $before2['drafts']['bb_user_topic_reply_draft'];
+
+		bb_draft_dispose( $u2, 'bb_user_topic_reply_draft', 'draft_reply' );
+
+		$after2 = bb_draft_get_user_meta_sizes( $u2 );
+		$this->assertLessThan( $bytes2, $after2['drafts']['bb_user_topic_reply_draft'], 'Inner-draft dispose must invalidate the memo so the row measures smaller.' );
+
+		// Path 1 - legacy-empty array() row removed wholesale.
+		$u3 = self::factory()->user->create();
+		add_user_meta( $u3, 'bb_user_topic_reply_draft', array() );
+
+		$before3 = bb_draft_get_user_meta_sizes( $u3 );
+		$this->assertArrayHasKey( 'bb_user_topic_reply_draft', $before3['drafts'] );
+
+		bb_draft_dispose( $u3, 'bb_user_topic_reply_draft' );
+
+		$after3 = bb_draft_get_user_meta_sizes( $u3 );
+		$this->assertArrayNotHasKey( 'bb_user_topic_reply_draft', $after3['drafts'], 'Legacy-empty row dispose must invalidate the memo.' );
+	}
 }

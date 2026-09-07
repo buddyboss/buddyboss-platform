@@ -384,6 +384,7 @@ function bb_draft_dispose( $user_id, $meta_key, $inner_key = '' ) {
 	if ( ! is_array( $stored ) || empty( $stored ) ) {
 		if ( '' === $inner_key && metadata_exists( 'user', $user_id, bp_get_user_meta_key( $meta_key ) ) ) {
 			bp_delete_user_meta( $user_id, $meta_key );
+			bb_draft_flush_user_meta_sizes( $user_id );
 
 			return true;
 		}
@@ -404,6 +405,8 @@ function bb_draft_dispose( $user_id, $meta_key, $inner_key = '' ) {
 		} else {
 			bp_update_user_meta( $user_id, $meta_key, $stored );
 		}
+
+		bb_draft_flush_user_meta_sizes( $user_id );
 
 		return true;
 	}
