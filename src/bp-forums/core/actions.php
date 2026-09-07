@@ -441,7 +441,7 @@ add_action( 'bp_notification_settings', 'forums_notification_settings', 11 );
  *                              instead of writing the whole row back.
  */
 function bb_post_topic_reply_draft() {
-	if ( ! is_user_logged_in() || empty( $_POST['_wpnonce_post_topic_reply_draft'] ) || ! wp_verify_nonce( $_POST['_wpnonce_post_topic_reply_draft'], 'post_topic_reply_draft_data' ) ) {
+	if ( ! is_user_logged_in() || empty( $_POST['_wpnonce_post_topic_reply_draft'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['_wpnonce_post_topic_reply_draft'] ) ), 'post_topic_reply_draft_data' ) ) {
 		wp_send_json_error();
 	}
 
