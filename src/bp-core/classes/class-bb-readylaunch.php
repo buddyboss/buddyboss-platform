@@ -721,7 +721,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 							bb_tutorlms_enable()
 						) {
 							$is_active   = true;
-							$item['url'] = get_post_type_archive_link( bb_tutorlms_profile_courses_slug() );
+							$item['url'] = get_post_type_archive_link( tutor()->course_post_type );
 						} elseif (
 							class_exists( 'memberpress\courses\helpers\Courses' ) &&
 							class_exists( 'memberpress\courses\models\Course' )
