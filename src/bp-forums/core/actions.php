@@ -459,6 +459,9 @@ function bb_post_topic_reply_draft() {
 
 		// Sanitize and cap the incoming entry BEFORE any side effect (attachment
 		// deletion or stamping) so a rejected request leaves storage untouched.
+		// This is the cheap bound that keeps a huge payload away from the
+		// per-attachment lookups below; the authoritative cap runs on the
+		// normalised entry just before it is stored.
 		if ( $is_draft_update ) {
 			$draft_topic_reply = bb_forums_sanitize_draft_entry( $draft_topic_reply );
 
@@ -604,6 +607,26 @@ function bb_post_topic_reply_draft() {
 				}
 
 				$draft_topic_reply['data']['bbp_video'] = wp_json_encode( $new_video_data );
+			}
+
+			// Re-check the cap on the FINAL entry. The check above bounds the
+			// work before any per-ID attachment lookup runs, but normalisation
+			// after it re-encodes the attachment JSON and adds a bb_media_draft
+			// flag per attachment, so the entry about to be stored is wider than
+			// the one that was measured. Nothing has been written yet - the
+			// stamps are deferred - so rejecting here still leaves storage
+			// untouched (PROD-9621).
+			$draft_entry_size = strlen( maybe_serialize( $draft_topic_reply ) );
+
+			if ( $draft_entry_size > bb_draft_max_size() ) {
+				/** This action is documented in bp-templates/bp-nouveau/includes/activity/ajax.php */
+				do_action( 'bb_draft_cap_rejected', $user_id, $draft_topic_reply['data_key'], $draft_entry_size, 'per_draft' );
+
+				wp_send_json_error(
+					array(
+						'message' => esc_html__( 'Your draft is too large to save. Please remove some content and try again.', 'buddyboss' ),
+					)
+				);
 			}
 
 			$existing_draft[ $draft_topic_reply['data_key'] ] = $draft_topic_reply;
