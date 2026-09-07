@@ -798,8 +798,10 @@ function bb_post_topic_reply_draft() {
 
 		$existing_draft = $merged_draft_row;
 
-		// The memo was primed from the pre-merge row; the trim and the budget
-		// below both read it.
+		// Pairs with the cache drop above rather than fixing a known stale read:
+		// no caller primes the size memo before this point today, but the trim
+		// and the budget below are the first things to consume it, and they must
+		// measure the row this request is actually about to write.
 		bb_draft_flush_user_meta_sizes( $user_id );
 
 		if ( empty( $existing_draft ) ) {
