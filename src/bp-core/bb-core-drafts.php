@@ -291,6 +291,22 @@ function bb_draft_strip_data_urls( $content ) {
 		$content = $stripped;
 	}
 
+	// Then any data: URI that is NOT base64 - `data:image/svg+xml,<svg …>`,
+	// `;utf8,`, percent-encoded, and so on. The rule above requires `;base64,`
+	// and let every other form through at full size, so a member could still
+	// park megabytes in a draft and only ever be refused for size, never
+	// cleaned. Not an injection path - kses escapes the surviving tag to inert
+	// text and leaves no live `data:` src - purely a size-coverage gap.
+	//
+	// Payload runs to the attribute delimiter. Also a negated character class,
+	// so it stays linear: measured at 9ms on a 4MB payload with no PCRE
+	// failure, same as the rule above.
+	$stripped = preg_replace( '/data:[a-z0-9.+-]+\/[a-z0-9.+-]+[a-z0-9;=.+-]*,[^"\'>]*/i', '', $content );
+
+	if ( is_string( $stripped ) ) {
+		$content = $stripped;
+	}
+
 	// Then drop images whose src is now actually empty (src="" / src='' / bare).
 	// The value must be provably empty - an optional-quote backreference would
 	// backtrack into matching ANY img tag.

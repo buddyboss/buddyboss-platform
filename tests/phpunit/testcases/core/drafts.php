@@ -1638,6 +1638,50 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 	 * Call this first in any test that runs a global pass, so the pass only
 	 * ever sees that test's own rows.
 	 */
+	/**
+	 * The strip must cover data: URIs that are not base64 encoded.
+	 *
+	 * The original rule required ";base64," and let every other form through at
+	 * full size - data:image/svg+xml,<svg …>, ;utf8,, percent-encoded - so a
+	 * member could park megabytes in a draft and only ever be refused for size,
+	 * never cleaned. Not an injection path: kses escapes the surviving tag to
+	 * inert text and leaves no live data: src. A size-coverage gap
+	 * (PROD-9621 M3).
+	 */
+	public function test_strip_data_urls_covers_non_base64_uris() {
+		$cases = array(
+			'a <img src="data:image/svg+xml,<svg onload=alert(1)/>"> b',
+			'a <img src="data:image/svg+xml;utf8,%3Csvg%3E"> b',
+			'a <img src="data:text/html,%3Cscript%3E"> b',
+		);
+
+		foreach ( $cases as $input ) {
+			$stripped = bb_draft_strip_data_urls( $input );
+
+			$this->assertStringNotContainsString( 'data:', $stripped, 'Every data: URI form must be stripped, not just base64.' );
+			$this->assertLessThan( strlen( $input ), strlen( $stripped ) );
+		}
+
+		// Content with no data URI, and a legitimate remote image, must be
+		// byte-identical - the widened rule must not eat ordinary markup.
+		$plain = 'plain text, nothing to strip';
+		$this->assertSame( $plain, bb_draft_strip_data_urls( $plain ) );
+
+		$real = 'see <img src="https://example.com/a.png" alt="x"> ok';
+		$this->assertSame( $real, bb_draft_strip_data_urls( $real ) );
+
+		// And it must stay linear on a multi-megabyte payload rather than
+		// hitting a PCRE backtrack limit, which is why both rules are negated
+		// character classes.
+		$big     = 'x <img src="data:image/svg+xml,' . str_repeat( 'A', 2 * MB_IN_BYTES ) . '"> y';
+		$started = microtime( true );
+		$out     = bb_draft_strip_data_urls( $big );
+
+		$this->assertIsString( $out, 'A PCRE failure would return null and silently keep the payload.' );
+		$this->assertLessThan( 200, strlen( $out ) );
+		$this->assertLessThan( 2.0, microtime( true ) - $started, 'The strip must not degrade to backtracking on large input.' );
+	}
+
 	protected function isolate_draft_maintenance() {
 		global $wpdb;
 
