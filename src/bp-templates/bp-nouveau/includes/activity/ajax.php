@@ -1211,6 +1211,13 @@ function bb_nouveau_ajax_post_draft_activity() {
 				}
 			}
 
+			// Draft-protection stamps are collected during validation but written
+			// only after every size cap has accepted the save - a rejected save
+			// must not leave orphan-protected attachments behind that no stored
+			// draft references (PROD-9621).
+			$stamp_attachment_ids   = array();
+			$stamp_feature_image_id = 0;
+
 			// Set media draft meta key to avoid delete from cron job 'bp_media_delete_orphaned_attachments'.
 			if ( isset( $draft_activity['data']['media'] ) && ! empty( $draft_activity['data']['media'] ) ) {
 				foreach ( $draft_activity['data']['media'] as $media_key => $new_media_attachment ) {
@@ -1221,7 +1228,7 @@ function bb_nouveau_ajax_post_draft_activity() {
 					}
 					if ( ! isset( $new_media_attachment['bb_media_draft'] ) ) {
 						$draft_activity['data']['media'][ $media_key ]['bb_media_draft'] = 1;
-						update_post_meta( $new_media_attachment['id'], 'bb_media_draft', 1 );
+						$stamp_attachment_ids[] = (int) $new_media_attachment['id'];
 					}
 				}
 				$draft_activity['data']['media'] = array_values( $draft_activity['data']['media'] );
@@ -1237,7 +1244,7 @@ function bb_nouveau_ajax_post_draft_activity() {
 					}
 					if ( ! isset( $new_document_attachment['bb_media_draft'] ) ) {
 						$draft_activity['data']['document'][ $document_key ]['bb_media_draft'] = 1;
-						update_post_meta( $new_document_attachment['id'], 'bb_media_draft', 1 );
+						$stamp_attachment_ids[] = (int) $new_document_attachment['id'];
 					}
 				}
 				$draft_activity['data']['document'] = array_values( $draft_activity['data']['document'] );
@@ -1253,7 +1260,7 @@ function bb_nouveau_ajax_post_draft_activity() {
 					}
 					if ( ! isset( $new_video_attachment['bb_media_draft'] ) ) {
 						$draft_activity['data']['video'][ $video_key ]['bb_media_draft'] = 1;
-						update_post_meta( $new_video_attachment['id'], 'bb_media_draft', 1 );
+						$stamp_attachment_ids[] = (int) $new_video_attachment['id'];
 					}
 				}
 				$draft_activity['data']['video'] = array_values( $draft_activity['data']['video'] );
@@ -1284,7 +1291,7 @@ function bb_nouveau_ajax_post_draft_activity() {
 						);
 					}
 					$draft_activity['data']['bb_activity_post_feature_image']['bb_activity_post_feature_image_draft'] = 1;
-					update_post_meta( $attachment_id, 'bb_activity_post_feature_image_draft', 1 );
+					$stamp_feature_image_id = (int) $attachment_id;
 				}
 			}
 
@@ -1348,6 +1355,14 @@ function bb_nouveau_ajax_post_draft_activity() {
 
 			$evicted_draft_keys = $draft_budget['evicted'];
 
+			// Every cap accepted the save - apply the deferred protection stamps now.
+			foreach ( array_unique( $stamp_attachment_ids ) as $stamp_attachment_id ) {
+				update_post_meta( $stamp_attachment_id, 'bb_media_draft', 1 );
+			}
+			if ( $stamp_feature_image_id ) {
+				update_post_meta( $stamp_feature_image_id, 'bb_activity_post_feature_image_draft', 1 );
+			}
+
 			bp_update_user_meta( $draft_user_id, $draft_activity['data_key'], $draft_activity );
 		} else {
 			// Dispose strictly from the STORED draft - the client payload's
@@ -1382,6 +1397,14 @@ function bb_nouveau_ajax_post_draft_activity() {
 				}
 			}
 
+			// Release the draft stamps from any attachments NOT hard-deleted above
+			// so the orphan-cleanup crons can collect them again - a discarded
+			// draft must never leave its uploads orphan-protected forever. Already
+			// deleted attachments are skipped by the ownership check (PROD-9621).
+			if ( is_array( $stored_draft ) ) {
+				bb_draft_unstamp_attachments( $stored_draft, $draft_user_id );
+			}
+
 			bp_delete_user_meta( $draft_user_id, $draft_activity['data_key'] );
 
 			$draft_activity['data'] = false;
@@ -1402,7 +1425,9 @@ function bb_nouveau_ajax_post_draft_activity() {
  * Used by the composer's lazy restore: the draft is no longer echoed into
  * page HTML, so when localStorage is empty and `has_draft` is localized as
  * true the JS requests the server copy through this endpoint. The key is
- * validated with the same server-derived rules as the save path.
+ * validated with the same key-shape rules as the save path; posting
+ * capability is deliberately NOT required - a member who lost posting
+ * rights must still be able to read their own stored draft.
  *
  * @since BuddyBoss [BBVERSION]
  */

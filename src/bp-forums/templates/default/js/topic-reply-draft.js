@@ -767,6 +767,18 @@ window.bp = window.bp || {};
 
 			this.topic_reply_draft.data = this.all_draft_data[this.topic_reply_draft.data_key];
 
+			var self = this,
+				draft_payload = this.topic_reply_draft;
+
+			// A delete needs only the key, never the content - the server
+			// disposes from its own stored row. Slimming the payload also keeps
+			// the unload delete under the browser's ~64KB sendBeacon quota,
+			// which a full near-cap draft exceeds (the request would silently
+			// never be sent and the server row would survive the discard).
+			if ( 'delete' === this.topic_reply_draft.post_action ) {
+				draft_payload = _.omit( this.topic_reply_draft, 'data' );
+			}
+
 			if ( ! is_reload_window ) {
 				if ( this.draft_ajax_request ) {
 					this.draft_ajax_request.abort();
@@ -775,7 +787,7 @@ window.bp = window.bp || {};
 				var draft_data = {
 					_wpnonce_post_topic_reply_draft: BP_Nouveau.forums.nonces.post_topic_reply_draft,
 					action: 'post_topic_reply_draft',
-					draft_topic_reply: this.topic_reply_draft
+					draft_topic_reply: draft_payload
 				};
 
 				// Send data to server.
@@ -784,7 +796,17 @@ window.bp = window.bp || {};
 						type: 'POST',
 						url: BP_Nouveau.ajaxurl,
 						data: draft_data,
-						success: function() {}
+						success: function( response ) {
+							// admin-ajax returns HTTP 200 for wp_send_json_error, so
+							// the guardrail rejections (size cap, key validation)
+							// surface here - silently dropping them reads as saved
+							// while the server copy quietly stops updating.
+							if ( response && ! response.success && response.data && response.data.message ) {
+								self.showDraftFeedback( response.data.message );
+							} else {
+								self.showDraftFeedback( '' );
+							}
+						}
 					}
 				);
 
@@ -794,7 +816,7 @@ window.bp = window.bp || {};
 				var formData = new FormData();
 				formData.append( '_wpnonce_post_topic_reply_draft', BP_Nouveau.forums.nonces.post_topic_reply_draft );
 				formData.append( 'action', 'post_topic_reply_draft' );
-				formData.append( 'draft_topic_reply', JSON.stringify( this.topic_reply_draft ) );
+				formData.append( 'draft_topic_reply', JSON.stringify( draft_payload ) );
 
 				if ( is_send_all_data ) {
 					formData.append( 'all_data', JSON.stringify( this.all_draft_data ) );
@@ -808,6 +830,28 @@ window.bp = window.bp || {};
 
 			// Set false after sending the request to the server.
 			this.draft_content_changed = false;
+		};
+
+		this.showDraftFeedback = function ( message ) {
+			var $form = this.currentForm && this.currentForm.length ? this.currentForm : $( 'form#new-post' );
+
+			if ( ! $form.length ) {
+				return;
+			}
+
+			var $notice = $form.find( '.bb-draft-save-feedback' );
+
+			if ( ! message ) {
+				$notice.remove();
+				return;
+			}
+
+			if ( ! $notice.length ) {
+				$notice = $( '<div class="bb-draft-save-feedback" role="alert"></div>' );
+				$form.prepend( $notice );
+			}
+
+			$notice.text( message );
 		};
 
 		this.displayTopicReplyDraft = function () {
@@ -1406,7 +1450,11 @@ window.bp = window.bp || {};
 			forum_reply.css( 'pointer-events', 'none' );
 
 			this.topic_reply_draft.post_action = 'delete';
-			this.postTopicReplyDraft( true, true, false );
+			// In-page discard goes over XHR, not sendBeacon - the beacon
+			// transport is reserved for unload, and its quota failure mode
+			// must never decide whether a deliberate discard reaches the
+			// server (PROD-9621).
+			this.postTopicReplyDraft( true, false, false );
 			this.clearTopicReplyDraftIntervals();
 			this.resetLocalTopicReplyDraft();
 			this.resetTopicReplyDraftPostForm();
@@ -1447,6 +1495,7 @@ window.bp = window.bp || {};
 	// (PROD-9621) - when server drafts exist, fetch them once and seed the
 	// localized map the instances read, then initialize the forms.
 	if (
+		0 < forms.length &&
 		'undefined' !== typeof BP_Nouveau.forums &&
 		true === BP_Nouveau.forums.has_draft &&
 		$.isEmptyObject( BP_Nouveau.forums.draft )

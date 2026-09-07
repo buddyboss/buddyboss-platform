@@ -1030,7 +1030,9 @@ window.bp = window.bp || {};
 
 					// When the composer opened before the fetch resolved, restore
 					// into the open form now (fires bb_activity_draft_loaded).
-					if ( $( 'body' ).hasClass( 'activity-modal-open' ) && ! _.isUndefined( self.postForm ) && ! self.postForm.$el.hasClass( 'bb-rl-activity-edit' ) ) {
+					// ReadyLaunch toggles bb-rl-activity-modal-open, not the
+					// nouveau pack's activity-modal-open class.
+					if ( $( 'body' ).hasClass( 'bb-rl-activity-modal-open' ) && ! _.isUndefined( self.postForm ) && ! self.postForm.$el.hasClass( 'bb-rl-activity-edit' ) ) {
 						self.displayDraftActivity();
 					}
 				}
@@ -1048,18 +1050,30 @@ window.bp = window.bp || {};
 			// image of 1MB+, which the draft and publish pipelines strip anyway.
 			// Refuse it at the moment of intent instead of silently losing it.
 			$( document ).on( 'paste.bbDraftImageGuard', '#bb-rl-whats-new-form [contenteditable="true"]', function ( event ) {
-				var clipboard = event.originalEvent ? event.originalEvent.clipboardData : null;
+				var clipboard = event.originalEvent ? event.originalEvent.clipboardData : null,
+					hasImageFile = false,
+					hasText = false,
+					i;
 
 				if ( ! clipboard || ! clipboard.items ) {
 					return;
 				}
 
-				for ( var i = 0; i < clipboard.items.length; i++ ) {
+				for ( i = 0; i < clipboard.items.length; i++ ) {
 					if ( 'file' === clipboard.items[ i ].kind && 0 === clipboard.items[ i ].type.indexOf( 'image/' ) ) {
-						event.preventDefault();
-						self.showDraftFeedback( bbRlActivity.params.paste_image_blocked_message );
-						return;
+						hasImageFile = true;
+					} else if ( 'string' === clipboard.items[ i ].kind && ( 'text/plain' === clipboard.items[ i ].type || 'text/html' === clipboard.items[ i ].type ) ) {
+						hasText = true;
 					}
+				}
+
+				// Office-suite copies (spreadsheet cells, rich text) put a bitmap
+				// rendition on the clipboard NEXT TO the text - the member is
+				// pasting text, so let it through (embedded data: URLs are
+				// stripped server-side). Only a pure image paste is refused.
+				if ( hasImageFile && ! hasText ) {
+					event.preventDefault();
+					self.showDraftFeedback( bbRlActivity.params.paste_image_blocked_message );
 				}
 			} );
 		},

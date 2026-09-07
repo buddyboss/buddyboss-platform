@@ -474,6 +474,12 @@ function bb_post_topic_reply_draft() {
 		$stored_row_size = strlen( maybe_serialize( $existing_draft ) );
 		$replaced_attachment_ids = array();
 
+		// Draft-protection stamps are collected during validation but written
+		// only after every size cap has accepted the save - a rejected save
+		// must not leave orphan-protected attachments behind that no stored
+		// draft references (PROD-9621).
+		$stamp_attachment_ids = array();
+
 		if ( isset( $existing_draft[ $draft_topic_reply['data_key'] ] ) ) {
 			$removed_data = $existing_draft[ $draft_topic_reply['data_key'] ];
 
@@ -549,7 +555,7 @@ function bb_post_topic_reply_draft() {
 						}
 						if ( ! isset( $new_media_attachment['bb_media_draft'] ) ) {
 							$new_media_data[ $media_key ]['bb_media_draft'] = 1;
-							update_post_meta( $new_media_attachment['id'], 'bb_media_draft', 1 );
+							$stamp_attachment_ids[] = (int) $new_media_attachment['id'];
 						}
 					}
 					$new_media_data = array_values( $new_media_data );
@@ -576,7 +582,7 @@ function bb_post_topic_reply_draft() {
 						}
 						if ( ! isset( $new_document_attachment['bb_media_draft'] ) ) {
 							$new_document_data[ $document_key ]['bb_media_draft'] = 1;
-							update_post_meta( $new_document_attachment['id'], 'bb_media_draft', 1 );
+							$stamp_attachment_ids[] = (int) $new_document_attachment['id'];
 						}
 					}
 					$new_document_data = array_values( $new_document_data );
@@ -603,7 +609,7 @@ function bb_post_topic_reply_draft() {
 						}
 						if ( ! isset( $new_video_attachment['bb_media_draft'] ) ) {
 							$new_video_data[ $video_key ]['bb_media_draft'] = 1;
-							update_post_meta( $new_video_attachment['id'], 'bb_media_draft', 1 );
+							$stamp_attachment_ids[] = (int) $new_video_attachment['id'];
 						}
 					}
 					$new_video_data = array_values( $new_video_data );
@@ -684,7 +690,12 @@ function bb_post_topic_reply_draft() {
 			bp_update_user_meta( $user_id, $usermeta_key, $existing_draft );
 		}
 
-		// The request is accepted - the replaced entry's attachments may go now.
+		// The request is accepted - apply the deferred protection stamps and
+		// delete the replaced entry's attachments now.
+		foreach ( array_unique( $stamp_attachment_ids ) as $stamp_attachment_id ) {
+			update_post_meta( $stamp_attachment_id, 'bb_media_draft', 1 );
+		}
+
 		foreach ( $replaced_attachment_ids as $replaced_attachment_id ) {
 			wp_delete_attachment( $replaced_attachment_id, true );
 		}

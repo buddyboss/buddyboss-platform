@@ -398,4 +398,125 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		$found  = wp_list_pluck( $second['rows'], 'meta_key' );
 		$this->assertContains( 'draft_user', $found, 'The real draft past the filtered window must still be reached.' );
 	}
+
+	public function test_dispose_removes_corrupt_and_legacy_empty_rows() {
+		$user_id = self::factory()->user->create();
+
+		// A corrupt (non-array) row - e.g. a serialized value truncated
+		// mid-write - is exactly the oversized shape healing must remove.
+		add_user_meta( $user_id, 'draft_user', 'corrupt-not-an-array' );
+		$this->assertTrue( bb_draft_dispose( $user_id, 'draft_user' ) );
+		$this->assertFalse( metadata_exists( 'user', $user_id, 'draft_user' ) );
+
+		// A legacy-empty array() row (old forum publish paths) is removable too.
+		add_user_meta( $user_id, 'bb_user_topic_reply_draft', array() );
+		$this->assertTrue( bb_draft_dispose( $user_id, 'bb_user_topic_reply_draft' ) );
+		$this->assertFalse( metadata_exists( 'user', $user_id, 'bb_user_topic_reply_draft' ) );
+
+		// A missing row still reports failure - nothing was removed.
+		$this->assertFalse( bb_draft_dispose( $user_id, 'draft_user' ) );
+
+		// An inner-key request on a corrupt row has nothing addressable.
+		add_user_meta( $user_id, 'bb_user_topic_reply_draft', 'corrupt' );
+		$this->assertFalse( bb_draft_dispose( $user_id, 'bb_user_topic_reply_draft', 'draft_topic' ) );
+	}
+
+	public function test_cleanup_collects_legacy_empty_forum_row_and_spares_fresh_drafts() {
+		$user_id = self::factory()->user->create();
+
+		add_user_meta( $user_id, 'bb_user_topic_reply_draft', array() );
+		add_user_meta(
+			$user_id,
+			'draft_user',
+			array(
+				'data_key'        => 'draft_user',
+				'data'            => array( 'content' => 'fresh' ),
+				'_draft_saved_at' => time(),
+			)
+		);
+
+		$result = bb_drafts_delete_expired( 0 );
+
+		$this->assertTrue( $result['complete'] );
+		$this->assertFalse( metadata_exists( 'user', $user_id, 'bb_user_topic_reply_draft' ), 'A legacy-empty aggregate row is collected immediately.' );
+		$this->assertTrue( metadata_exists( 'user', $user_id, 'draft_user' ), 'A fresh draft survives the sweep (negative control).' );
+	}
+
+	public function test_cleanup_resumes_from_persisted_cursor_and_clears_it_on_completion() {
+		global $wpdb;
+
+		$u1 = self::factory()->user->create();
+		$u2 = self::factory()->user->create();
+
+		$expired = array(
+			'data_key'        => 'draft_user',
+			'data'            => array( 'content' => 'old' ),
+			'_draft_saved_at' => 100,
+		);
+
+		add_user_meta( $u1, 'draft_user', $expired );
+		add_user_meta( $u2, 'draft_user', $expired );
+
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
+		$u1_row_id = (int) $wpdb->get_var( $wpdb->prepare( "SELECT umeta_id FROM {$wpdb->usermeta} WHERE user_id = %d AND meta_key = 'draft_user'", $u1 ) );
+
+		// Simulate a budget-interrupted previous slice that stopped after u1's row.
+		update_option( 'bb_draft_cleanup_cursor', $u1_row_id, false );
+
+		$result = bb_drafts_delete_expired( 0 );
+
+		$this->assertTrue( $result['complete'] );
+		$this->assertTrue( metadata_exists( 'user', $u1, 'draft_user' ), 'Rows before the persisted cursor were handled by the interrupted slice - not re-scanned.' );
+		$this->assertFalse( metadata_exists( 'user', $u2, 'draft_user' ), 'Rows after the cursor are reached by the resumed slice.' );
+		$this->assertFalse( get_option( 'bb_draft_cleanup_cursor' ), 'A completed pass clears the cursor so the next daily run starts fresh.' );
+	}
+
+	public function test_oneshot_heals_aggregate_oversized_user_and_disposes_corrupt_rows() {
+		$heavy   = self::factory()->user->create();
+		$light   = self::factory()->user->create();
+		$corrupt = self::factory()->user->create();
+
+		// Six ~60KB drafts: none individually over the 100KB per-draft cap,
+		// combined ~360KB over the 300KB per-user budget - the "ten 90KB
+		// legacy drafts" class the aggregate stage exists for.
+		for ( $i = 1; $i <= 6; $i++ ) {
+			add_user_meta(
+				$heavy,
+				'draft_group_' . $i,
+				array(
+					'data_key'        => 'draft_group_' . $i,
+					'data'            => array( 'content' => str_repeat( 'x', 60000 ) ),
+					'_draft_saved_at' => $i,
+				)
+			);
+		}
+
+		add_user_meta(
+			$light,
+			'draft_user',
+			array(
+				'data_key' => 'draft_user',
+				'data'     => array( 'content' => 'small' ),
+			)
+		);
+
+		// A corrupt scalar row over the per-draft cap - the truncated
+		// multi-MB shape the one-shot must be able to remove.
+		add_user_meta( $corrupt, 'draft_user', str_repeat( 'x', 200000 ) );
+
+		$result = bb_drafts_oneshot_batch( 0 );
+
+		$this->assertTrue( $result['complete'] );
+		$this->assertSame( 1, (int) get_option( 'bb_draft_oneshot_done' ) );
+		$this->assertFalse( get_option( 'bb_draft_oneshot_state' ), 'The persisted stage state is cleared on completion.' );
+
+		$this->assertFalse( metadata_exists( 'user', $corrupt, 'draft_user' ), 'A corrupt oversized row is disposed.' );
+
+		$heavy_sizes = bb_draft_get_user_meta_sizes( $heavy );
+		$this->assertLessThanOrEqual( bb_draft_user_total_max_size(), array_sum( $heavy_sizes['drafts'] ), 'The aggregate-oversized user is healed at upgrade, not on their next save.' );
+		$this->assertFalse( metadata_exists( 'user', $heavy, 'draft_group_1' ), 'The OLDEST draft is the one evicted.' );
+		$this->assertTrue( metadata_exists( 'user', $heavy, 'draft_group_6' ), 'Newer drafts survive - healing is not wholesale deletion.' );
+
+		$this->assertTrue( metadata_exists( 'user', $light, 'draft_user' ), 'An under-budget user is untouched (negative control).' );
+	}
 }

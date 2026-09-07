@@ -519,11 +519,15 @@ function bbp_new_reply_handler( $action = '' ) {
 				unset( $existing_draft[ $draft_data_key ] );
 			}
 
-			if ( empty( $existing_draft ) || is_string( $existing_draft ) ) {
-				$existing_draft = array();
+			// An emptied aggregate row is deleted, never written back as array() -
+			// a stored empty row keeps has_draft true (one wasted lazy-fetch AJAX
+			// per forum page load, forever) and no cleanup pass can remove it
+			// while ordinary publishes keep re-creating it (PROD-9621).
+			if ( empty( $existing_draft ) || ! is_array( $existing_draft ) ) {
+				bp_delete_user_meta( $user_id, $usermeta_key );
+			} else {
+				bp_update_user_meta( $user_id, $usermeta_key, $existing_draft );
 			}
-
-			bp_update_user_meta( $user_id, $usermeta_key, $existing_draft );
 		}
 
 		/** Additional Actions (After Save) */
