@@ -444,31 +444,52 @@ class BP_Tests_Core_Textdomain extends BP_UnitTestCase {
 	}
 
 	/**
-	 * The resolved locale must be passed to load_textdomain() explicitly.
+	 * The catalog is REGISTERED under the request locale, not the filtered one.
 	 *
-	 * Without the third argument core calls determine_locale() itself, which
-	 * defeats the deferral of user resolution and can register a catalog under
-	 * a different locale than the one its path was built from.
+	 * `plugin_locale` selects which catalog FILE belongs to this domain and may
+	 * legitimately differ from the request locale. It must not become the third
+	 * argument to load_textdomain(): core hands that straight to
+	 * WP_Translation_Controller::set_locale() — a process-wide singleton shared by
+	 * every text domain — before it inspects any file, so a filtered value would
+	 * repoint lookups for core's own `default` domain too.
+	 *
+	 * The fixture deliberately makes the two diverge. An earlier version of this
+	 * test forced a single locale, so filtered and request were identical and the
+	 * assertion held whichever variable the loader passed — it could not fail, and
+	 * did not fail when the leak was introduced. Keep them different.
 	 */
-	public function test_resolved_locale_is_passed_to_load_textdomain() {
+	public function test_request_locale_not_the_filtered_locale_is_registered() {
 		if ( version_compare( get_bloginfo( 'version' ), '6.3', '<' ) ) {
 			$this->markTestSkipped( 'pre_load_textdomain (with $locale) requires WP 6.3+.' );
 		}
 
-		$locale = 'zz_ARG';
-		$dir    = $this->make_dir( 'localearg' );
+		$request_locale  = 'zz_REQ';
+		$filtered_locale = 'zz_FILE';
+		$dir             = $this->make_dir( 'localearg' );
 
-		$this->make_catalog( $dir, $locale, array( 'BB_ARG_MSG' => 'BB_ARG_OK' ) );
+		// The catalog on disk is named for the FILTERED locale.
+		$this->make_catalog( $dir, $filtered_locale, array( 'BB_ARG_MSG' => 'BB_ARG_OK' ) );
 
-		$this->force_locale( $locale );
+		$this->force_locale( $request_locale );
 		$this->set_locations( array( $dir ) );
 
-		$seen = array();
+		add_filter(
+			'plugin_locale',
+			function ( $locale, $domain ) use ( $filtered_locale ) {
+				return 'buddyboss' === $domain ? $filtered_locale : $locale;
+			},
+			10,
+			2
+		);
+
+		$locales = array();
+		$mofiles = array();
 		add_filter(
 			'pre_load_textdomain',
-			function ( $loaded, $domain, $mofile, $passed_locale ) use ( &$seen ) {
+			function ( $loaded, $domain, $mofile, $passed_locale ) use ( &$locales, &$mofiles ) {
 				if ( 'buddyboss' === $domain ) {
-					$seen[] = $passed_locale;
+					$locales[] = $passed_locale;
+					$mofiles[] = basename( $mofile );
 				}
 
 				return $loaded;
@@ -479,11 +500,25 @@ class BP_Tests_Core_Textdomain extends BP_UnitTestCase {
 
 		bp_core_load_buddypress_textdomain();
 
-		$this->assertNotEmpty( $seen, 'load_textdomain() was never reached.' );
+		$this->assertNotEmpty( $locales, 'load_textdomain() was never reached.' );
+
+		// Registration locale: the request locale, never the filtered one.
 		$this->assertSame(
-			array( $locale ),
-			array_values( array_unique( $seen ) ),
-			'load_textdomain() was called without the resolved locale, letting core re-derive it.'
+			array( $request_locale ),
+			array_values( array_unique( $locales ) ),
+			'The plugin_locale-filtered value reached load_textdomain() and would repoint the process-wide translation controller.'
+		);
+
+		// File name: chosen by plugin_locale.
+		$this->assertContains(
+			'buddyboss-' . $filtered_locale . '.mo',
+			$mofiles,
+			'plugin_locale was not used to build the catalog file name.'
+		);
+		$this->assertNotContains(
+			'buddyboss-' . $request_locale . '.mo',
+			$mofiles,
+			'The catalog file name ignored plugin_locale.'
 		);
 	}
 
