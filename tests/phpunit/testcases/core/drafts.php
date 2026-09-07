@@ -2209,4 +2209,78 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 			'The key this request owns must still be saved.'
 		);
 	}
+	/**
+	 * A cap DECISION must act in the same key space the measurement reports.
+	 *
+	 * bb_draft_get_user_meta_sizes() reports LOGICAL keys and
+	 * bb_draft_enforce_user_budget() feeds those straight to
+	 * bb_draft_dispose(), which re-applies bp_get_user_meta_key(). The two
+	 * halves therefore have to agree: if the measurement reverted to raw
+	 * literals no cap could ever fire on a filtered install, and if dispose
+	 * stopped re-filtering it would delete a raw lookalike while the member's
+	 * real draft survived over budget. The sweep test covers expiry; this
+	 * covers the budget path, which is the half N2's recommendation asked for
+	 * and the one that runs on every save (PROD-9621 N2).
+	 */
+	public function test_budget_eviction_disposes_the_filtered_row_not_a_raw_lookalike() {
+		$user_id = self::factory()->user->create();
+
+		// A stray unfiltered lookalike a migration could have left behind. It is
+		// not this install's draft key, so nothing may measure or delete it.
+		update_user_meta( $user_id, 'draft_group_11', 'STRAY-RAW-ROW' );
+
+		add_filter( 'bp_get_user_meta_key', array( $this, 'filter_prefix_user_meta_key' ) );
+
+		// Oldest - the eviction candidate.
+		bp_update_user_meta(
+			$user_id,
+			'draft_group_11',
+			array(
+				'data_key'        => 'draft_group_11',
+				'data'            => array( 'content' => str_repeat( 'a', 150 * KB_IN_BYTES ) ),
+				'_draft_saved_at' => 100,
+			)
+		);
+
+		// Newest - must survive.
+		bp_update_user_meta(
+			$user_id,
+			'draft_group_22',
+			array(
+				'data_key'        => 'draft_group_22',
+				'data'            => array( 'content' => str_repeat( 'b', 150 * KB_IN_BYTES ) ),
+				'_draft_saved_at' => time(),
+			)
+		);
+
+		bb_draft_flush_user_meta_sizes( $user_id );
+
+		$sizes = bb_draft_get_user_meta_sizes( $user_id );
+
+		// Premise: both filtered rows are measured, and the raw lookalike is not.
+		$this->assertArrayHasKey( 'draft_group_11', $sizes['drafts'] );
+		$this->assertArrayHasKey( 'draft_group_22', $sizes['drafts'] );
+
+		// A third draft pushes the member past bb_draft_user_total_max_size().
+		$result = bb_draft_enforce_user_budget( $user_id, 'draft_user', 90 * KB_IN_BYTES );
+
+		$evicted_row  = bp_get_user_meta( $user_id, 'draft_group_11', true );
+		$survivor_row = bp_get_user_meta( $user_id, 'draft_group_22', true );
+
+		remove_filter( 'bp_get_user_meta_key', array( $this, 'filter_prefix_user_meta_key' ) );
+		bb_draft_flush_user_meta_sizes( $user_id );
+
+		$stray = get_user_meta( $user_id, 'draft_group_11', true );
+
+		$this->assertTrue( $result['allowed'], 'The save is under the total meta budget and must be allowed.' );
+		$this->assertContains(
+			'draft_group_11',
+			$result['evicted'],
+			'The oldest draft must be reported evicted under its LOGICAL key - that is what the client drops from localStorage.'
+		);
+		$this->assertSame( '', $evicted_row, 'The evicted draft must really be gone from the row the writers use.' );
+		$this->assertNotEmpty( $survivor_row, 'The newer draft must survive - evicting it is the wrong-order bug.' );
+		$this->assertSame( 'STRAY-RAW-ROW', $stray, 'An unfiltered lookalike is not ours on this install and must be left alone.' );
+	}
+
 }
