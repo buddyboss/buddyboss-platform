@@ -443,17 +443,35 @@ function bb_post_topic_reply_draft() {
 		// resolved against real forum/topic/reply IDs (PROD-9621 hardening).
 		$draft_key_context = bb_draft_topic_reply_key_context( (string) $draft_topic_reply['data_key'] );
 
-		if ( false === $draft_key_context ) {
-			wp_send_json_error();
-		}
-
 		$is_draft_update = ( isset( $draft_topic_reply['post_action'] ) && 'update' === $draft_topic_reply['post_action'] );
 
-		// SAVING requires the publish right for the OBJECT the key addresses,
-		// and view access to the forum the key resolves to - matching what the
-		// publish path enforces, and what the activity composer already does
-		// per group. Discarding one's own stored draft never does (PROD-9621).
-		if ( $is_draft_update && ! bb_draft_user_can_save_topic_reply_draft( $draft_key_context, $user_id ) ) {
+		// The shape check above resolves client-supplied post IDs, so on its own
+		// it answers "does this ID exist, and is it a forum/topic/reply?" for
+		// ANY id - an existence and post-type oracle over hidden and private
+		// forums, available to any logged-in member. Gate it behind the same
+		// view check the save path uses, and return one indistinguishable error
+		// for "no such shape", "cannot see it" and "may not post here"
+		// (PROD-9621 L1).
+		$draft_key_allowed = ( false !== $draft_key_context );
+
+		if ( $draft_key_allowed && ! empty( $draft_key_context['forum_id'] ) ) {
+			$draft_key_allowed = bbp_user_can_view_forum(
+				array(
+					'user_id'  => $user_id,
+					'forum_id' => (int) $draft_key_context['forum_id'],
+				)
+			);
+		}
+
+		// SAVING additionally requires the publish right for the OBJECT the key
+		// addresses - matching what the publish path enforces, and what the
+		// activity composer already does per group. Discarding one's own stored
+		// draft never does (PROD-9621).
+		if ( $draft_key_allowed && $is_draft_update ) {
+			$draft_key_allowed = bb_draft_user_can_save_topic_reply_draft( $draft_key_context, $user_id );
+		}
+
+		if ( ! $draft_key_allowed ) {
 			wp_send_json_error();
 		}
 
