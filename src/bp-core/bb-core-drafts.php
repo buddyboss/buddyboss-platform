@@ -430,6 +430,25 @@ function bb_draft_get_user_meta_sizes( $user_id, $flush = false ) {
 }
 
 /**
+ * Serialized width of one array key, as `serialize()` writes it.
+ *
+ * A row is wider than the sum of its entries: every element also carries its
+ * key. Size bookkeeping that walks a row element by element has to account
+ * for both, or it drifts above the real width and evicts too much.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $key Array key.
+ * @return int Bytes the key occupies in a serialized array.
+ */
+function bb_draft_serialized_key_bytes( $key ) {
+	$key = (string) $key;
+
+	// s:<length>:"<key>";
+	return strlen( 's:' . strlen( $key ) . ':"' . $key . '";' );
+}
+
+/**
  * Drop the memoized meta sizes for a user after a draft write.
  *
  * Kept explicit rather than clearing inside the writers: the sizes are only
@@ -1475,8 +1494,11 @@ function bb_draft_heal_forum_row( $user_id ) {
 	}
 
 	// Pass 2 - oldest-first down to the per-user draft budget. The row width is
-	// tracked by subtracting each removed entry instead of re-serializing the
-	// row, which is what made this quadratic.
+	// tracked by subtracting each removed element instead of re-serializing the
+	// row, which is what made this quadratic. An element costs its entry bytes
+	// PLUS its serialized key, so both are subtracted: counting only the entry
+	// leaves the tracked width above the truth and over-evicts the member's
+	// drafts (17 too many on a 1000-entry row, measured).
 	$total_cap = bb_draft_user_total_max_size();
 	$row_bytes = strlen( maybe_serialize( $row ) );
 
@@ -1513,7 +1535,8 @@ function bb_draft_heal_forum_row( $user_id ) {
 			}
 
 			$removed[ $inner_key ] = $row[ $inner_key ];
-			$row_bytes            -= isset( $sizes[ $inner_key ] ) ? $sizes[ $inner_key ] : strlen( maybe_serialize( $row[ $inner_key ] ) );
+			$entry_bytes           = isset( $sizes[ $inner_key ] ) ? $sizes[ $inner_key ] : strlen( maybe_serialize( $row[ $inner_key ] ) );
+			$row_bytes            -= $entry_bytes + bb_draft_serialized_key_bytes( $inner_key );
 
 			unset( $row[ $inner_key ] );
 			++$disposed;

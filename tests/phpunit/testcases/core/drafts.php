@@ -1521,6 +1521,73 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		$this->assertArrayNotHasKey( 'draft_reply_old', $row, 'The genuinely expired draft is still collected.' );
 	}
 
+	/**
+	 * The heal's size bookkeeping must match what serialize() really produces.
+	 *
+	 * A row is wider than the sum of its entries - every element also carries
+	 * its key. Subtracting only the entry bytes leaves the tracked width above
+	 * the truth, so the oldest-first trim keeps going and evicts drafts the
+	 * member should have kept.
+	 */
+	public function test_heal_size_bookkeeping_matches_serialize_exactly() {
+		// The formula must equal what serialize() charges for the key.
+		foreach ( array( 'draft_reply_1000', 'draft_topic', 'x' ) as $key ) {
+			$with    = strlen( maybe_serialize( array( $key => 1 ) ) );
+			$without = strlen( maybe_serialize( array() ) );
+			// element = key + value(i:1;) ; isolate the key by subtracting the value.
+			$value_bytes = strlen( 'i:1;' );
+			$this->assertSame(
+				$with - $without - $value_bytes,
+				bb_draft_serialized_key_bytes( $key ),
+				"Key accounting must be exact for '{$key}'."
+			);
+		}
+
+		// End to end: a row of many small entries must not be over-trimmed.
+		$user_id = self::factory()->user->create();
+		$row     = array();
+		$cap     = bb_draft_user_total_max_size();
+
+		// ~1000 tiny entries: the regime where ignoring key bytes drifts most.
+		for ( $i = 0; $i < 1000; $i++ ) {
+			$row[ 'draft_reply_' . ( 1000 + $i ) ] = array(
+				'data_key'        => 'draft_reply_' . ( 1000 + $i ),
+				'data'            => array( 'bbp_reply_content' => str_repeat( 'x', 300 ) ),
+				'_draft_saved_at' => 100 + $i,
+			);
+		}
+
+		bp_update_user_meta( $user_id, 'bb_user_topic_reply_draft', $row );
+		bb_draft_heal_forum_row( $user_id );
+
+		$healed = bp_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
+
+		$this->assertIsArray( $healed );
+		$this->assertLessThanOrEqual( $cap, strlen( maybe_serialize( $healed ) ), 'The healed row must fit the budget.' );
+
+		// And it must not have gone further than needed: putting the single
+		// oldest survivor back must push it over the cap again.
+		$survivors = $healed;
+		ksort( $survivors );
+		$oldest_key = null;
+		$oldest_ts  = PHP_INT_MAX;
+		foreach ( $row as $k => $entry ) {
+			if ( ! isset( $healed[ $k ] ) && $entry['_draft_saved_at'] < $oldest_ts ) {
+				$oldest_ts  = $entry['_draft_saved_at'];
+				$oldest_key = $k;
+			}
+		}
+
+		$this->assertNotNull( $oldest_key, 'Something must have been evicted for this to be a real test.' );
+
+		$healed[ $oldest_key ] = $row[ $oldest_key ];
+		$this->assertGreaterThan(
+			$cap,
+			strlen( maybe_serialize( $healed ) ),
+			'Restoring one evicted draft must exceed the cap - otherwise the trim went too far.'
+		);
+	}
+
 	public function filter_prefix_user_meta_key( $key ) {
 		return 'bbtest_' . $key;
 	}
