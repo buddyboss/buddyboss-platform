@@ -39,6 +39,163 @@ function bb_draft_is_draft_meta_key( $meta_key ) {
 }
 
 /**
+ * How `bp_get_user_meta_key` wraps the draft meta keys on this install.
+ *
+ * Every draft writer stores through `bp_update_user_meta()`, which passes
+ * the key through {@see bp_get_user_meta_key()}. The maintenance layer, by
+ * contrast, has to recognise keys coming back OUT of the database, so it
+ * needs the inverse of that filter. The filter is arbitrary, but its
+ * documented purpose (and every real use) is to wrap the key, so the wrap
+ * is derived from a probe and then VERIFIED against all four canonical
+ * draft shapes. A filter that is not a pure wrap (a hash, or one that
+ * rewrites only some keys) is reported as non-invertible, and the callers
+ * then decline to act rather than guess — see
+ * {@see bb_draft_get_rows_batch()}.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return array {
+ *     @type string $prefix     Text the filter prepends.
+ *     @type string $suffix     Text the filter appends.
+ *     @type bool   $invertible Whether a stored key can be mapped back.
+ * }
+ */
+function bb_draft_meta_key_wrap() {
+	// Keyed on the probe result rather than a bare flag: a test (or a plugin
+	// on a late hook) may add or remove the filter mid-request, and the memo
+	// must follow it instead of pinning the first answer seen.
+	static $memo = array();
+
+	$probe    = 'bb_draft_meta_key_probe';
+	$filtered = (string) bp_get_user_meta_key( $probe );
+
+	if ( isset( $memo[ $filtered ] ) ) {
+		return $memo[ $filtered ];
+	}
+
+	$identity = array(
+		'prefix'     => '',
+		'suffix'     => '',
+		'invertible' => true,
+	);
+
+	if ( $probe === $filtered ) {
+		$memo[ $filtered ] = $identity;
+
+		return $identity;
+	}
+
+	$position = strpos( $filtered, $probe );
+	$wrap     = $identity;
+
+	if ( false === $position ) {
+		$wrap['invertible'] = false;
+	} else {
+		$wrap['prefix'] = substr( $filtered, 0, $position );
+		$wrap['suffix'] = substr( $filtered, $position + strlen( $probe ) );
+
+		// Verify the derived wrap actually describes the real keys. A filter
+		// that rewrites only some keys would otherwise hand us a wrap that
+		// silently mismatches the rows we are about to delete.
+		foreach ( array( 'draft_user', 'bb_user_topic_reply_draft', 'draft_user_1', 'draft_group_1' ) as $canonical ) {
+			if ( (string) bp_get_user_meta_key( $canonical ) !== $wrap['prefix'] . $canonical . $wrap['suffix'] ) {
+				$wrap = $identity;
+
+				$wrap['invertible'] = false;
+				break;
+			}
+		}
+	}
+
+	$memo[ $filtered ] = $wrap;
+
+	return $wrap;
+}
+
+/**
+ * Map a stored usermeta key back to the draft key the writers asked for.
+ *
+ * The maintenance passes and the size measurement both read raw keys out of
+ * the database, while every writer stores the {@see bp_get_user_meta_key()}
+ * form. Comparing the two directly is what made the caps, the expiry cron
+ * and the healing pass inert on installs that filter that key — and worse,
+ * it let a stray unfiltered row hand {@see bb_draft_dispose()} a key that
+ * re-filtered onto a DIFFERENT, live row (PROD-9621 N2).
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $stored_key Key as stored in the usermeta table.
+ * @return string Logical draft key, or '' when the key is not a BuddyBoss draft.
+ */
+function bb_draft_logical_meta_key( $stored_key ) {
+	$stored_key = (string) $stored_key;
+	$wrap       = bb_draft_meta_key_wrap();
+
+	if ( empty( $wrap['invertible'] ) ) {
+		return '';
+	}
+
+	$logical = $stored_key;
+
+	if ( '' !== $wrap['prefix'] ) {
+		if ( 0 !== strpos( $logical, $wrap['prefix'] ) ) {
+			return '';
+		}
+
+		$logical = substr( $logical, strlen( $wrap['prefix'] ) );
+	}
+
+	if ( '' !== $wrap['suffix'] ) {
+		if ( substr( $logical, - strlen( $wrap['suffix'] ) ) !== $wrap['suffix'] ) {
+			return '';
+		}
+
+		$logical = substr( $logical, 0, - strlen( $wrap['suffix'] ) );
+	}
+
+	return bb_draft_is_draft_meta_key( $logical ) ? $logical : '';
+}
+
+/**
+ * SQL fragments matching the draft keys as they are actually stored.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return array {
+ *     @type bool     $invertible Whether the stored keys can be recognised at all.
+ *     @type string   $where      Prepared-placeholder WHERE fragment.
+ *     @type string[] $values     Values for the fragment's placeholders.
+ * }
+ */
+function bb_draft_meta_key_sql() {
+	global $wpdb;
+
+	$wrap = bb_draft_meta_key_wrap();
+
+	if ( empty( $wrap['invertible'] ) ) {
+		return array(
+			'invertible' => false,
+			'where'      => '',
+			'values'     => array(),
+		);
+	}
+
+	$prefix = $wrap['prefix'];
+	$suffix = $wrap['suffix'];
+
+	return array(
+		'invertible' => true,
+		'where'      => '( meta_key = %s OR meta_key = %s OR meta_key LIKE %s OR meta_key LIKE %s )',
+		'values'     => array(
+			$prefix . 'draft_user' . $suffix,
+			$prefix . 'bb_user_topic_reply_draft' . $suffix,
+			$wpdb->esc_like( $prefix . 'draft_user_' ) . '%' . $wpdb->esc_like( $suffix ),
+			$wpdb->esc_like( $prefix . 'draft_group_' ) . '%' . $wpdb->esc_like( $suffix ),
+		),
+	);
+}
+
+/**
  * Maximum stored size of a single draft, in bytes.
  *
  * Applies to one activity draft row and to one inner topic/reply draft
@@ -245,8 +402,13 @@ function bb_draft_get_user_meta_sizes( $user_id, $flush = false ) {
 			$bytes           = is_string( $raw_value ) ? strlen( $raw_value ) : strlen( maybe_serialize( $raw_value ) );
 			$sizes['total'] += $bytes;
 
-			if ( bb_draft_is_draft_meta_key( $meta_key ) ) {
-				$sizes['drafts'][ $meta_key ] = isset( $sizes['drafts'][ $meta_key ] ) ? $sizes['drafts'][ $meta_key ] + $bytes : $bytes;
+			// Keyed by the LOGICAL draft key, so the cap arithmetic and every
+			// key handed on to bp_get_user_meta()/bb_draft_dispose() speak the
+			// same language the writers used (PROD-9621 N2).
+			$logical_key = bb_draft_logical_meta_key( $meta_key );
+
+			if ( '' !== $logical_key ) {
+				$sizes['drafts'][ $logical_key ] = isset( $sizes['drafts'][ $logical_key ] ) ? $sizes['drafts'][ $logical_key ] + $bytes : $bytes;
 			}
 		}
 	}
@@ -773,9 +935,11 @@ function bb_draft_safe_unserialize( $value ) {
  * composite index is what would make this a true keyset seek.
  *
  * The SQL LIKE patterns only narrow the scan; every returned key must still
- * pass {@see bb_draft_is_draft_meta_key()} before it is acted on, because
- * LIKE cannot express "numeric suffix" and third-party plugins may store
- * their own draft_* keys.
+ * resolve through {@see bb_draft_logical_meta_key()} before it is acted on,
+ * because LIKE cannot express "numeric suffix" and third-party plugins may
+ * store their own draft_* keys. The patterns are built from
+ * {@see bb_draft_meta_key_wrap()} so they match the keys the writers really
+ * stored; when that wrap cannot be inverted the batch returns nothing.
  *
  * @since BuddyBoss [BBVERSION]
  *
@@ -792,22 +956,33 @@ function bb_draft_get_rows_batch( $last_umeta_id = 0, $limit = 200, $with_values
 	global $wpdb;
 
 	$value_column = $with_values ? ', meta_value' : '';
-	$like_user    = $wpdb->esc_like( 'draft_user_' ) . '%';
-	$like_group   = $wpdb->esc_like( 'draft_group_' ) . '%';
+	$key_sql      = bb_draft_meta_key_sql();
 
-	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- maintenance scan; $value_column is a fixed literal.
+	// A `bp_get_user_meta_key` filter this code cannot invert means a stored
+	// key can no longer be matched to the draft it belongs to. Deleting on a
+	// guess is the one outcome worse than not sweeping, so the sweep declines.
+	if ( empty( $key_sql['invertible'] ) ) {
+		return array(
+			'rows'     => array(),
+			'last_id'  => (int) $last_umeta_id,
+			'has_more' => false,
+		);
+	}
+
+	$query_values   = $key_sql['values'];
+	$query_values[] = (int) $last_umeta_id;
+	$query_values[] = (int) $limit;
+
+	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- maintenance scan; $value_column is a fixed literal and $key_sql['where'] carries only placeholders.
 	$rows = $wpdb->get_results(
 		$wpdb->prepare(
 			"SELECT umeta_id, user_id, meta_key, LENGTH(meta_value) AS bytes{$value_column}
 			FROM {$wpdb->usermeta}
-			WHERE ( meta_key = 'draft_user' OR meta_key = 'bb_user_topic_reply_draft' OR meta_key LIKE %s OR meta_key LIKE %s )
+			WHERE {$key_sql['where']}
 			AND umeta_id > %d
 			ORDER BY umeta_id ASC
 			LIMIT %d",
-			$like_user,
-			$like_group,
-			(int) $last_umeta_id,
-			(int) $limit
+			$query_values
 		),
 		ARRAY_A
 	);
@@ -826,11 +1001,23 @@ function bb_draft_get_rows_batch( $last_umeta_id = 0, $limit = 200, $with_values
 	return array(
 		// The cursor advances over the RAW window: a window consisting entirely
 		// of filtered-out third-party keys must not end the scan early.
+		// Every surviving row carries the LOGICAL key in `meta_key`, so callers
+		// may pass it straight to bb_draft_dispose()/bp_get_user_meta() without
+		// re-filtering it onto a different row; `stored_meta_key` keeps the raw
+		// value for diagnostics (PROD-9621 N2).
 		'rows'     => array_values(
 			array_filter(
-				$rows,
+				array_map(
+					function ( $row ) {
+						$row['stored_meta_key'] = $row['meta_key'];
+						$row['meta_key']        = bb_draft_logical_meta_key( $row['meta_key'] );
+
+						return $row;
+					},
+					$rows
+				),
 				function ( $row ) {
-					return bb_draft_is_draft_meta_key( $row['meta_key'] );
+					return '' !== $row['meta_key'];
 				}
 			)
 		),
@@ -1144,22 +1331,28 @@ function bb_drafts_oneshot_batch( $time_budget = 10 ) {
 			// finds the aggregate-oversized users for stage 2. Persisting the
 			// (small) user list instead of per-user byte totals keeps the state
 			// option bounded on sites with many draft holders.
-			$like_user  = $wpdb->esc_like( 'draft_user_' ) . '%';
-			$like_group = $wpdb->esc_like( 'draft_group_' ) . '%';
+			$key_sql = bb_draft_meta_key_sql();
 
-			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- one-time healing aggregate over the draft-key index range.
-			$heavy_users = $wpdb->get_col(
-				$wpdb->prepare(
-					"SELECT user_id
-					FROM {$wpdb->usermeta}
-					WHERE ( meta_key = 'draft_user' OR meta_key = 'bb_user_topic_reply_draft' OR meta_key LIKE %s OR meta_key LIKE %s )
-					GROUP BY user_id
-					HAVING SUM(LENGTH(meta_value)) > %d",
-					$like_user,
-					$like_group,
-					bb_draft_user_total_max_size()
-				)
-			);
+			if ( empty( $key_sql['invertible'] ) ) {
+				// Same reasoning as the scan: without an invertible key wrap the
+				// per-user totals cannot be attributed, so stage 2 is skipped.
+				$heavy_users = array();
+			} else {
+				$aggregate_values   = $key_sql['values'];
+				$aggregate_values[] = bb_draft_user_total_max_size();
+
+				// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- one-time healing aggregate; $key_sql['where'] carries only placeholders.
+				$heavy_users = $wpdb->get_col(
+					$wpdb->prepare(
+						"SELECT user_id
+						FROM {$wpdb->usermeta}
+						WHERE {$key_sql['where']}
+						GROUP BY user_id
+						HAVING SUM(LENGTH(meta_value)) > %d",
+						$aggregate_values
+					)
+				);
+			}
 
 			$state['heavy_users'] = array_map( 'intval', is_array( $heavy_users ) ? $heavy_users : array() );
 			update_option( 'bb_draft_oneshot_state', $state, false );

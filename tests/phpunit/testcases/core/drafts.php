@@ -745,8 +745,154 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		$this->assertSame( '1', (string) get_post_meta( $foreign, 'bb_media_draft', true ) );
 	}
 
+	/**
+	 * A filtered user-meta key must still be recognised as a draft key.
+	 *
+	 * Writers store through bp_update_user_meta(), so on any install that
+	 * filters bp_get_user_meta_key the stored key is not the literal one. The
+	 * caps, the expiry cron and the healing pass all read raw keys back out of
+	 * the table, so they need the inverse of that filter (PROD-9621 N2).
+	 */
+	public function test_logical_meta_key_inverts_the_user_meta_key_filter() {
+		add_filter( 'bp_get_user_meta_key', array( $this, 'filter_prefix_user_meta_key' ) );
+
+		$this->assertSame( 'draft_user', bb_draft_logical_meta_key( 'bbtest_draft_user' ) );
+		$this->assertSame( 'draft_group_12', bb_draft_logical_meta_key( 'bbtest_draft_group_12' ) );
+		$this->assertSame( 'bb_user_topic_reply_draft', bb_draft_logical_meta_key( 'bbtest_bb_user_topic_reply_draft' ) );
+
+		// An unprefixed row is NOT ours on this install - acting on it would
+		// re-filter the key onto a different, live row.
+		$this->assertSame( '', bb_draft_logical_meta_key( 'draft_user' ) );
+		// Third-party keys still never match, prefixed or not.
+		$this->assertSame( '', bb_draft_logical_meta_key( 'bbtest_draft_userdata' ) );
+		$this->assertSame( '', bb_draft_logical_meta_key( 'bbtest_draft_group_extra' ) );
+
+		remove_filter( 'bp_get_user_meta_key', array( $this, 'filter_prefix_user_meta_key' ) );
+
+		// Unfiltered install: identity.
+		$this->assertSame( 'draft_user', bb_draft_logical_meta_key( 'draft_user' ) );
+		$this->assertSame( '', bb_draft_logical_meta_key( 'bbtest_draft_user' ) );
+	}
+
+	/**
+	 * The size measurement must see drafts stored under a filtered key.
+	 *
+	 * Measuring raw literals reports zero draft bytes on a filtered install,
+	 * so no per-user cap can ever fire there (PROD-9621 N2).
+	 */
+	public function test_meta_sizes_measure_drafts_stored_under_a_filtered_key() {
+		$user_id = self::factory()->user->create();
+
+		add_filter( 'bp_get_user_meta_key', array( $this, 'filter_prefix_user_meta_key' ) );
+
+		bp_update_user_meta(
+			$user_id,
+			'draft_user',
+			array(
+				'data_key'        => 'draft_user',
+				'data'            => array( 'content' => str_repeat( 'a', 500 ) ),
+				'_draft_saved_at' => time(),
+			)
+		);
+
+		bb_draft_flush_user_meta_sizes( $user_id );
+		$sizes = bb_draft_get_user_meta_sizes( $user_id );
+
+		remove_filter( 'bp_get_user_meta_key', array( $this, 'filter_prefix_user_meta_key' ) );
+		bb_draft_flush_user_meta_sizes( $user_id );
+
+		$this->assertArrayHasKey( 'draft_user', $sizes['drafts'], 'Sizes must be keyed by the logical key the writers asked for.' );
+		$this->assertGreaterThan( 500, $sizes['drafts']['draft_user'] );
+	}
+
+	/**
+	 * The expiry sweep must collect a filtered row and leave a stray raw one.
+	 *
+	 * Matching raw literals made the sweep hand bb_draft_dispose() an
+	 * unfiltered key, which re-filtered onto the member's LIVE draft and
+	 * deleted that instead - while the row actually found survived
+	 * (PROD-9621 N2).
+	 */
+	public function test_expiry_sweep_acts_on_the_stored_key_not_a_raw_lookalike() {
+		$user_id = self::factory()->user->create();
+
+		// A stray unfiltered row a migration could have left behind.
+		update_user_meta( $user_id, 'draft_user', 'STRAY-RAW-ROW' );
+
+		add_filter( 'bp_get_user_meta_key', array( $this, 'filter_prefix_user_meta_key' ) );
+
+		// The member's real draft, expired, stored the way every writer stores.
+		bp_update_user_meta(
+			$user_id,
+			'draft_group_77',
+			array(
+				'data_key'        => 'draft_group_77',
+				'data'            => array( 'content' => 'expired group draft' ),
+				'_draft_saved_at' => 100,
+			)
+		);
+
+		// And a fresh one that must survive the sweep untouched.
+		bp_update_user_meta(
+			$user_id,
+			'draft_user',
+			array(
+				'data_key'        => 'draft_user',
+				'data'            => array( 'content' => 'fresh draft' ),
+				'_draft_saved_at' => time(),
+			)
+		);
+
+		delete_option( 'bb_draft_cleanup_cursor' );
+		bb_drafts_delete_expired( 0 );
+
+		$expired = bp_get_user_meta( $user_id, 'draft_group_77', true );
+		$fresh   = bp_get_user_meta( $user_id, 'draft_user', true );
+
+		remove_filter( 'bp_get_user_meta_key', array( $this, 'filter_prefix_user_meta_key' ) );
+
+		$stray = get_user_meta( $user_id, 'draft_user', true );
+
+		$this->assertSame( '', $expired, 'The expired filtered draft must be collected.' );
+		$this->assertNotEmpty( $fresh, 'A fresh draft must survive - deleting it is the wrong-row bug.' );
+		$this->assertSame( 'STRAY-RAW-ROW', $stray, 'An unfiltered lookalike row is not ours on this install and must be left alone.' );
+	}
+
+	/**
+	 * A key filter that cannot be inverted must stop the sweep, not guess.
+	 */
+	public function test_non_invertible_key_filter_disables_the_sweep() {
+		$user_id = self::factory()->user->create();
+
+		bp_update_user_meta(
+			$user_id,
+			'draft_user',
+			array(
+				'data_key'        => 'draft_user',
+				'data'            => array( 'content' => 'expired' ),
+				'_draft_saved_at' => 100,
+			)
+		);
+
+		add_filter( 'bp_get_user_meta_key', array( $this, 'filter_hash_user_meta_key' ) );
+
+		$wrap  = bb_draft_meta_key_wrap();
+		$batch = bb_draft_get_rows_batch( 0, 200, false );
+
+		remove_filter( 'bp_get_user_meta_key', array( $this, 'filter_hash_user_meta_key' ) );
+
+		$this->assertFalse( $wrap['invertible'], 'A hashing filter is not a wrap and must be reported as non-invertible.' );
+		$this->assertSame( array(), $batch['rows'], 'Without an invertible wrap the sweep must return nothing rather than delete on a guess.' );
+		$this->assertFalse( $batch['has_more'] );
+		$this->assertNotEmpty( get_user_meta( $user_id, 'draft_user', true ), 'Nothing may be removed while keys cannot be attributed.' );
+	}
+
 	public function filter_prefix_user_meta_key( $key ) {
 		return 'bbtest_' . $key;
+	}
+
+	public function filter_hash_user_meta_key( $key ) {
+		return 'bbtest_' . md5( $key );
 	}
 
 	/**
