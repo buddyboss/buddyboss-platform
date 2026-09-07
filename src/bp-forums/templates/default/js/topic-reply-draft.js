@@ -887,8 +887,16 @@ window.bp = window.bp || {};
 			this.showDraftFeedback( BP_Nouveau.forums.draft_evicted_message );
 		};
 
+		// One fallback for every draft-notice helper. These were split between
+		// $( 'form#new-post' ) and $( 'form[name="new-post"]' ).first(), which
+		// only agree while the topic and reply forms are the same element
+		// (PROD-9621).
+		this.draftNoticeForm = function () {
+			return ( this.currentForm && this.currentForm.length ) ? this.currentForm : $( 'form[name="new-post"]' ).first();
+		};
+
 		this.showDraftRetentionNotice = function () {
-			var $form   = this.currentForm ? this.currentForm : $( 'form[name="new-post"]' ).first(),
+			var $form   = this.draftNoticeForm(),
 				message = ( 'undefined' !== typeof BP_Nouveau.forums ) ? BP_Nouveau.forums.draft_retention_message : '',
 				$note;
 
@@ -899,12 +907,23 @@ window.bp = window.bp || {};
 
 			$note = $form.find( '.bb-draft-retention-note' );
 
-			if ( ! $note.length ) {
-				$note = $( '<div class="bb-draft-retention-note"></div>' );
-				$form.prepend( $note );
+			if ( $note.length ) {
+				$note.text( message );
+
+				return;
 			}
 
-			$note.text( message );
+			// Text set before insertion, and placed BELOW any refusal notice, so
+			// the two notices keep one fixed order whichever is created first.
+			$note = $( '<div class="bb-draft-retention-note"></div>' ).text( message );
+
+			var $feedback = $form.find( '.bb-draft-save-feedback' );
+
+			if ( $feedback.length ) {
+				$note.insertAfter( $feedback );
+			} else {
+				$form.prepend( $note );
+			}
 		};
 
 		// Interim PROD-9621 guard, mirroring the activity composer: a pasted
@@ -949,7 +968,7 @@ window.bp = window.bp || {};
 		};
 
 		this.showDraftFeedback = function ( message ) {
-			var $form = this.currentForm && this.currentForm.length ? this.currentForm : $( 'form#new-post' );
+			var $form = this.draftNoticeForm();
 
 			if ( ! $form.length ) {
 				return;
@@ -962,12 +981,17 @@ window.bp = window.bp || {};
 				return;
 			}
 
-			if ( ! $notice.length ) {
-				$notice = $( '<div class="bb-draft-save-feedback" role="alert"></div>' );
-				$form.prepend( $notice );
+			if ( $notice.length ) {
+				$notice.text( message );
+
+				return;
 			}
 
-			$notice.text( message );
+			// Built with its text already in place: an empty role="alert" node
+			// inserted first and filled afterwards is not announced by several
+			// screen readers, and this is the only signal a member gets that a
+			// save was refused (PROD-9621).
+			$form.prepend( $( '<div class="bb-draft-save-feedback" role="alert"></div>' ).text( message ) );
 		};
 
 		this.displayTopicReplyDraft = function () {

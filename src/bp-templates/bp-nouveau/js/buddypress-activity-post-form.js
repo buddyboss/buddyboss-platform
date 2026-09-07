@@ -1387,12 +1387,23 @@ window.bp = window.bp || {};
 				return;
 			}
 
-			if ( ! $note.length ) {
-				$note = $( '<div class="bb-draft-retention-note"></div>' );
-				$form.prepend( $note );
+			if ( $note.length ) {
+				$note.text( message );
+
+				return;
 			}
 
-			$note.text( message );
+			// Text set before insertion, and placed BELOW any refusal notice, so
+			// the two notices keep one fixed order whichever is created first.
+			$note = $( '<div class="bb-draft-retention-note"></div>' ).text( message );
+
+			var $feedback = $form.find( '.bb-draft-save-feedback' );
+
+			if ( $feedback.length ) {
+				$note.insertAfter( $feedback );
+			} else {
+				$form.prepend( $note );
+			}
 		},
 
 		showDraftFeedback: function( message ) {
@@ -1409,12 +1420,17 @@ window.bp = window.bp || {};
 				return;
 			}
 
-			if ( ! $notice.length ) {
-				$notice = $( '<div class="bb-draft-save-feedback" role="alert"></div>' );
-				$form.prepend( $notice );
+			if ( $notice.length ) {
+				$notice.text( message );
+
+				return;
 			}
 
-			$notice.text( message );
+			// Built with its text already in place: an empty role="alert" node
+			// inserted first and filled afterwards is not announced by several
+			// screen readers, and this is the only signal a member gets that a
+			// save was refused (PROD-9621).
+			$form.prepend( $( '<div class="bb-draft-save-feedback" role="alert"></div>' ).text( message ) );
 		},
 
 		collectDraftActivity: function() {
