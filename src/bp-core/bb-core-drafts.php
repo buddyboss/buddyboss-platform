@@ -444,7 +444,8 @@ function bb_draft_get_user_meta_sizes( $user_id, $flush = false ) {
 function bb_draft_serialized_key_bytes( $key ) {
 	$key = (string) $key;
 
-	// s:<length>:"<key>";
+	// A serialized string element is written as its length plus quotes and
+	// terminators, which is what this reproduces.
 	return strlen( 's:' . strlen( $key ) . ':"' . $key . '";' );
 }
 
