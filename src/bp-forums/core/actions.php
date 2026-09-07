@@ -417,7 +417,20 @@ add_action( 'bp_notification_settings', 'forums_notification_settings', 11 );
 /**
  * Save topic/reply draft data.
  *
+ * Responds with `draft_activity` (the accepted entry) plus
+ * `evicted_draft_keys` — the inner draft keys the row trim or the per-user
+ * budget removed to make room, which the client uses to drop their stale
+ * localStorage copies.
+ *
+ * Refuses with a `message` when the entry exceeds the per-draft cap or when
+ * the member's total user meta would pass the platform budget, and with an
+ * empty error when the nonce fails, the draft key does not resolve, the
+ * member cannot view the forum it names, or they may not publish that object
+ * type.
+ *
  * @since BuddyBoss 2.0.4
+ * @since BuddyBoss [BBVERSION] Added the size caps, the key validation and
+ *                              the `evicted_draft_keys` response field.
  */
 function bb_post_topic_reply_draft() {
 	if ( ! is_user_logged_in() || empty( $_POST['_wpnonce_post_topic_reply_draft'] ) || ! wp_verify_nonce( $_POST['_wpnonce_post_topic_reply_draft'], 'post_topic_reply_draft_data' ) ) {
@@ -499,7 +512,7 @@ function bb_post_topic_reply_draft() {
 				);
 			}
 
-			$draft_topic_reply   = bb_forums_sanitize_draft_entry( $draft_topic_reply );
+			$draft_topic_reply    = bb_forums_sanitize_draft_entry( $draft_topic_reply );
 			$sanitized_entry_size = strlen( maybe_serialize( $draft_topic_reply ) );
 
 			if ( $sanitized_entry_size > bb_draft_max_size() ) {
@@ -725,7 +738,7 @@ function bb_post_topic_reply_draft() {
 			$evicted_draft_keys = $trimmed_row['evicted'];
 			// Held back until the row is written - the budget check below can
 			// still refuse and abandon it (PROD-9621 H4).
-			$trimmed_entries    = $trimmed_row['entries'];
+			$trimmed_entries = $trimmed_row['entries'];
 
 			$forum_row_size = strlen( maybe_serialize( $existing_draft ) );
 

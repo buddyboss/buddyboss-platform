@@ -1165,7 +1165,18 @@ function bp_nouveau_ajax_post_update() {
 /**
  * Save activity draft data.
  *
+ * Responds with `draft_activity` (the accepted entry, or one whose `data` is
+ * false after a discard) plus `evicted_draft_keys` — the draft keys the
+ * per-user budget removed to make room, which the client uses to drop their
+ * stale localStorage copies.
+ *
+ * Refuses with a `message` when the entry exceeds the per-draft cap or when
+ * the member's total user meta would pass the platform budget, and with an
+ * empty error when the nonce or the draft key does not validate.
+ *
  * @since BuddyBoss 2.0.4
+ * @since BuddyBoss [BBVERSION] Added the size caps, the key validation and
+ *                              the `evicted_draft_keys` response field.
  */
 function bb_nouveau_ajax_post_draft_activity() {
 	if ( ! is_user_logged_in() || empty( $_POST['_wpnonce_post_draft'] ) || ! wp_verify_nonce( $_POST['_wpnonce_post_draft'], 'post_draft_activity' ) ) {

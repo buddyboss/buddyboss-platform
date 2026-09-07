@@ -1046,7 +1046,7 @@ function bb_nouveau_forum_localize_scripts( $params = array() ) {
 	// no longer echoed into every forum page's HTML (PROD-9621); the JS fetches
 	// it once through bb_get_topic_reply_drafts before initializing the forms.
 	// The `draft` key keeps its historical empty-map shape for third parties.
-	$params['forums']['draft']     = array();
+	$params['forums']['draft'] = array();
 	// Resolved through bp_get_user_meta_key() to match the writers, which all
 	// store through bp_update_user_meta().
 	$params['forums']['has_draft'] = metadata_exists( 'user', $user_id, bp_get_user_meta_key( 'bb_user_topic_reply_draft' ) );

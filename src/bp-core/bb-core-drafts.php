@@ -1203,15 +1203,15 @@ function bb_draft_get_rows_batch( $last_umeta_id = 0, $limit = 200, $with_values
 		$ids          = wp_list_pluck( $rows, 'umeta_id' );
 		$placeholders = implode( ',', array_fill( 0, count( $ids ), '%d' ) );
 
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- maintenance fetch; $placeholders is generated %d placeholders only.
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare -- maintenance fetch; $placeholders is one generated %d per id, which the sniff cannot see through the interpolation.
 		$values = $wpdb->get_results(
-			// phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber -- $placeholders is one %d per id and the ids are the only arguments.
 			$wpdb->prepare(
 				"SELECT umeta_id, meta_value FROM {$wpdb->usermeta} WHERE umeta_id IN ({$placeholders})",
 				array_map( 'intval', $ids )
 			),
 			ARRAY_A
 		);
+		// phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
 
 		$by_id = array();
 		foreach ( (array) $values as $value_row ) {
@@ -1221,6 +1221,7 @@ function bb_draft_get_rows_batch( $last_umeta_id = 0, $limit = 200, $with_values
 		foreach ( $rows as $index => $row ) {
 			// A row deleted between the two queries simply reads as empty and is
 			// then skipped by the callers' own shape checks.
+			// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_value -- an array key on a row already fetched, not a query argument.
 			$rows[ $index ]['meta_value'] = isset( $by_id[ (int) $row['umeta_id'] ] ) ? $by_id[ (int) $row['umeta_id'] ] : '';
 		}
 	}
