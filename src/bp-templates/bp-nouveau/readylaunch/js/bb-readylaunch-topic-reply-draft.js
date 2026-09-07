@@ -1737,23 +1737,35 @@ window.bp = window.bp || {};
 	// same way: a warm tab already holds the draft it would fetch
 	// (PROD-9621 M3).
 	var bbDraftIsWarmLocally = function () {
-		var i, key;
+		var i, key, resolved = 0;
 
 		try {
 			for ( i = 0; i < forms.length; i++ ) {
+				// Only the plain reply shape is derivable here. A topic form has
+				// no bbp_topic_id, and a reply-to-reply stores under
+				// draft_reply_{topic}_{reply}; both therefore read as unresolved
+				// and force the fetch, which is the safe direction.
 				key = $( forms[ i ] ).find( 'input[name="bbp_topic_id"]' ).length ?
 					'draft_reply_' + $( forms[ i ] ).find( 'input[name="bbp_topic_id"]' ).val() :
 					'';
 
-				if ( key && null !== window.localStorage.getItem( key ) ) {
-					return true;
+				if ( ! key || null === window.localStorage.getItem( key ) ) {
+					// EVERY form must be warm before the fetch can be skipped.
+					// Returning warm on the first hit skipped the single
+					// whole-map fetch, so any other form on the page never got
+					// its server draft at all.
+					return false;
 				}
+
+				resolved++;
 			}
 		} catch ( e ) {
 			// Storage unavailable - fall through and fetch.
+			return false;
 		}
 
-		return false;
+		// No form yielded a key, so nothing was actually proven warm.
+		return resolved > 0;
 	};
 
 	if (
