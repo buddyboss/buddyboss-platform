@@ -321,6 +321,10 @@ function bp_nouveau_activity_localize_scripts( $params = array() ) {
 	// member must be told, or drafts appear to vanish at random (PROD-9621).
 	$activity_params['draft_evicted_message'] = __( 'You had too many saved drafts, so your oldest draft was removed to save this one.', 'buddyboss' );
 
+	// The per-draft cap, so the composer can decide what to drop from an
+	// oversized payload instead of guessing at a threshold (PROD-9621).
+	$activity_params['draft_max_size'] = bb_draft_max_size();
+
 	$activity_params['access_control_settings'] = array(
 		'can_create_activity'          => bb_user_can_create_activity(),
 		'can_create_activity_media'    => bb_user_can_create_media(),

@@ -1548,23 +1548,31 @@ window.bp = window.bp || {};
 			if ( 'delete' === bp.draft_activity.post_action ) {
 				draft_payload = _.omit( bp.draft_activity, 'data' );
 			} else if ( bp.draft_activity.data && bp.draft_activity.data.video && bp.draft_activity.data.video.length ) {
-				// js_preview is a canvas.toDataURL() frame grab - tens to hundreds
-				// of KB of base64 per video, and purely a local rendering aid. It
-				// has no business in the stored draft: it is regenerated from the
-				// video on restore, and at this size it can single-handedly push a
-				// video draft past the per-draft cap so the save is REFUSED. Both
-				// forum packs already strip it before sending; the activity packs
-				// only nulled it in the localStorage copy, and only above 4MB
+				// js_preview is a canvas.toDataURL() frame grab, tens to hundreds
+				// of KB of base64 per video. It is NOT a throwaway: on publish the
+				// server feeds it to bp_video_base64_to_jpeg() to build the video's
+				// real thumbnail (bp-video-functions.php), so dropping it means a
+				// cold-restored video draft publishes with no generated thumbnail.
+				//
+				// But left in, it can single-handedly push a video draft past the
+				// per-draft cap and get the whole save REFUSED. So keep it whenever
+				// it fits and shed it only when that is the difference between
+				// saving and being rejected - a missing poster beats a lost draft
 				// (PROD-9621).
-				draft_payload      = _.clone( bp.draft_activity );
-				draft_payload.data = _.clone( bp.draft_activity.data );
+				var draft_cap = ( BP_Nouveau.activity.params && BP_Nouveau.activity.params.draft_max_size ) ?
+					parseInt( BP_Nouveau.activity.params.draft_max_size, 10 ) : 0;
 
-				draft_payload.data.video = _.map(
-					bp.draft_activity.data.video,
-					function ( item ) {
-						return _.omit( item, 'js_preview' );
-					}
-				);
+				if ( draft_cap > 0 && JSON.stringify( bp.draft_activity ).length > draft_cap ) {
+					draft_payload      = _.clone( bp.draft_activity );
+					draft_payload.data = _.clone( bp.draft_activity.data );
+
+					draft_payload.data.video = _.map(
+						bp.draft_activity.data.video,
+						function ( item ) {
+							return _.omit( item, 'js_preview' );
+						}
+					);
+				}
 			}
 
 			if ( ! is_reload_window ) {
