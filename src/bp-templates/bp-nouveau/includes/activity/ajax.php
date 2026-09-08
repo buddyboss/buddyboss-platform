@@ -1357,7 +1357,15 @@ function bb_nouveau_ajax_post_draft_activity() {
 						array(
 							'action'        => 'edit',
 							'attachment_id' => $attachment_id,
-							'user_id'       => ! empty( $draft_activity['data']['user_id'] ) ? $draft_activity['data']['user_id'] : bp_loggedin_user_id(),
+							// The permission SUBJECT is always the authenticated
+							// user, never the client payload. The Pro callee feeds
+							// this straight into bb_check_{group,activity,attachment}
+							// _permissions() as "who is asking", so a crafted
+							// data.user_id would evaluate the edit right under a
+							// different identity. Every other ownership check in
+							// this handler uses $draft_user_id (= bp_loggedin_user_id);
+							// this one must too.
+							'user_id'       => $draft_user_id,
 							'object'        => ! empty( $draft_activity['data']['object'] ) ? $draft_activity['data']['object'] : '',
 							'group_id'      => ! empty( $draft_activity['data']['item_id'] ) ? $draft_activity['data']['item_id'] : 0,
 						)
