@@ -786,6 +786,18 @@ function bb_draft_salvage_oversized_draft( $user_id, $meta_key ) {
 		return false;
 	}
 
+	// The one-shot scan measures row size in a metadata-only batch query and
+	// heals a whole 200-row window later, so the member can edit an
+	// oversized-at-scan row back UNDER the cap in that gap (open the composer,
+	// trim it, autosave). Re-measure the fresh row first: an already-valid draft
+	// must never fall through to the caller's unconditional bb_draft_dispose().
+	// Returning true (handled - nothing to do) is what keeps that from happening.
+	// This is the guard bb_draft_heal_forum_row() already applies per inner
+	// entry; the flat-key path lacked it (stale-size TOCTOU).
+	if ( strlen( maybe_serialize( $stored ) ) <= bb_draft_max_size() ) {
+		return true;
+	}
+
 	$shed = bb_draft_shed_preview_frames( $stored );
 
 	// Nothing was reclaimable, so this row is oversized on its own merits.

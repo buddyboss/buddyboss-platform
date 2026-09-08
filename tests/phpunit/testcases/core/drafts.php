@@ -4895,6 +4895,52 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 	}
 
 	/**
+	 * The one-shot heal must NOT delete a draft that shrank under the cap
+	 * between the metadata scan and the heal (stale-size TOCTOU). The scan
+	 * measures row size in a batch query and heals a whole window later, so the
+	 * member can edit an oversized-at-scan row back under the cap in that gap.
+	 * A plain-text row has no poster frame to shed, so salvage used to return
+	 * false regardless of the row's CURRENT size, and the caller then disposed
+	 * it unconditionally - permanently deleting a valid, in-progress draft.
+	 * Salvage now re-measures the fresh row and reports it handled (true) when
+	 * it is already under the cap, so the caller never disposes it.
+	 */
+	public function test_salvage_does_not_dispose_a_row_that_shrank_under_the_cap() {
+		$user_id = self::factory()->user->create();
+
+		// A small plain-text draft: under the per-draft cap, and NOTHING to shed
+		// (no video poster frame) - the exact shape the old code disposed.
+		bp_update_user_meta(
+			$user_id,
+			'draft_user',
+			array(
+				'data_key'        => 'draft_user',
+				'object'          => 'user',
+				'data'            => array( 'content' => 'a small, valid, in-progress note' ),
+				'_draft_saved_at' => time() - 60,
+			)
+		);
+
+		$this->assertLessThanOrEqual(
+			bb_draft_max_size(),
+			strlen( maybe_serialize( bp_get_user_meta( $user_id, 'draft_user', true ) ) ),
+			'Premise: the fixture row is under the per-draft cap.'
+		);
+
+		// "Handled - do not dispose." The caller runs `elseif salvage() {} elseif
+		// dispose() {}`, so a true return short-circuits the unconditional delete.
+		$this->assertTrue(
+			bb_draft_salvage_oversized_draft( $user_id, 'draft_user' ),
+			'A row already under the cap must be reported handled so the heal loop never disposes it.'
+		);
+
+		$this->assertNotEmpty(
+			bp_get_user_meta( $user_id, 'draft_user', true ),
+			'The valid, under-cap draft must still exist - salvage must not have destroyed it.'
+		);
+	}
+
+	/**
 	 * S4: the activity handler must store the same content on both transports.
 	 *
 	 * The activity composer posts two ways, exactly like the forum one: the
