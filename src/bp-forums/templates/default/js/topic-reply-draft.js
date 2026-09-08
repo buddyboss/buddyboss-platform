@@ -1963,71 +1963,12 @@ window.bp = window.bp || {};
 		} );
 	};
 
-	// The aggregated draft row is no longer echoed into forum page HTML
-	// - when server drafts exist, fetch them once and seed the
-	// localized map the instances read, then initialize the forms.
-	// `BP_Nouveau.forums.draft` is now always localized empty, so testing it
-	// alone made the fetch fire on EVERY forum page view for any draft holder -
-	// the opposite of the "0 requests warm / 1 cold" contract, and unlike the
-	// activity pack which checks its local copy first. Consult localStorage the
-	// same way: a warm tab already holds the draft it would fetch
-	// (M3).
-	var bbDraftIsWarmLocally = function () {
-		var i, key, resolved = 0;
-
-		try {
-			for ( i = 0; i < forms.length; i++ ) {
-				// A reply form CANNOT prove the tab already holds every draft the
-				// fetch would bring. It renders bbp_topic_id, so only the plain
-				// draft_reply_{topic} shape is derivable at init - but the member
-				// may hold a reply-to-reply draft under draft_reply_{topic}_{reply}
-				// on the server only, and that key is chosen later (when they
-				// click reply on a specific reply), so it is invisible here.
-				// Treating the bare key as warm skipped the fetch and the
-				// server-only reply-to-reply draft was never loaded, then the
-				// next autosave overwrote it (M9). Force the fetch for any reply
-				// form; a topic form has no bbp_topic_id and forces it via the
-				// empty key below.
-				if ( $( forms[ i ] ).find( 'input[name="bbp_topic_id"]' ).length ) {
-					return false;
-				}
-
-				key = '';
-
-				if ( ! key || null === window.localStorage.getItem( key ) ) {
-					// EVERY form must be warm before the single whole-map fetch
-					// can be skipped. Returning warm on the first hit skipped it
-					// for the whole page, so any other form never got its server
-					// draft at all.
-					return false;
-				}
-
-				// A stored copy holding nothing is not a warm cache - it is
-				// precisely the copy the server draft has to override, so the
-				// fetch must run. Counting it as warm skipped the fetch, left
-				// the server copy unavailable to compare against, and the
-				// composer opened empty over a live draft (Q12).
-				if ( ! bbDraftDataHasPayload( ( JSON.parse( window.localStorage.getItem( key ) ) || {} ).data ) ) {
-					return false;
-				}
-
-				resolved++;
-			}
-		} catch ( e ) {
-			// Storage unavailable - fall through and fetch.
-			return false;
-		}
-
-		// No form yielded a key, so nothing was actually proven warm.
-		return resolved > 0;
-	};
 
 	if (
 		0 < forms.length &&
 		'undefined' !== typeof BP_Nouveau.forums &&
 		true === BP_Nouveau.forums.has_draft &&
-		$.isEmptyObject( BP_Nouveau.forums.draft ) &&
-		! bbDraftIsWarmLocally()
+		$.isEmptyObject( BP_Nouveau.forums.draft )
 	) {
 		// Capture what each form arrived with BEFORE the request goes out.
 		// start() runs inside .always(), so a snapshot taken there would already
