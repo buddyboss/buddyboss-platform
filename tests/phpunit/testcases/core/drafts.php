@@ -2177,6 +2177,51 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		);
 	}
 
+	/**
+	 * M2 LOW: publishing a forum draft must flush the per-user size memo, in
+	 * step with every other draft mutator. The memo is a per-request lower bound
+	 * on the member's usermeta bytes; if the publish path removes a draft but
+	 * leaves the memo primed, later size-gated logic in the SAME request (a
+	 * follow-up autosave's budget check) reads a total that still counts the
+	 * bytes just published away.
+	 */
+	public function test_publishing_a_draft_flushes_the_user_meta_size_memo() {
+		$user_id  = self::factory()->user->create();
+		$meta_key = 'bb_user_topic_reply_draft';
+
+		$published_key = 'draft_discussion_11';
+		$sibling_key   = 'draft_discussion_22';
+
+		bp_update_user_meta(
+			$user_id,
+			$meta_key,
+			array(
+				// A large inner draft so removing it moves the byte total well
+				// past any measurement noise.
+				$published_key => array( 'data_key' => $published_key, 'data' => array( 'bbp_topic_content' => str_repeat( 'x', 4096 ) ) ),
+				$sibling_key   => array( 'data_key' => $sibling_key, 'data' => array( 'bbp_topic_content' => 'kept' ) ),
+			)
+		);
+
+		// Prime the memo for this user (this is what a preceding autosave in the
+		// same request would have done).
+		$before = bb_draft_get_user_meta_sizes( $user_id );
+
+		// Publish removes the large key.
+		bb_forums_delete_published_draft_key( $user_id, $published_key );
+
+		// Read again WITHOUT flushing by hand: a correct publish path already
+		// flushed, so this re-measures the now-smaller row. A publish that
+		// skipped the flush returns the stale primed total.
+		$after = bb_draft_get_user_meta_sizes( $user_id );
+
+		$this->assertLessThan(
+			$before['total'],
+			$after['total'],
+			'Publishing a draft must flush the size memo so a later same-request read sees the smaller total.'
+		);
+	}
+
 	public function filter_prefix_user_meta_key( $key ) {
 		return 'bbtest_' . $key;
 	}

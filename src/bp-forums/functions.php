@@ -1718,6 +1718,11 @@ function bb_forums_delete_published_draft_key( $user_id, $draft_data_key ) {
 		// the delete is a harmless no-op.
 		if ( ! empty( $existing_draft ) ) {
 			bp_delete_user_meta( $user_id, $usermeta_key );
+
+			// This request removed usermeta, so any size memo primed earlier is
+			// now stale. Every other draft mutator flushes after its write; this
+			// publish path is the only writer that used to skip it (M2 LOW).
+			bb_draft_flush_user_meta_sizes( $user_id );
 		}
 
 		return;
@@ -1739,4 +1744,9 @@ function bb_forums_delete_published_draft_key( $user_id, $draft_data_key ) {
 		// the member's OTHER drafts byte-for-byte (R2).
 		bp_update_user_meta( $user_id, $usermeta_key, wp_slash( $existing_draft ) );
 	}
+
+	// Flush the per-user size memo after the write, in step with every other
+	// draft mutator - both the delete and the update above change the member's
+	// total usermeta bytes, so a memo primed earlier in the request goes stale.
+	bb_draft_flush_user_meta_sizes( $user_id );
 }
