@@ -1926,6 +1926,11 @@ window.bp = window.bp || {};
 			}
 
 			if ( ! is_reload_window ) {
+				// A discard sends post_action 'delete'; a save sends 'update'. The
+				// fail handler needs this to pick the right message when the server
+				// rejects with no message of its own (M3).
+				var isDiscardRequest = ! _.isUndefined( bp.draft_activity ) && 'delete' === bp.draft_activity.post_action;
+
 				if ( bp.draft_ajax_request ) {
 					bp.draft_ajax_request.abort();
 				}
@@ -1955,9 +1960,17 @@ window.bp = window.bp || {};
 				).fail(
 					function ( response ) {
 						// Surface guardrail rejections (draft too large, too many
-						// drafts) instead of silently dropping the save.
-						if ( response && response.message ) {
-							bp.Nouveau.Activity.postForm.showDraftFeedback( response.message );
+						// drafts) with the server's message when it sends one;
+						// otherwise fall back to the generic save/discard-failed
+						// notice so a message-less rejection (an expired nonce, lost
+						// posting rights) is not read as success (M3).
+						var message = ( response && response.message ) ? response.message :
+							( isDiscardRequest ?
+								( bbRlActivity.params.draft_discard_failed_message || '' ) :
+								( bbRlActivity.params.draft_save_failed_message || '' ) );
+
+						if ( message ) {
+							bp.Nouveau.Activity.postForm.showDraftFeedback( message );
 						}
 					}
 				);

@@ -327,6 +327,14 @@ function bp_nouveau_activity_localize_scripts( $params = array() ) {
 	// draft_fetch_failed_message.
 	$activity_params['draft_fetch_failed_message'] = __( 'We could not load your saved draft. Reload the page before writing here, or your saved draft may be replaced.', 'buddyboss' );
 
+	// A save/discard refused with no specific server message (an expired nonce,
+	// or a moderator removing posting rights mid-session) must not surface as
+	// success. The forum packs already fall back to these strings; the activity
+	// packs surfaced only a server-provided message and were silent otherwise
+	// (M3 parity).
+	$activity_params['draft_save_failed_message']    = __( 'Your draft could not be saved. Please reload the page - anything you write here may not be kept.', 'buddyboss' );
+	$activity_params['draft_discard_failed_message'] = __( 'Your draft could not be discarded. Please reload the page and try again.', 'buddyboss' );
+
 	// The lazy restore is suppressed when the member has already started typing
 	// while the fetch was in flight - overwriting their text would be the real
 	// bug. The forum packs tell the member the stored draft is intact but was
