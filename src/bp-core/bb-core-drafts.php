@@ -683,17 +683,24 @@ function bb_draft_collect_attachment_ids( $draft ) {
  * Strip the video poster frames a stored draft does not need to keep.
  *
  * `js_preview` is a `canvas.toDataURL()` PNG of the first video frame, up to
- * 1920x1080. It is a convenience for redrawing the composer thumbnail and
- * nothing depends on it surviving a round trip — the poster is regenerated
- * from the attachment on publish. On a legacy row written before the client
- * stopped sending it, it is routinely the overwhelming majority of the
- * stored bytes: measured at 99.8% of a 150 KB row, which drops to 260 bytes
- * once the frame is gone.
+ * 1920x1080. On a legacy row written before the client stopped sending it, it
+ * is routinely the overwhelming majority of the stored bytes: measured at
+ * 99.8% of a 150 KB row, which drops to 260 bytes once the frame is gone.
  *
- * That makes it the first thing to drop when a row is over the cap, and the
- * reason the healing paths must try shedding before they delete: without it
- * they destroy the member's unpublished text to reclaim space that the
- * poster alone was using (Q6).
+ * Shedding it is NOT free, and the earlier claim that "the poster is
+ * regenerated from the attachment on publish" is wrong for the video kind this
+ * actually applies to (M10). `bp_video_add_generate_thumb_background_process()`
+ * returns early both when `bb_video_check_is_ffmpeg_binary()` reports no binary
+ * (the PHP library is bundled; the binary is not) AND when the video's privacy
+ * is `forums`/`comment`/`message` — and forum videos are created with
+ * `privacy => forums`. So for a FORUM video draft, shedding `js_preview` leaves
+ * it with no poster, permanently, on every install: `js_preview` was its only
+ * thumbnail source.
+ *
+ * The trade is still the right one — a missing poster beats destroying the
+ * member's unpublished text — which is why the healing paths must try shedding
+ * before they delete (Q6). But callers must not assume the thumbnail comes
+ * back; it does not for forum videos.
  *
  * Handles both stored shapes, the same pair
  * {@see bb_draft_collect_attachment_ids()} handles: the activity composer
