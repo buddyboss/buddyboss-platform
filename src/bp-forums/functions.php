@@ -1091,6 +1091,12 @@ function bb_nouveau_forum_localize_scripts( $params = array() ) {
 	// would otherwise overwrite the draft they were never shown (PROD-9621).
 	$params['forums']['draft_fetch_failed_message'] = __( 'We could not load your saved draft. Reload the page before writing here, or your saved draft may be replaced.', 'buddyboss' );
 
+	// Shown when a draft SAVE is refused and the server sent no message of its
+	// own - a bare wp_send_json_error() carries none, which is what the nonce
+	// check and the authorization gate emit. Without it those rejections were
+	// indistinguishable from a successful save (PROD-9621 H1).
+	$params['forums']['draft_save_failed_message'] = __( 'Your draft could not be saved. Please reload the page - anything you write here may not be kept.', 'buddyboss' );
+
 	// The restore is suppressed when the member has already typed into the
 	// form, and that suppression used to be silent - the stored draft is
 	// intact but nothing on screen said so (PROD-9621).

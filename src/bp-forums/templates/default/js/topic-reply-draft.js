@@ -925,19 +925,44 @@ window.bp = window.bp || {};
 						data: draft_data,
 						success: function( response ) {
 							// admin-ajax returns HTTP 200 for wp_send_json_error, so
-							// the guardrail rejections (size cap, key validation)
-							// surface here - silently dropping them reads as saved
-							// while the server copy quietly stops updating.
-							if ( response && ! response.success && response.data && response.data.message ) {
-								self.showDraftFeedback( response.data.message );
-							} else {
-								self.showDraftFeedback( '' );
-								self.handleEvictedDrafts( response );
+							// every guardrail rejection surfaces here - silently
+							// dropping one reads as saved while the server copy
+							// quietly stops updating.
+							//
+							// `! response.success` ALONE decides, which is the
+							// predicate the fetch path already uses. Testing
+							// `response.data.message` as well sent every rejection
+							// that carries no message into the else branch - i.e. the
+							// SUCCESS branch. A bare wp_send_json_error() emits
+							// {"success":false} with no `data` key at all, and that is
+							// exactly what the nonce check and the whole
+							// authorization gate send. So an expired nonce, or a
+							// moderator making the forum private mid-session, left the
+							// composer looking completely normal while nothing was
+							// saved - and cleared any standing warning as it went
+							// (PROD-9621 H1).
+							if ( ! response || ! response.success ) {
+								self.showDraftFeedback(
+									( response && response.data && response.data.message ) ?
+										response.data.message :
+										( BP_Nouveau.forums.draft_save_failed_message || '' )
+								);
 
-								// A stored draft exists again (or the discard has
-								// landed), so the reload guard has served its purpose.
-								bp.Nouveau.TopicReplyDraft.markDiscarded( draft_payload.data_key, false );
+								// Deliberately NOT clearing the discard marker here.
+								// discardTopicReplyDraftForm() sets it before the
+								// request and tears down the local copy; un-marking it
+								// on a REFUSED discard erases the guard that stops a
+								// reload re-offering a draft whose server row is still
+								// there.
+								return;
 							}
+
+							self.showDraftFeedback( '' );
+							self.handleEvictedDrafts( response );
+
+							// A stored draft exists again (or the discard has
+							// landed), so the reload guard has served its purpose.
+							bp.Nouveau.TopicReplyDraft.markDiscarded( draft_payload.data_key, false );
 						}
 					}
 				);
@@ -1848,7 +1873,25 @@ window.bp = window.bp || {};
 			return '';
 		}
 
-		$form.find( '[contenteditable="true"]' ).each(
+		// `.bbp-the-content` and NOT `[contenteditable="true"]`. This snapshot is
+		// taken twice - once at module scope before the draft fetch goes out,
+		// and again after it resolves - and the two must count the same parts.
+		// The editor is a plain <div class="bbp-the-content ..."> in server HTML
+		// (bbp_get_the_content()'s `editor_class`); MediumEditor adds
+		// contenteditable at jQuery(document).ready, which is AFTER this file's
+		// module scope runs from the footer. So the old selector matched 0
+		// elements at capture and 1 at comparison.
+		//
+		// On a reply form that was invisible, because both counts joined to ""
+		// with nothing else in the list - which is why repeated A/B runs on the
+		// reply form found nothing. On a TOPIC form the title input adds a
+		// second part, so capture joined to "" while comparison joined to
+		// "\u0000": hasMemberTypedContent() returned true unconditionally, the
+		// topic draft was never restored, has-draft was never applied (leaving
+		// the Discard button CSS-hidden) and a role="alert" told the member they
+		// had "already started writing here" on a form they had not touched, on
+		// every page load (PROD-9621 H3).
+		$form.find( '.bbp-the-content' ).each(
 			function () {
 				parts.push( $.trim( $( this ).text() ) );
 			}
