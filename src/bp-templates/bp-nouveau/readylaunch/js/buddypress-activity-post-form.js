@@ -942,6 +942,16 @@ window.bp = window.bp || {};
 		},
 
 
+		/**
+		 * Fire the public bb_activity_draft_loaded event for the restored draft.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param {Object|boolean} activity_data The restored draft data, or false when no draft exists.
+		 * @param {jQuery} $whatsNewForm The composer form element.
+		 *
+		 * @return {void}
+		 */
 		triggerDraftLoadedEvent: function ( activity_data, $whatsNewForm ) {
 			bp.draft_loaded_event_deferred = false;
 
@@ -957,6 +967,13 @@ window.bp = window.bp || {};
 			);
 		},
 
+		/**
+		 * Mark the lazy fetch settled and replay the draft-loaded event deferred during the empty priming pass.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @return {void}
+		 */
 		settleDeferredDraftLoadedEvent: function () {
 			// No server draft arrived: mark the fetch settled and replay the
 			// event displayDraftActivity() deferred, so listeners still receive
@@ -1117,6 +1134,13 @@ window.bp = window.bp || {};
 			}
 		},
 
+		/**
+		 * Fetch the server draft copy once when localStorage held nothing, then settle the draft-loaded event.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @return {void}
+		 */
 		fetchServerDraftActivity: function () {
 			var self = this;
 
@@ -1237,6 +1261,13 @@ window.bp = window.bp || {};
 			);
 		},
 
+		/**
+		 * Block pure-image clipboard pastes into the composer; embedded data URLs are stripped server-side.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @return {void}
+		 */
 		setupPasteImageGuard: function () {
 			var self = this;
 
@@ -1272,6 +1303,15 @@ window.bp = window.bp || {};
 			} );
 		},
 
+		/**
+		 * Drop localStorage copies the server reports were evicted from the draft budget.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param {Object} response The autosave AJAX response carrying any evicted draft keys.
+		 *
+		 * @return {void}
+		 */
 		handleEvictedDrafts: function ( response ) {
 			var keys = ( response && response.evicted_draft_keys ) ? response.evicted_draft_keys : [];
 
@@ -1294,6 +1334,15 @@ window.bp = window.bp || {};
 			this.showDraftFeedback( bbRlActivity.params.draft_evicted_message );
 		},
 
+		/**
+		 * Toggle the draft-retention notice on the composer.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param {boolean} show Whether to show (true) or hide (false) the notice.
+		 *
+		 * @return {void}
+		 */
 		showDraftRetentionNotice: function ( show ) {
 			var $form   = $( '#bb-rl-whats-new-form' ),
 				message = bbRlActivity.params.draft_retention_message,
@@ -1335,6 +1384,15 @@ window.bp = window.bp || {};
 		// re-fetching over AJAX on every later page load). Sheds the base64 video
 		// poster (js_preview) when the payload is too big for localStorage, and
 		// its try/catch keeps a storage failure from aborting the caller.
+		/**
+		 * Store the draft in localStorage, shedding oversized base64 media and swallowing quota errors.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param {Object} draft_activity The draft object to persist.
+		 *
+		 * @return {void}
+		 */
 		checkAndStoreDraftToLocalStorage: function ( draft_activity ) {
 			try {
 				var json_data    = JSON.stringify( draft_activity );
@@ -1373,6 +1431,15 @@ window.bp = window.bp || {};
 			}
 		},
 
+		/**
+		 * Display a transient feedback message on the draft composer.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param {string} message The feedback message to display.
+		 *
+		 * @return {void}
+		 */
 		showDraftFeedback: function ( message ) {
 			var $form = $( '#bb-rl-whats-new-form' );
 

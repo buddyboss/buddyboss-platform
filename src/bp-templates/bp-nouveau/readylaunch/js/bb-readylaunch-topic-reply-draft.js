@@ -32,6 +32,8 @@ window.bp = window.bp || {};
 		 *
 		 * @function start
 		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
 		 * @return {void}
 		 */
 		this.start = function() {
@@ -55,6 +57,8 @@ window.bp = window.bp || {};
 		 * NOT type, and treating it as typed suppresses a legitimate restore
 		 *.
 		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
 		 * @return {void}
 		 */
 		this.snapshotInitialContent = function () {
@@ -74,6 +78,8 @@ window.bp = window.bp || {};
 		/**
 		 * Current editable content of this form, as one comparable string.
 		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
 		 * @return {string}
 		 */
 		this.currentContentSnapshot = function () {
@@ -84,6 +90,8 @@ window.bp = window.bp || {};
 		 * Set up global variables and data for the TopicReplyDraft instance.
 		 *
 		 * @function setupGlobals
+		 * @since BuddyBoss [BBVERSION]
+		 *
 		 * @return {void}
 		 */
 		this.setupGlobals = function() {
@@ -118,6 +126,8 @@ window.bp = window.bp || {};
 		 * Add event listeners for managing topic reply drafts.
 		 *
 		 * @function addListeners
+		 * @since BuddyBoss [BBVERSION]
+		 *
 		 * @return {void}
 		 */
 		this.addListeners = function() {
@@ -221,6 +231,8 @@ window.bp = window.bp || {};
 		 * Set up necessary actions when opening the topic reply modal.
 		 *
 		 * @function setupOnOpenTopicReplyModal
+		 * @since BuddyBoss [BBVERSION]
+		 *
 		 * @return {void}
 		 */
 		this.setupOnOpenTopicReplyModal = function () {
@@ -235,6 +247,8 @@ window.bp = window.bp || {};
 		 * Set up the keys and data for managing topic reply drafts.
 		 *
 		 * @function setupTopicReplyDraftKeys
+		 *
+		 * @since BuddyBoss [BBVERSION]
 		 *
 		 * @return {void}
 		 */
@@ -277,6 +291,13 @@ window.bp = window.bp || {};
 			}
 		};
 
+		/**
+		 * Sync the topic and reply subscription checkboxes with the restored draft state.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @return {void}
+		 */
 		this.updateSubscriptionCheckboxes = function() {
 			// Change the subscribe checkbox id and label for to make it workable for multiple forms and topics on a single page.
 			var bbp_topic_subscription_id = this.currentForm.find( '#bbp_topic_subscription' );
@@ -286,6 +307,8 @@ window.bp = window.bp || {};
 
 		/**
 		 * Updates the attached lead discussion tags in the form.
+		 *
+		 * @since BuddyBoss [BBVERSION]
 		 *
 		 * @return {void}
 		 */
@@ -323,6 +346,13 @@ window.bp = window.bp || {};
 			tags_element.trigger( 'change' );
 		};
 
+		/**
+		 * Load the draft for the active form's key from localStorage into the working copy.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @return {Object} The current topic/reply draft object.
+		 */
 		this.getTopicReplyDraftData = function() {
 			if ( ! this.topic_reply_draft.data_key || '' !== this.topic_reply_draft.data_key ) {
 				var draft_data = localStorage.getItem( this.topic_reply_draft.data_key );
@@ -337,6 +367,13 @@ window.bp = window.bp || {};
 			return this.topic_reply_draft;
 		};
 
+		/**
+		 * Seed the working draft from the server copy when localStorage holds nothing for the key.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @return {void}
+		 */
 		this.syncTopicReplyDraftData = function() {
 			if (
 				'undefined' === typeof this.bp_nouveau_forums_data ||
@@ -368,6 +405,13 @@ window.bp = window.bp || {};
 			localStorage.setItem( this.topic_reply_draft.data_key, JSON.stringify( this.topic_reply_draft ) );
 		};
 
+		/**
+		 * Start the periodic local and server autosave intervals for the open composer.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @return {void}
+		 */
 		this.setupTopicReplyDraftIntervals = function() {
 			if ( $( '.bb-rl-forum-modal' ).hasClass( 'bb-rl-forum-modal-visible' ) ) {
 				if ( ! window.topic_reply_local_interval ) {
@@ -390,6 +434,13 @@ window.bp = window.bp || {};
 			}
 		};
 
+		/**
+		 * Clear the autosave intervals and reset transient state when the composer modal closes.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @return {void}
+		 */
 		this.clearOnCloseTopicReplyModal = function() {
 			bp.Nouveau.Media.reply_topic_display_post = '';
 
@@ -411,6 +462,13 @@ window.bp = window.bp || {};
 			this.is_topic_reply_form_submit           = false;
 		};
 
+		/**
+		 * Stop and clear the local and server autosave intervals.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @return {void}
+		 */
 		this.clearTopicReplyDraftIntervals = function() {
 			clearInterval( window.topic_reply_local_interval );
 			window.topic_reply_local_interval = false;
@@ -419,6 +477,13 @@ window.bp = window.bp || {};
 			window.topic_reply_ajax_interval = false;
 		};
 
+		/**
+		 * Drop the working draft and remove its localStorage copy.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @return {void}
+		 */
 		this.resetLocalTopicReplyDraft = function() {
 			bp.Nouveau.Media.reply_topic_display_post = '';
 			this.is_topic_reply_form_submit           = true;
@@ -445,6 +510,13 @@ window.bp = window.bp || {};
 			currentForm.removeClass( 'has-draft has-content has-media has-gif has-link-preview' );
 		};
 
+		/**
+		 * Reset the topic/reply post form fields to their empty state.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @return {void}
+		 */
 		this.resetTopicReplyDraftPostForm = function() {
 			var target                      = this.currentForm ? this.currentForm : $( 'form#new-post' );
 			var editor_key                  = target.find( '.bbp-the-content' ).data( 'key' ),
@@ -560,6 +632,13 @@ window.bp = window.bp || {};
 			target.removeClass( 'has-content' );
 		};
 
+		/**
+		 * Clear the link-preview data held on the draft and its form.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @return {void}
+		 */
 		this.resetTopicReplyDraftLinkPreview = function() {
 			var currentTargetForm = this.currentForm ? this.currentForm : $( 'form#new-post' );
 
@@ -576,6 +655,13 @@ window.bp = window.bp || {};
 			$( currentTargetForm ).find( '#bb_link_url' ).remove();
 		};
 
+		/**
+		 * Gather the current form values into the working draft for saving.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @return {void}
+		 */
 		this.collectTopicReplyDraftActivity = function() {
 			var form = this.currentForm ? this.currentForm : $( '#new-post' ), meta = {};
 
@@ -786,6 +872,16 @@ window.bp = window.bp || {};
 			}
 		};
 
+		/**
+		 * Flag the draft as changed when any tracked field differs between the two snapshots.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param {Object} old_data The previously stored draft field set.
+		 * @param {Object} new_data The freshly collected draft field set.
+		 *
+		 * @return {void}
+		 */
 		this.checkedTopicReplyDataChanged = function ( old_data, new_data ) {
 			var draft_data_keys = [
 				'bbp_topic_title',
@@ -832,6 +928,17 @@ window.bp = window.bp || {};
 			);
 		};
 
+		/**
+		 * Persist the collected draft to the server.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param {boolean} is_force_saved Whether the save was forced rather than interval-driven.
+		 * @param {boolean} is_reload_window Whether the save is running from the page-unload handler.
+		 * @param {boolean} is_send_all_data Whether the full draft payload (not just the delta) is sent.
+		 *
+		 * @return {void}
+		 */
 		this.postTopicReplyDraft = function ( is_force_saved, is_reload_window, is_send_all_data ) {
 			// The member HAS a stored draft that we failed to read. Writing now
 			// would replace content they were never shown with whatever happens
@@ -964,6 +1071,13 @@ window.bp = window.bp || {};
 		// the member can type into an already-rendered form while that request is
 		// in flight. Restoring on top of that would destroy text which was never
 		// saved anywhere - the change listeners are not bound yet either.
+		/**
+		 * Whether the member has typed into the composer since it opened.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @return {boolean} True when the current content differs from the initial snapshot.
+		 */
 		this.hasMemberTypedContent = function () {
 			var $form = this.draftNoticeForm();
 
@@ -992,6 +1106,8 @@ window.bp = window.bp || {};
 		 * rest of the page load. Silence there reads as a lost draft
 		 *.
 		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
 		 * @return {void}
 		 */
 		this.announceSuppressedDraftRestore = function () {
@@ -1002,6 +1118,15 @@ window.bp = window.bp || {};
 			}
 		};
 
+		/**
+		 * Drop localStorage copies the server reports were evicted from the draft budget.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param {Object} response The autosave AJAX response, carrying any evicted draft keys.
+		 *
+		 * @return {void}
+		 */
 		this.handleEvictedDrafts = function ( response ) {
 			var keys = ( response && response.data && response.data.evicted_draft_keys ) ? response.data.evicted_draft_keys : [];
 
@@ -1028,10 +1153,24 @@ window.bp = window.bp || {};
 		// $( 'form#new-post' ) and $( 'form[name="new-post"]' ).first(), which
 		// only agree while the topic and reply forms are the same element
 		//.
+		/**
+		 * Resolve the form element the draft notice should attach to.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @return {jQuery} The target form element.
+		 */
 		this.draftNoticeForm = function () {
 			return ( this.currentForm && this.currentForm.length ) ? this.currentForm : $( 'form[name="new-post"]' ).first();
 		};
 
+		/**
+		 * Show the draft-retention notice on the composer.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @return {void}
+		 */
 		this.showDraftRetentionNotice = function () {
 			var $form   = this.draftNoticeForm(),
 				message = ( 'undefined' !== typeof BP_Nouveau.forums ) ? BP_Nouveau.forums.draft_retention_message : '',
@@ -1067,6 +1206,13 @@ window.bp = window.bp || {};
 		// bitmap becomes an inline base64 image of 1MB+, which the draft and
 		// publish pipelines strip anyway. Refuse it at the moment of intent
 		// instead of silently losing it.
+		/**
+		 * Block pure-image clipboard pastes into the editor; embedded data URLs are stripped server-side.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @return {void}
+		 */
 		this.setupPasteImageGuard = function () {
 			var self  = this,
 				$form = this.currentForm ? this.currentForm : $( 'form[name="new-post"]' ).first();
@@ -1104,6 +1250,15 @@ window.bp = window.bp || {};
 			} );
 		};
 
+		/**
+		 * Display a transient feedback message on the draft composer.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param {string} message The feedback message to display.
+		 *
+		 * @return {void}
+		 */
 		this.showDraftFeedback = function ( message ) {
 			var $form = this.draftNoticeForm();
 
@@ -1187,6 +1342,13 @@ window.bp = window.bp || {};
 			return doc.body.innerHTML;
 		};
 
+		/**
+		 * Restore the saved draft into the appropriate topic or reply form.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @return {void}
+		 */
 		this.displayTopicReplyDraft = function () {
 			bp.Nouveau.Media.reply_topic_allow_delete_media = true;
 			if ( _.isUndefined( this.topic_reply_draft ) ) {
@@ -1200,6 +1362,13 @@ window.bp = window.bp || {};
 			}
 		};
 
+		/**
+		 * Populate the new-topic form from the restored draft.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @return {void}
+		 */
 		this.appendTopicDraftData = function() {
 			// Never clobber content the member typed while the draft fetch was
 			// in flight.
@@ -1343,6 +1512,13 @@ window.bp = window.bp || {};
 			this.previewDraftMedia( $form, activity_data );
 		};
 
+		/**
+		 * Populate the reply form from the restored draft.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @return {void}
+		 */
 		this.appendReplyDraftData = function() {
 			// Never clobber content the member typed while the draft fetch was
 			// in flight.
@@ -1471,6 +1647,16 @@ window.bp = window.bp || {};
 			this.previewDraftMedia( $form, activity_data );
 		};
 
+		/**
+		 * Render the restored draft's media, document, video and gif previews on the form.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param {jQuery} $form The draft form to render previews into.
+		 * @param {Object} activity_data The restored draft data.
+		 *
+		 * @return {void}
+		 */
 		this.previewDraftMedia = function( $form, activity_data ) {
 			var self                        = bp.Nouveau.Media,
 				dropzone_media_container    = $form.find( '#bb-rl-forums-post-media-uploader' ),
@@ -1798,12 +1984,26 @@ window.bp = window.bp || {};
 			}
 		};
 
+		/**
+		 * Handle the composer submit: persist the draft, then let the post proceed.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @return {void}
+		 */
 		this.submitTopicReplyDraftForm = function () {
 			this.topic_reply_draft.post_action = 'delete';
 			this.clearTopicReplyDraftIntervals();
 			this.resetLocalTopicReplyDraft();
 		};
 
+		/**
+		 * Discard the current draft and clear its stored copies.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @return {void}
+		 */
 		this.discardTopicReplyDraftForm = function () {
 
 			var forum_topic = this.currentForm.find( 'a[data-modal-id]' ),
@@ -1833,6 +2033,13 @@ window.bp = window.bp || {};
 			forum_reply.css( 'pointer-events', '' );
 		};
 
+		/**
+		 * Persist the draft on page unload so an accidental reload does not lose it.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @return {void}
+		 */
 		this.setupOnReloadWindow = function () {
 			if ( 'update' === this.topic_reply_draft.post_action ) {
 
