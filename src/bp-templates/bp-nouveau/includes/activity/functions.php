@@ -298,7 +298,15 @@ function bp_nouveau_activity_localize_scripts( $params = array() ) {
 	// The key is resolved through bp_get_user_meta_key() because every draft
 	// writer stores through bp_update_user_meta() - probing the raw literal
 	// would report "no draft" on installs that filter user meta keys.
-	$activity_params['has_draft'] = metadata_exists( 'user', bp_loggedin_user_id(), bp_get_user_meta_key( $draft_activity_meta_key ) );
+	//
+	// Gated on posting permission: a member who cannot create activity has no
+	// composer to restore into, so telling the JS a draft exists would only fire
+	// the lazy fetch for a form they can never open. bb_user_can_create_activity()
+	// is a context-independent filter (default true), so this is a no-op on a
+	// normal install and skips the probe entirely on one that disables activity
+	// posting for the member (Release-A "only load when needed").
+	$activity_params['has_draft'] = bb_user_can_create_activity()
+		&& metadata_exists( 'user', bp_loggedin_user_id(), bp_get_user_meta_key( $draft_activity_meta_key ) );
 
 	// Interim guard until pasted images are routed through the media uploader:
 	// a pasted bitmap becomes a multi-megabyte inline base64 image, which the
