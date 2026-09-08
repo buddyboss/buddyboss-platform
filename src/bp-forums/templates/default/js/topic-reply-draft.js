@@ -801,6 +801,18 @@ window.bp = window.bp || {};
 		};
 
 		this.postTopicReplyDraft = function ( is_force_saved, is_reload_window, is_send_all_data ) {
+			// The member HAS a stored draft that we failed to read. Writing now
+			// would replace content they were never shown with whatever happens
+			// to be in the box - a transient network failure would silently
+			// destroy the draft it prevented us from loading (PROD-9621).
+			if (
+				'undefined' !== typeof BP_Nouveau.forums &&
+				true === BP_Nouveau.forums.draft_fetch_failed
+			) {
+				this.showDraftFeedback( BP_Nouveau.forums.draft_fetch_failed_message || '' );
+
+				return;
+			}
 			if ( ! is_force_saved && 'undefined' === typeof this.all_draft_data[this.topic_reply_draft.data_key] ) {
 				return;
 			}
@@ -1846,35 +1858,61 @@ window.bp = window.bp || {};
 			}
 		);
 
-		$.post(
-			BP_Nouveau.ajaxurl,
-			{
-				action: 'bb_get_topic_reply_drafts',
-				_wpnonce_post_topic_reply_draft: BP_Nouveau.forums.nonces.post_topic_reply_draft
-			}
-		).done(
-			function ( response ) {
-				if ( response && response.success && response.data && response.data.drafts ) {
-					var drafts    = response.data.drafts,
-						discarded = bbDraftDiscardedKeys();
+		// One bounded retry before giving up. A failed fetch used to fall straight
+		// through .always() and initialise the forms with an empty draft map, so a
+		// member with a stored draft saw an empty composer, no error and no retry -
+		// and their next autosave overwrote the draft the fetch had failed to read
+		// (PROD-9621).
+		var bbDraftFetchAttempts = 0;
 
-					// Never re-offer a draft this tab has already discarded - the
-					// delete may simply not have been processed yet (PROD-9621).
-					_.each(
-						discarded,
-						function ( key ) {
-							delete drafts[ key ];
-						}
-					);
+		var bbRunDraftFetch = function () {
+			bbDraftFetchAttempts++;
 
-					BP_Nouveau.forums.draft = drafts;
+			$.post(
+				BP_Nouveau.ajaxurl,
+				{
+					action: 'bb_get_topic_reply_drafts',
+					_wpnonce_post_topic_reply_draft: BP_Nouveau.forums.nonces.post_topic_reply_draft
 				}
-			}
-		).always(
-			function () {
-				bbInitTopicReplyDrafts();
-			}
-		);
+			).done(
+				function ( response ) {
+					if ( response && response.success && response.data && response.data.drafts ) {
+						var drafts    = response.data.drafts,
+							discarded = bbDraftDiscardedKeys();
+
+						// Never re-offer a draft this tab has already discarded - the
+						// delete may simply not have been processed yet (PROD-9621).
+						_.each(
+							discarded,
+							function ( key ) {
+								delete drafts[ key ];
+							}
+						);
+
+						BP_Nouveau.forums.draft = drafts;
+					}
+
+					BP_Nouveau.forums.draft_fetch_failed = false;
+					bbInitTopicReplyDrafts();
+				}
+			).fail(
+				function () {
+					if ( bbDraftFetchAttempts < 2 ) {
+						window.setTimeout( bbRunDraftFetch, 2000 );
+
+						return;
+					}
+
+					// Out of attempts. Initialise the forms so the composer still
+					// works, but flag the failure so postTopicReplyDraft() refuses to
+					// overwrite the draft we could not read, and tells the member why.
+					BP_Nouveau.forums.draft_fetch_failed = true;
+					bbInitTopicReplyDrafts();
+				}
+			);
+		};
+
+		bbRunDraftFetch();
 	} else {
 		bbInitTopicReplyDrafts();
 	}

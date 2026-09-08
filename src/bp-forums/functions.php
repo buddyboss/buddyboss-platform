@@ -1067,6 +1067,11 @@ function bb_nouveau_forum_localize_scripts( $params = array() ) {
 	$params['forums']['paste_image_blocked_message'] = __( 'Pasted images are not supported yet. Please use the photo button to attach images.', 'buddyboss' );
 	$params['forums']['draft_evicted_message']       = __( 'You had too many saved drafts, so your oldest draft was removed to save this one.', 'buddyboss' );
 
+	// The lazy fetch can fail on a flaky connection. When it does, the member
+	// sees an empty composer even though a draft exists, and anything they type
+	// would otherwise overwrite the draft they were never shown (PROD-9621).
+	$params['forums']['draft_fetch_failed_message'] = __( 'We could not load your saved draft. Reload the page before writing here, or your saved draft may be replaced.', 'buddyboss' );
+
 	// The restore is suppressed when the member has already typed into the
 	// form, and that suppression used to be silent - the stored draft is
 	// intact but nothing on screen said so (PROD-9621).
