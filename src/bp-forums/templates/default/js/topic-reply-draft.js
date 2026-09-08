@@ -159,6 +159,21 @@ window.bp = window.bp || {};
 						self.clearOnCloseTopicReplyModal();
 					}
 				);
+
+				// start() is deferred behind the lazy draft fetch, so on a slow
+				// connection the member can already have the composer OPEN by
+				// the time the handlers above exist. jQuery does not replay an
+				// `bbp_after_load_reply_form` that has already fired, so the
+				// draft was never offered and the autosave intervals never
+				// started for the rest of that modal session: an empty composer
+				// over a draft the member does have, and nothing they typed
+				// saved either. Running the same setup once, now, is what the
+				// missed event would have done - and displayTopicReplyDraft()
+				// still refuses to clobber anything typed in the meantime, via
+				// hasMemberTypedContent() (PROD-9621 Q12).
+				if ( $( '.bb-modal-box' ).hasClass( 'bb-modal-open' ) ) {
+					self.setupOnOpenTopicReplyModal();
+				}
 			} else {
 				// The lazy draft fetch defers start() into an AJAX callback, and
 				// jQuery does not replay an already-fired `load`. When the fetch
@@ -344,14 +359,33 @@ window.bp = window.bp || {};
 
 		this.syncTopicReplyDraftData = function() {
 			if (
-				'undefined' === typeof this.all_draft_data[this.topic_reply_draft.data_key] &&
-				'undefined' !== typeof this.bp_nouveau_forums_data &&
-				'undefined' !== typeof this.bp_nouveau_forums_data[this.topic_reply_draft.data_key]
+				'undefined' === typeof this.bp_nouveau_forums_data ||
+				'undefined' === typeof this.bp_nouveau_forums_data[this.topic_reply_draft.data_key]
 			) {
-				this.topic_reply_draft                               = this.bp_nouveau_forums_data[this.topic_reply_draft.data_key];
-				this.all_draft_data[this.topic_reply_draft.data_key] = this.bp_nouveau_forums_data[this.topic_reply_draft.data_key].data;
-				localStorage.setItem( this.topic_reply_draft.data_key, JSON.stringify( this.topic_reply_draft ) );
+				return;
 			}
+
+			// The local copy outranks the server copy only when it actually
+			// holds something. Testing merely whether the key was DEFINED let an
+			// empty local copy block the server copy unconditionally: the
+			// composer opened blank over a live server draft, has-draft was
+			// applied anyway, and the next autosave wrote that emptiness back
+			// (PROD-9621 Q12).
+			//
+			// A local copy WITH content still wins, exactly as before - the
+			// member's most recent typing lives there and is not on the server
+			// yet. No clock comparison is involved in either direction, so this
+			// cannot mistake a skewed browser clock for a newer draft.
+			if (
+				'undefined' !== typeof this.all_draft_data[this.topic_reply_draft.data_key] &&
+				bbDraftDataHasPayload( this.all_draft_data[this.topic_reply_draft.data_key] )
+			) {
+				return;
+			}
+
+			this.topic_reply_draft                               = this.bp_nouveau_forums_data[this.topic_reply_draft.data_key];
+			this.all_draft_data[this.topic_reply_draft.data_key] = this.bp_nouveau_forums_data[this.topic_reply_draft.data_key].data;
+			localStorage.setItem( this.topic_reply_draft.data_key, JSON.stringify( this.topic_reply_draft ) );
 		};
 
 		this.setupTopicReplyDraftIntervals = function() {
@@ -667,6 +701,31 @@ window.bp = window.bp || {};
 				meta.bb_link_url                   = JSON.stringify( preview_data );
 			}
 
+			// Does the form being serialized RIGHT NOW carry anything of its
+			// own? Decided here, from `meta` alone, because the two
+			// "still available in older draft" checks below deliberately judge
+			// the STORED copy instead - they keep a draft alive across a
+			// momentarily empty form (closing the modal resets it before the
+			// unload save runs). What they must never do is make an EMPTY
+			// composer look like something worth writing: the write at the end
+			// of this function replaces the stored entry with `meta`, so an
+			// empty one destroyed the member's saved text and dropped their
+			// attachment references - locally AND on the server - while
+			// leaving is_content_valid true, so the composer still showed a
+			// draft indicator over an empty box (PROD-9621 Q12).
+			var payload_is_empty = false;
+
+			if ( ! media_valid ) {
+				if ( 'topic' === this.topic_reply_draft.object ) {
+					payload_is_empty = (
+						( 'undefined' === typeof meta.bbp_topic_title || '' === $.trim( meta.bbp_topic_title ) ) &&
+						( 'undefined' === typeof meta.bbp_topic_content || '' === $( $.parseHTML( meta.bbp_topic_content ) ).text().trim() )
+					);
+				} else if ( 'reply' === this.topic_reply_draft.object ) {
+					payload_is_empty = ( 'undefined' === typeof meta.bbp_reply_content || '' === $( $.parseHTML( meta.bbp_reply_content ) ).text().trim() );
+				}
+			}
+
 			// Check if the media, videos or documents still available in older draft so we need to be update the draft again.
 			if ( ! media_valid && 'undefined' !== typeof this.topic_reply_draft.data && false !== this.topic_reply_draft.data ) {
 				if (
@@ -723,6 +782,17 @@ window.bp = window.bp || {};
 			}
 
 			if ( content_valid ) {
+
+				// The composer is empty and the only thing still making this
+				// count as a draft is the copy already stored. Leave BOTH
+				// copies exactly as they are: `meta` carries nothing to save,
+				// and persisting it is the data loss described above. The
+				// member's deliberate route to removing a draft is the
+				// Discard Draft button, which deletes it on both sides
+				// (PROD-9621 Q12).
+				if ( payload_is_empty ) {
+					return;
+				}
 
 				if ( 'undefined' !== typeof meta.bbp_video && '' !== meta.bbp_video ) {
 					var new_videos = JSON.parse( meta.bbp_video );
@@ -1793,6 +1863,56 @@ window.bp = window.bp || {};
 		return parts.join( '\u0000' );
 	};
 
+	/**
+	 * Whether a draft's stored `data` holds anything worth restoring.
+	 *
+	 * Mirrors bb_draft_topic_reply_entry_has_payload() on the server, and draws
+	 * the same line: member-authored text and attachments count, while the tags,
+	 * subscription, sticky and topic/reply-ID fields that travel with every
+	 * serialized form do not.
+	 *
+	 * A copy holding none of it has nothing to put in the composer, so it must
+	 * never outrank one that does - an empty localStorage copy used to define
+	 * the key unconditionally and block the fetched server draft, leaving the
+	 * composer blank with the draft indicator still showing (PROD-9621 Q12).
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param {Object} data A draft entry's `data` object.
+	 * @return {boolean} True when there is content to restore.
+	 */
+	var bbDraftDataHasPayload = function ( data ) {
+		var i,
+			key,
+			lists = [ 'bbp_media', 'bbp_document', 'bbp_video', 'bbp_media_gif', 'link_preview_data', 'bb_link_url' ],
+			texts = [ 'bbp_topic_title', 'bbp_topic_content', 'bbp_reply_content' ];
+
+		if ( ! data || 'object' !== typeof data ) {
+			return false;
+		}
+
+		for ( i = 0; i < lists.length; i++ ) {
+			key = lists[ i ];
+
+			if ( 'undefined' !== typeof data[ key ] && '' !== data[ key ] && '[]' !== data[ key ] ) {
+				return true;
+			}
+		}
+
+		for ( i = 0; i < texts.length; i++ ) {
+			key = texts[ i ];
+
+			if (
+				'string' === typeof data[ key ] &&
+				'' !== $( $.parseHTML( data[ key ] ) ).text().trim()
+			) {
+				return true;
+			}
+		}
+
+		return false;
+	};
+
 	var bbInitTopicReplyDrafts = function () {
 		forms.each( function () {
 			var topicReplyDraft = new bp.Nouveau.TopicReplyDraft( $( this ) );
@@ -1827,6 +1947,15 @@ window.bp = window.bp || {};
 					// can be skipped. Returning warm on the first hit skipped it
 					// for the whole page, so any other form never got its server
 					// draft at all.
+					return false;
+				}
+
+				// A stored copy holding nothing is not a warm cache - it is
+				// precisely the copy the server draft has to override, so the
+				// fetch must run. Counting it as warm skipped the fetch, left
+				// the server copy unavailable to compare against, and the
+				// composer opened empty over a live draft (PROD-9621 Q12).
+				if ( ! bbDraftDataHasPayload( ( JSON.parse( window.localStorage.getItem( key ) ) || {} ).data ) ) {
 					return false;
 				}
 
