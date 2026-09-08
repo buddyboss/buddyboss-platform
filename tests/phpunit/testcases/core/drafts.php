@@ -2464,4 +2464,73 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		remove_filter( 'wp_die_ajax_handler', array( $this, 'filter_draft_die_handler' ), 99 );
 		remove_filter( 'wp_doing_ajax', '__return_true' );
 	}
+
+	/**
+	 * Budget eviction must credit the element key, not just the entry.
+	 *
+	 * A serialized row carries every element's KEY as well as its value, so
+	 * evicting an inner draft frees the entry plus its key. Counting only the
+	 * entry under-credits each eviction, the running total stays above the
+	 * truth, and the oldest-first loop keeps going - destroying drafts it did
+	 * not need to. This is the same undercount `f643e4d0c8` fixed in
+	 * `bb_forums_trim_draft_row()`; the budget is that loop's sibling and was
+	 * left behind (PROD-9621).
+	 *
+	 * The shortfall is dialled through `$new_size` so it lands in the window
+	 * where exactly one element key decides whether a third draft dies: two
+	 * evictions are enough when the key bytes are counted, three when they are
+	 * not. An assertion on the formula alone would stay green with the fix
+	 * reverted, which is why this drives the real function instead.
+	 */
+	public function test_budget_eviction_counts_the_element_key_bytes() {
+		$this->isolate_draft_maintenance();
+
+		$user_id = self::factory()->user->create();
+
+		// Keys of identical length so every element costs the same.
+		$keys = array( 'draft_discussion_1001', 'draft_discussion_1002', 'draft_discussion_1003', 'draft_discussion_1004' );
+		$row  = array();
+		$age  = 100;
+
+		foreach ( $keys as $key ) {
+			$row[ $key ] = array(
+				'data_key'        => $key,
+				'data'            => array( 'bbp_topic_content' => str_repeat( 'q', 64 ) ),
+				'_draft_saved_at' => $age++,
+			);
+		}
+
+		bp_update_user_meta( $user_id, 'bb_user_topic_reply_draft', $row );
+		bb_draft_flush_user_meta_sizes( $user_id );
+
+		$entry_bytes = strlen( maybe_serialize( $row[ $keys[0] ] ) );
+		$key_bytes   = bb_draft_serialized_key_bytes( $keys[0] );
+
+		$this->assertGreaterThan( 0, $key_bytes, 'Premise: an element key costs bytes, or there is nothing to account for.' );
+
+		$sizes     = bb_draft_get_user_meta_sizes( $user_id );
+		$row_bytes = (int) $sizes['drafts']['bb_user_topic_reply_draft'];
+		$total_cap = bb_draft_user_total_max_size();
+
+		// Land the shortfall strictly between "two entries" and "two entries
+		// plus their two keys", so the key term alone decides the outcome.
+		$shortfall = ( 2 * $entry_bytes ) + $key_bytes;
+		$new_size  = $total_cap - $row_bytes + $shortfall;
+
+		$result = bb_draft_enforce_user_budget( $user_id, 'draft_user', $new_size );
+
+		$this->assertTrue( $result['allowed'], 'Premise: the save is under the total meta budget.' );
+		$this->assertCount(
+			2,
+			$result['evicted'],
+			'Two evictions free the shortfall once each element key is credited; counting only the entry evicts a third draft that did not have to die.'
+		);
+
+		// And the survivors must be the NEWEST two, not an arbitrary pair.
+		$stored = bp_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
+		$this->assertArrayNotHasKey( $keys[0], $stored, 'Oldest first.' );
+		$this->assertArrayNotHasKey( $keys[1], $stored, 'Oldest first.' );
+		$this->assertArrayHasKey( $keys[2], $stored, 'The newer drafts must survive.' );
+		$this->assertArrayHasKey( $keys[3], $stored, 'The newer drafts must survive.' );
+	}
 }

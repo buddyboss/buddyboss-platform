@@ -865,7 +865,13 @@ function bb_draft_enforce_user_budget( $user_id, $current_key, $new_size, $conte
 					'meta_key'  => $meta_key,
 					'inner_key' => (string) $inner_key,
 					'saved_at'  => isset( $inner_draft['_draft_saved_at'] ) ? (int) $inner_draft['_draft_saved_at'] : 0,
-					'bytes'     => strlen( maybe_serialize( $inner_draft ) ),
+					// The row also carries every element's KEY, so evicting this
+					// entry frees the entry plus its key. Counting only the entry
+					// under-credits each eviction and the oldest-first loop keeps
+					// going, destroying drafts it did not need to - the same
+					// undercount f643e4d0c8 fixed in bb_forums_trim_draft_row(),
+					// which is the sibling of this loop (PROD-9621).
+					'bytes'     => strlen( maybe_serialize( $inner_draft ) ) + bb_draft_serialized_key_bytes( (string) $inner_key ),
 				);
 			}
 		} else {
