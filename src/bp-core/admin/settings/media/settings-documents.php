@@ -201,6 +201,51 @@ function bb_media_get_document_extension_data() {
 }
 
 /**
+ * Refresh the document extensions field with real defaults once they're loadable.
+ *
+ * At `bb_register_features` time (`bp_loaded` priority 5), the bp-nouveau
+ * document template functions — including `bp_media_allowed_document_type()`,
+ * which holds the ~80-entry hard-coded default extension list — are not
+ * guaranteed to be loaded yet. `bb_media_get_document_extension_options()`
+ * and `bb_media_get_document_extension_data()` therefore register the field
+ * with an empty `options`/`extension_data` payload on a site where
+ * `bp_document_extensions_support` has never been saved, which renders the
+ * "Manage File Extensions" modal with nothing but "Add Extension".
+ *
+ * `bb_admin_settings_before_get_feature` fires per-AJAX-request while
+ * building the Settings 2.0 response, well after the full component
+ * bootstrap has completed, so the default list is reliably available here.
+ * Re-registering the field simply overwrites its stored `options`/
+ * `extension_data` in the registry (see `BB_Feature_Registry::bb_register_field()`).
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $feature_id The feature being loaded.
+ */
+function bb_media_lazy_refresh_document_extension_defaults( $feature_id ) {
+	if ( 'media' !== $feature_id || ! function_exists( 'bp_media_allowed_document_type' ) ) {
+		return;
+	}
+
+	$existing = bb_feature_registry()->bb_get_fields( 'media', 'documents', 'documents_settings' );
+	if ( empty( $existing['bp_document_extensions_support'] ) ) {
+		return;
+	}
+
+	$field = $existing['bp_document_extensions_support'];
+	if ( ! empty( $field['extension_data'] ) ) {
+		// Already populated (e.g. the option has been saved) — nothing to refresh.
+		return;
+	}
+
+	$field['options']        = bb_media_get_document_extension_options();
+	$field['extension_data'] = bb_media_get_document_extension_data();
+
+	bb_register_feature_field( 'media', 'documents', 'documents_settings', $field );
+}
+add_action( 'bb_admin_settings_before_get_feature', 'bb_media_lazy_refresh_document_extension_defaults' );
+
+/**
  * Get icon options for the document extension icon dropdown.
  *
  * Uses the existing `bb_document_icon_class` filter to map icons. When ReadyLaunch
