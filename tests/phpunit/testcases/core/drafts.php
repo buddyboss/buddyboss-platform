@@ -1408,6 +1408,38 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 	}
 
 	/**
+	 * A lock collision mid-drain must re-arm the +60s continuation. WP deletes a
+	 * single-event cron entry before invoking it, so a bb_draft_cleanup tick that
+	 * backs off on the one-shot lock (or its own) would otherwise leave nothing
+	 * to resume the persisted cursor until the daily recurring fire, up to 24h.
+	 */
+	public function test_expiry_rearms_continuation_on_lock_collision() {
+		$this->isolate_draft_maintenance();
+
+		// A drain is in progress (a persisted cursor) and no continuation queued.
+		update_site_option( 'bb_draft_cleanup_cursor', 12345 );
+		$existing = wp_next_scheduled( 'bb_draft_cleanup' );
+		if ( $existing ) {
+			wp_unschedule_event( $existing, 'bb_draft_cleanup' );
+		}
+
+		set_site_transient( 'bb_draft_oneshot_lock', 1, 5 * MINUTE_IN_SECONDS );
+		$result = bb_drafts_delete_expired( 0 );
+		delete_site_transient( 'bb_draft_oneshot_lock' );
+
+		$this->assertTrue( ! empty( $result['locked'] ), 'The collision must report locked.' );
+		$this->assertNotFalse(
+			wp_next_scheduled( 'bb_draft_cleanup' ),
+			'A lock collision mid-drain must re-arm the continuation, not stall until the daily fire.'
+		);
+
+		$queued = wp_next_scheduled( 'bb_draft_cleanup' );
+		if ( $queued ) {
+			wp_unschedule_event( $queued, 'bb_draft_cleanup' );
+		}
+	}
+
+	/**
 	 * @return int
 	 */
 	public function return_two() {

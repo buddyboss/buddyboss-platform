@@ -1902,6 +1902,18 @@ function bb_drafts_delete_expired( $time_budget = 10 ) {
 	// silently resurrected by the one-shot's size heal, or vice versa. They must
 	// serialize against each other, not only against themselves.
 	if ( get_site_transient( 'bb_draft_cleanup_lock' ) || get_site_transient( 'bb_draft_oneshot_lock' ) ) {
+		// Re-arm the continuation on a lock collision when a drain is already
+		// in progress (a cursor is persisted). WP core deletes a single-event
+		// cron entry BEFORE invoking its callback, so a `bb_draft_cleanup`
+		// continuation tick that bails here would otherwise leave nothing to
+		// resume the half-drained cursor until the next daily recurring fire -
+		// up to 24h later. The one-shot migration (now a second, more
+		// contention-prone lock) can hold its lock across many cron cycles, so
+		// this collision is reachable; re-arming keeps the drain moving in ~60s.
+		if ( get_site_option( 'bb_draft_cleanup_cursor' ) && ! wp_next_scheduled( 'bb_draft_cleanup' ) ) {
+			wp_schedule_single_event( time() + MINUTE_IN_SECONDS, 'bb_draft_cleanup' );
+		}
+
 		return array(
 			'deleted'  => 0,
 			'complete' => false,
