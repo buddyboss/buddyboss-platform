@@ -1101,27 +1101,37 @@ window.bp = window.bp || {};
 					var bbTypedContent = ( ! _.isUndefined( self.postForm ) && self.postForm.$el ) ?
 						$.trim( self.postForm.$el.find( '#bb-rl-whats-new' ).text().replace( /\u00a0/g, ' ' ) ) : '';
 
-					if ( ( bp.draft_activity.data && '' !== bp.draft_activity.data ) || bp.draft_content_changed || '' !== bbTypedContent ) {
+					var hasLocalDraftData    = bp.draft_activity.data && '' !== bp.draft_activity.data,
+						memberStartedWriting = bp.draft_content_changed || '' !== bbTypedContent;
+
+					if ( hasLocalDraftData || memberStartedWriting ) {
 						self.settleDeferredDraftLoadedEvent();
+
+						// Suppressed because the member typed while the fetch was in
+						// flight: the stored draft is intact but not loaded. Silence
+						// reads as a lost draft, so tell them - the same notice the
+						// forum packs show (M11 parity). Not shown when a local draft
+						// was already present, since that draft stays on screen and
+						// nothing was withheld.
+						if ( ! hasLocalDraftData && memberStartedWriting && BP_Nouveau.activity.params.draft_not_restored_message ) {
+							self.showDraftFeedback( BP_Nouveau.activity.params.draft_not_restored_message );
+						}
+
 						return;
 					}
 
 					bp.draft_activity = response.draft_activity;
 					bp.old_draft_data = response.draft_activity.data;
 
-					// Guarded because the restore runs immediately below: a
-					// setItem() throw - quota exceeded, or storage blocked in a
-					// private window - would abort the rest of this callback and
-					// the member would never be shown the draft that was just
-					// fetched successfully. Caching it locally is an optimisation;
-					// displaying it is the point. The nouveau pack routes this
-					// through the try/catch'd checkAndStoreDraftToLocalStorage()
-					// and never had the problem.
-					try {
-						localStorage.setItem( bp.draft_activity.data_key, JSON.stringify( bp.draft_activity ) );
-					} catch ( e ) {
-						// Storage unavailable - continue to the restore regardless.
-					}
+					// Routed through the shedding helper (ported from the nouveau
+					// pack) rather than a bare setItem: a large video draft can
+					// exceed the localStorage quota, and without shedding the
+					// base64 poster the write throws QuotaExceededError, the copy
+					// is never cached, and RL re-fetches over AJAX on every later
+					// page load. The helper's own try/catch also keeps a throw from
+					// aborting the restore below - caching is an optimisation,
+					// displaying the draft is the point.
+					self.checkAndStoreDraftToLocalStorage( bp.draft_activity );
 
 					// When the composer opened before the fetch resolved, restore
 					// into the open form now (fires bb_activity_draft_loaded).
@@ -1255,6 +1265,49 @@ window.bp = window.bp || {};
 				$note.insertAfter( $feedback );
 			} else {
 				$form.prepend( $note );
+			}
+		},
+
+		// Ported from the nouveau pack so the RL lazy fetch caches a trimmed copy
+		// instead of throwing QuotaExceededError on a large video draft (and then
+		// re-fetching over AJAX on every later page load). Sheds the base64 video
+		// poster (js_preview) when the payload is too big for localStorage, and
+		// its try/catch keeps a storage failure from aborting the caller.
+		checkAndStoreDraftToLocalStorage: function ( draft_activity ) {
+			try {
+				var json_data    = JSON.stringify( draft_activity );
+				var encoder      = new TextEncoder();
+				var data_size_mb = encoder.encode( json_data ).length / ( 1024 * 1024 );
+				data_size_mb     = data_size_mb.toFixed( 2 );
+
+				if ( data_size_mb > 4 && draft_activity.data && draft_activity.data.video && draft_activity.data.video.length ) {
+
+					var storage_copy = JSON.parse( json_data );
+					if ( storage_copy.data && storage_copy.data.video ) {
+						for ( var i = 0; i < storage_copy.data.video.length; i++ ) {
+							if ( storage_copy.data.video[i].js_preview ) {
+								// Remove one js_preview.
+								storage_copy.data.video[i].js_preview = null;
+
+								// Recalculate size.
+								json_data    = JSON.stringify( storage_copy );
+								data_size_mb = encoder.encode( json_data ).length / ( 1024 * 1024 );
+								data_size_mb = data_size_mb.toFixed( 2 );
+
+								// Stop removing if size is acceptable.
+								if ( data_size_mb <= 4 ) {
+									break;
+								}
+							}
+						}
+					}
+
+					localStorage.setItem( draft_activity.data_key, json_data );
+				} else {
+					localStorage.setItem( draft_activity.data_key, json_data );
+				}
+			} catch ( e ) {
+				console.error( 'Error checking draft data size', e );
 			}
 		},
 

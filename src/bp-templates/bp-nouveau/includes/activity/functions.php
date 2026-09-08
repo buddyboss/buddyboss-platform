@@ -313,6 +313,13 @@ function bp_nouveau_activity_localize_scripts( $params = array() ) {
 	// draft_fetch_failed_message.
 	$activity_params['draft_fetch_failed_message'] = __( 'We could not load your saved draft. Reload the page before writing here, or your saved draft may be replaced.', 'buddyboss' );
 
+	// The lazy restore is suppressed when the member has already started typing
+	// while the fetch was in flight - overwriting their text would be the real
+	// bug. The forum packs tell the member the stored draft is intact but was
+	// not loaded; the activity packs took the same branch silently, which reads
+	// as a lost draft (M11 parity).
+	$activity_params['draft_not_restored_message'] = __( 'You have a saved draft. It was not loaded because you had already started writing here.', 'buddyboss' );
+
 	// Members must be told the draft has a lifetime, or the expiry cron reads
 	// as unexplained data loss when a draft is gone after a few weeks away.
 	// Empty when expiry is disabled, so the JS renders nothing.

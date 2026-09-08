@@ -1309,8 +1309,22 @@ window.bp = window.bp || {};
 					var bbTypedContent = ( ! _.isUndefined( self.postForm ) && self.postForm.$el ) ?
 						$.trim( self.postForm.$el.find( '#whats-new' ).text().replace( /\u00a0/g, ' ' ) ) : '';
 
-					if ( ( bp.draft_activity.data && '' !== bp.draft_activity.data ) || bp.draft_content_changed || '' !== bbTypedContent ) {
+					var hasLocalDraftData    = bp.draft_activity.data && '' !== bp.draft_activity.data,
+						memberStartedWriting = bp.draft_content_changed || '' !== bbTypedContent;
+
+					if ( hasLocalDraftData || memberStartedWriting ) {
 						self.settleDeferredDraftLoadedEvent();
+
+						// Suppressed because the member typed while the fetch was in
+						// flight: the stored draft is intact but not loaded. Silence
+						// reads as a lost draft, so tell them - the same notice the
+						// forum packs show (M11 parity). Not shown when a local draft
+						// was already present, since that draft stays on screen and
+						// nothing was withheld.
+						if ( ! hasLocalDraftData && memberStartedWriting && BP_Nouveau.activity.params.draft_not_restored_message ) {
+							self.showDraftFeedback( BP_Nouveau.activity.params.draft_not_restored_message );
+						}
+
 						return;
 					}
 
