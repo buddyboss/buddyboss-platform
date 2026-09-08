@@ -5,6 +5,31 @@ window.wp = window.wp || {};
 window.bp = window.bp || {};
 
 ( function ( exports, $ ) {
+
+	/**
+	 * UTF-8 byte length of a string.
+	 *
+	 * The draft cap is a BYTE budget measured server-side with strlen().
+	 * String.length counts UTF-16 code units, which undercounts every
+	 * non-ASCII script - measured in-browser at 2.93x for CJK, 1.96x for
+	 * emoji and 1.81x for Arabic. Comparing that against a byte cap meant the
+	 * poster shed never fired on those communities: the payload looked small,
+	 * js_preview stayed in, and the server refused the whole save instead - so
+	 * the member simply lost the draft (PROD-9621).
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param {string} str String to measure.
+	 * @return {number} Length in bytes.
+	 */
+	var bbDraftByteLength = function ( str ) {
+		try {
+			return new Blob( [ str ] ).size;
+		} catch ( e ) {
+			// No Blob: encodeURIComponent percent-escapes each non-ASCII byte.
+			return unescape( encodeURIComponent( str ) ).length;
+		}
+	};
 	bp.Nouveau = bp.Nouveau || {};
 
 	// Bail if not set.
@@ -1825,7 +1850,7 @@ window.bp = window.bp || {};
 				var draft_cap = ( BP_Nouveau.activity.params && BP_Nouveau.activity.params.draft_max_size ) ?
 					parseInt( BP_Nouveau.activity.params.draft_max_size, 10 ) : 0;
 
-				if ( draft_cap > 0 && JSON.stringify( bp.draft_activity ).length > draft_cap ) {
+				if ( draft_cap > 0 && bbDraftByteLength( JSON.stringify( bp.draft_activity ) ) > draft_cap ) {
 					draft_payload      = _.clone( bp.draft_activity );
 					draft_payload.data = _.clone( bp.draft_activity.data );
 
