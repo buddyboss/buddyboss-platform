@@ -58,7 +58,17 @@ window.bp = window.bp || {};
 		 * @return {void}
 		 */
 		this.snapshotInitialContent = function () {
-			this.initial_content_snapshot = this.currentContentSnapshot();
+			var $form    = this.draftNoticeForm(),
+				captured = $form.length ? $form.data( 'bbDraftInitialSnapshot' ) : undefined;
+
+			// On the lazy-fetch path start() runs inside .always(), i.e. AFTER
+			// the request resolved, so snapshotting here would already contain
+			// anything the member typed while it was in flight -
+			// hasMemberTypedContent() would then compare equal, conclude nothing
+			// was typed, and the restore would overwrite their text. That is the
+			// one window this guard exists for, so the capture taken before the
+			// request went out is authoritative when present (PROD-9621).
+			this.initial_content_snapshot = ( 'undefined' !== typeof captured ) ? captured : this.currentContentSnapshot();
 		};
 
 		/**
@@ -67,26 +77,7 @@ window.bp = window.bp || {};
 		 * @return {string}
 		 */
 		this.currentContentSnapshot = function () {
-			var $form = this.draftNoticeForm(),
-				parts = [];
-
-			if ( ! $form.length ) {
-				return '';
-			}
-
-			$form.find( '[contenteditable="true"]' ).each(
-				function () {
-					parts.push( $.trim( $( this ).text() ) );
-				}
-			);
-
-			$form.find( 'input[name="bbp_topic_title"]' ).each(
-				function () {
-					parts.push( $.trim( $( this ).val() || '' ) );
-				}
-			);
-
-			return parts.join( '\u0000' );
+			return bbDraftFormSnapshot( this.draftNoticeForm() );
 		};
 
 		/**
@@ -1758,6 +1749,38 @@ window.bp = window.bp || {};
 	// subscription IDs) from this closure.
 	var forms = $( 'form[name="new-post"]' );
 
+
+	/**
+	 * Snapshot one form's editable content without needing an instance.
+	 *
+	 * Shared with the instance method so the capture taken before the lazy fetch
+	 * and the comparison made after it speak exactly the same string.
+	 *
+	 * @param {Object} $form jQuery-wrapped form.
+	 * @return {string}
+	 */
+	var bbDraftFormSnapshot = function ( $form ) {
+		var parts = [];
+
+		if ( ! $form || ! $form.length ) {
+			return '';
+		}
+
+		$form.find( '[contenteditable="true"]' ).each(
+			function () {
+				parts.push( $.trim( $( this ).text() ) );
+			}
+		);
+
+		$form.find( 'input[name="bbp_topic_title"]' ).each(
+			function () {
+				parts.push( $.trim( $( this ).val() || '' ) );
+			}
+		);
+
+		return parts.join( '\u0000' );
+	};
+
 	var bbInitTopicReplyDrafts = function () {
 		forms.each( function () {
 			var topicReplyDraft = new bp.Nouveau.TopicReplyDraft( $( this ) );
@@ -1813,6 +1836,16 @@ window.bp = window.bp || {};
 		$.isEmptyObject( BP_Nouveau.forums.draft ) &&
 		! bbDraftIsWarmLocally()
 	) {
+		// Capture what each form arrived with BEFORE the request goes out.
+		// start() runs inside .always(), so a snapshot taken there would already
+		// include whatever the member typed while the fetch was in flight
+		// (see snapshotInitialContent(), PROD-9621).
+		forms.each(
+			function () {
+				$( this ).data( 'bbDraftInitialSnapshot', bbDraftFormSnapshot( $( this ) ) );
+			}
+		);
+
 		$.post(
 			BP_Nouveau.ajaxurl,
 			{
