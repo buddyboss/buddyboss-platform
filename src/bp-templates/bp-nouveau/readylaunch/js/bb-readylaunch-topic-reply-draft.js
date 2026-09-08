@@ -374,6 +374,56 @@ window.bp = window.bp || {};
 		 *
 		 * @return {void}
 		 */
+		/**
+		 * Persist the working draft to localStorage without letting a quota
+		 * throw abort the caller.
+		 *
+		 * A media/video-heavy forum draft can exceed the localStorage quota, and
+		 * a bare setItem() throws QuotaExceededError - which used to abort the
+		 * composer-close / autosave handler before the server save ran, dropping
+		 * BOTH the local and the server copy (H4). Store the full draft; on a
+		 * quota error shed the video poster frames (kept only to regenerate a
+		 * thumbnail on publish) and retry; if it still will not fit, skip the
+		 * local copy silently - the periodic server save is the durable path.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @return {void}
+		 */
+		this.storeTopicReplyDraftLocal = function () {
+			try {
+				localStorage.setItem( this.topic_reply_draft.data_key, JSON.stringify( this.topic_reply_draft ) );
+			} catch ( quota_error ) {
+				try {
+					var slim = JSON.parse( JSON.stringify( this.topic_reply_draft ) );
+
+					if (
+						slim.data &&
+						'undefined' !== typeof slim.data.bbp_video &&
+						'' !== slim.data.bbp_video &&
+						'[]' !== slim.data.bbp_video
+					) {
+						var videos = JSON.parse( slim.data.bbp_video );
+
+						if ( _.isArray( videos ) ) {
+							videos = _.map(
+								videos,
+								function ( item ) {
+									return _.omit( item, 'js_preview' );
+								}
+							);
+							slim.data.bbp_video = JSON.stringify( videos );
+						}
+					}
+
+					localStorage.setItem( this.topic_reply_draft.data_key, JSON.stringify( slim ) );
+				} catch ( retry_error ) {
+					// Still over quota - skip the local cache this round; the
+					// server save keeps the draft.
+				}
+			}
+		};
+
 		this.syncTopicReplyDraftData = function() {
 			if (
 				'undefined' === typeof this.bp_nouveau_forums_data ||
@@ -402,7 +452,7 @@ window.bp = window.bp || {};
 
 			this.topic_reply_draft                               = this.bp_nouveau_forums_data[this.topic_reply_draft.data_key];
 			this.all_draft_data[this.topic_reply_draft.data_key] = this.bp_nouveau_forums_data[this.topic_reply_draft.data_key].data;
-			localStorage.setItem( this.topic_reply_draft.data_key, JSON.stringify( this.topic_reply_draft ) );
+			this.storeTopicReplyDraftLocal();
 		};
 
 		/**
@@ -868,7 +918,7 @@ window.bp = window.bp || {};
 				this.all_draft_data[this.topic_reply_draft.data_key] = meta;
 				this.topic_reply_draft.is_content_valid              = true;
 
-				localStorage.setItem( this.topic_reply_draft.data_key, JSON.stringify( this.topic_reply_draft ) );
+				this.storeTopicReplyDraftLocal();
 			}
 		};
 
