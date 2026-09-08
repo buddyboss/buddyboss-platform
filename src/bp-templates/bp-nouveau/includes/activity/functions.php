@@ -299,13 +299,19 @@ function bp_nouveau_activity_localize_scripts( $params = array() ) {
 	// writer stores through bp_update_user_meta() - probing the raw literal
 	// would report "no draft" on installs that filter user meta keys.
 	//
-	// Gated on posting permission: a member who cannot create activity has no
+	// Gated on posting permission, mirroring the composer's OWN visibility gate
+	// (activity/post-form.php: hidden only when ! bb_user_can_create_activity()
+	// AND not a group activity page). A member who cannot create activity has no
 	// composer to restore into, so telling the JS a draft exists would only fire
-	// the lazy fetch for a form they can never open. bb_user_can_create_activity()
-	// is a context-independent filter (default true), so this is a no-op on a
-	// normal install and skips the probe entirely on one that disables activity
-	// posting for the member (Release-A "only load when needed").
-	$activity_params['has_draft'] = bb_user_can_create_activity()
+	// the lazy fetch for a form they can never open.
+	//
+	// The gate is SKIPPED for group drafts (draft_group_N, set above under
+	// bp_is_group()): bb_user_can_create_activity() is the SITE-WIDE 'user'-object
+	// switch and does not govern group posting - the group composer renders
+	// regardless, and group posting is authorized separately per group - so
+	// gating a group draft on it would make a member's valid, still-fetchable
+	// draft_group_N invisible when the switch is filtered false for them.
+	$activity_params['has_draft'] = ( bp_is_group() || bb_user_can_create_activity() )
 		&& metadata_exists( 'user', bp_loggedin_user_id(), bp_get_user_meta_key( $draft_activity_meta_key ) );
 
 	// Interim guard until pasted images are routed through the media uploader:
