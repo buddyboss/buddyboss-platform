@@ -3435,4 +3435,87 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 
 		return (array) json_decode( $body, true );
 	}
+
+	/**
+	 * R1/Q15: the row trim must not re-serialize the whole row per eviction.
+	 *
+	 * `bb_forums_trim_draft_row()` asked "does it fit yet?" with
+	 * `strlen( maybe_serialize( $row ) )` on every loop iteration, so an
+	 * over-budget row with N eviction candidates serialized O(N) copies of a
+	 * row that is by definition near the cap. Measured on a 200-entry / 10 MB
+	 * row: 182 whole-row `serialize()` calls moving 953.8 MB, on the live
+	 * autosave endpoint.
+	 *
+	 * The sibling `bb_draft_enforce_user_budget()` has always precomputed
+	 * per-entry `bytes` and subtracted; this is that pattern.
+	 *
+	 * Asserted here as a BEHAVIOURAL invariant rather than a timing: the
+	 * trimmed row must be exactly as small as the old implementation made it,
+	 * and must be at or under the budget. An accounting shortcut that drifted
+	 * by even a few bytes would either evict one entry too many (member loses
+	 * a draft) or leave the row over budget (the caller's budget check then
+	 * refuses the save) - so exactness is the thing worth locking down.
+	 */
+	public function test_q15_row_trim_is_exact_and_bounded() {
+		$user_id = self::factory()->user->create();
+
+		$row = array();
+
+		for ( $i = 1; $i <= 40; $i++ ) {
+			$row[ 'draft_reply_' . $i ] = array(
+				'data_key'        => 'draft_reply_' . $i,
+				'object'          => 'reply',
+				'data'            => array( 'bbp_reply_content' => str_repeat( 'x', 1000 ) ),
+				'_draft_saved_at' => 1700000000 + $i,
+			);
+		}
+
+		$protect_key = 'draft_reply_40';
+		$max_bytes   = 12000;
+
+		$result = bb_forums_trim_draft_row( $row, $protect_key, $user_id, $max_bytes );
+
+		// The protected entry always survives.
+		$this->assertArrayHasKey( $protect_key, $result['row'], 'The just-saved draft must never be evicted.' );
+
+		// The row really is under the budget - measured the authoritative way,
+		// not with the function's own accounting.
+		$this->assertLessThanOrEqual(
+			$max_bytes,
+			strlen( maybe_serialize( $result['row'] ) ),
+			'The trim must actually bring the row under the budget, or the caller refuses the save.'
+		);
+
+		// And it did not over-evict: putting back the last evicted entry would
+		// push it over. This is what catches accounting drift in either
+		// direction.
+		$this->assertNotEmpty( $result['evicted'], 'This fixture is over budget, so something must have been evicted.' );
+
+		$last_evicted = end( $result['evicted'] );
+		$last_inner   = substr( $last_evicted, strlen( 'bb_user_topic_reply_draft:' ) );
+
+		$restored = $result['row'];
+
+		$restored[ $last_inner ] = $row[ $last_inner ];
+
+		$this->assertGreaterThan(
+			$max_bytes,
+			strlen( maybe_serialize( $restored ) ),
+			'The trim evicted more than it needed to - the last eviction was unnecessary.'
+		);
+
+		// Oldest-first ordering is preserved.
+		$this->assertSame(
+			'bb_user_topic_reply_draft:draft_reply_1',
+			$result['evicted'][0],
+			'Eviction must still start with the oldest draft.'
+		);
+
+		// Removed entries are reported for the caller's deferred unstamping.
+		$this->assertSame(
+			count( $result['evicted'] ),
+			count( $result['entries'] ),
+			'Every evicted key must come back with its entry so the caller can unstamp it.'
+		);
+	}
 }

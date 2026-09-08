@@ -1510,6 +1510,17 @@ function bb_forums_trim_draft_row( $draft_row, $protect_key, $user_id, $max_byte
 		return $result;
 	}
 
+	// Steady state first, and cheaply: a row that already fits needs no
+	// candidate list, no sort and no per-entry accounting. One serialization,
+	// which is what the old implementation also cost on this path - the
+	// optimisation below must not make the common case more expensive than the
+	// rare one (PROD-9621 R1).
+	$row_bytes = strlen( maybe_serialize( $draft_row ) );
+
+	if ( $row_bytes <= $max_bytes ) {
+		return $result;
+	}
+
 	$candidates = array();
 
 	foreach ( $draft_row as $inner_key => $inner_draft ) {
@@ -1534,10 +1545,58 @@ function bb_forums_trim_draft_row( $draft_row, $protect_key, $user_id, $max_byte
 		}
 	);
 
+	// Size accounting is incremental, and exact.
+	//
+	// The loop below used to ask "does the row fit yet?" with
+	// strlen( maybe_serialize( $result['row'] ) ) on EVERY iteration, so an
+	// over-budget row with N eviction candidates serialized O(N) copies of a
+	// row that is by definition close to the cap. Measured on a 200-entry /
+	// 10 MB row: 182 whole-row serialize() calls moving 954 MB - and this runs
+	// on the live autosave endpoint, not a cron (PROD-9621 R1).
+	//
+	// serialize() writes an array as `a:{count}:{` + the concatenated
+	// key/value serializations + `}`, and elements serialize independently, so
+	// the row's exact width is the sum of per-entry costs measured once plus
+	// that envelope, and an eviction is a subtraction. Same shape as the
+	// sibling bb_draft_enforce_user_budget(), which has always precomputed
+	// per-entry `bytes` and subtracted.
+	//
+	// Exactness matters in both directions: drifting high evicts a draft the
+	// member did not need to lose, drifting low leaves the row over budget and
+	// the caller's own budget check then refuses the whole save. The
+	// authoritative re-measure after the loop is the backstop.
+	$entry_bytes = array();
+	$payload_sum = 0;
+
+	foreach ( $draft_row as $inner_key => $inner_draft ) {
+		// serialize() rather than maybe_serialize(): this must mirror how the
+		// element appears INSIDE the serialized row, and maybe_serialize()
+		// passes a string element through unchanged instead of writing it as
+		// s:len:"...";.
+		// phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.serialize_serialize -- measuring serialized WIDTH only; the result is never stored, transmitted or unserialized.
+		$bytes = bb_draft_serialized_key_bytes( $inner_key ) + strlen( serialize( $inner_draft ) );
+
+		$entry_bytes[ (string) $inner_key ] = $bytes;
+		$payload_sum                       += $bytes;
+	}
+
+	$row_count = count( $draft_row );
+
+	// Tie the derived width to the authoritative one measured above. If they
+	// ever disagree the derivation is wrong for this PHP build, so re-base the
+	// running total on the measured value and let the backstop finish the job.
+	$derived_bytes = strlen( 'a:' . $row_count . ':{' ) + 1 + $payload_sum;
+
+	if ( $derived_bytes !== $row_bytes ) {
+		$payload_sum = $row_bytes - ( strlen( 'a:' . $row_count . ':{' ) + 1 );
+	}
+
 	foreach ( $candidates as $candidate ) {
-		if ( strlen( maybe_serialize( $result['row'] ) ) <= $max_bytes ) {
+		if ( $row_bytes <= $max_bytes ) {
 			break;
 		}
+
+		$inner_key = $candidate['inner_key'];
 
 		// Only the in-memory row is changed here. Releasing the attachment
 		// stamps and firing the public bb_draft_evicted action are deferred to
@@ -1545,11 +1604,39 @@ function bb_forums_trim_draft_row( $draft_row, $protect_key, $user_id, $max_byte
 		// entirely - and an eviction that never reached storage must not leave
 		// its attachments unprotected or announce itself to listeners
 		// (PROD-9621 H4).
+		$result['entries'][ $inner_key ] = $result['row'][ $inner_key ];
+
+		unset( $result['row'][ $inner_key ] );
+
+		$result['evicted'][] = 'bb_user_topic_reply_draft:' . $inner_key;
+
+		--$row_count;
+		$payload_sum -= isset( $entry_bytes[ $inner_key ] ) ? $entry_bytes[ $inner_key ] : 0;
+		$row_bytes    = strlen( 'a:' . $row_count . ':{' ) + 1 + $payload_sum;
+	}
+
+	// Authoritative backstop: measure the real row once and keep evicting only
+	// if the accounting above somehow left it over budget. With the formula
+	// exact this measures once and stops, so the O(N) behaviour does not come
+	// back - but a future change to how PHP serializes arrays cannot silently
+	// turn an under-trim into a refused save.
+	$remaining     = $candidates;
+	$measured_size = strlen( maybe_serialize( $result['row'] ) );
+
+	while ( $measured_size > $max_bytes ) {
+		$candidate = array_shift( $remaining );
+
+		if ( null === $candidate || ! isset( $result['row'][ $candidate['inner_key'] ] ) ) {
+			break;
+		}
+
 		$result['entries'][ $candidate['inner_key'] ] = $result['row'][ $candidate['inner_key'] ];
 
 		unset( $result['row'][ $candidate['inner_key'] ] );
 
 		$result['evicted'][] = 'bb_user_topic_reply_draft:' . $candidate['inner_key'];
+
+		$measured_size = strlen( maybe_serialize( $result['row'] ) );
 	}
 
 	return $result;
