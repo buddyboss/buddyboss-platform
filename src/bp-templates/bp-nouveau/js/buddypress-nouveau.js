@@ -10,6 +10,11 @@ window.bp = window.bp || {};
 	var hoverCardPopup = false;
 	var hideCardTimeout = null;
 	var popupCardLoaded = false;
+	// Hover-intent timer. A card request is only issued once the pointer has
+	// rested on a trigger for HOVER_INTENT_DELAY ms, so sweeping the mouse across
+	// a row of avatars no longer fires one REST round-trip per avatar crossed.
+	var hoverIntentTimeout = null;
+	var HOVER_INTENT_DELAY = 200;
 
 	var currentProfileRequest = null;
 	var currentGroupRequest = null;
@@ -1167,13 +1172,22 @@ window.bp = window.bp || {};
 					popupCardLoaded = false;
 				}
 
-				// Always attempt to load the profile card
-				bp.Nouveau.profilePopupCard.call( this );
+				// Always attempt to load the profile card, once the pointer has settled.
+				bp.Nouveau.scheduleHoverIntent( this, bp.Nouveau.profilePopupCard );
 			} );
 			$( document ).on( 'mouseenter', '[data-bb-hp-group]', function ( event ) {
 				if ( 0 === $( event.currentTarget ).data( 'bb-hp-group' ) ) {
 					return;
 				}
+				// The group card opens on the group AVATAR, never on the group NAME.
+				// This test runs before any state is touched: a name link must be a
+				// no-op, not a trigger that first tears down an open member card.
+				// Sliding from an author name onto the group name in "X created the
+				// group Y" used to destroy the member card that was just opened.
+				if ( ! bp.Nouveau.isGroupAvatarTrigger( this ) ) {
+					return;
+				}
+
 				hoverAvatar = true;
 				hoverGroupAvatar = true;
 
@@ -1189,8 +1203,8 @@ window.bp = window.bp || {};
 					popupCardLoaded = false;
 				}
 
-				// Always attempt to load the group card
-				bp.Nouveau.groupPopupCard.call( this );
+				// Always attempt to load the group card, once the pointer has settled.
+				bp.Nouveau.scheduleHoverIntent( this, bp.Nouveau.groupPopupCard );
 			} );
 			$( document ).on( 'mouseleave', '[data-bb-hp-profile], [data-bb-hp-group]', function ( event ) {
 				var relatedTarget = event.relatedTarget;
@@ -1204,9 +1218,17 @@ window.bp = window.bp || {};
 					hoverGroupAvatar = false;
 				}
 
+				// The pointer left the trigger: drop any request that has not gone out yet.
+				bp.Nouveau.cancelHoverIntent();
+
 				// Only hide popup if we're not moving to another hoverable element or popup card
 				if ( $( relatedTarget ).closest( '[data-bb-hp-profile], [data-bb-hp-group], #profile-card, #group-card' ).length === 0 ) {
 					hoverAvatar = false;
+
+					// Nothing is going to consume the response — release the sockets
+					// instead of leaving both requests running to completion.
+					bp.Nouveau.abortOngoingProfileRequest();
+					bp.Nouveau.abortOngoingGroupRequest();
 					if ( !hoverCardPopup ) {
 						bp.Nouveau.checkHidePopupCard();
 					}
@@ -5272,6 +5294,60 @@ window.bp = window.bp || {};
 		},
 
 		/**
+		 * Whether a hovered [data-bb-hp-group] element is a group AVATAR rather than
+		 * a group NAME link.
+		 *
+		 * Avatars are (or wrap) an <img>; group-name links are plain text. Group
+		 * cards open on the avatar only, per the acceptance criteria.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param {Element} element Hovered element.
+		 * @return {boolean} True when the element should open a group card.
+		 */
+		isGroupAvatarTrigger: function ( element ) {
+			var $element = $( element );
+
+			return $element.is( 'img' ) || 0 !== $element.find( 'img' ).length;
+		},
+
+		/**
+		 * Defer a popup-card load until the pointer has rested on the trigger.
+		 *
+		 * Without this every avatar the cursor crosses issues its own REST request.
+		 * Aborting them client-side does not help the server: PHP-FPM has already
+		 * accepted the request and runs it to completion regardless.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param {Element}  trigger  Hovered element, used as `this` for the loader.
+		 * @param {Function} callback Card loader to run once the delay elapses.
+		 * @return {void}
+		 */
+		scheduleHoverIntent: function ( trigger, callback ) {
+			bp.Nouveau.cancelHoverIntent();
+
+			hoverIntentTimeout = setTimeout( function () {
+				hoverIntentTimeout = null;
+				callback.call( trigger );
+			}, HOVER_INTENT_DELAY );
+		},
+
+		/**
+		 * Cancel a pending hover-intent load.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @return {void}
+		 */
+		cancelHoverIntent: function () {
+			if ( hoverIntentTimeout ) {
+				clearTimeout( hoverIntentTimeout );
+				hoverIntentTimeout = null;
+			}
+		},
+
+		/**
 		 * Function to cancel ongoing AJAX request.
 		 */
 		abortOngoingProfileRequest: function () {
@@ -5749,9 +5825,11 @@ window.bp = window.bp || {};
 			// group NAME. Avatars are (or wrap) an <img>; group-name links are plain text, so a
 			// hovered group element that is neither an image nor contains one is a name link and
 			// must not open the card.
-			if ( ! $avatar.is( 'img' ) && ! $avatar.find( 'img' ).length ) {
-				// Dismiss any open card and reset popupCardLoaded so the next hover is not suppressed.
-				bp.Nouveau.hidePopupCard();
+			if ( ! bp.Nouveau.isGroupAvatarTrigger( $avatar ) ) {
+				// Release any group request still in flight for a previous trigger, but
+				// leave an open card alone: this element is a name link, and tearing the
+				// card down here dismissed the member card the pointer had just opened.
+				bp.Nouveau.abortOngoingGroupRequest();
 				return;
 			}
 

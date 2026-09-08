@@ -685,8 +685,11 @@ class BP_Nouveau extends BP_Theme_Compat {
 			'rest_nonce'                 => wp_create_nonce( 'wp_rest' ),
 			'member_label'               => __( 'member', 'buddyboss' ),
 			'members_label'              => __( 'members', 'buddyboss' ),
-			// Logged-in user id, used by the hover pop-up cards to suppress a member's own card
-			// everywhere (activity.params.user_id is the *displayed* user on member pages).
+			// Logged-in user id, used by the hover pop-up cards to suppress a member's own card.
+			// The cards previously read BP_Nouveau.activity.params.user_id, which carries the
+			// same value but is only registered when the Activity component is enabled — with
+			// Activity off the unguarded property read threw and killed every hover card on
+			// the site. Localizing it on the shared handle makes the guard component-agnostic.
 			'loggedin_user_id'           => bp_loggedin_user_id(),
 		);
 

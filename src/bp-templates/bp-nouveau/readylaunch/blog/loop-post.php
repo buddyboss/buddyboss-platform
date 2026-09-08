@@ -160,10 +160,11 @@ $bb_rl_blog_show_menu = (bool) apply_filters( 'bb_rl_blog_card_show_menu', $bb_r
 			</a>
 			<span class="bb-rl-author-name">
 				<?php
-				printf( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Attr escaped via esc_attr() in bb_get_hover_card_profile_attr(); the rest is escaped inline.
+				$bb_rl_blog_author_link = '<a href="' . esc_url( $bb_rl_blog_author_url ) . '"' . $bb_rl_blog_hp_attr . '>' . esc_html( $bb_rl_blog_author_name ) . '</a>';
+				printf(
 					/* translators: %s: linked author display name. */
 					esc_html__( 'By %s', 'buddyboss' ),
-					'<a href="' . esc_url( $bb_rl_blog_author_url ) . '"' . $bb_rl_blog_hp_attr . '>' . esc_html( $bb_rl_blog_author_name ) . '</a>'
+					$bb_rl_blog_author_link // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Anchor assembled from esc_url()/esc_html() parts; the hover attribute is escaped in bb_get_hover_card_profile_attr().
 				);
 				?>
 			</span>
