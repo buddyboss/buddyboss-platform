@@ -1674,3 +1674,69 @@ function bb_forums_trim_draft_row( $draft_row, $protect_key, $user_id, $max_byte
 
 	return $result;
 }
+
+/**
+ * Remove one published inner draft from the aggregated forum draft row.
+ *
+ * The topic/reply publish handlers used to read the whole aggregate row once,
+ * unset the just-published key, and write the rest back - with no fresh read.
+ * The save handler (bb_post_topic_reply_draft) deliberately drops the meta
+ * cache and re-reads before its own write, "Only the keys this request actually
+ * decided about are ours to write", because a second tab autosaving or
+ * discarding a DIFFERENT inner draft commits inside that window. The publish
+ * handlers had the same window but not the guard: a stale read wrote a whole-row
+ * value (or, since the emptied-row case became bp_delete_user_meta(), a
+ * whole-row DELETE) over a sibling another request had just written, and
+ * keymasters/moderators skip the bbp_update_user_last_posted() cache bust that
+ * narrows it for ordinary members (M2).
+ *
+ * This gives the publish path the save handler's three steps: drop the cache,
+ * re-read, and remove only the one key - so a concurrent sibling survives.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int    $user_id        Owning user ID.
+ * @param string $draft_data_key Inner draft key just published.
+ * @return void
+ */
+function bb_forums_delete_published_draft_key( $user_id, $draft_data_key ) {
+	$user_id      = (int) $user_id;
+	$usermeta_key = 'bb_user_topic_reply_draft';
+
+	if ( $user_id <= 0 ) {
+		return;
+	}
+
+	// Re-read on a fresh cache so a sibling another request wrote inside the
+	// publish window is not overwritten with this request's stale copy (M2).
+	wp_cache_delete( $user_id, 'user_meta' );
+	$existing_draft = bp_get_user_meta( $user_id, $usermeta_key, true );
+
+	if ( ! is_array( $existing_draft ) ) {
+		// A legacy-empty or corrupt non-array row carries no member content and
+		// keeps has_draft true forever; a genuinely absent row reads as '' and
+		// the delete is a harmless no-op.
+		if ( ! empty( $existing_draft ) ) {
+			bp_delete_user_meta( $user_id, $usermeta_key );
+		}
+
+		return;
+	}
+
+	if ( isset( $existing_draft[ $draft_data_key ] ) ) {
+		unset( $existing_draft[ $draft_data_key ] );
+	}
+
+	// An emptied aggregate row is deleted, never written back as array() - a
+	// stored empty row keeps has_draft true (one wasted lazy-fetch AJAX per
+	// forum page load, forever) and no cleanup pass can remove it while ordinary
+	// publishes keep re-creating it.
+	if ( empty( $existing_draft ) ) {
+		bp_delete_user_meta( $user_id, $usermeta_key );
+	} else {
+		// wp_slash(): the row came back UNSLASHED from bp_get_user_meta() and
+		// update_metadata() unslashes once more on write, so re-slash to store
+		// the member's OTHER drafts byte-for-byte (R2).
+		bp_update_user_meta( $user_id, $usermeta_key, wp_slash( $existing_draft ) );
+	}
+}

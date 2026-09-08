@@ -1844,6 +1844,72 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		}
 	}
 
+	/**
+	 * M2: publishing one forum draft must not clobber a sibling another request
+	 * wrote inside the publish window.
+	 *
+	 * The publish handlers read the aggregate row once and wrote the remainder
+	 * back with no fresh read, so a stale copy overwrote (or, with the emptied
+	 * case now a delete, deleted) a sibling committed meanwhile. The shared
+	 * removal helper now drops the cache and re-reads before removing the one
+	 * key. Simulated deterministically: prime the cache, write a new sibling to
+	 * STORAGE only (leaving the cache stale), then remove the published key and
+	 * assert the sibling survives.
+	 */
+	public function test_publishing_a_draft_keeps_a_concurrently_written_sibling() {
+		global $wpdb;
+
+		$user_id  = self::factory()->user->create();
+		$meta_key = 'bb_user_topic_reply_draft';
+
+		$published_key = 'draft_discussion_11';
+		$sibling_key   = 'draft_discussion_22';
+		$concurrent_key = 'draft_reply_33';
+
+		// Initial stored row: the key being published plus one existing sibling.
+		bp_update_user_meta(
+			$user_id,
+			$meta_key,
+			array(
+				$published_key => array( 'data_key' => $published_key, 'data' => array( 'bbp_topic_content' => 'publishing this' ) ),
+				$sibling_key   => array( 'data_key' => $sibling_key, 'data' => array( 'bbp_topic_content' => 'existing sibling' ) ),
+			)
+		);
+
+		// Prime the object cache with that shape.
+		bp_get_user_meta( $user_id, $meta_key, true );
+
+		// A concurrent request adds a THIRD draft, straight to storage, WITHOUT
+		// busting the object cache - the exact stale-cache window the fix closes.
+		$stored_key = bp_get_user_meta_key( $meta_key );
+		$new_row    = array(
+			$published_key  => array( 'data_key' => $published_key, 'data' => array( 'bbp_topic_content' => 'publishing this' ) ),
+			$sibling_key    => array( 'data_key' => $sibling_key, 'data' => array( 'bbp_topic_content' => 'existing sibling' ) ),
+			$concurrent_key => array( 'data_key' => $concurrent_key, 'data' => array( 'bbp_reply_content' => 'written by another tab' ) ),
+		);
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- deliberately leaves the object cache stale to reproduce the race.
+		$wpdb->update(
+			$wpdb->usermeta,
+			array( 'meta_value' => maybe_serialize( $new_row ) ),
+			array( 'user_id' => $user_id, 'meta_key' => $stored_key )
+		);
+
+		// Publish removes only $published_key.
+		bb_forums_delete_published_draft_key( $user_id, $published_key );
+
+		wp_cache_delete( $user_id, 'user_meta' );
+		$stored = bp_get_user_meta( $user_id, $meta_key, true );
+
+		$this->assertIsArray( $stored, 'The row must still exist.' );
+		$this->assertArrayNotHasKey( $published_key, $stored, 'The published draft must be removed.' );
+		$this->assertArrayHasKey( $sibling_key, $stored, 'The pre-existing sibling must survive.' );
+		$this->assertArrayHasKey(
+			$concurrent_key,
+			$stored,
+			'A sibling written by a concurrent request inside the publish window must NOT be clobbered.'
+		);
+	}
+
 	public function filter_prefix_user_meta_key( $key ) {
 		return 'bbtest_' . $key;
 	}

@@ -504,38 +504,16 @@ function bbp_new_reply_handler( $action = '' ) {
 			bbp_update_total_parent_reply( $reply_id, $topic_id, bbp_get_topic_reply_count( $topic_id, true ) + 1, 'add' );
 		}
 
-		// Delete draft data from the database.
+		// Delete draft data from the database - through the shared removal path
+		// that re-reads on a fresh cache, so publishing this reply does not
+		// overwrite a sibling draft another request wrote meanwhile (M2).
 		if ( 0 < $topic_id ) {
 			$draft_data_key = 'draft_reply_' . $topic_id;
 			if ( 0 < $reply_to ) {
 				$draft_data_key .= '_' . $reply_to;
 			}
 
-			$usermeta_key   = 'bb_user_topic_reply_draft';
-			$user_id        = bp_loggedin_user_id();
-			$existing_draft = bp_get_user_meta( $user_id, $usermeta_key, true );
-
-			if ( ! empty( $existing_draft ) && isset( $existing_draft[ $draft_data_key ] ) ) {
-				unset( $existing_draft[ $draft_data_key ] );
-			}
-
-			// An emptied aggregate row is deleted, never written back as array() -
-			// a stored empty row keeps has_draft true (one wasted lazy-fetch AJAX
-			// per forum page load, forever) and no cleanup pass can remove it
-			// while ordinary publishes keep re-creating it.
-			if ( empty( $existing_draft ) || ! is_array( $existing_draft ) ) {
-				bp_delete_user_meta( $user_id, $usermeta_key );
-			} else {
-				// wp_slash(): $existing_draft came from bp_get_user_meta(), so it is
-				// UNSLASHED, and update_metadata() unslashes the value once more before
-				// storing it. Writing it back untouched therefore strips a backslash
-				// layer from every string in the row - the member's OTHER drafts.
-				// Measured: an attachment list holding `résumé.pdf` comes back as
-				// `ru00e9sumu00e9.pdf`, and a filename containing a double quote breaks
-				// the list's JSON outright, losing that draft's whole attachment list.
-				// Publishing one draft must not corrupt the rest (R2).
-				bp_update_user_meta( $user_id, $usermeta_key, wp_slash( $existing_draft ) );
-			}
+			bb_forums_delete_published_draft_key( bp_loggedin_user_id(), $draft_data_key );
 		}
 
 		/** Additional Actions (After Save) */
