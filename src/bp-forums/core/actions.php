@@ -905,8 +905,17 @@ function bb_post_topic_reply_draft() {
 		// attachment list verbatim. The stamps for everything the new entry
 		// keeps are re-applied below, so the set difference is what may be
 		// released (PROD-9621).
+		//
+		// $existing_draft is the row as just written, so the whole surviving row
+		// is what may retain a stamp - not only the entry that replaced this
+		// one. The composer carries its content across reply targets, so one
+		// attachment is routinely referenced by several inner drafts of this
+		// row; comparing against the replacing entry alone released files a
+		// sibling inner draft still pointed at and the orphan crons deleted
+		// them. Matches the whole-row exclusion the eviction branch above
+		// already applies (PROD-9621).
 		if ( ! empty( $unstamp_draft_entry ) ) {
-			bb_draft_release_replaced_attachments( $unstamp_draft_entry, $draft_topic_reply, $user_id );
+			bb_draft_release_replaced_attachments( $unstamp_draft_entry, $draft_topic_reply, $user_id, $existing_draft );
 		}
 
 		// Re-applied unconditionally: update_post_meta() is idempotent, and this

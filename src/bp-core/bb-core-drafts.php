@@ -632,16 +632,40 @@ function bb_draft_collect_attachment_ids( $draft ) {
  * post meta so the existing orphaned-attachment crons become able to
  * collect the files again. Only attachments the user owns are touched.
  *
+ * Pass `$retain_entries` whenever the draft being released is ONE inner
+ * entry of a row that keeps others. The aggregated forum row holds every
+ * inner topic/reply draft together and the shared reply modal carries its
+ * content across reply targets, so one attachment is routinely referenced by
+ * several inner drafts at once; releasing an inner draft without excluding
+ * what its siblings still hold let the orphan crons delete files a stored
+ * draft was still pointing at. {@see bb_draft_heal_forum_row()} and the
+ * forum handler's eviction branch already apply this whole-row exclusion
+ * (PROD-9621).
+ *
  * @since BuddyBoss [BBVERSION]
  *
- * @param array $draft   Draft array.
- * @param int   $user_id Owning user ID.
+ * @param array $draft          Draft array.
+ * @param int   $user_id        Owning user ID.
+ * @param array $retain_entries Optional. Draft entries that survive this
+ *                              removal and whose attachments must keep
+ *                              their stamps.
  * @return void
  */
-function bb_draft_unstamp_attachments( $draft, $user_id ) {
+function bb_draft_unstamp_attachments( $draft, $user_id, $retain_entries = array() ) {
 	$attachment_ids = bb_draft_collect_attachment_ids( $draft );
+	$retained       = array();
+
+	if ( ! empty( $retain_entries ) && is_array( $retain_entries ) ) {
+		foreach ( $retain_entries as $retain_entry ) {
+			$retained = array_merge( $retained, bb_draft_collect_attachment_ids( $retain_entry ) );
+		}
+	}
 
 	foreach ( $attachment_ids as $attachment_id ) {
+		if ( in_array( (int) $attachment_id, $retained, true ) ) {
+			continue;
+		}
+
 		if ( ! bb_draft_user_can_manage_attachment( $attachment_id, $user_id ) ) {
 			continue;
 		}
@@ -661,15 +685,35 @@ function bb_draft_unstamp_attachments( $draft, $user_id ) {
  * then reap a file the stored draft still references. Only the set
  * difference (held before, not held now) may be released.
  *
+ * "Not held now" means held by NOTHING that is still stored, not merely by
+ * the entry that replaced this one. The aggregated forum row keeps every
+ * inner topic/reply draft together, and the composer carries its content
+ * across reply targets, so the same attachment is routinely referenced by
+ * several inner drafts at once. Comparing against the replacing entry alone
+ * released files a sibling inner draft still pointed at, and the
+ * orphan-cleanup crons then hard-deleted them - the exact outcome the
+ * paragraph above forbids. Pass every entry that survives the write in
+ * `$retain_entries`; the eviction path in the forum handler already applies
+ * this same whole-row exclusion (PROD-9621).
+ *
  * @since BuddyBoss [BBVERSION]
  *
  * @param array $previous_entry Draft entry being replaced.
  * @param array $current_entry  Draft entry replacing it.
  * @param int   $user_id        Owning user ID.
+ * @param array $retain_entries Optional. Draft entries that survive the write
+ *                              and whose attachments must keep their stamps.
  * @return int[] Attachment IDs whose stamps were released.
  */
-function bb_draft_release_replaced_attachments( $previous_entry, $current_entry, $user_id ) {
+function bb_draft_release_replaced_attachments( $previous_entry, $current_entry, $user_id, $retain_entries = array() ) {
 	$retained = bb_draft_collect_attachment_ids( $current_entry );
+
+	if ( ! empty( $retain_entries ) && is_array( $retain_entries ) ) {
+		foreach ( $retain_entries as $retain_entry ) {
+			$retained = array_merge( $retained, bb_draft_collect_attachment_ids( $retain_entry ) );
+		}
+	}
+
 	$released = array_values( array_diff( bb_draft_collect_attachment_ids( $previous_entry ), $retained ) );
 	$affected = array();
 
@@ -744,7 +788,15 @@ function bb_draft_dispose( $user_id, $meta_key, $inner_key = '' ) {
 			return false;
 		}
 
-		bb_draft_unstamp_attachments( $stored[ $inner_key ], $user_id );
+		// Only this inner draft goes; the rest of the row stays, so anything
+		// a surviving sibling still references must keep its stamp. Without
+		// this the member's own discard - and every budget eviction and
+		// expiry sweep, which all route through here - released files another
+		// stored inner draft was still using (PROD-9621).
+		$retain_entries = $stored;
+		unset( $retain_entries[ $inner_key ] );
+
+		bb_draft_unstamp_attachments( $stored[ $inner_key ], $user_id, $retain_entries );
 		unset( $stored[ $inner_key ] );
 
 		if ( empty( $stored ) ) {

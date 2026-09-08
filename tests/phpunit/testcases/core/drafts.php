@@ -2533,4 +2533,166 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		$this->assertArrayHasKey( $keys[2], $stored, 'The newer drafts must survive.' );
 		$this->assertArrayHasKey( $keys[3], $stored, 'The newer drafts must survive.' );
 	}
+
+	/**
+	 * Replacing one inner draft must not unstamp a sibling's attachment.
+	 *
+	 * `bb_draft_release_replaced_attachments()` computed "still held" from the
+	 * entry that REPLACED this one and nothing else. The aggregated forum row
+	 * keeps every inner topic/reply draft together, and the shared reply modal
+	 * carries its content across reply targets, so one attachment is routinely
+	 * referenced by several inner drafts at once. Replacing one of them then
+	 * released a file a sibling inner draft still pointed at, and the
+	 * orphan-cleanup crons hard-deleted it - the precise outcome the function's
+	 * own docblock promises it prevents. Browser-verified: all three stamps
+	 * disappeared while a sibling draft still referenced all three files.
+	 *
+	 * `$only_here` is the negative control. Without it this test would stay
+	 * green for a build that simply stopped releasing anything at all, which
+	 * would leak orphan protection for ever instead of over-releasing it.
+	 */
+	public function test_replacing_an_inner_draft_keeps_a_sibling_attachment_stamped() {
+		$user_id = self::factory()->user->create();
+		$this->set_current_user( $user_id );
+
+		$primary_forum = self::factory()->post->create( array( 'post_type' => bbp_get_forum_post_type() ) );
+		$sibling_forum = self::factory()->post->create( array( 'post_type' => bbp_get_forum_post_type() ) );
+
+		$primary_key = 'draft_discussion_' . $primary_forum;
+		$sibling_key = 'draft_discussion_' . $sibling_forum;
+
+		$shared    = $this->make_draft_attachment( $user_id );
+		$only_here = $this->make_draft_attachment( $user_id );
+
+		// Both start protected, exactly as a previous save would have left them.
+		update_post_meta( $shared, 'bb_media_draft', 1 );
+		update_post_meta( $only_here, 'bb_media_draft', 1 );
+
+		bp_update_user_meta(
+			$user_id,
+			'bb_user_topic_reply_draft',
+			array(
+				$primary_key => array(
+					'data_key'        => $primary_key,
+					'data'            => array(
+						'bbp_topic_content' => 'primary original',
+						'bbp_media'         => wp_json_encode( array( array( 'id' => $shared ), array( 'id' => $only_here ) ) ),
+					),
+					'_draft_saved_at' => time() - 60,
+				),
+				// The sibling still references the shared attachment.
+				$sibling_key => array(
+					'data_key'        => $sibling_key,
+					'data'            => array(
+						'bbp_topic_content' => 'sibling original',
+						'bbp_media'         => wp_json_encode( array( array( 'id' => $shared ) ) ),
+					),
+					'_draft_saved_at' => time() - 60,
+				),
+			)
+		);
+
+		// The member replaces the primary draft with content holding no
+		// attachments at all.
+		$this->drive_forum_draft_save(
+			$primary_key,
+			array( 'bbp_topic_content' => 'primary updated, attachments dropped' )
+		);
+
+		$this->assertSame(
+			'1',
+			(string) get_post_meta( $shared, 'bb_media_draft', true ),
+			'An attachment another inner draft of the same row still references must keep its orphan protection.'
+		);
+
+		// Negative control: an attachment nothing references any more must
+		// still be released, or the fix has simply disabled releasing.
+		$this->assertSame(
+			'',
+			(string) get_post_meta( $only_here, 'bb_media_draft', true ),
+			'An attachment no stored draft references any more must still be released.'
+		);
+	}
+
+	/**
+	 * Disposing one inner draft must not unstamp a sibling's attachment.
+	 *
+	 * `bb_draft_dispose()` is the shared removal path - the member's own
+	 * "Discard Draft", budget eviction and the expiry sweep all reach it - and
+	 * when it drops a single inner key it released that entry's attachments
+	 * outright. The rest of the aggregated row survives, and the shared reply
+	 * modal carries content across reply targets, so a surviving sibling was
+	 * routinely still referencing the released file; the orphan-cleanup crons
+	 * then hard-deleted it.
+	 *
+	 * Browser-verified: discarding one reply draft dropped all three
+	 * `bb_media_draft` stamps while the other reply draft still referenced all
+	 * three files. `bb_draft_heal_forum_row()` and the forum handler's eviction
+	 * branch already got this exclusion right; these were the outliers
+	 * (PROD-9621).
+	 *
+	 * `$only_here` is the negative control: without it the test would stay
+	 * green for a build that stopped releasing anything at all, leaking orphan
+	 * protection for ever instead of over-releasing it.
+	 */
+	public function test_disposing_one_inner_draft_keeps_a_sibling_attachment_stamped() {
+		$user_id = self::factory()->user->create();
+		$this->set_current_user( $user_id );
+
+		$doomed_key  = 'draft_reply_4001';
+		$sibling_key = 'draft_reply_4002';
+
+		$shared    = $this->make_draft_attachment( $user_id );
+		$only_here = $this->make_draft_attachment( $user_id );
+
+		update_post_meta( $shared, 'bb_media_draft', 1 );
+		update_post_meta( $only_here, 'bb_media_draft', 1 );
+
+		bp_update_user_meta(
+			$user_id,
+			'bb_user_topic_reply_draft',
+			array(
+				$doomed_key  => array(
+					'data_key'        => $doomed_key,
+					'data'            => array(
+						'bbp_reply_content' => 'the draft being discarded',
+						'bbp_media'         => wp_json_encode( array( array( 'id' => $shared ), array( 'id' => $only_here ) ) ),
+					),
+					'_draft_saved_at' => time() - 60,
+				),
+				$sibling_key => array(
+					'data_key'        => $sibling_key,
+					'data'            => array(
+						'bbp_reply_content' => 'the draft that stays',
+						'bbp_media'         => wp_json_encode( array( array( 'id' => $shared ) ) ),
+					),
+					'_draft_saved_at' => time() - 30,
+				),
+			)
+		);
+
+		$this->assertTrue(
+			bb_draft_dispose( $user_id, 'bb_user_topic_reply_draft', $doomed_key ),
+			'Premise: the dispose must actually have removed the inner draft.'
+		);
+
+		// Premise: the sibling really did survive the removal.
+		$stored = bp_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
+		$this->assertArrayHasKey( $sibling_key, $stored, 'The sibling inner draft must survive.' );
+		$this->assertArrayNotHasKey( $doomed_key, $stored, 'The disposed inner draft must be gone.' );
+
+		$this->assertSame(
+			'1',
+			(string) get_post_meta( $shared, 'bb_media_draft', true ),
+			'An attachment the surviving sibling still references must keep its orphan protection.'
+		);
+
+		// Negative control: nothing references this one any more.
+		$this->assertSame(
+			'',
+			(string) get_post_meta( $only_here, 'bb_media_draft', true ),
+			'An attachment no stored draft references any more must still be released.'
+		);
+	}
+
 }
