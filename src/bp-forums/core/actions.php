@@ -952,7 +952,23 @@ function bb_post_topic_reply_draft() {
 
 					$merged_entry         = $existing_draft[ $data_key ];
 					$merged_entry['data'] = $d_data;
-					$merged_entry         = bb_forums_sanitize_draft_entry( $merged_entry );
+
+					// Strip data URLs, then judge the RAW width BEFORE the
+					// expensive kses pass, mirroring the primary entry's M4
+					// ordering (:567-570). bbp_kses_data() on a multi-MB payload
+					// is the costly step, and one unload beacon can carry many
+					// siblings, so running kses on every sibling before any size
+					// check reintroduced the M4 CPU amplification - just scaled by
+					// sibling count instead of capped at one entry.
+					$merged_entry = bb_forums_strip_draft_data_urls( $merged_entry );
+
+					if ( strlen( maybe_serialize( $merged_entry ) ) > bb_draft_max_size() ) {
+						// Keep the previously stored entry rather than failing the
+						// whole request - the unload sync carries sibling drafts too.
+						continue;
+					}
+
+					$merged_entry = bb_forums_sanitize_draft_entry( $merged_entry );
 
 					if ( strlen( maybe_serialize( $merged_entry ) ) > bb_draft_max_size() ) {
 						// Keep the previously stored entry rather than failing the
