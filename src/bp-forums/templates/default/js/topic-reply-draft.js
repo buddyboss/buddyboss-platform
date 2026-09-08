@@ -1865,6 +1865,28 @@ window.bp = window.bp || {};
 		// (PROD-9621).
 		var bbDraftFetchAttempts = 0;
 
+		// Shared by both ways the read can fail. A transport error lands in
+		// .fail(), but a REJECTED read lands in .done(): bb_get_topic_reply_drafts()
+		// answers an expired nonce or a dropped session with wp_send_json_error(),
+		// which is HTTP 200 carrying success:false. Clearing the flag there treated
+		// that as a successful empty read, so no retry ran, the composer opened
+		// empty over a live server draft and the next autosave overwrote it - the
+		// exact loss this retry exists to prevent, reached without any transport
+		// error (PROD-9621).
+		var bbDraftFetchFailed = function () {
+			if ( bbDraftFetchAttempts < 2 ) {
+				window.setTimeout( bbRunDraftFetch, 2000 );
+
+				return;
+			}
+
+			// Out of attempts. Initialise the forms so the composer still
+			// works, but flag the failure so postTopicReplyDraft() refuses to
+			// overwrite the draft we could not read, and tells the member why.
+			BP_Nouveau.forums.draft_fetch_failed = true;
+			bbInitTopicReplyDrafts();
+		};
+
 		var bbRunDraftFetch = function () {
 			bbDraftFetchAttempts++;
 
@@ -1876,7 +1898,16 @@ window.bp = window.bp || {};
 				}
 			).done(
 				function ( response ) {
-					if ( response && response.success && response.data && response.data.drafts ) {
+					// Only `success` decides read-vs-rejected; the endpoint always
+					// sends `drafts` on success, so a missing/empty map is a member
+					// with no drafts, not a failure, and must not arm the guard.
+					if ( ! response || ! response.success ) {
+						bbDraftFetchFailed();
+
+						return;
+					}
+
+					if ( response.data && response.data.drafts ) {
 						var drafts    = response.data.drafts,
 							discarded = bbDraftDiscardedKeys();
 
@@ -1895,21 +1926,7 @@ window.bp = window.bp || {};
 					BP_Nouveau.forums.draft_fetch_failed = false;
 					bbInitTopicReplyDrafts();
 				}
-			).fail(
-				function () {
-					if ( bbDraftFetchAttempts < 2 ) {
-						window.setTimeout( bbRunDraftFetch, 2000 );
-
-						return;
-					}
-
-					// Out of attempts. Initialise the forms so the composer still
-					// works, but flag the failure so postTopicReplyDraft() refuses to
-					// overwrite the draft we could not read, and tells the member why.
-					BP_Nouveau.forums.draft_fetch_failed = true;
-					bbInitTopicReplyDrafts();
-				}
-			);
+			).fail( bbDraftFetchFailed );
 		};
 
 		bbRunDraftFetch();
