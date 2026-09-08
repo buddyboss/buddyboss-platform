@@ -2506,13 +2506,23 @@ function bb_drafts_collect_referenced_attachment_ids( $time_budget = 0, $started
  * them mid-compose is the data loss BLOCKER-1 closed.
  *
  * Bounded like its siblings ({@see bb_drafts_delete_expired}): held under
- * `bb_draft_stamp_sweep_lock`, time-budgeted, and CURSORED over the candidate
- * attachments by ID (`bb_draft_stamp_sweep_cursor`). The cursor is what fixes
- * the earlier fatal shape - a bare `LIMIT 500` with no order returned the same
- * referenced rows every run once a site held more than 500 of them, so not one
- * orphan past that window was ever released. The cursor advances over EVERY
- * candidate, referenced or not, so a referenced attachment is skipped without
- * stalling progress and is simply re-examined on the next full pass.
+ * `bb_draft_stamp_sweep_lock` (refreshed each window so an unlimited CLI drain
+ * keeps holding it) and CURSORED over the candidate attachments by ID
+ * (`bb_draft_stamp_sweep_cursor`). The cursor is what fixes the earlier fatal
+ * shape - a bare `LIMIT 500` with no order returned the same referenced rows
+ * every run once a site held more than 500 of them, so not one orphan past that
+ * window was ever released. The cursor advances over EVERY candidate,
+ * referenced or not, so a referenced attachment is skipped without stalling
+ * progress and is simply re-examined on the next full pass.
+ *
+ * The time budget applies ONLY to the release loop, which is sliceable (its
+ * cursor persists and resumes on the next daily run). The reference scan is
+ * NOT sliceable - the referenced set must be complete before any release, and
+ * a draft edited between slices could add a reference to an already-scanned
+ * attachment - so it always runs to completion regardless of the budget. That
+ * is why the budget is not passed to it (an earlier version did, and a scan
+ * that could not finish in the daily 10s released nothing and, with no
+ * continuation, restarted from zero every day - permanent leak on large sites).
  *
  * Runs on the DAILY hook only, never the 60-second expiry continuation, so the
  * full-table reference scan cannot re-run every minute. Expiry being disabled
@@ -2552,11 +2562,24 @@ function bb_drafts_release_orphaned_draft_stamps( $time_budget = 10 ) {
 
 	set_site_transient( 'bb_draft_stamp_sweep_lock', 1, 5 * MINUTE_IN_SECONDS );
 
-	// The referenced set must be COMPLETE before any release. A run that cannot
-	// finish the scan inside its budget releases nothing rather than risk
-	// freeing an attachment a not-yet-scanned draft still holds.
-	$referenced = bb_drafts_collect_referenced_attachment_ids( $time_budget, $started_at );
+	// The referenced set must be COMPLETE before any release, or an attachment a
+	// not-yet-scanned draft still holds would be wrongly freed. The scan
+	// therefore CANNOT be sliced across runs (a draft edited between slices
+	// could add a reference to an already-scanned attachment), so it always runs
+	// to completion regardless of this run's budget. Passing the run budget here
+	// was the bug: on a site whose full draft scan exceeds the daily 10s the
+	// scan returned false every day, the sweep released nothing, and - with no
+	// continuation - the next daily run restarted from zero, so M3's leak stayed
+	// permanent on exactly the large communities it targets. The budget now
+	// governs only the release loop below, which IS sliceable (its cursor is
+	// persisted and resumes on the next daily run). A community so large that
+	// even the reference scan alone exceeds PHP's execution limit should drain
+	// with `wp bb drafts cleanup` (unlimited).
+	$referenced = bb_drafts_collect_referenced_attachment_ids( 0, $started_at );
 
+	// Defensive: the scan is unbudgeted above, so it returns the full set. The
+	// guard stays in case the call ever regains a budget - a partial set must
+	// never reach the release loop.
 	if ( false === $referenced ) {
 		delete_site_transient( 'bb_draft_stamp_sweep_lock' );
 
@@ -2565,6 +2588,10 @@ function bb_drafts_release_orphaned_draft_stamps( $time_budget = 10 ) {
 			'complete' => false,
 		);
 	}
+
+	// Measure the release budget from AFTER the mandatory scan, so a slow scan
+	// does not eat the slice the sliceable release loop is entitled to.
+	$started_at = time();
 
 	$cutoff   = gmdate( 'Y-m-d H:i:s', time() - $retention_seconds );
 	$cursor   = (int) get_site_option( 'bb_draft_stamp_sweep_cursor', 0 );
@@ -2620,6 +2647,15 @@ function bb_drafts_release_orphaned_draft_stamps( $time_budget = 10 ) {
 		}
 
 		update_site_option( 'bb_draft_stamp_sweep_cursor', $cursor );
+
+		// Refresh the lock each window. `wp bb drafts cleanup` runs this with an
+		// UNLIMITED budget and drains the whole candidate set in one call; on a
+		// large library that drain exceeds the 5-minute TTL, and without this
+		// refresh the lock would expire mid-drain, the daily cron would acquire
+		// it, and both runs would advance the single bb_draft_stamp_sweep_cursor
+		// over each other - the clobber the lock exists to prevent (M6, matching
+		// bb_drafts_delete_expired).
+		set_site_transient( 'bb_draft_stamp_sweep_lock', 1, 5 * MINUTE_IN_SECONDS );
 
 		$batch_was_full = ( count( $candidate_ids ) === $batch_size );
 

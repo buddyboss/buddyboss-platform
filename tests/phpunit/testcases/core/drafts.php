@@ -1241,6 +1241,107 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 	}
 
 	/**
+	 * M6, stamp sweep: the lock must be refreshed each window, so an unlimited
+	 * CLI drain that outlasts the 5-minute TTL keeps holding it instead of
+	 * letting the daily cron in to share the cursor. The sibling expiry sweep
+	 * had this; the stamp sweep set the lock once and never again.
+	 */
+	public function test_orphan_stamp_sweep_refreshes_its_lock_each_window() {
+		$this->isolate_draft_maintenance();
+
+		$user_id = self::factory()->user->create();
+
+		// Six unreferenced old orphans + batch size two => three release windows,
+		// so the loop must refresh the lock more than the single entry set.
+		for ( $i = 0; $i < 6; $i++ ) {
+			$this->make_stamped_unsaved_attachment( $user_id );
+		}
+
+		add_filter( 'bb_draft_retention_days', array( $this, 'filter_one_day_retention' ) );
+		add_filter( 'bb_draft_stamp_sweep_batch_size', array( $this, 'filter_stamp_sweep_limit_two' ) );
+
+		$this->cleanup_lock_sets = 0;
+		add_filter( 'pre_set_site_transient_bb_draft_stamp_sweep_lock', array( $this, 'count_cleanup_lock_set' ) );
+
+		bb_drafts_release_orphaned_draft_stamps( 0 );
+
+		remove_filter( 'pre_set_site_transient_bb_draft_stamp_sweep_lock', array( $this, 'count_cleanup_lock_set' ) );
+		remove_filter( 'bb_draft_stamp_sweep_batch_size', array( $this, 'filter_stamp_sweep_limit_two' ) );
+		remove_filter( 'bb_draft_retention_days', array( $this, 'filter_one_day_retention' ) );
+
+		$this->assertGreaterThanOrEqual(
+			2,
+			$this->cleanup_lock_sets,
+			'The stamp sweep must set the lock once at entry and refresh it inside the window loop, or an unlimited CLI drain loses the lock mid-run.'
+		);
+	}
+
+	/**
+	 * The reference scan must signal a partial scan (false) rather than hand a
+	 * partial set to the release loop - releasing against an incomplete map
+	 * would free an attachment a not-yet-scanned draft still holds. Driven
+	 * deterministically by a start time already past the budget.
+	 */
+	public function test_reference_scan_reports_incompletion_when_over_budget() {
+		$user_id = self::factory()->user->create();
+
+		bp_update_user_meta(
+			$user_id,
+			'bb_user_topic_reply_draft',
+			array(
+				'draft_discussion_11' => array( 'data_key' => 'draft_discussion_11', '_draft_saved_at' => time(), 'data' => array( 'bbp_topic_content' => 'x' ) ),
+			)
+		);
+
+		$result = bb_drafts_collect_referenced_attachment_ids( 1, time() - 100 );
+
+		$this->assertFalse(
+			$result,
+			'A scan that cannot finish inside its budget must return false, never a partial referenced set.'
+		);
+	}
+
+	/**
+	 * M3 (regression): the sweep must complete its reference scan regardless of
+	 * the run budget. The budget was passed to the scan, so on a site whose scan
+	 * exceeds the daily 10s it timed out, released nothing, and - with no
+	 * continuation - restarted from zero every day, leaving the leak permanent.
+	 * The scan is now unbudgeted; only the release loop is budgeted (and resumes
+	 * via its persisted cursor). Under a small positive budget the referenced
+	 * attachment is still found and kept while the orphan is released.
+	 */
+	public function test_orphan_stamp_sweep_completes_scan_regardless_of_run_budget() {
+		$this->isolate_draft_maintenance();
+
+		$user_id  = self::factory()->user->create();
+		$orphan   = $this->make_stamped_unsaved_attachment( $user_id );
+		$in_draft = $this->make_stamped_unsaved_attachment( $user_id );
+
+		bp_update_user_meta(
+			$user_id,
+			'bb_user_topic_reply_draft',
+			array(
+				'draft_discussion_11' => array( 'data_key' => 'draft_discussion_11', '_draft_saved_at' => time(), 'data' => array( 'bbp_media' => wp_json_encode( array( array( 'id' => $in_draft ) ) ) ) ),
+			)
+		);
+
+		add_filter( 'bb_draft_retention_days', array( $this, 'filter_one_day_retention' ) );
+		$result = bb_drafts_release_orphaned_draft_stamps( 1 );
+		remove_filter( 'bb_draft_retention_days', array( $this, 'filter_one_day_retention' ) );
+
+		$this->assertSame(
+			'',
+			(string) get_post_meta( $orphan, 'bb_media_draft', true ),
+			'The orphan must be released even under a small run budget.'
+		);
+		$this->assertSame(
+			'1',
+			(string) get_post_meta( $in_draft, 'bb_media_draft', true ),
+			'A referenced attachment must be kept - proving the scan ran to completion, not a budget-truncated slice.'
+		);
+	}
+
+	/**
 	 * @return int
 	 */
 	public function filter_stamp_sweep_limit_two() {
