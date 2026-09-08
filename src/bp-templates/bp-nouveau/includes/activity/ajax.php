@@ -1357,17 +1357,22 @@ function bb_nouveau_ajax_post_draft_activity() {
 						array(
 							'action'        => 'edit',
 							'attachment_id' => $attachment_id,
-							// The permission SUBJECT is always the authenticated
-							// user, never the client payload. The Pro callee feeds
-							// this straight into bb_check_{group,activity,attachment}
-							// _permissions() as "who is asking", so a crafted
-							// data.user_id would evaluate the edit right under a
-							// different identity. Every other ownership check in
-							// this handler uses $draft_user_id (= bp_loggedin_user_id);
-							// this one must too.
+							// The permission SUBJECT and CONTEXT are the authenticated,
+							// server-validated draft, never the raw client payload.
+							// The Pro callee feeds all three into
+							// bb_check_{group,activity,attachment}_permissions() as
+							// "who/what is asking", so a crafted value would evaluate
+							// the edit right under a different identity or context.
+							// user_id is bp_loggedin_user_id(); object/group_id use
+							// $submitted_object / $submitted_item_id - the top-level
+							// fields bb_draft_validate_activity_data_key() already
+							// authorized above - not the sibling data.object /
+							// data.item_id fields, which are never validated for a
+							// 'user'-object draft and could be crafted to an
+							// arbitrary group in the same POST (GH review).
 							'user_id'       => $draft_user_id,
-							'object'        => ! empty( $draft_activity['data']['object'] ) ? $draft_activity['data']['object'] : '',
-							'group_id'      => ! empty( $draft_activity['data']['item_id'] ) ? $draft_activity['data']['item_id'] : 0,
+							'object'        => $submitted_object,
+							'group_id'      => ( 'group' === $submitted_object ) ? (int) $submitted_item_id : 0,
 						)
 					);
 					if (
