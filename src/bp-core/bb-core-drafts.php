@@ -346,6 +346,37 @@ function bb_draft_strip_data_urls( $content ) {
 }
 
 /**
+ * Most attachments of one type a draft payload may carry.
+ *
+ * The lists arrive as client JSON and every entry costs a per-ID ownership
+ * lookup, so they have to be bounded before that loop runs. The bound was a
+ * hard 50, which is BELOW what an administrator can configure: the media
+ * "Upload Limit" field accepts up to 100 ({@see bb_media_sanitize_upload_limit()}).
+ * On such a site the draft paths silently truncated the list they then STORED
+ * and left the dropped attachments unstamped - which is exactly the predicate
+ * `bp_media_delete_orphaned_attachments()` reaps. A member attaching 60 photos
+ * kept 50 in the draft and lost 10 files six hours later (PROD-9621 H4).
+ *
+ * The floor of 50 keeps the previous behaviour for every site at or below it.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return int Maximum entries accepted per attachment type.
+ */
+function bb_draft_max_attachments_per_type() {
+	$configured = function_exists( 'bp_media_allowed_upload_media_per_batch' ) ? (int) bp_media_allowed_upload_media_per_batch() : 0;
+
+	/**
+	 * Filters how many attachments of one type a draft payload may carry.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param int $max Maximum entries per attachment type.
+	 */
+	return (int) apply_filters( 'bb_draft_max_attachments_per_type', max( 50, $configured ) );
+}
+
+/**
  * Stamp every attachment a draft payload claims, before any size cap can refuse it.
  *
  * `bb_media_draft` is what keeps `bp_media_delete_orphaned_attachments()` from
@@ -385,9 +416,13 @@ function bb_draft_protect_payload_attachments( $lists, $user_id ) {
 		}
 
 		// Same bound the normalisation loops apply, enforced here too because
-		// this pass runs before them.
-		if ( 50 < count( $list ) ) {
-			$list = array_slice( $list, 0, 50 );
+		// this pass runs before them. Truncating HERE only limits how many
+		// attachments get stamped; the handlers refuse an over-bound list
+		// outright rather than storing a subset of it (PROD-9621 H4).
+		$max_per_type = bb_draft_max_attachments_per_type();
+
+		if ( $max_per_type < count( $list ) ) {
+			$list = array_slice( $list, 0, $max_per_type );
 		}
 
 		foreach ( $list as $entry ) {
@@ -736,7 +771,12 @@ function bb_draft_salvage_oversized_draft( $user_id, $meta_key ) {
 		return false;
 	}
 
-	bp_update_user_meta( $user_id, $meta_key, $shed );
+	// wp_slash(): $shed is derived from a row read with bp_get_user_meta(), so
+	// it is UNSLASHED, and update_metadata() unslashes once more on write. This
+	// function exists to PRESERVE the member's text when the row is oversized
+	// (PROD-9621 Q6) - without the re-slash it mangled exactly that text,
+	// turning `path C:\temp\notes` into `path C:tempnotes` (PROD-9621 S2).
+	bp_update_user_meta( $user_id, $meta_key, wp_slash( $shed ) );
 	bb_draft_flush_user_meta_sizes( $user_id );
 
 	return true;
@@ -919,7 +959,18 @@ function bb_draft_dispose( $user_id, $meta_key, $inner_key = '' ) {
 		if ( empty( $stored ) ) {
 			bp_delete_user_meta( $user_id, $meta_key );
 		} else {
-			bp_update_user_meta( $user_id, $meta_key, $stored );
+			// wp_slash(): $stored came from bp_get_user_meta() and is therefore
+			// UNSLASHED, while update_metadata() unslashes the value once more
+			// before storing it. Writing it back untouched stripped a backslash
+			// layer from the SURVIVING siblings - `résumé.pdf` became
+			// `ru00e9sumu00e9.pdf`, and a filename holding a double quote broke
+			// that draft's attachment list JSON outright.
+			//
+			// This is the shared removal path: the member's own discard, the
+			// per-user budget eviction and the nightly expiry cron all route
+			// through here, so it corrupted drafts the member never touched
+			// (PROD-9621 S1).
+			bp_update_user_meta( $user_id, $meta_key, wp_slash( $stored ) );
 		}
 
 		bb_draft_flush_user_meta_sizes( $user_id );
@@ -2089,6 +2140,27 @@ function bb_drafts_oneshot_batch( $time_budget = 10 ) {
 
 			// The whole window (draft rows AND filtered third-party keys) is done.
 			$cursor = (int) $batch['last_id'];
+
+			// Persisted after EVERY window, not only on a clean budget break -
+			// the same reasoning bb_drafts_delete_expired() already carries, and
+			// this pass is the MORE exposed of the two: it is the one that
+			// reads, heals, salvages and disposes the multi-megabyte rows, and
+			// its first slice runs synchronously on an upgrade admin request.
+			//
+			// Without this an interruption that never returns below (a fatal, a
+			// killed worker, an OOM inside bb_draft_heal_forum_row()) discarded
+			// every window already completed, so the +60s continuation re-read
+			// the same cursor and walked the same rows again - and under
+			// WP-CLI, where $time_budget is 0, neither post-loop branch runs at
+			// all, so a whole-table drain that died at 90% restarted at 0%
+			// (PROD-9621 H5).
+			//
+			// Known residual: this bounds how much progress an interruption can
+			// lose, but it cannot rescue a window whose own contents fatal every
+			// time. A single unhealable row still stalls the pass at that
+			// window; it no longer costs the windows before it.
+			$state['cursor'] = $cursor;
+			update_option( 'bb_draft_oneshot_state', $state, false );
 
 			// Window-level budget check - see bb_drafts_delete_expired(): a
 			// window of only filtered-out keys never reaches the per-row check.

@@ -654,9 +654,22 @@ function bb_post_topic_reply_draft() {
 			if ( isset( $draft_topic_reply['data']['bbp_media'] ) && ! empty( $draft_topic_reply['data']['bbp_media'] ) ) {
 				$new_media_data = json_decode( stripslashes( $draft_topic_reply['data']['bbp_media'] ), true );
 
-				if ( is_array( $new_media_data ) && 50 < count( $new_media_data ) ) {
-					// Bound client attachment lists before per-ID lookups run.
-					$new_media_data = array_slice( $new_media_data, 0, 50 );
+				// REFUSED rather than truncated. The slice this replaces mutated
+				// the array that is re-encoded and STORED just below, so entries
+				// past the bound were dropped from the draft the member would
+				// restore AND left unstamped - which is exactly what
+				// bp_media_delete_orphaned_attachments() hard-deletes. The bound
+				// was a hard 50 while the media Upload Limit accepts up to 100,
+				// so this was reachable from an ordinary admin setting
+				// (PROD-9621 H4). The refusal is safe here because
+				// bb_draft_protect_payload_attachments() has already stamped the
+				// member's uploads (PROD-9621 BLOCKER-1).
+				if ( is_array( $new_media_data ) && bb_draft_max_attachments_per_type() < count( $new_media_data ) ) {
+					wp_send_json_error(
+						array(
+							'message' => __( 'Your draft has too many attachments to save. Please remove some and try again.', 'buddyboss' ),
+						)
+					);
 				}
 
 				if ( ! empty( $new_media_data ) ) {
@@ -700,9 +713,22 @@ function bb_post_topic_reply_draft() {
 			if ( isset( $draft_topic_reply['data']['bbp_document'] ) && ! empty( $draft_topic_reply['data']['bbp_document'] ) ) {
 				$new_document_data = json_decode( stripslashes( $draft_topic_reply['data']['bbp_document'] ), true );
 
-				if ( is_array( $new_document_data ) && 50 < count( $new_document_data ) ) {
-					// Bound client attachment lists before per-ID lookups run.
-					$new_document_data = array_slice( $new_document_data, 0, 50 );
+				// REFUSED rather than truncated. The slice this replaces mutated
+				// the array that is re-encoded and STORED just below, so entries
+				// past the bound were dropped from the draft the member would
+				// restore AND left unstamped - which is exactly what
+				// bp_media_delete_orphaned_attachments() hard-deletes. The bound
+				// was a hard 50 while the media Upload Limit accepts up to 100,
+				// so this was reachable from an ordinary admin setting
+				// (PROD-9621 H4). The refusal is safe here because
+				// bb_draft_protect_payload_attachments() has already stamped the
+				// member's uploads (PROD-9621 BLOCKER-1).
+				if ( is_array( $new_document_data ) && bb_draft_max_attachments_per_type() < count( $new_document_data ) ) {
+					wp_send_json_error(
+						array(
+							'message' => __( 'Your draft has too many attachments to save. Please remove some and try again.', 'buddyboss' ),
+						)
+					);
 				}
 
 				if ( ! empty( $new_document_data ) ) {
@@ -746,9 +772,22 @@ function bb_post_topic_reply_draft() {
 			if ( isset( $draft_topic_reply['data']['bbp_video'] ) && ! empty( $draft_topic_reply['data']['bbp_video'] ) ) {
 				$new_video_data = json_decode( stripslashes( $draft_topic_reply['data']['bbp_video'] ), true );
 
-				if ( is_array( $new_video_data ) && 50 < count( $new_video_data ) ) {
-					// Bound client attachment lists before per-ID lookups run.
-					$new_video_data = array_slice( $new_video_data, 0, 50 );
+				// REFUSED rather than truncated. The slice this replaces mutated
+				// the array that is re-encoded and STORED just below, so entries
+				// past the bound were dropped from the draft the member would
+				// restore AND left unstamped - which is exactly what
+				// bp_media_delete_orphaned_attachments() hard-deletes. The bound
+				// was a hard 50 while the media Upload Limit accepts up to 100,
+				// so this was reachable from an ordinary admin setting
+				// (PROD-9621 H4). The refusal is safe here because
+				// bb_draft_protect_payload_attachments() has already stamped the
+				// member's uploads (PROD-9621 BLOCKER-1).
+				if ( is_array( $new_video_data ) && bb_draft_max_attachments_per_type() < count( $new_video_data ) ) {
+					wp_send_json_error(
+						array(
+							'message' => __( 'Your draft has too many attachments to save. Please remove some and try again.', 'buddyboss' ),
+						)
+					);
 				}
 
 				if ( ! empty( $new_video_data ) ) {

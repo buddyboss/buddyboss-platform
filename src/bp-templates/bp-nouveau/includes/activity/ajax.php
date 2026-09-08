@@ -1186,7 +1186,20 @@ function bb_nouveau_ajax_post_draft_activity() {
 	$draft_activity = $_REQUEST['draft_activity'] ?? '';
 
 	if ( ! empty( $_REQUEST['draft_activity'] ) && ! is_array( $_REQUEST['draft_activity'] ) ) {
-		$draft_activity = json_decode( stripslashes( $draft_activity ), true );
+		// The composer posts two ways and they arrive in different slash
+		// states. The in-page XHR sends an object, which jQuery serializes to
+		// draft_activity[data][content] and PHP rebuilds as a nested array
+		// whose leaves WordPress has already slashed. The unload beacon sends
+		// one JSON.stringify() string, and the decode here UNSLASHES
+		// everything - after which update_metadata() unslashes once more on
+		// write and eats the member's backslashes.
+		//
+		// So the same keystrokes were stored differently depending on whether
+		// the save came from the autosave tick or from closing the tab:
+		// `path C:\temp\notes` survived the XHR and became
+		// `path C:tempnotes` through the beacon. Re-slash so both transports
+		// hand this handler one state (PROD-9621 S4).
+		$draft_activity = wp_slash( json_decode( stripslashes( $draft_activity ), true ) );
 	}
 
 	$evicted_draft_keys = array();
@@ -1213,15 +1226,6 @@ function bb_nouveau_ajax_post_draft_activity() {
 
 		if ( isset( $draft_activity['post_action'] ) && 'update' === $draft_activity['post_action'] ) {
 
-			// Bound the client attachment lists before any per-ID lookups run - an
-			// unbounded crafted array would trigger thousands of uncached queries
-			// before the size caps below could reject the draft.
-			foreach ( array( 'media', 'document', 'video' ) as $bounded_type ) {
-				if ( isset( $draft_activity['data'][ $bounded_type ] ) && is_array( $draft_activity['data'][ $bounded_type ] ) && 50 < count( $draft_activity['data'][ $bounded_type ] ) ) {
-					$draft_activity['data'][ $bounded_type ] = array_slice( $draft_activity['data'][ $bounded_type ], 0, 50 );
-				}
-			}
-
 			// Protect the member's uploads BEFORE any cap can refuse this draft.
 			// The caps judge the draft's text; they must not decide whether a file
 			// the member already uploaded survives the orphan cron
@@ -1234,6 +1238,35 @@ function bb_nouveau_ajax_post_draft_activity() {
 				),
 				$draft_user_id
 			);
+
+			// The client attachment lists arrive as JSON and each entry costs a
+			// per-ID ownership lookup, so they must be bounded. This REFUSES an
+			// over-bound list instead of silently storing a truncated one: the
+			// slice this replaces mutated the very array that gets stored, so
+			// entries past the bound were dropped from the draft the member
+			// would restore AND never stamped - and unstamped is exactly what
+			// bp_media_delete_orphaned_attachments() hard-deletes. On a site
+			// whose Upload Limit is 60, a member attaching 60 photos kept 50
+			// and lost 10 files six hours later (PROD-9621 H4).
+			//
+			// Ordered AFTER the protection pass on purpose: a refusal must not
+			// decide whether files the member already uploaded survive the
+			// orphan cron (PROD-9621 BLOCKER-1).
+			$max_per_type = bb_draft_max_attachments_per_type();
+
+			foreach ( array( 'media', 'document', 'video' ) as $bounded_type ) {
+				if (
+					isset( $draft_activity['data'][ $bounded_type ] ) &&
+					is_array( $draft_activity['data'][ $bounded_type ] ) &&
+					$max_per_type < count( $draft_activity['data'][ $bounded_type ] )
+				) {
+					wp_send_json_error(
+						array(
+							'message' => __( 'Your draft has too many attachments to save. Please remove some and try again.', 'buddyboss' ),
+						)
+					);
+				}
+			}
 
 			if (
 				! empty( $draft_activity['data']['bb_activity_post_feature_image']['id'] ) &&

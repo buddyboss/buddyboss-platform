@@ -3887,4 +3887,267 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 			'The sibling attachment id must still be recoverable after the heal.'
 		);
 	}
+
+	/**
+	 * S1: disposing one inner draft must not corrupt the member's others.
+	 *
+	 * `bb_draft_dispose()` reads the aggregate row with `bp_get_user_meta()` -
+	 * so UNSLASHED - removes one inner key and writes the row back.
+	 * `update_metadata()` unslashes the value once more before storing, so the
+	 * surviving siblings lost a backslash layer: `résumé.pdf` came back as
+	 * `ru00e9sumu00e9.pdf` and a filename containing a double quote broke the
+	 * attachment list's JSON outright.
+	 *
+	 * This is the SHARED removal path - the member's own discard, the per-user
+	 * budget eviction and the nightly expiry cron all route through here - so
+	 * it corrupts drafts the member never touched, with no action on their
+	 * part.
+	 *
+	 * The survivor's bytes are the assertion; the disposed key going away is
+	 * the premise that proves the function actually ran.
+	 */
+	public function test_s1_dispose_preserves_the_surviving_siblings_bytes() {
+		$user_id = self::factory()->user->create();
+
+		$attachment_id = $this->make_draft_attachment( $user_id );
+
+		$survivor_list = wp_json_encode(
+			array(
+				array(
+					'id'    => $attachment_id,
+					'name'  => 'résumé.pdf',
+					'title' => 'Bob"s file.pdf',
+				),
+			)
+		);
+		$survivor_text = 'path C:\\temp\\notes';
+
+		bp_update_user_meta(
+			$user_id,
+			'bb_user_topic_reply_draft',
+			wp_slash(
+				array(
+					'draft_reply_1' => array(
+						'data_key'        => 'draft_reply_1',
+						'object'          => 'reply',
+						'data'            => array( 'bbp_reply_content' => 'the one being discarded' ),
+						'_draft_saved_at' => time() - 120,
+					),
+					'draft_reply_2' => array(
+						'data_key'        => 'draft_reply_2',
+						'object'          => 'reply',
+						'data'            => array(
+							'bbp_reply_content' => $survivor_text,
+							'bbp_document'      => $survivor_list,
+						),
+						'_draft_saved_at' => time() - 60,
+					),
+				)
+			)
+		);
+
+		// Premise: the fixture landed byte-identical.
+		$before = bp_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
+
+		$this->assertSame( $survivor_list, $before['draft_reply_2']['data']['bbp_document'], 'Premise: fixture stored verbatim.' );
+		$this->assertSame( $survivor_text, $before['draft_reply_2']['data']['bbp_reply_content'], 'Premise: fixture stored verbatim.' );
+
+		$this->assertTrue( bb_draft_dispose( $user_id, 'bb_user_topic_reply_draft', 'draft_reply_1' ) );
+
+		$after = bp_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
+
+		// Premise: it really did dispose the target.
+		$this->assertArrayNotHasKey( 'draft_reply_1', $after, 'The disposed inner draft must be gone.' );
+		$this->assertArrayHasKey( 'draft_reply_2', $after, 'The sibling must survive.' );
+
+		$this->assertSame(
+			$survivor_list,
+			$after['draft_reply_2']['data']['bbp_document'],
+			'Disposing one draft must leave a sibling attachment list byte-identical.'
+		);
+		$this->assertSame(
+			$survivor_text,
+			$after['draft_reply_2']['data']['bbp_reply_content'],
+			'Disposing one draft must leave a sibling text byte-identical.'
+		);
+		$this->assertSame(
+			array( (int) $attachment_id ),
+			bb_draft_collect_attachment_ids( $after['draft_reply_2'] ),
+			'The sibling attachment id must still be recoverable after an unrelated dispose.'
+		);
+	}
+
+	/**
+	 * S2: the salvage pass must not alter the text it exists to preserve.
+	 *
+	 * `bb_draft_salvage_oversized_draft()` was added by Q6 precisely to stop
+	 * the healing path destroying member text: it sheds the video poster frame
+	 * so an oversized row fits instead of being deleted. But it reads the row
+	 * unslashed and writes it back without re-slashing, so the meta API's
+	 * second unslash mangled the very content being rescued -
+	 * `path C:\temp\notes` came back as `path C:tempnotes`.
+	 */
+	public function test_s2_salvage_preserves_the_text_it_rescues() {
+		$user_id = self::factory()->user->create();
+
+		$typed = 'path C:\\temp\\notes and a résumé';
+
+		// `draft_user` (the activity one-draft-per-row shape), because
+		// bb_draft_shed_preview_frames() operates on a draft ENTRY - it reads
+		// $draft['data'] - and the forum aggregate row is a map of entries with
+		// no 'data' member of its own, so salvage is a no-op there.
+		//
+		// A poster frame big enough that the row is over the per-draft cap and
+		// shedding it brings the row back under - which is what makes salvage
+		// act rather than bail.
+		$poster = 'data:image/png;base64,' . str_repeat( 'A', bb_draft_max_size() );
+
+		bp_update_user_meta(
+			$user_id,
+			'draft_user',
+			wp_slash(
+				array(
+					'data_key'        => 'draft_user',
+					'object'          => 'user',
+					'data'            => array(
+						'content' => $typed,
+						'video'   => array(
+							array(
+								'id'         => 1234,
+								'js_preview' => $poster,
+							),
+						),
+					),
+					'_draft_saved_at' => time() - 60,
+				)
+			)
+		);
+
+		$before = bp_get_user_meta( $user_id, 'draft_user', true );
+
+		$this->assertSame( $typed, $before['data']['content'], 'Premise: fixture stored verbatim.' );
+
+		$this->assertTrue(
+			bb_draft_salvage_oversized_draft( $user_id, 'draft_user' ),
+			'Premise: salvage must have acted, or this test proves nothing.'
+		);
+
+		$after = bp_get_user_meta( $user_id, 'draft_user', true );
+
+		// Premise: the poster really was shed.
+		$this->assertTrue(
+			empty( $after['data']['video'][0]['js_preview'] ),
+			'Premise: the poster frame must have been shed.'
+		);
+
+		$this->assertSame(
+			$typed,
+			$after['data']['content'],
+			'Salvage must leave the rescued text byte-identical - it exists to preserve it.'
+		);
+	}
+
+	/**
+	 * S4: the activity handler must store the same content on both transports.
+	 *
+	 * The activity composer posts two ways, exactly like the forum one: the
+	 * in-page XHR sends an object (leaves arrive slashed) and the unload
+	 * beacon sends one `JSON.stringify()` string, which
+	 * `json_decode( stripslashes( … ) )` unslashes. `update_metadata()` then
+	 * unslashes once more on write, so the beacon transport ate the member's
+	 * backslashes while the XHR transport kept them - same handler, same
+	 * keystrokes, different stored content depending on whether the save came
+	 * from the autosave tick or from closing the tab.
+	 */
+	public function test_s4_activity_draft_content_is_transport_independent() {
+		$user_id = self::factory()->user->create();
+		$this->set_current_user( $user_id );
+
+		$typed = 'path C:\\temp\\notes';
+
+		$this->drive_activity_draft_save( 'draft_user', array( 'content' => $typed ) );
+
+		$stored = bp_get_user_meta( $user_id, 'draft_user', true );
+
+		$this->assertIsArray( $stored, 'The activity draft must have been stored.' );
+		$this->assertSame(
+			$typed,
+			$stored['data']['content'],
+			'The beacon transport must store the member content exactly as the XHR transport does.'
+		);
+	}
+
+	/**
+	 * H4: an over-50 attachment list must not be stored truncated.
+	 *
+	 * The bound was a hard 50 applied with array_slice() to the array that is
+	 * subsequently STORED, and on the activity path it ran before
+	 * bb_draft_protect_payload_attachments(). So on a site whose media "Upload
+	 * Limit" is above 50 - the field accepts up to 100 - entries past 50 were
+	 * dropped from the draft the member would restore AND never stamped, and
+	 * unstamped with no bb_media_draft is exactly what
+	 * bp_media_delete_orphaned_attachments() hard-deletes six hours later.
+	 *
+	 * The bound now follows the configured limit and the handlers refuse an
+	 * over-bound list instead of storing a subset. This asserts the case that
+	 * used to lose files: 60 attachments on a 60-limit site are stored complete
+	 * and every one of them is stamped.
+	 */
+	public function test_h4_attachment_list_at_the_configured_limit_is_stored_whole_and_stamped() {
+		$user_id = self::factory()->user->create();
+		$this->set_current_user( $user_id );
+
+		add_filter( 'bb_draft_max_attachments_per_type', array( $this, 'filter_draft_attachment_bound_60' ) );
+
+		$ids  = array();
+		$list = array();
+
+		for ( $i = 0; $i < 60; $i++ ) {
+			$id     = $this->make_draft_attachment( $user_id );
+			$ids[]  = (int) $id;
+			$list[] = array( 'id' => $id );
+		}
+
+		$this->drive_activity_draft_save(
+			'draft_user',
+			array(
+				'content' => 'sixty photos',
+				'media'   => $list,
+			)
+		);
+
+		remove_filter( 'bb_draft_max_attachments_per_type', array( $this, 'filter_draft_attachment_bound_60' ) );
+
+		$stored = bp_get_user_meta( $user_id, 'draft_user', true );
+
+		$this->assertIsArray( $stored, 'The draft must have been stored.' );
+		$this->assertCount(
+			60,
+			$stored['data']['media'],
+			'The stored draft must keep every attachment the member attached, not the first 50.'
+		);
+
+		$unstamped = array();
+
+		foreach ( $ids as $id ) {
+			if ( '1' !== (string) get_post_meta( $id, 'bb_media_draft', true ) ) {
+				$unstamped[] = $id;
+			}
+		}
+
+		$this->assertSame(
+			array(),
+			$unstamped,
+			'Every attachment the draft references must be orphan-protected, or the cron deletes the ones past the bound.'
+		);
+	}
+
+	/**
+	 * Raise the draft attachment bound to 60 for the H4 test.
+	 *
+	 * @return int
+	 */
+	public function filter_draft_attachment_bound_60() {
+		return 60;
+	}
 }
