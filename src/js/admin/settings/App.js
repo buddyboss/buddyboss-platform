@@ -5,11 +5,11 @@
  * @since BuddyBoss [BBVERSION]
  */
 
-import { useState, useEffect, useRef, lazy, Suspense } from '@wordpress/element';
+import { useState, useEffect, useCallback, lazy, Suspense } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
-import { Header } from './components/Header';
 import { Router } from './Router';
-import { KbProvider, useKb } from './context/KbContext';
+import { KbProvider, useKb, BBAdminHeader } from '@bb/admin-common';
+import { ajaxFetch } from './utils/ajax';
 import { clearHelpContentCache } from '../utils/api';
 
 // Register integration-specific hooks that extend the shared bb_verify_popup
@@ -18,11 +18,13 @@ import { clearHelpContentCache } from '../utils/api';
 import './components/recaptcha/recaptcha-verify-hooks';
 import './components/pusher/pusher-verify-hooks';
 
-// Lazy-load the Knowledge Base modal so admins who never open it don't pay
-// the bundle cost. The dynamic import resolves only after the user clicks the
-// graduation-cap trigger and `kbState.isOpen` flips to true.
+// Knowledge Base modal now lives in the shared layer (@bb/admin-common) so the
+// Settings and Integrations apps present the same help experience. It is an
+// external (the shared bundle is already enqueued as a dependency), so the lazy
+// import resolves from the in-memory global rather than a separate network
+// chunk; the Suspense wrapper is retained for parity.
 const KnowledgeBaseModal = lazy( () =>
-	import( './components/knowledge-base/KnowledgeBaseModal' )
+	import( '@bb/admin-common' ).then( ( module ) => ( { default: module.KnowledgeBaseModal } ) )
 );
 
 /**
@@ -63,6 +65,11 @@ function fixAdminMenuHighlight( route ) {
 		emails: [ 'all_emails' ],
 	};
 
+	// Settings tabs that have their own dedicated submenu item (e.g. "Help" at
+	// page=bb-settings&tab=help). These must highlight their own item, not the
+	// generic "Settings" item — matched below via the `tab={feature}` rule.
+	var standaloneSettingsTabs = [ 'help' ];
+
 	var isListing = false;
 	if ( listingPanels[ feature ] ) {
 		isListing = -1 !== listingPanels[ feature ].indexOf( panel );
@@ -72,8 +79,16 @@ function fixAdminMenuHighlight( route ) {
 		isListing = true;
 	}
 
-	// Determine which slug to target: component menu or Settings.
-	var targetSlug = isListing ? feature : 'settings';
+	// Determine which slug to target: component menu, a standalone settings
+	// tab (Help), or the generic Settings item.
+	var targetSlug;
+	if ( isListing ) {
+		targetSlug = feature;
+	} else if ( 'settings' === mainRoute && -1 !== standaloneSettingsTabs.indexOf( feature ) ) {
+		targetSlug = feature;
+	} else {
+		targetSlug = 'settings';
+	}
 
 	var submenuItems = bbMenu.querySelectorAll( 'ul.wp-submenu li' );
 	var targetItem = null;
@@ -169,10 +184,18 @@ export function App() {
 }
 
 function AppInner() {
-	const kbTriggerRef = useRef( null );
 	const { open: openKb, state: kbState } = useKb();
 	const [currentRoute, setCurrentRoute] = useState('/settings');
 	const [isLoading, setIsLoading] = useState(true);
+
+	// Stable identities so BBAdminHeader's search effect doesn't re-subscribe on
+	// every render (ajaxFetch is module-scoped; setCurrentRoute is stable).
+	const handleHeaderSearch = useCallback( ( query, signal ) =>
+		ajaxFetch( 'bb_admin_search_settings', { query }, { signal } ).then(
+			( response ) => ( response.success ? ( response.data?.results || [] ) : [] )
+		),
+	[] );
+	const handleHeaderSelectResult = useCallback( ( result ) => setCurrentRoute( result.route ), [] );
 
 	// One-shot localStorage flush for the help-content cache.
 	//
@@ -198,6 +221,20 @@ function AppInner() {
 	useEffect(() => {
 		fixAdminMenuHighlight( currentRoute );
 	}, [currentRoute]);
+
+	// Close the DocsBot chat whenever the Knowledge Base modal opens.
+	//
+	// The chat's only in-page toggle lives in the Help footer; once the
+	// full-screen KB modal opens it covers that footer, so a chat left open
+	// stays stuck on top of the modal with no way to dismiss it. Closing it as
+	// the modal opens keeps a single overlay in view. `window.DocsBotAI` is
+	// injected by the PHP loader and only carries `close()` once chat.js has
+	// initialized (Help tab only), so the guard makes this a no-op elsewhere.
+	useEffect(() => {
+		if ( kbState.isOpen && window.DocsBotAI && 'function' === typeof window.DocsBotAI.close ) {
+			window.DocsBotAI.close();
+		}
+	}, [kbState.isOpen]);
 
 	// Scroll to top on every route change. The Settings 2.0 router is
 	// homegrown (string-based currentRoute + history.replaceState) and has
@@ -367,17 +404,19 @@ function AppInner() {
 			<a href="#bb-admin-settings-main" className="screen-reader-shortcut">
 				{ __( 'Skip to settings content', 'buddyboss' ) }
 			</a>
-			<Header
-				onNavigate={setCurrentRoute}
-				kbTriggerRef={kbTriggerRef}
-				openKb={openKb}
+			<BBAdminHeader
+				logoUrl={ ( typeof bbAdminData !== 'undefined' && bbAdminData.logoUrl ) || '' }
+				ipnRootId={ ( typeof bbAdminData !== 'undefined' && bbAdminData.ipnRootId ) || '' }
+				onSearch={ handleHeaderSearch }
+				onSelectResult={ handleHeaderSelectResult }
+				onHelp={ openKb }
 			/>
 			<div id="bb-admin-settings-main" tabIndex="-1">
 				<Router currentRoute={currentRoute} onNavigate={setCurrentRoute} />
 			</div>
 			{ kbState.isOpen && (
 				<Suspense fallback={null}>
-					<KnowledgeBaseModal triggerRef={kbTriggerRef} />
+					<KnowledgeBaseModal />
 				</Suspense>
 			) }
 		</div>

@@ -732,6 +732,7 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 			'registered_date'    => bp_rest_prepare_date_response( $user_data->user_registered ),
 			'profile_name'       => bp_core_get_user_displayname( $user->ID ),
 			'last_activity'      => $this->bp_rest_get_member_last_active( $user->ID, array( 'relative' => false ) ),
+			'is_online'          => function_exists( 'bb_is_online_user' ) ? (bool) bb_is_online_user( $user->ID ) : false,
 			'xprofile'           => array(),
 			'followers'          => ! empty( $followers ) ? count( $followers ) : 0,
 			'following'          => ! empty( $following ) ? count( $following ) : 0,
@@ -1220,6 +1221,12 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 				'last_activity'      => array(
 					'description' => __( 'Last Active time for the member.', 'buddyboss' ),
 					'type'        => 'string',
+					'context'     => array( 'embed', 'view', 'edit' ),
+					'readonly'    => true,
+				),
+				'is_online'          => array(
+					'description' => __( 'Whether the member is currently online.', 'buddyboss' ),
+					'type'        => 'boolean',
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'readonly'    => true,
 				),

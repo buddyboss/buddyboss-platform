@@ -96,21 +96,46 @@ class BP_REST_Activity_Link_Preview_Endpoint extends WP_REST_Controller {
 			'wp_embed'    => '',
 		);
 
-		// Get URL parsed data.
-		$parse_url_data = ( function_exists( 'bp_core_parse_url' ) ? bp_core_parse_url( $url ) : '' );
+		// Give other plugins (the buddyboss-sharing plugin in particular,
+		// which needs to surface `is_internal` / `activity_id` /
+		// `activity_preview` for its own feature parity) a chance to
+		// short-circuit the preview resolution. Listeners that return a
+		// non-null array replace the default body; the standard
+		// `bp_core_parse_url()` path is skipped in that case.
+		$short_circuit = apply_filters( 'bp_rest_activity_link_preview_pre_resolve', null, $url, $request );
+		if ( is_array( $short_circuit ) ) {
+			$retval = array_merge( $retval, $short_circuit );
+		} else {
+			// Get URL parsed data.
+			$parse_url_data = ( function_exists( 'bp_core_parse_url' ) ? bp_core_parse_url( $url ) : '' );
 
-		// If empty data then send error.
-		if ( empty( $parse_url_data ) ) {
-			return new WP_Error(
-				'bp_rest_unknown_error',
-				__( 'There was a problem generating a link preview.', 'buddyboss' ),
-				array(
-					'status' => 400,
-				)
-			);
+			// If empty data then send error.
+			if ( empty( $parse_url_data ) ) {
+				return new WP_Error(
+					'bp_rest_unknown_error',
+					__( 'There was a problem generating a link preview.', 'buddyboss' ),
+					array(
+						'status' => 400,
+					)
+				);
+			}
+
+			$retval = array_merge( $retval, $parse_url_data );
 		}
 
-		$retval = array_merge( $retval, $parse_url_data );
+		/**
+		 * Filter the assembled link-preview payload before it is turned into a
+		 * REST response. Lets plugins tack on defaults for fields they only
+		 * partially populate via the pre-resolve short-circuit — e.g. the
+		 * sharing plugin adds `is_internal` / `activity_id` / `activity_preview`
+		 * with `false`/`0`/`''` defaults on external URLs so every response
+		 * shape is predictable to the app.
+		 *
+		 * @param array            $retval  The response payload.
+		 * @param string           $url     The URL being previewed.
+		 * @param WP_REST_Request  $request The full REST request.
+		 */
+		$retval = apply_filters( 'bp_rest_activity_link_preview_response', $retval, $url, $request );
 
 		$retval   = $this->add_additional_fields_to_object( $retval, $request );
 		$response = rest_ensure_response( $retval );
@@ -137,24 +162,28 @@ class BP_REST_Activity_Link_Preview_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function get_items_permissions_check( $request ) {
-		$retval = new WP_Error(
-			'bp_rest_component_required',
-			__( 'Sorry, Activity component was not enabled.', 'buddyboss' ),
-			array(
-				'status' => '404',
-			)
-		);
+		// Start fail-closed and only flip to allow once every gate passes, in the
+		// order: login → component → feature toggle. Matching the share endpoint's
+		// pattern so a future insertion between gates cannot inadvertently grant
+		// anonymous access.
+		$retval = true;
 
-		if ( bp_is_active( 'activity' ) ) {
-			$retval = true;
-		}
-
-		if ( true === $retval && ! is_user_logged_in() ) {
+		if ( ! is_user_logged_in() ) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
 				__( 'Sorry, you are not allowed to generate link preview in the activity.', 'buddyboss' ),
 				array(
 					'status' => rest_authorization_required_code(),
+				)
+			);
+		}
+
+		if ( true === $retval && ! bp_is_active( 'activity' ) ) {
+			$retval = new WP_Error(
+				'bp_rest_component_required',
+				__( 'Sorry, Activity component was not enabled.', 'buddyboss' ),
+				array(
+					'status' => 404,
 				)
 			);
 		}
@@ -193,19 +222,19 @@ class BP_REST_Activity_Link_Preview_Endpoint extends WP_REST_Controller {
 			'title'      => 'bp_activity_link_preview',
 			'type'       => 'object',
 			'properties' => array(
-				'title'       => array(
+				'title'            => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'Title for the link preview.', 'buddyboss' ),
 					'type'        => 'string',
 					'readonly'    => true,
 				),
-				'description' => array(
+				'description'      => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'Description or HTML to generate the link preview.', 'buddyboss' ),
 					'type'        => 'string',
 					'readonly'    => true,
 				),
-				'images'      => array(
+				'images'           => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'Image URLs for the preview.', 'buddyboss' ),
 					'type'        => 'array',
@@ -214,7 +243,7 @@ class BP_REST_Activity_Link_Preview_Endpoint extends WP_REST_Controller {
 						'type' => 'string',
 					),
 				),
-				'error'       => array(
+				'error'            => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'If any errors to retrieving a the preview data.', 'buddyboss' ),
 					'type'        => 'string',
@@ -236,6 +265,5 @@ class BP_REST_Activity_Link_Preview_Endpoint extends WP_REST_Controller {
 		 */
 		return apply_filters( 'bp_rest_activity_link_preview_schema', $this->add_additional_fields_schema( $schema ) );
 	}
-
 
 }

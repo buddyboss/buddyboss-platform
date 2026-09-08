@@ -1,0 +1,291 @@
+/**
+ * BuddyBoss Integrations marketplace — detail drawer (right slide-in).
+ *
+ * Fetches the integration's full record by slug and renders the header (logo,
+ * title, collection, description, "Learn More ↗") plus the sanitized
+ * content.rendered. Loading / error / empty states mirror the Knowledge Base
+ * article view. Installing is done from the card, not here.
+ *
+ * @package BuddyBoss\Core\Administration
+ * @since BuddyBoss [BBVERSION]
+ */
+
+import { useState, useEffect, useMemo, useRef } from '@wordpress/element';
+import { __ } from '@wordpress/i18n';
+import { decodeEntities } from '@wordpress/html-entities';
+import { fetchIntegrationBySlug } from '../../utils/integrationsApi';
+import { sanitizeKbArticle, safeUrl, safeImageUrl } from '@bb/admin-common';
+import { PluginActionButton } from './PluginActionButton';
+
+export function IntegrationDrawer( { slug, initialTitle, plugins, onClose } ) {
+	const [ status, setStatus ] = useState( 'loading' ); // loading | ready | error | notfound
+	const [ item, setItem ] = useState( null );
+	const abortRef = useRef( null );
+	const panelRef = useRef( null );
+	const previouslyFocusedRef = useRef( null );
+
+	// Fetch detail whenever the slug changes.
+	useEffect( () => {
+		if ( abortRef.current ) {
+			abortRef.current.abort();
+		}
+		const controller = new AbortController();
+		abortRef.current = controller;
+
+		setStatus( 'loading' );
+		setItem( null );
+
+		fetchIntegrationBySlug( slug, controller.signal )
+			.then( ( record ) => {
+				if ( controller.signal.aborted ) {
+					return;
+				}
+				if ( record ) {
+					setItem( record );
+					setStatus( 'ready' );
+				} else {
+					setStatus( 'notfound' );
+				}
+			} )
+			.catch( ( err ) => {
+				if ( err && err.name === 'AbortError' ) {
+					return;
+				}
+				setStatus( 'error' );
+			} );
+
+		return () => {
+			controller.abort();
+		};
+	}, [ slug ] );
+
+	// Close on Escape.
+	useEffect( () => {
+		const onKey = ( e ) => {
+			if ( 'Escape' === e.key ) {
+				onClose();
+			}
+		};
+		document.addEventListener( 'keydown', onKey );
+		return () => document.removeEventListener( 'keydown', onKey );
+	}, [ onClose ] );
+
+	// Focus management for the modal dialog (role="dialog" aria-modal="true"):
+	// move focus into the panel on open and restore it to the opener on close.
+	useEffect( () => {
+		previouslyFocusedRef.current = document.activeElement;
+		const closeBtn = panelRef.current && panelRef.current.querySelector( '.bb-integrations-drawer__close' );
+		if ( closeBtn ) {
+			closeBtn.focus();
+		}
+		return () => {
+			if ( previouslyFocusedRef.current && previouslyFocusedRef.current.focus ) {
+				previouslyFocusedRef.current.focus();
+			}
+		};
+	}, [] );
+
+	// Trap Tab focus inside the panel while the dialog is open.
+	useEffect( () => {
+		const onTrap = ( e ) => {
+			if ( 'Tab' !== e.key || ! panelRef.current ) {
+				return;
+			}
+			const focusables = panelRef.current.querySelectorAll(
+				'a[href], button:not([disabled]), input:not([disabled]), [tabindex]:not([tabindex="-1"])'
+			);
+			if ( ! focusables.length ) {
+				return;
+			}
+			const first = focusables[ 0 ];
+			const last = focusables[ focusables.length - 1 ];
+			if ( e.shiftKey && document.activeElement === first ) {
+				e.preventDefault();
+				last.focus();
+			} else if ( ! e.shiftKey && document.activeElement === last ) {
+				e.preventDefault();
+				first.focus();
+			}
+		};
+		document.addEventListener( 'keydown', onTrap );
+		return () => document.removeEventListener( 'keydown', onTrap );
+	}, [] );
+
+	// Make the rest of the page inert while the dialog is open, so a screen
+	// reader's virtual cursor can't wander into the grid behind it (aria-modal
+	// alone doesn't stop that). Walk from the drawer up to the app root, marking
+	// every sibling along the way inert; the drawer's own ancestor chain is left
+	// interactive. Restored on unmount.
+	useEffect( () => {
+		const drawerEl = panelRef.current && panelRef.current.closest( '.bb-integrations-drawer' );
+		const root = document.getElementById( 'bb-admin-integrations' ) || document.querySelector( '.bb-admin-app' );
+		if ( ! drawerEl || ! root ) {
+			return undefined;
+		}
+		const inerted = [];
+		let node = drawerEl;
+		while ( node && node !== root && node.parentElement ) {
+			Array.from( node.parentElement.children ).forEach( ( sibling ) => {
+				if ( sibling !== node && ! sibling.hasAttribute( 'inert' ) ) {
+					sibling.setAttribute( 'inert', '' );
+					inerted.push( sibling );
+				}
+			} );
+			node = node.parentElement;
+		}
+		return () => inerted.forEach( ( el ) => el.removeAttribute( 'inert' ) );
+	}, [] );
+
+	const title = item?.title?.rendered ? decodeEntities( item.title.rendered ) : '';
+	// Top-bar name: prefer the fetched title, fall back to the title handed over
+	// from the clicked card. initialTitle is already decoded by the card, so it is
+	// used as-is (decoding it again would over-decode e.g. &amp;amp;).
+	const headerName = title || initialTitle || '';
+	const description = item?.short_description ? decodeEntities( item.short_description ) : '';
+	const logo = item?.logo_image_url && 'string' === typeof item.logo_image_url ? item.logo_image_url : '';
+	// Resolve the sanitized logo URL up front; safeImageUrl returns '' for a
+	// non-http(s) URL, in which case we fall back to the placeholder icon.
+	const logoSrc = logo ? safeImageUrl( logo ) : '';
+	const contentHtml = item?.content?.rendered ? item.content.rendered : '';
+	// Sanitize once per content change — DOMParser is expensive and the drawer
+	// re-renders on every plugins-prop identity change (activate/deactivate).
+	const sanitizedContent = useMemo( () => ( contentHtml ? sanitizeKbArticle( contentHtml ) : '' ), [ contentHtml ] );
+	// "Learn More ↗" → the integration's site URL (acf.integration_site_url).
+	const learnMoreUrl = item?.acf?.integration_site_url || '';
+
+	// "Works with" — acf.works_with is a { slug: { name, met } } map built entirely
+	// from the integration's ACF "works_with" checkbox: `name` is the choice label,
+	// `met` is whether that platform is checked for this integration. Both come from
+	// the API, so adding / renaming a choice needs no client change. Older cached
+	// responses may still use the flat { slug: bool } shape (or an array of checked
+	// slugs) — handle those too, humanizing the slug when no label is available.
+	const slugToLabel = ( value ) =>
+		String( value ).replace( /[-_]+/g, ' ' ).replace( /\b\w/g, ( c ) => c.toUpperCase() );
+	// Explicit truthy check — ACF can serialize a false boolean as the string "0",
+	// which is falsy in JS but would slip past a loose cast.
+	const isMet = ( v ) => true === v || 1 === v || '1' === v;
+	const worksWithRaw = item?.acf?.works_with;
+	let worksWith = [];
+	if ( worksWithRaw && 'object' === typeof worksWithRaw && ! Array.isArray( worksWithRaw ) ) {
+		worksWith = Object.keys( worksWithRaw ).map( ( wSlug ) => {
+			const entry = worksWithRaw[ wSlug ];
+			// New shape: { name, met }. Legacy shape: a bare boolean.
+			return entry && 'object' === typeof entry
+				? { slug: wSlug, name: entry.name || slugToLabel( wSlug ), met: isMet( entry.met ) }
+				: { slug: wSlug, name: slugToLabel( wSlug ), met: isMet( entry ) };
+		} );
+	} else if ( Array.isArray( worksWithRaw ) ) {
+		// Legacy array of checked slugs — every listed slug is compatible.
+		worksWith = worksWithRaw
+			.map( ( entry ) => ( 'string' === typeof entry ? entry : ( entry && ( entry.slug || entry.value ) ) || '' ) )
+			.filter( Boolean )
+			.map( ( wSlug ) => ( { slug: wSlug, name: slugToLabel( wSlug ), met: true } ) );
+	}
+
+	return (
+		<div className="bb-integrations-drawer" role="dialog" aria-modal="true" aria-label={ headerName || __( 'Integration details', 'buddyboss' ) }>
+			<div className="bb-integrations-drawer__overlay" onClick={ onClose } aria-hidden="true" />
+
+			<div className="bb-integrations-drawer__panel" ref={ panelRef }>
+				<div className="bb-integrations-drawer__topbar">
+					<h2 className="bb-integrations-drawer__name">{ headerName }</h2>
+					<button
+						type="button"
+						className="bb-integrations-drawer__close"
+						onClick={ onClose }
+						aria-label={ __( 'Close', 'buddyboss' ) }
+					>
+						<i className="bb-icons-rl bb-icons-rl-x" aria-hidden="true" />
+					</button>
+				</div>
+
+				{ 'loading' === status && (
+					<div className="bb-integrations-drawer__state" aria-busy="true">
+						<span className="spinner is-active" />
+					</div>
+				) }
+
+				{ 'error' === status && (
+					<div className="bb-integrations-drawer__state" role="alert">
+						<p>{ __( 'We couldn’t load this integration. Please try again.', 'buddyboss' ) }</p>
+					</div>
+				) }
+
+				{ 'notfound' === status && (
+					<div className="bb-integrations-drawer__state">
+						<p>{ __( 'This integration is no longer available.', 'buddyboss' ) }</p>
+					</div>
+				) }
+
+				{ 'ready' === status && item && (
+					<div className="bb-integrations-drawer__content">
+						<div className="bb-integrations-drawer__header">
+							<span className="bb-integrations-drawer__icon">
+								{ logoSrc ? (
+									<img src={ logoSrc } alt="" />
+								) : (
+									<i className="bb-icons-rl bb-icons-rl-puzzle-piece" aria-hidden="true" />
+								) }
+							</span>
+							{ /* h3: the topbar __name <h2> is the dialog's primary heading. */ }
+							<h3 className="bb-integrations-drawer__title">
+								{ title }
+							</h3>
+							{ description && (
+								<p className="bb-integrations-drawer__desc">{ description }</p>
+							) }
+
+							<div className="bb-integrations-drawer__actions">
+								<PluginActionButton item={ item } plugins={ plugins } className="bb-integrations__btn bb-integrations__btn--fill" hideUnavailable />
+								{ learnMoreUrl && (
+									<a
+										href={ safeUrl( learnMoreUrl ) }
+										className="bb-integrations__btn bb-integrations__btn--outline"
+										target="_blank"
+										rel="noopener noreferrer"
+									>
+										{ __( 'Learn More', 'buddyboss' ) }
+										<i className="bb-icons-rl bb-icons-rl-arrow-up-right" aria-hidden="true" />
+									</a>
+								) }
+							</div>
+						</div>
+
+						{ /* "Works with" compatibility — shown whenever the API returns works_with entries. */ }
+						{ worksWith.length > 0 && (
+							<div className="bb-integrations-drawer__works-with">
+								<span className="bb-integrations-drawer__works-with-label">{ __( 'Works with:', 'buddyboss' ) }</span>
+								{ worksWith.map( ( req, i ) => (
+									<span key={ req.slug } className="bb-integrations-drawer__works-with-item">
+										{ i > 0 && (
+											<span className="bb-integrations-drawer__works-with-sep" aria-hidden="true">·</span>
+										) }
+										<span className="bb-integrations-drawer__works-with-name">{ req.name }</span>
+										<span
+											className={ 'bb-integrations-drawer__works-with-icon bb-integrations-drawer__works-with-icon--' + ( req.met ? 'yes' : 'no' ) }
+											role="img"
+											aria-label={ req.met ? __( 'Compatible', 'buddyboss' ) : __( 'Not compatible', 'buddyboss' ) }
+										>
+											<i className={ req.met ? 'bb-icons-rl bb-icons-rl-check' : 'bb-icons-rl bb-icons-rl-x' } aria-hidden="true" />
+										</span>
+									</span>
+								) ) }
+							</div>
+						) }
+
+						{ sanitizedContent && (
+							<div
+								className="bb-integrations-drawer__body"
+								// Same rich-content sanitizer the Knowledge Base modal uses — allows
+								// WP block markup, images and trusted video embeds (YouTube/Vimeo).
+								// Memoized above so DOMParser only re-runs when the HTML changes.
+								// eslint-disable-next-line react/no-danger
+								dangerouslySetInnerHTML={ { __html: sanitizedContent } }
+							/>
+						) }
+					</div>
+				) }
+			</div>
+		</div>
+	);
+}

@@ -286,8 +286,16 @@ function bp_activity_get_userid_from_mentionname( $mentionname ) {
 		// account for hyphens + spaces in the same user_login.
 		if ( empty( $userdata ) || ! is_a( $userdata, 'WP_User' ) ) {
 			global $wpdb;
-			$regex   = esc_sql( str_replace( '-', '[ \-]', $mentionname ) );
-			$user_id = $wpdb->get_var( "SELECT ID FROM {$wpdb->users} WHERE user_login REGEXP '{$regex}'" );
+			// Defense-in-depth: pass the regex through prepare's %s placeholder.
+			// See bp_get_userid_from_mentionname() in bp-core-functions.php for
+			// the canonical implementation — this deprecated copy mirrors it.
+			$regex   = str_replace( '-', '[ \-]', $mentionname );
+			$user_id = $wpdb->get_var(
+				$wpdb->prepare(
+					"SELECT ID FROM {$wpdb->users} WHERE user_login REGEXP %s",
+					$regex
+				)
+			);
 		} else {
 			$user_id = $userdata->ID;
 		}
@@ -1176,7 +1184,7 @@ function bp_activity_favorites_upgrade_data() {
 	if ( ! $bp_activity_favorites && bp_is_active( 'activity' ) ) {
 
 		if ( bp_is_large_install() ) {
-			$admin_url = bp_get_admin_url( add_query_arg( array( 'page' => 'bp-tools' ), 'admin.php' ) );
+			$admin_url = bp_get_admin_url( add_query_arg( array( 'page' => 'bb-settings', 'tab' => 'tools', 'panel' => 'repair_platform' ), 'admin.php' ) );
 			$notice    = sprintf(
 				'%1$s <a href="%2$s">%3$s</a> %4$s',
 				__( 'Due to the large size of your users table, you need to manually update user activity favorites data via BuddyBoss > ', 'buddyboss' ),
@@ -6539,102 +6547,6 @@ function bb_activity_is_enabled_cpt_global_comment( $post_type ) {
 	}
 
 	return apply_filters( 'bb_activity_is_enabled_cpt_global_comment', $supports_comments, $post_type );
-}
-
-/**
- * Pin or unpin activity or group feed post.
- *
- * @since BuddyBoss 2.4.60
- *
- * @param array $args Arguments related to pin/unpin activity or group feed post.
- *
- * @return bool|string Update type pinned|pin_updated|unpinned.
- */
-function bb_activity_pin_unpin_post( $args = array() ) {
-	$r = bp_parse_args(
-		$args,
-		array(
-			'action'      => 'pin',
-			'activity_id' => 0,
-			'retval'      => 'bool',
-			'user_id'     => bp_loggedin_user_id(),
-		)
-	);
-
-	$retval    = '';
-	$old_value = '';
-
-	$activity = new BP_Activity_Activity( (int) $r['activity_id'] );
-
-	if ( ! empty( $activity->id ) ) {
-
-		if ( 'unpin' === $r['action'] ) {
-			$updated_value = '';
-			$retval        = 'unpinned';
-		} else {
-			$updated_value = $r['activity_id'];
-			$retval        = 'pinned';
-		}
-
-		// Check if group activity or normal activity.
-		if ( 'groups' === $activity->component && ! empty( $activity->item_id ) ) {
-			$has_permission = false;
-
-			// First check if user is a site administrator.
-			if ( bp_current_user_can( 'administrator' ) ) {
-				$has_permission = true;
-			} else {
-				// Check group organizer or moderator permissions if not a site admin.
-				$is_admin = groups_is_user_admin( $r['user_id'], $activity->item_id );
-				$is_mod   = groups_is_user_mod( $r['user_id'], $activity->item_id );
-
-				if (
-					( $is_admin || $is_mod ) &&
-					bb_is_active_activity_pinned_posts()
-				) {
-					$has_permission = true;
-				}
-			}
-
-			if ( $has_permission ) {
-				$old_value = groups_get_groupmeta( $activity->item_id, 'bb_pinned_post' );
-				groups_update_groupmeta( $activity->item_id, 'bb_pinned_post', $updated_value );
-			} else {
-				$retval = 'not_allowed';
-			}
-		} elseif ( bp_current_user_can( 'administrator' ) ) {
-			$old_value = bp_get_option( 'bb_pinned_post' );
-			bp_update_option( 'bb_pinned_post', $updated_value );
-		} else {
-			$retval = 'not_allowed';
-		}
-
-		// Check if already exists and updating new value.
-		if ( ! empty( $updated_value ) && ! empty( $old_value ) && (int) $old_value !== (int) $updated_value ) {
-			$retval = 'pin_updated';
-		}
-
-		/**
-		 * Fires after activity pin/unpin post.
-		 *
-		 * @since BuddyBoss 2.4.60
-		 *
-		 * @param int    $activity_id Activity ID.
-		 * @param string $action      Action type pin/unpin.
-		 */
-		do_action( 'bb_activity_pin_unpin_post', $activity->id, $r['action'] );
-	}
-
-	if ( 'bool' === $r['retval'] ) {
-
-		if ( ! empty( $retval ) ) {
-			$retval = true;
-		} else {
-			$retval = false;
-		}
-	}
-
-	return $retval;
 }
 
 /**

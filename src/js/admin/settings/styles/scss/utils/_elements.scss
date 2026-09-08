@@ -614,6 +614,7 @@ select.bb-admin-settings__select {
 		width: 88px;
 		max-width: 88px;
 		height: 24px;
+        line-height: 24px;
 		min-height: auto;
 		padding: 0 8px;
 		background-color: $bb-background-primary-color;
@@ -1867,5 +1868,21 @@ select.bb-admin-settings__select {
     &__button {
         @include bb-button-primary;
         margin-top: 16px;
+        // Reset native <button> defaults so the AJAX activate variant matches
+        // the <a> link variant visually.
+        border: 0;
+        font: inherit;
+        cursor: pointer;
+
+        &[disabled] {
+            opacity: 0.6;
+            cursor: default;
+        }
+    }
+
+    &__error {
+        font-size: 13px;
+        color: $bb-error-color;
+        margin: 8px 0 0;
     }
 }

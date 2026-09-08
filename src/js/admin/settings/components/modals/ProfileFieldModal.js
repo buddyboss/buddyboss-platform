@@ -37,7 +37,7 @@ var OPTION_TYPES = [ 'selectbox', 'multiselectbox', 'checkbox', 'radio', 'gender
  *
  * @since BuddyBoss [BBVERSION]
  */
-var SINGLETON_TYPES = [ 'gender', 'socialnetworks', 'membertypes' ];
+var SINGLETON_TYPES = [ 'gender', 'socialnetworks', 'membertypes', 'biography' ];
 
 /**
  * Default gender options.
@@ -381,6 +381,7 @@ export function ProfileFieldModal( {
 		datebox: 'calendar-heart',
 		number: 'number-circle-one',
 		textarea: 'paragraph',
+		biography: 'read-cv-logo',
 		telephone: 'phone',
 		textbox: 'text-t',
 		url: 'globe',
@@ -615,6 +616,7 @@ export function ProfileFieldModal( {
 				gender: __( 'You can only have one instance of the "Gender" profile field.', 'buddyboss' ),
 				socialnetworks: __( 'You can only have one instance of the "Social Network" profile field.', 'buddyboss' ),
 				membertypes: __( 'You can only have one instance of the "Profile Type" profile field.', 'buddyboss' ),
+				biography: __( 'You can only have one instance of the "Bio" profile field.', 'buddyboss' ),
 			};
 			setError( singletonMessages[ type ] || __( 'This field type can only have one instance.', 'buddyboss' ) );
 			return;

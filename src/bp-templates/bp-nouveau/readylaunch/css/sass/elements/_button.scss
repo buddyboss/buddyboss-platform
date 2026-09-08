@@ -42,9 +42,9 @@
 		@include bb-rl-button--tertiary-link;
 	}
 
-	&.bb-rl-button--disabled {
+	&.bb-rl-button--disabled,
+	&.disabled[class*="bb-rl-button"] {
 
 		@include bb-rl-button--disabled;
 	}
 }
-

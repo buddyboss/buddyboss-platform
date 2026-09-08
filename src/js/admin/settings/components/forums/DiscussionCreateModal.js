@@ -8,7 +8,7 @@
  * @since BuddyBoss [BBVERSION]
  */
 
-import { useState, useRef, useEffect, useCallback } from '@wordpress/element';
+import { useState, useRef, useEffect, useCallback, Fragment } from '@wordpress/element';
 import {
 	Modal,
 	Button,
@@ -16,7 +16,7 @@ import {
 import { __ } from '@wordpress/i18n';
 
 import { createDiscussion } from '../../utils/ajax';
-import { groupFieldsWithLayout, buildRegisteredFieldPayload, getVisibleFields, needsSeparator } from '../../utils/format';
+import { groupFieldsWithLayout, buildRegisteredFieldPayload, getVisibleFields, isFieldConditionalDisabled, needsSeparator, splitFieldsByMetaboxGroup } from '../../utils/format';
 import { RegisteredMetaField } from '../common/RegisteredMetaField';
 import { forceRemoveEditor } from '../common/RichTextEditor';
 import { TagsAutocomplete } from './TagsAutocomplete';
@@ -193,10 +193,78 @@ export function DiscussionCreateModal( { isOpen, onClose, onCreated, createField
 		onClose();
 	};
 
-	// Render visible fields (respects client-side conditionals like publish_mode → date/time).
+	// Render visible fields (respects client-side conditionals like publish_mode → date/time),
+	// split into runs by source metabox so bridged third-party metaboxes (e.g. WP Fusion)
+	// render in a bordered section with their title heading at the end — matching Forums.
 	var visibleFields = getVisibleFields( fields, registeredValues );
+	var segments      = splitFieldsByMetaboxGroup( visibleFields );
 
-	var grouped = groupFieldsWithLayout( visibleFields );
+	var renderGroupedItem = function ( item, idx, groupedList ) {
+		var hasSeparator = needsSeparator( item, groupedList[ idx + 1 ] );
+
+		if ( 'row' === item.type ) {
+			return (
+				<div key={ 'row-' + idx } className={ 'bb-admin-meta-field__row bb-admin-settings-modal__row' + ( hasSeparator ? ' bb-admin-settings-modal__row--separator' : '' ) }>
+					{ item.fields.map( function ( field ) {
+						return (
+							<RegisteredMetaField
+								key={ field.id }
+								field={ field }
+								value={ registeredValues[ field.id ] }
+								onChange={ function ( val ) {
+									handleFieldChange( field.id, val );
+								} }
+								itemId={ 0 }
+								disabled={ isFieldConditionalDisabled( field, registeredValues ) }
+							/>
+						);
+					} ) }
+				</div>
+			);
+		}
+		return (
+			<div key={ item.field.id } className={ 'components-base-control ' + ( hasSeparator ? 'bb-admin-settings-modal__row--separator' : '' ) }>
+				<RegisteredMetaField
+					field={ item.field }
+					value={ registeredValues[ item.field.id ] }
+					onChange={ function ( val ) {
+						handleFieldChange( item.field.id, val );
+					} }
+					itemId={ 0 }
+					disabled={ isFieldConditionalDisabled( item.field, registeredValues ) }
+				/>
+			</div>
+		);
+	};
+
+	var renderSegments = function () {
+		return segments.map( function ( segment, segIdx ) {
+			var grouped = groupFieldsWithLayout( segment.fields );
+
+			if ( ! segment.group ) {
+				return (
+					<Fragment key={ 'seg-flat-' + segIdx }>
+						{ grouped.map( function ( item, idx ) {
+							return renderGroupedItem( item, idx, grouped );
+						} ) }
+					</Fragment>
+				);
+			}
+
+			return (
+				<div key={ 'seg-group-' + segIdx } className="bb-admin-meta-field__group" data-group-id={ segment.group }>
+					{ segment.label && (
+						<h3 className="bb-admin-meta-field__group-title">{ segment.label }</h3>
+					) }
+					<div className="bb-admin-meta-field__group-fields">
+						{ grouped.map( function ( item, idx ) {
+							return renderGroupedItem( item, idx, grouped );
+						} ) }
+					</div>
+				</div>
+			);
+		} );
+	};
 
 	return (
 		<Modal
@@ -210,41 +278,7 @@ export function DiscussionCreateModal( { isOpen, onClose, onCreated, createField
 					<p className="bb-admin-settings-modal__error">{ error }</p>
 				) }
 
-				{ grouped.map( function ( item, idx ) {
-					var hasSeparator = needsSeparator( item, grouped[ idx + 1 ] );
-
-					if ( 'row' === item.type ) {
-						return (
-							<div key={ 'row-' + idx } className={ 'bb-admin-meta-field__row bb-admin-settings-modal__row' + ( hasSeparator ? ' bb-admin-settings-modal__row--separator' : '' ) }>
-								{ item.fields.map( function ( field ) {
-									return (
-										<RegisteredMetaField
-											key={ field.id }
-											field={ field }
-											value={ registeredValues[ field.id ] }
-											onChange={ function ( val ) {
-												handleFieldChange( field.id, val );
-											} }
-											itemId={ 0 }
-										/>
-									);
-								} ) }
-							</div>
-						);
-					}
-					return (
-						<div key={ item.field.id } className={ 'components-base-control ' + ( hasSeparator ? 'bb-admin-settings-modal__row--separator' : '' ) }>
-							<RegisteredMetaField
-								field={ item.field }
-								value={ registeredValues[ item.field.id ] }
-								onChange={ function ( val ) {
-									handleFieldChange( item.field.id, val );
-								} }
-								itemId={ 0 }
-							/>
-						</div>
-					);
-				} ) }
+				{ renderSegments() }
 
 				<div className="bb-admin-settings-modal__custom-section">
 				<TagsAutocomplete

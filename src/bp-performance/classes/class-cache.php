@@ -394,17 +394,22 @@ class Cache {
 	/**
 	 * Purge cache by Component for setting screen
 	 *
-	 * @param array $component Array of components.
+	 * @param string $component Component cache-group prefix to purge (e.g. 'bp-activity').
 	 */
-	public function purge_by_component( $component = array() ) {
+	public function purge_by_component( $component = '' ) {
 		global $wpdb;
 
-		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-		$sql  = "DELETE FROM {$this->cache_table} WHERE cache_group like ";
-		$sql .= "'%" . $component . "%'";
+		// Bail on an empty component so we never build a "LIKE '%%'" that wipes the whole table.
+		if ( '' === (string) $component ) {
+			return;
+		}
 
-		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-		$wpdb->query( $sql );
+		$like = '%' . $wpdb->esc_like( $component ) . '%';
+
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		$wpdb->query(
+			$wpdb->prepare( "DELETE FROM {$this->cache_table} WHERE cache_group LIKE %s", $like )
+		);
 	}
 
 	/**

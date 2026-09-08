@@ -52,7 +52,15 @@
 					}
 					if ( 'v2_invisible_badge' === this.bbrecaptchaData.v2_option ) {
 						grecaptcha.ready( function () {
-							var form = $( '#' + container );
+							// Bind to the form that actually contains the widget so
+							// embedded login forms with a custom form_id (via
+							// wp_login_form) still get the submit-intercept. Fall back
+							// to the known container id for the core forms.
+							var widget = $( '#bb_recaptcha_v2_element' );
+							var form   = widget.length ? widget.closest( 'form' ) : $();
+							if ( ! form.length && container ) {
+								form = $( '#' + container );
+							}
 							var params = {
 								'sitekey': bbRecaptcha.data.site_key,
 								'tabindex': 9999,
@@ -60,7 +68,7 @@
 								'size': 'invisible',
 								'callback': function ( token ) {
 									$( '#g-recaptcha-response' ).val( token );
-									if ( container ) {
+									if ( form.length ) {
 										form.find( 'input[data-click]' ).trigger( 'click' );
 									}
 								},
