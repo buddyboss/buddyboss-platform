@@ -107,6 +107,15 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			if ( bp_is_active( 'forums' ) ) {
 				add_filter( 'bbp_use_template_canvas', '__return_false' );
 				add_filter( 'bbp_get_page_by_path', array( $this, 'bb_rl_forums_get_page_by_path' ), 99, 1 );
+
+				// Registered here, from the constructor, and NOT from
+				// bb_rl_required_load(): bbPress enqueues its forum scripts during
+				// `template_include` (bbp_template_include_theme_compat ->
+				// display_topic() -> BBP_Shortcodes::start() -> bbp_enqueue_scripts),
+				// and bb_rl_required_load() is itself called from a later
+				// `template_include` callback. A filter added there is registered
+				// too late to see the only pass that matters (PROD-9621 O2).
+				add_filter( 'bbp_default_scripts', array( $this, 'bb_rl_remove_default_topic_reply_draft_script' ) );
 			}
 
 			$enabled_for_page = $this->bb_is_readylaunch_enabled_for_page();
@@ -3465,6 +3474,65 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		}
 
 		/**
+		 * Drop the default forum draft pack when ReadyLaunch supplies its own.
+		 *
+		 * Both packs construct their own instance against the same forms and
+		 * each fires its own lazy draft fetch, so the page ran two of
+		 * everything. This was previously attempted with
+		 * `wp_deregister_script()` / `wp_dequeue_script()`, which cannot work
+		 * from anywhere in the enqueue phase, for two independent reasons:
+		 *
+		 *  - The ReadyLaunch enqueue runs on `wp_enqueue_scripts` at priority
+		 *    1, while bbPress enqueues from `bbp_enqueue_scripts` at priority
+		 *    10 — so a dequeue there ran before the handle existed and was a
+		 *    guaranteed no-op.
+		 *  - Raising the priority does not help either. The bbPress theme
+		 *    compat class hooks its `enqueue_scripts()` to **both**
+		 *    `bbp_enqueue_scripts` AND `wp_footer`, and the enqueue goes
+		 *    through `bbp_enqueue_script()`, which calls `wp_register_script()`
+		 *    and `wp_enqueue_script()`. The footer pass therefore re-registers
+		 *    and re-enqueues the handle, undoing any dequeue that ran earlier
+		 *    in the request — including one at `PHP_INT_MAX`.
+		 *
+		 * So the handle is removed before it is ever enqueued instead.
+		 * `bbp_default_scripts` is applied inside `enqueue_scripts()`
+		 * immediately before the enqueue loop, which means it applies on both
+		 * of those invocation paths and the result cannot be undone later
+		 * (PROD-9621 O2).
+		 *
+		 * Gated on the page context and NOT on whether the ReadyLaunch handle
+		 * is already enqueued, which was the first thing tried here and is
+		 * wrong: the decisive pass is the `template_include` one above, and
+		 * ReadyLaunch does not enqueue its own pack until `wp_enqueue_scripts`
+		 * priority 1, which is later. Measured on that pass — the replacement
+		 * reads as not enqueued while the page is unambiguously a ReadyLaunch
+		 * forum, so a `wp_script_is()` gate skips the one call that matters
+		 * and the default pack ships anyway.
+		 *
+		 * `bb_is_readylaunch_forums()` is the same predicate that decides
+		 * whether ReadyLaunch takes the page over at all, so the two decisions
+		 * cannot drift apart. It is also narrower than it looks: bbPress only
+		 * adds this handle on a single forum or single topic, which is exactly
+		 * where the ReadyLaunch pack replaces it.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param array $scripts Handle => attributes map bbPress is about to enqueue.
+		 * @return array
+		 */
+		public function bb_rl_remove_default_topic_reply_draft_script( $scripts ) {
+			if ( ! is_array( $scripts ) || ! isset( $scripts['bb-topic-reply-draft'] ) ) {
+				return $scripts;
+			}
+
+			if ( $this->bb_is_readylaunch_forums() ) {
+				unset( $scripts['bb-topic-reply-draft'] );
+			}
+
+			return $scripts;
+		}
+
+		/**
 		 * Enqueue styles and scripts for ReadyLaunch Forums.
 		 *
 		 * @since BuddyBoss 2.9.00
@@ -3511,11 +3579,6 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			if ( $min ) {
 				wp_style_add_data( 'bb-readylaunch-forums', 'suffix', $min );
 			}
-
-			// Dequeue default bbpress scripts to avoid conflict with readylaunch scripts.
-			// Should load after readylaunch scripts.
-			wp_deregister_script( 'bb-topic-reply-draft' );
-			wp_dequeue_script( 'bb-topic-reply-draft' );
 
 			// Enqueue Topic Reply Draft JavaScript.
 			wp_enqueue_script(
