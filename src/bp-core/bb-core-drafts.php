@@ -452,6 +452,14 @@ function bb_draft_protect_payload_attachments( $lists, $user_id ) {
 		}
 	}
 
+	// A new stamp adds a reference the network-wide referenced-attachment cache
+	// (H3, {@see bb_drafts_release_orphaned_draft_stamps}) must not miss, or the
+	// next sweep could release the stamp we just applied. Drop the cache so the
+	// sweep rescans; the cache is only an optimisation for unchanged windows.
+	if ( ! empty( $stamped ) ) {
+		delete_site_transient( 'bb_draft_referenced_stamp_ids' );
+	}
+
 	return array_keys( $stamped );
 }
 
@@ -2654,26 +2662,55 @@ function bb_drafts_release_orphaned_draft_stamps( $time_budget = 10 ) {
 	// persisted and resumes on the next daily run). A community so large that
 	// even the reference scan alone exceeds PHP's execution limit should drain
 	// with `wp bb drafts cleanup` (unlimited).
-	// Hold the lock across the (unbudgeted) scan too, not just the release loop
-	// below - on a large library the scan alone can outlast the 5-minute TTL.
-	$referenced = bb_drafts_collect_referenced_attachment_ids(
-		0,
-		$started_at,
-		function () {
-			set_transient( 'bb_draft_stamp_sweep_lock', 1, 5 * MINUTE_IN_SECONDS );
-		}
-	);
+	// The referenced set is built from network-GLOBAL draft usermeta, so it is
+	// identical on every blog. Now that the sweep runs per-site (D2), scanning
+	// the whole draft table once per blog per day is wasted work (H3): cache the
+	// set network-wide and reuse it. The cache is dropped whenever a draft
+	// stamps a new attachment ({@see bb_draft_protect_payload_attachments}), so
+	// between rebuilds it can only ever be a SUPERSET of the live referenced set
+	// - safe, because over-protecting leaks a stamp for one cycle but can never
+	// release an attachment a draft still holds. A TTL backstop rebuilds it if
+	// an invalidation is ever missed. On a busy network the set genuinely
+	// changes and each rescan is legitimate; the cache only elides the identical
+	// re-scans on quiet cleanup windows.
+	$referenced = get_site_transient( 'bb_draft_referenced_stamp_ids' );
 
-	// Defensive: the scan is unbudgeted above, so it returns the full set. The
-	// guard stays in case the call ever regains a budget - a partial set must
-	// never reach the release loop.
-	if ( false === $referenced ) {
-		delete_transient( 'bb_draft_stamp_sweep_lock' );
-
-		return array(
-			'released' => 0,
-			'complete' => false,
+	if ( ! is_array( $referenced ) ) {
+		// Hold the lock across the (unbudgeted) scan too, not just the release
+		// loop below - on a large library the scan alone can outlast the TTL.
+		$referenced = bb_drafts_collect_referenced_attachment_ids(
+			0,
+			$started_at,
+			function () {
+				set_transient( 'bb_draft_stamp_sweep_lock', 1, 5 * MINUTE_IN_SECONDS );
+			}
 		);
+
+		// Defensive: the scan is unbudgeted above, so it returns the full set.
+		// The guard stays in case the call ever regains a budget - a partial set
+		// must never reach the release loop or seed the cache.
+		if ( false === $referenced ) {
+			delete_transient( 'bb_draft_stamp_sweep_lock' );
+
+			return array(
+				'released' => 0,
+				'complete' => false,
+			);
+		}
+
+		/**
+		 * Filters the TTL (seconds) of the network-wide referenced-attachment
+		 * cache shared by every blog's orphan-stamp sweep. Correctness does not
+		 * depend on it (stamping invalidates the cache); it only bounds how long
+		 * a released reference lingers as safe over-protection.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param int $ttl Cache lifetime in seconds. Default 12 hours.
+		 */
+		$referenced_ttl = (int) apply_filters( 'bb_draft_referenced_cache_ttl', 12 * HOUR_IN_SECONDS );
+
+		set_site_transient( 'bb_draft_referenced_stamp_ids', $referenced, $referenced_ttl );
 	}
 
 	// Measure the release budget from AFTER the mandatory scan, so a slow scan

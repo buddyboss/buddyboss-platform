@@ -1028,6 +1028,8 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 	 */
 	protected $cleanup_lock_sets = 0;
 
+	protected $reference_scans = 0;
+
 	/**
 	 * Count a cleanup-lock set/refresh.
 	 *
@@ -1424,6 +1426,84 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 
 		wp_clear_scheduled_hook( 'bb_draft_stamp_release_hook' );
 		wp_clear_scheduled_hook( 'bb_draft_cleanup_hook' );
+	}
+
+	/**
+	 * Counts how many times the reference scan runs (its batch-size filter fires
+	 * exactly once per scan invocation).
+	 */
+	public function count_reference_scan( $value ) {
+		++$this->reference_scans;
+
+		return $value;
+	}
+
+	/**
+	 * H3: the reference scan reads network-global draft usermeta, so its answer
+	 * is identical on every blog. Now that the sweep runs per-site (D2), the set
+	 * is cached network-wide and reused: a second sweep with nothing changed must
+	 * NOT re-scan, and stamping a new attachment (a new reference) must drop the
+	 * cache so the next sweep rescans - the cache is only ever a superset of the
+	 * live set, never a subset, so it can leak a stamp for one cycle but never
+	 * release an in-use attachment.
+	 */
+	public function test_reference_scan_is_cached_network_wide_and_invalidated_on_stamp() {
+		$this->isolate_draft_maintenance();
+
+		$user_id  = self::factory()->user->create();
+		$orphan   = $this->make_stamped_unsaved_attachment( $user_id );
+		$in_draft = $this->make_stamped_unsaved_attachment( $user_id );
+
+		bp_update_user_meta(
+			$user_id,
+			'bb_user_topic_reply_draft',
+			array(
+				'draft_discussion_11' => array(
+					'data_key'        => 'draft_discussion_11',
+					'_draft_saved_at' => time(),
+					'data'            => array( 'bbp_media' => wp_json_encode( array( array( 'id' => $in_draft ) ) ) ),
+				),
+			)
+		);
+
+		add_filter( 'bb_draft_retention_days', array( $this, 'filter_one_day_retention' ) );
+		$this->reference_scans = 0;
+		add_filter( 'bb_draft_reference_scan_batch_size', array( $this, 'count_reference_scan' ) );
+
+		// First sweep: cold cache, so the scan runs and seeds the cache.
+		bb_drafts_release_orphaned_draft_stamps( 0 );
+		$this->assertSame( 1, $this->reference_scans, 'The first sweep must run the reference scan.' );
+		$this->assertIsArray(
+			get_site_transient( 'bb_draft_referenced_stamp_ids' ),
+			'The first sweep must seed the network-wide referenced-attachment cache.'
+		);
+
+		// Second sweep with nothing changed: cache hit, so NO re-scan.
+		bb_drafts_release_orphaned_draft_stamps( 0 );
+		$this->assertSame( 1, $this->reference_scans, 'A second sweep with an unchanged draft set must reuse the cache, not re-scan.' );
+
+		// Stamping a new attachment adds a reference the cache must not miss.
+		$new_attachment = self::factory()->post->create(
+			array(
+				'post_type'   => 'attachment',
+				'post_status' => 'inherit',
+				'post_author' => $user_id,
+			)
+		);
+		update_post_meta( $new_attachment, 'bp_media_saved', '0' );
+		bb_draft_protect_payload_attachments( array( array( array( 'id' => $new_attachment ) ) ), $user_id );
+
+		$this->assertFalse(
+			get_site_transient( 'bb_draft_referenced_stamp_ids' ),
+			'Stamping a new attachment must invalidate the referenced-attachment cache.'
+		);
+
+		// Next sweep: cache is cold again, so the scan runs.
+		bb_drafts_release_orphaned_draft_stamps( 0 );
+		$this->assertSame( 2, $this->reference_scans, 'After a stamp invalidates the cache, the next sweep must re-scan.' );
+
+		remove_filter( 'bb_draft_reference_scan_batch_size', array( $this, 'count_reference_scan' ) );
+		remove_filter( 'bb_draft_retention_days', array( $this, 'filter_one_day_retention' ) );
 	}
 
 	/**
@@ -2395,6 +2475,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		delete_site_transient( 'bb_draft_oneshot_lock' );
 		delete_transient( 'bb_draft_stamp_sweep_lock' );
 		delete_option( 'bb_draft_stamp_sweep_cursor' );
+		delete_site_transient( 'bb_draft_referenced_stamp_ids' );
 
 		$scheduled = wp_next_scheduled( 'bb_draft_oneshot' );
 		if ( $scheduled ) {
