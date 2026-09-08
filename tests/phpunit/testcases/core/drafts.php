@@ -949,6 +949,64 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 	}
 
 	/**
+	 * M1: a filter scoped to the draft keys leaves the internal probe key
+	 * unchanged, so bb_draft_meta_key_wrap()'s identity short-circuit used to
+	 * report invertible=true while every real stored key was actually wrapped -
+	 * silently disabling the cap, eviction, expiry and healing. The wrap must
+	 * VERIFY against the real canonical keys even in the identity case, and
+	 * decline (invertible=false) when the probe-derived wrap does not describe
+	 * them, so the sweep never deletes on a guess.
+	 */
+	public function test_draft_scoped_filter_keeps_the_maintenance_layer_working() {
+		$user_id = self::factory()->user->create();
+
+		add_filter( 'bp_get_user_meta_key', array( $this, 'filter_draft_scoped_user_meta_key' ) );
+
+		// Stored through the writer, so it lands under the WRAPPED key.
+		bp_update_user_meta(
+			$user_id,
+			'draft_user',
+			array(
+				'data_key'        => 'draft_user',
+				'data'            => array( 'content' => 'expired' ),
+				'_draft_saved_at' => 100,
+			)
+		);
+
+		$wrap  = bb_draft_meta_key_wrap();
+		$batch = bb_draft_get_rows_batch( 0, 200, false );
+
+		// The wrap follows the real draft key, so it is derivable and correct -
+		// NOT the silent identity that used to make everything inert (M1).
+		$this->assertTrue( $wrap['invertible'], 'A pure draft-scoped wrap must be invertible, not fall through to identity.' );
+		$this->assertSame( 'bbdraft_', $wrap['prefix'], 'The wrap prefix must be derived from the real filtered key.' );
+		$this->assertSame( '', $wrap['suffix'] );
+
+		// The sweep now SEES the row and reports its LOGICAL key, so the cap,
+		// eviction, expiry and healing are no longer disabled.
+		$this->assertCount( 1, $batch['rows'], 'The maintenance scan must see the stored draft under a draft-scoped filter.' );
+		$this->assertSame( 'draft_user', $batch['rows'][0]['meta_key'], 'The scan must map the wrapped key back to its logical form.' );
+
+		// End-to-end: the expiry sweep actually removes the expired draft.
+		add_filter( 'bb_draft_retention_days', array( $this, 'filter_one_day_retention' ) );
+		$result = bb_drafts_delete_expired( 0 );
+		remove_filter( 'bb_draft_retention_days', array( $this, 'filter_one_day_retention' ) );
+
+		remove_filter( 'bp_get_user_meta_key', array( $this, 'filter_draft_scoped_user_meta_key' ) );
+
+		$this->assertSame( 1, $result['deleted'], 'The expiry sweep must actually delete the expired draft, proving the layer is not inert.' );
+	}
+
+	/**
+	 * Retain drafts for one day (for expiry tests).
+	 *
+	 * @return int
+	 */
+	public function filter_one_day_retention() {
+		return 1;
+	}
+
+	/**
 	 * The activity composer's discard now delegates to bb_draft_dispose().
 	 *
 	 * The discard path used to hand-roll unstamp + delete and skipped the size
@@ -1792,6 +1850,22 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 
 	public function filter_hash_user_meta_key( $key ) {
 		return 'bbtest_' . md5( $key );
+	}
+
+	/**
+	 * Wrap ONLY the draft keys, leaving every other key (the internal probe
+	 * included) untouched - the natural way to scope a bp_get_user_meta_key
+	 * filter to drafts (M1).
+	 *
+	 * @param string $key Meta key.
+	 * @return string Possibly wrapped key.
+	 */
+	public function filter_draft_scoped_user_meta_key( $key ) {
+		if ( bb_draft_is_draft_meta_key( $key ) ) {
+			return 'bbdraft_' . $key;
+		}
+
+		return $key;
 	}
 
 	/**

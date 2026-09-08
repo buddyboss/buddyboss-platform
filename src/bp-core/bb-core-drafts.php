@@ -61,13 +61,19 @@ function bb_draft_is_draft_meta_key( $meta_key ) {
  * }
  */
 function bb_draft_meta_key_wrap() {
-	// Keyed on the probe result rather than a bare flag: a test (or a plugin
-	// on a late hook) may add or remove the filter mid-request, and the memo
-	// must follow it instead of pinning the first answer seen.
+	// Keyed on the filtered value of a REAL draft key, not a synthetic probe: a
+	// test (or a plugin on a late hook) may add or remove the filter
+	// mid-request, and the memo must follow it. A synthetic probe cannot follow
+	// a filter SCOPED to the draft keys - that filter leaves the probe untouched
+	// while wrapping every real key, so the probe's value (and therefore the
+	// memo key) never changes and "no filter" and "draft-scoped filter" collapse
+	// to the same cached identity, silently disabling the whole maintenance
+	// layer (M1). Deriving from `draft_user` makes the wrap follow exactly the
+	// filter the stored keys actually went through.
 	static $memo = array();
 
-	$probe    = 'bb_draft_meta_key_probe';
-	$filtered = (string) bp_get_user_meta_key( $probe );
+	$canonical_key = 'draft_user';
+	$filtered      = (string) bp_get_user_meta_key( $canonical_key );
 
 	if ( isset( $memo[ $filtered ] ) ) {
 		return $memo[ $filtered ];
@@ -79,24 +85,24 @@ function bb_draft_meta_key_wrap() {
 		'invertible' => true,
 	);
 
-	if ( $probe === $filtered ) {
-		$memo[ $filtered ] = $identity;
-
-		return $identity;
-	}
-
-	$position = strpos( $filtered, $probe );
 	$wrap     = $identity;
+	$position = strpos( $filtered, $canonical_key );
 
 	if ( false === $position ) {
+		// The filter is not a pure wrap of this key (a hash, say), so a stored
+		// key cannot be mapped back. Declining is the one outcome safer than
+		// guessing.
 		$wrap['invertible'] = false;
 	} else {
 		$wrap['prefix'] = substr( $filtered, 0, $position );
-		$wrap['suffix'] = substr( $filtered, $position + strlen( $probe ) );
+		$wrap['suffix'] = substr( $filtered, $position + strlen( $canonical_key ) );
+	}
 
-		// Verify the derived wrap actually describes the real keys. A filter
-		// that rewrites only some keys would otherwise hand us a wrap that
-		// silently mismatches the rows we are about to delete.
+	// Verify the derived wrap describes EVERY canonical draft key the same way.
+	// A filter that rewrites only some of them would otherwise hand back a wrap
+	// that silently mismatches the rows the maintenance layer is about to act
+	// on (M1).
+	if ( $wrap['invertible'] ) {
 		foreach ( array( 'draft_user', 'bb_user_topic_reply_draft', 'draft_user_1', 'draft_group_1' ) as $canonical ) {
 			if ( (string) bp_get_user_meta_key( $canonical ) !== $wrap['prefix'] . $canonical . $wrap['suffix'] ) {
 				$wrap = $identity;
