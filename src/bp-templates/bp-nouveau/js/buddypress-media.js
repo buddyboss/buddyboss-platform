@@ -1413,6 +1413,29 @@ window.bp = window.bp || {};
 									$( 'body #buddypress .activity-list li#activity-' + activityId ).remove();
 									$( 'body .bb-activity-media-elem.media-activity.' + id ).remove();
 									$( 'body .activity-comments li#acomment-' + activityId ).remove();
+
+									// The selectors above also clear the "view more comments"
+									// modal's copy of the activity, which leaves the modal open
+									// as an empty shell. When the modal's list has been emptied,
+									// close it through its real close button so the close
+									// handler runs; hide the wrapper directly if a theme
+									// override renamed the button.
+									var $activityModal = $( '#activity-modal:visible' );
+									if ( $activityModal.length && 0 === $activityModal.find( '.bb-modal-activity-body .activity-list li' ).length ) {
+										var $modalCloseButton = $activityModal.find( '.bb-modal-activity-header .bb-close-action-popup' );
+										if ( $modalCloseButton.length ) {
+											// A pin toggled from inside the modal is moot once the
+											// post is deleted - left set, the close-button's sync
+											// handler reloads the whole feed (same reset as the
+											// direct-delete path in buddypress-activity.js).
+											if ( 'undefined' !== typeof bp.Nouveau.Activity ) {
+												bp.Nouveau.Activity.activityPinHasUpdates = false;
+											}
+											$modalCloseButton.trigger( 'click' );
+										} else {
+											$activityModal.closest( '.bb-activity-model-wrapper' ).hide();
+										}
+									}
 								} else {
 									$( 'body #buddypress .activity-list li#activity-' + activityId ).replaceWith( response.data.activity_content );
 								}
