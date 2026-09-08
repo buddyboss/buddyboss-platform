@@ -2831,4 +2831,157 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		remove_filter( 'wp_die_ajax_handler', array( $this, 'filter_draft_die_handler' ), 99 );
 		remove_filter( 'wp_doing_ajax', '__return_true' );
 	}
+
+	/**
+	 * The upgrade one-shot must shed the poster before it deletes the draft.
+	 *
+	 * A one-draft-per-row key has nothing to evict inside the row, so the
+	 * healing pass had exactly one move: delete it. `js_preview` is a
+	 * canvas.toDataURL() poster frame that nothing depends on surviving a
+	 * round trip, and on a legacy row it is routinely almost the whole
+	 * payload - measured at 99.8% of a 150 KB row, dropping to 260 bytes once
+	 * shed. So the pass destroyed the member's unpublished text to reclaim
+	 * space the poster alone was using, at upgrade time, with no notice
+	 * (PROD-9621 Q6).
+	 *
+	 * The shedding that already existed was client-side only (`beb5d52a45`),
+	 * which can never reach a row that is already in the database - and
+	 * legacy rows are the entire population this one-shot exists to heal.
+	 *
+	 * Asserts on the CONTENT, not just the row's presence: a build that kept
+	 * the row but dropped the text would otherwise pass.
+	 */
+	public function test_oneshot_sheds_the_poster_instead_of_destroying_the_draft() {
+		$user_id = self::factory()->user->create();
+		$text    = 'IMPORTANT MEMBER TEXT the member has not published yet.';
+
+		$entry = array(
+			'object'          => 'user',
+			'data_key'        => 'draft_user',
+			'data'            => array(
+				'content' => $text,
+				'video'   => array(
+					array(
+						'id'         => 0,
+						'name'       => 'clip.mp4',
+						'js_preview' => 'data:image/png;base64,' . str_repeat( 'A', 150000 ),
+					),
+				),
+			),
+			'_draft_saved_at' => time() - 3600,
+		);
+
+		bp_update_user_meta( $user_id, 'draft_user', $entry );
+
+		// Premise: the row really is over the cap, and shedding really is
+		// enough to bring it under. Without both, the test proves nothing.
+		$shed = $entry;
+		unset( $shed['data']['video'][0]['js_preview'] );
+		$this->assertGreaterThan( bb_draft_max_size(), strlen( maybe_serialize( $entry ) ), 'Premise: the seeded row must exceed the cap.' );
+		$this->assertLessThanOrEqual( bb_draft_max_size(), strlen( maybe_serialize( $shed ) ), 'Premise: shedding the poster must be enough to fit.' );
+
+		delete_option( 'bb_draft_oneshot_state' );
+		bb_drafts_oneshot_batch( 0 );
+
+		$stored = bp_get_user_meta( $user_id, 'draft_user', true );
+
+		$this->assertIsArray( $stored, 'The salvageable draft must survive the healing pass, not be deleted.' );
+		$this->assertSame( $text, $stored['data']['content'], "The member's unpublished text must be intact." );
+		$this->assertArrayNotHasKey( 'js_preview', $stored['data']['video'][0], 'The poster frame must have been shed.' );
+		$this->assertLessThanOrEqual( bb_draft_max_size(), strlen( maybe_serialize( $stored ) ), 'The stored row must now be within the cap.' );
+	}
+
+	/**
+	 * Negative control: a row still too large after shedding is still deleted.
+	 *
+	 * Without this, the fix above would pass for a build that simply stopped
+	 * healing oversized rows - which would leave the poisoned usermeta this
+	 * whole ticket exists to clear sitting in the database (PROD-9621 Q6).
+	 */
+	public function test_oneshot_still_disposes_a_row_that_is_oversized_on_its_own_merits() {
+		$user_id = self::factory()->user->create();
+
+		$entry = array(
+			'object'          => 'user',
+			'data_key'        => 'draft_user',
+			'data'            => array(
+				// Over the cap on text alone, so shedding cannot rescue it.
+				'content' => str_repeat( 'x', 150 * KB_IN_BYTES ),
+				'video'   => array(
+					array(
+						'id'         => 0,
+						'js_preview' => 'data:image/png;base64,' . str_repeat( 'A', 1000 ),
+					),
+				),
+			),
+			'_draft_saved_at' => time() - 3600,
+		);
+
+		bp_update_user_meta( $user_id, 'draft_user', $entry );
+
+		$shed = $entry;
+		unset( $shed['data']['video'][0]['js_preview'] );
+		$this->assertGreaterThan( bb_draft_max_size(), strlen( maybe_serialize( $shed ) ), 'Premise: this row must still exceed the cap after shedding.' );
+
+		delete_option( 'bb_draft_oneshot_state' );
+		bb_drafts_oneshot_batch( 0 );
+
+		$this->assertEmpty(
+			bp_get_user_meta( $user_id, 'draft_user', true ),
+			'A row that is genuinely too large must still be disposed - the healing guarantee must not weaken.'
+		);
+	}
+
+	/**
+	 * The forum heal must shed an inner draft's poster before dropping it.
+	 *
+	 * Kept symmetric with the one-draft-per-row path above. The forum row
+	 * holds many inner drafts, so pass 1 drops only the ones individually
+	 * over the cap - but it dropped them whole, with the same salvageable
+	 * text loss. A salvage-only pass also has to reach the row write, which
+	 * the `empty( $removed )` early return used to prevent (PROD-9621 Q6).
+	 */
+	public function test_forum_heal_sheds_an_inner_poster_instead_of_dropping_the_inner_draft() {
+		$user_id = self::factory()->user->create();
+		$text    = 'FORUM DRAFT TEXT worth keeping.';
+		$key     = 'draft_reply_7001';
+
+		bp_update_user_meta(
+			$user_id,
+			'bb_user_topic_reply_draft',
+			array(
+				$key => array(
+					'data_key'        => $key,
+					'data'            => array(
+						'bbp_reply_content' => $text,
+						'bbp_video'         => wp_json_encode(
+							array(
+								array(
+									'id'         => 0,
+									'js_preview' => 'data:image/png;base64,' . str_repeat( 'A', 150000 ),
+								),
+							)
+						),
+					),
+					'_draft_saved_at' => time() - 3600,
+				),
+			)
+		);
+
+		$acted = bb_draft_heal_forum_row( $user_id );
+
+		$stored = bp_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
+
+		$this->assertIsArray( $stored, 'The aggregate row must survive.' );
+		$this->assertArrayHasKey( $key, $stored, 'The salvageable inner draft must not be dropped.' );
+		$this->assertSame( $text, $stored[ $key ]['data']['bbp_reply_content'], 'The inner draft text must be intact.' );
+
+		$video = json_decode( $stored[ $key ]['data']['bbp_video'], true );
+		$this->assertArrayNotHasKey( 'js_preview', $video[0], 'The inner poster frame must have been shed.' );
+
+		// A salvage is work done, so it must be reported - a caller summing
+		// this into a healed total would otherwise call a rewritten row
+		// untouched.
+		$this->assertSame( 1, $acted, 'The salvage must be counted in the return value.' );
+	}
 }

@@ -626,6 +626,123 @@ function bb_draft_collect_attachment_ids( $draft ) {
 }
 
 /**
+ * Strip the video poster frames a stored draft does not need to keep.
+ *
+ * `js_preview` is a `canvas.toDataURL()` PNG of the first video frame, up to
+ * 1920x1080. It is a convenience for redrawing the composer thumbnail and
+ * nothing depends on it surviving a round trip — the poster is regenerated
+ * from the attachment on publish. On a legacy row written before the client
+ * stopped sending it, it is routinely the overwhelming majority of the
+ * stored bytes: measured at 99.8% of a 150 KB row, which drops to 260 bytes
+ * once the frame is gone.
+ *
+ * That makes it the first thing to drop when a row is over the cap, and the
+ * reason the healing paths must try shedding before they delete: without it
+ * they destroy the member's unpublished text to reclaim space that the
+ * poster alone was using (PROD-9621 Q6).
+ *
+ * Handles both stored shapes, the same pair
+ * {@see bb_draft_collect_attachment_ids()} handles: the activity composer
+ * stores `data['video']` as a real array, the forum composer stores
+ * `data['bbp_video']` as a JSON string. Idempotent — shedding an
+ * already-shed draft returns it unchanged, so callers may compare sizes
+ * before and after to decide whether anything was reclaimed.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $draft Draft entry.
+ * @return array The draft with any poster frames removed.
+ */
+function bb_draft_shed_preview_frames( $draft ) {
+	if ( empty( $draft['data'] ) || ! is_array( $draft['data'] ) ) {
+		return $draft;
+	}
+
+	if ( ! empty( $draft['data']['video'] ) && is_array( $draft['data']['video'] ) ) {
+		foreach ( $draft['data']['video'] as $index => $entry ) {
+			if ( is_array( $entry ) && isset( $entry['js_preview'] ) ) {
+				unset( $draft['data']['video'][ $index ]['js_preview'] );
+			}
+		}
+	}
+
+	if ( ! empty( $draft['data']['bbp_video'] ) && is_string( $draft['data']['bbp_video'] ) ) {
+		$entries = json_decode( $draft['data']['bbp_video'], true );
+
+		if ( ! empty( $entries ) && is_array( $entries ) ) {
+			$shed = false;
+
+			foreach ( $entries as $index => $entry ) {
+				if ( is_array( $entry ) && isset( $entry['js_preview'] ) ) {
+					unset( $entries[ $index ]['js_preview'] );
+					$shed = true;
+				}
+			}
+
+			// Re-encoded only when something was actually removed: a
+			// no-op re-encode would still change the stored string
+			// (escaping, key order) and make the caller's before/after
+			// size comparison report a reclaim that did not happen.
+			if ( $shed ) {
+				$draft['data']['bbp_video'] = wp_json_encode( $entries );
+			}
+		}
+	}
+
+	return $draft;
+}
+
+/**
+ * Try to bring an oversized single-draft row under the cap by shedding.
+ *
+ * For the one-draft-per-row keys (`draft_user`, `draft_user_{id}`,
+ * `draft_group_{id}`) there is nothing to evict inside the row, so the
+ * healing pass had only one move: delete the row. That destroyed the
+ * member's unpublished text whenever the oversize came from a poster frame
+ * the draft did not need — which is the usual case on a legacy row
+ * (PROD-9621 Q6).
+ *
+ * Writes back only when shedding actually brings the row under the cap, so
+ * a row that is genuinely too large still falls through to disposal and the
+ * healing guarantee is unchanged.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int    $user_id  Owning user ID.
+ * @param string $meta_key Draft usermeta key.
+ * @return bool Whether the row was salvaged and stored.
+ */
+function bb_draft_salvage_oversized_draft( $user_id, $meta_key ) {
+	$user_id = (int) $user_id;
+
+	if ( $user_id <= 0 || ! bb_draft_is_draft_meta_key( $meta_key ) ) {
+		return false;
+	}
+
+	$stored = bp_get_user_meta( $user_id, $meta_key, true );
+
+	if ( ! is_array( $stored ) || empty( $stored ) ) {
+		return false;
+	}
+
+	$shed = bb_draft_shed_preview_frames( $stored );
+
+	// Nothing was reclaimable, so this row is oversized on its own merits.
+	if ( maybe_serialize( $shed ) === maybe_serialize( $stored ) ) {
+		return false;
+	}
+
+	if ( strlen( maybe_serialize( $shed ) ) > bb_draft_max_size() ) {
+		return false;
+	}
+
+	bp_update_user_meta( $user_id, $meta_key, $shed );
+	bb_draft_flush_user_meta_sizes( $user_id );
+
+	return true;
+}
+
+/**
  * Release the draft protection stamps from a draft's attachments.
  *
  * Removes the `bb_media_draft` / `bb_activity_post_feature_image_draft`
@@ -1653,7 +1770,7 @@ function bb_drafts_delete_expired( $time_budget = 10 ) {
  * @since BuddyBoss [BBVERSION]
  *
  * @param int $user_id Owning user ID.
- * @return int Number of inner drafts disposed.
+ * @return int Number of inner drafts acted on - disposed plus salvaged.
  */
 function bb_draft_heal_forum_row( $user_id ) {
 	$user_id  = (int) $user_id;
@@ -1670,6 +1787,7 @@ function bb_draft_heal_forum_row( $user_id ) {
 
 	$max_size = bb_draft_max_size();
 	$removed  = array();
+	$salvaged = 0;
 
 	// Pass 1 - inner drafts individually over the per-draft cap. Sizes are
 	// measured once, here, and reused by the trim below.
@@ -1679,6 +1797,20 @@ function bb_draft_heal_forum_row( $user_id ) {
 		$inner_bytes = strlen( maybe_serialize( $inner_draft ) );
 
 		if ( $inner_bytes > $max_size ) {
+			// Shed the poster frames before deleting. Kept symmetric with the
+			// one-draft-per-row path in bb_drafts_oneshot_batch(): an inner
+			// draft that only broke the cap because of a poster keeps its text
+			// instead of being dropped (PROD-9621 Q6).
+			$shed       = bb_draft_shed_preview_frames( $inner_draft );
+			$shed_bytes = strlen( maybe_serialize( $shed ) );
+
+			if ( $shed_bytes <= $max_size ) {
+				$row[ $inner_key ]            = $shed;
+				$sizes[ (string) $inner_key ] = $shed_bytes;
+				++$salvaged;
+				continue;
+			}
+
 			$removed[ (string) $inner_key ] = $inner_draft;
 			unset( $row[ $inner_key ] );
 			++$disposed;
@@ -1738,7 +1870,10 @@ function bb_draft_heal_forum_row( $user_id ) {
 		}
 	}
 
-	if ( empty( $removed ) ) {
+	// A salvage-only pass removed nothing but DID rewrite inner drafts, so it
+	// still has to reach the write below - returning early here would throw
+	// the shed row away and leave the oversized one stored (PROD-9621 Q6).
+	if ( empty( $removed ) && 0 === $salvaged ) {
 		return 0;
 	}
 
@@ -1767,7 +1902,9 @@ function bb_draft_heal_forum_row( $user_id ) {
 		}
 	}
 
-	return $disposed;
+	// Salvages count as work done: a caller summing this into a healed
+	// total would otherwise report a row it did rewrite as untouched.
+	return $disposed + $salvaged;
 }
 
 /**
@@ -1835,6 +1972,13 @@ function bb_drafts_oneshot_batch( $time_budget = 10 ) {
 				if ( $row_bytes > $max_size ) {
 					if ( 'bb_user_topic_reply_draft' === $row['meta_key'] ) {
 						$healed += bb_draft_heal_forum_row( $row_user );
+					} elseif ( bb_draft_salvage_oversized_draft( $row_user, $row['meta_key'] ) ) {
+						// Shedding the poster frame was enough - the member keeps
+						// their text. Tried BEFORE disposal because a one-draft row
+						// has nothing to evict, so disposal is total: it destroyed
+						// unpublished text to reclaim space the poster alone was
+						// using (PROD-9621 Q6).
+						++$healed;
 					} elseif ( bb_draft_dispose( $row_user, $row['meta_key'] ) ) {
 						++$healed;
 					}
