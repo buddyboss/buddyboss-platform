@@ -1379,6 +1379,35 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 	}
 
 	/**
+	 * The daily expiry sweep and the one-shot migration read-modify-write the
+	 * same aggregated usermeta rows, so they must serialize against EACH OTHER,
+	 * not only against themselves - otherwise a concurrent run can resurrect a
+	 * key one of them just removed. Each now backs off while the other's lock is
+	 * held.
+	 */
+	public function test_expiry_and_oneshot_serialize_against_each_other() {
+		$this->isolate_draft_maintenance();
+
+		$user_id = self::factory()->user->create();
+		bp_update_user_meta( $user_id, 'draft_user', array( 'data_key' => 'draft_user', '_draft_saved_at' => 100, 'data' => array( 'content' => 'expired' ) ) );
+
+		// Expiry must back off while the one-shot holds its lock, and touch nothing.
+		set_site_transient( 'bb_draft_oneshot_lock', 1, 5 * MINUTE_IN_SECONDS );
+		$blocked_expiry = bb_drafts_delete_expired( 0 );
+		delete_site_transient( 'bb_draft_oneshot_lock' );
+
+		$this->assertTrue( ! empty( $blocked_expiry['locked'] ), 'Expiry must back off while the one-shot lock is held.' );
+		$this->assertNotEmpty( bp_get_user_meta( $user_id, 'draft_user', true ), 'A backed-off expiry sweep must not dispose anything.' );
+
+		// One-shot must back off while the expiry holds its lock.
+		set_site_transient( 'bb_draft_cleanup_lock', 1, 5 * MINUTE_IN_SECONDS );
+		$blocked_oneshot = bb_drafts_oneshot_batch( 0 );
+		delete_site_transient( 'bb_draft_cleanup_lock' );
+
+		$this->assertTrue( ! empty( $blocked_oneshot['locked'] ), 'One-shot must back off while the expiry lock is held.' );
+	}
+
+	/**
 	 * @return int
 	 */
 	public function return_two() {

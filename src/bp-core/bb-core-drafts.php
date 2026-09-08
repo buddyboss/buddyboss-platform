@@ -1894,7 +1894,14 @@ function bb_drafts_delete_expired( $time_budget = 10 ) {
 	// it, and the next slice then skips every row below it. Serialize them.
 	// A lock lost to an unreliable object cache only costs duplicate work -
 	// disposal is idempotent - so failing open is the safe direction here.
-	if ( get_site_transient( 'bb_draft_cleanup_lock' ) ) {
+	//
+	// Also back off while the one-shot migration holds bb_draft_oneshot_lock:
+	// both sweeps read-modify-write the SAME aggregated usermeta rows, and
+	// running concurrently (each holding only its own lock) lets one write a
+	// stale copy over the other's change - the daily cron's just-expired key
+	// silently resurrected by the one-shot's size heal, or vice versa. They must
+	// serialize against each other, not only against themselves.
+	if ( get_site_transient( 'bb_draft_cleanup_lock' ) || get_site_transient( 'bb_draft_oneshot_lock' ) ) {
 		return array(
 			'deleted'  => 0,
 			'complete' => false,
@@ -2254,7 +2261,13 @@ function bb_drafts_oneshot_batch( $time_budget = 10 ) {
 	// costs duplicate work (every operation here is idempotent), so failing
 	// open is the safe direction. The WP-CLI drain releases the lock between
 	// its own calls, so it never blocks itself.
-	if ( get_site_transient( 'bb_draft_oneshot_lock' ) ) {
+	//
+	// Also back off while the daily expiry sweep holds bb_draft_cleanup_lock:
+	// both read-modify-write the same aggregated usermeta rows, so a concurrent
+	// run (each holding only its own lock) could resurrect a key the other just
+	// removed. The two must serialize against each other. This pairs with the
+	// same cross-check in bb_drafts_delete_expired().
+	if ( get_site_transient( 'bb_draft_oneshot_lock' ) || get_site_transient( 'bb_draft_cleanup_lock' ) ) {
 		return array(
 			'healed'   => 0,
 			'complete' => false,
