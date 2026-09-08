@@ -4612,6 +4612,144 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 	}
 
 	/**
+	 * Drive bb_post_topic_reply_draft() as a DISCARD (post_action delete).
+	 *
+	 * @param string $data_key Draft key to discard.
+	 * @return void
+	 */
+	protected function drive_forum_draft_discard( $data_key ) {
+		$_POST    = array();
+		$_REQUEST = array();
+
+		// The client discard omits the data member, exactly like the JS.
+		$_REQUEST['draft_topic_reply'] = wp_slash(
+			wp_json_encode(
+				array(
+					'data_key'    => $data_key,
+					'object'      => 'topic',
+					'post_action' => 'delete',
+				)
+			)
+		);
+
+		// phpcs:disable WordPress.Security.NonceVerification -- this test drives the handler that performs the verification.
+		$_POST['_wpnonce_post_topic_reply_draft'] = wp_create_nonce( 'post_topic_reply_draft_data' );
+		$_REQUEST                                 = array_merge( $_REQUEST, $_POST );
+		// phpcs:enable WordPress.Security.NonceVerification
+
+		add_filter( 'wp_doing_ajax', '__return_true' );
+		add_filter( 'wp_die_ajax_handler', array( $this, 'filter_draft_die_handler' ), 99 );
+
+		ob_start();
+
+		try {
+			bb_post_topic_reply_draft();
+		} catch ( Exception $e ) {
+			unset( $e );
+		}
+
+		ob_end_clean();
+
+		remove_filter( 'wp_die_ajax_handler', array( $this, 'filter_draft_die_handler' ), 99 );
+		remove_filter( 'wp_doing_ajax', '__return_true' );
+	}
+
+	/**
+	 * Discarding a forum draft must actually remove it from storage and release
+	 * its attachment protection.
+	 *
+	 * The GH1 refactor stopped seeding $decided_draft_keys with the primary key,
+	 * populating it only inside is_draft_update-gated blocks. A discard sends
+	 * post_action delete (is_draft_update false), so the key was never decided
+	 * and the fresh-read merge copied it straight back from storage - the
+	 * discard silently did nothing while reporting success, and the draft
+	 * resurfaced on the next lazy fetch.
+	 */
+	public function test_discarding_a_forum_draft_removes_it_and_releases_its_attachment() {
+		$user_id = self::factory()->user->create();
+		$this->set_current_user( $user_id );
+
+		$forum = self::factory()->post->create( array( 'post_type' => bbp_get_forum_post_type(), 'post_status' => 'publish' ) );
+		$att   = $this->make_draft_attachment( $user_id );
+		update_post_meta( $att, 'bb_media_draft', 1 );
+
+		$key = 'draft_discussion_' . $forum;
+
+		bp_update_user_meta(
+			$user_id,
+			'bb_user_topic_reply_draft',
+			wp_slash(
+				array(
+					$key => array(
+						'data_key'        => $key,
+						'object'          => 'topic',
+						'_draft_saved_at' => time() - 60,
+						'data'            => array(
+							'bbp_topic_content' => 'discard me',
+							'bbp_media'         => wp_json_encode( array( array( 'id' => $att ) ) ),
+						),
+					),
+				)
+			)
+		);
+
+		$this->drive_forum_draft_discard( $key );
+
+		$row = bp_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
+
+		$this->assertTrue(
+			empty( $row ) || ! isset( $row[ $key ] ),
+			'A discarded forum draft must be removed from storage, not silently re-copied by the merge.'
+		);
+		$this->assertSame(
+			'',
+			(string) get_post_meta( $att, 'bb_media_draft', true ),
+			'The discarded draft was the only reference, so its attachment stamp must be released.'
+		);
+	}
+
+	/**
+	 * Discarding one forum draft must NOT release an attachment a sibling draft
+	 * still references.
+	 */
+	public function test_discarding_a_forum_draft_keeps_a_sibling_attachment() {
+		$user_id = self::factory()->user->create();
+		$this->set_current_user( $user_id );
+
+		$forum_a = self::factory()->post->create( array( 'post_type' => bbp_get_forum_post_type(), 'post_status' => 'publish' ) );
+		$forum_b = self::factory()->post->create( array( 'post_type' => bbp_get_forum_post_type(), 'post_status' => 'publish' ) );
+		$shared  = $this->make_draft_attachment( $user_id );
+		update_post_meta( $shared, 'bb_media_draft', 1 );
+
+		$discard_key = 'draft_discussion_' . $forum_a;
+		$sibling_key = 'draft_discussion_' . $forum_b;
+		$media_json  = wp_json_encode( array( array( 'id' => $shared ) ) );
+
+		bp_update_user_meta(
+			$user_id,
+			'bb_user_topic_reply_draft',
+			wp_slash(
+				array(
+					$discard_key => array( 'data_key' => $discard_key, 'object' => 'topic', '_draft_saved_at' => time() - 60, 'data' => array( 'bbp_media' => $media_json ) ),
+					$sibling_key => array( 'data_key' => $sibling_key, 'object' => 'topic', '_draft_saved_at' => time() - 60, 'data' => array( 'bbp_media' => $media_json ) ),
+				)
+			)
+		);
+
+		$this->drive_forum_draft_discard( $discard_key );
+
+		$row = bp_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
+
+		$this->assertArrayNotHasKey( $discard_key, $row, 'The discarded draft must be removed.' );
+		$this->assertArrayHasKey( $sibling_key, $row, 'The sibling draft must survive.' );
+		$this->assertSame(
+			'1',
+			(string) get_post_meta( $shared, 'bb_media_draft', true ),
+			'An attachment the surviving sibling still references must keep its protection.'
+		);
+	}
+
+	/**
 	 * Drive the activity draft handler with a RAW request array (bypasses the
 	 * scalar-only drive_activity_draft_save helper), returning the response.
 	 *

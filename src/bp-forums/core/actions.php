@@ -638,11 +638,13 @@ function bb_post_topic_reply_draft() {
 		$kept_primary_key   = (string) $draft_topic_reply['data_key'];
 		$kept_primary_entry = $keep_stored_primary ? $existing_draft[ $kept_primary_key ] : array();
 
-		// Starts empty: the primary key is DECIDED only when it is actually
-		// written (see the assignment at the end of the primary block). A kept
-		// or rejected primary decides nothing, so the merge below takes that key
-		// from the fresh storage read and never overwrites the stored draft
-		// with an empty or over-cap payload (GH1, Q12).
+		// Starts empty: the primary key is DECIDED only when this request
+		// determines its final state - written by an accepted update (see the
+		// assignment at the end of the primary block) or removed by a discard
+		// (see the removal block below). A kept or rejected primary decides
+		// nothing, so the merge takes that key from the fresh storage read and
+		// never overwrites the stored draft with an empty or over-cap payload
+		// (GH1, Q12).
 		$decided_draft_keys = array();
 
 		// Draft-protection stamps are collected during validation but written
@@ -663,6 +665,20 @@ function bb_post_topic_reply_draft() {
 			$unstamp_draft_entry = $existing_draft[ $draft_topic_reply['data_key'] ];
 
 			unset( $existing_draft[ $draft_topic_reply['data_key'] ] );
+
+			// A discard (post_action 'delete', so NOT an update) removes the key
+			// for good, and must DECIDE it here so the fresh-read merge below
+			// omits it. An update leaves the decision to the primary-write block,
+			// which correctly withholds it on a late-cap rejection - so this is
+			// gated on ! $is_draft_update, never applied to an update. Without it
+			// a discard's key is never decided, the merge copies it straight back
+			// from storage, and the discard silently does nothing while the
+			// response reports success - the "deleted" draft resurfaces on the
+			// next lazy fetch (GH1 regression, was unconditionally seeded before
+			// the refactor).
+			if ( ! $is_draft_update ) {
+				$decided_draft_keys[ (string) $draft_topic_reply['data_key'] ] = true;
+			}
 		}
 
 		if ( empty( $existing_draft ) || is_string( $existing_draft ) ) {
