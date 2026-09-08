@@ -957,6 +957,53 @@ function bb_post_topic_reply_draft() {
 						continue;
 					}
 
+					// Bound each attachment type to the same per-type cap the
+					// primary entry enforces above (bbp_media/document/video at
+					// :704/:759/:814). The byte cap alone does not: a minimal
+					// {"id":N} reference is ~15-20 bytes, so a single sibling can
+					// carry thousands of IDs and still land under bb_draft_max_size(),
+					// then force one uncached get_post() per ID in the ownership
+					// loop below. Skip the sibling (keep the stored copy) rather
+					// than fail the whole unload-sync request, matching the byte-cap
+					// branch just above.
+					$sibling_type_cap = bb_draft_max_attachments_per_type();
+					$sibling_over_cap = false;
+
+					foreach ( array(
+						array( 'media', 'bbp_media' ),
+						array( 'document', 'bbp_document' ),
+						array( 'video', 'bbp_video' ),
+					) as $sibling_type_keys ) {
+						$sibling_type_count = 0;
+
+						foreach ( $sibling_type_keys as $sibling_type_key ) {
+							if ( empty( $merged_entry['data'][ $sibling_type_key ] ) ) {
+								continue;
+							}
+
+							$sibling_list = $merged_entry['data'][ $sibling_type_key ];
+
+							// Forum drafts carry each list as a JSON string
+							// (bbp_*); the activity shape carries a decoded array.
+							if ( is_string( $sibling_list ) ) {
+								$sibling_list = json_decode( $sibling_list, true );
+							}
+
+							if ( is_array( $sibling_list ) ) {
+								$sibling_type_count += count( $sibling_list );
+							}
+						}
+
+						if ( $sibling_type_cap < $sibling_type_count ) {
+							$sibling_over_cap = true;
+							break;
+						}
+					}
+
+					if ( $sibling_over_cap ) {
+						continue;
+					}
+
 					// This sibling is now part of the row this request writes,
 					// so its attachments need the same orphan protection the
 					// primary entry gets. The three per-type normalisation

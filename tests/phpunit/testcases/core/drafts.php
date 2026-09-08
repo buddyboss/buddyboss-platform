@@ -3187,6 +3187,84 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 	}
 
 	/**
+	 * Cap the per-type attachment count on the sibling-merge path.
+	 *
+	 * The primary draft entry refuses a save whose media/document/video list
+	 * exceeds bb_draft_max_attachments_per_type(). The sibling-merge path gated
+	 * only on the merged entry's total serialized byte size, and a minimal
+	 * {"id":N} reference is ~15-20 bytes, so a single sibling could carry
+	 * thousands of IDs under the byte cap and force one uncached get_post() per
+	 * ID in the ownership loop - a self-inflicted DoS / cap bypass. An over-cap
+	 * sibling must be skipped (its stored copy kept), exactly like the byte-cap
+	 * branch, while a within-cap sibling in the same request still merges.
+	 */
+	public function test_sibling_merge_is_bounded_by_the_per_type_attachment_cap() {
+		$user_id = self::factory()->user->create();
+		$this->set_current_user( $user_id );
+
+		// Small cap keeps the payload tiny; the production default is 50.
+		add_filter( 'bb_draft_max_attachments_per_type', array( $this, 'return_three' ) );
+
+		$primary_forum = self::factory()->post->create( array( 'post_type' => bbp_get_forum_post_type() ) );
+		$over_forum    = self::factory()->post->create( array( 'post_type' => bbp_get_forum_post_type() ) );
+		$under_forum   = self::factory()->post->create( array( 'post_type' => bbp_get_forum_post_type() ) );
+
+		$primary_key = 'draft_discussion_' . $primary_forum;
+		$over_key    = 'draft_discussion_' . $over_forum;
+		$under_key   = 'draft_discussion_' . $under_forum;
+
+		bp_update_user_meta(
+			$user_id,
+			'bb_user_topic_reply_draft',
+			array(
+				$primary_key => array( 'data_key' => $primary_key, 'data' => array( 'bbp_topic_content' => 'primary original' ), '_draft_saved_at' => time() - 60 ),
+				$over_key    => array( 'data_key' => $over_key, 'data' => array( 'bbp_topic_content' => 'over original' ), '_draft_saved_at' => time() - 60 ),
+				$under_key   => array( 'data_key' => $under_key, 'data' => array( 'bbp_topic_content' => 'under original' ), '_draft_saved_at' => time() - 60 ),
+			)
+		);
+
+		// Four media refs > cap of three: fits well under the byte cap, so only
+		// the count cap can stop it.
+		$over_media = wp_json_encode( array(
+			array( 'id' => 900001 ),
+			array( 'id' => 900002 ),
+			array( 'id' => 900003 ),
+			array( 'id' => 900004 ),
+		) );
+
+		$this->drive_forum_draft_save_with_siblings(
+			$primary_key,
+			array( 'bbp_topic_content' => 'primary updated' ),
+			array(
+				$over_key  => array( 'bbp_topic_content' => 'over OVERSIZED', 'bbp_media' => $over_media ),
+				$under_key => array( 'bbp_topic_content' => 'under updated', 'bbp_media' => wp_json_encode( array( array( 'id' => 900005 ) ) ) ),
+			)
+		);
+
+		remove_filter( 'bb_draft_max_attachments_per_type', array( $this, 'return_three' ) );
+
+		$stored = bp_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
+
+		$this->assertSame(
+			'over original',
+			$stored[ $over_key ]['data']['bbp_topic_content'],
+			'A sibling whose attachment count exceeds the per-type cap must be skipped, keeping its stored copy.'
+		);
+
+		// Control: a within-cap sibling in the SAME request still merges, so the
+		// cap is selective, not a blanket drop of every sibling.
+		$this->assertSame(
+			'under updated',
+			$stored[ $under_key ]['data']['bbp_topic_content'],
+			'A within-cap sibling must still merge, or the cap is dropping legal drafts.'
+		);
+	}
+
+	public function return_three() {
+		return 3;
+	}
+
+	/**
 	 * Replacing one inner draft must not unstamp a sibling's attachment.
 	 *
 	 * `bb_draft_release_replaced_attachments()` computed "still held" from the
