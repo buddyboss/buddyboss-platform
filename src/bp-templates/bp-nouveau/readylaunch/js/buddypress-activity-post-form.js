@@ -1099,7 +1099,20 @@ window.bp = window.bp || {};
 
 					bp.draft_activity = response.draft_activity;
 					bp.old_draft_data = response.draft_activity.data;
-					localStorage.setItem( bp.draft_activity.data_key, JSON.stringify( bp.draft_activity ) );
+
+					// Guarded because the restore runs immediately below: a
+					// setItem() throw - quota exceeded, or storage blocked in a
+					// private window - would abort the rest of this callback and
+					// the member would never be shown the draft that was just
+					// fetched successfully. Caching it locally is an optimisation;
+					// displaying it is the point. The nouveau pack routes this
+					// through the try/catch'd checkAndStoreDraftToLocalStorage()
+					// and never had the problem (PROD-9621).
+					try {
+						localStorage.setItem( bp.draft_activity.data_key, JSON.stringify( bp.draft_activity ) );
+					} catch ( e ) {
+						// Storage unavailable - continue to the restore regardless.
+					}
 
 					// When the composer opened before the fetch resolved, restore
 					// into the open form now (fires bb_activity_draft_loaded).
