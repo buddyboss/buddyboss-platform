@@ -992,6 +992,22 @@ window.bp = window.bp || {};
 								useInternalCDN: false,
 								events: {
 									ready: function () {
+										// Unlike the default pack - which initialises
+										// emoji ONCE on document ready - this runs on
+										// every `bbp_after_load_reply_form` /
+										// `bbp_after_load_topic_form`, i.e. the same
+										// event the draft restore uses, 100ms behind it.
+										// resetContent() reverts a MediumEditor element
+										// to the content captured when it was
+										// initialised (empty), so it wiped the draft the
+										// composer had just restored: on ReadyLaunch the
+										// member saw `has-draft` over an empty editor
+										// and their draft never came back
+										// (PROD-9621 Q12).
+										if ( $element.closest( 'form' ).hasClass( 'has-draft' ) ) {
+											return;
+										}
+
 										if ( typeof window.bb_rl_forums_medium_topic_editor !== 'undefined' && typeof window.bb_rl_forums_medium_topic_editor[ key ] !== 'undefined' ) {
 											window.bb_rl_forums_medium_topic_editor[ key ].resetContent();
 										}
