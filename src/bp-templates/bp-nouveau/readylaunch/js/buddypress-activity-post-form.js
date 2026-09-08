@@ -1545,7 +1545,12 @@ window.bp = window.bp || {};
 			self.checkedActivityDataChanged( bp.old_draft_data, data );
 
 			bp.draft_activity.data = data;
-			localStorage.setItem( bp.draft_activity.data_key, JSON.stringify( bp.draft_activity ) );
+			// Route through the shedding helper, not a raw setItem: a video-heavy
+			// draft can exceed the localStorage quota, and an uncaught QuotaExceededError
+			// here aborts the composer-close/modal handlers BEFORE postDraftActivity()
+			// runs - dropping both the local AND the server save at the moment the
+			// member expects it kept.
+			self.checkAndStoreDraftToLocalStorage( bp.draft_activity );
 		},
 
 		checkedActivityDataChanged: function ( old_data, new_data ) {
