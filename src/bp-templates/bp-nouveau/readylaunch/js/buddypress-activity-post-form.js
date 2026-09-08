@@ -1660,8 +1660,12 @@ window.bp = window.bp || {};
 				// over by serialize, so the shed does not run and the server
 				// refuses the whole save with the poster still attached. Shed at
 				// a margin below the cap to stay under the server's measurement -
-				// a missing poster beats a lost draft (M8).
-				var draft_cap_margin = draft_cap > 0 ? Math.floor( draft_cap * 0.95 ) : 0;
+				// a missing poster beats a lost draft (M8). The margin is 15%:
+				// measured serialize-over-JSON overhead reaches ~9% on
+				// attachment-heavy drafts (the media Upload Limit allows up to
+				// 100), and the server adds _draft_saved_at plus a bb_media_draft
+				// flag per attachment on top, so 5% under-covered that case.
+				var draft_cap_margin = draft_cap > 0 ? Math.floor( draft_cap * 0.85 ) : 0;
 
 				if ( draft_cap > 0 && bbDraftByteLength( JSON.stringify( bp.draft_activity ) ) > draft_cap_margin ) {
 					draft_payload      = _.clone( bp.draft_activity );
