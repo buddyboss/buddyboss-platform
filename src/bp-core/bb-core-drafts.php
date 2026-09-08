@@ -1968,6 +1968,15 @@ function bb_drafts_delete_expired( $time_budget = 10 ) {
 		// next run would redo the same window indefinitely (B2).
 		update_option( 'bb_draft_cleanup_cursor', $cursor, false );
 
+		// Refresh the lock each window. It is set once for 5 minutes at the top,
+		// but `wp bb drafts cleanup` runs with an UNLIMITED budget and the
+		// docblock promises it drains to completion - on a site with hundreds of
+		// thousands of draft rows that exceeds 5 minutes, the lock would expire
+		// mid-run, the daily cron would acquire it, and the two runs would then
+		// share the single cursor - the clobbering the lock exists to prevent
+		// (M6). Refreshing per window keeps it held for the life of the drain.
+		set_transient( 'bb_draft_cleanup_lock', 1, 5 * MINUTE_IN_SECONDS );
+
 		// Window-level budget check: a window whose rows are ALL filtered-out
 		// third-party draft_* keys never reaches the per-row check above, so
 		// consecutive such windows would otherwise run past the budget.

@@ -1021,6 +1021,25 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 	 * @param string $meta_key  Meta key.
 	 * @return void
 	 */
+	/**
+	 * Count of bb_draft_cleanup_lock (re)sets (for M6).
+	 *
+	 * @var int
+	 */
+	protected $cleanup_lock_sets = 0;
+
+	/**
+	 * Count a cleanup-lock set/refresh.
+	 *
+	 * @param mixed $value Transient value.
+	 * @return mixed The value unchanged.
+	 */
+	public function count_cleanup_lock_set( $value ) {
+		$this->cleanup_lock_sets++;
+
+		return $value;
+	}
+
 	public function count_agg_row_write( $meta_id, $object_id, $meta_key ) {
 		if ( bp_get_user_meta_key( 'bb_user_topic_reply_draft' ) === $meta_key ) {
 			$this->agg_row_writes++;
@@ -1068,6 +1087,37 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 			1,
 			$this->agg_row_writes,
 			'All expired inner drafts must be removed in ONE row write, not one per draft.'
+		);
+	}
+
+	/**
+	 * M6: the cleanup lock must be refreshed each window, so an unlimited CLI
+	 * drain that outlasts the 5-minute TTL keeps holding it instead of letting
+	 * the daily cron in to share the cursor.
+	 */
+	public function test_expiry_sweep_refreshes_its_lock_each_window() {
+		$this->isolate_draft_maintenance();
+
+		// More than one scan window (200) so the sweep loops at least twice.
+		for ( $i = 1; $i <= 250; $i++ ) {
+			bp_update_user_meta(
+				self::factory()->user->create(),
+				'draft_group_' . $i,
+				array( 'data_key' => 'draft_group_' . $i, '_draft_saved_at' => time(), 'data' => array( 'content' => 'x' ) )
+			);
+		}
+
+		$this->cleanup_lock_sets = 0;
+		add_filter( 'pre_set_transient_bb_draft_cleanup_lock', array( $this, 'count_cleanup_lock_set' ) );
+
+		bb_drafts_delete_expired( 0 );
+
+		remove_filter( 'pre_set_transient_bb_draft_cleanup_lock', array( $this, 'count_cleanup_lock_set' ) );
+
+		$this->assertGreaterThanOrEqual(
+			2,
+			$this->cleanup_lock_sets,
+			'The lock must be set once at the top and refreshed at least once inside the window loop.'
 		);
 	}
 
