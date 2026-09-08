@@ -1177,6 +1177,27 @@ function bb_post_topic_reply_draft() {
 			bb_draft_release_replaced_attachments( $unstamp_draft_entry, $draft_topic_reply, $user_id, $existing_draft );
 		}
 
+		// Release the stamps a SIBLING draft dropped this request - the same set
+		// difference the primary entry gets above. The merge re-stamps every
+		// attachment a merged sibling KEEPS (into $stamp_attachment_ids,
+		// re-applied just below), but never released what a sibling stopped
+		// referencing, so a photo removed from a sibling reply kept its
+		// bb_media_draft stamp for ever - protected from the orphan cron by a
+		// draft that no longer points at it. Previous = the entry as freshly
+		// stored; retain = the whole written row, so an attachment another
+		// surviving inner draft still holds is never released (and the re-stamp
+		// below backstops anything that is).
+		foreach ( array_keys( $decided_draft_keys ) as $decided_key ) {
+			// The primary entry is released above.
+			if ( (string) $draft_topic_reply['data_key'] === (string) $decided_key ) {
+				continue;
+			}
+
+			if ( isset( $fresh_draft_row[ $decided_key ] ) ) {
+				bb_draft_release_replaced_attachments( $fresh_draft_row[ $decided_key ], array(), $user_id, $existing_draft );
+			}
+		}
+
 		// Re-applied unconditionally: update_post_meta() is idempotent, and this
 		// is what keeps a kept attachment protected across every autosave.
 		foreach ( array_unique( $stamp_attachment_ids ) as $stamp_attachment_id ) {

@@ -3410,6 +3410,62 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 	}
 
 	/**
+	 * When a sibling draft's attachment list shrinks, the dropped attachment's
+	 * bb_media_draft stamp must be released - the same set difference the primary
+	 * entry gets. The sibling merge re-stamped what it KEEPS but never released
+	 * what it stopped referencing, so a photo removed from a sibling reply kept
+	 * its stamp for ever, protected from the orphan cron by a draft that no
+	 * longer points at it. An attachment another surviving entry still holds
+	 * must be kept.
+	 */
+	public function test_sibling_merge_releases_a_dropped_attachment_stamp() {
+		$user_id = self::factory()->user->create();
+		$this->set_current_user( $user_id );
+
+		$primary_forum = self::factory()->post->create( array( 'post_type' => bbp_get_forum_post_type() ) );
+		$sibling_forum = self::factory()->post->create( array( 'post_type' => bbp_get_forum_post_type() ) );
+
+		$primary_key = 'draft_discussion_' . $primary_forum;
+		$sibling_key = 'draft_discussion_' . $sibling_forum;
+
+		$dropped = $this->make_stamped_unsaved_attachment( $user_id ); // sibling-only, removed this request
+		$kept    = $this->make_stamped_unsaved_attachment( $user_id ); // referenced by the primary, must survive
+
+		bp_update_user_meta(
+			$user_id,
+			'bb_user_topic_reply_draft',
+			array(
+				$primary_key => array( 'data_key' => $primary_key, '_draft_saved_at' => time() - 60, 'data' => array( 'bbp_topic_content' => 'p', 'bbp_media' => wp_json_encode( array( array( 'id' => $kept ) ) ) ) ),
+				$sibling_key => array( 'data_key' => $sibling_key, '_draft_saved_at' => time() - 60, 'data' => array( 'bbp_topic_content' => 's', 'bbp_media' => wp_json_encode( array( array( 'id' => $dropped ), array( 'id' => $kept ) ) ) ) ),
+			)
+		);
+
+		// The sibling now references only $kept - it drops $dropped.
+		$this->drive_forum_draft_save_with_siblings(
+			$primary_key,
+			array( 'bbp_topic_content' => 'p updated', 'bbp_media' => wp_json_encode( array( array( 'id' => $kept ) ) ) ),
+			array(
+				$sibling_key => array( 'bbp_topic_content' => 's updated', 'bbp_media' => wp_json_encode( array( array( 'id' => $kept ) ) ) ),
+			)
+		);
+
+		// Premise: the sibling really was merged (else the test proves nothing).
+		$stored = bp_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
+		$this->assertSame( 's updated', $stored[ $sibling_key ]['data']['bbp_topic_content'], 'The sibling merge must have happened.' );
+
+		$this->assertSame(
+			'',
+			(string) get_post_meta( $dropped, 'bb_media_draft', true ),
+			'An attachment a sibling stopped referencing must have its stamp released so the orphan cron can reap it.'
+		);
+		$this->assertSame(
+			'1',
+			(string) get_post_meta( $kept, 'bb_media_draft', true ),
+			'An attachment another surviving entry still references must keep its stamp.'
+		);
+	}
+
+	/**
 	 * Replacing one inner draft must not unstamp a sibling's attachment.
 	 *
 	 * `bb_draft_release_replaced_attachments()` computed "still held" from the
