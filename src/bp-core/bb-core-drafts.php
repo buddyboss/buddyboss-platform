@@ -2314,12 +2314,132 @@ function bb_drafts_oneshot_batch( $time_budget = 10 ) {
 	);
 }
 
+/**
+ * Collect every attachment ID any STORED draft still references.
+ *
+ * The orphan-attachment cron reaps an attachment only when it has NO
+ * `bb_media_draft` meta, so that stamp is a "a draft still needs this" flag.
+ * The stamp is released when a draft is disposed, replaced or evicted - but a
+ * save REFUSED by a size/attachment cap stamps the member's uploads (correctly,
+ * before any cap can run - the BLOCKER-1 rule) and then stores no draft, so
+ * nothing ever releases those stamps and the files become permanently
+ * uncollectable (M3). This builds the authoritative "still referenced" set so
+ * the sweep below can release exactly the stamps nothing points at.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return array Map of attachment ID => true for every referenced attachment.
+ */
+function bb_drafts_collect_referenced_attachment_ids() {
+	$referenced = array();
+	$cursor     = 0;
+
+	do {
+		$batch = bb_draft_get_rows_batch( $cursor, 200, true );
+
+		foreach ( $batch['rows'] as $row ) {
+			$value = bb_draft_safe_unserialize( $row['meta_value'] );
+
+			if ( ! is_array( $value ) ) {
+				$cursor = (int) $row['umeta_id'];
+				continue;
+			}
+
+			if ( 'bb_user_topic_reply_draft' === $row['meta_key'] ) {
+				foreach ( $value as $inner_draft ) {
+					foreach ( bb_draft_collect_attachment_ids( $inner_draft ) as $attachment_id ) {
+						$referenced[ (int) $attachment_id ] = true;
+					}
+				}
+			} else {
+				foreach ( bb_draft_collect_attachment_ids( $value ) as $attachment_id ) {
+					$referenced[ (int) $attachment_id ] = true;
+				}
+			}
+
+			$cursor = (int) $row['umeta_id'];
+		}
+
+		$cursor = (int) $batch['last_id'];
+	} while ( $batch['has_more'] );
+
+	return $referenced;
+}
+
+/**
+ * Release draft-protection stamps from attachments no stored draft references.
+ *
+ * A save refused by a cap leaves the member's uploads stamped `bb_media_draft`
+ * with no draft to release them, so the orphan cron never reaps them (M3). This
+ * runs on the daily cleanup: it releases the stamp - it does NOT hard-delete -
+ * from every stamped, unsaved attachment older than the retention window that
+ * the reference scan proves nothing still points at. The existing orphan cron
+ * then collects the file on its own schedule. Releasing on refusal itself is
+ * deliberately NOT the fix: the member may retry the same attachments with less
+ * text, and unprotecting them mid-compose is the data loss BLOCKER-1 closed.
+ *
+ * Bounded per run: expiry being disabled ({@see bb_draft_retention_days()} = 0)
+ * switches this off too, and the query is capped so a huge library cannot stall
+ * the cron.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return int Number of attachments whose stamps were released.
+ */
+function bb_drafts_release_orphaned_draft_stamps() {
+	global $wpdb;
+
+	$retention_seconds = bb_draft_retention_seconds();
+
+	// Expiry off means "keep drafts forever", so their attachments must keep
+	// their protection forever too.
+	if ( 1 > $retention_seconds ) {
+		return 0;
+	}
+
+	$referenced = bb_drafts_collect_referenced_attachment_ids();
+	$cutoff     = gmdate( 'Y-m-d H:i:s', time() - $retention_seconds );
+
+	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- one-time maintenance sweep over draft-stamped attachments.
+	$candidate_ids = $wpdb->get_col(
+		$wpdb->prepare(
+			"SELECT p.ID
+			FROM {$wpdb->posts} p
+			INNER JOIN {$wpdb->postmeta} d ON ( d.post_id = p.ID AND d.meta_key = 'bb_media_draft' )
+			INNER JOIN {$wpdb->postmeta} s ON ( s.post_id = p.ID AND s.meta_key = 'bp_media_saved' AND s.meta_value = '0' )
+			WHERE p.post_type = 'attachment'
+			AND p.post_date_gmt < %s
+			LIMIT 500",
+			$cutoff
+		)
+	);
+
+	$released = 0;
+
+	foreach ( (array) $candidate_ids as $attachment_id ) {
+		$attachment_id = (int) $attachment_id;
+
+		// Referenced by a stored draft - its protection is still earned.
+		if ( isset( $referenced[ $attachment_id ] ) ) {
+			continue;
+		}
+
+		delete_post_meta( $attachment_id, 'bb_media_draft' );
+		delete_post_meta( $attachment_id, 'bb_activity_post_feature_image_draft' );
+		++$released;
+	}
+
+	return $released;
+}
+
 // The cleanup runs inline in cron requests (see bb_drafts_delete_expired
 // for why the background-process classes are not used here).
 add_action( 'bb_draft_cleanup', 'bb_drafts_delete_expired' );
+add_action( 'bb_draft_cleanup', 'bb_drafts_release_orphaned_draft_stamps' );
 add_action( 'bb_draft_oneshot', 'bb_drafts_oneshot_batch' );
 
 add_action( 'bb_draft_cleanup_hook', 'bb_drafts_delete_expired' );
+add_action( 'bb_draft_cleanup_hook', 'bb_drafts_release_orphaned_draft_stamps' );
 
 /**
  * Schedule the daily draft cleanup event.
@@ -2414,7 +2534,10 @@ if ( defined( 'WP_CLI' ) && WP_CLI ) {
 				WP_CLI::log( 'Expiry pass: ' . $expired['deleted'] . ' expired drafts removed.' );
 			} while ( empty( $expired['complete'] ) );
 
-			WP_CLI::success( 'Draft cleanup complete.' );
+			$released_stamps = bb_drafts_release_orphaned_draft_stamps();
+				WP_CLI::log( 'Orphaned draft stamps released: ' . $released_stamps . '.' );
+
+				WP_CLI::success( 'Draft cleanup complete.' );
 		}
 	);
 }

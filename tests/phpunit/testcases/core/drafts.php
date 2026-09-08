@@ -1007,6 +1007,86 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 	}
 
 	/**
+	 * Make a draft-stamped, unsaved attachment with a back-dated post date.
+	 *
+	 * @param int $owner_id Attachment author.
+	 * @param int $days_old How many days back to date it.
+	 * @return int Attachment ID.
+	 */
+	protected function make_stamped_unsaved_attachment( $owner_id, $days_old = 40 ) {
+		$id = self::factory()->post->create(
+			array(
+				'post_type'   => 'attachment',
+				'post_status' => 'inherit',
+				'post_author' => $owner_id,
+				'post_date_gmt' => gmdate( 'Y-m-d H:i:s', time() - ( $days_old * DAY_IN_SECONDS ) ),
+				'post_date'     => gmdate( 'Y-m-d H:i:s', time() - ( $days_old * DAY_IN_SECONDS ) ),
+			)
+		);
+		update_post_meta( $id, 'bp_media_saved', '0' );
+		update_post_meta( $id, 'bb_media_draft', 1 );
+
+		return (int) $id;
+	}
+
+	/**
+	 * M3: a stamp left by a cap-refused save, referenced by no stored draft,
+	 * must be released so the orphan cron can finally reap the file - while a
+	 * stamp a stored draft still references is left alone.
+	 */
+	public function test_orphaned_draft_stamps_are_released_for_unreferenced_attachments() {
+		$user_id = self::factory()->user->create();
+
+		$orphan   = $this->make_stamped_unsaved_attachment( $user_id ); // referenced by nothing
+		$in_draft = $this->make_stamped_unsaved_attachment( $user_id ); // referenced by a stored draft
+
+		// A stored forum draft that references $in_draft.
+		bp_update_user_meta(
+			$user_id,
+			'bb_user_topic_reply_draft',
+			array(
+				'draft_discussion_11' => array(
+					'data_key'        => 'draft_discussion_11',
+					'_draft_saved_at' => time(),
+					'data'            => array( 'bbp_media' => wp_json_encode( array( array( 'id' => $in_draft ) ) ) ),
+				),
+			)
+		);
+
+		add_filter( 'bb_draft_retention_days', array( $this, 'filter_one_day_retention' ) );
+		$released = bb_drafts_release_orphaned_draft_stamps();
+		remove_filter( 'bb_draft_retention_days', array( $this, 'filter_one_day_retention' ) );
+
+		$this->assertSame( 1, $released, 'Exactly the unreferenced stamped attachment must be released.' );
+		$this->assertSame(
+			'',
+			get_post_meta( $orphan, 'bb_media_draft', true ),
+			'The unreferenced stamp must be released so the orphan cron can reap the file.'
+		);
+		$this->assertSame(
+			'1',
+			(string) get_post_meta( $in_draft, 'bb_media_draft', true ),
+			'An attachment a stored draft still references must keep its protection.'
+		);
+	}
+
+	/**
+	 * M3: with expiry disabled, drafts are kept forever, so their attachment
+	 * stamps must never be swept.
+	 */
+	public function test_orphaned_stamp_sweep_is_off_when_expiry_is_disabled() {
+		$user_id = self::factory()->user->create();
+		$orphan  = $this->make_stamped_unsaved_attachment( $user_id );
+
+		add_filter( 'bb_draft_retention_days', '__return_zero' );
+		$released = bb_drafts_release_orphaned_draft_stamps();
+		remove_filter( 'bb_draft_retention_days', '__return_zero' );
+
+		$this->assertSame( 0, $released );
+		$this->assertSame( '1', (string) get_post_meta( $orphan, 'bb_media_draft', true ) );
+	}
+
+	/**
 	 * The activity composer's discard now delegates to bb_draft_dispose().
 	 *
 	 * The discard path used to hand-roll unstamp + delete and skipped the size
