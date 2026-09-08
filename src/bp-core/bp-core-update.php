@@ -570,7 +570,7 @@ function bp_version_updater() {
 			bb_install_addons_bundle_on_upgrade();
 		}
 
-		//: heal oversized/aggregate-oversized draft usermeta rows and
+		// Heal oversized/aggregate-oversized draft usermeta rows and
 		// start the draft retention machinery.
 		if ( $raw_db_version < 23621 ) {
 			bb_drafts_cleanup_on_upgrade();
