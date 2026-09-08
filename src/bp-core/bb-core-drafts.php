@@ -1970,7 +1970,12 @@ function bb_draft_heal_forum_row( $user_id ) {
 	if ( empty( $row ) ) {
 		bp_delete_user_meta( $user_id, 'bb_user_topic_reply_draft' );
 	} else {
-		bp_update_user_meta( $user_id, 'bb_user_topic_reply_draft', $row );
+		// wp_slash(): $row was read from storage and is UNSLASHED, and
+		// update_metadata() unslashes once more before storing. Writing it back
+		// untouched strips a backslash layer from every string in the row -
+		// including the \uXXXX escapes in the attachment lists of the very
+		// inner drafts this heal exists to preserve (PROD-9621 R2).
+		bp_update_user_meta( $user_id, 'bb_user_topic_reply_draft', wp_slash( $row ) );
 	}
 
 	bb_draft_flush_user_meta_sizes( $user_id );

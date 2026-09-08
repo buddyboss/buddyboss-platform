@@ -452,6 +452,36 @@ function bb_post_topic_reply_draft() {
 
 	if ( ! empty( $_REQUEST['draft_topic_reply'] ) && ! is_array( $_REQUEST['draft_topic_reply'] ) ) {
 		$draft_topic_reply = json_decode( stripslashes( $draft_topic_reply ), true );
+
+		// The two shipped clients post different SHAPES and therefore arrive in
+		// different slash states. The in-page XHR posts an object, which jQuery
+		// serializes to draft_topic_reply[data][...] and PHP rebuilds as a
+		// nested array whose leaves WordPress has already slashed. The unload
+		// beacon posts one JSON.stringify() string, and the decode above
+		// UNSLASHES everything.
+		//
+		// Three consumers below call stripslashes() on the attachment lists -
+		// bb_draft_protect_payload_attachments() and the three per-type
+		// normalisation loops - so on the beacon path they unslashed a SECOND
+		// time. That destroys wp_json_encode()'s \uXXXX and \" escapes, and the
+		// consequences are both halves of the same data loss: the list stops
+		// parsing, so the member's uploads are never orphan-protected on that
+		// path, and every "is this attachment still referenced?" check on this
+		// branch reads the stored list as empty and lets the cron reap files a
+		// live draft still points at.
+		//
+		// Re-slash exactly those three members - not the whole structure. The
+		// content members are deliberately left as the decode produced them:
+		// they are consumed by kses, not by stripslashes(), and slashing them
+		// here would change the sanitizer's input on this path for no reason
+		// (see the kses-and-slashes note, PROD-9621 R3).
+		if ( is_array( $draft_topic_reply ) && ! empty( $draft_topic_reply['data'] ) && is_array( $draft_topic_reply['data'] ) ) {
+			foreach ( array( 'bbp_media', 'bbp_document', 'bbp_video' ) as $draft_list_key ) {
+				if ( isset( $draft_topic_reply['data'][ $draft_list_key ] ) && is_string( $draft_topic_reply['data'][ $draft_list_key ] ) ) {
+					$draft_topic_reply['data'][ $draft_list_key ] = wp_slash( $draft_topic_reply['data'][ $draft_list_key ] );
+				}
+			}
+		}
 	}
 
 	if ( ! empty( $_REQUEST['all_data'] ) && ! is_array( $_REQUEST['all_data'] ) ) {
@@ -652,7 +682,18 @@ function bb_post_topic_reply_draft() {
 					$new_media_data = array_values( $new_media_data );
 				}
 
-				$draft_topic_reply['data']['bbp_media'] = wp_json_encode( $new_media_data );
+				// wp_slash(): this string was just built by wp_json_encode(), so
+				// it carries REAL backslashes - \uXXXX for a non-ASCII filename,
+				// \" for a quote - while every sibling value here is still
+				// slashed from $_REQUEST. update_metadata() unslashes the value
+				// once before storing it, which stripped those escapes and left
+				// the list unparseable: `resume.pdf` lost its accents and a
+				// quoted filename broke the JSON outright. Every
+				// "is this attachment still referenced?" exclusion on this
+				// branch parses this string, so a list that will not parse reads
+				// as "no attachments" and the orphan cron reaps files the stored
+				// draft still points at (PROD-9621 R2).
+				$draft_topic_reply['data']['bbp_media'] = wp_slash( wp_json_encode( $new_media_data ) );
 			}
 
 			// Set document draft meta key to avoid delete from cron job 'bp_media_delete_orphaned_attachments'.
@@ -687,7 +728,18 @@ function bb_post_topic_reply_draft() {
 					$new_document_data = array_values( $new_document_data );
 				}
 
-				$draft_topic_reply['data']['bbp_document'] = wp_json_encode( $new_document_data );
+				// wp_slash(): this string was just built by wp_json_encode(), so
+				// it carries REAL backslashes - \uXXXX for a non-ASCII filename,
+				// \" for a quote - while every sibling value here is still
+				// slashed from $_REQUEST. update_metadata() unslashes the value
+				// once before storing it, which stripped those escapes and left
+				// the list unparseable: `resume.pdf` lost its accents and a
+				// quoted filename broke the JSON outright. Every
+				// "is this attachment still referenced?" exclusion on this
+				// branch parses this string, so a list that will not parse reads
+				// as "no attachments" and the orphan cron reaps files the stored
+				// draft still points at (PROD-9621 R2).
+				$draft_topic_reply['data']['bbp_document'] = wp_slash( wp_json_encode( $new_document_data ) );
 			}
 
 			// Set video draft meta key to avoid delete from cron job 'bp_media_delete_orphaned_attachments'.
@@ -722,7 +774,18 @@ function bb_post_topic_reply_draft() {
 					$new_video_data = array_values( $new_video_data );
 				}
 
-				$draft_topic_reply['data']['bbp_video'] = wp_json_encode( $new_video_data );
+				// wp_slash(): this string was just built by wp_json_encode(), so
+				// it carries REAL backslashes - \uXXXX for a non-ASCII filename,
+				// \" for a quote - while every sibling value here is still
+				// slashed from $_REQUEST. update_metadata() unslashes the value
+				// once before storing it, which stripped those escapes and left
+				// the list unparseable: `resume.pdf` lost its accents and a
+				// quoted filename broke the JSON outright. Every
+				// "is this attachment still referenced?" exclusion on this
+				// branch parses this string, so a list that will not parse reads
+				// as "no attachments" and the orphan cron reaps files the stored
+				// draft still points at (PROD-9621 R2).
+				$draft_topic_reply['data']['bbp_video'] = wp_slash( wp_json_encode( $new_video_data ) );
 			}
 
 			// Re-check the cap on the FINAL entry. The check above bounds the
@@ -866,6 +929,25 @@ function bb_post_topic_reply_draft() {
 
 		// Keys this request never touched come from storage, so a sibling another
 		// tab discarded stays discarded and one it updated keeps that update.
+		//
+		// NOT re-slashed here, deliberately. These entries came from
+		// bp_get_user_meta() so they are unslashed, and update_metadata()
+		// unslashes the row once more on write - which does strip a backslash
+		// layer from them (a sibling's `résumé.pdf` is stored back as
+		// `ru00e9sumu00e9.pdf`; a filename containing a double quote loses that
+		// draft's whole attachment list). Slashing them HERE is not the fix:
+		// the row is still read after this point by the trim's size accounting
+		// and by bb_draft_release_replaced_attachments(), which parses the
+		// attachment JSON to decide what is still referenced. Slashed JSON does
+		// not parse, so the retained set comes back empty and a sibling's
+		// attachments lose their orphan protection - caught by
+		// test_replacing_an_inner_draft_keeps_a_sibling_attachment_stamped when
+		// this was attempted.
+		//
+		// The real fix is to normalise the whole handler to one slash state
+		// (unslash the request entry at the boundary, drop the four
+		// stripslashes() consumers, slash once at the write) - a scoped
+		// follow-up, not a one-liner here (PROD-9621 R2 follow-up).
 		foreach ( $fresh_draft_row as $fresh_key => $fresh_entry ) {
 			if ( ! isset( $decided_draft_keys[ $fresh_key ] ) ) {
 				$merged_draft_row[ $fresh_key ] = $fresh_entry;

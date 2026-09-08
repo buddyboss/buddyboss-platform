@@ -526,7 +526,15 @@ function bbp_new_reply_handler( $action = '' ) {
 			if ( empty( $existing_draft ) || ! is_array( $existing_draft ) ) {
 				bp_delete_user_meta( $user_id, $usermeta_key );
 			} else {
-				bp_update_user_meta( $user_id, $usermeta_key, $existing_draft );
+				// wp_slash(): $existing_draft came from bp_get_user_meta(), so it is
+				// UNSLASHED, and update_metadata() unslashes the value once more before
+				// storing it. Writing it back untouched therefore strips a backslash
+				// layer from every string in the row - the member's OTHER drafts.
+				// Measured: an attachment list holding `résumé.pdf` comes back as
+				// `ru00e9sumu00e9.pdf`, and a filename containing a double quote breaks
+				// the list's JSON outright, losing that draft's whole attachment list.
+				// Publishing one draft must not corrupt the rest (PROD-9621 R2).
+				bp_update_user_meta( $user_id, $usermeta_key, wp_slash( $existing_draft ) );
 			}
 		}
 

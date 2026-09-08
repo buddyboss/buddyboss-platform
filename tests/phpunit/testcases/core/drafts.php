@@ -3437,6 +3437,178 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 	}
 
 	/**
+	 * R2/Q16: a re-encoded attachment list must survive the meta write intact.
+	 *
+	 * The handler reads a client attachment list with
+	 * `json_decode( stripslashes( ... ) )`, normalises it (ownership check,
+	 * `bb_media_draft` stamp) and writes it back with `wp_json_encode()`. That
+	 * re-encoded string carries REAL backslashes - `é` for a non-ASCII
+	 * filename, `\"` for a quote - and `update_metadata()` runs
+	 * `wp_unslash()` on the value before storing it. So the escapes were
+	 * stripped and the stored list stopped being valid JSON.
+	 *
+	 * Measured before the fix: `résumé.pdf` stored as `ru00e9sumu00e9.pdf`
+	 * and `Bob"s file.pdf` as `Bob"s file.pdf`, `json_decode()` returning a
+	 * syntax error, and `bb_draft_collect_attachment_ids()` recovering ZERO
+	 * ids from the stored entry.
+	 *
+	 * That last number is why this is data loss rather than cosmetic: every
+	 * "is this attachment still referenced?" exclusion added by this branch
+	 * (Q1/Q3/Q4/H4) parses that JSON. A list that will not parse reads as "no
+	 * attachments referenced", so the replaced-entry release unstamps files
+	 * the stored draft still points at and the orphan cron deletes them.
+	 *
+	 * Asserts the stored bytes are byte-identical to what the handler encoded,
+	 * that they parse, and that the ids are recoverable - the property the
+	 * attachment-retention logic actually depends on.
+	 */
+	public function test_q16_reencoded_attachment_list_survives_the_meta_write() {
+		$user_id = self::factory()->user->create();
+		$this->set_current_user( $user_id );
+
+		$forum_id = self::factory()->post->create( array( 'post_type' => bbp_get_forum_post_type() ) );
+		$data_key = 'draft_discussion_' . $forum_id;
+
+		$attachment_id = $this->make_draft_attachment( $user_id );
+
+		// The two characters that break the round trip: a non-ASCII letter
+		// (encoded as \uXXXX) and a double quote (encoded as \").
+		$document_list = wp_json_encode(
+			array(
+				array(
+					'id'    => $attachment_id,
+					'name'  => 'résumé.pdf',
+					'title' => 'Bob"s file.pdf',
+				),
+			)
+		);
+
+		$this->drive_forum_draft_save_with_siblings(
+			$data_key,
+			array(
+				'bbp_topic_content' => 'a draft with an attachment',
+				'bbp_document'      => $document_list,
+			),
+			array()
+		);
+
+		$stored = bp_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
+
+		$this->assertIsArray( $stored, 'The draft must have been stored.' );
+		$this->assertArrayHasKey( $data_key, $stored );
+
+		$stored_list = $stored[ $data_key ]['data']['bbp_document'];
+
+		$this->assertIsString( $stored_list, 'The attachment list is stored as a JSON string.' );
+
+		$decoded = json_decode( $stored_list, true );
+
+		$this->assertNotNull(
+			$decoded,
+			'The stored attachment list must still be valid JSON - ' . json_last_error_msg() . ' - or every attachment-retention check reads it as empty.'
+		);
+
+		// The property the retention logic depends on.
+		$this->assertSame(
+			array( (int) $attachment_id ),
+			bb_draft_collect_attachment_ids( $stored[ $data_key ] ),
+			'The attachment id must be recoverable from the stored draft, or the orphan cron reaps a file the draft still references.'
+		);
+
+		// And the member's filename must come back as they typed it.
+		$this->assertSame( 'résumé.pdf', $decoded[0]['name'], 'A non-ASCII filename must survive the round trip.' );
+		$this->assertSame( 'Bob"s file.pdf', $decoded[0]['title'], 'A quote in a filename must survive the round trip.' );
+
+		// The other half of the same defect: bb_draft_protect_payload_attachments()
+		// also reads this list through stripslashes(), so an unparseable list
+		// meant the member's upload was never stamped at all and the orphan
+		// cron deleted it six hours later.
+		$this->assertSame(
+			'1',
+			(string) get_post_meta( $attachment_id, 'bb_media_draft', true ),
+			'The upload must be orphan-protected on the beacon path too, or the cron deletes a file the draft references.'
+		);
+	}
+
+	/**
+	 * R2/Q16, sibling path: the same must hold for an all_data replay.
+	 *
+	 * `all_data` arrives as one JSON envelope, so the handler's
+	 * `json_decode( stripslashes( ... ) )` hands back inner attachment lists
+	 * that are already UNSLASHED. Assigning them straight onto the stored
+	 * entry meant `update_metadata()`'s `wp_unslash()` stripped their escapes
+	 * too - the same corruption reached by a different route, on the path the
+	 * unload beacon uses for every sibling draft the tab holds.
+	 */
+	public function test_q16_all_data_sibling_attachment_list_survives_the_meta_write() {
+		$user_id = self::factory()->user->create();
+		$this->set_current_user( $user_id );
+
+		$primary_forum = self::factory()->post->create( array( 'post_type' => bbp_get_forum_post_type() ) );
+		$sibling_forum = self::factory()->post->create( array( 'post_type' => bbp_get_forum_post_type() ) );
+
+		$primary_key = 'draft_discussion_' . $primary_forum;
+		$sibling_key = 'draft_discussion_' . $sibling_forum;
+
+		$attachment_id = $this->make_draft_attachment( $user_id );
+
+		bp_update_user_meta(
+			$user_id,
+			'bb_user_topic_reply_draft',
+			array(
+				$primary_key => array(
+					'data_key'        => $primary_key,
+					'data'            => array( 'bbp_topic_content' => 'primary original' ),
+					'_draft_saved_at' => time() - 60,
+				),
+				$sibling_key => array(
+					'data_key'        => $sibling_key,
+					'data'            => array( 'bbp_topic_content' => 'sibling original' ),
+					'_draft_saved_at' => time() - 60,
+				),
+			)
+		);
+
+		$this->drive_forum_draft_save_with_siblings(
+			$primary_key,
+			array( 'bbp_topic_content' => 'primary updated' ),
+			array(
+				$sibling_key => array(
+					'bbp_topic_content' => 'sibling updated',
+					'bbp_document'      => wp_json_encode(
+						array(
+							array(
+								'id'   => $attachment_id,
+								'name' => 'résumé.pdf',
+							),
+						)
+					),
+				),
+			)
+		);
+
+		$stored = bp_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
+
+		// Premise: the sibling merge really happened.
+		$this->assertSame(
+			'sibling updated',
+			$stored[ $sibling_key ]['data']['bbp_topic_content'],
+			'The sibling merge must have happened, or this test proves nothing about it.'
+		);
+
+		$this->assertNotNull(
+			json_decode( $stored[ $sibling_key ]['data']['bbp_document'], true ),
+			'A sibling attachment list must still be valid JSON after the merge - ' . json_last_error_msg() . '.'
+		);
+
+		$this->assertSame(
+			array( (int) $attachment_id ),
+			bb_draft_collect_attachment_ids( $stored[ $sibling_key ] ),
+			'The sibling attachment id must be recoverable from the stored draft.'
+		);
+	}
+
+	/**
 	 * R1/Q15: the row trim must not re-serialize the whole row per eviction.
 	 *
 	 * `bb_forums_trim_draft_row()` asked "does it fit yet?" with
@@ -3516,6 +3688,203 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 			count( $result['evicted'] ),
 			count( $result['entries'] ),
 			'Every evicted key must come back with its entry so the caller can unstamp it.'
+		);
+	}
+
+	/**
+	 * Drive the save handler through the NESTED-ARRAY request shape.
+	 *
+	 * The two shipped clients do not agree on how they post: the in-page XHR
+	 * sends `draft_topic_reply` as an object, which jQuery serializes to
+	 * `draft_topic_reply[data][bbp_document]=...` and PHP rebuilds as a nested
+	 * array whose leaves are SLASHED by WordPress; the unload beacon sends one
+	 * `JSON.stringify()` string, which the handler decodes with
+	 * `json_decode( stripslashes( ... ) )` and so arrives UNSLASHED.
+	 *
+	 * {@see drive_forum_draft_save_with_siblings()} covers the string shape.
+	 * This covers the array shape, slashing the leaves the way
+	 * wp_magic_quotes() does for a real request.
+	 *
+	 * @param string $data_key Inner draft key.
+	 * @param array  $data     Draft data members (unslashed; slashed here).
+	 * @return void
+	 */
+	protected function drive_forum_draft_save_as_nested_array( $data_key, $data ) {
+		$_POST    = array();
+		$_REQUEST = array();
+
+		$_REQUEST['draft_topic_reply'] = wp_slash(
+			array(
+				'data_key'    => $data_key,
+				'object'      => 'topic',
+				'post_action' => 'update',
+				'data'        => $data,
+			)
+		);
+
+		// phpcs:disable WordPress.Security.NonceVerification -- this test drives the handler that performs the verification.
+		$_POST['_wpnonce_post_topic_reply_draft'] = wp_create_nonce( 'post_topic_reply_draft_data' );
+		$_REQUEST                                 = array_merge( $_REQUEST, $_POST );
+		// phpcs:enable WordPress.Security.NonceVerification
+
+		add_filter( 'wp_doing_ajax', '__return_true' );
+		add_filter( 'wp_die_ajax_handler', array( $this, 'filter_draft_die_handler' ), 99 );
+
+		ob_start();
+
+		try {
+			bb_post_topic_reply_draft();
+		} catch ( Exception $e ) {
+			unset( $e );
+		}
+
+		ob_end_clean();
+
+		remove_filter( 'wp_die_ajax_handler', array( $this, 'filter_draft_die_handler' ), 99 );
+		remove_filter( 'wp_doing_ajax', '__return_true' );
+	}
+
+	/**
+	 * R2/Q16, in-page XHR shape: attachment list must survive intact.
+	 *
+	 * Same invariant as the beacon-shape test, driven through the other
+	 * request shape, because the two arrive with different slash states and
+	 * the handler has to answer the same for both (bb-dev §54a-1/§54a-7).
+	 */
+	public function test_q16_nested_array_request_keeps_attachment_list_parseable() {
+		$user_id = self::factory()->user->create();
+		$this->set_current_user( $user_id );
+
+		$forum_id = self::factory()->post->create( array( 'post_type' => bbp_get_forum_post_type() ) );
+		$data_key = 'draft_discussion_' . $forum_id;
+
+		$attachment_id = $this->make_draft_attachment( $user_id );
+
+		$this->drive_forum_draft_save_as_nested_array(
+			$data_key,
+			array(
+				'bbp_topic_content' => 'a draft with an attachment',
+				'bbp_document'      => wp_json_encode(
+					array(
+						array(
+							'id'    => $attachment_id,
+							'name'  => 'résumé.pdf',
+							'title' => 'Bob"s file.pdf',
+						),
+					)
+				),
+			)
+		);
+
+		$stored = bp_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
+
+		$this->assertIsArray( $stored, 'The draft must have been stored.' );
+		$this->assertArrayHasKey( $data_key, $stored );
+
+		$decoded = json_decode( $stored[ $data_key ]['data']['bbp_document'], true );
+
+		$this->assertNotNull(
+			$decoded,
+			'In-page XHR shape: the stored attachment list must still be valid JSON - ' . json_last_error_msg() . '.'
+		);
+		$this->assertSame(
+			array( (int) $attachment_id ),
+			bb_draft_collect_attachment_ids( $stored[ $data_key ] ),
+			'In-page XHR shape: the attachment id must be recoverable from the stored draft.'
+		);
+		$this->assertSame( 'résumé.pdf', $decoded[0]['name'], 'A non-ASCII filename must survive the round trip.' );
+		$this->assertSame( 'Bob"s file.pdf', $decoded[0]['title'], 'A quote in a filename must survive the round trip.' );
+	}
+
+	/**
+	 * R2/Q16: a read-modify-write of the row must not strip its escapes.
+	 *
+	 * `bb_draft_heal_forum_row()` reads the aggregate row with
+	 * `bp_get_user_meta()` - so UNSLASHED - modifies one inner draft and
+	 * writes the whole row back. `update_metadata()` unslashes the value once
+	 * more before storing, so writing it back untouched stripped a backslash
+	 * layer from every string in the row, including the `\uXXXX` escapes in the
+	 * attachment lists of the inner drafts the heal exists to PRESERVE.
+	 *
+	 * Measured: `résumé.pdf` came back as `ru00e9sumu00e9.pdf`, and a filename
+	 * containing a double quote broke the list's JSON outright, losing that
+	 * draft's whole attachment list (and with it the "still referenced" answer
+	 * every retention check on this branch depends on).
+	 *
+	 * The oversized entry is what makes the heal act at all; the sibling with
+	 * the awkward filename is the one whose bytes must come back untouched.
+	 */
+	public function test_q16_heal_pass_preserves_sibling_json_escapes() {
+		$user_id = self::factory()->user->create();
+		$this->set_current_user( $user_id );
+
+		$attachment_id = $this->make_draft_attachment( $user_id );
+
+		$sibling_list = wp_json_encode(
+			array(
+				array(
+					'id'    => $attachment_id,
+					'name'  => 'résumé.pdf',
+					'title' => 'Bob"s file.pdf',
+				),
+			)
+		);
+
+		// Stored the correct way: slashed, so the meta API's single unslash
+		// lands the intended bytes.
+		bp_update_user_meta(
+			$user_id,
+			'bb_user_topic_reply_draft',
+			wp_slash(
+				array(
+					// Over the per-draft cap, so the heal has something to do.
+					'draft_reply_1' => array(
+						'data_key'        => 'draft_reply_1',
+						'object'          => 'reply',
+						'data'            => array( 'bbp_reply_content' => str_repeat( 'x', bb_draft_max_size() + 1024 ) ),
+						'_draft_saved_at' => time() - 120,
+					),
+					// The innocent bystander.
+					'draft_reply_2' => array(
+						'data_key'        => 'draft_reply_2',
+						'object'          => 'reply',
+						'data'            => array(
+							'bbp_reply_content' => 'a small sibling draft',
+							'bbp_document'      => $sibling_list,
+						),
+						'_draft_saved_at' => time() - 60,
+					),
+				)
+			)
+		);
+
+		// Premise: it really did land intact, or this test proves nothing.
+		$before = bp_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
+
+		$this->assertSame(
+			$sibling_list,
+			$before['draft_reply_2']['data']['bbp_document'],
+			'Premise: the fixture must be stored byte-identical before the heal runs.'
+		);
+
+		$acted = bb_draft_heal_forum_row( $user_id );
+
+		$this->assertGreaterThan( 0, $acted, 'The heal must have acted, or the row was never rewritten.' );
+
+		$after = bp_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
+
+		$this->assertArrayHasKey( 'draft_reply_2', $after, 'The small sibling must survive the heal.' );
+
+		$this->assertSame(
+			$sibling_list,
+			$after['draft_reply_2']['data']['bbp_document'],
+			'The heal must write the row back byte-identical - a lost backslash layer corrupts the filename and can break the JSON.'
+		);
+
+		$this->assertSame(
+			array( (int) $attachment_id ),
+			bb_draft_collect_attachment_ids( $after['draft_reply_2'] ),
+			'The sibling attachment id must still be recoverable after the heal.'
 		);
 	}
 }
