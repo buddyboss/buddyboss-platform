@@ -1092,7 +1092,16 @@ window.bp = window.bp || {};
 					// The member may have started typing while the fetch was in
 					// flight - never clobber newer local content with the older
 					// server copy the fetch was only needed to seed.
-					if ( ( bp.draft_activity.data && '' !== bp.draft_activity.data ) || bp.draft_content_changed ) {
+					//
+					// bp.draft_content_changed is only raised by the 3s autosave
+					// interval, so it misses typing in the first ~3s of a slow
+					// fetch. Read the composer's live content directly - the same
+					// content check the forum packs use - so a keystroke in that
+					// window is respected (M11).
+					var bbTypedContent = ( ! _.isUndefined( self.postForm ) && self.postForm.$el ) ?
+						$.trim( self.postForm.$el.find( '#bb-rl-whats-new' ).text().replace( /\u00a0/g, ' ' ) ) : '';
+
+					if ( ( bp.draft_activity.data && '' !== bp.draft_activity.data ) || bp.draft_content_changed || '' !== bbTypedContent ) {
 						self.settleDeferredDraftLoadedEvent();
 						return;
 					}
