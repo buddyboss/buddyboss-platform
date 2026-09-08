@@ -1097,6 +1097,11 @@ function bb_nouveau_forum_localize_scripts( $params = array() ) {
 	// indistinguishable from a successful save (H1).
 	$params['forums']['draft_save_failed_message'] = __( 'Your draft could not be saved. Please reload the page - anything you write here may not be kept.', 'buddyboss' );
 
+	// Shown when a DISCARD is refused (e.g. an expired nonce, or the forum made
+	// private mid-session). The save message would wrongly say the draft "could
+	// not be saved" when the member was trying to remove it.
+	$params['forums']['draft_discard_failed_message'] = __( 'Your draft could not be discarded. Please reload the page and try again.', 'buddyboss' );
+
 	// The restore is suppressed when the member has already typed into the
 	// form, and that suppression used to be silent - the stored draft is
 	// intact but nothing on screen said so.

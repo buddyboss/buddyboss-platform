@@ -859,12 +859,19 @@ window.bp = window.bp || {};
 			var self = this,
 				draft_payload = this.topic_reply_draft;
 
+			// Captured synchronously: discardTopicReplyDraftForm() resets
+			// post_action back to 'update' before the async response lands, so
+			// the callback below cannot read it off the draft any more - and a
+			// failed DISCARD must not tell the member their draft "could not be
+			// saved" when they were trying to remove it.
+			var is_discard_request = ( 'delete' === this.topic_reply_draft.post_action );
+
 			// A delete needs only the key, never the content - the server
 			// disposes from its own stored row. Slimming the payload also keeps
 			// the unload delete under the browser's ~64KB sendBeacon quota,
 			// which a full near-cap draft exceeds (the request would silently
 			// never be sent and the server row would survive the discard).
-			if ( 'delete' === this.topic_reply_draft.post_action ) {
+			if ( is_discard_request ) {
 				draft_payload = _.omit( this.topic_reply_draft, 'data' );
 			}
 
@@ -907,7 +914,9 @@ window.bp = window.bp || {};
 								self.showDraftFeedback(
 									( response && response.data && response.data.message ) ?
 										response.data.message :
-										( BP_Nouveau.forums.draft_save_failed_message || '' )
+										( is_discard_request ?
+											( BP_Nouveau.forums.draft_discard_failed_message || '' ) :
+											( BP_Nouveau.forums.draft_save_failed_message || '' ) )
 								);
 
 								// Deliberately NOT clearing the discard marker here.
