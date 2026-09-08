@@ -1939,13 +1939,22 @@ window.bp = window.bp || {};
 
 		try {
 			for ( i = 0; i < forms.length; i++ ) {
-				// Only the plain reply shape is derivable here. A topic form has
-				// no bbp_topic_id, and a reply-to-reply stores under
-				// draft_reply_{topic}_{reply}; both therefore read as unresolved
-				// and force the fetch, which is the safe direction.
-				key = $( forms[ i ] ).find( 'input[name="bbp_topic_id"]' ).length ?
-					'draft_reply_' + $( forms[ i ] ).find( 'input[name="bbp_topic_id"]' ).val() :
-					'';
+				// A reply form CANNOT prove the tab already holds every draft the
+				// fetch would bring. It renders bbp_topic_id, so only the plain
+				// draft_reply_{topic} shape is derivable at init - but the member
+				// may hold a reply-to-reply draft under draft_reply_{topic}_{reply}
+				// on the server only, and that key is chosen later (when they
+				// click reply on a specific reply), so it is invisible here.
+				// Treating the bare key as warm skipped the fetch and the
+				// server-only reply-to-reply draft was never loaded, then the
+				// next autosave overwrote it (M9). Force the fetch for any reply
+				// form; a topic form has no bbp_topic_id and forces it via the
+				// empty key below.
+				if ( $( forms[ i ] ).find( 'input[name="bbp_topic_id"]' ).length ) {
+					return false;
+				}
+
+				key = '';
 
 				if ( ! key || null === window.localStorage.getItem( key ) ) {
 					// EVERY form must be warm before the fetch can be skipped.
