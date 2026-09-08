@@ -3410,6 +3410,83 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 	}
 
 	/**
+	 * @return int
+	 */
+	public function return_800() {
+		return 800;
+	}
+
+	/**
+	 * A merged sibling that the budget trim then EVICTS must not have its
+	 * attachment re-stamped. The sibling merge pushes the sibling's attachment
+	 * IDs into $stamp_attachment_ids, and the aggregate-row trim can evict that
+	 * sibling (its stored _draft_saved_at is old - the merge does not refresh it
+	 * on a content-only change - so it sorts oldest, and only the primary key is
+	 * protected). The eviction-release loop correctly drops the evicted sibling's
+	 * stamp; the unconditional re-stamp loop then re-applied it, permanently
+	 * protecting a file nothing stored references. Reachable by ordinary heavy
+	 * forum users hitting their draft budget.
+	 */
+	public function test_evicted_sibling_attachment_is_not_re_stamped() {
+		$user_id = self::factory()->user->create();
+		$this->set_current_user( $user_id );
+
+		$primary_forum = self::factory()->post->create( array( 'post_type' => bbp_get_forum_post_type() ) );
+		$sibling_forum = self::factory()->post->create( array( 'post_type' => bbp_get_forum_post_type() ) );
+
+		$primary_key = 'draft_discussion_' . $primary_forum;
+		$sibling_key = 'draft_discussion_' . $sibling_forum;
+
+		// Referenced ONLY by the sibling, so once it is evicted nothing stored
+		// points at the attachment and its stamp must stay released.
+		$orphaned = $this->make_stamped_unsaved_attachment( $user_id );
+
+		// Small caps so the two-entry aggregate row exceeds the budget and the
+		// trim must evict the unprotected sibling (the primary key is protected).
+		add_filter( 'bb_draft_max_size', array( $this, 'return_800' ) );
+		add_filter( 'bb_draft_user_total_max_size', array( $this, 'return_800' ) );
+
+		bp_update_user_meta(
+			$user_id,
+			'bb_user_topic_reply_draft',
+			array(
+				$primary_key => array( 'data_key' => $primary_key, '_draft_saved_at' => time(), 'data' => array( 'bbp_topic_content' => str_repeat( 'p', 350 ) ) ),
+				$sibling_key => array( 'data_key' => $sibling_key, '_draft_saved_at' => 100, 'data' => array( 'bbp_topic_content' => str_repeat( 's', 300 ), 'bbp_media' => wp_json_encode( array( array( 'id' => $orphaned ) ) ) ) ),
+			)
+		);
+
+		// The beacon replays the sibling with changed content (so it merges and
+		// its attachment is pushed into the re-stamp set); the budget trim then
+		// evicts it.
+		$this->drive_forum_draft_save_with_siblings(
+			$primary_key,
+			array( 'bbp_topic_content' => str_repeat( 'p', 350 ) . ' updated' ),
+			array(
+				$sibling_key => array( 'bbp_topic_content' => str_repeat( 's', 300 ) . ' changed', 'bbp_media' => wp_json_encode( array( array( 'id' => $orphaned ) ) ) ),
+			)
+		);
+
+		remove_filter( 'bb_draft_user_total_max_size', array( $this, 'return_800' ) );
+		remove_filter( 'bb_draft_max_size', array( $this, 'return_800' ) );
+
+		$stored = bp_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
+
+		// Premise: the sibling really was evicted by the trim, or the test proves
+		// nothing about the eviction path.
+		$this->assertArrayNotHasKey(
+			$sibling_key,
+			is_array( $stored ) ? $stored : array(),
+			'Premise: the budget trim must have evicted the sibling.'
+		);
+
+		$this->assertSame(
+			'',
+			(string) get_post_meta( $orphaned, 'bb_media_draft', true ),
+			'An evicted sibling attachment must stay released, not be re-stamped by the unconditional re-stamp loop.'
+		);
+	}
+
+	/**
 	 * An authorization failure on the PRIMARY entry must not kill the whole
 	 * request before the sibling merge - the exact GH1 data-loss class, reached
 	 * via the auth path instead of the cap path. The unload beacon replays every

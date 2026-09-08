@@ -1217,10 +1217,29 @@ function bb_post_topic_reply_draft() {
 			}
 		}
 
-		// Re-applied unconditionally: update_post_meta() is idempotent, and this
-		// is what keeps a kept attachment protected across every autosave.
+		// Re-stamp only attachments a SURVIVING entry of the written row still
+		// references. update_post_meta() is idempotent, so this keeps a kept
+		// attachment protected across every autosave - but $stamp_attachment_ids
+		// also holds the attachments of freshly-merged SIBLINGS, and the budget
+		// trim above can evict a sibling (its _draft_saved_at is the old stored
+		// value, so it sorts "oldest" even while being edited, and only the
+		// primary key is protected from eviction). The eviction-release loop
+		// correctly dropped that evicted sibling's stamp; without this filter the
+		// re-stamp would re-apply it, permanently protecting an attachment nothing
+		// stored references so bp_media_delete_orphaned_attachments() could never
+		// reclaim it. Reachable by ordinary heavy forum users hitting their draft
+		// budget, not a crafted payload.
+		$surviving_stamp_ids = array();
+		foreach ( $existing_draft as $surviving_entry ) {
+			foreach ( bb_draft_collect_attachment_ids( $surviving_entry ) as $surviving_id ) {
+				$surviving_stamp_ids[ (int) $surviving_id ] = true;
+			}
+		}
+
 		foreach ( array_unique( $stamp_attachment_ids ) as $stamp_attachment_id ) {
-			update_post_meta( $stamp_attachment_id, 'bb_media_draft', 1 );
+			if ( isset( $surviving_stamp_ids[ (int) $stamp_attachment_id ] ) ) {
+				update_post_meta( $stamp_attachment_id, 'bb_media_draft', 1 );
+			}
 		}
 
 		// A kept stored primary answers with the STORED entry, never the empty
