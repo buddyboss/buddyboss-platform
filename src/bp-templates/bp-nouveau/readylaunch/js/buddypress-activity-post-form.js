@@ -3993,7 +3993,10 @@ window.bp = window.bp || {};
 					bp.draft_activity.data.privacy            = 'group';
 					bp.draft_activity.data[ 'group-privacy' ] = 'bb-rl-item-opt-' + bbRlActivity.params.item_id;
 
-					localStorage.setItem( bp.draft_activity.data_key, JSON.stringify( bp.draft_activity ) );
+					// Shedding store helper, not a raw setItem: a quota throw here
+					// would abort the group-privacy update handler. Fully-qualified
+					// because self/this is not the postForm object in this scope.
+					bp.Nouveau.Activity.postForm.checkAndStoreDraftToLocalStorage( bp.draft_activity );
 				}
 
 				if ( ! _.isUndefined( bp.draft_activity ) && '' !== bp.draft_activity.object && 'group' === bp.draft_activity.object && bp.draft_activity.data && '' !== bp.draft_activity.data ) {
@@ -4286,7 +4289,10 @@ window.bp = window.bp || {};
 					bp.draft_activity.data.privacy            = privacy;
 					bp.draft_activity.data[ 'group-privacy' ] = '';
 
-					localStorage.setItem( bp.draft_activity.data_key, JSON.stringify( bp.draft_activity ) );
+					// Shedding store helper, not a raw setItem: a quota throw here
+					// would abort the group-privacy update handler. Fully-qualified
+					// because self/this is not the postForm object in this scope.
+					bp.Nouveau.Activity.postForm.checkAndStoreDraftToLocalStorage( bp.draft_activity );
 				}
 
 				// Trigger the event to handle privacy change data.
