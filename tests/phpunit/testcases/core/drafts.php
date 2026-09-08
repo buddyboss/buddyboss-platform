@@ -3410,6 +3410,66 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 	}
 
 	/**
+	 * An authorization failure on the PRIMARY entry must not kill the whole
+	 * request before the sibling merge - the exact GH1 data-loss class, reached
+	 * via the auth path instead of the cap path. The unload beacon replays every
+	 * key the tab holds, so a member who has just lost access to the primary's
+	 * forum (removed from a group, forum made private) can still be carrying a
+	 * genuine, independently-authorized update to a sibling draft in a forum
+	 * they CAN still see. The auth gate used to wp_send_json_error() outright,
+	 * discarding that sibling's last save; it now records the rejection and falls
+	 * through to the sibling merge like the cap rejections do.
+	 */
+	public function test_auth_rejected_primary_still_saves_a_valid_sibling() {
+		$user_id = self::factory()->user->create();
+		$this->set_current_user( $user_id );
+
+		$primary_forum = self::factory()->post->create( array( 'post_type' => bbp_get_forum_post_type() ) );
+		$sibling_forum = self::factory()->post->create( array( 'post_type' => bbp_get_forum_post_type() ) );
+
+		$primary_key = 'draft_discussion_' . $primary_forum;
+		$sibling_key = 'draft_discussion_' . $sibling_forum;
+
+		bp_update_user_meta(
+			$user_id,
+			'bb_user_topic_reply_draft',
+			array(
+				$sibling_key => array( 'data_key' => $sibling_key, '_draft_saved_at' => time() - 60, 'data' => array( 'bbp_topic_content' => 'sibling original' ) ),
+			)
+		);
+
+		// The member can no longer view the PRIMARY's forum, but the sibling's is
+		// still readable.
+		$this->unreadable_forum_id = $primary_forum;
+		add_filter( 'bbp_user_can_view_forum', array( $this, 'filter_block_unreadable_forum' ), 10, 2 );
+
+		// One unload beacon: an unauthorized primary + a valid sibling update.
+		$this->drive_forum_draft_save_with_siblings(
+			$primary_key,
+			array( 'bbp_topic_content' => 'primary that can no longer be saved' ),
+			array(
+				$sibling_key => array( 'bbp_topic_content' => 'sibling UPDATED' ),
+			)
+		);
+
+		remove_filter( 'bbp_user_can_view_forum', array( $this, 'filter_block_unreadable_forum' ), 10 );
+
+		$stored = bp_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
+
+		$this->assertSame(
+			'sibling UPDATED',
+			$stored[ $sibling_key ]['data']['bbp_topic_content'],
+			'An auth-rejected primary must not kill the request before the sibling merge - the sibling update must persist (GH1 via the auth path).'
+		);
+
+		$this->assertArrayNotHasKey(
+			$primary_key,
+			$stored,
+			'The unauthorized primary entry must not be written.'
+		);
+	}
+
+	/**
 	 * When a sibling draft's attachment list shrinks, the dropped attachment's
 	 * bb_media_draft stamp must be released - the same set difference the primary
 	 * entry gets. The sibling merge re-stamped what it KEEPS but never released

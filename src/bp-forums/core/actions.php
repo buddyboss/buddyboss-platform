@@ -514,27 +514,30 @@ function bb_post_topic_reply_draft() {
 			$draft_key_allowed = bb_draft_user_can_save_topic_reply_draft( $draft_key_context, $user_id );
 		}
 
-		if ( ! $draft_key_allowed ) {
-			wp_send_json_error();
-		}
-
-		// A primary cap rejection is recorded, not thrown. The unload beacon
-		// carries sibling drafts in `all_data`, and calling wp_send_json_error()
-		// on the primary entry killed the whole request before that sibling
-		// merge ran - silently discarding a sibling's genuine update while the
-		// primary was merely too large or over its attachment bound (GH1). The
-		// flag skips only the primary's own write; the request still falls
-		// through to the sibling merge and then answers with the primary's
-		// rejection.
-		$primary_rejected  = false;
+		// A primary rejection is recorded, not thrown. The unload beacon carries
+		// sibling drafts in `all_data`, and calling wp_send_json_error() here -
+		// whether for a failed authorization gate (a forum the member has just
+		// lost access to, a topic gone private, a deleted reply) or for a cap
+		// below - killed the whole request before that sibling merge ran,
+		// silently discarding a sibling's genuine, independently-authorized
+		// update, the exact GH1 failure mode reached via the auth path instead of
+		// the cap path. The flag skips only the primary's own processing and
+		// write; the request still falls through to the sibling merge and then
+		// answers with the primary's rejection. An empty rejection keeps the
+		// authorization error indistinguishable across "no such shape", "cannot
+		// see it" and "may not post here" (L1).
+		$primary_rejected  = ! $draft_key_allowed;
 		$primary_rejection = array();
 
 		// Sanitize and cap the incoming entry BEFORE any side effect (attachment
 		// deletion or stamping) so a rejected request leaves storage untouched.
 		// This is the cheap bound that keeps a huge payload away from the
 		// per-attachment lookups below; the authoritative cap runs on the
-		// normalised entry just before it is stored.
-		if ( $is_draft_update ) {
+		// normalised entry just before it is stored. Skipped entirely when the
+		// primary is already rejected by the authorization gate above - its
+		// uploads must not be stamped and its size message must not overwrite the
+		// indistinguishable auth error - while the sibling merge still runs.
+		if ( $is_draft_update && ! $primary_rejected ) {
 			// Protecting the member's uploads is the one side effect that must
 			// happen FIRST. The caps below judge the draft's text, and two of
 			// them reject before the attachment loops further down ever run - so
