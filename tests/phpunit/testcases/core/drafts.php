@@ -2309,6 +2309,87 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 	}
 
 	/**
+	 * M13: the sibling re-authorization's PUBLISH-RIGHTS half must be
+	 * load-bearing, not merely redundant with the view-forum check.
+	 *
+	 * The existing merge test denies a sibling only via bbp_user_can_view_forum,
+	 * and bb_draft_user_can_save_topic_reply_draft() calls that same view check
+	 * internally, so removing EITHER gate alone left the test green. Here the
+	 * sibling is a TOPIC in a viewable forum with topic-publishing DENIED, while
+	 * the primary is a REPLY with reply-publishing allowed - so only the
+	 * publish-rights gate can reject the sibling, and removing the helper call
+	 * makes the smuggled update land.
+	 */
+	public function test_all_data_merge_reauthorizes_publish_rights_per_sibling() {
+		$user_id = self::factory()->user->create();
+		$this->set_current_user( $user_id );
+
+		$forum_id = self::factory()->post->create( array( 'post_type' => bbp_get_forum_post_type() ) );
+		$topic_id = self::factory()->post->create(
+			array( 'post_type' => bbp_get_topic_post_type(), 'post_parent' => $forum_id )
+		);
+
+		$primary_key = 'draft_reply_' . $topic_id;    // a reply - publishing allowed
+		$sibling_key = 'draft_discussion_' . $forum_id; // a topic - publishing DENIED
+
+		bp_update_user_meta(
+			$user_id,
+			'bb_user_topic_reply_draft',
+			array(
+				$primary_key => array( 'data_key' => $primary_key, 'data' => array( 'bbp_reply_content' => 'reply original' ), '_draft_saved_at' => time() - 60 ),
+				$sibling_key => array( 'data_key' => $sibling_key, 'data' => array( 'bbp_topic_content' => 'SIBLING ORIGINAL' ), '_draft_saved_at' => time() - 60 ),
+			)
+		);
+
+		$_POST    = array();
+		$_REQUEST = array();
+
+		$_REQUEST['draft_topic_reply'] = wp_json_encode(
+			array( 'data_key' => $primary_key, 'object' => 'reply', 'post_action' => 'update', 'data' => array( 'bbp_reply_content' => 'reply updated' ) )
+		);
+		$_REQUEST['all_data'] = wp_json_encode(
+			array( $sibling_key => array( 'bbp_topic_content' => 'SIBLING SMUGGLED UPDATE' ) )
+		);
+
+		// phpcs:disable WordPress.Security.NonceVerification -- this test drives the handler that performs the verification.
+		$_POST['_wpnonce_post_topic_reply_draft'] = wp_create_nonce( 'post_topic_reply_draft_data' );
+		$_REQUEST                                 = array_merge( $_REQUEST, $_POST );
+		// phpcs:enable WordPress.Security.NonceVerification
+
+		// Views allowed; topic-publishing denied; reply-publishing allowed.
+		add_filter( 'bbp_current_user_can_publish_topics', '__return_false' );
+		add_filter( 'bbp_current_user_can_publish_replies', '__return_true' );
+		add_filter( 'wp_doing_ajax', '__return_true' );
+		add_filter( 'wp_die_ajax_handler', array( $this, 'filter_draft_die_handler' ), 99 );
+
+		ob_start();
+		try {
+			bb_post_topic_reply_draft();
+		} catch ( Exception $e ) {
+			unset( $e );
+		}
+		ob_end_clean();
+
+		remove_filter( 'wp_die_ajax_handler', array( $this, 'filter_draft_die_handler' ), 99 );
+		remove_filter( 'wp_doing_ajax', '__return_true' );
+		remove_filter( 'bbp_current_user_can_publish_replies', '__return_true' );
+		remove_filter( 'bbp_current_user_can_publish_topics', '__return_false' );
+
+		$stored = bp_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
+
+		$this->assertSame(
+			'SIBLING ORIGINAL',
+			$stored[ $sibling_key ]['data']['bbp_topic_content'],
+			'A sibling TOPIC the member may not publish must NOT take the smuggled write - the publish-rights gate must reject it even though the forum is viewable.'
+		);
+		$this->assertSame(
+			'reply updated',
+			$stored[ $primary_key ]['data']['bbp_reply_content'],
+			'Negative control: the primary reply, which the member may publish, still saves.'
+		);
+	}
+
+	/**
 	 * Deny view access to one specific forum.
 	 *
 	 * @param bool      $retval   Incoming value.
