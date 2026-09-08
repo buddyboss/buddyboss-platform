@@ -1892,7 +1892,19 @@ window.bp = window.bp || {};
 				var draft_cap = ( BP_Nouveau.activity.params && BP_Nouveau.activity.params.draft_max_size ) ?
 					parseInt( BP_Nouveau.activity.params.draft_max_size, 10 ) : 0;
 
-				if ( draft_cap > 0 && bbDraftByteLength( JSON.stringify( bp.draft_activity ) ) > draft_cap ) {
+				// The server enforces the cap on strlen( maybe_serialize() ),
+				// which is systematically WIDER than JSON.stringify() (every
+				// string carries s:LEN:"...", every key likewise), and it adds
+				// _draft_saved_at plus a bb_media_draft flag per attachment AFTER
+				// the client has measured. Measuring JSON bytes against the raw
+				// cap therefore under-fires: a draft just under by JSON can be
+				// over by serialize, so the shed does not run and the server
+				// refuses the whole save with the poster still attached. Shed at
+				// a margin below the cap to stay under the server's measurement -
+				// a missing poster beats a lost draft (M8).
+				var draft_cap_margin = draft_cap > 0 ? Math.floor( draft_cap * 0.95 ) : 0;
+
+				if ( draft_cap > 0 && bbDraftByteLength( JSON.stringify( bp.draft_activity ) ) > draft_cap_margin ) {
 					draft_payload      = _.clone( bp.draft_activity );
 					draft_payload.data = _.clone( bp.draft_activity.data );
 
