@@ -1175,6 +1175,9 @@ window.bp = window.bp || {};
 
 					if (
 						0 === attr_name.indexOf( 'on' ) ||
+						// A style attribute can position an overlay for UI-redress and load
+						// remote URLs via url(...), so it is dropped like the <style> element.
+						'style' === attr_name ||
 						(
 							-1 !== [ 'href', 'src', 'srcset', 'poster' ].indexOf( attr_name ) &&
 							/(^|,)(javascript|vbscript|data):/.test( attr_value )
@@ -1188,6 +1191,37 @@ window.bp = window.bp || {};
 			return doc.body.innerHTML;
 		},
 
+		/**
+		 * Scrub a URL taken from a restored draft before it is concatenated into
+		 * an img `src` attribute.
+		 *
+		 * `group_image` / `group_avatar` come from the same member-editable
+		 * localStorage copy as the draft body, and the restore path builds
+		 * `'<img src="' + url + '"'` by string concatenation, so a value carrying
+		 * a quote or angle bracket would break out of the attribute and a
+		 * scriptable scheme would run. Anything unsafe collapses to a blank URL
+		 * (M1). Legitimate http(s) avatar URLs pass through untouched.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param {string} url Draft-supplied URL.
+		 *
+		 * @return {string} The URL, or '' when it is unsafe to inline.
+		 */
+		sanitizeDraftUrl: function ( url ) {
+			if ( ! url || 'string' !== typeof url ) {
+				return '';
+			}
+
+			var probe = url.replace( /[^\x21-\x7E]/g, '' ).toLowerCase();
+
+			if ( /[<>"']/.test( url ) || /^(javascript|vbscript|data):/.test( probe ) ) {
+				return '';
+			}
+
+			return url;
+		},
+
 		displayDraftActivity: function () {
 			var activity_data = bp.draft_activity.data,
 				$this         = this;
@@ -1196,6 +1230,17 @@ window.bp = window.bp || {};
 			// scriptable markup before it reaches listeners or the editor.
 			if ( activity_data && activity_data.content ) {
 				activity_data.content = this.sanitizeDraftContent( activity_data.content );
+			}
+
+			// Same untrusted source: the group avatar URL is concatenated into an
+			// img src on restore, so scrub it before any sink reads it (M1).
+			if ( activity_data ) {
+				if ( activity_data.group_image ) {
+					activity_data.group_image = this.sanitizeDraftUrl( activity_data.group_image );
+				}
+				if ( activity_data.group_avatar ) {
+					activity_data.group_avatar = this.sanitizeDraftUrl( activity_data.group_avatar );
+				}
 			}
 
 			bp.draft_activity.allow_delete_media = true;
@@ -1329,6 +1374,15 @@ window.bp = window.bp || {};
 				} else if ( true === BP_Nouveau.activity.params.has_draft ) {
 					// The draft is no longer echoed into page HTML - fetch the
 					// server copy once when localStorage held nothing.
+					//
+					// Snapshot what the composer arrived with BEFORE the fetch goes
+					// out, so the not-restored notice fires only when the member
+					// actually TYPES during the fetch - not merely because the
+					// composer was pre-filled (a mention prefix, a shared link).
+					// Matches the forum packs' snapshotInitialContent() (M4).
+					bp.draft_initial_content = ( ! _.isUndefined( self.postForm ) && self.postForm.$el ) ?
+						$.trim( self.postForm.$el.find( '#whats-new' ).text().replace( /\u00a0/g, ' ' ) ) : '';
+
 					self.fetchServerDraftActivity();
 				}
 
@@ -1389,7 +1443,11 @@ window.bp = window.bp || {};
 						$.trim( self.postForm.$el.find( '#whats-new' ).text().replace( /\u00a0/g, ' ' ) ) : '';
 
 					var hasLocalDraftData    = bp.draft_activity.data && '' !== bp.draft_activity.data,
-						memberStartedWriting = bp.draft_content_changed || '' !== bbTypedContent;
+						// Deviation from the pre-fetch snapshot, not mere non-emptiness,
+						// so a pre-filled composer is not mistaken for the member typing
+						// (M4). bp.draft_content_changed is raised only by real input
+						// events, so it stays a reliable signal.
+						memberStartedWriting = bp.draft_content_changed || ( bbTypedContent !== ( bp.draft_initial_content || '' ) );
 
 					if ( hasLocalDraftData || memberStartedWriting ) {
 						self.settleDeferredDraftLoadedEvent();

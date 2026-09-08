@@ -1367,6 +1367,9 @@ window.bp = window.bp || {};
 
 					if (
 						0 === attr_name.indexOf( 'on' ) ||
+						// A style attribute can position an overlay for UI-redress and load
+						// remote URLs via url(...), so it is dropped like the <style> element.
+						'style' === attr_name ||
 						(
 							-1 !== [ 'href', 'src', 'srcset', 'poster' ].indexOf( attr_name ) &&
 							/(^|,)(javascript|vbscript|data):/.test( attr_value )
