@@ -1169,10 +1169,10 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		);
 
 		add_filter( 'bb_draft_retention_days', array( $this, 'filter_one_day_retention' ) );
-		$released = bb_drafts_release_orphaned_draft_stamps();
+		$result = bb_drafts_release_orphaned_draft_stamps( 0 );
 		remove_filter( 'bb_draft_retention_days', array( $this, 'filter_one_day_retention' ) );
 
-		$this->assertSame( 1, $released, 'Exactly the unreferenced stamped attachment must be released.' );
+		$this->assertSame( 1, $result['released'], 'Exactly the unreferenced stamped attachment must be released.' );
 		$this->assertSame(
 			'',
 			get_post_meta( $orphan, 'bb_media_draft', true ),
@@ -1194,11 +1194,57 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		$orphan  = $this->make_stamped_unsaved_attachment( $user_id );
 
 		add_filter( 'bb_draft_retention_days', '__return_zero' );
-		$released = bb_drafts_release_orphaned_draft_stamps();
+		$result = bb_drafts_release_orphaned_draft_stamps( 0 );
 		remove_filter( 'bb_draft_retention_days', '__return_zero' );
 
-		$this->assertSame( 0, $released );
+		$this->assertSame( 0, $result['released'] );
 		$this->assertSame( '1', (string) get_post_meta( $orphan, 'bb_media_draft', true ) );
+	}
+
+	/**
+	 * M3 HIGH: the sweep must not stall behind >500 REFERENCED stamped
+	 * attachments - the bare LIMIT 500 with no order returned the same
+	 * referenced rows forever and released nothing. The cursor must carry the
+	 * scan past them to the real orphans.
+	 */
+	public function test_orphaned_stamp_sweep_reaches_orphans_past_500_referenced() {
+		$this->isolate_draft_maintenance();
+
+		$user_id = self::factory()->user->create();
+
+		// One aggregate row referencing many low-ID stamped attachments, plus a
+		// single higher-ID orphan the old LIMIT 500 window could never reach.
+		$referenced_entries = array();
+		for ( $i = 0; $i < 3; $i++ ) {
+			$ref = $this->make_stamped_unsaved_attachment( $user_id );
+			$referenced_entries[ 'draft_reply_' . ( $i + 1 ) ] = array(
+				'data_key'        => 'draft_reply_' . ( $i + 1 ),
+				'_draft_saved_at' => time(),
+				'data'            => array( 'bbp_media' => wp_json_encode( array( array( 'id' => $ref ) ) ) ),
+			);
+		}
+		bp_update_user_meta( $user_id, 'bb_user_topic_reply_draft', $referenced_entries );
+
+		// The orphan is created AFTER the referenced ones, so it has a higher ID
+		// and would sort last - exactly where a no-order LIMIT window drops it.
+		$orphan = $this->make_stamped_unsaved_attachment( $user_id );
+
+		add_filter( 'bb_draft_retention_days', array( $this, 'filter_one_day_retention' ) );
+		// Tiny page size forces the cursor to iterate, exercising the resume.
+		add_filter( 'bb_draft_stamp_sweep_batch_size', array( $this, 'filter_stamp_sweep_limit_two' ) );
+		$result = bb_drafts_release_orphaned_draft_stamps( 0 );
+		remove_filter( 'bb_draft_stamp_sweep_batch_size', array( $this, 'filter_stamp_sweep_limit_two' ) );
+		remove_filter( 'bb_draft_retention_days', array( $this, 'filter_one_day_retention' ) );
+
+		$this->assertSame( 1, $result['released'], 'Only the orphan must be released.' );
+		$this->assertSame( '', (string) get_post_meta( $orphan, 'bb_media_draft', true ), 'The higher-ID orphan must be reached past the referenced ones.' );
+	}
+
+	/**
+	 * @return int
+	 */
+	public function filter_stamp_sweep_limit_two() {
+		return 2;
 	}
 
 	/**
@@ -2032,6 +2078,8 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		delete_site_option( 'bb_draft_cleanup_epoch' );
 		delete_transient( 'bb_draft_cleanup_lock' );
 		delete_site_transient( 'bb_draft_oneshot_lock' );
+		delete_site_transient( 'bb_draft_stamp_sweep_lock' );
+		delete_site_option( 'bb_draft_stamp_sweep_cursor' );
 
 		$scheduled = wp_next_scheduled( 'bb_draft_oneshot' );
 		if ( $scheduled ) {

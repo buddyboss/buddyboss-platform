@@ -823,7 +823,7 @@ function bb_draft_salvage_oversized_draft( $user_id, $meta_key ) {
  * what its siblings still hold let the orphan crons delete files a stored
  * draft was still pointing at. {@see bb_draft_heal_forum_row()} and the
  * forum handler's eviction branch already apply this whole-row exclusion
- *.
+ *
  *
  * @since BuddyBoss [BBVERSION]
  *
@@ -2432,12 +2432,23 @@ function bb_drafts_oneshot_batch( $time_budget = 10 ) {
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @return array Map of attachment ID => true for every referenced attachment.
+ * @param int $time_budget Seconds to spend; 0 for unlimited.
+ * @param int $started_at  Run start time; 0 uses now.
+ * @return array|false Map of attachment ID => true, or false when the scan
+ *                     could not finish inside the budget.
  */
-function bb_drafts_collect_referenced_attachment_ids() {
+function bb_drafts_collect_referenced_attachment_ids( $time_budget = 0, $started_at = 0 ) {
 	$referenced = array();
 	$cursor     = 0;
+	$time_budget = (int) $time_budget;
+	$started_at  = $started_at ? (int) $started_at : time();
 
+	// Only attachment IDs are retained, so the map is bounded by distinct
+	// referenced attachments, not by row width; the per-window payload is
+	// byte-bounded by bb_draft_get_rows_batch(). The set must be COMPLETE
+	// before any release, or a referenced attachment scanned late would be
+	// wrongly freed - so a run that cannot finish the scan inside its budget
+	// returns false and the caller releases nothing this time (M3 HIGH).
 	do {
 		$batch = bb_draft_get_rows_batch( $cursor, 200, true );
 
@@ -2465,6 +2476,10 @@ function bb_drafts_collect_referenced_attachment_ids() {
 		}
 
 		$cursor = (int) $batch['last_id'];
+
+		if ( 0 < $time_budget && ( time() - $started_at ) >= $time_budget ) {
+			return false;
+		}
 	} while ( $batch['has_more'] );
 
 	return $referenced;
@@ -2475,71 +2490,158 @@ function bb_drafts_collect_referenced_attachment_ids() {
  *
  * A save refused by a cap leaves the member's uploads stamped `bb_media_draft`
  * with no draft to release them, so the orphan cron never reaps them (M3). This
- * runs on the daily cleanup: it releases the stamp - it does NOT hard-delete -
- * from every stamped, unsaved attachment older than the retention window that
- * the reference scan proves nothing still points at. The existing orphan cron
- * then collects the file on its own schedule. Releasing on refusal itself is
- * deliberately NOT the fix: the member may retry the same attachments with less
- * text, and unprotecting them mid-compose is the data loss BLOCKER-1 closed.
+ * releases the stamp - it does NOT hard-delete - from stamped, unsaved
+ * attachments older than the retention window that the reference scan proves
+ * nothing still points at. The existing orphan cron then collects the file on
+ * its own schedule. Releasing on refusal itself is deliberately NOT the fix:
+ * the member may retry the same attachments with less text, and unprotecting
+ * them mid-compose is the data loss BLOCKER-1 closed.
  *
- * Bounded per run: expiry being disabled ({@see bb_draft_retention_days()} = 0)
- * switches this off too, and the query is capped so a huge library cannot stall
- * the cron.
+ * Bounded like its siblings ({@see bb_drafts_delete_expired}): held under
+ * `bb_draft_stamp_sweep_lock`, time-budgeted, and CURSORED over the candidate
+ * attachments by ID (`bb_draft_stamp_sweep_cursor`). The cursor is what fixes
+ * the earlier fatal shape - a bare `LIMIT 500` with no order returned the same
+ * referenced rows every run once a site held more than 500 of them, so not one
+ * orphan past that window was ever released. The cursor advances over EVERY
+ * candidate, referenced or not, so a referenced attachment is skipped without
+ * stalling progress and is simply re-examined on the next full pass.
+ *
+ * Runs on the DAILY hook only, never the 60-second expiry continuation, so the
+ * full-table reference scan cannot re-run every minute. Expiry being disabled
+ * ({@see bb_draft_retention_days()} = 0) switches this off too.
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @return int Number of attachments whose stamps were released.
+ * @param int $time_budget Seconds to spend this run; 0 for unlimited.
+ * @return array { @type int $released @type bool $complete @type bool $locked }
  */
-function bb_drafts_release_orphaned_draft_stamps() {
+function bb_drafts_release_orphaned_draft_stamps( $time_budget = 10 ) {
 	global $wpdb;
+
+	$time_budget = (int) $time_budget;
+	$started_at  = time();
 
 	$retention_seconds = bb_draft_retention_seconds();
 
 	// Expiry off means "keep drafts forever", so their attachments must keep
 	// their protection forever too.
 	if ( 1 > $retention_seconds ) {
-		return 0;
+		return array(
+			'released' => 0,
+			'complete' => true,
+		);
 	}
 
-	$referenced = bb_drafts_collect_referenced_attachment_ids();
-	$cutoff     = gmdate( 'Y-m-d H:i:s', time() - $retention_seconds );
+	// Serialize against a second sweep (a concurrent daily fire, or a CLI drain
+	// racing the cron) so two runs cannot advance the cursor over each other.
+	if ( get_site_transient( 'bb_draft_stamp_sweep_lock' ) ) {
+		return array(
+			'released' => 0,
+			'complete' => false,
+			'locked'   => true,
+		);
+	}
 
-	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- one-time maintenance sweep over draft-stamped attachments.
-	$candidate_ids = $wpdb->get_col(
-		$wpdb->prepare(
-			"SELECT p.ID
-			FROM {$wpdb->posts} p
-			INNER JOIN {$wpdb->postmeta} d ON ( d.post_id = p.ID AND d.meta_key = 'bb_media_draft' )
-			INNER JOIN {$wpdb->postmeta} s ON ( s.post_id = p.ID AND s.meta_key = 'bp_media_saved' AND s.meta_value = '0' )
-			WHERE p.post_type = 'attachment'
-			AND p.post_date_gmt < %s
-			LIMIT 500",
-			$cutoff
-		)
-	);
+	set_site_transient( 'bb_draft_stamp_sweep_lock', 1, 5 * MINUTE_IN_SECONDS );
 
+	// The referenced set must be COMPLETE before any release. A run that cannot
+	// finish the scan inside its budget releases nothing rather than risk
+	// freeing an attachment a not-yet-scanned draft still holds.
+	$referenced = bb_drafts_collect_referenced_attachment_ids( $time_budget, $started_at );
+
+	if ( false === $referenced ) {
+		delete_site_transient( 'bb_draft_stamp_sweep_lock' );
+
+		return array(
+			'released' => 0,
+			'complete' => false,
+		);
+	}
+
+	$cutoff   = gmdate( 'Y-m-d H:i:s', time() - $retention_seconds );
+	$cursor   = (int) get_site_option( 'bb_draft_stamp_sweep_cursor', 0 );
 	$released = 0;
+	$complete = true;
 
-	foreach ( (array) $candidate_ids as $attachment_id ) {
-		$attachment_id = (int) $attachment_id;
+	/**
+	 * Filters the candidate batch size for the orphan-stamp sweep.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param int $batch_size Attachments examined per query. Default 200.
+	 */
+	$batch_size = max( 1, (int) apply_filters( 'bb_draft_stamp_sweep_batch_size', 200 ) );
 
-		// Referenced by a stored draft - its protection is still earned.
-		if ( isset( $referenced[ $attachment_id ] ) ) {
-			continue;
+	do {
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- maintenance sweep over draft-stamped attachments, cursored.
+		$candidate_ids = $wpdb->get_col(
+			$wpdb->prepare(
+				"SELECT p.ID
+				FROM {$wpdb->posts} p
+				INNER JOIN {$wpdb->postmeta} d ON ( d.post_id = p.ID AND d.meta_key = 'bb_media_draft' )
+				INNER JOIN {$wpdb->postmeta} s ON ( s.post_id = p.ID AND s.meta_key = 'bp_media_saved' AND s.meta_value = '0' )
+				WHERE p.post_type = 'attachment'
+				AND p.post_date_gmt < %s
+				AND p.ID > %d
+				ORDER BY p.ID ASC
+				LIMIT %d",
+				$cutoff,
+				$cursor,
+				$batch_size
+			)
+		);
+
+		if ( empty( $candidate_ids ) ) {
+			break;
 		}
 
-		delete_post_meta( $attachment_id, 'bb_media_draft' );
-		delete_post_meta( $attachment_id, 'bb_activity_post_feature_image_draft' );
-		++$released;
+		foreach ( $candidate_ids as $attachment_id ) {
+			$attachment_id = (int) $attachment_id;
+
+			// Advance the cursor over EVERY candidate, referenced or not, so a
+			// referenced attachment never stalls the scan.
+			$cursor = $attachment_id;
+
+			if ( isset( $referenced[ $attachment_id ] ) ) {
+				continue;
+			}
+
+			delete_post_meta( $attachment_id, 'bb_media_draft' );
+			delete_post_meta( $attachment_id, 'bb_activity_post_feature_image_draft' );
+			++$released;
+		}
+
+		update_site_option( 'bb_draft_stamp_sweep_cursor', $cursor );
+
+		$batch_was_full = ( count( $candidate_ids ) === $batch_size );
+
+		if ( 0 < $time_budget && ( time() - $started_at ) >= $time_budget ) {
+			$complete = false;
+			break;
+		}
+	} while ( $batch_was_full );
+
+	// A finished pass restarts from the top next time (attachments freshly
+	// stamped since, and any that became unreferenced, get re-examined).
+	if ( $complete ) {
+		delete_site_option( 'bb_draft_stamp_sweep_cursor' );
 	}
 
-	return $released;
+	delete_site_transient( 'bb_draft_stamp_sweep_lock' );
+
+	return array(
+		'released' => $released,
+		'complete' => $complete,
+	);
 }
 
 // The cleanup runs inline in cron requests (see bb_drafts_delete_expired
 // for why the background-process classes are not used here).
 add_action( 'bb_draft_cleanup', 'bb_drafts_delete_expired' );
-add_action( 'bb_draft_cleanup', 'bb_drafts_release_orphaned_draft_stamps' );
+// The orphan-stamp sweep is NOT wired to this 60-second continuation hook - its
+// full-table reference scan must not re-run every minute (M3 HIGH). It runs on
+// the daily hook below only.
+
 add_action( 'bb_draft_oneshot', 'bb_drafts_oneshot_batch' );
 
 add_action( 'bb_draft_cleanup_hook', 'bb_drafts_delete_expired' );
@@ -2638,8 +2740,16 @@ if ( defined( 'WP_CLI' ) && WP_CLI ) {
 				WP_CLI::log( 'Expiry pass: ' . $expired['deleted'] . ' expired drafts removed.' );
 			} while ( empty( $expired['complete'] ) );
 
-			$released_stamps = bb_drafts_release_orphaned_draft_stamps();
-				WP_CLI::log( 'Orphaned draft stamps released: ' . $released_stamps . '.' );
+			do {
+				$stamp_pass = bb_drafts_release_orphaned_draft_stamps( 0 );
+
+				if ( ! empty( $stamp_pass['locked'] ) ) {
+					WP_CLI::warning( 'Orphan-stamp sweep skipped: another sweep holds the lock. Re-run once it finishes.' );
+					break;
+				}
+
+				WP_CLI::log( 'Orphaned draft stamps released: ' . $stamp_pass['released'] . '.' );
+			} while ( empty( $stamp_pass['complete'] ) );
 
 				WP_CLI::success( 'Draft cleanup complete.' );
 		}
