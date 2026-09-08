@@ -1,4 +1,4 @@
-/* global bp, BP_Nouveau, _, Backbone, tinymce, bp_media_dropzone, BBTopicsManager, BBActivityPostFeatureImage */
+/* global bp, BP_Nouveau, _, Backbone, tinymce, bp_media_dropzone, BBTopicsManager, BBActivityPostFeatureImage, unescape */
 /* @version 3.1.0 */
 /*jshint esversion: 6 */
 window.wp = window.wp || {};
