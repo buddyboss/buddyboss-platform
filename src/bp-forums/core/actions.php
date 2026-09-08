@@ -774,6 +774,22 @@ function bb_post_topic_reply_draft() {
 							continue;
 						}
 
+						// This sibling is now part of the row this request writes,
+						// so its attachments need the same orphan protection the
+						// primary entry gets. The three per-type normalisation
+						// loops above only ever see the primary draft, so a file
+						// referenced solely by a sibling reached storage unstamped
+						// and bp_media_delete_orphaned_attachments() hard-deleted
+						// it while the member was still drafting with it. Ownership
+						// is re-checked per ID: this list is client JSON, and the
+						// stamping loop below writes without further checks
+						// (PROD-9621).
+						foreach ( bb_draft_collect_attachment_ids( $merged_entry ) as $sibling_attachment_id ) {
+							if ( bb_draft_user_can_manage_attachment( $sibling_attachment_id, $user_id ) ) {
+								$stamp_attachment_ids[] = (int) $sibling_attachment_id;
+							}
+						}
+
 						$existing_draft[ $data_key ]     = $merged_entry;
 						$decided_draft_keys[ $data_key ] = true;
 					}

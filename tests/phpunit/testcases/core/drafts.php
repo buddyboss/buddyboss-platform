@@ -2535,6 +2535,90 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 	}
 
 	/**
+	 * An attachment carried only by an all_data sibling must be protected.
+	 *
+	 * The three per-type normalisation loops that stamp `bb_media_draft` only
+	 * ever see the PRIMARY draft entry. The sibling merge replaces a stored
+	 * entry's whole `data` with client JSON and ran none of them, so a file
+	 * referenced solely by a sibling reached storage unstamped and
+	 * bp_media_delete_orphaned_attachments() hard-deleted it while the member
+	 * was still drafting with it.
+	 *
+	 * Reachable on the shipped BuddyBoss theme: one shared reply modal serves
+	 * every reply target on the page, and reopening it re-runs the key setup on
+	 * the same instance, so `all_draft_data` accumulates several inner keys and
+	 * the unload beacon replays them together (browser-verified, PROD-9621).
+	 *
+	 * The foreign attachment is the control that keeps the stamping honest: the
+	 * list is client JSON, so ownership must still be checked per ID.
+	 */
+	public function test_all_data_sibling_attachments_are_orphan_protected() {
+		$user_id = self::factory()->user->create();
+		$this->set_current_user( $user_id );
+
+		$primary_forum = self::factory()->post->create( array( 'post_type' => bbp_get_forum_post_type() ) );
+		$sibling_forum = self::factory()->post->create( array( 'post_type' => bbp_get_forum_post_type() ) );
+
+		$primary_key = 'draft_discussion_' . $primary_forum;
+		$sibling_key = 'draft_discussion_' . $sibling_forum;
+
+		$mine     = $this->make_draft_attachment( $user_id );
+		$somebody = $this->make_draft_attachment( self::factory()->user->create() );
+
+		bp_update_user_meta(
+			$user_id,
+			'bb_user_topic_reply_draft',
+			array(
+				$primary_key => array(
+					'data_key'        => $primary_key,
+					'data'            => array( 'bbp_topic_content' => 'primary original' ),
+					'_draft_saved_at' => time() - 60,
+				),
+				$sibling_key => array(
+					'data_key'        => $sibling_key,
+					'data'            => array( 'bbp_topic_content' => 'sibling original' ),
+					'_draft_saved_at' => time() - 60,
+				),
+			)
+		);
+
+		$this->drive_forum_draft_save_with_siblings(
+			$primary_key,
+			// The primary carries NO attachment, so anything stamped here can
+			// only have come from the sibling path.
+			array( 'bbp_topic_content' => 'primary updated' ),
+			array(
+				$sibling_key => array(
+					'bbp_topic_content' => 'sibling updated',
+					'bbp_media'         => wp_json_encode( array( array( 'id' => $mine ), array( 'id' => $somebody ) ) ),
+				),
+			)
+		);
+
+		$stored = bp_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
+
+		// Premise: the sibling really was merged. Without this the test would
+		// also pass for a handler that silently dropped every sibling.
+		$this->assertSame(
+			'sibling updated',
+			$stored[ $sibling_key ]['data']['bbp_topic_content'],
+			'The sibling merge must have happened, or this test proves nothing about it.'
+		);
+
+		$this->assertSame(
+			'1',
+			(string) get_post_meta( $mine, 'bb_media_draft', true ),
+			'An attachment stored by the sibling merge must be orphan-protected, or the cron deletes a file the stored draft references.'
+		);
+
+		$this->assertSame(
+			'',
+			(string) get_post_meta( $somebody, 'bb_media_draft', true ),
+			'Sibling stamping is per owner - a crafted all_data payload must not stamp another member attachment.'
+		);
+	}
+
+	/**
 	 * Replacing one inner draft must not unstamp a sibling's attachment.
 	 *
 	 * `bb_draft_release_replaced_attachments()` computed "still held" from the
@@ -2695,4 +2779,56 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		);
 	}
 
+	/**
+	 * Drive the forum draft save handler with a primary entry and siblings.
+	 *
+	 * Mirrors drive_forum_draft_save() but also sends the `all_data` map the
+	 * unload beacon replays.
+	 *
+	 * @param string $data_key Primary inner draft key.
+	 * @param array  $data     Primary draft data payload.
+	 * @param array  $all_data Sibling map, keyed by inner draft key.
+	 * @return void
+	 */
+	protected function drive_forum_draft_save_with_siblings( $data_key, $data, $all_data ) {
+		$_POST    = array();
+		$_REQUEST = array();
+
+		// wp_slash() because the handler stripslashes() before decoding, exactly
+		// as WordPress hands it a real request.
+		$_REQUEST['draft_topic_reply'] = wp_slash(
+			wp_json_encode(
+				array(
+					'data_key'    => $data_key,
+					'object'      => 'topic',
+					'post_action' => 'update',
+					'data'        => $data,
+				)
+			)
+		);
+
+		$_REQUEST['all_data'] = wp_slash( wp_json_encode( $all_data ) );
+
+		// phpcs:disable WordPress.Security.NonceVerification -- this test drives the handler that performs the verification.
+		$_POST['_wpnonce_post_topic_reply_draft'] = wp_create_nonce( 'post_topic_reply_draft_data' );
+		$_REQUEST                                 = array_merge( $_REQUEST, $_POST );
+		// phpcs:enable WordPress.Security.NonceVerification
+
+		add_filter( 'wp_doing_ajax', '__return_true' );
+		add_filter( 'wp_die_ajax_handler', array( $this, 'filter_draft_die_handler' ), 99 );
+
+		ob_start();
+
+		try {
+			bb_post_topic_reply_draft();
+		} catch ( Exception $e ) {
+			// Expected: the handler finished and tried to exit.
+			unset( $e );
+		}
+
+		ob_end_clean();
+
+		remove_filter( 'wp_die_ajax_handler', array( $this, 'filter_draft_die_handler' ), 99 );
+		remove_filter( 'wp_doing_ajax', '__return_true' );
+	}
 }
