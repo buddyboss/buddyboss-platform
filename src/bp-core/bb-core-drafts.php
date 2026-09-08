@@ -291,7 +291,7 @@ function bb_draft_strip_data_urls( $content ) {
 	// Remove the base64 payload itself first. This linear character-class
 	// pattern cannot hit PCRE backtracking limits even on multi-megabyte
 	// pasted images, unlike a tag-level match over the full subject.
-	$stripped = preg_replace( '/data:[a-z0-9.+-]+\/[a-z0-9.+-]+;base64,[A-Za-z0-9+\/=]*/i', '', $content );
+	$stripped = preg_replace( '/data:(?:[a-z0-9.+-]+\/[a-z0-9.+-]+)?;base64,[A-Za-z0-9+\/=]*/i', '', $content );
 
 	if ( is_string( $stripped ) ) {
 		$content = $stripped;
@@ -1269,6 +1269,18 @@ function bb_draft_enforce_user_budget( $user_id, $current_key, $new_size, $conte
 		 * @param string $reason      Eviction reason. Currently always 'aggregate_cap'.
 		 */
 		do_action( 'bb_draft_evicted', $user_id, $evicted_key, 'aggregate_cap' );
+	}
+
+	// Eviction is not guaranteed to have reached the cap: every remaining
+	// candidate's bb_draft_dispose() can fail (a second tab racing this one
+	// against a stale size memo), or there may simply be too little evictable
+	// content. This soft per-user cap is only actually enforced when the total
+	// is now under it - otherwise refuse, so the caller cannot store past the
+	// cap on the strength of a partial eviction. The independent aggregate-meta
+	// refusal is the hard guard against the object-cache-poisoning case; this
+	// keeps the soft cap honest too.
+	if ( $draft_total > $total_cap ) {
+		$result['allowed'] = false;
 	}
 
 	return $result;

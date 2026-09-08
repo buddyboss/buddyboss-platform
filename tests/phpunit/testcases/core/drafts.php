@@ -1440,6 +1440,43 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 	}
 
 	/**
+	 * Budget enforcement must not report success when eviction could not bring
+	 * the total under the cap. The loop breaks on success and otherwise falls
+	 * through, so a run where every remaining candidate fails to dispose (or
+	 * there is too little evictable content - here the new draft alone exceeds
+	 * the cap) used to still return allowed => true, silently letting the soft
+	 * per-user cap be exceeded.
+	 */
+	public function test_budget_refuses_when_eviction_cannot_reach_the_cap() {
+		$user_id = self::factory()->user->create();
+
+		// One evictable candidate.
+		bp_update_user_meta( $user_id, 'draft_group_1', array( 'data_key' => 'draft_group_1', '_draft_saved_at' => 100, 'data' => array( 'content' => str_repeat( 'a', 300 ) ) ) );
+
+		// Cap below the NEW draft's own size, so no amount of eviction fits it.
+		add_filter( 'bb_draft_user_total_max_size', array( $this, 'return_fifty' ) );
+		$result = bb_draft_enforce_user_budget( $user_id, 'draft_user', 500 );
+		remove_filter( 'bb_draft_user_total_max_size', array( $this, 'return_fifty' ) );
+
+		$this->assertFalse(
+			$result['allowed'],
+			'Budget must refuse when eviction cannot bring the total under the cap.'
+		);
+		$this->assertContains(
+			'draft_group_1',
+			$result['evicted'],
+			'Premise: eviction was attempted (the candidate was evicted) - the total simply could not fit.'
+		);
+	}
+
+	/**
+	 * @return int
+	 */
+	public function return_fifty() {
+		return 50;
+	}
+
+	/**
 	 * @return int
 	 */
 	public function return_two() {
