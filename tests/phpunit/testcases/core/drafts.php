@@ -1342,6 +1342,50 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 	}
 
 	/**
+	 * The unbudgeted reference scan runs FIRST and can outlast the 5-minute lock
+	 * TTL on a large library; it must refresh the lock each window too, not only
+	 * the release loop after it. Otherwise the lock expires mid-scan and a second
+	 * run starts, reopening the cursor-clobber race - just relocated to the scan.
+	 */
+	public function test_orphan_stamp_sweep_refreshes_its_lock_during_the_scan() {
+		$this->isolate_draft_maintenance();
+
+		// Three draft ROWS + a scan page size of two => the reference scan spans
+		// more than one window. No orphan attachments, so the release loop runs
+		// zero windows and only the scan phase can refresh the lock beyond entry.
+		for ( $i = 0; $i < 3; $i++ ) {
+			bp_update_user_meta(
+				self::factory()->user->create(),
+				'draft_user',
+				array( 'data_key' => 'draft_user', '_draft_saved_at' => time(), 'data' => array( 'content' => 'x' ) )
+			);
+		}
+
+		add_filter( 'bb_draft_reference_scan_batch_size', array( $this, 'return_two' ) );
+
+		$this->cleanup_lock_sets = 0;
+		add_filter( 'pre_set_site_transient_bb_draft_stamp_sweep_lock', array( $this, 'count_cleanup_lock_set' ) );
+
+		bb_drafts_release_orphaned_draft_stamps( 0 );
+
+		remove_filter( 'pre_set_site_transient_bb_draft_stamp_sweep_lock', array( $this, 'count_cleanup_lock_set' ) );
+		remove_filter( 'bb_draft_reference_scan_batch_size', array( $this, 'return_two' ) );
+
+		$this->assertGreaterThanOrEqual(
+			2,
+			$this->cleanup_lock_sets,
+			'The reference scan must refresh the lock each window, or a scan longer than the TTL loses the lock before the release loop starts.'
+		);
+	}
+
+	/**
+	 * @return int
+	 */
+	public function return_two() {
+		return 2;
+	}
+
+	/**
 	 * @return int
 	 */
 	public function filter_stamp_sweep_limit_two() {

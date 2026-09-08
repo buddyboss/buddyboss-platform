@@ -2440,16 +2440,28 @@ function bb_drafts_oneshot_batch( $time_budget = 10 ) {
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param int $time_budget Seconds to spend; 0 for unlimited.
- * @param int $started_at  Run start time; 0 uses now.
+ * @param int           $time_budget Seconds to spend; 0 for unlimited.
+ * @param int           $started_at  Run start time; 0 uses now.
+ * @param callable|null $keep_alive  Optional. Invoked once per scan window so a
+ *                                   long unbudgeted scan can refresh the caller's
+ *                                   lock. Default null.
  * @return array|false Map of attachment ID => true, or false when the scan
  *                     could not finish inside the budget.
  */
-function bb_drafts_collect_referenced_attachment_ids( $time_budget = 0, $started_at = 0 ) {
-	$referenced = array();
-	$cursor     = 0;
+function bb_drafts_collect_referenced_attachment_ids( $time_budget = 0, $started_at = 0, $keep_alive = null ) {
+	$referenced  = array();
+	$cursor      = 0;
 	$time_budget = (int) $time_budget;
 	$started_at  = $started_at ? (int) $started_at : time();
+
+	/**
+	 * Filters the row batch size for the draft reference scan.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param int $batch_size Draft rows read per window. Default 200.
+	 */
+	$batch_size = max( 1, (int) apply_filters( 'bb_draft_reference_scan_batch_size', 200 ) );
 
 	// Only attachment IDs are retained, so the map is bounded by distinct
 	// referenced attachments, not by row width; the per-window payload is
@@ -2458,7 +2470,7 @@ function bb_drafts_collect_referenced_attachment_ids( $time_budget = 0, $started
 	// wrongly freed - so a run that cannot finish the scan inside its budget
 	// returns false and the caller releases nothing this time (M3 HIGH).
 	do {
-		$batch = bb_draft_get_rows_batch( $cursor, 200, true );
+		$batch = bb_draft_get_rows_batch( $cursor, $batch_size, true );
 
 		foreach ( $batch['rows'] as $row ) {
 			$value = bb_draft_safe_unserialize( $row['meta_value'] );
@@ -2484,6 +2496,16 @@ function bb_drafts_collect_referenced_attachment_ids( $time_budget = 0, $started
 		}
 
 		$cursor = (int) $batch['last_id'];
+
+		// Refresh the caller's lock each window. This unbudgeted scan runs FIRST,
+		// before the release loop's own refresh, and on the large-community case
+		// this feature targets it can itself outlast the 5-minute lock TTL - the
+		// lock would then expire mid-scan and a second run could start, reopening
+		// the cursor-clobber race the lock exists to prevent, just relocated to
+		// the scan phase. The sweep passes a closure that re-sets its lock.
+		if ( is_callable( $keep_alive ) ) {
+			call_user_func( $keep_alive );
+		}
 
 		if ( 0 < $time_budget && ( time() - $started_at ) >= $time_budget ) {
 			return false;
@@ -2575,7 +2597,15 @@ function bb_drafts_release_orphaned_draft_stamps( $time_budget = 10 ) {
 	// persisted and resumes on the next daily run). A community so large that
 	// even the reference scan alone exceeds PHP's execution limit should drain
 	// with `wp bb drafts cleanup` (unlimited).
-	$referenced = bb_drafts_collect_referenced_attachment_ids( 0, $started_at );
+	// Hold the lock across the (unbudgeted) scan too, not just the release loop
+	// below - on a large library the scan alone can outlast the 5-minute TTL.
+	$referenced = bb_drafts_collect_referenced_attachment_ids(
+		0,
+		$started_at,
+		function () {
+			set_site_transient( 'bb_draft_stamp_sweep_lock', 1, 5 * MINUTE_IN_SECONDS );
+		}
+	);
 
 	// Defensive: the scan is unbudgeted above, so it returns the full set. The
 	// guard stays in case the call ever regains a budget - a partial set must
