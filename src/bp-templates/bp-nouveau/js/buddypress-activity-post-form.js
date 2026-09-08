@@ -1122,9 +1122,71 @@ window.bp = window.bp || {};
 			);
 		},
 
+		/**
+		 * Strip scriptable markup from a restored draft's content.
+		 *
+		 * The localStorage copy of a draft is member-editable storage that
+		 * never passes through the server's kses sanitization, so a tampered
+		 * local copy could otherwise inject script-capable markup into the
+		 * composer when the draft is restored. The content is parsed in an
+		 * inert document, so nothing executes or loads during the cleanup;
+		 * normal composer markup passes through untouched.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param {string} content Draft HTML content.
+		 *
+		 * @return {string} The content with scriptable markup removed.
+		 */
+		sanitizeDraftContent: function ( content ) {
+			if ( ! content || 'string' !== typeof content ) {
+				return content;
+			}
+
+			var doc            = document.implementation.createHTMLDocument( '' );
+			doc.body.innerHTML = content;
+
+			// Elements that can execute script, restyle the page, or hijack the host form.
+			var blocked = doc.body.querySelectorAll( 'script, style, iframe, frame, frameset, object, embed, applet, form, input, button, textarea, select, link, meta, base, template, noscript, svg, math' );
+			for ( var i = 0; i < blocked.length; i++ ) {
+				if ( blocked[ i ].parentNode ) {
+					blocked[ i ].parentNode.removeChild( blocked[ i ] );
+				}
+			}
+
+			var nodes = doc.body.querySelectorAll( '*' );
+			for ( var j = 0; j < nodes.length; j++ ) {
+				var attrs = nodes[ j ].attributes;
+				for ( var k = attrs.length - 1; 0 <= k; k-- ) {
+					var attr_name = attrs[ k ].name.toLowerCase();
+
+					// Drop non-printable characters so schemes like "java\nscript:" can't hide from the test below.
+					var attr_value = attrs[ k ].value.replace( /[^\x21-\x7E]/g, '' ).toLowerCase();
+
+					if (
+						0 === attr_name.indexOf( 'on' ) ||
+						(
+							-1 !== [ 'href', 'src', 'srcset', 'poster' ].indexOf( attr_name ) &&
+							/(^|,)(javascript|vbscript|data):/.test( attr_value )
+						)
+					) {
+						nodes[ j ].removeAttribute( attrs[ k ].name );
+					}
+				}
+			}
+
+			return doc.body.innerHTML;
+		},
+
 		displayDraftActivity: function () {
 			var activity_data = bp.draft_activity.data,
 				$this         = this;
+
+			// The local copy of the draft is member-editable storage - scrub
+			// scriptable markup before it reaches listeners or the editor.
+			if ( activity_data && activity_data.content ) {
+				activity_data.content = this.sanitizeDraftContent( activity_data.content );
+			}
 
 			bp.draft_activity.allow_delete_media = true;
 
