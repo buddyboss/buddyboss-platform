@@ -1003,7 +1003,7 @@ window.bp = window.bp || {};
 										// composer had just restored: on ReadyLaunch the
 										// member saw `has-draft` over an empty editor
 										// and their draft never came back
-										// (PROD-9621 Q12).
+										// (Q12).
 										if ( $element.closest( 'form' ).hasClass( 'has-draft' ) ) {
 											return;
 										}

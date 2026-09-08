@@ -570,7 +570,7 @@ function bp_version_updater() {
 			bb_install_addons_bundle_on_upgrade();
 		}
 
-		// PROD-9621: heal oversized/aggregate-oversized draft usermeta rows and
+		//: heal oversized/aggregate-oversized draft usermeta rows and
 		// start the draft retention machinery.
 		if ( $raw_db_version < 23621 ) {
 			bb_drafts_cleanup_on_upgrade();
@@ -4695,7 +4695,7 @@ function bb_install_addons_bundle_on_upgrade() {
 }
 
 /**
- * Start the PROD-9621 draft cleanup on upgrade.
+ * Start the draft cleanup on upgrade.
  *
  * Records the epoch that timestamp-less legacy drafts age from, queues the
  * `bb_draft_oneshot` continuation, and only THEN runs the first healing
@@ -4717,22 +4717,22 @@ function bb_install_addons_bundle_on_upgrade() {
  * @return void
  */
 function bb_drafts_cleanup_on_upgrade() {
-	if ( ! get_option( 'bb_draft_cleanup_epoch' ) ) {
-		update_option( 'bb_draft_cleanup_epoch', time(), false );
+	if ( ! get_site_option( 'bb_draft_cleanup_epoch' ) ) {
+		update_site_option( 'bb_draft_cleanup_epoch', time() );
 	}
 
 	// Guarded with an autoload-false OPTION rather than a transient, for the
 	// same reason bb_draft_oneshot_done is one: transients live in the very
 	// object cache this routine repairs, so on the installs it exists for the
 	// guard can evaporate and this 10-second synchronous slice would re-run on
-	// every admin request in the upgrade window (PROD-9621).
-	$last_started = (int) get_option( 'bb_drafts_cleanup_on_upgrade', 0 );
+	// every admin request in the upgrade window.
+	$last_started = (int) get_site_option( 'bb_drafts_cleanup_on_upgrade', 0 );
 
 	if ( $last_started && ( time() - $last_started ) < HOUR_IN_SECONDS ) {
 		return;
 	}
 
-	update_option( 'bb_drafts_cleanup_on_upgrade', time(), false );
+	update_site_option( 'bb_drafts_cleanup_on_upgrade', time() );
 
 	// Scheduled BEFORE the first slice runs, not after it. _bp_db_version is
 	// bumped by bp_version_bump() inside bp_is_update() - before this updater
@@ -4740,7 +4740,7 @@ function bb_drafts_cleanup_on_upgrade() {
 	// max_execution_time timeout inside the slice below would therefore skip
 	// both the continuation AND the remaining migrations in this routine, with
 	// no retry. Scheduling first means the healing still finishes on cron even
-	// if this request dies (PROD-9621 H1).
+	// if this request dies (H1).
 	if ( ! wp_next_scheduled( 'bb_draft_oneshot' ) ) {
 		wp_schedule_single_event( time() + MINUTE_IN_SECONDS, 'bb_draft_oneshot' );
 	}

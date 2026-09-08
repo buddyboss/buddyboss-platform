@@ -1138,7 +1138,24 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 
 		bb_drafts_cleanup_on_upgrade();
 
-		$this->assertTrue( (bool) get_option( 'bb_draft_oneshot_done' ), 'Once the window has passed the slice must run.' );
+		// The synchronous upgrade slice now hands the stage-2 aggregate to a
+		// cron continuation rather than running it in the admin request
+		// (reviewer: stage-2 unbounded), so completion is signalled once that
+		// continuation drains - drive it to completion the way cron would.
+		$this->assertNotEmpty( wp_next_scheduled( 'bb_draft_oneshot' ), 'Once the window has passed the slice must run and queue the continuation.' );
+
+		$guard_iterations = 0;
+		do {
+			$guard_iterations++;
+			$guard_result = bb_drafts_oneshot_batch( 0 );
+		} while ( empty( $guard_result['complete'] ) && $guard_iterations < 20 );
+
+		$this->assertTrue( (bool) get_option( 'bb_draft_oneshot_done' ), 'The pass must complete once its continuation drains.' );
+
+		$guard_scheduled = wp_next_scheduled( 'bb_draft_oneshot' );
+		if ( $guard_scheduled ) {
+			wp_unschedule_event( $guard_scheduled, 'bb_draft_oneshot' );
+		}
 
 		delete_option( 'bb_drafts_cleanup_on_upgrade' );
 		delete_option( 'bb_draft_oneshot_done' );
@@ -1373,11 +1390,24 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 
 		$this->assertTrue( $scheduled_during_slice, 'The continuation must already be queued while the slice is running, or a fatal there loses the remaining work.' );
 
-		// It completed here, so the now-redundant continuation is withdrawn.
+		// The synchronous slice defers the stage-2 aggregate to cron, so the
+		// continuation is still queued and completion is not yet signalled.
+		$this->assertFalse( (bool) get_option( 'bb_draft_oneshot_done' ), 'The synchronous slice must hand stage 2 to the continuation, not run it inline.' );
+		$this->assertNotEmpty( wp_next_scheduled( 'bb_draft_oneshot' ), 'The deferred continuation must remain queued.' );
+
+		// Draining the continuation the way cron would completes the pass and
+		// withdraws the now-redundant event.
+		$queue_iterations = 0;
+		do {
+			$queue_iterations++;
+			$queue_result = bb_drafts_oneshot_batch( 0 );
+		} while ( empty( $queue_result['complete'] ) && $queue_iterations < 20 );
+
 		$this->assertTrue( (bool) get_option( 'bb_draft_oneshot_done' ) );
-		$this->assertFalse( wp_next_scheduled( 'bb_draft_oneshot' ), 'A completed slice must not leave a pointless cron event behind.' );
+		$this->assertFalse( wp_next_scheduled( 'bb_draft_oneshot' ), 'A completed pass must not leave a pointless cron event behind.' );
 
 		delete_option( 'bb_drafts_cleanup_on_upgrade' );
+		delete_option( 'bb_draft_oneshot_done' );
 	}
 
 	/**
@@ -1741,9 +1771,14 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 
 		delete_option( 'bb_draft_cleanup_cursor' );
 		delete_option( 'bb_draft_oneshot_state' );
+		delete_site_option( 'bb_draft_oneshot_state' );
 		delete_option( 'bb_draft_oneshot_done' );
+		delete_site_option( 'bb_draft_oneshot_done' );
 		delete_option( 'bb_drafts_cleanup_on_upgrade' );
+		delete_site_option( 'bb_drafts_cleanup_on_upgrade' );
+		delete_site_option( 'bb_draft_cleanup_epoch' );
 		delete_transient( 'bb_draft_cleanup_lock' );
+		delete_site_transient( 'bb_draft_oneshot_lock' );
 
 		$scheduled = wp_next_scheduled( 'bb_draft_oneshot' );
 		if ( $scheduled ) {
@@ -4149,5 +4184,834 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 	 */
 	public function filter_draft_attachment_bound_60() {
 		return 60;
+	}
+
+	/**
+	 * Lower the per-type attachment bound so the refusal is cheap to reach.
+	 *
+	 * @return int
+	 */
+	public function filter_draft_attachment_bound_2() {
+		return 2;
+	}
+
+	/**
+	 * Drive the activity draft handler with a RAW request array (bypasses the
+	 * scalar-only drive_activity_draft_save helper), returning the response.
+	 *
+	 * @param array $draft Raw draft_activity payload.
+	 * @return array Decoded JSON response.
+	 */
+	protected function drive_activity_draft_raw( $draft ) {
+		$_POST    = array();
+		$_REQUEST = array();
+
+		$_REQUEST['draft_activity'] = wp_slash( wp_json_encode( $draft ) );
+
+		// phpcs:disable WordPress.Security.NonceVerification -- this test drives the handler that performs the verification.
+		$_POST['_wpnonce_post_draft'] = wp_create_nonce( 'post_draft_activity' );
+		$_REQUEST                     = array_merge( $_REQUEST, $_POST );
+		// phpcs:enable WordPress.Security.NonceVerification
+
+		add_filter( 'wp_doing_ajax', '__return_true' );
+		add_filter( 'wp_die_ajax_handler', array( $this, 'filter_draft_die_handler' ), 99 );
+
+		ob_start();
+
+		try {
+			bb_nouveau_ajax_post_draft_activity();
+		} catch ( Exception $e ) {
+			unset( $e );
+		}
+
+		$body = ob_get_clean();
+
+		remove_filter( 'wp_die_ajax_handler', array( $this, 'filter_draft_die_handler' ), 99 );
+		remove_filter( 'wp_doing_ajax', '__return_true' );
+
+		$decoded = json_decode( (string) $body, true );
+
+		return is_array( $decoded ) ? $decoded : array();
+	}
+
+	/**
+	 * C2: a crafted array data_key/object must be rejected WITHOUT emitting an
+	 * "Array to string conversion" notice.
+	 *
+	 * The suite converts warnings to exceptions, so a regression back to the
+	 * bare (string) cast turns this test red (GH review C2).
+	 */
+	public function test_c2_array_data_key_is_rejected_without_warning() {
+		$user_id = self::factory()->user->create();
+		$this->set_current_user( $user_id );
+
+		$response = $this->drive_activity_draft_raw(
+			array(
+				'data_key'    => array( 'x' ),
+				'object'      => array( 'y' ),
+				'post_action' => 'update',
+				'data'        => array( 'content' => 'hi', 'item_id' => array( 'z' ) ),
+			)
+		);
+
+		$this->assertArrayHasKey( 'success', $response, 'The handler must return a JSON response, not error out on a warning.' );
+		$this->assertFalse( $response['success'], 'A non-scalar data_key must be rejected.' );
+	}
+
+	/**
+	 * C1: the feature image is owner-gated before the caps, mirroring the
+	 * media/document/video lists.
+	 *
+	 * A member's OWN feature image is stamped early (BLOCKER-1 protection) so
+	 * the orphan cron spares it even if a later cap rejects. The Core-only
+	 * foreign-id drop cannot be exercised where Pro is active (its per-object
+	 * check owns that path and is preserved), so this asserts the owner-gate's
+	 * stamp, which is the branch this install can reach (GH review C1).
+	 */
+	public function test_c1_owned_feature_image_is_stamped_early() {
+		$user_id = self::factory()->user->create();
+		$this->set_current_user( $user_id );
+
+		$attachment_id = $this->make_draft_attachment( $user_id );
+
+		$this->drive_activity_draft_raw(
+			array(
+				'data_key'    => 'draft_user',
+				'object'      => 'user',
+				'post_action' => 'update',
+				'data'        => array(
+					'content'                       => 'a draft with a feature image',
+					'bb_activity_post_feature_image' => array( 'id' => $attachment_id ),
+				),
+			)
+		);
+
+		// The early owner-gate stamps before any cap or Pro check, so the meta
+		// is present regardless of what the rest of the request decided.
+		$this->assertSame(
+			'1',
+			(string) get_post_meta( $attachment_id, 'bb_activity_post_feature_image_draft', true ),
+			'An owned feature image must be orphan-protected by the early owner-gate.'
+		);
+	}
+
+	/**
+	 * The one-shot must CONVERGE across budgeted (cron-style) slices and still
+	 * run stage 2, now that the stage-2 aggregate is deferred off any
+	 * time-limited slice (reviewer: stage-2 unbounded).
+	 *
+	 * The failure this guards against is a defer that loops forever: an
+	 * "always defer when budget>0" without a scan_done marker re-completes an
+	 * empty re-scan every slice and never reaches the aggregate, so the
+	 * aggregate-oversized user is never trimmed. Slice 1 finishes the scan and
+	 * defers; slice 2 runs the aggregate and drains stage 2.
+	 */
+	public function test_oneshot_converges_across_budgeted_slices() {
+		$this->isolate_draft_maintenance();
+
+		$heavy = self::factory()->user->create();
+		$cap   = bb_draft_user_total_max_size();
+		$count = (int) ceil( ( $cap + 80000 ) / 40000 );
+
+		for ( $i = 1; $i <= $count; $i++ ) {
+			bp_update_user_meta(
+				$heavy,
+				'draft_group_' . $i,
+				array(
+					'data_key'        => 'draft_group_' . $i,
+					'_draft_saved_at' => 1000 + $i,
+					'data'            => array( 'content' => str_repeat( 'x', 40000 ) ),
+				)
+			);
+		}
+
+		$before = array_sum( bb_draft_get_user_meta_sizes( $heavy )['drafts'] );
+		$this->assertGreaterThan( $cap, $before, 'Fixture must start the user over the aggregate cap.' );
+
+		$iterations = 0;
+		do {
+			$iterations++;
+			$result = bb_drafts_oneshot_batch( 10 );
+		} while ( empty( $result['complete'] ) && $iterations < 50 );
+
+		$after = array_sum( bb_draft_get_user_meta_sizes( $heavy )['drafts'] );
+
+		$this->assertTrue( ! empty( $result['complete'] ), 'The one-shot must converge, not loop forever deferring the aggregate.' );
+		$this->assertLessThanOrEqual( $cap, $after, 'Stage 2 must trim the aggregate-oversized user under the cap.' );
+		$this->assertTrue( (bool) get_option( 'bb_draft_oneshot_done' ), 'Completion must set the durable done marker.' );
+
+		$scheduled = wp_next_scheduled( 'bb_draft_oneshot' );
+		if ( $scheduled ) {
+			wp_unschedule_event( $scheduled, 'bb_draft_oneshot' );
+		}
+		delete_option( 'bb_draft_oneshot_done' );
+	}
+
+	/**
+	 * The unbudgeted (WP-CLI) drain must complete stage 1 AND stage 2 in ONE
+	 * call - it does not defer the aggregate, unlike a time-limited slice.
+	 */
+	public function test_oneshot_budget_zero_completes_in_one_call() {
+		$this->isolate_draft_maintenance();
+
+		$heavy = self::factory()->user->create();
+		$cap   = bb_draft_user_total_max_size();
+		$count = (int) ceil( ( $cap + 80000 ) / 40000 );
+
+		for ( $i = 1; $i <= $count; $i++ ) {
+			bp_update_user_meta(
+				$heavy,
+				'draft_group_' . $i,
+				array(
+					'data_key'        => 'draft_group_' . $i,
+					'_draft_saved_at' => 1000 + $i,
+					'data'            => array( 'content' => str_repeat( 'x', 40000 ) ),
+				)
+			);
+		}
+
+		$result = bb_drafts_oneshot_batch( 0 );
+		$after  = array_sum( bb_draft_get_user_meta_sizes( $heavy )['drafts'] );
+
+		$this->assertTrue( ! empty( $result['complete'] ), 'The unbudgeted drain must complete in one call.' );
+		$this->assertLessThanOrEqual( $cap, $after, 'Stage 2 must run inline for the unbudgeted drain.' );
+
+		delete_option( 'bb_draft_oneshot_done' );
+	}
+
+	/**
+	 * A held lock makes the one-shot back off instead of racing on its state
+	 * (reviewer: no concurrency lock on bb_draft_oneshot_state).
+	 */
+	public function test_oneshot_backs_off_while_the_lock_is_held() {
+		$this->isolate_draft_maintenance();
+
+		set_site_transient( 'bb_draft_oneshot_lock', 1, 5 * MINUTE_IN_SECONDS );
+
+		$result = bb_drafts_oneshot_batch( 10 );
+
+		$this->assertNotEmpty( $result['locked'], 'A run finding the lock held must report locked.' );
+		$this->assertEmpty( $result['complete'], 'A locked run has not completed the pass.' );
+
+		delete_site_transient( 'bb_draft_oneshot_lock' );
+
+		$scheduled = wp_next_scheduled( 'bb_draft_oneshot' );
+		if ( $scheduled ) {
+			wp_unschedule_event( $scheduled, 'bb_draft_oneshot' );
+		}
+	}
+
+	/**
+	 * Drive the forum draft handler and RETURN the JSON response body.
+	 *
+	 * @param string $data_key Primary draft key.
+	 * @param array  $data     Primary draft data.
+	 * @param array  $all_data Sibling entries (data_key => data).
+	 * @return array Decoded JSON response.
+	 */
+	protected function drive_forum_draft_capture_response( $data_key, $data, $all_data ) {
+		$_POST    = array();
+		$_REQUEST = array();
+
+		$_REQUEST['draft_topic_reply'] = wp_slash(
+			wp_json_encode(
+				array(
+					'data_key'    => $data_key,
+					'object'      => 'topic',
+					'post_action' => 'update',
+					'data'        => $data,
+				)
+			)
+		);
+		$_REQUEST['all_data'] = wp_slash( wp_json_encode( $all_data ) );
+
+		// phpcs:disable WordPress.Security.NonceVerification -- this test drives the handler that performs the verification.
+		$_POST['_wpnonce_post_topic_reply_draft'] = wp_create_nonce( 'post_topic_reply_draft_data' );
+		$_REQUEST                                 = array_merge( $_REQUEST, $_POST );
+		// phpcs:enable WordPress.Security.NonceVerification
+
+		add_filter( 'wp_doing_ajax', '__return_true' );
+		add_filter( 'wp_die_ajax_handler', array( $this, 'filter_draft_die_handler' ), 99 );
+
+		ob_start();
+
+		try {
+			bb_post_topic_reply_draft();
+		} catch ( Exception $e ) {
+			unset( $e );
+		}
+
+		$body = ob_get_clean();
+
+		remove_filter( 'wp_die_ajax_handler', array( $this, 'filter_draft_die_handler' ), 99 );
+		remove_filter( 'wp_doing_ajax', '__return_true' );
+
+		$decoded = json_decode( (string) $body, true );
+
+		return is_array( $decoded ) ? $decoded : array();
+	}
+
+	/**
+	 * GH1, cap-rejection variant: an over-cap PRIMARY entry must not cost a
+	 * sibling its update, and the primary must still report its cap error.
+	 *
+	 * The unload beacon carries the primary entry plus an all_data array of
+	 * siblings. The per-draft byte cap on the primary used to call
+	 * wp_send_json_error(), which wp_die()s before the sibling merge ran -
+	 * silently discarding a sibling's genuine update while answering with a
+	 * cap error scoped only to the primary. The rejection is now a flag: the
+	 * request falls through to the sibling merge, then answers with the
+	 * primary's error (GH1).
+	 */
+	public function test_gh1_over_cap_primary_saves_sibling_and_still_reports_error() {
+		$user_id = self::factory()->user->create();
+		$this->set_current_user( $user_id );
+
+		$forum_a = self::factory()->post->create( array( 'post_type' => bbp_get_forum_post_type() ) );
+		$forum_b = self::factory()->post->create( array( 'post_type' => bbp_get_forum_post_type() ) );
+
+		$primary_key = 'draft_discussion_' . $forum_a;
+		$sibling_key = 'draft_discussion_' . $forum_b;
+
+		bp_update_user_meta(
+			$user_id,
+			'bb_user_topic_reply_draft',
+			wp_slash(
+				array(
+					$sibling_key => array(
+						'data_key'        => $sibling_key,
+						'object'          => 'topic',
+						'_draft_saved_at' => time() - 60,
+						'data'            => array( 'bbp_topic_content' => 'SIBLING OLD TEXT' ),
+					),
+				)
+			)
+		);
+
+		$over_cap = str_repeat( 'A', bb_draft_max_size() + 5000 );
+
+		$response = $this->drive_forum_draft_capture_response(
+			$primary_key,
+			array( 'bbp_topic_content' => $over_cap ),
+			array(
+				$primary_key => array( 'bbp_topic_content' => $over_cap ),
+				$sibling_key => array( 'bbp_topic_content' => 'SIBLING NEW TEXT' ),
+			)
+		);
+
+		$stored = bp_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
+
+		// The sibling's genuine update survived the primary's rejection.
+		$this->assertSame(
+			'SIBLING NEW TEXT',
+			$stored[ $sibling_key ]['data']['bbp_topic_content'],
+			'The sibling update in the same beacon must be saved even when the primary is over-cap.'
+		);
+
+		// The over-cap primary was NOT stored.
+		$this->assertTrue(
+			empty( $stored[ $primary_key ] ),
+			'The over-cap primary entry must not be stored.'
+		);
+
+		// And the response still reports the primary cap error.
+		$this->assertArrayHasKey( 'success', $response, 'The handler must return a JSON response.' );
+		$this->assertFalse( $response['success'], 'An over-cap primary must report an error.' );
+		$this->assertStringContainsString(
+			'too large',
+			isset( $response['data']['message'] ) ? $response['data']['message'] : '',
+			'The error must carry the per-draft cap message.'
+		);
+	}
+
+	/**
+	 * GH1, attachment-bound variant: an over-BOUND primary must not cost a
+	 * sibling its update either.
+	 */
+	public function test_gh1_over_bound_primary_saves_sibling() {
+		$user_id = self::factory()->user->create();
+		$this->set_current_user( $user_id );
+
+		$forum_a = self::factory()->post->create( array( 'post_type' => bbp_get_forum_post_type() ) );
+		$forum_b = self::factory()->post->create( array( 'post_type' => bbp_get_forum_post_type() ) );
+
+		$primary_key = 'draft_discussion_' . $forum_a;
+		$sibling_key = 'draft_discussion_' . $forum_b;
+
+		bp_update_user_meta(
+			$user_id,
+			'bb_user_topic_reply_draft',
+			wp_slash(
+				array(
+					$sibling_key => array(
+						'data_key'        => $sibling_key,
+						'object'          => 'topic',
+						'_draft_saved_at' => time() - 60,
+						'data'            => array( 'bbp_topic_content' => 'SIBLING OLD TEXT' ),
+					),
+				)
+			)
+		);
+
+		add_filter( 'bb_draft_max_attachments_per_type', array( $this, 'filter_draft_attachment_bound_2' ) );
+
+		$list = array();
+		for ( $i = 0; $i < 3; $i++ ) {
+			$list[] = array( 'id' => $this->make_draft_attachment( $user_id ) );
+		}
+
+		$response = $this->drive_forum_draft_capture_response(
+			$primary_key,
+			array(
+				'bbp_topic_content' => 'over-bound primary',
+				'bbp_media'         => wp_json_encode( $list ),
+			),
+			array(
+				$sibling_key => array( 'bbp_topic_content' => 'SIBLING NEW TEXT' ),
+			)
+		);
+
+		remove_filter( 'bb_draft_max_attachments_per_type', array( $this, 'filter_draft_attachment_bound_2' ) );
+
+		$stored = bp_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
+
+		$this->assertSame(
+			'SIBLING NEW TEXT',
+			$stored[ $sibling_key ]['data']['bbp_topic_content'],
+			'The sibling update must survive an over-bound primary.'
+		);
+		$this->assertTrue( empty( $stored[ $primary_key ] ), 'The over-bound primary must not be stored.' );
+		$this->assertFalse( $response['success'], 'An over-bound primary must report an error.' );
+	}
+
+	/**
+	 * Snapshots of every bb_draft_oneshot_state write, for the H5 cursor test.
+	 *
+	 * @var array
+	 */
+	protected $oneshot_state_writes = array();
+
+	/**
+	 * Record a bb_draft_oneshot_state write (option added).
+	 *
+	 * @param string $option Option name.
+	 * @param mixed  $value  Stored value.
+	 * @return void
+	 */
+	public function record_oneshot_state_added( $option, $value ) {
+		if ( 'bb_draft_oneshot_state' === $option ) {
+			$this->oneshot_state_writes[] = $value;
+		}
+	}
+
+	/**
+	 * Record a bb_draft_oneshot_state write (option updated).
+	 *
+	 * @param string $option    Option name.
+	 * @param mixed  $old_value Previous value.
+	 * @param mixed  $value     Stored value.
+	 * @return void
+	 */
+	public function record_oneshot_state_updated( $option, $old_value, $value ) {
+		if ( 'bb_draft_oneshot_state' === $option ) {
+			$this->oneshot_state_writes[] = $value;
+		}
+	}
+
+	/**
+	 * S5: an ordinary autosave of ONE forum draft must leave every SIBLING
+	 * entry in the aggregate row byte-identical.
+	 *
+	 * The handler rewrites the whole row, and its in-memory copy used to mix
+	 * slash states: siblings unslashed from the fresh storage read, the
+	 * primary entry slashed from the request. update_metadata()'s single
+	 * wp_unslash() then stripped a backslash layer from every sibling on
+	 * every autosave - `r\u00e9sum\u00e9.pdf` became `ru00e9sumu00e9.pdf` in a
+	 * sibling's attachment JSON, and a member-typed `C:\temp` lost its
+	 * backslash - corrupting drafts the member never touched, on the hottest
+	 * draft write on the site (PROD-9621 S5).
+	 *
+	 * Driven through BOTH request shapes, because they arrive in different
+	 * slash states and the boundary normalisation must make them
+	 * indistinguishable past that point (bb-dev §54a-1/§54a-7).
+	 */
+	public function test_s5_autosave_preserves_sibling_escapes_on_both_transports() {
+		foreach ( array( 'beacon', 'nested_array' ) as $transport ) {
+			$user_id = self::factory()->user->create();
+			$this->set_current_user( $user_id );
+
+			$forum_a = self::factory()->post->create( array( 'post_type' => bbp_get_forum_post_type() ) );
+			$forum_b = self::factory()->post->create( array( 'post_type' => bbp_get_forum_post_type() ) );
+
+			$primary_key = 'draft_discussion_' . $forum_a;
+			$sibling_key = 'draft_discussion_' . $forum_b;
+
+			$attachment_id = $this->make_draft_attachment( $user_id );
+
+			// Exactly what the fixed write paths store: real \uXXXX escapes in
+			// the attachment JSON, real backslashes in the member's text.
+			$sibling_json = wp_json_encode(
+				array(
+					array(
+						'id'   => $attachment_id,
+						'name' => 'r\u00e9sum\u00e9.pdf',
+					),
+				)
+			);
+			$sibling_text = 'sibling text with path C:\\temp\\notes';
+
+			bp_update_user_meta(
+				$user_id,
+				'bb_user_topic_reply_draft',
+				wp_slash(
+					array(
+						$sibling_key => array(
+							'data_key'        => $sibling_key,
+							'object'          => 'topic',
+							'_draft_saved_at' => time() - 60,
+							'data'            => array(
+								'bbp_topic_content' => $sibling_text,
+								'bbp_media'         => $sibling_json,
+							),
+						),
+					)
+				)
+			);
+
+			if ( 'beacon' === $transport ) {
+				$this->drive_forum_draft_save( $primary_key, array( 'bbp_topic_content' => 'autosave of a different draft' ) );
+			} else {
+				$this->drive_forum_draft_save_as_nested_array( $primary_key, array( 'bbp_topic_content' => 'autosave of a different draft' ) );
+			}
+
+			$stored = bp_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
+
+			// Negative control: the autosave itself must have been written, or
+			// this test also passes for a handler that rejects everything.
+			$this->assertArrayHasKey( $primary_key, $stored, "[$transport] The autosaved draft must be stored." );
+
+			$this->assertSame(
+				$sibling_json,
+				$stored[ $sibling_key ]['data']['bbp_media'],
+				"[$transport] The sibling's attachment JSON must survive the autosave byte-identical."
+			);
+			$this->assertSame(
+				$sibling_text,
+				$stored[ $sibling_key ]['data']['bbp_topic_content'],
+				"[$transport] The sibling's text must survive the autosave byte-identical."
+			);
+		}
+	}
+
+	/**
+	 * S5/R3: the SAME keystrokes must store the SAME forum draft content on
+	 * both transports.
+	 *
+	 * The in-page XHR posts a nested array (leaves WP-slashed); the unload
+	 * beacon posts one JSON string that decodes unslashed. Before the boundary
+	 * normalisation the two reached kses and storage in different slash
+	 * states, so a member-typed backslash survived one transport and not the
+	 * other - which stored draft the member got back depended on which timer
+	 * happened to fire last.
+	 */
+	public function test_s5_forum_draft_content_is_transport_independent() {
+		$typed = 'my path is C:\\temp\\notes';
+
+		$stored_by_transport = array();
+
+		foreach ( array( 'beacon', 'nested_array' ) as $transport ) {
+			$user_id = self::factory()->user->create();
+			$this->set_current_user( $user_id );
+
+			$forum_id = self::factory()->post->create( array( 'post_type' => bbp_get_forum_post_type() ) );
+			$data_key = 'draft_discussion_' . $forum_id;
+
+			if ( 'beacon' === $transport ) {
+				$this->drive_forum_draft_save( $data_key, array( 'bbp_topic_content' => $typed ) );
+			} else {
+				$this->drive_forum_draft_save_as_nested_array( $data_key, array( 'bbp_topic_content' => $typed ) );
+			}
+
+			$stored = bp_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
+
+			$this->assertArrayHasKey( $data_key, $stored, "[$transport] The draft must be stored." );
+
+			$stored_by_transport[ $transport ] = $stored[ $data_key ]['data']['bbp_topic_content'];
+
+			$this->assertSame(
+				$typed,
+				$stored[ $data_key ]['data']['bbp_topic_content'],
+				"[$transport] Member-typed backslashes must reach storage intact."
+			);
+		}
+
+		$this->assertSame(
+			$stored_by_transport['beacon'],
+			$stored_by_transport['nested_array'],
+			'Both transports must store identical content for identical keystrokes.'
+		);
+	}
+
+	/**
+	 * GH1: an empty PRIMARY entry must not cost a sibling its update.
+	 *
+	 * The kept-stored-primary guard used to answer with
+	 * wp_send_json_success(), which dies - and the sibling merge over
+	 * `all_data` runs later in the handler. The unload beacon replays every
+	 * key the tab holds, so a request whose primary happened to be an emptied
+	 * reply box still carried a sibling's genuine last-ever save, and the
+	 * early exit silently discarded it while reporting success.
+	 */
+	public function test_gh1_empty_primary_does_not_drop_a_sibling_update() {
+		$user_id = self::factory()->user->create();
+		$this->set_current_user( $user_id );
+
+		$forum_a = self::factory()->post->create( array( 'post_type' => bbp_get_forum_post_type() ) );
+		$forum_b = self::factory()->post->create( array( 'post_type' => bbp_get_forum_post_type() ) );
+
+		$primary_key = 'draft_discussion_' . $forum_a;
+		$sibling_key = 'draft_discussion_' . $forum_b;
+
+		bp_update_user_meta(
+			$user_id,
+			'bb_user_topic_reply_draft',
+			wp_slash(
+				array(
+					$primary_key => array(
+						'data_key'        => $primary_key,
+						'object'          => 'topic',
+						'_draft_saved_at' => time() - 60,
+						'data'            => array( 'bbp_topic_content' => 'PRIMARY STORED TEXT' ),
+					),
+					$sibling_key => array(
+						'data_key'        => $sibling_key,
+						'object'          => 'topic',
+						'_draft_saved_at' => time() - 60,
+						'data'            => array( 'bbp_topic_content' => 'SIBLING OLD TEXT' ),
+					),
+				)
+			)
+		);
+
+		// Unload beacon: the primary composer was emptied, the sibling was
+		// genuinely edited on the same page.
+		$this->drive_forum_draft_save_with_siblings(
+			$primary_key,
+			array( 'bbp_topic_content' => '<p><br></p>' ),
+			array(
+				$primary_key => array( 'bbp_topic_content' => '<p><br></p>' ),
+				$sibling_key => array( 'bbp_topic_content' => 'SIBLING NEW TEXT' ),
+			)
+		);
+
+		$stored = bp_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
+
+		$this->assertSame(
+			'PRIMARY STORED TEXT',
+			$stored[ $primary_key ]['data']['bbp_topic_content'],
+			'The emptied primary must not overwrite the stored draft (Q12 guard still holds).'
+		);
+		$this->assertSame(
+			'SIBLING NEW TEXT',
+			$stored[ $sibling_key ]['data']['bbp_topic_content'],
+			'The sibling update in the same request must be written - the kept primary must not end the request early.'
+		);
+	}
+
+	/**
+	 * GH2: the row trim must fit rows whose inner keys are INTEGERS.
+	 *
+	 * Legacy []-appended rows carry integer inner keys, which PHP serializes
+	 * as `i:N;` while the width helper priced them as strings - 4 bytes high
+	 * per key. The drifted accounting under-trimmed, and the authoritative
+	 * backstop was dead code (it reseeded from the full candidate list, its
+	 * first array_shift() returned an already-evicted candidate, and the
+	 * isset() check broke the loop). The row came back over budget and the
+	 * caller's budget check refused the whole save. 487 of 3,204 swept
+	 * budget/row combinations violated the invariant before the fix
+	 * (PROD-9621 GH2).
+	 *
+	 * Property sweep rather than one fixture: the failure lands only when the
+	 * budget falls inside the drift margin, and the sweep covers that band
+	 * without hand-computing it. Mutation-verified as a PAIR: reverting only
+	 * the pricing stays green (the live backstop absorbs the drift), reverting
+	 * only the backstop stays green (the pricing is exact), reverting both
+	 * goes red - the two fixes are each other's safety net, and this test is
+	 * what fails when the net is gone.
+	 */
+	public function test_gh2_trim_fits_rows_with_integer_inner_keys() {
+		for ( $count = 6; $count <= 22; $count += 8 ) {
+			$row = array();
+
+			for ( $i = 0; $i < $count; $i++ ) {
+				$row[ $i ] = array(
+					'_draft_saved_at' => 1000 + $i,
+					'data'            => array( 'bbp_reply_content' => str_repeat( 'x', 120 + $i ) ),
+				);
+			}
+
+			$full_size = strlen( maybe_serialize( $row ) );
+
+			for ( $max_bytes = (int) ( $full_size * 0.2 ); $max_bytes < $full_size; $max_bytes += 7 ) {
+				$result = bb_forums_trim_draft_row( $row, 0, 1, $max_bytes );
+				$size   = strlen( maybe_serialize( $result['row'] ) );
+
+				// Invariant, asserted on EVERY case: the returned row fits, or
+				// nothing evictable remains (the protected key 0 is never a
+				// candidate, so a one-entry row is the legal floor).
+				$this->assertTrue(
+					$size <= $max_bytes || 1 === count( $result['row'] ),
+					"Row of {$count} int-keyed drafts trimmed to cap {$max_bytes} came back at {$size} bytes with evictable entries left."
+				);
+			}
+		}
+	}
+
+	/**
+	 * H4, forum handler: an over-bound attachment list is REFUSED, with the
+	 * member's uploads already protected and storage untouched.
+	 *
+	 * The bound used to array_slice() the list that was then stored, so
+	 * entries past it were dropped from the draft AND left unstamped - which
+	 * is exactly the predicate the orphan cron hard-deletes. The refusal must
+	 * come AFTER the protection pass (BLOCKER-1: a cap must never decide
+	 * whether an already-uploaded file survives the cron).
+	 */
+	public function test_h4_forum_over_bound_attachment_list_is_refused_not_truncated() {
+		$user_id = self::factory()->user->create();
+		$this->set_current_user( $user_id );
+
+		$forum_id = self::factory()->post->create( array( 'post_type' => bbp_get_forum_post_type() ) );
+		$data_key = 'draft_discussion_' . $forum_id;
+
+		add_filter( 'bb_draft_max_attachments_per_type', array( $this, 'filter_draft_attachment_bound_2' ) );
+
+		$ids  = array();
+		$list = array();
+
+		for ( $i = 0; $i < 3; $i++ ) {
+			$id     = $this->make_draft_attachment( $user_id );
+			$ids[]  = (int) $id;
+			$list[] = array( 'id' => $id );
+		}
+
+		$this->drive_forum_draft_save(
+			$data_key,
+			array(
+				'bbp_topic_content' => 'three attachments against a bound of two',
+				'bbp_media'         => wp_json_encode( $list ),
+			)
+		);
+
+		remove_filter( 'bb_draft_max_attachments_per_type', array( $this, 'filter_draft_attachment_bound_2' ) );
+
+		// Refused, not truncated: nothing may have been stored.
+		$stored = bp_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
+		$this->assertTrue(
+			empty( $stored[ $data_key ] ),
+			'An over-bound list must refuse the save, never store a truncated draft.'
+		);
+
+		// BLOCKER-1: the protection pass ran before the refusal, so the
+		// member's uploads within the bound are stamped against the orphan
+		// cron even though the save was refused.
+		$this->assertSame( '1', (string) get_post_meta( $ids[0], 'bb_media_draft', true ), 'The first upload must be orphan-protected despite the refusal.' );
+		$this->assertSame( '1', (string) get_post_meta( $ids[1], 'bb_media_draft', true ), 'The second upload must be orphan-protected despite the refusal.' );
+	}
+
+	/**
+	 * H4, activity handler: same refusal contract as the forum handler.
+	 */
+	public function test_h4_activity_over_bound_attachment_list_is_refused_not_truncated() {
+		$user_id = self::factory()->user->create();
+		$this->set_current_user( $user_id );
+
+		add_filter( 'bb_draft_max_attachments_per_type', array( $this, 'filter_draft_attachment_bound_2' ) );
+
+		$ids  = array();
+		$list = array();
+
+		for ( $i = 0; $i < 3; $i++ ) {
+			$id     = $this->make_draft_attachment( $user_id );
+			$ids[]  = (int) $id;
+			$list[] = array( 'id' => $id );
+		}
+
+		$this->drive_activity_draft_save(
+			'draft_user',
+			array(
+				'content' => 'three attachments against a bound of two',
+				'media'   => $list,
+			)
+		);
+
+		remove_filter( 'bb_draft_max_attachments_per_type', array( $this, 'filter_draft_attachment_bound_2' ) );
+
+		$stored = bp_get_user_meta( $user_id, 'draft_user', true );
+		$this->assertEmpty( $stored, 'An over-bound list must refuse the save, never store a truncated draft.' );
+
+		$this->assertSame( '1', (string) get_post_meta( $ids[0], 'bb_media_draft', true ), 'The first upload must be orphan-protected despite the refusal.' );
+		$this->assertSame( '1', (string) get_post_meta( $ids[1], 'bb_media_draft', true ), 'The second upload must be orphan-protected despite the refusal.' );
+	}
+
+	/**
+	 * H5: the one-shot must persist its stage-1 cursor after EVERY window.
+	 *
+	 * Without the per-window persist, an interruption that never reached the
+	 * post-loop branches (a fatal inside a heal, a killed worker - and under
+	 * WP-CLI, where the budget is 0, those branches never run mid-loop at
+	 * all) discarded every completed window and the continuation restarted
+	 * the scan from row zero.
+	 *
+	 * Seeds one row more than a scan window (200) so the loop crosses a
+	 * window boundary, then asserts a state write with a mid-scan shape:
+	 * cursor advanced, heavy_users still null (stage 1 not yet complete).
+	 */
+	public function test_h5_oneshot_persists_cursor_after_every_window() {
+		$user_id = self::factory()->user->create();
+
+		for ( $i = 1; $i <= 201; $i++ ) {
+			bp_update_user_meta(
+				$user_id,
+				'draft_group_' . $i,
+				array(
+					'data_key'        => 'draft_group_' . $i,
+					'_draft_saved_at' => time(),
+					'data'            => array( 'content' => 'tiny' ),
+				)
+			);
+		}
+
+		delete_option( 'bb_draft_oneshot_state' );
+		delete_option( 'bb_draft_oneshot_done' );
+
+		$this->oneshot_state_writes = array();
+
+		add_action( 'added_option', array( $this, 'record_oneshot_state_added' ), 10, 2 );
+		add_action( 'updated_option', array( $this, 'record_oneshot_state_updated' ), 10, 3 );
+
+		$result = bb_drafts_oneshot_batch( 0 );
+
+		remove_action( 'added_option', array( $this, 'record_oneshot_state_added' ), 10 );
+		remove_action( 'updated_option', array( $this, 'record_oneshot_state_updated' ), 10 );
+
+		delete_option( 'bb_draft_oneshot_state' );
+		delete_option( 'bb_draft_oneshot_done' );
+
+		$this->assertNotEmpty( $result['complete'], 'The unbudgeted run must complete.' );
+
+		$mid_scan_persists = 0;
+
+		foreach ( $this->oneshot_state_writes as $state ) {
+			if ( is_array( $state ) && ! empty( $state['cursor'] ) && ( ! isset( $state['heavy_users'] ) || null === $state['heavy_users'] ) ) {
+				++$mid_scan_persists;
+			}
+		}
+
+		$this->assertGreaterThanOrEqual(
+			1,
+			$mid_scan_persists,
+			'Stage 1 must persist its cursor after every window, not only on a budget break - an interrupted scan must resume where it stopped.'
+		);
 	}
 }

@@ -292,7 +292,7 @@ function bp_nouveau_activity_localize_scripts( $params = array() ) {
 
 	// Localize only whether a server draft exists - the draft itself is fetched
 	// lazily when localStorage is empty. The full draft used to be echoed into
-	// nearly every page's HTML (PROD-9621); the key keeps its historical ''
+	// nearly every page's HTML; the key keeps its historical ''
 	// no-draft value for third-party readers.
 	$activity_params['draft_activity'] = '';
 	// The key is resolved through bp_get_user_meta_key() because every draft
@@ -303,19 +303,19 @@ function bp_nouveau_activity_localize_scripts( $params = array() ) {
 	// Interim guard until pasted images are routed through the media uploader:
 	// a pasted bitmap becomes a multi-megabyte inline base64 image, which the
 	// draft and publish pipelines strip - blocking at paste is honest feedback
-	// instead of silently losing the member's image (PROD-9621).
+	// instead of silently losing the member's image.
 	$activity_params['paste_image_blocked_message'] = __( 'Pasted images are not supported yet. Please use the photo button to attach images.', 'buddyboss' );
 
 	// The draft is fetched lazily now, so a failed read leaves the composer
 	// empty over a draft that still exists on the server. Without a message the
 	// member assumes nothing was saved, retypes, and the next autosave replaces
 	// the draft the fetch could not read. Mirrors the forum packs'
-	// draft_fetch_failed_message (PROD-9621).
+	// draft_fetch_failed_message.
 	$activity_params['draft_fetch_failed_message'] = __( 'We could not load your saved draft. Reload the page before writing here, or your saved draft may be replaced.', 'buddyboss' );
 
 	// Members must be told the draft has a lifetime, or the expiry cron reads
 	// as unexplained data loss when a draft is gone after a few weeks away.
-	// Empty when expiry is disabled, so the JS renders nothing (PROD-9621).
+	// Empty when expiry is disabled, so the JS renders nothing.
 	$draft_retention_days = bb_draft_retention_days();
 
 	$activity_params['draft_retention_message'] = $draft_retention_days ? sprintf(
@@ -325,11 +325,11 @@ function bp_nouveau_activity_localize_scripts( $params = array() ) {
 	) : '';
 
 	// Budget eviction removes an OLDER draft to make room for this save. The
-	// member must be told, or drafts appear to vanish at random (PROD-9621).
+	// member must be told, or drafts appear to vanish at random.
 	$activity_params['draft_evicted_message'] = __( 'You had too many saved drafts, so your oldest draft was removed to save this one.', 'buddyboss' );
 
 	// The per-draft cap, so the composer can decide what to drop from an
-	// oversized payload instead of guessing at a threshold (PROD-9621).
+	// oversized payload instead of guessing at a threshold.
 	$activity_params['draft_max_size'] = bb_draft_max_size();
 
 	$activity_params['access_control_settings'] = array(

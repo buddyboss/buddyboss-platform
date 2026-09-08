@@ -120,7 +120,7 @@ function bb_draft_meta_key_wrap() {
  * form. Comparing the two directly is what made the caps, the expiry cron
  * and the healing pass inert on installs that filter that key — and worse,
  * it let a stray unfiltered row hand {@see bb_draft_dispose()} a key that
- * re-filtered onto a DIFFERENT, live row (PROD-9621 N2).
+ * re-filtered onto a DIFFERENT, live row (N2).
  *
  * @since BuddyBoss [BBVERSION]
  *
@@ -305,7 +305,7 @@ function bb_draft_strip_data_urls( $content ) {
 	// neither, to the end of the draft. Requiring `="` (or `='`, or a bare
 	// unquoted attribute) in front confines it to the shape a pasted image
 	// actually arrives in, and lets the payload run to its real delimiter
-	// instead of stopping early at a `>` inside an SVG (PROD-9621).
+	// instead of stopping early at a `>` inside an SVG.
 	//
 	// One pass per delimiter rather than one pattern with a backreference: a
 	// backreferenced quote would backtrack, and every payload class here has to
@@ -355,7 +355,7 @@ function bb_draft_strip_data_urls( $content ) {
  * On such a site the draft paths silently truncated the list they then STORED
  * and left the dropped attachments unstamped - which is exactly the predicate
  * `bp_media_delete_orphaned_attachments()` reaps. A member attaching 60 photos
- * kept 50 in the draft and lost 10 files six hours later (PROD-9621 H4).
+ * kept 50 in the draft and lost 10 files six hours later (H4).
  *
  * The floor of 50 keeps the previous behaviour for every site at or below it.
  *
@@ -390,7 +390,7 @@ function bb_draft_max_attachments_per_type() {
  * meant to stop a rejected save leaving orphan-protected attachments behind.
  * It traded a bounded leak for member data loss, which is the worse of the two
  * - a stamped attachment nothing references wastes disk until the draft
- * cleanup reaches it, a deleted one is gone (PROD-9621 BLOCKER-1).
+ * cleanup reaches it, a deleted one is gone (BLOCKER-1).
  *
  * Ownership is still enforced per ID, and each list is bounded before any
  * per-ID lookup runs, so a crafted payload cannot stamp other members'
@@ -418,7 +418,7 @@ function bb_draft_protect_payload_attachments( $lists, $user_id ) {
 		// Same bound the normalisation loops apply, enforced here too because
 		// this pass runs before them. Truncating HERE only limits how many
 		// attachments get stamped; the handlers refuse an over-bound list
-		// outright rather than storing a subset of it (PROD-9621 H4).
+		// outright rather than storing a subset of it (H4).
 		$max_per_type = bb_draft_max_attachments_per_type();
 
 		if ( $max_per_type < count( $list ) ) {
@@ -558,7 +558,7 @@ function bb_draft_get_user_meta_sizes( $user_id, $flush = false ) {
 
 			// Keyed by the LOGICAL draft key, so the cap arithmetic and every
 			// key handed on to bp_get_user_meta()/bb_draft_dispose() speak the
-			// same language the writers used (PROD-9621 N2).
+			// same language the writers used (N2).
 			$logical_key = bb_draft_logical_meta_key( $meta_key );
 
 			if ( '' !== $logical_key ) {
@@ -585,6 +585,19 @@ function bb_draft_get_user_meta_sizes( $user_id, $flush = false ) {
  * @return int Bytes the key occupies in a serialized array.
  */
 function bb_draft_serialized_key_bytes( $key ) {
+	// PHP normalizes a canonical-integer array key to an int when it is SET,
+	// and serialize() then writes it as `i:N;` - not as the quoted string form.
+	// Pricing every key as a string overstated an integer key by 4 bytes
+	// (`s:1:"5";` vs `i:5;`), which made the derived row width drift from the
+	// real one on legacy rows whose inner keys were []-appended integers. The
+	// callers cast keys to string on the way in, so the canonical-int check is
+	// done HERE rather than trusting the received type: '5' and 5 price
+	// identically because PHP stores them identically, while '05' and '5.0'
+	// stay strings in both places (GH2).
+	if ( is_int( $key ) || (string) (int) $key === (string) $key ) {
+		return strlen( 'i:' . (int) $key . ';' );
+	}
+
 	$key = (string) $key;
 
 	// A serialized string element is written as its length plus quotes and
@@ -674,7 +687,7 @@ function bb_draft_collect_attachment_ids( $draft ) {
  * That makes it the first thing to drop when a row is over the cap, and the
  * reason the healing paths must try shedding before they delete: without it
  * they destroy the member's unpublished text to reclaim space that the
- * poster alone was using (PROD-9621 Q6).
+ * poster alone was using (Q6).
  *
  * Handles both stored shapes, the same pair
  * {@see bb_draft_collect_attachment_ids()} handles: the activity composer
@@ -735,7 +748,7 @@ function bb_draft_shed_preview_frames( $draft ) {
  * healing pass had only one move: delete the row. That destroyed the
  * member's unpublished text whenever the oversize came from a poster frame
  * the draft did not need — which is the usual case on a legacy row
- * (PROD-9621 Q6).
+ * (Q6).
  *
  * Writes back only when shedding actually brings the row under the cap, so
  * a row that is genuinely too large still falls through to disposal and the
@@ -774,8 +787,8 @@ function bb_draft_salvage_oversized_draft( $user_id, $meta_key ) {
 	// wp_slash(): $shed is derived from a row read with bp_get_user_meta(), so
 	// it is UNSLASHED, and update_metadata() unslashes once more on write. This
 	// function exists to PRESERVE the member's text when the row is oversized
-	// (PROD-9621 Q6) - without the re-slash it mangled exactly that text,
-	// turning `path C:\temp\notes` into `path C:tempnotes` (PROD-9621 S2).
+	// (Q6) - without the re-slash it mangled exactly that text,
+	// turning `path C:\temp\notes` into `path C:tempnotes` (S2).
 	bp_update_user_meta( $user_id, $meta_key, wp_slash( $shed ) );
 	bb_draft_flush_user_meta_sizes( $user_id );
 
@@ -797,7 +810,7 @@ function bb_draft_salvage_oversized_draft( $user_id, $meta_key ) {
  * what its siblings still hold let the orphan crons delete files a stored
  * draft was still pointing at. {@see bb_draft_heal_forum_row()} and the
  * forum handler's eviction branch already apply this whole-row exclusion
- * (PROD-9621).
+ *.
  *
  * @since BuddyBoss [BBVERSION]
  *
@@ -851,7 +864,7 @@ function bb_draft_unstamp_attachments( $draft, $user_id, $retain_entries = array
  * orphan-cleanup crons then hard-deleted them - the exact outcome the
  * paragraph above forbids. Pass every entry that survives the write in
  * `$retain_entries`; the eviction path in the forum handler already applies
- * this same whole-row exclusion (PROD-9621).
+ * this same whole-row exclusion.
  *
  * @since BuddyBoss [BBVERSION]
  *
@@ -906,7 +919,7 @@ function bb_draft_release_replaced_attachments( $previous_entry, $current_entry,
  * stored row must never hand it an empty key: a legacy row carrying an
  * empty-string inner key would otherwise delete the member's entire row
  * instead of that one entry. The loops that walk stored rows guard for it
- * (PROD-9621 M5).
+ * (M5).
  *
  * @param int    $user_id   Owning user ID.
  * @param string $meta_key  Draft usermeta key.
@@ -949,7 +962,7 @@ function bb_draft_dispose( $user_id, $meta_key, $inner_key = '' ) {
 		// a surviving sibling still references must keep its stamp. Without
 		// this the member's own discard - and every budget eviction and
 		// expiry sweep, which all route through here - released files another
-		// stored inner draft was still using (PROD-9621).
+		// stored inner draft was still using.
 		$retain_entries = $stored;
 		unset( $retain_entries[ $inner_key ] );
 
@@ -969,7 +982,7 @@ function bb_draft_dispose( $user_id, $meta_key, $inner_key = '' ) {
 			// This is the shared removal path: the member's own discard, the
 			// per-user budget eviction and the nightly expiry cron all route
 			// through here, so it corrupted drafts the member never touched
-			// (PROD-9621 S1).
+			// (S1).
 			bp_update_user_meta( $user_id, $meta_key, wp_slash( $stored ) );
 		}
 
@@ -1030,7 +1043,7 @@ function bb_draft_dispose( $user_id, $meta_key, $inner_key = '' ) {
  * only duplicates {@see bb_forums_trim_draft_row()}, which already does
  * exactly that one call earlier. Trim-then-budget is required ordering, not
  * convenience. Moot for the activity caller either way, since an activity
- * draft is one draft per meta row (PROD-9621 M4).
+ * draft is one draft per meta row (M4).
  *
  * @since BuddyBoss [BBVERSION]
  *
@@ -1102,7 +1115,7 @@ function bb_draft_enforce_user_budget( $user_id, $current_key, $new_size, $conte
 					// under-credits each eviction and the oldest-first loop keeps
 					// going, destroying drafts it did not need to - the same
 					// undercount f643e4d0c8 fixed in bb_forums_trim_draft_row(),
-					// which is the sibling of this loop (PROD-9621).
+					// which is the sibling of this loop.
 					'bytes'     => strlen( maybe_serialize( $inner_draft ) ) + bb_draft_serialized_key_bytes( (string) $inner_key ),
 				);
 			}
@@ -1241,7 +1254,7 @@ function bb_draft_validate_activity_data_key( $data_key, $draft_object, $item_id
  * The key already encodes whether the member is drafting a topic or a reply,
  * and which forum it belongs to. Returning that instead of a bare boolean is
  * what lets the save handler apply the SAME per-object, per-forum rules the
- * publish path applies, rather than one loose site-wide check (PROD-9621).
+ * publish path applies, rather than one loose site-wide check.
  *
  * @since BuddyBoss [BBVERSION]
  *
@@ -1389,7 +1402,7 @@ function bb_draft_user_can_save_topic_reply_draft( $key_context, $user_id ) {
  * validity flag true on the strength of the copy ALREADY STORED and then
  * write the freshly-serialized (empty) form over it, so emptying the editor
  * replaced saved text with nothing while keeping `is_content_valid` true
- * (PROD-9621 Q12). The client no longer does that — but it also no longer
+ * (Q12). The client no longer does that — but it also no longer
  * overwrites those rows, so the ones already written would otherwise show a
  * phantom draft forever. This is the read-side predicate that makes them
  * inert; a real save from the member replaces the row and it becomes a
@@ -1615,7 +1628,7 @@ function bb_draft_get_rows_batch( $last_umeta_id = 0, $limit = 200, $with_values
 
 	// Metadata first, ALWAYS - never `meta_value` in the windowing query. The
 	// widths come from LENGTH() so the window can be byte-bounded before any
-	// payload is pulled into PHP (PROD-9621 B2).
+	// payload is pulled into PHP (B2).
 	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- maintenance scan; $key_sql['where'] carries only placeholders.
 	$rows = $wpdb->get_results(
 		// phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber -- the sniff cannot count placeholders it never saw interpolated; the WHERE fragment carries 4, plus the 2 appended here = the 6 values passed.
@@ -1702,7 +1715,7 @@ function bb_draft_get_rows_batch( $last_umeta_id = 0, $limit = 200, $with_values
 		// Every surviving row carries the LOGICAL key in `meta_key`, so callers
 		// may pass it straight to bb_draft_dispose()/bp_get_user_meta() without
 		// re-filtering it onto a different row; `stored_meta_key` keeps the raw
-		// value for diagnostics (PROD-9621 N2).
+		// value for diagnostics (N2).
 		'rows'     => array_values(
 			array_filter(
 				array_map(
@@ -1797,10 +1810,10 @@ function bb_drafts_delete_expired( $time_budget = 10 ) {
 	// Record the epoch lazily when the upgrade routine never did (fresh
 	// installs, removed option) so timestamp-less legacy rows still age out
 	// eventually instead of never.
-	$epoch = (int) get_option( 'bb_draft_cleanup_epoch' );
+	$epoch = (int) get_site_option( 'bb_draft_cleanup_epoch' );
 	if ( ! $epoch ) {
 		$epoch = time();
-		add_option( 'bb_draft_cleanup_epoch', $epoch, '', false );
+		add_site_option( 'bb_draft_cleanup_epoch', $epoch );
 	}
 
 	do {
@@ -1823,7 +1836,7 @@ function bb_drafts_delete_expired( $time_budget = 10 ) {
 						// An empty inner key is the whole-row sentinel for
 						// bb_draft_dispose(), so a legacy row carrying one must
 						// not be routed through it - that would delete the
-						// member's other drafts too (PROD-9621 M5).
+						// member's other drafts too (M5).
 						if ( '' === (string) $inner_key ) {
 							continue;
 						}
@@ -1858,7 +1871,7 @@ function bb_drafts_delete_expired( $time_budget = 10 ) {
 		// Persisted after EVERY window, not only on a clean budget break: an
 		// interruption that never returns here (a fatal, a killed worker) would
 		// otherwise leave the cursor where the previous run left it, and the
-		// next run would redo the same window indefinitely (PROD-9621 B2).
+		// next run would redo the same window indefinitely (B2).
 		update_option( 'bb_draft_cleanup_cursor', $cursor, false );
 
 		// Window-level budget check: a window whose rows are ALL filtered-out
@@ -1904,7 +1917,7 @@ function bb_drafts_delete_expired( $time_budget = 10 ) {
  * write per drop, and the trim loop re-serialized the whole row on every
  * iteration - O(n·B) on rows that are megabytes wide by definition. On a
  * 5MB row with 40 inner drafts that was ~200MB of serialization and 40
- * multi-MB UPDATEs inside an upgrade request (PROD-9621 H2).
+ * multi-MB UPDATEs inside an upgrade request (H2).
  *
  * @since BuddyBoss [BBVERSION]
  *
@@ -1939,7 +1952,7 @@ function bb_draft_heal_forum_row( $user_id ) {
 			// Shed the poster frames before deleting. Kept symmetric with the
 			// one-draft-per-row path in bb_drafts_oneshot_batch(): an inner
 			// draft that only broke the cap because of a poster keeps its text
-			// instead of being dropped (PROD-9621 Q6).
+			// instead of being dropped (Q6).
 			$shed       = bb_draft_shed_preview_frames( $inner_draft );
 			$shed_bytes = strlen( maybe_serialize( $shed ) );
 
@@ -2011,7 +2024,7 @@ function bb_draft_heal_forum_row( $user_id ) {
 
 	// A salvage-only pass removed nothing but DID rewrite inner drafts, so it
 	// still has to reach the write below - returning early here would throw
-	// the shed row away and leave the oversized one stored (PROD-9621 Q6).
+	// the shed row away and leave the oversized one stored (Q6).
 	if ( empty( $removed ) && 0 === $salvaged ) {
 		return 0;
 	}
@@ -2025,7 +2038,7 @@ function bb_draft_heal_forum_row( $user_id ) {
 		// update_metadata() unslashes once more before storing. Writing it back
 		// untouched strips a backslash layer from every string in the row -
 		// including the \uXXXX escapes in the attachment lists of the very
-		// inner drafts this heal exists to preserve (PROD-9621 R2).
+		// inner drafts this heal exists to preserve (R2).
 		bp_update_user_meta( $user_id, 'bb_user_topic_reply_draft', wp_slash( $row ) );
 	}
 
@@ -2092,7 +2105,36 @@ function bb_drafts_oneshot_batch( $time_budget = 10 ) {
 	$complete    = true;
 	$max_size    = bb_draft_max_size();
 
-	$state = get_option( 'bb_draft_oneshot_state' );
+	// Defensive re-arm. WordPress core deletes a single-event cron entry from
+	// storage BEFORE it invokes the callback, so a fatal (OOM inside a
+	// multi-megabyte heal, a killed worker) anywhere below would otherwise
+	// leave nothing to resume the pass - only the very first, upgrade-triggered
+	// call is pre-scheduled defensively. Schedule the continuation up front and
+	// cancel it at the end if this slice finishes. Time-limited (cron) slices
+	// only; the WP-CLI drain ($time_budget 0) loops to completion itself.
+	if ( 0 < $time_budget && ! get_site_option( 'bb_draft_oneshot_done' ) && ! wp_next_scheduled( 'bb_draft_oneshot' ) ) {
+		wp_schedule_single_event( time() + 2 * MINUTE_IN_SECONDS, 'bb_draft_oneshot' );
+	}
+
+	// Serialize overlapping triggers. Two concurrent admin requests in the
+	// upgrade window, or a double-fired cron, would otherwise race on
+	// bb_draft_oneshot_state with last-writer-wins and silently discard one
+	// run's progress - the same hazard bb_drafts_delete_expired() guards with
+	// bb_draft_cleanup_lock. A lock lost to an unreliable object cache only
+	// costs duplicate work (every operation here is idempotent), so failing
+	// open is the safe direction. The WP-CLI drain releases the lock between
+	// its own calls, so it never blocks itself.
+	if ( get_site_transient( 'bb_draft_oneshot_lock' ) ) {
+		return array(
+			'healed'   => 0,
+			'complete' => false,
+			'locked'   => true,
+		);
+	}
+
+	set_site_transient( 'bb_draft_oneshot_lock', 1, 5 * MINUTE_IN_SECONDS );
+
+	$state = get_site_option( 'bb_draft_oneshot_state' );
 	$state = wp_parse_args(
 		is_array( $state ) ? $state : array(),
 		array(
@@ -2101,9 +2143,9 @@ function bb_drafts_oneshot_batch( $time_budget = 10 ) {
 		)
 	);
 
-	// Stage 1 - per-row healing scan. Skipped when a previous run already
-	// finished it (heavy_users is then an array, possibly empty).
-	if ( ! is_array( $state['heavy_users'] ) ) {
+	// Stage 1 - per-row healing scan. Skipped once a previous slice finished it
+	// (scan_done set) or the whole pass reached stage 2 (heavy_users an array).
+	if ( ! is_array( $state['heavy_users'] ) && empty( $state['scan_done'] ) ) {
 		$cursor = (int) $state['cursor'];
 
 		do {
@@ -2121,7 +2163,7 @@ function bb_drafts_oneshot_batch( $time_budget = 10 ) {
 						// their text. Tried BEFORE disposal because a one-draft row
 						// has nothing to evict, so disposal is total: it destroyed
 						// unpublished text to reclaim space the poster alone was
-						// using (PROD-9621 Q6).
+						// using (Q6).
 						++$healed;
 					} elseif ( bb_draft_dispose( $row_user, $row['meta_key'] ) ) {
 						++$healed;
@@ -2153,14 +2195,14 @@ function bb_drafts_oneshot_batch( $time_budget = 10 ) {
 			// the same cursor and walked the same rows again - and under
 			// WP-CLI, where $time_budget is 0, neither post-loop branch runs at
 			// all, so a whole-table drain that died at 90% restarted at 0%
-			// (PROD-9621 H5).
+			// (H5).
 			//
 			// Known residual: this bounds how much progress an interruption can
 			// lose, but it cannot rescue a window whose own contents fatal every
 			// time. A single unhealable row still stalls the pass at that
 			// window; it no longer costs the windows before it.
 			$state['cursor'] = $cursor;
-			update_option( 'bb_draft_oneshot_state', $state, false );
+			update_site_option( 'bb_draft_oneshot_state', $state );
 
 			// Window-level budget check - see bb_drafts_delete_expired(): a
 			// window of only filtered-out keys never reaches the per-row check.
@@ -2172,50 +2214,59 @@ function bb_drafts_oneshot_batch( $time_budget = 10 ) {
 
 		if ( ! $complete ) {
 			$state['cursor'] = $cursor;
-			update_option( 'bb_draft_oneshot_state', $state, false );
-		} elseif ( 0 < $time_budget && ( time() - $started_at ) >= $time_budget ) {
-			// Stage 1 finished, but this slice's budget is already spent. The
-			// stage-2 aggregate below is a GROUP BY/HAVING over the draft-key
-			// range - bounded in ROWS but not in TIME - and the upgrade routine
-			// runs the first slice synchronously on an admin request, so
-			// starting it here can blow max_execution_time mid-upgrade. Defer
-			// it to the next slice; re-scanning the exhausted tail is a cheap
-			// no-op that leaves the state shape unchanged.
-			$complete        = false;
-			$state['cursor'] = $cursor;
-			update_option( 'bb_draft_oneshot_state', $state, false );
+			update_site_option( 'bb_draft_oneshot_state', $state );
 		} else {
-			// Stage 1 finished - one indexed aggregate over the draft keys only
-			// finds the aggregate-oversized users for stage 2. Persisting the
-			// (small) user list instead of per-user byte totals keeps the state
-			// option bounded on sites with many draft holders.
-			$key_sql = bb_draft_meta_key_sql();
+			// Stage 1 scan finished. Mark it done, then DEFER the stage-2
+			// aggregate to a SEPARATE slice on any time-limited (cron) run: the
+			// GROUP BY/HAVING below is bounded in ROWS but not in TIME, and the
+			// upgrade routine runs the first slice synchronously on an admin
+			// request, so it must never execute there (reviewer: stage-2
+			// unbounded). Marking scan_done (rather than re-deferring on an
+			// empty re-scan) is what stops the defer from looping forever. The
+			// WP-CLI drain ($time_budget 0) does not defer and falls straight
+			// into the aggregate block below, running it inline.
+			$state['scan_done'] = true;
+			$state['cursor']    = $cursor;
+			update_site_option( 'bb_draft_oneshot_state', $state );
 
-			if ( empty( $key_sql['invertible'] ) ) {
-				// Same reasoning as the scan: without an invertible key wrap the
-				// per-user totals cannot be attributed, so stage 2 is skipped.
-				$heavy_users = array();
-			} else {
-				$aggregate_values   = $key_sql['values'];
-				$aggregate_values[] = bb_draft_user_total_max_size();
-
-				// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- one-time healing aggregate; $key_sql['where'] carries only placeholders.
-				$heavy_users = $wpdb->get_col(
-					// phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber -- as above; 4 placeholders in the fragment plus the 1 appended here = the 5 values passed.
-					$wpdb->prepare(
-						"SELECT user_id
-						FROM {$wpdb->usermeta}
-						WHERE {$key_sql['where']}
-						GROUP BY user_id
-						HAVING SUM(LENGTH(meta_value)) > %d",
-						$aggregate_values
-					)
-				);
+			if ( 0 < $time_budget ) {
+				$complete = false;
 			}
-
-			$state['heavy_users'] = array_map( 'intval', is_array( $heavy_users ) ? $heavy_users : array() );
-			update_option( 'bb_draft_oneshot_state', $state, false );
 		}
+	}
+
+	// Stage 1b - the indexed aggregate that finds aggregate-oversized users.
+	// Its own block, gated on scan_done, so it runs on a FRESH cron slice after
+	// the scan instead of piggybacking on the synchronous upgrade request. The
+	// (small) user list is persisted rather than per-user byte totals, keeping
+	// the state option bounded on sites with many draft holders.
+	if ( $complete && ! is_array( $state['heavy_users'] ) && ! empty( $state['scan_done'] ) ) {
+		$key_sql = bb_draft_meta_key_sql();
+
+		if ( empty( $key_sql['invertible'] ) ) {
+			// Same reasoning as the scan: without an invertible key wrap the
+			// per-user totals cannot be attributed, so stage 2 is skipped.
+			$heavy_users = array();
+		} else {
+			$aggregate_values   = $key_sql['values'];
+			$aggregate_values[] = bb_draft_user_total_max_size();
+
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- one-time healing aggregate; $key_sql['where'] carries only placeholders.
+			$heavy_users = $wpdb->get_col(
+				// phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber -- as above; 4 placeholders in the fragment plus the 1 appended here = the 5 values passed.
+				$wpdb->prepare(
+					"SELECT user_id
+					FROM {$wpdb->usermeta}
+					WHERE {$key_sql['where']}
+					GROUP BY user_id
+					HAVING SUM(LENGTH(meta_value)) > %d",
+					$aggregate_values
+				)
+			);
+		}
+
+		$state['heavy_users'] = array_map( 'intval', is_array( $heavy_users ) ? $heavy_users : array() );
+		update_site_option( 'bb_draft_oneshot_state', $state );
 	}
 
 	// Stage 2 - aggregate healing, draining the persisted user list.
@@ -2228,18 +2279,28 @@ function bb_drafts_oneshot_batch( $time_budget = 10 ) {
 
 			if ( 0 < $time_budget && ( time() - $started_at ) >= $time_budget && ! empty( $state['heavy_users'] ) ) {
 				$complete = false;
-				update_option( 'bb_draft_oneshot_state', $state, false );
+				update_site_option( 'bb_draft_oneshot_state', $state );
 				break;
 			}
 		}
 	}
 
 	if ( $complete ) {
-		update_option( 'bb_draft_oneshot_done', 1, false );
-		delete_option( 'bb_draft_oneshot_state' );
+		update_site_option( 'bb_draft_oneshot_done', 1 );
+		delete_site_option( 'bb_draft_oneshot_state' );
+
+		// Nothing left to resume - cancel the defensive continuation.
+		$scheduled = wp_next_scheduled( 'bb_draft_oneshot' );
+		if ( $scheduled ) {
+			wp_unschedule_event( $scheduled, 'bb_draft_oneshot' );
+		}
 	} elseif ( ! wp_next_scheduled( 'bb_draft_oneshot' ) ) {
 		wp_schedule_single_event( time() + MINUTE_IN_SECONDS, 'bb_draft_oneshot' );
 	}
+
+	// Released after the state and the schedule are settled, so a run starting
+	// the instant this one returns cannot read half-updated state.
+	delete_site_transient( 'bb_draft_oneshot_lock' );
 
 	return array(
 		'healed'   => $healed,
@@ -2280,7 +2341,7 @@ add_action( 'bp_init', 'bb_drafts_schedule_cleanup' );
 
 if ( defined( 'WP_CLI' ) && WP_CLI ) {
 	/**
-	 * Run or inspect the PROD-9621 draft cleanup from the command line.
+	 * Run or inspect the draft cleanup from the command line.
 	 *
 	 * Doubles as the support/VIP verification tool: `--status` reports
 	 * whether the upgrade one-shot finished (the signal that mu-plugin
@@ -2298,7 +2359,7 @@ if ( defined( 'WP_CLI' ) && WP_CLI ) {
 		'bb drafts cleanup',
 		function ( $args, $assoc_args ) {
 			if ( isset( $assoc_args['status'] ) ) {
-				$oneshot_done = (int) get_option( 'bb_draft_oneshot_done', 0 );
+				$oneshot_done = (int) get_site_option( 'bb_draft_oneshot_done', 0 );
 				$total_rows   = 0;
 				$oversized    = 0;
 				$last_id      = 0;
@@ -2325,6 +2386,14 @@ if ( defined( 'WP_CLI' ) && WP_CLI ) {
 			// Drain fully regardless of size - the docblock promises completion.
 			do {
 				$oneshot = bb_drafts_oneshot_batch( 0 );
+
+				// Another sweep holds the lock - do not spin. Same handling the
+				// expiry drain below uses.
+				if ( ! empty( $oneshot['locked'] ) ) {
+					WP_CLI::warning( 'Healing pass skipped: another sweep holds the lock. Re-run once it finishes.' );
+					break;
+				}
+
 				WP_CLI::log( 'Healing pass: ' . $oneshot['healed'] . ' drafts removed/evicted.' );
 			} while ( empty( $oneshot['complete'] ) );
 

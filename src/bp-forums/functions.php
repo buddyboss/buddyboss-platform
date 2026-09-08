@@ -1043,14 +1043,14 @@ function bb_nouveau_forum_localize_scripts( $params = array() ) {
 	);
 
 	// Localize only whether server drafts exist - the aggregated draft row is
-	// no longer echoed into every forum page's HTML (PROD-9621); the JS fetches
+	// no longer echoed into every forum page's HTML; the JS fetches
 	// it once through bb_get_topic_reply_drafts before initializing the forms.
 	// The `draft` key keeps its historical empty-map shape for third parties.
 	$params['forums']['draft'] = array();
 
 	// Whether a RESTORABLE draft exists, not merely whether the row does.
 	// The row can hold entries with no text and no attachment, which
-	// bb_get_topic_reply_drafts() now filters out (PROD-9621 Q12) - claiming
+	// bb_get_topic_reply_drafts() now filters out (Q12) - claiming
 	// has_draft for one would fire the lazy fetch on every forum page view
 	// and get an empty map back every time.
 	//
@@ -1082,24 +1082,24 @@ function bb_nouveau_forum_localize_scripts( $params = array() ) {
 
 	// Forum-composer copies of the activity composer's draft messages. They are
 	// localized separately because the activity params are not present on
-	// forum-only pages (PROD-9621).
+	// forum-only pages.
 	$params['forums']['paste_image_blocked_message'] = __( 'Pasted images are not supported yet. Please use the photo button to attach images.', 'buddyboss' );
 	$params['forums']['draft_evicted_message']       = __( 'You had too many saved drafts, so your oldest draft was removed to save this one.', 'buddyboss' );
 
 	// The lazy fetch can fail on a flaky connection. When it does, the member
 	// sees an empty composer even though a draft exists, and anything they type
-	// would otherwise overwrite the draft they were never shown (PROD-9621).
+	// would otherwise overwrite the draft they were never shown.
 	$params['forums']['draft_fetch_failed_message'] = __( 'We could not load your saved draft. Reload the page before writing here, or your saved draft may be replaced.', 'buddyboss' );
 
 	// Shown when a draft SAVE is refused and the server sent no message of its
 	// own - a bare wp_send_json_error() carries none, which is what the nonce
 	// check and the authorization gate emit. Without it those rejections were
-	// indistinguishable from a successful save (PROD-9621 H1).
+	// indistinguishable from a successful save (H1).
 	$params['forums']['draft_save_failed_message'] = __( 'Your draft could not be saved. Please reload the page - anything you write here may not be kept.', 'buddyboss' );
 
 	// The restore is suppressed when the member has already typed into the
 	// form, and that suppression used to be silent - the stored draft is
-	// intact but nothing on screen said so (PROD-9621).
+	// intact but nothing on screen said so.
 	$params['forums']['draft_not_restored_message'] = __( 'You have a saved draft. It was not loaded because you had already started writing here.', 'buddyboss' );
 
 	return $params;
@@ -1408,7 +1408,7 @@ function bb_moderator_can_delete_topic_reply( $obj, $args = array() ) {
  *
  * Split out of {@see bb_forums_sanitize_draft_entry()} so the cheap step can
  * run before the per-draft cap and the expensive kses pass runs only on a
- * payload the cap has already accepted (PROD-9621 M4).
+ * payload the cap has already accepted (M4).
  *
  * @since BuddyBoss [BBVERSION]
  *
@@ -1490,7 +1490,7 @@ function bb_forums_sanitize_draft_entry( $draft_entry ) {
  * `bb_draft_evicted` belong to the caller, AFTER the row is actually
  * written — a budget refusal downstream abandons the write, and an eviction
  * that never happened must not unprotect attachments or notify listeners
- * (PROD-9621 H4).
+ * (H4).
  *
  * @since BuddyBoss [BBVERSION]
  *
@@ -1520,7 +1520,7 @@ function bb_forums_trim_draft_row( $draft_row, $protect_key, $user_id, $max_byte
 	// candidate list, no sort and no per-entry accounting. One serialization,
 	// which is what the old implementation also cost on this path - the
 	// optimisation below must not make the common case more expensive than the
-	// rare one (PROD-9621 R1).
+	// rare one (R1).
 	$row_bytes = strlen( maybe_serialize( $draft_row ) );
 
 	if ( $row_bytes <= $max_bytes ) {
@@ -1558,7 +1558,7 @@ function bb_forums_trim_draft_row( $draft_row, $protect_key, $user_id, $max_byte
 	// over-budget row with N eviction candidates serialized O(N) copies of a
 	// row that is by definition close to the cap. Measured on a 200-entry /
 	// 10 MB row: 182 whole-row serialize() calls moving 954 MB - and this runs
-	// on the live autosave endpoint, not a cron (PROD-9621 R1).
+	// on the live autosave endpoint, not a cron (R1).
 	//
 	// serialize() writes an array as `a:{count}:{` + the concatenated
 	// key/value serializations + `}`, and elements serialize independently, so
@@ -1609,7 +1609,7 @@ function bb_forums_trim_draft_row( $draft_row, $protect_key, $user_id, $max_byte
 		// the caller, because a later budget refusal abandons this write
 		// entirely - and an eviction that never reached storage must not leave
 		// its attachments unprotected or announce itself to listeners
-		// (PROD-9621 H4).
+		// (H4).
 		$result['entries'][ $inner_key ] = $result['row'][ $inner_key ];
 
 		unset( $result['row'][ $inner_key ] );
@@ -1624,16 +1624,43 @@ function bb_forums_trim_draft_row( $draft_row, $protect_key, $user_id, $max_byte
 	// Authoritative backstop: measure the real row once and keep evicting only
 	// if the accounting above somehow left it over budget. With the formula
 	// exact this measures once and stops, so the O(N) behaviour does not come
-	// back - but a future change to how PHP serializes arrays cannot silently
-	// turn an under-trim into a refused save.
-	$remaining     = $candidates;
+	// back - but accounting drift cannot silently turn an under-trim into a
+	// refused save. Drift is not hypothetical: legacy rows whose inner keys
+	// are []-appended INTEGERS priced each key 4 bytes high until
+	// bb_draft_serialized_key_bytes() learned the i:N; form, and 487 of 3,204
+	// swept budget/row combinations came back over budget with evictable
+	// candidates remaining (GH2).
+	//
+	// Seeded with the candidates the loop above has NOT already evicted.
+	// Reseeding from the full list made this backstop dead code: its first
+	// array_shift() returned an already-evicted candidate, the isset() check
+	// broke the loop immediately, and the row was handed back over budget -
+	// which the caller's budget check then turned into a false "too many
+	// drafts" refusal (GH2).
+	$remaining = array();
+
+	foreach ( $candidates as $candidate ) {
+		if ( isset( $result['row'][ $candidate['inner_key'] ] ) ) {
+			$remaining[] = $candidate;
+		}
+	}
+
 	$measured_size = strlen( maybe_serialize( $result['row'] ) );
 
 	while ( $measured_size > $max_bytes ) {
 		$candidate = array_shift( $remaining );
 
-		if ( null === $candidate || ! isset( $result['row'][ $candidate['inner_key'] ] ) ) {
+		// List exhausted - nothing evictable remains (the protected entry is
+		// never a candidate), so the caller's budget check owns the outcome.
+		if ( null === $candidate ) {
 			break;
+		}
+
+		// Defensive only: entries cannot vanish mid-loop, but an already-gone
+		// key must be SKIPPED, never allowed to end the loop while later
+		// candidates are still evictable.
+		if ( ! isset( $result['row'][ $candidate['inner_key'] ] ) ) {
+			continue;
 		}
 
 		$result['entries'][ $candidate['inner_key'] ] = $result['row'][ $candidate['inner_key'] ];

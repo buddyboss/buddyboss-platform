@@ -475,7 +475,7 @@ function bbp_new_topic_handler( $action = '' ) {
 		// An emptied aggregate row is deleted, never written back as array() -
 		// a stored empty row keeps has_draft true (one wasted lazy-fetch AJAX
 		// per forum page load, forever) and no cleanup pass can remove it
-		// while ordinary publishes keep re-creating it (PROD-9621).
+		// while ordinary publishes keep re-creating it.
 		if ( empty( $existing_draft ) || ! is_array( $existing_draft ) ) {
 			bp_delete_user_meta( $user_id, $usermeta_key );
 		} else {
@@ -486,7 +486,7 @@ function bbp_new_topic_handler( $action = '' ) {
 			// Measured: an attachment list holding `résumé.pdf` comes back as
 			// `ru00e9sumu00e9.pdf`, and a filename containing a double quote breaks
 			// the list's JSON outright, losing that draft's whole attachment list.
-			// Publishing one draft must not corrupt the rest (PROD-9621 R2).
+			// Publishing one draft must not corrupt the rest (R2).
 			bp_update_user_meta( $user_id, $usermeta_key, wp_slash( $existing_draft ) );
 		}
 

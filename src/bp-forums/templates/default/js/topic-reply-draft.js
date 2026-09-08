@@ -53,7 +53,7 @@ window.bp = window.bp || {};
 		 * draft fetch was in flight" from "this form arrived pre-filled". A
 		 * reply-to-reply, a quote, or a mention prefix is content the member did
 		 * NOT type, and treating it as typed suppresses a legitimate restore
-		 * (PROD-9621).
+		 *.
 		 *
 		 * @return {void}
 		 */
@@ -67,7 +67,7 @@ window.bp = window.bp || {};
 			// hasMemberTypedContent() would then compare equal, conclude nothing
 			// was typed, and the restore would overwrite their text. That is the
 			// one window this guard exists for, so the capture taken before the
-			// request went out is authoritative when present (PROD-9621).
+			// request went out is authoritative when present.
 			this.initial_content_snapshot = ( 'undefined' !== typeof captured ) ? captured : this.currentContentSnapshot();
 		};
 
@@ -170,7 +170,7 @@ window.bp = window.bp || {};
 				// saved either. Running the same setup once, now, is what the
 				// missed event would have done - and displayTopicReplyDraft()
 				// still refuses to clobber anything typed in the meantime, via
-				// hasMemberTypedContent() (PROD-9621 Q12).
+				// hasMemberTypedContent() (Q12).
 				if ( $( '.bb-modal-box' ).hasClass( 'bb-modal-open' ) ) {
 					self.setupOnOpenTopicReplyModal();
 				}
@@ -179,7 +179,7 @@ window.bp = window.bp || {};
 				// jQuery does not replay an already-fired `load`. When the fetch
 				// loses that race the intervals would never start and nothing the
 				// member typed would be saved for the whole page load, so bind
-				// only while `load` is still pending (PROD-9621 H3).
+				// only while `load` is still pending (H3).
 				if ( 'complete' === document.readyState ) {
 					self.setupTopicReplyDraftIntervals();
 				} else {
@@ -370,7 +370,7 @@ window.bp = window.bp || {};
 			// empty local copy block the server copy unconditionally: the
 			// composer opened blank over a live server draft, has-draft was
 			// applied anyway, and the next autosave wrote that emptiness back
-			// (PROD-9621 Q12).
+			// (Q12).
 			//
 			// A local copy WITH content still wins, exactly as before - the
 			// member's most recent typing lives there and is not on the server
@@ -712,7 +712,7 @@ window.bp = window.bp || {};
 			// empty one destroyed the member's saved text and dropped their
 			// attachment references - locally AND on the server - while
 			// leaving is_content_valid true, so the composer still showed a
-			// draft indicator over an empty box (PROD-9621 Q12).
+			// draft indicator over an empty box (Q12).
 			var payload_is_empty = false;
 
 			if ( ! media_valid ) {
@@ -789,7 +789,7 @@ window.bp = window.bp || {};
 				// and persisting it is the data loss described above. The
 				// member's deliberate route to removing a draft is the
 				// Discard Draft button, which deletes it on both sides
-				// (PROD-9621 Q12).
+				// (Q12).
 				if ( payload_is_empty ) {
 					return;
 				}
@@ -874,7 +874,7 @@ window.bp = window.bp || {};
 			// The member HAS a stored draft that we failed to read. Writing now
 			// would replace content they were never shown with whatever happens
 			// to be in the box - a transient network failure would silently
-			// destroy the draft it prevented us from loading (PROD-9621).
+			// destroy the draft it prevented us from loading.
 			if (
 				'undefined' !== typeof BP_Nouveau.forums &&
 				true === BP_Nouveau.forums.draft_fetch_failed
@@ -940,7 +940,7 @@ window.bp = window.bp || {};
 							// moderator making the forum private mid-session, left the
 							// composer looking completely normal while nothing was
 							// saved - and cleared any standing warning as it went
-							// (PROD-9621 H1).
+							// (H1).
 							if ( ! response || ! response.success ) {
 								self.showDraftFeedback(
 									( response && response.data && response.data.message ) ?
@@ -989,7 +989,7 @@ window.bp = window.bp || {};
 			this.draft_content_changed = false;
 		};
 
-		// The draft row is fetched over AJAX before start() runs (PROD-9621), so
+		// The draft row is fetched over AJAX before start() runs, so
 		// the member can type into an already-rendered form while that request is
 		// in flight. Restoring on top of that would destroy text which was never
 		// saved anywhere - the change listeners are not bound yet either.
@@ -1019,7 +1019,7 @@ window.bp = window.bp || {};
 		 * resolves and appendTopicDraftData()/appendReplyDraftData() bail, so
 		 * has-draft is never applied and no affordance offers the draft for the
 		 * rest of the page load. Silence there reads as a lost draft
-		 * (PROD-9621).
+		 *.
 		 *
 		 * @return {void}
 		 */
@@ -1056,7 +1056,7 @@ window.bp = window.bp || {};
 		// One fallback for every draft-notice helper. These were split between
 		// $( 'form#new-post' ) and $( 'form[name="new-post"]' ).first(), which
 		// only agree while the topic and reply forms are the same element
-		// (PROD-9621).
+		//.
 		this.draftNoticeForm = function () {
 			return ( this.currentForm && this.currentForm.length ) ? this.currentForm : $( 'form[name="new-post"]' ).first();
 		};
@@ -1092,7 +1092,7 @@ window.bp = window.bp || {};
 			}
 		};
 
-		// Interim PROD-9621 guard, mirroring the activity composer: a pasted
+		// Interim guard, mirroring the activity composer: a pasted
 		// bitmap becomes an inline base64 image of 1MB+, which the draft and
 		// publish pipelines strip anyway. Refuse it at the moment of intent
 		// instead of silently losing it.
@@ -1156,7 +1156,7 @@ window.bp = window.bp || {};
 			// Built with its text already in place: an empty role="alert" node
 			// inserted first and filled afterwards is not announced by several
 			// screen readers, and this is the only signal a member gets that a
-			// save was refused (PROD-9621).
+			// save was refused.
 			$form.prepend( $( '<div class="bb-draft-save-feedback" role="alert"></div>' ).text( message ) );
 		};
 
@@ -1175,7 +1175,7 @@ window.bp = window.bp || {};
 
 		this.appendTopicDraftData = function() {
 			// Never clobber content the member typed while the draft fetch was
-			// in flight (PROD-9621).
+			// in flight.
 			if ( this.hasMemberTypedContent() ) {
 				this.announceSuppressedDraftRestore();
 
@@ -1312,7 +1312,7 @@ window.bp = window.bp || {};
 
 		this.appendReplyDraftData = function() {
 			// Never clobber content the member typed while the draft fetch was
-			// in flight (PROD-9621).
+			// in flight.
 			if ( this.hasMemberTypedContent() ) {
 				this.announceSuppressedDraftRestore();
 
@@ -1775,12 +1775,12 @@ window.bp = window.bp || {};
 
 			this.topic_reply_draft.post_action = 'delete';
 			// Marked before the request goes out: a reload racing the discard
-			// must not be offered this draft again (PROD-9621).
+			// must not be offered this draft again.
 			bp.Nouveau.TopicReplyDraft.markDiscarded( this.topic_reply_draft.data_key, true );
 			// In-page discard goes over XHR, not sendBeacon - the beacon
 			// transport is reserved for unload, and its quota failure mode
 			// must never decide whether a deliberate discard reaches the
-			// server (PROD-9621).
+			// server.
 			this.postTopicReplyDraft( true, false, false );
 			this.clearTopicReplyDraftIntervals();
 			this.resetLocalTopicReplyDraft();
@@ -1812,7 +1812,7 @@ window.bp = window.bp || {};
 	// the lazy fetch hands the just-discarded draft straight back. The activity
 	// composer guards this with a cookie; the forum pack has no cookie
 	// dependency, so the marker lives in sessionStorage - same tab, survives the
-	// reload, gone when the tab closes (PROD-9621).
+	// reload, gone when the tab closes.
 	var BB_DRAFT_DISCARDED_KEY = 'bb_forum_drafts_discarded';
 
 	var bbDraftDiscardedKeys = function () {
@@ -1890,7 +1890,7 @@ window.bp = window.bp || {};
 		// topic draft was never restored, has-draft was never applied (leaving
 		// the Discard button CSS-hidden) and a role="alert" told the member they
 		// had "already started writing here" on a form they had not touched, on
-		// every page load (PROD-9621 H3).
+		// every page load (H3).
 		$form.find( '.bbp-the-content' ).each(
 			function () {
 				parts.push( $.trim( $( this ).text() ) );
@@ -1917,7 +1917,7 @@ window.bp = window.bp || {};
 	 * A copy holding none of it has nothing to put in the composer, so it must
 	 * never outrank one that does - an empty localStorage copy used to define
 	 * the key unconditionally and block the fetched server draft, leaving the
-	 * composer blank with the draft indicator still showing (PROD-9621 Q12).
+	 * composer blank with the draft indicator still showing (Q12).
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
@@ -1964,14 +1964,14 @@ window.bp = window.bp || {};
 	};
 
 	// The aggregated draft row is no longer echoed into forum page HTML
-	// (PROD-9621) - when server drafts exist, fetch them once and seed the
+	// - when server drafts exist, fetch them once and seed the
 	// localized map the instances read, then initialize the forms.
 	// `BP_Nouveau.forums.draft` is now always localized empty, so testing it
 	// alone made the fetch fire on EVERY forum page view for any draft holder -
 	// the opposite of the "0 requests warm / 1 cold" contract, and unlike the
 	// activity pack which checks its local copy first. Consult localStorage the
 	// same way: a warm tab already holds the draft it would fetch
-	// (PROD-9621 M3).
+	// (M3).
 	var bbDraftIsWarmLocally = function () {
 		var i, key, resolved = 0;
 
@@ -1997,7 +1997,7 @@ window.bp = window.bp || {};
 				// precisely the copy the server draft has to override, so the
 				// fetch must run. Counting it as warm skipped the fetch, left
 				// the server copy unavailable to compare against, and the
-				// composer opened empty over a live draft (PROD-9621 Q12).
+				// composer opened empty over a live draft (Q12).
 				if ( ! bbDraftDataHasPayload( ( JSON.parse( window.localStorage.getItem( key ) ) || {} ).data ) ) {
 					return false;
 				}
@@ -2023,7 +2023,7 @@ window.bp = window.bp || {};
 		// Capture what each form arrived with BEFORE the request goes out.
 		// start() runs inside .always(), so a snapshot taken there would already
 		// include whatever the member typed while the fetch was in flight
-		// (see snapshotInitialContent(), PROD-9621).
+		// (see snapshotInitialContent(),).
 		forms.each(
 			function () {
 				$( this ).data( 'bbDraftInitialSnapshot', bbDraftFormSnapshot( $( this ) ) );
@@ -2034,7 +2034,7 @@ window.bp = window.bp || {};
 		// through .always() and initialise the forms with an empty draft map, so a
 		// member with a stored draft saw an empty composer, no error and no retry -
 		// and their next autosave overwrote the draft the fetch had failed to read
-		// (PROD-9621).
+		//.
 		var bbDraftFetchAttempts = 0;
 
 		// Shared by both ways the read can fail. A transport error lands in
@@ -2044,7 +2044,7 @@ window.bp = window.bp || {};
 		// that as a successful empty read, so no retry ran, the composer opened
 		// empty over a live server draft and the next autosave overwrote it - the
 		// exact loss this retry exists to prevent, reached without any transport
-		// error (PROD-9621).
+		// error.
 		var bbDraftFetchFailed = function () {
 			if ( bbDraftFetchAttempts < 2 ) {
 				window.setTimeout( bbRunDraftFetch, 2000 );
@@ -2084,7 +2084,7 @@ window.bp = window.bp || {};
 							discarded = bbDraftDiscardedKeys();
 
 						// Never re-offer a draft this tab has already discarded - the
-						// delete may simply not have been processed yet (PROD-9621).
+						// delete may simply not have been processed yet.
 						_.each(
 							discarded,
 							function ( key ) {

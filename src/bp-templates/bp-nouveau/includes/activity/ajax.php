@@ -1198,7 +1198,7 @@ function bb_nouveau_ajax_post_draft_activity() {
 		// the save came from the autosave tick or from closing the tab:
 		// `path C:\temp\notes` survived the XHR and became
 		// `path C:tempnotes` through the beacon. Re-slash so both transports
-		// hand this handler one state (PROD-9621 S4).
+		// hand this handler one state (S4).
 		$draft_activity = wp_slash( json_decode( stripslashes( $draft_activity ), true ) );
 	}
 
@@ -1213,10 +1213,18 @@ function bb_nouveau_ajax_post_draft_activity() {
 		// SAVES, the user passes that object's posting rules. Deletes validate
 		// shape only ('manage'): the slim discard payload carries no data member
 		// to resolve a group ID from, and a member who lost posting rights must
-		// still be able to discard their own stored draft (PROD-9621 hardening).
+		// still be able to discard their own stored draft (hardening).
 		$draft_context = ( isset( $draft_activity['post_action'] ) && 'update' === $draft_activity['post_action'] ) ? 'save' : 'manage';
 
-		if ( ! bb_draft_validate_activity_data_key( (string) $draft_activity['data_key'], (string) $draft_activity['object'], $draft_activity['data']['item_id'] ?? 0, $draft_user_id, $draft_context ) ) {
+		// Coerce only scalars. A crafted request can submit data_key/object as
+		// arrays, and casting an array to string emits an "Array to string
+		// conversion" notice before the validation below rejects it; a
+		// non-scalar becomes '' and fails validation cleanly (GH review C2).
+		$submitted_data_key = is_scalar( $draft_activity['data_key'] ) ? (string) $draft_activity['data_key'] : '';
+		$submitted_object   = is_scalar( $draft_activity['object'] ) ? (string) $draft_activity['object'] : '';
+		$submitted_item_id  = ( isset( $draft_activity['data'] ) && is_array( $draft_activity['data'] ) && isset( $draft_activity['data']['item_id'] ) ) ? $draft_activity['data']['item_id'] : 0;
+
+		if ( ! bb_draft_validate_activity_data_key( $submitted_data_key, $submitted_object, $submitted_item_id, $draft_user_id, $draft_context ) ) {
 			wp_send_json_error(
 				array(
 					'message' => __( 'This draft could not be saved.', 'buddyboss' ),
@@ -1229,7 +1237,7 @@ function bb_nouveau_ajax_post_draft_activity() {
 			// Protect the member's uploads BEFORE any cap can refuse this draft.
 			// The caps judge the draft's text; they must not decide whether a file
 			// the member already uploaded survives the orphan cron
-			// ({@see bb_draft_protect_payload_attachments()}, PROD-9621 BLOCKER-1).
+			// ({@see bb_draft_protect_payload_attachments()}, BLOCKER-1).
 			bb_draft_protect_payload_attachments(
 				array(
 					$draft_activity['data']['media'] ?? array(),
@@ -1247,11 +1255,11 @@ function bb_nouveau_ajax_post_draft_activity() {
 			// would restore AND never stamped - and unstamped is exactly what
 			// bp_media_delete_orphaned_attachments() hard-deletes. On a site
 			// whose Upload Limit is 60, a member attaching 60 photos kept 50
-			// and lost 10 files six hours later (PROD-9621 H4).
+			// and lost 10 files six hours later (H4).
 			//
 			// Ordered AFTER the protection pass on purpose: a refusal must not
 			// decide whether files the member already uploaded survive the
-			// orphan cron (PROD-9621 BLOCKER-1).
+			// orphan cron (BLOCKER-1).
 			$max_per_type = bb_draft_max_attachments_per_type();
 
 			foreach ( array( 'media', 'document', 'video' ) as $bounded_type ) {
@@ -1268,11 +1276,24 @@ function bb_nouveau_ajax_post_draft_activity() {
 				}
 			}
 
-			if (
-				! empty( $draft_activity['data']['bb_activity_post_feature_image']['id'] ) &&
-				bb_draft_user_can_manage_attachment( $draft_activity['data']['bb_activity_post_feature_image']['id'], $draft_user_id )
-			) {
-				update_post_meta( (int) $draft_activity['data']['bb_activity_post_feature_image']['id'], 'bb_activity_post_feature_image_draft', 1 );
+			// Owner-gate the feature image before the caps run, mirroring the
+			// BLOCKER-1 ordering the media/document/video lists use. When Pro is
+			// present its richer per-object check runs in the block below and
+			// keeps its existing error-on-foreign behaviour; a verified owner is
+			// merely protected early here. When Pro is ABSENT that block is
+			// skipped entirely, so a foreign attachment id used to be stored
+			// straight into the member's own draft row - here it is dropped the
+			// same way an unowned media id is (GH review C1).
+			if ( ! empty( $draft_activity['data']['bb_activity_post_feature_image']['id'] ) ) {
+				$feature_image_id = (int) $draft_activity['data']['bb_activity_post_feature_image']['id'];
+
+				if ( bb_draft_user_can_manage_attachment( $feature_image_id, $draft_user_id ) ) {
+					update_post_meta( $feature_image_id, 'bb_activity_post_feature_image_draft', 1 );
+				} elseif ( ! function_exists( 'bb_pro_activity_post_feature_image_instance' ) ) {
+					// Core-only: no Pro per-object check will run, so a foreign
+					// or unknown id must not be stored.
+					unset( $draft_activity['data']['bb_activity_post_feature_image'] );
+				}
 			}
 
 			// Collected again during validation and re-applied after the caps.
@@ -1375,7 +1396,7 @@ function bb_nouveau_ajax_post_draft_activity() {
 			// on the full client payload before any cap could refuse it - a CPU
 			// amplifier on an endpoint every open composer hits every 20s. Data
 			// URLs are stripped first, so the pasted-bitmap case stays cheap and
-			// is still judged on its post-strip width (PROD-9621 M4).
+			// is still judged on its post-strip width (M4).
 			foreach ( $draft_content_keys as $draft_content_key ) {
 				if ( isset( $draft_activity['data'][ $draft_content_key ] ) && is_string( $draft_activity['data'][ $draft_content_key ] ) ) {
 					$draft_activity['data'][ $draft_content_key ] = bb_draft_strip_data_urls( $draft_activity['data'][ $draft_content_key ] );
@@ -1461,7 +1482,7 @@ function bb_nouveau_ajax_post_draft_activity() {
 			// their draft stayed orphan-protected for good and the cleanup crons
 			// could never reclaim it - a slow leak of undeletable files. The
 			// forum handler was given this and the activity handler was not, so
-			// the helper had exactly one of its two call sites (PROD-9621).
+			// the helper had exactly one of its two call sites.
 			//
 			// Read BEFORE the write and released AFTER it: releasing first would
 			// expose the attachments of a draft that still exists if anything
@@ -1474,7 +1495,7 @@ function bb_nouveau_ajax_post_draft_activity() {
 		} else {
 			// Dispose strictly from the STORED draft - the client payload's
 			// attachment lists are never used for deletion, so a crafted request
-			// cannot delete attachments the draft never referenced (PROD-9621).
+			// cannot delete attachments the draft never referenced.
 			$stored_draft = bp_get_user_meta( $draft_user_id, $draft_activity['data_key'], true );
 
 			if ( is_array( $stored_draft ) && ! empty( $stored_draft['data'] ) && is_array( $stored_draft['data'] ) ) {
@@ -1509,7 +1530,7 @@ function bb_nouveau_ajax_post_draft_activity() {
 			// deleted ones are skipped by its ownership check), deletes the row,
 			// and invalidates the memoized meta sizes. Hand-rolling those three
 			// steps here is what let this path drift from the maintenance ones
-			// (PROD-9621).
+			//.
 			bb_draft_dispose( $draft_user_id, $draft_activity['data_key'] );
 
 			$draft_activity['data'] = false;

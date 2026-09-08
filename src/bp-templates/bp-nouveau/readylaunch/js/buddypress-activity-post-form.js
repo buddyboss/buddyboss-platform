@@ -15,7 +15,7 @@ window.bp = window.bp || {};
 	 * emoji and 1.81x for Arabic. Comparing that against a byte cap meant the
 	 * poster shed never fired on those communities: the payload looked small,
 	 * js_preview stayed in, and the server refused the whole save instead - so
-	 * the member simply lost the draft (PROD-9621).
+	 * the member simply lost the draft.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
@@ -983,7 +983,7 @@ window.bp = window.bp || {};
 			// that empty priming pass would hand listeners a falsy activity_data
 			// and then fire again with the real draft - they were built for a
 			// single fire. Defer it instead; fetchServerDraftActivity() replays
-			// the empty event if no draft ever materialises (PROD-9621).
+			// the empty event if no draft ever materialises.
 			if ( ! activity_data && true === bbRlActivity.params.has_draft && ! bp.draft_fetch_settled ) {
 				bp.draft_loaded_event_deferred = true;
 				return;
@@ -1040,7 +1040,7 @@ window.bp = window.bp || {};
 
 					// No lazy fetch is issued on this branch, so nothing would ever
 					// settle a deferred draft-loaded event and the public event would
-					// never fire at all. Mark it settled here (PROD-9621).
+					// never fire at all. Mark it settled here.
 					bp.draft_fetch_settled = true;
 				} else if ( ! _.isUndefined( bbRlActivity.params.draft_activity.data_key ) ) {
 					bp.old_draft_data = bbRlActivity.params.draft_activity.data;
@@ -1107,7 +1107,7 @@ window.bp = window.bp || {};
 					// fetched successfully. Caching it locally is an optimisation;
 					// displaying it is the point. The nouveau pack routes this
 					// through the try/catch'd checkAndStoreDraftToLocalStorage()
-					// and never had the problem (PROD-9621).
+					// and never had the problem.
 					try {
 						localStorage.setItem( bp.draft_activity.data_key, JSON.stringify( bp.draft_activity ) );
 					} catch ( e ) {
@@ -1132,7 +1132,7 @@ window.bp = window.bp || {};
 					// nothing was saved, retypes, and the next autosave replaces
 					// the draft the fetch could not read. The forum packs got this
 					// protection; the activity packs created the same lazy-fetch
-					// window and did not (PROD-9621).
+					// window and did not.
 					bp.draft_fetch_attempts = ( bp.draft_fetch_attempts || 0 ) + 1;
 
 					if ( bp.draft_fetch_attempts < 2 ) {
@@ -1159,7 +1159,7 @@ window.bp = window.bp || {};
 		setupPasteImageGuard: function () {
 			var self = this;
 
-			// Interim PROD-9621 guard: a pasted bitmap becomes an inline base64
+			// Interim guard: a pasted bitmap becomes an inline base64
 			// image of 1MB+, which the draft and publish pipelines strip anyway.
 			// Refuse it at the moment of intent instead of silently losing it.
 			$( document ).on( 'paste.bbDraftImageGuard', '#bb-rl-whats-new-form [contenteditable="true"]', function ( event ) {
@@ -1272,7 +1272,7 @@ window.bp = window.bp || {};
 			// Built with its text already in place: an empty role="alert" node
 			// inserted first and filled afterwards is not announced by several
 			// screen readers, and this is the only signal a member gets that a
-			// save was refused (PROD-9621).
+			// save was refused.
 			$form.prepend( $( '<div class="bb-draft-save-feedback" role="alert"></div>' ).text( message ) );
 		},
 
@@ -1312,7 +1312,7 @@ window.bp = window.bp || {};
 			// raw <img class="emojioneemoji">, and bp_activity_filter_kses() strips
 			// data-emoji-char on save - so after a restore the publish path finds no
 			// character to substitute and jQuery drops the image, losing the emoji
-			// from the published post (PROD-9621).
+			// from the published post.
 			//
 			// Done on a CLONE: this runs from a 20s autosave while the member is
 			// still typing, and rewriting the live editor would move their caret.
@@ -1601,7 +1601,7 @@ window.bp = window.bp || {};
 			// this composer is not based on it. Writing would replace a draft the
 			// member was never shown, which is the loss this refusal exists to
 			// prevent. A DISCARD is still allowed: refusing a deliberate delete
-			// would trap the member with a draft they cannot clear (PROD-9621).
+			// would trap the member with a draft they cannot clear.
 			if (
 				bp.draft_fetch_failed &&
 				( _.isUndefined( bp.draft_activity ) || 'delete' !== bp.draft_activity.post_action )
@@ -1638,7 +1638,7 @@ window.bp = window.bp || {};
 				// per-draft cap and get the whole save REFUSED. So keep it whenever
 				// it fits and shed it only when that is the difference between
 				// saving and being rejected - a missing poster beats a lost draft
-				// (PROD-9621).
+				//.
 				var draft_cap = ( BP_Nouveau.activity.params && BP_Nouveau.activity.params.draft_max_size ) ?
 					parseInt( BP_Nouveau.activity.params.draft_max_size, 10 ) : 0;
 
@@ -5843,7 +5843,7 @@ window.bp = window.bp || {};
 						// alt is in bp_get_allowedtags() and data-emoji-char is not,
 						// so a draft stored before the draft-side conversion landed
 						// comes back with only alt. Fall back to it or the emoji is
-						// dropped from the published post (PROD-9621).
+						// dropped from the published post.
 						return this.dataset.emojiChar || $( this ).attr( 'alt' ) || '';
 					}
 				);
