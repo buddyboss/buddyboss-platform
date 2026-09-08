@@ -1012,6 +1012,86 @@ function bb_draft_dispose( $user_id, $meta_key, $inner_key = '' ) {
 }
 
 /**
+ * Remove several expired inner drafts from the aggregate forum row in ONE write.
+ *
+ * The expiry sweep used to route each expired inner draft through
+ * {@see bb_draft_dispose()}, and each of those does a full-row read plus a
+ * full-row write - the O(n.B) shape {@see bb_draft_heal_forum_row()} was
+ * rewritten to avoid, now reintroduced by the RECURRING daily cron against the
+ * widest rows on the site by definition (M4). This does what the healer does:
+ * decide in memory, write once, then release the attachment stamps of the
+ * removed entries that no surviving inner draft still references.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int      $user_id    Owning user ID.
+ * @param string[] $inner_keys Inner draft keys to remove.
+ * @return int Number of inner drafts removed.
+ */
+function bb_draft_dispose_forum_inner_keys( $user_id, $inner_keys ) {
+	$user_id = (int) $user_id;
+
+	if ( $user_id <= 0 || empty( $inner_keys ) || ! is_array( $inner_keys ) ) {
+		return 0;
+	}
+
+	$row = bp_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
+
+	if ( ! is_array( $row ) || empty( $row ) ) {
+		return 0;
+	}
+
+	$removed = array();
+
+	foreach ( $inner_keys as $inner_key ) {
+		$inner_key = (string) $inner_key;
+
+		// An empty inner key is bb_draft_dispose()'s whole-row sentinel, never a
+		// real entry to remove (M5).
+		if ( '' === $inner_key || ! isset( $row[ $inner_key ] ) ) {
+			continue;
+		}
+
+		$removed[ $inner_key ] = $row[ $inner_key ];
+		unset( $row[ $inner_key ] );
+	}
+
+	if ( empty( $removed ) ) {
+		return 0;
+	}
+
+	// One write for the whole batch.
+	if ( empty( $row ) ) {
+		bp_delete_user_meta( $user_id, 'bb_user_topic_reply_draft' );
+	} else {
+		// wp_slash(): the row came back unslashed and update_metadata() unslashes
+		// once more on write, so re-slash to store the surviving drafts
+		// byte-for-byte (R2, S5).
+		bp_update_user_meta( $user_id, 'bb_user_topic_reply_draft', wp_slash( $row ) );
+	}
+
+	bb_draft_flush_user_meta_sizes( $user_id );
+
+	// Release the stamps of removed attachments no surviving inner draft holds.
+	$surviving = array();
+
+	foreach ( $row as $surviving_entry ) {
+		$surviving = array_merge( $surviving, bb_draft_collect_attachment_ids( $surviving_entry ) );
+	}
+
+	foreach ( $removed as $removed_entry ) {
+		foreach ( array_diff( bb_draft_collect_attachment_ids( $removed_entry ), $surviving ) as $attachment_id ) {
+			if ( bb_draft_user_can_manage_attachment( $attachment_id, $user_id ) ) {
+				delete_post_meta( $attachment_id, 'bb_media_draft' );
+				delete_post_meta( $attachment_id, 'bb_activity_post_feature_image_draft' );
+			}
+		}
+	}
+
+	return count( $removed );
+}
+
+/**
  * Enforce the per-user draft and meta budgets before storing a draft.
  *
  * When the combined size of the user's drafts would exceed
@@ -1838,6 +1918,11 @@ function bb_drafts_delete_expired( $time_budget = 10 ) {
 						++$deleted;
 					}
 				} else {
+					// Collect every expired inner key, then remove them in ONE
+					// write instead of a full-row read+write per key - the O(n.B)
+					// shape the healer avoids, on the recurring cron (M4).
+					$expired_inner_keys = array();
+
 					foreach ( $value as $inner_key => $inner_draft ) {
 						// An empty inner key is the whole-row sentinel for
 						// bb_draft_dispose(), so a legacy row carrying one must
@@ -1848,10 +1933,13 @@ function bb_drafts_delete_expired( $time_budget = 10 ) {
 						}
 
 						$saved_at = isset( $inner_draft['_draft_saved_at'] ) ? (int) $inner_draft['_draft_saved_at'] : $epoch;
-						if ( $saved_at < $cutoff && bb_draft_dispose( $user_id, $row['meta_key'], (string) $inner_key ) ) {
-							++$deleted;
+
+						if ( $saved_at < $cutoff ) {
+							$expired_inner_keys[] = (string) $inner_key;
 						}
 					}
+
+					$deleted += bb_draft_dispose_forum_inner_keys( $user_id, $expired_inner_keys );
 				}
 			} else {
 				$saved_at = ( is_array( $value ) && isset( $value['_draft_saved_at'] ) ) ? (int) $value['_draft_saved_at'] : $epoch;

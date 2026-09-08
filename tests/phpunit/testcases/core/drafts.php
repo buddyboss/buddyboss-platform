@@ -1007,6 +1007,71 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 	}
 
 	/**
+	 * Count of writes to the aggregate forum draft row (for M4).
+	 *
+	 * @var int
+	 */
+	protected $agg_row_writes = 0;
+
+	/**
+	 * Record a write to the aggregate forum draft row.
+	 *
+	 * @param int    $meta_id   Meta row ID.
+	 * @param int    $object_id User ID.
+	 * @param string $meta_key  Meta key.
+	 * @return void
+	 */
+	public function count_agg_row_write( $meta_id, $object_id, $meta_key ) {
+		if ( bp_get_user_meta_key( 'bb_user_topic_reply_draft' ) === $meta_key ) {
+			$this->agg_row_writes++;
+		}
+	}
+
+	/**
+	 * M4: the expiry sweep must remove all expired inner drafts of the
+	 * aggregate row in ONE write, not one full-row write per inner draft.
+	 */
+	public function test_expiry_sweep_disposes_forum_inner_drafts_in_one_write() {
+		$this->isolate_draft_maintenance();
+
+		$user_id = self::factory()->user->create();
+		$old     = time() - ( 40 * DAY_IN_SECONDS );
+		$now     = time();
+
+		bp_update_user_meta(
+			$user_id,
+			'bb_user_topic_reply_draft',
+			array(
+				'draft_reply_1' => array( 'data_key' => 'draft_reply_1', '_draft_saved_at' => $old, 'data' => array( 'bbp_reply_content' => 'expired 1' ) ),
+				'draft_reply_2' => array( 'data_key' => 'draft_reply_2', '_draft_saved_at' => $old, 'data' => array( 'bbp_reply_content' => 'expired 2' ) ),
+				'draft_reply_3' => array( 'data_key' => 'draft_reply_3', '_draft_saved_at' => $old, 'data' => array( 'bbp_reply_content' => 'expired 3' ) ),
+				'draft_reply_9' => array( 'data_key' => 'draft_reply_9', '_draft_saved_at' => $now, 'data' => array( 'bbp_reply_content' => 'fresh' ) ),
+			)
+		);
+
+		$this->agg_row_writes = 0;
+		add_action( 'updated_user_meta', array( $this, 'count_agg_row_write' ), 10, 3 );
+		add_action( 'added_user_meta', array( $this, 'count_agg_row_write' ), 10, 3 );
+
+		$result = bb_drafts_delete_expired( 0 );
+
+		remove_action( 'updated_user_meta', array( $this, 'count_agg_row_write' ), 10 );
+		remove_action( 'added_user_meta', array( $this, 'count_agg_row_write' ), 10 );
+
+		$stored = bp_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
+
+		$this->assertSame( 3, $result['deleted'], 'The three expired inner drafts must be removed.' );
+		$this->assertIsArray( $stored );
+		$this->assertArrayHasKey( 'draft_reply_9', $stored, 'The fresh inner draft must survive.' );
+		$this->assertArrayNotHasKey( 'draft_reply_1', $stored );
+		$this->assertSame(
+			1,
+			$this->agg_row_writes,
+			'All expired inner drafts must be removed in ONE row write, not one per draft.'
+		);
+	}
+
+	/**
 	 * Make a draft-stamped, unsaved attachment with a back-dated post date.
 	 *
 	 * @param int $owner_id Attachment author.
