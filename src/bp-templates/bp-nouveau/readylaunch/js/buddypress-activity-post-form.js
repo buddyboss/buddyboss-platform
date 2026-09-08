@@ -1721,6 +1721,13 @@ window.bp = window.bp || {};
 				bp.Nouveau.Activity.postForm.postDraftActivity( true, false );
 			}
 			bp.draft_activity.data = false;
+			// Settle the deferred draft-loaded event. On the warm-localStorage
+			// path no fetch runs, so draft_fetch_settled stays undefined; once a
+			// publish/discard clears the draft here, displayDraftActivity()'s
+			// deferral ( ! activity_data && has_draft && ! settled ) would become
+			// permanently true and the public bb_activity_draft_loaded event
+			// would never fire again for the rest of the page load (M7).
+			bp.draft_fetch_settled = true;
 			localStorage.removeItem( bp.draft_activity.data_key );
 			self.postForm.$el.removeClass( 'has-draft' );
 			self.showDraftRetentionNotice( false );
