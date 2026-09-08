@@ -847,10 +847,22 @@ function bb_draft_dispose( $user_id, $meta_key, $inner_key = '' ) {
  * That is why {@see bb_forums_trim_draft_row()} runs first in the forum
  * handler: it trims the aggregate row down, and this function then handles
  * the cross-row budget. A caller passing the aggregate key without trimming
- * first will not get inner-draft eviction from here. Teaching this function
- * to evict inner entries of the current row needs a protected-inner-key
- * parameter, since it has no way to know which inner draft is being saved
- * (PROD-9621 M4).
+ * first will not get inner-draft eviction from here.
+ *
+ * Do NOT add inner-row eviction here. It reads like a missing feature and a
+ * protected-inner-key parameter looks like the fix, so it has been proposed
+ * more than once; it was built and measured, and it does not work. This
+ * function evicts through {@see bb_draft_dispose()}, which WRITES TO
+ * STORAGE, and the forum handler then writes its own in-memory copy of the
+ * row over that write. The eviction is therefore announced but never
+ * performed: the response still reports the key as evicted, so the client
+ * drops its local copy, while the row stays over budget on the server - a
+ * manufactured data loss, strictly worse than the gap this paragraph
+ * describes. Returning keys for the caller to apply instead of writing them
+ * only duplicates {@see bb_forums_trim_draft_row()}, which already does
+ * exactly that one call earlier. Trim-then-budget is required ordering, not
+ * convenience. Moot for the activity caller either way, since an activity
+ * draft is one draft per meta row (PROD-9621 M4).
  *
  * @since BuddyBoss [BBVERSION]
  *
