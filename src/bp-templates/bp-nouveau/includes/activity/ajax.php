@@ -1222,10 +1222,28 @@ function bb_nouveau_ajax_post_draft_activity() {
 				}
 			}
 
-			// Draft-protection stamps are collected during validation but written
-			// only after every size cap has accepted the save - a rejected save
-			// must not leave orphan-protected attachments behind that no stored
-			// draft references (PROD-9621).
+			// Protect the member's uploads BEFORE any cap can refuse this draft.
+			// The caps judge the draft's text; they must not decide whether a file
+			// the member already uploaded survives the orphan cron
+			// ({@see bb_draft_protect_payload_attachments()}, PROD-9621 BLOCKER-1).
+			bb_draft_protect_payload_attachments(
+				array(
+					$draft_activity['data']['media'] ?? array(),
+					$draft_activity['data']['document'] ?? array(),
+					$draft_activity['data']['video'] ?? array(),
+				),
+				$draft_user_id
+			);
+
+			if (
+				! empty( $draft_activity['data']['bb_activity_post_feature_image']['id'] ) &&
+				bb_draft_user_can_manage_attachment( $draft_activity['data']['bb_activity_post_feature_image']['id'], $draft_user_id )
+			) {
+				update_post_meta( (int) $draft_activity['data']['bb_activity_post_feature_image']['id'], 'bb_activity_post_feature_image_draft', 1 );
+			}
+
+			// Collected again during validation and re-applied after the caps.
+			// Idempotent, and it covers IDs the normalisation below resolves.
 			$stamp_attachment_ids   = array();
 			$stamp_feature_image_id = 0;
 

@@ -2336,4 +2336,132 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		$svg = '<img src="data:image/svg+xml,<svg><rect/></svg>" alt="x">';
 		$this->assertStringNotContainsString( 'rect', bb_draft_strip_data_urls( $svg ), 'The payload must run to the attribute delimiter, not to the first `>`.' );
 	}
+
+	/**
+	 * A draft refused by a size cap must still protect the member's uploads.
+	 *
+	 * `bb_media_draft` is what stops `bp_media_delete_orphaned_attachments()`
+	 * hard-deleting a freshly uploaded file six hours later. Applying it only
+	 * after every cap accepted meant a member who wrote a long post and then
+	 * attached a photo had that photo deleted out from under them: the autosave
+	 * was refused for size, the stamp never ran, and the cron reaped the file
+	 * while it was still sitting in their composer. The release base stamped
+	 * inline and unconditionally; the deferral traded a bounded leak for real
+	 * data loss (PROD-9621 BLOCKER-1).
+	 *
+	 * Browser-verified on bbtesting.com as member5: photo uploaded against a
+	 * 156 KB draft, autosave refused with "Your draft is too large to save",
+	 * attachment left with no stamp and matching the cron's own predicate.
+	 */
+	public function test_size_capped_save_still_protects_uploaded_attachments() {
+		$user_id = self::factory()->user->create();
+		$this->set_current_user( $user_id );
+
+		$forum = self::factory()->post->create( array( 'post_type' => bbp_get_forum_post_type() ) );
+		$key   = 'draft_discussion_' . $forum;
+
+		$mine     = $this->make_draft_attachment( $user_id );
+		$somebody = $this->make_draft_attachment( self::factory()->user->create() );
+
+		$rejected = '';
+		$cb       = function ( $uid, $k, $size, $reason ) use ( &$rejected ) {
+			$rejected = $reason;
+		};
+		add_action( 'bb_draft_cap_rejected', $cb, 10, 4 );
+
+		$this->drive_forum_draft_save(
+			$key,
+			array(
+				// Over the 100 KB per-draft cap, which refuses before the
+				// attachment normalisation loops are ever reached.
+				'bbp_topic_content' => str_repeat( 'x', 150 * KB_IN_BYTES ),
+				'bbp_media'         => wp_json_encode( array( array( 'id' => $mine ), array( 'id' => $somebody ) ) ),
+			)
+		);
+
+		remove_action( 'bb_draft_cap_rejected', $cb, 10 );
+
+		// Premise: the cap really did refuse. Without this the test would pass
+		// for a build that simply accepted the oversized draft.
+		$this->assertSame( 'per_draft', $rejected, 'The oversized draft must still be refused - the fix must not weaken the cap.' );
+
+		$this->assertSame(
+			'1',
+			(string) get_post_meta( $mine, 'bb_media_draft', true ),
+			'A refused save must still protect the uploads it carried, or the orphan cron deletes the member files.'
+		);
+
+		$this->assertSame(
+			'',
+			(string) get_post_meta( $somebody, 'bb_media_draft', true ),
+			'Protection is per owner - a crafted payload must not stamp another member attachment.'
+		);
+	}
+
+	/**
+	 * An attachment in the state a fresh composer upload leaves behind.
+	 *
+	 * @param int $owner_id Owner user ID.
+	 * @return int Attachment ID.
+	 */
+	protected function make_draft_attachment( $owner_id ) {
+		$attachment_id = self::factory()->post->create(
+			array(
+				'post_type'   => 'attachment',
+				'post_author' => $owner_id,
+				'post_status' => 'inherit',
+			)
+		);
+
+		update_post_meta( $attachment_id, 'bp_media_saved', '0' );
+
+		return $attachment_id;
+	}
+
+	/**
+	 * Drive the forum draft save handler with one payload.
+	 *
+	 * @param string $data_key Inner draft key.
+	 * @param array  $data     Draft data payload.
+	 * @return void
+	 */
+	protected function drive_forum_draft_save( $data_key, $data ) {
+		$_POST    = array();
+		$_REQUEST = array();
+
+		// wp_slash() because the handler stripslashes() before decoding, exactly
+		// as WordPress hands it a real request.
+		$_REQUEST['draft_topic_reply'] = wp_slash(
+			wp_json_encode(
+				array(
+					'data_key'    => $data_key,
+					'object'      => 'topic',
+					'post_action' => 'update',
+					'data'        => $data,
+				)
+			)
+		);
+
+		// phpcs:disable WordPress.Security.NonceVerification -- this test drives the handler that performs the verification.
+		$_POST['_wpnonce_post_topic_reply_draft'] = wp_create_nonce( 'post_topic_reply_draft_data' );
+		$_REQUEST                                 = array_merge( $_REQUEST, $_POST );
+		// phpcs:enable WordPress.Security.NonceVerification
+
+		add_filter( 'wp_doing_ajax', '__return_true' );
+		add_filter( 'wp_die_ajax_handler', array( $this, 'filter_draft_die_handler' ), 99 );
+
+		ob_start();
+
+		try {
+			bb_post_topic_reply_draft();
+		} catch ( Exception $e ) {
+			// Expected: the handler finished and tried to exit.
+			unset( $e );
+		}
+
+		ob_end_clean();
+
+		remove_filter( 'wp_die_ajax_handler', array( $this, 'filter_draft_die_handler' ), 99 );
+		remove_filter( 'wp_doing_ajax', '__return_true' );
+	}
 }

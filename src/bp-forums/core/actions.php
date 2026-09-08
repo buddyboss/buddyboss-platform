@@ -502,6 +502,28 @@ function bb_post_topic_reply_draft() {
 		// per-attachment lookups below; the authoritative cap runs on the
 		// normalised entry just before it is stored.
 		if ( $is_draft_update ) {
+			// Protecting the member's uploads is the one side effect that must
+			// happen FIRST. The caps below judge the draft's text, and two of
+			// them reject before the attachment loops further down ever run - so
+			// a draft refused for size left every file the member had just
+			// uploaded unstamped, and bp_media_delete_orphaned_attachments()
+			// hard-deleted them six hours later (PROD-9621 BLOCKER-1).
+			bb_draft_protect_payload_attachments(
+				array_map(
+					function ( $list_key ) use ( $draft_topic_reply ) {
+						if ( empty( $draft_topic_reply['data'][ $list_key ] ) ) {
+							return array();
+						}
+
+						$list = $draft_topic_reply['data'][ $list_key ];
+
+						return is_array( $list ) ? $list : (array) json_decode( stripslashes( $list ), true );
+					},
+					array( 'bbp_media', 'bbp_document', 'bbp_video' )
+				),
+				$user_id
+			);
+
 			// Strip data URLs, then judge the RAW width before kses runs inside
 			// bb_forums_sanitize_draft_entry(). bbp_kses_data() on a multi-MB
 			// payload is the expensive step, and it used to run before any cap

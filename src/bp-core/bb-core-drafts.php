@@ -346,6 +346,75 @@ function bb_draft_strip_data_urls( $content ) {
 }
 
 /**
+ * Stamp every attachment a draft payload claims, before any size cap can refuse it.
+ *
+ * `bb_media_draft` is what keeps `bp_media_delete_orphaned_attachments()` from
+ * hard-deleting a freshly uploaded file six hours later. Whether that stamp is
+ * applied must NOT depend on whether the draft's TEXT fits the size caps: the
+ * member has already uploaded the file and it is sitting in their composer
+ * either way, so a draft refused for being too large would otherwise leave the
+ * upload unprotected and the cron would delete it out from under them.
+ *
+ * Collecting the stamps and applying them only once every cap accepted was
+ * meant to stop a rejected save leaving orphan-protected attachments behind.
+ * It traded a bounded leak for member data loss, which is the worse of the two
+ * - a stamped attachment nothing references wastes disk until the draft
+ * cleanup reaches it, a deleted one is gone (PROD-9621 BLOCKER-1).
+ *
+ * Ownership is still enforced per ID, and each list is bounded before any
+ * per-ID lookup runs, so a crafted payload cannot stamp other members'
+ * attachments or force thousands of uncached queries.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $lists   Attachment lists, each an array of entries carrying an `id`.
+ * @param int   $user_id Acting user ID.
+ * @return int[] Attachment IDs stamped.
+ */
+function bb_draft_protect_payload_attachments( $lists, $user_id ) {
+	$user_id = (int) $user_id;
+	$stamped = array();
+
+	if ( empty( $lists ) || ! is_array( $lists ) || $user_id < 1 ) {
+		return $stamped;
+	}
+
+	foreach ( $lists as $list ) {
+		if ( empty( $list ) || ! is_array( $list ) ) {
+			continue;
+		}
+
+		// Same bound the normalisation loops apply, enforced here too because
+		// this pass runs before them.
+		if ( 50 < count( $list ) ) {
+			$list = array_slice( $list, 0, 50 );
+		}
+
+		foreach ( $list as $entry ) {
+			$attachment_id = 0;
+
+			if ( is_array( $entry ) && ! empty( $entry['id'] ) ) {
+				$attachment_id = (int) $entry['id'];
+			}
+
+			if ( $attachment_id < 1 || isset( $stamped[ $attachment_id ] ) ) {
+				continue;
+			}
+
+			if ( ! bb_draft_user_can_manage_attachment( $attachment_id, $user_id ) ) {
+				continue;
+			}
+
+			update_post_meta( $attachment_id, 'bb_media_draft', 1 );
+
+			$stamped[ $attachment_id ] = true;
+		}
+	}
+
+	return array_keys( $stamped );
+}
+
+/**
  * Whether a user may manage (stamp or delete) an attachment from a draft.
  *
  * Draft payloads are client JSON; without this check any logged-in member
