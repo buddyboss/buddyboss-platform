@@ -1047,9 +1047,28 @@ function bb_nouveau_forum_localize_scripts( $params = array() ) {
 	// it once through bb_get_topic_reply_drafts before initializing the forms.
 	// The `draft` key keeps its historical empty-map shape for third parties.
 	$params['forums']['draft'] = array();
-	// Resolved through bp_get_user_meta_key() to match the writers, which all
-	// store through bp_update_user_meta().
-	$params['forums']['has_draft'] = metadata_exists( 'user', $user_id, bp_get_user_meta_key( 'bb_user_topic_reply_draft' ) );
+
+	// Whether a RESTORABLE draft exists, not merely whether the row does.
+	// The row can hold entries with no text and no attachment, which
+	// bb_get_topic_reply_drafts() now filters out (PROD-9621 Q12) - claiming
+	// has_draft for one would fire the lazy fetch on every forum page view
+	// and get an empty map back every time.
+	//
+	// Read through bp_get_user_meta() to match the writers, which all store
+	// through bp_update_user_meta() and so resolve the key through
+	// bp_get_user_meta_key(). The whole row is already in the user-meta cache
+	// this request primed, so this costs no extra query.
+	$params['forums']['has_draft'] = false;
+	$draft_row                     = bp_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
+
+	if ( ! empty( $draft_row ) && is_array( $draft_row ) ) {
+		foreach ( $draft_row as $draft_entry ) {
+			if ( is_array( $draft_entry ) && bb_draft_topic_reply_entry_has_payload( $draft_entry ) ) {
+				$params['forums']['has_draft'] = true;
+				break;
+			}
+		}
+	}
 
 	// Same retention disclosure as the activity composer - a draft that
 	// vanishes after the retention window must never be a surprise.

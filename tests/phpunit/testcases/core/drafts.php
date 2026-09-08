@@ -3099,4 +3099,340 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		remove_filter( 'wp_die_ajax_handler', array( $this, 'filter_draft_die_handler' ), 99 );
 		remove_filter( 'wp_doing_ajax', '__return_true' );
 	}
+
+	/**
+	 * Q12 premise: what the payload predicate counts as content.
+	 *
+	 * `bb_draft_topic_reply_entry_has_payload()` is the single predicate the
+	 * save guard, the fetch endpoint and the has_draft localize all resolve
+	 * through, and the JS packs mirror it in bbDraftDataHasPayload(). If it
+	 * drifts, a real draft stops being offered - so the line it draws is
+	 * asserted here rather than left implicit.
+	 *
+	 * The scaffolding cases are the ones that matter: tags, the subscription
+	 * checkbox, the sticky flag and the topic/reply IDs travel with EVERY
+	 * serialized form, so counting any of them as content would make every
+	 * emptied composer look like a draft worth keeping - which is the bug.
+	 */
+	public function test_q12_payload_predicate_separates_content_from_form_scaffolding() {
+		$scaffolding = array(
+			'bbp_topic_tags'         => '',
+			'bbp_topic_id'           => '2181',
+			'bbp_reply_to'           => '4350',
+			'action'                 => 'bbp-new-reply',
+			'bbp_topic_subscription' => '',
+			'bbp_stick_topic'        => '',
+			'bbp_document'           => '[]',
+			'link_preview_data'      => '',
+		);
+
+		$has_payload = array(
+			'reply text'        => array( 'bbp_reply_content' => 'real text' ),
+			'topic text'        => array( 'bbp_topic_content' => '<p>real text</p>' ),
+			'topic title only'  => array( 'bbp_topic_title' => 'Just a title' ),
+			'marked up text'    => array( 'bbp_reply_content' => '<p><b>bold</b></p>' ),
+			'photo only'        => array( 'bbp_media' => wp_json_encode( array( array( 'id' => 123 ) ) ) ),
+			'document only'     => array( 'bbp_document' => wp_json_encode( array( array( 'id' => 123 ) ) ) ),
+			'video only'        => array( 'bbp_video' => wp_json_encode( array( array( 'id' => 123 ) ) ) ),
+			'gif only'          => array( 'bbp_media_gif' => wp_json_encode( array( 'url' => 'x.gif' ) ) ),
+			'link preview only' => array( 'link_preview_data' => wp_json_encode( array( 'link_url' => 'https://x.test' ) ) ),
+			'derived link url'  => array( 'bb_link_url' => wp_json_encode( array( 'url' => 'https://x.test' ) ) ),
+		);
+
+		foreach ( $has_payload as $label => $data ) {
+			$this->assertTrue(
+				bb_draft_topic_reply_entry_has_payload( array( 'data' => array_merge( $scaffolding, $data ) ) ),
+				sprintf( 'A draft carrying %s must be treated as restorable content.', $label )
+			);
+		}
+
+		$no_payload = array(
+			'scaffolding alone'      => array(),
+			'empty reply string'     => array( 'bbp_reply_content' => '' ),
+			'empty paragraph'        => array( 'bbp_reply_content' => '<p></p>' ),
+			'line break only'        => array( 'bbp_reply_content' => '<br>' ),
+			'whitespace only'        => array( 'bbp_reply_content' => "  \n\t " ),
+			'non breaking space'     => array( 'bbp_reply_content' => '<p>&nbsp;</p>' ),
+			'empty attachment lists' => array(
+				'bbp_media'    => '[]',
+				'bbp_document' => '[]',
+				'bbp_video'    => '[]',
+			),
+			'tags but no text'       => array( 'bbp_topic_tags' => 'alpha,beta' ),
+			'subscribed but empty'   => array( 'bbp_topic_subscription' => 'bbp_subscribe' ),
+		);
+
+		foreach ( $no_payload as $label => $data ) {
+			$this->assertFalse(
+				bb_draft_topic_reply_entry_has_payload( array( 'data' => array_merge( $scaffolding, $data ) ) ),
+				sprintf( 'A draft carrying only %s has nothing to restore and must not count as a draft.', $label )
+			);
+		}
+
+		// Malformed shapes must answer false rather than warn or fatal - this
+		// predicate runs on stored rows written by older builds.
+		$this->assertFalse( bb_draft_topic_reply_entry_has_payload( array() ) );
+		$this->assertFalse( bb_draft_topic_reply_entry_has_payload( array( 'data' => '' ) ) );
+		$this->assertFalse( bb_draft_topic_reply_entry_has_payload( array( 'data' => 'not-an-array' ) ) );
+		$this->assertFalse( bb_draft_topic_reply_entry_has_payload( array( 'data' => array( 'bbp_reply_content' => array( 'nested' ) ) ) ) );
+	}
+
+	/**
+	 * Q12: a save carrying nothing must not replace a stored draft.
+	 *
+	 * The composer forced its own validity flag true whenever the ALREADY
+	 * STORED copy held content - the "still available in older draft" checks -
+	 * and then wrote the freshly serialized, empty form over it anyway. So
+	 * clearing the editor replaced the member's saved text with an empty
+	 * string, on the server, while leaving `is_content_valid` true so a draft
+	 * indicator still showed over the empty box.
+	 *
+	 * Fixed in both JS packs, but the empty copy already sitting in members'
+	 * localStorage on live installs is replayed by the unload sync, so the
+	 * handler is the boundary that has to refuse it. Browser-reproduced before
+	 * the fix on bbtesting.com: `draft_reply_2181` went from
+	 * "Q12-BASELINE-CONTENT-ALPHA" to "" server-side purely by clearing the
+	 * editor.
+	 *
+	 * The second half is the negative control: a save that DOES carry content
+	 * must still be written, or this test would also pass for a handler that
+	 * had stopped saving drafts altogether.
+	 */
+	public function test_q12_contentless_save_must_not_replace_a_stored_draft() {
+		$user_id = self::factory()->user->create();
+		$this->set_current_user( $user_id );
+
+		$forum_id = self::factory()->post->create( array( 'post_type' => bbp_get_forum_post_type() ) );
+		$data_key = 'draft_discussion_' . $forum_id;
+
+		bp_update_user_meta(
+			$user_id,
+			'bb_user_topic_reply_draft',
+			array(
+				$data_key => array(
+					'data_key'         => $data_key,
+					'object'           => 'topic',
+					'data'             => array( 'bbp_topic_content' => 'THE MEMBER WROTE THIS' ),
+					'is_content_valid' => true,
+					'_draft_saved_at'  => time() - 60,
+				),
+			)
+		);
+
+		// Exactly what an emptied composer serializes: the scaffolding survives,
+		// the content does not.
+		$this->drive_forum_draft_save_with_siblings(
+			$data_key,
+			array(
+				'bbp_topic_content'      => '',
+				'bbp_topic_tags'         => '',
+				'bbp_topic_subscription' => '',
+			),
+			array()
+		);
+
+		$stored = bp_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
+
+		$this->assertIsArray( $stored, 'The aggregate row must still exist.' );
+		$this->assertSame(
+			'THE MEMBER WROTE THIS',
+			$stored[ $data_key ]['data']['bbp_topic_content'],
+			'A save carrying no content must not replace stored content - that is the data loss.'
+		);
+
+		// Negative control: content still saves.
+		$this->drive_forum_draft_save_with_siblings(
+			$data_key,
+			array( 'bbp_topic_content' => 'THE MEMBER WROTE MORE' ),
+			array()
+		);
+
+		$stored = bp_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
+
+		$this->assertSame(
+			'THE MEMBER WROTE MORE',
+			$stored[ $data_key ]['data']['bbp_topic_content'],
+			'A save that carries content must still be written, or the guard is refusing everything.'
+		);
+	}
+
+	/**
+	 * Q12: a contentless all_data sibling must not replace a stored draft.
+	 *
+	 * This is the path a pre-existing empty localStorage copy actually arrives
+	 * on. The unload sync replays EVERY inner key the tab still holds, not just
+	 * the one being edited, and the sibling merge assigns the client's `data`
+	 * over the stored entry wholesale - so an empty sibling copy destroyed a
+	 * stored draft the member had not even opened in that tab.
+	 *
+	 * `$live_key` is the negative control: the sibling merge must still work
+	 * for a sibling that carries content, or this test would pass for a build
+	 * that simply dropped all siblings.
+	 */
+	public function test_q12_contentless_all_data_sibling_must_not_replace_a_stored_draft() {
+		$user_id = self::factory()->user->create();
+		$this->set_current_user( $user_id );
+
+		$primary_forum = self::factory()->post->create( array( 'post_type' => bbp_get_forum_post_type() ) );
+		$empty_forum   = self::factory()->post->create( array( 'post_type' => bbp_get_forum_post_type() ) );
+		$live_forum    = self::factory()->post->create( array( 'post_type' => bbp_get_forum_post_type() ) );
+
+		$primary_key = 'draft_discussion_' . $primary_forum;
+		$empty_key   = 'draft_discussion_' . $empty_forum;
+		$live_key    = 'draft_discussion_' . $live_forum;
+
+		bp_update_user_meta(
+			$user_id,
+			'bb_user_topic_reply_draft',
+			array(
+				$primary_key => array(
+					'data_key'        => $primary_key,
+					'data'            => array( 'bbp_topic_content' => 'primary original' ),
+					'_draft_saved_at' => time() - 60,
+				),
+				$empty_key   => array(
+					'data_key'        => $empty_key,
+					'data'            => array( 'bbp_topic_content' => 'SIBLING THE MEMBER STILL WANTS' ),
+					'_draft_saved_at' => time() - 60,
+				),
+				$live_key    => array(
+					'data_key'        => $live_key,
+					'data'            => array( 'bbp_topic_content' => 'sibling original' ),
+					'_draft_saved_at' => time() - 60,
+				),
+			)
+		);
+
+		$this->drive_forum_draft_save_with_siblings(
+			$primary_key,
+			array( 'bbp_topic_content' => 'primary updated' ),
+			array(
+				// A stale, emptied localStorage copy.
+				$empty_key => array(
+					'bbp_topic_content' => '',
+					'bbp_topic_tags'    => '',
+					'bbp_document'      => '[]',
+				),
+				// A sibling that really did change.
+				$live_key  => array( 'bbp_topic_content' => 'sibling updated' ),
+			)
+		);
+
+		$stored = bp_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
+
+		$this->assertSame(
+			'SIBLING THE MEMBER STILL WANTS',
+			$stored[ $empty_key ]['data']['bbp_topic_content'],
+			'A contentless sibling replay must not wipe a stored sibling draft.'
+		);
+
+		// Negative controls: the request itself still did its work.
+		$this->assertSame(
+			'sibling updated',
+			$stored[ $live_key ]['data']['bbp_topic_content'],
+			'A sibling carrying content must still merge, or the guard is refusing every sibling.'
+		);
+		$this->assertSame(
+			'primary updated',
+			$stored[ $primary_key ]['data']['bbp_topic_content'],
+			'The primary key must still be written.'
+		);
+	}
+
+	/**
+	 * Q12: a contentless stored entry must not be offered to the composer.
+	 *
+	 * The client no longer writes these, but rows already written on live
+	 * installs stop being overwritten now that the save guard exists - so
+	 * without a read-side mask they would show a "Draft" indicator over an
+	 * empty composer for ever. One real row in that exact state was found on
+	 * the test install (`draft_reply_2181_4350`: empty content, no attachment,
+	 * `is_content_valid` still true).
+	 *
+	 * The entry that DOES carry content is the negative control - the endpoint
+	 * must keep returning drafts, not filter them all out.
+	 */
+	public function test_q12_contentless_entry_is_not_offered_to_the_composer() {
+		$user_id = self::factory()->user->create();
+		$this->set_current_user( $user_id );
+
+		$empty_forum = self::factory()->post->create( array( 'post_type' => bbp_get_forum_post_type() ) );
+		$real_forum  = self::factory()->post->create( array( 'post_type' => bbp_get_forum_post_type() ) );
+
+		$empty_key = 'draft_discussion_' . $empty_forum;
+		$real_key  = 'draft_discussion_' . $real_forum;
+
+		bp_update_user_meta(
+			$user_id,
+			'bb_user_topic_reply_draft',
+			array(
+				$empty_key => array(
+					'data_key'         => $empty_key,
+					'object'           => 'topic',
+					'is_content_valid' => true,
+					'data'             => array(
+						'bbp_topic_content' => '',
+						'bbp_document'      => '[]',
+						'bbp_topic_tags'    => '',
+					),
+					'_draft_saved_at'  => time() - 60,
+				),
+				$real_key  => array(
+					'data_key'         => $real_key,
+					'object'           => 'topic',
+					'is_content_valid' => true,
+					'data'             => array( 'bbp_topic_content' => 'a real draft' ),
+					'_draft_saved_at'  => time() - 60,
+				),
+			)
+		);
+
+		$response = $this->drive_forum_draft_fetch();
+
+		$this->assertTrue( ! empty( $response['success'] ), 'The fetch endpoint must answer success.' );
+		$this->assertArrayNotHasKey(
+			$empty_key,
+			$response['data']['drafts'],
+			'An entry with no text and no attachment has nothing to restore and must not be offered.'
+		);
+		$this->assertArrayHasKey(
+			$real_key,
+			$response['data']['drafts'],
+			'A draft carrying content must still be offered, or the mask is hiding everything.'
+		);
+	}
+
+	/**
+	 * Drive bb_get_topic_reply_drafts() and return its decoded JSON response.
+	 *
+	 * @return array Decoded response.
+	 */
+	protected function drive_forum_draft_fetch() {
+		$_POST    = array();
+		$_REQUEST = array();
+
+		// phpcs:disable WordPress.Security.NonceVerification -- this test drives the handler that performs the verification.
+		$_POST['_wpnonce_post_topic_reply_draft'] = wp_create_nonce( 'post_topic_reply_draft_data' );
+		$_REQUEST                                 = array_merge( $_REQUEST, $_POST );
+		// phpcs:enable WordPress.Security.NonceVerification
+
+		add_filter( 'wp_doing_ajax', '__return_true' );
+		add_filter( 'wp_die_ajax_handler', array( $this, 'filter_draft_die_handler' ), 99 );
+
+		ob_start();
+
+		try {
+			bb_get_topic_reply_drafts();
+		} catch ( Exception $e ) {
+			// Expected: the handler finished and tried to exit.
+			unset( $e );
+		}
+
+		$body = ob_get_clean();
+
+		remove_filter( 'wp_die_ajax_handler', array( $this, 'filter_draft_die_handler' ), 99 );
+		remove_filter( 'wp_doing_ajax', '__return_true' );
+
+		return (array) json_decode( $body, true );
+	}
 }

@@ -559,6 +559,39 @@ function bb_post_topic_reply_draft() {
 
 		$existing_draft = bp_get_user_meta( $user_id, $usermeta_key, true );
 
+		// A save carrying NOTHING must never replace a stored draft that
+		// carries something.
+		//
+		// The composer used to serialize an emptied form and write it straight
+		// over the member's saved text: the "still available in older draft"
+		// checks forced its validity flag true on the strength of the copy
+		// already stored, and the write then used the empty payload anyway
+		// (PROD-9621 Q12). That is fixed in both packs - but the empty copy it
+		// has ALREADY left in members' localStorage on live installs is
+		// replayed by the unload sync, arriving here both as the primary entry
+		// and inside `all_data`. The client cannot be relied on to withdraw
+		// data it already holds, so this is the boundary that has to refuse it.
+		//
+		// Answered as success on purpose: nothing has gone wrong from the
+		// member's point of view, and the draft they still have stored is
+		// exactly the one they should keep. Returning the stored entry rather
+		// than the empty payload also stops the response re-seeding the empty
+		// copy the request came from.
+		if (
+			$is_draft_update &&
+			is_array( $existing_draft ) &&
+			isset( $existing_draft[ $draft_topic_reply['data_key'] ] ) &&
+			! bb_draft_topic_reply_entry_has_payload( $draft_topic_reply ) &&
+			bb_draft_topic_reply_entry_has_payload( $existing_draft[ $draft_topic_reply['data_key'] ] )
+		) {
+			wp_send_json_success(
+				array(
+					'draft_activity'     => $existing_draft[ $draft_topic_reply['data_key'] ],
+					'evicted_draft_keys' => array(),
+				)
+			);
+		}
+
 		// The inner keys this request is entitled to write. Everything else in
 		// the row is another tab's to own - see the merge before the write.
 		$decided_draft_keys = array( (string) $draft_topic_reply['data_key'] => true );
@@ -754,6 +787,19 @@ function bb_post_topic_reply_draft() {
 						}
 
 						if ( ! bb_draft_user_can_save_topic_reply_draft( $sibling_context, $user_id ) ) {
+							continue;
+						}
+
+						// Same rule as the primary entry above: a sibling that
+						// carries nothing must not replace a stored one that
+						// carries something. This is the path a pre-existing
+						// empty localStorage copy actually arrives on - the
+						// unload sync replays every key the tab holds, not just
+						// the one being edited (PROD-9621 Q12).
+						if (
+							! bb_draft_topic_reply_entry_has_payload( array( 'data' => $d_data ) ) &&
+							bb_draft_topic_reply_entry_has_payload( $existing_draft[ $data_key ] )
+						) {
 							continue;
 						}
 
@@ -968,9 +1014,18 @@ function bb_get_topic_reply_drafts() {
 
 	if ( ! empty( $draft_data ) && is_array( $draft_data ) ) {
 		foreach ( $draft_data as $data ) {
-			if ( isset( $data['data_key'] ) ) {
-				$drafts[ $data['data_key'] ] = $data;
+			if ( ! isset( $data['data_key'] ) ) {
+				continue;
 			}
+
+			// An entry with no text and no attachment has nothing to restore.
+			// Handing it back applies the "Draft" indicator over an empty
+			// composer, which is what members reported (PROD-9621 Q12).
+			if ( ! bb_draft_topic_reply_entry_has_payload( $data ) ) {
+				continue;
+			}
+
+			$drafts[ $data['data_key'] ] = $data;
 		}
 	}
 

@@ -1328,6 +1328,94 @@ function bb_draft_user_can_save_topic_reply_draft( $key_context, $user_id ) {
 }
 
 /**
+ * Whether a stored forum draft entry actually holds something to restore.
+ *
+ * A draft that carries neither text nor an attachment is not a draft: there
+ * is nothing to put back in the composer. Offering one anyway is what a
+ * member sees as the "Draft" indicator sitting over an empty box.
+ *
+ * Rows in that state exist on live installs. The composer used to force its
+ * validity flag true on the strength of the copy ALREADY STORED and then
+ * write the freshly-serialized (empty) form over it, so emptying the editor
+ * replaced saved text with nothing while keeping `is_content_valid` true
+ * (PROD-9621 Q12). The client no longer does that — but it also no longer
+ * overwrites those rows, so the ones already written would otherwise show a
+ * phantom draft forever. This is the read-side predicate that makes them
+ * inert; a real save from the member replaces the row and it becomes a
+ * normal draft again.
+ *
+ * Only member-authored payload counts. Tags, the subscription checkbox, the
+ * sticky flag and the topic/reply IDs travel with every serialized form and
+ * say nothing about whether there is content to restore — the same line the
+ * composer draws when it decides whether a draft is worth saving.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $entry Stored forum draft entry (`object`, `data`, ...).
+ * @return bool True when the entry holds restorable content.
+ */
+function bb_draft_topic_reply_entry_has_payload( $entry ) {
+	if ( empty( $entry['data'] ) || ! is_array( $entry['data'] ) ) {
+		return false;
+	}
+
+	$data = $entry['data'];
+
+	// Attachments of any kind make the draft worth restoring on their own —
+	// a photo-only or document-only draft is legitimate. Resolved through the
+	// shared collector so this agrees with every other attachment-aware path.
+	$attachment_ids = bb_draft_collect_attachment_ids( $entry );
+
+	if ( ! empty( $attachment_ids ) ) {
+		return true;
+	}
+
+	// A GIF and a link preview are payload too, and neither is an attachment
+	// post, so the collector above cannot see them. `bb_link_url` is the
+	// composer's derived copy of the link preview and is checked because the
+	// restore itself treats it as sufficient reason to rebuild the draft
+	// (appendReplyDraftData(), both packs) - the two must agree on what counts
+	// as content or a link-only draft would be offered and then refused, or
+	// masked while the composer still wanted it.
+	foreach ( array( 'bbp_media_gif', 'link_preview_data', 'bb_link_url' ) as $key ) {
+		if ( ! empty( $data[ $key ] ) && '[]' !== $data[ $key ] ) {
+			return true;
+		}
+	}
+
+	// Text, judged after tag stripping so markup a member never sees - an
+	// empty editor commonly serializes as "<p></p>" or "<br>" - does not
+	// count as content.
+	foreach ( array( 'bbp_topic_title', 'bbp_topic_content', 'bbp_reply_content' ) as $key ) {
+		if ( empty( $data[ $key ] ) || ! is_string( $data[ $key ] ) ) {
+			continue;
+		}
+
+		// Entities are decoded, and a non-breaking space counted as
+		// whitespace, so this answers the same as the client's
+		// `$( $.parseHTML( x ) ).text().trim()`: parseHTML decodes entities and
+		// JavaScript's trim() treats U+00A0 as whitespace. An editor the member
+		// left empty routinely still serializes as "<p>&nbsp;</p>", and the two
+		// sides disagreeing about that would offer a draft the composer then
+		// declines to save.
+		$text     = html_entity_decode( wp_strip_all_tags( $data[ $key ] ), ENT_QUOTES, 'UTF-8' );
+		$stripped = preg_replace( '/[\s\x{00A0}]+/u', '', $text );
+
+		if ( null === $stripped ) {
+			// Invalid UTF-8 broke the match. Fall back rather than conclude the
+			// draft is empty - the safe direction is to keep offering it.
+			$stripped = trim( $text );
+		}
+
+		if ( '' !== $stripped ) {
+			return true;
+		}
+	}
+
+	return false;
+}
+
+/**
  * Draft retention window in days.
  *
  * A value below 1 means "never expire": age-based cleanup is switched off
