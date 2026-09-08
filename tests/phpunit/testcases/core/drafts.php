@@ -2984,4 +2984,119 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		// untouched.
 		$this->assertSame( 1, $acted, 'The salvage must be counted in the return value.' );
 	}
+
+	/**
+	 * Replacing an activity draft must release the attachments it dropped.
+	 *
+	 * The activity save path only ever ADDED bb_media_draft. An attachment the
+	 * member removed from their draft therefore stayed orphan-protected for
+	 * good, and the cleanup crons could never reclaim it - a slow leak of
+	 * files nothing references and nothing can delete.
+	 *
+	 * bb_draft_release_replaced_attachments() existed for exactly this and had
+	 * one of its two call sites: the forum handler got it, the activity handler
+	 * did not (PROD-9621).
+	 *
+	 * `$kept` is the control that stops this becoming an over-release, which is
+	 * the failure mode the same helper already caused once on the forum side:
+	 * an attachment the new draft still holds must keep its stamp.
+	 */
+	public function test_replacing_an_activity_draft_releases_only_the_dropped_attachments() {
+		$user_id = self::factory()->user->create();
+		$this->set_current_user( $user_id );
+
+		$dropped = $this->make_draft_attachment( $user_id );
+		$kept    = $this->make_draft_attachment( $user_id );
+
+		update_post_meta( $dropped, 'bb_media_draft', 1 );
+		update_post_meta( $kept, 'bb_media_draft', 1 );
+
+		$key = 'draft_user_' . $user_id;
+
+		bp_update_user_meta(
+			$user_id,
+			$key,
+			array(
+				'object'   => 'user',
+				'data_key' => $key,
+				'data'     => array(
+					'content' => 'original',
+					'media'   => array(
+						array( 'id' => $dropped ),
+						array( 'id' => $kept ),
+					),
+				),
+			)
+		);
+
+		// The member removes one attachment and keeps the other.
+		$this->drive_activity_draft_save(
+			$key,
+			array(
+				'content' => 'updated',
+				'media'   => array( array( 'id' => $kept ) ),
+			)
+		);
+
+		// Premise: the save actually stored the new entry.
+		$stored = bp_get_user_meta( $user_id, $key, true );
+		$this->assertSame( 'updated', $stored['data']['content'], 'Premise: the replacement must have been stored.' );
+
+		$this->assertSame(
+			'',
+			(string) get_post_meta( $dropped, 'bb_media_draft', true ),
+			'An attachment the replaced draft dropped must have its stamp released, or it can never be cleaned up.'
+		);
+
+		$this->assertSame(
+			'1',
+			(string) get_post_meta( $kept, 'bb_media_draft', true ),
+			'An attachment the new draft still holds must keep its stamp - releasing it would expose a live draft to the orphan crons.'
+		);
+	}
+
+	/**
+	 * Drive the activity draft save handler with one payload.
+	 *
+	 * @param string $data_key Activity draft usermeta key.
+	 * @param array  $data     Draft data payload.
+	 * @return void
+	 */
+	protected function drive_activity_draft_save( $data_key, $data ) {
+		$_POST    = array();
+		$_REQUEST = array();
+
+		$_REQUEST['draft_activity'] = wp_slash(
+			wp_json_encode(
+				array(
+					'data_key'    => $data_key,
+					'object'      => 'user',
+					'post_action' => 'update',
+					'data'        => $data,
+				)
+			)
+		);
+
+		// phpcs:disable WordPress.Security.NonceVerification -- this test drives the handler that performs the verification.
+		$_POST['_wpnonce_post_draft'] = wp_create_nonce( 'post_draft_activity' );
+		$_REQUEST                     = array_merge( $_REQUEST, $_POST );
+		// phpcs:enable WordPress.Security.NonceVerification
+
+		add_filter( 'wp_doing_ajax', '__return_true' );
+		add_filter( 'wp_die_ajax_handler', array( $this, 'filter_draft_die_handler' ), 99 );
+
+		ob_start();
+
+		try {
+			bb_nouveau_ajax_post_draft_activity();
+		} catch ( Exception $e ) {
+			// Expected: the handler finished and tried to exit.
+			unset( $e );
+		}
+
+		ob_end_clean();
+
+		remove_filter( 'wp_die_ajax_handler', array( $this, 'filter_draft_die_handler' ), 99 );
+		remove_filter( 'wp_doing_ajax', '__return_true' );
+	}
 }

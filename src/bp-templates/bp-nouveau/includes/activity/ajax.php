@@ -1417,8 +1417,27 @@ function bb_nouveau_ajax_post_draft_activity() {
 				update_post_meta( $stamp_feature_image_id, 'bb_activity_post_feature_image_draft', 1 );
 			}
 
+			$replaced_draft = bp_get_user_meta( $draft_user_id, $draft_activity['data_key'], true );
+
 			bp_update_user_meta( $draft_user_id, $draft_activity['data_key'], $draft_activity );
 			bb_draft_flush_user_meta_sizes( $draft_user_id );
+
+			// Release the stamps of attachments the replaced draft held and the
+			// new one does not keep. Without this the activity path only ever
+			// ADDED bb_media_draft, so an attachment the member removed from
+			// their draft stayed orphan-protected for good and the cleanup crons
+			// could never reclaim it - a slow leak of undeletable files. The
+			// forum handler was given this and the activity handler was not, so
+			// the helper had exactly one of its two call sites (PROD-9621).
+			//
+			// Read BEFORE the write and released AFTER it: releasing first would
+			// expose the attachments of a draft that still exists if anything
+			// below failed. No $retain_entries argument is needed here because an
+			// activity draft is one draft per meta row, so it has no siblings
+			// that could still reference them.
+			if ( is_array( $replaced_draft ) && ! empty( $replaced_draft ) ) {
+				bb_draft_release_replaced_attachments( $replaced_draft, $draft_activity, $draft_user_id );
+			}
 		} else {
 			// Dispose strictly from the STORED draft - the client payload's
 			// attachment lists are never used for deletion, so a crafted request
