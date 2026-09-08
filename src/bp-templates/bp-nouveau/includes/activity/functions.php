@@ -306,6 +306,13 @@ function bp_nouveau_activity_localize_scripts( $params = array() ) {
 	// instead of silently losing the member's image (PROD-9621).
 	$activity_params['paste_image_blocked_message'] = __( 'Pasted images are not supported yet. Please use the photo button to attach images.', 'buddyboss' );
 
+	// The draft is fetched lazily now, so a failed read leaves the composer
+	// empty over a draft that still exists on the server. Without a message the
+	// member assumes nothing was saved, retypes, and the next autosave replaces
+	// the draft the fetch could not read. Mirrors the forum packs'
+	// draft_fetch_failed_message (PROD-9621).
+	$activity_params['draft_fetch_failed_message'] = __( 'We could not load your saved draft. Reload the page before writing here, or your saved draft may be replaced.', 'buddyboss' );
+
 	// Members must be told the draft has a lifetime, or the expiry cron reads
 	// as unexplained data loss when a draft is gone after a few weeks away.
 	// Empty when expiry is disabled, so the JS renders nothing (PROD-9621).

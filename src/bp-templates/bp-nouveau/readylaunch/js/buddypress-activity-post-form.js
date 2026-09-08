@@ -1112,7 +1112,33 @@ window.bp = window.bp || {};
 			).fail(
 				function () {
 					bp.draft_fetch_in_progress = false;
+
+					// One bounded retry, then refuse to overwrite. A failed read
+					// used to settle silently, leaving the composer empty over a
+					// draft that still exists on the server: the member assumes
+					// nothing was saved, retypes, and the next autosave replaces
+					// the draft the fetch could not read. The forum packs got this
+					// protection; the activity packs created the same lazy-fetch
+					// window and did not (PROD-9621).
+					bp.draft_fetch_attempts = ( bp.draft_fetch_attempts || 0 ) + 1;
+
+					if ( bp.draft_fetch_attempts < 2 ) {
+						window.setTimeout(
+							function () {
+								self.fetchServerDraftActivity();
+							},
+							2000
+						);
+
+						return;
+					}
+
+					bp.draft_fetch_failed = true;
 					self.settleDeferredDraftLoadedEvent();
+
+					if ( BP_Nouveau.activity.params.draft_fetch_failed_message ) {
+						self.showDraftFeedback( BP_Nouveau.activity.params.draft_fetch_failed_message );
+					}
 				}
 			);
 		},
@@ -1555,6 +1581,22 @@ window.bp = window.bp || {};
 		postDraftActivity: function ( is_force_saved, is_reload_window ) {
 
 			if ( _.isUndefined( this.postForm ) || this.postForm.$el.hasClass( 'bb-rl-activity-edit' ) ) {
+				return;
+			}
+
+			// The lazy fetch could not read the stored draft, so whatever is in
+			// this composer is not based on it. Writing would replace a draft the
+			// member was never shown, which is the loss this refusal exists to
+			// prevent. A DISCARD is still allowed: refusing a deliberate delete
+			// would trap the member with a draft they cannot clear (PROD-9621).
+			if (
+				bp.draft_fetch_failed &&
+				( _.isUndefined( bp.draft_activity ) || 'delete' !== bp.draft_activity.post_action )
+			) {
+				if ( BP_Nouveau.activity.params.draft_fetch_failed_message ) {
+					this.showDraftFeedback( BP_Nouveau.activity.params.draft_fetch_failed_message );
+				}
+
 				return;
 			}
 
