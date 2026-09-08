@@ -2579,7 +2579,10 @@ function bb_drafts_collect_referenced_attachment_ids( $time_budget = 0, $started
  * Bounded like its siblings ({@see bb_drafts_delete_expired}): held under
  * `bb_draft_stamp_sweep_lock` (refreshed each window so an unlimited CLI drain
  * keeps holding it) and CURSORED over the candidate attachments by ID
- * (`bb_draft_stamp_sweep_cursor`). The cursor is what fixes the earlier fatal
+ * (`bb_draft_stamp_sweep_cursor`). Both are BLOG-scoped (get_option /
+ * get_transient, not the *_site_* variants) because the candidate attachments
+ * live in the current blog's per-site tables, so every blog cursors its own
+ * attachment space independently. The cursor is what fixes the earlier fatal
  * shape - a bare `LIMIT 500` with no order returned the same referenced rows
  * every run once a site held more than 500 of them, so not one orphan past that
  * window was ever released. The cursor advances over EVERY candidate,
@@ -2595,8 +2598,13 @@ function bb_drafts_collect_referenced_attachment_ids( $time_budget = 0, $started
  * that could not finish in the daily 10s released nothing and, with no
  * continuation, restarted from zero every day - permanent leak on large sites).
  *
- * Runs on the DAILY hook only, never the 60-second expiry continuation, so the
- * full-table reference scan cannot re-run every minute. Expiry being disabled
+ * Runs on its own per-site daily hook (`bb_draft_stamp_release_hook`), never the
+ * 60-second expiry continuation, so the full-table reference scan cannot re-run
+ * every minute. That per-site hook (not the root-only `bb_draft_cleanup_hook`)
+ * is what lets the sweep reach every blog's attachments (D2). The reference set
+ * is still built from network-global usermeta, so it is a global superset for
+ * any one blog: a cross-blog attachment-ID collision can only wrongly KEEP a
+ * stamp (a leak), never wrongly release an in-use file. Expiry being disabled
  * ({@see bb_draft_retention_days()} = 0) switches this off too.
  *
  * @since BuddyBoss [BBVERSION]
@@ -2623,7 +2631,7 @@ function bb_drafts_release_orphaned_draft_stamps( $time_budget = 10 ) {
 
 	// Serialize against a second sweep (a concurrent daily fire, or a CLI drain
 	// racing the cron) so two runs cannot advance the cursor over each other.
-	if ( get_site_transient( 'bb_draft_stamp_sweep_lock' ) ) {
+	if ( get_transient( 'bb_draft_stamp_sweep_lock' ) ) {
 		return array(
 			'released' => 0,
 			'complete' => false,
@@ -2631,7 +2639,7 @@ function bb_drafts_release_orphaned_draft_stamps( $time_budget = 10 ) {
 		);
 	}
 
-	set_site_transient( 'bb_draft_stamp_sweep_lock', 1, 5 * MINUTE_IN_SECONDS );
+	set_transient( 'bb_draft_stamp_sweep_lock', 1, 5 * MINUTE_IN_SECONDS );
 
 	// The referenced set must be COMPLETE before any release, or an attachment a
 	// not-yet-scanned draft still holds would be wrongly freed. The scan
@@ -2652,7 +2660,7 @@ function bb_drafts_release_orphaned_draft_stamps( $time_budget = 10 ) {
 		0,
 		$started_at,
 		function () {
-			set_site_transient( 'bb_draft_stamp_sweep_lock', 1, 5 * MINUTE_IN_SECONDS );
+			set_transient( 'bb_draft_stamp_sweep_lock', 1, 5 * MINUTE_IN_SECONDS );
 		}
 	);
 
@@ -2660,7 +2668,7 @@ function bb_drafts_release_orphaned_draft_stamps( $time_budget = 10 ) {
 	// guard stays in case the call ever regains a budget - a partial set must
 	// never reach the release loop.
 	if ( false === $referenced ) {
-		delete_site_transient( 'bb_draft_stamp_sweep_lock' );
+		delete_transient( 'bb_draft_stamp_sweep_lock' );
 
 		return array(
 			'released' => 0,
@@ -2673,7 +2681,7 @@ function bb_drafts_release_orphaned_draft_stamps( $time_budget = 10 ) {
 	$started_at = time();
 
 	$cutoff   = gmdate( 'Y-m-d H:i:s', time() - $retention_seconds );
-	$cursor   = (int) get_site_option( 'bb_draft_stamp_sweep_cursor', 0 );
+	$cursor   = (int) get_option( 'bb_draft_stamp_sweep_cursor', 0 );
 	$released = 0;
 	$complete = true;
 
@@ -2725,7 +2733,7 @@ function bb_drafts_release_orphaned_draft_stamps( $time_budget = 10 ) {
 			++$released;
 		}
 
-		update_site_option( 'bb_draft_stamp_sweep_cursor', $cursor );
+		update_option( 'bb_draft_stamp_sweep_cursor', $cursor, false );
 
 		// Refresh the lock each window. `wp bb drafts cleanup` runs this with an
 		// UNLIMITED budget and drains the whole candidate set in one call; on a
@@ -2734,7 +2742,7 @@ function bb_drafts_release_orphaned_draft_stamps( $time_budget = 10 ) {
 		// it, and both runs would advance the single bb_draft_stamp_sweep_cursor
 		// over each other - the clobber the lock exists to prevent (M6, matching
 		// bb_drafts_delete_expired).
-		set_site_transient( 'bb_draft_stamp_sweep_lock', 1, 5 * MINUTE_IN_SECONDS );
+		set_transient( 'bb_draft_stamp_sweep_lock', 1, 5 * MINUTE_IN_SECONDS );
 
 		$batch_was_full = ( count( $candidate_ids ) === $batch_size );
 
@@ -2747,10 +2755,10 @@ function bb_drafts_release_orphaned_draft_stamps( $time_budget = 10 ) {
 	// A finished pass restarts from the top next time (attachments freshly
 	// stamped since, and any that became unreferenced, get re-examined).
 	if ( $complete ) {
-		delete_site_option( 'bb_draft_stamp_sweep_cursor' );
+		delete_option( 'bb_draft_stamp_sweep_cursor' );
 	}
 
-	delete_site_transient( 'bb_draft_stamp_sweep_lock' );
+	delete_transient( 'bb_draft_stamp_sweep_lock' );
 
 	return array(
 		'released' => $released,
@@ -2763,27 +2771,51 @@ function bb_drafts_release_orphaned_draft_stamps( $time_budget = 10 ) {
 add_action( 'bb_draft_cleanup', 'bb_drafts_delete_expired' );
 // The orphan-stamp sweep is NOT wired to this 60-second continuation hook - its
 // full-table reference scan must not re-run every minute (M3 HIGH). It runs on
-// the daily hook below only.
+// its own per-site daily hook (bb_draft_stamp_release_hook) below only.
 
 add_action( 'bb_draft_oneshot', 'bb_drafts_oneshot_batch' );
 
 add_action( 'bb_draft_cleanup_hook', 'bb_drafts_delete_expired' );
-add_action( 'bb_draft_cleanup_hook', 'bb_drafts_release_orphaned_draft_stamps' );
+
+// The orphan-stamp sweep queries per-site attachment tables ($wpdb->posts /
+// $wpdb->postmeta), so it must run on EVERY blog - unlike the usermeta expiry
+// above, which is network-global and correctly root-only. It therefore rides
+// its OWN per-site daily hook (scheduled with no root guard, exactly like
+// bp_media_delete_orphaned_attachments_hook), NOT bb_draft_cleanup_hook. Wiring
+// it to the root-only hook meant every subsite's stamped orphans were never
+// released, on any network, forever (D2).
+add_action( 'bb_draft_stamp_release_hook', 'bb_drafts_release_orphaned_draft_stamps' );
 
 /**
- * Schedule the daily draft cleanup event.
+ * Schedule the daily draft cleanup events.
  *
  * Scheduled directly (the polls add-on precedent): bp_core_schedule_cron()
  * queues its wp_schedule_event() on the same bp_init priority that is
- * already running, which can silently skip scheduling. On multisite only
- * the root blog schedules - usermeta is network-global, so per-subsite
- * events would duplicate the same sweep.
+ * already running, which can silently skip scheduling.
+ *
+ * Two events with DIFFERENT multisite scopes (D2):
+ *
+ * - `bb_draft_stamp_release_hook` runs on EVERY blog. The orphan-stamp sweep it
+ *   drives queries per-site attachment tables ($wpdb->posts / $wpdb->postmeta),
+ *   which differ per blog, so a root-only event would leave every subsite's
+ *   stamped orphans permanently uncollectable. Scheduled with no root guard,
+ *   exactly like bp_media_delete_orphaned_attachments_hook and its document /
+ *   video siblings.
+ * - `bb_draft_cleanup_hook` runs on the root blog only. Its usermeta expiry
+ *   sweep reads network-global usermeta, so one root-blog run covers every user
+ *   network-wide; per-subsite events would duplicate the same sweep.
  *
  * @since BuddyBoss [BBVERSION]
  *
  * @return void
  */
 function bb_drafts_schedule_cleanup() {
+	// Per-site: the orphan-stamp release sweep touches per-blog attachment tables.
+	if ( ! wp_next_scheduled( 'bb_draft_stamp_release_hook' ) ) {
+		wp_schedule_event( time() + HOUR_IN_SECONDS, 'bb_schedule_24hours', 'bb_draft_stamp_release_hook' );
+	}
+
+	// Root-only: the usermeta expiry sweep is network-global.
 	if ( is_multisite() && ! bp_is_root_blog() ) {
 		return;
 	}

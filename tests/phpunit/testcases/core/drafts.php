@@ -1261,11 +1261,11 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		add_filter( 'bb_draft_stamp_sweep_batch_size', array( $this, 'filter_stamp_sweep_limit_two' ) );
 
 		$this->cleanup_lock_sets = 0;
-		add_filter( 'pre_set_site_transient_bb_draft_stamp_sweep_lock', array( $this, 'count_cleanup_lock_set' ) );
+		add_filter( 'pre_set_transient_bb_draft_stamp_sweep_lock', array( $this, 'count_cleanup_lock_set' ) );
 
 		bb_drafts_release_orphaned_draft_stamps( 0 );
 
-		remove_filter( 'pre_set_site_transient_bb_draft_stamp_sweep_lock', array( $this, 'count_cleanup_lock_set' ) );
+		remove_filter( 'pre_set_transient_bb_draft_stamp_sweep_lock', array( $this, 'count_cleanup_lock_set' ) );
 		remove_filter( 'bb_draft_stamp_sweep_batch_size', array( $this, 'filter_stamp_sweep_limit_two' ) );
 		remove_filter( 'bb_draft_retention_days', array( $this, 'filter_one_day_retention' ) );
 
@@ -1364,11 +1364,11 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		add_filter( 'bb_draft_reference_scan_batch_size', array( $this, 'return_two' ) );
 
 		$this->cleanup_lock_sets = 0;
-		add_filter( 'pre_set_site_transient_bb_draft_stamp_sweep_lock', array( $this, 'count_cleanup_lock_set' ) );
+		add_filter( 'pre_set_transient_bb_draft_stamp_sweep_lock', array( $this, 'count_cleanup_lock_set' ) );
 
 		bb_drafts_release_orphaned_draft_stamps( 0 );
 
-		remove_filter( 'pre_set_site_transient_bb_draft_stamp_sweep_lock', array( $this, 'count_cleanup_lock_set' ) );
+		remove_filter( 'pre_set_transient_bb_draft_stamp_sweep_lock', array( $this, 'count_cleanup_lock_set' ) );
 		remove_filter( 'bb_draft_reference_scan_batch_size', array( $this, 'return_two' ) );
 
 		$this->assertGreaterThanOrEqual(
@@ -1376,6 +1376,54 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 			$this->cleanup_lock_sets,
 			'The reference scan must refresh the lock each window, or a scan longer than the TTL loses the lock before the release loop starts.'
 		);
+	}
+
+	/**
+	 * D2: the orphan-stamp sweep queries per-site attachment tables
+	 * ($wpdb->posts / $wpdb->postmeta), so it MUST run on every blog - it is
+	 * wired to the per-site `bb_draft_stamp_release_hook`, never the root-only
+	 * `bb_draft_cleanup_hook`. The earlier root-only wiring left every subsite's
+	 * stamped orphans permanently uncollectable. The usermeta expiry sweep, by
+	 * contrast, stays on the root-only hook because usermeta is network-global.
+	 */
+	public function test_orphan_stamp_sweep_runs_on_the_per_site_hook_not_the_root_only_hook() {
+		// The sweep is on the per-site hook.
+		$this->assertNotFalse(
+			has_action( 'bb_draft_stamp_release_hook', 'bb_drafts_release_orphaned_draft_stamps' ),
+			'The orphan-stamp sweep must be wired to the per-site bb_draft_stamp_release_hook.'
+		);
+
+		// The sweep is NOT on the root-only hook (the D2 bug).
+		$this->assertFalse(
+			has_action( 'bb_draft_cleanup_hook', 'bb_drafts_release_orphaned_draft_stamps' ),
+			'The orphan-stamp sweep must NOT be wired to the root-only bb_draft_cleanup_hook - that never reaches subsite attachments.'
+		);
+
+		// The usermeta expiry sweep stays on the root-only hook (it is network-global).
+		$this->assertNotFalse(
+			has_action( 'bb_draft_cleanup_hook', 'bb_drafts_delete_expired' ),
+			'The usermeta expiry sweep must remain on the root-only bb_draft_cleanup_hook.'
+		);
+	}
+
+	/**
+	 * D2: bb_drafts_schedule_cleanup() must schedule the per-site stamp-release
+	 * event unconditionally (before the root-blog guard), so every blog's cron
+	 * carries it. The root-only expiry event stays behind the guard.
+	 */
+	public function test_schedule_cleanup_registers_the_per_site_stamp_release_event() {
+		wp_clear_scheduled_hook( 'bb_draft_stamp_release_hook' );
+		wp_clear_scheduled_hook( 'bb_draft_cleanup_hook' );
+
+		bb_drafts_schedule_cleanup();
+
+		$this->assertNotFalse(
+			wp_next_scheduled( 'bb_draft_stamp_release_hook' ),
+			'bb_drafts_schedule_cleanup() must schedule the per-site stamp-release event.'
+		);
+
+		wp_clear_scheduled_hook( 'bb_draft_stamp_release_hook' );
+		wp_clear_scheduled_hook( 'bb_draft_cleanup_hook' );
 	}
 
 	/**
@@ -2345,8 +2393,8 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		delete_site_option( 'bb_draft_cleanup_epoch' );
 		delete_site_transient( 'bb_draft_cleanup_lock' );
 		delete_site_transient( 'bb_draft_oneshot_lock' );
-		delete_site_transient( 'bb_draft_stamp_sweep_lock' );
-		delete_site_option( 'bb_draft_stamp_sweep_cursor' );
+		delete_transient( 'bb_draft_stamp_sweep_lock' );
+		delete_option( 'bb_draft_stamp_sweep_cursor' );
 
 		$scheduled = wp_next_scheduled( 'bb_draft_oneshot' );
 		if ( $scheduled ) {
