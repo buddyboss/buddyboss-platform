@@ -513,14 +513,14 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		$u1_row_id = (int) $wpdb->get_var( $wpdb->prepare( "SELECT umeta_id FROM {$wpdb->usermeta} WHERE user_id = %d AND meta_key = 'draft_user'", $u1 ) );
 
 		// Simulate a budget-interrupted previous slice that stopped after u1's row.
-		update_option( 'bb_draft_cleanup_cursor', $u1_row_id, false );
+		update_site_option( 'bb_draft_cleanup_cursor', $u1_row_id );
 
 		$result = bb_drafts_delete_expired( 0 );
 
 		$this->assertTrue( $result['complete'] );
 		$this->assertTrue( metadata_exists( 'user', $u1, 'draft_user' ), 'Rows before the persisted cursor were handled by the interrupted slice - not re-scanned.' );
 		$this->assertFalse( metadata_exists( 'user', $u2, 'draft_user' ), 'Rows after the cursor are reached by the resumed slice.' );
-		$this->assertFalse( get_option( 'bb_draft_cleanup_cursor' ), 'A completed pass clears the cursor so the next daily run starts fresh.' );
+		$this->assertFalse( get_site_option( 'bb_draft_cleanup_cursor' ), 'A completed pass clears the cursor so the next daily run starts fresh.' );
 	}
 
 	public function test_oneshot_heals_aggregate_oversized_user_and_disposes_corrupt_rows() {
@@ -904,7 +904,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 			)
 		);
 
-		delete_option( 'bb_draft_cleanup_cursor' );
+		delete_site_option( 'bb_draft_cleanup_cursor' );
 		bb_drafts_delete_expired( 0 );
 
 		$expired = bp_get_user_meta( $user_id, 'draft_group_77', true );
@@ -1108,11 +1108,11 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		}
 
 		$this->cleanup_lock_sets = 0;
-		add_filter( 'pre_set_transient_bb_draft_cleanup_lock', array( $this, 'count_cleanup_lock_set' ) );
+		add_filter( 'pre_set_site_transient_bb_draft_cleanup_lock', array( $this, 'count_cleanup_lock_set' ) );
 
 		bb_drafts_delete_expired( 0 );
 
-		remove_filter( 'pre_set_transient_bb_draft_cleanup_lock', array( $this, 'count_cleanup_lock_set' ) );
+		remove_filter( 'pre_set_site_transient_bb_draft_cleanup_lock', array( $this, 'count_cleanup_lock_set' ) );
 
 		$this->assertGreaterThanOrEqual(
 			2,
@@ -1485,8 +1485,32 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 			)
 		);
 
-		delete_option( 'bb_draft_cleanup_cursor' );
+		delete_site_option( 'bb_draft_cleanup_cursor' );
+
+		// M12: the lock is network-scoped so a subsite `wp bb drafts cleanup`
+		// run and the root cron serialize against the one shared usermeta row
+		// set. A per-site transient of the same name must therefore NOT block
+		// the sweep - if it did, the lock would be per-site and the multisite
+		// race the network scope exists to prevent would be back.
 		set_transient( 'bb_draft_cleanup_lock', 1, 5 * MINUTE_IN_SECONDS );
+		$not_blocked = bb_drafts_delete_expired( 0 );
+		$this->assertTrue( empty( $not_blocked['locked'] ), 'A per-site lock must not block the network-scoped sweep.' );
+		delete_transient( 'bb_draft_cleanup_lock' );
+
+		// Re-stamp the draft the unblocked run above just collected, so the
+		// held-lock assertions below start from a populated row again.
+		bp_update_user_meta(
+			$user_id,
+			'draft_user',
+			array(
+				'data_key'        => 'draft_user',
+				'data'            => array( 'content' => 'expired' ),
+				'_draft_saved_at' => 100,
+			)
+		);
+		delete_site_option( 'bb_draft_cleanup_cursor' );
+
+		set_site_transient( 'bb_draft_cleanup_lock', 1, 5 * MINUTE_IN_SECONDS );
 
 		$blocked = bb_drafts_delete_expired( 0 );
 
@@ -1495,14 +1519,14 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		$this->assertFalse( $blocked['complete'], 'The work is not done, so the run must not claim completion.' );
 		$this->assertNotEmpty( bp_get_user_meta( $user_id, 'draft_user', true ), 'A locked-out run must not touch anything.' );
 
-		delete_transient( 'bb_draft_cleanup_lock' );
+		delete_site_transient( 'bb_draft_cleanup_lock' );
 
 		$ran = bb_drafts_delete_expired( 0 );
 
 		$this->assertTrue( empty( $ran['locked'] ) );
 		$this->assertTrue( $ran['complete'] );
 		$this->assertSame( '', (string) bp_get_user_meta( $user_id, 'draft_user', true ), 'Once the lock is free the expired draft is collected.' );
-		$this->assertFalse( get_transient( 'bb_draft_cleanup_lock' ), 'The lock must be released when the sweep returns.' );
+		$this->assertFalse( get_site_transient( 'bb_draft_cleanup_lock' ), 'The lock must be released when the sweep returns.' );
 	}
 
 	/**
@@ -1512,7 +1536,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		// Isolate: this test runs a pass over the whole usermeta table.
 		$this->isolate_draft_maintenance();
 
-		delete_transient( 'bb_draft_cleanup_lock' );
+		delete_site_transient( 'bb_draft_cleanup_lock' );
 		add_filter( 'bb_draft_retention_days', '__return_zero' );
 
 		$result = bb_drafts_delete_expired( 0 );
@@ -1520,7 +1544,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		remove_filter( 'bb_draft_retention_days', '__return_zero' );
 
 		$this->assertTrue( $result['complete'] );
-		$this->assertFalse( get_transient( 'bb_draft_cleanup_lock' ), 'The early return must not leak the lock, or every later sweep is blocked for 5 minutes.' );
+		$this->assertFalse( get_site_transient( 'bb_draft_cleanup_lock' ), 'The early return must not leak the lock, or every later sweep is blocked for 5 minutes.' );
 	}
 
 	/**
@@ -1915,8 +1939,8 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 			)
 		);
 
-		delete_option( 'bb_draft_cleanup_cursor' );
-		delete_transient( 'bb_draft_cleanup_lock' );
+		delete_site_option( 'bb_draft_cleanup_cursor' );
+		delete_site_transient( 'bb_draft_cleanup_lock' );
 		bb_drafts_delete_expired( 0 );
 
 		$row = bp_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
@@ -2068,7 +2092,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 			bb_draft_flush_user_meta_sizes( (int) $row->user_id );
 		}
 
-		delete_option( 'bb_draft_cleanup_cursor' );
+		delete_site_option( 'bb_draft_cleanup_cursor' );
 		delete_option( 'bb_draft_oneshot_state' );
 		delete_site_option( 'bb_draft_oneshot_state' );
 		delete_option( 'bb_draft_oneshot_done' );
@@ -2076,7 +2100,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		delete_option( 'bb_drafts_cleanup_on_upgrade' );
 		delete_site_option( 'bb_drafts_cleanup_on_upgrade' );
 		delete_site_option( 'bb_draft_cleanup_epoch' );
-		delete_transient( 'bb_draft_cleanup_lock' );
+		delete_site_transient( 'bb_draft_cleanup_lock' );
 		delete_site_transient( 'bb_draft_oneshot_lock' );
 		delete_site_transient( 'bb_draft_stamp_sweep_lock' );
 		delete_site_option( 'bb_draft_stamp_sweep_cursor' );

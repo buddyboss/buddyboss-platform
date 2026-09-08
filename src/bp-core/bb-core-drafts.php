@@ -1846,14 +1846,22 @@ function bb_draft_get_rows_batch( $last_umeta_id = 0, $limit = 200, $with_values
  * {@see bb_draft_dispose()} (meta API - replication-safe, cache-coherent,
  * attachment stamps released).
  *
- * The scan cursor is persisted in the `bb_draft_cleanup_cursor` option
+ * The scan cursor is persisted in the `bb_draft_cleanup_cursor` site option
  * between budget-interrupted slices: without it every continuation slice
  * would restart from row zero, and on a site whose draft rows cannot be
  * scanned inside one budget the rows past the time horizon would never be
  * reached at all. Because that cursor is shared by the recurring event and
- * the continuation event, the sweep holds the `bb_draft_cleanup_lock`
+ * the continuation event, the sweep holds the `bb_draft_cleanup_lock` site
  * transient for its duration; a run that finds the lock held returns
  * `locked` and leaves the work to the holder.
+ *
+ * Cursor and lock are network-scoped (`*_site_*`) to match the epoch option
+ * and the usermeta rows the sweep walks - all network-global. On multisite a
+ * `wp bb drafts cleanup --url=subsite` run would otherwise take a per-site
+ * cursor/lock and race the root cron's over the one shared row set; site
+ * scope collapses them to a single cursor and a single lock. On single site
+ * `*_site_*` transparently falls back to the per-site store, so nothing
+ * changes there.
  *
  * @return array { @type int $deleted @type bool $complete @type bool $locked }
  *
@@ -1874,7 +1882,7 @@ function bb_drafts_delete_expired( $time_budget = 10 ) {
 	// it, and the next slice then skips every row below it. Serialize them.
 	// A lock lost to an unreliable object cache only costs duplicate work -
 	// disposal is idempotent - so failing open is the safe direction here.
-	if ( get_transient( 'bb_draft_cleanup_lock' ) ) {
+	if ( get_site_transient( 'bb_draft_cleanup_lock' ) ) {
 		return array(
 			'deleted'  => 0,
 			'complete' => false,
@@ -1882,15 +1890,15 @@ function bb_drafts_delete_expired( $time_budget = 10 ) {
 		);
 	}
 
-	set_transient( 'bb_draft_cleanup_lock', 1, 5 * MINUTE_IN_SECONDS );
+	set_site_transient( 'bb_draft_cleanup_lock', 1, 5 * MINUTE_IN_SECONDS );
 
-	$cursor = (int) get_option( 'bb_draft_cleanup_cursor', 0 );
+	$cursor = (int) get_site_option( 'bb_draft_cleanup_cursor', 0 );
 
 	// Expiry switched off - delete nothing. Guarded here rather than relying on
 	// the cutoff arithmetic, where a zero window would expire every draft.
 	if ( 1 > $retention_seconds ) {
-		delete_option( 'bb_draft_cleanup_cursor' );
-		delete_transient( 'bb_draft_cleanup_lock' );
+		delete_site_option( 'bb_draft_cleanup_cursor' );
+		delete_site_transient( 'bb_draft_cleanup_lock' );
 
 		return array(
 			'deleted'  => 0,
@@ -1973,7 +1981,7 @@ function bb_drafts_delete_expired( $time_budget = 10 ) {
 		// interruption that never returns here (a fatal, a killed worker) would
 		// otherwise leave the cursor where the previous run left it, and the
 		// next run would redo the same window indefinitely (B2).
-		update_option( 'bb_draft_cleanup_cursor', $cursor, false );
+		update_site_option( 'bb_draft_cleanup_cursor', $cursor );
 
 		// Refresh the lock each window. It is set once for 5 minutes at the top,
 		// but `wp bb drafts cleanup` runs with an UNLIMITED budget and the
@@ -1982,7 +1990,7 @@ function bb_drafts_delete_expired( $time_budget = 10 ) {
 		// mid-run, the daily cron would acquire it, and the two runs would then
 		// share the single cursor - the clobbering the lock exists to prevent
 		// (M6). Refreshing per window keeps it held for the life of the drain.
-		set_transient( 'bb_draft_cleanup_lock', 1, 5 * MINUTE_IN_SECONDS );
+		set_site_transient( 'bb_draft_cleanup_lock', 1, 5 * MINUTE_IN_SECONDS );
 
 		// Window-level budget check: a window whose rows are ALL filtered-out
 		// third-party draft_* keys never reaches the per-row check above, so
@@ -1994,9 +2002,9 @@ function bb_drafts_delete_expired( $time_budget = 10 ) {
 	} while ( $batch['has_more'] );
 
 	if ( $complete ) {
-		delete_option( 'bb_draft_cleanup_cursor' );
+		delete_site_option( 'bb_draft_cleanup_cursor' );
 	} else {
-		update_option( 'bb_draft_cleanup_cursor', $cursor, false );
+		update_site_option( 'bb_draft_cleanup_cursor', $cursor );
 
 		if ( ! wp_next_scheduled( 'bb_draft_cleanup' ) ) {
 			wp_schedule_single_event( time() + MINUTE_IN_SECONDS, 'bb_draft_cleanup' );
@@ -2005,7 +2013,7 @@ function bb_drafts_delete_expired( $time_budget = 10 ) {
 
 	// Released only after the cursor is settled, so a run starting the instant
 	// this one returns cannot read a half-updated cursor.
-	delete_transient( 'bb_draft_cleanup_lock' );
+	delete_site_transient( 'bb_draft_cleanup_lock' );
 
 	return array(
 		'deleted'  => $deleted,
