@@ -683,6 +683,8 @@ class BP_Nouveau extends BP_Theme_Compat {
 			),
 			'rest_url'                   => untrailingslashit( home_url( 'wp-json/buddyboss/v1' ) ),
 			'rest_nonce'                 => wp_create_nonce( 'wp_rest' ),
+			// Shown in a hover pop-up card when its request fails.
+			'card_load_error'            => __( 'Failed to load data.', 'buddyboss' ),
 			'member_label'               => __( 'member', 'buddyboss' ),
 			'members_label'              => __( 'members', 'buddyboss' ),
 			// Logged-in user id, used by the hover pop-up cards to suppress a member's own card.

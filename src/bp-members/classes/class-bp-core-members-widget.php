@@ -352,7 +352,7 @@ function buddyboss_members_widget_active_heartbeat( $response = array(), $data =
 			?>
 			<li class="vcard">
 				<div class="item-avatar">
-					<a href="<?php bp_member_permalink(); ?>"  class="<?php echo esc_attr( $moderation_class ); ?>">
+					<a href="<?php bp_member_permalink(); ?>"  class="<?php echo esc_attr( $moderation_class ); ?>"<?php echo bb_get_hover_card_profile_attr( $members_template->member->id ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped in the helper. ?>>
 						<?php bp_member_avatar(); ?>
 						<?php bb_user_presence_html( $members_template->member->id ); ?>
 					</a>
@@ -360,7 +360,7 @@ function buddyboss_members_widget_active_heartbeat( $response = array(), $data =
 
 				<div class="item">
 					<div class="item-title fn">
-						<a href="<?php bp_member_permalink(); ?>"><?php bp_member_name(); ?></a>
+						<a href="<?php bp_member_permalink(); ?>"<?php echo bb_get_hover_card_profile_attr( $members_template->member->id ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped in the helper. ?>><?php bp_member_name(); ?></a>
 					</div>
 					<div class="item-meta">
 						<span class="activity" data-livestamp="<?php bp_core_iso8601_date( bp_get_member_last_active( array( 'relative' => false ) ) ); ?>"><?php bp_member_last_active(); ?></span>

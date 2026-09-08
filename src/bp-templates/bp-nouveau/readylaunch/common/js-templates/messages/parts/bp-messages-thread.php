@@ -172,7 +172,7 @@
 					</div>
 				<# } #>
 			<# } else if ( data.group_avatar && data.group_avatar.length > 1 && data.is_group_thread ) { #>
-				<img class="avatar" src="{{{data.group_avatar}}}" alt="{{data.group_name}}" data-bb-hp-group="{{data.group_id}}" />
+				<img class="avatar" src="{{{data.group_avatar}}}" alt="{{data.group_name}}"<# if ( ! data.is_deleted ) { #> data-bb-hp-group="{{data.group_id}}"<# } #> />
 			<# } else { #>
 				<# if ( other_recipients.length > 1 ) { #>
 					<span class="recipients-count">{{other_recipients.length}}</span>

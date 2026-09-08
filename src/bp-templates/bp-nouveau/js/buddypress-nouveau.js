@@ -15,6 +15,12 @@ window.bp = window.bp || {};
 	// a row of avatars no longer fires one REST round-trip per avatar crossed.
 	var hoverIntentTimeout = null;
 	var HOVER_INTENT_DELAY = 200;
+	// Per-card handles for the 100ms grace timer started on card mouseleave.
+	// Without these the timer could not be cancelled on re-entry, so leaving and
+	// re-entering a card within 100ms let the stale callback clear hoverCardPopup
+	// and close the card with the pointer still resting on it.
+	var profileCardHideTimeout = null;
+	var groupCardHideTimeout = null;
 
 	var currentProfileRequest = null;
 	var currentGroupRequest = null;
@@ -1157,6 +1163,13 @@ window.bp = window.bp || {};
 					return;
 				}
 
+				// Decide before any state changes: a trigger that will bail out must not
+				// first tear down an open card (e.g. grazing your own avatar with a group
+				// card open used to close it and render nothing in its place).
+				if ( ! bp.Nouveau.isProfileCardTrigger( this ) ) {
+					return;
+				}
+
 				hoverAvatar = true;
 				hoverProfileAvatar = true;
 
@@ -1240,6 +1253,12 @@ window.bp = window.bp || {};
 				hoverProfileCardPopup = true;
 				if ( hideCardTimeout ) {
 					clearTimeout( hideCardTimeout );
+					hideCardTimeout = null;
+				}
+				// Cancel the grace timer armed by a mouseleave we have just undone.
+				if ( profileCardHideTimeout ) {
+					clearTimeout( profileCardHideTimeout );
+					profileCardHideTimeout = null;
 				}
 			} );
 			$( document ).on( 'mouseenter', '#group-card', function () {
@@ -1248,11 +1267,21 @@ window.bp = window.bp || {};
 				hoverGroupCardPopup = true;
 				if ( hideCardTimeout ) {
 					clearTimeout( hideCardTimeout );
+					hideCardTimeout = null;
+				}
+				// Cancel the grace timer armed by a mouseleave we have just undone.
+				if ( groupCardHideTimeout ) {
+					clearTimeout( groupCardHideTimeout );
+					groupCardHideTimeout = null;
 				}
 			} );
 			$( document ).on( 'mouseleave', '#profile-card', function () {
 				hoverProfileCardPopup = false;
-				setTimeout( function () {
+				if ( profileCardHideTimeout ) {
+					clearTimeout( profileCardHideTimeout );
+				}
+				profileCardHideTimeout = setTimeout( function () {
+					profileCardHideTimeout = null;
 					hoverCardPopup = false;
 					if ( ! hoverAvatar ) {
 						bp.Nouveau.checkHidePopupCard();
@@ -1261,7 +1290,11 @@ window.bp = window.bp || {};
 			} );
 			$( document ).on( 'mouseleave', '#group-card', function () {
 				hoverGroupCardPopup = false;
-				setTimeout( function () {
+				if ( groupCardHideTimeout ) {
+					clearTimeout( groupCardHideTimeout );
+				}
+				groupCardHideTimeout = setTimeout( function () {
+					groupCardHideTimeout = null;
 					hoverCardPopup = false;
 					if ( ! hoverAvatar ) {
 						bp.Nouveau.checkHidePopupCard();
@@ -1269,7 +1302,12 @@ window.bp = window.bp || {};
 				}, 100 );
 			} );
 
-			$( window ).on( 'scroll', this.hidePopupCard );
+			// Scrolling cancels a pending hover intent too, otherwise an armed timer
+			// still pops a card open mid-scroll at a position that is no longer valid.
+			$( window ).on( 'scroll', function () {
+				bp.Nouveau.cancelHoverIntent();
+				bp.Nouveau.hidePopupCard();
+			} );
 		},
 
 		bindPopoverEvents: function() {
@@ -5305,6 +5343,42 @@ window.bp = window.bp || {};
 		 * @param {Element} element Hovered element.
 		 * @return {boolean} True when the element should open a group card.
 		 */
+		/**
+		 * Whether a hovered [data-bb-hp-profile] element should open a member card.
+		 *
+		 * Mirrors isGroupAvatarTrigger(): the answer must be known BEFORE any state is
+		 * touched, so a trigger that will bail out never tears down a card that is
+		 * already open. Previously a self-hover bailed out only after the handler had
+		 * closed an open group card and profilePopupCard() had rebuilt the card node,
+		 * leaving the viewer with nothing.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param {Element} element Hovered element.
+		 * @return {boolean} True when the element should open a member card.
+		 */
+		isProfileCardTrigger: function ( element ) {
+			var $element = $( element );
+
+			// Locations that opt out of the card entirely.
+			if ( $element.closest( '.message-members-list.member-popup, #mass-user-block-list' ).length ) {
+				return false;
+			}
+
+			var memberId = $element.attr( 'data-bb-hp-profile' );
+			if ( ! memberId || ! memberId.length || 0 === parseInt( memberId, 10 ) ) {
+				return false;
+			}
+
+			// A member's own avatar never opens a card.
+			var currentUserId = ! _.isUndefined( BP_Nouveau.loggedin_user_id ) ? BP_Nouveau.loggedin_user_id : 0;
+			if ( parseInt( currentUserId, 10 ) === parseInt( memberId, 10 ) ) {
+				return false;
+			}
+
+			return true;
+		},
+
 		isGroupAvatarTrigger: function ( element ) {
 			var $element = $( element );
 
@@ -5489,6 +5563,13 @@ window.bp = window.bp || {};
 				return;
 			}
 
+			// Same guard as the delegated handler, for direct callers: it must run before
+			// the card node is rebuilt below, or a bail-out destroys the open card.
+			if ( ! bp.Nouveau.isProfileCardTrigger( this ) ) {
+				bp.Nouveau.abortOngoingProfileRequest();
+				return;
+			}
+
 			$( '#buddypress #profile-card, #bbpress-forums #profile-card, #page #profile-card' ).remove();
 			var profileCardTemplate = bp.template( 'profile-card-popup' );
 			var renderedProfileCard = profileCardTemplate();
@@ -5527,7 +5608,6 @@ window.bp = window.bp || {};
 				return;
 			}
 
-			var currentUser = parseInt( currentUserId ) === parseInt( memberId );
 			var restUrl = BP_Nouveau.rest_url;
 			var url = restUrl + '/members/' + memberId + '/info';
 			var $profileCard = $( '#profile-card' );
@@ -5561,7 +5641,7 @@ window.bp = window.bp || {};
 			// Check cache.
 			if ( bp.Nouveau.cacheProfileCard[memberId] ) {
 				var cachedProfileData = bp.Nouveau.cacheProfileCard[memberId];
-				bp.Nouveau.updateProfileCard( cachedProfileData, currentUser );
+				bp.Nouveau.updateProfileCard( cachedProfileData, false );
 
 				$profileCard.removeClass( 'loading' );
 				popupCardLoaded = true;
@@ -5592,13 +5672,17 @@ window.bp = window.bp || {};
 					bp.Nouveau.resetProfileCard();
 
 					$profileCard.addClass( 'show loading' );
-					if ( currentUser ) {
-						$profileCard.find( '.skeleton-card-footer' ).addClass( 'bb-card-footer--plain' );
-					}
 				},
 				success   : function ( data ) {
 					// Cache profile data.
 					bp.Nouveau.cacheProfileCard[memberId] = data;
+
+					// Only paint a response that still matches the request in flight. Sliding
+					// from an uncached avatar onto an adjacent one could otherwise render the
+					// first member's data into the card the pointer has already moved on to.
+					if ( bp.Nouveau.currentRequestMemberId && bp.Nouveau.currentRequestMemberId !== memberId ) {
+						return;
+					}
 
 					// Check if hovering over avatar or popup.
 					if ( hoverProfileAvatar || hoverProfileCardPopup ) {
@@ -5607,7 +5691,7 @@ window.bp = window.bp || {};
 							var $currentProfileCard = $( '#profile-card' );
 							$currentProfileCard.removeClass( 'loading' );
 
-							bp.Nouveau.updateProfileCard( data, currentUser );
+							bp.Nouveau.updateProfileCard( data, false );
 							popupCardLoaded = true;
 						} else {
 							bp.Nouveau.hidePopupCard();
@@ -5616,7 +5700,7 @@ window.bp = window.bp || {};
 
 					bp.Nouveau.currentRequestMemberId = null;
 				},
-				error     : function ( xhr, status, error ) {
+				error     : function ( xhr, status ) {
 					// Ignore user-initiated aborts (a newer hover superseded this request).
 					if ( 'abort' === status ) {
 						// Clear the dedupe id so this item can be fetched again later.
@@ -5636,8 +5720,10 @@ window.bp = window.bp || {};
 						return;
 					}
 
-					console.error( 'Error fetching member info:', error );
-					$profileCard.html( '<span>Failed to load data.</span>' );
+					// Re-query: the card node may have been rebuilt since this request
+					// started, and writing into the detached original shows nothing.
+					var bbErrText = ! _.isUndefined( BP_Nouveau.card_load_error ) ? BP_Nouveau.card_load_error : 'Failed to load data.';
+					$( '#profile-card' ).html( $( '<span/>' ).text( bbErrText ) );
 					bp.Nouveau.currentRequestMemberId = null;
 				}
 			} );
@@ -5908,6 +5994,11 @@ window.bp = window.bp || {};
 					// Cache group data.
 					bp.Nouveau.cacheGroupCard[groupId] = data;
 
+					// Only paint a response that still matches the request in flight.
+					if ( bp.Nouveau.currentRequestGroupId && bp.Nouveau.currentRequestGroupId !== groupId ) {
+						return;
+					}
+
 					// Check if hovering over avatar or popup.
 					if ( hoverGroupAvatar || hoverGroupCardPopup ) {
 						if ( hoverAvatar || hoverCardPopup ) {
@@ -5924,7 +6015,7 @@ window.bp = window.bp || {};
 
 					bp.Nouveau.currentRequestGroupId = null;
 				},
-				error     : function ( xhr, status, error ) {
+				error     : function ( xhr, status ) {
 					// Ignore user-initiated aborts (a newer hover superseded this request).
 					if ( 'abort' === status ) {
 						// Clear the dedupe id so this item can be fetched again later.
@@ -5944,8 +6035,10 @@ window.bp = window.bp || {};
 						return;
 					}
 
-					console.error( 'Error fetching group info:', error );
-					$groupCard.html( '<span>Failed to load data.</span>' );
+					// Re-query: the card node may have been rebuilt since this request
+					// started, and writing into the detached original shows nothing.
+					var bbErrText = ! _.isUndefined( BP_Nouveau.card_load_error ) ? BP_Nouveau.card_load_error : 'Failed to load data.';
+					$( '#group-card' ).html( $( '<span/>' ).text( bbErrText ) );
 					bp.Nouveau.currentRequestGroupId = null;
 				}
 			} );
