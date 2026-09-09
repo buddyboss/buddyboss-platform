@@ -4834,7 +4834,6 @@ function bp_core_parse_url( $url ) {
 					'method'          => 'GET',
 					// Stop at the first response so the Location header below reflects the redirect.
 					'follow_location' => 0,
-					'max_redirects'   => 1,
 					'user_agent'      => $user_agent,
 				),
 			);
@@ -11004,6 +11003,7 @@ function bb_has_paid_product() {
  * @return string User agent string.
  */
 function bb_get_url_preview_user_agent() {
+	$user_agent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36';
 
 	/**
 	 * Filters the user agent string used for URL preview HTTP requests.
@@ -11012,5 +11012,5 @@ function bb_get_url_preview_user_agent() {
 	 *
 	 * @param string $user_agent User agent string.
 	 */
-	return apply_filters( 'bb_url_preview_user_agent', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36' );
+	return apply_filters( 'bb_url_preview_user_agent', $user_agent );
 }
