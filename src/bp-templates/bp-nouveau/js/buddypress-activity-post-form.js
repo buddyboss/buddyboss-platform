@@ -1432,6 +1432,13 @@ window.bp = window.bp || {};
 				function ( response ) {
 					bp.draft_fetch_in_progress = false;
 
+					// A successful read clears any earlier failure state, so a
+					// transient network blip at page load no longer disables server
+					// sync for the rest of the page view - postDraftActivity()
+					// re-attempts the read while the flag is set (M12).
+					bp.draft_fetch_failed   = false;
+					bp.draft_fetch_attempts = 0;
+
 					if ( ! response.draft_activity || ! response.draft_activity.data ) {
 						self.settleDeferredDraftLoadedEvent();
 						return;
@@ -2058,6 +2065,18 @@ window.bp = window.bp || {};
 				bp.draft_fetch_failed &&
 				( _.isUndefined( bp.draft_activity ) || 'delete' !== bp.draft_activity.post_action )
 			) {
+				// The earlier read failed, so this composer is not based on the
+				// stored draft and overwriting it would lose the draft the member was
+				// never shown. But the network may have recovered since page load, so
+				// re-attempt the read now (this runs on the periodic autosave tick)
+				// instead of refusing for the whole page view - a success clears
+				// draft_fetch_failed in fetchServerDraftActivity()'s done handler and
+				// the next tick saves normally (M12).
+				if ( ! bp.draft_fetch_in_progress && ! _.isUndefined( bp.draft_activity ) && bp.draft_activity.data_key ) {
+					bp.draft_fetch_attempts = 0;
+					this.fetchServerDraftActivity();
+				}
+
 				if ( BP_Nouveau.activity.params.draft_fetch_failed_message ) {
 					this.showDraftFeedback( BP_Nouveau.activity.params.draft_fetch_failed_message );
 				}
