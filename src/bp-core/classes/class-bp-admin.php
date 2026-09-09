@@ -129,6 +129,10 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 
 			// Load the BuddyBoss React settings.
 			require $this->admin_dir . 'bb-settings/index.php';
+
+			// Standalone Knowledge Base modal helper — lets add-on admin surfaces
+			// (Membership, Courses) mount the shared KB modal via window.bbKb.
+			require $this->admin_dir . 'bb-kb-standalone.php';
 		}
 
 		/**

@@ -624,28 +624,25 @@ class BP_Activity_Activity {
 			$sort     = '';
 		}
 
-		$pinned_id = 0;
+		/**
+		 * Filters the pinned activity id for this query.
+		 *
+		 * The returned id (0 = none) is floated to the top of the results via a
+		 * CASE-based ORDER BY and OR'd into the filter WHERE so it survives
+		 * filtering. The Pinned Posts add-on supplies this from the feed's
+		 * `pin_type`; with no provider the default 0 leaves ordering unchanged.
+		 *
+		 * @since BuddyBoss 3.4.0
+		 *
+		 * @param int   $pinned_id Pinned activity id. Default 0.
+		 * @param array $r         Parsed query arguments.
+		 */
+		$pinned_id = (int) apply_filters( 'bb_activity_get_pinned_id', 0, $r );
 
-		// Pinned post.
-		if ( ! empty( $r['pin_type'] ) ) {
-			if ( 'group' === $r['pin_type'] ) {
-				if (
-					! empty( $r['filter']['primary_id'] ) &&
-					! empty( $r['filter']['object'] ) &&
-					'groups' === $r['filter']['object']
-				) {
-					$group_id  = $r['filter']['primary_id'];
-					$pinned_id = groups_get_groupmeta( $group_id, 'bb_pinned_post' );
-				}
-			} elseif ( 'activity' === $r['pin_type'] ) {
-				$pinned_id = bp_get_option( 'bb_pinned_post', 0 );
-			}
-
-			if ( ! empty( $pinned_id ) ) {
-				$order_by = $wpdb->prepare( 'CASE WHEN a.id = %d THEN 1 ELSE 0 END DESC, ', (int) $pinned_id ) . $order_by;
-				if ( ! empty( $where_conditions['filter_sql'] ) ) {
-					$where_conditions['filter_sql'] = '(' . $where_conditions['filter_sql'] . ' OR ' . $wpdb->prepare( 'a.id = %d', $pinned_id ) . ')';
-				}
+		if ( ! empty( $pinned_id ) ) {
+			$order_by = $wpdb->prepare( 'CASE WHEN a.id = %d THEN 1 ELSE 0 END DESC, ', $pinned_id ) . $order_by;
+			if ( ! empty( $where_conditions['filter_sql'] ) ) {
+				$where_conditions['filter_sql'] = '(' . $where_conditions['filter_sql'] . ' OR ' . $wpdb->prepare( 'a.id = %d', $pinned_id ) . ')';
 			}
 		}
 		$r['pinned_id'] = $pinned_id;

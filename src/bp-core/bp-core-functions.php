@@ -10135,7 +10135,7 @@ function bb_get_settings_url() {
  *
  *   - 'section' — badge sits in the section header (e.g. "Group Headers",
  *                 "Member Access Controls", "Group Topics"). Default text
- *                 "UPGRADE PRO". link_url defaults to the BuddyBoss pricing
+ *                 "UPGRADE LAUNCH". link_url defaults to the BuddyBoss pricing
  *                 page since the section-level CTA is a straightforward upsell.
  *
  * Both contexts share the same "is Pro locked?" computation — Pro missing,
@@ -10169,7 +10169,7 @@ function bb_get_settings_url() {
  *     PRO notice data for React rendering.
  *
  *     @type bool   $show       Whether the notice should be shown.
- *     @type string $badge_text Badge label text ("PRO" for field, "UPGRADE PRO" for section).
+ *     @type string $badge_text Badge label text ("PRO" for field, "UPGRADE LAUNCH" for section).
  *     @type string $badge_icon BuddyBoss icon CSS class for the badge.
  *     @type string $link_url   URL for the play/video button (per-feature for field, pricing for section).
  *     @type string $link_icon  BuddyBoss icon CSS class for the play button.
@@ -10201,8 +10201,8 @@ function bb_admin_settings_get_pro_notice( $args = array() ) {
 	$data = array(
 		'show'       => false,
 		'badge_text' => $is_section
-			? __( 'UPGRADE PRO', 'buddyboss' )
-			: __( 'PRO', 'buddyboss' ),
+			? __( 'UPGRADE LAUNCH', 'buddyboss' )
+			: __( 'LAUNCH', 'buddyboss' ),
 		'badge_icon' => 'bb-icons-rl-crown-simple',
 		'link_url'   => $is_section ? 'https://www.buddyboss.com/pricing/' : '',
 		'link_icon'  => 'bb-icons-rl-play',
@@ -10245,6 +10245,22 @@ function bb_admin_settings_get_pro_notice( $args = array() ) {
 				function_exists( 'bb_pro_post_feature_image_version' ) &&
 				version_compare( bb_platform_pro()->version, bb_pro_post_feature_image_version(), '<' )
 			)
+		)
+	) {
+		$is_pro_locked = true;
+	} elseif (
+		// Reactions, Polls and Social Login moved to the BuddyBoss Addons plugin.
+		// Pro being installed and licensed is no longer proof the feature exists,
+		// so these types must lock unless a PROVIDER is actually present: the
+		// add-on's licensed module (its class/function only loads when licensed),
+		// or a legacy Pro build that still ships the feature (dormancy marker).
+		// Checked before the Pro-licence branch below so a licensed Pro without
+		// the add-on does not silently unlock features it no longer contains.
+		in_array( $type, array( 'reaction', 'reactions', 'polls', 'sso' ), true ) &&
+		! (
+			( ( 'reaction' === $type || 'reactions' === $type ) && ( class_exists( 'BB_Reactions' ) || function_exists( 'bp_register_reaction' ) ) ) ||
+			( 'polls' === $type && ( function_exists( 'bb_load_polls' ) || function_exists( 'bb_register_poll' ) ) ) ||
+			( 'sso' === $type && ( function_exists( 'bb_enable_sso' ) || function_exists( 'bb_register_sso' ) ) )
 		)
 	) {
 		$is_pro_locked = true;
@@ -10871,4 +10887,97 @@ function bb_get_tool_usage() {
 		}
 	}
 	return $out;
+}
+
+/**
+ * Check whether this site has any paid BuddyBoss product.
+ *
+ * Deliberately broader than `function_exists( 'bb_platform_pro' )`: a Plus
+ * customer, or a site running a licensed add-on without the Pro plugin, is
+ * still a paid site. Used to decide whether telemetry is forced to "complete"
+ * and whether the Telemetry settings panel is shown.
+ *
+ * Detection is DRM-based, with one deliberate exception for the theme. Plugin
+ * activation state is not inspected: an add-on only reaches
+ * `BB_DRM_Registry::register_addon()` when it is active, so the registry
+ * already carries that meaning.
+ *
+ * 1. The BuddyBoss Theme is active, or is the parent of the active child theme.
+ *    The exception, because DRM cannot see it: the theme never calls
+ *    `register_addon()`, and its licence key lives under its own connector
+ *    (`buddyboss_theme_dynamic_id`) which `BB_DRM_Helper::has_key()` does not
+ *    read. Without this check a theme-only Plus customer is invisible.
+ * 2. A paid add-on registered with the DRM registry. Every paid BuddyBoss
+ *    product registers at `plugins_loaded` priority 9, so the registry is
+ *    populated before this runs — in every context, including WP-Cron.
+ * 3. A Mothership licence key is stored for the Platform SKU.
+ * 4. The pre-Mothership licence option is still present, for sites that never
+ *    completed the licence migration.
+ *
+ * Intentionally does NOT call `BB_DRM_Addon::is_addon_licensed()`, which can
+ * reach the Mothership API, or `BB_DRM_Helper::is_valid()`, which returns true
+ * on development environments by design. This function runs on every request.
+ *
+ * @since BuddyBoss 3.4.3
+ *
+ * @return bool True if a paid BuddyBoss product was detected.
+ */
+function bb_has_paid_product() {
+	static $memo = null;
+
+	if ( null === $memo ) {
+		// The BuddyBoss Theme, including when it is the parent of a child theme.
+		$detected = ( 'buddyboss-theme' === get_template() );
+
+		// A paid add-on registered itself for DRM.
+		if ( ! $detected && class_exists( '\BuddyBoss\Core\Admin\DRM\BB_DRM_Registry' ) ) {
+			$registered_addons = \BuddyBoss\Core\Admin\DRM\BB_DRM_Registry::get_registered_addons();
+			$detected          = ! empty( $registered_addons );
+		}
+
+		// A Mothership licence key for the Platform SKU.
+		if ( ! $detected && class_exists( '\BuddyBoss\Core\Admin\DRM\BB_DRM_Helper' ) ) {
+			try {
+				$detected = \BuddyBoss\Core\Admin\DRM\BB_DRM_Helper::has_key();
+			} catch ( \Throwable $e ) {
+				// Mothership container unavailable — treat as no key.
+				$detected = false;
+			}
+		}
+
+		// Licence data from before the Mothership migration. Multisite stored
+		// this network-wide, so mirror the migration loader's site-option
+		// fallback or licensed pre-Mothership networks read as unpaid.
+		if ( ! $detected ) {
+			$detected = ! empty( get_option( 'bboss_updater_saved_licenses', array() ) );
+		}
+		if ( ! $detected && is_multisite() ) {
+			$detected = ! empty( get_site_option( 'bboss_updater_saved_licenses', array() ) );
+		}
+
+		/*
+		 * Only memoize once add-ons have had the chance to register (they do so
+		 * at `plugins_loaded` priority 9). did_action() alone is not enough: it
+		 * already returns 1 while `plugins_loaded` callbacks are still running,
+		 * so an early-priority callback could freeze a false negative for the
+		 * remainder of the request — hence the doing_action() exclusion.
+		 */
+		if ( did_action( 'plugins_loaded' ) && ! doing_action( 'plugins_loaded' ) ) {
+			$memo = $detected;
+		}
+	} else {
+		$detected = $memo;
+	}
+
+	/**
+	 * Filters whether the site has a paid BuddyBoss product.
+	 *
+	 * Applied on every call rather than memoized alongside the detection
+	 * result, so a callback added after the first call is still honoured.
+	 *
+	 * @since BuddyBoss 3.4.3
+	 *
+	 * @param bool $detected Whether a paid product was detected.
+	 */
+	return (bool) apply_filters( 'bb_has_paid_product', $detected );
 }
