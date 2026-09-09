@@ -1015,10 +1015,19 @@ window.bp = window.bp || {};
 		// the already-open composer; the member's current content is what saves
 		// from here (M12). A shared in-flight flag prevents overlapping retries.
 		this.retryDraftFetch = function () {
-			if ( 'undefined' === typeof BP_Nouveau.forums || true === BP_Nouveau.forums.draft_fetch_retrying ) {
+			// Ceiling on the per-tick re-attempt so a DURABLE failure (an expired
+			// nonce that never recovers on a long-open tab) does not fire a request
+			// every autosave tick forever. A success clears the flag and resets the
+			// counter, so a later fresh failure gets its own budget (M16).
+			if (
+				'undefined' === typeof BP_Nouveau.forums ||
+				true === BP_Nouveau.forums.draft_fetch_retrying ||
+				( BP_Nouveau.forums.draft_retry_attempts || 0 ) >= 5
+			) {
 				return;
 			}
 			BP_Nouveau.forums.draft_fetch_retrying = true;
+			BP_Nouveau.forums.draft_retry_attempts = ( BP_Nouveau.forums.draft_retry_attempts || 0 ) + 1;
 
 			$.post(
 				BP_Nouveau.ajaxurl,
@@ -1029,7 +1038,8 @@ window.bp = window.bp || {};
 			).done(
 				function ( response ) {
 					if ( response && response.success ) {
-						BP_Nouveau.forums.draft_fetch_failed = false;
+						BP_Nouveau.forums.draft_fetch_failed   = false;
+						BP_Nouveau.forums.draft_retry_attempts = 0;
 					}
 				}
 			).always(
