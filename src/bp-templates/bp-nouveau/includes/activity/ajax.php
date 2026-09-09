@@ -1511,6 +1511,23 @@ function bb_nouveau_ajax_post_draft_activity() {
 				update_post_meta( $stamp_feature_image_id, 'bb_activity_post_feature_image_draft', 1 );
 			}
 
+			// Strip the OTHER shape's attachment keys before storing. This handler
+			// validates, caps and ownership-checks only its own shape (media /
+			// document / video), so a foreign bbp_* key would be stored
+			// uninspected - and the global reference scan
+			// (bb_draft_collect_attachment_ids()) reads BOTH shapes, so a member
+			// could pin another member's stamped attachment against cleanup forever
+			// by referencing its id from a forum-shape key in their own activity
+			// draft (L6). The two shapes are mutually exclusive, so this only ever
+			// drops injected keys.
+			if ( isset( $draft_activity['data'] ) && is_array( $draft_activity['data'] ) ) {
+				unset(
+					$draft_activity['data']['bbp_media'],
+					$draft_activity['data']['bbp_document'],
+					$draft_activity['data']['bbp_video']
+				);
+			}
+
 			$replaced_draft = bp_get_user_meta( $draft_user_id, $draft_activity['data_key'], true );
 
 			bp_update_user_meta( $draft_user_id, $draft_activity['data_key'], $draft_activity );

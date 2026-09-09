@@ -1181,6 +1181,27 @@ function bb_post_topic_reply_draft() {
 				$evicted_draft_keys = array_merge( $evicted_draft_keys, $draft_budget['evicted'] );
 			}
 
+			// Strip the OTHER shape's attachment keys from every entry before
+			// storing. This handler validates, caps and ownership-checks only its
+			// own bbp_* shape, so foreign media/document/video/feature-image keys
+			// would be stored uninspected - and the global reference scan
+			// (bb_draft_collect_attachment_ids()) reads BOTH shapes, so a member
+			// could pin another member's stamped attachment against cleanup forever
+			// by referencing its id from an activity-shape key in a forum draft
+			// (L6). The shapes are mutually exclusive, so this only ever drops
+			// injected keys; applied to every entry so a sibling write or a
+			// pre-existing poisoned row is cleaned in the same pass.
+			foreach ( $existing_draft as $entry_key => $entry ) {
+				if ( isset( $entry['data'] ) && is_array( $entry['data'] ) ) {
+					unset(
+						$existing_draft[ $entry_key ]['data']['media'],
+						$existing_draft[ $entry_key ]['data']['document'],
+						$existing_draft[ $entry_key ]['data']['video'],
+						$existing_draft[ $entry_key ]['data']['bb_activity_post_feature_image']
+					);
+				}
+			}
+
 			// wp_slash(): the row is uniformly unslashed in memory (see the
 			// merge above), and update_metadata() unslashes once before
 			// storing - this is the single slash that cancels it, so storage

@@ -5852,6 +5852,71 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 	}
 
 	/**
+	 * L6: the activity handler must strip the OTHER (forum) shape's attachment
+	 * keys before storing. bb_draft_collect_attachment_ids() reads BOTH shapes,
+	 * so a foreign bbp_* key would be counted by the global reference scan and
+	 * pin whatever attachment id it names against the orphan-stamp sweep - a
+	 * member could keep another member's stamped attachment undeletable forever.
+	 *
+	 * Mutation check: drop the activity handler's unset() and this goes red - the
+	 * forged bbp_media key survives into storage.
+	 */
+	public function test_activity_save_strips_foreign_forum_shape_attachment_keys() {
+		$user_id = self::factory()->user->create();
+		$this->set_current_user( $user_id );
+
+		$this->drive_activity_draft_save(
+			'draft_user',
+			array(
+				'content'   => 'legit activity draft',
+				'bbp_media' => wp_json_encode( array( array( 'id' => 999999 ) ) ),
+			)
+		);
+
+		$stored = bp_get_user_meta( $user_id, 'draft_user', true );
+
+		$this->assertIsArray( $stored, 'The draft must have been stored.' );
+		$this->assertArrayNotHasKey(
+			'bbp_media',
+			$stored['data'],
+			'A foreign forum-shape attachment key must be stripped before storage (L6).'
+		);
+	}
+
+	/**
+	 * L6, forum side: the forum handler must strip the OTHER (activity) shape's
+	 * attachment keys before storing the aggregated row, for the same reason.
+	 *
+	 * Mutation check: drop the forum handler's per-entry unset() loop and this
+	 * goes red - the forged media key survives into the stored row.
+	 */
+	public function test_forum_save_strips_foreign_activity_shape_attachment_keys() {
+		$user_id = self::factory()->user->create();
+		$this->set_current_user( $user_id );
+
+		$forum    = self::factory()->post->create( array( 'post_type' => bbp_get_forum_post_type(), 'post_status' => 'publish' ) );
+		$data_key = 'draft_discussion_' . $forum;
+
+		$this->drive_forum_draft_save(
+			$data_key,
+			array(
+				'bbp_topic_content' => 'legit forum draft',
+				'media'             => array( array( 'id' => 999999 ) ),
+			)
+		);
+
+		$row = bp_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
+
+		$this->assertIsArray( $row, 'The row must have been stored.' );
+		$this->assertArrayHasKey( $data_key, $row, 'The forum draft entry must be present.' );
+		$this->assertArrayNotHasKey(
+			'media',
+			$row[ $data_key ]['data'],
+			'A foreign activity-shape attachment key must be stripped before storage (L6).'
+		);
+	}
+
+	/**
 	 * Lower the per-type attachment bound so the refusal is cheap to reach.
 	 *
 	 * @return int
