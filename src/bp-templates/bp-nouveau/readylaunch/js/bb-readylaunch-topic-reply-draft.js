@@ -358,9 +358,23 @@ window.bp = window.bp || {};
 				var draft_data = localStorage.getItem( this.topic_reply_draft.data_key );
 				if ( ! _.isUndefined( draft_data ) && null !== draft_data && 0 < draft_data.length ) {
 					// Parse data with JSON.
-					var draft_activity_local_data                        = JSON.parse( draft_data );
-					this.topic_reply_draft.data                          = draft_activity_local_data.data;
-					this.all_draft_data[this.topic_reply_draft.data_key] = draft_activity_local_data.data;
+					var draft_activity_local_data = JSON.parse( draft_data );
+
+					// The localStorage key is not scoped per user, so on a
+					// shared/kiosk browser it can hold a DIFFERENT member's forum
+					// draft. Server storage is per-user, but this cache is
+					// per-browser - restoring it would leak one member's draft into
+					// another's editor. Drop it when the stored owner is not the
+					// current member (privacy, #7 - matches the activity packs).
+					var stored_owner  = ( 'undefined' !== typeof draft_activity_local_data.bb_draft_owner ) ? parseInt( draft_activity_local_data.bb_draft_owner, 10 ) : 0;
+					var current_owner = parseInt( BP_Nouveau.forums.params.bb_current_user_id, 10 );
+
+					if ( stored_owner && current_owner && stored_owner !== current_owner ) {
+						localStorage.removeItem( this.topic_reply_draft.data_key );
+					} else {
+						this.topic_reply_draft.data                          = draft_activity_local_data.data;
+						this.all_draft_data[this.topic_reply_draft.data_key] = draft_activity_local_data.data;
+					}
 				}
 			}
 
@@ -391,6 +405,10 @@ window.bp = window.bp || {};
 		 * @return {void}
 		 */
 		this.storeTopicReplyDraftLocal = function () {
+			// Stamp the owner so a restore on a shared browser can reject another
+			// member's draft (#7).
+			this.topic_reply_draft.bb_draft_owner = parseInt( BP_Nouveau.forums.params.bb_current_user_id, 10 );
+
 			try {
 				localStorage.setItem( this.topic_reply_draft.data_key, JSON.stringify( this.topic_reply_draft ) );
 			} catch ( quota_error ) {
