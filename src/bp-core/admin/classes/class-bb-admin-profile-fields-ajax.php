@@ -477,6 +477,8 @@ class BB_Admin_Profile_Fields_Ajax {
 				wp_send_json_error( array( 'message' => __( 'You can only have one instance of the "Gender" profile field.', 'buddyboss' ) ) );
 			} elseif ( 'socialnetworks' === $type ) {
 				wp_send_json_error( array( 'message' => __( 'You can only have one instance of the "Social Network" profile field.', 'buddyboss' ) ) );
+			} elseif ( 'biography' === $type ) {
+				wp_send_json_error( array( 'message' => __( 'You can only have one instance of the "Bio" profile field.', 'buddyboss' ) ) );
 			}
 
 			wp_send_json_error( array( 'message' => __( 'There was an error saving the field. Please try again.', 'buddyboss' ) ) );
@@ -936,6 +938,7 @@ class BB_Admin_Profile_Fields_Ajax {
 		$labels = array(
 			'textbox'        => __( 'Single Line Input', 'buddyboss' ),
 			'textarea'       => __( 'Paragraph Input', 'buddyboss' ),
+			'biography'      => __( 'Bio', 'buddyboss' ),
 			'selectbox'      => __( 'Dropdown', 'buddyboss' ),
 			'multiselectbox' => __( 'Multi Select', 'buddyboss' ),
 			'checkbox'       => __( 'Checkboxes', 'buddyboss' ),
@@ -978,6 +981,7 @@ class BB_Admin_Profile_Fields_Ajax {
 		$descriptions = array(
 			'textbox'        => __( 'Displays a single-line text field where users can enter short text.', 'buddyboss' ),
 			'textarea'       => __( 'Displays a multi-line text field where users can enter longer text.', 'buddyboss' ),
+			'biography'      => __( 'Displays a multi-line text field for the member\'s bio, shared with the "Biographical Info" field on their WordPress profile.', 'buddyboss' ),
 			'selectbox'      => __( 'Displays a dropdown list where users can select one option from multiple predefined choices.', 'buddyboss' ),
 			'multiselectbox' => __( 'Displays a list where users can select multiple options.', 'buddyboss' ),
 			'checkbox'       => __( 'Displays multiple options where users can select one or more choices.', 'buddyboss' ),

@@ -134,6 +134,28 @@ const integrationsConfig = withCommonExternal({
     },
 });
 
+// Standalone KB modal — mounts the shared KB modal on any admin page and
+// exposes window.bbKb. Externalizes @bb/admin-common like the other consumers.
+const kbStandaloneConfig = withCommonExternal({
+    ...defaultConfig,
+    name: 'kb-standalone',
+    entry: {
+        'index': path.resolve(__dirname, 'kb-standalone/index.js'),
+    },
+    output: {
+        path: path.resolve(__dirname, '../../bp-core/admin/bb-settings/kb-standalone/build'),
+        filename: '[name].js',
+        clean: false,
+    },
+    module: {
+        ...defaultConfig.module,
+        rules: [
+            ...rules,
+            scssRule,
+        ],
+    },
+});
+
 // Shared admin-common layer — built ONCE, consumed by every admin app as an external.
 // Exposes its exports on window.bbAdminCommon so app bundles can import
 // `@bb/admin-common` as an external (no code duplication across bundles).
@@ -170,9 +192,11 @@ if (buildTarget === 'common') {
     module.exports = settingsConfig;
 } else if (buildTarget === 'integrations') {
     module.exports = integrationsConfig;
+} else if (buildTarget === 'kb-standalone') {
+    module.exports = kbStandaloneConfig;
 } else {
     // Default: export all configurations for combined builds. common is listed
     // before settings/integrations to mirror the package.json build order (they
     // externalize @bb/admin-common as a runtime dep, so order is cosmetic here).
-    module.exports = [rlOnboardingConfig, commonConfig, settingsConfig, integrationsConfig];
+    module.exports = [rlOnboardingConfig, commonConfig, settingsConfig, integrationsConfig, kbStandaloneConfig];
 }

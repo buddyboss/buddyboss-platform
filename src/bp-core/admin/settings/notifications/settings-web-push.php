@@ -202,7 +202,7 @@ function bb_notifications_register_web_push_pro_placeholder_fields() {
 			),
 			'pro_notice'  => array(
 				'show'       => true,
-				'badge_text' => __( 'UPGRADE PRO', 'buddyboss' ),
+				'badge_text' => __( 'UPGRADE LAUNCH', 'buddyboss' ),
 				'badge_icon' => 'bb-icons-rl-crown-simple',
 				'link_url'   => 'https://www.buddyboss.com/platform/',
 			),

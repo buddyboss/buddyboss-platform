@@ -3,7 +3,7 @@ Contributors: buddyboss
 Requires at least: 4.9.1
 Tested up to: 6.8.1
 Requires PHP: 7.4.0
-Stable tag: 3.2.0
+Stable tag: 3.4.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,28 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 3.4.4 =
+* Enhancement: Members - Added Member Directory settings to the REST API, allowing apps to access configured directory elements, profile actions, and primary actions
+* Bug: Core - Fixed an issue where the Profile Visibility API ignored enforced visibility settings, allowing users to select and save visibility options restricted by administrators
+
+= 3.4.3 =
+* Bug: Access Controls - Fixed Access Control settings not saving when only the restriction type or membership provider was changed
+* Bug: Login - Fixed reCAPTCHA login verification blocking sign-ins on third-party login forms such as MemberPress; verification now applies only to the WordPress and BuddyBoss login forms it is rendered on
+
+= 3.4.2 =
+* Bug: Activity - Added two new objects to the Activity REST API
+* Bug: Core - Fixed the issue where the addon plugin was not installing and activating automatically according to the active plan
+* Bug: Login - Fixed a server-side verification bypass that allowed CAPTCHA validation to be skipped when the response field was missing
+
+= 3.4.1 =
+* Enhancement: Core - Updated add-on listing in settings and improvements
+
+= 3.4.0 =
+* Enhancement: Improved plan and feature management, laying the groundwork for plan options
+
+= 3.3.0 =
+* Enhancement: Profiles - Added a new "Bio" profile field mapped to the WordPress biographical info field
 
 = 3.2.0 =
 * New Feature! - Added the Blogs feature with post bookmarking and blog category subscriptions, plus support for the Member Blogging add-on
