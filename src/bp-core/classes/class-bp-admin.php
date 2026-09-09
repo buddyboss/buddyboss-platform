@@ -1068,7 +1068,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 		 * @return false|object Plugin information for BuddyBoss Platform, or the original result.
 		 */
 		public function bb_plugins_api_information( $result, $action, $args ) {
-			if ( 'plugin_information' !== $action || empty( $args->slug ) ) {
+			if ( 'plugin_information' !== $action || empty( $args->slug ) || false !== $result ) {
 				return $result;
 			}
 
@@ -1133,13 +1133,17 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
-		 * @param string $version Optional. Version number to link directly to;
-		 *                        empty for the release notes archive.
+		 * @param string $version   Optional. Version number to link directly to;
+		 *                          empty for the release notes archive.
+		 * @param string $page_base Optional. Release notes archive base URL, so
+		 *                          BuddyBoss add-on plugins can reuse this helper
+		 *                          for their own release pages; defaults to the
+		 *                          Platform releases archive.
 		 *
 		 * @return string Release notes page URL.
 		 */
-		public function bb_get_release_notes_page_url( $version = '' ) {
-			$url = 'https://www.buddyboss.com/resources/buddyboss-platform-releases/';
+		public function bb_get_release_notes_page_url( $version = '', $page_base = '' ) {
+			$url = ! empty( $page_base ) ? $page_base : 'https://www.buddyboss.com/resources/buddyboss-platform-releases/';
 
 			// The version comes from the update feed; keep only digits and dots so a
 			// mangled value cannot alter the URL path.
@@ -1162,16 +1166,22 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
-		 * @param string $version Version number, e.g. '3.4.4'.
+		 * @param string $version   Version number, e.g. '3.4.4'.
+		 * @param string $rest_base Optional. Releases post type REST base on
+		 *                          buddyboss.com/resources, so BuddyBoss add-on
+		 *                          plugins can reuse this helper for their own
+		 *                          release feeds; defaults to the Platform
+		 *                          releases post type.
 		 *
 		 * @return string Sanitized release notes HTML, or empty string if unavailable.
 		 */
-		public function bb_get_release_notes_html( $version ) {
+		public function bb_get_release_notes_html( $version, $rest_base = 'releases-platform' ) {
 			// The version comes from the update feed; keep only digits and dots so a
 			// mangled value cannot inject extra query arguments into the request.
-			$version = preg_replace( '/[^0-9.]/', '', (string) $version );
+			$version   = preg_replace( '/[^0-9.]/', '', (string) $version );
+			$rest_base = sanitize_key( str_replace( '/', '', (string) $rest_base ) );
 
-			$cache_key = 'bb_platform_release_notes_' . md5( $version );
+			$cache_key = 'bb_release_notes_' . md5( $rest_base . '_' . $version );
 			$cached    = get_transient( $cache_key );
 
 			if ( false !== $cached ) {
@@ -1183,7 +1193,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 					'slug'    => str_replace( '.', '-', $version ),
 					'_fields' => 'title,content,link,release_fields',
 				),
-				'https://buddyboss.com/resources/wp-json/wp/v2/releases-platform'
+				'https://buddyboss.com/resources/wp-json/wp/v2/' . $rest_base
 			);
 
 			$response = wp_remote_get( $endpoint, array( 'timeout' => 10 ) );
