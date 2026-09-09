@@ -1088,7 +1088,20 @@ window.bp = window.bp || {};
 				if ( ! _.isUndefined( draft_data ) && null !== draft_data && 0 < draft_data.length ) {
 					if ( 'deleted' !== $.cookie( bp.draft_activity.data_key ) ) {
 				 		// Parse data with JSON.
-						var draft_activity_local_data = JSON.parse( draft_data );
+						// A corrupted value - a partial write from a crashed/killed
+						// tab, a leftover from an incompatible older client, or
+						// tampering - would otherwise throw a SyntaxError that aborts
+						// the rest of start(): syncDraftActivity() (the server
+						// fallback), the paste guard and the save-on-close handlers
+						// would never wire up, silently. Treat a parse failure as
+						// "no local draft" - drop the bad key and carry on (M13).
+						var draft_activity_local_data = null;
+						try {
+							draft_activity_local_data = JSON.parse( draft_data );
+						} catch ( e ) {
+							localStorage.removeItem( bp.draft_activity.data_key );
+							$.removeCookie( bp.draft_activity.data_key );
+						}
 
 						// The localStorage key is not scoped per user, so on a
 						// shared/kiosk browser it can hold a DIFFERENT member's
@@ -1097,13 +1110,13 @@ window.bp = window.bp || {};
 						// restoring it would leak one member's draft into another's
 						// composer. Drop it when the stored owner is not the current
 						// member (privacy).
-						var draft_owner   = ( draft_activity_local_data.data && ! _.isUndefined( draft_activity_local_data.data.user_id ) ) ? parseInt( draft_activity_local_data.data.user_id, 10 ) : 0;
+						var draft_owner   = ( draft_activity_local_data && draft_activity_local_data.data && ! _.isUndefined( draft_activity_local_data.data.user_id ) ) ? parseInt( draft_activity_local_data.data.user_id, 10 ) : 0;
 						var current_owner = parseInt( BP_Nouveau.activity.params.user_id, 10 );
 
 						if ( draft_owner && current_owner && draft_owner !== current_owner ) {
 							localStorage.removeItem( bp.draft_activity.data_key );
 							$.removeCookie( bp.draft_activity.data_key );
-						} else {
+						} else if ( draft_activity_local_data ) {
 							bp.draft_activity.data = draft_activity_local_data.data;
 						}
 					} else {
