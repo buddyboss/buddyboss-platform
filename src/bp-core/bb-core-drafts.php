@@ -326,7 +326,7 @@ function bb_draft_strip_data_urls( $content ) {
 		array(
 			'/(=\s*")data:(?:[a-z0-9.+-]+\/[a-z0-9.+-]+)?[a-z0-9;=.+-]*,[^"]*/i',
 			'/(=\s*\')data:(?:[a-z0-9.+-]+\/[a-z0-9.+-]+)?[a-z0-9;=.+-]*,[^\']*/i',
-			'/(=\s*)data:[a-z0-9.+-]+\/[a-z0-9.+-]+[a-z0-9;=.+-]*,[^\s"\'>]*/i',
+			'/(\s[a-z][a-z0-9:_-]*\s*=\s*)data:(?:[a-z0-9.+-]+\/[a-z0-9.+-]+)?[a-z0-9;=.+-]*,[^\s"\'>]*/i',
 		),
 		'$1',
 		$content
@@ -452,14 +452,14 @@ function bb_draft_protect_payload_attachments( $lists, $user_id ) {
 		}
 	}
 
-	// A new stamp adds a reference the network-wide referenced-attachment cache
-	// (H3, {@see bb_drafts_release_orphaned_draft_stamps}) must not miss, or the
-	// next sweep could release the stamp we just applied. Drop the cache so the
-	// sweep rescans; the cache is only an optimisation for unchanged windows.
-	if ( ! empty( $stamped ) ) {
-		delete_site_transient( 'bb_draft_referenced_stamp_ids' );
-	}
-
+	// The referenced-set cache is NOT invalidated here: this runs BEFORE the
+	// draft that references these attachments is written, so a sweep rebuilding
+	// the set in the window between here and the write would re-cache without the
+	// new reference and pin it for the TTL (F3). The reference only exists once
+	// the draft is stored, so each caller invalidates AFTER its own draft write
+	// (activity/ajax.php, forums/core/actions.php). On a refused save no draft is
+	// written, so there is correctly nothing to invalidate - the attachment is a
+	// stamped orphan the sweep may reap once it ages past retention.
 	return array_keys( $stamped );
 }
 

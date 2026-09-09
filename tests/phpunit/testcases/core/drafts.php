@@ -1482,20 +1482,16 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		bb_drafts_release_orphaned_draft_stamps( 0 );
 		$this->assertSame( 1, $this->reference_scans, 'A second sweep with an unchanged draft set must reuse the cache, not re-scan.' );
 
-		// Stamping a new attachment adds a reference the cache must not miss.
-		$new_attachment = self::factory()->post->create(
-			array(
-				'post_type'   => 'attachment',
-				'post_status' => 'inherit',
-				'post_author' => $user_id,
-			)
-		);
-		update_post_meta( $new_attachment, 'bp_media_saved', '0' );
-		bb_draft_protect_payload_attachments( array( array( array( 'id' => $new_attachment ) ) ), $user_id );
+		// A draft save that references a new attachment drops the cache. That
+		// invalidation now lives in the AJAX handlers, AFTER the draft write
+		// that creates the reference (F3) - driven end-to-end by
+		// test_draft_save_invalidates_referenced_stamp_cache. Simulate that drop
+		// here and confirm the next sweep rescans.
+		delete_site_transient( 'bb_draft_referenced_stamp_ids' );
 
 		$this->assertFalse(
 			get_site_transient( 'bb_draft_referenced_stamp_ids' ),
-			'Stamping a new attachment must invalidate the referenced-attachment cache.'
+			'A new reference must invalidate the referenced-attachment cache.'
 		);
 
 		// Next sweep: cache is cold again, so the scan runs.
@@ -2550,6 +2546,82 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		$this->assertIsString( $out, 'A PCRE failure would return null and silently keep the payload.' );
 		$this->assertLessThan( 200, strlen( $out ), 'The payload must be gone, which only happens if the match did not bail.' );
 		$this->assertSame( PREG_NO_ERROR, preg_last_error(), 'A backtrack limit here would mean the pattern is not linear.' );
+	}
+
+	/**
+	 * F6: the unquoted-attribute rule must (a) strip a MIME-less data: URI at
+	 * full size - the size-coverage gap this whole ticket exists for - and
+	 * (b) NOT truncate a member's link that merely carries data: inside a query
+	 * string. The rule is anchored on an attribute boundary and its MIME is
+	 * optional, so both hold at once.
+	 */
+	public function test_strip_data_urls_unquoted_boundary_and_query_safe() {
+		// (a) MIME-less data: as a real unquoted attribute value -> stripped.
+		$this->assertStringNotContainsString(
+			'data:',
+			bb_draft_strip_data_urls( '<img src=data:,plaintextpayload>' ),
+			'A MIME-less unquoted data: URI must be stripped, not stored at full size.'
+		);
+		// Unquoted typed data: attribute -> stripped too.
+		$this->assertStringNotContainsString(
+			'data:',
+			bb_draft_strip_data_urls( '<img src=data:image/svg+xml,xxxx>' ),
+			'A typed unquoted data: URI must still be stripped.'
+		);
+
+		// (b) data: inside a query string is NOT at an attribute boundary and
+		// must survive untouched - truncating it broke real member links.
+		$query_link = '<a href="https://example.com/s?q=data:text/plain,hello&z=3">L</a>';
+		$this->assertSame(
+			$query_link,
+			bb_draft_strip_data_urls( $query_link ),
+			'A ?q=data:... query string must not be truncated.'
+		);
+		$untyped_query = '<a href="https://example.com/s?q=data:1,2">L</a>';
+		$this->assertSame(
+			$untyped_query,
+			bb_draft_strip_data_urls( $untyped_query ),
+			'An untyped ?q=data:1,2 query string must not be truncated.'
+		);
+
+		// A legitimate unquoted attribute with no data: URI stays byte-identical.
+		$this->assertSame(
+			'<div data-role=banner>ok</div>',
+			bb_draft_strip_data_urls( '<div data-role=banner>ok</div>' )
+		);
+	}
+
+	/**
+	 * F3: saving a draft that stamps an attachment must invalidate the
+	 * orphan-stamp sweep's referenced-set cache, so the next sweep rescans and
+	 * cannot release the attachment the new draft references. (The invalidation
+	 * ordering - after the write - is verified by review; this guards against
+	 * the invalidation being dropped entirely, which the suite could not detect
+	 * before.)
+	 */
+	public function test_draft_save_invalidates_referenced_stamp_cache() {
+		$user_id = self::factory()->user->create();
+		$this->set_current_user( $user_id );
+
+		$att = $this->make_draft_attachment( $user_id );
+
+		// Pretend a sweep has cached a referenced-set that does not know about
+		// the attachment this save is about to reference.
+		set_site_transient( 'bb_draft_referenced_stamp_ids', array( 999999 => true ) );
+
+		$this->drive_activity_draft_save(
+			'draft_user',
+			array(
+				'content' => 'draft with one attachment',
+				'media'   => array( array( 'id' => $att ) ),
+			)
+		);
+
+		$this->assertSame( '1', (string) get_post_meta( $att, 'bb_media_draft', true ), 'Premise: the attachment was stamped by the save.' );
+		$this->assertFalse(
+			get_site_transient( 'bb_draft_referenced_stamp_ids' ),
+			'F3: a save that stamps an attachment must drop the referenced-set cache so the next sweep rescans.'
+		);
 	}
 
 	protected function isolate_draft_maintenance() {
