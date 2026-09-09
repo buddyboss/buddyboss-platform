@@ -1068,6 +1068,14 @@ window.bp = window.bp || {};
 							// saved - and cleared any standing warning as it went
 							// (H1).
 							if ( ! response || ! response.success ) {
+								// A budget refusal (after the row write) may have
+								// evicted older drafts; drop their local copies so the
+								// UI does not keep listing drafts that are gone (F2).
+								// No-op when the response carries no evicted keys; the
+								// failure message below then overwrites the eviction
+								// notice, since the save itself failed.
+								self.handleEvictedDrafts( response );
+
 								self.showDraftFeedback(
 									( response && response.data && response.data.message ) ?
 										response.data.message :
