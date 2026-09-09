@@ -2350,6 +2350,21 @@ window.bp = window.bp || {};
 
 		checkAndStoreDraftToLocalStorage: function( draft_activity ) {
 			try {
+				// Strip inline base64 data: URLs before storing. The paste guard
+				// converts pasted images to uploads, but a drag-and-drop drops a raw
+				// base64 <img> straight into the editor, outside that guard - a single
+				// dropped photo can be several MB and blow the per-origin localStorage
+				// quota, whose failure the catch below silently swallows, disabling
+				// local persistence for every draft on the origin. The server strips
+				// these on save too, so neither store persists the blob (M19).
+				if ( draft_activity && draft_activity.data && 'string' === typeof draft_activity.data.content && /data:[^"']*base64/i.test( draft_activity.data.content ) ) {
+					draft_activity = JSON.parse( JSON.stringify( draft_activity ) );
+					draft_activity.data.content = draft_activity.data.content.replace(
+						/(\s(?:src|href)\s*=\s*)(["'])data:[^"']*base64[^"']*\2/gi,
+						'$1$2$2'
+					);
+				}
+
 				var json_data     = JSON.stringify( draft_activity );
 				var encoder       = new TextEncoder();
 				var data_size_mb  = encoder.encode( json_data ).length / ( 1024 * 1024 );
