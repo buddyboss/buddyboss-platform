@@ -326,7 +326,7 @@ function bb_draft_strip_data_urls( $content ) {
 		array(
 			'/(=\s*")data:(?:[a-z0-9.+-]+\/[a-z0-9.+-]+)?[a-z0-9;=.+-]*,[^"]*/i',
 			'/(=\s*\')data:(?:[a-z0-9.+-]+\/[a-z0-9.+-]+)?[a-z0-9;=.+-]*,[^\']*/i',
-			'/(=\s*)data:(?:[a-z0-9.+-]+\/[a-z0-9.+-]+)?[a-z0-9;=.+-]*,[^\s"\'>]*/i',
+			'/(=\s*)data:[a-z0-9.+-]+\/[a-z0-9.+-]+[a-z0-9;=.+-]*,[^\s"\'>]*/i',
 		),
 		'$1',
 		$content
@@ -1294,18 +1294,31 @@ function bb_draft_enforce_user_budget( $user_id, $current_key, $new_size, $conte
 		$reclaimable += $candidate['bytes'];
 	}
 
-	if ( ( $draft_total - $reclaimable ) > $total_cap ) {
+	// The feasibility refusal is a SAVE concept only: refuse without deleting
+	// when the new save can never fit (H1). The healing context has no new save
+	// to protect - partial reclamation is its whole purpose, so it must fall
+	// through to the eviction loop and reclaim whatever it can (F4). Its caller
+	// ignores 'allowed' and counts 'evicted'.
+	if ( 'heal' !== $context && ( $draft_total - $reclaimable ) > $total_cap ) {
 		$result['allowed'] = false;
 
 		return $result;
 	}
+
+	// The eviction below deletes rows and, by default, releases their attachment
+	// stamps in the CURRENT blog. That is correct for a live in-blog save, but
+	// the healing context runs from the root-only one-shot and evicts heavy
+	// users' rows network-wide, so on multisite it would strip a same-numbered
+	// attachment on the wrong blog - H2 verbatim (F1). Defer the release there
+	// so the per-site orphan-stamp sweep reaps in the correct blog instead.
+	$defer_attachment_release = ( 'heal' === $context && is_multisite() );
 
 	foreach ( $candidates as $candidate ) {
 		if ( $draft_total <= $total_cap ) {
 			break;
 		}
 
-		if ( ! bb_draft_dispose( $user_id, $candidate['meta_key'], $candidate['inner_key'] ) ) {
+		if ( ! bb_draft_dispose( $user_id, $candidate['meta_key'], $candidate['inner_key'], $defer_attachment_release ) ) {
 			continue;
 		}
 

@@ -1656,6 +1656,52 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 	/**
 	 * @return int
 	 */
+	public function return_hundred_k() {
+		return 100000;
+	}
+
+	/**
+	 * F4: the H1 feasibility refusal is a SAVE concept - it must not fire for the
+	 * 'heal' context, where partial reclamation is the whole point. A heavy user
+	 * whose non-evictable bulk (a corrupt row) already exceeds the cap must still
+	 * have their evictable drafts reclaimed under 'heal', even though 'save'
+	 * correctly refuses and deletes nothing.
+	 */
+	public function test_heal_context_reclaims_partially_where_save_refuses() {
+		$user_id = self::factory()->user->create();
+
+		// A corrupt (non-array) row: counted toward the total, never an eviction
+		// candidate, and far larger than the cap on its own.
+		bp_update_user_meta( $user_id, 'draft_user', str_repeat( 'x', 1000000 ) );
+		// A real, evictable draft.
+		bp_update_user_meta( $user_id, 'draft_group_1', array( 'data_key' => 'draft_group_1', '_draft_saved_at' => 100, 'data' => array( 'content' => str_repeat( 'a', 300 ) ) ) );
+
+		add_filter( 'bb_draft_user_total_max_size', array( $this, 'return_hundred_k' ) );
+
+		// 'save': can never fit (corrupt bulk alone exceeds the cap) - refuse,
+		// delete nothing (H1).
+		$save = bb_draft_enforce_user_budget( $user_id, 'draft_user_new', 0, 'save' );
+		$this->assertFalse( $save['allowed'] );
+		$this->assertSame( array(), $save['evicted'] );
+		$this->assertNotEmpty( bp_get_user_meta( $user_id, 'draft_group_1', true ), 'save must not delete the evictable draft when it can never fit.' );
+
+		// 'heal': partial reclamation - evict what it can, even though it cannot
+		// fully reach the cap (F4).
+		$heal = bb_draft_enforce_user_budget( $user_id, '', 0, 'heal' );
+
+		remove_filter( 'bb_draft_user_total_max_size', array( $this, 'return_hundred_k' ) );
+
+		$this->assertContains(
+			'draft_group_1',
+			$heal['evicted'],
+			'F4: heal must reclaim the evictable draft even when the cap can never be fully reached.'
+		);
+		$this->assertEmpty(
+			bp_get_user_meta( $user_id, 'draft_group_1', true ),
+			'F4: the healed draft must actually be removed.'
+		);
+	}
+
 	public function return_fifty() {
 		return 50;
 	}
