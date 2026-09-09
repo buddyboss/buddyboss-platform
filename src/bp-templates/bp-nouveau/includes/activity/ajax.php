@@ -1458,6 +1458,30 @@ function bb_nouveau_ajax_post_draft_activity() {
 				}
 			}
 
+			/**
+			 * Free-text draft fields sanitized as PLAIN text, mirroring the publish
+			 * path which runs sanitize_text_field() on post_title. The content field
+			 * is HTML and handled by the kses pass above; these are short single-line
+			 * values that went to storage unsanitized before - harmless while a draft
+			 * is only ever read back to its owner, but the public draft-loaded /
+			 * draft-collect events hand them to third-party listeners that may render
+			 * them without escaping (M17).
+			 *
+			 * @since BuddyBoss [BBVERSION]
+			 *
+			 * @param string[] $text_keys Draft data keys holding plain text.
+			 */
+			$draft_text_keys = apply_filters(
+				'bb_draft_activity_text_keys',
+				array( 'post_title', 'link_title', 'link_description', 'item_name' )
+			);
+
+			foreach ( $draft_text_keys as $draft_text_key ) {
+				if ( isset( $draft_activity['data'][ $draft_text_key ] ) && is_string( $draft_activity['data'][ $draft_text_key ] ) ) {
+					$draft_activity['data'][ $draft_text_key ] = sanitize_text_field( $draft_activity['data'][ $draft_text_key ] );
+				}
+			}
+
 			$draft_activity['_draft_saved_at'] = time();
 
 			$draft_size = strlen( maybe_serialize( $draft_activity ) );
@@ -1557,9 +1581,17 @@ function bb_nouveau_ajax_post_draft_activity() {
 			// expose the attachments of a draft that still exists if anything
 			// below failed. No $retain_entries argument is needed here because an
 			// activity draft is one draft per meta row, so it has no siblings
-			// that could still reference them.
+			// that could still reference them - but a DIFFERENT row (another
+			// activity draft, a group draft, the forum row) can, so the cross-row
+			// retain set is passed to keep those stamps (L7 fan-out).
 			if ( is_array( $replaced_draft ) && ! empty( $replaced_draft ) ) {
-				bb_draft_release_replaced_attachments( $replaced_draft, $draft_activity, $draft_user_id );
+				bb_draft_release_replaced_attachments(
+					$replaced_draft,
+					$draft_activity,
+					$draft_user_id,
+					array(),
+					bb_draft_collect_other_row_referenced_ids( $draft_user_id, $draft_activity['data_key'] )
+				);
 			}
 		} else {
 			// Dispose strictly from the STORED draft - the client payload's

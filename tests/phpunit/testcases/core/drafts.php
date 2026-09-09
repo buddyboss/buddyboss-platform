@@ -6003,6 +6003,35 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 	}
 
 	/**
+	 * M17: free-text draft fields (post_title and siblings) must be plain-text
+	 * sanitized before storage, like the publish path does - the draft-loaded /
+	 * draft-collect events hand them to third-party listeners that may render them
+	 * without escaping. Only `content` was sanitized before.
+	 *
+	 * Mutation check: drop the bb_draft_activity_text_keys sanitize loop and the
+	 * script tag survives into storage.
+	 */
+	public function test_activity_save_sanitizes_free_text_fields() {
+		$user_id = self::factory()->user->create();
+		$this->set_current_user( $user_id );
+
+		$this->drive_activity_draft_save(
+			'draft_user',
+			array(
+				'content'    => 'body',
+				'post_title' => '<script>alert(1)</script>Title',
+				'item_name'  => 'name<b>x</b>',
+			)
+		);
+
+		$stored = bp_get_user_meta( $user_id, 'draft_user', true );
+
+		$this->assertIsArray( $stored, 'The draft must have been stored.' );
+		$this->assertStringNotContainsString( '<script>', (string) $stored['data']['post_title'], 'post_title must be plain-text sanitized (M17).' );
+		$this->assertStringNotContainsString( '<b>', (string) $stored['data']['item_name'], 'item_name must be plain-text sanitized (M17).' );
+	}
+
+	/**
 	 * L8: bb_draft_release_replaced_attachments() must honour the cross-row
 	 * retain-id set the forum and activity handlers pass it, so replacing an
 	 * entry never strips a stamp another row still holds. This locks the primitive
