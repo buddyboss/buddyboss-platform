@@ -5790,6 +5790,186 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 	}
 
 	/**
+	 * A member must be able to discard their OWN stored forum draft even after
+	 * losing view access to the forum it targets - removed from a private group,
+	 * or the forum turned private after the draft was written.
+	 *
+	 * Discard authorization used to run through the same bbp_user_can_view_forum()
+	 * gate as a save: once the member could no longer see the forum, that gate
+	 * failed, the primary was marked rejected, the dispose block was skipped, and
+	 * the draft (with its stamped attachment) was stranded in usermeta until the
+	 * retention cron - contradicting the handler's own "Discarding one's own
+	 * stored draft never [needs the extra right]" intent. Ownership of the stored
+	 * key, which could only have been written through the view+publish-gated save
+	 * path, is what authorizes the discard now (L3).
+	 *
+	 * Mutation check: restore the view gate on discards (drop `! $discarding_own_draft`)
+	 * and this goes red - the draft survives and its stamp is never released.
+	 */
+	public function test_discarding_own_forum_draft_survives_view_access_loss() {
+		if ( ! bp_is_active( 'forums' ) ) {
+			$this->markTestSkipped( 'Forums component inactive.' );
+		}
+
+		$user_id = self::factory()->user->create();
+		$this->set_current_user( $user_id );
+
+		$forum = self::factory()->post->create( array( 'post_type' => bbp_get_forum_post_type(), 'post_status' => 'publish' ) );
+		$att   = $this->make_draft_attachment( $user_id );
+		update_post_meta( $att, 'bb_media_draft', 1 );
+
+		$key = 'draft_discussion_' . $forum;
+
+		bp_update_user_meta(
+			$user_id,
+			'bb_user_topic_reply_draft',
+			wp_slash(
+				array(
+					$key => array(
+						'data_key'        => $key,
+						'object'          => 'topic',
+						'_draft_saved_at' => time() - 60,
+						'data'            => array(
+							'bbp_topic_content' => 'discard me after removal',
+							'bbp_media'         => wp_json_encode( array( array( 'id' => $att ) ) ),
+						),
+					),
+				)
+			)
+		);
+
+		// The member can no longer see the forum this draft targets.
+		$this->unreadable_forum_id = $forum;
+		add_filter( 'bbp_user_can_view_forum', array( $this, 'filter_block_unreadable_forum' ), 10, 2 );
+
+		$this->drive_forum_draft_discard( $key );
+
+		remove_filter( 'bbp_user_can_view_forum', array( $this, 'filter_block_unreadable_forum' ), 10 );
+		$this->unreadable_forum_id = 0;
+
+		$row = bp_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
+
+		$this->assertTrue(
+			empty( $row ) || ! isset( $row[ $key ] ),
+			'A member must be able to discard their own stored draft after losing view access to its forum.'
+		);
+		$this->assertSame(
+			'',
+			(string) get_post_meta( $att, 'bb_media_draft', true ),
+			'The orphaned draft was the only reference, so discarding it must release its attachment stamp.'
+		);
+	}
+
+	/**
+	 * The discard view-gate exemption is scoped to a key the member actually
+	 * HOLDS - it must never widen into a blanket "discards skip the view check",
+	 * which would reopen the L1 existence oracle. A discard for an unreadable
+	 * forum the member holds NO draft in stays behind the view gate and answers
+	 * with the same indistinguishable rejection as any unauthorized request.
+	 *
+	 * Mutation check: replace the ownership exemption with the naive
+	 * `$is_draft_update`-only gate and this goes red - the crafted discard skips
+	 * the view check, no-ops, and answers success:true, leaking that the forum
+	 * exists.
+	 */
+	public function test_discard_of_unowned_key_stays_behind_the_view_gate() {
+		if ( ! bp_is_active( 'forums' ) ) {
+			$this->markTestSkipped( 'Forums component inactive.' );
+		}
+
+		$user_id = self::factory()->user->create();
+		$this->set_current_user( $user_id );
+
+		$owned_forum  = self::factory()->post->create( array( 'post_type' => bbp_get_forum_post_type(), 'post_status' => 'publish' ) );
+		$unread_forum = self::factory()->post->create( array( 'post_type' => bbp_get_forum_post_type(), 'post_status' => 'publish' ) );
+
+		$owned_key   = 'draft_discussion_' . $owned_forum;
+		$crafted_key = 'draft_discussion_' . $unread_forum; // The member holds NO draft here.
+
+		bp_update_user_meta(
+			$user_id,
+			'bb_user_topic_reply_draft',
+			wp_slash(
+				array(
+					$owned_key => array(
+						'data_key'        => $owned_key,
+						'object'          => 'topic',
+						'_draft_saved_at' => time() - 60,
+						'data'            => array( 'bbp_topic_content' => 'keep me' ),
+					),
+				)
+			)
+		);
+
+		$this->unreadable_forum_id = $unread_forum;
+		add_filter( 'bbp_user_can_view_forum', array( $this, 'filter_block_unreadable_forum' ), 10, 2 );
+
+		$response = $this->drive_forum_draft_discard_capture( $crafted_key );
+
+		remove_filter( 'bbp_user_can_view_forum', array( $this, 'filter_block_unreadable_forum' ), 10 );
+		$this->unreadable_forum_id = 0;
+
+		$this->assertFalse(
+			(bool) ( $response['success'] ?? false ),
+			'A discard for an unreadable forum the member does not hold must return the indistinguishable auth error, not success - the oracle stays closed.'
+		);
+
+		$row = bp_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
+		$this->assertTrue(
+			isset( $row[ $owned_key ] ),
+			'A crafted discard for a key the member does not hold must not disturb their genuine draft in another forum.'
+		);
+	}
+
+	/**
+	 * Drive bb_post_topic_reply_draft() as a DISCARD and return the decoded
+	 * JSON response, so a test can assert the response the client would see
+	 * (success vs the indistinguishable auth error).
+	 *
+	 * @param string $data_key Draft key to discard.
+	 * @return array Decoded response body, or empty array when undecodable.
+	 */
+	protected function drive_forum_draft_discard_capture( $data_key ) {
+		$_POST    = array();
+		$_REQUEST = array();
+
+		$_REQUEST['draft_topic_reply'] = wp_slash(
+			wp_json_encode(
+				array(
+					'data_key'    => $data_key,
+					'object'      => 'topic',
+					'post_action' => 'delete',
+				)
+			)
+		);
+
+		// phpcs:disable WordPress.Security.NonceVerification -- this test drives the handler that performs the verification.
+		$_POST['_wpnonce_post_topic_reply_draft'] = wp_create_nonce( 'post_topic_reply_draft_data' );
+		$_REQUEST                                 = array_merge( $_REQUEST, $_POST );
+		// phpcs:enable WordPress.Security.NonceVerification
+
+		add_filter( 'wp_doing_ajax', '__return_true' );
+		add_filter( 'wp_die_ajax_handler', array( $this, 'filter_draft_die_handler' ), 99 );
+
+		ob_start();
+
+		try {
+			bb_post_topic_reply_draft();
+		} catch ( Exception $e ) {
+			unset( $e );
+		}
+
+		$body = ob_get_clean();
+
+		remove_filter( 'wp_die_ajax_handler', array( $this, 'filter_draft_die_handler' ), 99 );
+		remove_filter( 'wp_doing_ajax', '__return_true' );
+
+		$decoded = json_decode( (string) $body, true );
+
+		return is_array( $decoded ) ? $decoded : array();
+	}
+
+	/**
 	 * Discarding one forum draft must NOT release an attachment a sibling draft
 	 * still references.
 	 */

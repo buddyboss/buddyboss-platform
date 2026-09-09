@@ -488,16 +488,42 @@ function bb_post_topic_reply_draft() {
 
 		$is_draft_update = ( isset( $draft_topic_reply['post_action'] ) && 'update' === $draft_topic_reply['post_action'] );
 
+		// The member's OWN stored row, read once here and reused by the merge
+		// below (this replaces a second read of the same request-stable meta).
+		// It establishes ownership of the incoming key: a draft can only have
+		// been stored through this handler's save path, which already enforced
+		// view + publish, so a key present in this row was authorized when it
+		// was written.
+		$existing_draft = bp_get_user_meta( $user_id, $usermeta_key, true );
+
+		// A DISCARD of a key the member already holds is theirs to remove even
+		// after they lose access to the forum it targets - removed from a
+		// private group, forum turned private. Tying discard authorization to
+		// CURRENT view access stranded such drafts (and their stamped
+		// attachments) in usermeta until the retention cron, contradicting the
+		// "Discarding one's own stored draft never [needs the extra right]"
+		// intent stated at the save gate below (L3).
+		$discarding_own_draft = (
+			! $is_draft_update &&
+			is_array( $existing_draft ) &&
+			isset( $existing_draft[ (string) $draft_topic_reply['data_key'] ] )
+		);
+
 		// The shape check above resolves client-supplied post IDs, so on its own
 		// it answers "does this ID exist, and is it a forum/topic/reply?" for
 		// ANY id - an existence and post-type oracle over hidden and private
 		// forums, available to any logged-in member. Gate it behind the same
 		// view check the save path uses, and return one indistinguishable error
-		// for "no such shape", "cannot see it" and "may not post here"
-		// (L1).
+		// for "no such shape", "cannot see it" and "may not post here" (L1).
+		//
+		// A member discarding a key they already hold is exempt from the view
+		// gate ONLY: the entry stays behind the SHAPE check, so a crafted key
+		// the member does NOT hold still falls through to the same view check
+		// and the same indistinguishable rejection - the oracle stays closed,
+		// while the member's own orphaned draft becomes removable again (L3).
 		$draft_key_allowed = ( false !== $draft_key_context );
 
-		if ( $draft_key_allowed && ! empty( $draft_key_context['forum_id'] ) ) {
+		if ( $draft_key_allowed && ! empty( $draft_key_context['forum_id'] ) && ! $discarding_own_draft ) {
 			$draft_key_allowed = bbp_user_can_view_forum(
 				array(
 					'user_id'  => $user_id,
@@ -597,8 +623,6 @@ function bb_post_topic_reply_draft() {
 				}
 			}
 		}
-
-		$existing_draft = bp_get_user_meta( $user_id, $usermeta_key, true );
 
 		// A save carrying NOTHING must never replace a stored draft that
 		// carries something.
