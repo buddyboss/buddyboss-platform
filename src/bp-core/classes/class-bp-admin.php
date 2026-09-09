@@ -221,6 +221,8 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			// Fix the "View details"/"View version details" links on the Plugins page, which
 			// otherwise point to a WordPress.org plugin_information lookup that always fails.
 			add_filter( 'site_transient_update_plugins', array( $this, 'bb_fix_plugin_details_link' ), 20 );
+			add_filter( 'plugins_api', array( $this, 'bb_plugins_api_information' ), 10, 3 );
+			add_filter( 'plugin_row_meta', array( $this, 'bb_modify_plugin_row_meta' ), 10, 2 );
 		}
 
 		/**
@@ -976,11 +978,12 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 		 * BuddyBoss Platform is distributed from BuddyBoss's own servers, not the
 		 * WordPress.org plugin directory. WordPress core builds the "View details"
 		 * (plugin row) and "View version details" (update notice) links from the
-		 * 'slug' it finds on this transient, then requests that slug from
-		 * WordPress.org's plugins_api() — which always returns "Plugin not found."
-		 * for a plugin that isn't listed there. Removing 'slug' lets the row link
-		 * fall back to the plugin's own site link, and pointing 'url' at our
-		 * release notes page gives the update notice a working destination.
+		 * 'slug' it finds on this transient. A missing slug is not an option either:
+		 * core then falls back to $response->id (the plugin file path) or renders
+		 * the external 'url' inside a thickbox iframe, which buddyboss.com refuses
+		 * via X-Frame-Options — both dead ends. So the slug is normalized here and
+		 * bb_plugins_api_information() serves the plugin information for it locally,
+		 * so the links open a working modal instead of a WordPress.org 404.
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
@@ -997,8 +1000,8 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 
 			foreach ( array( 'response', 'no_update' ) as $key ) {
 				if ( isset( $value->{$key}[ $plugin_file ] ) ) {
-					unset( $value->{$key}[ $plugin_file ]->slug );
-					$value->{$key}[ $plugin_file ]->url = 'https://buddyboss.com/resources/release-notes/';
+					$value->{$key}[ $plugin_file ]->slug = dirname( $plugin_file );
+					$value->{$key}[ $plugin_file ]->url  = $this->bb_get_release_notes_page_url();
 				}
 			}
 
@@ -1041,6 +1044,216 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 
 			// Clean up the update flag to prevent database bloat.
 			delete_option( '_bb_is_update' );
+		}
+
+		/**
+		 * Serve plugin information for BuddyBoss Platform locally.
+		 *
+		 * Handles the plugin-information modal opened by the "View version x.x.x
+		 * details" link in the update notice, which otherwise queries
+		 * WordPress.org and returns "Plugin not found." The changelog section is
+		 * fetched from the buddyboss.com release notes API when available and
+		 * always links to the full release notes page.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param false|object|array $result The result object or array. Default false.
+		 * @param string             $action The type of information being requested from the Plugin Installation API.
+		 * @param object             $args   Plugin API arguments.
+		 *
+		 * @return false|object Plugin information for BuddyBoss Platform, or the original result.
+		 */
+		public function bb_plugins_api_information( $result, $action, $args ) {
+			if ( 'plugin_information' !== $action || empty( $args->slug ) ) {
+				return $result;
+			}
+
+			$plugin_file = plugin_basename( buddypress()->basename );
+
+			if ( dirname( $plugin_file ) !== $args->slug ) {
+				return $result;
+			}
+
+			$new_version = BP_PLATFORM_VERSION;
+			$package     = '';
+			$update_data = get_site_transient( 'update_plugins' );
+
+			if ( ! empty( $update_data->response[ $plugin_file ]->new_version ) ) {
+				$new_version = $update_data->response[ $plugin_file ]->new_version;
+				$package     = ! empty( $update_data->response[ $plugin_file ]->package ) ? $update_data->response[ $plugin_file ]->package : '';
+			}
+
+			$release_url = $this->bb_get_release_notes_page_url( $new_version );
+			$changelog   = $this->bb_get_release_notes_html( $new_version );
+
+			$release_link = sprintf(
+				'<p><a href="%1$s" target="_blank" rel="noopener noreferrer">%2$s</a></p>',
+				esc_url( $release_url ),
+				sprintf(
+					/* translators: %s: version number. */
+					esc_html__( 'View the full release notes for version %s on buddyboss.com', 'buddyboss' ),
+					esc_html( $new_version )
+				)
+			);
+
+			$information = array(
+				'name'          => __( 'BuddyBoss Platform', 'buddyboss' ),
+				'slug'          => $args->slug,
+				'version'       => $new_version,
+				'author'        => '<a href="https://www.buddyboss.com/" target="_blank" rel="noopener noreferrer">BuddyBoss</a>',
+				'homepage'      => 'https://www.buddyboss.com/',
+				'last_updated'  => '',
+				'sections'      => array(
+					'description' => '<p>' . esc_html__( 'The BuddyBoss Platform adds community features to WordPress. Member Profiles, Activity Feeds, Direct Messaging, Notifications, and more!', 'buddyboss' ) . '</p>',
+					'changelog'   => $changelog . $release_link,
+				),
+				'download_link' => $package,
+			);
+
+			/**
+			 * Filters the locally served plugin information for BuddyBoss Platform.
+			 *
+			 * @since BuddyBoss [BBVERSION]
+			 *
+			 * @param array  $information Plugin information served to the plugin-information modal.
+			 * @param string $new_version Version number the information describes.
+			 * @param object $args        Plugin API arguments.
+			 */
+			$information = apply_filters( 'bb_platform_plugins_api_information', $information, $new_version, $args );
+
+			return (object) $information;
+		}
+
+		/**
+		 * Replace the "View details" plugin row link with "Visit plugin site".
+		 *
+		 * With a slug present on the update transient, WordPress core renders a
+		 * "View details" link on the plugin row. Per product decision the row
+		 * should link to the BuddyBoss site instead, matching the other
+		 * BuddyBoss plugins; the plugin-information modal remains reachable from
+		 * the "View version x.x.x details" link in the update notice.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param string[] $plugin_meta An array of the plugin's metadata.
+		 * @param string   $plugin_file Path to the plugin file relative to the plugins directory.
+		 *
+		 * @return string[] Modified plugin metadata.
+		 */
+		public function bb_modify_plugin_row_meta( $plugin_meta, $plugin_file ) {
+			if ( plugin_basename( buddypress()->basename ) !== $plugin_file ) {
+				return $plugin_meta;
+			}
+
+			foreach ( $plugin_meta as $key => $meta ) {
+				if ( false !== strpos( $meta, 'plugin-install.php?tab=plugin-information' ) ) {
+					$plugin_meta[ $key ] = sprintf(
+						'<a href="%1$s" target="_blank" rel="noopener noreferrer" aria-label="%2$s">%3$s</a>',
+						esc_url( 'https://www.buddyboss.com/' ),
+						esc_attr__( 'Visit plugin site for BuddyBoss Platform', 'buddyboss' ),
+						esc_html__( 'Visit plugin site', 'buddyboss' )
+					);
+				}
+			}
+
+			return $plugin_meta;
+		}
+
+		/**
+		 * Get the buddyboss.com release notes page URL.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param string $version Optional. Version number to link directly to;
+		 *                        empty for the release notes archive.
+		 *
+		 * @return string Release notes page URL.
+		 */
+		public function bb_get_release_notes_page_url( $version = '' ) {
+			$url = 'https://www.buddyboss.com/resources/buddyboss-platform-releases/';
+
+			if ( ! empty( $version ) ) {
+				$url .= str_replace( '.', '-', $version ) . '/';
+			}
+
+			return $url;
+		}
+
+		/**
+		 * Fetch the release notes HTML for a version from buddyboss.com.
+		 *
+		 * Queries the public releases-platform REST endpoint and caches the
+		 * result. A failed or empty response is cached briefly so the Plugins
+		 * screen never hammers the remote site, and the caller falls back to a
+		 * plain release notes link.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param string $version Version number, e.g. '3.4.4'.
+		 *
+		 * @return string Sanitized release notes HTML, or empty string if unavailable.
+		 */
+		public function bb_get_release_notes_html( $version ) {
+			$cache_key = 'bb_platform_release_notes_' . md5( $version );
+			$cached    = get_transient( $cache_key );
+
+			if ( false !== $cached ) {
+				return is_string( $cached ) ? $cached : '';
+			}
+
+			$endpoint = add_query_arg(
+				array(
+					'slug'    => str_replace( '.', '-', $version ),
+					'_fields' => 'title,content,link,release_fields',
+				),
+				'https://buddyboss.com/resources/wp-json/wp/v2/releases-platform'
+			);
+
+			$response = wp_remote_get( $endpoint, array( 'timeout' => 10 ) );
+
+			if ( is_wp_error( $response ) || 200 !== wp_remote_retrieve_response_code( $response ) ) {
+				set_transient( $cache_key, '', HOUR_IN_SECONDS );
+
+				return '';
+			}
+
+			$items = json_decode( wp_remote_retrieve_body( $response ), true );
+			$html  = '';
+
+			if ( is_array( $items ) && ! empty( $items[0] ) && is_array( $items[0] ) ) {
+				$item = $items[0];
+
+				if ( ! empty( $item['content']['rendered'] ) ) {
+					$html = $item['content']['rendered'];
+				} elseif ( ! empty( $item['release_fields'] ) ) {
+					$fields = $item['release_fields'];
+
+					if ( is_string( $fields ) ) {
+						$html = $fields;
+					} elseif ( is_array( $fields ) ) {
+						foreach ( array( 'changelog', 'changes', 'release_notes', 'content' ) as $field_key ) {
+							if ( ! empty( $fields[ $field_key ] ) && is_string( $fields[ $field_key ] ) ) {
+								$html = $fields[ $field_key ];
+								break;
+							}
+						}
+					}
+				}
+			}
+
+			if ( ! empty( $html ) ) {
+				// The release feed contains tags whose closing bracket is missing at
+				// line ends (e.g. "</ul\r\n"); repair them so wp_kses_post() does not
+				// escape the fragment into visible text, then balance whatever is left.
+				$html = preg_replace( '/<(\/?[a-z][a-z0-9]*)(?=\s*(?:\r|\n|$))(?!>)/i', '<$1>', $html );
+				$html = force_balance_tags( wp_kses_post( $html ) );
+			} else {
+				$html = '';
+			}
+
+			set_transient( $cache_key, $html, ! empty( $html ) ? 12 * HOUR_IN_SECONDS : HOUR_IN_SECONDS );
+
+			return $html;
 		}
 	}
 endif; // End class_exists check.
