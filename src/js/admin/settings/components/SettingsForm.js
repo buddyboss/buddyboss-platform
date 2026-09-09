@@ -166,6 +166,11 @@ function PageCreateButton( { field, disabled, onCreated } ) {
  * @param {Object}   props.values           Current field values
  * @param {Function} props.onChange         Change handler
  * @param {Function} props.onProBadgeClick  Pro badge click handler
+ * @param {Function} props.onUpgradeClick   Empty-state upgrade button handler.
+ *                                          Called with the field when it
+ *                                          carries an `upgrade_modal` payload,
+ *                                          so the button opens UpgradeModal
+ *                                          in-page instead of navigating.
  * @param {boolean}  props.disabled         When true, every field control
  *                                          rendered by the form is forced
  *                                          into its disabled state. Used by
@@ -178,7 +183,7 @@ function PageCreateButton( { field, disabled, onCreated } ) {
  *                                          full intensity.
  * @returns {JSX.Element} Settings form component
  */
-export function SettingsForm({ fields, values, onChange, onProBadgeClick, disabled: formDisabled = false }) {
+export function SettingsForm({ fields, values, onChange, onProBadgeClick, onUpgradeClick, disabled: formDisabled = false }) {
 	// Use reaction callbacks hook for jQuery emotion picker integration
 	const { defaultEmotionsRef } = useReactionCallbacks(onChange, values);
 
@@ -940,7 +945,38 @@ export function SettingsForm({ fields, values, onChange, onProBadgeClick, disabl
 								dangerouslySetInnerHTML={{ __html: sanitizedHtml[ field.name + '__desc' ] || '' }}
 							/>
 						) }
-						{ field.button_label && field.addon_action && field.addon_slug ? (
+						{ field.button_label && field.upgrade_modal && onUpgradeClick &&
+							( ! field.upgrade_catalog_url || field.button_url === field.upgrade_catalog_url ) ? (
+							// Catalog-backed upsell: open UpgradeModal in-page rather
+							// than sending the admin off to pricing, matching the
+							// field-level pro badge. Rendered as a <button> because it
+							// performs an in-page action — an <a href> here would be a
+							// lie to keyboard and screen-reader users, and middle-click
+							// would open a dead tab.
+							//
+							// When the payload came from the catalog, the button must still
+							// point AT the catalog URL. A `bb_admin_settings_format_field_data`
+							// callback may swap the button per runtime state — Member Blogs
+							// sends its no-license state to the license screen — and that
+							// choice must win. The modal is the richer form of the marketing
+							// link, so it may only ever replace the marketing link, never a
+							// destination a consumer picked deliberately.
+							//
+							// No catalog URL means the payload was registered by the panel
+							// itself, which is an explicit request for the modal rather than
+							// something the catalog imposed — nothing to override, so it is
+							// allowed. Such a panel controls the modal by registering the
+							// payload only in the states that should show it.
+							//
+							// Everything else falls through to the plain link below.
+							<button
+								type="button"
+								onClick={ () => onUpgradeClick( field ) }
+								className="bb-admin-empty-state__button"
+							>
+								{ field.button_label }
+							</button>
+						) : field.button_label && field.addon_action && field.addon_slug ? (
 							// Install or activate the add-on in place via AJAX.
 							// `addon_nonce_key` picks which bbAdminData nonce the
 							// handler expects (Mothership vs Platform-owned) —

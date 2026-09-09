@@ -967,6 +967,11 @@ class BB_Admin_Settings_Ajax {
 				// runtime state can pick the marketing URL for its upsell states while
 				// keeping its own URLs (license screen, add-ons screen) for the others.
 				'upgrade_catalog_url'       => null,
+				// Resolved below alongside `upgrade_catalog_url`: the catalog entry in
+				// UpgradeModal's shape ({ tier, label, title, description, media, url }).
+				// When present, an empty-state upgrade button opens the modal in-page
+				// rather than navigating away.
+				'upgrade_modal'             => null,
 				// Empty state fields (centered card with icon + title + description + button).
 				'empty_state_title'         => $field['empty_state_title'] ?? null,
 				'empty_state_description'   => $field['empty_state_description'] ?? null,
@@ -1246,6 +1251,13 @@ class BB_Admin_Settings_Ajax {
 			 * `bb_admin_settings_format_field_data` callback that swaps the button per
 			 * runtime state (Member Blogs does) can use the marketing URL for its
 			 * upsell states while keeping its own URLs for the others.
+			 *
+			 * `upgrade_modal` carries the same catalog entry in the shape UpgradeModal
+			 * consumes, so an empty-state button can open the modal in-page instead of
+			 * navigating straight to pricing — the behavior field-level pro badges have
+			 * had since 3.0. It is built whenever the catalog resolves an entry, even
+			 * one without an `upgrade_url`: the modal supplies its own pricing fallback,
+			 * so an entry that is only hero art plus copy still renders.
 			 */
 			if (
 				! empty( $field['upgrade_from_catalog'] ) &&
@@ -1260,6 +1272,41 @@ class BB_Admin_Settings_Ajax {
 					// no entry, so the catalog wins whenever it does.
 					$field_data['button_url'] = $field_data['upgrade_catalog_url'];
 				}
+
+				if ( ! empty( $upsell_entry ) && function_exists( 'bb_field_upgrade_to_modal_payload' ) ) {
+					// Prefer the empty state's own heading as the modal title fallback:
+					// on an upsell panel the empty-state title names the feature
+					// ("Email Digest") while `label` is typically blank.
+					$field_data['upgrade_modal'] = bb_field_upgrade_to_modal_payload(
+						$upsell_entry,
+						$field_data['empty_state_title'] ?? $field_data['label'] ?? ''
+					);
+				}
+			}
+
+			/*
+			 * Registered fallback. A panel may ship its own modal content so its upsell
+			 * works before — or without — a catalog entry, which matters for a feature
+			 * that launches ahead of the marketing push: with neither, the button
+			 * silently degrades to a plain pricing link and the designed modal never
+			 * appears. The catalog still wins whenever it holds an entry, so marketing
+			 * keeps the ability to retarget copy, art and URL without a plugin release.
+			 *
+			 * Passed through the same builder as the catalog path so both shapes are
+			 * sanitized identically and React has one contract; registration therefore
+			 * uses the catalog's key names (`upgrade_title`, `upgrade_description`,
+			 * `upgrade_tier`, `upgrade_url`, `upgrade_image_url`/`upgrade_video_url`).
+			 */
+			if (
+				empty( $field_data['upgrade_modal'] ) &&
+				! empty( $field['upgrade_modal'] ) &&
+				is_array( $field['upgrade_modal'] ) &&
+				function_exists( 'bb_field_upgrade_to_modal_payload' )
+			) {
+				$field_data['upgrade_modal'] = bb_field_upgrade_to_modal_payload(
+					$field['upgrade_modal'],
+					$field_data['empty_state_title'] ?? $field_data['label'] ?? ''
+				);
 			}
 
 			// Inject upload_config and resolved upload_url for image_radio/image_upload fields with upload support.
