@@ -4808,16 +4808,17 @@ function bp_core_parse_url( $url ) {
 
 	$parse_url_data = wp_parse_url( $url, PHP_URL_HOST );
 	$original_url   = $url;
+	$user_agent     = bb_get_url_preview_user_agent();
 
-	if ( in_array( $parse_url_data, apply_filters( 'bp_core_parse_url_shorten_url_provider', array( 'bit.ly', 'snip.ly', 'rb.gy', 'tinyurl.com', 'tiny.one', 'rotf.lol', 'b.link', '4ubr.short.gy', '' ) ), true ) ) {
+	if ( in_array( $parse_url_data, apply_filters( 'bp_core_parse_url_shorten_url_provider', array( 'bit.ly', 'snip.ly', 'rb.gy', 'tinyurl.com', 'tiny.one', 'rotf.lol', 'b.link', '4ubr.short.gy', 'maps.app.goo.gl', '' ) ), true ) ) {
 		$response = wp_safe_remote_get(
 			$url,
 			array(
-				'stream'      => true,
-				'headers'     => array(
-					'user-agent' => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:71.0) Gecko/20100101 Firefox/71.0',
+				'stream'  => true,
+				'headers' => array(
+					'user-agent' => $user_agent,
 				),
-			),
+			)
 		);
 
 		if ( ! is_wp_error( $response ) && ! empty( $response['http_response']->get_response_object()->url ) && $response['http_response']->get_response_object()->url !== $url ) {
@@ -4830,16 +4831,24 @@ function bp_core_parse_url( $url ) {
 		if ( $original_url === $url ) {
 			$context = array(
 				'http' => array(
-					'method'        => 'GET',
-					'max_redirects' => 1,
+					'method'          => 'GET',
+					// Stop at the first response so the Location header below reflects the redirect.
+					'follow_location' => 0,
+					'user_agent'      => $user_agent,
 				),
 			);
 
 			@file_get_contents( $url, null, stream_context_create( $context ) );
-			if ( isset( $http_response_header ) && isset( $http_response_header[6] ) ) {
-				$new_url = str_replace( 'Location: ', '', $http_response_header[6] );
-				if ( filter_var( $new_url, FILTER_VALIDATE_URL ) ) {
-					$url = $new_url;
+			if ( ! empty( $http_response_header ) && is_array( $http_response_header ) ) {
+				// Find the redirect target instead of relying on a fixed header position.
+				foreach ( $http_response_header as $response_header ) {
+					if ( 0 === stripos( $response_header, 'Location:' ) ) {
+						$new_url = trim( substr( $response_header, strlen( 'Location:' ) ) );
+						if ( filter_var( $new_url, FILTER_VALIDATE_URL ) ) {
+							$url = $new_url;
+						}
+						break;
+					}
 				}
 			}
 		}
@@ -4880,7 +4889,7 @@ function bp_core_parse_url( $url ) {
 		$parsed_url_data['error']       = '';
 		$parsed_url_data['wp_embed']    = true;
 	} else {
-		$args = array( 'user-agent' => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:71.0) Gecko/20100101 Firefox/71.0' );
+		$args = array( 'user-agent' => $user_agent );
 
 		if ( bb_is_same_site_url( $url ) ) {
 			if ( ! bp_enable_private_network() ) {
@@ -10980,4 +10989,28 @@ function bb_has_paid_product() {
 	 * @param bool $detected Whether a paid product was detected.
 	 */
 	return (bool) apply_filters( 'bb_has_paid_product', $detected );
+}
+
+/**
+ * Get the user agent string used for URL preview HTTP requests.
+ *
+ * A modern browser UA is required so URL redirect resolvers (e.g. Google's
+ * maps.app.goo.gl short-link service) return proper 3xx redirects instead of
+ * empty JS-only interstitials that contain no scrapeable metadata.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return string User agent string.
+ */
+function bb_get_url_preview_user_agent() {
+	$user_agent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36';
+
+	/**
+	 * Filters the user agent string used for URL preview HTTP requests.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $user_agent User agent string.
+	 */
+	return apply_filters( 'bb_url_preview_user_agent', $user_agent );
 }
