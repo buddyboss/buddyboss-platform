@@ -4797,29 +4797,6 @@ function bp_core_get_group_avatar( $legacy_user_avatar_name, $legacy_group_avata
 }
 
 /**
- * Get the user agent string used for URL preview HTTP requests.
- *
- * A modern browser UA is required so URL redirect resolvers (e.g. Google's
- * maps.app.goo.gl short-link service) return proper 3xx redirects instead of
- * empty JS-only interstitials that contain no scrapeable metadata.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @return string User agent string.
- */
-function bb_get_url_preview_user_agent() {
-
-	/**
-	 * Filters the user agent string used for URL preview HTTP requests.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @param string $user_agent User agent string.
-	 */
-	return apply_filters( 'bb_url_preview_user_agent', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36' );
-}
-
-/**
  * Parse url and get data about URL.
  *
  * @param string $url URL to parse data.
@@ -4854,9 +4831,11 @@ function bp_core_parse_url( $url ) {
 		if ( $original_url === $url ) {
 			$context = array(
 				'http' => array(
-					'method'        => 'GET',
-					'max_redirects' => 1,
-					'user_agent'    => $user_agent,
+					'method'          => 'GET',
+					// Stop at the first response so the Location header below reflects the redirect.
+					'follow_location' => 0,
+					'max_redirects'   => 1,
+					'user_agent'      => $user_agent,
 				),
 			);
 
@@ -11011,4 +10990,27 @@ function bb_has_paid_product() {
 	 * @param bool $detected Whether a paid product was detected.
 	 */
 	return (bool) apply_filters( 'bb_has_paid_product', $detected );
+}
+
+/**
+ * Get the user agent string used for URL preview HTTP requests.
+ *
+ * A modern browser UA is required so URL redirect resolvers (e.g. Google's
+ * maps.app.goo.gl short-link service) return proper 3xx redirects instead of
+ * empty JS-only interstitials that contain no scrapeable metadata.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return string User agent string.
+ */
+function bb_get_url_preview_user_agent() {
+
+	/**
+	 * Filters the user agent string used for URL preview HTTP requests.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $user_agent User agent string.
+	 */
+	return apply_filters( 'bb_url_preview_user_agent', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36' );
 }
