@@ -716,6 +716,56 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 	}
 
 	/**
+	 * Recommendation #5 - the whole point of the has_draft probe is that the
+	 * localized params must NOT carry the draft content (only a cheap boolean),
+	 * so page HTML stays small and the full draft is fetched lazily. Assert the
+	 * payload is actually blanked, on BOTH surfaces, when a draft exists.
+	 */
+	public function test_localized_params_carry_no_draft_content() {
+		$user_id  = self::factory()->user->create();
+		$old_user = get_current_user_id();
+		$this->set_current_user( $user_id );
+
+		// Activity: a stored draft_user with real content.
+		bp_update_user_meta(
+			$user_id,
+			'draft_user',
+			array( 'data_key' => 'draft_user', '_draft_saved_at' => time(), 'data' => array( 'content' => 'PRIVATE activity draft body' ) )
+		);
+
+		$activity = bp_nouveau_activity_localize_scripts( array() );
+
+		$this->assertTrue( $activity['activity']['params']['has_draft'], 'Premise: activity has_draft is true.' );
+		$this->assertSame(
+			'',
+			$activity['activity']['params']['draft_activity'],
+			'Rec #5: the localized activity params must carry no draft content - draft_activity must be the empty string, not the stored draft.'
+		);
+		$json = wp_json_encode( $activity['activity']['params'] );
+		$this->assertStringNotContainsString( 'PRIVATE activity draft body', (string) $json, 'The draft body must not leak into the localized activity params.' );
+
+		// Forums: a stored aggregate row with real content.
+		if ( bp_is_active( 'forums' ) ) {
+			bp_update_user_meta(
+				$user_id,
+				'bb_user_topic_reply_draft',
+				array( 'draft_reply' => array( 'data_key' => 'draft_reply', '_draft_saved_at' => time(), 'data' => array( 'bbp_reply_content' => 'PRIVATE forum draft body' ) ) )
+			);
+
+			$forums = bb_nouveau_forum_localize_scripts( array() );
+
+			$this->assertTrue( $forums['forums']['has_draft'], 'Premise: forum has_draft is true.' );
+			$this->assertEmpty(
+				$forums['forums']['draft'],
+				'Rec #5: the localized forum params must carry no draft content - the draft map must be empty.'
+			);
+			$this->assertStringNotContainsString( 'PRIVATE forum draft body', (string) wp_json_encode( $forums['forums'] ), 'The forum draft body must not leak into the localized params.' );
+		}
+
+		$this->set_current_user( $old_user );
+	}
+
+	/**
 	 * Replacing a draft must not strip protection from attachments it keeps.
 	 *
 	 * A restored draft re-sends its stored attachment list verbatim, so the
