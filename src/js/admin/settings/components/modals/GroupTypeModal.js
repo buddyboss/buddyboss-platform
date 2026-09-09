@@ -7,17 +7,16 @@
  * @since BuddyBoss [BBVERSION]
  */
 
-import { useState, useEffect, useCallback } from '@wordpress/element';
 import {
-	TextControl,
-	CheckboxControl,
-	SelectControl,
 	Button,
-	Spinner,
+	CheckboxControl,
 	Modal,
+	SelectControl,
+	TextControl
 } from '@wordpress/components';
-import { __ } from '@wordpress/i18n';
+import { useCallback, useEffect, useState } from '@wordpress/element';
 import { decodeEntities } from '@wordpress/html-entities';
+import { __ } from '@wordpress/i18n';
 import { createGroupType, updateGroupType } from '../../utils/ajax';
 import { sanitizeHtml } from '../../utils/sanitize';
 
@@ -419,6 +418,11 @@ export function GroupTypeModal( { isOpen, onClose, onSave, groupType, memberType
 	}
 
 	var isEditing = !! ( groupType && groupType.id );
+	// The [group] shortcode expects the group type key (`name` in the AJAX
+	// payload, mirrors `_bp_group_type_key`), not the post ID.
+	var groupTypeShortcode = isEditing && groupType.name
+		? '[group type="' + groupType.name + '"]'
+		: '';
 	var modalTitle = isEditing
 		? __( 'Edit Group Type', 'buddyboss' )
 		: __( 'Add New Group Type', 'buddyboss' );
@@ -685,7 +689,7 @@ export function GroupTypeModal( { isOpen, onClose, onSave, groupType, memberType
 					</div>
 
 					{/* Shortcode (edit mode only) */}
-					{ isEditing && groupType && groupType.id && (
+					{ groupTypeShortcode && (
 						<div className="bb-admin-group-type-modal__section">
 							<h4 className="bb-admin-group-type-modal__section-title">
 								{ __( 'Shortcode', 'buddyboss' ) }
@@ -694,7 +698,7 @@ export function GroupTypeModal( { isOpen, onClose, onSave, groupType, memberType
 								<input
 									type="text"
 									readOnly
-									value={ '[group type="' + groupType.id + '"]' }
+									value={ groupTypeShortcode }
 									className="bb-admin-group-type-modal__shortcode-input"
 									onClick={ function ( e ) { e.target.select(); } }
 								/>
@@ -702,11 +706,10 @@ export function GroupTypeModal( { isOpen, onClose, onSave, groupType, memberType
 									type="button"
 									className="bb-admin-group-type-modal__shortcode-copy"
 									onClick={ function () {
-										var shortcode = '[group type="' + groupType.id + '"]';
 										if ( ! navigator.clipboard ) {
 											return;
 										}
-										navigator.clipboard.writeText( shortcode ).then( function () {
+										navigator.clipboard.writeText( groupTypeShortcode ).then( function () {
 											window.dispatchEvent( new CustomEvent( 'bb-settings-toast', {
 												detail: { status: 'success', message: __( 'Copied to clipboard.', 'buddyboss' ) },
 											} ) );
