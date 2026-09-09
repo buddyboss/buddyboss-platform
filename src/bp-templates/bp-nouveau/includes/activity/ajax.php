@@ -1309,10 +1309,18 @@ function bb_nouveau_ajax_post_draft_activity() {
 						unset( $draft_activity['data']['media'][ $media_key ] );
 						continue;
 					}
+					// Stamp EVERY owned attachment the draft keeps, not only the
+					// ones whose payload lacks the flag: a restored draft echoes
+					// the stored JSON back with bb_media_draft already set, so a
+					// flag-gated queue stays empty and the post-write cache
+					// invalidation never fires, while the attachment is still
+					// referenced - the orphan-stamp sweep then releases it and the
+					// cron reaps a file the draft points at (F7, matching forums).
 					if ( ! isset( $new_media_attachment['bb_media_draft'] ) ) {
 						$draft_activity['data']['media'][ $media_key ]['bb_media_draft'] = 1;
-						$stamp_attachment_ids[] = (int) $new_media_attachment['id'];
 					}
+
+					$stamp_attachment_ids[] = (int) $new_media_attachment['id'];
 				}
 				$draft_activity['data']['media'] = array_values( $draft_activity['data']['media'] );
 			}
@@ -1325,10 +1333,18 @@ function bb_nouveau_ajax_post_draft_activity() {
 						unset( $draft_activity['data']['document'][ $document_key ] );
 						continue;
 					}
+					// Stamp EVERY owned attachment the draft keeps, not only the
+					// ones whose payload lacks the flag: a restored draft echoes
+					// the stored JSON back with bb_media_draft already set, so a
+					// flag-gated queue stays empty and the post-write cache
+					// invalidation never fires, while the attachment is still
+					// referenced - the orphan-stamp sweep then releases it and the
+					// cron reaps a file the draft points at (F7, matching forums).
 					if ( ! isset( $new_document_attachment['bb_media_draft'] ) ) {
 						$draft_activity['data']['document'][ $document_key ]['bb_media_draft'] = 1;
-						$stamp_attachment_ids[] = (int) $new_document_attachment['id'];
 					}
+
+					$stamp_attachment_ids[] = (int) $new_document_attachment['id'];
 				}
 				$draft_activity['data']['document'] = array_values( $draft_activity['data']['document'] );
 			}
@@ -1341,10 +1357,18 @@ function bb_nouveau_ajax_post_draft_activity() {
 						unset( $draft_activity['data']['video'][ $video_key ] );
 						continue;
 					}
+					// Stamp EVERY owned attachment the draft keeps, not only the
+					// ones whose payload lacks the flag: a restored draft echoes
+					// the stored JSON back with bb_media_draft already set, so a
+					// flag-gated queue stays empty and the post-write cache
+					// invalidation never fires, while the attachment is still
+					// referenced - the orphan-stamp sweep then releases it and the
+					// cron reaps a file the draft points at (F7, matching forums).
 					if ( ! isset( $new_video_attachment['bb_media_draft'] ) ) {
 						$draft_activity['data']['video'][ $video_key ]['bb_media_draft'] = 1;
-						$stamp_attachment_ids[] = (int) $new_video_attachment['id'];
 					}
+
+					$stamp_attachment_ids[] = (int) $new_video_attachment['id'];
 				}
 				$draft_activity['data']['video'] = array_values( $draft_activity['data']['video'] );
 			}

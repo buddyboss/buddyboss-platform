@@ -456,10 +456,20 @@ function bb_draft_protect_payload_attachments( $lists, $user_id ) {
 	// draft that references these attachments is written, so a sweep rebuilding
 	// the set in the window between here and the write would re-cache without the
 	// new reference and pin it for the TTL (F3). The reference only exists once
-	// the draft is stored, so each caller invalidates AFTER its own draft write
-	// (activity/ajax.php, forums/core/actions.php). On a refused save no draft is
-	// written, so there is correctly nothing to invalidate - the attachment is a
-	// stamped orphan the sweep may reap once it ages past retention.
+	// the draft is stored, so invalidation belongs AFTER the draft write.
+	//
+	// IMPORTANT: this function no longer provides that invalidation, so each
+	// caller MUST drop `bb_draft_referenced_stamp_ids` after its own draft
+	// write, keyed on EVERY attachment the draft keeps - never on a
+	// client-controlled flag. A restored draft echoes bb_media_draft back
+	// already set, so a flag-gated queue stamps nothing yet still references the
+	// file; if the caller's invalidation is gated on that queue it leaves the
+	// cache stale and the sweep reaps a referenced file (F7). Callers:
+	// activity/ajax.php and forums/core/actions.php.
+	//
+	// On a refused save no draft is written, so there is correctly nothing to
+	// invalidate - the attachment is a stamped orphan the sweep may reap once it
+	// ages past retention.
 	return array_keys( $stamped );
 }
 

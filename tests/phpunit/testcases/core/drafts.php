@@ -1482,21 +1482,14 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		bb_drafts_release_orphaned_draft_stamps( 0 );
 		$this->assertSame( 1, $this->reference_scans, 'A second sweep with an unchanged draft set must reuse the cache, not re-scan.' );
 
-		// A draft save that references a new attachment drops the cache. That
-		// invalidation now lives in the AJAX handlers, AFTER the draft write
-		// that creates the reference (F3) - driven end-to-end by
-		// test_draft_save_invalidates_referenced_stamp_cache. Simulate that drop
-		// here and confirm the next sweep rescans.
+		// When the cache is dropped (which the AJAX handlers do after a draft
+		// write - see test_draft_save_invalidates_referenced_stamp_cache), the
+		// next sweep must re-scan rather than reuse the stale set. This leg
+		// asserts the re-scan behaviour; the invalidation itself is tested there.
 		delete_site_transient( 'bb_draft_referenced_stamp_ids' );
 
-		$this->assertFalse(
-			get_site_transient( 'bb_draft_referenced_stamp_ids' ),
-			'A new reference must invalidate the referenced-attachment cache.'
-		);
-
-		// Next sweep: cache is cold again, so the scan runs.
 		bb_drafts_release_orphaned_draft_stamps( 0 );
-		$this->assertSame( 2, $this->reference_scans, 'After a stamp invalidates the cache, the next sweep must re-scan.' );
+		$this->assertSame( 2, $this->reference_scans, 'A dropped cache must force the next sweep to re-scan instead of reusing a stale set.' );
 
 		remove_filter( 'bb_draft_reference_scan_batch_size', array( $this, 'count_reference_scan' ) );
 		remove_filter( 'bb_draft_retention_days', array( $this, 'filter_one_day_retention' ) );
@@ -2603,24 +2596,43 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		$user_id = self::factory()->user->create();
 		$this->set_current_user( $user_id );
 
-		$att = $this->make_draft_attachment( $user_id );
+		// A NEW attachment (payload lacks bb_media_draft): the guard fires and
+		// the stamp is queued the ordinary way.
+		$fresh = $this->make_draft_attachment( $user_id );
 
-		// Pretend a sweep has cached a referenced-set that does not know about
-		// the attachment this save is about to reference.
 		set_site_transient( 'bb_draft_referenced_stamp_ids', array( 999999 => true ) );
-
 		$this->drive_activity_draft_save(
 			'draft_user',
 			array(
-				'content' => 'draft with one attachment',
-				'media'   => array( array( 'id' => $att ) ),
+				'content' => 'draft with a fresh attachment',
+				'media'   => array( array( 'id' => $fresh ) ),
 			)
 		);
-
-		$this->assertSame( '1', (string) get_post_meta( $att, 'bb_media_draft', true ), 'Premise: the attachment was stamped by the save.' );
+		$this->assertSame( '1', (string) get_post_meta( $fresh, 'bb_media_draft', true ), 'Premise: the fresh attachment was stamped.' );
 		$this->assertFalse(
 			get_site_transient( 'bb_draft_referenced_stamp_ids' ),
-			'F3: a save that stamps an attachment must drop the referenced-set cache so the next sweep rescans.'
+			'A save that stamps a fresh attachment must drop the referenced-set cache.'
+		);
+
+		// F7: a RESTORED draft echoes the stored JSON back with bb_media_draft
+		// already set. The flag-gated stamp queues nothing, but the draft still
+		// references the file - so invalidation must key on the attachment being
+		// KEPT, not on the client flag. This is the case that was silently
+		// broken by removing the pre-write backstop; the payload-without-flag
+		// case above cannot detect it.
+		$restored = $this->make_draft_attachment( $user_id );
+
+		set_site_transient( 'bb_draft_referenced_stamp_ids', array( 999999 => true ) );
+		$this->drive_activity_draft_save(
+			'draft_user',
+			array(
+				'content' => 'restored draft echoing the stored flag',
+				'media'   => array( array( 'id' => $restored, 'bb_media_draft' => 1 ) ),
+			)
+		);
+		$this->assertFalse(
+			get_site_transient( 'bb_draft_referenced_stamp_ids' ),
+			'F7: a save whose payload already carries bb_media_draft still references the file, so it MUST invalidate the cache - a stale cache lets the sweep reap a referenced attachment.'
 		);
 	}
 
