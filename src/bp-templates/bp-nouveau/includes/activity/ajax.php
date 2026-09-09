@@ -1489,19 +1489,22 @@ function bb_nouveau_ajax_post_draft_activity() {
 				update_post_meta( $stamp_feature_image_id, 'bb_activity_post_feature_image_draft', 1 );
 			}
 
-			// These deferred stamps add references the orphan-stamp sweep's
-			// cached referenced-set must not miss (H3): bb_draft_protect_payload_
-			// attachments() only invalidates when IT stamps something, and a
-			// text-only primary leaves that empty while these sibling stamps
-			// still add references. Drop the cache so the next sweep rescans.
-			if ( ! empty( $stamp_attachment_ids ) || $stamp_feature_image_id ) {
-				delete_site_transient( 'bb_draft_referenced_stamp_ids' );
-			}
-
 			$replaced_draft = bp_get_user_meta( $draft_user_id, $draft_activity['data_key'], true );
 
 			bp_update_user_meta( $draft_user_id, $draft_activity['data_key'], $draft_activity );
 			bb_draft_flush_user_meta_sizes( $draft_user_id );
+
+			// These deferred stamps add references the orphan-stamp sweep's
+			// cached referenced-set must not miss (H3): bb_draft_protect_payload_
+			// attachments() only invalidates when IT stamps something, and a
+			// text-only primary leaves that empty while these sibling stamps
+			// still add references. Drop the cache AFTER the draft write above -
+			// the reference only exists once the draft is stored, so invalidating
+			// before it let a sweep rebuild the set without the new reference and
+			// pin it for the TTL (F3). Matches the forum handler's order.
+			if ( ! empty( $stamp_attachment_ids ) || $stamp_feature_image_id ) {
+				delete_site_transient( 'bb_draft_referenced_stamp_ids' );
+			}
 
 			// Release the stamps of attachments the replaced draft held and the
 			// new one does not keep. Without this the activity path only ever

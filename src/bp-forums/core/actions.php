@@ -1136,12 +1136,13 @@ function bb_post_topic_reply_draft() {
 					wp_send_json_error(
 						array(
 							'message' => __( 'Your draft could not be saved because you have too many saved drafts. Please discard some drafts and try again.', 'buddyboss' ),
-							// A refusal after a mid-loop eviction race may have deleted
-							// some drafts (here plus any earlier row-trim evictions);
-							// hand the keys back so the client can drop them from its
-							// localStorage/UI instead of listing drafts that are gone
-							// (H1).
-							'evicted_draft_keys' => array_merge( $evicted_draft_keys, $draft_budget['evicted'] ),
+							// Report ONLY the budget evictions here (F2): those were
+							// disposed to storage by bb_draft_enforce_user_budget().
+							// The row-trim keys in $evicted_draft_keys were held back
+							// and are abandoned on this refusal (the write below never
+							// runs), so announcing them would tell the member drafts
+							// were removed that are still on the server (H4).
+							'evicted_draft_keys' => $draft_budget['evicted'],
 						)
 					);
 				}
@@ -1268,8 +1269,14 @@ function bb_post_topic_reply_draft() {
 
 		// Emitted only AFTER the sibling merge and the row write, so a rejected
 		// primary reports its cap error while every sibling the same beacon
-		// carried has already been saved (GH1).
+		// carried has already been saved (GH1). By this point the row IS written,
+		// so any row-trim / budget evictions accumulated in $evicted_draft_keys
+		// are real and must ride along - otherwise the member is told the save
+		// failed but never learns their oldest drafts were removed (F2).
 		if ( $primary_rejected ) {
+			if ( ! empty( $evicted_draft_keys ) ) {
+				$primary_rejection['evicted_draft_keys'] = $evicted_draft_keys;
+			}
 			wp_send_json_error( $primary_rejection );
 		}
 	}
