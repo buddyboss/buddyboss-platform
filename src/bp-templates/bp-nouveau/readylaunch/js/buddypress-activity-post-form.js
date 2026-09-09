@@ -1184,7 +1184,12 @@ window.bp = window.bp || {};
 				} else if ( ! _.isUndefined( bbRlActivity.params.draft_activity.data_key ) ) {
 					bp.old_draft_data = bbRlActivity.params.draft_activity.data;
 					bp.draft_activity = bbRlActivity.params.draft_activity;
-					localStorage.setItem( draftKey, JSON.stringify( bp.draft_activity ) );
+					// Route through the quota-safe helper, exactly as the Nouveau pack
+					// does at the equivalent spot. A raw localStorage.setItem() here
+					// would reintroduce the QuotaExceededError path the shedding helper
+					// exists to avoid, were this (currently dead) inline-param branch
+					// ever repopulated (L5).
+					self.checkAndStoreDraftToLocalStorage( bp.draft_activity );
 				} else if ( true === bbRlActivity.params.has_draft ) {
 					// The draft is no longer echoed into page HTML - fetch the
 					// server copy once when localStorage held nothing.
