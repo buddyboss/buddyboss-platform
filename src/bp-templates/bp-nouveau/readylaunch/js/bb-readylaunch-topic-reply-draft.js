@@ -1163,6 +1163,16 @@ window.bp = window.bp || {};
 							self.showDraftFeedback( '' );
 							self.handleEvictedDrafts( response );
 
+							// A successful DISCARD round-trip proves the connection and
+							// nonce are fine, so clear a latched fetch-failure and its M16
+							// retry budget - a transient blip at page load would otherwise
+							// keep autosave blocked for the whole page view even though we
+							// just reached the server (M18).
+							if ( is_discard_request && 'undefined' !== typeof BP_Nouveau.forums ) {
+								BP_Nouveau.forums.draft_fetch_failed   = false;
+								BP_Nouveau.forums.draft_retry_attempts = 0;
+							}
+
 							// A stored draft exists again (or the discard has
 							// landed), so the reload guard has served its purpose.
 							bp.Nouveau.TopicReplyDraft.markDiscarded( draft_payload.data_key, false );
