@@ -7,16 +7,17 @@
  * @since BuddyBoss [BBVERSION]
  */
 
+import { useState, useEffect, useCallback } from '@wordpress/element';
 import {
-	Button,
+	TextControl,
 	CheckboxControl,
-	Modal,
 	SelectControl,
-	TextControl
+	Button,
+	Spinner,
+	Modal
 } from '@wordpress/components';
-import { useCallback, useEffect, useState } from '@wordpress/element';
-import { decodeEntities } from '@wordpress/html-entities';
 import { __ } from '@wordpress/i18n';
+import { decodeEntities } from '@wordpress/html-entities';
 import { createGroupType, updateGroupType } from '../../utils/ajax';
 import { sanitizeHtml } from '../../utils/sanitize';
 

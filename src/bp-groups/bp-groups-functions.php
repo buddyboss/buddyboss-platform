@@ -4046,6 +4046,8 @@ function bp_group_get_count_by_group_type( $group_type = '', $taxonomy = 'bp_gro
  *
  * @since BuddyBoss 1.0.0
  *
+ * @since BuddyBoss [BBVERSION] The 'type' attribute also accepts a group type post ID.
+ *
  * @param $atts
  *
  * @return false|string
@@ -5740,11 +5742,11 @@ function bb_groups_members( $group_id = 0, $role = array( 'member', 'mod', 'admi
  * Resolves a group type key from a provided value for use in the group shortcode.
  *
  * Accepts a group type key or a group type post ID and returns the corresponding key.
- * 
+ *
  * @since BuddyBoss [BBVERSION]
- * 
+ *
  * @param string|int $type Group type key or post ID.
- * 
+ *
  * @return string Group type key.
  */
 function bb_group_type_shortcode_resolve_key( $type ) {
@@ -5775,5 +5777,12 @@ function bb_group_type_shortcode_resolve_key( $type ) {
 		}
 	}
 
+	/**
+	 * Filter resolved group type key for shortcode usage.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 * @param string $key  The resolved group type key.
+	 * @param string $type The original type value passed in.
+	 */
 	return apply_filters( 'bb_group_type_shortcode_resolve_key', $key, $type );
 }
