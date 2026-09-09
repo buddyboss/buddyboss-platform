@@ -1007,15 +1007,61 @@ window.bp = window.bp || {};
 		 *
 		 * @return {void}
 		 */
+		// Re-attempt the one-time lazy read that failed at page load, so a
+		// transient blip does not latch draft_fetch_failed for the whole page
+		// view. Called from the autosave tick in postTopicReplyDraft(). On success
+		// it ONLY clears the flag (unblocking saves) - it deliberately does NOT
+		// re-run the form init (that would double-bind listeners) or restore over
+		// the already-open composer; the member's current content is what saves
+		// from here (M12). A shared in-flight flag prevents overlapping retries.
+		this.retryDraftFetch = function () {
+			if ( 'undefined' === typeof BP_Nouveau.forums || true === BP_Nouveau.forums.draft_fetch_retrying ) {
+				return;
+			}
+			BP_Nouveau.forums.draft_fetch_retrying = true;
+
+			$.post(
+				BP_Nouveau.ajaxurl,
+				{
+					action: 'bb_get_topic_reply_drafts',
+					_wpnonce_post_topic_reply_draft: BP_Nouveau.forums.nonces.post_topic_reply_draft
+				}
+			).done(
+				function ( response ) {
+					if ( response && response.success ) {
+						BP_Nouveau.forums.draft_fetch_failed = false;
+					}
+				}
+			).always(
+				function () {
+					BP_Nouveau.forums.draft_fetch_retrying = false;
+				}
+			);
+		};
+
 		this.postTopicReplyDraft = function ( is_force_saved, is_reload_window, is_send_all_data ) {
+			// Captured synchronously up front: discardTopicReplyDraftForm()
+			// resets post_action back to 'update' before any async response
+			// lands, and a DISCARD must be EXEMPT from the fetch-failed guard
+			// below - blocking it left the member's SERVER draft undeletable for
+			// the whole page view (the local UI reset, but the stored row
+			// survived).
+			var is_discard_request = ( 'delete' === this.topic_reply_draft.post_action );
+
 			// The member HAS a stored draft that we failed to read. Writing now
-			// would replace content they were never shown with whatever happens
-			// to be in the box - a transient network failure would silently
-			// destroy the draft it prevented us from loading.
+			// would replace content they were never shown with whatever is in
+			// the box - a transient failure would silently destroy the draft it
+			// prevented us from loading. A discard is exempt (it only removes
+			// the key). The network may have recovered since the initial read
+			// failed, so re-attempt the read on this tick rather than latching
+			// the failure for the whole page view: a success clears the flag and
+			// the next tick saves normally (M12).
 			if (
+				! is_discard_request &&
 				'undefined' !== typeof BP_Nouveau.forums &&
 				true === BP_Nouveau.forums.draft_fetch_failed
 			) {
+				this.retryDraftFetch();
 				this.showDraftFeedback( BP_Nouveau.forums.draft_fetch_failed_message || '' );
 
 				return;
@@ -1033,13 +1079,6 @@ window.bp = window.bp || {};
 
 			var self = this,
 				draft_payload = this.topic_reply_draft;
-
-			// Captured synchronously: discardTopicReplyDraftForm() resets
-			// post_action back to 'update' before the async response lands, so
-			// the callback below cannot read it off the draft any more - and a
-			// failed DISCARD must not tell the member their draft "could not be
-			// saved" when they were trying to remove it.
-			var is_discard_request = ( 'delete' === this.topic_reply_draft.post_action );
 
 			// A delete needs only the key, never the content - the server
 			// disposes from its own stored row. Slimming the payload also keeps
