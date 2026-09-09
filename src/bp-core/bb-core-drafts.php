@@ -324,9 +324,9 @@ function bb_draft_strip_data_urls( $content ) {
 	// only ever a cleanup for. Eating the member's text is the worse failure.
 	$stripped = preg_replace(
 		array(
-			'/(=\s*")data:[a-z0-9.+-]+\/[a-z0-9.+-]+[a-z0-9;=.+-]*,[^"]*/i',
-			'/(=\s*\')data:[a-z0-9.+-]+\/[a-z0-9.+-]+[a-z0-9;=.+-]*,[^\']*/i',
-			'/(=\s*)data:[a-z0-9.+-]+\/[a-z0-9.+-]+[a-z0-9;=.+-]*,[^\s"\'>]*/i',
+			'/(=\s*")data:(?:[a-z0-9.+-]+\/[a-z0-9.+-]+)?[a-z0-9;=.+-]*,[^"]*/i',
+			'/(=\s*\')data:(?:[a-z0-9.+-]+\/[a-z0-9.+-]+)?[a-z0-9;=.+-]*,[^\']*/i',
+			'/(=\s*)data:(?:[a-z0-9.+-]+\/[a-z0-9.+-]+)?[a-z0-9;=.+-]*,[^\s"\'>]*/i',
 		),
 		'$1',
 		$content
@@ -954,13 +954,28 @@ function bb_draft_release_replaced_attachments( $previous_entry, $current_entry,
  * instead of that one entry. The loops that walk stored rows guard for it
  * (M5).
  *
- * @param int    $user_id   Owning user ID.
- * @param string $meta_key  Draft usermeta key.
- * @param string $inner_key Optional. Inner draft key inside the forum aggregate
- *                          row; empty means "remove the whole row".
+ * `$defer_attachment_release` exists for the root-only expiry sweep on
+ * multisite (H2): drafts live in network-global usermeta, so that sweep sees
+ * every blog's drafts, but attachments live in per-site `wp_posts`/`wp_postmeta`
+ * and the stamp release resolves attachment IDs through `get_post()` in the
+ * CURRENT blog. Releasing a subsite draft's attachment ID from root context
+ * would strip protection from - and let the orphan cron delete - a same-numbered
+ * attachment on the ROOT blog that a live draft still references. When true, the
+ * unstamp is skipped and the per-site orphan-stamp sweep ({@see
+ * bb_drafts_release_orphaned_draft_stamps}), which runs in each blog's own
+ * context, releases the stamp correctly once the draft is gone.
+ *
+ * @param int    $user_id                  Owning user ID.
+ * @param string $meta_key                 Draft usermeta key.
+ * @param string $inner_key                Optional. Inner draft key inside the
+ *                                         forum aggregate row; empty means
+ *                                         "remove the whole row".
+ * @param bool   $defer_attachment_release Optional. Skip the attachment unstamp
+ *                                         and leave it to the per-site sweep.
+ *                                         Default false.
  * @return bool Whether a stored draft was removed.
  */
-function bb_draft_dispose( $user_id, $meta_key, $inner_key = '' ) {
+function bb_draft_dispose( $user_id, $meta_key, $inner_key = '', $defer_attachment_release = false ) {
 	$user_id = (int) $user_id;
 
 	if ( $user_id <= 0 || ! bb_draft_is_draft_meta_key( $meta_key ) ) {
@@ -999,7 +1014,9 @@ function bb_draft_dispose( $user_id, $meta_key, $inner_key = '' ) {
 		$retain_entries = $stored;
 		unset( $retain_entries[ $inner_key ] );
 
-		bb_draft_unstamp_attachments( $stored[ $inner_key ], $user_id, $retain_entries );
+		if ( ! $defer_attachment_release ) {
+			bb_draft_unstamp_attachments( $stored[ $inner_key ], $user_id, $retain_entries );
+		}
 		unset( $stored[ $inner_key ] );
 
 		if ( empty( $stored ) ) {
@@ -1024,12 +1041,14 @@ function bb_draft_dispose( $user_id, $meta_key, $inner_key = '' ) {
 		return true;
 	}
 
-	if ( 'bb_user_topic_reply_draft' === $meta_key ) {
-		foreach ( $stored as $inner_draft ) {
-			bb_draft_unstamp_attachments( $inner_draft, $user_id );
+	if ( ! $defer_attachment_release ) {
+		if ( 'bb_user_topic_reply_draft' === $meta_key ) {
+			foreach ( $stored as $inner_draft ) {
+				bb_draft_unstamp_attachments( $inner_draft, $user_id );
+			}
+		} else {
+			bb_draft_unstamp_attachments( $stored, $user_id );
 		}
-	} else {
-		bb_draft_unstamp_attachments( $stored, $user_id );
 	}
 
 	bp_delete_user_meta( $user_id, $meta_key );
@@ -1051,11 +1070,14 @@ function bb_draft_dispose( $user_id, $meta_key, $inner_key = '' ) {
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param int      $user_id    Owning user ID.
- * @param string[] $inner_keys Inner draft keys to remove.
+ * @param int      $user_id                  Owning user ID.
+ * @param string[] $inner_keys               Inner draft keys to remove.
+ * @param bool     $defer_attachment_release Optional. Skip attachment release
+ *                                           and leave it to the per-site sweep
+ *                                           (H2). Default false.
  * @return int Number of inner drafts removed.
  */
-function bb_draft_dispose_forum_inner_keys( $user_id, $inner_keys ) {
+function bb_draft_dispose_forum_inner_keys( $user_id, $inner_keys, $defer_attachment_release = false ) {
 	$user_id = (int) $user_id;
 
 	if ( $user_id <= 0 || empty( $inner_keys ) || ! is_array( $inner_keys ) ) {
@@ -1100,17 +1122,23 @@ function bb_draft_dispose_forum_inner_keys( $user_id, $inner_keys ) {
 	bb_draft_flush_user_meta_sizes( $user_id );
 
 	// Release the stamps of removed attachments no surviving inner draft holds.
-	$surviving = array();
+	// On multisite the root-only expiry sweep passes $defer_attachment_release,
+	// because these IDs resolve against the current blog's tables and would
+	// otherwise release a same-numbered attachment on the wrong blog (H2); the
+	// per-site orphan-stamp sweep releases them in the correct context instead.
+	if ( ! $defer_attachment_release ) {
+		$surviving = array();
 
-	foreach ( $row as $surviving_entry ) {
-		$surviving = array_merge( $surviving, bb_draft_collect_attachment_ids( $surviving_entry ) );
-	}
+		foreach ( $row as $surviving_entry ) {
+			$surviving = array_merge( $surviving, bb_draft_collect_attachment_ids( $surviving_entry ) );
+		}
 
-	foreach ( $removed as $removed_entry ) {
-		foreach ( array_diff( bb_draft_collect_attachment_ids( $removed_entry ), $surviving ) as $attachment_id ) {
-			if ( bb_draft_user_can_manage_attachment( $attachment_id, $user_id ) ) {
-				delete_post_meta( $attachment_id, 'bb_media_draft' );
-				delete_post_meta( $attachment_id, 'bb_activity_post_feature_image_draft' );
+		foreach ( $removed as $removed_entry ) {
+			foreach ( array_diff( bb_draft_collect_attachment_ids( $removed_entry ), $surviving ) as $attachment_id ) {
+				if ( bb_draft_user_can_manage_attachment( $attachment_id, $user_id ) ) {
+					delete_post_meta( $attachment_id, 'bb_media_draft' );
+					delete_post_meta( $attachment_id, 'bb_activity_post_feature_image_draft' );
+				}
 			}
 		}
 	}
@@ -1253,6 +1281,25 @@ function bb_draft_enforce_user_budget( $user_id, $current_key, $new_size, $conte
 		}
 	);
 
+	// Decide BEFORE destroying anything: if evicting every candidate still
+	// cannot bring the total under the cap, refuse now, without deleting a
+	// single draft (H1). bb_draft_dispose() writes to storage immediately, so a
+	// post-eviction refusal - the shape this replaced - would have permanently
+	// deleted the member's older drafts AND rejected the new save, telling them
+	// to "discard some drafts" that no longer exist. Rows that are corrupt /
+	// non-array are skipped above and never enter $candidates, so they are
+	// correctly excluded from what is reclaimable here.
+	$reclaimable = 0;
+	foreach ( $candidates as $candidate ) {
+		$reclaimable += $candidate['bytes'];
+	}
+
+	if ( ( $draft_total - $reclaimable ) > $total_cap ) {
+		$result['allowed'] = false;
+
+		return $result;
+	}
+
 	foreach ( $candidates as $candidate ) {
 		if ( $draft_total <= $total_cap ) {
 			break;
@@ -1279,14 +1326,14 @@ function bb_draft_enforce_user_budget( $user_id, $current_key, $new_size, $conte
 		do_action( 'bb_draft_evicted', $user_id, $evicted_key, 'aggregate_cap' );
 	}
 
-	// Eviction is not guaranteed to have reached the cap: every remaining
-	// candidate's bb_draft_dispose() can fail (a second tab racing this one
-	// against a stale size memo), or there may simply be too little evictable
-	// content. This soft per-user cap is only actually enforced when the total
-	// is now under it - otherwise refuse, so the caller cannot store past the
-	// cap on the strength of a partial eviction. The independent aggregate-meta
-	// refusal is the hard guard against the object-cache-poisoning case; this
-	// keeps the soft cap honest too.
+	// The pre-loop feasibility check above guarantees the candidate set CAN
+	// reach the cap, so the only way to still be over it here is a
+	// bb_draft_dispose() that failed mid-loop (a second tab racing this one
+	// against a stale size memo) - a genuine, narrow race. Refuse, so the caller
+	// cannot store past the cap on a partial eviction. $result['evicted'] lists
+	// what was actually deleted; the callers surface it on refusal too, so the
+	// client can reconcile its localStorage/UI instead of showing drafts that no
+	// longer exist.
 	if ( $draft_total > $total_cap ) {
 		$result['allowed'] = false;
 	}
@@ -1980,7 +2027,7 @@ function bb_drafts_delete_expired( $time_budget = 10 ) {
 					// A legacy-empty array() row (old publish paths) holds no member
 					// content and is collected immediately; a corrupt row ages from
 					// the epoch like any unstamped legacy row.
-					if ( ( is_array( $value ) || $epoch < $cutoff ) && bb_draft_dispose( $user_id, $row['meta_key'] ) ) {
+					if ( ( is_array( $value ) || $epoch < $cutoff ) && bb_draft_dispose( $user_id, $row['meta_key'], '', is_multisite() ) ) {
 						++$deleted;
 					}
 				} else {
@@ -2005,11 +2052,11 @@ function bb_drafts_delete_expired( $time_budget = 10 ) {
 						}
 					}
 
-					$deleted += bb_draft_dispose_forum_inner_keys( $user_id, $expired_inner_keys );
+					$deleted += bb_draft_dispose_forum_inner_keys( $user_id, $expired_inner_keys, is_multisite() );
 				}
 			} else {
 				$saved_at = ( is_array( $value ) && isset( $value['_draft_saved_at'] ) ) ? (int) $value['_draft_saved_at'] : $epoch;
-				if ( $saved_at < $cutoff && bb_draft_dispose( $user_id, $row['meta_key'] ) ) {
+				if ( $saved_at < $cutoff && bb_draft_dispose( $user_id, $row['meta_key'], '', is_multisite() ) ) {
 					++$deleted;
 				}
 			}
@@ -2090,10 +2137,13 @@ function bb_drafts_delete_expired( $time_budget = 10 ) {
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param int $user_id Owning user ID.
+ * @param int  $user_id                  Owning user ID.
+ * @param bool $defer_attachment_release Optional. Skip attachment release and
+ *                                        leave it to the per-site sweep (H2).
+ *                                        Default false.
  * @return int Number of inner drafts acted on - disposed plus salvaged.
  */
-function bb_draft_heal_forum_row( $user_id ) {
+function bb_draft_heal_forum_row( $user_id, $defer_attachment_release = false ) {
 	$user_id  = (int) $user_id;
 	$disposed = 0;
 	$row      = bp_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
@@ -2103,7 +2153,7 @@ function bb_draft_heal_forum_row( $user_id ) {
 	}
 
 	if ( ! is_array( $row ) ) {
-		return bb_draft_dispose( $user_id, 'bb_user_topic_reply_draft' ) ? 1 : 0;
+		return bb_draft_dispose( $user_id, 'bb_user_topic_reply_draft', '', $defer_attachment_release ) ? 1 : 0;
 	}
 
 	$max_size = bb_draft_max_size();
@@ -2219,11 +2269,16 @@ function bb_draft_heal_forum_row( $user_id ) {
 		$surviving = array_merge( $surviving, bb_draft_collect_attachment_ids( $surviving_entry ) );
 	}
 
-	foreach ( $removed as $removed_entry ) {
-		foreach ( array_diff( bb_draft_collect_attachment_ids( $removed_entry ), $surviving ) as $attachment_id ) {
-			if ( bb_draft_user_can_manage_attachment( $attachment_id, $user_id ) ) {
-				delete_post_meta( $attachment_id, 'bb_media_draft' );
-				delete_post_meta( $attachment_id, 'bb_activity_post_feature_image_draft' );
+	// Skipped on multisite when healing from the root-only one-shot: these
+	// IDs resolve against the current blog and could release a same-numbered
+	// attachment on the wrong blog (H2). The per-site orphan-stamp sweep reaps.
+	if ( ! $defer_attachment_release ) {
+		foreach ( $removed as $removed_entry ) {
+			foreach ( array_diff( bb_draft_collect_attachment_ids( $removed_entry ), $surviving ) as $attachment_id ) {
+				if ( bb_draft_user_can_manage_attachment( $attachment_id, $user_id ) ) {
+					delete_post_meta( $attachment_id, 'bb_media_draft' );
+					delete_post_meta( $attachment_id, 'bb_activity_post_feature_image_draft' );
+				}
 			}
 		}
 	}
@@ -2332,7 +2387,7 @@ function bb_drafts_oneshot_batch( $time_budget = 10 ) {
 
 				if ( $row_bytes > $max_size ) {
 					if ( 'bb_user_topic_reply_draft' === $row['meta_key'] ) {
-						$healed += bb_draft_heal_forum_row( $row_user );
+						$healed += bb_draft_heal_forum_row( $row_user, is_multisite() );
 					} elseif ( bb_draft_salvage_oversized_draft( $row_user, $row['meta_key'] ) ) {
 						// Shedding the poster frame was enough - the member keeps
 						// their text. Tried BEFORE disposal because a one-draft row
@@ -2340,7 +2395,7 @@ function bb_drafts_oneshot_batch( $time_budget = 10 ) {
 						// unpublished text to reclaim space the poster alone was
 						// using (Q6).
 						++$healed;
-					} elseif ( bb_draft_dispose( $row_user, $row['meta_key'] ) ) {
+					} elseif ( bb_draft_dispose( $row_user, $row['meta_key'], '', is_multisite() ) ) {
 						++$healed;
 					}
 				}

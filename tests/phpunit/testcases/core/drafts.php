@@ -1590,10 +1590,66 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 			$result['allowed'],
 			'Budget must refuse when eviction cannot bring the total under the cap.'
 		);
-		$this->assertContains(
-			'draft_group_1',
+
+		// H1: it must DECIDE before destroying. When even evicting every
+		// candidate cannot reach the cap, nothing is deleted - the old shape
+		// deleted the candidate first and refused second, permanently losing the
+		// member's draft AND rejecting the save. So: no evictions reported, and
+		// the candidate still exists.
+		$this->assertSame(
+			array(),
 			$result['evicted'],
-			'Premise: eviction was attempted (the candidate was evicted) - the total simply could not fit.'
+			'H1: a refusal that can never fit must delete nothing - evicted must be empty.'
+		);
+		$this->assertNotEmpty(
+			bp_get_user_meta( $user_id, 'draft_group_1', true ),
+			'H1: the evictable draft must survive a refusal that could never have fit.'
+		);
+	}
+
+	/**
+	 * H2: on multisite the root-only expiry sweep must NOT release a draft's
+	 * attachment stamp - the ID resolves against the current blog and could
+	 * strip protection from a same-numbered attachment on the wrong blog. It
+	 * passes $defer_attachment_release, and bb_draft_dispose() must then remove
+	 * the row but leave the stamp for the per-site sweep to reap. The default
+	 * (single-site / in-blog discard) still unstamps immediately.
+	 */
+	public function test_dispose_defers_attachment_release_when_asked() {
+		$user_id = self::factory()->user->create();
+		$att     = $this->make_stamped_unsaved_attachment( $user_id );
+
+		bp_update_user_meta(
+			$user_id,
+			'draft_user',
+			array( 'data_key' => 'draft_user', '_draft_saved_at' => 100, 'data' => array( 'media' => array( array( 'id' => $att ) ) ) )
+		);
+
+		// Deferred: the row goes, the stamp stays (the per-site sweep reaps it).
+		$this->assertTrue( bb_draft_dispose( $user_id, 'draft_user', '', true ) );
+		$this->assertEmpty(
+			bp_get_user_meta( $user_id, 'draft_user', true ),
+			'The draft row must still be removed when attachment release is deferred.'
+		);
+		$this->assertSame(
+			'1',
+			(string) get_post_meta( $att, 'bb_media_draft', true ),
+			'H2: a deferred dispose must NOT release the attachment stamp - the per-site sweep does that in the correct blog.'
+		);
+
+		// Control: the default path unstamps immediately.
+		$user2 = self::factory()->user->create();
+		$att2  = $this->make_stamped_unsaved_attachment( $user2 );
+		bp_update_user_meta(
+			$user2,
+			'draft_user',
+			array( 'data_key' => 'draft_user', '_draft_saved_at' => 100, 'data' => array( 'media' => array( array( 'id' => $att2 ) ) ) )
+		);
+		$this->assertTrue( bb_draft_dispose( $user2, 'draft_user' ) );
+		$this->assertSame(
+			'',
+			(string) get_post_meta( $att2, 'bb_media_draft', true ),
+			'Control: the default (in-blog) dispose must release the stamp immediately.'
 		);
 	}
 
