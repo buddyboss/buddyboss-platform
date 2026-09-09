@@ -369,17 +369,35 @@ function bb_draft_strip_data_urls( $content ) {
  *
  * @return int Maximum entries accepted per attachment type.
  */
-function bb_draft_max_attachments_per_type() {
-	$configured = function_exists( 'bp_media_allowed_upload_media_per_batch' ) ? (int) bp_media_allowed_upload_media_per_batch() : 0;
+function bb_draft_max_attachments_per_type( $type = 'media' ) {
+	// Each attachment type has its OWN independently-configurable upload limit
+	// (Photos, Documents and Videos each accept up to 100). Reading only the
+	// Photos limit for all three reintroduced the H4 truncation for the other
+	// two whenever their limit was raised above the 50 floor while Photos was
+	// left lower - a member attaching 60 videos to a draft on a Video-limit-100
+	// site was silently cut to 50, and the dropped 10 lost to the orphan cron.
+	switch ( $type ) {
+		case 'document':
+			$configured = function_exists( 'bp_media_allowed_upload_document_per_batch' ) ? (int) bp_media_allowed_upload_document_per_batch() : 0;
+			break;
+		case 'video':
+			$configured = function_exists( 'bp_video_allowed_upload_video_per_batch' ) ? (int) bp_video_allowed_upload_video_per_batch() : 0;
+			break;
+		case 'media':
+		default:
+			$configured = function_exists( 'bp_media_allowed_upload_media_per_batch' ) ? (int) bp_media_allowed_upload_media_per_batch() : 0;
+			break;
+	}
 
 	/**
 	 * Filters how many attachments of one type a draft payload may carry.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
-	 * @param int $max Maximum entries per attachment type.
+	 * @param int    $max  Maximum entries per attachment type.
+	 * @param string $type Attachment type: 'media', 'document' or 'video'.
 	 */
-	return (int) apply_filters( 'bb_draft_max_attachments_per_type', max( 50, $configured ) );
+	return (int) apply_filters( 'bb_draft_max_attachments_per_type', max( 50, $configured ), $type );
 }
 
 /**
@@ -404,7 +422,9 @@ function bb_draft_max_attachments_per_type() {
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param array $lists   Attachment lists, each an array of entries carrying an `id`.
+ * @param array $lists   Attachment lists keyed by type ('media'/'document'/'video'),
+ *                       each an array of entries carrying an `id`. An unkeyed list
+ *                       falls back to the media cap.
  * @param int   $user_id Acting user ID.
  * @return int[] Attachment IDs stamped.
  */
@@ -416,7 +436,7 @@ function bb_draft_protect_payload_attachments( $lists, $user_id ) {
 		return $stamped;
 	}
 
-	foreach ( $lists as $list ) {
+	foreach ( $lists as $type => $list ) {
 		if ( empty( $list ) || ! is_array( $list ) ) {
 			continue;
 		}
@@ -424,8 +444,11 @@ function bb_draft_protect_payload_attachments( $lists, $user_id ) {
 		// Same bound the normalisation loops apply, enforced here too because
 		// this pass runs before them. Truncating HERE only limits how many
 		// attachments get stamped; the handlers refuse an over-bound list
-		// outright rather than storing a subset of it (H4).
-		$max_per_type = bb_draft_max_attachments_per_type();
+		// outright rather than storing a subset of it (H4). The cap is PER TYPE,
+		// and it must match the type-specific cap the handlers enforce or this
+		// pass would stamp fewer than the handler stores (or vice versa) - the
+		// BLOCKER-1 mismatch. Callers pass a media/document/video-keyed array.
+		$max_per_type = bb_draft_max_attachments_per_type( is_string( $type ) ? $type : 'media' );
 
 		if ( $max_per_type < count( $list ) ) {
 			$list = array_slice( $list, 0, $max_per_type );

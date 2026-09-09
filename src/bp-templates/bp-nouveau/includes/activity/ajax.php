@@ -1240,9 +1240,9 @@ function bb_nouveau_ajax_post_draft_activity() {
 			// ({@see bb_draft_protect_payload_attachments()}, BLOCKER-1).
 			bb_draft_protect_payload_attachments(
 				array(
-					$draft_activity['data']['media'] ?? array(),
-					$draft_activity['data']['document'] ?? array(),
-					$draft_activity['data']['video'] ?? array(),
+					'media'    => $draft_activity['data']['media'] ?? array(),
+					'document' => $draft_activity['data']['document'] ?? array(),
+					'video'    => $draft_activity['data']['video'] ?? array(),
 				),
 				$draft_user_id
 			);
@@ -1260,13 +1260,11 @@ function bb_nouveau_ajax_post_draft_activity() {
 			// Ordered AFTER the protection pass on purpose: a refusal must not
 			// decide whether files the member already uploaded survive the
 			// orphan cron (BLOCKER-1).
-			$max_per_type = bb_draft_max_attachments_per_type();
-
 			foreach ( array( 'media', 'document', 'video' ) as $bounded_type ) {
 				if (
 					isset( $draft_activity['data'][ $bounded_type ] ) &&
 					is_array( $draft_activity['data'][ $bounded_type ] ) &&
-					$max_per_type < count( $draft_activity['data'][ $bounded_type ] )
+					bb_draft_max_attachments_per_type( $bounded_type ) < count( $draft_activity['data'][ $bounded_type ] )
 				) {
 					wp_send_json_error(
 						array(

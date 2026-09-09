@@ -5780,6 +5780,78 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 	}
 
 	/**
+	 * Test hook: cap the VIDEO type at 2, every other type at 50, so a test can
+	 * prove the cap is resolved for the list's actual type rather than uniformly.
+	 *
+	 * @param int    $max  The unfiltered cap.
+	 * @param string $type The attachment type.
+	 * @return int Type-specific cap.
+	 */
+	public function cap_two_for_video( $max, $type ) {
+		return 'video' === $type ? 2 : 50;
+	}
+
+	/**
+	 * H4 per-type: the attachment cap must be resolved from EACH type's own
+	 * upload limit, not the Photos limit for all three. Reading only the Photos
+	 * limit reintroduced the H4 truncation for Documents and Videos whenever
+	 * their independently-configurable limit was raised above the 50 floor while
+	 * Photos was left lower.
+	 *
+	 * Mutation check: revert the helper to read bp_media_allowed_upload_media_per_batch()
+	 * for all types and this goes red - document/video fall back to the 50 floor.
+	 */
+	public function test_max_attachments_is_resolved_per_type() {
+		if (
+			! function_exists( 'bp_video_allowed_upload_video_per_batch' ) ||
+			! function_exists( 'bp_media_allowed_upload_document_per_batch' )
+		) {
+			$this->markTestSkipped( 'Media/Video components inactive.' );
+		}
+
+		// Photos left low (floors at 50); Documents and Videos raised above 50.
+		update_option( 'bp_media_allowed_per_batch', 10 );
+		update_option( 'bp_document_allowed_per_batch', 70 );
+		update_option( 'bp_video_allowed_per_batch', 80 );
+
+		$this->assertSame( 50, bb_draft_max_attachments_per_type( 'media' ), 'Photos at 10 floors at 50.' );
+		$this->assertSame( 70, bb_draft_max_attachments_per_type( 'document' ), 'Documents must read their OWN upload limit, not the Photos one.' );
+		$this->assertSame( 80, bb_draft_max_attachments_per_type( 'video' ), 'Videos must read their OWN upload limit, not the Photos one.' );
+
+		delete_option( 'bp_media_allowed_per_batch' );
+		delete_option( 'bp_document_allowed_per_batch' );
+		delete_option( 'bp_video_allowed_per_batch' );
+	}
+
+	/**
+	 * The protect pass must apply the cap of the LIST'S type, so its truncation
+	 * matches the type-specific refusal the handlers enforce. A mismatch stamps
+	 * fewer than the handler stores (or vice versa) - the BLOCKER-1 data-loss gap.
+	 *
+	 * Mutation check: drop the type argument the protect loop passes (so every
+	 * list resolves the media cap) and this goes red - the video list is no longer
+	 * capped at the video-specific 2.
+	 */
+	public function test_protect_applies_the_per_type_cap_to_the_right_list() {
+		$user_id = self::factory()->user->create();
+
+		$video_ids = array();
+		for ( $i = 0; $i < 3; $i++ ) {
+			$video_ids[] = array( 'id' => $this->make_stamped_unsaved_attachment( $user_id ) );
+		}
+
+		add_filter( 'bb_draft_max_attachments_per_type', array( $this, 'cap_two_for_video' ), 10, 2 );
+		$stamped = bb_draft_protect_payload_attachments( array( 'video' => $video_ids ), $user_id );
+		remove_filter( 'bb_draft_max_attachments_per_type', array( $this, 'cap_two_for_video' ), 10 );
+
+		$this->assertCount(
+			2,
+			$stamped,
+			'The video list must be capped by the VIDEO cap (2), which requires protect to pass each list its own type.'
+		);
+	}
+
+	/**
 	 * Lower the per-type attachment bound so the refusal is cheap to reach.
 	 *
 	 * @return int

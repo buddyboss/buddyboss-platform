@@ -570,24 +570,28 @@ function bb_post_topic_reply_draft() {
 			// a draft refused for size left every file the member had just
 			// uploaded unstamped, and bp_media_delete_orphaned_attachments()
 			// hard-deleted them six hours later (BLOCKER-1).
-			bb_draft_protect_payload_attachments(
-				array_map(
-					function ( $list_key ) use ( $draft_topic_reply ) {
-						if ( empty( $draft_topic_reply['data'][ $list_key ] ) ) {
-							return array();
-						}
+			$protect_lists = array();
+			foreach ( array(
+				'media'    => 'bbp_media',
+				'document' => 'bbp_document',
+				'video'    => 'bbp_video',
+			) as $protect_type => $list_key ) {
+				if ( empty( $draft_topic_reply['data'][ $list_key ] ) ) {
+					$protect_lists[ $protect_type ] = array();
+					continue;
+				}
 
-						$list = $draft_topic_reply['data'][ $list_key ];
+				$list = $draft_topic_reply['data'][ $list_key ];
 
-						// The boundary above normalised the entry to unslashed,
-						// so this JSON carries its real escapes - a stripslashes()
-						// here would destroy them (S5).
-						return is_array( $list ) ? $list : (array) json_decode( $list, true );
-					},
-					array( 'bbp_media', 'bbp_document', 'bbp_video' )
-				),
-				$user_id
-			);
+				// The boundary above normalised the entry to unslashed, so this
+				// JSON carries its real escapes - a stripslashes() here would
+				// destroy them (S5).
+				$protect_lists[ $protect_type ] = is_array( $list ) ? $list : (array) json_decode( $list, true );
+			}
+
+			// Keyed by type so the per-type cap inside matches what each cap below
+			// enforces (H4 per-type parity).
+			bb_draft_protect_payload_attachments( $protect_lists, $user_id );
 
 			// Strip data URLs, then judge the RAW width before kses runs inside
 			// bb_forums_sanitize_draft_entry(). bbp_kses_data() on a multi-MB
@@ -728,7 +732,7 @@ function bb_post_topic_reply_draft() {
 				// (H4). The refusal is safe here because
 				// bb_draft_protect_payload_attachments() has already stamped the
 				// member's uploads (BLOCKER-1).
-				if ( is_array( $new_media_data ) && bb_draft_max_attachments_per_type() < count( $new_media_data ) ) {
+				if ( is_array( $new_media_data ) && bb_draft_max_attachments_per_type( 'media' ) < count( $new_media_data ) ) {
 					// Recorded, not thrown: falling through preserves any sibling
 					// update the same beacon carried (GH1). The member's uploads
 					// were already protected above (BLOCKER-1), so refusing the
@@ -783,7 +787,7 @@ function bb_post_topic_reply_draft() {
 				// (H4). The refusal is safe here because
 				// bb_draft_protect_payload_attachments() has already stamped the
 				// member's uploads (BLOCKER-1).
-				if ( is_array( $new_document_data ) && bb_draft_max_attachments_per_type() < count( $new_document_data ) ) {
+				if ( is_array( $new_document_data ) && bb_draft_max_attachments_per_type( 'document' ) < count( $new_document_data ) ) {
 					// Recorded, not thrown: falling through preserves any sibling
 					// update the same beacon carried (GH1). The member's uploads
 					// were already protected above (BLOCKER-1), so refusing the
@@ -838,7 +842,7 @@ function bb_post_topic_reply_draft() {
 				// (H4). The refusal is safe here because
 				// bb_draft_protect_payload_attachments() has already stamped the
 				// member's uploads (BLOCKER-1).
-				if ( is_array( $new_video_data ) && bb_draft_max_attachments_per_type() < count( $new_video_data ) ) {
+				if ( is_array( $new_video_data ) && bb_draft_max_attachments_per_type( 'video' ) < count( $new_video_data ) ) {
 					// Recorded, not thrown: falling through preserves any sibling
 					// update the same beacon carried (GH1). The member's uploads
 					// were already protected above (BLOCKER-1), so refusing the
@@ -1009,7 +1013,6 @@ function bb_post_topic_reply_draft() {
 					// loop below. Skip the sibling (keep the stored copy) rather
 					// than fail the whole unload-sync request, matching the byte-cap
 					// branch just above.
-					$sibling_type_cap = bb_draft_max_attachments_per_type();
 					$sibling_over_cap = false;
 
 					foreach ( array(
@@ -1017,6 +1020,10 @@ function bb_post_topic_reply_draft() {
 						array( 'document', 'bbp_document' ),
 						array( 'video', 'bbp_video' ),
 					) as $sibling_type_keys ) {
+						// Per-type cap, matching the primary entry's type-specific
+						// caps above (bbp_media/document/video each read their own
+						// upload limit).
+						$sibling_type_cap   = bb_draft_max_attachments_per_type( $sibling_type_keys[0] );
 						$sibling_type_count = 0;
 
 						foreach ( $sibling_type_keys as $sibling_type_key ) {
