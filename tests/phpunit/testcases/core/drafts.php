@@ -1691,6 +1691,45 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		);
 	}
 
+	/**
+	 * F1 (single-site leg): bb_draft_enforce_user_budget() derives
+	 * $defer_attachment_release = 'heal' === $context && is_multisite(). On a
+	 * single-site install is_multisite() is false, so even the 'heal' context
+	 * must NOT defer - it releases the evicted draft's attachment stamp
+	 * immediately, in the (only) blog. This guards the derivation against
+	 * over-deferring on single-site; the multisite branch (defer = true) is
+	 * exercised only under a multisite test env (see
+	 * test_dispose_defers_attachment_release_when_asked for the flag itself).
+	 */
+	public function test_heal_eviction_releases_attachment_immediately_on_single_site() {
+		if ( is_multisite() ) {
+			$this->markTestSkipped( 'This leg asserts the single-site (non-deferred) derivation; run the multisite leg under a multisite suite.' );
+		}
+
+		$user_id = self::factory()->user->create();
+		$att     = $this->make_stamped_unsaved_attachment( $user_id );
+
+		// One evictable draft that references the stamped attachment, plus a
+		// corrupt bulk that keeps the user over budget so heal evicts it.
+		bp_update_user_meta( $user_id, 'draft_user', str_repeat( 'x', 1000000 ) );
+		bp_update_user_meta(
+			$user_id,
+			'draft_group_1',
+			array( 'data_key' => 'draft_group_1', '_draft_saved_at' => 100, 'data' => array( 'media' => array( array( 'id' => $att ) ) ) )
+		);
+
+		add_filter( 'bb_draft_user_total_max_size', array( $this, 'return_hundred_k' ) );
+		$heal = bb_draft_enforce_user_budget( $user_id, '', 0, 'heal' );
+		remove_filter( 'bb_draft_user_total_max_size', array( $this, 'return_hundred_k' ) );
+
+		$this->assertContains( 'draft_group_1', $heal['evicted'], 'Premise: heal evicted the draft that held the attachment.' );
+		$this->assertSame(
+			'',
+			(string) get_post_meta( $att, 'bb_media_draft', true ),
+			'F1: on single-site the heal context must NOT defer - the evicted draft\'s attachment stamp is released immediately.'
+		);
+	}
+
 	public function return_fifty() {
 		return 50;
 	}
