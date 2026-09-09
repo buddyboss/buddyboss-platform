@@ -1136,6 +1136,12 @@ function bb_post_topic_reply_draft() {
 					wp_send_json_error(
 						array(
 							'message' => __( 'Your draft could not be saved because you have too many saved drafts. Please discard some drafts and try again.', 'buddyboss' ),
+							// A refusal after a mid-loop eviction race may have deleted
+							// some drafts (here plus any earlier row-trim evictions);
+							// hand the keys back so the client can drop them from its
+							// localStorage/UI instead of listing drafts that are gone
+							// (H1).
+							'evicted_draft_keys' => array_merge( $evicted_draft_keys, $draft_budget['evicted'] ),
 						)
 					);
 				}
@@ -1236,10 +1242,19 @@ function bb_post_topic_reply_draft() {
 			}
 		}
 
+		$reference_added = false;
 		foreach ( array_unique( $stamp_attachment_ids ) as $stamp_attachment_id ) {
 			if ( isset( $surviving_stamp_ids[ (int) $stamp_attachment_id ] ) ) {
 				update_post_meta( $stamp_attachment_id, 'bb_media_draft', 1 );
+				$reference_added = true;
 			}
+		}
+
+		// A re-stamped sibling is a reference the orphan-stamp sweep's cached
+		// referenced-set must not miss (H3) - see the matching drop in
+		// activity/ajax.php. Drop the cache so the next sweep rescans.
+		if ( $reference_added ) {
+			delete_site_transient( 'bb_draft_referenced_stamp_ids' );
 		}
 
 		// A kept stored primary answers with the STORED entry, never the empty

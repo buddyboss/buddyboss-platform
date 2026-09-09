@@ -1470,6 +1470,11 @@ function bb_nouveau_ajax_post_draft_activity() {
 				wp_send_json_error(
 					array(
 						'message' => __( 'Your draft could not be saved because you have too many saved drafts. Please discard some drafts and try again.', 'buddyboss' ),
+						// A refusal after a mid-loop eviction race may have deleted
+						// some drafts; hand the keys back so the client can drop them
+						// from its localStorage/UI rather than list drafts that are
+						// gone (H1).
+						'evicted_draft_keys' => $draft_budget['evicted'],
 					)
 				);
 			}
@@ -1482,6 +1487,15 @@ function bb_nouveau_ajax_post_draft_activity() {
 			}
 			if ( $stamp_feature_image_id ) {
 				update_post_meta( $stamp_feature_image_id, 'bb_activity_post_feature_image_draft', 1 );
+			}
+
+			// These deferred stamps add references the orphan-stamp sweep's
+			// cached referenced-set must not miss (H3): bb_draft_protect_payload_
+			// attachments() only invalidates when IT stamps something, and a
+			// text-only primary leaves that empty while these sibling stamps
+			// still add references. Drop the cache so the next sweep rescans.
+			if ( ! empty( $stamp_attachment_ids ) || $stamp_feature_image_id ) {
+				delete_site_transient( 'bb_draft_referenced_stamp_ids' );
 			}
 
 			$replaced_draft = bp_get_user_meta( $draft_user_id, $draft_activity['data_key'], true );
