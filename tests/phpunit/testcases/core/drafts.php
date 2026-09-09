@@ -5963,6 +5963,76 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 	}
 
 	/**
+	 * L8: the L7 cross-row retain must hold on the OTHER release paths too, not
+	 * just bb_draft_dispose(). bb_draft_dispose_forum_inner_keys() is the expiry
+	 * cron's batch path - an unattended, cron-driven release - and it built its
+	 * surviving set from the aggregated forum row only, so aging out a forum inner
+	 * draft would strip the stamp of an attachment a live activity/group draft
+	 * still holds.
+	 *
+	 * Mutation check: drop the bb_draft_collect_other_row_referenced_ids() seed in
+	 * bb_draft_dispose_forum_inner_keys() and this goes red.
+	 */
+	public function test_forum_inner_dispose_keeps_a_stamp_another_row_references() {
+		$user_id = self::factory()->user->create();
+
+		$shared = $this->make_stamped_unsaved_attachment( $user_id );
+
+		// Referenced by an ACTIVITY/group row AND by an inner forum draft.
+		bp_update_user_meta( $user_id, 'draft_group_5', array( 'data' => array( 'media' => array( array( 'id' => $shared ) ) ) ) );
+		bp_update_user_meta(
+			$user_id,
+			'bb_user_topic_reply_draft',
+			array(
+				'draft_discussion_9' => array(
+					'data_key' => 'draft_discussion_9',
+					'data'     => array( 'bbp_media' => wp_json_encode( array( array( 'id' => $shared ) ) ) ),
+				),
+			)
+		);
+		bb_draft_flush_user_meta_sizes( $user_id );
+
+		// The expiry cron's batch-expire path.
+		bb_draft_dispose_forum_inner_keys( $user_id, array( 'draft_discussion_9' ) );
+
+		$this->assertSame(
+			'1',
+			(string) get_post_meta( $shared, 'bb_media_draft', true ),
+			'Expiring a forum inner draft must not release a stamp a DIFFERENT row still references (L8 fan-out).'
+		);
+	}
+
+	/**
+	 * L8: bb_draft_release_replaced_attachments() must honour the cross-row
+	 * retain-id set the forum and activity handlers pass it, so replacing an
+	 * entry never strips a stamp another row still holds. This locks the primitive
+	 * those handler paths depend on.
+	 *
+	 * Mutation check: drop the $retain_ids merge in the function and the stamp is
+	 * released.
+	 */
+	public function test_release_replaced_honours_cross_row_retain_ids() {
+		$user_id = self::factory()->user->create();
+
+		$shared = $this->make_stamped_unsaved_attachment( $user_id );
+
+		$released = bb_draft_release_replaced_attachments(
+			array( 'data' => array( 'media' => array( array( 'id' => $shared ) ) ) ), // previous held it
+			array( 'data' => array() ), // current holds nothing
+			$user_id,
+			array(),
+			array( $shared ) // but another row still references it
+		);
+
+		$this->assertNotContains( (int) $shared, $released, 'A cross-row-referenced attachment must not be reported released.' );
+		$this->assertSame(
+			'1',
+			(string) get_post_meta( $shared, 'bb_media_draft', true ),
+			'A cross-row-referenced attachment must keep its stamp on a replaced-entry release (L8).'
+		);
+	}
+
+	/**
 	 * Lower the per-type attachment bound so the refusal is cheap to reach.
 	 *
 	 * @return int

@@ -1129,6 +1129,14 @@ function bb_post_topic_reply_draft() {
 		// measure the row this request is actually about to write.
 		bb_draft_flush_user_meta_sizes( $user_id );
 
+		// Attachments the user's OTHER draft rows still reference, so a release
+		// below does not strip the stamp of a file a live activity/group draft
+		// still holds (L7 fan-out). Computed LAZILY - only a release that actually
+		// touches attachments needs it, so a text-only autosave (the common case)
+		// pays nothing (M2 perf). The other rows are untouched by this handler and
+		// the forum row is excluded, so one computation is reused across the sites.
+		$cross_row_retained_ids = null;
+
 		if ( empty( $existing_draft ) ) {
 			bp_delete_user_meta( $user_id, $usermeta_key );
 			bb_draft_flush_user_meta_sizes( $user_id );
@@ -1215,7 +1223,10 @@ function bb_post_topic_reply_draft() {
 			// release their attachment stamps and announce them. Attachments the
 			// surviving row still holds are excluded (H4).
 			if ( ! empty( $trimmed_entries ) ) {
-				$surviving_attachment_ids = array();
+				if ( null === $cross_row_retained_ids ) {
+					$cross_row_retained_ids = bb_draft_collect_other_row_referenced_ids( $user_id, $usermeta_key );
+				}
+				$surviving_attachment_ids = $cross_row_retained_ids;
 
 				foreach ( $existing_draft as $surviving_entry ) {
 					$surviving_attachment_ids = array_merge( $surviving_attachment_ids, bb_draft_collect_attachment_ids( $surviving_entry ) );
@@ -1252,7 +1263,10 @@ function bb_post_topic_reply_draft() {
 		// them. Matches the whole-row exclusion the eviction branch above
 		// already applies.
 		if ( ! $primary_rejected && ! empty( $unstamp_draft_entry ) ) {
-			bb_draft_release_replaced_attachments( $unstamp_draft_entry, $draft_topic_reply, $user_id, $existing_draft );
+			if ( null === $cross_row_retained_ids && bb_draft_collect_attachment_ids( $unstamp_draft_entry ) ) {
+				$cross_row_retained_ids = bb_draft_collect_other_row_referenced_ids( $user_id, $usermeta_key );
+			}
+			bb_draft_release_replaced_attachments( $unstamp_draft_entry, $draft_topic_reply, $user_id, $existing_draft, (array) $cross_row_retained_ids );
 		}
 
 		// Release the stamps a SIBLING draft dropped this request - the same set
@@ -1272,7 +1286,10 @@ function bb_post_topic_reply_draft() {
 			}
 
 			if ( isset( $fresh_draft_row[ $decided_key ] ) ) {
-				bb_draft_release_replaced_attachments( $fresh_draft_row[ $decided_key ], array(), $user_id, $existing_draft );
+				if ( null === $cross_row_retained_ids && bb_draft_collect_attachment_ids( $fresh_draft_row[ $decided_key ] ) ) {
+					$cross_row_retained_ids = bb_draft_collect_other_row_referenced_ids( $user_id, $usermeta_key );
+				}
+				bb_draft_release_replaced_attachments( $fresh_draft_row[ $decided_key ], array(), $user_id, $existing_draft, (array) $cross_row_retained_ids );
 			}
 		}
 

@@ -931,6 +931,60 @@ function bb_draft_collect_other_referenced_ids( $user_id, $exclude_key, $exclude
 }
 
 /**
+ * Collect attachment IDs referenced by the user's draft rows OTHER than one row.
+ *
+ * The whole-row companion to {@see bb_draft_collect_other_referenced_ids()}, for
+ * the release sites that already hold their OWN row's surviving set in memory -
+ * the forum row-trim eviction, the expiry batch and the row heal - and only need
+ * the cross-ROW additions. Without merging these, releasing an entry from the
+ * forum row stripped the stamp of an attachment a DIFFERENT usermeta row still
+ * held: the L7 gap, reopened through every release path bb_draft_dispose() did
+ * not itself cover.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int    $user_id          User ID.
+ * @param string $exclude_meta_key Meta key whose row the caller handles itself.
+ * @return int[] Attachment IDs referenced by the user's other draft rows.
+ */
+function bb_draft_collect_other_row_referenced_ids( $user_id, $exclude_meta_key ) {
+	$user_id = (int) $user_id;
+	$ids     = array();
+
+	if ( $user_id <= 0 ) {
+		return $ids;
+	}
+
+	$sizes = bb_draft_get_user_meta_sizes( $user_id );
+
+	if ( empty( $sizes['drafts'] ) || ! is_array( $sizes['drafts'] ) ) {
+		return $ids;
+	}
+
+	foreach ( array_keys( $sizes['drafts'] ) as $meta_key ) {
+		if ( $meta_key === $exclude_meta_key ) {
+			continue;
+		}
+
+		$stored = bp_get_user_meta( $user_id, $meta_key, true );
+
+		if ( empty( $stored ) || ! is_array( $stored ) ) {
+			continue;
+		}
+
+		if ( 'bb_user_topic_reply_draft' === $meta_key ) {
+			foreach ( $stored as $inner_draft ) {
+				$ids = array_merge( $ids, bb_draft_collect_attachment_ids( $inner_draft ) );
+			}
+		} else {
+			$ids = array_merge( $ids, bb_draft_collect_attachment_ids( $stored ) );
+		}
+	}
+
+	return array_values( array_unique( array_map( 'intval', $ids ) ) );
+}
+
+/**
  * Release the draft protection stamps from a draft's attachments.
  *
  * Removes the `bb_media_draft` / `bb_activity_post_feature_image_draft`
@@ -1015,10 +1069,13 @@ function bb_draft_unstamp_attachments( $draft, $user_id, $retain_entries = array
  * @param int   $user_id        Owning user ID.
  * @param array $retain_entries Optional. Draft entries that survive the write
  *                              and whose attachments must keep their stamps.
+ * @param array $retain_ids     Optional. Attachment IDs a DIFFERENT stored row
+ *                              still references (cross-row retain), which must
+ *                              also keep their stamps (L7).
  * @return int[] Attachment IDs whose stamps were released.
  */
-function bb_draft_release_replaced_attachments( $previous_entry, $current_entry, $user_id, $retain_entries = array() ) {
-	$retained = bb_draft_collect_attachment_ids( $current_entry );
+function bb_draft_release_replaced_attachments( $previous_entry, $current_entry, $user_id, $retain_entries = array(), $retain_ids = array() ) {
+	$retained = array_merge( bb_draft_collect_attachment_ids( $current_entry ), array_map( 'intval', (array) $retain_ids ) );
 
 	if ( ! empty( $retain_entries ) && is_array( $retain_entries ) ) {
 		foreach ( $retain_entries as $retain_entry ) {
@@ -1247,7 +1304,12 @@ function bb_draft_dispose_forum_inner_keys( $user_id, $inner_keys, $defer_attach
 	// otherwise release a same-numbered attachment on the wrong blog (H2); the
 	// per-site orphan-stamp sweep releases them in the correct context instead.
 	if ( ! $defer_attachment_release ) {
-		$surviving = array();
+		// Same-row survivors PLUS every attachment the user's OTHER draft rows
+		// still reference. This runs from the expiry cron, so without the
+		// cross-row set an aged-out forum inner draft would strip the stamp of a
+		// file a live activity/group draft still holds - the L7 gap, reached
+		// through an unattended path (L8 fan-out).
+		$surviving = bb_draft_collect_other_row_referenced_ids( $user_id, 'bb_user_topic_reply_draft' );
 
 		foreach ( $row as $surviving_entry ) {
 			$surviving = array_merge( $surviving, bb_draft_collect_attachment_ids( $surviving_entry ) );
@@ -2396,7 +2458,10 @@ function bb_draft_heal_forum_row( $user_id, $defer_attachment_release = false ) 
 
 	bb_draft_flush_user_meta_sizes( $user_id );
 
-	$surviving = array();
+	// Same-row survivors PLUS every attachment the user's OTHER draft rows still
+	// reference, or healing/trimming this forum row would strip the stamp of a
+	// file a different row still holds (L7 fan-out).
+	$surviving = bb_draft_collect_other_row_referenced_ids( $user_id, 'bb_user_topic_reply_draft' );
 
 	foreach ( $row as $surviving_entry ) {
 		$surviving = array_merge( $surviving, bb_draft_collect_attachment_ids( $surviving_entry ) );
