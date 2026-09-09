@@ -2021,6 +2021,18 @@ window.bp = window.bp || {};
 				);
 
 			} else {
+				// Abort any in-flight autosave XHR before the unload beacon,
+				// mirroring the in-page branch. A slow 20s autosave still uploading
+				// when the tab closes carries OLDER content; without this it could
+				// reach the server AFTER this newer beacon and overwrite it - the
+				// server does not order writes by recency - silently reverting the
+				// member's last edits. Aborting cancels a request still in flight;
+				// one already being processed server-side is a narrower residual
+				// race (M14).
+				if ( bp.draft_ajax_request ) {
+					bp.draft_ajax_request.abort();
+				}
+
 				const formData = new FormData();
 				formData.append( '_wpnonce_post_draft', bbRlActivity.params.post_draft_nonce );
 				formData.append( 'action', 'post_draft_activity' );
@@ -2049,6 +2061,14 @@ window.bp = window.bp || {};
 				bp.Nouveau.Activity.postForm.postDraftActivity( true, false );
 			}
 			bp.draft_activity.data = false;
+			// Also reset the previous-content snapshot. resetDraftActivity(false) -
+			// the post-publish path - does not call postDraftActivity(), the only
+			// other place old_draft_data is cleared, so without this the next
+			// collectDraftActivity() compares the just-published content against the
+			// now-blank composer, flips draft_content_changed true, and saves a
+			// near-empty "update" draft the member never asked for - recreating the
+			// row publish just cleared (M15).
+			bp.old_draft_data = false;
 			// Settle the deferred draft-loaded event. On the warm-localStorage
 			// path no fetch runs, so draft_fetch_settled stays undefined; once a
 			// publish/discard clears the draft here, displayDraftActivity()'s
