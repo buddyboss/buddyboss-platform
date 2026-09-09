@@ -1546,6 +1546,101 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 	}
 
 	/**
+	 * Test hook: bump the referenced-cache token, exactly as a reference-adding
+	 * save does through bb_draft_invalidate_referenced_cache(), and return the
+	 * batch size unchanged. Attaching it to the scan or release batch-size filter
+	 * simulates a concurrent invalidation landing at that phase of the sweep.
+	 *
+	 * @param int $batch_size The filtered batch size.
+	 * @return int The same batch size.
+	 */
+	public function bump_referenced_token_return( $batch_size ) {
+		bb_draft_invalidate_referenced_cache();
+		return $batch_size;
+	}
+
+	/**
+	 * L4 TOCTOU (scan-window leg): a reference added while the sweep's unbudgeted
+	 * scan is running must not be lost to a stale cache. Every reference-adding
+	 * save bumps a token via bb_draft_invalidate_referenced_cache(); the sweep
+	 * captures it before the scan and, if it moves before the set is committed,
+	 * abstains - caching nothing and releasing nothing - instead of pinning a set
+	 * that may be missing the new reference for the full TTL, which is what let
+	 * the release loop free (and the orphan cron then hard-delete) a still-
+	 * referenced attachment.
+	 *
+	 * Simulated deterministically by a filter fired DURING the scan (after the
+	 * sweep captured the token), standing in for a save's invalidation landing
+	 * between the cache-miss read and the write-back.
+	 *
+	 * Mutation check: drop the post-scan token guard and this goes red - the sweep
+	 * caches the set and releases the orphan.
+	 */
+	public function test_sweep_abstains_when_a_reference_is_added_during_the_scan() {
+		$this->isolate_draft_maintenance();
+
+		$user_id = self::factory()->user->create();
+		$orphan  = $this->make_stamped_unsaved_attachment( $user_id );
+
+		add_filter( 'bb_draft_retention_days', array( $this, 'filter_one_day_retention' ) );
+		add_filter( 'bb_draft_reference_scan_batch_size', array( $this, 'bump_referenced_token_return' ) );
+
+		$result = bb_drafts_release_orphaned_draft_stamps( 0 );
+
+		remove_filter( 'bb_draft_reference_scan_batch_size', array( $this, 'bump_referenced_token_return' ) );
+		remove_filter( 'bb_draft_retention_days', array( $this, 'filter_one_day_retention' ) );
+
+		$this->assertSame( 0, $result['released'], 'A reference added mid-scan must make the sweep release nothing this run.' );
+		$this->assertFalse( $result['complete'], 'An abstained run is not complete; it must resume next run.' );
+		$this->assertSame(
+			'1',
+			(string) get_post_meta( $orphan, 'bb_media_draft', true ),
+			'The sweep must keep every stamp when it abstains - releasing against a possibly-stale set is the TOCTOU this guards.'
+		);
+		$this->assertFalse(
+			get_site_transient( 'bb_draft_referenced_stamp_ids' ),
+			'A set built across an invalidation must NOT be cached, or it would pin the stale answer for the TTL.'
+		);
+	}
+
+	/**
+	 * L4 TOCTOU (release-loop leg): a reference stamped after the set was built but
+	 * while the release loop is still running must stop the loop, not be released
+	 * against the now-stale set. The per-batch token re-check breaks the loop the
+	 * moment the token moves; the cursor persists, so the next run resumes against
+	 * a rebuilt set.
+	 *
+	 * Simulated deterministically by a filter fired at the start of the release
+	 * phase (after the scan committed a clean set), standing in for a concurrent
+	 * stamp landing mid-release.
+	 *
+	 * Mutation check: drop the per-batch token guard and this goes red - the loop
+	 * releases the orphan against the stale set.
+	 */
+	public function test_sweep_stops_releasing_when_a_reference_is_added_mid_release() {
+		$this->isolate_draft_maintenance();
+
+		$user_id = self::factory()->user->create();
+		$orphan  = $this->make_stamped_unsaved_attachment( $user_id );
+
+		add_filter( 'bb_draft_retention_days', array( $this, 'filter_one_day_retention' ) );
+		add_filter( 'bb_draft_stamp_sweep_batch_size', array( $this, 'bump_referenced_token_return' ) );
+
+		$result = bb_drafts_release_orphaned_draft_stamps( 0 );
+
+		remove_filter( 'bb_draft_stamp_sweep_batch_size', array( $this, 'bump_referenced_token_return' ) );
+		remove_filter( 'bb_draft_retention_days', array( $this, 'filter_one_day_retention' ) );
+
+		$this->assertSame( 0, $result['released'], 'A reference added mid-release must stop the loop before it frees anything.' );
+		$this->assertFalse( $result['complete'], 'A run stopped by a mid-release invalidation is not complete.' );
+		$this->assertSame(
+			'1',
+			(string) get_post_meta( $orphan, 'bb_media_draft', true ),
+			'The orphan must keep its stamp when the loop yields to a mid-release reference.'
+		);
+	}
+
+	/**
 	 * The daily expiry sweep and the one-shot migration read-modify-write the
 	 * same aggregated usermeta rows, so they must serialize against EACH OTHER,
 	 * not only against themselves - otherwise a concurrent run can resurrect a
@@ -2751,6 +2846,7 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		delete_transient( 'bb_draft_stamp_sweep_lock' );
 		delete_option( 'bb_draft_stamp_sweep_cursor' );
 		delete_site_transient( 'bb_draft_referenced_stamp_ids' );
+		delete_site_option( 'bb_draft_referenced_stamp_ids_token' );
 
 		$scheduled = wp_next_scheduled( 'bb_draft_oneshot' );
 		if ( $scheduled ) {

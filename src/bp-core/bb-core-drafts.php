@@ -2562,6 +2562,34 @@ function bb_drafts_oneshot_batch( $time_budget = 10 ) {
 }
 
 /**
+ * Invalidate the shared referenced-attachment cache after a draft write adds a
+ * reference, and record that the invalidation happened.
+ *
+ * A bare delete of `bb_draft_referenced_stamp_ids` is not enough on its own. The
+ * orphan-stamp sweep reads the cache and, on a miss, runs an unbudgeted
+ * network-wide scan and only writes the result back when the scan finishes. A
+ * save landing BETWEEN the sweep's cache-miss read and that write deletes
+ * nothing (the cache is momentarily empty) and the sweep then commits a set that
+ * is MISSING the just-added reference for the whole TTL - so the sweep can
+ * release, and the orphan cron then hard-delete, an attachment a live draft
+ * still holds (a TOCTOU that violates the "cache is always a SUPERSET of the
+ * live set" invariant the sweep relies on).
+ *
+ * The token turns that otherwise-silent overwrite into a detectable event: the
+ * sweep captures the token before it gathers data and refuses to cache or
+ * release a set built across a change. The value must differ on every call
+ * because update_site_option() no-ops on an unchanged value.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_draft_invalidate_referenced_cache() {
+	delete_site_transient( 'bb_draft_referenced_stamp_ids' );
+	update_site_option( 'bb_draft_referenced_stamp_ids_token', uniqid( (string) wp_rand(), true ) );
+}
+
+/**
  * Collect every attachment ID any STORED draft still references.
  *
  * The orphan-attachment cron reaps an attachment only when it has NO
@@ -2751,7 +2779,14 @@ function bb_drafts_release_orphaned_draft_stamps( $time_budget = 10 ) {
 	// an invalidation is ever missed. On a busy network the set genuinely
 	// changes and each rescan is legitimate; the cache only elides the identical
 	// re-scans on quiet cleanup windows.
-	$referenced = get_site_transient( 'bb_draft_referenced_stamp_ids' );
+	//
+	// That SUPERSET guarantee holds only while no reference is ADDED across the
+	// scan/commit boundary. bb_draft_invalidate_referenced_cache() records a
+	// token on every such add; capture it BEFORE reading the cache or scanning,
+	// and refuse to cache or release a set built across a change (below) - the
+	// bare delete alone cannot cancel a scan that has not yet written its result.
+	$reference_token = get_site_option( 'bb_draft_referenced_stamp_ids_token', '' );
+	$referenced      = get_site_transient( 'bb_draft_referenced_stamp_ids' );
 
 	if ( ! is_array( $referenced ) ) {
 		// Hold the lock across the (unbudgeted) scan too, not just the release
@@ -2786,6 +2821,21 @@ function bb_drafts_release_orphaned_draft_stamps( $time_budget = 10 ) {
 		 *
 		 * @param int $ttl Cache lifetime in seconds. Default 12 hours.
 		 */
+		// A save invalidated the set while this unbudgeted scan was running, so
+		// the scan may have missed a reference added after its cursor passed the
+		// edited draft. Committing it would pin a NON-superset for the full TTL -
+		// the TOCTOU that lets the release loop free a still-referenced
+		// attachment. Abstain: cache nothing and release nothing this run; the
+		// next daily or CLI run rebuilds cleanly against a stable token.
+		if ( get_site_option( 'bb_draft_referenced_stamp_ids_token', '' ) !== $reference_token ) {
+			delete_transient( 'bb_draft_stamp_sweep_lock' );
+
+			return array(
+				'released' => 0,
+				'complete' => false,
+			);
+		}
+
 		$referenced_ttl = (int) apply_filters( 'bb_draft_referenced_cache_ttl', 12 * HOUR_IN_SECONDS );
 
 		set_site_transient( 'bb_draft_referenced_stamp_ids', $referenced, $referenced_ttl );
@@ -2810,6 +2860,18 @@ function bb_drafts_release_orphaned_draft_stamps( $time_budget = 10 ) {
 	$batch_size = max( 1, (int) apply_filters( 'bb_draft_stamp_sweep_batch_size', 200 ) );
 
 	do {
+		// A save that stamps a NEW attachment mid-sweep invalidates the set and
+		// bumps the token. The batch about to be judged may pre-date that
+		// reference, so stop releasing the moment the token moves: the cursor is
+		// persisted each window, so the next run resumes against a rebuilt set.
+		// Only attachment-stamping saves bump the token - text-only autosaves do
+		// not - so this yields to a genuinely new reference, not to every
+		// keystroke, and cannot starve the sweep on a busy site.
+		if ( get_site_option( 'bb_draft_referenced_stamp_ids_token', '' ) !== $reference_token ) {
+			$complete = false;
+			break;
+		}
+
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- maintenance sweep over draft-stamped attachments, cursored.
 		$candidate_ids = $wpdb->get_col(
 			$wpdb->prepare(

@@ -1527,7 +1527,7 @@ function bb_nouveau_ajax_post_draft_activity() {
 			// before it let a sweep rebuild the set without the new reference and
 			// pin it for the TTL (F3). Matches the forum handler's order.
 			if ( ! empty( $stamp_attachment_ids ) || $stamp_feature_image_id ) {
-				delete_site_transient( 'bb_draft_referenced_stamp_ids' );
+				bb_draft_invalidate_referenced_cache();
 			}
 
 			// Release the stamps of attachments the replaced draft held and the

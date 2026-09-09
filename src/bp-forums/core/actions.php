@@ -1277,9 +1277,11 @@ function bb_post_topic_reply_draft() {
 
 		// A re-stamped sibling is a reference the orphan-stamp sweep's cached
 		// referenced-set must not miss (H3) - see the matching drop in
-		// activity/ajax.php. Drop the cache so the next sweep rescans.
+		// activity/ajax.php. Drop the cache AND bump the token so a sweep whose
+		// in-flight scan already passed this draft cannot commit a set missing
+		// this reference (L4 TOCTOU).
 		if ( $reference_added ) {
-			delete_site_transient( 'bb_draft_referenced_stamp_ids' );
+			bb_draft_invalidate_referenced_cache();
 		}
 
 		// A kept stored primary answers with the STORED entry, never the empty
