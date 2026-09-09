@@ -222,7 +222,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			// otherwise point to a WordPress.org plugin_information lookup that always fails.
 			add_filter( 'site_transient_update_plugins', array( $this, 'bb_fix_plugin_details_link' ), 20 );
 			add_filter( 'plugins_api', array( $this, 'bb_plugins_api_information' ), 10, 3 );
-			add_filter( 'plugin_row_meta', array( $this, 'bb_modify_plugin_row_meta' ), 10, 2 );
+			add_filter( 'plugin_row_meta', array( $this, 'bb_modify_plugin_row_meta' ), 10, 3 );
 		}
 
 		/**
@@ -975,6 +975,8 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 		}
 
 		/**
+		 * Normalize the platform's update transient entry so its details links work.
+		 *
 		 * BuddyBoss Platform is distributed from BuddyBoss's own servers, not the
 		 * WordPress.org plugin directory. WordPress core builds the "View details"
 		 * (plugin row) and "View version details" (update notice) links from the
@@ -999,7 +1001,9 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			$plugin_file = plugin_basename( buddypress()->basename );
 
 			foreach ( array( 'response', 'no_update' ) as $key ) {
-				if ( isset( $value->{$key}[ $plugin_file ] ) ) {
+				// Third-party update managers are known to rewrite this transient
+				// with array entries; assigning a property on one fatals on PHP 8.
+				if ( isset( $value->{$key}[ $plugin_file ] ) && is_object( $value->{$key}[ $plugin_file ] ) ) {
 					$value->{$key}[ $plugin_file ]->slug = dirname( $plugin_file );
 					$value->{$key}[ $plugin_file ]->url  = $this->bb_get_release_notes_page_url();
 				}
@@ -1137,19 +1141,22 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 		 *
 		 * @param string[] $plugin_meta An array of the plugin's metadata.
 		 * @param string   $plugin_file Path to the plugin file relative to the plugins directory.
+		 * @param array    $plugin_data An array of plugin data from the plugin headers.
 		 *
 		 * @return string[] Modified plugin metadata.
 		 */
-		public function bb_modify_plugin_row_meta( $plugin_meta, $plugin_file ) {
+		public function bb_modify_plugin_row_meta( $plugin_meta, $plugin_file, $plugin_data = array() ) {
 			if ( plugin_basename( buddypress()->basename ) !== $plugin_file ) {
 				return $plugin_meta;
 			}
+
+			$plugin_uri = ! empty( $plugin_data['PluginURI'] ) ? $plugin_data['PluginURI'] : 'https://www.buddyboss.com/';
 
 			foreach ( $plugin_meta as $key => $meta ) {
 				if ( false !== strpos( $meta, 'plugin-install.php?tab=plugin-information' ) ) {
 					$plugin_meta[ $key ] = sprintf(
 						'<a href="%1$s" target="_blank" rel="noopener noreferrer" aria-label="%2$s">%3$s</a>',
-						esc_url( 'https://www.buddyboss.com/' ),
+						esc_url( $plugin_uri ),
 						esc_attr__( 'Visit plugin site for BuddyBoss Platform', 'buddyboss' ),
 						esc_html__( 'Visit plugin site', 'buddyboss' )
 					);
@@ -1171,6 +1178,10 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 		 */
 		public function bb_get_release_notes_page_url( $version = '' ) {
 			$url = 'https://www.buddyboss.com/resources/buddyboss-platform-releases/';
+
+			// The version comes from the update feed; keep only digits and dots so a
+			// mangled value cannot alter the URL path.
+			$version = preg_replace( '/[^0-9.]/', '', (string) $version );
 
 			if ( ! empty( $version ) ) {
 				$url .= str_replace( '.', '-', $version ) . '/';
@@ -1194,6 +1205,10 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 		 * @return string Sanitized release notes HTML, or empty string if unavailable.
 		 */
 		public function bb_get_release_notes_html( $version ) {
+			// The version comes from the update feed; keep only digits and dots so a
+			// mangled value cannot inject extra query arguments into the request.
+			$version = preg_replace( '/[^0-9.]/', '', (string) $version );
+
 			$cache_key = 'bb_platform_release_notes_' . md5( $version );
 			$cached    = get_transient( $cache_key );
 
@@ -1245,7 +1260,13 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 				// The release feed contains tags whose closing bracket is missing at
 				// line ends (e.g. "</ul\r\n"); repair them so wp_kses_post() does not
 				// escape the fragment into visible text, then balance whatever is left.
-				$html = preg_replace( '/<(\/?[a-z][a-z0-9]*)(?=\s*(?:\r|\n|$))(?!>)/i', '<$1>', $html );
+				// Trade-off: a valid tag split across lines ("<a\nhref=...") or prose
+				// like "a <b\n" gets closed early — always safe after kses, and the
+				// feed is a flat single-line-per-tag list, so accepted.
+				$repaired = preg_replace( '/<(\/?[a-z][a-z0-9]*)(?=\s*(?:\r|\n|$))/i', '<$1>', $html );
+				if ( null !== $repaired ) {
+					$html = $repaired;
+				}
 				$html = force_balance_tags( wp_kses_post( $html ) );
 			} else {
 				$html = '';
