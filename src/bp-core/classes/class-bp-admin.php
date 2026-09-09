@@ -222,7 +222,6 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			// otherwise point to a WordPress.org plugin_information lookup that always fails.
 			add_filter( 'site_transient_update_plugins', array( $this, 'bb_fix_plugin_details_link' ), 20 );
 			add_filter( 'plugins_api', array( $this, 'bb_plugins_api_information' ), 10, 3 );
-			add_filter( 'plugin_row_meta', array( $this, 'bb_modify_plugin_row_meta' ), 10, 3 );
 		}
 
 		/**
@@ -1053,11 +1052,12 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 		/**
 		 * Serve plugin information for BuddyBoss Platform locally.
 		 *
-		 * Handles the plugin-information modal opened by the "View version x.x.x
-		 * details" link in the update notice, which otherwise queries
-		 * WordPress.org and returns "Plugin not found." The changelog section is
-		 * fetched from the buddyboss.com release notes API when available and
-		 * always links to the full release notes page.
+		 * Handles the plugin-information modal opened by the plugin row's
+		 * "View details" link and the update notice's "View version x.x.x
+		 * details" link, which otherwise query WordPress.org and return
+		 * "Plugin not found." The changelog section is fetched from the
+		 * buddyboss.com release notes API when available and always links to
+		 * the full release notes page.
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
@@ -1126,44 +1126,6 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			$information = apply_filters( 'bb_platform_plugins_api_information', $information, $new_version, $args );
 
 			return (object) $information;
-		}
-
-		/**
-		 * Replace the "View details" plugin row link with "Visit plugin site".
-		 *
-		 * With a slug present on the update transient, WordPress core renders a
-		 * "View details" link on the plugin row. Per product decision the row
-		 * should link to the BuddyBoss site instead, matching the other
-		 * BuddyBoss plugins; the plugin-information modal remains reachable from
-		 * the "View version x.x.x details" link in the update notice.
-		 *
-		 * @since BuddyBoss [BBVERSION]
-		 *
-		 * @param string[] $plugin_meta An array of the plugin's metadata.
-		 * @param string   $plugin_file Path to the plugin file relative to the plugins directory.
-		 * @param array    $plugin_data An array of plugin data from the plugin headers.
-		 *
-		 * @return string[] Modified plugin metadata.
-		 */
-		public function bb_modify_plugin_row_meta( $plugin_meta, $plugin_file, $plugin_data = array() ) {
-			if ( plugin_basename( buddypress()->basename ) !== $plugin_file ) {
-				return $plugin_meta;
-			}
-
-			$plugin_uri = ! empty( $plugin_data['PluginURI'] ) ? $plugin_data['PluginURI'] : 'https://www.buddyboss.com/';
-
-			foreach ( $plugin_meta as $key => $meta ) {
-				if ( false !== strpos( $meta, 'plugin-install.php?tab=plugin-information' ) ) {
-					$plugin_meta[ $key ] = sprintf(
-						'<a href="%1$s" target="_blank" rel="noopener noreferrer" aria-label="%2$s">%3$s</a>',
-						esc_url( $plugin_uri ),
-						esc_attr__( 'Visit plugin site for BuddyBoss Platform', 'buddyboss' ),
-						esc_html__( 'Visit plugin site', 'buddyboss' )
-					);
-				}
-			}
-
-			return $plugin_meta;
 		}
 
 		/**
