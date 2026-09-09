@@ -5917,6 +5917,52 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 	}
 
 	/**
+	 * L7: disposing one draft row (a discard, a budget eviction, or an expiry
+	 * sweep - all route through bb_draft_dispose()) must NOT release an
+	 * attachment stamp a DIFFERENT stored row still references. The immediate
+	 * dispose path only ever excluded same-row siblings, so an attachment held by
+	 * two rows lost its bb_media_draft protection the moment one row went, and the
+	 * general orphan-media cron could then hard-delete a file a live draft still
+	 * pointed at.
+	 *
+	 * Mutation check: drop the cross-row retain (remove
+	 * bb_draft_collect_other_referenced_ids from the whole-row dispose) and the
+	 * first assertion goes red - the shared stamp is released while a row still
+	 * needs it. The second assertion guards the opposite direction: the stamp is
+	 * still released once nothing references it.
+	 */
+	public function test_dispose_keeps_a_stamp_a_different_row_still_references() {
+		$user_id = self::factory()->user->create();
+
+		$shared = $this->make_stamped_unsaved_attachment( $user_id );
+
+		// Two DIFFERENT draft rows both legitimately reference the same attachment.
+		bp_update_user_meta( $user_id, 'draft_user', array( 'data' => array( 'media' => array( array( 'id' => $shared ) ) ) ) );
+		bp_update_user_meta( $user_id, 'draft_group_5', array( 'data' => array( 'media' => array( array( 'id' => $shared ) ) ) ) );
+		bb_draft_flush_user_meta_sizes( $user_id );
+
+		// Dispose ONE row.
+		bb_draft_dispose( $user_id, 'draft_group_5' );
+
+		$this->assertSame(
+			'1',
+			(string) get_post_meta( $shared, 'bb_media_draft', true ),
+			'An attachment a DIFFERENT stored draft row still references must keep its stamp when one row is disposed (L7).'
+		);
+
+		// Disposing the LAST row that references it now releases the stamp - the
+		// retain must not become a permanent leak.
+		bb_draft_flush_user_meta_sizes( $user_id );
+		bb_draft_dispose( $user_id, 'draft_user' );
+
+		$this->assertSame(
+			'',
+			(string) get_post_meta( $shared, 'bb_media_draft', true ),
+			'Once no stored draft references it, the stamp is released as before.'
+		);
+	}
+
+	/**
 	 * Lower the per-type attachment bound so the refusal is cheap to reach.
 	 *
 	 * @return int

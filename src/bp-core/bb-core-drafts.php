@@ -862,6 +862,75 @@ function bb_draft_salvage_oversized_draft( $user_id, $meta_key ) {
 }
 
 /**
+ * Collect every attachment ID the user's OTHER stored drafts still reference.
+ *
+ * The immediate dispose path (a member's own discard, a per-user budget
+ * eviction, the expiry cron) released an entry's attachment stamps consulting
+ * only same-ROW siblings, never the user's other draft rows. So an attachment
+ * legitimately referenced from two rows - two activity drafts, or an activity
+ * and a group draft - lost its `bb_media_draft` protection the moment one row
+ * was disposed, and the general orphan-media cron could then hard-delete a file
+ * a live draft still pointed at (L7). This builds the retain set the dispose
+ * passes to {@see bb_draft_unstamp_attachments()} so a still-referenced
+ * attachment keeps its stamp.
+ *
+ * Read from live storage on each call, so inside a multi-eviction loop it
+ * reflects the rows already removed this pass - an attachment shared by two
+ * evicted rows is retained while the first goes and released when the last does.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int    $user_id       User ID.
+ * @param string $exclude_key   Meta key of the entry being disposed.
+ * @param string $exclude_inner Inner key being disposed, or '' for a whole row.
+ * @return int[] Attachment IDs still referenced by the user's other drafts.
+ */
+function bb_draft_collect_other_referenced_ids( $user_id, $exclude_key, $exclude_inner = '' ) {
+	$user_id = (int) $user_id;
+	$ids     = array();
+
+	if ( $user_id <= 0 ) {
+		return $ids;
+	}
+
+	$sizes = bb_draft_get_user_meta_sizes( $user_id );
+
+	if ( empty( $sizes['drafts'] ) || ! is_array( $sizes['drafts'] ) ) {
+		return $ids;
+	}
+
+	foreach ( array_keys( $sizes['drafts'] ) as $meta_key ) {
+		$stored = bp_get_user_meta( $user_id, $meta_key, true );
+
+		if ( empty( $stored ) || ! is_array( $stored ) ) {
+			continue;
+		}
+
+		if ( 'bb_user_topic_reply_draft' === $meta_key ) {
+			foreach ( $stored as $inner_key => $inner_draft ) {
+				// Skip only the exact entry being disposed; every other inner
+				// draft - in this row or any other - is a live reference.
+				if ( $meta_key === $exclude_key && (string) $inner_key === (string) $exclude_inner ) {
+					continue;
+				}
+
+				$ids = array_merge( $ids, bb_draft_collect_attachment_ids( $inner_draft ) );
+			}
+		} else {
+			// A whole activity row. Skipped only when IT is the entry being
+			// disposed as a whole (empty inner key).
+			if ( $meta_key === $exclude_key && '' === (string) $exclude_inner ) {
+				continue;
+			}
+
+			$ids = array_merge( $ids, bb_draft_collect_attachment_ids( $stored ) );
+		}
+	}
+
+	return array_values( array_unique( array_map( 'intval', $ids ) ) );
+}
+
+/**
  * Release the draft protection stamps from a draft's attachments.
  *
  * Removes the `bb_media_draft` / `bb_activity_post_feature_image_draft`
@@ -885,11 +954,18 @@ function bb_draft_salvage_oversized_draft( $user_id, $meta_key ) {
  * @param array $retain_entries Optional. Draft entries that survive this
  *                              removal and whose attachments must keep
  *                              their stamps.
+ * @param array $retain_ids     Optional. Attachment IDs a DIFFERENT stored row
+ *                              still references (cross-row retain), which must
+ *                              also keep their stamps.
  * @return void
  */
-function bb_draft_unstamp_attachments( $draft, $user_id, $retain_entries = array() ) {
+function bb_draft_unstamp_attachments( $draft, $user_id, $retain_entries = array(), $retain_ids = array() ) {
 	$attachment_ids = bb_draft_collect_attachment_ids( $draft );
-	$retained       = array();
+	// Pre-resolved IDs a DIFFERENT draft row still references (cross-row retain).
+	// The same-row $retain_entries only ever covered siblings in one aggregated
+	// row, so an attachment held by another usermeta row lost its stamp when this
+	// one was disposed (L7); callers now pass those ids here.
+	$retained = array_map( 'intval', (array) $retain_ids );
 
 	if ( ! empty( $retain_entries ) && is_array( $retain_entries ) ) {
 		foreach ( $retain_entries as $retain_entry ) {
@@ -1048,7 +1124,14 @@ function bb_draft_dispose( $user_id, $meta_key, $inner_key = '', $defer_attachme
 		unset( $retain_entries[ $inner_key ] );
 
 		if ( ! $defer_attachment_release ) {
-			bb_draft_unstamp_attachments( $stored[ $inner_key ], $user_id, $retain_entries );
+			// Same-row siblings ($retain_entries) PLUS anything the user's other
+			// draft rows still reference (L7).
+			bb_draft_unstamp_attachments(
+				$stored[ $inner_key ],
+				$user_id,
+				$retain_entries,
+				bb_draft_collect_other_referenced_ids( $user_id, $meta_key, $inner_key )
+			);
 		}
 		unset( $stored[ $inner_key ] );
 
@@ -1075,12 +1158,16 @@ function bb_draft_dispose( $user_id, $meta_key, $inner_key = '', $defer_attachme
 	}
 
 	if ( ! $defer_attachment_release ) {
+		// The whole row goes, so nothing in it survives to retain; the retain set
+		// is whatever the user's OTHER draft rows still reference (L7).
+		$retain_ids = bb_draft_collect_other_referenced_ids( $user_id, $meta_key, '' );
+
 		if ( 'bb_user_topic_reply_draft' === $meta_key ) {
 			foreach ( $stored as $inner_draft ) {
-				bb_draft_unstamp_attachments( $inner_draft, $user_id );
+				bb_draft_unstamp_attachments( $inner_draft, $user_id, array(), $retain_ids );
 			}
 		} else {
-			bb_draft_unstamp_attachments( $stored, $user_id );
+			bb_draft_unstamp_attachments( $stored, $user_id, array(), $retain_ids );
 		}
 	}
 
