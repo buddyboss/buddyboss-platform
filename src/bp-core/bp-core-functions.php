@@ -4831,6 +4831,7 @@ function bp_core_parse_url( $url ) {
 
 	$parse_url_data = wp_parse_url( $url, PHP_URL_HOST );
 	$original_url   = $url;
+	$user_agent     = bb_get_url_preview_user_agent();
 
 	if ( in_array( $parse_url_data, apply_filters( 'bp_core_parse_url_shorten_url_provider', array( 'bit.ly', 'snip.ly', 'rb.gy', 'tinyurl.com', 'tiny.one', 'rotf.lol', 'b.link', '4ubr.short.gy', 'maps.app.goo.gl', '' ) ), true ) ) {
 		$response = wp_safe_remote_get(
@@ -4838,7 +4839,7 @@ function bp_core_parse_url( $url ) {
 			array(
 				'stream'  => true,
 				'headers' => array(
-					'user-agent' => bb_get_url_preview_user_agent(),
+					'user-agent' => $user_agent,
 				),
 			)
 		);
@@ -4855,14 +4856,21 @@ function bp_core_parse_url( $url ) {
 				'http' => array(
 					'method'        => 'GET',
 					'max_redirects' => 1,
+					'user_agent'    => $user_agent,
 				),
 			);
 
 			@file_get_contents( $url, null, stream_context_create( $context ) );
-			if ( isset( $http_response_header ) && isset( $http_response_header[6] ) ) {
-				$new_url = str_replace( 'Location: ', '', $http_response_header[6] );
-				if ( filter_var( $new_url, FILTER_VALIDATE_URL ) ) {
-					$url = $new_url;
+			if ( ! empty( $http_response_header ) && is_array( $http_response_header ) ) {
+				// Find the redirect target instead of relying on a fixed header position.
+				foreach ( $http_response_header as $response_header ) {
+					if ( 0 === stripos( $response_header, 'Location:' ) ) {
+						$new_url = trim( substr( $response_header, strlen( 'Location:' ) ) );
+						if ( filter_var( $new_url, FILTER_VALIDATE_URL ) ) {
+							$url = $new_url;
+						}
+						break;
+					}
 				}
 			}
 		}
@@ -4903,7 +4911,7 @@ function bp_core_parse_url( $url ) {
 		$parsed_url_data['error']       = '';
 		$parsed_url_data['wp_embed']    = true;
 	} else {
-		$args = array( 'user-agent' => bb_get_url_preview_user_agent() );
+		$args = array( 'user-agent' => $user_agent );
 
 		if ( bb_is_same_site_url( $url ) ) {
 			if ( ! bp_enable_private_network() ) {
