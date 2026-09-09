@@ -1089,7 +1089,23 @@ window.bp = window.bp || {};
 					if ( 'deleted' !== $.cookie( bp.draft_activity.data_key ) ) {
 				 		// Parse data with JSON.
 						var draft_activity_local_data = JSON.parse( draft_data );
-						bp.draft_activity.data        = draft_activity_local_data.data;
+
+						// The localStorage key is not scoped per user, so on a
+						// shared/kiosk browser it can hold a DIFFERENT member's
+						// draft (they logged out without clearing storage). Server
+						// storage is per-user, but this cache is per-browser -
+						// restoring it would leak one member's draft into another's
+						// composer. Drop it when the stored owner is not the current
+						// member (privacy).
+						var draft_owner   = ( draft_activity_local_data.data && ! _.isUndefined( draft_activity_local_data.data.user_id ) ) ? parseInt( draft_activity_local_data.data.user_id, 10 ) : 0;
+						var current_owner = parseInt( BP_Nouveau.activity.params.user_id, 10 );
+
+						if ( draft_owner && current_owner && draft_owner !== current_owner ) {
+							localStorage.removeItem( bp.draft_activity.data_key );
+							$.removeCookie( bp.draft_activity.data_key );
+						} else {
+							bp.draft_activity.data = draft_activity_local_data.data;
+						}
 					} else {
 						$.removeCookie( bp.draft_activity.data_key );
 					}
@@ -1374,15 +1390,6 @@ window.bp = window.bp || {};
 				} else if ( true === BP_Nouveau.activity.params.has_draft ) {
 					// The draft is no longer echoed into page HTML - fetch the
 					// server copy once when localStorage held nothing.
-					//
-					// Snapshot what the composer arrived with BEFORE the fetch goes
-					// out, so the not-restored notice fires only when the member
-					// actually TYPES during the fetch - not merely because the
-					// composer was pre-filled (a mention prefix, a shared link).
-					// Matches the forum packs' snapshotInitialContent() (M4).
-					bp.draft_initial_content = ( ! _.isUndefined( self.postForm ) && self.postForm.$el ) ?
-						$.trim( self.postForm.$el.find( '#whats-new' ).text().replace( /\u00a0/g, ' ' ) ) : '';
-
 					self.fetchServerDraftActivity();
 				}
 
@@ -1443,11 +1450,7 @@ window.bp = window.bp || {};
 						$.trim( self.postForm.$el.find( '#whats-new' ).text().replace( /\u00a0/g, ' ' ) ) : '';
 
 					var hasLocalDraftData    = bp.draft_activity.data && '' !== bp.draft_activity.data,
-						// Deviation from the pre-fetch snapshot, not mere non-emptiness,
-						// so a pre-filled composer is not mistaken for the member typing
-						// (M4). bp.draft_content_changed is raised only by real input
-						// events, so it stays a reliable signal.
-						memberStartedWriting = bp.draft_content_changed || ( bbTypedContent !== ( bp.draft_initial_content || '' ) );
+						memberStartedWriting = bp.draft_content_changed || '' !== bbTypedContent;
 
 					if ( hasLocalDraftData || memberStartedWriting ) {
 						self.settleDeferredDraftLoadedEvent();
@@ -2156,6 +2159,12 @@ window.bp = window.bp || {};
 					}
 				).fail(
 					function ( response ) {
+						// A budget refusal may have evicted older drafts before it
+						// gave up; drop their local copies so the UI does not keep
+						// listing drafts that no longer exist (H1). No-op when the
+						// response carries no evicted keys.
+						bp.Nouveau.Activity.postForm.handleEvictedDrafts( response );
+
 						// Surface guardrail rejections (draft too large, too many
 						// drafts) with the server's message when it sends one;
 						// otherwise fall back to the generic save/discard-failed
