@@ -1109,10 +1109,13 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			// filters, including bb_fix_plugin_details_link() above — harmless, since
 			// that filter only normalizes the entry's slug.
 			$update_data = get_site_transient( 'update_plugins' );
+			$update      = isset( $update_data->response[ $plugin_file ] ) ? $update_data->response[ $plugin_file ] : null;
 
-			if ( ! empty( $update_data->response[ $plugin_file ]->new_version ) ) {
-				$new_version = $update_data->response[ $plugin_file ]->new_version;
-				$package     = ! empty( $update_data->response[ $plugin_file ]->package ) ? $update_data->response[ $plugin_file ]->package : '';
+			// Third-party update managers are known to rewrite this transient with
+			// array entries; reading a property off one warns under WP_DEBUG.
+			if ( is_object( $update ) && ! empty( $update->new_version ) ) {
+				$new_version = $update->new_version;
+				$package     = ! empty( $update->package ) ? $update->package : '';
 			}
 
 			$release_url = $this->bb_get_release_notes_page_url( $new_version );
