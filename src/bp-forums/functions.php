@@ -1475,6 +1475,27 @@ function bb_forums_sanitize_draft_entry( $draft_entry ) {
 				$draft_entry['data'][ $content_key ] = bbp_kses_data( bb_draft_strip_data_urls( $draft_entry['data'][ $content_key ] ) );
 			}
 		}
+
+		/**
+		 * Free-text forum draft fields sanitized as PLAIN text (bbp_topic_title),
+		 * mirroring the M17 activity-draft fix and the topic publish path. The
+		 * content keys above are HTML (kses); the title is a short single-line
+		 * value that reached storage byte-for-byte from client JSON before -
+		 * harmless while a draft is only read back to its owner, but inconsistent
+		 * with the rest of the draft sanitization and one .html()-vs-.val() mistake
+		 * in any consumer of this usermeta row away from a stored-XSS (M21).
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param string[] $text_keys Draft data keys holding plain text.
+		 */
+		$text_keys = apply_filters( 'bb_draft_topic_reply_text_keys', array( 'bbp_topic_title' ) );
+
+		foreach ( $text_keys as $text_key ) {
+			if ( isset( $draft_entry['data'][ $text_key ] ) && is_string( $draft_entry['data'][ $text_key ] ) ) {
+				$draft_entry['data'][ $text_key ] = sanitize_text_field( $draft_entry['data'][ $text_key ] );
+			}
+		}
 	}
 
 	$draft_entry['_draft_saved_at'] = time();

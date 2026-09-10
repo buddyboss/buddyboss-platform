@@ -981,6 +981,35 @@ function bb_post_topic_reply_draft() {
 					$merged_entry         = $existing_draft[ $data_key ];
 					$merged_entry['data'] = $d_data;
 
+					// Protect this sibling's uploads BEFORE any cap below can
+					// reject it, exactly as the primary entry is at :594. Each cap
+					// here `continue`s past the stamping loop further down, so a file
+					// referenced ONLY by a freshly-uploaded, over-cap sibling reached
+					// no storage AND was never stamped - and
+					// bp_media_delete_orphaned_attachments() hard-deleted it while the
+					// member was still drafting with it, the exact BLOCKER-1 loss the
+					// primary path already guards. Keyed by type so the per-type cap
+					// inside matches the checks below (L11).
+					$sibling_protect_lists = array();
+					foreach ( array(
+						'media'    => 'bbp_media',
+						'document' => 'bbp_document',
+						'video'    => 'bbp_video',
+					) as $sibling_protect_type => $sibling_list_key ) {
+						if ( empty( $merged_entry['data'][ $sibling_list_key ] ) ) {
+							$sibling_protect_lists[ $sibling_protect_type ] = array();
+							continue;
+						}
+
+						$sibling_protect_list = $merged_entry['data'][ $sibling_list_key ];
+
+						$sibling_protect_lists[ $sibling_protect_type ] = is_array( $sibling_protect_list )
+							? $sibling_protect_list
+							: (array) json_decode( $sibling_protect_list, true );
+					}
+
+					bb_draft_protect_payload_attachments( $sibling_protect_lists, $user_id );
+
 					// Strip data URLs, then judge the RAW width BEFORE the
 					// expensive kses pass, mirroring the primary entry's M4
 					// ordering (:567-570). bbp_kses_data() on a multi-MB payload

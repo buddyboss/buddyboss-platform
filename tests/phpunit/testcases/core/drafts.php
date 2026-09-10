@@ -2545,6 +2545,31 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 	}
 
 	/**
+	 * M21: bbp_topic_title is a free-text forum draft field and must be plain-text
+	 * sanitized before storage, like the M17 activity fields and the topic publish
+	 * path. Only the HTML content keys were sanitized before.
+	 *
+	 * Mutation check: drop the bb_draft_topic_reply_text_keys loop and the script
+	 * tag survives.
+	 */
+	public function test_forum_draft_sanitizes_topic_title() {
+		$out = bb_forums_sanitize_draft_entry(
+			array(
+				'data' => array(
+					'bbp_topic_content' => 'body',
+					'bbp_topic_title'   => '<script>alert(1)</script>Title',
+				),
+			)
+		);
+
+		$this->assertStringNotContainsString(
+			'<script>',
+			(string) $out['data']['bbp_topic_title'],
+			'bbp_topic_title must be plain-text sanitized (M21).'
+		);
+	}
+
+	/**
 	 * The two public draft hooks must actually fire, with their documented args.
 	 *
 	 * They shipped as public contracts with zero assertions anywhere
@@ -4243,6 +4268,107 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 			'1',
 			(string) get_post_meta( $kept, 'bb_media_draft', true ),
 			'An attachment another surviving entry still references must keep its stamp.'
+		);
+	}
+
+	/**
+	 * L11: a sibling rejected by a cap must still have its fresh uploads protected
+	 * up-front, exactly as the primary entry is (BLOCKER-1). The sibling merge
+	 * stamped its attachments only AFTER the caps, each of which `continue`s past
+	 * the stamping loop - so a file referenced only by a freshly-uploaded, over-cap
+	 * sibling reached no storage AND was never stamped, and the orphan cron
+	 * hard-deleted it while the member was still drafting with it.
+	 *
+	 * Mutation check: remove the bb_draft_protect_payload_attachments() call added
+	 * to the sibling merge and this goes red - the fresh attachment is unstamped.
+	 */
+	public function test_over_cap_sibling_still_protects_its_fresh_attachment() {
+		$user_id = self::factory()->user->create();
+		$this->set_current_user( $user_id );
+
+		$primary_forum = self::factory()->post->create( array( 'post_type' => bbp_get_forum_post_type() ) );
+		$sibling_forum = self::factory()->post->create( array( 'post_type' => bbp_get_forum_post_type() ) );
+
+		$primary_key = 'draft_discussion_' . $primary_forum;
+		$sibling_key = 'draft_discussion_' . $sibling_forum;
+
+		// A fresh upload the member just added to the sibling - owned, not stamped.
+		$fresh = $this->make_draft_attachment( $user_id );
+
+		bp_update_user_meta(
+			$user_id,
+			'bb_user_topic_reply_draft',
+			array(
+				$primary_key => array( 'data_key' => $primary_key, '_draft_saved_at' => time() - 60, 'data' => array( 'bbp_topic_content' => 'p' ) ),
+				$sibling_key => array( 'data_key' => $sibling_key, '_draft_saved_at' => time() - 60, 'data' => array( 'bbp_topic_content' => 's' ) ),
+			)
+		);
+
+		// The sibling update carries the fresh attachment AND content over the byte
+		// cap, so the merge rejects it - after the up-front protection has run.
+		$this->drive_forum_draft_save_with_siblings(
+			$primary_key,
+			array( 'bbp_topic_content' => 'p updated' ),
+			array(
+				$sibling_key => array(
+					'bbp_topic_content' => str_repeat( 'x', bb_draft_max_size() + 100 ),
+					'bbp_media'         => wp_json_encode( array( array( 'id' => $fresh ) ) ),
+				),
+			)
+		);
+
+		$stored = bp_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
+
+		// Premise: the over-cap sibling update really was rejected (small copy kept).
+		$this->assertSame(
+			's',
+			$stored[ $sibling_key ]['data']['bbp_topic_content'],
+			'Premise: the over-byte-cap sibling update must be rejected, keeping the stored copy.'
+		);
+
+		// The fix: its fresh upload was stamped BEFORE the cap, so the orphan cron
+		// cannot hard-delete a file the member is still drafting with (L11).
+		$this->assertSame(
+			'1',
+			(string) get_post_meta( $fresh, 'bb_media_draft', true ),
+			'A fresh attachment on an over-cap sibling must be protected up-front (L11, BLOCKER-1 parity).'
+		);
+	}
+
+	/**
+	 * L11: the activity discard's delete_media branch hard-deletes attachments
+	 * (wp_delete_attachment, permanent). It must NOT delete one a DIFFERENT stored
+	 * draft row still references - ownership alone is not enough. Completes the
+	 * cross-row retain pattern every stamp-release path already applies.
+	 *
+	 * Mutation check: drop the ! in_array( ..., $discard_retained_ids ) guard and
+	 * this goes red - the shared attachment is permanently deleted.
+	 */
+	public function test_discard_delete_media_spares_a_cross_row_referenced_attachment() {
+		$user_id = self::factory()->user->create();
+		$this->set_current_user( $user_id );
+
+		$shared = $this->make_draft_attachment( $user_id );
+
+		// draft_user (about to be discarded with delete_media) and draft_group_5
+		// both reference $shared; the latter must survive.
+		bp_update_user_meta( $user_id, 'draft_user', array( 'data_key' => 'draft_user', 'data' => array( 'media' => array( array( 'id' => $shared ) ) ) ) );
+		bp_update_user_meta( $user_id, 'draft_group_5', array( 'data_key' => 'draft_group_5', 'data' => array( 'media' => array( array( 'id' => $shared ) ) ) ) );
+		bb_draft_flush_user_meta_sizes( $user_id );
+
+		$this->drive_activity_draft_raw(
+			array(
+				'data_key'     => 'draft_user',
+				'object'       => 'user',
+				'post_action'  => 'delete',
+				'delete_media' => 'true',
+			)
+		);
+
+		$this->assertInstanceOf(
+			'WP_Post',
+			get_post( $shared ),
+			'delete_media must not hard-delete an attachment another draft row still references (L11).'
 		);
 	}
 
