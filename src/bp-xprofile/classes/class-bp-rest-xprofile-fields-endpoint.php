@@ -1862,27 +1862,215 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 	 * @return string
 	 */
 	public function bp_rest_get_field_visibility( $field_object ) {
-		global $field;
+		return self::bb_rest_get_field_visibility_state( $field_object );
+	}
 
-		// Get the field id into for user check.
+	/**
+	 * Resolve whether the current user may change a field's visibility level.
+	 *
+	 * Mirrors the web `bp_xprofile_change_field_visibility` capability (admin "Enforce field
+	 * visibility" plus the display-name-format locks) so every REST reader and writer of
+	 * visibility levels shares one rule.
+	 *
+	 * @since 0.1.0
+	 *
+	 * @param BP_XProfile_Field $field_object Field object.
+	 *
+	 * @return string 'allowed' when the member may pick a level, 'disabled' when it is locked.
+	 */
+	public static function bb_rest_get_field_visibility_state( $field_object ) {
+		if ( ! $field_object instanceof BP_XProfile_Field || empty( $field_object->id ) ) {
+			return 'disabled';
+		}
+
+		if ( function_exists( 'bb_xprofile_can_change_field_visibility' ) ) {
+			return bb_xprofile_can_change_field_visibility( $field_object->id ) ? 'allowed' : 'disabled';
+		}
+
+		// Older Platform without the helper: resolve the capability the way the profile loop does.
+		// The capability map already denies when allow_custom_visibility is 'disabled' (it reads
+		// the field from the loop globals scaffolded below), but that resolution is internal to
+		// core — check the meta directly as well so the admin "Enforce field visibility" lock can
+		// never depend on it. BP_XProfile_Field::__get() defaults the meta to 'allowed'.
+		if ( 'disabled' === $field_object->__get( 'allow_custom_visibility' ) ) {
+			return 'disabled';
+		}
+
+		$had_template    = array_key_exists( 'profile_template', $GLOBALS );
+		$had_field       = array_key_exists( 'field', $GLOBALS );
+		$template_backup = $had_template ? $GLOBALS['profile_template'] : null;
+		$field_backup    = $had_field ? $GLOBALS['field'] : null;
+
 		$GLOBALS['profile_template']              = new stdClass();
 		$GLOBALS['profile_template']->in_the_loop = true;
+		$GLOBALS['field']                         = $field_object;
 
-		// Setup current user id into global.
-		$field = $field_object;
+		$can_change = bp_current_user_can( 'bp_xprofile_change_field_visibility' );
 
-		return (
-			! bp_current_user_can( 'bp_xprofile_change_field_visibility' )
-			? 'disabled'
-			: (
-				(
-					! empty( $field->__get( 'allow_custom_visibility' ) )
-					&& 'allowed' === $field->__get( 'allow_custom_visibility' )
-				)
-				? $field->__get( 'allow_custom_visibility' )
-				: 'disabled'
-			)
-		);
+		if ( $had_template ) {
+			$GLOBALS['profile_template'] = $template_backup;
+		} else {
+			unset( $GLOBALS['profile_template'] );
+		}
+
+		if ( $had_field ) {
+			$GLOBALS['field'] = $field_backup;
+		} else {
+			unset( $GLOBALS['field'] );
+		}
+
+		return $can_change ? 'allowed' : 'disabled';
+	}
+
+	/**
+	 * Get the visibility levels a member may select for a field.
+	 *
+	 * Locked fields expose only their current level so clients can still label the value.
+	 *
+	 * @since 0.1.0
+	 *
+	 * @param BP_XProfile_Field $field_object  Field object.
+	 * @param int               $user_id       Optional. Profile owner. Defaults to the logged-in user.
+	 * @param string            $state         Optional. Precomputed bb_rest_get_field_visibility_state() result.
+	 * @param string|null       $current_level Optional. Precomputed current level for the user.
+	 *
+	 * @return array Permitted visibility levels as id => label.
+	 */
+	public static function bb_rest_get_field_visibility_options( $field_object, $user_id = 0, $state = '', $current_level = null ) {
+		$options = array_column( bp_xprofile_get_visibility_levels(), 'label', 'id' );
+
+		if ( '' === $state ) {
+			$state = self::bb_rest_get_field_visibility_state( $field_object );
+		}
+
+		if ( 'allowed' !== $state ) {
+			if ( null === $current_level ) {
+				$current_level = xprofile_get_field_visibility_level( $field_object->id, $user_id ? $user_id : bp_loggedin_user_id() );
+			}
+
+			if ( isset( $options[ $current_level ] ) ) {
+				$options = array( $current_level => $options[ $current_level ] );
+			} elseif ( ! empty( $current_level ) ) {
+				// The stored level is not among the registered options (its component was
+				// deactivated), so no registered label exists - present a humanized form
+				// of the slug rather than the raw machine value.
+				$options = array( $current_level => ucwords( str_replace( array( '_', '-' ), ' ', $current_level ) ) );
+			} else {
+				$options = array();
+			}
+		}
+
+		/**
+		 * Filter the visibility levels a member may select for a profile field.
+		 *
+		 * Narrowing the list here is enforced on save only for a field the member may
+		 * change AND a level they do not already hold. Two write paths never consult it:
+		 * a locked field is rejected (or passed through as a no-op) before the options are
+		 * built, and resubmitting the level the member currently holds is a no-op on any
+		 * field, so this filter cannot be used to move someone off a level they already
+		 * have. Use it to shape what clients offer, not as an access-control boundary.
+		 *
+		 * @since 0.1.0
+		 *
+		 * @param array             $options      Permitted visibility levels as id => label.
+		 * @param BP_XProfile_Field $field_object Field object.
+		 */
+		return apply_filters( 'bb_rest_xprofile_field_visibility_options', $options, $field_object );
+	}
+
+	/**
+	 * Validate a visibility level submitted by a member for a field.
+	 *
+	 * @since 0.1.0
+	 *
+	 * @param BP_XProfile_Field|null $field_object Field object (null when the ID was unknown).
+	 * @param int                    $user_id      Profile owner.
+	 * @param mixed                  $level        Submitted visibility level.
+	 * @param string                 $state        Optional. Precomputed bb_rest_get_field_visibility_state() result.
+	 *
+	 * @return true|null|WP_Error True when the level may be written, null when it equals the current
+	 *                            level of a locked field (nothing to write), WP_Error when rejected.
+	 *                            An allowed field always returns true or WP_Error, never null.
+	 */
+	public static function bb_rest_validate_field_visibility_level( $field_object, $user_id, $level, $state = '' ) {
+		if ( ! is_scalar( $level ) || '' === (string) $level ) {
+			return new WP_Error( 'bp_rest_invalid_visibility_level', __( 'Invalid visibility level.', 'buddyboss' ), array( 'status' => 400 ) );
+		}
+
+		$level = (string) $level;
+
+		if ( ! $field_object instanceof BP_XProfile_Field || empty( $field_object->id ) ) {
+			return new WP_Error( 'bp_rest_invalid_profile_field', __( 'Invalid profile field.', 'buddyboss' ), array( 'status' => 400 ) );
+		}
+
+		if ( '' === $state ) {
+			$state = self::bb_rest_get_field_visibility_state( $field_object );
+		}
+
+		// A field hidden by the display-name format renders no control on any screen, so
+		// its level is locked rather than its id invalid - report it as a lock. Platform's
+		// bb_xprofile_can_change_field_visibility() already folds this in, so $state covers
+		// it there; the explicit check keeps the lock in place against an older Platform
+		// whose helper resolves the capability alone.
+		if (
+			'allowed' === $state
+			&& function_exists( 'bp_core_hide_display_name_field' )
+			&& true === bp_core_hide_display_name_field( $field_object->id )
+		) {
+			$state = 'disabled';
+		}
+
+		// Field names are stored with entities; the REST payload is data, not HTML, so decode them.
+		$field_name = wp_specialchars_decode( $field_object->name, ENT_QUOTES );
+
+		$current_level = xprofile_get_field_visibility_level( $field_object->id, $user_id );
+
+		if ( 'allowed' !== $state ) {
+			// Resubmitting a locked field's current level is a harmless no-op.
+			if ( $current_level === $level ) {
+				return null;
+			}
+
+			return new WP_Error(
+				'bp_rest_visibility_level_locked',
+				sprintf(
+					/* translators: %s: Profile field name. */
+					__( 'The visibility of the "%s" field cannot be changed.', 'buddyboss' ),
+					$field_name
+				),
+				array( 'status' => 403 )
+			);
+		}
+
+		$permitted_levels = self::bb_rest_get_field_visibility_options( $field_object, $user_id, $state );
+		if ( ! array_key_exists( $level, $permitted_levels ) ) {
+			// The level the member already has must round-trip, even when it is no longer
+			// offered - a level whose component was deactivated (e.g. 'friends' after
+			// Connections is turned off) drops out of the registered options, and
+			// rejecting it would make the member's own profile unsavable. Nothing to
+			// write, so this is the same harmless no-op as a locked field.
+			//
+			// Deliberately scoped to this branch: a level that IS offered falls through to
+			// the write below even when it equals the field's default, so a member's first
+			// explicit choice is stored rather than left to follow a default the admin may
+			// later change. That is what the web settings screen does.
+			if ( $current_level === $level ) {
+				return null;
+			}
+
+			return new WP_Error(
+				'bp_rest_visibility_level_not_allowed',
+				sprintf(
+					/* translators: 1: Submitted visibility level. 2: Profile field name. */
+					__( '"%1$s" is not an allowed visibility level for the "%2$s" field.', 'buddyboss' ),
+					$level,
+					$field_name
+				),
+				array( 'status' => 400 )
+			);
+		}
+
+		return true;
 	}
 
 	/**
