@@ -330,7 +330,7 @@ class BuddyPress {
 
 		/** Versions */
 		$this->version    = defined( 'BP_PLATFORM_VERSION' ) ? BP_PLATFORM_VERSION : ( defined( 'BP_VERSION' ) ? BP_VERSION : '1.0.0' );
-		$this->db_version = 23604;
+		$this->db_version = 23621;
 
 		/** Loading */
 
@@ -563,6 +563,7 @@ class BuddyPress {
 		require $this->plugin_dir . 'bp-core/bp-core-invitation.php';
 		require $this->plugin_dir . 'bp-core/bb-core-subscriptions.php';
 		require $this->plugin_dir . 'bp-core/bb-core-bookmarks.php';
+		require $this->plugin_dir . 'bp-core/bb-core-drafts.php';
 		require $this->plugin_dir . 'bp-core/bb-core-blocks.php';
 
 		// Maybe load deprecated buddypress functionality (this double negative is proof positive!).

@@ -302,6 +302,7 @@ add_action( 'bbp_get_request', 'bbp_search_results_redirect', 10 );
 add_action( 'bbp_login_form_login', 'bbp_user_maybe_convert_pass' );
 
 add_action( 'wp_ajax_post_topic_reply_draft', 'bb_post_topic_reply_draft' );
+add_action( 'wp_ajax_bb_get_topic_reply_drafts', 'bb_get_topic_reply_drafts' );
 
 add_action( 'wp_footer', 'bb_forum_add_content_popup' );
 add_action( 'wp_footer', 'bb_forums_gifpicker_add_popup_template' );
@@ -416,10 +417,31 @@ add_action( 'bp_notification_settings', 'forums_notification_settings', 11 );
 /**
  * Save topic/reply draft data.
  *
+ * Responds with `draft_activity` (the accepted entry) plus
+ * `evicted_draft_keys` — the inner draft keys the row trim or the per-user
+ * budget removed to make room, which the client uses to drop their stale
+ * localStorage copies.
+ *
+ * Refuses with a `message` when the entry exceeds the per-draft cap or when
+ * the member's total user meta would pass the platform budget, and with an
+ * empty error when the nonce fails, the draft key does not resolve, the
+ * member cannot view the forum it names, or they may not publish that object
+ * type.
+ *
+ * Concurrency: the aggregate row is shared by every forum draft the member
+ * holds, so this handler writes back only the inner keys the request itself
+ * decided about and takes the rest from a fresh read. Two requests editing
+ * the SAME inner key are still last-writer-wins, which is the intended
+ * semantic; requests editing DIFFERENT keys no longer overwrite each other.
+ *
  * @since BuddyBoss 2.0.4
+ * @since BuddyBoss [BBVERSION] Added the size caps, the key validation and
+ *                              the `evicted_draft_keys` response field.
+ * @since BuddyBoss [BBVERSION] Writes merge onto a fresh read of the row
+ *                              instead of writing the whole row back.
  */
 function bb_post_topic_reply_draft() {
-	if ( ! is_user_logged_in() || empty( $_POST['_wpnonce_post_topic_reply_draft'] ) || ! wp_verify_nonce( $_POST['_wpnonce_post_topic_reply_draft'], 'post_topic_reply_draft_data' ) ) {
+	if ( ! is_user_logged_in() || empty( $_POST['_wpnonce_post_topic_reply_draft'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['_wpnonce_post_topic_reply_draft'] ) ), 'post_topic_reply_draft_data' ) ) {
 		wp_send_json_error();
 	}
 
@@ -428,8 +450,30 @@ function bb_post_topic_reply_draft() {
 	$user_id           = bp_loggedin_user_id();
 	$all_data          = array();
 
+	// ONE slash state from here on: UNSLASHED. The two shipped clients post
+	// different shapes and used to arrive in different slash states - the
+	// in-page XHR posts an object, which jQuery serializes to
+	// draft_topic_reply[data][...] and PHP rebuilds as a nested array whose
+	// leaves WordPress has already slashed; the unload beacon posts one
+	// JSON.stringify() string, and json_decode( stripslashes() ) yields it
+	// unslashed. Every consumer below then had to guess which state it was
+	// reading, and the guesses could not all be right at once: the row write
+	// mixed unslashed storage-read siblings with slashed request values, so
+	// update_metadata()'s single wp_unslash() stripped a backslash layer from
+	// every sibling on every autosave (S5), and kses saw different input per
+	// transport (R3).
+	//
+	// Normalising at this boundary is the whole fix: everything in memory is
+	// real bytes, every json_decode() sees parseable JSON, the size caps
+	// measure true widths, and the ONE row write below re-slashes the lot so
+	// update_metadata() hands storage exactly what is in memory.
 	if ( ! empty( $_REQUEST['draft_topic_reply'] ) && ! is_array( $_REQUEST['draft_topic_reply'] ) ) {
+		// Beacon transport: stripslashes() removes the WP slashes from the JSON
+		// string and the decode produces unslashed values.
 		$draft_topic_reply = json_decode( stripslashes( $draft_topic_reply ), true );
+	} elseif ( is_array( $draft_topic_reply ) ) {
+		// XHR transport: nested array with WP-slashed leaves.
+		$draft_topic_reply = wp_unslash( $draft_topic_reply );
 	}
 
 	if ( ! empty( $_REQUEST['all_data'] ) && ! is_array( $_REQUEST['all_data'] ) ) {
@@ -438,132 +482,950 @@ function bb_post_topic_reply_draft() {
 
 	if ( is_array( $draft_topic_reply ) && isset( $draft_topic_reply['data_key'], $draft_topic_reply['object'] ) ) {
 
+		// Accept only the draft key shapes the forum composer actually builds,
+		// resolved against real forum/topic/reply IDs (hardening).
+		$draft_key_context = bb_draft_topic_reply_key_context( (string) $draft_topic_reply['data_key'] );
+
+		$is_draft_update = ( isset( $draft_topic_reply['post_action'] ) && 'update' === $draft_topic_reply['post_action'] );
+
+		// The member's OWN stored row, read once here and reused by the merge
+		// below (this replaces a second read of the same request-stable meta).
+		// It establishes ownership of the incoming key: a draft can only have
+		// been stored through this handler's save path, which already enforced
+		// view + publish, so a key present in this row was authorized when it
+		// was written.
 		$existing_draft = bp_get_user_meta( $user_id, $usermeta_key, true );
 
-		if ( isset( $existing_draft[ $draft_topic_reply['data_key'] ] ) ) {
-			$removed_data = $existing_draft[ $draft_topic_reply['data_key'] ];
+		// A DISCARD of a key the member already holds is theirs to remove even
+		// after they lose access to the forum it targets - removed from a
+		// private group, forum turned private. Tying discard authorization to
+		// CURRENT view access stranded such drafts (and their stamped
+		// attachments) in usermeta until the retention cron, contradicting the
+		// "Discarding one's own stored draft never [needs the extra right]"
+		// intent stated at the save gate below (L3).
+		$discarding_own_draft = (
+			! $is_draft_update &&
+			is_array( $existing_draft ) &&
+			isset( $existing_draft[ (string) $draft_topic_reply['data_key'] ] )
+		);
 
-			// Delete medias.
-			if ( isset( $removed_data['bbp_media'] ) && ! empty( $removed_data['bbp_media'] ) ) {
-				$remove_media_data = json_decode( stripslashes( $removed_data['bbp_media'] ), true );
+		// The shape check above resolves client-supplied post IDs, so on its own
+		// it answers "does this ID exist, and is it a forum/topic/reply?" for
+		// ANY id - an existence and post-type oracle over hidden and private
+		// forums, available to any logged-in member. Gate it behind the same
+		// view check the save path uses, and return one indistinguishable error
+		// for "no such shape", "cannot see it" and "may not post here" (L1).
+		//
+		// A member discarding a key they already hold is exempt from the view
+		// gate ONLY: the entry stays behind the SHAPE check, so a crafted key
+		// the member does NOT hold still falls through to the same view check
+		// and the same indistinguishable rejection - the oracle stays closed,
+		// while the member's own orphaned draft becomes removable again (L3).
+		$draft_key_allowed = ( false !== $draft_key_context );
 
-				if ( ! empty( $remove_media_data ) ) {
-					foreach ( $remove_media_data as $media_attachment ) {
-						if ( ! empty( $media_attachment['id'] ) && 0 < (int) $media_attachment['id'] ) {
-							wp_delete_attachment( $media_attachment['id'], true );
-						}
-					}
+		if ( $draft_key_allowed && ! empty( $draft_key_context['forum_id'] ) && ! $discarding_own_draft ) {
+			$draft_key_allowed = bbp_user_can_view_forum(
+				array(
+					'user_id'  => $user_id,
+					'forum_id' => (int) $draft_key_context['forum_id'],
+				)
+			);
+		}
+
+		// SAVING additionally requires the publish right for the OBJECT the key
+		// addresses - matching what the publish path enforces, and what the
+		// activity composer already does per group. Discarding one's own stored
+		// draft never does.
+		if ( $draft_key_allowed && $is_draft_update ) {
+			$draft_key_allowed = bb_draft_user_can_save_topic_reply_draft( $draft_key_context, $user_id );
+		}
+
+		// A primary rejection is recorded, not thrown. The unload beacon carries
+		// sibling drafts in `all_data`, and calling wp_send_json_error() here -
+		// whether for a failed authorization gate (a forum the member has just
+		// lost access to, a topic gone private, a deleted reply) or for a cap
+		// below - killed the whole request before that sibling merge ran,
+		// silently discarding a sibling's genuine, independently-authorized
+		// update, the exact GH1 failure mode reached via the auth path instead of
+		// the cap path. The flag skips only the primary's own processing and
+		// write; the request still falls through to the sibling merge and then
+		// answers with the primary's rejection. An empty rejection keeps the
+		// authorization error indistinguishable across "no such shape", "cannot
+		// see it" and "may not post here" (L1).
+		$primary_rejected  = ! $draft_key_allowed;
+		$primary_rejection = array();
+
+		// Sanitize and cap the incoming entry BEFORE any side effect (attachment
+		// deletion or stamping) so a rejected request leaves storage untouched.
+		// This is the cheap bound that keeps a huge payload away from the
+		// per-attachment lookups below; the authoritative cap runs on the
+		// normalised entry just before it is stored. Skipped entirely when the
+		// primary is already rejected by the authorization gate above - its
+		// uploads must not be stamped and its size message must not overwrite the
+		// indistinguishable auth error - while the sibling merge still runs.
+		if ( $is_draft_update && ! $primary_rejected ) {
+			// Protecting the member's uploads is the one side effect that must
+			// happen FIRST. The caps below judge the draft's text, and two of
+			// them reject before the attachment loops further down ever run - so
+			// a draft refused for size left every file the member had just
+			// uploaded unstamped, and bp_media_delete_orphaned_attachments()
+			// hard-deleted them six hours later (BLOCKER-1).
+			$protect_lists = array();
+			foreach ( array(
+				'media'    => 'bbp_media',
+				'document' => 'bbp_document',
+				'video'    => 'bbp_video',
+			) as $protect_type => $list_key ) {
+				if ( empty( $draft_topic_reply['data'][ $list_key ] ) ) {
+					$protect_lists[ $protect_type ] = array();
+					continue;
 				}
+
+				$list = $draft_topic_reply['data'][ $list_key ];
+
+				// The boundary above normalised the entry to unslashed, so this
+				// JSON carries its real escapes - a stripslashes() here would
+				// destroy them (S5).
+				$protect_lists[ $protect_type ] = is_array( $list ) ? $list : (array) json_decode( $list, true );
 			}
 
-			// Delete documents.
-			if ( isset( $removed_data['bbp_document'] ) && ! empty( $removed_data['bbp_document'] ) ) {
-				$remove_document_data = json_decode( stripslashes( $removed_data['bbp_document'] ), true );
+			// Keyed by type so the per-type cap inside matches what each cap below
+			// enforces (H4 per-type parity).
+			bb_draft_protect_payload_attachments( $protect_lists, $user_id );
 
-				if ( ! empty( $remove_document_data ) ) {
-					foreach ( $remove_document_data as $document_attachment ) {
-						if ( ! empty( $document_attachment['id'] ) && 0 < (int) $document_attachment['id'] ) {
-							wp_delete_attachment( $document_attachment['id'], true );
-						}
-					}
-				}
+			// Strip data URLs, then judge the RAW width before kses runs inside
+			// bb_forums_sanitize_draft_entry(). bbp_kses_data() on a multi-MB
+			// payload is the expensive step, and it used to run before any cap
+			// could refuse the request (M4).
+			$draft_topic_reply = bb_forums_strip_draft_data_urls( $draft_topic_reply );
+			$raw_entry_size    = strlen( maybe_serialize( $draft_topic_reply ) );
+
+			if ( $raw_entry_size > bb_draft_max_size() ) {
+				/** This action is documented in bp-templates/bp-nouveau/includes/activity/ajax.php */
+				do_action( 'bb_draft_cap_rejected', $user_id, $draft_topic_reply['data_key'], $raw_entry_size, 'per_draft' );
+
+				$primary_rejected  = true;
+				$primary_rejection = array(
+					'message' => __( 'Your draft is too large to save. Please remove some content and try again.', 'buddyboss' ),
+				);
 			}
 
-			// Delete videos.
-			if ( isset( $removed_data['bbp_video'] ) && ! empty( $removed_data['bbp_video'] ) ) {
-				$remove_video_data = json_decode( stripslashes( $removed_data['bbp_video'] ), true );
+			// kses is the expensive step and it is skipped once the raw width
+			// already failed - the primary is not going to be stored either way.
+			if ( ! $primary_rejected ) {
+				$draft_topic_reply    = bb_forums_sanitize_draft_entry( $draft_topic_reply );
+				$sanitized_entry_size = strlen( maybe_serialize( $draft_topic_reply ) );
 
-				if ( ! empty( $remove_video_data ) ) {
-					foreach ( $remove_video_data as $video_attachment ) {
-						if ( ! empty( $video_attachment['id'] ) && 0 < (int) $video_attachment['id'] ) {
-							wp_delete_attachment( $video_attachment['id'], true );
-						}
-					}
+				if ( $sanitized_entry_size > bb_draft_max_size() ) {
+					/** This action is documented in bp-templates/bp-nouveau/includes/activity/ajax.php */
+					do_action( 'bb_draft_cap_rejected', $user_id, $draft_topic_reply['data_key'], $sanitized_entry_size, 'per_draft' );
+
+					$primary_rejected  = true;
+					$primary_rejection = array(
+						'message' => __( 'Your draft is too large to save. Please remove some content and try again.', 'buddyboss' ),
+					);
 				}
 			}
+		}
+
+		// A save carrying NOTHING must never replace a stored draft that
+		// carries something.
+		//
+		// The composer used to serialize an emptied form and write it straight
+		// over the member's saved text: the "still available in older draft"
+		// checks forced its validity flag true on the strength of the copy
+		// already stored, and the write then used the empty payload anyway
+		// (Q12). That is fixed in both packs - but the empty copy it
+		// has ALREADY left in members' localStorage on live installs is
+		// replayed by the unload sync, arriving here both as the primary entry
+		// and inside `all_data`. The client cannot be relied on to withdraw
+		// data it already holds, so this is the boundary that has to refuse it.
+		//
+		// Answered as success on purpose: nothing has gone wrong from the
+		// member's point of view, and the draft they still have stored is
+		// exactly the one they should keep. Returning the stored entry rather
+		// than the empty payload also stops the response re-seeding the empty
+		// copy the request came from.
+		// A FLAG, not an early exit. Ending the request here looked right -
+		// nothing has gone wrong from the member's point of view - but
+		// wp_send_json_success() dies, and the sibling merge over `all_data`
+		// runs later in this function. The unload beacon replays every key the
+		// tab holds, so a request whose PRIMARY entry happens to be empty (a
+		// reply box just cleared) can still carry a sibling with genuine new
+		// content; exiting early silently discarded that sibling's last-ever
+		// save (GH1). Skip only the primary entry's own write and let the rest
+		// of the request proceed.
+		$keep_stored_primary = (
+			$is_draft_update &&
+			is_array( $existing_draft ) &&
+			isset( $existing_draft[ $draft_topic_reply['data_key'] ] ) &&
+			! bb_draft_topic_reply_entry_has_payload( $draft_topic_reply ) &&
+			bb_draft_topic_reply_entry_has_payload( $existing_draft[ $draft_topic_reply['data_key'] ] )
+		);
+
+		// Captured for the response: the member keeps their stored draft, and
+		// answering with it (never the empty payload) stops the response
+		// re-seeding the empty copy the request came from (Q12).
+		$kept_primary_key   = (string) $draft_topic_reply['data_key'];
+		$kept_primary_entry = $keep_stored_primary ? $existing_draft[ $kept_primary_key ] : array();
+
+		// Starts empty: the primary key is DECIDED only when this request
+		// determines its final state - written by an accepted update (see the
+		// assignment at the end of the primary block) or removed by a discard
+		// (see the removal block below). A kept or rejected primary decides
+		// nothing, so the merge takes that key from the fresh storage read and
+		// never overwrites the stored draft with an empty or over-cap payload
+		// (GH1, Q12).
+		$decided_draft_keys = array();
+
+		// Draft-protection stamps are collected during validation but written
+		// only after every size cap has accepted the save - a rejected save
+		// must not leave orphan-protected attachments behind that no stored
+		// draft references.
+		$stamp_attachment_ids = array();
+
+		// The replaced/discarded entry's attachment stamps are released only
+		// after every cap has accepted the write - a rejected save leaves the
+		// stored draft, so unstamping here would expose the attachments of a
+		// draft that still exists to the orphan crons.
+		$unstamp_draft_entry = array();
+
+		// Nothing is replaced when the stored primary is kept or rejected, so
+		// nothing may be unstamped for it either (GH1).
+		if ( ! $keep_stored_primary && ! $primary_rejected && isset( $existing_draft[ $draft_topic_reply['data_key'] ] ) ) {
+			$unstamp_draft_entry = $existing_draft[ $draft_topic_reply['data_key'] ];
 
 			unset( $existing_draft[ $draft_topic_reply['data_key'] ] );
+
+			// A discard (post_action 'delete', so NOT an update) removes the key
+			// for good, and must DECIDE it here so the fresh-read merge below
+			// omits it. An update leaves the decision to the primary-write block,
+			// which correctly withholds it on a late-cap rejection - so this is
+			// gated on ! $is_draft_update, never applied to an update. Without it
+			// a discard's key is never decided, the merge copies it straight back
+			// from storage, and the discard silently does nothing while the
+			// response reports success - the "deleted" draft resurfaces on the
+			// next lazy fetch (GH1 regression, was unconditionally seeded before
+			// the refactor).
+			if ( ! $is_draft_update ) {
+				$decided_draft_keys[ (string) $draft_topic_reply['data_key'] ] = true;
+			}
 		}
 
 		if ( empty( $existing_draft ) || is_string( $existing_draft ) ) {
 			$existing_draft = array();
 		}
 
-		if ( isset( $draft_topic_reply['post_action'] ) && 'update' === $draft_topic_reply['post_action'] ) {
+		if ( $is_draft_update && ! $keep_stored_primary && ! $primary_rejected ) {
 
 			// Set media draft meta key to avoid delete from cron job 'bp_media_delete_orphaned_attachments'.
 			if ( isset( $draft_topic_reply['data']['bbp_media'] ) && ! empty( $draft_topic_reply['data']['bbp_media'] ) ) {
-				$new_media_data = json_decode( stripslashes( $draft_topic_reply['data']['bbp_media'] ), true );
+				$new_media_data = json_decode( $draft_topic_reply['data']['bbp_media'], true );
+
+				// REFUSED rather than truncated. The slice this replaces mutated
+				// the array that is re-encoded and STORED just below, so entries
+				// past the bound were dropped from the draft the member would
+				// restore AND left unstamped - which is exactly what
+				// bp_media_delete_orphaned_attachments() hard-deletes. The bound
+				// was a hard 50 while the media Upload Limit accepts up to 100,
+				// so this was reachable from an ordinary admin setting
+				// (H4). The refusal is safe here because
+				// bb_draft_protect_payload_attachments() has already stamped the
+				// member's uploads (BLOCKER-1).
+				if ( is_array( $new_media_data ) && bb_draft_max_attachments_per_type( 'media' ) < count( $new_media_data ) ) {
+					// Recorded, not thrown: falling through preserves any sibling
+					// update the same beacon carried (GH1). The member's uploads
+					// were already protected above (BLOCKER-1), so refusing the
+					// primary write here is safe.
+					$primary_rejected  = true;
+					$primary_rejection = array(
+						'message' => __( 'Your draft has too many attachments to save. Please remove some and try again.', 'buddyboss' ),
+					);
+				}
 
 				if ( ! empty( $new_media_data ) ) {
 					foreach ( $new_media_data as $media_key => $new_media_attachment ) {
+						// Attachment IDs arrive as client JSON - only the owner may stamp them.
+						if ( empty( $new_media_attachment['id'] ) || ! bb_draft_user_can_manage_attachment( $new_media_attachment['id'], $user_id ) ) {
+							unset( $new_media_data[ $media_key ] );
+							continue;
+						}
+						// Stamp EVERY owned attachment the entry keeps, not only the
+						// ones whose payload lacks the flag. A restored draft sends
+						// the stored JSON back with `bb_media_draft` already set, so
+						// a flag-gated stamp queues nothing while the replaced-entry
+						// unstamp below still fires - the attachment then loses its
+						// protection for good and the orphan cron reaps a file the
+						// draft still references.
 						if ( ! isset( $new_media_attachment['bb_media_draft'] ) ) {
 							$new_media_data[ $media_key ]['bb_media_draft'] = 1;
-							update_post_meta( $new_media_attachment['id'], 'bb_media_draft', 1 );
 						}
+
+						$stamp_attachment_ids[] = (int) $new_media_attachment['id'];
 					}
+					$new_media_data = array_values( $new_media_data );
 				}
 
+				// Stored raw: the whole handler is unslashed in memory now, and
+				// the single row write below applies the one wp_slash() that
+				// update_metadata() undoes - so these escapes reach storage
+				// verbatim (R2, S5).
 				$draft_topic_reply['data']['bbp_media'] = wp_json_encode( $new_media_data );
 			}
 
 			// Set document draft meta key to avoid delete from cron job 'bp_media_delete_orphaned_attachments'.
 			if ( isset( $draft_topic_reply['data']['bbp_document'] ) && ! empty( $draft_topic_reply['data']['bbp_document'] ) ) {
-				$new_document_data = json_decode( stripslashes( $draft_topic_reply['data']['bbp_document'] ), true );
+				$new_document_data = json_decode( $draft_topic_reply['data']['bbp_document'], true );
+
+				// REFUSED rather than truncated. The slice this replaces mutated
+				// the array that is re-encoded and STORED just below, so entries
+				// past the bound were dropped from the draft the member would
+				// restore AND left unstamped - which is exactly what
+				// bp_media_delete_orphaned_attachments() hard-deletes. The bound
+				// was a hard 50 while the media Upload Limit accepts up to 100,
+				// so this was reachable from an ordinary admin setting
+				// (H4). The refusal is safe here because
+				// bb_draft_protect_payload_attachments() has already stamped the
+				// member's uploads (BLOCKER-1).
+				if ( is_array( $new_document_data ) && bb_draft_max_attachments_per_type( 'document' ) < count( $new_document_data ) ) {
+					// Recorded, not thrown: falling through preserves any sibling
+					// update the same beacon carried (GH1). The member's uploads
+					// were already protected above (BLOCKER-1), so refusing the
+					// primary write here is safe.
+					$primary_rejected  = true;
+					$primary_rejection = array(
+						'message' => __( 'Your draft has too many attachments to save. Please remove some and try again.', 'buddyboss' ),
+					);
+				}
 
 				if ( ! empty( $new_document_data ) ) {
 					foreach ( $new_document_data as $document_key => $new_document_attachment ) {
+						// Attachment IDs arrive as client JSON - only the owner may stamp them.
+						if ( empty( $new_document_attachment['id'] ) || ! bb_draft_user_can_manage_attachment( $new_document_attachment['id'], $user_id ) ) {
+							unset( $new_document_data[ $document_key ] );
+							continue;
+						}
+						// Stamp EVERY owned attachment the entry keeps, not only the
+						// ones whose payload lacks the flag. A restored draft sends
+						// the stored JSON back with `bb_media_draft` already set, so
+						// a flag-gated stamp queues nothing while the replaced-entry
+						// unstamp below still fires - the attachment then loses its
+						// protection for good and the orphan cron reaps a file the
+						// draft still references.
 						if ( ! isset( $new_document_attachment['bb_media_draft'] ) ) {
 							$new_document_data[ $document_key ]['bb_media_draft'] = 1;
-							update_post_meta( $new_document_attachment['id'], 'bb_media_draft', 1 );
 						}
+
+						$stamp_attachment_ids[] = (int) $new_document_attachment['id'];
 					}
+					$new_document_data = array_values( $new_document_data );
 				}
 
+				// Stored raw: the whole handler is unslashed in memory now, and
+				// the single row write below applies the one wp_slash() that
+				// update_metadata() undoes - so these escapes reach storage
+				// verbatim (R2, S5).
 				$draft_topic_reply['data']['bbp_document'] = wp_json_encode( $new_document_data );
 			}
 
 			// Set video draft meta key to avoid delete from cron job 'bp_media_delete_orphaned_attachments'.
 			if ( isset( $draft_topic_reply['data']['bbp_video'] ) && ! empty( $draft_topic_reply['data']['bbp_video'] ) ) {
-				$new_video_data = json_decode( stripslashes( $draft_topic_reply['data']['bbp_video'] ), true );
+				$new_video_data = json_decode( $draft_topic_reply['data']['bbp_video'], true );
+
+				// REFUSED rather than truncated. The slice this replaces mutated
+				// the array that is re-encoded and STORED just below, so entries
+				// past the bound were dropped from the draft the member would
+				// restore AND left unstamped - which is exactly what
+				// bp_media_delete_orphaned_attachments() hard-deletes. The bound
+				// was a hard 50 while the media Upload Limit accepts up to 100,
+				// so this was reachable from an ordinary admin setting
+				// (H4). The refusal is safe here because
+				// bb_draft_protect_payload_attachments() has already stamped the
+				// member's uploads (BLOCKER-1).
+				if ( is_array( $new_video_data ) && bb_draft_max_attachments_per_type( 'video' ) < count( $new_video_data ) ) {
+					// Recorded, not thrown: falling through preserves any sibling
+					// update the same beacon carried (GH1). The member's uploads
+					// were already protected above (BLOCKER-1), so refusing the
+					// primary write here is safe.
+					$primary_rejected  = true;
+					$primary_rejection = array(
+						'message' => __( 'Your draft has too many attachments to save. Please remove some and try again.', 'buddyboss' ),
+					);
+				}
 
 				if ( ! empty( $new_video_data ) ) {
 					foreach ( $new_video_data as $video_key => $new_video_attachment ) {
+						// Attachment IDs arrive as client JSON - only the owner may stamp them.
+						if ( empty( $new_video_attachment['id'] ) || ! bb_draft_user_can_manage_attachment( $new_video_attachment['id'], $user_id ) ) {
+							unset( $new_video_data[ $video_key ] );
+							continue;
+						}
+						// Stamp EVERY owned attachment the entry keeps, not only the
+						// ones whose payload lacks the flag. A restored draft sends
+						// the stored JSON back with `bb_media_draft` already set, so
+						// a flag-gated stamp queues nothing while the replaced-entry
+						// unstamp below still fires - the attachment then loses its
+						// protection for good and the orphan cron reaps a file the
+						// draft still references.
 						if ( ! isset( $new_video_attachment['bb_media_draft'] ) ) {
 							$new_video_data[ $video_key ]['bb_media_draft'] = 1;
-							update_post_meta( $new_video_attachment['id'], 'bb_media_draft', 1 );
 						}
+
+						$stamp_attachment_ids[] = (int) $new_video_attachment['id'];
 					}
+					$new_video_data = array_values( $new_video_data );
 				}
 
+				// Stored raw: the whole handler is unslashed in memory now, and
+				// the single row write below applies the one wp_slash() that
+				// update_metadata() undoes - so these escapes reach storage
+				// verbatim (R2, S5).
 				$draft_topic_reply['data']['bbp_video'] = wp_json_encode( $new_video_data );
 			}
 
-			$existing_draft[ $draft_topic_reply['data_key'] ] = $draft_topic_reply;
+			// Re-check the cap on the FINAL entry. The check above bounds the
+			// work before any per-ID attachment lookup runs, but normalisation
+			// after it re-encodes the attachment JSON and adds a bb_media_draft
+			// flag per attachment, so the entry about to be stored is wider than
+			// the one that was measured. Nothing has been written yet - the
+			// stamps are deferred - so rejecting here still leaves storage
+			// untouched.
+			$draft_entry_size = strlen( maybe_serialize( $draft_topic_reply ) );
 
-			if ( ! empty( $all_data ) ) {
+			if ( $draft_entry_size > bb_draft_max_size() ) {
+				/** This action is documented in bp-templates/bp-nouveau/includes/activity/ajax.php */
+				do_action( 'bb_draft_cap_rejected', $user_id, $draft_topic_reply['data_key'], $draft_entry_size, 'per_draft' );
 
-				foreach ( $all_data as $data_key => $d_data ) {
+				$primary_rejected  = true;
+				$primary_rejection = array(
+					'message' => __( 'Your draft is too large to save. Please remove some content and try again.', 'buddyboss' ),
+				);
+			}
 
-					// Avoid conflict with current data.
-					if ( $draft_topic_reply['data_key'] === $data_key ) {
+			// The primary is written - and therefore DECIDED - only when every
+			// cap accepted it. A rejected primary leaves the key undecided, so
+			// the merge keeps the stored copy while the sibling merge below still
+			// runs (GH1).
+			if ( ! $primary_rejected ) {
+				$existing_draft[ $draft_topic_reply['data_key'] ]              = $draft_topic_reply;
+				$decided_draft_keys[ (string) $draft_topic_reply['data_key'] ] = true;
+			}
+		}
+
+		// The sibling merge runs whether or not the primary entry was written:
+		// the unload beacon carries every key the tab holds, and a kept-stored
+		// or over-cap primary must not cost a sibling its last-ever save (GH1).
+		if ( $is_draft_update && ! empty( $all_data ) ) {
+
+			foreach ( $all_data as $data_key => $d_data ) {
+
+				// Avoid conflict with current data.
+				if ( $draft_topic_reply['data_key'] === $data_key ) {
+					continue;
+				}
+
+				// Update the all data. The same guardrails apply to this write
+				// path as to the primary draft - it may not smuggle content the
+				// primary path would strip, cap, or reject.
+				if ( isset( $existing_draft[ $data_key ] ) && is_array( $d_data ) ) {
+
+					// Re-authorize per sibling key. The unload beacon replays
+					// whatever the tab still holds, so an entry stored while the
+					// member could still see its forum may arrive long after that
+					// access was revoked (removed from the group, forum made
+					// private). Without this the primary path's view/publish gate
+					// would apply only to the key being edited, and a sibling
+					// draft in a now-unreadable forum would keep taking writes.
+					$sibling_context = bb_draft_topic_reply_key_context( (string) $data_key );
+
+					if ( false === $sibling_context ) {
 						continue;
 					}
 
-					// Update the all data.
-					if ( isset( $existing_draft[ $data_key ] ) ) {
-						$existing_draft[ $data_key ]['data'] = $d_data;
+					if (
+						! empty( $sibling_context['forum_id'] ) &&
+						! bbp_user_can_view_forum(
+							array(
+								'user_id'  => $user_id,
+								'forum_id' => (int) $sibling_context['forum_id'],
+							)
+						)
+					) {
+						continue;
 					}
+
+					if ( ! bb_draft_user_can_save_topic_reply_draft( $sibling_context, $user_id ) ) {
+						continue;
+					}
+
+					// Same rule as the primary entry above: a sibling that
+					// carries nothing must not replace a stored one that
+					// carries something. This is the path a pre-existing
+					// empty localStorage copy actually arrives on - the
+					// unload sync replays every key the tab holds, not just
+					// the one being edited (Q12).
+					if (
+						! bb_draft_topic_reply_entry_has_payload( array( 'data' => $d_data ) ) &&
+						bb_draft_topic_reply_entry_has_payload( $existing_draft[ $data_key ] )
+					) {
+						continue;
+					}
+
+					// An unchanged entry keeps its stored save timestamp - the
+					// unload sync fires on every forum page exit, and restamping
+					// would keep every draft eternally "fresh" for expiry.
+					if ( isset( $existing_draft[ $data_key ]['data'] ) && maybe_serialize( $existing_draft[ $data_key ]['data'] ) === maybe_serialize( $d_data ) ) {
+						continue;
+					}
+
+					$merged_entry         = $existing_draft[ $data_key ];
+					$merged_entry['data'] = $d_data;
+
+					// Protect this sibling's uploads BEFORE any cap below can
+					// reject it, exactly as the primary entry is at :594. Each cap
+					// here `continue`s past the stamping loop further down, so a file
+					// referenced ONLY by a freshly-uploaded, over-cap sibling reached
+					// no storage AND was never stamped - and
+					// bp_media_delete_orphaned_attachments() hard-deleted it while the
+					// member was still drafting with it, the exact BLOCKER-1 loss the
+					// primary path already guards. Keyed by type so the per-type cap
+					// inside matches the checks below (L11).
+					$sibling_protect_lists = array();
+					foreach ( array(
+						'media'    => 'bbp_media',
+						'document' => 'bbp_document',
+						'video'    => 'bbp_video',
+					) as $sibling_protect_type => $sibling_list_key ) {
+						if ( empty( $merged_entry['data'][ $sibling_list_key ] ) ) {
+							$sibling_protect_lists[ $sibling_protect_type ] = array();
+							continue;
+						}
+
+						$sibling_protect_list = $merged_entry['data'][ $sibling_list_key ];
+
+						$sibling_protect_lists[ $sibling_protect_type ] = is_array( $sibling_protect_list )
+							? $sibling_protect_list
+							: (array) json_decode( $sibling_protect_list, true );
+					}
+
+					bb_draft_protect_payload_attachments( $sibling_protect_lists, $user_id );
+
+					// Strip data URLs, then judge the RAW width BEFORE the
+					// expensive kses pass, mirroring the primary entry's M4
+					// ordering (:567-570). bbp_kses_data() on a multi-MB payload
+					// is the costly step, and one unload beacon can carry many
+					// siblings, so running kses on every sibling before any size
+					// check reintroduced the M4 CPU amplification - just scaled by
+					// sibling count instead of capped at one entry.
+					$merged_entry = bb_forums_strip_draft_data_urls( $merged_entry );
+
+					if ( strlen( maybe_serialize( $merged_entry ) ) > bb_draft_max_size() ) {
+						// Keep the previously stored entry rather than failing the
+						// whole request - the unload sync carries sibling drafts too.
+						continue;
+					}
+
+					$merged_entry = bb_forums_sanitize_draft_entry( $merged_entry );
+
+					if ( strlen( maybe_serialize( $merged_entry ) ) > bb_draft_max_size() ) {
+						// Keep the previously stored entry rather than failing the
+						// whole request - the unload sync carries sibling drafts too.
+						continue;
+					}
+
+					// Bound each attachment type to the same per-type cap the
+					// primary entry enforces above (bbp_media/document/video at
+					// :704/:759/:814). The byte cap alone does not: a minimal
+					// {"id":N} reference is ~15-20 bytes, so a single sibling can
+					// carry thousands of IDs and still land under bb_draft_max_size(),
+					// then force one uncached get_post() per ID in the ownership
+					// loop below. Skip the sibling (keep the stored copy) rather
+					// than fail the whole unload-sync request, matching the byte-cap
+					// branch just above.
+					$sibling_over_cap = false;
+
+					foreach ( array(
+						array( 'media', 'bbp_media' ),
+						array( 'document', 'bbp_document' ),
+						array( 'video', 'bbp_video' ),
+					) as $sibling_type_keys ) {
+						// Per-type cap, matching the primary entry's type-specific
+						// caps above (bbp_media/document/video each read their own
+						// upload limit).
+						$sibling_type_cap   = bb_draft_max_attachments_per_type( $sibling_type_keys[0] );
+						$sibling_type_count = 0;
+
+						foreach ( $sibling_type_keys as $sibling_type_key ) {
+							if ( empty( $merged_entry['data'][ $sibling_type_key ] ) ) {
+								continue;
+							}
+
+							$sibling_list = $merged_entry['data'][ $sibling_type_key ];
+
+							// Forum drafts carry each list as a JSON string
+							// (bbp_*); the activity shape carries a decoded array.
+							if ( is_string( $sibling_list ) ) {
+								$sibling_list = json_decode( $sibling_list, true );
+							}
+
+							if ( is_array( $sibling_list ) ) {
+								$sibling_type_count += count( $sibling_list );
+							}
+						}
+
+						if ( $sibling_type_cap < $sibling_type_count ) {
+							$sibling_over_cap = true;
+							break;
+						}
+					}
+
+					if ( $sibling_over_cap ) {
+						continue;
+					}
+
+					// This sibling is now part of the row this request writes,
+					// so its attachments need the same orphan protection the
+					// primary entry gets. The three per-type normalisation
+					// loops above only ever see the primary draft, so a file
+					// referenced solely by a sibling reached storage unstamped
+					// and bp_media_delete_orphaned_attachments() hard-deleted
+					// it while the member was still drafting with it. Ownership
+					// is re-checked per ID: this list is client JSON, and the
+					// stamping loop below writes without further checks
+					//.
+					foreach ( bb_draft_collect_attachment_ids( $merged_entry ) as $sibling_attachment_id ) {
+						if ( bb_draft_user_can_manage_attachment( $sibling_attachment_id, $user_id ) ) {
+							$stamp_attachment_ids[] = (int) $sibling_attachment_id;
+						}
+					}
+
+					$existing_draft[ $data_key ]     = $merged_entry;
+					$decided_draft_keys[ $data_key ] = true;
 				}
 			}
 		}
 
-		bp_update_user_meta( $user_id, $usermeta_key, $existing_draft );
+		// Merge onto a FRESH read of the row instead of writing back the copy
+		// taken at the top of this request. Between those two points the handler
+		// runs kses over the payload, up to 150 attachment ownership lookups and
+		// the trim/budget pass, and a second tab autosaving or discarding a
+		// DIFFERENT inner draft commits inside that window. Writing the whole
+		// stale array back resurrected drafts the member had just discarded -
+		// with their attachment stamps already released, so the orphan cron then
+		// reaped the media the restored draft still referenced - and silently
+		// reverted the other tab's autosave. Only the keys this request actually
+		// decided about are ours to write; every other key belongs to whoever
+		// wrote it last (M2).
+		wp_cache_delete( $user_id, 'user_meta' );
+		$fresh_draft_row = bp_get_user_meta( $user_id, $usermeta_key, true );
+		$stored_row_size = strlen( maybe_serialize( $fresh_draft_row ) );
+
+		if ( ! is_array( $fresh_draft_row ) ) {
+			$fresh_draft_row = array();
+		}
+
+		$merged_draft_row = array();
+
+		// Keys this request never touched come from storage, so a sibling another
+		// tab discarded stays discarded and one it updated keeps that update.
+		//
+		// Every entry in this merged row is UNSLASHED - the storage reads
+		// always were, and the boundary normalisation at the top of this
+		// handler now unslashes the request entry too - so the whole row is in
+		// ONE state and the single wp_slash() at the write below is exactly
+		// what update_metadata()'s wp_unslash() undoes. Mixing states here is
+		// what stripped a backslash layer from every sibling on every autosave
+		// (S5).
+		foreach ( $fresh_draft_row as $fresh_key => $fresh_entry ) {
+			if ( ! isset( $decided_draft_keys[ $fresh_key ] ) ) {
+				$merged_draft_row[ $fresh_key ] = $fresh_entry;
+			}
+		}
+
+		// Keys this request decided about come from this request - including the
+		// primary key's deletion, which is expressed by its absence here.
+		foreach ( array_keys( $decided_draft_keys ) as $decided_key ) {
+			if ( isset( $existing_draft[ $decided_key ] ) ) {
+				$merged_draft_row[ $decided_key ] = $existing_draft[ $decided_key ];
+			}
+		}
+
+		$existing_draft = $merged_draft_row;
+
+		// Pairs with the cache drop above rather than fixing a known stale read:
+		// no caller primes the size memo before this point today, but the trim
+		// and the budget below are the first things to consume it, and they must
+		// measure the row this request is actually about to write.
+		bb_draft_flush_user_meta_sizes( $user_id );
+
+		// Attachments the user's OTHER draft rows still reference, so a release
+		// below does not strip the stamp of a file a live activity/group draft
+		// still holds (L7 fan-out). Computed LAZILY - only a release that actually
+		// touches attachments needs it, so a text-only autosave (the common case)
+		// pays nothing (M2 perf). The other rows are untouched by this handler and
+		// the forum row is excluded, so one computation is reused across the sites.
+		$cross_row_retained_ids = null;
+
+		if ( empty( $existing_draft ) ) {
+			bp_delete_user_meta( $user_id, $usermeta_key );
+			bb_draft_flush_user_meta_sizes( $user_id );
+		} else {
+			// The aggregated row itself must respect the per-user draft budget -
+			// trim oldest inner drafts first, protecting the one just saved.
+			// The ceiling is the budget MINUS the member's other draft rows:
+			// letting the forum row fill the whole budget on its own would make
+			// every activity draft an eviction candidate on the next save. A
+			// single per-draft cap is kept as the floor so a member carrying
+			// heavy activity drafts can still save a forum draft at all.
+			$draft_sizes       = bb_draft_get_user_meta_sizes( $user_id );
+			$forum_row_bytes   = isset( $draft_sizes['drafts'][ $usermeta_key ] ) ? (int) $draft_sizes['drafts'][ $usermeta_key ] : 0;
+			$other_draft_bytes = array_sum( $draft_sizes['drafts'] ) - $forum_row_bytes;
+			$forum_row_cap     = max( bb_draft_max_size(), bb_draft_user_total_max_size() - $other_draft_bytes );
+
+			$trimmed_row        = bb_forums_trim_draft_row( $existing_draft, $draft_topic_reply['data_key'], $user_id, $forum_row_cap );
+			$existing_draft     = $trimmed_row['row'];
+			$evicted_draft_keys = $trimmed_row['evicted'];
+			// Held back until the row is written - the budget check below can
+			// still refuse and abandon it (H4).
+			$trimmed_entries = $trimmed_row['entries'];
+
+			$forum_row_size = strlen( maybe_serialize( $existing_draft ) );
+
+			// A write that does not grow the row is always allowed: refusing a
+			// discard because the USER is over budget would deadlock the very
+			// remedy the budget error tells them to perform.
+			if ( $forum_row_size > $stored_row_size ) {
+				$draft_budget = bb_draft_enforce_user_budget( $user_id, $usermeta_key, $forum_row_size );
+
+				if ( empty( $draft_budget['allowed'] ) ) {
+					/** This action is documented in bp-templates/bp-nouveau/includes/activity/ajax.php */
+					do_action( 'bb_draft_cap_rejected', $user_id, $usermeta_key, $forum_row_size, 'meta_budget' );
+
+					wp_send_json_error(
+						array(
+							'message' => __( 'Your draft could not be saved because you have too many saved drafts. Please discard some drafts and try again.', 'buddyboss' ),
+							// Report ONLY the budget evictions here (F2): those were
+							// disposed to storage by bb_draft_enforce_user_budget().
+							// The row-trim keys in $evicted_draft_keys were held back
+							// and are abandoned on this refusal (the write below never
+							// runs), so announcing them would tell the member drafts
+							// were removed that are still on the server (H4).
+							'evicted_draft_keys' => $draft_budget['evicted'],
+						)
+					);
+				}
+
+				$evicted_draft_keys = array_merge( $evicted_draft_keys, $draft_budget['evicted'] );
+			}
+
+			// Strip the OTHER shape's attachment keys from every entry before
+			// storing. This handler validates, caps and ownership-checks only its
+			// own bbp_* shape, so foreign media/document/video/feature-image keys
+			// would be stored uninspected - and the global reference scan
+			// (bb_draft_collect_attachment_ids()) reads BOTH shapes, so a member
+			// could pin another member's stamped attachment against cleanup forever
+			// by referencing its id from an activity-shape key in a forum draft
+			// (L6). The shapes are mutually exclusive, so this only ever drops
+			// injected keys; applied to every entry so a sibling write or a
+			// pre-existing poisoned row is cleaned in the same pass.
+			foreach ( $existing_draft as $entry_key => $entry ) {
+				if ( isset( $entry['data'] ) && is_array( $entry['data'] ) ) {
+					unset(
+						$existing_draft[ $entry_key ]['data']['media'],
+						$existing_draft[ $entry_key ]['data']['document'],
+						$existing_draft[ $entry_key ]['data']['video'],
+						$existing_draft[ $entry_key ]['data']['bb_activity_post_feature_image']
+					);
+				}
+			}
+
+			// wp_slash(): the row is uniformly unslashed in memory (see the
+			// merge above), and update_metadata() unslashes once before
+			// storing - this is the single slash that cancels it, so storage
+			// receives the row byte-for-byte (S5). The in-memory $existing_draft
+			// stays unslashed for the consumers below, which parse its
+			// attachment JSON.
+			bp_update_user_meta( $user_id, $usermeta_key, wp_slash( $existing_draft ) );
+			bb_draft_flush_user_meta_sizes( $user_id );
+
+			// The trimmed row is now stored, so the evictions really happened:
+			// release their attachment stamps and announce them. Attachments the
+			// surviving row still holds are excluded (H4).
+			if ( ! empty( $trimmed_entries ) ) {
+				if ( null === $cross_row_retained_ids ) {
+					$cross_row_retained_ids = bb_draft_collect_other_row_referenced_ids( $user_id, $usermeta_key );
+				}
+				$surviving_attachment_ids = $cross_row_retained_ids;
+
+				foreach ( $existing_draft as $surviving_entry ) {
+					$surviving_attachment_ids = array_merge( $surviving_attachment_ids, bb_draft_collect_attachment_ids( $surviving_entry ) );
+				}
+
+				foreach ( $trimmed_entries as $trimmed_inner_key => $trimmed_entry ) {
+					foreach ( array_diff( bb_draft_collect_attachment_ids( $trimmed_entry ), $surviving_attachment_ids ) as $evicted_attachment_id ) {
+						if ( bb_draft_user_can_manage_attachment( $evicted_attachment_id, $user_id ) ) {
+							delete_post_meta( $evicted_attachment_id, 'bb_media_draft' );
+							delete_post_meta( $evicted_attachment_id, 'bb_activity_post_feature_image_draft' );
+						}
+					}
+
+					/** This action is documented in bp-core/bb-core-drafts.php */
+					do_action( 'bb_draft_evicted', (int) $user_id, 'bb_user_topic_reply_draft:' . $trimmed_inner_key, 'aggregate_cap' );
+				}
+			}
+		}
+
+		// The request is accepted. Release the stamps only for attachments the
+		// replaced entry held and the new one does NOT keep - unstamping the
+		// whole replaced entry would strip protection from files the member is
+		// still drafting with, because a restored draft re-sends its stored
+		// attachment list verbatim. The stamps for everything the new entry
+		// keeps are re-applied below, so the set difference is what may be
+		// released.
+		//
+		// $existing_draft is the row as just written, so the whole surviving row
+		// is what may retain a stamp - not only the entry that replaced this
+		// one. The composer carries its content across reply targets, so one
+		// attachment is routinely referenced by several inner drafts of this
+		// row; comparing against the replacing entry alone released files a
+		// sibling inner draft still pointed at and the orphan crons deleted
+		// them. Matches the whole-row exclusion the eviction branch above
+		// already applies.
+		if ( ! $primary_rejected && ! empty( $unstamp_draft_entry ) ) {
+			if ( null === $cross_row_retained_ids && bb_draft_collect_attachment_ids( $unstamp_draft_entry ) ) {
+				$cross_row_retained_ids = bb_draft_collect_other_row_referenced_ids( $user_id, $usermeta_key );
+			}
+			bb_draft_release_replaced_attachments( $unstamp_draft_entry, $draft_topic_reply, $user_id, $existing_draft, (array) $cross_row_retained_ids );
+		}
+
+		// Release the stamps a SIBLING draft dropped this request - the same set
+		// difference the primary entry gets above. The merge re-stamps every
+		// attachment a merged sibling KEEPS (into $stamp_attachment_ids,
+		// re-applied just below), but never released what a sibling stopped
+		// referencing, so a photo removed from a sibling reply kept its
+		// bb_media_draft stamp for ever - protected from the orphan cron by a
+		// draft that no longer points at it. Previous = the entry as freshly
+		// stored; retain = the whole written row, so an attachment another
+		// surviving inner draft still holds is never released (and the re-stamp
+		// below backstops anything that is).
+		foreach ( array_keys( $decided_draft_keys ) as $decided_key ) {
+			// The primary entry is released above.
+			if ( (string) $draft_topic_reply['data_key'] === (string) $decided_key ) {
+				continue;
+			}
+
+			if ( isset( $fresh_draft_row[ $decided_key ] ) ) {
+				if ( null === $cross_row_retained_ids && bb_draft_collect_attachment_ids( $fresh_draft_row[ $decided_key ] ) ) {
+					$cross_row_retained_ids = bb_draft_collect_other_row_referenced_ids( $user_id, $usermeta_key );
+				}
+				bb_draft_release_replaced_attachments( $fresh_draft_row[ $decided_key ], array(), $user_id, $existing_draft, (array) $cross_row_retained_ids );
+			}
+		}
+
+		// Re-stamp only attachments a SURVIVING entry of the written row still
+		// references. update_post_meta() is idempotent, so this keeps a kept
+		// attachment protected across every autosave - but $stamp_attachment_ids
+		// also holds the attachments of freshly-merged SIBLINGS, and the budget
+		// trim above can evict a sibling (its _draft_saved_at is the old stored
+		// value, so it sorts "oldest" even while being edited, and only the
+		// primary key is protected from eviction). The eviction-release loop
+		// correctly dropped that evicted sibling's stamp; without this filter the
+		// re-stamp would re-apply it, permanently protecting an attachment nothing
+		// stored references so bp_media_delete_orphaned_attachments() could never
+		// reclaim it. Reachable by ordinary heavy forum users hitting their draft
+		// budget, not a crafted payload.
+		$surviving_stamp_ids = array();
+		foreach ( $existing_draft as $surviving_entry ) {
+			foreach ( bb_draft_collect_attachment_ids( $surviving_entry ) as $surviving_id ) {
+				$surviving_stamp_ids[ (int) $surviving_id ] = true;
+			}
+		}
+
+		$reference_added = false;
+		foreach ( array_unique( $stamp_attachment_ids ) as $stamp_attachment_id ) {
+			if ( isset( $surviving_stamp_ids[ (int) $stamp_attachment_id ] ) ) {
+				update_post_meta( $stamp_attachment_id, 'bb_media_draft', 1 );
+				$reference_added = true;
+			}
+		}
+
+		// A re-stamped sibling is a reference the orphan-stamp sweep's cached
+		// referenced-set must not miss (H3) - see the matching drop in
+		// activity/ajax.php. Drop the cache AND bump the token so a sweep whose
+		// in-flight scan already passed this draft cannot commit a set missing
+		// this reference (L4 TOCTOU).
+		if ( $reference_added ) {
+			bb_draft_invalidate_referenced_cache();
+		}
+
+		// A kept stored primary answers with the STORED entry, never the empty
+		// payload - so the response cannot re-seed the empty copy the request
+		// came from (Q12). Preferring the just-written row lets a newer copy
+		// another tab saved meanwhile win; the guard-time capture is the
+		// fallback for a row a concurrent discard emptied.
+		if ( $keep_stored_primary ) {
+			$draft_topic_reply = isset( $existing_draft[ $kept_primary_key ] ) ? $existing_draft[ $kept_primary_key ] : $kept_primary_entry;
+		}
+
+		// Emitted only AFTER the sibling merge and the row write, so a rejected
+		// primary reports its cap error while every sibling the same beacon
+		// carried has already been saved (GH1). By this point the row IS written,
+		// so any row-trim / budget evictions accumulated in $evicted_draft_keys
+		// are real and must ride along - otherwise the member is told the save
+		// failed but never learns their oldest drafts were removed (F2).
+		if ( $primary_rejected ) {
+			if ( ! empty( $evicted_draft_keys ) ) {
+				$primary_rejection['evicted_draft_keys'] = $evicted_draft_keys;
+			}
+			wp_send_json_error( $primary_rejection );
+		}
 	}
 
 	wp_send_json_success(
 		array(
-			'draft_activity' => $draft_topic_reply,
+			'draft_activity'     => $draft_topic_reply,
+			'evicted_draft_keys' => isset( $evicted_draft_keys ) ? $evicted_draft_keys : array(),
+		)
+	);
+}
+
+/**
+ * Fetch the logged-in member's stored topic/reply drafts.
+ *
+ * Used by the forum composer's lazy restore: the aggregated draft row is no
+ * longer echoed into forum page HTML, so the JS requests it once through
+ * this endpoint before initializing the topic/reply forms.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_get_topic_reply_drafts() {
+	if ( ! is_user_logged_in() || empty( $_POST['_wpnonce_post_topic_reply_draft'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['_wpnonce_post_topic_reply_draft'] ) ), 'post_topic_reply_draft_data' ) ) {
+		wp_send_json_error();
+	}
+
+	$draft_data = bp_get_user_meta( bp_loggedin_user_id(), 'bb_user_topic_reply_draft', true );
+	$drafts     = array();
+
+	if ( ! empty( $draft_data ) && is_array( $draft_data ) ) {
+		foreach ( $draft_data as $data ) {
+			if ( ! isset( $data['data_key'] ) ) {
+				continue;
+			}
+
+			// An entry with no text and no attachment has nothing to restore.
+			// Handing it back applies the "Draft" indicator over an empty
+			// composer, which is what members reported (Q12).
+			if ( ! bb_draft_topic_reply_entry_has_payload( $data ) ) {
+				continue;
+			}
+
+			$drafts[ $data['data_key'] ] = $data;
+		}
+	}
+
+	wp_send_json_success(
+		array(
+			'drafts' => $drafts,
 		)
 	);
 }

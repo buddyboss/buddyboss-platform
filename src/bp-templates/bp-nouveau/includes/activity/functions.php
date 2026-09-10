@@ -290,9 +290,76 @@ function bp_nouveau_activity_localize_scripts( $params = array() ) {
 		$draft_activity_meta_key = 'draft_group_' . bp_get_current_group_id();
 	}
 
-	// Get draft activity.
-	$draft_activity                    = bp_get_user_meta( bp_loggedin_user_id(), $draft_activity_meta_key, true );
-	$activity_params['draft_activity'] = $draft_activity;
+	// Localize only whether a server draft exists - the draft itself is fetched
+	// lazily when localStorage is empty. The full draft used to be echoed into
+	// nearly every page's HTML; the key keeps its historical ''
+	// no-draft value for third-party readers.
+	$activity_params['draft_activity'] = '';
+	// The key is resolved through bp_get_user_meta_key() because every draft
+	// writer stores through bp_update_user_meta() - probing the raw literal
+	// would report "no draft" on installs that filter user meta keys.
+	//
+	// Gated on posting permission, mirroring the composer's OWN visibility gate
+	// (activity/post-form.php: hidden only when ! bb_user_can_create_activity()
+	// AND not a group activity page). A member who cannot create activity has no
+	// composer to restore into, so telling the JS a draft exists would only fire
+	// the lazy fetch for a form they can never open.
+	//
+	// The gate is SKIPPED for group drafts (draft_group_N, set above under
+	// bp_is_group()): bb_user_can_create_activity() is the SITE-WIDE 'user'-object
+	// switch and does not govern group posting - the group composer renders
+	// regardless, and group posting is authorized separately per group - so
+	// gating a group draft on it would make a member's valid, still-fetchable
+	// draft_group_N invisible when the switch is filtered false for them.
+	$activity_params['has_draft'] = ( bp_is_group() || bb_user_can_create_activity() )
+		&& metadata_exists( 'user', bp_loggedin_user_id(), bp_get_user_meta_key( $draft_activity_meta_key ) );
+
+	// Interim guard until pasted images are routed through the media uploader:
+	// a pasted bitmap becomes a multi-megabyte inline base64 image, which the
+	// draft and publish pipelines strip - blocking at paste is honest feedback
+	// instead of silently losing the member's image.
+	$activity_params['paste_image_blocked_message'] = __( 'Pasted images are not supported yet. Please use the photo button to attach images.', 'buddyboss' );
+
+	// The draft is fetched lazily now, so a failed read leaves the composer
+	// empty over a draft that still exists on the server. Without a message the
+	// member assumes nothing was saved, retypes, and the next autosave replaces
+	// the draft the fetch could not read. Mirrors the forum packs'
+	// draft_fetch_failed_message.
+	$activity_params['draft_fetch_failed_message'] = __( 'We could not load your saved draft. Reload the page before writing here, or your saved draft may be replaced.', 'buddyboss' );
+
+	// A save/discard refused with no specific server message (an expired nonce,
+	// or a moderator removing posting rights mid-session) must not surface as
+	// success. The forum packs already fall back to these strings; the activity
+	// packs surfaced only a server-provided message and were silent otherwise
+	// (M3 parity).
+	$activity_params['draft_save_failed_message']    = __( 'Your draft could not be saved. Please reload the page - anything you write here may not be kept.', 'buddyboss' );
+	$activity_params['draft_discard_failed_message'] = __( 'Your draft could not be discarded. Please reload the page and try again.', 'buddyboss' );
+
+	// The lazy restore is suppressed when the member has already started typing
+	// while the fetch was in flight - overwriting their text would be the real
+	// bug. The forum packs tell the member the stored draft is intact but was
+	// not loaded; the activity packs took the same branch silently, which reads
+	// as a lost draft (M11 parity).
+	$activity_params['draft_not_restored_message'] = __( 'You have a saved draft. It was not loaded because you had already started writing here.', 'buddyboss' );
+
+	// Members must be told the draft has a lifetime, or the expiry cron reads
+	// as unexplained data loss when a draft is gone after a few weeks away.
+	// Empty when expiry is disabled, so the JS renders nothing.
+	$draft_retention_days = bb_draft_retention_days();
+
+	$activity_params['draft_retention_message'] = $draft_retention_days ? sprintf(
+		/* translators: %s: Number of days a draft is kept. */
+		_n( 'Drafts are kept for %s day.', 'Drafts are kept for %s days.', $draft_retention_days, 'buddyboss' ),
+		number_format_i18n( $draft_retention_days )
+	) : '';
+
+	// Budget eviction removes an OLDER draft to make room for this save. The
+	// member must be told, or drafts appear to vanish at random.
+	$activity_params['draft_evicted_message'] = __( 'You had too many saved drafts, so your oldest draft was removed to save this one.', 'buddyboss' );
+
+	// The per-draft cap, so the composer can decide what to drop from an
+	// oversized payload instead of guessing at a threshold.
+	$activity_params['draft_max_size'] = bb_draft_max_size();
 
 	$activity_params['access_control_settings'] = array(
 		'can_create_activity'          => bb_user_can_create_activity(),

@@ -1027,8 +1027,7 @@ function bb_nouveau_forum_localize_scripts( $params = array() ) {
 		return $params;
 	}
 
-	$user_id    = bp_loggedin_user_id();
-	$draft_data = get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
+	$user_id = bp_loggedin_user_id();
 
 	$params['forums'] = array(
 		'params'  => array(
@@ -1043,15 +1042,70 @@ function bb_nouveau_forum_localize_scripts( $params = array() ) {
 		),
 	);
 
+	// Localize only whether server drafts exist - the aggregated draft row is
+	// no longer echoed into every forum page's HTML; the JS fetches
+	// it once through bb_get_topic_reply_drafts before initializing the forms.
+	// The `draft` key keeps its historical empty-map shape for third parties.
 	$params['forums']['draft'] = array();
-	if ( ! empty( $draft_data ) ) {
-		foreach ( $draft_data as $data ) {
 
-			if ( isset( $data['data_key'] ) ) {
-				$params['forums']['draft'][ $data['data_key'] ] = $data;
+	// Whether a RESTORABLE draft exists, not merely whether the row does.
+	// The row can hold entries with no text and no attachment, which
+	// bb_get_topic_reply_drafts() now filters out (Q12) - claiming
+	// has_draft for one would fire the lazy fetch on every forum page view
+	// and get an empty map back every time.
+	//
+	// Read through bp_get_user_meta() to match the writers, which all store
+	// through bp_update_user_meta() and so resolve the key through
+	// bp_get_user_meta_key(). The whole row is already in the user-meta cache
+	// this request primed, so this costs no extra query.
+	$params['forums']['has_draft'] = false;
+	$draft_row                     = bp_get_user_meta( $user_id, 'bb_user_topic_reply_draft', true );
+
+	if ( ! empty( $draft_row ) && is_array( $draft_row ) ) {
+		foreach ( $draft_row as $draft_entry ) {
+			if ( is_array( $draft_entry ) && bb_draft_topic_reply_entry_has_payload( $draft_entry ) ) {
+				$params['forums']['has_draft'] = true;
+				break;
 			}
 		}
 	}
+
+	// Same retention disclosure as the activity composer - a draft that
+	// vanishes after the retention window must never be a surprise.
+	$draft_retention_days = bb_draft_retention_days();
+
+	$params['forums']['draft_retention_message'] = $draft_retention_days ? sprintf(
+		/* translators: %s: Number of days a draft is kept. */
+		_n( 'Drafts are kept for %s day.', 'Drafts are kept for %s days.', $draft_retention_days, 'buddyboss' ),
+		number_format_i18n( $draft_retention_days )
+	) : '';
+
+	// Forum-composer copies of the activity composer's draft messages. They are
+	// localized separately because the activity params are not present on
+	// forum-only pages.
+	$params['forums']['paste_image_blocked_message'] = __( 'Pasted images are not supported yet. Please use the photo button to attach images.', 'buddyboss' );
+	$params['forums']['draft_evicted_message']       = __( 'You had too many saved drafts, so your oldest draft was removed to save this one.', 'buddyboss' );
+
+	// The lazy fetch can fail on a flaky connection. When it does, the member
+	// sees an empty composer even though a draft exists, and anything they type
+	// would otherwise overwrite the draft they were never shown.
+	$params['forums']['draft_fetch_failed_message'] = __( 'We could not load your saved draft. Reload the page before writing here, or your saved draft may be replaced.', 'buddyboss' );
+
+	// Shown when a draft SAVE is refused and the server sent no message of its
+	// own - a bare wp_send_json_error() carries none, which is what the nonce
+	// check and the authorization gate emit. Without it those rejections were
+	// indistinguishable from a successful save (H1).
+	$params['forums']['draft_save_failed_message'] = __( 'Your draft could not be saved. Please reload the page - anything you write here may not be kept.', 'buddyboss' );
+
+	// Shown when a DISCARD is refused (e.g. an expired nonce, or the forum made
+	// private mid-session). The save message would wrongly say the draft "could
+	// not be saved" when the member was trying to remove it.
+	$params['forums']['draft_discard_failed_message'] = __( 'Your draft could not be discarded. Please reload the page and try again.', 'buddyboss' );
+
+	// The restore is suppressed when the member has already typed into the
+	// form, and that suppression used to be silent - the stored draft is
+	// intact but nothing on screen said so.
+	$params['forums']['draft_not_restored_message'] = __( 'You have a saved draft. It was not loaded because you had already started writing here.', 'buddyboss' );
 
 	return $params;
 }
@@ -1352,4 +1406,373 @@ function bb_moderator_can_delete_topic_reply( $obj, $args = array() ) {
 	}
 
 	return $allow_delete;
+}
+
+/**
+ * Strip inline data-URL images from a draft entry's content fields.
+ *
+ * Split out of {@see bb_forums_sanitize_draft_entry()} so the cheap step can
+ * run before the per-draft cap and the expensive kses pass runs only on a
+ * payload the cap has already accepted (M4).
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $draft_entry Draft entry with a `data` member.
+ * @return array Entry with data URLs removed from its content fields.
+ */
+function bb_forums_strip_draft_data_urls( $draft_entry ) {
+	if ( ! is_array( $draft_entry ) || empty( $draft_entry['data'] ) || ! is_array( $draft_entry['data'] ) ) {
+		return $draft_entry;
+	}
+
+	/** This filter is documented in bp-forums/functions.php */
+	$content_keys = apply_filters( 'bb_draft_topic_reply_content_keys', array( 'bbp_topic_content', 'bbp_reply_content' ) );
+
+	foreach ( $content_keys as $content_key ) {
+		if ( isset( $draft_entry['data'][ $content_key ] ) && is_string( $draft_entry['data'][ $content_key ] ) ) {
+			$draft_entry['data'][ $content_key ] = bb_draft_strip_data_urls( $draft_entry['data'][ $content_key ] );
+		}
+	}
+
+	return $draft_entry;
+}
+
+/**
+ * Sanitize one topic/reply draft entry before it is stored in usermeta.
+ *
+ * Strips inline data-URL images and applies the forum publish path's kses
+ * allowlist to the drafted content fields, then stamps the save time used
+ * by draft expiry and size-budget eviction. Extension data members are
+ * left untouched.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $draft_entry Draft entry with a `data` member.
+ * @return array Sanitized draft entry.
+ */
+function bb_forums_sanitize_draft_entry( $draft_entry ) {
+	if ( ! is_array( $draft_entry ) ) {
+		return $draft_entry;
+	}
+
+	if ( ! empty( $draft_entry['data'] ) && is_array( $draft_entry['data'] ) ) {
+
+		/**
+		 * Filters which forum draft data members carry member-authored HTML content.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param string[] $content_keys Draft data keys holding HTML content.
+		 */
+		$content_keys = apply_filters( 'bb_draft_topic_reply_content_keys', array( 'bbp_topic_content', 'bbp_reply_content' ) );
+
+		foreach ( $content_keys as $content_key ) {
+			if ( isset( $draft_entry['data'][ $content_key ] ) && is_string( $draft_entry['data'][ $content_key ] ) ) {
+				// Same allowed tags as the topic/reply publish path (bbp_filter_kses), unslashed variant.
+				// Data URLs are stripped by bb_forums_strip_draft_data_urls()
+				// before the cap; kept idempotent here so any other caller of
+				// this function still gets the full treatment.
+				$draft_entry['data'][ $content_key ] = bbp_kses_data( bb_draft_strip_data_urls( $draft_entry['data'][ $content_key ] ) );
+			}
+		}
+
+		/**
+		 * Free-text forum draft fields sanitized as PLAIN text (bbp_topic_title),
+		 * mirroring the M17 activity-draft fix and the topic publish path. The
+		 * content keys above are HTML (kses); the title is a short single-line
+		 * value that reached storage byte-for-byte from client JSON before -
+		 * harmless while a draft is only read back to its owner, but inconsistent
+		 * with the rest of the draft sanitization and one .html()-vs-.val() mistake
+		 * in any consumer of this usermeta row away from a stored-XSS (M21).
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param string[] $text_keys Draft data keys holding plain text.
+		 */
+		$text_keys = apply_filters( 'bb_draft_topic_reply_text_keys', array( 'bbp_topic_title' ) );
+
+		foreach ( $text_keys as $text_key ) {
+			if ( isset( $draft_entry['data'][ $text_key ] ) && is_string( $draft_entry['data'][ $text_key ] ) ) {
+				$draft_entry['data'][ $text_key ] = sanitize_text_field( $draft_entry['data'][ $text_key ] );
+			}
+		}
+	}
+
+	$draft_entry['_draft_saved_at'] = time();
+
+	return $draft_entry;
+}
+
+/**
+ * Trim the aggregated forum draft row to a byte budget, oldest drafts first.
+ *
+ * The forum draft row holds ALL of a user's topic/reply drafts, so the row
+ * itself must respect the per-user draft budget. Inner drafts other than
+ * the protected (just-saved) one are removed oldest-first until the
+ * serialized row fits.
+ *
+ * PURE with respect to storage: this only rewrites the in-memory row and
+ * reports what it removed. Releasing attachment stamps and firing
+ * `bb_draft_evicted` belong to the caller, AFTER the row is actually
+ * written — a budget refusal downstream abandons the write, and an eviction
+ * that never happened must not unprotect attachments or notify listeners
+ * (H4).
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array  $draft_row   Aggregated draft row (inner key => draft entry).
+ * @param string $protect_key Inner key that must not be evicted.
+ * @param int    $user_id     Owning user ID.
+ * @param int    $max_bytes   Byte budget for the serialized row.
+ * @return array {
+ *     @type array    $row     Trimmed draft row.
+ *     @type string[] $evicted Evicted inner keys ("meta_key:inner_key").
+ *     @type array    $entries Removed entries, inner key => entry, for the
+ *                             caller's deferred unstamping.
+ * }
+ */
+function bb_forums_trim_draft_row( $draft_row, $protect_key, $user_id, $max_bytes ) {
+	$result = array(
+		'row'     => $draft_row,
+		'evicted' => array(),
+		'entries' => array(),
+	);
+
+	if ( empty( $draft_row ) || ! is_array( $draft_row ) ) {
+		return $result;
+	}
+
+	// Steady state first, and cheaply: a row that already fits needs no
+	// candidate list, no sort and no per-entry accounting. One serialization,
+	// which is what the old implementation also cost on this path - the
+	// optimisation below must not make the common case more expensive than the
+	// rare one (R1).
+	$row_bytes = strlen( maybe_serialize( $draft_row ) );
+
+	if ( $row_bytes <= $max_bytes ) {
+		return $result;
+	}
+
+	$candidates = array();
+
+	foreach ( $draft_row as $inner_key => $inner_draft ) {
+		if ( (string) $inner_key === (string) $protect_key ) {
+			continue;
+		}
+
+		$candidates[] = array(
+			'inner_key' => (string) $inner_key,
+			'saved_at'  => isset( $inner_draft['_draft_saved_at'] ) ? (int) $inner_draft['_draft_saved_at'] : 0,
+		);
+	}
+
+	usort(
+		$candidates,
+		function ( $a, $b ) {
+			if ( $a['saved_at'] === $b['saved_at'] ) {
+				return 0;
+			}
+
+			return ( $a['saved_at'] < $b['saved_at'] ) ? -1 : 1;
+		}
+	);
+
+	// Size accounting is incremental, and exact.
+	//
+	// The loop below used to ask "does the row fit yet?" with
+	// strlen( maybe_serialize( $result['row'] ) ) on EVERY iteration, so an
+	// over-budget row with N eviction candidates serialized O(N) copies of a
+	// row that is by definition close to the cap. Measured on a 200-entry /
+	// 10 MB row: 182 whole-row serialize() calls moving 954 MB - and this runs
+	// on the live autosave endpoint, not a cron (R1).
+	//
+	// serialize() writes an array as `a:{count}:{` + the concatenated
+	// key/value serializations + `}`, and elements serialize independently, so
+	// the row's exact width is the sum of per-entry costs measured once plus
+	// that envelope, and an eviction is a subtraction. Same shape as the
+	// sibling bb_draft_enforce_user_budget(), which has always precomputed
+	// per-entry `bytes` and subtracted.
+	//
+	// Exactness matters in both directions: drifting high evicts a draft the
+	// member did not need to lose, drifting low leaves the row over budget and
+	// the caller's own budget check then refuses the whole save. The
+	// authoritative re-measure after the loop is the backstop.
+	$entry_bytes = array();
+	$payload_sum = 0;
+
+	foreach ( $draft_row as $inner_key => $inner_draft ) {
+		// serialize() rather than maybe_serialize(): this must mirror how the
+		// element appears INSIDE the serialized row, and maybe_serialize()
+		// passes a string element through unchanged instead of writing it as
+		// s:len:"...";.
+		// phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.serialize_serialize -- measuring serialized WIDTH only; the result is never stored, transmitted or unserialized.
+		$bytes = bb_draft_serialized_key_bytes( $inner_key ) + strlen( serialize( $inner_draft ) );
+
+		$entry_bytes[ (string) $inner_key ] = $bytes;
+		$payload_sum                       += $bytes;
+	}
+
+	$row_count = count( $draft_row );
+
+	// Tie the derived width to the authoritative one measured above. If they
+	// ever disagree the derivation is wrong for this PHP build, so re-base the
+	// running total on the measured value and let the backstop finish the job.
+	$derived_bytes = strlen( 'a:' . $row_count . ':{' ) + 1 + $payload_sum;
+
+	if ( $derived_bytes !== $row_bytes ) {
+		$payload_sum = $row_bytes - ( strlen( 'a:' . $row_count . ':{' ) + 1 );
+	}
+
+	foreach ( $candidates as $candidate ) {
+		if ( $row_bytes <= $max_bytes ) {
+			break;
+		}
+
+		$inner_key = $candidate['inner_key'];
+
+		// Only the in-memory row is changed here. Releasing the attachment
+		// stamps and firing the public bb_draft_evicted action are deferred to
+		// the caller, because a later budget refusal abandons this write
+		// entirely - and an eviction that never reached storage must not leave
+		// its attachments unprotected or announce itself to listeners
+		// (H4).
+		$result['entries'][ $inner_key ] = $result['row'][ $inner_key ];
+
+		unset( $result['row'][ $inner_key ] );
+
+		$result['evicted'][] = 'bb_user_topic_reply_draft:' . $inner_key;
+
+		--$row_count;
+		$payload_sum -= isset( $entry_bytes[ $inner_key ] ) ? $entry_bytes[ $inner_key ] : 0;
+		$row_bytes    = strlen( 'a:' . $row_count . ':{' ) + 1 + $payload_sum;
+	}
+
+	// Authoritative backstop: measure the real row once and keep evicting only
+	// if the accounting above somehow left it over budget. With the formula
+	// exact this measures once and stops, so the O(N) behaviour does not come
+	// back - but accounting drift cannot silently turn an under-trim into a
+	// refused save. Drift is not hypothetical: legacy rows whose inner keys
+	// are []-appended INTEGERS priced each key 4 bytes high until
+	// bb_draft_serialized_key_bytes() learned the i:N; form, and 487 of 3,204
+	// swept budget/row combinations came back over budget with evictable
+	// candidates remaining (GH2).
+	//
+	// Seeded with the candidates the loop above has NOT already evicted.
+	// Reseeding from the full list made this backstop dead code: its first
+	// array_shift() returned an already-evicted candidate, the isset() check
+	// broke the loop immediately, and the row was handed back over budget -
+	// which the caller's budget check then turned into a false "too many
+	// drafts" refusal (GH2).
+	$remaining = array();
+
+	foreach ( $candidates as $candidate ) {
+		if ( isset( $result['row'][ $candidate['inner_key'] ] ) ) {
+			$remaining[] = $candidate;
+		}
+	}
+
+	$measured_size = strlen( maybe_serialize( $result['row'] ) );
+
+	while ( $measured_size > $max_bytes ) {
+		$candidate = array_shift( $remaining );
+
+		// List exhausted - nothing evictable remains (the protected entry is
+		// never a candidate), so the caller's budget check owns the outcome.
+		if ( null === $candidate ) {
+			break;
+		}
+
+		// Defensive only: entries cannot vanish mid-loop, but an already-gone
+		// key must be SKIPPED, never allowed to end the loop while later
+		// candidates are still evictable.
+		if ( ! isset( $result['row'][ $candidate['inner_key'] ] ) ) {
+			continue;
+		}
+
+		$result['entries'][ $candidate['inner_key'] ] = $result['row'][ $candidate['inner_key'] ];
+
+		unset( $result['row'][ $candidate['inner_key'] ] );
+
+		$result['evicted'][] = 'bb_user_topic_reply_draft:' . $candidate['inner_key'];
+
+		$measured_size = strlen( maybe_serialize( $result['row'] ) );
+	}
+
+	return $result;
+}
+
+/**
+ * Remove one published inner draft from the aggregated forum draft row.
+ *
+ * The topic/reply publish handlers used to read the whole aggregate row once,
+ * unset the just-published key, and write the rest back - with no fresh read.
+ * The save handler (bb_post_topic_reply_draft) deliberately drops the meta
+ * cache and re-reads before its own write, "Only the keys this request actually
+ * decided about are ours to write", because a second tab autosaving or
+ * discarding a DIFFERENT inner draft commits inside that window. The publish
+ * handlers had the same window but not the guard: a stale read wrote a whole-row
+ * value (or, since the emptied-row case became bp_delete_user_meta(), a
+ * whole-row DELETE) over a sibling another request had just written, and
+ * keymasters/moderators skip the bbp_update_user_last_posted() cache bust that
+ * narrows it for ordinary members (M2).
+ *
+ * This gives the publish path the save handler's three steps: drop the cache,
+ * re-read, and remove only the one key - so a concurrent sibling survives.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int    $user_id        Owning user ID.
+ * @param string $draft_data_key Inner draft key just published.
+ * @return void
+ */
+function bb_forums_delete_published_draft_key( $user_id, $draft_data_key ) {
+	$user_id      = (int) $user_id;
+	$usermeta_key = 'bb_user_topic_reply_draft';
+
+	if ( $user_id <= 0 ) {
+		return;
+	}
+
+	// Re-read on a fresh cache so a sibling another request wrote inside the
+	// publish window is not overwritten with this request's stale copy (M2).
+	wp_cache_delete( $user_id, 'user_meta' );
+	$existing_draft = bp_get_user_meta( $user_id, $usermeta_key, true );
+
+	if ( ! is_array( $existing_draft ) ) {
+		// A legacy-empty or corrupt non-array row carries no member content and
+		// keeps has_draft true forever; a genuinely absent row reads as '' and
+		// the delete is a harmless no-op.
+		if ( ! empty( $existing_draft ) ) {
+			bp_delete_user_meta( $user_id, $usermeta_key );
+
+			// This request removed usermeta, so any size memo primed earlier is
+			// now stale. Every other draft mutator flushes after its write; this
+			// publish path is the only writer that used to skip it (M2 LOW).
+			bb_draft_flush_user_meta_sizes( $user_id );
+		}
+
+		return;
+	}
+
+	if ( isset( $existing_draft[ $draft_data_key ] ) ) {
+		unset( $existing_draft[ $draft_data_key ] );
+	}
+
+	// An emptied aggregate row is deleted, never written back as array() - a
+	// stored empty row keeps has_draft true (one wasted lazy-fetch AJAX per
+	// forum page load, forever) and no cleanup pass can remove it while ordinary
+	// publishes keep re-creating it.
+	if ( empty( $existing_draft ) ) {
+		bp_delete_user_meta( $user_id, $usermeta_key );
+	} else {
+		// wp_slash(): the row came back UNSLASHED from bp_get_user_meta() and
+		// update_metadata() unslashes once more on write, so re-slash to store
+		// the member's OTHER drafts byte-for-byte (R2).
+		bp_update_user_meta( $user_id, $usermeta_key, wp_slash( $existing_draft ) );
+	}
+
+	// Flush the per-user size memo after the write, in step with every other
+	// draft mutator - both the delete and the update above change the member's
+	// total usermeta bytes, so a memo primed earlier in the request goes stale.
+	bb_draft_flush_user_meta_sizes( $user_id );
 }

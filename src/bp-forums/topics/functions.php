@@ -462,21 +462,10 @@ function bbp_new_topic_handler( $action = '' ) {
 			}
 		}
 
-		// Delete draft data from the database.
-		$draft_data_key = 'draft_discussion_' . $forum_id;
-		$usermeta_key   = 'bb_user_topic_reply_draft';
-		$user_id        = bp_loggedin_user_id();
-		$existing_draft = bp_get_user_meta( $user_id, $usermeta_key, true );
-
-		if ( ! empty( $existing_draft ) && isset( $existing_draft[ $draft_data_key ] ) ) {
-			unset( $existing_draft[ $draft_data_key ] );
-		}
-
-		if ( empty( $existing_draft ) || is_string( $existing_draft ) ) {
-			$existing_draft = array();
-		}
-
-		bp_update_user_meta( $user_id, $usermeta_key, $existing_draft );
+		// Delete draft data from the database - through the shared removal path
+		// that re-reads on a fresh cache, so publishing this topic does not
+		// overwrite a sibling draft another request wrote meanwhile (M2).
+		bb_forums_delete_published_draft_key( bp_loggedin_user_id(), 'draft_discussion_' . $forum_id );
 
 		/** Additional Actions (After Save) */
 
