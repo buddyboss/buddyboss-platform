@@ -49,9 +49,9 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 		wp_update_user(
 			array(
 				'ID'           => $u,
-				'first_name'   => 'Peter',
-				'last_name'    => 'Zebrastripe',
-				'display_name' => 'Peter Zebrastripe',
+				'first_name'   => 'Alex',
+				'last_name'    => 'Quillfeather',
+				'display_name' => 'Alex Quillfeather',
 			)
 		);
 
@@ -75,13 +75,13 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 
 		$item               = new stdClass();
 		$item->user_id      = $u;
-		$item->display_name = 'Peter Zebrastripe'; // Raw WP column, as joined by the activity query.
+		$item->display_name = 'Alex Quillfeather'; // Raw WP column, as joined by the activity query.
 
 		$this->set_current_user( 0 );
-		$this->assertSame( 'Peter', bb_activity_get_item_user_displayname( $item ) );
+		$this->assertSame( 'Alex', bb_activity_get_item_user_displayname( $item ) );
 
 		$this->set_current_user( $member );
-		$this->assertSame( 'Peter Zebrastripe', bb_activity_get_item_user_displayname( $item ) );
+		$this->assertSame( 'Alex Quillfeather', bb_activity_get_item_user_displayname( $item ) );
 	}
 
 	/**
@@ -112,29 +112,29 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 		// Bare last name (display_name is only the hidden last name): a guest must not see it;
 		// it falls back to the public first name.
 		$u1 = $this->create_member_with_hidden_last_name();
-		wp_update_user( array( 'ID' => $u1, 'display_name' => 'Zebrastripe' ) );
+		wp_update_user( array( 'ID' => $u1, 'display_name' => 'Quillfeather' ) );
 		$GLOBALS['bb_default_display_avatar'] = true;
 		$this->set_current_user( 0 );
-		$this->assertStringNotContainsString( 'Zebrastripe', bp_core_get_user_displayname( $u1, 0 ) );
+		$this->assertStringNotContainsString( 'Quillfeather', bp_core_get_user_displayname( $u1, 0 ) );
 		$GLOBALS['bb_default_display_avatar'] = true;
-		$this->assertSame( 'Peter', bp_core_get_user_displayname( $u1, 0 ) );
+		$this->assertSame( 'Alex', bp_core_get_user_displayname( $u1, 0 ) );
 
 		// Last-first order.
 		$u2 = $this->create_member_with_hidden_last_name();
-		wp_update_user( array( 'ID' => $u2, 'display_name' => 'Zebrastripe Peter' ) );
+		wp_update_user( array( 'ID' => $u2, 'display_name' => 'Quillfeather Alex' ) );
 		$GLOBALS['bb_default_display_avatar'] = true;
 		$this->set_current_user( 0 );
-		$this->assertSame( 'Peter', bp_core_get_user_displayname( $u2, 0 ) );
+		$this->assertSame( 'Alex', bp_core_get_user_displayname( $u2, 0 ) );
 
 		// Control: normal "First Last" still redacts to the first name for a guest and stays
 		// full for a logged-in member.
 		$u3 = $this->create_member_with_hidden_last_name();
 		$GLOBALS['bb_default_display_avatar'] = true;
 		$this->set_current_user( 0 );
-		$this->assertSame( 'Peter', bp_core_get_user_displayname( $u3, 0 ) );
+		$this->assertSame( 'Alex', bp_core_get_user_displayname( $u3, 0 ) );
 		$GLOBALS['bb_default_display_avatar'] = true;
 		$this->set_current_user( $member );
-		$this->assertSame( 'Peter Zebrastripe', bp_core_get_user_displayname( $u3, $member ) );
+		$this->assertSame( 'Alex Quillfeather', bp_core_get_user_displayname( $u3, $member ) );
 	}
 
 	/**
@@ -185,8 +185,8 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 		$this->set_current_user( $viewer );
 		wp_cache_delete( $activity_id, 'bp_activity_comments' );
 		$as_member = $this->get_comment_tree( $activity_id );
-		$this->assertSame( 'Peter Zebrastripe', $as_member[ $comment_id ]->user_fullname );
-		$this->assertSame( 'Peter Zebrastripe', $as_member[ $comment_id ]->children[ $reply_id ]->user_fullname );
+		$this->assertSame( 'Alex Quillfeather', $as_member[ $comment_id ]->user_fullname );
+		$this->assertSame( 'Alex Quillfeather', $as_member[ $comment_id ]->children[ $reply_id ]->user_fullname );
 
 		$cached = wp_cache_get( $activity_id, 'bp_activity_comments' );
 		$this->assertIsArray( $cached, 'The tree must be cached for the single-activity request.' );
@@ -194,13 +194,13 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 		// 2) A guest reads the same activity from the warm cache.
 		$this->set_current_user( 0 );
 		$as_guest = $this->get_comment_tree( $activity_id );
-		$this->assertSame( 'Peter', $as_guest[ $comment_id ]->user_fullname );
-		$this->assertSame( 'Peter', $as_guest[ $comment_id ]->children[ $reply_id ]->user_fullname );
+		$this->assertSame( 'Alex', $as_guest[ $comment_id ]->user_fullname );
+		$this->assertSame( 'Alex', $as_guest[ $comment_id ]->children[ $reply_id ]->user_fullname );
 
 		// 3) The reverse direction: a member must still get the name they are entitled to.
 		$this->set_current_user( $other );
 		$as_other = $this->get_comment_tree( $activity_id );
-		$this->assertSame( 'Peter Zebrastripe', $as_other[ $comment_id ]->user_fullname );
+		$this->assertSame( 'Alex Quillfeather', $as_other[ $comment_id ]->user_fullname );
 
 		$bp->current_component = $reset_component;
 		$bp->current_action    = $reset_action;
@@ -237,17 +237,17 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 		$this->assertTrue( bp_has_activities( array( 'include' => $activity_id, 'display_comments' => 'threaded', 'show_hidden' => true ) ) );
 		bp_the_activity();
 
-		$this->assertSame( 'Peter Zebrastripe', $activities_template->activity->display_name, 'Fixture: the raw joined column holds the full name.' );
-		$this->assertSame( 'Peter', bp_get_activity_member_display_name() );
-		$this->assertStringContainsString( 'alt="Profile photo of Peter"', bp_get_activity_avatar() );
-		$this->assertStringNotContainsString( 'Zebrastripe', bp_get_activity_avatar() );
-		$this->assertStringNotContainsString( 'Zebrastripe', bp_get_activity_secondary_avatar() );
+		$this->assertSame( 'Alex Quillfeather', $activities_template->activity->display_name, 'Fixture: the raw joined column holds the full name.' );
+		$this->assertSame( 'Alex', bp_get_activity_member_display_name() );
+		$this->assertStringContainsString( 'alt="Profile photo of Alex"', bp_get_activity_avatar() );
+		$this->assertStringNotContainsString( 'Quillfeather', bp_get_activity_avatar() );
+		$this->assertStringNotContainsString( 'Quillfeather', bp_get_activity_secondary_avatar() );
 
 		// Inside the comment loop the tags read from `current_comment`.
 		$this->assertArrayHasKey( $comment_id, $activities_template->activity->children );
 		$activities_template->activity->current_comment = $activities_template->activity->children[ $comment_id ];
-		$this->assertSame( 'Peter', bp_get_activity_comment_name() );
-		$this->assertStringContainsString( 'alt="Profile photo of Peter"', bp_get_activity_avatar() );
+		$this->assertSame( 'Alex', bp_get_activity_comment_name() );
+		$this->assertStringContainsString( 'alt="Profile photo of Alex"', bp_get_activity_avatar() );
 		unset( $activities_template->activity->current_comment );
 
 		$activities_template = null;
@@ -280,10 +280,10 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 				continue;
 			}
 			$found = true;
-			$this->assertSame( 'Peter', bp_get_group_member_name() );
-			$this->assertStringContainsString( 'alt="Profile photo of Peter"', bp_get_group_member_avatar() );
-			$this->assertStringNotContainsString( 'Zebrastripe', bp_get_group_member_avatar_thumb() );
-			$this->assertStringNotContainsString( 'Zebrastripe', bp_get_group_member_avatar_mini() );
+			$this->assertSame( 'Alex', bp_get_group_member_name() );
+			$this->assertStringContainsString( 'alt="Profile photo of Alex"', bp_get_group_member_avatar() );
+			$this->assertStringNotContainsString( 'Quillfeather', bp_get_group_member_avatar_thumb() );
+			$this->assertStringNotContainsString( 'Quillfeather', bp_get_group_member_avatar_mini() );
 		}
 		$this->assertTrue( $found, 'The member with the hidden last name must be in the loop.' );
 

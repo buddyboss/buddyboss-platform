@@ -1399,9 +1399,9 @@ Bar!';
 		wp_update_user(
 			array(
 				'ID'           => $u,
-				'first_name'   => 'Peter',
-				'last_name'    => 'Zebrastripe',
-				'display_name' => 'Peter Zebrastripe',
+				'first_name'   => 'Alex',
+				'last_name'    => 'Quillfeather',
+				'display_name' => 'Alex Quillfeather',
 			)
 		);
 		xprofile_set_field_visibility_level( bp_xprofile_lastname_field_id(), $u, 'loggedin' );
@@ -1416,27 +1416,27 @@ Bar!';
 		$bp->displayed_user->userdata = bp_core_get_core_userdata( $u );
 		$bp->displayed_user->fullname = $bp->displayed_user->userdata->display_name;
 		$bp->displayed_user->domain   = bp_core_get_user_domain( $u );
-		$this->assertSame( 'Peter Zebrastripe', $bp->displayed_user->fullname );
+		$this->assertSame( 'Alex Quillfeather', $bp->displayed_user->fullname );
 
 		// Guest viewer.
 		$this->set_current_user( 0 );
 		xprofile_override_user_fullnames();
-		$this->assertSame( 'Peter', bp_get_displayed_user_fullname() );
+		$this->assertSame( 'Alex', bp_get_displayed_user_fullname() );
 
 		if ( bp_is_active( 'activity' ) ) {
 			ob_start();
 			bp_members_activity_feed();
 			$rss_link = ob_get_clean();
 			$this->assertStringContainsString( 'rel="alternate"', $rss_link );
-			$this->assertStringNotContainsString( 'Zebrastripe', $rss_link );
-			$this->assertStringContainsString( '| Peter |', $rss_link );
+			$this->assertStringNotContainsString( 'Quillfeather', $rss_link );
+			$this->assertStringContainsString( '| Alex |', $rss_link );
 		}
 
 		// Logged-in member viewer gets the full name.
 		$bp->displayed_user->fullname = $bp->displayed_user->userdata->display_name;
 		$this->set_current_user( $member );
 		xprofile_override_user_fullnames();
-		$this->assertSame( 'Peter Zebrastripe', bp_get_displayed_user_fullname() );
+		$this->assertSame( 'Alex Quillfeather', bp_get_displayed_user_fullname() );
 
 		$GLOBALS['bb_default_display_avatar'] = false;
 		$bp->displayed_user = $displayed_backup;
