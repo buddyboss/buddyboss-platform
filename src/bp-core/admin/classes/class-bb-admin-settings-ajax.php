@@ -147,7 +147,28 @@ class BB_Admin_Settings_Ajax {
 		// toggle can read back OFF while the DB says ON. Dropping the bucket
 		// forces a fresh rebuild from the DB on the next read. Cheap: settings
 		// saves are infrequent admin actions and the rebuild is a single query.
+		//
+		// bp_update_option() stores on the community's root blog
+		// (update_blog_option( bp_get_root_blog_id(), … )) and restores the
+		// current blog before returning, so on multisite the option — and the
+		// stale 'alloptions' bucket ('alloptions' is a blog-scoped, non-global
+		// group) — live on the root blog, which may differ from the blog this
+		// AJAX request is executing on. Switch there before the delete, mirroring
+		// the sibling endpoints in this class (search / directory-page).
+		$switched = false;
+		if ( is_multisite() && function_exists( 'bp_get_root_blog_id' ) ) {
+			$root_blog_id = bp_get_root_blog_id();
+			if ( $root_blog_id && get_current_blog_id() !== $root_blog_id ) {
+				switch_to_blog( $root_blog_id );
+				$switched = true;
+			}
+		}
+
 		wp_cache_delete( 'alloptions', 'options' );
+
+		if ( $switched ) {
+			restore_current_blog();
+		}
 
 		// Component-specific cache invalidation. Only fires when the relevant
 		// component is active so the handler stays usable when, say, Groups
