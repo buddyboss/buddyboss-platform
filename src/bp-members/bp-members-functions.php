@@ -562,8 +562,33 @@ function bp_core_get_user_displayname( $user_id_or_username, $current_user_id = 
 	} else {
 		$last_name_field_id = bp_xprofile_lastname_field_id();
 		if ( in_array( $last_name_field_id, $list_fields ) && ! empty( xprofile_get_field_data( $last_name_field_id, $user_id ) ) ) {
-			$last_name = xprofile_get_field_data( $last_name_field_id, $user_id );
-			$full_name = str_replace( ' ' . $last_name, '', get_the_author_meta( 'display_name', $user_id ) );
+			$last_name    = xprofile_get_field_data( $last_name_field_id, $user_id );
+			$display_name = get_the_author_meta( 'display_name', $user_id );
+
+			// Remove the hidden last name as a whole space-delimited token so it is stripped
+			// wherever it sits in the stored display name - trailing ("First Last"), leading
+			// ("Last First") or a bare "Last" - and multi-word last names are handled, without
+			// mangling a longer word that merely begins with the last name (e.g. "Smithers"
+			// is not truncated when the last name is "Smith"). A plain str_replace of
+			// ' ' . $last_name only matched a space-prefixed trailing token and leaked the
+			// name for every other display-name shape (imports, the wp-admin "Display name
+			// publicly as" dropdown, third-party writes).
+			$full_name = preg_replace( '/(^|\s)' . preg_quote( $last_name, '/' ) . '(?=\s|$)/u', ' ', $display_name );
+			if ( null === $full_name ) {
+				$full_name = $display_name;
+			}
+			$full_name = trim( preg_replace( '/\s+/', ' ', $full_name ) );
+
+			// If only the hidden last name remained, fall back to the (public) first name,
+			// then the nickname, so the viewer still sees a name rather than a blank.
+			if ( '' === $full_name ) {
+				$first_name_field_id = bp_xprofile_firstname_field_id();
+				$full_name           = $first_name_field_id ? (string) xprofile_get_field_data( $first_name_field_id, $user_id ) : '';
+				$full_name           = trim( $full_name );
+				if ( '' === $full_name ) {
+					$full_name = get_the_author_meta( 'nickname', $user_id );
+				}
+			}
 		} else {
 			$full_name = get_the_author_meta( 'display_name', $user_id );
 		}

@@ -98,6 +98,46 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 	}
 
 	/**
+	 * bp_core_get_user_displayname() must strip a hidden last name wherever it sits in the
+	 * stored display_name - a bare "Last", a "Last First" order, or any value not written by
+	 * BuddyBoss's "First Last" sync (the wp-admin "Display name publicly as" dropdown,
+	 * importers, other plugins). A plain str_replace of ' ' . $last_name only matched a
+	 * space-prefixed trailing token and leaked the name for every other shape.
+	 *
+	 * @group bb_activity_get_item_user_displayname
+	 */
+	public function test_get_user_displayname_strips_hidden_last_name_in_any_order() {
+		$member = self::factory()->user->create();
+
+		// Bare last name (display_name is only the hidden last name): a guest must not see it;
+		// it falls back to the public first name.
+		$u1 = $this->create_member_with_hidden_last_name();
+		wp_update_user( array( 'ID' => $u1, 'display_name' => 'Zebrastripe' ) );
+		$GLOBALS['bb_default_display_avatar'] = true;
+		$this->set_current_user( 0 );
+		$this->assertStringNotContainsString( 'Zebrastripe', bp_core_get_user_displayname( $u1, 0 ) );
+		$GLOBALS['bb_default_display_avatar'] = true;
+		$this->assertSame( 'Peter', bp_core_get_user_displayname( $u1, 0 ) );
+
+		// Last-first order.
+		$u2 = $this->create_member_with_hidden_last_name();
+		wp_update_user( array( 'ID' => $u2, 'display_name' => 'Zebrastripe Peter' ) );
+		$GLOBALS['bb_default_display_avatar'] = true;
+		$this->set_current_user( 0 );
+		$this->assertSame( 'Peter', bp_core_get_user_displayname( $u2, 0 ) );
+
+		// Control: normal "First Last" still redacts to the first name for a guest and stays
+		// full for a logged-in member.
+		$u3 = $this->create_member_with_hidden_last_name();
+		$GLOBALS['bb_default_display_avatar'] = true;
+		$this->set_current_user( 0 );
+		$this->assertSame( 'Peter', bp_core_get_user_displayname( $u3, 0 ) );
+		$GLOBALS['bb_default_display_avatar'] = true;
+		$this->set_current_user( $member );
+		$this->assertSame( 'Peter Zebrastripe', bp_core_get_user_displayname( $u3, $member ) );
+	}
+
+	/**
 	 * The comment tree is cached per activity with no viewer in the key. A tree cached
 	 * while a member viewed it must not hand that member's `user_fullname` to a guest.
 	 *
