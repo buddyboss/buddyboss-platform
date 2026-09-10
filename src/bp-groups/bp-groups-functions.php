@@ -4046,6 +4046,8 @@ function bp_group_get_count_by_group_type( $group_type = '', $taxonomy = 'bp_gro
  *
  * @since BuddyBoss 1.0.0
  *
+ * @since BuddyBoss [BBVERSION] The 'type' attribute also accepts a group type post ID.
+ *
  * @param $atts
  *
  * @return false|string
@@ -4062,14 +4064,14 @@ function bp_group_type_short_code_callback( $atts ) {
 				</div>
 				<div id="groups-dir-list" class="groups dir-list">
 					<?php
-					$atts['group_type'] = $atts['type'];
+					// Accepts a group type key, or a group type post ID for back-compat.
+					$group_type_key     = bb_group_type_shortcode_resolve_key( $atts['type'] );
+					$atts['group_type'] = $group_type_key;
 
-					if ( ! empty( $atts['type'] ) ) {
+					if ( ! empty( $group_type_key ) ) {
 
-						$name = str_replace( array( ' ', ',' ), array( '-', '-' ), strtolower( $atts['type'] ) );
-
-						// Set the "current" profile type, if one is provided, in member directories.
-						buddypress()->groups->current_directory_type = $name;
+						// Set the "current" group type, if one is provided, in group directories.
+						buddypress()->groups->current_directory_type = $group_type_key;
 						buddypress()->current_component              = 'groups';
 						buddypress()->is_directory                   = true;
 					}
@@ -5734,4 +5736,53 @@ function bb_groups_members( $group_id = 0, $role = array( 'member', 'mod', 'admi
 		</span>
 		<?php
 	}
+}
+
+/**
+ * Resolves a group type key from a provided value for use in the group shortcode.
+ *
+ * Accepts a group type key or a group type post ID and returns the corresponding key.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string|int $type Group type key or post ID.
+ *
+ * @return string Group type key.
+ */
+function bb_group_type_shortcode_resolve_key( $type ) {
+	$type = trim( (string) $type );
+
+	if ( '' === $type ) {
+		return '';
+	}
+
+	$key = str_replace( array( ' ', ',' ), array( '-', '-' ), strtolower( $type ) );
+
+	// A registered key wins outright (this also covers a key that happens to be
+	// all-digits). Only when the value is not a registered key and is purely
+	// numeric do we treat it as a legacy group type post ID and resolve its key.
+	if ( null === bp_groups_get_group_type_object( $key ) && ctype_digit( $type ) ) {
+		$type_post = get_post( absint( $type ) );
+
+		if (
+			$type_post instanceof WP_Post
+			&& bp_groups_get_group_type_post_type() === $type_post->post_type
+		) {
+			$resolved_key = bp_group_get_group_type_key( $type_post->ID );
+
+			if ( ! empty( $resolved_key ) ) {
+				$key = sanitize_key( $resolved_key );
+			}
+		}
+	}
+
+	/**
+	 * Filter resolved group type key for shortcode usage.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $key  The resolved group type key.
+	 * @param string $type The original type value passed in.
+	 */
+	return apply_filters( 'bb_group_type_shortcode_resolve_key', $key, $type );
 }
