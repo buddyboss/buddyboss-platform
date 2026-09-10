@@ -1171,7 +1171,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 		 * @return string Release notes page URL.
 		 */
 		public function bb_get_release_notes_page_url( $version = '', $page_base = '' ) {
-			$url = ! empty( $page_base ) ? $page_base : 'https://www.buddyboss.com/resources/buddyboss-platform-releases/';
+			$url = ! empty( $page_base ) ? trailingslashit( $page_base ) : 'https://www.buddyboss.com/resources/buddyboss-platform-releases/';
 
 			// The version comes from the update feed; keep only digits and dots so a
 			// mangled value cannot alter the URL path.
@@ -1256,7 +1256,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 				}
 			}
 
-			if ( ! empty( $html ) ) {
+			if ( '' !== $html ) {
 				// The release feed contains tags whose closing bracket is missing at
 				// line ends (e.g. "</ul\r\n"); repair them so wp_kses_post() does not
 				// escape the fragment into visible text, then balance whatever is left.
@@ -1268,11 +1268,9 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 					$html = $repaired;
 				}
 				$html = force_balance_tags( wp_kses_post( $html ) );
-			} else {
-				$html = '';
 			}
 
-			set_transient( $cache_key, $html, ! empty( $html ) ? 12 * HOUR_IN_SECONDS : HOUR_IN_SECONDS );
+			set_transient( $cache_key, $html, '' !== $html ? 12 * HOUR_IN_SECONDS : HOUR_IN_SECONDS );
 
 			return $html;
 		}
