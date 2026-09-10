@@ -574,10 +574,12 @@ function bp_core_get_user_displayname( $user_id_or_username, $current_user_id = 
 			// name for every other display-name shape (imports, the wp-admin "Display name
 			// publicly as" dropdown, third-party writes).
 			$full_name = preg_replace( '/(^|\s)' . preg_quote( $last_name, '/' ) . '(?=\s|$)/u', ' ', $display_name );
-			if ( null === $full_name ) {
-				$full_name = $display_name;
-			}
-			$full_name = trim( preg_replace( '/\s+/', ' ', $full_name ) );
+
+			// preg_replace() returns null only on failure (e.g. malformed UTF-8 in the stored
+			// display name, as legacy/imported rows can carry). Fail closed: never fall back to
+			// the raw display name, which still holds the hidden last name - treat it as "nothing
+			// left" so the public first-name/nickname fallback below applies instead of leaking.
+			$full_name = ( null === $full_name ) ? '' : trim( preg_replace( '/\s+/', ' ', $full_name ) );
 
 			// If only the hidden last name remained, fall back to the (public) first name,
 			// then the nickname, so the viewer still sees a name rather than a blank.
