@@ -1132,8 +1132,8 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 				'name'          => __( 'BuddyBoss Platform', 'buddyboss' ),
 				'slug'          => $args->slug,
 				'version'       => $new_version,
-				'author'        => '<a href="https://www.buddyboss.com/" target="_blank" rel="noopener noreferrer">BuddyBoss</a>',
-				'homepage'      => 'https://www.buddyboss.com/',
+				'author'        => '<a href="https://buddyboss.com/" target="_blank" rel="noopener noreferrer">BuddyBoss</a>',
+				'homepage'      => 'https://buddyboss.com/',
 				'last_updated'  => '',
 				'sections'      => array(
 					'description' => '<p>' . esc_html__( 'The BuddyBoss Platform adds community features to WordPress. Member Profiles, Activity Feeds, Direct Messaging, Notifications, and more!', 'buddyboss' ) . '</p>',
@@ -1171,11 +1171,14 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 		 * @return string Release notes page URL.
 		 */
 		public function bb_get_release_notes_page_url( $version = '', $page_base = '' ) {
-			$url = ! empty( $page_base ) ? trailingslashit( $page_base ) : 'https://www.buddyboss.com/resources/buddyboss-platform-releases/';
+			$url = ! empty( $page_base ) ? trailingslashit( $page_base ) : 'https://buddyboss.com/resources/buddyboss-platform-releases/';
 
-			// The version comes from the update feed; keep only digits and dots so a
-			// mangled value cannot alter the URL path.
-			$version = preg_replace( '/[^0-9.]/', '', (string) $version );
+			// The version comes from the update feed; keep only the leading run of
+			// digits and dots so a suffixed version (e.g. 3.4.4-beta1) truncates to
+			// its base (3.4.4) instead of splicing into 3.4.41, and a mangled value
+			// cannot alter the URL path.
+			preg_match( '/^[0-9.]+/', (string) $version, $matches );
+			$version = isset( $matches[0] ) ? $matches[0] : '';
 
 			if ( ! empty( $version ) ) {
 				$url .= str_replace( '.', '-', $version ) . '/';
@@ -1204,9 +1207,12 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 		 * @return string Sanitized release notes HTML, or empty string if unavailable.
 		 */
 		public function bb_get_release_notes_html( $version, $rest_base = 'releases-platform' ) {
-			// The version comes from the update feed; keep only digits and dots so a
-			// mangled value cannot inject extra query arguments into the request.
-			$version   = preg_replace( '/[^0-9.]/', '', (string) $version );
+			// The version comes from the update feed; keep only the leading run of
+			// digits and dots so a suffixed version (e.g. 3.4.4-beta1) truncates to
+			// its base (3.4.4) instead of splicing into 3.4.41, and a mangled value
+			// cannot inject extra query arguments into the request.
+			preg_match( '/^[0-9.]+/', (string) $version, $matches );
+			$version   = isset( $matches[0] ) ? $matches[0] : '';
 			$rest_base = sanitize_key( str_replace( '/', '', (string) $rest_base ) );
 
 			$cache_key = 'bb_release_notes_' . md5( $rest_base . '_' . $version );
