@@ -986,6 +986,14 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 		 * bb_plugins_api_information() serves the plugin information for it locally,
 		 * so the links open a working modal instead of a WordPress.org 404.
 		 *
+		 * Both transient keys matter, for two different core paths: 'response'
+		 * feeds wp_plugin_update_row() (the update notice's "View version x.x.x
+		 * details" link), while WP_Plugins_List_Table::prepare_items() merges
+		 * whichever of 'response' or 'no_update' holds the plugin into the row's
+		 * data, and that is where the row's own "View details" link gets its
+		 * slug. Dropping 'no_update' would therefore lose that link in the
+		 * common, already-up-to-date case.
+		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
 		 * @param mixed $value Value of the 'update_plugins' site transient.
@@ -1099,7 +1107,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 
 			$plugin_file = $this->bb_get_platform_plugin_file();
 
-			if ( $this->bb_get_platform_plugin_slug() !== $args->slug ) {
+			if ( dirname( $plugin_file ) !== $args->slug ) {
 				return $result;
 			}
 
