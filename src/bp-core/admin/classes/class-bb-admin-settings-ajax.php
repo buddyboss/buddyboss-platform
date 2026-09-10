@@ -135,6 +135,20 @@ class BB_Admin_Settings_Ajax {
 
 		bp_update_option( $option_name, $option_value );
 
+		// Force the autoloaded-options cache to match the DB after the write.
+		//
+		// These options are autoloaded, so get_option() reads them from the
+		// persistent 'alloptions' cache bucket (Redis / Object Cache Pro here).
+		// If that bucket is ever out of sync with the DB, core's update_option()
+		// cannot heal it: when the row already holds the submitted value,
+		// $wpdb->update() reports 0 changed rows, update_option() returns early
+		// ('if ( ! $result ) return false;') and never refreshes the cache. The
+		// next get_option()/refresh then keeps serving the stale value, so a
+		// toggle can read back OFF while the DB says ON. Dropping the bucket
+		// forces a fresh rebuild from the DB on the next read. Cheap: settings
+		// saves are infrequent admin actions and the rebuild is a single query.
+		wp_cache_delete( 'alloptions', 'options' );
+
 		// Component-specific cache invalidation. Only fires when the relevant
 		// component is active so the handler stays usable when, say, Groups
 		// is deactivated but a Members option is being saved.
