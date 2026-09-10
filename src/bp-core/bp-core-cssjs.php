@@ -955,11 +955,15 @@ function bb_load_emoji_detection_script() {
 			/**
 			 * Filters the URL where emoji png images are hosted.
 			 *
+			 * Defaults to WordPress core's own `emoji_url` filter so the
+			 * base URL always matches the emoji set bundled with the
+			 * site's current WordPress version instead of a hardcoded one.
+			 *
 			 * @since BuddyBoss 2.4.40
 			 *
 			 * @param string $url The emoji base URL for png images.
 			 */
-			'baseUrl' => apply_filters( 'bb_emoji_url', 'https://s.w.org/images/core/emoji/14.0.0/72x72/' ),
+			'baseUrl' => apply_filters( 'bb_emoji_url', apply_filters( 'emoji_url', 'https://s.w.org/images/core/emoji/17.0.2/72x72/' ) ),
 
 			/**
 			 * Filters the extension of the emoji png files.
@@ -973,11 +977,15 @@ function bb_load_emoji_detection_script() {
 			/**
 			 * Filters the URL where emoji SVG images are hosted.
 			 *
+			 * Defaults to WordPress core's own `emoji_svg_url` filter so the
+			 * base URL always matches the emoji set bundled with the
+			 * site's current WordPress version instead of a hardcoded one.
+			 *
 			 * @since BuddyBoss 2.4.40
 			 *
 			 * @param string $url The emoji base URL for svg images.
 			 */
-			'svgUrl'  => apply_filters( 'bb_emoji_svg_url', 'https://s.w.org/images/core/emoji/14.0.0/svg/' ),
+			'svgUrl'  => apply_filters( 'bb_emoji_svg_url', apply_filters( 'emoji_svg_url', 'https://s.w.org/images/core/emoji/17.0.2/svg/' ) ),
 
 			/**
 			 * Filters the extension of the emoji SVG files.
