@@ -4741,19 +4741,17 @@ function bb_drafts_cleanup_on_upgrade() {
 	// both the continuation AND the remaining migrations in this routine, with
 	// no retry. Scheduling first means the healing still finishes on cron even
 	// if this request dies (H1).
-	if ( ! wp_next_scheduled( 'bb_draft_oneshot' ) ) {
-		wp_schedule_single_event( time() + MINUTE_IN_SECONDS, 'bb_draft_oneshot' );
-	}
+	// Scheduled on the ROOT blog: the healing is network-wide but this updater
+	// runs on whichever subsite's admin loads first after the version bump, and
+	// cron events are per-blog - so a naive schedule here could strand the
+	// continuation on a low-traffic subsite's cron (L10).
+	bb_draft_oneshot_schedule( MINUTE_IN_SECONDS );
 
 	$result = bb_drafts_oneshot_batch( 10 );
 
 	// Finished inside this request after all, so the queued continuation has
 	// nothing left to do.
 	if ( ! empty( $result['complete'] ) ) {
-		$scheduled = wp_next_scheduled( 'bb_draft_oneshot' );
-
-		if ( $scheduled ) {
-			wp_unschedule_event( $scheduled, 'bb_draft_oneshot' );
-		}
+		bb_draft_oneshot_unschedule();
 	}
 }

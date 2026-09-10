@@ -155,8 +155,12 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		}
 
 		$forum_id = self::factory()->post->create( array( 'post_type' => bbp_get_forum_post_type() ) );
-		$topic_id = self::factory()->post->create( array( 'post_type' => bbp_get_topic_post_type() ) );
-		$reply_id = self::factory()->post->create( array( 'post_type' => bbp_get_reply_post_type() ) );
+		$topic_id = self::factory()->post->create( array( 'post_type' => bbp_get_topic_post_type(), 'post_parent' => $forum_id ) );
+		// A legitimate reply BELONGS to the topic named in its key (L9): the
+		// validator now rejects a reply from a different topic, so the fixture
+		// must set that membership for the valid-shape assertion below.
+		$reply_id = self::factory()->post->create( array( 'post_type' => bbp_get_reply_post_type(), 'post_parent' => $topic_id ) );
+		update_post_meta( $reply_id, '_bbp_topic_id', $topic_id );
 
 		// The five shapes the forum composer builds.
 		$this->assertTrue( bb_draft_validate_topic_reply_data_key( 'draft_topic' ) );
@@ -2465,6 +2469,48 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 		$this->assertArrayNotHasKey( 'draft_reply_big', $row );
 		$this->assertSame( '', (string) get_post_meta( $dropped, 'bb_media_draft', true ), 'The dropped draft releases its attachment.' );
 		$this->assertSame( '1', (string) get_post_meta( $kept, 'bb_media_draft', true ), 'The surviving draft keeps its attachment protected.' );
+	}
+
+	/**
+	 * L8 fan-out coverage: bb_draft_heal_forum_row() does the same cross-row merge
+	 * as bb_draft_dispose(); its own attachment test only exercised same-row
+	 * retain. Healing away a forum inner draft must not release a stamp a DIFFERENT
+	 * stored row still references.
+	 *
+	 * Mutation check: drop the bb_draft_collect_other_row_referenced_ids() seed in
+	 * bb_draft_heal_forum_row() and this goes red.
+	 */
+	public function test_forum_row_heal_keeps_a_stamp_another_row_references() {
+		$user_id = self::factory()->user->create();
+
+		$shared = $this->make_stamped_unsaved_attachment( $user_id );
+
+		// Referenced by an ACTIVITY/group row AND by an OVERSIZED forum inner
+		// draft that the heal will drop.
+		bp_update_user_meta( $user_id, 'draft_group_5', array( 'data' => array( 'media' => array( array( 'id' => $shared ) ) ) ) );
+		bp_update_user_meta(
+			$user_id,
+			'bb_user_topic_reply_draft',
+			array(
+				'draft_reply_big' => array(
+					'data_key'        => 'draft_reply_big',
+					'_draft_saved_at' => 100,
+					'data'            => array(
+						'bbp_reply_content' => str_repeat( 'x', bb_draft_max_size() + 100 ),
+						'bbp_media'         => wp_json_encode( array( array( 'id' => $shared ) ) ),
+					),
+				),
+			)
+		);
+		bb_draft_flush_user_meta_sizes( $user_id );
+
+		bb_draft_heal_forum_row( $user_id );
+
+		$this->assertSame(
+			'1',
+			(string) get_post_meta( $shared, 'bb_media_draft', true ),
+			'Healing away a forum inner draft must not release a stamp a DIFFERENT row still references (L8 fan-out).'
+		);
 	}
 
 	/**
@@ -6059,6 +6105,63 @@ class BP_Tests_Core_Drafts extends BP_UnitTestCase {
 			(string) get_post_meta( $shared, 'bb_media_draft', true ),
 			'A cross-row-referenced attachment must keep its stamp on a replaced-entry release (L8).'
 		);
+	}
+
+	/**
+	 * L9: a draft_reply_<topic>_<reply> key must verify the reply actually
+	 * belongs to the named topic. Validating the two halves independently let a
+	 * member pair a public topic with a reply id from an unrelated (possibly
+	 * private) forum - the forum_id gate is derived from the topic, so the
+	 * reply's real forum was never checked, and "reply exists" vs "does not"
+	 * reopened the L1 existence/post-type oracle for the reply shape.
+	 *
+	 * Mutation check: drop the bbp_get_reply_topic_id() === topic check and the
+	 * cross-topic pairing resolves instead of being rejected.
+	 */
+	public function test_reply_key_rejects_a_reply_from_a_different_topic() {
+		if ( ! bp_is_active( 'forums' ) ) {
+			$this->markTestSkipped( 'Forums component inactive.' );
+		}
+
+		$forum_a = self::factory()->post->create( array( 'post_type' => bbp_get_forum_post_type() ) );
+		$topic_a = self::factory()->post->create( array( 'post_type' => bbp_get_topic_post_type(), 'post_parent' => $forum_a ) );
+		$reply_a = self::factory()->post->create( array( 'post_type' => bbp_get_reply_post_type(), 'post_parent' => $topic_a ) );
+		update_post_meta( $reply_a, '_bbp_topic_id', $topic_a );
+		update_post_meta( $reply_a, '_bbp_forum_id', $forum_a );
+
+		$forum_b = self::factory()->post->create( array( 'post_type' => bbp_get_forum_post_type() ) );
+		$topic_b = self::factory()->post->create( array( 'post_type' => bbp_get_topic_post_type(), 'post_parent' => $forum_b ) );
+		$reply_b = self::factory()->post->create( array( 'post_type' => bbp_get_reply_post_type(), 'post_parent' => $topic_b ) );
+		update_post_meta( $reply_b, '_bbp_topic_id', $topic_b );
+		update_post_meta( $reply_b, '_bbp_forum_id', $forum_b );
+
+		// The reply that DOES belong to topic A resolves.
+		$own = bb_draft_topic_reply_key_context( 'draft_reply_' . $topic_a . '_' . $reply_a );
+		$this->assertIsArray( $own, 'A reply that belongs to the named topic must resolve.' );
+		$this->assertSame( $reply_a, $own['reply_id'] );
+
+		// A reply from a DIFFERENT topic/forum must be rejected identically to a
+		// non-existent one - no oracle.
+		$this->assertFalse(
+			bb_draft_topic_reply_key_context( 'draft_reply_' . $topic_a . '_' . $reply_b ),
+			'A reply from a different topic must be rejected, not resolved (L9 oracle).'
+		);
+	}
+
+	/**
+	 * L10: bb_draft_oneshot_schedule()/_unschedule() queue and clear the healing
+	 * continuation. The root-blog pinning is multisite-only (documented, not
+	 * exercisable in this single-site suite); this locks the core mechanism.
+	 */
+	public function test_oneshot_schedule_helper_queues_and_clears_the_event() {
+		bb_draft_oneshot_unschedule();
+		$this->assertFalse( wp_next_scheduled( 'bb_draft_oneshot' ), 'Precondition: nothing scheduled.' );
+
+		bb_draft_oneshot_schedule( 60 );
+		$this->assertNotFalse( wp_next_scheduled( 'bb_draft_oneshot' ), 'The helper must queue the one-shot event.' );
+
+		bb_draft_oneshot_unschedule();
+		$this->assertFalse( wp_next_scheduled( 'bb_draft_oneshot' ), 'Unschedule must clear the event.' );
 	}
 
 	/**

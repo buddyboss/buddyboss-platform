@@ -1197,6 +1197,7 @@ window.bp = window.bp || {};
 				} else if ( ! _.isUndefined( bbRlActivity.params.draft_activity.data_key ) ) {
 					bp.old_draft_data = bbRlActivity.params.draft_activity.data;
 					bp.draft_activity = bbRlActivity.params.draft_activity;
+					bp.draft_activity.data = self.restoreVideoJsPreview( bp.draft_activity.data, bp.old_draft_data );
 					// Route through the quota-safe helper, exactly as the Nouveau pack
 					// does at the equivalent spot. A raw localStorage.setItem() here
 					// would reintroduce the QuotaExceededError path the shedding helper
@@ -1293,6 +1294,8 @@ window.bp = window.bp || {};
 
 					bp.draft_activity = response.draft_activity;
 					bp.old_draft_data = response.draft_activity.data;
+					// Restore video posters by ID (M20) - parity with the Nouveau pack.
+					bp.draft_activity.data = self.restoreVideoJsPreview( bp.draft_activity.data, bp.old_draft_data );
 
 					// Routed through the shedding helper (ported from the nouveau
 					// pack) rather than a bare setItem: a large video draft can
@@ -1567,6 +1570,32 @@ window.bp = window.bp || {};
 			$form.prepend( $( '<div class="bb-draft-save-feedback" role="alert"></div>' ).text( message ) );
 		},
 
+		// Splice a video's base64 js_preview poster back in by matching video IDs
+		// against a pre-overwrite backup. The server needs that frame to build the
+		// video's real thumbnail on publish (bp_video_base64_to_jpeg); a shed copy
+		// that later becomes the working draft would otherwise publish with no
+		// thumbnail. Ported from the Nouveau pack, which had it and RL did not
+		// (M20). "A missing poster beats a lost draft."
+		restoreVideoJsPreview: function ( draft_data, backup_data ) {
+			if ( draft_data && draft_data.video && draft_data.video.length &&
+				backup_data && backup_data.video && backup_data.video.length ) {
+				for ( var i = 0; i < draft_data.video.length; i++ ) {
+					for ( var j = 0; j < backup_data.video.length; j++ ) {
+						if ( draft_data.video[i].id && backup_data.video[j].id &&
+							draft_data.video[i].id === backup_data.video[j].id ) {
+							if ( backup_data.video[j].js_preview ) {
+								draft_data.video[i].js_preview = backup_data.video[j].js_preview;
+							}
+							break;
+						}
+					}
+				}
+				$( 'form.draft-video-uploading.media-uploading' ).removeClass( 'draft-video-uploading media-uploading' );
+			}
+
+			return draft_data;
+		},
+
 		collectDraftActivity: function () {
 			var self = this,
 				meta = {};
@@ -1773,7 +1802,11 @@ window.bp = window.bp || {};
 			// Set Draft activity data.
 			self.checkedActivityDataChanged( bp.old_draft_data, data );
 
+			// Back up the current data before overwriting, then splice the video
+			// posters back in by ID (M20) - parity with the Nouveau pack.
+			var bak_draft_activity_data = bp.draft_activity.data;
 			bp.draft_activity.data = data;
+			bp.draft_activity.data = self.restoreVideoJsPreview( bp.draft_activity.data, bak_draft_activity_data );
 			// Route through the shedding helper, not a raw setItem: a video-heavy
 			// draft can exceed the localStorage quota, and an uncaught QuotaExceededError
 			// here aborts the composer-close/modal handlers BEFORE postDraftActivity()

@@ -1682,6 +1682,18 @@ function bb_draft_topic_reply_key_context( $data_key ) {
 				return false;
 			}
 
+			// The reply must belong to the TOPIC named in the same key. Without
+			// this the two halves are validated independently, so a member could
+			// pair a public topic they can view with a reply id from an unrelated
+			// (possibly private) forum: forum_id below is derived from the topic,
+			// so the reply's real forum is never gated, and the "reply exists / is
+			// a reply" vs "does not" outcomes reopen the L1 existence/post-type
+			// oracle for the reply shape. Tying it to the topic collapses both
+			// outcomes into the same indistinguishable rejection (L9).
+			if ( (int) bbp_get_reply_topic_id( (int) $matches[2] ) !== (int) $matches[1] ) {
+				return false;
+			}
+
 			$context['reply_id'] = (int) $matches[2];
 		}
 
@@ -2534,8 +2546,8 @@ function bb_drafts_oneshot_batch( $time_budget = 10 ) {
 	// call is pre-scheduled defensively. Schedule the continuation up front and
 	// cancel it at the end if this slice finishes. Time-limited (cron) slices
 	// only; the WP-CLI drain ($time_budget 0) loops to completion itself.
-	if ( 0 < $time_budget && ! get_site_option( 'bb_draft_oneshot_done' ) && ! wp_next_scheduled( 'bb_draft_oneshot' ) ) {
-		wp_schedule_single_event( time() + 2 * MINUTE_IN_SECONDS, 'bb_draft_oneshot' );
+	if ( 0 < $time_budget && ! get_site_option( 'bb_draft_oneshot_done' ) ) {
+		bb_draft_oneshot_schedule( 2 * MINUTE_IN_SECONDS );
 	}
 
 	// Serialize overlapping triggers. Two concurrent admin requests in the
@@ -2717,13 +2729,10 @@ function bb_drafts_oneshot_batch( $time_budget = 10 ) {
 		update_site_option( 'bb_draft_oneshot_done', 1 );
 		delete_site_option( 'bb_draft_oneshot_state' );
 
-		// Nothing left to resume - cancel the defensive continuation.
-		$scheduled = wp_next_scheduled( 'bb_draft_oneshot' );
-		if ( $scheduled ) {
-			wp_unschedule_event( $scheduled, 'bb_draft_oneshot' );
-		}
-	} elseif ( ! wp_next_scheduled( 'bb_draft_oneshot' ) ) {
-		wp_schedule_single_event( time() + MINUTE_IN_SECONDS, 'bb_draft_oneshot' );
+		// Nothing left to resume - cancel the defensive continuation (on root).
+		bb_draft_oneshot_unschedule();
+	} else {
+		bb_draft_oneshot_schedule( MINUTE_IN_SECONDS );
 	}
 
 	// Released after the state and the schedule are settled, so a run starting
@@ -2734,6 +2743,70 @@ function bb_drafts_oneshot_batch( $time_budget = 10 ) {
 		'healed'   => $healed,
 		'complete' => $complete,
 	);
+}
+
+
+/**
+ * Schedule the one-shot healing continuation on the ROOT blog.
+ *
+ * The one-shot heals network-GLOBAL draft usermeta and tracks its progress in
+ * network-global site options, so it must run once network-wide. It is triggered
+ * by bp_version_updater() on whichever blog's admin loads first after the
+ * DB-version bump, but WP-Cron events live in the PER-BLOG cron table - so
+ * scheduling on the current blog can strand the continuation on a low-traffic
+ * subsite's cron where it never fires, while the version stays bumped so nothing
+ * re-triggers it (L10). Pin every schedule/check of this event to the root blog,
+ * mirroring bb_draft_cleanup_hook's root-only gate. The synchronous slice itself
+ * still runs on the current blog - it operates on the global usermeta either way.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int $delay Seconds from now to run.
+ * @return void
+ */
+function bb_draft_oneshot_schedule( $delay ) {
+	$switched = false;
+
+	if ( is_multisite() && ! bp_is_root_blog() ) {
+		switch_to_blog( bp_get_root_blog_id() );
+		$switched = true;
+	}
+
+	if ( ! wp_next_scheduled( 'bb_draft_oneshot' ) ) {
+		wp_schedule_single_event( time() + (int) $delay, 'bb_draft_oneshot' );
+	}
+
+	if ( $switched ) {
+		restore_current_blog();
+	}
+}
+
+/**
+ * Cancel the root-blog one-shot healing continuation.
+ *
+ * Companion to {@see bb_draft_oneshot_schedule()} - the event lives on the root
+ * blog's cron table, so it must be looked up and cleared there too (L10).
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_draft_oneshot_unschedule() {
+	$switched = false;
+
+	if ( is_multisite() && ! bp_is_root_blog() ) {
+		switch_to_blog( bp_get_root_blog_id() );
+		$switched = true;
+	}
+
+	$scheduled = wp_next_scheduled( 'bb_draft_oneshot' );
+	if ( $scheduled ) {
+		wp_unschedule_event( $scheduled, 'bb_draft_oneshot' );
+	}
+
+	if ( $switched ) {
+		restore_current_blog();
+	}
 }
 
 /**
