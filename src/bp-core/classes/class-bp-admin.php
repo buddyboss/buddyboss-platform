@@ -997,18 +997,43 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 				return $value;
 			}
 
-			$plugin_file = plugin_basename( buddypress()->basename );
+			$plugin_file = $this->bb_get_platform_plugin_file();
 
 			foreach ( array( 'response', 'no_update' ) as $key ) {
 				// Third-party update managers are known to rewrite this transient
 				// with array entries; assigning a property on one fatals on PHP 8.
 				if ( isset( $value->{$key}[ $plugin_file ] ) && is_object( $value->{$key}[ $plugin_file ] ) ) {
-					$value->{$key}[ $plugin_file ]->slug = dirname( $plugin_file );
-					$value->{$key}[ $plugin_file ]->url  = $this->bb_get_release_notes_page_url();
+					// With the slug set, every core details link resolves through
+					// plugins_api (bb_plugins_api_information); core reads the
+					// entry's 'url' only when the slug is absent, so it is left
+					// untouched here.
+					$value->{$key}[ $plugin_file ]->slug = $this->bb_get_platform_plugin_slug();
 				}
 			}
 
 			return $value;
+		}
+
+		/**
+		 * Get the platform's plugin basename, e.g. 'buddyboss-platform/bp-loader.php'.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @return string Plugin basename.
+		 */
+		protected function bb_get_platform_plugin_file() {
+			return plugin_basename( buddypress()->basename );
+		}
+
+		/**
+		 * Get the platform's plugin directory slug, e.g. 'buddyboss-platform'.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @return string Plugin directory slug.
+		 */
+		protected function bb_get_platform_plugin_slug() {
+			return dirname( $this->bb_get_platform_plugin_file() );
 		}
 
 		/**
@@ -1072,14 +1097,17 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 				return $result;
 			}
 
-			$plugin_file = plugin_basename( buddypress()->basename );
+			$plugin_file = $this->bb_get_platform_plugin_file();
 
-			if ( dirname( $plugin_file ) !== $args->slug ) {
+			if ( $this->bb_get_platform_plugin_slug() !== $args->slug ) {
 				return $result;
 			}
 
 			$new_version = BP_PLATFORM_VERSION;
 			$package     = '';
+			// Note: reading this transient re-runs the site_transient_update_plugins
+			// filters, including bb_fix_plugin_details_link() above — harmless, since
+			// that filter only normalizes the entry's slug.
 			$update_data = get_site_transient( 'update_plugins' );
 
 			if ( ! empty( $update_data->response[ $plugin_file ]->new_version ) ) {
