@@ -5758,11 +5758,10 @@ function bb_group_type_shortcode_resolve_key( $type ) {
 
 	$key = str_replace( array( ' ', ',' ), array( '-', '-' ), strtolower( $type ) );
 
-	if ( null !== bp_groups_get_group_type_object( $key ) ) {
-		return $key;
-	}
-
-	if ( ctype_digit( $type ) ) {
+	// A registered key wins outright (this also covers a key that happens to be
+	// all-digits). Only when the value is not a registered key and is purely
+	// numeric do we treat it as a legacy group type post ID and resolve its key.
+	if ( null === bp_groups_get_group_type_object( $key ) && ctype_digit( $type ) ) {
 		$type_post = get_post( absint( $type ) );
 
 		if (
@@ -5781,6 +5780,7 @@ function bb_group_type_shortcode_resolve_key( $type ) {
 	 * Filter resolved group type key for shortcode usage.
 	 *
 	 * @since BuddyBoss [BBVERSION]
+	 *
 	 * @param string $key  The resolved group type key.
 	 * @param string $type The original type value passed in.
 	 */
