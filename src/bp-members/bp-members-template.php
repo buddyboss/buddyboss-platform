@@ -810,7 +810,8 @@ function bp_member_avatar( $args = '' ) {
 function bp_get_member_avatar( $args = '' ) {
 	global $members_template;
 
-	$fullname = ! empty( $members_template->member->fullname ) ? $members_template->member->fullname : $members_template->member->display_name;
+	// `fullname` is resolved for the current viewer; never fall back to the raw WP display_name.
+	$fullname = ! empty( $members_template->member->fullname ) ? $members_template->member->fullname : bp_core_get_user_displayname( $members_template->member->id );
 
 	$defaults = array(
 		'type'   => 'thumb',

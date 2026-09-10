@@ -4941,7 +4941,7 @@ function bp_get_group_member_avatar( $args = '' ) {
 			'item_id' => $members_template->member->user_id,
 			'type'    => 'full',
 			'email'   => $members_template->member->user_email,
-			'alt'     => sprintf( __( 'Profile photo of %s', 'buddyboss' ), $members_template->member->display_name ),
+			'alt'     => sprintf( __( 'Profile photo of %s', 'buddyboss' ), bb_get_group_member_display_name() ),
 		)
 	);
 
@@ -4983,7 +4983,7 @@ function bp_get_group_member_avatar_thumb( $args = '' ) {
 			'item_id' => $members_template->member->user_id,
 			'type'    => 'thumb',
 			'email'   => $members_template->member->user_email,
-			'alt'     => sprintf( __( 'Profile photo of %s', 'buddyboss' ), $members_template->member->display_name ),
+			'alt'     => sprintf( __( 'Profile photo of %s', 'buddyboss' ), bb_get_group_member_display_name() ),
 		)
 	);
 
@@ -5027,7 +5027,7 @@ function bp_get_group_member_avatar_mini( $width = 30, $height = 30 ) {
 			'item_id' => $members_template->member->user_id,
 			'type'    => 'thumb',
 			'email'   => $members_template->member->user_email,
-			'alt'     => sprintf( __( 'Profile photo of %s', 'buddyboss' ), $members_template->member->display_name ),
+			'alt'     => sprintf( __( 'Profile photo of %s', 'buddyboss' ), bb_get_group_member_display_name() ),
 			'width'   => absint( $width ),
 			'height'  => absint( $height ),
 		)
@@ -5042,6 +5042,34 @@ function bp_get_group_member_avatar_mini( $width = 30, $height = 30 ) {
 	 * @param array  $r     Parsed args used for the avatar query.
 	 */
 	return apply_filters( 'bp_get_group_member_avatar_mini', bp_core_fetch_avatar( $r ), $r );
+}
+
+/**
+ * Get the display name of the current member in the group members loop, as the current viewer may see it.
+ *
+ * Prefers the `fullname` that BP_User_Query populates per viewer (respects last-name
+ * visibility) and falls back to a per-viewer resolution; never the raw WP display_name.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @global BP_Groups_Group_Members_Template $members_template
+ *
+ * @return string
+ */
+function bb_get_group_member_display_name() {
+	global $members_template;
+
+	if ( ! isset( $members_template->member ) ) {
+		return '';
+	}
+
+	if ( ! empty( $members_template->member->fullname ) ) {
+		return $members_template->member->fullname;
+	}
+
+	$name = bp_core_get_user_displayname( bp_get_group_member_id() );
+
+	return is_string( $name ) ? $name : '';
 }
 
 /**
@@ -5070,7 +5098,7 @@ function bp_get_group_member_name() {
 	 *
 	 * @param string $display_name Display name of the current user.
 	 */
-	return apply_filters( 'bp_get_group_member_name', $members_template->member->display_name );
+	return apply_filters( 'bp_get_group_member_name', bb_get_group_member_display_name() );
 }
 
 /**

@@ -1693,9 +1693,12 @@ function bbp_get_author_link( $args = '' ) {
 	// Neither a reply nor a topic, so could be a revision
 	if ( ! empty( $r['post_id'] ) ) {
 
+		// Author name as the current viewer may see it (respects last-name visibility).
+		$author_display_name = bp_core_get_user_displayname( $user_id );
+
 		// Generate title with the display name of the author
 		if ( empty( $r['link_title'] ) ) {
-			$r['link_title'] = sprintf( ! bbp_is_reply_anonymous( $r['post_id'] ) ? __( 'View %s\'s profile', 'buddyboss' ) : __( 'Visit %s\'s website', 'buddyboss' ), get_the_author_meta( 'display_name', $user_id ) );
+			$r['link_title'] = sprintf( ! bbp_is_reply_anonymous( $r['post_id'] ) ? __( 'View %s\'s profile', 'buddyboss' ) : __( 'Visit %s\'s website', 'buddyboss' ), $author_display_name );
 		}
 
 		// Assemble some link bits
@@ -1715,7 +1718,7 @@ function bbp_get_author_link( $args = '' ) {
 
 		// Get display name
 		if ( 'name' === $r['type'] || 'both' === $r['type'] ) {
-			$author_links[] = esc_html( get_the_author_meta( 'display_name', $user_id ) );
+			$author_links[] = esc_html( $author_display_name );
 		}
 
 		// Add links if not anonymous

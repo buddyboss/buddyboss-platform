@@ -1202,7 +1202,7 @@ Bar!';
 		$this->set_current_user( $u );
 
 		$bp                     = buddypress();
-		$displayed_user_backup  = $bp->displayed_user->id;
+		$displayed_user_backup  = isset( $bp->displayed_user->id ) ? $bp->displayed_user->id : 0;
 		$component_backup       = $bp->current_component;
 		$action_backup          = $bp->current_action;
 		$action_vars_backup     = $bp->action_variables;
@@ -1368,5 +1368,83 @@ Bar!';
 		bp_xprofile_update_field_meta( $f, 'allow_custom_visibility', $allow_custom_visibility );
 
 		return $f;
+	}
+
+	/**
+	 * buddypress()->displayed_user->fullname is seeded from the raw WP display_name; the
+	 * xprofile override must always re-resolve it for the current viewer (not only when
+	 * profile sync is disabled), otherwise a hidden last name leaks through every
+	 * bp_get_displayed_user_fullname() consumer — e.g. the member RSS <link> title.
+	 *
+	 * @group xprofile_override_user_fullnames
+	 * @group bp_get_displayed_user_fullname
+	 */
+	public function test_xprofile_override_user_fullnames_respects_viewer_visibility_with_sync_enabled() {
+		$bp                 = buddypress();
+		$displayed_backup   = $bp->displayed_user;
+		$loggedin_backup    = $bp->loggedin_user;
+		$format_backup      = bp_get_option( 'bp-display-name-format' );
+		$sync_backup        = bp_get_option( 'bp-disable-profile-sync' );
+		$xprofile_is_active = bp_is_active( 'xprofile' );
+
+		buddypress()->active_components['xprofile'] = '1';
+		bp_update_option( 'bp-display-name-format', 'first_last_name' );
+		bp_update_option( 'bp-disable-profile-sync', 0 );
+		$this->assertFalse( bp_disable_profile_sync() );
+
+		$u      = self::factory()->user->create();
+		$member = self::factory()->user->create();
+
+		// `profile_update` syncs first/last name into the xprofile fields.
+		wp_update_user(
+			array(
+				'ID'           => $u,
+				'first_name'   => 'Peter',
+				'last_name'    => 'Zebrastripe',
+				'display_name' => 'Peter Zebrastripe',
+			)
+		);
+		xprofile_set_field_visibility_level( bp_xprofile_lastname_field_id(), $u, 'loggedin' );
+
+		// Refresh the per-request name memo primed during user creation.
+		$GLOBALS['bb_default_display_avatar'] = true;
+		bp_core_get_user_displayname( $u, $u );
+
+		// Seed the globals exactly as BP_Members_Component::setup_globals() does (raw column).
+		$bp->displayed_user           = new stdClass();
+		$bp->displayed_user->id       = $u;
+		$bp->displayed_user->userdata = bp_core_get_core_userdata( $u );
+		$bp->displayed_user->fullname = $bp->displayed_user->userdata->display_name;
+		$bp->displayed_user->domain   = bp_core_get_user_domain( $u );
+		$this->assertSame( 'Peter Zebrastripe', $bp->displayed_user->fullname );
+
+		// Guest viewer.
+		$this->set_current_user( 0 );
+		xprofile_override_user_fullnames();
+		$this->assertSame( 'Peter', bp_get_displayed_user_fullname() );
+
+		if ( bp_is_active( 'activity' ) ) {
+			ob_start();
+			bp_members_activity_feed();
+			$rss_link = ob_get_clean();
+			$this->assertStringContainsString( 'rel="alternate"', $rss_link );
+			$this->assertStringNotContainsString( 'Zebrastripe', $rss_link );
+			$this->assertStringContainsString( '| Peter |', $rss_link );
+		}
+
+		// Logged-in member viewer gets the full name.
+		$bp->displayed_user->fullname = $bp->displayed_user->userdata->display_name;
+		$this->set_current_user( $member );
+		xprofile_override_user_fullnames();
+		$this->assertSame( 'Peter Zebrastripe', bp_get_displayed_user_fullname() );
+
+		$GLOBALS['bb_default_display_avatar'] = false;
+		$bp->displayed_user = $displayed_backup;
+		$bp->loggedin_user  = $loggedin_backup;
+		bp_update_option( 'bp-display-name-format', $format_backup );
+		bp_update_option( 'bp-disable-profile-sync', $sync_backup );
+		if ( ! $xprofile_is_active ) {
+			unset( buddypress()->active_components['xprofile'] );
+		}
 	}
 }

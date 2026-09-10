@@ -1795,6 +1795,9 @@ class BP_Activity_Activity {
 
 				$descendants = $wpdb->get_results( $sql );
 
+				// The legacy SELECT joins the raw xprofile name; resolve it for the current viewer.
+				$descendants = self::append_user_fullnames( $descendants );
+
 				// We use the mptt BETWEEN clause to limit returned
 				// descendants to the correct part of the tree.
 			} else {
@@ -2023,9 +2026,75 @@ class BP_Activity_Activity {
 			) {
 				wp_cache_set( $activity_id, $cache_value, 'bp_activity_comments' );
 			}
+		} else {
+			// Cache hit. The cached tree carries the `user_fullname` resolved for the viewer
+			// who populated the cache, but that value depends on the current viewer (last-name
+			// visibility), so re-resolve it for this request instead of serving another
+			// viewer's names.
+			$comments = self::bb_refresh_comment_tree_fullnames( $comments );
 		}
 
 		return $comments;
+	}
+
+	/**
+	 * Re-resolve the viewer-dependent `user_fullname` on a nested activity comment tree.
+	 *
+	 * The comment tree is cached per activity (no viewer in the key), while display names
+	 * are resolved per viewer by bp_core_get_user_displayname() — a hidden last name must
+	 * not leak from one viewer's cached tree into another viewer's response.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array $comments Nested comment tree as returned by get_activity_comments().
+	 * @return array The same tree with `user_fullname` resolved for the current viewer.
+	 */
+	protected static function bb_refresh_comment_tree_fullnames( $comments ) {
+		if ( empty( $comments ) || ! is_array( $comments ) || ! bp_is_active( 'xprofile' ) ) {
+			return $comments;
+		}
+
+		$nodes = array();
+		self::bb_flatten_comment_tree( $comments, $nodes );
+
+		if ( empty( $nodes ) ) {
+			return $comments;
+		}
+
+		$fullnames = bp_core_get_user_displaynames( wp_list_pluck( $nodes, 'user_id' ) );
+		if ( empty( $fullnames ) ) {
+			return $comments;
+		}
+
+		foreach ( $nodes as $node ) {
+			if ( ! empty( $fullnames[ $node->user_id ] ) ) {
+				$node->user_fullname = $fullnames[ $node->user_id ];
+			}
+		}
+
+		return $comments;
+	}
+
+	/**
+	 * Collect every comment object of a nested comment tree into a flat list.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array $comments Nested comment tree (objects with a `children` array).
+	 * @param array $nodes    Accumulator, passed by reference.
+	 */
+	private static function bb_flatten_comment_tree( $comments, &$nodes ) {
+		foreach ( (array) $comments as $comment ) {
+			if ( ! is_object( $comment ) ) {
+				continue;
+			}
+
+			$nodes[] = $comment;
+
+			if ( ! empty( $comment->children ) ) {
+				self::bb_flatten_comment_tree( $comment->children, $nodes );
+			}
+		}
 	}
 
 	/**

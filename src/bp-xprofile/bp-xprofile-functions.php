@@ -728,24 +728,27 @@ function xprofile_update_field_position( $field_id, $position, $field_group_id )
 }
 
 /**
- * Replace the displayed and logged-in users fullnames with the xprofile name, if required.
+ * Replace the displayed and logged-in users fullnames with the xprofile name.
  *
- * The Members component uses the logged-in user's display_name to set the
- * value of buddypress()->loggedin_user->fullname. However, in cases where
- * profile sync is disabled, display_name may diverge from the xprofile
- * fullname field value, and the xprofile field should take precedence.
+ * The Members component uses the raw WP display_name to set the value of
+ * buddypress()->loggedin_user->fullname and buddypress()->displayed_user->fullname.
+ * That stored value always holds the member's full name, while what a given viewer
+ * may see depends on xprofile field visibility (e.g. a last name hidden from
+ * logged-out visitors). Resolving through bp_core_get_user_displayname() applies
+ * the current viewer's visibility, so template tags such as
+ * bp_get_displayed_user_fullname() (RSS <link> titles, feed titles, avatar alt text,
+ * theme-compat post title, oEmbed header) never expose a hidden last name.
+ * It also keeps the names correct when profile sync is disabled and display_name
+ * diverges from the xprofile fields.
  *
  * Runs at bp_setup_globals:100 to ensure that all components have loaded their
  * globals before attempting any overrides.
  *
  * @since BuddyPress 2.0.0
+ * @since BuddyBoss [BBVERSION] Always runs; no longer skipped when profile sync is enabled,
+ *                              so the resolved names respect the current viewer's field visibility.
  */
 function xprofile_override_user_fullnames() {
-	// If sync is enabled, the two names will match. No need to continue.
-	if ( ! bp_disable_profile_sync() ) {
-		return;
-	}
-
 	if ( bp_loggedin_user_id() ) {
 		buddypress()->loggedin_user->fullname = bp_core_get_user_displayname( bp_loggedin_user_id() );
 	}
