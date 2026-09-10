@@ -217,6 +217,11 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			add_action( 'admin_menu', array( $this, 'adjust_buddyboss_menus' ), 100 );
 
 			add_action( 'admin_footer', array( $this, 'bb_display_update_plugin_information' ) );
+
+			// Fix the "View details"/"View version details" links on the Plugins page, which
+			// otherwise point to a WordPress.org plugin_information lookup that always fails.
+			add_filter( 'site_transient_update_plugins', array( $this, 'bb_fix_plugin_details_link' ), 20 );
+			add_filter( 'plugins_api', array( $this, 'bb_plugins_api_information' ), 10, 3 );
 		}
 
 		/**
@@ -969,6 +974,77 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 		}
 
 		/**
+		 * Normalize the platform's update transient entry so its details links work.
+		 *
+		 * BuddyBoss Platform is distributed from BuddyBoss's own servers, not the
+		 * WordPress.org plugin directory. WordPress core builds the "View details"
+		 * (plugin row) and "View version details" (update notice) links from the
+		 * 'slug' it finds on this transient. A missing slug is not an option either:
+		 * core then falls back to $response->id (the plugin file path) or renders
+		 * the external 'url' inside a thickbox iframe, which buddyboss.com refuses
+		 * via X-Frame-Options — both dead ends. So the slug is normalized here and
+		 * bb_plugins_api_information() serves the plugin information for it locally,
+		 * so the links open a working modal instead of a WordPress.org 404.
+		 *
+		 * Both transient keys matter, for two different core paths: 'response'
+		 * feeds wp_plugin_update_row() (the update notice's "View version x.x.x
+		 * details" link), while WP_Plugins_List_Table::prepare_items() merges
+		 * whichever of 'response' or 'no_update' holds the plugin into the row's
+		 * data, and that is where the row's own "View details" link gets its
+		 * slug. Dropping 'no_update' would therefore lose that link in the
+		 * common, already-up-to-date case.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param mixed $value Value of the 'update_plugins' site transient.
+		 *
+		 * @return mixed
+		 */
+		public function bb_fix_plugin_details_link( $value ) {
+			if ( empty( $value ) || ! is_object( $value ) ) {
+				return $value;
+			}
+
+			$plugin_file = $this->bb_get_platform_plugin_file();
+
+			foreach ( array( 'response', 'no_update' ) as $key ) {
+				// Third-party update managers are known to rewrite this transient
+				// with array entries; assigning a property on one fatals on PHP 8.
+				if ( isset( $value->{$key}[ $plugin_file ] ) && is_object( $value->{$key}[ $plugin_file ] ) ) {
+					// With the slug set, every core details link resolves through
+					// plugins_api (bb_plugins_api_information); core reads the
+					// entry's 'url' only when the slug is absent, so it is left
+					// untouched here.
+					$value->{$key}[ $plugin_file ]->slug = $this->bb_get_platform_plugin_slug();
+				}
+			}
+
+			return $value;
+		}
+
+		/**
+		 * Get the platform's plugin basename, e.g. 'buddyboss-platform/bp-loader.php'.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @return string Plugin basename.
+		 */
+		protected function bb_get_platform_plugin_file() {
+			return plugin_basename( buddypress()->basename );
+		}
+
+		/**
+		 * Get the platform's plugin directory slug, e.g. 'buddyboss-platform'.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @return string Plugin directory slug.
+		 */
+		protected function bb_get_platform_plugin_slug() {
+			return dirname( $this->bb_get_platform_plugin_file() );
+		}
+
+		/**
 		 * Display plugin information after plugin successfully updated.
 		 *
 		 * @since BuddyBoss 1.9.1
@@ -1004,6 +1080,216 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 
 			// Clean up the update flag to prevent database bloat.
 			delete_option( '_bb_is_update' );
+		}
+
+		/**
+		 * Serve plugin information for BuddyBoss Platform locally.
+		 *
+		 * Handles the plugin-information modal opened by the plugin row's
+		 * "View details" link and the update notice's "View version x.x.x
+		 * details" link, which otherwise query WordPress.org and return
+		 * "Plugin not found." The changelog section is fetched from the
+		 * buddyboss.com release notes API when available and always links to
+		 * the full release notes page.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param false|object|array $result The result object or array. Default false.
+		 * @param string             $action The type of information being requested from the Plugin Installation API.
+		 * @param object             $args   Plugin API arguments.
+		 *
+		 * @return false|object Plugin information for BuddyBoss Platform, or the original result.
+		 */
+		public function bb_plugins_api_information( $result, $action, $args ) {
+			if ( 'plugin_information' !== $action || empty( $args->slug ) || false !== $result ) {
+				return $result;
+			}
+
+			$plugin_file = $this->bb_get_platform_plugin_file();
+
+			if ( dirname( $plugin_file ) !== $args->slug ) {
+				return $result;
+			}
+
+			$new_version = BP_PLATFORM_VERSION;
+			$package     = '';
+			// Note: reading this transient re-runs the site_transient_update_plugins
+			// filters, including bb_fix_plugin_details_link() above — harmless, since
+			// that filter only normalizes the entry's slug.
+			$update_data = get_site_transient( 'update_plugins' );
+			$update      = isset( $update_data->response[ $plugin_file ] ) ? $update_data->response[ $plugin_file ] : null;
+
+			// Third-party update managers are known to rewrite this transient with
+			// array entries; reading a property off one warns under WP_DEBUG.
+			if ( is_object( $update ) && ! empty( $update->new_version ) ) {
+				$new_version = $update->new_version;
+				$package     = ! empty( $update->package ) ? $update->package : '';
+			}
+
+			$release_url = $this->bb_get_release_notes_page_url( $new_version );
+			$changelog   = $this->bb_get_release_notes_html( $new_version );
+
+			$release_link = sprintf(
+				'<p><a href="%1$s" target="_blank" rel="noopener noreferrer">%2$s</a></p>',
+				esc_url( $release_url ),
+				sprintf(
+					/* translators: %s: version number. */
+					esc_html__( 'View the full release notes for version %s on buddyboss.com', 'buddyboss' ),
+					esc_html( $new_version )
+				)
+			);
+
+			$information = array(
+				'name'          => __( 'BuddyBoss Platform', 'buddyboss' ),
+				'slug'          => $args->slug,
+				'version'       => $new_version,
+				'author'        => '<a href="https://buddyboss.com/" target="_blank" rel="noopener noreferrer">BuddyBoss</a>',
+				'homepage'      => 'https://buddyboss.com/',
+				'last_updated'  => '',
+				'sections'      => array(
+					'description' => '<p>' . esc_html__( 'The BuddyBoss Platform adds community features to WordPress. Member Profiles, Activity Feeds, Direct Messaging, Notifications, and more!', 'buddyboss' ) . '</p>',
+					'changelog'   => $changelog . $release_link,
+				),
+				'download_link' => $package,
+			);
+
+			/**
+			 * Filters the locally served plugin information for BuddyBoss Platform.
+			 *
+			 * @since BuddyBoss [BBVERSION]
+			 *
+			 * @param array  $information Plugin information served to the plugin-information modal.
+			 * @param string $new_version Version number the information describes.
+			 * @param object $args        Plugin API arguments.
+			 */
+			$information = apply_filters( 'bb_platform_plugins_api_information', $information, $new_version, $args );
+
+			return (object) $information;
+		}
+
+		/**
+		 * Get the buddyboss.com release notes page URL.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param string $version   Optional. Version number to link directly to;
+		 *                          empty for the release notes archive.
+		 * @param string $page_base Optional. Release notes archive base URL, so
+		 *                          BuddyBoss add-on plugins can reuse this helper
+		 *                          for their own release pages; defaults to the
+		 *                          Platform releases archive.
+		 *
+		 * @return string Release notes page URL.
+		 */
+		public function bb_get_release_notes_page_url( $version = '', $page_base = '' ) {
+			$url = ! empty( $page_base ) ? trailingslashit( $page_base ) : 'https://buddyboss.com/resources/buddyboss-platform-releases/';
+
+			// The version comes from the update feed; keep only the leading run of
+			// digits and dots so a suffixed version (e.g. 3.4.4-beta1) truncates to
+			// its base (3.4.4) instead of splicing into 3.4.41, and a mangled value
+			// cannot alter the URL path.
+			preg_match( '/^[0-9.]+/', (string) $version, $matches );
+			$version = isset( $matches[0] ) ? $matches[0] : '';
+
+			if ( ! empty( $version ) ) {
+				$url .= str_replace( '.', '-', $version ) . '/';
+			}
+
+			return $url;
+		}
+
+		/**
+		 * Fetch the release notes HTML for a version from buddyboss.com.
+		 *
+		 * Queries the public releases-platform REST endpoint and caches the
+		 * result. A failed or empty response is cached briefly so the Plugins
+		 * screen never hammers the remote site, and the caller falls back to a
+		 * plain release notes link.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param string $version   Version number, e.g. '3.4.4'.
+		 * @param string $rest_base Optional. Releases post type REST base on
+		 *                          buddyboss.com/resources, so BuddyBoss add-on
+		 *                          plugins can reuse this helper for their own
+		 *                          release feeds; defaults to the Platform
+		 *                          releases post type.
+		 *
+		 * @return string Sanitized release notes HTML, or empty string if unavailable.
+		 */
+		public function bb_get_release_notes_html( $version, $rest_base = 'releases-platform' ) {
+			// The version comes from the update feed; keep only the leading run of
+			// digits and dots so a suffixed version (e.g. 3.4.4-beta1) truncates to
+			// its base (3.4.4) instead of splicing into 3.4.41, and a mangled value
+			// cannot inject extra query arguments into the request.
+			preg_match( '/^[0-9.]+/', (string) $version, $matches );
+			$version   = isset( $matches[0] ) ? $matches[0] : '';
+			$rest_base = sanitize_key( str_replace( '/', '', (string) $rest_base ) );
+
+			$cache_key = 'bb_release_notes_' . md5( $rest_base . '_' . $version );
+			$cached    = get_transient( $cache_key );
+
+			if ( false !== $cached ) {
+				return is_string( $cached ) ? $cached : '';
+			}
+
+			$endpoint = add_query_arg(
+				array(
+					'slug'    => str_replace( '.', '-', $version ),
+					'_fields' => 'title,content,link,release_fields',
+				),
+				'https://buddyboss.com/resources/wp-json/wp/v2/' . $rest_base
+			);
+
+			$response = wp_remote_get( $endpoint, array( 'timeout' => 10 ) );
+
+			if ( is_wp_error( $response ) || 200 !== wp_remote_retrieve_response_code( $response ) ) {
+				set_transient( $cache_key, '', HOUR_IN_SECONDS );
+
+				return '';
+			}
+
+			$items = json_decode( wp_remote_retrieve_body( $response ), true );
+			$html  = '';
+
+			if ( is_array( $items ) && ! empty( $items[0] ) && is_array( $items[0] ) ) {
+				$item = $items[0];
+
+				if ( ! empty( $item['content']['rendered'] ) ) {
+					$html = $item['content']['rendered'];
+				} elseif ( ! empty( $item['release_fields'] ) ) {
+					$fields = $item['release_fields'];
+
+					if ( is_string( $fields ) ) {
+						$html = $fields;
+					} elseif ( is_array( $fields ) ) {
+						foreach ( array( 'changelog', 'changes', 'release_notes', 'content' ) as $field_key ) {
+							if ( ! empty( $fields[ $field_key ] ) && is_string( $fields[ $field_key ] ) ) {
+								$html = $fields[ $field_key ];
+								break;
+							}
+						}
+					}
+				}
+			}
+
+			if ( '' !== $html ) {
+				// The release feed contains tags whose closing bracket is missing at
+				// line ends (e.g. "</ul\r\n"); repair them so wp_kses_post() does not
+				// escape the fragment into visible text, then balance whatever is left.
+				// Trade-off: a valid tag split across lines ("<a\nhref=...") or prose
+				// like "a <b\n" gets closed early — always safe after kses, and the
+				// feed is a flat single-line-per-tag list, so accepted.
+				$repaired = preg_replace( '/<(\/?[a-z][a-z0-9]*)(?=\s*(?:\r|\n|$))/i', '<$1>', $html );
+				if ( null !== $repaired ) {
+					$html = $repaired;
+				}
+				$html = force_balance_tags( wp_kses_post( $html ) );
+			}
+
+			set_transient( $cache_key, $html, '' !== $html ? 12 * HOUR_IN_SECONDS : HOUR_IN_SECONDS );
+
+			return $html;
 		}
 	}
 endif; // End class_exists check.
