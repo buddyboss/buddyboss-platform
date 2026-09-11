@@ -386,6 +386,124 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 	}
 
 	/**
+	 * The members directory renders names through bp_member_name()/bp_get_member_name(), which had
+	 * no test at all and was still on the pre-fix logic: it preferred the loop's own `fullname`,
+	 * fell back to the raw display_name column when that was unset, and redacted with a naive
+	 * str_replace( ' ' . $last_name, ... ).
+	 *
+	 * Both halves are exercised here. `populate_extras => false` is the realistic path that leaves
+	 * `fullname` unset - widgets and custom loops use it - and the drifted columns are the shapes
+	 * the naive strip silently no-ops on.
+	 *
+	 * @group bb_member_directory
+	 */
+	public function test_members_loop_name_hides_last_name_from_guest() {
+		$user_id = $this->create_member_with_hidden_surname( 'adminsonly', 'Bramblewick', 'Octavia' );
+
+		global $wpdb;
+
+		foreach ( array( 'Octavia Bramblewick', 'OctaviaBramblewick', 'Octavia-Bramblewick', 'Bramblewick' ) as $display_name ) {
+			$wpdb->update( $wpdb->users, array( 'display_name' => $display_name ), array( 'ID' => $user_id ) );
+			clean_user_cache( $user_id );
+			BB_XProfile_Visibility::flush_field_ids_cache();
+
+			foreach ( array( true, false ) as $populate_extras ) {
+				$this->set_current_user( 0 );
+
+				$has = bp_has_members(
+					array(
+						'include'         => array( $user_id ),
+						'per_page'        => 1,
+						'populate_extras' => $populate_extras,
+					)
+				);
+				$this->assertTrue( $has, 'the members loop should return the fixture member' );
+
+				global $members_template;
+				while ( bp_members() ) {
+					bp_the_member();
+
+					$name = bp_get_member_name();
+					$this->assertStringNotContainsStringIgnoringCase(
+						'bramblewick',
+						$name,
+						"hidden surname leaked in the members loop (display_name '{$display_name}', populate_extras " . var_export( $populate_extras, true ) . ')'
+					);
+					$this->assertSame( 'Octavia', $name );
+				}
+			}
+		}
+
+		// The member themselves still sees their own full name in the loop.
+		$wpdb->update( $wpdb->users, array( 'display_name' => 'Octavia Bramblewick' ), array( 'ID' => $user_id ) );
+		clean_user_cache( $user_id );
+		BB_XProfile_Visibility::flush_field_ids_cache();
+		$this->set_current_user( $user_id );
+
+		if ( bp_has_members( array( 'include' => array( $user_id ), 'per_page' => 1, 'populate_extras' => true ) ) ) {
+			while ( bp_members() ) {
+				bp_the_member();
+				$this->assertStringContainsStringIgnoringCase( 'bramblewick', bp_get_member_name(), 'the member lost their own surname' );
+			}
+		}
+	}
+
+	/**
+	 * A hidden name part welded into a longer token with letters or digits against it must still be
+	 * redacted. The punctuation-boundary fail-safe cannot see these, and an exact first+last glue
+	 * test does not match them either, so before this they were returned whole:
+	 * "pzebrastripe" (initial + surname, the shape an LDAP or forum import produces),
+	 * "PeterZebrastripeJr", "Zebrastripe2" (de-duplication suffix), "MrPeterZebrastripe".
+	 *
+	 * The second half of the table is the counter-pressure: a hidden part that is a coincidental
+	 * fragment of a longer, unrelated word must NOT be over-redacted, or the fix silently deletes
+	 * name parts the viewer is entitled to.
+	 *
+	 * @group bb_name_redaction
+	 */
+	public function test_strip_hidden_name_part_redacts_embedded_tokens_without_over_redacting() {
+		$leaky = array(
+			// display_name, hidden, visible.
+			array( 'pzebrastripe', 'Zebrastripe', 'Peter' ),
+			array( 'PeterZebrastripeJr', 'Zebrastripe', 'Peter' ),
+			array( 'Zebrastripe2', 'Zebrastripe', 'Peter' ),
+			array( 'MrPeterZebrastripe', 'Zebrastripe', 'Peter' ),
+			array( 'Zebrastripes', 'Zebrastripe', 'Peter' ),
+			// The visible first name has itself drifted, so the exact glue test cannot match.
+			array( 'PeterZebrastripe', 'Zebrastripe', 'Pete' ),
+		);
+
+		foreach ( $leaky as $case ) {
+			list( $display_name, $hidden, $visible ) = $case;
+			$result = bb_core_strip_hidden_name_part( $display_name, $hidden, $visible );
+
+			$this->assertStringNotContainsStringIgnoringCase(
+				$hidden,
+				$result,
+				"hidden part survived in '{$display_name}'"
+			);
+		}
+
+		// Coincidental fragments of unrelated words must survive untouched.
+		$keep = array(
+			array( 'Louis Armstrong Ng', 'Ng', 'Louis', 'Louis Armstrong' ),
+			array( 'Linda Marie Lin', 'Lin', 'Linda', 'Linda Marie' ),
+			array( 'Wendy Wu', 'Wu', 'Wendy', 'Wendy' ),
+			array( 'AlexQuillfeather Jr', 'Quillfeather', 'Alex', 'Alex Jr' ),
+			array( 'Anna Marie Smith', 'Smith', 'Anna', 'Anna Marie' ),
+		);
+
+		foreach ( $keep as $case ) {
+			list( $display_name, $hidden, $visible, $expected ) = $case;
+			$this->assertSame(
+				$expected,
+				bb_core_strip_hidden_name_part( $display_name, $hidden, $visible ),
+				"over-redaction for '{$display_name}'"
+			);
+		}
+	}
+
+	/**
 	 * The LIKE matcher has to agree with the SQL comparison that produced the candidate rows,
 	 * including the backslash escaping bp_esc_like() applies.
 	 */

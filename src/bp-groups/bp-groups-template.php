@@ -5066,10 +5066,11 @@ function bb_get_group_member_display_name() {
 		return '';
 	}
 
-	if ( ! empty( $members_template->member->fullname ) ) {
-		return $members_template->member->fullname;
-	}
-
+	// Always resolve through the canonical, viewer-scoped function. The loop's own `fullname` is
+	// not a viewer-scoped value by contract - depending on which query populated the loop it can be
+	// unset, or carry raw xprofile data that was never filtered for this viewer - and preferring it
+	// is how bp_get_member_name() came to leak a hidden surname on the members directory. One
+	// resolution per row is cheap: bp_core_get_user_displaynames() primes the caches it reads.
 	$name = bp_core_get_user_displayname( bp_get_group_member_id() );
 
 	return is_string( $name ) ? $name : '';

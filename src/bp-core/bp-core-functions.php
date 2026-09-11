@@ -11149,11 +11149,50 @@ function bb_core_strip_hidden_name_part( $display_name, $hidden_part, $visible_p
 			continue;
 		}
 
+		$token_nospace = preg_replace( '/[\s\p{Zs}]+/u', '', $token );
+
+		// The token IS the visible counterpart - keep it. Checked first so a short hidden part that
+		// happens to be a substring of the visible name ("Lin" inside "Linda") never drops it.
+		if ( '' !== $visible_nospace && 0 === strcasecmp( $token_nospace, $visible_nospace ) ) {
+			$tokens[] = $token;
+			continue;
+		}
+
 		if ( '' !== $glue_pattern && preg_match( $glue_pattern, $token ) ) {
 			$tokens[] = $visible_part;
-		} elseif ( '' !== $edge_glue && preg_match( $edge_glue, $token ) ) {
 			continue;
-		} elseif ( ! preg_match( $bounded, $token ) ) {
+		}
+
+		if ( '' !== $edge_glue && preg_match( $edge_glue, $token ) ) {
+			continue;
+		}
+
+		// The hidden part is embedded in a longer token with letters or digits against it, so the
+		// punctuation-boundary test below cannot see it: "pzebrastripe" (initial + surname),
+		// "PeterZebrastripeJr", "Zebrastripe2" (de-duplication suffix), "MrPeterZebrastripe". The
+		// token is a disclosure when what is left after removing the hidden part does not stand on
+		// its own as a name - it is only an initial or a digit or two - or when it is the visible
+		// counterpart with the hidden part welded on. Both mean the token exists BECAUSE of the
+		// hidden name, so it goes.
+		//
+		// A hidden part that is merely a coincidental fragment of a longer, unrelated word ("Ng" at
+		// the end of "Armstrong") leaves a substantial remainder that is not the visible name, and
+		// is deliberately kept - dropping it would redact a name part the viewer is entitled to.
+		$embedded = ( '' !== $hidden_nospace && false !== stripos( $token_nospace, $hidden_nospace ) );
+
+		if ( $embedded ) {
+			$remainder = preg_replace( '/' . preg_quote( $hidden_nospace, '/' ) . '/iu', '', $token_nospace );
+			$remainder = ( null === $remainder ) ? '' : $remainder;
+
+			$remainder_is_negligible = ( function_exists( 'mb_strlen' ) ? mb_strlen( $remainder, 'UTF-8' ) : strlen( $remainder ) ) <= 2;
+			$remainder_is_visible    = ( '' !== $visible_nospace && false !== stripos( $remainder, $visible_nospace ) );
+
+			if ( $remainder_is_negligible || $remainder_is_visible ) {
+				continue;
+			}
+		}
+
+		if ( ! preg_match( $bounded, $token ) ) {
 			$tokens[] = $token;
 		}
 	}
