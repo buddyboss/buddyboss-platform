@@ -2,12 +2,12 @@
 /**
  * Two Factor plugin compatibility probe.
  *
- * Low-level detection of the Two Factor plugin: where it lives, which version is
- * present, and the minimum version this integration can work with. The public API
- * built on top of these helpers lives in bb-two-factor-functions.php.
+ * Which plugin file this integration looks for, and the oldest release it
+ * supports. Both are filterable so a site can point the integration at a
+ * differently packaged copy.
  *
- * Nothing here loads the plugin or depends on it being active, and nothing here
- * requires wp-admin includes, so every helper is safe to call on the front end.
+ * Nothing here loads the plugin, depends on it being active, or needs wp-admin
+ * includes, so every helper is front-end safe.
  *
  * @since   BuddyBoss [BBVERSION]
  * @package BuddyBoss\Features\Integrations\TwoFactor
@@ -19,8 +19,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Plugin file of the Two Factor plugin, relative to the plugins directory.
  *
- * Matches the `required_plugin` value the integration passes to BP_Integration,
- * so both sides agree on what "the plugin" means.
+ * Also the `required_plugin` value passed to BP_Integration.
  *
  * @since BuddyBoss [BBVERSION]
  */
@@ -54,8 +53,7 @@ function bb_two_factor_plugin_basename() {
 	/**
 	 * Filters the Two Factor plugin file this integration looks for.
 	 *
-	 * Lets a site that ships the plugin under a different folder name keep the
-	 * integration working.
+	 * For sites that ship the plugin under a different folder name.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
@@ -81,65 +79,4 @@ function bb_two_factor_min_plugin_version() {
 	 * @param string $version Minimum supported version.
 	 */
 	return (string) apply_filters( 'bb_two_factor_min_plugin_version', BB_TWO_FACTOR_MIN_VERSION );
-}
-
-/**
- * Get the absolute path to the Two Factor plugin file.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @return string Absolute path. Not guaranteed to exist.
- */
-function bb_two_factor_plugin_file() {
-	return trailingslashit( WP_PLUGIN_DIR ) . bb_two_factor_plugin_basename();
-}
-
-/**
- * Whether the Two Factor plugin files are present, active or not.
- *
- * Deliberately a file check rather than `get_plugins()`, which lives in
- * wp-admin/includes/plugin.php and is not available on the front end.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @return bool True when the plugin file exists on disk.
- */
-function bb_two_factor_plugin_is_installed() {
-	static $installed = null;
-
-	if ( null === $installed ) {
-		$installed = file_exists( bb_two_factor_plugin_file() );
-	}
-
-	return $installed;
-}
-
-/**
- * Read the version from the Two Factor plugin header.
- *
- * Used when the plugin is installed but not active, so its `TWO_FACTOR_VERSION`
- * constant is not defined. `get_file_data()` is core, front-end safe, and reads
- * only the first 8KB of the file.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @return string Version string, or an empty string when it cannot be read.
- */
-function bb_two_factor_plugin_header_version() {
-	static $version = null;
-
-	if ( null !== $version ) {
-		return $version;
-	}
-
-	if ( ! bb_two_factor_plugin_is_installed() ) {
-		$version = '';
-
-		return $version;
-	}
-
-	$data    = get_file_data( bb_two_factor_plugin_file(), array( 'Version' => 'Version' ), 'plugin' );
-	$version = isset( $data['Version'] ) ? (string) $data['Version'] : '';
-
-	return $version;
 }
