@@ -1342,4 +1342,227 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 			remove_filter( 'xprofile_get_field_data', $ln_data, 20 );
 		}
 	}
+
+	/**
+	 * A stored last name padded with whitespace must still be stripped for a LOGGED-IN viewer.
+	 *
+	 * xprofile_filter_get_user_display_name() overwrites the resolved name for every authenticated
+	 * viewer, so it is a second, independent implementation of the redaction. It used to build its
+	 * replacement straight from the raw field value: a value padded by an import or a paste from a
+	 * word processor ("Zebrastripe ", or a U+00A0 that PHP's trim() leaves alone) produced a pattern
+	 * that could not match the rebuilt name, and the surname was served to a viewer denied it while
+	 * the guest path - which trims - redacted correctly. Both paths now go through
+	 * bb_core_strip_hidden_name_part().
+	 *
+	 * @group bb_name_privacy
+	 */
+	public function test_get_user_displayname_padded_last_name_is_stripped_for_logged_in_viewer() {
+		$ln = (int) bp_xprofile_lastname_field_id();
+
+		foreach ( array( 'ascii' => "Zebrastripe \t ", 'nbsp' => "\xC2\xA0Zebrastripe\xC2\xA0" ) as $label => $padded ) {
+			$author = self::factory()->user->create();
+			$viewer = self::factory()->user->create(); // logged-in, non-friend, non-admin.
+			wp_update_user(
+				array(
+					'ID'           => $author,
+					'first_name'   => 'Peter',
+					'last_name'    => 'Zebrastripe',
+					'display_name' => 'Peter Zebrastripe',
+				)
+			);
+			update_user_meta( $author, 'nickname', 'peternick' );
+			xprofile_set_field_data( bp_xprofile_firstname_field_id(), $author, 'Peter' );
+			xprofile_set_field_data( $ln, $author, 'Zebrastripe' );
+			xprofile_set_field_visibility_level( $ln, $author, 'adminsonly' );
+
+			// xprofile_set_field_data() sanitises the padding away on save, so the padded value can
+			// only be reached by feeding it in at read time - which is exactly the shape an import
+			// or a direct DB write leaves behind.
+			$pad = function ( $value, $field_id, $user_id ) use ( $ln, $author, $padded ) {
+				return ( (int) $field_id === $ln && (int) $user_id === (int) $author ) ? $padded : $value;
+			};
+			add_filter( 'xprofile_get_field_data', $pad, 20, 3 );
+
+			try {
+				$GLOBALS['bb_default_display_avatar'] = true;
+				$this->set_current_user( $viewer );
+				$seen = bp_core_get_user_displayname( $author, $viewer );
+
+				$this->assertStringNotContainsStringIgnoringCase(
+					'zebrastripe',
+					(string) $seen,
+					"padded last name ({$label}) leaked to a logged-in viewer"
+				);
+				$this->assertSame( 'Peter', (string) $seen, "unexpected visible name for padding case {$label}" );
+			} finally {
+				remove_filter( 'xprofile_get_field_data', $pad, 20 );
+				$GLOBALS['bb_default_display_avatar'] = false;
+			}
+		}
+	}
+
+	/**
+	 * bb_core_guest_viewer_id() must resolve a name exactly as a real logged-out request does.
+	 *
+	 * Emails addressed to a plain email address (member invitations) are composed inside the
+	 * inviter's own session, where the request viewer is the inviter and every visibility check
+	 * passes. A viewer id of 0 cannot express "no member is watching" - every layer replaces it with
+	 * the request's viewer - so the sentinel is the only way to pin the resolution to the public
+	 * view. Asserted against the real logged-out result for every display format so the two cannot
+	 * drift apart.
+	 *
+	 * @group bb_name_privacy
+	 */
+	/**
+	 * A hidden surname that is a prefix or suffix of the VISIBLE first name must not take the first
+	 * name with it.
+	 *
+	 * bb_core_strip_hidden_name_part()'s third argument names the token the viewer IS allowed to
+	 * see. Without it the helper falls to its edge-glue rule and drops any token that merely begins
+	 * or ends with the hidden part, so "Lisa Li" with the surname "Li" hidden lost "Lisa" too and
+	 * fell through to the nickname - a logged-in member shown LESS than a guest. The guest path
+	 * always passed the counterpart; this asserts the logged-in filter path and the guest path give
+	 * the same answer for the shapes where the two rules differ.
+	 *
+	 * @group bb_name_privacy
+	 */
+	public function test_hidden_surname_glued_to_visible_first_name_keeps_the_first_name() {
+		$ln_id = (int) bp_xprofile_lastname_field_id();
+		$fn_id = (int) bp_xprofile_firstname_field_id();
+
+		$pairs = array(
+			array( 'Lisa', 'Li' ),         // surname is a prefix of the first name.
+			array( 'Benson', 'Ben' ),      // ditto, longer.
+			array( 'Anna', 'Ann' ),        // ditto, one character apart.
+			array( 'Robinson', 'Rob' ),    // ditto.
+			array( 'Jack', 'Jackson' ),    // first name is a prefix of the surname.
+			array( 'Peter', 'Zebrastripe' ), // no overlap - the control.
+		);
+
+		foreach ( $pairs as $pair ) {
+			list( $first, $last ) = $pair;
+
+			// Fresh author per pair - see the sentinel test for why the per-request memo makes
+			// reuse assert the first pair's answer for all of them.
+			$author = self::factory()->user->create();
+			$viewer = self::factory()->user->create(); // logged-in, non-friend, non-admin.
+			wp_update_user(
+				array(
+					'ID'           => $author,
+					'first_name'   => $first,
+					'last_name'    => $last,
+					'display_name' => $first . ' ' . $last,
+				)
+			);
+			$nickname = 'nick' . $author;
+			update_user_meta( $author, 'nickname', $nickname );
+			xprofile_set_field_data( bp_xprofile_nickname_field_id(), $author, $nickname );
+			xprofile_set_field_data( $fn_id, $author, $first );
+			xprofile_set_field_data( $ln_id, $author, $last );
+			xprofile_set_field_visibility_level( $fn_id, $author, 'public' );
+			xprofile_set_field_visibility_level( $ln_id, $author, 'adminsonly' );
+
+			$GLOBALS['bb_default_display_avatar'] = true;
+			$this->set_current_user( 0 );
+			$guest = bp_core_get_user_displayname( $author );
+
+			$GLOBALS['bb_default_display_avatar'] = true;
+			$this->set_current_user( $viewer );
+			$logged_in = bp_core_get_user_displayname( $author, $viewer );
+
+			$this->assertSame(
+				$first,
+				(string) $guest,
+				"guest lost the visible first name for {$first}/{$last}"
+			);
+			$this->assertSame(
+				(string) $guest,
+				(string) $logged_in,
+				"logged-in viewer disagreed with the guest for {$first}/{$last}"
+			);
+			// Only meaningful where the surname is not itself a substring of the visible first
+			// name; for "Lisa"/"Li" the two assertions above already pin the result to exactly the
+			// first name, which is the strongest statement available.
+			if ( false === stripos( $first, $last ) ) {
+				$this->assertStringNotContainsStringIgnoringCase(
+					$last,
+					(string) $logged_in,
+					"hidden surname leaked to a logged-in viewer for {$first}/{$last}"
+				);
+			}
+		}
+
+		$GLOBALS['bb_default_display_avatar'] = false;
+	}
+
+	public function test_guest_viewer_sentinel_matches_a_real_logged_out_request() {
+		$ln     = (int) bp_xprofile_lastname_field_id();
+		$format = bp_get_option( 'bp-display-name-format' );
+
+		try {
+			foreach ( array( 'first_last_name', 'first_name', 'nickname' ) as $display_format ) {
+				bp_update_option( 'bp-display-name-format', $display_format );
+
+				foreach ( array( 'public', 'loggedin', 'friends', 'adminsonly' ) as $level ) {
+					// A fresh author per combination. xprofile_filter_get_user_display_name() memoizes
+					// per (user, viewer) for the request and is not invalidated by a visibility write,
+					// so reusing one user here would assert against the first combination's answer for
+					// all twelve. A real request never re-points a member's visibility mid-flight.
+					$author = self::factory()->user->create();
+					wp_update_user(
+						array(
+							'ID'           => $author,
+							'first_name'   => 'Peter',
+							'last_name'    => 'Zebrastripe',
+							'display_name' => 'Peter Zebrastripe',
+						)
+					);
+					// Keep the two nickname sources in step. The guest path reads the `nickname`
+					// usermeta while the logged-in path reads the Nickname xprofile field; the site
+					// keeps them synced, and setting only one would make this assert a fixture skew
+					// rather than the sentinel's behaviour.
+					$nickname = 'peternick' . $author;
+					update_user_meta( $author, 'nickname', $nickname );
+					xprofile_set_field_data( bp_xprofile_nickname_field_id(), $author, $nickname );
+					xprofile_set_field_data( bp_xprofile_firstname_field_id(), $author, 'Peter' );
+					xprofile_set_field_data( $ln, $author, 'Zebrastripe' );
+					xprofile_set_field_visibility_level( $ln, $author, $level );
+
+					// The reference: what an anonymous visitor actually gets.
+					$GLOBALS['bb_default_display_avatar'] = true;
+					$this->set_current_user( 0 );
+					$anonymous = bp_core_get_user_displayname( $author );
+
+					// The same question asked while the profile owner is the one logged in - the
+					// invitation case. Without the sentinel this returns the self view, in full.
+					$GLOBALS['bb_default_display_avatar'] = true;
+					$this->set_current_user( $author );
+					$self = bp_core_get_user_displayname( $author );
+
+					$GLOBALS['bb_default_display_avatar'] = true;
+					$sentinel = bp_core_get_user_displayname( $author, bb_core_guest_viewer_id() );
+
+					$this->assertSame(
+						(string) $anonymous,
+						(string) $sentinel,
+						"sentinel diverged from a real logged-out request ({$display_format}/{$level})"
+					);
+
+					if ( 'first_last_name' === $display_format && 'public' !== $level ) {
+						// The case that makes the sentinel necessary: the owner sees the surname,
+						// an outsider must not.
+						$this->assertStringContainsStringIgnoringCase( 'zebrastripe', (string) $self );
+						$this->assertStringNotContainsStringIgnoringCase(
+							'zebrastripe',
+							(string) $sentinel,
+							"sentinel leaked the hidden surname ({$display_format}/{$level})"
+						);
+					}
+				}
+			}
+		} finally {
+			$GLOBALS['bb_default_display_avatar'] = false;
+			bp_update_option( 'bp-display-name-format', $format );
+		}
+	}
 }

@@ -607,7 +607,12 @@ function bb_core_prime_user_displayname_caches( $user_ids, $viewer_id = 0 ) {
  * @since BuddyBoss 2.5.90 Added the `$current_user_id` parameter.
  *
  * @param int|string|bool $user_id_or_username User ID or username.
- * @param int $current_user_id                 Optional. ID of the user viewing the profile.
+ * @param int             $current_user_id   Optional. ID of the user viewing the profile. Default
+ *                                             0, which resolves the viewer from the current request.
+ *                                             Pass bb_core_guest_viewer_id() to force the public,
+ *                                             logged-out view - required when the audience is
+ *                                             provably not a member (an invitation email sent to a
+ *                                             plain email address).
  * @return string|bool The display name for the user in question, or false if
  *                     user not found.
  */

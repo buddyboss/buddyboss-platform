@@ -415,7 +415,11 @@ function bp_get_invites_member_invite_url() {
 function bp_get_member_invites_wildcard_replace( $text, $email = false ) {
 	global $bp;
 
-	$inviter_name = bp_core_get_user_displayname( bp_loggedin_user_id() );
+	// The invitation is composed in the inviter's own session but is delivered to a plain email
+	// address - there is no member behind it. Resolved against the request viewer the inviter sees
+	// their own profile in full, so the email would carry name parts the site hides from everyone
+	// else. Pin the resolution to the public, logged-out view.
+	$inviter_name = bp_core_get_user_displayname( bp_loggedin_user_id(), bb_core_guest_viewer_id() );
 	$site_name    = get_bloginfo( 'name' );
 	$inviter_url  = bp_loggedin_user_domain();
 

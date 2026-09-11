@@ -11006,6 +11006,28 @@ function bb_core_get_viewer_user_id() {
 }
 
 /**
+ * Viewer ID that means "an anonymous visitor", explicitly.
+ *
+ * Throughout the profile-visibility API a viewer ID of `0` does NOT mean "logged out" - it means
+ * "resolve the viewer from the current request". `bp_core_get_user_displayname()` replaces it with
+ * `bb_core_get_viewer_user_id()`, and `bp_xprofile_get_hidden_fields_for_user()` replaces it with
+ * `bp_loggedin_user_id()`. There is therefore no way to say "render this name for someone who is
+ * not a member of this site" while a member happens to be logged in.
+ *
+ * That case is real: a member invitation is composed in the inviter's own session but is delivered
+ * to a plain email address with no member behind it. Resolved with the request's viewer, the
+ * inviter sees their own profile, so the email carries name parts the site hides from everyone
+ * else (PROD-9896). Passing this ID pins the resolution to the public, logged-out view.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return int Sentinel viewer ID representing an anonymous visitor.
+ */
+function bb_core_guest_viewer_id() {
+	return -1;
+}
+
+/**
  * Evaluate a MySQL `LIKE` pattern against a string in PHP.
  *
  * Used where a row set produced by a `LIKE` comparison in SQL has to be re-tested against a value

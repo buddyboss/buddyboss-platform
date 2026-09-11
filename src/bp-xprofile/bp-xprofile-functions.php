@@ -1344,7 +1344,9 @@ function bp_xprofile_get_visibility_levels() {
  *   or if you have added your own custom levels.
  *
  * @param int $displayed_user_id The id of the user the profile fields belong to.
- * @param int $current_user_id   The id of the user viewing the profile.
+ * @param int $current_user_id   The id of the user viewing the profile. 0 resolves the viewer from
+ *                               the current request; bb_core_guest_viewer_id() forces the public,
+ *                               logged-out view.
  * @return array An array of field ids that should be excluded from the profile query
  */
 function bp_xprofile_get_hidden_fields_for_user( $displayed_user_id = 0, $current_user_id = 0 ) {
@@ -1371,7 +1373,11 @@ function bp_xprofile_get_hidden_fields_for_user( $displayed_user_id = 0, $curren
 	 *
 	 * @param array $hidden_fields     Array of hidden fields for the displayed/logged in user.
 	 * @param int   $displayed_user_id ID of the displayed user.
-	 * @param int   $current_user_id   ID of the current user.
+	 * @param int   $current_user_id   ID of the current user. Can be bb_core_guest_viewer_id() (-1),
+	 *                                 an explicit "anonymous visitor" viewer used when the audience
+	 *                                 is provably not a member. Test for a logged-out viewer with
+	 *                                 that helper as well as with `empty()`, or a guest resolution
+	 *                                 will take the logged-in branch of a listener.
 	 */
 	return apply_filters( 'bp_xprofile_get_hidden_fields_for_user', $hidden_fields, $displayed_user_id, $current_user_id );
 }
@@ -1390,13 +1396,21 @@ function bp_xprofile_get_hidden_fields_for_user( $displayed_user_id = 0, $curren
  * @see bp_xprofile_get_hidden_fields_for_user()
  *
  * @param int $displayed_user_id The id of the user the profile fields belong to.
- * @param int $current_user_id   The id of the user viewing the profile.
+ * @param int $current_user_id   The id of the user viewing the profile. 0 resolves the viewer from
+ *                               the current request; bb_core_guest_viewer_id() forces the public,
+ *                               logged-out view.
  * @return array An array of visibility levels hidden to the current user.
  */
 function bp_xprofile_get_hidden_field_types_for_user( $displayed_user_id = 0, $current_user_id = 0 ) {
 
-	// Current user is logged in.
-	if ( ! empty( $current_user_id ) ) {
+	// An explicit anonymous viewer - see bb_core_guest_viewer_id(). Checked before the
+	// "logged in" branch because the sentinel is a non-empty ID and would otherwise be treated
+	// as a member, and before bp_user_can() because it is not a real user row.
+	if ( function_exists( 'bb_core_guest_viewer_id' ) && bb_core_guest_viewer_id() === (int) $current_user_id ) {
+		$hidden_levels = array( 'friends', 'loggedin', 'adminsonly' );
+
+		// Current user is logged in.
+	} elseif ( ! empty( $current_user_id ) ) {
 
 		// The moderator override must be evaluated for the VIEWER ($current_user_id) - the same
 		// identity the friendship branch below uses - not the global actor. They are the same on
@@ -1434,7 +1448,11 @@ function bp_xprofile_get_hidden_field_types_for_user( $displayed_user_id = 0, $c
 	 *
 	 * @param array $hidden_fields     Array of hidden fields for the displayed/logged in user.
 	 * @param int   $displayed_user_id ID of the displayed user.
-	 * @param int   $current_user_id   ID of the current user.
+	 * @param int   $current_user_id   ID of the current user. Can be bb_core_guest_viewer_id() (-1),
+	 *                                 an explicit "anonymous visitor" viewer used when the audience
+	 *                                 is provably not a member. Test for a logged-out viewer with
+	 *                                 that helper as well as with `empty()`, or a guest resolution
+	 *                                 will take the logged-in branch of a listener.
 	 */
 	return apply_filters( 'bp_xprofile_get_hidden_field_types_for_user', $hidden_levels, $displayed_user_id, $current_user_id );
 }
