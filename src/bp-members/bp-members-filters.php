@@ -641,11 +641,11 @@ function bb_core_prime_mentions_results() {
 				)
 			);
 
-			if ( ! empty( $user->display_name ) && ! bp_disable_profile_sync() ) {
-				$result->name = bp_core_get_user_displayname( $user->ID );
-			} else {
-				$result->name = bp_core_get_user_displayname( $user->ID );
-			}
+			// Always resolved through the viewer-aware helper: the raw display_name column can
+			// carry a name part this viewer is denied, and profile sync has no bearing on that.
+			// Both arms of the branch that used to stand here had become identical, which read as
+			// though sync still changed the answer.
+			$result->name    = bp_core_get_user_displayname( $user->ID );
 			$result->user_id = $user->ID;
 
 			$friends[] = $result;

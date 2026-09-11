@@ -1495,6 +1495,54 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 		$GLOBALS['bb_default_display_avatar'] = false;
 	}
 
+	/**
+	 * Apostrophes, curly apostrophes and digits are ordinary characters to the redaction.
+	 *
+	 * The helper builds its patterns with preg_quote(), so "O'Brien" is matched literally the way
+	 * a hyphenated name already is. That was reasoned about but never asserted, and an apostrophe
+	 * is the single most common non-alphabetic character in a real surname - U+2019 included,
+	 * which is what word processors and phone keyboards actually insert. Digits are here because a
+	 * surname field accepts them and a quantifier-looking value must not be treated as pattern
+	 * syntax.
+	 *
+	 * Each row is a separator shape the stored display_name genuinely drifts into: spaced, glued,
+	 * reversed, hyphen-joined.
+	 *
+	 * @group bb_name_privacy
+	 */
+	public function test_strip_hidden_name_part_handles_apostrophes_and_digits() {
+		$cases = array(
+			// display_name,        hidden,          visible,  expected.
+			array( "Sean O'Brien",       "O'Brien",       'Sean', 'Sean' ),
+			array( "Sean OâBrien", "OâBrien", 'Sean', 'Sean' ), // U+2019.
+			array( "SeanO'Brien",        "O'Brien",       'Sean', 'Sean' ),           // Glued.
+			array( "O'Brien Sean",       "O'Brien",       'Sean', 'Sean' ),           // Reversed.
+			array( "Sean O'Brien-Smith", "O'Brien-Smith", 'Sean', 'Sean' ),
+			array( "Ana D'Souza",        "D'Souza",       'Ana',  'Ana' ),
+			array( 'Agent 007',          '007',           'Agent', 'Agent' ),         // Digits.
+			array( 'User 42',            '42',            'User', 'User' ),
+			array( 'Anne-Marie Dupont',  'Dupont',        'Anne-Marie', 'Anne-Marie' ),
+			array( 'Dupont Anne-Marie',  'Dupont',        'Anne-Marie', 'Anne-Marie' ),
+		);
+
+		foreach ( $cases as $case ) {
+			list( $display_name, $hidden, $visible, $expected ) = $case;
+
+			$actual = bb_core_strip_hidden_name_part( $display_name, $hidden, $visible );
+
+			$this->assertSame(
+				$expected,
+				$actual,
+				"unexpected result for '{$display_name}' with '{$hidden}' hidden"
+			);
+			$this->assertStringNotContainsStringIgnoringCase(
+				$hidden,
+				$actual,
+				"hidden part survived in '{$display_name}'"
+			);
+		}
+	}
+
 	public function test_guest_viewer_sentinel_matches_a_real_logged_out_request() {
 		$ln     = (int) bp_xprofile_lastname_field_id();
 		$format = bp_get_option( 'bp-display-name-format' );
