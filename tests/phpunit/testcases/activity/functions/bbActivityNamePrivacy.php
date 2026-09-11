@@ -514,6 +514,63 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 	}
 
 	/**
+	 * When BOTH the first and last name are hidden from the viewer and the stored display_name is a
+	 * separator-less glue ("AlexQuillfeather"), the glue-substitution must not leak the hidden first
+	 * name - the token is dropped and the resolution falls through to the nickname.
+	 *
+	 * @group bb_activity_get_item_user_displayname
+	 */
+	public function test_get_user_displayname_glue_does_not_leak_hidden_first_name() {
+		$u = $this->create_member_with_hidden_last_name();
+		wp_update_user( array( 'ID' => $u, 'display_name' => 'AlexQuillfeather', 'nickname' => 'quillnick' ) );
+
+		$first_name_field_id = (int) bp_xprofile_firstname_field_id();
+		$hide_first = static function ( $hidden, $displayed_user_id, $viewer_id ) use ( $u, $first_name_field_id ) {
+			if ( (int) $displayed_user_id === (int) $u && 0 === (int) $viewer_id ) {
+				$hidden[] = $first_name_field_id;
+			}
+			return $hidden;
+		};
+		add_filter( 'bp_xprofile_get_hidden_fields_for_user', $hide_first, 10, 3 );
+
+		$GLOBALS['bb_default_display_avatar'] = true;
+		$this->set_current_user( 0 );
+		$resolved = bp_core_get_user_displayname( $u, 0 );
+
+		$this->assertStringNotContainsString( 'Quillfeather', $resolved );
+		$this->assertStringNotContainsString( 'Alex', $resolved );
+		$this->assertSame( 'quillnick', $resolved );
+
+		remove_filter( 'bp_xprofile_get_hidden_fields_for_user', $hide_first, 10 );
+	}
+
+	/**
+	 * A multi-word surname glued with no internal spaces but kept apart from the first name
+	 * ("Alex VanDerBerg" for last name "Van Der Berg") must still redact - the whitespace-stripped
+	 * comparison catches it as a whole token.
+	 *
+	 * @group bb_activity_get_item_user_displayname
+	 */
+	public function test_get_user_displayname_redacts_multiword_surname_glued_without_spaces() {
+		$u = self::factory()->user->create();
+		wp_update_user(
+			array(
+				'ID'           => $u,
+				'first_name'   => 'Alex',
+				'last_name'    => 'Van Der Berg',
+				'display_name' => 'Alex VanDerBerg',
+			)
+		);
+		xprofile_set_field_visibility_level( bp_xprofile_lastname_field_id(), $u, 'loggedin' );
+
+		$GLOBALS['bb_default_display_avatar'] = true;
+		$this->set_current_user( 0 );
+		$guest = bp_core_get_user_displayname( $u, 0 );
+		$this->assertStringNotContainsStringIgnoringCase( 'vanderberg', preg_replace( '/\s+/', '', $guest ) );
+		$this->assertSame( 'Alex', $guest );
+	}
+
+	/**
 	 * The comment tree is cached per activity with no viewer in the key. A tree cached
 	 * while a member viewed it must not hand that member's `user_fullname` to a guest.
 	 *

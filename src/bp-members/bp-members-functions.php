@@ -608,10 +608,21 @@ function bp_core_get_user_displayname( $user_id_or_username, $current_user_id = 
 						? preg_replace( '/^\s+|\s+$/u', '', (string) xprofile_get_field_data( $first_name_field_id, $user_id ) )
 						: '';
 
-					$glue_pattern = ( '' !== $first_name )
-						? '/^(?:' . preg_quote( preg_replace( '/\s+/', '', $first_name . $last_name ), '/' ) . '|' . preg_quote( preg_replace( '/\s+/', '', $last_name . $first_name ), '/' ) . ')$/iu'
+					// The first name is used for glue DETECTION regardless of its own visibility, but
+					// only SUBSTITUTED into the output when it is itself visible to this viewer -
+					// otherwise a viewer who may see neither name would have the hidden first name
+					// leaked in place of the surname.
+					$first_name_visible = ( $first_name_field_id && '' !== $first_name && ! in_array( $first_name_field_id, $list_fields ) ); // phpcs:ignore WordPress.PHP.StrictInArray.MissingTrueStrict -- field ids are strings from $wpdb, int from the getter; a strict compare misses the match.
+
+					// Compare against whitespace-STRIPPED forms so a multi-word surname glued with no
+					// internal spaces ("VanDerBerg" for field "Van Der Berg") is still matched as a
+					// whole token or as first+last glue.
+					$ln_nospace   = preg_replace( '/\s+/', '', $last_name );
+					$fn_nospace   = preg_replace( '/\s+/', '', $first_name );
+					$glue_pattern = ( '' !== $fn_nospace )
+						? '/^(?:' . preg_quote( $fn_nospace . $ln_nospace, '/' ) . '|' . preg_quote( $ln_nospace . $fn_nospace, '/' ) . ')$/iu'
 						: '';
-					$bounded      = '/(?<![\p{L}\p{N}])' . preg_quote( $last_name, '/' ) . '(?![\p{L}\p{N}])/iu';
+					$bounded      = '/(?<![\p{L}\p{N}])' . preg_quote( $ln_nospace, '/' ) . '(?![\p{L}\p{N}])/iu';
 
 					$tokens = array();
 					foreach ( preg_split( '/\s+/', $full_name ) as $token ) {
@@ -619,7 +630,11 @@ function bp_core_get_user_displayname( $user_id_or_username, $current_user_id = 
 							continue;
 						}
 						if ( '' !== $glue_pattern && preg_match( $glue_pattern, $token ) ) {
-							$tokens[] = $first_name;
+							// Token is the first and last name glued together - keep just the first
+							// name, and only when the viewer may see it.
+							if ( $first_name_visible ) {
+								$tokens[] = $first_name;
+							}
 						} elseif ( ! preg_match( $bounded, $token ) ) {
 							$tokens[] = $token;
 						}
