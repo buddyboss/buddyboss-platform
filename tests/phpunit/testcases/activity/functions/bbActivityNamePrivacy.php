@@ -1402,18 +1402,6 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 	}
 
 	/**
-	 * bb_core_guest_viewer_id() must resolve a name exactly as a real logged-out request does.
-	 *
-	 * Emails addressed to a plain email address (member invitations) are composed inside the
-	 * inviter's own session, where the request viewer is the inviter and every visibility check
-	 * passes. A viewer id of 0 cannot express "no member is watching" - every layer replaces it with
-	 * the request's viewer - so the sentinel is the only way to pin the resolution to the public
-	 * view. Asserted against the real logged-out result for every display format so the two cannot
-	 * drift apart.
-	 *
-	 * @group bb_name_privacy
-	 */
-	/**
 	 * A hidden surname that is a prefix or suffix of the VISIBLE first name must not take the first
 	 * name with it.
 	 *
@@ -1731,6 +1719,150 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 		}
 	}
 
+	/**
+	 * A moderator passed as the EXPLICIT viewer is still allowed the hidden name.
+	 *
+	 * The sibling test above pins the opposite direction - an administrator running a personal-data
+	 * export must get the DATA SUBJECT's view, not their own. Both matter, and only one was
+	 * asserted: with just the negative test, an implementation that stripped the surname
+	 * unconditionally would stay green while silently taking capability out of the picture. This
+	 * locks the bp_user_can( $viewer_id, 'bp_moderate' ) branch of
+	 * bp_xprofile_get_hidden_field_types_for_user(), which is evaluated against the viewer that was
+	 * passed in rather than the acting session - so it must hold whoever is logged in.
+	 *
+	 * @group bb_name_privacy
+	 */
+	public function test_moderator_as_explicit_viewer_still_receives_the_full_name() {
+		$format_backup = bp_get_option( 'bp-display-name-format' );
+
+		try {
+			bp_update_option( 'bp-display-name-format', 'first_last_name' );
+
+			$subject = self::factory()->user->create();
+			wp_update_user(
+				array(
+					'ID'           => $subject,
+					'first_name'   => 'Alex',
+					'last_name'    => 'Quillfeather',
+					'display_name' => 'Alex Quillfeather',
+				)
+			);
+			xprofile_set_field_data( bp_xprofile_firstname_field_id(), $subject, 'Alex' );
+			xprofile_set_field_data( bp_xprofile_lastname_field_id(), $subject, 'Quillfeather' );
+			// Hidden from everyone who is not self or a moderator.
+			xprofile_set_field_visibility_level( bp_xprofile_lastname_field_id(), $subject, 'adminsonly' );
+
+			$moderator = self::factory()->user->create( array( 'role' => 'administrator' ) );
+			$stranger  = self::factory()->user->create();
+
+			// Control: a plain member really is denied it, so the assertions below cannot pass
+			// simply because nothing is hidden.
+			$GLOBALS['bb_default_display_avatar'] = true;
+			$this->set_current_user( $stranger );
+			$this->assertSame(
+				'Alex',
+				(string) bp_core_get_user_displayname( $subject, $stranger ),
+				'fixture: a plain member must be denied the surname'
+			);
+
+			// The moderator as the explicit viewer - while a plain member is the acting session, so
+			// this proves the capability is read off the VIEWER argument, not the current user.
+			$GLOBALS['bb_default_display_avatar'] = true;
+			$this->set_current_user( $stranger );
+			$this->assertSame(
+				'Alex Quillfeather',
+				(string) bp_core_get_user_displayname( $subject, $moderator ),
+				'a moderator passed as the explicit viewer must still receive the full name'
+			);
+
+			// And in the ordinary case, where the moderator is also the one logged in.
+			$GLOBALS['bb_default_display_avatar'] = true;
+			$this->set_current_user( $moderator );
+			$this->assertSame(
+				'Alex Quillfeather',
+				(string) bp_core_get_user_displayname( $subject ),
+				'a logged-in moderator must still receive the full name'
+			);
+		} finally {
+			$GLOBALS['bb_default_display_avatar'] = false;
+			bp_update_option( 'bp-display-name-format', $format_backup );
+		}
+	}
+
+	/**
+	 * The Display Name Format gate subsumes the "Display Name Fields" Last Name toggle.
+	 *
+	 * bp_core_hide_display_name_field() reports only that the Last Name FIELD is switched off
+	 * (bp-hide-last-name), and an earlier revision gated the redaction on it - which missed the
+	 * far more common case of the field being enabled while the format still excludes the surname.
+	 * The resolver now gates on bp_core_display_name_format() alone. This asserts the two settings
+	 * cannot disagree: under "First Name" or "Nickname" the surname is absent whichever way the
+	 * toggle is set, and under "First Name & Last Name" a public surname is still shown - so the
+	 * broader gate did not become a blanket strip.
+	 *
+	 * @group bb_name_privacy
+	 */
+	public function test_display_name_format_gate_subsumes_the_last_name_field_toggle() {
+		$format_backup = bp_get_option( 'bp-display-name-format' );
+		$hide_backup   = bp_get_option( 'bp-hide-last-name' );
+
+		try {
+			foreach ( array( 'first_last_name', 'first_name', 'nickname' ) as $display_format ) {
+				foreach ( array( 0, 1 ) as $hide_last_name ) {
+					bp_update_option( 'bp-display-name-format', $display_format );
+					bp_update_option( 'bp-hide-last-name', $hide_last_name );
+
+					$u = self::factory()->user->create();
+					wp_update_user(
+						array(
+							'ID'           => $u,
+							'first_name'   => 'Peter',
+							'last_name'    => 'Zebrastripe',
+							'display_name' => 'Peter Zebrastripe',
+						)
+					);
+					$nickname = 'peternick' . $u;
+					update_user_meta( $u, 'nickname', $nickname );
+					xprofile_set_field_data( bp_xprofile_nickname_field_id(), $u, $nickname );
+					xprofile_set_field_data( bp_xprofile_firstname_field_id(), $u, 'Peter' );
+					xprofile_set_field_data( bp_xprofile_lastname_field_id(), $u, 'Zebrastripe' );
+					// Visibility deliberately PUBLIC: the only thing under test here is the format.
+					xprofile_set_field_visibility_level( bp_xprofile_lastname_field_id(), $u, 'public' );
+
+					$GLOBALS['bb_default_display_avatar'] = true;
+					$this->set_current_user( 0 );
+					$guest = (string) bp_core_get_user_displayname( $u );
+
+					$expected = 'first_last_name' === $display_format
+						? 'Peter Zebrastripe'
+						: ( 'nickname' === $display_format ? $nickname : 'Peter' );
+
+					$this->assertSame(
+						$expected,
+						$guest,
+						"format {$display_format} with bp-hide-last-name={$hide_last_name}"
+					);
+				}
+			}
+		} finally {
+			$GLOBALS['bb_default_display_avatar'] = false;
+			bp_update_option( 'bp-display-name-format', $format_backup );
+			bp_update_option( 'bp-hide-last-name', $hide_backup );
+		}
+	}
+
+	/**
+	 * bb_core_guest_viewer_id() must resolve a name exactly as a real logged-out request does.
+	 *
+	 * Emails addressed to a plain email address (member invitations) are composed inside the
+	 * inviter's own session, where the request viewer is the inviter and every visibility check
+	 * passes. A viewer id of 0 cannot express "no member is watching" - every layer replaces it with
+	 * the request's viewer - so the sentinel is the only way to pin the resolution to the public
+	 * view. Asserted against the real logged-out result for every display format so the two cannot
+	 * drift apart.
+	 *
+	 * @group bb_name_privacy
+	 */
 	public function test_guest_viewer_sentinel_matches_a_real_logged_out_request() {
 		$ln     = (int) bp_xprofile_lastname_field_id();
 		$format = bp_get_option( 'bp-display-name-format' );
