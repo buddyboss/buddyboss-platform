@@ -573,7 +573,13 @@ function bp_core_get_user_displayname( $user_id_or_username, $current_user_id = 
 			// ' ' . $last_name only matched a space-prefixed trailing token and leaked the
 			// name for every other display-name shape (imports, the wp-admin "Display name
 			// publicly as" dropdown, third-party writes).
-			$full_name = preg_replace( '/(^|\s)' . preg_quote( $last_name, '/' ) . '(?=\s|$)/u', ' ', $display_name );
+			//
+			// The `i` flag matches case-insensitively so a stored display name whose casing
+			// drifted from the profile field value ("PETER ZEBRASTRIPE" vs field "Zebrastripe",
+			// as imports/third-party writes can produce) still redacts. Matching is token-bounded
+			// ((^|\s)...(?=\s|$)), so this cannot truncate a longer word; when the casing already
+			// agrees - the normal profile-sync case - it behaves exactly as the case-sensitive form.
+			$full_name = preg_replace( '/(^|\s)' . preg_quote( $last_name, '/' ) . '(?=\s|$)/iu', ' ', $display_name );
 
 			// preg_replace() returns null only on failure (e.g. malformed UTF-8 in the stored
 			// display name, as legacy/imported rows can carry). Fail closed: never fall back to

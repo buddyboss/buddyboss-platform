@@ -138,6 +138,34 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 	}
 
 	/**
+	 * The stored display_name casing can drift from the profile field value - imports, the
+	 * wp-admin "Display name publicly as" dropdown and third-party writes are not bound to the
+	 * field's casing. The strip matches case-insensitively so a differently-cased last name is
+	 * still redacted, while a display_name whose casing already agrees behaves exactly as before
+	 * (the token-bounded match cannot truncate a longer word).
+	 *
+	 * @group bb_activity_get_item_user_displayname
+	 */
+	public function test_get_user_displayname_strips_hidden_last_name_case_insensitively() {
+		// Casing drift: field is "Quillfeather", stored display_name upper-cased.
+		$u1 = $this->create_member_with_hidden_last_name();
+		wp_update_user( array( 'ID' => $u1, 'display_name' => 'ALEX QUILLFEATHER' ) );
+		$GLOBALS['bb_default_display_avatar'] = true;
+		$this->set_current_user( 0 );
+		$this->assertStringNotContainsStringIgnoringCase( 'quillfeather', bp_core_get_user_displayname( $u1, 0 ) );
+
+		// Control: casing already agrees - unchanged behaviour (guest first-name-only, member full).
+		$member = self::factory()->user->create();
+		$u2     = $this->create_member_with_hidden_last_name();
+		$GLOBALS['bb_default_display_avatar'] = true;
+		$this->set_current_user( 0 );
+		$this->assertSame( 'Alex', bp_core_get_user_displayname( $u2, 0 ) );
+		$GLOBALS['bb_default_display_avatar'] = true;
+		$this->set_current_user( $member );
+		$this->assertSame( 'Alex Quillfeather', bp_core_get_user_displayname( $u2, $member ) );
+	}
+
+	/**
 	 * When stripping the hidden last name leaves nothing (a bare "Last" display name), the
 	 * first-name fallback must itself honour visibility: if the First Name field is also
 	 * hidden from the viewer (e.g. via the bp_xprofile_get_hidden_fields_for_user filter),
