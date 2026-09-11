@@ -1609,6 +1609,128 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 		}
 	}
 
+	/**
+	 * Non-Latin scripts redact the same way Latin ones do.
+	 *
+	 * The matcher is built on \p{L}/\p{N} with the /u modifier throughout, so it is script-agnostic
+	 * by construction - but every fixture in this file was Latin, so nothing proved it. A community
+	 * platform is exactly where CJK, Hangul, Cyrillic, Arabic and accented Latin names show up, and
+	 * the glued shapes matter most there: CJK names carry no space between the family and given
+	 * name at all, so "hidden surname welded to a visible given name" is the normal case, not drift.
+	 *
+	 * @group bb_name_privacy
+	 */
+	public function test_strip_hidden_name_part_handles_non_latin_scripts() {
+		$cases = array(
+			// display_name,   hidden,     visible,   expected.
+			array( "\xE5\xA4\xAA\xE9\x83\x8E \xE7\x94\xB0\xE4\xB8\xAD", "\xE7\x94\xB0\xE4\xB8\xAD", "\xE5\xA4\xAA\xE9\x83\x8E", "\xE5\xA4\xAA\xE9\x83\x8E" ), // Japanese, spaced.
+			array( "\xE5\xA4\xAA\xE9\x83\x8E\xE7\x94\xB0\xE4\xB8\xAD", "\xE7\x94\xB0\xE4\xB8\xAD", "\xE5\xA4\xAA\xE9\x83\x8E", "\xE5\xA4\xAA\xE9\x83\x8E" ),     // Japanese, glued.
+			array( "\xD0\x98\xD0\xB2\xD0\xB0\xD0\xBD \xD0\x9F\xD0\xB5\xD1\x82\xD1\x80\xD0\xBE\xD0\xB2", "\xD0\x9F\xD0\xB5\xD1\x82\xD1\x80\xD0\xBE\xD0\xB2", "\xD0\x98\xD0\xB2\xD0\xB0\xD0\xBD", "\xD0\x98\xD0\xB2\xD0\xB0\xD0\xBD" ), // Cyrillic.
+			array( "\xD0\x98\xD0\xB2\xD0\xB0\xD0\xBD\xD0\x9F\xD0\xB5\xD1\x82\xD1\x80\xD0\xBE\xD0\xB2", "\xD0\x9F\xD0\xB5\xD1\x82\xD1\x80\xD0\xBE\xD0\xB2", "\xD0\x98\xD0\xB2\xD0\xB0\xD0\xBD", "\xD0\x98\xD0\xB2\xD0\xB0\xD0\xBD" ),     // Cyrillic, glued.
+			array( "Jos\xC3\xA9 \xC3\x81lvarez", "\xC3\x81lvarez", "Jos\xC3\xA9", "Jos\xC3\xA9" ),                 // Accented Latin.
+			array( "Jos\xC3\xA9\xC3\x81lvarez", "\xC3\x81lvarez", "Jos\xC3\xA9", "Jos\xC3\xA9" ),                  // Accented, glued.
+			array( "Zo\xC3\xAB M\xC3\xBCller", "M\xC3\xBCller", "Zo\xC3\xAB", "Zo\xC3\xAB" ),
+		);
+
+		foreach ( $cases as $case ) {
+			list( $display_name, $hidden, $visible, $expected ) = $case;
+
+			$actual = bb_core_strip_hidden_name_part( $display_name, $hidden, $visible );
+
+			$this->assertSame( $expected, $actual, "unexpected result for '{$display_name}'" );
+			$this->assertFalse(
+				mb_stripos( (string) $actual, $hidden, 0, 'UTF-8' ),
+				"hidden part survived in '{$display_name}'"
+			);
+		}
+	}
+
+	/**
+	 * A de-duplication digit suffix does not shield the surname.
+	 *
+	 * WordPress appends a numeric suffix when a name collides ("Zebrastripe2"), and an initial
+	 * welded to a surname ("pzebrastripe") is a common imported shape. Both leave a remainder that
+	 * is only a character or two, so the token exists BECAUSE of the hidden name and must go. This
+	 * path was reasoned about in the helper's comments but never asserted.
+	 *
+	 * The negligible-remainder rule is measured in CHARACTERS, not bytes - asserted here with a
+	 * fullwidth digit so a byte-length regression would be caught.
+	 *
+	 * @group bb_name_privacy
+	 */
+	public function test_strip_hidden_name_part_drops_tokens_left_over_by_a_hidden_surname() {
+		$this->assertSame( 'Peter', bb_core_strip_hidden_name_part( 'Peter Zebrastripe2', 'Zebrastripe', 'Peter' ) );
+		// "Jr" here is its own space-separated token, not a remainder welded to the surname, so it
+		// carries no part of the hidden name and is correctly kept. Contrast "PeterZebrastripeJr"
+		// below, where the same characters are inside the token the surname created.
+		$this->assertSame( 'Peter Jr', bb_core_strip_hidden_name_part( 'Peter Zebrastripe Jr', 'Zebrastripe', 'Peter' ) );
+		$this->assertSame( '', bb_core_strip_hidden_name_part( 'PeterZebrastripeJr', 'Zebrastripe', 'Peter' ) );
+		$this->assertSame( '', bb_core_strip_hidden_name_part( 'pzebrastripe', 'Zebrastripe', 'Peter' ) );
+		$this->assertSame( '', bb_core_strip_hidden_name_part( "Zebrastripe\xEF\xBC\x92", 'Zebrastripe', 'Peter' ) );
+
+		// The other side of the rule: a surname that is only a coincidental fragment of a longer,
+		// unrelated word leaves a substantial remainder and must be KEPT - dropping it would redact
+		// a name the viewer is entitled to.
+		$this->assertSame( 'Armstrong', bb_core_strip_hidden_name_part( 'Armstrong', 'Ng', 'Armstrong' ) );
+	}
+
+	/**
+	 * With every name source blank, the label falls to user_nicename - never to a blank.
+	 *
+	 * Each strip can consume the whole name, and the nickname can be empty too. The last resort is
+	 * user_nicename, which WordPress guarantees for a real user and which cannot carry a hidden
+	 * name part. This is also the reason the raw-display_name fallbacks further down the bbPress
+	 * author helpers are unreachable: this function never returns an empty string for a valid user.
+	 *
+	 * @group bb_name_privacy
+	 */
+	public function test_get_user_displayname_falls_back_to_user_nicename_when_all_else_is_blank() {
+		$author = self::factory()->user->create(
+			array(
+				'user_login'    => 'lastresort',
+				'user_nicename' => 'lastresort',
+			)
+		);
+
+		// The rebuilt name IS the hidden surname and there is no nickname to fall back to.
+		update_user_meta( $author, 'nickname', '' );
+		xprofile_set_field_data( bp_xprofile_nickname_field_id(), $author, '' );
+
+		$ln        = (int) bp_xprofile_lastname_field_id();
+		$force     = function () {
+			return 'Zebrastripe';
+		};
+		$hide_ln   = function ( $fields, $user_id, $viewer_id ) use ( $ln, $author ) {
+			if ( (int) $user_id === (int) $author ) {
+				$fields   = (array) $fields;
+				$fields[] = $ln;
+				return array_unique( $fields );
+			}
+			return $fields;
+		};
+		$ln_data   = function ( $value, $field_id, $user_id ) use ( $ln, $author ) {
+			return ( (int) $field_id === $ln && (int) $user_id === (int) $author ) ? 'Zebrastripe' : $value;
+		};
+		add_filter( 'bp_xprofile_get_member_display_name', $force, 20 );
+		add_filter( 'bp_xprofile_get_hidden_fields_for_user', $hide_ln, 20, 3 );
+		add_filter( 'xprofile_get_field_data', $ln_data, 20, 3 );
+
+		try {
+			$GLOBALS['bb_default_display_avatar'] = true;
+			$this->set_current_user( 0 );
+			$seen = bp_core_get_user_displayname( $author );
+
+			$this->assertStringNotContainsStringIgnoringCase( 'zebrastripe', (string) $seen );
+			$this->assertNotSame( '', trim( (string) $seen ), 'must never resolve to a blank label' );
+			$this->assertSame( 'lastresort', (string) $seen );
+		} finally {
+			$GLOBALS['bb_default_display_avatar'] = false;
+			remove_filter( 'bp_xprofile_get_member_display_name', $force, 20 );
+			remove_filter( 'bp_xprofile_get_hidden_fields_for_user', $hide_ln, 20 );
+			remove_filter( 'xprofile_get_field_data', $ln_data, 20 );
+		}
+	}
+
 	public function test_guest_viewer_sentinel_matches_a_real_logged_out_request() {
 		$ln     = (int) bp_xprofile_lastname_field_id();
 		$format = bp_get_option( 'bp-display-name-format' );
