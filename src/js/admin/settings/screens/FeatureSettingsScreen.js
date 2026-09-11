@@ -231,6 +231,30 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 		}
 	}, [buildProModalPayload]);
 
+	/**
+	 * Handle a click on an empty-state upgrade button that carries a catalog
+	 * modal payload (`upgrade_modal`, set by the AJAX formatter for fields
+	 * registered with `upgrade_from_catalog`).
+	 *
+	 * Separate from the pro-badge handlers because the fallbacks differ: an
+	 * upsell panel names the feature in `empty_state_title`/`empty_state_description`,
+	 * where a locked field uses `label`/`description`.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param {Object} field Field object with an `upgrade_modal` payload.
+	 */
+	const handleEmptyStateUpgradeClick = useCallback((field) => {
+		const payload = buildProModalPayload(
+			field?.upgrade_modal,
+			field?.empty_state_title || field?.label,
+			field?.empty_state_description || field?.description
+		);
+		if (payload) {
+			setProUpgradeModalPayload(payload);
+		}
+	}, [buildProModalPayload]);
+
 	// Auto-save state.
 	const [toast, setToast] = useState(null);
 	const [changedFields, setChangedFields] = useState({});
@@ -1431,6 +1455,7 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 														values={settings}
 														onChange={handleSettingChange}
 														onProBadgeClick={handleFieldProClick}
+														onUpgradeClick={handleEmptyStateUpgradeClick}
 														disabled={isSectionDisabled}
 													/>
 												) }
