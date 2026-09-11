@@ -11105,8 +11105,24 @@ function bb_core_sql_like_match( $pattern, $subject ) {
  */
 function bb_core_strip_hidden_name_part( $display_name, $hidden_part, $visible_part = '' ) {
 	$display_name = (string) $display_name;
-	$hidden_part  = preg_replace( '/^[\s\p{Zs}]+|[\s\p{Zs}]+$/u', '', (string) $hidden_part );
-	$visible_part = preg_replace( '/^[\s\p{Zs}]+|[\s\p{Zs}]+$/u', '', (string) $visible_part );
+
+	// A null $hidden_part means the caller's own normalisation failed - preg_replace() returns null
+	// only when the subject is not valid UTF-8, which is exactly the legacy/imported data this
+	// redaction exists for. Fail closed: we cannot prove the display name is free of a value we
+	// cannot even read, and returning it unchanged would hand the viewer the raw column.
+	if ( null === $hidden_part ) {
+		return '';
+	}
+
+	$hidden_raw   = (string) $hidden_part;
+	$hidden_part  = preg_replace( '/^[\s\p{Zs}]+|[\s\p{Zs}]+$/u', '', $hidden_raw );
+	$visible_part = (string) preg_replace( '/^[\s\p{Zs}]+|[\s\p{Zs}]+$/u', '', (string) $visible_part );
+
+	// Same reasoning for a hidden value that is itself malformed: '' would mean "nothing to strip"
+	// and return the display name whole, so the two cases must not collapse into one.
+	if ( null === $hidden_part ) {
+		return '';
+	}
 
 	if ( '' === $hidden_part || '' === trim( $display_name ) ) {
 		return trim( $display_name );

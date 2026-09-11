@@ -504,6 +504,38 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 	}
 
 	/**
+	 * A name value that is not valid UTF-8 must fail CLOSED. preg_replace() with the /u modifier
+	 * returns null on such a subject, and if that null is treated as "no hidden part" the raw
+	 * display_name is returned to a viewer who is denied it - the exact legacy/imported data shape
+	 * this redaction exists for.
+	 *
+	 * The empty case is asserted alongside it because the two must not collapse: an empty hidden
+	 * part legitimately means "nothing to strip" and returns the name unchanged.
+	 *
+	 * @group bb_name_redaction
+	 */
+	public function test_strip_hidden_name_part_fails_closed_on_unprocessable_input() {
+		$malformed = "Zebra\xb0stripe"; // Lone 0xB0 - not valid UTF-8.
+
+		$this->assertFalse( mb_check_encoding( $malformed, 'UTF-8' ), 'fixture must really be malformed' );
+
+		// Malformed hidden part, valid display name: must not return the column.
+		$this->assertSame( '', bb_core_strip_hidden_name_part( 'Peter Zebrastripe', $malformed, 'Peter' ) );
+
+		// The callers normalise before calling and pass null when that fails - same meaning.
+		$this->assertSame( '', bb_core_strip_hidden_name_part( 'Peter Zebrastripe', null, 'Peter' ) );
+
+		// Malformed display name with a valid hidden part: also fail closed.
+		$this->assertSame( '', bb_core_strip_hidden_name_part( "Peter Zebra\xb0stripe", 'Zebrastripe', 'Peter' ) );
+
+		// A genuinely empty hidden part is NOT a failure - nothing to strip.
+		$this->assertSame( 'Peter Zebrastripe', bb_core_strip_hidden_name_part( 'Peter Zebrastripe', '', 'Peter' ) );
+
+		// And the ordinary case still works.
+		$this->assertSame( 'Peter', bb_core_strip_hidden_name_part( 'Peter Zebrastripe', 'Zebrastripe', 'Peter' ) );
+	}
+
+	/**
 	 * The LIKE matcher has to agree with the SQL comparison that produced the candidate rows,
 	 * including the backslash escaping bp_esc_like() applies.
 	 */
