@@ -617,8 +617,13 @@ function bp_core_get_user_displayname( $user_id_or_username, $current_user_id = 
 					// Compare against whitespace-STRIPPED forms so a multi-word surname glued with no
 					// internal spaces ("VanDerBerg" for field "Van Der Berg") is still matched as a
 					// whole token or as first+last glue.
-					$ln_nospace   = preg_replace( '/\s+/', '', $last_name );
-					$fn_nospace   = preg_replace( '/\s+/', '', $first_name );
+					// Strip Unicode spaces too (\p{Zs}, incl. U+00A0), not just ASCII \s - a multi-word
+					// surname field whose internal separator is a non-breaking space
+					// ("Van\u{00A0}Der\u{00A0}Berg") must reduce to the same "VanDerBerg" the glued
+					// display_name carries, or it would not match and the surname would survive.
+					// Requires the /u modifier for \p{Zs}.
+					$ln_nospace   = preg_replace( '/[\s\p{Zs}]+/u', '', $last_name );
+					$fn_nospace   = preg_replace( '/[\s\p{Zs}]+/u', '', $first_name );
 					$glue_pattern = ( '' !== $fn_nospace )
 						? '/^(?:' . preg_quote( $fn_nospace . $ln_nospace, '/' ) . '|' . preg_quote( $ln_nospace . $fn_nospace, '/' ) . ')$/iu'
 						: '';
@@ -650,7 +655,7 @@ function bp_core_get_user_displayname( $user_id_or_username, $current_user_id = 
 					$fn_hidden = '';
 					if ( ! $first_name_visible && '' !== $fn_nospace ) {
 						$fn_alts = array( preg_quote( $fn_nospace, '/' ) );
-						foreach ( preg_split( '/\s+/', $first_name ) as $fn_part ) {
+						foreach ( preg_split( '/[\s\p{Zs}]+/u', $first_name ) as $fn_part ) {
 							if ( '' !== $fn_part ) {
 								$fn_alts[] = preg_quote( $fn_part, '/' );
 							}

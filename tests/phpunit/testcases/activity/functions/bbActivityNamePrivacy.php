@@ -669,6 +669,33 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 	}
 
 	/**
+	 * A multi-word surname whose FIELD VALUE uses a non-breaking space (U+00A0) as its internal word
+	 * separator ("Van\u{00A0}Der\u{00A0}Berg", the "pasted from a word processor" shape) glued into the
+	 * display_name with no separator ("AnnaVanDerBerg") must still redact - the whitespace-strip that
+	 * builds the match must remove Unicode spaces (\p{Zs}), not just ASCII \s, or the surname survives.
+	 * Field value is written directly (wp_update_user would sanitise the NBSP away).
+	 *
+	 * @group bb_activity_get_item_user_displayname
+	 */
+	public function test_get_user_displayname_redacts_surname_with_nbsp_separator() {
+		$nbsp = "\xc2\xa0"; // U+00A0.
+		$u    = self::factory()->user->create();
+		xprofile_set_field_data( bp_xprofile_firstname_field_id(), $u, 'Anna' );
+		xprofile_set_field_data( bp_xprofile_lastname_field_id(), $u, 'Van' . $nbsp . 'Der' . $nbsp . 'Berg' );
+		xprofile_set_field_visibility_level( bp_xprofile_lastname_field_id(), $u, 'loggedin' );
+		// Drift the column to the glued form directly, bypassing the format sync.
+		global $wpdb;
+		$wpdb->update( $wpdb->users, array( 'display_name' => 'AnnaVanDerBerg' ), array( 'ID' => $u ) );
+		clean_user_cache( $u );
+
+		$GLOBALS['bb_default_display_avatar'] = true;
+		$this->set_current_user( 0 );
+		$guest = bp_core_get_user_displayname( $u, 0 );
+		$this->assertStringNotContainsStringIgnoringCase( 'vanderberg', preg_replace( '/[\s\p{Zs}]+/u', '', $guest ), 'NBSP-separated surname leaked' );
+		$this->assertSame( 'Anna', $guest );
+	}
+
+	/**
 	 * When the First Name field is genuinely EMPTY (unset on the site, or left blank by the member,
 	 * or its data row missing - not merely hidden), the exact first+last glue pattern cannot be
 	 * built, so a separator-less glued display_name ("AnnaSmith") that drifted from the fields
