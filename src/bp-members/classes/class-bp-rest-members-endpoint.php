@@ -720,9 +720,16 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 			$member_types = bp_get_member_type( $user->ID, false );
 		}
 
+		// The name is viewer-dependent (a member may hide their last name, or the site format may
+		// exclude it). Redact through bp_core_get_user_displayname(), which is viewer-scoped (0 = a
+		// guest), instead of exposing the raw wp_users.display_name column. NOTE: this file is the
+		// GENERATED copy synced from buddyboss-platform-api via `grunt bp_rest`; the source of truth
+		// is the API repo's get_visible_display_name() and this stays in sync at release.
+		$viewer_id = get_current_user_id();
+
 		$data      = array(
 			'id'                 => $user->ID,
-			'name'               => $user->display_name,
+			'name'               => bp_core_get_user_displayname( $user->ID, $viewer_id ),
 			'user_login'         => $user->user_login,
 			'link'               => bp_core_get_user_domain( $user->ID, $user->user_nicename, $user->user_login ),
 			'member_types'       => $member_types,
@@ -730,7 +737,7 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 			'capabilities'       => array(),
 			'extra_capabilities' => array(),
 			'registered_date'    => bp_rest_prepare_date_response( $user_data->user_registered ),
-			'profile_name'       => bp_core_get_user_displayname( $user->ID ),
+			'profile_name'       => bp_core_get_user_displayname( $user->ID, $viewer_id ),
 			'last_activity'      => $this->bp_rest_get_member_last_active( $user->ID, array( 'relative' => false ) ),
 			'is_online'          => function_exists( 'bb_is_online_user' ) ? (bool) bb_is_online_user( $user->ID ) : false,
 			'xprofile'           => array(),

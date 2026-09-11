@@ -849,7 +849,11 @@ function xprofile_filter_get_user_display_name( $full_name, $user_id, $current_u
 			if ( $first_name_field_id && in_array( $first_name_field_id, $list_fields ) ) {
 				$first_name = xprofile_get_field_data( $first_name_field_id, $user_id );
 				if ( ! empty( $first_name ) ) {
-					$full_name = trim( str_replace( $first_name, '', $full_name ) );
+					// Whole-token removal (not a bare str_replace, which a 1-3 letter first name would
+					// use to mangle a longer token): drop the first name only where it stands as a
+					// complete token, mirroring the boundary matching in bp_core_get_user_displayname().
+					$stripped  = preg_replace( '/(^|\s)' . preg_quote( $first_name, '/' ) . '(?=\s|$)/iu', ' ', $full_name );
+					$full_name = ( null === $stripped ) ? '' : trim( preg_replace( '/\s+/', ' ', $stripped ) );
 				}
 				if ( '' === trim( (string) $full_name ) ) {
 					$full_name = get_the_author_meta( 'nickname', $user_id );

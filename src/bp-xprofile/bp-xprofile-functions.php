@@ -1408,9 +1408,19 @@ function bp_xprofile_get_hidden_field_types_for_user( $displayed_user_id = 0, $c
 	// Current user is logged in.
 	if ( ! empty( $current_user_id ) ) {
 
+		// The moderator override must be evaluated for the VIEWER ($current_user_id) - the same
+		// identity the friendship branch below uses - not the global actor. They are the same on
+		// every normal request, but a WP personal-data export runs as an administrator while asking
+		// for a specific data subject's view: using the actor there would treat the admin as able to
+		// see everyone's hidden fields and defeat the redaction. Keep bp_current_user_can() (with its
+		// BP-specific filters) for the common viewer==actor path so nothing else changes.
+		$viewer_can_moderate = ( (int) $current_user_id === bp_loggedin_user_id() )
+			? bp_current_user_can( 'bp_moderate' )
+			: user_can( (int) $current_user_id, 'bp_moderate' );
+
 		// Nothing's private when viewing your own profile, or when the
 		// current user is an admin.
-		if ( $displayed_user_id == $current_user_id || bp_current_user_can( 'bp_moderate' ) ) {
+		if ( $displayed_user_id == $current_user_id || $viewer_can_moderate ) {
 			$hidden_levels = array();
 
 			// If the current user and displayed user are friends, show all.

@@ -938,6 +938,16 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 						'html'    => false,
 					)
 				);
+
+				// The group-member object carries the raw wp_users.display_name, which holds the full
+				// name even when the member hid their last name (or the site format excludes it). Redact
+				// it for the current viewer before it is exposed in admins[]/mods[], so it cannot leak
+				// the hidden surname next to the already-redacted fullname. bp_core_get_user_displayname()
+				// is viewer-scoped and falls back to the logged-in user (0 for a guest).
+				if ( isset( $user->display_name ) && function_exists( 'bp_core_get_user_displayname' ) ) {
+					$user->display_name = bp_core_get_user_displayname( $user->ID );
+				}
+
 				// Make sure to unset private data.
 				$private_keys = array_intersect(
 					array_keys( get_object_vars( $user ) ),

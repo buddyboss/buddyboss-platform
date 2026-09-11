@@ -560,17 +560,20 @@ function bp_core_get_user_displayname( $user_id_or_username, $current_user_id = 
 	// visibility level. That format-level hide never enters bp_xprofile_get_hidden_fields_for_user(),
 	// so a guest whose stored display_name has drifted to the full name (the format -> display_name
 	// resync is a manual repair tool, not automatic) would otherwise be shown the last name the site
-	// format is meant to suppress. Treat a format-hidden last name as hidden here so the same
-	// redaction runs. Logged-in viewers already get the format-aware name via
-	// xprofile_filter_get_user_display_name(); this keeps the guest path consistent.
-	$format_hidden_last_name_id = bp_xprofile_lastname_field_id();
+	// format is meant to suppress. The last name is not part of the "First Name" or "Nickname"
+	// display formats AT ALL - regardless of whether the Last Name field is enabled as a profile
+	// field - so under those formats a drifted display_name must be redacted for the guest path too.
+	// (Gating on bp_core_hide_display_name_field() was too narrow: that only reports the field being
+	// DISABLED, missing the common enabled-field case.) Logged-in viewers already get the format-aware
+	// name via xprofile_filter_get_user_display_name(); this keeps the guest path consistent.
+	$format_last_name_field_id = bp_xprofile_lastname_field_id();
+	$active_display_format     = function_exists( 'bp_core_display_name_format' ) ? bp_core_display_name_format() : 'first_last_name';
 	if (
-		$format_hidden_last_name_id
-		&& function_exists( 'bp_core_hide_display_name_field' )
-		&& bp_core_hide_display_name_field( $format_hidden_last_name_id )
-		&& ! in_array( $format_hidden_last_name_id, $list_fields )
+		$format_last_name_field_id
+		&& in_array( $active_display_format, array( 'first_name', 'nickname' ), true )
+		&& ! in_array( $format_last_name_field_id, $list_fields )
 	) {
-		$list_fields[] = $format_hidden_last_name_id;
+		$list_fields[] = $format_last_name_field_id;
 	}
 
 	if ( empty( $list_fields ) ) {

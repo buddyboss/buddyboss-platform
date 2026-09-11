@@ -470,49 +470,96 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 	}
 
 	/**
-	 * Site Display Name Format = "First Name" with the Last Name field disabled hides the last name
-	 * for EVERYONE via the format, independent of per-field visibility. A guest whose stored
-	 * display_name has drifted to the full name (the format->display_name resync is a manual repair)
-	 * must NOT be shown the last name, even though the member never set a restrictive Last-Name
-	 * visibility level (it stays public).
+	 * The "First Name" and "Nickname" display formats exclude the last name for EVERYONE, regardless
+	 * of per-field visibility AND regardless of whether the Last Name field is enabled (the default).
+	 * A guest whose stored display_name has drifted to the full name (the format->display_name resync
+	 * is a manual repair) must not be shown the last name. The Last Name field is left ENABLED here -
+	 * the configuration that actually regressed - and its per-field visibility left PUBLIC, so only
+	 * the site format hides it. Also asserts the guest result matches a logged-in member (no inverted
+	 * gradient).
 	 *
 	 * @group bb_activity_get_item_user_displayname
 	 */
-	public function test_get_user_displayname_first_name_format_strips_drifted_last_name_for_guest() {
+	public function test_get_user_displayname_hides_last_name_under_first_name_and_nickname_formats() {
 		$format_backup = bp_get_option( 'bp-display-name-format' );
-		$hln_backup    = bp_get_option( 'bp-hide-last-name' );
+		$member        = self::factory()->user->create();
 
 		try {
-			bp_update_option( 'bp-display-name-format', 'first_name' );
-			bp_update_option( 'bp-hide-last-name', 0 ); // Last Name field disabled => format-hidden.
-
-			$u = self::factory()->user->create();
-			wp_update_user(
-				array(
-					'ID'         => $u,
-					'first_name' => 'Alex',
-					'last_name'  => 'Quillfeather',
-					'nickname'   => 'quillnick',
-				)
+			// format => expected visible label (first_name => "Alex", nickname => the nickname).
+			$cases = array(
+				'first_name' => 'Alex',
+				'nickname'   => 'quillnick',
 			);
-			// Ensure the last-name FIELD is populated (the first_name-format sync does not set it), and
-			// leave its per-field visibility PUBLIC - only the site format hides it.
-			xprofile_set_field_data( bp_xprofile_lastname_field_id(), $u, 'Quillfeather' );
-			xprofile_set_field_visibility_level( bp_xprofile_lastname_field_id(), $u, 'public' );
-			// Drift the stored column to the full name, as a pre-repair / imported site would have.
-			global $wpdb;
-			$wpdb->update( $wpdb->users, array( 'display_name' => 'Alex Quillfeather' ), array( 'ID' => $u ) );
-			clean_user_cache( $u );
 
-			$GLOBALS['bb_default_display_avatar'] = true;
-			$this->set_current_user( 0 );
-			$guest = bp_core_get_user_displayname( $u, 0 );
-			$this->assertStringNotContainsStringIgnoringCase( 'quillfeather', $guest, 'first_name format leaked the last name to a guest' );
-			$this->assertSame( 'Alex', $guest );
+			foreach ( $cases as $format => $expected ) {
+				bp_update_option( 'bp-display-name-format', $format );
+				// Last Name field ENABLED (default) - do NOT disable it; that is the config that leaked.
+
+				$u = self::factory()->user->create();
+				wp_update_user(
+					array(
+						'ID'         => $u,
+						'first_name' => 'Alex',
+						'last_name'  => 'Quillfeather',
+						'nickname'   => 'quillnick',
+					)
+				);
+				xprofile_set_field_data( bp_xprofile_lastname_field_id(), $u, 'Quillfeather' );
+				xprofile_set_field_data( bp_xprofile_firstname_field_id(), $u, 'Alex' );
+				// Per-field visibility PUBLIC - only the site format hides the last name.
+				xprofile_set_field_visibility_level( bp_xprofile_lastname_field_id(), $u, 'public' );
+				// Drift the stored column to the full name, as a pre-repair / imported site would have.
+				global $wpdb;
+				$wpdb->update( $wpdb->users, array( 'display_name' => 'Alex Quillfeather' ), array( 'ID' => $u ) );
+				clean_user_cache( $u );
+
+				$GLOBALS['bb_default_display_avatar'] = true;
+				$this->set_current_user( 0 );
+				$guest = bp_core_get_user_displayname( $u, 0 );
+				$this->assertStringNotContainsStringIgnoringCase( 'quillfeather', $guest, "{$format} format leaked the last name to a guest" );
+				$this->assertSame( $expected, $guest, "{$format} guest label" );
+
+				// No inverted gradient: a logged-in member sees the same (format-appropriate) value.
+				$GLOBALS['bb_default_display_avatar'] = true;
+				$this->set_current_user( $member );
+				$this->assertSame( $expected, bp_core_get_user_displayname( $u, $member ), "{$format} member label matches guest" );
+			}
 		} finally {
 			bp_update_option( 'bp-display-name-format', $format_backup );
-			bp_update_option( 'bp-hide-last-name', $hln_backup );
 		}
+	}
+
+	/**
+	 * A WP personal-data export runs as an administrator but must reflect the DATA SUBJECT's view:
+	 * a connection who hid their last name from the data subject must not have it exported. Because
+	 * bp_xprofile_get_hidden_field_types_for_user() evaluated the moderator override against the
+	 * global actor (the admin), the redaction was a no-op; the moderator check must use the viewer.
+	 *
+	 * @group bb_activity_get_item_user_displayname
+	 */
+	public function test_get_user_displayname_redacts_for_data_subject_when_admin_is_actor() {
+		$subject = self::factory()->user->create(); // the data subject (a regular member, not admin).
+		$other   = self::factory()->user->create();
+		wp_update_user(
+			array(
+				'ID'           => $other,
+				'first_name'   => 'Alex',
+				'last_name'    => 'Quillfeather',
+				'display_name' => 'Alex Quillfeather',
+			)
+		);
+		// $other hides the last name from non-friends (the data subject is not a friend).
+		xprofile_set_field_visibility_level( bp_xprofile_lastname_field_id(), $other, 'friends' );
+
+		// The export tool runs as an administrator (maps to bp_moderate).
+		$admin = self::factory()->user->create( array( 'role' => 'administrator' ) );
+
+		$GLOBALS['bb_default_display_avatar'] = true;
+		$this->set_current_user( $admin );
+		// Resolve as the export does: displayed = $other, viewer = the data subject.
+		$exported = bp_core_get_user_displayname( $other, $subject );
+		$this->assertStringNotContainsStringIgnoringCase( 'quillfeather', $exported, 'export leaked a connection last name hidden from the data subject' );
+		$this->assertSame( 'Alex', $exported );
 	}
 
 	/**
