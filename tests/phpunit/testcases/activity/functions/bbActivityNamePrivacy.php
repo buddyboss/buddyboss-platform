@@ -138,6 +138,38 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 	}
 
 	/**
+	 * When stripping the hidden last name leaves nothing (a bare "Last" display name), the
+	 * first-name fallback must itself honour visibility: if the First Name field is also
+	 * hidden from the viewer (e.g. via the bp_xprofile_get_hidden_fields_for_user filter),
+	 * fall through to the nickname rather than leaking the raw first name.
+	 *
+	 * @group bb_activity_get_item_user_displayname
+	 */
+	public function test_get_user_displayname_first_name_fallback_honours_first_name_visibility() {
+		$u = $this->create_member_with_hidden_last_name();
+		wp_update_user( array( 'ID' => $u, 'display_name' => 'Quillfeather', 'nickname' => 'quillnick' ) );
+
+		$first_name_field_id = (int) bp_xprofile_firstname_field_id();
+		$hide_first = static function ( $hidden, $displayed_user_id, $viewer_id ) use ( $u, $first_name_field_id ) {
+			if ( (int) $displayed_user_id === (int) $u && 0 === (int) $viewer_id ) {
+				$hidden[] = $first_name_field_id;
+			}
+			return $hidden;
+		};
+		add_filter( 'bp_xprofile_get_hidden_fields_for_user', $hide_first, 10, 3 );
+
+		$GLOBALS['bb_default_display_avatar'] = true;
+		$this->set_current_user( 0 );
+		$resolved = bp_core_get_user_displayname( $u, 0 );
+
+		$this->assertStringNotContainsString( 'Quillfeather', $resolved );
+		$this->assertStringNotContainsString( 'Alex', $resolved );
+		$this->assertSame( 'quillnick', $resolved );
+
+		remove_filter( 'bp_xprofile_get_hidden_fields_for_user', $hide_first, 10 );
+	}
+
+	/**
 	 * The comment tree is cached per activity with no viewer in the key. A tree cached
 	 * while a member viewed it must not hand that member's `user_fullname` to a guest.
 	 *

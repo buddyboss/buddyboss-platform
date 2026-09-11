@@ -581,12 +581,16 @@ function bp_core_get_user_displayname( $user_id_or_username, $current_user_id = 
 			// left" so the public first-name/nickname fallback below applies instead of leaking.
 			$full_name = ( null === $full_name ) ? '' : trim( preg_replace( '/\s+/', ' ', $full_name ) );
 
-			// If only the hidden last name remained, fall back to the (public) first name,
-			// then the nickname, so the viewer still sees a name rather than a blank.
+			// If only the hidden last name remained, fall back to the first name - but only
+			// when it is itself visible to this viewer (it is governed by the same hidden-field
+			// list as the last name; a site may hide it too via visibility or the
+			// bp_xprofile_get_hidden_fields_for_user filter). Otherwise use the nickname, so a
+			// viewer who may see neither name still gets a non-leaking label rather than a blank.
 			if ( '' === $full_name ) {
 				$first_name_field_id = bp_xprofile_firstname_field_id();
-				$full_name           = $first_name_field_id ? (string) xprofile_get_field_data( $first_name_field_id, $user_id ) : '';
-				$full_name           = trim( $full_name );
+				if ( $first_name_field_id && ! in_array( $first_name_field_id, $list_fields ) ) {
+					$full_name = trim( (string) xprofile_get_field_data( $first_name_field_id, $user_id ) );
+				}
 				if ( '' === $full_name ) {
 					$full_name = get_the_author_meta( 'nickname', $user_id );
 				}
