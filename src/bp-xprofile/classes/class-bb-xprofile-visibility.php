@@ -63,6 +63,21 @@ class BB_XProfile_Visibility {
 	public $last_updated;
 
 	/**
+	 * Per-request memo of get_user_field_ids_by_visibility_levels() results.
+	 *
+	 * Display names are viewer-dependent and get resolved at many independent points in a single
+	 * request (activity action strings, author links, append_user_fullnames(), comment trees,
+	 * member loops, avatar alts, RSS), so the same (user, levels) visibility lookup would
+	 * otherwise re-run its uncached query several times per request. Keyed by
+	 * "{user_id}:{sha1 of the sorted levels}". Invalidated per user on every write below.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @var array $field_ids_cache
+	 */
+	private static $field_ids_cache = array();
+
+	/**
 	 * BB_XProfile_Visibility constructor.
 	 *
 	 * @since BuddyBoss 2.6.50
@@ -340,6 +355,8 @@ class BB_XProfile_Visibility {
 				return false;
 			}
 
+			self::flush_field_ids_cache( (int) $this->user_id );
+
 			/**
 			 * Fires after the current profile data instance gets saved.
 			 *
@@ -390,6 +407,8 @@ class BB_XProfile_Visibility {
 			return false;
 		}
 
+		self::flush_field_ids_cache( (int) $this->user_id );
+
 		/**
 		 * Fires after the current profile data instance gets deleted.
 		 *
@@ -427,6 +446,9 @@ class BB_XProfile_Visibility {
 			return false;
 		}
 
+		// Affects rows across all users - clear the whole memo.
+		self::flush_field_ids_cache();
+
 		return true;
 	}
 
@@ -461,6 +483,8 @@ class BB_XProfile_Visibility {
 			xprofile_delete_field_data( $field_id, $user_id );
 		}
 
+		self::flush_field_ids_cache( (int) $user_id );
+
 		return count( $field_ids );
 	}
 
@@ -483,6 +507,8 @@ class BB_XProfile_Visibility {
 			return false;
 		}
 
+		self::flush_field_ids_cache( (int) $user_id );
+
 		return true;
 	}
 
@@ -504,6 +530,15 @@ class BB_XProfile_Visibility {
 
 		if ( empty( $user_id ) || empty( $levels ) ) {
 			return $fields;
+		}
+
+		// Per-request memo: the same (user, levels) pair is resolved many times per request and
+		// the query below is uncached. Key on the sorted levels so equivalent level sets hit.
+		$sorted_levels = $levels;
+		sort( $sorted_levels );
+		$cache_key = (int) $user_id . ':' . sha1( implode( ',', $sorted_levels ) );
+		if ( isset( self::$field_ids_cache[ $cache_key ] ) ) {
+			return self::$field_ids_cache[ $cache_key ];
 		}
 
 		// Prepare the levels array by quoting each element.
@@ -535,7 +570,36 @@ class BB_XProfile_Visibility {
 			}
 		}
 
+		self::$field_ids_cache[ $cache_key ] = $fields;
+
 		return $fields;
+	}
+
+	/**
+	 * Invalidate the per-request visibility field-ids memo.
+	 *
+	 * Called by every writer that changes rows in the visibility table so a read that follows a
+	 * write in the same request never returns a stale result.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param int $user_id Optional. Clear only this user's entries; 0 clears the whole memo (used
+	 *                     when a write affects rows across all users).
+	 */
+	public static function flush_field_ids_cache( $user_id = 0 ) {
+		$user_id = (int) $user_id;
+
+		if ( $user_id <= 0 ) {
+			self::$field_ids_cache = array();
+			return;
+		}
+
+		$prefix = $user_id . ':';
+		foreach ( array_keys( self::$field_ids_cache ) as $key ) {
+			if ( 0 === strpos( $key, $prefix ) ) {
+				unset( self::$field_ids_cache[ $key ] );
+			}
+		}
 	}
 
 }
