@@ -380,6 +380,51 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 	}
 
 	/**
+	 * The redaction must hold under EVERY restrictive visibility level a member can pick for their
+	 * Last Name, not just "All Members" - a guest must see only the first name for loggedin / friends
+	 * / adminsonly (BuddyBoss's registered restrictive levels), and the full name only for public.
+	 * Guards the class of "some visibility level was not redacted" for the guest (viewer 0), who is
+	 * denied by every non-public level.
+	 *
+	 * @group bb_activity_get_item_user_displayname
+	 */
+	public function test_get_user_displayname_hides_last_name_across_all_visibility_levels() {
+		foreach ( array( 'loggedin', 'friends', 'adminsonly' ) as $level ) {
+			$u = self::factory()->user->create();
+			wp_update_user(
+				array(
+					'ID'           => $u,
+					'first_name'   => 'Alex',
+					'last_name'    => 'Quillfeather',
+					'display_name' => 'Alex Quillfeather',
+				)
+			);
+			xprofile_set_field_visibility_level( bp_xprofile_lastname_field_id(), $u, $level );
+
+			$GLOBALS['bb_default_display_avatar'] = true;
+			$this->set_current_user( 0 );
+			$guest = bp_core_get_user_displayname( $u, 0 );
+			$this->assertSame( 'Alex', $guest, "guest leak under visibility level '{$level}'" );
+			$this->assertStringNotContainsStringIgnoringCase( 'quillfeather', $guest, "surname leaked under '{$level}'" );
+		}
+
+		// Public: the full name shows to the guest (negative control).
+		$pub = self::factory()->user->create();
+		wp_update_user(
+			array(
+				'ID'           => $pub,
+				'first_name'   => 'Alex',
+				'last_name'    => 'Quillfeather',
+				'display_name' => 'Alex Quillfeather',
+			)
+		);
+		xprofile_set_field_visibility_level( bp_xprofile_lastname_field_id(), $pub, 'public' );
+		$GLOBALS['bb_default_display_avatar'] = true;
+		$this->set_current_user( 0 );
+		$this->assertSame( 'Alex Quillfeather', bp_core_get_user_displayname( $pub, 0 ), 'public last name should show to guest' );
+	}
+
+	/**
 	 * Edge: first and last name are the same word in a different case. Hiding the last name still
 	 * yields the (visible) first name - never an empty label and never a leak of the raw column.
 	 *
@@ -542,6 +587,59 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 		$this->assertSame( 'quillnick', $resolved );
 
 		remove_filter( 'bp_xprofile_get_hidden_fields_for_user', $hide_first, 10 );
+	}
+
+	/**
+	 * When BOTH the first and last name are hidden from the viewer and the stored display_name is a
+	 * PLAIN space-separated "First Last" (the default, non-drifted shape - no glue, no punctuation),
+	 * stripping the surname leaves the first-name token standing. It must NOT be returned: the hidden
+	 * first name is dropped like the surname and the resolution falls through to the nickname. Covers
+	 * a single-token first name and a multi-word first name (both tokens must go).
+	 *
+	 * @group bb_activity_get_item_user_displayname
+	 */
+	public function test_get_user_displayname_plain_first_last_does_not_leak_when_both_hidden() {
+		$first_name_field_id = (int) bp_xprofile_firstname_field_id();
+		$hide_first          = static function ( $hidden, $displayed_user_id, $viewer_id ) use ( &$target, $first_name_field_id ) {
+			if ( ! empty( $target ) && (int) $displayed_user_id === (int) $target && 0 === (int) $viewer_id ) {
+				$hidden[] = $first_name_field_id;
+			}
+			return $hidden;
+		};
+		add_filter( 'bp_xprofile_get_hidden_fields_for_user', $hide_first, 10, 3 );
+
+		try {
+			// case => [ first name, display_name, tokens that must be absent ].
+			$cases = array(
+				'single-token first name' => array( 'Alex', 'Alex Quillfeather', array( 'Alex', 'Quillfeather' ) ),
+				'multi-word first name'   => array( 'Mary Jane', 'Mary Jane Quillfeather', array( 'Mary', 'Jane', 'Quillfeather' ) ),
+			);
+
+			foreach ( $cases as $label => $case ) {
+				list( $first, $display, $absent ) = $case;
+
+				$target = $this->create_member_with_hidden_last_name();
+				wp_update_user(
+					array(
+						'ID'           => $target,
+						'first_name'   => $first,
+						'display_name' => $display,
+						'nickname'     => 'quillnick',
+					)
+				);
+
+				$GLOBALS['bb_default_display_avatar'] = true;
+				$this->set_current_user( 0 );
+				$resolved = bp_core_get_user_displayname( $target, 0 );
+
+				foreach ( $absent as $needle ) {
+					$this->assertStringNotContainsString( $needle, $resolved, "{$label}: '{$needle}' leaked" );
+				}
+				$this->assertSame( 'quillnick', $resolved, "{$label}: expected nickname fallback" );
+			}
+		} finally {
+			remove_filter( 'bp_xprofile_get_hidden_fields_for_user', $hide_first, 10 );
+		}
 	}
 
 	/**

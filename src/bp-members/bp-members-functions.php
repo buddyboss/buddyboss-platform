@@ -568,7 +568,7 @@ function bp_core_get_user_displayname( $user_id_or_username, $current_user_id = 
 			// pattern that cannot match the display name and silently leave the hidden last name
 			// in place. Mirrors the REST helper in buddyboss-platform-api's
 			// BP_REST_Members_Endpoint::get_visible_display_name().
-			$last_name    = preg_replace( '/^\s+|\s+$/u', '', (string) xprofile_get_field_data( $last_name_field_id, $user_id ) );
+			$last_name    = preg_replace( '/^[\s\p{Zs}]+|[\s\p{Zs}]+$/u', '', (string) xprofile_get_field_data( $last_name_field_id, $user_id ) );
 			$display_name = get_the_author_meta( 'display_name', $user_id );
 
 			$format = function_exists( 'bp_core_display_name_format' ) ? bp_core_display_name_format() : 'first_last_name';
@@ -605,7 +605,7 @@ function bp_core_get_user_displayname( $user_id_or_username, $current_user_id = 
 				if ( '' !== $full_name ) {
 					$first_name_field_id = bp_xprofile_firstname_field_id();
 					$first_name          = $first_name_field_id
-						? preg_replace( '/^\s+|\s+$/u', '', (string) xprofile_get_field_data( $first_name_field_id, $user_id ) )
+						? preg_replace( '/^[\s\p{Zs}]+|[\s\p{Zs}]+$/u', '', (string) xprofile_get_field_data( $first_name_field_id, $user_id ) )
 						: '';
 
 					// The first name is used for glue DETECTION regardless of its own visibility, but
@@ -638,6 +638,26 @@ function bp_core_get_user_displayname( $user_id_or_username, $current_user_id = 
 						: '';
 					$bounded      = '/(?<![\p{L}\p{N}])' . preg_quote( $ln_nospace, '/' ) . '(?![\p{L}\p{N}])/iu';
 
+					// When the First Name field is ALSO hidden from this viewer, stripping the surname
+					// from a plain "First Last" display name leaves the first-name token standing
+					// ("Alex Quillfeather" -> "Alex"), and none of the last-name-derived patterns above
+					// match it - so it would be returned, leaking the hidden first name. Build a matcher
+					// for the first name (the whole whitespace-stripped form and each of its tokens, so a
+					// multi-word first name is caught too) and drop those tokens as well. Only built when
+					// the first name is hidden AND known, so every visible-first-name path is unchanged;
+					// dropping is privacy-safe (the token IS the hidden first name), and if everything is
+					// dropped the fallback below resolves to the nickname.
+					$fn_hidden = '';
+					if ( ! $first_name_visible && '' !== $fn_nospace ) {
+						$fn_alts = array( preg_quote( $fn_nospace, '/' ) );
+						foreach ( preg_split( '/\s+/', $first_name ) as $fn_part ) {
+							if ( '' !== $fn_part ) {
+								$fn_alts[] = preg_quote( $fn_part, '/' );
+							}
+						}
+						$fn_hidden = '/^(?:' . implode( '|', array_unique( $fn_alts ) ) . ')$/iu';
+					}
+
 					$tokens = array();
 					foreach ( preg_split( '/\s+/', $full_name ) as $token ) {
 						if ( '' === $token ) {
@@ -655,6 +675,10 @@ function bp_core_get_user_displayname( $user_id_or_username, $current_user_id = 
 							// recovered or checked against a visibility rule, so resolution falls through
 							// to the first-name field / nickname fallback below.
 							continue;
+						} elseif ( '' !== $fn_hidden && preg_match( $fn_hidden, $token ) ) {
+							// The hidden first name left standing after the surname strip - drop it too,
+							// so a viewer denied BOTH name fields never sees the first name here.
+							continue;
 						} elseif ( ! preg_match( $bounded, $token ) ) {
 							$tokens[] = $token;
 						}
@@ -671,7 +695,7 @@ function bp_core_get_user_displayname( $user_id_or_username, $current_user_id = 
 			if ( '' === $full_name ) {
 				$first_name_field_id = bp_xprofile_firstname_field_id();
 				if ( $first_name_field_id && ! in_array( $first_name_field_id, $list_fields ) ) {
-					$full_name = preg_replace( '/^\s+|\s+$/u', '', (string) xprofile_get_field_data( $first_name_field_id, $user_id ) );
+					$full_name = preg_replace( '/^[\s\p{Zs}]+|[\s\p{Zs}]+$/u', '', (string) xprofile_get_field_data( $first_name_field_id, $user_id ) );
 				}
 				if ( '' === $full_name ) {
 					$full_name = get_the_author_meta( 'nickname', $user_id );
