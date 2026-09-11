@@ -425,6 +425,97 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 	}
 
 	/**
+	 * A LOGGED-IN, non-privileged viewer (not a guest, not a friend, not an admin) who is denied both
+	 * name fields must still get the nickname - not the first name. This exercises the priority-15
+	 * xprofile_filter_get_user_display_name() filter, which for authenticated viewers overwrites the
+	 * function body's redacted result with a field-data rebuild and strips only the last name; prior
+	 * rounds only tested guests (viewer 0) and so never reached this path.
+	 *
+	 * @group bb_activity_get_item_user_displayname
+	 */
+	public function test_get_user_displayname_logged_in_stranger_both_hidden_falls_to_nickname() {
+		$u = self::factory()->user->create();
+		wp_update_user(
+			array(
+				'ID'           => $u,
+				'first_name'   => 'Alex',
+				'last_name'    => 'Quillfeather',
+				'display_name' => 'Alex Quillfeather',
+				'nickname'     => 'quillnick',
+			)
+		);
+		// adminsonly => hidden from a logged-in, non-admin, non-self viewer.
+		xprofile_set_field_visibility_level( bp_xprofile_lastname_field_id(), $u, 'adminsonly' );
+
+		$stranger = self::factory()->user->create(); // logged-in, non-friend, non-admin.
+		$fn_id    = (int) bp_xprofile_firstname_field_id();
+		$hide_first = static function ( $hidden, $displayed_user_id, $viewer_id ) use ( $u, $stranger, $fn_id ) {
+			if ( (int) $displayed_user_id === (int) $u && (int) $viewer_id === (int) $stranger ) {
+				$hidden[] = $fn_id;
+			}
+			return $hidden;
+		};
+		add_filter( 'bp_xprofile_get_hidden_fields_for_user', $hide_first, 10, 3 );
+
+		try {
+			$GLOBALS['bb_default_display_avatar'] = true;
+			$this->set_current_user( $stranger );
+			$resolved = bp_core_get_user_displayname( $u, $stranger );
+			$this->assertStringNotContainsString( 'Quillfeather', $resolved, 'last name leaked to logged-in stranger' );
+			$this->assertStringNotContainsString( 'Alex', $resolved, 'first name leaked to logged-in stranger' );
+			$this->assertSame( 'quillnick', $resolved );
+		} finally {
+			remove_filter( 'bp_xprofile_get_hidden_fields_for_user', $hide_first, 10 );
+		}
+	}
+
+	/**
+	 * Site Display Name Format = "First Name" with the Last Name field disabled hides the last name
+	 * for EVERYONE via the format, independent of per-field visibility. A guest whose stored
+	 * display_name has drifted to the full name (the format->display_name resync is a manual repair)
+	 * must NOT be shown the last name, even though the member never set a restrictive Last-Name
+	 * visibility level (it stays public).
+	 *
+	 * @group bb_activity_get_item_user_displayname
+	 */
+	public function test_get_user_displayname_first_name_format_strips_drifted_last_name_for_guest() {
+		$format_backup = bp_get_option( 'bp-display-name-format' );
+		$hln_backup    = bp_get_option( 'bp-hide-last-name' );
+
+		try {
+			bp_update_option( 'bp-display-name-format', 'first_name' );
+			bp_update_option( 'bp-hide-last-name', 0 ); // Last Name field disabled => format-hidden.
+
+			$u = self::factory()->user->create();
+			wp_update_user(
+				array(
+					'ID'         => $u,
+					'first_name' => 'Alex',
+					'last_name'  => 'Quillfeather',
+					'nickname'   => 'quillnick',
+				)
+			);
+			// Ensure the last-name FIELD is populated (the first_name-format sync does not set it), and
+			// leave its per-field visibility PUBLIC - only the site format hides it.
+			xprofile_set_field_data( bp_xprofile_lastname_field_id(), $u, 'Quillfeather' );
+			xprofile_set_field_visibility_level( bp_xprofile_lastname_field_id(), $u, 'public' );
+			// Drift the stored column to the full name, as a pre-repair / imported site would have.
+			global $wpdb;
+			$wpdb->update( $wpdb->users, array( 'display_name' => 'Alex Quillfeather' ), array( 'ID' => $u ) );
+			clean_user_cache( $u );
+
+			$GLOBALS['bb_default_display_avatar'] = true;
+			$this->set_current_user( 0 );
+			$guest = bp_core_get_user_displayname( $u, 0 );
+			$this->assertStringNotContainsStringIgnoringCase( 'quillfeather', $guest, 'first_name format leaked the last name to a guest' );
+			$this->assertSame( 'Alex', $guest );
+		} finally {
+			bp_update_option( 'bp-display-name-format', $format_backup );
+			bp_update_option( 'bp-hide-last-name', $hln_backup );
+		}
+	}
+
+	/**
 	 * Edge: first and last name are the same word in a different case. Hiding the last name still
 	 * yields the (visible) first name - never an empty label and never a leak of the raw column.
 	 *

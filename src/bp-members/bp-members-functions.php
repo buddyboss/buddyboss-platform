@@ -554,6 +554,25 @@ function bp_core_get_user_displayname( $user_id_or_username, $current_user_id = 
 	}
 
 	$list_fields = bp_xprofile_get_hidden_fields_for_user( $user_id, $current_user_id );
+
+	// The site-wide Display Name Format can hide the last name from EVERYONE - "First Name" and
+	// "Nickname" formats, or the "Last Name" field disabled - independently of any per-field
+	// visibility level. That format-level hide never enters bp_xprofile_get_hidden_fields_for_user(),
+	// so a guest whose stored display_name has drifted to the full name (the format -> display_name
+	// resync is a manual repair tool, not automatic) would otherwise be shown the last name the site
+	// format is meant to suppress. Treat a format-hidden last name as hidden here so the same
+	// redaction runs. Logged-in viewers already get the format-aware name via
+	// xprofile_filter_get_user_display_name(); this keeps the guest path consistent.
+	$format_hidden_last_name_id = bp_xprofile_lastname_field_id();
+	if (
+		$format_hidden_last_name_id
+		&& function_exists( 'bp_core_hide_display_name_field' )
+		&& bp_core_hide_display_name_field( $format_hidden_last_name_id )
+		&& ! in_array( $format_hidden_last_name_id, $list_fields )
+	) {
+		$list_fields[] = $format_hidden_last_name_id;
+	}
+
 	if ( empty( $list_fields ) ) {
 		$full_name = get_the_author_meta( 'display_name', $user_id );
 		if ( empty( $full_name ) ) {

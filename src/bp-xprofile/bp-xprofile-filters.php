@@ -835,7 +835,25 @@ function xprofile_filter_get_user_display_name( $full_name, $user_id, $current_u
 
 			if ( in_array( $last_name_field_id, $list_fields ) && ! empty( xprofile_get_field_data( $last_name_field_id, $user_id ) ) ) {
 				$last_name = xprofile_get_field_data( $last_name_field_id, $user_id );
-				$full_name = str_replace( ' ' . $last_name, '', $full_name );
+				$full_name = trim( str_replace( ' ' . $last_name, '', $full_name ) );
+			}
+
+			// The First Name can also be hidden from this viewer (via the
+			// bp_xprofile_get_hidden_fields_for_user filter). $full_name here was rebuilt as a clean
+			// "First Last" from field data, so once the last name is stripped the first name is left
+			// standing - drop it too and fall back to the nickname, mirroring the $fn_hidden branch in
+			// bp_core_get_user_displayname(). Without this a logged-in viewer denied BOTH name fields
+			// would see the hidden first name (the guest path is already handled by the function body,
+			// which this filter would otherwise overwrite for authenticated viewers).
+			$first_name_field_id = bp_xprofile_firstname_field_id();
+			if ( $first_name_field_id && in_array( $first_name_field_id, $list_fields ) ) {
+				$first_name = xprofile_get_field_data( $first_name_field_id, $user_id );
+				if ( ! empty( $first_name ) ) {
+					$full_name = trim( str_replace( $first_name, '', $full_name ) );
+				}
+				if ( '' === trim( (string) $full_name ) ) {
+					$full_name = get_the_author_meta( 'nickname', $user_id );
+				}
 			}
 		}
 		$bb_default_display_avatar = false;
