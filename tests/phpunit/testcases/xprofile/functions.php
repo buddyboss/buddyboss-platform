@@ -1389,8 +1389,11 @@ Bar!';
 
 		buddypress()->active_components['xprofile'] = '1';
 		bp_update_option( 'bp-display-name-format', 'first_last_name' );
+
+		// Profile sync on. Note this option is what an admin sets, but bp_disable_profile_sync()
+		// does not read it (it only runs its filter), so asserting on that function here would
+		// be a tautology - the point of this test is that the override no longer depends on it.
 		bp_update_option( 'bp-disable-profile-sync', 0 );
-		$this->assertFalse( bp_disable_profile_sync() );
 
 		$u      = self::factory()->user->create();
 		$member = self::factory()->user->create();
@@ -1418,33 +1421,37 @@ Bar!';
 		$bp->displayed_user->domain   = bp_core_get_user_domain( $u );
 		$this->assertSame( 'Alex Quillfeather', $bp->displayed_user->fullname );
 
-		// Guest viewer.
-		$this->set_current_user( 0 );
-		xprofile_override_user_fullnames();
-		$this->assertSame( 'Alex', bp_get_displayed_user_fullname() );
+		// try/finally so a failing assertion cannot leave the BP globals, the display-name
+		// format or the xprofile activation flag mutated for every later test in this process.
+		try {
+			// Guest viewer.
+			$this->set_current_user( 0 );
+			xprofile_override_user_fullnames();
+			$this->assertSame( 'Alex', bp_get_displayed_user_fullname() );
 
-		if ( bp_is_active( 'activity' ) ) {
-			ob_start();
-			bp_members_activity_feed();
-			$rss_link = ob_get_clean();
-			$this->assertStringContainsString( 'rel="alternate"', $rss_link );
-			$this->assertStringNotContainsString( 'Quillfeather', $rss_link );
-			$this->assertStringContainsString( '| Alex |', $rss_link );
-		}
+			if ( bp_is_active( 'activity' ) ) {
+				ob_start();
+				bp_members_activity_feed();
+				$rss_link = ob_get_clean();
+				$this->assertStringContainsString( 'rel="alternate"', $rss_link );
+				$this->assertStringNotContainsString( 'Quillfeather', $rss_link );
+				$this->assertStringContainsString( '| Alex |', $rss_link );
+			}
 
-		// Logged-in member viewer gets the full name.
-		$bp->displayed_user->fullname = $bp->displayed_user->userdata->display_name;
-		$this->set_current_user( $member );
-		xprofile_override_user_fullnames();
-		$this->assertSame( 'Alex Quillfeather', bp_get_displayed_user_fullname() );
-
-		$GLOBALS['bb_default_display_avatar'] = false;
-		$bp->displayed_user = $displayed_backup;
-		$bp->loggedin_user  = $loggedin_backup;
-		bp_update_option( 'bp-display-name-format', $format_backup );
-		bp_update_option( 'bp-disable-profile-sync', $sync_backup );
-		if ( ! $xprofile_is_active ) {
-			unset( buddypress()->active_components['xprofile'] );
+			// Logged-in member viewer gets the full name.
+			$bp->displayed_user->fullname = $bp->displayed_user->userdata->display_name;
+			$this->set_current_user( $member );
+			xprofile_override_user_fullnames();
+			$this->assertSame( 'Alex Quillfeather', bp_get_displayed_user_fullname() );
+		} finally {
+			$GLOBALS['bb_default_display_avatar'] = false;
+			$bp->displayed_user = $displayed_backup;
+			$bp->loggedin_user  = $loggedin_backup;
+			bp_update_option( 'bp-display-name-format', $format_backup );
+			bp_update_option( 'bp-disable-profile-sync', $sync_backup );
+			if ( ! $xprofile_is_active ) {
+				unset( buddypress()->active_components['xprofile'] );
+			}
 		}
 	}
 }

@@ -166,6 +166,161 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 	}
 
 	/**
+	 * Negative regression for the case-insensitive strip: matching is token-bounded, so a longer
+	 * word that merely BEGINS with the hidden last name - even when the stored casing differs -
+	 * must not be truncated. Guards against `/iu` over-stripping "Smithers" down when the hidden
+	 * last name is "Smith".
+	 *
+	 * @group bb_activity_get_item_user_displayname
+	 */
+	public function test_get_user_displayname_case_insensitive_does_not_truncate_longer_word() {
+		$u = self::factory()->user->create();
+		wp_update_user(
+			array(
+				'ID'           => $u,
+				'first_name'   => 'Smithers',
+				'last_name'    => 'Smith',
+				'display_name' => 'Smithers Smith',
+			)
+		);
+		xprofile_set_field_visibility_level( bp_xprofile_lastname_field_id(), $u, 'loggedin' );
+		$GLOBALS['bb_default_display_avatar'] = true;
+		bp_core_get_user_displayname( $u, $u );
+
+		// Casing-drifted stored value: only the standalone last-name token is removed; the longer
+		// "SMITHERS" token (which begins with "Smith") is left intact, not truncated.
+		wp_update_user( array( 'ID' => $u, 'display_name' => 'SMITHERS SMITH' ) );
+		$GLOBALS['bb_default_display_avatar'] = true;
+		$this->set_current_user( 0 );
+		$this->assertSame( 'SMITHERS', bp_core_get_user_displayname( $u, 0 ) );
+	}
+
+	/**
+	 * Existing customers who do NOT hide their last name are wholly unaffected by the strip
+	 * (case-insensitive or not): a public last name never enters the strip branch, so the full
+	 * name shows to everyone including guests.
+	 *
+	 * @group bb_activity_get_item_user_displayname
+	 */
+	public function test_get_user_displayname_public_last_name_unaffected_for_guest() {
+		$u = self::factory()->user->create();
+		wp_update_user(
+			array(
+				'ID'           => $u,
+				'first_name'   => 'Arianna',
+				'last_name'    => 'Julie',
+				'display_name' => 'Arianna Julie',
+			)
+		);
+		xprofile_set_field_visibility_level( bp_xprofile_lastname_field_id(), $u, 'public' );
+		$GLOBALS['bb_default_display_avatar'] = true;
+		$this->set_current_user( 0 );
+		$this->assertSame( 'Arianna Julie', bp_core_get_user_displayname( $u, 0 ) );
+	}
+
+	/**
+	 * Edge: first and last name are the same word in a different case. Hiding the last name still
+	 * yields the (visible) first name - never an empty label and never a leak of the raw column.
+	 *
+	 * @group bb_activity_get_item_user_displayname
+	 */
+	public function test_get_user_displayname_case_insensitive_first_equals_last() {
+		$u = self::factory()->user->create();
+		wp_update_user(
+			array(
+				'ID'           => $u,
+				'first_name'   => 'Peter',
+				'last_name'    => 'Peter',
+				'display_name' => 'Peter PETER',
+			)
+		);
+		xprofile_set_field_visibility_level( bp_xprofile_lastname_field_id(), $u, 'loggedin' );
+		$GLOBALS['bb_default_display_avatar'] = true;
+		$this->set_current_user( 0 );
+		$this->assertSame( 'Peter', bp_core_get_user_displayname( $u, 0 ) );
+	}
+
+	/**
+	 * The hidden last name must not leak under any of the three Display Name Format options, with
+	 * the stored display_name matching what profile sync writes for that format. A guest never
+	 * sees the last name; a permitted (logged-in) viewer still gets the format-appropriate name.
+	 *
+	 * @group bb_activity_get_item_user_displayname
+	 */
+	public function test_get_user_displayname_hides_last_name_across_all_display_name_formats() {
+		$member = self::factory()->user->create();
+
+		// format => [ stored display_name sync would write, expected guest label ].
+		$cases = array(
+			'first_last_name' => array( 'Peter Zebrastripe', 'Peter' ),
+			'first_name'      => array( 'Peter', 'Peter' ),
+			'nickname'        => array( 'peternick', 'peternick' ),
+		);
+
+		foreach ( $cases as $format => $case ) {
+			list( $display, $expected_guest ) = $case;
+			bp_update_option( 'bp-display-name-format', $format );
+
+			$u = self::factory()->user->create();
+			wp_update_user(
+				array(
+					'ID'           => $u,
+					'first_name'   => 'Peter',
+					'last_name'    => 'Zebrastripe',
+					'nickname'     => 'peternick',
+					'display_name' => $display,
+				)
+			);
+			xprofile_set_field_visibility_level( bp_xprofile_lastname_field_id(), $u, 'loggedin' );
+
+			$GLOBALS['bb_default_display_avatar'] = true;
+			$this->set_current_user( 0 );
+			$guest = bp_core_get_user_displayname( $u, 0 );
+			$this->assertStringNotContainsStringIgnoringCase( 'Zebrastripe', $guest, "guest leak under format {$format}" );
+			$this->assertSame( $expected_guest, $guest, "guest label under format {$format}" );
+
+			// A permitted viewer sees the format-appropriate full value (unchanged behaviour).
+			$GLOBALS['bb_default_display_avatar'] = true;
+			$this->set_current_user( $member );
+			$this->assertSame( $display, bp_core_get_user_displayname( $u, $member ), "member label under format {$format}" );
+		}
+	}
+
+	/**
+	 * Drift case flagged in the root doc (C1): the format is first-name-only or nickname, but the
+	 * stored display_name column still holds the full "First Last" (profile sync disabled, an
+	 * importer, or a pre-Repair state). The strip must still keep the hidden last name from a
+	 * guest - the fix does not rely on the column already matching the format.
+	 *
+	 * @group bb_activity_get_item_user_displayname
+	 */
+	public function test_get_user_displayname_no_last_name_leak_when_display_name_drifts_from_format() {
+		foreach ( array( 'first_name', 'nickname' ) as $format ) {
+			bp_update_option( 'bp-display-name-format', $format );
+
+			$u = self::factory()->user->create();
+			wp_update_user(
+				array(
+					'ID'           => $u,
+					'first_name'   => 'Peter',
+					'last_name'    => 'Zebrastripe',
+					'nickname'     => 'peternick',
+					'display_name' => 'Peter Zebrastripe', // Stale full name, drifted from the format.
+				)
+			);
+			xprofile_set_field_visibility_level( bp_xprofile_lastname_field_id(), $u, 'loggedin' );
+
+			$GLOBALS['bb_default_display_avatar'] = true;
+			$this->set_current_user( 0 );
+			$this->assertStringNotContainsStringIgnoringCase(
+				'Zebrastripe',
+				bp_core_get_user_displayname( $u, 0 ),
+				"drift leak under format {$format}"
+			);
+		}
+	}
+
+	/**
 	 * When stripping the hidden last name leaves nothing (a bare "Last" display name), the
 	 * first-name fallback must itself honour visibility: if the First Name field is also
 	 * hidden from the viewer (e.g. via the bp_xprofile_get_hidden_fields_for_user filter),
@@ -237,33 +392,37 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 		);
 
 		// Single-activity context: this is the only front-end path that caches the tree.
-		$bp->current_component = 'activity';
-		$bp->current_action    = (string) $activity_id;
-		$this->assertTrue( bp_is_single_activity() );
+		// try/finally so a failing assertion cannot leave the BP globals pointing at this
+		// activity for every later test in the same process.
+		try {
+			$bp->current_component = 'activity';
+			$bp->current_action    = (string) $activity_id;
+			$this->assertTrue( bp_is_single_activity() );
 
-		// 1) A logged-in member views the permalink first and primes the cache with the full name.
-		$this->set_current_user( $viewer );
-		wp_cache_delete( $activity_id, 'bp_activity_comments' );
-		$as_member = $this->get_comment_tree( $activity_id );
-		$this->assertSame( 'Alex Quillfeather', $as_member[ $comment_id ]->user_fullname );
-		$this->assertSame( 'Alex Quillfeather', $as_member[ $comment_id ]->children[ $reply_id ]->user_fullname );
+			// 1) A logged-in member views the permalink first and primes the cache with the full name.
+			$this->set_current_user( $viewer );
+			wp_cache_delete( $activity_id, 'bp_activity_comments' );
+			$as_member = $this->get_comment_tree( $activity_id );
+			$this->assertSame( 'Alex Quillfeather', $as_member[ $comment_id ]->user_fullname );
+			$this->assertSame( 'Alex Quillfeather', $as_member[ $comment_id ]->children[ $reply_id ]->user_fullname );
 
-		$cached = wp_cache_get( $activity_id, 'bp_activity_comments' );
-		$this->assertIsArray( $cached, 'The tree must be cached for the single-activity request.' );
+			$cached = wp_cache_get( $activity_id, 'bp_activity_comments' );
+			$this->assertIsArray( $cached, 'The tree must be cached for the single-activity request.' );
 
-		// 2) A guest reads the same activity from the warm cache.
-		$this->set_current_user( 0 );
-		$as_guest = $this->get_comment_tree( $activity_id );
-		$this->assertSame( 'Alex', $as_guest[ $comment_id ]->user_fullname );
-		$this->assertSame( 'Alex', $as_guest[ $comment_id ]->children[ $reply_id ]->user_fullname );
+			// 2) A guest reads the same activity from the warm cache.
+			$this->set_current_user( 0 );
+			$as_guest = $this->get_comment_tree( $activity_id );
+			$this->assertSame( 'Alex', $as_guest[ $comment_id ]->user_fullname );
+			$this->assertSame( 'Alex', $as_guest[ $comment_id ]->children[ $reply_id ]->user_fullname );
 
-		// 3) The reverse direction: a member must still get the name they are entitled to.
-		$this->set_current_user( $other );
-		$as_other = $this->get_comment_tree( $activity_id );
-		$this->assertSame( 'Alex Quillfeather', $as_other[ $comment_id ]->user_fullname );
-
-		$bp->current_component = $reset_component;
-		$bp->current_action    = $reset_action;
+			// 3) The reverse direction: a member must still get the name they are entitled to.
+			$this->set_current_user( $other );
+			$as_other = $this->get_comment_tree( $activity_id );
+			$this->assertSame( 'Alex Quillfeather', $as_other[ $comment_id ]->user_fullname );
+		} finally {
+			$bp->current_component = $reset_component;
+			$bp->current_action    = $reset_action;
+		}
 	}
 
 	/**
@@ -360,5 +519,131 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 		$activity = new BP_Activity_Activity( $activity_id );
 
 		return BP_Activity_Activity::get_activity_comments( $activity_id, $activity->mptt_left, $activity->mptt_right );
+	}
+	/**
+	 * The bbPress profile screens (`/forums/user/{slug}/`) read the displayed user's name via
+	 * bbp_get_displayed_user_field( 'display_name' ) - the raw WP column, which always holds the
+	 * full name. That value reaches the page title, the theme-compat `post_title` (rendered into
+	 * the page heading and the BuddyBoss App `#bbapp-title` span) and every sub-nav link title in
+	 * the theme's `bbpress/user-details.php`, so a guest could read a hidden last name there even
+	 * though the BuddyBoss member profile at /members/{slug}/ redacted it.
+	 *
+	 * @group bb_activity_get_item_user_displayname
+	 * @group bbp_get_displayed_user_field
+	 */
+	public function test_bbp_displayed_user_field_hides_last_name_from_guest() {
+		$author = $this->create_member_with_hidden_last_name();
+		$viewer = self::factory()->user->create();
+
+		$bbp            = bbpress();
+		$displayed_back = isset( $bbp->displayed_user ) ? $bbp->displayed_user : null;
+
+		try {
+			$bbp->displayed_user = get_userdata( $author );
+			$this->assertSame( 'Alex Quillfeather', $bbp->displayed_user->display_name, 'The stored column must keep the full name.' );
+
+			$GLOBALS['bb_default_display_avatar'] = true;
+
+			// Guest: the hidden last name must not be returned.
+			$this->set_current_user( 0 );
+			$this->assertSame( 'Alex', bbp_get_displayed_user_field( 'display_name' ) );
+
+			// A logged-in member is entitled to the full name.
+			$this->set_current_user( $viewer );
+			$this->assertSame( 'Alex Quillfeather', bbp_get_displayed_user_field( 'display_name' ) );
+
+			// The member themself always sees their own full name.
+			$this->set_current_user( $author );
+			$this->assertSame( 'Alex Quillfeather', bbp_get_displayed_user_field( 'display_name' ) );
+
+			// Unrelated fields are untouched by the redaction.
+			$this->set_current_user( 0 );
+			$this->assertSame( get_userdata( $author )->user_nicename, bbp_get_displayed_user_field( 'user_nicename' ) );
+
+			// The documented "raw" filter still returns the stored column.
+			$this->assertSame( 'Alex Quillfeather', bbp_get_displayed_user_field( 'display_name', 'raw' ) );
+		} finally {
+			$bbp->displayed_user = $displayed_back;
+		}
+	}
+
+	/**
+	 * bbp_get_reply_author() printed the raw WP display_name for a reply's author, leaking a last
+	 * name hidden by profile-field visibility on every reply in a topic. It now resolves the name
+	 * for the current viewer.
+	 *
+	 * @group bb_activity_get_item_user_displayname
+	 * @group bbp_get_reply_author
+	 */
+	public function test_bbp_reply_author_hides_last_name_from_guest() {
+		if ( ! function_exists( 'bbp_get_reply_author' ) ) {
+			$this->markTestSkipped( 'Forums component not loaded.' );
+		}
+
+		$author = $this->create_member_with_hidden_last_name();
+		$member = self::factory()->user->create();
+		$reply  = self::factory()->post->create( array( 'post_author' => $author ) );
+
+		$GLOBALS['bb_default_display_avatar'] = true;
+		$this->set_current_user( 0 );
+		$guest = bbp_get_reply_author( $reply );
+		$this->assertStringContainsString( 'Alex', $guest );
+		$this->assertStringNotContainsString( 'Quillfeather', $guest );
+
+		$GLOBALS['bb_default_display_avatar'] = true;
+		$this->set_current_user( $member );
+		$this->assertStringContainsString( 'Alex Quillfeather', bbp_get_reply_author( $reply ) );
+	}
+
+	/**
+	 * bbp_get_topic_author() had the same raw-display_name leak for a topic's author.
+	 *
+	 * @group bb_activity_get_item_user_displayname
+	 * @group bbp_get_topic_author
+	 */
+	public function test_bbp_topic_author_hides_last_name_from_guest() {
+		if ( ! function_exists( 'bbp_get_topic_author' ) ) {
+			$this->markTestSkipped( 'Forums component not loaded.' );
+		}
+
+		$author = $this->create_member_with_hidden_last_name();
+		$member = self::factory()->user->create();
+		$topic  = self::factory()->post->create( array( 'post_author' => $author ) );
+
+		$GLOBALS['bb_default_display_avatar'] = true;
+		$this->set_current_user( 0 );
+		$guest = bbp_get_topic_author( $topic );
+		$this->assertStringContainsString( 'Alex', $guest );
+		$this->assertStringNotContainsString( 'Quillfeather', $guest );
+
+		$GLOBALS['bb_default_display_avatar'] = true;
+		$this->set_current_user( $member );
+		$this->assertStringContainsString( 'Alex Quillfeather', bbp_get_topic_author( $topic ) );
+	}
+
+	/**
+	 * bbp_get_user_profile_edit_link() built its anchor text from the raw display_name; the linked
+	 * name now honours the viewer's visibility of the last name.
+	 *
+	 * @group bb_activity_get_item_user_displayname
+	 * @group bbp_get_user_profile_edit_link
+	 */
+	public function test_bbp_user_profile_edit_link_hides_last_name_from_guest() {
+		if ( ! function_exists( 'bbp_get_user_profile_edit_link' ) ) {
+			$this->markTestSkipped( 'Forums component not loaded.' );
+		}
+
+		$author = $this->create_member_with_hidden_last_name();
+		$member = self::factory()->user->create();
+
+		$GLOBALS['bb_default_display_avatar'] = true;
+		$this->set_current_user( 0 );
+		$guest_link = bbp_get_user_profile_edit_link( $author );
+		$this->assertStringContainsString( 'Alex', $guest_link );
+		$this->assertStringNotContainsString( 'Quillfeather', $guest_link );
+
+		$GLOBALS['bb_default_display_avatar'] = true;
+		$this->set_current_user( $member );
+		$this->assertStringContainsString( 'Alex Quillfeather', bbp_get_user_profile_edit_link( $author ) );
 	}
 }

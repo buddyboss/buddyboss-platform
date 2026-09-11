@@ -562,7 +562,11 @@ function bp_core_get_user_displayname( $user_id_or_username, $current_user_id = 
 	} else {
 		$last_name_field_id = bp_xprofile_lastname_field_id();
 		if ( in_array( $last_name_field_id, $list_fields ) && ! empty( xprofile_get_field_data( $last_name_field_id, $user_id ) ) ) {
-			$last_name    = xprofile_get_field_data( $last_name_field_id, $user_id );
+			// Trim before it reaches preg_quote(): a stored value with surrounding whitespace
+			// would otherwise build a pattern that cannot match the display name, silently
+			// leaving the hidden last name in place. Mirrors the REST helper in
+			// buddyboss-platform-api's BP_REST_Members_Endpoint::get_visible_display_name().
+			$last_name    = trim( (string) xprofile_get_field_data( $last_name_field_id, $user_id ) );
 			$display_name = get_the_author_meta( 'display_name', $user_id );
 
 			// Remove the hidden last name as a whole space-delimited token so it is stripped
@@ -579,7 +583,9 @@ function bp_core_get_user_displayname( $user_id_or_username, $current_user_id = 
 			// as imports/third-party writes can produce) still redacts. Matching is token-bounded
 			// ((^|\s)...(?=\s|$)), so this cannot truncate a longer word; when the casing already
 			// agrees - the normal profile-sync case - it behaves exactly as the case-sensitive form.
-			$full_name = preg_replace( '/(^|\s)' . preg_quote( $last_name, '/' ) . '(?=\s|$)/iu', ' ', $display_name );
+			$full_name = ( '' === $last_name )
+				? $display_name
+				: preg_replace( '/(^|\s)' . preg_quote( $last_name, '/' ) . '(?=\s|$)/iu', ' ', $display_name );
 
 			// preg_replace() returns null only on failure (e.g. malformed UTF-8 in the stored
 			// display name, as legacy/imported rows can carry). Fail closed: never fall back to

@@ -3028,7 +3028,7 @@ function bbp_title( $title = '', $sep = '&raquo;', $seplocation = '' ) {
 
 			// Other user
 		} else {
-			$new_title['text']   = get_userdata( bbp_get_user_id() )->display_name;
+			$new_title['text']   = bp_core_get_user_displayname( bbp_get_user_id() );
 			$new_title['format'] = esc_attr__( "Edit %s's Profile", 'buddyboss' );
 		}
 

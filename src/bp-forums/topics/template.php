@@ -1417,7 +1417,9 @@ function bbp_get_topic_author( $topic_id = 0 ) {
 	$topic_id = bbp_get_topic_id( $topic_id );
 
 	if ( ! bbp_is_topic_anonymous( $topic_id ) ) {
-		$author = get_the_author_meta( 'display_name', bbp_get_topic_author_id( $topic_id ) );
+		// Resolved for the current viewer: the raw display_name ignores the Last Name
+		// field's visibility level.
+		$author = bp_core_get_user_displayname( bbp_get_topic_author_id( $topic_id ) );
 	} else {
 		$author = get_post_meta( $topic_id, '_bbp_anonymous_name', true );
 	}
