@@ -45,8 +45,8 @@ bb_register_integration(
 		'is_available_callback'   => 'bb_two_factor_plugin_is_active',
 		'is_active_callback'      => 'bb_two_factor_feature_is_on',
 
-		'confirm_off_title'       => __( 'Disable Two-Factor Authentication?', 'buddyboss' ),
-		'confirm_off_message'     => __( 'Members will stop being asked for a second factor when they sign in, and the Security tab will be hidden. Authenticator apps and recovery codes are kept, so re-enabling later restores them.', 'buddyboss' ),
+		'confirm_off_title'       => __( 'Hide two-factor settings from members?', 'buddyboss' ),
+		'confirm_off_message'     => __( 'The Security tab will be removed from the Account page, so members can no longer set up or change two-factor authentication from the front end. Anyone who already turned it on is still asked for a second factor when they sign in, and their authenticator apps and recovery codes are untouched.', 'buddyboss' ),
 		'confirm_off_destructive' => true,
 	)
 );
