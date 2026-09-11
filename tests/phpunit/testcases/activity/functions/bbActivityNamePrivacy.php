@@ -166,10 +166,11 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 	}
 
 	/**
-	 * Negative regression for the case-insensitive strip: matching is token-bounded, so a longer
-	 * word that merely BEGINS with the hidden last name - even when the stored casing differs -
-	 * must not be truncated. Guards against `/iu` over-stripping "Smithers" down when the hidden
-	 * last name is "Smith".
+	 * A longer word that merely BEGINS with the hidden last name must never be truncated to a
+	 * fragment. The token-bounded strip removes only the standalone `SMITH` token; the surviving
+	 * `SMITHERS` still contains `Smith` as a substring, so the leak fail-safe re-renders the name
+	 * from the visible First Name field ("Smithers") rather than return a value that still holds
+	 * the hidden surname. Either way the result is the full first name, never a truncated fragment.
 	 *
 	 * @group bb_activity_get_item_user_displayname
 	 */
@@ -187,12 +188,102 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 		$GLOBALS['bb_default_display_avatar'] = true;
 		bp_core_get_user_displayname( $u, $u );
 
-		// Casing-drifted stored value: only the standalone last-name token is removed; the longer
-		// "SMITHERS" token (which begins with "Smith") is left intact, not truncated.
 		wp_update_user( array( 'ID' => $u, 'display_name' => 'SMITHERS SMITH' ) );
 		$GLOBALS['bb_default_display_avatar'] = true;
 		$this->set_current_user( 0 );
-		$this->assertSame( 'SMITHERS', bp_core_get_user_displayname( $u, 0 ) );
+		$guest = bp_core_get_user_displayname( $u, 0 );
+		$this->assertSame( 'Smithers', $guest );
+		// Never a truncated fragment, and never the hidden standalone surname.
+		$this->assertStringStartsWith( 'Smithers', $guest );
+	}
+
+	/**
+	 * The hidden last name must not leak when the stored display_name has drifted so the surname
+	 * sits against punctuation ("Anna Smith-Jones", "Anna Smith, PhD"), has no separating space
+	 * ("AnnaSmith"), or is otherwise not a whitespace-delimited token - the exact bypass the
+	 * token-bounded strip cannot catch. In every case the leak fail-safe falls back to the visible
+	 * first name.
+	 *
+	 * @group bb_activity_get_item_user_displayname
+	 */
+	public function test_get_user_displayname_no_leak_when_last_name_adjacent_to_punctuation() {
+		$formats = array( 'first_last_name', 'first_name' );
+		$drifted = array( 'Anna Smith-Jones', 'Anna Smith, PhD', 'Anna (Smith)', 'AnnaSmith', 'O.Smith' );
+
+		foreach ( $formats as $format ) {
+			bp_update_option( 'bp-display-name-format', $format );
+			foreach ( $drifted as $display ) {
+				$u = self::factory()->user->create();
+				wp_update_user(
+					array(
+						'ID'           => $u,
+						'first_name'   => 'Anna',
+						'last_name'    => 'Smith',
+						'display_name' => $display,
+					)
+				);
+				xprofile_set_field_visibility_level( bp_xprofile_lastname_field_id(), $u, 'loggedin' );
+
+				$GLOBALS['bb_default_display_avatar'] = true;
+				$this->set_current_user( 0 );
+				$guest = bp_core_get_user_displayname( $u, 0 );
+				$this->assertStringNotContainsStringIgnoringCase( 'smith', $guest, "leak under {$format} for '{$display}'" );
+				$this->assertSame( 'Anna', $guest, "fallback under {$format} for '{$display}'" );
+			}
+		}
+	}
+
+	/**
+	 * A custom display_name that does NOT contain the hidden last name must be preserved, not
+	 * over-corrected. "The Boss" (no surname present) stays as-is for a guest; only when the
+	 * surname actually survives the strip does the fallback replace it.
+	 *
+	 * @group bb_activity_get_item_user_displayname
+	 */
+	public function test_get_user_displayname_preserves_custom_name_without_last_name() {
+		$u = self::factory()->user->create();
+		wp_update_user(
+			array(
+				'ID'           => $u,
+				'first_name'   => 'Anna',
+				'last_name'    => 'Smith',
+				'display_name' => 'The Boss',
+			)
+		);
+		xprofile_set_field_visibility_level( bp_xprofile_lastname_field_id(), $u, 'loggedin' );
+
+		$GLOBALS['bb_default_display_avatar'] = true;
+		$this->set_current_user( 0 );
+		$this->assertSame( 'The Boss', bp_core_get_user_displayname( $u, 0 ) );
+	}
+
+	/**
+	 * Under the Nickname display format the visible name is the nickname (its own visibility
+	 * governs it), so the Last Name field's visibility must neither leak a drifted full-name
+	 * display_name nor strip a nickname word that coincides with the surname.
+	 *
+	 * @group bb_activity_get_item_user_displayname
+	 */
+	public function test_get_user_displayname_nickname_format_uses_nickname_not_stripped_column() {
+		bp_update_option( 'bp-display-name-format', 'nickname' );
+
+		// Drift: the stored column holds the full name, but the visible value is the nickname.
+		$u = self::factory()->user->create();
+		wp_update_user(
+			array(
+				'ID'           => $u,
+				'first_name'   => 'Peter',
+				'last_name'    => 'Zebrastripe',
+				'nickname'     => 'peternick',
+				'display_name' => 'Peter Zebrastripe',
+			)
+		);
+		xprofile_set_field_visibility_level( bp_xprofile_lastname_field_id(), $u, 'loggedin' );
+		$GLOBALS['bb_default_display_avatar'] = true;
+		$this->set_current_user( 0 );
+		$guest = bp_core_get_user_displayname( $u, 0 );
+		$this->assertSame( 'peternick', $guest );
+		$this->assertStringNotContainsStringIgnoringCase( 'zebrastripe', $guest );
 	}
 
 	/**
@@ -435,7 +526,8 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 	public function test_activity_loop_template_tags_hide_last_name_from_guest() {
 		global $activities_template;
 
-		$author = $this->create_member_with_hidden_last_name();
+		$template_backup = $activities_template;
+		$author          = $this->create_member_with_hidden_last_name();
 
 		$activity_id = self::factory()->activity->create(
 			array(
@@ -453,23 +545,27 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 
 		$this->set_current_user( 0 );
 
-		$this->assertTrue( bp_has_activities( array( 'include' => $activity_id, 'display_comments' => 'threaded', 'show_hidden' => true ) ) );
-		bp_the_activity();
+		// try/finally so a failing assertion cannot leave $activities_template pointing at the
+		// fixture for every later test in this process.
+		try {
+			$this->assertTrue( bp_has_activities( array( 'include' => $activity_id, 'display_comments' => 'threaded', 'show_hidden' => true ) ) );
+			bp_the_activity();
 
-		$this->assertSame( 'Alex Quillfeather', $activities_template->activity->display_name, 'Fixture: the raw joined column holds the full name.' );
-		$this->assertSame( 'Alex', bp_get_activity_member_display_name() );
-		$this->assertStringContainsString( 'alt="Profile photo of Alex"', bp_get_activity_avatar() );
-		$this->assertStringNotContainsString( 'Quillfeather', bp_get_activity_avatar() );
-		$this->assertStringNotContainsString( 'Quillfeather', bp_get_activity_secondary_avatar() );
+			$this->assertSame( 'Alex Quillfeather', $activities_template->activity->display_name, 'Fixture: the raw joined column holds the full name.' );
+			$this->assertSame( 'Alex', bp_get_activity_member_display_name() );
+			$this->assertStringContainsString( 'alt="Profile photo of Alex"', bp_get_activity_avatar() );
+			$this->assertStringNotContainsString( 'Quillfeather', bp_get_activity_avatar() );
+			$this->assertStringNotContainsString( 'Quillfeather', bp_get_activity_secondary_avatar() );
 
-		// Inside the comment loop the tags read from `current_comment`.
-		$this->assertArrayHasKey( $comment_id, $activities_template->activity->children );
-		$activities_template->activity->current_comment = $activities_template->activity->children[ $comment_id ];
-		$this->assertSame( 'Alex', bp_get_activity_comment_name() );
-		$this->assertStringContainsString( 'alt="Profile photo of Alex"', bp_get_activity_avatar() );
-		unset( $activities_template->activity->current_comment );
-
-		$activities_template = null;
+			// Inside the comment loop the tags read from `current_comment`.
+			$this->assertArrayHasKey( $comment_id, $activities_template->activity->children );
+			$activities_template->activity->current_comment = $activities_template->activity->children[ $comment_id ];
+			$this->assertSame( 'Alex', bp_get_activity_comment_name() );
+			$this->assertStringContainsString( 'alt="Profile photo of Alex"', bp_get_activity_avatar() );
+			unset( $activities_template->activity->current_comment );
+		} finally {
+			$activities_template = $template_backup;
+		}
 	}
 
 	/**
@@ -484,29 +580,34 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 			$this->markTestSkipped( 'Groups component is not active.' );
 		}
 
-		$author  = $this->create_member_with_hidden_last_name();
-		$creator = self::factory()->user->create();
-		$group   = self::factory()->group->create( array( 'creator_id' => $creator ) );
+		$template_backup = $members_template;
+		$author          = $this->create_member_with_hidden_last_name();
+		$creator         = self::factory()->user->create();
+		$group           = self::factory()->group->create( array( 'creator_id' => $creator ) );
 		groups_join_group( $group, $author );
 
 		$this->set_current_user( 0 );
-		$this->assertTrue( bp_group_has_members( array( 'group_id' => $group, 'exclude_admins_mods' => false ) ) );
 
-		$found = false;
-		while ( bp_group_members() ) {
-			bp_group_the_member();
-			if ( (int) bp_get_group_member_id() !== $author ) {
-				continue;
+		// try/finally so a failing assertion cannot leave $members_template set for later tests.
+		try {
+			$this->assertTrue( bp_group_has_members( array( 'group_id' => $group, 'exclude_admins_mods' => false ) ) );
+
+			$found = false;
+			while ( bp_group_members() ) {
+				bp_group_the_member();
+				if ( (int) bp_get_group_member_id() !== $author ) {
+					continue;
+				}
+				$found = true;
+				$this->assertSame( 'Alex', bp_get_group_member_name() );
+				$this->assertStringContainsString( 'alt="Profile photo of Alex"', bp_get_group_member_avatar() );
+				$this->assertStringNotContainsString( 'Quillfeather', bp_get_group_member_avatar_thumb() );
+				$this->assertStringNotContainsString( 'Quillfeather', bp_get_group_member_avatar_mini() );
 			}
-			$found = true;
-			$this->assertSame( 'Alex', bp_get_group_member_name() );
-			$this->assertStringContainsString( 'alt="Profile photo of Alex"', bp_get_group_member_avatar() );
-			$this->assertStringNotContainsString( 'Quillfeather', bp_get_group_member_avatar_thumb() );
-			$this->assertStringNotContainsString( 'Quillfeather', bp_get_group_member_avatar_mini() );
+			$this->assertTrue( $found, 'The member with the hidden last name must be in the loop.' );
+		} finally {
+			$members_template = $template_backup;
 		}
-		$this->assertTrue( $found, 'The member with the hidden last name must be in the loop.' );
-
-		$members_template = null;
 	}
 
 	/**

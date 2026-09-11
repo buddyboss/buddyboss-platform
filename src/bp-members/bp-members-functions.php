@@ -562,46 +562,63 @@ function bp_core_get_user_displayname( $user_id_or_username, $current_user_id = 
 	} else {
 		$last_name_field_id = bp_xprofile_lastname_field_id();
 		if ( in_array( $last_name_field_id, $list_fields ) && ! empty( xprofile_get_field_data( $last_name_field_id, $user_id ) ) ) {
-			// Trim before it reaches preg_quote(): a stored value with surrounding whitespace
-			// would otherwise build a pattern that cannot match the display name, silently
-			// leaving the hidden last name in place. Mirrors the REST helper in
-			// buddyboss-platform-api's BP_REST_Members_Endpoint::get_visible_display_name().
-			$last_name    = trim( (string) xprofile_get_field_data( $last_name_field_id, $user_id ) );
+			// Unicode-aware trim before the value reaches preg_quote(): a stored value with
+			// surrounding whitespace - including a non-ASCII space such as U+00A0 pasted from a
+			// word processor, which PHP's trim() does not remove - would otherwise build a
+			// pattern that cannot match the display name and silently leave the hidden last name
+			// in place. Mirrors the REST helper in buddyboss-platform-api's
+			// BP_REST_Members_Endpoint::get_visible_display_name().
+			$last_name    = preg_replace( '/^\s+|\s+$/u', '', (string) xprofile_get_field_data( $last_name_field_id, $user_id ) );
 			$display_name = get_the_author_meta( 'display_name', $user_id );
 
-			// Remove the hidden last name as a whole space-delimited token so it is stripped
-			// wherever it sits in the stored display name - trailing ("First Last"), leading
-			// ("Last First") or a bare "Last" - and multi-word last names are handled, without
-			// mangling a longer word that merely begins with the last name (e.g. "Smithers"
-			// is not truncated when the last name is "Smith"). A plain str_replace of
-			// ' ' . $last_name only matched a space-prefixed trailing token and leaked the
-			// name for every other display-name shape (imports, the wp-admin "Display name
-			// publicly as" dropdown, third-party writes).
-			//
-			// The `i` flag matches case-insensitively so a stored display name whose casing
-			// drifted from the profile field value ("PETER ZEBRASTRIPE" vs field "Zebrastripe",
-			// as imports/third-party writes can produce) still redacts. Matching is token-bounded
-			// ((^|\s)...(?=\s|$)), so this cannot truncate a longer word; when the casing already
-			// agrees - the normal profile-sync case - it behaves exactly as the case-sensitive form.
-			$full_name = ( '' === $last_name )
-				? $display_name
-				: preg_replace( '/(^|\s)' . preg_quote( $last_name, '/' ) . '(?=\s|$)/iu', ' ', $display_name );
+			$format = function_exists( 'bp_core_display_name_format' ) ? bp_core_display_name_format() : 'first_last_name';
 
-			// preg_replace() returns null only on failure (e.g. malformed UTF-8 in the stored
-			// display name, as legacy/imported rows can carry). Fail closed: never fall back to
-			// the raw display name, which still holds the hidden last name - treat it as "nothing
-			// left" so the public first-name/nickname fallback below applies instead of leaking.
-			$full_name = ( null === $full_name ) ? '' : trim( preg_replace( '/\s+/', ' ', $full_name ) );
+			if ( 'nickname' === $format ) {
+				// Under the Nickname display format the visible name is the nickname, which carries
+				// its own visibility level; the Last Name field is not part of it. Read the
+				// nickname field directly instead of stripping the stored display_name, so (a) a
+				// display_name that has drifted to a full name (import, the wp-admin "Display name
+				// publicly as" dropdown, third-party writes) cannot leak the surname, and (b) a
+				// nickname that legitimately contains the surname as a word is not wrongly stripped.
+				$full_name = get_the_author_meta( 'nickname', $user_id );
+			} elseif ( '' === $last_name ) {
+				$full_name = $display_name;
+			} else {
+				// Remove the hidden last name as a whole token wherever it sits in the stored
+				// display name - trailing ("First Last"), leading ("Last First") or a bare "Last" -
+				// with multi-word last names handled and without truncating a longer word that
+				// merely begins with it ("Smithers" is not cut when the last name is "Smith"). The
+				// `i` flag redacts a casing-drifted value ("PETER ZEBRASTRIPE" vs field
+				// "Zebrastripe"); when casing already agrees it behaves as the case-sensitive form.
+				$full_name = preg_replace( '/(^|\s)' . preg_quote( $last_name, '/' ) . '(?=\s|$)/iu', ' ', $display_name );
 
-			// If only the hidden last name remained, fall back to the first name - but only
-			// when it is itself visible to this viewer (it is governed by the same hidden-field
-			// list as the last name; a site may hide it too via visibility or the
+				// preg_replace() returns null only on failure (malformed UTF-8 in the stored
+				// display name). Fail closed: treat it as "nothing left" so the fallback below
+				// applies instead of returning the raw name that still holds the hidden last name.
+				$full_name = ( null === $full_name ) ? '' : trim( preg_replace( '/\s+/', ' ', $full_name ) );
+
+				// The token match only removes a whitespace-delimited occurrence. A stored
+				// display_name that drifted to place the surname against punctuation
+				// ("Anna Smith-Jones", "Anna Smith, PhD") or with no separator ("AnnaSmith") would
+				// still expose it. If the surname survives anywhere in the result, drop to the
+				// first-name/nickname recompute below - which never contains the hidden last name -
+				// rather than leak it. (A first name that legitimately contains the surname as a
+				// substring, e.g. "Johnson" for hidden "John", is the member's own visible name;
+				// re-rendering it from the first-name field is not a leak of the hidden field).
+				if ( '' !== $full_name && preg_match( '/' . preg_quote( $last_name, '/' ) . '/iu', $full_name ) ) {
+					$full_name = '';
+				}
+			}
+
+			// If nothing usable remains, fall back to the first name - but only when it is itself
+			// visible to this viewer (it is governed by the same hidden-field list as the last
+			// name; a site may hide it too via visibility or the
 			// bp_xprofile_get_hidden_fields_for_user filter). Otherwise use the nickname, so a
 			// viewer who may see neither name still gets a non-leaking label rather than a blank.
 			if ( '' === $full_name ) {
 				$first_name_field_id = bp_xprofile_firstname_field_id();
 				if ( $first_name_field_id && ! in_array( $first_name_field_id, $list_fields ) ) {
-					$full_name = trim( (string) xprofile_get_field_data( $first_name_field_id, $user_id ) );
+					$full_name = preg_replace( '/^\s+|\s+$/u', '', (string) xprofile_get_field_data( $first_name_field_id, $user_id ) );
 				}
 				if ( '' === $full_name ) {
 					$full_name = get_the_author_meta( 'nickname', $user_id );
