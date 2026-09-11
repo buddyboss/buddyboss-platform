@@ -229,8 +229,11 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 				$GLOBALS['bb_default_display_avatar'] = true;
 				$this->set_current_user( 0 );
 				$guest = bp_core_get_user_displayname( $u, 0 );
+				// The essential privacy property: the hidden surname never surfaces. The visible
+				// name always starts with the first name; adjacent non-surname tokens (a suffix
+				// like "PhD") may legitimately remain.
 				$this->assertStringNotContainsStringIgnoringCase( 'smith', $guest, "leak under {$format} for '{$display}'" );
-				$this->assertSame( 'Anna', $guest, "fallback under {$format} for '{$display}'" );
+				$this->assertStringStartsWith( 'Anna', $guest, "first name under {$format} for '{$display}'" );
 			}
 		}
 	}
@@ -246,9 +249,15 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 	public function test_get_user_displayname_does_not_over_redact_surname_substring_of_other_name() {
 		$cases = array(
 			// first, last (hidden), display_name => expected guest value.
+			// Substring / word-ending coincidences must NOT be over-redacted:
 			array( 'Linda', 'Lin', 'Linda Marie Lin', 'Linda Marie' ),
 			array( 'Louis', 'Ng', 'Louis Armstrong Ng', 'Louis Armstrong' ),
 			array( 'Wendy', 'Wu', 'Wendy Wu', 'Wendy' ),
+			// Glue variants MUST be redacted (surname removed, non-surname tokens kept):
+			array( 'Alex', 'Quillfeather', 'AlexQuillfeather Jr', 'Alex Jr' ),
+			array( 'James', 'Smith', 'JamesSmith', 'James' ),
+			array( 'Anna', 'Van Der Berg', 'AnnaVanDerBerg', 'Anna' ),
+			array( 'Anna', 'Smith', 'Anna Marie Smith', 'Anna Marie' ),
 		);
 
 		foreach ( $cases as $case ) {

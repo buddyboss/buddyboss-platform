@@ -584,50 +584,47 @@ function bp_core_get_user_displayname( $user_id_or_username, $current_user_id = 
 			} elseif ( '' === $last_name ) {
 				$full_name = $display_name;
 			} else {
-				// Remove the hidden last name as a whole token wherever it sits in the stored
-				// display name - trailing ("First Last"), leading ("Last First") or a bare "Last" -
-				// with multi-word last names handled and without truncating a longer word that
-				// merely begins with it ("Smithers" is not cut when the last name is "Smith"). The
-				// `i` flag redacts a casing-drifted value ("PETER ZEBRASTRIPE" vs field
-				// "Zebrastripe"); when casing already agrees it behaves as the case-sensitive form.
+				// Remove the hidden last name from the stored display name across every drift shape,
+				// without over-redacting a token that merely contains the surname as a substring.
+				//
+				// Stage 1 - whole-token whitespace strip: handles "First Last", "Last First",
+				// "First Middle Last" (middle name kept) and multi-word surnames matched as a unit.
+				// The `i` flag redacts a casing-drifted value; preg_replace() returns null only on
+				// malformed UTF-8, which we fail closed to '' so the fallback applies.
 				$full_name = preg_replace( '/(^|\s)' . preg_quote( $last_name, '/' ) . '(?=\s|$)/iu', ' ', $display_name );
-
-				// preg_replace() returns null only on failure (malformed UTF-8 in the stored
-				// display name). Fail closed: treat it as "nothing left" so the fallback below
-				// applies instead of returning the raw name that still holds the hidden last name.
 				$full_name = ( null === $full_name ) ? '' : trim( preg_replace( '/\s+/', ' ', $full_name ) );
 
-				// The whitespace-delimited strip above misses a surname that drifted against
-				// punctuation ("Anna Smith-Jones", "Anna Smith, PhD", "O.Smith"). Fail-safe: if the
-				// surname still survives as a WHOLE token - bounded by a non-letter/non-digit
-				// character or a string edge - the strip failed to catch it, so drop to the
-				// first-name/nickname recompute below rather than leak it. The boundary is
-				// deliberately not a bare substring test: a surname that is merely a substring of a
-				// different name token (hidden "Lin" inside the visible first name "Linda", or a
-				// middle name) is not a leak and must not trigger over-redaction that would drop
-				// legitimate name parts.
-				if ( '' !== $full_name && preg_match( '/(?<![\p{L}\p{N}])' . preg_quote( $last_name, '/' ) . '(?![\p{L}\p{N}])/iu', $full_name ) ) {
-					$full_name = '';
-				}
-
-				// Separator-less glue: a surname joined directly to the first name ("AnnaSmith")
-				// has no boundary for the token check above. Redact only when the surviving value
-				// is EXACTLY the first and last name concatenated (either order) - this catches the
-				// glued leak while leaving a legitimate word that merely ends with the surname (last
-				// name "Ng" inside "Armstrong") untouched, which a boundary/substring test cannot.
+				// Stage 2 - token pass over what remains, for the surname drifted against punctuation
+				// ("Smith-Jones", "O.Smith") or glued to the first name with no separator
+				// ("AnnaSmith", "AnnaSmith Jr", multi-word "AnnaVanDerBerg"). A token that is the
+				// first+last (or last+first) name glued together becomes just the first name; a token
+				// in which the surname survives as a whole or punctuation-bounded piece is dropped; a
+				// token that merely contains the surname as a substring ("Lin" in "Linda", "Ng" in
+				// "Armstrong") is kept untouched. The first name is read for detection only, so the
+				// glue is caught even when the first name is itself hidden.
 				if ( '' !== $full_name ) {
-					// Read the first-name value for pattern detection only (not for display), so the
-					// glue is recognised even when the first name is itself hidden from this viewer.
 					$first_name_field_id = bp_xprofile_firstname_field_id();
 					$first_name          = $first_name_field_id
 						? preg_replace( '/^\s+|\s+$/u', '', (string) xprofile_get_field_data( $first_name_field_id, $user_id ) )
 						: '';
-					if (
-						'' !== $first_name
-						&& preg_match( '/^(?:' . preg_quote( $first_name . $last_name, '/' ) . '|' . preg_quote( $last_name . $first_name, '/' ) . ')$/iu', $full_name )
-					) {
-						$full_name = '';
+
+					$glue_pattern = ( '' !== $first_name )
+						? '/^(?:' . preg_quote( preg_replace( '/\s+/', '', $first_name . $last_name ), '/' ) . '|' . preg_quote( preg_replace( '/\s+/', '', $last_name . $first_name ), '/' ) . ')$/iu'
+						: '';
+					$bounded      = '/(?<![\p{L}\p{N}])' . preg_quote( $last_name, '/' ) . '(?![\p{L}\p{N}])/iu';
+
+					$tokens = array();
+					foreach ( preg_split( '/\s+/', $full_name ) as $token ) {
+						if ( '' === $token ) {
+							continue;
+						}
+						if ( '' !== $glue_pattern && preg_match( $glue_pattern, $token ) ) {
+							$tokens[] = $first_name;
+						} elseif ( ! preg_match( $bounded, $token ) ) {
+							$tokens[] = $token;
+						}
 					}
+					$full_name = trim( implode( ' ', $tokens ) );
 				}
 			}
 
