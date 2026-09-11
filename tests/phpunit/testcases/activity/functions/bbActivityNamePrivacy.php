@@ -1543,6 +1543,72 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 		}
 	}
 
+	/**
+	 * Losing the Last Name field id must not lose the site-wide format hide.
+	 *
+	 * bp_xprofile_lastname_field_id() returns 0 when its option was never written - the getter
+	 * defaults to 0 - or when a third-party filter says so, and it is filterable. The
+	 * format-level hide was appended to the hidden-field list only when that id was truthy, so
+	 * with the id missing the resolver fell through to the stored display_name: under a "First
+	 * Name" site format a guest was served the drifted full name, which is the exact scenario
+	 * PROD-9896 is about. The surname is not part of the "First Name" or "Nickname" formats at
+	 * all, so neither format needs the field id to resolve a name.
+	 *
+	 * @group bb_name_privacy
+	 */
+	public function test_missing_last_name_field_id_still_honours_the_format_hide() {
+		$format_backup = bp_get_option( 'bp-display-name-format' );
+		$zero          = function () {
+			return 0;
+		};
+
+		try {
+			foreach ( array( 'first_name', 'nickname' ) as $display_format ) {
+				bp_update_option( 'bp-display-name-format', $display_format );
+
+				$author = self::factory()->user->create();
+				wp_update_user(
+					array(
+						'ID'           => $author,
+						'first_name'   => 'Peter',
+						'last_name'    => 'Zebrastripe',
+						// Drifted: the column holds the full name the format is meant to suppress.
+						'display_name' => 'Peter Zebrastripe',
+					)
+				);
+				$nickname = 'peternick' . $author;
+				update_user_meta( $author, 'nickname', $nickname );
+				xprofile_set_field_data( bp_xprofile_nickname_field_id(), $author, $nickname );
+				xprofile_set_field_data( bp_xprofile_firstname_field_id(), $author, 'Peter' );
+				xprofile_set_field_data( bp_xprofile_lastname_field_id(), $author, 'Zebrastripe' );
+
+				// Now take the field id away, as a site with the option unset would have it.
+				add_filter( 'bp_xprofile_lastname_field_id', $zero, 99 );
+
+				$GLOBALS['bb_default_display_avatar'] = true;
+				$this->set_current_user( 0 );
+				$guest = bp_core_get_user_displayname( $author );
+
+				remove_filter( 'bp_xprofile_lastname_field_id', $zero, 99 );
+
+				$this->assertStringNotContainsStringIgnoringCase(
+					'zebrastripe',
+					(string) $guest,
+					"format {$display_format} leaked the surname when the last-name field id was missing"
+				);
+				$this->assertSame(
+					( 'nickname' === $display_format ) ? $nickname : 'Peter',
+					(string) $guest,
+					"unexpected visible name under format {$display_format}"
+				);
+			}
+		} finally {
+			remove_filter( 'bp_xprofile_lastname_field_id', $zero, 99 );
+			$GLOBALS['bb_default_display_avatar'] = false;
+			bp_update_option( 'bp-display-name-format', $format_backup );
+		}
+	}
+
 	public function test_guest_viewer_sentinel_matches_a_real_logged_out_request() {
 		$ln     = (int) bp_xprofile_lastname_field_id();
 		$format = bp_get_option( 'bp-display-name-format' );

@@ -654,12 +654,45 @@ function bp_core_get_user_displayname( $user_id_or_username, $current_user_id = 
 	// name via xprofile_filter_get_user_display_name(); this keeps the guest path consistent.
 	$format_last_name_field_id = bp_xprofile_lastname_field_id();
 	$active_display_format     = function_exists( 'bp_core_display_name_format' ) ? bp_core_display_name_format() : 'first_last_name';
+	$format_hides_last_name    = in_array( $active_display_format, array( 'first_name', 'nickname' ), true );
 	if (
 		$format_last_name_field_id
-		&& in_array( $active_display_format, array( 'first_name', 'nickname' ), true )
+		&& $format_hides_last_name
 		&& ! in_array( $format_last_name_field_id, $list_fields )
 	) {
 		$list_fields[] = $format_last_name_field_id;
+	}
+
+	// bp_xprofile_lastname_field_id() returns 0 when its option was never written (it defaults to
+	// 0) or when a third-party filter says so, and the append above needs a field id to work with.
+	// Losing the id must not lose the format-level hide: the surname is not part of the "First
+	// Name" or "Nickname" formats at all, so with the id missing the answer still cannot be the
+	// stored display_name, which is exactly where a drifted full name lives. Neither format needs
+	// the last-name field to be resolved - read the format's own source instead.
+	if ( ! $format_last_name_field_id && $format_hides_last_name ) {
+		if ( 'nickname' === $active_display_format ) {
+			$full_name = get_the_author_meta( 'nickname', $user_id );
+		} else {
+			$first_name_field_id = function_exists( 'bp_xprofile_firstname_field_id' ) ? bp_xprofile_firstname_field_id() : 0;
+			$full_name           = '';
+
+			// Only when this viewer may actually see the first name; otherwise fall through to the
+			// nickname the same way the hidden-first-name branches below do.
+			// phpcs:ignore WordPress.PHP.StrictInArray.MissingTrueStrict -- field ids are strings from $wpdb, int from the getter.
+			if ( $first_name_field_id && ! in_array( $first_name_field_id, $list_fields ) ) {
+				$full_name = preg_replace( '/^[\s\p{Zs}]+|[\s\p{Zs}]+$/u', '', (string) xprofile_get_field_data( $first_name_field_id, $user_id ) );
+			}
+			if ( '' === (string) $full_name ) {
+				$full_name = get_the_author_meta( 'nickname', $user_id );
+			}
+		}
+
+		if ( '' === (string) $full_name ) {
+			$full_name = get_the_author_meta( 'user_nicename', $user_id );
+		}
+
+		/** This filter is documented in bp-members/bp-members-functions.php */
+		return apply_filters( 'bp_core_get_user_displayname', trim( (string) $full_name ), $user_id, $current_user_id );
 	}
 
 	if ( empty( $list_fields ) ) {
