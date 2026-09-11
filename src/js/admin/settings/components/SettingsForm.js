@@ -945,28 +945,50 @@ export function SettingsForm({ fields, values, onChange, onProBadgeClick, onUpgr
 								dangerouslySetInnerHTML={{ __html: sanitizedHtml[ field.name + '__desc' ] || '' }}
 							/>
 						) }
-						{ field.button_label && field.upgrade_modal && onUpgradeClick &&
-							( ! field.upgrade_catalog_url || field.button_url === field.upgrade_catalog_url ) ? (
-							// Catalog-backed upsell: open UpgradeModal in-page rather
+						{ field.button_label && field.addon_action && field.addon_slug ? (
+							// Install or activate the add-on in place via AJAX.
+							// `addon_nonce_key` picks which bbAdminData nonce the
+							// handler expects (Mothership vs Platform-owned) —
+							// see AddonActivateButton for the two families.
+							//
+							// FIRST in the chain, ahead of the upgrade modal below: an
+							// in-place install/activate is always more specific than a
+							// marketing upsell. Member Blogs' `not_installed` /
+							// `installed_inactive` states set `addon_action` for a customer
+							// whose plan already includes the add-on, and offering them
+							// "Upgrade" instead of "Install & Activate" would be wrong.
+							<AddonActivateButton
+								action={ field.addon_action }
+								slug={ field.addon_slug }
+								label={ field.button_label }
+								nonceKey={ field.addon_nonce_key }
+								busyLabel={ field.addon_busy_label }
+								className="bb-admin-empty-state__button"
+							/>
+						) : field.button_label && field.upgrade_modal && onUpgradeClick &&
+							( 'registered' === field.upgrade_modal.source ||
+								field.button_url === field.upgrade_catalog_url ) ? (
+							// Upsell with modal content: open UpgradeModal in-page rather
 							// than sending the admin off to pricing, matching the
 							// field-level pro badge. Rendered as a <button> because it
 							// performs an in-page action — an <a href> here would be a
 							// lie to keyboard and screen-reader users, and middle-click
 							// would open a dead tab.
 							//
-							// When the payload came from the catalog, the button must still
-							// point AT the catalog URL. A `bb_admin_settings_format_field_data`
-							// callback may swap the button per runtime state — Member Blogs
-							// sends its no-license state to the license screen — and that
-							// choice must win. The modal is the richer form of the marketing
-							// link, so it may only ever replace the marketing link, never a
-							// destination a consumer picked deliberately.
+							// Gated on the payload's PROVENANCE (`source`, set by the AJAX
+							// formatter), not on whether a catalog URL happens to exist.
+							// A CATALOG payload is content the marketing feed imposed on
+							// this panel, so it may only replace the marketing link the
+							// catalog itself supplied — a `bb_admin_settings_format_field_data`
+							// callback that swapped the button per runtime state (Member Blogs
+							// sends its no-license state to the license screen) must win, and
+							// `button_url === upgrade_catalog_url` is what proves the button
+							// is still the catalog's own.
 							//
-							// No catalog URL means the payload was registered by the panel
-							// itself, which is an explicit request for the modal rather than
-							// something the catalog imposed — nothing to override, so it is
-							// allowed. Such a panel controls the modal by registering the
-							// payload only in the states that should show it.
+							// A REGISTERED payload is the panel asking for its own modal, so
+							// there is nothing to override and it is always allowed; such a
+							// panel controls the modal by registering the payload only in the
+							// states that should show it.
 							//
 							// Everything else falls through to the plain link below.
 							<button
@@ -976,19 +998,6 @@ export function SettingsForm({ fields, values, onChange, onProBadgeClick, onUpgr
 							>
 								{ field.button_label }
 							</button>
-						) : field.button_label && field.addon_action && field.addon_slug ? (
-							// Install or activate the add-on in place via AJAX.
-							// `addon_nonce_key` picks which bbAdminData nonce the
-							// handler expects (Mothership vs Platform-owned) —
-							// see AddonActivateButton for the two families.
-							<AddonActivateButton
-								action={ field.addon_action }
-								slug={ field.addon_slug }
-								label={ field.button_label }
-								nonceKey={ field.addon_nonce_key }
-								busyLabel={ field.addon_busy_label }
-								className="bb-admin-empty-state__button"
-							/>
 						) : field.button_label && field.button_url ? (
 							<a
 								href={ safeUrl( field.button_url ) }

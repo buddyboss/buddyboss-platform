@@ -1281,6 +1281,20 @@ class BB_Admin_Settings_Ajax {
 						$upsell_entry,
 						$field_data['empty_state_title'] ?? $field_data['label'] ?? ''
 					);
+
+					// Provenance, read by SettingsForm.js to decide whether the modal may
+					// take over the empty-state button. A catalog payload is content the
+					// marketing feed imposed on this panel, so it may only ever replace
+					// the marketing link the catalog itself supplied — never a
+					// destination a `bb_admin_settings_format_field_data` consumer chose.
+					// Testing `upgrade_catalog_url` for that was not equivalent: the
+					// branch above sets it ONLY when the entry carries an `upgrade_url`,
+					// while the modal is built for an entry that is hero art plus copy
+					// alone, and such an entry left the flag unset and the modal
+					// indistinguishable from a registered one.
+					if ( ! empty( $field_data['upgrade_modal'] ) ) {
+						$field_data['upgrade_modal']['source'] = 'catalog';
+					}
 				}
 			}
 
@@ -1307,6 +1321,13 @@ class BB_Admin_Settings_Ajax {
 					$field['upgrade_modal'],
 					$field_data['empty_state_title'] ?? $field_data['label'] ?? ''
 				);
+
+				// Provenance — see the catalog branch above. A payload the panel
+				// registered for itself is an explicit request for the modal, so it may
+				// take the button whatever the button currently points at.
+				if ( ! empty( $field_data['upgrade_modal'] ) ) {
+					$field_data['upgrade_modal']['source'] = 'registered';
+				}
 			}
 
 			// Inject upload_config and resolved upload_url for image_radio/image_upload fields with upload support.
