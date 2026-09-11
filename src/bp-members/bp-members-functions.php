@@ -622,6 +622,20 @@ function bp_core_get_user_displayname( $user_id_or_username, $current_user_id = 
 					$glue_pattern = ( '' !== $fn_nospace )
 						? '/^(?:' . preg_quote( $fn_nospace . $ln_nospace, '/' ) . '|' . preg_quote( $ln_nospace . $fn_nospace, '/' ) . ')$/iu'
 						: '';
+					// When the first name is unknown - its field is unset, left blank, or its data row is
+					// missing - the exact first+last glue pattern above cannot be built ($fn_nospace is
+					// empty), so a surname glued to an unknown name part with no separator ("AnnaSmith",
+					// "SmithAnna") would slip past $bounded, whose leading/trailing lookarounds require a
+					// non-letter boundary the glue does not have. Match the surname glued to the START or
+					// END of a token and drop the whole token - exactly as the punctuation-bounded case
+					// ("Anna-Smith") already does via $bounded. This over-redacts a standalone name that
+					// merely begins or ends with the exact surname string (hidden "Lin" inside "Linda"),
+					// which is privacy-safe - never a leak - and is only reachable when the first name is
+					// genuinely absent, so the visible over-redaction test (with a real first name) is
+					// untouched.
+					$ln_glue      = ( '' === $fn_nospace )
+						? '/^' . preg_quote( $ln_nospace, '/' ) . '|' . preg_quote( $ln_nospace, '/' ) . '$/iu'
+						: '';
 					$bounded      = '/(?<![\p{L}\p{N}])' . preg_quote( $ln_nospace, '/' ) . '(?![\p{L}\p{N}])/iu';
 
 					$tokens = array();
@@ -635,6 +649,12 @@ function bp_core_get_user_displayname( $user_id_or_username, $current_user_id = 
 							if ( $first_name_visible ) {
 								$tokens[] = $first_name;
 							}
+						} elseif ( '' !== $ln_glue && preg_match( $ln_glue, $token ) ) {
+							// First name unknown: the surname is glued to the start or end of this token
+							// with no separator. Drop the whole token - the first-name portion cannot be
+							// recovered or checked against a visibility rule, so resolution falls through
+							// to the first-name field / nickname fallback below.
+							continue;
 						} elseif ( ! preg_match( $bounded, $token ) ) {
 							$tokens[] = $token;
 						}

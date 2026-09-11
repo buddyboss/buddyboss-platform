@@ -571,6 +571,65 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 	}
 
 	/**
+	 * When the First Name field is genuinely EMPTY (unset on the site, or left blank by the member,
+	 * or its data row missing - not merely hidden), the exact first+last glue pattern cannot be
+	 * built, so a separator-less glued display_name ("AnnaSmith") that drifted from the fields
+	 * (import, the wp-admin "Display name publicly as" dropdown, a third-party write) must still
+	 * redact the hidden surname. The whole glued token is dropped - the first-name portion cannot be
+	 * recovered or checked against a visibility rule - and resolution falls through to the nickname,
+	 * exactly as the punctuation-bounded "Anna-Smith" shape already did. Covers both the "first
+	 * last" (surname suffix) and "last first" (surname prefix) glue orders.
+	 *
+	 * @group bb_activity_get_item_user_displayname
+	 */
+	public function test_get_user_displayname_redacts_glued_surname_when_first_name_blank() {
+		global $wpdb;
+
+		// Reproduce the real production drift: a bulk DB import writes the display_name column
+		// directly (bypassing the profile_update sync that would otherwise self-heal an empty first
+		// name to the nickname and recompute the column), leaving a glued "AnnaSmith" while the
+		// first-name xprofile field is genuinely empty. This site literally carries ~70k such
+		// forum-imported users. The no-leak guarantee must hold under EVERY Display Name Format
+		// option and both glue orders, so changing bp-display-name-format (or which fields are the
+		// first/last name) can never reopen the leak. 'annanick' is the safe fallback across the
+		// board: dropped-glue -> empty first-name field -> nickname; and the nickname format returns
+		// the nickname outright.
+		$fn_id   = bp_xprofile_firstname_field_id();
+		$ln_id   = bp_xprofile_lastname_field_id();
+		$formats = array( 'first_name', 'first_last_name', 'nickname' );
+		$glues   = array(
+			'AnnaSmith', // surname suffix (first_last order).
+			'SmithAnna', // surname prefix (last_first order).
+		);
+
+		foreach ( $formats as $format ) {
+			bp_update_option( 'bp-display-name-format', $format );
+
+			foreach ( $glues as $display ) {
+				$u = self::factory()->user->create();
+				update_user_meta( $u, 'nickname', 'annanick' );
+
+				// Set the profile fields directly (no profile_update sync): last name present + hidden,
+				// first name genuinely empty.
+				xprofile_set_field_data( $ln_id, $u, 'Smith' );
+				xprofile_set_field_data( $fn_id, $u, '' );
+				xprofile_set_field_visibility_level( $ln_id, $u, 'loggedin' );
+
+				// Drift the stored column exactly as a direct SQL import would, bypassing every sync.
+				$wpdb->update( $wpdb->users, array( 'display_name' => $display ), array( 'ID' => $u ) );
+				clean_user_cache( $u );
+
+				$GLOBALS['bb_default_display_avatar'] = true;
+				$this->set_current_user( 0 );
+				$guest = bp_core_get_user_displayname( $u, 0 );
+
+				$this->assertStringNotContainsStringIgnoringCase( 'smith', $guest, "leak for '{$display}' under format '{$format}'" );
+				$this->assertSame( 'annanick', $guest, "fallback for '{$display}' under format '{$format}'" );
+			}
+		}
+	}
+
+	/**
 	 * The comment tree is cached per activity with no viewer in the key. A tree cached
 	 * while a member viewed it must not hand that member's `user_fullname` to a guest.
 	 *
