@@ -3567,6 +3567,13 @@ function bb_migrate_xprofile_visibility( $background = false, $page = 1 ) {
 		}
 	}
 
+	// This batch wrote visibility rows directly (bypassing BB_XProfile_Visibility's own
+	// invalidation), so clear the per-request field-ids memo in case a read for a migrated user
+	// runs later in the same request.
+	if ( class_exists( 'BB_XProfile_Visibility' ) ) {
+		BB_XProfile_Visibility::flush_field_ids_cache();
+	}
+
 	// If running in the background, schedule the next batch.
 	if ( $background ) {
 		$bb_background_updater->data(
