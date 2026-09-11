@@ -603,11 +603,12 @@ function bb_core_prime_mentions_results() {
 			)
 		);
 
-		if ( ! empty( $user->display_name ) && ! bp_disable_profile_sync() ) {
-			$result->name = $user->display_name;
-		} else {
-			$result->name = bp_core_get_user_displayname( $user->ID );
-		}
+		// Resolve the name for the current viewer so a last name hidden by profile-field
+		// visibility is not localized into the page for every logged-in user. The raw
+		// $user->display_name column is viewer-agnostic; the friends branch below already
+		// resolves it, and bp_disable_profile_sync() is effectively always false, so the raw
+		// branch previously ran on every request.
+		$result->name    = bp_core_get_user_displayname( $user->ID );
 		$result->user_id = $user->ID;
 
 		$members[] = $result;
