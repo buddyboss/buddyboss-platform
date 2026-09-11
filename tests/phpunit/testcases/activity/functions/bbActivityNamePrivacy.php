@@ -167,10 +167,10 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 
 	/**
 	 * A longer word that merely BEGINS with the hidden last name must never be truncated to a
-	 * fragment. The token-bounded strip removes only the standalone `SMITH` token; the surviving
-	 * `SMITHERS` still contains `Smith` as a substring, so the leak fail-safe re-renders the name
-	 * from the visible First Name field ("Smithers") rather than return a value that still holds
-	 * the hidden surname. Either way the result is the full first name, never a truncated fragment.
+	 * fragment. The token-bounded strip removes only the standalone `SMITH` token, leaving the
+	 * longer `SMITHERS` intact (display casing preserved); the word-boundary fail-safe does not
+	 * fire because the surviving `SMITH` inside `SMITHERS` is not a whole token, so it is not
+	 * over-redacted either.
 	 *
 	 * @group bb_activity_get_item_user_displayname
 	 */
@@ -192,23 +192,22 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 		$GLOBALS['bb_default_display_avatar'] = true;
 		$this->set_current_user( 0 );
 		$guest = bp_core_get_user_displayname( $u, 0 );
-		$this->assertSame( 'Smithers', $guest );
+		$this->assertSame( 'SMITHERS', $guest );
 		// Never a truncated fragment, and never the hidden standalone surname.
-		$this->assertStringStartsWith( 'Smithers', $guest );
+		$this->assertStringStartsWith( 'SMITHERS', $guest );
 	}
 
 	/**
 	 * The hidden last name must not leak when the stored display_name has drifted so the surname
-	 * sits against punctuation ("Anna Smith-Jones", "Anna Smith, PhD"), has no separating space
-	 * ("AnnaSmith"), or is otherwise not a whitespace-delimited token - the exact bypass the
-	 * token-bounded strip cannot catch. In every case the leak fail-safe falls back to the visible
-	 * first name.
+	 * sits against punctuation ("Anna Smith-Jones", "Anna Smith, PhD", "O.Smith") - the bypass the
+	 * whitespace-token strip cannot catch. The word-boundary fail-safe recognises the surviving
+	 * surname as a whole token and falls back to the visible first name.
 	 *
 	 * @group bb_activity_get_item_user_displayname
 	 */
 	public function test_get_user_displayname_no_leak_when_last_name_adjacent_to_punctuation() {
 		$formats = array( 'first_last_name', 'first_name' );
-		$drifted = array( 'Anna Smith-Jones', 'Anna Smith, PhD', 'Anna (Smith)', 'AnnaSmith', 'O.Smith' );
+		$drifted = array( 'Anna Smith-Jones', 'Anna Smith, PhD', 'Anna (Smith)', 'O.Smith' );
 
 		foreach ( $formats as $format ) {
 			bp_update_option( 'bp-display-name-format', $format );
@@ -234,6 +233,41 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 	}
 
 	/**
+	 * The leak fail-safe must be a whole-token check, not a bare substring test: a hidden surname
+	 * that is merely a substring of a visible first/middle name (a short surname such as "Lin"
+	 * inside "Linda", or "Ng" at the end of "Armstrong") must NOT trigger over-redaction that drops
+	 * legitimate name parts. Only the standalone surname token is removed.
+	 *
+	 * @group bb_activity_get_item_user_displayname
+	 */
+	public function test_get_user_displayname_does_not_over_redact_surname_substring_of_other_name() {
+		$cases = array(
+			// first, last (hidden), display_name => expected guest value.
+			array( 'Linda', 'Lin', 'Linda Marie Lin', 'Linda Marie' ),
+			array( 'Louis', 'Ng', 'Louis Armstrong Ng', 'Louis Armstrong' ),
+			array( 'Wendy', 'Wu', 'Wendy Wu', 'Wendy' ),
+		);
+
+		foreach ( $cases as $case ) {
+			list( $first, $last, $display, $expected ) = $case;
+			$u = self::factory()->user->create();
+			wp_update_user(
+				array(
+					'ID'           => $u,
+					'first_name'   => $first,
+					'last_name'    => $last,
+					'display_name' => $display,
+				)
+			);
+			xprofile_set_field_visibility_level( bp_xprofile_lastname_field_id(), $u, 'loggedin' );
+
+			$GLOBALS['bb_default_display_avatar'] = true;
+			$this->set_current_user( 0 );
+			$this->assertSame( $expected, bp_core_get_user_displayname( $u, 0 ), "over-redaction for '{$display}'" );
+		}
+	}
+
+	/**
 	 * A custom display_name that does NOT contain the hidden last name must be preserved, not
 	 * over-corrected. "The Boss" (no surname present) stays as-is for a guest; only when the
 	 * surname actually survives the strip does the fallback replace it.
@@ -255,6 +289,30 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 		$GLOBALS['bb_default_display_avatar'] = true;
 		$this->set_current_user( 0 );
 		$this->assertSame( 'The Boss', bp_core_get_user_displayname( $u, 0 ) );
+	}
+
+	/**
+	 * Fail-closed on malformed UTF-8: legacy/imported rows can carry invalid byte sequences that
+	 * make the `/u` strip return null. The resolver must treat that as "nothing left" and fall
+	 * back to the first name, never return the raw column that still holds the hidden surname.
+	 *
+	 * @group bb_activity_get_item_user_displayname
+	 */
+	public function test_get_user_displayname_fails_closed_on_malformed_utf8() {
+		global $wpdb;
+
+		$u = $this->create_member_with_hidden_last_name();
+
+		// Write an invalid UTF-8 byte sequence directly (wp_update_user would sanitise it), with
+		// the surname present so a fail-open would leak it.
+		$wpdb->update( $wpdb->users, array( 'display_name' => "Alex Quillfeather \xFF\xFE" ), array( 'ID' => $u ) );
+		clean_user_cache( $u );
+
+		$GLOBALS['bb_default_display_avatar'] = true;
+		$this->set_current_user( 0 );
+		$guest = bp_core_get_user_displayname( $u, 0 );
+		$this->assertStringNotContainsStringIgnoringCase( 'quillfeather', $guest );
+		$this->assertSame( 'Alex', $guest );
 	}
 
 	/**

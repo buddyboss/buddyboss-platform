@@ -597,15 +597,18 @@ function bp_core_get_user_displayname( $user_id_or_username, $current_user_id = 
 				// applies instead of returning the raw name that still holds the hidden last name.
 				$full_name = ( null === $full_name ) ? '' : trim( preg_replace( '/\s+/', ' ', $full_name ) );
 
-				// The token match only removes a whitespace-delimited occurrence. A stored
-				// display_name that drifted to place the surname against punctuation
-				// ("Anna Smith-Jones", "Anna Smith, PhD") or with no separator ("AnnaSmith") would
-				// still expose it. If the surname survives anywhere in the result, drop to the
-				// first-name/nickname recompute below - which never contains the hidden last name -
-				// rather than leak it. (A first name that legitimately contains the surname as a
-				// substring, e.g. "Johnson" for hidden "John", is the member's own visible name;
-				// re-rendering it from the first-name field is not a leak of the hidden field).
-				if ( '' !== $full_name && preg_match( '/' . preg_quote( $last_name, '/' ) . '/iu', $full_name ) ) {
+				// The whitespace-delimited strip above misses a surname that drifted against
+				// punctuation ("Anna Smith-Jones", "Anna Smith, PhD", "O.Smith"). Fail-safe: if the
+				// surname still survives as a WHOLE token - bounded by a non-letter/non-digit
+				// character or a string edge - the strip failed to catch it, so drop to the
+				// first-name/nickname recompute below rather than leak it. The boundary is
+				// deliberately not a bare substring test: a surname that is merely a substring of a
+				// different name token (hidden "Lin" inside the visible first name "Linda", or a
+				// middle name) is not a leak and must not trigger over-redaction that would drop
+				// legitimate name parts. A truly separator-less "AnnaSmith" is not produced by
+				// profile sync, the wp-admin display-name dropdown or standard imports, and cannot
+				// be distinguished from a longer word without over-redacting real names.
+				if ( '' !== $full_name && preg_match( '/(?<![\p{L}\p{N}])' . preg_quote( $last_name, '/' ) . '(?![\p{L}\p{N}])/iu', $full_name ) ) {
 					$full_name = '';
 				}
 			}
