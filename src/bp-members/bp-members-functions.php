@@ -605,11 +605,29 @@ function bp_core_get_user_displayname( $user_id_or_username, $current_user_id = 
 				// deliberately not a bare substring test: a surname that is merely a substring of a
 				// different name token (hidden "Lin" inside the visible first name "Linda", or a
 				// middle name) is not a leak and must not trigger over-redaction that would drop
-				// legitimate name parts. A truly separator-less "AnnaSmith" is not produced by
-				// profile sync, the wp-admin display-name dropdown or standard imports, and cannot
-				// be distinguished from a longer word without over-redacting real names.
+				// legitimate name parts.
 				if ( '' !== $full_name && preg_match( '/(?<![\p{L}\p{N}])' . preg_quote( $last_name, '/' ) . '(?![\p{L}\p{N}])/iu', $full_name ) ) {
 					$full_name = '';
+				}
+
+				// Separator-less glue: a surname joined directly to the first name ("AnnaSmith")
+				// has no boundary for the token check above. Redact only when the surviving value
+				// is EXACTLY the first and last name concatenated (either order) - this catches the
+				// glued leak while leaving a legitimate word that merely ends with the surname (last
+				// name "Ng" inside "Armstrong") untouched, which a boundary/substring test cannot.
+				if ( '' !== $full_name ) {
+					// Read the first-name value for pattern detection only (not for display), so the
+					// glue is recognised even when the first name is itself hidden from this viewer.
+					$first_name_field_id = bp_xprofile_firstname_field_id();
+					$first_name          = $first_name_field_id
+						? preg_replace( '/^\s+|\s+$/u', '', (string) xprofile_get_field_data( $first_name_field_id, $user_id ) )
+						: '';
+					if (
+						'' !== $first_name
+						&& preg_match( '/^(?:' . preg_quote( $first_name . $last_name, '/' ) . '|' . preg_quote( $last_name . $first_name, '/' ) . ')$/iu', $full_name )
+					) {
+						$full_name = '';
+					}
 				}
 			}
 

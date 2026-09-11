@@ -199,15 +199,18 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 
 	/**
 	 * The hidden last name must not leak when the stored display_name has drifted so the surname
-	 * sits against punctuation ("Anna Smith-Jones", "Anna Smith, PhD", "O.Smith") - the bypass the
-	 * whitespace-token strip cannot catch. The word-boundary fail-safe recognises the surviving
-	 * surname as a whole token and falls back to the visible first name.
+	 * sits against punctuation ("Anna Smith-Jones", "O.Smith") or is glued directly to the first
+	 * name with no separator ("AnnaSmith", "SmithAnna") - the bypasses the whitespace-token strip
+	 * cannot catch. The word-boundary fail-safe handles punctuation and the exact first+last
+	 * concatenation check handles the glued case; both fall back to the visible first name.
 	 *
 	 * @group bb_activity_get_item_user_displayname
 	 */
 	public function test_get_user_displayname_no_leak_when_last_name_adjacent_to_punctuation() {
 		$formats = array( 'first_last_name', 'first_name' );
-		$drifted = array( 'Anna Smith-Jones', 'Anna Smith, PhD', 'Anna (Smith)', 'O.Smith' );
+		// Punctuation-adjacent (caught by the word-boundary fail-safe) plus separator-less glue
+		// (caught by the exact first+last concatenation check).
+		$drifted = array( 'Anna Smith-Jones', 'Anna Smith, PhD', 'Anna (Smith)', 'O.Smith', 'AnnaSmith', 'SmithAnna' );
 
 		foreach ( $formats as $format ) {
 			bp_update_option( 'bp-display-name-format', $format );
