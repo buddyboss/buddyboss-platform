@@ -5047,8 +5047,11 @@ function bp_get_group_member_avatar_mini( $width = 30, $height = 30 ) {
 /**
  * Get the display name of the current member in the group members loop, as the current viewer may see it.
  *
- * Prefers the `fullname` that BP_User_Query populates per viewer (respects last-name
- * visibility) and falls back to a per-viewer resolution; never the raw WP display_name.
+ * The group members loop does not populate a viewer-scoped `fullname`, so resolution goes through
+ * bp_core_get_user_displayname() (which honours last-name visibility for the current viewer). The
+ * `fullname` short-circuit is only honoured when some other query has already set it AND it is
+ * non-empty; it is NOT assumed to be viewer-scoped, so callers must not populate it with a raw
+ * WP display_name.
  *
  * @since BuddyBoss [BBVERSION]
  *

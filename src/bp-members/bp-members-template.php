@@ -810,8 +810,12 @@ function bp_member_avatar( $args = '' ) {
 function bp_get_member_avatar( $args = '' ) {
 	global $members_template;
 
-	// `fullname` is resolved for the current viewer; never fall back to the raw WP display_name.
-	$fullname = ! empty( $members_template->member->fullname ) ? $members_template->member->fullname : bp_core_get_user_displayname( $members_template->member->id );
+	// Used only for the avatar alt/title. The default members query populates `fullname` from a
+	// viewer-scoped value, but the alphabetical (A-Z / BP_Core_User letter) directory path sets
+	// `fullname` to the RAW xprofile Full Name (class-bp-core-user.php), which would expose a last
+	// name hidden from this viewer. Resolve through the viewer-scoped bp_core_get_user_displayname()
+	// so the alt never leaks a hidden name part regardless of which query populated the loop.
+	$fullname = bp_core_get_user_displayname( $members_template->member->id );
 
 	$defaults = array(
 		'type'   => 'thumb',

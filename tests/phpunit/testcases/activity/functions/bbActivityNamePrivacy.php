@@ -893,6 +893,92 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 	}
 
 	/**
+	 * When the Last Name FIELD is empty (unset on the site, blank, or its data row missing) but
+	 * the stored display_name has drifted to a full name (raw DB import - the ~70k forum-imported
+	 * users here - the wp-admin "Display name publicly as" dropdown, or a third-party write), a
+	 * guest from whom the last name is hidden must not receive the drifted surname. There is no
+	 * stored surname string to strip, so the visible name is resolved from the format's own fields
+	 * - matching what a logged-in viewer already sees (proven by
+	 * xprofile_filter_get_user_display_name() rebuilding from bp_xprofile_get_member_display_name())
+	 * - rather than falling through to the raw column. Covers all three Display Name Format options.
+	 *
+	 * Regression for PROD-9896: the round-15/16 "empty last-name field" case, previously deferred as
+	 * an accepted limitation on the belief that resolving from fields would over-redact a legitimate
+	 * first-name-only member. It does not: the logged-in path already never shows the drifted column
+	 * in this state, and the negative control below proves a VISIBLE empty-last-name member is
+	 * untouched.
+	 *
+	 * @group bb_activity_get_item_user_displayname
+	 */
+	public function test_get_user_displayname_empty_last_name_field_does_not_leak_drifted_surname() {
+		global $wpdb;
+
+		$fn_id = bp_xprofile_firstname_field_id();
+		$ln_id = bp_xprofile_lastname_field_id();
+
+		// format => expected guest label for a hidden, EMPTY last name with a drifted column.
+		$cases = array(
+			'first_name'      => 'Peter',    // first-name field (visible), never the drifted column.
+			'first_last_name' => 'Peter',    // last name empty + hidden -> first name only.
+			'nickname'        => 'petenick', // nickname field, drift irrelevant.
+		);
+
+		foreach ( $cases as $format => $expected ) {
+			bp_update_option( 'bp-display-name-format', $format );
+
+			$u = self::factory()->user->create();
+			update_user_meta( $u, 'nickname', 'petenick' );
+
+			// First name present + visible; last name field genuinely EMPTY; last name hidden from
+			// guests (redundant under first_name/nickname, which hide it by format, but required for
+			// the first_last_name case). Set directly, no profile_update sync.
+			xprofile_set_field_data( $fn_id, $u, 'Peter' );
+			xprofile_set_field_data( $ln_id, $u, '' );
+			xprofile_set_field_visibility_level( $ln_id, $u, 'loggedin' );
+
+			// Drift the stored column exactly as a direct SQL import would, bypassing every sync.
+			$wpdb->update( $wpdb->users, array( 'display_name' => 'Peter Zebrastripe' ), array( 'ID' => $u ) );
+			clean_user_cache( $u );
+
+			$GLOBALS['bb_default_display_avatar'] = true;
+			$this->set_current_user( 0 );
+			$guest = bp_core_get_user_displayname( $u, 0 );
+
+			$this->assertStringNotContainsStringIgnoringCase( 'zebrastripe', $guest, "empty-last-name leak under format '{$format}'" );
+			$this->assertSame( $expected, $guest, "empty-last-name resolution under format '{$format}'" );
+		}
+	}
+
+	/**
+	 * Negative control for the empty-last-name fix (bb-dev SS29.1): a member who legitimately has
+	 * only a first name (Last Name field empty) with the last name VISIBLE (public) must keep their
+	 * custom display_name. The fix must redact ONLY when the last name is actually hidden, never
+	 * over-correct a name that is on show - this is the concern that deferred the fix in round 15/16.
+	 *
+	 * @group bb_activity_get_item_user_displayname
+	 */
+	public function test_get_user_displayname_visible_empty_last_name_preserves_custom_display_name() {
+		global $wpdb;
+
+		bp_update_option( 'bp-display-name-format', 'first_last_name' );
+
+		$fn_id = bp_xprofile_firstname_field_id();
+		$ln_id = bp_xprofile_lastname_field_id();
+
+		$u = self::factory()->user->create();
+		xprofile_set_field_data( $fn_id, $u, 'Peter' );
+		xprofile_set_field_data( $ln_id, $u, '' );
+		xprofile_set_field_visibility_level( $ln_id, $u, 'public' );
+
+		$wpdb->update( $wpdb->users, array( 'display_name' => 'The Legend' ), array( 'ID' => $u ) );
+		clean_user_cache( $u );
+
+		$GLOBALS['bb_default_display_avatar'] = true;
+		$this->set_current_user( 0 );
+		$this->assertSame( 'The Legend', bp_core_get_user_displayname( $u, 0 ) );
+	}
+
+	/**
 	 * The comment tree is cached per activity with no viewer in the key. A tree cached
 	 * while a member viewed it must not hand that member's `user_fullname` to a guest.
 	 *

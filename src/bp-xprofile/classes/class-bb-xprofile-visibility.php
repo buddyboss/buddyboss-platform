@@ -576,6 +576,80 @@ class BB_XProfile_Visibility {
 	}
 
 	/**
+	 * Prime the per-request field-ids memo for a batch of users in a single query.
+	 *
+	 * The single-user getter issues one uncached query per user. Resolving a
+	 * member loop, an activity stream or a REST collection asks it once per row, so a directory of
+	 * 50 members costs 50 queries before any name is rendered. This fills the same memo the getter
+	 * reads, keyed identically, so the per-row calls become array lookups.
+	 *
+	 * Users with no matching row are memoized as an empty array on purpose: without that they would
+	 * miss the memo and fall through to an individual query each, which is the cost this exists to
+	 * remove.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array $user_ids User IDs to prime.
+	 * @param array $levels   Visibility levels to prime for. Must be the same set the subsequent
+	 *                        get_user_field_ids_by_visibility_levels() calls will pass, or those
+	 *                        calls simply miss the memo and behave as they do today.
+	 */
+	public static function prime_field_ids_cache( $user_ids, $levels = array() ) {
+		global $wpdb;
+
+		$user_ids = array_filter( array_map( 'intval', (array) $user_ids ) );
+		$levels   = array_filter( (array) $levels );
+
+		if ( empty( $user_ids ) || empty( $levels ) ) {
+			return;
+		}
+
+		$sorted_levels = $levels;
+		sort( $sorted_levels );
+		$key_suffix = ':' . sha1( implode( ',', $sorted_levels ) );
+
+		// Only query users that are not already memoized.
+		$uncached_ids = array();
+		foreach ( $user_ids as $user_id ) {
+			if ( ! isset( self::$field_ids_cache[ $user_id . $key_suffix ] ) ) {
+				$uncached_ids[ $user_id ] = $user_id;
+			}
+		}
+
+		if ( empty( $uncached_ids ) ) {
+			return;
+		}
+
+		$bp = buddypress();
+
+		$quoted_levels = implode(
+			',',
+			array_map(
+				function ( $level ) use ( $wpdb ) {
+					return $wpdb->prepare( '%s', $level );
+				},
+				$levels
+			)
+		);
+
+		$user_ids_sql = implode( ',', $uncached_ids );
+
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- levels are prepared above, ids are ints.
+		$results = $wpdb->get_results(
+			"SELECT DISTINCT user_id, field_id FROM {$bp->profile->table_name_visibility} WHERE user_id IN ( {$user_ids_sql} ) AND value IN ( {$quoted_levels} )"
+		);
+
+		$grouped = array();
+		foreach ( (array) $results as $row ) {
+			$grouped[ (int) $row->user_id ][ (int) $row->field_id ] = (int) $row->field_id;
+		}
+
+		foreach ( $uncached_ids as $user_id ) {
+			self::$field_ids_cache[ $user_id . $key_suffix ] = isset( $grouped[ $user_id ] ) ? $grouped[ $user_id ] : array();
+		}
+	}
+
+	/**
 	 * Invalidate the per-request visibility field-ids memo.
 	 *
 	 * Called by every writer that changes rows in the visibility table so a read that follows a

@@ -5397,25 +5397,10 @@ function bb_xprofile_search_bp_user_query_search_first_last_nickname( $sql, BP_U
 
 	// Checked profile fields based on privacy settings of particular user while searching.
 	if ( ! empty( $matched_user_ids ) ) {
-		$matched_user_data = $wpdb->get_results( "SELECT * FROM {$bp->profile->table_name_data} WHERE " . implode( ' OR ', $where_condition ) );
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- clauses built above.
+		$matched_user_data = $wpdb->get_results( "SELECT user_id, field_id FROM {$bp->profile->table_name_data} WHERE " . implode( ' OR ', $where_condition ) );
 
-		if ( ! empty( $matched_user_data ) ) {
-			foreach ( $matched_user_data as $k => $user ) {
-				$field_visibility = xprofile_get_field_visibility_level( $user->field_id, $user->user_id );
-				if ( 'adminsonly' === $field_visibility && ! current_user_can( 'administrator' ) ) {
-					$key = array_search( $user->user_id, $matched_user_ids, true );
-					if ( false !== $key ) {
-						unset( $matched_user_ids[ $key ] );
-					}
-				}
-				if ( 'friends' === $field_visibility && ! current_user_can( 'administrator' ) && false === friends_check_friendship( intval( $user->user_id ), bp_loggedin_user_id() ) ) {
-					$key = array_search( $user->user_id, $matched_user_ids, true );
-					if ( false !== $key ) {
-						unset( $matched_user_ids[ $key ] );
-					}
-				}
-			}
-		}
+		$matched_user_ids = bb_xprofile_filter_field_search_matches( $matched_user_ids, $matched_user_data );
 	}
 
 	if ( ! empty( $matched_user_ids ) ) {
@@ -10980,4 +10965,103 @@ function bb_has_paid_product() {
 	 * @param bool $detected Whether a paid product was detected.
 	 */
 	return (bool) apply_filters( 'bb_has_paid_product', $detected );
+}
+
+/**
+ * Resolve the ID of the user on whose behalf the current request is being rendered.
+ *
+ * `bp_loggedin_user_id()` reads `buddypress()->loggedin_user->id`, which is populated by
+ * `bp_setup_current_user()` on WordPress' `set_current_user` action. On a normal page load that
+ * always tracks `get_current_user_id()`. In a REST request it can lag behind: the authentication
+ * handler may resolve the user before BuddyPress has registered that action, leaving the BP global
+ * at 0 while WordPress already knows who is calling. Anything that derives a *viewer* from
+ * `bp_loggedin_user_id()` then behaves as though the request were anonymous — for
+ * `bp_core_get_user_displayname()` that means an authenticated member is served the guest-level
+ * redaction of another member's name (PROD-9896).
+ *
+ * Prefer the BuddyPress global, because code that deliberately re-points the viewer does so by
+ * assigning to it (see `bp_messages_*` and the personal-data exporters), and fall back to the
+ * WordPress current user only when BP has no value at all. That makes this a no-op on every path
+ * where the two already agree.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return int User ID of the current viewer, or 0 when the request is anonymous.
+ */
+function bb_core_get_viewer_user_id() {
+	$viewer_id = function_exists( 'bp_loggedin_user_id' ) ? (int) bp_loggedin_user_id() : 0;
+
+	if ( empty( $viewer_id ) ) {
+		$viewer_id = (int) get_current_user_id();
+	}
+
+	/**
+	 * Filters the resolved viewer user ID.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param int $viewer_id User ID of the current viewer, 0 when anonymous.
+	 */
+	return (int) apply_filters( 'bb_core_get_viewer_user_id', $viewer_id );
+}
+
+/**
+ * Evaluate a MySQL `LIKE` pattern against a string in PHP.
+ *
+ * Used where a row set produced by a `LIKE` comparison in SQL has to be re-tested against a value
+ * that only exists in PHP — for example a display name that has been redacted for the current
+ * viewer, which no column holds. Re-implementing the comparison by hand invites subtle drift from
+ * the SQL that produced the candidate rows, so this mirrors it directly: the caller passes the very
+ * pattern it gave to `$wpdb`.
+ *
+ * Supports the two wildcards WordPress' `$wpdb->esc_like()` / `bp_esc_like()` protect (`%` and `_`)
+ * and their backslash escaping, so a literal `%` typed by a member stays literal. Matching is
+ * case-insensitive and multibyte-aware, matching MySQL's default `utf8mb4_*_ci` collation.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $pattern LIKE pattern, exactly as passed to the SQL comparison.
+ * @param string $subject String to test.
+ * @return bool Whether $subject satisfies $pattern.
+ */
+function bb_core_sql_like_match( $pattern, $subject ) {
+	$pattern = (string) $pattern;
+	$subject = (string) $subject;
+
+	$regex  = '';
+	$length = strlen( $pattern );
+
+	for ( $i = 0; $i < $length; $i++ ) {
+		$char = $pattern[ $i ];
+
+		if ( '\\' === $char && $i + 1 < $length ) {
+			// An escaped wildcard is a literal character; consume both bytes.
+			++$i;
+			$regex .= preg_quote( $pattern[ $i ], '/' );
+			continue;
+		}
+
+		if ( '%' === $char ) {
+			$regex .= '.*';
+			continue;
+		}
+
+		if ( '_' === $char ) {
+			$regex .= '.';
+			continue;
+		}
+
+		$regex .= preg_quote( $char, '/' );
+	}
+
+	$matched = preg_match( '/^' . $regex . '$/iu', $subject );
+
+	// preg_match() returns false only on a malformed pattern or invalid UTF-8. Retry without the
+	// unicode modifier so a byte-wise comparison still answers, rather than silently reporting "no
+	// match" — for the privacy filter that calls this, "no match" is the destructive answer.
+	if ( false === $matched ) {
+		$matched = preg_match( '/^' . $regex . '$/i', $subject );
+	}
+
+	return ( 1 === $matched );
 }
