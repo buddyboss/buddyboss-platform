@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace BuddyBoss\Core\Admin\Mothership;
 
 use BuddyBossPlatform\GroundLevel\Mothership\Manager\AddonsManager;
-use BuddyBossPlatform\GroundLevel\Mothership\Api\Response;
 use BuddyBossPlatform\GroundLevel\Mothership\AbstractPluginConnection;
 
 /**
@@ -16,6 +15,12 @@ use BuddyBossPlatform\GroundLevel\Mothership\AbstractPluginConnection;
  * statically throughout the codebase (admin page, DRM add-on gating, placeholder cards, and the
  * plugin connector's cache invalidation), so this class keeps a static facade and delegates to
  * the container-managed vendor instance.
+ *
+ * GroundLevel 9.x changed the data shape: {@see AddonsManager::getAddons()} returns a plain
+ * array of add-on objects (fetched as relations of the connected product, so the connector's
+ * `productId` must be set), and the list also contains products typed `upgrade-addon` — add-ons
+ * that exist for the product line but are NOT included in the current license. Those are shown
+ * as "Upgrade" cards on the add-ons page and must never count as licensed.
  *
  * It also `extends AddonsManager` so it can reuse the vendor's `protected prepareProductsForDisplay()`
  * via a container-resolved instance of itself (see {@see self::render_addons_html()}) instead of
@@ -87,18 +92,15 @@ class BB_Addons_Manager extends AddonsManager {
 			$addons_manager->clearCache();
 		}
 
-		$addons = $addons_manager->getAddons( true );
-
-		if ( $addons instanceof Response && $addons->isError() ) {
-			return sprintf( '<div class=""><p>%s <b>%s</b></p></div>', esc_html__( 'There was an issue connecting with the API.', 'buddyboss' ), esc_html( $addons->getMessage() ) );
-		}
-
+		// getAddons() returns the cached add-on list; on an API error the vendor keeps the
+		// last successful list (or an empty list) for a short TTL, so there is no error
+		// response to surface here — an empty list renders the "no add-ons" message.
 		$addons_manager->enqueueAssets();
 
 		// Reuse the vendor's display-prep logic. It is protected on AddonsManager, so we call
 		// it on a container-resolved instance of this subclass (legal from within the class).
 		$products = self::container()->get( self::class )->prepareProductsForDisplay( // phpcs:ignore WordPress.NamingConventions.ValidFunctionName.MethodNameInvalid
-			$addons->getData( 'products', array() )
+			$addons_manager->getAddons( true )
 		);
 		ob_start();
 		include __DIR__ . '/views/products.php';
@@ -109,10 +111,12 @@ class BB_Addons_Manager extends AddonsManager {
 	 * Check if a product exists and is enabled by slug.
 	 *
 	 * Reads from the vendor add-ons cache ({@see AddonsManager::getAddons()}); no separate
-	 * BuddyBoss cache layer is maintained.
+	 * BuddyBoss cache layer is maintained. Products typed `upgrade-addon` are add-ons the
+	 * current license does NOT include, so they are skipped — this method gates DRM and the
+	 * placeholder feature cards, and must only ever return licensed add-ons.
 	 *
 	 * @param string $slug Product slug to check.
-	 * @return object|null Product object if found and enabled, null otherwise.
+	 * @return object|null Product object if found, licensed and enabled, null otherwise.
 	 */
 	public static function checkProductBySlug( string $slug ): ?object {
 		// Check if the license is activated before making API calls.
@@ -120,13 +124,11 @@ class BB_Addons_Manager extends AddonsManager {
 			return null;
 		}
 
-		$response = self::addons_manager()->getAddons( true );
+		foreach ( self::addons_manager()->getAddons( true ) as $product ) {
+			if ( ! is_object( $product ) || 'upgrade-addon' === ( $product->type ?? '' ) ) {
+				continue;
+			}
 
-		if ( ! $response instanceof Response || $response->isError() ) {
-			return null;
-		}
-
-		foreach ( $response->getData( 'products', array() ) as $product ) {
 			if (
 				! empty( $product->slug ) &&
 				false !== strpos( $product->slug, $slug ) &&

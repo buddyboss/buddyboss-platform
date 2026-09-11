@@ -241,7 +241,7 @@ class BB_Mothership_Loader {
 		add_action( 'add_option_buddyboss_dynamic_plugin_id', array( $this, 'clear_platform_update_cache' ) );
 		add_action( 'update_option_buddyboss_dynamic_plugin_id', array( $this, 'clear_platform_update_cache' ) );
 
-		// Handle license status changes. GroundLevel 7.4.0's periodic license check fires
+		// Handle license status changes. GroundLevel 9.1.2's periodic license check fires
 		// `{plugin_id}_active_license_invalidated` / `_active_license_expired` when the
 		// license is revoked or expired (the old `_license_status_changed` event no longer
 		// fires, but the hook is kept for backward compatibility with custom callers).

@@ -65,6 +65,16 @@ defined( 'ABSPATH' ) || exit;
 								</strong>
 							</div>
 							<div class="mosh-product-action">
+								<?php if ( 'upgrade' === $product->status ) : ?>
+								<a class="button button-primary mosh-product-upgrade"
+									href="<?php echo esc_url( $product->upgradeUrl ); ?>"
+									target="_blank"
+									rel="noopener noreferrer"
+								>
+									<i class="<?php echo esc_attr( $product->iconClass ); ?>"></i>
+									<?php echo esc_html( $product->buttonLabel ); ?>
+								</a>
+								<?php else : ?>
 								<button type="button"
 									data-slug="<?php echo esc_attr( $product->slug ); ?>"
 									data-extension-type="<?php echo esc_attr( $product->extension_type ); ?>"
@@ -72,6 +82,7 @@ defined( 'ABSPATH' ) || exit;
 									<i class="<?php echo esc_attr( $product->iconClass ); ?>"></i>
 									<?php echo esc_html( $product->buttonLabel ); ?>
 								</button>
+								<?php endif; ?>
 							</div>
 						</div>
 					</div>
@@ -80,6 +91,7 @@ defined( 'ABSPATH' ) || exit;
 			</div>
 		</div>
 	<?php else : ?>
-		<h3><?php esc_html_e( 'There were no Add-ons found for your License Key.', 'buddyboss' ); ?></h3>
+		<h3><?php esc_html_e( 'No Add-ons found for your License Key.', 'buddyboss' ); ?></h3>
+		<p><?php esc_html_e( 'If you were expecting add-ons here, use the "Refresh Add-ons" button above to try again.', 'buddyboss' ); ?></p>
 	<?php endif; ?>
 </div>

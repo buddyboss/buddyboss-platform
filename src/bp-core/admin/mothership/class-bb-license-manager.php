@@ -24,7 +24,7 @@ use BuddyBossPlatform\GroundLevel\Mothership\Transients\ActivationTransient;
 /**
  * BuddyBoss License Manager.
  *
- * Standalone license controller layered over the GroundLevel 7.4.0 services. The vendor
+ * Standalone license controller layered over the GroundLevel 9.1.2 services. The vendor
  * {@see \BuddyBossPlatform\GroundLevel\Mothership\Manager\LicenseManager} became an
  * instance-based service resolved from the container (no static container, no static
  * helpers), so this class no longer extends it — it resolves the vendor API objects
@@ -1282,9 +1282,11 @@ class BB_License_Manager {
 
 		$root_api_url = self::get_api_base_url( $plugin_id );
 
-		$api_url     = $root_api_url . 'licenses/' . $license_key;
-		$domain      = wp_parse_url( home_url(), PHP_URL_HOST );
-		$credentials = base64_encode( $domain . ':' . $license_key );
+		$api_url = $root_api_url . 'licenses/' . $license_key;
+		// Must match the domain the license was activated with (host, or host/path for
+		// subdirectory installs) or the license server rejects the Basic-auth credentials.
+		$domain      = self::container()->get( Credentials::class )->getDomain();
+		$credentials = base64_encode( rawurlencode( $domain ) . ':' . $license_key );
 		$args        = array(
 			'headers' => array(
 				'Authorization' => "Basic $credentials",
@@ -1504,7 +1506,7 @@ class BB_License_Manager {
 				delete_option( $plugin_id . '_license_activation_status' );
 
 				// Clear transients (both regular and site-wide for multisite). The add-ons
-				// response is cached under `-mosh-addons` in GroundLevel 7.4.0 (the legacy
+				// response is cached under `-mosh-addons` in GroundLevel 9.1.2 (the legacy
 				// `-mosh-products` / `-mosh-addons-update-check` keys no longer exist).
 				delete_transient( $plugin_id . '-mosh-addons' );
 				delete_transient( $plugin_id . '_license_details' );

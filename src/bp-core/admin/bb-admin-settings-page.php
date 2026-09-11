@@ -16,6 +16,32 @@ defined( 'ABSPATH' ) || exit;
 // `bb_admin_settings_page()` below remains the render callback and is
 // invoked from BP_Admin's submenu registration.
 
+/**
+ * Get the GroundLevel add-on AJAX action names for the current plugin ID.
+ *
+ * GroundLevel 9.x registers `wp_ajax_{pluginId}_addon_install` / `_activate` /
+ * `_deactivate` (the unscoped `mosh_addon_*` actions were removed), where the plugin ID
+ * is the dynamic Mothership edition. The React settings screen posts to these when
+ * installing/activating a placeholder feature's add-on.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return array<string,string> Action names keyed by `install`, `activate`, `deactivate`.
+ */
+function bb_admin_settings_get_addon_ajax_actions() {
+	$plugin_id = defined( 'PLATFORM_EDITION' ) ? PLATFORM_EDITION : 'buddyboss-platform';
+
+	if ( class_exists( '\BuddyBoss\Core\Admin\Mothership\BB_Plugin_Connector' ) ) {
+		$plugin_id = ( new \BuddyBoss\Core\Admin\Mothership\BB_Plugin_Connector() )->getDynamicPluginId();
+	}
+
+	return array(
+		'install'    => $plugin_id . '_addon_install',
+		'activate'   => $plugin_id . '_addon_activate',
+		'deactivate' => $plugin_id . '_addon_deactivate',
+	);
+}
+
 
 /**
  * Render the New Settings page.
@@ -220,6 +246,10 @@ function bb_admin_settings_page() {
 		'adminUrl'                  => esc_url( admin_url() ),
 		'ajaxNonce'                 => wp_create_nonce( 'bb_admin_settings' ),
 		'addonNonce'                => wp_create_nonce( 'mosh_addons' ),
+		// GroundLevel 9.x scopes the add-on AJAX actions to the (dynamic) plugin ID,
+		// e.g. `bb-platform-free_addon_install`. Resolve them server-side so the React
+		// settings screen never hardcodes an action name.
+		'addonActions'              => bb_admin_settings_get_addon_ajax_actions(),
 		'logoUrl'                   => buddypress()->plugin_url . 'bp-core/images/admin/BBLogo.png',
 		'isReadyLaunch'             => function_exists( 'bb_is_readylaunch_enabled' ) && bb_is_readylaunch_enabled(),
 		// Mirrors the legacy ReadyLaunchSettings.js gate at line 1252 —

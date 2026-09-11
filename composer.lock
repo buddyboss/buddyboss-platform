@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "5771ef3af3dc44d46b3233743d20f8b5",
+    "content-hash": "9398786fa4629e30c478a2901ab4a22f",
     "packages": [
         {
             "name": "alchemy/binary-driver",
@@ -74,16 +74,16 @@
         },
         {
             "name": "caseproof/ground-level-container",
-            "version": "7.4.0",
+            "version": "9.1.2",
             "source": {
                 "type": "git",
                 "url": "git@github.com:caseproof/ground-level-container.git",
-                "reference": "ce6e7f29b059b156f5b8394b8c36f4ceb9816e6b"
+                "reference": "7458f9851de5e35a00234bf599180d9a03a2525c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/caseproof/ground-level-container/zipball/ce6e7f29b059b156f5b8394b8c36f4ceb9816e6b",
-                "reference": "ce6e7f29b059b156f5b8394b8c36f4ceb9816e6b",
+                "url": "https://api.github.com/repos/caseproof/ground-level-container/zipball/7458f9851de5e35a00234bf599180d9a03a2525c",
+                "reference": "7458f9851de5e35a00234bf599180d9a03a2525c",
                 "shasum": ""
             },
             "require": {
@@ -110,28 +110,28 @@
             ],
             "description": "The GroundLevel Container package.",
             "support": {
-                "source": "https://github.com/caseproof/ground-level-container/tree/7.4.0"
+                "source": "https://github.com/caseproof/ground-level-container/tree/9.1.2"
             },
-            "time": "2026-04-18T16:26:32+00:00"
+            "time": "2026-07-15T17:07:11+00:00"
         },
         {
             "name": "caseproof/ground-level-in-product-notifications",
-            "version": "7.4.0",
+            "version": "9.1.2",
             "source": {
                 "type": "git",
                 "url": "git@github.com:caseproof/ground-level-in-product-notifications.git",
-                "reference": "7d6ad99c9f1c977c2c86992b2ef9fb1c6a3806ca"
+                "reference": "fb2b17d79c42904365d6f417d4750bcec36122d8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/caseproof/ground-level-in-product-notifications/zipball/7d6ad99c9f1c977c2c86992b2ef9fb1c6a3806ca",
-                "reference": "7d6ad99c9f1c977c2c86992b2ef9fb1c6a3806ca",
+                "url": "https://api.github.com/repos/caseproof/ground-level-in-product-notifications/zipball/fb2b17d79c42904365d6f417d4750bcec36122d8",
+                "reference": "fb2b17d79c42904365d6f417d4750bcec36122d8",
                 "shasum": ""
             },
             "require": {
-                "caseproof/ground-level-container": "^7.4.0",
-                "caseproof/ground-level-mothership": "^7.4.0",
-                "caseproof/ground-level-support": "^7.4.0",
+                "caseproof/ground-level-container": "^9.1.2",
+                "caseproof/ground-level-mothership": "^9.1.2",
+                "caseproof/ground-level-support": "^9.1.2",
                 "php": ">=7.4"
             },
             "type": "library",
@@ -151,27 +151,27 @@
             ],
             "description": "The GroundLevel In-Product Notifications package.",
             "support": {
-                "source": "https://github.com/caseproof/ground-level-in-product-notifications/tree/7.4.0"
+                "source": "https://github.com/caseproof/ground-level-in-product-notifications/tree/9.1.2"
             },
-            "time": "2026-06-16T21:00:25+00:00"
+            "time": "2026-09-09T17:00:57+00:00"
         },
         {
             "name": "caseproof/ground-level-mothership",
-            "version": "7.4.0",
+            "version": "9.1.2",
             "source": {
                 "type": "git",
                 "url": "git@github.com:caseproof/ground-level-mothership.git",
-                "reference": "536eb14071a64f4d6b52621833ceca7d964600a3"
+                "reference": "69d74c6770a1951f7560e2d6104e0c56a3f4f3f9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/caseproof/ground-level-mothership/zipball/536eb14071a64f4d6b52621833ceca7d964600a3",
-                "reference": "536eb14071a64f4d6b52621833ceca7d964600a3",
+                "url": "https://api.github.com/repos/caseproof/ground-level-mothership/zipball/69d74c6770a1951f7560e2d6104e0c56a3f4f3f9",
+                "reference": "69d74c6770a1951f7560e2d6104e0c56a3f4f3f9",
                 "shasum": ""
             },
             "require": {
-                "caseproof/ground-level-container": "^7.4.0",
-                "caseproof/ground-level-support": "^7.4.0",
+                "caseproof/ground-level-container": "^9.1.2",
+                "caseproof/ground-level-support": "^9.1.2",
                 "php": ">=7.4"
             },
             "type": "library",
@@ -191,22 +191,22 @@
             ],
             "description": "The GroundLevel Mothership package.",
             "support": {
-                "source": "https://github.com/caseproof/ground-level-mothership/tree/7.4.0"
+                "source": "https://github.com/caseproof/ground-level-mothership/tree/9.1.2"
             },
-            "time": "2026-06-16T21:00:25+00:00"
+            "time": "2026-09-09T17:00:57+00:00"
         },
         {
             "name": "caseproof/ground-level-support",
-            "version": "7.4.0",
+            "version": "9.1.2",
             "source": {
                 "type": "git",
                 "url": "git@github.com:caseproof/ground-level-support.git",
-                "reference": "6167abed63554fc477ab39a499b4e20e16db06a4"
+                "reference": "d5d378031bf2bd1c8af89979c734b88a59e161c3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/caseproof/ground-level-support/zipball/6167abed63554fc477ab39a499b4e20e16db06a4",
-                "reference": "6167abed63554fc477ab39a499b4e20e16db06a4",
+                "url": "https://api.github.com/repos/caseproof/ground-level-support/zipball/d5d378031bf2bd1c8af89979c734b88a59e161c3",
+                "reference": "d5d378031bf2bd1c8af89979c734b88a59e161c3",
                 "shasum": ""
             },
             "require": {
@@ -229,9 +229,9 @@
             ],
             "description": "The GroundLevel Support package.",
             "support": {
-                "source": "https://github.com/caseproof/ground-level-support/tree/7.4.0"
+                "source": "https://github.com/caseproof/ground-level-support/tree/9.1.2"
             },
-            "time": "2026-05-25T08:34:21+00:00"
+            "time": "2026-08-12T14:07:19+00:00"
         },
         {
             "name": "composer/installers",
@@ -2281,21 +2281,21 @@
         },
         {
             "name": "phpcsstandards/phpcsextra",
-            "version": "1.5.0",
+            "version": "1.5.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHPCSStandards/PHPCSExtra.git",
-                "reference": "b598aa890815b8df16363271b659d73280129101"
+                "reference": "39467533fdb742446d68c1d10ac33d625ee0311c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHPCSStandards/PHPCSExtra/zipball/b598aa890815b8df16363271b659d73280129101",
-                "reference": "b598aa890815b8df16363271b659d73280129101",
+                "url": "https://api.github.com/repos/PHPCSStandards/PHPCSExtra/zipball/39467533fdb742446d68c1d10ac33d625ee0311c",
+                "reference": "39467533fdb742446d68c1d10ac33d625ee0311c",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.4",
-                "phpcsstandards/phpcsutils": "^1.2.0",
+                "phpcsstandards/phpcsutils": "^1.2.3",
                 "squizlabs/php_codesniffer": "^3.13.5 || ^4.0.1"
             },
             "require-dev": {
@@ -2359,20 +2359,20 @@
                     "type": "thanks_dev"
                 }
             ],
-            "time": "2025-11-12T23:06:57+00:00"
+            "time": "2026-07-27T11:13:17+00:00"
         },
         {
             "name": "phpcsstandards/phpcsutils",
-            "version": "1.2.2",
+            "version": "1.2.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHPCSStandards/PHPCSUtils.git",
-                "reference": "c216317e96c8b3f5932808f9b0f1f7a14e3bbf55"
+                "reference": "5f35d9408c54d7b529501f3c688b6eae562aea1f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHPCSStandards/PHPCSUtils/zipball/c216317e96c8b3f5932808f9b0f1f7a14e3bbf55",
-                "reference": "c216317e96c8b3f5932808f9b0f1f7a14e3bbf55",
+                "url": "https://api.github.com/repos/PHPCSStandards/PHPCSUtils/zipball/5f35d9408c54d7b529501f3c688b6eae562aea1f",
+                "reference": "5f35d9408c54d7b529501f3c688b6eae562aea1f",
                 "shasum": ""
             },
             "require": {
@@ -2452,7 +2452,7 @@
                     "type": "thanks_dev"
                 }
             ],
-            "time": "2025-12-08T14:27:58+00:00"
+            "time": "2026-07-27T10:28:41+00:00"
         },
         {
             "name": "phpdocumentor/reflection-common",
@@ -2698,16 +2698,16 @@
         },
         {
             "name": "phpstan/phpdoc-parser",
-            "version": "2.3.2",
+            "version": "2.3.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpdoc-parser.git",
-                "reference": "a004701b11273a26cd7955a61d67a7f1e525a45a"
+                "reference": "148cefffaf0233e4c08cc13db8a195a56dd6dfe9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpdoc-parser/zipball/a004701b11273a26cd7955a61d67a7f1e525a45a",
-                "reference": "a004701b11273a26cd7955a61d67a7f1e525a45a",
+                "url": "https://api.github.com/repos/phpstan/phpdoc-parser/zipball/148cefffaf0233e4c08cc13db8a195a56dd6dfe9",
+                "reference": "148cefffaf0233e4c08cc13db8a195a56dd6dfe9",
                 "shasum": ""
             },
             "require": {
@@ -2739,9 +2739,9 @@
             "description": "PHPDoc parser with support for nullable, intersection and generic types",
             "support": {
                 "issues": "https://github.com/phpstan/phpdoc-parser/issues",
-                "source": "https://github.com/phpstan/phpdoc-parser/tree/2.3.2"
+                "source": "https://github.com/phpstan/phpdoc-parser/tree/2.3.5"
             },
-            "time": "2026-01-25T14:56:51+00:00"
+            "time": "2026-08-31T16:05:28+00:00"
         },
         {
             "name": "phpunit/php-code-coverage",
@@ -3453,16 +3453,16 @@
         },
         {
             "name": "sebastian/exporter",
-            "version": "3.1.8",
+            "version": "3.1.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/exporter.git",
-                "reference": "64cfeaa341951ceb2019d7b98232399d57bb2296"
+                "reference": "0cd58aaf479f1e18dfef818b8b8a4ccba188e545"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/exporter/zipball/64cfeaa341951ceb2019d7b98232399d57bb2296",
-                "reference": "64cfeaa341951ceb2019d7b98232399d57bb2296",
+                "url": "https://api.github.com/repos/sebastianbergmann/exporter/zipball/0cd58aaf479f1e18dfef818b8b8a4ccba188e545",
+                "reference": "0cd58aaf479f1e18dfef818b8b8a4ccba188e545",
                 "shasum": ""
             },
             "require": {
@@ -3518,7 +3518,7 @@
             ],
             "support": {
                 "issues": "https://github.com/sebastianbergmann/exporter/issues",
-                "source": "https://github.com/sebastianbergmann/exporter/tree/3.1.8"
+                "source": "https://github.com/sebastianbergmann/exporter/tree/3.1.9"
             },
             "funding": [
                 {
@@ -3538,7 +3538,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-09-24T05:55:14+00:00"
+            "time": "2026-08-11T04:45:00+00:00"
         },
         {
             "name": "sebastian/global-state",
@@ -3709,16 +3709,16 @@
         },
         {
             "name": "sebastian/recursion-context",
-            "version": "3.0.3",
+            "version": "3.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/recursion-context.git",
-                "reference": "8fe7e75986a9d24b4cceae847314035df7703a5a"
+                "reference": "4d3432ab12baebb4da6b7ad65d92847287f593b8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/recursion-context/zipball/8fe7e75986a9d24b4cceae847314035df7703a5a",
-                "reference": "8fe7e75986a9d24b4cceae847314035df7703a5a",
+                "url": "https://api.github.com/repos/sebastianbergmann/recursion-context/zipball/4d3432ab12baebb4da6b7ad65d92847287f593b8",
+                "reference": "4d3432ab12baebb4da6b7ad65d92847287f593b8",
                 "shasum": ""
             },
             "require": {
@@ -3760,7 +3760,7 @@
             "homepage": "http://www.github.com/sebastianbergmann/recursion-context",
             "support": {
                 "issues": "https://github.com/sebastianbergmann/recursion-context/issues",
-                "source": "https://github.com/sebastianbergmann/recursion-context/tree/3.0.3"
+                "source": "https://github.com/sebastianbergmann/recursion-context/tree/3.0.4"
             },
             "funding": [
                 {
@@ -3780,7 +3780,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-08-10T05:25:53+00:00"
+            "time": "2026-08-11T05:21:46+00:00"
         },
         {
             "name": "sebastian/resource-operations",
@@ -3877,16 +3877,16 @@
         },
         {
             "name": "squizlabs/php_codesniffer",
-            "version": "3.13.5",
+            "version": "3.13.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHPCSStandards/PHP_CodeSniffer.git",
-                "reference": "0ca86845ce43291e8f5692c7356fccf3bcf02bf4"
+                "reference": "4c378e1a528ea066890fc2397cbdd2f94eb2fc91"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHPCSStandards/PHP_CodeSniffer/zipball/0ca86845ce43291e8f5692c7356fccf3bcf02bf4",
-                "reference": "0ca86845ce43291e8f5692c7356fccf3bcf02bf4",
+                "url": "https://api.github.com/repos/PHPCSStandards/PHP_CodeSniffer/zipball/4c378e1a528ea066890fc2397cbdd2f94eb2fc91",
+                "reference": "4c378e1a528ea066890fc2397cbdd2f94eb2fc91",
                 "shasum": ""
             },
             "require": {
@@ -3952,7 +3952,7 @@
                     "type": "thanks_dev"
                 }
             ],
-            "time": "2025-11-04T16:30:35+00:00"
+            "time": "2026-08-06T00:17:32+00:00"
         },
         {
             "name": "symfony/console",
@@ -4264,16 +4264,16 @@
         },
         {
             "name": "symfony/polyfill-intl-grapheme",
-            "version": "v1.38.1",
+            "version": "v1.41.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-intl-grapheme.git",
-                "reference": "e9247d281d694a5120554d9afaf54e070e88a603"
+                "reference": "bb899c1db0aa8127dc3afe8cda4a67eb24915f8d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/polyfill-intl-grapheme/zipball/e9247d281d694a5120554d9afaf54e070e88a603",
-                "reference": "e9247d281d694a5120554d9afaf54e070e88a603",
+                "url": "https://api.github.com/repos/symfony/polyfill-intl-grapheme/zipball/bb899c1db0aa8127dc3afe8cda4a67eb24915f8d",
+                "reference": "bb899c1db0aa8127dc3afe8cda4a67eb24915f8d",
                 "shasum": ""
             },
             "require": {
@@ -4322,7 +4322,7 @@
                 "shim"
             ],
             "support": {
-                "source": "https://github.com/symfony/polyfill-intl-grapheme/tree/v1.38.1"
+                "source": "https://github.com/symfony/polyfill-intl-grapheme/tree/v1.41.0"
             },
             "funding": [
                 {
@@ -4342,20 +4342,20 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-05-26T05:58:03+00:00"
+            "time": "2026-07-28T08:25:59+00:00"
         },
         {
             "name": "symfony/polyfill-intl-normalizer",
-            "version": "v1.38.0",
+            "version": "v1.42.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-intl-normalizer.git",
-                "reference": "2d446c214bdbe5b71bde5011b060a05fece3ae6b"
+                "reference": "aa20edea75bd9c48cfecc8360922e5a6e5c44502"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/polyfill-intl-normalizer/zipball/2d446c214bdbe5b71bde5011b060a05fece3ae6b",
-                "reference": "2d446c214bdbe5b71bde5011b060a05fece3ae6b",
+                "url": "https://api.github.com/repos/symfony/polyfill-intl-normalizer/zipball/aa20edea75bd9c48cfecc8360922e5a6e5c44502",
+                "reference": "aa20edea75bd9c48cfecc8360922e5a6e5c44502",
                 "shasum": ""
             },
             "require": {
@@ -4407,7 +4407,7 @@
                 "shim"
             ],
             "support": {
-                "source": "https://github.com/symfony/polyfill-intl-normalizer/tree/v1.38.0"
+                "source": "https://github.com/symfony/polyfill-intl-normalizer/tree/v1.42.0"
             },
             "funding": [
                 {
@@ -4427,7 +4427,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-05-25T13:48:31+00:00"
+            "time": "2026-08-07T06:33:24+00:00"
         },
         {
             "name": "symfony/polyfill-php72",
@@ -5059,16 +5059,16 @@
         },
         {
             "name": "wp-coding-standards/wpcs",
-            "version": "3.3.0",
+            "version": "3.4.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/WordPress/WordPress-Coding-Standards.git",
-                "reference": "7795ec6fa05663d716a549d0b44e47ffc8b0d4a6"
+                "reference": "ec2ff942335f33683a5957a85d138753876a05cf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/WordPress/WordPress-Coding-Standards/zipball/7795ec6fa05663d716a549d0b44e47ffc8b0d4a6",
-                "reference": "7795ec6fa05663d716a549d0b44e47ffc8b0d4a6",
+                "url": "https://api.github.com/repos/WordPress/WordPress-Coding-Standards/zipball/ec2ff942335f33683a5957a85d138753876a05cf",
+                "reference": "ec2ff942335f33683a5957a85d138753876a05cf",
                 "shasum": ""
             },
             "require": {
@@ -5077,9 +5077,9 @@
                 "ext-tokenizer": "*",
                 "ext-xmlreader": "*",
                 "php": ">=7.2",
-                "phpcsstandards/phpcsextra": "^1.5.0",
-                "phpcsstandards/phpcsutils": "^1.1.0",
-                "squizlabs/php_codesniffer": "^3.13.4"
+                "phpcsstandards/phpcsextra": "^1.5.1",
+                "phpcsstandards/phpcsutils": "^1.2.3",
+                "squizlabs/php_codesniffer": "^3.13.5"
             },
             "require-dev": {
                 "php-parallel-lint/php-console-highlighter": "^1.0.0",
@@ -5121,7 +5121,7 @@
                     "type": "custom"
                 }
             ],
-            "time": "2025-11-25T12:08:04+00:00"
+            "time": "2026-07-27T11:53:23+00:00"
         }
     ],
     "aliases": [],
@@ -5133,5 +5133,5 @@
         "php": ">=5.3.0"
     },
     "platform-dev": {},
-    "plugin-api-version": "2.6.0"
+    "plugin-api-version": "2.9.0"
 }
