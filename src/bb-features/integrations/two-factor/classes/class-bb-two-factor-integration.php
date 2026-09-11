@@ -20,6 +20,18 @@ defined( 'ABSPATH' ) || exit;
 class BB_Two_Factor_Integration extends BP_Integration {
 
 	/**
+	 * Legacy integrations tab file. Empty: Settings 2.0 owns the admin UI.
+	 *
+	 * Declared because BP_Integration reads it on every
+	 * bp_register_admin_integrations pass without declaring it.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @var string
+	 */
+	public $admin_tab = '';
+
+	/**
 	 * Constructor.
 	 *
 	 * @since BuddyBoss [BBVERSION]
@@ -68,18 +80,5 @@ class BB_Two_Factor_Integration extends BP_Integration {
 
 		require_once $dir . 'bb-two-factor-actions.php';
 		require_once $dir . 'bb-two-factor-filters.php';
-	}
-
-	/**
-	 * Legacy integrations admin tab. Settings 2.0 owns the admin UI.
-	 *
-	 * Overridden rather than inherited: the parent reads $this->admin_tab, which
-	 * BP_Integration never declares, so inheriting it raises an undefined-property
-	 * notice on every bp_register_admin_integrations pass.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 */
-	public function setup_admin_integration_tab() {
-		// No-op.
 	}
 }

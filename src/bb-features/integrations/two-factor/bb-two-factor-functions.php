@@ -238,6 +238,41 @@ function bb_two_factor_drain_errors() {
 }
 
 /**
+ * Point the plugin's revalidation link back at the Security tab.
+ *
+ * Two_Factor_Core builds the link's redirect_to from get_user_settings_page_url(),
+ * which is protected and unfiltered, so it always names a wp-admin screen. The
+ * plugin then carries redirect_to through the whole round trip - hidden field on
+ * the challenge form, then the login_redirect filter before wp_safe_redirect() -
+ * so replacing it here is enough to land the member back on the tab.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $html       Markup from the plugin's options renderer.
+ * @param string $return_url Where revalidation should return to.
+ * @return string
+ */
+function bb_two_factor_set_revalidate_return( $html, $return_url ) {
+	if ( '' === $return_url || false === strpos( $html, 'action=revalidate_2fa' ) ) {
+		return $html;
+	}
+
+	$url = add_query_arg(
+		'redirect_to',
+		rawurlencode( $return_url ),
+		Two_Factor_Core::get_user_two_factor_revalidate_url()
+	);
+
+	return (string) preg_replace_callback(
+		'/href="[^"]*action=revalidate_2fa[^"]*"/i',
+		static function () use ( $url ) {
+			return 'href="' . esc_url( $url ) . '"';
+		},
+		$html
+	);
+}
+
+/**
  * Render the plugin's own two-factor options for a member.
  *
  * Output is the plugin's wp-admin profile section verbatim, so every provider it
@@ -256,7 +291,12 @@ function bb_two_factor_render_options( $user ) {
 		return;
 	}
 
+	ob_start();
 	Two_Factor_Core::user_two_factor_options( $user );
+	$html = ob_get_clean();
+
+	// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Markup is produced and escaped by Two_Factor_Core.
+	echo bb_two_factor_set_revalidate_return( $html, bb_two_factor_get_settings_url( $user->ID ) );
 }
 
 /**
