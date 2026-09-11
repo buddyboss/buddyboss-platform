@@ -11065,3 +11065,98 @@ function bb_core_sql_like_match( $pattern, $subject ) {
 
 	return ( 1 === $matched );
 }
+
+/**
+ * Remove a name part the viewer may not see from a stored display name.
+ *
+ * The `display_name` column always holds a member's full name, so redacting a name part means
+ * removing it from a string that may have drifted a long way from "First Last" — an import, the
+ * wp-admin "Display name publicly as" dropdown or a third-party write can leave it glued
+ * ("AlexQuillfeather"), joined by punctuation ("Alex-Quillfeather"), joined by a non-breaking
+ * space, reordered, or reduced to the hidden part alone. A plain `str_replace()` silently misses
+ * every one of those, and for a privacy redaction "no match" is the destructive answer.
+ *
+ * Two passes:
+ *
+ * 1. A whole-token strip, which handles the ordinary separated forms in either order and leaves a
+ *    middle name in place. Unicode spaces count as separators, so an NBSP-joined name tokenises
+ *    like an ASCII-spaced one.
+ * 2. A token pass over what remains, for the drifted shapes. A token that is the two name parts
+ *    glued together collapses to the part the viewer may see; a token in which the hidden part
+ *    survives whole or punctuation-bounded is dropped; a token that merely *contains* the hidden
+ *    part as a substring ("Lin" inside "Linda") is kept, so a short name does not over-redact.
+ *
+ * The caller decides what to do with an empty result — this returns '' rather than guessing a
+ * fallback, because the safe fallback differs by context (the counterpart name, the nickname, the
+ * user_nicename).
+ *
+ * Call it once per hidden part: to redact both name parts, pass the result of the first call as
+ * the `$display_name` of the second.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $display_name The stored display name to redact.
+ * @param string $hidden_part  The name part this viewer may not see. An empty value is a no-op.
+ * @param string $visible_part Optional. The counterpart name part this viewer MAY see, used to
+ *                             rebuild a token where the two are glued together. Pass '' when the
+ *                             counterpart is unknown or is itself hidden — a glued token is then
+ *                             dropped whole rather than partially disclosed.
+ * @return string The display name without the hidden part; '' when nothing visible remains.
+ */
+function bb_core_strip_hidden_name_part( $display_name, $hidden_part, $visible_part = '' ) {
+	$display_name = (string) $display_name;
+	$hidden_part  = preg_replace( '/^[\s\p{Zs}]+|[\s\p{Zs}]+$/u', '', (string) $hidden_part );
+	$visible_part = preg_replace( '/^[\s\p{Zs}]+|[\s\p{Zs}]+$/u', '', (string) $visible_part );
+
+	if ( '' === $hidden_part || '' === trim( $display_name ) ) {
+		return trim( $display_name );
+	}
+
+	// Pass 1 - whole-token strip. preg_replace() returns null only on malformed UTF-8, which we
+	// fail closed to '' so the caller applies its fallback rather than echoing the raw column.
+	$stripped = preg_replace( '/(^|[\s\p{Zs}])' . preg_quote( $hidden_part, '/' ) . '(?=[\s\p{Zs}]|$)/iu', ' ', $display_name );
+	$stripped = ( null === $stripped ) ? '' : trim( preg_replace( '/[\s\p{Zs}]+/u', ' ', $stripped ) );
+
+	if ( '' === $stripped ) {
+		return '';
+	}
+
+	// Pass 2 - token pass. Compare against whitespace-stripped forms so a multi-word name glued
+	// with no internal spaces ("VanDerBerg" for "Van Der Berg") still matches.
+	$hidden_nospace  = preg_replace( '/[\s\p{Zs}]+/u', '', $hidden_part );
+	$visible_nospace = preg_replace( '/[\s\p{Zs}]+/u', '', $visible_part );
+
+	// A token that is the two parts glued together, in either order.
+	$glue_pattern = ( '' !== $visible_nospace )
+		? '/^(?:' . preg_quote( $hidden_nospace . $visible_nospace, '/' ) . '|' . preg_quote( $visible_nospace . $hidden_nospace, '/' ) . ')$/iu'
+		: '';
+
+	// The counterpart is unknown, so the exact glue above cannot be built: match the hidden part
+	// glued to the start or end of a token and drop the token. This over-redacts a standalone name
+	// that merely begins or ends with the hidden value, which is privacy-safe, and is only reachable
+	// when the counterpart is genuinely absent or itself hidden.
+	$edge_glue = ( '' === $visible_nospace )
+		? '/^' . preg_quote( $hidden_nospace, '/' ) . '|' . preg_quote( $hidden_nospace, '/' ) . '$/iu'
+		: '';
+
+	// The hidden part surviving whole or as a punctuation-bounded piece of a token, without
+	// matching it as a bare substring of a longer word.
+	$bounded = '/(?<![\p{L}\p{N}])' . preg_quote( $hidden_nospace, '/' ) . '(?![\p{L}\p{N}])/iu';
+
+	$tokens = array();
+	foreach ( preg_split( '/[\s\p{Zs}]+/u', $stripped ) as $token ) {
+		if ( '' === $token ) {
+			continue;
+		}
+
+		if ( '' !== $glue_pattern && preg_match( $glue_pattern, $token ) ) {
+			$tokens[] = $visible_part;
+		} elseif ( '' !== $edge_glue && preg_match( $edge_glue, $token ) ) {
+			continue;
+		} elseif ( ! preg_match( $bounded, $token ) ) {
+			$tokens[] = $token;
+		}
+	}
+
+	return trim( implode( ' ', $tokens ) );
+}

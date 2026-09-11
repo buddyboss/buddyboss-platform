@@ -1282,4 +1282,64 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 		$this->set_current_user( $member );
 		$this->assertStringContainsString( 'Alex Quillfeather', bbp_get_user_profile_edit_link( $author ) );
 	}
+
+	/**
+	 * Regression for the round-19 review Finding #2: the LOGGED-IN redaction filter
+	 * (xprofile_filter_get_user_display_name, priority 15) rebuilds the name from
+	 * bp_xprofile_get_member_display_name() and strips the hidden last name. When the first name is
+	 * empty in every source the rebuild consults (xprofile field, first_name usermeta, nickname
+	 * usermeta - the direct-import case), that rebuild is the BARE surname with no leading space, so
+	 * the old str_replace( ' ' . $last_name, ... ) matched nothing and returned the hidden surname
+	 * verbatim to a logged-in stranger. The fix anchors the strip at the start of the string too and
+	 * falls back to the nickname. This path is only reachable for a logged-in viewer (the guest path
+	 * uses the anchored function body, already covered), so it needs its own test.
+	 *
+	 * The rebuilt "bare surname" state is forced via the bp_xprofile_get_member_display_name filter
+	 * so the assertion is deterministic and does not depend on the profile-sync self-heal; the strip
+	 * logic under test is downstream of that value.
+	 *
+	 * @group bb_activity_get_item_user_displayname
+	 */
+	public function test_get_user_displayname_logged_in_stranger_bare_surname_does_not_leak() {
+		$author = self::factory()->user->create(); // fresh - no name resolved/cached yet
+		$viewer = self::factory()->user->create(); // a logged-in non-friend, non-admin stranger
+		update_user_meta( $author, 'nickname', 'quillnick' );
+
+		$ln = (int) bp_xprofile_lastname_field_id();
+
+		// Force the exact reachable state (bb_default_display_avatar bypasses both name caches, so
+		// these apply on the call under test): the logged-in filter's rebuild is the BARE surname
+		// (first name empty in every source), the last name field holds 'Quillfeather', and it is
+		// hidden from this viewer.
+		$force_bare = function () {
+			return 'Quillfeather';
+		};
+		$hide_ln = function ( $fields, $user_id, $viewer_id ) use ( $ln, $author ) {
+			if ( (int) $user_id === (int) $author ) {
+				$fields   = (array) $fields;
+				$fields[] = $ln;
+				return array_unique( $fields );
+			}
+			return $fields;
+		};
+		$ln_data = function ( $value, $field_id, $user_id ) use ( $ln, $author ) {
+			return ( (int) $field_id === $ln && (int) $user_id === (int) $author ) ? 'Quillfeather' : $value;
+		};
+		add_filter( 'bp_xprofile_get_member_display_name', $force_bare, 20 );
+		add_filter( 'bp_xprofile_get_hidden_fields_for_user', $hide_ln, 20, 3 );
+		add_filter( 'xprofile_get_field_data', $ln_data, 20, 3 );
+
+		try {
+			$GLOBALS['bb_default_display_avatar'] = true;
+			$this->set_current_user( $viewer );
+			$seen = bp_core_get_user_displayname( $author, $viewer );
+
+			$this->assertStringNotContainsStringIgnoringCase( 'quillfeather', (string) $seen, 'logged-in stranger got the bare hidden surname' );
+			$this->assertSame( 'quillnick', $seen, 'should fall back to the nickname, not a blank or the surname' );
+		} finally {
+			remove_filter( 'bp_xprofile_get_member_display_name', $force_bare, 20 );
+			remove_filter( 'bp_xprofile_get_hidden_fields_for_user', $hide_ln, 20 );
+			remove_filter( 'xprofile_get_field_data', $ln_data, 20 );
+		}
+	}
 }

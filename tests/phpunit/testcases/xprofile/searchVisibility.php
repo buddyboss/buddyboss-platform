@@ -294,6 +294,98 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 	}
 
 	/**
+	 * The hidden first name must also be redacted when the stored display_name has drifted away
+	 * from a plain "First Last" string - glued with no separator, joined by punctuation, or joined
+	 * by a Unicode space. Stage 1 of the strip only matches a whole whitespace-delimited token, so
+	 * without the token pass these shapes were returned with the hidden first name still in them.
+	 *
+	 * Each shape is asserted for a denied viewer AND for a permitted one, so neither an absent nor
+	 * an over-broad redaction can pass.
+	 */
+	public function test_hidden_first_name_is_redacted_when_display_name_has_drifted() {
+		$fn_id = bp_xprofile_firstname_field_id();
+
+		$member = self::factory()->user->create();
+
+		$shapes = array(
+			'plain'       => 'Marigold Thistlewood',
+			'glued'       => 'MarigoldThistlewood',
+			'punctuation' => 'Marigold-Thistlewood',
+			'nbsp'        => "Marigold\xc2\xa0Thistlewood",
+		);
+
+		foreach ( $shapes as $label => $display_name ) {
+			$user_id = self::factory()->user->create( array( 'nickname' => 'marinick' ) );
+
+			xprofile_set_field_data( $fn_id, $user_id, 'Marigold' );
+			xprofile_set_field_data( bp_xprofile_lastname_field_id(), $user_id, 'Thistlewood' );
+			xprofile_set_field_visibility_level( bp_xprofile_lastname_field_id(), $user_id, 'public' );
+
+			global $wpdb;
+			$wpdb->update( $wpdb->users, array( 'display_name' => $display_name ), array( 'ID' => $user_id ) );
+			clean_user_cache( $user_id );
+
+			bp_xprofile_update_meta( $fn_id, 'field', 'allow_custom_visibility', 'disabled' );
+			bp_xprofile_update_meta( $fn_id, 'field', 'default_visibility', 'loggedin' );
+			wp_cache_delete( 'default_visibility_levels', 'bp_xprofile' );
+			wp_cache_delete( $fn_id, 'bp_xprofile_fields' );
+			BB_XProfile_Visibility::flush_field_ids_cache();
+
+			// Fixture precondition: the first name really is hidden from a guest.
+			$this->assertContains( (int) $fn_id, array_map( 'intval', (array) bp_xprofile_get_hidden_fields_for_user( $user_id, 0 ) ), "precondition ({$label})" );
+
+			$guest = bp_core_get_user_displayname( $user_id, 0 );
+			$this->assertStringNotContainsStringIgnoringCase( 'marigold', $guest, "hidden first name leaked to a guest ({$label})" );
+			$this->assertSame( 'Thistlewood', $guest, "the visible last name should survive ({$label})" );
+
+			// A viewer who may see the first name keeps the full name.
+			$permitted = bp_core_get_user_displayname( $user_id, $member );
+			$this->assertStringContainsStringIgnoringCase( 'marigold', $permitted, "a permitted viewer lost the first name ({$label})" );
+		}
+	}
+
+	/**
+	 * When the first name is empty in every source bp_xprofile_get_member_display_name() consults
+	 * (xprofile field, first_name usermeta and nickname usermeta), the name it rebuilds is the bare
+	 * surname with no leading space. The priority-15 filter's strip needed a leading space, so it
+	 * did nothing and returned the hidden surname verbatim to a logged-in viewer denied it.
+	 *
+	 * Also asserts the result is never blank - redacting the only stored name part must still yield
+	 * a usable public label.
+	 */
+	public function test_hidden_last_name_is_redacted_when_it_is_the_entire_display_name() {
+		$user_id  = self::factory()->user->create();
+		$stranger = self::factory()->user->create();
+
+		// Empty every first-name source, so the rebuilt name is the bare surname.
+		xprofile_set_field_data( bp_xprofile_firstname_field_id(), $user_id, '' );
+		update_user_meta( $user_id, 'first_name', '' );
+		update_user_meta( $user_id, 'nickname', '' );
+		xprofile_set_field_data( bp_xprofile_lastname_field_id(), $user_id, 'Ravensworth' );
+		update_user_meta( $user_id, 'last_name', 'Ravensworth' );
+		xprofile_set_field_visibility_level( bp_xprofile_lastname_field_id(), $user_id, 'adminsonly' );
+
+		global $wpdb;
+		$wpdb->update( $wpdb->users, array( 'display_name' => 'Ravensworth' ), array( 'ID' => $user_id ) );
+		clean_user_cache( $user_id );
+		BB_XProfile_Visibility::flush_field_ids_cache();
+
+		// Fixture precondition: the rebuild really is the bare surname, and it really is hidden.
+		$this->assertSame( 'Ravensworth', bp_xprofile_get_member_display_name( $user_id ) );
+		$this->assertContains( (int) bp_xprofile_lastname_field_id(), array_map( 'intval', (array) bp_xprofile_get_hidden_fields_for_user( $user_id, $stranger ) ) );
+
+		$this->set_current_user( $stranger );
+		$name = bp_core_get_user_displayname( $user_id, $stranger );
+
+		$this->assertStringNotContainsStringIgnoringCase( 'ravensworth', $name, 'the hidden surname was returned verbatim' );
+		$this->assertNotSame( '', trim( (string) $name ), 'a redacted name must never be blank' );
+
+		// The member themselves still sees it.
+		$this->set_current_user( $user_id );
+		$this->assertStringContainsStringIgnoringCase( 'ravensworth', bp_core_get_user_displayname( $user_id, $user_id ) );
+	}
+
+	/**
 	 * The LIKE matcher has to agree with the SQL comparison that produced the candidate rows,
 	 * including the backslash escaping bp_esc_like() applies.
 	 */

@@ -710,111 +710,31 @@ function bp_core_get_user_displayname( $user_id_or_username, $current_user_id = 
 					$full_name = get_the_author_meta( 'nickname', $user_id );
 				}
 			} else {
-				// Remove the hidden last name from the stored display name across every drift shape,
-				// without over-redacting a token that merely contains the surname as a substring.
-				//
-				// Stage 1 - whole-token whitespace strip: handles "First Last", "Last First",
-				// "First Middle Last" (middle name kept) and multi-word surnames matched as a unit.
-				// The `i` flag redacts a casing-drifted value; preg_replace() returns null only on
-				// malformed UTF-8, which we fail closed to '' so the fallback applies.
-				$full_name = preg_replace( '/(^|\s)' . preg_quote( $last_name, '/' ) . '(?=\s|$)/iu', ' ', $display_name );
-				$full_name = ( null === $full_name ) ? '' : trim( preg_replace( '/\s+/', ' ', $full_name ) );
+				// Remove the hidden last name from the stored display name. Shared helper - see
+				// bb_core_strip_hidden_name_part() for the drift shapes it covers (separated in either
+				// order, glued, punctuation-joined, Unicode-space-joined, casing-drifted). The first name
+				// is only offered as the counterpart when this viewer may see it, so a glued token is
+				// never rebuilt from a name they are denied.
+				$first_name_field_id = bp_xprofile_firstname_field_id();
+				$first_name          = $first_name_field_id
+					? preg_replace( '/^[\\s\\p{Zs}]+|[\\s\\p{Zs}]+$/u', '', (string) xprofile_get_field_data( $first_name_field_id, $user_id ) )
+					: '';
 
-				// Stage 2 - token pass over what remains, for the surname drifted against punctuation
-				// ("Smith-Jones", "O.Smith") or glued to the first name with no separator
-				// ("AnnaSmith", "AnnaSmith Jr", multi-word "AnnaVanDerBerg"). A token that is the
-				// first+last (or last+first) name glued together becomes just the first name; a token
-				// in which the surname survives as a whole or punctuation-bounded piece is dropped; a
-				// token that merely contains the surname as a substring ("Lin" in "Linda", "Ng" in
-				// "Armstrong") is kept untouched. The first name is read for detection only, so the
-				// glue is caught even when the first name is itself hidden.
-				if ( '' !== $full_name ) {
-					$first_name_field_id = bp_xprofile_firstname_field_id();
-					$first_name          = $first_name_field_id
-						? preg_replace( '/^[\s\p{Zs}]+|[\s\p{Zs}]+$/u', '', (string) xprofile_get_field_data( $first_name_field_id, $user_id ) )
-						: '';
+				// phpcs:ignore WordPress.PHP.StrictInArray.MissingTrueStrict -- field ids are strings from $wpdb, int from the getter; a strict compare misses the match.
+				$first_name_visible = ( $first_name_field_id && '' !== $first_name && ! in_array( $first_name_field_id, $list_fields ) );
 
-					// The first name is used for glue DETECTION regardless of its own visibility, but
-					// only SUBSTITUTED into the output when it is itself visible to this viewer -
-					// otherwise a viewer who may see neither name would have the hidden first name
-					// leaked in place of the surname.
-					$first_name_visible = ( $first_name_field_id && '' !== $first_name && ! in_array( $first_name_field_id, $list_fields ) ); // phpcs:ignore WordPress.PHP.StrictInArray.MissingTrueStrict -- field ids are strings from $wpdb, int from the getter; a strict compare misses the match.
+				$full_name = bb_core_strip_hidden_name_part(
+					$display_name,
+					$last_name,
+					$first_name_visible ? $first_name : ''
+				);
 
-					// Compare against whitespace-STRIPPED forms so a multi-word surname glued with no
-					// internal spaces ("VanDerBerg" for field "Van Der Berg") is still matched as a
-					// whole token or as first+last glue.
-					// Strip Unicode spaces too (\p{Zs}, incl. U+00A0), not just ASCII \s - a multi-word
-					// surname field whose internal separator is a non-breaking space
-					// ("Van\u{00A0}Der\u{00A0}Berg") must reduce to the same "VanDerBerg" the glued
-					// display_name carries, or it would not match and the surname would survive.
-					// Requires the /u modifier for \p{Zs}.
-					$ln_nospace   = preg_replace( '/[\s\p{Zs}]+/u', '', $last_name );
-					$fn_nospace   = preg_replace( '/[\s\p{Zs}]+/u', '', $first_name );
-					$glue_pattern = ( '' !== $fn_nospace )
-						? '/^(?:' . preg_quote( $fn_nospace . $ln_nospace, '/' ) . '|' . preg_quote( $ln_nospace . $fn_nospace, '/' ) . ')$/iu'
-						: '';
-					// When the first name is unknown - its field is unset, left blank, or its data row is
-					// missing - the exact first+last glue pattern above cannot be built ($fn_nospace is
-					// empty), so a surname glued to an unknown name part with no separator ("AnnaSmith",
-					// "SmithAnna") would slip past $bounded, whose leading/trailing lookarounds require a
-					// non-letter boundary the glue does not have. Match the surname glued to the START or
-					// END of a token and drop the whole token - exactly as the punctuation-bounded case
-					// ("Anna-Smith") already does via $bounded. This over-redacts a standalone name that
-					// merely begins or ends with the exact surname string (hidden "Lin" inside "Linda"),
-					// which is privacy-safe - never a leak - and is only reachable when the first name is
-					// genuinely absent, so the visible over-redaction test (with a real first name) is
-					// untouched.
-					$ln_glue      = ( '' === $fn_nospace )
-						? '/^' . preg_quote( $ln_nospace, '/' ) . '|' . preg_quote( $ln_nospace, '/' ) . '$/iu'
-						: '';
-					$bounded      = '/(?<![\p{L}\p{N}])' . preg_quote( $ln_nospace, '/' ) . '(?![\p{L}\p{N}])/iu';
-
-					// When the First Name field is ALSO hidden from this viewer, stripping the surname
-					// from a plain "First Last" display name leaves the first-name token standing
-					// ("Alex Quillfeather" -> "Alex"), and none of the last-name-derived patterns above
-					// match it - so it would be returned, leaking the hidden first name. Build a matcher
-					// for the first name (the whole whitespace-stripped form and each of its tokens, so a
-					// multi-word first name is caught too) and drop those tokens as well. Only built when
-					// the first name is hidden AND known, so every visible-first-name path is unchanged;
-					// dropping is privacy-safe (the token IS the hidden first name), and if everything is
-					// dropped the fallback below resolves to the nickname.
-					$fn_hidden = '';
-					if ( ! $first_name_visible && '' !== $fn_nospace ) {
-						$fn_alts = array( preg_quote( $fn_nospace, '/' ) );
-						foreach ( preg_split( '/[\s\p{Zs}]+/u', $first_name ) as $fn_part ) {
-							if ( '' !== $fn_part ) {
-								$fn_alts[] = preg_quote( $fn_part, '/' );
-							}
-						}
-						$fn_hidden = '/^(?:' . implode( '|', array_unique( $fn_alts ) ) . ')$/iu';
-					}
-
-					$tokens = array();
-					foreach ( preg_split( '/\s+/', $full_name ) as $token ) {
-						if ( '' === $token ) {
-							continue;
-						}
-						if ( '' !== $glue_pattern && preg_match( $glue_pattern, $token ) ) {
-							// Token is the first and last name glued together - keep just the first
-							// name, and only when the viewer may see it.
-							if ( $first_name_visible ) {
-								$tokens[] = $first_name;
-							}
-						} elseif ( '' !== $ln_glue && preg_match( $ln_glue, $token ) ) {
-							// First name unknown: the surname is glued to the start or end of this token
-							// with no separator. Drop the whole token - the first-name portion cannot be
-							// recovered or checked against a visibility rule, so resolution falls through
-							// to the first-name field / nickname fallback below.
-							continue;
-						} elseif ( '' !== $fn_hidden && preg_match( $fn_hidden, $token ) ) {
-							// The hidden first name left standing after the surname strip - drop it too,
-							// so a viewer denied BOTH name fields never sees the first name here.
-							continue;
-						} elseif ( ! preg_match( $bounded, $token ) ) {
-							$tokens[] = $token;
-						}
-					}
-					$full_name = trim( implode( ' ', $tokens ) );
+				// When the First Name is ALSO hidden from this viewer, stripping the surname leaves the
+				// first-name token standing ("Alex Quillfeather" -> "Alex"), which none of the surname
+				// matchers can see. Strip it in a second pass, so a viewer denied BOTH name fields is
+				// never shown either one.
+				if ( ! $first_name_visible && '' !== $first_name ) {
+					$full_name = bb_core_strip_hidden_name_part( $full_name, $first_name, '' );
 				}
 			}
 
@@ -850,11 +770,26 @@ function bp_core_get_user_displayname( $user_id_or_username, $current_user_id = 
 
 			// phpcs:ignore WordPress.PHP.StrictInArray.MissingTrueStrict -- field ids are strings from $wpdb, int from the getter; a strict compare misses the match.
 			if ( $first_name_field_id && '' !== $first_name && in_array( $first_name_field_id, $list_fields ) ) {
-				$stripped  = preg_replace( '/(^|\s)' . preg_quote( $first_name, '/' ) . '(?=\s|$)/iu', ' ', $display_name );
-				$full_name = ( null === $stripped ) ? '' : trim( preg_replace( '/\s+/', ' ', $stripped ) );
+				$last_name_value = preg_replace( '/^[\s\p{Zs}]+|[\s\p{Zs}]+$/u', '', (string) xprofile_get_field_data( $last_name_field_id, $user_id ) );
 
-				// Nothing left that this viewer may see - fall back to the nickname rather than
-				// returning a blank or the raw column.
+				// phpcs:ignore WordPress.PHP.StrictInArray.MissingTrueStrict -- see above.
+				$last_name_visible = ( $last_name_field_id && '' !== $last_name_value && ! in_array( $last_name_field_id, $list_fields ) );
+
+				// Shared with the hidden-last-name path and with the REST members endpoint: handles
+				// the separated, glued, punctuation-joined and Unicode-space-joined shapes a stored
+				// display_name drifts into. The counterpart is only passed when this viewer may see
+				// it, so a glued token is never rebuilt from a name they are denied.
+				$full_name = bb_core_strip_hidden_name_part(
+					$display_name,
+					$first_name,
+					$last_name_visible ? $last_name_value : ''
+				);
+
+				// Nothing left that this viewer may see - prefer the last name they are allowed to
+				// see, then the nickname, rather than returning a blank or the raw column.
+				if ( '' === $full_name && $last_name_visible ) {
+					$full_name = $last_name_value;
+				}
 				if ( '' === $full_name ) {
 					$full_name = get_the_author_meta( 'nickname', $user_id );
 				}
@@ -865,6 +800,14 @@ function bp_core_get_user_displayname( $user_id_or_username, $current_user_id = 
 	}
 
 	$user_data = get_userdata( $user_id );
+
+	// Redacting every part of a name can leave nothing behind - a member whose only stored name was
+	// the hidden one, with no nickname to fall back to. Never return a blank label: user_nicename is
+	// public and cannot carry a hidden name part.
+	if ( '' === trim( (string) $full_name ) && ! empty( $user_data ) ) {
+		$full_name = $user_data->user_nicename;
+	}
+
 	if ( empty( $full_name ) && empty( $user_data ) ) {
 		$full_name = __( 'Deleted User', 'buddyboss' );
 	}

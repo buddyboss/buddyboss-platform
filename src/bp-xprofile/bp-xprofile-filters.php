@@ -835,7 +835,16 @@ function xprofile_filter_get_user_display_name( $full_name, $user_id, $current_u
 
 			if ( in_array( $last_name_field_id, $list_fields ) && ! empty( xprofile_get_field_data( $last_name_field_id, $user_id ) ) ) {
 				$last_name = xprofile_get_field_data( $last_name_field_id, $user_id );
-				$full_name = trim( str_replace( ' ' . $last_name, '', $full_name ) );
+
+				// Anchored removal, not str_replace( ' ' . $last_name, ... ): that needs a leading
+				// space, so it silently did nothing when the rebuilt name IS the bare surname - which
+				// happens whenever the first name is empty in every source that
+				// bp_xprofile_get_member_display_name() consults (xprofile field, first_name usermeta
+				// and nickname usermeta), as on directly imported accounts. The hidden surname was
+				// then returned verbatim to a viewer denied it. Match it at the start of the string
+				// as well, and treat Unicode spaces as separators.
+				$stripped  = preg_replace( '/(^|[\s\p{Zs}])' . preg_quote( $last_name, '/' ) . '(?=[\s\p{Zs}]|$)/iu', ' ', $full_name );
+				$full_name = ( null === $stripped ) ? '' : trim( preg_replace( '/[\s\p{Zs}]+/u', ' ', $stripped ) );
 			}
 
 			// The First Name can also be hidden from this viewer (via the
@@ -858,6 +867,17 @@ function xprofile_filter_get_user_display_name( $full_name, $user_id, $current_u
 				if ( '' === trim( (string) $full_name ) ) {
 					$full_name = get_the_author_meta( 'nickname', $user_id );
 				}
+			}
+
+			// Stripping a hidden name part can consume the whole name - a member whose rebuilt name
+			// was nothing but the hidden surname, for instance. Never return a blank label: fall back
+			// to the nickname, then to the public user_nicename, neither of which can carry a hidden
+			// name part.
+			if ( '' === trim( (string) $full_name ) ) {
+				$full_name = get_the_author_meta( 'nickname', $user_id );
+			}
+			if ( '' === trim( (string) $full_name ) ) {
+				$full_name = get_the_author_meta( 'user_nicename', $user_id );
 			}
 		}
 		$bb_default_display_avatar = false;
