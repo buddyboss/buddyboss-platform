@@ -702,162 +702,167 @@ function bp_core_get_user_displayname( $user_id_or_username, $current_user_id = 
 	// current REQUEST's viewer rather than the $current_user_id this call was asked about.
 	bb_core_is_resolving_user_displayname( true );
 
-	if ( empty( $list_fields ) ) {
-		$full_name = get_the_author_meta( 'display_name', $user_id );
-		if ( empty( $full_name ) ) {
-			$full_name = get_the_author_meta( 'nickname', $user_id );
-		}
-	} else {
-		$last_name_field_id = bp_xprofile_lastname_field_id();
-		// The last name is hidden from this viewer. The `! empty()` gate on the stored field
-		// value is intentionally NOT part of this condition: when the field is empty there is no
-		// surname to strip, but a stored display_name that has drifted to a full name would still
-		// leak the surname, so the empty case is resolved from the format fields in the
-		// '' === $last_name branch below rather than falling through to the raw display_name.
-		if ( in_array( $last_name_field_id, $list_fields ) ) { // phpcs:ignore WordPress.PHP.StrictInArray.MissingTrueStrict -- field ids are strings from $wpdb, int from the getter; a strict compare misses the match.
-			// Unicode-aware trim before the value reaches preg_quote(): a stored value with
-			// surrounding whitespace - including a non-ASCII space such as U+00A0 pasted from a
-			// word processor, which PHP's trim() does not remove - would otherwise build a
-			// pattern that cannot match the display name and silently leave the hidden last name
-			// in place. Mirrors the REST helper in buddyboss-platform-api's
-			// BP_REST_Members_Endpoint::get_visible_display_name().
-			$last_name    = preg_replace( '/^[\s\p{Zs}]+|[\s\p{Zs}]+$/u', '', (string) xprofile_get_field_data( $last_name_field_id, $user_id ) );
-			$display_name = get_the_author_meta( 'display_name', $user_id );
-
-			$format = function_exists( 'bp_core_display_name_format' ) ? bp_core_display_name_format() : 'first_last_name';
-
-			if ( 'nickname' === $format ) {
-				// Under the Nickname display format the visible name is the nickname, which carries
-				// its own visibility level; the Last Name field is not part of it. Read the
-				// nickname field directly instead of stripping the stored display_name, so (a) a
-				// display_name that has drifted to a full name (import, the wp-admin "Display name
-				// publicly as" dropdown, third-party writes) cannot leak the surname, and (b) a
-				// nickname that legitimately contains the surname as a word is not wrongly stripped.
+	// try/finally so the re-entrancy marker is always cleared: if any read below throws, an
+	// unbalanced marker would leave the WordPress-core author filters standing down for the
+	// rest of the request and fail OPEN on those surfaces.
+	try {
+		if ( empty( $list_fields ) ) {
+			$full_name = get_the_author_meta( 'display_name', $user_id );
+			if ( empty( $full_name ) ) {
 				$full_name = get_the_author_meta( 'nickname', $user_id );
-			} elseif ( '' === $last_name ) {
-				// The Last Name field is empty (unset, blank, or whitespace-only), so there is no
-				// stored surname to strip out of the display name. A display_name that has drifted to
-				// a full name - raw DB import (e.g. the ~70k forum-imported users here), the wp-admin
-				// "Display name publicly as" dropdown, or any third-party write - would otherwise be
-				// returned in full here, leaking the very surname the hide is meant to suppress.
-				// Resolve the visible name from the format's own fields instead, exactly as the
-				// logged-in path (xprofile_filter_get_user_display_name() via
-				// bp_xprofile_get_member_display_name()) already does, so a guest and a permitted
-				// member stay consistent: the first name (only when this viewer may see it - it is
-				// governed by the same hidden-field list), falling back to the nickname. The Nickname
-				// format is already handled by the branch above.
-				$full_name           = '';
-				$first_name_field_id = bp_xprofile_firstname_field_id();
-				if ( $first_name_field_id && ! in_array( $first_name_field_id, $list_fields ) ) {
-					$full_name = preg_replace( '/^[\s\p{Zs}]+|[\s\p{Zs}]+$/u', '', (string) xprofile_get_field_data( $first_name_field_id, $user_id ) );
-				}
-				if ( '' === $full_name ) {
-					$full_name = get_the_author_meta( 'nickname', $user_id );
-				}
-			} else {
-				// Remove the hidden last name from the stored display name. Shared helper - see
-				// bb_core_strip_hidden_name_part() for the drift shapes it covers (separated in either
-				// order, glued, punctuation-joined, Unicode-space-joined, casing-drifted). The first name
-				// is only offered as the counterpart when this viewer may see it, so a glued token is
-				// never rebuilt from a name they are denied.
-				$first_name_field_id = bp_xprofile_firstname_field_id();
-				$first_name          = $first_name_field_id
-					? preg_replace( '/^[\\s\\p{Zs}]+|[\\s\\p{Zs}]+$/u', '', (string) xprofile_get_field_data( $first_name_field_id, $user_id ) )
-					: '';
-
-				// phpcs:ignore WordPress.PHP.StrictInArray.MissingTrueStrict -- field ids are strings from $wpdb, int from the getter; a strict compare misses the match.
-				$first_name_visible = ( $first_name_field_id && '' !== $first_name && ! in_array( $first_name_field_id, $list_fields ) );
-
-				$full_name = bb_core_strip_hidden_name_part(
-					$display_name,
-					$last_name,
-					$first_name_visible ? $first_name : ''
-				);
-
-				// When the First Name is ALSO hidden from this viewer, stripping the surname leaves the
-				// first-name token standing ("Alex Quillfeather" -> "Alex"), which none of the surname
-				// matchers can see. Strip it in a second pass, so a viewer denied BOTH name fields is
-				// never shown either one.
-				if ( ! $first_name_visible && '' !== $first_name ) {
-					$full_name = bb_core_strip_hidden_name_part( $full_name, $first_name, '' );
-				}
-			}
-
-			// If nothing usable remains, fall back to the first name - but only when it is itself
-			// visible to this viewer (it is governed by the same hidden-field list as the last
-			// name; a site may hide it too via visibility or the
-			// bp_xprofile_get_hidden_fields_for_user filter). Otherwise use the nickname, so a
-			// viewer who may see neither name still gets a non-leaking label rather than a blank.
-			if ( '' === $full_name ) {
-				$first_name_field_id = bp_xprofile_firstname_field_id();
-				if ( $first_name_field_id && ! in_array( $first_name_field_id, $list_fields ) ) {
-					$full_name = preg_replace( '/^[\s\p{Zs}]+|[\s\p{Zs}]+$/u', '', (string) xprofile_get_field_data( $first_name_field_id, $user_id ) );
-				}
-				if ( '' === $full_name ) {
-					$full_name = get_the_author_meta( 'nickname', $user_id );
-				}
 			}
 		} else {
-			// The last name is not hidden from this viewer, but the FIRST name may be: its field can
-			// be restricted per user, or site-wide through the field's own default visibility (which
-			// bp_xprofile_get_fields_by_visibility_levels() applies to every member even when custom
-			// visibility is disabled). Returning the stored display_name here would hand a guest the
-			// full name while a permitted member - whose name IS resolved from the fields - gets less,
-			// so the viewer denied the most sees the most. Strip the hidden first name the same way
-			// the last name is stripped above, which also matches what
-			// xprofile_filter_get_user_display_name() already returns to logged-in viewers.
-			$first_name_field_id = bp_xprofile_firstname_field_id();
-			$first_name          = $first_name_field_id
-				? preg_replace( '/^[\s\p{Zs}]+|[\s\p{Zs}]+$/u', '', (string) xprofile_get_field_data( $first_name_field_id, $user_id ) )
-				: '';
+			$last_name_field_id = bp_xprofile_lastname_field_id();
+			// The last name is hidden from this viewer. The `! empty()` gate on the stored field
+			// value is intentionally NOT part of this condition: when the field is empty there is no
+			// surname to strip, but a stored display_name that has drifted to a full name would still
+			// leak the surname, so the empty case is resolved from the format fields in the
+			// '' === $last_name branch below rather than falling through to the raw display_name.
+			if ( in_array( $last_name_field_id, $list_fields ) ) { // phpcs:ignore WordPress.PHP.StrictInArray.MissingTrueStrict -- field ids are strings from $wpdb, int from the getter; a strict compare misses the match.
+				// Unicode-aware trim before the value reaches preg_quote(): a stored value with
+				// surrounding whitespace - including a non-ASCII space such as U+00A0 pasted from a
+				// word processor, which PHP's trim() does not remove - would otherwise build a
+				// pattern that cannot match the display name and silently leave the hidden last name
+				// in place. Mirrors the REST helper in buddyboss-platform-api's
+				// BP_REST_Members_Endpoint::get_visible_display_name().
+				$last_name    = preg_replace( '/^[\s\p{Zs}]+|[\s\p{Zs}]+$/u', '', (string) xprofile_get_field_data( $last_name_field_id, $user_id ) );
+				$display_name = get_the_author_meta( 'display_name', $user_id );
 
-			$display_name = get_the_author_meta( 'display_name', $user_id );
+				$format = function_exists( 'bp_core_display_name_format' ) ? bp_core_display_name_format() : 'first_last_name';
 
-			// phpcs:ignore WordPress.PHP.StrictInArray.MissingTrueStrict -- field ids are strings from $wpdb, int from the getter; a strict compare misses the match.
-			if ( $first_name_field_id && '' !== $first_name && in_array( $first_name_field_id, $list_fields ) ) {
-				$last_name_value = preg_replace( '/^[\s\p{Zs}]+|[\s\p{Zs}]+$/u', '', (string) xprofile_get_field_data( $last_name_field_id, $user_id ) );
-
-				// phpcs:ignore WordPress.PHP.StrictInArray.MissingTrueStrict -- see above.
-				$last_name_visible = ( $last_name_field_id && '' !== $last_name_value && ! in_array( $last_name_field_id, $list_fields ) );
-
-				// Shared with the hidden-last-name path and with the REST members endpoint: handles
-				// the separated, glued, punctuation-joined and Unicode-space-joined shapes a stored
-				// display_name drifts into. The counterpart is only passed when this viewer may see
-				// it, so a glued token is never rebuilt from a name they are denied.
-				$full_name = bb_core_strip_hidden_name_part(
-					$display_name,
-					$first_name,
-					$last_name_visible ? $last_name_value : ''
-				);
-
-				// Nothing left that this viewer may see - prefer the last name they are allowed to
-				// see, then the nickname, rather than returning a blank or the raw column.
-				if ( '' === $full_name && $last_name_visible ) {
-					$full_name = $last_name_value;
-				}
-				if ( '' === $full_name ) {
+				if ( 'nickname' === $format ) {
+					// Under the Nickname display format the visible name is the nickname, which carries
+					// its own visibility level; the Last Name field is not part of it. Read the
+					// nickname field directly instead of stripping the stored display_name, so (a) a
+					// display_name that has drifted to a full name (import, the wp-admin "Display name
+					// publicly as" dropdown, third-party writes) cannot leak the surname, and (b) a
+					// nickname that legitimately contains the surname as a word is not wrongly stripped.
 					$full_name = get_the_author_meta( 'nickname', $user_id );
+				} elseif ( '' === $last_name ) {
+					// The Last Name field is empty (unset, blank, or whitespace-only), so there is no
+					// stored surname to strip out of the display name. A display_name that has drifted to
+					// a full name - raw DB import (e.g. the ~70k forum-imported users here), the wp-admin
+					// "Display name publicly as" dropdown, or any third-party write - would otherwise be
+					// returned in full here, leaking the very surname the hide is meant to suppress.
+					// Resolve the visible name from the format's own fields instead, exactly as the
+					// logged-in path (xprofile_filter_get_user_display_name() via
+					// bp_xprofile_get_member_display_name()) already does, so a guest and a permitted
+					// member stay consistent: the first name (only when this viewer may see it - it is
+					// governed by the same hidden-field list), falling back to the nickname. The Nickname
+					// format is already handled by the branch above.
+					$full_name           = '';
+					$first_name_field_id = bp_xprofile_firstname_field_id();
+					if ( $first_name_field_id && ! in_array( $first_name_field_id, $list_fields ) ) {
+						$full_name = preg_replace( '/^[\s\p{Zs}]+|[\s\p{Zs}]+$/u', '', (string) xprofile_get_field_data( $first_name_field_id, $user_id ) );
+					}
+					if ( '' === $full_name ) {
+						$full_name = get_the_author_meta( 'nickname', $user_id );
+					}
+				} else {
+					// Remove the hidden last name from the stored display name. Shared helper - see
+					// bb_core_strip_hidden_name_part() for the drift shapes it covers (separated in either
+					// order, glued, punctuation-joined, Unicode-space-joined, casing-drifted). The first name
+					// is only offered as the counterpart when this viewer may see it, so a glued token is
+					// never rebuilt from a name they are denied.
+					$first_name_field_id = bp_xprofile_firstname_field_id();
+					$first_name          = $first_name_field_id
+						? preg_replace( '/^[\\s\\p{Zs}]+|[\\s\\p{Zs}]+$/u', '', (string) xprofile_get_field_data( $first_name_field_id, $user_id ) )
+						: '';
+
+					// phpcs:ignore WordPress.PHP.StrictInArray.MissingTrueStrict -- field ids are strings from $wpdb, int from the getter; a strict compare misses the match.
+					$first_name_visible = ( $first_name_field_id && '' !== $first_name && ! in_array( $first_name_field_id, $list_fields ) );
+
+					$full_name = bb_core_strip_hidden_name_part(
+						$display_name,
+						$last_name,
+						$first_name_visible ? $first_name : ''
+					);
+
+					// When the First Name is ALSO hidden from this viewer, stripping the surname leaves the
+					// first-name token standing ("Alex Quillfeather" -> "Alex"), which none of the surname
+					// matchers can see. Strip it in a second pass, so a viewer denied BOTH name fields is
+					// never shown either one.
+					if ( ! $first_name_visible && '' !== $first_name ) {
+						$full_name = bb_core_strip_hidden_name_part( $full_name, $first_name, '' );
+					}
+				}
+
+				// If nothing usable remains, fall back to the first name - but only when it is itself
+				// visible to this viewer (it is governed by the same hidden-field list as the last
+				// name; a site may hide it too via visibility or the
+				// bp_xprofile_get_hidden_fields_for_user filter). Otherwise use the nickname, so a
+				// viewer who may see neither name still gets a non-leaking label rather than a blank.
+				if ( '' === $full_name ) {
+					$first_name_field_id = bp_xprofile_firstname_field_id();
+					if ( $first_name_field_id && ! in_array( $first_name_field_id, $list_fields ) ) {
+						$full_name = preg_replace( '/^[\s\p{Zs}]+|[\s\p{Zs}]+$/u', '', (string) xprofile_get_field_data( $first_name_field_id, $user_id ) );
+					}
+					if ( '' === $full_name ) {
+						$full_name = get_the_author_meta( 'nickname', $user_id );
+					}
 				}
 			} else {
-				$full_name = $display_name;
+				// The last name is not hidden from this viewer, but the FIRST name may be: its field can
+				// be restricted per user, or site-wide through the field's own default visibility (which
+				// bp_xprofile_get_fields_by_visibility_levels() applies to every member even when custom
+				// visibility is disabled). Returning the stored display_name here would hand a guest the
+				// full name while a permitted member - whose name IS resolved from the fields - gets less,
+				// so the viewer denied the most sees the most. Strip the hidden first name the same way
+				// the last name is stripped above, which also matches what
+				// xprofile_filter_get_user_display_name() already returns to logged-in viewers.
+				$first_name_field_id = bp_xprofile_firstname_field_id();
+				$first_name          = $first_name_field_id
+					? preg_replace( '/^[\s\p{Zs}]+|[\s\p{Zs}]+$/u', '', (string) xprofile_get_field_data( $first_name_field_id, $user_id ) )
+					: '';
+
+				$display_name = get_the_author_meta( 'display_name', $user_id );
+
+				// phpcs:ignore WordPress.PHP.StrictInArray.MissingTrueStrict -- field ids are strings from $wpdb, int from the getter; a strict compare misses the match.
+				if ( $first_name_field_id && '' !== $first_name && in_array( $first_name_field_id, $list_fields ) ) {
+					$last_name_value = preg_replace( '/^[\s\p{Zs}]+|[\s\p{Zs}]+$/u', '', (string) xprofile_get_field_data( $last_name_field_id, $user_id ) );
+
+					// phpcs:ignore WordPress.PHP.StrictInArray.MissingTrueStrict -- see above.
+					$last_name_visible = ( $last_name_field_id && '' !== $last_name_value && ! in_array( $last_name_field_id, $list_fields ) );
+
+					// Shared with the hidden-last-name path and with the REST members endpoint: handles
+					// the separated, glued, punctuation-joined and Unicode-space-joined shapes a stored
+					// display_name drifts into. The counterpart is only passed when this viewer may see
+					// it, so a glued token is never rebuilt from a name they are denied.
+					$full_name = bb_core_strip_hidden_name_part(
+						$display_name,
+						$first_name,
+						$last_name_visible ? $last_name_value : ''
+					);
+
+					// Nothing left that this viewer may see - prefer the last name they are allowed to
+					// see, then the nickname, rather than returning a blank or the raw column.
+					if ( '' === $full_name && $last_name_visible ) {
+						$full_name = $last_name_value;
+					}
+					if ( '' === $full_name ) {
+						$full_name = get_the_author_meta( 'nickname', $user_id );
+					}
+				} else {
+					$full_name = $display_name;
+				}
 			}
 		}
+
+		$user_data = get_userdata( $user_id );
+
+		// Redacting every part of a name can leave nothing behind - a member whose only stored name was
+		// the hidden one, with no nickname to fall back to. Never return a blank label: user_nicename is
+		// public and cannot carry a hidden name part.
+		if ( '' === trim( (string) $full_name ) && ! empty( $user_data ) ) {
+			$full_name = $user_data->user_nicename;
+		}
+
+		if ( empty( $full_name ) && empty( $user_data ) ) {
+			$full_name = __( 'Deleted User', 'buddyboss' );
+		}
+	} finally {
+		bb_core_is_resolving_user_displayname( false );
 	}
-
-	$user_data = get_userdata( $user_id );
-
-	// Redacting every part of a name can leave nothing behind - a member whose only stored name was
-	// the hidden one, with no nickname to fall back to. Never return a blank label: user_nicename is
-	// public and cannot carry a hidden name part.
-	if ( '' === trim( (string) $full_name ) && ! empty( $user_data ) ) {
-		$full_name = $user_data->user_nicename;
-	}
-
-	if ( empty( $full_name ) && empty( $user_data ) ) {
-		$full_name = __( 'Deleted User', 'buddyboss' );
-	}
-
-	bb_core_is_resolving_user_displayname( false );
 
 	/**
 	 * Filters the display name for the passed in user.
