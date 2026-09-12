@@ -1244,20 +1244,43 @@ function bb_clear_group_thread_cache( $thread_id ) {
 /**
  * Function to bypass the name privacy for admin.
  *
+ * Only a viewer that resolves to a real administrator account lifts the hidden levels. Every other
+ * viewer - an anonymous one, the bb_core_guest_viewer_id() sentinel, or an ID with no user row -
+ * leaves them exactly as the caller computed them: this is a privacy filter, so "we could not
+ * establish who is looking" has to mean "hide", never "show everything".
+ *
  * @since BuddyBoss 2.7.00
+ *
+ * @since BuddyBoss [BBVERSION] An empty, anonymous or unresolvable viewer no longer clears the
+ *        hidden levels.
  *
  * @param array $hidden_levels     Hidden levels.
  * @param int   $displayed_user_id Displayed user id.
- * @param int   $current_user_id   Current user id.
+ * @param int   $current_user_id   Current user id. May be 0 for an anonymous request or
+ *                                 bb_core_guest_viewer_id() for an explicitly public resolution.
  *
  * @return array
  */
 function bb_bypass_name_privacy_for_admin( $hidden_levels, $displayed_user_id, $current_user_id ) {
-	if ( empty( $current_user_id ) ) {
-		return array();
+	$current_user_id = (int) $current_user_id;
+
+	// No viewer to test. bb_core_guest_viewer_id() is a sentinel, not a user row, so get_userdata()
+	// would return false for it and never identify an administrator.
+	if (
+		empty( $current_user_id ) ||
+		( function_exists( 'bb_core_guest_viewer_id' ) && bb_core_guest_viewer_id() === $current_user_id )
+	) {
+		return $hidden_levels;
 	}
 
 	$current_user_data = get_userdata( $current_user_id );
+
+	// A deleted or never-existing ID: get_userdata() returns false, and reading ->roles off it is a
+	// PHP 8 TypeError in the in_array() below.
+	if ( empty( $current_user_data ) || ! is_array( $current_user_data->roles ) ) {
+		return $hidden_levels;
+	}
+
 	if ( in_array( 'administrator', $current_user_data->roles, true ) ) {
 		$hidden_levels = array();
 	}

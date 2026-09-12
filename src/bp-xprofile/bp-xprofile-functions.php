@@ -3750,11 +3750,18 @@ function bb_xprofile_can_change_field_visibility( $field_id ) {
  * confirms it. A directory that hides a surname must not answer questions about it either
  * (PROD-9896).
  *
- * The candidate set is deliberately narrow. Only two groups of members can be affected: those with
- * an explicit non-public visibility row on a name field, and — when a name field's own
- * `default_visibility` is non-public — those whose stored value for that field matches the term.
- * On a community where nobody restricts a name field this costs one indexed query and resolves no
- * names at all.
+ * The candidate set is deliberately narrow. Three sources feed it: members with an explicit
+ * non-public visibility row on a name field; members whose stored value for a name field with a
+ * non-public `default_visibility` matches the term; and, when the Display Name Format leaves a name
+ * field out of the visible name site-wide, the matched members whose match is not in the name part
+ * the format still shows. Under the "First Name & Last Name" format on a community where nobody
+ * restricts a name field, none of the three produces anything and this costs one indexed query.
+ *
+ * Under a format-level hide the third source is as large as the number of members whose match lies
+ * only in the hidden name part, and the re-test resolves that many names — batched through
+ * bb_core_prime_user_displayname_caches(), but on a one-character term over a large community that
+ * is real work. Those are exactly the members that have to be re-tested, so it is not capped: a cap
+ * would have to fail open and serve the matches this function exists to suppress.
  *
  * Removal is decided by re-running the *same* LIKE pattern against the name this viewer would
  * actually see. A member whose visible name still matches (searching "Peter" for "Peter
@@ -3860,6 +3867,51 @@ function bb_xprofile_filter_user_search_matches( $matched_user_ids, $like_patter
 		}
 	}
 
+	// (3) The site-wide Display Name Format can leave a name field out of the visible name for
+	// EVERY member at once, independently of any visibility level: under "First Name" the surname
+	// is not part of the name at all, and under "Nickname" neither the surname nor the first name
+	// is. bp_core_get_user_displayname() already honours that hide - it appends the Last Name field
+	// to the hidden-field list - so the rendered name is redacted while the match, without this,
+	// still answers the question. That is the configuration this ticket is about.
+	//
+	// This source cannot be bounded by a stored field value the way (2) is. The hide applies to the
+	// whole community, and the value that leaks is the one in the `display_name` COLUMN, which
+	// drifts away from the fields (an import, the wp-admin "Display name publicly as" dropdown, a
+	// third-party write) and can carry a surname the Last Name field no longer holds - the drift
+	// this whole redaction exists for. Every matched member is therefore a candidate, less those
+	// whose match lies in the name part the format DOES show: their visible name provably still
+	// matches, so re-resolving them would only cost time. A member for whom that shown field is
+	// itself hidden is still reached through (1) or (2), which are unioned in independently of
+	// this.
+	$display_name_format = function_exists( 'bp_core_display_name_format' ) ? bp_core_display_name_format() : 'first_last_name';
+
+	if ( in_array( $display_name_format, array( 'first_name', 'nickname' ), true ) ) {
+		$format_candidate_ids = $matched_user_ids;
+
+		$shown_field_id = ( 'nickname' === $display_name_format )
+			? (int) bp_xprofile_nickname_field_id()
+			: (int) bp_xprofile_firstname_field_id();
+
+		if ( $shown_field_id ) {
+			$value_placeholders = implode( ' OR ', array_fill( 0, count( $like_patterns ), 'value LIKE %s' ) );
+
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- visibility filtering must read current values.
+			$shown_field_matchers = $wpdb->get_col(
+				$wpdb->prepare(
+					// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- table name and placeholder list are built from trusted values, every user value is bound below.
+					"SELECT DISTINCT user_id FROM {$bp->profile->table_name_data} WHERE field_id = %d AND ( {$value_placeholders} )",
+					array_merge( array( $shown_field_id ), array_values( $like_patterns ) )
+				)
+			);
+
+			if ( ! empty( $shown_field_matchers ) ) {
+				$format_candidate_ids = array_diff( $format_candidate_ids, array_map( 'intval', $shown_field_matchers ) );
+			}
+		}
+
+		$candidate_ids = array_merge( $candidate_ids, $format_candidate_ids );
+	}
+
 	$candidate_ids = array_unique( $candidate_ids );
 
 	// Only the matched rows matter, and a member is never hidden from themselves.
@@ -3963,6 +4015,30 @@ function bb_xprofile_filter_field_search_matches( $matched_user_ids, $matched_us
 		return $matched_user_ids;
 	}
 
+	// The site-wide Display Name Format can leave a name field out of the visible name for EVERY
+	// member at once, independently of any visibility level, and that hide never enters
+	// bp_xprofile_get_hidden_fields_for_user() - bp_core_get_user_displayname() appends it
+	// separately. Without it a member matched only on a format-hidden name field is kept here, and
+	// the hit confirms the very name part the format suppresses. This mirrors the same source in
+	// bb_xprofile_filter_user_search_matches(): one rule, two filters, and they must agree.
+	$format_hidden_field_ids = array();
+	$display_name_format     = function_exists( 'bp_core_display_name_format' ) ? bp_core_display_name_format() : 'first_last_name';
+
+	if ( in_array( $display_name_format, array( 'first_name', 'nickname' ), true ) ) {
+		$format_last_name_field_id = function_exists( 'bp_xprofile_lastname_field_id' ) ? (int) bp_xprofile_lastname_field_id() : 0;
+		if ( $format_last_name_field_id > 0 ) {
+			$format_hidden_field_ids[] = $format_last_name_field_id;
+		}
+
+		// Under "Nickname" the visible name is the nickname alone, so the first name is out too.
+		if ( 'nickname' === $display_name_format ) {
+			$format_first_name_field_id = function_exists( 'bp_xprofile_firstname_field_id' ) ? (int) bp_xprofile_firstname_field_id() : 0;
+			if ( $format_first_name_field_id > 0 ) {
+				$format_hidden_field_ids[] = $format_first_name_field_id;
+			}
+		}
+	}
+
 	// Group the matched field ids per user, so a user is judged on all of their matches at once.
 	$fields_by_user = array();
 	foreach ( (array) $matched_user_data as $row ) {
@@ -3978,6 +4054,10 @@ function bb_xprofile_filter_field_search_matches( $matched_user_ids, $matched_us
 		}
 
 		$hidden_fields = array_map( 'intval', (array) bp_xprofile_get_hidden_fields_for_user( $user_id, $viewer_id ) );
+
+		if ( ! empty( $format_hidden_field_ids ) ) {
+			$hidden_fields = array_unique( array_merge( $hidden_fields, $format_hidden_field_ids ) );
+		}
 
 		if ( empty( $hidden_fields ) ) {
 			continue;

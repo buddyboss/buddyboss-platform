@@ -11181,8 +11181,25 @@ function bb_core_strip_hidden_name_part( $display_name, $hidden_part, $visible_p
 	// matching it as a bare substring of a longer word.
 	$bounded = '/(?<![\p{L}\p{N}])' . preg_quote( $hidden_nospace, '/' ) . '(?![\p{L}\p{N}])/iu';
 
+	$stripped_tokens = preg_split( '/[\s\p{Zs}]+/u', $stripped );
+
+	// Does the counterpart the viewer MAY see already stand on its own as a token? The length gate
+	// in the embedded-token rule below turns on this: if the visible name is already present in its
+	// own right, the name reads complete without the token under test, so that token can be treated
+	// as possibly unrelated. If it is NOT present, the token under test is all the name there is,
+	// and a hidden part inside it is far more likely to BE the hidden name with something welded on.
+	$visible_has_own_token = false;
+	if ( '' !== $visible_nospace ) {
+		foreach ( $stripped_tokens as $candidate ) {
+			if ( '' !== $candidate && 0 === strcasecmp( $candidate, $visible_nospace ) ) {
+				$visible_has_own_token = true;
+				break;
+			}
+		}
+	}
+
 	$tokens = array();
-	foreach ( preg_split( '/[\s\p{Zs}]+/u', $stripped ) as $token ) {
+	foreach ( $stripped_tokens as $token ) {
 		if ( '' === $token ) {
 			continue;
 		}
@@ -11207,25 +11224,77 @@ function bb_core_strip_hidden_name_part( $display_name, $hidden_part, $visible_p
 
 		// The hidden part is embedded in a longer token with letters or digits against it, so the
 		// punctuation-boundary test below cannot see it: "pzebrastripe" (initial + surname),
-		// "PeterZebrastripeJr", "Zebrastripe2" (de-duplication suffix), "MrPeterZebrastripe". The
-		// token is a disclosure when what is left after removing the hidden part does not stand on
-		// its own as a name - it is only an initial or a digit or two - or when it is the visible
-		// counterpart with the hidden part welded on. Both mean the token exists BECAUSE of the
-		// hidden name, so it goes.
+		// "PeterZebrastripeJr", "Zebrastripe2" (de-duplication suffix), "MrPeterZebrastripe". Such a
+		// token exists BECAUSE of the hidden name, so it goes.
 		//
 		// A hidden part that is merely a coincidental fragment of a longer, unrelated word ("Ng" at
-		// the end of "Armstrong") leaves a substantial remainder that is not the visible name, and
-		// is deliberately kept - dropping it would redact a name part the viewer is entitled to.
+		// the end of "Armstrong", "Ann" inside "Cann") must be KEPT - dropping it redacts a name
+		// part the viewer is entitled to, which is a defect in its own right and not a safe
+		// over-redaction. The shape tests below separate the two where the shape can; the tie-break
+		// after them handles the fragments that are too short for shape to decide.
 		$embedded = ( '' !== $hidden_nospace && false !== stripos( $token_nospace, $hidden_nospace ) );
 
 		if ( $embedded ) {
 			$remainder = preg_replace( '/' . preg_quote( $hidden_nospace, '/' ) . '/iu', '', $token_nospace );
 			$remainder = ( null === $remainder ) ? '' : $remainder;
 
-			$remainder_is_negligible = ( function_exists( 'mb_strlen' ) ? mb_strlen( $remainder, 'UTF-8' ) : strlen( $remainder ) ) <= 2;
-			$remainder_is_visible    = ( '' !== $visible_nospace && false !== stripos( $remainder, $visible_nospace ) );
+			$remainder_length = ( function_exists( 'mb_strlen' ) ? mb_strlen( $remainder, 'UTF-8' ) : strlen( $remainder ) );
+			$hidden_length    = ( function_exists( 'mb_strlen' ) ? mb_strlen( $hidden_nospace, 'UTF-8' ) : strlen( $hidden_nospace ) );
 
-			if ( $remainder_is_negligible || $remainder_is_visible ) {
+			// Shapes that are a disclosure however short the hidden part is.
+			//
+			// 1. The token is the visible counterpart with the hidden part welded on
+			//    ("PeterZebrastripeJr", "MrPeterZebrastripe").
+			// 2. Nothing of a second NAME is left - only digits or punctuation, which is what a
+			//    de-duplication suffix leaves ("Zebrastripe2", "Zebrastripe_1"). No real name is
+			//    spelled without a letter, so this can never be a coincidence.
+			// 3. A single initial welded to the surname ("pzebrastripe", "Peter pwu"), the shape an
+			//    LDAP or forum import leaves. Pinned to the visible counterpart's OWN initial, so it
+			//    stays a statement about this member's name rather than "any single letter".
+			$remainder_is_visible    = ( '' !== $visible_nospace && false !== stripos( $remainder, $visible_nospace ) );
+			$remainder_is_decoration = ( '' !== $remainder && ! preg_match( '/\p{L}/u', $remainder ) );
+
+			$visible_initial = '';
+			if ( '' !== $visible_nospace ) {
+				$visible_initial = function_exists( 'mb_substr' ) ? mb_substr( $visible_nospace, 0, 1, 'UTF-8' ) : substr( $visible_nospace, 0, 1 );
+			}
+			$remainder_is_that_initial = ( 1 === $remainder_length && '' !== $visible_initial && 0 === strcasecmp( $remainder, $visible_initial ) );
+
+			$is_disclosure = ( $remainder_is_visible || $remainder_is_decoration || $remainder_is_that_initial );
+
+			// Everything else is a fragment too short to judge by shape: "Cann" is "Ann" plus a
+			// letter in exactly the way "Zebrastripes" is "Zebrastripe" plus a letter, and "MrLin"
+			// is "Lin" plus two. What breaks the tie is whether the name still reads complete
+			// WITHOUT this token.
+			if ( ! $is_disclosure ) {
+				if ( $visible_has_own_token ) {
+					// The visible counterpart is already standing on its own ("Bob" in "Bob Cann"),
+					// so this token is an additional name the member has and a short fragment inside
+					// it is plausibly coincidence - keep it. Short name parts collide with unrelated
+					// names constantly (Ann/Cann, Ann/Anne, Lin/Linda, Ross/Cross, Rice/Price,
+					// Anna/Hanna, and "Thelin" is itself a surname). From five characters up two
+					// DIFFERENT names no longer sit within two characters of each other in practice,
+					// so at that length the token goes again ("Peter Zebrastripes").
+					$is_disclosure = ( $remainder_length <= 2 && $hidden_length >= 5 );
+				} else {
+					// The visible counterpart is NOT standing on its own, so this token is the whole
+					// name on offer and there is nothing for it to be coincidental WITH. A hidden
+					// part welded to either end of it is a disclosure at any remainder length - an
+					// initial, an honorific or a particle in front ("pzebrastripe", "MrLin",
+					// "theLin"), a plural or suffix behind ("Zebrastripes") - which is the same
+					// treatment $edge_glue already gives when the counterpart is unknown. A fragment
+					// buried mid-token is left to the remainder length, so an unrelated single-token
+					// name keeps its letters ("strongman" for a member whose surname is "Ng").
+					$hidden_at_edge = (bool) preg_match(
+						'/^' . preg_quote( $hidden_nospace, '/' ) . '|' . preg_quote( $hidden_nospace, '/' ) . '$/iu',
+						$token_nospace
+					);
+
+					$is_disclosure = ( $hidden_at_edge || $remainder_length <= 2 );
+				}
+			}
+
+			if ( $is_disclosure ) {
 				continue;
 			}
 		}

@@ -188,6 +188,22 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 						// Search in user meta table for terms
 						$conditions_wp_user_table[] = " ID IN ( SELECT user_id FROM {$wpdb->usermeta} WHERE ExtractValue(meta_value, '//text()') LIKE %s AND meta_key NOT IN( 'first_name', 'last_name', 'nickname' ) ) ";
 						$query_placeholder[]        = '%' . $wpdb->esc_like( $search_term ) . '%';
+					} elseif ( 'display_name' === $user_field ) {
+						// The display_name column always holds the member's full name, so this
+						// comparison matches on name parts the searcher may not be shown. The row
+						// is redacted at render time, but the match itself is the disclosure -
+						// searching a guessed surname and getting one hit confirms it. The member
+						// directory closes this in BP_User_Query; this engine builds its own SQL
+						// and never goes through BP_User_Query, so it has to apply the same rule
+						// here or the two answer the same question differently (PROD-9896).
+						$hidden_ids = $this->bb_get_hidden_display_name_match_ids( $search_term );
+
+						if ( ! empty( $hidden_ids ) ) {
+							$conditions_wp_user_table[] = ' ( display_name LIKE %s AND ID NOT IN ( ' . implode( ',', $hidden_ids ) . ' ) ) ';
+						} else {
+							$conditions_wp_user_table[] = ' display_name LIKE %s ';
+						}
+						$query_placeholder[] = '%' . $wpdb->esc_like( $search_term ) . '%';
 					} else {
 						$conditions_wp_user_table[] = $user_field . ' LIKE %s ';
 						$query_placeholder[]        = '%' . $wpdb->esc_like( $search_term ) . '%';
@@ -426,6 +442,66 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 					'only_totalrow_count' => $only_totalrow_count,
 				)
 			);
+		}
+
+		/**
+		 * Members whose display_name matches the term only on a name part hidden from the viewer.
+		 *
+		 * The member directory drops those matches inside BP_User_Query, through
+		 * bb_xprofile_filter_user_search_matches(). This engine assembles its own SQL against
+		 * wp_users and never runs BP_User_Query, so the same set has to be resolved here and
+		 * excluded from the display_name comparison - otherwise the site-wide search answers a
+		 * question the member directory refuses (PROD-9896).
+		 *
+		 * Only the display_name comparison is narrowed. user_login, user_nicename and user_email
+		 * are public identifiers that carry no hidden name part, so a member matching on one of
+		 * those is still a legitimate hit.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param string $search_term Raw search term, as passed to sql().
+		 * @return array User IDs to exclude from the display_name comparison. Empty when nothing
+		 *               is hidden, which is the usual case.
+		 */
+		protected function bb_get_hidden_display_name_match_ids( $search_term ) {
+			global $wpdb;
+
+			// sql() is called twice per search - once for the row count, once for the rows - and
+			// both calls resolve the identical set.
+			static $cache = array();
+
+			if ( ! function_exists( 'bb_xprofile_filter_user_search_matches' ) ) {
+				return array();
+			}
+
+			$cache_key = md5( (string) $search_term ) . '_' . bb_core_get_viewer_user_id();
+
+			if ( isset( $cache[ $cache_key ] ) ) {
+				return $cache[ $cache_key ];
+			}
+
+			$like_pattern = '%' . $wpdb->esc_like( $search_term ) . '%';
+
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- visibility filtering must read current values; memoised above for the two calls this request makes.
+			$matched_user_ids = $wpdb->get_col(
+				$wpdb->prepare( "SELECT ID FROM {$wpdb->users} WHERE display_name LIKE %s", $like_pattern )
+			);
+
+			$matched_user_ids = array_filter( array_map( 'intval', (array) $matched_user_ids ) );
+
+			if ( empty( $matched_user_ids ) ) {
+				$cache[ $cache_key ] = array();
+
+				return $cache[ $cache_key ];
+			}
+
+			$visible_user_ids = array_filter(
+				array_map( 'intval', (array) bb_xprofile_filter_user_search_matches( $matched_user_ids, array( $like_pattern ) ) )
+			);
+
+			$cache[ $cache_key ] = array_values( array_diff( $matched_user_ids, $visible_user_ids ) );
+
+			return $cache[ $cache_key ];
 		}
 
 		protected function generate_html( $template_type = '' ) {

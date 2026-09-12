@@ -979,12 +979,16 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 	}
 
 	/**
-	 * The comment tree is cached per activity with no viewer in the key. A tree cached
-	 * while a member viewed it must not hand that member's `user_fullname` to a guest.
+	 * The comment tree is cached per activity with no viewer in the key. Every name-bearing value
+	 * on a cached node has to be re-resolved for whoever is reading it - `user_fullname`, and the
+	 * rendered `action` sentence the REST endpoint returns as `title`, which embeds the name via
+	 * bp_activity_generate_action_string() -> bp_core_get_userlink().
 	 *
 	 * @group bp_activity_comments_cache
 	 */
 	public function test_cached_comment_tree_reresolves_names_for_current_viewer() {
+		global $wpdb;
+
 		$bp                = buddypress();
 		$reset_component   = $bp->current_component;
 		$reset_action      = $bp->current_action;
@@ -1031,9 +1035,17 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 			$as_member = $this->get_comment_tree( $activity_id );
 			$this->assertSame( 'Alex Quillfeather', $as_member[ $comment_id ]->user_fullname );
 			$this->assertSame( 'Alex Quillfeather', $as_member[ $comment_id ]->children[ $reply_id ]->user_fullname );
+			$this->assertStringContainsString( '>Alex Quillfeather</a>', $as_member[ $comment_id ]->action );
+			$this->assertStringContainsString( '>Alex Quillfeather</a>', $as_member[ $comment_id ]->children[ $reply_id ]->action );
+			$this->assertSame( 'Alex Quillfeather', $as_member[ $comment_id ]->display_name, 'Fixture: the node carries the raw wp_users column.' );
 
 			$cached = wp_cache_get( $activity_id, 'bp_activity_comments' );
 			$this->assertIsArray( $cached, 'The tree must be cached for the single-activity request.' );
+			$this->assertStringContainsString(
+				'Quillfeather',
+				$cached[ $comment_id ]->action,
+				'Fixture: the cached node really does carry the priming viewer\'s name in its action string.'
+			);
 
 			// 2) A guest reads the same activity from the warm cache.
 			$this->set_current_user( 0 );
@@ -1041,10 +1053,37 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 			$this->assertSame( 'Alex', $as_guest[ $comment_id ]->user_fullname );
 			$this->assertSame( 'Alex', $as_guest[ $comment_id ]->children[ $reply_id ]->user_fullname );
 
+			// The action string is served as `title` by the activity REST endpoint, so the hidden
+			// last name must be gone from it as well as from user_fullname.
+			$this->assertStringContainsString( '>Alex</a>', $as_guest[ $comment_id ]->action );
+			$this->assertStringNotContainsString( 'Quillfeather', $as_guest[ $comment_id ]->action );
+			$this->assertStringContainsString( '>Alex</a>', $as_guest[ $comment_id ]->children[ $reply_id ]->action );
+			$this->assertStringNotContainsString( 'Quillfeather', $as_guest[ $comment_id ]->children[ $reply_id ]->action );
+
 			// 3) The reverse direction: a member must still get the name they are entitled to.
 			$this->set_current_user( $other );
 			$as_other = $this->get_comment_tree( $activity_id );
 			$this->assertSame( 'Alex Quillfeather', $as_other[ $comment_id ]->user_fullname );
+			$this->assertStringContainsString( '>Alex Quillfeather</a>', $as_other[ $comment_id ]->action );
+			$this->assertStringContainsString( '>Alex Quillfeather</a>', $as_other[ $comment_id ]->children[ $reply_id ]->action );
+
+			// 4) `display_name` on a node is the raw wp_users column and is the same for every
+			// viewer, so the invariant it has to satisfy is freshness rather than visibility: the
+			// tree is invalidated only when a comment is added, edited or deleted - never when a
+			// member is renamed - so a cached node must not go on serving the name the member had
+			// when the tree was built.
+			$wpdb->update( $wpdb->users, array( 'display_name' => 'Alexander Quillfeather' ), array( 'ID' => $author ) );
+			clean_user_cache( $author );
+
+			$this->assertIsArray(
+				wp_cache_get( $activity_id, 'bp_activity_comments' ),
+				'Renaming a member must not invalidate the comment tree cache - that is what makes this leg meaningful.'
+			);
+
+			$this->set_current_user( $other );
+			$as_renamed = $this->get_comment_tree( $activity_id );
+			$this->assertSame( 'Alexander Quillfeather', $as_renamed[ $comment_id ]->display_name );
+			$this->assertSame( 'Alexander Quillfeather', $as_renamed[ $comment_id ]->children[ $reply_id ]->display_name );
 		} finally {
 			$bp->current_component = $reset_component;
 			$bp->current_action    = $reset_action;
@@ -1931,6 +1970,347 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 		} finally {
 			$GLOBALS['bb_default_display_avatar'] = false;
 			bp_update_option( 'bp-display-name-format', $format );
+		}
+	}
+
+	/**
+	 * WordPress core publishes a member's name on surfaces BuddyBoss never renders: the author
+	 * archive title and its feed (wp_get_document_title() reads get_queried_object()->display_name
+	 * with no filter of its own), the feed autodiscovery link and `the_author()` (which read the
+	 * raw column through get_the_author_meta()/$authordata), and the `wp/v2/users` route. All of
+	 * them must show the same name the community does - and must leave it alone when nothing is
+	 * hidden, so a site that redacts nothing keeps core's own output byte for byte.
+	 *
+	 * @group bb_name_privacy
+	 * @group bb_core_author_surfaces
+	 */
+	public function test_wordpress_core_author_surfaces_honour_name_visibility() {
+		$author = $this->create_member_with_hidden_last_name();
+		$viewer = self::factory()->user->create();
+
+		$authordata_backup = isset( $GLOBALS['authordata'] ) ? $GLOBALS['authordata'] : null;
+
+		// Stand the main query up as an author archive rather than routing a request through
+		// go_to(): re-running `init` in this process re-registers the Platform blocks and the
+		// harness reports that as incorrect usage, which would make this test fail for a reason
+		// that has nothing to do with names.
+		$query_backup                       = $GLOBALS['wp_query'];
+		$GLOBALS['wp_query']                = new WP_Query();
+		$GLOBALS['wp_query']->is_author     = true;
+		$GLOBALS['wp_query']->is_archive    = true;
+		$GLOBALS['wp_query']->queried_object    = get_userdata( $author );
+		$GLOBALS['wp_query']->queried_object_id = $author;
+
+		try {
+			// --- A guest: every surface shows the redacted name. ---
+			$this->set_current_user( 0 );
+
+			$this->assertSame( 'Alex', bb_core_get_redacted_core_author_name( $author ) );
+			$this->assertSame( 'Alex', get_the_author_meta( 'display_name', $author ) );
+
+			$GLOBALS['authordata'] = get_userdata( $author );
+			$this->assertSame( 'Alex', get_the_author() );
+
+			$this->assertTrue( is_author(), 'Fixture: the author archive must actually be the queried object.' );
+			$this->assertStringNotContainsString( 'Quillfeather', wp_get_document_title() );
+			$this->assertStringContainsString( 'Alex', wp_get_document_title() );
+
+			$response = new WP_REST_Response( array( 'id' => $author, 'name' => 'Alex Quillfeather' ) );
+			$response = bb_core_filter_rest_prepare_user( $response, get_userdata( $author ) );
+			$this->assertSame( 'Alex', $response->get_data()['name'] );
+
+			// --- The opt-out filter hands the surfaces back to WordPress unchanged. ---
+			add_filter( 'bb_core_redact_core_author_name', '__return_false' );
+			$this->assertSame( 'Alex Quillfeather', get_the_author_meta( 'display_name', $author ) );
+			remove_filter( 'bb_core_redact_core_author_name', '__return_false' );
+
+			// --- A member who may see the surname: core output is left exactly as it was. ---
+			$this->set_current_user( $viewer );
+			$this->assertNull(
+				bb_core_get_redacted_core_author_name( $author ),
+				'Nothing is hidden from this viewer, so core output must not be touched at all.'
+			);
+			$this->assertSame( 'Alex Quillfeather', get_the_author_meta( 'display_name', $author ) );
+
+			$GLOBALS['authordata'] = get_userdata( $author );
+			$this->assertSame( 'Alex Quillfeather', get_the_author() );
+
+			// --- And the resolution itself still reads the STORED column, not its own output. ---
+			// Without the re-entrancy marker bp_core_get_user_displayname() would be handed the
+			// name redacted for the CURRENT request's viewer instead of the column, and would
+			// answer for the wrong viewer whenever one is passed explicitly.
+			$this->set_current_user( 0 );
+			$this->assertSame( 'Alex Quillfeather', bp_core_get_user_displayname( $author, $viewer ) );
+			$this->assertFalse( bb_core_is_resolving_user_displayname(), 'The marker must not stay raised.' );
+		} finally {
+			if ( null === $authordata_backup ) {
+				unset( $GLOBALS['authordata'] );
+			} else {
+				$GLOBALS['authordata'] = $authordata_backup;
+			}
+			$GLOBALS['wp_query'] = $query_backup;
+		}
+	}
+
+	/**
+	 * The guest sentinel is a non-existent user ID, so every listener on the hidden-level filters
+	 * has to survive it. Platform's own listener did not: get_userdata( -1 ) is false, reading
+	 * ->roles off it is null, and in_array( 'administrator', null, true ) is a PHP 8 TypeError.
+	 *
+	 * The empty-viewer branch is asserted in the same place because it used to return array() - no
+	 * hidden levels at all - which is the wrong direction for a privacy filter: "we could not
+	 * establish who is looking" has to mean hide, not show everything.
+	 *
+	 * @group bb_name_privacy
+	 */
+	public function test_admin_name_privacy_bypass_survives_a_non_member_viewer() {
+		if ( ! function_exists( 'bb_bypass_name_privacy_for_admin' ) ) {
+			$this->markTestSkipped( 'The Messages component is not loaded in this configuration.' );
+		}
+
+		$levels = array( 'friends', 'loggedin', 'adminsonly' );
+		$member = self::factory()->user->create();
+		$admin  = self::factory()->user->create( array( 'role' => 'administrator' ) );
+
+		// A deleted or never-existing account, and the explicit guest sentinel.
+		$ghost = self::factory()->user->create();
+		wp_delete_user( $ghost );
+
+		foreach ( array( bb_core_guest_viewer_id(), 0, $ghost ) as $viewer ) {
+			$this->assertSame(
+				$levels,
+				bb_bypass_name_privacy_for_admin( $levels, $member, $viewer ),
+				"viewer {$viewer} cleared the hidden levels without being an administrator"
+			);
+		}
+
+		// A real member is not an administrator either.
+		$this->assertSame( $levels, bb_bypass_name_privacy_for_admin( $levels, $member, $member ) );
+
+		// ... and the bypass still does what it exists for.
+		$this->assertSame( array(), bb_bypass_name_privacy_for_admin( $levels, $member, $admin ) );
+	}
+
+	/**
+	 * A SHORT hidden name part must not consume an unrelated token that merely contains it.
+	 *
+	 * The embedded-token rule drops a token when removing the hidden part leaves only a character
+	 * or two behind, because that is what an initial welded to a surname ("pzebrastripe") and a
+	 * de-duplication suffix ("Zebrastripe2") look like. Applied to a SHORT surname the very same
+	 * shape describes an ordinary, unrelated name: "Cann" is "Ann" plus one letter in exactly the
+	 * way "Zebrastripes" is "Zebrastripe" plus one letter. A member called Bob Cann whose surname
+	 * "Ann" was hidden therefore lost "Cann" too and was served only "Bob".
+	 *
+	 * That is not a safe failure. Over-redaction deletes a name part the viewer is entitled to,
+	 * and where the visible first name is short as well the label collapses to the nickname - the
+	 * "logged-in member shown LESS than a guest" outcome this file already guards elsewhere.
+	 *
+	 * Shape alone cannot separate the two, so the tie-break is whether the name still reads
+	 * complete WITHOUT the token under test - that is, whether the visible counterpart is already
+	 * standing on its own somewhere in the name. If it is, this token is an extra name the member
+	 * has and a short fragment inside it is plausibly coincidence ("Thelin" is a real surname);
+	 * only a fragment long enough to make coincidence implausible takes it.
+	 *
+	 * If the counterpart is NOT standing on its own, this token is the whole name on offer and
+	 * there is nothing for the fragment to be coincidental with, so a hidden part welded to either
+	 * END of it goes at any length - an initial, honorific or particle in front ("pzebrastripe",
+	 * "MrLin", "theLin"), a plural behind ("Zebrastripes"). That is the fail-closed direction and
+	 * it is the default. A fragment buried mid-token is still judged on remainder length, so an
+	 * unrelated one-word name survives ("strongman" for a member whose surname is "Ng").
+	 *
+	 * @group bb_name_privacy
+	 */
+	public function test_strip_hidden_name_part_keeps_unrelated_tokens_containing_a_short_hidden_part() {
+		$keep = array(
+			// display_name,   hidden, visible, expected.
+			array( 'Bob Cann',  'Ann',  'Bob',   'Bob Cann' ),  // Reported shape: fragment at the END of an unrelated token.
+			array( 'Bob Anne',  'Ann',  'Bob',   'Bob Anne' ),  // ... and at the start.
+			array( 'Bob Cross', 'Ross', 'Bob',   'Bob Cross' ),
+			array( 'Bob Price', 'Rice', 'Bob',   'Bob Price' ),
+			array( 'Bob Hanna', 'Anna', 'Bob',   'Bob Hanna' ),
+			array( 'Bob Linda', 'Lin',  'Bob',   'Bob Linda' ), // Two-character remainder.
+
+			// The counterpart is standing on its own, so an honorific-looking prefix on a SECOND
+			// token is left alone - "Thelin" and "Mrlin" are spellings a real surname can have.
+			array( 'Peter theLin', 'Lin', 'Peter', 'Peter theLin' ),
+			array( 'Peter MrLin',  'Lin', 'Peter', 'Peter MrLin' ),
+
+			// No counterpart token here, but the fragment is buried mid-word rather than welded to
+			// an end, so the one-word name the member chose keeps its letters.
+			array( 'strongman', 'Ng', 'Louis', 'strongman' ),
+		);
+
+		foreach ( $keep as $case ) {
+			list( $display_name, $hidden, $visible, $expected ) = $case;
+
+			$this->assertSame(
+				$expected,
+				bb_core_strip_hidden_name_part( $display_name, $hidden, $visible ),
+				"over-redaction for '{$display_name}' with '{$hidden}' hidden"
+			);
+		}
+
+		// The same short hidden parts in the shapes that really are a disclosure. None of these is
+		// condemned by the length of the fragment, so the tie-break must never be the only thing
+		// standing between them and the viewer.
+		$redact = array(
+			// display_name,  hidden, visible, expected.
+			array( 'Cann Ann',  'Ann',  'Cann',  'Cann' ),  // The surname standing alone as its own token.
+			array( 'pwu',       'Wu',   'Peter', '' ),      // Initial + surname, the import shape.
+			array( 'Wu2',       'Wu',   'Peter', '' ),      // WordPress de-duplication suffix.
+			array( 'Wendy Wu2', 'Wu',   'Wendy', 'Wendy' ),
+
+			// The same two shapes with the counterpart standing on its own, so the tie-break keeps
+			// the token and only the shape tests can condemn it: the initial welded to a two-letter
+			// surname, and a de-duplication suffix. Without these rows those tests would be proved
+			// by nothing - the rows above reach the same answer through the edge rule instead.
+			array( 'Peter pwu', 'Wu', 'Peter', 'Peter' ),
+			array( 'Peter Wu2', 'Wu', 'Peter', 'Peter' ),
+
+			// The honorific/particle shape, which no allowlist should be needed to catch: the
+			// remainder has letters (so it is not decoration), is longer than one character (so it
+			// is not the counterpart's initial) and is not the counterpart itself. What condemns it
+			// is that the counterpart is nowhere in the name as its own token, so this token is all
+			// the name there is and the surname is welded to its end.
+			array( 'MrLin',  'Lin', 'Peter', '' ),
+			array( 'DrWu',   'Wu',  'Anna',  '' ),
+			array( 'MsNg',   'Ng',  'Kate',  '' ),
+			array( 'theLin', 'Lin', 'Peter', '' ), // Three-character remainder - never reached by a length cap of two.
+		);
+
+		foreach ( $redact as $case ) {
+			list( $display_name, $hidden, $visible, $expected ) = $case;
+			$actual = bb_core_strip_hidden_name_part( $display_name, $hidden, $visible );
+
+			$this->assertSame(
+				$expected,
+				$actual,
+				"unexpected result for '{$display_name}' with '{$hidden}' hidden"
+			);
+			// Only meaningful where the surviving name does not legitimately contain the fragment:
+			// "Cann" keeps the letters of "Ann" by definition, and the assertion above already pins
+			// that row to exactly the right string.
+			if ( false === stripos( $expected, $hidden ) ) {
+				$this->assertStringNotContainsStringIgnoringCase(
+					$hidden,
+					$actual,
+					"short hidden part survived in '{$display_name}'"
+				);
+			}
+		}
+
+		// The negligible remainder is still counted in CHARACTERS, not bytes: a fullwidth letter is
+		// one character and three bytes, so a byte-length regression would keep this token whole.
+		// The counterpart stands on its own here deliberately - that is the branch where remainder
+		// LENGTH is what decides. Without a separate "Peter" the edge rule would answer first and
+		// this would pass whether the count was characters or bytes.
+		$this->assertSame( 'Peter', bb_core_strip_hidden_name_part( "Peter Zebrastripe\xEF\xBD\x93", 'Zebrastripe', 'Peter' ) );
+	}
+
+	/**
+	 * The invitation message on the PUBLIC registration page must name the inviter as a stranger
+	 * sees them.
+	 *
+	 * bp_invites_member_invite_register_screen_message() runs on bp_before_register_page and
+	 * prints "You've been invited to join the site by: X" to whoever opens the invitation link.
+	 * The audience is by definition not a member yet, but the name was resolved with the default
+	 * viewer - the current request - so an admin previewing the page, or the inviter opening their
+	 * own link, put name parts the site hides from everyone else into a page served to a stranger.
+	 *
+	 * bp_get_member_invites_wildcard_replace() in the same file already pins the invitation EMAIL
+	 * to bb_core_guest_viewer_id() for exactly this reason; this asserts the register screen gives
+	 * the same answer. The positive assertion is the point of the test as much as the negative one:
+	 * without it the test would pass just as well if the message never rendered at all.
+	 *
+	 * @group bb_name_privacy
+	 */
+	public function test_register_screen_invite_message_names_the_inviter_as_a_guest_sees_them() {
+		$invites_was_active = bp_is_active( 'invites' );
+		buddypress()->active_components['invites'] = '1';
+
+		if ( ! post_type_exists( bp_get_invite_post_type() ) ) {
+			register_post_type( bp_get_invite_post_type(), array( 'public' => false ) );
+		}
+
+		$inviter = self::factory()->user->create();
+		wp_update_user(
+			array(
+				'ID'           => $inviter,
+				'first_name'   => 'Peter',
+				'last_name'    => 'Zebrastripe',
+				'display_name' => 'Peter Zebrastripe',
+			)
+		);
+		$nickname = 'peternick' . $inviter;
+		update_user_meta( $inviter, 'nickname', $nickname );
+		xprofile_set_field_data( bp_xprofile_nickname_field_id(), $inviter, $nickname );
+		xprofile_set_field_data( bp_xprofile_firstname_field_id(), $inviter, 'Peter' );
+		xprofile_set_field_data( bp_xprofile_lastname_field_id(), $inviter, 'Zebrastripe' );
+		xprofile_set_field_visibility_level( bp_xprofile_lastname_field_id(), $inviter, 'adminsonly' );
+
+		$invitee_email = 'invitee' . $inviter . '@example.com';
+		$invite_id     = self::factory()->post->create(
+			array(
+				'post_type'   => bp_get_invite_post_type(),
+				'post_status' => 'publish',
+				'post_author' => $inviter,
+				'post_title'  => 'Invite',
+			)
+		);
+		update_post_meta( $invite_id, '_bp_invitee_email', $invitee_email );
+
+		// The viewer who can see the most: an administrator, which is who previews a registration
+		// page. The inviter's own session is the other half of the same problem. Created before the
+		// request globals below are faked so nothing in user creation runs against them.
+		$admin = self::factory()->user->create( array( 'role' => 'administrator' ) );
+
+		// bp_invites_member_invite_invitation_page() is the screen's own gate and is filterable, so
+		// the test does not have to fake a register-page request to reach the message.
+		$on_invite_page = '__return_true';
+		add_filter( 'invite_anyone_is_accept_invitation_page', $on_invite_page );
+
+		$get_backup          = $_GET;
+		$_GET['bp-invites']  = 'accept-member-invitation';
+		$_GET['email']       = $invitee_email;
+		$signup_backup       = isset( buddypress()->signup ) ? buddypress()->signup : null;
+		buddypress()->signup = new stdClass();
+		buddypress()->signup->step = 'request-details';
+
+		try {
+			foreach ( array( 'admin' => $admin, 'inviter' => $inviter ) as $label => $viewer ) {
+				$GLOBALS['bb_default_display_avatar'] = true;
+				$this->set_current_user( $viewer );
+
+				ob_start();
+				bp_invites_member_invite_register_screen_message();
+				$output = ob_get_clean();
+				wp_reset_postdata();
+
+				$this->assertStringContainsString(
+					'Peter',
+					$output,
+					"the invitation message did not render for the {$label} viewer"
+				);
+				$this->assertStringNotContainsStringIgnoringCase(
+					'zebrastripe',
+					$output,
+					"the inviter's hidden surname was printed on the public register page for the {$label} viewer"
+				);
+			}
+		} finally {
+			$GLOBALS['bb_default_display_avatar'] = false;
+			remove_filter( 'invite_anyone_is_accept_invitation_page', $on_invite_page );
+			$_GET = $get_backup;
+
+			if ( null === $signup_backup ) {
+				unset( buddypress()->signup );
+			} else {
+				buddypress()->signup = $signup_backup;
+			}
+
+			if ( ! $invites_was_active ) {
+				unset( buddypress()->active_components['invites'] );
+			}
 		}
 	}
 }

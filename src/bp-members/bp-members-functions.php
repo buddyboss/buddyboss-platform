@@ -695,6 +695,13 @@ function bp_core_get_user_displayname( $user_id_or_username, $current_user_id = 
 		return apply_filters( 'bp_core_get_user_displayname', trim( (string) $full_name ), $user_id, $current_user_id );
 	}
 
+	// From here on this resolution reads the STORED `display_name` column, through
+	// get_the_author_meta(). That read fires `get_the_author_display_name`, which is where
+	// bb_core_filter_the_author_display_name() applies this same redaction to WordPress core's own
+	// author output - so without this marker the column would come back already redacted, for the
+	// current REQUEST's viewer rather than the $current_user_id this call was asked about.
+	bb_core_is_resolving_user_displayname( true );
+
 	if ( empty( $list_fields ) ) {
 		$full_name = get_the_author_meta( 'display_name', $user_id );
 		if ( empty( $full_name ) ) {
@@ -850,6 +857,8 @@ function bp_core_get_user_displayname( $user_id_or_username, $current_user_id = 
 		$full_name = __( 'Deleted User', 'buddyboss' );
 	}
 
+	bb_core_is_resolving_user_displayname( false );
+
 	/**
 	 * Filters the display name for the passed in user.
 	 *
@@ -864,6 +873,39 @@ add_filter( 'bp_core_get_user_displayname', 'wp_filter_kses' );
 add_filter( 'bp_core_get_user_displayname', 'strip_tags', 1 );
 add_filter( 'bp_core_get_user_displayname', 'trim' );
 add_filter( 'bp_core_get_user_displayname', 'stripslashes' );
+
+/**
+ * Whether a member display-name resolution is currently reading the stored `display_name` column.
+ *
+ * bp_core_get_user_displayname() takes the stored column as its INPUT and strips the name parts the
+ * viewer may not see out of it. It reads that column with get_the_author_meta(), which is also the
+ * hook BuddyBoss uses to apply the same redaction to WordPress core's author output
+ * (bb_core_filter_the_author_display_name()). Left unmarked the two chase each other: the
+ * resolution asks core for the column, core hands back a name already redacted for the current
+ * request's viewer - not for the `$current_user_id` the resolution was asked about - and every
+ * resolution costs two.
+ *
+ * While this reports true, the WordPress-core author filters stand down and leave the stored value
+ * alone. It is a re-entrancy marker, not a switch: nothing outside those filters should consult it,
+ * and nothing should leave it raised.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param bool|null $resolving Optional. True to mark a resolution as started, false to mark it as
+ *                             finished, null (default) to only read the current state.
+ * @return bool Whether a resolution is in progress.
+ */
+function bb_core_is_resolving_user_displayname( $resolving = null ) {
+	static $depth = 0;
+
+	if ( true === $resolving ) {
+		++$depth;
+	} elseif ( false === $resolving ) {
+		$depth = max( 0, $depth - 1 );
+	}
+
+	return $depth > 0;
+}
 add_filter( 'bp_core_get_user_displayname', 'esc_html' );
 add_filter( 'bp_core_get_user_displayname', 'wp_specialchars_decode', 16 );
 

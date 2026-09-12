@@ -187,6 +187,167 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 	}
 
 	/**
+	 * The site-wide Display Name Format hide, which is the configuration this ticket is about.
+	 *
+	 * Under "First Name" the surname is not part of anybody's visible name, whatever the Last Name
+	 * field's visibility says, and bp_core_get_user_displayname() redacts it accordingly. Before
+	 * this, none of the search filter's candidate sources looked at the format at all, so a member
+	 * whose only match was that surname stayed in the results and confirmed it.
+	 *
+	 * The member here has a PUBLIC Last Name field and no visibility row of any kind, so sources
+	 * (1) and (2) cannot see them - only the format source can. The same search under the "First
+	 * Name & Last Name" format is the negative control: nothing is hidden there, so the member must
+	 * still be found and the filter must not have become a blanket surname block.
+	 *
+	 * @group bb_search_visibility_display_format
+	 */
+	public function test_display_name_format_hide_removes_a_surname_only_match() {
+		$user_id = $this->create_member_with_hidden_surname( 'public', 'Ashdownly', 'Rosalind' );
+		$pattern = '%Ashdownly%';
+
+		bp_update_option( 'bp-display-name-format', 'first_last_name' );
+		$this->set_current_user( 0 );
+		$this->assertSame(
+			array( $user_id ),
+			bb_xprofile_filter_user_search_matches( array( $user_id ), array( $pattern ), 0 ),
+			'Nothing is hidden under the First Name & Last Name format, so the match must survive.'
+		);
+
+		bp_update_option( 'bp-display-name-format', 'first_name' );
+		$this->assertSame(
+			array(),
+			bb_xprofile_filter_user_search_matches( array( $user_id ), array( $pattern ), 0 ),
+			'A guest confirmed a surname the First Name format hides from everyone.'
+		);
+
+		// The name part the format DOES show still matches, so the member stays findable.
+		$this->assertSame(
+			array( $user_id ),
+			bb_xprofile_filter_user_search_matches( array( $user_id ), array( '%Rosalind%' ), 0 ),
+			'The visible first name stopped matching under the format hide.'
+		);
+	}
+
+	/**
+	 * The format hide has to reach a surname that lives ONLY in the stored `display_name` column.
+	 *
+	 * That drift - an import, the wp-admin "Display name publicly as" dropdown, a third-party write
+	 * - is the shape this whole redaction exists for, and it is invisible to a candidate source
+	 * bounded by the Last Name field's stored value, because that field is empty.
+	 *
+	 * @group bb_search_visibility_display_format
+	 */
+	public function test_display_name_format_hide_reaches_a_drifted_display_name() {
+		global $wpdb;
+
+		$user_id = self::factory()->user->create( array( 'nickname' => 'driftnick' ) );
+		xprofile_set_field_data( bp_xprofile_firstname_field_id(), $user_id, 'Dorothea' );
+		xprofile_set_field_data( bp_xprofile_lastname_field_id(), $user_id, '' );
+
+		$wpdb->update( $wpdb->users, array( 'display_name' => 'Dorothea Quillmere' ), array( 'ID' => $user_id ) );
+		clean_user_cache( $user_id );
+
+		$this->assertSame(
+			'',
+			(string) xprofile_get_field_data( bp_xprofile_lastname_field_id(), $user_id ),
+			'Fixture: the surname must exist only in the stored column.'
+		);
+
+		bp_update_option( 'bp-display-name-format', 'first_name' );
+		$this->set_current_user( 0 );
+
+		$this->assertSame( 'Dorothea', bp_core_get_user_displayname( $user_id, 0 ), 'Fixture: the rendered name is redacted.' );
+		$this->assertSame(
+			array(),
+			bb_xprofile_filter_user_search_matches( array( $user_id ), array( '%Quillmere%' ), 0 ),
+			'A guest confirmed a surname that is redacted everywhere it is rendered.'
+		);
+	}
+
+	/**
+	 * A moderator may read every name, so the format source must not filter their search either -
+	 * the function returns before any candidate is built for them.
+	 *
+	 * @group bb_search_visibility_display_format
+	 */
+	public function test_display_name_format_hide_does_not_filter_a_moderator() {
+		$user_id = $this->create_member_with_hidden_surname( 'public', 'Fenwicker', 'Marguerite' );
+		$admin   = self::factory()->user->create( array( 'role' => 'administrator' ) );
+
+		bp_update_option( 'bp-display-name-format', 'first_name' );
+
+		$this->assertSame(
+			array( $user_id ),
+			bb_xprofile_filter_user_search_matches( array( $user_id ), array( '%Fenwicker%' ), $admin )
+		);
+	}
+
+	/**
+	 * The site-wide search engine (Bp_Search_Members) builds its own SQL against wp_users and never
+	 * runs BP_User_Query, so it used to answer a surname question the member directory refuses. The
+	 * wp_users leg must now exclude the same members.
+	 *
+	 * @group bb_search_visibility_display_format
+	 */
+	public function test_site_search_members_sql_excludes_a_hidden_display_name_match() {
+		// The harness does not boot the Search component, and its class autoloader require()s any
+		// bp-* class file it is asked for whether the component was booted or not - so probing for
+		// Bp_Search_Members with autoloading on is a fatal, because its base class is defined by an
+		// include the component never ran. Load the base class first, then the subclass.
+		$search_dir = buddypress()->plugin_dir . 'bp-search/';
+
+		foreach ( array( 'bp-search-functions.php', 'bp-search-settings.php' ) as $search_file ) {
+			if ( file_exists( $search_dir . $search_file ) ) {
+				require_once $search_dir . $search_file;
+			}
+		}
+
+		if ( ! class_exists( 'Bp_Search_Type', false ) && file_exists( $search_dir . 'classes/class-bp-search-types.php' ) ) {
+			require_once $search_dir . 'classes/class-bp-search-types.php';
+		}
+
+		if ( ! class_exists( 'Bp_Search_Type', false ) ) {
+			$this->markTestSkipped( 'The Search component is not available in this configuration.' );
+		}
+
+		if ( ! class_exists( 'Bp_Search_Members', false ) && file_exists( $search_dir . 'classes/class-bp-search-members.php' ) ) {
+			require_once $search_dir . 'classes/class-bp-search-members.php';
+		}
+
+		if ( ! class_exists( 'Bp_Search_Members', false ) || ! function_exists( 'bp_get_search_user_fields' ) || ! function_exists( 'bp_is_search_user_field_enable' ) ) {
+			$this->markTestSkipped( 'The Search component is not available in this configuration.' );
+		}
+
+		$user_id = $this->create_member_with_hidden_surname( 'adminsonly', 'Thistlewood', 'Genevieve' );
+		bp_update_user_last_activity( $user_id, bp_core_current_time() );
+
+		// The Display Name search field is what the site owner switches on in Search settings; the
+		// harness has no settings saved, so turn it on for this assertion and put it back after.
+		$field_option = 'bp_search_user_field_display_name';
+		$field_backup = get_option( $field_option );
+		update_option( $field_option, 1 );
+
+		$this->set_current_user( 0 );
+
+		try {
+			$sql = Bp_Search_Members::instance()->sql( 'Thistlewood' );
+		} finally {
+			if ( false === $field_backup ) {
+				delete_option( $field_option );
+			} else {
+				update_option( $field_option, $field_backup );
+			}
+		}
+
+		$this->assertStringContainsString( 'display_name LIKE', $sql, 'Fixture: the display_name comparison must be part of this query.' );
+		$this->assertStringContainsString(
+			'ID NOT IN ( ' . $user_id . ' )',
+			$sql,
+			'The wp_users leg still matches a member on a surname the viewer may not see.'
+		);
+	}
+
+	/**
 	 * The profile-field leg, tested at the function contract rather than through the whole query
 	 * pipeline: a member whose every matching field is hidden from the viewer is dropped, and one
 	 * who also matched a visible field is kept.
