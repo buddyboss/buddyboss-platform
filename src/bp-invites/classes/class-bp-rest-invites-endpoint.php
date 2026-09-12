@@ -296,6 +296,14 @@ class BP_REST_Invites_Endpoint extends WP_REST_Controller {
 			// check if it has enough recipients to use batch emails.
 			$min_count_recipients = function_exists( 'bb_email_queue_has_min_count' ) && bb_email_queue_has_min_count( $invite_correct_array );
 
+			// The invitation is composed in the inviter's own session but is delivered to a plain
+			// email address with no member behind it. Resolved against the request viewer the
+			// inviter sees their own profile in full, so the email would carry name parts the site
+			// hides from everyone else. bb_core_guest_viewer_id() pins the resolution to the public,
+			// logged-out view; guarded because this plugin can run against a Platform that predates
+			// the helper, where the old behaviour is kept rather than fatalling.
+			$invite_viewer_id = function_exists( 'bb_core_guest_viewer_id' ) ? bb_core_guest_viewer_id() : 0;
+
 			foreach ( $invite_correct_array as $key => $value ) {
 
 				$_POST = array();
@@ -304,7 +312,7 @@ class BP_REST_Invites_Endpoint extends WP_REST_Controller {
 				$name           = sanitize_text_field( wp_unslash( $value['name'] ) );
 				$member_type    = $value['member_type'];
 				$query_string[] = $email;
-				$inviter_name   = bp_core_get_user_displayname( bp_loggedin_user_id() );
+				$inviter_name   = bp_core_get_user_displayname( bp_loggedin_user_id(), $invite_viewer_id );
 
 				if ( true === bp_disable_invite_member_email_subject() ) {
 					$subject = $request->get_param( 'email_subject' );
@@ -334,7 +342,7 @@ class BP_REST_Invites_Endpoint extends WP_REST_Controller {
 
 ' . bp_get_member_invites_wildcard_replace( stripslashes( wp_strip_all_tags( bp_get_invites_member_invite_url() ) ), $email );
 
-				$inviter_name = bp_core_get_user_displayname( bp_loggedin_user_id() );
+				$inviter_name = bp_core_get_user_displayname( bp_loggedin_user_id(), $invite_viewer_id );
 				$site_name    = get_bloginfo( 'name' );
 				$inviter_url  = bp_loggedin_user_domain();
 

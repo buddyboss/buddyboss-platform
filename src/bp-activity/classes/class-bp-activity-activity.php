@@ -1795,6 +1795,9 @@ class BP_Activity_Activity {
 
 				$descendants = $wpdb->get_results( $sql );
 
+				// The legacy SELECT joins the raw xprofile name; resolve it for the current viewer.
+				$descendants = self::append_user_fullnames( $descendants );
+
 				// We use the mptt BETWEEN clause to limit returned
 				// descendants to the correct part of the tree.
 			} else {
@@ -2023,9 +2026,112 @@ class BP_Activity_Activity {
 			) {
 				wp_cache_set( $activity_id, $cache_value, 'bp_activity_comments' );
 			}
+		} else {
+			// Cache hit. The cached tree carries every name-bearing value resolved for the viewer
+			// who populated the cache, but those values depend on the current viewer (last-name
+			// visibility), so re-resolve them for this request instead of serving another
+			// viewer's names.
+			$comments = self::bb_refresh_comment_tree_viewer_fields( $comments );
 		}
 
 		return $comments;
+	}
+
+	/**
+	 * Re-resolve every viewer-dependent name value on a nested activity comment tree.
+	 *
+	 * The comment tree is cached per activity in the persistent, global `bp_activity_comments`
+	 * group with no viewer in the key, so one request's tree is served verbatim to the next
+	 * visitor — including a logged-out one. Three values on each node carry a member's name and
+	 * must therefore be rebuilt for the current viewer rather than served from the cache:
+	 *
+	 * - `user_fullname`, resolved by bp_core_get_user_displayname(), which redacts a name part
+	 *   the viewer may not see;
+	 * - `action`, the rendered sentence ("<a…>Name</a> posted a new activity comment") that the
+	 *   REST endpoint returns as `title`. get_activity_data() generates it through
+	 *   bp_activity_generate_action_string() -> bp_core_get_userlink() ->
+	 *   bp_core_get_user_displayname(), so it is resolved for whoever populated the cache;
+	 * - `display_name`, the raw wp_users column get_activity_data() copies onto each node. It is
+	 *   the same for every viewer, but it is refreshed here so a rename is not served stale — the
+	 *   cache is invalidated only when a comment is added, edited or deleted, never when a name
+	 *   or its visibility changes, which is also why this re-resolution belongs on every read.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array $comments Nested comment tree as returned by get_activity_comments().
+	 * @return array The same tree with its name values resolved for the current viewer.
+	 */
+	protected static function bb_refresh_comment_tree_viewer_fields( $comments ) {
+		if ( empty( $comments ) || ! is_array( $comments ) || ! bp_is_active( 'xprofile' ) ) {
+			return $comments;
+		}
+
+		$nodes = array();
+		self::bb_flatten_comment_tree( $comments, $nodes );
+
+		if ( empty( $nodes ) ) {
+			return $comments;
+		}
+
+		// Resolve the whole tree in one batch first. bp_core_get_user_displaynames() calls
+		// cache_users() and bb_core_prime_user_displayname_caches(), which fill the WP user,
+		// xprofile-data and visibility caches that the per-node action regeneration below reads
+		// back one member at a time — so rebuilding the action strings costs no extra queries.
+		$fullnames = (array) bp_core_get_user_displaynames( wp_list_pluck( $nodes, 'user_id' ) );
+
+		foreach ( $nodes as $node ) {
+			$user_id = isset( $node->user_id ) ? (int) $node->user_id : 0;
+
+			if ( $user_id && ! empty( $fullnames[ $user_id ] ) ) {
+				$node->user_fullname = $fullnames[ $user_id ];
+			}
+
+			if ( $user_id && isset( $node->display_name ) ) {
+				$user_data = get_userdata( $user_id );
+
+				// Only when the user still exists: get_activity_data() leaves the property alone
+				// for a deleted user, and the cache-hit path must not diverge from it.
+				if ( ! empty( $user_data ) ) {
+					$node->display_name = $user_data->display_name;
+				}
+			}
+
+			// Regenerate unconditionally, keeping the cached string only when no format callback
+			// is registered for the type (bp_activity_generate_action_string() returns false).
+			// This is what BP_Activity_Activity::get() already does to every top-level activity in
+			// the same response through generate_action_strings(), and unlike a "only when the
+			// stored action column was empty" rule it also disinfects trees written by an earlier
+			// version — the group is persistent and has no TTL, so a leaking entry would otherwise
+			// survive the upgrade until the activity's comments changed.
+			$generated_action = bp_activity_generate_action_string( $node );
+			if ( false !== $generated_action ) {
+				$node->action = $generated_action;
+			}
+		}
+
+		return $comments;
+	}
+
+	/**
+	 * Collect every comment object of a nested comment tree into a flat list.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array $comments Nested comment tree (objects with a `children` array).
+	 * @param array $nodes    Accumulator, passed by reference.
+	 */
+	private static function bb_flatten_comment_tree( $comments, &$nodes ) {
+		foreach ( (array) $comments as $comment ) {
+			if ( ! is_object( $comment ) ) {
+				continue;
+			}
+
+			$nodes[] = $comment;
+
+			if ( ! empty( $comment->children ) ) {
+				self::bb_flatten_comment_tree( $comment->children, $nodes );
+			}
+		}
 	}
 
 	/**

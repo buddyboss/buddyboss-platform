@@ -515,6 +515,13 @@ function bp_core_get_user_displaynames( $user_ids ) {
 	// Warm the WP users cache with a targeted bulk update.
 	cache_users( $user_ids );
 
+	// Warm the xprofile caches this loop is about to read. bp_core_get_user_displayname() resolves
+	// a name from the first/last/nickname field values and the per-user visibility rows; left cold
+	// each of those is an individual query per user, so a 50-member loop pays ~13 queries per row
+	// before a single name is rendered. Priming turns the whole batch into a handful of queries and
+	// changes no behaviour — the per-user calls below read the very caches filled here.
+	bb_core_prime_user_displayname_caches( $user_ids );
+
 	$retval = array();
 	foreach ( $user_ids as $user_id ) {
 		$retval[ $user_id ] = bp_core_get_user_displayname( $user_id );
@@ -524,13 +531,88 @@ function bp_core_get_user_displaynames( $user_ids ) {
 }
 
 /**
+ * Prime the caches that bp_core_get_user_displayname() reads, for a batch of users.
+ *
+ * Fills two caches, both of which the single-user resolution already consults, so this is purely a
+ * query-count optimisation with no effect on the value returned:
+ *
+ * - `bp_xprofile_data` for the First Name, Last Name and Nickname fields, via
+ *   BP_XProfile_ProfileData::get_value_byid(), which is the same primer xprofile_get_field_data()
+ *   goes through — one query per field for the whole batch instead of one per user per field.
+ * - the per-request visibility field-ids memo on BB_XProfile_Visibility, primed per distinct
+ *   hidden-level set. The level set is read from bp_xprofile_get_hidden_field_types_for_user() per
+ *   user rather than re-derived here, so a site that filters those levels still gets keys that
+ *   match what the loop will ask for; where it does not match, the getter simply falls back to its
+ *   own query and behaviour is unchanged.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $user_ids  User IDs whose display names are about to be resolved.
+ * @param int   $viewer_id Optional. Viewer the names will be resolved for. Defaults to the current
+ *                         viewer, which is what bp_core_get_user_displayname() will use.
+ */
+function bb_core_prime_user_displayname_caches( $user_ids, $viewer_id = 0 ) {
+	$user_ids = array_filter( array_map( 'intval', (array) $user_ids ) );
+
+	if ( empty( $user_ids ) || ! bp_is_active( 'xprofile' ) ) {
+		return;
+	}
+
+	if ( empty( $viewer_id ) ) {
+		$viewer_id = bb_core_get_viewer_user_id();
+	}
+
+	// Prime the name field values for the whole batch.
+	if ( class_exists( 'BP_XProfile_ProfileData' ) ) {
+		$name_field_ids = array_filter(
+			array(
+				(int) bp_xprofile_firstname_field_id(),
+				(int) bp_xprofile_lastname_field_id(),
+				(int) bp_xprofile_nickname_field_id(),
+			)
+		);
+
+		foreach ( array_unique( $name_field_ids ) as $field_id ) {
+			BP_XProfile_ProfileData::get_value_byid( $field_id, $user_ids );
+		}
+	}
+
+	// Prime the visibility lookup, grouped by the hidden-level set each user will be resolved with.
+	if ( ! class_exists( 'BB_XProfile_Visibility' ) ) {
+		return;
+	}
+
+	$by_levels = array();
+	foreach ( $user_ids as $user_id ) {
+		$levels = (array) bp_xprofile_get_hidden_field_types_for_user( $user_id, $viewer_id );
+
+		if ( empty( $levels ) ) {
+			// Self or a moderator: the getter returns before it queries.
+			continue;
+		}
+
+		sort( $levels );
+		$by_levels[ implode( ',', $levels ) ][] = $user_id;
+	}
+
+	foreach ( $by_levels as $levels => $grouped_ids ) {
+		BB_XProfile_Visibility::prime_field_ids_cache( $grouped_ids, explode( ',', $levels ) );
+	}
+}
+
+/**
  * Fetch the display name for a user.
  *
  * @since BuddyPress 1.0.1
  * @since BuddyBoss 2.5.90 Added the `$current_user_id` parameter.
  *
  * @param int|string|bool $user_id_or_username User ID or username.
- * @param int $current_user_id                 Optional. ID of the user viewing the profile.
+ * @param int             $current_user_id   Optional. ID of the user viewing the profile. Default
+ *                                             0, which resolves the viewer from the current request.
+ *                                             Pass bb_core_guest_viewer_id() to force the public,
+ *                                             logged-out view - required when the audience is
+ *                                             provably not a member (an invitation email sent to a
+ *                                             plain email address).
  * @return string|bool The display name for the user in question, or false if
  *                     user not found.
  */
@@ -550,28 +632,236 @@ function bp_core_get_user_displayname( $user_id_or_username, $current_user_id = 
 	}
 
 	if ( empty( $current_user_id ) ) {
-		$current_user_id = bp_loggedin_user_id();
+		// Not bp_loggedin_user_id() directly: in a REST request BuddyPress' logged-in global can
+		// still be 0 while WordPress has already resolved the user, which would serve an
+		// authenticated caller the guest-level redaction of someone else's name. See
+		// bb_core_get_viewer_user_id().
+		$current_user_id = bb_core_get_viewer_user_id();
 	}
 
 	$list_fields = bp_xprofile_get_hidden_fields_for_user( $user_id, $current_user_id );
-	if ( empty( $list_fields ) ) {
-		$full_name = get_the_author_meta( 'display_name', $user_id );
-		if ( empty( $full_name ) ) {
-			$full_name = get_the_author_meta( 'nickname', $user_id );
-		}
-	} else {
-		$last_name_field_id = bp_xprofile_lastname_field_id();
-		if ( in_array( $last_name_field_id, $list_fields ) && ! empty( xprofile_get_field_data( $last_name_field_id, $user_id ) ) ) {
-			$last_name = xprofile_get_field_data( $last_name_field_id, $user_id );
-			$full_name = str_replace( ' ' . $last_name, '', get_the_author_meta( 'display_name', $user_id ) );
-		} else {
-			$full_name = get_the_author_meta( 'display_name', $user_id );
-		}
+
+	// The site-wide Display Name Format can hide the last name from EVERYONE - "First Name" and
+	// "Nickname" formats, or the "Last Name" field disabled - independently of any per-field
+	// visibility level. That format-level hide never enters bp_xprofile_get_hidden_fields_for_user(),
+	// so a guest whose stored display_name has drifted to the full name (the format -> display_name
+	// resync is a manual repair tool, not automatic) would otherwise be shown the last name the site
+	// format is meant to suppress. The last name is not part of the "First Name" or "Nickname"
+	// display formats AT ALL - regardless of whether the Last Name field is enabled as a profile
+	// field - so under those formats a drifted display_name must be redacted for the guest path too.
+	// (Gating on bp_core_hide_display_name_field() was too narrow: that only reports the field being
+	// DISABLED, missing the common enabled-field case.) Logged-in viewers already get the format-aware
+	// name via xprofile_filter_get_user_display_name(); this keeps the guest path consistent.
+	$format_last_name_field_id = bp_xprofile_lastname_field_id();
+	$active_display_format     = function_exists( 'bp_core_display_name_format' ) ? bp_core_display_name_format() : 'first_last_name';
+	$format_hides_last_name    = in_array( $active_display_format, array( 'first_name', 'nickname' ), true );
+	if (
+		$format_last_name_field_id
+		&& $format_hides_last_name
+		&& ! in_array( $format_last_name_field_id, $list_fields )
+	) {
+		$list_fields[] = $format_last_name_field_id;
 	}
 
-	$user_data = get_userdata( $user_id );
-	if ( empty( $full_name ) && empty( $user_data ) ) {
-		$full_name = __( 'Deleted User', 'buddyboss' );
+	// bp_xprofile_lastname_field_id() returns 0 when its option was never written (it defaults to
+	// 0) or when a third-party filter says so, and the append above needs a field id to work with.
+	// Losing the id must not lose the format-level hide: the surname is not part of the "First
+	// Name" or "Nickname" formats at all, so with the id missing the answer still cannot be the
+	// stored display_name, which is exactly where a drifted full name lives. Neither format needs
+	// the last-name field to be resolved - read the format's own source instead.
+	if ( ! $format_last_name_field_id && $format_hides_last_name ) {
+		if ( 'nickname' === $active_display_format ) {
+			$full_name = get_the_author_meta( 'nickname', $user_id );
+		} else {
+			$first_name_field_id = function_exists( 'bp_xprofile_firstname_field_id' ) ? bp_xprofile_firstname_field_id() : 0;
+			$full_name           = '';
+
+			// Only when this viewer may actually see the first name; otherwise fall through to the
+			// nickname the same way the hidden-first-name branches below do.
+			// phpcs:ignore WordPress.PHP.StrictInArray.MissingTrueStrict -- field ids are strings from $wpdb, int from the getter.
+			if ( $first_name_field_id && ! in_array( $first_name_field_id, $list_fields ) ) {
+				$full_name = preg_replace( '/^[\s\p{Zs}]+|[\s\p{Zs}]+$/u', '', (string) xprofile_get_field_data( $first_name_field_id, $user_id ) );
+			}
+			if ( '' === (string) $full_name ) {
+				$full_name = get_the_author_meta( 'nickname', $user_id );
+			}
+		}
+
+		if ( '' === (string) $full_name ) {
+			$full_name = get_the_author_meta( 'user_nicename', $user_id );
+		}
+
+		/** This filter is documented in bp-members/bp-members-functions.php */
+		return apply_filters( 'bp_core_get_user_displayname', trim( (string) $full_name ), $user_id, $current_user_id );
+	}
+
+	// From here on this resolution reads the STORED `display_name` column, through
+	// get_the_author_meta(). That read fires `get_the_author_display_name`, which is where
+	// bb_core_filter_the_author_display_name() applies this same redaction to WordPress core's own
+	// author output - so without this marker the column would come back already redacted, for the
+	// current REQUEST's viewer rather than the $current_user_id this call was asked about.
+	bb_core_is_resolving_user_displayname( true );
+
+	// try/finally so the re-entrancy marker is always cleared: if any read below throws, an
+	// unbalanced marker would leave the WordPress-core author filters standing down for the
+	// rest of the request and fail OPEN on those surfaces.
+	try {
+		if ( empty( $list_fields ) ) {
+			$full_name = get_the_author_meta( 'display_name', $user_id );
+			if ( empty( $full_name ) ) {
+				$full_name = get_the_author_meta( 'nickname', $user_id );
+			}
+		} else {
+			$last_name_field_id = bp_xprofile_lastname_field_id();
+			// The last name is hidden from this viewer. The `! empty()` gate on the stored field
+			// value is intentionally NOT part of this condition: when the field is empty there is no
+			// surname to strip, but a stored display_name that has drifted to a full name would still
+			// leak the surname, so the empty case is resolved from the format fields in the
+			// '' === $last_name branch below rather than falling through to the raw display_name.
+			if ( in_array( $last_name_field_id, $list_fields ) ) { // phpcs:ignore WordPress.PHP.StrictInArray.MissingTrueStrict -- field ids are strings from $wpdb, int from the getter; a strict compare misses the match.
+				// Unicode-aware trim before the value reaches preg_quote(): a stored value with
+				// surrounding whitespace - including a non-ASCII space such as U+00A0 pasted from a
+				// word processor, which PHP's trim() does not remove - would otherwise build a
+				// pattern that cannot match the display name and silently leave the hidden last name
+				// in place. Mirrors the REST helper in buddyboss-platform-api's
+				// BP_REST_Members_Endpoint::get_visible_display_name().
+				$last_name    = preg_replace( '/^[\s\p{Zs}]+|[\s\p{Zs}]+$/u', '', (string) xprofile_get_field_data( $last_name_field_id, $user_id ) );
+				$display_name = get_the_author_meta( 'display_name', $user_id );
+
+				$format = function_exists( 'bp_core_display_name_format' ) ? bp_core_display_name_format() : 'first_last_name';
+
+				if ( 'nickname' === $format ) {
+					// Under the Nickname display format the visible name is the nickname, which carries
+					// its own visibility level; the Last Name field is not part of it. Read the
+					// nickname field directly instead of stripping the stored display_name, so (a) a
+					// display_name that has drifted to a full name (import, the wp-admin "Display name
+					// publicly as" dropdown, third-party writes) cannot leak the surname, and (b) a
+					// nickname that legitimately contains the surname as a word is not wrongly stripped.
+					$full_name = get_the_author_meta( 'nickname', $user_id );
+				} elseif ( '' === $last_name ) {
+					// The Last Name field is empty (unset, blank, or whitespace-only), so there is no
+					// stored surname to strip out of the display name. A display_name that has drifted to
+					// a full name - raw DB import (e.g. the ~70k forum-imported users here), the wp-admin
+					// "Display name publicly as" dropdown, or any third-party write - would otherwise be
+					// returned in full here, leaking the very surname the hide is meant to suppress.
+					// Resolve the visible name from the format's own fields instead, exactly as the
+					// logged-in path (xprofile_filter_get_user_display_name() via
+					// bp_xprofile_get_member_display_name()) already does, so a guest and a permitted
+					// member stay consistent: the first name (only when this viewer may see it - it is
+					// governed by the same hidden-field list), falling back to the nickname. The Nickname
+					// format is already handled by the branch above.
+					$full_name           = '';
+					$first_name_field_id = bp_xprofile_firstname_field_id();
+					if ( $first_name_field_id && ! in_array( $first_name_field_id, $list_fields ) ) {
+						$full_name = preg_replace( '/^[\s\p{Zs}]+|[\s\p{Zs}]+$/u', '', (string) xprofile_get_field_data( $first_name_field_id, $user_id ) );
+					}
+					if ( '' === $full_name ) {
+						$full_name = get_the_author_meta( 'nickname', $user_id );
+					}
+				} else {
+					// Remove the hidden last name from the stored display name. Shared helper - see
+					// bb_core_strip_hidden_name_part() for the drift shapes it covers (separated in either
+					// order, glued, punctuation-joined, Unicode-space-joined, casing-drifted). The first name
+					// is only offered as the counterpart when this viewer may see it, so a glued token is
+					// never rebuilt from a name they are denied.
+					$first_name_field_id = bp_xprofile_firstname_field_id();
+					$first_name          = $first_name_field_id
+						? preg_replace( '/^[\\s\\p{Zs}]+|[\\s\\p{Zs}]+$/u', '', (string) xprofile_get_field_data( $first_name_field_id, $user_id ) )
+						: '';
+
+					// phpcs:ignore WordPress.PHP.StrictInArray.MissingTrueStrict -- field ids are strings from $wpdb, int from the getter; a strict compare misses the match.
+					$first_name_visible = ( $first_name_field_id && '' !== $first_name && ! in_array( $first_name_field_id, $list_fields ) );
+
+					$full_name = bb_core_strip_hidden_name_part(
+						$display_name,
+						$last_name,
+						$first_name_visible ? $first_name : ''
+					);
+
+					// When the First Name is ALSO hidden from this viewer, stripping the surname leaves the
+					// first-name token standing ("Alex Quillfeather" -> "Alex"), which none of the surname
+					// matchers can see. Strip it in a second pass, so a viewer denied BOTH name fields is
+					// never shown either one.
+					if ( ! $first_name_visible && '' !== $first_name ) {
+						$full_name = bb_core_strip_hidden_name_part( $full_name, $first_name, '' );
+					}
+				}
+
+				// If nothing usable remains, fall back to the first name - but only when it is itself
+				// visible to this viewer (it is governed by the same hidden-field list as the last
+				// name; a site may hide it too via visibility or the
+				// bp_xprofile_get_hidden_fields_for_user filter). Otherwise use the nickname, so a
+				// viewer who may see neither name still gets a non-leaking label rather than a blank.
+				if ( '' === $full_name ) {
+					$first_name_field_id = bp_xprofile_firstname_field_id();
+					if ( $first_name_field_id && ! in_array( $first_name_field_id, $list_fields ) ) {
+						$full_name = preg_replace( '/^[\s\p{Zs}]+|[\s\p{Zs}]+$/u', '', (string) xprofile_get_field_data( $first_name_field_id, $user_id ) );
+					}
+					if ( '' === $full_name ) {
+						$full_name = get_the_author_meta( 'nickname', $user_id );
+					}
+				}
+			} else {
+				// The last name is not hidden from this viewer, but the FIRST name may be: its field can
+				// be restricted per user, or site-wide through the field's own default visibility (which
+				// bp_xprofile_get_fields_by_visibility_levels() applies to every member even when custom
+				// visibility is disabled). Returning the stored display_name here would hand a guest the
+				// full name while a permitted member - whose name IS resolved from the fields - gets less,
+				// so the viewer denied the most sees the most. Strip the hidden first name the same way
+				// the last name is stripped above, which also matches what
+				// xprofile_filter_get_user_display_name() already returns to logged-in viewers.
+				$first_name_field_id = bp_xprofile_firstname_field_id();
+				$first_name          = $first_name_field_id
+					? preg_replace( '/^[\s\p{Zs}]+|[\s\p{Zs}]+$/u', '', (string) xprofile_get_field_data( $first_name_field_id, $user_id ) )
+					: '';
+
+				$display_name = get_the_author_meta( 'display_name', $user_id );
+
+				// phpcs:ignore WordPress.PHP.StrictInArray.MissingTrueStrict -- field ids are strings from $wpdb, int from the getter; a strict compare misses the match.
+				if ( $first_name_field_id && '' !== $first_name && in_array( $first_name_field_id, $list_fields ) ) {
+					$last_name_value = preg_replace( '/^[\s\p{Zs}]+|[\s\p{Zs}]+$/u', '', (string) xprofile_get_field_data( $last_name_field_id, $user_id ) );
+
+					// phpcs:ignore WordPress.PHP.StrictInArray.MissingTrueStrict -- see above.
+					$last_name_visible = ( $last_name_field_id && '' !== $last_name_value && ! in_array( $last_name_field_id, $list_fields ) );
+
+					// Shared with the hidden-last-name path and with the REST members endpoint: handles
+					// the separated, glued, punctuation-joined and Unicode-space-joined shapes a stored
+					// display_name drifts into. The counterpart is only passed when this viewer may see
+					// it, so a glued token is never rebuilt from a name they are denied.
+					$full_name = bb_core_strip_hidden_name_part(
+						$display_name,
+						$first_name,
+						$last_name_visible ? $last_name_value : ''
+					);
+
+					// Nothing left that this viewer may see - prefer the last name they are allowed to
+					// see, then the nickname, rather than returning a blank or the raw column.
+					if ( '' === $full_name && $last_name_visible ) {
+						$full_name = $last_name_value;
+					}
+					if ( '' === $full_name ) {
+						$full_name = get_the_author_meta( 'nickname', $user_id );
+					}
+				} else {
+					$full_name = $display_name;
+				}
+			}
+		}
+
+		$user_data = get_userdata( $user_id );
+
+		// Redacting every part of a name can leave nothing behind - a member whose only stored name was
+		// the hidden one, with no nickname to fall back to. Never return a blank label: user_nicename is
+		// public and cannot carry a hidden name part.
+		if ( '' === trim( (string) $full_name ) && ! empty( $user_data ) ) {
+			$full_name = $user_data->user_nicename;
+		}
+
+		if ( empty( $full_name ) && empty( $user_data ) ) {
+			$full_name = __( 'Deleted User', 'buddyboss' );
+		}
+	} finally {
+		bb_core_is_resolving_user_displayname( false );
 	}
 
 	/**
@@ -588,6 +878,39 @@ add_filter( 'bp_core_get_user_displayname', 'wp_filter_kses' );
 add_filter( 'bp_core_get_user_displayname', 'strip_tags', 1 );
 add_filter( 'bp_core_get_user_displayname', 'trim' );
 add_filter( 'bp_core_get_user_displayname', 'stripslashes' );
+
+/**
+ * Whether a member display-name resolution is currently reading the stored `display_name` column.
+ *
+ * bp_core_get_user_displayname() takes the stored column as its INPUT and strips the name parts the
+ * viewer may not see out of it. It reads that column with get_the_author_meta(), which is also the
+ * hook BuddyBoss uses to apply the same redaction to WordPress core's author output
+ * (bb_core_filter_the_author_display_name()). Left unmarked the two chase each other: the
+ * resolution asks core for the column, core hands back a name already redacted for the current
+ * request's viewer - not for the `$current_user_id` the resolution was asked about - and every
+ * resolution costs two.
+ *
+ * While this reports true, the WordPress-core author filters stand down and leave the stored value
+ * alone. It is a re-entrancy marker, not a switch: nothing outside those filters should consult it,
+ * and nothing should leave it raised.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param bool|null $resolving Optional. True to mark a resolution as started, false to mark it as
+ *                             finished, null (default) to only read the current state.
+ * @return bool Whether a resolution is in progress.
+ */
+function bb_core_is_resolving_user_displayname( $resolving = null ) {
+	static $depth = 0;
+
+	if ( true === $resolving ) {
+		++$depth;
+	} elseif ( false === $resolving ) {
+		$depth = max( 0, $depth - 1 );
+	}
+
+	return $depth > 0;
+}
 add_filter( 'bp_core_get_user_displayname', 'esc_html' );
 add_filter( 'bp_core_get_user_displayname', 'wp_specialchars_decode', 16 );
 

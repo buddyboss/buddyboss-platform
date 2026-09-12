@@ -603,11 +603,12 @@ function bb_core_prime_mentions_results() {
 			)
 		);
 
-		if ( ! empty( $user->display_name ) && ! bp_disable_profile_sync() ) {
-			$result->name = $user->display_name;
-		} else {
-			$result->name = bp_core_get_user_displayname( $user->ID );
-		}
+		// Resolve the name for the current viewer so a last name hidden by profile-field
+		// visibility is not localized into the page for every logged-in user. The raw
+		// $user->display_name column is viewer-agnostic; the friends branch below already
+		// resolves it, and bp_disable_profile_sync() is effectively always false, so the raw
+		// branch previously ran on every request.
+		$result->name    = bp_core_get_user_displayname( $user->ID );
 		$result->user_id = $user->ID;
 
 		$members[] = $result;
@@ -640,11 +641,11 @@ function bb_core_prime_mentions_results() {
 				)
 			);
 
-			if ( ! empty( $user->display_name ) && ! bp_disable_profile_sync() ) {
-				$result->name = bp_core_get_user_displayname( $user->ID );
-			} else {
-				$result->name = bp_core_get_user_displayname( $user->ID );
-			}
+			// Always resolved through the viewer-aware helper: the raw display_name column can
+			// carry a name part this viewer is denied, and profile sync has no bearing on that.
+			// Both arms of the branch that used to stand here had become identical, which read as
+			// though sync still changed the answer.
+			$result->name    = bp_core_get_user_displayname( $user->ID );
 			$result->user_id = $user->ID;
 
 			$friends[] = $result;
@@ -1060,3 +1061,211 @@ function bb_admin_member_types_listing_orderby( $orderby, $query ) {
 
 	return "FIELD({$wpdb->posts}.post_status, 'private') DESC, {$wpdb->posts}.post_date ASC";
 }
+
+/**
+ * Name a member may be shown under on a WordPress-core author surface, when BuddyBoss redacts it.
+ *
+ * The name a member is shown under is resolved by bp_core_get_user_displayname(), which applies
+ * profile-field visibility and the site-wide Display Name Format. WordPress core does not go
+ * through it: several emitters read the raw `display_name` column straight off the user object, so
+ * a name part the community hides is published on surfaces BuddyBoss never rendered - the author
+ * archive title, its feed, the feed autodiscovery link and the `wp/v2/users` REST response
+ * (PROD-9896).
+ *
+ * This returns a replacement ONLY when BuddyBoss actually redacts something. When the resolved name
+ * equals the stored column - the normal case, and always the case for a moderator - it returns null
+ * and the caller leaves core's own output untouched.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int $user_id ID of the member whose name is about to be emitted.
+ * @return string|null The name to show instead, or null to leave the value alone.
+ */
+function bb_core_get_redacted_core_author_name( $user_id ) {
+	$user_id = (int) $user_id;
+
+	// A resolution already in flight is reading the stored column as its own input; standing in
+	// front of that read would feed it a redacted name resolved for the wrong viewer, and recurse.
+	// See bb_core_is_resolving_user_displayname().
+	if ( empty( $user_id ) || bb_core_is_resolving_user_displayname() ) {
+		return null;
+	}
+
+	// wp-admin screens are left alone. They are an authenticated, capability-gated context that
+	// renders names core's own way throughout, and user management needs the canonical column: a
+	// site on the "First Name" format would otherwise list a dozen identical "Peter" rows with no
+	// way to tell them apart. admin-ajax.php is NOT exempt - it serves front-end requests.
+	if ( is_admin() && ! wp_doing_ajax() ) {
+		return null;
+	}
+
+	/**
+	 * Filters whether BuddyBoss name visibility is applied to WordPress core author output.
+	 *
+	 * Covers the author archive title, the author feed, the feed autodiscovery link, `the_author`
+	 * and the `wp/v2/users` REST response. Return false to leave WordPress core emitting the raw
+	 * `display_name` column on those surfaces.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param bool $redact  Whether to apply the redaction. Default true.
+	 * @param int  $user_id ID of the member whose name is being emitted.
+	 */
+	if ( ! apply_filters( 'bb_core_redact_core_author_name', true, $user_id ) ) {
+		return null;
+	}
+
+	if ( ! function_exists( 'bp_core_get_user_displayname' ) ) {
+		return null;
+	}
+
+	$user_data = get_userdata( $user_id );
+
+	if ( empty( $user_data ) ) {
+		return null;
+	}
+
+	$raw_display_name = (string) $user_data->display_name;
+
+	if ( '' === $raw_display_name ) {
+		return null;
+	}
+
+	// bp_core_get_user_displayname() raises the marker itself for the branch that reads the stored
+	// column; raise it here too so the branches that return before that read are covered as well.
+	bb_core_is_resolving_user_displayname( true );
+	$resolved = bp_core_get_user_displayname( $user_id );
+	bb_core_is_resolving_user_displayname( false );
+
+	if ( ! is_string( $resolved ) || '' === $resolved || $resolved === $raw_display_name ) {
+		return null;
+	}
+
+	return $resolved;
+}
+
+/**
+ * Apply member name visibility to `get_the_author_meta( 'display_name' )`.
+ *
+ * Reaches WordPress core's author feed autodiscovery link, comment author output and every theme
+ * or plugin that asks core for an author's display name.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $display_name The stored display name.
+ * @param int    $user_id      ID of the author.
+ * @return string The name this viewer may see.
+ */
+function bb_core_filter_the_author_display_name( $display_name, $user_id ) {
+	$redacted = bb_core_get_redacted_core_author_name( $user_id );
+
+	return ( null === $redacted ) ? $display_name : $redacted;
+}
+add_filter( 'get_the_author_display_name', 'bb_core_filter_the_author_display_name', 10, 2 );
+
+/**
+ * Apply member name visibility to `get_the_author()`.
+ *
+ * Core reads $authordata->display_name directly here, so the value never passes through
+ * get_the_author_meta() and needs its own callback. Feeds the archive title prefix
+ * (get_the_archive_title()) and `the_author()` in themes.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string|null $display_name The stored display name, or null when there is no author.
+ * @return string|null The name this viewer may see.
+ */
+function bb_core_filter_the_author( $display_name ) {
+	if ( ! is_string( $display_name ) || '' === $display_name || empty( $GLOBALS['authordata']->ID ) ) {
+		return $display_name;
+	}
+
+	$redacted = bb_core_get_redacted_core_author_name( $GLOBALS['authordata']->ID );
+
+	return ( null === $redacted ) ? $display_name : $redacted;
+}
+add_filter( 'the_author', 'bb_core_filter_the_author' );
+
+/**
+ * Apply member name visibility to the author archive's document title.
+ *
+ * wp_get_document_title() reads get_queried_object()->display_name directly, with no filter of its
+ * own, so the raw column reaches both `<title>` on the author archive and `<title>` in that
+ * author's feed (get_wp_title_rss() calls wp_get_document_title()).
+ *
+ * Only the author archive is touched, and only the author's own raw name inside it, so a title a
+ * theme or SEO plugin has already rewritten keeps whatever else it contains.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $title_parts Parts of the document title.
+ * @return array The same parts with the author's hidden name part removed.
+ */
+function bb_core_filter_author_document_title_parts( $title_parts ) {
+	if ( empty( $title_parts['title'] ) || ! is_string( $title_parts['title'] ) || ! is_author() ) {
+		return $title_parts;
+	}
+
+	$author = get_queried_object();
+
+	if ( empty( $author->ID ) || empty( $author->display_name ) ) {
+		return $title_parts;
+	}
+
+	$redacted = bb_core_get_redacted_core_author_name( $author->ID );
+
+	if ( null === $redacted ) {
+		return $title_parts;
+	}
+
+	$title_parts['title'] = str_replace( $author->display_name, $redacted, $title_parts['title'] );
+
+	return $title_parts;
+}
+add_filter( 'document_title_parts', 'bb_core_filter_author_document_title_parts' );
+
+/**
+ * Apply member name visibility to the `wp/v2/users` REST response.
+ *
+ * WP_REST_Users_Controller copies the raw `display_name` column into the `name` field. The route is
+ * readable by anonymous callers for any user who has published content, so without this the
+ * community's own members endpoint redacts a name that WordPress' endpoint hands out in full.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param WP_REST_Response $response The response object.
+ * @param WP_User          $user     The user object used to create the response.
+ * @return WP_REST_Response The response, with `name` resolved for the requesting viewer.
+ */
+function bb_core_filter_rest_prepare_user( $response, $user ) {
+	if ( ! ( $response instanceof WP_REST_Response ) || empty( $user->ID ) ) {
+		return $response;
+	}
+
+	// REST is not is_admin(), so the wp-admin exemption in the resolver cannot see the user-picker
+	// and user-list requests the block editor and wp-admin screens make over this route. Gate them
+	// on the capability those screens require instead, for the same reason: user management needs
+	// the canonical column to tell two members with the same first name apart. Anonymous callers
+	// and ordinary members - the audience this ticket is about - never hold it.
+	if ( current_user_can( 'list_users' ) ) {
+		return $response;
+	}
+
+	$data = $response->get_data();
+
+	if ( ! is_array( $data ) || ! isset( $data['name'] ) ) {
+		return $response;
+	}
+
+	$redacted = bb_core_get_redacted_core_author_name( $user->ID );
+
+	if ( null === $redacted ) {
+		return $response;
+	}
+
+	$data['name'] = $redacted;
+	$response->set_data( $data );
+
+	return $response;
+}
+add_filter( 'rest_prepare_user', 'bb_core_filter_rest_prepare_user', 10, 2 );

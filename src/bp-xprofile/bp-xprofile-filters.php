@@ -831,11 +831,83 @@ function xprofile_filter_get_user_display_name( $full_name, $user_id, $current_u
 		$list_fields = bp_xprofile_get_hidden_fields_for_user( $user_id, $current_user_id );
 
 		if ( ! empty( $list_fields ) ) {
-			$last_name_field_id = bp_xprofile_lastname_field_id();
+			$last_name_field_id  = bp_xprofile_lastname_field_id();
+			$first_name_field_id = bp_xprofile_firstname_field_id();
 
-			if ( in_array( $last_name_field_id, $list_fields ) && ! empty( xprofile_get_field_data( $last_name_field_id, $user_id ) ) ) {
-				$last_name = xprofile_get_field_data( $last_name_field_id, $user_id );
-				$full_name = str_replace( ' ' . $last_name, '', $full_name );
+			// Both name parts are read up front because each is the other's counterpart: the helper
+			// needs to know which token the viewer IS allowed to see, or it removes tokens that
+			// merely begin or end with the hidden part. Values are Unicode-trimmed here for the same
+			// reason bp_core_get_user_displayname() trims them - an imported value padded with
+			// U+00A0 must still match.
+			$last_name  = $last_name_field_id
+				? preg_replace( '/^[\s\p{Zs}]+|[\s\p{Zs}]+$/u', '', (string) xprofile_get_field_data( $last_name_field_id, $user_id ) )
+				: '';
+			$first_name = $first_name_field_id
+				? preg_replace( '/^[\s\p{Zs}]+|[\s\p{Zs}]+$/u', '', (string) xprofile_get_field_data( $first_name_field_id, $user_id ) )
+				: '';
+
+			// Field ids are strings from $wpdb but ints from the getters, so these comparisons are
+			// deliberately loose - a strict in_array() misses the match.
+			// phpcs:disable WordPress.PHP.StrictInArray.MissingTrueStrict
+			$last_name_hidden  = ( $last_name_field_id && in_array( $last_name_field_id, $list_fields ) );
+			$first_name_hidden = ( $first_name_field_id && in_array( $first_name_field_id, $list_fields ) );
+			// phpcs:enable WordPress.PHP.StrictInArray.MissingTrueStrict
+
+			$last_name_visible  = ( $last_name_field_id && '' !== $last_name && ! $last_name_hidden );
+			$first_name_visible = ( $first_name_field_id && '' !== $first_name && ! $first_name_hidden );
+
+			if ( $last_name_hidden && '' !== $last_name ) {
+				// Delegate to the one implementation of this redaction, shared with
+				// bp_core_get_user_displayname(). Rolling a regex here is how this path fell behind
+				// the guest path twice: a bare str_replace needed a leading space and so did nothing
+				// when the rebuilt name WAS the surname, and the replacement built its pattern from
+				// an untrimmed field value, so a stored "Smith " (padded by an import) produced a
+				// pattern that could not match and the surname was served to a viewer denied it.
+				// The helper trims Unicode whitespace itself and fails closed on unusable input.
+				//
+				// The third argument is load-bearing and must stay: without it the helper drops any
+				// token that merely starts or ends with the surname, so a member called "Lisa Li"
+				// (surname "Li" hidden) lost the visible "Lisa" too and fell through to the nickname
+				// - a logged-in member seeing LESS than a guest. The counterpart is offered only when
+				// this viewer may actually see it, so a glued token is never rebuilt out of a name
+				// they are denied. Mirrors bp_core_get_user_displayname().
+				$full_name = bb_core_strip_hidden_name_part(
+					$full_name,
+					$last_name,
+					$first_name_visible ? $first_name : ''
+				);
+			}
+
+			// The First Name can also be hidden from this viewer (via the
+			// bp_xprofile_get_hidden_fields_for_user filter). $full_name here was rebuilt as a clean
+			// "First Last" from field data, so once the last name is stripped the first name is left
+			// standing - drop it too and fall back to the nickname, mirroring the $fn_hidden branch in
+			// bp_core_get_user_displayname(). Without this a logged-in viewer denied BOTH name fields
+			// would see the hidden first name (the guest path is already handled by the function body,
+			// which this filter would otherwise overwrite for authenticated viewers).
+			if ( $first_name_hidden ) {
+				if ( '' !== $first_name ) {
+					// Same shared helper, same counterpart rule - see the last-name call above.
+					$full_name = bb_core_strip_hidden_name_part(
+						$full_name,
+						$first_name,
+						$last_name_visible ? $last_name : ''
+					);
+				}
+				if ( '' === trim( (string) $full_name ) ) {
+					$full_name = get_the_author_meta( 'nickname', $user_id );
+				}
+			}
+
+			// Stripping a hidden name part can consume the whole name - a member whose rebuilt name
+			// was nothing but the hidden surname, for instance. Never return a blank label: fall back
+			// to the nickname, then to the public user_nicename, neither of which can carry a hidden
+			// name part.
+			if ( '' === trim( (string) $full_name ) ) {
+				$full_name = get_the_author_meta( 'nickname', $user_id );
+			}
+			if ( '' === trim( (string) $full_name ) ) {
+				$full_name = get_the_author_meta( 'user_nicename', $user_id );
 			}
 		}
 		$bb_default_display_avatar = false;

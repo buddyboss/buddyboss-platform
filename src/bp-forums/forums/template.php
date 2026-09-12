@@ -2155,14 +2155,14 @@ function bbp_forum_author_display_name( $forum_id = 0 ) {
  *
  * @return string Author of forum
  * @uses                  bbp_get_forum_author_id() To get the forum author id
- * @uses                  get_the_author_meta() To get the display name of the author
+ * @uses                  bp_core_get_user_displayname() To get the display name of the author as the current viewer may see it
  * @uses                  apply_filters() Calls 'bbp_get_forum_author' with the author
  *                        and forum id
  * @uses                  bbp_get_forum_id() To get the forum id
  */
 function bbp_get_forum_author_display_name( $forum_id = 0 ) {
 	$forum_id = bbp_get_forum_id( $forum_id );
-	$author   = get_the_author_meta( 'display_name', bbp_get_forum_author_id( $forum_id ) );
+	$author   = bp_core_get_user_displayname( bbp_get_forum_author_id( $forum_id ) );
 
 	return apply_filters( 'bbp_get_forum_author_display_name', $author, $forum_id );
 }

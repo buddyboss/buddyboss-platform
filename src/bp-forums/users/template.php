@@ -135,6 +135,10 @@ function bbp_displayed_user_field( $field = '', $filter = 'display' ) {
 	 * @see WP_User::__get() for more on how the value is retrieved
 	 * @see sanitize_user_field() for more on how the value is sanitized
 	 * @uses apply_filters() Calls 'bbp_get_displayed_user_field' with the value
+	 *
+	 * @since BuddyBoss [BBVERSION] `display_name` is resolved for the current viewer, so a
+	 *                              last name hidden by profile-field visibility is not returned.
+	 *
 	 * @return string|bool Value of the field if it exists, else false
 	 */
 function bbp_get_displayed_user_field( $field = '', $filter = 'display' ) {
@@ -153,6 +157,19 @@ function bbp_get_displayed_user_field( $field = '', $filter = 'display' ) {
 
 	// Put back the user filter property that was previously juggled above.
 	$user->filter = $old_filter;
+
+	// The stored display_name always holds the member's full name, so reading it off the
+	// WP_User object ignores the Last Name field's visibility level. Resolve it for the
+	// current viewer instead, so the bbPress profile screens (page title, avatar link
+	// title, sub-nav link titles - core templates and theme overrides alike) never print
+	// a last name the member has hidden from that viewer. The 'raw' filter keeps its
+	// documented meaning of "the unfiltered stored value" and is left untouched.
+	if ( 'display_name' === $field && 'raw' !== $filter && ! empty( $user->ID ) ) {
+		$visible_name = bp_core_get_user_displayname( $user->ID );
+		if ( ! empty( $visible_name ) ) {
+			$value = $visible_name;
+		}
+	}
 
 	// Return empty
 	return apply_filters( 'bbp_get_displayed_user_field', $value, $field, $filter );
@@ -395,8 +412,9 @@ function bbp_get_user_profile_edit_link( $user_id = 0 ) {
 		return false;
 	}
 
-	$user      = get_userdata( $user_id );
-	$edit_link = '<a href="' . esc_url( bbp_get_user_profile_url( $user_id ) ) . '">' . esc_html( $user->display_name ) . '</a>';
+	// Resolved for the current viewer: the raw display_name ignores the Last Name field's
+	// visibility level.
+	$edit_link = '<a href="' . esc_url( bbp_get_user_profile_url( $user_id ) ) . '">' . esc_html( bp_core_get_user_displayname( $user_id ) ) . '</a>';
 	return apply_filters( 'bbp_get_user_profile_edit_link', $edit_link, $user_id );
 }
 
@@ -1693,9 +1711,12 @@ function bbp_get_author_link( $args = '' ) {
 	// Neither a reply nor a topic, so could be a revision
 	if ( ! empty( $r['post_id'] ) ) {
 
+		// Author name as the current viewer may see it (respects last-name visibility).
+		$author_display_name = bp_core_get_user_displayname( $user_id );
+
 		// Generate title with the display name of the author
 		if ( empty( $r['link_title'] ) ) {
-			$r['link_title'] = sprintf( ! bbp_is_reply_anonymous( $r['post_id'] ) ? __( 'View %s\'s profile', 'buddyboss' ) : __( 'Visit %s\'s website', 'buddyboss' ), get_the_author_meta( 'display_name', $user_id ) );
+			$r['link_title'] = sprintf( ! bbp_is_reply_anonymous( $r['post_id'] ) ? __( 'View %s\'s profile', 'buddyboss' ) : __( 'Visit %s\'s website', 'buddyboss' ), $author_display_name );
 		}
 
 		// Assemble some link bits
@@ -1715,7 +1736,7 @@ function bbp_get_author_link( $args = '' ) {
 
 		// Get display name
 		if ( 'name' === $r['type'] || 'both' === $r['type'] ) {
-			$author_links[] = esc_html( get_the_author_meta( 'display_name', $user_id ) );
+			$author_links[] = esc_html( $author_display_name );
 		}
 
 		// Add links if not anonymous

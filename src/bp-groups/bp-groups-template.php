@@ -4941,7 +4941,7 @@ function bp_get_group_member_avatar( $args = '' ) {
 			'item_id' => $members_template->member->user_id,
 			'type'    => 'full',
 			'email'   => $members_template->member->user_email,
-			'alt'     => sprintf( __( 'Profile photo of %s', 'buddyboss' ), $members_template->member->display_name ),
+			'alt'     => sprintf( __( 'Profile photo of %s', 'buddyboss' ), bb_get_group_member_display_name() ),
 		)
 	);
 
@@ -4983,7 +4983,7 @@ function bp_get_group_member_avatar_thumb( $args = '' ) {
 			'item_id' => $members_template->member->user_id,
 			'type'    => 'thumb',
 			'email'   => $members_template->member->user_email,
-			'alt'     => sprintf( __( 'Profile photo of %s', 'buddyboss' ), $members_template->member->display_name ),
+			'alt'     => sprintf( __( 'Profile photo of %s', 'buddyboss' ), bb_get_group_member_display_name() ),
 		)
 	);
 
@@ -5027,7 +5027,7 @@ function bp_get_group_member_avatar_mini( $width = 30, $height = 30 ) {
 			'item_id' => $members_template->member->user_id,
 			'type'    => 'thumb',
 			'email'   => $members_template->member->user_email,
-			'alt'     => sprintf( __( 'Profile photo of %s', 'buddyboss' ), $members_template->member->display_name ),
+			'alt'     => sprintf( __( 'Profile photo of %s', 'buddyboss' ), bb_get_group_member_display_name() ),
 			'width'   => absint( $width ),
 			'height'  => absint( $height ),
 		)
@@ -5042,6 +5042,38 @@ function bp_get_group_member_avatar_mini( $width = 30, $height = 30 ) {
 	 * @param array  $r     Parsed args used for the avatar query.
 	 */
 	return apply_filters( 'bp_get_group_member_avatar_mini', bp_core_fetch_avatar( $r ), $r );
+}
+
+/**
+ * Get the display name of the current member in the group members loop, as the current viewer may see it.
+ *
+ * The group members loop does not populate a viewer-scoped `fullname`, so resolution goes through
+ * bp_core_get_user_displayname() (which honours last-name visibility for the current viewer). The
+ * `fullname` short-circuit is only honoured when some other query has already set it AND it is
+ * non-empty; it is NOT assumed to be viewer-scoped, so callers must not populate it with a raw
+ * WP display_name.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @global BP_Groups_Group_Members_Template $members_template
+ *
+ * @return string
+ */
+function bb_get_group_member_display_name() {
+	global $members_template;
+
+	if ( ! isset( $members_template->member ) ) {
+		return '';
+	}
+
+	// Always resolve through the canonical, viewer-scoped function. The loop's own `fullname` is
+	// not a viewer-scoped value by contract - depending on which query populated the loop it can be
+	// unset, or carry raw xprofile data that was never filtered for this viewer - and preferring it
+	// is how bp_get_member_name() came to leak a hidden surname on the members directory. One
+	// resolution per row is cheap: bp_core_get_user_displaynames() primes the caches it reads.
+	$name = bp_core_get_user_displayname( bp_get_group_member_id() );
+
+	return is_string( $name ) ? $name : '';
 }
 
 /**
@@ -5070,7 +5102,7 @@ function bp_get_group_member_name() {
 	 *
 	 * @param string $display_name Display name of the current user.
 	 */
-	return apply_filters( 'bp_get_group_member_name', $members_template->member->display_name );
+	return apply_filters( 'bp_get_group_member_name', bb_get_group_member_display_name() );
 }
 
 /**

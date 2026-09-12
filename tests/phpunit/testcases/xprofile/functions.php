@@ -1202,7 +1202,7 @@ Bar!';
 		$this->set_current_user( $u );
 
 		$bp                     = buddypress();
-		$displayed_user_backup  = $bp->displayed_user->id;
+		$displayed_user_backup  = isset( $bp->displayed_user->id ) ? $bp->displayed_user->id : 0;
 		$component_backup       = $bp->current_component;
 		$action_backup          = $bp->current_action;
 		$action_vars_backup     = $bp->action_variables;
@@ -1368,5 +1368,177 @@ Bar!';
 		bp_xprofile_update_field_meta( $f, 'allow_custom_visibility', $allow_custom_visibility );
 
 		return $f;
+	}
+
+	/**
+	 * buddypress()->displayed_user->fullname is seeded from the raw WP display_name; the
+	 * xprofile override must always re-resolve it for the current viewer (not only when
+	 * profile sync is disabled), otherwise a hidden last name leaks through every
+	 * bp_get_displayed_user_fullname() consumer — e.g. the member RSS <link> title.
+	 *
+	 * @group xprofile_override_user_fullnames
+	 * @group bp_get_displayed_user_fullname
+	 */
+	public function test_xprofile_override_user_fullnames_respects_viewer_visibility_with_sync_enabled() {
+		$bp                 = buddypress();
+		$displayed_backup   = $bp->displayed_user;
+		$loggedin_backup    = $bp->loggedin_user;
+		$format_backup      = bp_get_option( 'bp-display-name-format' );
+		$sync_backup        = bp_get_option( 'bp-disable-profile-sync' );
+		$xprofile_is_active = bp_is_active( 'xprofile' );
+
+		buddypress()->active_components['xprofile'] = '1';
+		bp_update_option( 'bp-display-name-format', 'first_last_name' );
+
+		// Profile sync on. Note this option is what an admin sets, but bp_disable_profile_sync()
+		// does not read it (it only runs its filter), so asserting on that function here would
+		// be a tautology - the point of this test is that the override no longer depends on it.
+		bp_update_option( 'bp-disable-profile-sync', 0 );
+
+		$u      = self::factory()->user->create();
+		$member = self::factory()->user->create();
+
+		// `profile_update` syncs first/last name into the xprofile fields.
+		wp_update_user(
+			array(
+				'ID'           => $u,
+				'first_name'   => 'Alex',
+				'last_name'    => 'Quillfeather',
+				'display_name' => 'Alex Quillfeather',
+			)
+		);
+		xprofile_set_field_visibility_level( bp_xprofile_lastname_field_id(), $u, 'loggedin' );
+
+		// Refresh the per-request name memo primed during user creation.
+		$GLOBALS['bb_default_display_avatar'] = true;
+		bp_core_get_user_displayname( $u, $u );
+
+		// Seed the globals exactly as BP_Members_Component::setup_globals() does (raw column).
+		$bp->displayed_user           = new stdClass();
+		$bp->displayed_user->id       = $u;
+		$bp->displayed_user->userdata = bp_core_get_core_userdata( $u );
+		$bp->displayed_user->fullname = $bp->displayed_user->userdata->display_name;
+		$bp->displayed_user->domain   = bp_core_get_user_domain( $u );
+		$this->assertSame( 'Alex Quillfeather', $bp->displayed_user->fullname );
+
+		// try/finally so a failing assertion cannot leave the BP globals, the display-name
+		// format or the xprofile activation flag mutated for every later test in this process.
+		try {
+			// Guest viewer.
+			$this->set_current_user( 0 );
+			xprofile_override_user_fullnames();
+			$this->assertSame( 'Alex', bp_get_displayed_user_fullname() );
+
+			if ( bp_is_active( 'activity' ) ) {
+				ob_start();
+				bp_members_activity_feed();
+				$rss_link = ob_get_clean();
+				$this->assertStringContainsString( 'rel="alternate"', $rss_link );
+				$this->assertStringNotContainsString( 'Quillfeather', $rss_link );
+				$this->assertStringContainsString( '| Alex |', $rss_link );
+			}
+
+			// Logged-in member viewer gets the full name.
+			$bp->displayed_user->fullname = $bp->displayed_user->userdata->display_name;
+			$this->set_current_user( $member );
+			xprofile_override_user_fullnames();
+			$this->assertSame( 'Alex Quillfeather', bp_get_displayed_user_fullname() );
+		} finally {
+			$GLOBALS['bb_default_display_avatar'] = false;
+			$bp->displayed_user = $displayed_backup;
+			$bp->loggedin_user  = $loggedin_backup;
+			bp_update_option( 'bp-display-name-format', $format_backup );
+			bp_update_option( 'bp-disable-profile-sync', $sync_backup );
+			if ( ! $xprofile_is_active ) {
+				unset( buddypress()->active_components['xprofile'] );
+			}
+		}
+	}
+
+	/**
+	 * The same redaction must hold with profile sync DISABLED.
+	 *
+	 * xprofile_override_user_fullnames() used to begin with
+	 * `if ( ! bp_disable_profile_sync() ) { return; }`, so with sync off it never ran and
+	 * $bp->displayed_user->fullname kept the raw wp_users.display_name - which is where the
+	 * drifted full name lives. The RSS <link rel="alternate"> title on a member page is built
+	 * from that global, which is how the surname reached page source (PROD-9896). The early
+	 * return is gone, so the option must now make no difference at all; the sibling test above
+	 * pins the sync-enabled half.
+	 *
+	 * @group bb_name_privacy
+	 */
+	public function test_xprofile_override_user_fullnames_respects_viewer_visibility_with_sync_disabled() {
+		$bp                 = buddypress();
+		$displayed_backup   = $bp->displayed_user;
+		$loggedin_backup    = $bp->loggedin_user;
+		$format_backup      = bp_get_option( 'bp-display-name-format' );
+		$sync_backup        = bp_get_option( 'bp-disable-profile-sync' );
+		$xprofile_is_active = bp_is_active( 'xprofile' );
+
+		buddypress()->active_components['xprofile'] = '1';
+		bp_update_option( 'bp-display-name-format', 'first_last_name' );
+
+		// The only difference from the sibling test: profile sync is off.
+		bp_update_option( 'bp-disable-profile-sync', 1 );
+
+		$u      = self::factory()->user->create();
+		$member = self::factory()->user->create();
+
+		wp_update_user(
+			array(
+				'ID'           => $u,
+				'first_name'   => 'Alex',
+				'last_name'    => 'Quillfeather',
+				'display_name' => 'Alex Quillfeather',
+			)
+		);
+		// With sync off, `profile_update` may not populate the xprofile fields - write them
+		// directly so the redaction has the field values it reads, which is exactly the state a
+		// sync-disabled site is in once a member has filled in their profile.
+		xprofile_set_field_data( bp_xprofile_firstname_field_id(), $u, 'Alex' );
+		xprofile_set_field_data( bp_xprofile_lastname_field_id(), $u, 'Quillfeather' );
+		xprofile_set_field_visibility_level( bp_xprofile_lastname_field_id(), $u, 'loggedin' );
+
+		$GLOBALS['bb_default_display_avatar'] = true;
+		bp_core_get_user_displayname( $u, $u );
+
+		$bp->displayed_user           = new stdClass();
+		$bp->displayed_user->id       = $u;
+		$bp->displayed_user->userdata = bp_core_get_core_userdata( $u );
+		$bp->displayed_user->fullname = $bp->displayed_user->userdata->display_name;
+		$bp->displayed_user->domain   = bp_core_get_user_domain( $u );
+		$this->assertSame( 'Alex Quillfeather', $bp->displayed_user->fullname );
+
+		try {
+			// Guest viewer - the surname must not survive, sync off or not.
+			$this->set_current_user( 0 );
+			xprofile_override_user_fullnames();
+			$this->assertSame( 'Alex', bp_get_displayed_user_fullname() );
+
+			if ( bp_is_active( 'activity' ) ) {
+				ob_start();
+				bp_members_activity_feed();
+				$rss_link = ob_get_clean();
+				$this->assertStringContainsString( 'rel="alternate"', $rss_link );
+				$this->assertStringNotContainsString( 'Quillfeather', $rss_link );
+				$this->assertStringContainsString( '| Alex |', $rss_link );
+			}
+
+			// A logged-in member is still allowed the full name.
+			$bp->displayed_user->fullname = $bp->displayed_user->userdata->display_name;
+			$this->set_current_user( $member );
+			xprofile_override_user_fullnames();
+			$this->assertSame( 'Alex Quillfeather', bp_get_displayed_user_fullname() );
+		} finally {
+			$GLOBALS['bb_default_display_avatar'] = false;
+			$bp->displayed_user = $displayed_backup;
+			$bp->loggedin_user  = $loggedin_backup;
+			bp_update_option( 'bp-display-name-format', $format_backup );
+			bp_update_option( 'bp-disable-profile-sync', $sync_backup );
+			if ( ! $xprofile_is_active ) {
+				unset( buddypress()->active_components['xprofile'] );
+			}
+		}
 	}
 }

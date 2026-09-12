@@ -5397,25 +5397,10 @@ function bb_xprofile_search_bp_user_query_search_first_last_nickname( $sql, BP_U
 
 	// Checked profile fields based on privacy settings of particular user while searching.
 	if ( ! empty( $matched_user_ids ) ) {
-		$matched_user_data = $wpdb->get_results( "SELECT * FROM {$bp->profile->table_name_data} WHERE " . implode( ' OR ', $where_condition ) );
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- clauses built above.
+		$matched_user_data = $wpdb->get_results( "SELECT user_id, field_id FROM {$bp->profile->table_name_data} WHERE " . implode( ' OR ', $where_condition ) );
 
-		if ( ! empty( $matched_user_data ) ) {
-			foreach ( $matched_user_data as $k => $user ) {
-				$field_visibility = xprofile_get_field_visibility_level( $user->field_id, $user->user_id );
-				if ( 'adminsonly' === $field_visibility && ! current_user_can( 'administrator' ) ) {
-					$key = array_search( $user->user_id, $matched_user_ids, true );
-					if ( false !== $key ) {
-						unset( $matched_user_ids[ $key ] );
-					}
-				}
-				if ( 'friends' === $field_visibility && ! current_user_can( 'administrator' ) && false === friends_check_friendship( intval( $user->user_id ), bp_loggedin_user_id() ) ) {
-					$key = array_search( $user->user_id, $matched_user_ids, true );
-					if ( false !== $key ) {
-						unset( $matched_user_ids[ $key ] );
-					}
-				}
-			}
-		}
+		$matched_user_ids = bb_xprofile_filter_field_search_matches( $matched_user_ids, $matched_user_data );
 	}
 
 	if ( ! empty( $matched_user_ids ) ) {
@@ -10980,4 +10965,344 @@ function bb_has_paid_product() {
 	 * @param bool $detected Whether a paid product was detected.
 	 */
 	return (bool) apply_filters( 'bb_has_paid_product', $detected );
+}
+
+/**
+ * Resolve the ID of the user on whose behalf the current request is being rendered.
+ *
+ * `bp_loggedin_user_id()` reads `buddypress()->loggedin_user->id`, which is populated by
+ * `bp_setup_current_user()` on WordPress' `set_current_user` action. On a normal page load that
+ * always tracks `get_current_user_id()`. In a REST request it can lag behind: the authentication
+ * handler may resolve the user before BuddyPress has registered that action, leaving the BP global
+ * at 0 while WordPress already knows who is calling. Anything that derives a *viewer* from
+ * `bp_loggedin_user_id()` then behaves as though the request were anonymous — for
+ * `bp_core_get_user_displayname()` that means an authenticated member is served the guest-level
+ * redaction of another member's name (PROD-9896).
+ *
+ * Prefer the BuddyPress global, because code that deliberately re-points the viewer does so by
+ * assigning to it (see `bp_messages_*` and the personal-data exporters), and fall back to the
+ * WordPress current user only when BP has no value at all. That makes this a no-op on every path
+ * where the two already agree.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return int User ID of the current viewer, or 0 when the request is anonymous.
+ */
+function bb_core_get_viewer_user_id() {
+	$viewer_id = function_exists( 'bp_loggedin_user_id' ) ? (int) bp_loggedin_user_id() : 0;
+
+	if ( empty( $viewer_id ) ) {
+		$viewer_id = (int) get_current_user_id();
+	}
+
+	/**
+	 * Filters the resolved viewer user ID.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param int $viewer_id User ID of the current viewer, 0 when anonymous.
+	 */
+	return (int) apply_filters( 'bb_core_get_viewer_user_id', $viewer_id );
+}
+
+/**
+ * Viewer ID that means "an anonymous visitor", explicitly.
+ *
+ * Throughout the profile-visibility API a viewer ID of `0` does NOT mean "logged out" - it means
+ * "resolve the viewer from the current request". `bp_core_get_user_displayname()` replaces it with
+ * `bb_core_get_viewer_user_id()`, and `bp_xprofile_get_hidden_fields_for_user()` replaces it with
+ * `bp_loggedin_user_id()`. There is therefore no way to say "render this name for someone who is
+ * not a member of this site" while a member happens to be logged in.
+ *
+ * That case is real: a member invitation is composed in the inviter's own session but is delivered
+ * to a plain email address with no member behind it. Resolved with the request's viewer, the
+ * inviter sees their own profile, so the email carries name parts the site hides from everyone
+ * else (PROD-9896). Passing this ID pins the resolution to the public, logged-out view.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return int Sentinel viewer ID representing an anonymous visitor.
+ */
+function bb_core_guest_viewer_id() {
+	return -1;
+}
+
+/**
+ * Evaluate a MySQL `LIKE` pattern against a string in PHP.
+ *
+ * Used where a row set produced by a `LIKE` comparison in SQL has to be re-tested against a value
+ * that only exists in PHP — for example a display name that has been redacted for the current
+ * viewer, which no column holds. Re-implementing the comparison by hand invites subtle drift from
+ * the SQL that produced the candidate rows, so this mirrors it directly: the caller passes the very
+ * pattern it gave to `$wpdb`.
+ *
+ * Supports the two wildcards WordPress' `$wpdb->esc_like()` / `bp_esc_like()` protect (`%` and `_`)
+ * and their backslash escaping, so a literal `%` typed by a member stays literal. Matching is
+ * case-insensitive and multibyte-aware, matching MySQL's default `utf8mb4_*_ci` collation.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $pattern LIKE pattern, exactly as passed to the SQL comparison.
+ * @param string $subject String to test.
+ * @return bool Whether $subject satisfies $pattern.
+ */
+function bb_core_sql_like_match( $pattern, $subject ) {
+	$pattern = (string) $pattern;
+	$subject = (string) $subject;
+
+	$regex  = '';
+	$length = strlen( $pattern );
+
+	for ( $i = 0; $i < $length; $i++ ) {
+		$char = $pattern[ $i ];
+
+		if ( '\\' === $char && $i + 1 < $length ) {
+			// An escaped wildcard is a literal character; consume both bytes.
+			++$i;
+			$regex .= preg_quote( $pattern[ $i ], '/' );
+			continue;
+		}
+
+		if ( '%' === $char ) {
+			$regex .= '.*';
+			continue;
+		}
+
+		if ( '_' === $char ) {
+			$regex .= '.';
+			continue;
+		}
+
+		$regex .= preg_quote( $char, '/' );
+	}
+
+	$matched = preg_match( '/^' . $regex . '$/iu', $subject );
+
+	// preg_match() returns false only on a malformed pattern or invalid UTF-8. Retry without the
+	// unicode modifier so a byte-wise comparison still answers, rather than silently reporting "no
+	// match" — for the privacy filter that calls this, "no match" is the destructive answer.
+	if ( false === $matched ) {
+		$matched = preg_match( '/^' . $regex . '$/i', $subject );
+	}
+
+	return ( 1 === $matched );
+}
+
+/**
+ * Remove a name part the viewer may not see from a stored display name.
+ *
+ * The `display_name` column always holds a member's full name, so redacting a name part means
+ * removing it from a string that may have drifted a long way from "First Last" — an import, the
+ * wp-admin "Display name publicly as" dropdown or a third-party write can leave it glued
+ * ("AlexQuillfeather"), joined by punctuation ("Alex-Quillfeather"), joined by a non-breaking
+ * space, reordered, or reduced to the hidden part alone. A plain `str_replace()` silently misses
+ * every one of those, and for a privacy redaction "no match" is the destructive answer.
+ *
+ * Two passes:
+ *
+ * 1. A whole-token strip, which handles the ordinary separated forms in either order and leaves a
+ *    middle name in place. Unicode spaces count as separators, so an NBSP-joined name tokenises
+ *    like an ASCII-spaced one.
+ * 2. A token pass over what remains, for the drifted shapes. A token that is the two name parts
+ *    glued together collapses to the part the viewer may see; a token in which the hidden part
+ *    survives whole or punctuation-bounded is dropped; a token that merely *contains* the hidden
+ *    part as a substring ("Lin" inside "Linda") is kept, so a short name does not over-redact.
+ *
+ * The caller decides what to do with an empty result — this returns '' rather than guessing a
+ * fallback, because the safe fallback differs by context (the counterpart name, the nickname, the
+ * user_nicename).
+ *
+ * Call it once per hidden part: to redact both name parts, pass the result of the first call as
+ * the `$display_name` of the second.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $display_name The stored display name to redact.
+ * @param string $hidden_part  The name part this viewer may not see. An empty value is a no-op.
+ * @param string $visible_part Optional. The counterpart name part this viewer MAY see, used to
+ *                             rebuild a token where the two are glued together. Pass '' when the
+ *                             counterpart is unknown or is itself hidden — a glued token is then
+ *                             dropped whole rather than partially disclosed.
+ * @return string The display name without the hidden part; '' when nothing visible remains.
+ */
+function bb_core_strip_hidden_name_part( $display_name, $hidden_part, $visible_part = '' ) {
+	$display_name = (string) $display_name;
+
+	// A null $hidden_part means the caller's own normalisation failed - preg_replace() returns null
+	// only when the subject is not valid UTF-8, which is exactly the legacy/imported data this
+	// redaction exists for. Fail closed: we cannot prove the display name is free of a value we
+	// cannot even read, and returning it unchanged would hand the viewer the raw column.
+	if ( null === $hidden_part ) {
+		return '';
+	}
+
+	$hidden_raw   = (string) $hidden_part;
+	$hidden_part  = preg_replace( '/^[\s\p{Zs}]+|[\s\p{Zs}]+$/u', '', $hidden_raw );
+	$visible_part = (string) preg_replace( '/^[\s\p{Zs}]+|[\s\p{Zs}]+$/u', '', (string) $visible_part );
+
+	// Same reasoning for a hidden value that is itself malformed: '' would mean "nothing to strip"
+	// and return the display name whole, so the two cases must not collapse into one.
+	if ( null === $hidden_part ) {
+		return '';
+	}
+
+	if ( '' === $hidden_part || '' === trim( $display_name ) ) {
+		return trim( $display_name );
+	}
+
+	// Pass 1 - whole-token strip. preg_replace() returns null only on malformed UTF-8, which we
+	// fail closed to '' so the caller applies its fallback rather than echoing the raw column.
+	$stripped = preg_replace( '/(^|[\s\p{Zs}])' . preg_quote( $hidden_part, '/' ) . '(?=[\s\p{Zs}]|$)/iu', ' ', $display_name );
+	$stripped = ( null === $stripped ) ? '' : trim( preg_replace( '/[\s\p{Zs}]+/u', ' ', $stripped ) );
+
+	if ( '' === $stripped ) {
+		return '';
+	}
+
+	// Pass 2 - token pass. Compare against whitespace-stripped forms so a multi-word name glued
+	// with no internal spaces ("VanDerBerg" for "Van Der Berg") still matches.
+	$hidden_nospace  = preg_replace( '/[\s\p{Zs}]+/u', '', $hidden_part );
+	$visible_nospace = preg_replace( '/[\s\p{Zs}]+/u', '', $visible_part );
+
+	// A token that is the two parts glued together, in either order.
+	$glue_pattern = ( '' !== $visible_nospace )
+		? '/^(?:' . preg_quote( $hidden_nospace . $visible_nospace, '/' ) . '|' . preg_quote( $visible_nospace . $hidden_nospace, '/' ) . ')$/iu'
+		: '';
+
+	// The counterpart is unknown, so the exact glue above cannot be built: match the hidden part
+	// glued to the start or end of a token and drop the token. This over-redacts a standalone name
+	// that merely begins or ends with the hidden value, which is privacy-safe, and is only reachable
+	// when the counterpart is genuinely absent or itself hidden.
+	$edge_glue = ( '' === $visible_nospace )
+		? '/^' . preg_quote( $hidden_nospace, '/' ) . '|' . preg_quote( $hidden_nospace, '/' ) . '$/iu'
+		: '';
+
+	// The hidden part surviving whole or as a punctuation-bounded piece of a token, without
+	// matching it as a bare substring of a longer word.
+	$bounded = '/(?<![\p{L}\p{N}])' . preg_quote( $hidden_nospace, '/' ) . '(?![\p{L}\p{N}])/iu';
+
+	$stripped_tokens = preg_split( '/[\s\p{Zs}]+/u', $stripped );
+
+	// Does the counterpart the viewer MAY see already stand on its own as a token? The length gate
+	// in the embedded-token rule below turns on this: if the visible name is already present in its
+	// own right, the name reads complete without the token under test, so that token can be treated
+	// as possibly unrelated. If it is NOT present, the token under test is all the name there is,
+	// and a hidden part inside it is far more likely to BE the hidden name with something welded on.
+	$visible_has_own_token = false;
+	if ( '' !== $visible_nospace ) {
+		foreach ( $stripped_tokens as $candidate ) {
+			if ( '' !== $candidate && 0 === strcasecmp( $candidate, $visible_nospace ) ) {
+				$visible_has_own_token = true;
+				break;
+			}
+		}
+	}
+
+	$tokens = array();
+	foreach ( $stripped_tokens as $token ) {
+		if ( '' === $token ) {
+			continue;
+		}
+
+		$token_nospace = preg_replace( '/[\s\p{Zs}]+/u', '', $token );
+
+		// The token IS the visible counterpart - keep it. Checked first so a short hidden part that
+		// happens to be a substring of the visible name ("Lin" inside "Linda") never drops it.
+		if ( '' !== $visible_nospace && 0 === strcasecmp( $token_nospace, $visible_nospace ) ) {
+			$tokens[] = $token;
+			continue;
+		}
+
+		if ( '' !== $glue_pattern && preg_match( $glue_pattern, $token ) ) {
+			$tokens[] = $visible_part;
+			continue;
+		}
+
+		if ( '' !== $edge_glue && preg_match( $edge_glue, $token ) ) {
+			continue;
+		}
+
+		// The hidden part is embedded in a longer token with letters or digits against it, so the
+		// punctuation-boundary test below cannot see it: "pzebrastripe" (initial + surname),
+		// "PeterZebrastripeJr", "Zebrastripe2" (de-duplication suffix), "MrPeterZebrastripe". Such a
+		// token exists BECAUSE of the hidden name, so it goes.
+		//
+		// A hidden part that is merely a coincidental fragment of a longer, unrelated word ("Ng" at
+		// the end of "Armstrong", "Ann" inside "Cann") must be KEPT - dropping it redacts a name
+		// part the viewer is entitled to, which is a defect in its own right and not a safe
+		// over-redaction. The shape tests below separate the two where the shape can; the tie-break
+		// after them handles the fragments that are too short for shape to decide.
+		$embedded = ( '' !== $hidden_nospace && false !== stripos( $token_nospace, $hidden_nospace ) );
+
+		if ( $embedded ) {
+			$remainder = preg_replace( '/' . preg_quote( $hidden_nospace, '/' ) . '/iu', '', $token_nospace );
+			$remainder = ( null === $remainder ) ? '' : $remainder;
+
+			$remainder_length = ( function_exists( 'mb_strlen' ) ? mb_strlen( $remainder, 'UTF-8' ) : strlen( $remainder ) );
+			$hidden_length    = ( function_exists( 'mb_strlen' ) ? mb_strlen( $hidden_nospace, 'UTF-8' ) : strlen( $hidden_nospace ) );
+
+			// Shapes that are a disclosure however short the hidden part is.
+			//
+			// 1. The token is the visible counterpart with the hidden part welded on
+			//    ("PeterZebrastripeJr", "MrPeterZebrastripe").
+			// 2. Nothing of a second NAME is left - only digits or punctuation, which is what a
+			//    de-duplication suffix leaves ("Zebrastripe2", "Zebrastripe_1"). No real name is
+			//    spelled without a letter, so this can never be a coincidence.
+			// 3. A single initial welded to the surname ("pzebrastripe", "Peter pwu"), the shape an
+			//    LDAP or forum import leaves. Pinned to the visible counterpart's OWN initial, so it
+			//    stays a statement about this member's name rather than "any single letter".
+			$remainder_is_visible    = ( '' !== $visible_nospace && false !== stripos( $remainder, $visible_nospace ) );
+			$remainder_is_decoration = ( '' !== $remainder && ! preg_match( '/\p{L}/u', $remainder ) );
+
+			$visible_initial = '';
+			if ( '' !== $visible_nospace ) {
+				$visible_initial = function_exists( 'mb_substr' ) ? mb_substr( $visible_nospace, 0, 1, 'UTF-8' ) : substr( $visible_nospace, 0, 1 );
+			}
+			$remainder_is_that_initial = ( 1 === $remainder_length && '' !== $visible_initial && 0 === strcasecmp( $remainder, $visible_initial ) );
+
+			$is_disclosure = ( $remainder_is_visible || $remainder_is_decoration || $remainder_is_that_initial );
+
+			// Everything else is a fragment too short to judge by shape: "Cann" is "Ann" plus a
+			// letter in exactly the way "Zebrastripes" is "Zebrastripe" plus a letter, and "MrLin"
+			// is "Lin" plus two. What breaks the tie is whether the name still reads complete
+			// WITHOUT this token.
+			if ( ! $is_disclosure ) {
+				if ( $visible_has_own_token ) {
+					// The visible counterpart is already standing on its own ("Bob" in "Bob Cann"),
+					// so this token is an additional name the member has and a short fragment inside
+					// it is plausibly coincidence - keep it. Short name parts collide with unrelated
+					// names constantly (Ann/Cann, Ann/Anne, Lin/Linda, Ross/Cross, Rice/Price,
+					// Anna/Hanna, and "Thelin" is itself a surname). From five characters up two
+					// DIFFERENT names no longer sit within two characters of each other in practice,
+					// so at that length the token goes again ("Peter Zebrastripes").
+					$is_disclosure = ( $remainder_length <= 2 && $hidden_length >= 5 );
+				} else {
+					// The visible counterpart is NOT standing on its own, so this token is the whole
+					// name on offer and there is nothing for it to be coincidental WITH. A hidden
+					// part welded to either end of it is a disclosure at any remainder length - an
+					// initial, an honorific or a particle in front ("pzebrastripe", "MrLin",
+					// "theLin"), a plural or suffix behind ("Zebrastripes") - which is the same
+					// treatment $edge_glue already gives when the counterpart is unknown. A fragment
+					// buried mid-token is left to the remainder length, so an unrelated single-token
+					// name keeps its letters ("strongman" for a member whose surname is "Ng").
+					$hidden_at_edge = (bool) preg_match(
+						'/^' . preg_quote( $hidden_nospace, '/' ) . '|' . preg_quote( $hidden_nospace, '/' ) . '$/iu',
+						$token_nospace
+					);
+
+					$is_disclosure = ( $hidden_at_edge || $remainder_length <= 2 );
+				}
+			}
+
+			if ( $is_disclosure ) {
+				continue;
+			}
+		}
+
+		if ( ! preg_match( $bounded, $token ) ) {
+			$tokens[] = $token;
+		}
+	}
+
+	return trim( implode( ' ', $tokens ) );
 }

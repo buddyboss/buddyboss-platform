@@ -872,8 +872,9 @@ function bp_activity_member_display_name() {
 function bp_get_activity_member_display_name() {
 	global $activities_template;
 
-	$retval = isset( $activities_template->activity->display_name )
-		? $activities_template->activity->display_name
+	// Resolve for the current viewer (respects last-name visibility); never the raw WP display_name.
+	$retval = isset( $activities_template->activity )
+		? bb_activity_get_item_user_displayname( $activities_template->activity )
 		: '';
 
 	/**
@@ -1096,8 +1097,8 @@ function bp_get_activity_avatar( $args = '' ) {
 	// to current_comment. Otherwise, just use activity.
 	$current_activity_item = isset( $activities_template->activity->current_comment ) ? $activities_template->activity->current_comment : $activities_template->activity;
 
-	// Activity user display name.
-	$dn_default = isset( $current_activity_item->display_name ) ? $current_activity_item->display_name : '';
+	// Activity user display name, as the current viewer may see it (respects last-name visibility).
+	$dn_default = bb_activity_get_item_user_displayname( $current_activity_item );
 
 	// Prepend some descriptive text to alt.
 	$alt_default = ! empty( $dn_default ) ? sprintf( __( 'Profile photo of %s', 'buddyboss' ), $dn_default ) : __( 'Profile photo', 'buddyboss' );
@@ -1302,7 +1303,7 @@ function bp_get_activity_secondary_avatar( $args = '' ) {
 			}
 
 			if ( empty( $alt ) ) {
-				$alt = sprintf( __( 'Profile photo of %s', 'buddyboss' ), $activities_template->activity->display_name );
+				$alt = sprintf( __( 'Profile photo of %s', 'buddyboss' ), bb_activity_get_item_user_displayname( $activities_template->activity ) );
 			}
 
 			break;
@@ -2288,7 +2289,7 @@ function bp_get_activity_comment_name() {
 
 		$name = apply_filters( 'bp_acomment_name', $activities_template->activity->current_comment->user_fullname, $activities_template->activity->current_comment );  // Backward compatibility.
 	} else {
-		$name = $activities_template->activity->current_comment->display_name;
+		$name = bb_activity_get_item_user_displayname( $activities_template->activity->current_comment );
 	}
 
 	/**

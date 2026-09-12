@@ -1417,7 +1417,9 @@ function bbp_get_topic_author( $topic_id = 0 ) {
 	$topic_id = bbp_get_topic_id( $topic_id );
 
 	if ( ! bbp_is_topic_anonymous( $topic_id ) ) {
-		$author = get_the_author_meta( 'display_name', bbp_get_topic_author_id( $topic_id ) );
+		// Resolved for the current viewer: the raw display_name ignores the Last Name
+		// field's visibility level.
+		$author = bp_core_get_user_displayname( bbp_get_topic_author_id( $topic_id ) );
 	} else {
 		$author = get_post_meta( $topic_id, '_bbp_anonymous_name', true );
 	}
@@ -1477,7 +1479,14 @@ function bbp_topic_author_display_name( $topic_id = 0 ) {
  *
  * @since                          bbPress (r2485)
  *
- * @param int $topic_id Optional. Topic id
+ * @since                          BuddyBoss [BBVERSION] Added the `$viewer_user_id` parameter.
+ *
+ * @param int $topic_id       Optional. Topic id.
+ * @param int $viewer_user_id Optional. ID of the user the name is being rendered for. Defaults to
+ *                            0, the current request's viewer. Pass it explicitly when the audience
+ *                            is someone other than the current user - an email fan-out resolves one
+ *                            author's name for many different recipients, and profile-field
+ *                            visibility is evaluated per recipient.
  *
  * @return string Topic's author's display name
  * @uses                           bbp_is_topic_anonymous() To check if the topic is by an
@@ -1489,7 +1498,7 @@ function bbp_topic_author_display_name( $topic_id = 0 ) {
  *                                 display name and topic id
  * @uses                           bbp_get_topic_id() To get the topic id
  */
-function bbp_get_topic_author_display_name( $topic_id = 0 ) {
+function bbp_get_topic_author_display_name( $topic_id = 0, $viewer_user_id = 0 ) {
 	$topic_id = bbp_get_topic_id( $topic_id );
 
 	// Check for anonymous user
@@ -1498,7 +1507,9 @@ function bbp_get_topic_author_display_name( $topic_id = 0 ) {
 		// Get the author ID
 		$author_id = bbp_get_topic_author_id( $topic_id );
 
-		$author_name = ( function_exists( 'bp_core_get_user_displayname' ) ) ? bp_core_get_user_displayname( $author_id ) : '';
+		// Get the author display name based on the last name privacy. Mirrors
+		// bbp_get_reply_author_display_name().
+		$author_name = ( function_exists( 'bp_core_get_user_displayname' ) ) ? bp_core_get_user_displayname( $author_id, $viewer_user_id ) : '';
 
 		if ( empty( $author_name ) ) {
 			// Try to get a display name

@@ -81,7 +81,9 @@ final class BP_Friendship_Export extends BP_Export {
 			$data = array(
 				array(
 					'name'  => __( 'Connection Name', 'buddyboss' ),
-					'value' => $friend_user->display_name,
+					// Resolve for the data subject ($user) so a last name the connection has
+					// hidden by profile-field visibility is not exported in the raw column.
+					'value' => bp_core_get_user_displayname( $friend_user_id, $user->ID ),
 				),
 				array(
 					'name'  => __( 'Sent Created (GMT)', 'buddyboss' ),

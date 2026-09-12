@@ -469,7 +469,19 @@ class BP_User_Query {
 				)
 			);
 
-			$match_in_clause        = empty( $matched_user_ids ) ? 'NULL' : implode( ',', $matched_user_ids );
+			// display_name always holds the member's full name, so this comparison can match on a
+			// name part the searcher is not allowed to see. The row would be redacted at render
+			// time, but its presence in the results is itself a disclosure — searching a guessed
+			// surname and getting one hit confirms it. Drop the matches that exist only in a hidden
+			// name part. See bb_xprofile_filter_user_search_matches() (PROD-9896).
+			if ( ! empty( $matched_user_ids ) && function_exists( 'bb_xprofile_filter_user_search_matches' ) ) {
+				$matched_user_ids = bb_xprofile_filter_user_search_matches(
+					$matched_user_ids,
+					array( $search_terms_nospace, $search_terms_space )
+				);
+			}
+
+			$match_in_clause        = empty( $matched_user_ids ) ? 'NULL' : implode( ',', wp_parse_id_list( $matched_user_ids ) );
 			$sql['where']['search'] = "u.{$this->uid_name} IN ({$match_in_clause})";
 		}
 
