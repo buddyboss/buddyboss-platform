@@ -250,4 +250,3 @@ function bb_media_lazy_refresh_video_extension_defaults( $feature_id ) {
 	bb_register_feature_field( 'media', 'videos', 'videos_settings', $field );
 }
 add_action( 'bb_admin_settings_before_get_feature', 'bb_media_lazy_refresh_video_extension_defaults' );
-
