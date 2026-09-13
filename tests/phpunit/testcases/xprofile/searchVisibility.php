@@ -1141,4 +1141,200 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 
 		$bp->loggedin_user->id = $original;
 	}
+
+	/**
+	 * Build a matched-row object of the shape the profile-field search hands the second producer.
+	 *
+	 * @param int $user_id  Matched member.
+	 * @param int $field_id Field the value comparison matched on.
+	 * @return object
+	 */
+	protected function field_match_row( $user_id, $field_id ) {
+		return (object) array(
+			'user_id'  => (int) $user_id,
+			'field_id' => (int) $field_id,
+		);
+	}
+
+	/**
+	 * The profile-FIELD search producer must drop a match that lives only in a hidden field.
+	 *
+	 * bb_xprofile_filter_field_search_matches() is the second of the two producers - a search over
+	 * xprofile_data.value rather than the display_name column. It had no test at all, and a mutation
+	 * in its format-hide arm survived (PROD-9896 M5). Without it a guest can confirm the contents of
+	 * an admins-only field by watching whether the member comes back.
+	 */
+	public function test_field_search_drops_a_member_matched_only_on_a_hidden_field() {
+		$user_id      = $this->create_member_with_hidden_surname( 'adminsonly', 'Blackwood' );
+		$matched_data = array( $this->field_match_row( $user_id, bp_xprofile_lastname_field_id() ) );
+
+		$this->set_current_user( 0 );
+		$this->assertSame(
+			array(),
+			bb_xprofile_filter_field_search_matches( array( $user_id ), $matched_data, 0 ),
+			'A guest confirmed the contents of an admins-only field through profile-field search.'
+		);
+	}
+
+	/**
+	 * A member is removed only when EVERY field they matched on is hidden - a hit that also lands on
+	 * a visible field is legitimate and must survive. This pins the filter against over-reach.
+	 */
+	public function test_field_search_keeps_a_member_when_any_matched_field_is_visible() {
+		$user_id      = $this->create_member_with_hidden_surname( 'adminsonly', 'Thistlewood', 'Cordelia' );
+		$matched_data = array(
+			$this->field_match_row( $user_id, bp_xprofile_firstname_field_id() ),
+			$this->field_match_row( $user_id, bp_xprofile_lastname_field_id() ),
+		);
+
+		$this->set_current_user( 0 );
+		$this->assertSame(
+			array( $user_id ),
+			bb_xprofile_filter_field_search_matches( array( $user_id ), $matched_data, 0 ),
+			'A member matched on a visible field as well as a hidden one was wrongly dropped.'
+		);
+	}
+
+	/**
+	 * The mutation-surviving arm (PROD-9896 M5): the site-wide Display Name Format hide.
+	 *
+	 * The Last Name field here is PUBLIC with no visibility row of any kind, so only the "First Name"
+	 * format removes it from every visible name. bb_xprofile_filter_user_search_matches() honours
+	 * that; this second producer must apply the identical rule, or a surname-only field match
+	 * discloses exactly the part the format suppresses. The "First Name & Last Name" run is the
+	 * negative control - nothing hides the surname there, so the filter must not become a blanket
+	 * surname block.
+	 *
+	 * @group bb_search_visibility_display_format
+	 */
+	public function test_field_search_format_hide_drops_a_last_name_only_match() {
+		$user_id      = $this->create_member_with_hidden_surname( 'public', 'Grimsford', 'Evangeline' );
+		$matched_data = array( $this->field_match_row( $user_id, bp_xprofile_lastname_field_id() ) );
+
+		$this->set_current_user( 0 );
+
+		bp_update_option( 'bp-display-name-format', 'first_last_name' );
+		$this->assertSame(
+			array( $user_id ),
+			bb_xprofile_filter_field_search_matches( array( $user_id ), $matched_data, 0 ),
+			'The public surname is part of the visible name under this format and must not be filtered.'
+		);
+
+		bp_update_option( 'bp-display-name-format', 'first_name' );
+		$this->assertSame(
+			array(),
+			bb_xprofile_filter_field_search_matches( array( $user_id ), $matched_data, 0 ),
+			'The First Name format hide was not applied by the profile-field search producer.'
+		);
+	}
+
+	/**
+	 * Under "Nickname" the visible name is the nickname alone, so BOTH the first name and the
+	 * surname are out of it. A match that lives only in the first-name field must be dropped - the
+	 * arm that force-adds the first-name field to the hidden set under this format.
+	 *
+	 * @group bb_search_visibility_display_format
+	 */
+	public function test_field_search_nickname_format_drops_a_first_name_only_match() {
+		$user_id      = $this->create_member_with_hidden_surname( 'public', 'Nettleby', 'Percival' );
+		$matched_data = array( $this->field_match_row( $user_id, bp_xprofile_firstname_field_id() ) );
+
+		bp_update_option( 'bp-display-name-format', 'nickname' );
+		$this->set_current_user( 0 );
+		$this->assertSame(
+			array(),
+			bb_xprofile_filter_field_search_matches( array( $user_id ), $matched_data, 0 ),
+			'The Nickname format hides the first name, but a first-name-only field match survived.'
+		);
+	}
+
+	/**
+	 * A moderator may read every field, so the second producer must filter nothing from them.
+	 */
+	public function test_field_search_moderator_sees_every_field() {
+		$user_id      = $this->create_member_with_hidden_surname( 'adminsonly', 'Ironwood' );
+		$admin        = self::factory()->user->create( array( 'role' => 'administrator' ) );
+		$matched_data = array( $this->field_match_row( $user_id, bp_xprofile_lastname_field_id() ) );
+
+		$this->assertSame(
+			array( $user_id ),
+			bb_xprofile_filter_field_search_matches( array( $user_id ), $matched_data, $admin ),
+			'A moderator was denied a match on a field they may read.'
+		);
+	}
+
+	/**
+	 * A first name stored only in WordPress user-meta must be re-tested, not dropped.
+	 *
+	 * The imported/unhealed member shape here: the name lives in user_meta + wp_users.display_name,
+	 * the xprofile First Name field is empty, and there is no stored surname. A LOGGED-IN viewer's
+	 * resolver back-fills the empty field from user_meta and returns it, so their visible name
+	 * genuinely matches and the member must stay findable. The GUEST path never reads user_meta
+	 * first_name - it reads the field, then the nickname - so the same member is correctly NOT
+	 * confirmable by a guest searching that first name (the nickname here does not contain it).
+	 *
+	 * Without the user-meta arm of bb_xprofile_get_format_undecidable_matches() the member is
+	 * dropped for the logged-in viewer too, silently losing every unhealed member from search.
+	 *
+	 * @group bb_search_visibility_display_format
+	 */
+	public function test_format_hide_re_tests_a_first_name_stored_only_in_user_meta() {
+		global $wpdb;
+
+		$user_id = self::factory()->user->create( array( 'nickname' => 'quillby-nick' ) );
+
+		// Force the xprofile name fields empty, THEN set the authoritative user-meta value, so the
+		// only place the first name lives is user_meta and the drifted display_name column.
+		xprofile_set_field_data( bp_xprofile_firstname_field_id(), $user_id, '' );
+		xprofile_set_field_data( bp_xprofile_lastname_field_id(), $user_id, '' );
+		update_user_meta( $user_id, 'first_name', 'Grimwald' );
+
+		$wpdb->update( $wpdb->users, array( 'display_name' => 'Grimwald Ashforth' ), array( 'ID' => $user_id ) );
+		clean_user_cache( $user_id );
+
+		$this->assertSame(
+			'',
+			(string) xprofile_get_field_data( bp_xprofile_firstname_field_id(), $user_id ),
+			'Fixture: the First Name field must be empty so the resolver falls back to user_meta.'
+		);
+		$this->assertSame(
+			'Grimwald',
+			(string) get_user_meta( $user_id, 'first_name', true ),
+			'Fixture: the first name must live in user_meta.'
+		);
+
+		bp_update_option( 'bp-display-name-format', 'first_name' );
+
+		$member = self::factory()->user->create();
+
+		// Prove the fixture without persisting the self-heal (which would populate the field and
+		// make the member trivially findable regardless of the fix under test).
+		bb_xprofile_is_display_name_self_heal_suspended( true );
+		try {
+			$this->assertSame(
+				'Grimwald',
+				bp_core_get_user_displayname( $user_id, $member ),
+				'Fixture: a logged-in viewer resolves the member to the user-meta first name.'
+			);
+		} finally {
+			bb_xprofile_is_display_name_self_heal_suspended( false );
+		}
+		$this->assertSame(
+			'',
+			(string) xprofile_get_field_data( bp_xprofile_firstname_field_id(), $user_id ),
+			'Fixture: the search re-test must not have persisted the back-filled first name.'
+		);
+
+		$this->assertContains(
+			$user_id,
+			bb_xprofile_filter_user_search_matches( array( $user_id ), array( '%Grimwald%' ), $member ),
+			'A member whose first name lives only in user_meta was dropped from a logged-in search.'
+		);
+
+		$this->assertNotContains(
+			$user_id,
+			bb_xprofile_filter_user_search_matches( array( $user_id ), array( '%Grimwald%' ), 0 ),
+			'A guest matched a first name their own view resolves to the nickname, not this term.'
+		);
+	}
 }
