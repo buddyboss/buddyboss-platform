@@ -1133,9 +1133,19 @@ function bb_core_get_redacted_core_author_name( $user_id ) {
 
 	// bp_core_get_user_displayname() raises the marker itself for the branch that reads the stored
 	// column; raise it here too so the branches that return before that read are covered as well.
+	//
+	// try/finally for the same reason the resolver has one: the marker is what stands the
+	// WordPress-core author filters down, so leaving it raised fails OPEN - every later
+	// get_the_author_display_name / the_author / document_title_parts / rest_prepare_user would
+	// return the raw `display_name` column for the rest of the request. A throw from any filter
+	// on the resolution must not be able to do that.
 	bb_core_is_resolving_user_displayname( true );
-	$resolved = bp_core_get_user_displayname( $user_id );
-	bb_core_is_resolving_user_displayname( false );
+
+	try {
+		$resolved = bp_core_get_user_displayname( $user_id );
+	} finally {
+		bb_core_is_resolving_user_displayname( false );
+	}
 
 	if ( ! is_string( $resolved ) || '' === $resolved || $resolved === $raw_display_name ) {
 		return null;

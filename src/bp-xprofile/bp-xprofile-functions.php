@@ -1962,7 +1962,9 @@ function bp_xprofile_get_member_display_name( $user_id = null ) {
 				if ( empty( $display_name ) ) {
 					$display_name = get_user_meta( $user_id, 'nickname', true );
 				}
-				xprofile_set_field_data( $first_name_id, $user_id, $display_name );
+				if ( ! bb_xprofile_is_display_name_self_heal_suspended() ) {
+					xprofile_set_field_data( $first_name_id, $user_id, $display_name );
+				}
 			}
 
 			// Get Nick Name Field Id.
@@ -1979,7 +1981,9 @@ function bp_xprofile_get_member_display_name( $user_id = null ) {
 				if ( ! $nickname || $invalid ) {
 					$nickname = ( isset( $user->user_nicename ) ) ? $user->user_nicename : '';
 				}
-				xprofile_set_field_data( $nickname_id, $user_id, $nickname );
+				if ( ! bb_xprofile_is_display_name_self_heal_suspended() ) {
+					xprofile_set_field_data( $nickname_id, $user_id, $nickname );
+				}
 			}
 
 			break;
@@ -1996,12 +2000,16 @@ function bp_xprofile_get_member_display_name( $user_id = null ) {
 				if ( empty( $result_first_name ) ) {
 					$result_first_name = get_user_meta( $user_id, 'nickname', true );
 				}
-				xprofile_set_field_data( $first_name_id, $user_id, $result_first_name );
+				if ( ! bb_xprofile_is_display_name_self_heal_suspended() ) {
+					xprofile_set_field_data( $first_name_id, $user_id, $result_first_name );
+				}
 			}
 
 			if ( '' === $result_last_name ) {
 				$result_last_name = get_user_meta( $user_id, 'last_name', true );
-				xprofile_set_field_data( $last_name_id, $user_id, $result_last_name );
+				if ( ! bb_xprofile_is_display_name_self_heal_suspended() ) {
+					xprofile_set_field_data( $last_name_id, $user_id, $result_last_name );
+				}
 			}
 
 			$display_name = implode(
@@ -2028,7 +2036,9 @@ function bp_xprofile_get_member_display_name( $user_id = null ) {
 				if ( ! $nickname || $invalid ) {
 					$nickname = $user->user_nicename;
 				}
-				xprofile_set_field_data( $nickname_id, $user_id, $nickname );
+				if ( ! bb_xprofile_is_display_name_self_heal_suspended() ) {
+					xprofile_set_field_data( $nickname_id, $user_id, $nickname );
+				}
 			}
 
 			break;
@@ -2047,7 +2057,9 @@ function bp_xprofile_get_member_display_name( $user_id = null ) {
 				if ( ! $nickname || $invalid ) {
 					$nickname = $user->user_nicename;
 				}
-				xprofile_set_field_data( $nickname_id, $user_id, $nickname );
+				if ( ! bb_xprofile_is_display_name_self_heal_suspended() ) {
+					xprofile_set_field_data( $nickname_id, $user_id, $nickname );
+				}
 				$display_name = $nickname;
 
 			}
@@ -2056,9 +2068,51 @@ function bp_xprofile_get_member_display_name( $user_id = null ) {
 
 	$name = apply_filters( 'bp_xprofile_get_member_display_name', trim( $display_name ), $user_id );
 
-	$cache[ $cache_key ] = $name;
+	// While the self-heal is suspended this resolution is a READ of someone else's name performed
+	// for a third party (a search re-test), not a visit to that member. Caching it would let the
+	// suspended answer stand in for the next legitimate call in the same request and silently skip
+	// the repair that call would have performed. The value itself is identical either way - only
+	// the persistence differs - so not caching costs one resolution, never correctness.
+	if ( ! bb_xprofile_is_display_name_self_heal_suspended() ) {
+		$cache[ $cache_key ] = $name;
+	}
 
 	return $name;
+}
+
+/**
+ * Whether bp_xprofile_get_member_display_name() must resolve without repairing stored fields.
+ *
+ * It is a self-healing resolver: when a name field has no
+ * stored value it back-fills it from the WordPress user meta, and an empty back-fill value makes
+ * xprofile_set_field_data() DELETE the row. That is correct on a profile view - the member is
+ * present and the repair is a side effect of showing them their own data - but the same resolver
+ * is reached from member search, which re-tests other members' names to decide whether a match is
+ * visible. A search is a read: one GET would otherwise issue one destructive write per re-tested
+ * candidate, against members who are not even in the results (PROD-9896).
+ *
+ * Suspension changes nothing about the value returned; it only stops the repair being persisted,
+ * so the next request that legitimately resolves that member still performs it.
+ *
+ * Nested like bb_core_is_resolving_user_displayname(): callers raise it with `true`, lower it with
+ * `false` in a `finally`, and read it with no argument.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param bool|null $suspend Optional. True to suspend the self-heal, false to release one
+ *                           suspension, null (default) to only read the current state.
+ * @return bool Whether the self-heal is currently suspended.
+ */
+function bb_xprofile_is_display_name_self_heal_suspended( $suspend = null ) {
+	static $depth = 0;
+
+	if ( true === $suspend ) {
+		++$depth;
+	} elseif ( false === $suspend ) {
+		$depth = max( 0, $depth - 1 );
+	}
+
+	return $depth > 0;
 }
 
 /**
@@ -3757,11 +3811,18 @@ function bb_xprofile_can_change_field_visibility( $field_id ) {
  * the format still shows. Under the "First Name & Last Name" format on a community where nobody
  * restricts a name field, none of the three produces anything and this costs one indexed query.
  *
- * Under a format-level hide the third source is as large as the number of members whose match lies
- * only in the hidden name part, and the re-test resolves that many names — batched through
- * bb_core_prime_user_displayname_caches(), but on a one-character term over a large community that
- * is real work. Those are exactly the members that have to be re-tested, so it is not capped: a cap
- * would have to fail open and serve the matches this function exists to suppress.
+ * Under a format-level hide the third source would otherwise be as large as the match count itself,
+ * so it is answered in SQL rather than by resolving a name per member: a match is kept when it lies
+ * in a source the format still shows (the shown name field, the nickname, user_nicename), and
+ * dropped when it does not. Only the one shape SQL cannot decide — the stored `display_name` with
+ * the surname removed, which can contain a token that is in no field — reaches the PHP re-test, and
+ * that re-test is bounded by `bb_xprofile_user_search_visibility_candidate_limit`. Past the bound
+ * the remaining unverified matches are DROPPED: a bound that failed open would serve the matches
+ * this function exists to suppress.
+ *
+ * The re-test is also read-only. It runs with bb_xprofile_is_display_name_self_heal_suspended()
+ * raised, so a search never persists the name-field repair bp_xprofile_get_member_display_name()
+ * performs for a member who is actually being viewed.
  *
  * Removal is decided by re-running the *same* LIKE pattern against the name this viewer would
  * actually see. A member whose visible name still matches (searching "Peter" for "Peter
@@ -3867,6 +3928,27 @@ function bb_xprofile_filter_user_search_matches( $matched_user_ids, $like_patter
 		}
 	}
 
+	$display_name_format = function_exists( 'bp_core_display_name_format' ) ? bp_core_display_name_format() : 'first_last_name';
+
+	/**
+	 * Filters how many matches a single search may re-resolve in PHP before it stops.
+	 *
+	 * Re-testing a candidate resolves a full display name for them. That is cheap per member and
+	 * ruinous in bulk: a one-word term on a large community can match every member at once, and
+	 * this filter runs before pagination, on a request an anonymous visitor can issue. Past the
+	 * budget the remaining unverified matches are DROPPED, never kept - a budget that failed open
+	 * would serve exactly the matches this function exists to suppress. Raise it only on an
+	 * install whose member table can afford it.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param int    $limit               Maximum number of matches to re-resolve. 0 removes the
+	 *                                    bound entirely. Default 500.
+	 * @param string $display_name_format Active Display Name Format.
+	 * @param int    $viewer_id           Viewer the visibility is evaluated for.
+	 */
+	$candidate_limit = (int) apply_filters( 'bb_xprofile_user_search_visibility_candidate_limit', 500, $display_name_format, $viewer_id );
+
 	// (3) The site-wide Display Name Format can leave a name field out of the visible name for
 	// EVERY member at once, independently of any visibility level: under "First Name" the surname
 	// is not part of the name at all, and under "Nickname" neither the surname nor the first name
@@ -3874,42 +3956,37 @@ function bb_xprofile_filter_user_search_matches( $matched_user_ids, $like_patter
 	// to the hidden-field list - so the rendered name is redacted while the match, without this,
 	// still answers the question. That is the configuration this ticket is about.
 	//
-	// This source cannot be bounded by a stored field value the way (2) is. The hide applies to the
-	// whole community, and the value that leaks is the one in the `display_name` COLUMN, which
-	// drifts away from the fields (an import, the wp-admin "Display name publicly as" dropdown, a
-	// third-party write) and can carry a surname the Last Name field no longer holds - the drift
-	// this whole redaction exists for. Every matched member is therefore a candidate, less those
-	// whose match lies in the name part the format DOES show: their visible name provably still
-	// matches, so re-resolving them would only cost time. A member for whom that shown field is
-	// itself hidden is still reached through (1) or (2), which are unioned in independently of
-	// this.
-	$display_name_format = function_exists( 'bp_core_display_name_format' ) ? bp_core_display_name_format() : 'first_last_name';
+	// Unlike (1) and (2) this source is not bounded by a stored value: the hide applies to the
+	// whole community, and the value that leaks lives in the `display_name` COLUMN, which drifts
+	// away from the fields (an import, the wp-admin "Display name publicly as" dropdown, a
+	// third-party write). Promoting every matched member to a candidate and resolving a name for
+	// each - before pagination, on an anonymous request - is an unbounded amount of work per
+	// request; on this install a one-word term matching 70,000 members exhausted 512 MB.
+	//
+	// So the question is answered in SQL instead. A match is kept without any PHP work when it
+	// lies in a source the format actually SHOWS, which is the complete list of things
+	// bp_core_get_user_displayname() can return under these formats: the shown name field, the
+	// nickname it falls back to, and user_nicename, its last resort. Everything else is dropped -
+	// except the one shape SQL cannot decide (see bb_xprofile_get_format_undecidable_matches()),
+	// which is re-tested in PHP within the budget above.
+	$format_drop_ids = array();
 
 	if ( in_array( $display_name_format, array( 'first_name', 'nickname' ), true ) ) {
-		$format_candidate_ids = $matched_user_ids;
+		$explained_ids = bb_xprofile_get_format_visible_name_matches( $display_name_format, $like_patterns );
 
-		$shown_field_id = ( 'nickname' === $display_name_format )
-			? (int) bp_xprofile_nickname_field_id()
-			: (int) bp_xprofile_firstname_field_id();
+		// A member is never hidden from themselves, so the viewer is never a drop candidate.
+		$unexplained_ids = array_values( array_diff( $matched_user_ids, $explained_ids, array( $viewer_id ) ) );
 
-		if ( $shown_field_id ) {
-			$value_placeholders = implode( ' OR ', array_fill( 0, count( $like_patterns ), 'value LIKE %s' ) );
-
-			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- visibility filtering must read current values.
-			$shown_field_matchers = $wpdb->get_col(
-				$wpdb->prepare(
-					// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- table name and placeholder list are built from trusted values, every user value is bound below.
-					"SELECT DISTINCT user_id FROM {$bp->profile->table_name_data} WHERE field_id = %d AND ( {$value_placeholders} )",
-					array_merge( array( $shown_field_id ), array_values( $like_patterns ) )
-				)
-			);
-
-			if ( ! empty( $shown_field_matchers ) ) {
-				$format_candidate_ids = array_diff( $format_candidate_ids, array_map( 'intval', $shown_field_matchers ) );
-			}
+		if ( $candidate_limit > 0 && count( $unexplained_ids ) > $candidate_limit ) {
+			// Too many to decide individually. Fail closed on all of them: this is the term that
+			// matches most of the member table, where the oracle is worth the least and the work
+			// costs the most.
+			$format_drop_ids = $unexplained_ids;
+		} elseif ( ! empty( $unexplained_ids ) ) {
+			$undecidable_ids = bb_xprofile_get_format_undecidable_matches( $display_name_format, $unexplained_ids );
+			$format_drop_ids = array_values( array_diff( $unexplained_ids, $undecidable_ids ) );
+			$candidate_ids   = array_merge( $candidate_ids, $undecidable_ids );
 		}
-
-		$candidate_ids = array_merge( $candidate_ids, $format_candidate_ids );
 	}
 
 	$candidate_ids = array_unique( $candidate_ids );
@@ -3932,45 +4009,236 @@ function bb_xprofile_filter_user_search_matches( $matched_user_ids, $like_patter
 	 */
 	$candidate_ids = array_filter( array_map( 'intval', (array) apply_filters( 'bb_xprofile_user_search_visibility_candidates', $candidate_ids, $matched_user_ids, $viewer_id ) ) );
 
-	if ( empty( $candidate_ids ) ) {
-		return $matched_user_ids;
+	// Re-applied after the filter: a listener must not be able to make a member invisible to
+	// themselves, and only matched rows can be removed from the result.
+	$candidate_ids = array_values( array_diff( array_intersect( $candidate_ids, $matched_user_ids ), array( $viewer_id ) ) );
+
+	$remove_ids = $format_drop_ids;
+
+	// Sources (1) and (2) are bounded by stored rows rather than by the term, but "bounded" is not
+	// "small": on a community where a name field's default visibility is restricted, every matched
+	// member carries a row. Apply the same budget, and the same fail-closed answer past it.
+	if ( $candidate_limit > 0 && count( $candidate_ids ) > $candidate_limit ) {
+		$remove_ids    = array_merge( $remove_ids, array_slice( $candidate_ids, $candidate_limit ) );
+		$candidate_ids = array_slice( $candidate_ids, 0, $candidate_limit );
 	}
 
-	// Resolving a name is several cached reads; prime them for the whole candidate set at once.
-	if ( function_exists( 'bb_core_prime_user_displayname_caches' ) ) {
-		bb_core_prime_user_displayname_caches( $candidate_ids, $viewer_id );
-	}
-
-	foreach ( $candidate_ids as $candidate_id ) {
-		$visible_name = bp_core_get_user_displayname( $candidate_id, $viewer_id );
-
-		if ( ! is_string( $visible_name ) ) {
-			$visible_name = '';
+	if ( ! empty( $candidate_ids ) ) {
+		// Resolving a name is several cached reads; prime them for the whole candidate set at once.
+		if ( function_exists( 'bb_core_prime_user_displayname_caches' ) ) {
+			bb_core_prime_user_displayname_caches( $candidate_ids, $viewer_id );
 		}
 
-		$still_matches = false;
-		foreach ( $like_patterns as $pattern ) {
-			// The search term was normalised with wp_kses_normalize_entities() before it became a
-			// LIKE pattern, while the resolved name is plain text. Test both forms so a name
-			// containing an entity-encodable character is not dropped by that asymmetry alone.
-			if (
-				bb_core_sql_like_match( $pattern, $visible_name )
-				|| bb_core_sql_like_match( $pattern, wp_kses_normalize_entities( $visible_name ) )
-			) {
-				$still_matches = true;
-				break;
+		// A search is a read. bp_core_get_user_displayname() reaches
+		// bp_xprofile_get_member_display_name(), which back-fills missing name fields and DELETEs
+		// the row when the back-filled value is empty - one destructive write per re-tested
+		// candidate, against members who are not even in the results. Suspend that repair for the
+		// duration of the loop; the resolved value is unchanged, only the persistence is skipped.
+		// try/finally because leaving the suspension raised would silence the repair for the rest
+		// of the request (PROD-9896).
+		bb_xprofile_is_display_name_self_heal_suspended( true );
+
+		try {
+			foreach ( $candidate_ids as $candidate_id ) {
+				$visible_name = bp_core_get_user_displayname( $candidate_id, $viewer_id );
+
+				if ( ! is_string( $visible_name ) ) {
+					$visible_name = '';
+				}
+
+				$still_matches = false;
+				foreach ( $like_patterns as $pattern ) {
+					// The search term was normalised with wp_kses_normalize_entities() before it became a
+					// LIKE pattern, while the resolved name is plain text. Test both forms so a name
+					// containing an entity-encodable character is not dropped by that asymmetry alone.
+					if (
+						bb_core_sql_like_match( $pattern, $visible_name )
+						|| bb_core_sql_like_match( $pattern, wp_kses_normalize_entities( $visible_name ) )
+					) {
+						$still_matches = true;
+						break;
+					}
+				}
+
+				if ( ! $still_matches ) {
+					$remove_ids[] = (int) $candidate_id;
+				}
 			}
-		}
-
-		if ( ! $still_matches ) {
-			$key = array_search( (int) $candidate_id, $matched_user_ids, true );
-			if ( false !== $key ) {
-				unset( $matched_user_ids[ $key ] );
-			}
+		} finally {
+			bb_xprofile_is_display_name_self_heal_suspended( false );
 		}
 	}
 
-	return array_values( $matched_user_ids );
+	if ( empty( $remove_ids ) ) {
+		return array_values( $matched_user_ids );
+	}
+
+	return array_values( array_diff( $matched_user_ids, $remove_ids ) );
+}
+
+/**
+ * User IDs whose search match lies in a name source the Display Name Format still shows.
+ *
+ * Answers, in SQL, the question bb_xprofile_filter_user_search_matches() would otherwise answer by
+ * resolving a display name for every matched member. Under the "First Name" and "Nickname" formats
+ * bp_core_get_user_displayname() can only ever return one of: the field the format shows, the
+ * nickname it falls back to when that field is empty, or user_nicename, its last resort. A member
+ * whose match is in one of those provably still matches the name this viewer is shown, so the
+ * match is not a disclosure and no PHP work is needed to keep it.
+ *
+ * Deliberately NOT a source: `user_login`. It is never returned as a display name - the fallback
+ * chain ends at user_nicename - so treating a login match as proof would keep a member whose
+ * visible name does not match, which is the leak. (The site-wide search engine compares user_login
+ * on a separate leg of its own query, which this exclusion list is never applied to.)
+ *
+ * Nor does this decide per-viewer visibility: the shown field can itself be restricted for an
+ * individual member. Those members are reached by sources (1) and (2) in the caller, which are
+ * unioned in independently and re-tested.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $display_name_format Active Display Name Format. Only 'first_name' and 'nickname'
+ *                                    hide a name part site-wide.
+ * @param array  $like_patterns       LIKE patterns the match was produced with.
+ * @return array User IDs matched by a visible name source.
+ */
+function bb_xprofile_get_format_visible_name_matches( $display_name_format, $like_patterns ) {
+	global $wpdb;
+
+	$like_patterns = array_values( array_filter( (array) $like_patterns ) );
+
+	if ( empty( $like_patterns ) ) {
+		return array();
+	}
+
+	$bp            = buddypress();
+	$explained_ids = array();
+
+	// The one profile field the format still shows. Under "Nickname" that is the nickname, which is
+	// read from the user meta below - bp_core_get_user_displayname() reads the meta, not the
+	// profile field, and the two can drift apart.
+	$shown_field_id = ( 'nickname' === $display_name_format ) ? 0 : (int) bp_xprofile_firstname_field_id();
+
+	if ( $shown_field_id > 0 ) {
+		$value_placeholders = implode( ' OR ', array_fill( 0, count( $like_patterns ), 'value LIKE %s' ) );
+
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- visibility filtering must read current values.
+		$field_matchers = $wpdb->get_col(
+			$wpdb->prepare(
+				// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- table name and placeholder list are built from trusted values, every user value is bound below.
+				"SELECT DISTINCT user_id FROM {$bp->profile->table_name_data} WHERE field_id = %d AND ( {$value_placeholders} )",
+				array_merge( array( $shown_field_id ), $like_patterns )
+			)
+		);
+
+		if ( ! empty( $field_matchers ) ) {
+			$explained_ids = array_map( 'intval', $field_matchers );
+		}
+	}
+
+	// The nickname: the visible name under the "Nickname" format, and the fallback under "First
+	// Name" when the first-name field is empty or hidden.
+	$meta_placeholders = implode( ' OR ', array_fill( 0, count( $like_patterns ), 'meta_value LIKE %s' ) );
+
+	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- visibility filtering must read current values.
+	$nickname_matchers = $wpdb->get_col(
+		$wpdb->prepare(
+			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare -- table name and placeholder list are built from trusted values, every user value is bound below.
+			"SELECT DISTINCT user_id FROM {$wpdb->usermeta} WHERE meta_key = 'nickname' AND ( {$meta_placeholders} )",
+			$like_patterns
+		)
+	);
+
+	if ( ! empty( $nickname_matchers ) ) {
+		$explained_ids = array_merge( $explained_ids, array_map( 'intval', $nickname_matchers ) );
+	}
+
+	// user_nicename: what the resolver returns when every name part is redacted away. It is a
+	// public identifier and carries no hidden name part.
+	$nicename_placeholders = implode( ' OR ', array_fill( 0, count( $like_patterns ), 'user_nicename LIKE %s' ) );
+
+	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- visibility filtering must read current values.
+	$nicename_matchers = $wpdb->get_col(
+		$wpdb->prepare(
+			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare -- table name and placeholder list are built from trusted values, every user value is bound below.
+			"SELECT ID FROM {$wpdb->users} WHERE ( {$nicename_placeholders} )",
+			$like_patterns
+		)
+	);
+
+	if ( ! empty( $nicename_matchers ) ) {
+		$explained_ids = array_merge( $explained_ids, array_map( 'intval', $nicename_matchers ) );
+	}
+
+	return array_values( array_unique( $explained_ids ) );
+}
+
+/**
+ * The matches under a format-level hide whose visibility SQL cannot decide.
+ *
+ * Companion to bb_xprofile_get_format_visible_name_matches(): of the matches that source could not
+ * account for, these are the ones that still have to be re-tested in PHP, because
+ * bp_core_get_user_displayname() can return something for them that is in none of the columns.
+ *
+ * - "First Name": the resolver returns the stored `display_name` with the surname removed, so the
+ *   answer can contain a token that exists in no field at all - a drifted column, which is the
+ *   whole reason this redaction exists. That residue cannot be expressed in SQL. It only exists
+ *   when there IS a surname to remove, though: with no stored last name the resolver falls through
+ *   to the first name, the nickname and user_nicename, all three already tested.
+ * - "Nickname": the resolver returns the nickname, and only when that is empty does it fall
+ *   through to the first name - which the format hides but a per-field check may still allow. So
+ *   only members with no stored nickname are undecidable.
+ *
+ * Everything this does NOT return can be dropped outright: their visible name is one of the values
+ * already compared, and it did not match.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $display_name_format Active Display Name Format.
+ * @param array  $user_ids            Matched user IDs not accounted for by a visible name source.
+ *                                    Already bounded by the caller's budget.
+ * @return array The subset that must be re-tested in PHP.
+ */
+function bb_xprofile_get_format_undecidable_matches( $display_name_format, $user_ids ) {
+	global $wpdb;
+
+	$user_ids = array_values( array_unique( array_filter( array_map( 'intval', (array) $user_ids ) ) ) );
+
+	if ( empty( $user_ids ) ) {
+		return array();
+	}
+
+	$id_list = implode( ',', $user_ids );
+
+	if ( 'nickname' === $display_name_format ) {
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- the id list is built from intval()ed values.
+		$with_nickname = $wpdb->get_col(
+			"SELECT DISTINCT user_id FROM {$wpdb->usermeta} WHERE meta_key = 'nickname' AND TRIM( meta_value ) <> '' AND user_id IN ( {$id_list} )"
+		);
+
+		return array_values( array_diff( $user_ids, array_map( 'intval', (array) $with_nickname ) ) );
+	}
+
+	$last_name_field_id = function_exists( 'bp_xprofile_lastname_field_id' ) ? (int) bp_xprofile_lastname_field_id() : 0;
+
+	// No Last Name field to remove: the resolver never reads the stored column under this format,
+	// so there is no residue and nothing left to decide.
+	if ( $last_name_field_id <= 0 ) {
+		return array();
+	}
+
+	$bp = buddypress();
+
+	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- visibility filtering must read current values.
+	$with_last_name = $wpdb->get_col(
+		$wpdb->prepare(
+			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- table name and the id list are built from trusted, intval()ed values.
+			"SELECT DISTINCT user_id FROM {$bp->profile->table_name_data} WHERE field_id = %d AND TRIM( value ) <> '' AND user_id IN ( {$id_list} )",
+			$last_name_field_id
+		)
+	);
+
+	return array_values( array_map( 'intval', (array) $with_last_name ) );
 }
 
 /**

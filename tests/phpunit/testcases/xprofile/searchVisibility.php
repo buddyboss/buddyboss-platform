@@ -265,6 +265,412 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 	}
 
 	/**
+	 * Create a member whose search match exists ONLY in the stored `display_name` column.
+	 *
+	 * The shape the format hide exists for, and the one that used to promote every matched member
+	 * to a candidate: the surname is not in the Last Name field, so no stored value bounds the set.
+	 *
+	 * @param string $token    Token that appears only in the stored column.
+	 * @param string $nickname Nickname, deliberately not matching $token.
+	 * @param string $surname  Value for the Last Name field. '' leaves the field unset.
+	 * @return int
+	 */
+	protected function create_member_with_drifted_column( $token, $nickname, $surname = '' ) {
+		global $wpdb;
+
+		$user_id = self::factory()->user->create(
+			array(
+				'nickname'      => $nickname,
+				'user_nicename' => $nickname,
+			)
+		);
+
+		xprofile_set_field_data( bp_xprofile_firstname_field_id(), $user_id, 'Wilhelmina' );
+		if ( '' !== $surname ) {
+			xprofile_set_field_data( bp_xprofile_lastname_field_id(), $user_id, $surname );
+		}
+
+		$wpdb->update( $wpdb->users, array( 'display_name' => 'Wilhelmina ' . $token ), array( 'ID' => $user_id ) );
+		clean_user_cache( $user_id );
+
+		return $user_id;
+	}
+
+	/**
+	 * Count how many display names a call resolves.
+	 *
+	 * The per-candidate resolution is the cost that made this filter an unauthenticated memory
+	 * exhaustion (PROD-9896 B1), so the bound is asserted by counting resolutions, not by timing.
+	 *
+	 * @param callable $callback Code to measure.
+	 * @return array array( return value, resolution count ).
+	 */
+	protected function count_name_resolutions( $callback ) {
+		$counter = 0;
+
+		$probe = function ( $name ) use ( &$counter ) {
+			++$counter;
+
+			return $name;
+		};
+
+		add_filter( 'bp_core_get_user_displayname', $probe, 1 );
+		$result = call_user_func( $callback );
+		remove_filter( 'bp_core_get_user_displayname', $probe, 1 );
+
+		return array( $result, $counter );
+	}
+
+	/**
+	 * Under a format-level hide the answer must come from SQL, not from a name per matched member.
+	 *
+	 * Source (3) promoted EVERY matched user to a candidate and resolved a full display name for
+	 * each, before pagination and with no bound, on a request an anonymous visitor can issue. On a
+	 * 70k-member install a one-word term exhausted 512 MB. The matches here are all decidable in
+	 * SQL - their visible name is the first name, the nickname or the user_nicename, none of which
+	 * match - so the correct cost is ZERO resolutions.
+	 *
+	 * @group bb_search_visibility_display_format
+	 */
+	public function test_format_hide_decides_matches_without_resolving_a_name_each() {
+		$user_ids = array();
+		for ( $i = 0; $i < 12; $i++ ) {
+			$user_ids[] = $this->create_member_with_drifted_column( 'Zarquonade', 'zarqnick' . $i );
+		}
+
+		bp_update_option( 'bp-display-name-format', 'first_name' );
+		$this->set_current_user( 0 );
+
+		list( $result, $resolutions ) = $this->count_name_resolutions(
+			function () use ( $user_ids ) {
+				return bb_xprofile_filter_user_search_matches( $user_ids, array( '%Zarquonade%' ), 0 );
+			}
+		);
+
+		$this->assertSame( array(), $result, 'A guest confirmed a surname the format hides from everyone.' );
+		$this->assertSame(
+			0,
+			$resolutions,
+			'Every matched member was still resolved in PHP - the work this filter does is unbounded again.'
+		);
+	}
+
+	/**
+	 * Past the budget the remaining unverified matches must be DROPPED, never served.
+	 *
+	 * A bound that failed open would re-open the very oracle the filter exists to close, so the
+	 * expensive answer and the safe answer have to be the same answer.
+	 *
+	 * @group bb_search_visibility_display_format
+	 */
+	public function test_candidate_budget_drops_unverified_matches_instead_of_serving_them() {
+		$over_budget = array();
+		for ( $i = 0; $i < 4; $i++ ) {
+			// A stored surname makes each of these undecidable in SQL, so they are exactly the
+			// matches the budget has to rule on.
+			$over_budget[] = $this->create_member_with_drifted_column( 'Vandergloom', 'vglnick' . $i, 'Vandergloom' );
+		}
+
+		// A member the format still shows: their match is in the first name, so it is kept without
+		// any re-testing and the budget must not touch it.
+		$visible_id = $this->create_member_with_hidden_surname( 'public', 'Ellsworthy', 'Vandergloom' );
+
+		bp_update_option( 'bp-display-name-format', 'first_name' );
+		$this->set_current_user( 0 );
+
+		$cap = function () {
+			return 2;
+		};
+		add_filter( 'bb_xprofile_user_search_visibility_candidate_limit', $cap );
+
+		list( $result, $resolutions ) = $this->count_name_resolutions(
+			function () use ( $over_budget, $visible_id ) {
+				return bb_xprofile_filter_user_search_matches(
+					array_merge( $over_budget, array( $visible_id ) ),
+					array( '%Vandergloom%' ),
+					0
+				);
+			}
+		);
+
+		remove_filter( 'bb_xprofile_user_search_visibility_candidate_limit', $cap );
+
+		$this->assertSame(
+			array( $visible_id ),
+			$result,
+			'Over budget the unverified matches were served instead of dropped - the oracle is open again.'
+		);
+		$this->assertSame( 0, $resolutions, 'The budget was exceeded, so nothing should have been resolved at all.' );
+	}
+
+	/**
+	 * The SQL answer must not over-filter: a match that survives in the VISIBLE name is still a hit.
+	 *
+	 * The stored column drifts, so the redacted name can contain a token that is in none of the
+	 * fields ("Reggie Quenlingham" minus the surname, with a First Name field reading "Reginald").
+	 * SQL cannot compute that residue, so those matches - and only those - are still re-tested.
+	 *
+	 * @group bb_search_visibility_display_format
+	 */
+	public function test_format_hide_keeps_a_match_that_survives_in_the_visible_name() {
+		global $wpdb;
+
+		$user_id = self::factory()->user->create(
+			array(
+				'nickname'      => 'holdnick',
+				'user_nicename' => 'holdnick',
+			)
+		);
+
+		xprofile_set_field_data( bp_xprofile_firstname_field_id(), $user_id, 'Reginald' );
+		xprofile_set_field_data( bp_xprofile_lastname_field_id(), $user_id, 'Quenlingham' );
+
+		$wpdb->update( $wpdb->users, array( 'display_name' => 'Reggiebert Quenlingham' ), array( 'ID' => $user_id ) );
+		clean_user_cache( $user_id );
+
+		bp_update_option( 'bp-display-name-format', 'first_name' );
+		$this->set_current_user( 0 );
+
+		$this->assertSame(
+			'Reggiebert',
+			bp_core_get_user_displayname( $user_id, 0 ),
+			'Fixture: the visible name must keep the searched token after the surname is removed.'
+		);
+
+		$this->assertSame(
+			array( $user_id ),
+			bb_xprofile_filter_user_search_matches( array( $user_id ), array( '%Reggiebert%' ), 0 ),
+			'A member whose VISIBLE name matches was filtered out of the results.'
+		);
+
+		$this->assertSame(
+			array(),
+			bb_xprofile_filter_user_search_matches( array( $user_id ), array( '%Quenlingham%' ), 0 ),
+			'The surname the format hides still answered a search.'
+		);
+	}
+
+	/**
+	 * The budget also bounds the per-user visibility sources, and fails closed there too.
+	 *
+	 * Sources (1) and (2) are bounded by stored rows rather than by the search term, which is not
+	 * the same as small: on a community where a name field's default visibility is restricted, or
+	 * where many members restrict their own, every matched member carries a row and the re-test is
+	 * as large as the match count again. Exercised under the "First Name & Last Name" format so
+	 * the site-wide format source is not involved at all.
+	 *
+	 * @group bb_search_visibility_display_format
+	 */
+	public function test_candidate_budget_also_bounds_the_per_user_visibility_sources() {
+		$user_ids = array();
+		for ( $i = 0; $i < 4; $i++ ) {
+			// Restricted surname, but a FIRST name that matches the term - so the re-test keeps
+			// them, and a truncated re-test is observable as a member going missing.
+			$user_ids[] = $this->create_member_with_hidden_surname( 'adminsonly', 'Underbough' . $i, 'Underbough' );
+		}
+
+		bp_update_option( 'bp-display-name-format', 'first_last_name' );
+		$this->set_current_user( 0 );
+
+		$unbounded = bb_xprofile_filter_user_search_matches( $user_ids, array( '%Underbough%' ), 0 );
+		sort( $unbounded );
+		$expected = $user_ids;
+		sort( $expected );
+
+		$this->assertSame(
+			$expected,
+			$unbounded,
+			'Fixture: with no budget every one of these members is kept, because their visible first name matches.'
+		);
+
+		$cap = function () {
+			return 2;
+		};
+		add_filter( 'bb_xprofile_user_search_visibility_candidate_limit', $cap );
+
+		list( $result, $resolutions ) = $this->count_name_resolutions(
+			function () use ( $user_ids ) {
+				return bb_xprofile_filter_user_search_matches( $user_ids, array( '%Underbough%' ), 0 );
+			}
+		);
+
+		remove_filter( 'bb_xprofile_user_search_visibility_candidate_limit', $cap );
+
+		$this->assertCount(
+			2,
+			$result,
+			'Past the budget the unverified matches were served instead of dropped.'
+		);
+		$this->assertSame( 2, $resolutions, 'The budget did not bound the number of names resolved.' );
+		$this->assertEmpty(
+			array_diff( $result, $user_ids ),
+			'The budget removed members that were never candidates.'
+		);
+	}
+
+	/**
+	 * The Nickname format takes a different set of visible sources, and needs its own cover.
+	 *
+	 * Under "Nickname" the visible name is the nickname meta, NOT the nickname profile field (the
+	 * two drift apart), and only when that meta is empty does the resolver fall through to the
+	 * first name. So the SQL answer is decided by different columns than under "First Name", and a
+	 * member with no nickname at all is the one shape that still has to be re-tested.
+	 *
+	 * @group bb_search_visibility_display_format
+	 */
+	public function test_nickname_format_decides_matches_from_the_nickname_not_the_profile_field() {
+		global $wpdb;
+
+		// Nickname stored, and it does not match: the visible name is that nickname, so the match
+		// exists only in the hidden part and the answer is decidable in SQL.
+		$hidden_id = self::factory()->user->create(
+			array(
+				'nickname'      => 'gladhollow',
+				'user_nicename' => 'gladhollow',
+			)
+		);
+		xprofile_set_field_data( bp_xprofile_firstname_field_id(), $hidden_id, 'Perrin' );
+		$wpdb->update( $wpdb->users, array( 'display_name' => 'Perrin Ashgrovely' ), array( 'ID' => $hidden_id ) );
+		clean_user_cache( $hidden_id );
+
+		// No nickname at all: the resolver falls through to the first name, which no column in the
+		// visible-source query can tell us about, so this one must still be re-tested.
+		$fallback_id = self::factory()->user->create( array( 'user_nicename' => 'nonicknamer' ) );
+		delete_user_meta( $fallback_id, 'nickname' );
+		xprofile_set_field_data( bp_xprofile_firstname_field_id(), $fallback_id, 'Ashgrovely' );
+		$wpdb->update( $wpdb->users, array( 'display_name' => 'Ashgrovely Winterbourne' ), array( 'ID' => $fallback_id ) );
+		clean_user_cache( $fallback_id );
+
+		bp_update_option( 'bp-display-name-format', 'nickname' );
+		$this->set_current_user( 0 );
+
+		$this->assertSame(
+			'Ashgrovely',
+			bp_core_get_user_displayname( $fallback_id, 0 ),
+			'Fixture: with no nickname the visible name must fall through to the first name.'
+		);
+
+		list( $result, $resolutions ) = $this->count_name_resolutions(
+			function () use ( $hidden_id, $fallback_id ) {
+				return bb_xprofile_filter_user_search_matches(
+					array( $hidden_id, $fallback_id ),
+					array( '%Ashgrovely%' ),
+					0
+				);
+			}
+		);
+
+		$this->assertSame(
+			array( $fallback_id ),
+			$result,
+			'Under the Nickname format the wrong members survived: the hidden one must go, the one whose visible name matches must stay.'
+		);
+		$this->assertSame(
+			1,
+			$resolutions,
+			'Only the member whose visible name SQL cannot compute should have been resolved.'
+		);
+	}
+
+	/**
+	 * A search is a read: re-testing a candidate must not write to their profile fields.
+	 *
+	 * bp_xprofile_get_member_display_name() back-fills a missing name field from the WP user meta
+	 * and DELETEs the row when that value is empty. Reached from the search re-test that is one
+	 * destructive write per candidate, against members who are not even in the results
+	 * (PROD-9896 H1).
+	 *
+	 * @group bb_search_visibility_display_format
+	 */
+	public function test_search_re_test_does_not_write_to_profile_fields() {
+		global $wpdb;
+
+		$bp      = buddypress();
+		$viewer  = self::factory()->user->create();
+		$user_id = self::factory()->user->create(
+			array(
+				'nickname'      => 'healnick',
+				'user_nicename' => 'healnick',
+			)
+		);
+
+		// No First Name row at all - that absence is what the self-heal repairs.
+		$wpdb->delete( $bp->profile->table_name_data, array( 'field_id' => bp_xprofile_firstname_field_id(), 'user_id' => $user_id ) );
+		xprofile_set_field_data( bp_xprofile_lastname_field_id(), $user_id, 'Quenlingham' );
+
+		$wpdb->update( $wpdb->users, array( 'display_name' => 'Reggiebert Quenlingham' ), array( 'ID' => $user_id ) );
+		clean_user_cache( $user_id );
+
+		$before = (int) $wpdb->get_var(
+			$wpdb->prepare(
+				"SELECT COUNT(*) FROM {$bp->profile->table_name_data} WHERE field_id = %d AND user_id = %d",
+				bp_xprofile_firstname_field_id(),
+				$user_id
+			)
+		);
+		$this->assertSame( 0, $before, 'Fixture: the First Name row must be missing before the search.' );
+
+		bp_update_option( 'bp-display-name-format', 'first_name' );
+		$this->set_current_user( $viewer );
+
+		bb_xprofile_filter_user_search_matches( array( $user_id ), array( '%Reggiebert%' ), $viewer );
+
+		$after = (int) $wpdb->get_var(
+			$wpdb->prepare(
+				"SELECT COUNT(*) FROM {$bp->profile->table_name_data} WHERE field_id = %d AND user_id = %d",
+				bp_xprofile_firstname_field_id(),
+				$user_id
+			)
+		);
+
+		$this->assertSame( 0, $after, 'A read-only member search wrote to another member\'s profile fields.' );
+		$this->assertFalse(
+			bb_xprofile_is_display_name_self_heal_suspended(),
+			'The self-heal suspension outlived the search and will silence the repair for the rest of the request.'
+		);
+	}
+
+	/**
+	 * The re-entrancy marker must be cleared even when the resolution throws.
+	 *
+	 * The marker is what stands WordPress core's author filters down while a resolution reads the
+	 * stored column. Left raised it fails OPEN: every later get_the_author_display_name /
+	 * the_author / document_title_parts / rest_prepare_user returns the RAW column (PROD-9896).
+	 *
+	 * @group bb_search_visibility_display_format
+	 */
+	public function test_core_author_redaction_clears_the_marker_when_a_filter_throws() {
+		$user_id = $this->create_member_with_hidden_surname( 'adminsonly', 'Thrimbleby', 'Cornelius' );
+
+		$this->set_current_user( 0 );
+
+		$boom = function () {
+			throw new RuntimeException( 'boom' );
+		};
+
+		add_filter( 'bp_core_get_user_displayname', $boom, 999 );
+
+		try {
+			bb_core_get_redacted_core_author_name( $user_id );
+		} catch ( Exception $e ) {
+			unset( $e );
+		}
+
+		remove_filter( 'bp_core_get_user_displayname', $boom, 999 );
+
+		$this->assertFalse(
+			bb_core_is_resolving_user_displayname(),
+			'The marker stayed raised after a throw - WordPress core author output now leaks the raw display_name.'
+		);
+
+		$this->assertSame(
+			'Cornelius',
+			apply_filters( 'get_the_author_display_name', 'Cornelius Thrimbleby', $user_id ),
+			'WordPress core author output served the raw column after the failed resolution.'
+		);
+	}
+
+	/**
 	 * A moderator may read every name, so the format source must not filter their search either -
 	 * the function returns before any candidate is built for them.
 	 *
