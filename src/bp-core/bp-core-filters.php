@@ -2434,7 +2434,10 @@ add_action( 'bp_core_install', 'bb_update_digest_schedule_event_on_change_compon
  * @param string $feature_id Feature ID that was activated.
  */
 function bb_messages_schedule_digest_cron_on_feature_activate( $feature_id ) {
-	if ( 'messages' !== $feature_id || wp_next_scheduled( 'bb_digest_email_notifications_hook' ) ) {
+	// Legacy email preferences never use delayed digest notifications
+	// (see bb_check_delay_email_notification()), and the delay settings
+	// fields are not even registered in that mode, so skip scheduling.
+	if ( 'messages' !== $feature_id || true === bb_enabled_legacy_email_preference() || wp_next_scheduled( 'bb_digest_email_notifications_hook' ) ) {
 		return;
 	}
 
