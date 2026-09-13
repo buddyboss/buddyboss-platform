@@ -886,6 +886,60 @@ function bb_media_get_extension_data( $option_name ) {
 }
 
 /**
+ * Refresh an extensions field (video/document) with real defaults once loadable.
+ *
+ * At `bb_register_features` time (`bp_loaded` priority 5), the bp-nouveau
+ * template functions that hold the hard-coded default extension lists —
+ * `bp_video_allowed_video_type()` and `bp_media_allowed_document_type()` —
+ * are not guaranteed to be loaded yet. The video/document extension getters
+ * therefore register their fields with an empty `options`/`extension_data`
+ * payload on a site where the option has never been saved, which renders
+ * the "Manage File Extensions" modal with nothing but "Add Extension".
+ *
+ * `bb_admin_settings_before_get_feature` fires per-AJAX-request while
+ * building the Settings 2.0 response, well after the full component
+ * bootstrap has completed, so the default list is reliably available here.
+ * Re-registering the field simply overwrites its stored `options`/
+ * `extension_data` in the registry (see `BB_Feature_Registry::bb_register_field()`).
+ *
+ * Shared by `bb_media_lazy_refresh_video_extension_defaults()` (settings-videos.php)
+ * and `bb_media_lazy_refresh_document_extension_defaults()` (settings-documents.php),
+ * which were previously two ~90% identical copies of this logic.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $feature_id      The feature being loaded.
+ * @param string $panel_id        Side panel id ('videos' or 'documents').
+ * @param string $section_id      Section id ('videos_settings' or 'documents_settings').
+ * @param string $option_name     DB option name for this extensions field.
+ * @param string $guard_function  Name of the template-layer function whose
+ *                                 availability gates the refresh (see above).
+ * @param bool   $include_default Whether the toggle options should include
+ *                                 the is_default flag. See bb_media_get_extension_options().
+ */
+function bb_media_lazy_refresh_extension_defaults( $feature_id, $panel_id, $section_id, $option_name, $guard_function, $include_default = false ) {
+	if ( 'media' !== $feature_id || ! function_exists( $guard_function ) ) {
+		return;
+	}
+
+	$existing = bb_feature_registry()->bb_get_fields( 'media', $panel_id, $section_id );
+	if ( empty( $existing[ $option_name ] ) ) {
+		return;
+	}
+
+	$field = $existing[ $option_name ];
+	if ( ! empty( $field['extension_data'] ) ) {
+		// Already populated (e.g. the option has been saved) — nothing to refresh.
+		return;
+	}
+
+	$field['options']        = bb_media_get_extension_options( $option_name, $include_default );
+	$field['extension_data'] = bb_media_get_extension_data( $option_name );
+
+	bb_register_feature_field( 'media', $panel_id, $section_id, $field );
+}
+
+/**
  * Format a document icon class for display.
  *
  * Applies the bb_document_icon_class filter and adds the appropriate
