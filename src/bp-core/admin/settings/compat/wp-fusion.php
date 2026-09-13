@@ -458,11 +458,20 @@ function bb_legacy_wpf_save_group_setting( $group_id, $key, $value ) {
  *
  * CRM tag ids aren't always numeric (e.g. `add_tags` CRMs use the typed
  * string itself as the id), so this only trims/de-dupes/drops-empties rather
- * than forcing `absint()`. `$max` mirrors the classic select2's `data-limit`
- * for the two single-tag fields (see file docblock "Single-tag note") — when
- * set, only the last `$max` entries are kept, matching a user replacing their
- * one selection with a newer pick rather than being blocked from picking at
- * all once one tag is chosen.
+ * than forcing `absint()`. Deliberately does NOT run values through
+ * `sanitize_text_field()`: that function strips anything that looks like an
+ * HTML tag, collapses internal whitespace, and removes any `%xx`-shaped
+ * substring — any of which would silently mutate an `add_tags` CRM's tag id
+ * (the literal string the admin typed) into a different string than what's
+ * actually stored in the CRM, desyncing the two. Only control characters are
+ * stripped (via `filter_var( ..., FILTER_FLAG_STRIP_LOW )`) and the result
+ * trimmed, which is enough to keep the stored value a well-formed
+ * single-line string without touching its content.
+ * `$max` mirrors the classic select2's `data-limit` for the two single-tag
+ * fields (see file docblock "Single-tag note") — when set, only the last
+ * `$max` entries are kept, matching a user replacing their one selection
+ * with a newer pick rather than being blocked from picking at all once one
+ * tag is chosen.
  *
  * @since BuddyBoss 3.1.0
  *
@@ -480,7 +489,11 @@ function bb_legacy_wpf_sanitize_group_tag_ids( $raw, $max = null ) {
 		if ( ! is_scalar( $value ) ) {
 			continue;
 		}
-		$value = trim( (string) sanitize_text_field( $value ) );
+		// Strip control characters only (not sanitize_text_field() — see
+		// docblock above) so an `add_tags` CRM's literal tag id survives
+		// unmutated.
+		$value = filter_var( (string) $value, FILTER_UNSAFE_RAW, FILTER_FLAG_STRIP_LOW );
+		$value = trim( $value );
 		if ( '' !== $value ) {
 			$out[] = $value;
 		}
