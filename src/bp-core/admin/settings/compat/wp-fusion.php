@@ -394,7 +394,11 @@ add_filter( 'bb_legacy_meta_box_bridge_skip_groups', 'bb_legacy_wpf_skip_group_a
 
 /**
  * Read the WP Fusion group settings array for a group, merged over defaults
- * so every key is always present regardless of what's actually stored.
+ * so every key is always present regardless of what's actually stored, and
+ * each leaf coerced to an array so a corrupted/scalar leaf (e.g. from data
+ * written outside this bridge) can't reach `get_value()` /
+ * `AjaxMultiSelectField` as anything but a (possibly single-element) flat
+ * array of tag ids.
  *
  * Mirrors the default-merge in `WPF_BuddyPress::meta_box_callback_groups()`.
  *
@@ -415,9 +419,14 @@ function bb_legacy_wpf_group_settings( $group_id ) {
 		return $defaults;
 	}
 
-	$stored = groups_get_groupmeta( $group_id, 'wpf-settings-buddypress' );
+	$stored   = groups_get_groupmeta( $group_id, 'wpf-settings-buddypress' );
+	$settings = is_array( $stored ) ? array_merge( $defaults, $stored ) : $defaults;
 
-	return is_array( $stored ) ? array_merge( $defaults, $stored ) : $defaults;
+	foreach ( $settings as $key => $value ) {
+		$settings[ $key ] = array_values( (array) $value );
+	}
+
+	return $settings;
 }
 
 /**
