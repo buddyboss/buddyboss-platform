@@ -1487,6 +1487,13 @@ function bbp_topic_author_display_name( $topic_id = 0 ) {
  *                            is someone other than the current user - an email fan-out resolves one
  *                            author's name for many different recipients, and profile-field
  *                            visibility is evaluated per recipient.
+ *                            Feed output (the RSS <dc:creator> elements in
+ *                            bp-forums/topics/functions.php and replies/functions.php)
+ *                            deliberately passes nothing: a feed's audience IS the requester,
+ *                            so an anonymous fetch resolves as a guest and a subscribed member
+ *                            as themselves. Pinning those to bb_core_guest_viewer_id() would
+ *                            show a logged-in subscriber less than the site shows them on
+ *                            screen.
  *
  * @return string Topic's author's display name
  * @uses                           bbp_is_topic_anonymous() To check if the topic is by an

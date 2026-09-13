@@ -1610,4 +1610,81 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 			'A logged-in viewer was wrongly denied a members-only name they may read.'
 		);
 	}
+
+	/**
+	 * An email token must resolve the named member for the RECIPIENT, not the request actor.
+	 *
+	 * Email bodies are built once, in the request of whoever triggered the send, and delivered to
+	 * someone else. A name resolved against the actor is never redacted - nobody is denied their own
+	 * name - so the full name landed in every recipient's inbox even when the site withholds it from
+	 * them on screen. groups_notification_group_invites() now passes the invitee as the viewer.
+	 *
+	 * This covers the email/notification fan-out paths, which had no test (PROD-9896 review finding).
+	 *
+	 * @group bb_search_visibility_display_format
+	 */
+	public function test_email_token_resolves_the_name_for_the_recipient() {
+		$inviter = $this->create_member_with_hidden_surname( 'adminsonly', 'Wolstenholme', 'Prudence' );
+		$invitee = self::factory()->user->create();
+
+		bp_update_option( 'bp-display-name-format', 'first_last_name' );
+
+		// bp_send_email() returns a WP_Error before it ever sets tokens when the bp-email posts are
+		// absent, and WP's test suite wipes them. Re-establish them the way BP_UnitTestCase_Emails
+		// does - bp_core_install_emails() lives in the admin schema file, which is not loaded here.
+		if ( is_wp_error( bp_get_email( 'groups-invitation' ) ) ) {
+			require_once buddypress()->plugin_dir . '/bp-core/admin/bp-core-admin-schema.php';
+			bp_core_install_emails();
+		}
+
+		$captured = array();
+		$capture  = function ( $formatted_tokens ) use ( &$captured ) {
+			$captured[] = $formatted_tokens;
+
+			return $formatted_tokens;
+		};
+		// Stop the send once the tokens exist: set_tokens() runs before validate().
+		$halt = function () {
+			return new WP_Error( 'bb_test_halt', 'halted' );
+		};
+
+		add_filter( 'bp_email_set_tokens', $capture );
+		add_filter( 'bp_email_validate', $halt, 99 );
+
+		$group_id = $this->factory->group->create( array( 'creator_id' => $inviter ) );
+		$group    = groups_get_group( $group_id );
+		// groups_notification_group_invites() accepts a BP_Groups_Member or a plain user id.
+		$member = (int) $invitee;
+
+		// The actor is the inviter - the context that made the name unredacted before the fix.
+		$this->set_current_user( $inviter );
+		groups_notification_group_invites( $group, $member, $inviter );
+
+		remove_filter( 'bp_email_set_tokens', $capture );
+		remove_filter( 'bp_email_validate', $halt, 99 );
+
+		$inviter_names = array();
+		foreach ( $captured as $tokens ) {
+			foreach ( $tokens as $key => $value ) {
+				if ( false !== strpos( (string) $key, 'inviter.name' ) ) {
+					$inviter_names[] = (string) $value;
+				}
+			}
+		}
+
+		$this->assertNotEmpty( $inviter_names, 'Fixture: the invite email must carry an inviter.name token.' );
+
+		foreach ( $inviter_names as $name ) {
+			$this->assertStringNotContainsString(
+				'Wolstenholme',
+				$name,
+				'The invite email carried a surname the recipient is denied on screen.'
+			);
+			$this->assertStringContainsString(
+				'Prudence',
+				$name,
+				'The visible part of the inviter name was lost as well.'
+			);
+		}
+	}
 }
