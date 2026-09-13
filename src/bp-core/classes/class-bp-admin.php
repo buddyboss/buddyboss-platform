@@ -1127,7 +1127,21 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			}
 
 			$release_url = $this->bb_get_release_notes_page_url( $new_version );
-			$changelog   = $this->bb_get_release_notes_html( $new_version );
+
+			/*
+			 * Only the plugin-information modal renders the changelog, and it asks
+			 * for the slug alone. WP_Plugin_Dependencies::get_dependency_api_data()
+			 * also calls plugins_api() for every "Requires Plugins" slug — which is
+			 * this plugin, for each add-on — on every plugins.php and
+			 * plugin-install.php load, passing a 'fields' array. Fetching release
+			 * notes there would put a blocking HTTP request in a page load for data
+			 * nothing displays, so the fetch is limited to callers that want
+			 * sections.
+			 */
+			$fields    = isset( $args->fields ) ? (array) $args->fields : array();
+			$changelog = ( empty( $fields ) || ! empty( $fields['sections'] ) )
+				? $this->bb_get_release_notes_html( $new_version )
+				: '';
 
 			$release_link = sprintf(
 				'<p><a href="%1$s" target="_blank" rel="noopener noreferrer">%2$s</a></p>',
