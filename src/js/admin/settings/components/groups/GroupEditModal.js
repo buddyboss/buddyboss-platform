@@ -330,7 +330,17 @@ export function GroupEditModal( { isOpen, group, onClose, onSave, isSaving } ) {
 					}
 				}
 
-				payload[ 'registered_field_' + field.id ] = null !== val && undefined !== val ? val : '';
+				// An empty array serializes to nothing at all via FormData
+				// (appendToFormData() has nothing to iterate), so the POST key
+				// is simply absent and save_fields_data() skips the field — an
+				// array-type field could never be cleared back to empty once
+				// it held a value. Send '' instead so the key reaches $_POST;
+				// each array field's sanitize_callback is expected to treat ''
+				// as "empty selection" (see e.g.
+				// bb_legacy_wpf_sanitize_group_tag_ids()).
+				var isEmptyArray = Array.isArray( val ) && 0 === val.length;
+
+				payload[ 'registered_field_' + field.id ] = ( null !== val && undefined !== val && ! isEmptyArray ) ? val : '';
 			} );
 		}
 
