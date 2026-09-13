@@ -1550,6 +1550,68 @@ function bp_xprofile_get_fields_by_visibility_levels( $user_id, $levels = array(
 }
 
 /**
+ * Prime the caches bp_xprofile_get_hidden_fields_for_user() reads, for a batch of users.
+ *
+ * Resolving one member's hidden fields costs up to three uncached reads: the
+ * BB_XProfile_Visibility::user_data_exists() probe, the field-ids lookup for the viewer's hidden
+ * level set, and - for members with no visibility row - the `bp_xprofile_visibility_levels` user
+ * meta. Anything that resolves visibility once per row (a member loop, an activity stream, a
+ * member search re-testing its matches) therefore pays that per member. This fills all three for
+ * the whole batch in a handful of queries.
+ *
+ * Purely a query-count optimisation: every cache filled here is one the single-user path already
+ * consults, so nothing about the answer changes. Where a key cannot be predicted - a site that
+ * filters the hidden level set to something other than what this computes - the per-user call
+ * simply misses the memo and behaves exactly as it does today.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $user_ids  User IDs whose hidden fields are about to be resolved.
+ * @param int   $viewer_id Optional. Viewer the visibility will be evaluated for. Defaults to the
+ *                         current viewer, which is what the per-user calls will use.
+ */
+function bb_xprofile_prime_hidden_fields_for_users( $user_ids, $viewer_id = 0 ) {
+	$user_ids = array_filter( array_map( 'intval', (array) $user_ids ) );
+
+	if ( empty( $user_ids ) || ! bp_is_active( 'xprofile' ) || ! class_exists( 'BB_XProfile_Visibility' ) ) {
+		return;
+	}
+
+	if ( empty( $viewer_id ) ) {
+		$viewer_id = bb_core_get_viewer_user_id();
+	}
+
+	// (a) The "does this member have any visibility row at all" probe, which decides which of the
+	// two branches below bp_xprofile_get_fields_by_visibility_levels() takes.
+	BB_XProfile_Visibility::prime_user_data_exists_cache( $user_ids );
+
+	// (b) The user-meta branch, taken by every member who has no visibility row - on a community
+	// that has never used custom visibility that is ALL of them. update_meta_cache() queries only
+	// the ids the object cache does not already hold.
+	update_meta_cache( 'user', $user_ids );
+
+	// (c) The field-ids memo, primed per distinct hidden-level set. The level set is read from
+	// bp_xprofile_get_hidden_field_types_for_user() per user rather than re-derived here, so a
+	// site that filters those levels still gets keys that match what the loop will ask for.
+	$by_levels = array();
+	foreach ( $user_ids as $user_id ) {
+		$levels = (array) bp_xprofile_get_hidden_field_types_for_user( $user_id, $viewer_id );
+
+		if ( empty( $levels ) ) {
+			// Self or a moderator: the getter returns before it queries.
+			continue;
+		}
+
+		sort( $levels );
+		$by_levels[ implode( ',', $levels ) ][] = $user_id;
+	}
+
+	foreach ( $by_levels as $levels => $grouped_ids ) {
+		BB_XProfile_Visibility::prime_field_ids_cache( $grouped_ids, explode( ',', $levels ) );
+	}
+}
+
+/**
  * Formats datebox field values passed through a POST request.
  *
  * @since BuddyPress 2.8.0
@@ -4362,19 +4424,45 @@ function bb_xprofile_filter_field_search_matches( $matched_user_ids, $matched_us
 	}
 
 	// Group the matched field ids per user, so a user is judged on all of their matches at once.
+	// Restricted to the matched rows here rather than inside the loop: only a matched row can be
+	// removed, and the per-row in_array() this replaces scanned the whole matched list once per
+	// matched user - quadratic on a term that matches a large part of the member table.
+	$is_matched     = array_flip( $matched_user_ids );
 	$fields_by_user = array();
 	foreach ( (array) $matched_user_data as $row ) {
-		if ( empty( $row->user_id ) || empty( $row->field_id ) ) {
+		if ( empty( $row->user_id ) || empty( $row->field_id ) || ! isset( $is_matched[ (int) $row->user_id ] ) ) {
 			continue;
 		}
 		$fields_by_user[ (int) $row->user_id ][] = (int) $row->field_id;
 	}
 
-	foreach ( $fields_by_user as $user_id => $field_ids ) {
-		if ( ! in_array( $user_id, $matched_user_ids, true ) ) {
-			continue;
-		}
+	if ( empty( $fields_by_user ) ) {
+		return array_values( $matched_user_ids );
+	}
 
+	/** This filter is documented in bp-xprofile/bp-xprofile-functions.php */
+	$candidate_limit = (int) apply_filters( 'bb_xprofile_user_search_visibility_candidate_limit', 500, $display_name_format, $viewer_id );
+
+	$remove_ids = array();
+
+	// Deciding one member costs a visibility resolution, and this producer matches on xprofile
+	// VALUES, so the set it has to decide is as large as the match count itself - a one-word term
+	// on a large community can be the whole member table, before pagination, on a request an
+	// anonymous visitor can issue. Bound it with the same budget its sibling uses, and give the
+	// same fail-closed answer past the bound: a budget that kept the undecided matches would serve
+	// exactly what this filter exists to suppress (PROD-9896).
+	if ( $candidate_limit > 0 && count( $fields_by_user ) > $candidate_limit ) {
+		// A member is never hidden from themselves, so the budget must not be able to drop the
+		// viewer out of their own search results.
+		$remove_ids     = array_values( array_diff( array_slice( array_keys( $fields_by_user ), $candidate_limit ), array( $viewer_id ) ) );
+		$fields_by_user = array_slice( $fields_by_user, 0, $candidate_limit, true );
+	}
+
+	// Resolving a member's hidden fields is up to three uncached reads; fill them for the whole
+	// set at once so the loop below is array lookups rather than queries per matched row.
+	bb_xprofile_prime_hidden_fields_for_users( array_keys( $fields_by_user ), $viewer_id );
+
+	foreach ( $fields_by_user as $user_id => $field_ids ) {
 		$hidden_fields = array_map( 'intval', (array) bp_xprofile_get_hidden_fields_for_user( $user_id, $viewer_id ) );
 
 		if ( ! empty( $format_hidden_field_ids ) ) {
@@ -4390,11 +4478,12 @@ function bb_xprofile_filter_field_search_matches( $matched_user_ids, $matched_us
 			continue;
 		}
 
-		$key = array_search( $user_id, $matched_user_ids, true );
-		if ( false !== $key ) {
-			unset( $matched_user_ids[ $key ] );
-		}
+		$remove_ids[] = (int) $user_id;
 	}
 
-	return array_values( $matched_user_ids );
+	if ( empty( $remove_ids ) ) {
+		return array_values( $matched_user_ids );
+	}
+
+	return array_values( array_diff( $matched_user_ids, $remove_ids ) );
 }

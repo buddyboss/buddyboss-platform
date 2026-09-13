@@ -539,11 +539,11 @@ function bp_core_get_user_displaynames( $user_ids ) {
  * - `bp_xprofile_data` for the First Name, Last Name and Nickname fields, via
  *   BP_XProfile_ProfileData::get_value_byid(), which is the same primer xprofile_get_field_data()
  *   goes through — one query per field for the whole batch instead of one per user per field.
- * - the per-request visibility field-ids memo on BB_XProfile_Visibility, primed per distinct
- *   hidden-level set. The level set is read from bp_xprofile_get_hidden_field_types_for_user() per
- *   user rather than re-derived here, so a site that filters those levels still gets keys that
- *   match what the loop will ask for; where it does not match, the getter simply falls back to its
- *   own query and behaviour is unchanged.
+ * - the visibility reads bp_xprofile_get_hidden_fields_for_user() performs, through
+ *   bb_xprofile_prime_hidden_fields_for_users(): the user_data_exists() probe, the field-ids memo
+ *   per distinct hidden-level set, and the user-meta fallback. Where a key cannot be predicted -
+ *   a site filtering the hidden level set - the per-user call falls back to its own query and
+ *   behaviour is unchanged.
  *
  * @since BuddyBoss [BBVERSION]
  *
@@ -577,27 +577,10 @@ function bb_core_prime_user_displayname_caches( $user_ids, $viewer_id = 0 ) {
 		}
 	}
 
-	// Prime the visibility lookup, grouped by the hidden-level set each user will be resolved with.
-	if ( ! class_exists( 'BB_XProfile_Visibility' ) ) {
-		return;
-	}
-
-	$by_levels = array();
-	foreach ( $user_ids as $user_id ) {
-		$levels = (array) bp_xprofile_get_hidden_field_types_for_user( $user_id, $viewer_id );
-
-		if ( empty( $levels ) ) {
-			// Self or a moderator: the getter returns before it queries.
-			continue;
-		}
-
-		sort( $levels );
-		$by_levels[ implode( ',', $levels ) ][] = $user_id;
-	}
-
-	foreach ( $by_levels as $levels => $grouped_ids ) {
-		BB_XProfile_Visibility::prime_field_ids_cache( $grouped_ids, explode( ',', $levels ) );
-	}
+	// Prime the visibility reads. Shared with the member-search producers, which resolve the same
+	// caches once per matched row - keeping one primer means the two cannot drift into priming
+	// different subsets of what the resolution actually reads.
+	bb_xprofile_prime_hidden_fields_for_users( $user_ids, $viewer_id );
 }
 
 /**
