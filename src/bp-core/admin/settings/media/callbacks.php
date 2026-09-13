@@ -203,7 +203,7 @@ function bb_media_sanitize_extensions( $value, $option_name = '' ) {
 	// the toggle-only flow always sends every registered key with its
 	// 0/1 state, never an empty map.
 	//
-	// @since BuddyBoss 3.0.3
+	// @since BuddyBoss 3.0.3.
 	if ( empty( $value ) ) {
 		return array();
 	}
@@ -232,7 +232,7 @@ function bb_media_sanitize_extensions( $value, $option_name = '' ) {
 		// default extensions to an empty array before any of them have been
 		// persisted.
 		//
-		// @since BuddyBoss [BBVERSION]
+		// @since BuddyBoss [BBVERSION].
 		$default_extensions = bb_media_get_default_extensions( $option_name );
 		$existing           = bp_get_option( $option_name, $default_extensions );
 
@@ -816,7 +816,7 @@ function bb_media_get_extension_options( $option_name, $include_default = false 
 	// saved at all — get_option() only substitutes the default for a
 	// missing row, so an empty-but-present option needs its own fallback.
 	//
-	// @since BuddyBoss [BBVERSION]
+	// @since BuddyBoss [BBVERSION].
 	if ( empty( $extensions ) ) {
 		$extensions = $default_extensions;
 	}
@@ -861,7 +861,7 @@ function bb_media_get_extension_data( $option_name ) {
 	// See bb_media_get_extension_options() above — an empty-but-present
 	// option needs the same fallback as a missing one.
 	//
-	// @since BuddyBoss [BBVERSION]
+	// @since BuddyBoss [BBVERSION].
 	if ( empty( $extensions ) ) {
 		$extensions = $default_extensions;
 	}
