@@ -223,6 +223,18 @@ function AjaxMultiSelectField( { field, value, onChange, disabled } ) {
 
 	function handleSelect( item ) {
 		var newIds = selectedIds.concat( [ coerceId( item.value ) ] );
+
+		// Optional cap (e.g. WP Fusion's "Link with Tag" fields mirror the
+		// classic select2's data-limit="1" single-tag pickers). Keep only the
+		// most recently added ids so the UI enforces the same limit the
+		// server-side sanitize_callback backstops, instead of letting the
+		// user select more than the max and having entries silently dropped
+		// only on save.
+		var maxSelection = extraData.max_selection ? parseInt( extraData.max_selection, 10 ) : 0;
+		if ( maxSelection > 0 && newIds.length > maxSelection ) {
+			newIds = newIds.slice( -maxSelection );
+		}
+
 		setItemLabels( function ( prev ) {
 			var updated = Object.assign( {}, prev );
 			updated[ coerceId( item.value ) ] = item.label;

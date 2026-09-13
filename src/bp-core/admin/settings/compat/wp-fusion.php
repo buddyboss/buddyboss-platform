@@ -504,9 +504,15 @@ function bb_legacy_wpf_sanitize_group_tag_ids( $raw, $max = null ) {
  * @since BuddyBoss 3.1.0
  *
  * @param string[] $saved Currently saved tag ids for this field.
+ * @param int|null $max   Optional cap on how many tags the field accepts (see
+ *                        the "Single-tag note" in the file docblock). When
+ *                        set, `AjaxMultiSelectField` enforces it client-side
+ *                        by dropping the oldest selection instead of only
+ *                        relying on the server-side truncation in
+ *                        `bb_legacy_wpf_sanitize_group_tag_ids()`.
  * @return array Extra data for the `ajax_multiselect` field type.
  */
-function bb_legacy_wpf_group_tag_extra_data( $saved ) {
+function bb_legacy_wpf_group_tag_extra_data( $saved, $max = null ) {
 	$extra = array(
 		'ajax_action'        => 'bb_legacy_ajax_select_search',
 		'ajax_nonce'         => wp_create_nonce( 'bb_admin_settings' ),
@@ -516,6 +522,10 @@ function bb_legacy_wpf_group_tag_extra_data( $saved ) {
 		'resolver'           => 'wpf_tags',
 		'selected_items'     => array(),
 	);
+
+	if ( null !== $max && $max > 0 ) {
+		$extra['max_selection'] = (int) $max;
+	}
 
 	if ( bb_legacy_wpf_crm_supports_tag_create() ) {
 		$extra['allow_create']  = true;
@@ -624,7 +634,7 @@ function bb_legacy_wpf_register_group_fields( $registry, $component ) {
 			},
 			'get_extra_data'    => function ( $group ) {
 				$group_id = is_object( $group ) && isset( $group->id ) ? (int) $group->id : 0;
-				return bb_legacy_wpf_group_tag_extra_data( bb_legacy_wpf_group_settings( $group_id )['tag_link'] );
+				return bb_legacy_wpf_group_tag_extra_data( bb_legacy_wpf_group_settings( $group_id )['tag_link'], 1 );
 			},
 			'save_value'        => function ( $group, $value ) {
 				$group_id = is_object( $group ) && isset( $group->id ) ? (int) $group->id : 0;
@@ -654,7 +664,7 @@ function bb_legacy_wpf_register_group_fields( $registry, $component ) {
 			},
 			'get_extra_data'    => function ( $group ) {
 				$group_id = is_object( $group ) && isset( $group->id ) ? (int) $group->id : 0;
-				return bb_legacy_wpf_group_tag_extra_data( bb_legacy_wpf_group_settings( $group_id )['organizer_tag'] );
+				return bb_legacy_wpf_group_tag_extra_data( bb_legacy_wpf_group_settings( $group_id )['organizer_tag'], 1 );
 			},
 			'save_value'        => function ( $group, $value ) {
 				$group_id = is_object( $group ) && isset( $group->id ) ? (int) $group->id : 0;
