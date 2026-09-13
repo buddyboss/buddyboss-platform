@@ -1456,4 +1456,158 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 			'The graph shape must be preserved exactly.'
 		);
 	}
+
+	/**
+	 * An unhealed member's restricted surname must not survive in the resolved name.
+	 *
+	 * bp_xprofile_get_member_display_name() back-fills a name field that has no stored row from the
+	 * WordPress user meta, and returns that value whether or not the repair was persisted - a member
+	 * search suspends the write while still resolving. xprofile_filter_get_user_display_name() then
+	 * decided whether to strip the surname by re-reading the FIELD, a second and independent
+	 * resolution of the same value: on an imported member who never re-saved their profile the field
+	 * is empty while the resolved name carries the surname, so the strip was skipped and a logged-in
+	 * searcher could confirm a restricted surname by searching it (PROD-9896 review finding).
+	 *
+	 * @group bb_search_visibility_display_format
+	 */
+	public function test_unhealed_member_restricted_last_name_is_stripped() {
+		global $wpdb;
+		$bp = buddypress();
+
+		$viewer  = self::factory()->user->create();
+		$user_id = self::factory()->user->create( array( 'nickname' => 'ravennick' ) );
+
+		wp_update_user(
+			array(
+				'ID'           => $user_id,
+				'first_name'   => 'Anneliese',
+				'last_name'    => 'Ravenscroft',
+				'display_name' => 'Anneliese Ravenscroft',
+			)
+		);
+
+		xprofile_set_field_data( bp_xprofile_firstname_field_id(), $user_id, 'Anneliese' );
+		xprofile_set_field_visibility_level( bp_xprofile_lastname_field_id(), $user_id, 'adminsonly' );
+
+		// The unhealed shape: the surname lives only in user meta and the stored column.
+		$wpdb->delete( $bp->profile->table_name_data, array( 'field_id' => bp_xprofile_lastname_field_id(), 'user_id' => $user_id ) );
+		wp_cache_flush();
+
+		bp_update_option( 'bp-display-name-format', 'first_last_name' );
+		$this->set_current_user( $viewer );
+
+		$this->assertSame(
+			'',
+			(string) xprofile_get_field_data( bp_xprofile_lastname_field_id(), $user_id ),
+			'Fixture: the Last Name field must have no stored row.'
+		);
+
+		// The resolution exactly as the search re-test performs it, with the repair suspended.
+		bb_xprofile_is_display_name_self_heal_suspended( true );
+		try {
+			$suspended_name = bp_core_get_user_displayname( $user_id, $viewer );
+		} finally {
+			bb_xprofile_is_display_name_self_heal_suspended( false );
+		}
+
+		$this->assertSame(
+			'Anneliese',
+			(string) $suspended_name,
+			'A viewer denied the surname was served it while the self-heal was suspended.'
+		);
+
+		$this->assertSame(
+			array(),
+			bb_xprofile_filter_user_search_matches( array( $user_id ), array( '%Ravenscroft%' ), $viewer ),
+			'The restricted surname still answered a member search.'
+		);
+
+		// The guest path resolves in the function body rather than through this filter; it already
+		// failed closed and must keep doing so.
+		$this->assertStringNotContainsString(
+			'Ravenscroft',
+			(string) bp_core_get_user_displayname( $user_id, 0 ),
+			'A guest was served the restricted surname.'
+		);
+	}
+
+	/**
+	 * The counterpart: an unhealed member with NOTHING restricted keeps their whole name.
+	 *
+	 * The fix above reads the user-meta surname when the field is empty. That must feed the strip
+	 * decision only when the field is actually hidden - it must not start redacting members whose
+	 * name nobody restricted, which would take the surname off every imported member.
+	 *
+	 * @group bb_search_visibility_display_format
+	 */
+	public function test_unhealed_member_without_restriction_keeps_full_name() {
+		global $wpdb;
+		$bp = buddypress();
+
+		$viewer  = self::factory()->user->create();
+		$user_id = self::factory()->user->create( array( 'nickname' => 'holtnick' ) );
+
+		wp_update_user(
+			array(
+				'ID'           => $user_id,
+				'first_name'   => 'Bartholomew',
+				'last_name'    => 'Holtsworthy',
+				'display_name' => 'Bartholomew Holtsworthy',
+			)
+		);
+
+		xprofile_set_field_data( bp_xprofile_firstname_field_id(), $user_id, 'Bartholomew' );
+		xprofile_set_field_visibility_level( bp_xprofile_lastname_field_id(), $user_id, 'public' );
+
+		$wpdb->delete( $bp->profile->table_name_data, array( 'field_id' => bp_xprofile_lastname_field_id(), 'user_id' => $user_id ) );
+		wp_cache_flush();
+
+		bp_update_option( 'bp-display-name-format', 'first_last_name' );
+		$this->set_current_user( $viewer );
+
+		$this->assertSame(
+			'Bartholomew Holtsworthy',
+			(string) bp_core_get_user_displayname( $user_id, $viewer ),
+			'An unhealed member with nothing hidden lost a name part they are allowed to show.'
+		);
+
+		$this->assertSame(
+			array( $user_id ),
+			bb_xprofile_filter_user_search_matches( array( $user_id ), array( '%Holtsworthy%' ), $viewer ),
+			'A visible surname was wrongly dropped from the search results.'
+		);
+	}
+
+	/**
+	 * The explicit guest viewer must be treated as logged OUT, not as member -1.
+	 *
+	 * bb_core_guest_viewer_id() is the marker for "resolve this for an audience that is provably not
+	 * a member" (an invitation email to a plain address, say). It is a non-empty id, so a bare
+	 * truthy test reads it as a logged-in member and drops 'loggedin' from the hidden set - which
+	 * under-protects a "Logged-in Users only" name field for exactly the audience that must not see
+	 * it. bp_xprofile_get_hidden_field_types_for_user() has always checked the sentinel; this
+	 * producer did not (PROD-9896 review finding).
+	 *
+	 * @group bb_search_visibility_display_format
+	 */
+	public function test_guest_sentinel_viewer_is_treated_as_logged_out() {
+		$user_id = $this->create_member_with_hidden_surname( 'loggedin', 'Marchbanks', 'Evelina' );
+
+		bp_update_option( 'bp-display-name-format', 'first_last_name' );
+		$this->set_current_user( 0 );
+
+		$this->assertSame(
+			array(),
+			bb_xprofile_filter_user_search_matches( array( $user_id ), array( '%Marchbanks%' ), bb_core_guest_viewer_id() ),
+			'A members-only surname answered a search resolved for an explicitly anonymous audience.'
+		);
+
+		// A logged-in member may see a 'loggedin' field, so the same search must still find them.
+		$member = self::factory()->user->create();
+		$this->assertSame(
+			array( $user_id ),
+			bb_xprofile_filter_user_search_matches( array( $user_id ), array( '%Marchbanks%' ), $member ),
+			'A logged-in viewer was wrongly denied a members-only name they may read.'
+		);
+	}
 }

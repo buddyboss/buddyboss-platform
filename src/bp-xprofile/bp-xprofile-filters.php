@@ -846,6 +846,27 @@ function xprofile_filter_get_user_display_name( $full_name, $user_id, $current_u
 				? preg_replace( '/^[\s\p{Zs}]+|[\s\p{Zs}]+$/u', '', (string) xprofile_get_field_data( $first_name_field_id, $user_id ) )
 				: '';
 
+			// The field read alone is NOT what $full_name was built from. Two lines above,
+			// bp_xprofile_get_member_display_name() back-fills a name field that has no stored row
+			// from the WordPress user meta, and it returns that back-filled value whether or not the
+			// repair was persisted - a member search suspends the write
+			// (bb_xprofile_is_display_name_self_heal_suspended()) while still resolving the name. So
+			// on an unhealed member - an import that never re-saved the profile - the field comes
+			// back empty while $full_name carries the surname, and gating the strip below on the
+			// empty field left the hidden name standing: a logged-in searcher could confirm a
+			// restricted surname by searching it. Read the same source the name was built from. (PROD-9896).
+			if ( '' === (string) $last_name && $last_name_field_id ) {
+				$last_name = preg_replace( '/^[\s\p{Zs}]+|[\s\p{Zs}]+$/u', '', (string) get_user_meta( $user_id, 'last_name', true ) );
+			}
+
+			// Same for the first name. Only the direct `first_name` meta is mirrored, not the
+			// resolver's further fallback to the nickname: when the nickname is what filled the
+			// slot, the visible token is the nickname - a different field with its own visibility -
+			// and stripping it would remove a name this viewer is allowed to see.
+			if ( '' === (string) $first_name && $first_name_field_id ) {
+				$first_name = preg_replace( '/^[\s\p{Zs}]+|[\s\p{Zs}]+$/u', '', (string) get_user_meta( $user_id, 'first_name', true ) );
+			}
+
 			// Field ids are strings from $wpdb but ints from the getters, so these comparisons are
 			// deliberately loose - a strict in_array() misses the match.
 			// phpcs:disable WordPress.PHP.StrictInArray.MissingTrueStrict

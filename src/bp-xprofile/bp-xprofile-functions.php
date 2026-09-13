@@ -3914,8 +3914,13 @@ function bb_xprofile_filter_user_search_matches( $matched_user_ids, $like_patter
 	}
 	$viewer_id = (int) $viewer_id;
 
-	// A moderator sees every field, so no match can be hidden from them.
-	if ( $viewer_id && bp_user_can( $viewer_id, 'bp_moderate' ) ) {
+	// A moderator sees every field, so no match can be hidden from them. The guest sentinel is not
+	// a real user row, so it never reaches bp_user_can().
+	if (
+		$viewer_id
+		&& ! ( function_exists( 'bb_core_guest_viewer_id' ) && bb_core_guest_viewer_id() === $viewer_id )
+		&& bp_user_can( $viewer_id, 'bp_moderate' )
+	) {
 		return $matched_user_ids;
 	}
 
@@ -3936,7 +3941,15 @@ function bb_xprofile_filter_user_search_matches( $matched_user_ids, $like_patter
 	// Levels that can be hidden from this viewer, before the per-target friendship test. 'loggedin'
 	// is only ever hidden from a logged-out visitor; 'friends' depends on the pair and is narrowed
 	// below by the per-user resolution.
-	$hidden_levels = $viewer_id
+	//
+	// bb_core_guest_viewer_id() (-1) is an explicit "resolve this as an anonymous visitor" marker,
+	// and it is a non-empty id - a bare truthy test reads it as a logged-in member and drops
+	// 'loggedin' from the hidden set, under-protecting a "Logged-in Users only" name field for an
+	// audience that is provably not logged in. Checked the same way, and for the same reason, as
+	// bp_xprofile_get_hidden_field_types_for_user().
+	$is_guest_viewer = ( function_exists( 'bb_core_guest_viewer_id' ) && bb_core_guest_viewer_id() === $viewer_id );
+
+	$hidden_levels = ( $viewer_id && ! $is_guest_viewer )
 		? array( 'friends', 'adminsonly' )
 		: array( 'loggedin', 'friends', 'adminsonly' );
 
