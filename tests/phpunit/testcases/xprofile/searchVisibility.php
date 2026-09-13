@@ -1337,4 +1337,53 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 			'A guest matched a first name their own view resolves to the nickname, not this term.'
 		);
 	}
+
+	/**
+	 * An SEO plugin that answers `pre_get_document_title` must not carry the surname into `<title>`.
+	 *
+	 * wp_get_document_title() returns the first non-empty `pre_get_document_title` value untouched,
+	 * so a plugin answering there short-circuits the whole title build and
+	 * bb_core_filter_author_document_title_parts() never fires. Every major SEO plugin does this -
+	 * All in One SEO at priority 99999, Yoast, Rank Math - and they read the name off the WP_User
+	 * object's display_name PROPERTY, which no WordPress filter intercepts. Replicated live against
+	 * All in One SEO before this test was written (PROD-9896).
+	 *
+	 * @group bb_search_visibility_display_format
+	 */
+	public function test_seo_plugin_author_title_is_redacted() {
+		// go_to() re-fires `init` in an already-booted process, so Platform re-registers its block.
+		// A harness artefact of navigating, not something this test exercises.
+		$this->setExpectedIncorrectUsage( 'WP_Block_Type_Registry::register' );
+
+		$user_id = $this->create_member_with_hidden_surname( 'public', 'Ravensmere', 'Tobias' );
+
+		bp_update_option( 'bp-display-name-format', 'first_name' );
+		$this->set_current_user( 0 );
+
+		$this->go_to( get_author_posts_url( $user_id ) );
+
+		// Stand in for the SEO plugin: answer pre_get_document_title with a title built from the
+		// raw column, exactly as they do, at the priority All in One SEO uses.
+		$seo = function () use ( $user_id ) {
+			$author = get_userdata( $user_id );
+
+			return $author->display_name . ' - Test Site';
+		};
+		add_filter( 'pre_get_document_title', $seo, 99999 );
+
+		$title = wp_get_document_title();
+
+		remove_filter( 'pre_get_document_title', $seo, 99999 );
+
+		$this->assertStringNotContainsString(
+			'Ravensmere',
+			$title,
+			'An SEO plugin short-circuited the title build and carried the hidden surname into <title>.'
+		);
+		$this->assertSame(
+			'Tobias - Test Site',
+			$title,
+			'The redaction must replace only the member name, leaving the rest of the plugin template intact.'
+		);
+	}
 }

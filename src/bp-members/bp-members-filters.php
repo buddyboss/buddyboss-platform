@@ -1235,6 +1235,48 @@ function bb_core_filter_author_document_title_parts( $title_parts ) {
 add_filter( 'document_title_parts', 'bb_core_filter_author_document_title_parts' );
 
 /**
+ * Apply member name visibility to an author-archive title produced by an SEO plugin.
+ *
+ * WordPress offers `pre_get_document_title` first and returns that value untouched
+ * when it is non-empty, so an SEO plugin answering there short-circuits the whole title build:
+ * `document_title_parts` never fires and bb_core_filter_author_document_title_parts() never sees
+ * the title. Every major one does this - All in One SEO at priority 99999, Yoast, Rank Math - and
+ * they resolve the name from the WP_User object's `display_name` PROPERTY, a plain read that no
+ * WordPress filter can intercept. Without this the raw surname reaches `<title>` on exactly the
+ * sites this ticket is about, with the rest of the redaction working perfectly around it.
+ *
+ * Deliberately last: it has to run after whichever plugin produced the title. Only the member's own
+ * stored name is replaced inside that string, so a title the plugin has templated keeps everything
+ * else it contains. When no plugin answers, `$title` is '' and this returns '' unchanged, leaving
+ * core to build the parts and the `document_title_parts` filter to do the work as before.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $title The title an earlier filter produced, or '' when none has.
+ * @return string The same title with the author's hidden name part removed.
+ */
+function bb_core_filter_author_pre_document_title( $title ) {
+	if ( ! is_string( $title ) || '' === $title || ! is_author() ) {
+		return $title;
+	}
+
+	$author = get_queried_object();
+
+	if ( empty( $author->ID ) || empty( $author->display_name ) ) {
+		return $title;
+	}
+
+	$redacted = bb_core_get_redacted_core_author_name( $author->ID );
+
+	if ( null === $redacted ) {
+		return $title;
+	}
+
+	return str_replace( $author->display_name, $redacted, $title );
+}
+add_filter( 'pre_get_document_title', 'bb_core_filter_author_pre_document_title', 1000000 );
+
+/**
  * Apply member name visibility to the `wp/v2/users` REST response.
  *
  * WP_REST_Users_Controller copies the raw `display_name` column into the `name` field. The route is
