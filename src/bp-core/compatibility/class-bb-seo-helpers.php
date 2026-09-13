@@ -25,10 +25,18 @@ if ( ! class_exists( 'BB_SEO_Helpers' ) ) {
 	 * page source for anonymous visitors and social scrapers. That is PROD-9896 exactly, arriving
 	 * through a third party rather than through Platform.
 	 *
-	 * Verified against All in One SEO on a live install: its `aioseo_schema_output` graph carried
-	 * the raw surname in the breadcrumb crumbs (Breadcrumbs.php:317) and in the ProfilePage
-	 * `mainEntity` name (ProfilePage.php:86), both raw property reads. The rest of its schema uses
-	 * get_the_author_meta() and was already redacted.
+	 * Verified against all three major plugins on a live install, each carrying the raw surname
+	 * through a property read its own schema builder makes:
+	 *
+	 * - All in One SEO   - breadcrumb crumbs (Breadcrumbs.php:317) and the ProfilePage `mainEntity`
+	 *                      name (ProfilePage.php:86). Reproduced end to end in the browser.
+	 * - Yoast SEO        - the Person graph piece `name` (src/generators/schema/person.php:145) and
+	 *                      the avatar `caption` (:243). Reproduced end to end in the browser: two
+	 *                      raw surnames in the JSON-LD with this layer removed, zero with it.
+	 * - Rank Math        - the author breadcrumb crumb (class-breadcrumbs.php:455).
+	 *
+	 * Each plugin's remaining schema goes through get_the_author_meta() and is already redacted by
+	 * the member name filters in bp-members-filters.php.
 	 *
 	 * The interception is the same for every one of these plugins - take the structure they are
 	 * about to output and replace the member names the current viewer may not see - so the plugins
@@ -105,10 +113,12 @@ if ( ! class_exists( 'BB_SEO_Helpers' ) ) {
 		 * costs nothing, so the list is not gated on plugin detection - which also means a site can
 		 * add an SEO plugin later without this stopping working.
 		 *
-		 * All in One SEO's hook is verified against the plugin's source and reproduced live. The
-		 * other two are the documented public graph filters of their plugins but were NOT verified
-		 * on the install this was written against; a name that turns out to be wrong is inert, not
-		 * broken, and should be corrected rather than trusted.
+		 * All three hook names are verified against the plugins' own source:
+		 * `aioseo_schema_output` (AIOSEO Schema/Helpers.php:82), `wpseo_schema_graph` (Yoast
+		 * src/generators/schema-generator.php:161) and `rank_math/json_ld` (Rank Math
+		 * class-jsonld.php:73 via the `do_filter()` helper, which prefixes `rank_math/`). The
+		 * priority is above every registration those plugins make on their own graph, so this runs
+		 * on the finished structure.
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
@@ -130,11 +140,11 @@ if ( ! class_exists( 'BB_SEO_Helpers' ) ) {
 			return (array) apply_filters(
 				'bb_seo_schema_graph_filters',
 				array(
-					// All in One SEO - verified.
+					// All in One SEO.
 					'aioseo_schema_output' => 20,
-					// Yoast SEO - unverified on this install.
+					// Yoast SEO.
 					'wpseo_schema_graph'   => 20,
-					// Rank Math - unverified on this install.
+					// Rank Math - its own registrations run at 8, 10 and 11.
 					'rank_math/json_ld'    => 20,
 				)
 			);
