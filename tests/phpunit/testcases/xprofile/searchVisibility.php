@@ -1386,4 +1386,74 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 			'The redaction must replace only the member name, leaving the rest of the plugin template intact.'
 		);
 	}
+
+	/**
+	 * An SEO plugin's JSON-LD graph must not carry a name part hidden from the viewer.
+	 *
+	 * SEO plugins build their schema from the WP_User object's display_name PROPERTY, a read no
+	 * WordPress filter reaches, so BB_SEO_Helpers intercepts the graph on its way out instead.
+	 * Replicated live against All in One SEO before this test was written: its breadcrumb crumbs
+	 * (Breadcrumbs.php:317) and ProfilePage mainEntity name (ProfilePage.php:86) both carried the
+	 * raw surname on an anonymous author-archive request (PROD-9896).
+	 *
+	 * @group bb_search_visibility_display_format
+	 */
+	public function test_seo_plugin_schema_graph_is_redacted() {
+		// go_to() re-fires `init` in an already-booted process, so Platform re-registers its block.
+		$this->setExpectedIncorrectUsage( 'WP_Block_Type_Registry::register' );
+
+		$user_id = $this->create_member_with_hidden_surname( 'public', 'Ashcombe', 'Marguerite' );
+
+		bp_update_option( 'bp-display-name-format', 'first_name' );
+		$this->set_current_user( 0 );
+
+		$this->go_to( get_author_posts_url( $user_id ) );
+
+		require_once buddypress()->compatibility_dir . '/class-bb-seo-helpers.php';
+		$helper = BB_SEO_Helpers::instance();
+
+		$permalink = get_author_posts_url( $user_id );
+		$graph     = array(
+			array(
+				'@type'      => 'BreadcrumbList',
+				'itemListElement' => array(
+					array( '@type' => 'ListItem', 'position' => 2, 'name' => 'Marguerite Ashcombe', 'item' => $permalink ),
+				),
+			),
+			array(
+				'@type'      => 'ProfilePage',
+				'name'       => 'Marguerite Ashcombe - Test Site',
+				'url'        => $permalink,
+				'mainEntity' => array( '@type' => 'Person', 'name' => 'Marguerite Ashcombe' ),
+			),
+		);
+
+		$redacted = $helper->redact_schema_graph( $graph );
+
+		$this->assertStringNotContainsString(
+			'Ashcombe',
+			wp_json_encode( $redacted ),
+			'An SEO plugin graph carried a surname the display format hides from every viewer.'
+		);
+		$this->assertSame(
+			'Marguerite',
+			$redacted[0]['itemListElement'][0]['name'],
+			'The breadcrumb name should be the visible name, not blank or mangled.'
+		);
+		$this->assertSame(
+			'Marguerite - Test Site',
+			$redacted[1]['name'],
+			'Only the member name should be replaced; the rest of the plugin template must survive.'
+		);
+		$this->assertSame(
+			$permalink,
+			$redacted[1]['url'],
+			'A URL must never be rewritten - permalinks are built from user_nicename.'
+		);
+		$this->assertSame(
+			'Person',
+			$redacted[1]['mainEntity']['@type'],
+			'The graph shape must be preserved exactly.'
+		);
+	}
 }
