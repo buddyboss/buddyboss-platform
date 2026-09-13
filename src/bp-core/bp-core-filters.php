@@ -2441,6 +2441,11 @@ function bb_messages_schedule_digest_cron_on_feature_activate( $feature_id ) {
 		return;
 	}
 
+	// Only schedule the cron when "Delay Email Notifications" is actually enabled.
+	if ( ! (bool) bp_get_option( 'delay_email_notification', 1 ) ) {
+		return;
+	}
+
 	$time_delay_email_notification = (int) bp_get_option( 'time_delay_email_notification', 15 );
 	$schedule_key                  = 'bb_schedule_15min';
 	if ( 5 === $time_delay_email_notification ) {
