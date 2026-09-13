@@ -140,6 +140,37 @@ function bb_media_sanitize_upload_limit( $value ) {
 }
 
 /**
+ * Get the hard-coded default extension list for an extensions option.
+ *
+ * Centralizes the option-name-to-defaults mapping so the sanitize and
+ * getter helpers below can't drift out of sync (they previously each
+ * duplicated this mapping, and the getters always fell back to the
+ * document list regardless of `$option_name`, silently handing the video
+ * field document defaults on a site where the video option was never
+ * saved).
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $option_name The DB option name (bp_video_extensions_support
+ *                             or bp_document_extensions_support).
+ *
+ * @return array Hard-coded default extensions for the given option, or an
+ *               empty array if the option is unrecognized or its source
+ *               function isn't loaded yet.
+ */
+function bb_media_get_default_extensions( $option_name ) {
+	if ( 'bp_video_extensions_support' === $option_name && function_exists( 'bp_video_allowed_video_type' ) ) {
+		return bp_video_allowed_video_type();
+	}
+
+	if ( 'bp_document_extensions_support' === $option_name && function_exists( 'bp_media_allowed_document_type' ) ) {
+		return bp_media_allowed_document_type();
+	}
+
+	return array();
+}
+
+/**
  * Sanitize file extensions array (video/document).
  *
  * Handles two input formats from the React admin UI:
@@ -172,7 +203,7 @@ function bb_media_sanitize_extensions( $value, $option_name = '' ) {
 	// the toggle-only flow always sends every registered key with its
 	// 0/1 state, never an empty map.
 	//
-	// @since BuddyBoss 3.0.3
+	// @since BuddyBoss 3.0.3.
 	if ( empty( $value ) ) {
 		return array();
 	}
@@ -194,8 +225,20 @@ function bb_media_sanitize_extensions( $value, $option_name = '' ) {
 			}
 		}
 
-		// Merge toggle states into existing stored data.
-		$existing = bp_get_option( $option_name, array() );
+		// Merge toggle states into existing stored data, falling back to the
+		// hard-coded defaults when the option has never been saved yet — or
+		// was previously saved as an empty array by a legacy upgrade routine
+		// (see bb_update_to_2_4_10()) — so a toggle flip doesn't wipe out the
+		// default extensions to an empty array before any of them have been
+		// persisted.
+		//
+		// @since BuddyBoss [BBVERSION].
+		$default_extensions = bb_media_get_default_extensions( $option_name );
+		$existing           = bp_get_option( $option_name, $default_extensions );
+
+		if ( empty( $existing ) ) {
+			$existing = $default_extensions;
+		}
 
 		foreach ( $value as $key => $is_active ) {
 			$sanitized_key = sanitize_key( $key );
@@ -765,8 +808,20 @@ function bb_media_create_test_upload() {
  * @return array Toggle list options.
  */
 function bb_media_get_extension_options( $option_name, $include_default = false ) {
-	$extensions = bp_get_option( $option_name, array() );
-	$options    = array();
+	$default_extensions = bb_media_get_default_extensions( $option_name );
+	$extensions         = bp_get_option( $option_name, $default_extensions );
+
+	// The option may exist but have been saved as an empty array by a
+	// legacy upgrade routine (see bb_update_to_2_4_10()) rather than never
+	// saved at all — get_option() only substitutes the default for a
+	// missing row, so an empty-but-present option needs its own fallback.
+	//
+	// @since BuddyBoss [BBVERSION].
+	if ( empty( $extensions ) ) {
+		$extensions = $default_extensions;
+	}
+
+	$options = array();
 
 	foreach ( $extensions as $key => $ext ) {
 		if ( ! is_array( $ext ) || empty( $ext['extension'] ) ) {
@@ -800,8 +855,18 @@ function bb_media_get_extension_options( $option_name, $include_default = false 
  * @return array Full extension data keyed by extension ID.
  */
 function bb_media_get_extension_data( $option_name ) {
-	$extensions = bp_get_option( $option_name, array() );
-	$data       = array();
+	$default_extensions = bb_media_get_default_extensions( $option_name );
+	$extensions         = bp_get_option( $option_name, $default_extensions );
+
+	// See bb_media_get_extension_options() above — an empty-but-present
+	// option needs the same fallback as a missing one.
+	//
+	// @since BuddyBoss [BBVERSION].
+	if ( empty( $extensions ) ) {
+		$extensions = $default_extensions;
+	}
+
+	$data = array();
 
 	foreach ( $extensions as $key => $ext ) {
 		if ( ! is_array( $ext ) || empty( $ext['extension'] ) ) {
@@ -818,6 +883,60 @@ function bb_media_get_extension_data( $option_name ) {
 	}
 
 	return $data;
+}
+
+/**
+ * Refresh an extensions field (video/document) with real defaults once loadable.
+ *
+ * At `bb_register_features` time (`bp_loaded` priority 5), the bp-nouveau
+ * template functions that hold the hard-coded default extension lists —
+ * `bp_video_allowed_video_type()` and `bp_media_allowed_document_type()` —
+ * are not guaranteed to be loaded yet. The video/document extension getters
+ * therefore register their fields with an empty `options`/`extension_data`
+ * payload on a site where the option has never been saved, which renders
+ * the "Manage File Extensions" modal with nothing but "Add Extension".
+ *
+ * `bb_admin_settings_before_get_feature` fires per-AJAX-request while
+ * building the Settings 2.0 response, well after the full component
+ * bootstrap has completed, so the default list is reliably available here.
+ * Re-registering the field simply overwrites its stored `options`/
+ * `extension_data` in the registry (see `BB_Feature_Registry::bb_register_field()`).
+ *
+ * Shared by `bb_media_lazy_refresh_video_extension_defaults()` (settings-videos.php)
+ * and `bb_media_lazy_refresh_document_extension_defaults()` (settings-documents.php),
+ * which were previously two ~90% identical copies of this logic.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $feature_id      The feature being loaded.
+ * @param string $panel_id        Side panel id ('videos' or 'documents').
+ * @param string $section_id      Section id ('videos_settings' or 'documents_settings').
+ * @param string $option_name     DB option name for this extensions field.
+ * @param string $guard_function  Name of the template-layer function whose
+ *                                 availability gates the refresh (see above).
+ * @param bool   $include_default Whether the toggle options should include
+ *                                 the is_default flag. See bb_media_get_extension_options().
+ */
+function bb_media_lazy_refresh_extension_defaults( $feature_id, $panel_id, $section_id, $option_name, $guard_function, $include_default = false ) {
+	if ( 'media' !== $feature_id || ! function_exists( $guard_function ) ) {
+		return;
+	}
+
+	$existing = bb_feature_registry()->bb_get_fields( 'media', $panel_id, $section_id );
+	if ( empty( $existing[ $option_name ] ) ) {
+		return;
+	}
+
+	$field = $existing[ $option_name ];
+	if ( ! empty( $field['extension_data'] ) ) {
+		// Already populated (e.g. the option has been saved) — nothing to refresh.
+		return;
+	}
+
+	$field['options']        = bb_media_get_extension_options( $option_name, $include_default );
+	$field['extension_data'] = bb_media_get_extension_data( $option_name );
+
+	bb_register_feature_field( 'media', $panel_id, $section_id, $field );
 }
 
 /**
