@@ -95,6 +95,69 @@ function bb_email_digest_required_plans() {
 }
 
 /**
+ * Whether the BuddyBoss license is currently activated.
+ *
+ * Split out from the state resolver so the licence fact and the plan fact can be
+ * exercised independently — a QA site can reach the plan branches without holding a
+ * matching licence, and reaching the unlicensed screen never means deactivating a real
+ * one. Fails closed: an unreadable licence layer counts as not activated.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return bool True when a licence is activated.
+ */
+function bb_email_digest_is_license_active() {
+	$active = false;
+
+	if ( class_exists( '\BuddyBoss\Core\Admin\Mothership\BB_Plugin_Connector' ) ) {
+		try {
+			$connector = new \BuddyBoss\Core\Admin\Mothership\BB_Plugin_Connector();
+			$active    = (bool) $connector->getLicenseActivationStatus();
+		} catch ( \Exception $e ) {
+			$active = false;
+		}
+	}
+
+	/**
+	 * Filters whether the licence counts as activated for the Email Digest panel.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param bool $active Whether a licence is activated.
+	 */
+	return (bool) apply_filters( 'bb_email_digest_is_license_active', $active );
+}
+
+/**
+ * The plan SKU the activated licence carries.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return string Lowercase SKU, or an empty string when it cannot be determined.
+ */
+function bb_email_digest_licensed_plan_sku() {
+	$sku = '';
+
+	if ( class_exists( '\BuddyBoss\Core\Admin\Mothership\BB_Plugin_Connector' ) ) {
+		try {
+			$connector = new \BuddyBoss\Core\Admin\Mothership\BB_Plugin_Connector();
+			$sku       = strtolower( (string) $connector->getCurrentPluginId() );
+		} catch ( \Exception $e ) {
+			$sku = '';
+		}
+	}
+
+	/**
+	 * Filters the plan SKU used to decide Email Digest entitlement.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $sku Lowercase plan SKU.
+	 */
+	return (string) apply_filters( 'bb_email_digest_licensed_plan_sku', $sku );
+}
+
+/**
  * Resolve which of the three stand-in states applies.
  *
  * Fails closed on every ambiguity: an unreadable licence layer, an unactivated licence and
@@ -107,21 +170,11 @@ function bb_email_digest_required_plans() {
  * @return string One of 'needs_license', 'not_in_plan', 'addon_inactive'.
  */
 function bb_email_digest_get_placeholder_state() {
-	if ( ! class_exists( '\BuddyBoss\Core\Admin\Mothership\BB_Plugin_Connector' ) ) {
+	if ( ! bb_email_digest_is_license_active() ) {
 		return 'needs_license';
 	}
 
-	try {
-		$connector = new \BuddyBoss\Core\Admin\Mothership\BB_Plugin_Connector();
-
-		if ( ! $connector->getLicenseActivationStatus() ) {
-			return 'needs_license';
-		}
-
-		$sku = strtolower( (string) $connector->getCurrentPluginId() );
-	} catch ( \Exception $e ) {
-		return 'needs_license';
-	}
+	$sku = bb_email_digest_licensed_plan_sku();
 
 	if ( '' === $sku ) {
 		return 'not_in_plan';
@@ -140,9 +193,25 @@ function bb_email_digest_get_placeholder_state() {
 		return 'not_in_plan';
 	}
 
-	// Entitled by plan, yet the real panel is absent (the caller already established
-	// that) — so the add-on that implements the digest is not running.
-	return 'addon_inactive';
+	// Entitled by plan, yet the real panel is absent — the caller established that before
+	// calling. Two explanations remain and they need different screens.
+	if ( ! function_exists( 'is_plugin_active' ) ) {
+		require_once ABSPATH . 'wp-admin/includes/plugin.php';
+	}
+
+	if ( ! is_plugin_active( bb_email_digest_addon_plugin_file() ) ) {
+		// The plugin that carries the digest is not running at all. Nothing about the
+		// licence is wrong, so the fix is the plugin, not the plan.
+		return 'addon_inactive';
+	}
+
+	// The plugin IS running and still registered nothing, so this build of it does not
+	// carry the digest module — the add-on ships module folders per build, and a build
+	// without that folder is a build without the feature. An admin cannot switch on what
+	// is not there, and the route to it is a plan whose build includes it, so this lands
+	// on the upgrade screen rather than a card telling them to activate a plugin that is
+	// already active.
+	return 'not_in_plan';
 }
 
 /**
@@ -185,7 +254,7 @@ function bb_email_digest_upgrade_modal_payload() {
 		'title'       => __( 'Simplify Email Notifications', 'buddyboss' ),
 		'description' => __( 'Combine multiple community notifications into one organized daily or weekly email while keeping in-app notifications unchanged.', 'buddyboss' ),
 		'tier'        => 'start',
-		'url'         => 'https://www.buddyboss.com/pricing/',
+		'url'         => 'https://buddyboss.com/pricing?utm_source=product&utm_medium=platform-plugin&utm_campaign=email-digest-upgrade&utm_content=emails-settings',
 		// Platform's own copy of the hero, at the design's native 600x337. The add-on
 		// ships the same file, but this panel exists precisely for sites where the add-on
 		// is not on disk, so it cannot borrow that one.
@@ -247,7 +316,7 @@ function bb_admin_settings_register_email_digest_placeholder() {
 			'show'       => true,
 			'badge_text' => __( 'UPGRADE START', 'buddyboss' ),
 			'badge_icon' => 'bb-icons-rl-crown-simple',
-			'link_url'   => 'https://www.buddyboss.com/pricing/',
+			'link_url'   => 'https://buddyboss.com/pricing?utm_source=product&utm_medium=platform-plugin&utm_campaign=email-digest-upgrade&utm_content=emails-settings',
 			'modal'      => bb_email_digest_upgrade_modal_payload(),
 		);
 	}
@@ -344,7 +413,21 @@ function bb_admin_settings_register_email_digest_locked_form() {
 	 * @return void
 	 */
 	$register = function ( $args ) {
-		$args['pro_only']          = true;
+		$args['pro_only'] = true;
+
+		// Three separate jobs, and all three are needed.
+		//
+		// `pro_only` dims the row and forces the control's off-state, but it does that
+		// through CSS `pointer-events: none` — which stops a mouse and nothing else. A
+		// keyboard user can still Tab onto the control and operate it, and assistive
+		// technology is never told the control is unavailable.
+		//
+		// `disabled` is what actually makes the control inert and announces it as such.
+		//
+		// `__return_empty_string` is the half that survives the browser entirely: a
+		// crafted POST bypasses both of the above, so refusing the value server-side is
+		// the only real guarantee that a locked panel cannot be written to.
+		$args['disabled']          = true;
 		$args['sanitize_callback'] = '__return_empty_string';
 
 		bb_register_feature_field( 'emails', 'email_digest', 'email_digest', $args );
