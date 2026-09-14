@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 3.4.1\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2026-09-14 02:35:20+00:00\n"
+"POT-Creation-Date: 2026-09-14 06:53:25+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -16670,7 +16670,7 @@ msgstr ""
 msgid "View the full release notes for version %s on buddyboss.com"
 msgstr ""
 
-#: bp-core/classes/class-bp-admin.php:1376
+#: bp-core/classes/class-bp-admin.php:1531
 msgid "Visit the plugin website for release information"
 msgstr ""
 
