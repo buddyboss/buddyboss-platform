@@ -1266,22 +1266,143 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			}
 
 			$items = json_decode( wp_remote_retrieve_body( $response ), true );
-			$html  = '';
+			$html  = ( is_array( $items ) && ! empty( $items[0] ) ) ? $this->bb_extract_release_notes_html( $items[0] ) : '';
 
-			if ( is_array( $items ) && ! empty( $items[0] ) && is_array( $items[0] ) ) {
-				$item = $items[0];
+			$html = $this->bb_prepare_release_notes_html( $html );
 
-				if ( ! empty( $item['content']['rendered'] ) ) {
-					$html = $item['content']['rendered'];
-				} elseif ( ! empty( $item['release_fields'] ) ) {
-					$fields = $item['release_fields'];
+			set_transient( $cache_key, $html, '' !== $html ? 12 * HOUR_IN_SECONDS : HOUR_IN_SECONDS );
 
-					if ( is_string( $fields ) ) {
-						$html = $fields;
-					} elseif ( is_array( $fields ) ) {
-						foreach ( array( 'changelog', 'changes', 'release_notes', 'content' ) as $field_key ) {
-							if ( ! empty( $fields[ $field_key ] ) && is_string( $fields[ $field_key ] ) ) {
-								$html = $fields[ $field_key ];
+			return $html;
+		}
+
+		/**
+		 * Make remote release notes HTML safe to render.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param string $html Raw release notes HTML.
+		 *
+		 * @return string Sanitized HTML, or empty string.
+		 */
+		protected function bb_prepare_release_notes_html( $html ) {
+			if ( ! is_string( $html ) || '' === $html ) {
+				return '';
+			}
+
+			// The release feed contains tags whose closing bracket is missing at
+			// line ends (e.g. "</ul\r\n"); repair them so wp_kses_post() does not
+			// escape the fragment into visible text, then balance whatever is left.
+			// Trade-off: a valid tag split across lines ("<a\nhref=...") or prose
+			// like "a <b\n" gets closed early — always safe after kses, and the
+			// feed is a flat single-line-per-tag list, so accepted.
+			$repaired = preg_replace( '/<(\/?[a-z][a-z0-9]*)(?=\s*(?:\r|\n|$))/i', '<$1>', $html );
+
+			if ( null !== $repaired ) {
+				$html = $repaired;
+			}
+
+			return force_balance_tags( wp_kses_post( $html ) );
+		}
+
+		/**
+		 * Pull the release notes HTML out of a releases REST item.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param array $item One item from a releases REST collection.
+		 *
+		 * @return string Raw release notes HTML, or empty string.
+		 */
+		protected function bb_extract_release_notes_html( $item ) {
+			if ( ! is_array( $item ) ) {
+				return '';
+			}
+
+			if ( ! empty( $item['content']['rendered'] ) ) {
+				return $item['content']['rendered'];
+			}
+
+			if ( empty( $item['release_fields'] ) ) {
+				return '';
+			}
+
+			$fields = $item['release_fields'];
+
+			if ( is_string( $fields ) ) {
+				return $fields;
+			}
+
+			if ( is_array( $fields ) ) {
+				foreach ( array( 'changelog', 'changes', 'release_notes', 'content' ) as $field_key ) {
+					if ( ! empty( $fields[ $field_key ] ) && is_string( $fields[ $field_key ] ) ) {
+						return $fields[ $field_key ];
+					}
+				}
+			}
+
+			return '';
+		}
+
+		/**
+		 * Fetch the release notes HTML for a BuddyBoss add-on version.
+		 *
+		 * Add-on releases all share one post type on buddyboss.com, separated by a
+		 * term of its "addons" taxonomy, so the add-on is identified by term slug
+		 * rather than by its own post type. Their post slugs cannot be relied on -
+		 * the prefix differs per add-on and WordPress appends a disambiguation
+		 * suffix to duplicates (addons-1-1-1-2), and a few predate the convention
+		 * entirely - but the post title is always the plain version number, so the
+		 * version is matched on that.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param string $version   Version number, e.g. '2.1.2'.
+		 * @param string $term_slug Term slug of the add-on in the releases taxonomy.
+		 *
+		 * @return string Sanitized release notes HTML, or empty string if unavailable.
+		 */
+		public function bb_get_addon_release_notes_html( $version, $term_slug ) {
+			// The version comes from the update feed; keep only the leading run of
+			// digits and dots so a suffixed version matches its base release.
+			preg_match( '/^[0-9.]+/', (string) $version, $matches );
+			$version   = isset( $matches[0] ) ? $matches[0] : '';
+			$term_slug = sanitize_title( (string) $term_slug );
+
+			if ( '' === $version || '' === $term_slug ) {
+				return '';
+			}
+
+			$cache_key = 'bb_release_notes_addon_' . md5( $term_slug . '_' . $version );
+			$cached    = get_transient( $cache_key );
+
+			if ( false !== $cached ) {
+				return is_string( $cached ) ? $cached : '';
+			}
+
+			$html    = '';
+			$term_id = $this->bb_get_addon_release_term_id( $term_slug );
+
+			if ( $term_id ) {
+				$endpoint = add_query_arg(
+					array(
+						'addons'   => $term_id,
+						'per_page' => 100,
+						'_fields'  => 'title,release_fields',
+					),
+					'https://buddyboss.com/resources/wp-json/wp/v2/bb-addons'
+				);
+
+				$response = wp_remote_get( esc_url_raw( $endpoint ), array( 'timeout' => 10 ) );
+
+				if ( ! is_wp_error( $response ) && 200 === wp_remote_retrieve_response_code( $response ) ) {
+					$items = json_decode( wp_remote_retrieve_body( $response ), true );
+
+					if ( is_array( $items ) ) {
+						foreach ( $items as $item ) {
+							$title = isset( $item['title']['rendered'] ) ? trim( wp_strip_all_tags( $item['title']['rendered'] ) ) : '';
+
+							if ( $title === $version ) {
+								$html = $this->bb_extract_release_notes_html( $item );
 								break;
 							}
 						}
@@ -1289,23 +1410,57 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 				}
 			}
 
-			if ( '' !== $html ) {
-				// The release feed contains tags whose closing bracket is missing at
-				// line ends (e.g. "</ul\r\n"); repair them so wp_kses_post() does not
-				// escape the fragment into visible text, then balance whatever is left.
-				// Trade-off: a valid tag split across lines ("<a\nhref=...") or prose
-				// like "a <b\n" gets closed early — always safe after kses, and the
-				// feed is a flat single-line-per-tag list, so accepted.
-				$repaired = preg_replace( '/<(\/?[a-z][a-z0-9]*)(?=\s*(?:\r|\n|$))/i', '<$1>', $html );
-				if ( null !== $repaired ) {
-					$html = $repaired;
-				}
-				$html = force_balance_tags( wp_kses_post( $html ) );
-			}
+			$html = $this->bb_prepare_release_notes_html( $html );
 
 			set_transient( $cache_key, $html, '' !== $html ? 12 * HOUR_IN_SECONDS : HOUR_IN_SECONDS );
 
 			return $html;
+		}
+
+		/**
+		 * Resolve an add-on releases taxonomy term slug to its term ID.
+		 *
+		 * The posts collection filters on term IDs, and those are specific to
+		 * buddyboss.com, so the stable term slug is resolved here instead of
+		 * hard-coding an ID. Cached separately from the notes: term IDs change far
+		 * less often than releases appear.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param string $term_slug Term slug in the releases taxonomy.
+		 *
+		 * @return int Term ID, or 0 when it cannot be resolved.
+		 */
+		protected function bb_get_addon_release_term_id( $term_slug ) {
+			$cache_key = 'bb_release_addon_term_' . md5( $term_slug );
+			$cached    = get_transient( $cache_key );
+
+			if ( false !== $cached ) {
+				return (int) $cached;
+			}
+
+			$endpoint = add_query_arg(
+				array(
+					'slug'    => $term_slug,
+					'_fields' => 'id',
+				),
+				'https://buddyboss.com/resources/wp-json/wp/v2/addons'
+			);
+
+			$response = wp_remote_get( esc_url_raw( $endpoint ), array( 'timeout' => 10 ) );
+			$term_id  = 0;
+
+			if ( ! is_wp_error( $response ) && 200 === wp_remote_retrieve_response_code( $response ) ) {
+				$terms = json_decode( wp_remote_retrieve_body( $response ), true );
+
+				if ( is_array( $terms ) && ! empty( $terms[0]['id'] ) ) {
+					$term_id = (int) $terms[0]['id'];
+				}
+			}
+
+			set_transient( $cache_key, $term_id, $term_id ? WEEK_IN_SECONDS : HOUR_IN_SECONDS );
+
+			return $term_id;
 		}
 
 		/**
