@@ -222,6 +222,8 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			// otherwise point to a WordPress.org plugin_information lookup that always fails.
 			add_filter( 'site_transient_update_plugins', array( $this, 'bb_fix_plugin_details_link' ), 20 );
 			add_filter( 'plugins_api', array( $this, 'bb_plugins_api_information' ), 10, 3 );
+			// Late, so an add-on that is active always answers for itself first.
+			add_filter( 'plugins_api', array( $this, 'bb_plugins_api_addon_fallback' ), 20, 3 );
 		}
 
 		/**
@@ -1304,6 +1306,143 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			set_transient( $cache_key, $html, '' !== $html ? 12 * HOUR_IN_SECONDS : HOUR_IN_SECONDS );
 
 			return $html;
+		}
+
+		/**
+		 * Serve plugin information for an installed but inactive BuddyBoss add-on.
+		 *
+		 * Each BuddyBoss add-on answers plugins_api for its own slug, but only
+		 * while it is active. The Plugins screen still offers "View details" for
+		 * an inactive add-on — the slug reaches the row from the update
+		 * transient, which this plugin's updater populates — and without a
+		 * handler that request falls through to WordPress.org and dies with
+		 * "Plugin not found."
+		 *
+		 * This runs at a later priority than every add-on's own handler and only
+		 * when nothing else answered, so an active add-on always supplies its own
+		 * data. The details here come from the add-on's plugin headers, which is
+		 * all that can be known while it is not running.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param false|object|array $result The result object or array. Default false.
+		 * @param string             $action The type of information being requested from the Plugin Installation API.
+		 * @param object             $args   Plugin API arguments.
+		 *
+		 * @return false|object Plugin information for the add-on, or the original result.
+		 */
+		public function bb_plugins_api_addon_fallback( $result, $action, $args ) {
+			if ( 'plugin_information' !== $action || empty( $args->slug ) || false !== $result ) {
+				return $result;
+			}
+
+			$plugin = $this->bb_get_inactive_buddyboss_addon( $args->slug );
+
+			if ( empty( $plugin['file'] ) ) {
+				return $result;
+			}
+
+			$plugin_file = $plugin['file'];
+			$plugin_data = $plugin['data'];
+
+			$new_version = ! empty( $plugin_data['Version'] ) ? $plugin_data['Version'] : '';
+			$package     = '';
+			$update_data = get_site_transient( 'update_plugins' );
+			$update      = isset( $update_data->response[ $plugin_file ] ) ? $update_data->response[ $plugin_file ] : null;
+
+			// Third-party update managers are known to rewrite this transient with
+			// array entries; reading a property off one warns under WP_DEBUG.
+			if ( is_object( $update ) && ! empty( $update->new_version ) ) {
+				$new_version = $update->new_version;
+				$package     = ! empty( $update->package ) ? $update->package : '';
+			}
+
+			$plugin_uri = ! empty( $plugin_data['PluginURI'] ) ? $plugin_data['PluginURI'] : 'https://buddyboss.com/';
+			$author_uri = ! empty( $plugin_data['AuthorURI'] ) ? $plugin_data['AuthorURI'] : 'https://buddyboss.com/';
+			$author     = ! empty( $plugin_data['Author'] ) ? wp_strip_all_tags( $plugin_data['Author'] ) : 'BuddyBoss';
+
+			$information = array(
+				'name'          => wp_strip_all_tags( $plugin_data['Name'] ),
+				'slug'          => $args->slug,
+				'version'       => $new_version,
+				'author'        => '<a href="' . esc_url( $author_uri ) . '" target="_blank" rel="noopener noreferrer">' . esc_html( $author ) . '</a>',
+				'homepage'      => $plugin_uri,
+				'last_updated'  => '',
+				'sections'      => array(
+					'description' => '<p>' . wp_kses_post( $plugin_data['Description'] ) . '</p>',
+					'changelog'   => sprintf(
+						'<p><a href="%1$s" target="_blank" rel="noopener noreferrer">%2$s</a></p>',
+						esc_url( $plugin_uri ),
+						esc_html__( 'Visit the plugin website for release information', 'buddyboss' )
+					),
+				),
+				'download_link' => $package,
+			);
+
+			/**
+			 * Filters the plugin information served for an inactive BuddyBoss add-on.
+			 *
+			 * @since BuddyBoss [BBVERSION]
+			 *
+			 * @param array  $information Plugin information served to the plugin-information modal.
+			 * @param string $new_version Version number the information describes.
+			 * @param object $args        Plugin API arguments (the requested slug is $args->slug).
+			 */
+			$information = apply_filters( 'bb_plugins_api_addon_fallback_information', $information, $new_version, $args );
+
+			return (object) $information;
+		}
+
+		/**
+		 * Resolve a slug to an installed BuddyBoss add-on of this plugin.
+		 *
+		 * Deliberately narrow. A plugin qualifies only when it is authored by
+		 * BuddyBoss AND declares this plugin in its "Requires Plugins" header,
+		 * which is what marks it an add-on distributed from BuddyBoss's own
+		 * servers. BuddyBoss also publishes standalone plugins through the
+		 * WordPress.org directory — those carry no such header, resolve through
+		 * WordPress.org perfectly well, and must never be answered here.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param string $slug Plugin directory slug.
+		 *
+		 * @return array Array with 'file' (plugin basename) and 'data' (plugin headers), or empty array.
+		 */
+		protected function bb_get_inactive_buddyboss_addon( $slug ) {
+			if ( ! function_exists( 'get_plugins' ) ) {
+				require_once ABSPATH . 'wp-admin/includes/plugin.php';
+			}
+
+			$platform_slug = $this->bb_get_platform_plugin_slug();
+
+			foreach ( get_plugins() as $file => $data ) {
+				if ( dirname( $file ) !== $slug || $slug === $platform_slug ) {
+					continue;
+				}
+
+				$author = ! empty( $data['AuthorName'] ) ? $data['AuthorName'] : ( ! empty( $data['Author'] ) ? $data['Author'] : '' );
+
+				if ( false === stripos( wp_strip_all_tags( $author ), 'buddyboss' ) ) {
+					return array();
+				}
+
+				// Read the header directly: WordPress only exposes 'RequiresPlugins'
+				// in plugin data from 6.5 onwards, and this has to hold on 6.0.
+				$headers  = get_file_data( WP_PLUGIN_DIR . '/' . $file, array( 'RequiresPlugins' => 'Requires Plugins' ) );
+				$requires = ! empty( $headers['RequiresPlugins'] ) ? array_map( 'trim', explode( ',', $headers['RequiresPlugins'] ) ) : array();
+
+				if ( ! in_array( $platform_slug, $requires, true ) ) {
+					return array();
+				}
+
+				return array(
+					'file' => $file,
+					'data' => $data,
+				);
+			}
+
+			return array();
 		}
 	}
 endif; // End class_exists check.
