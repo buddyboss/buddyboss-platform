@@ -11251,8 +11251,18 @@ function bb_core_strip_hidden_name_part( $display_name, $hidden_part, $visible_p
 			// 3. A single initial welded to the surname ("pzebrastripe", "Peter pwu"), the shape an
 			//    LDAP or forum import leaves. Pinned to the visible counterpart's OWN initial, so it
 			//    stays a statement about this member's name rather than "any single letter".
-			$remainder_is_visible    = ( '' !== $visible_nospace && false !== stripos( $remainder, $visible_nospace ) );
+			$remainder_is_visible    = ( '' !== $remainder && '' !== $visible_nospace && false !== stripos( $remainder, $visible_nospace ) );
 			$remainder_is_decoration = ( '' !== $remainder && ! preg_match( '/\p{L}/u', $remainder ) );
+
+			// 4. A generational suffix is not a name either. "AnnJr" is the hidden "Ann" with a
+			// suffix welded on - the same shape as "Ann2", which rule 2 already catches - not a
+			// different name that happens to contain it the way "Cann" does. Without this, the
+			// length tie-break below keeps any hidden part under five characters in this shape, so
+			// Ann, Amy, Bob, Eve, Kim and Sam all survived redaction. Pinned to the closed set of
+			// real suffixes: a bare roman numeral letter is left out because "ix", "vi" and "xi"
+			// are ordinary name fragments ("Annix"), and treating those as suffixes would strip
+			// tokens that are somebody else's name.
+			$remainder_is_suffix = ( '' !== $remainder && 1 === preg_match( '/^(?:jr|jnr|sr|snr|ii|iii|iv)$/iu', $remainder ) );
 
 			$visible_initial = '';
 			if ( '' !== $visible_nospace ) {
@@ -11260,7 +11270,7 @@ function bb_core_strip_hidden_name_part( $display_name, $hidden_part, $visible_p
 			}
 			$remainder_is_that_initial = ( 1 === $remainder_length && '' !== $visible_initial && 0 === strcasecmp( $remainder, $visible_initial ) );
 
-			$is_disclosure = ( $remainder_is_visible || $remainder_is_decoration || $remainder_is_that_initial );
+			$is_disclosure = ( $remainder_is_visible || $remainder_is_decoration || $remainder_is_suffix || $remainder_is_that_initial );
 
 			// Everything else is a fragment too short to judge by shape: "Cann" is "Ann" plus a
 			// letter in exactly the way "Zebrastripes" is "Zebrastripe" plus a letter, and "MrLin"

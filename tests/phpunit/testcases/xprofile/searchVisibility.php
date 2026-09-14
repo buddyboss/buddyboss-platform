@@ -1687,4 +1687,65 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 			);
 		}
 	}
+
+	/**
+	 * A generational suffix welded to a short hidden name is a disclosure, not a coincidence.
+	 *
+	 * When the visible counterpart already stands on its own token, an embedded fragment is kept
+	 * unless the hidden part is five characters or more - short name parts collide with unrelated
+	 * names constantly ("Ann" inside "Cann", "Lin" inside "Linda"). That length rule also kept
+	 * "AnnJr", where the remainder is a generational suffix rather than a name, so every hidden
+	 * name under five characters survived redaction in that shape (PROD-9896 review finding).
+	 *
+	 * The counter-assertions matter as much as the leak ones: widening this must not start
+	 * stripping tokens that merely contain a short hidden part.
+	 *
+	 * @group bb_search_visibility_display_format
+	 */
+	public function test_strip_hidden_name_part_treats_a_generational_suffix_as_a_disclosure() {
+		$leaks = array(
+			array( 'Smith AnnJr', 'Ann', 'Smith' ),
+			array( 'Smith AmyJr', 'Amy', 'Smith' ),
+			array( 'Smith BobII', 'Bob', 'Smith' ),
+			array( 'Smith EveSr', 'Eve', 'Smith' ),
+			array( 'Smith AnnaIV', 'Anna', 'Smith' ),
+		);
+
+		foreach ( $leaks as $case ) {
+			list( $stored, $hidden, $visible ) = $case;
+
+			$this->assertStringNotContainsString(
+				$hidden,
+				bb_core_strip_hidden_name_part( $stored, $hidden, $visible ),
+				sprintf( 'A hidden name welded to a generational suffix survived redaction in "%s".', $stored )
+			);
+		}
+
+		// A short fragment inside a token that is a real name must still be left alone - the
+		// coincidence protection this rule sits next to.
+		$keeps = array(
+			array( 'Bob Cann', 'Ann', 'Bob' ),
+			array( 'Bob Anne', 'Ann', 'Bob' ),
+			array( 'Bob Linda', 'Lin', 'Bob' ),
+			array( 'Bob Annix', 'Ann', 'Bob' ),
+			array( 'Bob Hanna', 'Anna', 'Bob' ),
+		);
+
+		foreach ( $keeps as $case ) {
+			list( $stored, $hidden, $visible ) = $case;
+
+			$this->assertSame(
+				$stored,
+				bb_core_strip_hidden_name_part( $stored, $hidden, $visible ),
+				sprintf( 'An unrelated name containing a short hidden fragment was wrongly stripped in "%s".', $stored )
+			);
+		}
+
+		// And the shapes that were already redacted must stay redacted.
+		$this->assertSame(
+			'Peter',
+			bb_core_strip_hidden_name_part( 'Peter Zebrastripes', 'Zebrastripe', 'Peter' ),
+			'A five-character-or-longer hidden part lost its existing redaction.'
+		);
+	}
 }
