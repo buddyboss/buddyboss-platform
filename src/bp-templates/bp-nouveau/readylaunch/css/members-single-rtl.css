@@ -2534,6 +2534,10 @@ table.profile-settings tbody td select {
   margin: 0 0 var(--bb-rl-space-100);
 }
 
+.bb-rl-account-settings-section .bb-two-factor-form .notice p {
+  font-size: 13px;
+}
+
 .bb-rl-account-settings-section .bb-two-factor-form .notice p:last-child {
   margin-bottom: 0;
 }

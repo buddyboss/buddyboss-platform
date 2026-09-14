@@ -343,8 +343,12 @@
 				margin: 0 0 var(--bb-rl-space-100);
 			}
 
-			p:last-child {
-				margin-bottom: 0;
+			p {
+				font-size: 13px;
+
+				&:last-child {
+					margin-bottom: 0;
+				}
 			}
 
 			&.notice-warning {
