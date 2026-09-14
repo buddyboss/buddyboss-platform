@@ -1645,7 +1645,14 @@ function bb_xprofile_filter_possible_hidden_users( $user_ids, $levels = array() 
 		"SELECT DISTINCT user_id FROM {$table} WHERE user_id IN ( {$ids_sql} ) AND value IN ( {$quoted_levels} )"
 	);
 
-	if ( null === $rows && ! empty( $wpdb->last_error ) ) {
+	// A failed query must reach the null return above, not be read as "nobody restricted anything".
+	// It cannot be detected from $rows: wpdb::get_col() initialises its return to array() and never
+	// hands back null, so an error and an empty result set are the same value. Ask $wpdb directly -
+	// wpdb::query() clears last_error through flush() before every query, so this reports on the
+	// query just issued. Getting this wrong is not a degraded search, it is the leak: both callers
+	// treat an array as an authoritative narrowing, and the field-search one returns the whole
+	// matched set unfiltered when that narrowing comes back empty (PROD-9896).
+	if ( ! empty( $wpdb->last_error ) ) {
 		return null;
 	}
 

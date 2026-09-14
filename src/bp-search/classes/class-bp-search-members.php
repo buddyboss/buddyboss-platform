@@ -343,7 +343,7 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 							// check visiblity for field id with current user.
 							if ( ! empty( $sql_xprofile_result ) ) {
 								foreach ( $sql_xprofile_result as $field_data ) {
-									$hidden_fields = bp_xprofile_get_hidden_fields_for_user( $field_data->user_id, bp_loggedin_user_id() );
+									$hidden_fields = bp_xprofile_get_hidden_fields_for_user( $field_data->user_id, bb_core_get_viewer_user_id() );
 
 									if (
 										( ! empty( $hidden_fields )

@@ -1541,4 +1541,58 @@ Bar!';
 			}
 		}
 	}
+
+	/**
+	 * A failed visibility query must be indistinguishable from "everyone is a candidate", never
+	 * from "nobody restricted anything".
+	 *
+	 * bb_xprofile_filter_possible_hidden_users() narrows the set of members whose search match has
+	 * to be re-tested against their viewer-visible name. Its callers treat an array as an
+	 * authoritative narrowing - bb_xprofile_filter_field_search_matches() returns the whole matched
+	 * set unfiltered when that narrowing comes back empty - so a query error resolving to array()
+	 * publishes exactly the names the filter exists to withhold.
+	 *
+	 * It cannot be detected from the return value of the query: wpdb::get_col() initialises its
+	 * return to array() and never hands back null, so an error and an empty result set are the same
+	 * value. This pins the $wpdb->last_error check that replaced that dead comparison (PROD-9896).
+	 *
+	 * @group xprofile
+	 * @group bb_xprofile_filter_possible_hidden_users
+	 */
+	public function test_filter_possible_hidden_users_fails_closed_on_query_error() {
+		global $wpdb;
+
+		$user_ids = array( $this->factory->user->create(), $this->factory->user->create() );
+		$levels   = array( 'friends', 'loggedin', 'adminsonly' );
+
+		// Healthy control: the narrowing applies and returns an array.
+		$this->assertIsArray(
+			bb_xprofile_filter_possible_hidden_users( $user_ids, $levels ),
+			'A healthy query should return the narrowed candidate array.'
+		);
+
+		$break_query = function ( $query ) {
+			if ( false !== strpos( $query, 'DISTINCT user_id' ) && false !== stripos( $query, 'visibility' ) ) {
+				return 'SELECT DISTINCT user_id FROM __bb_no_such_table__ WHERE 1=1';
+			}
+
+			return $query;
+		};
+
+		$suppress = $wpdb->suppress_errors( true );
+		add_filter( 'query', $break_query );
+
+		try {
+			$result = bb_xprofile_filter_possible_hidden_users( $user_ids, $levels );
+		} finally {
+			remove_filter( 'query', $break_query );
+			$wpdb->suppress_errors( $suppress );
+		}
+
+		$this->assertNull(
+			$result,
+			'A failed visibility query must return null so the caller keeps its whole candidate set, rather than an empty array it would treat as an authoritative narrowing.'
+		);
+	}
+
 }
