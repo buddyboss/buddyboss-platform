@@ -4307,8 +4307,15 @@ function bb_xprofile_filter_field_search_matches( $matched_user_ids, $matched_us
 	}
 	$viewer_id = (int) $viewer_id;
 
-	// A moderator sees every field, so nothing can be hidden from them.
-	if ( $viewer_id && bp_user_can( $viewer_id, 'bp_moderate' ) ) {
+	// A moderator sees every field, so nothing can be hidden from them. The guest sentinel is not
+	// a real user row, so it never reaches bp_user_can() - the same guard its sibling
+	// bb_xprofile_filter_user_search_matches() applies, kept identical because the two filters
+	// answer the same question about the same viewer and must not disagree about who a guest is.
+	if (
+		$viewer_id
+		&& ! ( function_exists( 'bb_core_guest_viewer_id' ) && bb_core_guest_viewer_id() === $viewer_id )
+		&& bp_user_can( $viewer_id, 'bp_moderate' )
+	) {
 		return $matched_user_ids;
 	}
 

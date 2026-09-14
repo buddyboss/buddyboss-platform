@@ -1287,6 +1287,63 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 			'A guest confirmed the contents of an admins-only field through profile-field search.'
 		);
 	}
+	/**
+	 * The profile-field producer must read the guest sentinel the same way its sibling does.
+	 *
+	 * bb_core_guest_viewer_id() (-1) marks "resolve this for an audience that is provably not a
+	 * member". It is a NON-EMPTY id, so a bare truthy test reads it as a logged-in member.
+	 * bb_xprofile_filter_user_search_matches() excludes it before bp_user_can(); this producer did
+	 * not, so the sentinel was handed to a capability check for a user row that does not exist.
+	 *
+	 * Harmless in itself - bp_user_can() answers false for a non-existent user - but the two
+	 * filters are OR'd into one search and must not disagree about who a guest is. Asserted in both
+	 * directions so an over-broad guard cannot pass either: the sentinel is denied a members-only
+	 * field, and a real logged-in member still gets it.
+	 *
+	 * @group bb_search_visibility_display_format
+	 */
+	public function test_field_search_guest_sentinel_is_treated_as_logged_out() {
+		$user_id      = $this->create_member_with_hidden_surname( 'loggedin', 'Fenwicke', 'Ottoline' );
+		$matched_data = array( $this->field_match_row( $user_id, bp_xprofile_lastname_field_id() ) );
+
+		// Record every capability check the filter performs. The guard's whole effect is that the
+		// sentinel never reaches one - the RESULT is identical either way, because bp_user_can()
+		// answers false for a user row that does not exist, so asserting only the returned ids
+		// would pass with the guard removed and prove nothing.
+		$checked = array();
+		$spy     = function ( $retval, $user_id ) use ( &$checked ) {
+			$checked[] = (int) $user_id;
+
+			return $retval;
+		};
+		add_filter( 'bp_user_can', $spy, 10, 2 );
+
+		try {
+			$result = bb_xprofile_filter_field_search_matches( array( $user_id ), $matched_data, bb_core_guest_viewer_id() );
+		} finally {
+			remove_filter( 'bp_user_can', $spy, 10 );
+		}
+
+		$this->assertSame(
+			array(),
+			$result,
+			'A members-only field answered a profile-field search resolved for an explicitly anonymous audience.'
+		);
+
+		$this->assertNotContains(
+			(int) bb_core_guest_viewer_id(),
+			$checked,
+			'The guest sentinel was passed to a capability check for a user row that does not exist.'
+		);
+
+		$member = self::factory()->user->create();
+		$this->assertSame(
+			array( $user_id ),
+			bb_xprofile_filter_field_search_matches( array( $user_id ), $matched_data, $member ),
+			'A logged-in viewer was wrongly denied a members-only field they may read.'
+		);
+	}
+
 
 	/**
 	 * A member is removed only when EVERY field they matched on is hidden - a hit that also lands on
