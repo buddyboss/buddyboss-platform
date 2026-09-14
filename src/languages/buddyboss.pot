@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 3.4.1\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2026-08-06 15:09:02+00:00\n"
+"POT-Creation-Date: 2026-09-14 01:57:07+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -22,12 +22,826 @@ msgstr ""
 "X-Poedit-SearchPath-0: .\n"
 "X-Poedit-Bookmarks: \n"
 "X-Textdomain-Support: yes\n"
-"X-Generator: WP-CLI 2.7.1\n"
+"X-Generator: Deprecated: Creation of dynamic property WP_CLI\Dispatcher\CompositeCommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\CompositeCommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\CommandNamespace::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\CommandNamespace::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\CompositeCommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\CompositeCommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\CompositeCommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\CompositeCommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\CompositeCommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\CompositeCommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\CommandNamespace::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\CompositeCommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\CompositeCommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\CompositeCommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\CompositeCommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\CompositeCommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\CompositeCommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\CompositeCommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\CompositeCommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\CompositeCommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\CompositeCommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\CompositeCommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\CompositeCommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\CompositeCommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\CompositeCommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\CompositeCommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\CompositeCommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\CompositeCommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\CompositeCommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\CompositeCommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\CompositeCommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\CompositeCommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\CompositeCommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\CompositeCommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\CompositeCommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\CommandNamespace::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\CompositeCommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\CompositeCommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\CompositeCommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\CompositeCommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\CompositeCommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\CompositeCommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\CommandNamespace::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Using ${var} in strings is deprecated, use {$var} instead in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/i18n-command/src/MakeJsonCommand.php on line 359
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\CommandNamespace::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\CompositeCommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\CompositeCommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\CompositeCommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\CompositeCommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\CompositeCommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\CompositeCommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\CompositeCommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\CompositeCommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\CompositeCommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\CompositeCommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\CompositeCommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\CompositeCommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\CompositeCommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\CompositeCommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\CompositeCommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\CompositeCommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\CompositeCommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+
+Deprecated: Creation of dynamic property WP_CLI\Dispatcher\Subcommand::$longdesc is deprecated in phar:///Applications/MAMP/Library/bin/wp/vendor/wp-cli/wp-cli/php/WP_CLI/Dispatcher/CompositeCommand.php on line 38
+WP-CLI 2.7.1\n"
 "X-Domain: buddyboss\n"
 
 
 #. Plugin Name of the plugin
 #: bp-core/admin/settings/activity/settings-visibility.php:68
+#: bp-core/classes/class-bp-admin.php:1159
 #: bp-performance/bp-performance-includes.php:71
 #: bp-templates/bp-nouveau/includes/customizer.php:29
 msgid "BuddyBoss Platform"
@@ -39,6 +853,7 @@ msgid "https://buddyboss.com/"
 msgstr ""
 
 #. Description of the plugin
+#: bp-core/classes/class-bp-admin.php:1166
 msgid "The BuddyBoss Platform adds community features to WordPress. Member Profiles, Activity Feeds, Direct Messaging, Notifications, and more!"
 msgstr ""
 
@@ -5428,12 +6243,12 @@ msgstr ""
 #: bp-core/admin/bb-admin-settings-emails.php:59
 #: bp-core/admin/bb-admin-settings-tools.php:336
 #: bp-core/bp-core-functions.php:3343
-#: bp-core/classes/class-bp-admin.php:604
-#: bp-core/classes/class-bp-admin.php:605
-#: bp-core/classes/class-bp-admin.php:615
-#: bp-core/classes/class-bp-admin.php:616
-#: bp-core/classes/class-bp-admin.php:635
-#: bp-core/classes/class-bp-admin.php:636
+#: bp-core/classes/class-bp-admin.php:611
+#: bp-core/classes/class-bp-admin.php:612
+#: bp-core/classes/class-bp-admin.php:622
+#: bp-core/classes/class-bp-admin.php:623
+#: bp-core/classes/class-bp-admin.php:642
+#: bp-core/classes/class-bp-admin.php:643
 msgid "Emails"
 msgstr ""
 
@@ -6571,9 +7386,9 @@ msgid "Articles"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-help.php:52
-#: bp-core/classes/class-bp-admin.php:409
-#: bp-core/classes/class-bp-admin.php:491
-#: bp-core/classes/class-bp-admin.php:492
+#: bp-core/classes/class-bp-admin.php:416
+#: bp-core/classes/class-bp-admin.php:498
+#: bp-core/classes/class-bp-admin.php:499
 msgid "Help"
 msgstr ""
 
@@ -6636,9 +7451,9 @@ msgid "When links are used in activity posts, display an image and excerpt from 
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-settings.php:143
-#: bp-core/classes/class-bp-admin.php:324
-#: bp-core/classes/class-bp-admin.php:454
-#: bp-core/classes/class-bp-admin.php:692
+#: bp-core/classes/class-bp-admin.php:331
+#: bp-core/classes/class-bp-admin.php:461
+#: bp-core/classes/class-bp-admin.php:699
 #: bp-core/gdpr/class-bp-settings-export.php:29
 #: bp-core/gdpr/class-bp-settings-export.php:55
 #: bp-forums/admin/admin.php:388
@@ -11972,9 +12787,9 @@ msgid "OneSignal integration for BuddyBoss is currently disabled. Enable it to c
 msgstr ""
 
 #: bp-core/admin/settings/notifications/settings-web-push.php:89
-#: bp-core/classes/class-bp-admin.php:323
-#: bp-core/classes/class-bp-admin.php:453
-#: bp-core/classes/class-bp-admin.php:569
+#: bp-core/classes/class-bp-admin.php:330
+#: bp-core/classes/class-bp-admin.php:460
+#: bp-core/classes/class-bp-admin.php:576
 msgid "BuddyBoss Settings"
 msgstr ""
 
@@ -12384,7 +13199,7 @@ msgid "account"
 msgstr ""
 
 #: bp-core/admin/templates/update-buddyboss.php:87
-#: bp-core/classes/class-bp-admin.php:694
+#: bp-core/classes/class-bp-admin.php:701
 msgid "Release Notes"
 msgstr ""
 
@@ -16233,39 +17048,48 @@ msgstr ""
 msgid "Save Settings"
 msgstr ""
 
-#: bp-core/classes/class-bp-admin.php:408
+#: bp-core/classes/class-bp-admin.php:415
 msgid "BuddyBoss Help"
 msgstr ""
 
-#: bp-core/classes/class-bp-admin.php:428
+#: bp-core/classes/class-bp-admin.php:435
 msgid "BuddyPress Settings"
 msgstr ""
 
-#: bp-core/classes/class-bp-admin.php:429
+#: bp-core/classes/class-bp-admin.php:436
 #: bp-integrations/compatibility/templates/admin/integration-tab-intro.php:13
 msgid "BuddyPress"
 msgstr ""
 
-#: bp-core/classes/class-bp-admin.php:473
+#: bp-core/classes/class-bp-admin.php:480
 msgid "BuddyBoss Integrations"
 msgstr ""
 
-#: bp-core/classes/class-bp-admin.php:474
+#: bp-core/classes/class-bp-admin.php:481
 msgid "Integrations"
 msgstr ""
 
-#: bp-core/classes/class-bp-admin.php:693
+#: bp-core/classes/class-bp-admin.php:700
 #: bp-forums/admin/admin.php:393
 #: bp-templates/bp-nouveau/readylaunch/common/js-templates/messages/parts/bp-messages-right-panel.php:21
 msgid "About"
 msgstr ""
 
-#: bp-core/classes/class-bp-admin.php:744
+#: bp-core/classes/class-bp-admin.php:751
 msgid "Docs"
 msgstr ""
 
-#: bp-core/classes/class-bp-admin.php:745
+#: bp-core/classes/class-bp-admin.php:752
 msgid "<strong>You are offline.</strong> Documentation requires internet access."
+msgstr ""
+
+#. translators: %s: version number.
+#: bp-core/classes/class-bp-admin.php:1153
+msgid "View the full release notes for version %s on buddyboss.com"
+msgstr ""
+
+#: bp-core/classes/class-bp-admin.php:1376
+msgid "Visit the plugin website for release information"
 msgstr ""
 
 #: bp-core/classes/class-bp-attachment-avatar.php:41
