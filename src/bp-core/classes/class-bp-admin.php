@@ -1416,15 +1416,20 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 
 			$platform_slug = $this->bb_get_platform_plugin_slug();
 
+			// This plugin answers for itself in bb_plugins_api_information().
+			if ( $slug === $platform_slug ) {
+				return array();
+			}
+
 			foreach ( get_plugins() as $file => $data ) {
-				if ( dirname( $file ) !== $slug || $slug === $platform_slug ) {
+				if ( dirname( $file ) !== $slug ) {
 					continue;
 				}
 
 				$author = ! empty( $data['AuthorName'] ) ? $data['AuthorName'] : ( ! empty( $data['Author'] ) ? $data['Author'] : '' );
 
 				if ( false === stripos( wp_strip_all_tags( $author ), 'buddyboss' ) ) {
-					return array();
+					continue;
 				}
 
 				// Read the header directly: WordPress only exposes 'RequiresPlugins'
@@ -1433,7 +1438,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 				$requires = ! empty( $headers['RequiresPlugins'] ) ? array_map( 'trim', explode( ',', $headers['RequiresPlugins'] ) ) : array();
 
 				if ( ! in_array( $platform_slug, $requires, true ) ) {
-					return array();
+					continue;
 				}
 
 				return array(
