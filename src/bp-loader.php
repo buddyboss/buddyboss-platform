@@ -508,7 +508,20 @@ if ( ! function_exists( 'bp_core_load_buddypress_textdomain' ) ) {
 				$buddyboss_lang_path = $plugin_folder . '/src/languages';
 			}
 
-			return load_plugin_textdomain( $domain, false, $buddyboss_lang_path );
+			load_plugin_textdomain( $domain, false, $buddyboss_lang_path );
+
+			// Mark the domain as loaded (empty translation set) when no .mo file
+			// exists for the current locale (e.g. default en_US). This prevents the
+			// WP 6.7+ just-in-time loader from emitting the "translation loading
+			// triggered too early" notice for pre-init __() calls.
+			if ( ! is_textdomain_loaded( $domain ) ) {
+				global $l10n;
+				if ( ! isset( $l10n[ $domain ] ) ) {
+					$l10n[ $domain ] = new NOOP_Translations();
+				}
+			}
+
+			return true;
 		}
 
 		return false;
