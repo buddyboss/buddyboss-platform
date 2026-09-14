@@ -1516,6 +1516,27 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			$author_uri = ! empty( $plugin_data['AuthorURI'] ) ? $plugin_data['AuthorURI'] : 'https://buddyboss.com/';
 			$author     = ! empty( $plugin_data['Author'] ) ? wp_strip_all_tags( $plugin_data['Author'] ) : 'BuddyBoss';
 
+			/*
+			 * Serve the add-on's release notes as well, so the modal reads the same
+			 * whether the add-on answered for itself or this fallback did. An
+			 * add-on that is running fetches its own notes and never reaches here;
+			 * one that is not - inactive, or with its handler behind an integration
+			 * that has not booted - would otherwise be left with a bare link.
+			 */
+			$fields    = isset( $args->fields ) ? (array) $args->fields : array();
+			$changelog = '';
+
+			if ( empty( $fields ) || ! empty( $fields['sections'] ) ) {
+				$term      = $this->bb_get_addon_release_term( $args->slug );
+				$rest_base = $this->bb_get_addon_release_post_type( $args->slug );
+
+				if ( '' !== $term ) {
+					$changelog = $this->bb_get_addon_release_notes_html( $new_version, $term );
+				} elseif ( '' !== $rest_base ) {
+					$changelog = $this->bb_get_release_notes_html( $new_version, $rest_base );
+				}
+			}
+
 			$information = array(
 				'name'          => wp_strip_all_tags( $plugin_data['Name'] ),
 				'slug'          => $args->slug,
@@ -1525,7 +1546,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 				'last_updated'  => '',
 				'sections'      => array(
 					'description' => '<p>' . wp_kses_post( $plugin_data['Description'] ) . '</p>',
-					'changelog'   => sprintf(
+					'changelog'   => $changelog . sprintf(
 						'<p><a href="%1$s" target="_blank" rel="noopener noreferrer">%2$s</a></p>',
 						esc_url( $plugin_uri ),
 						esc_html__( 'Visit the plugin website for release information', 'buddyboss' )
@@ -1546,6 +1567,71 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			$information = apply_filters( 'bb_plugins_api_addon_fallback_information', $information, $new_version, $args );
 
 			return (object) $information;
+		}
+
+		/**
+		 * Map an add-on's plugin slug to its term in the releases taxonomy.
+		 *
+		 * Add-on releases are grouped on buddyboss.com by a term whose slug does
+		 * not match the plugin directory, so the pairing is kept here. Add-ons
+		 * that ship their own handler pass their term directly and never consult
+		 * this; it exists for the ones this fallback answers for.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param string $slug Plugin directory slug.
+		 *
+		 * @return string Term slug, or empty string when the add-on has no releases feed.
+		 */
+		protected function bb_get_addon_release_term( $slug ) {
+			$terms = array(
+				'buddyboss-offload-media' => 'buddyboss-offload-media-releases',
+				'buddyboss-gamification'  => 'buddyboss-gamification-releases',
+				'buddyboss-sharing'       => 'buddyboss-sharing-releases',
+				'buddyboss-learndash'     => 'buddyboss-learndash',
+				'buddyboss-addons'        => 'buddyboss-addons',
+			);
+
+			/**
+			 * Filters the plugin slug to releases-taxonomy term map.
+			 *
+			 * @since BuddyBoss [BBVERSION]
+			 *
+			 * @param array $terms Map of plugin directory slug to releases term slug.
+			 */
+			$terms = apply_filters( 'bb_addon_release_terms', $terms );
+
+			return isset( $terms[ $slug ] ) ? (string) $terms[ $slug ] : '';
+		}
+
+		/**
+		 * Map an add-on's plugin slug to its own releases post type.
+		 *
+		 * A few products keep their releases in a post type of their own rather
+		 * than in the shared add-on taxonomy, so they are resolved separately
+		 * from bb_get_addon_release_term().
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param string $slug Plugin directory slug.
+		 *
+		 * @return string Releases post type REST base, or empty string.
+		 */
+		protected function bb_get_addon_release_post_type( $slug ) {
+			$types = array(
+				'buddyboss-platform-pro' => 'releases-platformpro',
+			);
+
+			/**
+			 * Filters the plugin slug to releases post type map.
+			 *
+			 * @since BuddyBoss [BBVERSION]
+			 *
+			 * @param array $types Map of plugin directory slug to releases post type REST base.
+			 */
+			$types = apply_filters( 'bb_addon_release_post_types', $types );
+
+			return isset( $types[ $slug ] ) ? (string) $types[ $slug ] : '';
 		}
 
 		/**
