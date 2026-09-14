@@ -11089,250 +11089,144 @@ function bb_core_sql_like_match( $pattern, $subject ) {
 }
 
 /**
- * Remove a name part the viewer may not see from a stored display name.
+ * Build the name a viewer may see from the member's own profile fields.
  *
- * The `display_name` column always holds a member's full name, so redacting a name part means
- * removing it from a string that may have drifted a long way from "First Last" — an import, the
- * wp-admin "Display name publicly as" dropdown or a third-party write can leave it glued
- * ("AlexQuillfeather"), joined by punctuation ("Alex-Quillfeather"), joined by a non-breaking
- * space, reordered, or reduced to the hidden part alone. A plain `str_replace()` silently misses
- * every one of those, and for a privacy redaction "no match" is the destructive answer.
+ * `wp_users.display_name` is a DERIVED column: BuddyBoss writes it from the profile fields when a
+ * member saves, and nothing keeps it in step afterwards. An import, the wp-admin "Display name
+ * publicly as" dropdown or any third-party write can leave it spelling something a long way from
+ * "First Last" - glued ("AlexQuillfeather"), punctuation-joined, reordered, suffixed, or holding a
+ * name the member no longer has. Members cannot set it themselves.
  *
- * Two passes:
+ * So when a name part has to be withheld from this viewer, the visible name is NOT that column
+ * minus the hidden part. Subtracting one string from another is undecidable on drifted data: a
+ * surname sits inside unrelated names as often as it is the name being hidden ("Ng" inside
+ * "Armstrong", "Ann" inside "Cann"), and a suffix or a de-duplication digit welded to the hidden
+ * part ("AnnJr", "Zebrastripe2") is indistinguishable by shape from somebody else's name. Every
+ * heuristic that separates those cases is load-bearing for one shape and wrong for another.
  *
- * 1. A whole-token strip, which handles the ordinary separated forms in either order and leaves a
- *    middle name in place. Unicode spaces count as separators, so an NBSP-joined name tokenises
- *    like an ASCII-spaced one.
- * 2. A token pass over what remains, for the drifted shapes. A token that is the two name parts
- *    glued together collapses to the part the viewer may see; a token in which the hidden part
- *    survives whole or punctuation-bounded is dropped; a token that merely *contains* the hidden
- *    part as a substring ("Lin" inside "Linda") is kept, so a short name does not over-redact.
+ * The name is therefore assembled from the fields this viewer may see, in the order the site-wide
+ * Display Name Format asks for - which is how the logged-in path has always built it
+ * (bp_xprofile_get_member_display_name()), so the guest view and the member view agree by
+ * construction rather than by two implementations happening to match.
  *
- * The caller decides what to do with an empty result — this returns '' rather than guessing a
- * fallback, because the safe fallback differs by context (the counterpart name, the nickname, the
- * user_nicename).
- *
- * Call it once per hidden part: to redact both name parts, pass the result of the first call as
- * the `$display_name` of the second.
+ * The stored column is still returned untouched when nothing is hidden, so a deliberately
+ * customised display name only gives way to the rebuild when something has to be withheld.
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param string $display_name The stored display name to redact.
- * @param string $hidden_part  The name part this viewer may not see. An empty value is a no-op.
- * @param string $visible_part Optional. The counterpart name part this viewer MAY see, used to
- *                             rebuild a token where the two are glued together. Pass '' when the
- *                             counterpart is unknown or is itself hidden — a glued token is then
- *                             dropped whole rather than partially disclosed.
- * @return string The display name without the hidden part; '' when nothing visible remains.
+ * @param int   $user_id          ID of the member whose name is being resolved.
+ * @param array $hidden_field_ids XProfile field IDs this viewer may not see, as returned by
+ *                                bp_xprofile_get_hidden_fields_for_user(). The site-wide format
+ *                                hide never appears in that list and is applied here instead.
+ * @return string The visible name; the nickname, then the user_nicename, when no permitted name
+ *                part has a value. '' only for an unusable user ID.
  */
-function bb_core_strip_hidden_name_part( $display_name, $hidden_part, $visible_part = '' ) {
-	$display_name = (string) $display_name;
+function bb_core_build_visible_display_name( $user_id, $hidden_field_ids = array() ) {
+	$user_id = (int) $user_id;
 
-	// A null $hidden_part means the caller's own normalisation failed - preg_replace() returns null
-	// only when the subject is not valid UTF-8, which is exactly the legacy/imported data this
-	// redaction exists for. Fail closed: we cannot prove the display name is free of a value we
-	// cannot even read, and returning it unchanged would hand the viewer the raw column.
-	if ( null === $hidden_part ) {
+	if ( $user_id <= 0 ) {
 		return '';
 	}
 
-	$hidden_raw   = (string) $hidden_part;
-	$hidden_part  = preg_replace( '/^[\s\p{Zs}]+|[\s\p{Zs}]+$/u', '', $hidden_raw );
-	$visible_part = (string) preg_replace( '/^[\s\p{Zs}]+|[\s\p{Zs}]+$/u', '', (string) $visible_part );
+	$format = function_exists( 'bp_core_display_name_format' ) ? bp_core_display_name_format() : 'first_last_name';
 
-	// Same reasoning for a hidden value that is itself malformed: '' would mean "nothing to strip"
-	// and return the display name whole, so the two cases must not collapse into one.
-	if ( null === $hidden_part ) {
-		return '';
+	// Under the Nickname format the visible name is the nickname and nothing else - neither name
+	// field is part of it - so there is nothing to assemble and nothing a visibility level could
+	// remove. The Nickname field itself is never excludable (bp_xprofile_get_fields_by_visibility_levels()).
+	if ( 'nickname' === $format ) {
+		return bb_core_get_name_fallback_label( $user_id );
 	}
 
-	if ( '' === $hidden_part || '' === trim( $display_name ) ) {
-		return trim( $display_name );
+	$hidden_field_ids    = array_map( 'intval', (array) $hidden_field_ids );
+	$first_name_field_id = (int) bp_xprofile_firstname_field_id();
+	$last_name_field_id  = (int) bp_xprofile_lastname_field_id();
+
+	$first_name_hidden = ( $first_name_field_id > 0 && in_array( $first_name_field_id, $hidden_field_ids, true ) );
+
+	// The "First Name" format leaves the surname out of the visible name for EVERY viewer, whether
+	// or not the Last Name field is enabled as a profile field, and that hide never enters the
+	// per-viewer list. Gating on bp_core_hide_display_name_field() instead would be too narrow: it
+	// only reports the field being DISABLED, missing the common enabled-field case.
+	$last_name_hidden = (
+		'first_name' === $format
+		|| ( $last_name_field_id > 0 && in_array( $last_name_field_id, $hidden_field_ids, true ) )
+	);
+
+	$parts = array();
+
+	if ( ! $first_name_hidden ) {
+		$parts[] = bb_core_get_name_field_value( $first_name_field_id, $user_id, 'first_name' );
 	}
 
-	// Pass 1 - whole-token strip. preg_replace() returns null only on malformed UTF-8, which we
-	// fail closed to '' so the caller applies its fallback rather than echoing the raw column.
-	$stripped = preg_replace( '/(^|[\s\p{Zs}])' . preg_quote( $hidden_part, '/' ) . '(?=[\s\p{Zs}]|$)/iu', ' ', $display_name );
-	$stripped = ( null === $stripped ) ? '' : trim( preg_replace( '/[\s\p{Zs}]+/u', ' ', $stripped ) );
-
-	if ( '' === $stripped ) {
-		// Nothing survived. When the visible counterpart is the SAME string as the hidden part - a
-		// member whose First Name and Last Name are both "Alex" - the whole-token pass above
-		// removed both tokens, because a case-insensitive strip cannot tell one from the other.
-		// Returning '' sends the caller to its nickname fallback, so the member loses a name this
-		// viewer is allowed to see.
-		//
-		// Echoing that string back discloses nothing: the counterpart is only ever passed when this
-		// viewer MAY see it, so the permitted half is spelled exactly the same as the hidden one and
-		// showing it tells the viewer nothing they were not already entitled to. Compared the same
-		// way the strip matched - case-insensitively - so "Alex Alex" and "Alex alex" behave alike
-		// (PROD-9896).
-		if ( '' !== $visible_part ) {
-			$visible_fold = function_exists( 'mb_strtolower' ) ? mb_strtolower( $visible_part, 'UTF-8' ) : strtolower( $visible_part );
-			$hidden_fold  = function_exists( 'mb_strtolower' ) ? mb_strtolower( $hidden_part, 'UTF-8' ) : strtolower( $hidden_part );
-
-			if ( $visible_fold === $hidden_fold ) {
-				return $visible_part;
-			}
-		}
-
-		return '';
+	if ( ! $last_name_hidden ) {
+		$parts[] = bb_core_get_name_field_value( $last_name_field_id, $user_id, 'last_name' );
 	}
 
-	// Pass 2 - token pass. Compare against whitespace-stripped forms so a multi-word name glued
-	// with no internal spaces ("VanDerBerg" for "Van Der Berg") still matches.
-	$hidden_nospace  = preg_replace( '/[\s\p{Zs}]+/u', '', $hidden_part );
-	$visible_nospace = preg_replace( '/[\s\p{Zs}]+/u', '', $visible_part );
+	$name = trim( implode( ' ', array_filter( $parts, 'strlen' ) ) );
 
-	// A token that is the two parts glued together, in either order.
-	$glue_pattern = ( '' !== $visible_nospace )
-		? '/^(?:' . preg_quote( $hidden_nospace . $visible_nospace, '/' ) . '|' . preg_quote( $visible_nospace . $hidden_nospace, '/' ) . ')$/iu'
-		: '';
+	return ( '' !== $name ) ? $name : bb_core_get_name_fallback_label( $user_id );
+}
 
-	// The counterpart is unknown, so the exact glue above cannot be built: match the hidden part
-	// glued to the start or end of a token and drop the token. This over-redacts a standalone name
-	// that merely begins or ends with the hidden value, which is privacy-safe, and is only reachable
-	// when the counterpart is genuinely absent or itself hidden.
-	$edge_glue = ( '' === $visible_nospace )
-		? '/^' . preg_quote( $hidden_nospace, '/' ) . '|' . preg_quote( $hidden_nospace, '/' ) . '$/iu'
-		: '';
+/**
+ * Read one name profile field for bb_core_build_visible_display_name().
+ *
+ * Unicode-aware trim, because a value padded with a non-ASCII space - U+00A0 pasted from a word
+ * processor, which PHP's trim() leaves in place - would otherwise reach the assembled name.
+ * preg_replace() returns null only on a subject that is not valid UTF-8, which normalises to '' so
+ * the caller applies its fallback rather than concatenating a null.
+ *
+ * The WordPress user meta is read when the profile field has no stored row. That is not a
+ * convenience: bp_xprofile_get_member_display_name() back-fills a missing name field from exactly
+ * this meta, and on an imported member the xprofile row genuinely does not exist yet, so reading
+ * only the field would drop a name this viewer is entitled to see.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int    $field_id XProfile field ID. 0 when the field is not resolvable.
+ * @param int    $user_id  ID of the member the field belongs to.
+ * @param string $meta_key WordPress user meta key holding the same name part.
+ * @return string The stored value, or '' when there is none.
+ */
+function bb_core_get_name_field_value( $field_id, $user_id, $meta_key ) {
+	$field_id = (int) $field_id;
+	$value    = '';
 
-	// The hidden part surviving whole or as a punctuation-bounded piece of a token, without
-	// matching it as a bare substring of a longer word.
-	$bounded = '/(?<![\p{L}\p{N}])' . preg_quote( $hidden_nospace, '/' ) . '(?![\p{L}\p{N}])/iu';
-
-	$stripped_tokens = preg_split( '/[\s\p{Zs}]+/u', $stripped );
-
-	// Does the counterpart the viewer MAY see already stand on its own as a token? The length gate
-	// in the embedded-token rule below turns on this: if the visible name is already present in its
-	// own right, the name reads complete without the token under test, so that token can be treated
-	// as possibly unrelated. If it is NOT present, the token under test is all the name there is,
-	// and a hidden part inside it is far more likely to BE the hidden name with something welded on.
-	$visible_has_own_token = false;
-	if ( '' !== $visible_nospace ) {
-		foreach ( $stripped_tokens as $candidate ) {
-			if ( '' !== $candidate && 0 === strcasecmp( $candidate, $visible_nospace ) ) {
-				$visible_has_own_token = true;
-				break;
-			}
-		}
+	if ( $field_id > 0 ) {
+		$stored = xprofile_get_field_data( $field_id, $user_id );
+		$value  = is_string( $stored ) ? (string) preg_replace( '/^[\s\p{Zs}]+|[\s\p{Zs}]+$/u', '', $stored ) : '';
 	}
 
-	$tokens = array();
-	foreach ( $stripped_tokens as $token ) {
-		if ( '' === $token ) {
-			continue;
-		}
-
-		$token_nospace = preg_replace( '/[\s\p{Zs}]+/u', '', $token );
-
-		// The token IS the visible counterpart - keep it. Checked first so a short hidden part that
-		// happens to be a substring of the visible name ("Lin" inside "Linda") never drops it.
-		if ( '' !== $visible_nospace && 0 === strcasecmp( $token_nospace, $visible_nospace ) ) {
-			$tokens[] = $token;
-			continue;
-		}
-
-		if ( '' !== $glue_pattern && preg_match( $glue_pattern, $token ) ) {
-			$tokens[] = $visible_part;
-			continue;
-		}
-
-		if ( '' !== $edge_glue && preg_match( $edge_glue, $token ) ) {
-			continue;
-		}
-
-		// The hidden part is embedded in a longer token with letters or digits against it, so the
-		// punctuation-boundary test below cannot see it: "pzebrastripe" (initial + surname),
-		// "PeterZebrastripeJr", "Zebrastripe2" (de-duplication suffix), "MrPeterZebrastripe". Such a
-		// token exists BECAUSE of the hidden name, so it goes.
-		//
-		// A hidden part that is merely a coincidental fragment of a longer, unrelated word ("Ng" at
-		// the end of "Armstrong", "Ann" inside "Cann") must be KEPT - dropping it redacts a name
-		// part the viewer is entitled to, which is a defect in its own right and not a safe
-		// over-redaction. The shape tests below separate the two where the shape can; the tie-break
-		// after them handles the fragments that are too short for shape to decide.
-		$embedded = ( '' !== $hidden_nospace && false !== stripos( $token_nospace, $hidden_nospace ) );
-
-		if ( $embedded ) {
-			$remainder = preg_replace( '/' . preg_quote( $hidden_nospace, '/' ) . '/iu', '', $token_nospace );
-			$remainder = ( null === $remainder ) ? '' : $remainder;
-
-			$remainder_length = ( function_exists( 'mb_strlen' ) ? mb_strlen( $remainder, 'UTF-8' ) : strlen( $remainder ) );
-			$hidden_length    = ( function_exists( 'mb_strlen' ) ? mb_strlen( $hidden_nospace, 'UTF-8' ) : strlen( $hidden_nospace ) );
-
-			// Shapes that are a disclosure however short the hidden part is.
-			//
-			// 1. The token is the visible counterpart with the hidden part welded on
-			//    ("PeterZebrastripeJr", "MrPeterZebrastripe").
-			// 2. Nothing of a second NAME is left - only digits or punctuation, which is what a
-			//    de-duplication suffix leaves ("Zebrastripe2", "Zebrastripe_1"). No real name is
-			//    spelled without a letter, so this can never be a coincidence.
-			// 3. A single initial welded to the surname ("pzebrastripe", "Peter pwu"), the shape an
-			//    LDAP or forum import leaves. Pinned to the visible counterpart's OWN initial, so it
-			//    stays a statement about this member's name rather than "any single letter".
-			$remainder_is_visible    = ( '' !== $remainder && '' !== $visible_nospace && false !== stripos( $remainder, $visible_nospace ) );
-			$remainder_is_decoration = ( '' !== $remainder && ! preg_match( '/\p{L}/u', $remainder ) );
-
-			// 4. A generational suffix is not a name either. "AnnJr" is the hidden "Ann" with a
-			// suffix welded on - the same shape as "Ann2", which rule 2 already catches - not a
-			// different name that happens to contain it the way "Cann" does. Without this, the
-			// length tie-break below keeps any hidden part under five characters in this shape, so
-			// Ann, Amy, Bob, Eve, Kim and Sam all survived redaction. Pinned to the closed set of
-			// real suffixes: a bare roman numeral letter is left out because "ix", "vi" and "xi"
-			// are ordinary name fragments ("Annix"), and treating those as suffixes would strip
-			// tokens that are somebody else's name.
-			$remainder_is_suffix = ( '' !== $remainder && 1 === preg_match( '/^(?:jr|jnr|sr|snr|ii|iii|iv)$/iu', $remainder ) );
-
-			$visible_initial = '';
-			if ( '' !== $visible_nospace ) {
-				$visible_initial = function_exists( 'mb_substr' ) ? mb_substr( $visible_nospace, 0, 1, 'UTF-8' ) : substr( $visible_nospace, 0, 1 );
-			}
-			$remainder_is_that_initial = ( 1 === $remainder_length && '' !== $visible_initial && 0 === strcasecmp( $remainder, $visible_initial ) );
-
-			$is_disclosure = ( $remainder_is_visible || $remainder_is_decoration || $remainder_is_suffix || $remainder_is_that_initial );
-
-			// Everything else is a fragment too short to judge by shape: "Cann" is "Ann" plus a
-			// letter in exactly the way "Zebrastripes" is "Zebrastripe" plus a letter, and "MrLin"
-			// is "Lin" plus two. What breaks the tie is whether the name still reads complete
-			// WITHOUT this token.
-			if ( ! $is_disclosure ) {
-				if ( $visible_has_own_token ) {
-					// The visible counterpart is already standing on its own ("Bob" in "Bob Cann"),
-					// so this token is an additional name the member has and a short fragment inside
-					// it is plausibly coincidence - keep it. Short name parts collide with unrelated
-					// names constantly (Ann/Cann, Ann/Anne, Lin/Linda, Ross/Cross, Rice/Price,
-					// Anna/Hanna, and "Thelin" is itself a surname). From five characters up two
-					// DIFFERENT names no longer sit within two characters of each other in practice,
-					// so at that length the token goes again ("Peter Zebrastripes").
-					$is_disclosure = ( $remainder_length <= 2 && $hidden_length >= 5 );
-				} else {
-					// The visible counterpart is NOT standing on its own, so this token is the whole
-					// name on offer and there is nothing for it to be coincidental WITH. A hidden
-					// part welded to either end of it is a disclosure at any remainder length - an
-					// initial, an honorific or a particle in front ("pzebrastripe", "MrLin",
-					// "theLin"), a plural or suffix behind ("Zebrastripes") - which is the same
-					// treatment $edge_glue already gives when the counterpart is unknown. A fragment
-					// buried mid-token is left to the remainder length, so an unrelated single-token
-					// name keeps its letters ("strongman" for a member whose surname is "Ng").
-					$hidden_at_edge = (bool) preg_match(
-						'/^' . preg_quote( $hidden_nospace, '/' ) . '|' . preg_quote( $hidden_nospace, '/' ) . '$/iu',
-						$token_nospace
-					);
-
-					$is_disclosure = ( $hidden_at_edge || $remainder_length <= 2 );
-				}
-			}
-
-			if ( $is_disclosure ) {
-				continue;
-			}
-		}
-
-		if ( ! preg_match( $bounded, $token ) ) {
-			$tokens[] = $token;
-		}
+	if ( '' === $value && '' !== (string) $meta_key ) {
+		$stored = get_user_meta( $user_id, $meta_key, true );
+		$value  = is_string( $stored ) ? (string) preg_replace( '/^[\s\p{Zs}]+|[\s\p{Zs}]+$/u', '', $stored ) : '';
 	}
 
-	return trim( implode( ' ', $tokens ) );
+	return $value;
+}
+
+/**
+ * The label to show for a member whose permitted name parts hold nothing.
+ *
+ * Never a blank: the nickname first - it carries no hidden name part - then the public
+ * user_nicename, which WordPress guarantees for every real user.
+ *
+ * The `nickname` USER META is what is read, not the xprofile Nickname field, because that is the
+ * chain bp_xprofile_get_member_display_name() itself falls back through when a name field is empty.
+ * The two are kept in step by bp_xprofile_sync_bp_profile() on every save; where they have drifted
+ * apart it is on an unhealed import, whose xprofile row does not exist at all - so the meta is both
+ * the more faithful source and the one that still has a value.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int $user_id ID of the member.
+ * @return string The nickname, else the user_nicename, else ''.
+ */
+function bb_core_get_name_fallback_label( $user_id ) {
+	$nickname = trim( (string) get_the_author_meta( 'nickname', $user_id ) );
+
+	if ( '' !== $nickname ) {
+		return $nickname;
+	}
+
+	return trim( (string) get_the_author_meta( 'user_nicename', $user_id ) );
 }

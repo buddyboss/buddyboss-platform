@@ -404,15 +404,19 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 	}
 
 	/**
-	 * The SQL answer must not over-filter: a match that survives in the VISIBLE name is still a hit.
+	 * A token that exists ONLY in the drifted column is not part of anybody's visible name.
 	 *
-	 * The stored column drifts, so the redacted name can contain a token that is in none of the
-	 * fields ("Reggie Quenlingham" minus the surname, with a First Name field reading "Reginald").
-	 * SQL cannot compute that residue, so those matches - and only those - are still re-tested.
+	 * The stored display_name is a derived value that drifts away from the fields ("Reggiebert
+	 * Quenlingham" for a member whose First Name field reads "Reginald"). The visible name is
+	 * assembled from the fields, so that residue is shown to nobody - and a search for it must not
+	 * confirm the member either, which SQL can now decide outright: no name is resolved at all.
+	 *
+	 * The companion assertion is the one that stops this becoming an over-filter: the token that IS
+	 * in the shown field keeps the member findable.
 	 *
 	 * @group bb_search_visibility_display_format
 	 */
-	public function test_format_hide_keeps_a_match_that_survives_in_the_visible_name() {
+	public function test_format_hide_decides_a_drifted_column_without_resolving_a_name() {
 		global $wpdb;
 
 		$user_id = self::factory()->user->create(
@@ -432,14 +436,27 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 		$this->set_current_user( 0 );
 
 		$this->assertSame(
-			'Reggiebert',
+			'Reginald',
 			bp_core_get_user_displayname( $user_id, 0 ),
-			'Fixture: the visible name must keep the searched token after the surname is removed.'
+			'Fixture: the visible name must come from the First Name field, not the drifted column.'
+		);
+
+		list( $result, $resolutions ) = $this->count_name_resolutions(
+			function () use ( $user_id ) {
+				return bb_xprofile_filter_user_search_matches( array( $user_id ), array( '%Reggiebert%' ), 0 );
+			}
 		);
 
 		$this->assertSame(
+			array(),
+			$result,
+			'A token that lives only in the drifted column still answered a search.'
+		);
+		$this->assertSame( 0, $resolutions, 'The format hide must be decided in SQL, resolving no names.' );
+
+		$this->assertSame(
 			array( $user_id ),
-			bb_xprofile_filter_user_search_matches( array( $user_id ), array( '%Reggiebert%' ), 0 ),
+			bb_xprofile_filter_user_search_matches( array( $user_id ), array( '%Reginald%' ), 0 ),
 			'A member whose VISIBLE name matches was filtered out of the results.'
 		);
 
@@ -511,18 +528,19 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 	/**
 	 * The Nickname format takes a different set of visible sources, and needs its own cover.
 	 *
-	 * Under "Nickname" the visible name is the nickname meta, NOT the nickname profile field (the
-	 * two drift apart), and only when that meta is empty does the resolver fall through to the
-	 * first name. So the SQL answer is decided by different columns than under "First Name", and a
-	 * member with no nickname at all is the one shape that still has to be re-tested.
+	 * Under "Nickname" the visible name is the nickname - the profile field, then the `nickname`
+	 * user meta it falls back to, then user_nicename. Neither name field is part of it at all, so
+	 * a member whose match lives only in their first name or in the stored column is not findable
+	 * by that term, and every one of those sources is a column, so the whole answer is decided in
+	 * SQL with no name resolved.
 	 *
 	 * @group bb_search_visibility_display_format
 	 */
-	public function test_nickname_format_decides_matches_from_the_nickname_not_the_profile_field() {
+	public function test_nickname_format_decides_matches_from_the_nickname_sources() {
 		global $wpdb;
 
 		// Nickname stored, and it does not match: the visible name is that nickname, so the match
-		// exists only in the hidden part and the answer is decidable in SQL.
+		// exists only in the hidden part.
 		$hidden_id = self::factory()->user->create(
 			array(
 				'nickname'      => 'gladhollow',
@@ -530,30 +548,49 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 			)
 		);
 		xprofile_set_field_data( bp_xprofile_firstname_field_id(), $hidden_id, 'Perrin' );
+		// Both nickname sources, set explicitly: the field is what a member sees under this format,
+		// the user meta is what the fallback chain reads, and the factory does not set either.
+		xprofile_set_field_data( bp_xprofile_nickname_field_id(), $hidden_id, 'gladhollow' );
+		update_user_meta( $hidden_id, 'nickname', 'gladhollow' );
 		$wpdb->update( $wpdb->users, array( 'display_name' => 'Perrin Ashgrovely' ), array( 'ID' => $hidden_id ) );
 		clean_user_cache( $hidden_id );
 
-		// No nickname at all: the resolver falls through to the first name, which no column in the
-		// visible-source query can tell us about, so this one must still be re-tested.
+		// No nickname at all: the visible name falls through to user_nicename, which does not carry
+		// the term either. The first name is NOT a source under this format, so this member is not
+		// findable by it - the leg that used to be re-tested in PHP and is now decided outright.
 		$fallback_id = self::factory()->user->create( array( 'user_nicename' => 'nonicknamer' ) );
-		delete_user_meta( $fallback_id, 'nickname' );
 		xprofile_set_field_data( bp_xprofile_firstname_field_id(), $fallback_id, 'Ashgrovely' );
+		xprofile_set_field_data( bp_xprofile_nickname_field_id(), $fallback_id, '' );
+		delete_user_meta( $fallback_id, 'nickname' );
 		$wpdb->update( $wpdb->users, array( 'display_name' => 'Ashgrovely Winterbourne' ), array( 'ID' => $fallback_id ) );
 		clean_user_cache( $fallback_id );
+
+		// A nickname that DOES match: this member must survive, or the filter is an over-filter.
+		$visible_id = self::factory()->user->create(
+			array(
+				'nickname'      => 'Ashgrovely',
+				'user_nicename' => 'ashg-visible',
+			)
+		);
+		xprofile_set_field_data( bp_xprofile_firstname_field_id(), $visible_id, 'Corwin' );
+		xprofile_set_field_data( bp_xprofile_nickname_field_id(), $visible_id, 'Ashgrovely' );
+		update_user_meta( $visible_id, 'nickname', 'Ashgrovely' );
+		$wpdb->update( $wpdb->users, array( 'display_name' => 'Corwin Dunhollow' ), array( 'ID' => $visible_id ) );
+		clean_user_cache( $visible_id );
 
 		bp_update_option( 'bp-display-name-format', 'nickname' );
 		$this->set_current_user( 0 );
 
 		$this->assertSame(
-			'Ashgrovely',
+			'nonicknamer',
 			bp_core_get_user_displayname( $fallback_id, 0 ),
-			'Fixture: with no nickname the visible name must fall through to the first name.'
+			'Fixture: with no nickname the visible name must end at user_nicename, not the first name.'
 		);
 
 		list( $result, $resolutions ) = $this->count_name_resolutions(
-			function () use ( $hidden_id, $fallback_id ) {
+			function () use ( $hidden_id, $fallback_id, $visible_id ) {
 				return bb_xprofile_filter_user_search_matches(
-					array( $hidden_id, $fallback_id ),
+					array( $hidden_id, $fallback_id, $visible_id ),
 					array( '%Ashgrovely%' ),
 					0
 				);
@@ -561,14 +598,14 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 		);
 
 		$this->assertSame(
-			array( $fallback_id ),
+			array( $visible_id ),
 			$result,
-			'Under the Nickname format the wrong members survived: the hidden one must go, the one whose visible name matches must stay.'
+			'Under the Nickname format only the member whose nickname matches may survive.'
 		);
 		$this->assertSame(
-			1,
+			0,
 			$resolutions,
-			'Only the member whose visible name SQL cannot compute should have been resolved.'
+			'Every Nickname-format source is a column, so no name should have been resolved.'
 		);
 	}
 
@@ -1016,90 +1053,121 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 	}
 
 	/**
-	 * A hidden name part welded into a longer token with letters or digits against it must still be
-	 * redacted. The punctuation-boundary fail-safe cannot see these, and an exact first+last glue
-	 * test does not match them either, so before this they were returned whole:
-	 * "pzebrastripe" (initial + surname, the shape an LDAP or forum import produces),
-	 * "PeterZebrastripeJr", "Zebrastripe2" (de-duplication suffix), "MrPeterZebrastripe".
+	 * The visible name is ASSEMBLED from the profile fields, never subtracted from the column.
 	 *
-	 * The second half of the table is the counter-pressure: a hidden part that is a coincidental
-	 * fragment of a longer, unrelated word must NOT be over-redacted, or the fix silently deletes
-	 * name parts the viewer is entitled to.
+	 * Every row below is a shape the stored `display_name` drifts into - an initial welded to the
+	 * surname, a generational suffix, a de-duplication digit, an honorific, a hyphenated surname, a
+	 * member whose two name parts are the same string, a column that spells a different name
+	 * entirely. Removing the hidden part from those strings is not decidable: a surname sits inside
+	 * unrelated words ("Ng" in "Armstrong", "Ann" in "Cann") as readily as it is the name being
+	 * hidden, and every rule that separated the two was load-bearing for one shape and wrong for
+	 * another (PROD-9896).
+	 *
+	 * So the column is not consulted at all. One assertion covers both failure directions at once:
+	 * the answer must be exactly the field the viewer may see - which no drifted shape can leak
+	 * into, and from which no coincidental token can be stripped out.
+	 *
+	 * Asserted for a guest AND for a logged-in stranger, because the two reach it by different
+	 * paths (the function body and xprofile_filter_get_user_display_name()) and used to disagree.
 	 *
 	 * @group bb_name_redaction
 	 */
-	public function test_strip_hidden_name_part_redacts_embedded_tokens_without_over_redacting() {
-		$leaky = array(
-			// display_name, hidden, visible.
-			array( 'pzebrastripe', 'Zebrastripe', 'Peter' ),
-			array( 'PeterZebrastripeJr', 'Zebrastripe', 'Peter' ),
-			array( 'Zebrastripe2', 'Zebrastripe', 'Peter' ),
-			array( 'MrPeterZebrastripe', 'Zebrastripe', 'Peter' ),
-			array( 'Zebrastripes', 'Zebrastripe', 'Peter' ),
-			// The visible first name has itself drifted, so the exact glue test cannot match.
-			array( 'PeterZebrastripe', 'Zebrastripe', 'Pete' ),
+	public function test_visible_name_is_rebuilt_from_the_fields_not_the_stored_column() {
+		global $wpdb;
+
+		$cases = array(
+			// Label, first name, hidden last name, stored display_name.
+			array( 'initial welded to the surname', 'Peter', 'Zebrastripe', 'pzebrastripe' ),
+			array( 'suffix welded on', 'Peter', 'Zebrastripe', 'PeterZebrastripeJr' ),
+			array( 'de-duplication digit', 'Peter', 'Zebrastripe', 'Zebrastripe2' ),
+			array( 'honorific prefix', 'Peter', 'Zebrastripe', 'MrPeterZebrastripe' ),
+			array( 'generational suffix on a short surname', 'Smith', 'Ann', 'Smith AnnJr' ),
+			array( 'surname is a fragment of an unrelated word', 'Louis', 'Ng', 'Louis Armstrong' ),
+			array( 'hyphenated surname', 'Anna', 'Smith', 'Anna Smith-Jones' ),
+			array( 'both name parts are the same string', 'Alexis', 'Alexis', 'Alexis Alexis' ),
+			array( 'column spells a different name entirely', 'Reginald', 'Quenlingham', 'Reggiebert Quenlingham' ),
+			array( 'column is nothing but the hidden surname', 'Wendy', 'Zebrastripe', 'Zebrastripe' ),
 		);
 
-		foreach ( $leaky as $case ) {
-			list( $display_name, $hidden, $visible ) = $case;
-			$result = bb_core_strip_hidden_name_part( $display_name, $hidden, $visible );
+		bp_update_option( 'bp-display-name-format', 'first_last_name' );
+		$viewer = self::factory()->user->create();
 
-			$this->assertStringNotContainsStringIgnoringCase(
-				$hidden,
-				$result,
-				"hidden part survived in '{$display_name}'"
-			);
-		}
+		foreach ( $cases as $case ) {
+			list( $label, $first_name, $last_name, $stored ) = $case;
 
-		// Coincidental fragments of unrelated words must survive untouched.
-		$keep = array(
-			array( 'Louis Armstrong Ng', 'Ng', 'Louis', 'Louis Armstrong' ),
-			array( 'Linda Marie Lin', 'Lin', 'Linda', 'Linda Marie' ),
-			array( 'Wendy Wu', 'Wu', 'Wendy', 'Wendy' ),
-			array( 'AlexQuillfeather Jr', 'Quillfeather', 'Alex', 'Alex Jr' ),
-			array( 'Anna Marie Smith', 'Smith', 'Anna', 'Anna Marie' ),
-		);
+			$user_id = self::factory()->user->create();
 
-		foreach ( $keep as $case ) {
-			list( $display_name, $hidden, $visible, $expected ) = $case;
+			xprofile_set_field_data( bp_xprofile_firstname_field_id(), $user_id, $first_name );
+			xprofile_set_field_data( bp_xprofile_lastname_field_id(), $user_id, $last_name );
+			xprofile_set_field_visibility_level( bp_xprofile_lastname_field_id(), $user_id, 'adminsonly' );
+
+			$wpdb->update( $wpdb->users, array( 'display_name' => $stored ), array( 'ID' => $user_id ) );
+			clean_user_cache( $user_id );
+			wp_cache_flush();
+
 			$this->assertSame(
-				$expected,
-				bb_core_strip_hidden_name_part( $display_name, $hidden, $visible ),
-				"over-redaction for '{$display_name}'"
+				$first_name,
+				(string) bp_core_get_user_displayname( $user_id, 0 ),
+				sprintf( 'Guest view was not the visible field for the "%s" shape.', $label )
+			);
+
+			$this->assertSame(
+				$first_name,
+				(string) bp_core_get_user_displayname( $user_id, $viewer ),
+				sprintf( 'Member view was not the visible field for the "%s" shape.', $label )
 			);
 		}
 	}
 
 	/**
-	 * A name value that is not valid UTF-8 must fail CLOSED. preg_replace() with the /u modifier
-	 * returns null on such a subject, and if that null is treated as "no hidden part" the raw
-	 * display_name is returned to a viewer who is denied it - the exact legacy/imported data shape
-	 * this redaction exists for.
+	 * With no permitted name part left, the label falls back and never to the stored column.
 	 *
-	 * The empty case is asserted alongside it because the two must not collapse: an empty hidden
-	 * part legitimately means "nothing to strip" and returns the name unchanged.
+	 * A member whose only stored name is the hidden one has nothing to assemble, so the answer is
+	 * the nickname - which carries no hidden name part - and then the public user_nicename. The
+	 * drifted column must not be reached at any point in that chain.
 	 *
 	 * @group bb_name_redaction
 	 */
-	public function test_strip_hidden_name_part_fails_closed_on_unprocessable_input() {
-		$malformed = "Zebra\xb0stripe"; // Lone 0xB0 - not valid UTF-8.
+	public function test_a_fully_redacted_name_falls_back_without_reaching_the_column() {
+		global $wpdb;
 
-		$this->assertFalse( mb_check_encoding( $malformed, 'UTF-8' ), 'fixture must really be malformed' );
+		bp_update_option( 'bp-display-name-format', 'first_last_name' );
 
-		// Malformed hidden part, valid display name: must not return the column.
-		$this->assertSame( '', bb_core_strip_hidden_name_part( 'Peter Zebrastripe', $malformed, 'Peter' ) );
+		// Nickname present: it is the first fallback.
+		$with_nickname = self::factory()->user->create( array( 'nickname' => 'quietquill' ) );
+		xprofile_set_field_data( bp_xprofile_firstname_field_id(), $with_nickname, '' );
+		xprofile_set_field_data( bp_xprofile_lastname_field_id(), $with_nickname, 'Zebrastripe' );
+		xprofile_set_field_visibility_level( bp_xprofile_lastname_field_id(), $with_nickname, 'adminsonly' );
+		delete_user_meta( $with_nickname, 'first_name' );
+		xprofile_set_field_data( bp_xprofile_nickname_field_id(), $with_nickname, 'quietquill' );
+		update_user_meta( $with_nickname, 'nickname', 'quietquill' );
+		$wpdb->update( $wpdb->users, array( 'display_name' => 'Peter Zebrastripe' ), array( 'ID' => $with_nickname ) );
+		clean_user_cache( $with_nickname );
+		wp_cache_flush();
 
-		// The callers normalise before calling and pass null when that fails - same meaning.
-		$this->assertSame( '', bb_core_strip_hidden_name_part( 'Peter Zebrastripe', null, 'Peter' ) );
+		$this->assertSame(
+			'quietquill',
+			(string) bp_core_get_user_displayname( $with_nickname, 0 ),
+			'A member with nothing visible must fall back to the nickname.'
+		);
 
-		// Malformed display name with a valid hidden part: also fail closed.
-		$this->assertSame( '', bb_core_strip_hidden_name_part( "Peter Zebra\xb0stripe", 'Zebrastripe', 'Peter' ) );
+		// No nickname at all: the chain ends at the public user_nicename.
+		$no_nickname = self::factory()->user->create( array( 'user_nicename' => 'silent-quill' ) );
+		xprofile_set_field_data( bp_xprofile_firstname_field_id(), $no_nickname, '' );
+		xprofile_set_field_data( bp_xprofile_lastname_field_id(), $no_nickname, 'Zebrastripe' );
+		xprofile_set_field_visibility_level( bp_xprofile_lastname_field_id(), $no_nickname, 'adminsonly' );
+		delete_user_meta( $no_nickname, 'first_name' );
+		xprofile_set_field_data( bp_xprofile_nickname_field_id(), $no_nickname, '' );
+		delete_user_meta( $no_nickname, 'nickname' );
+		$wpdb->update( $wpdb->users, array( 'display_name' => 'Peter Zebrastripe' ), array( 'ID' => $no_nickname ) );
+		clean_user_cache( $no_nickname );
+		wp_cache_flush();
 
-		// A genuinely empty hidden part is NOT a failure - nothing to strip.
-		$this->assertSame( 'Peter Zebrastripe', bb_core_strip_hidden_name_part( 'Peter Zebrastripe', '', 'Peter' ) );
-
-		// And the ordinary case still works.
-		$this->assertSame( 'Peter', bb_core_strip_hidden_name_part( 'Peter Zebrastripe', 'Zebrastripe', 'Peter' ) );
+		$this->assertSame(
+			'silent-quill',
+			(string) bp_core_get_user_displayname( $no_nickname, 0 ),
+			'With no nickname the chain must end at user_nicename, never at the stored column.'
+		);
 	}
 
 	/**
@@ -1264,21 +1332,21 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 	}
 
 	/**
-	 * A first name stored only in WordPress user-meta must be re-tested, not dropped.
+	 * A first name stored only in WordPress user-meta keeps the member findable, for every viewer.
 	 *
 	 * The imported/unhealed member shape here: the name lives in user_meta + wp_users.display_name,
-	 * the xprofile First Name field is empty, and there is no stored surname. A LOGGED-IN viewer's
-	 * resolver back-fills the empty field from user_meta and returns it, so their visible name
-	 * genuinely matches and the member must stay findable. The GUEST path never reads user_meta
-	 * first_name - it reads the field, then the nickname - so the same member is correctly NOT
-	 * confirmable by a guest searching that first name (the nickname here does not contain it).
+	 * the xprofile First Name field is empty, and there is no stored surname. The visible name is
+	 * assembled from the first-name source the format shows, and that source falls back to the user
+	 * meta exactly as bp_xprofile_get_member_display_name() does - so guest and member resolve the
+	 * same name, and a search for it must keep the member rather than silently losing every
+	 * unhealed member from the directory.
 	 *
-	 * Without the user-meta arm of bb_xprofile_get_format_undecidable_matches() the member is
-	 * dropped for the logged-in viewer too, silently losing every unhealed member from search.
+	 * That column is compared by bb_xprofile_get_format_visible_name_matches(), so the answer costs
+	 * no name resolution at all.
 	 *
 	 * @group bb_search_visibility_display_format
 	 */
-	public function test_format_hide_re_tests_a_first_name_stored_only_in_user_meta() {
+	public function test_format_hide_keeps_a_first_name_stored_only_in_user_meta() {
 		global $wpdb;
 
 		$user_id = self::factory()->user->create( array( 'nickname' => 'quillby-nick' ) );
@@ -1307,8 +1375,8 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 
 		$member = self::factory()->user->create();
 
-		// Prove the fixture without persisting the self-heal (which would populate the field and
-		// make the member trivially findable regardless of the fix under test).
+		// Prove the fixture without persisting the self-heal, which would populate the field and
+		// make the member trivially findable regardless of the behaviour under test.
 		bb_xprofile_is_display_name_self_heal_suspended( true );
 		try {
 			$this->assertSame(
@@ -1316,25 +1384,39 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 				bp_core_get_user_displayname( $user_id, $member ),
 				'Fixture: a logged-in viewer resolves the member to the user-meta first name.'
 			);
+			$this->assertSame(
+				'Grimwald',
+				bp_core_get_user_displayname( $user_id, 0 ),
+				'A guest must resolve the same name as a member - the surname is what the format hides, not the first name.'
+			);
 		} finally {
 			bb_xprofile_is_display_name_self_heal_suspended( false );
 		}
 		$this->assertSame(
 			'',
 			(string) xprofile_get_field_data( bp_xprofile_firstname_field_id(), $user_id ),
-			'Fixture: the search re-test must not have persisted the back-filled first name.'
+			'Fixture: resolving a name for a search must not have persisted the back-filled first name.'
 		);
 
-		$this->assertContains(
-			$user_id,
-			bb_xprofile_filter_user_search_matches( array( $user_id ), array( '%Grimwald%' ), $member ),
-			'A member whose first name lives only in user_meta was dropped from a logged-in search.'
-		);
+		foreach ( array( $member, 0 ) as $viewer_id ) {
+			list( $result, $resolutions ) = $this->count_name_resolutions(
+				function () use ( $user_id, $viewer_id ) {
+					return bb_xprofile_filter_user_search_matches( array( $user_id ), array( '%Grimwald%' ), $viewer_id );
+				}
+			);
 
-		$this->assertNotContains(
-			$user_id,
-			bb_xprofile_filter_user_search_matches( array( $user_id ), array( '%Grimwald%' ), 0 ),
-			'A guest matched a first name their own view resolves to the nickname, not this term.'
+			$this->assertContains(
+				$user_id,
+				$result,
+				'A member whose first name lives only in user_meta was dropped from the results.'
+			);
+			$this->assertSame( 0, $resolutions, 'The user-meta first name is a column, so no name should have been resolved.' );
+		}
+
+		$this->assertSame(
+			array(),
+			bb_xprofile_filter_user_search_matches( array( $user_id ), array( '%Ashforth%' ), 0 ),
+			'The surname the format hides still answered a search.'
 		);
 	}
 
@@ -1687,132 +1769,96 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 			);
 		}
 	}
-
 	/**
-	 * A generational suffix welded to a short hidden name is a disclosure, not a coincidence.
+	 * Re-testing a batch of search candidates must not cost a user-meta query per member.
 	 *
-	 * When the visible counterpart already stands on its own token, an embedded fragment is kept
-	 * unless the hidden part is five characters or more - short name parts collide with unrelated
-	 * names constantly ("Ann" inside "Cann", "Lin" inside "Linda"). That length rule also kept
-	 * "AnnJr", where the remainder is a generational suffix rather than a name, so every hidden
-	 * name under five characters survived redaction in that shape (PROD-9896 review finding).
+	 * The visible name is assembled from the profile fields, and each field falls back to the
+	 * WordPress user meta when it has no stored row - the normal state of an imported member, the
+	 * shape this install has ~70,000 of. The search re-test resolves a name for up to
+	 * `bb_xprofile_user_search_visibility_candidate_limit` candidates on a request an anonymous
+	 * visitor can issue, and unlike bp_core_get_user_displaynames() it does not warm the WP user
+	 * caches itself - so bb_core_prime_user_displayname_caches() has to, or every candidate costs
+	 * its own query before a single result is rendered.
 	 *
-	 * The counter-assertions matter as much as the leak ones: widening this must not start
-	 * stripping tokens that merely contain a short hidden part.
+	 * Two disjoint batches of different sizes are measured so the fixed cost cancels out and only
+	 * the per-member cost is left. Only user/usermeta reads are counted: other per-member work in
+	 * the resolution (the moderation suspend check, for one) is pre-existing and is not what
+	 * priming the name sources is answerable for, so counting everything would measure someone
+	 * else's query and make this test unfalsifiable for its own subject.
 	 *
 	 * @group bb_search_visibility_display_format
 	 */
-	public function test_strip_hidden_name_part_treats_a_generational_suffix_as_a_disclosure() {
-		$leaks = array(
-			array( 'Smith AnnJr', 'Ann', 'Smith' ),
-			array( 'Smith AmyJr', 'Amy', 'Smith' ),
-			array( 'Smith BobII', 'Bob', 'Smith' ),
-			array( 'Smith EveSr', 'Eve', 'Smith' ),
-			array( 'Smith AnnaIV', 'Anna', 'Smith' ),
-		);
-
-		foreach ( $leaks as $case ) {
-			list( $stored, $hidden, $visible ) = $case;
-
-			$this->assertStringNotContainsString(
-				$hidden,
-				bb_core_strip_hidden_name_part( $stored, $hidden, $visible ),
-				sprintf( 'A hidden name welded to a generational suffix survived redaction in "%s".', $stored )
-			);
-		}
-
-		// A short fragment inside a token that is a real name must still be left alone - the
-		// coincidence protection this rule sits next to.
-		$keeps = array(
-			array( 'Bob Cann', 'Ann', 'Bob' ),
-			array( 'Bob Anne', 'Ann', 'Bob' ),
-			array( 'Bob Linda', 'Lin', 'Bob' ),
-			array( 'Bob Annix', 'Ann', 'Bob' ),
-			array( 'Bob Hanna', 'Anna', 'Bob' ),
-		);
-
-		foreach ( $keeps as $case ) {
-			list( $stored, $hidden, $visible ) = $case;
-
-			$this->assertSame(
-				$stored,
-				bb_core_strip_hidden_name_part( $stored, $hidden, $visible ),
-				sprintf( 'An unrelated name containing a short hidden fragment was wrongly stripped in "%s".', $stored )
-			);
-		}
-
-		// And the shapes that were already redacted must stay redacted.
-		$this->assertSame(
-			'Peter',
-			bb_core_strip_hidden_name_part( 'Peter Zebrastripes', 'Zebrastripe', 'Peter' ),
-			'A five-character-or-longer hidden part lost its existing redaction.'
-		);
-	}
-
-	/**
-	 * A member whose two name parts are the same string keeps the half the viewer may see.
-	 *
-	 * The whole-token strip is case-insensitive and cannot tell one "Alex" from the other, so for a
-	 * member whose First Name and Last Name are both "Alex" it removed BOTH tokens and returned ''.
-	 * xprofile_filter_get_user_display_name() then fell through to the nickname, and the member lost
-	 * a name the viewer was allowed to see (PROD-9896 review finding).
-	 *
-	 * Echoing the permitted half back discloses nothing - the counterpart is only ever passed when
-	 * this viewer may see it - but the fail-closed behaviour when NO counterpart is offered must
-	 * survive, which the assertions below pin.
-	 *
-	 * @group bb_search_visibility_display_format
-	 */
-	public function test_identical_name_parts_keep_the_visible_half() {
-		// The helper itself.
-		$this->assertSame(
-			'Alex',
-			bb_core_strip_hidden_name_part( 'Alex Alex', 'Alex', 'Alex' ),
-			'A member whose name parts are the same string lost both of them.'
-		);
-		$this->assertSame(
-			'alex',
-			bb_core_strip_hidden_name_part( 'Alex alex', 'Alex', 'alex' ),
-			'The comparison must fold case the same way the strip matches.'
-		);
-
-		// Fail-closed must survive: with no counterpart offered, nothing may be echoed back.
-		$this->assertSame(
-			'',
-			bb_core_strip_hidden_name_part( 'Alex Alex', 'Alex', '' ),
-			'With no visible counterpart the helper must still fail closed.'
-		);
-		$this->assertSame(
-			'',
-			bb_core_strip_hidden_name_part( 'Zebrastripe', 'Zebrastripe', 'Peter' ),
-			'A counterpart that differs from the hidden part must not be echoed back.'
-		);
-
-		// End to end, through the filter path that had no re-derivation of its own.
-		$viewer  = self::factory()->user->create();
-		$user_id = self::factory()->user->create( array( 'nickname' => 'alexnick' ) );
-
-		wp_update_user(
-			array(
-				'ID'           => $user_id,
-				'first_name'   => 'Alexis',
-				'last_name'    => 'Alexis',
-				'display_name' => 'Alexis Alexis',
-			)
-		);
-
-		xprofile_set_field_data( bp_xprofile_firstname_field_id(), $user_id, 'Alexis' );
-		xprofile_set_field_data( bp_xprofile_lastname_field_id(), $user_id, 'Alexis' );
-		xprofile_set_field_visibility_level( bp_xprofile_lastname_field_id(), $user_id, 'adminsonly' );
+	public function test_search_re_test_primes_the_name_sources_for_the_whole_batch() {
+		global $wpdb;
 
 		bp_update_option( 'bp-display-name-format', 'first_last_name' );
-		$this->set_current_user( $viewer );
-		wp_cache_flush();
+		$this->set_current_user( 0 );
 
+		$make_batch = function ( $size, $tag ) use ( $wpdb ) {
+			$ids = array();
+			for ( $i = 0; $i < $size; $i++ ) {
+				$id = self::factory()->user->create();
+				// The unhealed shape: no xprofile name rows, the name only in user meta and the
+				// stored column. The restricted surname is what makes them search candidates.
+				xprofile_set_field_data( bp_xprofile_firstname_field_id(), $id, '' );
+				xprofile_set_field_data( bp_xprofile_lastname_field_id(), $id, '' );
+				update_user_meta( $id, 'first_name', $tag . $i );
+				update_user_meta( $id, 'last_name', 'Hollowmere' );
+				xprofile_set_field_visibility_level( bp_xprofile_lastname_field_id(), $id, 'adminsonly' );
+				$wpdb->update( $wpdb->users, array( 'display_name' => $tag . $i . ' Hollowmere' ), array( 'ID' => $id ) );
+				clean_user_cache( $id );
+				$ids[] = $id;
+			}
+
+			return $ids;
+		};
+
+		$small = $make_batch( 2, 'Smallmember' );
+		$large = $make_batch( 8, 'Largemember' );
+
+		$measure = function ( $ids ) use ( $wpdb ) {
+			wp_cache_flush();
+
+			$counted = 0;
+			$counter = function ( $query ) use ( &$counted, $wpdb ) {
+				if ( false !== strpos( $query, $wpdb->usermeta ) || false !== strpos( $query, $wpdb->users ) ) {
+					++$counted;
+				}
+
+				return $query;
+			};
+
+			add_filter( 'query', $counter );
+			bb_xprofile_filter_user_search_matches( $ids, array( '%Hollowmere%' ), 0 );
+			remove_filter( 'query', $counter );
+
+			return $counted;
+		};
+
+		// Fixture: these members really do resolve from the user meta, so the reads under test
+		// happen at all.
+		wp_cache_flush();
 		$this->assertSame(
-			'Alexis',
-			(string) bp_core_get_user_displayname( $user_id, $viewer ),
-			'The member fell through to their nickname instead of the first name the viewer may see.'
+			'Smallmember0',
+			(string) bp_core_get_user_displayname( $small[0], 0 ),
+			'Fixture: the name must resolve from the user meta.'
+		);
+
+		$small_queries = $measure( $small );
+		$large_queries = $measure( $large );
+
+		// Four times the candidates, the same number of user/usermeta reads: they are answered for
+		// the whole batch up front, not per member.
+		$this->assertSame(
+			$small_queries,
+			$large_queries,
+			sprintf(
+				'Re-testing %d candidates cost %d user/usermeta queries against %d for %d - the name sources are not being primed for the batch.',
+				count( $large ),
+				$large_queries,
+				$small_queries,
+				count( $small )
+			)
 		);
 	}
 }

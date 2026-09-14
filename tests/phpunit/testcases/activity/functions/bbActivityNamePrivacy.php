@@ -166,15 +166,17 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 	}
 
 	/**
-	 * A longer word that merely BEGINS with the hidden last name must never be truncated to a
-	 * fragment. The token-bounded strip removes only the standalone `SMITH` token, leaving the
-	 * longer `SMITHERS` intact (display casing preserved); the word-boundary fail-safe does not
-	 * fire because the surviving `SMITH` inside `SMITHERS` is not a whole token, so it is not
-	 * over-redacted either.
+	 * A longer word that merely BEGINS with the hidden last name is never truncated, or leaked.
+	 *
+	 * Removing "Smith" from a stored "SMITHERS SMITH" is the shape no string rule got right: the
+	 * whole-token pass leaves "SMITHERS" (carrying the surname's letters), and a substring pass
+	 * destroys it. The visible name is assembled from the First Name field instead, so neither
+	 * failure is reachable - and the casing shown is the member's own field casing, not whatever
+	 * the derived column happens to hold.
 	 *
 	 * @group bb_activity_get_item_user_displayname
 	 */
-	public function test_get_user_displayname_case_insensitive_does_not_truncate_longer_word() {
+	public function test_get_user_displayname_is_the_field_not_a_truncated_column() {
 		$u = self::factory()->user->create();
 		wp_update_user(
 			array(
@@ -192,9 +194,9 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 		$GLOBALS['bb_default_display_avatar'] = true;
 		$this->set_current_user( 0 );
 		$guest = bp_core_get_user_displayname( $u, 0 );
-		$this->assertSame( 'SMITHERS', $guest );
-		// Never a truncated fragment, and never the hidden standalone surname.
-		$this->assertStringStartsWith( 'SMITHERS', $guest );
+
+		$this->assertSame( 'Smithers', $guest );
+		$this->assertStringStartsWith( 'Smithers', $guest );
 	}
 
 	/**
@@ -239,29 +241,34 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 	}
 
 	/**
-	 * The leak fail-safe must be a whole-token check, not a bare substring test: a hidden surname
-	 * that is merely a substring of a visible first/middle name (a short surname such as "Lin"
-	 * inside "Linda", or "Ng" at the end of "Armstrong") must NOT trigger over-redaction that drops
-	 * legitimate name parts. Only the standalone surname token is removed.
+	 * Neither direction of the old string rules is reachable: the answer is always the shown field.
+	 *
+	 * Each row was a separate bug. A bare substring test over-redacted, dropping name parts the
+	 * viewer is entitled to ("Lin" inside "Linda", "Ng" at the end of "Armstrong"); a whole-token
+	 * test under-redacted, leaving the surname glued to another token ("AlexQuillfeather",
+	 * "JamesSmith", "AnnaVanDerBerg"). No single rule satisfies both columns of this table.
+	 *
+	 * Assembling the name from the fields answers every row the same way, which is why the
+	 * expectation is uniform: the First Name field, with nothing subtracted and nothing echoed
+	 * from the stored column. A middle name that exists ONLY in that column ("Linda Marie Lin")
+	 * goes with it - it is not a field the member has, and it is not what their own profile shows.
 	 *
 	 * @group bb_activity_get_item_user_displayname
 	 */
-	public function test_get_user_displayname_does_not_over_redact_surname_substring_of_other_name() {
+	public function test_get_user_displayname_is_the_shown_field_whatever_the_column_holds() {
 		$cases = array(
-			// first, last (hidden), display_name => expected guest value.
-			// Substring / word-ending coincidences must NOT be over-redacted:
-			array( 'Linda', 'Lin', 'Linda Marie Lin', 'Linda Marie' ),
-			array( 'Louis', 'Ng', 'Louis Armstrong Ng', 'Louis Armstrong' ),
-			array( 'Wendy', 'Wu', 'Wendy Wu', 'Wendy' ),
-			// Glue variants MUST be redacted (surname removed, non-surname tokens kept):
-			array( 'Alex', 'Quillfeather', 'AlexQuillfeather Jr', 'Alex Jr' ),
-			array( 'James', 'Smith', 'JamesSmith', 'James' ),
-			array( 'Anna', 'Van Der Berg', 'AnnaVanDerBerg', 'Anna' ),
-			array( 'Anna', 'Smith', 'Anna Marie Smith', 'Anna Marie' ),
+			// first, last (hidden), display_name.
+			array( 'Linda', 'Lin', 'Linda Marie Lin' ),
+			array( 'Louis', 'Ng', 'Louis Armstrong Ng' ),
+			array( 'Wendy', 'Wu', 'Wendy Wu' ),
+			array( 'Alex', 'Quillfeather', 'AlexQuillfeather Jr' ),
+			array( 'James', 'Smith', 'JamesSmith' ),
+			array( 'Anna', 'Van Der Berg', 'AnnaVanDerBerg' ),
+			array( 'Anna', 'Smith', 'Anna Marie Smith' ),
 		);
 
 		foreach ( $cases as $case ) {
-			list( $first, $last, $display, $expected ) = $case;
+			list( $first, $last, $display ) = $case;
 			$u = self::factory()->user->create();
 			wp_update_user(
 				array(
@@ -275,18 +282,28 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 
 			$GLOBALS['bb_default_display_avatar'] = true;
 			$this->set_current_user( 0 );
-			$this->assertSame( $expected, bp_core_get_user_displayname( $u, 0 ), "over-redaction for '{$display}'" );
+			$this->assertSame( $first, bp_core_get_user_displayname( $u, 0 ), "wrong name for '{$display}'" );
 		}
 	}
 
 	/**
-	 * A custom display_name that does NOT contain the hidden last name must be preserved, not
-	 * over-corrected. "The Boss" (no surname present) stays as-is for a guest; only when the
-	 * surname actually survives the strip does the fallback replace it.
+	 * A custom display_name survives while nothing is hidden, and gives way once something is.
+	 *
+	 * The stored column is returned untouched for a viewer who may see every name part, so a
+	 * deliberately customised name ("The Boss") is preserved for them. Once a name part has to be
+	 * withheld the name is assembled from the fields instead, and the custom string goes with it.
+	 *
+	 * That is the deliberate trade of rebuilding rather than subtracting, and it costs less than it
+	 * looks: BuddyBoss already ignores this column for EVERY logged-in viewer
+	 * (xprofile_filter_get_user_display_name() replaces it with the field-built name), so the only
+	 * behaviour that changes is a guest's, and only for a member with something hidden. Keeping the
+	 * custom string would mean proving the hidden part is absent from it, which is the undecidable
+	 * subtraction this fix exists to remove - and it fails open on an orphaned surname the member
+	 * no longer stores.
 	 *
 	 * @group bb_activity_get_item_user_displayname
 	 */
-	public function test_get_user_displayname_preserves_custom_name_without_last_name() {
+	public function test_get_user_displayname_custom_name_survives_until_something_is_hidden() {
 		$u = self::factory()->user->create();
 		wp_update_user(
 			array(
@@ -296,11 +313,17 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 				'display_name' => 'The Boss',
 			)
 		);
+
+		// Nothing hidden from a guest yet: the custom column is the public name and is kept.
+		$GLOBALS['bb_default_display_avatar'] = true;
+		$this->set_current_user( 0 );
+		$this->assertSame( 'The Boss', bp_core_get_user_displayname( $u, 0 ) );
+
 		xprofile_set_field_visibility_level( bp_xprofile_lastname_field_id(), $u, 'loggedin' );
 
 		$GLOBALS['bb_default_display_avatar'] = true;
 		$this->set_current_user( 0 );
-		$this->assertSame( 'The Boss', bp_core_get_user_displayname( $u, 0 ) );
+		$this->assertSame( 'Anna', bp_core_get_user_displayname( $u, 0 ) );
 	}
 
 	/**
@@ -1390,8 +1413,9 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 	 * replacement straight from the raw field value: a value padded by an import or a paste from a
 	 * word processor ("Zebrastripe ", or a U+00A0 that PHP's trim() leaves alone) produced a pattern
 	 * that could not match the rebuilt name, and the surname was served to a viewer denied it while
-	 * the guest path - which trims - redacted correctly. Both paths now go through
-	 * bb_core_strip_hidden_name_part().
+	 * the guest path - which trims - redacted correctly. Both paths now assemble the name through
+	 * bb_core_build_visible_display_name(), which never reads the hidden field at all - so the
+	 * padding cannot reach the answer by any route.
 	 *
 	 * @group bb_name_privacy
 	 */
@@ -1444,12 +1468,12 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 	 * A hidden surname that is a prefix or suffix of the VISIBLE first name must not take the first
 	 * name with it.
 	 *
-	 * bb_core_strip_hidden_name_part()'s third argument names the token the viewer IS allowed to
-	 * see. Without it the helper falls to its edge-glue rule and drops any token that merely begins
-	 * or ends with the hidden part, so "Lisa Li" with the surname "Li" hidden lost "Lisa" too and
-	 * fell through to the nickname - a logged-in member shown LESS than a guest. The guest path
-	 * always passed the counterpart; this asserts the logged-in filter path and the guest path give
-	 * the same answer for the shapes where the two rules differ.
+	 * Subtracting the surname out of the stored name dropped any token that merely began or ended
+	 * with it, so "Lisa Li" with the surname "Li" hidden lost "Lisa" too and fell through to the
+	 * nickname - a logged-in member shown LESS than a guest. Nothing is subtracted now: the first
+	 * name is read from its own field, so a surname that is a fragment of it cannot reach it. This
+	 * asserts the logged-in filter path and the guest path give the same answer for the shapes
+	 * where the old rules differed.
 	 *
 	 * @group bb_name_privacy
 	 */
@@ -1523,183 +1547,61 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 	}
 
 	/**
-	 * Apostrophes, curly apostrophes and digits are ordinary characters to the redaction.
+	 * Non-Latin scripts resolve the same way Latin ones do.
 	 *
-	 * The helper builds its patterns with preg_quote(), so "O'Brien" is matched literally the way
-	 * a hyphenated name already is. That was reasoned about but never asserted, and an apostrophe
-	 * is the single most common non-alphabetic character in a real surname - U+2019 included,
-	 * which is what word processors and phone keyboards actually insert. Digits are here because a
-	 * surname field accepts them and a quantifier-looking value must not be treated as pattern
-	 * syntax.
+	 * Every fixture in this file was Latin, so nothing proved the name assembly was script-agnostic.
+	 * A community platform is exactly where CJK, Cyrillic and accented Latin names show up, and the
+	 * glued column is the normal case there rather than drift: a CJK display name carries no space
+	 * between the family and given name at all, so the old subtraction had to reach inside a single
+	 * token to work. Assembling the name from the fields never needs to.
 	 *
-	 * Each row is a separator shape the stored display_name genuinely drifts into: spaced, glued,
-	 * reversed, hyphen-joined.
+	 * The trim applied to each field value is Unicode-aware, so the padded row below - a U+00A0 that
+	 * PHP's trim() leaves in place - must not reach the assembled name either.
 	 *
 	 * @group bb_name_privacy
 	 */
-	public function test_strip_hidden_name_part_handles_apostrophes_and_digits() {
+	public function test_get_user_displayname_handles_non_latin_scripts() {
 		$cases = array(
-			// display_name,        hidden,          visible,  expected.
-			array( "Sean O'Brien",       "O'Brien",       'Sean', 'Sean' ),
-			array( "Sean OâBrien", "OâBrien", 'Sean', 'Sean' ), // U+2019.
-			array( "SeanO'Brien",        "O'Brien",       'Sean', 'Sean' ),           // Glued.
-			array( "O'Brien Sean",       "O'Brien",       'Sean', 'Sean' ),           // Reversed.
-			array( "Sean O'Brien-Smith", "O'Brien-Smith", 'Sean', 'Sean' ),
-			array( "Ana D'Souza",        "D'Souza",       'Ana',  'Ana' ),
-			array( 'Agent 007',          '007',           'Agent', 'Agent' ),         // Digits.
-			array( 'User 42',            '42',            'User', 'User' ),
-			array( 'Anne-Marie Dupont',  'Dupont',        'Anne-Marie', 'Anne-Marie' ),
-			array( 'Dupont Anne-Marie',  'Dupont',        'Anne-Marie', 'Anne-Marie' ),
+			// First name, hidden last name, stored display_name.
+			array( "\xE5\xA4\xAA\xE9\x83\x8E", "\xE7\x94\xB0\xE4\xB8\xAD", "\xE5\xA4\xAA\xE9\x83\x8E \xE7\x94\xB0\xE4\xB8\xAD" ), // Japanese, spaced.
+			array( "\xE5\xA4\xAA\xE9\x83\x8E", "\xE7\x94\xB0\xE4\xB8\xAD", "\xE5\xA4\xAA\xE9\x83\x8E\xE7\x94\xB0\xE4\xB8\xAD" ),  // Japanese, glued.
+			array( "\xD0\x98\xD0\xB2\xD0\xB0\xD0\xBD", "\xD0\x9F\xD0\xB5\xD1\x82\xD1\x80\xD0\xBE\xD0\xB2", "\xD0\x98\xD0\xB2\xD0\xB0\xD0\xBD \xD0\x9F\xD0\xB5\xD1\x82\xD1\x80\xD0\xBE\xD0\xB2" ), // Cyrillic.
+			array( "\xD0\x98\xD0\xB2\xD0\xB0\xD0\xBD", "\xD0\x9F\xD0\xB5\xD1\x82\xD1\x80\xD0\xBE\xD0\xB2", "\xD0\x98\xD0\xB2\xD0\xB0\xD0\xBD\xD0\x9F\xD0\xB5\xD1\x82\xD1\x80\xD0\xBE\xD0\xB2" ),  // Cyrillic, glued.
+			array( "Jos\xC3\xA9", "\xC3\x81lvarez", "Jos\xC3\xA9\xC3\x81lvarez" ),                                                // Accented, glued.
+			array( "Zo\xC3\xAB", "M\xC3\xBCller", "Zo\xC3\xAB M\xC3\xBCller" ),
+			// Padded with U+00A0, which PHP's trim() does not remove.
+			array( "\xC2\xA0Zo\xC3\xAB\xC2\xA0", "M\xC3\xBCller", "Zo\xC3\xAB M\xC3\xBCller" ),
 		);
 
 		foreach ( $cases as $case ) {
-			list( $display_name, $hidden, $visible, $expected ) = $case;
+			list( $first, $last, $display ) = $case;
+			$expected = preg_replace( '/^[\s\p{Zs}]+|[\s\p{Zs}]+$/u', '', $first );
 
-			$actual = bb_core_strip_hidden_name_part( $display_name, $hidden, $visible );
-
-			$this->assertSame(
-				$expected,
-				$actual,
-				"unexpected result for '{$display_name}' with '{$hidden}' hidden"
+			$u = self::factory()->user->create();
+			wp_update_user(
+				array(
+					'ID'           => $u,
+					'first_name'   => $first,
+					'last_name'    => $last,
+					'display_name' => $display,
+				)
 			);
-			$this->assertStringNotContainsStringIgnoringCase(
-				$hidden,
-				$actual,
-				"hidden part survived in '{$display_name}'"
-			);
-		}
-	}
+			xprofile_set_field_data( bp_xprofile_firstname_field_id(), $u, $first );
+			xprofile_set_field_data( bp_xprofile_lastname_field_id(), $u, $last );
+			xprofile_set_field_visibility_level( bp_xprofile_lastname_field_id(), $u, 'adminsonly' );
 
-	/**
-	 * Losing the Last Name field id must not lose the site-wide format hide.
-	 *
-	 * bp_xprofile_lastname_field_id() returns 0 when its option was never written - the getter
-	 * defaults to 0 - or when a third-party filter says so, and it is filterable. The
-	 * format-level hide was appended to the hidden-field list only when that id was truthy, so
-	 * with the id missing the resolver fell through to the stored display_name: under a "First
-	 * Name" site format a guest was served the drifted full name, which is the exact scenario
-	 * PROD-9896 is about. The surname is not part of the "First Name" or "Nickname" formats at
-	 * all, so neither format needs the field id to resolve a name.
-	 *
-	 * @group bb_name_privacy
-	 */
-	public function test_missing_last_name_field_id_still_honours_the_format_hide() {
-		$format_backup = bp_get_option( 'bp-display-name-format' );
-		$zero          = function () {
-			return 0;
-		};
+			$GLOBALS['bb_default_display_avatar'] = true;
+			$this->set_current_user( 0 );
+			$actual = (string) bp_core_get_user_displayname( $u, 0 );
 
-		try {
-			foreach ( array( 'first_name', 'nickname' ) as $display_format ) {
-				bp_update_option( 'bp-display-name-format', $display_format );
-
-				$author = self::factory()->user->create();
-				wp_update_user(
-					array(
-						'ID'           => $author,
-						'first_name'   => 'Peter',
-						'last_name'    => 'Zebrastripe',
-						// Drifted: the column holds the full name the format is meant to suppress.
-						'display_name' => 'Peter Zebrastripe',
-					)
-				);
-				$nickname = 'peternick' . $author;
-				update_user_meta( $author, 'nickname', $nickname );
-				xprofile_set_field_data( bp_xprofile_nickname_field_id(), $author, $nickname );
-				xprofile_set_field_data( bp_xprofile_firstname_field_id(), $author, 'Peter' );
-				xprofile_set_field_data( bp_xprofile_lastname_field_id(), $author, 'Zebrastripe' );
-
-				// Now take the field id away, as a site with the option unset would have it.
-				add_filter( 'bp_xprofile_lastname_field_id', $zero, 99 );
-
-				$GLOBALS['bb_default_display_avatar'] = true;
-				$this->set_current_user( 0 );
-				$guest = bp_core_get_user_displayname( $author );
-
-				remove_filter( 'bp_xprofile_lastname_field_id', $zero, 99 );
-
-				$this->assertStringNotContainsStringIgnoringCase(
-					'zebrastripe',
-					(string) $guest,
-					"format {$display_format} leaked the surname when the last-name field id was missing"
-				);
-				$this->assertSame(
-					( 'nickname' === $display_format ) ? $nickname : 'Peter',
-					(string) $guest,
-					"unexpected visible name under format {$display_format}"
-				);
-			}
-		} finally {
-			remove_filter( 'bp_xprofile_lastname_field_id', $zero, 99 );
-			$GLOBALS['bb_default_display_avatar'] = false;
-			bp_update_option( 'bp-display-name-format', $format_backup );
-		}
-	}
-
-	/**
-	 * Non-Latin scripts redact the same way Latin ones do.
-	 *
-	 * The matcher is built on \p{L}/\p{N} with the /u modifier throughout, so it is script-agnostic
-	 * by construction - but every fixture in this file was Latin, so nothing proved it. A community
-	 * platform is exactly where CJK, Hangul, Cyrillic, Arabic and accented Latin names show up, and
-	 * the glued shapes matter most there: CJK names carry no space between the family and given
-	 * name at all, so "hidden surname welded to a visible given name" is the normal case, not drift.
-	 *
-	 * @group bb_name_privacy
-	 */
-	public function test_strip_hidden_name_part_handles_non_latin_scripts() {
-		$cases = array(
-			// display_name,   hidden,     visible,   expected.
-			array( "\xE5\xA4\xAA\xE9\x83\x8E \xE7\x94\xB0\xE4\xB8\xAD", "\xE7\x94\xB0\xE4\xB8\xAD", "\xE5\xA4\xAA\xE9\x83\x8E", "\xE5\xA4\xAA\xE9\x83\x8E" ), // Japanese, spaced.
-			array( "\xE5\xA4\xAA\xE9\x83\x8E\xE7\x94\xB0\xE4\xB8\xAD", "\xE7\x94\xB0\xE4\xB8\xAD", "\xE5\xA4\xAA\xE9\x83\x8E", "\xE5\xA4\xAA\xE9\x83\x8E" ),     // Japanese, glued.
-			array( "\xD0\x98\xD0\xB2\xD0\xB0\xD0\xBD \xD0\x9F\xD0\xB5\xD1\x82\xD1\x80\xD0\xBE\xD0\xB2", "\xD0\x9F\xD0\xB5\xD1\x82\xD1\x80\xD0\xBE\xD0\xB2", "\xD0\x98\xD0\xB2\xD0\xB0\xD0\xBD", "\xD0\x98\xD0\xB2\xD0\xB0\xD0\xBD" ), // Cyrillic.
-			array( "\xD0\x98\xD0\xB2\xD0\xB0\xD0\xBD\xD0\x9F\xD0\xB5\xD1\x82\xD1\x80\xD0\xBE\xD0\xB2", "\xD0\x9F\xD0\xB5\xD1\x82\xD1\x80\xD0\xBE\xD0\xB2", "\xD0\x98\xD0\xB2\xD0\xB0\xD0\xBD", "\xD0\x98\xD0\xB2\xD0\xB0\xD0\xBD" ),     // Cyrillic, glued.
-			array( "Jos\xC3\xA9 \xC3\x81lvarez", "\xC3\x81lvarez", "Jos\xC3\xA9", "Jos\xC3\xA9" ),                 // Accented Latin.
-			array( "Jos\xC3\xA9\xC3\x81lvarez", "\xC3\x81lvarez", "Jos\xC3\xA9", "Jos\xC3\xA9" ),                  // Accented, glued.
-			array( "Zo\xC3\xAB M\xC3\xBCller", "M\xC3\xBCller", "Zo\xC3\xAB", "Zo\xC3\xAB" ),
-		);
-
-		foreach ( $cases as $case ) {
-			list( $display_name, $hidden, $visible, $expected ) = $case;
-
-			$actual = bb_core_strip_hidden_name_part( $display_name, $hidden, $visible );
-
-			$this->assertSame( $expected, $actual, "unexpected result for '{$display_name}'" );
+			$this->assertSame( $expected, $actual, "unexpected result for '{$display}'" );
 			$this->assertFalse(
-				mb_stripos( (string) $actual, $hidden, 0, 'UTF-8' ),
-				"hidden part survived in '{$display_name}'"
+				mb_stripos( $actual, $last, 0, 'UTF-8' ),
+				"hidden part survived in '{$display}'"
 			);
 		}
 	}
 
-	/**
-	 * A de-duplication digit suffix does not shield the surname.
-	 *
-	 * WordPress appends a numeric suffix when a name collides ("Zebrastripe2"), and an initial
-	 * welded to a surname ("pzebrastripe") is a common imported shape. Both leave a remainder that
-	 * is only a character or two, so the token exists BECAUSE of the hidden name and must go. This
-	 * path was reasoned about in the helper's comments but never asserted.
-	 *
-	 * The negligible-remainder rule is measured in CHARACTERS, not bytes - asserted here with a
-	 * fullwidth digit so a byte-length regression would be caught.
-	 *
-	 * @group bb_name_privacy
-	 */
-	public function test_strip_hidden_name_part_drops_tokens_left_over_by_a_hidden_surname() {
-		$this->assertSame( 'Peter', bb_core_strip_hidden_name_part( 'Peter Zebrastripe2', 'Zebrastripe', 'Peter' ) );
-		// "Jr" here is its own space-separated token, not a remainder welded to the surname, so it
-		// carries no part of the hidden name and is correctly kept. Contrast "PeterZebrastripeJr"
-		// below, where the same characters are inside the token the surname created.
-		$this->assertSame( 'Peter Jr', bb_core_strip_hidden_name_part( 'Peter Zebrastripe Jr', 'Zebrastripe', 'Peter' ) );
-		$this->assertSame( '', bb_core_strip_hidden_name_part( 'PeterZebrastripeJr', 'Zebrastripe', 'Peter' ) );
-		$this->assertSame( '', bb_core_strip_hidden_name_part( 'pzebrastripe', 'Zebrastripe', 'Peter' ) );
-		$this->assertSame( '', bb_core_strip_hidden_name_part( "Zebrastripe\xEF\xBC\x92", 'Zebrastripe', 'Peter' ) );
-
-		// The other side of the rule: a surname that is only a coincidental fragment of a longer,
-		// unrelated word leaves a substantial remainder and must be KEPT - dropping it would redact
-		// a name the viewer is entitled to.
-		$this->assertSame( 'Armstrong', bb_core_strip_hidden_name_part( 'Armstrong', 'Ng', 'Armstrong' ) );
-	}
 
 	/**
 	 * With every name source blank, the label falls to user_nicename - never to a blank.
@@ -2089,122 +1991,6 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 
 		// ... and the bypass still does what it exists for.
 		$this->assertSame( array(), bb_bypass_name_privacy_for_admin( $levels, $member, $admin ) );
-	}
-
-	/**
-	 * A SHORT hidden name part must not consume an unrelated token that merely contains it.
-	 *
-	 * The embedded-token rule drops a token when removing the hidden part leaves only a character
-	 * or two behind, because that is what an initial welded to a surname ("pzebrastripe") and a
-	 * de-duplication suffix ("Zebrastripe2") look like. Applied to a SHORT surname the very same
-	 * shape describes an ordinary, unrelated name: "Cann" is "Ann" plus one letter in exactly the
-	 * way "Zebrastripes" is "Zebrastripe" plus one letter. A member called Bob Cann whose surname
-	 * "Ann" was hidden therefore lost "Cann" too and was served only "Bob".
-	 *
-	 * That is not a safe failure. Over-redaction deletes a name part the viewer is entitled to,
-	 * and where the visible first name is short as well the label collapses to the nickname - the
-	 * "logged-in member shown LESS than a guest" outcome this file already guards elsewhere.
-	 *
-	 * Shape alone cannot separate the two, so the tie-break is whether the name still reads
-	 * complete WITHOUT the token under test - that is, whether the visible counterpart is already
-	 * standing on its own somewhere in the name. If it is, this token is an extra name the member
-	 * has and a short fragment inside it is plausibly coincidence ("Thelin" is a real surname);
-	 * only a fragment long enough to make coincidence implausible takes it.
-	 *
-	 * If the counterpart is NOT standing on its own, this token is the whole name on offer and
-	 * there is nothing for the fragment to be coincidental with, so a hidden part welded to either
-	 * END of it goes at any length - an initial, honorific or particle in front ("pzebrastripe",
-	 * "MrLin", "theLin"), a plural behind ("Zebrastripes"). That is the fail-closed direction and
-	 * it is the default. A fragment buried mid-token is still judged on remainder length, so an
-	 * unrelated one-word name survives ("strongman" for a member whose surname is "Ng").
-	 *
-	 * @group bb_name_privacy
-	 */
-	public function test_strip_hidden_name_part_keeps_unrelated_tokens_containing_a_short_hidden_part() {
-		$keep = array(
-			// display_name,   hidden, visible, expected.
-			array( 'Bob Cann',  'Ann',  'Bob',   'Bob Cann' ),  // Reported shape: fragment at the END of an unrelated token.
-			array( 'Bob Anne',  'Ann',  'Bob',   'Bob Anne' ),  // ... and at the start.
-			array( 'Bob Cross', 'Ross', 'Bob',   'Bob Cross' ),
-			array( 'Bob Price', 'Rice', 'Bob',   'Bob Price' ),
-			array( 'Bob Hanna', 'Anna', 'Bob',   'Bob Hanna' ),
-			array( 'Bob Linda', 'Lin',  'Bob',   'Bob Linda' ), // Two-character remainder.
-
-			// The counterpart is standing on its own, so an honorific-looking prefix on a SECOND
-			// token is left alone - "Thelin" and "Mrlin" are spellings a real surname can have.
-			array( 'Peter theLin', 'Lin', 'Peter', 'Peter theLin' ),
-			array( 'Peter MrLin',  'Lin', 'Peter', 'Peter MrLin' ),
-
-			// No counterpart token here, but the fragment is buried mid-word rather than welded to
-			// an end, so the one-word name the member chose keeps its letters.
-			array( 'strongman', 'Ng', 'Louis', 'strongman' ),
-		);
-
-		foreach ( $keep as $case ) {
-			list( $display_name, $hidden, $visible, $expected ) = $case;
-
-			$this->assertSame(
-				$expected,
-				bb_core_strip_hidden_name_part( $display_name, $hidden, $visible ),
-				"over-redaction for '{$display_name}' with '{$hidden}' hidden"
-			);
-		}
-
-		// The same short hidden parts in the shapes that really are a disclosure. None of these is
-		// condemned by the length of the fragment, so the tie-break must never be the only thing
-		// standing between them and the viewer.
-		$redact = array(
-			// display_name,  hidden, visible, expected.
-			array( 'Cann Ann',  'Ann',  'Cann',  'Cann' ),  // The surname standing alone as its own token.
-			array( 'pwu',       'Wu',   'Peter', '' ),      // Initial + surname, the import shape.
-			array( 'Wu2',       'Wu',   'Peter', '' ),      // WordPress de-duplication suffix.
-			array( 'Wendy Wu2', 'Wu',   'Wendy', 'Wendy' ),
-
-			// The same two shapes with the counterpart standing on its own, so the tie-break keeps
-			// the token and only the shape tests can condemn it: the initial welded to a two-letter
-			// surname, and a de-duplication suffix. Without these rows those tests would be proved
-			// by nothing - the rows above reach the same answer through the edge rule instead.
-			array( 'Peter pwu', 'Wu', 'Peter', 'Peter' ),
-			array( 'Peter Wu2', 'Wu', 'Peter', 'Peter' ),
-
-			// The honorific/particle shape, which no allowlist should be needed to catch: the
-			// remainder has letters (so it is not decoration), is longer than one character (so it
-			// is not the counterpart's initial) and is not the counterpart itself. What condemns it
-			// is that the counterpart is nowhere in the name as its own token, so this token is all
-			// the name there is and the surname is welded to its end.
-			array( 'MrLin',  'Lin', 'Peter', '' ),
-			array( 'DrWu',   'Wu',  'Anna',  '' ),
-			array( 'MsNg',   'Ng',  'Kate',  '' ),
-			array( 'theLin', 'Lin', 'Peter', '' ), // Three-character remainder - never reached by a length cap of two.
-		);
-
-		foreach ( $redact as $case ) {
-			list( $display_name, $hidden, $visible, $expected ) = $case;
-			$actual = bb_core_strip_hidden_name_part( $display_name, $hidden, $visible );
-
-			$this->assertSame(
-				$expected,
-				$actual,
-				"unexpected result for '{$display_name}' with '{$hidden}' hidden"
-			);
-			// Only meaningful where the surviving name does not legitimately contain the fragment:
-			// "Cann" keeps the letters of "Ann" by definition, and the assertion above already pins
-			// that row to exactly the right string.
-			if ( false === stripos( $expected, $hidden ) ) {
-				$this->assertStringNotContainsStringIgnoringCase(
-					$hidden,
-					$actual,
-					"short hidden part survived in '{$display_name}'"
-				);
-			}
-		}
-
-		// The negligible remainder is still counted in CHARACTERS, not bytes: a fullwidth letter is
-		// one character and three bytes, so a byte-length regression would keep this token whole.
-		// The counterpart stands on its own here deliberately - that is the branch where remainder
-		// LENGTH is what decides. Without a separate "Peter" the edge rule would answer first and
-		// this would pass whether the count was characters or bytes.
-		$this->assertSame( 'Peter', bb_core_strip_hidden_name_part( "Peter Zebrastripe\xEF\xBD\x93", 'Zebrastripe', 'Peter' ) );
 	}
 
 	/**
