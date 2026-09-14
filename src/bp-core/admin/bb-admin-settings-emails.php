@@ -47,6 +47,11 @@ function bb_admin_settings_register_emails_feature() {
 	require_once __DIR__ . '/settings/emails/meta-fields.php';
 	require_once __DIR__ . '/settings/emails/legacy-meta-bridge.php';
 
+	// The Email Digest ships in the BuddyBoss Addons plugin. This registers the stand-in
+	// panel for sites where that plugin is absent, inactive, or licensed on a plan that
+	// does not include it, and stands itself down whenever the real panel is registered.
+	require_once __DIR__ . '/settings/emails/email-digest-placeholder.php';
+
 	// =========================================================================
 	// SIDE PANELS
 	// =========================================================================
