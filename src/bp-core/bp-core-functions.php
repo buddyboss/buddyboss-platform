@@ -11156,6 +11156,26 @@ function bb_core_strip_hidden_name_part( $display_name, $hidden_part, $visible_p
 	$stripped = ( null === $stripped ) ? '' : trim( preg_replace( '/[\s\p{Zs}]+/u', ' ', $stripped ) );
 
 	if ( '' === $stripped ) {
+		// Nothing survived. When the visible counterpart is the SAME string as the hidden part - a
+		// member whose First Name and Last Name are both "Alex" - the whole-token pass above
+		// removed both tokens, because a case-insensitive strip cannot tell one from the other.
+		// Returning '' sends the caller to its nickname fallback, so the member loses a name this
+		// viewer is allowed to see.
+		//
+		// Echoing that string back discloses nothing: the counterpart is only ever passed when this
+		// viewer MAY see it, so the permitted half is spelled exactly the same as the hidden one and
+		// showing it tells the viewer nothing they were not already entitled to. Compared the same
+		// way the strip matched - case-insensitively - so "Alex Alex" and "Alex alex" behave alike.
+		// (PROD-9896)
+		if ( '' !== $visible_part ) {
+			$visible_fold = function_exists( 'mb_strtolower' ) ? mb_strtolower( $visible_part, 'UTF-8' ) : strtolower( $visible_part );
+			$hidden_fold  = function_exists( 'mb_strtolower' ) ? mb_strtolower( $hidden_part, 'UTF-8' ) : strtolower( $hidden_part );
+
+			if ( $visible_fold === $hidden_fold ) {
+				return $visible_part;
+			}
+		}
+
 		return '';
 	}
 

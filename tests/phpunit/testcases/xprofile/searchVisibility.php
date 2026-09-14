@@ -1748,4 +1748,71 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 			'A five-character-or-longer hidden part lost its existing redaction.'
 		);
 	}
+
+	/**
+	 * A member whose two name parts are the same string keeps the half the viewer may see.
+	 *
+	 * The whole-token strip is case-insensitive and cannot tell one "Alex" from the other, so for a
+	 * member whose First Name and Last Name are both "Alex" it removed BOTH tokens and returned ''.
+	 * xprofile_filter_get_user_display_name() then fell through to the nickname, and the member lost
+	 * a name the viewer was allowed to see (PROD-9896 review finding).
+	 *
+	 * Echoing the permitted half back discloses nothing - the counterpart is only ever passed when
+	 * this viewer may see it - but the fail-closed behaviour when NO counterpart is offered must
+	 * survive, which the assertions below pin.
+	 *
+	 * @group bb_search_visibility_display_format
+	 */
+	public function test_identical_name_parts_keep_the_visible_half() {
+		// The helper itself.
+		$this->assertSame(
+			'Alex',
+			bb_core_strip_hidden_name_part( 'Alex Alex', 'Alex', 'Alex' ),
+			'A member whose name parts are the same string lost both of them.'
+		);
+		$this->assertSame(
+			'alex',
+			bb_core_strip_hidden_name_part( 'Alex alex', 'Alex', 'alex' ),
+			'The comparison must fold case the same way the strip matches.'
+		);
+
+		// Fail-closed must survive: with no counterpart offered, nothing may be echoed back.
+		$this->assertSame(
+			'',
+			bb_core_strip_hidden_name_part( 'Alex Alex', 'Alex', '' ),
+			'With no visible counterpart the helper must still fail closed.'
+		);
+		$this->assertSame(
+			'',
+			bb_core_strip_hidden_name_part( 'Zebrastripe', 'Zebrastripe', 'Peter' ),
+			'A counterpart that differs from the hidden part must not be echoed back.'
+		);
+
+		// End to end, through the filter path that had no re-derivation of its own.
+		$viewer  = self::factory()->user->create();
+		$user_id = self::factory()->user->create( array( 'nickname' => 'alexnick' ) );
+
+		wp_update_user(
+			array(
+				'ID'           => $user_id,
+				'first_name'   => 'Alexis',
+				'last_name'    => 'Alexis',
+				'display_name' => 'Alexis Alexis',
+			)
+		);
+
+		xprofile_set_field_data( bp_xprofile_firstname_field_id(), $user_id, 'Alexis' );
+		xprofile_set_field_data( bp_xprofile_lastname_field_id(), $user_id, 'Alexis' );
+		xprofile_set_field_visibility_level( bp_xprofile_lastname_field_id(), $user_id, 'adminsonly' );
+
+		bp_update_option( 'bp-display-name-format', 'first_last_name' );
+		$this->set_current_user( $viewer );
+		wp_cache_flush();
+
+		$this->assertSame(
+			'Alexis',
+			(string) bp_core_get_user_displayname( $user_id, $viewer ),
+			'The member fell through to their nickname instead of the first name the viewer may see.'
+		);
+	}
 }
