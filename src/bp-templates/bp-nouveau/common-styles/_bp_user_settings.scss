@@ -695,3 +695,314 @@
 }
 
 /*__ Settings __*/
+
+
+// Security
+
+/*__ Security (Two-Factor) __*/
+
+// The Security tab prints the Two Factor plugin's wp-admin markup, which is
+// built for a two-column admin form table. These rules give it a readable
+// single column under any theme. Specificity is kept to a single class so
+// the BuddyBoss theme and ReadyLaunch can layer their own styling on top.
+
+.security-info {
+	margin-bottom: $marg-lrg;
+	color: $light-text;
+}
+
+.bb-two-factor-form {
+
+	fieldset {
+		margin: 0;
+		padding: 0;
+		border: 0;
+	}
+
+	fieldset[disabled] {
+		opacity: 0.6;
+	}
+
+	// The plugin hides this legend with the theme's screen-reader class; not
+	// every theme defines it, and it repeats the heading above.
+	legend.screen-reader-text {
+		position: absolute;
+		width: 1px;
+		height: 1px;
+		margin: -1px;
+		padding: 0;
+		border: 0;
+		clip: rect(0 0 0 0);
+		overflow: hidden;
+		word-wrap: normal !important;
+	}
+
+	fieldset > p {
+		max-width: 640px;
+		margin-bottom: $marg-lrg;
+		color: $light-text;
+	}
+
+	hr {
+		height: 1px;
+		margin: $marg-xlrg 0;
+		border: 0;
+		background: $bp-border-color;
+	}
+
+	.two-factor-methods-table,
+	.two-factor-primary-method-table {
+		display: block;
+		width: 100%;
+		margin: 0;
+		border: 0;
+
+		tbody,
+		tr,
+		th,
+		td {
+			display: block;
+			padding: 0;
+			border: 0;
+		}
+
+		tr {
+			margin-bottom: $marg-lrg;
+			padding: $pad-med;
+			border: 1px solid $bp-border-color;
+			border-radius: $block-radius-inner;
+			background: $white;
+		}
+
+		tr:last-child {
+			margin-bottom: 0;
+		}
+
+		th {
+			margin-bottom: $marg-sml;
+			color: $light-text;
+			font-size: 13px;
+			letter-spacing: 0.5px;
+			text-align: left;
+			text-transform: uppercase;
+		}
+
+		th label {
+			margin: 0;
+			color: inherit;
+			font: inherit;
+		}
+	}
+
+	.two-factor-method-label {
+		display: flex;
+		align-items: center;
+		flex-wrap: wrap;
+		margin: 0;
+		cursor: pointer;
+
+		input[type="checkbox"] {
+			flex-shrink: 0;
+			margin: 0 $marg-sml 0 0;
+		}
+	}
+
+	.two-factor-method-recommended {
+		margin-left: $marg-xsml;
+		padding: 2px 6px;
+		border: 0;
+		border-radius: 3px;
+		background: $light-grey;
+		color: $dark-grey;
+		font-size: 11px;
+		font-weight: 400;
+		letter-spacing: 0.4px;
+		text-decoration: none;
+		text-transform: uppercase;
+		cursor: help;
+	}
+
+	#two-factor-totp-options,
+	#two-factor-backup-codes,
+	.two-factor-backup-codes-wrapper {
+		margin-top: $marg-med;
+		padding: $pad-med;
+		border-radius: $block-radius-inner;
+		background: $off-white;
+
+		p {
+			margin-bottom: $marg-sml;
+		}
+
+		p:last-child {
+			margin-bottom: 0;
+		}
+	}
+
+	.two-factor-backup-codes-wrapper {
+		margin-top: $marg-sml;
+	}
+
+	// Providers that render a plain description instead of a panel, e.g. Email.
+	.two-factor-methods-table td > p {
+		margin: $marg-sml 0 0;
+		color: $light-text;
+	}
+
+	.totp-steps {
+		margin: 0;
+		padding-left: $pad-med;
+
+		> li {
+			margin-bottom: $marg-med;
+		}
+
+		> li:last-child {
+			margin-bottom: 0;
+		}
+	}
+
+	// The QR modules are always dark, so this panel stays light.
+	#two-factor-qr-code {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 204px;
+		min-width: 0;
+		height: 204px;
+		min-height: 0;
+		margin: $marg-med 0;
+		padding: $pad-sml;
+		border: 1px solid $bp-border-color;
+		border-radius: $block-radius-inner;
+		background: $white;
+
+		svg {
+			display: block;
+			width: 180px;
+			height: 180px;
+		}
+	}
+
+	code {
+		display: inline-block;
+		padding: 4px 8px;
+		border: 1px solid $bp-border-color;
+		border-radius: 3px;
+		background: $white;
+		font-size: 14px;
+		letter-spacing: 1px;
+		word-break: break-all;
+	}
+
+	label[for="two-factor-totp-authcode"] {
+		display: block;
+	}
+
+	#two-factor-totp-authcode {
+		display: block;
+		width: 100%;
+		max-width: 220px;
+		margin-top: $marg-xsml;
+	}
+
+	.totp-submit {
+		margin-top: $marg-sml;
+	}
+
+	.two-factor-backup-codes-list-wrap {
+		display: block;
+		margin-top: 0;
+		padding: $pad-med;
+		border: 1px solid $bp-border-color;
+		border-radius: $block-radius-inner;
+		background: $white;
+	}
+
+	.two-factor-backup-codes-unused-codes {
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: 4px $marg-lrg;
+		margin: 0;
+		padding: 0;
+		list-style-position: inside;
+
+		li {
+			margin: 0;
+		}
+	}
+
+	.two-factor-backup-codes-token {
+		letter-spacing: 0.2em;
+	}
+
+	#two-factor-primary-provider {
+		width: 100%;
+		max-width: 320px;
+	}
+
+	.description {
+		margin: $marg-xsml 0 0;
+		color: $light-text;
+		font-size: 13px;
+	}
+
+	#two-factor-backup-codes em {
+		display: inline-block;
+		margin-left: $marg-xsml;
+		color: $light-text;
+		font-size: 13px;
+	}
+
+	// wp-admin notices.
+	.notice {
+		margin: 0 0 $marg-lrg;
+		padding: $pad-sml $pad-med;
+		border: 0;
+		border-left: 3px solid $informational;
+		border-radius: $block-radius-inner;
+		background: $off-white;
+		box-shadow: none;
+
+		p {
+			margin: 0 0 $marg-xsml;
+		}
+
+		p:last-child {
+			margin-bottom: 0;
+		}
+
+		&.notice-warning {
+			border-left-color: $golden;
+		}
+
+		&.notice-error {
+			border-left-color: $warnings;
+		}
+
+		&.notice-success {
+			border-left-color: $update-success;
+		}
+	}
+
+	.button-two-factor-backup-codes-copy,
+	.button-two-factor-backup-codes-download {
+		margin-right: $marg-xsml;
+	}
+
+	.submit {
+		margin-top: $marg-lrg;
+	}
+
+	@media screen and (max-width: 544px) {
+
+		.two-factor-methods-table tr,
+		.two-factor-primary-method-table tr {
+			padding: $pad-sml;
+		}
+
+		.two-factor-backup-codes-unused-codes {
+			grid-template-columns: minmax(0, 1fr);
+		}
+	}
+}
