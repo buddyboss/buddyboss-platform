@@ -19938,7 +19938,7 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
   bottom: 0;
   display: flex;
   align-items: center;
-  padding: 0 var(--bb-rl-space-200);
+  padding: 0 var(--bb-rl-space-100);
 }
 
 .bb-rl-account-settings-section .bb-password-wrap .bb-toggle-password i[class*="bb-icon-"] {
