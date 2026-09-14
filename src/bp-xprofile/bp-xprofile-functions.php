@@ -1550,6 +1550,138 @@ function bp_xprofile_get_fields_by_visibility_levels( $user_id, $levels = array(
 }
 
 /**
+ * Narrow a matched set to the members who could have a profile field hidden from a viewer.
+ *
+ * The search-visibility filters have to decide, per matched member, whether the field their hit
+ * came from is one this viewer may see. Resolving that is the expensive part, and it is only ever
+ * interesting for a member who has actually restricted something: where nothing on the profile
+ * carries a level this viewer is denied, bp_xprofile_get_hidden_fields_for_user() returns an empty
+ * list and the member is kept. Spending the candidate budget on the rest - and DROPPING whatever
+ * sorted past it - discarded search results that no privacy rule applied to (PROD-9896).
+ *
+ * "Could be hidden" follows bp_xprofile_get_fields_by_visibility_levels() exactly, because that is
+ * what the keep-test will ask. It has two branches and they treat a field's own default visibility
+ * very differently:
+ *
+ * - A member with ANY row in the visibility table is resolved from those rows. A field they never
+ *   set is simply NOT hidden - the default does not reach them.
+ * - A member with no rows at all is resolved from the `bp_xprofile_visibility_levels` user meta,
+ *   and there a field with no entry DOES fall back to the field's default.
+ * - `allow_custom_visibility = 'disabled'` overrides both: the admin default replaces every
+ *   member's own setting, so the field is restricted for the whole community.
+ *
+ * Over-inclusion is safe and under-inclusion is not, so every uncertain case is kept as a
+ * candidate: a member returned here is still decided properly by the caller's keep-test, whereas a
+ * member wrongly left out would be kept without being checked.
+ *
+ * Bounded by the set it is given rather than by a scan of the member table, so it costs a handful
+ * of queries over the matched IDs - the same shape as the priming the callers already do.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $user_ids Matched member IDs to narrow.
+ * @param array $levels   Visibility levels hidden from this viewer. Defaults to every non-public
+ *                        level, which is the widest (safest) reading.
+ * @return array|null The subset that could have something hidden, or null when every member has to
+ *                    be treated as a candidate - including on any unexpected condition, so the
+ *                    caller falls back to its bounded whole-set behaviour rather than to a narrowed
+ *                    set that might be missing somebody.
+ */
+function bb_xprofile_filter_possible_hidden_users( $user_ids, $levels = array() ) {
+	global $wpdb;
+
+	$user_ids = array_values( array_unique( array_filter( array_map( 'intval', (array) $user_ids ) ) ) );
+
+	if ( empty( $user_ids ) || ! bp_is_active( 'xprofile' ) || ! class_exists( 'BB_XProfile_Visibility' ) ) {
+		return null;
+	}
+
+	$levels = array_values( array_filter( array_map( 'strval', (array) $levels ) ) );
+
+	if ( empty( $levels ) ) {
+		$levels = array( 'friends', 'loggedin', 'adminsonly' );
+	}
+
+	$bp    = buddypress();
+	$table = isset( $bp->profile->table_name_visibility ) ? $bp->profile->table_name_visibility : '';
+
+	if ( empty( $table ) ) {
+		return null;
+	}
+
+	// Does any field fall back to a level this viewer is denied? Read live -
+	// fetch_default_visibility_levels() is object-cached and dropped when a field is saved, so a
+	// changed default is picked up without a second memo to invalidate.
+	$default_reaches_unset_fields = false;
+
+	foreach ( (array) BP_XProfile_Group::fetch_default_visibility_levels() as $defaults ) {
+		if ( ! isset( $defaults['default'] ) || ! in_array( $defaults['default'], $levels, true ) ) {
+			continue;
+		}
+
+		// The admin default replaces every member's own setting on BOTH branches, so the field is
+		// restricted community-wide and no candidate set is smaller than the whole match set.
+		if ( isset( $defaults['allow_custom'] ) && 'disabled' === $defaults['allow_custom'] ) {
+			return null;
+		}
+
+		$default_reaches_unset_fields = true;
+	}
+
+	$ids_sql       = implode( ',', $user_ids );
+	$quoted_levels = implode(
+		',',
+		array_map(
+			function ( $level ) use ( $wpdb ) {
+				return $wpdb->prepare( '%s', $level );
+			},
+			$levels
+		)
+	);
+
+	// Members who explicitly restricted a field. Bounded by the matched set.
+	// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- levels are prepared above, ids are ints.
+	$rows = $wpdb->get_col(
+		"SELECT DISTINCT user_id FROM {$table} WHERE user_id IN ( {$ids_sql} ) AND value IN ( {$quoted_levels} )"
+	);
+
+	if ( null === $rows && ! empty( $wpdb->last_error ) ) {
+		return null;
+	}
+
+	$candidates = array_flip( array_map( 'intval', (array) $rows ) );
+
+	// Both reads below are answered from caches these two calls fill for the whole batch.
+	BB_XProfile_Visibility::prime_user_data_exists_cache( $user_ids );
+	update_meta_cache( 'user', $user_ids );
+
+	foreach ( $user_ids as $user_id ) {
+		if ( isset( $candidates[ $user_id ] ) ) {
+			continue;
+		}
+
+		// Resolved from the visibility table, and the query above already asked it everything.
+		if ( BB_XProfile_Visibility::user_data_exists( $user_id ) ) {
+			continue;
+		}
+
+		// No rows: the user-meta branch, where an unset field falls back to the field default.
+		if ( $default_reaches_unset_fields ) {
+			$candidates[ $user_id ] = true;
+			continue;
+		}
+
+		$stored = bp_get_user_meta( $user_id, 'bp_xprofile_visibility_levels', true );
+
+		if ( is_array( $stored ) && array_intersect( $levels, array_map( 'strval', array_values( $stored ) ) ) ) {
+			$candidates[ $user_id ] = true;
+		}
+	}
+
+	return array_map( 'intval', array_keys( $candidates ) );
+}
+
+/**
  * Prime the caches bp_xprofile_get_hidden_fields_for_user() reads, for a batch of users.
  *
  * Resolving one member's hidden fields costs up to three uncached reads: the
@@ -4065,6 +4197,23 @@ function bb_xprofile_filter_user_search_matches( $matched_user_ids, $like_patter
 	// Only the matched rows matter, and a member is never hidden from themselves.
 	$candidate_ids = array_diff( array_intersect( $candidate_ids, $matched_user_ids ), array( $viewer_id ) );
 
+	// Source (2) turns on a field's DEFAULT visibility and is bounded only by whose stored value
+	// the term matched - but that default does not reach a member who has their own row for the
+	// field, because bp_xprofile_get_fields_by_visibility_levels() resolves such a member from the
+	// table and leaves a field they never set un-hidden. Those members are fully permitted, yet
+	// they were consuming the budget below and whatever sorted past it was dropped: on a community
+	// whose Last Name default is restricted, 599 permitted members returned 499 to a logged-out
+	// visitor (PROD-9896).
+	//
+	// Applied before the filter that follows, so a site adding its own candidates back is not
+	// narrowed away. null means the narrowing does not apply - the default is forced community-wide
+	// through 'disabled' custom visibility - and the whole candidate set stays in play.
+	$possible_hidden = bb_xprofile_filter_possible_hidden_users( $candidate_ids, $hidden_levels );
+
+	if ( is_array( $possible_hidden ) ) {
+		$candidate_ids = array_intersect( $candidate_ids, $possible_hidden );
+	}
+
 	/**
 	 * Filters the users whose search match has to be re-tested against their viewer-visible name.
 	 *
@@ -4365,12 +4514,37 @@ function bb_xprofile_filter_field_search_matches( $matched_user_ids, $matched_us
 
 	$remove_ids = array();
 
+	// Only a member who has actually restricted something can be redacted here, so only those need
+	// deciding - and only those should consume the budget below. Every other matched member
+	// provably resolves to an empty hidden-field list, which is exactly what the keep-test in the
+	// loop concludes, so they are kept without a visibility read. Applying the budget to the whole
+	// match set instead dropped ordinary, fully-public members for no reason beyond their position
+	// in an unordered match set: 600 members with a public first name returned 500 to a logged-out
+	// visitor (PROD-9896).
+	//
+	// null means no narrowing is possible - a field's default is forced on the whole community
+	// through 'disabled' custom visibility. The site-wide format hide is the same kind of rule, so
+	// both leave the whole matched set in play and the bound below does the work.
+	$possible_hidden = empty( $format_hidden_field_ids )
+		? bb_xprofile_filter_possible_hidden_users( array_keys( $fields_by_user ) )
+		: null;
+
+	if ( is_array( $possible_hidden ) ) {
+		$fields_by_user = array_intersect_key( $fields_by_user, array_flip( $possible_hidden ) );
+
+		// Nobody in this match set has restricted anything, so there is nothing to withhold.
+		if ( empty( $fields_by_user ) ) {
+			return array_values( $matched_user_ids );
+		}
+	}
+
 	// Deciding one member costs a visibility resolution, and this producer matches on xprofile
-	// VALUES, so the set it has to decide is as large as the match count itself - a one-word term
-	// on a large community can be the whole member table, before pagination, on a request an
-	// anonymous visitor can issue. Bound it with the same budget its sibling uses, and give the
-	// same fail-closed answer past the bound: a budget that kept the undecided matches would serve
-	// exactly what this filter exists to suppress (PROD-9896).
+	// VALUES, so the set it has to decide can still be as large as the match count once the
+	// narrowing above does not apply - a one-word term on a large community can be the whole member
+	// table, before pagination, on a request an anonymous visitor can issue. Bound it with the same
+	// budget its sibling uses, and give the same fail-closed answer past the bound: a budget that
+	// kept the undecided matches would serve exactly what this filter exists to suppress
+	// (PROD-9896).
 	if ( $candidate_limit > 0 && count( $fields_by_user ) > $candidate_limit ) {
 		// A member is never hidden from themselves, so the budget must not be able to drop the
 		// viewer out of their own search results.

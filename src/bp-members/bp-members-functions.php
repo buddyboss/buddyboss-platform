@@ -647,7 +647,30 @@ function bp_core_get_user_displayname( $user_id_or_username, $current_user_id = 
 	$active_display_format  = function_exists( 'bp_core_display_name_format' ) ? bp_core_display_name_format() : 'first_last_name';
 	$format_hides_last_name = in_array( $active_display_format, array( 'first_name', 'nickname' ), true );
 
-	if ( ! empty( $list_fields ) || $format_hides_last_name ) {
+	// Only a hidden NAME field can change the visible name. bp_xprofile_get_hidden_fields_for_user()
+	// reports EVERY restricted field on the profile - a Phone, an Address, any custom field - so
+	// testing that list for emptiness stood the stored display_name down for members whose name
+	// parts are entirely public. Where the column had drifted away from "First Last" that did not
+	// merely rebuild it, it DISCLOSED a name part the column withheld: a member with a public
+	// surname but a display_name of just "bb3" was rendered to guests as "bb3 Smith1" because one
+	// unrelated field was set to friends-only. And because a field's own default_visibility applies
+	// to every member with no per-user row, a single restricted field definition turned the rebuild
+	// on for the whole member table at once.
+	//
+	// The two sibling producers written for this same fix already scope it this way -
+	// BP_REST_Members_Endpoint::get_visible_display_name() and
+	// BuddyBoss\Sharing\Helpers\Member_Name::redacted_display_name() both test the two name field
+	// ids rather than the whole hidden list - so this keeps the three in agreement.
+	$name_field_ids = array_filter(
+		array(
+			(int) bp_xprofile_firstname_field_id(),
+			(int) bp_xprofile_lastname_field_id(),
+		)
+	);
+
+	$hidden_name_fields = array_intersect( array_map( 'intval', (array) $list_fields ), $name_field_ids );
+
+	if ( ! empty( $hidden_name_fields ) || $format_hides_last_name ) {
 		// Something has to be withheld from this viewer, so the answer cannot come from the stored
 		// display_name column at all - it is a derived value that drifts, and removing a name part
 		// from a drifted string is not decidable. Assemble the name from the fields this viewer may

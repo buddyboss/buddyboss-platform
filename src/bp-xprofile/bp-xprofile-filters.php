@@ -830,7 +830,23 @@ function xprofile_filter_get_user_display_name( $full_name, $user_id, $current_u
 
 		$list_fields = bp_xprofile_get_hidden_fields_for_user( $user_id, $current_user_id );
 
-		if ( ! empty( $list_fields ) ) {
+		// Only a hidden NAME field can change the visible name.
+		// bp_xprofile_get_hidden_fields_for_user() reports every restricted field on the profile,
+		// so testing it for emptiness rebuilt the name for members whose name parts are entirely
+		// public - and a field's own default_visibility applies to every member with no per-user
+		// row, so one restricted field definition turned the rebuild on site-wide. Scope it to the
+		// two name fields, exactly as the guest path in bp_core_get_user_displayname() does, so the
+		// two resolve the same member to the same name (PROD-9896).
+		$name_field_ids = array_filter(
+			array(
+				(int) bp_xprofile_firstname_field_id(),
+				(int) bp_xprofile_lastname_field_id(),
+			)
+		);
+
+		$hidden_name_fields = array_intersect( array_map( 'intval', (array) $list_fields ), $name_field_ids );
+
+		if ( ! empty( $hidden_name_fields ) ) {
 			// A name part is withheld from this viewer, so the name assembled above cannot stand:
 			// bp_xprofile_get_member_display_name() builds every part the site-wide FORMAT asks
 			// for, not every part this viewer may see. Rebuild from the permitted fields only.
