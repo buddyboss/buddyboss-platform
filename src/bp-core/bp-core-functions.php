@@ -11165,8 +11165,8 @@ function bb_core_strip_hidden_name_part( $display_name, $hidden_part, $visible_p
 		// Echoing that string back discloses nothing: the counterpart is only ever passed when this
 		// viewer MAY see it, so the permitted half is spelled exactly the same as the hidden one and
 		// showing it tells the viewer nothing they were not already entitled to. Compared the same
-		// way the strip matched - case-insensitively - so "Alex Alex" and "Alex alex" behave alike.
-		// (PROD-9896)
+		// way the strip matched - case-insensitively - so "Alex Alex" and "Alex alex" behave alike
+		// (PROD-9896).
 		if ( '' !== $visible_part ) {
 			$visible_fold = function_exists( 'mb_strtolower' ) ? mb_strtolower( $visible_part, 'UTF-8' ) : strtolower( $visible_part );
 			$hidden_fold  = function_exists( 'mb_strtolower' ) ? mb_strtolower( $hidden_part, 'UTF-8' ) : strtolower( $hidden_part );
