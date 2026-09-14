@@ -2125,3 +2125,535 @@ table.profile-settings tbody td select {
   left: -24px;
   width: 100%;
 }
+
+/*
+ * Security tab.
+ *
+ * The tab prints the Two Factor plugin's wp-admin markup verbatim, so
+ * everything below restyles that markup - form tables, wp-admin buttons
+ * and notices - to ReadyLaunch's account settings language.
+ */
+.bb-rl-account-settings-section .security-info {
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 22px;
+  max-width: 640px;
+  margin-bottom: var(--bb-rl-space-300);
+  color: var(--bb-rl-text-secondary-color);
+}
+
+.bb-rl-account-settings-section .bb-two-factor-form h2 {
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 28px;
+  margin-bottom: var(--bb-rl-space-100);
+  color: var(--bb-rl-text-color);
+}
+
+.bb-rl-account-settings-section .bb-two-factor-form fieldset {
+  margin: 0;
+}
+
+.bb-rl-account-settings-section .bb-two-factor-form fieldset[disabled] {
+  opacity: 0.6;
+}
+
+.bb-rl-account-settings-section .bb-two-factor-form fieldset > p {
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 22px;
+  max-width: 640px;
+  margin-bottom: var(--bb-rl-space-300);
+  color: var(--bb-rl-text-secondary-color);
+}
+
+.bb-rl-account-settings-section .bb-two-factor-form hr {
+  height: 1px;
+  margin: var(--bb-rl-space-300) 0;
+  border: 0;
+  background-color: var(--bb-rl-border-secondary-color);
+}
+
+.bb-rl-account-settings-section .bb-two-factor-form .two-factor-methods-table,
+.bb-rl-account-settings-section .bb-two-factor-form .two-factor-primary-method-table {
+  display: block;
+  width: 100%;
+  margin: 0;
+  border: 0;
+}
+
+.bb-rl-account-settings-section .bb-two-factor-form .two-factor-methods-table tbody,
+.bb-rl-account-settings-section .bb-two-factor-form .two-factor-methods-table tr,
+.bb-rl-account-settings-section .bb-two-factor-form .two-factor-methods-table th,
+.bb-rl-account-settings-section .bb-two-factor-form .two-factor-methods-table td,
+.bb-rl-account-settings-section .bb-two-factor-form .two-factor-primary-method-table tbody,
+.bb-rl-account-settings-section .bb-two-factor-form .two-factor-primary-method-table tr,
+.bb-rl-account-settings-section .bb-two-factor-form .two-factor-primary-method-table th,
+.bb-rl-account-settings-section .bb-two-factor-form .two-factor-primary-method-table td {
+  display: block;
+  padding: 0;
+  border: 0;
+}
+
+.bb-rl-account-settings-section .bb-two-factor-form .two-factor-methods-table tr,
+.bb-rl-account-settings-section .bb-two-factor-form .two-factor-primary-method-table tr {
+  margin-bottom: var(--bb-rl-space-300);
+}
+
+.bb-rl-account-settings-section .bb-two-factor-form .two-factor-methods-table tr:last-child,
+.bb-rl-account-settings-section .bb-two-factor-form .two-factor-primary-method-table tr:last-child {
+  margin-bottom: 0;
+}
+
+.bb-rl-account-settings-section .bb-two-factor-form .two-factor-methods-table th,
+.bb-rl-account-settings-section .bb-two-factor-form .two-factor-primary-method-table th {
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 22px;
+  margin-bottom: var(--bb-rl-space-100);
+  color: var(--bb-rl-text-tertiary-color);
+  text-align: left;
+}
+
+.bb-rl-account-settings-section .bb-two-factor-form .two-factor-methods-table th label,
+.bb-rl-account-settings-section .bb-two-factor-form .two-factor-primary-method-table th label {
+  margin: 0;
+  color: inherit;
+  font: inherit;
+}
+
+.bb-rl-account-settings-section .bb-two-factor-form .two-factor-methods-table td,
+.bb-rl-account-settings-section .bb-two-factor-form .two-factor-primary-method-table td {
+  padding: var(--bb-rl-space-300);
+  border: 1px solid var(--bb-rl-border-secondary-color);
+  border-radius: var(--bb-rl-radius-lg);
+  background-color: var(--bb-rl-background-color);
+}
+
+.bb-rl-account-settings-section .bb-two-factor-form .two-factor-method-label {
+  position: relative;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  margin: 0;
+  cursor: pointer;
+}
+
+.bb-rl-account-settings-section .bb-two-factor-form .two-factor-method-label strong {
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 22px;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  color: var(--bb-rl-text-color);
+}
+
+.bb-rl-account-settings-section .bb-two-factor-form .two-factor-method-label strong:before {
+  content: "";
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+  margin-right: var(--bb-rl-space-100);
+  border: 1px solid var(--bb-rl-border-tertiary-color);
+  border-radius: var(--bb-rl-radius-sm);
+  background: var(--bb-rl-background-color);
+}
+
+.bb-rl-account-settings-section .bb-two-factor-form .two-factor-method-label input[type="checkbox"]:focus + strong:before {
+  border-color: var(--bb-rl-background-brand-primary-color);
+}
+
+.bb-rl-account-settings-section .bb-two-factor-form .two-factor-method-label input[type="checkbox"]:checked + strong:before {
+  border-color: var(--bb-rl-background-brand-primary-color);
+  background: var(--bb-rl-background-brand-primary-color);
+}
+
+.bb-rl-account-settings-section .bb-two-factor-form .two-factor-method-label input[type="checkbox"]:checked + strong:after {
+  content: "\e182";
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 16px;
+  color: var(--bb-rl-text-white-color);
+  font-family: bb-icons-rl;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1;
+  text-align: center;
+  transform: translateY(-50%);
+}
+
+.bb-rl-account-settings-section .bb-two-factor-form .two-factor-method-label input[type="checkbox"]:disabled + strong {
+  color: var(--bb-rl-text-disabled-color);
+  cursor: auto;
+}
+
+.bb-rl-account-settings-section .bb-two-factor-form .two-factor-method-label input[type="checkbox"]:disabled + strong:before {
+  background: var(--bb-rl-border-disabled-color);
+  box-shadow: none;
+}
+
+.bb-rl-account-settings-section .bb-two-factor-form .two-factor-method-recommended {
+  font-size: var(--bb-rl-font-size-xs);
+  font-weight: 500;
+  line-height: var(--bb-rl-base-line-xs);
+  margin-left: var(--bb-rl-space-100);
+  padding: 2px var(--bb-rl-space-100);
+  border: 0;
+  border-radius: var(--bb-rl-radius-sm);
+  background-color: var(--bb-rl-background-positive-secondary-color);
+  color: var(--bb-rl-text-positive-primary-color);
+  text-decoration: none;
+  cursor: help;
+}
+
+.bb-rl-account-settings-section .bb-two-factor-form #two-factor-totp-options,
+.bb-rl-account-settings-section .bb-two-factor-form #two-factor-backup-codes,
+.bb-rl-account-settings-section .bb-two-factor-form .two-factor-backup-codes-wrapper {
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 22px;
+  margin-top: var(--bb-rl-space-200);
+  padding: var(--bb-rl-space-200);
+  border-radius: var(--bb-rl-radius-base);
+  background-color: var(--bb-rl-background-secondary-color);
+  color: var(--bb-rl-text-secondary-color);
+}
+
+.bb-rl-account-settings-section .bb-two-factor-form #two-factor-totp-options p,
+.bb-rl-account-settings-section .bb-two-factor-form #two-factor-backup-codes p,
+.bb-rl-account-settings-section .bb-two-factor-form .two-factor-backup-codes-wrapper p {
+  margin-bottom: var(--bb-rl-space-100);
+}
+
+.bb-rl-account-settings-section .bb-two-factor-form #two-factor-totp-options p:last-child,
+.bb-rl-account-settings-section .bb-two-factor-form #two-factor-backup-codes p:last-child,
+.bb-rl-account-settings-section .bb-two-factor-form .two-factor-backup-codes-wrapper p:last-child {
+  margin-bottom: 0;
+}
+
+.bb-rl-account-settings-section .bb-two-factor-form .two-factor-backup-codes-wrapper {
+  margin-top: var(--bb-rl-space-100);
+}
+
+.bb-rl-account-settings-section .bb-two-factor-form .two-factor-methods-table td > p {
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 22px;
+  margin: var(--bb-rl-space-100) 0 0;
+  color: var(--bb-rl-text-secondary-color);
+}
+
+.bb-rl-account-settings-section .bb-two-factor-form .totp-steps {
+  margin: 0;
+  padding-left: var(--bb-rl-space-200);
+}
+
+.bb-rl-account-settings-section .bb-two-factor-form .totp-steps > li {
+  margin-bottom: var(--bb-rl-space-200);
+}
+
+.bb-rl-account-settings-section .bb-two-factor-form .totp-steps > li:last-child {
+  margin-bottom: 0;
+}
+
+.bb-rl-account-settings-section .bb-two-factor-form #two-factor-qr-code {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 204px;
+  min-width: 0;
+  height: 204px;
+  min-height: 0;
+  margin: var(--bb-rl-space-200) 0;
+  padding: var(--bb-rl-space-200);
+  border: 1px solid var(--bb-rl-border-secondary-color);
+  border-radius: var(--bb-rl-radius-base);
+  background-color: #fff;
+}
+
+.bb-rl-account-settings-section .bb-two-factor-form #two-factor-qr-code svg {
+  display: block;
+  width: 180px;
+  height: 180px;
+}
+
+.bb-rl-account-settings-section .bb-two-factor-form code {
+  display: inline-block;
+  padding: 6px var(--bb-rl-space-100);
+  border: 1px solid var(--bb-rl-border-secondary-color);
+  border-radius: var(--bb-rl-radius-sm);
+  background-color: var(--bb-rl-background-color);
+  color: var(--bb-rl-text-color);
+  font-size: 14px;
+  letter-spacing: 1px;
+  word-break: break-all;
+}
+
+.bb-rl-account-settings-section .bb-two-factor-form label[for="two-factor-totp-authcode"] {
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 22px;
+  display: block;
+  color: var(--bb-rl-text-color);
+}
+
+.bb-rl-account-settings-section .bb-two-factor-form #two-factor-totp-authcode {
+  display: block;
+  width: 100%;
+  max-width: 220px;
+  margin-top: var(--bb-rl-space-100);
+  letter-spacing: 0.2em;
+}
+
+.bb-rl-account-settings-section .bb-two-factor-form .totp-submit {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  font-weight: 500;
+  text-align: center;
+  cursor: pointer;
+  border-radius: var(--bb-rl-radius-md);
+  padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+  text-decoration: none;
+  background-color: var(--bb-rl-background-brand-primary-color);
+  color: var(--bb-rl-text-white-color);
+  border: 1px solid var(--bb-rl-background-brand-primary-color);
+  padding: 6px var(--bb-rl-space-200);
+  font-size: var(--bb-rl-font-size-sm);
+  font-weight: 400;
+  margin-top: var(--bb-rl-space-200);
+}
+
+.bb-rl-account-settings-section .bb-two-factor-form .totp-submit:hover {
+  background-color: var(--bb-rl-background-brand-primary-hover-color);
+}
+
+.bb-rl-account-settings-section .bb-two-factor-form .totp-submit:focus-within {
+  outline: 2px solid var(--bb-rl-border-brand-primary-color);
+}
+
+.bb-rl-account-settings-section .bb-two-factor-form .totp-submit:disabled {
+  background-color: var(--bb-rl-background-brand-disabled-color);
+  cursor: not-allowed;
+}
+
+.bb-rl-account-settings-section .bb-two-factor-form .two-factor-backup-codes-count {
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 22px;
+  color: var(--bb-rl-text-color);
+}
+
+.bb-rl-account-settings-section .bb-two-factor-form .two-factor-backup-codes-list-wrap {
+  display: block;
+  margin-top: 0;
+  padding: var(--bb-rl-space-200);
+  border: 1px solid var(--bb-rl-border-secondary-color);
+  border-radius: var(--bb-rl-radius-base);
+  background-color: var(--bb-rl-background-color);
+}
+
+.bb-rl-account-settings-section .bb-two-factor-form .two-factor-backup-codes-unused-codes {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6px var(--bb-rl-space-300);
+  margin: 0;
+  padding: 0;
+  list-style-position: inside;
+}
+
+.bb-rl-account-settings-section .bb-two-factor-form .two-factor-backup-codes-unused-codes li {
+  margin: 0;
+  color: var(--bb-rl-text-tertiary-color);
+}
+
+.bb-rl-account-settings-section .bb-two-factor-form .two-factor-backup-codes-token {
+  color: var(--bb-rl-text-color);
+  letter-spacing: 0.2em;
+}
+
+.bb-rl-account-settings-section .bb-two-factor-form #two-factor-primary-provider {
+  width: 100%;
+  max-width: 320px;
+}
+
+.bb-rl-account-settings-section .bb-two-factor-form .description {
+  font-size: var(--bb-rl-font-size-xs);
+  font-weight: 500;
+  line-height: var(--bb-rl-base-line-xs);
+  margin: var(--bb-rl-space-100) 0 0;
+  color: var(--bb-rl-text-tertiary-color);
+  font-weight: 400;
+}
+
+.bb-rl-account-settings-section .bb-two-factor-form #two-factor-backup-codes em {
+  font-size: var(--bb-rl-font-size-xs);
+  font-weight: 500;
+  line-height: var(--bb-rl-base-line-xs);
+  display: inline-block;
+  margin-left: var(--bb-rl-space-100);
+  color: var(--bb-rl-text-tertiary-color);
+  font-weight: 400;
+}
+
+.bb-rl-account-settings-section .bb-two-factor-form .notice {
+  display: flex;
+  align-items: center;
+  padding: var(--bb-rl-space-100);
+  border: 1px solid transparent;
+  border-radius: var(--bb-rl-radius-md);
+  font-size: var(--bb-rl-font-size-sm);
+  font-weight: 500;
+  background-color: var(--bb-rl-background-secondary-color);
+  display: block;
+  border-width: 0;
+  border-left-width: 2px;
+  border-style: solid;
+  border-radius: 0;
+  padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
+  color: var(--bb-rl-text-color);
+  font-size: var(--bb-rl-font-size-sm);
+  font-weight: 500;
+  line-height: var(--bb-rl-base-line-small);
+  background-color: var(--bb-rl-background-info-secondary-color);
+  border-color: var(--bb-rl-border-info-secondary-color);
+  margin: 0 0 var(--bb-rl-space-200);
+}
+
+.bb-rl-account-settings-section .bb-two-factor-form .notice > [class*="bb-icons"] {
+  margin-right: var(--bb-rl-space-100);
+  font-size: 20px;
+  font-family: bb-icons-rl;
+}
+
+.bb-rl-account-settings-section .bb-two-factor-form .notice p {
+  margin: 0 0 var(--bb-rl-space-100);
+}
+
+.bb-rl-account-settings-section .bb-two-factor-form .notice p:last-child {
+  margin-bottom: 0;
+}
+
+.bb-rl-account-settings-section .bb-two-factor-form .notice.notice-warning {
+  background-color: var(--bb-rl-background-warning-secondary-color);
+  border-color: var(--bb-rl-border-warning-secondary-color);
+}
+
+.bb-rl-account-settings-section .bb-two-factor-form .notice.notice-error {
+  background-color: var(--bb-rl-background-danger-secondary-color);
+  border-color: var(--bb-rl-border-danger-secondary-color);
+}
+
+.bb-rl-account-settings-section .bb-two-factor-form .notice.notice-success {
+  background-color: var(--bb-rl-background-positive-secondary-color);
+  border-color: var(--bb-rl-border-positive-secondary-color);
+}
+
+.bb-rl-account-settings-section .bb-two-factor-form .button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  font-weight: 500;
+  text-align: center;
+  cursor: pointer;
+  border-radius: var(--bb-rl-radius-md);
+  padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+  text-decoration: none;
+  background-color: var(--bb-rl-background-brand-primary-color);
+  color: var(--bb-rl-text-white-color);
+  border: 1px solid var(--bb-rl-background-brand-primary-color);
+  padding: 6px var(--bb-rl-space-200);
+  font-size: var(--bb-rl-font-size-sm);
+  font-weight: 400;
+}
+
+.bb-rl-account-settings-section .bb-two-factor-form .button:hover {
+  background-color: var(--bb-rl-background-brand-primary-hover-color);
+}
+
+.bb-rl-account-settings-section .bb-two-factor-form .button:focus-within {
+  outline: 2px solid var(--bb-rl-border-brand-primary-color);
+}
+
+.bb-rl-account-settings-section .bb-two-factor-form .button:disabled {
+  background-color: var(--bb-rl-background-brand-disabled-color);
+  cursor: not-allowed;
+}
+
+.bb-rl-account-settings-section .bb-two-factor-form .button-secondary {
+  background-color: transparent;
+  color: var(--bb-rl-text-color);
+  border: 1px solid var(--bb-rl-border-tertiary-color);
+}
+
+.bb-rl-account-settings-section .bb-two-factor-form .button-secondary:hover {
+  background-color: var(--bb-rl-background-secondary-color);
+}
+
+.bb-rl-account-settings-section .bb-two-factor-form .button-secondary:focus {
+  outline: 2px solid var(--bb-rl-border-quinery-color);
+}
+
+.bb-rl-account-settings-section .bb-two-factor-form .button-secondary:disabled {
+  border-color: var(--bb-rl-border-tertiary-color);
+  color: var(--bb-rl-text-disabled-color);
+  cursor: not-allowed;
+}
+
+.bb-rl-account-settings-section .bb-two-factor-form .button-two-factor-backup-codes-copy,
+.bb-rl-account-settings-section .bb-two-factor-form .button-two-factor-backup-codes-download {
+  margin-right: var(--bb-rl-space-100);
+}
+
+.bb-rl-account-settings-section .bb-two-factor-form .submit {
+  margin-top: var(--bb-rl-space-300);
+}
+
+.bb-rl-account-settings-section .bb-two-factor-form #submit {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  font-weight: 500;
+  text-align: center;
+  cursor: pointer;
+  border-radius: var(--bb-rl-radius-md);
+  padding: var(--bb-rl-space-100) var(--bb-rl-space-200);
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+  text-decoration: none;
+  background-color: var(--bb-rl-background-brand-primary-color);
+  color: var(--bb-rl-text-white-color);
+  border: 1px solid var(--bb-rl-background-brand-primary-color);
+  font-size: var(--bb-rl-font-size-sm);
+  padding: 6px var(--bb-rl-space-200);
+  line-height: var(--bb-rl-base-line-small);
+}
+
+.bb-rl-account-settings-section .bb-two-factor-form #submit:hover {
+  background-color: var(--bb-rl-background-brand-primary-hover-color);
+}
+
+.bb-rl-account-settings-section .bb-two-factor-form #submit:focus-within {
+  outline: 2px solid var(--bb-rl-border-brand-primary-color);
+}
+
+.bb-rl-account-settings-section .bb-two-factor-form #submit:disabled {
+  background-color: var(--bb-rl-background-brand-disabled-color);
+  cursor: not-allowed;
+}
+
+@media screen and (max-width: 544px) {
+  .bb-rl-account-settings-section .bb-two-factor-form .two-factor-methods-table td,
+  .bb-rl-account-settings-section .bb-two-factor-form .two-factor-primary-method-table td {
+    padding: var(--bb-rl-space-200);
+  }
+  .bb-rl-account-settings-section .bb-two-factor-form .two-factor-backup-codes-unused-codes {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
