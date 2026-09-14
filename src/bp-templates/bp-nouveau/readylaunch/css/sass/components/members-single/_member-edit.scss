@@ -218,6 +218,41 @@
 		}
 	}
 
+	.bb-password-wrap {
+		position: relative;
+
+		input {
+			padding-right: var(--bb-rl-space-500);
+		}
+
+		.bb-toggle-password {
+			position: absolute;
+			top: 0;
+			right: 0;
+			bottom: 0;
+			display: flex;
+			align-items: center;
+			padding: 0 var(--bb-rl-space-200);
+
+			i[class*="bb-icon-"] {
+				display: flex;
+
+				&::before {
+					content: "\e220";
+					font-family: bb-icons-rl;
+					font-size: 18px;
+					line-height: 1;
+					font-style: normal;
+					color: var(--bb-rl-icon-secondary-color);
+				}
+			}
+
+			&.bb-show-pass i[class*="bb-icon-"]::before {
+				content: "\e224";
+			}
+		}
+	}
+
 	.bp-feedback {
 		margin-bottom: var(--bb-rl-space-200);
 
