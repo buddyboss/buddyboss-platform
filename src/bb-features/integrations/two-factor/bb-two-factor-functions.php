@@ -184,6 +184,8 @@ function bb_two_factor_get_broken_config( $user_id ) {
  * @since BuddyBoss [BBVERSION]
  *
  * @param string $context 'display' or 'save'. Save has twice the grace time.
+ *                        Only 'save' has a caller today; 'display' is kept so
+ *                        the signature matches the plugin's own method.
  * @return bool
  */
 function bb_two_factor_current_user_can_manage( $context = 'display' ) {
