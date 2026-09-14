@@ -1257,7 +1257,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 				'https://buddyboss.com/resources/wp-json/wp/v2/' . $rest_base
 			);
 
-			$response = wp_remote_get( $endpoint, array( 'timeout' => 10 ) );
+			$response = wp_remote_get( esc_url_raw( $endpoint ), array( 'timeout' => 10 ) );
 
 			if ( is_wp_error( $response ) || 200 !== wp_remote_retrieve_response_code( $response ) ) {
 				set_transient( $cache_key, '', HOUR_IN_SECONDS );
@@ -1366,7 +1366,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 				'slug'          => $args->slug,
 				'version'       => $new_version,
 				'author'        => '<a href="' . esc_url( $author_uri ) . '" target="_blank" rel="noopener noreferrer">' . esc_html( $author ) . '</a>',
-				'homepage'      => $plugin_uri,
+				'homepage'      => esc_url( $plugin_uri ),
 				'last_updated'  => '',
 				'sections'      => array(
 					'description' => '<p>' . wp_kses_post( $plugin_data['Description'] ) . '</p>',
