@@ -76,8 +76,6 @@ final class BP_Friendship_Export extends BP_Export {
 				$group_label = __( 'Pending Received Connection Requests', 'buddyboss' );
 			}
 
-			$friend_user = get_userdata( $friend_user_id );
-
 			$data = array(
 				array(
 					'name'  => __( 'Connection Name', 'buddyboss' ),

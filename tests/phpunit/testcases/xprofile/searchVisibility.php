@@ -185,6 +185,50 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 
 		$this->assertContains( $user_id, $this->search_as( $user_id, 'Hollybrook' ) );
 	}
+	/**
+	 * The 'friends' level is the only one that depends on the PAIR, not on the viewer alone.
+	 *
+	 * Every other level resolves from the viewer's own standing - logged out, logged in, moderator,
+	 * the member themselves - so a filter that never consulted the friendship at all would still
+	 * pass all of those. Only the positive direction of this one proves the per-pair resolution is
+	 * reached: the file asserted that a stranger is denied a friends-only surname, but never that a
+	 * confirmed friend can still find it, so an over-broad filter that hid the surname from
+	 * EVERYONE was green.
+	 *
+	 * Both directions are asserted against the same term and the same member, so the two answers
+	 * can only differ because of the friendship.
+	 */
+	public function test_friends_level_surname_is_visible_to_a_friend_and_hidden_from_a_stranger() {
+		if ( ! bp_is_active( 'friends' ) || ! function_exists( 'friends_add_friend' ) ) {
+			$this->markTestSkipped( 'The Friends component is not active in this configuration.' );
+		}
+
+		$user_id  = $this->create_member_with_hidden_surname( 'friends', 'Ashdowne', 'Cordelia' );
+		$friend   = self::factory()->user->create();
+		$stranger = self::factory()->user->create();
+
+		friends_add_friend( $friend, $user_id, true );
+
+		// Fixture guard: without a real confirmed friendship the positive assertion below would
+		// pass for the wrong reason.
+		$this->assertTrue(
+			(bool) friends_check_friendship( $friend, $user_id ),
+			'Fixture: the friendship was not established, so the positive case proves nothing.'
+		);
+
+		$this->assertContains(
+			$user_id,
+			$this->search_as( $friend, 'Ashdowne' ),
+			'A confirmed friend lost a surname they are entitled to see.'
+		);
+
+		$this->assertNotContains(
+			$user_id,
+			$this->search_as( $stranger, 'Ashdowne' ),
+			'A stranger confirmed a friends-only surname.'
+		);
+	}
+
 
 	/**
 	 * The site-wide Display Name Format hide, which is the configuration this ticket is about.
