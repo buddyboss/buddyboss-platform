@@ -16188,7 +16188,8 @@ body .password-toggle .bb-hide-pw.bb-show-pass .bb-icon::before {
   font-size: 13px;
 }
 
-.bb-two-factor-form .notice {
+.bb-two-factor-form .notice,
+.bb-two-factor-form #totp-setup-error {
   margin: 0 0 20px;
   padding: 0.7em 1em;
   border: 0;
@@ -16198,24 +16199,34 @@ body .password-toggle .bb-hide-pw.bb-show-pass .bb-icon::before {
   box-shadow: none;
 }
 
-.bb-two-factor-form .notice p {
+.bb-two-factor-form .notice p,
+.bb-two-factor-form #totp-setup-error p {
   margin: 0 0 5px;
 }
 
-.bb-two-factor-form .notice p:last-child {
+.bb-two-factor-form .notice p:last-child,
+.bb-two-factor-form #totp-setup-error p:last-child {
   margin-bottom: 0;
 }
 
-.bb-two-factor-form .notice.notice-warning {
+.bb-two-factor-form .notice.notice-warning,
+.bb-two-factor-form #totp-setup-error.notice-warning {
   border-left-color: #edbb34;
 }
 
-.bb-two-factor-form .notice.notice-error {
+.bb-two-factor-form .notice.notice-error,
+.bb-two-factor-form #totp-setup-error.notice-error {
   border-left-color: #d33;
 }
 
-.bb-two-factor-form .notice.notice-success {
+.bb-two-factor-form .notice.notice-success,
+.bb-two-factor-form #totp-setup-error.notice-success {
   border-left-color: #8a2;
+}
+
+.bb-two-factor-form #totp-setup-error {
+  margin: 10px 0 0;
+  border-left-color: #d33;
 }
 
 .bb-two-factor-form .button-two-factor-backup-codes-copy,

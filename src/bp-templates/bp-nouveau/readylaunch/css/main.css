@@ -21222,7 +21222,8 @@ table.profile-settings tbody td select {
   font-weight: 400;
 }
 
-.bb-rl-account-settings-section .bb-two-factor-form .notice {
+.bb-rl-account-settings-section .bb-two-factor-form .notice,
+.bb-rl-account-settings-section .bb-two-factor-form #totp-setup-error {
   display: flex;
   align-items: center;
   padding: var(--bb-rl-space-100);
@@ -21246,37 +21247,50 @@ table.profile-settings tbody td select {
   margin: 0 0 var(--bb-rl-space-200);
 }
 
-.bb-rl-account-settings-section .bb-two-factor-form .notice > [class*="bb-icons"] {
+.bb-rl-account-settings-section .bb-two-factor-form .notice > [class*="bb-icons"],
+.bb-rl-account-settings-section .bb-two-factor-form #totp-setup-error > [class*="bb-icons"] {
   margin-right: var(--bb-rl-space-100);
   font-size: 20px;
   font-family: bb-icons-rl;
 }
 
-.bb-rl-account-settings-section .bb-two-factor-form .notice p {
+.bb-rl-account-settings-section .bb-two-factor-form .notice p,
+.bb-rl-account-settings-section .bb-two-factor-form #totp-setup-error p {
   margin: 0 0 var(--bb-rl-space-100);
 }
 
-.bb-rl-account-settings-section .bb-two-factor-form .notice p {
+.bb-rl-account-settings-section .bb-two-factor-form .notice p,
+.bb-rl-account-settings-section .bb-two-factor-form #totp-setup-error p {
   font-size: 13px;
 }
 
-.bb-rl-account-settings-section .bb-two-factor-form .notice p:last-child {
+.bb-rl-account-settings-section .bb-two-factor-form .notice p:last-child,
+.bb-rl-account-settings-section .bb-two-factor-form #totp-setup-error p:last-child {
   margin-bottom: 0;
 }
 
-.bb-rl-account-settings-section .bb-two-factor-form .notice.notice-warning {
+.bb-rl-account-settings-section .bb-two-factor-form .notice.notice-warning,
+.bb-rl-account-settings-section .bb-two-factor-form #totp-setup-error.notice-warning {
   background-color: var(--bb-rl-background-warning-secondary-color);
   border-color: var(--bb-rl-border-warning-secondary-color);
 }
 
-.bb-rl-account-settings-section .bb-two-factor-form .notice.notice-error {
+.bb-rl-account-settings-section .bb-two-factor-form .notice.notice-error,
+.bb-rl-account-settings-section .bb-two-factor-form #totp-setup-error.notice-error {
   background-color: var(--bb-rl-background-danger-secondary-color);
   border-color: var(--bb-rl-border-danger-secondary-color);
 }
 
-.bb-rl-account-settings-section .bb-two-factor-form .notice.notice-success {
+.bb-rl-account-settings-section .bb-two-factor-form .notice.notice-success,
+.bb-rl-account-settings-section .bb-two-factor-form #totp-setup-error.notice-success {
   background-color: var(--bb-rl-background-positive-secondary-color);
   border-color: var(--bb-rl-border-positive-secondary-color);
+}
+
+.bb-rl-account-settings-section .bb-two-factor-form #totp-setup-error {
+  background-color: var(--bb-rl-background-danger-secondary-color);
+  border-color: var(--bb-rl-border-danger-secondary-color);
+  margin: var(--bb-rl-space-200) 0 0;
 }
 
 .bb-rl-account-settings-section .bb-two-factor-form .button {

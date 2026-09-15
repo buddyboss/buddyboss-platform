@@ -331,8 +331,9 @@
 			font-weight: 400;
 		}
 
-		// wp-admin notices.
-		.notice {
+		// wp-admin notices, plus the error the TOTP script injects after Verify.
+		.notice,
+		#totp-setup-error {
 
 			@include bb-rl-notice;
 			@include bb-rl-notice--plain;
@@ -365,6 +366,12 @@
 
 				@include bb-rl-notice--plain-success;
 			}
+		}
+
+		#totp-setup-error {
+
+			@include bb-rl-notice--plain-error;
+			margin: var(--bb-rl-space-200) 0 0;
 		}
 
 		// wp-admin buttons.

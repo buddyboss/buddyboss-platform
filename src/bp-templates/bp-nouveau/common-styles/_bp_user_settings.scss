@@ -954,8 +954,9 @@
 		font-size: 13px;
 	}
 
-	// wp-admin notices.
-	.notice {
+	// wp-admin notices, plus the error the TOTP script injects after Verify.
+	.notice,
+	#totp-setup-error {
 		margin: 0 0 $marg-lrg;
 		padding: $pad-sml $pad-med;
 		border: 0;
@@ -983,6 +984,11 @@
 		&.notice-success {
 			border-left-color: $update-success;
 		}
+	}
+
+	#totp-setup-error {
+		margin: $marg-sml 0 0;
+		border-left-color: $warnings;
 	}
 
 	.button-two-factor-backup-codes-copy,
