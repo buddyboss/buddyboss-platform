@@ -224,6 +224,12 @@ add_action( 'set_logged_in_cookie', 'bb_two_factor_capture_sso_session', 10, 6 )
  * @since BuddyBoss [BBVERSION]
  */
 function bb_two_factor_skip_sso_challenge() {
+
+	// Check if two-factor is active.
+	if ( ! bb_two_factor_is_active() ) {
+		return;
+	}
+
 	remove_action( 'wp_login', array( 'Two_Factor_Core', 'wp_login' ), PHP_INT_MAX );
 
 	$session = bb_two_factor_sso_session();
