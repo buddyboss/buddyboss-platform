@@ -31,6 +31,32 @@ final class BP_Notification_Export extends BP_Export {
 	}
 
 	/**
+	 * The member this export is being produced for, while a batch is being rendered.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @var int
+	 */
+	private $bb_export_viewer_id = 0;
+
+	/**
+	 * Resolve member names for the data subject while their export is rendered.
+	 *
+	 * Filters the viewer bp_core_get_user_displayname() falls back to when no viewer is passed.
+	 * Only name resolution is re-pointed - capabilities and the logged-in user are untouched - so a
+	 * notification the subject received reads with the names the subject is allowed to see, not the
+	 * names the administrator running the export can see.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param int $viewer_id The viewer BuddyBoss resolved for this request.
+	 * @return int The data subject while a batch is rendering, otherwise the value unchanged.
+	 */
+	public function bb_filter_export_viewer_id( $viewer_id ) {
+		return $this->bb_export_viewer_id ? (int) $this->bb_export_viewer_id : $viewer_id;
+	}
+
+	/**
 	 * Export member notifications.
 	 *
 	 * @param $user
@@ -50,6 +76,40 @@ final class BP_Notification_Export extends BP_Export {
 		$export_items = array();
 
 		$data_items = $this->get_data( $user, $page );
+
+		// A notification's text is built by the component that created it, and those callbacks
+		// resolve the actor's name for whoever is browsing - here the administrator running the
+		// export. Point name resolution at the data subject for the duration of the batch, so a
+		// surname they may not see does not reach a report produced on their behalf (PROD-9896).
+		$this->bb_export_viewer_id = (int) $user->ID;
+		add_filter( 'bb_core_get_viewer_user_id', array( $this, 'bb_filter_export_viewer_id' ) );
+
+		try {
+			$export_items = $this->bb_prepare_export_items( $data_items );
+		} finally {
+			remove_filter( 'bb_core_get_viewer_user_id', array( $this, 'bb_filter_export_viewer_id' ) );
+			$this->bb_export_viewer_id = 0;
+		}
+
+		$done = $data_items['total'] < $data_items['offset'];
+
+		return $this->response( $export_items, $done );
+	}
+
+	/**
+	 * Build the export rows for one batch of notifications.
+	 *
+	 * Split out of process_data() so the viewer scoping around it cannot be bypassed by an early
+	 * return added inside the loop later.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array $data_items The batch returned by get_data().
+	 * @return array Export items for this batch.
+	 */
+	private function bb_prepare_export_items( $data_items ) {
+
+		$export_items = array();
 
 		foreach ( $data_items['items'] as $item ) {
 
@@ -94,9 +154,7 @@ final class BP_Notification_Export extends BP_Export {
 
 		}
 
-		$done = $data_items['total'] < $data_items['offset'];
-
-		return $this->response( $export_items, $done );
+		return $export_items;
 	}
 
 	/**
