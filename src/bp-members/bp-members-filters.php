@@ -1069,8 +1069,7 @@ function bb_admin_member_types_listing_orderby( $orderby, $query ) {
  * profile-field visibility and the site-wide Display Name Format. WordPress core does not go
  * through it: several emitters read the raw `display_name` column straight off the user object, so
  * a name part the community hides is published on surfaces BuddyBoss never rendered - the author
- * archive title, its feed, the feed autodiscovery link and the `wp/v2/users` REST response
- * (PROD-9896).
+ * archive title, its feed, the feed autodiscovery link and the `wp/v2/users` REST response.
  *
  * This returns a replacement ONLY when BuddyBoss actually redacts something. When the resolved name
  * equals the stored column - the normal case, and always the case for a moderator - it returns null
@@ -1119,7 +1118,10 @@ function bb_core_get_redacted_core_author_name( $user_id ) {
 		return null;
 	}
 
-	$user_data = get_userdata( $user_id );
+	// The raw wp_users row. get_userdata() resolves to the same value, but wraps the row in a
+	// WP_User whose construction also loads and maps the member's capabilities - work nothing here
+	// reads, and this function is called once per member by BB_SEO_Helpers::get_name_map().
+	$user_data = BP_Core_User::get_core_userdata( $user_id );
 
 	if ( empty( $user_data ) ) {
 		return null;

@@ -2087,7 +2087,11 @@ class BP_Activity_Activity {
 			}
 
 			if ( $user_id && isset( $node->display_name ) ) {
-				$user_data = get_userdata( $user_id );
+				// The raw wp_users row, read straight from the `users` cache group that
+				// cache_users() filled above. get_userdata() resolves to the same value, but wraps
+				// the row in a WP_User whose construction also loads and maps the member's
+				// capabilities — work nothing here reads, paid once per node.
+				$user_data = BP_Core_User::get_core_userdata( $user_id );
 
 				// Only when the user still exists: get_activity_data() leaves the property alone
 				// for a deleted user, and the cache-hit path must not diverge from it.

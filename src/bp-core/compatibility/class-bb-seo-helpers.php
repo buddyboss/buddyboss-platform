@@ -22,7 +22,7 @@ if ( ! class_exists( 'BB_SEO_Helpers' ) ) {
 	 * PROPERTY rather than through get_the_author_meta(). A property read passes through no filter,
 	 * so BuddyBoss' member name visibility cannot reach it: on a community using the "First Name"
 	 * display format, or where a member restricted their surname, the full name is emitted into the
-	 * page source for anonymous visitors and social scrapers. That is PROD-9896 exactly, arriving
+	 * page source for anonymous visitors and social scrapers. That is the leak this guards against, arriving
 	 * through a third party rather than through Platform.
 	 *
 	 * Verified against all three major plugins on a live install, each carrying the raw surname
@@ -443,7 +443,10 @@ if ( ! class_exists( 'BB_SEO_Helpers' ) ) {
 		 */
 		private function build_name_entry( $user_id ) {
 
-			$user_data = get_userdata( $user_id );
+			// The raw wp_users row. get_userdata() resolves to the same value, but wraps the row in
+			// a WP_User whose construction also loads and maps the member's capabilities - work
+			// nothing here reads, and this method runs once per member in get_name_map()'s loop.
+			$user_data = BP_Core_User::get_core_userdata( $user_id );
 
 			if ( empty( $user_data ) ) {
 				return array();
