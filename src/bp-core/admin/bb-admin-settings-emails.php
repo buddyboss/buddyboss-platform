@@ -47,11 +47,6 @@ function bb_admin_settings_register_emails_feature() {
 	require_once __DIR__ . '/settings/emails/meta-fields.php';
 	require_once __DIR__ . '/settings/emails/legacy-meta-bridge.php';
 
-	// The Email Digest ships in the BuddyBoss Addons plugin. This registers the stand-in
-	// panel for sites where that plugin is absent, inactive, or licensed on a plan that
-	// does not include it, and stands itself down whenever the real panel is registered.
-	require_once __DIR__ . '/settings/emails/email-digest-placeholder.php';
-
 	// =========================================================================
 	// SIDE PANELS
 	// =========================================================================
@@ -73,3 +68,18 @@ function bb_admin_settings_register_emails_feature() {
 }
 
 add_action( 'bb_register_features', 'bb_admin_settings_register_emails_feature', 25 );
+
+// The Email Digest ships in the BuddyBoss Addons plugin. This registers the stand-in panel
+// for sites where that plugin is absent, inactive, or licensed on a plan that does not
+// include it, and stands itself down whenever the real panel is registered.
+//
+// Required at FILE scope, not from inside the feature callback above. That callback runs at
+// `bb_register_features` priority 25 — the SAME priority as the Notifications feature, which
+// is what fires `bb_notifications_after_register_settings_fields`, the hook the placeholder's
+// signpost listens on. Hooking from inside the callback therefore only worked while this file
+// happened to be required before bb-admin-settings-notifications.php (same priority resolves
+// by registration order), so reordering two `require_once` lines in bb-admin-settings-init.php
+// would have silently dropped the Email Digest entry from the Notifications tab on exactly the
+// sites the placeholder exists for. At file scope the listener is registered long before
+// `bb_register_features` fires at all, and the order no longer matters.
+require_once __DIR__ . '/settings/emails/email-digest-placeholder.php';

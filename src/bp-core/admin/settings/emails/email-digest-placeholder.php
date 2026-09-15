@@ -18,9 +18,15 @@
  *
  *   1. No activated licence      → activation is the only step that can resolve anything,
  *                                  so the card points at the licence screen.
- *   2. Licence, plan without it  → the plan is the blocker, so the card carries the
- *                                  upgrade path: its button opens the upgrade dialog
- *                                  (hero art plus copy) rather than navigating away.
+ *   2. Licence, plan without it  → NOT a card. The whole digest form renders, locked and
+ *                                  inert, so an admin can see what the upgrade buys; the
+ *                                  upgrade path hangs off the section's UPGRADE START pill
+ *                                  and the enable toggle's badge. (An earlier revision used
+ *                                  a single upgrade card here — if you are looking for the
+ *                                  `empty_state` + `upgrade_modal` pairing the AJAX
+ *                                  formatter supports, nothing in Platform registers it
+ *                                  today; that branch is an extension seam, not this
+ *                                  panel's behavior.)
  *   3. Licence, plan with it,    → a card that fixes the plugin in place, because the
  *      add-on absent, off or        entitlement is fine and only the plugin is wrong.
  *      too old                      Telling this admin to upgrade would be wrong. Three
@@ -91,6 +97,23 @@ function bb_email_digest_addon_plugin_slug() {
  * @return array List of lowercase plan SKU prefixes.
  */
 function bb_email_digest_required_plans() {
+	// SINGLE SOURCE OF TRUTH when the add-on is installed. The list below is a copy, and a
+	// copy drifts: the moment a new plan SKU is added to the add-on's registry and not here,
+	// this panel starts telling entitled customers to upgrade (or, in the other direction,
+	// promises a digest that will never load). The add-on's accessor returns the PLAN
+	// requirement only — not its entitlement verdict, which also requires the module folder
+	// on disk and would send a customer on a valid plan with a stripped build to pricing.
+	if ( function_exists( 'bb_addons_module_plans' ) ) {
+		$from_addon = bb_addons_module_plans( 'notification-digest' );
+		if ( ! empty( $from_addon ) ) {
+			/** This filter is documented in src/bp-core/admin/settings/emails/email-digest-placeholder.php */
+			return (array) apply_filters( 'bb_email_digest_required_plans', $from_addon );
+		}
+	}
+
+	// Fallback copy, for the case this panel exists FOR: a site where the add-on is not
+	// installed at all, so there is nothing to ask. Keep in sync with the `$bundled_plans`
+	// list in the add-on's class-bb-addons-license-manager.php.
 	$plans = array(
 		'bb-web-start',
 		'bb-plus-web',
@@ -673,7 +696,7 @@ function bb_email_digest_soften_stale_update_card( $field_data, $field, $feature
 	// when no newer build is known, and that answer comes from an update check that may
 	// simply be stale. "Check again" there re-runs it, which is the one action on this
 	// site that can turn this card into an Update button.
-	$field_data['button_url']              = admin_url( 'update-core.php' );
+	$field_data['button_url'] = admin_url( 'update-core.php' );
 
 	// Clearing the action is what demotes the control from <AddonActivateButton> back to
 	// a plain link — React picks the button branch purely on these two being present.
