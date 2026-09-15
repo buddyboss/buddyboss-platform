@@ -250,8 +250,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			 * the active theme's files. A BuddyBoss theme that is installed but not
 			 * active still shows an update row with this link, and the theme cannot
 			 * run a line of code to fix it. A plugin can.
-			 */
-			/*
+			 *
 			 * Priority 11 is the only window that works, and both edges are load
 			 * bearing. The Mothership updater rebuilds this transient's theme
 			 * entries at 10, discarding anything written before it - so 9, or any
@@ -3638,6 +3637,17 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			// Name and version, not a translatable sentence: a "%1$s %2$s" msgid
 			// gives translators nothing to act on and clutters the POT.
 			$heading = '' !== $version ? $name . ' ' . $version : $name;
+
+			/*
+			 * admin-post.php loads wp-admin/includes/admin.php but not wp-admin/admin.php,
+			 * and set_current_screen() is only called from the latter - so without this
+			 * get_current_screen() is null for the rest of the request. iframe_header()
+			 * prints $current_screen->id inside its inline script, and iframe_footer()
+			 * fires 'admin_footer', which reaches this class's own
+			 * bb_display_update_plugin_information() and every third-party callback on
+			 * that hook. 'themes' is the screen this modal is opened from.
+			 */
+			set_current_screen( 'themes' );
 
 			iframe_header( __( 'Theme Release Notes', 'buddyboss' ) );
 			?>
