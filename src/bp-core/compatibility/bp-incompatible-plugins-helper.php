@@ -310,8 +310,7 @@ function bp_helper_plugins_loaded_callback() {
 	 * They build the document title, the Open Graph tags and the JSON-LD graph themselves, and
 	 * resolve a member's name by reading the WP_User `display_name` property rather than through
 	 * get_the_author_meta() - a read no filter can reach. Without this the full name goes into the
-	 * page source for anonymous visitors and social scrapers on a community that hides it
-	 * (PROD-9896).
+	 * page source for anonymous visitors and social scrapers on a community that hides it.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 */

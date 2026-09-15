@@ -925,7 +925,7 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 	 * xprofile_filter_get_user_display_name() rebuilding from bp_xprofile_get_member_display_name())
 	 * - rather than falling through to the raw column. Covers all three Display Name Format options.
 	 *
-	 * Regression for PROD-9896: the round-15/16 "empty last-name field" case, previously deferred as
+	 * Regression: the round-15/16 "empty last-name field" case, previously deferred as
 	 * an accepted limitation on the belief that resolving from fields would over-redact a legitimate
 	 * first-name-only member. It does not: the logged-in path already never shows the drifted column
 	 * in this state, and the negative control below proves a VISIBLE empty-last-name member is
@@ -1554,7 +1554,7 @@ class BP_Tests_Activity_Functions_BbActivityNamePrivacy extends BP_UnitTestCase 
 	 * format-level hide was appended to the hidden-field list only when that id was truthy, so
 	 * with the id missing the resolver fell through to the stored display_name: under a "First
 	 * Name" site format a guest was served the drifted full name, which is the exact scenario
-	 * PROD-9896 is about. The surname is not part of the "First Name" or "Nickname" formats at
+	 * this is about. The surname is not part of the "First Name" or "Nickname" formats at
 	 * all, so neither format needs the field id to resolve a name.
 	 *
 	 * @group bb_name_privacy

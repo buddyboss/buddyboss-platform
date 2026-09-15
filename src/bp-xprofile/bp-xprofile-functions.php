@@ -1557,7 +1557,7 @@ function bp_xprofile_get_fields_by_visibility_levels( $user_id, $levels = array(
  * interesting for a member who has actually restricted something: where nothing on the profile
  * carries a level this viewer is denied, bp_xprofile_get_hidden_fields_for_user() returns an empty
  * list and the member is kept. Spending the candidate budget on the rest - and DROPPING whatever
- * sorted past it - discarded search results that no privacy rule applied to (PROD-9896).
+ * sorted past it - discarded search results that no privacy rule applied to.
  *
  * "Could be hidden" follows bp_xprofile_get_fields_by_visibility_levels() exactly, because that is
  * what the keep-test will ask. It has two branches and they treat a field's own default visibility
@@ -1651,7 +1651,7 @@ function bb_xprofile_filter_possible_hidden_users( $user_ids, $levels = array() 
 	// wpdb::query() clears last_error through flush() before every query, so this reports on the
 	// query just issued. Getting this wrong is not a degraded search, it is the leak: both callers
 	// treat an array as an authoritative narrowing, and the field-search one returns the whole
-	// matched set unfiltered when that narrowing comes back empty (PROD-9896).
+	// matched set unfiltered when that narrowing comes back empty.
 	if ( ! empty( $wpdb->last_error ) ) {
 		return null;
 	}
@@ -2290,7 +2290,7 @@ function bp_xprofile_get_member_display_name( $user_id = null ) {
  * present and the repair is a side effect of showing them their own data - but the same resolver
  * is reached from member search, which re-tests other members' names to decide whether a match is
  * visible. A search is a read: one GET would otherwise issue one destructive write per re-tested
- * candidate, against members who are not even in the results (PROD-9896).
+ * candidate, against members who are not even in the results.
  *
  * Suspension changes nothing about the value returned; it only stops the repair being persisted,
  * so the next request that legitimately resolves that member still performs it.
@@ -4002,8 +4002,7 @@ function bb_xprofile_can_change_field_visibility( $field_id ) {
  * Name" format it contains the surname even when that field's visibility hides it. The row itself
  * is never rendered — bp_core_get_user_displayname() redacts the name before output — but the
  * *match* is the disclosure: searching a guessed surname and getting exactly one member back
- * confirms it. A directory that hides a surname must not answer questions about it either
- * (PROD-9896).
+ * confirms it. A directory that hides a surname must not answer questions about it either.
  *
  * The candidate set is deliberately narrow. Three sources feed it: members with an explicit
  * non-public visibility row on a name field; members whose stored value for a name field with a
@@ -4210,7 +4209,7 @@ function bb_xprofile_filter_user_search_matches( $matched_user_ids, $like_patter
 	// table and leaves a field they never set un-hidden. Those members are fully permitted, yet
 	// they were consuming the budget below and whatever sorted past it was dropped: on a community
 	// whose Last Name default is restricted, 599 permitted members returned 499 to a logged-out
-	// visitor (PROD-9896).
+	// visitor.
 	//
 	// Applied before the filter that follows, so a site adding its own candidates back is not
 	// narrowed away. null means the narrowing does not apply - the default is forced community-wide
@@ -4262,7 +4261,7 @@ function bb_xprofile_filter_user_search_matches( $matched_user_ids, $like_patter
 		// candidate, against members who are not even in the results. Suspend that repair for the
 		// duration of the loop; the resolved value is unchanged, only the persistence is skipped.
 		// try/finally because leaving the suspension raised would silence the repair for the rest
-		// of the request (PROD-9896).
+		// of the request.
 		bb_xprofile_is_display_name_self_heal_suspended( true );
 
 		try {
@@ -4319,7 +4318,7 @@ function bb_xprofile_filter_user_search_matches( $matched_user_ids, $like_patter
  *
  * (Before the name was rebuilt this could not be complete: the resolver returned the drifted column
  * minus the surname, a residue that exists in no column at all, and every such member had to be
- * re-resolved in PHP - an unbounded amount of work on an anonymous request. PROD-9896.)
+ * re-resolved in PHP - an unbounded amount of work on an anonymous request.)
  *
  * Deliberately NOT a source: `user_login`. It is never returned as a display name - the fallback
  * chain ends at user_nicename - so treating a login match as proof would keep a member whose
@@ -4527,7 +4526,7 @@ function bb_xprofile_filter_field_search_matches( $matched_user_ids, $matched_us
 	// loop concludes, so they are kept without a visibility read. Applying the budget to the whole
 	// match set instead dropped ordinary, fully-public members for no reason beyond their position
 	// in an unordered match set: 600 members with a public first name returned 500 to a logged-out
-	// visitor (PROD-9896).
+	// visitor.
 	//
 	// null means no narrowing is possible - a field's default is forced on the whole community
 	// through 'disabled' custom visibility. The site-wide format hide is the same kind of rule, so
@@ -4550,8 +4549,7 @@ function bb_xprofile_filter_field_search_matches( $matched_user_ids, $matched_us
 	// narrowing above does not apply - a one-word term on a large community can be the whole member
 	// table, before pagination, on a request an anonymous visitor can issue. Bound it with the same
 	// budget its sibling uses, and give the same fail-closed answer past the bound: a budget that
-	// kept the undecided matches would serve exactly what this filter exists to suppress
-	// (PROD-9896).
+	// kept the undecided matches would serve exactly what this filter exists to suppress.
 	if ( $candidate_limit > 0 && count( $fields_by_user ) > $candidate_limit ) {
 		// A member is never hidden from themselves, so the budget must not be able to drop the
 		// viewer out of their own search results.

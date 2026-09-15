@@ -836,7 +836,7 @@ function xprofile_filter_get_user_display_name( $full_name, $user_id, $current_u
 		// public - and a field's own default_visibility applies to every member with no per-user
 		// row, so one restricted field definition turned the rebuild on site-wide. Scope it to the
 		// two name fields, exactly as the guest path in bp_core_get_user_displayname() does, so the
-		// two resolve the same member to the same name (PROD-9896).
+		// two resolve the same member to the same name.
 		$name_field_ids = array_filter(
 			array(
 				(int) bp_xprofile_firstname_field_id(),
@@ -856,7 +856,7 @@ function xprofile_filter_get_user_display_name( $full_name, $user_id, $current_u
 			// string, which could not be made correct on this product's data: a surname is a
 			// substring of unrelated names ("Ng" inside "Armstrong") as often as it is the name
 			// being hidden, and the rules that told those apart were each load-bearing for one
-			// shape and wrong for another (PROD-9896).
+			// shape and wrong for another.
 			$full_name = bb_core_build_visible_display_name( $user_id, $list_fields );
 		}
 		$bb_default_display_avatar = false;

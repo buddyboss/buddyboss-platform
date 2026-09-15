@@ -83,7 +83,7 @@ class BB_XProfile_Visibility {
 	 * A class property rather than a method-local static so prime_user_data_exists_cache() can
 	 * fill it for a whole batch: the getter is called once per member by
 	 * bp_xprofile_get_fields_by_visibility_levels(), which member search reaches once per matched
-	 * row, and its query is uncached (PROD-9896).
+	 * row, and its query is uncached.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
@@ -272,7 +272,7 @@ class BB_XProfile_Visibility {
 	 * The single-user getter issues one uncached query per user, and
 	 * bp_xprofile_get_fields_by_visibility_levels() calls it once per member whose visibility is
 	 * resolved. Member search resolves one member per matched row, so on a term that matches a
-	 * large part of the member table that probe alone is one query per match (PROD-9896).
+	 * large part of the member table that probe alone is one query per match.
 	 *
 	 * Users with no row are memoized as false on purpose: without that they would miss the memo
 	 * and fall through to an individual query each, which is the cost this exists to remove.

@@ -1462,7 +1462,7 @@ Bar!';
 	 * `if ( ! bp_disable_profile_sync() ) { return; }`, so with sync off it never ran and
 	 * $bp->displayed_user->fullname kept the raw wp_users.display_name - which is where the
 	 * drifted full name lives. The RSS <link rel="alternate"> title on a member page is built
-	 * from that global, which is how the surname reached page source (PROD-9896). The early
+	 * from that global, which is how the surname reached page source. The early
 	 * return is gone, so the option must now make no difference at all; the sibling test above
 	 * pins the sync-enabled half.
 	 *
@@ -1554,7 +1554,7 @@ Bar!';
 	 *
 	 * It cannot be detected from the return value of the query: wpdb::get_col() initialises its
 	 * return to array() and never hands back null, so an error and an empty result set are the same
-	 * value. This pins the $wpdb->last_error check that replaced that dead comparison (PROD-9896).
+	 * value. This pins the $wpdb->last_error check that replaced that dead comparison.
 	 *
 	 * @group xprofile
 	 * @group bb_xprofile_filter_possible_hidden_users

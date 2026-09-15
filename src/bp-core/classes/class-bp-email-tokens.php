@@ -3070,7 +3070,7 @@ class BP_Email_Tokens {
 	 * whoever triggered the send - usually the author, who is never denied any part of their own
 	 * name. Resolving a member's display name without a viewer therefore renders the AUTHOR'S view
 	 * of it into every recipient's inbox, past the profile-field visibility the site enforces on
-	 * screen (PROD-9896). `receiver-user.id` is set by every fan-out that sends these emails; when
+	 * screen. `receiver-user.id` is set by every fan-out that sends these emails; when
 	 * it is absent this returns 0, which is the pre-existing "use the current request" behaviour.
 	 *
 	 * @since BuddyBoss [BBVERSION]

@@ -2,7 +2,7 @@
 /**
  * Profile-field visibility applied to member search and name resolution.
  *
- * PROD-9896: a member search must not confirm the contents of a name or profile field the
+ * A member search must not confirm the contents of a name or profile field the
  * searcher is not allowed to read, and no viewer may be shown more of a name than a viewer with
  * broader permission.
  *
@@ -344,7 +344,7 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 	 * Count how many display names a call resolves.
 	 *
 	 * The per-candidate resolution is the cost that made this filter an unauthenticated memory
-	 * exhaustion (PROD-9896 B1), so the bound is asserted by counting resolutions, not by timing.
+	 * exhaustion, so the bound is asserted by counting resolutions, not by timing.
 	 *
 	 * @param callable $callback Code to measure.
 	 * @return array array( return value, resolution count ).
@@ -658,8 +658,7 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 	 *
 	 * bp_xprofile_get_member_display_name() back-fills a missing name field from the WP user meta
 	 * and DELETEs the row when that value is empty. Reached from the search re-test that is one
-	 * destructive write per candidate, against members who are not even in the results
-	 * (PROD-9896 H1).
+	 * destructive write per candidate, against members who are not even in the results.
 	 *
 	 * @group bb_search_visibility_display_format
 	 */
@@ -716,7 +715,7 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 	 *
 	 * The marker is what stands WordPress core's author filters down while a resolution reads the
 	 * stored column. Left raised it fails OPEN: every later get_the_author_display_name /
-	 * the_author / document_title_parts / rest_prepare_user returns the RAW column (PROD-9896).
+	 * the_author / document_title_parts / rest_prepare_user returns the RAW column.
 	 *
 	 * @group bb_search_visibility_display_format
 	 */
@@ -1105,7 +1104,7 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 	 * entirely. Removing the hidden part from those strings is not decidable: a surname sits inside
 	 * unrelated words ("Ng" in "Armstrong", "Ann" in "Cann") as readily as it is the name being
 	 * hidden, and every rule that separated the two was load-bearing for one shape and wrong for
-	 * another (PROD-9896).
+	 * another.
 	 *
 	 * So the column is not consulted at all. One assertion covers both failure directions at once:
 	 * the answer must be exactly the field the viewer may see - which no drifted shape can leak
@@ -1273,7 +1272,7 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 	 *
 	 * bb_xprofile_filter_field_search_matches() is the second of the two producers - a search over
 	 * xprofile_data.value rather than the display_name column. It had no test at all, and a mutation
-	 * in its format-hide arm survived (PROD-9896 M5). Without it a guest can confirm the contents of
+	 * in its format-hide arm survived. Without it a guest can confirm the contents of
 	 * an admins-only field by watching whether the member comes back.
 	 */
 	public function test_field_search_drops_a_member_matched_only_on_a_hidden_field() {
@@ -1365,7 +1364,7 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 	}
 
 	/**
-	 * The mutation-surviving arm (PROD-9896 M5): the site-wide Display Name Format hide.
+	 * The mutation-surviving arm: the site-wide Display Name Format hide.
 	 *
 	 * The Last Name field here is PUBLIC with no visibility row of any kind, so only the "First Name"
 	 * format removes it from every visible name. bb_xprofile_filter_user_search_matches() honours
@@ -1529,7 +1528,7 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 	 * bb_core_filter_author_document_title_parts() never fires. Every major SEO plugin does this -
 	 * All in One SEO at priority 99999, Yoast, Rank Math - and they read the name off the WP_User
 	 * object's display_name PROPERTY, which no WordPress filter intercepts. Replicated live against
-	 * All in One SEO before this test was written (PROD-9896).
+	 * All in One SEO before this test was written.
 	 *
 	 * @group bb_search_visibility_display_format
 	 */
@@ -1577,7 +1576,7 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 	 * WordPress filter reaches, so BB_SEO_Helpers intercepts the graph on its way out instead.
 	 * Replicated live against All in One SEO before this test was written: its breadcrumb crumbs
 	 * (Breadcrumbs.php:317) and ProfilePage mainEntity name (ProfilePage.php:86) both carried the
-	 * raw surname on an anonymous author-archive request (PROD-9896).
+	 * raw surname on an anonymous author-archive request.
 	 *
 	 * @group bb_search_visibility_display_format
 	 */
@@ -1648,7 +1647,7 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 	 * REST request is_author() and is_singular() are both false, so the member could not be
 	 * identified from the query and the graph went out with the raw column in it: an unauthenticated
 	 * GET /wp-json/wp/v2/users/<id> returned "name":"Alex Quillfeather" for a member whose surname
-	 * the same site hides on every page (PROD-9896 QA finding F-1).
+	 * the same site hides on every page.
 	 *
 	 * The member is taken from the plugin's own context object instead, which is what makes this
 	 * work on REST and on a collection response where each item has a different author.
@@ -1749,7 +1748,7 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 	 * Yoast's Meta_Author_Presenter reads $user_data->display_name - the WP_User property, which no
 	 * WordPress filter reaches - and prints it as <meta name="author">. The schema graph and the
 	 * document title were redacted while this tag was not, so a guest page source still carried the
-	 * full name (PROD-9896 QA finding F-2). The plugin offers `wpseo_meta_author`, which is what
+	 * full name. The plugin offers `wpseo_meta_author`, which is what
 	 * BB_SEO_Helpers hooks.
 	 *
 	 * @group bb_search_visibility_display_format
@@ -1819,7 +1818,7 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 	 * reached. The result: not one BuddyBoss exporter or eraser registered, and Tools > Export
 	 * Personal Data produced a report containing the WordPress groups and none of the member's
 	 * connections, group memberships, messages, activity, profile fields or forum content
-	 * (PROD-9896 QA). Registering on a LATER priority of the same action is what makes it run - and
+	 *. Registering on a LATER priority of the same action is what makes it run - and
 	 * it has to be later than priority 2 in any case, because every check in the callback is a
 	 * bp_is_active() call and the components are not set up until then.
 	 *
@@ -1849,7 +1848,7 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 	 * A notification's text is produced by the component that created it, and those callbacks
 	 * resolve the actor's name for whoever is browsing - during an export that is the administrator
 	 * running it, not the member the export belongs to. The report therefore read "Alex Quillfeather
-	 * replied to your post" for a data subject the surname is hidden from (PROD-9896 QA finding F-3,
+	 * replied to your post" for a data subject the surname is hidden from (QA finding F-3,
 	 * reachable only once the exporters above started registering).
 	 *
 	 * @group bb_search_visibility_display_format
@@ -1901,7 +1900,7 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 	 * decided whether to strip the surname by re-reading the FIELD, a second and independent
 	 * resolution of the same value: on an imported member who never re-saved their profile the field
 	 * is empty while the resolved name carries the surname, so the strip was skipped and a logged-in
-	 * searcher could confirm a restricted surname by searching it (PROD-9896 review finding).
+	 * searcher could confirm a restricted surname by searching it.
 	 *
 	 * @group bb_search_visibility_display_format
 	 */
@@ -2021,7 +2020,7 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 	 * truthy test reads it as a logged-in member and drops 'loggedin' from the hidden set - which
 	 * under-protects a "Logged-in Users only" name field for exactly the audience that must not see
 	 * it. bp_xprofile_get_hidden_field_types_for_user() has always checked the sentinel; this
-	 * producer did not (PROD-9896 review finding).
+	 * producer did not.
 	 *
 	 * @group bb_search_visibility_display_format
 	 */
@@ -2054,7 +2053,7 @@ class BP_Tests_XProfile_SearchVisibility extends BP_UnitTestCase {
 	 * name - so the full name landed in every recipient's inbox even when the site withholds it from
 	 * them on screen. groups_notification_group_invites() now passes the invitee as the viewer.
 	 *
-	 * This covers the email/notification fan-out paths, which had no test (PROD-9896 review finding).
+	 * This covers the email/notification fan-out paths, which had no test.
 	 *
 	 * @group bb_search_visibility_display_format
 	 */

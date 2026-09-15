@@ -10977,7 +10977,7 @@ function bb_has_paid_product() {
  * at 0 while WordPress already knows who is calling. Anything that derives a *viewer* from
  * `bp_loggedin_user_id()` then behaves as though the request were anonymous — for
  * `bp_core_get_user_displayname()` that means an authenticated member is served the guest-level
- * redaction of another member's name (PROD-9896).
+ * redaction of another member's name.
  *
  * Prefer the BuddyPress global, because code that deliberately re-points the viewer does so by
  * assigning to it (see `bp_messages_*` and the personal-data exporters), and fall back to the
@@ -11017,7 +11017,7 @@ function bb_core_get_viewer_user_id() {
  * That case is real: a member invitation is composed in the inviter's own session but is delivered
  * to a plain email address with no member behind it. Resolved with the request's viewer, the
  * inviter sees their own profile, so the email carries name parts the site hides from everyone
- * else (PROD-9896). Passing this ID pins the resolution to the public, logged-out view.
+ * else. Passing this ID pins the resolution to the public, logged-out view.
  *
  * @since BuddyBoss [BBVERSION]
  *

@@ -31,7 +31,7 @@ class BP_Core_Gdpr {
 	 *   therefore never ran and BuddyBoss contributed no exporter or eraser at all: an admin
 	 *   running Tools > Export Personal Data got a report with the WordPress groups in it and none
 	 *   of the member's connections, group memberships, messages, activity, profile fields or
-	 *   forum content (PROD-9896 QA).
+	 *   forum content.
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */

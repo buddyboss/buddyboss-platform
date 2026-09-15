@@ -195,7 +195,7 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 						// searching a guessed surname and getting one hit confirms it. The member
 						// directory closes this in BP_User_Query; this engine builds its own SQL
 						// and never goes through BP_User_Query, so it has to apply the same rule
-						// here or the two answer the same question differently (PROD-9896).
+						// here or the two answer the same question differently.
 						$hidden_ids = $this->bb_get_hidden_display_name_match_ids( $search_term );
 
 						if ( ! empty( $hidden_ids ) ) {
@@ -451,7 +451,7 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 		 * bb_xprofile_filter_user_search_matches(). This engine assembles its own SQL against
 		 * wp_users and never runs BP_User_Query, so the same set has to be resolved here and
 		 * excluded from the display_name comparison - otherwise the site-wide search answers a
-		 * question the member directory refuses (PROD-9896).
+		 * question the member directory refuses.
 		 *
 		 * Only the display_name comparison is narrowed. user_login, user_nicename and user_email
 		 * are public identifiers that carry no hidden name part, so a member matching on one of

@@ -80,7 +80,7 @@ final class BP_Notification_Export extends BP_Export {
 		// A notification's text is built by the component that created it, and those callbacks
 		// resolve the actor's name for whoever is browsing - here the administrator running the
 		// export. Point name resolution at the data subject for the duration of the batch, so a
-		// surname they may not see does not reach a report produced on their behalf (PROD-9896).
+		// surname they may not see does not reach a report produced on their behalf.
 		$this->bb_export_viewer_id = (int) $user->ID;
 		add_filter( 'bb_core_get_viewer_user_id', array( $this, 'bb_filter_export_viewer_id' ) );
 

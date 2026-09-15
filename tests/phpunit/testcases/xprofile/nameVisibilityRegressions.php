@@ -1,6 +1,6 @@
 <?php
 /**
- * Regressions found while reviewing the PROD-9896 name-visibility work.
+ * Regressions found while reviewing the name-visibility work.
  *
  * Both cases below passed the suite that shipped with that work, because nothing in it exercised
  * them: the first needs a restricted field that is NOT a name field, and the second needs a match
